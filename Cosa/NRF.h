@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/NRF.h
  * @version 1.0
  *
  * @section License
@@ -325,6 +325,7 @@ public:
 
   /**
    * Set interrupt handler. And enable irq-pin change interrupts.
+   * The NRF object becomes the callback environment.
    * @param[in] fn callback function.
    */
   void set_interrupt(InterruptPin::Callback fn);
@@ -444,11 +445,14 @@ public:
   uint8_t flush();
 
   /**
-   * Callback function to push event for receive interrupts.
+   * Callback function to push event for receive data interrupts.
    */
   static void push_event(InterruptPin* pin, void* env);
 
 private:
+  /**
+   * Transceiver state
+   */
   State _state;
 };
 

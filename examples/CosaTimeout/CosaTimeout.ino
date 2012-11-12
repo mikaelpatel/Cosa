@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file CosaTimeout.ino
  * @version 1.0
  *
  * @section License
@@ -29,24 +29,23 @@
 #include "Cosa/Pins.h"
 #include "Cosa/Watchdog.h"
 
-#define USE_POWER_SAVING
-
+// Use the Arduino builtin LED
 OutputPin ledPin(13, 0);
 
+// Blink on timeout interrupt
 void blink(void* env)
 {
   ledPin.toggle();
 }
 
+// Start watchdog with approx. 1 second timeout and blink interrupt call
 void setup()
 {
   Watchdog::begin(1024, blink);
 }
 
+// Got into sleep mode while awaiting the next timeout
 void loop()
 {
-#ifdef USE_POWER_SAVING
-  Event event;
-  Event::queue.await(&event);
-#endif
+  Watchdog::await();
 }

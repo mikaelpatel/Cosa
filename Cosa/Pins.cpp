@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/Pins.cpp
  * @version 1.0
  *
  * @section License
@@ -37,10 +37,10 @@ Pin::print()
 #ifndef NDEBUG
   Serial_print("Pin(");
   Serial.print(_pin);
-  Serial_print(", ");
+  Serial_print(", 0x");
   Serial.print((uint16_t) _sfr, HEX);
-  Serial_print(", ");
-  Serial.print(_mask, HEX);
+  Serial_print(", 0b");
+  Serial.print(_mask, BIN);
   Serial_print(")");
 #endif
 }
@@ -54,28 +54,15 @@ Pin::println()
 #endif
 }
 
-
 InputPin::InputPin(uint8_t pin, Mode mode) : 
   Pin(pin)
 {
   if (mode == PULLUP_MODE) *PORT() |= _mask; 
 }
 
-
 InterruptPin* InterruptPin::ext[2] = { 0, 0 };
 
-InterruptPin::InterruptPin(uint8_t pin, Callback fn, Mode mode) : 
-  InputPin(pin), 
-  _callback(fn),
-  _env(0)
-{
-  if (mode & PULLUP_MODE) *PORT() |= _mask; 
-  if (pin > 1 && pin < 4) {
-    pin = pin - 2;
-    ext[pin] = this;
-    bit_field_set(EICRA, bit_mask(pin), 2, bit_mask_get(mode, 0b11));
-  }
-}
+InterruptPin::InterruptPin(uint8_t pin, Mode mode, Callback fn, void* env);
 
 ISR(INT0_vect)
 {
@@ -88,7 +75,6 @@ ISR(INT1_vect)
   if (InterruptPin::ext[1] != 0) 
     InterruptPin::ext[1]->on_interrupt();
 }
-
 
 void 
 OutputPin::pulse(uint16_t us)
@@ -135,7 +121,6 @@ PWMPin::get_duty()
   return (is_set());
 }
 
-
 AnalogPin* AnalogPin::response = 0;
 
 uint16_t 
@@ -145,7 +130,7 @@ AnalogPin::sample()
   ADMUX = (_reference | ((_pin - 14) & 0xf));
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
   loop_until_bit_is_clear(ADCSRA, ADSC);
-  return (ADCW);
+  return (_value = ADCW);
 }
 
 void 
@@ -163,7 +148,7 @@ uint16_t
 AnalogPin::await_sample()
 {
   loop_until_bit_is_clear(ADCSRA, ADSC);
-  return (ADCW);
+  return (_value = ADCW);
 }
 
 ISR(ADC_vect) 
@@ -171,6 +156,6 @@ ISR(ADC_vect)
   if (AnalogPin::response != 0) {
     AnalogPin::response->on_sample(ADCW);
     AnalogPin::response = 0;
-    bit_clear(ADCSRA, ADIE);
   }
+  bit_clear(ADCSRA, ADIE);
 }

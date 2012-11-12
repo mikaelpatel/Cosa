@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/Pins.h
  * @version 1.0
  *
  * @section License
@@ -155,7 +155,7 @@ public:
   /**
    * Callback function prototype.
    * @param[in] pin reference of changed pin.
-   * @param[in] env associated environment.
+   * @param[in] env callback environment. 
    */
   typedef void (*Callback)(InterruptPin* pin, void* env);
 
@@ -174,16 +174,31 @@ public:
   };
 
   /**
-   * Construct interrupt pin with given pin number, callback and mode.
+   * Construct interrupt pin with given pin number, mode, callback and environment.
    * @param[in] pin pin number.
-   * @param[in] fn callback function.
    * @param[in] mode pin mode.
+   * @param[in] fn callback function.
+   * @param[in] env callback environment. 
    */
-  InterruptPin(uint8_t pin, Callback fn = 0, Mode mode = ON_CHANGE_MODE);
+  InterruptPin(uint8_t pin, Mode mode = ON_CHANGE_MODE, Callback fn = 0, void* env = 0) :
+    InputPin(pin), 
+    _callback(fn),
+    _env(env)
+  {
+    if (mode & PULLUP_MODE) {
+      *PORT() |= _mask; 
+    }
+    if (pin > 1 && pin < 4) {
+      pin = pin - 2;
+      ext[pin] = this;
+      bit_field_set(EICRA, bit_mask(pin), 2, bit_mask_get(mode, 0b11));
+    }
+  }
 
   /**
    * Set interrupt pin callback.
    * @param[in] fn callback function.
+   * @param[in] env callback environment.
    */
   void set(Callback fn, void* env) { _callback = fn; _env = env; }
 
@@ -205,10 +220,11 @@ public:
   /**
    * Callback function to push event for interrupt pin change.
    * @param[in] fn callback function.
+   * @param[in] env callback environment.
    */
-  static void push_event(InterruptPin* pin) 
+  static void push_event(InterruptPin* pin, void* env) 
   { 
-    Event::push(Event::INTERRUPT_PIN_CHANGE_TYPE, pin, pin->is_set());
+    Event::push(Event::INTERRUPT_PIN_CHANGE_TYPE, pin, (uint16_t) env);
   }
 };
 
@@ -245,6 +261,13 @@ public:
   void toggle() { *PIN() |= _mask; }
 
   /**
+   * Set the output pin with the given value. Zero(0) to clear
+   * and non-zero to set.
+   * @param[in] value to set.
+   */
+  void set(uint8_t value) { if (value) set(); else clear(); }
+
+  /**
    * Toggle the output pin to form a pulse with given length in
    * micro-seconds.
    * @param[in] us pulse width in micro seconds
@@ -272,10 +295,12 @@ public:
   void set(uint8_t duty);
 
   /**
-   * Set duty cycle for pwm output pin with value mapping.
+   * Set duty cycle for pwm output pin with given value mapping.
+   * The value is mapped from ]min..max[ to duty [0..255]. Value
+   * below min is mapped to zero(0) and above max to 255.
    * @param[in] value.
-   * @param[in] min.
-   * @param[in] max.
+   * @param[in] min value.
+   * @param[in] max value.
    */
   void set(uint16_t value, uint16_t min, uint16_t max);
 
@@ -295,9 +320,9 @@ public:
   /**
    * Callback function prototype for analog sample completion.
    * @param[in] pin analog source.
-   * @param[in] value sample value.
+   * @param[in] env callback environment.
    */
-  typedef void (*Callback)(AnalogPin* pin, uint16_t value);
+  typedef void (*Callback)(AnalogPin* pin, void* env);
 
   /**
    * Reference voltage; ARef pin, Vcc or internal 1V1.
@@ -311,7 +336,9 @@ public:
 private:
   Reference _reference;
   Callback _callback;
-
+  uint16_t _value;
+  void* _env;
+  
 public:
   static AnalogPin* response;
 
@@ -321,19 +348,23 @@ public:
    * @param[in] pin number.
    * @param[in] ref reference voltage.
    * @param[in] fn conversion completion callback function.
+   * @param[in] env callback environment. 
    */
-  AnalogPin(uint8_t pin, Reference ref = AVCC_REFERENCE, Callback fn = 0) : 
+  AnalogPin(uint8_t pin, Reference ref = AVCC_REFERENCE, Callback fn = 0, void* env = 0) : 
     Pin(pin < 14 ? pin + 14 : pin), 
     _reference(ref),
-    _callback(fn)
+    _callback(fn),
+    _value(0),
+    _env(env)
   {
   }
 
   /**
    * Set conversion completion callback function.
    * @param[in] fn conversion completion callback function.
+   * @param[in] env callback environment. 
    */
-  void set(Callback fn) { _callback = fn; }
+  void set(Callback fn, void* env = 0) { _callback = fn; _env = env; }
 
   /**
    * Set reference voltage for conversion.
@@ -342,8 +373,14 @@ public:
   void set(Reference ref) { _reference = ref; }
 
   /**
-   * Sample analog pin. Wait for conversion to complete before returning sample
-   * value.
+   * Get latest sample. 
+   * @return sample value.
+   */
+  uint16_t get_value() { return (_value); }
+
+  /**
+   * Sample analog pin. Wait for conversion to complete before returning with
+   * sample value.
    * @return sample value.
    */
   uint16_t sample();
@@ -364,16 +401,20 @@ public:
    * Trampoline function for interrupt service on conversion completion.
    * @param[in] value sample.
    */
-  void on_sample(uint16_t value) { if (_callback != 0) _callback(this, value); }
+  void on_sample(uint16_t value) 
+  { 
+    _value = value; 
+    if (_callback != 0) _callback(this, _env); 
+  }
 
   /**
    * Callback function to push event for sample conversion completion.
    * @param[in] pin analog pin source.
    * @param[in] value sample.
    */
-  static void push_event(AnalogPin* pin, uint16_t value)
+  static void push_event(AnalogPin* pin, void* env)
   { 
-    Event::push(Event::ANALOG_PIN_SAMPLE_TYPE, pin, value);
+    Event::push(Event::ANALOG_PIN_SAMPLE_TYPE, pin, (uint16_t) env);
   }
 };
 

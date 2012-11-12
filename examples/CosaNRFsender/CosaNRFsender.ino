@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file CosaNRFsender.ino
  * @version 1.0
  *
  * @section License
@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of NRF24L01+ driver.
+ * Cosa demonstration of NRF24L01+ driver; sender
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -89,7 +89,7 @@ struct msg_t {
 };
 
 msg_t msg = { 0 };
-uint8_t count = sizeof(msg);
+const uint8_t count = sizeof(msg);
 
 void loop()
 {

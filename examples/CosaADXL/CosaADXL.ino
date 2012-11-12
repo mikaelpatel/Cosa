@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file CosaAXDL.ino
  * @version 1.0
  *
  * @section License
@@ -38,7 +38,7 @@ void setup()
   // Start the serial interface 
   Serial.begin(9600);
 
-  // Start the watchdog and push timeout events
+  // Start the watchdog, approx. 1 second ticks, and push timeout events
   Watchdog::begin(1024, Watchdog::push_event);
 
   // Calibrate the accelerometer

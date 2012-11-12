@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/Event.cpp
  * @version 1.0
  *
  * @section License
@@ -43,7 +43,7 @@ Event::print()
 #ifndef NDEBUG
   Serial_print("Event(");
   Serial.print(_type);
-  Serial_print(", ");
+  Serial_print(", 0x");
   Serial.print((uint16_t) _source, HEX);
   Serial_print(", ");
   Serial.print(_value);

@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/SPI.h
  * @version 1.0
  *
  * @section License

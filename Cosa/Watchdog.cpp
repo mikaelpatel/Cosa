@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/Watchdog.cpp
  * @version 1.0
  *
  * @section License
@@ -78,6 +78,8 @@ void
 Watchdog::await()
 {
   volatile uint16_t ticks = _ticks;
+
+  // Go to sleep and wait for the next tick. Check for other interrupt
   do {
     cli();
     set_sleep_mode(_mode);

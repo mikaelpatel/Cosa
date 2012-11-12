@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/Memory.h
  * @version 1.0
  *
  * @section License
@@ -29,7 +29,8 @@
 #ifndef __COSA_MEMORY_H__
 #define __COSA_MEMORY_H__
 
-inline int free_memory() 
+inline int 
+free_memory() 
 {
   extern int __heap_start, *__brkval; 
   int v; 

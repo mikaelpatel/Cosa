@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/Serial.h
  * @version 1.0
  *
  * @section License
@@ -21,7 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Hardware Serial (UART) support functions.
+ * Hardware Serial (UART) support functions. This is a temporary 
+ * solutation while waiting for a Cosa UART class.
  *
  * This file is part of the Arduino Che Cosa project.
  */

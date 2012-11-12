@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file CosaPins.ino
  * @version 1.0
  *
  * @section License
@@ -41,7 +41,7 @@ void do_interrupt(InterruptPin* pin, void* env)
 
 // Input and output pins
 
-InterruptPin intPin(2, do_interrupt);
+InterruptPin intPin(2, InterruptPin::ON_RISING_MODE, do_interrupt);
 PWMPin ledPin(5);
 InputPin onoffPin(7);
 AnalogPin tempVCC(8, AnalogPin::A1V1_REFERENCE);

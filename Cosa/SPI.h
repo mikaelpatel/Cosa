@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/SPI.h
  * @version 1.0
  *
  * @section License
@@ -254,6 +254,9 @@ public:
   }
 };
 
+/**
+ * Some syntactic sugar to capture the slave selection block
+ */
 #define SPI_transaction(ss) for (uint8_t i = (ss.clear(), 1); i != 0; i--, ss.set())
 
 #endif

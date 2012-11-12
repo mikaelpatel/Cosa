@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/Types.h
  * @version 1.0
  *
  * @section License
@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// FIX: Remove Arduino dependency
 #include "Serial.h"
 
 /**
@@ -76,7 +77,7 @@ inline void unlock(uint8_t key)
 }
 
 /**
- * Syntax abstraction for synchronized block. Used in the form:
+ * Syntactic sugar for synchronized block. Used in the form:
  * synchronized {
  *   ...
  * }
@@ -86,7 +87,7 @@ inline void unlock(uint8_t key)
 
 /**
  * Force compiler to store all values in memory at this point.
- * Alternative to volative declaration.
+ * Alternative to volatile declaration.
  */
 #define barrier() __asm__ __volatile__("nop" ::: "memory") 
 

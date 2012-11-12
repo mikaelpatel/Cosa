@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/NRF.cpp
  * @version 1.0
  *
  * @section License
@@ -42,7 +42,7 @@ NRF::NRF(uint8_t channel, uint8_t csn, uint8_t ce, uint8_t irq) :
   _channel(channel),
   _csn(csn, 1),
   _ce(ce, 0),
-  _irq(irq, 0, InterruptPin::ON_FALLING_MODE),
+  _irq(irq, InterruptPin::ON_FALLING_MODE),
   _state(POWER_DOWN_STATE)
 {
   begin(SPI::DIV4_CLOCK, 0, SPI::MSB_FIRST);

@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Cosa/Watchdog.h
  * @version 1.0
  *
  * @section License
@@ -45,6 +45,7 @@ public:
   typedef void (*Callback)(void* env);
 
 private:
+  // FIX: Allow multiple callbacks with any interval of delay (tick count)
   static volatile uint16_t _ticks;
   static Callback _callback;
   static uint8_t _prescale;
