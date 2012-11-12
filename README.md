@@ -7,14 +7,10 @@ To install download and move the Cosa directory to the Arduino cores directory w
 
 The examples should be moved to your sketchbook directory. 
 
-Cosa classes are included with:
+Cosa classes are included with prefix, e.g. "Cosa/FileName.h"
 
-#include "Cosa/FileName.h"
+For now the target architecture is Arduino based on Atmega328P; Arduino Uno, Nano, etc. Additional classes are planned; Timers, TWI, UART, etc. And more drivers for typical modules. 
 
-For now the target architecture is Arduino based on Atmega328P; Arduino Uno, Nano, etc.
-
-Additional classes are planned; Timers, TWI, UART, etc. And more drivers for typical modules. 
-
-The target for Cosa is "Internet-of-things" and ultra low power and cost sensor networks.
+The target of this project is to provide an efficient programming platform for rapid prototyping of "Internet-of-things"-devices.  
 
 
