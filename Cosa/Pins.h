@@ -340,8 +340,6 @@ private:
   void* _env;
   
 public:
-  static AnalogPin* response;
-
   /**
    * Construct abstract analog pin for given Arduino pin with reference and
    * conversion completion callback function.
@@ -350,14 +348,7 @@ public:
    * @param[in] fn conversion completion callback function.
    * @param[in] env callback environment. 
    */
-  AnalogPin(uint8_t pin, Reference ref = AVCC_REFERENCE, Callback fn = 0, void* env = 0) : 
-    Pin(pin < 14 ? pin + 14 : pin), 
-    _reference(ref),
-    _callback(fn),
-    _value(0),
-    _env(env)
-  {
-  }
+  AnalogPin(uint8_t pin, Reference ref = AVCC_REFERENCE, Callback fn = 0, void* env = 0);
 
   /**
    * Set conversion completion callback function.
@@ -406,6 +397,14 @@ public:
     _value = value; 
     if (_callback != 0) _callback(this, _env); 
   }
+
+  /**
+   * Start analog batch mode sampling. All defined analog pins are
+   * sampled in the background. Returns true(1) if started otherwise
+   * false(0).
+   * @return boolean.
+   */
+  static uint8_t begin();
 
   /**
    * Callback function to push event for sample conversion completion.
