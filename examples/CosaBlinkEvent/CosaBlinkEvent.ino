@@ -1,5 +1,5 @@
 /**
- * @file CosaBlink.ino
+ * @file CosaBlinkEvent.ino
  * @version 1.0
  *
  * @section License
@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa LED blink.
+ * Cosa LED blink with watchdog timeout event wait for low power.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -34,14 +34,16 @@ OutputPin ledPin(13, 0);
 
 void setup()
 {
-  // Start the watchdog (64 milli-second timeout)
-  Watchdog::begin(512);
+  // Start the watchdog (0.5 second timeout)
+  Watchdog::begin(512, Watchdog::push_event);
 }
 
 void loop()
 {
-  ledPin.set();
-  Watchdog::delay(512);
-  ledPin.clear();
-  Watchdog::delay(1024);
+  // Wait for timeout event 
+  Event event;
+  Event::queue.await(&event);
+  
+  // Toggle the led pin
+  ledPin.toggle();
 }
