@@ -121,10 +121,7 @@ PWMPin::get_duty()
   return (is_set());
 }
 
-static const int ANALOG_MAP_MAX = 8;
-static AnalogPin* analog_map[ANALOG_MAP_MAX] = { 0 };
-static int8_t analog_request_pin = -1;
-static uint8_t analog_batch_mode = 0;
+AnalogPin* AnalogPin::_sampling = 0;
 
 AnalogPin::AnalogPin(uint8_t pin, Reference ref, Callback fn, void* env) : 
   Pin(pin < 14 ? pin + 14 : pin), 
@@ -133,7 +130,6 @@ AnalogPin::AnalogPin(uint8_t pin, Reference ref, Callback fn, void* env) :
   _value(0),
   _env(env)
 {
-  analog_map[_pin - 14] = this;
 }
 
 uint16_t 
@@ -153,7 +149,7 @@ AnalogPin::request_sample()
   ADMUX = (_reference | (_pin - 14));
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
   if (_callback == 0) return;
-  analog_request_pin = _pin - 14;
+  _sampling = this;
   bit_set(ADCSRA, ADIE);
 }
 
@@ -164,38 +160,47 @@ AnalogPin::await_sample()
   return (_value = ADCW);
 }
 
-uint8_t
-AnalogPin::begin()
-{
-  if (analog_batch_mode || analog_request_pin > 0) return (0);
-  for (uint8_t i = 0; i < ANALOG_MAP_MAX; i++) {
-    AnalogPin* pin = analog_map[i];
-    if (pin != 0) {
-      analog_batch_mode = 1;
-      pin->request_sample();
-      return (1);
-    }
-  }
-  return (0);
-}
-
 ISR(ADC_vect) 
 { 
-  if (analog_request_pin > 0) {
-    AnalogPin* request = analog_map[analog_request_pin];
-    if (analog_batch_mode) {
-      AnalogPin* pin = 0;
-      for (uint8_t i = analog_request_pin + 1; i < ANALOG_MAP_MAX; i++) {
-	pin = analog_map[i];
-	if (pin != 0) {
-	  pin->request_sample();
-	  break;
-	}
-      }
-      analog_batch_mode = (pin != 0); 
-    } 
-    request->on_sample(ADCW);
+  bit_clear(ADCSRA, ADIE);
+  AnalogPin* pin = AnalogPin::get_sampling();
+  if (pin != 0) {
+    pin->on_sample(ADCW);
   }
-  if (!analog_batch_mode)
-    bit_clear(ADCSRA, ADIE);
 }
+
+void 
+AnalogPinSet::sample_next(AnalogPin* pin, void* env)
+{
+  AnalogPinSet* set = (AnalogPinSet*) env;
+  if (set->_next != set->_count) {
+    set->_pin_at[set->_next++]->request_sample();
+  } 
+  else if (set->_callback != 0) {
+    set->_callback(set, set->_env);
+  }
+}
+
+AnalogPinSet::AnalogPinSet(AnalogPin** pins, uint8_t count, Callback fn, void* env) :
+  _pin_at(pins),
+  _count(count),
+  _callback(fn),
+  _env(env)
+{
+  for (uint8_t i = 0; i < count; i++)
+    _pin_at[i]->set(sample_next);
+}
+  
+uint8_t
+AnalogPinSet::begin(Callback fn, void* env)
+{
+  if (AnalogPin::get_sampling()) return (0);
+  if (fn != 0) {
+    _callback = fn;
+    _env = env;
+  }
+  _pin_at[0]->request_sample();
+  _next = 1;
+  return (1);
+}
+

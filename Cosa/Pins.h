@@ -46,19 +46,28 @@ protected:
    * Return pointer to PIN register.
    * @return PIN register pointer.
    */
-  volatile uint8_t* PIN() { return (_sfr); }
+  volatile uint8_t* PIN() 
+  { 
+    return (_sfr); 
+  }
 
   /**
    * Return pointer to data direction register.
    * @return DDR register pointer.
    */
-  volatile uint8_t* DDR() { return (_sfr + 1); }
+  volatile uint8_t* DDR() 
+  { 
+    return (_sfr + 1); 
+  }
 
   /**
    * Return pointer to data port register.
    * @return PORT register pointer.
    */
-  volatile uint8_t* PORT() { return (_sfr + 2); }
+  volatile uint8_t* PORT() 
+  { 
+    return (_sfr + 2); 
+  }
 
   /**
    * Return special function register for given Arduino pin number.
@@ -101,19 +110,28 @@ public:
    * Return Arduino pin number of abstract pin.
    * @return pin number.
    */
-  uint8_t pin() { return (_pin); }
+  uint8_t pin() 
+  { 
+    return (_pin); 
+  }
 
   /**
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  uint8_t is_set() { return ((*PIN() & _mask) != 0); }
+  uint8_t is_set() 
+  { 
+    return ((*PIN() & _mask) != 0); 
+  }
 
   /**
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  uint8_t is_clear() { return ((*PIN() & _mask) == 0); }
+  uint8_t is_clear() 
+  { 
+    return ((*PIN() & _mask) == 0); 
+  }
 
   /**
    * In debug mode, print abstract pin information to serial stream.
@@ -174,7 +192,8 @@ public:
   };
 
   /**
-   * Construct interrupt pin with given pin number, mode, callback and environment.
+   * Construct interrupt pin with given pin number, mode, callback 
+   * and environment.
    * @param[in] pin pin number.
    * @param[in] mode pin mode.
    * @param[in] fn callback function.
@@ -200,22 +219,35 @@ public:
    * @param[in] fn callback function.
    * @param[in] env callback environment.
    */
-  void set(Callback fn, void* env) { _callback = fn; _env = env; }
+  void set(Callback fn, void* env) 
+  { 
+    _callback = fn; 
+    _env = env; 
+  }
 
   /**
    * Enable interrupt pin change detection and callback.
    */
-  void enable() { bit_set(EIMSK, _pin - 2); }
+  void enable() 
+  { 
+    bit_set(EIMSK, _pin - 2); 
+  }
 
   /**
    * Disable interrupt pin change detection and callback.
    */
-  void disable() { bit_clear(EIMSK, _pin - 2); }
+  void disable() 
+  { 
+    bit_clear(EIMSK, _pin - 2); 
+  }
 
   /**
    * Trampoline function for interrupt service on pin change interrupt.
    */
-  void on_interrupt() { if (_callback != 0) _callback(this, _env); }
+  void on_interrupt() 
+  { 
+    if (_callback != 0) _callback(this, _env); 
+  }
 
   /**
    * Callback function to push event for interrupt pin change.
@@ -248,24 +280,36 @@ public:
   /**
    * Set the output pin.
    */
-  void set() { *PORT() |= _mask; }
+  void set() 
+  { 
+    *PORT() |= _mask; 
+  }
 
   /**
    * Clear the output pin.
    */
-  void clear() { *PORT() &= ~_mask; }
+  void clear() 
+  { 
+    *PORT() &= ~_mask; 
+  }
 
   /**
    * Toggle the output pin.
    */
-  void toggle() { *PIN() |= _mask; }
+  void toggle() 
+  { 
+    *PIN() |= _mask; 
+  }
 
   /**
    * Set the output pin with the given value. Zero(0) to clear
    * and non-zero to set.
    * @param[in] value to set.
    */
-  void set(uint8_t value) { if (value) set(); else clear(); }
+  void set(uint8_t value) 
+  { 
+    if (value) set(); else clear(); 
+  }
 
   /**
    * Toggle the output pin to form a pulse with given length in
@@ -334,6 +378,7 @@ public:
   };
 
 private:
+  static AnalogPin* _sampling;
   Reference _reference;
   Callback _callback;
   uint16_t _value;
@@ -355,19 +400,39 @@ public:
    * @param[in] fn conversion completion callback function.
    * @param[in] env callback environment. 
    */
-  void set(Callback fn, void* env = 0) { _callback = fn; _env = env; }
+  void set(Callback fn, void* env = 0) 
+  { 
+    _callback = fn; 
+    _env = env; 
+  }
 
   /**
    * Set reference voltage for conversion.
    * @param[in] ref reference voltage.
    */
-  void set(Reference ref) { _reference = ref; }
+  void set(Reference ref) 
+  {
+    _reference = ref; 
+  }
 
   /**
    * Get latest sample. 
    * @return sample value.
    */
-  uint16_t get_value() { return (_value); }
+  uint16_t get_value() 
+  { 
+    return (_value); 
+  }
+
+  /**
+   * Get reference to analog pin that is currently sampling.
+   * Null if no conversion is active.
+   * @return analog pin reference or null(0);
+   */
+  static AnalogPin* get_sampling() 
+  { 
+    return (_sampling); 
+  }
 
   /**
    * Sample analog pin. Wait for conversion to complete before returning with
@@ -399,14 +464,6 @@ public:
   }
 
   /**
-   * Start analog batch mode sampling. All defined analog pins are
-   * sampled in the background. Returns true(1) if started otherwise
-   * false(0).
-   * @return boolean.
-   */
-  static uint8_t begin();
-
-  /**
    * Callback function to push event for sample conversion completion.
    * @param[in] pin analog pin source.
    * @param[in] value sample.
@@ -415,6 +472,84 @@ public:
   { 
     Event::push(Event::ANALOG_PIN_SAMPLE_TYPE, pin, (uint16_t) env);
   }
+};
+
+/*
+ * Abstract analog pin set. 
+ */
+class AnalogPinSet {
+
+public:
+  /**
+   * Callback function prototype for analog pin set sample completion.
+   * @param[in] pin analog pin set.
+   * @param[in] env callback environment.
+   */
+  typedef void (*Callback)(AnalogPinSet* set, void* env);
+
+private:
+  AnalogPin** _pin_at;
+  Callback _callback;
+  uint8_t _count;
+  uint8_t _next;
+  void* _env;
+
+public:
+  /**
+   * Construct abstract analog pin set. 
+   * @param[in] pins vector with analog pin references.
+   * @param[in] count number of analog pins in set.
+   * @param[in] fn conversion completion callback function.
+   * @param[in] env callback environment.
+   */
+  AnalogPinSet(AnalogPin** pins, uint8_t count, Callback fn = 0, void* env = 0);
+  
+  /**
+   * Get number of analog pins in set.
+   * @return set size.
+   */
+  uint8_t get_count() 
+  { 
+    return (_count); 
+  }
+
+  /**
+   * Get analog pin in set.
+   * @param[in] ix index.
+   * @return analog pin or null.
+   */
+  AnalogPin* get_pin_at(uint8_t ix) 
+  { 
+    return (ix < _count ? _pin_at[ix] : 0); 
+  }
+
+  /**
+   * Start analog pin set sampling. All analog pins in set are
+   * sampled in the background. Returns true(1) if started otherwise
+   * false(0).
+   * @param[in] fn conversion completion callback function.
+   * @param[in] env callback environment.
+   * @return boolean.
+   */
+  uint8_t begin(Callback fn = 0, void* env = 0);
+  
+  /**
+   * Callback function to push event for sample conversion completion.
+   * @param[in] pin analog pin set.
+   * @param[in] env callback environment.
+   */
+  static void push_event(AnalogPinSet* set, void* env)
+  { 
+    Event::push(Event::ANALOG_PIN_SET_SAMPLE_TYPE, set, (uint16_t) env);
+  }
+
+ private:
+  /**
+   * Callback function to handle sampling.
+   * @param[in] pin analog pin.
+   * @param[in] env analog pin set.
+   */
+  static void sample_next(AnalogPin* pin, void* env);
 };
 
 #endif
