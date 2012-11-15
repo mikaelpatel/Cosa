@@ -174,21 +174,22 @@ AnalogPinSet::sample_next(AnalogPin* pin, void* env)
 {
   AnalogPinSet* set = (AnalogPinSet*) env;
   if (set->_next != set->_count) {
-    set->_pin_at[set->_next++]->request_sample();
+    AnalogPin* pin = set->get_pin_at(set->_next++);
+    pin->request_sample();
   } 
   else if (set->_callback != 0) {
     set->_callback(set, set->_env);
   }
 }
 
-AnalogPinSet::AnalogPinSet(AnalogPin** pins, uint8_t count, Callback fn, void* env) :
+AnalogPinSet::AnalogPinSet(const AnalogPin** pins, uint8_t count, Callback fn, void* env) :
   _pin_at(pins),
   _count(count),
   _callback(fn),
   _env(env)
 {
-  for (uint8_t i = 0; i < count; i++)
-    _pin_at[i]->set(sample_next);
+  for (uint8_t ix = 0; ix < count; ix++)
+    get_pin_at(ix)->set(sample_next, this);
 }
   
 uint8_t
@@ -199,7 +200,7 @@ AnalogPinSet::begin(Callback fn, void* env)
     _callback = fn;
     _env = env;
   }
-  _pin_at[0]->request_sample();
+  get_pin_at(0)->request_sample();
   _next = 1;
   return (1);
 }

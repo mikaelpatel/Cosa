@@ -482,7 +482,8 @@ public:
 };
 
 /*
- * Abstract analog pin set. 
+ * Abstract analog pin set. Allow sampling of a set of pins with
+ * callback or event when completed.
  */
 class AnalogPinSet {
 
@@ -495,7 +496,7 @@ public:
   typedef void (*Callback)(AnalogPinSet* set, void* env);
 
 private:
-  AnalogPin** _pin_at;
+  const AnalogPin** _pin_at;
   Callback _callback;
   uint8_t _count;
   uint8_t _next;
@@ -503,13 +504,15 @@ private:
 
 public:
   /**
-   * Construct abstract analog pin set. 
-   * @param[in] pins vector with analog pin references.
+   * Construct abstract analog pin set given vector and number of pins,
+   * callback and environment on callback. The vector of pins should be
+   * defined in program memory.
+   * @param[in] pins vector with analog pins.
    * @param[in] count number of analog pins in set.
    * @param[in] fn conversion completion callback function.
    * @param[in] env callback environment.
    */
-  AnalogPinSet(AnalogPin** pins, uint8_t count, Callback fn = 0, void* env = 0);
+  AnalogPinSet(const AnalogPin** pins, uint8_t count, Callback fn = 0, void* env = 0);
   
   /**
    * Get number of analog pins in set.
@@ -521,13 +524,13 @@ public:
   }
 
   /**
-   * Get analog pin in set.
+   * Get analog pin in set. 
    * @param[in] ix index.
    * @return analog pin or null.
    */
   AnalogPin* get_pin_at(uint8_t ix) 
   { 
-    return (ix < _count ? _pin_at[ix] : 0); 
+    return (ix < _count ? (AnalogPin*) pgm_read_word(&_pin_at[ix]) : 0);
   }
 
   /**
@@ -552,7 +555,9 @@ public:
 
  private:
   /**
-   * Callback function to handle sampling.
+   * Callback function to handle sampling of the pins in the set.
+   * Will call the set callback when all pins have been sampled and
+   * the conversions completed.
    * @param[in] pin analog pin.
    * @param[in] env analog pin set.
    */
