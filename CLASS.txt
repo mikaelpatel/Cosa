@@ -1,0 +1,32 @@
+--------------------------------------------------------------------
+PINS
+Object-oriented approach to sketch pin declaration and function
+structuring. 
+--------------------------------------------------------------------
+Pins.h:		class Pin
+Pins.h:		      class InputPin : public Pin
+Pins.h:		      	    class InterruptPin : public InputPin
+Pins.h:		      class OutputPin : public Pin
+Pins.h:		      	    class PWMPin : public OutputPin
+Pins.h:		      class AnalogPin : public Pin
+Pins.h:		class AnalogPinSet
+--------------------------------------------------------------------
+EVENT QUEUE
+Support for pushing events from interrupt handlers.
+--------------------------------------------------------------------
+Event.h:	class Event
+Queue.h:	class Queue
+--------------------------------------------------------------------
+WATCHDOG
+Ultra low power timer. Time base for delay and timeout events.
+--------------------------------------------------------------------
+Watchdog.h:	class Watchdog
+--------------------------------------------------------------------
+SERIAL PERIPHERAL INTERFACE
+Driver for master/slave devices on the serial peripherial interface.
+--------------------------------------------------------------------
+SPI.h:		class SPI
+ADXL.h:		      class ADXL : private SPI
+NRF.h:		      class NRF : private SPI
+--------------------------------------------------------------------
+
