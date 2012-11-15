@@ -459,6 +459,7 @@ public:
    */
   void on_sample(uint16_t value) 
   { 
+    _sampling = 0;
     _value = value; 
     if (_callback != 0) _callback(this, _env); 
   }
