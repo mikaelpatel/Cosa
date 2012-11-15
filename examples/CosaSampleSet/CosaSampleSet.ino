@@ -31,12 +31,12 @@
 #include "Cosa/Watchdog.h"
 
 // Analog input pins
-
 AnalogPin levelPin(0);
 AnalogPin basePin(1);
 AnalogPin powerPin(2);
 AnalogPin tempVCC(8);
 
+// Analog pin vector for pin set. Note: use program memory
 const PROGMEM AnalogPin* pins[] = {
   &levelPin,
   &basePin,
