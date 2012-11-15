@@ -1,5 +1,5 @@
 /**
- * @file CosaAXDL.ino
+ * @file CosaBlinkInterrupt.ino
  * @version 1.0
  *
  * @section License
@@ -21,38 +21,31 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of ADXL345 driver.
+ * Cosa LED blink with watchdog timeout interrupt callback.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Pins.h"
 #include "Cosa/Watchdog.h"
-#include "Cosa/ADXL.h"
 
-// Digital Accelerometer using SPI and default slave select pin(10)
+// Use the Arduino builtin LED
+OutputPin ledPin(13, 0);
 
-ADXL adxl;
-
-void setup()
+// Blink on timeout interrupt callback
+void blink(void* env)
 {
-  // Start the serial interface 
-  Serial.begin(9600);
-
-  // Start the watchdog, approx. 1 second ticks, and push timeout events
-  Watchdog::begin(1024, Watchdog::push_event);
-
-  // Calibrate the accelerometer
-  adxl.calibrate();
+  ledPin.toggle();
 }
 
+// Start watchdog with approx. 1 second timeout and blink interrupt call
+void setup()
+{
+  Watchdog::begin(1024, blink);
+}
+
+// Got into sleep mode while awaiting the next timeout
 void loop()
 {
-  // Wait for the next event (1 second sleep)
-  Event event;
-  Event::queue.await(&event);
-
-  // Sample the accelerometer and print values
-  ADXL::sample_t s;
-  adxl.sample(s);
-  s.println();
+  Watchdog::await();
 }
