@@ -65,14 +65,20 @@ public:
    * Return length of queue.
    * @return length of queue.
    */
-  uint8_t length() { return (_length); }
+  uint8_t length() 
+  { 
+    return (_length); 
+  }
 
   /**
    * Return true(1) if members are available in queue otherwise
    * false(0).
    * @return boolean.
    */
-  uint8_t available() { return (_length > 0); }
+  uint8_t available() 
+  { 
+    return (_length > 0); 
+  }
 
   /**
    * Enqueue given member data if storage is available. Return true(1)

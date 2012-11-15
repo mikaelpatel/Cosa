@@ -58,19 +58,29 @@ public:
    * @param[in] fn callback function.
    * @param[in] env environment pointer.
    */
-  static void set(Callback fn, void* env = 0) { _callback = fn; _env = env; }
+  static void set(Callback fn, void* env = 0) 
+  { 
+    _callback = fn; 
+    _env = env; 
+  }
 
   /**
    * Get number of watchdog cycles.
    * @return number of ticks.
    */
-  static uint16_t get_ticks() { return (_ticks); }
+  static uint16_t get_ticks() 
+  { 
+    return (_ticks); 
+  }
 
   /**
    * Get number of milli-seconds per tick.
    * @return milli-seconds.
    */
-  static uint16_t ms_per_tick() { return (16 << _prescale); }
+  static uint16_t ms_per_tick() 
+  { 
+    return (16 << _prescale); 
+  }
 
   /**
    * Start watchdog with given period (milli-seconds), sleep mode and 
@@ -97,12 +107,19 @@ public:
   /**
    * Stop watchdog. Turn off timout callback.
    */
-  static void end() { wdt_disable(); }
+  static void end() 
+  { 
+    wdt_disable(); 
+  }
 
   /**
    * Trampoline function for interrupt service on watchdog timeout.
    */
-  static void on_timeout() { _ticks++; if (_callback != 0) _callback(_env); }
+  static void on_timeout() 
+  { 
+    _ticks++; 
+    if (_callback != 0) _callback(_env); 
+  }
 
   /**
    * Callback function to push event for watchdog timeout.

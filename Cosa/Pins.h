@@ -104,7 +104,8 @@ public:
    * Construct abstract pin given Arduino pin number.
    * @param[in] pin number.
    */
-  Pin(uint8_t pin) : _sfr(SFR(pin)), _mask(MASK(pin)), _pin(pin) {}
+  Pin(uint8_t pin) : _sfr(SFR(pin)), _mask(MASK(pin)), _pin(pin) 
+  {}
 
   /**
    * Return Arduino pin number of abstract pin.
@@ -271,7 +272,8 @@ public:
    * @param[in] pin number.
    * @param[in] initial value.
    */
-  OutputPin(uint8_t pin, uint8_t initial = 0) : Pin(pin) 
+  OutputPin(uint8_t pin, uint8_t initial = 0) : 
+    Pin(pin) 
   { 
     *DDR() |= _mask; 
     if (initial) set(); else clear();
@@ -330,7 +332,11 @@ public:
    * @param[in] pin number.
    * @param[in] duty cycle (0..255)
    */
-  PWMPin(uint8_t pin, uint8_t duty = 0) : OutputPin(pin) { set(duty); }
+  PWMPin(uint8_t pin, uint8_t duty = 0) : 
+    OutputPin(pin) 
+  { 
+    set(duty); 
+  }
 
   /**
    * Set duty cycle for pwm output pin.

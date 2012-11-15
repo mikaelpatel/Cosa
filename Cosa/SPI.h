@@ -125,7 +125,10 @@ public:
    * Set data receive callback function.
    * @param[in] fn callback function.
    */
-  void set(Callback fn) { _callback = fn; }
+  void set(Callback fn) 
+  { 
+    _callback = fn; 
+  }
 
   /**
    * Set data receive buffer for package receive mode.

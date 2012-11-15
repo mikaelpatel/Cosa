@@ -74,13 +74,19 @@ public:
    * Return event type.
    * @return type.
    */
-  Type get_type() { return (_type); }
+  Type get_type() 
+  { 
+    return (_type); 
+  }
 
   /**
    * Return event source.
    * @return pointer.
    */
-  void* get_source() { return (_source); } 
+  void* get_source() 
+  { 
+    return (_source); 
+  } 
 
   /**
    * Return event value.
