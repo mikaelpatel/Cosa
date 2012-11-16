@@ -59,15 +59,6 @@ private:
     MISO_PIN = 4,
     SCK_PIN = 5
   };
-  enum {
-    WRITE_CMD = 0x00,
-    READ_CMD = 0x80,
-    EXEC_CMD = 0x40,
-    RES_CMD = 0xc0,
-    CMD_MASK = 0xc0,
-    ARG_MASK = 0x3f
-  };
-
   Callback _callback;
   uint8_t _cmd;
   uint8_t* _buffer;
