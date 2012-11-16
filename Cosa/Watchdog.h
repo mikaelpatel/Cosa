@@ -91,10 +91,13 @@ public:
    * @param[in] fn callback function.
    * @param[in] mode sleep mode.
    */
-  static void begin(uint16_t ms, Callback fn = 0, uint8_t mode = SLEEP_MODE_IDLE);
+  static void begin(uint16_t ms, 
+		    Callback fn = 0, 
+		    uint8_t mode = SLEEP_MODE_IDLE);
 
   /**
-   * Await watchdogs next tick. Put into sleep mode according to begin setup.
+   * Await watchdogs next tick. Put into sleep mode according to 
+   * begin setup.
    */
   static void await();
 

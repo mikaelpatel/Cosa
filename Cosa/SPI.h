@@ -139,9 +139,9 @@ public:
    * @param[in] direction data bit order.
    * @return true(1) if successful otherwise false(0)
    */
-  uint8_t begin(Clock clock = DEFAULT_CLOCK, 
-		uint8_t mode = 0, 
-		Direction direction = MSB_FIRST);
+  bool begin(Clock clock = DEFAULT_CLOCK, 
+	     uint8_t mode = 0, 
+	     Direction direction = MSB_FIRST);
 
   /**
    * Exchange data with slave. Return value received. Slave select must be
@@ -165,8 +165,8 @@ public:
   void exchange(void* buffer, uint8_t count);
 
   /**
-   * Exchange package in program memory to slave. Received data from slave is 
-   * ignored. Slave selection is done for package.
+   * Exchange package in program memory to slave. Received data 
+   * from slave is ignored. Slave selection is done for package.
    * @param[in] buffer with data in program memory.
    * @param[in] count size of buffer.
    */

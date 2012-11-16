@@ -192,7 +192,7 @@ AnalogPinSet::AnalogPinSet(const AnalogPin** pins, uint8_t count, Callback fn, v
     get_pin_at(ix)->set(sample_next, this);
 }
   
-uint8_t
+bool
 AnalogPinSet::begin(Callback fn, void* env)
 {
   if (AnalogPin::get_sampling()) return (0);

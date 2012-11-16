@@ -28,7 +28,7 @@
 
 #include "Queue.h"
 
-uint8_t
+bool
 Queue::enqueue(void* data)
 {
   if (_length == _nmemb) return (0);
@@ -41,7 +41,7 @@ Queue::enqueue(void* data)
   return (1);
 }
 
-uint8_t
+bool
 Queue::enqueue_P(const void* data)
 {
   if (_length == _nmemb) return (0);
@@ -54,7 +54,7 @@ Queue::enqueue_P(const void* data)
   return (1);
 }
 
-uint8_t
+bool
 Queue::dequeue(void* data)
 {
   if (_length == 0) return (0);
@@ -67,7 +67,7 @@ Queue::dequeue(void* data)
   return (1);
 }
 
-uint8_t
+void
 Queue::await(void* data, uint8_t mode)
 {
   while (!dequeue(data)) {
@@ -78,6 +78,5 @@ Queue::await(void* data, uint8_t mode)
     sleep_cpu();
     sleep_disable();
   }
-  return (1);
 }
 

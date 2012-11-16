@@ -369,7 +369,7 @@ public:
    * Return true(1) if data is available, otherwise false(0).
    * @return boolean.
    */
-  uint8_t is_available();
+  bool is_available();
 
   /**
    * Read received payload into given buffer. Returns number of bytes
@@ -384,19 +384,19 @@ public:
    * Return true(1) if device is ready, otherwise false(0).
    * @return boolean.
    */
-  uint8_t is_ready();
+  bool is_ready();
 
   /**
    * Return true(1) if max retransmit attempts otherwise false(0).
    * @return boolean.
    */
-  uint8_t is_max_retransmit();
+  bool is_max_retransmit();
 
   /**
    * Return true(1) if max lost packets count otherwise false(0).
    * @return boolean.
    */
-  uint8_t is_max_lost();
+  bool is_max_lost();
 
   /**
    * Send acknowledgement payload from given buffer. Return number of 

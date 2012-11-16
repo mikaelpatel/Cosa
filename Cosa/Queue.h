@@ -75,7 +75,7 @@ public:
    * false(0).
    * @return boolean.
    */
-  uint8_t available() 
+  bool available() 
   { 
     return (_length > 0); 
   }
@@ -86,14 +86,14 @@ public:
    * @param[in] data pointer to member data buffer.
    * @return boolean.
    */
-  uint8_t enqueue(void* data);
+  bool enqueue(void* data);
 
   /**
    * Enqueue given member data in program memory if storage is available. 
    * Return true(1) if successful otherwise false(0). Atomic operation.
    * @return boolean.
    */
-  uint8_t enqueue_P(const void* data);
+  bool enqueue_P(const void* data);
 
   /**
    * Dequeue member data from queue to given buffer. Returns true(1) if
@@ -102,17 +102,15 @@ public:
    * @param[in,out] data pointer to member data buffer.
    * @return boolean.
    */
-  uint8_t dequeue(void* data);
+  bool dequeue(void* data);
 
   /**
    * Await data to become available from queue. Will perform a system
-   * sleep with the given sleep mode. Returns the number of sleep
-   * cycles performed.
+   * sleep with the given sleep mode. 
    * @param[in,out] data pointer to member data buffer.
    * @param[in] mode sleep mode.
-   * @return number of sleep cycles.
    */
-  uint8_t await(void* data, uint8_t mode = SLEEP_MODE_IDLE);
+  void await(void* data, uint8_t mode = SLEEP_MODE_IDLE);
 };
 
 #endif

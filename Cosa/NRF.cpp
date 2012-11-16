@@ -157,7 +157,7 @@ NRF::set_powerdown_mode()
   _state = POWER_DOWN_STATE;
 }
 
-uint8_t
+bool
 NRF::is_available()
 {
   uint8_t status = get_status();
@@ -181,21 +181,21 @@ NRF::recv(void* buffer, uint8_t* pipe)
   return (count);
 }
 
-uint8_t
+bool
 NRF::is_ready()
 {
   uint8_t status = get_status();
   return ((status & (_BV(TX_FIFO_FULL))) == 0);
 }
 
-uint8_t 
+bool
 NRF::is_max_retransmit()
 {
   uint8_t status = get_status();
   return ((status & _BV(MAX_RT)) != 0);
 }
 
-uint8_t 
+bool
 NRF::is_max_lost()
 {
   uint8_t observe = read(OBSERVE_TX);

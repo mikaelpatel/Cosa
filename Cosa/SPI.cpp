@@ -30,7 +30,7 @@
 
 SPI* SPI::_spi = 0;
 
-uint8_t
+bool
 SPI::begin(Clock clock, uint8_t mode, Direction direction)
 {
   // Check for slave pin setting; input(MOSI, SS, SCK), output(MISO)

@@ -120,7 +120,7 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  uint8_t is_set() 
+  bool is_set() 
   { 
     return ((*PIN() & _mask) != 0); 
   }
@@ -129,7 +129,7 @@ public:
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  uint8_t is_clear() 
+  bool is_clear() 
   { 
     return ((*PIN() & _mask) == 0); 
   }
@@ -541,7 +541,7 @@ public:
    * @param[in] env callback environment.
    * @return boolean.
    */
-  uint8_t begin(Callback fn = 0, void* env = 0);
+  bool begin(Callback fn = 0, void* env = 0);
   
   /**
    * Callback function to push event for sample conversion completion.
