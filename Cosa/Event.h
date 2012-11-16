@@ -41,19 +41,21 @@ public:
    * Event types are added here for new event sources. Typical mapping
    * from interrupts to events.
    */
-  enum Type {
+  enum {
     NULL_TYPE = 0,
     INTERRUPT_PIN_CHANGE_TYPE = 1,
     ANALOG_PIN_SAMPLE_TYPE = 2,
     ANALOG_PIN_SET_SAMPLE_TYPE = 3,
     WATCHDOG_TIMEOUT_TYPE = 4,
     SPI_RECEIVE_DATA_TYPE = 5,
-    NRF_RECEIVE_DATA_TYPE = 6,
-    ADXL_CHANGE_TYPE = 7
+    TWI_WRITE_DATA_TYPE = 6,
+    TWI_READ_DATA_TYPE = 7,
+    NRF_RECEIVE_DATA_TYPE = 8,
+    ADXL_CHANGE_TYPE = 9
   };
 
 private:
-  Type _type;
+  int _type;
   void* _source;
   uint16_t _value;
 
@@ -64,7 +66,7 @@ public:
    * @param[in] source event generator.
    * @param[in] value event value.
    */
-  Event(Type type = NULL_TYPE, void* source = 0, uint16_t value = 0) :
+  Event(int type = NULL_TYPE, void* source = 0, uint16_t value = 0) :
     _type(type),
     _source(source),
     _value(value)
@@ -74,7 +76,7 @@ public:
    * Return event type.
    * @return type.
    */
-  Type get_type() 
+  int get_type() 
   { 
     return (_type); 
   }
@@ -102,7 +104,7 @@ public:
    * @param[in] value event value.
    * @return boolean, true(1) if successful otherwise false(0).
    */
-  static uint8_t push(Type type, void* source = 0, uint16_t value = 0);
+  static uint8_t push(int type, void* source = 0, uint16_t value = 0);
 
   /**
    * In debug mode, print event to serial stream.

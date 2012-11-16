@@ -29,10 +29,11 @@
 #include "Event.h"
 
 static Event event[Event::QUEUE_MAX];
+
 Queue Event::queue(Event::QUEUE_MAX, sizeof(Event), event);
 
 uint8_t
-Event::push(Type type, void* source, uint16_t value)
+Event::push(int type, void* source, uint16_t value)
 {
   Event event(type, source, value);
   return (queue.enqueue(&event));
