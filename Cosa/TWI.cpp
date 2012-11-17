@@ -28,15 +28,32 @@
 
 #include "Cosa/TWI.h"
 
+#ifndef TWI_FREQ
+#define TWI_FREQ 100000L
+#endif
+
 static TWI* _twi = 0;
 
 bool 
-TWI::begin()
+TWI::begin(uint8_t addr, Callback fn)
 {
-  if (_twi != 0) return (0);
   _twi = this;
-  bit_set(DDRB, SDA_PIN);
-  bit_set(DDRB, SCL_PIN);	 
+  _callback = fn;
+  _addr = (addr << ADDR_POS);
+
+  // Check for slave mode
+  if (fn != 0) {
+    TWAR = _addr;
+  }
+
+  // Enable internal pullup
+  bit_set(PORTC, SDA);
+  bit_set(PORTC, SCL);
+
+  // Set clock prescale and bit rate
+  bit_clear(TWSR, TWPS0);
+  bit_clear(TWSR, TWPS1);
+  TWBR = ((F_CPU / TWI_FREQ) - 16) / 2;
   TWCR = IDLE_CMD;
   return (1);
 }
@@ -44,10 +61,7 @@ TWI::begin()
 bool 
 TWI::end()
 {
-  if (_twi == 0) return (0);
   _twi = 0;
-  bit_clear(DDRB, SDA_PIN);
-  bit_clear(DDRB, SCL_PIN);	 
   TWCR = 0;
   return (1);
 }
@@ -85,13 +99,20 @@ TWI::read(uint8_t addr, void* buf, uint8_t size)
 void
 TWI::on_bus_event()
 {
-  _status = (Status) TWSR;
+  _status = (Status) (TWSR & 0xf8);
   switch (_status) {
   case START:
   case REP_START:
     TWDR = _addr;
     TWCR = DATA_CMD;
     break;
+  case ARB_LOST:
+    TWCR = START_CMD;
+    _next = 0;
+    break;
+  /**
+   * Master Transmitter Mode
+   */
   case MT_SLA_ACK:
   case MT_DATA_ACK:
     if (_next < _size) {
@@ -100,9 +121,16 @@ TWI::on_bus_event()
     } 
     else {
       TWCR = STOP_CMD;
-      if (_callback != 0) _callback(this);
+      if (_callback != 0)_callback(this);
     }
     break;
+  case MT_SLA_NACK:
+  case MT_DATA_NACK:
+    TWCR = STOP_CMD;
+    break;
+  /**
+   * Master Receiver Mode
+   */
   case MR_DATA_ACK:
     _buf[_next++] = TWDR;
   case MR_SLA_ACK:
@@ -116,17 +144,68 @@ TWI::on_bus_event()
   case MR_DATA_NACK:
     _buf[_next++] = TWDR;
     TWCR = STOP_CMD;
-    if (_callback != 0) _callback(this);
+    if (_callback != 0)_callback(this);
+    _next = 0;
     break;      
-  case ARB_LOST:
-    TWCR = START_CMD;
-    break;
-  case MT_SLA_NACK:
   case MR_SLA_NACK:
-  case MT_DATA_NACK:
+    TWCR = STOP_CMD;
+    break;
+  /**
+   * Slave Transmitter Mode
+   */
+  case ST_SLA_ACK:
+  case ST_ARB_LOST_SLA_ACK:
+    if (_callback != 0)_callback(this);
+    _next = 0;
+  case ST_DATA_ACK:
+    TWDR = _buf[_next++];
+    if (_next < _size) {
+      TWCR = ACK_CMD;
+    } 
+    else {
+      TWCR = NACK_CMD;
+    }
+    break;
+  case ST_DATA_NACK:
+  case ST_LAST_DATA:
+    TWCR = ACK_CMD;
+    break;
+  /**
+   * Slave Receiver Mode
+   */
+  case SR_SLA_ACK:
+  case SR_GCALL_ACK:
+  case SR_ARB_LOST_SLA_ACK:
+  case SR_ARB_LOST_GCALL_ACK:
+    _next = 0;
+    TWCR = ACK_CMD;
+    break;
+  case SR_DATA_ACK:
+  case SR_GCALL_DATA_ACK:
+    if (_next < _size){
+      _buf[_next++] = TWDR;
+      TWCR = ACK_CMD;
+    }
+    else {
+      TWCR = NACK_CMD;
+    }
+    break;
+  case SR_STOP:
+    if (_next < _size) {
+      _buf[_next] = 0;
+    }
+    TWCR = STOP_CMD;
+    if (_callback != 0) _callback(this);
+    TWCR = IDLE_CMD; 
+    break;
+  case SR_DATA_NACK:
+  case SR_GCALL_DATA_NACK:
+    TWCR = NACK_CMD;
+    break;
+  case NO_INFO:
+    break;
   case BUS_ERROR:
   default:     
-    _status = (Status) TWSR;
     TWCR = IDLE_CMD; 
   }
 }

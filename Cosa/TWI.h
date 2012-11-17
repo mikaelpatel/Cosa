@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Two wire library. Master mode only. 
+ * Two wire library. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -44,7 +44,7 @@ public:
 
 protected:
   /**
-   * Status codes
+   * Two wire status codes
    */
   enum Status {
     /** General Status Codes */
@@ -83,7 +83,7 @@ protected:
   };
 
   /**
-   * Addressing and operation bit
+   * Addressing and read/write bit 
    */
   enum {
     WRITE_OP = 0x00,
@@ -98,20 +98,20 @@ protected:
    * Commands for TWI hardware
    */
   enum {
-    IDLE_CMD = _BV(TWEN),
-    START_CMD = _BV(TWINT) | _BV(TWSTA) | _BV(TWEN) | _BV(TWIE),
+    IDLE_CMD =  _BV(TWINT) |_BV(TWEA) | _BV(TWEN) | _BV(TWIE),
+    START_CMD = _BV(TWINT) | _BV(TWEN) | _BV(TWSTA) | _BV(TWEN) | _BV(TWIE),
     DATA_CMD = _BV(TWINT) | _BV(TWEN) | _BV(TWIE),
     ACK_CMD = _BV(TWINT) | _BV(TWEA) | _BV(TWEN) | _BV(TWIE),
     NACK_CMD = _BV(TWINT) | _BV(TWEN) | _BV(TWIE),
-    STOP_CMD =  _BV(TWINT) | _BV(TWSTO) | _BV(TWEN) | _BV(TWIE)
+    STOP_CMD =  _BV(TWINT) | _BV(TWEA) | _BV(TWSTO) | _BV(TWEN) | _BV(TWIE)
   };
 
   /**
-   * Pins used for TWI interface
+   * Pins used for TWI interface (in port C).
    */
-  enum Pin {
-    SDA_PIN = 18,
-    SCL_PIN = 19
+  enum {
+    SDA = 4,
+    SCL = 5
   };
 
   Callback _callback;
@@ -164,10 +164,12 @@ public:
   }
 
   /**
-   * Start master TWI bus logic. 
+   * Start TWI bus logic. Default mode is master.
+   * @param[in] addr slave address (0..127).
+   * @param[in] fn slave callback.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin();
+  bool begin(uint8_t addr = 0, Callback fn = 0);
 
   /**
    * Disconnect usage of the TWI bus logic.
@@ -239,6 +241,17 @@ public:
   uint8_t get_size() 
   { 
     return (_next); 
+  }
+
+  /**
+   * Set buffer and size of buffer (for slave callback).
+   * @param[in] buf data to write.
+   * @param[in] size max number of bytes to write.
+   */
+  void set(void* buf, uint8_t size)
+  {
+    _buf = (uint8_t*) buf;
+    _size = size;
   }
 
   /**
