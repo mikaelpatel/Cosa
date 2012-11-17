@@ -23,10 +23,15 @@ Ultra low power timer. Time base for delay and timeout events.
 Watchdog.h:	class Watchdog
 --------------------------------------------------------------------
 SERIAL PERIPHERAL INTERFACE
-Driver for master/slave devices on the serial peripherial interface.
+Driver for devices on the serial peripherial interface (SPI).
 --------------------------------------------------------------------
 SPI.h:		class SPI
 ADXL.h:		      class ADXL : private SPI
 NRF.h:		      class NRF : private SPI
+--------------------------------------------------------------------
+TWO WIRE INTERFACE
+    Driver for deviced on the two wire interface (TWI/I2C).
+--------------------------------------------------------------------
+TWI.h:		class TWI
 --------------------------------------------------------------------
 
