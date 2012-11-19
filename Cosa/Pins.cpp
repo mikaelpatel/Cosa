@@ -31,6 +31,22 @@
 #include "Pins.h"
 #include <util/delay_basic.h>
 
+uint8_t 
+Pin::await_change(uint8_t us)
+{
+  uint8_t res = 0;
+  if (is_set()) {
+    synchronized {
+      while (is_set() && us--) res++;
+    }
+    return (res);
+  }
+  synchronized {
+    while (is_clear() && us--) res++;
+  }
+  return (res);
+}
+
 void 
 Pin::print()
 {
@@ -52,12 +68,6 @@ Pin::println()
   print();
   Serial_print("\n");
 #endif
-}
-
-InputPin::InputPin(uint8_t pin, Mode mode) : 
-  Pin(pin)
-{
-  if (mode == PULLUP_MODE) *PORT() |= _mask; 
 }
 
 InterruptPin* InterruptPin::ext[2] = { 0, 0 };

@@ -135,6 +135,14 @@ public:
   }
 
   /**
+   * Await change of pin state given maximum number of micro seconds.
+   * Returns number of micro seconds.
+   * @param[in] us micro seconds (1..255).
+   * @return number of wait cycles.
+   */
+  uint8_t await_change(uint8_t us);
+
+  /**
    * In debug mode, print abstract pin information to serial stream.
    */
   void print();
@@ -162,7 +170,11 @@ public:
    * @param[in] pin number.
    * @param[in] mode pin mode (normal or pullup).
    */
-  InputPin(uint8_t pin, Mode mode = NORMAL_MODE);
+  InputPin(uint8_t pin, Mode mode = NORMAL_MODE) :
+    Pin(pin)
+  {
+    if (mode == PULLUP_MODE) *PORT() |= _mask; 
+  }
 };
 
 /**
@@ -359,6 +371,58 @@ public:
    * @return duty
    */
   uint8_t get_duty();
+};
+
+/**
+ * Abstract IO-pin that may switch between input and output pin.
+ */
+class IOPin : public OutputPin {
+
+public:
+  enum Mode {
+    OUTPUT_MODE = 0,
+    INPUT_MODE = 1,
+    PULLUP_MODE = 2
+  };
+
+  /**
+   * Construct abstract in/output pin given Arduino pin number.
+   * @param[in] pin number.
+   * @param[in] mode pin mode (normal or pullup).
+   */
+  IOPin(uint8_t pin, Mode mode = INPUT_MODE) : 
+    OutputPin(pin),
+    _mode(mode)
+  {
+    set(mode);
+  }
+
+  /**
+   * Change IO-pin to given mode.
+   * @param[in] mode new operation mode.
+   */
+  void set(Mode mode)
+  {
+    if (mode == OUTPUT_MODE)
+      *DDR() |= _mask; 
+    else
+      *DDR() &= ~_mask; 
+    if (mode == PULLUP_MODE)
+      *PORT() |= _mask; 
+    _mode = mode;
+  }
+  
+  /**
+   * Get current IO-pin mode.
+   * @return mode.
+   */
+  Mode get_mode()
+  {
+    return (_mode);
+  }
+  
+private:
+  Mode _mode;
 };
 
 /*

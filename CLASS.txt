@@ -8,6 +8,7 @@ Pins.h:		      class InputPin : public Pin
 Pins.h:		      	    class InterruptPin : public InputPin
 Pins.h:		      class OutputPin : public Pin
 Pins.h:		      	    class PWMPin : public OutputPin
+Pins.h:			    class IOPin : public OutputPin
 Pins.h:		      class AnalogPin : public Pin
 Pins.h:		class AnalogPinSet
 --------------------------------------------------------------------
