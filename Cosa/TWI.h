@@ -33,6 +33,8 @@
 #include "Bits.h"
 #include "Event.h"
 
+#define TWI_STATUS(x) ((x) >> 3)
+
 class TWI {
 
 public:
@@ -46,40 +48,40 @@ protected:
   /**
    * Two wire status codes
    */
-  enum Status {
+  enum {
     /** General Status Codes */
-    START = 0x08,
-    REP_START = 0x10,
-    ARB_LOST = 0x38,
+    START = TWI_STATUS(0x08),
+    REP_START = TWI_STATUS(0x10),
+    ARB_LOST = TWI_STATUS(0x38),
     /** Master Tranmitter Mode*/
-    MT_SLA_ACK = 0x18,
-    MT_SLA_NACK = 0x20,
-    MT_DATA_ACK = 0x28,
-    MT_DATA_NACK = 0x30,
+    MT_SLA_ACK = TWI_STATUS(0x18),
+    MT_SLA_NACK = TWI_STATUS(0x20),
+    MT_DATA_ACK = TWI_STATUS(0x28),
+    MT_DATA_NACK = TWI_STATUS(0x30),
     /** Master Receiver Mode */
-    MR_SLA_ACK = 0x40,
-    MR_SLA_NACK = 0x48,
-    MR_DATA_ACK = 0x50,
-    MR_DATA_NACK = 0x58,
+    MR_SLA_ACK = TWI_STATUS(0x40),
+    MR_SLA_NACK = TWI_STATUS(0x48),
+    MR_DATA_ACK = TWI_STATUS(0x50),
+    MR_DATA_NACK = TWI_STATUS(0x58),
     /** Slave Transmitter Mode */
-    ST_SLA_ACK = 0xA8,
-    ST_ARB_LOST_SLA_ACK = 0xB0,
-    ST_DATA_ACK = 0xB8,
-    ST_DATA_NACK = 0xC0,
-    ST_LAST_DATA = 0xC8,
+    ST_SLA_ACK = TWI_STATUS(0xA8),
+    ST_ARB_LOST_SLA_ACK = TWI_STATUS(0xB0),
+    ST_DATA_ACK = TWI_STATUS(0xB8),
+    ST_DATA_NACK = TWI_STATUS(0xC0),
+    ST_LAST_DATA = TWI_STATUS(0xC8),
     /** Slave Receiver Mode */
-    SR_SLA_ACK = 0x60,
-    SR_ARB_LOST_SLA_ACK = 0x68,
-    SR_GCALL_ACK = 0x70,
-    SR_ARB_LOST_GCALL_ACK = 0x78,
-    SR_DATA_ACK = 0x80,
-    SR_DATA_NACK = 0x88,
-    SR_GCALL_DATA_ACK = 0x90,
-    SR_GCALL_DATA_NACK = 0x98,
-    SR_STOP = 0xA0,
+    SR_SLA_ACK = TWI_STATUS(0x60),
+    SR_ARB_LOST_SLA_ACK = TWI_STATUS(0x68),
+    SR_GCALL_ACK = TWI_STATUS(0x70),
+    SR_ARB_LOST_GCALL_ACK = TWI_STATUS(0x78),
+    SR_DATA_ACK = TWI_STATUS(0x80),
+    SR_DATA_NACK = TWI_STATUS(0x88),
+    SR_GCALL_DATA_ACK = TWI_STATUS(0x90),
+    SR_GCALL_DATA_NACK = TWI_STATUS(0x98),
+    SR_STOP = TWI_STATUS(0xA0),
     /** Misc */
-    NO_INFO = 0xF8,
-    BUS_ERROR = 0x00
+    NO_INFO = TWI_STATUS(0xF8),
+    BUS_ERROR = TWI_STATUS(0x00)
   };
 
   /**
@@ -115,7 +117,7 @@ protected:
   };
 
   Callback _callback;
-  Status _status;
+  uint8_t _status;
   uint8_t _addr;
   uint8_t* _buf;
   uint8_t _size;
@@ -134,10 +136,10 @@ protected:
    * Get the current status. Wait if the TWI bus logic is busy.
    * @return status
    */
-  Status get_status()
+  uint8_t get_status()
   {
     while (is_busy());
-    return (_status = (Status) TWSR);
+    return (_status = TWI_STATUS(TWSR));
   }
   
   /**

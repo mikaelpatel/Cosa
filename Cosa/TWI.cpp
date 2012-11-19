@@ -99,7 +99,7 @@ TWI::read(uint8_t addr, void* buf, uint8_t size)
 void
 TWI::on_bus_event()
 {
-  _status = (Status) (TWSR & 0xf8);
+  _status = TWI_STATUS(TWSR);
   switch (_status) {
   case START:
   case REP_START:
