@@ -23,6 +23,12 @@ Ultra low power timer. Time base for delay and timeout events.
 --------------------------------------------------------------------
 Watchdog.h:	class Watchdog
 --------------------------------------------------------------------
+TRACE
+Minimum UART output only trace class. Support for constant strings
+in program memory.
+--------------------------------------------------------------------
+Trace.h:	class Trace
+--------------------------------------------------------------------
 SERIAL PERIPHERAL INTERFACE
 Driver for devices on the serial peripherial interface (SPI).
 --------------------------------------------------------------------
