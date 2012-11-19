@@ -70,6 +70,7 @@ Trace::begin(uint32_t baudrate)
     
   // Set frame format: asynchronous, 8data, 2stop bit
   UCSR0C = _BV(USBS0) | (3 << UCSZ00);
+  return (1);
 }
 
 bool end()
