@@ -38,8 +38,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-// FIX: Remove Arduino dependency
-#include "Serial.h"
+/**
+ * Number of bits in a character.
+ */
+#define CHARBITS 8
 
 /**
  * Macro for number of elements in a vector.

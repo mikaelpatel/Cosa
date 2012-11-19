@@ -28,6 +28,9 @@
  */
 
 #include "ADXL.h"
+#ifndef NDEBUG
+#include "Trace.h"
+#endif
 
 ADXL::ADXL(uint8_t ss) : 
   SPI(), 
@@ -102,13 +105,13 @@ void
 ADXL::sample_t::print()
 {
 #ifndef NDEBUG
-  Serial_print("ADXL::sample_t(");
-  Serial.print(x);
-  Serial_print(", ");
-  Serial.print(y);
-  Serial_print(", ");
-  Serial.print(z);
-  Serial_print(")");
+  Trace::print_P(PSTR("ADXL::sample_t("));
+  Trace::print(x);
+  Trace::print_P(PSTR(", "));
+  Trace::print(y);
+  Trace::print_P(PSTR(", "));
+  Trace::print(z);
+  Trace::print_P(PSTR(")"));
 #endif
 }
 
@@ -117,7 +120,7 @@ ADXL::sample_t::println()
 {
 #ifndef NDEBUG
   print();
-  Serial_print("\n");
+  Trace::println();
 #endif
 }
 

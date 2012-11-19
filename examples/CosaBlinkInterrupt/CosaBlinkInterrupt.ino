@@ -44,7 +44,7 @@ void setup()
   Watchdog::begin(1024, blink);
 }
 
-// Got into sleep mode while awaiting the next timeout
+// Go into sleep mode while awaiting the next timeout
 void loop()
 {
   Watchdog::await();

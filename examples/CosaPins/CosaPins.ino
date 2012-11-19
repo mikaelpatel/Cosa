@@ -29,6 +29,7 @@
 #include "Cosa/Memory.h"
 #include "Cosa/Pins.h"
 #include "Cosa/Watchdog.h"
+#include "Cosa/Trace.h"
 
 // Callback for interrupt pin(2) 
 
@@ -49,22 +50,22 @@ AnalogPin levelPin(14);
 
 void setup()
 {
-  // Start the serial interface for trace output
-  Serial.begin(9600);
+  // Start trace output stream
+  Trace::begin(9600);
 
   // Check amount of free memory
-  Serial_trace(free_memory());
+  TRACE(free_memory());
 
   // Check size of instances
-  Serial_trace(sizeof(Event));
-  Serial_trace(sizeof(Queue));
-  Serial_trace(sizeof(Pin));
-  Serial_trace(sizeof(InputPin));
-  Serial_trace(sizeof(InterruptPin));
-  Serial_trace(sizeof(AnalogPin));
-  Serial_trace(sizeof(OutputPin));
-  Serial_trace(sizeof(PWMPin));
-  Serial_trace(sizeof(Watchdog));
+  TRACE(sizeof(Event));
+  TRACE(sizeof(Queue));
+  TRACE(sizeof(Pin));
+  TRACE(sizeof(InputPin));
+  TRACE(sizeof(InterruptPin));
+  TRACE(sizeof(AnalogPin));
+  TRACE(sizeof(OutputPin));
+  TRACE(sizeof(PWMPin));
+  TRACE(sizeof(Watchdog));
 
   // Print debug information about the sketch pins
   onoffPin.println();
@@ -74,7 +75,7 @@ void setup()
   tempVCC.println();
 
   // Check interrupt pin; enable and print interrupt count
-  Serial_trace(state);
+  TRACE(state);
   intPin.enable();
 
   // Start the watchdog ticks counter (1 second pulse)
@@ -95,27 +96,36 @@ void loop()
   uint16_t new_value = levelPin.sample();
   int16_t diff = new_value - old_value;
   if (abs(diff) > 100) {
+
     // Print the time index
-    Serial_print("ticks = ");
-    Serial.println(Watchdog::get_ticks());
+    Trace::print_P(PSTR("ticks = "));
+    Trace::print(Watchdog::get_ticks());
+    Trace::println();
+
     // Asynchronous sample internal temperature level
     tempVCC.request_sample();
-    Serial_print("levelPin = ");
-    Serial.println(new_value);
+    Trace::print_P(PSTR("levelPin = "));
+    Trace::print(new_value);
+    Trace::println();
     old_value = new_value;
-    Serial_print("tempVCC = ");
+    Trace::print_P(PSTR("tempVCC = "));
+
     // Await the sample and print value
-    Serial.println(tempVCC.await_sample());
+    Trace::print(tempVCC.await_sample());
+    Trace::println();
+
     // Check if the led should be on and the pwm level updated
     if (onoffPin.is_set()) {
       ledPin.set(new_value, 0, 1023);
-      Serial_print("duty = ");
-      Serial.println(ledPin.get_duty());
+      Trace::print_P(PSTR("duty = "));
+      Trace::print(ledPin.get_duty());
+      Trace::println();
     }
     else {
       ledPin.clear();
     }
+
     // Print the interrupt counter
-    Serial_trace(state);
+    TRACE(state);
   }
 }

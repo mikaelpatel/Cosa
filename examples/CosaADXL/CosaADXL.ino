@@ -26,6 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Trace.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/ADXL.h"
 
@@ -35,8 +36,8 @@ ADXL adxl;
 
 void setup()
 {
-  // Start the serial interface 
-  Serial.begin(9600);
+  // Start the trace output stream
+  Trace::begin(9600);
 
   // Start the watchdog, approx. 1 second ticks, and push timeout events
   Watchdog::begin(1024, Watchdog::push_event);
@@ -51,7 +52,7 @@ void loop()
   Event event;
   Event::queue.await(&event);
 
-  // Sample the accelerometer and print values
+  // Sample the accelerometer and print values to trace stream
   ADXL::sample_t s;
   adxl.sample(s);
   s.println();

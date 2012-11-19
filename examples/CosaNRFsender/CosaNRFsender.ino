@@ -27,6 +27,7 @@
  */
 
 #include "Cosa/NRF.h"
+#include "Cosa/Trace.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Memory.h"
 
@@ -41,12 +42,12 @@ NRF nrf;
 
 void setup()
 {
-  // Start serial interface for trace output
-  Serial.begin(9600);
+  // Start trace output stream
+  Trace::begin(9600);
 
   // Check amount of free memory
-  Serial_trace(free_memory());
-  Serial_trace(sizeof(NRF));
+  TRACE(free_memory());
+  TRACE(sizeof(NRF));
 
   // Start the watchdog ticks counter and push timeout events
 #ifdef USE_EVENT_AWAIT
@@ -61,26 +62,29 @@ void setup()
 
   // Check configuration and setup transmitter mode
   nrf.set_transmitter_mode("cosa1");
-  Serial_trace(nrf.read(NRF::FEATURE));
-  Serial_trace(nrf.read(NRF::RF_CH));
-  Serial_trace(nrf.read(NRF::RF_SETUP));
-  Serial_trace(nrf.read(NRF::RX_PW_P0));
-  Serial_trace(nrf.read(NRF::RX_PW_P1));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P0));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P1));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P2));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P3));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P4));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P5));
-  Serial_trace(nrf.read(NRF::SETUP_RETR));
-  Serial_trace(nrf.read(NRF::SETUP_AW));
-  Serial_trace(nrf.read(NRF::DYNPD));
-  Serial_trace(nrf.read(NRF::CONFIG));
+
+  // Print configuration
+  TRACE(nrf.read(NRF::FEATURE));
+  TRACE(nrf.read(NRF::RF_CH));
+  TRACE(nrf.read(NRF::RF_SETUP));
+  TRACE(nrf.read(NRF::RX_PW_P0));
+  TRACE(nrf.read(NRF::RX_PW_P1));
+  TRACE(nrf.read(NRF::RX_ADDR_P0));
+  TRACE(nrf.read(NRF::RX_ADDR_P1));
+  TRACE(nrf.read(NRF::RX_ADDR_P2));
+  TRACE(nrf.read(NRF::RX_ADDR_P3));
+  TRACE(nrf.read(NRF::RX_ADDR_P4));
+  TRACE(nrf.read(NRF::RX_ADDR_P5));
+  TRACE(nrf.read(NRF::SETUP_RETR));
+  TRACE(nrf.read(NRF::SETUP_AW));
+  TRACE(nrf.read(NRF::DYNPD));
+  TRACE(nrf.read(NRF::CONFIG));
 
   // Turn off Arduino timer0 to reduce wakeups
   TIMSK0 = 0;
 }
 
+// Message block
 typedef struct msg_t msg_t;
 struct msg_t {
   uint16_t id; 
@@ -99,7 +103,7 @@ void loop()
 #ifdef USE_EVENT_AWAIT
   Event event;
   Event::queue.await(&event);
-  Serial_trace(event.get_type());
+  TRACE(event.get_type());
 #endif
 
   // Attempt to send a message
@@ -107,14 +111,14 @@ void loop()
   msg.status = nrf.get_status();
   msg.observe = nrf.read(NRF::OBSERVE_TX);
   if (nrf.send(&msg, count) == count) {
-    Serial.print(Watchdog::get_ticks());
-    Serial_print(":SEND(id = ");
-    Serial.print(msg.id);
-    Serial_print(", observe = 0b");
-    Serial.print(msg.observe, BIN);
-    Serial_print(", status = 0b");
-    Serial.print(msg.status, BIN);
-    Serial_print(")\n");
+    Trace::print(Watchdog::get_ticks());
+    Trace::print_P(PSTR(":SEND(id = "));
+    Trace::print(msg.id);
+    Trace::print_P(", observe = ");
+    Trace::print(msg.observe, 2);
+    Trace::print_P(PSTR(", status = "));
+    Trace::print(msg.status, 2);
+    Trace::print_P(PSTR(")\n"));
   }
 
   // Check if the transmission fifo needs flushing

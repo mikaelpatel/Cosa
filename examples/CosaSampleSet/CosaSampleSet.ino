@@ -29,6 +29,7 @@
 #include "Cosa/Memory.h"
 #include "Cosa/Pins.h"
 #include "Cosa/Watchdog.h"
+#include "Cosa/Trace.h"
 
 // Analog input pins
 AnalogPin levelPin(0);
@@ -44,44 +45,42 @@ const PROGMEM AnalogPin* pins[] = {
   &tempVCC
 };
 
+// Declare the pin set with vector, number of members and push event callback
 AnalogPinSet pinSet(pins, membersof(pins), AnalogPinSet::push_event);
 
 void setup()
 {
-  // Start the serial interface for trace output
-  Serial.begin(9600);
+  // Start the trace output stream
+  Trace::begin(9600);
 
   // Check amount of free memory
-  Serial_trace(free_memory());
+  TRACE(free_memory());
 
   // Check size of instances
-  Serial_trace(sizeof(AnalogPin));
-  Serial_trace(sizeof(AnalogPinSet));
-  Serial_trace(sizeof(pins));
-  Serial_trace(membersof(pins));
+  TRACE(sizeof(AnalogPin));
+  TRACE(sizeof(AnalogPinSet));
+  TRACE(sizeof(pins));
+  TRACE(membersof(pins));
 
-  // Start the watchdog ticks counter (64 ms pulse)
+  // Start the watchdog ticks counter (shortest possible tick, 16 ms)
   Watchdog::begin(16);
-
-  // Give to serial interface some time
-  Watchdog::delay(128);
 }
 
 void loop()
 {
   // Start sampling analog pins
-  Serial_trace(pinSet.begin());
+  TRACE(pinSet.begin());
 
   // Wait for the next event. Allow a low power sleep
   Event event;
   Event::queue.await(&event);
 
   // Print the values
-  Serial_trace(levelPin.get_value());
-  Serial_trace(basePin.get_value());
-  Serial_trace(powerPin.get_value());
-  Serial_trace(tempVCC.get_value());
+  TRACE(levelPin.get_value());
+  TRACE(basePin.get_value());
+  TRACE(powerPin.get_value());
+  TRACE(tempVCC.get_value());
 
-  // Wait (approx. 1 s) before issuing the next sample
-  Watchdog::delay(1024);
+  // Wait (approx. 0.5 s) before issuing the next sample
+  Watchdog::delay(512);
 }

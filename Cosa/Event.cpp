@@ -27,6 +27,9 @@
  */
 
 #include "Event.h"
+#ifndef NDEBUG
+#include "Trace.h"
+#endif
 
 static Event event[Event::QUEUE_MAX];
 
@@ -43,13 +46,13 @@ void
 Event::print()
 {
 #ifndef NDEBUG
-  Serial_print("Event(");
-  Serial.print(_type);
-  Serial_print(", 0x");
-  Serial.print((uint16_t) _source, HEX);
-  Serial_print(", ");
-  Serial.print(_value);
-  Serial_print(")");
+  Trace::print_P(PSTR("Event("));
+  Trace::print(_type);
+  Trace::print_P(PSTR(", "));
+  Trace::print((uint16_t) _source, 16);
+  Trace::print_P(PSTR(", "));
+  Trace::print(_value);
+  Trace::print_P(PSTR(")"));
 #endif
 }
 
@@ -58,7 +61,7 @@ Event::println()
 {
 #ifndef NDEBUG
   print();
-  Serial_print("\n");
+  Trace::println();
 #endif
 }
 

@@ -29,6 +29,9 @@
  */
 
 #include "Pins.h"
+#ifndef NDEBUG
+#include "Trace.h"
+#endif
 #include <util/delay_basic.h>
 
 uint8_t 
@@ -51,13 +54,13 @@ void
 Pin::print()
 {
 #ifndef NDEBUG
-  Serial_print("Pin(");
-  Serial.print(_pin);
-  Serial_print(", 0x");
-  Serial.print((uint16_t) _sfr, HEX);
-  Serial_print(", 0b");
-  Serial.print(_mask, BIN);
-  Serial_print(")");
+  Trace::print_P(PSTR("Pin("));
+  Trace::print(_pin);
+  Trace::print_P(PSTR(", "));
+  Trace::print((uint16_t) _sfr, 16);
+  Trace::print_P(PSTR(", "));
+  Trace::print(_mask, 2);
+  Trace::print_P(PSTR(")"));
 #endif
 }
 
@@ -66,7 +69,7 @@ Pin::println()
 {
 #ifndef NDEBUG
   print();
-  Serial_print("\n");
+  Trace::println();
 #endif
 }
 

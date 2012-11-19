@@ -27,6 +27,7 @@
  */
 
 #include "Cosa/NRF.h"
+#include "Cosa/Trace.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Memory.h"
 
@@ -39,12 +40,12 @@ NRF nrf;
 
 void setup()
 {
-  // Start serial interface for trace output
-  Serial.begin(9600);
+  // Start trace output
+  Trace::begin(9600);
 
   // Check amount of free memory
-  Serial_trace(free_memory());
-  Serial_trace(sizeof(NRF));
+  TRACE(free_memory());
+  TRACE(sizeof(NRF));
 
   // Start the watchdog ticks counter and push timeout events
 #ifdef USE_TIMEOUT_EVENTS
@@ -57,29 +58,32 @@ void setup()
   // Powerup the transceiver and select receiver mode.
   nrf.set_powerup_mode();
   nrf.set_receiver_mode("cosa1");
-  Serial_trace(nrf.read(NRF::FEATURE));
-  Serial_trace(nrf.read(NRF::RF_CH));
-  Serial_trace(nrf.read(NRF::RF_SETUP));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P0));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P1));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P2));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P3));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P4));
-  Serial_trace(nrf.read(NRF::RX_ADDR_P5));
-  Serial_trace(nrf.read(NRF::SETUP_RETR));
-  Serial_trace(nrf.read(NRF::SETUP_AW));
-  Serial_trace(nrf.read(NRF::DYNPD));
-  Serial_trace(nrf.read(NRF::CONFIG));
+
+  // Print out the configuration
+  TRACE(nrf.read(NRF::FEATURE));
+  TRACE(nrf.read(NRF::RF_CH));
+  TRACE(nrf.read(NRF::RF_SETUP));
+  TRACE(nrf.read(NRF::RX_ADDR_P0));
+  TRACE(nrf.read(NRF::RX_ADDR_P1));
+  TRACE(nrf.read(NRF::RX_ADDR_P2));
+  TRACE(nrf.read(NRF::RX_ADDR_P3));
+  TRACE(nrf.read(NRF::RX_ADDR_P4));
+  TRACE(nrf.read(NRF::RX_ADDR_P5));
+  TRACE(nrf.read(NRF::SETUP_RETR));
+  TRACE(nrf.read(NRF::SETUP_AW));
+  TRACE(nrf.read(NRF::DYNPD));
+  TRACE(nrf.read(NRF::CONFIG));
 
 #ifdef USE_RECEIVE_INTERRUPTS
   // Setup interrupt handler to push events on message received
   nrf.set_interrupt(NRF::push_event);
 #endif
 
-  // Turn off Arduino timer0
+  // Turn off Arduino timer0 until init is replaced
   TIMSK0 = 0;
 }
 
+// Message block
 typedef struct msg_t msg_t;
 struct msg_t {
   uint16_t id;
@@ -92,34 +96,36 @@ void loop()
   // Wait for the next event. Go to low power during the wait.
   Event event;
   Event::queue.await(&event);
-  Serial_trace(event.get_type());
 
-  // Print transceiver and fifo status
+  // Print event type
+  TRACE(event.get_type());
+
+  // Print receiver and fifo status
   uint16_t ticks = Watchdog::get_ticks();
   uint8_t observe = nrf.read(NRF::OBSERVE_TX);
   uint8_t status = nrf.get_status();
   uint8_t fifo = nrf.read(NRF::FIFO_STATUS);
-  Serial.print(ticks);
-  Serial_print(":RECV(observe = 0b");
-  Serial.print(observe, BIN);
-  Serial_print(", status = 0b");
-  Serial.print(status, BIN);
-  Serial_print(", fifo = 0b");
-  Serial.print(fifo, BIN);
-  Serial_print(")\n");
+  Trace::print(ticks);
+  Trace::print_P(PSTR(":RECV(observe = "));
+  Trace::print(observe, 2);
+  Trace::print_P(PSTR(", status = "));
+  Trace::print(status, 2);
+  Trace::print_P(PSTR(", fifo = "));
+  Trace::print(fifo, 2);
+  Trace::print_P(PSTR(")\n"));
 
-  // Attempt to receive messages.
+  // Attempt to receive and print a message
   msg_t msg;
   uint8_t pipe; 
   if (nrf.recv(&msg, &pipe)) {
-    Serial_print("  PIPE(");
-    Serial.print(pipe);
-    Serial_print("):msg(id = ");
-    Serial.print(msg.id);
-    Serial_print(", observe = 0b");
-    Serial.print(msg.observe, BIN);
-    Serial_print(", status = 0b");
-    Serial.print(msg.status, BIN);
-    Serial_print(")\n");
+    Trace::print_P(PSTR("  PIPE("));
+    Trace::print(pipe);
+    Trace::print_P(PSTR("):msg(id = "));
+    Trace::print(msg.id);
+    Trace::print_P(PSTR(", observe = "));
+    Trace::print(msg.observe, 2);
+    Trace::print_P(", status = ");
+    Trace::print(msg.status, 2);
+    Trace::print_P(PSTR(")\n"));
   }
 }
