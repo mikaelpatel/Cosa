@@ -29,7 +29,7 @@
 
 #include "Cosa/Trace.h"
 
-/**
- * The Trace class singleton. 
- */
 Trace trace;
+
+int8_t trace_log_mask = LOG_UPTO(LOG_INFO);
+

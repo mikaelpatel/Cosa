@@ -66,7 +66,32 @@ public:
   }
 };
 
+/**
+ * The Trace class singleton. 
+ */
 extern Trace trace;
+
+/**
+ * Log priorities.
+ */
+#define	LOG_EMERG	0	/* System is unusable */
+#define	LOG_ALERT	1	/* Action must be taken immediately */
+#define	LOG_CRIT	2	/* Critical conditions */
+#define	LOG_ERR		3	/* Error conditions */
+#define	LOG_WARNING	4	/* Warning conditions */
+#define	LOG_NOTICE	5	/* Normal but significant condition */
+#define	LOG_INFO	6	/* Informational */
+#define	LOG_DEBUG	7	/* Debug-level messages */
+
+/**
+ * Macros to generate mask for the trace log priorities (LOG_EMERG..
+ * LOG_DEBUG) setting of trace_log_mask.
+ * LOG_MASK(prio) bit mask corresponding to the given priority.
+ * LOG_UPTO(prio) bit mask for all priorities including the given.
+ */
+#define LOG_MASK(prio) (1 << (prio))
+#define LOG_UPTO(prio) (LOG_MASK((prio) + 1) - 1)
+extern int8_t trace_log_mask;
 
 #ifndef NDEBUG
 
@@ -74,19 +99,18 @@ extern Trace trace;
  * Support macro for trace of a string in program memory.
  * @param[in] str string literal
  */
-#define TRACE_PSTR(str)				\
-  trace.print_P(PSTR(str))
+# define TRACE_PSTR(str) trace.print_P(PSTR(str))
 
 /**
  * Support macro for trace of an expression. The expression
  * is used as a string and the value is evaluated.
  * @param[in] expr expression.
  */
-# define TRACE(expr)				\
-  do {						\
-    TRACE_PSTR(#expr " = ");			\
-    trace.print(expr);				\
-    trace.println();				\
+# define TRACE(expr)							\
+  do {									\
+    trace.print_P(PSTR(#expr " = "));					\
+    trace.print(expr);							\
+    trace.println();							\
   } while (0)
 
 /**
@@ -94,13 +118,38 @@ extern Trace trace;
  * function name prefix.
  * @param[in] msg log message.
  */
-# define TRACE_LOG(msg)				\
-  do {						\
-    trace.print(__LINE__);			\
-    trace.print(':');				\
-    trace.print(__func__);			\
-    TRACE_PSTR(":" msg "\n");			\
-  } while (0)
+# define TRACE_LOG(msg, ...)						\
+  trace.printf(PSTR("%d:%s:" msg "\n"),					\
+	       __LINE__, __func__, __VA_ARGS__)
+# define IS_LOG_PRIO(prio) (trace_log_mask & LOG_MASK(prio))
+# define EMERG(msg, ...)						\
+  if (IS_LOG_PRIO(LOG_EMERG)) TRACE_LOG("emerg:" msg, __VA_ARGS__)
+# define ALERT(msg, ...)						\
+  if (IS_LOG_PRIO(LOG_ALERT)) TRACE_LOG("alert:" msg, __VA_ARGS__)
+# define CRIT(msg, ...)							\
+  if (IS_LOG_PRIO(LOG_CRIT)) TRACE_LOG("crit:" msg, __VA_ARGS__)
+# define ERR(msg, ...)							\
+  if (IS_LOG_PRIO(LOG_ERR)) TRACE_LOG("err:" msg, __VA_ARGS__)
+# define WARNING(msg, ...)						\
+  if (IS_LOG_PRIO(LOG_WARNING)) TRACE_LOG("warning:" msg, __VA_ARGS__)
+# define NOTICE(msg, ...)						\
+  if (IS_LOG_PRIO(LOG_NOTICE)) TRACE_LOG("notice:" msg, __VA_ARGS__)
+# define INFO(msg, ...)							\
+  if (IS_LOG_PRIO(LOG_INFO)) TRACE_LOG("info:" msg, __VA_ARGS__)
+# define DEBUG(msg, ...)						\
+  if (IS_LOG_PRIO(LOG_DEBUG)) TRACE_LOG("debug:" msg, __VA_ARGS__)
+#else
+# define TRACE_PSTR(str)
+# define TRACE(expr)
+# define TRACE_LOG(msg, ...)
+# define EMERG(msg, ...)
+# define ALERT(msg, ...)
+# define CRIT(msg, ...)
+# define ERR(msg, ...)
+# define WARNING(msg, ...)
+# define NOTICE(msg, ...)
+# define INFO(msg, ...)
+# define DEBUG(msg, ...)
 #endif
 
 #endif
