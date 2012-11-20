@@ -109,7 +109,7 @@ void loop()
   // Attempt to send a message
   msg.status = nrf.get_status();
   msg.observe = nrf.read(NRF::OBSERVE_TX);
-  trace.printf(PSTR("%d:SEND(id = %d, lost = %d, retransmit = %d, status = %bd)"), Watchdog::get_ticks(), msg.id, msg.observe >> 4, msg.observe & 0xf, msg.status);
+  trace.printf_P(PSTR("%d:SEND(id = %d, lost = %d, retransmit = %d, status = %bd)"), Watchdog::get_ticks(), msg.id, msg.observe >> 4, msg.observe & 0xf, msg.status);
   if (nrf.send(&msg, count) != count) {
     trace.print_P(PSTR(" -- failed\n"));
   } 
