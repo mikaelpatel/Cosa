@@ -52,7 +52,9 @@ void setup()
 {
   // Start trace output stream
   trace.begin(9600);
-  TRACE_LOG("Initiated trace log");
+
+  // Info message using the trace log
+  INFO("Initiated trace log", 0);
 
   // Check amount of free memory
   TRACE(free_memory());
@@ -91,6 +93,9 @@ void loop()
   // Wait for the next event. Allow a low power sleep
   Event event;
   Event::queue.await(&event);
+
+  // Info message using the trace log
+  INFO("Event received (type = %d)", event.get_type());
 
   // Sample the level and check for change
   static uint16_t old_value = 0;

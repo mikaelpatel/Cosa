@@ -107,13 +107,16 @@ void loop()
 #endif
 
   // Attempt to send a message
-  msg.id += 1;
   msg.status = nrf.get_status();
   msg.observe = nrf.read(NRF::OBSERVE_TX);
-  if (nrf.send(&msg, count) == count) {
-    trace.printf(PSTR("%d:SEND(id = %d, observe = %bd, status = %bd"), Watchdog::get_ticks(), msg.id, msg.observe, msg.status);
+  trace.printf(PSTR("%d:SEND(id = %d, lost = %d, retransmit = %d, status = %bd)"), Watchdog::get_ticks(), msg.id, msg.observe >> 4, msg.observe & 0xf, msg.status);
+  if (nrf.send(&msg, count) != count) {
+    trace.print_P(PSTR(" -- failed\n"));
+  } 
+  else {
+    msg.id += 1;
+    trace.println();
   }
-
   // Check if the transmission fifo needs flushing
   if (!nrf.is_ready() && nrf.is_max_retransmit()) {
     nrf.flush();
