@@ -47,9 +47,11 @@ TWI::begin(uint8_t addr, Callback fn)
   }
 
   // Enable internal pullup
-  bit_set(PORTC, SDA);
-  bit_set(PORTC, SCL);
-
+  synchronized {
+    bit_set(PORTC, SDA);
+    bit_set(PORTC, SCL);
+  }
+  
   // Set clock prescale and bit rate
   bit_clear(TWSR, TWPS0);
   bit_clear(TWSR, TWPS1);

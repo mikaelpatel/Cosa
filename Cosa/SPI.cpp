@@ -34,23 +34,25 @@ bool
 SPI::begin(Clock clock, uint8_t mode, Direction direction)
 {
   // Check for slave pin setting; input(MOSI, SS, SCK), output(MISO)
-  if (clock == MASTER_CLOCK) {
-    _spi = this;
-    _put = 0;
-    bit_clear(DDRB, MOSI_PIN); 
-    bit_set(DDRB, MISO_PIN);	 
-    bit_clear(DDRB, SCK_PIN);
-    bit_clear(DDRB, SS_PIN);	 
-    SPCR = (_BV(SPIE) | _BV(SPE));
-  } 
-  // Master pin setting; input(MISO), output(MOSI, SCK)
-  else {
-    bit_set(DDRB, MOSI_PIN);
-    bit_clear(DDRB, MISO_PIN);
-    bit_set(DDRB, SCK_PIN);
-    bit_clear(PORTB, SCK_PIN);
-    bit_clear(PORTB, MOSI_PIN);
-    SPCR = (_BV(MSTR) | _BV(SPE));
+  synchronized {
+    if (clock == MASTER_CLOCK) {
+      _spi = this;
+      _put = 0;
+      bit_clear(DDRB, MOSI_PIN); 
+      bit_set(DDRB, MISO_PIN);	 
+      bit_clear(DDRB, SCK_PIN);
+      bit_clear(DDRB, SS_PIN);	 
+      SPCR = (_BV(SPIE) | _BV(SPE));
+    } 
+    // Master pin setting; input(MISO), output(MOSI, SCK)
+    else {
+      bit_set(DDRB, MOSI_PIN);
+      bit_clear(DDRB, MISO_PIN);
+      bit_set(DDRB, SCK_PIN);
+      bit_clear(PORTB, SCK_PIN);
+      bit_clear(PORTB, MOSI_PIN);
+      SPCR = (_BV(MSTR) | _BV(SPE));
+    }
   }
   // Set control register according to parameters
   SPCR |= ((direction << DORD) 

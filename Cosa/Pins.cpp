@@ -35,14 +35,13 @@ uint8_t
 Pin::await_change(uint8_t us)
 {
   uint8_t res = 0;
-  if (is_set()) {
-    synchronized {
+  synchronized {
+    if (is_set()) {
       while (is_set() && us--) res++;
     }
-    return (res);
-  }
-  synchronized {
-    while (is_clear() && us--) res++;
+    else {
+      while (is_clear() && us--) res++;
+    }
   }
   return (res);
 }
@@ -73,8 +72,7 @@ ISR(INT0_vect)
 
 ISR(INT1_vect)
 {
-  if (InterruptPin::ext[1] != 0) 
-    InterruptPin::ext[1]->on_interrupt();
+  if (InterruptPin::ext[1] != 0) InterruptPin::ext[1]->on_interrupt();
 }
 
 void 
@@ -165,9 +163,7 @@ ISR(ADC_vect)
 { 
   bit_clear(ADCSRA, ADIE);
   AnalogPin* pin = AnalogPin::get_sampling();
-  if (pin != 0) {
-    pin->on_sample(ADCW);
-  }
+  if (pin != 0) pin->on_sample(ADCW);
 }
 
 void 

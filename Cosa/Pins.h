@@ -178,7 +178,9 @@ public:
   InputPin(uint8_t pin, Mode mode = NORMAL_MODE) :
     Pin(pin)
   {
-    if (mode == PULLUP_MODE) *PORT() |= _mask; 
+    synchronized {
+      if (mode == PULLUP_MODE) *PORT() |= _mask; 
+    }
   }
 };
 
@@ -223,7 +225,9 @@ public:
     _env(env)
   {
     if (mode & PULLUP_MODE) {
-      *PORT() |= _mask; 
+      synchronized {
+	*PORT() |= _mask; 
+      }
     }
     if (pin > 1 && pin < 4) {
       pin = pin - 2;
@@ -292,7 +296,9 @@ public:
   OutputPin(uint8_t pin, uint8_t initial = 0) : 
     Pin(pin) 
   { 
-    *DDR() |= _mask; 
+    synchronized {
+      *DDR() |= _mask; 
+    }
     if (initial) set(); else clear();
   }
 
@@ -301,7 +307,9 @@ public:
    */
   void set() 
   { 
-    *PORT() |= _mask; 
+    synchronized {
+      *PORT() |= _mask; 
+    }
   }
 
   /**
@@ -309,7 +317,9 @@ public:
    */
   void clear() 
   { 
-    *PORT() &= ~_mask; 
+    synchronized {
+      *PORT() &= ~_mask; 
+    }
   }
 
   /**
@@ -317,7 +327,9 @@ public:
    */
   void toggle() 
   { 
-    *PIN() |= _mask; 
+    synchronized {
+      *PIN() |= _mask; 
+    }
   }
 
   /**
@@ -408,12 +420,14 @@ public:
    */
   void set(Mode mode)
   {
-    if (mode == OUTPUT_MODE)
-      *DDR() |= _mask; 
-    else
-      *DDR() &= ~_mask; 
-    if (mode == PULLUP_MODE)
-      *PORT() |= _mask; 
+    synchronized {
+      if (mode == OUTPUT_MODE)
+	*DDR() |= _mask; 
+      else
+	*DDR() &= ~_mask; 
+      if (mode == PULLUP_MODE)
+	*PORT() |= _mask; 
+    }
     _mode = mode;
   }
   
