@@ -35,12 +35,9 @@
 class UART : public IOStream::Device {
 
 public:
-  /* As defined by IOStream::Device */
+  /* As defined by IOStream::Device. Rest is inherited from null device */
   virtual int putchar(char c);
-  virtual int puts(char* s);
-  virtual int puts_P(const char* s);
-  virtual int getchar();
-  virtual char* gets(char *s);
+  virtual int flush();
 
   /**
    * Start UART device.
@@ -54,6 +51,9 @@ public:
    * @return true(1) if successful otherwise false(0)
    */
   bool end();
+
+ private:
+  static const uint32_t FLUSH_CYCLES_MAX = 1000000;
 };
 
 #endif

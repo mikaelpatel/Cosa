@@ -82,31 +82,11 @@ UART::putchar(char c)
 }
 
 int 
-UART::puts(char* s)
+UART::flush()
 {
-  char c; 
-  while ((c = *s++) != 0) 
-    putchar(c);
-}
-
-int 
-UART::puts_P(const char* s)
-{
-  char c; 
-  while ((c = pgm_read_byte(s++)) != 0)
-    putchar(c);
-}
-
-int 
-UART::getchar()
-{
-  return (-1);
-}
-
-char* 
-UART::gets(char *s) 
-{
-  return (s);
+  uint32_t cycles = FLUSH_CYCLES_MAX;
+  while (head != tail && cycles != 0) cycles--;
+  return (cycles == 0 ? -1 : 0);
 }
 
 ISR(USART_UDRE_vect)

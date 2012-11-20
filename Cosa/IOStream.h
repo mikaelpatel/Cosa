@@ -37,16 +37,71 @@ class IOStream {
 
 public:
   /**
-   * Device for output/input of character or string. Null device.
+   * Device for output/input of character or string.
    */
   class Device {
   public:
-    virtual int putchar(char c) { return (0); }
-    virtual int puts(char* s) { return (0); }
-    virtual int puts_P(const char* s) { return (0); }
-    virtual int getchar() { return (-1); }
-    virtual char* gets(char *s) { *s = 0; return (s); }
-    virtual int sync() { return (0); }
+    /**
+     * Write character to device.
+     * @param[in] c character to write.
+     * @return character written or EOF(-1).
+     */
+    virtual int putchar(char c);
+
+    /**
+     * Write null terminated string to device.
+     * @param[in] s string to write.
+     * @return zero(0) or negative error code.
+     */
+    virtual int puts(char* s);
+
+    /**
+     * Write null terminated string from program memory to device.
+     * @param[in] s string in program memory to write.
+     * @return zero(0) or negative error code.
+     */
+    virtual int puts_P(const char* s);
+
+    /**
+     * Write data from buffer with given size to device.
+     * @param[in] buf buffer to write.
+     * @param[in] size number of bytes to write.
+     * @return number of bytes written or EOF(-1).
+     */
+    virtual int write(void* buf, uint8_t size);
+
+    /**
+     * Read character from device.
+     * @return character or EOF(-1).
+     */
+    virtual int getchar();
+
+    /**
+     * Read string terminated by new-line or until size into given
+     * string buffer.
+     * @param[in] s string buffer to read into.
+     * @param[in] count max number of bytes to read.
+     * @return number of characters read or EOF(-1).
+     */
+    virtual char* gets(char *s, uint8_t count);
+
+    /**
+     * Read data from buffer with given size from device.
+     * @param[in] buf buffer to read into.
+     * @param[in] size number of bytes to read.
+     * @return number of bytes read or EOF(-1).
+     */
+    virtual int read(void* buf, uint8_t size);
+
+    /**
+     * Flush internal device buffers. Wait for device to become idle.
+     * @return zero(0) or negative error code.
+     */
+    virtual int flush();
+
+    /**
+     * The default implementation of device.
+     */
     static Device null;
   };
 
