@@ -43,7 +43,7 @@ ADXL.h:		      class ADXL : private SPI
 NRF.h:		      class NRF : private SPI
 --------------------------------------------------------------------
 TWO WIRE INTERFACE
-Driver for deviced on the two wire interface (TWI/I2C).
+Driver for devices on the two wire interface (TWI/I2C).
 --------------------------------------------------------------------
 TWI.h:		class TWI
 --------------------------------------------------------------------
