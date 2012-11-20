@@ -52,8 +52,7 @@ IOStream::Device::puts_P(const char* s)
 { 
   char c;
   while ((c = pgm_read_byte(s++)) != 0)
-    while ((c = *s++) != 0) 
-      if (putchar(c) < 0) return (-1);
+    if (putchar(c) < 0) return (-1);
   return (0); 
 }
 
