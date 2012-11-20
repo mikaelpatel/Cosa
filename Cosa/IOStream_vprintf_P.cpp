@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream_vprintf.cpp
+ * @file Cosa/IOStream_vprintf_P.cpp
  * @version 1.0
  *
  * @section License
@@ -30,7 +30,7 @@
 #include <stdarg.h>
 
 void 
-IOStream::vprintf(const char* format, va_list args)
+IOStream::vprintf_P(const char* format, va_list args)
 {
   const char* s = format;
   uint8_t is_signed;

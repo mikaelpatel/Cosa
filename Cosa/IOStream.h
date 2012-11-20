@@ -196,22 +196,24 @@ public:
   void println() { _dev->putchar('\n'); }
 
   /**
-   * Formated print with variable argument list.
-   * @param[in] format string.
+   * Formated print with variable argument list. The format string
+   * should be in program memory. Use the macro PSTR().
+   * @param[in] format string in program memory.
    * @param[in] args variable argument list.
    */
-  void vprintf(const char* format, va_list args);
+  void vprintf_P(const char* format, va_list args);
 
   /**
-   * Formated print with variable argument list.
-   * @param[in] format string.
+   * Formated print with variable argument list. The format string
+   * should be in program memory. Use the macro PSTR().
+   * @param[in] format string in program memory.
    * @param[in] ... variable argument list.
    */
-  void printf(const char* format, ...)
+  void printf_P(const char* format, ...)
   {
     va_list args;
     va_start(args, format);
-    vprintf(format, args);
+    vprintf_P(format, args);
     va_end(args);
   }
 

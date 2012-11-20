@@ -119,8 +119,8 @@ extern int8_t trace_log_mask;
  * @param[in] msg log message.
  */
 # define TRACE_LOG(msg, ...)						\
-  trace.printf(PSTR("%d:%s:" msg "\n"),					\
-	       __LINE__, __func__, __VA_ARGS__)
+  trace.printf_P(PSTR("%d:%s:" msg "\n"),				\
+		 __LINE__, __func__, __VA_ARGS__)
 # define IS_LOG_PRIO(prio) (trace_log_mask & LOG_MASK(prio))
 # define EMERG(msg, ...)						\
   if (IS_LOG_PRIO(LOG_EMERG)) TRACE_LOG("emerg:" msg, __VA_ARGS__)

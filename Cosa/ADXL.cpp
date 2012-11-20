@@ -101,7 +101,7 @@ ADXL::calibrate()
 void 
 ADXL::sample_t::print(IOStream& stream)
 {
-  stream.printf(PSTR("ADXL::sample_t(%d, %d, %d)"), x, y, z);
+  stream.printf_P(PSTR("ADXL::sample_t(x = %d, y = %d, z = %d)"), x, y, z);
 }
 
 void 

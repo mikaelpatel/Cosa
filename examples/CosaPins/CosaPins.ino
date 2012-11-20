@@ -71,9 +71,9 @@ void setup()
   TRACE(sizeof(Watchdog));
 
   // Print debug information about the sketch pins
-  onoffPin.println();
   intPin.println();
   ledPin.println();
+  onoffPin.println();
   levelPin.println();
   tempVCC.println();
 
@@ -104,20 +104,20 @@ void loop()
   if (abs(diff) > 100) {
 
     // Print the time index
-    trace.printf(PSTR("ticks = %d\n"), Watchdog::get_ticks());
+    trace.printf_P(PSTR("ticks = %d\n"), Watchdog::get_ticks());
 
     // Asynchronous sample internal temperature level
     tempVCC.request_sample();
-    trace.printf(PSTR("levelPin = %d\n"), new_value);
+    trace.printf_P(PSTR("levelPin = %d\n"), new_value);
     old_value = new_value;
 
     // Await the sample and print value
-    trace.printf(PSTR("tempVCC = %d\n"), tempVCC.await_sample());
+    trace.printf_P(PSTR("tempVCC = %d\n"), tempVCC.await_sample());
 
     // Check if the led should be on and the pwm level updated
     if (onoffPin.is_set()) {
       ledPin.set(new_value, 0, 1023);
-      trace.printf(PSTR("duty = %d\n"), ledPin.get_duty());
+      trace.printf_P(PSTR("duty = %d\n"), ledPin.get_duty());
     }
     else {
       ledPin.clear();
