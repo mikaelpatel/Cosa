@@ -105,27 +105,12 @@ void loop()
   uint8_t observe = nrf.read(NRF::OBSERVE_TX);
   uint8_t status = nrf.get_status();
   uint8_t fifo = nrf.read(NRF::FIFO_STATUS);
-  trace.print(ticks);
-  TRACE_PSTR(":RECV(observe = ");
-  trace.print(observe, 2);
-  TRACE_PSTR(", status = ");
-  trace.print(status, 2);
-  TRACE_PSTR(", fifo = ");
-  trace.print(fifo, 2);
-  TRACE_PSTR(")\n");
+  trace.printf(PSTR("%d:RECV(observe = %bd, status = %bd, fifo = %bd)\n"), ticks, observe, status, fifo);
 
   // Attempt to receive and print a message
   msg_t msg;
   uint8_t pipe; 
   if (nrf.recv(&msg, &pipe)) {
-    TRACE_PSTR("  PIPE(");
-    trace.print(pipe);
-    TRACE_PSTR("):msg(id = ");
-    trace.print(msg.id);
-    TRACE_PSTR(", observe = ");
-    trace.print(msg.observe, 2);
-    TRACE_PSTR(", status = ");
-    trace.print(msg.status, 2);
-    TRACE_PSTR(")\n");
+    trace.printf(PSTR("PIPE(%d):msg(id = %d, observe = %bd, status = %bd)\n"), pipe, msg.id, msg.observe, msg.status);
   }
 }

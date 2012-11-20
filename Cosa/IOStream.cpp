@@ -28,6 +28,7 @@
  */
 
 #include "Cosa/IOStream.h"
+#include <stdarg.h>
 
 IOStream::Device IOStream::Device::null;
 
@@ -61,6 +62,63 @@ IOStream::print(unsigned long int n, uint8_t base)
   if (base != 10) print_prefix(base);
   char buf[sizeof(long int) * CHARBITS + 1];
   print(ultoa(n, buf, base));
+}
+
+void 
+IOStream::vprintf(const char* format, va_list args)
+{
+  const char* s = format;
+  uint8_t is_signed;
+  uint8_t base;
+  char c;
+  while ((c = pgm_read_byte(s++)) != 0) {
+    if (c == '%') {
+      is_signed = 1;
+      base = 10;
+    next:
+      c = pgm_read_byte(s++);
+      if (c == 0) s--;
+      switch (c) {
+      case 'b': 
+	base = 2; 
+	goto next;
+      case 'o': 
+	base = 8; 
+	goto next;
+      case 'h': 
+	base = 16; 
+	goto next;
+      case 'u': 
+	is_signed = 0; 
+	goto next;
+      case 'p': 
+	print(va_arg(args, void*)); 
+	continue;
+      case 'P': 
+	print(va_arg(args, const void*)); 
+	continue;
+      case 's': 
+	print(va_arg(args, char*)); 
+	continue;
+      case 'S': 
+	print(va_arg(args, const char*)); 
+	continue;
+      case 'd': 
+	if (is_signed) 
+	  print(va_arg(args, int), base); 
+	else
+	  print(va_arg(args, unsigned int), base); 
+	continue;
+      case 'l': 
+	if (is_signed) 
+	  print(va_arg(args, long int), base);
+	else
+	  print(va_arg(args, unsigned long int), base);
+	continue;
+      };
+    }
+    print(c);
+  }
 }
 
 void 

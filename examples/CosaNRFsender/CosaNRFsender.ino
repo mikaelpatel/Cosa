@@ -111,14 +111,7 @@ void loop()
   msg.status = nrf.get_status();
   msg.observe = nrf.read(NRF::OBSERVE_TX);
   if (nrf.send(&msg, count) == count) {
-    trace.print(Watchdog::get_ticks());
-    TRACE_PSTR(":SEND(id = ");
-    trace.print(msg.id);
-    TRACE_PSTR(", observe = ");
-    trace.print(msg.observe, 2);
-    TRACE_PSTR(", status = ");
-    trace.print(msg.status, 2);
-    TRACE_PSTR(")\n");
+    trace.printf(PSTR("%d:SEND(id = %d, observe = %bd, status = %bd"), Watchdog::get_ticks(), msg.id, msg.observe, msg.status);
   }
 
   // Check if the transmission fifo needs flushing

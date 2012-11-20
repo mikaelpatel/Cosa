@@ -92,8 +92,8 @@ ADXL::sample(sample_t& s)
 void
 ADXL::calibrate()
 {
-  calibrate(0, 0, 0);
   sample_t s;
+  calibrate(0, 0, 0);
   sample(s);
   calibrate(-s.x/4, -s.y/4, -s.z/4);
 }
@@ -101,13 +101,7 @@ ADXL::calibrate()
 void 
 ADXL::sample_t::print(IOStream& stream)
 {
-  stream.print_P(PSTR("ADXL::sample_t("));
-  stream.print(x);
-  stream.print_P(PSTR(", "));
-  stream.print(y);
-  stream.print_P(PSTR(", "));
-  stream.print(z);
-  stream.print_P(PSTR(")"));
+  stream.printf(PSTR("ADXL::sample_t(%d, %d, %d)"), x, y, z);
 }
 
 void 

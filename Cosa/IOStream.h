@@ -31,6 +31,7 @@
 #define __COSA_IOSTREAM_H__
 
 #include "Cosa/Types.h"
+#include <stdarg.h>
 
 class IOStream {
 
@@ -138,6 +139,26 @@ public:
    * Print end of line to stream.
    */
   void println() { _dev->putchar('\n'); }
+
+  /**
+   * Formated print with variable argument list.
+   * @param[in] format string.
+   * @param[in] args variable argument list.
+   */
+  void vprintf(const char* format, va_list args);
+
+  /**
+   * Formated print with variable argument list.
+   * @param[in] format string.
+   * @param[in] ... variable argument list.
+   */
+  void printf(const char* format, ...)
+  {
+    va_list args;
+    va_start(args, format);
+    vprintf(format, args);
+    va_end(args);
+  }
 
  private:
   Device* _dev;

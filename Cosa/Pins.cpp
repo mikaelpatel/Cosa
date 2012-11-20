@@ -50,13 +50,7 @@ Pin::await_change(uint8_t us)
 void 
 Pin::print(IOStream& stream)
 {
-  stream.print_P(PSTR("Pin("));
-  stream.print(_pin);
-  stream.print_P(PSTR(", "));
-  stream.print((uint16_t) _sfr, 16);
-  stream.print_P(PSTR(", "));
-  stream.print(_mask, 2);
-  stream.print_P(PSTR(")"));
+  stream.printf(PSTR("Pin(%d, %p, %bd)"), _pin, _sfr, _mask);
 }
 
 void 
