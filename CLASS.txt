@@ -23,11 +23,17 @@ Ultra low power timer. Time base for delay and timeout events.
 --------------------------------------------------------------------
 Watchdog.h:	class Watchdog
 --------------------------------------------------------------------
-TRACE
-Minimum UART output only trace class. Support for constant strings
-in program memory.
+IOSTREAM
+Stream and device abstraction. 
 --------------------------------------------------------------------
-Trace.h:	class Trace
+IOStream.h:	class IOStream
+IOStream.h:     class IOStream::Device
+UART.h:		      class UART : public IOStream::Device
+--------------------------------------------------------------------
+TRACE
+Trace log support.
+--------------------------------------------------------------------
+Trace.h:       class Trace : public IOStream [UART]
 --------------------------------------------------------------------
 SERIAL PERIPHERAL INTERFACE
 Driver for devices on the serial peripherial interface (SPI).
@@ -37,7 +43,7 @@ ADXL.h:		      class ADXL : private SPI
 NRF.h:		      class NRF : private SPI
 --------------------------------------------------------------------
 TWO WIRE INTERFACE
-    Driver for deviced on the two wire interface (TWI/I2C).
+Driver for deviced on the two wire interface (TWI/I2C).
 --------------------------------------------------------------------
 TWI.h:		class TWI
 --------------------------------------------------------------------
