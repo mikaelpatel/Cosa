@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Trace.h
+ * @file Cosa/UART.h
  * @version 1.0
  *
  * @section License
@@ -21,15 +21,39 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Basic trace support class. Combind IOStream with UART for trace
- * output.
+ * Basic UART device handler with internal buffering.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Trace.h"
+#ifndef __COSA_UART_H__
+#define __COSA_UART_H__
 
-/**
- * The Trace class singleton. 
- */
-Trace trace;
+#include "Cosa/Types.h"
+#include "Cosa/IOStream.h"
+
+class UART : public IOStream::Device {
+
+public:
+  /* As defined by IOStream::Device */
+  virtual int putchar(char c);
+  virtual int puts(char* s);
+  virtual int puts_P(const char* s);
+  virtual int getchar();
+  virtual char* gets(char *s);
+
+  /**
+   * Start UART device.
+   * @param[in] baudrate serial bitrate.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool begin(uint32_t baudrate = 9600);
+
+  /**
+   * Stop UART device.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool end();
+};
+
+#endif

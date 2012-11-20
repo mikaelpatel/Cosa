@@ -26,9 +26,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/ADXL.h"
 #include "Cosa/Trace.h"
 #include "Cosa/Watchdog.h"
-#include "Cosa/ADXL.h"
 
 // Digital Accelerometer using SPI and default slave select pin(10)
 
@@ -36,8 +36,8 @@ ADXL adxl;
 
 void setup()
 {
-  // Start the trace output stream
-  Trace::begin(9600);
+  // Initiate trace stream
+  trace.begin(9600);
 
   // Start the watchdog, approx. 1 second ticks, and push timeout events
   Watchdog::begin(1024, Watchdog::push_event);

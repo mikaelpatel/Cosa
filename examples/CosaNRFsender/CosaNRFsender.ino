@@ -43,7 +43,7 @@ NRF nrf;
 void setup()
 {
   // Start trace output stream
-  Trace::begin(9600);
+  trace.begin(9600);
 
   // Check amount of free memory
   TRACE(free_memory());
@@ -111,14 +111,14 @@ void loop()
   msg.status = nrf.get_status();
   msg.observe = nrf.read(NRF::OBSERVE_TX);
   if (nrf.send(&msg, count) == count) {
-    Trace::print(Watchdog::get_ticks());
-    Trace::print_P(PSTR(":SEND(id = "));
-    Trace::print(msg.id);
-    Trace::print_P(", observe = ");
-    Trace::print(msg.observe, 2);
-    Trace::print_P(PSTR(", status = "));
-    Trace::print(msg.status, 2);
-    Trace::print_P(PSTR(")\n"));
+    trace.print(Watchdog::get_ticks());
+    TRACE_PSTR(":SEND(id = ");
+    trace.print(msg.id);
+    TRACE_PSTR(", observe = ");
+    trace.print(msg.observe, 2);
+    TRACE_PSTR(", status = ");
+    trace.print(msg.status, 2);
+    TRACE_PSTR(")\n");
   }
 
   // Check if the transmission fifo needs flushing

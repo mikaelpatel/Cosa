@@ -51,7 +51,8 @@ AnalogPin levelPin(14);
 void setup()
 {
   // Start trace output stream
-  Trace::begin(9600);
+  trace.begin(9600);
+  TRACE_LOG("Initiated trace log");
 
   // Check amount of free memory
   TRACE(free_memory());
@@ -98,28 +99,28 @@ void loop()
   if (abs(diff) > 100) {
 
     // Print the time index
-    Trace::print_P(PSTR("ticks = "));
-    Trace::print(Watchdog::get_ticks());
-    Trace::println();
+    TRACE_PSTR("ticks = ");
+    trace.print(Watchdog::get_ticks());
+    trace.println();
 
     // Asynchronous sample internal temperature level
     tempVCC.request_sample();
-    Trace::print_P(PSTR("levelPin = "));
-    Trace::print(new_value);
-    Trace::println();
+    TRACE_PSTR("levelPin = ");
+    trace.print(new_value);
+    trace.println();
     old_value = new_value;
-    Trace::print_P(PSTR("tempVCC = "));
+    TRACE_PSTR("tempVCC = ");
 
     // Await the sample and print value
-    Trace::print(tempVCC.await_sample());
-    Trace::println();
+    trace.print(tempVCC.await_sample());
+    trace.println();
 
     // Check if the led should be on and the pwm level updated
     if (onoffPin.is_set()) {
       ledPin.set(new_value, 0, 1023);
-      Trace::print_P(PSTR("duty = "));
-      Trace::print(ledPin.get_duty());
-      Trace::println();
+      TRACE_PSTR("duty = ");
+      trace.print(ledPin.get_duty());
+      trace.println();
     }
     else {
       ledPin.clear();

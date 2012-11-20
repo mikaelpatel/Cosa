@@ -29,8 +29,8 @@
 #ifndef __COSE_QUEUE_H__
 #define __COSE_QUEUE_H__
 
+#include "Cosa/Types.h"
 #include <avr/sleep.h>
-#include "Types.h"
 
 class Queue {
 

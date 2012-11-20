@@ -30,8 +30,8 @@
 #define __COSA_TWI_H__
 
 #include "Cosa/Types.h"
-#include "Bits.h"
-#include "Event.h"
+#include "Cosa/Bits.h"
+#include "Cosa/Event.h"
 
 #define TWI_STATUS(x) ((x) >> 3)
 

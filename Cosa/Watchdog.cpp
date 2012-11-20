@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Watchdog.h"
+#include "Cosa/Watchdog.h"
 
 Watchdog::Callback Watchdog::_callback = 0;
 

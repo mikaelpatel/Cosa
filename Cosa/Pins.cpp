@@ -28,10 +28,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Pins.h"
-#ifndef NDEBUG
-#include "Trace.h"
-#endif
+#include "Cosa/Pins.h"
 #include <util/delay_basic.h>
 
 uint8_t 
@@ -51,26 +48,22 @@ Pin::await_change(uint8_t us)
 }
 
 void 
-Pin::print()
+Pin::print(IOStream& stream)
 {
-#ifndef NDEBUG
-  Trace::print_P(PSTR("Pin("));
-  Trace::print(_pin);
-  Trace::print_P(PSTR(", "));
-  Trace::print((uint16_t) _sfr, 16);
-  Trace::print_P(PSTR(", "));
-  Trace::print(_mask, 2);
-  Trace::print_P(PSTR(")"));
-#endif
+  stream.print_P(PSTR("Pin("));
+  stream.print(_pin);
+  stream.print_P(PSTR(", "));
+  stream.print((uint16_t) _sfr, 16);
+  stream.print_P(PSTR(", "));
+  stream.print(_mask, 2);
+  stream.print_P(PSTR(")"));
 }
 
 void 
-Pin::println() 
+Pin::println(IOStream& stream)
 {
-#ifndef NDEBUG
   print();
-  Trace::println();
-#endif
+  stream.println();
 }
 
 InterruptPin* InterruptPin::ext[2] = { 0, 0 };

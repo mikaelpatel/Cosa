@@ -27,10 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "ADXL.h"
-#ifndef NDEBUG
-#include "Trace.h"
-#endif
+#include "Cosa/ADXL.h"
 
 ADXL::ADXL(uint8_t ss) : 
   SPI(), 
@@ -102,26 +99,22 @@ ADXL::calibrate()
 }
 
 void 
-ADXL::sample_t::print()
+ADXL::sample_t::print(IOStream& stream)
 {
-#ifndef NDEBUG
-  Trace::print_P(PSTR("ADXL::sample_t("));
-  Trace::print(x);
-  Trace::print_P(PSTR(", "));
-  Trace::print(y);
-  Trace::print_P(PSTR(", "));
-  Trace::print(z);
-  Trace::print_P(PSTR(")"));
-#endif
+  stream.print_P(PSTR("ADXL::sample_t("));
+  stream.print(x);
+  stream.print_P(PSTR(", "));
+  stream.print(y);
+  stream.print_P(PSTR(", "));
+  stream.print(z);
+  stream.print_P(PSTR(")"));
 }
 
 void 
-ADXL::sample_t::println()
+ADXL::sample_t::println(IOStream& stream)
 {
-#ifndef NDEBUG
-  print();
-  Trace::println();
-#endif
+  print(stream);
+  stream.println();
 }
 
 

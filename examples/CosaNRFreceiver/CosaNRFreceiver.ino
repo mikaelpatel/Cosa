@@ -27,8 +27,8 @@
  */
 
 #include "Cosa/NRF.h"
-#include "Cosa/Trace.h"
 #include "Cosa/Watchdog.h"
+#include "Cosa/Trace.h"
 #include "Cosa/Memory.h"
 
 // Configuration
@@ -41,7 +41,7 @@ NRF nrf;
 void setup()
 {
   // Start trace output
-  Trace::begin(9600);
+  trace.begin(9600);
 
   // Check amount of free memory
   TRACE(free_memory());
@@ -105,27 +105,27 @@ void loop()
   uint8_t observe = nrf.read(NRF::OBSERVE_TX);
   uint8_t status = nrf.get_status();
   uint8_t fifo = nrf.read(NRF::FIFO_STATUS);
-  Trace::print(ticks);
-  Trace::print_P(PSTR(":RECV(observe = "));
-  Trace::print(observe, 2);
-  Trace::print_P(PSTR(", status = "));
-  Trace::print(status, 2);
-  Trace::print_P(PSTR(", fifo = "));
-  Trace::print(fifo, 2);
-  Trace::print_P(PSTR(")\n"));
+  trace.print(ticks);
+  TRACE_PSTR(":RECV(observe = ");
+  trace.print(observe, 2);
+  TRACE_PSTR(", status = ");
+  trace.print(status, 2);
+  TRACE_PSTR(", fifo = ");
+  trace.print(fifo, 2);
+  TRACE_PSTR(")\n");
 
   // Attempt to receive and print a message
   msg_t msg;
   uint8_t pipe; 
   if (nrf.recv(&msg, &pipe)) {
-    Trace::print_P(PSTR("  PIPE("));
-    Trace::print(pipe);
-    Trace::print_P(PSTR("):msg(id = "));
-    Trace::print(msg.id);
-    Trace::print_P(PSTR(", observe = "));
-    Trace::print(msg.observe, 2);
-    Trace::print_P(", status = ");
-    Trace::print(msg.status, 2);
-    Trace::print_P(PSTR(")\n"));
+    TRACE_PSTR("  PIPE(");
+    trace.print(pipe);
+    TRACE_PSTR("):msg(id = ");
+    trace.print(msg.id);
+    TRACE_PSTR(", observe = ");
+    trace.print(msg.observe, 2);
+    TRACE_PSTR(", status = ");
+    trace.print(msg.status, 2);
+    TRACE_PSTR(")\n");
   }
 }

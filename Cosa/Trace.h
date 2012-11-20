@@ -21,7 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Basic trace support class. 
+ * Basic trace support class. Combind IOStream with UART for trace
+ * output.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -30,123 +31,75 @@
 #define __COSA_TRACE_H__
 
 #include "Cosa/Types.h"
+#include "Cosa/IOStream.h"
+#include "Cosa/UART.h"
 
-class Trace {
+class Trace : public IOStream {
+
+private:
+  UART uart;
 
 public:
   /**
-   * Start trace stream over uart transmitter.
+   * Construct Trace IOStream object and initiate UART object.
+   * The Trace class is actually a singleton; trace.
+   */
+  Trace() : IOStream(&uart) {}
+
+  /**
+   * Start trace stream over UART transmitter.
    * @param[in] baudrate serial bitrate.
    * @return true(1) if successful otherwise false(0)
    */
-  static bool begin(uint32_t baudrate = 9600);
+  bool begin(uint32_t baudrate = 9600)
+  {
+    return (uart.begin(baudrate));
+  }
 
   /**
-   * Stop trace stream over uart transmitter.
+   * Stop trace stream over current device.
    * @return true(1) if successful otherwise false(0)
    */
-  static bool end();
-
-  /**
-   * Print integer value in given base to trace stream.
-   * @param[in] value to print.
-   * @param[in] base to represent value in (default 10).
-   */
-  static void print(int value, uint8_t base = 10);
-
-  /**
-   * Print long integer 32-bit value in given base to trace stream.
-   * @param[in] value to print.
-   * @param[in] base to represent value in (default 10).
-   */
-  static void print(long int value, uint8_t base = 10);
-
-  /**
-   * Print unsigned 8-bit integer value in given base to trace 
-   * stream.
-   * @param[in] value to print.
-   * @param[in] base to represent value in (default 10).
-   */
-  static void print(uint8_t value, uint8_t base = 10)
+  bool end()
   {
-    print((int) value, base);
-  }
-
-  /**
-   * Print unsigned 16-bit integer value in given base to trace 
-   * stream.
-   * @param[in] value to print.
-   * @param[in] base to represent value in (default 10).
-   */
-  static void print(uint16_t value, uint8_t base = 10)
-  {
-    print((long int) value, base);
-  }
-    
-  /**
-   * Print pointer as a hexidecimal number to trace stream.
-   * @param[in] ptr pointer to data memory.
-   */
-  static void print(void *ptr)
-  { 
-    print((int16_t) ptr, 16);
-  }
-
-  /**
-   * Print pointer to program memory as a hexidecimal number to 
-   * trace stream.
-   * @param[in] ptr pointer to program memory.
-   */
-  static void print(const void *ptr)
-  { 
-    print((int16_t) ptr, 16);
-  }
-
-  /**
-   * Print character to trace stream.
-   * @param[in] c character to print.
-   */
-  static void print(char c);
-  
-  /**
-   * Print string in data memory to trace stream.
-   * @param[in] ptr pointer to data memory string.
-   */
-  static void print(char* s)
-  {
-    char c; 
-    while ((c = *s++) != 0) 
-      print(c);
-  }
-
-  /**
-   * Print string in program memory to trace stream.
-   * Use macro PSTR() to generate a string constants in 
-   * program memory.
-   * @param[in] ptr pointer to program memory string.
-   */
-  static void print_P(const char* s)
-  {
-    char c; 
-    while ((c = pgm_read_byte(s++)) != 0)
-      print(c);
-  }
-
-  /**
-   * Print end of line to trace stream.
-   */
-  static void println()
-  {
-    print_P(PSTR("\n"));
+    return (uart.end());
   }
 };
 
+extern Trace trace;
+
 #ifndef NDEBUG
+
+/**
+ * Support macro for trace of a string in program memory.
+ * @param[in] str string literal
+ */
+#define TRACE_PSTR(str)				\
+  trace.print_P(PSTR(str))
+
+/**
+ * Support macro for trace of an expression. The expression
+ * is used as a string and the value is evaluated.
+ * @param[in] expr expression.
+ */
 # define TRACE(expr)				\
   do {						\
-    Trace::print_P(PSTR(#expr " = "));		\
-    Trace::print(expr);				\
-    Trace::println();				\
+    TRACE_PSTR(#expr " = ");			\
+    trace.print(expr);				\
+    trace.println();				\
+  } while (0)
+
+/**
+ * Support macro for trace of a log message with line number and
+ * function name prefix.
+ * @param[in] msg log message.
+ */
+# define TRACE_LOG(msg)				\
+  do {						\
+    trace.print(__LINE__);			\
+    trace.print(':');				\
+    trace.print(__func__);			\
+    TRACE_PSTR(":" msg "\n");			\
   } while (0)
 #endif
 

@@ -31,9 +31,11 @@
 #ifndef __COSA_PINS_H__
 #define __COSA_PINS_H__
 
-#include "Types.h"
-#include "Bits.h"
-#include "Event.h"
+#include "Cosa/Types.h"
+#include "Cosa/Bits.h"
+#include "Cosa/Event.h"
+#include "Cosa/IOStream.h"
+#include "Cosa/Trace.h"
 
 class Pin {
 
@@ -143,15 +145,18 @@ public:
   uint8_t await_change(uint8_t us);
 
   /**
-   * In debug mode, print abstract pin information to serial stream.
+   * Print abstract pin information to given stream. Default is the
+   * trace stream.  
+   * @param[in] stream to print on.
    */
-  void print();
+  void print(IOStream& stream = trace); 
 
   /**
-   * In debug mode, print abstract pin information to serial stream
-   * with new-line.
+   * Print abstract pin information to given stream with
+   * new-line. Default is the trace stream. 
+   * @param[in] stream to print on.
    */
-  void println();
+  void println(IOStream& stream = trace);
 };
 
 /**

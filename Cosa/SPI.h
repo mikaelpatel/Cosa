@@ -33,8 +33,8 @@
 #define __COSA_SPI_H__
 
 #include "Cosa/Types.h"
-#include "Bits.h"
-#include "Event.h"
+#include "Cosa/Bits.h"
+#include "Cosa/Event.h"
 
 class SPI {
 

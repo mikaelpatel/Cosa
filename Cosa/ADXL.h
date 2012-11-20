@@ -30,8 +30,10 @@
 #ifndef __COSA_ADXL_H__
 #define __COSA_ADXL_H__
 
-#include "SPI.h"
-#include "Pins.h"
+#include "Cosa/SPI.h"
+#include "Cosa/Pins.h"
+#include "Cosa/IOStream.h"
+#include "Cosa/Trace.h"
 
 class ADXL : private SPI {
 
@@ -257,14 +259,18 @@ public:
     int z;
     
     /**
-     * In debug mode, print sample to serial stream.
+     * In debug mode, print sample to given stream. The
+     * default is the trace stream.
+     * @param[in] stream to print on.
      */
-    void print();
+    void print(IOStream& stream = trace);
 
     /**
-     * In debug mode, print sample to serial stream with new-line.
+     * In debug mode, print sample to stream with new-line. The
+     * default is the trace stream.
+     * @param[in] stream to print on.
      */
-    void println();
+    void println(IOStream& stream = trace);
   };
 
   /**

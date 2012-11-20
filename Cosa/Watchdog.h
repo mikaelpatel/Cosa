@@ -32,9 +32,9 @@
 #include <avr/wdt.h>
 #include <avr/sleep.h>
 
-#include "Types.h"
-#include "Bits.h"
-#include "Event.h"
+#include "Cosa/Types.h"
+#include "Cosa/Bits.h"
+#include "Cosa/Event.h"
 
 class Watchdog {
 

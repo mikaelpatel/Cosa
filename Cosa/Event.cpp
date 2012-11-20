@@ -26,10 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Event.h"
-#ifndef NDEBUG
-#include "Trace.h"
-#endif
+#include "Cosa/Event.h"
 
 static Event event[Event::QUEUE_MAX];
 
@@ -43,26 +40,22 @@ Event::push(int type, void* source, uint16_t value)
 }
 
 void 
-Event::print()
+Event::print(IOStream& stream)
 {
-#ifndef NDEBUG
-  Trace::print_P(PSTR("Event("));
-  Trace::print(_type);
-  Trace::print_P(PSTR(", "));
-  Trace::print((uint16_t) _source, 16);
-  Trace::print_P(PSTR(", "));
-  Trace::print(_value);
-  Trace::print_P(PSTR(")"));
-#endif
+  stream.print_P(PSTR("Event("));
+  stream.print(_type);
+  stream.print_P(PSTR(", "));
+  stream.print((uint16_t) _source, 16);
+  stream.print_P(PSTR(", "));
+  stream.print(_value);
+  stream.print_P(PSTR(")"));
 }
 
 void 
-Event::println() 
+Event::println(IOStream& stream) 
 {
-#ifndef NDEBUG
   print();
-  Trace::println();
-#endif
+  stream.println();
 }
 
 

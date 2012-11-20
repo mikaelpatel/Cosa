@@ -31,9 +31,9 @@
 #ifndef __COSA_NRF_H__
 #define __COSA_NRF_H__
 
-#include "Pins.h"
-#include "Event.h"
-#include "SPI.h"
+#include "Cosa/Pins.h"
+#include "Cosa/Event.h"
+#include "Cosa/SPI.h"
 
 class NRF : private SPI {
 

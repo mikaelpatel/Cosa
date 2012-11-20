@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Queue.h"
+#include "Cosa/Queue.h"
 
 bool
 Queue::enqueue(void* data)

@@ -29,8 +29,10 @@
 #ifndef __COSA_EVENT_H__
 #define __COSA_EVENT_H__
 
-#include "Types.h"
-#include "Queue.h"
+#include "Cosa/Types.h"
+#include "Cosa/Queue.h"
+#include "Cosa/IOStream.h"
+#include "Cosa/Trace.h"
 
 class Event {
 
@@ -51,7 +53,8 @@ public:
     TWI_WRITE_DATA_TYPE = 6,
     TWI_READ_DATA_TYPE = 7,
     NRF_RECEIVE_DATA_TYPE = 8,
-    ADXL_CHANGE_TYPE = 9
+    ADXL_CHANGE_TYPE = 9,
+    APPL_TYPE = 128
   };
 
 private:
@@ -107,14 +110,16 @@ public:
   static uint8_t push(int type, void* source = 0, uint16_t value = 0);
 
   /**
-   * In debug mode, print event to serial stream.
+   * In debug mode, print event to given stream. Default is the
+   * trace stream.
    */
-  void print();
+  void print(IOStream& stream = trace);
 
   /**
-   * In debug mode, print event to serial stream with new-line.
+   * In debug mode, print event to given stream with new-line.
+   * Default is the trace stream.
    */
-  void println();
+  void println(IOStream& stream = trace);
 
   /**
    * Event queue of size QUEUE_MAX.

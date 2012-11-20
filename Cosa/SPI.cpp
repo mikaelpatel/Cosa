@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "SPI.h"
+#include "Cosa/SPI.h"
 
 SPI* SPI::_spi = 0;
 

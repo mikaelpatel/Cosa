@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "NRF.h"
+#include "Cosa/NRF.h"
 #include <util/delay.h>
 
 // Timing information (ch. 6.1.7, pp. 24)
