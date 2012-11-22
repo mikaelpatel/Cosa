@@ -21,7 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * 1-Wire device driver support class.
+ * 1-Wire device driver support class. Note: this is for single
+ * slave without search and match of rom codes.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -65,7 +66,8 @@ public:
     Device(OneWire* pin) : _pin(pin) {}
 
     /**
-     * Read device rom.
+     * Read device rom. This can only be used when there is only
+     * one slave on the bus.
      * @return true(1) if successful otherwise false(0).
      */
     bool read_rom();
@@ -95,15 +97,18 @@ public:
    * Read the given number of bits from the one wire bus (slave).
    * Default number of bits is 8. Returns the value read MSB aligned.
    * The internal CRC is updated (see begin() and end()).
+   * @param[in] bits to be read.
    * @return value read.
    */
   uint8_t read(uint8_t bits = CHARBITS);
 
   /**
-   * Write the given value to the one wire bus.
+   * Write the given value to the one wire bus. The bits are written
+   * from LSB to MSB. 
    * @param[in] value.
+   * @param[in] bits to be written.
    */
-  void write(uint8_t value);
+  void write(uint8_t value, uint8_t bits = CHARBITS);
 
   /**
    * Begin a read sequence with CRC.

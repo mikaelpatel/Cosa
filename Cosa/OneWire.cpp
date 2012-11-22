@@ -21,7 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * 1-Wire device driver support class.
+ * 1-Wire device driver support class. Note: this is for single
+ * slave without search and match of rom codes.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -47,7 +48,7 @@ OneWire::reset()
   clear();
   DELAY(480);
 
-  // Check that there is a slave device
+  // Check that there is a slave device presence
   set_mode(INPUT_MODE);
   DELAY(70);
   res = is_clear();
@@ -63,14 +64,16 @@ OneWire::read(uint8_t bits)
   uint8_t mix = 0;
   while (bits--) {
     synchronized {
-      // Generate the read slot
+
+      // Generate the read slot; LSB to MSB order
       set_mode(OUTPUT_MODE);
       clear();
       DELAY(6);
       set_mode(INPUT_MODE);
       DELAY(9);
       res >>= 1;
-      // Sample the data from the slave and generate crc
+
+      // Sample the data from the slave and generate CRC
       if (is_set()) {
 	res |= 0x80;
 	mix = (_crc ^ 1);
@@ -87,12 +90,13 @@ OneWire::read(uint8_t bits)
 }
 
 void
-OneWire::write(uint8_t value)
+OneWire::write(uint8_t value, uint8_t bits)
 {
   set_mode(OUTPUT_MODE);
-  for (uint8_t bits = 0; bits < CHARBITS; bits++) {
+  while (bits--) {
     synchronized {
-      // Generate the write slot; LSB first
+
+      // Generate the write slot; LSB to MSB order
       clear();
       if (value & 1) {
 	DELAY(6);
@@ -114,11 +118,13 @@ bool
 OneWire::Device::read_rom()
 {
   if (!_pin->reset()) return (0);
+  // Fix: Assumes that a single slave on the bus
   _pin->write(OneWire::READ_ROM);
   _pin->begin();
   for (uint8_t i = 0; i < ROM_MAX; i++) {
     _rom[i] = _pin->read();
   }
+  // CRC code will be wrong for multiple slave
   return (_pin->end() == 0);
 }
 
