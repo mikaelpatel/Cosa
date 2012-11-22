@@ -79,7 +79,7 @@ void
 OutputPin::pulse(uint16_t us)
 {
   toggle();
-  _delay_loop_2(us >> 2);
+  _delay_loop_2(us << 2);
   toggle();
 }
 

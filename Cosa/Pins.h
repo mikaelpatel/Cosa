@@ -411,14 +411,14 @@ public:
     OutputPin(pin),
     _mode(mode)
   {
-    set(mode);
+    set_mode(mode);
   }
 
   /**
    * Change IO-pin to given mode.
    * @param[in] mode new operation mode.
    */
-  void set(Mode mode)
+  void set_mode(Mode mode)
   {
     synchronized {
       if (mode == OUTPUT_MODE)
