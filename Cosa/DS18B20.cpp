@@ -32,8 +32,7 @@
 bool
 DS18B20::convert_request()
 {
-  if (!_pin->reset()) return (0);
-  _pin->write(OneWire::SKIP_ROM);
+  if (!skip_rom()) return (0);
   _pin->write(CONVERT_T);
   return (1);
 }
@@ -41,8 +40,7 @@ DS18B20::convert_request()
 bool
 DS18B20::read_scratchpad()
 {
-  if (!_pin->reset()) return (0);
-  _pin->write(OneWire::SKIP_ROM);
+  if (!skip_rom()) return (0);
   _pin->write(READ_SCRATCHPAD);
   _pin->begin();
   uint8_t* ptr = (uint8_t*) &_scratchpad;

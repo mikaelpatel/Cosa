@@ -128,6 +128,25 @@ OneWire::Device::read_rom()
   return (_pin->end() == 0);
 }
 
+bool
+OneWire::Device::match_rom()
+{
+  if (!_pin->reset()) return (0);
+  _pin->write(OneWire::MATCH_ROM);
+  for (uint8_t i = 0; i < ROM_MAX; i++) {
+    _pin->write(_rom[i]);
+  }
+  return (1);
+}
+
+bool
+OneWire::Device::skip_rom()
+{
+  if (!_pin->reset()) return (0);
+  _pin->write(OneWire::SKIP_ROM);
+  return (1);
+}
+
 void
 OneWire::Device::print_rom(IOStream& stream)
 {

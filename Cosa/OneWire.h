@@ -73,6 +73,20 @@ public:
     bool read_rom();
 
     /**
+     * Match device rom. Address the slave device with the
+     * rom code. Device specific function command should follow.
+     * @return true(1) if successful otherwise false(0).
+     */
+    bool match_rom();
+
+    /**
+     * Skip device rom for boardcast or single device access.
+     * Device specific function command should follow.
+     * @return true(1) if successful otherwise false(0).
+     */
+    bool skip_rom();
+
+    /**
      * Print device rom to output stream. Default stream
      * is the trace stream.
      * @param[in] stream to print rom to.
