@@ -59,10 +59,32 @@ DS18B20::print_scratchpad(IOStream& stream)
   }
 }
 
-uint16_t 
+int16_t 
 DS18B20::get_temperature()
 {
-  uint16_t temp = (_scratchpad[1] << 8) | _scratchpad[0];
+  int16_t temp = (_scratchpad[1] << 8) | _scratchpad[0];
   return (temp);
 }
+
+void 
+DS18B20::get(temperature_t& res)
+{
+  int16_t temp = ((int16_t*) _scratchpad)[0];
+  int16_t numerator = temp >> 4;
+  if (temp < 0) temp = -temp;
+  uint16_t denominator = 0;
+  uint16_t fraction = 625;
+  for (uint8_t i = 0; i < 4; i++) {
+    if (temp & 1) denominator += fraction;
+    fraction <<= 1;
+    temp >>= 1;
+  }
+  if (denominator < 1000 && denominator > 500) denominator = 1000;
+  res.numerator = numerator;
+  res.denominator = denominator;
+}
+
+
+
+
 

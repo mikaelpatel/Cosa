@@ -62,14 +62,13 @@ void setup()
 
 void loop()
 {
-  Watchdog::delay(1024);
-
   // Request a single temperature conversion
   TRACE(ds18b20.convert_request());
-  Watchdog::delay(16);
+  Watchdog::delay(1024);
 
   // Read the scatchpad to get the latest value and print
   TRACE(ds18b20.read_scratchpad());
-  uint16_t temp = ds18b20.get_temperature();
-  INFO("temperature = %d.%d", temp >> 4, temp & 0xf);
+  DS18B20::temperature_t temperature;
+  ds18b20.get(temperature);
+  INFO("temperature = %d.%d", temperature.numerator, temperature.denominator);
 }
