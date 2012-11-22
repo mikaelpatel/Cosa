@@ -104,7 +104,7 @@ OneWire::write(uint8_t value)
 	set();
 	DELAY(10);
       }
-      value = value >> 1;
+      value >>= 1;
     }
   }
   set_mode(INPUT_MODE);

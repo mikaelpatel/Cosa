@@ -45,8 +45,9 @@ DS18B20::read_scratchpad()
   _pin->write(OneWire::SKIP_ROM);
   _pin->write(READ_SCRATCHPAD);
   _pin->begin();
-  for (uint8_t i = 0; i < SCRATCHPAD_MAX; i++) {
-    _scratchpad[i] = _pin->read();
+  uint8_t* ptr = (uint8_t*) &_scratchpad;
+  for (uint8_t i = 0; i < sizeof(_scratchpad); i++) {
+    *ptr++ = _pin->read();
   }
   return (_pin->end() == 0);
 }
@@ -54,29 +55,30 @@ DS18B20::read_scratchpad()
 void 
 DS18B20::print_scratchpad(IOStream& stream)
 {
-  for (uint8_t i = 0; i < SCRATCHPAD_MAX; i++) {
-    stream.printf_P(PSTR("scratchpad[%d] = %hd\n"), i, _scratchpad[i]);
+  uint8_t* ptr = (uint8_t*) &_scratchpad;
+  for (uint8_t i = 0; i < sizeof(_scratchpad); i++) {
+    stream.printf_P(PSTR("scratchpad[%d] = %hd\n"), i, *ptr++);
   }
 }
 
 int16_t 
 DS18B20::get_temperature()
 {
-  return (((int16_t*) _scratchpad)[0]);
+  return (_scratchpad.temperature);
 }
 
 void 
 DS18B20::get(temperature_t& res)
 {
-  int16_t temp = ((int16_t*) _scratchpad)[0];
-  int16_t numerator = temp >> 4;
-  if (temp < 0) temp = -temp;
+  int16_t temperature = _scratchpad.temperature;
+  int16_t numerator = temperature >> 4;
+  if (temperature < 0) temperature = -temperature;
   uint16_t denominator = 0;
   uint16_t fraction = 625;
   for (uint8_t i = 0; i < 4; i++) {
-    if (temp & 1) denominator += fraction;
+    if (temperature & 1) denominator += fraction;
     fraction <<= 1;
-    temp >>= 1;
+    temperature >>= 1;
   }
   if (denominator < 1000 && denominator > 500) denominator = 1000;
   res.numerator = numerator;

@@ -22,7 +22,7 @@
  *
  * @section Description
  * Driver for the DS18B20 Programmable Resolution 1-Write
- * Digital Thermometer.
+ * Digital Thermometer. See Maxim Integrated product description.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -37,7 +37,7 @@
 class DS18B20 : public OneWire::Device {
 private:
   /**
-   * DS18B20 Function Commands
+   * DS18B20 Function Commands (Table 3, pp. 12)
    */
   enum {
     CONVERT_T = 0x44,
@@ -47,8 +47,19 @@ private:
     RECALL_E = 0xB8,
     READ_POWER_SUPPLY = 0xB4
   };
-  static const uint8_t SCRATCHPAD_MAX = 9;
-  uint8_t _scratchpad[SCRATCHPAD_MAX];
+
+  /**
+   * DS18B20 Memory Map (Figure 7, pp 7)
+   */
+  struct scratchpad_t {
+    int16_t temperature;
+    int8_t high_trigger;
+    int8_t low_trigger;
+    uint8_t configuration;
+    uint8_t reserved[3];
+    uint8_t crc;
+  };
+  scratchpad_t _scratchpad;
 
 public:
   /**
@@ -58,7 +69,8 @@ public:
   DS18B20(OneWire* pin) : OneWire::Device(pin) {}
 
   /**
-   * Initiate a single temperature conversion.
+   * Initiate a single temperature conversion. With default setting
+   * 12-bit resolution the max conversion time is 750 ms.
    * @return true(1) if successful otherwise false(0).
    */
   bool convert_request();
@@ -77,7 +89,7 @@ public:
 
   /**
    * Get the latest temperature reading from the local memory scratchpad.
-   * @return temperature as a 16bit, fixed point(4) number.
+   * @return temperature as a 12:4 bit fixed point number.
    */
   int16_t get_temperature();
 
