@@ -53,7 +53,7 @@ void loop()
   Event::queue.await(&event);
 
   // Sample the accelerometer and print values to trace stream
-  ADXL345::sample_t s;
-  adxl.sample(s);
-  s.println();
+  ADXL345::sample_t values;
+  adxl.sample(values);
+  values.println();
 }
