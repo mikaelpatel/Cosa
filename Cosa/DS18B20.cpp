@@ -62,8 +62,7 @@ DS18B20::print_scratchpad(IOStream& stream)
 int16_t 
 DS18B20::get_temperature()
 {
-  int16_t temp = (_scratchpad[1] << 8) | _scratchpad[0];
-  return (temp);
+  return (((int16_t*) _scratchpad)[0]);
 }
 
 void 
