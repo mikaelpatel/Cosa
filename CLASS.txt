@@ -47,4 +47,13 @@ Driver for devices on the two wire interface (TWI/I2C).
 --------------------------------------------------------------------
 TWI.h:		class TWI
 --------------------------------------------------------------------
+ONEWIRE
+Driver for devices on the one wire bus (1-Wire). 
+Support for DS18B20 Programmable Resolution 1-Wire Digital 
+Thermometer.
+--------------------------------------------------------------------
+OneWire.h:	class OneWire : public IOPin
+OneWire.h:	class OneWire::Device
+DS18B20.h:	      class DS18B20 : public OneWire::Device
+--------------------------------------------------------------------
 
