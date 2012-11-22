@@ -104,20 +104,20 @@ void loop()
   if (abs(diff) > 100) {
 
     // Print the time index
-    trace.printf_P(PSTR("ticks = %d\n"), Watchdog::get_ticks());
+    INFO("ticks = %d", Watchdog::get_ticks());
 
     // Asynchronous sample internal temperature level
     tempVCC.request_sample();
-    trace.printf_P(PSTR("levelPin = %d\n"), new_value);
+    INFO("levelPin = %d", new_value);
     old_value = new_value;
 
     // Await the sample and print value
-    trace.printf_P(PSTR("tempVCC = %d\n"), tempVCC.await_sample());
+    INFO("tempVCC = %d", tempVCC.await_sample());
 
     // Check if the led should be on and the pwm level updated
     if (onoffPin.is_set()) {
       ledPin.set(new_value, 0, 1023);
-      trace.printf_P(PSTR("duty = %d\n"), ledPin.get_duty());
+      INFO("duty = %d", ledPin.get_duty());
     }
     else {
       ledPin.clear();

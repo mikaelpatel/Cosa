@@ -71,5 +71,5 @@ void loop()
   // Read the scatchpad to get the latest value and print
   TRACE(ds18b20.read_scratchpad());
   uint16_t temp = ds18b20.get_temperature();
-  trace.printf_P(PSTR("temperature = %d.%d\n"), temp >> 4, temp & 0xf);
+  INFO("temperature = %d.%d", temp >> 4, temp & 0xf);
 }
