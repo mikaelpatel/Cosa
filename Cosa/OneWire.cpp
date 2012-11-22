@@ -66,21 +66,21 @@ OneWire::read(uint8_t bits)
       // Generate the read slot
       set_mode(OUTPUT_MODE);
       clear();
-      DELAY(3);
+      DELAY(6);
       set_mode(INPUT_MODE);
       DELAY(9);
       res >>= 1;
       // Sample the data from the slave and generate crc
       if (is_set()) {
 	res |= 0x80;
-	mix = (_crc ^ 1) & 0x01;
+	mix = (_crc ^ 1);
       }
       else {
-	mix = (_crc ^ 0) & 0x01;
+	mix = (_crc ^ 0);
       }
       _crc >>= 1;
-      if (mix) _crc ^= 0x8C;
-      DELAY(52);
+      if (mix & 1) _crc ^= 0x8C;
+      DELAY(55);
     }
   }
   return (res);
@@ -95,14 +95,14 @@ OneWire::write(uint8_t value)
       // Generate the write slot; LSB first
       clear();
       if (value & 1) {
-	DELAY(10);
+	DELAY(6);
 	set();
-	DELAY(55);
+	DELAY(64);
       }
       else {
-	DELAY(65);
+	DELAY(60);
 	set();
-	DELAY(5);
+	DELAY(10);
       }
       value = value >> 1;
     }
