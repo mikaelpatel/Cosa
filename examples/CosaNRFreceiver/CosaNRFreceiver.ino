@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) Mikael Patel, 2012
+ * Copyright (C) 2012, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/NRF.h"
+#include "Cosa/NRF24L01P.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
 #include "Cosa/Memory.h"
@@ -36,7 +36,7 @@
 #define USE_RECEIVE_INTERRUPTS
 
 // NRF24L01+ Wireless communication using SPI and default pins(9, 10, 2)
-NRF nrf;
+NRF24L01P nrf;
 
 void setup()
 {
@@ -45,7 +45,7 @@ void setup()
 
   // Check amount of free memory
   TRACE(free_memory());
-  TRACE(sizeof(NRF));
+  TRACE(sizeof(nrf));
 
   // Start the watchdog ticks counter and push timeout events
 #ifdef USE_TIMEOUT_EVENTS
@@ -60,23 +60,23 @@ void setup()
   nrf.set_receiver_mode("cosa1");
 
   // Print out the configuration
-  TRACE(nrf.read(NRF::FEATURE));
-  TRACE(nrf.read(NRF::RF_CH));
-  TRACE(nrf.read(NRF::RF_SETUP));
-  TRACE(nrf.read(NRF::RX_ADDR_P0));
-  TRACE(nrf.read(NRF::RX_ADDR_P1));
-  TRACE(nrf.read(NRF::RX_ADDR_P2));
-  TRACE(nrf.read(NRF::RX_ADDR_P3));
-  TRACE(nrf.read(NRF::RX_ADDR_P4));
-  TRACE(nrf.read(NRF::RX_ADDR_P5));
-  TRACE(nrf.read(NRF::SETUP_RETR));
-  TRACE(nrf.read(NRF::SETUP_AW));
-  TRACE(nrf.read(NRF::DYNPD));
-  TRACE(nrf.read(NRF::CONFIG));
+  TRACE(nrf.read(NRF24L01P::FEATURE));
+  TRACE(nrf.read(NRF24L01P::RF_CH));
+  TRACE(nrf.read(NRF24L01P::RF_SETUP));
+  TRACE(nrf.read(NRF24L01P::RX_ADDR_P0));
+  TRACE(nrf.read(NRF24L01P::RX_ADDR_P1));
+  TRACE(nrf.read(NRF24L01P::RX_ADDR_P2));
+  TRACE(nrf.read(NRF24L01P::RX_ADDR_P3));
+  TRACE(nrf.read(NRF24L01P::RX_ADDR_P4));
+  TRACE(nrf.read(NRF24L01P::RX_ADDR_P5));
+  TRACE(nrf.read(NRF24L01P::SETUP_RETR));
+  TRACE(nrf.read(NRF24L01P::SETUP_AW));
+  TRACE(nrf.read(NRF24L01P::DYNPD));
+  TRACE(nrf.read(NRF24L01P::CONFIG));
 
 #ifdef USE_RECEIVE_INTERRUPTS
   // Setup interrupt handler to push events on message received
-  nrf.set_interrupt(NRF::push_event);
+  nrf.set_interrupt(NRF24L01P::push_event);
 #endif
 
   // Turn off Arduino timer0 until init is replaced
@@ -102,9 +102,9 @@ void loop()
 
   // Print receiver and fifo status
   uint16_t ticks = Watchdog::get_ticks();
-  uint8_t observe = nrf.read(NRF::OBSERVE_TX);
+  uint8_t observe = nrf.read(NRF24L01P::OBSERVE_TX);
   uint8_t status = nrf.get_status();
-  uint8_t fifo = nrf.read(NRF::FIFO_STATUS);
+  uint8_t fifo = nrf.read(NRF24L01P::FIFO_STATUS);
   trace.printf_P(PSTR("%d:RECV(observe = %bd, status = %bd, fifo = %bd)\n"), ticks, observe, status, fifo);
 
   // Attempt to receive and print a message

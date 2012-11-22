@@ -1,9 +1,9 @@
 /**
- * @file Cosa/NRF.h
+ * @file Cosa/NRF24L01P.h
  * @version 1.0
  *
  * @section License
- * Copyright (C) Mikael Patel, 2012
+ * Copyright (C) 2012, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,14 +28,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_NRF_H__
-#define __COSA_NRF_H__
+#ifndef __COSA_NRF24L01P_H__
+#define __COSA_NRF24L01P_H__
 
 #include "Cosa/Pins.h"
 #include "Cosa/Event.h"
 #include "Cosa/SPI.h"
 
-class NRF : private SPI {
+class NRF24L01P : private SPI {
 
 private:
   /**
@@ -87,7 +87,10 @@ public:
    * @param[in] ce chip enable activates pin number (default 9).
    * @param[in] irq interrupt pin number (default 2).
    */
-  NRF(uint8_t channel = 64, uint8_t csn = 10, uint8_t ce = 9, uint8_t irq = 2);
+  NRF24L01P(uint8_t channel = 64, 
+	    uint8_t csn = 10, 
+	    uint8_t ce = 9, 
+	    uint8_t irq = 2);
 
   /**
    * NRF transceiver states (See chap. 6.1.1, fig. 4, pp. 22)

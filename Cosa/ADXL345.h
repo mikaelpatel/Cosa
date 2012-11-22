@@ -1,9 +1,9 @@
 /**
- * @file Cosa/ADXL.cpp
+ * @file Cosa/ADXL345.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) Mikael Patel, 2012
+ * Copyright (C) 2012, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,15 +27,15 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ADXL_H__
-#define __COSA_ADXL_H__
+#ifndef __COSA_ADXL345_H__
+#define __COSA_ADXL345_H__
 
 #include "Cosa/SPI.h"
 #include "Cosa/Pins.h"
 #include "Cosa/IOStream.h"
 #include "Cosa/Trace.h"
 
-class ADXL : private SPI {
+class ADXL345 : private SPI {
 
 private:
   /**
@@ -224,7 +224,7 @@ public:
    * Construct accelerometer object selected with given output pin.
    * @param[in] ss slave selection pin.
    */
-  ADXL(uint8_t ss = 10);
+  ADXL345(uint8_t ss = 10);
 
   /**
    * Accelerometer offset calibration structure.

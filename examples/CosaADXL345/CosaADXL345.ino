@@ -1,9 +1,9 @@
 /**
- * @file CosaAXDL.ino
+ * @file CosaAXDL345.ino
  * @version 1.0
  *
  * @section License
- * Copyright (C) Mikael Patel, 2012
+ * Copyright (C) 2012, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,13 +26,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/ADXL.h"
+#include "Cosa/ADXL345.h"
 #include "Cosa/Trace.h"
 #include "Cosa/Watchdog.h"
 
 // Digital Accelerometer using SPI and default slave select pin(10)
 
-ADXL adxl;
+ADXL345 adxl;
 
 void setup()
 {
@@ -53,7 +53,7 @@ void loop()
   Event::queue.await(&event);
 
   // Sample the accelerometer and print values to trace stream
-  ADXL::sample_t s;
+  ADXL345::sample_t s;
   adxl.sample(s);
   s.println();
 }

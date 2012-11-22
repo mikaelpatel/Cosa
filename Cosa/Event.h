@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) Mikael Patel, 2012
+ * Copyright (C) 2012, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -52,8 +52,8 @@ public:
     SPI_RECEIVE_DATA_TYPE = 5,
     TWI_WRITE_DATA_TYPE = 6,
     TWI_READ_DATA_TYPE = 7,
-    NRF_RECEIVE_DATA_TYPE = 8,
-    ADXL_CHANGE_TYPE = 9,
+    NRF24L01P_RECEIVE_DATA_TYPE = 8,
+    ADXL345_CHANGE_TYPE = 9,
     APPL_TYPE = 128
   };
 

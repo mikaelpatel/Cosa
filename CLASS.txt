@@ -39,8 +39,8 @@ SERIAL PERIPHERAL INTERFACE
 Driver for devices on the serial peripherial interface (SPI).
 --------------------------------------------------------------------
 SPI.h:		class SPI
-ADXL.h:		      class ADXL : private SPI
-NRF.h:		      class NRF : private SPI
+ADXL345.h:	      class ADXL345 : private SPI
+NRF24L01P.h:	      class NRF24L01P : private SPI
 --------------------------------------------------------------------
 TWO WIRE INTERFACE
 Driver for devices on the two wire interface (TWI/I2C).

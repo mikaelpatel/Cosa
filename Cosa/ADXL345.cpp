@@ -1,9 +1,9 @@
 /**
- * @file Cosa/ADXL.cpp
+ * @file Cosa/ADXL345.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) Mikael Patel, 2012
+ * Copyright (C) 2012, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,9 +27,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/ADXL.h"
+#include "Cosa/ADXL345.h"
 
-ADXL::ADXL(uint8_t ss) : 
+ADXL345::ADXL345(uint8_t ss) : 
   SPI(), 
   _ss(ss, 1) 
 {
@@ -40,7 +40,7 @@ ADXL::ADXL(uint8_t ss) :
 }
 
 void 
-ADXL::write(Register reg, uint8_t value)
+ADXL345::write(Register reg, uint8_t value)
 {
   SPI_transaction(_ss) {
     SPI::write(WRITE_CMD | (reg & REG_MASK), value);
@@ -48,7 +48,7 @@ ADXL::write(Register reg, uint8_t value)
 }
 
 void 
-ADXL::write(Register reg, void* buffer, uint8_t count)
+ADXL345::write(Register reg, void* buffer, uint8_t count)
 {
   SPI_transaction(_ss) {
     SPI::write(WRITE_CMD | MULTIPLE_BYTE | (reg & REG_MASK), buffer, count);
@@ -56,7 +56,7 @@ ADXL::write(Register reg, void* buffer, uint8_t count)
 }
 
 uint8_t 
-ADXL::read(Register reg)
+ADXL345::read(Register reg)
 {
   uint8_t res;
   SPI_transaction(_ss) {
@@ -66,7 +66,7 @@ ADXL::read(Register reg)
 }
 
 void 
-ADXL::read(Register reg, void* buffer, uint8_t count)
+ADXL345::read(Register reg, void* buffer, uint8_t count)
 {
   SPI_transaction(_ss) {
     SPI::read(READ_CMD | MULTIPLE_BYTE | (reg & REG_MASK), buffer, count);
@@ -74,7 +74,7 @@ ADXL::read(Register reg, void* buffer, uint8_t count)
 }
 
 void 
-ADXL::calibrate(int8_t x, int8_t y, int8_t z)
+ADXL345::calibrate(int8_t x, int8_t y, int8_t z)
 {
   offset_t ofs; 
   ofs.x = x;
@@ -84,13 +84,13 @@ ADXL::calibrate(int8_t x, int8_t y, int8_t z)
 }
 
 void 
-ADXL::sample(sample_t& s)
+ADXL345::sample(sample_t& s)
 {
   read(DATA, &s, sizeof(s));
 }
 
 void
-ADXL::calibrate()
+ADXL345::calibrate()
 {
   sample_t s;
   calibrate(0, 0, 0);
@@ -99,13 +99,13 @@ ADXL::calibrate()
 }
 
 void 
-ADXL::sample_t::print(IOStream& stream)
+ADXL345::sample_t::print(IOStream& stream)
 {
-  stream.printf_P(PSTR("ADXL::sample_t(x = %d, y = %d, z = %d)"), x, y, z);
+  stream.printf_P(PSTR("ADXL345::sample_t(x = %d, y = %d, z = %d)"), x, y, z);
 }
 
 void 
-ADXL::sample_t::println(IOStream& stream)
+ADXL345::sample_t::println(IOStream& stream)
 {
   print(stream);
   stream.println();

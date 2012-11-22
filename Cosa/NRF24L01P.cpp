@@ -1,9 +1,9 @@
 /**
- * @file Cosa/NRF.cpp
+ * @file Cosa/NRF24L01P.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) Mikael Patel, 2012
+ * Copyright (C) 2012, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/NRF.h"
+#include "Cosa/NRF24L01P.h"
 #include <util/delay.h>
 
 // Timing information (ch. 6.1.7, pp. 24)
@@ -36,7 +36,7 @@
 #define Tstby2a 130.0
 #define Thce 10.0
 
-NRF::NRF(uint8_t channel, uint8_t csn, uint8_t ce, uint8_t irq) : 
+NRF24L01P::NRF24L01P(uint8_t channel, uint8_t csn, uint8_t ce, uint8_t irq) : 
   SPI(), 
   _status(0),
   _channel(channel),
@@ -49,7 +49,7 @@ NRF::NRF(uint8_t channel, uint8_t csn, uint8_t ce, uint8_t irq) :
 }
 
 uint8_t
-NRF::read(Register reg)
+NRF24L01P::read(Register reg)
 {
   uint8_t res;
   SPI_transaction(_csn) {
@@ -59,7 +59,7 @@ NRF::read(Register reg)
 }
 
 uint8_t 
-NRF::write(Register reg, uint8_t data)
+NRF24L01P::write(Register reg, uint8_t data)
 {
   SPI_transaction(_csn) {
     _status = SPI::write(W_REGISTER | (REG_MASK & reg), data);
@@ -68,7 +68,7 @@ NRF::write(Register reg, uint8_t data)
 }
 
 uint8_t 
-NRF::write(Register reg, const void* buffer, uint8_t count)
+NRF24L01P::write(Register reg, const void* buffer, uint8_t count)
 {
   SPI_transaction(_csn) {
     _status = SPI::write(W_REGISTER | (REG_MASK & reg), buffer, count);
@@ -77,14 +77,14 @@ NRF::write(Register reg, const void* buffer, uint8_t count)
 }
 
 void 
-NRF::set_interrupt(InterruptPin::Callback fn)
+NRF24L01P::set_interrupt(InterruptPin::Callback fn)
 {
   _irq.set(fn, this);
   if (fn != 0) _irq.enable();
 }
 
 void
-NRF::set_powerup_mode()
+NRF24L01P::set_powerup_mode()
 {
   if (_state != POWER_DOWN_STATE) return;
   _ce.clear();
@@ -101,7 +101,7 @@ NRF::set_powerup_mode()
 }
 
 void
-NRF::set_receiver_mode(const void* addr, uint8_t width)
+NRF24L01P::set_receiver_mode(const void* addr, uint8_t width)
 {
   if (width > AW_MAX) width = AW_MAX;
   else if (width < 3) width = 3;
@@ -124,7 +124,7 @@ NRF::set_receiver_mode(const void* addr, uint8_t width)
 }
 
 void
-NRF::set_transmitter_mode(const void* addr, uint8_t width)
+NRF24L01P::set_transmitter_mode(const void* addr, uint8_t width)
 {
   if (width > AW_MAX) width = AW_MAX;
   else if (width < 3) width = 3;
@@ -142,7 +142,7 @@ NRF::set_transmitter_mode(const void* addr, uint8_t width)
 }
 
 void
-NRF::set_standby_mode()
+NRF24L01P::set_standby_mode()
 {
   _delay_us(Thce);
   _ce.clear();
@@ -150,7 +150,7 @@ NRF::set_standby_mode()
 }
 
 void
-NRF::set_powerdown_mode()
+NRF24L01P::set_powerdown_mode()
 {
   _ce.clear();
   write(CONFIG, _BV(EN_CRC) | _BV(CRCO));
@@ -158,14 +158,14 @@ NRF::set_powerdown_mode()
 }
 
 bool
-NRF::is_available()
+NRF24L01P::is_available()
 {
   uint8_t status = get_status();
   return ((status & RX_P_NO_MASK) != RX_P_NO_MASK);
 }
 
 uint8_t
-NRF::recv(void* buffer, uint8_t* pipe)
+NRF24L01P::recv(void* buffer, uint8_t* pipe)
 {
   uint8_t status = get_status();
   uint8_t no = (status & RX_P_NO_MASK);
@@ -182,28 +182,28 @@ NRF::recv(void* buffer, uint8_t* pipe)
 }
 
 bool
-NRF::is_ready()
+NRF24L01P::is_ready()
 {
   uint8_t status = get_status();
   return ((status & (_BV(TX_FIFO_FULL))) == 0);
 }
 
 bool
-NRF::is_max_retransmit()
+NRF24L01P::is_max_retransmit()
 {
   uint8_t status = get_status();
   return ((status & _BV(MAX_RT)) != 0);
 }
 
 bool
-NRF::is_max_lost()
+NRF24L01P::is_max_lost()
 {
   uint8_t observe = read(OBSERVE_TX);
   return ((observe >> PLOS_CNT) == 0xf);
 }
 
 uint8_t
-NRF::ack(const void* buffer, uint8_t count, uint8_t pipe)
+NRF24L01P::ack(const void* buffer, uint8_t count, uint8_t pipe)
 {
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
@@ -214,7 +214,7 @@ NRF::ack(const void* buffer, uint8_t count, uint8_t pipe)
 }
 
 uint8_t
-NRF::ack_P(const void* buffer, uint8_t count, uint8_t pipe)
+NRF24L01P::ack_P(const void* buffer, uint8_t count, uint8_t pipe)
 {
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
@@ -225,7 +225,7 @@ NRF::ack_P(const void* buffer, uint8_t count, uint8_t pipe)
 }
 
 uint8_t
-NRF::send(const void* buffer, uint8_t count)
+NRF24L01P::send(const void* buffer, uint8_t count)
 {
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
@@ -236,7 +236,7 @@ NRF::send(const void* buffer, uint8_t count)
 }
 
 uint8_t
-NRF::send_P(const void* buffer, uint8_t count)
+NRF24L01P::send_P(const void* buffer, uint8_t count)
 {
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
@@ -247,7 +247,7 @@ NRF::send_P(const void* buffer, uint8_t count)
 }
 
 uint8_t 
-NRF::flush()
+NRF24L01P::flush()
 {
   SPI_transaction(_csn) {
     _status = SPI::exchange(FLUSH_RX);
@@ -262,12 +262,12 @@ NRF::flush()
 }
 
 void 
-NRF::push_event(InterruptPin* pin, void* env)
+NRF24L01P::push_event(InterruptPin* pin, void* env)
 { 
-  NRF* nrf = (NRF*) env;
+  NRF24L01P* nrf = (NRF24L01P*) env;
   uint8_t status = nrf->get_status();
   if (status & _BV(RX_DR)) {
     nrf->write(STATUS, _BV(RX_DR));
-    Event::push(Event::NRF_RECEIVE_DATA_TYPE, nrf, status);
+    Event::push(Event::NRF24L01P_RECEIVE_DATA_TYPE, nrf, status);
   }
 }
