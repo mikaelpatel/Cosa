@@ -21,8 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * 1-Wire device driver support class. Note: this is for single
- * slave without search and match of rom codes.
+ * 1-Wire device driver support class. Allows device rom search
+ * and connection to multiple devices on 1-Wire buses.
  *
  * This file is part of the Arduino Che Cosa project.
  */
