@@ -65,24 +65,6 @@ DS18B20::get_temperature()
   return (_scratchpad.temperature);
 }
 
-void 
-DS18B20::get(temperature_t& res)
-{
-  int16_t temperature = _scratchpad.temperature;
-  int16_t numerator = temperature >> 4;
-  if (temperature < 0) temperature = -temperature;
-  uint16_t denominator = 0;
-  uint16_t fraction = 625;
-  for (uint8_t i = 0; i < 4; i++) {
-    if (temperature & 1) denominator += fraction;
-    fraction <<= 1;
-    temperature >>= 1;
-  }
-  if (denominator < 1000 && denominator > 500) denominator = 1000;
-  res.numerator = numerator;
-  res.denominator = denominator;
-}
-
 
 
 

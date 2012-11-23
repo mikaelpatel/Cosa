@@ -89,25 +89,9 @@ public:
 
   /**
    * Get the latest temperature reading from the local memory scratchpad.
-   * @return temperature as a 12:4 bit fixed point number.
+   * @return temperature as a fixed<12,4> point number.
    */
   int16_t get_temperature();
-
-  /**
-   * Temperature mapped to decimal fraction with denominator scaled
-   * by 1000.
-   */
-  struct temperature_t {
-    int16_t numerator;
-    int16_t denominator;
-  };
-
-  /**
-   * Get the latest temperature reading from the local memory scratchpad
-   * as a decimal fraction with denominator scaled by 1000.
-   * @param[in] pin one wire bus pin.
-   */
-  void get(temperature_t& res);
 };
 
 #endif
