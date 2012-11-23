@@ -70,7 +70,14 @@ void loop()
   // Read the scatchpad to get the latest value and print
   TRACE(ds18b20.read_scratchpad());
   FixedPoint temp(ds18b20.get_temperature(), 4);
-  INFO("temperature = %d.%d", 
-       temp.get_integer(), 
-       temp.get_fraction(4));
+  int16_t integer = temp.get_integer();
+  int16_t fraction = temp.get_fraction();
+  int16_t fraction1000 = temp.get_fraction(4);
+  INFO("temperature = %hd, %d.%d, %d.%s%d", 
+       ds18b20.get_temperature(),
+       integer,
+       fraction,
+       integer,
+       (fraction1000 != 0 & fraction1000 < 1000 ? "0" : ""),
+       fraction1000);
 }

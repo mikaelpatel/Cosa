@@ -36,7 +36,7 @@ FixedPoint::get_fraction(uint8_t scale)
   if (scale == 0) return (_fraction);
   while (--scale) 
     half = (half << 3) + (half << 1);
-  for (uint8_t bit = (1 << _point); bit; bit >>= 1, half >>= 1)
+  for (uint8_t bit = (1 << (_point - 1)); bit; bit >>= 1, half >>= 1)
     if (bit & _fraction)
       result += half;
   return (result);
