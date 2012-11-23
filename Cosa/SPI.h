@@ -36,7 +36,7 @@
 #include "Cosa/Bits.h"
 #include "Cosa/Event.h"
 
-class SPI {
+class SPI : public Thing {
 
 public:
   /**
@@ -46,11 +46,11 @@ public:
   static SPI* _spi;
 
   /**
-   * Callback function prototype for data receive.
+   * Interrupt handler prototype for data receive.
    * @param[in] buffer pointer to received data (byte or package).
    * @param[in] count size of received data
    */
-  typedef void (*Callback)(void* buffer, uint8_t count);
+  typedef void (*InterruptHandler)(void* buffer, uint8_t count);
 
 private:
   enum Pin {
@@ -59,11 +59,12 @@ private:
     MISO_PIN = 4,
     SCK_PIN = 5
   };
-  Callback _callback;
+  InterruptHandler _handler;
   uint8_t _cmd;
   uint8_t* _buffer;
   uint8_t _max;
   uint8_t _put;
+  uint8_t _data;
 
 public:
   enum Clock {
@@ -88,37 +89,45 @@ public:
    * Construct serial peripheral interface for master.
    */
   SPI() : 
-    _callback(0), 
+    Thing(),
+    _handler(0), 
     _buffer(0),
     _max(0),
-    _put(0)
+    _put(0),
+    _data(0)
   {
     _spi = 0;
   }
   
   /**
    * Construct serial peripheral interface for slave.
-   * @param[in] fn callback function.
+   * @param[in] fn interrupt handler. 
    * @param[in] buffer with data to received data.
    * @param[in] max size of buffer.
    */
-  SPI(Callback fn, void* buffer = 0, uint8_t max = 0) : 
-    _callback(fn), 
+  SPI(InterruptHandler fn, void* buffer = 0, uint8_t max = 0) : 
+    Thing(),
+    _handler(fn), 
     _buffer((uint8_t*) buffer),
     _max(max),
-    _put(0)
+    _put(0),
+    _data(0)
   {
     _spi = 0;
     bit_clear(DDRB, SS_PIN);
+    if (buffer == 0) {
+      _buffer = &_data;
+      _max = 1;
+    }
   }
   
   /*
-   * Set data receive callback function.
-   * @param[in] fn callback function.
+   * Set data receive interrupt handler.
+   * @param[in] fn interrupt handler function.
    */
-  void set(Callback fn) 
+  void set(InterruptHandler fn) 
   { 
-    _callback = fn; 
+    _handler = fn; 
   }
 
   /**
@@ -130,6 +139,24 @@ public:
   { 
     _buffer = (uint8_t*) buffer; 
     _max = max; 
+  }
+
+  /**
+   * Get data receive buffer for package receive mode.
+   * @return buffer pointer to buffer.
+   */
+  void* get_buffer()
+  { 
+    return (_buffer);
+  }
+
+  /**
+   * Get length of receive buffer.
+   * @return number of bytes.
+   */
+  uint8_t get_length()
+  { 
+    return (_put);
   }
 
   /**
@@ -239,12 +266,12 @@ public:
   void on_receive(uint8_t data);
 
   /**
-   * Callback function to push event for receive data/package
+   * Interrupt handler to push event for receive data/package
    * in slave mode.
    */
-  static void push_event(uint8_t* buffer, uint8_t count) 
+  static void push_event(SPI* spi, uint8_t count)
   { 
-    Event::push(Event::SPI_RECEIVE_DATA_TYPE, buffer, count);
+    Event::push(Event::READ_DATA_TYPE, spi, count);
   }
 };
 

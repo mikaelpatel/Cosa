@@ -62,8 +62,6 @@ Pin::println(IOStream& stream)
 
 InterruptPin* InterruptPin::ext[2] = { 0, 0 };
 
-InterruptPin::InterruptPin(uint8_t pin, Mode mode, Callback fn, void* env);
-
 ISR(INT0_vect)
 {
   if (InterruptPin::ext[0] != 0) 
@@ -72,7 +70,8 @@ ISR(INT0_vect)
 
 ISR(INT1_vect)
 {
-  if (InterruptPin::ext[1] != 0) InterruptPin::ext[1]->on_interrupt();
+  if (InterruptPin::ext[1] != 0) 
+    InterruptPin::ext[1]->on_interrupt();
 }
 
 void 
@@ -122,15 +121,6 @@ PWMPin::get_duty()
 
 AnalogPin* AnalogPin::_sampling = 0;
 
-AnalogPin::AnalogPin(uint8_t pin, Reference ref, Callback fn, void* env) : 
-  Pin(pin < 14 ? pin + 14 : pin), 
-  _reference(ref),
-  _callback(fn),
-  _value(0),
-  _env(env)
-{
-}
-
 uint16_t 
 AnalogPin::sample()
 {
@@ -147,7 +137,7 @@ AnalogPin::request_sample()
   loop_until_bit_is_clear(ADCSRA, ADSC);
   ADMUX = (_reference | (_pin - 14));
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
-  if (_callback == 0) return;
+  if (_handler == 0) return;
   _sampling = this;
   bit_set(ADCSRA, ADIE);
 }
@@ -174,27 +164,17 @@ AnalogPinSet::sample_next(AnalogPin* pin, void* env)
     AnalogPin* pin = set->get_pin_at(set->_next++);
     pin->request_sample();
   } 
-  else if (set->_callback != 0) {
-    set->_callback(set, set->_env);
+  else if (set->_handler != 0) {
+    set->_handler(set, set->_env);
   }
 }
 
-AnalogPinSet::AnalogPinSet(const AnalogPin** pins, uint8_t count, Callback fn, void* env) :
-  _pin_at(pins),
-  _count(count),
-  _callback(fn),
-  _env(env)
-{
-  for (uint8_t ix = 0; ix < count; ix++)
-    get_pin_at(ix)->set(sample_next, this);
-}
-  
 bool
-AnalogPinSet::begin(Callback fn, void* env)
+AnalogPinSet::begin(InterruptHandler fn, void* env)
 {
   if (AnalogPin::get_sampling()) return (0);
   if (fn != 0) {
-    _callback = fn;
+    _handler = fn;
     _env = env;
   }
   get_pin_at(0)->request_sample();

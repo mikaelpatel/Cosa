@@ -32,23 +32,11 @@ static Event event[Event::QUEUE_MAX];
 
 Queue Event::queue(Event::QUEUE_MAX, sizeof(Event), event);
 
-uint8_t
-Event::push(int type, void* source, uint16_t value)
-{
-  Event event(type, source, value);
-  return (queue.enqueue(&event));
-}
-
 void 
 Event::print(IOStream& stream)
 {
-  stream.print_P(PSTR("Event("));
-  stream.print(_type);
-  stream.print_P(PSTR(", "));
-  stream.print((uint16_t) _source, 16);
-  stream.print_P(PSTR(", "));
-  stream.print(_value);
-  stream.print_P(PSTR(")"));
+  stream.printf_P(PSTR("Event(type = %d, target = %p, value = %hd"),
+		  _type, _target, _value);
 }
 
 void 

@@ -33,6 +33,7 @@
 #include "Cosa/Queue.h"
 #include "Cosa/IOStream.h"
 #include "Cosa/Trace.h"
+#include "Cosa/Thing.h"
 
 class Event {
 
@@ -45,33 +46,34 @@ public:
    */
   enum {
     NULL_TYPE = 0,
-    INTERRUPT_PIN_CHANGE_TYPE = 1,
-    ANALOG_PIN_SAMPLE_TYPE = 2,
-    ANALOG_PIN_SET_SAMPLE_TYPE = 3,
-    WATCHDOG_TIMEOUT_TYPE = 4,
-    SPI_RECEIVE_DATA_TYPE = 5,
-    TWI_WRITE_DATA_TYPE = 6,
-    TWI_READ_DATA_TYPE = 7,
-    NRF24L01P_RECEIVE_DATA_TYPE = 8,
-    ADXL345_CHANGE_TYPE = 9,
-    APPL_TYPE = 128
+    CHANGE_TYPE = 1,
+    FALLING_TYPE = 2,
+    RISING_TYPE = 3,
+    TIMEOUT_TYPE = 4,
+    CONNECT_TYPE = 5,
+    DISCONNECT_TYPE = 6,
+    READ_DATA_TYPE = 7,
+    WRITE_DATA_TYPE = 8,
+    THING_TYPE = 64,
+    ERROR_TYPE = 255
   };
 
 private:
-  int _type;
-  void* _source;
+  uint8_t _type;
+  Thing* _target;
   uint16_t _value;
 
 public:
   /**
    * Construct event with given type, source and value.
    * @param[in] type event identity.
-   * @param[in] source event generator.
+   * @param[in] target event receiver.
    * @param[in] value event value.
+   * @param[in] env event environment.
    */
-  Event(int type = NULL_TYPE, void* source = 0, uint16_t value = 0) :
+  Event(int8_t type = NULL_TYPE, Thing* target = 0, uint16_t value = 0) :
     _type(type),
-    _source(source),
+    _target(target),
     _value(value)
   {}
 
@@ -85,29 +87,67 @@ public:
   }
 
   /**
-   * Return event source.
+   * Return event target.
    * @return pointer.
    */
-  void* get_source() 
+  Thing* get_target() 
   { 
-    return (_source); 
+    return (_target); 
   } 
 
   /**
    * Return event value.
    * @return value.
    */
-  uint16_t get_value() { return (_value); }
+  uint16_t get_value() 
+  { 
+    return (_value); 
+  }
+
+  /**
+   * Return event environment pointer.
+   * @return pointer
+   */
+  void* get_env() 
+  { 
+    return ((void*) _value); 
+  }
+
+  /**
+   * Dispatch event handler for target object.
+   */
+  bool dispatch()
+  {
+    if (_target != 0) 
+      _target->on_event(_type, _value);
+  }
 
   /**
    * Push an event with given type, source and value into the event queue, .
    * (eventq). Return true(1) if successful otherwise false(0).
    * @param[in] type event identity.
-   * @param[in] source event generator.
+   * @param[in] target event target.
    * @param[in] value event value.
    * @return boolean, true(1) if successful otherwise false(0).
    */
-  static uint8_t push(int type, void* source = 0, uint16_t value = 0);
+  static bool push(uint8_t type, Thing* target, uint16_t value = 0)
+  {
+    Event event(type, target, value);
+    return (queue.enqueue(&event));
+  }
+
+  /**
+   * Push an event with given type, source and value into the event queue, .
+   * (eventq). Return true(1) if successful otherwise false(0).
+   * @param[in] type event identity.
+   * @param[in] target event target.
+   * @param[in] value event value.
+   * @return boolean, true(1) if successful otherwise false(0).
+   */
+  static bool push(uint8_t type, Thing* target, void* value)
+  {
+    push(type, target, (uint16_t) value);
+  }
 
   /**
    * In debug mode, print event to given stream. Default is the

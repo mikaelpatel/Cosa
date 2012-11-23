@@ -28,7 +28,7 @@
 
 #include "Cosa/Watchdog.h"
 
-Watchdog::Callback Watchdog::_callback = 0;
+Watchdog::InterruptHandler Watchdog::_handler = 0;
 
 volatile uint16_t Watchdog::_ticks = 0;
 
@@ -50,7 +50,7 @@ log2(uint16_t value)
 }
 
 void 
-Watchdog::begin(uint16_t ms, Callback fn, uint8_t mode)
+Watchdog::begin(uint16_t ms, InterruptHandler fn, uint8_t mode)
 {
   // Map milli-seconds to watchdog prescale values
   uint8_t prescale = log2((ms + 8) >> 5) - 1;
@@ -68,8 +68,8 @@ Watchdog::begin(uint16_t ms, Callback fn, uint8_t mode)
     WDTCSR = config;
   }
 
-  // Register the callback function
-  _callback = fn;
+  // Register the interrupt handler
+  _handler = fn;
   _prescale = prescale;
   _mode = mode;
 }

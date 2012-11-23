@@ -35,6 +35,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.h"
+#include "Cosa/Thing.h"
 
 class Watchdog {
 
@@ -42,25 +43,25 @@ public:
   /**
    * Callback function prototype for watchdog timeout.
    */
-  typedef void (*Callback)(void* env);
+  typedef void (*InterruptHandler)(void* env);
 
 private:
   // FIX: Allow multiple callbacks with any interval of delay (tick count)
   static volatile uint16_t _ticks;
-  static Callback _callback;
+  static InterruptHandler _handler;
   static uint8_t _prescale;
   static uint8_t _mode;
   static void* _env;
   
 public:
   /**
-   * Set watchdog timeout callback function.
-   * @param[in] fn callback function.
+   * Set watchdog timeout interrupt handler.
+   * @param[in] fn interrupt handler.
    * @param[in] env environment pointer.
    */
-  static void set(Callback fn, void* env = 0) 
+  static void set(InterruptHandler fn, void* env = 0) 
   { 
-    _callback = fn; 
+    _handler = fn; 
     _env = env; 
   }
 
@@ -84,15 +85,15 @@ public:
 
   /**
    * Start watchdog with given period (milli-seconds), sleep mode and 
-   * timeout callback function. The timeout period is mapped to 
+   * timeout interrupt handler. The timeout period is mapped to 
    * 16 milli-seconds and double periods (32, 64, 128, etc to approx 
    * 8 seconds).
    * @param[in] ms timeout period in milli-seconds.
-   * @param[in] fn callback function.
+   * @param[in] fn function.
    * @param[in] mode sleep mode.
    */
   static void begin(uint16_t ms, 
-		    Callback fn = 0, 
+		    InterruptHandler fn = 0, 
 		    uint8_t mode = SLEEP_MODE_IDLE);
 
   /**
@@ -118,10 +119,10 @@ public:
   /**
    * Trampoline function for interrupt service on watchdog timeout.
    */
-  static void on_timeout() 
+  static void on_timeout()
   { 
     _ticks++; 
-    if (_callback != 0) _callback(_env); 
+    if (_handler != 0) _handler(_env); 
   }
 
   /**
@@ -129,7 +130,7 @@ public:
    */
   static void push_event(void* env) 
   { 
-    Event::push(Event::WATCHDOG_TIMEOUT_TYPE, env, _ticks); 
+    Event::push(Event::TIMEOUT_TYPE, 0, env);
   }
 };
 

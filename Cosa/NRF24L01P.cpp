@@ -77,7 +77,7 @@ NRF24L01P::write(Register reg, const void* buffer, uint8_t count)
 }
 
 void 
-NRF24L01P::set_interrupt(InterruptPin::Callback fn)
+NRF24L01P::set_interrupt(InterruptPin::InterruptHandler fn)
 {
   _irq.set(fn, this);
   if (fn != 0) _irq.enable();
@@ -268,6 +268,6 @@ NRF24L01P::push_event(InterruptPin* pin, void* env)
   uint8_t status = nrf->get_status();
   if (status & _BV(RX_DR)) {
     nrf->write(STATUS, _BV(RX_DR));
-    Event::push(Event::NRF24L01P_RECEIVE_DATA_TYPE, nrf, status);
+    Event::push(Event::READ_DATA_TYPE, nrf, status);
   }
 }

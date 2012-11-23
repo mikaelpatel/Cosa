@@ -33,11 +33,12 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
+#include "Cosa/Thing.h"
 #include "Cosa/Event.h"
 #include "Cosa/IOStream.h"
 #include "Cosa/Trace.h"
 
-class Pin {
+class Pin : public Thing {
 
 protected:
   volatile uint8_t* const _sfr;
@@ -106,7 +107,11 @@ public:
    * Construct abstract pin given Arduino pin number.
    * @param[in] pin number.
    */
-  Pin(uint8_t pin) : _sfr(SFR(pin)), _mask(MASK(pin)), _pin(pin) 
+  Pin(uint8_t pin) : 
+    Thing(), 
+    _sfr(SFR(pin)), 
+    _mask(MASK(pin)), 
+    _pin(pin) 
   {}
 
   /**
@@ -138,7 +143,7 @@ public:
 
   /**
    * Await change of pin state given maximum number of micro seconds.
-   * Returns number of micro seconds.
+   * Returns number of wait cycles. 
    * @param[in] us micro seconds (1..255).
    * @return number of wait cycles.
    */
@@ -185,20 +190,21 @@ public:
 };
 
 /**
- * Abstract interrupt pin. Allows callback with the pin value changes.
+ * Abstract interrupt pin. Allows interrupt handling on the pin value 
+ * changes. 
  */
 class InterruptPin : public InputPin {
 
 public:
   /**
-   * Callback function prototype.
+   * Interrupt handler function prototype.
    * @param[in] pin reference of changed pin.
-   * @param[in] env callback environment. 
+   * @param[in] env interrupt handler environment. 
    */
-  typedef void (*Callback)(InterruptPin* pin, void* env);
+  typedef void (*InterruptHandler)(InterruptPin* pin, void* env);
 
 private:
-  Callback _callback;
+  InterruptHandler _handler;
   void* _env;
 
 public:
@@ -212,16 +218,19 @@ public:
   };
 
   /**
-   * Construct interrupt pin with given pin number, mode, callback 
-   * and environment.
+   * Construct interrupt pin with given pin number, mode, interrupt
+   * handler and environment.
    * @param[in] pin pin number.
    * @param[in] mode pin mode.
-   * @param[in] fn callback function.
-   * @param[in] env callback environment. 
+   * @param[in] fn interrupt handler function.
+   * @param[in] env interrupt handler environment. 
    */
-  InterruptPin(uint8_t pin, Mode mode = ON_CHANGE_MODE, Callback fn = 0, void* env = 0) :
+  InterruptPin(uint8_t pin, 
+	       Mode mode = ON_CHANGE_MODE,  
+	       InterruptHandler fn = 0, 
+	       void* env = 0) :
     InputPin(pin), 
-    _callback(fn),
+    _handler(fn),
     _env(env)
   {
     if (mode & PULLUP_MODE) {
@@ -237,18 +246,18 @@ public:
   }
 
   /**
-   * Set interrupt pin callback.
-   * @param[in] fn callback function.
-   * @param[in] env callback environment.
+   * Set interrupt handler.
+   * @param[in] fn interrupt handler function.
+   * @param[in] env interrupt handler environment.
    */
-  void set(Callback fn, void* env) 
+  void set(InterruptHandler fn, void* env) 
   { 
-    _callback = fn; 
+    _handler = fn; 
     _env = env; 
   }
 
   /**
-   * Enable interrupt pin change detection and callback.
+   * Enable interrupt pin change detection and interrupt handler.
    */
   void enable() 
   { 
@@ -256,7 +265,7 @@ public:
   }
 
   /**
-   * Disable interrupt pin change detection and callback.
+   * Disable interrupt pin change detection.
    */
   void disable() 
   { 
@@ -268,17 +277,17 @@ public:
    */
   void on_interrupt() 
   { 
-    if (_callback != 0) _callback(this, _env); 
+    if (_handler != 0) _handler(this, _env); 
   }
 
   /**
-   * Callback function to push event for interrupt pin change.
-   * @param[in] fn callback function.
-   * @param[in] env callback environment.
+   * Interrupt handler to push event for interrupt pin change.
+   * @param[in] pin reference of changed pin.
+   * @param[in] env interrupt/event handler environment. 
    */
   static void push_event(InterruptPin* pin, void* env) 
   { 
-    Event::push(Event::INTERRUPT_PIN_CHANGE_TYPE, pin, (uint16_t) env);
+    Event::push(Event::CHANGE_TYPE, pin, env);
   }
 };
 
@@ -451,11 +460,11 @@ class AnalogPin : public Pin {
 
 public:
   /**
-   * Callback function prototype for analog sample completion.
+   * Interrupt handler prototype for analog sample completion.
    * @param[in] pin analog source.
-   * @param[in] env callback environment.
+   * @param[in] env interrupt handler environment.
    */
-  typedef void (*Callback)(AnalogPin* pin, void* env);
+  typedef void (*InterruptHandler)(AnalogPin* pin, void* env);
 
   /**
    * Reference voltage; ARef pin, Vcc or internal 1V1.
@@ -469,29 +478,40 @@ public:
 private:
   static AnalogPin* _sampling;
   Reference _reference;
-  Callback _callback;
+  InterruptHandler _handler;
   uint16_t _value;
   void* _env;
   
 public:
   /**
    * Construct abstract analog pin for given Arduino pin with reference and
-   * conversion completion callback function.
+   * conversion completion interrupt handler.
    * @param[in] pin number.
    * @param[in] ref reference voltage.
-   * @param[in] fn conversion completion callback function.
-   * @param[in] env callback environment. 
+   * @param[in] fn conversion completion interrupt handler.
+   * @param[in] env interrupt handler environment. 
    */
-  AnalogPin(uint8_t pin, Reference ref = AVCC_REFERENCE, Callback fn = 0, void* env = 0);
+  AnalogPin(uint8_t pin, 
+	    Reference ref = AVCC_REFERENCE, 
+	    InterruptHandler fn = 0, 
+	    void* env = 0) :
+    Pin(pin < 14 ? pin + 14 : pin), 
+    _reference(ref),
+    _handler(fn),
+    _value(0),
+    _env(env)
+  {
+  }
+
 
   /**
-   * Set conversion completion callback function.
-   * @param[in] fn conversion completion callback function.
-   * @param[in] env callback environment. 
+   * Set conversion completion interrupt handler.
+   * @param[in] fn conversion completion interrupt handler.
+   * @param[in] env interrupt handler environment. 
    */
-  void set(Callback fn, void* env = 0) 
+  void set(InterruptHandler fn, void* env = 0) 
   { 
-    _callback = fn; 
+    _handler = fn; 
     _env = env; 
   }
 
@@ -550,37 +570,38 @@ public:
   { 
     _sampling = 0;
     _value = value; 
-    if (_callback != 0) _callback(this, _env); 
+    if (_handler != 0) _handler(this, _env); 
   }
 
   /**
-   * Callback function to push event for sample conversion completion.
+   * Interrupt handler to push event for sample conversion completion.
    * @param[in] pin analog pin source.
    * @param[in] value sample.
    */
   static void push_event(AnalogPin* pin, void* env)
   { 
-    Event::push(Event::ANALOG_PIN_SAMPLE_TYPE, pin, (uint16_t) env);
+    Event::push(Event::READ_DATA_TYPE, pin, env);
   }
 };
 
 /*
  * Abstract analog pin set. Allow sampling of a set of pins with
- * callback or event when completed.
+ * interrupt or event handler when completed.
  */
-class AnalogPinSet {
+class AnalogPinSet : public Thing {
 
 public:
   /**
-   * Callback function prototype for analog pin set sample completion.
+   * Interrupt handler function prototype for analog pin set 
+   * sample completion.
    * @param[in] pin analog pin set.
-   * @param[in] env callback environment.
+   * @param[in] env interrupt handler environment.
    */
-  typedef void (*Callback)(AnalogPinSet* set, void* env);
+  typedef void (*InterruptHandler)(AnalogPinSet* set, void* env);
 
 private:
   const AnalogPin** _pin_at;
-  Callback _callback;
+  InterruptHandler _handler;
   uint8_t _count;
   uint8_t _next;
   void* _env;
@@ -588,14 +609,25 @@ private:
 public:
   /**
    * Construct abstract analog pin set given vector and number of pins,
-   * callback and environment on callback. The vector of pins should be
-   * defined in program memory.
+   * interrupt handler and environment. The vector of pins should be 
+   * defined in program memory using PROGMEM.
    * @param[in] pins vector with analog pins.
    * @param[in] count number of analog pins in set.
-   * @param[in] fn conversion completion callback function.
-   * @param[in] env callback environment.
+   * @param[in] fn conversion completion interrupt handler.
+   * @param[in] env interrupt handler environment.
    */
-  AnalogPinSet(const AnalogPin** pins, uint8_t count, Callback fn = 0, void* env = 0);
+  AnalogPinSet(const AnalogPin** pins, 
+	       uint8_t count, 
+	       InterruptHandler fn = 0, 
+	       void* env = 0) :
+    _pin_at(pins),
+    _count(count),
+    _handler(fn),
+    _env(env)
+  {
+    for (uint8_t ix = 0; ix < count; ix++)
+      get_pin_at(ix)->set(sample_next, this);
+  }
   
   /**
    * Get number of analog pins in set.
@@ -620,27 +652,27 @@ public:
    * Start analog pin set sampling. All analog pins in set are
    * sampled in the background. Returns true(1) if started otherwise
    * false(0).
-   * @param[in] fn conversion completion callback function.
-   * @param[in] env callback environment.
+   * @param[in] fn conversion completion interrupt handler.
+   * @param[in] env handler environment.
    * @return boolean.
    */
-  bool begin(Callback fn = 0, void* env = 0);
+  bool begin(InterruptHandler fn = 0, void* env = 0);
   
   /**
-   * Callback function to push event for sample conversion completion.
+   * Interrupt handler to push event for sample conversion completion.
    * @param[in] pin analog pin set.
-   * @param[in] env callback environment.
+   * @param[in] env handler environment.
    */
   static void push_event(AnalogPinSet* set, void* env)
   { 
-    Event::push(Event::ANALOG_PIN_SET_SAMPLE_TYPE, set, (uint16_t) env);
+    Event::push(Event::READ_DATA_TYPE, set, env);
   }
 
  private:
   /**
-   * Callback function to handle sampling of the pins in the set.
-   * Will call the set callback when all pins have been sampled and
-   * the conversions completed.
+   * Interrupt handler for analog pin completion to handle sampling of
+   * the pins in the set. Will call the set interrupt handler when all
+   * pins have been sampled and the conversions completed.
    * @param[in] pin analog pin.
    * @param[in] env analog pin set.
    */

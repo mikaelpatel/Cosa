@@ -92,10 +92,10 @@ ADXL345::sample(sample_t& s)
 void
 ADXL345::calibrate()
 {
-  sample_t s;
+  sample_t smpl;
   calibrate(0, 0, 0);
-  sample(s);
-  calibrate(-s.x/4, -s.y/4, -s.z/4);
+  sample(smpl);
+  calibrate(-smpl.x/4, -smpl.y/4, -smpl.z/4);
 }
 
 void 

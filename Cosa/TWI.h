@@ -32,17 +32,18 @@
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.h"
+#include "Cosa/Thing.h"
 
 #define TWI_STATUS(x) ((x) >> 3)
 
-class TWI {
+class TWI : public Thing {
 
 public:
   /**
-   * Callback function prototype for request completions.
-   * @param[in] twi callback environment.
+   * Interrupt handler prototype for request completions.
+   * @param[in] twi environment.
    */
-  typedef void (*Callback)(TWI* twi);
+  typedef void (*InterruptHandler)(TWI* twi);
 
 protected:
   /**
@@ -116,7 +117,7 @@ protected:
     SCL = 5
   };
 
-  Callback _callback;
+  InterruptHandler _handler;
   uint8_t _status;
   uint8_t _addr;
   uint8_t* _buf;
@@ -149,15 +150,15 @@ protected:
    * @param[in] addr slave address and operation.
    * @param[in] buf data buffer to send or receive into.
    * @param[in] size number of bytes in buffer.
-   * @param[in] fn callback on completion.
+   * @param[in] fn interrupt handler on completion.
    * @return bool
    */
-  bool request(uint8_t addr, void* buf, uint8_t size, Callback fn);
+  bool request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn);
 
 public:
   TWI() :
     _status(NO_INFO),
-    _callback(0),
+    _handler(0),
     _addr(0),
     _buf(0),
     _size(0),
@@ -168,10 +169,10 @@ public:
   /**
    * Start TWI bus logic. Default mode is master.
    * @param[in] addr slave address (0..127).
-   * @param[in] fn slave callback.
+   * @param[in] fn slave interrupt handler.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint8_t addr = 0, Callback fn = 0);
+  bool begin(uint8_t addr = 0, InterruptHandler fn = 0);
 
   /**
    * Disconnect usage of the TWI bus logic.
@@ -205,10 +206,10 @@ public:
    * @param[in] addr slave address (0..127).
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
-   * @param[in] fn callback on completion.
+   * @param[in] fn interrupt handler on completion.
    * @return true(1) if successful otherwise false(0)
    */
-  bool write_request(uint8_t addr, void* buf, uint8_t size, Callback fn = 0)
+  bool write_request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn = 0)
   {
     return (request(((addr << ADDR_POS) | WRITE_OP), buf, size, fn));
   }
@@ -219,10 +220,10 @@ public:
    * @param[in] addr slave address (0..127).
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
-   * @param[in] fn callback on completion.
+   * @param[in] fn interrupt handler on completion.
    * @return true(1) if successful request otherwise false(0)
    */
-  bool read_request(uint8_t addr, void* buf, uint8_t size, Callback fn = 0)
+  bool read_request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn = 0)
   {
     return (request(((addr << ADDR_POS) | READ_OP), buf, size, fn));
   }
@@ -246,7 +247,7 @@ public:
   }
 
   /**
-   * Set buffer and size of buffer (for slave callback).
+   * Set buffer and size of buffer (for slave interrupt handling).
    * @param[in] buf data to write.
    * @param[in] size max number of bytes to write.
    */
@@ -261,7 +262,7 @@ public:
    */
   static void push_write_event(TWI* twi)
   { 
-    Event::push(Event::TWI_WRITE_DATA_TYPE, twi, 0);
+    Event::push(Event::WRITE_DATA_TYPE, twi);
   }
 
   /**
@@ -269,7 +270,7 @@ public:
    */
   static void push_read_event(TWI* twi)
   { 
-    Event::push(Event::TWI_READ_DATA_TYPE, twi, 0);
+    Event::push(Event::READ_DATA_TYPE, twi);
   }
 
   /**

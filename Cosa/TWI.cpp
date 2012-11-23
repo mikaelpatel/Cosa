@@ -35,10 +35,10 @@
 static TWI* _twi = 0;
 
 bool 
-TWI::begin(uint8_t addr, Callback fn)
+TWI::begin(uint8_t addr, InterruptHandler fn)
 {
   _twi = this;
-  _callback = fn;
+  _handler = fn;
   _addr = (addr << ADDR_POS);
 
   // Check for slave mode
@@ -69,12 +69,12 @@ TWI::end()
 }
 
 bool
-TWI::request(uint8_t addr, void* buf, uint8_t size, Callback fn)
+TWI::request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn)
 {
   if (is_busy()) return (0);
   _addr = addr;
   _status = NO_INFO;
-  _callback = fn;
+  _handler = fn;
   _buf = (uint8_t*) buf;
   _size = size;
   _next = 0;
@@ -123,7 +123,7 @@ TWI::on_bus_event()
     } 
     else {
       TWCR = STOP_CMD;
-      if (_callback != 0)_callback(this);
+      if (_handler != 0) _handler(this);
     }
     break;
   case MT_SLA_NACK:
@@ -146,7 +146,7 @@ TWI::on_bus_event()
   case MR_DATA_NACK:
     _buf[_next++] = TWDR;
     TWCR = STOP_CMD;
-    if (_callback != 0)_callback(this);
+    if (_handler != 0) _handler(this);
     _next = 0;
     break;      
   case MR_SLA_NACK:
@@ -157,7 +157,7 @@ TWI::on_bus_event()
    */
   case ST_SLA_ACK:
   case ST_ARB_LOST_SLA_ACK:
-    if (_callback != 0)_callback(this);
+    if (_handler != 0) _handler(this);
     _next = 0;
   case ST_DATA_ACK:
     TWDR = _buf[_next++];
@@ -197,7 +197,7 @@ TWI::on_bus_event()
       _buf[_next] = 0;
     }
     TWCR = STOP_CMD;
-    if (_callback != 0) _callback(this);
+    if (_handler != 0) _handler(this);
     TWCR = IDLE_CMD; 
     break;
   case SR_DATA_NACK:

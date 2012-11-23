@@ -328,10 +328,10 @@ public:
 
   /**
    * Set interrupt handler. And enable irq-pin change interrupts.
-   * The NRF object becomes the callback environment.
-   * @param[in] fn callback function.
+   * The NRF object becomes the interrupt handler environment.
+   * @param[in] fn interrupt handler function.
    */
-  void set_interrupt(InterruptPin::Callback fn);
+  void set_interrupt(InterruptPin::InterruptHandler fn);
 
   /**
    * Set power up mode. Will initiate radio with necessary settings

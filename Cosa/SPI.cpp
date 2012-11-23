@@ -119,19 +119,21 @@ SPI::end()
 void 
 SPI::on_receive(uint8_t data) 
 { 
-  // Check for no callback
-  if (_callback == 0) return;
+  // Check for no interrupt handler
+  if (_handler == 0) return;
 
   // Check for no buffer
   if (_buffer == 0) {
-    _callback(&data, 1);
+    _put = 1;
+    _handler(this, _put);
+    _put = 0;
     return;
   }
 
-  // Append to buffer and callback on full
+  // Append to buffer and call user interrupt handler on full
   _buffer[_put++] = data;
   if (_put == _max) {
-    _callback(_buffer, _put); 
+    _handler(this, _put); 
     _put = 0;
   }
 }
