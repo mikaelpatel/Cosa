@@ -31,6 +31,7 @@
 #include "Cosa/DS18B20.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
+#include "Cosa/FixedPoint.h"
 
 // One-wire pin and DS18B20 device
 OneWire oneWire(7);
@@ -68,7 +69,8 @@ void loop()
 
   // Read the scatchpad to get the latest value and print
   TRACE(ds18b20.read_scratchpad());
-  DS18B20::temperature_t temperature;
-  ds18b20.get(temperature);
-  INFO("temperature = %d.%d", temperature.numerator, temperature.denominator);
+  FixedPoint temp(ds18b20.get_temperature(), 4);
+  INFO("temperature = %d.%d", 
+       temp.get_integer(), 
+       temp.get_fraction(4));
 }
