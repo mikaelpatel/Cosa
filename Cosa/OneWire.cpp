@@ -134,12 +134,11 @@ OneWire::Device::search_rom(int8_t last)
 	  _pin->write(1, 1); 
 	  data |= 0x80; 
 	} 
-	else if (pos > last) {
-	  _pin->write(0, 1); 
-	  next = pos;
-	} 
 	else {
-	  if (_rom[i] & (1 << j)) {
+	  if (pos > last) {
+	    _pin->write(0, 1); 
+	  } 
+	  else if (_rom[i] & (1 << j)) {
 	    _pin->write(1, 1);
 	    data |= 0x80; 
 	  } 
