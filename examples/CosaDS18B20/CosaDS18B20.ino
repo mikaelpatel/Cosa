@@ -35,7 +35,8 @@
 
 // One-wire pin and DS18B20 device
 OneWire oneWire(7);
-DS18B20 ds18b20(&oneWire);
+DS18B20 outdoors(&oneWire);
+DS18B20 indoors(&oneWire);
 
 void setup()
 {
@@ -52,10 +53,15 @@ void setup()
   oneWire.println();
 
   // Read and print the device rom and scratchpad
-  TRACE(ds18b20.read_rom());
-  ds18b20.print_rom();
-  TRACE(ds18b20.read_scratchpad());
-  ds18b20.print_scratchpad();
+  TRACE(indoors.connect(0));
+  indoors.print_rom();
+  TRACE(indoors.read_scratchpad());
+  indoors.print_scratchpad();
+
+  TRACE(outdoors.connect(1));
+  outdoors.print_rom();
+  TRACE(outdoors.read_scratchpad());
+  outdoors.print_scratchpad();
 
   // Start the watchdog ticks counter
   Watchdog::begin(16);
@@ -64,20 +70,34 @@ void setup()
 void loop()
 {
   // Request a single temperature conversion
-  TRACE(ds18b20.convert_request());
+  TRACE(indoors.convert_request());
+  TRACE(outdoors.convert_request());
   Watchdog::delay(1024);
 
   // Read the scatchpad to get the latest value and print
-  TRACE(ds18b20.read_scratchpad());
-  FixedPoint temp(ds18b20.get_temperature(), 4);
-  int16_t integer = temp.get_integer();
-  int16_t fraction = temp.get_fraction();
-  int16_t fraction1000 = temp.get_fraction(4);
-  INFO("temperature = %hd, %d.%d, %d.%s%d", 
-       ds18b20.get_temperature(),
-       integer,
-       fraction,
-       integer,
+  int16_t integer;
+  int16_t fraction;
+  int16_t fraction1000;
+
+  TRACE(indoors.read_scratchpad());
+  FixedPoint intemp(indoors.get_temperature(), 4);
+  integer = intemp.get_integer();
+  fraction = intemp.get_fraction();
+  fraction1000 = intemp.get_fraction(4);
+  INFO("(indoors) raw = %hd", indoors.get_temperature());
+  INFO("fixed<12:4> = %d.%d", integer, fraction);
+  INFO("temperature = %d.%s%d C", integer,
+       (fraction1000 != 0 & fraction1000 < 1000 ? "0" : ""),
+       fraction1000);
+
+  TRACE(outdoors.read_scratchpad());
+  FixedPoint outtemp(outdoors.get_temperature(), 4);
+  integer = outtemp.get_integer();
+  fraction = outtemp.get_fraction();
+  fraction1000 = outtemp.get_fraction(4);
+  INFO("(outdoors) raw = %hd", outdoors.get_temperature());
+  INFO("fixed<12:4> = %d.%d", integer, fraction);
+  INFO("temperature = %d.%s%d C", integer,
        (fraction1000 != 0 & fraction1000 < 1000 ? "0" : ""),
        fraction1000);
 }

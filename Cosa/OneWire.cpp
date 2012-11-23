@@ -62,6 +62,7 @@ OneWire::read(uint8_t bits)
 {
   uint8_t res = 0;
   uint8_t mix = 0;
+  uint8_t adjust = CHARBITS - bits;
   while (bits--) {
     synchronized {
 
@@ -86,6 +87,8 @@ OneWire::read(uint8_t bits)
       DELAY(55);
     }
   }
+  // Adjust result to align with LSB 
+  while (adjust--) res >>= 1;
   return (res);
 }
 
@@ -114,17 +117,66 @@ OneWire::write(uint8_t value, uint8_t bits)
   set_mode(INPUT_MODE);
 }
 
+int8_t
+OneWire::Device::search_rom(int8_t last)
+{
+  if (!_pin->reset()) return (0);
+  _pin->write(OneWire::SEARCH_ROM);
+  uint8_t pos = 0;
+  int8_t next = LAST;
+  for (uint8_t i = 0; i < 8; i++) {
+    uint8_t data = 0;
+    for (uint8_t j = 0; j < 8; j++) {
+      data >>= 1;
+      switch (_pin->read(2)) {
+      case 0b00: // Discrepency between device roms
+	if (pos == last) {
+	  _pin->write(1, 1); 
+	  data |= 0x80; 
+	} 
+	else if (pos > last) {
+	  _pin->write(0, 1); 
+	  next = pos;
+	} 
+	else {
+	  if (_rom[i] & (1 << j)) {
+	    _pin->write(1, 1);
+	    data |= 0x80; 
+	  } 
+	  else {
+	    _pin->write(0, 1);
+	  }
+	  next = pos;
+	}
+	break;
+      case 0b01: // Only one's at this position 
+	_pin->write(1, 1); 
+	data |= 0x80; 
+	break;
+      case 0b10: // Only zero's at this position
+	_pin->write(0, 1); 
+	break;
+      case 0b11: // No device detected
+	goto error;
+      }
+      pos += 1;
+    }
+    _rom[i] = data;
+  }
+  return (next);
+ error:
+  return (-1);
+}
+
 bool
 OneWire::Device::read_rom()
 {
   if (!_pin->reset()) return (0);
-  // Fix: Assumes that a single slave on the bus
   _pin->write(OneWire::READ_ROM);
   _pin->begin();
   for (uint8_t i = 0; i < ROM_MAX; i++) {
     _rom[i] = _pin->read();
   }
-  // CRC code will be wrong for multiple slave
   return (_pin->end() == 0);
 }
 
@@ -152,5 +204,18 @@ OneWire::Device::print_rom(IOStream& stream)
 {
   for (uint8_t i = 0; i < ROM_MAX; i++)
     stream.printf_P(PSTR("rom[%d] = %hd\n"), i, _rom[i]);
+}
+
+bool 
+OneWire::Device::connect(uint8_t code, uint8_t index)
+{
+  int8_t last = FIRST;
+  do {
+    last = search_rom(last);
+    if (last == -1) return (0);
+    if (_rom[0] == code && index == 0) return (1);
+    index -= 1;
+  } while (last != LAST);
+  return (0);
 }
 

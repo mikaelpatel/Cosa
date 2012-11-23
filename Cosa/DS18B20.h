@@ -40,6 +40,7 @@ private:
    * DS18B20 Function Commands (Table 3, pp. 12)
    */
   enum {
+    FAMILY_CODE = 0x28,
     CONVERT_T = 0x44,
     WRITE_SCRATCHPAD = 0x4E,
     READ_SCRATCHPAD = 0xBE,
@@ -67,6 +68,16 @@ public:
    * @param[in] pin one wire bus pin.
    */
   DS18B20(OneWire* pin) : OneWire::Device(pin) {}
+
+  /**
+   * Connect to DS18B20 device with given index.
+   * @param[in] index device order.
+   * @return true(1) if successful otherwise false(0).
+   */
+  bool connect(uint8_t index)
+  {
+    return (OneWire::Device::connect(FAMILY_CODE, index));
+  }
 
   /**
    * Initiate a single temperature conversion. With default setting
