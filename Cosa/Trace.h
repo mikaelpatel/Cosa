@@ -34,6 +34,11 @@
 #include "Cosa/IOStream.h"
 #include "Cosa/UART.h"
 
+/**
+ * The Trace class singleton. 
+ */
+extern class Trace trace;
+
 class Trace : public IOStream {
 
 private:
@@ -49,11 +54,17 @@ public:
   /**
    * Start trace stream over UART transmitter.
    * @param[in] baudrate serial bitrate.
+   * @param[in] banner trace begin message.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint32_t baudrate = 9600)
+  bool begin(uint32_t baudrate = 9600, const char* banner = 0)
   {
-    return (uart.begin(baudrate));
+    if (!uart.begin(baudrate)) return (0);
+    if (banner) {
+      trace.print_P(banner);
+      trace.println();
+    }
+    return (1);
   }
 
   /**
@@ -65,11 +76,6 @@ public:
     return (uart.end());
   }
 };
-
-/**
- * The Trace class singleton. 
- */
-extern Trace trace;
 
 /**
  * Log priorities.

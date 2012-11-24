@@ -37,7 +37,10 @@ ADXL345 adxl;
 void setup()
 {
   // Initiate trace stream
-  trace.begin(9600);
+  trace.begin(9600, PSTR("CosaADXL345: started"));
+
+  // Check amount of free memory
+  TRACE(free_memory());
 
   // Start the watchdog, approx. 1 second ticks, and push timeout events
   Watchdog::begin(1024, Watchdog::push_event);

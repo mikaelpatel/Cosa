@@ -51,10 +51,7 @@ AnalogPin levelPin(14);
 void setup()
 {
   // Start trace output stream
-  trace.begin(9600);
-
-  // Info message using the trace log
-  INFO("Initiated trace log", 0);
+  trace.begin(9600, PSTR("CosaPins: started"));
 
   // Check amount of free memory
   TRACE(free_memory());

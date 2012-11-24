@@ -41,10 +41,7 @@ DS18B20 basement(&oneWire);
 void setup()
 {
   // Start trace output stream
-  trace.begin(9600);
-
-  // Info message using the trace log
-  INFO("Initiated trace log", 0);
+  trace.begin(9600, PSTR("CosaDS18B20: started"));
 
   // Check amount of free memory
   TRACE(free_memory());
@@ -53,20 +50,18 @@ void setup()
   oneWire.println();
   oneWire.print_devices();
 
-  // Read and print the device rom and scratchpad
+  // Read and print the device rom
   TRACE(indoors.connect(0));
   indoors.print_rom();
-
   TRACE(outdoors.connect(1));
   outdoors.print_rom();
-
   TRACE(basement.connect(2));
   basement.print_rom();
 
-  // Start the watchdog ticks counter
+  // Start the watchdog ticks counter with 16 ms period
   Watchdog::begin(16);
 
-  // Start the convertion pipeline
+  // Start the convertion pipeline; indoors->outdoors->basement sampling
   indoors.convert_request();
   Watchdog::delay(1024);
 }

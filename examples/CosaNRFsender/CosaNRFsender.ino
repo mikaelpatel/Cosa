@@ -43,7 +43,7 @@ NRF24L01P nrf;
 void setup()
 {
   // Start trace output stream
-  trace.begin(9600);
+  trace.begin(9600, PSTR("CosaNRFsender: started"));
 
   // Check amount of free memory
   TRACE(free_memory());

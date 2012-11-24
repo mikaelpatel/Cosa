@@ -51,7 +51,7 @@ AnalogPinSet pinSet(pins, membersof(pins), AnalogPinSet::push_event);
 void setup()
 {
   // Start the trace output stream
-  trace.begin(9600);
+  trace.begin(9600, PSTR("CosaSampleSet: started"));
 
   // Check amount of free memory
   TRACE(free_memory());
