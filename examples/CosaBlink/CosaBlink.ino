@@ -34,14 +34,14 @@ OutputPin ledPin(13, 0);
 
 void setup()
 {
-  // Start the watchdog (0.5 second timeout)
-  Watchdog::begin(512);
+  // Start the watchdog (16 milli-second timeout)
+  Watchdog::begin(16);
 }
 
 void loop()
 {
   ledPin.set();
-  Watchdog::delay(512);
+  Watchdog::delay(16);
   ledPin.clear();
-  Watchdog::delay(1024);
+  Watchdog::delay(512);
 }

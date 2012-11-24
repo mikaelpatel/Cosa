@@ -41,7 +41,7 @@ void blink(void* env)
 // Start watchdog with approx. 1 second timeout and blink interrupt call
 void setup()
 {
-  Watchdog::begin(1024, blink);
+  Watchdog::begin(512, blink);
 }
 
 // Go into sleep mode while awaiting the next timeout

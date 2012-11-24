@@ -27,6 +27,7 @@
  */
 
 #include "Cosa/Memory.h"
+#include "Cosa/Pins.h"
 #include "Cosa/TWI/DS1307.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
@@ -35,6 +36,9 @@
 DS1307 rtc;
 DS1307::timekeeper_t now;
 uint8_t state[16];
+
+// Use the buildin led as a heartbeat
+OutputPin ledPin(13, 0);
 
 void setup()
 {
@@ -48,13 +52,16 @@ void setup()
   Watchdog::begin(16);
 
   // Initate state vector (restart will force zero of the ram)
+  ledPin.toggle();
   rtc.write_ram(state, sizeof(state), 16);
+  ledPin.toggle();
 }
 
 void loop()
 {
   // Wait a second
   Watchdog::delay(1000);
+  ledPin.toggle();
 
   // Read the time from the rtc device and print
   rtc.get_time(now);
@@ -66,7 +73,9 @@ void loop()
   trace.println();
 
   // Read the state and update
+  ledPin.toggle();
   rtc.read_ram(state, sizeof(state), 16);
+  ledPin.toggle();
   for (uint8_t i = 0; i < sizeof(state); i++) {
     trace.print(state[i], 16);
     trace.print_P(PSTR(" "));
@@ -79,4 +88,5 @@ void loop()
   for (uint8_t i = 0; i < sizeof(state); i++) {
     state[i] = 0;
   }
+  ledPin.toggle();
 }

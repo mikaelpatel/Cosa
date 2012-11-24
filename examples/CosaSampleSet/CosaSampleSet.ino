@@ -48,6 +48,9 @@ const PROGMEM AnalogPin* pins[] = {
 // Declare the pin set with vector, number of members and push event callback
 AnalogPinSet pinSet(pins, membersof(pins), AnalogPinSet::push_event);
 
+// Use the buildin led as a heartbeat
+OutputPin ledPin(13, 0);
+
 void setup()
 {
   // Start the trace output stream
@@ -68,12 +71,12 @@ void setup()
 
 void loop()
 {
-  // Start sampling analog pins
+  // Start sampling analog pins and Wait for the next event
+  ledPin.toggle();
   TRACE(pinSet.begin());
-
-  // Wait for the next event. Allow a low power sleep
   Event event;
   Event::queue.await(&event);
+  ledPin.toggle();
 
   // Print the values
   TRACE(levelPin.get_value());

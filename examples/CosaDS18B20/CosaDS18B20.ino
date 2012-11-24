@@ -38,6 +38,9 @@ DS18B20 outdoors(&oneWire);
 DS18B20 indoors(&oneWire);
 DS18B20 basement(&oneWire);
 
+// Use the buildin led as a heartbeat
+OutputPin ledPin(13, 0);
+
 void setup()
 {
   // Start trace output stream
@@ -51,12 +54,14 @@ void setup()
   oneWire.print_devices();
 
   // Read and print the device rom
+  ledPin.toggle();
   TRACE(indoors.connect(0));
   indoors.print_rom();
   TRACE(outdoors.connect(1));
   outdoors.print_rom();
   TRACE(basement.connect(2));
   basement.print_rom();
+  ledPin.toggle();
 
   // Start the watchdog ticks counter with 16 ms period
   Watchdog::begin(16);
@@ -69,23 +74,29 @@ void setup()
 void loop()
 {
   // Start outdoors temperature conversion and read the indoors temperature
+  ledPin.toggle();
   outdoors.convert_request();
   indoors.read_temperature();
   indoors.print_temperature_P(PSTR("indoors = "));
   trace.println();
+  ledPin.toggle();
   Watchdog::delay(1024);
 
   // Start basement temperature conversion and read the outdoors temperature
+  ledPin.toggle();
   basement.convert_request();
   outdoors.read_temperature();
   outdoors.print_temperature_P(PSTR("outdoors = "));
   trace.println();
+  ledPin.toggle();
   Watchdog::delay(1024);
 
   // Start indoors temperature conversion and read the basement temperature
+  ledPin.toggle();
   indoors.convert_request();
   basement.read_temperature();
   basement.print_temperature_P(PSTR("basement = "));
   trace.println();
+  ledPin.toggle();
   Watchdog::delay(1024);
 }
