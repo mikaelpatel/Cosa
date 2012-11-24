@@ -63,7 +63,7 @@ IOStream::vprintf_P(const char* format, va_list args)
 	print(va_arg(args, char*)); 
 	continue;
       case 'S': 
-	print(va_arg(args, const char*)); 
+	print_P(va_arg(args, const char*)); 
 	continue;
       case 'd': 
 	if (is_signed) 
