@@ -93,5 +93,13 @@ inline void unlock(uint8_t key)
  */
 #define barrier() __asm__ __volatile__("nop" ::: "memory") 
 
+/**
+ * Buffer structure for vector write operations.
+ */
+struct iovec {
+  void* buf;
+  size_t count;
+};
+
 #endif
 
