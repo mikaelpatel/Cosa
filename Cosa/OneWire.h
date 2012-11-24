@@ -54,11 +54,13 @@ public:
    * Device connected to a 1-Wire pin
    */
   class Device {
+    friend class OneWire;
   protected:
     static const uint8_t ROM_MAX = 8;
     static const uint8_t ROMBITS = ROM_MAX * CHARBITS;
     enum {
       FIRST = -1,
+      ERROR = -1,
       LAST = ROMBITS
     };
     uint8_t _rom[ROM_MAX];
@@ -68,7 +70,7 @@ public:
      * Construct one wire device.
      * @param[in] pin one wire bus.
      */
-    Device(OneWire* pin) : _pin(pin) {}
+  Device(OneWire* pin) : _pin(pin) {}
 
     /**
      * Search device rom given the last position of discrepancy.
@@ -102,11 +104,11 @@ public:
 
     /**
      * Connect to 1-Wire device with given family code and index.
-     * @param[in] code device family code.
+     * @param[in] family device family code.
      * @param[in] index device order.
      * @return true(1) if successful otherwise false(0).
      */
-    bool connect(uint8_t code, uint8_t index);
+    bool connect(uint8_t family, uint8_t index);
 
   public:
     /**
@@ -159,6 +161,13 @@ public:
    * @return generated CRC.
    */
   uint8_t end() { return (_crc); }
+
+  /**
+   * Print list of connected devices on given stream.
+   * Default stream is the trace stream.
+   * @param[in] stream to print rom to.
+   */
+  void print_devices(IOStream& stream = trace);
 };
 
 #endif

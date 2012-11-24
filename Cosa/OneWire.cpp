@@ -117,10 +117,22 @@ OneWire::write(uint8_t value, uint8_t bits)
   set_mode(INPUT_MODE);
 }
 
+void
+OneWire::print_devices(IOStream& stream)
+{
+  Device dev(this);
+  int8_t last = Device::FIRST;
+  do {
+    last = dev.search_rom(last);
+    if (last == Device::ERROR) return;
+    dev.print_rom(stream);
+  } while (last != Device::LAST);
+}
+
 int8_t
 OneWire::Device::search_rom(int8_t last)
 {
-  if (!_pin->reset()) return (0);
+  if (!_pin->reset()) return (ERROR);
   _pin->write(OneWire::SEARCH_ROM);
   uint8_t pos = 0;
   int8_t next = LAST;
@@ -133,19 +145,17 @@ OneWire::Device::search_rom(int8_t last)
 	if (pos == last) {
 	  _pin->write(1, 1); 
 	  data |= 0x80; 
+	  last = FIRST;
+	} 
+	else if (pos > last) {
+	  _pin->write(0, 1); 
+	  next = pos;
+	} else if (_rom[i] & (1 << j)) {
+	  _pin->write(1, 1);
+	  data |= 0x80; 
 	} 
 	else {
-	  if (pos > last) {
-	    _pin->write(0, 1); 
-	  } 
-	  else if (_rom[i] & (1 << j)) {
-	    _pin->write(1, 1);
-	    data |= 0x80; 
-	  } 
-	  else {
-	    _pin->write(0, 1);
-	  }
-	  next = pos;
+	  _pin->write(0, 1);
 	}
 	break;
       case 0b01: // Only one's at this position 
@@ -164,7 +174,7 @@ OneWire::Device::search_rom(int8_t last)
   }
   return (next);
  error:
-  return (-1);
+  return (ERROR);
 }
 
 bool
@@ -201,19 +211,24 @@ OneWire::Device::skip_rom()
 void
 OneWire::Device::print_rom(IOStream& stream)
 {
-  for (uint8_t i = 0; i < ROM_MAX; i++)
-    stream.printf_P(PSTR("rom[%d] = %hd\n"), i, _rom[i]);
+  uint8_t i;
+  stream.printf_P(PSTR("OneWire::rom(family = %hd, id = "), _rom[0]);
+  for (i = 1; i < ROM_MAX - 1; i++)
+    stream.printf_P(PSTR("%hd, "), _rom[i]);
+  stream.printf_P(PSTR("crc = %hd)\n"), _rom[i]);
 }
 
 bool 
-OneWire::Device::connect(uint8_t code, uint8_t index)
+OneWire::Device::connect(uint8_t family, uint8_t index)
 {
   int8_t last = FIRST;
   do {
     last = search_rom(last);
-    if (last == -1) return (0);
-    if (_rom[0] == code && index == 0) return (1);
-    index -= 1;
+    if (last == ERROR) return (0);
+    if (_rom[0] == family) {
+      if (index == 0) return (1);
+      index -= 1;
+    }
   } while (last != LAST);
   return (0);
 }
