@@ -27,6 +27,11 @@
  */
 
 #include "Cosa/TWI.h"
+#include "Cosa/Watchdog.h"
+
+#include <util/delay_basic.h>
+
+#define DELAY(us) _delay_loop_2((us) << 2)
 
 #ifndef TWI_FREQ
 #define TWI_FREQ 100000L
@@ -71,8 +76,8 @@ TWI::end()
 bool
 TWI::request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn)
 {
-  if (is_busy()) return (0);
   _addr = addr;
+  _state = (addr & WRITE_OP) ? MT_STATE : MR_STATE;
   _status = NO_INFO;
   _handler = fn;
   _buf = (uint8_t*) buf;
@@ -82,11 +87,30 @@ TWI::request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn)
   return (1);
 }
 
+int 
+TWI::write(uint8_t addr, uint8_t data)
+{
+  _data[0] = data;
+  if (!write_request(addr, _data, sizeof(data))) return (-1);
+  await_request();
+  return (_next);
+}
+ 
+int 
+TWI::read(uint8_t addr, uint8_t size)
+{
+  if (size > sizeof(_data)) size = sizeof(_data);
+  if (!read_request(addr, &_data, size)) return (-1);
+  await_request();
+  if (size == 1) return (_data[0]);
+  return (((int*) _data)[0]);
+}
+
 int16_t
 TWI::write(uint8_t addr, void* buf, uint8_t size)
 {
   if (!write_request(addr, buf, size)) return (-1);
-  while (is_busy()); 
+  await_request();
   return (_next);
 }
 
@@ -94,7 +118,7 @@ int16_t
 TWI::read(uint8_t addr, void* buf, uint8_t size)
 {
   if (!read_request(addr, buf, size)) return (-1);
-  while (is_busy()); 
+  await_request();
   return (_next);
 }
 
@@ -124,11 +148,15 @@ TWI::on_bus_event()
     else {
       TWCR = STOP_CMD;
       if (_handler != 0) _handler(this);
+      loop_until_bit_is_clear(TWCR, TWSTO);
+      _state = IDLE_STATE;
     }
     break;
   case MT_SLA_NACK:
   case MT_DATA_NACK:
     TWCR = STOP_CMD;
+    loop_until_bit_is_clear(TWCR, TWSTO);
+    _state = IDLE_STATE;
     break;
   /**
    * Master Receiver Mode
@@ -146,11 +174,17 @@ TWI::on_bus_event()
   case MR_DATA_NACK:
     _buf[_next++] = TWDR;
     TWCR = STOP_CMD;
-    if (_handler != 0) _handler(this);
-    _next = 0;
+    if (_handler != 0) {
+      _handler(this);
+      _next = 0;
+    }
+    loop_until_bit_is_clear(TWCR, TWSTO);
+    _state = IDLE_STATE;
     break;      
   case MR_SLA_NACK:
     TWCR = STOP_CMD;
+    loop_until_bit_is_clear(TWCR, TWSTO);
+    _state = IDLE_STATE;
     break;
   /**
    * Slave Transmitter Mode
@@ -198,6 +232,8 @@ TWI::on_bus_event()
     }
     TWCR = STOP_CMD;
     if (_handler != 0) _handler(this);
+    loop_until_bit_is_clear(TWCR, TWSTO);
+    _state = IDLE_STATE;
     TWCR = IDLE_CMD; 
     break;
   case SR_DATA_NACK:

@@ -47,8 +47,16 @@ public:
 
 protected:
   /**
-   * Two wire status codes
+   * Two wire state and status codes
    */
+  enum State {
+    ERROR_STATE = 0,
+    IDLE_STATE = 1,
+    MT_STATE = 2,
+    MR_STATE = 3,
+    ST_STATE = 4,
+    SR_STATE = 5
+  };
   enum {
     /** General Status Codes */
     START = TWI_STATUS(0x08),
@@ -101,7 +109,7 @@ protected:
    * Commands for TWI hardware
    */
   enum {
-    IDLE_CMD =  _BV(TWINT) |_BV(TWEA) | _BV(TWEN) | _BV(TWIE),
+    IDLE_CMD =  _BV(TWEA) | _BV(TWEN) | _BV(TWIE),
     START_CMD = _BV(TWINT) | _BV(TWEN) | _BV(TWSTA) | _BV(TWEN) | _BV(TWIE),
     DATA_CMD = _BV(TWINT) | _BV(TWEN) | _BV(TWIE),
     ACK_CMD = _BV(TWINT) | _BV(TWEA) | _BV(TWEN) | _BV(TWIE),
@@ -117,32 +125,16 @@ protected:
     SCL = 5
   };
 
+  volatile State _state;
+  volatile uint8_t _status;
   InterruptHandler _handler;
-  uint8_t _status;
   uint8_t _addr;
+  uint8_t _data[2];
+  uint8_t _cnt;
   uint8_t* _buf;
   uint8_t _size;
-  uint8_t _next;
+  volatile uint8_t _next;
 
-  /**
-   * Check if the TWI bus logic is busy
-   * @return bool
-   */
-  bool is_busy() 
-  {
-    return (bit_is_set(TWCR, TWIE) != 0); 
-  }
-
-  /**
-   * Get the current status. Wait if the TWI bus logic is busy.
-   * @return status
-   */
-  uint8_t get_status()
-  {
-    while (is_busy());
-    return (_status = TWI_STATUS(TWSR));
-  }
-  
   /**
    * Initiate a request to the slave. The address field is
    * the TWI address and operation (read/write bit). 
@@ -157,6 +149,7 @@ protected:
 
 public:
   TWI() :
+    _state(IDLE_STATE),
     _status(NO_INFO),
     _handler(0),
     _addr(0),
@@ -181,6 +174,24 @@ public:
   bool end();
 
   /**
+   * Write data to the given slave unit. Returns number of bytes read
+   * or negative error code.
+   * @param[in] addr slave address (0..127).
+   * @param[in] data to write.
+   * @return number of bytes
+   */
+  int write(uint8_t addr, uint8_t data);
+  
+  /**
+   * Read data to the given slave unit. Returns data read or negative
+   * error code.
+   * @param[in] addr slave address (0..127).
+   * @param[in] size number of bytes to read (1..2).
+   * @return data.
+   */
+  int read(uint8_t addr, uint8_t size = 1);
+
+  /**
    * Write data to the given slave unit. Returns number of bytes
    * written or negative error code.
    * @param[in] addr slave address (0..127).
@@ -188,7 +199,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int16_t write(uint8_t addr, void* buf, uint8_t size);
+  int write(uint8_t addr, void* buf, uint8_t size);
 
   /**
    * Read data to the given slave unit. Returns number of bytes read
@@ -198,7 +209,7 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes
    */
-  int16_t read(uint8_t addr, void* buf, uint8_t size);
+  int read(uint8_t addr, void* buf, uint8_t size);
 
   /**
    * In master mode requests write data to the given slave unit.
@@ -226,6 +237,14 @@ public:
   bool read_request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn = 0)
   {
     return (request(((addr << ADDR_POS) | READ_OP), buf, size, fn));
+  }
+
+  /**
+   * Await issued request to complete.
+   */
+  void await_request()
+  {
+    while (_state > IDLE_STATE);
   }
 
   /**
