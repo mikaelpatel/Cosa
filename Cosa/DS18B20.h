@@ -62,6 +62,19 @@ private:
   };
   scratchpad_t _scratchpad;
 
+  /**
+   * Read the contents of the scratchpad to local memory.
+   * @return true(1) if successful otherwise false(0).
+   */
+  bool read_scratchpad();
+
+  /**
+   * Print the contents of the local memory scratchpad to given stream.
+   * The default stream is the trace stream.
+   * @param[in] stream output stream.
+   */
+  void print_scratchpad(IOStream& stream = trace);
+
 public:
   /**
    * Construct a DS18B20 device connected to the given one wire bus.
@@ -87,22 +100,27 @@ public:
   bool convert_request();
 
   /**
-   * Read the contents of the scratchpad to local memory.
+   * Read the temperture from device.
    * @return true(1) if successful otherwise false(0).
    */
-  bool read_scratchpad();
-
-  /**
-   * Print the contents of the local memory scratchpad to given stream.
-   * The default stream is the trace stream.
-   */
-  void print_scratchpad(IOStream& stream = trace);
+  bool read_temperature()
+  {
+    return (read_scratchpad());
+  }
 
   /**
    * Get the latest temperature reading from the local memory scratchpad.
    * @return temperature as a fixed<12,4> point number.
    */
   int16_t get_temperature();
+
+  /**
+   * Print the latest temperature reading to given stream. 
+   * The default stream is the trace stream.
+   * @param[in] prefix string.
+   * @param[in] stream output stream.
+   */
+  void print_temperature_P(const char* prefix, IOStream& stream = trace);
 };
 
 #endif

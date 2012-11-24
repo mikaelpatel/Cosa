@@ -28,6 +28,7 @@
  */
 
 #include "Cosa/DS18B20.h"
+#include "Cosa/FixedPoint.h"
 
 bool
 DS18B20::convert_request()
@@ -47,6 +48,9 @@ DS18B20::read_scratchpad()
   for (uint8_t i = 0; i < sizeof(_scratchpad); i++) {
     *ptr++ = _pin->read();
   }
+#ifdef __DEBUG__
+  print_scratchpad();
+#endif
   return (_pin->end() == 0);
 }
 
@@ -65,7 +69,14 @@ DS18B20::get_temperature()
   return (_scratchpad.temperature);
 }
 
-
-
-
-
+void 
+DS18B20::print_temperature_P(const char* prefix, IOStream& stream)
+{
+  FixedPoint temp(_scratchpad.temperature, 4);
+  int16_t integer = temp.get_integer();
+  uint16_t fraction = temp.get_fraction(4);
+  stream.printf_P(PSTR("%S%d.%s%d C"), prefix,
+		  integer,
+		  (fraction != 0 & fraction < 1000 ? "0" : ""),
+		  fraction);
+}

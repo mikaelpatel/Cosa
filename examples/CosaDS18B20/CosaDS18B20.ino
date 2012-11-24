@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of the DS18B20 device driver.
+ * Cosa demonstration of the DS18B20 1-Wire device driver.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -31,12 +31,12 @@
 #include "Cosa/DS18B20.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
-#include "Cosa/FixedPoint.h"
 
-// One-wire pin and DS18B20 device
+// One-wire pin and connected DS18B20 devices
 OneWire oneWire(7);
 DS18B20 outdoors(&oneWire);
 DS18B20 indoors(&oneWire);
+DS18B20 basement(&oneWire);
 
 void setup()
 {
@@ -51,53 +51,46 @@ void setup()
 
   // Print debug information about the sketch onewire pins
   oneWire.println();
+  oneWire.print_devices();
 
   // Read and print the device rom and scratchpad
   TRACE(indoors.connect(0));
   indoors.print_rom();
-  TRACE(indoors.read_scratchpad());
-  indoors.print_scratchpad();
 
   TRACE(outdoors.connect(1));
   outdoors.print_rom();
-  TRACE(outdoors.read_scratchpad());
-  outdoors.print_scratchpad();
+
+  TRACE(basement.connect(2));
+  basement.print_rom();
 
   // Start the watchdog ticks counter
   Watchdog::begin(16);
+
+  // Start the convertion pipeline
+  indoors.convert_request();
+  Watchdog::delay(1024);
 }
 
 void loop()
 {
-  // Request a single temperature conversion
-  TRACE(indoors.convert_request());
-  TRACE(outdoors.convert_request());
+  // Start outdoors temperature conversion and read the indoors temperature
+  outdoors.convert_request();
+  indoors.read_temperature();
+  indoors.print_temperature_P(PSTR("indoors = "));
+  trace.println();
   Watchdog::delay(1024);
 
-  // Read the scatchpad to get the latest value and print
-  int16_t integer;
-  int16_t fraction;
-  int16_t fraction1000;
+  // Start basement temperature conversion and read the outdoors temperature
+  basement.convert_request();
+  outdoors.read_temperature();
+  outdoors.print_temperature_P(PSTR("outdoors = "));
+  trace.println();
+  Watchdog::delay(1024);
 
-  TRACE(indoors.read_scratchpad());
-  FixedPoint intemp(indoors.get_temperature(), 4);
-  integer = intemp.get_integer();
-  fraction = intemp.get_fraction();
-  fraction1000 = intemp.get_fraction(4);
-  INFO("(indoors) raw = %hd", indoors.get_temperature());
-  INFO("fixed<12:4> = %d.%d", integer, fraction);
-  INFO("temperature = %d.%s%d C", integer,
-       (fraction1000 != 0 & fraction1000 < 1000 ? "0" : ""),
-       fraction1000);
-
-  TRACE(outdoors.read_scratchpad());
-  FixedPoint outtemp(outdoors.get_temperature(), 4);
-  integer = outtemp.get_integer();
-  fraction = outtemp.get_fraction();
-  fraction1000 = outtemp.get_fraction(4);
-  INFO("(outdoors) raw = %hd", outdoors.get_temperature());
-  INFO("fixed<12:4> = %d.%d", integer, fraction);
-  INFO("temperature = %d.%s%d C", integer,
-       (fraction1000 != 0 & fraction1000 < 1000 ? "0" : ""),
-       fraction1000);
+  // Start indoors temperature conversion and read the basement temperature
+  indoors.convert_request();
+  basement.read_temperature();
+  basement.print_temperature_P(PSTR("basement = "));
+  trace.println();
+  Watchdog::delay(1024);
 }
