@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/NRF24L01P.h"
+#include "Cosa/SPI/NRF24L01P.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
 #include "Cosa/Memory.h"

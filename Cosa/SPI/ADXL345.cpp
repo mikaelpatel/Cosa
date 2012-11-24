@@ -1,5 +1,5 @@
 /**
- * @file Cosa/ADXL345.cpp
+ * @file Cosa/SPI/ADXL345.cpp
  * @version 1.0
  *
  * @section License
@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/ADXL345.h"
+#include "Cosa/SPI/ADXL345.h"
 
 ADXL345::ADXL345(uint8_t ss) : 
   SPI(), 

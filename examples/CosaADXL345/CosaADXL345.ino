@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/ADXL345.h"
+#include "Cosa/SPI/ADXL345.h"
 #include "Cosa/Trace.h"
 #include "Cosa/Watchdog.h"
 

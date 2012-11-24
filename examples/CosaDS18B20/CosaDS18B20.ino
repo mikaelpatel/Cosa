@@ -28,7 +28,7 @@
 
 #include "Cosa/Memory.h"
 #include "Cosa/OneWire.h"
-#include "Cosa/DS18B20.h"
+#include "Cosa/OneWire/DS18B20.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
 
