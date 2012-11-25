@@ -22,14 +22,15 @@
  *
  * @section Description
  * Cosa demonstration of the DS18B20 1-Wire device driver.
+ * Assumes three thermometers are connected to 1-Wire bus on
+ * pin(7) in search order.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Memory.h"
-#include "Cosa/OneWire.h"
 #include "Cosa/OneWire/DS18B20.h"
 #include "Cosa/Watchdog.h"
+#include "Cosa/Memory.h"
 #include "Cosa/Trace.h"
 
 // One-wire pin and connected DS18B20 devices
@@ -49,11 +50,10 @@ void setup()
   // Check amount of free memory
   TRACE(free_memory());
 
-  // Print debug information about the sketch onewire pins
-  oneWire.println();
+  // List connected devices
   oneWire.print_devices();
 
-  // Read and print the device rom
+  // Connect to the devices and print rom contents
   ledPin.toggle();
   TRACE(indoors.connect(0));
   indoors.print_rom();
@@ -66,7 +66,7 @@ void setup()
   // Start the watchdog ticks counter with 16 ms period
   Watchdog::begin(16);
 
-  // Start the convertion pipeline; indoors->outdoors->basement sampling
+  // Start the conversion pipeline; indoors->outdoors->basement sampling
   indoors.convert_request();
   Watchdog::delay(1024);
 }
@@ -78,7 +78,6 @@ void loop()
   outdoors.convert_request();
   indoors.read_temperature();
   indoors.print_temperature_P(PSTR("indoors = "));
-  trace.println();
   ledPin.toggle();
   Watchdog::delay(1024);
 
@@ -86,8 +85,7 @@ void loop()
   ledPin.toggle();
   basement.convert_request();
   outdoors.read_temperature();
-  outdoors.print_temperature_P(PSTR("outdoors = "));
-  trace.println();
+  outdoors.print_temperature_P(PSTR(", outdoors = "));
   ledPin.toggle();
   Watchdog::delay(1024);
 
@@ -95,7 +93,7 @@ void loop()
   ledPin.toggle();
   indoors.convert_request();
   basement.read_temperature();
-  basement.print_temperature_P(PSTR("basement = "));
+  basement.print_temperature_P(PSTR(", basement = "));
   trace.println();
   ledPin.toggle();
   Watchdog::delay(1024);

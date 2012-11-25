@@ -34,7 +34,7 @@
 #include "Cosa/IOStream.h"
 #include "Cosa/Trace.h"
 
-class OneWire : public IOPin {
+class OneWire : private IOPin {
 private:
   uint8_t _crc;
 
