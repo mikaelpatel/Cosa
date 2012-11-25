@@ -1,6 +1,6 @@
-CosaDS18B20
+CosaDS1307
 ====
 
-Demonstration of Cosa OneWire DS18B20 1-Wire driver. Three Programmable Resolution 1-Wire Digital Thermometers are used. See Bench and Screenshot.
+Demonstration of Cosa TWI driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock. See Bench and Screenshot.
 
 
