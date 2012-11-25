@@ -1,9 +1,16 @@
 --------------------------------------------------------------------
+Thing 
+The Cosa Root class. Basic event dispatch and collection handling,
+broadcast of an event of a set of things.
+--------------------------------------------------------------------
+Thing.h:	class Thing
+Things.h:	      class Things : public Thing
+--------------------------------------------------------------------
 PINS
 Object-oriented approach to sketch pin declaration and function
 structuring. 
 --------------------------------------------------------------------
-Pins.h:		class Pin
+Pins.h:		class Pin : public Thing
 Pins.h:		      class InputPin : public Pin
 Pins.h:		      	    class InterruptPin : public InputPin
 Pins.h:		      class OutputPin : public Pin
@@ -38,14 +45,14 @@ Trace.h:       class Trace : public IOStream [UART]
 SERIAL PERIPHERAL INTERFACE
 Driver for devices on the serial peripherial interface (SPI).
 --------------------------------------------------------------------
-SPI.h:		class SPI
+SPI.h:		class SPI : public Thing
 ADXL345.h:	      class ADXL345 : private SPI
 NRF24L01P.h:	      class NRF24L01P : private SPI
 --------------------------------------------------------------------
 TWO WIRE INTERFACE
 Driver for devices on the two wire interface (TWI/I2C).
 --------------------------------------------------------------------
-TWI.h:		class TWI
+TWI.h:		class TWI : public Thing
 DS1307.h	      class DS1307 : private TWI
 --------------------------------------------------------------------
 ONEWIRE
