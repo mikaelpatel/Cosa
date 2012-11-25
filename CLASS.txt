@@ -46,6 +46,7 @@ TWO WIRE INTERFACE
 Driver for devices on the two wire interface (TWI/I2C).
 --------------------------------------------------------------------
 TWI.h:		class TWI
+DS1307.h	      class DS1307 : private TWI
 --------------------------------------------------------------------
 ONEWIRE
 Driver for devices on the one wire bus (1-Wire). 

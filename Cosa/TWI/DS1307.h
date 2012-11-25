@@ -32,7 +32,7 @@
 
 #include "Cosa/TWI.h"
 
-class DS1307 : public TWI {
+class DS1307 : private TWI {
 
 private:
   static const uint8_t ADDR = 0x68;
@@ -51,6 +51,8 @@ public:
     uint8_t month;
     uint8_t year;
     uint8_t cntl;
+    void to_binary();
+    void to_bcd();
   };
 
   /**
@@ -92,8 +94,10 @@ public:
    */
   bool set_time(timekeeper_t& now)
   {
-    return (write_ram(&now, sizeof(now)) == sizeof(now));
+    return (write_ram(&now, sizeof(now)) == sizeof(now) ||
+	    write_ram(&now, sizeof(now), sizeof(timekeeper_t)) == sizeof(now));
   }
+
 };
 
 #endif

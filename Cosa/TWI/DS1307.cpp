@@ -28,6 +28,23 @@
  */
 
 #include "Cosa/TWI/DS1307.h"
+#include "Cosa/BCD.h"
+
+void 
+DS1307::timekeeper_t::to_binary()
+{
+  uint8_t* buf = (uint8_t*) &seconds;
+  for (uint8_t i = 0; i < sizeof(timekeeper_t); i++)
+    buf[i] = bcd_to_bin(buf[i]);
+}
+
+void 
+DS1307::timekeeper_t::to_bcd()
+{
+  uint8_t* buf = (uint8_t*) &seconds;
+  for (uint8_t i = 0; i < sizeof(timekeeper_t); i++)
+    buf[i] = bin_to_bcd(buf[i]);
+}
 
 int8_t
 DS1307::read_ram(void* buf, uint8_t size, uint8_t pos)

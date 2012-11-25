@@ -32,10 +32,14 @@
 #include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
 
-// The real-time device, time and state kept in ram in device
+// The real-time device, latest start and sample time in ram
 DS1307 rtc;
 DS1307::timekeeper_t now;
-uint8_t state[16];
+struct {
+  DS1307::timekeeper_t start;
+  DS1307::timekeeper_t sample;
+} latest;
+const uint8_t ram_pos = sizeof(DS1307::timekeeper_t);
 
 // Use the buildin led as a heartbeat
 OutputPin ledPin(13, 0);
@@ -50,31 +54,35 @@ void setup()
 
   // Start the watchdog ticks counter
   Watchdog::begin(16);
-
-  // Initate state vector (restart will force zero of the ram)
-  rtc.write_ram(state, sizeof(state), 16);
 }
 
 void loop()
 {
   // Wait a second
   Watchdog::delay(1000);
+  ledPin.toggle();
 
   // Read the time from the rtc device and print
-  ledPin.toggle();
   rtc.get_time(now);
-  trace.print_P(PSTR("rtc:"));
+  trace.print_P(PSTR("rtc (bcd):"));
   trace.print(&now, sizeof(now), 16);
+  now.to_binary();
+  trace.print_P(PSTR("rtc (bin):"));
+  trace.print(&now, sizeof(now), 16);
+  now.to_bcd();
+  trace.print_P(PSTR("rtc (bcd):"));
+  trace.print(&now, sizeof(now), 16);
+  trace.println();
 
-  // Read the state and update
-  rtc.read_ram(state, sizeof(state), 16);
-  trace.print_P(PSTR("ram:"));
-  trace.print(state, sizeof(state), 16);
-  for (uint8_t i = 0; i < sizeof(state); i++) state[i]++;
-  rtc.write_ram(state, sizeof(state), 16);
-
-  // Clear the local state copy to verify write and read back
-  for (uint8_t i = 0; i < sizeof(state); i++) state[i] = 0;
+  // Read the latest start and sample time
+  rtc.read_ram(&latest, sizeof(latest), ram_pos);
+  trace.print_P(PSTR("ram (start):"));
+  trace.print(&latest.start, sizeof(latest.start), 16);
+  trace.print_P(PSTR("ram (sampl):"));
+  trace.print(&latest.sample, sizeof(latest.sample), 16);
+  latest.sample = now;
+  rtc.write_ram(&latest, sizeof(latest), ram_pos);
+  trace.println();
 
   // Heartbeat
   ledPin.toggle();
