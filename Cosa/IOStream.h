@@ -158,6 +158,14 @@ public:
   void print(unsigned long int value, uint8_t base = 10);
 
   /**
+   * Print buffer contents in given base to stream.
+   * @param[in] ptr pointer to data memory.
+   * @param[in] size number of bytes.
+   * @param[in] base to represent value in (default 10).
+   */
+  void print(void *ptr, size_t size, uint8_t base = 10);
+
+  /**
    * Print pointer as a hexidecimal number to stream.
    * @param[in] ptr pointer to data memory.
    */

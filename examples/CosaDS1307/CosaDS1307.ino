@@ -52,41 +52,30 @@ void setup()
   Watchdog::begin(16);
 
   // Initate state vector (restart will force zero of the ram)
-  ledPin.toggle();
   rtc.write_ram(state, sizeof(state), 16);
-  ledPin.toggle();
 }
 
 void loop()
 {
   // Wait a second
   Watchdog::delay(1000);
-  ledPin.toggle();
 
   // Read the time from the rtc device and print
+  ledPin.toggle();
   rtc.get_time(now);
-  uint8_t* buffer = (uint8_t*) &now;
-  for (uint8_t i = 0; i < sizeof(now); i++) {
-    trace.print(buffer[i], 16);
-    trace.print_P(PSTR(" "));
-  }
-  trace.println();
+  trace.print_P(PSTR("rtc:"));
+  trace.print(&now, sizeof(now), 16);
 
   // Read the state and update
-  ledPin.toggle();
   rtc.read_ram(state, sizeof(state), 16);
-  ledPin.toggle();
-  for (uint8_t i = 0; i < sizeof(state); i++) {
-    trace.print(state[i], 16);
-    trace.print_P(PSTR(" "));
-    state[i]++;
-  }
-  trace.println();
+  trace.print_P(PSTR("ram:"));
+  trace.print(state, sizeof(state), 16);
+  for (uint8_t i = 0; i < sizeof(state); i++) state[i]++;
   rtc.write_ram(state, sizeof(state), 16);
 
   // Clear the local state copy to verify write and read back
-  for (uint8_t i = 0; i < sizeof(state); i++) {
-    state[i] = 0;
-  }
+  for (uint8_t i = 0; i < sizeof(state); i++) state[i] = 0;
+
+  // Heartbeat
   ledPin.toggle();
 }
