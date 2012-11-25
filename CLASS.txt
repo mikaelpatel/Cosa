@@ -1,15 +1,17 @@
---------------------------------------------------------------------
+----------------------------------------------------------------------------
+ARDUINO CHE COSA?
+----------------------------------------------------------------------------
 Thing 
 The Cosa Root class. Basic event dispatch and collection handling,
 broadcast of an event of a set of things.
---------------------------------------------------------------------
+----------------------------------------------------------------------------
 Thing.h:	class Thing
 Things.h:	      class Things : public Thing
---------------------------------------------------------------------
+----------------------------------------------------------------------------
 PINS
 Object-oriented approach to sketch pin declaration and function
 structuring. 
---------------------------------------------------------------------
+----------------------------------------------------------------------------
 Pins.h:		class Pin : public Thing
 Pins.h:		      class InputPin : public Pin
 Pins.h:		      	    class InterruptPin : public InputPin
@@ -18,50 +20,54 @@ Pins.h:		      	    class PWMPin : public OutputPin
 Pins.h:			    class IOPin : public OutputPin
 Pins.h:		      class AnalogPin : public Pin
 Pins.h:		class AnalogPinSet
---------------------------------------------------------------------
+----------------------------------------------------------------------------
 EVENT QUEUE
 Support for pushing events from interrupt handlers.
---------------------------------------------------------------------
+----------------------------------------------------------------------------
 Event.h:	class Event
 Queue.h:	class Queue
---------------------------------------------------------------------
+----------------------------------------------------------------------------
 WATCHDOG
 Ultra low power timer. Time base for delay and timeout events.
---------------------------------------------------------------------
+----------------------------------------------------------------------------
 Watchdog.h:	class Watchdog
---------------------------------------------------------------------
+----------------------------------------------------------------------------
 IOSTREAM
 Stream and device abstraction. 
---------------------------------------------------------------------
-IOStream.h:	class IOStream
-IOStream.h:     class IOStream::Device
-UART.h:		      class UART : public IOStream::Device
---------------------------------------------------------------------
+----------------------------------------------------------------------------
+IOStream.h:		class IOStream
+IOStream.h:     	class IOStream::Device
+IOStream/UART.h:	      class UART : public IOStream::Device
+----------------------------------------------------------------------------
 TRACE
 Trace log support.
---------------------------------------------------------------------
+----------------------------------------------------------------------------
 Trace.h:       class Trace : public IOStream [UART]
---------------------------------------------------------------------
+----------------------------------------------------------------------------
 SERIAL PERIPHERAL INTERFACE
 Driver for devices on the serial peripherial interface (SPI).
---------------------------------------------------------------------
-SPI.h:		class SPI : public Thing
-ADXL345.h:	      class ADXL345 : private SPI
-NRF24L01P.h:	      class NRF24L01P : private SPI
---------------------------------------------------------------------
+Support for ADXL345 Digital Accelerometer, nRF24L01 Single Chip 2.4GHz
+Transceiver. 
+----------------------------------------------------------------------------
+SPI.h:			class SPI : public Thing
+SPI/ADXL345.h:	      	      class ADXL345 : private SPI
+SPI/NRF24L01P.h:	      class NRF24L01P : private SPI
+----------------------------------------------------------------------------
 TWO WIRE INTERFACE
 Driver for devices on the two wire interface (TWI/I2C).
---------------------------------------------------------------------
-TWI.h:		class TWI : public Thing
-DS1307.h	      class DS1307 : private TWI
---------------------------------------------------------------------
+Support for AT24CXX Serial EEPROM, DS1307 Realtime clock with RAM.
+----------------------------------------------------------------------------
+TWI.h:			class TWI : public Thing
+TWI/AT24CXX.h	      	      class AT24CXX : private TWI
+TWI/DS1307.h	      	      class DS1307 : private TWI
+----------------------------------------------------------------------------
 ONEWIRE
 Driver for devices on the one wire bus (1-Wire). 
 Support for DS18B20 Programmable Resolution 1-Wire Digital 
 Thermometer.
---------------------------------------------------------------------
-OneWire.h:	class OneWire : public IOPin
-OneWire.h:	class OneWire::Device
-DS18B20.h:	      class DS18B20 : public OneWire::Device
---------------------------------------------------------------------
+----------------------------------------------------------------------------
+OneWire.h:		class OneWire : private IOPin
+OneWire.h:		class OneWire::Device
+OnwWire/DS18B20.h:	      class DS18B20 : public OneWire::Device
+----------------------------------------------------------------------------
 
