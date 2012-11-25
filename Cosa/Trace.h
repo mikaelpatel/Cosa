@@ -32,7 +32,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.h"
-#include "Cosa/UART.h"
+#include "Cosa/IOStream/UART.h"
 
 /**
  * The Trace class singleton. 
