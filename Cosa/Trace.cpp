@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Trace.h
+ * @file Cosa/Trace.cpp
  * @version 1.0
  *
  * @section License
