@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Things.h
+ * @file Cosa/Things.cpp
  * @version 1.0
  *
  * @section License
@@ -26,42 +26,21 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_THINGS_H__
-#define __COSA_THINGS_H__
+#include "Cosa/Things.h"
 
-#include "Cosa/Types.h"
-#include "Cosa/Thing.h"
+void 
+Things::broadcast(Thing* things, uint8_t type, uint16_t value)
+{
+  for (Thing* it = things->get_succ(); it != things; it = it->get_succ())
+    it->on_event(type, value);
+}
 
-class Things : public Thing {
+uint8_t 
+Things::length()
+{
+  uint8_t res = 0;
+  for (Thing* it = _succ; it != this; it = it->get_succ()) res++;
+  return (res);
+}
 
-public:
-  /**
-   * Default event handler for thing collection. Boardcase event.
-   * @param[in] things the collection.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  static void broadcast(Thing* things, uint8_t type, uint16_t value);
 
-  /**
-   * Construct a thing collection.
-   */
-  Things() : Thing(broadcast) {}
-
-  /**
-   * Return number of things.
-   * @return length
-   */
-  uint8_t length();
-
-  /**
-   * Return true(1) if there are no things otherwise false(0).
-   * @return bool
-   */
-  bool is_empty()
-  {
-    return (_succ == this);
-  }
-};
-
-#endif

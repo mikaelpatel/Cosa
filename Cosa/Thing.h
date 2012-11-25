@@ -33,6 +33,7 @@
 #include "Cosa/Types.h"
 
 class Thing {
+
 public:
   /**
    * Event handler function prototype.
@@ -42,7 +43,7 @@ public:
    */
   typedef void (*EventHandler)(Thing* it, uint8_t type, uint16_t value);
 
-  // protected:
+protected:
   EventHandler _callback;
   Thing* _succ;
   Thing* _pred;
@@ -71,6 +72,20 @@ public:
   void on_event(uint8_t type, uint16_t value)
   {
     if (_callback != 0) _callback(this, type, value);
+  }
+
+  /**
+   * Add given thing.
+   * @param[in] it thing to add.
+   */
+  void add(Thing* it)
+  {
+    synchronized {
+      it->_succ = this;
+      it->_pred = this->_pred;
+      this->_pred->_succ = it;
+      this->_pred = it;
+    }
   }
 
   /**
