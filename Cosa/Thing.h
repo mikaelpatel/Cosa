@@ -42,12 +42,16 @@ public:
    */
   typedef void (*EventHandler)(Thing* it, uint8_t type, uint16_t value);
 
-private:
+  // protected:
   EventHandler _callback;
+  Thing* _succ;
+  Thing* _pred;
 
 public:
-  Thing() : 
-    _callback(0) 
+  Thing(EventHandler callback = 0) : 
+    _callback(callback),
+    _succ(this),
+    _pred(this)
   {}
   
   /**
@@ -67,6 +71,29 @@ public:
   void on_event(uint8_t type, uint16_t value)
   {
     if (_callback != 0) _callback(this, type, value);
+  }
+
+  /**
+   * Remove this thing from any things.
+   */
+  void remove()
+  {
+    synchronized {
+      _succ->_pred = _pred;
+      _pred->_succ = _succ;
+      _succ = this;
+      _pred = this;
+    }
+  }
+
+  Thing* get_succ() 
+  {
+    return (_succ);
+  }
+
+  Thing* get_pred() 
+  {
+    return (_pred);
   }
 };
 
