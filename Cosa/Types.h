@@ -96,9 +96,9 @@ inline void unlock(uint8_t key)
 /**
  * Buffer structure for vector write operations.
  */
-struct iovec {
-  void* buf;
-  size_t count;
+struct iovec_t {
+  uint8_t* buf;
+  size_t size;
 };
 
 #endif

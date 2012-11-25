@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/DS1307.cpp
+ * @file Cosa/TWI/AT23CXX.cpp
  * @version 1.0
  *
  * @section License
@@ -21,46 +21,31 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock.
- * See Maxim Integrated product description.
+ * Driver for the AT24CXX 2-Wire Serial EEPROM.
+ * See Atmel Product description (Rev. 0336K-SEEPR-7/03).
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/DS1307.h"
-#include "Cosa/BCD.h"
-
-void 
-DS1307::timekeeper_t::to_binary()
-{
-  uint8_t* buf = (uint8_t*) &seconds;
-  for (uint8_t i = 0; i < sizeof(timekeeper_t); i++)
-    buf[i] = bcd_to_bin(buf[i]);
-}
-
-void 
-DS1307::timekeeper_t::to_bcd()
-{
-  uint8_t* buf = (uint8_t*) &seconds;
-  for (uint8_t i = 0; i < sizeof(timekeeper_t); i++)
-    buf[i] = bin_to_bcd(buf[i]);
-}
+#include "Cosa/TWI/AT24CXX.h"
 
 int
-DS1307::read_ram(void* buf, uint8_t size, uint8_t pos)
+AT24CXX::read(void* buf, uint8_t size, uint16_t addr)
 {
-  if (!begin(ADDR)) return (-1);
-  write(ADDR, pos);
-  int count = read(ADDR, buf, size);
+  if (!begin(_addr)) return (-1);
+  TWI::write(_addr, addr);
+  int count = TWI::read(_addr, buf, size);
   end();
   return (count);
 }
 
-int
-DS1307::write_ram(void* buf, uint8_t size, uint8_t pos)
+int 
+AT24CXX::write(void* buf, uint8_t size, uint16_t addr)
 {
-  if (!begin(ADDR)) return (-1);
-  int count = write(ADDR, pos, buf, size);
+  if (!begin(_addr)) return (-1);
+  TWI::write(_addr, addr);
+  int count = TWI::write(_addr, addr, buf, size);
   end();
+  if (count > 0) count -= sizeof(addr);
   return (count);
 }

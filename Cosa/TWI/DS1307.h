@@ -35,7 +35,7 @@
 class DS1307 : private TWI {
 
 private:
-  static const uint8_t ADDR = 0x68;
+  static const uint8_t ADDR = 0xD0;
   static const uint8_t RAM_MAX = 0x40;
 
 public:
@@ -63,7 +63,7 @@ public:
    * @param[in] pos address in ram to read from.
    * @return number of bytes or negative error code.
    */
-  int8_t read_ram(void* buf, uint8_t size, uint8_t pos = 0);
+  int read_ram(void* buf, uint8_t size, uint8_t pos = 0);
 
   /**
    * Write ram block at given position with the contents from buffer.
@@ -73,7 +73,7 @@ public:
    * @param[in] pos address in ram to read write to.
    * @return number of bytes or negative error code.
    */
-  int8_t write_ram(void* buf, uint8_t size, uint8_t pos = 0);
+  int write_ram(void* buf, uint8_t size, uint8_t pos = 0);
 
   /**
    * Read current time from real-time clock. Return true(1)

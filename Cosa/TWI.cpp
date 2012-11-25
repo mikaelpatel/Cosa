@@ -44,7 +44,7 @@ TWI::begin(uint8_t addr, InterruptHandler fn)
 {
   _twi = this;
   _handler = fn;
-  _addr = (addr << ADDR_POS);
+  _addr = addr;
 
   // Check for slave mode
   if (fn != 0) {
@@ -74,52 +74,72 @@ TWI::end()
 }
 
 bool
-TWI::request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn)
+TWI::request(uint8_t addr, InterruptHandler fn)
 {
   _addr = addr;
   _state = (addr & WRITE_OP) ? MT_STATE : MR_STATE;
   _status = NO_INFO;
   _handler = fn;
-  _buf = (uint8_t*) buf;
-  _size = size;
+  _count = 0;
   _next = 0;
+  _ix = 0;
   TWCR = START_CMD;
   return (1);
 }
 
-int 
-TWI::write(uint8_t addr, uint8_t data)
-{
-  _data[0] = data;
-  if (!write_request(addr, _data, sizeof(data))) return (-1);
-  await_request();
-  return (_next);
-}
- 
-int 
-TWI::read(uint8_t addr, uint8_t size)
-{
-  if (size > sizeof(_data)) size = sizeof(_data);
-  if (!read_request(addr, &_data, size)) return (-1);
-  await_request();
-  if (size == 1) return (_data[0]);
-  return (((int*) _data)[0]);
-}
-
-int16_t
+int
 TWI::write(uint8_t addr, void* buf, uint8_t size)
 {
-  if (!write_request(addr, buf, size)) return (-1);
+  _vec[0].buf = (uint8_t*) buf;
+  _vec[0].size = size;
+  _vec[1].buf = 0;
+  _vec[1].size = 0;
+  if (!request(addr | WRITE_OP)) return (-1);
   await_request();
-  return (_next);
+  return (_count);
 }
 
-int16_t
+int 
+TWI::write(uint8_t addr, uint8_t header, void* buf, uint8_t size)
+{
+  _buf[0] = header;
+  _vec[0].buf = _buf;
+  _vec[0].size = sizeof(header);
+  _vec[1].buf = (uint8_t*) buf;
+  _vec[1].size = size;
+  _vec[2].buf = 0;
+  _vec[2].size = 0;
+  if (!request(addr | WRITE_OP)) return (-1);
+  await_request();
+  return (_count);
+}
+
+int 
+TWI::write(uint8_t addr, uint16_t header, void* buf, uint8_t size)
+{
+  _buf[0] = (header >> 8);
+  _buf[1] = header;
+  _vec[0].buf = _buf;
+  _vec[0].size = sizeof(header);
+  _vec[1].buf = (uint8_t*) buf;
+  _vec[1].size = size;
+  _vec[2].buf = 0;
+  _vec[2].size = 0;
+  if (!request(addr | WRITE_OP)) return (-1);
+  await_request();
+  return (_count);
+}
+
+int
 TWI::read(uint8_t addr, void* buf, uint8_t size)
 {
-  if (!read_request(addr, buf, size)) return (-1);
+  _vec[0].buf = (uint8_t*) buf;
+  _vec[0].size = size;
+  _vec[1].buf = 0;
+  _vec[1].size = 0;
+  if (!request(addr | READ_OP)) return (-1);
   await_request();
-  return (_next);
+  return (_count);
 }
 
 void
@@ -134,6 +154,8 @@ TWI::on_bus_event()
     break;
   case ARB_LOST:
     TWCR = START_CMD;
+    _ix = 0;
+    _count = 0;
     _next = 0;
     break;
   /**
@@ -141,9 +163,14 @@ TWI::on_bus_event()
    */
   case MT_SLA_ACK:
   case MT_DATA_ACK:
-    if (_next < _size) {
-      TWDR = _buf[_next++];
+    if (_next == _vec[_ix].size) {
+      _ix += 1;
+      _next = 0;
+    }
+    if (_next < _vec[_ix].size) {
+      TWDR = _vec[_ix].buf[_next++];
       TWCR = DATA_CMD;
+      _count++;
     } 
     else {
       TWCR = STOP_CMD;
@@ -162,9 +189,10 @@ TWI::on_bus_event()
    * Master Receiver Mode
    */
   case MR_DATA_ACK:
-    _buf[_next++] = TWDR;
+    _vec[_ix].buf[_next++] = TWDR;
+    _count++;
   case MR_SLA_ACK:
-    if (_next < (_size - 1)) {
+    if (_next < (_vec[_ix].size - 1)) {
       TWCR = ACK_CMD;
     } 
     else {
@@ -172,7 +200,8 @@ TWI::on_bus_event()
     }    
     break; 
   case MR_DATA_NACK:
-    _buf[_next++] = TWDR;
+    _vec[_ix].buf[_next++] = TWDR;
+    _count++;
     TWCR = STOP_CMD;
     if (_handler != 0) {
       _handler(this);
@@ -194,8 +223,8 @@ TWI::on_bus_event()
     if (_handler != 0) _handler(this);
     _next = 0;
   case ST_DATA_ACK:
-    TWDR = _buf[_next++];
-    if (_next < _size) {
+    TWDR = _vec[_ix].buf[_next++];
+    if (_next < _vec[_ix].size) {
       TWCR = ACK_CMD;
     } 
     else {
@@ -218,8 +247,8 @@ TWI::on_bus_event()
     break;
   case SR_DATA_ACK:
   case SR_GCALL_DATA_ACK:
-    if (_next < _size){
-      _buf[_next++] = TWDR;
+    if (_next < _vec[_ix].size){
+      _vec[_ix].buf[_next++] = TWDR;
       TWCR = ACK_CMD;
     }
     else {
@@ -227,8 +256,8 @@ TWI::on_bus_event()
     }
     break;
   case SR_STOP:
-    if (_next < _size) {
-      _buf[_next] = 0;
+    if (_next < _vec[_ix].size) {
+      _vec[_ix].buf[_next] = 0;
     }
     TWCR = STOP_CMD;
     if (_handler != 0) _handler(this);

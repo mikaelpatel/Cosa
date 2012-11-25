@@ -98,10 +98,7 @@ protected:
    */
   enum {
     WRITE_OP = 0x00,
-    READ_OP = 0x01
-  };
-  enum {
-    ADDR_POS = 1,
+    READ_OP = 0x01,
     ADDR_MASK = 0xfe
   };
 
@@ -125,27 +122,27 @@ protected:
     SCL = 5
   };
 
+  static const uint8_t BUF_MAX = 4;
+  static const uint8_t VEC_MAX = 4;
   volatile State _state;
   volatile uint8_t _status;
   InterruptHandler _handler;
   uint8_t _addr;
-  uint8_t _data[2];
-  uint8_t _cnt;
-  uint8_t* _buf;
-  uint8_t _size;
+  uint8_t _buf[BUF_MAX];
+  iovec_t _vec[VEC_MAX];
+  volatile uint8_t _ix;
   volatile uint8_t _next;
+  volatile int _count;
 
   /**
    * Initiate a request to the slave. The address field is
    * the TWI address and operation (read/write bit). 
    * Return true(1) if successful otherwise false(0).
    * @param[in] addr slave address and operation.
-   * @param[in] buf data buffer to send or receive into.
-   * @param[in] size number of bytes in buffer.
    * @param[in] fn interrupt handler on completion.
    * @return bool
    */
-  bool request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn);
+  bool request(uint8_t addr, InterruptHandler fn = 0);
 
 public:
   TWI() :
@@ -153,15 +150,15 @@ public:
     _status(NO_INFO),
     _handler(0),
     _addr(0),
-    _buf(0),
-    _size(0),
-    _next(0)
+    _ix(0),
+    _next(0),
+    _count(0)
   {
   }
 
   /**
    * Start TWI bus logic. Default mode is master.
-   * @param[in] addr slave address (0..127).
+   * @param[in] addr slave address.
    * @param[in] fn slave interrupt handler.
    * @return true(1) if successful otherwise false(0)
    */
@@ -174,27 +171,9 @@ public:
   bool end();
 
   /**
-   * Write data to the given slave unit. Returns number of bytes read
-   * or negative error code.
-   * @param[in] addr slave address (0..127).
-   * @param[in] data to write.
-   * @return number of bytes
-   */
-  int write(uint8_t addr, uint8_t data);
-  
-  /**
-   * Read data to the given slave unit. Returns data read or negative
-   * error code.
-   * @param[in] addr slave address (0..127).
-   * @param[in] size number of bytes to read (1..2).
-   * @return data.
-   */
-  int read(uint8_t addr, uint8_t size = 1);
-
-  /**
    * Write data to the given slave unit. Returns number of bytes
    * written or negative error code.
-   * @param[in] addr slave address (0..127).
+   * @param[in] addr slave address.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
    * @return number of bytes
@@ -202,9 +181,31 @@ public:
   int write(uint8_t addr, void* buf, uint8_t size);
 
   /**
+   * Write data to the given slave unit. Returns number of bytes
+   * written or negative error code.
+   * @param[in] addr slave address.
+   * @param[in] header to write before buffer.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes
+   */
+  int write(uint8_t addr, uint8_t header, void* buf = 0, uint8_t size = 0);
+
+  /**
+   * Write data to the given slave unit. Returns number of bytes
+   * written or negative error code.
+   * @param[in] addr slave address.
+   * @param[in] header to write before buffer.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes
+   */
+  int write(uint8_t addr, uint16_t header, void* buf = 0, uint8_t size = 0);
+
+  /**
    * Read data to the given slave unit. Returns number of bytes read
    * or negative error code.
-   * @param[in] addr slave address (0..127).
+   * @param[in] addr slave address.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to read.
    * @return number of bytes
@@ -212,68 +213,11 @@ public:
   int read(uint8_t addr, void* buf, uint8_t size);
 
   /**
-   * In master mode requests write data to the given slave unit.
-   * Returns true(1) if successful request otherwise false(0)
-   * @param[in] addr slave address (0..127).
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @param[in] fn interrupt handler on completion.
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool write_request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn = 0)
-  {
-    return (request(((addr << ADDR_POS) | WRITE_OP), buf, size, fn));
-  }
-
-  /**
-   * In master mode requests read data to the given slave unit.
-   * Returns true(1) if successful request otherwise false(0)
-   * @param[in] addr slave address (0..127).
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @param[in] fn interrupt handler on completion.
-   * @return true(1) if successful request otherwise false(0)
-   */
-  bool read_request(uint8_t addr, void* buf, uint8_t size, InterruptHandler fn = 0)
-  {
-    return (request(((addr << ADDR_POS) | READ_OP), buf, size, fn));
-  }
-
-  /**
    * Await issued request to complete.
    */
   void await_request()
   {
     while (_state > IDLE_STATE);
-  }
-
-  /**
-   * Return request buffer.
-   * @return buffer pointer.
-   */
-  void* get_buf() 
-  { 
-    return (_buf); 
-  }
-
-  /**
-   * Return number of bytes in request buffer.
-   * @return size.
-   */
-  uint8_t get_size() 
-  { 
-    return (_next); 
-  }
-
-  /**
-   * Set buffer and size of buffer (for slave interrupt handling).
-   * @param[in] buf data to write.
-   * @param[in] size max number of bytes to write.
-   */
-  void set(void* buf, uint8_t size)
-  {
-    _buf = (uint8_t*) buf;
-    _size = size;
   }
 
   /**
