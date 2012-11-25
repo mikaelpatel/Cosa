@@ -157,9 +157,9 @@ ISR(ADC_vect)
 }
 
 void 
-AnalogPinSet::sample_next(AnalogPin* pin, void* env)
+AnalogPins::sample_next(AnalogPin* pin, void* env)
 {
-  AnalogPinSet* set = (AnalogPinSet*) env;
+  AnalogPins* set = (AnalogPins*) env;
   if (set->_next != set->_count) {
     AnalogPin* pin = set->get_pin_at(set->_next++);
     pin->request_sample();
@@ -170,7 +170,7 @@ AnalogPinSet::sample_next(AnalogPin* pin, void* env)
 }
 
 bool
-AnalogPinSet::begin(InterruptHandler fn, void* env)
+AnalogPins::begin(InterruptHandler fn, void* env)
 {
   if (AnalogPin::get_sampling()) return (0);
   if (fn != 0) {

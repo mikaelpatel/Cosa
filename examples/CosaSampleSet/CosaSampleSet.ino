@@ -46,7 +46,7 @@ const PROGMEM AnalogPin* pins[] = {
 };
 
 // Declare the pin set with vector, number of members and push event callback
-AnalogPinSet pinSet(pins, membersof(pins), AnalogPinSet::push_event);
+AnalogPins analogPins(pins, membersof(pins), AnalogPins::push_event);
 
 // Use the buildin led as a heartbeat
 OutputPin ledPin(13, 0);
@@ -61,7 +61,7 @@ void setup()
 
   // Check size of instances
   TRACE(sizeof(AnalogPin));
-  TRACE(sizeof(AnalogPinSet));
+  TRACE(sizeof(AnalogPins));
   TRACE(sizeof(pins));
   TRACE(membersof(pins));
 
@@ -73,7 +73,7 @@ void loop()
 {
   // Start sampling analog pins and Wait for the next event
   ledPin.toggle();
-  TRACE(pinSet.begin());
+  TRACE(analogPins.begin());
   Event event;
   Event::queue.await(&event);
   ledPin.toggle();

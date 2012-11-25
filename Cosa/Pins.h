@@ -588,16 +588,16 @@ public:
  * Abstract analog pin set. Allow sampling of a set of pins with
  * interrupt or event handler when completed.
  */
-class AnalogPinSet : public Thing {
+class AnalogPins : public Thing {
 
 public:
   /**
    * Interrupt handler function prototype for analog pin set 
    * sample completion.
-   * @param[in] pin analog pin set.
+   * @param[in] set analog pin set.
    * @param[in] env interrupt handler environment.
    */
-  typedef void (*InterruptHandler)(AnalogPinSet* set, void* env);
+  typedef void (*InterruptHandler)(AnalogPins* set, void* env);
 
 private:
   const AnalogPin** _pin_at;
@@ -616,10 +616,10 @@ public:
    * @param[in] fn conversion completion interrupt handler.
    * @param[in] env interrupt handler environment.
    */
-  AnalogPinSet(const AnalogPin** pins, 
-	       uint8_t count, 
-	       InterruptHandler fn = 0, 
-	       void* env = 0) :
+  AnalogPins(const AnalogPin** pins, 
+	     uint8_t count, 
+	     InterruptHandler fn = 0, 
+	     void* env = 0) :
     _pin_at(pins),
     _count(count),
     _handler(fn),
@@ -663,7 +663,7 @@ public:
    * @param[in] pin analog pin set.
    * @param[in] env handler environment.
    */
-  static void push_event(AnalogPinSet* set, void* env)
+  static void push_event(AnalogPins* set, void* env)
   { 
     Event::push(Event::READ_DATA_TYPE, set, env);
   }
