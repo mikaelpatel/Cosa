@@ -268,6 +268,6 @@ NRF24L01P::push_event(InterruptPin* pin, void* env)
   uint8_t status = nrf->get_status();
   if (status & _BV(RX_DR)) {
     nrf->write(STATUS, _BV(RX_DR));
-    Event::push(Event::READ_DATA_TYPE, nrf, status);
+    Event::push(Event::RECEIVE_COMPLETED_TYPE, nrf, status);
   }
 }

@@ -271,7 +271,7 @@ public:
    */
   static void push_event(SPI* spi, uint8_t count)
   { 
-    Event::push(Event::READ_DATA_TYPE, spi, count);
+    Event::push(Event::RECEIVE_COMPLETED_TYPE, spi, count);
   }
 };
 
