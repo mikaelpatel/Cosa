@@ -49,7 +49,7 @@ DS1307::timekeeper_t::to_bcd()
 int
 DS1307::read_ram(void* buf, uint8_t size, uint8_t pos)
 {
-  if (!begin(ADDR)) return (-1);
+  if (!begin()) return (-1);
   write(ADDR, pos);
   int count = read(ADDR, buf, size);
   end();
@@ -59,7 +59,7 @@ DS1307::read_ram(void* buf, uint8_t size, uint8_t pos)
 int
 DS1307::write_ram(void* buf, uint8_t size, uint8_t pos)
 {
-  if (!begin(ADDR)) return (-1);
+  if (!begin()) return (-1);
   int count = write(ADDR, pos, buf, size);
   end();
   return (count);

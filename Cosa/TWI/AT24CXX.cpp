@@ -32,7 +32,7 @@
 int
 AT24CXX::read(void* buf, uint8_t size, uint16_t addr)
 {
-  if (!begin(_addr)) return (-1);
+  if (!begin()) return (-1);
   TWI::write(_addr, addr);
   int count = TWI::read(_addr, buf, size);
   end();
@@ -42,7 +42,7 @@ AT24CXX::read(void* buf, uint8_t size, uint16_t addr)
 int 
 AT24CXX::write(void* buf, uint8_t size, uint16_t addr)
 {
-  if (!begin(_addr)) return (-1);
+  if (!begin()) return (-1);
   TWI::write(_addr, addr);
   int count = TWI::write(_addr, addr, buf, size);
   end();

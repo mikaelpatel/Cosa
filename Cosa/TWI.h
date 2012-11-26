@@ -29,6 +29,7 @@
 #ifndef __COSA_TWI_H__
 #define __COSA_TWI_H__
 
+#include <avr/sleep.h>
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.h"
@@ -37,13 +38,6 @@
 #define TWI_STATUS(x) ((x) >> 3)
 
 class TWI : public Thing {
-
-public:
-  /**
-   * Interrupt handler prototype for request completions.
-   * @param[in] twi environment.
-   */
-  typedef void (*InterruptHandler)(TWI* twi);
 
 protected:
   /**
@@ -126,7 +120,7 @@ protected:
   static const uint8_t VEC_MAX = 4;
   volatile State _state;
   volatile uint8_t _status;
-  InterruptHandler _handler;
+  Thing* _target;
   uint8_t _addr;
   uint8_t _buf[BUF_MAX];
   iovec_t _vec[VEC_MAX];
@@ -139,16 +133,15 @@ protected:
    * the TWI address and operation (read/write bit). 
    * Return true(1) if successful otherwise false(0).
    * @param[in] addr slave address and operation.
-   * @param[in] fn interrupt handler on completion.
    * @return bool
    */
-  bool request(uint8_t addr, InterruptHandler fn = 0);
+  bool request(uint8_t addr);
 
 public:
   TWI() :
     _state(IDLE_STATE),
     _status(NO_INFO),
-    _handler(0),
+    _target(0),
     _addr(0),
     _ix(0),
     _next(0),
@@ -158,12 +151,12 @@ public:
 
   /**
    * Start TWI bus logic. Default mode is master.
+   * @param[in] target receiver of events in slave mode.
    * @param[in] addr slave address.
-   * @param[in] fn slave interrupt handler.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint8_t addr = 0, InterruptHandler fn = 0);
-
+  bool begin(uint8_t addr = 0, Thing* target = 0);
+  
   /**
    * Disconnect usage of the TWI bus logic.
    * @return true(1) if successful otherwise false(0)
@@ -171,6 +164,48 @@ public:
   bool end();
 
   /**
+   * Issue a write data request to the given slave unit. Return
+   * true(1) if successful otherwise(0).
+   * @param[in] addr slave address.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return bool
+   */
+  bool write_request(uint8_t addr, void* buf, uint8_t size);
+
+  /**
+   * Issue a write data request to the given slave unit. Return
+   * true(1) if successful otherwise(0).
+   * @param[in] addr slave address.
+   * @param[in] header to write before buffer.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return bool
+   */
+  bool write_request(uint8_t addr, uint8_t header, void* buf, uint8_t size);
+
+  /**
+   * Issue a write data request to the given slave unit. Return
+   * true(1) if successful otherwise(0).
+   * @param[in] addr slave address.
+   * @param[in] header to write before buffer.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return bool
+   */
+  bool write_request(uint8_t addr, uint16_t header, void* buf, uint8_t size);
+
+  /**
+   * Issue a read data request to the given slave unit. Return
+   * true(1) if successful otherwise(0).
+   * @param[in] addr slave address.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to read.
+   * @return number of bytes
+   */
+  bool read_request(uint8_t addr, void* buf, uint8_t size);
+
+  /**
    * Write data to the given slave unit. Returns number of bytes
    * written or negative error code.
    * @param[in] addr slave address.
@@ -178,7 +213,12 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(uint8_t addr, void* buf, uint8_t size);
+  int write(uint8_t addr, void* buf, uint8_t size)
+  {
+    if (!write_request(addr, buf, size)) return (-1);
+    await_request();
+    return (_count);
+  }
 
   /**
    * Write data to the given slave unit. Returns number of bytes
@@ -189,7 +229,12 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(uint8_t addr, uint8_t header, void* buf = 0, uint8_t size = 0);
+  int write(uint8_t addr, uint8_t header, void* buf = 0, uint8_t size = 0)
+  {
+    if (!write_request(addr, header, buf, size)) return (-1);
+    await_request();
+    return (_count);
+  }
 
   /**
    * Write data to the given slave unit. Returns number of bytes
@@ -200,7 +245,12 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(uint8_t addr, uint16_t header, void* buf = 0, uint8_t size = 0);
+  int write(uint8_t addr, uint16_t header, void* buf = 0, uint8_t size = 0)
+  {
+    if (!write_request(addr, header, buf, size)) return (-1);
+    await_request();
+    return (_count);
+  }
 
   /**
    * Read data to the given slave unit. Returns number of bytes read
@@ -210,31 +260,17 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes
    */
-  int read(uint8_t addr, void* buf, uint8_t size);
+  int read(uint8_t addr, void* buf, uint8_t size)
+  {
+    if (!read_request(addr, buf, size)) return (-1);
+    await_request();
+    return (_count);
+  }
 
   /**
    * Await issued request to complete.
    */
-  void await_request()
-  {
-    while (_state > IDLE_STATE);
-  }
-
-  /**
-   * Callback function to push event on write completion.
-   */
-  static void push_write_event(TWI* twi)
-  { 
-    Event::push(Event::WRITE_DATA_TYPE, twi);
-  }
-
-  /**
-   * Callback function to push event on read completion.
-   */
-  static void push_read_event(TWI* twi)
-  { 
-    Event::push(Event::READ_DATA_TYPE, twi);
-  }
+  void await_request(uint8_t mode = SLEEP_MODE_IDLE);
 
   /**
    * TWI state machine. Run by interrupt handler.

@@ -40,14 +40,14 @@
 static TWI* _twi = 0;
 
 bool 
-TWI::begin(uint8_t addr, InterruptHandler fn)
+TWI::begin(uint8_t addr, Thing* target)
 {
   _twi = this;
-  _handler = fn;
+  _target = target;
   _addr = addr;
 
   // Check for slave mode
-  if (fn != 0) {
+  if (target != 0 && addr != 0) {
     TWAR = _addr;
   }
 
@@ -74,12 +74,11 @@ TWI::end()
 }
 
 bool
-TWI::request(uint8_t addr, InterruptHandler fn)
+TWI::request(uint8_t addr)
 {
   _addr = addr;
   _state = (addr & WRITE_OP) ? MT_STATE : MR_STATE;
   _status = NO_INFO;
-  _handler = fn;
   _count = 0;
   _next = 0;
   _ix = 0;
@@ -87,20 +86,18 @@ TWI::request(uint8_t addr, InterruptHandler fn)
   return (1);
 }
 
-int
-TWI::write(uint8_t addr, void* buf, uint8_t size)
+bool
+TWI::write_request(uint8_t addr, void* buf, uint8_t size)
 {
   _vec[0].buf = (uint8_t*) buf;
   _vec[0].size = size;
   _vec[1].buf = 0;
   _vec[1].size = 0;
-  if (!request(addr | WRITE_OP)) return (-1);
-  await_request();
-  return (_count);
+  return (request(addr | WRITE_OP));
 }
 
-int 
-TWI::write(uint8_t addr, uint8_t header, void* buf, uint8_t size)
+bool
+TWI::write_request(uint8_t addr, uint8_t header, void* buf, uint8_t size)
 {
   _buf[0] = header;
   _vec[0].buf = _buf;
@@ -109,13 +106,11 @@ TWI::write(uint8_t addr, uint8_t header, void* buf, uint8_t size)
   _vec[1].size = size;
   _vec[2].buf = 0;
   _vec[2].size = 0;
-  if (!request(addr | WRITE_OP)) return (-1);
-  await_request();
-  return (_count);
+  return (request(addr | WRITE_OP));
 }
 
-int 
-TWI::write(uint8_t addr, uint16_t header, void* buf, uint8_t size)
+bool
+TWI::write_request(uint8_t addr, uint16_t header, void* buf, uint8_t size)
 {
   _buf[0] = (header >> 8);
   _buf[1] = header;
@@ -125,21 +120,30 @@ TWI::write(uint8_t addr, uint16_t header, void* buf, uint8_t size)
   _vec[1].size = size;
   _vec[2].buf = 0;
   _vec[2].size = 0;
-  if (!request(addr | WRITE_OP)) return (-1);
-  await_request();
-  return (_count);
+  return (request(addr | WRITE_OP));
 }
 
-int
-TWI::read(uint8_t addr, void* buf, uint8_t size)
+bool
+TWI::read_request(uint8_t addr, void* buf, uint8_t size)
 {
   _vec[0].buf = (uint8_t*) buf;
   _vec[0].size = size;
   _vec[1].buf = 0;
   _vec[1].size = 0;
-  if (!request(addr | READ_OP)) return (-1);
-  await_request();
-  return (_count);
+  return (request(addr | READ_OP));
+}
+
+void 
+TWI::await_request(uint8_t mode)
+{
+  do {
+    cli();
+    set_sleep_mode(mode);
+    sleep_enable();
+    sei();
+    sleep_cpu();
+    sleep_disable();
+  } while (_state > IDLE_STATE);
 }
 
 void
@@ -174,7 +178,8 @@ TWI::on_bus_event()
     } 
     else {
       TWCR = STOP_CMD;
-      if (_handler != 0) _handler(this);
+      if (_target != 0) 
+	Event::push(Event::WRITE_COMPLETED_TYPE, _target, _twi);
       loop_until_bit_is_clear(TWCR, TWSTO);
       _state = IDLE_STATE;
     }
@@ -203,8 +208,8 @@ TWI::on_bus_event()
     _vec[_ix].buf[_next++] = TWDR;
     _count++;
     TWCR = STOP_CMD;
-    if (_handler != 0) {
-      _handler(this);
+    if (_target != 0) {
+      Event::push(Event::READ_COMPLETED_TYPE, _target, _twi);
       _next = 0;
     }
     loop_until_bit_is_clear(TWCR, TWSTO);
@@ -220,7 +225,9 @@ TWI::on_bus_event()
    */
   case ST_SLA_ACK:
   case ST_ARB_LOST_SLA_ACK:
-    if (_handler != 0) _handler(this);
+    if (_target != 0) {
+      Event::push(Event::WRITE_COMPLETED_TYPE, _target, _twi);
+    }
     _next = 0;
   case ST_DATA_ACK:
     TWDR = _vec[_ix].buf[_next++];
@@ -256,11 +263,10 @@ TWI::on_bus_event()
     }
     break;
   case SR_STOP:
-    if (_next < _vec[_ix].size) {
-      _vec[_ix].buf[_next] = 0;
-    }
     TWCR = STOP_CMD;
-    if (_handler != 0) _handler(this);
+    if (_target != 0) {
+      Event::push(Event::READ_COMPLETED_TYPE, _target, _twi);
+    }
     loop_until_bit_is_clear(TWCR, TWSTO);
     _state = IDLE_STATE;
     TWCR = IDLE_CMD; 
@@ -281,3 +287,4 @@ ISR(TWI_vect)
 {
   if (_twi != 0) _twi->on_bus_event();
 }
+
