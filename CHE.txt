@@ -1,4 +1,4 @@
-FILE FORMAT: CHE COSA ARDUINO
+DATA STREAMING FORMAT: CHE COSA ARDUINO
 
 This is a desciption of the Cosa data streaming format. This is
 basically a tagged data format that supports the C/C++ language data, 
