@@ -1,0 +1,72 @@
+FILE FORMAT: CHE COSA ARDUINO
+
+This is a desciption of the Cosa data streaming format. This is
+basically a tagged data format that supports the C/C++ language data, 
+type declarations (struct) and sequences of these. Pointers are not
+allowed in the streaming format.  
+
+Each data object is tagged with a prefix byte. This prefix contains a
+four bit type tag and a four bit attribute. Additinal prefix
+attributes are used for sequence length.
+
+All data is stored in MSB first (bigendian aka network order).
+
+1. TYPE TAGS
+
+3210 bit position
+
+0000 uint8_t, unsigned char
+0001 uint16_t, unsigned short 
+0010 uint32_t, unsigned long
+0011 uint64_t, unsigned long long
+0100 reserved
+0101 reserved
+0110 type_t, declaration
+0111 type_t, data
+1000 int8_t, signed char
+1001 int16_t, signed short
+1010 int32_t, signed long
+1011 int64_t, signed long long
+1100 float16_t
+1101 float32_t, float/*
+1110 float64_t, double/*
+1111 float80_t, long double/*
+
+Bit(3) is set for signed data types. Bit(2) is clear for integer and
+data types, and set for floating point numbers. Bit(1..0) is log2
+number of bytes in integer numbers.
+
+2. DATA SEQUENCE
+
+Data values and sequences are prefixed with the type nibble and
+primary attribute nibble and possible secondary attributes.
+
+dddd    nnnn             V*      data value(N=0..12)
+dddd    1101   N         V*      data value(N=0..255)
+dddd    1110   N:N       V*      data value(N=0..64K)
+dddd	1111      	 V*0     null terminated sequence 
+
+3. DATA TYPE DECLARATION
+
+0110    0000        T    V*0     start descriptor(type, name)
+dddd    nnnn             V*0     data<D> type(N=0..12, name)
+dddd    1101   N         V*0     data<D> type(N=0..255, name)
+dddd    1110   N:N       V*0     data<D> type(N=0..64K, name)
+dddd	1111      	 V*0     data<D> null terminated sequence(name)
+0110    nnnn        T    V*0     data<T> type(N=0..12, name)
+0110    1101   N    T    V*0     data<T> type(N=13..255, name)
+0110    1110   N:N  T    V*0     data<T> type(N=256..64K, name)
+0110	1111        T  	 V*0     data<T> null terminated sequence(name)
+
+Note that the elementary data tags are reinterpreted for a data type
+declaraction. Instead of data values the type prefix is followed by a
+possible name string (null terminated).
+
+4. TYPED DATA SEQUENCE
+
+0111    nnnn        T    V*      data<T> value(N=0..12, name)
+0111    1101   N    T    V*      data<T> value(N=0..255, name)
+0111    1110   N:N  T    V*      data<T> value(N=0..64K, name)
+0111	1111        T	 V*      data<T> value null terminated sequence(name)
+
+A typed data sequence is prefixed with the type identity.
