@@ -34,15 +34,16 @@
 
 // The real-time device, latest start and sample time in ram
 DS1307 rtc;
-DS1307::timekeeper_t now;
-struct {
-  DS1307::timekeeper_t start;
-  DS1307::timekeeper_t sample;
-} latest;
+
+// Data structure stored in device ram; last set and run time
+struct latest_t {
+  DS1307::timekeeper_t set;
+  DS1307::timekeeper_t run;
+};
 const uint8_t ram_pos = sizeof(DS1307::timekeeper_t);
 
-// Use the buildin led as a heartbeat
-OutputPin ledPin(13, 0);
+// Use the builtin led for a heartbeat
+OutputPin ledPin(13);
 
 void setup()
 {
@@ -53,7 +54,29 @@ void setup()
   TRACE(free_memory());
 
   // Start the watchdog ticks counter
-  Watchdog::begin(16);
+  Watchdog::begin();
+
+  // Read the latest set and run time
+  latest_t latest;
+  rtc.read_ram(&latest, sizeof(latest), ram_pos);
+
+  // Convert bcd to binary and print latest set time
+  latest.set.to_binary();
+  trace.print_P(PSTR("set on "));
+  latest.set.print();
+  trace.println();
+
+  // And the latest run time
+  latest.run.to_binary();
+  trace.print_P(PSTR("run on "));
+  latest.run.print();
+  trace.println();
+
+  // Update the run time with the current time and update ram
+  DS1307::timekeeper_t now;
+  rtc.get_time(now);
+  latest.run = now;
+  rtc.write_ram(&latest, sizeof(latest), ram_pos);
 }
 
 void loop()
@@ -63,25 +86,10 @@ void loop()
   ledPin.toggle();
 
   // Read the time from the rtc device and print
+  DS1307::timekeeper_t now;
   rtc.get_time(now);
-  trace.print_P(PSTR("rtc (bcd):"));
-  trace.print(&now, sizeof(now), 16);
   now.to_binary();
-  trace.print_P(PSTR("rtc (bin):"));
-  trace.print(&now, sizeof(now), 16);
-  now.to_bcd();
-  trace.print_P(PSTR("rtc (bcd):"));
-  trace.print(&now, sizeof(now), 16);
-  trace.println();
-
-  // Read the latest start and sample time
-  rtc.read_ram(&latest, sizeof(latest), ram_pos);
-  trace.print_P(PSTR("ram (start):"));
-  trace.print(&latest.start, sizeof(latest.start), 16);
-  trace.print_P(PSTR("ram (sampl):"));
-  trace.print(&latest.sample, sizeof(latest.sample), 16);
-  latest.sample = now;
-  rtc.write_ram(&latest, sizeof(latest), ram_pos);
+  now.print();
   trace.println();
 
   // Heartbeat

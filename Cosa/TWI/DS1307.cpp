@@ -46,6 +46,13 @@ DS1307::timekeeper_t::to_bcd()
     buf[i] = bin_to_bcd(buf[i]);
 }
 
+void 
+DS1307::timekeeper_t::print(IOStream& stream, const char* format)
+{
+  if (format == 0) format = PSTR("%d-%d-%d %d:%d:%d");
+  stream.printf_P(format, year, month, date, hours, minutes, seconds);
+}
+
 int
 DS1307::read_ram(void* buf, uint8_t size, uint8_t pos)
 {
@@ -64,3 +71,5 @@ DS1307::write_ram(void* buf, uint8_t size, uint8_t pos)
   end();
   return (count);
 }
+
+

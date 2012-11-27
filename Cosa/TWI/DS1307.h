@@ -31,6 +31,8 @@
 #define __COSA_TWI_DS1307__
 
 #include "Cosa/TWI.h"
+#include "Cosa/IOStream.h"
+#include "Cosa/Trace.h"
 
 class DS1307 : private TWI {
 
@@ -53,6 +55,7 @@ public:
     uint8_t cntl;
     void to_binary();
     void to_bcd();
+    void print(IOStream& stream = trace, const char* format = 0);
   };
 
   /**
