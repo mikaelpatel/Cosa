@@ -337,7 +337,7 @@ public:
   void toggle() 
   { 
     synchronized {
-      *PIN() |= _mask; 
+      *PIN() = _mask; 
     }
   }
 
