@@ -48,8 +48,8 @@ const PROGMEM AnalogPin* pins[] = {
 // Declare the pin set with vector, number of members and push event callback
 AnalogPins analogPins(pins, membersof(pins), AnalogPins::push_event);
 
-// Use the buildin led as a heartbeat
-OutputPin ledPin(13, 0);
+// Use the builtin led for a heartbeat
+OutputPin ledPin(13);
 
 void setup()
 {

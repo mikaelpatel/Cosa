@@ -29,13 +29,13 @@
 #include "Cosa/Pins.h"
 #include "Cosa/Watchdog.h"
 
-// Use the buildin led. Initiate with zero(0).
-OutputPin ledPin(13, 0);
+// Use the build-in led
+OutputPin ledPin(13);
 
 void setup()
 {
-  // Start the watchdog (0.5 second timeout)
-  Watchdog::begin(512, Watchdog::push_event);
+  // Start the watchdog (0.5 second timeout, watchdog timeout events)
+  Watchdog::begin(512, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
 }
 
 void loop()

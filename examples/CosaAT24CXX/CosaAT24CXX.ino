@@ -33,10 +33,10 @@
 #include "Cosa/Watchdog.h"
 #include "Cosa/TWI/AT24CXX.h"
 
-// Use the buildin led as a heartbeat
-OutputPin ledPin(13, 0);
+// Use the builtin led as a heartbeat
+OutputPin ledPin(13);
 
-// The serial eeprom
+// The serial eeprom (sub-address 0b000)
 AT24CXX rom(0);
 
 void setup()
@@ -47,13 +47,14 @@ void setup()
   // Check amount of free memory
   TRACE(free_memory());
 
-  // Start the watchdog ticks counter (2 second ticks)
-  Watchdog::begin(2048);
+  // Start the watchdog with default timeout (16 ms)
+  Watchdog::begin();
 }
 
 void loop()
 {
-  Watchdog::await();
+  // Wait for 2 seconds; we don't want to burn too many write cycles
+  Watchdog::delay(2000);
   ledPin.toggle();
 
   // Read the eeprom into memory

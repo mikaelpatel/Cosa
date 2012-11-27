@@ -29,8 +29,8 @@
 #include "Cosa/Pins.h"
 #include "Cosa/Watchdog.h"
 
-// Use the buildin led. Initiate with zero(0).
-OutputPin ledPin(13, 0);
+// Use the builtin led
+OutputPin ledPin(13);
 
 void setup()
 {

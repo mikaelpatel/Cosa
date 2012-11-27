@@ -32,11 +32,9 @@
 #include "Cosa/Memory.h"
 
 // NRF24L01+ Wireless communication using SPI and default pins(9, 10, 2)
-
 NRF24L01P nrf;
 
 // Configuration
-
 #define USE_WATCHDOG_DELAY
 // #define USE_EVENT_AWAIT
 
@@ -51,7 +49,7 @@ void setup()
 
   // Start the watchdog ticks counter and push timeout events
 #ifdef USE_EVENT_AWAIT
-  Watchdog::begin(1024, Watchdog::push_event);
+  Watchdog::begin(1024, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
 #endif
 #ifdef USE_WATCHDOG_DELAY
   Watchdog::begin(64);

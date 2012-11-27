@@ -29,14 +29,13 @@
 #include "Cosa/Watchdog.h"
 
 Watchdog::InterruptHandler Watchdog::_handler = 0;
-
-volatile uint16_t Watchdog::_ticks = 0;
-
 void* Watchdog::_env = 0;
 
-uint8_t Watchdog::_mode = 0;
+Things Watchdog::_timeq[Watchdog::TIMEQ_MAX];
 
+volatile uint16_t Watchdog::_ticks = 0;
 uint8_t Watchdog::_prescale = 0;
+uint8_t Watchdog::_mode = 0;
 
 inline uint8_t 
 log2(uint16_t value)
@@ -50,7 +49,10 @@ log2(uint16_t value)
 }
 
 void 
-Watchdog::begin(uint16_t ms, InterruptHandler fn, uint8_t mode)
+Watchdog::begin(uint16_t ms, 
+		uint8_t mode, 
+		InterruptHandler handler, 
+		void* env)
 {
   // Map milli-seconds to watchdog prescale values
   uint8_t prescale = log2((ms + 8) >> 5) - 1;
@@ -69,32 +71,34 @@ Watchdog::begin(uint16_t ms, InterruptHandler fn, uint8_t mode)
   }
 
   // Register the interrupt handler
-  _handler = fn;
+  _handler = handler;
+  _env = env;
   _prescale = prescale;
   _mode = mode;
 }
 
-void
-Watchdog::await()
+void 
+Watchdog::add(Thing* thing, uint16_t ms)
 {
-  volatile uint16_t ticks = _ticks;
+  uint8_t level = log2((ms + 8) >> 5) - 1;
+  if (level > 9) level = 9;
+  _timeq[level].add(thing);
+}
 
-  // Go to sleep and wait for the next tick. Check for other interrupt
+void
+Watchdog::await(AwaitCondition fn, void* env, uint16_t ms)
+{
+  volatile uint16_t ticks = _ticks + 1;
+  if (ms != 0) ticks += (ms / ms_per_tick());
   do {
+    if (fn != 0 && fn(env)) return;
     cli();
     set_sleep_mode(_mode);
     sleep_enable();
     sei();
     sleep_cpu();
     sleep_disable();
-  } while (ticks == _ticks);
-}
-
-void
-Watchdog::delay(uint16_t ms)
-{
-  uint16_t ticks = ms / ms_per_tick();
-  while (ticks--) await();
+  } while ((ticks != _ticks) || ((ms == 0) && (fn != 0)));
 }
 
 ISR(WDT_vect)

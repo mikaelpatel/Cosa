@@ -59,23 +59,40 @@ public:
    * Set the event handler for this thing.
    * @param[in] fn event handler.
    */
-  void set(EventHandler fn) 
+  void set_event_handler(EventHandler fn) 
   { 
     _callback = fn; 
   }
 
   /**
-   * Trampoline function for event dispatch.
-   * @param[in] type the event type.
-   * @param[in] value the event value.
+   * Get the event handler for this thing.
+   * @return event handler.
    */
-  void on_event(uint8_t type, uint16_t value)
-  {
-    if (_callback != 0) _callback(this, type, value);
+  EventHandler get_event_handler() 
+  { 
+    return (_callback);
   }
 
   /**
-   * Add given thing.
+   * Return successor in sequence.
+   * @return next thing.
+   */
+  Thing* get_succ() 
+  {
+    return (_succ);
+  }
+
+  /**
+   * Return predecessor in sequence.
+   * @return previous thing.
+   */
+  Thing* get_pred() 
+  {
+    return (_pred);
+  }
+
+  /**
+   * Add given thing as predecessor.
    * @param[in] it thing to add.
    */
   void add(Thing* it)
@@ -101,14 +118,14 @@ public:
     }
   }
 
-  Thing* get_succ() 
+  /**
+   * Trampoline function for event dispatch.
+   * @param[in] type the event type.
+   * @param[in] value the event value.
+   */
+  void on_event(uint8_t type, uint16_t value)
   {
-    return (_succ);
-  }
-
-  Thing* get_pred() 
-  {
-    return (_pred);
+    if (_callback != 0) _callback(this, type, value);
   }
 };
 

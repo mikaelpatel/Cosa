@@ -31,17 +31,15 @@
 #include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
 
-// Callback for interrupt pin(2) 
-
-volatile uint16_t state = 0;
+// Callback for interrupt pin(2); updates a counter
+volatile uint16_t counter = 0;
 
 void do_interrupt(InterruptPin* pin, void* env)
 {
-  state++;
+  counter++;
 }
 
 // Input and output pins
-
 InterruptPin intPin(2, InterruptPin::ON_RISING_MODE, do_interrupt);
 PWMPin ledPin(5);
 InputPin onoffPin(7);
@@ -74,15 +72,12 @@ void setup()
   levelPin.println();
   tempVCC.println();
 
-  // Check interrupt pin; enable and print interrupt count
-  TRACE(state);
+  // Check interrupt pin; enable and print interrupt counter
+  TRACE(counter);
   intPin.enable();
 
   // Start the watchdog ticks counter (1 second pulse)
-  Watchdog::begin(1024, Watchdog::push_event);
-
-  // Give to serial interface some time
-  delay(10);
+  Watchdog::begin(1024, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
 }
 
 void loop()
@@ -91,36 +86,28 @@ void loop()
   Event event;
   Event::queue.await(&event);
 
-  // Info message using the trace log
-  INFO("Event received (type = %d)", event.get_type());
+  // Sample the level
+  uint16_t value = levelPin.sample();
 
-  // Sample the level and check for change
-  static uint16_t old_value = 0;
-  uint16_t new_value = levelPin.sample();
-  int16_t diff = new_value - old_value;
-  if (abs(diff) > 100) {
+  // Print the time index
+  INFO("ticks = %d", Watchdog::get_ticks());
+  
+  // Asynchronous sample internal temperature level
+  tempVCC.request_sample();
+  INFO("levelPin = %d", value);
 
-    // Print the time index
-    INFO("ticks = %d", Watchdog::get_ticks());
+  // Await the sample and print value
+  INFO("tempVCC = %d", tempVCC.await_sample());
 
-    // Asynchronous sample internal temperature level
-    tempVCC.request_sample();
-    INFO("levelPin = %d", new_value);
-    old_value = new_value;
-
-    // Await the sample and print value
-    INFO("tempVCC = %d", tempVCC.await_sample());
-
-    // Check if the led should be on and the pwm level updated
-    if (onoffPin.is_set()) {
-      ledPin.set(new_value, 0, 1023);
-      INFO("duty = %d", ledPin.get_duty());
-    }
-    else {
-      ledPin.clear();
-    }
-
-    // Print the interrupt counter
-    TRACE(state);
+  // Check if the led should be on and the pwm level updated
+  if (onoffPin.is_set()) {
+    ledPin.set(value, 0, 1023);
+    INFO("duty = %d", ledPin.get_duty());
   }
+  else {
+    ledPin.clear();
+  }
+
+  // Print the interrupt counter
+  TRACE(counter);
 }

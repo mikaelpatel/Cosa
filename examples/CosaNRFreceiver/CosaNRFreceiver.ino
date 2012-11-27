@@ -49,7 +49,7 @@ void setup()
 
   // Start the watchdog ticks counter and push timeout events
 #ifdef USE_TIMEOUT_EVENTS
-  Watchdog::begin(1024, Watchdog::push_event);
+  Watchdog::begin(1024, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
 #endif
 #ifdef USE_RECEIVE_INTERRUPTS
   Watchdog::begin(1024);

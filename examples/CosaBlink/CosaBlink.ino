@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa LED blink.
+ * Cosa LED blink demonstration.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -29,19 +29,22 @@
 #include "Cosa/Pins.h"
 #include "Cosa/Watchdog.h"
 
-// Use the buildin led and initiate with zero(0).
-OutputPin ledPin(13, 0);
+// Use the built-in led
+OutputPin ledPin(13);
 
 void setup()
 {
-  // Start the watchdog (16 milli-second timeout)
-  Watchdog::begin(16);
+  // Start the watchdog with the default timeout period (16 ms)
+  Watchdog::begin();
 }
 
 void loop()
 {
+  // Turn on the led for 16 ms
   ledPin.set();
   Watchdog::delay(16);
+
+  // Turn off the led and wait 512 ms
   ledPin.clear();
   Watchdog::delay(512);
 }

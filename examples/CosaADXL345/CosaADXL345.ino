@@ -27,9 +27,10 @@
  */
 
 #include "Cosa/SPI/ADXL345.h"
+#include "Cosa/Pins.h"
 #include "Cosa/Trace.h"
-#include "Cosa/Watchdog.h"
 #include "Cosa/Memory.h"
+#include "Cosa/Watchdog.h"
 
 // Digital Accelerometer using SPI and default slave select pin(10)
 ADXL345 adxl;
@@ -42,15 +43,18 @@ void setup()
   // Check amount of free memory
   TRACE(free_memory());
 
-  // Start the watchdog, approx. 0.5 second ticks, and push timeout events
-  Watchdog::begin(512, Watchdog::push_event);
+  // Start the watchdog with default timeout (16 ms)
+  Watchdog::begin();
+
+  // Recalibrate the accelerometer
+  Watchdog::delay(100);
+  adxl.calibrate();
 }
 
 void loop()
 {
-  // Wait for the next event (1 second sleep)
-  Event event;
-  Event::queue.await(&event);
+  // Wait for 500 ms.
+  Watchdog::delay(500);
 
   // Sample the accelerometer and print values to trace stream
   ADXL345::sample_t values;

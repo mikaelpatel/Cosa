@@ -31,8 +31,12 @@
 void 
 Things::broadcast(Thing* things, uint8_t type, uint16_t value)
 {
-  for (Thing* it = things->get_succ(); it != things; it = it->get_succ())
-    it->on_event(type, value);
+  Thing* thing = things->get_succ(); 
+  while (thing != things) {
+    Thing* succ = thing->get_succ();
+    thing->on_event(type, value);
+    thing = succ;
+  }
 }
 
 uint8_t 

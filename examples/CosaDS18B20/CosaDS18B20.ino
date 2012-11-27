@@ -39,8 +39,8 @@ DS18B20 outdoors(&oneWire);
 DS18B20 indoors(&oneWire);
 DS18B20 basement(&oneWire);
 
-// Use the buildin led as a heartbeat
-OutputPin ledPin(13, 0);
+// Use the builtin led for a heartbeat
+OutputPin ledPin(13);
 
 void setup()
 {

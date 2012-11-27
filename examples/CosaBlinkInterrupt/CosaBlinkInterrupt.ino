@@ -29,23 +29,22 @@
 #include "Cosa/Pins.h"
 #include "Cosa/Watchdog.h"
 
-// Use the Arduino builtin LED
-OutputPin ledPin(13, 0);
+// Use the builtin led
+OutputPin ledPin(13);
 
-// Blink on timeout interrupt callback
 void blink(void* env)
 {
   ledPin.toggle();
 }
 
-// Start watchdog with approx. 1 second timeout and blink interrupt call
 void setup()
 {
-  Watchdog::begin(512, blink);
+  // Start watchdog with approx. 0.5 s timeout and blink interrupt call
+  Watchdog::begin(512, SLEEP_MODE_IDLE, blink);
 }
 
-// Go into sleep mode while awaiting the next timeout
 void loop()
 {
+  // Sleep during timeout wait
   Watchdog::await();
 }

@@ -36,35 +36,37 @@
 #include "Cosa/Bits.h"
 #include "Cosa/Event.h"
 #include "Cosa/Thing.h"
+#include "Cosa/Things.h"
 
 class Watchdog {
 
 public:
   /**
-   * Callback function prototype for watchdog timeout.
+   * Interrupt handler function prototype.
+   * @param[in] env interrupt handler environment.
    */
   typedef void (*InterruptHandler)(void* env);
 
+  /**
+   * Callback function prototype for await condition function.
+   * Return true(1) to return from await() otherwise false(0).
+   * @param[in] env condition function environment.
+   * @return bool
+   */
+  typedef bool (*AwaitCondition)(void* env);
+
 private:
-  // FIX: Allow multiple callbacks with any interval of delay (tick count)
-  static volatile uint16_t _ticks;
   static InterruptHandler _handler;
+  static void* _env;
+
+  static const uint8_t TIMEQ_MAX = 10;
+  static Things _timeq[TIMEQ_MAX];
+
+  static volatile uint16_t _ticks;
   static uint8_t _prescale;
   static uint8_t _mode;
-  static void* _env;
   
 public:
-  /**
-   * Set watchdog timeout interrupt handler.
-   * @param[in] fn interrupt handler.
-   * @param[in] env environment pointer.
-   */
-  static void set(InterruptHandler fn, void* env = 0) 
-  { 
-    _handler = fn; 
-    _env = env; 
-  }
-
   /**
    * Get number of watchdog cycles.
    * @return number of ticks.
@@ -84,29 +86,65 @@ public:
   }
 
   /**
-   * Start watchdog with given period (milli-seconds), sleep mode and 
-   * timeout interrupt handler. The timeout period is mapped to 
-   * 16 milli-seconds and double periods (32, 64, 128, etc to approx 
-   * 8 seconds).
-   * @param[in] ms timeout period in milli-seconds.
-   * @param[in] fn function.
-   * @param[in] mode sleep mode.
+   * Set watchdog timeout interrupt handler.
+   * @param[in] fn interrupt handler.
+   * @param[in] env environment pointer.
    */
-  static void begin(uint16_t ms, 
-		    InterruptHandler fn = 0, 
-		    uint8_t mode = SLEEP_MODE_IDLE);
+  static void set(InterruptHandler fn, void* env = 0) 
+  { 
+    synchronized {
+      _handler = fn; 
+      _env = env; 
+    }
+  }
 
   /**
-   * Await watchdogs next tick. Put into sleep mode according to 
-   * begin setup.
+   * Set watchdog sleep mode as defined by set_sleep_mode().
+   * @param[in] mode sleep mode.
    */
-  static void await();
+  static void set(uint8_t mode)
+  { 
+    _mode = mode; 
+  }
+  
+  /**
+   * Add thing to time out set so that it will receive a timeout
+   * event.
+   * @param[in] thing timeout target to add.
+   * @param[in] ms milliseconds.
+   */
+  static void add(Thing* thing, uint16_t ms);
+
+  /**
+   * Start watchdog with given period (milli-seconds) and sleep mode.
+   * The timeout period is mapped to 16 milli-seconds and double
+   * periods (32, 64, 128, etc to approx 8 seconds).
+   * @param[in] ms timeout period in milli-seconds.
+   * @param[in] mode sleep mode.
+   * @param[in] handler of interrupts.
+   * @param[in] env handler environment.
+   */
+  static void begin(uint16_t ms = 16, 
+		    uint8_t mode = SLEEP_MODE_IDLE,
+		    InterruptHandler handler = 0,
+		    void* env = 0);
+
+  /**
+   * Await condition. Put into sleep mode according to  begin
+   * setup. Execute function for each wakeup to check if a condition
+   * has been valid. If the condition function is null(0) the next
+   * tick is awaited. 
+   * @param[in] fn function.
+   * @param[in] env function environment.
+   * @param[in] ms max sleep period in milli-seconds.
+   */
+  static void await(AwaitCondition fn = 0, void* env = 0, uint16_t ms = 0);
 
   /**
    * Delay using watchdog timeouts and sleep mode.
    * @param[in] ms sleep period in milli-seconds.
    */
-  static void delay(uint16_t ms);
+  static void delay(uint16_t ms) { await(0, 0, ms); }
   
   /**
    * Stop watchdog. Turn off timout callback.
@@ -117,20 +155,33 @@ public:
   }
 
   /**
-   * Trampoline function for interrupt service on watchdog timeout.
+   * Default interrupt handler for timeout queues.
+   * @param[in] env interrupt handler environment.
    */
-  static void on_timeout()
+  static void push_timeout_events(void* env)
   { 
-    _ticks++; 
-    if (_handler != 0) _handler(_env); 
+    uint16_t changed = (_ticks ^ (_ticks + 1));
+    for (uint8_t i = _prescale; i < TIMEQ_MAX; i++, changed >>= 1)
+      if ((changed & 1) && !_timeq[i].is_empty())
+	Event::push(Event::TIMEOUT_TYPE, &_timeq[i], i);
   }
 
   /**
-   * Callback function to push event for watchdog timeout.
+   * Alternative interrupt handler for watchdog events.
+   * @param[in] env interrupt handler environment.
    */
-  static void push_event(void* env) 
+  static void push_watchdog_event(void* env)
   { 
-    Event::push(Event::TIMEOUT_TYPE, 0, env);
+    Event::push(Event::WATCHDOG_TYPE, 0, env);
+  }
+
+  /**
+   * Trampoline function for interrupt service on watchdog timeout.
+   */
+  static void on_timeout()
+  {
+    if (_handler != 0) _handler(_env);
+    _ticks += 1;
   }
 };
 
