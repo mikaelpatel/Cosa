@@ -35,7 +35,7 @@ Queue Event::queue(Event::QUEUE_MAX, sizeof(Event), event);
 void 
 Event::print(IOStream& stream)
 {
-  stream.printf_P(PSTR("Event(type = %d, target = %p, value = %hd"),
+  stream.printf_P(PSTR("Event(type = %d, target = %p, value = %hd)"),
 		  _type, _target, _value);
 }
 
@@ -45,5 +45,4 @@ Event::println(IOStream& stream)
   print();
   stream.println();
 }
-
 
