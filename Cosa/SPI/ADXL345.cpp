@@ -36,7 +36,6 @@ ADXL345::ADXL345(uint8_t ss) :
   begin(SPI::DIV4_CLOCK, 3, SPI::MSB_FIRST);
   write(DATA_FORMAT, _BV(FULL_RES) | RANGE_16G);
   write(POWER_CTL, _BV(MEASURE));
-  calibrate(0, 0, 0);
 }
 
 void 
@@ -92,10 +91,10 @@ ADXL345::sample(sample_t& s)
 void
 ADXL345::calibrate()
 {
-  sample_t smpl;
+  sample_t value;
   calibrate(0, 0, 0);
-  sample(smpl);
-  calibrate(-smpl.x/4, -smpl.y/4, -smpl.z/4);
+  sample(value);
+  calibrate(-value.x/4, -value.y/4, -value.z/4);
 }
 
 void 
