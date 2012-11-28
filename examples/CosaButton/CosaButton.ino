@@ -1,5 +1,5 @@
 /**
- * @file CosaBlinkTimeout.ino
+ * @file CosaButton.ino
  * @version 1.0
  *
  * @section License
@@ -21,45 +21,48 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa RGB LED blink with timeout events.
+ * Cosa demonstration of button abstraction.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Memory.h"
 #include "Cosa/Pins.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/Button.h"
+#include "Cosa/Event.h"
 
-// Use an RGB LED connected to pins(5,6,7)
-OutputPin redLedPin(5);
-OutputPin greenLedPin(6, 1);
-OutputPin blueLedPin(7);
+// Input pin and button
+InputPin onoffPin(7);
+Button onoffButton;
 
-// Event handler for toggling the output pin
-void blink(Thing* it, uint8_t type, uint16_t value)
+void on_change(Thing* it, uint8_t type, uint16_t value)
 {
-  OutputPin* pin = (OutputPin*) it;
-  pin->toggle();
+  INFO("on_change(%p, %d, %d)", it, type, value);
 }
 
 void setup()
 {
-  // Set the blink function as the led event handler
-  redLedPin.set_event_handler(blink);
-  greenLedPin.set_event_handler(blink);
-  blueLedPin.set_event_handler(blink);
+  // Start trace output stream
+  trace.begin(9600, PSTR("CosaButton: started"));
 
-  // Add the led pins to watchdog timeout periods
-  Watchdog::attach(&redLedPin, 512);
-  Watchdog::attach(&greenLedPin, 1024);
-  Watchdog::attach(&blueLedPin, 1024);
+  // Check amount of free memory
+  TRACE(free_memory());
 
-  // Start the watchdog (16 ms timeout, push timeout events)
+  // Check size of instances
+  TRACE(sizeof(InputPin));
+  TRACE(sizeof(Button));
+
+  // Set the event callback and attach the input pin
+  onoffPin.set_event_handler(on_change);
+  onoffButton.attach(&onoffPin);
+
+  // Start the watchdog ticks and push time events
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 }
 
 void loop()
 {
-  // The basic event dispatcher
+  // The basic event top loop
   Event event;
   Event::queue.await(&event);
   event.dispatch();

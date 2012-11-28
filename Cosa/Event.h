@@ -46,9 +46,9 @@ public:
    */
   enum {
     NULL_TYPE = 0,
-    CHANGE_TYPE = 1,
-    FALLING_TYPE = 2,
-    RISING_TYPE = 3,
+    FALLING_TYPE = 1,
+    RISING_TYPE = 2,
+    CHANGE_TYPE = 3,
     TIMEOUT_TYPE = 4,
     CONNECT_TYPE = 5,
     DISCONNECT_TYPE = 6,

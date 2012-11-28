@@ -78,11 +78,11 @@ Watchdog::begin(uint16_t ms,
 }
 
 void 
-Watchdog::add(Thing* thing, uint16_t ms)
+Watchdog::attach(Thing* thing, uint16_t ms)
 {
   uint8_t level = log2((ms + 8) >> 5) - 1;
   if (level > 9) level = 9;
-  _timeq[level].add(thing);
+  _timeq[level].attach(thing);
 }
 
 void

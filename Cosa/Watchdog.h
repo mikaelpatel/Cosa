@@ -108,12 +108,12 @@ public:
   }
   
   /**
-   * Add thing to time out set so that it will receive a timeout
-   * event.
+   * Attach thing to watchdog so that it will receive a timeout
+   * event with given period in milli-seconds.
    * @param[in] thing timeout target to add.
    * @param[in] ms milliseconds.
    */
-  static void add(Thing* thing, uint16_t ms);
+  static void attach(Thing* thing, uint16_t ms);
 
   /**
    * Start watchdog with given period (milli-seconds) and sleep mode.

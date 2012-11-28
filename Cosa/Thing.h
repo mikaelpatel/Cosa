@@ -92,10 +92,10 @@ public:
   }
 
   /**
-   * Add given thing as predecessor.
+   * Attach given thing as predecessor.
    * @param[in] it thing to add.
    */
-  void add(Thing* it)
+  void attach(Thing* it)
   {
     synchronized {
       it->_succ = this;
@@ -106,9 +106,9 @@ public:
   }
 
   /**
-   * Remove this thing from any things.
+   * Detach this thing from any things.
    */
-  void remove()
+  void detach()
   {
     synchronized {
       _succ->_pred = _pred;
