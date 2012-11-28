@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------
-ARDUINO CHE COSA?
+COSA CLASS OVERVIEW
 ----------------------------------------------------------------------------
 Thing 
 The Cosa Root class. Basic event dispatch and collection handling,
@@ -57,11 +57,13 @@ SPI/NRF24L01P.h:	      class NRF24L01P : private SPI
 ----------------------------------------------------------------------------
 TWO WIRE INTERFACE
 Driver for devices on the two wire interface (TWI/I2C).
-Support for AT24CXX Serial EEPROM, DS1307 Realtime clock with RAM.
+Support for AT24CXX Serial EEPROM, DS1307 Realtime clock with RAM,
+PCF8591 2-Wire 8-bit A/D and D/A converter.
 ----------------------------------------------------------------------------
 TWI.h:			class TWI : public Thing
 TWI/AT24CXX.h	      	      class AT24CXX : private TWI
 TWI/DS1307.h	      	      class DS1307 : private TWI
+TWI/PCF8591.h		      class PCF8591 : private TWI
 ----------------------------------------------------------------------------
 ONEWIRE
 Driver for devices on the one wire bus (1-Wire). 

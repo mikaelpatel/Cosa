@@ -1,6 +1,7 @@
-CosaButton
+CosaPCF8591
 ====
 
-Demonstration of Cosa debouncing of switch/buttons connected to an input pin. The input pin object will receive falling/rising/changed events from the button which will filter changes on the pin using low frequency sampling (64 ms).
+Demonstration of Cosa PCF8591 A/D, D/A conversion TWI driver. Single sample, sample sequence and output conversion is shown in example code.
+
 
 
