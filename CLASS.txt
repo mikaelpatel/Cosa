@@ -19,7 +19,7 @@ Pins.h:		      class OutputPin : public Pin
 Pins.h:		      	    class PWMPin : public OutputPin
 Pins.h:			    class IOPin : public OutputPin
 Pins.h:		      class AnalogPin : public Pin
-Pins.h:		class AnalogPinSet
+Pins.h:		class AnalogPins
 ----------------------------------------------------------------------------
 EVENT QUEUE
 Support for pushing events from interrupt handlers.
@@ -28,9 +28,11 @@ Event.h:	class Event
 Queue.h:	class Queue
 ----------------------------------------------------------------------------
 WATCHDOG
-Ultra low power timer. Time base for delay and timeout events.
+Ultra low power timer. Time base for delay and timeout events. Time queues
+using Things. Allow attaching pins etc to receive timeout events.
 ----------------------------------------------------------------------------
 Watchdog.h:	class Watchdog
+		      => class Things
 ----------------------------------------------------------------------------
 IOSTREAM
 Stream and device abstraction. 
@@ -69,5 +71,16 @@ Thermometer.
 OneWire.h:		class OneWire : private IOPin
 OneWire.h:		class OneWire::Device
 OnwWire/DS18B20.h:	      class DS18B20 : public OneWire::Device
+----------------------------------------------------------------------------
+BUTTON
+Abstraction of debounced switch or button connected to an input pin.
+----------------------------------------------------------------------------
+Button.h:		class Button : private InputPin
+----------------------------------------------------------------------------
+SUPPORT LIBRARIES
+----------------------------------------------------------------------------
+BCD.h:			converting bcd numbers to and from binary
+Bits.h:			macros to handle bit field and position 
+FixedPoint.h:		handling of fixed point numbers
 ----------------------------------------------------------------------------
 
