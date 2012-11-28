@@ -1,13 +1,13 @@
-DATA STREAMING FORMAT: CHE COSA ARDUINO
+CONTINUA: DATA STREAMING FORMAT FOR COSA
 
 Author:	       Mikael Patel
 Date:	       2012-11-28
 Rev.:	       1.0
 
-This is a desciption of the Cosa data streaming format. It is
-basically a tagged data format that supports the C/C++ language data
-types, declarations (struct) and sequences of these. Pointers are not
-allowed in the streaming format.
+This is a desciption of the Cosa data streaming format; Continua. It
+is basically a tagged data format that supports the C/C++ language
+data types, declarations (struct) and sequences of these. Pointers are
+not allowed in the streaming format.
 
 Each data object is tagged with a prefix byte. This prefix contains a
 four bit type tag and a four bit attribute. Additional prefix 
