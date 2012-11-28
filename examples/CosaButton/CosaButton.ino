@@ -26,18 +26,25 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Memory.h"
-#include "Cosa/Pins.h"
 #include "Cosa/Button.h"
+#include "Cosa/Pins.h"
 #include "Cosa/Event.h"
+#include "Cosa/Memory.h"
 
 // Input pin and button
-InputPin onoffPin(7);
-Button onoffButton;
+InputPin onoffPin(7, InputPin::PULLUP_MODE);
+Button onoffButton(Button::ON_FALLING_MODE);
+
+// Use the built-in led
+OutputPin ledPin(13);
 
 void on_change(Thing* it, uint8_t type, uint16_t value)
 {
-  INFO("on_change(%p, %d, %d)", it, type, value);
+  static uint8_t count = 1;
+  ledPin.toggle();
+  TRACE(count++);
+  Watchdog::delay(16);
+  ledPin.toggle();
 }
 
 void setup()
