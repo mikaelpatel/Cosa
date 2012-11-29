@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa data stream handler.
+ * The Cosa Ciao data stream handler. Please see CIAO.txt for details.
  *
  * This file is part of the Arduino Che Cosa project.
  */

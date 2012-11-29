@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa data stream handler. Please see CIAO.txt for details.
+ * The Cosa Ciao data stream handler. Please see CIAO.txt for details.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -35,10 +35,11 @@ class Ciao {
   
 private:
   /**
-   * Data type tag.
+   * Data type tag:
+   * Predefined data types and tags for extension.
    */
   enum {
-    TYPE_MASK = 0xf0,
+    MASK_TYPE = 0xf0,
     UINT8_TYPE = 0x00,
     UINT16_TYPE = 0x10,
     UINT32_TYPE = 0x20,
@@ -65,7 +66,7 @@ private:
    * value or end of used defined data type sequence.
    */
   enum {
-    ATTR_MASK = 0x0f,
+    MASK_ATTR = 0x0f,
     COUNT0_ATTR = 0x00,
     COUNT4_MASK = 0x07,
     COUNT8_ATTR = 0x08,
@@ -89,12 +90,13 @@ private:
   };
   struct decl_user_t {		// user data type declaration
     uint16_t id;		// user identity
+    const char* name;		// name of user type
+    size_t size;		// size of data type instance (bytes)
     decl_member_t* member;	// member declaractions
     uint8_t count;		// number of members
-    size_t size;		// size of data type instance
-    const char* name;		// name of user type
   };
 
+  // Output streaming device.
   IOStream::Device* _dev;
 
   /**
@@ -105,6 +107,10 @@ private:
   void write(uint8_t type, uint16_t count);
 
 public:
+  /**
+   * Construct data streaming for given device.
+   * @param[in] dev output device.
+   */
   Ciao(IOStream::Device* dev) : _dev(dev) {}
 
   /**
