@@ -38,12 +38,14 @@ class FSM : public Thing {
 
 public:
   /**
-   * State handler function prototype. Event type and value.
+   * State handler function prototype. Should return true(1) if
+   * the event was handled otherwise false(0).
    * @param[in] fsm finite state machine.
    * @param[in] type the type of event.
    * @param[in] value the event value.
+   * @return bool
    */
-  typedef void (*StateHandler)(FSM* fsm, uint8_t type, uint16_t value);
+  typedef bool (*StateHandler)(FSM* fsm, uint8_t type, uint16_t value);
   
 private:
   StateHandler _state;
@@ -62,15 +64,13 @@ private:
   }
 
 public:
-  FSM() : Thing(do_event), _state(0) { }
+  FSM(StateHandler init = 0) : Thing(do_event), _state(init) { }
   
   /**
-   * Start the state machine with the given state function.
-   * @param[in] fn state handler.
+   * Start the state machine with a FSM_INIT_TYPE event.
    */
-  void begin(StateHandler fn) 
+  void begin()
   {
-    set_state(fn);
     Event::push(Event::FSM_INIT_TYPE, this);
   }
   
