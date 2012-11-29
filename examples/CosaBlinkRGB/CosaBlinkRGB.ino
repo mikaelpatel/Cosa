@@ -30,22 +30,28 @@
 #include "Cosa/Pins.h"
 #include "Cosa/Watchdog.h"
 
-// The state machine: Blink RGB with six color states
+// The state machine: Blink RGB LED with six color states
 class BlinkRGB : public FSM {
-public:
-  // Timeout before going to next color state
-  static const uint16_t TIMEOUT = 128;
 
+public:
   // The output pins
   OutputPin redLedPin;
   OutputPin greenLedPin;
   OutputPin blueLedPin;
 
-  BlinkRGB(uint8_t redLedPinNr, uint8_t greenLedPinNr, uint8_t blueLedPinNr) :
+  // Timeout period
+  uint16_t timeout;
+  
+  // Construct the state machine for the RGB led sequencing
+  BlinkRGB(uint16_t ms = 512,
+	   uint8_t redLedPinNr = 5, 
+	   uint8_t greenLedPinNr = 6, 
+	   uint8_t blueLedPinNr= 7) :
     FSM(redState),
     redLedPin(redLedPinNr, 1),
     greenLedPin(greenLedPinNr),
-    blueLedPin(blueLedPinNr, 1)
+    blueLedPin(blueLedPinNr, 1),
+    timeout(ms)
   {}
 
   // State functions; red => yellow => green => cyan => blue => meganta
@@ -53,7 +59,7 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->blueLedPin.toggle();
-    fsm->set_timer(TIMEOUT);
+    fsm->set_timer(rgb->timeout);
     fsm->set_state(yellowState);
     return (1);
   }
@@ -62,7 +68,7 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->greenLedPin.toggle();
-    fsm->set_timer(TIMEOUT);
+    fsm->set_timer(rgb->timeout);
     fsm->set_state(greenState);
     return (1);
   }
@@ -71,7 +77,7 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->redLedPin.toggle();
-    fsm->set_timer(TIMEOUT);
+    fsm->set_timer(rgb->timeout);
     fsm->set_state(cyanState);
     return (1);
   }
@@ -80,7 +86,7 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->blueLedPin.toggle();
-    fsm->set_timer(TIMEOUT);
+    fsm->set_timer(rgb->timeout);
     fsm->set_state(blueState);
     return (1);
   }
@@ -89,7 +95,7 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->greenLedPin.toggle();
-    fsm->set_timer(TIMEOUT);
+    fsm->set_timer(rgb->timeout);
     fsm->set_state(magentaState);
     return (1);
   }
@@ -98,22 +104,24 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->redLedPin.toggle();
-    fsm->set_timer(TIMEOUT);
+    fsm->set_timer(rgb->timeout);
     fsm->set_state(redState);
     return (1);
   }
 };
 
-// The state machine; possible to create any number of copies
-BlinkRGB fsm(5, 6, 7);
+// The state machines
+BlinkRGB led1(512, 5, 6, 7);
+BlinkRGB led2(256, 8, 9, 10);
 
 void setup()
 {
   // Start the watchdog (16 ms timeout, push timeout events)
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 
-  // Start the state machine
-  fsm.begin();
+  // Start the state machines
+  led1.begin();
+  led2.begin();
 }
 
 void loop()
