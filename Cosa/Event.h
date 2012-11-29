@@ -57,7 +57,9 @@ public:
     READ_COMPLETED_TYPE = 9,
     WRITE_COMPLETED_TYPE = 10,
     WATCHDOG_TYPE = 11,
+    FSM_INIT_TYPE = 12,
     THING_TYPE = 63,
+    USER_TYPE = 64,
     ERROR_TYPE = 255
   };
 
