@@ -45,7 +45,7 @@ private:
     USER8_DECL_START = 0x40,
     USER8_DECL_END = 0x4f,
     USER16_DECL_START = 0x50,
-    USER16_END_START = 0x5f,
+    USER16_DECL_END = 0x5f,
     USER8_TYPE = 0x60,
     USER16_TYPE = 0x70,
     INT8_TYPE = 0x80,
@@ -88,6 +88,7 @@ private:
     uint16_t id;		// user identity
     decl_member_t* member;	// member declaractions
     uint8_t count;		// number of members
+    size_t size;		// size of data type instance
     const char* name;		// name of user type
   };
 
@@ -183,6 +184,8 @@ public:
     write(INT32_TYPE, count);
     _dev->write(buf, count * sizeof(int32_t));
   }
+
+  void write(decl_user_t* decl);
 
   void write(decl_user_t* decl, void* buf, uint16_t count);
 };

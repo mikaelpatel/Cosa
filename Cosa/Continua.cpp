@@ -39,7 +39,7 @@ Continua::write(uint8_t type, uint16_t count)
   }
 
   // Tag byte contains marker and preceeding byte counter
-  if (count < 255) {
+  if (count < 256) {
     _dev->putchar(type | COUNT8_TYPE);
     _dev->putchar(count);
     return;
@@ -49,4 +49,54 @@ Continua::write(uint8_t type, uint16_t count)
   _dev->putchar(type | COUNT16_TYPE);
   _dev->putchar(count >> 8);
   _dev->putchar(count);
+}
+
+void 
+Continua::write(decl_user_t* decl)
+{
+  // Write declaration start tag and identity
+  if (decl->id < 256) {
+    _dev->putchar(USER8_DECL_START);
+    _dev->putchar(decl->id);
+  }
+  else {
+    _dev->putchar(USER16_DECL_START);
+    _dev->putchar((decl->id) >> 8);
+    _dev->putchar(decl->id);
+  }
+
+  // Write declaration name null terminated
+  _dev->puts_P(decl->name);
+  _dev->putchar(0);
+
+  // Write members
+  decl_member_t* member = decl->member;
+  for (uint8_t i = 0; i < decl->count; i++) {
+    write(member->type, member->count);
+    _dev->puts_P(member->name);
+    _dev->putchar(0);
+  }
+
+  // Write declaration end tag
+  if (decl->id < 256) {
+    _dev->putchar(USER8_DECL_END);
+  }
+  else {
+    _dev->putchar(USER16_DECL_END);
+  }
+}
+
+void 
+Continua::write(decl_user_t* decl, void* buf, uint16_t count)
+{
+  if (decl->id < 256) {
+    write(USER8_TYPE, count);
+    _dev->putchar(decl->id);
+  }
+  else {
+    write(USER16_TYPE, count);
+    _dev->putchar(decl->id);
+    _dev->putchar((decl->id) >> 8);
+  }
+  _dev->write(buf, count * decl->size);
 }
