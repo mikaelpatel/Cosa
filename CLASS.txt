@@ -21,6 +21,12 @@ Pins.h:			    class IOPin : public OutputPin
 Pins.h:		      class AnalogPin : public Pin
 Pins.h:		class AnalogPins
 ----------------------------------------------------------------------------
+FSM
+Finite State Machines
+Support for constructing finite state machines (FSM).
+----------------------------------------------------------------------------
+FSM.h		class FSM : private Thing
+----------------------------------------------------------------------------
 BUTTON
 Abstraction of debounced switch or button connected to an input pin.
 ----------------------------------------------------------------------------
