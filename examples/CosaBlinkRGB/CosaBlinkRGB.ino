@@ -33,12 +33,19 @@
 // The state machine
 FSM fsm;
 
+// The state functions
 void redState(FSM* fsm, uint8_t type, uint16_t value);
+void yellowState(FSM* fsm, uint8_t type, uint16_t value);
 void greenState(FSM* fsm, uint8_t type, uint16_t value);
+void cyanState(FSM* fsm, uint8_t type, uint16_t value);
 void blueState(FSM* fsm, uint8_t type, uint16_t value);
+void magentaState(FSM* fsm, uint8_t type, uint16_t value);
+
+// Timeout
+static const uint16_t TIMEOUT = 128;
 
 // Use an RGB LED connected to pins(5,6,7)
-OutputPin redLedPin(5);
+OutputPin redLedPin(5, 1);
 OutputPin greenLedPin(6);
 OutputPin blueLedPin(7, 1);
 
@@ -46,25 +53,43 @@ OutputPin blueLedPin(7, 1);
 void redState(FSM* fsm, uint8_t type, uint16_t value)
 {
   blueLedPin.toggle();
-  redLedPin.toggle();
-  fsm->set_timer(128);
+  fsm->set_timer(TIMEOUT);
+  fsm->set_state(yellowState);
+}
+
+void yellowState(FSM* fsm, uint8_t type, uint16_t value)
+{
+  greenLedPin.toggle();
+  fsm->set_timer(TIMEOUT);
   fsm->set_state(greenState);
 }
 
 void greenState(FSM* fsm, uint8_t type, uint16_t value)
 {
   redLedPin.toggle();
-  greenLedPin.toggle();
-  fsm->set_timer(256);
+  fsm->set_timer(TIMEOUT);
+  fsm->set_state(cyanState);
+}
+
+void cyanState(FSM* fsm, uint8_t type, uint16_t value)
+{
+  blueLedPin.toggle();
+  fsm->set_timer(TIMEOUT);
   fsm->set_state(blueState);
 }
 
 void blueState(FSM* fsm, uint8_t type, uint16_t value)
 {
   greenLedPin.toggle();
-  blueLedPin.toggle();
-  fsm->set_timer(512);
-  fsm->set_state(greenState);
+  fsm->set_timer(TIMEOUT);
+  fsm->set_state(magentaState);
+}
+
+void magentaState(FSM* fsm, uint8_t type, uint16_t value)
+{
+  redLedPin.toggle();
+  fsm->set_timer(TIMEOUT);
+  fsm->set_state(redState);
 }
 
 void setup()
