@@ -38,6 +38,7 @@ private:
    * Data type tag.
    */
   enum {
+    TYPE_MASK = 0xf0,
     UINT8_TYPE = 0x00,
     UINT16_TYPE = 0x10,
     UINT32_TYPE = 0x20,
@@ -59,20 +60,22 @@ private:
   };
 
   /**
-   * Number for data values in sequence[count].
+   * Tag attribute: 
+   * Number for data values in sequence[count]. User data type name as
+   * value or end of used defined data type sequence.
    */
   enum {
-    COUNT_MASK = 0x0f,
-    COUNT0_TYPE = 0x00,
-    COUNT4_MAX = 0x07,
-    COUNT8_TYPE = 0x08,
-    COUNT16_TYPE = 0x09,
-    USER8_NAME_TYPE = 0x0a,
-    USER16_NAME_TYPE = 0x0b,
-    RESERVED1_TYPE = 0x0c,
-    RESERVED2_TYPE = 0x0d,
-    RESERVED3_TYPE = 0x0e,
-    END_SEQUENCE_TYPE = 0x0f
+    ATTR_MASK = 0x0f,
+    COUNT0_ATTR = 0x00,
+    COUNT4_MASK = 0x07,
+    COUNT8_ATTR = 0x08,
+    COUNT16_ATTR = 0x09,
+    USER8_NAME_ATTR = 0x0a,
+    USER16_NAME_ATTR = 0x0b,
+    RESERVED1_ATTR = 0x0c,
+    RESERVED2_ATTR = 0x0d,
+    RESERVED3_ATTR = 0x0e,
+    END_SEQUENCE_ATTR = 0x0f
   };
 
   /**
