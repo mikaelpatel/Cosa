@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Continua.h
+ * @file Cosa/Ciao.h
  * @version 1.0
  *
  * @section License
@@ -21,17 +21,17 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa data stream handler. Please see CONTINUA.txt for details.
+ * The Cosa data stream handler. Please see CIAO.txt for details.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CONTINUA_H__
-#define __COSA_CONTINUA_H__
+#ifndef __COSA_CIAO_H__
+#define __COSA_CIAO_H__
 
 #include "Cosa/IOStream.h"
 
-class Continua {
+class Ciao {
   
 private:
   /**
@@ -94,18 +94,31 @@ private:
 
   IOStream::Device* _dev;
 
+  /**
+   * Write data tag to given stream.
+   * @param[in] type data type tag
+   * @param[in] count number of elements in sequence
+   */
   void write(uint8_t type, uint16_t count);
 
 public:
-  Continua(IOStream::Device* dev) : _dev(dev) {}
+  Ciao(IOStream::Device* dev) : _dev(dev) {}
 
-  void write(char* buf)
+  /**
+   * Write given string to data stream.
+   * @param[in] s string to write
+   */
+  void write(char* s)
   {
     write(UINT8_TYPE, 0);
-    _dev->puts(buf);
+    _dev->puts(s);
     _dev->putchar(0);
   }
 
+  /**
+   * Write given string from program memory to data stream.
+   * @param[in] s program memory string to write
+   */
   void write_P(const char* buf)
   {
     write(UINT8_TYPE, 0);
@@ -113,80 +126,144 @@ public:
     _dev->putchar(0);
   }
 
+  /**
+   * Write given unsigned 8-bit integer to data stream.
+   * @param[in] value to write to data stream.
+   */
   void write(uint8_t value)
   {
     write(UINT8_TYPE, 1);
     _dev->putchar(value);
   }
 
+  /**
+   * Write given unsigned 8-bit integer vector to data stream.
+   * @param[in] buf pointer to integer vector.
+   * @param[in] count size of vector.
+   */
   void write(uint8_t* buf, uint16_t count)
   {
     write(UINT8_TYPE, count);
     _dev->write(buf, count * sizeof(uint8_t));
   }
 
+  /**
+   * Write given unsigned 16-bit integer to data stream.
+   * @param[in] value to write to data stream.
+   */
   void write(uint16_t value)
   {
     write(UINT16_TYPE, 1);
     _dev->write(&value, sizeof(value));
   }
 
+  /**
+   * Write given unsigned 16-bit integer vector to data stream.
+   * @param[in] buf pointer to integer vector.
+   * @param[in] count size of vector.
+   */
   void write(uint16_t* buf, uint16_t count)
   {
     write(UINT16_TYPE, count);
     _dev->write(buf, count * sizeof(uint16_t));
   }
 
+  /**
+   * Write given unsigned 32-bit integer to data stream.
+   * @param[in] value to write to data stream.
+   */
   void write(uint32_t value)
   {
     write(UINT32_TYPE, 1);
     _dev->write(&value, sizeof(value));
   }
 
+  /**
+   * Write given unsigned 32-bit integer vector to data stream.
+   * @param[in] buf pointer to integer vector.
+   * @param[in] count size of vector.
+   */
   void write(uint32_t* buf, uint16_t count)
   {
     write(UINT32_TYPE, count);
     _dev->write(buf, count * sizeof(uint32_t));
   }
 
+  /**
+   * Write given signed 8-bit integer to data stream.
+   * @param[in] value to write to data stream.
+   */
   void write(int8_t value)
   {
     write(INT8_TYPE, 1);
     _dev->putchar(value);
   }
 
+  /**
+   * Write given signed 8-bit integer vector to data stream.
+   * @param[in] buf pointer to integer vector.
+   * @param[in] count size of vector.
+   */
   void write(int8_t* buf, int16_t count)
   {
     write(INT8_TYPE, count);
     _dev->write(buf, count * sizeof(int8_t));
   }
 
+  /**
+   * Write given signed 16-bit integer to data stream.
+   * @param[in] value to write to data stream.
+   */
   void write(int16_t value)
   {
     write(INT16_TYPE, 1);
     _dev->write(&value, sizeof(value));
   }
 
+  /**
+   * Write given signed 16-bit integer vector to data stream.
+   * @param[in] buf pointer to integer vector.
+   * @param[in] count size of vector.
+   */
   void write(int16_t* buf, int16_t count)
   {
     write(INT16_TYPE, count);
     _dev->write(buf, count * sizeof(int16_t));
   }
 
+  /**
+   * Write given signed 32-bit integer to data stream.
+   * @param[in] value to write to data stream.
+   */
   void write(int32_t value)
   {
     write(INT32_TYPE, 1);
     _dev->write(&value, sizeof(value));
   }
 
+  /**
+   * Write given signed 32-bit integer vector to data stream.
+   * @param[in] buf pointer to integer vector.
+   * @param[in] count size of vector.
+   */
   void write(int32_t* buf, int16_t count)
   {
     write(INT32_TYPE, count);
     _dev->write(buf, count * sizeof(int32_t));
   }
 
+  /**
+   * Write given user defined data type declaration to data stream.
+   * @param[in] decl declaration structure to write.
+   */
   void write(decl_user_t* decl);
 
+  /**
+   * Write given user defined data type value to data stream.
+   * @param[in] decl user defined data type.
+   * @param[in] buf pointer to value(s) to write.
+   * @param[in] count size of sequence to write.
+   */
   void write(decl_user_t* decl, void* buf, uint16_t count);
 };
 

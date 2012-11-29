@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Continua.cpp
+ * @file Cosa/Ciao.cpp
  * @version 1.0
  *
  * @section License
@@ -26,10 +26,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Continua.h"
+#include "Cosa/Ciao.h"
 
 void 
-Continua::write(uint8_t type, uint16_t count)
+Ciao::write(uint8_t type, uint16_t count)
 {
   // Tag byte contains count[0..7]
   if (count < 8) {
@@ -38,23 +38,23 @@ Continua::write(uint8_t type, uint16_t count)
     return;
   }
 
-  // Tag byte contains marker and preceeding byte counter
+  // Tag byte contains marker. Succeeding byte counter[8..255]
   if (count < 256) {
     _dev->putchar(type | COUNT8_TYPE);
     _dev->putchar(count);
     return;
   }
   
-  // Tag byte contains marker and preceeding two bytes counter (bigendian)
+  // Tag byte contains marker. Succeeding two bytes counter[255..64K]
   _dev->putchar(type | COUNT16_TYPE);
   _dev->putchar(count >> 8);
   _dev->putchar(count);
 }
 
 void 
-Continua::write(decl_user_t* decl)
+Ciao::write(decl_user_t* decl)
 {
-  // Write declaration start tag and identity
+  // Write declaration start tag and identity number (8 or 16-bit)
   if (decl->id < 256) {
     _dev->putchar(USER8_DECL_START);
     _dev->putchar(decl->id);
@@ -69,7 +69,7 @@ Continua::write(decl_user_t* decl)
   _dev->puts_P(decl->name);
   _dev->putchar(0);
 
-  // Write members
+  // Write members with name null terminated
   decl_member_t* member = decl->member;
   for (uint8_t i = 0; i < decl->count; i++) {
     write(member->type, member->count);
@@ -87,8 +87,9 @@ Continua::write(decl_user_t* decl)
 }
 
 void 
-Continua::write(decl_user_t* decl, void* buf, uint16_t count)
+Ciao::write(decl_user_t* decl, void* buf, uint16_t count)
 {
+  // Write type tag for user data with count and type identity
   if (decl->id < 256) {
     write(USER8_TYPE, count);
     _dev->putchar(decl->id);
@@ -98,5 +99,7 @@ Continua::write(decl_user_t* decl, void* buf, uint16_t count)
     _dev->putchar(decl->id);
     _dev->putchar((decl->id) >> 8);
   }
+
+  // Write data buffer to stream
   _dev->write(buf, count * decl->size);
 }

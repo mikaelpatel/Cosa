@@ -1,10 +1,10 @@
-CONTINUA: DATA STREAMING FORMAT FOR COSA
+CIAO: DATA STREAMING FORMAT FOR COSA
 
 Author:	       Mikael Patel
-Date:	       2012-11-28
+Date:	       2012-11-29
 Rev.:	       1.0
 
-This is a desciption of the Cosa data streaming format; Continua. It
+This is a desciption of the Cosa data streaming format; Ciao. It
 is basically a tagged data format that supports the C/C++ language
 data types, declarations (struct) and sequences of these. Pointers are
 not allowed in the streaming format.
@@ -15,13 +15,18 @@ attributes are used for sequence length and user defined types.
 
 All data is stored in MSB first (bigendian aka network order).
 
+Typically usage of this format are; data streaming between systems
+(Arduino or other), remote procedure call (as data type declaration
+and values may be interpreted as closures), tracing, file format,
+etc. 
+
 1. TYPE TAGS
 
 3210 BIT POSITION, UNSIGNED INTEGER NUMBERS
 0000 uint8_t, unsigned char
 0001 uint16_t, unsigned short 
 0010 uint32_t, unsigned long
-0011 uint64_t, unsigned long long
+0011 uint64_t, unsigned long long/*
 
 3210 BIT POSITION, USER DEFINED TYPES
 0100 type_t, user data type declaration, 8-bit identity
@@ -35,27 +40,17 @@ All data is stored in MSB first (bigendian aka network order).
 1010 int32_t, signed long
 1011 int64_t, signed long long
 
-3210 BIT POSITION, FLOATING POINT NUMBERS
-1100 float16_t
-1101 float32_t, float
-1110 float64_t, double
-1111 float80_t, long double
+3210 BIT POSITION, FLOATING POINT NUMBERS (IEEE 754)/*
+1100 binary16_t, half-precision floating-point format
+1101 binary32_t, single, float
+1110 binary64_t, double
+1111 binary80_t, long double
 
 Bit(3) is set for signed data types. Cleared bit(2) indicates for
 integer and set for floating point numbers. For integers bit(1..0) is
 log2 number of bytes, values 0..3 for 1..8 bytes which is 8..64 bits.
 
-is_unsigned_int() (type <= 0b11)
-is_signed_int() (type >= 0b1000 && type <= 0b1011)
-is_int() (is_unsigned_int() || is_signed_int())
-is_data_type() (type >= 0100 && type <= 0111)
-is_float() (type >= 1100)
-sizeof() 
-	 1. is_int() (1 << (0011 & type))
-	 2. is_float() 
-	    1. is_float80() 80
-	    2. (1 << ((0011 & type) + 1)
-	 3. is_data_type() sum of sizeof() type declaration
+*/ are optional in small embedded systems.
 
 2. DATA SEQUENCE
 
@@ -71,17 +66,17 @@ dddd	1111      	 V*0     null terminated sequence
 
 The attribute is the length of the data sequence [0..64K] using 4, 12
 or 20 bits. This is symmetrical for all types except user data type
-declaraction.
+declaration.
 
 3. DATA TYPE DECLARATION
 
 The type tag may be extended with user defined types. These are given
-a 8 or 16-bit unsigned integer number allowing at most 256 + 64K
+an 8 or 16-bit unsigned integer number allowing at most 256 + 64K
 additional data types. Sequences of user defined data types are
 included.  
 
 Note that the elementary data tags are reinterpreted for a data type
-declaraction. Instead of data values the type prefix is followed by a
+declaration. Instead of data values the type prefix is followed by a
 possible name string (null terminated). Union is not supported in this
 release. 
 
