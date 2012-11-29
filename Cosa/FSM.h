@@ -64,15 +64,11 @@ private:
   }
 
 public:
-  FSM(StateHandler init = 0) : Thing(do_event), _state(init) { }
-  
   /**
-   * Start the state machine with a FSM_INIT_TYPE event.
+   * Construct state machine with given initial state.
+   * @param{in] init initial state handler.
    */
-  void begin()
-  {
-    Event::push(Event::FSM_INIT_TYPE, this);
-  }
+  FSM(StateHandler init = 0) : Thing(do_event), _state(init) { }
   
   /**
    * Set new state handler for next event.
@@ -81,6 +77,42 @@ public:
   void set_state(StateHandler fn) 
   {
     _state = fn;
+  }
+  
+  /**
+   * Send an event to the state machine.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  void send(uint8_t type, uint16_t value = 0)
+  {
+    Event::push(type, this, value);
+  }
+  
+  /**
+   * Send an event to the state machine.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  void send(uint8_t type, void* value)
+  {
+    Event::push(type, this, value);
+  }
+  
+  /**
+   * Start the state machine with a FSM_BEGIN_TYPE event.
+   */
+  void begin()
+  {
+    send(Event::FSM_BEGIN_TYPE);
+  }
+  
+  /**
+   * End the state machine with a FSM_END_TYPE event.
+   */
+  void end()
+  {
+    send(Event::FSM_END_TYPE);
   }
   
   /**
