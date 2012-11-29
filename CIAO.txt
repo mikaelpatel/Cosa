@@ -2,7 +2,7 @@ CIAO: DATA STREAMING FORMAT FOR COSA
 
 Author:	       Mikael Patel
 Date:	       2012-11-29
-Rev.:	       1.0
+Rev.:	       1.1
 
 This is a desciption of the Cosa data streaming format; Ciao. It
 is basically a tagged data format that supports the C/C++ language
@@ -131,3 +131,18 @@ TYPE    ATTRIBUTES           	 DESCRIPTION
 0111	1111        T:T	 V*      data<T> value null terminated sequence(name)
 
 A typed data sequence is prefixed with the type identity.
+
+5. EXAMPLES
+
+EXPRESSION			ENCODING
+uint8_t x = 15;			[0x01] [0x0f]
+int32 y = -2;			[0xa1] [0xff] [0xfe]
+char* s = "Ciao!"		[0x00] ['C']['i']['a']['o']['!'][0]
+struct Point {			[0x80] [0x42] ['P']['o']['i']['n']['t'][0]
+  int16_t x;   			[0x91] ['x'][0]
+  int16_t y;			[0x91] ['y'][0]
+};	  			[0x8f]
+Point p = { 1, -1 };		[0x61] [0x42] [0x00][0x01] [0xff][0xff]
+Point q[100];  	  		[0x6d] [100] [..][..]...[..][..]
+
+In the example above the struct Point is given the identity (0x42).
