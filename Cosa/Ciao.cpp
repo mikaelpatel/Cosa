@@ -48,8 +48,7 @@ Ciao::write(uint8_t type, uint16_t count)
   
   // Tag byte contains marker. Succeeding two bytes counter[255..64K]
   _dev->putchar(type | COUNT16_ATTR);
-  _dev->putchar(count >> 8);
-  _dev->putchar(count);
+  _dev->write(&count, sizeof(count));
 }
 
 void 

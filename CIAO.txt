@@ -2,7 +2,7 @@ CIAO: DATA STREAMING FORMAT FOR COSA
 
 Author:	       Mikael Patel
 Date:	       2012-11-29
-Rev.:	       1.1
+Rev.:	       1.2
 
 This is a desciption of the Cosa data streaming format; Ciao. It
 is basically a tagged data format that supports the C/C++ language
@@ -13,7 +13,9 @@ Each data object is tagged with a prefix byte. This prefix contains a
 four bit type tag and a four bit attribute. Additional prefix 
 attributes are used for sequence length and user defined types.
 
-All data is stored in MSB first (bigendian aka network order).
+All data is stored as on the Arduino/AVR/Amtel processors in LSB first
+(little-endian). And to avoid byte swapping native order is used in
+Cosa Ciao data streams.
 
 Typically usage of this format are; data streaming between systems
 (Arduino or other), remote procedure call (as data type declaration
