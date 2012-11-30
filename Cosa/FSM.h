@@ -49,8 +49,9 @@ public:
   typedef bool (*StateHandler)(FSM* fsm, uint8_t type, uint16_t value);
   
 private:
+  static const uint16_t TIMEOUT_REQUEST = 0xffff;
   StateHandler _state;
-  uint8_t _is_timed;
+  uint16_t _period;
 
   /**
    * The first level event handler. Filters timeout events and
@@ -62,7 +63,7 @@ private:
   static void do_event(Thing* it, uint8_t type, uint16_t value)
   {
     FSM* fsm = (FSM*) it;
-    if (!fsm->_is_timed) fsm->cancel_timer();
+    if (fsm->_period == TIMEOUT_REQUEST) fsm->cancel_timer();
     fsm->_state(fsm, type, value);
   }
 
@@ -70,12 +71,12 @@ public:
   /**
    * Construct state machine with given initial state.
    * @param{in] init initial state handler.
-   * @param{in] is_timed state machine needs a timeout in all states.
+   * @param{in] period timeout in all states.
    */
-  FSM(StateHandler init, uint8_t is_timed = 0) : 
+  FSM(StateHandler init, uint16_t period = 0) :
     Thing(do_event), 
     _state(init),
-    _is_timed(is_timed)
+    _period(period)
   {}
   
   /**
@@ -89,13 +90,12 @@ public:
   }
   
   /**
-   * Set timed status; true(1) to receive timeout events in all 
-   * states.
-   * @param[in] flag for timed status.
+   * Set timeout period for all states.
+   * @param[in] ms timeout.
    */
-  void set_timed(uint8_t flag)
+  void set_period(uint8_t ms)
   {
-    _is_timed == flag;
+    _period = ms;
   }
   
   /**
@@ -121,10 +121,12 @@ public:
   /**
    * Start the state machine with a FSM_BEGIN_TYPE event.
    */
-  void begin()
+  bool begin()
   {
-    if (_state == 0) return;
+    if ((_period != 0) && (_period != TIMEOUT_REQUEST)) 
+      Watchdog::attach(this, _period);
     send(Event::FSM_BEGIN_TYPE);
+    return (1);
   }
   
   /**
@@ -132,6 +134,7 @@ public:
    */
   void end()
   {
+    cancel_timer();
     send(Event::FSM_END_TYPE);
   }
   
@@ -141,6 +144,7 @@ public:
    */
   void set_timer(uint16_t timeout)
   {
+    _period = TIMEOUT_REQUEST;
     Watchdog::attach(this, timeout);
   }
 
@@ -150,7 +154,10 @@ public:
    */
   void cancel_timer()
   {
-    detach();
+    if (_period != 0) {
+      detach();
+      _period = 0;
+    }
   }
 };
 

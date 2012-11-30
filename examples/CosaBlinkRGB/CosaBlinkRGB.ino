@@ -39,27 +39,24 @@ public:
   OutputPin greenLedPin;
   OutputPin blueLedPin;
 
-  // Timeout period
-  uint16_t timeout;
-  
   // Construct the state machine for the RGB led sequencing
-  BlinkRGB(uint16_t ms = 512,
+  BlinkRGB(uint16_t period = 512,
 	   uint8_t redLedPinNr = 5, 
 	   uint8_t greenLedPinNr = 6, 
 	   uint8_t blueLedPinNr= 7) :
-    FSM(redState),
+    FSM(redState, period),
     redLedPin(redLedPinNr, 1),
     greenLedPin(greenLedPinNr),
-    blueLedPin(blueLedPinNr, 1),
-    timeout(ms)
+    blueLedPin(blueLedPinNr, 1)
   {}
 
   // State functions; red => yellow => green => cyan => blue => meganta
+  // Receive a timeout events which are ignored. Turns on and off the
+  // leds with toggle and steps to the next state. 
   static bool redState(FSM* fsm, uint8_t type, uint16_t value)
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->blueLedPin.toggle();
-    fsm->set_timer(rgb->timeout);
     fsm->set_state(yellowState);
     return (1);
   }
@@ -68,7 +65,6 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->greenLedPin.toggle();
-    fsm->set_timer(rgb->timeout);
     fsm->set_state(greenState);
     return (1);
   }
@@ -77,7 +73,6 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->redLedPin.toggle();
-    fsm->set_timer(rgb->timeout);
     fsm->set_state(cyanState);
     return (1);
   }
@@ -86,7 +81,6 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->blueLedPin.toggle();
-    fsm->set_timer(rgb->timeout);
     fsm->set_state(blueState);
     return (1);
   }
@@ -95,7 +89,6 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->greenLedPin.toggle();
-    fsm->set_timer(rgb->timeout);
     fsm->set_state(magentaState);
     return (1);
   }
@@ -104,13 +97,12 @@ public:
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->redLedPin.toggle();
-    fsm->set_timer(rgb->timeout);
     fsm->set_state(redState);
     return (1);
   }
 };
 
-// The state machines
+// The state machines for two RGB leds
 BlinkRGB led1(512, 5, 6, 7);
 BlinkRGB led2(256, 8, 9, 10);
 
