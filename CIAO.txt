@@ -138,7 +138,7 @@ A typed data sequence is prefixed with the type identity.
 
 EXPRESSION			ENCODING
 uint8_t x = 15;			[0x01] [0x0f]
-int32 y = -2;			[0xa1] [0xfe] [0xff]
+int32_t y = -2;			[0xa1] [0xfe] [0xff]
 char* s = "Ciao!"		[0x00] ['C']['i']['a']['o']['!'][0]
 struct Point {			[0x80] [0x42] ['P']['o']['i']['n']['t'][0]
   int16_t x;   			[0x91] ['x'][0]

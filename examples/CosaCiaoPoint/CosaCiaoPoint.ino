@@ -46,22 +46,21 @@ const char Point_y_name[] PROGMEM = "y";
 const Ciao::decl_member_t Point_member[] PROGMEM = {
   {
     Ciao::INT16_TYPE,		// type
-    0,				// id
     1,				// count
-    Point_x_name		// name
+    Point_x_name,		// name
+    0				// decl
   },
   {
     Ciao::INT16_TYPE,		// type
-    0,				// id
     1,				// count
-    Point_y_name		// name
+    Point_y_name,		// name
+    0				// decl
   }
 };
 const char Point_name[] PROGMEM = "Point";
 const Ciao::decl_user_t Point_decl PROGMEM = {
   0x42,				// id
   Point_name,			// name
-  sizeof(Point),		// size
   Point_member,			// member
   membersof(Point_member)	// count
 };  
@@ -91,19 +90,30 @@ void setup()
   cout.set(&traceDevice);
   cout.begin();
 
-  // Value to stream
-  Point p = { -1, 1 };
+  // Values to stream
+  char* s = "Ciao!";
+  uint8_t x = 15;
+  int32_t y = -2;
+  int16_t z[] = { 1, 2, 3, 4 };
+  float r = 3.14;
+  float c[] = { -1.0, 1.0 };
 
   // Stream raw values first and then the same with type declaration
-  cout.write_P(PSTR("Point"));
-  cout.write(p.x);
-  cout.write(p.y);
+  cout.write(s);
+  cout.write(x);
+  cout.write(y);
+  cout.write(z, membersof(z));
+  cout.write(r);
+  cout.write(c, membersof(c));
 
   // Stream the type declaration
   cout.write(&Point_decl);
 
   // Stream the value
+  Point p = { -1, 1 };
   cout.write(&Point_decl, &p, 1);
+  Point q[] = { { -100, -100 }, { 100, 100 } };
+  cout.write(&Point_decl, &q, membersof(q));
 }
 
 void loop()

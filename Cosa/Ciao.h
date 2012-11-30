@@ -35,8 +35,7 @@ class Ciao {
   
 public:
   /**
-   * Data type tag:
-   * Predefined data types and tags for extension.
+   * Data type tag: Predefined data types and tags for extension.
    */
   enum {
     MASK_TYPE = 0xf0,
@@ -61,9 +60,8 @@ public:
   };
 
   /**
-   * Tag attribute: 
-   * Number for data values in sequence[count]. User data type name as
-   * value or end of used defined data type sequence.
+   * Tag attribute: Number for data values in sequence[count]. User defined
+   * data type name as value or end of used defined data type sequence.
    */
   enum {
     MASK_ATTR = 0x0f,
@@ -80,26 +78,33 @@ public:
   };
 
   /**
-   * Data type declaraction member
+   * Data type declaration structures (program memory)
    */
-  struct decl_member_t {	// user data type member declaration
-    uint8_t type;		// data type tag
-    uint16_t id;		// user identity
-    uint16_t count;		// number of elements in sequence
-    const char* name;		// name of member
+  struct decl_member_t {
+    uint8_t type;
+    uint16_t count;
+    const char* name;
+    const struct decl_user_t* decl;
   };
-  struct decl_user_t {		// user data type declaration
-    uint16_t id;		// user identity
-    const char* name;		// name of user type
-    size_t size;		// size of data type instance (bytes)
-    const decl_member_t* member; // member declaractions
-    uint16_t count;		// number of members
+  struct decl_user_t {
+    uint16_t id;
+    const char* name;
+    const decl_member_t* member;
+    uint8_t count;
   };
   
+  /**
+   * Stream header with version string and endian information (identity=0x00)
+   */
+  struct header_t {
+    char* version;
+    uint16_t endian;
+  };
+
 private:
-  // Version and header
-  static const uint16_t ID;
-  static const char VERSION[] PROGMEM;
+  // Version header
+  static const decl_user_t _header_decl PROGMEM;
+  static header_t _header;
 
   // Output streaming device.
   IOStream::Device* _dev;
@@ -132,8 +137,7 @@ public:
    */
   void begin()
   {
-    write_P(VERSION);
-    write((uint16_t) 1);
+    write(&_header_decl, &_header, 1);
   }
 
   /**
@@ -282,6 +286,27 @@ public:
   {
     write(INT32_TYPE, count);
     _dev->write(buf, count * sizeof(int32_t));
+  }
+
+  /**
+   * Write given 32-bit floating point to data stream.
+   * @param[in] value to write to data stream.
+   */
+  void write(float value)
+  {
+    write(FLOAT32_TYPE, 1);
+    _dev->write(&value, sizeof(value));
+  }
+
+  /**
+   * Write given 32-bit floating vector to data stream.
+   * @param[in] buf pointer to integer vector.
+   * @param[in] count size of vector.
+   */
+  void write(float* buf, int16_t count)
+  {
+    write(FLOAT32_TYPE, count);
+    _dev->write(buf, count * sizeof(float));
   }
 
   /**

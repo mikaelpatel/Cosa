@@ -28,10 +28,42 @@
 
 #include "Cosa/Ciao.h"
 #include <avr/pgmspace.h>
+#include "Cosa/Trace.h"
 
-// Ciao version string in program memory
-const uint16_t Ciao::ID = 0;
-const char Ciao::VERSION[] PROGMEM = "Cosa::Ciao/1.0";
+// Ciao configuration
+static const uint16_t ID = 0x00;
+static char VERSION[] = "Cosa::Ciao/1.0";
+
+// Ciao header declaration 
+static const char version_name[] PROGMEM = "version";
+static const char endian_name[] PROGMEM = "endian";
+static const Ciao::decl_member_t member[] PROGMEM = {
+  {
+    Ciao::UINT8_TYPE,		// type
+    0,				// count
+    version_name,		// name
+    0				// decl
+  },
+  {
+    Ciao::UINT16_TYPE,		// type
+    1,				// count
+    endian_name,		// name
+    0				// decl
+  }
+};
+static const char header_name[] PROGMEM = "Ciao::header_t";
+const Ciao::decl_user_t Ciao::_header_decl PROGMEM = {
+  ID,				// id
+  header_name,			// name
+  member,			// member
+  membersof(member)		// count
+};  
+
+// Ciao header with version string and endian information
+Ciao::header_t Ciao::_header = {
+  VERSION,
+  0x0100
+};
 
 void
 Ciao::write(uint8_t type, uint16_t count)
@@ -95,6 +127,25 @@ Ciao::write(const decl_user_t* decl)
   }
 }
 
+static const uint8_t sizeoftype[] PROGMEM = {
+  1,
+  2,
+  4,
+  8, 
+  0, 
+  0, 
+  0, 
+  0, 
+  1, 
+  2, 
+  4, 
+  8, 
+  2, 
+  4, 
+  8, 
+  10
+};
+
 void 
 Ciao::write(const decl_user_t* decl, void* buf, uint16_t count)
 {
@@ -113,5 +164,28 @@ Ciao::write(const decl_user_t* decl, void* buf, uint16_t count)
   }
 
   // Write data buffer to stream
-  _dev->write(buf, count * d.size);
+  uint8_t* dp = (uint8_t*) buf;
+  while (count--) {
+    const decl_member_t* mp = d.member;
+    for (uint16_t i = 0; i < d.count; i++) {
+      decl_member_t m;
+      memcpy_P(&m, mp++, sizeof(m));
+      // Allow strings and data elements vectors only
+      // Fix: Add table with user defined types
+      if (m.count == 0 && m.type == UINT8_TYPE) {
+	uint8_t* sp = *((uint8_t**) dp);
+	uint8_t d;
+	do {
+	  d = *sp++;
+	  _dev->putchar(d);
+	} while (d != 0);
+	dp += sizeof(sp);
+      } 
+      else {
+	size_t s = pgm_read_byte(&sizeoftype[m.type >> 4]) * m.count;
+	_dev->write(dp, s);
+	dp += s;
+      }
+    }
+  }
 }
