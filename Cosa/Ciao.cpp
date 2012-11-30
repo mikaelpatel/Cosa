@@ -31,7 +31,7 @@
 
 // Ciao version string in program memory
 const uint16_t Ciao::ID = 0;
-const char Ciao::VERSION[] PROGMEM = "Cosa/Ciao/1.0";
+const char Ciao::VERSION[] PROGMEM = "Cosa::Ciao/1.0";
 
 void
 Ciao::write(uint8_t type, uint16_t count)

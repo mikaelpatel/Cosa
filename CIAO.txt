@@ -1,8 +1,8 @@
 CIAO: DATA STREAMING FORMAT FOR COSA
 
 Author:	       Mikael Patel
-Date:	       2012-11-29
-Rev.:	       1.2
+Date:	       2012-11-30
+Rev.:	       1.0
 
 This is a desciption of the Cosa data streaming format; Ciao. It
 is basically a tagged data format that supports the C/C++ language
