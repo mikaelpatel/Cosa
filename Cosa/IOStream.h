@@ -31,7 +31,6 @@
 #define __COSA_IOSTREAM_H__
 
 #include "Cosa/Types.h"
-#include <stdarg.h>
 
 class IOStream {
 
@@ -68,7 +67,7 @@ public:
      * @param[in] size number of bytes to write.
      * @return number of bytes written or EOF(-1).
      */
-    virtual int write(void* buf, uint8_t size);
+    virtual int write(void* buf, size_t size);
 
     /**
      * Read character from device.
@@ -83,7 +82,7 @@ public:
      * @param[in] count max number of bytes to read.
      * @return number of characters read or EOF(-1).
      */
-    virtual char* gets(char *s, uint8_t count);
+    virtual char* gets(char *s, size_t count);
 
     /**
      * Read data from buffer with given size from device.
@@ -91,7 +90,7 @@ public:
      * @param[in] size number of bytes to read.
      * @return number of bytes read or EOF(-1).
      */
-    virtual int read(void* buf, uint8_t size);
+    virtual int read(void* buf, size_t size);
 
     /**
      * Flush internal device buffers. Wait for device to become idle.

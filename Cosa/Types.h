@@ -34,6 +34,7 @@
 #include <avr/pgmspace.h>
 #include <avr/sfr_defs.h>
 
+#include <stdarg.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>

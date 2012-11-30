@@ -57,10 +57,10 @@ IOStream::Device::puts_P(const char* s)
 }
 
 int 
-IOStream::Device::write(void* buf, uint8_t size) 
+IOStream::Device::write(void* buf, size_t size) 
 { 
   char* ptr = (char*) buf;
-  uint8_t n = 0;
+  size_t n = 0;
   for(; n < size; n++)
     if (putchar(*ptr++) < 0)
       return (-1);
@@ -74,11 +74,10 @@ IOStream::Device::getchar()
 }
 
 char* 
-IOStream::Device::gets(char *s,  uint8_t count) 
+IOStream::Device::gets(char *s,  size_t count) 
 { 
   char* res = s;
-  uint8_t n = 0;
-  for(; n < count; n++) {
+  for (size_t n = 0; n < count; n++) {
     int c = getchar();
     if (c < 0) {
       *s = 0;
@@ -95,11 +94,11 @@ IOStream::Device::gets(char *s,  uint8_t count)
 }
 
 int 
-IOStream::Device::read(void* buf, uint8_t size) 
+IOStream::Device::read(void* buf, size_t size) 
 { 
   char* ptr = (char*) buf;
-  uint8_t n = 0;
-  for(; n < size; n++)
+  size_t n = 0; 
+  for (; n < size; n++)
     if ((*ptr++ = getchar()) < 0)
       return (-1);
   return (n);
