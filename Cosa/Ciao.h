@@ -95,8 +95,12 @@ public:
     const decl_member_t* member; // member declaractions
     uint16_t count;		// number of members
   };
-
+  
 private:
+  // Version and header
+  static const uint16_t ID;
+  static const char VERSION[] PROGMEM;
+
   // Output streaming device.
   IOStream::Device* _dev;
 
@@ -121,6 +125,15 @@ public:
   void set(IOStream::Device* dev) 
   { 
     _dev = dev;
+  }
+
+  /**
+   * Start the data stream with a version string and endian information.
+   */
+  void begin()
+  {
+    write_P(VERSION);
+    write((uint16_t) 1);
   }
 
   /**
