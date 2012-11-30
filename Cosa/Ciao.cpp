@@ -27,6 +27,7 @@
  */
 
 #include "Cosa/Ciao.h"
+#include <avr/pgmspace.h>
 
 void 
 Ciao::write(uint8_t type, uint16_t count)
@@ -52,33 +53,38 @@ Ciao::write(uint8_t type, uint16_t count)
 }
 
 void 
-Ciao::write(decl_user_t* decl)
+Ciao::write(const decl_user_t* decl)
 {
+  // Read declaration from program memory
+  decl_user_t d;
+  memcpy_P(&d, decl, sizeof(d));
+  
   // Write declaration start tag and identity number (8 or 16-bit)
-  if (decl->id < 256) {
+  if (d.id < 256) {
     _dev->putchar(USER8_DECL_START);
-    _dev->putchar(decl->id);
+    _dev->putchar(d.id);
   }
   else {
     _dev->putchar(USER16_DECL_START);
-    _dev->putchar((decl->id) >> 8);
-    _dev->putchar(decl->id);
+    _dev->write(&d.id, sizeof(uint16_t));
   }
 
   // Write declaration name null terminated
-  _dev->puts_P(decl->name);
+  _dev->puts_P(d.name);
   _dev->putchar(0);
-
+  
   // Write members with name null terminated
-  decl_member_t* member = decl->member;
-  for (uint8_t i = 0; i < decl->count; i++) {
-    write(member->type, member->count);
-    _dev->puts_P(member->name);
+  const decl_member_t* mp = d.member;
+  for (uint16_t i = 0; i < d.count; i++) {
+    decl_member_t m;
+    memcpy_P(&m, mp++, sizeof(m));
+    write(m.type, m.count);
+    _dev->puts_P(m.name);
     _dev->putchar(0);
   }
-
+	 
   // Write declaration end tag
-  if (decl->id < 256) {
+  if (d.id < 256) {
     _dev->putchar(USER8_DECL_END);
   }
   else {
@@ -87,19 +93,22 @@ Ciao::write(decl_user_t* decl)
 }
 
 void 
-Ciao::write(decl_user_t* decl, void* buf, uint16_t count)
+Ciao::write(const decl_user_t* decl, void* buf, uint16_t count)
 {
+  // Read declaration from program memory
+  decl_user_t d;
+  memcpy_P(&d, decl, sizeof(d));
+  
   // Write type tag for user data with count and type identity
-  if (decl->id < 256) {
+  if (d.id < 256) {
     write(USER8_TYPE, count);
-    _dev->putchar(decl->id);
+    _dev->putchar(d.id);
   }
   else {
     write(USER16_TYPE, count);
-    _dev->putchar(decl->id);
-    _dev->putchar((decl->id) >> 8);
+    _dev->write(&d.id, sizeof(d.id));
   }
 
   // Write data buffer to stream
-  _dev->write(buf, count * decl->size);
+  _dev->write(buf, count * d.size);
 }

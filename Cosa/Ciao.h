@@ -33,7 +33,7 @@
 
 class Ciao {
   
-private:
+public:
   /**
    * Data type tag:
    * Predefined data types and tags for extension.
@@ -92,10 +92,11 @@ private:
     uint16_t id;		// user identity
     const char* name;		// name of user type
     size_t size;		// size of data type instance (bytes)
-    decl_member_t* member;	// member declaractions
-    uint8_t count;		// number of members
+    const decl_member_t* member; // member declaractions
+    uint16_t count;		// number of members
   };
 
+private:
   // Output streaming device.
   IOStream::Device* _dev;
 
@@ -111,7 +112,16 @@ public:
    * Construct data streaming for given device.
    * @param[in] dev output device.
    */
-  Ciao(IOStream::Device* dev) : _dev(dev) {}
+  Ciao(IOStream::Device* dev = 0) : _dev(dev) {}
+
+  /**
+   * Set io stream device.
+   * @param[in] dev stream device.
+   */
+  void set(IOStream::Device* dev) 
+  { 
+    _dev = dev;
+  }
 
   /**
    * Write given string to data stream.
@@ -263,17 +273,17 @@ public:
 
   /**
    * Write given user defined data type declaration to data stream.
-   * @param[in] decl declaration structure to write.
+   * @param[in] decl declaration structure to write (progam memory(
    */
-  void write(decl_user_t* decl);
+  void write(const decl_user_t* decl);
 
   /**
    * Write given user defined data type value to data stream.
-   * @param[in] decl user defined data type.
+   * @param[in] decl user defined data type (program memory).
    * @param[in] buf pointer to value(s) to write.
    * @param[in] count size of sequence to write.
    */
-  void write(decl_user_t* decl, void* buf, uint16_t count);
+  void write(const decl_user_t* decl, void* buf, uint16_t count);
 };
 
 #endif
