@@ -1,5 +1,5 @@
 /**
- * @file CosaBlinkRBG.ino
+ * @file CosaBlinkFSM.ino
  * @version 1.0
  *
  * @section License
