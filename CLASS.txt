@@ -92,6 +92,11 @@ SPI.h:			class SPI : public Thing
 SPI/ADXL345.h:	      	      class ADXL345 : private SPI
 SPI/NRF24L01P.h:	      class NRF24L01P : private SPI
 ----------------------------------------------------------------------------
+DHT11 
+Humidity & Temperature Sensor device driver
+----------------------------------------------------------------------------
+DHT.h:			class DHT11 : private IOPin
+----------------------------------------------------------------------------
 SUPPORT LIBRARIES
 ----------------------------------------------------------------------------
 BCD.h:			converting bcd numbers to and from binary
