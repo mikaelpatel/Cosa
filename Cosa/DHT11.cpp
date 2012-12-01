@@ -72,7 +72,7 @@ DHT11::sample()
       for (uint8_t j = 0; j < CHARBITS; j++) {
 	int8_t bit = read_bit(2);
 	if (bit < 0) synchronized_return (0);
-	_data[i] = (_data[i] << 1) | (bit != 0);
+	_data[i] = (_data[i] << 1) | bit;
       }
       if (i < DATA_MAX - 1) chksum += _data[i];
     }
