@@ -53,7 +53,7 @@ public:
   // State functions; red => yellow => green => cyan => blue => meganta
   // Receive a timeout events which are ignored. Turns on and off the
   // leds with toggle and steps to the next state. 
-  static bool redState(FSM* fsm, uint8_t type, uint16_t value)
+  static bool redState(FSM* fsm, uint8_t type)
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->blueLedPin.toggle();
@@ -61,7 +61,7 @@ public:
     return (1);
   }
 
-  static bool yellowState(FSM* fsm, uint8_t type, uint16_t value)
+  static bool yellowState(FSM* fsm, uint8_t type)
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->greenLedPin.toggle();
@@ -69,7 +69,7 @@ public:
     return (1);
   }
   
-  static bool greenState(FSM* fsm, uint8_t type, uint16_t value)
+  static bool greenState(FSM* fsm, uint8_t type)
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->redLedPin.toggle();
@@ -77,7 +77,7 @@ public:
     return (1);
   }
   
-  static bool cyanState(FSM* fsm, uint8_t type, uint16_t value)
+  static bool cyanState(FSM* fsm, uint8_t type)
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->blueLedPin.toggle();
@@ -85,7 +85,7 @@ public:
     return (1);
   }
 
-  static bool blueState(FSM* fsm, uint8_t type, uint16_t value)
+  static bool blueState(FSM* fsm, uint8_t type)
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->greenLedPin.toggle();
@@ -93,7 +93,7 @@ public:
     return (1);
   }
 
-  static bool magentaState(FSM* fsm, uint8_t type, uint16_t value)
+  static bool magentaState(FSM* fsm, uint8_t type)
   {
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->redLedPin.toggle();

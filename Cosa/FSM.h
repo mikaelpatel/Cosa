@@ -43,15 +43,15 @@ public:
    * and hierarchical state handlers.
    * @param[in] fsm finite state machine.
    * @param[in] type the type of event.
-   * @param[in] value the event value.
    * @return bool
    */
-  typedef bool (*StateHandler)(FSM* fsm, uint8_t type, uint16_t value);
+  typedef bool (*StateHandler)(FSM* fsm, uint8_t type);
   
 private:
   static const uint16_t TIMEOUT_REQUEST = 0xffff;
   StateHandler _state;
   uint16_t _period;
+  uint16_t _param;
 
   /**
    * The first level event handler. Filters timeout events and
@@ -64,7 +64,8 @@ private:
   {
     FSM* fsm = (FSM*) it;
     if (fsm->_period == TIMEOUT_REQUEST) fsm->cancel_timer();
-    fsm->_state(fsm, type, value);
+    fsm->_param = value;
+    fsm->_state(fsm, type);
   }
 
 public:
@@ -76,7 +77,8 @@ public:
   FSM(StateHandler init, uint16_t period = 0) :
     Thing(do_event), 
     _state(init),
-    _period(period)
+    _period(period),
+    _param(0)
   {}
   
   /**
@@ -96,6 +98,24 @@ public:
   void set_period(uint8_t ms)
   {
     _period = ms;
+  }
+  
+  /**
+   * Get event parameter.
+   * @param[out] param event parameter
+   */
+  void get(uint16_t& param)
+  {
+    param = _param;
+  }
+  
+  /**
+   * Get event parameter.
+   * @param[out] param event parameter
+   */
+  void get(void*& param)
+  {
+    param = (void*) _param;
   }
   
   /**
