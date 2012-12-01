@@ -94,11 +94,18 @@ public:
   };
   
   /**
-   * Stream header with version string and endian information (identity=0x00)
+   * Stream header with magic string, revision and endian information 
+   * The idenity code is 0x00.
    */
   struct header_t {
-    char* version;
-    uint16_t endian;
+    char* magic;
+    uint8_t major;
+    uint8_t minor;
+    uint8_t endian;
+  };
+  enum {
+    LITTLE_ENDIAN = 0,
+    BIG_ENDIAN = 1
   };
 
 private:

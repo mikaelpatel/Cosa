@@ -27,25 +27,41 @@
  */
 
 #include "Cosa/Ciao.h"
-#include <avr/pgmspace.h>
 #include "Cosa/Trace.h"
+#include <avr/pgmspace.h>
 
 // Ciao configuration
 static const uint16_t ID = 0x00;
-static char VERSION[] = "Cosa::Ciao/1.0";
+static char MAGIC[] = "Cosa::Ciao";
+static const uint8_t MAJOR = 1;
+static const uint8_t MINOR = 0;
 
 // Ciao header declaration 
-static const char version_name[] PROGMEM = "version";
+static const char magic_name[] PROGMEM = "magic";
+static const char major_name[] PROGMEM = "major";
+static const char minor_name[] PROGMEM = "minor";
 static const char endian_name[] PROGMEM = "endian";
 static const Ciao::decl_member_t member[] PROGMEM = {
   {
     Ciao::UINT8_TYPE,		// type
     0,				// count
-    version_name,		// name
+    magic_name,			// name
     0				// decl
   },
   {
-    Ciao::UINT16_TYPE,		// type
+    Ciao::UINT8_TYPE,		// type
+    1,				// count
+    major_name,			// name
+    0				// decl
+  },
+  {
+    Ciao::UINT8_TYPE,		// type
+    1,				// count
+    minor_name,			// name
+    0				// decl
+  },
+  {
+    Ciao::UINT8_TYPE,		// type
     1,				// count
     endian_name,		// name
     0				// decl
@@ -61,8 +77,10 @@ const Ciao::decl_user_t Ciao::_header_decl PROGMEM = {
 
 // Ciao header with version string and endian information
 Ciao::header_t Ciao::_header = {
-  VERSION,
-  0x0100
+  MAGIC,
+  MAJOR,
+  MINOR,
+  LITTLE_ENDIAN
 };
 
 void
