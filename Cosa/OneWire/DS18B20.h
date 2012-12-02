@@ -27,8 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ONEWIRE_DS18B20__
-#define __COSA_ONEWIRE_DS18B20__
+#ifndef __COSA_ONEWIRE_DS18B20_H__
+#define __COSA_ONEWIRE_DS18B20_H__
 
 #include "Cosa/OneWire.h"
 #include "Cosa/IOStream.h"

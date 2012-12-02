@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Button.h
+ * @file Cosa/Button.cpp
  * @version 1.0
  *
  * @section License

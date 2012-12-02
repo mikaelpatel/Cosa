@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/PCF8591.h
+ * @file Cosa/TWI/PCF8591.cpp
  * @version 1.0
  *
  * @section License

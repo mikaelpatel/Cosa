@@ -27,8 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_PCF8591__
-#define __COSA_TWI_PCF8591__
+#ifndef __COSA_TWI_PCF8591_H__
+#define __COSA_TWI_PCF8591_H__
 
 #include "Cosa/TWI.h"
 

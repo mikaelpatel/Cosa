@@ -27,8 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_DS1307__
-#define __COSA_TWI_DS1307__
+#ifndef __COSA_TWI_DS1307_H__
+#define __COSA_TWI_DS1307_H__
 
 #include "Cosa/TWI.h"
 #include "Cosa/IOStream.h"

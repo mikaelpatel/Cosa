@@ -27,8 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_AT24CXX__
-#define __COSA_TWI_AT24CXX__
+#ifndef __COSA_TWI_AT24CXX_H__
+#define __COSA_TWI_AT24CXX_H__
 
 #include "Cosa/TWI.h"
 
