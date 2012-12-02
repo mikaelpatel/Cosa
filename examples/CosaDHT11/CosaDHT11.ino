@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/DHT11.h"
+#include "Cosa/Driver/DHT11.h"
 #include "Cosa/Pins.h"
 #include "Cosa/Trace.h"
 #include "Cosa/Watchdog.h"
@@ -49,11 +49,13 @@ void loop()
   // Wait for the watchdog
   Watchdog::delay(2048);
 
-  // Sample the device for humidity and temperature
+  // Read temperature and humidity
   ledPin.toggle();
-  dht11.sample();
+  uint8_t temperature;
+  uint8_t humidity;
+  dht11.read(temperature, humidity);
   ledPin.toggle();
 
   // Print the sampled values
-  dht11.print();
+  trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
 }

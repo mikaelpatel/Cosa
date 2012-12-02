@@ -1,5 +1,5 @@
 /**
- * @file DHT11.h
+ * @file Cosa/Driver/DHT11.h
  * @version 1.0
  *
  * @section License
@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_DHT11_H__
-#define __COSA_DHT11_H__
+#ifndef __COSA_DRIVER_DHT11_H__
+#define __COSA_DRIVER_DHT11_H__
 
 #include "Cosa/Pins.h"
 #include "Cosa/IOStream.h"
@@ -36,46 +36,37 @@
 class DHT11 : private IOPin {
 
 private:
+  /**
+   * Data buffer and latest pin level
+   */
   static const uint8_t DATA_MAX = 5;
   uint8_t _data[DATA_MAX];
   uint8_t _latest;
 
   /** 
-   * Read the next bit from the device given number 
-   * of level changes. Return one(1) if the bit was set,
-   * zero(0) if clear, otherwise a negative error code.
-   * @param[in] changes
+   * Read the next bit from the device given number of level
+   * changes. Return one(1) if the bit was set, zero(0) if clear,
+   * otherwise a negative error code. 
+   * @param[in] changes number of level transitions.
+   * @return one(1) if the bit was set, zero(0) if clear, otherwise a
+   * negative error code. 
    */
   int8_t read_bit(uint8_t changes);
   
 public:
   /**
-   * Construct connection to a DHT11 device on given pin.
+   * Construct connection to a DHT11 device on given in/output-pin.
    */
   DHT11(uint8_t pin) : IOPin(pin) {}
 
   /**
-   * Sample the device. Return true(1) if successful 
-   * otherwise false(0). 
+   * Read temperature and humidity from the device. Return true(1) if
+   * successful otherwise false(0). 
+   * @param[out] temperature reading.
+   * @param[out] humidity reading.
+   * @return bool.
    */
-  bool sample();
-
-  /**
-   * Return sampled temperature.
-   */
-  uint8_t get_temperature() { return (_data[2]); }
-
-  /**
-   * Return sampled humidity.
-   */
-  uint8_t get_humidity() { return (_data[0]); }
-
-  /**
-   * Print humidity and temperature to given output stream.
-   * Default is the trace stream.
-   * @param[in] stream output stream.
-   */
-  void print(IOStream& stream = trace);
+  bool read(uint8_t& temperature, uint8_t& humidity);
 };
 
 #endif

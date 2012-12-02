@@ -1,5 +1,5 @@
 /**
- * @file DHT11.h
+ * @file Cosa/Driver/DHT11.cpp
  * @version 1.0
  *
  * @section License
@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/DHT11.h"
+#include "Cosa/Driver/DHT11.h"
 #include "Cosa/Watchdog.h"
 #include <util/delay_basic.h>
 
@@ -53,8 +53,12 @@ DHT11::read_bit(uint8_t changes)
 }
 
 bool 
-DHT11::sample()
+DHT11::read(uint8_t& temperature, uint8_t& humidity)
 {
+  // Default out of range values
+  temperature = 100;
+  humidity = 100;
+
   // Send start signal to DHT
   set_mode(OUTPUT_MODE);
   clear();
@@ -77,13 +81,9 @@ DHT11::sample()
       if (i < DATA_MAX - 1) chksum += _data[i];
     }
   }
-  // Return the validation of the check sum
+  // Return values, and validation of the check sum
+  temperature = _data[2];
+  humidity = _data[0];
   return (chksum == _data[DATA_MAX - 1]);
-}
-
-void
-DHT11::print(IOStream& stream)
-{
-  stream.printf_P(PSTR("RH = %d%%, T = %d C\n"), _data[0], _data[2]);
 }
 
