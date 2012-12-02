@@ -17,12 +17,21 @@ Cosa uses the Arduino IDL and build system. Cosa classes are included with prefi
 
 Please note that documentation for each device driver hardware module may be found in the Cosa/references directory. 
 
-For now the target architecture is Arduino based on Atmega328P; Arduino Uno, Nano, etc. 
-
 The goal of this project is to provide an efficient programming platform for rapid prototyping of "Internet-of-things"-devices. Unfortunately Cosa is not a beginners entry level programming platform, though following some of the design patterns in Cosa will help beginners build more complex small scale embedded systems with richer concurrency and low power consumption.
 
 Note:
-
 1. Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are supported. 
-2. Timers, EEPROM, UART (receiver) are not supported.
-3. Arduino Mega is not currently support. 
+2. Timers, EEPROM, UART (receiver) are not supported but planned.
+3. Arduino Mega, Leonardo, etc, are not currently supported but planned.
+4. Attiny devices are not currently supported but planned.
+
+Drivers:
+1. DS18B20 Programmable Resolution 1-Wire Digital Thermometer.
+2. AT24CXX Serial EEPROM.
+3. DS1307 Realtime clock with RAM,
+4. PCF8591 2-Wire 8-bit A/D and D/A converter.
+5. ADXL345 Digital Accelerometer.
+6. nRF24L01 Single Chip 2.4GHz Transceiver. 
+7. DHT11 Humidity & Temperature Sensor device driver
+
+
