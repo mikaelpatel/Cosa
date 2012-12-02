@@ -1,16 +1,22 @@
 Che Cosa?
 ====
 
-Object-oriented platform for Arduino. Class hierarchy for Pins, Watchdog and SPI to start with. Supports device drivers for additional hardware abstraction and event driven programming for low power. The Pins class hierarchy allows declaration of sketch pin typing and usage. The Pins classes captures the Arduino/AVR pin types; input, pullup, interrupt, output, analog and pwm. The watchdog is used as the basic timer. An SPI class allows both slave and master mode device drivers for hardware on the SPI bus. To demonstrate usage there are two drivers; ADXL345 Accelerometer and NRF24L01+ Transceiver. Please see example code.
+Cosa is an Object-oriented platform for Arduino. It contains a rich set of classes to support rapid prototyping of Internet-of-Things devices. A class overview may be found in the CLASS.txt file. A data streaming format is also defined; Ciao. This format encodes C/C++ language data types such as integer and floating pointer numbers into a binary format that may be used for a number of applications; tracing, remote procedure calls, etc. The format allows user defined data types to be defined and values exchanged without additional encoding. The stream header itself is a pre-defined serializable data type. 
 
-To install download and move the Cosa directory to the Arduino cores directory within arduino itself, i.e., your-arduino-install-directory/hardware/arduino/cores/arduino.
+Cosa supports the following AVR/Atmega328P internal hardware modules; all pin modes, interrupt pins, PWM, Watchdog, UART (transmit), SPI and TWI. The Watchdog is used as the primary even clock and allows low power event wait.
 
-The examples should be moved to your sketchbook directory. 
+The primary programming paradigm is object-oriented, state-machine/event driven.
 
-Cosa classes are included with prefix, e.g. "Cosa/FileName.h"
+There is a large number of device drivers available for SPI, TWI and OneWire. A strict directory structure is used to organize the source code. Sub-directories are used for each driver type. Please check the class overview for a full list of drivers.
 
-For now the target architecture is Arduino based on Atmega328P; Arduino Uno, Nano, etc. Additional classes are planned; Timers, TWI, UART, etc. And more drivers for typical modules. 
+To install download and move the Cosa directory to the Arduino cores directory within arduino itself, i.e., your-arduino-install-directory/hardware/arduino/cores/arduino.The examples should be moved to your sketchbook directory. 
 
-The target of this project is to provide an efficient programming platform for rapid prototyping of "Internet-of-things"-devices.  
+Cosa uses the Arduino IDL and build system. Cosa classes are included with prefix, e.g. "Cosa/FileName.h". It is possible to use both Arduino and Cosa functions together. Though in some cases the Cosa object may become inconsistent.
+
+Please note that documentation for each device driver hardware module may be found in the Cosa/references directory. 
+
+For now the target architecture is Arduino based on Atmega328P; Arduino Uno, Nano, etc. 
+
+The target of this project is to provide an efficient programming platform for rapid prototyping of "Internet-of-things"-devices. Unfortunately Cosa is not a beginners entry level programming platform. 
 
 
