@@ -77,6 +77,14 @@ public:
   }
 
   /**
+   * Reset the ticks counter for time measurement.
+   */
+  static void reset() 
+  { 
+    _ticks = 0;
+  }
+
+  /**
    * Get number of milli-seconds per tick.
    * @return milli-seconds.
    */
