@@ -81,6 +81,7 @@ DHT11::read(uint8_t& temperature, uint8_t& humidity)
       if (i < DATA_MAX - 1) chksum += _data[i];
     }
   }
+
   // Return values, and validation of the check sum
   temperature = _data[2];
   humidity = _data[0];
