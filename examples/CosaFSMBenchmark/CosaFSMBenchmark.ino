@@ -53,9 +53,7 @@ public:
   Echo() : FSM(echoState), _port(0) {}
 
   /**
-   * Bind name and port. The name is used for the trace print
-   * and the state machine will receive the echo event.
-   * @param[in] name string in program memory.
+   * Bind receiving fsm to port. 
    * @param[in] fsm state machine to receive the event.
    */
   void bind(FSM* fsm)
@@ -84,10 +82,10 @@ void setup()
   // Start the trace output stream
   trace.begin(9600, PSTR("CosaFSMBenchmark: started"));
 
-  // Start the watchdog for timeout handling
+  // Start the watchdog in default 16 ms ticks
   Watchdog::begin();
 
-  // Bind the state machines to each other and give them names
+  // Bind the state machines to each other
   ping.bind(&pong);
   pong.bind(&ping);
 
@@ -95,18 +93,19 @@ void setup()
   ping.begin();
   pong.begin();
 
-  // Startup info
+  // Give some more startup info
   TRACE(F_CPU);
   TRACE(EVENTS_MAX);
 }
 
 void loop()
 {
-  // Initiate the counters and reset the watchdog ticks
+  // Initiate the counters and reset the watchdog ticks for measurement.
+  // Note the resolution is only 16 ms ticks by default.
   uint32_t count = events = EVENTS_MAX;
   Watchdog::reset();
 
-  // Send a first event to start the benchmark and dispatch
+  // Send a first event to start the benchmark and dispatch events.
   ping.send(Event::USER_TYPE);
   while (count--) {
     Event event;
@@ -114,7 +113,7 @@ void loop()
     event.dispatch();
   }
 
-  // Capture the tick count and calculate the time per event and cycles
+  // Capture the tick count and calculate the time per event and nr of cycles.
   uint16_t ticks = Watchdog::get_ticks();
   uint32_t ms = ticks * Watchdog::ms_per_tick();
   uint32_t us_per_event = (ms * 1000L) / EVENTS_MAX;
