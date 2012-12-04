@@ -46,15 +46,16 @@ TWI::begin(uint8_t addr, Thing* target)
   _target = target;
   _addr = addr;
 
-  // Check for slave mode
+  // Check for slave mode and set device address
   if (target != 0 && addr != 0) {
     TWAR = _addr;
-  }
-
-  // Enable internal pullup
-  synchronized {
-    bit_set(PORTC, SDA);
-    bit_set(PORTC, SCL);
+  } 
+  else {
+    // Enable internal pullup
+    synchronized {
+      bit_set(PORTC, SDA);
+      bit_set(PORTC, SCL);
+    }
   }
   
   // Set clock prescale and bit rate
@@ -133,8 +134,8 @@ TWI::read_request(uint8_t addr, void* buf, uint8_t size)
   return (request(addr | READ_OP));
 }
 
-void 
-TWI::await_request(uint8_t mode)
+int
+TWI::await_completed(uint8_t mode)
 {
   do {
     cli();
@@ -144,6 +145,7 @@ TWI::await_request(uint8_t mode)
     sleep_cpu();
     sleep_disable();
   } while (_state > IDLE_STATE);
+  return (_count);
 }
 
 void
@@ -157,10 +159,8 @@ TWI::on_bus_event()
     TWCR = DATA_CMD;
     break;
   case ARB_LOST:
-    TWCR = START_CMD;
-    _ix = 0;
-    _count = 0;
-    _next = 0;
+    TWCR = IDLE_CMD;
+    _state = ERROR_STATE;
     break;
   /**
    * Master Transmitter Mode
@@ -175,15 +175,10 @@ TWI::on_bus_event()
       TWDR = _vec[_ix].buf[_next++];
       TWCR = DATA_CMD;
       _count++;
+      break;
     } 
-    else {
-      TWCR = STOP_CMD;
-      if (_target != 0) 
-	Event::push(Event::WRITE_COMPLETED_TYPE, _target, _twi);
-      loop_until_bit_is_clear(TWCR, TWSTO);
-      _state = IDLE_STATE;
-    }
-    break;
+    if (_target != 0) 
+      Event::push(Event::WRITE_COMPLETED_TYPE, _target, _twi);
   case MT_SLA_NACK:
   case MT_DATA_NACK:
     TWCR = STOP_CMD;
@@ -207,14 +202,10 @@ TWI::on_bus_event()
   case MR_DATA_NACK:
     _vec[_ix].buf[_next++] = TWDR;
     _count++;
-    TWCR = STOP_CMD;
     if (_target != 0) {
       Event::push(Event::READ_COMPLETED_TYPE, _target, _twi);
       _next = 0;
     }
-    loop_until_bit_is_clear(TWCR, TWSTO);
-    _state = IDLE_STATE;
-    break;      
   case MR_SLA_NACK:
     TWCR = STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
@@ -225,10 +216,12 @@ TWI::on_bus_event()
    */
   case ST_SLA_ACK:
   case ST_ARB_LOST_SLA_ACK:
-    if (_target != 0) {
-      Event::push(Event::WRITE_COMPLETED_TYPE, _target, _twi);
-    }
+    _state = ST_STATE;
     _next = 0;
+    _ix = 0;
+    _vec[_ix].size = 4;
+    if (_target != 0) 
+      _target->on_event(Event::SERVICE_RESPONSE_TYPE, _twi);
   case ST_DATA_ACK:
     TWDR = _vec[_ix].buf[_next++];
     if (_next < _vec[_ix].size) {
@@ -241,6 +234,7 @@ TWI::on_bus_event()
   case ST_DATA_NACK:
   case ST_LAST_DATA:
     TWCR = ACK_CMD;
+    _state = IDLE_STATE;
     break;
   /**
    * Slave Receiver Mode
@@ -249,12 +243,13 @@ TWI::on_bus_event()
   case SR_GCALL_ACK:
   case SR_ARB_LOST_SLA_ACK:
   case SR_ARB_LOST_GCALL_ACK:
+    _state = SR_STATE;
     _next = 0;
     TWCR = ACK_CMD;
     break;
   case SR_DATA_ACK:
   case SR_GCALL_DATA_ACK:
-    if (_next < _vec[_ix].size){
+    if (_next < _vec[_ix].size) {
       _vec[_ix].buf[_next++] = TWDR;
       TWCR = ACK_CMD;
     }
@@ -264,10 +259,9 @@ TWI::on_bus_event()
     break;
   case SR_STOP:
     TWCR = STOP_CMD;
-    if (_target != 0) {
-      Event::push(Event::READ_COMPLETED_TYPE, _target, _twi);
-    }
     loop_until_bit_is_clear(TWCR, TWSTO);
+    if (_target != 0) 
+      Event::push(Event::SERVICE_REQUEST_TYPE, _target, _twi);
     _state = IDLE_STATE;
     TWCR = IDLE_CMD; 
     break;

@@ -100,11 +100,11 @@ protected:
    * Commands for TWI hardware
    */
   enum {
-    IDLE_CMD =  _BV(TWEA) | _BV(TWEN) | _BV(TWIE),
-    START_CMD = _BV(TWINT) | _BV(TWEN) | _BV(TWSTA) | _BV(TWEN) | _BV(TWIE),
-    DATA_CMD = _BV(TWINT) | _BV(TWEN) | _BV(TWIE),
-    ACK_CMD = _BV(TWINT) | _BV(TWEA) | _BV(TWEN) | _BV(TWIE),
-    NACK_CMD = _BV(TWINT) | _BV(TWEN) | _BV(TWIE),
+    IDLE_CMD =               _BV(TWEA) |              _BV(TWEN) | _BV(TWIE),
+    START_CMD = _BV(TWINT) | _BV(TWEA) | _BV(TWSTA) | _BV(TWEN) | _BV(TWIE),
+    DATA_CMD =  _BV(TWINT) |                          _BV(TWEN) | _BV(TWIE),
+    ACK_CMD =   _BV(TWINT) | _BV(TWEA) |              _BV(TWEN) | _BV(TWIE),
+    NACK_CMD =  _BV(TWINT) |                          _BV(TWEN) | _BV(TWIE),
     STOP_CMD =  _BV(TWINT) | _BV(TWEA) | _BV(TWSTO) | _BV(TWEN) | _BV(TWIE)
   };
 
@@ -116,6 +116,7 @@ protected:
     SCL = 5
   };
 
+ public:
   static const uint8_t BUF_MAX = 4;
   static const uint8_t VEC_MAX = 4;
   volatile State _state;
@@ -137,7 +138,7 @@ protected:
    */
   bool request(uint8_t addr);
 
-public:
+  // public:
   TWI() :
     _state(IDLE_STATE),
     _status(NO_INFO),
@@ -216,8 +217,7 @@ public:
   int write(uint8_t addr, void* buf, uint8_t size)
   {
     if (!write_request(addr, buf, size)) return (-1);
-    await_request();
-    return (_count);
+    return (await_completed());
   }
 
   /**
@@ -232,8 +232,7 @@ public:
   int write(uint8_t addr, uint8_t header, void* buf = 0, uint8_t size = 0)
   {
     if (!write_request(addr, header, buf, size)) return (-1);
-    await_request();
-    return (_count);
+    return (await_completed());
   }
 
   /**
@@ -248,8 +247,8 @@ public:
   int write(uint8_t addr, uint16_t header, void* buf = 0, uint8_t size = 0)
   {
     if (!write_request(addr, header, buf, size)) return (-1);
-    await_request();
-    return (_count);
+    await_completed();
+    return (await_completed());
   }
 
   /**
@@ -263,14 +262,14 @@ public:
   int read(uint8_t addr, void* buf, uint8_t size)
   {
     if (!read_request(addr, buf, size)) return (-1);
-    await_request();
-    return (_count);
+    return (await_completed());
   }
 
   /**
-   * Await issued request to complete.
+   * Await issued request to complete. Returns number of bytes 
+   * or negative error code.
    */
-  void await_request(uint8_t mode = SLEEP_MODE_IDLE);
+  int await_completed(uint8_t mode = SLEEP_MODE_IDLE);
 
   /**
    * TWI state machine. Run by interrupt handler.
