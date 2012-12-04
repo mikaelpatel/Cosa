@@ -127,6 +127,10 @@ public:
   {
     if (_callback != 0) _callback(this, type, value);
   }
+  void on_event(uint8_t type, void* value)
+  {
+    on_event(type, (uint16_t) value);
+  }
 };
 
 #endif
