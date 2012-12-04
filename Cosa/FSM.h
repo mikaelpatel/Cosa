@@ -139,13 +139,13 @@ public:
   }
   
   /**
-   * Start the state machine with a FSM_BEGIN_TYPE event.
+   * Start the state machine with a BEGIN_TYPE event.
    */
   bool begin()
   {
     if ((_period != 0) && (_period != TIMEOUT_REQUEST)) 
       Watchdog::attach(this, _period);
-    send(Event::FSM_BEGIN_TYPE);
+    send(Event::BEGIN_TYPE);
     return (1);
   }
   
@@ -155,7 +155,7 @@ public:
   void end()
   {
     cancel_timer();
-    send(Event::FSM_END_TYPE);
+    send(Event::END_TYPE);
   }
   
   /**
