@@ -131,6 +131,9 @@ public:
   { 
     return ((*PIN() & _mask) != 0); 
   }
+  bool is_high() { return (is_set()); }
+  bool is_on()   { return (is_set()); }
+  bool read()    { return (is_set()); }
 
   /**
    * Return true(1) if the pin is clear otherwise false(0).
@@ -140,6 +143,8 @@ public:
   { 
     return ((*PIN() & _mask) == 0); 
   }
+  bool is_low() { return (is_clear()); }
+  bool is_off() { return (is_clear()); }
 
   /**
    * Await change of pin state given maximum number of micro seconds.
@@ -250,7 +255,7 @@ public:
    * @param[in] fn interrupt handler function.
    * @param[in] env interrupt handler environment.
    */
-  void set(InterruptHandler fn, void* env) 
+  void set_interrupt_handler(InterruptHandler fn, void* env) 
   { 
     _handler = fn; 
     _env = env; 
@@ -320,6 +325,8 @@ public:
       *PORT() |= _mask; 
     }
   }
+  void high() { set(); }
+  void on()   { set(); }
 
   /**
    * Clear the output pin.
@@ -330,6 +337,8 @@ public:
       *PORT() &= ~_mask; 
     }
   }
+  void low() { clear(); }
+  void off() { clear(); }
 
   /**
    * Toggle the output pin.
@@ -350,6 +359,7 @@ public:
   { 
     if (value) set(); else clear(); 
   }
+  void write(uint8_t value) { set(value); }
 
   /**
    * Toggle the output pin to form a pulse with given length in
@@ -381,6 +391,7 @@ public:
    * @param[in] duty cycle (0..255)
    */
   void set(uint8_t duty);
+  void write(uint8_t duty) { set(duty); }
 
   /**
    * Set duty cycle for pwm output pin with given value mapping.
@@ -391,6 +402,10 @@ public:
    * @param[in] max value.
    */
   void set(uint16_t value, uint16_t min, uint16_t max);
+  void write(uint16_t value, uint16_t min, uint16_t max)
+  {
+    set(value, min, max);
+  }
 
   /**
    * Return duty setting for pwm output pin.
@@ -509,7 +524,7 @@ public:
    * @param[in] fn conversion completion interrupt handler.
    * @param[in] env interrupt handler environment. 
    */
-  void set(InterruptHandler fn, void* env = 0) 
+  void set_interrupt_handler(InterruptHandler fn, void* env = 0) 
   { 
     _handler = fn; 
     _env = env; 
@@ -519,7 +534,7 @@ public:
    * Set reference voltage for conversion.
    * @param[in] ref reference voltage.
    */
-  void set(Reference ref) 
+  void set_reference(Reference ref) 
   {
     _reference = ref; 
   }
@@ -626,7 +641,7 @@ public:
     _env(env)
   {
     for (uint8_t ix = 0; ix < count; ix++)
-      get_pin_at(ix)->set(sample_next, this);
+      get_pin_at(ix)->set_interrupt_handler(sample_next, this);
   }
   
   /**
