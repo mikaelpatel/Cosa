@@ -116,7 +116,7 @@ protected:
     SCL = 5
   };
 
- public:
+protected:
   static const uint8_t BUF_MAX = 4;
   static const uint8_t VEC_MAX = 4;
   volatile State _state;
@@ -138,7 +138,7 @@ protected:
    */
   bool request(uint8_t addr);
 
-  // public:
+public:
   TWI() :
     _state(IDLE_STATE),
     _status(NO_INFO),

@@ -37,6 +37,9 @@ private:
   static const uint8_t CMD_MAX = 8;
   static const uint8_t ADDR = 0xC05A;
   static void request_handler(Thing* it, uint8_t type, uint16_t value);
+  friend void request_handler(Thing* it, uint8_t type, uint16_t value);
+  void update();
+
 public:
   TWIslave() : TWI() { set_event_handler(request_handler); }
   bool begin();
@@ -51,14 +54,20 @@ TWIslave::begin()
 }
 
 void
+TWIslave::update()
+{
+  _vec[0].buf[1] = PINB;
+  _vec[0].buf[2] = PINC;
+  _vec[0].buf[3] = PIND;
+  trace.print(_vec[0].buf, 4);
+}
+
+void
 TWIslave::request_handler(Thing* it, uint8_t type, uint16_t value)
 {
-  TWI* twi = (TWI*) it;
+  TWIslave* twi = (TWIslave*) it;
   INFO("type = %d", type);
-  twi->_vec[0].buf[1] = PINB;
-  twi->_vec[0].buf[2] = PINC;
-  twi->_vec[0].buf[3] = PIND;
-  trace.print(twi->_vec[0].buf, 4);
+  twi->update();
 }
 
 // The TWI interface and slave instance
