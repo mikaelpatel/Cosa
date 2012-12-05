@@ -30,21 +30,22 @@
 #define __COSA_BCD_H__
 
 inline uint8_t
-bcd_to_bin(uint8_t v)
+bcd_to_bin(uint8_t value)
 {
-  uint8_t u = (v >> 4);
-  return ((u << 3) + (u << 1) + (v & 0xf));
+  uint8_t high = (value >> 4);
+  uint8_t low = (value & 0xf);
+  return ((high << 3) + (high << 1) + low);
 }
 
 inline uint8_t
-bin_to_bcd(uint8_t v)
+bin_to_bcd(uint8_t value)
 {
   uint8_t res = 0;
-  while (v > 9) {
+  while (value > 9) {
     res += 0x10;
-    v -= 10;
+    value -= 10;
   }
-  return (res + v);
+  return (res + value);
 }
 
 
