@@ -220,8 +220,6 @@ TWI::on_bus_event()
     _next = 0;
     _ix = 0;
     _vec[_ix].size = 4;
-    if (_target != 0) 
-      _target->on_event(Event::SERVICE_RESPONSE_TYPE, _twi);
   case ST_DATA_ACK:
     TWDR = _vec[_ix].buf[_next++];
     if (_next < _vec[_ix].size) {
