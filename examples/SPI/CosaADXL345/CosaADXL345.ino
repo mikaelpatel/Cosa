@@ -40,8 +40,9 @@ void setup()
   // Initiate trace stream
   trace.begin(9600, PSTR("CosaADXL345: started"));
 
-  // Check amount of free memory
+  // Check amount of free memory and size of objects
   TRACE(free_memory());
+  TRACE(sizeof(adxl));
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
@@ -53,7 +54,7 @@ void setup()
 
 void loop()
 {
-  // Wait for 500 ms.
+  // Wait for 500 ms
   Watchdog::delay(500);
 
   // Sample the accelerometer and print values to trace stream

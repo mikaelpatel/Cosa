@@ -60,7 +60,6 @@ void loop()
   // Write a command to the slave
   static uint8_t cmd = 0;
   ledPin.toggle();
-  Watchdog::reset();
   INFO("cmd = %d", cmd);
   twi.begin();
   twi.write(ADDR, cmd++);
@@ -71,7 +70,9 @@ void loop()
   twi.begin();
   int count = twi.read(ADDR, buf, sizeof(buf));
   twi.end();
-  if (count > 0) trace.print(buf, count);
-  TRACE(Watchdog::get_ticks());
+  if (count > 0) 
+    trace.print(buf, count);
+  else
+    TRACE(count);
   ledPin.toggle();
 }

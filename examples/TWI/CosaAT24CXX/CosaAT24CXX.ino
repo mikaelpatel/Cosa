@@ -37,15 +37,16 @@
 OutputPin ledPin(13);
 
 // The serial eeprom (sub-address 0b000)
-AT24CXX rom(0);
+AT24CXX rom(0b000);
 
 void setup()
 {
   // Start trace output stream
   trace.begin(9600, PSTR("CosaAT24CXX: started"));
 
-  // Check amount of free memory
+  // Check amount of free memory and size of objects
   TRACE(free_memory());
+  TRACE(sizeof(rom));
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();

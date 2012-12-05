@@ -41,10 +41,10 @@ void setup()
 void loop()
 {
   // Turn on the led for 16 ms
-  ledPin.set();
+  ledPin.on();
   Watchdog::delay(16);
 
   // Turn off the led and wait 512 ms
-  ledPin.clear();
+  ledPin.off();
   Watchdog::delay(512);
 }
