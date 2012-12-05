@@ -79,7 +79,7 @@ NRF24L01P::write(Register reg, const void* buffer, uint8_t count)
 void 
 NRF24L01P::set_interrupt(InterruptPin::InterruptHandler fn)
 {
-  _irq.set(fn, this);
+  _irq.set_interrupt_handler(fn, this);
   if (fn != 0) _irq.enable();
 }
 

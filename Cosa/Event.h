@@ -42,31 +42,43 @@ public:
 
   /**
    * Event types are added here for new event sources. Typical mapping
-   * from interrupts to events.
+   * from interrupts to events. Note that the event is not a global
+   * numbering scheme. Instead depends on the receiving/sending party,
+   * the protocol. 
    */
   enum {
     NULL_TYPE = 0,
-    FALLING_TYPE,
+
+    FALLING_TYPE,		// Pins
     RISING_TYPE,
     CHANGE_TYPE,
+
+    WATCHDOG_TYPE,		// Watchdog and timers
     TIMEOUT_TYPE,
-    CONNECT_TYPE,
+
+    BEGIN_TYPE,			// Finite State Machines
+    END_TYPE,
+
+    CONNECT_TYPE,		// Device drivers and protocol stacks
     DISCONNECT_TYPE,
-    RECEIVE_REQUEST_TYPE,
+    RECEIVE_REQUEST_TYPE,	
     RECEIVE_COMPLETED_TYPE,
     SEND_REQUEST_TYPE,
     SEND_COMPLETED_TYPE,
+
+    OPEN_TYPE,			// Device drivers and storage
+    CLOSE_TYPE,
     READ_REQUEST_TYPE,
     READ_COMPLETED_TYPE,
     WRITE_REQUEST_TYPE,
     WRITE_COMPLETED_TYPE,
-    SERVICE_REQUEST_TYPE,
+
+    SERVICE_REQUEST_TYPE,	// Servers
     SERVICE_RESPONSE_TYPE,
-    WATCHDOG_TYPE,
-    BEGIN_TYPE,
-    END_TYPE,
-    USER_TYPE = 64,
-    ERROR_TYPE = 255
+
+    USER_TYPE = 64,		// User defined events/messages
+
+    ERROR_TYPE = 255		// Error event
   };
 
 private:
