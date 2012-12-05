@@ -40,7 +40,7 @@ struct Point {
   int16_t y;
 };
 
-// Ciao data type declaraction in program memory for Point
+// Ciao data type declaration in program memory for Point
 const char Point_x_name[] PROGMEM = "x";
 const char Point_y_name[] PROGMEM = "y";
 const Ciao::decl_member_t Point_member[] PROGMEM = {
@@ -69,6 +69,7 @@ const Ciao::decl_user_t Point_decl PROGMEM = {
 #undef putchar
 
 // We need a trick to allow mapping the binary stream to textual trace
+// Otherwise we would need to write a host program for this
 class TraceDevice : public IOStream::Device {
 public:
   virtual int putchar(char c)
@@ -79,6 +80,7 @@ public:
   }
 };
 
+// The trick IOStream device
 TraceDevice traceDevice;
 
 void setup()

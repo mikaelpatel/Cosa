@@ -35,21 +35,21 @@ Ciao::write(uint8_t type, uint16_t count)
 {
   // Tag byte contains count[0..7]
   if (count < 8) {
-    type |= count;
-    _dev->putchar(type);
-    return;
+    count |= type;
   }
 
   // Tag byte contains marker. Succeeding byte counter[8..255]
-  if (count < 256) {
+  else if (count < 256) {
     _dev->putchar(type | COUNT8_ATTR);
-    _dev->putchar(count);
-    return;
   }
   
   // Tag byte contains marker. Succeeding two bytes counter[255..64K]
-  _dev->putchar(type | COUNT16_ATTR);
-  _dev->write(&count, sizeof(count));
+  else {
+    _dev->putchar(type | COUNT16_ATTR);
+    _dev->putchar(count >> 8);
+  }
+
+  _dev->putchar(count);
 }
 
 void 
@@ -62,12 +62,12 @@ Ciao::write(const decl_user_t* decl)
   // Write declaration start tag and identity number (8 or 16-bit)
   if (d.id < 256) {
     _dev->putchar(USER8_DECL_START);
-    _dev->putchar(d.id);
   }
   else {
     _dev->putchar(USER16_DECL_START);
-    _dev->write(&d.id, sizeof(uint16_t));
+    _dev->putchar(d.id >> 8);
   }
+  _dev->putchar(d.id);
 
   // Write declaration name null terminated
   _dev->puts_P(d.name);
@@ -121,12 +121,12 @@ Ciao::write(const decl_user_t* decl, void* buf, uint16_t count)
   // Write type tag for user data with count and type identity
   if (d.id < 256) {
     write(USER8_TYPE, count);
-    _dev->putchar(d.id);
   }
   else {
     write(USER16_TYPE, count);
-    _dev->write(&d.id, sizeof(d.id));
+    _dev->putchar(d.id >> 8);
   }
+  _dev->putchar(d.id);
 
   // Write data buffer to stream
   uint8_t* dp = (uint8_t*) buf;

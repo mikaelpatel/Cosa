@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa Ciao data stream handler header.
+ * The Cosa Ciao data stream handler header descriptor.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -74,7 +74,7 @@ const Ciao::decl_user_t Ciao::_header_decl PROGMEM = {
   membersof(member)		// count
 };  
 
-// Ciao header with version string and endian information
+// Ciao header with magic string, revision and endian information
 Ciao::header_t Ciao::_header = {
   MAGIC,
   MAJOR,
