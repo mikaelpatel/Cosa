@@ -119,7 +119,7 @@ PWMPin::get_duty()
   return (is_set());
 }
 
-AnalogPin* AnalogPin::_sampling = 0;
+AnalogPin* AnalogPin::_sampling_pin = 0;
 
 uint16_t 
 AnalogPin::sample()
@@ -138,7 +138,7 @@ AnalogPin::request_sample()
   ADMUX = (_reference | (_pin - 14));
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
   if (_handler == 0) return;
-  _sampling = this;
+  _sampling_pin = this;
   bit_set(ADCSRA, ADIE);
 }
 
@@ -152,7 +152,7 @@ AnalogPin::await_sample()
 ISR(ADC_vect) 
 { 
   bit_clear(ADCSRA, ADIE);
-  AnalogPin* pin = AnalogPin::get_sampling();
+  AnalogPin* pin = AnalogPin::get_sampling_pin();
   if (pin != 0) pin->on_sample(ADCW);
 }
 
@@ -170,9 +170,9 @@ AnalogPins::sample_next(AnalogPin* pin, void* env)
 }
 
 bool
-AnalogPins::begin(InterruptHandler fn, void* env)
+AnalogPins::request_samples(InterruptHandler fn, void* env)
 {
-  if (AnalogPin::get_sampling()) return (0);
+  if (AnalogPin::get_sampling_pin() != 0) return (0);
   if (fn != 0) {
     _handler = fn;
     _env = env;

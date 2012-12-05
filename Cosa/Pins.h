@@ -491,7 +491,7 @@ public:
   };
 
 private:
-  static AnalogPin* _sampling;
+  static AnalogPin* _sampling_pin;
   Reference _reference;
   InterruptHandler _handler;
   uint16_t _value;
@@ -553,9 +553,9 @@ public:
    * Null if no conversion is active.
    * @return analog pin reference or null(0);
    */
-  static AnalogPin* get_sampling() 
+  static AnalogPin* get_sampling_pin() 
   { 
-    return (_sampling); 
+    return (_sampling_pin); 
   }
 
   /**
@@ -583,7 +583,7 @@ public:
    */
   void on_sample(uint16_t value) 
   { 
-    _sampling = 0;
+    _sampling_pin = 0;
     _value = value; 
     if (_handler != 0) _handler(this, _env); 
   }
@@ -671,7 +671,7 @@ public:
    * @param[in] env handler environment.
    * @return boolean.
    */
-  bool begin(InterruptHandler fn = 0, void* env = 0);
+  bool request_samples(InterruptHandler fn = 0, void* env = 0);
   
   /**
    * Interrupt handler to push event for sample conversion completion.
