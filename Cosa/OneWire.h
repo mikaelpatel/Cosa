@@ -21,8 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * 1-Wire device driver support class. Allows device rom search
- * and connection to multiple devices on 1-Wire buses.
+ * One-wire device driver support class. Allows device rom search
+ * and connection to multiple devices on one-wire bus.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -40,7 +40,7 @@ private:
 
 public:
   /**
-   * ROM Commands 
+   * ROM Commands and Size
    */
   enum {
     SEARCH_ROM = 0xF0,
@@ -49,15 +49,15 @@ public:
     SKIP_ROM = 0xCC,
     ALARM_SEARCH = 0xEC
   };
+  static const uint8_t ROM_MAX = 8;
+  static const uint8_t ROMBITS = ROM_MAX * CHARBITS;
 
   /**
-   * Device connected to a 1-Wire pin
+   * Driver for device connected to a one-wire pin
    */
-  class Device {
+  class Driver {
     friend class OneWire;
   protected:
-    static const uint8_t ROM_MAX = 8;
-    static const uint8_t ROMBITS = ROM_MAX * CHARBITS;
     enum {
       FIRST = -1,
       ERROR = -1,
@@ -66,11 +66,12 @@ public:
     uint8_t _rom[ROM_MAX];
     OneWire* _pin;
 
+  public:
     /**
-     * Construct one wire device.
+     * Construct one wire device driver.
      * @param[in] pin one wire bus.
      */
-  Device(OneWire* pin) : _pin(pin) {}
+    Driver(OneWire* pin) : _pin(pin) {}
 
     /**
      * Search device rom given the last position of discrepancy.
@@ -103,7 +104,7 @@ public:
     bool skip_rom();
 
     /**
-     * Connect to 1-Wire device with given family code and index.
+     * Connect to one-wire device with given family code and index.
      * @param[in] family device family code.
      * @param[in] index device order.
      * @return true(1) if successful otherwise false(0).
@@ -119,6 +120,127 @@ public:
     void print_rom(IOStream& stream = trace);
   };
 
+  /**
+   * Act as slave device connected to a one-wire pin
+   */
+  class Device : public InterruptPin {
+    friend class OneWire;
+  private:
+    // One-wire slave pin mode
+    enum Mode {
+      OUTPUT_MODE = 0,
+      INPUT_MODE = 1
+    };
+
+    // One-wire slave states
+    enum State {
+      IDLE_STATE,
+      RESET_STATE,
+      PRESENCE_STATE,
+      ROM_STATE,
+      FUNCTION_STATE
+    };
+
+    /**
+     * Set slave device pin input/output mode.
+     * @param[in] mode pin mode.
+     */
+    void set_mode(Mode mode)
+    {
+      synchronized {
+	if (mode == OUTPUT_MODE)
+	  *DDR() |= _mask; 
+	else
+	  *DDR() &= ~_mask; 
+      }
+    }
+
+    /**
+     * Set slave device pin.
+     */
+    void set() 
+    { 
+      synchronized {
+	*PORT() |= _mask; 
+      }
+    }
+
+    /**
+     * Clear slave device pin.
+     */
+    void clear() 
+    { 
+      synchronized {
+	*PORT() &= ~_mask; 
+      }
+    }
+
+    /**
+     * Read the given number of bits from the one wire bus (master).
+     * Default number of bits is 8. Returns the value read LSB aligned.
+     * or negative error code.
+     * @param[in] bits to be read.
+     * @return value read.
+     */
+    int read(uint8_t bits = CHARBITS);
+
+    /**
+     * Write the given value to the one wire bus. The bits are written
+     * from LSB to MSB. Return true(1) if successful otherwise false(0).
+     * @param[in] value.
+     * @param[in] bits to be written.
+     */
+    bool write(uint8_t value, uint8_t bits);
+
+    /**
+     * Slave device event handler function. Handle presence pulse and
+     * rom/function command parsing.
+     * @param[in] it the target object.
+     * @param[in] type the type of event.
+     * @param[in] value the event value.
+     */
+    static void service_request(Thing* it, uint8_t type, uint16_t value);
+
+    /**
+     * Slave device interrupt handler function. Detect reset and initiate
+     * presence pulse. Push service_request event for further handling.
+     * @param[in] pin reference of changed pin.
+     * @param[in] env interrupt handler environment. 
+     */
+    static void interrupt_handler(InterruptPin* pin, void* env);
+    friend void interrupt_handler(InterruptPin* pin, void* env);
+
+  protected:
+    uint8_t* _rom;
+    volatile uint32_t _time;
+    volatile uint8_t _crc;
+    volatile State _state;
+
+  public:
+    // Slave function codes
+    enum {
+      STATUS = 0x11
+    };
+
+    /**
+     * Construct one wire slave device connected to the given pin and
+     * rom identity code. Note: crc is generated automatically.
+     * @param[in] pin number.
+     * @param[in] rom identity number.
+     */
+    Device(uint8_t pin, uint8_t* rom) : 
+      InterruptPin(pin, 
+		   InterruptPin::ON_CHANGE_MODE, 
+		   interrupt_handler),
+      _rom(rom),
+      _time(0),
+      _crc(0),
+      _state(IDLE_STATE)
+    {
+      set_event_handler(service_request);
+    }
+  };
+  
   /**
    * Construct one wire bus connected to the given pin.
    * @param[in] pin number.

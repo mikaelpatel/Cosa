@@ -34,7 +34,7 @@
 #include "Cosa/IOStream.h"
 #include "Cosa/Trace.h"
 
-class DS18B20 : public OneWire::Device {
+class DS18B20 : public OneWire::Driver {
 private:
   /**
    * DS18B20 Function Commands (Table 3, pp. 12)
@@ -80,7 +80,7 @@ public:
    * Construct a DS18B20 device connected to the given one wire bus.
    * @param[in] pin one wire bus pin.
    */
-  DS18B20(OneWire* pin) : OneWire::Device(pin) {}
+  DS18B20(OneWire* pin) : OneWire::Driver(pin) {}
 
   /**
    * Connect to DS18B20 device with given index.
@@ -89,7 +89,7 @@ public:
    */
   bool connect(uint8_t index)
   {
-    return (OneWire::Device::connect(FAMILY_CODE, index));
+    return (OneWire::Driver::connect(FAMILY_CODE, index));
   }
 
   /**

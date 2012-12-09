@@ -246,7 +246,7 @@ public:
     if (pin > 1 && pin < 4) {
       pin = pin - 2;
       ext[pin] = this;
-      bit_field_set(EICRA, bit_mask(pin), 2, bit_mask_get(mode, 0b11));
+      EICRA = (EICRA & ~(0b11 << pin)) | (mode << pin);
     }
   }
 

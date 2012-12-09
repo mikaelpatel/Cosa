@@ -21,8 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * 1-Wire device driver support class. Allows device rom search
- * and connection to multiple devices on 1-Wire buses.
+ * 1-Wire device driver support class. Allows device rom search,
+ * connection to multiple devices and slave devices.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -35,25 +35,22 @@
 bool
 OneWire::reset()
 {
-  uint8_t retry = 64;
+  uint8_t retry = 100;
   uint8_t res = 0;
-
-  // Check that the bus is not active
   set_mode(INPUT_MODE);
   while (is_clear() && retry--) DELAY(10);
   if (retry == 0) return (0);
-
-  // Generate the reset signal
   set_mode(OUTPUT_MODE);
+  set();
   clear();
   DELAY(480);
-
-  // Check that there is a slave device presence
-  set_mode(INPUT_MODE);
-  DELAY(70);
-  res = is_clear();
+  set();
+  synchronized {
+    set_mode(INPUT_MODE);
+    DELAY(70);
+    res = is_clear();
+  }
   DELAY(410);
-
   return (res);
 }
 
@@ -63,18 +60,16 @@ OneWire::read(uint8_t bits)
   uint8_t res = 0;
   uint8_t mix = 0;
   uint8_t adjust = CHARBITS - bits;
+  DELAY(5);
   while (bits--) {
     synchronized {
-
-      // Generate the read slot; LSB to MSB order
       set_mode(OUTPUT_MODE);
+      set();
       clear();
       DELAY(6);
       set_mode(INPUT_MODE);
       DELAY(9);
       res >>= 1;
-
-      // Sample the data from the slave and generate CRC
       if (is_set()) {
 	res |= 0x80;
 	mix = (_crc ^ 1);
@@ -87,50 +82,55 @@ OneWire::read(uint8_t bits)
       DELAY(55);
     }
   }
-  // Adjust result to align with LSB 
-  while (adjust--) res >>= 1;
+  res >>= adjust;
   return (res);
 }
 
 void
 OneWire::write(uint8_t value, uint8_t bits)
 {
-  set_mode(OUTPUT_MODE);
-  while (bits--) {
-    synchronized {
-
-      // Generate the write slot; LSB to MSB order
+  uint8_t mix = 0;
+  synchronized {
+    set_mode(OUTPUT_MODE);
+    set();
+    DELAY(5);
+    while (bits--) {
       clear();
       if (value & 1) {
 	DELAY(6);
 	set();
 	DELAY(64);
+	mix = (_crc ^ 1);
       }
       else {
 	DELAY(60);
 	set();
 	DELAY(10);
+	mix = (_crc ^ 0);
       }
       value >>= 1;
+      _crc >>= 1;
+      if (mix & 1) _crc ^= 0x8C;
     }
+    set_mode(INPUT_MODE);
   }
-  set_mode(INPUT_MODE);
+  DELAY(10);
 }
 
 void
 OneWire::print_devices(IOStream& stream)
 {
-  Device dev(this);
-  int8_t last = Device::FIRST;
+  Driver dev(this);
+  int8_t last = Driver::FIRST;
   do {
     last = dev.search_rom(last);
-    if (last == Device::ERROR) return;
+    if (last == Driver::ERROR) return;
     dev.print_rom(stream);
-  } while (last != Device::LAST);
+  } while (last != Driver::LAST);
 }
 
 int8_t
-OneWire::Device::search_rom(int8_t last)
+OneWire::Driver::search_rom(int8_t last)
 {
   if (!_pin->reset()) return (ERROR);
   _pin->write(OneWire::SEARCH_ROM);
@@ -178,7 +178,7 @@ OneWire::Device::search_rom(int8_t last)
 }
 
 bool
-OneWire::Device::read_rom()
+OneWire::Driver::read_rom()
 {
   if (!_pin->reset()) return (0);
   _pin->write(OneWire::READ_ROM);
@@ -190,7 +190,7 @@ OneWire::Device::read_rom()
 }
 
 bool
-OneWire::Device::match_rom()
+OneWire::Driver::match_rom()
 {
   if (!_pin->reset()) return (0);
   _pin->write(OneWire::MATCH_ROM);
@@ -201,7 +201,7 @@ OneWire::Device::match_rom()
 }
 
 bool
-OneWire::Device::skip_rom()
+OneWire::Driver::skip_rom()
 {
   if (!_pin->reset()) return (0);
   _pin->write(OneWire::SKIP_ROM);
@@ -209,7 +209,7 @@ OneWire::Device::skip_rom()
 }
 
 void
-OneWire::Device::print_rom(IOStream& stream)
+OneWire::Driver::print_rom(IOStream& stream)
 {
   uint8_t i;
   stream.printf_P(PSTR("OneWire::rom(family = %hd, id = "), _rom[0]);
@@ -219,7 +219,7 @@ OneWire::Device::print_rom(IOStream& stream)
 }
 
 bool 
-OneWire::Device::connect(uint8_t family, uint8_t index)
+OneWire::Driver::connect(uint8_t family, uint8_t index)
 {
   int8_t last = FIRST;
   do {
@@ -233,3 +233,178 @@ OneWire::Device::connect(uint8_t family, uint8_t index)
   return (0);
 }
 
+int
+OneWire::Device::read(uint8_t bits)
+{
+  uint8_t res = 0;
+  uint8_t mix = 0;
+  uint8_t adjust = CHARBITS - bits;
+  const uint8_t RETRY_MAX = 40;
+  uint8_t retry = RETRY_MAX;
+  synchronized {
+    while (bits--) {
+      retry = RETRY_MAX;
+      do {
+	while (is_set() && retry--) DELAY(1);
+	if (retry == 0) synchronized_return (-1);
+	DELAY(1);
+      } while (is_set());
+      DELAY(8);
+      res >>= 1;
+      if (is_set()) {
+	res |= 0x80;
+	mix = (_crc ^ 1);
+      }
+      else {
+	mix = (_crc ^ 0);
+      }
+      _crc >>= 1;
+      if (mix & 1) _crc ^= 0x8C;
+      DELAY(40);
+      retry = RETRY_MAX;
+      do {
+	while (is_clear() && retry--) DELAY(1);
+	if (retry == 0) synchronized_return (-1);
+	DELAY(1);
+      } while (is_clear());
+    }
+  }
+  res >>= adjust;
+  return (res);
+}
+
+bool
+OneWire::Device::write(uint8_t value, uint8_t bits)
+{
+  uint8_t mix = 0;
+  const uint8_t RETRY_MAX = 40;
+  uint8_t retry = RETRY_MAX;
+  synchronized {
+    while (bits--) {
+      retry = RETRY_MAX;
+      do {
+	while (is_set() && retry--) DELAY(1);
+	if (retry == 0) synchronized_return (0);
+	DELAY(1);
+      } while (is_set());
+      if (value & 1) {
+	mix = (_crc ^ 1);
+	DELAY(45);
+      }
+      else {
+	set_mode(OUTPUT_MODE);
+	set();
+	clear();
+	DELAY(45);
+	set_mode(INPUT_MODE);
+	mix = (_crc ^ 0);
+      }
+      value >>= 1;
+      _crc >>= 1;
+      if (mix & 1) _crc ^= 0x8C;
+    }
+  }
+  return (1);
+}
+
+// FIX: Should become independent of Arduino timers
+extern volatile unsigned long timer0_overflow_count;
+
+static unsigned long 
+micros() 
+{
+  unsigned long m;
+  uint8_t t;
+  synchronized {
+    m = timer0_overflow_count;
+    t = TCNT0;
+    if ((TIFR0 & _BV(TOV0)) && (t < 255))
+      m++;
+  }	
+  return ((m << 8) + t) << 2;
+}
+
+void 
+OneWire::Device::service_request(Thing* it, uint8_t type, uint16_t value)
+{
+  OneWire::Device* dev = (OneWire::Device*) it;
+  uint32_t stop = micros() + 440;
+
+  static uint16_t req = 0;
+  static uint16_t fns = 0;
+  static uint16_t err = 0;
+
+  req++;
+  DELAY(200);
+  dev->set_mode(INPUT_MODE);
+  synchronized {
+    DELAY(stop - micros());
+
+    dev->_state = ROM_STATE;
+    int cmd = dev->read(8);
+    if (cmd == READ_ROM) {
+      dev->_crc = 0;
+      for (uint8_t i = 0; i < ROM_MAX - 1; i++)
+	if (!dev->write(dev->_rom[i], 8)) synchronized_goto(error);
+      if (!dev->write(dev->_crc, 8)) synchronized_goto(error);
+    }
+
+    else {
+
+      if (cmd == MATCH_ROM) {
+	for (uint8_t i = 0; i < ROM_MAX - 1; i++)
+	  if (dev->read(8) != dev->_rom[i]) synchronized_goto(error);
+	if (dev->read(8) < 0) synchronized_goto(error);
+      } 
+
+      else if (cmd != SKIP_ROM) synchronized_goto(error);
+
+      dev->_state = FUNCTION_STATE;
+      cmd = dev->read(8);
+      if (cmd < 0) synchronized_goto(error);
+      fns++;
+      if (cmd == STATUS) {
+	dev->_crc = 0;
+	dev->write(req >> 8, 8);
+	dev->write(req, 8);
+	dev->write(fns >> 8, 8);
+	dev->write(fns, 8);
+	dev->write(err >> 8, 8);
+	dev->write(err, 8);
+	dev->write(dev->_crc, 8);
+      }
+    }
+  }
+
+ final:
+  dev->_state = IDLE_STATE;
+  dev->enable();
+  return;
+
+ error:
+  err++;
+  goto final;
+}
+
+void 
+OneWire::Device::interrupt_handler(InterruptPin* pin, void* env)
+{
+  OneWire::Device* dev = (OneWire::Device*) pin;
+  volatile uint32_t now = micros();
+  if (dev->_state == IDLE_STATE) {
+    if (dev->is_clear()) {
+      dev->_time = now + 400L;
+      dev->_state = RESET_STATE;
+    }
+  } 
+  else if (dev->_state == RESET_STATE && now > dev->_time) {
+    dev->_state = PRESENCE_STATE;
+    dev->_time = now;
+    dev->disable();
+    dev->set_mode(OUTPUT_MODE);
+    dev->set();
+    dev->clear();
+    InterruptPin::push_event(pin, env);
+  }
+  else dev->_state = IDLE_STATE;
+}
