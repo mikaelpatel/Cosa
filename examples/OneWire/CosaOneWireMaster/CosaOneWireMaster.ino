@@ -31,15 +31,37 @@
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.h"
 
-// A dummy device to read/write to the OneWire interface
-class Device : public OneWire::Driver {
+// Slave device driver
+class Driver : public OneWire::Driver {
+private:
+  uint8_t _status[8];
 public:
-  Device(OneWire* pin) : OneWire::Driver(pin) {}
+  Driver(OneWire* pin) : OneWire::Driver(pin) {}
+  bool read_status();
+  void print_status(IOStream& stream = trace);
 };
+
+bool
+Driver::read_status()
+{
+  if (!match_rom()) return (0);
+  _pin->write(OneWire::Device::STATUS);
+  _pin->begin();
+  for (uint8_t i = 0; i < membersof(_status) - 1; i++)
+    _status[i] = _pin->read(8);
+  _status[7] = _pin->end();
+  return (_pin->end() == 0);
+}
+
+void 
+Driver::print_status(IOStream& stream)
+{
+  stream.print(_status, sizeof(_status));
+}
 
 // The OneWire bus on pin 7 and led heartbeat
 OneWire oneWire(7);
-Device device(&oneWire);
+Driver driver(&oneWire);
 OutputPin ledPin(13);
 
 void setup()
@@ -47,6 +69,8 @@ void setup()
   trace.begin(9600, PSTR("CosaOneWireMaster: started"));
   TRACE(free_memory());
   Watchdog::begin();
+  driver.connect(0xC0, 0);
+  driver.print_rom();
 }
 
 #define __DEBUG__
@@ -54,61 +78,23 @@ void setup()
 void loop()
 {
   static uint16_t ok = 0;
-  static uint16_t rst = 0;
   static uint16_t err = 0;
 
-  // Read ROM
+  // Read status
   ledPin.toggle();
-  while (!oneWire.reset()) rst++;
-  oneWire.write(OneWire::READ_ROM, 8);
-  uint8_t rom[OneWire::ROM_MAX + 1];
-  oneWire.begin();
-  for (uint8_t i = 0; i < membersof(rom) - 1; i++)
-    rom[i] = oneWire.read(8);
-  if (oneWire.end() != 0) err++; else ok++;
-  rom[OneWire::ROM_MAX] = oneWire.end();
+  if (driver.read_status()) ok++; else err++;
   ledPin.toggle();
 
 #ifdef __DEBUG__
   trace.print(ok);
   trace.print_P(PSTR(":"));
-  trace.print(rst);
-  trace.print_P(PSTR(":"));
   trace.print(err);
   trace.print_P(PSTR(" "));
-  trace.print(rom, sizeof(rom), 16);
-  Watchdog::delay(512);
-#endif
-
-  // Match ROM and request STATUS
-  ledPin.toggle();
-  while (!oneWire.reset()) rst++;
-  oneWire.write(OneWire::MATCH_ROM, 8);
-  for (uint8_t i = 0; i < membersof(rom) - 1; i++)
-    oneWire.write(rom[i]);
-  oneWire.write(OneWire::Device::STATUS);
-  uint8_t status[8];
-  oneWire.begin();
-  for (uint8_t i = 0; i < membersof(status) - 1; i++)
-    status[i] = oneWire.read(8);
-  if (oneWire.end() != 0) err++; else ok++;
-  status[7] = oneWire.end();
-  ledPin.toggle();
-
-#ifdef __DEBUG__
-  trace.print(ok);
-  trace.print_P(PSTR(":"));
-  trace.print(rst);
-  trace.print_P(PSTR(":"));
-  trace.print(err);
-  trace.print_P(PSTR(" "));
-  trace.print(status, sizeof(status));
+  driver.print_status();
   Watchdog::delay(512);
 #else
   if (ok % 100 == 0) {
     trace.print(ok);
-    trace.print_P(PSTR(":"));
-    trace.print(rst);
     trace.print_P(PSTR(":"));
     trace.print(err);
     trace.println();

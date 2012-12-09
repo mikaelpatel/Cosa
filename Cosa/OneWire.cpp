@@ -35,21 +35,20 @@
 bool
 OneWire::reset()
 {
-  uint8_t retry = 100;
   uint8_t res = 0;
-  set_mode(INPUT_MODE);
-  while (is_clear() && retry--) DELAY(10);
-  if (retry == 0) return (0);
-  set_mode(OUTPUT_MODE);
-  set();
-  clear();
-  DELAY(480);
-  set();
-  synchronized {
-    set_mode(INPUT_MODE);
-    DELAY(70);
-    res = is_clear();
-  }
+  uint8_t retry = 4;
+  do {
+    set_mode(OUTPUT_MODE);
+    set();
+    clear();
+    DELAY(480);
+    set();
+    synchronized {
+      set_mode(INPUT_MODE);
+      DELAY(70);
+      res = is_clear();
+    }
+  } while (retry-- && !res);
   DELAY(410);
   return (res);
 }
@@ -351,7 +350,21 @@ OneWire::Device::service_request(Thing* it, uint8_t type, uint16_t value)
 
     else {
 
-      if (cmd == MATCH_ROM) {
+      if (cmd == SEARCH_ROM) {
+	for (uint8_t i = 0; i < ROM_MAX; i++) {
+	  uint8_t bits = dev->_rom[i];
+	  for (uint8_t j = 0; j < CHARBITS; j++) {
+	    uint8_t bit = (bits & 0x01);
+	    bit |= (~bit << 1);
+	    if (!dev->write(bit, 2)) synchronized_goto(error);
+	    int value = dev->read(1);
+	    if (value != (bits & 0x01)) synchronized_goto(error);
+	    bits >>= 1;
+	  }
+	}
+      }
+
+      else if (cmd == MATCH_ROM) {
 	for (uint8_t i = 0; i < ROM_MAX - 1; i++)
 	  if (dev->read(8) != dev->_rom[i]) synchronized_goto(error);
 	if (dev->read(8) < 0) synchronized_goto(error);
