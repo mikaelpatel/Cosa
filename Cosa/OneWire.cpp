@@ -229,6 +229,7 @@ OneWire::Driver::connect(uint8_t family, uint8_t index)
       index -= 1;
     }
   } while (last != LAST);
+  for (i = 1; i < ROM_MAX; i++) _rom[i] = 0;
   return (0);
 }
 
