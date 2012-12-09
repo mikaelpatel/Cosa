@@ -229,7 +229,7 @@ OneWire::Driver::connect(uint8_t family, uint8_t index)
       index -= 1;
     }
   } while (last != LAST);
-  for (i = 1; i < ROM_MAX; i++) _rom[i] = 0;
+  for (uint8_t i = 1; i < ROM_MAX; i++) _rom[i] = 0;
   return (0);
 }
 
@@ -334,14 +334,18 @@ OneWire::Device::service_request(Thing* it, uint8_t type, uint16_t value)
   static uint16_t fns = 0;
   static uint16_t err = 0;
 
+  // Complete the precense pulse
   req++;
   DELAY(200);
+  dev->set();
   dev->set_mode(INPUT_MODE);
   synchronized {
     DELAY(stop - micros());
 
     dev->_state = ROM_STATE;
     int cmd = dev->read(8);
+
+    // Check for READ ROM command. Only possible when single device
     if (cmd == READ_ROM) {
       dev->_crc = 0;
       for (uint8_t i = 0; i < ROM_MAX - 1; i++)
@@ -351,6 +355,7 @@ OneWire::Device::service_request(Thing* it, uint8_t type, uint16_t value)
 
     else {
 
+      // Check for SEARCH ROM command. Match slave device rom identity
       if (cmd == SEARCH_ROM) {
 	for (uint8_t i = 0; i < ROM_MAX; i++) {
 	  uint8_t bits = dev->_rom[i];
@@ -365,18 +370,23 @@ OneWire::Device::service_request(Thing* it, uint8_t type, uint16_t value)
 	}
       }
 
+      // Check for MATCH ROM command. Match slave device rom identity
       else if (cmd == MATCH_ROM) {
 	for (uint8_t i = 0; i < ROM_MAX - 1; i++)
 	  if (dev->read(8) != dev->_rom[i]) synchronized_goto(error);
 	if (dev->read(8) < 0) synchronized_goto(error);
       } 
 
+      // Check for error commands
       else if (cmd != SKIP_ROM) synchronized_goto(error);
 
+      // Get the function command
       dev->_state = FUNCTION_STATE;
       cmd = dev->read(8);
       if (cmd < 0) synchronized_goto(error);
       fns++;
+
+      // Check for STATUS function command. Return statistics
       if (cmd == STATUS) {
 	dev->_crc = 0;
 	dev->write(req >> 8, 8);
