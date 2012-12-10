@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao/header_t.cpp
+ * @file Cosa/Ciao/sample_request_t.cpp
  * @version 1.0
  *
  * @section License
@@ -21,62 +21,34 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa Ciao data stream handler header descriptor.
+ * The Cosa Ciao data stream sample request descriptor.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Ciao.h"
 
-// Ciao configuration
-static char MAGIC[] = "Cosa::Ciao";
-static const uint8_t MAJOR = 1;
-static const uint8_t MINOR = 0;
-
-// Ciao header with magic string, revision and endian information
-Ciao::header_t Ciao::header = {
-  MAGIC,
-  MAJOR,
-  MINOR,
-  LITTLE_ENDIAN
-};
-
-// Ciao header descriptor 
-static const char magic_name[] PROGMEM = "magic";
-static const char major_name[] PROGMEM = "major";
-static const char minor_name[] PROGMEM = "minor";
-static const char endian_name[] PROGMEM = "endian";
+static const char pins_name[] PROGMEM = "pins";
+static const char period_name[] PROGMEM = "period";
 static const Ciao::desc_member_t members[] PROGMEM = {
   {
-    Ciao::UINT8_TYPE,
-    0,
-    magic_name,
+    Ciao::UINT32_TYPE,
+    1,
+    pins_name,
     0
   },
   {
-    Ciao::UINT8_TYPE,
+    Ciao::UINT16_TYPE,
     1,
-    major_name,
-    0
-  },
-  {
-    Ciao::UINT8_TYPE,
-    1,
-    minor_name,
-    0
-  },
-  {
-    Ciao::UINT8_TYPE,
-    1,
-    endian_name,
+    period_name,
     0
   }
 };
-static const char name[] PROGMEM = "Ciao::header_t";
-const Ciao::desc_user_t Ciao::header_desc PROGMEM = {
-  Ciao::HEADER_ID,
+static const char name[] PROGMEM = "Ciao::sample_request_t";
+const Ciao::desc_user_t Ciao::sample_request_desc PROGMEM = {
+  Ciao::SAMPLE_REQUEST_ID,
   name,
   members,
   membersof(members)
-};  
+};
 

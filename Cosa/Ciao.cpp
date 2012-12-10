@@ -30,6 +30,133 @@
 #include "Cosa/Trace.h"
 #include <avr/pgmspace.h>
 
+void 
+Ciao::write(char* s)
+{
+  write(UINT8_TYPE, 0);
+  _dev->puts(s);
+  _dev->putchar(0);
+}
+
+void 
+Ciao::write_P(const char* buf)
+{
+  write(UINT8_TYPE, 0);
+  _dev->puts_P(buf);
+  _dev->putchar(0);
+}
+
+void 
+Ciao::write(uint8_t value)
+{
+  write(UINT8_TYPE, 1);
+  _dev->putchar(value);
+}
+
+void 
+Ciao::write(uint8_t* buf, uint16_t count)
+{
+  write(UINT8_TYPE, count);
+  _dev->write(buf, count * sizeof(uint8_t));
+}
+
+void 
+Ciao::write(uint16_t value)
+{
+  write(UINT16_TYPE, 1);
+  _dev->write(&value, sizeof(value));
+}
+
+void 
+Ciao::write(uint16_t* buf, uint16_t count)
+{
+  write(UINT16_TYPE, count);
+  _dev->write(buf, count * sizeof(uint16_t));
+}
+
+void Ciao::write(uint32_t value)
+{
+  write(UINT32_TYPE, 1);
+  _dev->write(&value, sizeof(value));
+}
+
+void Ciao::write(uint32_t* buf, uint16_t count)
+{
+  write(UINT32_TYPE, count);
+  _dev->write(buf, count * sizeof(uint32_t));
+}
+
+void Ciao::write(int8_t value)
+{
+  write(INT8_TYPE, 1);
+  _dev->putchar(value);
+}
+
+void 
+Ciao::write(int8_t* buf, int16_t count)
+{
+  write(INT8_TYPE, count);
+  _dev->write(buf, count * sizeof(int8_t));
+}
+
+void 
+Ciao::write(int16_t value)
+{
+  write(INT16_TYPE, 1);
+  _dev->write(&value, sizeof(value));
+}
+
+void Ciao::write(int16_t* buf, int16_t count)
+{
+  write(INT16_TYPE, count);
+  _dev->write(buf, count * sizeof(int16_t));
+}
+
+void 
+Ciao::write(int32_t value)
+{
+  write(INT32_TYPE, 1);
+  _dev->write(&value, sizeof(value));
+}
+
+void Ciao::write(int32_t* buf, int16_t count)
+{
+  write(INT32_TYPE, count);
+  _dev->write(buf, count * sizeof(int32_t));
+}
+
+void 
+Ciao::write(float value)
+{
+  write(FLOAT32_TYPE, 1);
+  _dev->write(&value, sizeof(value));
+}
+
+void 
+Ciao::write(float* buf, int16_t count)
+{
+  write(FLOAT32_TYPE, count);
+  _dev->write(buf, count * sizeof(float));
+}
+
+void 
+Ciao::write(Pin* pin)
+{
+  digital_pin_t dgl;
+  dgl.pin = pin->get_pin();
+  dgl.value = pin->is_set();
+  write(&digital_pin_desc, &dgl, 1);
+}
+
+void 
+Ciao::write(AnalogPin* pin)
+{
+  analog_pin_t ang;
+  ang.pin = pin->get_pin();
+  ang.value = pin->get_value();
+  write(&analog_pin_desc, &ang, 1);
+}
+
 void
 Ciao::write(uint8_t type, uint16_t count)
 {
@@ -53,42 +180,42 @@ Ciao::write(uint8_t type, uint16_t count)
 }
 
 void 
-Ciao::write(const decl_user_t* decl)
+Ciao::write(const desc_user_t* desc)
 {
-  // Read declaration from program memory
-  decl_user_t d;
-  memcpy_P(&d, decl, sizeof(d));
+  // Read descaration from program memory
+  desc_user_t d;
+  memcpy_P(&d, desc, sizeof(d));
   
-  // Write declaration start tag and identity number (8 or 16-bit)
+  // Write descaration start tag and identity number (8 or 16-bit)
   if (d.id < 256) {
-    _dev->putchar(USER8_DECL_START);
+    _dev->putchar(USER8_DESC_START);
   }
   else {
-    _dev->putchar(USER16_DECL_START);
+    _dev->putchar(USER16_DESC_START);
     _dev->putchar(d.id >> 8);
   }
   _dev->putchar(d.id);
 
-  // Write declaration name null terminated
+  // Write descaration name null terminated
   _dev->puts_P(d.name);
   _dev->putchar(0);
   
   // Write members with name null terminated
-  const decl_member_t* mp = d.member;
+  const desc_member_t* mp = d.member;
   for (uint16_t i = 0; i < d.count; i++) {
-    decl_member_t m;
+    desc_member_t m;
     memcpy_P(&m, mp++, sizeof(m));
     write(m.type, m.count);
     _dev->puts_P(m.name);
     _dev->putchar(0);
   }
 	 
-  // Write declaration end tag
+  // Write descaration end tag
   if (d.id < 256) {
-    _dev->putchar(USER8_DECL_END);
+    _dev->putchar(USER8_DESC_END);
   }
   else {
-    _dev->putchar(USER16_DECL_END);
+    _dev->putchar(USER16_DESC_END);
   }
 }
 
@@ -112,11 +239,11 @@ static const uint8_t sizeoftype[] PROGMEM = {
 };
 
 void 
-Ciao::write(const decl_user_t* decl, void* buf, uint16_t count)
+Ciao::write(const desc_user_t* desc, void* buf, uint16_t count)
 {
-  // Read declaration from program memory
-  decl_user_t d;
-  memcpy_P(&d, decl, sizeof(d));
+  // Read descaration from program memory
+  desc_user_t d;
+  memcpy_P(&d, desc, sizeof(d));
   
   // Write type tag for user data with count and type identity
   if (d.id < 256) {
@@ -131,9 +258,9 @@ Ciao::write(const decl_user_t* decl, void* buf, uint16_t count)
   // Write data buffer to stream
   uint8_t* dp = (uint8_t*) buf;
   while (count--) {
-    const decl_member_t* mp = d.member;
+    const desc_member_t* mp = d.member;
     for (uint16_t i = 0; i < d.count; i++) {
-      decl_member_t m;
+      desc_member_t m;
       memcpy_P(&m, mp++, sizeof(m));
       // Allow strings and data elements vectors only
       // Fix: Add table with user defined types

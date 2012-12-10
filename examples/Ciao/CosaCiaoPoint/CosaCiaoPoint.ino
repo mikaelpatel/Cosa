@@ -21,18 +21,24 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Example program for the Ciao streaming format; declaration and
+ * Example program for the Ciao streaming format; descriptor and
  * streaming of a data type.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Pins.h"
 #include "Cosa/Ciao.h"
 #include "Cosa/IOStream.h"
+#include "Cosa/Event.h"
 #include "Cosa/Trace.h"
 
 // Ciao output stream over the UART
 Ciao cout;
+
+// Pins to sample and stream
+AnalogPin levelPin(0);
+OutputPin ledPin(13);
 
 // A Point data type 
 struct Point {
@@ -40,29 +46,30 @@ struct Point {
   int16_t y;
 };
 
-// Ciao data type declaration in program memory for Point
+// Ciao data type descriptor in program memory for Point
 const char Point_x_name[] PROGMEM = "x";
 const char Point_y_name[] PROGMEM = "y";
-const Ciao::decl_member_t Point_member[] PROGMEM = {
+const Ciao::desc_member_t Point_member[] PROGMEM = {
   {
-    Ciao::INT16_TYPE,		// type
-    1,				// count
-    Point_x_name,		// name
-    0				// decl
+    Ciao::INT16_TYPE,
+    1,
+    Point_x_name,
+    0
   },
   {
-    Ciao::INT16_TYPE,		// type
-    1,				// count
-    Point_y_name,		// name
-    0				// decl
+    Ciao::INT16_TYPE,
+    1,
+    Point_y_name,
+    0
   }
 };
+const uint8_t Point_ID = 0x42;
 const char Point_name[] PROGMEM = "Point";
-const Ciao::decl_user_t Point_decl PROGMEM = {
-  0x42,				// id
-  Point_name,			// name
-  Point_member,			// member
-  membersof(Point_member)	// count
+const Ciao::desc_user_t Point_desc PROGMEM = {
+  Point_ID,
+  Point_name,
+  Point_member,
+  membersof(Point_member)
 };  
 
 // Arduino build includes stdio and putchar macro so we need to undef
@@ -80,7 +87,7 @@ public:
   }
 };
 
-// The trick IOStream device
+// The new IOStream device that will print in hexadecimal
 TraceDevice traceDevice;
 
 void setup()
@@ -100,7 +107,7 @@ void setup()
   float r = 3.14;
   float c[] = { -1.0, 1.0 };
 
-  // Stream raw values first and then the same with type declaration
+  // Stream values with known types
   cout.write(s);
   cout.write(x);
   cout.write(y);
@@ -108,14 +115,27 @@ void setup()
   cout.write(r);
   cout.write(c, membersof(c));
 
-  // Stream the type declaration
-  cout.write(&Point_decl);
+  // Stream the type descriptor
+  cout.write(&Point_desc);
 
-  // Stream the value
+  // Stream the value of the new type
   Point p = { -1, 1 };
-  cout.write(&Point_decl, &p, 1);
+  cout.write(&Point_desc, &p, 1);
+
   Point q[] = { { -100, -100 }, { 100, 100 } };
-  cout.write(&Point_decl, &q, membersof(q));
+  cout.write(&Point_desc, &q, membersof(q));
+
+  // Stream some other values; analog and digital pin values
+  levelPin.sample();
+  cout.write(&levelPin);
+  cout.write(&ledPin);
+  ledPin.toggle();
+  cout.write(&ledPin);
+
+  // Stream an event. Double check the address of the analog pin
+  Event event(Event::READ_COMPLETED_TYPE, &levelPin);
+  cout.write((uint16_t) &levelPin);
+  cout.write(&event);
 }
 
 void loop()

@@ -30,6 +30,7 @@
 #define __COSA_CIAO_H__
 
 #include "Cosa/IOStream.h"
+#include "Cosa/Pins.h"
 
 class Ciao {
   
@@ -43,10 +44,10 @@ public:
     UINT16_TYPE = 0x10,
     UINT32_TYPE = 0x20,
     UINT64_TYPE = 0x30,
-    USER8_DECL_START = 0x40,
-    USER8_DECL_END = 0x4f,
-    USER16_DECL_START = 0x50,
-    USER16_DECL_END = 0x5f,
+    USER8_DESC_START = 0x40,
+    USER8_DESC_END = 0x4f,
+    USER16_DESC_START = 0x50,
+    USER16_DESC_END = 0x5f,
     USER8_TYPE = 0x60,
     USER16_TYPE = 0x70,
     INT8_TYPE = 0x80,
@@ -69,33 +70,40 @@ public:
     COUNT4_MASK = 0x07,
     COUNT8_ATTR = 0x08,
     COUNT16_ATTR = 0x09,
-    USER8_NAME_ATTR = 0x0a,
-    USER16_NAME_ATTR = 0x0b,
-    RESERVED1_ATTR = 0x0c,
-    RESERVED2_ATTR = 0x0d,
-    RESERVED3_ATTR = 0x0e,
     END_SEQUENCE_ATTR = 0x0f
   };
 
   /**
-   * Data type declaration structures (program memory)
+   * Data type descriptor structures (program memory)
    */
-  struct decl_member_t {
+  struct desc_member_t {
     uint8_t type;
     uint16_t count;
     const char* name;
-    const struct decl_user_t* decl;
+    const struct user_t* desc;
   };
-  struct decl_user_t {
+  struct desc_user_t {
     uint16_t id;
     const char* name;
-    const decl_member_t* member;
+    const desc_member_t* member;
     uint8_t count;
   };
-  
+
+  /**
+   * Predefined data type identity.
+   */
+  enum {
+    HEADER_ID = 0x00,
+    ANALOG_PIN_ID = 0x01,
+    DIGITAL_PIN_ID = 0x02,
+    DIGITAL_PINS_ID = 0x03,
+    EVENT_ID = 0x04,
+    SAMPLE_REQUEST_ID = 0x80
+  };
+    
   /**
    * Stream header with magic string, revision and endian information 
-   * The idenity code is 0x00.
+   * The identity code is HEADER_ID(0x00).
    */
   struct header_t {
     char* magic;
@@ -108,10 +116,49 @@ public:
     BIG_ENDIAN = 1
   };
 
+  /**
+   * Stream analog pin value. The identity code is ANALOG_PIN_ID(0x01).
+   */
+  struct analog_pin_t {
+    uint8_t pin;
+    uint16_t value;
+  };
+
+  /**
+   * Stream digital pin value. The identity code is DIGITAL_PIN_ID(0x02).
+   */
+  struct digital_pin_t {
+    uint8_t pin;
+    uint8_t value;
+  };
+
+  /**
+   * Stream digital pins value. The identity code is DIGITAL_PINS_ID(0x03).
+   */
+  struct digital_pins_t {
+    uint16_t pins;
+    uint16_t values;
+  };
+
+  /**
+   * Stream sample request. The identity code is SAMPLE_ID(0x05).
+   */
+  struct sample_request_t {
+    uint32_t pins;
+    uint16_t period;
+  };
+
 private:
   // Version header
-  static const decl_user_t _header_decl PROGMEM;
-  static header_t _header;
+  static const desc_user_t header_desc PROGMEM;
+  static header_t header;
+
+  // Standard data descriptors
+  static const desc_user_t analog_pin_desc PROGMEM;
+  static const desc_user_t digital_pin_desc PROGMEM;
+  static const desc_user_t digital_pins_desc PROGMEM;
+  static const desc_user_t event_desc PROGMEM;
+  static const desc_user_t sample_request_desc PROGMEM;
 
   // Output streaming device.
   IOStream::Device* _dev;
@@ -144,191 +191,146 @@ public:
    */
   void begin()
   {
-    write(&_header_decl, &_header, 1);
+    write(&header_desc, &header, 1);
   }
 
   /**
    * Write given string to data stream.
    * @param[in] s string to write
    */
-  void write(char* s)
-  {
-    write(UINT8_TYPE, 0);
-    _dev->puts(s);
-    _dev->putchar(0);
-  }
+  void write(char* s);
 
   /**
    * Write given string from program memory to data stream.
    * @param[in] s program memory string to write
    */
-  void write_P(const char* buf)
-  {
-    write(UINT8_TYPE, 0);
-    _dev->puts_P(buf);
-    _dev->putchar(0);
-  }
+  void write_P(const char* buf);
 
   /**
    * Write given unsigned 8-bit integer to data stream.
    * @param[in] value to write to data stream.
    */
-  void write(uint8_t value)
-  {
-    write(UINT8_TYPE, 1);
-    _dev->putchar(value);
-  }
+  void write(uint8_t value);
 
   /**
    * Write given unsigned 8-bit integer vector to data stream.
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(uint8_t* buf, uint16_t count)
-  {
-    write(UINT8_TYPE, count);
-    _dev->write(buf, count * sizeof(uint8_t));
-  }
+  void write(uint8_t* buf, uint16_t count);
 
   /**
    * Write given unsigned 16-bit integer to data stream.
    * @param[in] value to write to data stream.
    */
-  void write(uint16_t value)
-  {
-    write(UINT16_TYPE, 1);
-    _dev->write(&value, sizeof(value));
-  }
+  void write(uint16_t value);
 
   /**
    * Write given unsigned 16-bit integer vector to data stream.
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(uint16_t* buf, uint16_t count)
-  {
-    write(UINT16_TYPE, count);
-    _dev->write(buf, count * sizeof(uint16_t));
-  }
+  void write(uint16_t* buf, uint16_t count);
 
   /**
    * Write given unsigned 32-bit integer to data stream.
    * @param[in] value to write to data stream.
    */
-  void write(uint32_t value)
-  {
-    write(UINT32_TYPE, 1);
-    _dev->write(&value, sizeof(value));
-  }
+  void write(uint32_t value);
 
   /**
    * Write given unsigned 32-bit integer vector to data stream.
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(uint32_t* buf, uint16_t count)
-  {
-    write(UINT32_TYPE, count);
-    _dev->write(buf, count * sizeof(uint32_t));
-  }
+  void write(uint32_t* buf, uint16_t count);
 
   /**
    * Write given signed 8-bit integer to data stream.
    * @param[in] value to write to data stream.
    */
-  void write(int8_t value)
-  {
-    write(INT8_TYPE, 1);
-    _dev->putchar(value);
-  }
+  void write(int8_t value);
 
   /**
    * Write given signed 8-bit integer vector to data stream.
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(int8_t* buf, int16_t count)
-  {
-    write(INT8_TYPE, count);
-    _dev->write(buf, count * sizeof(int8_t));
-  }
+  void write(int8_t* buf, int16_t count);
 
   /**
    * Write given signed 16-bit integer to data stream.
    * @param[in] value to write to data stream.
    */
-  void write(int16_t value)
-  {
-    write(INT16_TYPE, 1);
-    _dev->write(&value, sizeof(value));
-  }
+  void write(int16_t value);
 
   /**
    * Write given signed 16-bit integer vector to data stream.
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(int16_t* buf, int16_t count)
-  {
-    write(INT16_TYPE, count);
-    _dev->write(buf, count * sizeof(int16_t));
-  }
+  void write(int16_t* buf, int16_t count);
 
   /**
    * Write given signed 32-bit integer to data stream.
    * @param[in] value to write to data stream.
    */
-  void write(int32_t value)
-  {
-    write(INT32_TYPE, 1);
-    _dev->write(&value, sizeof(value));
-  }
+  void write(int32_t value);
 
   /**
    * Write given signed 32-bit integer vector to data stream.
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(int32_t* buf, int16_t count)
-  {
-    write(INT32_TYPE, count);
-    _dev->write(buf, count * sizeof(int32_t));
-  }
+  void write(int32_t* buf, int16_t count);
 
   /**
    * Write given 32-bit floating point to data stream.
    * @param[in] value to write to data stream.
    */
-  void write(float value)
-  {
-    write(FLOAT32_TYPE, 1);
-    _dev->write(&value, sizeof(value));
-  }
+  void write(float value);
 
   /**
    * Write given 32-bit floating vector to data stream.
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(float* buf, int16_t count)
+  void write(float* buf, int16_t count);
+
+  /**
+   * Write digital pin value to data stream.
+   * @param[in] pin to write to data stream.
+   */
+  void write(Pin* pin);
+
+  /**
+   * Write analog pin value to data stream.
+   * @param[in] pin to write to data stream.
+   */
+  void write(AnalogPin* pin);
+
+  /**
+   * Write event to data stream.
+   * @param[in] event to write to data stream.
+   */
+  void write(Event* event)
   {
-    write(FLOAT32_TYPE, count);
-    _dev->write(buf, count * sizeof(float));
+    write(&event_desc, event, 1);
   }
 
   /**
-   * Write given user defined data type declaration to data stream.
-   * @param[in] decl declaration structure to write (progam memory(
+   * Write given user defined data type descriptor to data stream.
+   * @param[in] desc descriptor structure to write (progam memory(
    */
-  void write(const decl_user_t* decl);
+  void write(const desc_user_t* desc);
 
   /**
    * Write given user defined data type value to data stream.
-   * @param[in] decl user defined data type (program memory).
+   * @param[in] desc user defined data type (program memory).
    * @param[in] buf pointer to value(s) to write.
    * @param[in] count size of sequence to write.
    */
-  void write(const decl_user_t* decl, void* buf, uint16_t count);
+  void write(const desc_user_t* desc, void* buf, uint16_t count);
 };
 
 #endif

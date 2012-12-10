@@ -1,24 +1,25 @@
 CIAO: DATA STREAMING FORMAT FOR COSA
 
 Author:	       Mikael Patel
-Date:	       2012-11-30
-Rev.:	       1.0
+Date:	       2012-12-10
+Rev.:	       1.0.2
 
 This is a desciption of the Cosa data streaming format; Ciao. It
 is basically a tagged data format that supports the C/C++ language
-data types, declarations (struct) and sequences of these. Pointers are
+data types, descriptors (struct) and sequences of these. Pointers are
 not allowed in the streaming format.
 
-Each data object is tagged with a prefix byte. This prefix contains a
-four bit type tag and a four bit attribute. Additional prefix 
-attributes are used for sequence length and user defined types.
+Each data object is tagged with a prefix byte. It contains a four bit
+type tag and a four bit attribute. Additional prefix attributes are
+used for sequence length and user defined types. 
 
 All data is stored as on the Arduino/AVR/Amtel processors in LSB first
 (little-endian). And to avoid byte swapping native order is used in
-Cosa Ciao data streams.
+Cosa Ciao data streams. The actual byte order of data is defined in
+the Ciao header.
 
 Typically usage of this format are; data streaming between systems
-(Arduino or other), remote procedure call (as data type declaration
+(Arduino or other), remote procedure call (as data type descriptor
 and values may be interpreted as closures), tracing, file format,
 etc. 
 
@@ -31,26 +32,29 @@ etc.
 0011 uint64_t, unsigned long long/*
 
 3210 BIT POSITION, USER DEFINED TYPES
-0100 type_t, user data type declaration, 8-bit identity
-0101 type_t,  - , 16-bit identity
-0110 type_t, user data type data, 8-bit identity
-0111 type_t,  - , 16-bit identity
+0100 type_t, system data type descriptor, 8-bit identity
+0101 type_t, user data type descriptor, 16-bit identity
+0110 type_t, system data type data, 8-bit identity
+0111 type_t, user data type data, 16-bit identity
 
 3210 BIT POSITION, SIGNED INTEGER NUMBERS
 1000 int8_t, signed char
 1001 int16_t, signed short
 1010 int32_t, signed long
-1011 int64_t, signed long long
+1011 int64_t, signed long long/*
 
-3210 BIT POSITION, FLOATING POINT NUMBERS (IEEE 754)/*
-1100 binary16_t, half-precision floating-point format
+3210 BIT POSITION, FLOATING POINT NUMBERS (IEEE 754)
+1100 binary16_t, half-precision floating-point format/*
 1101 binary32_t, single, float
-1110 binary64_t, double
-1111 binary80_t, long double
+1110 binary64_t, double/*
+1111 binary80_t, long double/*
 
 Bit(3) is set for signed data types. Cleared bit(2) indicates for
 integer and set for floating point numbers. For integers bit(1..0) is
 log2 number of bytes, values 0..3 for 1..8 bytes which is 8..64 bits.
+
+A maximum of 64 K user defined data types are allowed. See section 5
+for more details on the system data types.
 
 */ are optional in small embedded systems.
 
@@ -60,17 +64,20 @@ Data values and sequences are prefixed with the type nibble and
 primary attribute nibble and possible secondary attributes. 
 
 TYPE    ATTRIBUTES           	 DESCRIPTION
+dddd	0000      	 V*0     null terminated sequence 
 dddd    nnnn             V*      data value(N=0..7)
-dddd    nnnn		 	 reserved (N=8..12)
-dddd    1101   N         V*      data value(N=0..255)
-dddd    1110   N:N       V*      data value(N=0..64K)
-dddd	1111      	 V*0     null terminated sequence 
+dddd    1000   N         V*      data value(N=8..255)
+dddd    1001   N:N       V*      data value(N=256..64K)
+dddd    nnnn   		 	 reserved(N=10..15)
 
 The attribute is the length of the data sequence [0..64K] using 4, 12
 or 20 bits. This is symmetrical for all types except user data type
-declaration.
+descriptor. 
 
-3. DATA TYPE DECLARATION
+Null terminated sequences are of most interest for representation of C
+strings (i.e. uint8_t[N]).
+
+3. DATA TYPE DESCRIPTOR
 
 The type tag may be extended with user defined types. These are given
 an 8 or 16-bit unsigned integer number allowing at most 256 + 64K
@@ -78,40 +85,40 @@ additional data types. Sequences of user defined data types are
 included.  
 
 Note that the elementary data tags are reinterpreted for a data type
-declaration. Instead of data values the type prefix is followed by a
-possible name string (null terminated). Union is not supported in this
+descriptor. Instead of data values the type prefix is followed by a
+possible name string (null terminated). Unions is not supported in this
 release. 
 
 TYPE    ATTRIBUTES           	 DESCRIPTION
 0100    0000        T    V*0     start descriptor(type, name), 8-bit id
-0100	nnnn	    	 	 reserved (N=1..254)
+0100	nnnn	    	 	 reserved (N=1..14)
 0100	1111	    	 	 end of descriptor
 
 TYPE    ATTRIBUTES           	 DESCRIPTION
 0101    0000        T:T  V*0     start descriptor(type, name), 16-bit id
-0100	nnnn	    	 	 reserved (N=1..254)
+0100	nnnn	    	 	 reserved (N=1..14)
 0101	1111			 end of descriptor
 
 TYPE    ATTRIBUTES           	 DESCRIPTION
-dddd    nnnn             V*0     data<D> type(N=0..7, name)
-dddd    nnnn		 	 reserved (N=8..12)
-dddd    1101   N         V*0     data<D> type(N=0..255, name)
-dddd    1110   N:N       V*0     data<D> type(N=0..64K, name)
-dddd	1111      	 V*0     data<D> null terminated sequence(name)
+dddd	0000      	 V*0     data<D> null terminated sequence(name)
+dddd    nnnn             V*0     data<D> type(N=1..7, name)
+dddd    1000   N         V*0     data<D> type(N=8..255, name)
+dddd    1001   N:N       V*0     data<D> type(N=256..64K, name)
+dddd    nnnn   		 	 reserved (N=10..15)
 
 TYPE    ATTRIBUTES           	 DESCRIPTION
-0110    nnnn        T    V*0     data<T> type(N=0..7, name), 8-bit id
-0110    nnnn		 	 reserved (N=8..12)
-0110    1101   N    T    V*0     data<T> type(N=0..255, name)
-0110    1110   N:N  T    V*0     data<T> type(N=0..64K, name)
-0110	1111        T  	 V*0     data<T> null terminated sequence(name)
+0110	0000        T  	 V*0     data<T> null terminated sequence(name)
+0110    nnnn        T    V*0     data<T> type(N=1..7, name), 8-bit id
+0110    1000   N    T    V*0     data<T> type(N=8..255, name)
+0110    1001   N:N  T    V*0     data<T> type(N=256..64K, name)
+0110    nnnn		 	 reserved (N=10..15)
 
 TYPE    ATTRIBUTES           	 DESCRIPTION
-0111    nnnn        T:T  V*0     data<T> type(N=0..7, name), 16-bit id
-0111    nnnn		 	 reserved (N=8..12)
-0111    1101   N    T:T  V*0     data<T> type(N=0..255, name)
-0111    1110   N:N  T:T  V*0     data<T> type(N=0..64K, name)
-0111	1111        T:T	 V*0     data<T> null terminated sequence(name)
+0111	0000        T:T	 V*0     data<T> null terminated sequence(name)
+0111    nnnn        T:T  V*0     data<T> type(N=1..7, name), 16-bit id
+0111    1000   N    T:T  V*0     data<T> type(N=8..255, name)
+0111    1001   N:N  T:T  V*0     data<T> type(N=256..64K, name)
+0111    nnnn		 	 reserved (N=10..15)
 
 A user defined data type may be viewed as a schema and may be used for
 both data tables and closures.
@@ -119,22 +126,41 @@ both data tables and closures.
 4. TYPED DATA SEQUENCE
 
 TYPE    ATTRIBUTES           	 DESCRIPTION
-0110    nnnn        T    V*      data<T> value(N=0..7, name), 8-bit id
-0110    nnnn		 	 reserved (N=8..12)
-0110    1101   N    T    V*      data<T> value(N=0..255, name)
-0110    1110   N:N  T    V*      data<T> value(N=0..64K, name)
-0110	1111        T	 V*      data<T> value null terminated sequence(name)
+0110	0000        T	 V*      data<T> value null terminated sequence(name)
+0110    nnnn        T    V*      data<T> value(N=1..7, name), 8-bit id
+0110    1000   N    T    V*      data<T> value(N=8..255, name)
+0110    1001   N:N  T    V*      data<T> value(N=256..64K, name)
+0110    nnnn		 	 reserved (N=10..15)
 
 TYPE    ATTRIBUTES           	 DESCRIPTION
-0111    nnnn        T:T  V*      data<T> value(N=0..7, name), 16-bit id
-0111    nnnn		 	 reserved (N=8..12)
-0111    1101   N    T:T  V*      data<T> value(N=0..255, name)
-0111    1110   N:N  T:T  V*      data<T> value(N=0..64K, name)
-0111	1111        T:T	 V*      data<T> value null terminated sequence(name)
+0111	0000        T:T	 V*      data<T> value null terminated sequence(name)
+0111    nnnn        T:T  V*      data<T> value(N=1..7, name), 16-bit id
+0111    1000   N    T:T  V*      data<T> value(N=8..255, name)
+0111    1001   N:N  T:T  V*      data<T> value(N=256..64K, name)
+0111    nnnn		 	 reserved (N=10..15)
 
 A typed data sequence is prefixed with the type identity.
 
-5. EXAMPLES
+5. SYSTEM DATA TYPES
+
+The short 8-bit data type identities are reserved for system data
+types. The below identities are currently defined. Note that the
+identities 0..127 are used for up-stream (status/response) and
+128..255 for down-stream (control/requests). See Ciao.h for more
+details on the struct member description. 
+
+ID     NAME		     DESCRIPTION
+0x00   HEADER_ID	     Ciao stream header (magic/version/endian)
+0x01   ANALOG_PIN_ID	     Analog pin value
+0x02   DIGITAL_PIN_ID	     Digital pin value 
+0x03   DIGITAL_PINS_ID	     Digital pin values 
+0x04   EVENT_ID		     Cosa event trace
+0x80   SAMPLE_REQUEST_ID     Digital/analog pin set sample request
+
+The descriptor data structure is defined in Cosa/Ciao.h. The system
+data type descriptors are found in Cosa/Ciao/type.h.
+
+6. EXAMPLES
 
 EXPRESSION			ENCODING
 uint8_t x = 15;			[0x01] [0x0f]
@@ -145,6 +171,20 @@ struct Point {			[0x80] [0x42] ['P']['o']['i']['n']['t'][0]
   int16_t y;			[0x91] ['y'][0]
 };	  			[0x8f]
 Point p = { 1, -1 };		[0x61] [0x42] [0x01][0x00] [0xff][0xff]
-Point q[100];  	  		[0x6d] [100] [0x42] [..][..]...[..][..]
+Point q[100];  	  		[0x68] [100] [0x42] [..][..]...[..][..]
 
 In the example above the struct Point is given the identity (0x42).
+
+7. REFERENCES
+
+[1] Sun Microsystems (1987). "XDR: External Data Representation
+    Standard". RFC 1014. Network Working Group. Retrieved July 11,
+    2011. http://tools.ietf.org/html/rfc1014
+[2] Boost Serialization, 
+    http://www.boost.org/doc/libs/1_46_1/libs/serialization/doc/index.html
+[3] Java Stream Format,
+    http://docs.oracle.com/javase/7/docs/platform/serialization/spec/protocol.html#10258
+[4] Arduino/Firmata, http://www.firmata.org
+
+
+
