@@ -119,7 +119,7 @@ PWMPin::get_duty()
   return (is_set());
 }
 
-AnalogPin* AnalogPin::_sampling_pin = 0;
+AnalogPin* AnalogPin::sampling_pin = 0;
 
 uint16_t 
 AnalogPin::sample()
@@ -138,7 +138,7 @@ AnalogPin::request_sample()
   ADMUX = (_reference | (_pin - 14));
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
   if (_handler == 0) return;
-  _sampling_pin = this;
+  sampling_pin = this;
   bit_set(ADCSRA, ADIE);
 }
 

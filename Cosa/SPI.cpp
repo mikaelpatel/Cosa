@@ -28,7 +28,7 @@
 
 #include "Cosa/SPI.h"
 
-SPI* SPI::_spi = 0;
+SPI* SPI::spi = 0;
 
 bool
 SPI::begin(Clock clock, uint8_t mode, Direction direction)
@@ -36,7 +36,7 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
   // Check for slave pin setting; input(MOSI, SS, SCK), output(MISO)
   synchronized {
     if (clock == MASTER_CLOCK) {
-      _spi = this;
+      spi = this;
       _put = 0;
       bit_clear(DDRB, MOSI_PIN); 
       bit_set(DDRB, MISO_PIN);	 
@@ -112,7 +112,7 @@ SPI::write_P(uint8_t cmd, const void* buffer, uint8_t count)
 void
 SPI::end()
 { 
-  _spi = 0;
+  spi = 0;
   SPCR = 0;     
 }
 
@@ -140,6 +140,6 @@ SPI::on_receive(uint8_t data)
 
 ISR(SPI_STC_vect)
 {
-  if (SPI::_spi != 0) SPI::_spi->on_receive(SPDR);
+  if (SPI::spi != 0) SPI::spi->on_receive(SPDR);
 }
 

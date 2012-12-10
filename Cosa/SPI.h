@@ -43,7 +43,7 @@ public:
    * Current SPI instance in slave mode. Allow mapping of interrupt
    * on master data transfer. 
    */
-  static SPI* _spi;
+  static SPI* spi;
 
   /**
    * Interrupt handler prototype for data receive.
@@ -96,7 +96,7 @@ public:
     _put(0),
     _data(0)
   {
-    _spi = 0;
+    spi = 0;
   }
   
   /**
@@ -113,7 +113,7 @@ public:
     _put(0),
     _data(0)
   {
-    _spi = 0;
+    spi = 0;
     bit_clear(DDRB, SS_PIN);
     if (buffer == 0) {
       _buffer = &_data;

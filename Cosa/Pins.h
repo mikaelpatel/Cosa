@@ -491,7 +491,7 @@ public:
   };
 
 private:
-  static AnalogPin* _sampling_pin;
+  static AnalogPin* sampling_pin;
   Reference _reference;
   InterruptHandler _handler;
   uint16_t _value;
@@ -555,7 +555,7 @@ public:
    */
   static AnalogPin* get_sampling_pin() 
   { 
-    return (_sampling_pin); 
+    return (sampling_pin); 
   }
 
   /**
@@ -583,7 +583,7 @@ public:
    */
   void on_sample(uint16_t value) 
   { 
-    _sampling_pin = 0;
+    sampling_pin = 0;
     _value = value; 
     if (_handler != 0) _handler(this, _env); 
   }
