@@ -3,7 +3,7 @@ Che Cosa?
 
 Cosa is an object-oriented platform for Arduino that supports an event-driven programming paradigm with simple finite state machines. It contains a rich set of classes to support rapid prototyping of Internet-of-Things devices. A class overview may be found in CLASS.txt.
 
-Cosa also contains a data streaming format (Ciao) for encodes C/C++ language data types such as strings, integer and floating pointer numbers into a binary format. It may be used for a number of applications; tracing, remote procedure calls, data exchange between Arduino devices, etc. The format allows user data types to be defined and values exchanged without additional encoding. The stream header itself is a pre-defined serializable data type. See CIAO.txt for more details and the example code (CosaCiaoPoint).
+Cosa also contains a data streaming format (Ciao) for encoding of C/C++ language data types such as strings, integer and floating pointer numbers into a binary format. It may be used for a number of applications; tracing, remote procedure calls, data exchange between Arduino devices, etc. The format allows user data types to be defined and values exchanged without additional encoding. The stream header itself is a pre-defined serializable data type. See CIAO.txt for more details and the example code (CosaCiaoPoint).
 
 Cosa supports the following AVR/Atmega328P internal hardware modules; all pin modes, interrupt pins, PWM, Watchdog, UART (transmit), SPI and TWI. 
 
