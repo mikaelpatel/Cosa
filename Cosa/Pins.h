@@ -595,7 +595,7 @@ public:
    */
   static void push_event(AnalogPin* pin, void* env)
   { 
-    Event::push(Event::READ_COMPLETED_TYPE, pin, env);
+    Event::push(Event::SAMPLE_COMPLETED_TYPE, pin, env);
   }
 };
 
@@ -680,7 +680,7 @@ public:
    */
   static void push_event(AnalogPins* set, void* env)
   { 
-    Event::push(Event::READ_COMPLETED_TYPE, set, env);
+    Event::push(Event::SAMPLE_COMPLETED_TYPE, set, env);
   }
 
  private:
