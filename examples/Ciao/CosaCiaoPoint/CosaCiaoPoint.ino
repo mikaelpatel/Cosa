@@ -31,7 +31,10 @@
 #include "Cosa/Ciao.h"
 #include "Cosa/IOStream.h"
 #include "Cosa/Event.h"
+#include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
+#include <ctype.h>
+#include <math.h>
 
 // Ciao output stream over the UART
 Ciao cout;
@@ -47,9 +50,11 @@ struct Point {
 };
 
 // Ciao data type descriptor in program memory for Point
+const uint16_t Point_ID = 0x1042;
+const char Point_name[] PROGMEM = "Point";
 const char Point_x_name[] PROGMEM = "x";
 const char Point_y_name[] PROGMEM = "y";
-const Ciao::Descriptor::member_t Point_member[] PROGMEM = {
+const Ciao::Descriptor::member_t Point_members[] PROGMEM = {
   {
     Ciao::INT16_TYPE,
     1,
@@ -63,25 +68,28 @@ const Ciao::Descriptor::member_t Point_member[] PROGMEM = {
     0
   }
 };
-const uint8_t Point_ID = 0x42;
-const char Point_name[] PROGMEM = "Point";
 const Ciao::Descriptor::user_t Point_desc PROGMEM = {
   Point_ID,
   Point_name,
-  Point_member,
-  membersof(Point_member)
+  Point_members,
+  membersof(Point_members)
 };  
 
 // Arduino build includes stdio and putchar macro so we need to undef
 #undef putchar
 
 // We need a trick to allow mapping the binary stream to textual trace
-// Otherwise we would need to write a host program for this
+// This is basically an example of the Decorator Design Pattern
+// Otherwise we would need to write a host program
 class TraceDevice : public IOStream::Device {
 public:
   virtual int putchar(char c)
   { 
     trace.print((uint8_t) c, 16); 
+    if (isgraph(c)) {
+      trace.print(' ');
+      trace.print(c);
+    }
     trace.println();
     return (1); 
   }
@@ -97,47 +105,65 @@ void setup()
 
   // Setup and start the data output stream on the trace device
   cout.set(&traceDevice);
+
+  INFO("Write the header to the trace device", 0);
   cout.begin();
 
   // Values to stream
-  char* s = "Ciao!";
+  char* s = "Tjabba, tjena";
   uint8_t x = 15;
   int32_t y = -2;
   int16_t z[] = { 1, 2, 3, 4 };
-  float r = 3.14;
+  float r = M_PI;
   float c[] = { -1.0, 1.0 };
 
-  // Stream values with known types
+  INFO("Stream standard type values", 0);
   cout.write(s);
   cout.write(x);
   cout.write(y);
   cout.write(z, membersof(z));
   cout.write(r);
   cout.write(c, membersof(c));
+  cout.write(NAN);
+  cout.write(INFINITY);
 
-  // Stream the type descriptor
+  INFO("Stream Point type descriptor", 0);
   cout.write(&Point_desc);
 
-  // Stream the value of the new type
+  INFO("Stream Point values with user type prefix", 0);
   Point p = { -1, 1 };
   cout.write(&Point_desc, &p, 1);
 
   Point q[] = { { -100, -100 }, { 100, 100 } };
   cout.write(&Point_desc, &q, membersof(q));
 
-  // Stream some other values; analog and digital pin values
+  INFO("Stream some other values; analog and digital pin values", 0);
   levelPin.sample();
   cout.write(&levelPin);
   cout.write(&ledPin);
   ledPin.toggle();
   cout.write(&ledPin);
+  ledPin.toggle();
 
-  // Stream an event. Double check the address of the analog pin
+  INFO("Stream an event. Double check the address of the analog pin", 0);
   Event event(Event::READ_COMPLETED_TYPE, &levelPin);
   cout.write((uint16_t) &levelPin);
   cout.write(&event);
+
+  // Start the watchdog and trace events
+  Watchdog::begin(2048, 
+		  SLEEP_MODE_IDLE, 
+		  Watchdog::push_watchdog_event, 
+		  &ledPin);
 }
 
 void loop()
 {
+  INFO("Wait for timeout event", 0);
+  Event event;
+  Event::queue.await(&event);
+  OutputPin* pin = (OutputPin*) event.get_env();
+  pin->toggle();
+  cout.write(&event);
+  pin->toggle();
 }

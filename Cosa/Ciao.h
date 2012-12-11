@@ -290,6 +290,7 @@ public:
    * @param[in] value to write to data stream.
    */
   void write(float value);
+  void write(double value) { write((float) value); }
 
   /**
    * Write given 32-bit floating vector to data stream.
@@ -297,6 +298,7 @@ public:
    * @param[in] count size of vector.
    */
   void write(float* buf, int16_t count);
+  void write(double* buf, int16_t count) { write((float*) buf, count); }
 
   /**
    * Write digital pin value to data stream.
