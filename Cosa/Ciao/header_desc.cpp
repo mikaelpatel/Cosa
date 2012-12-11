@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao/header_t.cpp
+ * @file Cosa/Ciao/header_desc.cpp
  * @version 1.0
  *
  * @section License

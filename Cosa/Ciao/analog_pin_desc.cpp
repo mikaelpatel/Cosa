@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao/sample_request_t.cpp
+ * @file Cosa/Ciao/analog_pin_desc.cpp
  * @version 1.0
  *
  * @section License
@@ -21,34 +21,33 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa Ciao data stream sample request descriptor.
+ * The Cosa Ciao data stream analog pin value descriptor.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Ciao.h"
 
-static const char pins_name[] PROGMEM = "pins";
-static const char period_name[] PROGMEM = "period";
+static const char pin_name[] PROGMEM = "pin";
+static const char value_name[] PROGMEM = "value";
 static const Ciao::desc_member_t members[] PROGMEM = {
   {
-    Ciao::UINT32_TYPE,
+    Ciao::UINT8_TYPE,
     1,
-    pins_name,
+    pin_name,
     0
   },
   {
     Ciao::UINT16_TYPE,
     1,
-    period_name,
+    value_name,
     0
   }
 };
-static const char name[] PROGMEM = "Ciao::sample_request_t";
-const Ciao::desc_user_t Ciao::sample_request_desc PROGMEM = {
-  Ciao::SAMPLE_REQUEST_ID,
+static const char name[] PROGMEM = "Ciao::analog_pin_t";
+const Ciao::desc_user_t Ciao::analog_pin_desc PROGMEM = {
+  Ciao::ANALOG_PIN_ID,
   name,
   members,
   membersof(members)
-};
-
+};  

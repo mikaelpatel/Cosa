@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao/digital_pin_t.cpp
+ * @file Cosa/Ciao/digital_pins_desc.cpp
  * @version 1.0
  *
  * @section License
@@ -21,32 +21,32 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa Ciao data stream digital pin value descriptor.
+ * The Cosa Ciao data stream digital pin values descriptor.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Ciao.h"
 
-static const char pin_name[] PROGMEM = "pin";
-static const char value_name[] PROGMEM = "value";
+static const char pins_name[] PROGMEM = "pins";
+static const char values_name[] PROGMEM = "values";
 static const Ciao::desc_member_t members[] PROGMEM = {
   {
-    Ciao::UINT8_TYPE,
+    Ciao::UINT16_TYPE,
     1,
-    pin_name,
+    pins_name,
     0
   },
   {
-    Ciao::UINT8_TYPE,
+    Ciao::UINT16_TYPE,
     1,
-    value_name,
+    values_name,
     0
   }
 };
-static const char name[] PROGMEM = "Ciao::digital_pin_t";
-const Ciao::desc_user_t Ciao::digital_pin_desc PROGMEM = {
-  Ciao::DIGITAL_PIN_ID,
+static const char name[] PROGMEM = "Ciao::digital_pins_t";
+const Ciao::desc_user_t Ciao::digital_pins_desc PROGMEM = {
+  Ciao::DIGITAL_PINS_ID,
   name,
   members,
   membersof(members)
