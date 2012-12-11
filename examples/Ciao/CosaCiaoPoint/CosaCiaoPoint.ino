@@ -49,7 +49,7 @@ struct Point {
 // Ciao data type descriptor in program memory for Point
 const char Point_x_name[] PROGMEM = "x";
 const char Point_y_name[] PROGMEM = "y";
-const Ciao::desc_member_t Point_member[] PROGMEM = {
+const Ciao::Descriptor::member_t Point_member[] PROGMEM = {
   {
     Ciao::INT16_TYPE,
     1,
@@ -65,7 +65,7 @@ const Ciao::desc_member_t Point_member[] PROGMEM = {
 };
 const uint8_t Point_ID = 0x42;
 const char Point_name[] PROGMEM = "Point";
-const Ciao::desc_user_t Point_desc PROGMEM = {
+const Ciao::Descriptor::user_t Point_desc PROGMEM = {
   Point_ID,
   Point_name,
   Point_member,

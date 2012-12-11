@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao/digital_pins_desc.cpp
+ * @file Cosa/Ciao/digital_pins_t.cpp
  * @version 1.0
  *
  * @section License
@@ -30,7 +30,7 @@
 
 static const char pins_name[] PROGMEM = "pins";
 static const char values_name[] PROGMEM = "values";
-static const Ciao::desc_member_t members[] PROGMEM = {
+static const Ciao::Descriptor::member_t members[] PROGMEM = {
   {
     Ciao::UINT16_TYPE,
     1,
@@ -45,7 +45,7 @@ static const Ciao::desc_member_t members[] PROGMEM = {
   }
 };
 static const char name[] PROGMEM = "Ciao::digital_pins_t";
-const Ciao::desc_user_t Ciao::digital_pins_desc PROGMEM = {
+const Ciao::Descriptor::user_t Ciao::Descriptor::digital_pins_t PROGMEM = {
   Ciao::DIGITAL_PINS_ID,
   name,
   members,

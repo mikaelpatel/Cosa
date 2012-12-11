@@ -74,22 +74,6 @@ public:
   };
 
   /**
-   * Data type descriptor structures (program memory)
-   */
-  struct desc_member_t {
-    uint8_t type;
-    uint16_t count;
-    const char* name;
-    const struct user_t* desc;
-  };
-  struct desc_user_t {
-    uint16_t id;
-    const char* name;
-    const desc_member_t* member;
-    uint8_t count;
-  };
-
-  /**
    * Predefined data type identity.
    */
   enum {
@@ -100,7 +84,32 @@ public:
     EVENT_ID = 0x04,
     SAMPLE_REQUEST_ID = 0x80
   };
-    
+
+  /**
+   * Data type descriptor structures (program memory)
+   */
+  class Descriptor {
+  public:
+    struct member_t {
+      uint8_t type;
+      uint16_t count;
+      const char* name;
+      const struct user_t* desc;
+    };
+    struct user_t {
+      uint16_t id;
+      const char* name;
+      const member_t* member;
+      uint8_t count;
+    };
+    static const user_t header_t PROGMEM;
+    static const user_t analog_pin_t PROGMEM;
+    static const user_t digital_pin_t PROGMEM;
+    static const user_t digital_pins_t PROGMEM;
+    static const user_t event_t PROGMEM;
+    static const user_t sample_request_t PROGMEM;
+  };
+
   /**
    * Stream header with magic string, revision and endian information 
    * The identity code is HEADER_ID(0x00).
@@ -150,15 +159,7 @@ public:
 
 private:
   // Version header
-  static const desc_user_t header_desc PROGMEM;
   static header_t header;
-
-  // Standard data descriptors
-  static const desc_user_t analog_pin_desc PROGMEM;
-  static const desc_user_t digital_pin_desc PROGMEM;
-  static const desc_user_t digital_pins_desc PROGMEM;
-  static const desc_user_t event_desc PROGMEM;
-  static const desc_user_t sample_request_desc PROGMEM;
 
   // Output streaming device.
   IOStream::Device* _dev;
@@ -191,7 +192,7 @@ public:
    */
   void begin()
   {
-    write(&header_desc, &header, 1);
+    write(&Descriptor::header_t, &header, 1);
   }
 
   /**
@@ -315,14 +316,14 @@ public:
    */
   void write(Event* event)
   {
-    write(&event_desc, event, 1);
+    write(&Descriptor::event_t, event, 1);
   }
 
   /**
    * Write given user defined data type descriptor to data stream.
-   * @param[in] desc descriptor structure to write (progam memory(
+   * @param[in] desc descriptor structure to write (progam memory).
    */
-  void write(const desc_user_t* desc);
+  void write(const Descriptor::user_t* desc);
 
   /**
    * Write given user defined data type value to data stream.
@@ -330,7 +331,7 @@ public:
    * @param[in] buf pointer to value(s) to write.
    * @param[in] count size of sequence to write.
    */
-  void write(const desc_user_t* desc, void* buf, uint16_t count);
+  void write(const Descriptor::user_t* desc, void* buf, uint16_t count);
 };
 
 #endif

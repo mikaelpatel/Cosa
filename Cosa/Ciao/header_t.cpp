@@ -46,7 +46,7 @@ static const char magic_name[] PROGMEM = "magic";
 static const char major_name[] PROGMEM = "major";
 static const char minor_name[] PROGMEM = "minor";
 static const char endian_name[] PROGMEM = "endian";
-static const Ciao::desc_member_t members[] PROGMEM = {
+static const Ciao::Descriptor::member_t members[] PROGMEM = {
   {
     Ciao::UINT8_TYPE,
     0,
@@ -73,7 +73,7 @@ static const Ciao::desc_member_t members[] PROGMEM = {
   }
 };
 static const char name[] PROGMEM = "Ciao::header_t";
-const Ciao::desc_user_t Ciao::header_desc PROGMEM = {
+const Ciao::Descriptor::user_t Ciao::Descriptor::header_t PROGMEM = {
   Ciao::HEADER_ID,
   name,
   members,

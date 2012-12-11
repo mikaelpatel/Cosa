@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao/event_desc.cpp
+ * @file Cosa/Ciao/event_t.cpp
  * @version 1.0
  *
  * @section License
@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa Ciao data stream digital pin value descriptor.
+ * The Cosa Ciao data stream Cosa event descriptor.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -31,7 +31,7 @@
 static const char type_name[] PROGMEM = "type";
 static const char target_name[] PROGMEM = "target";
 static const char value_name[] PROGMEM = "value";
-static const Ciao::desc_member_t members[] PROGMEM = {
+static const Ciao::Descriptor::member_t members[] PROGMEM = {
   {
     Ciao::UINT8_TYPE,
     1,
@@ -52,7 +52,7 @@ static const Ciao::desc_member_t members[] PROGMEM = {
   }
 };
 static const char name[] PROGMEM = "Cosa::Event";
-const Ciao::desc_user_t Ciao::event_desc PROGMEM = {
+const Ciao::Descriptor::user_t Ciao::Descriptor::event_t PROGMEM = {
   Ciao::EVENT_ID,
   name,
   members,

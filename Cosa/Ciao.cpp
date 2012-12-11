@@ -145,7 +145,7 @@ Ciao::write(Pin* pin)
   digital_pin_t dgl;
   dgl.pin = pin->get_pin();
   dgl.value = pin->is_set();
-  write(&digital_pin_desc, &dgl, 1);
+  write(&Descriptor::digital_pin_t, &dgl, 1);
 }
 
 void 
@@ -154,7 +154,7 @@ Ciao::write(AnalogPin* pin)
   analog_pin_t ang;
   ang.pin = pin->get_pin();
   ang.value = pin->get_value();
-  write(&analog_pin_desc, &ang, 1);
+  write(&Descriptor::analog_pin_t, &ang, 1);
 }
 
 void
@@ -180,10 +180,10 @@ Ciao::write(uint8_t type, uint16_t count)
 }
 
 void 
-Ciao::write(const desc_user_t* desc)
+Ciao::write(const Descriptor::user_t* desc)
 {
   // Read descaration from program memory
-  desc_user_t d;
+  Descriptor::user_t d;
   memcpy_P(&d, desc, sizeof(d));
   
   // Write descaration start tag and identity number (8 or 16-bit)
@@ -201,9 +201,9 @@ Ciao::write(const desc_user_t* desc)
   _dev->putchar(0);
   
   // Write members with name null terminated
-  const desc_member_t* mp = d.member;
+  const Descriptor::member_t* mp = d.member;
   for (uint16_t i = 0; i < d.count; i++) {
-    desc_member_t m;
+    Descriptor::member_t m;
     memcpy_P(&m, mp++, sizeof(m));
     write(m.type, m.count);
     _dev->puts_P(m.name);
@@ -239,10 +239,10 @@ static const uint8_t sizeoftype[] PROGMEM = {
 };
 
 void 
-Ciao::write(const desc_user_t* desc, void* buf, uint16_t count)
+Ciao::write(const Descriptor::user_t* desc, void* buf, uint16_t count)
 {
   // Read descaration from program memory
-  desc_user_t d;
+  Descriptor::user_t d;
   memcpy_P(&d, desc, sizeof(d));
   
   // Write type tag for user data with count and type identity
@@ -258,9 +258,9 @@ Ciao::write(const desc_user_t* desc, void* buf, uint16_t count)
   // Write data buffer to stream
   uint8_t* dp = (uint8_t*) buf;
   while (count--) {
-    const desc_member_t* mp = d.member;
+    const Descriptor::member_t* mp = d.member;
     for (uint16_t i = 0; i < d.count; i++) {
-      desc_member_t m;
+      Descriptor::member_t m;
       memcpy_P(&m, mp++, sizeof(m));
       // Allow strings and data elements vectors only
       // Fix: Add table with user defined types

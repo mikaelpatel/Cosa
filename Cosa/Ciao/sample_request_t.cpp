@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao/sample_request_desc.cpp
+ * @file Cosa/Ciao/sample_request_t.cpp
  * @version 1.0
  *
  * @section License
@@ -30,7 +30,7 @@
 
 static const char pins_name[] PROGMEM = "pins";
 static const char period_name[] PROGMEM = "period";
-static const Ciao::desc_member_t members[] PROGMEM = {
+static const Ciao::Descriptor::member_t members[] PROGMEM = {
   {
     Ciao::UINT32_TYPE,
     1,
@@ -45,7 +45,7 @@ static const Ciao::desc_member_t members[] PROGMEM = {
   }
 };
 static const char name[] PROGMEM = "Ciao::sample_request_t";
-const Ciao::desc_user_t Ciao::sample_request_desc PROGMEM = {
+const Ciao::Descriptor::user_t Ciao::Descriptor::sample_request_t PROGMEM = {
   Ciao::SAMPLE_REQUEST_ID,
   name,
   members,
