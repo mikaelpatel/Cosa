@@ -36,7 +36,6 @@
  */
 const uint32_t IPUS = F_CPU / 1000000L;
 const uint32_t EVENTS_MAX = 100000L;
-uint32_t events;
 
 /**
  * Simple echo state machine with a single state. 
@@ -68,7 +67,7 @@ public:
   static bool echoState(FSM* fsm, uint8_t type)
   {
     Echo* echo = (Echo*) fsm;
-    if (events--) echo->_port->send(Event::USER_TYPE);
+    echo->_port->send(Event::USER_TYPE);
     return (1);
   }
 };
@@ -89,10 +88,6 @@ void setup()
   ping.bind(&pong);
   pong.bind(&ping);
 
-  // Start the state machines
-  ping.begin();
-  pong.begin();
-
   // Give some more startup info
   TRACE(F_CPU);
   TRACE(EVENTS_MAX);
@@ -102,12 +97,12 @@ void loop()
 {
   // Initiate the counters and reset the watchdog ticks for measurement.
   // Note the resolution is only 16 ms ticks by default.
-  uint32_t count = events = EVENTS_MAX;
+  uint32_t events = EVENTS_MAX;
   Watchdog::reset();
 
   // Send a first event to start the benchmark and dispatch events.
   ping.send(Event::USER_TYPE);
-  while (count--) {
+  while (events--) {
     Event event;
     Event::queue.await(&event);
     event.dispatch();
@@ -115,7 +110,8 @@ void loop()
 
   // Capture the tick count and calculate the time per event and nr of cycles.
   uint16_t ticks = Watchdog::get_ticks();
-  uint32_t ms = ticks * Watchdog::ms_per_tick();
+  uint16_t ms_per_tick = Watchdog::ms_per_tick();
+  uint32_t ms = ticks * ms_per_tick;
   uint32_t us_per_event = (ms * 1000L) / EVENTS_MAX;
   INFO("%l us per event (%l cycles)", us_per_event, us_per_event * IPUS);
 }
