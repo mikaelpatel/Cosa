@@ -41,17 +41,20 @@ public:
   static const uint8_t QUEUE_MAX = 16;
 
   /**
-   * Event types are added here for new event sources. Typical mapping
-   * from interrupts to events. Note that the event is not a global
-   * numbering scheme. Instead depends on the receiving/sending party,
+   * Event types are added here. Typical mapping from interrupts to
+   * events. Note that the event is not a global numbering
+   * scheme. Instead depends on the receiving/sending party, 
    * the protocol. 
    */
   enum {
     NULL_TYPE = 0,
 
-    FALLING_TYPE,		// Pins
+    FALLING_TYPE,		// Digital Pins
     RISING_TYPE,
     CHANGE_TYPE,
+
+    SAMPLE_REQUEST_TYPE,	// Analog Pins
+    SAMPLE_COMPLETED_TYPE,
 
     WATCHDOG_TYPE,		// Watchdog and timers
     TIMEOUT_TYPE,
@@ -141,8 +144,7 @@ public:
    */
   bool dispatch()
   {
-    if (_target != 0) 
-      _target->on_event(_type, _value);
+    if (_target != 0) _target->on_event(_type, _value);
   }
 
   /**
@@ -164,12 +166,12 @@ public:
    * (eventq). Return true(1) if successful otherwise false(0).
    * @param[in] type event identity.
    * @param[in] target event target.
-   * @param[in] value event value.
+   * @param[in] env event environment pointer.
    * @return boolean, true(1) if successful otherwise false(0).
    */
-  static bool push(uint8_t type, Thing* target, void* value)
+  static bool push(uint8_t type, Thing* target, void* env)
   {
-    push(type, target, (uint16_t) value);
+    push(type, target, (uint16_t) env);
   }
 
   /**
