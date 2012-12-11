@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OneWire.h
+ * @file Cosa/OWI.h
  * @version 1.0
  *
  * @section License
@@ -27,14 +27,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ONEWIRE_H__
-#define __COSA_ONEWIRE_H__
+#ifndef __COSA_OWI_H__
+#define __COSA_OWI_H__
 
 #include "Cosa/Pins.h"
 #include "Cosa/IOStream.h"
 #include "Cosa/Trace.h"
 
-class OneWire : private IOPin {
+class OWI : private IOPin {
 private:
   uint8_t _crc;
 
@@ -56,7 +56,7 @@ public:
    * Driver for device connected to a one-wire pin
    */
   class Driver {
-    friend class OneWire;
+    friend class OWI;
   protected:
     enum {
       FIRST = -1,
@@ -64,14 +64,14 @@ public:
       LAST = ROMBITS
     };
     uint8_t _rom[ROM_MAX];
-    OneWire* _pin;
+    OWI* _pin;
 
   public:
     /**
      * Construct one wire device driver.
      * @param[in] pin one wire bus.
      */
-    Driver(OneWire* pin) : _pin(pin) {}
+    Driver(OWI* pin) : _pin(pin) {}
 
     /**
      * Search device rom given the last position of discrepancy.
@@ -124,7 +124,7 @@ public:
    * Act as slave device connected to a one-wire pin
    */
   class Device : public InterruptPin {
-    friend class OneWire;
+    friend class OWI;
   private:
     // One-wire slave pin mode
     enum Mode {
@@ -245,7 +245,7 @@ public:
    * Construct one wire bus connected to the given pin.
    * @param[in] pin number.
    */
-  OneWire(uint8_t pin) : IOPin(pin) {}
+  OWI(uint8_t pin) : IOPin(pin) {}
 
   /**
    * Reset the one wire bus and check that at least one device is

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OneWire.cpp
+ * @file Cosa/OWI.cpp
  * @version 1.0
  *
  * @section License
@@ -27,13 +27,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OneWire.h"
+#include "Cosa/OWI.h"
 #include <util/delay_basic.h>
 
 #define DELAY(us) _delay_loop_2((us) << 2)
 
 bool
-OneWire::reset()
+OWI::reset()
 {
   uint8_t res = 0;
   uint8_t retry = 4;
@@ -54,7 +54,7 @@ OneWire::reset()
 }
 
 uint8_t
-OneWire::read(uint8_t bits)
+OWI::read(uint8_t bits)
 {
   uint8_t res = 0;
   uint8_t mix = 0;
@@ -86,7 +86,7 @@ OneWire::read(uint8_t bits)
 }
 
 void
-OneWire::write(uint8_t value, uint8_t bits)
+OWI::write(uint8_t value, uint8_t bits)
 {
   uint8_t mix = 0;
   synchronized {
@@ -117,7 +117,7 @@ OneWire::write(uint8_t value, uint8_t bits)
 }
 
 void
-OneWire::print_devices(IOStream& stream)
+OWI::print_devices(IOStream& stream)
 {
   Driver dev(this);
   int8_t last = Driver::FIRST;

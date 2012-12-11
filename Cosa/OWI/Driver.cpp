@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OneWire/Driver.cpp
+ * @file Cosa/OWI/Driver.cpp
  * @version 1.0
  *
  * @section License
@@ -26,16 +26,16 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OneWire.h"
+#include "Cosa/OWI.h"
 #include <util/delay_basic.h>
 
 #define DELAY(us) _delay_loop_2((us) << 2)
 
 int8_t
-OneWire::Driver::search_rom(int8_t last)
+OWI::Driver::search_rom(int8_t last)
 {
   if (!_pin->reset()) return (ERROR);
-  _pin->write(OneWire::SEARCH_ROM);
+  _pin->write(OWI::SEARCH_ROM);
   uint8_t pos = 0;
   int8_t next = LAST;
   for (uint8_t i = 0; i < 8; i++) {
@@ -80,10 +80,10 @@ OneWire::Driver::search_rom(int8_t last)
 }
 
 bool
-OneWire::Driver::read_rom()
+OWI::Driver::read_rom()
 {
   if (!_pin->reset()) return (0);
-  _pin->write(OneWire::READ_ROM);
+  _pin->write(OWI::READ_ROM);
   _pin->begin();
   for (uint8_t i = 0; i < ROM_MAX; i++) {
     _rom[i] = _pin->read();
@@ -92,10 +92,10 @@ OneWire::Driver::read_rom()
 }
 
 bool
-OneWire::Driver::match_rom()
+OWI::Driver::match_rom()
 {
   if (!_pin->reset()) return (0);
-  _pin->write(OneWire::MATCH_ROM);
+  _pin->write(OWI::MATCH_ROM);
   for (uint8_t i = 0; i < ROM_MAX; i++) {
     _pin->write(_rom[i]);
   }
@@ -103,25 +103,25 @@ OneWire::Driver::match_rom()
 }
 
 bool
-OneWire::Driver::skip_rom()
+OWI::Driver::skip_rom()
 {
   if (!_pin->reset()) return (0);
-  _pin->write(OneWire::SKIP_ROM);
+  _pin->write(OWI::SKIP_ROM);
   return (1);
 }
 
 void
-OneWire::Driver::print_rom(IOStream& stream)
+OWI::Driver::print_rom(IOStream& stream)
 {
   uint8_t i;
-  stream.printf_P(PSTR("OneWire::rom(family = %hd, id = "), _rom[0]);
+  stream.printf_P(PSTR("OWI::rom(family = %hd, id = "), _rom[0]);
   for (i = 1; i < ROM_MAX - 1; i++)
     stream.printf_P(PSTR("%hd, "), _rom[i]);
   stream.printf_P(PSTR("crc = %hd)\n"), _rom[i]);
 }
 
 bool 
-OneWire::Driver::connect(uint8_t family, uint8_t index)
+OWI::Driver::connect(uint8_t family, uint8_t index)
 {
   int8_t last = FIRST;
   do {

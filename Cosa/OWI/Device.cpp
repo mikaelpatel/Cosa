@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OneWire/Device.cpp
+ * @file Cosa/OWI/Device.cpp
  * @version 1.0
  *
  * @section License
@@ -26,13 +26,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OneWire.h"
+#include "Cosa/OWI.h"
 #include <util/delay_basic.h>
 
 #define DELAY(us) _delay_loop_2((us) << 2)
 
 int
-OneWire::Device::read(uint8_t bits)
+OWI::Device::read(uint8_t bits)
 {
   uint8_t res = 0;
   uint8_t mix = 0;
@@ -72,7 +72,7 @@ OneWire::Device::read(uint8_t bits)
 }
 
 bool
-OneWire::Device::write(uint8_t value, uint8_t bits)
+OWI::Device::write(uint8_t value, uint8_t bits)
 {
   uint8_t mix = 0;
   const uint8_t RETRY_MAX = 40;
@@ -123,9 +123,9 @@ micros()
 }
 
 void 
-OneWire::Device::service_request(Thing* it, uint8_t type, uint16_t value)
+OWI::Device::service_request(Thing* it, uint8_t type, uint16_t value)
 {
-  OneWire::Device* dev = (OneWire::Device*) it;
+  OWI::Device* dev = (OWI::Device*) it;
   uint32_t stop = micros() + 440;
 
   static uint16_t req = 0;
@@ -209,9 +209,9 @@ OneWire::Device::service_request(Thing* it, uint8_t type, uint16_t value)
 }
 
 void 
-OneWire::Device::interrupt_handler(InterruptPin* pin, void* env)
+OWI::Device::interrupt_handler(InterruptPin* pin, void* env)
 {
-  OneWire::Device* dev = (OneWire::Device*) pin;
+  OWI::Device* dev = (OWI::Device*) pin;
   volatile uint32_t now = micros();
   if (dev->_state == IDLE_STATE) {
     if (dev->is_clear()) {

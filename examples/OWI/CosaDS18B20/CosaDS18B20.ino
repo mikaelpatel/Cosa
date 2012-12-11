@@ -28,16 +28,16 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OneWire/DS18B20.h"
+#include "Cosa/OWI/DS18B20.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.h"
 
 // One-wire pin and connected DS18B20 devices
-OneWire oneWire(7);
-DS18B20 outdoors(&oneWire);
-DS18B20 indoors(&oneWire);
-DS18B20 basement(&oneWire);
+OWI owi(7);
+DS18B20 outdoors(&owi);
+DS18B20 indoors(&owi);
+DS18B20 basement(&owi);
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(13);
@@ -51,7 +51,7 @@ void setup()
   TRACE(free_memory());
 
   // List connected devices
-  oneWire.print_devices();
+  owi.print_devices();
 
   // Connect to the devices and print rom contents
   ledPin.toggle();

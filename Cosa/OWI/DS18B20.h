@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OneWire/DS18B20.h
+ * @file Cosa/OWI/DS18B20.h
  * @version 1.0
  *
  * @section License
@@ -30,11 +30,11 @@
 #ifndef __COSA_ONEWIRE_DS18B20_H__
 #define __COSA_ONEWIRE_DS18B20_H__
 
-#include "Cosa/OneWire.h"
+#include "Cosa/OWI.h"
 #include "Cosa/IOStream.h"
 #include "Cosa/Trace.h"
 
-class DS18B20 : public OneWire::Driver {
+class DS18B20 : public OWI::Driver {
 private:
   /**
    * DS18B20 Function Commands (Table 3, pp. 12)
@@ -80,7 +80,7 @@ public:
    * Construct a DS18B20 device connected to the given one wire bus.
    * @param[in] pin one wire bus pin.
    */
-  DS18B20(OneWire* pin) : OneWire::Driver(pin) {}
+  DS18B20(OWI* pin) : OWI::Driver(pin) {}
 
   /**
    * Connect to DS18B20 device with given index.
@@ -89,7 +89,7 @@ public:
    */
   bool connect(uint8_t index)
   {
-    return (OneWire::Driver::connect(FAMILY_CODE, index));
+    return (OWI::Driver::connect(FAMILY_CODE, index));
   }
 
   /**

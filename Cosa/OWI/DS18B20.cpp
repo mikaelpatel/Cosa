@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OneWire/DS18B20.cpp
+ * @file Cosa/OWI/DS18B20.cpp
  * @version 1.0
  *
  * @section License
@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OneWire/DS18B20.h"
+#include "Cosa/OWI/DS18B20.h"
 #include "Cosa/FixedPoint.h"
 
 bool

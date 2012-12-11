@@ -1,5 +1,5 @@
 /**
- * @file CosaOneWireSlave.ino
+ * @file CosaOWIslave.ino
  * @version 1.0
  *
  * @section License
@@ -21,28 +21,28 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of the OneWire Master-Slave.
+ * Cosa demonstration of the OWI Master-Slave.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OneWire.h"
+#include "Cosa/OWI.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.h"
 
 // The slave device rom identity (crc is automatically generated)
-uint8_t rom[OneWire::ROM_MAX] = {
+uint8_t rom[OWI::ROM_MAX] = {
   0xC0, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x00, 0xb1
 };
 
-// The OneWire connection on pin 2 and led for heartbeat
-OneWire::Device slave(2, rom);
+// The OWI connection on pin 2 and led for heartbeat
+OWI::Device slave(2, rom);
 OutputPin ledPin(13);
 
 void setup()
 {
-  trace.begin(9600, PSTR("CosaOneWireSlave: started"));
+  trace.begin(9600, PSTR("CosaOWIslave: started"));
   TRACE(free_memory());
   slave.enable();
   Watchdog::begin();

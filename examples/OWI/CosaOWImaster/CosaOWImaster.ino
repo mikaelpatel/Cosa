@@ -1,5 +1,5 @@
 /**
- * @file CosaOneWireMaster.ino
+ * @file CosaOWImaster.ino
  * @version 1.0
  *
  * @section License
@@ -26,17 +26,17 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OneWire.h"
+#include "Cosa/OWI.h"
 #include "Cosa/Watchdog.h"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.h"
 
 // Slave device driver
-class Driver : public OneWire::Driver {
+class Driver : public OWI::Driver {
 private:
   uint8_t _status[8];
 public:
-  Driver(OneWire* pin) : OneWire::Driver(pin) {}
+  Driver(OWI* pin) : OWI::Driver(pin) {}
   bool read_status();
   void print_status(IOStream& stream = trace);
 };
@@ -45,7 +45,7 @@ bool
 Driver::read_status()
 {
   if (!match_rom()) return (0);
-  _pin->write(OneWire::Device::STATUS);
+  _pin->write(OWI::Device::STATUS);
   _pin->begin();
   for (uint8_t i = 0; i < membersof(_status) - 1; i++)
     _status[i] = _pin->read(8);
@@ -60,13 +60,13 @@ Driver::print_status(IOStream& stream)
 }
 
 // The OneWire bus on pin 7 and led heartbeat
-OneWire oneWire(7);
-Driver driver(&oneWire);
+OWI owi(7);
+Driver driver(&owi);
 OutputPin ledPin(13);
 
 void setup()
 {
-  trace.begin(9600, PSTR("CosaOneWireMaster: started"));
+  trace.begin(9600, PSTR("CosaOWImaster: started"));
   TRACE(free_memory());
   Watchdog::begin();
   driver.connect(0xC0, 0);
