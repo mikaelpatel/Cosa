@@ -62,16 +62,17 @@ CIAO
 The Cosa data stream handler. See CIAO.txt.
 ----------------------------------------------------------------------------
 Ciao.h:			class Ciao
-			      => class IOStream::Device
+			      class Ciao::Descriptor
 ----------------------------------------------------------------------------
-ONEWIRE
+OWI
 Driver for devices on the one wire bus (1-Wire). 
 Support for DS18B20 Programmable Resolution 1-Wire Digital 
 Thermometer.
 ----------------------------------------------------------------------------
-OneWire.h:		class OneWire : private IOPin
-OneWire.h:		class OneWire::Device
-OnwWire/DS18B20.h:	      class DS18B20 : public OneWire::Device
+OWI.h:			class OWI : private IOPin
+OWI.h:			      class OWI::Device
+OWI.h:			      class OWI::Driver			     
+OWI/DS18B20.h:	      	      class DS18B20 : public OWI::Driver
 ----------------------------------------------------------------------------
 TWO WIRE INTERFACE
 Driver for devices on the two wire interface (TWI/I2C).
@@ -83,7 +84,7 @@ TWI/AT24CXX.h	      	      class AT24CXX : private TWI
 TWI/DS1307.h	      	      class DS1307 : private TWI
 TWI/PCF8591.h		      class PCF8591 : private TWI
 ----------------------------------------------------------------------------
-THREE WIRE/SERIAL PERIPHERAL INTERFACE
+SERIAL PERIPHERAL INTERFACE
 Driver for devices on the serial peripherial interface (SPI).
 Support for ADXL345 Digital Accelerometer, nRF24L01 Single Chip 2.4GHz
 Transceiver. 
@@ -95,7 +96,7 @@ SPI/NRF24L01P.h:	      class NRF24L01P : private SPI
 DHT11 
 Humidity & Temperature Sensor device driver
 ----------------------------------------------------------------------------
-DHT.h:			class DHT11 : private IOPin
+Drivers/DHT11.h:	class DHT11 : private IOPin
 ----------------------------------------------------------------------------
 SUPPORT LIBRARIES
 ----------------------------------------------------------------------------
