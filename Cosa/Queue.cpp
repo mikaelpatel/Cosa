@@ -33,12 +33,9 @@ Queue::enqueue(void* data)
 {
   if (_length == _nmemb) return (0);
   synchronized {
-    // memcpy(_putp, data, _msize);
-    uint8_t* dp = (uint8_t*) data;
-    uint8_t n = _msize;
-    while (n--) *_putp++ = *dp++;
+    memcpy(_putp, data, _msize);
     _length += 1;
-    // _putp += _msize;
+    _putp += _msize;
     if (_putp == _lastp) _putp = _buffer;
   }
   return (1);
@@ -49,12 +46,9 @@ Queue::enqueue_P(const void* data)
 {
   if (_length == _nmemb) return (0);
   synchronized {
-    // memcpy_P(_putp, data, _msize);
-    uint8_t* dp = (uint8_t*) data;
-    uint8_t n = _msize;
-    while (n--) *_putp++ = pgm_read_byte(dp++);
+    memcpy_P(_putp, data, _msize);
     _length += 1;
-    // _putp += _msize;
+    _putp += _msize;
     if (_putp == _lastp) _putp = _buffer;
   }
   return (1);
@@ -66,11 +60,8 @@ Queue::dequeue(void* data)
   if (_length == 0) return (0);
   synchronized {
     memcpy(data, _getp, _msize);
-    uint8_t* dp = (uint8_t*) data;
-    uint8_t n = _msize;
-    while (n--) *dp++ = *_getp++;
     _length -= 1;
-    // _getp += _msize;
+    _getp += _msize;
     if (_getp == _lastp) _getp = _buffer;
   }
   return (1);
