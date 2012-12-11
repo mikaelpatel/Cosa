@@ -38,9 +38,8 @@ private:
   uint8_t _length;
   uint8_t _nmemb;
   uint8_t _msize;
-  uint8_t* _putp;
-  uint8_t* _getp;
-  uint8_t* _lastp;
+  uint8_t _put;
+  uint8_t _get;
   uint8_t* _buffer;
 
 public:
@@ -52,15 +51,14 @@ public:
    * @param[in] msize size of member.
    * @param[in] buffer pointer to buffer.
    */
-  Queue(uint8_t nmemb, uint8_t msize, void* buffer = 0) 
+  Queue(uint8_t nmemb, uint8_t msize, void* buffer = 0) :
+    _length(0),
+    _nmemb(nmemb),
+    _msize(msize),
+    _put(0),
+    _get(0),
+    _buffer((uint8_t*) (buffer != 0 ? buffer : malloc(msize * nmemb)))
   {
-    _length = 0;
-    _nmemb = nmemb;
-    _msize = msize;
-    _buffer = (uint8_t*) (buffer != 0 ? buffer : malloc(msize * nmemb));
-    _putp = _buffer;
-    _getp = _buffer;
-    _lastp = _buffer + (nmemb * msize);
   }
 
   /**

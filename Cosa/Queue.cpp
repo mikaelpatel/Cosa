@@ -33,10 +33,10 @@ Queue::enqueue(void* data)
 {
   if (_length == _nmemb) return (0);
   synchronized {
-    memcpy(_putp, data, _msize);
+    memcpy(&_buffer[_put * _msize], data, _msize);
     _length += 1;
-    _putp += _msize;
-    if (_putp == _lastp) _putp = _buffer;
+    _put += 1;
+    if (_put == _nmemb) _put = 0;
   }
   return (1);
 }
@@ -46,10 +46,10 @@ Queue::enqueue_P(const void* data)
 {
   if (_length == _nmemb) return (0);
   synchronized {
-    memcpy_P(_putp, data, _msize);
+    memcpy(&_buffer[_put * _msize], data, _msize);
     _length += 1;
-    _putp += _msize;
-    if (_putp == _lastp) _putp = _buffer;
+    _put += 1;
+    if (_put == _nmemb) _put = 0;
   }
   return (1);
 }
@@ -59,10 +59,10 @@ Queue::dequeue(void* data)
 {
   if (_length == 0) return (0);
   synchronized {
-    memcpy(data, _getp, _msize);
+    memcpy(data, &_buffer[_get * _msize], _msize);
     _length -= 1;
-    _getp += _msize;
-    if (_getp == _lastp) _getp = _buffer;
+    _get += 1;
+    if (_get == _nmemb) _get = 0;
   }
   return (1);
 }
