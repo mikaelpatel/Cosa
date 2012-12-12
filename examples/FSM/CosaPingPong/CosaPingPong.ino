@@ -43,11 +43,10 @@ private:
 
 public:
   /**
-   * Construct the echo state machine. Put in listen state as
-   * initial state when started. Name and port must be bound
+   * Construct the echo state machine. Name and port must be bound
    * before started.
    */
-  Echo() : FSM(listenState), _port(0), _name(0) {}
+  Echo() : FSM(initState), _port(0), _name(0) {}
 
   /**
    * Bind name and port. The name is used for the trace print
@@ -62,12 +61,26 @@ public:
   }
 
   /**
-   * The states; listen and echo.
+   * The states; init, listen and echo.
+   * init -> listen: print init message
+   * listen -> echo on timeout(0.5 s): print name
+   * echo -> listen: send message 
    */
+  static bool initState(FSM* fsm, uint8_t type)
+  {
+    Echo* echo = (Echo*) fsm;
+    trace.print_P(PSTR("init "));
+    trace.print_P(echo->_name);
+    trace.println();
+    fsm->set_state(listenState);
+    return (1);
+  }
+
   static bool listenState(FSM* fsm, uint8_t type)
   {
     Echo* echo = (Echo*) fsm;
     trace.print_P(echo->_name);
+    trace.println();
     fsm->set_state(echoState);
     fsm->set_timer(512);
     return (1);
@@ -95,16 +108,16 @@ void setup()
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 
   // Bind the state machines to each other and give them names
-  ping.bind(PSTR("ping > "), &pong);
-  pong.bind(PSTR("pong > "), &pang);
-  pang.bind(PSTR("pang!\n"), &ping);
+  ping.bind(PSTR("ping"), &pong);
+  pong.bind(PSTR("pong"), &pang);
+  pang.bind(PSTR("pang"), &ping);
 
   // Start the state machines
   ping.begin();
   pong.begin();
   pang.begin();
 
-  // And send an event to the first to kick them off
+  // Send an event to the first to kick them off
   ping.send(Event::USER_TYPE);
 }
 
