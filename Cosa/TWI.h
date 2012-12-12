@@ -247,7 +247,6 @@ public:
   int write(uint8_t addr, uint16_t header, void* buf = 0, uint8_t size = 0)
   {
     if (!write_request(addr, header, buf, size)) return (-1);
-    await_completed();
     return (await_completed());
   }
 
