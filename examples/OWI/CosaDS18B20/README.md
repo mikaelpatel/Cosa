@@ -5,6 +5,6 @@ Demonstration of Cosa OneWire DS18B20 1-Wire driver. Three Programmable Resoluti
 
 Circuit
 
-The Arduino Pin 7 is used as the 1-wire bus. Use a pullup resistor (4-5 Kohm) to power (Vcc). Connect Vcc and ground to the Digital Thermometer. The example code assumes three device but this is not critical.
+The Arduino Pin 7 is used as the 1-wire bus. Use a pullup resistor (4-5 Kohm) to power (Vcc). Connect Vcc and ground to the Digital Thermometer. The example code assumes three devices but this is not critical. 
 
-See Bench.jpg for a picture of a typical circuit using three devices, a pull-up resistor and an Arduino Nano with a IO shield.
+See Bench.jpg for a picture of a typical circuit using three devices, a pull-up resistor and an Arduino Nano with an IO shield.
