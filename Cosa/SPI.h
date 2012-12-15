@@ -53,11 +53,14 @@ public:
   typedef void (*InterruptHandler)(void* buffer, uint8_t count);
 
 private:
+  /**
+   * Pins used for SPI interface (in port B, digital pins 10-13).
+   */
   enum Pin {
-    SS_PIN = 2,
-    MOSI_PIN = 3,
-    MISO_PIN = 4,
-    SCK_PIN = 5
+    SS = 2,
+    MOSI = 3,
+    MISO = 4,
+    SCK = 5
   };
   InterruptHandler _handler;
   uint8_t _cmd;
@@ -114,7 +117,7 @@ public:
     _data(0)
   {
     spi = 0;
-    bit_clear(DDRB, SS_PIN);
+    bit_clear(DDRB, SS);
     if (buffer == 0) {
       _buffer = &_data;
       _max = 1;

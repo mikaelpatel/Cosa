@@ -38,19 +38,19 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
     if (clock == MASTER_CLOCK) {
       spi = this;
       _put = 0;
-      bit_clear(DDRB, MOSI_PIN); 
-      bit_set(DDRB, MISO_PIN);	 
-      bit_clear(DDRB, SCK_PIN);
-      bit_clear(DDRB, SS_PIN);	 
+      bit_clear(DDRB, MOSI); 
+      bit_set(DDRB, MISO);	 
+      bit_clear(DDRB, SCK);
+      bit_clear(DDRB, SS);	 
       SPCR = (_BV(SPIE) | _BV(SPE));
     } 
     // Master pin setting; input(MISO), output(MOSI, SCK)
     else {
-      bit_set(DDRB, MOSI_PIN);
-      bit_clear(DDRB, MISO_PIN);
-      bit_set(DDRB, SCK_PIN);
-      bit_clear(PORTB, SCK_PIN);
-      bit_clear(PORTB, MOSI_PIN);
+      bit_set(DDRB, MOSI);
+      bit_clear(DDRB, MISO);
+      bit_set(DDRB, SCK);
+      bit_clear(PORTB, SCK);
+      bit_clear(PORTB, MOSI);
       SPCR = (_BV(MSTR) | _BV(SPE));
     }
   }

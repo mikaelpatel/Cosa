@@ -109,7 +109,7 @@ protected:
   };
 
   /**
-   * Pins used for TWI interface (in port C).
+   * Pins used for TWI interface (in port C, analog pins).
    */
   enum {
     SDA = 4,
