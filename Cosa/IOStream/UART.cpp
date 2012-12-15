@@ -79,6 +79,7 @@ UART::putchar(char c)
   buffer[next] = c;
   head = next;
   bit_set(UCSR0B, UDRIE0);
+  return (c);
 }
 
 int 

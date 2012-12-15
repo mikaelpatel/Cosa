@@ -77,6 +77,6 @@ DS18B20::print_temperature_P(const char* prefix, IOStream& stream)
   uint16_t fraction = temp.get_fraction(4);
   stream.printf_P(PSTR("%S%d.%s%d C"), prefix,
 		  integer,
-		  (fraction != 0 & fraction < 1000 ? "0" : ""),
+		  ((fraction != 0) && (fraction < 1000) ? "0" : ""),
 		  fraction);
 }

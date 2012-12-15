@@ -142,7 +142,7 @@ public:
   /**
    * Dispatch event handler for target object.
    */
-  bool dispatch()
+  void dispatch()
   {
     if (_target != 0) _target->on_event(_type, _value);
   }
@@ -153,12 +153,11 @@ public:
    * @param[in] type event identity.
    * @param[in] target event target.
    * @param[in] value event value.
-   * @return boolean, true(1) if successful otherwise false(0).
    */
-  static bool push(uint8_t type, Thing* target, uint16_t value = 0)
+  static void push(uint8_t type, Thing* target, uint16_t value = 0)
   {
     Event event(type, target, value);
-    return (queue.enqueue(&event));
+    queue.enqueue(&event);
   }
 
   /**
@@ -167,9 +166,8 @@ public:
    * @param[in] type event identity.
    * @param[in] target event target.
    * @param[in] env event environment pointer.
-   * @return boolean, true(1) if successful otherwise false(0).
    */
-  static bool push(uint8_t type, Thing* target, void* env)
+  static void push(uint8_t type, Thing* target, void* env)
   {
     push(type, target, (uint16_t) env);
   }

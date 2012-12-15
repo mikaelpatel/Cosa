@@ -39,9 +39,8 @@ static const uint8_t COUNT_MAX = 255;
 int8_t
 DHT11::read_bit(uint8_t changes)
 {
-  uint8_t counter;
+  uint8_t counter = 0;
   while (changes--) {
-    counter = 0;
     while (is_set() == _latest) {
       counter++;
       DELAY(1);

@@ -636,8 +636,8 @@ public:
 	     InterruptHandler fn = 0, 
 	     void* env = 0) :
     _pin_at(pins),
-    _count(count),
     _handler(fn),
+    _count(count),
     _env(env)
   {
     for (uint8_t ix = 0; ix < count; ix++)

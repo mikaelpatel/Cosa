@@ -36,7 +36,7 @@ IOStream::print(void *ptr, size_t size, uint8_t base)
   unsigned int v_adj = (base == 10 ? 0 : (base == 8 ? 01000 : 0x100));
   uint8_t adj = (v_adj != 0);
   uint8_t n = 0;
-  for (int i = 0; i < size; i++) {
+  for (size_t i = 0; i < size; i++) {
     if (n == 0) {
       print(p);
       print_P(PSTR(": "));
