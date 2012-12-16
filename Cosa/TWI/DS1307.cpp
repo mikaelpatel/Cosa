@@ -56,19 +56,19 @@ DS1307::timekeeper_t::print(IOStream& stream, const char* format)
 int
 DS1307::read_ram(void* buf, uint8_t size, uint8_t pos)
 {
-  if (!begin()) return (-1);
-  write(ADDR, pos);
-  int count = read(ADDR, buf, size);
-  end();
+  if (!twi.begin()) return (-1);
+  twi.write(ADDR, pos);
+  int count = twi.read(ADDR, buf, size);
+  twi.end();
   return (count);
 }
 
 int
 DS1307::write_ram(void* buf, uint8_t size, uint8_t pos)
 {
-  if (!begin()) return (-1);
-  int count = write(ADDR, pos, buf, size);
-  end();
+  if (!twi.begin()) return (-1);
+  int count = twi.write(ADDR, pos, buf, size);
+  twi.end();
   return (count);
 }
 

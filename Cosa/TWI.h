@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Two wire library. 
+ * Two wire library. Support for the I2C/TWI bus.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -29,17 +29,14 @@
 #ifndef __COSA_TWI_H__
 #define __COSA_TWI_H__
 
-#include <avr/sleep.h>
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.h"
 #include "Cosa/Thing.h"
+#include <avr/sleep.h>
 
-#define TWI_STATUS(x) ((x) >> 3)
-
-class TWI : public Thing {
-
-protected:
+class TWI {
+private:
   /**
    * Two wire state and status codes
    */
@@ -51,6 +48,7 @@ protected:
     ST_STATE = 4,
     SR_STATE = 5
   };
+# define TWI_STATUS(x) ((x) >> 3)
   enum {
     /** General Status Codes */
     START = TWI_STATUS(0x08),
@@ -116,7 +114,9 @@ protected:
     SCL = 5
   };
 
-protected:
+  /**
+   * Device state, data buffers and target.
+   */
   static const uint8_t BUF_MAX = 4;
   static const uint8_t VEC_MAX = 4;
   volatile State _state;
@@ -139,6 +139,25 @@ protected:
   bool request(uint8_t addr);
 
 public:
+  /**
+   * Two-write device drivers are friends and may have callback/
+   * event handler for completion events.
+   */
+  class Driver : public Thing {
+    friend class TWI;
+  };
+
+  /**
+   * Two-write device are friends and may have callback/
+   * event handler for request events.
+   */
+  class Device : public Thing {
+    friend class TWI;
+  };
+
+  /** 
+   * Construct two-wire instance. This is actually a single-ton.
+   */
   TWI() :
     _state(IDLE_STATE),
     _status(NO_INFO),
@@ -151,18 +170,29 @@ public:
   }
 
   /**
-   * Start TWI bus logic. Default mode is master.
-   * @param[in] target receiver of events in slave mode.
+   * Start TWI bus logic. Default mode is master if address is non zero.
+   * @param[in] target receiver of events on requests.
    * @param[in] addr slave address.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint8_t addr = 0, Thing* target = 0);
+  bool begin(Thing* target = 0, uint8_t addr = 0);
   
   /**
    * Disconnect usage of the TWI bus logic.
    * @return true(1) if successful otherwise false(0)
    */
   bool end();
+
+  /**
+   * Set the input buffer.
+   * @param[in] buf buffer pointer.
+   * @param[in] size of buffer.
+   */
+  void set_buf(void* buf, uint8_t size)
+  {
+    _vec[0].buf = (uint8_t*) buf;
+    _vec[0].size = size;
+  }
 
   /**
    * Issue a write data request to the given slave unit. Return
@@ -275,5 +305,10 @@ public:
    */
   void on_bus_event();
 };
+
+/**
+ * Two-wire hardware interface module.
+ */
+extern TWI twi;
 
 #endif

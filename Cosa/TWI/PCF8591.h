@@ -32,7 +32,7 @@
 
 #include "Cosa/TWI.h"
 
-class PCF8591 : private TWI {
+class PCF8591 : private TWI::Driver {
 
 private:
   // Two-wire address for PCF8591 
@@ -63,7 +63,7 @@ public:
    * chip address.
    * @param[in] addr chip address (0..7)
    */
-  PCF8591(uint8_t addr = 0) : TWI(), _addr(ADDR | (addr & 0xe)) {}
+  PCF8591(uint8_t addr = 0) : _addr(ADDR | (addr & 0xe)) {}
 
   /**
    * Begin a sampling sequence for the channel given by the control
@@ -78,7 +78,7 @@ public:
    */
   void end()
   {
-    TWI::end();
+    twi.end();
   }
   
   /**
@@ -89,7 +89,7 @@ public:
   uint8_t sample()
   {
     uint8_t res;
-    TWI::read(_addr, &res, 1);
+    twi.read(_addr, &res, 1);
     return (res);
   }
 
@@ -102,7 +102,7 @@ public:
    */
   int sample(uint8_t* buf, uint8_t size)
   {
-    return (TWI::read(_addr, buf, size));
+    return (twi.read(_addr, buf, size));
   }
 
   /**

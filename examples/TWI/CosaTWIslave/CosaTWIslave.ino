@@ -32,45 +32,61 @@
 #include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
 
-class TWIslave : public TWI {
+// A simple TWI slave device
+class TWIslave : public TWI::Device {
 private:
-  static const uint8_t CMD_MAX = 8;
+  // Address of device on TWI bus
   static const uint8_t ADDR = 0xC05A;
+  // Buffer for request and respons
+  static const uint8_t BUF_MAX = 4;
+  uint8_t _buf[BUF_MAX];
+  // Request handler; events from incoming requests
   static void request_handler(Thing* it, uint8_t type, uint16_t value);
   friend void request_handler(Thing* it, uint8_t type, uint16_t value);
+  // Update buffer with reply
   void update();
 
 public:
-  TWIslave() : TWI() { set_event_handler(request_handler); }
+  TWIslave();
   bool begin();
+  bool end();
 };
 
-bool
+TWIslave::TWIslave()
+{ 
+  set_event_handler(request_handler); 
+}
+
+bool 
 TWIslave::begin() 
 { 
-  _vec[0].buf = _buf;
-  _vec[0].size = sizeof(_buf);
-  return (TWI::begin(ADDR, this)); 
+  twi.set_buf(_buf, sizeof(_buf));
+  return (twi.begin(this, ADDR)); 
+}
+
+bool 
+TWIslave::end() 
+{ 
+  return (twi.end()); 
 }
 
 void
 TWIslave::update()
 {
-  _vec[0].buf[1] = PINB;
-  _vec[0].buf[2] = PINC;
-  _vec[0].buf[3] = PIND;
-  trace.print(_vec[0].buf, 4);
+  for (uint8_t i = 1; i < sizeof(_buf); i++)
+    _buf[i] = _buf[0] + i;
+  trace.print(_buf, 4);
 }
 
 void
 TWIslave::request_handler(Thing* it, uint8_t type, uint16_t value)
 {
   TWIslave* twi = (TWIslave*) it;
-  INFO("type = %d", type);
+  INFO("event.type = %d, twi.command = %d", type, twi->_buf[0]);
   twi->update();
 }
 
-// The TWI interface and slave instance
+// The TWI slave instance
 TWIslave slave;
 
 // Use the builtin led for a heartbeat

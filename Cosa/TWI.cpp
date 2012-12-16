@@ -29,20 +29,15 @@
 #include "Cosa/TWI.h"
 #include "Cosa/Watchdog.h"
 
-#include <util/delay_basic.h>
-
-#define DELAY(us) _delay_loop_2((us) << 2)
-
 #ifndef TWI_FREQ
 #define TWI_FREQ 100000L
 #endif
 
-static TWI* _twi = 0;
+TWI twi;
 
 bool 
-TWI::begin(uint8_t addr, Thing* target)
+TWI::begin(Thing* target, uint8_t addr)
 {
-  _twi = this;
   _target = target;
   _addr = addr;
 
@@ -69,7 +64,7 @@ TWI::begin(uint8_t addr, Thing* target)
 bool 
 TWI::end()
 {
-  _twi = 0;
+  _target = 0;
   TWCR = 0;
   return (1);
 }
@@ -178,7 +173,7 @@ TWI::on_bus_event()
       break;
     } 
     if (_target != 0) 
-      Event::push(Event::WRITE_COMPLETED_TYPE, _target, _twi);
+      Event::push(Event::WRITE_COMPLETED_TYPE, _target, &twi);
   case MT_SLA_NACK:
   case MT_DATA_NACK:
     TWCR = STOP_CMD;
@@ -203,7 +198,7 @@ TWI::on_bus_event()
     _vec[_ix].buf[_next++] = TWDR;
     _count++;
     if (_target != 0) {
-      Event::push(Event::READ_COMPLETED_TYPE, _target, _twi);
+      Event::push(Event::READ_COMPLETED_TYPE, _target, &twi);
       _next = 0;
     }
   case MR_SLA_NACK:
@@ -259,7 +254,7 @@ TWI::on_bus_event()
     TWCR = STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
     if (_target != 0) 
-      Event::push(Event::SERVICE_REQUEST_TYPE, _target, _twi);
+      Event::push(Event::SERVICE_REQUEST_TYPE, _target, &twi);
     _state = IDLE_STATE;
     TWCR = IDLE_CMD; 
     break;
@@ -277,6 +272,6 @@ TWI::on_bus_event()
 
 ISR(TWI_vect) 
 {
-  if (_twi != 0) _twi->on_bus_event();
+  twi.on_bus_event();
 }
 

@@ -33,8 +33,8 @@ bool
 PCF8591::begin(uint8_t cntl)
 {
   _cntl = cntl;
-  if (!TWI::begin()) return (0);
-  TWI::write(_addr, _cntl);
+  if (twi.begin()) return (0);
+  twi.write(_addr, _cntl);
   sample();
   return (1);
 }
@@ -42,8 +42,8 @@ PCF8591::begin(uint8_t cntl)
 bool
 PCF8591::convert(uint8_t value)
 {
-  if (!TWI::begin()) return (0);
-  int count = TWI::write(_addr, _cntl, &value, 1);
-  TWI::end();
+  if (!twi.begin()) return (0);
+  int count = twi.write(_addr, _cntl, &value, 1);
+  twi.end();
   return (count == (sizeof(_cntl) + sizeof(value)));
 }

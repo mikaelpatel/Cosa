@@ -35,9 +35,6 @@
 // TWI slave address
 static const uint8_t ADDR = 0xC05A;
 
-// The TWI interface
-TWI twi;
-
 // Use the builtin led for a heartbeat
 OutputPin ledPin(13);
 
@@ -59,14 +56,16 @@ void loop()
 
   // Write a command to the slave
   static uint8_t cmd = 0;
+  uint8_t buf[4];
   ledPin.toggle();
   INFO("cmd = %d", cmd);
+  buf[0] = cmd++;
+  for (uint8_t i = 1; i < sizeof(buf); i++) buf[i] = 0;
   twi.begin();
-  twi.write(ADDR, cmd++);
+  twi.write(ADDR, buf, sizeof(buf));
   twi.end();
 
   // Read back the result
-  uint8_t buf[4];
   twi.begin();
   int count = twi.read(ADDR, buf, sizeof(buf));
   twi.end();
