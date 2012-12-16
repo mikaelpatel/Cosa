@@ -7,17 +7,15 @@ Cosa also contains a data streaming format (Ciao) for encoding of C/C++ language
 
 Cosa supports the following AVR/Atmega328P internal hardware modules; all pin modes, interrupt pins, PWM, Watchdog, UART (transmit), SPI and TWI. 
 
-The primary programming paradigm is object-oriented and state-machine/event driven. Virtual functions and singleton instances are avoided to reduce memory usage. Please see the example sketches in the directory Cosa/examples.
-
-There is a large number of device drivers available for SPI, TWI and OneWire. A strict directory structure is used to organize the Cosa/driver source code. Sub-directories are used for each driver type. Please check the class overview for a full list of drivers.
-
-To install download and move the Cosa directory to the Arduino cores directory within arduino itself, i.e., your-arduino-install-directory/hardware/arduino/cores/arduino.The examples should be moved to your sketchbook directory. 
+The primary programming paradigm is object-oriented and state-machine/event driven. Virtual functions and instances are avoided to reduce memory footprint. There is a large number of device drivers available for SPI, TWI/I2C and 1-Wire. A strict directory structure is used to organize the Cosa/driver source code. Sub-directories are used for each driver type. Please check the class overview for a full list of drivers.
 
 Cosa uses the Arduino IDL and build system. Cosa classes are included with prefix, e.g. "Cosa/FileName.h". It is possible to use both Arduino and Cosa functions together, though in some cases the Cosa objects may become inconsistent.
 
-Please note that documentation for each device driver hardware module may be found in the Cosa/references directory. 
-
 The goal of this project is to provide an efficient programming platform for rapid prototyping of "Internet-of-things"-devices. Unfortunately Cosa is not a beginners entry level programming platform, though following some of the design patterns in Cosa will help beginners build more complex small scale embedded systems with richer concurrency and low power consumption.
+
+Install:
+
+To install download and move the Cosa directory to the Arduino cores directory within arduino itself, i.e., your-arduino-install-directory/hardware/arduino/cores/arduino. The examples should be moved to your Arduino sketchbook directory. 
 
 Note:
 
@@ -35,5 +33,8 @@ Drivers:
 5. ADXL345 Digital Accelerometer.
 6. nRF24L01 Single Chip 2.4GHz Transceiver. 
 7. DHT11 Humidity & Temperature Sensor device driver
+8. Slave device support for SPI, TWI and OWI.
+
+The reference documentation for each device driver hardware module may be found in the Cosa/references directory. 
 
 
