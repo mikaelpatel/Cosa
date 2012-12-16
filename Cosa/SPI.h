@@ -36,15 +36,9 @@
 #include "Cosa/Bits.h"
 #include "Cosa/Event.h"
 
-class SPI : public Thing {
+class SPI {
 
 public:
-  /**
-   * Current SPI instance in slave mode. Allow mapping of interrupt
-   * on master data transfer. 
-   */
-  static SPI* spi;
-
   /**
    * Interrupt handler prototype for data receive.
    * @param[in] buffer pointer to received data (byte or package).
@@ -70,6 +64,22 @@ private:
   uint8_t _data;
 
 public:
+  /**
+   * Device drivers are friends and may have callback/
+   * event handler for completion events.
+   */
+  class Driver : public Thing {
+    friend class SPI;
+  };
+
+  /**
+   * Slave devices are friends and may have callback/
+   * event handler for request events.
+   */
+  class Device : public Thing {
+    friend class SPI;
+  };
+
   enum Clock {
     DIV4_CLOCK = 0x00,
     DIV16_CLOCK = 0x01,
@@ -92,14 +102,12 @@ public:
    * Construct serial peripheral interface for master.
    */
   SPI() : 
-    Thing(),
     _handler(0), 
     _buffer(0),
     _max(0),
     _put(0),
     _data(0)
   {
-    spi = 0;
   }
   
   /**
@@ -109,14 +117,12 @@ public:
    * @param[in] max size of buffer.
    */
   SPI(InterruptHandler fn, void* buffer = 0, uint8_t max = 0) : 
-    Thing(),
     _handler(fn), 
     _buffer((uint8_t*) buffer),
     _max(max),
     _put(0),
     _data(0)
   {
-    spi = 0;
     bit_clear(DDRB, SS);
     if (buffer == 0) {
       _buffer = &_data;
@@ -128,7 +134,7 @@ public:
    * Set data receive interrupt handler.
    * @param[in] fn interrupt handler function.
    */
-  void set(InterruptHandler fn) 
+  void set_interrupt(InterruptHandler fn) 
   { 
     _handler = fn; 
   }
@@ -138,7 +144,7 @@ public:
    * @param[in] buffer pointer to buffer.
    * @param[in] max max size of data package.
    */
-  void set(void* buffer, uint8_t max) 
+  void set_buf(void* buffer, uint8_t max) 
   { 
     _buffer = (uint8_t*) buffer; 
     _max = max; 
@@ -148,7 +154,7 @@ public:
    * Get data receive buffer for package receive mode.
    * @return buffer pointer to buffer.
    */
-  void* get_buffer()
+  void* get_buf()
   { 
     return (_buffer);
   }
@@ -259,8 +265,9 @@ public:
   
   /**
    * End of master/slave interaction.
+   * @return true(1) if successful otherwise false(0)
    */
-  void end();
+  bool end();
 
   /**
    * Trampoline function for interrupt service on data receive in 
@@ -272,9 +279,9 @@ public:
    * Interrupt handler to push event for receive data/package
    * in slave mode.
    */
-  static void push_event(SPI* spi, uint8_t count)
+  static void push_event(Device* dev, uint8_t count)
   { 
-    Event::push(Event::RECEIVE_COMPLETED_TYPE, spi, count);
+    Event::push(Event::RECEIVE_COMPLETED_TYPE, dev, count);
   }
 };
 
@@ -282,5 +289,10 @@ public:
  * Some syntactic sugar to capture the slave selection block
  */
 #define SPI_transaction(ss) for (uint8_t i = (ss.clear(), 1); i != 0; i--, ss.set())
+
+/**
+ * Singleton instance of the hardware SPI module
+ */
+extern SPI spi;
 
 #endif

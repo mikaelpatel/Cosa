@@ -47,8 +47,8 @@ void setup()
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
 
-  // Recalibrate the accelerometer
-  Watchdog::delay(100);
+  // Start and recalibrate the accelerometer
+  Watchdog::delay(128);
   adxl.calibrate();
 }
 

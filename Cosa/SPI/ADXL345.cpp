@@ -29,20 +29,20 @@
 
 #include "Cosa/SPI/ADXL345.h"
 
-ADXL345::ADXL345(uint8_t ss) : 
-  SPI(), 
+ADXL345::ADXL345(uint8_t ss) :
   _ss(ss, 1) 
 {
-  begin(SPI::DIV4_CLOCK, 3, SPI::MSB_FIRST);
-  write(DATA_FORMAT, _BV(FULL_RES) | RANGE_16G);
-  write(POWER_CTL, _BV(MEASURE));
+  if (begin()) {
+    write(DATA_FORMAT, _BV(FULL_RES) | RANGE_16G);
+    write(POWER_CTL, _BV(MEASURE));
+  }
 }
 
 void 
 ADXL345::write(Register reg, uint8_t value)
 {
   SPI_transaction(_ss) {
-    SPI::write(WRITE_CMD | (reg & REG_MASK), value);
+    spi.write(WRITE_CMD | (reg & REG_MASK), value);
   }
 }
 
@@ -50,7 +50,7 @@ void
 ADXL345::write(Register reg, void* buffer, uint8_t count)
 {
   SPI_transaction(_ss) {
-    SPI::write(WRITE_CMD | MULTIPLE_BYTE | (reg & REG_MASK), buffer, count);
+    spi.write(WRITE_CMD | MULTIPLE_BYTE | (reg & REG_MASK), buffer, count);
   }
 }
 
@@ -59,7 +59,7 @@ ADXL345::read(Register reg)
 {
   uint8_t res;
   SPI_transaction(_ss) {
-    res = SPI::read(READ_CMD | (reg & REG_MASK));
+    res = spi.read(READ_CMD | (reg & REG_MASK));
   }
   return (res);
 }
@@ -68,7 +68,7 @@ void
 ADXL345::read(Register reg, void* buffer, uint8_t count)
 {
   SPI_transaction(_ss) {
-    SPI::read(READ_CMD | MULTIPLE_BYTE | (reg & REG_MASK), buffer, count);
+    spi.read(READ_CMD | MULTIPLE_BYTE | (reg & REG_MASK), buffer, count);
   }
 }
 

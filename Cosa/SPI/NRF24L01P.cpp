@@ -37,7 +37,6 @@
 #define Thce 10.0
 
 NRF24L01P::NRF24L01P(uint8_t channel, uint8_t csn, uint8_t ce, uint8_t irq) : 
-  SPI(), 
   _status(0),
   _channel(channel),
   _csn(csn, 1),
@@ -45,7 +44,7 @@ NRF24L01P::NRF24L01P(uint8_t channel, uint8_t csn, uint8_t ce, uint8_t irq) :
   _irq(irq, InterruptPin::ON_FALLING_MODE),
   _state(POWER_DOWN_STATE)
 {
-  begin(SPI::DIV4_CLOCK, 0, SPI::MSB_FIRST);
+  begin();
 }
 
 uint8_t
@@ -53,7 +52,7 @@ NRF24L01P::read(Register reg)
 {
   uint8_t res;
   SPI_transaction(_csn) {
-    res = SPI::read(R_REGISTER | (REG_MASK & reg));
+    res = spi.read(R_REGISTER | (REG_MASK & reg));
   }
   return (res);
 }
@@ -62,7 +61,7 @@ uint8_t
 NRF24L01P::write(Register reg, uint8_t data)
 {
   SPI_transaction(_csn) {
-    _status = SPI::write(W_REGISTER | (REG_MASK & reg), data);
+    _status = spi.write(W_REGISTER | (REG_MASK & reg), data);
   }
   return (_status);
 }
@@ -71,7 +70,7 @@ uint8_t
 NRF24L01P::write(Register reg, const void* buffer, uint8_t count)
 {
   SPI_transaction(_csn) {
-    _status = SPI::write(W_REGISTER | (REG_MASK & reg), buffer, count);
+    _status = spi.write(W_REGISTER | (REG_MASK & reg), buffer, count);
   }
   return (_status);
 }
@@ -173,10 +172,10 @@ NRF24L01P::recv(void* buffer, uint8_t* pipe)
   if (pipe != 0) *pipe = no >> RX_P_NO;
   uint8_t count;
   SPI_transaction(_csn) {
-    count = SPI::read(R_RX_PL_WID);
+    count = spi.read(R_RX_PL_WID);
   }
   SPI_transaction(_csn) {
-    _status = SPI::read(R_RX_PAYLOAD, buffer, count);
+    _status = spi.read(R_RX_PAYLOAD, buffer, count);
   }
   return (count);
 }
@@ -208,7 +207,7 @@ NRF24L01P::ack(const void* buffer, uint8_t count, uint8_t pipe)
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
   SPI_transaction(_csn) {
-    _status = SPI::write(W_ACK_PAYLOAD | (PIPE_MASK & pipe), buffer, count);
+    _status = spi.write(W_ACK_PAYLOAD | (PIPE_MASK & pipe), buffer, count);
   }
   return (count);
 }
@@ -219,7 +218,7 @@ NRF24L01P::ack_P(const void* buffer, uint8_t count, uint8_t pipe)
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
   SPI_transaction(_csn) {
-    _status = SPI::write_P(W_ACK_PAYLOAD | (PIPE_MASK & pipe), buffer, count);
+    _status = spi.write_P(W_ACK_PAYLOAD | (PIPE_MASK & pipe), buffer, count);
   }
   return (count);
 }
@@ -230,7 +229,7 @@ NRF24L01P::send(const void* buffer, uint8_t count)
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
   SPI_transaction(_csn) {
-    _status = SPI::write(W_TX_PAYLOAD, buffer, count);
+    _status = spi.write(W_TX_PAYLOAD, buffer, count);
   }
   return (count);
 }
@@ -241,7 +240,7 @@ NRF24L01P::send_P(const void* buffer, uint8_t count)
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
   SPI_transaction(_csn) {
-    _status = SPI::write_P(W_TX_PAYLOAD, buffer, count);
+    _status = spi.write_P(W_TX_PAYLOAD, buffer, count);
   }
   return (count);
 }
@@ -250,8 +249,8 @@ uint8_t
 NRF24L01P::flush()
 {
   SPI_transaction(_csn) {
-    _status = SPI::exchange(FLUSH_RX);
-    _status = SPI::exchange(FLUSH_TX);
+    _status = spi.exchange(FLUSH_RX);
+    _status = spi.exchange(FLUSH_TX);
   }
   write(STATUS, 0xf0);
   if (is_max_lost()) {

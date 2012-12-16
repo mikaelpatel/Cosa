@@ -35,7 +35,7 @@
 #include "Cosa/IOStream.h"
 #include "Cosa/Trace.h"
 
-class ADXL345 : private SPI {
+class ADXL345 : private SPI::Driver {
 
 private:
   /**
@@ -225,6 +225,24 @@ public:
    * @param[in] ss slave selection pin.
    */
   ADXL345(uint8_t ss = 10);
+
+  /**
+   * Start interaction with device.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool begin()
+  {
+    return (spi.begin(SPI::DIV4_CLOCK, 3, SPI::MSB_FIRST));
+  }
+
+  /**
+   * Stop sequence of interaction with device.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool end()
+  {
+    return (spi.end());
+  }
 
   /**
    * Accelerometer offset calibration structure.

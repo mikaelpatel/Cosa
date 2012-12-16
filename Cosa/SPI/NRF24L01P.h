@@ -35,7 +35,7 @@
 #include "Cosa/Event.h"
 #include "Cosa/SPI.h"
 
-class NRF24L01P : private SPI {
+class NRF24L01P : private SPI::Driver {
 
 private:
   /**
@@ -290,6 +290,24 @@ public:
   };
 
   /**
+   * Start interaction with device.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool begin()
+  {
+    return (spi.begin(SPI::DIV4_CLOCK, 0, SPI::MSB_FIRST));
+  }
+
+  /**
+   * Stop sequence of interaction with device.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool end()
+  {
+    return (spi.end());
+  }
+
+  /**
    * Read command and status registers. Issue R_REGISTER command.
    * @param[in] reg register address.
    * @return register value.
@@ -321,7 +339,7 @@ public:
   uint8_t get_status()
   {
     SPI_transaction(_csn) {
-      _status = SPI::exchange(NOP);
+      _status = spi.exchange(NOP);
     }
     return (_status);
   }
