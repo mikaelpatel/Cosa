@@ -148,7 +148,7 @@ public:
   };
 
   /**
-   * Slave evices are friends and may have callback/
+   * Slave devices are friends and may have callback/
    * event handler for request events.
    */
   class Device : public Thing {
