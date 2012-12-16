@@ -139,24 +139,6 @@ Ciao::write(float* buf, int16_t count)
   _dev->write(buf, count * sizeof(float));
 }
 
-void 
-Ciao::write(Pin* pin)
-{
-  digital_pin_t dgl;
-  dgl.pin = pin->get_pin();
-  dgl.value = pin->is_set();
-  write(&Descriptor::digital_pin_t, &dgl, 1);
-}
-
-void 
-Ciao::write(AnalogPin* pin)
-{
-  analog_pin_t ang;
-  ang.pin = pin->get_pin();
-  ang.value = pin->get_value();
-  write(&Descriptor::analog_pin_t, &ang, 1);
-}
-
 void
 Ciao::write(uint8_t type, uint16_t count)
 {

@@ -1,5 +1,5 @@
 /**
- * @file CosaCiaoPoint.ino
+ * @file CosaCiaoNative.ino
  * @version 1.0
  *
  * @section License
@@ -21,8 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Example program for the Ciao streaming format; descriptor and
- * streaming of a data type.
+ * Example program for the Ciao streaming format; native data types.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -31,41 +30,10 @@
 #include "Cosa/IOStream.h"
 #include "Cosa/Trace.h"
 #include <ctype.h>
+#include <math.h>
 
 // Ciao output stream
 Ciao cout;
-
-// A Point data type 
-struct Point {
-  int16_t x;
-  int16_t y;
-};
-
-// Ciao data type descriptor in program memory for Point
-const uint16_t Point_ID = 0x1042;
-const char Point_name[] PROGMEM = "Point";
-const char Point_x_name[] PROGMEM = "x";
-const char Point_y_name[] PROGMEM = "y";
-const Ciao::Descriptor::member_t Point_members[] PROGMEM = {
-  {
-    Ciao::INT16_TYPE,
-    1,
-    Point_x_name,
-    0
-  },
-  {
-    Ciao::INT16_TYPE,
-    1,
-    Point_y_name,
-    0
-  }
-};
-const Ciao::Descriptor::user_t Point_desc PROGMEM = {
-  Point_ID,
-  Point_name,
-  Point_members,
-  membersof(Point_members)
-};  
 
 // Arduino build includes stdio and putchar macro so we need to undef
 #undef putchar
@@ -93,7 +61,7 @@ TraceDevice traceDevice;
 void setup()
 {
   // Start trace coutput stream
-  trace.begin(9600, PSTR("CosaCiaoPoint: started"));
+  trace.begin(9600, PSTR("CosaCiaoNative: started"));
 
   // Setup and start the data output stream on the trace device
   cout.set(&traceDevice);
@@ -101,15 +69,23 @@ void setup()
   INFO("Write the header to the trace device", 0);
   cout.begin();
 
-  INFO("Stream Point type descriptor", 0);
-  cout.write(&Point_desc);
+  // Values to stream
+  char* s = "Tjena, tjabba";
+  uint8_t x = 15;
+  int32_t y = -2;
+  int16_t z[] = { 1, 2, 3, 4 };
+  float r = M_PI;
+  float c[] = { -1.0, 1.0 };
 
-  INFO("Stream Point values with user type prefix", 0);
-  Point p = { -1, 1 };
-  cout.write(&Point_desc, &p, 1);
-
-  Point q[] = { { -100, -100 }, { 100, 100 } };
-  cout.write(&Point_desc, &q, membersof(q));
+  INFO("Stream standard type values", 0);
+  cout.write(s);
+  cout.write(x);
+  cout.write(y);
+  cout.write(z, membersof(z));
+  cout.write(r);
+  cout.write(c, membersof(c));
+  cout.write(NAN);
+  cout.write(INFINITY);
 }
 
 void loop()

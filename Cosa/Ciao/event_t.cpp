@@ -53,7 +53,7 @@ static const Ciao::Descriptor::member_t members[] PROGMEM = {
 };
 static const char name[] PROGMEM = "Cosa::Event";
 const Ciao::Descriptor::user_t Ciao::Descriptor::event_t PROGMEM = {
-  Ciao::EVENT_ID,
+  Ciao::Descriptor::EVENT_ID,
   name,
   members,
   membersof(members)

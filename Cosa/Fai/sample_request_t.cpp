@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao/digital_pin_t.cpp
+ * @file Cosa/Fai/sample_request_t.cpp
  * @version 1.0
  *
  * @section License
@@ -21,32 +21,32 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa Ciao data stream digital pin value descriptor.
+ * The Cosa Fai data stream sample request descriptor.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Ciao.h"
+#include "Cosa/Fai.h"
 
-static const char pin_name[] PROGMEM = "pin";
-static const char value_name[] PROGMEM = "value";
+static const char pins_name[] PROGMEM = "pins";
+static const char period_name[] PROGMEM = "period";
 static const Ciao::Descriptor::member_t members[] PROGMEM = {
   {
-    Ciao::UINT8_TYPE,
+    Ciao::UINT32_TYPE,
     1,
-    pin_name,
+    pins_name,
     0
   },
   {
-    Ciao::UINT8_TYPE,
+    Ciao::UINT16_TYPE,
     1,
-    value_name,
+    period_name,
     0
   }
 };
-static const char name[] PROGMEM = "Ciao::digital_pin_t";
-const Ciao::Descriptor::user_t Ciao::Descriptor::digital_pin_t PROGMEM = {
-  Ciao::DIGITAL_PIN_ID,
+static const char name[] PROGMEM = "Ciao::Fai::sample_request_t";
+const Ciao::Descriptor::user_t Fai::Descriptor::sample_request_t PROGMEM = {
+  Fai::Descriptor::SAMPLE_REQUEST_ID,
   name,
   members,
   membersof(members)

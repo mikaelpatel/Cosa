@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao/analog_pin_desc.cpp
+ * @file Cosa/Fai/digital_pin_t.cpp
  * @version 1.0
  *
  * @section License
@@ -21,12 +21,12 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa Ciao data stream analog pin value descriptor.
+ * The Cosa Fai data stream digital pin value descriptor.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Ciao.h"
+#include "Cosa/Fai.h"
 
 static const char pin_name[] PROGMEM = "pin";
 static const char value_name[] PROGMEM = "value";
@@ -38,16 +38,17 @@ static const Ciao::Descriptor::member_t members[] PROGMEM = {
     0
   },
   {
-    Ciao::UINT16_TYPE,
+    Ciao::UINT8_TYPE,
     1,
     value_name,
     0
   }
 };
-static const char name[] PROGMEM = "Ciao::analog_pin_t";
-const Ciao::Descriptor::user_t Ciao::Descriptor::analog_pin_t PROGMEM = {
-  Ciao::ANALOG_PIN_ID,
+static const char name[] PROGMEM = "Ciao::Fai::digital_pin_t";
+const Ciao::Descriptor::user_t Fai::Descriptor::digital_pin_t PROGMEM = {
+  Fai::Descriptor::DIGITAL_PIN_ID,
   name,
   members,
   membersof(members)
-};  
+};
+

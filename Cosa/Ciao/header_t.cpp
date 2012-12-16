@@ -74,7 +74,7 @@ static const Ciao::Descriptor::member_t members[] PROGMEM = {
 };
 static const char name[] PROGMEM = "Ciao::header_t";
 const Ciao::Descriptor::user_t Ciao::Descriptor::header_t PROGMEM = {
-  Ciao::HEADER_ID,
+  Ciao::Descriptor::HEADER_ID,
   name,
   members,
   membersof(members)

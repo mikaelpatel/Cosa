@@ -30,7 +30,7 @@
 #define __COSA_CIAO_H__
 
 #include "Cosa/IOStream.h"
-#include "Cosa/Pins.h"
+#include "Cosa/Event.h"
 
 class Ciao {
   
@@ -74,22 +74,19 @@ public:
   };
 
   /**
-   * Predefined data type identity.
-   */
-  enum {
-    HEADER_ID = 0x00,
-    ANALOG_PIN_ID = 0x01,
-    DIGITAL_PIN_ID = 0x02,
-    DIGITAL_PINS_ID = 0x03,
-    EVENT_ID = 0x04,
-    SAMPLE_REQUEST_ID = 0x80
-  };
-
-  /**
    * Data type descriptor structures (program memory)
    */
   class Descriptor {
   public:
+    /**
+     * Predefined data type identity.
+     */
+    enum {
+      HEADER_ID = 0x00,
+      EVENT_ID = 0x01,
+      FAI_ID = 0x10,
+      USER_ID = 0x0100
+    };
     struct member_t {
       uint8_t type;
       uint16_t count;
@@ -103,11 +100,7 @@ public:
       uint8_t count;
     };
     static const user_t header_t PROGMEM;
-    static const user_t analog_pin_t PROGMEM;
-    static const user_t digital_pin_t PROGMEM;
-    static const user_t digital_pins_t PROGMEM;
     static const user_t event_t PROGMEM;
-    static const user_t sample_request_t PROGMEM;
   };
 
   /**
@@ -123,38 +116,6 @@ public:
   enum {
     LITTLE_ENDIAN = 0,
     BIG_ENDIAN = 1
-  };
-
-  /**
-   * Stream analog pin value. The identity code is ANALOG_PIN_ID(0x01).
-   */
-  struct analog_pin_t {
-    uint8_t pin;
-    uint16_t value;
-  };
-
-  /**
-   * Stream digital pin value. The identity code is DIGITAL_PIN_ID(0x02).
-   */
-  struct digital_pin_t {
-    uint8_t pin;
-    uint8_t value;
-  };
-
-  /**
-   * Stream digital pins value. The identity code is DIGITAL_PINS_ID(0x03).
-   */
-  struct digital_pins_t {
-    uint16_t pins;
-    uint16_t values;
-  };
-
-  /**
-   * Stream sample request. The identity code is SAMPLE_ID(0x05).
-   */
-  struct sample_request_t {
-    uint32_t pins;
-    uint16_t period;
   };
 
 private:
@@ -299,18 +260,6 @@ public:
    */
   void write(float* buf, int16_t count);
   void write(double* buf, int16_t count) { write((float*) buf, count); }
-
-  /**
-   * Write digital pin value to data stream.
-   * @param[in] pin to write to data stream.
-   */
-  void write(Pin* pin);
-
-  /**
-   * Write analog pin value to data stream.
-   * @param[in] pin to write to data stream.
-   */
-  void write(AnalogPin* pin);
 
   /**
    * Write event to data stream.

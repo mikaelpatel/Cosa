@@ -1,5 +1,5 @@
 /**
- * @file CosaCiaoPoint.ino
+ * @file CosaFai.ino
  * @version 1.0
  *
  * @section License
@@ -21,51 +21,25 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Example program for the Ciao streaming format; descriptor and
- * streaming of a data type.
+ * Example program for the Cosa Fai streaming format.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Ciao.h"
+#include "Cosa/Pins.h"
+#include "Cosa/Fai.h"
 #include "Cosa/IOStream.h"
+#include "Cosa/Event.h"
+#include "Cosa/Watchdog.h"
 #include "Cosa/Trace.h"
 #include <ctype.h>
 
-// Ciao output stream
-Ciao cout;
+// Fai::Ciao output stream over the UART
+Fai cout;
 
-// A Point data type 
-struct Point {
-  int16_t x;
-  int16_t y;
-};
-
-// Ciao data type descriptor in program memory for Point
-const uint16_t Point_ID = 0x1042;
-const char Point_name[] PROGMEM = "Point";
-const char Point_x_name[] PROGMEM = "x";
-const char Point_y_name[] PROGMEM = "y";
-const Ciao::Descriptor::member_t Point_members[] PROGMEM = {
-  {
-    Ciao::INT16_TYPE,
-    1,
-    Point_x_name,
-    0
-  },
-  {
-    Ciao::INT16_TYPE,
-    1,
-    Point_y_name,
-    0
-  }
-};
-const Ciao::Descriptor::user_t Point_desc PROGMEM = {
-  Point_ID,
-  Point_name,
-  Point_members,
-  membersof(Point_members)
-};  
+// Pins to sample and stream
+AnalogPin levelPin(0);
+OutputPin ledPin(13);
 
 // Arduino build includes stdio and putchar macro so we need to undef
 #undef putchar
@@ -93,7 +67,7 @@ TraceDevice traceDevice;
 void setup()
 {
   // Start trace coutput stream
-  trace.begin(9600, PSTR("CosaCiaoPoint: started"));
+  trace.begin(9600, PSTR("CosaFai: started"));
 
   // Setup and start the data output stream on the trace device
   cout.set(&traceDevice);
@@ -101,17 +75,34 @@ void setup()
   INFO("Write the header to the trace device", 0);
   cout.begin();
 
-  INFO("Stream Point type descriptor", 0);
-  cout.write(&Point_desc);
+  INFO("Stream some other values; analog and digital pin values", 0);
+  levelPin.sample();
+  cout.write(&levelPin);
+  cout.write(&ledPin);
+  ledPin.toggle();
+  cout.write(&ledPin);
+  ledPin.toggle();
 
-  INFO("Stream Point values with user type prefix", 0);
-  Point p = { -1, 1 };
-  cout.write(&Point_desc, &p, 1);
+  INFO("Stream an event. Double check the address of the analog pin", 0);
+  Event event(Event::READ_COMPLETED_TYPE, &levelPin);
+  cout.Ciao::write(&event);
 
-  Point q[] = { { -100, -100 }, { 100, 100 } };
-  cout.write(&Point_desc, &q, membersof(q));
+  // Start the watchdog and trace events
+  Watchdog::begin(2048, 
+		  SLEEP_MODE_IDLE, 
+		  Watchdog::push_watchdog_event, 
+		  &ledPin);
 }
 
 void loop()
 {
+  INFO("Wait for timeout event", 0);
+  Event event;
+  Event::queue.await(&event);
+  OutputPin* pin = (OutputPin*) event.get_env();
+  pin->toggle();
+  cout.Ciao::write(&event);
+  levelPin.sample();
+  cout.write(&levelPin);
+  pin->toggle();
 }
