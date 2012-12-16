@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * One-wire device driver support class. Allows device rom search
+ * 1-wire device driver support class. Allows device rom search
  * and connection to multiple devices on one-wire bus.
  *
  * This file is part of the Arduino Che Cosa project.
@@ -35,9 +35,6 @@
 #include "Cosa/Trace.h"
 
 class OWI : private IOPin {
-private:
-  uint8_t _crc;
-
 public:
   /**
    * ROM Commands and Size
@@ -229,9 +226,7 @@ public:
      * @param[in] rom identity number.
      */
     Device(uint8_t pin, uint8_t* rom) : 
-      InterruptPin(pin, 
-		   InterruptPin::ON_CHANGE_MODE, 
-		   interrupt_handler),
+      InterruptPin(pin, InterruptPin::ON_CHANGE_MODE, interrupt_handler),
       _rom(rom),
       _time(0),
       _crc(0),
@@ -241,6 +236,10 @@ public:
     }
   };
   
+private:
+  uint8_t _crc;
+  
+public:
   /**
    * Construct one wire bus connected to the given pin.
    * @param[in] pin number.
