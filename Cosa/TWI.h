@@ -140,7 +140,7 @@ private:
 
 public:
   /**
-   * Two-write device drivers are friends and may have callback/
+   * Device drivers are friends and may have callback/
    * event handler for completion events.
    */
   class Driver : public Thing {
@@ -148,7 +148,7 @@ public:
   };
 
   /**
-   * Two-write device are friends and may have callback/
+   * Slave evices are friends and may have callback/
    * event handler for request events.
    */
   class Device : public Thing {
