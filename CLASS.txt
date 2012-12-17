@@ -59,11 +59,13 @@ Trace log support.
 Trace.h:	Trace trace (singleton)
 Trace.h:	class Trace : public IOStream [UART]
 ----------------------------------------------------------------------------
-CIAO
+CIAO and COSA FAI
 The Cosa data stream handler. See CIAO.txt.
 ----------------------------------------------------------------------------
 Ciao.h:		class Ciao
 		      class Ciao::Descriptor
+Fai.h:		class Fai : public Ciao
+		      class Fai::Descriptor
 ----------------------------------------------------------------------------
 OWI
 Driver for devices on the one wire bus (1-Wire). 
