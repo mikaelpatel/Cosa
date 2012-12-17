@@ -35,25 +35,27 @@ The reference documentation for each device driver hardware module may be found 
 References
 ----------
 
-1. D.tools, http://hci.stanford.edu/research/dtools/
-2. Processing, http://processing.org/
-3. Wiring, http://wiring.org.co/
-4. Arduino, http://www.arduino.cc/
-5. Firmata, http://www.firmata.org/wiki/Main_Page
-6. LilyPad, http://web.media.mit.edu/~leah/LilyPad/
-7. Jeelabs, http://jeelabs.org/
-8. Quantum Leaps, http://www.state-machine.com/
-9. Concurrency.cc, http://concurrency.cc/
+[1] D.tools, http://hci.stanford.edu/research/dtools/
+[2] Processing, http://processing.org/
+[3] Wiring, http://wiring.org.co/
+[4] Arduino, http://www.arduino.cc/
+[5] Firmata, http://www.firmata.org/wiki/Main_Page
+[6] LilyPad, http://web.media.mit.edu/~leah/LilyPad/
+[7] Jeelabs, http://jeelabs.org/
+[8] Quantum Leaps, http://www.state-machine.com/
+[9] Concurrency.cc, http://concurrency.cc/
 
 Naming
 ------
 
-"Cosa"; noun thing, matter; pronoun; what?, what!. "Che cosa"; pronoun; what. "Ciao"; interjection hello!, goodbye!. "Cosa fai"; what are you doing?
+* "Cosa"; noun thing, matter; pronoun; what?, what!. 
+* "Che cosa"; pronoun; what. 
+* "Ciao"; interjection hello!, goodbye!. 
+* "Cosa fai"; what are you doing?
 
 Note
 ----
 
-1. Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are supported. 
-2. Timers, EEPROM, UART (receiver) are not directly supported but planned. This also applies for Arduino Mega and Leonardo, and Attiny devices.
+Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are supported. Timers, EEPROM, UART (receiver) are not directly supported but planned. This also applies for Arduino Mega and Leonardo, and Attiny devices.
 
 
