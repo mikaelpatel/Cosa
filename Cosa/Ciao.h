@@ -83,7 +83,6 @@ public:
      */
     enum {
       HEADER_ID = 0x00,
-      EVENT_ID = 0x01,
       FAI_ID = 0x10,
       USER_ID = 0x0100
     };
@@ -100,7 +99,6 @@ public:
       uint8_t count;
     };
     static const user_t header_t PROGMEM;
-    static const user_t event_t PROGMEM;
   };
 
   /**
@@ -260,15 +258,6 @@ public:
    */
   void write(float* buf, int16_t count);
   void write(double* buf, int16_t count) { write((float*) buf, count); }
-
-  /**
-   * Write event to data stream.
-   * @param[in] event to write to data stream.
-   */
-  void write(Event* event)
-  {
-    write(&Descriptor::event_t, event, 1);
-  }
 
   /**
    * Write given user defined data type descriptor to data stream.

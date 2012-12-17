@@ -30,6 +30,58 @@
 #include "Cosa/Trace.h"
 #include <avr/pgmspace.h>
 
+// Ciao configuration
+static char MAGIC[] = "Cosa::Ciao";
+static const uint8_t MAJOR = 1;
+static const uint8_t MINOR = 0;
+
+// Ciao header with magic string, revision and endian information
+Ciao::header_t Ciao::header = {
+  MAGIC,
+  MAJOR,
+  MINOR,
+  LITTLE_ENDIAN
+};
+
+// Ciao header descriptor 
+static const char magic_name[] PROGMEM = "magic";
+static const char major_name[] PROGMEM = "major";
+static const char minor_name[] PROGMEM = "minor";
+static const char endian_name[] PROGMEM = "endian";
+static const Ciao::Descriptor::member_t members[] PROGMEM = {
+  {
+    Ciao::UINT8_TYPE,
+    0,
+    magic_name,
+    0
+  },
+  {
+    Ciao::UINT8_TYPE,
+    1,
+    major_name,
+    0
+  },
+  {
+    Ciao::UINT8_TYPE,
+    1,
+    minor_name,
+    0
+  },
+  {
+    Ciao::UINT8_TYPE,
+    1,
+    endian_name,
+    0
+  }
+};
+static const char name[] PROGMEM = "Ciao::header_t";
+const Ciao::Descriptor::user_t Ciao::Descriptor::header_t PROGMEM = {
+  Ciao::Descriptor::HEADER_ID,
+  name,
+  members,
+  membersof(members)
+};  
+
 void 
 Ciao::write(char* s)
 {

@@ -44,6 +44,7 @@ public:
       ANALOG_PIN_ID = 0x10,
       DIGITAL_PIN_ID = 0x11,
       DIGITAL_PINS_ID = 0x12,
+      EVENT_ID = 0x13,
       SAMPLE_REQUEST_ID = 0x20,
       SET_MODE_ID = 0x21
     };
@@ -52,6 +53,7 @@ public:
     static const Ciao::Descriptor::user_t digital_pins_t PROGMEM;
     static const Ciao::Descriptor::user_t sample_request_t PROGMEM;
     static const Ciao::Descriptor::user_t set_mode_t PROGMEM;
+    static const Ciao::Descriptor::user_t event_t PROGMEM;
   };
 
   /**
@@ -101,6 +103,14 @@ public:
   Fai(IOStream::Device* dev = 0) : Ciao(dev) {}
 
   /**
+   * Start the data stream with a version string and endian information.
+   */
+  void begin()
+  {
+    Ciao::write(&Ciao::Descriptor::header_t, &header, 1);
+  }
+
+  /**
    * Write digital pin value to data stream.
    * @param[in] pin to write to data stream.
    */
@@ -111,6 +121,19 @@ public:
    * @param[in] pin to write to data stream.
    */
   void write(AnalogPin* pin);
+
+  /**
+   * Write event to data stream.
+   * @param[in] event to write to data stream.
+   */
+  void write(Event* event)
+  {
+    Ciao::write(&Descriptor::event_t, event, 1);
+  }
+
+private:
+  // Version header
+  static header_t header;
 };
 
 #endif

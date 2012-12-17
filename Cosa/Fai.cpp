@@ -28,6 +28,19 @@
 
 #include "Cosa/Fai.h"
 
+// Ciao configuration
+static char MAGIC[] = "Cosa::Fai";
+static const uint8_t MAJOR = 1;
+static const uint8_t MINOR = 0;
+
+// Ciao header with magic string, revision and endian information
+Ciao::header_t Fai::header = {
+  MAGIC,
+  MAJOR,
+  MINOR,
+  LITTLE_ENDIAN
+};
+
 void 
 Fai::write(Pin* pin)
 {

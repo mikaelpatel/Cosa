@@ -85,7 +85,7 @@ void setup()
 
   INFO("Stream an event. Double check the address of the analog pin", 0);
   Event event(Event::READ_COMPLETED_TYPE, &levelPin);
-  cout.Ciao::write(&event);
+  cout.write(&event);
 
   // Start the watchdog and trace events
   Watchdog::begin(2048, 
@@ -101,7 +101,7 @@ void loop()
   Event::queue.await(&event);
   OutputPin* pin = (OutputPin*) event.get_env();
   pin->toggle();
-  cout.Ciao::write(&event);
+  cout.write(&event);
   levelPin.sample();
   cout.write(&levelPin);
   pin->toggle();
