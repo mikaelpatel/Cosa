@@ -1,8 +1,8 @@
 CIAO: DATA STREAMING FORMAT FOR COSA
 
 Author:	       Mikael Patel
-Date:	       2012-12-10
-Rev.:	       1.0.2
+Date:	       2012-12-17
+Rev.:	       1.0.3
 
 This is a desciption of the Cosa data streaming format; Ciao. It
 is basically a tagged data format that supports the C/C++ language
@@ -141,24 +141,27 @@ TYPE    ATTRIBUTES           	 DESCRIPTION
 
 A typed data sequence is prefixed with the type identity.
 
-5. SYSTEM DATA TYPES
+5. SYSTEM AND COSA FAI DATA TYPES
 
 The short 8-bit data type identities are reserved for system data
 types. The below identities are currently defined. Note that the
 identities 0..127 are used for up-stream (status/response) and
-128..255 for down-stream (control/requests). See Ciao.h for more
-details on the struct member description. 
+128..255 for down-stream (control/requests). See Ciao.h and Fai.h
+for more details on the struct member description. 
 
 ID     NAME		     DESCRIPTION
 0x00   HEADER_ID	     Ciao stream header (magic/version/endian)
-0x01   ANALOG_PIN_ID	     Analog pin value
-0x02   DIGITAL_PIN_ID	     Digital pin value 
-0x03   DIGITAL_PINS_ID	     Digital pin values 
-0x04   EVENT_ID		     Cosa event trace
-0x80   SAMPLE_REQUEST_ID     Digital/analog pin set sample request
+0x10   FAI_ID		     Fai types
+0x10   ANALOG_PIN_ID	     Analog pin value
+0x11   DIGITAL_PIN_ID	     Digital pin value 
+0x12   DIGITAL_PINS_ID	     Digital pin values 
+0x13   EVENT_ID		     Cosa event trace
+0x20   SAMPLE_REQUEST_ID     Digital/analog pin set sample request
+0x21   SET_MODE_ID     	     Set digital/analog pin mode
 
-The descriptor data structure is defined in Cosa/Ciao.h. The system
-data type descriptors are found in Cosa/Ciao/type.h.
+The descriptor data structure is defined in Cosa/Ciao.h and Cosa/Fai.h. 
+The system data type descriptors are found in Cosa/Ciao.cpp and 
+Cosa/Fai-directory.
 
 6. EXAMPLES
 
