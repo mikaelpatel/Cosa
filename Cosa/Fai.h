@@ -51,6 +51,7 @@ public:
     static const Ciao::Descriptor::user_t digital_pin_t PROGMEM;
     static const Ciao::Descriptor::user_t digital_pins_t PROGMEM;
     static const Ciao::Descriptor::user_t sample_request_t PROGMEM;
+    static const Ciao::Descriptor::user_t set_mode_t PROGMEM;
   };
 
   /**
@@ -78,11 +79,19 @@ public:
   };
 
   /**
-   * Stream sample request. The identity code is SAMPLE_ID(0x20).
+   * Stream sample request. The identity code is SAMPLE_REQUEST_ID(0x20).
    */
   struct sample_request_t {
     uint32_t pins;
     uint16_t period;
+  };
+
+  /**
+   * Stream set mode request. The identity code is SET_MODE_ID(0x21).
+   */
+  struct set_mode_t {
+    uint8_t pin;
+    uint8_t mode;
   };
 
   /**
