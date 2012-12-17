@@ -35,15 +35,15 @@ The reference documentation for each device driver hardware module may be found 
 References
 ----------
 
-[1] D.tools, http://hci.stanford.edu/research/dtools/
-[2] Processing, http://processing.org/
-[3] Wiring, http://wiring.org.co/
-[4] Arduino, http://www.arduino.cc/
-[5] Firmata, http://www.firmata.org/wiki/Main_Page
-[6] LilyPad, http://web.media.mit.edu/~leah/LilyPad/
-[7] Jeelabs, http://jeelabs.org/
-[8] Quantum Leaps, http://www.state-machine.com/
-[9] Concurrency.cc, http://concurrency.cc/
+1. D.tools, http://hci.stanford.edu/research/dtools/
+2. Processing, http://processing.org/
+3. Wiring, http://wiring.org.co/
+4. Arduino, http://www.arduino.cc/
+5. Firmata, http://www.firmata.org/wiki/Main_Page
+6. LilyPad, http://web.media.mit.edu/~leah/LilyPad/
+7. Jeelabs, http://jeelabs.org/
+8. Quantum Leaps, http://www.state-machine.com/
+9. Concurrency.cc, http://concurrency.cc/
 
 Naming
 ------
