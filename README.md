@@ -1,5 +1,5 @@
 Che Cosa?
-====
+=========
 
 Cosa is an object-oriented platform for Arduino that supports an event-driven programming paradigm with simple finite state machines. It contains a rich set of classes to support rapid prototyping of Internet-of-Things devices. A class overview may be found in CLASS.txt.
 
@@ -13,11 +13,13 @@ Cosa uses the Arduino IDL and build system. Cosa classes are included with prefi
 
 The goal of this project is to provide an efficient programming platform for rapid prototyping of "Internet-of-things"-devices. Unfortunately Cosa is not a beginners entry level programming platform, though following some of the design patterns in Cosa will help beginners build more complex small scale embedded systems with richer concurrency and low power consumption.
 
-Install:
+Install
+-------
 
 To install download and move the Cosa directory to the Arduino cores directory within arduino itself, i.e., your-arduino-install-directory/hardware/arduino/cores/arduino. The examples should be moved to your Arduino sketchbook directory. 
 
-Drivers:
+Drivers
+-------
 
 1. DS18B20 Programmable Resolution 1-Wire Digital Thermometer.
 2. AT24CXX Serial EEPROM.
@@ -30,7 +32,8 @@ Drivers:
 
 The reference documentation for each device driver hardware module may be found in the Cosa/references directory. 
 
-References:
+References
+----------
 
 1. D.tools, http://hci.stanford.edu/research/dtools/
 2. Processing, http://processing.org/
@@ -42,11 +45,13 @@ References:
 8. Quantum Leaps, http://www.state-machine.com/
 9. Concurrency.cc, http://concurrency.cc/
 
-Naming:
+Naming
+------
 
 "Cosa"; noun thing, matter; pronoun; what?, what!. "Che cosa"; pronoun; what. "Ciao"; interjection hello!, goodbye!. "Cosa fai"; what are you doing?
 
-Note:
+Note
+----
 
 1. Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are supported. 
 2. Timers, EEPROM, UART (receiver) are not directly supported but planned. This also applies for Arduino Mega and Leonardo, and Attiny devices.
