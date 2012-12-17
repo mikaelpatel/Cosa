@@ -31,6 +31,7 @@
 
 #include "Cosa/Ciao.h"
 #include "Cosa/Pins.h"
+#include "Cosa/Event.h"
 
 class Fai : public Ciao {
 public:
