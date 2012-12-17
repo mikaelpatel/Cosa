@@ -3,7 +3,7 @@ Che Cosa?
 
 Cosa is an object-oriented platform for Arduino that supports an event-driven programming paradigm with simple finite state machines. It contains a rich set of classes to support rapid prototyping of Internet-of-Things devices. A class overview may be found in CLASS.txt.
 
-Cosa also contains a data streaming format (Ciao) for encoding of C/C++ language data types such as strings, integer and floating pointer numbers into a binary format. It may be used for a number of applications; tracing, remote procedure calls, data exchange between Arduino devices, etc. The format allows user data types to be defined and values exchanged without additional encoding. The stream header itself is a pre-defined serializable data type. See CIAO.txt for more details and the example code (examples/Ciao).
+Cosa also contains a data streaming format (Ciao) for encoding of C/C++ language data types such as strings, integer and floating pointer numbers into a binary format. It may be used for a number of applications; tracing, remote procedure calls, data exchange between Arduino devices, etc. The format allows user data types to be defined and values exchanged without additional encoding. The stream header itself is a pre-defined serializable data type. Ciao is used to define an Arduino monitoring and control language (Cosa fai) which has much in common with Firmata. See CIAO.txt for more details and the example code (examples/Ciao).
 
 Cosa supports the following AVR/Atmega328P internal hardware modules; all pin modes, interrupt pins, PWM, Watchdog, UART (transmit), SPI and TWI. 
 
@@ -30,26 +30,25 @@ Drivers:
 
 The reference documentation for each device driver hardware module may be found in the Cosa/references directory. 
 
-Note:
-
-1. Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are supported. 
-2. Timers, EEPROM, UART (receiver) are not directly supported but planned. This also applies for Arduino Mega and Leonardo, and Attiny devices.
-
-Naming:
-
-Cosa; noun thing, matter; pronoun; what?, what!
-Che cosa; pronoun; what
-Ciao; interjection hello!, goodbye!
-Cosa fai; what are you doing?
-
 References:
 
 1. D.tools, http://hci.stanford.edu/research/dtools/
 2. Processing, http://processing.org/
 3. Wiring, http://wiring.org.co/
 4. Arduino, http://www.arduino.cc/
-5. LilyPad, http://web.media.mit.edu/~leah/LilyPad/
-6. Jeelabs, http://jeelabs.org/
-7. Quantum Leaps, http://www.state-machine.com/
+5. Firmata, http://www.firmata.org/wiki/Main_Page
+6. LilyPad, http://web.media.mit.edu/~leah/LilyPad/
+7. Jeelabs, http://jeelabs.org/
+8. Quantum Leaps, http://www.state-machine.com/
+9. Concurrency.cc, http://concurrency.cc/
+
+Naming:
+
+"Cosa"; noun thing, matter; pronoun; what?, what!. "Che cosa"; pronoun; what. "Ciao"; interjection hello!, goodbye!. "Cosa fai"; what are you doing?
+
+Note:
+
+1. Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are supported. 
+2. Timers, EEPROM, UART (receiver) are not directly supported but planned. This also applies for Arduino Mega and Leonardo, and Attiny devices.
 
 
