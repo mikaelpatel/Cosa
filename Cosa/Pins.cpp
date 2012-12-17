@@ -31,6 +31,8 @@
 #include "Cosa/Pins.h"
 #include <util/delay_basic.h>
 
+#define DELAY(us) _delay_loop_2((us) << 2)
+
 uint8_t 
 Pin::await_change(uint8_t us)
 {
@@ -78,7 +80,7 @@ void
 OutputPin::pulse(uint16_t us)
 {
   toggle();
-  _delay_loop_2(us << 2);
+  DELAY(us);
   toggle();
 }
 

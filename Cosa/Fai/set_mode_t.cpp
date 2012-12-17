@@ -28,7 +28,7 @@
 
 #include "Cosa/Fai.h"
 
-static const char pin_name[] PROGMEM = "pins";
+static const char pin_name[] PROGMEM = "pin";
 static const char mode_name[] PROGMEM = "mode";
 static const Ciao::Descriptor::member_t members[] PROGMEM = {
   {

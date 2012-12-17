@@ -27,7 +27,6 @@
  */
 
 #include "Cosa/Ciao.h"
-#include "Cosa/Trace.h"
 #include <avr/pgmspace.h>
 
 // Ciao configuration

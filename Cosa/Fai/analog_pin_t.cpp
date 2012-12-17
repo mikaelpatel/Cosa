@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Fai/analog_pin_desc.cpp
+ * @file Cosa/Fai/analog_pin_t.cpp
  * @version 1.0
  *
  * @section License

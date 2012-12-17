@@ -32,7 +32,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/Thing.h"
 
 class Button : private Thing {
 
@@ -70,7 +70,6 @@ public:
   void attach(InputPin* pin);
 
 private:
-
   /**
    * Button event handler. Called by watchdog on timeout. Samples the
    * attached pin and calls pin event handler on change.

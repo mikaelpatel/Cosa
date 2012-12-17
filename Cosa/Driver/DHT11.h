@@ -30,8 +30,6 @@
 #define __COSA_DRIVER_DHT11_H__
 
 #include "Cosa/Pins.h"
-#include "Cosa/IOStream.h"
-#include "Cosa/Trace.h"
 
 class DHT11 : private IOPin {
 
