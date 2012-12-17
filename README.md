@@ -3,7 +3,7 @@ Che Cosa?
 
 Cosa is an object-oriented platform for Arduino that supports an event-driven programming paradigm with simple finite state machines. It contains a rich set of classes to support rapid prototyping of Internet-of-Things devices. A class overview may be found in CLASS.txt.
 
-Cosa also contains a data streaming format (Ciao) for encoding of C/C++ language data types such as strings, integer and floating pointer numbers into a binary format. It may be used for a number of applications; tracing, remote procedure calls, data exchange between Arduino devices, etc. The format allows user data types to be defined and values exchanged without additional encoding. The stream header itself is a pre-defined serializable data type. See CIAO.txt for more details and the example code (CosaCiaoPoint).
+Cosa also contains a data streaming format (Ciao) for encoding of C/C++ language data types such as strings, integer and floating pointer numbers into a binary format. It may be used for a number of applications; tracing, remote procedure calls, data exchange between Arduino devices, etc. The format allows user data types to be defined and values exchanged without additional encoding. The stream header itself is a pre-defined serializable data type. See CIAO.txt for more details and the example code (examples/Ciao).
 
 Cosa supports the following AVR/Atmega328P internal hardware modules; all pin modes, interrupt pins, PWM, Watchdog, UART (transmit), SPI and TWI. 
 
@@ -17,24 +17,39 @@ Install:
 
 To install download and move the Cosa directory to the Arduino cores directory within arduino itself, i.e., your-arduino-install-directory/hardware/arduino/cores/arduino. The examples should be moved to your Arduino sketchbook directory. 
 
-Note:
-
-1. Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are supported. 
-2. Timers, EEPROM, UART (receiver) are not directly supported but planned.
-3. Arduino Mega, Leonardo, etc, are not currently supported but planned.
-4. Attiny devices are not currently supported but planned.
-
 Drivers:
 
 1. DS18B20 Programmable Resolution 1-Wire Digital Thermometer.
 2. AT24CXX Serial EEPROM.
-3. DS1307 Realtime clock with RAM,
+3. DS1307 Realtime clock with RAM.
 4. PCF8591 2-Wire 8-bit A/D and D/A converter.
 5. ADXL345 Digital Accelerometer.
 6. nRF24L01 Single Chip 2.4GHz Transceiver. 
-7. DHT11 Humidity & Temperature Sensor device driver
+7. DHT11 Humidity & Temperature Sensor device driver.
 8. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may be found in the Cosa/references directory. 
+
+Note:
+
+1. Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are supported. 
+2. Timers, EEPROM, UART (receiver) are not directly supported but planned. This also applies for Arduino Mega and Leonardo, and Attiny devices.
+
+Naming:
+
+Cosa; noun thing, matter; pronoun; what?, what!
+Che cosa; pronoun; what
+Ciao; interjection hello!, goodbye!
+Cosa fai; what are you doing?
+
+References:
+
+1. D.tools, http://hci.stanford.edu/research/dtools/
+2. Processing, http://processing.org/
+3. Wiring, http://wiring.org.co/
+4. Arduino, http://www.arduino.cc/
+5. LilyPad, http://web.media.mit.edu/~leah/LilyPad/
+6. Jeelabs, http://jeelabs.org/
+7. Quantum Leaps, http://www.state-machine.com/
 
 
