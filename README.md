@@ -9,7 +9,7 @@ Cosa supports the following AVR/Atmega328P internal hardware modules; all pin mo
 
 The primary programming paradigm is object-oriented and state-machine/event driven. Virtual functions and instances are avoided to reduce memory footprint. There is a large number of device drivers available for SPI, TWI/I2C and 1-Wire. A strict directory structure is used to organize the Cosa/driver source code. Sub-directories are used for each driver type. Please check the class overview for a full list of drivers.
 
-Cosa uses the Arduino IDL and build system. Cosa classes are included with prefix, e.g. "Cosa/FileName.h". It is possible to use both Arduino and Cosa functions together, though in some cases the Cosa objects may become inconsistent.
+Cosa uses the Arduino IDE and build system. Cosa classes are included with prefix, e.g. "Cosa/FileName.h". It is possible to use both Arduino and Cosa functions together, though in some cases the Cosa objects may become inconsistent.
 
 The goal of this project is to provide an efficient programming platform for rapid prototyping of "Internet-of-things"-devices. Unfortunately Cosa is not a beginners entry level programming platform, though following some of the design patterns in Cosa will help beginners build more complex small scale embedded systems with richer concurrency and low power consumption.
 

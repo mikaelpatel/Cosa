@@ -215,11 +215,11 @@ Ciao::write(uint8_t type, uint16_t count)
 void 
 Ciao::write(const Descriptor::user_t* desc)
 {
-  // Read descaration from program memory
+  // Read descriptor from program memory
   Descriptor::user_t d;
   memcpy_P(&d, desc, sizeof(d));
   
-  // Write descaration start tag and identity number (8 or 16-bit)
+  // Write descriptor start tag and identity number (8 or 16-bit)
   if (d.id < 256) {
     _dev->putchar(USER8_DESC_START);
   }
@@ -229,7 +229,7 @@ Ciao::write(const Descriptor::user_t* desc)
   }
   _dev->putchar(d.id);
 
-  // Write descaration name null terminated
+  // Write descriptor null terminated name null
   _dev->puts_P(d.name);
   _dev->putchar(0);
   
@@ -243,7 +243,7 @@ Ciao::write(const Descriptor::user_t* desc)
     _dev->putchar(0);
   }
 	 
-  // Write descaration end tag
+  // Write descriptor end tag
   if (d.id < 256) {
     _dev->putchar(USER8_DESC_END);
   }
@@ -274,7 +274,7 @@ static const uint8_t sizeoftype[] PROGMEM = {
 void 
 Ciao::write(const Descriptor::user_t* desc, void* buf, uint16_t count)
 {
-  // Read descaration from program memory
+  // Read descriptor from program memory
   Descriptor::user_t d;
   memcpy_P(&d, desc, sizeof(d));
   
