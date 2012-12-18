@@ -22,7 +22,8 @@
  *
  * @section Description
  * Finite State Machine support class. States are represented as an
- * Event handler.
+ * Event handler. Support timeout events and period timed state 
+ * machines.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -67,7 +68,7 @@ private:
     fsm->_param = value;
     fsm->_state(fsm, type);
   }
-
+  
 public:
   /**
    * Construct state machine with given initial state.

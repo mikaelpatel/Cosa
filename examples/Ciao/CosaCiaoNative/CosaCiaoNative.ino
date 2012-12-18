@@ -84,8 +84,8 @@ void setup()
   cout.write(z, membersof(z));
   cout.write(r);
   cout.write(c, membersof(c));
-  cout.write(NAN);
-  cout.write(INFINITY);
+  cout.write((float) NAN);
+  cout.write((float) INFINITY);
 }
 
 void loop()

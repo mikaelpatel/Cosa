@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * BCD convertion functions.
+ * Simple two digit BCD convertion functions.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -33,7 +33,7 @@ inline uint8_t
 bcd_to_bin(uint8_t value)
 {
   uint8_t high = (value >> 4);
-  uint8_t low = (value & 0xf);
+  uint8_t low = (value & 0x0f);
   return ((high << 3) + (high << 1) + low);
 }
 
@@ -47,7 +47,6 @@ bin_to_bcd(uint8_t value)
   }
   return (res + value);
 }
-
 
 #endif
 
