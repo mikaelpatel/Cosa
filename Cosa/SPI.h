@@ -23,8 +23,8 @@
  * @section Description
  * Serial Peripheral Interface (SPI) device class.
  * http://www.byteparadigm.com/kb/article/AA-00255/22/Introduction-to-SPI-and-IC-protocols.html
- * Typical usage is SPI devices inherit from SPI::Driver and define
- * SPI commands and higher functions. 
+ * Typical usage is SPI device drivers inherit from SPI::Driver and 
+ * define SPI commands and higher functions. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
