@@ -27,9 +27,6 @@
  */
 
 #include "Cosa/OWI.h"
-#include <util/delay_basic.h>
-
-#define DELAY(us) _delay_loop_2((us) << 2)
 
 int8_t
 OWI::Driver::search_rom(int8_t last)
