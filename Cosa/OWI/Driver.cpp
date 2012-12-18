@@ -65,15 +65,13 @@ OWI::Driver::search_rom(int8_t last)
 	_pin->write(0, 1); 
 	break;
       case 0b11: // No device detected
-	goto error;
+	return (ERROR);
       }
       pos += 1;
     }
     _rom[i] = data;
   }
   return (next);
- error:
-  return (ERROR);
 }
 
 bool
