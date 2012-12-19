@@ -88,8 +88,8 @@ void
 PWMPin::set(uint8_t duty)
 {
   if (_pin == 3) { 
-    bit_set(TCCR2A, COM2A1);
-    OCR2A = duty;
+    bit_set(TCCR2A, COM2B1);
+    OCR2B = duty;
     return;
   }
   if (_pin == 5) { 
@@ -103,8 +103,8 @@ PWMPin::set(uint8_t duty)
     return;
   }
   if (_pin == 11) { 
-    bit_set(TCCR2A, COM2B1);
-    OCR2B = duty;
+    bit_set(TCCR2A, COM2A1);
+    OCR2A = duty;
     return;
   }
   if (duty < 128) 
