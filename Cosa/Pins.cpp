@@ -87,6 +87,11 @@ OutputPin::pulse(uint16_t us)
 void 
 PWMPin::set(uint8_t duty)
 {
+  if (_pin == 3) { 
+    bit_set(TCCR2A, COM2A1);
+    OCR2A = duty;
+    return;
+  }
   if (_pin == 5) { 
     bit_set(TCCR0A, COM0B1);
     OCR0B = duty;
@@ -95,6 +100,11 @@ PWMPin::set(uint8_t duty)
   if (_pin == 6) {
     bit_set(TCCR0A, COM0A1);
     OCR0A = duty;
+    return;
+  }
+  if (_pin == 11) { 
+    bit_set(TCCR2A, COM2B1);
+    OCR2B = duty;
     return;
   }
   if (duty < 128) 
