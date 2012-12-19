@@ -29,6 +29,7 @@
 #include "Cosa/Button.h"
 #include "Cosa/Pins.h"
 #include "Cosa/Event.h"
+#include "Cosa/Watchdog.h"
 #include "Cosa/Memory.h"
 
 // Input pin and button
