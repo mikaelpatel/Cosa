@@ -569,13 +569,13 @@ public:
    * Request sample of analog pin. Conversion completion function is called
    * if defined otherwise use await_sample().
    */
-  void request_sample();
+  void sample_request();
 
   /**
    * Await conversion to complete. Returns sample value
    * @return sample value.
    */
-  uint16_t await_sample();
+  uint16_t sample_await();
 
   /**
    * Trampoline function for interrupt service on conversion completion.
@@ -671,7 +671,7 @@ public:
    * @param[in] env handler environment.
    * @return boolean.
    */
-  bool request_samples(InterruptHandler fn = 0, void* env = 0);
+  bool samples_request(InterruptHandler fn = 0, void* env = 0);
   
   /**
    * Interrupt handler to push event for sample conversion completion.

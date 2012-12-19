@@ -73,7 +73,7 @@ void loop()
 {
   // Start sampling analog pins and Wait for the next event
   ledPin.toggle();
-  TRACE(analogPins.request_samples());
+  TRACE(analogPins.samples_request());
   Event event;
   Event::queue.await(&event);
   ledPin.toggle();

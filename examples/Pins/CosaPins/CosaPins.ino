@@ -93,11 +93,11 @@ void loop()
   INFO("ticks = %d", Watchdog::get_ticks());
   
   // Asynchronous sample internal temperature level
-  tempVCC.request_sample();
+  tempVCC.sample_request();
   INFO("levelPin = %d", value);
 
   // Await the sample and print value
-  INFO("tempVCC = %d", tempVCC.await_sample());
+  INFO("tempVCC = %d", tempVCC.sample_await());
 
   // Check if the led should be on and the pwm level updated
   if (onoffPin.is_set()) {

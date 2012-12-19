@@ -134,7 +134,7 @@ AnalogPin::sample()
 }
 
 void 
-AnalogPin::request_sample()
+AnalogPin::sample_request()
 {
   loop_until_bit_is_clear(ADCSRA, ADSC);
   ADMUX = (_reference | (_pin - 14));
@@ -145,7 +145,7 @@ AnalogPin::request_sample()
 }
 
 uint16_t 
-AnalogPin::await_sample()
+AnalogPin::sample_await()
 {
   loop_until_bit_is_clear(ADCSRA, ADSC);
   return (_value = ADCW);
@@ -164,7 +164,7 @@ AnalogPins::sample_next(AnalogPin* pin, void* env)
   AnalogPins* set = (AnalogPins*) env;
   if (set->_next != set->_count) {
     AnalogPin* pin = set->get_pin_at(set->_next++);
-    pin->request_sample();
+    pin->sample_request();
   } 
   else if (set->_handler != 0) {
     set->_handler(set, set->_env);
@@ -172,14 +172,14 @@ AnalogPins::sample_next(AnalogPin* pin, void* env)
 }
 
 bool
-AnalogPins::request_samples(InterruptHandler fn, void* env)
+AnalogPins::samples_request(InterruptHandler fn, void* env)
 {
   if (AnalogPin::get_sampling_pin() != 0) return (0);
   if (fn != 0) {
     _handler = fn;
     _env = env;
   }
-  get_pin_at(0)->request_sample();
+  get_pin_at(0)->sample_request();
   _next = 1;
   return (1);
 }
