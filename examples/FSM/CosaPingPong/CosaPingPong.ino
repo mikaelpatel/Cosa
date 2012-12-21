@@ -38,15 +38,16 @@
 class Echo : public FSM {
 
 private:
-  FSM* _port;
   const char* _name;
+  uint16_t _count;
+  FSM* _port;
 
 public:
   /**
    * Construct the echo state machine. Name and port must be bound
    * before started.
    */
-  Echo() : FSM(initState), _port(0), _name(0) {}
+  Echo() : FSM(initState), _name(0), _count(0), _port(0) {}
 
   /**
    * Bind name and port. The name is used for the trace print
@@ -80,7 +81,7 @@ public:
   {
     Echo* echo = (Echo*) fsm;
     trace.print_P(echo->_name);
-    trace.println();
+    trace.printf_P(PSTR("(count = %d)\n"), echo->_count++);
     fsm->set_state(echoState);
     fsm->set_timer(512);
     return (1);
