@@ -26,12 +26,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.h"
-#include "Cosa/Fai.h"
-#include "Cosa/IOStream.h"
-#include "Cosa/Event.h"
-#include "Cosa/Watchdog.h"
-#include "Cosa/Trace.h"
+#include "Cosa/Fai.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/IOStream.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/Event.hh"
+#include "Cosa/Watchdog.hh"
 #include <ctype.h>
 
 // Fai::Ciao output stream over the UART

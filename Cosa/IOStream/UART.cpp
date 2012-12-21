@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IOStream/UART.h"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Bits.h"
 
 // FIX: This assumes singleton

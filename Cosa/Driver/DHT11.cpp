@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Driver/DHT11.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/Driver/DHT11.hh"
+#include "Cosa/Watchdog.hh"
 #include <util/delay_basic.h>
 
 #define DELAY(us) _delay_loop_2((us) << 2)

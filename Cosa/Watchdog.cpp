@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Watchdog.h"
+#include "Cosa/Watchdog.hh"
 
 Watchdog::InterruptHandler Watchdog::_handler = 0;
 void* Watchdog::_env = 0;

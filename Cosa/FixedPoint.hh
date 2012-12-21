@@ -1,5 +1,5 @@
 /**
- * @file Cosa/FixedPoint.h
+ * @file Cosa/FixedPoint.hh
  * @version 1.0
  *
  * @section License
@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FIXEDPOINT_H__
-#define __COSA_FIXEDPOINT_H__
+#ifndef __COSA_FIXEDPOINT_HH__
+#define __COSA_FIXEDPOINT_HH__
 
 #include "Cosa/Types.h"
 

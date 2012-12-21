@@ -27,8 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OWI/DS18B20.h"
-#include "Cosa/FixedPoint.h"
+#include "Cosa/OWI/DS18B20.hh"
+#include "Cosa/FixedPoint.hh"
 
 bool
 DS18B20::convert_request()

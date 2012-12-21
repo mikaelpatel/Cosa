@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OWI.h"
+#include "Cosa/OWI.hh"
 
 int8_t
 OWI::Driver::search_rom(int8_t last)

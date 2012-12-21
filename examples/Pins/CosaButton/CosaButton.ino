@@ -26,10 +26,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Button.h"
-#include "Cosa/Pins.h"
-#include "Cosa/Event.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/Button.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/Event.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
 // Input pin and button

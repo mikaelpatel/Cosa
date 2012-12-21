@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI.h
+ * @file Cosa/SPI.cpp
  * @version 1.0
  *
  * @section License
@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI.h"
+#include "Cosa/SPI.hh"
 
 SPI spi;
 

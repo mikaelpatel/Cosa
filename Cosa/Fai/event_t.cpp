@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Fai.h"
+#include "Cosa/Fai.hh"
 
 static const char type_name[] PROGMEM = "type";
 static const char target_name[] PROGMEM = "target";

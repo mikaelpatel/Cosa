@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Queue.h
+ * @file Cosa/Queue.hh
  * @version 1.0
  *
  * @section License
@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSE_QUEUE_H__
-#define __COSE_QUEUE_H__
+#ifndef __COSE_QUEUE_HH__
+#define __COSE_QUEUE_HH__
 
 #include "Cosa/Types.h"
 #include <avr/sleep.h>

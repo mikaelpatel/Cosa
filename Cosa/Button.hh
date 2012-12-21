@@ -27,12 +27,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BUTTON_H__
-#define __COSA_BUTTON_H__
+#ifndef __COSA_BUTTON_HH__
+#define __COSA_BUTTON_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.h"
-#include "Cosa/Thing.h"
+#include "Cosa/Pins.hh"
+#include "Cosa/Thing.hh"
 
 class Button : private Thing {
 

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Fai.h
+ * @file Cosa/Fai.hh
  * @version 1.0
  *
  * @section License
@@ -26,12 +26,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FAI_H__
-#define __COSA_FAI_H__
+#ifndef __COSA_FAI_HH__
+#define __COSA_FAI_HH__
 
-#include "Cosa/Ciao.h"
-#include "Cosa/Pins.h"
-#include "Cosa/Event.h"
+#include "Cosa/Ciao.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/Event.hh"
 
 class Fai : public Ciao {
 public:

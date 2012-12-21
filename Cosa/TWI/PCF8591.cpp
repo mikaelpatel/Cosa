@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/PCF8591.h"
+#include "Cosa/TWI/PCF8591.hh"
 
 bool
 PCF8591::begin(uint8_t cntl)

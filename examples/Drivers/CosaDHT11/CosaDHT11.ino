@@ -26,10 +26,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Driver/DHT11.h"
-#include "Cosa/Pins.h"
-#include "Cosa/Trace.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/Driver/DHT11.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
 
 // Connect devices to pins
 DHT11 indoors(7);

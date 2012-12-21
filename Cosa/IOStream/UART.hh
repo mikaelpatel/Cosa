@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Things.h
+ * @file Cosa/IOStream/UART.hh
  * @version 1.0
  *
  * @section License
@@ -21,47 +21,39 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa low level callback set handling.
+ * Basic UART device handler with internal buffering.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_THINGS_H__
-#define __COSA_THINGS_H__
+#ifndef __COSA_UART_HH__
+#define __COSA_UART_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Thing.h"
+#include "Cosa/IOStream.hh"
 
-class Things : public Thing {
+class UART : public IOStream::Device {
 
 public:
-  /**
-   * Default event handler for thing collection. Boardcase event.
-   * @param[in] things the collection.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  static void broadcast(Thing* things, uint8_t type, uint16_t value);
+  /* As defined by IOStream::Device. Rest is inherited from null device */
+  virtual int putchar(char c);
+  virtual int flush();
 
   /**
-   * Construct a thing collection.
+   * Start UART device.
+   * @param[in] baudrate serial bitrate.
+   * @return true(1) if successful otherwise false(0)
    */
-  Things() : Thing(broadcast) {}
+  bool begin(uint32_t baudrate = 9600);
 
   /**
-   * Return number of things.
-   * @return length
+   * Stop UART device.
+   * @return true(1) if successful otherwise false(0)
    */
-  uint8_t length();
+  bool end();
 
-  /**
-   * Return true(1) if there are no things otherwise false(0).
-   * @return bool
-   */
-  bool is_empty()
-  {
-    return (_succ == this);
-  }
+ private:
+  static const uint32_t FLUSH_CYCLES_MAX = 1000000;
 };
 
 #endif

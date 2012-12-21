@@ -26,9 +26,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/NRF24L01P.h"
-#include "Cosa/Trace.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/SPI/NRF24L01P.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
 // NRF24L01+ Wireless communication using SPI and default pins(9, 10, 2)

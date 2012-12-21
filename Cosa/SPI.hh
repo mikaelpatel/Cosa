@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI.h
+ * @file Cosa/SPI.hh
  * @version 1.0
  *
  * @section License
@@ -29,12 +29,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SPI_H__
-#define __COSA_SPI_H__
+#ifndef __COSA_SPI_HH__
+#define __COSA_SPI_HH__
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
-#include "Cosa/Event.h"
+#include "Cosa/Event.hh"
 
 class SPI {
 

@@ -26,10 +26,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OWI.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/OWI.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/Trace.h"
 
 // Slave device driver
 class Driver : public OWI::Driver {

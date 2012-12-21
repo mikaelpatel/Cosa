@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/DS1307.h"
+#include "Cosa/TWI/DS1307.hh"
 #include "Cosa/BCD.h"
 
 void 

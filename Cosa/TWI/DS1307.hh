@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/DS1307.h
+ * @file Cosa/TWI/DS1307.hh
  * @version 1.0
  *
  * @section License
@@ -27,12 +27,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_DS1307_H__
-#define __COSA_TWI_DS1307_H__
+#ifndef __COSA_TWI_DS1307_HH__
+#define __COSA_TWI_DS1307_HH__
 
-#include "Cosa/TWI.h"
-#include "Cosa/IOStream.h"
-#include "Cosa/Trace.h"
+#include "Cosa/TWI.hh"
+#include "Cosa/IOStream.hh"
+#include "Cosa/Trace.hh"
 
 class DS1307 : private TWI::Driver {
 

@@ -26,10 +26,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Pins.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/Pins.h"
-#include "Cosa/Watchdog.h"
-#include "Cosa/Trace.h"
 
 // Callback for interrupt pin(2); updates a counter
 volatile uint16_t counter = 0;

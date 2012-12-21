@@ -26,11 +26,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/TWI/DS1307.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/Pins.h"
-#include "Cosa/TWI/DS1307.h"
-#include "Cosa/Watchdog.h"
-#include "Cosa/Trace.h"
 
 // The real-time device, latest start and sample time in ram
 DS1307 rtc;

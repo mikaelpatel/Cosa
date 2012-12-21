@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Watchdog.h
+ * @file Cosa/Watchdog.hh
  * @version 1.0
  *
  * @section License
@@ -26,17 +26,17 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_WATCHDOG_H__
-#define __COSA_WATCHDOG_H__
+#ifndef __COSA_WATCHDOG_HH__
+#define __COSA_WATCHDOG_HH__
 
 #include <avr/wdt.h>
 #include <avr/sleep.h>
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
-#include "Cosa/Event.h"
-#include "Cosa/Thing.h"
-#include "Cosa/Things.h"
+#include "Cosa/Event.hh"
+#include "Cosa/Thing.hh"
+#include "Cosa/Things.hh"
 
 class Watchdog {
 

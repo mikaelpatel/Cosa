@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/NRF24L01P.h
+ * @file Cosa/SPI/NRF24L01P.hh
  * @version 1.0
  *
  * @section License
@@ -28,12 +28,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SPI_NRF24L01P_H__
-#define __COSA_SPI_NRF24L01P_H__
+#ifndef __COSA_SPI_NRF24L01P_HH__
+#define __COSA_SPI_NRF24L01P_HH__
 
-#include "Cosa/Pins.h"
-#include "Cosa/Event.h"
-#include "Cosa/SPI.h"
+#include "Cosa/Pins.hh"
+#include "Cosa/Event.hh"
+#include "Cosa/SPI.hh"
 
 class NRF24L01P : private SPI::Driver {
 

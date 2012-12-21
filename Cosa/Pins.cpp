@@ -28,7 +28,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.h"
+#include "Cosa/Pins.hh"
 #include <util/delay_basic.h>
 
 #define DELAY(us) _delay_loop_2((us) << 2)

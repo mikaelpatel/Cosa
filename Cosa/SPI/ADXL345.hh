@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/ADXL345.h
+ * @file Cosa/SPI/ADXL345.hh
  * @version 1.0
  *
  * @section License
@@ -27,13 +27,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SPI_ADXL345_H__
-#define __COSA_SPI_ADXL345_H__
+#ifndef __COSA_SPI_ADXL345_HH__
+#define __COSA_SPI_ADXL345_HH__
 
-#include "Cosa/SPI.h"
-#include "Cosa/Pins.h"
-#include "Cosa/IOStream.h"
-#include "Cosa/Trace.h"
+#include "Cosa/SPI.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/IOStream.hh"
+#include "Cosa/Trace.hh"
 
 class ADXL345 : private SPI::Driver {
 

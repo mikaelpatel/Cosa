@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OWI/DS18B20.h
+ * @file Cosa/OWI/DS18B20.hh
  * @version 1.0
  *
  * @section License
@@ -27,12 +27,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ONEWIRE_DS18B20_H__
-#define __COSA_ONEWIRE_DS18B20_H__
+#ifndef __COSA_OWI_DS18B20_HH__
+#define __COSA_OWI_DS18B20_HH__
 
-#include "Cosa/OWI.h"
-#include "Cosa/IOStream.h"
-#include "Cosa/Trace.h"
+#include "Cosa/OWI.hh"
+#include "Cosa/IOStream.hh"
+#include "Cosa/Trace.hh"
 
 class DS18B20 : public OWI::Driver {
 private:

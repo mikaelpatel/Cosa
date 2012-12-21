@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IOStream.h"
+#include "Cosa/IOStream.hh"
 #include <stdarg.h>
 
 IOStream::Device IOStream::Device::null;

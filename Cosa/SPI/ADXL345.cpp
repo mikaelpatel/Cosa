@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/ADXL345.h"
+#include "Cosa/SPI/ADXL345.hh"
 
 ADXL345::ADXL345(uint8_t ss) :
   _ss(ss, 1) 

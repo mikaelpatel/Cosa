@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OWI.h
+ * @file Cosa/OWI.hh
  * @version 1.0
  *
  * @section License
@@ -27,12 +27,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_OWI_H__
-#define __COSA_OWI_H__
+#ifndef __COSA_OWI_HH__
+#define __COSA_OWI_HH__
 
-#include "Cosa/Pins.h"
-#include "Cosa/IOStream.h"
-#include "Cosa/Trace.h"
+#include "Cosa/Pins.hh"
+#include "Cosa/IOStream.hh"
+#include "Cosa/Trace.hh"
 
 class OWI : private IOPin {
 public:

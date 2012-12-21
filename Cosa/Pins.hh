@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Pins.h
+ * @file Cosa/Pins.hh
  * @version 1.0
  *
  * @section License
@@ -28,15 +28,15 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_PINS_H__
-#define __COSA_PINS_H__
+#ifndef __COSA_PINS_HH__
+#define __COSA_PINS_HH__
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
-#include "Cosa/Thing.h"
-#include "Cosa/Event.h"
-#include "Cosa/IOStream.h"
-#include "Cosa/Trace.h"
+#include "Cosa/Thing.hh"
+#include "Cosa/Event.hh"
+#include "Cosa/IOStream.hh"
+#include "Cosa/Trace.hh"
 
 class Pin : public Thing {
 

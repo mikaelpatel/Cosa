@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Queue.h
+ * @file Cosa/Queue.cpp
  * @version 1.0
  *
  * @section License
@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Queue.h"
+#include "Cosa/Queue.hh"
 
 bool
 Queue::enqueue(void* data)

@@ -26,9 +26,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/FSM.h"
-#include "Cosa/Event.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/FSM.hh"
+#include "Cosa/Event.hh"
+#include "Cosa/Watchdog.hh"
 
 /**
  * Simple echo state machine: Listens for an event. When received

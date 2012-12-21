@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/Pins.hh"
+#include "Cosa/Watchdog.hh"
 
 // Use the build-in led
 OutputPin ledPin(13);

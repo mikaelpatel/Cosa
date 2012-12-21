@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Trace.h"
+#include "Cosa/Trace.hh"
 
 Trace trace;
 

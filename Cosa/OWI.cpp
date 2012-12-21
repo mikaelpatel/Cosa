@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OWI.h"
+#include "Cosa/OWI.hh"
 #include <util/delay_basic.h>
 
 #define DELAY(us) _delay_loop_2((us) << 2)

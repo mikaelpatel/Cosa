@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Ciao.h"
+#include "Cosa/Ciao.hh"
 #include <avr/pgmspace.h>
 
 // Ciao configuration

@@ -26,11 +26,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/ADXL345.h"
-#include "Cosa/Pins.h"
-#include "Cosa/Trace.h"
+#include "Cosa/SPI/ADXL345.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/Watchdog.h"
 
 // Digital Accelerometer using SPI and default slave select pin(10)
 ADXL345 adxl;

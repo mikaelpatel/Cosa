@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/Pins.hh"
+#include "Cosa/Watchdog.hh"
 
 // Use an RGB LED connected to pins(5,6,7)
 OutputPin redLedPin(5);

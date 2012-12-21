@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Button.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/Button.hh"
+#include "Cosa/Watchdog.hh"
 
 void
 Button::attach(InputPin* pin)

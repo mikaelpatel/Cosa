@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Driver/DHT11.h
+ * @file Cosa/Driver/DHT11.hh
  * @version 1.0
  *
  * @section License
@@ -26,10 +26,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_DRIVER_DHT11_H__
-#define __COSA_DRIVER_DHT11_H__
+#ifndef __COSA_DRIVER_DHT11_HH__
+#define __COSA_DRIVER_DHT11_HH__
 
-#include "Cosa/Pins.h"
+#include "Cosa/Pins.hh"
 
 class DHT11 : private IOPin {
 

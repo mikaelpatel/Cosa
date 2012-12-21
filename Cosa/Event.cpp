@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Event.h"
+#include "Cosa/Event.hh"
 
 static Event event[Event::QUEUE_MAX];
 

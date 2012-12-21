@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Event.h
+ * @file Cosa/Event.hh
  * @version 1.0
  *
  * @section License
@@ -26,14 +26,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_EVENT_H__
-#define __COSA_EVENT_H__
+#ifndef __COSA_EVENT_HH__
+#define __COSA_EVENT_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Queue.h"
-#include "Cosa/IOStream.h"
-#include "Cosa/Trace.h"
-#include "Cosa/Thing.h"
+#include "Cosa/Queue.hh"
+#include "Cosa/IOStream.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/Thing.hh"
 
 class Event {
 

@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/TWI.hh"
+#include "Cosa/Watchdog.hh"
 
 #ifndef TWI_FREQ
 #define TWI_FREQ 100000L

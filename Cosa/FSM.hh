@@ -1,5 +1,5 @@
 /**
- * @file Cosa/FSM.h
+ * @file Cosa/FSM.hh
  * @version 1.0
  *
  * @section License
@@ -28,12 +28,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FSM_H__
-#define __COSA_FSM_H__
+#ifndef __COSA_FSM_HH__
+#define __COSA_FSM_HH__
 
-#include "Cosa/Thing.h"
-#include "Cosa/Event.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/Thing.hh"
+#include "Cosa/Event.hh"
+#include "Cosa/Watchdog.hh"
 
 class FSM : public Thing {
 

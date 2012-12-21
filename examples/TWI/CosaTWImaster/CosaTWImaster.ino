@@ -26,11 +26,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/TWI.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/TWI.h"
-#include "Cosa/Pins.h"
-#include "Cosa/Watchdog.h"
-#include "Cosa/Trace.h"
 
 // TWI slave address
 static const uint8_t ADDR = 0xC05A;

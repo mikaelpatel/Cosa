@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/FixedPoint.h"
+#include "Cosa/FixedPoint.hh"
 
 uint16_t 
 FixedPoint::get_fraction(uint8_t scale)

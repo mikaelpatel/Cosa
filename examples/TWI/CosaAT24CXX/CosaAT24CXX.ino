@@ -27,11 +27,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.h"
-#include "Cosa/Trace.h"
+#include "Cosa/TWI/AT24CXX.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/Watchdog.h"
-#include "Cosa/TWI/AT24CXX.h"
 
 // Use the builtin led as a heartbeat
 OutputPin ledPin(13);

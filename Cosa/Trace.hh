@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Trace.h
+ * @file Cosa/Trace.hh
  * @version 1.0
  *
  * @section License
@@ -27,12 +27,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TRACE_H__
-#define __COSA_TRACE_H__
+#ifndef __COSA_TRACE_HH__
+#define __COSA_TRACE_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/IOStream.h"
-#include "Cosa/IOStream/UART.h"
+#include "Cosa/IOStream.hh"
+#include "Cosa/IOStream/UART.hh"
 
 /**
  * The Trace class singleton. 

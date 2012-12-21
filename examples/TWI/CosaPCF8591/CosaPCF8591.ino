@@ -26,10 +26,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/PCF8591.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/TWI/PCF8591.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Pins.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/Pins.h"
 
 // The A/D, D/A converter
 PCF8591 adc;

@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Fai.h"
+#include "Cosa/Fai.hh"
 
 static const char pins_name[] PROGMEM = "pins";
 static const char period_name[] PROGMEM = "period";

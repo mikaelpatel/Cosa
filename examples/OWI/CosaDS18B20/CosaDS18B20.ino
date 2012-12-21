@@ -28,10 +28,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OWI/DS18B20.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/OWI/DS18B20.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/Trace.h"
 
 // One-wire pin and connected DS18B20 devices
 OWI owi(7);

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream.h
+ * @file Cosa/IOStream.hh
  * @version 1.0
  *
  * @section License
@@ -27,8 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOSTREAM_H__
-#define __COSA_IOSTREAM_H__
+#ifndef __COSA_IOSTREAM_HH__
+#define __COSA_IOSTREAM_HH__
 
 #include "Cosa/Types.h"
 

@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Things.h"
+#include "Cosa/Things.hh"
 
 void 
 Things::broadcast(Thing* things, uint8_t type, uint16_t value)

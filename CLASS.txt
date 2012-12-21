@@ -5,66 +5,66 @@ Thing
 The Cosa Root class. Basic event dispatch and collection handling,
 broadcast of an event of a set of things.
 ----------------------------------------------------------------------------
-Thing.h:	class Thing
-Things.h:	      class Things : public Thing
+Thing.hh:	class Thing
+Things.hh:	      class Things : public Thing
 ----------------------------------------------------------------------------
 PINS
 Object-oriented approach to sketch pin declaration and function
 structuring. 
 ----------------------------------------------------------------------------
-Pins.h:		class Pin : public Thing
-Pins.h:		      class InputPin : public Pin
-Pins.h:		      	    class InterruptPin : public InputPin
-Pins.h:		      class OutputPin : public Pin
-Pins.h:		      	    class PWMPin : public OutputPin
-Pins.h:			    class IOPin : public OutputPin
-Pins.h:		      class AnalogPin : public Pin
-Pins.h:		class AnalogPins
+Pins.hh:	class Pin : public Thing
+Pins.hh:	      class InputPin : public Pin
+Pins.hh:	      	    class InterruptPin : public InputPin
+Pins.hh:	      class OutputPin : public Pin
+Pins.hh:	      	    class PWMPin : public OutputPin
+Pins.hh:		    class IOPin : public OutputPin
+Pins.hh:	      class AnalogPin : public Pin
+Pins.hh:	class AnalogPins
 ----------------------------------------------------------------------------
 FSM
 Finite State Machines
 Support for constructing finite state machines (FSM).
 ----------------------------------------------------------------------------
-FSM.h		class FSM : private Thing
+FSM.hh:		class FSM : private Thing
 ----------------------------------------------------------------------------
 BUTTON
 Abstraction of debounced switch or button connected to an input pin.
 ----------------------------------------------------------------------------
-Button.h:	class Button : private InputPin
+Button.hh:	class Button : private InputPin
 ----------------------------------------------------------------------------
 EVENT QUEUE
 Support for pushing events from interrupt handlers.
 ----------------------------------------------------------------------------
-Event.h:	class Event
+Event.hh:	class Event
 		      => class Queue
-Queue.h:	class Queue
+Queue.hh:	class Queue
 ----------------------------------------------------------------------------
 WATCHDOG
 Ultra low power timer. Time base for delay and timeout events. Time queues
 using Things. Allow attaching pins etc to receive timeout events.
 ----------------------------------------------------------------------------
-Watchdog.h:	class Watchdog
+Watchdog.hh:	class Watchdog
 		      => class Things
 ----------------------------------------------------------------------------
 IOSTREAM
 Stream and device abstraction. 
 ----------------------------------------------------------------------------
-IOStream.h:	class IOStream
-IOStream.h:     	class IOStream::Device
-IOStream/UART.h:       	      class UART : public IOStream::Device
+IOStream.hh:	class IOStream
+IOStream.hh:     	class IOStream::Device
+IOStream/UART.hh:      	      class UART : public IOStream::Device
 ----------------------------------------------------------------------------
 TRACE
 Trace log support.
 ----------------------------------------------------------------------------
-Trace.h:	Trace trace (singleton)
-Trace.h:	class Trace : public IOStream [UART]
+Trace.hh:	Trace trace (singleton)
+Trace.hh:	class Trace : public IOStream [UART]
 ----------------------------------------------------------------------------
 CIAO and COSA FAI
 The Cosa data stream handler. See CIAO.txt.
 ----------------------------------------------------------------------------
-Ciao.h:		class Ciao
+Ciao.hh:	class Ciao
 		      class Ciao::Descriptor
-Fai.h:		class Fai : public Ciao
+Fai.hh:		class Fai : public Ciao
 		      class Fai::Descriptor
 ----------------------------------------------------------------------------
 OWI
@@ -72,45 +72,46 @@ Driver for devices on the one wire bus (1-Wire).
 Support for DS18B20 Programmable Resolution 1-Wire Digital 
 Thermometer.
 ----------------------------------------------------------------------------
-OWI.h:		class OWI : private IOPin
-OWI.h:		      class OWI::Device
-OWI.h:		      class OWI::Driver			     
-OWI/DS18B20.h:	      	    class DS18B20 : public OWI::Driver
+OWI.hh:		class OWI : private IOPin
+OWI.hh:		      class OWI::Device
+OWI.hh:		      class OWI::Driver			     
+OWI/DS18B20.hh:	      	    class DS18B20 : public OWI::Driver
 ----------------------------------------------------------------------------
 TWO WIRE INTERFACE
 Driver for devices on the two wire interface (TWI/I2C).
 Support for AT24CXX Serial EEPROM, DS1307 Realtime clock with RAM,
 PCF8591 2-Wire 8-bit A/D and D/A converter.
 ----------------------------------------------------------------------------
-TWI.h:		TWI twi (singleton)
-TWI.h:		class TWI : public Thing
-TWI.h:		      class TWI::Device
-TWI.h:		      class TWI::Driver
-TWI/AT24CXX.h	      	    class AT24CXX : private TWI::Driver
-TWI/DS1307.h	      	    class DS1307 : private TWI::Driver
-TWI/PCF8591.h	      	    class PCF8591 : private TWI::Driver
+TWI.hh:		TWI twi (singleton)
+TWI.hh:		class TWI : public Thing
+TWI.hh:		      class TWI::Device
+TWI.hh:		      class TWI::Driver
+TWI/AT24CXX.hh:	      	    class AT24CXX : private TWI::Driver
+TWI/DS1307.hh:	      	    class DS1307 : private TWI::Driver
+TWI/PCF8591.hh:	      	    class PCF8591 : private TWI::Driver
 ----------------------------------------------------------------------------
 SERIAL PERIPHERAL INTERFACE
 Driver for devices on the serial peripherial interface (SPI).
 Support for ADXL345 Digital Accelerometer, nRF24L01 Single Chip 2.4GHz
 Transceiver. 
 ----------------------------------------------------------------------------
-SPI.h:		SPI spi (singleton)
-SPI.h:		class SPI : public Thing
-SPI.h:		      class SPI::Device
-SPI.h:		      class SPI::Driver
-SPI/ADXL345.h:	      	    class ADXL345 : private SPI::Driver
-SPI/NRF24L01P.h:      	    class NRF24L01P : private SPI::Driver
+SPI.hh:		SPI spi (singleton)
+SPI.hh:		class SPI : public Thing
+SPI.hh:		      class SPI::Device
+SPI.hh:		      class SPI::Driver
+SPI/ADXL345.hh:	      	    class ADXL345 : private SPI::Driver
+SPI/NRF24L01P.hh:      	    class NRF24L01P : private SPI::Driver
 ----------------------------------------------------------------------------
 DHT11 
 Humidity & Temperature Sensor device driver
 ----------------------------------------------------------------------------
-Drivers/DHT11.h:	class DHT11 : private IOPin
+Drivers/DHT11.hh:	class DHT11 : private IOPin
 ----------------------------------------------------------------------------
 SUPPORT
 ----------------------------------------------------------------------------
 BCD.h:			converting bcd numbers to and from binary
 Bits.h:			macros to handle bit field and position 
-FixedPoint.h:		handling of fixed point numbers
+FixedPoint.hh:		handling of fixed point numbers
+Memory.h:		memory status functions
 ----------------------------------------------------------------------------
 

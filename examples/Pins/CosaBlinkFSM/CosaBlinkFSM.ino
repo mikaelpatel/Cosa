@@ -26,9 +26,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/FSM.h"
-#include "Cosa/Pins.h"
-#include "Cosa/Watchdog.h"
+#include "Cosa/FSM.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/Watchdog.hh"
 
 // The state machine: Blink RGB LED with six color states
 class BlinkRGB : public FSM {

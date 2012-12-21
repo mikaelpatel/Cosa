@@ -26,9 +26,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Ciao.h"
-#include "Cosa/IOStream.h"
-#include "Cosa/Trace.h"
+#include "Cosa/Ciao.hh"
+#include "Cosa/IOStream.hh"
+#include "Cosa/Trace.hh"
+
 #include <ctype.h>
 #include <math.h>
 

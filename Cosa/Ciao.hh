@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao.h
+ * @file Cosa/Ciao.hh
  * @version 1.0
  *
  * @section License
@@ -26,11 +26,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CIAO_H__
-#define __COSA_CIAO_H__
+#ifndef __COSA_CIAO_HH__
+#define __COSA_CIAO_HH__
 
-#include "Cosa/IOStream.h"
-#include "Cosa/Event.h"
+#include "Cosa/IOStream.hh"
+#include "Cosa/Event.hh"
 
 class Ciao {
   

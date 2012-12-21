@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IOStream.h"
+#include "Cosa/IOStream.hh"
 
 void 
 IOStream::print(void *ptr, size_t size, uint8_t base)
