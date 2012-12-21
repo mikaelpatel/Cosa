@@ -28,14 +28,14 @@
 
 #include "Cosa/Watchdog.hh"
 
-Watchdog::InterruptHandler Watchdog::_handler = 0;
-void* Watchdog::_env = 0;
+Watchdog::InterruptHandler Watchdog::s_handler = 0;
+void* Watchdog::s_env = 0;
 
-Things Watchdog::_timeq[Watchdog::TIMEQ_MAX];
+Things Watchdog::s_timeq[Watchdog::TIMEQ_MAX];
 
-volatile uint16_t Watchdog::_ticks = 0;
-uint8_t Watchdog::_prescale = 0;
-uint8_t Watchdog::_mode = 0;
+volatile uint16_t Watchdog::s_ticks = 0;
+uint8_t Watchdog::s_prescale = 0;
+uint8_t Watchdog::s_mode = 0;
 
 inline uint8_t 
 log2(uint16_t value)
@@ -71,10 +71,10 @@ Watchdog::begin(uint16_t ms,
   }
 
   // Register the interrupt handler
-  _handler = handler;
-  _env = env;
-  _prescale = prescale;
-  _mode = mode;
+  s_handler = handler;
+  s_env = env;
+  s_prescale = prescale;
+  s_mode = mode;
 }
 
 void 
@@ -82,23 +82,23 @@ Watchdog::attach(Thing* thing, uint16_t ms)
 {
   uint8_t level = log2((ms + 8) >> 5) - 1;
   if (level > 9) level = 9;
-  _timeq[level].attach(thing);
+  s_timeq[level].attach(thing);
 }
 
 void
 Watchdog::await(AwaitCondition fn, void* env, uint16_t ms)
 {
-  volatile uint16_t ticks = _ticks + 1;
+  volatile uint16_t ticks = s_ticks + 1;
   if (ms != 0) ticks += (ms / ms_per_tick());
   do {
     if (fn != 0 && fn(env)) return;
     cli();
-    set_sleep_mode(_mode);
+    set_sleep_mode(s_mode);
     sleep_enable();
     sei();
     sleep_cpu();
     sleep_disable();
-  } while ((ticks != _ticks) || ((ms == 0) && (fn != 0)));
+  } while ((ticks != s_ticks) || ((ms == 0) && (fn != 0)));
 }
 
 ISR(WDT_vect)

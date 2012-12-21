@@ -119,15 +119,15 @@ private:
    */
   static const uint8_t BUF_MAX = 4;
   static const uint8_t VEC_MAX = 4;
-  volatile State _state;
-  volatile uint8_t _status;
-  Thing* _target;
-  uint8_t _addr;
-  uint8_t _buf[BUF_MAX];
-  iovec_t _vec[VEC_MAX];
-  volatile uint8_t _ix;
-  volatile uint8_t _next;
-  volatile int _count;
+  volatile State m_state;
+  volatile uint8_t m_status;
+  Thing* m_target;
+  uint8_t m_addr;
+  uint8_t m_buf[BUF_MAX];
+  iovec_t m_vec[VEC_MAX];
+  volatile uint8_t m_ix;
+  volatile uint8_t m_next;
+  volatile int m_count;
 
   /**
    * Initiate a request to the slave. The address field is
@@ -159,13 +159,13 @@ public:
    * Construct two-wire instance. This is actually a single-ton.
    */
   TWI() :
-    _state(IDLE_STATE),
-    _status(NO_INFO),
-    _target(0),
-    _addr(0),
-    _ix(0),
-    _next(0),
-    _count(0)
+    m_state(IDLE_STATE),
+    m_status(NO_INFO),
+    m_target(0),
+    m_addr(0),
+    m_ix(0),
+    m_next(0),
+    m_count(0)
   {
   }
 
@@ -190,8 +190,8 @@ public:
    */
   void set_buf(void* buf, uint8_t size)
   {
-    _vec[0].buf = (uint8_t*) buf;
-    _vec[0].size = size;
+    m_vec[0].buf = (uint8_t*) buf;
+    m_vec[0].size = size;
   }
 
   /**

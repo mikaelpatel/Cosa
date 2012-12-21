@@ -50,9 +50,9 @@ public:
   
 private:
   static const uint16_t TIMEOUT_REQUEST = 0xffff;
-  StateHandler _state;
-  uint16_t _period;
-  uint16_t _param;
+  StateHandler m_state;
+  uint16_t m_period;
+  uint16_t m_param;
 
   /**
    * The first level event handler. Filters timeout events and
@@ -64,9 +64,9 @@ private:
   static void do_event(Thing* it, uint8_t type, uint16_t value)
   {
     FSM* fsm = (FSM*) it;
-    if (fsm->_period == TIMEOUT_REQUEST) fsm->cancel_timer();
-    fsm->_param = value;
-    fsm->_state(fsm, type);
+    if (fsm->m_period == TIMEOUT_REQUEST) fsm->cancel_timer();
+    fsm->m_param = value;
+    fsm->m_state(fsm, type);
   }
   
 public:
@@ -77,9 +77,9 @@ public:
    */
   FSM(StateHandler init, uint16_t period = 0) :
     Thing(do_event), 
-    _state(init),
-    _period(period),
-    _param(0)
+    m_state(init),
+    m_period(period),
+    m_param(0)
   {}
   
   /**
@@ -89,7 +89,7 @@ public:
   void set_state(StateHandler fn) 
   {
     if (fn == 0) return;
-    _state = fn;
+    m_state = fn;
   }
   
   /**
@@ -98,7 +98,7 @@ public:
    */
   void set_period(uint8_t ms)
   {
-    _period = ms;
+    m_period = ms;
   }
   
   /**
@@ -107,7 +107,7 @@ public:
    */
   void get(uint16_t& param)
   {
-    param = _param;
+    param = m_param;
   }
   
   /**
@@ -116,7 +116,7 @@ public:
    */
   void get(void*& param)
   {
-    param = (void*) _param;
+    param = (void*) m_param;
   }
   
   /**
@@ -144,8 +144,8 @@ public:
    */
   bool begin()
   {
-    if ((_period != 0) && (_period != TIMEOUT_REQUEST)) 
-      Watchdog::attach(this, _period);
+    if ((m_period != 0) && (m_period != TIMEOUT_REQUEST)) 
+      Watchdog::attach(this, m_period);
     send(Event::BEGIN_TYPE);
     return (1);
   }
@@ -165,7 +165,7 @@ public:
    */
   void set_timer(uint16_t timeout)
   {
-    _period = TIMEOUT_REQUEST;
+    m_period = TIMEOUT_REQUEST;
     Watchdog::attach(this, timeout);
   }
 
@@ -175,9 +175,9 @@ public:
    */
   void cancel_timer()
   {
-    if (_period != 0) {
+    if (m_period != 0) {
       detach();
-      _period = 0;
+      m_period = 0;
     }
   }
 };

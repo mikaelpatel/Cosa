@@ -108,7 +108,7 @@ public:
    * Construct stream with given device.
    * @param[in] dev stream device.
    */
-  IOStream(Device* dev = &Device::null) : _dev(dev) {}
+  IOStream(Device* dev = &Device::null) : m_dev(dev) {}
   
   /**
    * Get current device.
@@ -116,7 +116,7 @@ public:
    */
   Device* get_device() 
   { 
-    return (_dev); 
+    return (m_dev); 
   }
 
   /**
@@ -125,7 +125,7 @@ public:
    */
   void set(Device* dev) 
   { 
-    _dev = dev;
+    m_dev = dev;
   }
 
   /**
@@ -181,13 +181,13 @@ public:
    * Print character to stream.
    * @param[in] c character to print.
    */
-  void print(char c) { _dev->putchar(c); }
+  void print(char c) { m_dev->putchar(c); }
 
   /**
    * Print string in data memory to stream.
    * @param[in] ptr pointer to data memory string.
    */
-  void print(char* s) { _dev->puts(s); }
+  void print(char* s) { m_dev->puts(s); }
 
   /**
    * Print string in program memory to stream.
@@ -195,12 +195,12 @@ public:
    * program memory.
    * @param[in] ptr pointer to program memory string.
    */
-  void print_P(const char* s) { _dev->puts_P(s); }
+  void print_P(const char* s) { m_dev->puts_P(s); }
 
   /**
    * Print end of line to stream.
    */
-  void println() { _dev->putchar('\n'); }
+  void println() { m_dev->putchar('\n'); }
 
   /**
    * Formated print with variable argument list. The format string
@@ -225,7 +225,7 @@ public:
   }
 
  private:
-  Device* _dev;
+  Device* m_dev;
 
   /**
    * Print number prefix for non decimal base.

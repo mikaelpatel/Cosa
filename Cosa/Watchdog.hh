@@ -56,15 +56,15 @@ public:
   typedef bool (*AwaitCondition)(void* env);
 
 private:
-  static InterruptHandler _handler;
-  static void* _env;
+  static InterruptHandler s_handler;
+  static void* s_env;
 
   static const uint8_t TIMEQ_MAX = 10;
-  static Things _timeq[TIMEQ_MAX];
+  static Things s_timeq[TIMEQ_MAX];
 
-  static volatile uint16_t _ticks;
-  static uint8_t _prescale;
-  static uint8_t _mode;
+  static volatile uint16_t s_ticks;
+  static uint8_t s_prescale;
+  static uint8_t s_mode;
   
 public:
   /**
@@ -73,7 +73,7 @@ public:
    */
   static uint16_t get_ticks() 
   { 
-    return (_ticks); 
+    return (s_ticks); 
   }
 
   /**
@@ -81,7 +81,7 @@ public:
    */
   static void reset() 
   { 
-    _ticks = 0;
+    s_ticks = 0;
   }
 
   /**
@@ -90,7 +90,7 @@ public:
    */
   static uint16_t ms_per_tick() 
   { 
-    return (16 << _prescale); 
+    return (16 << s_prescale); 
   }
 
   /**
@@ -101,8 +101,8 @@ public:
   static void set(InterruptHandler fn, void* env = 0) 
   { 
     synchronized {
-      _handler = fn; 
-      _env = env; 
+      s_handler = fn; 
+      s_env = env; 
     }
   }
 
@@ -112,7 +112,7 @@ public:
    */
   static void set(uint8_t mode)
   { 
-    _mode = mode; 
+    s_mode = mode; 
   }
   
   /**
@@ -168,10 +168,10 @@ public:
    */
   static void push_timeout_events(void* env)
   { 
-    uint16_t changed = (_ticks ^ (_ticks + 1));
-    for (uint8_t i = _prescale; i < TIMEQ_MAX; i++, changed >>= 1)
-      if ((changed & 1) && !_timeq[i].is_empty())
-	Event::push(Event::TIMEOUT_TYPE, &_timeq[i], i);
+    uint16_t changed = (s_ticks ^ (s_ticks + 1));
+    for (uint8_t i = s_prescale; i < TIMEQ_MAX; i++, changed >>= 1)
+      if ((changed & 1) && !s_timeq[i].is_empty())
+	Event::push(Event::TIMEOUT_TYPE, &s_timeq[i], i);
   }
 
   /**
@@ -188,8 +188,8 @@ public:
    */
   static void on_timeout()
   {
-    if (_handler != 0) _handler(_env);
-    _ticks += 1;
+    if (s_handler != 0) s_handler(s_env);
+    s_ticks += 1;
   }
 };
 

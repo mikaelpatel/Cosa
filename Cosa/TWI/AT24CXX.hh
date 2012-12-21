@@ -36,7 +36,7 @@ class AT24CXX : private TWI::Driver {
 
 private:
   static const uint8_t ADDR = 0xa0;
-  uint8_t _addr;
+  uint8_t m_addr;
 
 public:
   /**
@@ -44,7 +44,7 @@ public:
    * chip address.
    * @param[in] addr chip address (0..7)
    */
-  AT24CXX(uint8_t addr = 0) : _addr(ADDR | (addr & 0xe)) {}
+  AT24CXX(uint8_t addr = 0) : m_addr(ADDR | (addr & 0xe)) {}
 
   /**
    * Read rom block with the given size into the buffer from the address.

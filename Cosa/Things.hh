@@ -60,7 +60,7 @@ public:
    */
   bool is_empty()
   {
-    return (_succ == this);
+    return (m_succ == this);
   }
 };
 

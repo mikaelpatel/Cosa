@@ -33,8 +33,8 @@ int
 AT24CXX::read(void* buf, uint8_t size, uint16_t addr)
 {
   if (!twi.begin()) return (-1);
-  twi.write(_addr, addr);
-  int count = twi.read(_addr, buf, size);
+  twi.write(m_addr, addr);
+  int count = twi.read(m_addr, buf, size);
   twi.end();
   return (count);
 }
@@ -43,8 +43,8 @@ int
 AT24CXX::write(void* buf, uint8_t size, uint16_t addr)
 {
   if (!twi.begin()) return (-1);
-  twi.write(_addr, addr);
-  int count = twi.write(_addr, addr, buf, size);
+  twi.write(m_addr, addr);
+  int count = twi.write(m_addr, addr, buf, size);
   twi.end();
   if (count > 0) count -= sizeof(addr);
   return (count);

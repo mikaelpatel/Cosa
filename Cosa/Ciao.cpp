@@ -85,134 +85,134 @@ void
 Ciao::write(char* s)
 {
   write(UINT8_TYPE, 0);
-  _dev->puts(s);
-  _dev->putchar(0);
+  m_dev->puts(s);
+  m_dev->putchar(0);
 }
 
 void 
 Ciao::write_P(const char* buf)
 {
   write(UINT8_TYPE, 0);
-  _dev->puts_P(buf);
-  _dev->putchar(0);
+  m_dev->puts_P(buf);
+  m_dev->putchar(0);
 }
 
 void 
 Ciao::write(uint8_t value)
 {
   write(UINT8_TYPE, 1);
-  _dev->putchar(value);
+  m_dev->putchar(value);
 }
 
 void 
 Ciao::write(uint8_t* buf, uint16_t count)
 {
   write(UINT8_TYPE, count);
-  _dev->write(buf, count * sizeof(uint8_t));
+  m_dev->write(buf, count * sizeof(uint8_t));
 }
 
 void 
 Ciao::write(uint16_t value)
 {
   write(UINT16_TYPE, 1);
-  _dev->write(&value, sizeof(value));
+  m_dev->write(&value, sizeof(value));
 }
 
 void 
 Ciao::write(uint16_t* buf, uint16_t count)
 {
   write(UINT16_TYPE, count);
-  _dev->write(buf, count * sizeof(uint16_t));
+  m_dev->write(buf, count * sizeof(uint16_t));
 }
 
 void Ciao::write(uint32_t value)
 {
   write(UINT32_TYPE, 1);
-  _dev->write(&value, sizeof(value));
+  m_dev->write(&value, sizeof(value));
 }
 
 void Ciao::write(uint32_t* buf, uint16_t count)
 {
   write(UINT32_TYPE, count);
-  _dev->write(buf, count * sizeof(uint32_t));
+  m_dev->write(buf, count * sizeof(uint32_t));
 }
 
 void Ciao::write(uint64_t value)
 {
   write(UINT64_TYPE, 1);
-  _dev->write(&value, sizeof(value));
+  m_dev->write(&value, sizeof(value));
 }
 
 void Ciao::write(uint64_t* buf, uint16_t count)
 {
   write(UINT64_TYPE, count);
-  _dev->write(buf, count * sizeof(uint32_t));
+  m_dev->write(buf, count * sizeof(uint32_t));
 }
 
 void Ciao::write(int8_t value)
 {
   write(INT8_TYPE, 1);
-  _dev->putchar(value);
+  m_dev->putchar(value);
 }
 
 void 
 Ciao::write(int8_t* buf, uint16_t count)
 {
   write(INT8_TYPE, count);
-  _dev->write(buf, count * sizeof(int8_t));
+  m_dev->write(buf, count * sizeof(int8_t));
 }
 
 void 
 Ciao::write(int16_t value)
 {
   write(INT16_TYPE, 1);
-  _dev->write(&value, sizeof(value));
+  m_dev->write(&value, sizeof(value));
 }
 
 void Ciao::write(int16_t* buf, uint16_t count)
 {
   write(INT16_TYPE, count);
-  _dev->write(buf, count * sizeof(int16_t));
+  m_dev->write(buf, count * sizeof(int16_t));
 }
 
 void 
 Ciao::write(int32_t value)
 {
   write(INT32_TYPE, 1);
-  _dev->write(&value, sizeof(value));
+  m_dev->write(&value, sizeof(value));
 }
 
 void Ciao::write(int32_t* buf, uint16_t count)
 {
   write(INT32_TYPE, count);
-  _dev->write(buf, count * sizeof(int32_t));
+  m_dev->write(buf, count * sizeof(int32_t));
 }
 
 void 
 Ciao::write(int64_t value)
 {
   write(INT64_TYPE, 1);
-  _dev->write(&value, sizeof(value));
+  m_dev->write(&value, sizeof(value));
 }
 
 void Ciao::write(int64_t* buf, uint16_t count)
 {
   write(INT64_TYPE, count);
-  _dev->write(buf, count * sizeof(int32_t));
+  m_dev->write(buf, count * sizeof(int32_t));
 }
 
 void 
 Ciao::write(float value)
 {
   write(FLOAT32_TYPE, 1);
-  _dev->write(&value, sizeof(value));
+  m_dev->write(&value, sizeof(value));
 }
 
 void 
 Ciao::write(float* buf, uint16_t count)
 {
   write(FLOAT32_TYPE, count);
-  _dev->write(buf, count * sizeof(float));
+  m_dev->write(buf, count * sizeof(float));
 }
 
 void
@@ -225,16 +225,16 @@ Ciao::write(uint8_t type, uint16_t count)
 
   // Tag byte contains marker. Succeeding byte counter[8..255]
   else if (count < 256) {
-    _dev->putchar(type | COUNT8_ATTR);
+    m_dev->putchar(type | COUNT8_ATTR);
   }
   
   // Tag byte contains marker. Succeeding two bytes counter[255..64K]
   else {
-    _dev->putchar(type | COUNT16_ATTR);
-    _dev->putchar(count >> 8);
+    m_dev->putchar(type | COUNT16_ATTR);
+    m_dev->putchar(count >> 8);
   }
 
-  _dev->putchar(count);
+  m_dev->putchar(count);
 }
 
 void 
@@ -246,17 +246,17 @@ Ciao::write(const Descriptor::user_t* desc)
   
   // Write descriptor start tag and identity number (8 or 16-bit)
   if (d.id < 256) {
-    _dev->putchar(USER8_DESC_START);
+    m_dev->putchar(USER8_DESC_START);
   }
   else {
-    _dev->putchar(USER16_DESC_START);
-    _dev->putchar(d.id >> 8);
+    m_dev->putchar(USER16_DESC_START);
+    m_dev->putchar(d.id >> 8);
   }
-  _dev->putchar(d.id);
+  m_dev->putchar(d.id);
 
   // Write descriptor null terminated name null
-  _dev->puts_P(d.name);
-  _dev->putchar(0);
+  m_dev->puts_P(d.name);
+  m_dev->putchar(0);
   
   // Write members with name null terminated
   const Descriptor::member_t* mp = d.member;
@@ -264,16 +264,16 @@ Ciao::write(const Descriptor::user_t* desc)
     Descriptor::member_t m;
     memcpy_P(&m, mp++, sizeof(m));
     write(m.type, m.count);
-    _dev->puts_P(m.name);
-    _dev->putchar(0);
+    m_dev->puts_P(m.name);
+    m_dev->putchar(0);
   }
 	 
   // Write descriptor end tag
   if (d.id < 256) {
-    _dev->putchar(USER8_DESC_END);
+    m_dev->putchar(USER8_DESC_END);
   }
   else {
-    _dev->putchar(USER16_DESC_END);
+    m_dev->putchar(USER16_DESC_END);
   }
 }
 
@@ -309,9 +309,9 @@ Ciao::write(const Descriptor::user_t* desc, void* buf, uint16_t count)
   }
   else {
     write(USER16_TYPE, count);
-    _dev->putchar(d.id >> 8);
+    m_dev->putchar(d.id >> 8);
   }
-  _dev->putchar(d.id);
+  m_dev->putchar(d.id);
 
   // Write data buffer to stream
   uint8_t* dp = (uint8_t*) buf;
@@ -327,13 +327,13 @@ Ciao::write(const Descriptor::user_t* desc, void* buf, uint16_t count)
 	uint8_t d;
 	do {
 	  d = *sp++;
-	  _dev->putchar(d);
+	  m_dev->putchar(d);
 	} while (d != 0);
 	dp += sizeof(sp);
       } 
       else {
 	size_t s = pgm_read_byte(&sizeoftype[m.type >> 4]) * m.count;
-	_dev->write(dp, s);
+	m_dev->write(dp, s);
 	dp += s;
       }
     }

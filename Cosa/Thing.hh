@@ -44,15 +44,15 @@ public:
   typedef void (*EventHandler)(Thing* it, uint8_t type, uint16_t value);
 
 protected:
-  EventHandler _callback;
-  Thing* _succ;
-  Thing* _pred;
+  EventHandler m_callback;
+  Thing* m_succ;
+  Thing* m_pred;
 
 public:
   Thing(EventHandler callback = 0) : 
-    _callback(callback),
-    _succ(this),
-    _pred(this)
+    m_callback(callback),
+    m_succ(this),
+    m_pred(this)
   {}
   
   /**
@@ -61,7 +61,7 @@ public:
    */
   void set_event_handler(EventHandler fn) 
   { 
-    _callback = fn; 
+    m_callback = fn; 
   }
 
   /**
@@ -70,7 +70,7 @@ public:
    */
   EventHandler get_event_handler() 
   { 
-    return (_callback);
+    return (m_callback);
   }
 
   /**
@@ -79,7 +79,7 @@ public:
    */
   Thing* get_succ() 
   {
-    return (_succ);
+    return (m_succ);
   }
 
   /**
@@ -88,7 +88,7 @@ public:
    */
   Thing* get_pred() 
   {
-    return (_pred);
+    return (m_pred);
   }
 
   /**
@@ -98,10 +98,10 @@ public:
   void attach(Thing* it)
   {
     synchronized {
-      it->_succ = this;
-      it->_pred = this->_pred;
-      this->_pred->_succ = it;
-      this->_pred = it;
+      it->m_succ = this;
+      it->m_pred = this->m_pred;
+      this->m_pred->m_succ = it;
+      this->m_pred = it;
     }
   }
 
@@ -111,10 +111,10 @@ public:
   void detach()
   {
     synchronized {
-      _succ->_pred = _pred;
-      _pred->_succ = _succ;
-      _succ = this;
-      _pred = this;
+      m_succ->m_pred = m_pred;
+      m_pred->m_succ = m_succ;
+      m_succ = this;
+      m_pred = this;
     }
   }
 
@@ -125,11 +125,17 @@ public:
    */
   void on_event(uint8_t type, uint16_t value)
   {
-    if (_callback != 0) _callback(this, type, value);
+    if (m_callback != 0) m_callback(this, type, value);
   }
+
+  /**
+   * Trampoline function for event dispatch.
+   * @param[in] type the event type.
+   * @param[in] value the event value.
+   */
   void on_event(uint8_t type, void* value)
   {
-    if (_callback != 0) _callback(this, type, (uint16_t) value);
+    if (m_callback != 0) m_callback(this, type, (uint16_t) value);
   }
 };
 

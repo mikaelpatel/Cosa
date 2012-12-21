@@ -60,7 +60,7 @@ private:
     uint8_t reserved[3];
     uint8_t crc;
   };
-  scratchpad_t _scratchpad;
+  scratchpad_t m_scratchpad;
 
   /**
    * Read the contents of the scratchpad to local memory.

@@ -52,7 +52,7 @@ protected:
   /**
    * Slave select pin (default is pin 10)
    */
-  OutputPin _ss;
+  OutputPin m_ss;
 
   /**
    * Registers Map (See tab. 19, pp. 23)

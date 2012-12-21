@@ -43,7 +43,7 @@ uint8_t
 Things::length()
 {
   uint8_t res = 0;
-  for (Thing* it = _succ; it != this; it = it->get_succ()) res++;
+  for (Thing* it = m_succ; it != this; it = it->get_succ()) res++;
   return (res);
 }
 

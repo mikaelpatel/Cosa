@@ -36,7 +36,7 @@ void
 Event::print(IOStream& stream)
 {
   stream.printf_P(PSTR("Event(type = %d, target = %p, value = %hd)"),
-		  _type, _target, _value);
+		  m_type, m_target, m_value);
 }
 
 void 

@@ -30,7 +30,7 @@
 #include "Cosa/SPI/ADXL345.hh"
 
 ADXL345::ADXL345(uint8_t ss) :
-  _ss(ss, 1) 
+  m_ss(ss, 1) 
 {
   if (begin()) {
     write(DATA_FORMAT, _BV(FULL_RES) | RANGE_16G);
@@ -41,7 +41,7 @@ ADXL345::ADXL345(uint8_t ss) :
 void 
 ADXL345::write(Register reg, uint8_t value)
 {
-  SPI_transaction(_ss) {
+  SPI_transaction(m_ss) {
     spi.write(WRITE_CMD | (reg & REG_MASK), value);
   }
 }
@@ -49,7 +49,7 @@ ADXL345::write(Register reg, uint8_t value)
 void 
 ADXL345::write(Register reg, void* buffer, uint8_t count)
 {
-  SPI_transaction(_ss) {
+  SPI_transaction(m_ss) {
     spi.write(WRITE_CMD | MULTIPLE_BYTE | (reg & REG_MASK), buffer, count);
   }
 }
@@ -58,7 +58,7 @@ uint8_t
 ADXL345::read(Register reg)
 {
   uint8_t res;
-  SPI_transaction(_ss) {
+  SPI_transaction(m_ss) {
     res = spi.read(READ_CMD | (reg & REG_MASK));
   }
   return (res);
@@ -67,7 +67,7 @@ ADXL345::read(Register reg)
 void 
 ADXL345::read(Register reg, void* buffer, uint8_t count)
 {
-  SPI_transaction(_ss) {
+  SPI_transaction(m_ss) {
     spi.read(READ_CMD | MULTIPLE_BYTE | (reg & REG_MASK), buffer, count);
   }
 }

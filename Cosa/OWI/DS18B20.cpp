@@ -34,7 +34,7 @@ bool
 DS18B20::convert_request()
 {
   if (!match_rom()) return (0);
-  _pin->write(CONVERT_T);
+  m_pin->write(CONVERT_T);
   return (1);
 }
 
@@ -42,23 +42,23 @@ bool
 DS18B20::read_scratchpad()
 {
   if (!match_rom()) return (0);
-  _pin->write(READ_SCRATCHPAD);
-  _pin->begin();
-  uint8_t* ptr = (uint8_t*) &_scratchpad;
-  for (uint8_t i = 0; i < sizeof(_scratchpad); i++) {
-    *ptr++ = _pin->read();
+  m_pin->write(READ_SCRATCHPAD);
+  m_pin->begin();
+  uint8_t* ptr = (uint8_t*) &m_scratchpad;
+  for (uint8_t i = 0; i < sizeof(m_scratchpad); i++) {
+    *ptr++ = m_pin->read();
   }
 #ifdef __DEBUG__
   print_scratchpad();
 #endif
-  return (_pin->end() == 0);
+  return (m_pin->end() == 0);
 }
 
 void 
 DS18B20::print_scratchpad(IOStream& stream)
 {
-  uint8_t* ptr = (uint8_t*) &_scratchpad;
-  for (uint8_t i = 0; i < sizeof(_scratchpad); i++) {
+  uint8_t* ptr = (uint8_t*) &m_scratchpad;
+  for (uint8_t i = 0; i < sizeof(m_scratchpad); i++) {
     stream.printf_P(PSTR("scratchpad[%d] = %hd\n"), i, *ptr++);
   }
 }
@@ -66,13 +66,13 @@ DS18B20::print_scratchpad(IOStream& stream)
 int16_t 
 DS18B20::get_temperature()
 {
-  return (_scratchpad.temperature);
+  return (m_scratchpad.temperature);
 }
 
 void 
 DS18B20::print_temperature_P(const char* prefix, IOStream& stream)
 {
-  FixedPoint temp(_scratchpad.temperature, 4);
+  FixedPoint temp(m_scratchpad.temperature, 4);
   int16_t integer = temp.get_integer();
   uint16_t fraction = temp.get_fraction(4);
   stream.printf_P(PSTR("%S%d.%s%d C"), prefix,

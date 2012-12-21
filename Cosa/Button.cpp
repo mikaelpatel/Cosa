@@ -32,8 +32,8 @@
 void
 Button::attach(InputPin* pin)
 {
-  _pin = pin;
-  _state = pin->is_set();
+  m_pin = pin;
+  m_state = pin->is_set();
   set_event_handler(on_timeout);
   Watchdog::attach(this, SAMPLE_MS);
 }
@@ -42,17 +42,17 @@ void
 Button::on_timeout(Thing* it, uint8_t type, uint16_t value)
 {
   Button* button = (Button*) it;
-  InputPin* pin = button->_pin;
+  InputPin* pin = button->m_pin;
   if (type != Event::TIMEOUT_TYPE || pin == 0) return;
   
   // Update the button state
-  uint8_t old_state = button->_state;
-  button->_state = pin->is_set();
-  uint8_t new_state = button->_state;
+  uint8_t old_state = button->m_state;
+  button->m_state = pin->is_set();
+  uint8_t new_state = button->m_state;
 
   // If changed according to mode call the pin event handler
   if ((old_state != new_state) && 
-      ((button->_mode == Button::ON_CHANGE_MODE) ||
-       (new_state == button->_mode)))
-    pin->on_event(Event::FALLING_TYPE + button->_mode, value);
+      ((button->m_mode == Button::ON_CHANGE_MODE) ||
+       (new_state == button->m_mode)))
+    pin->on_event(Event::FALLING_TYPE + button->m_mode, value);
 }

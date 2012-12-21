@@ -85,9 +85,9 @@ public:
   };
 
 private:
-  uint8_t _type;
-  Thing* _target;
-  uint16_t _value;
+  uint8_t m_type;
+  Thing* m_target;
+  uint16_t m_value;
 
 public:
   /**
@@ -98,9 +98,9 @@ public:
    * @param[in] env event environment.
    */
   Event(int8_t type = NULL_TYPE, Thing* target = 0, uint16_t value = 0) :
-    _type(type),
-    _target(target),
-    _value(value)
+    m_type(type),
+    m_target(target),
+    m_value(value)
   {}
 
   /**
@@ -109,7 +109,7 @@ public:
    */
   int get_type() 
   { 
-    return (_type); 
+    return (m_type); 
   }
 
   /**
@@ -118,7 +118,7 @@ public:
    */
   Thing* get_target() 
   { 
-    return (_target); 
+    return (m_target); 
   } 
 
   /**
@@ -127,7 +127,7 @@ public:
    */
   uint16_t get_value() 
   { 
-    return (_value); 
+    return (m_value); 
   }
 
   /**
@@ -136,7 +136,7 @@ public:
    */
   void* get_env() 
   { 
-    return ((void*) _value); 
+    return ((void*) m_value); 
   }
 
   /**
@@ -144,7 +144,7 @@ public:
    */
   void dispatch()
   {
-    if (_target != 0) _target->on_event(_type, _value);
+    if (m_target != 0) m_target->on_event(m_type, m_value);
   }
 
   /**

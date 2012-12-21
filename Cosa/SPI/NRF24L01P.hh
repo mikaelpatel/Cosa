@@ -60,23 +60,23 @@ private:
   /**
    * Transmission state
    */
-  uint8_t _status;
-  uint8_t _channel;
+  uint8_t m_status;
+  uint8_t m_channel;
 
   /**
    * Slave select pin (default is pin 10)
    */
-  OutputPin _csn;
+  OutputPin m_csn;
 
   /**
    * Chip enable activity RX/TX select pin (default is pin 9)
    */
-  OutputPin _ce;
+  OutputPin m_ce;
 
   /**
    * Chip interrupt pin (default is pin 2)
    */
-  InterruptPin _irq;
+  InterruptPin m_irq;
 
 public:
   /**
@@ -338,10 +338,10 @@ public:
    */
   uint8_t get_status()
   {
-    SPI_transaction(_csn) {
-      _status = spi.exchange(NOP);
+    SPI_transaction(m_csn) {
+      m_status = spi.exchange(NOP);
     }
-    return (_status);
+    return (m_status);
   }
 
   /**
@@ -474,7 +474,7 @@ private:
   /**
    * Transceiver state
    */
-  State _state;
+  State m_state;
 };
 
 #endif

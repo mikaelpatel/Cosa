@@ -71,13 +71,13 @@ OWI::read(uint8_t bits)
       res >>= 1;
       if (is_set()) {
 	res |= 0x80;
-	mix = (_crc ^ 1);
+	mix = (m_crc ^ 1);
       }
       else {
-	mix = (_crc ^ 0);
+	mix = (m_crc ^ 0);
       }
-      _crc >>= 1;
-      if (mix & 1) _crc ^= 0x8C;
+      m_crc >>= 1;
+      if (mix & 1) m_crc ^= 0x8C;
       DELAY(55);
     }
   }
@@ -99,17 +99,17 @@ OWI::write(uint8_t value, uint8_t bits)
 	DELAY(6);
 	set();
 	DELAY(64);
-	mix = (_crc ^ 1);
+	mix = (m_crc ^ 1);
       }
       else {
 	DELAY(60);
 	set();
 	DELAY(10);
-	mix = (_crc ^ 0);
+	mix = (m_crc ^ 0);
       }
       value >>= 1;
-      _crc >>= 1;
-      if (mix & 1) _crc ^= 0x8C;
+      m_crc >>= 1;
+      if (mix & 1) m_crc ^= 0x8C;
     }
     set_mode(INPUT_MODE);
   }

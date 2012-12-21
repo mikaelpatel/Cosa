@@ -122,7 +122,7 @@ private:
   static header_t header;
 
   // Output streaming device.
-  IOStream::Device* _dev;
+  IOStream::Device* m_dev;
 
   /**
    * Write data tag to given stream.
@@ -136,7 +136,7 @@ public:
    * Construct data streaming for given device.
    * @param[in] dev output device.
    */
-  Ciao(IOStream::Device* dev = 0) : _dev(dev) {}
+  Ciao(IOStream::Device* dev = 0) : m_dev(dev) {}
 
   /**
    * Set io stream device.
@@ -144,7 +144,7 @@ public:
    */
   void set(IOStream::Device* dev) 
   { 
-    _dev = dev;
+    m_dev = dev;
   }
 
   /**

@@ -33,11 +33,11 @@ FixedPoint::get_fraction(uint8_t scale)
 {
   uint16_t half = 5;
   uint16_t result = 0;
-  if (scale == 0) return (_fraction);
+  if (scale == 0) return (m_fraction);
   while (--scale) 
     half = (half << 3) + (half << 1);
-  for (uint8_t bit = (1 << (_point - 1)); bit; bit >>= 1, half >>= 1)
-    if (bit & _fraction)
+  for (uint8_t bit = (1 << (m_point - 1)); bit; bit >>= 1, half >>= 1)
+    if (bit & m_fraction)
       result += half;
   return (result);
 }

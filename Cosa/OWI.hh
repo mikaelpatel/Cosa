@@ -60,15 +60,24 @@ public:
       ERROR = -1,
       LAST = ROMBITS
     };
-    uint8_t _rom[ROM_MAX];
-    OWI* _pin;
+    uint8_t m_rom[ROM_MAX];
+    OWI* m_pin;
 
   public:
     /**
      * Construct one wire device driver.
      * @param[in] pin one wire bus.
      */
-    Driver(OWI* pin) : _pin(pin) {}
+    Driver(OWI* pin) : m_pin(pin) {}
+
+    /**
+     * Return pointer to device rom. 
+     * @return device rom buffer.
+     */
+    uint8_t* get_rom() 
+    {
+      return (m_rom);
+    }
 
     /**
      * Search device rom given the last position of discrepancy.
@@ -146,9 +155,9 @@ public:
     {
       synchronized {
 	if (mode == OUTPUT_MODE)
-	  *DDR() |= _mask; 
+	  *DDR() |= m_mask; 
 	else
-	  *DDR() &= ~_mask; 
+	  *DDR() &= ~m_mask; 
       }
     }
 
@@ -158,7 +167,7 @@ public:
     void set() 
     { 
       synchronized {
-	*PORT() |= _mask; 
+	*PORT() |= m_mask; 
       }
     }
 
@@ -168,7 +177,7 @@ public:
     void clear() 
     { 
       synchronized {
-	*PORT() &= ~_mask; 
+	*PORT() &= ~m_mask; 
       }
     }
 
@@ -208,10 +217,10 @@ public:
     friend void interrupt_handler(InterruptPin* pin, void* env);
 
   protected:
-    uint8_t* _rom;
-    volatile uint32_t _time;
-    volatile uint8_t _crc;
-    volatile State _state;
+    uint8_t* m_rom;
+    volatile uint32_t m_time;
+    volatile uint8_t m_crc;
+    volatile State m_state;
 
   public:
     // Slave function codes
@@ -227,17 +236,17 @@ public:
      */
     Device(uint8_t pin, uint8_t* rom) : 
       InterruptPin(pin, InterruptPin::ON_CHANGE_MODE, interrupt_handler),
-      _rom(rom),
-      _time(0),
-      _crc(0),
-      _state(IDLE_STATE)
+      m_rom(rom),
+      m_time(0),
+      m_crc(0),
+      m_state(IDLE_STATE)
     {
       set_event_handler(service_request);
     }
   };
   
 private:
-  uint8_t _crc;
+  uint8_t m_crc;
   
 public:
   /**
@@ -273,7 +282,7 @@ public:
   /**
    * Begin a read sequence with CRC.
    */
-  void begin() { _crc = 0; }
+  void begin() { m_crc = 0; }
 
   /**
    * End a read sequence and return the generated CRC. If the
@@ -281,7 +290,7 @@ public:
    * zero(0).
    * @return generated CRC.
    */
-  uint8_t end() { return (_crc); }
+  uint8_t end() { return (m_crc); }
 
   /**
    * Print list of connected devices on given stream.

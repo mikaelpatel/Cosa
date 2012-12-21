@@ -33,9 +33,9 @@
 
 class FixedPoint {
 private:
-  int16_t _integer;
-  uint16_t _fraction;
-  uint8_t _point;
+  int16_t m_integer;
+  uint16_t m_fraction;
+  uint8_t m_point;
 public:
   /** 
    * Construct fixed point integer with given value and binary point.
@@ -43,9 +43,9 @@ public:
    * @param[in] point fixed point binary point.
    */
   FixedPoint(int16_t value, uint8_t point):
-    _integer(value >> point),
-    _fraction((value < 0 ? -value : value) & ~(-1 << point)),
-    _point(point)
+    m_integer(value >> point),
+    m_fraction((value < 0 ? -value : value) & ~(-1 << point)),
+    m_point(point)
   {
   }
 
@@ -53,13 +53,13 @@ public:
    * Return integer part of fixed point number.
    * @return integer.
    */
-  int16_t get_integer() { return (_integer); }
+  int16_t get_integer() { return (m_integer); }
 
   /** 
    * Return unsigned fraction part of fixed point number.
    * @return fraction.
    */
-  uint16_t get_fraction() { return (_fraction); }
+  uint16_t get_fraction() { return (m_fraction); }
 
   /** 
    * Return scaled unsigned fraction part of fixed point number.

@@ -51,13 +51,13 @@ OWI::Device::read(uint8_t bits)
       res >>= 1;
       if (is_set()) {
 	res |= 0x80;
-	mix = (_crc ^ 1);
+	mix = (m_crc ^ 1);
       }
       else {
-	mix = (_crc ^ 0);
+	mix = (m_crc ^ 0);
       }
-      _crc >>= 1;
-      if (mix & 1) _crc ^= 0x8C;
+      m_crc >>= 1;
+      if (mix & 1) m_crc ^= 0x8C;
       DELAY(40);
       retry = RETRY_MAX;
       do {
@@ -86,7 +86,7 @@ OWI::Device::write(uint8_t value, uint8_t bits)
 	DELAY(1);
       } while (is_set());
       if (value & 1) {
-	mix = (_crc ^ 1);
+	mix = (m_crc ^ 1);
 	DELAY(45);
       }
       else {
@@ -95,11 +95,11 @@ OWI::Device::write(uint8_t value, uint8_t bits)
 	clear();
 	DELAY(45);
 	set_mode(INPUT_MODE);
-	mix = (_crc ^ 0);
+	mix = (m_crc ^ 0);
       }
       value >>= 1;
-      _crc >>= 1;
-      if (mix & 1) _crc ^= 0x8C;
+      m_crc >>= 1;
+      if (mix & 1) m_crc ^= 0x8C;
     }
   }
   return (1);
@@ -140,15 +140,15 @@ OWI::Device::service_request(Thing* it, uint8_t type, uint16_t value)
   synchronized {
     DELAY(stop - micros());
 
-    dev->_state = ROM_STATE;
+    dev->m_state = ROM_STATE;
     int cmd = dev->read(8);
 
     // Check for READ ROM command. Only possible when single device
     if (cmd == READ_ROM) {
-      dev->_crc = 0;
+      dev->m_crc = 0;
       for (uint8_t i = 0; i < ROM_MAX - 1; i++)
-	if (!dev->write(dev->_rom[i], 8)) synchronized_goto(error);
-      if (!dev->write(dev->_crc, 8)) synchronized_goto(error);
+	if (!dev->write(dev->m_rom[i], 8)) synchronized_goto(error);
+      if (!dev->write(dev->m_crc, 8)) synchronized_goto(error);
     }
 
     else {
@@ -156,7 +156,7 @@ OWI::Device::service_request(Thing* it, uint8_t type, uint16_t value)
       // Check for SEARCH ROM command. Match slave device rom identity
       if (cmd == SEARCH_ROM) {
 	for (uint8_t i = 0; i < ROM_MAX; i++) {
-	  uint8_t bits = dev->_rom[i];
+	  uint8_t bits = dev->m_rom[i];
 	  for (uint8_t j = 0; j < CHARBITS; j++) {
 	    uint8_t bit = (bits & 0x01);
 	    bit |= (~bit << 1);
@@ -171,7 +171,7 @@ OWI::Device::service_request(Thing* it, uint8_t type, uint16_t value)
       // Check for MATCH ROM command. Match slave device rom identity
       else if (cmd == MATCH_ROM) {
 	for (uint8_t i = 0; i < ROM_MAX - 1; i++)
-	  if (dev->read(8) != dev->_rom[i]) synchronized_goto(error);
+	  if (dev->read(8) != dev->m_rom[i]) synchronized_goto(error);
 	if (dev->read(8) < 0) synchronized_goto(error);
       } 
 
@@ -179,27 +179,27 @@ OWI::Device::service_request(Thing* it, uint8_t type, uint16_t value)
       else if (cmd != SKIP_ROM) synchronized_goto(error);
 
       // Get the function command
-      dev->_state = FUNCTION_STATE;
+      dev->m_state = FUNCTION_STATE;
       cmd = dev->read(8);
       if (cmd < 0) synchronized_goto(error);
       fns++;
 
       // Check for STATUS function command. Return statistics
       if (cmd == STATUS) {
-	dev->_crc = 0;
+	dev->m_crc = 0;
 	dev->write(req >> 8, 8);
 	dev->write(req, 8);
 	dev->write(fns >> 8, 8);
 	dev->write(fns, 8);
 	dev->write(err >> 8, 8);
 	dev->write(err, 8);
-	dev->write(dev->_crc, 8);
+	dev->write(dev->m_crc, 8);
       }
     }
   }
 
  final:
-  dev->_state = IDLE_STATE;
+  dev->m_state = IDLE_STATE;
   dev->enable();
   return;
 
@@ -213,20 +213,20 @@ OWI::Device::interrupt_handler(InterruptPin* pin, void* env)
 {
   OWI::Device* dev = (OWI::Device*) pin;
   volatile uint32_t now = micros();
-  if (dev->_state == IDLE_STATE) {
+  if (dev->m_state == IDLE_STATE) {
     if (dev->is_clear()) {
-      dev->_time = now + 400L;
-      dev->_state = RESET_STATE;
+      dev->m_time = now + 400L;
+      dev->m_state = RESET_STATE;
     }
   } 
-  else if (dev->_state == RESET_STATE && now > dev->_time) {
-    dev->_state = PRESENCE_STATE;
-    dev->_time = now;
+  else if (dev->m_state == RESET_STATE && now > dev->m_time) {
+    dev->m_state = PRESENCE_STATE;
+    dev->m_time = now;
     dev->disable();
     dev->set_mode(OUTPUT_MODE);
     dev->set();
     dev->clear();
     InterruptPin::push_event(pin, env);
   }
-  else dev->_state = IDLE_STATE;
+  else dev->m_state = IDLE_STATE;
 }

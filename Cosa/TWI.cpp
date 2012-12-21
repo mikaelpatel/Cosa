@@ -38,12 +38,12 @@ TWI twi;
 bool 
 TWI::begin(Thing* target, uint8_t addr)
 {
-  _target = target;
-  _addr = addr;
+  m_target = target;
+  m_addr = addr;
 
   // Check for slave mode and set device address
   if (target != 0 && addr != 0) {
-    TWAR = _addr;
+    TWAR = m_addr;
   } 
   else {
     // Enable internal pullup
@@ -64,7 +64,7 @@ TWI::begin(Thing* target, uint8_t addr)
 bool 
 TWI::end()
 {
-  _target = 0;
+  m_target = 0;
   TWCR = 0;
   return (1);
 }
@@ -72,12 +72,12 @@ TWI::end()
 bool
 TWI::request(uint8_t addr)
 {
-  _addr = addr;
-  _state = (addr & WRITE_OP) ? MT_STATE : MR_STATE;
-  _status = NO_INFO;
-  _count = 0;
-  _next = 0;
-  _ix = 0;
+  m_addr = addr;
+  m_state = (addr & WRITE_OP) ? MT_STATE : MR_STATE;
+  m_status = NO_INFO;
+  m_count = 0;
+  m_next = 0;
+  m_ix = 0;
   TWCR = START_CMD;
   return (1);
 }
@@ -85,47 +85,47 @@ TWI::request(uint8_t addr)
 bool
 TWI::write_request(uint8_t addr, void* buf, uint8_t size)
 {
-  _vec[0].buf = (uint8_t*) buf;
-  _vec[0].size = size;
-  _vec[1].buf = 0;
-  _vec[1].size = 0;
+  m_vec[0].buf = (uint8_t*) buf;
+  m_vec[0].size = size;
+  m_vec[1].buf = 0;
+  m_vec[1].size = 0;
   return (request(addr | WRITE_OP));
 }
 
 bool
 TWI::write_request(uint8_t addr, uint8_t header, void* buf, uint8_t size)
 {
-  _buf[0] = header;
-  _vec[0].buf = _buf;
-  _vec[0].size = sizeof(header);
-  _vec[1].buf = (uint8_t*) buf;
-  _vec[1].size = size;
-  _vec[2].buf = 0;
-  _vec[2].size = 0;
+  m_buf[0] = header;
+  m_vec[0].buf = m_buf;
+  m_vec[0].size = sizeof(header);
+  m_vec[1].buf = (uint8_t*) buf;
+  m_vec[1].size = size;
+  m_vec[2].buf = 0;
+  m_vec[2].size = 0;
   return (request(addr | WRITE_OP));
 }
 
 bool
 TWI::write_request(uint8_t addr, uint16_t header, void* buf, uint8_t size)
 {
-  _buf[0] = (header >> 8);
-  _buf[1] = header;
-  _vec[0].buf = _buf;
-  _vec[0].size = sizeof(header);
-  _vec[1].buf = (uint8_t*) buf;
-  _vec[1].size = size;
-  _vec[2].buf = 0;
-  _vec[2].size = 0;
+  m_buf[0] = (header >> 8);
+  m_buf[1] = header;
+  m_vec[0].buf = m_buf;
+  m_vec[0].size = sizeof(header);
+  m_vec[1].buf = (uint8_t*) buf;
+  m_vec[1].size = size;
+  m_vec[2].buf = 0;
+  m_vec[2].size = 0;
   return (request(addr | WRITE_OP));
 }
 
 bool
 TWI::read_request(uint8_t addr, void* buf, uint8_t size)
 {
-  _vec[0].buf = (uint8_t*) buf;
-  _vec[0].size = size;
-  _vec[1].buf = 0;
-  _vec[1].size = 0;
+  m_vec[0].buf = (uint8_t*) buf;
+  m_vec[0].size = size;
+  m_vec[1].buf = 0;
+  m_vec[1].size = 0;
   return (request(addr | READ_OP));
 }
 
@@ -139,55 +139,55 @@ TWI::await_completed(uint8_t mode)
     sei();
     sleep_cpu();
     sleep_disable();
-  } while (_state > IDLE_STATE);
-  return (_count);
+  } while (m_state > IDLE_STATE);
+  return (m_count);
 }
 
 void
 TWI::on_bus_event()
 {
-  _status = TWI_STATUS(TWSR);
-  switch (_status) {
+  m_status = TWI_STATUS(TWSR);
+  switch (m_status) {
   case START:
   case REP_START:
-    TWDR = _addr;
+    TWDR = m_addr;
     TWCR = DATA_CMD;
     break;
   case ARB_LOST:
     TWCR = IDLE_CMD;
-    _state = ERROR_STATE;
+    m_state = ERROR_STATE;
     break;
   /**
    * Master Transmitter Mode
    */
   case MT_SLA_ACK:
   case MT_DATA_ACK:
-    if (_next == _vec[_ix].size) {
-      _ix += 1;
-      _next = 0;
+    if (m_next == m_vec[m_ix].size) {
+      m_ix += 1;
+      m_next = 0;
     }
-    if (_next < _vec[_ix].size) {
-      TWDR = _vec[_ix].buf[_next++];
+    if (m_next < m_vec[m_ix].size) {
+      TWDR = m_vec[m_ix].buf[m_next++];
       TWCR = DATA_CMD;
-      _count++;
+      m_count++;
       break;
     } 
-    if (_target != 0) 
-      Event::push(Event::WRITE_COMPLETED_TYPE, _target, &twi);
+    if (m_target != 0) 
+      Event::push(Event::WRITE_COMPLETED_TYPE, m_target, &twi);
   case MT_SLA_NACK:
   case MT_DATA_NACK:
     TWCR = STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
-    _state = IDLE_STATE;
+    m_state = IDLE_STATE;
     break;
   /**
    * Master Receiver Mode
    */
   case MR_DATA_ACK:
-    _vec[_ix].buf[_next++] = TWDR;
-    _count++;
+    m_vec[m_ix].buf[m_next++] = TWDR;
+    m_count++;
   case MR_SLA_ACK:
-    if (_next < (_vec[_ix].size - 1)) {
+    if (m_next < (m_vec[m_ix].size - 1)) {
       TWCR = ACK_CMD;
     } 
     else {
@@ -195,29 +195,29 @@ TWI::on_bus_event()
     }    
     break; 
   case MR_DATA_NACK:
-    _vec[_ix].buf[_next++] = TWDR;
-    _count++;
-    if (_target != 0) {
-      Event::push(Event::READ_COMPLETED_TYPE, _target, &twi);
-      _next = 0;
+    m_vec[m_ix].buf[m_next++] = TWDR;
+    m_count++;
+    if (m_target != 0) {
+      Event::push(Event::READ_COMPLETED_TYPE, m_target, &twi);
+      m_next = 0;
     }
   case MR_SLA_NACK:
     TWCR = STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
-    _state = IDLE_STATE;
+    m_state = IDLE_STATE;
     break;
   /**
    * Slave Transmitter Mode
    */
   case ST_SLA_ACK:
   case ST_ARB_LOST_SLA_ACK:
-    _state = ST_STATE;
-    _next = 0;
-    _ix = 0;
-    _vec[_ix].size = 4;
+    m_state = ST_STATE;
+    m_next = 0;
+    m_ix = 0;
+    m_vec[m_ix].size = 4;
   case ST_DATA_ACK:
-    TWDR = _vec[_ix].buf[_next++];
-    if (_next < _vec[_ix].size) {
+    TWDR = m_vec[m_ix].buf[m_next++];
+    if (m_next < m_vec[m_ix].size) {
       TWCR = ACK_CMD;
     } 
     else {
@@ -227,7 +227,7 @@ TWI::on_bus_event()
   case ST_DATA_NACK:
   case ST_LAST_DATA:
     TWCR = ACK_CMD;
-    _state = IDLE_STATE;
+    m_state = IDLE_STATE;
     break;
   /**
    * Slave Receiver Mode
@@ -236,14 +236,14 @@ TWI::on_bus_event()
   case SR_GCALL_ACK:
   case SR_ARB_LOST_SLA_ACK:
   case SR_ARB_LOST_GCALL_ACK:
-    _state = SR_STATE;
-    _next = 0;
+    m_state = SR_STATE;
+    m_next = 0;
     TWCR = ACK_CMD;
     break;
   case SR_DATA_ACK:
   case SR_GCALL_DATA_ACK:
-    if (_next < _vec[_ix].size) {
-      _vec[_ix].buf[_next++] = TWDR;
+    if (m_next < m_vec[m_ix].size) {
+      m_vec[m_ix].buf[m_next++] = TWDR;
       TWCR = ACK_CMD;
     }
     else {
@@ -253,9 +253,9 @@ TWI::on_bus_event()
   case SR_STOP:
     TWCR = STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
-    if (_target != 0) 
-      Event::push(Event::SERVICE_REQUEST_TYPE, _target, &twi);
-    _state = IDLE_STATE;
+    if (m_target != 0) 
+      Event::push(Event::SERVICE_REQUEST_TYPE, m_target, &twi);
+    m_state = IDLE_STATE;
     TWCR = IDLE_CMD; 
     break;
   case SR_DATA_NACK:

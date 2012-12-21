@@ -31,45 +31,45 @@
 int8_t
 OWI::Driver::search_rom(int8_t last)
 {
-  if (!_pin->reset()) return (ERROR);
-  _pin->write(OWI::SEARCH_ROM);
+  if (!m_pin->reset()) return (ERROR);
+  m_pin->write(OWI::SEARCH_ROM);
   uint8_t pos = 0;
   int8_t next = LAST;
   for (uint8_t i = 0; i < 8; i++) {
     uint8_t data = 0;
     for (uint8_t j = 0; j < 8; j++) {
       data >>= 1;
-      switch (_pin->read(2)) {
+      switch (m_pin->read(2)) {
       case 0b00: // Discrepency between device roms
 	if (pos == last) {
-	  _pin->write(1, 1); 
+	  m_pin->write(1, 1); 
 	  data |= 0x80; 
 	  last = FIRST;
 	} 
 	else if (pos > last) {
-	  _pin->write(0, 1); 
+	  m_pin->write(0, 1); 
 	  next = pos;
-	} else if (_rom[i] & (1 << j)) {
-	  _pin->write(1, 1);
+	} else if (m_rom[i] & (1 << j)) {
+	  m_pin->write(1, 1);
 	  data |= 0x80; 
 	} 
 	else {
-	  _pin->write(0, 1);
+	  m_pin->write(0, 1);
 	}
 	break;
       case 0b01: // Only one's at this position 
-	_pin->write(1, 1); 
+	m_pin->write(1, 1); 
 	data |= 0x80; 
 	break;
       case 0b10: // Only zero's at this position
-	_pin->write(0, 1); 
+	m_pin->write(0, 1); 
 	break;
       case 0b11: // No device detected
 	return (ERROR);
       }
       pos += 1;
     }
-    _rom[i] = data;
+    m_rom[i] = data;
   }
   return (next);
 }
@@ -77,22 +77,22 @@ OWI::Driver::search_rom(int8_t last)
 bool
 OWI::Driver::read_rom()
 {
-  if (!_pin->reset()) return (0);
-  _pin->write(OWI::READ_ROM);
-  _pin->begin();
+  if (!m_pin->reset()) return (0);
+  m_pin->write(OWI::READ_ROM);
+  m_pin->begin();
   for (uint8_t i = 0; i < ROM_MAX; i++) {
-    _rom[i] = _pin->read();
+    m_rom[i] = m_pin->read();
   }
-  return (_pin->end() == 0);
+  return (m_pin->end() == 0);
 }
 
 bool
 OWI::Driver::match_rom()
 {
-  if (!_pin->reset()) return (0);
-  _pin->write(OWI::MATCH_ROM);
+  if (!m_pin->reset()) return (0);
+  m_pin->write(OWI::MATCH_ROM);
   for (uint8_t i = 0; i < ROM_MAX; i++) {
-    _pin->write(_rom[i]);
+    m_pin->write(m_rom[i]);
   }
   return (1);
 }
@@ -100,8 +100,8 @@ OWI::Driver::match_rom()
 bool
 OWI::Driver::skip_rom()
 {
-  if (!_pin->reset()) return (0);
-  _pin->write(OWI::SKIP_ROM);
+  if (!m_pin->reset()) return (0);
+  m_pin->write(OWI::SKIP_ROM);
   return (1);
 }
 
@@ -109,10 +109,10 @@ void
 OWI::Driver::print_rom(IOStream& stream)
 {
   uint8_t i;
-  stream.printf_P(PSTR("OWI::rom(family = %hd, id = "), _rom[0]);
+  stream.printf_P(PSTR("OWI::rom(family = %hd, id = "), m_rom[0]);
   for (i = 1; i < ROM_MAX - 1; i++)
-    stream.printf_P(PSTR("%hd, "), _rom[i]);
-  stream.printf_P(PSTR("crc = %hd)\n"), _rom[i]);
+    stream.printf_P(PSTR("%hd, "), m_rom[i]);
+  stream.printf_P(PSTR("crc = %hd)\n"), m_rom[i]);
 }
 
 bool 
@@ -122,11 +122,11 @@ OWI::Driver::connect(uint8_t family, uint8_t index)
   do {
     last = search_rom(last);
     if (last == ERROR) return (0);
-    if (_rom[0] == family) {
+    if (m_rom[0] == family) {
       if (index == 0) return (1);
       index -= 1;
     }
   } while (last != LAST);
-  for (uint8_t i = 1; i < ROM_MAX; i++) _rom[i] = 0;
+  for (uint8_t i = 1; i < ROM_MAX; i++) m_rom[i] = 0;
   return (0);
 }

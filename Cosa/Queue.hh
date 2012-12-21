@@ -35,12 +35,12 @@
 class Queue {
 
 private:
-  uint8_t _length;
-  uint8_t _nmemb;
-  uint8_t _msize;
-  uint8_t _put;
-  uint8_t _get;
-  uint8_t* _buffer;
+  uint8_t m_length;
+  uint8_t m_nmemb;
+  uint8_t m_msize;
+  uint8_t m_put;
+  uint8_t m_get;
+  uint8_t* m_buffer;
 
 public:
   /**
@@ -52,12 +52,12 @@ public:
    * @param[in] buffer pointer to buffer.
    */
   Queue(uint8_t nmemb, uint8_t msize, void* buffer = 0) :
-    _length(0),
-    _nmemb(nmemb),
-    _msize(msize),
-    _put(0),
-    _get(0),
-    _buffer((uint8_t*) (buffer != 0 ? buffer : malloc(msize * nmemb)))
+    m_length(0),
+    m_nmemb(nmemb),
+    m_msize(msize),
+    m_put(0),
+    m_get(0),
+    m_buffer((uint8_t*) (buffer != 0 ? buffer : malloc(msize * nmemb)))
   {
   }
 
@@ -67,7 +67,7 @@ public:
    */
   uint8_t length() 
   { 
-    return (_length); 
+    return (m_length); 
   }
 
   /**
@@ -77,7 +77,7 @@ public:
    */
   bool available() 
   { 
-    return (_length > 0); 
+    return (m_length > 0); 
   }
 
   /**

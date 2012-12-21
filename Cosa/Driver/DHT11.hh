@@ -38,8 +38,8 @@ private:
    * Data buffer and latest pin level
    */
   static const uint8_t DATA_MAX = 5;
-  uint8_t _data[DATA_MAX];
-  uint8_t _latest;
+  uint8_t m_data[DATA_MAX];
+  uint8_t m_latest;
 
   /** 
    * Read the next bit from the device given number of level

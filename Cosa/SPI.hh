@@ -56,12 +56,12 @@ private:
     MISO = 4,
     SCK = 5
   };
-  InterruptHandler _handler;
-  uint8_t _cmd;
-  uint8_t* _buffer;
-  uint8_t _max;
-  uint8_t _put;
-  uint8_t _data;
+  InterruptHandler m_handler;
+  uint8_t m_cmd;
+  uint8_t* m_buffer;
+  uint8_t m_max;
+  uint8_t m_put;
+  uint8_t m_data;
 
 public:
   /**
@@ -102,11 +102,11 @@ public:
    * Construct serial peripheral interface for master.
    */
   SPI() : 
-    _handler(0), 
-    _buffer(0),
-    _max(0),
-    _put(0),
-    _data(0)
+    m_handler(0), 
+    m_buffer(0),
+    m_max(0),
+    m_put(0),
+    m_data(0)
   {
   }
   
@@ -117,16 +117,16 @@ public:
    * @param[in] max size of buffer.
    */
   SPI(InterruptHandler fn, void* buffer = 0, uint8_t max = 0) : 
-    _handler(fn), 
-    _buffer((uint8_t*) buffer),
-    _max(max),
-    _put(0),
-    _data(0)
+    m_handler(fn), 
+    m_buffer((uint8_t*) buffer),
+    m_max(max),
+    m_put(0),
+    m_data(0)
   {
     bit_clear(DDRB, SS);
     if (buffer == 0) {
-      _buffer = &_data;
-      _max = 1;
+      m_buffer = &m_data;
+      m_max = 1;
     }
   }
   
@@ -136,7 +136,7 @@ public:
    */
   void set_interrupt(InterruptHandler fn) 
   { 
-    _handler = fn; 
+    m_handler = fn; 
   }
 
   /**
@@ -146,8 +146,8 @@ public:
    */
   void set_buf(void* buffer, uint8_t max) 
   { 
-    _buffer = (uint8_t*) buffer; 
-    _max = max; 
+    m_buffer = (uint8_t*) buffer; 
+    m_max = max; 
   }
 
   /**
@@ -156,7 +156,7 @@ public:
    */
   void* get_buf()
   { 
-    return (_buffer);
+    return (m_buffer);
   }
 
   /**
@@ -165,7 +165,7 @@ public:
    */
   uint8_t get_length()
   { 
-    return (_put);
+    return (m_put);
   }
 
   /**

@@ -41,9 +41,9 @@
 class Pin : public Thing {
 
 protected:
-  volatile uint8_t* const _sfr;
-  const uint8_t _mask;
-  const uint8_t _pin;
+  volatile uint8_t* const m_sfr;
+  const uint8_t m_mask;
+  const uint8_t m_pin;
 
   /**
    * Return pointer to PIN register.
@@ -51,7 +51,7 @@ protected:
    */
   volatile uint8_t* PIN() 
   { 
-    return (_sfr); 
+    return (m_sfr); 
   }
 
   /**
@@ -60,7 +60,7 @@ protected:
    */
   volatile uint8_t* DDR() 
   { 
-    return (_sfr + 1); 
+    return (m_sfr + 1); 
   }
 
   /**
@@ -69,7 +69,7 @@ protected:
    */
   volatile uint8_t* PORT() 
   { 
-    return (_sfr + 2); 
+    return (m_sfr + 2); 
   }
 
   /**
@@ -109,9 +109,9 @@ public:
    */
   Pin(uint8_t pin) : 
     Thing(), 
-    _sfr(SFR(pin)), 
-    _mask(MASK(pin)), 
-    _pin(pin) 
+    m_sfr(SFR(pin)), 
+    m_mask(MASK(pin)), 
+    m_pin(pin) 
   {}
 
   /**
@@ -120,7 +120,7 @@ public:
    */
   uint8_t get_pin() 
   { 
-    return (_pin); 
+    return (m_pin); 
   }
 
   /**
@@ -129,11 +129,35 @@ public:
    */
   bool is_set() 
   { 
-    return ((*PIN() & _mask) != 0); 
+    return ((*PIN() & m_mask) != 0); 
   }
-  bool is_high() { return (is_set()); }
-  bool is_on()   { return (is_set()); }
-  bool read()    { return (is_set()); }
+
+  /**
+   * Return true(1) if the pin is set otherwise false(0).
+   * @return boolean.
+   */
+  bool is_high() 
+  { 
+    return (is_set()); 
+  }
+
+  /**
+   * Return true(1) if the pin is set otherwise false(0).
+   * @return boolean.
+   */
+  bool is_on()
+  { 
+    return (is_set()); 
+  }
+
+  /**
+   * Return true(1) if the pin is set otherwise false(0).
+   * @return boolean.
+   */
+  bool read()
+  { 
+    return (is_set()); 
+  }
 
   /**
    * Return true(1) if the pin is clear otherwise false(0).
@@ -141,10 +165,26 @@ public:
    */
   bool is_clear() 
   { 
-    return ((*PIN() & _mask) == 0); 
+    return ((*PIN() & m_mask) == 0); 
   }
-  bool is_low() { return (is_clear()); }
-  bool is_off() { return (is_clear()); }
+
+  /**
+   * Return true(1) if the pin is clear otherwise false(0).
+   * @return boolean.
+   */
+  bool is_low() 
+  { 
+    return (is_clear()); 
+  }
+
+  /**
+   * Return true(1) if the pin is clear otherwise false(0).
+   * @return boolean.
+   */
+  bool is_off() 
+  { 
+    return (is_clear()); 
+  }
 
   /**
    * Await change of pin state given maximum number of micro seconds.
@@ -189,7 +229,7 @@ public:
     Pin(pin)
   {
     synchronized {
-      if (mode == PULLUP_MODE) *PORT() |= _mask; 
+      if (mode == PULLUP_MODE) *PORT() |= m_mask; 
     }
   }
 };
@@ -209,8 +249,8 @@ public:
   typedef void (*InterruptHandler)(InterruptPin* pin, void* env);
 
 private:
-  InterruptHandler _handler;
-  void* _env;
+  InterruptHandler m_handler;
+  void* m_env;
 
 public:
   static InterruptPin* ext[2];
@@ -235,12 +275,12 @@ public:
 	       InterruptHandler fn = 0, 
 	       void* env = 0) :
     InputPin(pin), 
-    _handler(fn),
-    _env(env)
+    m_handler(fn),
+    m_env(env)
   {
     if (mode & PULLUP_MODE) {
       synchronized {
-	*PORT() |= _mask; 
+	*PORT() |= m_mask; 
       }
     }
     if (pin > 1 && pin < 4) {
@@ -257,8 +297,8 @@ public:
    */
   void set_interrupt_handler(InterruptHandler fn, void* env) 
   { 
-    _handler = fn; 
-    _env = env; 
+    m_handler = fn; 
+    m_env = env; 
   }
 
   /**
@@ -266,7 +306,7 @@ public:
    */
   void enable() 
   { 
-    bit_set(EIMSK, _pin - 2); 
+    bit_set(EIMSK, m_pin - 2); 
   }
 
   /**
@@ -274,7 +314,7 @@ public:
    */
   void disable() 
   { 
-    bit_clear(EIMSK, _pin - 2); 
+    bit_clear(EIMSK, m_pin - 2); 
   }
 
   /**
@@ -282,7 +322,7 @@ public:
    */
   void on_interrupt() 
   { 
-    if (_handler != 0) _handler(this, _env); 
+    if (m_handler != 0) m_handler(this, m_env); 
   }
 
   /**
@@ -311,7 +351,7 @@ public:
     Pin(pin) 
   { 
     synchronized {
-      *DDR() |= _mask; 
+      *DDR() |= m_mask; 
     }
     if (initial) set(); else clear();
   }
@@ -322,11 +362,25 @@ public:
   void set() 
   { 
     synchronized {
-      *PORT() |= _mask; 
+      *PORT() |= m_mask; 
     }
   }
-  void high() { set(); }
-  void on()   { set(); }
+
+  /**
+   * Set the output pin.
+   */
+  void high() 
+  { 
+    set(); 
+  }
+
+  /**
+   * Set the output pin.
+   */
+  void on()   
+  { 
+    set(); 
+  }
 
   /**
    * Clear the output pin.
@@ -334,11 +388,25 @@ public:
   void clear() 
   { 
     synchronized {
-      *PORT() &= ~_mask; 
+      *PORT() &= ~m_mask; 
     }
   }
-  void low() { clear(); }
-  void off() { clear(); }
+
+  /**
+   * Clear the output pin.
+   */
+  void low()
+  { 
+    clear(); 
+  }
+
+  /**
+   * Clear the output pin.
+   */
+  void off() 
+  { 
+    clear(); 
+  }
 
   /**
    * Toggle the output pin.
@@ -346,7 +414,7 @@ public:
   void toggle() 
   { 
     synchronized {
-      *PIN() = _mask; 
+      *PIN() = m_mask; 
     }
   }
 
@@ -359,7 +427,16 @@ public:
   { 
     if (value) set(); else clear(); 
   }
-  void write(uint8_t value) { set(value); }
+
+  /**
+   * Set the output pin with the given value. Zero(0) to clear
+   * and non-zero to set.
+   * @param[in] value to set.
+   */
+  void write(uint8_t value) 
+  { 
+    set(value); 
+  }
 
   /**
    * Toggle the output pin to form a pulse with given length in
@@ -391,7 +468,15 @@ public:
    * @param[in] duty cycle (0..255)
    */
   void set(uint8_t duty);
-  void write(uint8_t duty) { set(duty); }
+
+  /**
+   * Set duty cycle for pwm output pin.
+   * @param[in] duty cycle (0..255)
+   */
+  void write(uint8_t duty) 
+  { 
+    set(duty); 
+  }
 
   /**
    * Set duty cycle for pwm output pin with given value mapping.
@@ -402,6 +487,15 @@ public:
    * @param[in] max value.
    */
   void set(uint16_t value, uint16_t min, uint16_t max);
+
+  /**
+   * Set duty cycle for pwm output pin with given value mapping.
+   * The value is mapped from ]min..max[ to duty [0..255]. Value
+   * below min is mapped to zero(0) and above max to 255.
+   * @param[in] value.
+   * @param[in] min value.
+   * @param[in] max value.
+   */
   void write(uint16_t value, uint16_t min, uint16_t max)
   {
     set(value, min, max);
@@ -433,7 +527,7 @@ public:
    */
   IOPin(uint8_t pin, Mode mode = INPUT_MODE) : 
     OutputPin(pin),
-    _mode(mode)
+    m_mode(mode)
   {
     set_mode(mode);
   }
@@ -446,13 +540,13 @@ public:
   {
     synchronized {
       if (mode == OUTPUT_MODE)
-	*DDR() |= _mask; 
+	*DDR() |= m_mask; 
       else
-	*DDR() &= ~_mask; 
+	*DDR() &= ~m_mask; 
       if (mode == PULLUP_MODE)
-	*PORT() |= _mask; 
+	*PORT() |= m_mask; 
     }
-    _mode = mode;
+    m_mode = mode;
   }
   
   /**
@@ -461,11 +555,11 @@ public:
    */
   Mode get_mode()
   {
-    return (_mode);
+    return (m_mode);
   }
   
 private:
-  Mode _mode;
+  Mode m_mode;
 };
 
 /*
@@ -492,10 +586,10 @@ public:
 
 private:
   static AnalogPin* sampling_pin;
-  Reference _reference;
-  InterruptHandler _handler;
-  uint16_t _value;
-  void* _env;
+  Reference m_reference;
+  InterruptHandler m_handler;
+  uint16_t m_value;
+  void* m_env;
   
 public:
   /**
@@ -511,10 +605,10 @@ public:
 	    InterruptHandler fn = 0, 
 	    void* env = 0) :
     Pin(pin < 14 ? pin + 14 : pin), 
-    _reference(ref),
-    _handler(fn),
-    _value(0),
-    _env(env)
+    m_reference(ref),
+    m_handler(fn),
+    m_value(0),
+    m_env(env)
   {
   }
 
@@ -526,8 +620,8 @@ public:
    */
   void set_interrupt_handler(InterruptHandler fn, void* env = 0) 
   { 
-    _handler = fn; 
-    _env = env; 
+    m_handler = fn; 
+    m_env = env; 
   }
 
   /**
@@ -536,7 +630,7 @@ public:
    */
   void set_reference(Reference ref) 
   {
-    _reference = ref; 
+    m_reference = ref; 
   }
 
   /**
@@ -545,7 +639,7 @@ public:
    */
   uint16_t get_value() 
   { 
-    return (_value); 
+    return (m_value); 
   }
 
   /**
@@ -584,8 +678,8 @@ public:
   void on_sample(uint16_t value) 
   { 
     sampling_pin = 0;
-    _value = value; 
-    if (_handler != 0) _handler(this, _env); 
+    m_value = value; 
+    if (m_handler != 0) m_handler(this, m_env); 
   }
 
   /**
@@ -615,11 +709,11 @@ public:
   typedef void (*InterruptHandler)(AnalogPins* set, void* env);
 
 private:
-  const AnalogPin** _pin_at;
-  InterruptHandler _handler;
-  uint8_t _count;
-  uint8_t _next;
-  void* _env;
+  const AnalogPin** m_pin_at;
+  InterruptHandler m_handler;
+  uint8_t m_count;
+  uint8_t m_next;
+  void* m_env;
 
 public:
   /**
@@ -635,10 +729,10 @@ public:
 	     uint8_t count, 
 	     InterruptHandler fn = 0, 
 	     void* env = 0) :
-    _pin_at(pins),
-    _handler(fn),
-    _count(count),
-    _env(env)
+    m_pin_at(pins),
+    m_handler(fn),
+    m_count(count),
+    m_env(env)
   {
     for (uint8_t ix = 0; ix < count; ix++)
       get_pin_at(ix)->set_interrupt_handler(sample_next, this);
@@ -650,7 +744,7 @@ public:
    */
   uint8_t get_count() 
   { 
-    return (_count); 
+    return (m_count); 
   }
 
   /**
@@ -660,7 +754,7 @@ public:
    */
   AnalogPin* get_pin_at(uint8_t ix) 
   { 
-    return (ix < _count ? (AnalogPin*) pgm_read_word(&_pin_at[ix]) : 0);
+    return (ix < m_count ? (AnalogPin*) pgm_read_word(&m_pin_at[ix]) : 0);
   }
 
   /**

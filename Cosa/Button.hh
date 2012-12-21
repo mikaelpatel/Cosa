@@ -45,9 +45,9 @@ public:
   
 private:
   static const uint16_t SAMPLE_MS = 64;
-  InputPin* _pin;
-  uint8_t _state;
-  Mode _mode;
+  InputPin* m_pin;
+  uint8_t m_state;
+  Mode m_mode;
 
 public:
   /**
@@ -57,9 +57,9 @@ public:
    */
   Button(Mode mode = ON_CHANGE_MODE) : 
     Thing(), 
-    _pin(0), 
-    _state(0),
-    _mode(mode)
+    m_pin(0), 
+    m_state(0),
+    m_mode(mode)
   {}
 
   /**

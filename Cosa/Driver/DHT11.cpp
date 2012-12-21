@@ -41,12 +41,12 @@ DHT11::read_bit(uint8_t changes)
 {
   uint8_t counter = 0;
   while (changes--) {
-    while (is_set() == _latest) {
+    while (is_set() == m_latest) {
       counter++;
       DELAY(1);
       if (counter == COUNT_MAX) return (-1);
     }
-    _latest = !_latest;
+    m_latest = !m_latest;
   }
   return (counter > COUNT_MIN);
 }
@@ -68,22 +68,22 @@ DHT11::read(uint8_t& temperature, uint8_t& humidity)
   
   // Receive bits from the DHT and calculate check sum
   uint8_t chksum = 0;
-  _latest = 1;
+  m_latest = 1;
   synchronized {
     if (read_bit(3) < 0) synchronized_return (0);
     for (uint8_t i = 0; i < DATA_MAX; i++) {
       for (uint8_t j = 0; j < CHARBITS; j++) {
 	int8_t bit = read_bit(2);
 	if (bit < 0) synchronized_return (0);
-	_data[i] = (_data[i] << 1) | bit;
+	m_data[i] = (m_data[i] << 1) | bit;
       }
-      if (i < DATA_MAX - 1) chksum += _data[i];
+      if (i < DATA_MAX - 1) chksum += m_data[i];
     }
   }
 
   // Return values, and validation of the check sum
-  temperature = _data[2];
-  humidity = _data[0];
-  return (chksum == _data[DATA_MAX - 1]);
+  temperature = m_data[2];
+  humidity = m_data[0];
+  return (chksum == m_data[DATA_MAX - 1]);
 }
 

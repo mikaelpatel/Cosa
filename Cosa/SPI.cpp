@@ -36,7 +36,7 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
   // Check for slave pin setting; input(MOSI, SS, SCK), output(MISO)
   synchronized {
     if (clock == MASTER_CLOCK) {
-      _put = 0;
+      m_put = 0;
       bit_clear(DDRB, MOSI); 
       bit_set(DDRB, MISO);	 
       bit_clear(DDRB, SCK);
@@ -119,21 +119,21 @@ void
 SPI::on_receive(uint8_t data) 
 { 
   // Check for no interrupt handler
-  if (_handler == 0) return;
+  if (m_handler == 0) return;
 
   // Check for no buffer
-  if (_buffer == 0) {
-    _put = 1;
-    _handler(this, _put);
-    _put = 0;
+  if (m_buffer == 0) {
+    m_put = 1;
+    m_handler(this, m_put);
+    m_put = 0;
     return;
   }
 
   // Append to buffer and call user interrupt handler on full
-  _buffer[_put++] = data;
-  if (_put == _max) {
-    _handler(this, _put); 
-    _put = 0;
+  m_buffer[m_put++] = data;
+  if (m_put == m_max) {
+    m_handler(this, m_put); 
+    m_put = 0;
   }
 }
 
