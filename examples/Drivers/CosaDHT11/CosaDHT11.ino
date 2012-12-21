@@ -32,7 +32,8 @@
 #include "Cosa/Watchdog.h"
 
 // Connect devices to pins
-DHT11 dht11(7);
+DHT11 indoors(7);
+DHT11 outdoors(8);
 OutputPin ledPin(13);
 
 void setup()
@@ -53,9 +54,11 @@ void loop()
   ledPin.toggle();
   uint8_t temperature;
   uint8_t humidity;
-  dht11.read(temperature, humidity);
-  ledPin.toggle();
-
-  // Print the sampled values
+  indoors.read(temperature, humidity);
+  trace.print_P(PSTR("indoors:  "));
   trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
+  outdoors.read(temperature, humidity);
+  trace.print_P(PSTR("outdoors: "));
+  trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
+  ledPin.toggle();
 }

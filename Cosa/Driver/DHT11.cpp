@@ -33,7 +33,7 @@
 #define DELAY(us) _delay_loop_2((us) << 2)
 
 // Thresholds for wire sampling
-static const uint8_t COUNT_MIN = 20;
+static const uint8_t COUNT_MIN = 40;
 static const uint8_t COUNT_MAX = 255;
 
 int8_t
