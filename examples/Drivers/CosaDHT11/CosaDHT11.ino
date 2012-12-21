@@ -50,15 +50,19 @@ void loop()
   // Wait for the watchdog
   Watchdog::delay(2048);
 
-  // Read temperature and humidity
+  // Read in- and outdoors temperature and humidity
   ledPin.toggle();
   uint8_t temperature;
   uint8_t humidity;
+
   indoors.read(temperature, humidity);
   trace.print_P(PSTR("indoors:  "));
   trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
+
   outdoors.read(temperature, humidity);
   trace.print_P(PSTR("outdoors: "));
   trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
+
+  // Blink built-in led during active period
   ledPin.toggle();
 }
