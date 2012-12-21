@@ -37,6 +37,7 @@ class Ciao {
 public:
   /**
    * Data type tag: Predefined data types and tags for extension.
+   * NB: Arduino/AVR does not implement FLOAT16/64/80.
    */
   enum {
     MASK_TYPE = 0xf0,
@@ -206,6 +207,19 @@ public:
   void write(uint32_t* buf, uint16_t count);
 
   /**
+   * Write given unsigned 64-bit integer to data stream.
+   * @param[in] value to write to data stream.
+   */
+  void write(uint64_t value);
+
+  /**
+   * Write given unsigned 64-bit integer vector to data stream.
+   * @param[in] buf pointer to integer vector.
+   * @param[in] count size of vector.
+   */
+  void write(uint64_t* buf, uint16_t count);
+
+  /**
    * Write given signed 8-bit integer to data stream.
    * @param[in] value to write to data stream.
    */
@@ -216,7 +230,7 @@ public:
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(int8_t* buf, int16_t count);
+  void write(int8_t* buf, uint16_t count);
 
   /**
    * Write given signed 16-bit integer to data stream.
@@ -229,7 +243,7 @@ public:
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(int16_t* buf, int16_t count);
+  void write(int16_t* buf, uint16_t count);
 
   /**
    * Write given signed 32-bit integer to data stream.
@@ -242,7 +256,20 @@ public:
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(int32_t* buf, int16_t count);
+  void write(int32_t* buf, uint16_t count);
+
+  /**
+   * Write given signed 64-bit integer to data stream.
+   * @param[in] value to write to data stream.
+   */
+  void write(int64_t value);
+
+  /**
+   * Write given signed 64-bit integer vector to data stream.
+   * @param[in] buf pointer to integer vector.
+   * @param[in] count size of vector.
+   */
+  void write(int64_t* buf, uint16_t count);
 
   /**
    * Write given 32-bit floating point to data stream.
@@ -255,7 +282,7 @@ public:
    * @param[in] buf pointer to integer vector.
    * @param[in] count size of vector.
    */
-  void write(float* buf, int16_t count);
+  void write(float* buf, uint16_t count);
 
   /**
    * Write given user defined data type descriptor to data stream.

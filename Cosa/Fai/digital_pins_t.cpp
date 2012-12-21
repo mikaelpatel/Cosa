@@ -28,17 +28,10 @@
 
 #include "Cosa/Fai.h"
 
-static const char pins_name[] PROGMEM = "pins";
 static const char values_name[] PROGMEM = "values";
 static const Ciao::Descriptor::member_t members[] PROGMEM = {
   {
-    Ciao::UINT16_TYPE,
-    1,
-    pins_name,
-    0
-  },
-  {
-    Ciao::UINT16_TYPE,
+    Ciao::UINT32_TYPE,
     1,
     values_name,
     0

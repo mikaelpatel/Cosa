@@ -79,8 +79,9 @@ public:
   { 
     trace.print((uint8_t) c, 16); 
     if (isgraph(c)) {
-      trace.print(' ');
+      trace.print_P(PSTR(" '"));
       trace.print(c);
+      trace.print('\'');
     }
     trace.println();
     return (1); 

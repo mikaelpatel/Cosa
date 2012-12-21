@@ -137,6 +137,18 @@ void Ciao::write(uint32_t* buf, uint16_t count)
   _dev->write(buf, count * sizeof(uint32_t));
 }
 
+void Ciao::write(uint64_t value)
+{
+  write(UINT64_TYPE, 1);
+  _dev->write(&value, sizeof(value));
+}
+
+void Ciao::write(uint64_t* buf, uint16_t count)
+{
+  write(UINT64_TYPE, count);
+  _dev->write(buf, count * sizeof(uint32_t));
+}
+
 void Ciao::write(int8_t value)
 {
   write(INT8_TYPE, 1);
@@ -144,7 +156,7 @@ void Ciao::write(int8_t value)
 }
 
 void 
-Ciao::write(int8_t* buf, int16_t count)
+Ciao::write(int8_t* buf, uint16_t count)
 {
   write(INT8_TYPE, count);
   _dev->write(buf, count * sizeof(int8_t));
@@ -157,7 +169,7 @@ Ciao::write(int16_t value)
   _dev->write(&value, sizeof(value));
 }
 
-void Ciao::write(int16_t* buf, int16_t count)
+void Ciao::write(int16_t* buf, uint16_t count)
 {
   write(INT16_TYPE, count);
   _dev->write(buf, count * sizeof(int16_t));
@@ -170,9 +182,22 @@ Ciao::write(int32_t value)
   _dev->write(&value, sizeof(value));
 }
 
-void Ciao::write(int32_t* buf, int16_t count)
+void Ciao::write(int32_t* buf, uint16_t count)
 {
   write(INT32_TYPE, count);
+  _dev->write(buf, count * sizeof(int32_t));
+}
+
+void 
+Ciao::write(int64_t value)
+{
+  write(INT64_TYPE, 1);
+  _dev->write(&value, sizeof(value));
+}
+
+void Ciao::write(int64_t* buf, uint16_t count)
+{
+  write(INT64_TYPE, count);
   _dev->write(buf, count * sizeof(int32_t));
 }
 
@@ -184,7 +209,7 @@ Ciao::write(float value)
 }
 
 void 
-Ciao::write(float* buf, int16_t count)
+Ciao::write(float* buf, uint16_t count)
 {
   write(FLOAT32_TYPE, count);
   _dev->write(buf, count * sizeof(float));

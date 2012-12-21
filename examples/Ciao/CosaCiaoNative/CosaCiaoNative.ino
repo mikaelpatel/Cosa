@@ -47,8 +47,9 @@ public:
   { 
     trace.print((uint8_t) c, 16); 
     if (isgraph(c)) {
-      trace.print(' ');
+      trace.print_P(PSTR(" '"));
       trace.print(c);
+      trace.print('\'');
     }
     trace.println();
     return (1); 
@@ -74,6 +75,8 @@ void setup()
   uint8_t x = 15;
   int32_t y = -2;
   int16_t z[] = { 1, 2, 3, 4 };
+  int32_t g = 0x01020304L;
+  uint64_t h = 0x0102030405060708LL;
   float r = M_PI;
   float c[] = { -1.0, 1.0 };
 
@@ -82,6 +85,8 @@ void setup()
   cout.write(x);
   cout.write(y);
   cout.write(z, membersof(z));
+  cout.write(g);
+  cout.write(h);
   cout.write(r);
   cout.write(c, membersof(c));
   cout.write((float) NAN);

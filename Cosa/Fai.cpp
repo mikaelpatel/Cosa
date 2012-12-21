@@ -42,6 +42,14 @@ Ciao::header_t Fai::header = {
 };
 
 void 
+Fai::write(uint32_t mask)
+{
+  digital_pins_t dgl;
+  dgl.values = ((PINB << 8) | PIND) & mask;
+  Ciao::write(&Descriptor::digital_pins_t, &dgl, 1);
+}
+
+void 
 Fai::write(Pin* pin)
 {
   digital_pin_t dgl;

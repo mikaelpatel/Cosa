@@ -39,6 +39,7 @@ Fai cout;
 
 // Pins to sample and stream
 AnalogPin levelPin(0);
+InputPin onoffPin(2);
 OutputPin ledPin(13);
 
 // Arduino build includes stdio and putchar macro so we need to undef
@@ -53,8 +54,9 @@ public:
   { 
     trace.print((uint8_t) c, 16); 
     if (isgraph(c)) {
-      trace.print(' ');
+      trace.print_P(PSTR(" '"));
       trace.print(c);
+      trace.print('\'');
     }
     trace.println();
     return (1); 
@@ -75,22 +77,8 @@ void setup()
   INFO("Write the header to the trace device", 0);
   cout.begin();
 
-  INFO("Stream some other values; analog and digital pin values", 0);
-  levelPin.sample();
-  cout.write(&levelPin);
-  cout.write(&ledPin);
-  ledPin.toggle();
-  cout.write(&ledPin);
-  ledPin.toggle();
-
-  INFO("Stream an event. Double check the address of the analog pin", 0);
-  Event event(Event::READ_COMPLETED_TYPE, &levelPin);
-  cout.write(&event);
-
   // Start the watchdog and trace events
-  Watchdog::begin(2048, 
-		  SLEEP_MODE_IDLE, 
-		  Watchdog::push_watchdog_event, 
+  Watchdog::begin(2048, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event, 
 		  &ledPin);
 }
 
@@ -99,10 +87,14 @@ void loop()
   INFO("Wait for timeout event", 0);
   Event event;
   Event::queue.await(&event);
-  OutputPin* pin = (OutputPin*) event.get_env();
-  pin->toggle();
-  cout.write(&event);
+
+  ledPin.toggle();
   levelPin.sample();
+
   cout.write(&levelPin);
-  pin->toggle();
+  cout.write(&onoffPin);
+  cout.write(1 << onoffPin.get_pin());
+  cout.write(&event);
+
+  ledPin.toggle();
 }

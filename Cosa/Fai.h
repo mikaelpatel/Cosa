@@ -77,8 +77,7 @@ public:
    * Stream digital pins value. The identity code is DIGITAL_PINS_ID(0x12).
    */
   struct digital_pins_t {
-    uint16_t pins;
-    uint16_t values;
+    uint32_t values;
   };
 
   /**
@@ -110,6 +109,12 @@ public:
   {
     Ciao::write(&Ciao::Descriptor::header_t, &header, 1);
   }
+
+  /**
+   * Write digital pins value to data stream.
+   * @param[in] mask digital pins to write to data stream.
+   */
+  void write(uint32_t mask);
 
   /**
    * Write digital pin value to data stream.
