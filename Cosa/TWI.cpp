@@ -29,6 +29,9 @@
 #include "Cosa/TWI.hh"
 #include "Cosa/Watchdog.hh"
 
+/**
+ * Default Two-write clock: 100 KHz
+ */
 #ifndef TWI_FREQ
 #define TWI_FREQ 100000L
 #endif

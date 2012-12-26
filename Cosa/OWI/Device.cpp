@@ -27,9 +27,6 @@
  */
 
 #include "Cosa/OWI.hh"
-#include <util/delay_basic.h>
-
-#define DELAY(us) _delay_loop_2((us) << 2)
 
 int
 OWI::Device::read(uint8_t bits)
@@ -123,9 +120,8 @@ micros()
 }
 
 void 
-OWI::Device::service_request(Thing* it, uint8_t type, uint16_t value)
+OWI::Device::on_event(uint8_t type, uint16_t value)
 {
-  OWI::Device* dev = (OWI::Device*) it;
   uint32_t stop = micros() + 440;
 
   static uint16_t req = 0;
@@ -135,20 +131,20 @@ OWI::Device::service_request(Thing* it, uint8_t type, uint16_t value)
   // Complete the precense pulse
   req++;
   DELAY(200);
-  dev->set();
-  dev->set_mode(INPUT_MODE);
+  set();
+  set_mode(INPUT_MODE);
   synchronized {
     DELAY(stop - micros());
 
-    dev->m_state = ROM_STATE;
-    int cmd = dev->read(8);
+    m_state = ROM_STATE;
+    int cmd = read(8);
 
     // Check for READ ROM command. Only possible when single device
     if (cmd == READ_ROM) {
-      dev->m_crc = 0;
+      m_crc = 0;
       for (uint8_t i = 0; i < ROM_MAX - 1; i++)
-	if (!dev->write(dev->m_rom[i], 8)) synchronized_goto(error);
-      if (!dev->write(dev->m_crc, 8)) synchronized_goto(error);
+	if (!write(m_rom[i], 8)) synchronized_goto(error);
+      if (!write(m_crc, 8)) synchronized_goto(error);
     }
 
     else {
@@ -156,12 +152,12 @@ OWI::Device::service_request(Thing* it, uint8_t type, uint16_t value)
       // Check for SEARCH ROM command. Match slave device rom identity
       if (cmd == SEARCH_ROM) {
 	for (uint8_t i = 0; i < ROM_MAX; i++) {
-	  uint8_t bits = dev->m_rom[i];
+	  uint8_t bits = m_rom[i];
 	  for (uint8_t j = 0; j < CHARBITS; j++) {
 	    uint8_t bit = (bits & 0x01);
 	    bit |= (~bit << 1);
-	    if (!dev->write(bit, 2)) synchronized_goto(error);
-	    int value = dev->read(1);
+	    if (!write(bit, 2)) synchronized_goto(error);
+	    int value = read(1);
 	    if (value != (bits & 0x01)) synchronized_goto(error);
 	    bits >>= 1;
 	  }
@@ -171,36 +167,36 @@ OWI::Device::service_request(Thing* it, uint8_t type, uint16_t value)
       // Check for MATCH ROM command. Match slave device rom identity
       else if (cmd == MATCH_ROM) {
 	for (uint8_t i = 0; i < ROM_MAX - 1; i++)
-	  if (dev->read(8) != dev->m_rom[i]) synchronized_goto(error);
-	if (dev->read(8) < 0) synchronized_goto(error);
+	  if (read(8) != m_rom[i]) synchronized_goto(error);
+	if (read(8) < 0) synchronized_goto(error);
       } 
 
       // Check for error commands
       else if (cmd != SKIP_ROM) synchronized_goto(error);
 
       // Get the function command
-      dev->m_state = FUNCTION_STATE;
-      cmd = dev->read(8);
+      m_state = FUNCTION_STATE;
+      cmd = read(8);
       if (cmd < 0) synchronized_goto(error);
       fns++;
 
       // Check for STATUS function command. Return statistics
       if (cmd == STATUS) {
-	dev->m_crc = 0;
-	dev->write(req >> 8, 8);
-	dev->write(req, 8);
-	dev->write(fns >> 8, 8);
-	dev->write(fns, 8);
-	dev->write(err >> 8, 8);
-	dev->write(err, 8);
-	dev->write(dev->m_crc, 8);
+	m_crc = 0;
+	write(req >> 8, 8);
+	write(req, 8);
+	write(fns >> 8, 8);
+	write(fns, 8);
+	write(err >> 8, 8);
+	write(err, 8);
+	write(m_crc, 8);
       }
     }
   }
 
  final:
-  dev->m_state = IDLE_STATE;
-  dev->enable();
+  m_state = IDLE_STATE;
+  enable();
   return;
 
  error:
@@ -209,24 +205,23 @@ OWI::Device::service_request(Thing* it, uint8_t type, uint16_t value)
 }
 
 void 
-OWI::Device::interrupt_handler(InterruptPin* pin, void* env)
+OWI::Device::on_interrupt()
 {
-  OWI::Device* dev = (OWI::Device*) pin;
   volatile uint32_t now = micros();
-  if (dev->m_state == IDLE_STATE) {
-    if (dev->is_clear()) {
-      dev->m_time = now + 400L;
-      dev->m_state = RESET_STATE;
+  if (m_state == IDLE_STATE) {
+    if (is_clear()) {
+      m_time = now + 400L;
+      m_state = RESET_STATE;
     }
   } 
-  else if (dev->m_state == RESET_STATE && now > dev->m_time) {
-    dev->m_state = PRESENCE_STATE;
-    dev->m_time = now;
-    dev->disable();
-    dev->set_mode(OUTPUT_MODE);
-    dev->set();
-    dev->clear();
-    InterruptPin::push_event(pin, env);
+  else if (m_state == RESET_STATE && now > m_time) {
+    m_state = PRESENCE_STATE;
+    m_time = now;
+    disable();
+    set_mode(OUTPUT_MODE);
+    set();
+    clear();
+    Event::push(Event::CHANGE_TYPE, this);
   }
-  else dev->m_state = IDLE_STATE;
+  else m_state = IDLE_STATE;
 }

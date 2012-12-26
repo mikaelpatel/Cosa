@@ -33,6 +33,7 @@
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 #include <avr/sfr_defs.h>
+#include <util/delay_basic.h>
 
 #include <stdarg.h>
 #include <stdint.h>
@@ -58,6 +59,18 @@
  * @return offset.
  */
 #define offsetof(type, member) __builtin_offsetof(type, member)
+
+/**
+ * Instruction clock cycles per micro-second. Assumes clock greater
+ * or equal to 1 MHz.
+ */
+#define I_CPU (F_CPU / 1000000L)
+
+/**
+ * Macro for micro-second delay. 
+ * @param[in] us micro-seconds
+ */
+#define DELAY(us) _delay_loop_2((us) * I_CPU / 4)
 
 /**
  * Disable interrupts and return flags.

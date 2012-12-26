@@ -76,7 +76,18 @@ private:
   /**
    * Chip interrupt pin (default is pin 2)
    */
-  InterruptPin m_irq;
+  class IRQPin : public InterruptPin {
+    friend class NRF24L01P;
+  private:
+    NRF24L01P* m_nrf;
+  public:
+    IRQPin(uint8_t pin, Mode mode, NRF24L01P* nrf) : 
+      InterruptPin(pin, mode),
+      m_nrf(nrf)
+    {}
+    virtual void on_interrupt();
+  };
+  IRQPin m_irq;
 
 public:
   /**
@@ -344,12 +355,15 @@ public:
     return (m_status);
   }
 
-  /**
-   * Set interrupt handler. And enable irq-pin change interrupts.
-   * The NRF object becomes the interrupt handler environment.
-   * @param[in] fn interrupt handler function.
-   */
-  void set_interrupt(InterruptPin::InterruptHandler fn);
+  void enable()
+  {
+    m_irq.enable();
+  }
+
+  void disable()
+  {
+    m_irq.disable();
+  }
 
   /**
    * Set power up mode. Will initiate radio with necessary settings
@@ -464,11 +478,6 @@ public:
    * @return status.
    */
   uint8_t flush();
-
-  /**
-   * Callback function to push event for receive data interrupts.
-   */
-  static void push_event(InterruptPin* pin, void* env);
 
 private:
   /**

@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of a TWI master (see CosaTWIslave).
+ * Cosa demonstration of a TWI master (see also CosaTWIslave).
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -43,24 +43,27 @@ void setup()
   // Start trace output stream
   trace.begin(9600, PSTR("CosaTWImaster: started"));
 
-  // Check amount of free memory
+  // Check amount of free memory and size of instances
   TRACE(free_memory());
-
+  TRACE(sizeof(OutputPin));
+  TRACE(sizeof(TWI));
+  
   // Start the watchdog ticks counter
   Watchdog::begin();
 }
 
 void loop()
 {
-  Watchdog::delay(1024);
+  Watchdog::delay(512);
 
   // Write a command to the slave
   static uint8_t cmd = 0;
   uint8_t buf[4];
   ledPin.toggle();
-  INFO("cmd = %d", cmd);
   buf[0] = cmd++;
   for (uint8_t i = 1; i < sizeof(buf); i++) buf[i] = 0;
+  INFO("WRITE(cmd = %d)", cmd);
+  trace.print(buf, sizeof(buf));
   twi.begin();
   twi.write(ADDR, buf, sizeof(buf));
   twi.end();
@@ -69,9 +72,8 @@ void loop()
   twi.begin();
   int count = twi.read(ADDR, buf, sizeof(buf));
   twi.end();
+  INFO("READ(count = %d)", count);
   if (count > 0) 
     trace.print(buf, count);
-  else
-    TRACE(count);
   ledPin.toggle();
 }

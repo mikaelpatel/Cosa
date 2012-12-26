@@ -32,21 +32,34 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
-// Input pin and button
-InputPin onoffPin(7, InputPin::PULLUP_MODE);
-Button onoffButton(Button::ON_FALLING_MODE);
-
 // Use the built-in led
 OutputPin ledPin(13);
 
-void on_change(Thing* it, uint8_t type, uint16_t value)
-{
-  static uint8_t count = 1;
-  ledPin.toggle();
-  TRACE(count++);
-  Watchdog::delay(16);
-  ledPin.toggle();
-}
+// Input button
+class OnOffButton : public Button {
+private:
+  uint8_t m_count;
+public:
+  OnOffButton(uint8_t pin, Button::Mode mode) : 
+    Button(pin, mode),  
+    m_count(0)
+  {
+  }
+
+  virtual void on_change(uint8_t type)
+  {
+    ledPin.toggle();
+    m_count += 1;
+    if (ledPin.is_set()) {
+      INFO("%d: on", m_count);
+    }
+    else {
+      INFO("%d: off", m_count);
+    }
+  }
+};
+
+OnOffButton onOff(7, Button::ON_FALLING_MODE);
 
 void setup()
 {
@@ -57,12 +70,7 @@ void setup()
   TRACE(free_memory());
 
   // Check size of instances
-  TRACE(sizeof(InputPin));
   TRACE(sizeof(Button));
-
-  // Set the event callback and attach the input pin
-  onoffPin.set_event_handler(on_change);
-  onoffButton.attach(&onoffPin);
 
   // Start the watchdog ticks and push time events
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);

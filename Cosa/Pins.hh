@@ -241,18 +241,6 @@ public:
 class InterruptPin : public InputPin {
 
 public:
-  /**
-   * Interrupt handler function prototype.
-   * @param[in] pin reference of changed pin.
-   * @param[in] env interrupt handler environment. 
-   */
-  typedef void (*InterruptHandler)(InterruptPin* pin, void* env);
-
-private:
-  InterruptHandler m_handler;
-  void* m_env;
-
-public:
   static InterruptPin* ext[2];
   
   enum Mode {
@@ -267,16 +255,9 @@ public:
    * handler and environment.
    * @param[in] pin pin number.
    * @param[in] mode pin mode.
-   * @param[in] fn interrupt handler function.
-   * @param[in] env interrupt handler environment. 
    */
-  InterruptPin(uint8_t pin, 
-	       Mode mode = ON_CHANGE_MODE,  
-	       InterruptHandler fn = 0, 
-	       void* env = 0) :
-    InputPin(pin), 
-    m_handler(fn),
-    m_env(env)
+  InterruptPin(uint8_t pin, Mode mode = ON_CHANGE_MODE) :
+    InputPin(pin)
   {
     if (mode & PULLUP_MODE) {
       synchronized {
@@ -288,17 +269,6 @@ public:
       ext[pin] = this;
       EICRA = (EICRA & ~(0b11 << pin)) | (mode << pin);
     }
-  }
-
-  /**
-   * Set interrupt handler.
-   * @param[in] fn interrupt handler function.
-   * @param[in] env interrupt handler environment.
-   */
-  void set_interrupt_handler(InterruptHandler fn, void* env) 
-  { 
-    m_handler = fn; 
-    m_env = env; 
   }
 
   /**
@@ -318,21 +288,11 @@ public:
   }
 
   /**
-   * Trampoline function for interrupt service on pin change interrupt.
+   * Default interrupt service on pin change interrupt.
    */
-  void on_interrupt() 
+  virtual void on_interrupt() 
   { 
-    if (m_handler != 0) m_handler(this, m_env); 
-  }
-
-  /**
-   * Interrupt handler to push event for interrupt pin change.
-   * @param[in] pin reference of changed pin.
-   * @param[in] env interrupt/event handler environment. 
-   */
-  static void push_event(InterruptPin* pin, void* env) 
-  { 
-    Event::push(Event::CHANGE_TYPE, pin, env);
+    Event::push(Event::CHANGE_TYPE, this);
   }
 };
 
@@ -569,13 +529,6 @@ class AnalogPin : public Pin {
 
 public:
   /**
-   * Interrupt handler prototype for analog sample completion.
-   * @param[in] pin analog source.
-   * @param[in] env interrupt handler environment.
-   */
-  typedef void (*InterruptHandler)(AnalogPin* pin, void* env);
-
-  /**
    * Reference voltage; ARef pin, Vcc or internal 1V1.
    */
   enum Reference {
@@ -584,12 +537,10 @@ public:
     A1V1_REFERENCE = (_BV(REFS1) | _BV(REFS0))
   };
 
-private:
+protected:
   static AnalogPin* sampling_pin;
   Reference m_reference;
-  InterruptHandler m_handler;
   uint16_t m_value;
-  void* m_env;
   
 public:
   /**
@@ -597,31 +548,12 @@ public:
    * conversion completion interrupt handler.
    * @param[in] pin number.
    * @param[in] ref reference voltage.
-   * @param[in] fn conversion completion interrupt handler.
-   * @param[in] env interrupt handler environment. 
    */
-  AnalogPin(uint8_t pin, 
-	    Reference ref = AVCC_REFERENCE, 
-	    InterruptHandler fn = 0, 
-	    void* env = 0) :
+  AnalogPin(uint8_t pin, Reference ref = AVCC_REFERENCE) :
     Pin(pin < 14 ? pin + 14 : pin), 
     m_reference(ref),
-    m_handler(fn),
-    m_value(0),
-    m_env(env)
+    m_value(0)
   {
-  }
-
-
-  /**
-   * Set conversion completion interrupt handler.
-   * @param[in] fn conversion completion interrupt handler.
-   * @param[in] env interrupt handler environment. 
-   */
-  void set_interrupt_handler(InterruptHandler fn, void* env = 0) 
-  { 
-    m_handler = fn; 
-    m_env = env; 
   }
 
   /**
@@ -663,7 +595,7 @@ public:
    * Request sample of analog pin. Conversion completion function is called
    * if defined otherwise use await_sample().
    */
-  void sample_request();
+  bool sample_request();
 
   /**
    * Await conversion to complete. Returns sample value
@@ -672,24 +604,13 @@ public:
   uint16_t sample_await();
 
   /**
-   * Trampoline function for interrupt service on conversion completion.
+   * Interrupt service on conversion completion.
    * @param[in] value sample.
    */
-  void on_sample(uint16_t value) 
+  virtual void on_interrupt(uint16_t value) 
   { 
     sampling_pin = 0;
     m_value = value; 
-    if (m_handler != 0) m_handler(this, m_env); 
-  }
-
-  /**
-   * Interrupt handler to push event for sample conversion completion.
-   * @param[in] pin analog pin source.
-   * @param[in] value sample.
-   */
-  static void push_event(AnalogPin* pin, void* env)
-  { 
-    Event::push(Event::SAMPLE_COMPLETED_TYPE, pin, env);
   }
 };
 
@@ -697,23 +618,13 @@ public:
  * Abstract analog pin set. Allow sampling of a set of pins with
  * interrupt or event handler when completed.
  */
-class AnalogPins : public Thing {
-
-public:
-  /**
-   * Interrupt handler function prototype for analog pin set 
-   * sample completion.
-   * @param[in] set analog pin set.
-   * @param[in] env interrupt handler environment.
-   */
-  typedef void (*InterruptHandler)(AnalogPins* set, void* env);
+class AnalogPins : private AnalogPin {
 
 private:
-  const AnalogPin** m_pin_at;
-  InterruptHandler m_handler;
+  const uint8_t* m_pin_at;
+  uint16_t* m_buffer;
   uint8_t m_count;
   uint8_t m_next;
-  void* m_env;
 
 public:
   /**
@@ -722,20 +633,17 @@ public:
    * defined in program memory using PROGMEM.
    * @param[in] pins vector with analog pins.
    * @param[in] count number of analog pins in set.
-   * @param[in] fn conversion completion interrupt handler.
-   * @param[in] env interrupt handler environment.
    */
-  AnalogPins(const AnalogPin** pins, 
-	     uint8_t count, 
-	     InterruptHandler fn = 0, 
-	     void* env = 0) :
+  AnalogPins(const uint8_t* pins, uint16_t* buffer, uint8_t count,
+	     Reference ref = AVCC_REFERENCE) :
+    AnalogPin(255, ref),
     m_pin_at(pins),
-    m_handler(fn),
+    m_buffer(buffer != 0 ? 
+	     buffer : 
+	     (uint16_t*) malloc(sizeof(uint16_t) * count)),
     m_count(count),
-    m_env(env)
+    m_next(0)
   {
-    for (uint8_t ix = 0; ix < count; ix++)
-      get_pin_at(ix)->set_interrupt_handler(sample_next, this);
   }
   
   /**
@@ -750,42 +658,23 @@ public:
   /**
    * Get analog pin in set. 
    * @param[in] ix index.
-   * @return analog pin or null.
+   * @return pin number.
    */
-  AnalogPin* get_pin_at(uint8_t ix) 
+  uint8_t get_pin_at(uint8_t ix) 
   { 
-    return (ix < m_count ? (AnalogPin*) pgm_read_word(&m_pin_at[ix]) : 0);
+    return (ix < m_count ? pgm_read_byte(&m_pin_at[ix]) : 0);
   }
-
-  /**
-   * Start analog pin set sampling. All analog pins in set are
-   * sampled in the background. Returns true(1) if started otherwise
-   * false(0).
-   * @param[in] fn conversion completion interrupt handler.
-   * @param[in] env handler environment.
-   * @return boolean.
-   */
-  bool samples_request(InterruptHandler fn = 0, void* env = 0);
   
   /**
-   * Interrupt handler to push event for sample conversion completion.
-   * @param[in] pin analog pin set.
-   * @param[in] env handler environment.
+   * Request sample of analog pin set. 
    */
-  static void push_event(AnalogPins* set, void* env)
-  { 
-    Event::push(Event::SAMPLE_COMPLETED_TYPE, set, env);
-  }
+  bool samples_request();
 
- private:
   /**
-   * Interrupt handler for analog pin completion to handle sampling of
-   * the pins in the set. Will call the set interrupt handler when all
-   * pins have been sampled and the conversions completed.
-   * @param[in] pin analog pin.
-   * @param[in] env analog pin set.
+   * Interrupt service on conversion completion.
+   * @param[in] value sample.
    */
-  static void sample_next(AnalogPin* pin, void* env);
+  virtual void on_interrupt(uint16_t value);
 };
 
 #endif

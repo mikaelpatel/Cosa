@@ -31,10 +31,6 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
 
-// Configuration
-// #define USE_TIMEOUT_EVENTS
-#define USE_RECEIVE_INTERRUPTS
-
 // NRF24L01+ Wireless communication using SPI and default pins(9, 10, 2)
 NRF24L01P nrf;
 
@@ -47,13 +43,8 @@ void setup()
   TRACE(free_memory());
   TRACE(sizeof(nrf));
 
-  // Start the watchdog ticks counter and push timeout events
-#ifdef USE_TIMEOUT_EVENTS
-  Watchdog::begin(1024, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
-#endif
-#ifdef USE_RECEIVE_INTERRUPTS
+  // Start the watchdog
   Watchdog::begin(1024);
-#endif
 
   // Powerup the transceiver and select receiver mode.
   nrf.set_powerup_mode();
@@ -74,10 +65,8 @@ void setup()
   TRACE(nrf.read(NRF24L01P::DYNPD));
   TRACE(nrf.read(NRF24L01P::CONFIG));
 
-#ifdef USE_RECEIVE_INTERRUPTS
-  // Setup interrupt handler to push events on message received
-  nrf.set_interrupt(NRF24L01P::push_event);
-#endif
+  // Allow interrupt handler for receiver
+  nrf.enable();
 
   // Turn off Arduino timer0 until init is replaced
   TIMSK0 = 0;

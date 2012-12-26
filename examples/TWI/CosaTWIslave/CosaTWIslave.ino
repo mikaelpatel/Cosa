@@ -37,56 +37,34 @@ class TWIslave : public TWI::Device {
 private:
   // Address of device on TWI bus
   static const uint8_t ADDR = 0xC05A;
+
   // Buffer for request and respons
   static const uint8_t BUF_MAX = 4;
-  uint8_t _buf[BUF_MAX];
-  // Request handler; events from incoming requests
-  static void request_handler(Thing* it, uint8_t type, uint16_t value);
-  friend void request_handler(Thing* it, uint8_t type, uint16_t value);
-  // Update buffer with reply
-  void update();
+  uint8_t m_buf[BUF_MAX];
 
 public:
-  TWIslave();
+  // Request handler; events from incoming requests
+  virtual void on_event(uint8_t type, uint16_t value);
+  
+  // Connect to the two wire bus and service
   bool begin();
-  bool end();
 };
-
-TWIslave::TWIslave()
-{ 
-  set_event_handler(request_handler); 
-}
 
 bool 
 TWIslave::begin() 
 { 
-  twi.set_buf(_buf, sizeof(_buf));
+  twi.set_buf(m_buf, sizeof(m_buf));
   return (twi.begin(this, ADDR)); 
 }
 
-bool 
-TWIslave::end() 
-{ 
-  return (twi.end()); 
-}
-
 void
-TWIslave::update()
+TWIslave::on_event(uint8_t type, uint16_t value)
 {
-  for (uint8_t i = 1; i < sizeof(_buf); i++)
-    _buf[i] = _buf[0] + i;
-  trace.print(_buf, 4);
+  for (uint8_t i = 1; i < sizeof(m_buf); i++)
+    m_buf[i] = m_buf[0] + i;
 }
 
-void
-TWIslave::request_handler(Thing* it, uint8_t type, uint16_t value)
-{
-  TWIslave* twi = (TWIslave*) it;
-  INFO("event.type = %d, twi.command = %d", type, twi->_buf[0]);
-  twi->update();
-}
-
-// The TWI slave instance
+// The TWI slave
 TWIslave slave;
 
 // Use the builtin led for a heartbeat
@@ -97,8 +75,10 @@ void setup()
   // Start trace output stream
   trace.begin(9600, PSTR("CosaTWISlave: started"));
 
-  // Check amount of free memory
+  // Check amount of free memory and size of classes
   TRACE(free_memory());
+  TRACE(sizeof(TWIslave));
+  TRACE(sizeof(OutputPin));
 
   // Start the watchdog ticks counter
   Watchdog::begin();

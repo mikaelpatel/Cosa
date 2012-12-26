@@ -156,7 +156,8 @@ public:
   };
 
   /** 
-   * Construct two-wire instance. This is actually a single-ton.
+   * Construct two-wire instance. This is actually a single-ton on
+   * current supported hardware.
    */
   TWI() :
     m_state(IDLE_STATE),
@@ -307,7 +308,7 @@ public:
 };
 
 /**
- * Two-wire hardware interface module.
+ * Two-wire hardware interface module. Singleton on Arduino hardware.
  */
 extern TWI twi;
 

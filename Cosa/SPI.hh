@@ -35,16 +35,9 @@
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.hh"
+#include "Cosa/Thing.hh"
 
-class SPI {
-
-public:
-  /**
-   * Interrupt handler prototype for data receive.
-   * @param[in] buffer pointer to received data (byte or package).
-   * @param[in] count size of received data
-   */
-  typedef void (*InterruptHandler)(void* buffer, uint8_t count);
+class SPI : public Thing {
 
 private:
   /**
@@ -56,7 +49,6 @@ private:
     MISO = 4,
     SCK = 5
   };
-  InterruptHandler m_handler;
   uint8_t m_cmd;
   uint8_t* m_buffer;
   uint8_t m_max;
@@ -102,7 +94,6 @@ public:
    * Construct serial peripheral interface for master.
    */
   SPI() : 
-    m_handler(0), 
     m_buffer(0),
     m_max(0),
     m_put(0),
@@ -116,8 +107,7 @@ public:
    * @param[in] buffer with data to received data.
    * @param[in] max size of buffer.
    */
-  SPI(InterruptHandler fn, void* buffer = 0, uint8_t max = 0) : 
-    m_handler(fn), 
+  SPI(void* buffer, uint8_t max) : 
     m_buffer((uint8_t*) buffer),
     m_max(max),
     m_put(0),
@@ -128,15 +118,6 @@ public:
       m_buffer = &m_data;
       m_max = 1;
     }
-  }
-  
-  /*
-   * Set data receive interrupt handler.
-   * @param[in] fn interrupt handler function.
-   */
-  void set_interrupt(InterruptHandler fn) 
-  { 
-    m_handler = fn; 
   }
 
   /**
@@ -270,19 +251,10 @@ public:
   bool end();
 
   /**
-   * Trampoline function for interrupt service on data receive in 
-   * slave mode.
+   * Interrupt service on data receive in slave mode.
+   * @param[in] data received data.
    */
-  void on_receive(uint8_t data);
-
-  /**
-   * Interrupt handler to push event for receive data/package
-   * in slave mode.
-   */
-  static void push_event(Device* dev, uint8_t count)
-  { 
-    Event::push(Event::RECEIVE_COMPLETED_TYPE, dev, count);
-  }
+  virtual void on_receive(uint8_t data);
 };
 
 /**

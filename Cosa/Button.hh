@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Button.h
+ * @file Cosa/Button.hh
  * @version 1.0
  *
  * @section License
@@ -32,9 +32,8 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
-#include "Cosa/Thing.hh"
 
-class Button : private Thing {
+class Button : public InputPin {
 
 public:
   enum Mode {
@@ -42,34 +41,20 @@ public:
     ON_RISING_MODE = 1,
     ON_CHANGE_MODE = 2
   };
-  
+
 private:
   static const uint16_t SAMPLE_MS = 64;
-  InputPin* m_pin;
   uint8_t m_state;
-  Mode m_mode;
+  uint8_t m_mode;
 
 public:
   /**
-   * Construct a button with the given mode. Input pin to be 
-   * attached.
-   * @param[in] mode event mode.
+   * Construct a button with the given mode. 
+   * @param[in] pin number.
+   * @param[in] mode change event mode.
    */
-  Button(Mode mode = ON_CHANGE_MODE) : 
-    Thing(), 
-    m_pin(0), 
-    m_state(0),
-    m_mode(mode)
-  {}
+  Button(uint8_t pin, Mode mode = ON_CHANGE_MODE);
 
-  /**
-   * Attach given input pin to the button. Pin will be sampled and 
-   * on change receive events.
-   * @param[in] pin input pin.
-   */
-  void attach(InputPin* pin);
-
-private:
   /**
    * Button event handler. Called by watchdog on timeout. Samples the
    * attached pin and calls pin event handler on change.
@@ -77,7 +62,13 @@ private:
    * @param[in] type the type of event (timeout).
    * @param[in] value the event value.
    */
-  static void on_timeout(Thing* it, uint8_t type, uint16_t value);
+  virtual void on_event(uint8_t type, uint16_t value);
+
+  /**
+   * The event handler; button 
+   * @param[in] type event type.
+   */
+  virtual void on_change(uint8_t type) {}
 };
 
 #endif

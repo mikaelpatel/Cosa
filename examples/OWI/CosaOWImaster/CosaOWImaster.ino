@@ -34,7 +34,8 @@
 // Slave device driver
 class Driver : public OWI::Driver {
 private:
-  uint8_t _status[8];
+  static const uint8_t STATUS_MAX = 8;
+  uint8_t m_status[STATUS_MAX];
 public:
   Driver(OWI* pin) : OWI::Driver(pin) {}
   bool read_status();
@@ -45,18 +46,18 @@ bool
 Driver::read_status()
 {
   if (!match_rom()) return (0);
-  _pin->write(OWI::Device::STATUS);
-  _pin->begin();
-  for (uint8_t i = 0; i < membersof(_status) - 1; i++)
-    _status[i] = _pin->read(8);
-  _status[7] = _pin->end();
-  return (_pin->end() == 0);
+  m_pin->write(OWI::Device::STATUS);
+  m_pin->begin();
+  for (uint8_t i = 0; i < membersof(m_status) - 1; i++)
+    m_status[i] = m_pin->read(8);
+  m_status[7] = m_pin->end();
+  return (m_pin->end() == 0);
 }
 
 void 
 Driver::print_status(IOStream& stream)
 {
-  stream.print(_status, sizeof(_status));
+  stream.print(m_status, sizeof(m_status));
 }
 
 // The OneWire bus on pin 7 and led heartbeat

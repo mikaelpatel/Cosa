@@ -201,11 +201,10 @@ public:
     /**
      * Slave device event handler function. Handle presence pulse and
      * rom/function command parsing.
-     * @param[in] it the target object.
      * @param[in] type the type of event.
      * @param[in] value the event value.
      */
-    static void service_request(Thing* it, uint8_t type, uint16_t value);
+    virtual void on_event(uint8_t type, uint16_t value);
 
     /**
      * Slave device interrupt handler function. Detect reset and initiate
@@ -213,8 +212,7 @@ public:
      * @param[in] pin reference of changed pin.
      * @param[in] env interrupt handler environment. 
      */
-    static void interrupt_handler(InterruptPin* pin, void* env);
-    friend void interrupt_handler(InterruptPin* pin, void* env);
+    virtual void on_interrupt();
 
   protected:
     uint8_t* m_rom;
@@ -235,13 +233,12 @@ public:
      * @param[in] rom identity number.
      */
     Device(uint8_t pin, uint8_t* rom) : 
-      InterruptPin(pin, InterruptPin::ON_CHANGE_MODE, interrupt_handler),
+      InterruptPin(pin, InterruptPin::ON_CHANGE_MODE),
       m_rom(rom),
       m_time(0),
       m_crc(0),
       m_state(IDLE_STATE)
     {
-      set_event_handler(service_request);
     }
   };
   

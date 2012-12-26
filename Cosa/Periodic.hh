@@ -1,5 +1,5 @@
 /**
- * @file CosaBlinkTimeout.ino
+ * @file Cosa/Periodic.hh
  * @version 1.0
  *
  * @section License
@@ -21,52 +21,58 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa RGB LED blink with timeout events.
+ * Periodic function handler. Syntactic sugar for watchdog timeout
+ * event handlers.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.hh"
+#ifndef __COSA_PERIODIC_HH__
+#define __COSA_PERIODIC_HH__
+
+#include "Cosa/Types.h"
+#include "Cosa/Thing.hh"
 #include "Cosa/Watchdog.hh"
 
-// LED output pin
-class LED : public OutputPin {
+class Periodic : public Thing {
 public:
-  LED(uint8_t pin, uint8_t initial = 0) : 
-    OutputPin(pin, initial)
-  {}
-
-  virtual void on_event(uint8_t type, uint16_t value)
-  {
-    toggle();
-  }
-
-  void blink(uint16_t ms) 
+  /**
+   * Construct a periodic function handler. 
+   * @param[in] ms period of timeout.
+   */
+  Periodic(uint16_t ms) : Thing()
   {
     Watchdog::attach(this, ms);
   }
+
+  /**
+   * Set timeout period.
+   * @param[in] ms period of timeout.
+   */
+  void set_period(uint16_t ms)
+  {
+    detach();
+    Watchdog::attach(this, ms);
+  }
+
+  /**
+   * Periodic event handler; dispatch the run() function on
+   * timeout events.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value)
+  {
+    if (type != Event::TIMEOUT_TYPE) return;
+    run();
+  }
+
+  /**
+   * The default null function. 
+   */
+  virtual void run()
+  {
+  }
 };
 
-// Use an RGB LED connected to pins(5,6,7)
-LED redLedPin(5);
-LED greenLedPin(6, 1);
-LED blueLedPin(7);
-
-void setup()
-{
-  // Start the watchdog (16 ms timeout, push timeout events)
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
-
-  // Set blink time period for the leds
-  redLedPin.blink(512);
-  greenLedPin.blink(1024);
-  blueLedPin.blink(1024);
-}
-
-void loop()
-{
-  // The basic event dispatcher
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}
+#endif

@@ -27,20 +27,11 @@
  */
 
 #include "Cosa/Ciao.hh"
-#include <avr/pgmspace.h>
 
 // Ciao configuration
 static char MAGIC[] = "Cosa::Ciao";
 static const uint8_t MAJOR = 1;
 static const uint8_t MINOR = 0;
-
-// Ciao header with magic string, revision and endian information
-Ciao::header_t Ciao::header = {
-  MAGIC,
-  MAJOR,
-  MINOR,
-  LITTLE_ENDIAN
-};
 
 // Ciao header descriptor 
 static const char magic_name[] PROGMEM = "magic";
@@ -80,6 +71,17 @@ const Ciao::Descriptor::user_t Ciao::Descriptor::header_t PROGMEM = {
   members,
   membersof(members)
 };  
+
+void 
+Ciao::begin()
+{
+  header_t header;
+  header.magic = MAGIC;
+  header.major = MAJOR;
+  header.minor = MINOR;
+  header.endian = LITTLE_ENDIAN;
+  write(&Descriptor::header_t, &header, 1);
+}
 
 void 
 Ciao::write(char* s)
@@ -125,31 +127,36 @@ Ciao::write(uint16_t* buf, uint16_t count)
   m_dev->write(buf, count * sizeof(uint16_t));
 }
 
-void Ciao::write(uint32_t value)
+void
+Ciao::write(uint32_t value)
 {
   write(UINT32_TYPE, 1);
   m_dev->write(&value, sizeof(value));
 }
 
-void Ciao::write(uint32_t* buf, uint16_t count)
+void 
+Ciao::write(uint32_t* buf, uint16_t count)
 {
   write(UINT32_TYPE, count);
   m_dev->write(buf, count * sizeof(uint32_t));
 }
 
-void Ciao::write(uint64_t value)
+void 
+Ciao::write(uint64_t value)
 {
   write(UINT64_TYPE, 1);
   m_dev->write(&value, sizeof(value));
 }
 
-void Ciao::write(uint64_t* buf, uint16_t count)
+void 
+Ciao::write(uint64_t* buf, uint16_t count)
 {
   write(UINT64_TYPE, count);
   m_dev->write(buf, count * sizeof(uint32_t));
 }
 
-void Ciao::write(int8_t value)
+void 
+Ciao::write(int8_t value)
 {
   write(INT8_TYPE, 1);
   m_dev->putchar(value);
@@ -182,7 +189,8 @@ Ciao::write(int32_t value)
   m_dev->write(&value, sizeof(value));
 }
 
-void Ciao::write(int32_t* buf, uint16_t count)
+void 
+Ciao::write(int32_t* buf, uint16_t count)
 {
   write(INT32_TYPE, count);
   m_dev->write(buf, count * sizeof(int32_t));
@@ -195,7 +203,8 @@ Ciao::write(int64_t value)
   m_dev->write(&value, sizeof(value));
 }
 
-void Ciao::write(int64_t* buf, uint16_t count)
+void 
+Ciao::write(int64_t* buf, uint16_t count)
 {
   write(INT64_TYPE, count);
   m_dev->write(buf, count * sizeof(int32_t));
@@ -277,23 +286,25 @@ Ciao::write(const Descriptor::user_t* desc)
   }
 }
 
+typedef float float32_t;
+
 static const uint8_t sizeoftype[] PROGMEM = {
-  1,
-  2,
-  4,
-  8, 
+  sizeof(uint8_t),
+  sizeof(uint16_t),
+  sizeof(uint32_t),
+  sizeof(uint64_t),
   0, 
   0, 
   0, 
   0, 
-  1, 
-  2, 
-  4, 
-  8, 
-  2, 
-  4, 
-  8, 
-  10
+  sizeof(int8_t),
+  sizeof(int16_t),
+  sizeof(int32_t),
+  sizeof(int64_t),
+  0,
+  sizeof(float32_t), 
+  0, 
+  0
 };
 
 void 

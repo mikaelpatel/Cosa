@@ -84,7 +84,7 @@ public:
      */
     enum {
       HEADER_ID = 0x00,
-      FAI_ID = 0x10,
+      COSA_FAI_ID = 0x10,
       USER_ID = 0x0100
     };
     struct member_t {
@@ -117,10 +117,7 @@ public:
     BIG_ENDIAN = 1
   };
 
-private:
-  // Version header
-  static header_t header;
-
+protected:
   // Output streaming device.
   IOStream::Device* m_dev;
 
@@ -150,10 +147,7 @@ public:
   /**
    * Start the data stream with a version string and endian information.
    */
-  void begin()
-  {
-    write(&Descriptor::header_t, &header, 1);
-  }
+  void begin();
 
   /**
    * Write given string to data stream.

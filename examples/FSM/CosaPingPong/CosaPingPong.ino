@@ -38,16 +38,16 @@
 class Echo : public FSM {
 
 private:
-  const char* _name;
-  uint16_t _count;
-  FSM* _port;
+  const char* m_name;
+  uint16_t m_count;
+  FSM* m_port;
 
 public:
   /**
    * Construct the echo state machine. Name and port must be bound
    * before started.
    */
-  Echo() : FSM(initState), _name(0), _count(0), _port(0) {}
+  Echo() : FSM(initState), m_name(0), m_count(0), m_port(0) {}
 
   /**
    * Bind name and port. The name is used for the trace print
@@ -57,8 +57,8 @@ public:
    */
   void bind(const char* name, FSM* fsm)
   {
-    _name = name;
-    _port = fsm;
+    m_name = name;
+    m_port = fsm;
   }
 
   /**
@@ -71,7 +71,7 @@ public:
   {
     Echo* echo = (Echo*) fsm;
     trace.print_P(PSTR("init "));
-    trace.print_P(echo->_name);
+    trace.print_P(echo->m_name);
     trace.println();
     fsm->set_state(listenState);
     return (1);
@@ -80,8 +80,8 @@ public:
   static bool listenState(FSM* fsm, uint8_t type)
   {
     Echo* echo = (Echo*) fsm;
-    trace.print_P(echo->_name);
-    trace.printf_P(PSTR("(count = %d)\n"), echo->_count++);
+    trace.print_P(echo->m_name);
+    trace.printf_P(PSTR("(count = %d)\n"), echo->m_count++);
     fsm->set_state(echoState);
     fsm->set_timer(512);
     return (1);
@@ -90,7 +90,7 @@ public:
   static bool echoState(FSM* fsm, uint8_t type)
   {
     Echo* echo = (Echo*) fsm;
-    echo->_port->send(Event::USER_TYPE);
+    echo->m_port->send(Event::USER_TYPE);
     fsm->set_state(listenState);
   };
 };

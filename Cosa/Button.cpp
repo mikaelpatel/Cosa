@@ -29,30 +29,28 @@
 #include "Cosa/Button.hh"
 #include "Cosa/Watchdog.hh"
 
-void
-Button::attach(InputPin* pin)
+Button::Button(uint8_t pin, Mode mode) : 
+  InputPin(pin, InputPin::PULLUP_MODE),
+  m_state(0),
+  m_mode(mode)
 {
-  m_pin = pin;
-  m_state = pin->is_set();
-  set_event_handler(on_timeout);
+  m_state = is_set();
   Watchdog::attach(this, SAMPLE_MS);
 }
 
 void 
-Button::on_timeout(Thing* it, uint8_t type, uint16_t value)
+Button::on_event(uint8_t type, uint16_t value)
 {
-  Button* button = (Button*) it;
-  InputPin* pin = button->m_pin;
-  if (type != Event::TIMEOUT_TYPE || pin == 0) return;
+  // Skip all but timeout events
+  if (type != Event::TIMEOUT_TYPE) return;
   
   // Update the button state
-  uint8_t old_state = button->m_state;
-  button->m_state = pin->is_set();
-  uint8_t new_state = button->m_state;
+  uint8_t old_state = m_state;
+  m_state = is_set();
+  uint8_t new_state = m_state;
 
-  // If changed according to mode call the pin event handler
+  // If changed according to mode call the pin change handler
   if ((old_state != new_state) && 
-      ((button->m_mode == Button::ON_CHANGE_MODE) ||
-       (new_state == button->m_mode)))
-    pin->on_event(Event::FALLING_TYPE + button->m_mode, value);
+      ((m_mode == ON_CHANGE_MODE) || (new_state == m_mode)))
+    on_change(Event::FALLING_TYPE + m_mode);
 }

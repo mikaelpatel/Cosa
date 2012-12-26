@@ -29,6 +29,7 @@
 #ifndef __COSA_FAI_HH__
 #define __COSA_FAI_HH__
 
+#include "Cosa/Types.h"
 #include "Cosa/Ciao.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Event.hh"
@@ -105,10 +106,7 @@ public:
   /**
    * Start the data stream with a version string and endian information.
    */
-  void begin()
-  {
-    Ciao::write(&Ciao::Descriptor::header_t, &header, 1);
-  }
+  void begin();
 
   /**
    * Write digital pins value to data stream.
@@ -136,10 +134,6 @@ public:
   {
     Ciao::write(&Descriptor::event_t, event, 1);
   }
-
-private:
-  // Version header
-  static header_t header;
 };
 
 #endif

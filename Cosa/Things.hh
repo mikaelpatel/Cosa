@@ -36,18 +36,10 @@ class Things : public Thing {
 
 public:
   /**
-   * Default event handler for thing collection. Boardcase event.
-   * @param[in] things the collection.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  static void broadcast(Thing* things, uint8_t type, uint16_t value);
-
-  /**
    * Construct a thing collection.
    */
-  Things() : Thing(broadcast) {}
-
+  Things() : Thing() {}
+  
   /**
    * Return number of things.
    * @return length
@@ -62,6 +54,14 @@ public:
   {
     return (m_succ == this);
   }
+
+  /**
+   * Event handler. Default event handler for thing collections. 
+   * Will boardcase the event to the collection.
+   * @param[in] type the event type.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value);
 };
 
 #endif

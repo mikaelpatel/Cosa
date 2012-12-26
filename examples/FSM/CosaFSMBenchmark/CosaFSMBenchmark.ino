@@ -30,11 +30,11 @@
 #include "Cosa/FSM.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Memory.h"
 
 /**
  * Number of messages to send in the benchmark.
  */
-const uint32_t IPUS = F_CPU / 1000000L;
 const uint32_t EVENTS_MAX = 100000L;
 
 /**
@@ -43,13 +43,13 @@ const uint32_t EVENTS_MAX = 100000L;
 class Echo : public FSM {
 
 private:
-  FSM* _port;
+  FSM* m_port;
 
 public:
   /**
    * Construct the echo state machine. 
    */
-  Echo() : FSM(echoState), _port(0) {}
+  Echo() : FSM(echoState), m_port(0) {}
 
   /**
    * Bind receiving fsm to port. 
@@ -57,7 +57,7 @@ public:
    */
   void bind(FSM* fsm)
   {
-    _port = fsm;
+    m_port = fsm;
   }
 
   /**
@@ -67,7 +67,7 @@ public:
   static bool echoState(FSM* fsm, uint8_t type)
   {
     Echo* echo = (Echo*) fsm;
-    echo->_port->send(Event::USER_TYPE);
+    echo->m_port->send(Event::USER_TYPE);
     return (1);
   }
 };
@@ -81,6 +81,13 @@ void setup()
   // Start the trace output stream
   trace.begin(9600, PSTR("CosaFSMBenchmark: started"));
 
+  // Check amount of free memory
+  TRACE(free_memory());
+
+  // Check size of instances
+  TRACE(sizeof(FSM));
+  TRACE(sizeof(Echo));
+
   // Start the watchdog in default 16 ms ticks
   Watchdog::begin();
 
@@ -90,6 +97,7 @@ void setup()
 
   // Give some more startup info
   TRACE(F_CPU);
+  TRACE(I_CPU);
   TRACE(EVENTS_MAX);
 }
 
@@ -113,5 +121,5 @@ void loop()
   uint16_t ms_per_tick = Watchdog::ms_per_tick();
   uint32_t ms = ticks * ms_per_tick;
   uint32_t us_per_event = (ms * 1000L) / EVENTS_MAX;
-  INFO("%l us per event (%l cycles)", us_per_event, us_per_event * IPUS);
+  INFO("%l us per event (%l cycles)", us_per_event, us_per_event * I_CPU);
 }

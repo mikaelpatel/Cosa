@@ -41,7 +41,7 @@ NRF24L01P::NRF24L01P(uint8_t channel, uint8_t csn, uint8_t ce, uint8_t irq) :
   m_channel(channel),
   m_csn(csn, 1),
   m_ce(ce, 0),
-  m_irq(irq, InterruptPin::ON_FALLING_MODE),
+  m_irq(irq, InterruptPin::ON_FALLING_MODE, this),
   m_state(POWER_DOWN_STATE)
 {
   begin();
@@ -73,13 +73,6 @@ NRF24L01P::write(Register reg, const void* buffer, uint8_t count)
     m_status = spi.write(W_REGISTER | (REG_MASK & reg), buffer, count);
   }
   return (m_status);
-}
-
-void 
-NRF24L01P::set_interrupt(InterruptPin::InterruptHandler fn)
-{
-  m_irq.set_interrupt_handler(fn, this);
-  if (fn != 0) m_irq.enable(); else m_irq.disable(); 
 }
 
 void
@@ -261,12 +254,11 @@ NRF24L01P::flush()
 }
 
 void 
-NRF24L01P::push_event(InterruptPin* pin, void* env)
+NRF24L01P::IRQPin::on_interrupt()
 { 
-  NRF24L01P* nrf = (NRF24L01P*) env;
-  uint8_t status = nrf->get_status();
+  uint8_t status = m_nrf->get_status();
   if (status & _BV(RX_DR)) {
-    nrf->write(STATUS, _BV(RX_DR));
-    Event::push(Event::RECEIVE_COMPLETED_TYPE, nrf, status);
+    m_nrf->write(NRF24L01P::STATUS, _BV(RX_DR));
+    Event::push(Event::RECEIVE_COMPLETED_TYPE, m_nrf, status);
   }
 }

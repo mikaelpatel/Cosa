@@ -118,13 +118,10 @@ SPI::end()
 void 
 SPI::on_receive(uint8_t data) 
 { 
-  // Check for no interrupt handler
-  if (m_handler == 0) return;
-
   // Check for no buffer
   if (m_buffer == 0) {
     m_put = 1;
-    m_handler(this, m_put);
+    Event::push(Event::RECEIVE_COMPLETED_TYPE, this, m_put);
     m_put = 0;
     return;
   }
@@ -132,7 +129,7 @@ SPI::on_receive(uint8_t data)
   // Append to buffer and call user interrupt handler on full
   m_buffer[m_put++] = data;
   if (m_put == m_max) {
-    m_handler(this, m_put); 
+    Event::push(Event::RECEIVE_COMPLETED_TYPE, this, m_put);
     m_put = 0;
   }
 }

@@ -61,12 +61,11 @@ private:
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
-  static void do_event(Thing* it, uint8_t type, uint16_t value)
+  virtual void on_event(uint8_t type, uint16_t value)
   {
-    FSM* fsm = (FSM*) it;
-    if (fsm->m_period == TIMEOUT_REQUEST) fsm->cancel_timer();
-    fsm->m_param = value;
-    fsm->m_state(fsm, type);
+    if (m_period == TIMEOUT_REQUEST) cancel_timer();
+    m_param = value;
+    m_state(this, type);
   }
   
 public:
@@ -76,7 +75,7 @@ public:
    * @param{in] period timeout in all states.
    */
   FSM(StateHandler init, uint16_t period = 0) :
-    Thing(do_event), 
+    Thing(), 
     m_state(init),
     m_period(period),
     m_param(0)
@@ -166,6 +165,7 @@ public:
   void set_timer(uint16_t timeout)
   {
     m_period = TIMEOUT_REQUEST;
+    detach();
     Watchdog::attach(this, timeout);
   }
 

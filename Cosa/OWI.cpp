@@ -28,9 +28,6 @@
  */
 
 #include "Cosa/OWI.hh"
-#include <util/delay_basic.h>
-
-#define DELAY(us) _delay_loop_2((us) << 2)
 
 bool
 OWI::reset()

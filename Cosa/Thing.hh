@@ -34,45 +34,16 @@
 
 class Thing {
 
-public:
-  /**
-   * Event handler function prototype.
-   * @param[in] it the target object.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  typedef void (*EventHandler)(Thing* it, uint8_t type, uint16_t value);
-
 protected:
-  EventHandler m_callback;
   Thing* m_succ;
   Thing* m_pred;
 
 public:
-  Thing(EventHandler callback = 0) : 
-    m_callback(callback),
+  Thing() : 
     m_succ(this),
     m_pred(this)
   {}
   
-  /**
-   * Set the event handler for this thing.
-   * @param[in] fn event handler.
-   */
-  void set_event_handler(EventHandler fn) 
-  { 
-    m_callback = fn; 
-  }
-
-  /**
-   * Get the event handler for this thing.
-   * @return event handler.
-   */
-  EventHandler get_event_handler() 
-  { 
-    return (m_callback);
-  }
-
   /**
    * Return successor in sequence.
    * @return next thing.
@@ -119,23 +90,12 @@ public:
   }
 
   /**
-   * Trampoline function for event dispatch.
+   * Event handler.
    * @param[in] type the event type.
    * @param[in] value the event value.
    */
-  void on_event(uint8_t type, uint16_t value)
+  virtual void on_event(uint8_t type, uint16_t value)
   {
-    if (m_callback != 0) m_callback(this, type, value);
-  }
-
-  /**
-   * Trampoline function for event dispatch.
-   * @param[in] type the event type.
-   * @param[in] value the event value.
-   */
-  void on_event(uint8_t type, void* value)
-  {
-    if (m_callback != 0) m_callback(this, type, (uint16_t) value);
   }
 };
 

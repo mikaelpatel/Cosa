@@ -101,6 +101,15 @@ Watchdog::await(AwaitCondition fn, void* env, uint16_t ms)
   } while ((ticks != s_ticks) || ((ms == 0) && (fn != 0)));
 }
 
+void 
+Watchdog::push_timeout_events(void* env)
+{ 
+  uint16_t changed = (s_ticks ^ (s_ticks + 1));
+  for (uint8_t i = s_prescale; i < TIMEQ_MAX; i++, changed >>= 1)
+    if ((changed & 1) && !s_timeq[i].is_empty())
+      Event::push(Event::TIMEOUT_TYPE, &s_timeq[i], i);
+}
+
 ISR(WDT_vect)
 {
   Watchdog::on_timeout();

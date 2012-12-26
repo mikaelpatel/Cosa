@@ -29,6 +29,7 @@
 #ifndef __COSA_DRIVER_DHT11_HH__
 #define __COSA_DRIVER_DHT11_HH__
 
+#include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
 
 class DHT11 : private IOPin {
