@@ -198,6 +198,7 @@ AnalogPins::on_interrupt(uint16_t value)
     bit_set(ADCSRA, ADIE);
   } 
   else {
+    sampling_pin = 0;
     Event::push(Event::SAMPLE_COMPLETED_TYPE, this);
   }
 }

@@ -31,22 +31,20 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
 
-// Analog input pins
-AnalogPin levelPin(0);
-AnalogPin basePin(1);
-AnalogPin powerPin(2);
-AnalogPin tempVCC(8);
-
 // Analog pin vector for pin set. Note: use program memory
-const PROGMEM AnalogPin* pins[] = {
-  &levelPin,
-  &basePin,
-  &powerPin,
-  &tempVCC
+const PROGMEM uint8_t pins[] = {
+  0, 
+  1,
+  2,
+  8
 };
 
-// Declare the pin set with vector, number of members and push event callback
-AnalogPins analogPins(pins, membersof(pins), AnalogPins::push_event);
+// Buffer for sample values
+uint16_t buffer[membersof(pins)];
+
+// Declare the pin set with vector, buffer and number of members
+// Use default reference voltage
+AnalogPins analogPins(pins, buffer, membersof(pins));
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(13);
@@ -63,6 +61,7 @@ void setup()
   TRACE(sizeof(AnalogPin));
   TRACE(sizeof(AnalogPins));
   TRACE(sizeof(pins));
+  TRACE(sizeof(buffer));
   TRACE(membersof(pins));
 
   // Start the watchdog ticks counter (shortest possible tick, 16 ms)
@@ -71,7 +70,7 @@ void setup()
 
 void loop()
 {
-  // Start sampling analog pins and Wait for the next event
+  // Start sampling analog pins and wait for the next event
   ledPin.toggle();
   TRACE(analogPins.samples_request());
   Event event;
@@ -79,10 +78,8 @@ void loop()
   ledPin.toggle();
 
   // Print the values
-  TRACE(levelPin.get_value());
-  TRACE(basePin.get_value());
-  TRACE(powerPin.get_value());
-  TRACE(tempVCC.get_value());
+  for (uint8_t i = 0; i < membersof(pins); i++)
+    TRACE(buffer[i]);
 
   // Wait (approx. 0.5 s) before issuing the next sample
   Watchdog::delay(512);
