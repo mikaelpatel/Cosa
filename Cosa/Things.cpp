@@ -21,7 +21,13 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa low level callback set handling.
+ * The Cosa class hierarchy root object collection; Things.
+ * Acts as the head of a circular double linked queue of thing(s).
+ * Is responsible for broadcasting events to the collection.
+ *
+ * @section See Also
+ * Thing.hh for Cosa root object, Thing, and Event.hh for details on
+ * event types and parameter passing.  
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -31,7 +37,9 @@
 void
 Things::on_event(uint8_t type, uint16_t value)
 {
+  // Iterate through the list and dispatch the event
   for (Thing* it = m_succ; it != this;) {
+    // Get the successor as the current event call may detach itself
     Thing* succ = it->get_succ();
     it->on_event(type, value);
     it = succ;
@@ -42,6 +50,7 @@ uint8_t
 Things::length()
 {
   uint8_t res = 0;
+  // Iterate through the list and count the length of the queue
   for (Thing* it = m_succ; it != this; it = it->get_succ()) res++;
   return (res);
 }

@@ -43,8 +43,8 @@ public:
   /**
    * Event types are added here. Typical mapping from interrupts to
    * events. Note that the event is not a global numbering
-   * scheme. Instead depends on the receiving/sending party, 
-   * the protocol. 
+   * scheme. Instead depends on the receiving/sending party, the
+   * protocol.  
    */
   enum {
     NULL_TYPE = 0,
@@ -75,10 +75,12 @@ public:
     READ_COMPLETED_TYPE,
     WRITE_REQUEST_TYPE,
     WRITE_COMPLETED_TYPE,
+    COMMAND_REQUEST_TYPE,
+    COMMAND_COMPLETED_TYPE,
 
     SERVICE_REQUEST_TYPE,	// Servers
     SERVICE_RESPONSE_TYPE,
-
+    
     USER_TYPE = 64,		// User defined events/messages
 
     ERROR_TYPE = 255		// Error event

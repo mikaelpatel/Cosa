@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Things.hh
+ * @file Cosa/Thing.cpp
  * @version 1.0
  *
  * @section License
@@ -21,53 +21,52 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa class hierarchy root object collection; Things.
- * Acts as the head of a circular double linked queue of thing(s).
- * Is responsible for broadcasting events to the collection.
- *
+ * The Cosa class hierarchy root object; Thing. Supports double linked
+ * circulic lists and basic event handler (virtual method). 
+ * 
  * @section See Also
- * Thing.hh for Cosa root object, Thing, and Event.hh for details on
+ * Things.hh for collection of Things, and Event.hh for details on
  * event types and parameter passing.  
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_THINGS_HH__
-#define __COSA_THINGS_HH__
-
-#include "Cosa/Types.h"
 #include "Cosa/Thing.hh"
 
-class Things : public Thing {
-
-public:
-  /**
-   * Construct a thing collection.
-   */
-  Things() : Thing() {}
-  
-  /**
-   * Return number of things.
-   * @return length
-   */
-  uint8_t length();
-
-  /**
-   * Return true(1) if there are no things otherwise false(0).
-   * @return bool.
-   */
-  bool is_empty()
-  {
-    return (m_succ == this);
+void 
+Thing::attach(Thing* it)
+{
+  synchronized {
+    // Check if it needs to be detached first
+    if (it->m_succ != it) {
+      it->m_succ->m_pred = it->m_pred;
+      it->m_pred->m_succ = it->m_succ;
+    }
+    // Attach it as the new predecessor
+    it->m_succ = this;
+    it->m_pred = this->m_pred;
+    this->m_pred->m_succ = it;
+    this->m_pred = it;
   }
+}
 
-  /**
-   * Event handler. Default event handler for thing collections. 
-   * Will boardcase the event to the collection.
-   * @param[in] type the event type.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value);
-};
+void
+Thing::detach()
+{
+  synchronized {
+    // Check that the detach is necessary
+    if (m_succ != this) {
+      // Unlink and initiate to self reference
+      m_succ->m_pred = m_pred;
+      m_pred->m_succ = m_succ;
+      m_succ = this;
+      m_pred = this;
+    }
+  }
+}
 
-#endif
+void 
+Thing::on_event(uint8_t type, uint16_t value) 
+{
+}
+

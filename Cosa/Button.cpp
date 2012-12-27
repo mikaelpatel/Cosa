@@ -21,7 +21,21 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Debounded Button abstraction. Sampled input pin.
+ * Debounded Button; Sampled input pin with pullup resistor. Uses a
+ * watchdog timeout event (64 ms) for sampling and on change calls an
+ * event action. Subclass Button and implement the virtual on_change()
+ * method. Use the subclass for any state needed for the action
+ * function.  
+ *
+ * @section Circuit
+ * Connect button/switch from pin to ground. 
+ *
+ * @section Limitations
+ * Button toggle faster than sample period may be missed.
+ * 
+ * @section See Also
+ * The Button event handler requires the usage of an event
+ * dispatch. See Event.hh. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -34,6 +48,7 @@ Button::Button(uint8_t pin, Mode mode) :
   m_state(0),
   m_mode(mode)
 {
+  // Set initial state and attach to watchdog timeout queue
   m_state = is_set();
   Watchdog::attach(this, SAMPLE_MS);
 }
@@ -53,4 +68,10 @@ Button::on_event(uint8_t type, uint16_t value)
   if ((old_state != new_state) && 
       ((m_mode == ON_CHANGE_MODE) || (new_state == m_mode)))
     on_change(Event::FALLING_TYPE + m_mode);
+}
+
+void 
+Button::on_change(uint8_t type)
+{
+  // Default change event function
 }

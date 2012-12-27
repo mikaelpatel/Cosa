@@ -23,6 +23,14 @@
  * @section Description
  * DHT11 Humidity & Temperature Sensor device driver.
  *
+ * @section Circuit
+ * Connect DHT11 to pin, VCC and ground. A pullup resistor from
+ * the pin to VCC should be used. Most DHT11 modules have this.
+ *
+ * @section Limitations
+ * The driver will turn off interrupt handling during data read from
+ * the device. 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,6 +40,9 @@
 // Thresholds for wire sampling
 static const uint8_t COUNT_MIN = 40;
 static const uint8_t COUNT_MAX = 255;
+
+// Index of last member in data buffer
+static const uint8_t DATA_LAST = DHT11::DATA_MAX - 1;
 
 int8_t
 DHT11::read_bit(uint8_t changes)
@@ -55,7 +66,7 @@ DHT11::read(uint8_t& temperature, uint8_t& humidity)
   temperature = 100;
   humidity = 100;
 
-  // Send start signal to DHT
+  // Send start signal to the device
   set_mode(OUTPUT_MODE);
   clear();
   Watchdog::delay(256);
@@ -63,7 +74,7 @@ DHT11::read(uint8_t& temperature, uint8_t& humidity)
   DELAY(40);
   set_mode(INPUT_MODE);
   
-  // Receive bits from the DHT and calculate check sum
+  // Receive bits from the device and calculate check sum
   uint8_t chksum = 0;
   m_latest = 1;
   synchronized {
@@ -74,13 +85,13 @@ DHT11::read(uint8_t& temperature, uint8_t& humidity)
 	if (bit < 0) synchronized_return (0);
 	m_data[i] = (m_data[i] << 1) | bit;
       }
-      if (i < DATA_MAX - 1) chksum += m_data[i];
+      if (i < DATA_LAST) chksum += m_data[i];
     }
   }
 
-  // Return values, and validation of the check sum
+  // Return values and validation of the check sum
   temperature = m_data[2];
   humidity = m_data[0];
-  return (chksum == m_data[DATA_MAX - 1]);
+  return (chksum == m_data[DATA_LAST]);
 }
 

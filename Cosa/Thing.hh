@@ -21,8 +21,12 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa class hiearchy root object; Thing. Basic event
- * handler.
+ * The Cosa class hierarchy root object; Thing. Supports double linked
+ * circulic lists and basic event handler (virtual method). 
+ * 
+ * @section See Also
+ * Things.hh for collection of Things, and Event.hh for details on
+ * event types and parameter passing.  
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -35,10 +39,16 @@
 class Thing {
 
 protected:
+  /**
+   * Double linked list pointers. 
+   */
   Thing* m_succ;
   Thing* m_pred;
 
 public:
+  /**
+   * Construct this thing and initiate to self reference.
+   */
   Thing() : 
     m_succ(this),
     m_pred(this)
@@ -46,7 +56,7 @@ public:
   
   /**
    * Return successor in sequence.
-   * @return next thing.
+   * @return successor thing.
    */
   Thing* get_succ() 
   {
@@ -55,7 +65,7 @@ public:
 
   /**
    * Return predecessor in sequence.
-   * @return previous thing.
+   * @return predecessor thing.
    */
   Thing* get_pred() 
   {
@@ -63,40 +73,25 @@ public:
   }
 
   /**
-   * Attach given thing as predecessor.
-   * @param[in] it thing to add.
+   * Attach given thing as predecessor. Will check and detach
+   * if already attached.
+   * @param[in] it thing to attach.
    */
-  void attach(Thing* it)
-  {
-    synchronized {
-      it->m_succ = this;
-      it->m_pred = this->m_pred;
-      this->m_pred->m_succ = it;
-      this->m_pred = it;
-    }
-  }
+  void attach(Thing* it);
 
   /**
-   * Detach this thing from any things.
+   * Detach this thing from any-thing. Unlink from any collection.
    */
-  void detach()
-  {
-    synchronized {
-      m_succ->m_pred = m_pred;
-      m_pred->m_succ = m_succ;
-      m_succ = this;
-      m_pred = this;
-    }
-  }
+  void detach();
 
   /**
-   * Event handler.
+   * Default null event handler. Should be redefined by sub-classes.
+   * Called by Event::dispatch(). See Event.hh for details on event
+   * types and value passing.
    * @param[in] type the event type.
    * @param[in] value the event value.
    */
-  virtual void on_event(uint8_t type, uint16_t value)
-  {
-  }
+  virtual void on_event(uint8_t type, uint16_t value);
 };
 
 #endif

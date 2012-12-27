@@ -22,6 +22,15 @@
  *
  * @section Description
  * The Cosa Ciao data stream handler. Please see CIAO.txt for details.
+ * Define CIAO_NAMES for descriptor name strings.
+ *
+ * @section Limitations
+ * The Ciao class handles only output. The data types 16, 64 and 80-bit
+ * floating point are not supported.
+ *
+ * @section See Also
+ * Requires an IOSteam::Device. This is used in binary/8-bit character
+ * mode. See also Cosa/Fai.hh for details on board state reporting.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -34,11 +43,20 @@ static const uint8_t MAJOR = 1;
 static const uint8_t MINOR = 0;
 
 // Ciao header descriptor 
-static const char magic_name[] PROGMEM = "magic";
-static const char major_name[] PROGMEM = "major";
-static const char minor_name[] PROGMEM = "minor";
+#if defined(CIAO_NAMES)
+static const char header_name[] PROGMEM = "Ciao::header_t";
+static const char magic_name[]  PROGMEM = "magic";
+static const char major_name[]  PROGMEM = "major";
+static const char minor_name[]  PROGMEM = "minor";
 static const char endian_name[] PROGMEM = "endian";
-static const Ciao::Descriptor::member_t members[] PROGMEM = {
+#else
+#define header_name 0
+#define magic_name  0
+#define major_name  0
+#define minor_name  0
+#define endian_name 0
+#endif
+static const Ciao::Descriptor::member_t header_members[] PROGMEM = {
   {
     Ciao::UINT8_TYPE,
     0,
@@ -64,12 +82,11 @@ static const Ciao::Descriptor::member_t members[] PROGMEM = {
     0
   }
 };
-static const char name[] PROGMEM = "Ciao::header_t";
 const Ciao::Descriptor::user_t Ciao::Descriptor::header_t PROGMEM = {
   Ciao::Descriptor::HEADER_ID,
-  name,
-  members,
-  membersof(members)
+  header_name,
+  header_members,
+  membersof(header_members)
 };  
 
 void 
@@ -232,12 +249,12 @@ Ciao::write(uint8_t type, uint16_t count)
     count |= type;
   }
 
-  // Tag byte contains marker. Succeeding byte counter[8..255]
+  // Else tag byte contains marker. Succeeding byte counter[8..255]
   else if (count < 256) {
     m_dev->putchar(type | COUNT8_ATTR);
   }
   
-  // Tag byte contains marker. Succeeding two bytes counter[255..64K]
+  // Else tag byte contains marker. Succeeding two bytes counter[256..64K]
   else {
     m_dev->putchar(type | COUNT16_ATTR);
     m_dev->putchar(count >> 8);
@@ -278,12 +295,7 @@ Ciao::write(const Descriptor::user_t* desc)
   }
 	 
   // Write descriptor end tag
-  if (d.id < 256) {
-    m_dev->putchar(USER8_DESC_END);
-  }
-  else {
-    m_dev->putchar(USER16_DESC_END);
-  }
+  m_dev->putchar(d.id < 256 ? USER8_DESC_END : USER16_DESC_END);
 }
 
 typedef float float32_t;
@@ -344,6 +356,7 @@ Ciao::write(const Descriptor::user_t* desc, void* buf, uint16_t count)
       } 
       else {
 	size_t s = pgm_read_byte(&sizeoftype[m.type >> 4]) * m.count;
+	if (s == 0) return;
 	m_dev->write(dp, s);
 	dp += s;
       }

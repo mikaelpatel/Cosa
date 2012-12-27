@@ -23,6 +23,9 @@
  * @section Description
  * Simple two digit BCD convertion functions.
  *
+ * @section Limitations
+ * Handles only two digit BCD numbers (0..99).
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

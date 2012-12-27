@@ -22,6 +22,15 @@
  *
  * @section Description
  * The Cosa Ciao data stream handler. Please see CIAO.txt for details.
+ * Define CIAO_NAMES for descriptor name strings.
+ *
+ * @section Limitations
+ * The Ciao class handles only output. The data types 16, 64 and 80-bit
+ * floating point are not supported.
+ *
+ * @section See Also
+ * Requires an IOSteam::Device. This is used in binary/8-bit character
+ * mode. See also Cosa/Fai.hh for details on board state reporting.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -30,7 +39,6 @@
 #define __COSA_CIAO_HH__
 
 #include "Cosa/IOStream.hh"
-#include "Cosa/Event.hh"
 
 class Ciao {
   
@@ -80,7 +88,8 @@ public:
   class Descriptor {
   public:
     /**
-     * Predefined data type identity.
+     * Predefined data type identity; System data type tags are 0..255.
+     * User data type tags are 256..64K.
      */
     enum {
       HEADER_ID = 0x00,

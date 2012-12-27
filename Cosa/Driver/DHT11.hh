@@ -23,6 +23,14 @@
  * @section Description
  * DHT11 Humidity & Temperature Sensor device driver.
  *
+ * @section Circuit
+ * Connect DHT11 to pin, VCC and ground. A pullup resistor from
+ * the pin to VCC should be used. Most DHT11 modules have this.
+ *
+ * @section Limitations
+ * The driver will turn off interrupt handling during data read from
+ * the device. 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,11 +42,16 @@
 
 class DHT11 : private IOPin {
 
-private:
+public:
   /**
-   * Data buffer and latest pin level
+   * Size of data buffer.
    */
   static const uint8_t DATA_MAX = 5;
+
+private:
+  /**
+   * Data buffer and latest pin level.
+   */
   uint8_t m_data[DATA_MAX];
   uint8_t m_latest;
 
@@ -59,13 +72,22 @@ public:
   DHT11(uint8_t pin) : IOPin(pin) {}
 
   /**
-   * Read temperature and humidity from the device. Return true(1) if
-   * successful otherwise false(0). 
+   * Read temperature and humidity from the device. Return true(1) and
+   * values if successful otherwise false(0).  
    * @param[out] temperature reading.
    * @param[out] humidity reading.
    * @return bool.
    */
   bool read(uint8_t& temperature, uint8_t& humidity);
+
+  /**
+   * Return reference to data from latest read.
+   * @return data pointer.
+   */
+  uint8_t* get_data()
+  {
+    return (m_data);
+  }
 };
 
 #endif

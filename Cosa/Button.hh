@@ -21,8 +21,21 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Debounded Button abstraction. Sampled input pin using the
- * Watchdog timeout event(64 ms).
+ * Debounded Button; Sampled input pin with pullup resistor. Uses a
+ * watchdog timeout event (64 ms) for sampling and on change calls an
+ * event action. Subclass Button and implement the virtual on_change()
+ * method. Use the subclass for any state needed for the action
+ * function.  
+ *
+ * @section Circuit
+ * Connect button/switch from pin to ground. 
+ *
+ * @section Limitations
+ * Button toggle faster than sample period may be missed.
+ * 
+ * @section See Also
+ * The Button event handler requires the usage of an event
+ * dispatch. See Event.hh. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -33,9 +46,12 @@
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
 
-class Button : public InputPin {
+class Button : private InputPin {
 
 public:
+  /**
+   * Button change detection modes.
+   */
   enum Mode {
     ON_FALLING_MODE = 0,
     ON_RISING_MODE = 1,
@@ -43,32 +59,35 @@ public:
   };
 
 private:
+  // Sample period, current state and change detection mode
   static const uint16_t SAMPLE_MS = 64;
   uint8_t m_state;
   uint8_t m_mode;
 
+  /**
+   * Button event handler. Called by event dispatch. Samples the
+   * attached pin and calls pin change handler, on_change(). 
+   * @param[in] type the type of event (timeout).
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value);
+
 public:
   /**
-   * Construct a button with the given mode. 
+   * Construct a button connected to the given pin and with 
+   * the given change detect mode. 
    * @param[in] pin number.
    * @param[in] mode change event mode.
    */
   Button(uint8_t pin, Mode mode = ON_CHANGE_MODE);
 
   /**
-   * Button event handler. Called by watchdog on timeout. Samples the
-   * attached pin and calls pin event handler on change.
-   * @param[in] it the target object (button).
-   * @param[in] type the type of event (timeout).
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value);
-
-  /**
-   * The event handler; button 
+   * The button change event handler. Called when a change
+   * corresponding to the mode has been detected. Event types are;
+   * Event::FALLING_TYPE, Event::RISING_TYPE, and Event::CHANGE_TYPE. 
    * @param[in] type event type.
    */
-  virtual void on_change(uint8_t type) {}
+  virtual void on_change(uint8_t type);
 };
 
 #endif

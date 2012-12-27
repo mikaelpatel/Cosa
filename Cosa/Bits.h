@@ -42,9 +42,5 @@
 #define bit_toggle(p,b) ((p) ^= bit_mask(b))
 #define bit_write(c,p,b) (c ? bit_set(p,b) : bit_clear(p,b)) 
 
-#define bit_field_mask(w) (~(-1 << (w)))
-#define bit_field_get(p,b,w) (((p) >> (b)) & bit_field_mask(w))
-#define bit_field_set(p,b,w,d) (p) = ((p) & ~(bit_field_mask(w) << (b))) | ((d) << (b))
-
 #endif
 
