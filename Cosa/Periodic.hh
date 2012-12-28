@@ -22,7 +22,17 @@
  *
  * @section Description
  * Periodic function handler. Syntactic sugar for watchdog timeout
- * event handlers.
+ * event handlers. Subclass and implement the virtual method run()
+ * as the function to be executed periodically.
+ *
+ * @section Limitations
+ * Avoid setting period to the same value in the run method as this
+ * will force the function to be executed twice in the same time frame. 
+ *
+ * @section See Also
+ * For details on time period handling see Watchdog.hh. This execution
+ * pattern is also available in the FSM (Finite State Machine) class.
+ * See FSM.hh.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -42,7 +52,7 @@ public:
    */
   Periodic(uint16_t ms) : Thing()
   {
-    Watchdog::attach(this, ms);
+    set_period(ms);
   }
 
   /**
@@ -51,7 +61,6 @@ public:
    */
   void set_period(uint16_t ms)
   {
-    detach();
     Watchdog::attach(this, ms);
   }
 

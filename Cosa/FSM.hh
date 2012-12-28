@@ -165,7 +165,6 @@ public:
   void set_timer(uint16_t timeout)
   {
     m_period = TIMEOUT_REQUEST;
-    detach();
     Watchdog::attach(this, timeout);
   }
 
