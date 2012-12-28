@@ -28,9 +28,16 @@
 
 #include "Cosa/Fai.hh"
 
+#if defined(NREFLECTION)
+#define descr_name 0
+#define pin_name 0
+#define mode_name 0
+#else
+static const char descr_name[] PROGMEM = "Ciao::Fai::set_mode_t";
 static const char pin_name[] PROGMEM = "pin";
 static const char mode_name[] PROGMEM = "mode";
-static const Ciao::Descriptor::member_t members[] PROGMEM = {
+#endif
+static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
   {
     Ciao::UINT8_TYPE,
     1,
@@ -44,11 +51,10 @@ static const Ciao::Descriptor::member_t members[] PROGMEM = {
     0
   }
 };
-static const char name[] PROGMEM = "Ciao::Fai::set_mode_t";
 const Ciao::Descriptor::user_t Fai::Descriptor::set_mode_t PROGMEM = {
   Fai::Descriptor::SET_MODE_ID,
-  name,
-  members,
-  membersof(members)
+  descr_name,
+  descr_members,
+  membersof(descr_members)
 };
 

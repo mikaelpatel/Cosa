@@ -28,10 +28,18 @@
 
 #include "Cosa/Fai.hh"
 
+#if defined(NREFLECTION)
+#define descr_name 0
+#define type_name 0
+#define target_name 0
+#define value_name 0
+#else
+static const char descr_name[] PROGMEM = "Cosa::Event";
 static const char type_name[] PROGMEM = "type";
 static const char target_name[] PROGMEM = "target";
 static const char value_name[] PROGMEM = "value";
-static const Ciao::Descriptor::member_t members[] PROGMEM = {
+#endif
+static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
   {
     Ciao::UINT8_TYPE,
     1,
@@ -51,11 +59,10 @@ static const Ciao::Descriptor::member_t members[] PROGMEM = {
     0
   }
 };
-static const char name[] PROGMEM = "Cosa::Event";
 const Ciao::Descriptor::user_t Fai::Descriptor::event_t PROGMEM = {
   Fai::Descriptor::EVENT_ID,
-  name,
-  members,
-  membersof(members)
+  descr_name,
+  descr_members,
+  membersof(descr_members)
 };
 

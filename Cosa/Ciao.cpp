@@ -43,20 +43,20 @@ static const uint8_t MAJOR = 1;
 static const uint8_t MINOR = 0;
 
 // Ciao header descriptor 
-#if defined(CIAO_NAMES)
-static const char header_name[] PROGMEM = "Ciao::header_t";
+#if defined(NREFECTION)
+#define descr_name 0
+#define magic_name 0
+#define major_name 0
+#define minor_name 0
+#define endian_name 0
+#else
+static const char descr_name[] PROGMEM = "Ciao::header_t";
 static const char magic_name[]  PROGMEM = "magic";
 static const char major_name[]  PROGMEM = "major";
 static const char minor_name[]  PROGMEM = "minor";
 static const char endian_name[] PROGMEM = "endian";
-#else
-#define header_name 0
-#define magic_name  0
-#define major_name  0
-#define minor_name  0
-#define endian_name 0
 #endif
-static const Ciao::Descriptor::member_t header_members[] PROGMEM = {
+static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
   {
     Ciao::UINT8_TYPE,
     0,
@@ -84,9 +84,9 @@ static const Ciao::Descriptor::member_t header_members[] PROGMEM = {
 };
 const Ciao::Descriptor::user_t Ciao::Descriptor::header_t PROGMEM = {
   Ciao::Descriptor::HEADER_ID,
-  header_name,
-  header_members,
-  membersof(header_members)
+  descr_name,
+  descr_members,
+  membersof(descr_members)
 };  
 
 void 

@@ -28,8 +28,14 @@
 
 #include "Cosa/Fai.hh"
 
+#if defined(NREFLECTION)
+#define descr_name 0
+#define values_name 0
+#else
+static const char descr_name[] PROGMEM = "Cosa::Fai::digital_pins_t";
 static const char values_name[] PROGMEM = "values";
-static const Ciao::Descriptor::member_t members[] PROGMEM = {
+#endif
+static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
   {
     Ciao::UINT32_TYPE,
     1,
@@ -37,11 +43,10 @@ static const Ciao::Descriptor::member_t members[] PROGMEM = {
     0
   }
 };
-static const char name[] PROGMEM = "Cosa::Fai::digital_pins_t";
 const Ciao::Descriptor::user_t Fai::Descriptor::digital_pins_t PROGMEM = {
   Fai::Descriptor::DIGITAL_PINS_ID,
-  name,
-  members,
-  membersof(members)
+  descr_name,
+  descr_members,
+  membersof(descr_members)
 };
 
