@@ -59,7 +59,7 @@ public:
      * Interrupt service on data receive in slave mode.
      * @param[in] data received data.
      */
-    virtual void on_receive(uint8_t data);
+    virtual void on_interrupt(uint8_t data);
   };
 
   enum Clock {

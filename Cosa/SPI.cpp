@@ -116,7 +116,7 @@ SPI::end()
 }
 
 void 
-SPI::Device::on_receive(uint8_t data) 
+SPI::Device::on_interrupt(uint8_t data) 
 { 
   // Check for no buffer
   if (spi.m_buffer == 0) {
@@ -137,6 +137,6 @@ SPI::Device::on_receive(uint8_t data)
 ISR(SPI_STC_vect)
 {
   SPI::Device* device = spi.get_device();
-  if (device != 0) device->on_receive(SPDR);
+  if (device != 0) device->on_interrupt(SPDR);
 }
 
