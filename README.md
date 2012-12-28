@@ -85,6 +85,7 @@ Naming
 * "Che cosa"; pronoun; what. 
 * "Ciao"; interjection hello!, goodbye!. 
 * "Cosa fai"; what are you doing?
+* "Caso"; in the event of.
 
 Note
 ----
