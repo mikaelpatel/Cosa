@@ -104,6 +104,95 @@ public:
     static Device null;
   };
 
+  class Filter : public Device {
+  protected:
+    Device* m_dev;
+  public:
+    Filter(Device* dev) : m_dev(dev) {}
+
+    /**
+     * Write character to device.
+     * @param[in] c character to write.
+     * @return character written or EOF(-1).
+     */
+    virtual int putchar(char c) 
+    { 
+      return (m_dev->putchar(c)); 
+    }
+
+    /**
+     * Write null terminated string to device.
+     * @param[in] s string to write.
+     * @return zero(0) or negative error code.
+     */
+    virtual int puts(char* s)
+    {
+      return (m_dev->puts(s));
+    }
+
+    /**
+     * Write null terminated string from program memory to device.
+     * @param[in] s string in program memory to write.
+     * @return zero(0) or negative error code.
+     */
+    virtual int puts_P(const char* s)
+    {
+      return (m_dev->puts_P(s));
+    }
+
+    /**
+     * Write data from buffer with given size to device.
+     * @param[in] buf buffer to write.
+     * @param[in] size number of bytes to write.
+     * @return number of bytes written or EOF(-1).
+     */
+    virtual int write(void* buf, size_t size)
+    {
+      return (m_dev->write(buf, size));
+    }
+
+    /**
+     * Read character from device.
+     * @return character or EOF(-1).
+     */
+    virtual int getchar()
+    {
+      return (m_dev->getchar());
+    }
+
+    /**
+     * Read string terminated by new-line or until size into given
+     * string buffer.
+     * @param[in] s string buffer to read into.
+     * @param[in] count max number of bytes to read.
+     * @return number of characters read or EOF(-1).
+     */
+    virtual char* gets(char *s, size_t count)
+    {
+      return (m_dev->gets(s, count));
+    }
+
+    /**
+     * Read data from buffer with given size from device.
+     * @param[in] buf buffer to read into.
+     * @param[in] size number of bytes to read.
+     * @return number of bytes read or EOF(-1).
+     */
+    virtual int read(void* buf, size_t size)
+    {
+      return (m_dev->read(buf, size));
+    }
+
+    /**
+     * Flush internal device buffers. Wait for device to become idle.
+     * @return zero(0) or negative error code.
+     */
+    virtual int flush()
+    {
+      return (m_dev->flush());
+    }
+  };
+
   /**
    * Construct stream with given device.
    * @param[in] dev stream device.
