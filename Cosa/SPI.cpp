@@ -116,26 +116,27 @@ SPI::end()
 }
 
 void 
-SPI::on_receive(uint8_t data) 
+SPI::Device::on_receive(uint8_t data) 
 { 
   // Check for no buffer
-  if (m_buffer == 0) {
-    m_put = 1;
-    Event::push(Event::RECEIVE_COMPLETED_TYPE, this, m_put);
-    m_put = 0;
+  if (spi.m_buffer == 0) {
+    spi.m_put = 1;
+    Event::push(Event::RECEIVE_COMPLETED_TYPE, this, spi.m_put);
+    spi.m_put = 0;
     return;
   }
 
   // Append to buffer and call user interrupt handler on full
-  m_buffer[m_put++] = data;
-  if (m_put == m_max) {
-    Event::push(Event::RECEIVE_COMPLETED_TYPE, this, m_put);
-    m_put = 0;
+  spi.m_buffer[spi.m_put++] = data;
+  if (spi.m_put == spi.m_max) {
+    Event::push(Event::RECEIVE_COMPLETED_TYPE, this, spi.m_put);
+    spi.m_put = 0;
   }
 }
 
 ISR(SPI_STC_vect)
 {
-  spi.on_receive(SPDR);
+  SPI::Device* device = spi.get_device();
+  if (device != 0) device->on_receive(SPDR);
 }
 

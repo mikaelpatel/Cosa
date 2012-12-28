@@ -22,7 +22,7 @@
  *
  * @section Description
  * Finite State Machine support class. States are represented as an
- * Event handler. Support timeout events and period timed state 
+ * Event handler. Supports timeout events and period timed state 
  * machines.
  *
  * This file is part of the Arduino Che Cosa project.
@@ -139,7 +139,7 @@ public:
   }
   
   /**
-   * Start the state machine with a BEGIN_TYPE event.
+   * Start the state machine with an Event::BEGIN_TYPE.
    */
   bool begin()
   {
@@ -150,7 +150,7 @@ public:
   }
   
   /**
-   * End the state machine with a FSM_END_TYPE event.
+   * End the state machine with an Event::END_TYPE.
    */
   void end()
   {
@@ -160,12 +160,12 @@ public:
   
   /**
    * Set timer for time out events and possible state transitions.
-   * @param[in] timeout period in ms.
+   * @param[in] ms timeout period.
    */
-  void set_timer(uint16_t timeout)
+  void set_timer(uint16_t ms)
   {
     m_period = TIMEOUT_REQUEST;
-    Watchdog::attach(this, timeout);
+    Watchdog::attach(this, ms);
   }
 
   /**

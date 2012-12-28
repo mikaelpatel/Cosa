@@ -21,14 +21,13 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa Ciao data stream of Arduino state (Cosa fai).
+ * The Cosa Ciao data stream of Arduino status and commands (Cosa fai).
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Fai.hh"
 
-// Ciao configuration
 static char MAGIC[] = "Cosa::Fai";
 static const uint8_t MAJOR = 1;
 static const uint8_t MINOR = 0;

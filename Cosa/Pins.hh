@@ -33,12 +33,12 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
-#include "Cosa/Thing.hh"
+#include "Cosa/Caso.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
 
-class Pin : public Thing {
+class Pin : public Caso {
 
 protected:
   volatile uint8_t* const m_sfr;
@@ -108,7 +108,6 @@ public:
    * @param[in] pin number.
    */
   Pin(uint8_t pin) : 
-    Thing(), 
     m_sfr(SFR(pin)), 
     m_mask(MASK(pin)), 
     m_pin(pin) 

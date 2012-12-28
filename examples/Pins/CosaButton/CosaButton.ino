@@ -66,11 +66,14 @@ void setup()
   // Start trace output stream
   trace.begin(9600, PSTR("CosaButton: started"));
 
-  // Check amount of free memory
+  // Check amount of free memory and size of instances
   TRACE(free_memory());
-
-  // Check size of instances
+  TRACE(sizeof(Caso));
+  TRACE(sizeof(OutputPin));
+  TRACE(sizeof(InputPin));
+  TRACE(sizeof(Thing));
   TRACE(sizeof(Button));
+  TRACE(sizeof(OnOffButton));
 
   // Start the watchdog ticks and push time events
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);

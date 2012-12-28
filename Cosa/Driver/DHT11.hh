@@ -21,15 +21,18 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * DHT11 Humidity & Temperature Sensor device driver.
+ * DHT11 Humidity & Temperature Sensor device driver. Subclass
+ * and implement the event handler, on_event(), to allow periodic
+ * read of device (attach to watchdog timeout queue).
  *
  * @section Circuit
  * Connect DHT11 to pin, VCC and ground. A pullup resistor from
- * the pin to VCC should be used. Most DHT11 modules have this.
+ * the pin to VCC should be used. Most DHT11 modules have a built-in 
+ * pullup resistor.
  *
  * @section Limitations
- * The driver will turn off interrupt handling during data read from
- * the device. 
+ * The driver will turn off interrupt handling during data read 
+ * from the device. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -39,8 +42,9 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
+#include "Cosa/Thing.hh"
 
-class DHT11 : private IOPin {
+class DHT11 : private Thing {
 
 public:
   /**
@@ -50,8 +54,9 @@ public:
 
 private:
   /**
-   * Data buffer and latest pin level.
+   * Input/Output pin, Data buffer and latest pin level.
    */
+  IOPin m_pin;
   uint8_t m_data[DATA_MAX];
   uint8_t m_latest;
 
@@ -69,7 +74,7 @@ public:
   /**
    * Construct connection to a DHT11 device on given in/output-pin.
    */
-  DHT11(uint8_t pin) : IOPin(pin) {}
+  DHT11(uint8_t pin) : m_pin(pin) {}
 
   /**
    * Read temperature and humidity from the device. Return true(1) and

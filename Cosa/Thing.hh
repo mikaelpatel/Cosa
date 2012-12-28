@@ -21,12 +21,10 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa class hierarchy root object; Thing. Supports double linked
- * circulic lists and basic event handler (virtual method). 
+ * The Cosa class double linked circulic list item; Thing.
  * 
  * @section See Also
- * Things.hh for collection of Things, and Event.hh for details on
- * event types and parameter passing.  
+ * Things.hh for collection of Things.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -35,8 +33,9 @@
 #define __COSA_THING_HH__
 
 #include "Cosa/Types.h"
+#include "Cosa/Caso.hh"
 
-class Thing {
+class Thing : public Caso {
 
 protected:
   /**
@@ -83,15 +82,6 @@ public:
    * Detach this thing from any-thing. Unlink from any collection.
    */
   void detach();
-
-  /**
-   * Default null event handler. Should be redefined by sub-classes.
-   * Called by Event::dispatch(). See Event.hh for details on event
-   * types and value passing.
-   * @param[in] type the event type.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value);
 };
 
 #endif

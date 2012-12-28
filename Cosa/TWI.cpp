@@ -39,7 +39,7 @@
 TWI twi;
 
 bool 
-TWI::begin(Thing* target, uint8_t addr)
+TWI::begin(Caso* target, uint8_t addr)
 {
   m_target = target;
   m_addr = addr;

@@ -29,7 +29,6 @@
 #include "Cosa/Event.hh"
 
 static Event event[Event::QUEUE_MAX];
-
 Queue Event::queue(Event::QUEUE_MAX, sizeof(Event), event);
 
 void 

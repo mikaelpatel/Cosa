@@ -29,6 +29,7 @@
 #include "Cosa/Ciao.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/Memory.h"
 
 #include <ctype.h>
 #include <math.h>
@@ -64,6 +65,11 @@ void setup()
 {
   // Start trace coutput stream
   trace.begin(9600, PSTR("CosaCiaoNative: started"));
+
+  // Check amount of free memory and size of instances
+  TRACE(free_memory());
+  TRACE(sizeof(Ciao));
+  TRACE(sizeof(TraceDevice));
 
   // Setup and start the data output stream on the trace device
   cout.set(&traceDevice);

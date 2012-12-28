@@ -26,10 +26,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Driver/DHT11.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Driver/DHT11.hh"
+#include "Cosa/Memory.h"
 
 // Connect devices to pins
 DHT11 indoors(7);
@@ -40,6 +41,11 @@ void setup()
 {
   // Start trace output stream
   trace.begin(9600, PSTR("CosaDHT11: started"));
+
+  // Check amount of free memory and size of instances
+  TRACE(free_memory());
+  TRACE(sizeof(OutputPin));
+  TRACE(sizeof(DHT11));
 
   // Start the watchdog ticks and push time events
   Watchdog::begin(16);

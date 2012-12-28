@@ -21,11 +21,14 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * DHT11 Humidity & Temperature Sensor device driver.
+ * DHT11 Humidity & Temperature Sensor device driver. Subclass
+ * and implement the event handler, on_event(), to allow periodic
+ * read of device (attach to watchdog timeout queue).
  *
  * @section Circuit
  * Connect DHT11 to pin, VCC and ground. A pullup resistor from
- * the pin to VCC should be used. Most DHT11 modules have this.
+ * the pin to VCC should be used. Most DHT11 modules have a built-in 
+ * pullup resistor.
  *
  * @section Limitations
  * The driver will turn off interrupt handling during data read from
@@ -49,7 +52,7 @@ DHT11::read_bit(uint8_t changes)
 {
   uint8_t counter = 0;
   while (changes--) {
-    while (is_set() == m_latest) {
+    while (m_pin.is_set() == m_latest) {
       counter++;
       DELAY(1);
       if (counter == COUNT_MAX) return (-1);
@@ -67,12 +70,12 @@ DHT11::read(uint8_t& temperature, uint8_t& humidity)
   humidity = 100;
 
   // Send start signal to the device
-  set_mode(OUTPUT_MODE);
-  clear();
+  m_pin.set_mode(IOPin::OUTPUT_MODE);
+  m_pin.clear();
   Watchdog::delay(256);
-  set();
+  m_pin.set();
   DELAY(40);
-  set_mode(INPUT_MODE);
+  m_pin.set_mode(IOPin::INPUT_MODE);
   
   // Receive bits from the device and calculate check sum
   uint8_t chksum = 0;

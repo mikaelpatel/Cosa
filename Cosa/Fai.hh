@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa Ciao data stream of Arduino state (Cosa fai).
+ * The Cosa Ciao data stream of Arduino status and commands (Cosa fai).
  *
  * This file is part of the Arduino Che Cosa project.
  */

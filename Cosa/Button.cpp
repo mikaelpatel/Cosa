@@ -44,12 +44,12 @@
 #include "Cosa/Watchdog.hh"
 
 Button::Button(uint8_t pin, Mode mode) : 
-  InputPin(pin, InputPin::PULLUP_MODE),
+  m_pin(pin, InputPin::PULLUP_MODE),
   m_state(0),
   m_mode(mode)
 {
   // Set initial state and attach to watchdog timeout queue
-  m_state = is_set();
+  m_state = m_pin.is_set();
   Watchdog::attach(this, SAMPLE_MS);
 }
 
@@ -61,7 +61,7 @@ Button::on_event(uint8_t type, uint16_t value)
   
   // Update the button state
   uint8_t old_state = m_state;
-  m_state = is_set();
+  m_state = m_pin.is_set();
   uint8_t new_state = m_state;
 
   // If changed according to mode call the pin change handler

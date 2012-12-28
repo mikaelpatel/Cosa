@@ -43,7 +43,7 @@ struct Point {
 
 // Ciao data type descriptor in program memory for Point
 const uint16_t Point_ID = 0x1042;
-const char Point_name[] PROGMEM = "Point";
+const char Point_name[] PROGMEM = "::Point";
 const char Point_x_name[] PROGMEM = "x";
 const char Point_y_name[] PROGMEM = "y";
 const Ciao::Descriptor::member_t Point_members[] PROGMEM = {
@@ -101,6 +101,9 @@ void setup()
 
   INFO("Write the header to the trace device", 0);
   cout.begin();
+
+  INFO("Stream Ciao header descriptor", 0);
+  cout.write(&Ciao::Descriptor::header_t);
 
   INFO("Stream Point type descriptor", 0);
   cout.write(&Point_desc);

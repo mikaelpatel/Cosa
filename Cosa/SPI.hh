@@ -35,32 +35,16 @@
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.hh"
-#include "Cosa/Thing.hh"
+#include "Cosa/Caso.hh"
 
-class SPI : public Thing {
-
-private:
-  /**
-   * Pins used for SPI interface (in port B, digital pins 10-13).
-   */
-  enum Pin {
-    SS = 2,
-    MOSI = 3,
-    MISO = 4,
-    SCK = 5
-  };
-  uint8_t m_cmd;
-  uint8_t* m_buffer;
-  uint8_t m_max;
-  uint8_t m_put;
-  uint8_t m_data;
+class SPI {
 
 public:
   /**
    * Device drivers are friends and may have callback/
    * event handler for completion events.
    */
-  class Driver : public Thing {
+  class Driver : public Caso {
     friend class SPI;
   };
 
@@ -68,8 +52,14 @@ public:
    * Slave devices are friends and may have callback/
    * event handler for request events.
    */
-  class Device : public Thing {
+  class Device : public Caso {
     friend class SPI;
+  public:
+    /**
+     * Interrupt service on data receive in slave mode.
+     * @param[in] data received data.
+     */
+    virtual void on_receive(uint8_t data);
   };
 
   enum Clock {
@@ -90,6 +80,24 @@ public:
     LSB_FIRST = 1
   };
 
+private:
+  /**
+   * Pins used for SPI interface (in port B, digital pins 10-13).
+   */
+  enum Pin {
+    SS = 2,
+    MOSI = 3,
+    MISO = 4,
+    SCK = 5
+  };
+  uint8_t m_cmd;
+  uint8_t* m_buffer;
+  uint8_t m_max;
+  uint8_t m_put;
+  uint8_t m_data;
+  Device* m_dev;
+
+public:
   /**
    * Construct serial peripheral interface for master.
    */
@@ -97,7 +105,8 @@ public:
     m_buffer(0),
     m_max(0),
     m_put(0),
-    m_data(0)
+    m_data(0),
+    m_dev(0)
   {
   }
   
@@ -107,11 +116,12 @@ public:
    * @param[in] buffer with data to received data.
    * @param[in] max size of buffer.
    */
-  SPI(void* buffer, uint8_t max) : 
+  SPI(Device* dev, void* buffer, uint8_t max) : 
     m_buffer((uint8_t*) buffer),
     m_max(max),
     m_put(0),
-    m_data(0)
+    m_data(0),
+    m_dev(dev)
   {
     bit_clear(DDRB, SS);
     if (buffer == 0) {
@@ -147,6 +157,15 @@ public:
   uint8_t get_length()
   { 
     return (m_put);
+  }
+
+  /**
+   * Get slave device handler.
+   * @return device reference.
+   */
+  Device* get_device()
+  { 
+    return (m_dev);
   }
 
   /**
@@ -249,12 +268,6 @@ public:
    * @return true(1) if successful otherwise false(0)
    */
   bool end();
-
-  /**
-   * Interrupt service on data receive in slave mode.
-   * @param[in] data received data.
-   */
-  virtual void on_receive(uint8_t data);
 };
 
 /**

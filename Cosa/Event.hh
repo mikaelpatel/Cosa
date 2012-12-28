@@ -30,10 +30,10 @@
 #define __COSA_EVENT_HH__
 
 #include "Cosa/Types.h"
+#include "Cosa/Caso.hh"
 #include "Cosa/Queue.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/Thing.hh"
 
 class Event {
 
@@ -88,7 +88,7 @@ public:
 
 private:
   uint8_t m_type;
-  Thing* m_target;
+  Caso* m_target;
   uint16_t m_value;
 
 public:
@@ -99,7 +99,7 @@ public:
    * @param[in] value event value.
    * @param[in] env event environment.
    */
-  Event(int8_t type = NULL_TYPE, Thing* target = 0, uint16_t value = 0) :
+  Event(int8_t type = NULL_TYPE, Caso* target = 0, uint16_t value = 0) :
     m_type(type),
     m_target(target),
     m_value(value)
@@ -118,7 +118,7 @@ public:
    * Return event target.
    * @return pointer.
    */
-  Thing* get_target() 
+  Caso* get_target() 
   { 
     return (m_target); 
   } 
@@ -156,7 +156,7 @@ public:
    * @param[in] target event target.
    * @param[in] value event value.
    */
-  static void push(uint8_t type, Thing* target, uint16_t value = 0)
+  static void push(uint8_t type, Caso* target, uint16_t value = 0)
   {
     Event event(type, target, value);
     queue.enqueue(&event);
@@ -169,7 +169,7 @@ public:
    * @param[in] target event target.
    * @param[in] env event environment pointer.
    */
-  static void push(uint8_t type, Thing* target, void* env)
+  static void push(uint8_t type, Caso* target, void* env)
   {
     push(type, target, (uint16_t) env);
   }

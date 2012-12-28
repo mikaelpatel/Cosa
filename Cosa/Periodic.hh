@@ -50,7 +50,8 @@ public:
    * Construct a periodic function handler. 
    * @param[in] ms period of timeout.
    */
-  Periodic(uint16_t ms) : Thing()
+  Periodic(uint16_t ms) : 
+    Thing()
   {
     set_period(ms);
   }
