@@ -61,7 +61,9 @@ public:
     return (m_succ == this);
   }
 
+private:
   /**
+   * @override
    * Event handler. Default event handler for thing collections. 
    * Will boardcase the event to the collection.
    * @param[in] type the event type.

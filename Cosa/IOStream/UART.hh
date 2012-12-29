@@ -33,6 +33,12 @@
 #include "Cosa/IOStream.hh"
 
 class UART : public IOStream::Device {
+private:
+  static const uint8_t BUFFER_MAX = 64;
+  static const uint8_t BUFFER_MASK = BUFFER_MAX - 1;
+  volatile char m_buffer[BUFFER_MAX];
+  volatile uint8_t m_head;
+  volatile uint8_t m_tail;
 
 public:
   /* As defined by IOStream::Device. Rest is inherited from null device */
@@ -52,8 +58,15 @@ public:
    */
   bool end();
 
+  /**
+   * UART interupt handler
+   */
+  void on_interrupt();
+
  private:
   static const uint32_t FLUSH_CYCLES_MAX = 1000000;
 };
+
+extern UART* uart;
 
 #endif

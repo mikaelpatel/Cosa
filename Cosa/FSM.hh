@@ -55,6 +55,7 @@ private:
   uint16_t m_param;
 
   /**
+   * @override
    * The first level event handler. Filters timeout events and
    * adapt to state handler function prototype.
    * @param[in] it the target object.

@@ -29,13 +29,7 @@
 #include "Cosa/IOStream/UART.hh"
 #include "Cosa/Bits.h"
 
-// FIX: This assumes singleton
-
-static const uint8_t BUFFER_MAX = 64;
-static const uint8_t BUFFER_MASK = BUFFER_MAX - 1;
-static volatile char buffer[BUFFER_MAX];
-static volatile uint8_t head;
-static volatile uint8_t tail;
+UART* uart = 0;
 
 bool
 UART::begin(uint32_t baudrate)
@@ -43,8 +37,9 @@ UART::begin(uint32_t baudrate)
   uint16_t setting = (F_CPU / (baudrate * 16L)) - 1;
 
   // Set up trace buffer
-  head = 0;
-  tail = 0;
+  uart = this;
+  m_head = 0;
+  m_tail = 0;
   
   // Check if double rate is needed
   if (setting & 0x8000) {
@@ -74,10 +69,10 @@ UART::end()
 int 
 UART::putchar(char c)
 {
-  uint8_t next = (head + 1) & BUFFER_MASK;
-  while (next == tail);
-  buffer[next] = c;
-  head = next;
+  uint8_t next = (m_head + 1) & BUFFER_MASK;
+  while (next == m_tail);
+  m_buffer[next] = c;
+  m_head = next;
   bit_set(UCSR0B, UDRIE0);
   return (c);
 }
@@ -86,18 +81,25 @@ int
 UART::flush()
 {
   uint32_t cycles = FLUSH_CYCLES_MAX;
-  while (head != tail && cycles != 0) cycles--;
+  while (m_head != m_tail && cycles != 0) cycles--;
   return (cycles == 0 ? -1 : 0);
 }
 
-ISR(USART_UDRE_vect)
+void
+UART::on_interrupt()
 {
-  if (head != tail) {
-    uint8_t next = (tail + 1) & BUFFER_MASK;
-    tail = next;
-    UDR0 = buffer[next];
+  if (m_head != m_tail) {
+    uint8_t next = (m_tail + 1) & BUFFER_MASK;
+    m_tail = next;
+    UDR0 = m_buffer[next];
   }
   else {
     bit_clear(UCSR0B, UDRIE0);
   }
+}
+
+ISR(USART_UDRE_vect)
+{
+  if (uart == 0) return;
+  uart->on_interrupt();
 }

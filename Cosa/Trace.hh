@@ -97,7 +97,7 @@ public:
  */
 #define LOG_MASK(prio) (1 << (prio))
 #define LOG_UPTO(prio) (LOG_MASK((prio) + 1) - 1)
-extern int8_t trace_log_mask;
+extern uint8_t trace_log_mask;
 
 #ifndef NDEBUG
 
