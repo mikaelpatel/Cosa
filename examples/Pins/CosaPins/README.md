@@ -1,11 +1,14 @@
 CosaPins
-====
+========
 
-Demonstration of Cosa Pin abstraction. Sketch pin usage is declarative and object-oriented. 
+Demonstration of Cosa Pin abstraction. Sketch pin usage is declarative
+and object-oriented.  
 
 Circuit
+-------
+Connect pin 2 a button/switch with pullup resistor, pin 5 to a LED
+with a resistor (330-1Kohm), pin 7 should also be connected to a
+button/switch, and pin 14 (analog pin 0) should be connected to a
+potentmeter so that the voltage may vary between VCC and ground. 
 
-Pin 2 should be connected to a button/switch with pullup resistor. 
-Pin 7 should also be connected to a button/switch. 
-Pin 14 (Analog 0) should be connected to a potentmeter so that the voltage may vary between Vcc and ground.
 

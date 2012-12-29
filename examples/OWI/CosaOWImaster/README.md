@@ -10,5 +10,9 @@ pullup resistor should be used to the one-wire bus and connected to
 Vcc. The master and slave should have common ground. See also
 CosaOWIslave. 
 
+The Arduino Pin 13 (builtin LED) is on during the status read.
+
+
+
 
 

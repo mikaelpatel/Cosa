@@ -8,9 +8,12 @@ Bench and Screenshot.
 Circuit
 -------
 The Arduino Pin 7 is used as the 1-wire bus. Use a pullup resistor
-(4-5 Kohm) to power (Vcc). Connect Vcc and ground to the Digital
-Thermometer. The example code assumes three devices but this is not
-critical.  
+(4-5 Kohm) to power (VCC). Connect VCC and ground to the Digital
+Thermometer. The example code assumes three devices on the 1-wire bus
+but this is not critical.  
+
+The Arduino Pin 13 (builtin LED) is on during the temperature
+sampling. 
 
 See Bench.jpg for a picture of a typical circuit using three devices,
 a pull-up resistor and an Arduino Nano with an IO shield. 

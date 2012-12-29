@@ -51,7 +51,6 @@ public:
 };
 
 // Use an RGB LED connected to pins(5,6,7)
-LED builtinPin(13);
 LED redLedPin(5);
 LED greenLedPin(6, 1);
 LED blueLedPin(7);
