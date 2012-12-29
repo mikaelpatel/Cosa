@@ -80,26 +80,20 @@ UART::putchar(char c)
 int 
 UART::flush()
 {
-  uint32_t cycles = FLUSH_CYCLES_MAX;
+  uint32_t cycles = CYCLES_MAX;
   while (m_head != m_tail && cycles != 0) cycles--;
   return (cycles == 0 ? -1 : 0);
-}
-
-void
-UART::on_interrupt()
-{
-  if (m_head != m_tail) {
-    uint8_t next = (m_tail + 1) & BUFFER_MASK;
-    m_tail = next;
-    UDR0 = m_buffer[next];
-  }
-  else {
-    bit_clear(UCSR0B, UDRIE0);
-  }
 }
 
 ISR(USART_UDRE_vect)
 {
   if (uart == 0) return;
-  uart->on_interrupt();
+  if (uart->m_head != uart->m_tail) {
+    uint8_t next = (uart->m_tail + 1) & UART::BUFFER_MASK;
+    uart->m_tail = next;
+    UDR0 = uart->m_buffer[next];
+  }
+  else {
+    bit_clear(UCSR0B, UDRIE0);
+  }
 }

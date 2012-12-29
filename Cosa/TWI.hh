@@ -35,6 +35,8 @@
 #include "Cosa/Caso.hh"
 #include <avr/sleep.h>
 
+extern "C" void TWI_vect(void) __attribute__ ((signal));
+
 class TWI {
 private:
   /**
@@ -138,6 +140,10 @@ private:
    */
   bool request(uint8_t addr);
 
+  /**
+   * Interrupt handler is a friend.
+   */
+  friend void TWI_vect(void);
 public:
   /**
    * Device drivers are friends and may have callback/

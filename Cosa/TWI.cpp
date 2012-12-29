@@ -146,135 +146,131 @@ TWI::await_completed(uint8_t mode)
   return (m_count);
 }
 
-void
-TWI::on_bus_event()
+ISR(TWI_vect) 
 {
-  m_status = TWI_STATUS(TWSR);
-  switch (m_status) {
-  case START:
-  case REP_START:
-    TWDR = m_addr;
-    TWCR = DATA_CMD;
+  twi.m_status = TWI_STATUS(TWSR);
+  switch (twi.m_status) {
+  case TWI::START:
+  case TWI::REP_START:
+    TWDR = twi.m_addr;
+    TWCR = TWI::DATA_CMD;
     break;
-  case ARB_LOST:
-    TWCR = IDLE_CMD;
-    m_state = ERROR_STATE;
+  case TWI::ARB_LOST:
+    TWCR = TWI::IDLE_CMD;
+    twi.m_state = TWI::ERROR_STATE;
     break;
   /**
    * Master Transmitter Mode
    */
-  case MT_SLA_ACK:
-  case MT_DATA_ACK:
-    if (m_next == m_vec[m_ix].size) {
-      m_ix += 1;
-      m_next = 0;
+  case TWI::MT_SLA_ACK:
+  case TWI::MT_DATA_ACK:
+    if (twi.m_next == twi.m_vec[twi.m_ix].size) {
+      twi.m_ix += 1;
+      twi.m_next = 0;
     }
-    if (m_next < m_vec[m_ix].size) {
-      TWDR = m_vec[m_ix].buf[m_next++];
-      TWCR = DATA_CMD;
-      m_count++;
+    if (twi.m_next < twi.m_vec[twi.m_ix].size) {
+      TWDR = twi.m_vec[twi.m_ix].buf[twi.m_next++];
+      TWCR = TWI::DATA_CMD;
+      twi.m_count++;
       break;
     } 
-    if (m_target != 0) 
-      Event::push(Event::WRITE_COMPLETED_TYPE, m_target, &twi);
-  case MT_SLA_NACK:
-  case MT_DATA_NACK:
-    TWCR = STOP_CMD;
+    if (twi.m_target != 0) 
+      Event::push(Event::WRITE_COMPLETED_TYPE, twi.m_target, &twi);
+  case TWI::MT_SLA_NACK:
+  case TWI::MT_DATA_NACK:
+    TWCR = TWI::STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
-    m_state = IDLE_STATE;
+    twi.m_state = TWI::IDLE_STATE;
     break;
   /**
    * Master Receiver Mode
    */
-  case MR_DATA_ACK:
-    m_vec[m_ix].buf[m_next++] = TWDR;
-    m_count++;
-  case MR_SLA_ACK:
-    if (m_next < (m_vec[m_ix].size - 1)) {
-      TWCR = ACK_CMD;
+  case TWI::MR_DATA_ACK:
+    twi.m_vec[twi.m_ix].buf[twi.m_next++] = TWDR;
+    twi.m_count++;
+  case TWI::MR_SLA_ACK:
+    if (twi.m_next < (twi.m_vec[twi.m_ix].size - 1)) {
+      TWCR = TWI::ACK_CMD;
     } 
     else {
-      TWCR = NACK_CMD;
+      TWCR = TWI::NACK_CMD;
     }    
     break; 
-  case MR_DATA_NACK:
-    m_vec[m_ix].buf[m_next++] = TWDR;
-    m_count++;
-    if (m_target != 0) {
-      Event::push(Event::READ_COMPLETED_TYPE, m_target, &twi);
-      m_next = 0;
+  case TWI::MR_DATA_NACK:
+    twi.m_vec[twi.m_ix].buf[twi.m_next++] = TWDR;
+    twi.m_count++;
+    if (twi.m_target != 0) {
+      Event::push(Event::READ_COMPLETED_TYPE, twi.m_target, &twi);
+      twi.m_next = 0;
     }
-  case MR_SLA_NACK:
-    TWCR = STOP_CMD;
+  case TWI::MR_SLA_NACK:
+    TWCR = TWI::STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
-    m_state = IDLE_STATE;
+    twi.m_state = TWI::IDLE_STATE;
     break;
   /**
    * Slave Transmitter Mode
    */
-  case ST_SLA_ACK:
-  case ST_ARB_LOST_SLA_ACK:
-    m_state = ST_STATE;
-    m_next = 0;
-    m_ix = 0;
-    m_vec[m_ix].size = 4;
-  case ST_DATA_ACK:
-    TWDR = m_vec[m_ix].buf[m_next++];
-    if (m_next < m_vec[m_ix].size) {
-      TWCR = ACK_CMD;
+  case TWI::ST_SLA_ACK:
+  case TWI::ST_ARB_LOST_SLA_ACK:
+    twi.m_state = TWI::ST_STATE;
+    twi.m_next = 0;
+    twi.m_ix = 0;
+    twi.m_vec[twi.m_ix].size = 4;
+  case TWI::ST_DATA_ACK:
+    TWDR = twi.m_vec[twi.m_ix].buf[twi.m_next++];
+    if (twi.m_next < twi.m_vec[twi.m_ix].size) {
+      TWCR = TWI::ACK_CMD;
     } 
     else {
-      TWCR = NACK_CMD;
+      TWCR = TWI::NACK_CMD;
     }
     break;
-  case ST_DATA_NACK:
-  case ST_LAST_DATA:
-    TWCR = ACK_CMD;
-    m_state = IDLE_STATE;
+  case TWI::ST_DATA_NACK:
+  case TWI::ST_LAST_DATA:
+    TWCR = TWI::ACK_CMD;
+    twi.m_state = TWI::IDLE_STATE;
     break;
   /**
    * Slave Receiver Mode
    */
-  case SR_SLA_ACK:
-  case SR_GCALL_ACK:
-  case SR_ARB_LOST_SLA_ACK:
-  case SR_ARB_LOST_GCALL_ACK:
-    m_state = SR_STATE;
-    m_next = 0;
-    TWCR = ACK_CMD;
+  case TWI::SR_SLA_ACK:
+  case TWI::SR_GCALL_ACK:
+  case TWI::SR_ARB_LOST_SLA_ACK:
+  case TWI::SR_ARB_LOST_GCALL_ACK:
+    twi.m_state = TWI::SR_STATE;
+    twi.m_next = 0;
+    TWCR = TWI::ACK_CMD;
     break;
-  case SR_DATA_ACK:
-  case SR_GCALL_DATA_ACK:
-    if (m_next < m_vec[m_ix].size) {
-      m_vec[m_ix].buf[m_next++] = TWDR;
-      TWCR = ACK_CMD;
+  case TWI::SR_DATA_ACK:
+  case TWI::SR_GCALL_DATA_ACK:
+    if (twi.m_next < twi.m_vec[twi.m_ix].size) {
+      twi.m_vec[twi.m_ix].buf[twi.m_next++] = TWDR;
+      TWCR = TWI::ACK_CMD;
     }
     else {
-      TWCR = NACK_CMD;
+      TWCR = TWI::NACK_CMD;
     }
     break;
-  case SR_STOP:
-    TWCR = STOP_CMD;
+  case TWI::SR_STOP:
+    TWCR = TWI::STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
-    if (m_target != 0) 
-      Event::push(Event::SERVICE_REQUEST_TYPE, m_target, &twi);
-    m_state = IDLE_STATE;
-    TWCR = IDLE_CMD; 
+    if (twi.m_target != 0) 
+      Event::push(Event::SERVICE_REQUEST_TYPE, twi.m_target, &twi);
+    twi.m_state = TWI::IDLE_STATE;
+    TWCR = TWI::IDLE_CMD; 
     break;
-  case SR_DATA_NACK:
-  case SR_GCALL_DATA_NACK:
-    TWCR = NACK_CMD;
+  case TWI::SR_DATA_NACK:
+  case TWI::SR_GCALL_DATA_NACK:
+    TWCR = TWI::NACK_CMD;
     break;
-  case NO_INFO:
+  case TWI::NO_INFO:
     break;
-  case BUS_ERROR:
+  case TWI::BUS_ERROR:
   default:     
-    TWCR = IDLE_CMD; 
+    TWCR = TWI::IDLE_CMD; 
   }
 }
 
-ISR(TWI_vect) 
-{
-  twi.on_bus_event();
-}
+
 

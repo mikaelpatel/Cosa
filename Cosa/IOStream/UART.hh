@@ -32,13 +32,17 @@
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 
+extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
+
 class UART : public IOStream::Device {
 private:
+  static const uint32_t CYCLES_MAX = 1000000;
   static const uint8_t BUFFER_MAX = 64;
   static const uint8_t BUFFER_MASK = BUFFER_MAX - 1;
   volatile char m_buffer[BUFFER_MAX];
   volatile uint8_t m_head;
   volatile uint8_t m_tail;
+  friend void USART_UDRE_vect(void);
 
 public:
   /* As defined by IOStream::Device. Rest is inherited from null device */
@@ -57,14 +61,6 @@ public:
    * @return true(1) if successful otherwise false(0)
    */
   bool end();
-
-  /**
-   * UART interupt handler
-   */
-  void on_interrupt();
-
- private:
-  static const uint32_t FLUSH_CYCLES_MAX = 1000000;
 };
 
 extern UART* uart;
