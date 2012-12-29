@@ -63,14 +63,12 @@ InterruptPin* InterruptPin::ext[2] = { 0, 0 };
 
 ISR(INT0_vect)
 {
-  if (InterruptPin::ext[0] != 0) 
-    InterruptPin::ext[0]->on_interrupt();
+  if (InterruptPin::ext[0] != 0) InterruptPin::ext[0]->on_interrupt();
 }
 
 ISR(INT1_vect)
 {
-  if (InterruptPin::ext[1] != 0) 
-    InterruptPin::ext[1]->on_interrupt();
+  if (InterruptPin::ext[1] != 0) InterruptPin::ext[1]->on_interrupt();
 }
 
 void 
@@ -123,11 +121,14 @@ PWMPin::set(uint16_t value, uint16_t min, uint16_t max)
 uint8_t
 PWMPin::get_duty()
 {
-  if (m_pin == 3) return (OCR2B);
-  if (m_pin == 5) return (OCR0B);
-  if (m_pin == 6) return (OCR0A);
-  if (m_pin == 11) return (OCR2A);
-  return (is_set());
+  switch (m_pin) {
+  case 3: return (OCR2B);
+  case 5: return (OCR0B);
+  case 6: return (OCR0A);
+  case 11: return (OCR2A);
+  default:
+    return (is_set());
+  }
 }
 
 AnalogPin* AnalogPin::sampling_pin = 0;
