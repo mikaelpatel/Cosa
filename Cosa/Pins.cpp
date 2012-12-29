@@ -82,30 +82,26 @@ OutputPin::pulse(uint16_t us)
 void 
 PWMPin::set(uint8_t duty)
 {
-  if (m_pin == 3) { 
+  switch (m_pin) {
+  case 3:
     bit_set(TCCR2A, COM2B1);
     OCR2B = duty;
     return;
-  }
-  if (m_pin == 5) { 
+  case 5:
     bit_set(TCCR0A, COM0B1);
     OCR0B = duty;
     return;
-  }
-  if (m_pin == 6) {
+  case 6:
     bit_set(TCCR0A, COM0A1);
     OCR0A = duty;
     return;
-  }
-  if (m_pin == 11) { 
+  case 11:
     bit_set(TCCR2A, COM2A1);
     OCR2A = duty;
     return;
+  default:
+    OutputPin::set(duty);
   }
-  if (duty < 128) 
-    OutputPin::clear(); 
-  else 
-    OutputPin::set();
 }
 
 void 
@@ -144,21 +140,28 @@ AnalogPin::sample()
 }
 
 bool
-AnalogPin::sample_request()
+AnalogPin::sample_request(uint8_t pin, Reference ref)
 {
   if (sampling_pin != 0) return (0);
+  if (pin >= 14) pin -= 14;
   loop_until_bit_is_clear(ADCSRA, ADSC);
-  ADMUX = (m_reference | (m_pin - 14));
+  ADMUX = (ref | pin);
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
   sampling_pin = this;
   bit_set(ADCSRA, ADIE);
   return (1);
 }
 
+bool
+AnalogPin::sample_request()
+{
+  return (sample_request(m_pin, m_reference));
+}
+
 uint16_t 
 AnalogPin::sample_await()
 {
-  if (sampling_pin == 0) return (0);
+  if (sampling_pin == 0) return (0xffffU);
   loop_until_bit_is_clear(ADCSRA, ADSC);
   return (m_value = ADCW);
 }
@@ -166,40 +169,27 @@ AnalogPin::sample_await()
 ISR(ADC_vect) 
 { 
   bit_clear(ADCSRA, ADIE);
-  AnalogPin* pin = AnalogPin::get_sampling_pin();
-  if (pin != 0) pin->on_interrupt(ADCW);
+  if (AnalogPin::sampling_pin != 0) 
+    AnalogPin::sampling_pin->on_interrupt(ADCW);
 }
 
 bool
 AnalogPins::samples_request()
 {
-  if (AnalogPin::get_sampling_pin() != 0) return (0);
-  uint8_t pin = get_pin_at(0);
-  if (pin >= 14) pin -= 14;
+  if (sampling_pin != 0) return (0);
   m_next = 0;
-  loop_until_bit_is_clear(ADCSRA, ADSC);
-  ADMUX = (m_reference | pin);
-  bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
-  sampling_pin = this;
-  bit_set(ADCSRA, ADIE);
-  return (1);
+  return (sample_request(get_pin_at(m_next), m_reference));
 }
 
 void 
 AnalogPins::on_interrupt(uint16_t value)
 {
+  sampling_pin = 0;
   m_buffer[m_next++] = value;
   if (m_next != m_count) {
-    uint8_t pin = get_pin_at(m_next);
-    if (pin >= 14) pin -= 14;
-    loop_until_bit_is_clear(ADCSRA, ADSC);
-    ADMUX = (m_reference | pin);
-    bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
-    sampling_pin = this;
-    bit_set(ADCSRA, ADIE);
+    sample_request(get_pin_at(m_next), m_reference);
   } 
   else {
-    sampling_pin = 0;
     Event::push(Event::SAMPLE_COMPLETED_TYPE, this);
   }
 }

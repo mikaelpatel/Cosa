@@ -521,6 +521,8 @@ private:
   Mode m_mode;
 };
 
+extern "C" void ADC_vect(void) __attribute__ ((signal));
+
 /*
  * Abstract analog pin. Allows asynchronous sampling.
  */
@@ -541,6 +543,19 @@ protected:
   Reference m_reference;
   uint16_t m_value;
   
+  /**
+   * Internal request sample of analog pin. Set up sampling of given pin
+   * with given reference voltage.
+   * @param[in] pin number.
+   * @param[in] ref reference voltage.
+   * @return bool.
+   */
+  bool sample_request(uint8_t pin, Reference ref);
+
+  /**
+   * Interrupt handler is a friend.
+   */
+  friend void ADC_vect(void);
 public:
   /**
    * Construct abstract analog pin for given Arduino pin with reference and
@@ -574,16 +589,6 @@ public:
   }
 
   /**
-   * Get reference to analog pin that is currently sampling.
-   * Null if no conversion is active.
-   * @return analog pin reference or null(0);
-   */
-  static AnalogPin* get_sampling_pin() 
-  { 
-    return (sampling_pin); 
-  }
-
-  /**
    * Sample analog pin. Wait for conversion to complete before returning with
    * sample value.
    * @return sample value.
@@ -593,6 +598,7 @@ public:
   /**
    * Request sample of analog pin. Conversion completion function is called
    * if defined otherwise use await_sample().
+   * @return bool.
    */
   bool sample_request();
 
@@ -633,7 +639,8 @@ public:
    * @param[in] pins vector with analog pins.
    * @param[in] count number of analog pins in set.
    */
-  AnalogPins(const uint8_t* pins, uint16_t* buffer, uint8_t count,
+  AnalogPins(const uint8_t* pins, 
+	     uint16_t* buffer, uint8_t count,
 	     Reference ref = AVCC_REFERENCE) :
     AnalogPin(255, ref),
     m_pin_at(pins),
@@ -670,6 +677,7 @@ public:
   bool samples_request();
 
   /**
+   * @override
    * Interrupt service on conversion completion.
    * @param[in] value sample.
    */
