@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Watchdog abstraction. Low power timer.
+ * Low power timer.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -101,7 +101,7 @@ Watchdog::await(AwaitCondition fn, void* env, uint16_t ms)
   } while ((ticks != s_ticks) || ((ms == 0) && (fn != 0)));
 }
 
-void 
+void
 Watchdog::push_timeout_events(void* env)
 { 
   uint16_t changed = (s_ticks ^ (s_ticks + 1));

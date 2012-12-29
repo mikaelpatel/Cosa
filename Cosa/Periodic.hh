@@ -45,6 +45,21 @@
 #include "Cosa/Watchdog.hh"
 
 class Periodic : public Thing {
+
+private:
+  /**
+   * @override
+   * Periodic event handler; dispatch the run() function on
+   * timeout events.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value)
+  {
+    if (type != Event::TIMEOUT_TYPE) return;
+    run();
+  }
+
 public:
   /**
    * Construct a periodic function handler. 
@@ -63,18 +78,6 @@ public:
   void set_period(uint16_t ms)
   {
     Watchdog::attach(this, ms);
-  }
-
-  /**
-   * Periodic event handler; dispatch the run() function on
-   * timeout events.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value)
-  {
-    if (type != Event::TIMEOUT_TYPE) return;
-    run();
   }
 
   /**

@@ -43,19 +43,19 @@ public:
   class Descriptor {
   public:
     enum {
-      ANALOG_PIN_ID = 0x10,
-      DIGITAL_PIN_ID = 0x11,
-      DIGITAL_PINS_ID = 0x12,
-      EVENT_ID = 0x13,
-      SAMPLE_REQUEST_ID = 0x20,
-      SET_MODE_ID = 0x21
+      ANALOG_PIN_ID = Ciao::Descriptor::COSA_FAI_ID,
+      DIGITAL_PIN_ID,
+      DIGITAL_PINS_ID,
+      EVENT_ID,
+      SAMPLE_REQUEST_ID,
+      SET_MODE_ID
     };
     static const Ciao::Descriptor::user_t analog_pin_t PROGMEM;
     static const Ciao::Descriptor::user_t digital_pin_t PROGMEM;
     static const Ciao::Descriptor::user_t digital_pins_t PROGMEM;
+    static const Ciao::Descriptor::user_t event_t PROGMEM;
     static const Ciao::Descriptor::user_t sample_request_t PROGMEM;
     static const Ciao::Descriptor::user_t set_mode_t PROGMEM;
-    static const Ciao::Descriptor::user_t event_t PROGMEM;
   };
 
   /**

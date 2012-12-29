@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Watchdog abstraction. Low power timer.
+ * Low power timer.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -163,13 +163,13 @@ public:
   }
 
   /**
-   * Default interrupt handler for timeout queues.
+   * Default interrupt handler for timeout queues. 
    * @param[in] env interrupt handler environment.
    */
   static void push_timeout_events(void* env);
 
   /**
-   * Alternative interrupt handler for watchdog events.
+   * Alternative interrupt handler for watchdog events. 
    * @param[in] env interrupt handler environment.
    */
   static void push_watchdog_event(void* env)
@@ -182,8 +182,8 @@ public:
    */
   static void on_timeout()
   {
-    s_ticks += 1;
     if (s_handler != 0) s_handler(s_env);
+    s_ticks += 1;
   }
 };
 

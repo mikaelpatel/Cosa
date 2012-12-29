@@ -77,6 +77,12 @@ void setup()
   INFO("Write the header to the trace device", 0);
   cout.begin();
 
+  INFO("Write the cosa fai type descriptors", 0);
+  cout.Ciao::write(&Fai::Descriptor::analog_pin_t);
+  cout.Ciao::write(&Fai::Descriptor::digital_pin_t);
+  cout.Ciao::write(&Fai::Descriptor::digital_pins_t);
+  cout.Ciao::write(&Fai::Descriptor::event_t);
+
   // Start the watchdog and trace events
   Watchdog::begin(2048, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event, 
 		  &ledPin);

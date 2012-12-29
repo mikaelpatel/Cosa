@@ -51,7 +51,8 @@ class Button : private Thing {
 
 public:
   /**
-   * Button change detection modes.
+   * Button change detection modes; falling (set->clear), 
+   * rising (clear-> set) and change (falling or rising).
    */
   enum Mode {
     ON_FALLING_MODE = 0,
@@ -59,7 +60,7 @@ public:
     ON_CHANGE_MODE = 2
   };
 
-private:
+protected:
   // Sample period, current state and change detection mode
   static const uint16_t SAMPLE_MS = 64;
   InputPin m_pin;
@@ -67,6 +68,7 @@ private:
   uint8_t m_mode;
 
   /**
+   * @override
    * Button event handler. Called by event dispatch. Samples the
    * attached pin and calls pin change handler, on_change(). 
    * @param[in] type the type of event (timeout).
@@ -77,9 +79,9 @@ private:
 public:
   /**
    * Construct a button connected to the given pin and with 
-   * the given change detect mode. 
+   * the given change detection mode. 
    * @param[in] pin number.
-   * @param[in] mode change event mode.
+   * @param[in] mode change detection mode.
    */
   Button(uint8_t pin, Mode mode = ON_CHANGE_MODE);
 

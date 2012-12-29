@@ -30,15 +30,18 @@
 #include "Cosa/Watchdog.hh"
 
 // LED output pin
-class LED : public OutputPin {
+class LED : public Thing {
+private:
+  OutputPin m_pin;
 public:
   LED(uint8_t pin, uint8_t initial = 0) : 
-    OutputPin(pin, initial)
-  {}
+    m_pin(pin, initial)
+  {
+  }
 
   virtual void on_event(uint8_t type, uint16_t value)
   {
-    toggle();
+    m_pin.toggle();
   }
 
   void blink(uint16_t ms) 
@@ -48,6 +51,7 @@ public:
 };
 
 // Use an RGB LED connected to pins(5,6,7)
+LED builtinPin(13);
 LED redLedPin(5);
 LED greenLedPin(6, 1);
 LED blueLedPin(7);
@@ -58,6 +62,7 @@ void setup()
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 
   // Set blink time period for the leds
+  builtinPin.blink(1024);
   redLedPin.blink(512);
   greenLedPin.blink(1024);
   blueLedPin.blink(1024);

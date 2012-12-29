@@ -22,7 +22,6 @@
  *
  * @section Description
  * The Cosa Ciao data stream handler. Please see CIAO.txt for details.
- * Define CIAO_NAMES for descriptor name strings.
  *
  * @section Limitations
  * The Ciao class handles only output. The data types 16, 64 and 80-bit

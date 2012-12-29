@@ -44,7 +44,7 @@ public:
    * and hierarchical state handlers.
    * @param[in] fsm finite state machine.
    * @param[in] type the type of event.
-   * @return bool
+   * @return bool.
    */
   typedef bool (*StateHandler)(FSM* fsm, uint8_t type);
   

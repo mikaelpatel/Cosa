@@ -53,13 +53,19 @@ public:
    * Return integer part of fixed point number.
    * @return integer.
    */
-  int16_t get_integer() { return (m_integer); }
+  int16_t get_integer() 
+  { 
+    return (m_integer); 
+  }
 
   /** 
    * Return unsigned fraction part of fixed point number.
    * @return fraction.
    */
-  uint16_t get_fraction() { return (m_fraction); }
+  uint16_t get_fraction() 
+  { 
+    return (m_fraction); 
+  }
 
   /** 
    * Return scaled unsigned fraction part of fixed point number.

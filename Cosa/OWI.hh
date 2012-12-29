@@ -199,6 +199,7 @@ public:
     bool write(uint8_t value, uint8_t bits);
 
     /**
+     * @override
      * Slave device event handler function. Handle presence pulse and
      * rom/function command parsing.
      * @param[in] type the type of event.

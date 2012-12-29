@@ -38,6 +38,9 @@
 class Event {
 
 public:
+  /**
+   * Size of event queue.
+   */
   static const uint8_t QUEUE_MAX = 16;
 
   /**
@@ -150,39 +153,43 @@ public:
   }
 
   /**
-   * Push an event with given type, source and value into the event queue, .
-   * (eventq). Return true(1) if successful otherwise false(0).
+   * Push an event with given type, source and value into the event queue.
+   * Return true(1) if successful otherwise false(0).
    * @param[in] type event identity.
    * @param[in] target event target.
    * @param[in] value event value.
+   * @return bool.
    */
-  static void push(uint8_t type, Caso* target, uint16_t value = 0)
+  static bool push(uint8_t type, Caso* target, uint16_t value = 0)
   {
     Event event(type, target, value);
-    queue.enqueue(&event);
+    return (queue.enqueue(&event));
   }
 
   /**
-   * Push an event with given type, source and value into the event queue, .
-   * (eventq). Return true(1) if successful otherwise false(0).
+   * Push an event with given type, source and value into the event queue.
+   * Return true(1) if successful otherwise false(0).
    * @param[in] type event identity.
    * @param[in] target event target.
    * @param[in] env event environment pointer.
+   * @return bool.
    */
-  static void push(uint8_t type, Caso* target, void* env)
+  static bool push(uint8_t type, Caso* target, void* env)
   {
-    push(type, target, (uint16_t) env);
+    return (push(type, target, (uint16_t) env));
   }
 
   /**
    * In debug mode, print event to given stream. Default is the
    * trace stream.
+   * @param[in] steam output stream.
    */
   void print(IOStream& stream = trace);
 
   /**
    * In debug mode, print event to given stream with new-line.
    * Default is the trace stream.
+   * @param[in] steam output stream.
    */
   void println(IOStream& stream = trace);
 

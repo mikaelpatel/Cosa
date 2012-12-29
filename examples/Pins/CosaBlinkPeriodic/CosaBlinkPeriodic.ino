@@ -1,5 +1,5 @@
 /**
- * @file Cosa/BCD.h
+ * @file CosaBlinkPeriodic.ino
  * @version 1.0
  *
  * @section License
@@ -21,45 +21,39 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Simple two digit BCD convertion functions.
- *
- * @section Limitations
- * Handles only two digit BCD numbers (0..99).
+ * Cosa RGB LED blink with periodic function.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BCD_H__
-#define __COSA_BCD_H__
+#include "Cosa/Periodic.hh"
+#include "Cosa/Pins.hh"
 
-/**
- * Convert given two digit BCD (0x00..0x99) to binary value (0..99).
- * @param[in] value to convert.
- * @return binary value.
- */
-inline uint8_t
-bcd_to_bin(uint8_t value)
+// Blinking LED output pin
+class LED : public Periodic {
+private:
+  OutputPin m_pin;
+public:
+  LED(uint8_t pin, uint16_t ms, uint8_t initial = 0) : 
+    Periodic(ms), m_pin(pin, initial) {}
+  virtual void run() { m_pin.toggle(); }
+};
+
+// Use an RGB LED connected to pins(5,6,7)
+LED redLedPin(5, 512);
+LED greenLedPin(6, 1024, 1);
+LED blueLedPin(7, 1024);
+
+// Start the watchdog (16 ms timeout, push timeout events)
+void setup()
 {
-  uint8_t high = (value >> 4);
-  uint8_t low = (value & 0x0f);
-  return ((high << 3) + (high << 1) + low);
+  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 }
 
-/**
- * Convert given binary value (0..99) to two digit BCD (0x00..0x99).
- * @param[in] value to convert.
- * @return BCD value.
- */
-inline uint8_t
-bin_to_bcd(uint8_t value)
+// The basic event dispatcher
+void loop()
 {
-  uint8_t res = 0;
-  while (value > 9) {
-    res += 0x10;
-    value -= 10;
-  }
-  return (res + value);
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
 }
-
-#endif
-

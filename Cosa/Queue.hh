@@ -96,9 +96,9 @@ public:
   bool enqueue_P(const void* data);
 
   /**
-   * Dequeue member data from queue to given buffer. Returns true(1) if
-   * member was available and succcessful otherwise false(0). 
-   * Atomic operation.
+   * Dequeue member data from queue to given buffer. Returns true(1)
+   * if member was available and succcessful otherwise
+   * false(0). Atomic operation.
    * @param[in,out] data pointer to member data buffer.
    * @return boolean.
    */

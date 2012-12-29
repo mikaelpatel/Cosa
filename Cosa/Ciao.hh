@@ -22,7 +22,6 @@
  *
  * @section Description
  * The Cosa Ciao data stream handler. Please see CIAO.txt for details.
- * Define CIAO_NAMES for descriptor name strings.
  *
  * @section Limitations
  * The Ciao class handles only output. The data types 16, 64 and 80-bit
@@ -44,32 +43,6 @@ class Ciao {
   
 public:
   /**
-   * Data type tag: Predefined data types and tags for extension.
-   * NB: Arduino/AVR does not implement FLOAT16/64/80.
-   */
-  enum {
-    MASK_TYPE = 0xf0,
-    UINT8_TYPE = 0x00,
-    UINT16_TYPE = 0x10,
-    UINT32_TYPE = 0x20,
-    UINT64_TYPE = 0x30,
-    USER8_DESC_START = 0x40,
-    USER8_DESC_END = 0x4f,
-    USER16_DESC_START = 0x50,
-    USER16_DESC_END = 0x5f,
-    USER8_TYPE = 0x60,
-    USER16_TYPE = 0x70,
-    INT8_TYPE = 0x80,
-    INT16_TYPE = 0x90,
-    INT32_TYPE = 0xa0,
-    INT64_TYPE = 0xb0,
-    FLOAT16_TYPE = 0xc0,
-    FLOAT32_TYPE = 0xd0,
-    FLOAT64_TYPE = 0xe0,
-    FLOAT80_TYPE = 0xf0
-  };
-
-  /**
    * Tag attribute: Number for data values in sequence[count]. User defined
    * data type name as value or end of used defined data type sequence.
    */
@@ -80,6 +53,32 @@ public:
     COUNT8_ATTR = 0x08,
     COUNT16_ATTR = 0x09,
     END_SEQUENCE_ATTR = 0x0f
+  };
+
+  /**
+   * Data type tag: Predefined data types and tags for extension.
+   * NB: Arduino/AVR does not implement FLOAT16/64/80.
+   */
+  enum {
+    MASK_TYPE = 0xf0,
+    UINT8_TYPE = 0x00,
+    UINT16_TYPE = 0x10,
+    UINT32_TYPE = 0x20,
+    UINT64_TYPE = 0x30,
+    USER8_DESC_START = 0x40,
+    USER8_DESC_END = USER8_DESC_START | END_SEQUENCE_ATTR,
+    USER16_DESC_START = 0x50,
+    USER16_DESC_END = USER16_DESC_START | END_SEQUENCE_ATTR,
+    USER8_TYPE = 0x60,
+    USER16_TYPE = 0x70,
+    INT8_TYPE = 0x80,
+    INT16_TYPE = 0x90,
+    INT32_TYPE = 0xa0,
+    INT64_TYPE = 0xb0,
+    FLOAT16_TYPE = 0xc0,
+    FLOAT32_TYPE = 0xd0,
+    FLOAT64_TYPE = 0xe0,
+    FLOAT80_TYPE = 0xf0
   };
 
   /**
@@ -132,8 +131,8 @@ protected:
 
   /**
    * Write data tag to given stream.
-   * @param[in] type data type tag
-   * @param[in] count number of elements in sequence
+   * @param[in] type data type tag.
+   * @param[in] count number of elements in sequence.
    */
   void write(uint8_t type, uint16_t count);
 
@@ -145,7 +144,7 @@ public:
   Ciao(IOStream::Device* dev = 0) : m_dev(dev) {}
 
   /**
-   * Set io stream device.
+   * Set io-stream device.
    * @param[in] dev stream device.
    */
   void set(IOStream::Device* dev) 
