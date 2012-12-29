@@ -16,8 +16,7 @@ sizeof(Echo) = 14
 F_CPU = 16000000  
 I_CPU = 16  
 EVENTS_MAX = 100000  
-124:loop:info:25 us per event (400 cycles)  
-124:loop:info:25 us per event (400 cycles)  
+124:info:25 us per event (400 cycles)  
 
 Circuit
 -------
