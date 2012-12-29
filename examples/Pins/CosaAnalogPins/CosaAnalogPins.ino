@@ -1,5 +1,5 @@
 /**
- * @file CosaSampleSet.ino
+ * @file CosaAnalogPins.ino
  * @version 1.0
  *
  * @section License
@@ -52,12 +52,14 @@ OutputPin ledPin(13);
 void setup()
 {
   // Start the trace output stream
-  trace.begin(9600, PSTR("CosaSampleSet: started"));
+  trace.begin(9600, PSTR("CosaAnalogPins: started"));
 
-  // Check amount of free memory
+  // Check amount of free memory and size of instances
   TRACE(free_memory());
-
-  // Check size of instances
+  TRACE(sizeof(Trace));
+  TRACE(sizeof(Event));
+  TRACE(sizeof(Event::queue));
+  TRACE(sizeof(OutputPin));
   TRACE(sizeof(AnalogPin));
   TRACE(sizeof(AnalogPins));
   TRACE(sizeof(pins));
@@ -65,7 +67,7 @@ void setup()
   TRACE(membersof(pins));
 
   // Start the watchdog ticks counter (shortest possible tick, 16 ms)
-  Watchdog::begin(16);
+  Watchdog::begin();
 }
 
 void loop()
