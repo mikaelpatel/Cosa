@@ -60,7 +60,8 @@ Drivers
 5. ADXL345 Digital Accelerometer.
 6. nRF24L01 Single Chip 2.4GHz Transceiver. 
 7. DHT11 Humidity & Temperature Sensor device driver.
-8. Slave device support for SPI, TWI and OWI.
+8. HC-SR04/US-020 Ultrasonic range module device driver.
+9. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the Cosa/references directory.  
@@ -90,6 +91,9 @@ Naming
 Note
 ----
 
-Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are supported. Timers, EEPROM, UART (receiver) are not directly supported but planned. This also applies for Arduino Mega and Leonardo, and Attiny devices.
+Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are
+supported. Timers, EEPROM, UART (receiver) are not directly supported
+but planned. This also applies for Arduino Mega and Leonardo, and
+Attiny devices. 
 
 
