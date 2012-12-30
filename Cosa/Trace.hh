@@ -60,7 +60,7 @@ public:
   bool begin(uint32_t baudrate = 9600, const char* banner = 0)
   {
     if (!uart.begin(baudrate)) return (0);
-    if (banner) {
+    if (banner != 0) {
       trace.print_P(banner);
       trace.println();
     }

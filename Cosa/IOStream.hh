@@ -22,7 +22,7 @@
  *
  * @section Description
  * Basic in-/output stream support class. Requires implementation of
- * Stream::Device.
+ * Stream::Device and/or Stream::Filter.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -36,7 +36,7 @@ class IOStream {
 
 public:
   /**
-   * Device for output/input of character or string.
+   * Device for in/output of characters or strings.
    */
   class Device {
   public:
@@ -48,7 +48,8 @@ public:
     virtual int putchar(char c);
 
     /**
-     * Write null terminated string to device.
+     * Write null terminated string to device. Terminating
+     * null is not written.
      * @param[in] s string to write.
      * @return zero(0) or negative error code.
      */
@@ -56,6 +57,7 @@ public:
 
     /**
      * Write null terminated string from program memory to device.
+     * Terminating null is not written.
      * @param[in] s string in program memory to write.
      * @return zero(0) or negative error code.
      */
@@ -85,7 +87,7 @@ public:
     virtual char* gets(char *s, size_t count);
 
     /**
-     * Read data from buffer with given size from device.
+     * Read data to given buffer with given size from device.
      * @param[in] buf buffer to read into.
      * @param[in] size number of bytes to read.
      * @return number of bytes read or EOF(-1).
@@ -104,6 +106,10 @@ public:
     static Device null;
   };
 
+  /**
+   * Filter for device (decorator). Default implementation is a 
+   * null filter.
+   */
   class Filter : public Device {
   protected:
     Device* m_dev;
@@ -122,6 +128,7 @@ public:
 
     /**
      * Write null terminated string to device.
+     * Terminating character is not written.
      * @param[in] s string to write.
      * @return zero(0) or negative error code.
      */
@@ -132,6 +139,7 @@ public:
 
     /**
      * Write null terminated string from program memory to device.
+     * Terminating character is not written.
      * @param[in] s string in program memory to write.
      * @return zero(0) or negative error code.
      */
@@ -173,7 +181,7 @@ public:
     }
 
     /**
-     * Read data from buffer with given size from device.
+     * Read data to buffer with given size from device.
      * @param[in] buf buffer to read into.
      * @param[in] size number of bytes to read.
      * @return number of bytes read or EOF(-1).
@@ -194,14 +202,14 @@ public:
   };
 
   /**
-   * Construct stream with given device.
+   * Construct stream with given device. Default is the null device.
    * @param[in] dev stream device.
    */
   IOStream(Device* dev = &Device::null) : m_dev(dev) {}
   
   /**
    * Get current device.
-   * @return device
+   * @return device.
    */
   Device* get_device() 
   { 
@@ -212,7 +220,7 @@ public:
    * Set io stream device.
    * @param[in] dev stream device.
    */
-  void set(Device* dev) 
+  void set_device(Device* dev) 
   { 
     m_dev = dev;
   }
@@ -264,19 +272,28 @@ public:
    * stream.
    * @param[in] ptr pointer to program memory.
    */
-  void print(const void *ptr) { print((unsigned int) ptr, 16); }
+  void print(const void *ptr) 
+  { 
+    print((unsigned int) ptr, 16); 
+  }
 
   /**
    * Print character to stream.
    * @param[in] c character to print.
    */
-  void print(char c) { m_dev->putchar(c); }
+  void print(char c) 
+  { 
+    m_dev->putchar(c); 
+  }
 
   /**
    * Print string in data memory to stream.
    * @param[in] ptr pointer to data memory string.
    */
-  void print(char* s) { m_dev->puts(s); }
+  void print(char* s) 
+  { 
+    m_dev->puts(s); 
+  }
 
   /**
    * Print string in program memory to stream.
@@ -284,12 +301,18 @@ public:
    * program memory.
    * @param[in] ptr pointer to program memory string.
    */
-  void print_P(const char* s) { m_dev->puts_P(s); }
+  void print_P(const char* s) 
+  { 
+    m_dev->puts_P(s); 
+  }
 
   /**
    * Print end of line to stream.
    */
-  void println() { m_dev->putchar('\n'); }
+  void println() 
+  { 
+    m_dev->putchar('\n'); 
+  }
 
   /**
    * Formated print with variable argument list. The format string
