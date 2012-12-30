@@ -73,6 +73,7 @@ private:
 public:
   /**
    * Construct connection to a DHT11 device on given in/output-pin.
+   * @param[pin] pin data.
    */
   DHT11(uint8_t pin) : m_pin(pin) {}
 
