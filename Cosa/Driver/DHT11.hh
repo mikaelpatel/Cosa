@@ -57,8 +57,8 @@ private:
    * Input/Output pin, Data buffer and latest pin level.
    */
   IOPin m_pin;
-  uint8_t m_data[DATA_MAX];
   uint8_t m_latest;
+  uint8_t m_data[DATA_MAX];
 
   /** 
    * Read the next bit from the device given number of level
@@ -70,6 +70,13 @@ private:
    */
   int8_t read_bit(uint8_t changes);
   
+  /**
+   * Read data from the device. Return true(1) if successful otherwise
+   * false(0).    
+   * @return bool.
+   */
+  bool read_data();
+
 public:
   /**
    * Construct connection to a DHT11 device on given in/output-pin.
@@ -84,15 +91,41 @@ public:
    * @param[out] humidity reading.
    * @return bool.
    */
-  bool read(uint8_t& temperature, uint8_t& humidity);
+  bool read(uint8_t& temperature, uint8_t& humidity)
+  {
+    if (!read_data()) return (0);
+    temperature = get_temperature();
+    humidity = get_humidity();
+  }
 
   /**
-   * Return reference to data from latest read.
-   * @return data pointer.
+   * Return temperature from latest read.
+   * @return temperature.
    */
-  uint8_t* get_data()
+  uint8_t get_temperature()
   {
-    return (m_data);
+    return (m_data[2]);
+  }
+
+  /**
+   * Return humidity from latest read.
+   * @return humidity.
+   */
+  uint8_t get_humidity()
+  {
+    return (m_data[0]);
+  }
+
+  /**
+   * @override
+   * Default device event handler function. Attach to watchdog
+   * timer queue, Watchdog::attach(), to allow perodic reading.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value)
+  {
+    read_data();
   }
 };
 

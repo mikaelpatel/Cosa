@@ -63,12 +63,8 @@ DHT11::read_bit(uint8_t changes)
 }
 
 bool 
-DHT11::read(uint8_t& temperature, uint8_t& humidity)
+DHT11::read_data()
 {
-  // Default out of range values
-  temperature = 100;
-  humidity = 100;
-
   // Send start signal to the device
   m_pin.set_mode(IOPin::OUTPUT_MODE);
   m_pin.clear();
@@ -91,10 +87,7 @@ DHT11::read(uint8_t& temperature, uint8_t& humidity)
       if (i < DATA_LAST) chksum += m_data[i];
     }
   }
-
-  // Return values and validation of the check sum
-  temperature = m_data[2];
-  humidity = m_data[0];
+  // Return check sum validation
   return (chksum == m_data[DATA_LAST]);
 }
 
