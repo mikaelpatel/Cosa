@@ -74,10 +74,10 @@ IOStream::Device::getchar()
 }
 
 char* 
-IOStream::Device::gets(char *s,  size_t count) 
+IOStream::Device::gets(char *s, size_t count) 
 { 
   char* res = s;
-  for (size_t n = 0; n < count; n++) {
+  while (count--) {
     int c = getchar();
     if (c < 0) {
       *s = 0;
@@ -161,7 +161,7 @@ IOStream::print(void *ptr, size_t size, uint8_t base)
   unsigned int v_adj = (base == 10 ? 0 : (base == 8 ? 01000 : 0x100));
   uint8_t adj = (v_adj != 0);
   uint8_t n = 0;
-  for (size_t i = 0; i < size; i++) {
+  while (size--) {
     if (n == 0) {
       print(p);
       print_P(PSTR(": "));
@@ -201,7 +201,8 @@ IOStream::vprintf_P(const char* format, va_list args)
       case 'o': 
 	base = 8; 
 	goto next;
-      case 'h': 
+      case 'h':
+      case 'x': 
 	base = 16; 
 	goto next;
       case 'u': 

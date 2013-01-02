@@ -315,7 +315,7 @@ public:
   }
 
   /**
-   * Formated print with variable argument list. The format string
+   * Format print with variable argument list. The format string
    * should be in program memory. Use the macro PSTR().
    * @param[in] format string in program memory.
    * @param[in] args variable argument list.
