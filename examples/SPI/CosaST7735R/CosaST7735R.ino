@@ -33,20 +33,7 @@
 #include "Cosa/SPI/ST7735R.hh"
 
 ST7735R tft;
-
-#include "Cosa/IOStream.hh"
-#undef putchar
-
-class LCD : public IOStream::Device {
-private:
-  ST7735R* m_tft;
-public:
-  LCD(ST7735R* tft) : IOStream::Device(), m_tft(tft) {}
-  virtual int putchar(char c) { m_tft->draw_char(c); return (1); }
-};
-
-LCD lcd(&tft);
-IOStream cout(&lcd);
+IOStream cout(&tft);
 
 void setup()
 {
@@ -56,17 +43,13 @@ void setup()
   // Check amount of free memory and size of objects
   TRACE(free_memory());
   TRACE(sizeof(tft));
-  TRACE(sizeof(lcd));
   TRACE(sizeof(cout));
 
   // Start the watchdog with default timeout (16 ms)
-  Watchdog::begin(128);
+  Watchdog::begin();
 
   // Initiate the display
   TRACE(tft.begin());
-  tft.initiate();
-  tft.set_color(tft.WHITE);
-  tft.fill_screen();
 }
 
 void loop()
@@ -75,38 +58,43 @@ void loop()
 
   // Fill screen
   start = micros();
-  tft.set_color(tft.WHITE);
+  tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
   ms = (micros() - start) / 1000L;
   INFO("fill_screen: %ul ms", ms);
 
   // Print on the output stream
   start = micros();
-  tft.set_color(tft.BLUE);
-  tft.set_size(1);
+  tft.set_text_color(tft.BLUE);
+  tft.set_scale(1);
   tft.set_cursor(0, 0);
   cout.print_P(PSTR("CosaST7735R: started"));
   cout.println();
-  cout.printf_P(PSTR("color(%hd)\n"), tft.get_color());
+  cout.printf_P(PSTR("color(%hd)\n"), tft.get_text_color());
   uint8_t x, y;
   tft.get_cursor(x, y);
   cout.printf_P(PSTR("cursor(x = %d, y = %d)\n"), x, y);
+  tft.set_text_color(tft.RED);
+  tft.set_scale(2);
+  cout.print_P(PSTR("  Hello\n  World"));
+  cout.println();
+  tft.set_text_color(tft.BLACK);
+  tft.set_scale(1);
   ms = (micros() - start) / 1000L;
-  cout.printf_P(PSTR("draw_string: %ul ms"), ms);
+  cout.printf_P(PSTR("draw_intro: %ul ms\n"), ms);
   Watchdog::delay(2048);
 
   // Draw grid with pin status
-  tft.set_color(tft.WHITE);
+  tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
   start = micros();
   for (uint8_t x = 0, y = 2; y < tft.SCREEN_HEIGHT; y += 20, x++) {
-    tft.set_gray(25);
+    tft.set_pen_color(tft.grayscale(75));
     tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 16);
-    tft.set_color(tft.BLACK);
+    tft.set_pen_color(tft.BLACK);
     tft.draw_rect(10, y, tft.SCREEN_WIDTH - 20, 16);
-    tft.set_color(digitalRead(x) ? tft.RED : tft.GREEN);
+    tft.set_pen_color(digitalRead(x) ? tft.RED : tft.GREEN);
     tft.fill_circle(28, y + 8, 5);
-    tft.set_color(tft.BLACK);
     tft.set_cursor(50, y + 5);
     cout.printf_P(PSTR("A%d = %d"), x, analogRead(x));
   }
@@ -115,9 +103,9 @@ void loop()
   Watchdog::delay(2048);  
 
   // Grid with draw pixel
-  tft.set_color(tft.WHITE);
+  tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
-  tft.set_color(tft.BLACK);
+  tft.set_pen_color(tft.BLACK);
   start = micros();
   for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 2) {
     for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 2) {
@@ -129,7 +117,7 @@ void loop()
   Watchdog::delay(2048);
 
   // Grid with draw rectangle
-  tft.set_color(tft.BLACK);
+  tft.set_pen_color(tft.BLACK);
   start = micros();
   for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 20) {
     for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 20) {
@@ -141,7 +129,7 @@ void loop()
   Watchdog::delay(2048);
   
   // Fill rectangles
-  tft.set_color(tft.WHITE);
+  tft.set_pen_color(tft.WHITE);
   start = micros();
   for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 20) {
     for (uint8_t y = x; y < tft.SCREEN_HEIGHT; y += 40) {
@@ -153,9 +141,9 @@ void loop()
   Watchdog::delay(2048);
   
   // Grid with draw circle
-  tft.set_color(tft.WHITE);
+  tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
-  tft.set_color(tft.BLACK);
+  tft.set_pen_color(tft.BLACK);
   start = micros();
   for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 20) {
     for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 20) {
@@ -167,7 +155,7 @@ void loop()
   Watchdog::delay(2048);
 
   // Fill circles
-  tft.set_color(tft.RED);
+  tft.set_pen_color(tft.RED);
   start = micros();
   for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 20) {
     for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 20) {
@@ -179,18 +167,18 @@ void loop()
   Watchdog::delay(2048);
   
   // Draw lines
-  tft.set_color(tft.BLACK);
+  tft.set_pen_color(tft.BLACK);
   tft.fill_screen();
   start = micros();
-  tft.set_color(tft.RED);
+  tft.set_pen_color(tft.RED);
   for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 6) {
     tft.draw_line(0, 0, x, tft.SCREEN_HEIGHT - 1);
   }
-  tft.set_color(tft.GREEN);
+  tft.set_pen_color(tft.GREEN);
   for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 6) {
     tft.draw_line(0, 0, tft.SCREEN_WIDTH - 1, y);
   }
-  tft.set_color(tft.BLUE);
+  tft.set_pen_color(tft.BLUE);
   for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 6) {
     tft.draw_line(tft.SCREEN_WIDTH - 1, 0, x, tft.SCREEN_HEIGHT - 1);
   }
@@ -198,14 +186,14 @@ void loop()
   INFO("draw_line: %ul ms", ms);
   Watchdog::delay(2048);
 
-  tft.set_color(tft.BLACK);
+  tft.set_pen_color(tft.BLACK);
   tft.fill_screen();
   start = micros();
-  tft.set_color(tft.CYAN);
+  tft.set_pen_color(tft.CYAN);
   for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 6) {
     tft.draw_line(tft.SCREEN_WIDTH - 1, 0, 0, y);
   }
-  tft.set_color(tft.MAGENTA);
+  tft.set_pen_color(tft.MAGENTA);
   for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 6) {
     tft.draw_line(0, tft.SCREEN_HEIGHT - 1, x, 0);
   }
@@ -213,9 +201,9 @@ void loop()
   INFO("draw_line: %ul ms", ms);
   Watchdog::delay(2048);
 
-  tft.set_color(tft.BLACK);
+  tft.set_pen_color(tft.BLACK);
   tft.fill_screen();
-  tft.set_color(tft.YELLOW);
+  tft.set_pen_color(tft.YELLOW);
   start = micros();
   for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 6) {
     tft.draw_line(0, tft.SCREEN_HEIGHT - 1, tft.SCREEN_WIDTH - 1, y);
@@ -231,17 +219,56 @@ void loop()
   Watchdog::delay(2048);
 
   // Draw grayscale 
-  tft.set_color(tft.BLACK);
+  tft.set_pen_color(tft.BLACK);
   tft.fill_screen();
   start = micros();
-  tft.set_color(tft.RED);
+  tft.set_pen_color(tft.RED);
   tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
   for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
     uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
-    tft.set_gray(level);
+    tft.set_pen_color(tft.grayscale(level));
     tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
   }
   ms = (micros() - start) / 1000L;
-  INFO("set_gray/draw_line: %ul ms", ms);
+  INFO("grayscale/fill_rect: %ul ms", ms);
+  Watchdog::delay(2048);
+
+  // Draw red shades
+  start = micros();
+  tft.set_pen_color(tft.RED);
+  tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
+  for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
+    uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
+    tft.set_pen_color(tft.red(level));
+    tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
+  }
+  ms = (micros() - start) / 1000L;
+  INFO("red/fill_rect: %ul ms", ms);
+  Watchdog::delay(2048);
+
+  // Draw green shades
+  start = micros();
+  tft.set_pen_color(tft.RED);
+  tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
+  for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
+    uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
+    tft.set_pen_color(tft.green(level));
+    tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
+  }
+  ms = (micros() - start) / 1000L;
+  INFO("green/fill_rect: %ul ms", ms);
+  Watchdog::delay(2048);
+
+  // Draw blue shades
+  start = micros();
+  tft.set_pen_color(tft.RED);
+  tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
+  for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
+    uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
+    tft.set_pen_color(tft.blue(level));
+    tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
+  }
+  ms = (micros() - start) / 1000L;
+  INFO("blue/fill_rect: %ul ms", ms);
   Watchdog::delay(2048);
 }

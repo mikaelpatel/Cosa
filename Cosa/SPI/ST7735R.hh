@@ -26,18 +26,20 @@
  * @section See Also
  * Sitronix Technology Corp. ST7735R documentation, V2.1, 2010-02-01.
  *
+ * @section Acknowledgement
+ * Inspired by graphics library by ladyada/adafruit.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #ifndef __COSA_SPI_ST7735R_HH__
 #define __COSA_SPI_ST7735R_HH__
 
+#include "Cosa/Canvas.hh"
 #include "Cosa/SPI.hh"
 #include "Cosa/Pins.hh"
-#include "Cosa/IOStream.hh"
-#include "Cosa/Trace.hh"
 
-class ST7735R : private SPI::Driver {
+class ST7735R : public Canvas {
 
 protected:
   /**
@@ -51,24 +53,11 @@ protected:
   OutputPin m_dc;
 
   /**
-   * Current drawing color; RGB<5, 6, 5>
+   * Initialization script (in program memory).
    */
-  uint16_t m_color;
-
-  /**
-   * Current font size (scale 1..n) and text position.
-   */
-  uint8_t m_size;
-  uint8_t m_x;
-  uint8_t m_y;
-
-  /**
-   * Initialization script and font (in program memory)
-   */
+  uint8_t m_initiated;
   static uint8_t script[] PROGMEM;
-  static uint8_t font[] PROGMEM;
 
-public:
   /**
    * SPI commands (ch. 10 Command, pp. 77-78, pp. 119-120)
    */
@@ -160,28 +149,7 @@ public:
    */
   void write(Command cmd, uint16_t x, uint16_t y);
 
-  /**
-   * Write command and data to device.
-   * @param[in] cmd command to write.
-   * @param[in] buffer data buffer to write.
-   * @param[in] count number of bytes to write.
-   */
-  void write_P(Command cmd, const void* buffer, uint8_t count);
-
-  /**
-   * Screen size; width/height
-   */
-  static const uint8_t SCREEN_WIDTH = 128;
-  static const uint8_t SCREEN_HEIGHT = 160;
-
-  /**
-   * Font size; width/height 
-   */
-  static const uint8_t FONT_HEIGHT = 8;
-  static const uint8_t FONT_WIDTH = 5;
-  static const uint8_t CHAR_SPACING = 1;
-  static const uint8_t LINE_SPACING = 2;
-
+public:
   /**
    * Construct display object with given control pins.
    * @param[in] cs slave selection pin (default pin 10).
@@ -190,19 +158,11 @@ public:
   ST7735R(uint8_t cs = 10, uint8_t dc = 9);
 
   /**
+   * @override
    * Start interaction with device.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin()
-  {
-    return (spi.begin(SPI::DEFAULT_CLOCK, 3, SPI::MSB_FIRST));
-  }
-
-  /**
-   * Initiate device with command and data sequence.
-   * @param[in] bp boot sequence (in program memory).
-   */
-  void initiate(const uint8_t* bp = script);
+  virtual bool begin();
 
   /**
    * Set the current display port.
@@ -219,203 +179,54 @@ public:
   }
 
   /**
-   * Basic color set.
-   */
-  enum {
-    WHITE = 0xFFFFU,
-    BLACK = 0x0000U,
-    RED = 0xF800U,
-    GREEN = 0x07E0U,
-    BLUE = 0x001FU,
-    CYAN = GREEN + BLUE,
-    MAGENTA = RED + BLUE,
-    YELLOW = RED + GREEN
-  };
-  
-  /**
-   * Get current drawing color.
-   * @return color.
-   */
-  uint16_t get_color()
-  {
-    return (m_color);
-  }
-
-  /**
-   * Set current drawing color.
-   * @param[in] color
-   */
-  void set_color(uint16_t color)
-  {
-    m_color = color;
-  }
-
-  /**
-   * Set current drawing color from primary colors (RGB).
-   * @param[in] red
-   * @param[in] green
-   * @param[in] blue
-   */
-  void set_color(uint8_t red, uint8_t green, uint8_t blue)
-  {
-    m_color = (((red & 0x1f) << 11) | ((green & 0x3f) << 5) | (blue & 0x1f));
-  }
-
-  /**
-   * Set current drawing color to gray scale shade (0..100%)
-   * @param[in] scale
-   */
-  void set_gray(uint8_t scale)
-  {
-    if (scale > 100) scale = 100;
-    uint8_t level = (scale * 0x1fU) / 100;
-    set_color(level, level << 1, level);
-  }
-
-  /**
-   * Get current font size.
-   * @return size.
-   */
-  uint8_t get_size(uint8_t size)
-  {
-    return (m_size);
-  }
-
-  /**
-   * Set current font size.
-   * @param[in] size
-   */
-  void set_size(uint8_t size)
-  {
-    m_size = (size > 0 ? size : 1);
-  }
-
-  /**
-   * Set current text position.
-   * @param[out] x
-   * @param[out] y
-   */
-  void get_cursor(uint8_t& x, uint8_t& y)
-  {
-    x = m_x;
-    y = m_y;
-  }
-
-  /**
-   * Set current text position.
-   * @param[in] x
-   * @param[in] y
-   */
-  void set_cursor(uint8_t x, uint8_t y)
-  {
-    m_x = x;
-    m_y = y;
-  }
-
-  /**
+   * @override
    * Set pixel with current color.
    * @param[in] x
    * @param[in] y
    */
-  void draw_pixel(uint8_t x, uint8_t y)
+  virtual void draw_pixel(uint8_t x, uint8_t y)
   {
     set_port(x, y, x + 1, y + 1);
     SPI_transaction(m_cs) {
-      spi.exchange(m_color >> 8);
-      spi.exchange(m_color);
+      spi.exchange(m_pen_color >> 8);
+      spi.exchange(m_pen_color);
     }
   }
 
   /**
-   * Draw line with current color.
-   * @param[in] x0 
-   * @param[in] y0
-   * @param[in] x1
-   * @param[in] y1
-   */
-  void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
-
-  /**
+   * @override
    * Draw vertical line with current color.
    * @param[in] x 
    * @param[in] y
    * @param[in] length
    */
-  void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length);
+  virtual void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length);
 
   /**
+   * @override
    * Draw horizontal line with current color.
    * @param[in] x 
    * @param[in] y
    * @param[in] length
    */
-  void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length);
+  virtual void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length);
 
   /**
-   * Draw rectangle with current color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] width
-   * @param[in] height
-   */
-  void draw_rect(uint8_t x, uint8_t y, uint8_t width = 1, uint8_t height = 1);
-
-  /**
+   * @override
    * Fill rectangle with current color.
    * @param[in] x 
    * @param[in] y
    * @param[in] width
    * @param[in] height
    */
-  void fill_rect(uint8_t x, uint8_t y, uint8_t width = 1, uint8_t height = 1);
+  virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
   
   /**
-   * Fill screen with current color.
-   */
-  void fill_screen()
-  {
-    fill_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-  }
-
-  /**
-   * Draw circle with current color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] radius
-   */
-  void draw_circle(uint8_t x, uint8_t y, uint8_t radius);
-
-  /**
-   * Fill circle with current color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] radius
-   */
-  void fill_circle(uint8_t x, uint8_t y, uint8_t radius);
-
-  /**
-   * Draw character with current color and font.
-   * @param[in] c
-   */
-  void draw_char(char c);
-
-  /**
-   * Draw string in current color and font.
-   * @param[in] s
-   */
-  void draw_string(char* s);
-
-  /**
-   * Draw string from program memory with current color and font.
-   * @param[in] s
-   */
-  void draw_string_P(const char* s);
-
-  /**
+   * @override
    * Stop sequence of interaction with device.
    * @return true(1) if successful otherwise false(0)
    */
-  bool end()
+  virtual bool end()
   {
     return (spi.end());
   }
