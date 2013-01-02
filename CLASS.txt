@@ -102,7 +102,7 @@ TWI/PCF8591.hh:	      	    class PCF8591 : private TWI::Driver
 SERIAL PERIPHERAL INTERFACE
 Driver for devices on the serial peripherial interface (SPI).
 Support for ADXL345 Digital Accelerometer, nRF24L01 Single Chip 2.4GHz
-Transceiver. 
+Transceiver, and ST7735R, 262K Color Single-Chip TFT Controller.
 ----------------------------------------------------------------------------
 SPI.hh:		SPI spi (singleton)
 SPI.hh:		class SPI
@@ -110,6 +110,7 @@ SPI.hh:		      class SPI::Device : public Caso
 SPI.hh:		      class SPI::Driver : public Caso
 SPI/ADXL345.hh:	      	    class ADXL345 : private SPI::Driver
 SPI/NRF24L01P.hh:      	    class NRF24L01P : private SPI::Driver
+SPI/ST7735R.hh:		    class ST7735R : private SPI::Driver
 ----------------------------------------------------------------------------
 DHT11 
 Humidity & Temperature Sensor device driver

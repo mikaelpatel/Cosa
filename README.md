@@ -59,9 +59,10 @@ Drivers
 4. PCF8591 2-Wire 8-bit A/D and D/A converter.
 5. ADXL345 Digital Accelerometer.
 6. nRF24L01 Single Chip 2.4GHz Transceiver. 
-7. DHT11 Humidity & Temperature Sensor device driver.
-8. HC-SR04/US-020 Ultrasonic range module device driver.
-9. Slave device support for SPI, TWI and OWI.
+7. DHT11 Humidity & Temperature Sensor.
+8. HC-SR04/US-020 Ultrasonic range module.
+9. ST7735R, 262K Color Single-Chip TFT Controller.
+10. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the Cosa/references directory.  
