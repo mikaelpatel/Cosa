@@ -76,6 +76,13 @@ Ciao.hh:	class Ciao
 Fai.hh:		class Fai : public Ciao
 		      class Fai::Descriptor
 ----------------------------------------------------------------------------
+CANVAS/FONT
+The Cosa graphics device handler.
+Canvas.hh:      class Canvas : public IOStream::Device
+SPI/ST7735R.hh:       class ST7735R : public Canvas
+Font.hh:	class Font
+Font5x7.hh:	      class Font5x7 : public Font
+----------------------------------------------------------------------------
 OWI
 Driver for devices on the one wire bus (1-Wire). 
 Support for DS18B20 Programmable Resolution 1-Wire Digital 
@@ -110,7 +117,6 @@ SPI.hh:		      class SPI::Device : public Caso
 SPI.hh:		      class SPI::Driver : public Caso
 SPI/ADXL345.hh:	      	    class ADXL345 : private SPI::Driver
 SPI/NRF24L01P.hh:      	    class NRF24L01P : private SPI::Driver
-SPI/ST7735R.hh:		    class ST7735R : private SPI::Driver
 ----------------------------------------------------------------------------
 DHT11 
 Humidity & Temperature Sensor device driver
