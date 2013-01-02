@@ -103,7 +103,7 @@ SPI::write_P(uint8_t cmd, const void* buffer, uint8_t count)
 {
   uint8_t status = exchange(cmd);
   for (uint8_t* bp = (uint8_t*) buffer; count != 0; bp++, count--) {
-    exchange(pgm_read_byte(*bp));
+    exchange(pgm_read_byte(bp));
   }
   return (status);
 }
