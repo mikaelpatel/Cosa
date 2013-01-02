@@ -38,6 +38,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
+#include "Cosa/Font5x7.hh"
 
 class Canvas : public IOStream::Device {
 
@@ -64,8 +65,7 @@ protected:
   /**
    * Text handling; font, color, scale and position.
    */
-  static uint8_t font5x7[] PROGMEM;
-  const uint8_t* m_font;
+  Font* m_font;
   uint16_t m_text_color;
   uint8_t m_scale;
   uint8_t m_x;
@@ -93,27 +93,27 @@ public:
   const uint8_t SCREEN_HEIGHT;
   
   /**
-   * Font size; width/height 
+   * Character/line spacing
    */
-  static const uint8_t FONT_HEIGHT = 8;
-  static const uint8_t FONT_WIDTH = 5;
-  static const uint8_t CHAR_SPACING = 1;
-  static const uint8_t LINE_SPACING = 2;
+  uint8_t CHAR_SPACING;
+  uint8_t LINE_SPACING;
 
   /**
    * Construct canvas object and initiate.
    */
-  Canvas(uint8_t width, uint8_t height) :
+  Canvas(uint8_t width, uint8_t height, Font* font = &font5x7) :
     IOStream::Device(),
     m_canvas_color(WHITE),
     m_pen_color(BLACK),
-    m_scale(1),
-    m_font(font5x7),
+    m_font(font),
     m_text_color(BLACK),
+    m_scale(1),
     m_x(0),
     m_y(0),
     SCREEN_WIDTH(width),
-    SCREEN_HEIGHT(height)
+    SCREEN_HEIGHT(height),
+    CHAR_SPACING(1),
+    LINE_SPACING(2)
   {}
 
   /**
@@ -174,6 +174,15 @@ public:
   void set_text_color(uint16_t color)
   {
     m_text_color = color;
+  }
+
+  /**
+   * Set current text font.
+   * @param[in] font
+   */
+  void set_font(Font* font)
+  {
+    m_font = font;
   }
 
   /**
