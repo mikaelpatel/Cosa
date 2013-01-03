@@ -37,7 +37,7 @@
 class Font5x7 : public Font {
 
 private:
-  static uint8_t bitmap[] PROGMEM;
+  static const uint8_t bitmap[] PROGMEM;
 
 public:
   Font5x7() : Font(5, 8, bitmap) {}

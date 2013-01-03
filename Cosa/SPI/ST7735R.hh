@@ -56,7 +56,7 @@ protected:
    * Initialization script (in program memory).
    */
   uint8_t m_initiated;
-  static uint8_t script[] PROGMEM;
+  static const uint8_t script[] PROGMEM;
 
   /**
    * SPI commands (ch. 10 Command, pp. 77-78, pp. 119-120)

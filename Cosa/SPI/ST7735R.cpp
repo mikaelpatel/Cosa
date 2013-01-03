@@ -31,7 +31,7 @@
 
 #include "Cosa/SPI/ST7735R.hh"
 
-uint8_t ST7735R::script[] PROGMEM = {
+const uint8_t ST7735R::script[] PROGMEM = {
   // Software Reset
   SWRESET, 0, 
   // Software Delay 

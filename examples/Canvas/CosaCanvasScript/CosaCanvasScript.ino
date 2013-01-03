@@ -43,8 +43,7 @@ const uint8_t script[] PROGMEM = {
   Canvas::SET_PEN_COLOR, 0, 0, 0,
   Canvas::DRAW_RECT, 108, 30,
   Canvas::SET_CURSOR, 30, 20,
-  Canvas::DRAW_STRING_P, 
-  'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', 0,
+  Canvas::DRAW_STRING_P, 'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', 0,
 
   Canvas::SET_CURSOR, 60, 60,
   Canvas::DRAW_CIRCLE, 10,
