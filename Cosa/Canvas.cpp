@@ -177,10 +177,9 @@ Canvas::draw_char(char c)
 {
   uint16_t color = m_pen_color;
   m_pen_color = m_text_color;
-  if (c >= ' ')
-    draw_bitmap(m_x, m_y, m_font->get_bitmap(c), m_font->WIDTH, m_font->HEIGHT);
+  draw_bitmap(m_x, m_y, m_font->get_bitmap(c), m_font->WIDTH, m_font->HEIGHT);
   m_x += m_scale * (m_font->WIDTH + CHAR_SPACING);
-  if (m_x > SCREEN_WIDTH || c == '\n') {
+  if (m_x > SCREEN_WIDTH) {
     m_x = 0;
     m_y += m_scale * (m_font->HEIGHT + LINE_SPACING);
     if (m_y > SCREEN_HEIGHT) m_y = 0;
@@ -188,3 +187,15 @@ Canvas::draw_char(char c)
   m_pen_color = color;
 }
 
+int 
+Canvas::putchar(char c) 
+{ 
+  if (c >= ' ') 
+    draw_char(c);
+  if (c == '\n') {
+    m_x = 0;
+    m_y += m_scale * (m_font->HEIGHT + LINE_SPACING);
+    if (m_y > SCREEN_HEIGHT) m_y = 0;
+  }
+  return (1);
+}

@@ -25,7 +25,7 @@
  * LCD/TFT. See Cosa/SPI/ST7735R.hh for an example of usage.
  *
  * @section Limitations
- * Color model is 16-bit RBG<5,6,5>.
+ * Color model is 16-bit RBG<5,6,5>. Canvas size is max 256x256.
  *
  * @section Acknowledgement
  * Inspired by graphics library by ladyada/adafruit.
@@ -41,19 +41,6 @@
 #include "Cosa/Font5x7.hh"
 
 class Canvas : public IOStream::Device {
-
-private:
-  /**
-   * @override
-   * Write character to canvas device.
-   * @param[in] c character to write.
-   * @return character written or EOF(-1).
-   */
-  virtual int putchar(char c) 
-  { 
-    draw_char(c);
-    return (1);
-  }
 
 protected:
   /**
@@ -408,6 +395,15 @@ public:
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool end() = 0;
+
+private:
+  /**
+   * @override
+   * Write character to canvas device.
+   * @param[in] c character to write.
+   * @return character written or EOF(-1).
+   */
+  virtual int putchar(char c);
 };
 
 #endif

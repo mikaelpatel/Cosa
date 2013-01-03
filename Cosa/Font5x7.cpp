@@ -21,7 +21,10 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Bitmap font 5x7.
+ * Bitmap font size 5x7.
+ *
+ * @section Acknowledgement
+ * Inspired by graphics library by ladyada/adafruit.
  *
  * This file is part of the Arduino Che Cosa project.
  */
