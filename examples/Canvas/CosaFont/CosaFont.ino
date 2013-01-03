@@ -42,9 +42,9 @@ void loop()
 {
   tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
-  tft.set_scale(1);
+  tft.set_text_scale(1);
   tft.set_pen_color(tft.BLACK);
-  tft.set_text_color(tft.red(75));
+  tft.set_text_color(tft.red_shade(75));
   char c = 0;
   for (uint8_t x = 3; x < tft.SCREEN_WIDTH - 12; x += 12) {
     for (uint8_t y = 2; y < tft.SCREEN_HEIGHT - 12; y += 12) {
@@ -58,7 +58,7 @@ void loop()
   }
   Watchdog::delay(2048);
 
-  tft.set_scale(16);
+  tft.set_text_scale(16);
   tft.set_pen_color(tft.grayscale(75));
   tft.fill_rect(3, 2, tft.SCREEN_WIDTH - 6, tft.SCREEN_HEIGHT - 4);
   tft.set_pen_color(tft.BLACK);
@@ -66,11 +66,11 @@ void loop()
   tft.set_pen_color(tft.grayscale(75));
   for (uint8_t c = 0; c < 128; c++) {
     tft.fill_rect(tft.SCREEN_WIDTH/2 - 40, tft.SCREEN_HEIGHT/2 - 63, 83, 131);
-    tft.set_text_color(tft.red(50));
-    tft.set_cursor(tft.SCREEN_WIDTH/2 - 37, tft.SCREEN_HEIGHT/2 - 63);
+    tft.set_text_color(tft.red_shade(50));
+    tft.set_cursor(tft.SCREEN_WIDTH/2 - 37, tft.SCREEN_HEIGHT/2 - 60);
     tft.draw_char(c);
-    tft.set_text_color(tft.red(75));
-    tft.set_cursor(tft.SCREEN_WIDTH/2 - 40, tft.SCREEN_HEIGHT/2 - 60);
+    tft.set_text_color(tft.red_shade(75));
+    tft.set_cursor(tft.SCREEN_WIDTH/2 - 40, tft.SCREEN_HEIGHT/2 - 63);
     tft.draw_char(c);
     Watchdog::delay(512);
   }

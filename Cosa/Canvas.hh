@@ -44,20 +44,31 @@ class Canvas : public IOStream::Device {
 
 protected:
   /**
-   * Current drawing color; RGB<5,6,5>
+   * Current drawing color; 16-bit RGB<5,6,5>
    */
   uint16_t m_canvas_color;
   uint16_t m_pen_color;
   
   /**
-   * Text handling; font, color, scale and position.
+   * Current position (turtle graphics style)
+   */
+  struct {
+    uint8_t x;
+    uint8_t y;
+  } m_cursor;
+
+  /**
+   * Text handling; font, color, scale and port.
    */
   Font* m_font;
   uint16_t m_text_color;
-  uint8_t m_scale;
-  uint8_t m_x;
-  uint8_t m_y;
-
+  uint8_t m_text_scale;
+  struct {
+    uint8_t x;
+    uint8_t y;
+    uint8_t width;
+    uint8_t height;
+  } m_text_port;
 public:
   /**
    * Basic color palette.
@@ -87,6 +98,9 @@ public:
 
   /**
    * Construct canvas object and initiate.
+   * @param[in] width screen width.
+   * @param[in] height screen height.
+   * @param[in] font text font (default 5x7).
    */
   Canvas(uint8_t width, uint8_t height, Font* font = &font5x7) :
     IOStream::Device(),
@@ -94,17 +108,22 @@ public:
     m_pen_color(BLACK),
     m_font(font),
     m_text_color(BLACK),
-    m_scale(1),
-    m_x(0),
-    m_y(0),
+    m_text_scale(1),
     SCREEN_WIDTH(width),
     SCREEN_HEIGHT(height),
     CHAR_SPACING(1),
     LINE_SPACING(2)
-  {}
+  {
+    m_cursor.x = 0;
+    m_cursor.y = 0;
+    m_text_port.x = 0;
+    m_text_port.y = 0;
+    m_text_port.width = width;
+    m_text_port.height = height;
+  }
 
   /**
-   * Start interaction with device.
+   * Start interaction with device. Must override.
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool begin() = 0;
@@ -173,7 +192,7 @@ public:
   }
 
   /**
-   * Create color from primary colors (RGB).
+   * Create 16-bit color from primary colors (RGB).
    * @param[in] red
    * @param[in] green
    * @param[in] blue
@@ -181,7 +200,9 @@ public:
    */
   uint16_t color(uint8_t red, uint8_t green, uint8_t blue)
   {
-    return (((red & 0x1f) << 11) | ((green & 0x3f) << 5) | (blue & 0x1f));
+    return (((red & 0x1f) << 11)  | 
+	    ((green & 0x3f) << 5) | 
+	    (blue & 0x1f));
   }
 
   /**
@@ -201,7 +222,7 @@ public:
    * @param[in] scale
    * @return red shade.
    */
-  uint16_t red(uint8_t scale)
+  uint16_t red_shade(uint8_t scale)
   {
     if (scale > 100) scale = 100;
     uint8_t level = (scale * 0x1fU) / 100;
@@ -213,7 +234,7 @@ public:
    * @param[in] scale
    * @return green shade.
    */
-  uint16_t green(uint8_t scale)
+  uint16_t green_shade(uint8_t scale)
   {
     if (scale > 100) scale = 100;
     uint8_t level = (scale * 0x3fU) / 100;
@@ -225,7 +246,7 @@ public:
    * @param[in] scale
    * @return red shade.
    */
-  uint16_t blue(uint8_t scale)
+  uint16_t blue_shade(uint8_t scale)
   {
     if (scale > 100) scale = 100;
     uint8_t level = (scale * 0x1fU) / 100;
@@ -233,43 +254,73 @@ public:
   }
 
   /**
-   * Get current scale.
-   * @return scale.
+   * Get current text scale.
+   * @return text scale.
    */
-  uint8_t get_scale()
+  uint8_t get_text_scale()
   {
-    return (m_scale);
+    return (m_text_scale);
   }
 
   /**
-   * Set current scale (1..n).
+   * Set current text scale (1..n).
    * @param[in] scale.
    */
-  void set_scale(uint8_t scale)
+  void set_text_scale(uint8_t scale)
   {
-    m_scale = (scale > 0 ? scale : 1);
+    m_text_scale = (scale > 0 ? scale : 1);
   }
 
   /**
-   * Set current text position.
+   * Get current text port.
    * @param[out] x
    * @param[out] y
+   * @param[out] width
+   * @param[out] height
    */
-  void get_cursor(uint8_t& x, uint8_t& y)
+  void get_text_port(uint8_t& x, uint8_t& y, uint8_t& width, uint8_t& height)
   {
-    x = m_x;
-    y = m_y;
+    x = m_text_port.x;
+    y = m_text_port.y;
+    width = m_text_port.width;
+    height = m_text_port.height;
   }
 
   /**
    * Set current text position.
    * @param[in] x
    * @param[in] y
+   * @param[in] width
+   * @param[in] height
+   */
+  void set_text_port(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
+  {
+    m_text_port.x = x;
+    m_text_port.y = y;
+    m_text_port.width = width;
+    m_text_port.height = height;
+  }
+
+  /**
+   * Get current cursor position.
+   * @param[out] x
+   * @param[out] y
+   */
+  void get_cursor(uint8_t& x, uint8_t& y)
+  {
+    x = m_cursor.x;
+    y = m_cursor.y;
+  }
+
+  /**
+   * Set current cursor position.
+   * @param[in] x
+   * @param[in] y
    */
   void set_cursor(uint8_t x, uint8_t y)
   {
-    m_x = x;
-    m_y = y;
+    m_cursor.x = x;
+    m_cursor.y = y;
   }
 
   /**
@@ -278,6 +329,14 @@ public:
    * @param[in] y
    */
   virtual void draw_pixel(uint8_t x, uint8_t y);
+
+  /**
+   * Set pixel at cursor position with current color.
+   */
+  void draw_pixel()
+  {
+    draw_pixel(m_cursor.x, m_cursor.y);
+  }
 
   /**
    * Draw bitmap with current color.
@@ -290,6 +349,18 @@ public:
    */
   virtual void draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp, 
 			   uint8_t width, uint8_t height);
+
+  /**
+   * Draw bitmap at cursor position with current color.
+   * @param[in] bp
+   * @param[in] width
+   * @param[in] height
+   * @param[in] scale
+   */
+  void draw_bitmap(const uint8_t* bp, uint8_t width, uint8_t height)
+  {
+    draw_bitmap(m_cursor.x, m_cursor.y, bp, width, height);
+  }
   
   /**
    * Draw line with current color.
@@ -301,6 +372,19 @@ public:
   virtual void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
 
   /**
+   * Draw line to given position with current color. Update cursor to
+   * new position.
+   * @param[in] x
+   * @param[in] y
+   */
+  void draw_line(uint8_t x, uint8_t y)
+  {
+    draw_line(m_cursor.x, m_cursor.y, x, y);
+    m_cursor.x = x;
+    m_cursor.y = y;
+  }
+
+  /**
    * Draw vertical line with current color.
    * @param[in] x 
    * @param[in] y
@@ -309,6 +393,16 @@ public:
   virtual void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
   {
     draw_line(x, y, x, y + length);
+  }
+
+  /**
+   * Draw vertical line with given length and current color. Update
+   * cursor to new position.
+   * @param[in] length
+   */
+  void draw_vertical_line(uint8_t length)
+  {
+    draw_line(m_cursor.x, m_cursor.y + length);
   }
 
   /**
@@ -323,22 +417,52 @@ public:
   }
 
   /**
+   * Draw horizontal line with given length and current color. Update
+   * cursor to new position.
+   * @param[in] length
+   */
+  void draw_horizontal_line(uint8_t length)
+  {
+    draw_line(m_cursor.x + length, m_cursor.y);
+  }
+
+  /**
    * Draw rectangle with current color.
    * @param[in] x 
    * @param[in] y
    * @param[in] width
    * @param[in] height
    */
-  virtual void draw_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
+  virtual void draw_rect(uint8_t x, uint8_t y, 
+			 uint8_t width, uint8_t height);
+  /**
+   * Draw rectangle at cursor position with current color.
+   * @param[in] width
+   * @param[in] height
+   */
+  void draw_rect(uint8_t width, uint8_t height)
+  {
+    draw_rect(m_cursor.x, m_cursor.y, width, height);
+  }
 
   /**
-   * Fill rectangle with current color.
+   * Fill rectangle with current color. Must override.
    * @param[in] x 
    * @param[in] y
    * @param[in] width
    * @param[in] height
    */
-  virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) = 0;
+  virtual void fill_rect(uint8_t x, uint8_t y, 
+			 uint8_t width, uint8_t height) = 0;
+  /**
+   * Fill rectangle at cursor position with current color.
+   * @param[in] width
+   * @param[in] height
+   */
+  void fill_rect(uint8_t width, uint8_t height)
+  {
+    fill_rect(m_cursor.x, m_cursor.y, width, height);
+  }
   
   /**
    * Fill screen with current color.
@@ -357,12 +481,30 @@ public:
   virtual void draw_circle(uint8_t x, uint8_t y, uint8_t radius);
 
   /**
+   * Draw circle at cursor position with current color.
+   * @param[in] radius
+   */
+  void draw_circle(uint8_t radius)
+  {
+    draw_circle(m_cursor.x, m_cursor.y, radius);
+  }
+
+  /**
    * Fill circle with current color.
    * @param[in] x 
    * @param[in] y
    * @param[in] radius
    */
   virtual void fill_circle(uint8_t x, uint8_t y, uint8_t radius);
+
+  /**
+   * Fill circle at cursor position with current color.
+   * @param[in] radius
+   */
+  void fill_circle(uint8_t radius)
+  {
+    draw_circle(m_cursor.x, m_cursor.y, radius);
+  }
 
   /**
    * Draw character with current color and font.
@@ -391,15 +533,15 @@ public:
   }
 
   /**
-   * Stop sequence of interaction with device.
+   * Stop sequence of interaction with device. Must override.
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool end() = 0;
 
-private:
   /**
    * @override
-   * Write character to canvas device.
+   * Write character at current cursor position, with current text
+   * color and font.  
    * @param[in] c character to write.
    * @return character written or EOF(-1).
    */

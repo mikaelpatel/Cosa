@@ -70,7 +70,7 @@ void loop()
   tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
   for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
     uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
-    tft.set_pen_color(tft.red(level));
+    tft.set_pen_color(tft.red_shade(level));
     tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
   }
   ms = (micros() - start) / 1000L;
@@ -83,7 +83,7 @@ void loop()
   tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
   for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
     uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
-    tft.set_pen_color(tft.green(level));
+    tft.set_pen_color(tft.green_shade(level));
     tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
   }
   ms = (micros() - start) / 1000L;
@@ -96,7 +96,7 @@ void loop()
   tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
   for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
     uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
-    tft.set_pen_color(tft.blue(level));
+    tft.set_pen_color(tft.blue_shade(level));
     tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
   }
   ms = (micros() - start) / 1000L;

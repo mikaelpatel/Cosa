@@ -45,10 +45,11 @@ Canvas::draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp,
       if ((j & 0x7) == 0)
 	line = pgm_read_byte(bp++);
       if (line & 0x1) {
-	if (m_scale == 1)
+	if (m_text_scale == 1)
 	  draw_pixel(x + i, y + j);
 	else {
-	  fill_rect(x + i*m_scale, y + j*m_scale, m_scale, m_scale);
+	  fill_rect(x + i*m_text_scale, y + j*m_text_scale, 
+		    m_text_scale, m_text_scale);
 	} 
       }
       line >>= 1;
@@ -177,12 +178,15 @@ Canvas::draw_char(char c)
 {
   uint16_t color = m_pen_color;
   m_pen_color = m_text_color;
-  draw_bitmap(m_x, m_y, m_font->get_bitmap(c), m_font->WIDTH, m_font->HEIGHT);
-  m_x += m_scale * (m_font->WIDTH + CHAR_SPACING);
-  if (m_x > SCREEN_WIDTH) {
-    m_x = 0;
-    m_y += m_scale * (m_font->HEIGHT + LINE_SPACING);
-    if (m_y > SCREEN_HEIGHT) m_y = 0;
+  draw_bitmap(m_cursor.x, m_cursor.y, 
+	      m_font->get_bitmap(c), 
+	      m_font->WIDTH, m_font->HEIGHT);
+  m_cursor.x += m_text_scale * (m_font->WIDTH + CHAR_SPACING);
+  if (m_cursor.x > m_text_port.width) {
+    m_cursor.x = m_text_port.x;
+    m_cursor.y += m_text_scale * (m_font->HEIGHT + LINE_SPACING);
+    if (m_cursor.y > m_text_port.width) 
+      m_cursor.y = m_text_port.y;
   }
   m_pen_color = color;
 }
@@ -193,9 +197,10 @@ Canvas::putchar(char c)
   if (c >= ' ') 
     draw_char(c);
   if (c == '\n') {
-    m_x = 0;
-    m_y += m_scale * (m_font->HEIGHT + LINE_SPACING);
-    if (m_y > SCREEN_HEIGHT) m_y = 0;
+    m_cursor.x = m_text_port.x;
+    m_cursor.y += m_text_scale * (m_font->HEIGHT + LINE_SPACING);
+    if (m_cursor.y > m_text_port.width) 
+      m_cursor.y = m_text_port.y;
   }
   return (1);
 }

@@ -66,7 +66,7 @@ void loop()
   // Print on the output stream
   start = micros();
   tft.set_text_color(tft.BLUE);
-  tft.set_scale(1);
+  tft.set_text_scale(1);
   tft.set_cursor(0, 0);
   cout.print_P(PSTR("CosaST7735R: started"));
   cout.println();
@@ -75,11 +75,11 @@ void loop()
   tft.get_cursor(x, y);
   cout.printf_P(PSTR("cursor(x = %d, y = %d)\n"), x, y);
   tft.set_text_color(tft.RED);
-  tft.set_scale(2);
+  tft.set_text_scale(2);
   cout.print_P(PSTR("  Hello\n  World"));
   cout.println();
   tft.set_text_color(tft.BLACK);
-  tft.set_scale(1);
+  tft.set_text_scale(1);
   ms = (micros() - start) / 1000L;
   cout.printf_P(PSTR("draw_intro: %ul ms\n"), ms);
   Watchdog::delay(2048);
