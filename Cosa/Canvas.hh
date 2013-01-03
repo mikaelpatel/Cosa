@@ -539,6 +539,37 @@ public:
   virtual bool end() = 0;
 
   /**
+   * Drawing operation codes (in program memory).
+   */
+  enum {
+    NOP = 0,
+    SET_CANVAS_COLOR,
+    SET_PEN_COLOR,
+    SET_TEXT_COLOR,
+    SET_TEXT_SCALE,
+    SET_TEXT_PORT,
+    SET_FONT,
+    SET_CURSOR,
+    DRAW_PIXEL,
+    DRAW_BITMAP,
+    DRAW_LINE,
+    DRAW_RECT,
+    FILL_RECT,
+    FILL_SCREEN,
+    DRAW_CIRCLE,
+    FILL_CIRCLE,
+    DRAW_CHAR,
+    DRAW_STRING_P,
+    END_SCRIPT
+  };
+
+  /**
+   * Run canvas drawing script.
+   * @param[in] ip instruction pointer.
+   */
+  void run(const uint8_t* ip);
+
+  /**
    * @override
    * Write character at current cursor position, with current text
    * color and font.  

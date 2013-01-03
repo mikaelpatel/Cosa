@@ -191,6 +191,74 @@ Canvas::draw_char(char c)
   m_pen_color = color;
 }
 
+void 
+Canvas::run(const uint8_t* ip)
+{
+  while (1) {
+    switch (pgm_read_byte(ip++)) {
+    case NOP:
+      break;
+    case SET_CANVAS_COLOR:
+      set_canvas_color(color(pgm_read_byte(ip++), 
+			     pgm_read_byte(ip++), 
+			     pgm_read_byte(ip++)));
+    break;
+    case SET_PEN_COLOR:
+      set_pen_color(color(pgm_read_byte(ip++), 
+			  pgm_read_byte(ip++), 
+			  pgm_read_byte(ip++)));
+      break;
+    case SET_TEXT_COLOR:
+      set_text_color(color(pgm_read_byte(ip++), 
+			   pgm_read_byte(ip++), 
+			   pgm_read_byte(ip++)));
+      break;
+    case SET_TEXT_SCALE:
+      set_text_scale(pgm_read_byte(ip++));
+      break;
+    case SET_TEXT_PORT:
+      set_text_port(pgm_read_byte(ip++),
+		    pgm_read_byte(ip++),
+		    pgm_read_byte(ip++),
+		    pgm_read_byte(ip++));
+      break;
+    case SET_CURSOR:
+      set_cursor(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      break;
+    case DRAW_PIXEL:
+      draw_pixel();
+      break;
+    case DRAW_LINE:
+      draw_line(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      break;
+    case DRAW_RECT:
+      draw_rect(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      break;
+    case FILL_RECT:
+      fill_rect(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      break;
+    case FILL_SCREEN:
+      fill_screen();
+      break;
+    case DRAW_CIRCLE:
+      draw_circle(pgm_read_byte(ip++));
+      break;
+    case FILL_CIRCLE:
+      fill_circle(pgm_read_byte(ip++));
+      break;
+    case DRAW_CHAR:
+      draw_char(pgm_read_byte(ip++));
+      break;
+    case DRAW_STRING_P:
+      char c;
+      while ((c = pgm_read_byte(ip++)) != 0) putchar(c);
+      break;
+    default:
+      return;
+    }
+  }
+}
+
 int 
 Canvas::putchar(char c) 
 { 
