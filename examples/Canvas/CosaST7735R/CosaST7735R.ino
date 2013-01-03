@@ -84,24 +84,6 @@ void loop()
   cout.printf_P(PSTR("draw_intro: %ul ms\n"), ms);
   Watchdog::delay(2048);
 
-  // Draw grid with pin status
-  tft.set_pen_color(tft.WHITE);
-  tft.fill_screen();
-  start = micros();
-  for (uint8_t x = 0, y = 2; y < tft.SCREEN_HEIGHT; y += 20, x++) {
-    tft.set_pen_color(tft.grayscale(75));
-    tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 16);
-    tft.set_pen_color(tft.BLACK);
-    tft.draw_rect(10, y, tft.SCREEN_WIDTH - 20, 16);
-    tft.set_pen_color(digitalRead(x) ? tft.RED : tft.GREEN);
-    tft.fill_circle(28, y + 8, 5);
-    tft.set_cursor(50, y + 5);
-    cout.printf_P(PSTR("A%d = %d"), x, analogRead(x));
-  }
-  ms = (micros() - start) / 1000L;
-  INFO("pin_status: %ul ms", ms);
-  Watchdog::delay(2048);  
-
   // Grid with draw pixel
   tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
