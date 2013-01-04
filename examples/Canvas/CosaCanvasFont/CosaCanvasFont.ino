@@ -1,5 +1,5 @@
 /**
- * @file CosaFont.ino
+ * @file CosaCanvasFont.ino
  * @version 1.0
  *
  * @section License
@@ -21,8 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of Canvas/Font and device driver for ST7735R, 
- * 262K Color Single-Chip TFT Controller.
+ * Cosa demonstration of Canvas Font handling and device driver for 
+ * ST7735R, 262K Color Single-Chip TFT Controller.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -34,12 +34,14 @@ ST7735R tft;
 
 void setup()
 {
+  // Start the watchdog and initiate the display
   Watchdog::begin();
   tft.begin();
 }
 
 void loop()
 {
+  // Draw the font table
   tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
   tft.set_text_scale(1);
@@ -58,6 +60,7 @@ void loop()
   }
   Watchdog::delay(2048);
 
+  // Draw each character in the font table 
   tft.set_text_scale(16);
   tft.set_pen_color(tft.shade(tft.WHITE, 75));
   tft.fill_rect(3, 2, tft.WIDTH - 6, tft.HEIGHT - 4);

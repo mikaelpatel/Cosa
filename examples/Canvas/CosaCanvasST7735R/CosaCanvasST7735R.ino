@@ -1,5 +1,5 @@
 /**
- * @file CosaST7735R.ino
+ * @file CosaCanvasST7735R.ino
  * @version 1.0
  *
  * @section License
@@ -122,21 +122,9 @@ void loop()
   INFO("fill_rect: %ul ms", ms);
   Watchdog::delay(2048);
   
-  // Grid with draw circle
+  // Fill circles
   tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
-  tft.set_pen_color(tft.BLACK);
-  start = micros();
-  for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
-    for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
-      tft.draw_circle(x + 10, y + 10, 10);
-    }
-  }
-  ms = (micros() - start) / 1000L;
-  INFO("draw_circle: %ul ms", ms);
-  Watchdog::delay(2048);
-
-  // Fill circles
   tft.set_pen_color(tft.RED);
   start = micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
@@ -146,8 +134,21 @@ void loop()
   }
   ms = (micros() - start) / 1000L;
   INFO("fill_circle: %ul ms", ms);
+
+  // Grid with draw circle
+  tft.set_pen_color(tft.BLACK);
+  start = micros();
+  for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
+    for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
+      tft.draw_circle(x + 10, y + 10, 9);
+    }
+  }
+  ms = (micros() - start) / 1000L;
+  INFO("draw_circle: %ul ms", ms);
   Watchdog::delay(2048);
-  
+
+  return;
+
   // Draw lines
   tft.set_pen_color(tft.BLACK);
   tft.fill_screen();

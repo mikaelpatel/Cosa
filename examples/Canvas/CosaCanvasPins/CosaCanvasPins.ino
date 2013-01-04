@@ -1,5 +1,5 @@
 /**
- * @file CosaPinStatus.ino
+ * @file CosaCanvasPins.ino
  * @version 1.0
  *
  * @section License
@@ -31,12 +31,16 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/SPI/ST7735R.hh"
 
+// The display and an iostream to the device
 ST7735R tft;
 IOStream cout(&tft);
 
 void setup()
 {
+  // Start the watchdogy for delay
   Watchdog::begin();
+
+  // Initiate the display and clear the screen
   tft.begin();
   tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
@@ -44,6 +48,7 @@ void setup()
 
 void loop()
 {
+  // Display digital and analog pin values (A/D0..7)
   for (uint8_t x = 0, y = 2; y < tft.HEIGHT; y += 20, x++) {
     tft.set_pen_color(tft.shade(tft.WHITE, 75));
     tft.fill_rect(10, y, tft.WIDTH - 20, 16);

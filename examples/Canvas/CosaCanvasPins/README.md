@@ -1,9 +1,9 @@
-CosaPinStatus
-=============
+CosaCanvasPins
+==============
 
 Cosa demonstration of Canvas device driver for ST7735R, 262K Color 
 Single-Chip TFT Controller, and monitoring of Arduino pins.
-Shows binding to IOStream::Device.
+Shows binding to IOStream::Device onto the display (and not the UART).
 
 Circuit
 -------

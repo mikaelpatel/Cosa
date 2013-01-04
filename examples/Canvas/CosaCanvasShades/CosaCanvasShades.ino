@@ -1,5 +1,5 @@
 /**
- * @file CosaShade.ino
+ * @file CosaCanvasShades.ino
  * @version 1.0
  *
  * @section License
@@ -27,7 +27,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/SPI/ST7735R.hh"
 
@@ -35,22 +34,14 @@ ST7735R tft;
 
 void setup()
 {
-  // Initiate trace stream
-  trace.begin(9600, PSTR("CosaShade: started"));
-
-  // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
-
-  // Initiate the display
   tft.begin();
   tft.set_pen_color(tft.BLACK);
   tft.fill_screen();
 }
 
-uint32_t draw_shade(uint16_t color)
+void draw_shade(uint16_t color)
 {
-  uint32_t start, ms;
-  start = micros();
   tft.set_pen_color(tft.WHITE);
   tft.draw_rect(9, 9, tft.WIDTH - 19, tft.HEIGHT - 19);
   for (uint8_t y = 10; y < tft.HEIGHT - 10; y += 4) {
@@ -58,28 +49,16 @@ uint32_t draw_shade(uint16_t color)
     tft.set_pen_color(tft.shade(color, level));
     tft.fill_rect(10, y, tft.WIDTH - 20, 4);
   }
-  ms = (micros() - start) / 1000L;
-  Watchdog::delay(2048);
-  return (ms);
+  Watchdog::delay(1024);
 }
 
 void loop()
 {
-  uint32_t ms;
-
-  // Draw grayscale 
-  ms = draw_shade(tft.WHITE);
-  INFO("grayscale/fill_rect: %ul ms", ms);
-
-  // Draw red shades
-  ms = draw_shade(tft.RED);
-  INFO("red/fill_rect: %ul ms", ms);
-
-  // Draw green shades
-  ms = draw_shade(tft.GREEN);
-  INFO("green/fill_rect: %ul ms", ms);
-
-  // Draw blue shades
-  ms = draw_shade(tft.BLUE);
-  INFO("blue/fill_rect: %ul ms", ms);
+  draw_shade(tft.WHITE);
+  draw_shade(tft.RED);
+  draw_shade(tft.GREEN);
+  draw_shade(tft.BLUE);
+  draw_shade(tft.YELLOW);
+  draw_shade(tft.CYAN);
+  draw_shade(tft.MAGENTA);
 }
