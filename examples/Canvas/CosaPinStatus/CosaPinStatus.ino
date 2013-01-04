@@ -44,11 +44,11 @@ void setup()
 
 void loop()
 {
-  for (uint8_t x = 0, y = 2; y < tft.SCREEN_HEIGHT; y += 20, x++) {
-    tft.set_pen_color(tft.grayscale(75));
-    tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 16);
+  for (uint8_t x = 0, y = 2; y < tft.HEIGHT; y += 20, x++) {
+    tft.set_pen_color(tft.shade(tft.WHITE, 75));
+    tft.fill_rect(10, y, tft.WIDTH - 20, 16);
     tft.set_pen_color(tft.BLACK);
-    tft.draw_rect(10, y, tft.SCREEN_WIDTH - 20, 16);
+    tft.draw_rect(10, y, tft.WIDTH - 20, 16);
     tft.set_cursor(15, y + 5);
     cout.printf_P(PSTR("D%d"), x);
     tft.set_pen_color(digitalRead(x) ? tft.RED : tft.GREEN);

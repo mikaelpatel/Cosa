@@ -31,8 +31,10 @@
 #include "Cosa/Memory.h"
 #include "Cosa/SPI/ST7735R.hh"
 
+// Use the TFT display as canvas
 ST7735R tft;
 
+// The test drawing script
 const uint8_t script[] PROGMEM = {
   Canvas::SET_PEN_COLOR, 100, 100, 100,
   Canvas::FILL_SCREEN,
@@ -43,10 +45,13 @@ const uint8_t script[] PROGMEM = {
   Canvas::SET_PEN_COLOR, 0, 0, 0,
   Canvas::DRAW_RECT, 108, 30,
   Canvas::SET_CURSOR, 30, 20,
-  Canvas::DRAW_STRING_P, 'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', 0,
+  Canvas::DRAW_STRING_P, 2, 
 
   Canvas::SET_CURSOR, 60, 60,
   Canvas::DRAW_CIRCLE, 10,
+  Canvas::ADD_CURSOR, -10, -10,
+  Canvas::DRAW_RECT, 20, 20,
+  Canvas::ADD_CURSOR, 10, 10,
   Canvas::DRAW_LINE, 100, 100,
   Canvas::DRAW_CIRCLE, 10,
   Canvas::DRAW_LINE, 20, 100,
@@ -55,21 +60,39 @@ const uint8_t script[] PROGMEM = {
 
   Canvas::SET_CURSOR, 50, 130,
   Canvas::SET_PEN_COLOR, 100, 255, 0,
-  Canvas::FILL_RECT, 20, 20,
-  Canvas::SET_PEN_COLOR, 0, 0, 0,
-  Canvas::DRAW_RECT, 20, 20,
+  Canvas::CALL_SCRIPT, 1,
+  Canvas::DRAW_CHAR, 3,
+
   Canvas::SET_CURSOR, 10, 130,
   Canvas::SET_PEN_COLOR, 255, 0, 100,
-  Canvas::FILL_RECT, 20, 20,
-  Canvas::SET_PEN_COLOR, 0, 0, 0,
-  Canvas::DRAW_RECT, 20, 20,
+  Canvas::CALL_SCRIPT, 1,
+  Canvas::DRAW_CHAR, 4,
+
   Canvas::SET_CURSOR, 90, 130,
   Canvas::SET_PEN_COLOR, 0, 100, 255,
+  Canvas::CALL_SCRIPT, 1,
+  Canvas::DRAW_CHAR, 5,
+
+  Canvas::END_SCRIPT
+};
+
+// A sub-script 
+const uint8_t sub_script[] PROGMEM = {
   Canvas::FILL_RECT, 20, 20,
   Canvas::SET_PEN_COLOR, 0, 0, 0,
   Canvas::DRAW_RECT, 20, 20,
-
+  Canvas::ADD_CURSOR, 8, 8,
   Canvas::END_SCRIPT
+};
+
+// And a message
+const char msg[] PROGMEM = "Hello World";
+
+// The script table
+PGM_VOID_P tab[] PROGMEM = {
+  script,
+  sub_script,
+  msg
 };
 
 void setup()
@@ -79,21 +102,26 @@ void setup()
 
   // Check amount of free memory and size of objects
   TRACE(free_memory());
+  TRACE(sizeof(Canvas));
   TRACE(sizeof(tft));
   TRACE(sizeof(script));
+  TRACE(sizeof(msg));
+  TRACE(sizeof(tab));
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
 
-  // Initiate the display
-  TRACE(tft.begin());
-
-  // Benchmark the script run
+  // Benchmark the display initialization and script run
   uint32_t start, ms;
   start = micros();
-  tft.run(script);
+  tft.begin();
   ms = (micros() - start) / 1000L;
-  INFO("run script: %ul ms", ms);
+  INFO("begin: %ul ms", ms);
+
+  start = micros();
+  tft.run(0, tab, membersof(tab));
+  ms = (micros() - start) / 1000L;
+  INFO("run: %ul ms", ms);
 }
 
 void loop()

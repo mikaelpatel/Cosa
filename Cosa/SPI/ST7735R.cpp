@@ -68,9 +68,9 @@ const uint8_t ST7735R::script[] PROGMEM = {
   MADCTL, 1, 0xC0,
   // Set Color Mode, 16-bit color
   COLMOD, 1, 0x05,
-  // Set Column Address, XSTART = 0, XEND = SCREEN_WIDTH - 1
+  // Set Column Address, XSTART = 0, XEND = WIDTH - 1
   CASET, 4, 0x00, 0x00, 0x00, 127,
-  // Set Row Address, YSTART = 0, XEND = SCREEN_HEIGHT - 1
+  // Set Row Address, YSTART = 0, XEND = HEIGHT - 1
   RASET, 4, 0x00, 0x00, 0x00, 159,
   // Positive Gamma Correction
   GMCTRP1, 16, 
@@ -189,8 +189,8 @@ ST7735R::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 void 
 ST7735R::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 {
-  if (x >= SCREEN_WIDTH) return;
-  if (y + length >= SCREEN_HEIGHT) length = SCREEN_HEIGHT - y - 1;
+  if (x >= WIDTH) return;
+  if (y + length >= HEIGHT) length = HEIGHT - y - 1;
   set_port(x, y, x, y + length);
   SPI_transaction(m_cs) {
     while (length--) {
@@ -203,8 +203,8 @@ ST7735R::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 void 
 ST7735R::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 {
-  if (y >= SCREEN_HEIGHT) return;
-  if (x + length >= SCREEN_WIDTH) length = SCREEN_WIDTH - x - 1;
+  if (y >= HEIGHT) return;
+  if (x + length >= WIDTH) length = WIDTH - x - 1;
   set_port(x, y, x + length, y + 1);
   SPI_transaction(m_cs) {
     while (length--) {

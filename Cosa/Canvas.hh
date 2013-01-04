@@ -87,8 +87,8 @@ public:
   /**
    * Screen size; width/height
    */
-  const uint8_t SCREEN_WIDTH;
-  const uint8_t SCREEN_HEIGHT;
+  uint8_t WIDTH;
+  uint8_t HEIGHT;
   
   /**
    * Character/line spacing
@@ -109,8 +109,8 @@ public:
     m_font(font),
     m_text_color(BLACK),
     m_text_scale(1),
-    SCREEN_WIDTH(width),
-    SCREEN_HEIGHT(height),
+    WIDTH(width),
+    HEIGHT(height),
     CHAR_SPACING(1),
     LINE_SPACING(2)
   {
@@ -206,51 +206,17 @@ public:
   }
 
   /**
-   * Create gray scale shade (0..100%)
+   * Create color shade (0..100%)
    * @param[in] scale
-   * @return grayscale.
+   * @return color shade.
    */
-  uint16_t grayscale(uint8_t scale)
+  uint16_t shade(uint16_t color, uint8_t scale)
   {
     if (scale > 100) scale = 100;
-    uint8_t level = (scale * 0x1fU) / 100;
-    return (color(level, level << 1, level));
-  }
-
-  /**
-   * Create red shade (0..100%)
-   * @param[in] scale
-   * @return red shade.
-   */
-  uint16_t red_shade(uint8_t scale)
-  {
-    if (scale > 100) scale = 100;
-    uint8_t level = (scale * 0x1fU) / 100;
-    return (color(level, 0, 0));
-  }
-
-  /**
-   * Create green shade (0..100%)
-   * @param[in] scale
-   * @return green shade.
-   */
-  uint16_t green_shade(uint8_t scale)
-  {
-    if (scale > 100) scale = 100;
-    uint8_t level = (scale * 0x3fU) / 100;
-    return (color(0, level, 0));
-  }
-
-  /**
-   * Create blue shade (0..100%)
-   * @param[in] scale
-   * @return red shade.
-   */
-  uint16_t blue_shade(uint8_t scale)
-  {
-    if (scale > 100) scale = 100;
-    uint8_t level = (scale * 0x1fU) / 100;
-    return (color(0, 0, level));
+    uint8_t red = (scale * ((color >> 11) & 0x1fU)) / 100;
+    uint8_t green = (scale * ((color >> 5) & 0x3fU)) / 100;
+    uint8_t blue = (scale * (color & 0x1fU)) / 100;
+    return (Canvas::color(red, green, blue));
   }
 
   /**
@@ -321,6 +287,17 @@ public:
   {
     m_cursor.x = x;
     m_cursor.y = y;
+  }
+
+  /**
+   * Add current cursor position.
+   * @param[in] dx
+   * @param[in] dy
+   */
+  void add_cursor(int8_t dx, int8_t dy)
+  {
+    m_cursor.x += dx;
+    m_cursor.y += dy;
   }
 
   /**
@@ -469,7 +446,7 @@ public:
    */
   virtual void fill_screen()
   {
-    fill_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    fill_rect(0, 0, WIDTH, HEIGHT);
   }
 
   /**
@@ -533,6 +510,15 @@ public:
   }
 
   /**
+   * @override
+   * Write character at current cursor position, with current text
+   * color, scale and font.  
+   * @param[in] c character to write.
+   * @return character written or EOF(-1).
+   */
+  virtual int putchar(char c);
+
+  /**
    * Stop sequence of interaction with device. Must override.
    * @return true(1) if successful otherwise false(0)
    */
@@ -542,7 +528,8 @@ public:
    * Drawing operation codes (in program memory).
    */
   enum {
-    NOP = 0,
+    END_SCRIPT = 0,
+    CALL_SCRIPT,
     SET_CANVAS_COLOR,
     SET_PEN_COLOR,
     SET_TEXT_COLOR,
@@ -550,6 +537,7 @@ public:
     SET_TEXT_PORT,
     SET_FONT,
     SET_CURSOR,
+    ADD_CURSOR,
     DRAW_PIXEL,
     DRAW_BITMAP,
     DRAW_LINE,
@@ -559,24 +547,17 @@ public:
     DRAW_CIRCLE,
     FILL_CIRCLE,
     DRAW_CHAR,
-    DRAW_STRING_P,
-    END_SCRIPT
+    DRAW_STRING_P
   };
 
   /**
-   * Run canvas drawing script.
-   * @param[in] ip instruction pointer.
+   * Run canvas drawing script. Table may contain sub-scripts and strings.
+   * All should be in program memory.
+   * @param[in] ix script to run.
+   * @param[in] tab script table.
+   * @param[in] max size of script table.
    */
-  void run(const uint8_t* ip);
-
-  /**
-   * @override
-   * Write character at current cursor position, with current text
-   * color and font.  
-   * @param[in] c character to write.
-   * @return character written or EOF(-1).
-   */
-  virtual int putchar(char c);
+  void run(uint8_t ix, PGM_VOID_P* tab, uint8_t max);
 };
 
 #endif

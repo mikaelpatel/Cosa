@@ -191,18 +191,39 @@ Canvas::draw_char(char c)
   m_pen_color = color;
 }
 
+int 
+Canvas::putchar(char c) 
+{ 
+  if (c >= ' ') 
+    draw_char(c);
+  if (c == '\n') {
+    m_cursor.x = m_text_port.x;
+    m_cursor.y += m_text_scale * (m_font->HEIGHT + LINE_SPACING);
+    if (m_cursor.y > m_text_port.width) 
+      m_cursor.y = m_text_port.y;
+  }
+  return (c);
+}
+
 void 
-Canvas::run(const uint8_t* ip)
+Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
 {
+  if (ix >= max) return;
+  const uint8_t* ip = (const uint8_t*) pgm_read_word(tab + ix);
   while (1) {
     switch (pgm_read_byte(ip++)) {
-    case NOP:
+    case END_SCRIPT:
+      return;
+    case CALL_SCRIPT:
+      ix = pgm_read_byte(ip++);
+      if (ix >= max) return;
+      run(ix, tab, max);
       break;
     case SET_CANVAS_COLOR:
       set_canvas_color(color(pgm_read_byte(ip++), 
 			     pgm_read_byte(ip++), 
 			     pgm_read_byte(ip++)));
-    break;
+      break;
     case SET_PEN_COLOR:
       set_pen_color(color(pgm_read_byte(ip++), 
 			  pgm_read_byte(ip++), 
@@ -224,6 +245,9 @@ Canvas::run(const uint8_t* ip)
       break;
     case SET_CURSOR:
       set_cursor(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      break;
+    case ADD_CURSOR:
+      add_cursor(pgm_read_byte(ip++), pgm_read_byte(ip++));
       break;
     case DRAW_PIXEL:
       draw_pixel();
@@ -250,8 +274,9 @@ Canvas::run(const uint8_t* ip)
       draw_char(pgm_read_byte(ip++));
       break;
     case DRAW_STRING_P:
-      char c;
-      while ((c = pgm_read_byte(ip++)) != 0) putchar(c);
+      ix = pgm_read_byte(ip++);
+      if (ix >= max) return;
+      draw_string_P((const char*) pgm_read_word(tab + ix));
       break;
     default:
       return;
@@ -259,16 +284,3 @@ Canvas::run(const uint8_t* ip)
   }
 }
 
-int 
-Canvas::putchar(char c) 
-{ 
-  if (c >= ' ') 
-    draw_char(c);
-  if (c == '\n') {
-    m_cursor.x = m_text_port.x;
-    m_cursor.y += m_text_scale * (m_font->HEIGHT + LINE_SPACING);
-    if (m_cursor.y > m_text_port.width) 
-      m_cursor.y = m_text_port.y;
-  }
-  return (1);
-}

@@ -47,59 +47,39 @@ void setup()
   tft.fill_screen();
 }
 
-void loop()
+uint32_t draw_shade(uint16_t color)
 {
   uint32_t start, ms;
+  start = micros();
+  tft.set_pen_color(tft.WHITE);
+  tft.draw_rect(9, 9, tft.WIDTH - 19, tft.HEIGHT - 19);
+  for (uint8_t y = 10; y < tft.HEIGHT - 10; y += 4) {
+    uint8_t level = ((y - 10) * 100L) / (tft.HEIGHT - 10);
+    tft.set_pen_color(tft.shade(color, level));
+    tft.fill_rect(10, y, tft.WIDTH - 20, 4);
+  }
+  ms = (micros() - start) / 1000L;
+  Watchdog::delay(2048);
+  return (ms);
+}
+
+void loop()
+{
+  uint32_t ms;
 
   // Draw grayscale 
-  start = micros();
-  tft.set_pen_color(tft.WHITE);
-  tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
-  for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
-    uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
-    tft.set_pen_color(tft.grayscale(level));
-    tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
-  }
-  ms = (micros() - start) / 1000L;
+  ms = draw_shade(tft.WHITE);
   INFO("grayscale/fill_rect: %ul ms", ms);
-  Watchdog::delay(2048);
 
   // Draw red shades
-  start = micros();
-  tft.set_pen_color(tft.WHITE);
-  tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
-  for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
-    uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
-    tft.set_pen_color(tft.red_shade(level));
-    tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
-  }
-  ms = (micros() - start) / 1000L;
+  ms = draw_shade(tft.RED);
   INFO("red/fill_rect: %ul ms", ms);
-  Watchdog::delay(2048);
 
   // Draw green shades
-  start = micros();
-  tft.set_pen_color(tft.WHITE);
-  tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
-  for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
-    uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
-    tft.set_pen_color(tft.green_shade(level));
-    tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
-  }
-  ms = (micros() - start) / 1000L;
+  ms = draw_shade(tft.GREEN);
   INFO("green/fill_rect: %ul ms", ms);
-  Watchdog::delay(2048);
 
   // Draw blue shades
-  start = micros();
-  tft.set_pen_color(tft.WHITE);
-  tft.draw_rect(9, 9, tft.SCREEN_WIDTH - 19, tft.SCREEN_HEIGHT - 19);
-  for (uint8_t y = 10; y < tft.SCREEN_HEIGHT - 10; y += 4) {
-    uint8_t level = ((y - 10) * 100L) / (tft.SCREEN_HEIGHT - 10);
-    tft.set_pen_color(tft.blue_shade(level));
-    tft.fill_rect(10, y, tft.SCREEN_WIDTH - 20, 4);
-  }
-  ms = (micros() - start) / 1000L;
+  ms = draw_shade(tft.BLUE);
   INFO("blue/fill_rect: %ul ms", ms);
-  Watchdog::delay(2048);
 }

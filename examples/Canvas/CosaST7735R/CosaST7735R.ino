@@ -89,8 +89,8 @@ void loop()
   tft.fill_screen();
   tft.set_pen_color(tft.BLACK);
   start = micros();
-  for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 2) {
-    for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 2) {
+  for (uint8_t x = 0; x < tft.WIDTH; x += 2) {
+    for (uint8_t y = 0; y < tft.HEIGHT; y += 2) {
       tft.draw_pixel(x, y);
     }
   }
@@ -101,8 +101,8 @@ void loop()
   // Grid with draw rectangle
   tft.set_pen_color(tft.BLACK);
   start = micros();
-  for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 20) {
-    for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 20) {
+  for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
+    for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
       tft.draw_rect(x, y, 20, 20);
     }
   }
@@ -113,8 +113,8 @@ void loop()
   // Fill rectangles
   tft.set_pen_color(tft.WHITE);
   start = micros();
-  for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 20) {
-    for (uint8_t y = x; y < tft.SCREEN_HEIGHT; y += 40) {
+  for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
+    for (uint8_t y = x; y < tft.HEIGHT; y += 40) {
       tft.fill_rect(x + 1, y + 1, 19, 19);
     }
   }
@@ -127,8 +127,8 @@ void loop()
   tft.fill_screen();
   tft.set_pen_color(tft.BLACK);
   start = micros();
-  for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 20) {
-    for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 20) {
+  for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
+    for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
       tft.draw_circle(x + 10, y + 10, 10);
     }
   }
@@ -139,8 +139,8 @@ void loop()
   // Fill circles
   tft.set_pen_color(tft.RED);
   start = micros();
-  for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 20) {
-    for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 20) {
+  for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
+    for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
       tft.fill_circle(x + 10, y + 10, 9);
     }
   }
@@ -153,16 +153,16 @@ void loop()
   tft.fill_screen();
   start = micros();
   tft.set_pen_color(tft.RED);
-  for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 6) {
-    tft.draw_line(0, 0, x, tft.SCREEN_HEIGHT - 1);
+  for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
+    tft.draw_line(0, 0, x, tft.HEIGHT - 1);
   }
   tft.set_pen_color(tft.GREEN);
-  for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 6) {
-    tft.draw_line(0, 0, tft.SCREEN_WIDTH - 1, y);
+  for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
+    tft.draw_line(0, 0, tft.WIDTH - 1, y);
   }
   tft.set_pen_color(tft.BLUE);
-  for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 6) {
-    tft.draw_line(tft.SCREEN_WIDTH - 1, 0, x, tft.SCREEN_HEIGHT - 1);
+  for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
+    tft.draw_line(tft.WIDTH - 1, 0, x, tft.HEIGHT - 1);
   }
   ms = (micros() - start) / 1000L;
   INFO("draw_line: %ul ms", ms);
@@ -172,12 +172,12 @@ void loop()
   tft.fill_screen();
   start = micros();
   tft.set_pen_color(tft.CYAN);
-  for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 6) {
-    tft.draw_line(tft.SCREEN_WIDTH - 1, 0, 0, y);
+  for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
+    tft.draw_line(tft.WIDTH - 1, 0, 0, y);
   }
   tft.set_pen_color(tft.MAGENTA);
-  for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 6) {
-    tft.draw_line(0, tft.SCREEN_HEIGHT - 1, x, 0);
+  for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
+    tft.draw_line(0, tft.HEIGHT - 1, x, 0);
   }
   ms = (micros() - start) / 1000L;
   INFO("draw_line: %ul ms", ms);
@@ -187,14 +187,14 @@ void loop()
   tft.fill_screen();
   tft.set_pen_color(tft.YELLOW);
   start = micros();
-  for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 6) {
-    tft.draw_line(0, tft.SCREEN_HEIGHT - 1, tft.SCREEN_WIDTH - 1, y);
+  for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
+    tft.draw_line(0, tft.HEIGHT - 1, tft.WIDTH - 1, y);
   }
-  for (uint8_t x = 0; x < tft.SCREEN_WIDTH; x += 6) {
-    tft.draw_line(tft.SCREEN_WIDTH - 1, tft.SCREEN_HEIGHT - 1, x, 0);
+  for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
+    tft.draw_line(tft.WIDTH - 1, tft.HEIGHT - 1, x, 0);
   }
-  for (uint8_t y = 0; y < tft.SCREEN_HEIGHT; y += 6) {
-    tft.draw_line(tft.SCREEN_WIDTH - 1, tft.SCREEN_HEIGHT - 1, 0, y);
+  for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
+    tft.draw_line(tft.WIDTH - 1, tft.HEIGHT - 1, 0, y);
   }
   ms = (micros() - start) / 1000L;
   INFO("draw_line: %ul ms", ms);
