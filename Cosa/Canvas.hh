@@ -38,7 +38,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Font5x7.hh"
+#include "Cosa/Font/System5x7.hh"
 
 class Canvas : public IOStream::Device {
 
@@ -102,7 +102,7 @@ public:
    * @param[in] height screen height.
    * @param[in] font text font (default 5x7).
    */
-  Canvas(uint8_t width, uint8_t height, Font* font = &font5x7) :
+  Canvas(uint8_t width, uint8_t height, Font* font = &system5x7) :
     IOStream::Device(),
     m_canvas_color(WHITE),
     m_pen_color(BLACK),
@@ -521,29 +521,27 @@ public:
   virtual bool end() = 0;
 
   /**
-   * Drawing operation codes (in program memory).
+   * Drawing instructions and arguments (in program memory).
    */
   enum {
-    END_SCRIPT = 0,
-    CALL_SCRIPT,
-    SET_CANVAS_COLOR,
-    SET_PEN_COLOR,
-    SET_TEXT_COLOR,
-    SET_TEXT_SCALE,
-    SET_TEXT_PORT,
-    SET_FONT,
-    SET_CURSOR,
-    MOVE_CURSOR,
-    DRAW_PIXEL,
-    DRAW_BITMAP,
-    DRAW_LINE,
-    DRAW_RECT,
-    FILL_RECT,
-    FILL_SCREEN,
-    DRAW_CIRCLE,
-    FILL_CIRCLE,
-    DRAW_CHAR,
-    DRAW_STRING_P
+    END_SCRIPT = 0,		// (void)
+    CALL_SCRIPT,		// (uint8_t ix) index of script in table
+    SET_CANVAS_COLOR,		// (uint8_t r, g, b) 24-bit color code
+    SET_PEN_COLOR,		// (uint8_t r, g, b) 24-bit color code
+    SET_TEXT_COLOR,		// (uint8_t r, g, b) 24-bit color code
+    SET_TEXT_SCALE,		// (uint8_t s) scale factor (1..n)
+    SET_TEXT_PORT,		// (uint8_t x, y, w, h) text port
+    SET_CURSOR,			// (uint8_t x, y) cursor position
+    MOVE_CURSOR,		// (int8_t dx, dy) cursor delta position
+    DRAW_PIXEL,			// (void)
+    DRAW_LINE,			// (uint8_t x, y) line end position
+    DRAW_RECT,			// (uint8_t w, h) width and height of rectangle
+    FILL_RECT,			// (uint8_t w, h) width and height of rectangle
+    FILL_SCREEN,		// (void)
+    DRAW_CIRCLE,		// (uint8_t r) radius of circle
+    FILL_CIRCLE,		// (uint8_t r) radius of circle
+    DRAW_CHAR,			// (uint8_t c) character
+    DRAW_STRING_P		// (uint8_t ix) index of string in table
   };
 
   /**

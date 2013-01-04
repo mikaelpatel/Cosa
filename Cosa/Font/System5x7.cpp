@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Font5x7.cpp
+ * @file Cosa/Font/System5x7.cpp
  * @version 1.0
  *
  * @section License
@@ -29,11 +29,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Font5x7.hh"
+#include "Cosa/Font/System5x7.hh"
 
-Font5x7 font5x7;
+System5x7 system5x7;
 
-const uint8_t Font5x7::bitmap[] PROGMEM = {
+const uint8_t System5x7::bitmap[] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x00,   
   0x3E, 0x5B, 0x4F, 0x5B, 0x3E, 	
   0x3E, 0x6B, 0x4F, 0x6B, 0x3E, 	

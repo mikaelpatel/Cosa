@@ -65,7 +65,7 @@ public:
    */
   const uint8_t* get_bitmap(char c)
   {
-    return (m_bitmap + (c*WIDTH));
+    return (m_bitmap + (c * WIDTH));
   }
 };
 

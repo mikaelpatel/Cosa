@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Font5x7.hh
+ * @file Cosa/Font/System5x7.hh
  * @version 1.0
  *
  * @section License
@@ -29,20 +29,20 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FONT5X7_HH__
-#define __COSA_FONT5X7_HH__
+#ifndef __COSA_FONT_SYSTEM5X7_HH__
+#define __COSA_FONT_SYSTEM5X7_HH__
 
 #include "Cosa/Font.hh"
 
-class Font5x7 : public Font {
+class System5x7 : public Font {
 
 private:
   static const uint8_t bitmap[] PROGMEM;
 
 public:
-  Font5x7() : Font(5, 8, bitmap) {}
+  System5x7() : Font(5, 8, bitmap) {}
 };
 
-extern Font5x7 font5x7;
+extern System5x7 system5x7;
 
 #endif

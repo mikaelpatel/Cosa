@@ -30,6 +30,9 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
+#include "Cosa/IOStream.hh"
+#include "Cosa/Font/System5x7.hh"
+#include "Cosa/Canvas.hh"
 #include "Cosa/SPI/ST7735R.hh"
 
 ST7735R tft;
@@ -42,8 +45,11 @@ void setup()
 
   // Check amount of free memory and size of objects
   TRACE(free_memory());
-  TRACE(sizeof(tft));
-  TRACE(sizeof(cout));
+  TRACE(sizeof(Canvas));
+  TRACE(sizeof(Font));
+  TRACE(sizeof(IOStream));
+  TRACE(sizeof(ST7735R));
+  TRACE(sizeof(Trace));
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
@@ -65,12 +71,16 @@ void loop()
 
   // Print on the output stream
   start = micros();
+  tft.set_pen_color(tft.shade(tft.GREEN, 20));
+  tft.draw_rect(0, 0, tft.WIDTH - 1, tft.HEIGHT - 1);
   tft.set_text_color(tft.BLUE);
   tft.set_text_scale(1);
-  tft.set_cursor(0, 0);
+  tft.set_text_port(2, 2, tft.WIDTH, tft.HEIGHT);
+  tft.set_cursor(2, 2);
   cout.print_P(PSTR("CosaST7735R: started"));
   cout.println();
-  cout.printf_P(PSTR("color(%hd)\n"), tft.get_text_color());
+  cout.printf_P(PSTR("text_color(%od)\n"), tft.get_text_color());
+  cout.printf_P(PSTR("text_scale(%d)\n"), tft.get_text_scale());
   uint8_t x, y;
   tft.get_cursor(x, y);
   cout.printf_P(PSTR("cursor(x = %d, y = %d)\n"), x, y);
@@ -146,8 +156,6 @@ void loop()
   ms = (micros() - start) / 1000L;
   INFO("draw_circle: %ul ms", ms);
   Watchdog::delay(2048);
-
-  return;
 
   // Draw lines
   tft.set_pen_color(tft.BLACK);
