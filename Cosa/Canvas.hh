@@ -74,14 +74,14 @@ public:
    * Basic color palette.
    */
   enum {
-    WHITE = 0xFFFFU,
     BLACK = 0x0000U,
+    WHITE = 0xFFFFU,
     RED = 0xF800U,
     GREEN = 0x07E0U,
     BLUE = 0x001FU,
+    YELLOW = RED + GREEN,
     CYAN = GREEN + BLUE,
-    MAGENTA = RED + BLUE,
-    YELLOW = RED + GREEN
+    MAGENTA = RED + BLUE
   };
   
   /**
@@ -114,12 +114,8 @@ public:
     CHAR_SPACING(1),
     LINE_SPACING(2)
   {
-    m_cursor.x = 0;
-    m_cursor.y = 0;
-    m_text_port.x = 0;
-    m_text_port.y = 0;
-    m_text_port.width = width;
-    m_text_port.height = height;
+    set_cursor(0, 0);
+    set_text_port(0, 0, width, height);
   }
 
   /**
@@ -290,11 +286,11 @@ public:
   }
 
   /**
-   * Add current cursor position.
+   * Move current cursor to delta position.
    * @param[in] dx
    * @param[in] dy
    */
-  void add_cursor(int8_t dx, int8_t dy)
+  void move_cursor(int8_t dx, int8_t dy)
   {
     m_cursor.x += dx;
     m_cursor.y += dy;
@@ -537,7 +533,7 @@ public:
     SET_TEXT_PORT,
     SET_FONT,
     SET_CURSOR,
-    ADD_CURSOR,
+    MOVE_CURSOR,
     DRAW_PIXEL,
     DRAW_BITMAP,
     DRAW_LINE,

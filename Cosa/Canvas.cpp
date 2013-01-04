@@ -246,8 +246,8 @@ Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
     case SET_CURSOR:
       set_cursor(pgm_read_byte(ip++), pgm_read_byte(ip++));
       break;
-    case ADD_CURSOR:
-      add_cursor(pgm_read_byte(ip++), pgm_read_byte(ip++));
+    case MOVE_CURSOR:
+      move_cursor(pgm_read_byte(ip++), pgm_read_byte(ip++));
       break;
     case DRAW_PIXEL:
       draw_pixel();

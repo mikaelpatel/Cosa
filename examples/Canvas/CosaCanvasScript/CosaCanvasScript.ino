@@ -49,27 +49,33 @@ const uint8_t script[] PROGMEM = {
 
   Canvas::SET_CURSOR, 60, 60,
   Canvas::DRAW_CIRCLE, 10,
-  Canvas::ADD_CURSOR, -10, -10,
-  Canvas::DRAW_RECT, 20, 20,
-  Canvas::ADD_CURSOR, 10, 10,
   Canvas::DRAW_LINE, 100, 100,
   Canvas::DRAW_CIRCLE, 10,
   Canvas::DRAW_LINE, 20, 100,
   Canvas::DRAW_CIRCLE, 10,
   Canvas::DRAW_LINE, 60, 60,
 
-  Canvas::SET_CURSOR, 50, 130,
-  Canvas::SET_PEN_COLOR, 100, 255, 0,
+  Canvas::SET_PEN_COLOR, 0, 0, 0,
+  Canvas::SET_CURSOR, 20, 100,
+  Canvas::DRAW_LINE, 20, 130,
+  Canvas::SET_PEN_COLOR, 255, 0, 255,
   Canvas::CALL_SCRIPT, 1,
   Canvas::DRAW_CHAR, 3,
 
-  Canvas::SET_CURSOR, 10, 130,
-  Canvas::SET_PEN_COLOR, 255, 0, 100,
+  Canvas::SET_PEN_COLOR, 0, 0, 0,
+  Canvas::SET_CURSOR, 60, 60,
+  Canvas::DRAW_LINE, 60, 130,
+  Canvas::SET_PEN_COLOR, 255, 255, 0,
   Canvas::CALL_SCRIPT, 1,
   Canvas::DRAW_CHAR, 4,
 
-  Canvas::SET_CURSOR, 90, 130,
-  Canvas::SET_PEN_COLOR, 0, 100, 255,
+  Canvas::MOVE_CURSOR, -16, -10,
+  Canvas::DRAW_RECT, 24, 24,
+
+  Canvas::SET_PEN_COLOR, 0, 0, 0,
+  Canvas::SET_CURSOR, 100, 100,
+  Canvas::DRAW_LINE, 100, 130,
+  Canvas::SET_PEN_COLOR, 0, 255, 255,
   Canvas::CALL_SCRIPT, 1,
   Canvas::DRAW_CHAR, 5,
 
@@ -78,10 +84,11 @@ const uint8_t script[] PROGMEM = {
 
 // A sub-script 
 const uint8_t sub_script[] PROGMEM = {
+  Canvas::MOVE_CURSOR, -10, -10,
   Canvas::FILL_RECT, 20, 20,
   Canvas::SET_PEN_COLOR, 0, 0, 0,
   Canvas::DRAW_RECT, 20, 20,
-  Canvas::ADD_CURSOR, 8, 8,
+  Canvas::MOVE_CURSOR, 8, 8,
   Canvas::END_SCRIPT
 };
 
