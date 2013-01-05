@@ -66,40 +66,26 @@ Canvas::draw_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
   draw_horizontal_line(x, y + height, width);
 }
 
-#define swap(a, b) { uint16_t t = a; a = b; b = t; }
+#define dist(x, y) ((x > y) ? (x - y) : (y - x))
+#define swap(a, b) { uint8_t t = a; a = b; b = t; }
 
 void 
-Canvas::draw_line(uint8_t _x0, uint8_t _y0, uint8_t _x1, uint8_t _y1)
+Canvas::draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
 {
-  int16_t x0 = _x0;
-  int16_t y0 = _y0;
-  int16_t x1 = _x1;
-  int16_t y1 = _y1; 
-
-  uint16_t steep = (abs(y1 - y0) > abs(x1 - x0));
+  uint8_t steep = (dist(y0, y1) > dist(x0, x1));
   if (steep) {
     swap(x0, y0);
     swap(x1, y1);
   }
-
   if (x0 > x1) {
     swap(x0, x1);
     swap(y0, y1);
   }
-
-  uint16_t dx, dy;
+  uint8_t dx, dy;
   dx = x1 - x0;
-  dy = abs(y1 - y0);
-
+  dy = dist(y0, y1);
   int16_t err = dx / 2;
-  int16_t ystep;
-
-  if (y0 < y1) {
-    ystep = 1;
-  } else {
-    ystep = -1;
-  }
-
+  int8_t ystep = (y0 < y1) ? 1 : -1;
   for (; x0 <= x1; x0++) {
     if (steep) {
       draw_pixel(y0, x0);
@@ -120,8 +106,8 @@ Canvas::draw_circle(uint8_t x, uint8_t y, uint8_t radius)
   int16_t f = 1 - radius;
   int16_t dx = 1;
   int16_t dy = -2 * radius;
-  int16_t rx = 0;
-  int16_t ry = radius;
+  int8_t rx = 0;
+  int8_t ry = radius;
 
   draw_pixel(x, y + radius);
   draw_pixel(x, y - radius);
@@ -153,8 +139,8 @@ Canvas::fill_circle(uint8_t x, uint8_t y, uint8_t radius)
   int16_t f = 1 - radius;
   int16_t dx = 1;
   int16_t dy = -2 * radius;
-  int16_t rx = 0;
-  int16_t ry = radius;
+  int8_t rx = 0;
+  int8_t ry = radius;
 
   draw_vertical_line(x, y - radius, 2*radius + 1);
   while (rx < ry) {
@@ -167,8 +153,8 @@ Canvas::fill_circle(uint8_t x, uint8_t y, uint8_t radius)
     dx += 2;
     f += dx;
     draw_vertical_line(x + rx, y - ry, 2*ry + 1);
-    draw_vertical_line(x - rx, y - ry, 2*ry + 1);
     draw_vertical_line(x + ry, y - rx, 2*rx + 1);
+    draw_vertical_line(x - rx, y - ry, 2*ry + 1);
     draw_vertical_line(x - ry, y - rx, 2*rx + 1);
   }
 }

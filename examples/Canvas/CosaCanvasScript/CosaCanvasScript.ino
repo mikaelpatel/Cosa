@@ -36,10 +36,10 @@ ST7735R tft;
 
 // The test drawing script
 const uint8_t script[] PROGMEM = {
-  Canvas::SET_PEN_COLOR, 100, 100, 100,
+  Canvas::SET_CANVAS_COLOR, 100, 100, 100,
   Canvas::FILL_SCREEN,
 
-  Canvas::SET_PEN_COLOR, 255, 100, 100,
+  Canvas::SET_PEN_COLOR, 100, 100, 200,
   Canvas::SET_CURSOR, 10, 10,
   Canvas::FILL_RECT, 108, 30,
   Canvas::SET_PEN_COLOR, 0, 0, 0,
@@ -48,11 +48,8 @@ const uint8_t script[] PROGMEM = {
   Canvas::DRAW_STRING_P, 2, 
 
   Canvas::SET_CURSOR, 60, 60,
-  Canvas::DRAW_CIRCLE, 10,
   Canvas::DRAW_LINE, 100, 100,
-  Canvas::DRAW_CIRCLE, 10,
   Canvas::DRAW_LINE, 20, 100,
-  Canvas::DRAW_CIRCLE, 10,
   Canvas::DRAW_LINE, 60, 60,
 
   Canvas::SET_PEN_COLOR, 0, 0, 0,
@@ -78,6 +75,22 @@ const uint8_t script[] PROGMEM = {
   Canvas::SET_PEN_COLOR, 0, 255, 255,
   Canvas::CALL_SCRIPT, 1,
   Canvas::DRAW_CHAR, 5,
+
+  Canvas::SET_PEN_COLOR, 255, 255, 255,
+  Canvas::SET_CURSOR, 60, 60,
+  Canvas::FILL_CIRCLE, 10,
+  Canvas::SET_CURSOR, 100, 100,
+  Canvas::FILL_CIRCLE, 10,
+  Canvas::SET_CURSOR, 20, 100,
+  Canvas::FILL_CIRCLE, 10,
+
+  Canvas::SET_PEN_COLOR, 0, 0, 0,
+  Canvas::SET_CURSOR, 60, 60,
+  Canvas::DRAW_CIRCLE, 10,
+  Canvas::SET_CURSOR, 100, 100,
+  Canvas::DRAW_CIRCLE, 10,
+  Canvas::SET_CURSOR, 20, 100,
+  Canvas::DRAW_CIRCLE, 10,
 
   Canvas::END_SCRIPT
 };

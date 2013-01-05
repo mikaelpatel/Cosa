@@ -64,7 +64,7 @@ void loop()
 
   // Fill screen
   start = micros();
-  tft.set_pen_color(tft.WHITE);
+  tft.set_canvas_color(tft.WHITE);
   tft.fill_screen();
   ms = (micros() - start) / 1000L;
   INFO("fill_screen: %ul ms", ms);
@@ -95,7 +95,6 @@ void loop()
   Watchdog::delay(2048);
 
   // Grid with draw pixel
-  tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
   tft.set_pen_color(tft.BLACK);
   start = micros();
@@ -133,7 +132,6 @@ void loop()
   Watchdog::delay(2048);
   
   // Fill circles
-  tft.set_pen_color(tft.WHITE);
   tft.fill_screen();
   tft.set_pen_color(tft.RED);
   start = micros();
@@ -158,7 +156,7 @@ void loop()
   Watchdog::delay(2048);
 
   // Draw lines
-  tft.set_pen_color(tft.BLACK);
+  tft.set_canvas_color(tft.shade(tft.WHITE, 20));
   tft.fill_screen();
   start = micros();
   tft.set_pen_color(tft.RED);

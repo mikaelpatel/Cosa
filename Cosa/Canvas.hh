@@ -196,9 +196,9 @@ public:
    */
   uint16_t color(uint8_t red, uint8_t green, uint8_t blue)
   {
-    return (((red & 0x1f) << 11)  | 
-	    ((green & 0x3f) << 5) | 
-	    (blue & 0x1f));
+    return ((((red >> 3) & 0x1f) << 11)  | 
+	    (((green >> 2) & 0x3f) << 5) | 
+	    ((blue >> 3) & 0x1f));
   }
 
   /**
@@ -442,7 +442,10 @@ public:
    */
   virtual void fill_screen()
   {
+    uint16_t saved = m_pen_color;
+    m_pen_color = m_canvas_color;
     fill_rect(0, 0, WIDTH, HEIGHT);
+    m_pen_color = saved;
   }
 
   /**
@@ -476,7 +479,7 @@ public:
    */
   void fill_circle(uint8_t radius)
   {
-    draw_circle(m_cursor.x, m_cursor.y, radius);
+    fill_circle(m_cursor.x, m_cursor.y, radius);
   }
 
   /**
