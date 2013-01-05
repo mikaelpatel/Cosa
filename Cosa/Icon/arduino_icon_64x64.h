@@ -24,7 +24,9 @@
  * Arduino icon 64x64.
  *
  * @section Acknowledgement
- * Originates from the GLCD library. Adapted for Cosa Canvas.
+ * Originates from the GLCD library and adapted for Cosa Canvas.
+ * The GLCD library was created by Michael Margolis and improved 
+ * by Bill Perry.
  *
  * This file is part of the Arduino Che Cosa project.
  */
