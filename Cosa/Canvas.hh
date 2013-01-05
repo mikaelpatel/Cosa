@@ -48,7 +48,7 @@ protected:
    */
   uint16_t m_canvas_color;
   uint16_t m_pen_color;
-  
+
   /**
    * Current position (turtle graphics style)
    */
@@ -85,11 +85,15 @@ public:
   };
   
   /**
-   * Screen size; width/height
+   * Screen size; width/height and orientation
    */
   uint8_t WIDTH;
   uint8_t HEIGHT;
-  
+  enum {
+    PORTRAIT = 0,
+    LANDSCAPE = 1,
+  };
+
   /**
    * Character/line spacing
    */
@@ -194,26 +198,14 @@ public:
    * @param[in] blue
    * @return color.
    */
-  uint16_t color(uint8_t red, uint8_t green, uint8_t blue)
-  {
-    return ((((red >> 3) & 0x1f) << 11)  | 
-	    (((green >> 2) & 0x3f) << 5) | 
-	    ((blue >> 3) & 0x1f));
-  }
+  uint16_t color(uint8_t red, uint8_t green, uint8_t blue);
 
   /**
    * Create color shade (0..100%)
    * @param[in] scale
    * @return color shade.
    */
-  uint16_t shade(uint16_t color, uint8_t scale)
-  {
-    if (scale > 100) scale = 100;
-    uint8_t red = (scale * ((color >> 11) & 0x1fU)) / 100;
-    uint8_t green = (scale * ((color >> 5) & 0x3fU)) / 100;
-    uint8_t blue = (scale * (color & 0x1fU)) / 100;
-    return (Canvas::color(red, green, blue));
-  }
+  uint16_t shade(uint16_t color, uint8_t scale);
 
   /**
    * Get current text scale.
@@ -295,6 +287,12 @@ public:
     m_cursor.x += dx;
     m_cursor.y += dy;
   }
+
+  /**
+   * Set screen orientation. Must override.
+   * @param[in] direction
+   */
+  virtual void set_orientation(uint8_t direction) = 0;
 
   /**
    * Set pixel with current color.
@@ -406,8 +404,8 @@ public:
    * @param[in] width
    * @param[in] height
    */
-  virtual void draw_rect(uint8_t x, uint8_t y, 
-			 uint8_t width, uint8_t height);
+  virtual void draw_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
+
   /**
    * Draw rectangle at cursor position with current color.
    * @param[in] width
@@ -425,8 +423,8 @@ public:
    * @param[in] width
    * @param[in] height
    */
-  virtual void fill_rect(uint8_t x, uint8_t y, 
-			 uint8_t width, uint8_t height) = 0;
+  virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) = 0;
+
   /**
    * Fill rectangle at cursor position with current color.
    * @param[in] width

@@ -42,17 +42,17 @@ void setup()
 void loop()
 {
   // Draw the font table
-  tft.set_pen_color(tft.WHITE);
+  tft.set_pen_color(Canvas::WHITE);
   tft.fill_screen();
   tft.set_text_scale(1);
-  tft.set_pen_color(tft.BLACK);
-  tft.set_text_color(tft.shade(tft.RED, 75));
+  tft.set_pen_color(Canvas::BLACK);
+  tft.set_text_color(tft.shade(Canvas::RED, 75));
   char c = 0;
   for (uint8_t x = 3; x < tft.WIDTH - 12; x += 12) {
     for (uint8_t y = 2; y < tft.HEIGHT - 12; y += 12) {
-      tft.set_pen_color(tft.shade(tft.WHITE, 75));
+      tft.set_pen_color(tft.shade(Canvas::WHITE, 75));
       tft.fill_rect(x, y, 12, 12);
-      tft.set_pen_color(tft.BLACK);
+      tft.set_pen_color(Canvas::BLACK);
       tft.draw_rect(x, y, 12, 12);
       tft.set_cursor(x + 3, y + 3);
       tft.draw_char(c++);
@@ -62,17 +62,17 @@ void loop()
 
   // Draw each character in the font table 
   tft.set_text_scale(16);
-  tft.set_pen_color(tft.shade(tft.WHITE, 75));
+  tft.set_pen_color(tft.shade(Canvas::WHITE, 75));
   tft.fill_rect(3, 2, tft.WIDTH - 6, tft.HEIGHT - 4);
-  tft.set_pen_color(tft.BLACK);
+  tft.set_pen_color(Canvas::BLACK);
   tft.draw_rect(3, 2, tft.WIDTH - 6, tft.HEIGHT - 4);
-  tft.set_pen_color(tft.shade(tft.WHITE, 75));
+  tft.set_pen_color(tft.shade(Canvas::WHITE, 75));
   for (uint8_t c = 0; c < 128; c++) {
     tft.fill_rect(tft.WIDTH/2 - 40, tft.HEIGHT/2 - 63, 83, 131);
-    tft.set_text_color(tft.shade(tft.RED, 50));
+    tft.set_text_color(tft.shade(Canvas::RED, 50));
     tft.set_cursor(tft.WIDTH/2 - 37, tft.HEIGHT/2 - 60);
     tft.draw_char(c);
-    tft.set_text_color(tft.shade(tft.RED, 75));
+    tft.set_text_color(tft.shade(Canvas::RED, 75));
     tft.set_cursor(tft.WIDTH/2 - 40, tft.HEIGHT/2 - 63);
     tft.draw_char(c);
     Watchdog::delay(512);

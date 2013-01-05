@@ -35,6 +35,26 @@
 
 #include "Cosa/Canvas.hh"
 
+uint16_t 
+Canvas::color(uint8_t red, uint8_t green, uint8_t blue)
+{
+  return ((((red >> 3) & 0x1f) << 11)  | 
+	  (((green >> 2) & 0x3f) << 5) | 
+	  ((blue >> 3) & 0x1f));
+}
+
+uint16_t 
+Canvas::shade(uint16_t color, uint8_t scale)
+{
+  if (scale > 100) scale = 100;
+  uint8_t blue = (scale * (color & 0x1fU)) / 100;
+  color >>= 5;
+  uint8_t green = (scale * (color & 0x3fU)) / 100;
+  color >>= 6;
+  uint8_t red = (scale * (color & 0x1fU)) / 100;
+  return ((((red) & 0x1f) << 11)  | (((green) & 0x3f) << 5) | ((blue) & 0x1f));
+}
+
 void
 Canvas::draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp, 
 		    uint8_t width, uint8_t height)

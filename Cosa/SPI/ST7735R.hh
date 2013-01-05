@@ -120,6 +120,23 @@ protected:
     EXTCTRL = 0xF0,		// Extension Command Control
     VCOM4L = 0xFF		// VCOM 4 Level Control
   };
+  /**
+   *  Memory Data Access Control (bits)
+   */
+  enum {
+    MADCTL_MY = 0x80,
+    MADCTL_MX = 0x40,
+    MADCTL_MV = 0x20,
+    MADCTL_ML = 0x10,
+    MADCTL_BGR = 0x08,
+    MADCTL_MH = 0x04
+  };
+
+  /**
+   * Screen size
+   */
+  static const uint8_t SCREEN_WIDTH = 128;
+  static const uint8_t SCREEN_HEIGHT = 160;
 
   /**
    * Write command to device.
@@ -163,6 +180,12 @@ public:
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool begin();
+
+  /**
+   * Set screen orientation
+   * @param[in] direction
+   */
+  virtual void set_orientation(uint8_t direction);
 
   /**
    * Set the current display port.

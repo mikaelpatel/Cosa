@@ -42,7 +42,7 @@ void setup()
 
   // Initiate the display and clear the screen
   tft.begin();
-  tft.set_pen_color(tft.WHITE);
+  tft.set_pen_color(Canvas::WHITE);
   tft.fill_screen();
 }
 
@@ -50,13 +50,13 @@ void loop()
 {
   // Display digital and analog pin values (A/D0..7)
   for (uint8_t x = 0, y = 2; y < tft.HEIGHT; y += 20, x++) {
-    tft.set_pen_color(tft.shade(tft.WHITE, 75));
+    tft.set_pen_color(tft.shade(Canvas::WHITE, 75));
     tft.fill_rect(10, y, tft.WIDTH - 20, 16);
-    tft.set_pen_color(tft.BLACK);
+    tft.set_pen_color(Canvas::BLACK);
     tft.draw_rect(10, y, tft.WIDTH - 20, 16);
     tft.set_cursor(15, y + 5);
     cout.printf_P(PSTR("D%d"), x);
-    tft.set_pen_color(digitalRead(x) ? tft.RED : tft.GREEN);
+    tft.set_pen_color(digitalRead(x) ? Canvas::RED : Canvas::GREEN);
     tft.fill_circle(35, y + 8, 5);
     tft.set_cursor(55, y + 5);
     cout.printf_P(PSTR("A%d %d"), x, analogRead(x));

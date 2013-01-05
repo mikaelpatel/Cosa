@@ -135,9 +135,9 @@ void setup()
   uint32_t start, ms;
   start = micros();
   tft.begin();
+  tft.fill_screen();
   ms = (micros() - start) / 1000L;
   INFO("begin: %ul ms", ms);
-
   start = micros();
   tft.run(0, tab, membersof(tab));
   ms = (micros() - start) / 1000L;

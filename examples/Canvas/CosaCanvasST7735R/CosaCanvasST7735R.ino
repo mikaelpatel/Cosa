@@ -64,16 +64,16 @@ void loop()
 
   // Fill screen
   start = micros();
-  tft.set_canvas_color(tft.WHITE);
+  tft.set_canvas_color(Canvas::WHITE);
   tft.fill_screen();
   ms = (micros() - start) / 1000L;
   INFO("fill_screen: %ul ms", ms);
 
   // Print on the output stream
   start = micros();
-  tft.set_pen_color(tft.shade(tft.GREEN, 20));
+  tft.set_pen_color(tft.shade(Canvas::GREEN, 20));
   tft.draw_rect(0, 0, tft.WIDTH - 1, tft.HEIGHT - 1);
-  tft.set_text_color(tft.BLUE);
+  tft.set_text_color(Canvas::BLUE);
   tft.set_text_scale(1);
   tft.set_text_port(2, 2, tft.WIDTH, tft.HEIGHT);
   tft.set_cursor(2, 2);
@@ -84,11 +84,11 @@ void loop()
   uint8_t x, y;
   tft.get_cursor(x, y);
   cout.printf_P(PSTR("cursor(x = %d, y = %d)\n"), x, y);
-  tft.set_text_color(tft.RED);
+  tft.set_text_color(Canvas::RED);
   tft.set_text_scale(2);
   cout.print_P(PSTR("  Hello\n  World"));
   cout.println();
-  tft.set_text_color(tft.BLACK);
+  tft.set_text_color(Canvas::BLACK);
   tft.set_text_scale(1);
   ms = (micros() - start) / 1000L;
   cout.printf_P(PSTR("draw_intro: %ul ms\n"), ms);
@@ -96,7 +96,7 @@ void loop()
 
   // Grid with draw pixel
   tft.fill_screen();
-  tft.set_pen_color(tft.BLACK);
+  tft.set_pen_color(Canvas::BLACK);
   start = micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 2) {
     for (uint8_t y = 0; y < tft.HEIGHT; y += 2) {
@@ -108,7 +108,7 @@ void loop()
   Watchdog::delay(2048);
 
   // Grid with draw rectangle
-  tft.set_pen_color(tft.BLACK);
+  tft.set_pen_color(Canvas::BLACK);
   start = micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
     for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
@@ -120,7 +120,7 @@ void loop()
   Watchdog::delay(2048);
   
   // Fill rectangles
-  tft.set_pen_color(tft.WHITE);
+  tft.set_pen_color(Canvas::WHITE);
   start = micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
     for (uint8_t y = x; y < tft.HEIGHT; y += 40) {
@@ -133,7 +133,7 @@ void loop()
   
   // Fill circles
   tft.fill_screen();
-  tft.set_pen_color(tft.RED);
+  tft.set_pen_color(Canvas::RED);
   start = micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
     for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
@@ -144,7 +144,7 @@ void loop()
   INFO("fill_circle: %ul ms", ms);
 
   // Grid with draw circle
-  tft.set_pen_color(tft.BLACK);
+  tft.set_pen_color(Canvas::BLACK);
   start = micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
     for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
@@ -156,18 +156,18 @@ void loop()
   Watchdog::delay(2048);
 
   // Draw lines
-  tft.set_canvas_color(tft.shade(tft.WHITE, 20));
+  tft.set_canvas_color(tft.shade(Canvas::WHITE, 20));
   tft.fill_screen();
   start = micros();
-  tft.set_pen_color(tft.RED);
+  tft.set_pen_color(Canvas::RED);
   for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
     tft.draw_line(0, 0, x, tft.HEIGHT - 1);
   }
-  tft.set_pen_color(tft.GREEN);
+  tft.set_pen_color(Canvas::GREEN);
   for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
     tft.draw_line(0, 0, tft.WIDTH - 1, y);
   }
-  tft.set_pen_color(tft.BLUE);
+  tft.set_pen_color(Canvas::BLUE);
   for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
     tft.draw_line(tft.WIDTH - 1, 0, x, tft.HEIGHT - 1);
   }
@@ -175,14 +175,14 @@ void loop()
   INFO("draw_line: %ul ms", ms);
   Watchdog::delay(2048);
 
-  tft.set_pen_color(tft.BLACK);
+  tft.set_pen_color(Canvas::BLACK);
   tft.fill_screen();
   start = micros();
-  tft.set_pen_color(tft.CYAN);
+  tft.set_pen_color(Canvas::CYAN);
   for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
     tft.draw_line(tft.WIDTH - 1, 0, 0, y);
   }
-  tft.set_pen_color(tft.MAGENTA);
+  tft.set_pen_color(Canvas::MAGENTA);
   for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
     tft.draw_line(0, tft.HEIGHT - 1, x, 0);
   }
@@ -190,10 +190,11 @@ void loop()
   INFO("draw_line: %ul ms", ms);
   Watchdog::delay(2048);
 
-  tft.set_pen_color(tft.BLACK);
-  tft.fill_screen();
-  tft.set_pen_color(tft.YELLOW);
   start = micros();
+  tft.set_orientation(Canvas::LANDSCAPE);
+  tft.set_pen_color(Canvas::BLACK);
+  tft.fill_screen();
+  tft.set_pen_color(Canvas::YELLOW);
   for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
     tft.draw_line(0, tft.HEIGHT - 1, tft.WIDTH - 1, y);
   }
@@ -204,6 +205,11 @@ void loop()
     tft.draw_line(tft.WIDTH - 1, tft.HEIGHT - 1, 0, y);
   }
   ms = (micros() - start) / 1000L;
+  tft.set_text_color(Canvas::BLACK);
+  tft.set_cursor(5, 40);
+  tft.set_text_scale(4);
+  cout.printf_P(PSTR("%ul ms\n"), ms);
+  tft.set_orientation(Canvas::PORTRAIT);
   INFO("draw_line: %ul ms", ms);
   Watchdog::delay(2048);
 }

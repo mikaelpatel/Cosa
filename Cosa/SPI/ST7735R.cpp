@@ -119,7 +119,7 @@ ST7735R::begin()
 }
 
 ST7735R::ST7735R(uint8_t cs, uint8_t dc) :
-  Canvas(128, 160),
+  Canvas(SCREEN_WIDTH, SCREEN_HEIGHT),
   m_cs(cs, 1),
   m_dc(dc, 1),
   m_initiated(0)
@@ -214,3 +214,18 @@ ST7735R::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
   }
 }
 
+void 
+ST7735R::set_orientation(uint8_t direction) {
+  uint8_t setting = 0;
+  if (direction == LANDSCAPE) {
+    setting = MADCTL_MX | MADCTL_MV;
+    WIDTH  = SCREEN_HEIGHT;
+    HEIGHT = SCREEN_WIDTH;
+  } 
+  else {
+    setting = MADCTL_MX | MADCTL_MY;
+    WIDTH  = SCREEN_WIDTH;
+    HEIGHT = SCREEN_HEIGHT;
+  }
+  write(MADCTL, setting);
+}
