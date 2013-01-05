@@ -77,7 +77,7 @@ void setup()
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 
   // Attach the range module to read distance every second
-  Watchdog::attach(&ping, 1024);
+  Watchdog::attach(&ping, 256);
 }
 
 void loop()
