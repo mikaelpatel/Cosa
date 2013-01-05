@@ -44,7 +44,7 @@
 class HCSR04 : public Thing {
 private:
   static const uint16_t TIMEOUT = 0xffffU;
-  static const uint16_t COUNT_PER_CM = 49;
+  static const uint16_t COUNT_PER_CM = 54;
   OutputPin m_trigPin;
   InputPin m_echoPin;
   uint16_t m_distance;
@@ -92,4 +92,3 @@ public:
 };
 
 #endif
-
