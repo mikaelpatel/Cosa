@@ -31,16 +31,21 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
 
-// Callback for interrupt pin(2); updates a counter
-volatile uint16_t counter = 0;
-
-void do_interrupt(InterruptPin* pin, void* env)
-{
-  counter++;
-}
+// Input interrupt pin with counter
+class CounterInterruptPin : public InterruptPin {
+private:
+  volatile uint16_t m_counter;
+  virtual void on_interrupt() { m_counter++; }
+public:
+  CounterInterruptPin(uint8_t pin) :
+    InterruptPin(pin, InterruptPin::ON_RISING_MODE),
+    m_counter(0)
+  {}
+  uint16_t get_counter() { return (m_counter); }
+};
 
 // Input and output pins
-InterruptPin intPin(2, InterruptPin::ON_RISING_MODE, do_interrupt);
+CounterInterruptPin intPin(2);
 PWMPin ledPin(5);
 InputPin onoffPin(7);
 AnalogPin tempVCC(8, AnalogPin::A1V1_REFERENCE);
@@ -60,6 +65,7 @@ void setup()
   TRACE(sizeof(Pin));
   TRACE(sizeof(InputPin));
   TRACE(sizeof(InterruptPin));
+  TRACE(sizeof(CounterInterruptPin));
   TRACE(sizeof(AnalogPin));
   TRACE(sizeof(OutputPin));
   TRACE(sizeof(PWMPin));
@@ -73,7 +79,7 @@ void setup()
   tempVCC.println();
 
   // Check interrupt pin; enable and print interrupt counter
-  TRACE(counter);
+  TRACE(intPin.get_counter());
   intPin.enable();
 
   // Start the watchdog ticks counter (1 second pulse)
@@ -109,5 +115,5 @@ void loop()
   }
 
   // Print the interrupt counter
-  TRACE(counter);
+  TRACE(intPin.get_counter());
 }
