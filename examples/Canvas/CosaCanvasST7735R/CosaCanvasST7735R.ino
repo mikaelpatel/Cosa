@@ -34,6 +34,9 @@
 #include "Cosa/Font/System5x7.hh"
 #include "Cosa/Canvas.hh"
 #include "Cosa/SPI/ST7735R.hh"
+#include "Cosa/Icon/arduino_icon_34x32.h"
+#include "Cosa/Icon/arduino_icon_64x64.h"
+#include "Cosa/Icon/arduino_icon_96x32.h"
 
 ST7735R tft;
 IOStream cout(&tft);
@@ -212,4 +215,20 @@ void loop()
   tft.set_orientation(Canvas::PORTRAIT);
   INFO("draw_line: %ul ms", ms);
   Watchdog::delay(2048);
+
+  // Display the Arduino Icons
+  tft.fill_screen();
+  tft.set_pen_color(tft.shade(Canvas::CYAN, 80));
+  tft.set_text_scale(1);
+  tft.draw_icon((tft.WIDTH-34)/2, (tft.HEIGHT-32)/2, arduino_icon_34x32);
+  Watchdog::delay(2048);
+  tft.fill_screen();
+  tft.draw_icon((tft.WIDTH-64)/2, (tft.HEIGHT-64)/2, arduino_icon_64x64);
+  Watchdog::delay(2048);
+  tft.set_orientation(Canvas::LANDSCAPE);
+  tft.fill_screen();
+  tft.draw_icon((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, arduino_icon_96x32);
+  tft.set_orientation(Canvas::PORTRAIT);
+  for (uint8_t x = 0; x < 2; x++) Watchdog::delay(2048);
 }
+

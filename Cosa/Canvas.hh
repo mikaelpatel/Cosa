@@ -289,10 +289,10 @@ public:
   }
 
   /**
-   * Set screen orientation. Must override.
-   * @param[in] direction
+   * Set screen orientation.
+   * @param[in] direction (LANDSCAPE/PORTRAIT)
    */
-  virtual void set_orientation(uint8_t direction) = 0;
+  virtual void set_orientation(uint8_t direction) {}
 
   /**
    * Set pixel with current color.
@@ -316,7 +316,6 @@ public:
    * @param[in] bp
    * @param[in] width
    * @param[in] height
-   * @param[in] scale
    */
   virtual void draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp, 
 			   uint8_t width, uint8_t height);
@@ -326,11 +325,27 @@ public:
    * @param[in] bp
    * @param[in] width
    * @param[in] height
-   * @param[in] scale
    */
   void draw_bitmap(const uint8_t* bp, uint8_t width, uint8_t height)
   {
     draw_bitmap(m_cursor.x, m_cursor.y, bp, width, height);
+  }
+  
+  /**
+   * Draw icon at given position with current color.
+   * @param[in] x 
+   * @param[in] y
+   * @param[in] bp
+   */
+  virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp);
+
+  /**
+   * Draw icon at cursor position with current color.
+   * @param[in] bp
+   */
+  void draw_icon(const uint8_t* bp)
+  {
+    draw_icon(m_cursor.x, m_cursor.y, bp);
   }
   
   /**
@@ -534,6 +549,8 @@ public:
     SET_TEXT_PORT,		// (uint8_t x, y, w, h) text port
     SET_CURSOR,			// (uint8_t x, y) cursor position
     MOVE_CURSOR,		// (int8_t dx, dy) cursor delta position
+    DRAW_BITMAP,		// (uint8_t ix, w, h) index, width and height
+    DRAW_ICON,	       		// (uint8_t ix) index to icon in table
     DRAW_PIXEL,			// (void)
     DRAW_LINE,			// (uint8_t x, y) line end position
     DRAW_RECT,			// (uint8_t w, h) width and height of rectangle
