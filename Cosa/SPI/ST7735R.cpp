@@ -176,6 +176,8 @@ ST7735R::write(Command cmd, uint16_t x, uint16_t y)
 void 
 ST7735R::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 {
+  if (x + width >= WIDTH) width = WIDTH - x;
+  if (y + height >= HEIGHT) height = HEIGHT - y;
   set_port(x, y, x + width - 1, y + height - 1);
   SPI_transaction(m_cs) {
     for (x = 0; x < width; x++)
@@ -189,8 +191,14 @@ ST7735R::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 void 
 ST7735R::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 {
-  if (x >= WIDTH) return;
-  if (y + length >= HEIGHT) length = HEIGHT - y - 1;
+  if (x >= WIDTH || length == 0) return;
+  if (y >= HEIGHT) {
+    int8_t z = y + length;
+    if (z >= HEIGHT) return;
+    length = z;
+    y = 0;
+  }
+  if (y + length >= HEIGHT) length = HEIGHT - y;
   set_port(x, y, x, y + length);
   SPI_transaction(m_cs) {
     while (length--) {
@@ -203,9 +211,15 @@ ST7735R::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 void 
 ST7735R::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 {
-  if (y >= HEIGHT) return;
-  if (x + length >= WIDTH) length = WIDTH - x - 1;
-  set_port(x, y, x + length, y + 1);
+  if (y >= HEIGHT || length == 0) return;
+  if (x >= WIDTH) {
+    int8_t z = x + length;
+    if (z >= WIDTH) return;
+    length = z;
+    x = 0;
+  }
+  if (x + length >= WIDTH) length = WIDTH - x;
+  set_port(x, y, x + length, y);
   SPI_transaction(m_cs) {
     while (length--) {
       spi.exchange(m_pen_color >> 8);
@@ -218,12 +232,12 @@ void
 ST7735R::set_orientation(uint8_t direction) {
   uint8_t setting = 0;
   if (direction == LANDSCAPE) {
-    setting = MADCTL_MX | MADCTL_MV;
+    setting = (MADCTL_MX | MADCTL_MV);
     WIDTH  = SCREEN_HEIGHT;
     HEIGHT = SCREEN_WIDTH;
   } 
   else {
-    setting = MADCTL_MX | MADCTL_MY;
+    setting = (MADCTL_MX | MADCTL_MY);
     WIDTH  = SCREEN_WIDTH;
     HEIGHT = SCREEN_HEIGHT;
   }

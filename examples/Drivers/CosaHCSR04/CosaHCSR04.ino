@@ -41,6 +41,8 @@ HCSR04 ping(2, 3);
 #undef putchar
 #include "Cosa/SPI/ST7735R.hh"
 #include "Cosa/IOStream.hh"
+#include "Cosa/Font/FixedNums8x16.hh"
+#include "Cosa/Font/System5x7.hh"
 ST7735R tft;
 IOStream cout(&tft);
 uint16_t RED, GREEN, BLUE, YELLOW, CYAN, GRAY;
@@ -103,7 +105,14 @@ void loop()
     else                     tft.set_canvas_color(GRAY);
     tft.fill_screen();
     tft.set_cursor(10, 10);
+    tft.set_text_scale(4);
+    tft.set_font(&system5x7);
     cout.printf_P(PSTR("%d\nmm"), distance);
+
+    tft.set_text_scale(1);
+    tft.set_cursor(10, 120);
+    tft.set_font(&fixednums8x16);
+    cout.printf_P(PSTR("%d"), distance);
 #else
     TRACE(distance);
 #endif

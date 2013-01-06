@@ -34,6 +34,7 @@
  */
 
 #include "Cosa/Canvas.hh"
+#include "Cosa/Font.hh"
 
 uint16_t 
 Canvas::color(uint8_t red, uint8_t green, uint8_t blue)
@@ -78,20 +79,22 @@ Canvas::draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp,
 }
 
 void
-Canvas::draw_icon(uint8_t x, uint8_t y, const uint8_t* bp)
+Canvas::draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
+		  uint8_t width, uint8_t height)
 {
-  uint8_t width = pgm_read_byte(bp++);
-  uint8_t height = pgm_read_byte(bp++);
   for (uint8_t i = 0; i < height; i += 8) {
     for (uint8_t j = 0; j < width; j++) {
       uint8_t line = pgm_read_byte(bp++);
       for (uint8_t k = 0; k < 8; k++) {
 	if (line & 1) {
 	  if (m_text_scale == 1)
-	    draw_pixel(x + j, y + k + i);
+	    draw_pixel(x + j, 
+		       y + k + i);
 	  else {
-	    fill_rect(x + j*m_text_scale, y + i*m_text_scale, 
-		      m_text_scale, m_text_scale);
+	    fill_rect(x + j*m_text_scale, 
+		      y + (k+i)*m_text_scale, 
+		      m_text_scale, 
+		      m_text_scale);
 	  } 
 	}
 	line >>= 1;
@@ -177,28 +180,23 @@ Canvas::draw_circle(uint8_t x, uint8_t y, uint8_t radius)
 }
 
 void 
-Canvas::fill_circle(uint8_t x, uint8_t y, uint8_t radius)
+Canvas::fill_circle(uint8_t x, uint8_t y, uint8_t r)
 {
-  int16_t f = 1 - radius;
-  int16_t dx = 1;
-  int16_t dy = -2 * radius;
-  int8_t rx = 0;
-  int8_t ry = radius;
+  int16_t dx = 0, dy = r;
+  int16_t p = 1 - r;
 
-  draw_vertical_line(x, y - radius, 2*radius + 1);
-  while (rx < ry) {
-    if (f >= 0) {
-      ry--;
-      dy += 2;
-      f += dy;
+  while (dx <= dy) {
+    draw_vertical_line(x + dx, y - dy, dy + dy);
+    draw_vertical_line(x - dx, y - dy, dy + dy);
+    draw_vertical_line(x + dy, y - dx, dx + dx);
+    draw_vertical_line(x - dy, y - dx, dx + dx);
+    dx++;
+    if (p < 0)
+      p = p + (dx << 1) + 1;
+    else {
+      dy--;
+      p = p + ((dx - dy) << 1) + 1;
     }
-    rx++;
-    dx += 2;
-    f += dx;
-    draw_vertical_line(x + rx, y - ry, 2*ry + 1);
-    draw_vertical_line(x + ry, y - rx, 2*rx + 1);
-    draw_vertical_line(x - rx, y - ry, 2*ry + 1);
-    draw_vertical_line(x - ry, y - rx, 2*rx + 1);
   }
 }
 
@@ -207,9 +205,7 @@ Canvas::draw_char(char c)
 {
   uint16_t color = m_pen_color;
   m_pen_color = m_text_color;
-  draw_bitmap(m_cursor.x, m_cursor.y, 
-	      m_font->get_bitmap(c), 
-	      m_font->WIDTH, m_font->HEIGHT);
+  m_font->draw(this, c, m_cursor.x, m_cursor.y);
   m_cursor.x += m_text_scale * (m_font->WIDTH + CHAR_SPACING);
   if (m_cursor.x > m_text_port.width) {
     m_cursor.x = m_text_port.x;

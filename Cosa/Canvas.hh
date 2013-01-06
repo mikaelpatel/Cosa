@@ -38,7 +38,10 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Font/System5x7.hh"
+
+class Font;
+class System5x7;
+extern System5x7 system5x7;
 
 class Canvas : public IOStream::Device {
 
@@ -106,7 +109,7 @@ public:
    * @param[in] height screen height.
    * @param[in] font text font (default 5x7).
    */
-  Canvas(uint8_t width, uint8_t height, Font* font = &system5x7) :
+  Canvas(uint8_t width, uint8_t height, Font* font = (Font*) &system5x7) :
     IOStream::Device(),
     m_canvas_color(WHITE),
     m_pen_color(BLACK),
@@ -336,8 +339,24 @@ public:
    * @param[in] x 
    * @param[in] y
    * @param[in] bp
+   * @param[in] width
+   * @param[in] height
    */
-  virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp);
+  virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
+			 uint8_t width, uint8_t height);
+
+  /**
+   * Draw icon at given position with current color.
+   * @param[in] x 
+   * @param[in] y
+   * @param[in] bp
+   */
+  virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp)
+  {
+    uint8_t width = pgm_read_byte(bp++);
+    uint8_t height = pgm_read_byte(bp++);
+    draw_icon(x, y, bp, width, height);
+  }
 
   /**
    * Draw icon at cursor position with current color.
@@ -345,7 +364,9 @@ public:
    */
   void draw_icon(const uint8_t* bp)
   {
-    draw_icon(m_cursor.x, m_cursor.y, bp);
+    uint8_t width = pgm_read_byte(bp++);
+    uint8_t height = pgm_read_byte(bp++);
+    draw_icon(m_cursor.x, m_cursor.y, bp, width, height);
   }
   
   /**

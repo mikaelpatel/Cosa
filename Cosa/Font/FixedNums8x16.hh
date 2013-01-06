@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Font.hh
+ * @file Cosa/Font/FixedNum8x16.hh
  * @version 1.0
  *
  * @section License
@@ -21,72 +21,40 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Bitmap font library.
+ * Bitmap font size 8x16, fixed with font with numbers only.
+ *
+ * @section Acknowledgement
+ * Originates from the GLCD library and adapted for Cosa Canvas.
+ * The GLCD library was created by Michael Margolis and improved 
+ * by Bill Perry.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FONT_HH__
-#define __COSA_FONT_HH__
+#ifndef __COSA_FONT_FIXEDNUMS8X16_HH__
+#define __COSA_FONT_FIXEDNUMS8X16_HH__
 
-#include "Cosa/Types.h"
-#include "Cosa/Canvas.hh"
+#include "Cosa/Font.hh"
 
-class Font {
+class FixedNums8x16 : public Font {
 
-protected:
-  /**
-   * Font bitmap.
-   */
-  const uint8_t* m_bitmap;
+private:
+  static const uint8_t bitmap[] PROGMEM;
 
 public:
-  /**
-   * Font size; width/height 
-   */
-  const uint8_t WIDTH;
-  const uint8_t HEIGHT;
+  FixedNums8x16() : Font(8, 15, bitmap) {}
 
   /**
-   * Construct font descriptor and bitmap.
-   * @param[in] width character width.
-   * @param[in] height character height.
-   * @param[in] bitmap font storage.
-   */
-  Font(uint8_t width, uint8_t height, const uint8_t* bitmap) :
-    m_bitmap(bitmap),
-    WIDTH(width), 
-    HEIGHT(height)
-  {}
-  
-  /**
+   * @overriden
    * Get bitmap for given character.
    * @param[in] c character.
    * @return bitmap pointer.
    */
   virtual const uint8_t* get_bitmap(char c)
   {
-    return (m_bitmap + (c * WIDTH));
-  }
-
-  /**
-   * Get width for given character.
-   * @param[in] c character.
-   * @return width.
-   */
-  virtual uint8_t get_width(char c)
-  {
-    return (WIDTH);
-  }
-  
-  /**
-   * Get width for given character.
-   * @param[in] c character.
-   * @return height.
-   */
-  virtual uint8_t get_height(char c)
-  {
-    return (HEIGHT);
+    c = c - '+';
+    if (c > 16) c = 0;
+    return (m_bitmap + (c * WIDTH)*((HEIGHT + 1)/CHARBITS));
   }
 
   /**
@@ -98,8 +66,10 @@ public:
    */
   virtual void draw(Canvas* canvas, char c, uint8_t x, uint8_t y)
   {
-    canvas->draw_bitmap(x, y, get_bitmap(c), WIDTH, HEIGHT);
+    canvas->draw_icon(x, y, get_bitmap(c), WIDTH, HEIGHT);
   }
 };
+
+extern FixedNums8x16 fixednums8x16;
 
 #endif

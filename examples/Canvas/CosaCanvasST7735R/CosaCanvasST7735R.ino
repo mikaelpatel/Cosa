@@ -63,16 +63,17 @@ void setup()
 
 void loop()
 {
+  static uint8_t direction = Canvas::PORTRAIT;
   uint32_t start, ms;
 
-  // Fill screen
+  // Test#1: Fill screen
   start = micros();
   tft.set_canvas_color(Canvas::WHITE);
   tft.fill_screen();
   ms = (micros() - start) / 1000L;
-  INFO("fill_screen: %ul ms", ms);
+  INFO("test#1:fill screen: %ul ms", ms);
 
-  // Print on the output stream
+  // Test#2: Use the display as an output stream
   start = micros();
   tft.set_pen_color(tft.shade(Canvas::GREEN, 20));
   tft.draw_rect(0, 0, tft.WIDTH - 1, tft.HEIGHT - 1);
@@ -94,10 +95,10 @@ void loop()
   tft.set_text_color(Canvas::BLACK);
   tft.set_text_scale(1);
   ms = (micros() - start) / 1000L;
-  cout.printf_P(PSTR("draw_intro: %ul ms\n"), ms);
+  cout.printf_P(PSTR("test#2:output stream: %ul ms\n"), ms);
   Watchdog::delay(2048);
 
-  // Grid with draw pixel
+  // Test#3: Grid with draw pixel
   tft.fill_screen();
   tft.set_pen_color(Canvas::BLACK);
   start = micros();
@@ -107,10 +108,10 @@ void loop()
     }
   }
   ms = (micros() - start) / 1000L;
-  INFO("draw_pixel: %ul ms", ms);
+  INFO("test#3:draw pixel grid: %ul ms", ms);
   Watchdog::delay(2048);
 
-  // Grid with draw rectangle
+  // Test#4: Grid with draw rectangle
   tft.set_pen_color(Canvas::BLACK);
   start = micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
@@ -119,10 +120,10 @@ void loop()
     }
   }
   ms = (micros() - start) / 1000L;
-  INFO("draw_rect: %ul ms", ms);
+  INFO("test#4:draw rect grid: %ul ms", ms);
   Watchdog::delay(2048);
   
-  // Fill rectangles
+  // Test#5: Fill some of the rectangles
   tft.set_pen_color(Canvas::WHITE);
   start = micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
@@ -131,34 +132,26 @@ void loop()
     }
   }
   ms = (micros() - start) / 1000L;
-  INFO("fill_rect: %ul ms", ms);
+  INFO("test#5:fill rect grid: %ul ms", ms);
   Watchdog::delay(2048);
-  
-  // Fill circles
+
+  // Test#6: Fill circles
   tft.fill_screen();
-  tft.set_pen_color(Canvas::RED);
+  tft.set_pen_color(tft.shade(Canvas::RED, 80));
   start = micros();
-  for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
-    for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
-      tft.fill_circle(x + 10, y + 10, 9);
+  for (uint8_t x = 0; x < tft.WIDTH; x += 30) {
+    for (uint8_t y = 0; y < tft.HEIGHT; y += 30) {
+      tft.fill_circle(x, y, 12);
+      tft.set_cursor(x - 2, y - 3);
+      tft.draw_char('*');
+      tft.draw_circle(x, y, 12);
     }
   }
   ms = (micros() - start) / 1000L;
-  INFO("fill_circle: %ul ms", ms);
-
-  // Grid with draw circle
-  tft.set_pen_color(Canvas::BLACK);
-  start = micros();
-  for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
-    for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
-      tft.draw_circle(x + 10, y + 10, 9);
-    }
-  }
-  ms = (micros() - start) / 1000L;
-  INFO("draw_circle: %ul ms", ms);
+  INFO("test#6:draw circle grid: %ul ms", ms);
   Watchdog::delay(2048);
 
-  // Draw lines
+  // Test#7: Draw lines
   tft.set_canvas_color(tft.shade(Canvas::WHITE, 20));
   tft.fill_screen();
   start = micros();
@@ -175,26 +168,11 @@ void loop()
     tft.draw_line(tft.WIDTH - 1, 0, x, tft.HEIGHT - 1);
   }
   ms = (micros() - start) / 1000L;
-  INFO("draw_line: %ul ms", ms);
+  INFO("test#7:draw lines: %ul ms", ms);
   Watchdog::delay(2048);
 
-  tft.set_pen_color(Canvas::BLACK);
-  tft.fill_screen();
+  // Test#8: Draw more lines
   start = micros();
-  tft.set_pen_color(Canvas::CYAN);
-  for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
-    tft.draw_line(tft.WIDTH - 1, 0, 0, y);
-  }
-  tft.set_pen_color(Canvas::MAGENTA);
-  for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
-    tft.draw_line(0, tft.HEIGHT - 1, x, 0);
-  }
-  ms = (micros() - start) / 1000L;
-  INFO("draw_line: %ul ms", ms);
-  Watchdog::delay(2048);
-
-  start = micros();
-  tft.set_orientation(Canvas::LANDSCAPE);
   tft.set_pen_color(Canvas::BLACK);
   tft.fill_screen();
   tft.set_pen_color(Canvas::YELLOW);
@@ -211,12 +189,13 @@ void loop()
   tft.set_text_color(Canvas::BLACK);
   tft.set_cursor(5, 40);
   tft.set_text_scale(4);
+  tft.set_orientation(Canvas::LANDSCAPE);
   cout.printf_P(PSTR("%ul ms\n"), ms);
-  tft.set_orientation(Canvas::PORTRAIT);
-  INFO("draw_line: %ul ms", ms);
+  tft.set_orientation(direction);
+  INFO("test#8:draw more lines: %ul ms", ms);
   Watchdog::delay(2048);
 
-  // Display the Arduino Icons
+  // Test#9: Display the Arduino Icons
   tft.fill_screen();
   tft.set_pen_color(tft.shade(Canvas::CYAN, 80));
   tft.set_text_scale(1);
@@ -225,10 +204,15 @@ void loop()
   tft.fill_screen();
   tft.draw_icon((tft.WIDTH-64)/2, (tft.HEIGHT-64)/2, arduino_icon_64x64);
   Watchdog::delay(2048);
-  tft.set_orientation(Canvas::LANDSCAPE);
   tft.fill_screen();
+  start = micros();
   tft.draw_icon((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, arduino_icon_96x32);
-  tft.set_orientation(Canvas::PORTRAIT);
-  for (uint8_t x = 0; x < 2; x++) Watchdog::delay(2048);
+  ms = (micros() - start) / 1000L;
+  Watchdog::delay(2048);
+  INFO("test#9:draw arduino icon: %ul ms", ms);
+
+  // Rotate display
+  direction = !direction;
+  tft.set_orientation(direction);
 }
 
