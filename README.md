@@ -35,11 +35,12 @@ with prefix, e.g. "Cosa/FileName.hh". It is possible to use both
 Arduino and Cosa functions together, though in some cases the Cosa
 objects may become inconsistent. 
 
-To improve debugging and testing there is trace/syslog support and an
-IOStream class with both output to serial communication (UART) but
-also small TFT display (such as the SR7735R). A IOSTream/Canvas class
-supports basic drawing and scripting of drawing operations to reduce
-program memory footprint.
+To improve debugging and testing there is trace/syslog style support. 
+The IOStream class allows output to both serial communication (UART) 
+and small TFT displays (such as the SR7735R). The drawing Canvas class
+supports basic drawing operation and scripting to reduce program
+memory footprint. The Canvas class also supports drawing of icons and
+multiple fonts. 
 
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. 
