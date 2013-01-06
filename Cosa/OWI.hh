@@ -63,12 +63,21 @@ public:
     uint8_t m_rom[ROM_MAX];
     OWI* m_pin;
 
+    /**
+     * Search device rom given the last position of discrepancy.
+     * Negative value for start from the beginning.
+     * @param[in] last position of discrepancy.
+     * @return position of difference or negative error code.
+     */
+    int8_t search(int8_t last = FIRST);
+
   public:
     /**
      * Construct one wire device driver.
      * @param[in] pin one wire bus.
+     * @param[in] rom identity.
      */
-    Driver(OWI* pin) : m_pin(pin) {}
+    Driver(OWI* pin, const uint8_t* rom = 0);
 
     /**
      * Return pointer to device rom. 
@@ -108,6 +117,14 @@ public:
      * @return true(1) if successful otherwise false(0).
      */
     bool skip_rom();
+
+    /**
+     * Search alarming device given the last position of discrepancy.
+     * Negative value for start from the beginning.
+     * @param[in] last position of discrepancy.
+     * @return position of difference or negative error code.
+     */
+    int8_t alarm_search(int8_t last = FIRST);
 
     /**
      * Connect to one-wire device with given family code and index.

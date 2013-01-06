@@ -28,11 +28,18 @@
 
 #include "Cosa/OWI.hh"
 
-int8_t
-OWI::Driver::search_rom(int8_t last)
+OWI::Driver::Driver(OWI* pin, const uint8_t* rom) : 
+  m_pin(pin) 
 {
-  if (!m_pin->reset()) return (ERROR);
-  m_pin->write(OWI::SEARCH_ROM);
+  if (rom != 0) {
+    for (uint8_t i = 0; i < ROM_MAX; i++)
+      m_rom[i] = pgm_read_byte(rom++);
+  }
+}
+
+int8_t
+OWI::Driver::search(int8_t last)
+{
   uint8_t pos = 0;
   int8_t next = LAST;
   for (uint8_t i = 0; i < 8; i++) {
@@ -74,6 +81,14 @@ OWI::Driver::search_rom(int8_t last)
   return (next);
 }
 
+int8_t
+OWI::Driver::search_rom(int8_t last)
+{
+  if (!m_pin->reset()) return (ERROR);
+  m_pin->write(OWI::SEARCH_ROM);
+  return (search(last));
+}
+
 bool
 OWI::Driver::read_rom()
 {
@@ -103,6 +118,14 @@ OWI::Driver::skip_rom()
   if (!m_pin->reset()) return (0);
   m_pin->write(OWI::SKIP_ROM);
   return (1);
+}
+
+int8_t
+OWI::Driver::alarm_search(int8_t last)
+{
+  if (!m_pin->reset()) return (ERROR);
+  m_pin->write(OWI::ALARM_SEARCH);
+  return (search(last));
 }
 
 void
