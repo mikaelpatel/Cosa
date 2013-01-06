@@ -38,18 +38,23 @@ HCSR04 ping(2, 3);
 
 // Use the ST7735R TFT display or the trace iostream
 #ifdef USE_TFT
+
 #undef putchar
 #include "Cosa/SPI/ST7735R.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Font/FixedNums8x16.hh"
-#include "Cosa/Font/System5x7.hh"
+#include "Cosa/Icon/arduino_icon_96x32.h"
+
 ST7735R tft;
 IOStream cout(&tft);
 uint16_t RED, GREEN, BLUE, YELLOW, CYAN, GRAY;
+
 #else
+
 #include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
 OutputPin ledPin(13);
+
 #endif
 
 void setup()
@@ -58,7 +63,8 @@ void setup()
   // Start display and initiate text scale and port
   tft.begin();
   tft.set_text_scale(4);
-  tft.set_text_port(10, 40, tft.WIDTH - 20, tft.HEIGHT - 40);
+  tft.set_font(&fixednums8x16);
+  tft.set_orientation(Canvas::LANDSCAPE);
   RED = tft.shade(Canvas::RED, 75);
   YELLOW = tft.shade(Canvas::YELLOW, 75);
   GREEN = tft.shade(Canvas::GREEN, 75);
@@ -104,15 +110,16 @@ void loop()
     else if (distance < 400) tft.set_canvas_color(CYAN);
     else                     tft.set_canvas_color(GRAY);
     tft.fill_screen();
-    tft.set_cursor(10, 10);
-    tft.set_text_scale(4);
-    tft.set_font(&system5x7);
-    cout.printf_P(PSTR("%d\nmm"), distance);
-
-    tft.set_text_scale(1);
-    tft.set_cursor(10, 120);
-    tft.set_font(&fixednums8x16);
-    cout.printf_P(PSTR("%d"), distance);
+    if (distance < 50 || distance > 2000) {
+      uint8_t saved = tft.get_text_scale();
+      tft.set_text_scale(1);
+      tft.draw_icon((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, arduino_icon_96x32);
+      tft.set_text_scale(saved);
+    }
+    else {
+      tft.set_cursor(10, 35);
+      cout.printf_P(PSTR("%d"), distance);
+    }
 #else
     TRACE(distance);
 #endif
