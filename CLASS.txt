@@ -86,6 +86,7 @@ The Cosa font handler.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 Font.hh:		class Font
 Font/System5x7.hh:	      class System5x7 : public Font (singleton)
+Font/Fixednums8x16.hh:	      class Fixednums8x16 : public Font (singleton)
 ----------------------------------------------------------------------------
 OWI
 Driver for devices on the one wire bus (1-Wire). Support for DS18B20

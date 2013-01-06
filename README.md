@@ -7,6 +7,10 @@ machines. It contains a rich set of classes to support rapid
 prototyping of Internet-of-Things devices. A class overview may be
 found in [CLASS.txt](https://github.com/mikaelpatel/Cosa/blob/master/CLASS.txt). 
 
+Cosa supports the following AVR/Atmega328P internal hardware modules;
+all pin modes, interrupt pins, PWM, Watchdog, UART (transmit), SPI and
+TWI.  
+
 Cosa also contains a data streaming format (Ciao) for encoding of
 C/C++ language data types such as strings, integer and floating
 pointer numbers into a binary format. It may be used for a number of
@@ -18,10 +22,6 @@ an Arduino monitoring and control language (Cosa fai) which has much
 in common with Firmata. See
 [CIAO.txt](https://github.com/mikaelpatel/Cosa/blob/master/CIAO.txt)
 for more details and the example code (examples/Ciao). 
-
-Cosa supports the following AVR/Atmega328P internal hardware modules;
-all pin modes, interrupt pins, PWM, Watchdog, UART (transmit), SPI and
-TWI.  
 
 The primary programming paradigm is object-oriented and
 state-machine/event driven. There is a large number of device drivers
@@ -35,12 +35,18 @@ with prefix, e.g. "Cosa/FileName.hh". It is possible to use both
 Arduino and Cosa functions together, though in some cases the Cosa
 objects may become inconsistent. 
 
+To improve debugging and testing there is trace/syslog support and an
+IOStream class with both output to serial communication (UART) but
+also small TFT display (such as the SR7735R). A IOSTream/Canvas class
+supports basic drawing and scripting of drawing operations to reduce
+program memory footprint.
+
 The goal of this project is to provide an efficient programming
-platform for rapid prototyping of
-"Internet-of-things"-devices. Unfortunately Cosa is not a beginners
-entry level programming platform, though following some of the design
-patterns in Cosa will help beginners build more complex small scale
-embedded systems with richer concurrency and low power consumption. 
+platform for rapid prototyping of "Internet-of-things"-devices. 
+Unfortunately Cosa is not a beginners entry level programming
+platform, though following some of the design patterns in Cosa will
+help beginners build more complex small scale embedded systems with
+richer concurrency and low power consumption.  
 
 Install
 -------
