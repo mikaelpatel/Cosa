@@ -79,8 +79,9 @@ public:
   /**
    * Construct a DS18B20 device connected to the given one wire bus.
    * @param[in] pin one wire bus pin.
+   * @param[in] rom device identity (default null).
    */
-  DS18B20(OWI* pin) : OWI::Driver(pin) {}
+  DS18B20(OWI* pin, const uint8_t* rom = 0) : OWI::Driver(pin, rom) {}
 
   /**
    * Connect to DS18B20 device with given index.
