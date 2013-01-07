@@ -68,9 +68,15 @@
 
 /**
  * Macro for micro-second delay. 
- * @param[in] us micro-seconds
+ * @param[in] us micro-seconds.
  */
 #define DELAY(us) _delay_loop_2((us) * I_CPU / 4)
+
+/**
+ * Macro for sleep for number of seconds. 
+ * @param[in] s seconds.
+ */
+#define SLEEP(seconds) Watchdog::delay(seconds * 1024)
 
 /**
  * Disable interrupts and return flags.
