@@ -12,7 +12,7 @@ HY-1.8 SPI):
 
 GND ==> GND(1)  
 VCC(5V) ==> VCC(2)  
-RST ==> HY-18 RESET(6)  
+RST ==> RESET(6)  
 Pin(9) 	==> A0(7)  
 MOSI/Pin(11) ==> SDA(8)  
 SCK/Pin(13) ==> SCK(9)  
