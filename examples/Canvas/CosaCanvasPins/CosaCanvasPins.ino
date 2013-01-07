@@ -61,5 +61,5 @@ void loop()
     tft.set_cursor(55, y + 5);
     cout.printf_P(PSTR("A%d %d"), x, analogRead(x));
   }
-  Watchdog::delay(512);  
+  SLEEP(1);
 }

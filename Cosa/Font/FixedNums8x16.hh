@@ -63,10 +63,12 @@ public:
    * @param[in] c
    * @param[in] x 
    * @param[in] y
+   * @param[in] scale
    */
-  virtual void draw(Canvas* canvas, char c, uint8_t x, uint8_t y)
+  virtual void draw(Canvas* canvas, char c, uint8_t x, uint8_t y, 
+		    uint8_t scale)
   {
-    canvas->draw_icon(x, y, get_bitmap(c), WIDTH, HEIGHT);
+    canvas->draw_icon(x, y, get_bitmap(c), WIDTH, HEIGHT, scale);
   }
 };
 

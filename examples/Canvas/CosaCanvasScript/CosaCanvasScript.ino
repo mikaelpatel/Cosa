@@ -31,6 +31,8 @@
 #include "Cosa/Memory.h"
 #include "Cosa/SPI/ST7735R.hh"
 #include "Cosa/Icon/arduino_icon_34x32.h"
+#include "Cosa/Font/System5x7.hh"
+#include "Cosa/Font/FixedNums8x16.hh"
 
 // Use the TFT display as canvas
 ST7735R tft;
@@ -42,7 +44,7 @@ const uint8_t init_script[] PROGMEM = {
   Canvas::FILL_SCREEN,
   Canvas::SET_TEXT_COLOR, 255, 255, 255,
   Canvas::SET_PEN_COLOR, 255, 255, 255,
-  Canvas::DRAW_ICON, 1,
+  Canvas::DRAW_ICON, 1, 1,
   Canvas::MOVE_CURSOR, -30, 36, 
   Canvas::DRAW_STRING_P, 5,
   Canvas::SET_PEN_COLOR, 0, 0, 0,
@@ -92,6 +94,7 @@ const uint8_t script[] PROGMEM = {
   Canvas::CALL_SCRIPT, 3,
   Canvas::DRAW_CHAR, 5,
 
+  Canvas::SET_TEXT_FONT, 7,
   Canvas::SET_PEN_COLOR, 255, 255, 255,
   Canvas::SET_CURSOR, 60, 60,
   Canvas::FILL_CIRCLE, 10,
@@ -99,14 +102,20 @@ const uint8_t script[] PROGMEM = {
   Canvas::FILL_CIRCLE, 10,
   Canvas::SET_CURSOR, 20, 100,
   Canvas::FILL_CIRCLE, 10,
-
   Canvas::SET_PEN_COLOR, 0, 0, 0,
   Canvas::SET_CURSOR, 60, 60,
   Canvas::DRAW_CIRCLE, 10,
+  Canvas::MOVE_CURSOR, -3, -7,
+  Canvas::DRAW_CHAR, '1',
   Canvas::SET_CURSOR, 100, 100,
   Canvas::DRAW_CIRCLE, 10,
+  Canvas::MOVE_CURSOR, -3, -7,
+  Canvas::DRAW_CHAR, '2',
   Canvas::SET_CURSOR, 20, 100,
   Canvas::DRAW_CIRCLE, 10,
+  Canvas::MOVE_CURSOR, -3, -7,
+  Canvas::DRAW_CHAR, '3',
+  Canvas::SET_TEXT_FONT, 6,
 
   Canvas::END_SCRIPT
 };
@@ -132,7 +141,9 @@ PGM_VOID_P tab[] PROGMEM = {
   script,
   sub_script,
   msg,
-  banner
+  banner,
+  &system5x7,
+  &fixednums8x16
 };
 
 void setup()
@@ -144,12 +155,15 @@ void setup()
   TRACE(free_memory());
   TRACE(sizeof(Canvas));
   TRACE(sizeof(tft));
+  TRACE(sizeof(tab));
   TRACE(sizeof(init_script));
-  TRACE(sizeof(arduino_icon_34x32));
   TRACE(sizeof(script));
   TRACE(sizeof(sub_script));
+  TRACE(sizeof(arduino_icon_34x32));
+  TRACE(sizeof(system5x7));
+  TRACE(sizeof(fixednums8x16));
   TRACE(sizeof(msg));
-  TRACE(sizeof(tab));
+  TRACE(sizeof(banner));
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
@@ -172,12 +186,12 @@ void loop()
   tft.run(0, tab, membersof(tab));
   ms = (micros() - start) / 1000L;
   INFO("init script run: %ul ms", ms);
-  Watchdog::delay(2048);
+  SLEEP(2);
 
   // Run script and measure execution time
   start = micros();
   tft.run(2, tab, membersof(tab));
   ms = (micros() - start) / 1000L;
   INFO("scipt run: %ul ms", ms);
-  Watchdog::delay(2048);
+  SLEEP(2);
 }

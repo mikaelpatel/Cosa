@@ -32,6 +32,7 @@
 #include "Cosa/Memory.h"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Font/System5x7.hh"
+#include "Cosa/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas.hh"
 #include "Cosa/SPI/ST7735R.hh"
 #include "Cosa/Icon/arduino_icon_34x32.h"
@@ -96,7 +97,8 @@ void loop()
   tft.set_text_scale(1);
   ms = (micros() - start) / 1000L;
   cout.printf_P(PSTR("test#2:output stream: %ul ms\n"), ms);
-  Watchdog::delay(2048);
+  INFO("test#2:output stream: %ul ms\n", ms);
+  SLEEP(2);
 
   // Test#3: Grid with draw pixel
   tft.fill_screen();
@@ -109,7 +111,7 @@ void loop()
   }
   ms = (micros() - start) / 1000L;
   INFO("test#3:draw pixel grid: %ul ms", ms);
-  Watchdog::delay(2048);
+  SLEEP(2);
 
   // Test#4: Grid with draw rectangle
   tft.set_pen_color(Canvas::BLACK);
@@ -121,7 +123,7 @@ void loop()
   }
   ms = (micros() - start) / 1000L;
   INFO("test#4:draw rect grid: %ul ms", ms);
-  Watchdog::delay(2048);
+  SLEEP(2);
   
   // Test#5: Fill some of the rectangles
   tft.set_pen_color(Canvas::WHITE);
@@ -133,7 +135,7 @@ void loop()
   }
   ms = (micros() - start) / 1000L;
   INFO("test#5:fill rect grid: %ul ms", ms);
-  Watchdog::delay(2048);
+  SLEEP(2);
 
   // Test#6: Fill circles
   tft.fill_screen();
@@ -149,7 +151,7 @@ void loop()
   }
   ms = (micros() - start) / 1000L;
   INFO("test#6:draw circle grid: %ul ms", ms);
-  Watchdog::delay(2048);
+  SLEEP(2);
 
   // Test#7: Draw lines
   tft.set_canvas_color(tft.shade(Canvas::WHITE, 20));
@@ -169,7 +171,7 @@ void loop()
   }
   ms = (micros() - start) / 1000L;
   INFO("test#7:draw lines: %ul ms", ms);
-  Watchdog::delay(2048);
+  SLEEP(2);
 
   // Test#8: Draw more lines
   start = micros();
@@ -188,27 +190,30 @@ void loop()
   ms = (micros() - start) / 1000L;
   tft.set_text_color(Canvas::BLACK);
   tft.set_cursor(5, 40);
-  tft.set_text_scale(4);
+  tft.set_text_scale(2);
+  tft.set_text_font(&fixednums8x16);
   tft.set_orientation(Canvas::LANDSCAPE);
-  cout.printf_P(PSTR("%ul ms\n"), ms);
+  cout.printf_P(PSTR("%ul"), ms);
+  tft.set_text_scale(4);
+  tft.set_text_font(&system5x7);
+  cout.print_P(PSTR(" ms"));
   tft.set_orientation(direction);
   INFO("test#8:draw more lines: %ul ms", ms);
-  Watchdog::delay(2048);
+  SLEEP(2);
 
   // Test#9: Display the Arduino Icons
   tft.fill_screen();
   tft.set_pen_color(tft.shade(Canvas::CYAN, 80));
-  tft.set_text_scale(1);
   tft.draw_icon((tft.WIDTH-34)/2, (tft.HEIGHT-32)/2, arduino_icon_34x32);
-  Watchdog::delay(2048);
+  SLEEP(2);
   tft.fill_screen();
   tft.draw_icon((tft.WIDTH-64)/2, (tft.HEIGHT-64)/2, arduino_icon_64x64);
-  Watchdog::delay(2048);
+  SLEEP(2);
   tft.fill_screen();
   start = micros();
   tft.draw_icon((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, arduino_icon_96x32);
   ms = (micros() - start) / 1000L;
-  Watchdog::delay(2048);
+  SLEEP(2);
   INFO("test#9:draw arduino icon: %ul ms", ms);
 
   // Rotate display

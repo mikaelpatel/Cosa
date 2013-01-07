@@ -63,7 +63,7 @@ void setup()
   // Start display and initiate text scale and port
   tft.begin();
   tft.set_text_scale(4);
-  tft.set_font(&fixednums8x16);
+  tft.set_text_font(&fixednums8x16);
   tft.set_orientation(Canvas::LANDSCAPE);
   RED = tft.shade(Canvas::RED, 75);
   YELLOW = tft.shade(Canvas::YELLOW, 75);

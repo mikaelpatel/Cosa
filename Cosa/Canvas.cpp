@@ -58,7 +58,8 @@ Canvas::shade(uint16_t color, uint8_t scale)
 
 void
 Canvas::draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp, 
-		    uint8_t width, uint8_t height)
+		    uint8_t width, uint8_t height,
+		    uint8_t scale)
 {
   for (uint8_t i = 0; i < width; i++) {
     uint8_t line = 0;
@@ -66,11 +67,10 @@ Canvas::draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp,
       if ((j & 0x7) == 0)
 	line = pgm_read_byte(bp++);
       if (line & 0x1) {
-	if (m_text_scale == 1)
+	if (scale == 1)
 	  draw_pixel(x + i, y + j);
 	else {
-	  fill_rect(x + i*m_text_scale, y + j*m_text_scale, 
-		    m_text_scale, m_text_scale);
+	  fill_rect(x + i*scale, y + j*scale, scale, scale);
 	} 
       }
       line >>= 1;
@@ -80,21 +80,18 @@ Canvas::draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp,
 
 void
 Canvas::draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
-		  uint8_t width, uint8_t height)
+		  uint8_t width, uint8_t height,
+		  uint8_t scale)
 {
   for (uint8_t i = 0; i < height; i += 8) {
     for (uint8_t j = 0; j < width; j++) {
       uint8_t line = pgm_read_byte(bp++);
       for (uint8_t k = 0; k < 8; k++) {
 	if (line & 1) {
-	  if (m_text_scale == 1)
-	    draw_pixel(x + j, 
-		       y + k + i);
+	  if (scale == 1)
+	    draw_pixel(x + j, y + k + i);
 	  else {
-	    fill_rect(x + j*m_text_scale, 
-		      y + (k+i)*m_text_scale, 
-		      m_text_scale, 
-		      m_text_scale);
+	    fill_rect(x + j*scale, y + (k+i)*scale, scale, scale);
 	  } 
 	}
 	line >>= 1;
@@ -205,7 +202,7 @@ Canvas::draw_char(char c)
 {
   uint16_t color = m_pen_color;
   m_pen_color = m_text_color;
-  m_font->draw(this, c, m_cursor.x, m_cursor.y);
+  m_font->draw(this, c, m_cursor.x, m_cursor.y, m_text_scale);
   m_cursor.x += m_text_scale * (m_font->WIDTH + CHAR_SPACING);
   if (m_cursor.x > m_text_port.width) {
     m_cursor.x = m_text_port.x;
@@ -268,6 +265,11 @@ Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
 		    pgm_read_byte(ip++),
 		    pgm_read_byte(ip++));
       break;
+    case SET_TEXT_FONT:
+      ix = pgm_read_byte(ip++);
+      if (ix >= max) return;
+      set_text_font((Font*) pgm_read_word(tab + ix));
+      break;
     case SET_CURSOR:
       set_cursor(pgm_read_byte(ip++), pgm_read_byte(ip++));
       break;
@@ -279,12 +281,14 @@ Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
       if (ix >= max) return;
       draw_bitmap((const uint8_t*) pgm_read_word(tab + ix),
 		  pgm_read_byte(ip++), 
+		  pgm_read_byte(ip++),
 		  pgm_read_byte(ip++));
       break;
     case DRAW_ICON:
       ix = pgm_read_byte(ip++);
       if (ix >= max) return;
-      draw_icon((const uint8_t*) pgm_read_word(tab + ix));
+      draw_icon((const uint8_t*) pgm_read_word(tab + ix), 
+		pgm_read_byte(ip++));
       break;
     case DRAW_PIXEL:
       draw_pixel();

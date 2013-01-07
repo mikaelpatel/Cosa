@@ -186,10 +186,18 @@ public:
   }
 
   /**
+   * Get current text font.
+   */
+  Font* get_text_font()
+  {
+    return (m_font);
+  }
+
+  /**
    * Set current text font.
    * @param[in] font
    */
-  void set_font(Font* font)
+  void set_text_font(Font* font)
   {
     m_font = font;
   }
@@ -319,19 +327,24 @@ public:
    * @param[in] bp
    * @param[in] width
    * @param[in] height
+   * @param[in] scale
    */
   virtual void draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp, 
-			   uint8_t width, uint8_t height);
+			   uint8_t width, uint8_t height, 
+			   uint8_t scale = 1);
 
   /**
    * Draw bitmap at cursor position with current color.
    * @param[in] bp
    * @param[in] width
    * @param[in] height
+   * @param[in] scale
    */
-  void draw_bitmap(const uint8_t* bp, uint8_t width, uint8_t height)
+  void draw_bitmap(const uint8_t* bp, 
+		   uint8_t width, uint8_t height,
+		   uint8_t scale = 1)
   {
-    draw_bitmap(m_cursor.x, m_cursor.y, bp, width, height);
+    draw_bitmap(m_cursor.x, m_cursor.y, bp, width, height, scale);
   }
   
   /**
@@ -341,32 +354,37 @@ public:
    * @param[in] bp
    * @param[in] width
    * @param[in] height
+   * @param[in] scale
    */
   virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
-			 uint8_t width, uint8_t height);
+			 uint8_t width, uint8_t height,
+			 uint8_t scale = 1);
 
   /**
    * Draw icon at given position with current color.
    * @param[in] x 
    * @param[in] y
    * @param[in] bp
+   * @param[in] scale
    */
-  virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp)
+  virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp, 
+			 uint8_t scale = 1)
   {
     uint8_t width = pgm_read_byte(bp++);
     uint8_t height = pgm_read_byte(bp++);
-    draw_icon(x, y, bp, width, height);
+    draw_icon(x, y, bp, width, height, scale);
   }
 
   /**
    * Draw icon at cursor position with current color.
    * @param[in] bp
+   * @param[in] scale
    */
-  void draw_icon(const uint8_t* bp)
+  void draw_icon(const uint8_t* bp, uint8_t scale = 1)
   {
     uint8_t width = pgm_read_byte(bp++);
     uint8_t height = pgm_read_byte(bp++);
-    draw_icon(m_cursor.x, m_cursor.y, bp, width, height);
+    draw_icon(m_cursor.x, m_cursor.y, bp, width, height, scale);
   }
   
   /**
@@ -561,26 +579,27 @@ public:
    * Drawing instructions and arguments (in program memory).
    */
   enum {
-    END_SCRIPT = 0,		// (void)
-    CALL_SCRIPT,		// (uint8_t ix) index of script in table
-    SET_CANVAS_COLOR,		// (uint8_t r, g, b) 24-bit color code
-    SET_PEN_COLOR,		// (uint8_t r, g, b) 24-bit color code
-    SET_TEXT_COLOR,		// (uint8_t r, g, b) 24-bit color code
-    SET_TEXT_SCALE,		// (uint8_t s) scale factor (1..n)
-    SET_TEXT_PORT,		// (uint8_t x, y, w, h) text port
-    SET_CURSOR,			// (uint8_t x, y) cursor position
-    MOVE_CURSOR,		// (int8_t dx, dy) cursor delta position
-    DRAW_BITMAP,		// (uint8_t ix, w, h) index, width and height
-    DRAW_ICON,	       		// (uint8_t ix) index to icon in table
-    DRAW_PIXEL,			// (void)
-    DRAW_LINE,			// (uint8_t x, y) line end position
-    DRAW_RECT,			// (uint8_t w, h) width and height of rectangle
-    FILL_RECT,			// (uint8_t w, h) width and height of rectangle
-    FILL_SCREEN,		// (void)
-    DRAW_CIRCLE,		// (uint8_t r) radius of circle
-    FILL_CIRCLE,		// (uint8_t r) radius of circle
-    DRAW_CHAR,			// (uint8_t c) character
-    DRAW_STRING_P		// (uint8_t ix) index of string in table
+    END_SCRIPT = 0,	// (void)
+    CALL_SCRIPT,	// (uint8_t ix) index of script in table
+    SET_CANVAS_COLOR,	// (uint8_t r, g, b) 24-bit color code
+    SET_PEN_COLOR,	// (uint8_t r, g, b) 24-bit color code
+    SET_TEXT_COLOR,	// (uint8_t r, g, b) 24-bit color code
+    SET_TEXT_SCALE,	// (uint8_t s) scale factor (1..n)
+    SET_TEXT_PORT,	// (uint8_t x, y, w, h) text port
+    SET_TEXT_FONT,	// (uint8_t ix) index to font in table
+    SET_CURSOR,		// (uint8_t x, y) cursor position
+    MOVE_CURSOR,	// (int8_t dx, dy) cursor delta position
+    DRAW_BITMAP,	// (uint8_t ix, w, h, s) index, width, height, scale
+    DRAW_ICON,	       	// (uint8_t ix, scale) index to icon in table, scale
+    DRAW_PIXEL,		// (void)
+    DRAW_LINE,		// (uint8_t x, y) line end position
+    DRAW_RECT,		// (uint8_t w, h) width and height of rectangle
+    FILL_RECT,		// (uint8_t w, h) width and height of rectangle
+    FILL_SCREEN,	// (void)
+    DRAW_CIRCLE,	// (uint8_t r) radius of circle
+    FILL_CIRCLE,	// (uint8_t r) radius of circle
+    DRAW_CHAR,		// (uint8_t c) character
+    DRAW_STRING_P	// (uint8_t ix) index of string in table
   };
 
   /**
