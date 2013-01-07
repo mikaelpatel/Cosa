@@ -31,10 +31,7 @@
 OWI::Driver::Driver(OWI* pin, const uint8_t* rom) : 
   m_pin(pin) 
 {
-  if (rom != 0) {
-    for (uint8_t i = 0; i < ROM_MAX; i++)
-      m_rom[i] = pgm_read_byte(rom++);
-  }
+  if (rom != 0) memcpy_P(m_rom, rom, ROM_MAX);
 }
 
 int8_t
@@ -150,6 +147,6 @@ OWI::Driver::connect(uint8_t family, uint8_t index)
       index -= 1;
     }
   } while (last != LAST);
-  for (uint8_t i = 1; i < ROM_MAX; i++) m_rom[i] = 0;
+  memset(m_rom, 0, ROM_MAX);
   return (0);
 }
