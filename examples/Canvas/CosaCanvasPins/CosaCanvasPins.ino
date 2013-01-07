@@ -56,10 +56,10 @@ void loop()
     tft.draw_rect(10, y, tft.WIDTH - 20, 16);
     tft.set_cursor(15, y + 5);
     cout.printf_P(PSTR("D%d"), x);
-    tft.set_pen_color(digitalRead(x) ? Canvas::RED : Canvas::GREEN);
+    tft.set_pen_color(Pin::is_set(x) ? Canvas::RED : Canvas::GREEN);
     tft.fill_circle(35, y + 8, 5);
     tft.set_cursor(55, y + 5);
-    cout.printf_P(PSTR("A%d %d"), x, analogRead(x));
+    cout.printf_P(PSTR("A%d %d"), x, AnalogPin::sample(x));
   }
   SLEEP(1);
 }

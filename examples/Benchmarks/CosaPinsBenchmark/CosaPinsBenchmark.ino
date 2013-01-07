@@ -54,6 +54,15 @@ void setup()
   stop = micros();
   INFO("Cosa: %ul us per 1000, is_set()", (stop - start) / 1000L);
 
+  // Measure the time to perform 1,000,000 input pin reads
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      Pin::is_set(7);
+    }
+  stop = micros();
+  INFO("Cosa: %ul us per 1000, Pin::is_set()", (stop - start) / 1000L);
+
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
@@ -97,6 +106,13 @@ void setup()
     analogPin.sample();
   stop = micros();
   INFO("Cosa: %ul us per sample()", (stop - start) / 1000L);
+
+  // Measure the time to perform 1,000 analog pin samples
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    AnalogPin::sample(0);
+  stop = micros();
+  INFO("Cosa: %ul us per AnalogPin::sample()", (stop - start) / 1000L);
 
   // Measure the time to perform 1,000 analogRead
   start = micros();

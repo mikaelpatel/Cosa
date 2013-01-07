@@ -77,7 +77,7 @@ protected:
    * @param[in] pin number.
    * @return special register pointer.
    */
-  volatile uint8_t* SFR(uint8_t pin) 
+  static volatile uint8_t* SFR(uint8_t pin) 
   { 
     return (pin < 8 ? &PIND : (pin < 14 ? &PINB : &PINC));
   }
@@ -87,7 +87,7 @@ protected:
    * @param[in] pin number.
    * @return pin bit position.
    */
-  const uint8_t BIT(uint8_t pin)
+  static const uint8_t BIT(uint8_t pin)
   {
     return (pin < 8 ? pin : (pin < 14 ? pin - 8 : (pin - 14)));
   }
@@ -97,7 +97,7 @@ protected:
    * @param[in] pin number.
    * @return pin bit mask.
    */
-  const uint8_t MASK(uint8_t pin)
+  static const uint8_t MASK(uint8_t pin)
   {
     return (_BV(BIT(pin)));
   }
@@ -129,6 +129,16 @@ public:
   bool is_set() 
   { 
     return ((*PIN() & m_mask) != 0); 
+  }
+
+  /**
+   * Return true(1) if the pin is set otherwise false(0).
+   * @param[in] pin number.
+   * @return boolean.
+   */
+  static bool is_set(uint8_t pin)
+  {
+    return ((*SFR(pin) & MASK(pin)) != 0); 
   }
 
   /**
@@ -589,8 +599,17 @@ public:
   }
 
   /**
-   * Sample analog pin. Wait for conversion to complete before returning with
-   * sample value.
+   * Sample analog pin. Wait for conversion to complete before 
+   * returning with sample value.
+   * @param[in] pin number.
+   * @param[in] ref reference voltage.
+   * @return sample value.
+   */
+  static uint16_t sample(uint8_t pin, Reference ref = AVCC_REFERENCE);
+
+  /**
+   * Sample analog pin. Wait for conversion to complete before 
+   * returning with sample value.
    * @return sample value.
    */
   uint16_t sample();
