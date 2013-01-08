@@ -53,8 +53,8 @@ void setup()
 
 void loop()
 {
-  // Wait for the watchdog
-  Watchdog::delay(2048);
+  // Sample every 2 seconds
+  SLEEP(2);
 
   // Read in- and outdoors temperature and humidity
   ledPin.toggle();

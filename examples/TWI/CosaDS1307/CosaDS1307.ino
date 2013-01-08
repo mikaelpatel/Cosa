@@ -82,7 +82,7 @@ void setup()
 void loop()
 {
   // Wait a second
-  Watchdog::delay(1000);
+  SLEEP(1);
   ledPin.toggle();
 
   // Read the time from the rtc device and print

@@ -55,7 +55,7 @@ void setup()
 void loop()
 {
   // Wait for 2 seconds; we don't want to burn too many write cycles
-  Watchdog::delay(2000);
+  SLEEP(2);
   ledPin.toggle();
 
   // Read the eeprom into memory

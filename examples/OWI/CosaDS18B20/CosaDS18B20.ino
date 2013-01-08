@@ -68,7 +68,7 @@ void setup()
 
   // Start the conversion pipeline; indoors->outdoors->basement sampling
   indoors.convert_request();
-  Watchdog::delay(1024);
+  SLEEP(1);
 }
 
 void loop()
@@ -79,7 +79,7 @@ void loop()
   indoors.read_temperature();
   indoors.print_temperature_P(PSTR("indoors = "));
   ledPin.toggle();
-  Watchdog::delay(1024);
+  SLEEP(1);
 
   // Start basement temperature conversion and read the outdoors temperature
   ledPin.toggle();
@@ -87,7 +87,7 @@ void loop()
   outdoors.read_temperature();
   outdoors.print_temperature_P(PSTR(", outdoors = "));
   ledPin.toggle();
-  Watchdog::delay(1024);
+  SLEEP(1);
 
   // Start indoors temperature conversion and read the basement temperature
   ledPin.toggle();
@@ -96,5 +96,5 @@ void loop()
   basement.print_temperature_P(PSTR(", basement = "));
   trace.println();
   ledPin.toggle();
-  Watchdog::delay(1024);
+  SLEEP(1);
 }
