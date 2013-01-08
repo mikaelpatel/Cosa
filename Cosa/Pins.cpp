@@ -30,21 +30,6 @@
 
 #include "Cosa/Pins.hh"
 
-uint8_t 
-Pin::await_change(uint8_t us)
-{
-  uint8_t res = 0;
-  synchronized {
-    if (is_set()) {
-      while (is_set() && us--) res++;
-    }
-    else {
-      while (is_clear() && us--) res++;
-    }
-  }
-  return (res);
-}
-
 void 
 Pin::print(IOStream& stream)
 {

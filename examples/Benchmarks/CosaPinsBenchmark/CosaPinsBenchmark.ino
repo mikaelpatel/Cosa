@@ -44,43 +44,35 @@ void setup()
   TRACE(free_memory());
   TRACE(sizeof(InputPin));
   TRACE(sizeof(OutputPin));
+  TRACE(sizeof(AnalogPin));
 
   // Measure the time to perform 1,000,000 input pin reads
-  start = micros();
-  for (uint16_t i = 0; i < 1000; i++)
-    for (uint16_t j = 0; j < 1000; j++) {
-      inPin.is_set();
-    }
-  stop = micros();
-  INFO("Cosa: %ul us per 1000, is_set()", (stop - start) / 1000L);
-
-  // Measure the time to perform 1,000,000 input pin reads
-  start = micros();
-  for (uint16_t i = 0; i < 1000; i++)
-    for (uint16_t j = 0; j < 1000; j++) {
-      Pin::is_set(7);
-    }
-  stop = micros();
-  INFO("Cosa: %ul us per 1000, Pin::is_set()", (stop - start) / 1000L);
-
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       digitalRead(7);
     }
   stop = micros();
-  INFO("Arduino: %ul us per 1000, digitalRead()", (stop - start) / 1000L);
+  INFO("Arduino: %ul us per 1000 digitalRead(7)", (stop - start) / 1000L);
 
-  // Measure the time to perform 1,000,000 output pin set/clear
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
-      outPin.set();
-      outPin.clear();
+      inPin.is_set();
     }
   stop = micros();
-  INFO("Cosa: %ul us per 1000, set()-clear()", (stop - start) / 1000L);
+  INFO("Cosa: %ul us per 1000 inPin.is_set()", (stop - start) / 1000L);
 
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      InputPin::read(7);
+    }
+  stop = micros();
+  INFO("Cosa: %ul us per 1000 Pin::is_set(7)\n", (stop - start) / 1000L);
+
+
+  // Measure the time to perform 1,000,000 output pin writes
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
@@ -88,38 +80,69 @@ void setup()
       digitalWrite(8, 0);
     }
   stop = micros();
-  INFO("Arduino: %ul us per 1000, digitalWrite(1)-digitalWrite(0)", 
-       (stop - start) / 1000L);
+  INFO("Arduino: %ul us per 1000 digitalWrite(8, 0); digitalWrite(8, 1)", (stop - start) / 1000L);
 
-  // Measure the time to perform 1,000,000 output pin toggle
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      outPin.write(0);
+      outPin.write(1);
+    }
+  stop = micros();
+  INFO("Cosa: %ul us per 1000 outPin.write(0); outPin.write(1)", (stop - start) / 1000L);
+
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      outPin.set();
+      outPin.clear();
+    }
+  stop = micros();
+  INFO("Cosa: %ul us per 1000 outPin.set; outPin.clear()", (stop - start) / 1000L);
+
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       outPin.toggle();
     }
   stop = micros();
-  INFO("Cosa: %ul us per 1000 toggle()", (stop - start) / 1000L);
+  INFO("Cosa: %ul us per 1000 outPin.toggle()", (stop - start) / 1000L);
 
-  // Measure the time to perform 1,000 analog pin samples
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
-    analogPin.sample();
+    for (uint16_t j = 0; j < 1000; j++) {
+      OutputPin::write(8, 0);
+      OutputPin::write(8, 1);
+    }
   stop = micros();
-  INFO("Cosa: %ul us per sample()", (stop - start) / 1000L);
+  INFO("Cosa: %ul us per 1000 OutputPin::write(8, 0); OutputPin::write(8, 1)", (stop - start) / 1000L);
 
-  // Measure the time to perform 1,000 analog pin samples
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
-    AnalogPin::sample(0);
+    for (uint16_t j = 0; j < 1000; j++) {
+      OutputPin::toggle(8);
+    }
   stop = micros();
-  INFO("Cosa: %ul us per AnalogPin::sample()", (stop - start) / 1000L);
+  INFO("Cosa: %ul us per 1000 OutputPin::toggle(8)\n", (stop - start) / 1000L);
 
-  // Measure the time to perform 1,000 analogRead
+  // Measure the time to perform 1,000 analog pin samples
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
     analogRead(0);
   stop = micros();
   INFO("Arduino: %ul us per analogRead()", (stop - start) / 1000L);
+
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    analogPin.sample();
+  stop = micros();
+  INFO("Cosa: %ul us per analogPin.sample()", (stop - start) / 1000L);
+
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    AnalogPin::sample(0);
+  stop = micros();
+  INFO("Cosa: %ul us per AnalogPin::sample()", (stop - start) / 1000L);
 }
 
 void loop()

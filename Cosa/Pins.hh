@@ -55,7 +55,7 @@ protected:
   }
 
   /**
-   * Return pointer to data direction register.
+   * Return pointer to Data Direction Register.
    * @return DDR register pointer.
    */
   volatile uint8_t* DDR() 
@@ -64,7 +64,7 @@ protected:
   }
 
   /**
-   * Return pointer to data port register.
+   * Return pointer to data PORT register.
    * @return PORT register pointer.
    */
   volatile uint8_t* PORT() 
@@ -73,7 +73,7 @@ protected:
   }
 
   /**
-   * Return special function register for given Arduino pin number.
+   * Return Special Function Register for given Arduino pin number.
    * @param[in] pin number.
    * @return special register pointer.
    */
@@ -83,7 +83,8 @@ protected:
   }
 
   /**
-   * Return bit position for given Arduino pin number.
+   * Return bit position for given Arduino pin number in Special
+   * Function Register.
    * @param[in] pin number.
    * @return pin bit position.
    */
@@ -93,13 +94,43 @@ protected:
   }
   
   /**
-   * Return bit mask position for given Arduino pin number.
+   * Return bit mask for given Arduino pin number.
    * @param[in] pin number.
    * @return pin bit mask.
    */
   static const uint8_t MASK(uint8_t pin)
   {
     return (_BV(BIT(pin)));
+  }
+
+  /**
+   * Return pointer to PIN register.
+   * @param[in] pin number.
+   * @return PIN register pointer.
+   */
+  static volatile uint8_t* PIN(uint8_t pin) 
+  { 
+    return (SFR(pin));
+  }
+
+  /**
+   * Return pointer to Data Direction Register.
+   * @param[in] pin number.
+   * @return DDR register pointer.
+   */
+  static volatile uint8_t* DDR(uint8_t pin) 
+  { 
+    return (SFR(pin) + 1);
+  }
+
+  /**
+   * Return pointer to data PORT register.
+   * @param[in] pin number.
+   * @return PORT register pointer.
+   */
+  static volatile uint8_t* PORT(uint8_t pin) 
+  { 
+    return (SFR(pin) + 2);
   }
 
 public:
@@ -133,16 +164,6 @@ public:
 
   /**
    * Return true(1) if the pin is set otherwise false(0).
-   * @param[in] pin number.
-   * @return boolean.
-   */
-  static bool is_set(uint8_t pin)
-  {
-    return ((*SFR(pin) & MASK(pin)) != 0); 
-  }
-
-  /**
-   * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
   bool is_high() 
@@ -155,15 +176,6 @@ public:
    * @return boolean.
    */
   bool is_on()
-  { 
-    return (is_set()); 
-  }
-
-  /**
-   * Return true(1) if the pin is set otherwise false(0).
-   * @return boolean.
-   */
-  bool read()
   { 
     return (is_set()); 
   }
@@ -196,12 +208,13 @@ public:
   }
 
   /**
-   * Await change of pin state given maximum number of micro seconds.
-   * Returns number of wait cycles. 
-   * @param[in] us micro seconds (1..255).
-   * @return number of wait cycles.
+   * Return true(1) if the pin is set otherwise false(0).
+   * @return boolean.
    */
-  uint8_t await_change(uint8_t us);
+  bool read()
+  { 
+    return (is_set()); 
+  }
 
   /**
    * Print abstract pin information to given stream. Default is the
@@ -232,14 +245,40 @@ public:
   /**
    * Construct abstract input pin given Arduino pin number.
    * @param[in] pin number.
-   * @param[in] mode pin mode (normal or pullup).
+   * @param[in] mode pin mode (default NORMAL_MODE).
    */
   InputPin(uint8_t pin, Mode mode = NORMAL_MODE) :
     Pin(pin)
   {
-    synchronized {
-      if (mode == PULLUP_MODE) *PORT() |= m_mask; 
+    if (mode == PULLUP_MODE) {
+      synchronized {
+	*PORT() |= m_mask; 
+      }
     }
+  }
+
+  /**
+   * Set input pin to given mode.
+   * @param[in] pin number.
+   * @param[in] mode pin mode (default NORMAL_MODE).
+   */
+  static void set_mode(uint8_t pin, Mode mode = NORMAL_MODE)
+  {
+    if (mode == PULLUP_MODE) {
+      synchronized { 
+	*PORT(pin) |= MASK(pin); 
+      }
+    }
+  }
+
+  /**
+   * Return true(1) if the pin is set otherwise false(0).
+   * @param[in] pin number.
+   * @return boolean.
+   */
+  static bool read(uint8_t pin)
+  {
+    return ((*SFR(pin) & MASK(pin)) != 0); 
   }
 };
 
@@ -322,7 +361,20 @@ public:
     synchronized {
       *DDR() |= m_mask; 
     }
-    if (initial) set(); else clear();
+    set(initial);
+  }
+
+  /**
+   * Set output pin to mode.
+   * @param[in] pin number.
+   * @param[in] mode pin mode (normal or pullup).
+   */
+  static void set_mode(uint8_t pin, uint8_t initial = 0)
+  {
+    synchronized {
+      *DDR(pin) |= MASK(pin); 
+    }
+    write(pin, initial);
   }
 
   /**
@@ -388,13 +440,14 @@ public:
   }
 
   /**
-   * Set the output pin with the given value. Zero(0) to clear
-   * and non-zero to set.
-   * @param[in] value to set.
+   * Toggle the output pin.
+   * @param[in] pin number.
    */
-  void set(uint8_t value) 
+  static void toggle(uint8_t pin) 
   { 
-    if (value) set(); else clear(); 
+    synchronized {
+      *PIN(pin) = MASK(pin); 
+    }
   }
 
   /**
@@ -402,9 +455,39 @@ public:
    * and non-zero to set.
    * @param[in] value to set.
    */
+  void set(bool value) 
+  { 
+    if (value) set(); else clear(); 
+  }
+
+  /**
+   * Set the output pin with the given value. Zero(0) to clear
+   * and non-zero to set.
+   * @param[in] value to write.
+   */
   void write(uint8_t value) 
   { 
     set(value); 
+  }
+
+  /**
+   * Set the given output pin with the given value. Zero(0) to 
+   * clear and non-zero to set.
+   * @param[in] pin number.
+   * @param[in] value to write.
+   */
+  static void write(uint8_t pin, uint8_t value) 
+  { 
+    volatile uint8_t* port = PORT(pin);
+    const uint8_t mask = MASK(pin);
+    synchronized {
+      if (value) {
+	*port |= mask;
+      }
+      else {
+	*port &= ~mask;
+      }
+    }
   }
 
   /**
