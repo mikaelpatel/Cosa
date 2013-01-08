@@ -314,7 +314,7 @@ Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
     case DRAW_CHAR:
       draw_char(pgm_read_byte(ip++));
       break;
-    case DRAW_STRING_P:
+    case DRAW_STRING:
       ix = pgm_read_byte(ip++);
       if (ix >= max) return;
       draw_string_P((const char*) pgm_read_word(tab + ix));

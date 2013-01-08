@@ -576,40 +576,66 @@ public:
   virtual bool end() = 0;
 
   /**
-   * Drawing instructions and arguments (in program memory).
+   * Canvas script instructions. See macro set below for arguments.
    */
   enum {
-    END_SCRIPT = 0,	// (void)
-    CALL_SCRIPT,	// (uint8_t ix) index of script in table
-    SET_CANVAS_COLOR,	// (uint8_t r, g, b) 24-bit color code
-    SET_PEN_COLOR,	// (uint8_t r, g, b) 24-bit color code
-    SET_TEXT_COLOR,	// (uint8_t r, g, b) 24-bit color code
-    SET_TEXT_SCALE,	// (uint8_t s) scale factor (1..n)
-    SET_TEXT_PORT,	// (uint8_t x, y, w, h) text port
-    SET_TEXT_FONT,	// (uint8_t ix) index to font in table
-    SET_CURSOR,		// (uint8_t x, y) cursor position
-    MOVE_CURSOR,	// (int8_t dx, dy) cursor delta position
-    DRAW_BITMAP,	// (uint8_t ix, w, h, s) index, width, height, scale
-    DRAW_ICON,	       	// (uint8_t ix, scale) index to icon in table, scale
-    DRAW_PIXEL,		// (void)
-    DRAW_LINE,		// (uint8_t x, y) line end position
-    DRAW_RECT,		// (uint8_t w, h) width and height of rectangle
-    FILL_RECT,		// (uint8_t w, h) width and height of rectangle
-    FILL_SCREEN,	// (void)
-    DRAW_CIRCLE,	// (uint8_t r) radius of circle
-    FILL_CIRCLE,	// (uint8_t r) radius of circle
-    DRAW_CHAR,		// (uint8_t c) character
-    DRAW_STRING_P	// (uint8_t ix) index of string in table
+    END_SCRIPT = 0,
+    CALL_SCRIPT,
+    SET_CANVAS_COLOR,
+    SET_PEN_COLOR,
+    SET_TEXT_COLOR,
+    SET_TEXT_SCALE,
+    SET_TEXT_PORT,
+    SET_TEXT_FONT,
+    SET_CURSOR,
+    MOVE_CURSOR,
+    DRAW_BITMAP,
+    DRAW_ICON,
+    DRAW_PIXEL,
+    DRAW_LINE,
+    DRAW_RECT,
+    FILL_RECT,
+    FILL_SCREEN,
+    DRAW_CIRCLE,
+    FILL_CIRCLE,
+    DRAW_CHAR,
+    DRAW_STRING
   };
 
   /**
    * Run canvas drawing script. Table may contain sub-scripts and strings.
-   * All should be in program memory.
+   * All should be in program memory. Use support macro set to write scripts.
    * @param[in] ix script to run.
    * @param[in] tab script table.
    * @param[in] max size of script table.
    */
   void run(uint8_t ix, PGM_VOID_P* tab, uint8_t max);
 };
+
+/**
+ * Script support macro. Generate script code in program memory.
+ */
+#define CANVAS_BEGIN_SCRIPT(name) const uint8_t name[] PROGMEM = {
+#define CANVAS_CALL_SCRIPT(ix) Canvas::CALL_SCRIPT, ix,
+#define CANVAS_SET_CANVAS_COLOR(r, g, b) Canvas::SET_CANVAS_COLOR, r, g, b,
+#define CANVAS_SET_PEN_COLOR(r, g, b) Canvas::SET_PEN_COLOR, r, g, b,
+#define CANVAS_SET_TEXT_COLOR(r, g, b) Canvas::SET_TEXT_COLOR, r, g, b,
+#define CANVAS_SET_TEXT_SCALE(s) Canvas::SET_TEXT_SCALE, s,
+#define CANVAS_SET_TEXT_PORT(x, y, w, h) Canvas::SET_TEXT_PORT,	x, y, w, h,
+#define CANVAS_SET_TEXT_FONT(ix) Canvas::SET_TEXT_FONT, ix, 
+#define CANVAS_SET_CURSOR(x, y) Canvas::SET_CURSOR, x, y,
+#define CANVAS_MOVE_CURSOR(dx, dy) Canvas::MOVE_CURSOR,	dx, dy,
+#define CANVAS_DRAW_BITMAP(ix, w, h, s) Canvas::DRAW_BITMAP, ix, w, h, s,
+#define CANVAS_DRAW_ICON(ix, s) Canvas::DRAW_ICON, ix, s,
+#define CANVAS_DRAW_PIXEL() Canvas::DRAW_PIXEL,	
+#define CANVAS_DRAW_LINE(x, y) Canvas::DRAW_LINE, x, y,
+#define CANVAS_DRAW_RECT(w, h) Canvas::DRAW_RECT, w, h,
+#define CANVAS_FILL_RECT(w, h) Canvas::FILL_RECT, w, h,
+#define CANVAS_FILL_SCREEN() Canvas::FILL_SCREEN,
+#define CANVAS_DRAW_CIRCLE(r) Canvas::DRAW_CIRCLE, r,
+#define CANVAS_FILL_CIRCLE(r) Canvas::FILL_CIRCLE, r,
+#define CANVAS_DRAW_CHAR(c) Canvas::DRAW_CHAR, c,
+#define CANVAS_DRAW_STRING(ix) Canvas::DRAW_STRING, ix,
+#define CANVAS_END_SCRIPT Canvas::END_SCRIPT };
 
 #endif
