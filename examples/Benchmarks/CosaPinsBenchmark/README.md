@@ -5,7 +5,7 @@ Measurement of the pins operations; digital/analog input pin read,
 digital output pin write and toggle. 
 
 Reading a digital pin in Cosa is 8X faster than Arduino. Writing is
-4-8X faster. Reading an analog pin in Cosa is equal to Arduino.
+4-12X faster. Reading an analog pin in Cosa is equal to Arduino.
 
 CosaPinsBenchmark: started  
 free_memory() = 1760  
