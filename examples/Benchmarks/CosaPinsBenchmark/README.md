@@ -14,7 +14,7 @@ sizeof(OutputPin) = 6
 sizeof(AnalogPin) = 10  
 56:setup:info:Arduino: 4087 us per 1000 digitalRead(7)  
 64:setup:info:Cosa: 566 us per 1000 inPin.is_set()  
-72:setup:info:Cosa: 503 us per 1000 Pin::is_set(7)  
+72:setup:info:Cosa: 503 us per 1000 InputPin::read(7)  
 
 83:setup:info:Arduino: 8237 us per 1000 digitalWrite(8, 0); digitalWrite(8, 1)  
 92:setup:info:Cosa: 2264 us per 1000 outPin.write(0); outPin.write(1)  

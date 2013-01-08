@@ -69,7 +69,7 @@ void setup()
       InputPin::read(7);
     }
   stop = micros();
-  INFO("Cosa: %ul us per 1000 Pin::is_set(7)\n", (stop - start) / 1000L);
+  INFO("Cosa: %ul us per 1000 InputPin::read(7)\n", (stop - start) / 1000L);
 
 
   // Measure the time to perform 1,000,000 output pin writes
