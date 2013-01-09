@@ -80,16 +80,16 @@ void setup()
       digitalWrite(8, 0);
     }
   stop = micros();
-  INFO("Arduino: %ul us per 1000 digitalWrite(8, 0); digitalWrite(8, 1)", (stop - start) / 1000L);
+  INFO("Arduino: %ul us per 1000 digitalWrite(8, 1); digitalWrite(8, 0)", (stop - start) / 1000L);
 
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
-      outPin.write(0);
       outPin.write(1);
+      outPin.write(0);
     }
   stop = micros();
-  INFO("Cosa: %ul us per 1000 outPin.write(0); outPin.write(1)", (stop - start) / 1000L);
+  INFO("Cosa: %ul us per 1000 outPin.write(1); outPin.write(0)", (stop - start) / 1000L);
 
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -98,7 +98,24 @@ void setup()
       outPin.clear();
     }
   stop = micros();
-  INFO("Cosa: %ul us per 1000 outPin.set; outPin.clear()", (stop - start) / 1000L);
+  INFO("Cosa: %ul us per 1000 outPin.set; outPin.clear()\n", (stop - start) / 1000L);
+
+  // Measure the time to perform 1,000,000 output pin toggle
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      digitalWrite(8, !digitalRead(8));
+    }
+  stop = micros();
+  INFO("Arduino: %ul us per 1000 digitalWrite(8, !digitalRead(8))", (stop - start) / 1000L);
+
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      outPin.write(!outPin.read());
+    }
+  stop = micros();
+  INFO("Cosa: %ul us per 1000 outPin.write(!outPin.read())", (stop - start) / 1000L);
 
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -111,11 +128,10 @@ void setup()
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
-      OutputPin::write(8, 0);
-      OutputPin::write(8, 1);
+      OutputPin::write(8, !OutputPin::read(8));
     }
   stop = micros();
-  INFO("Cosa: %ul us per 1000 OutputPin::write(8, 0); OutputPin::write(8, 1)", (stop - start) / 1000L);
+  INFO("Cosa: %ul us per 1000 OutputPin::write(8, !OutputPin::read(8))", (stop - start) / 1000L);
 
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)

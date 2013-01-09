@@ -217,6 +217,16 @@ public:
   }
 
   /**
+   * Return true(1) if the pin is set otherwise false(0).
+   * @param[in] pin number.
+   * @return boolean.
+   */
+  static bool read(uint8_t pin)
+  {
+    return ((*SFR(pin) & MASK(pin)) != 0); 
+  }
+
+  /**
    * Print abstract pin information to given stream. Default is the
    * trace stream.  
    * @param[in] stream to print on.
@@ -269,16 +279,6 @@ public:
 	*PORT(pin) |= MASK(pin); 
       }
     }
-  }
-
-  /**
-   * Return true(1) if the pin is set otherwise false(0).
-   * @param[in] pin number.
-   * @return boolean.
-   */
-  static bool read(uint8_t pin)
-  {
-    return ((*SFR(pin) & MASK(pin)) != 0); 
   }
 };
 

@@ -16,16 +16,19 @@ Reading a digital pin in Cosa is 8X faster than Arduino. Writing is
       64:setup:info:Cosa: 566 us per 1000 inPin.is_set()  
       72:setup:info:Cosa: 503 us per 1000 InputPin::read(7)  
 
-      83:setup:info:Arduino: 8237 us per 1000 digitalWrite(8, 0); digitalWrite(8, 1)  
-      92:setup:info:Cosa: 2264 us per 1000 outPin.write(0); outPin.write(1)  
+      83:setup:info:Arduino: 8237 us per 1000 digitalWrite(8, 1); digitalWrite(8, 0)  
+      92:setup:info:Cosa: 2264 us per 1000 outPin.write(1); outPin.write(0)  
       101:setup:info:Cosa: 2264 us per 1000 outPin.set; outPin.clear()  
-      109:setup:info:Cosa: 1132 us per 1000 outPin.toggle()  
-      118:setup:info:Cosa: 1069 us per 1000 OutputPin::write(8, 0); OutputPin::write(8, 1)  
-      126:setup:info:Cosa: 692 us per 1000 OutputPin::toggle(8)  
 
-      133:setup:info:Arduino: 112 us per analogRead()  
-      139:setup:info:Cosa: 112 us per analogPin.sample()  
-      145:setup:info:Cosa: 112 us per AnalogPin::sample()  
+      110:setup:info:Arduino: 8206 us per 1000 digitalWrite(8, !digitalRead(8))  
+      118:setup:info:Cosa: 2012 us per 1000 outPin.write(!outPin.read())  
+      126:setup:info:Cosa: 1132 us per 1000 outPin.toggle()  
+      134:setup:info:Cosa: 1038 us per 1000 OutputPin::write(8, !OutputPin::read(8))  
+      142:setup:info:Cosa: 692 us per 1000 OutputPin::toggle(8)  
+
+      149:setup:info:Arduino: 112 us per analogRead()  
+      155:setup:info:Cosa: 112 us per analogPin.sample()  
+      161:setup:info:Cosa: 112 us per AnalogPin::sample()  
 
 Circuit
 -------
