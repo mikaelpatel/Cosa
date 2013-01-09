@@ -65,9 +65,10 @@ CANVAS_SET_CURSOR(30, 20)
 CANVAS_DRAW_STRING(4)
 // Draw triangle in the center of the screen
 CANVAS_SET_CURSOR(60, 60)
-CANVAS_DRAW_LINE(100, 100)
-CANVAS_DRAW_LINE(20, 100)
-CANVAS_DRAW_LINE(60, 60)
+CANVAS_DRAW_POLY(8)
+// CANVAS_DRAW_LINE(100, 100)
+// CANVAS_DRAW_LINE(20, 100)
+// CANVAS_DRAW_LINE(60, 60)
 // Draw magenta filled/outlined rectangle with a character in center
 CANVAS_SET_PEN_COLOR(0, 0, 0)
 CANVAS_SET_CURSOR(20, 100)
@@ -131,6 +132,14 @@ CANVAS_END_SCRIPT
 const char msg[] PROGMEM = "Hello World";
 const char banner[] PROGMEM = "Cosa Canvas 1.0";
 
+// A polygon
+const int8_t poly[] PROGMEM = {
+   40,  40,
+  -80,   0,
+   40, -40,
+    0,   0
+};
+
 // The script table: the order is important as index is used in scripts
 PGM_VOID_P tab[] PROGMEM = {
   init_script,
@@ -140,7 +149,8 @@ PGM_VOID_P tab[] PROGMEM = {
   msg,
   banner,
   &system5x7,
-  &fixednums8x16
+  &fixednums8x16,
+  poly
 };
 
 void setup()

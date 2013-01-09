@@ -53,7 +53,18 @@ Canvas::shade(uint16_t color, uint8_t scale)
   uint8_t green = (scale * (color & 0x3fU)) / 100;
   color >>= 6;
   uint8_t red = (scale * (color & 0x1fU)) / 100;
-  return ((((red) & 0x1f) << 11)  | (((green) & 0x3f) << 5) | ((blue) & 0x1f));
+  return (((red & 0x1f) << 11)  | ((green & 0x3f) << 5) | (blue & 0x1f));
+}
+
+uint16_t 
+Canvas::blend(uint16_t c1, uint16_t c2)
+{
+  uint8_t blue = (c1 + c2)/2;
+  c1 >>= 5; c2 >>= 5; 
+  uint8_t green = (c1 + c2)/2;
+  c1 >>= 6; c2 >>= 6; 
+  uint8_t red = (c1 + c2)/2;
+  return (((red & 0x1f) << 11)  | ((green & 0x3f) << 5) | (blue & 0x1f));
 }
 
 void
@@ -140,6 +151,34 @@ Canvas::draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
       y0 += ystep;
       err += dx;
     }
+  }
+}
+
+void
+Canvas::draw_poly(int dx, int dy, ...)
+{
+  va_list args;
+  va_start(args, dy);
+  while (dx != 0 || dy != 0) {
+    uint8_t x = m_cursor.x + dx;
+    uint8_t y = m_cursor.y + dy;
+    draw_line(x, y);
+    dx = va_arg(args, int);
+    dy = va_arg(args, int);
+  }
+  va_end(args);
+}
+
+void 
+Canvas::draw_poly_P(const int8_t* p)
+{
+  for (;;) {
+    int8_t dx = pgm_read_byte(p++);
+    int8_t dy = pgm_read_byte(p++);
+    if (dx == 0 && dy == 0) return;
+    uint8_t x = m_cursor.x + dx;
+    uint8_t y = m_cursor.y + dy;
+    draw_line(x, y);
   }
 }
 
@@ -295,6 +334,11 @@ Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
       break;
     case DRAW_LINE:
       draw_line(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      break;
+    case DRAW_POLY:
+      ix = pgm_read_byte(ip++);
+      if (ix >= max) return;
+      draw_poly_P((const int8_t*) pgm_read_word(tab + ix));
       break;
     case DRAW_RECT:
       draw_rect(pgm_read_byte(ip++), pgm_read_byte(ip++));

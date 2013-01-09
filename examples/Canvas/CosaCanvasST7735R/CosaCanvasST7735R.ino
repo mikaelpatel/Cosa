@@ -109,6 +109,8 @@ void loop()
       tft.draw_pixel(x, y);
     }
   }
+  tft.set_pen_color(Canvas::RED);
+  tft.fill_rect(20, 20, 20, 20);
   ms = (micros() - start) / 1000L;
   INFO("test#3:draw pixel grid: %ul ms", ms);
   SLEEP(2);
@@ -201,7 +203,30 @@ void loop()
   INFO("test#8:draw more lines: %ul ms", ms);
   SLEEP(2);
 
-  // Test#9: Display the Arduino Icons
+  // Test#9: Display polygons (variable parameter list and vector in program memory)
+  start = micros();
+  tft.set_canvas_color(Canvas::WHITE);
+  tft.fill_screen();
+  tft.set_pen_color(Canvas::RED);
+  tft.set_cursor(1,1);
+  tft.draw_poly(tft.WIDTH-2, 0, 
+		0, tft.HEIGHT-2, 
+		-(tft.WIDTH-2), 0, 
+		0, -(tft.HEIGHT-2),
+		0, 0);
+  tft.set_pen_color(Canvas::BLUE);
+  static const int8_t gon[] PROGMEM = { 100, 100, -100, 0, 50, -50, 0, 50, 0, 0 };
+  tft.set_cursor(10,10);
+  tft.draw_poly_P(gon);
+  tft.set_cursor(15,20);
+  tft.draw_poly_P(gon);
+  tft.set_cursor(20,30);
+  tft.draw_poly_P(gon);
+  INFO("test#9:polygon: %ul ms", ms);
+  SLEEP(2);
+
+
+  // Test#10: Display the Arduino Icons
   tft.fill_screen();
   tft.set_pen_color(tft.shade(Canvas::CYAN, 80));
   tft.draw_icon((tft.WIDTH-34)/2, (tft.HEIGHT-32)/2, arduino_icon_34x32);
@@ -214,7 +239,7 @@ void loop()
   tft.draw_icon((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, arduino_icon_96x32);
   ms = (micros() - start) / 1000L;
   SLEEP(2);
-  INFO("test#9:draw arduino icon: %ul ms", ms);
+  INFO("test#10:draw arduino icon: %ul ms", ms);
 
   // Rotate display
   direction = !direction;

@@ -213,10 +213,19 @@ public:
 
   /**
    * Create color shade (0..100%)
+   * @param[in] color
    * @param[in] scale
    * @return color shade.
    */
   uint16_t shade(uint16_t color, uint8_t scale);
+
+  /**
+   * Blend the two colors.
+   * @param[in] c1
+   * @param[in] c2
+   * @return color blend.
+   */
+  uint16_t blend(uint16_t c1, uint16_t c2);
 
   /**
    * Get current text scale.
@@ -452,6 +461,21 @@ public:
   }
 
   /**
+   * Draw polygon with given list of delta positions. Terminate with 0, 0.
+   * Update cursor to new position
+   * @param[in] dx
+   * @param[in] dy
+   */
+  virtual void draw_poly(int dx, int dy, ...);
+
+  /**
+   * Draw polygon from program memory with current color. Vector of 
+   * delta positions. Terminate with 0, 0. Update cursor to new position.
+   * @param[in] p
+   */
+  virtual void draw_poly_P(const int8_t* p);
+
+  /**
    * Draw rectangle with current color.
    * @param[in] x 
    * @param[in] y
@@ -593,6 +617,7 @@ public:
     DRAW_ICON,
     DRAW_PIXEL,
     DRAW_LINE,
+    DRAW_POLY,
     DRAW_RECT,
     FILL_RECT,
     FILL_SCREEN,
@@ -629,6 +654,7 @@ public:
 #define CANVAS_DRAW_ICON(ix, s) Canvas::DRAW_ICON, ix, s,
 #define CANVAS_DRAW_PIXEL() Canvas::DRAW_PIXEL,	
 #define CANVAS_DRAW_LINE(x, y) Canvas::DRAW_LINE, x, y,
+#define CANVAS_DRAW_POLY(ix) Canvas::DRAW_POLY, ix,
 #define CANVAS_DRAW_RECT(w, h) Canvas::DRAW_RECT, w, h,
 #define CANVAS_FILL_RECT(w, h) Canvas::FILL_RECT, w, h,
 #define CANVAS_FILL_SCREEN() Canvas::FILL_SCREEN,
