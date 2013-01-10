@@ -87,8 +87,18 @@ public:
    */
   virtual void on_event(uint8_t type, uint16_t value)
   {
-    read(m_distance);
+    uint16_t distance;
+    read(distance);
+    if (m_distance == distance) return;
+    m_distance = distance;
+    on_change(distance);
   }
+
+  /**
+   * Default on change function. 
+   * @param[in] value.
+   */
+  virtual void on_change(uint16_t distance) {}
 };
 
 #endif
