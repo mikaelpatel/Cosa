@@ -154,21 +154,6 @@ Canvas::draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
   }
 }
 
-void
-Canvas::draw_poly(int dx, int dy, ...)
-{
-  va_list args;
-  va_start(args, dy);
-  while (dx != 0 || dy != 0) {
-    uint8_t x = m_cursor.x + dx;
-    uint8_t y = m_cursor.y + dy;
-    draw_line(x, y);
-    dx = va_arg(args, int);
-    dy = va_arg(args, int);
-  }
-  va_end(args);
-}
-
 void 
 Canvas::draw_poly_P(const int8_t* p)
 {
@@ -179,6 +164,24 @@ Canvas::draw_poly_P(const int8_t* p)
     uint8_t x = m_cursor.x + dx;
     uint8_t y = m_cursor.y + dy;
     draw_line(x, y);
+  }
+}
+
+void 
+Canvas::draw_stroke_P(const int8_t* p)
+{
+  for (;;) {
+    int8_t dx = pgm_read_byte(p++);
+    int8_t dy = pgm_read_byte(p++);
+    if (dx == 0 && dy == 0) return;
+    if (dx <= 0 && dy <= 0) {
+      move_cursor(dx, dy);
+    }
+    else {
+      uint8_t x = m_cursor.x + dx;
+      uint8_t y = m_cursor.y + dy;
+      draw_line(x, y);
+    }
   }
 }
 

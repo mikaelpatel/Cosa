@@ -97,7 +97,7 @@ void loop()
   tft.set_text_scale(1);
   ms = (micros() - start) / 1000L;
   cout.printf_P(PSTR("test#2:output stream: %ul ms\n"), ms);
-  INFO("test#2:output stream: %ul ms\n", ms);
+  INFO("test#2:output stream: %ul ms", ms);
   SLEEP(2);
 
   // Test#3: Grid with draw pixel
@@ -203,30 +203,49 @@ void loop()
   INFO("test#8:draw more lines: %ul ms", ms);
   SLEEP(2);
 
-  // Test#9: Display polygons (variable parameter list and vector in program memory)
+  // Test#9: Display polygons 
   start = micros();
   tft.set_canvas_color(Canvas::WHITE);
   tft.fill_screen();
-  tft.set_pen_color(Canvas::RED);
   tft.set_cursor(1,1);
-  tft.draw_poly(tft.WIDTH-2, 0, 
-		0, tft.HEIGHT-2, 
-		-(tft.WIDTH-2), 0, 
-		0, -(tft.HEIGHT-2),
-		0, 0);
   tft.set_pen_color(Canvas::BLUE);
-  static const int8_t gon[] PROGMEM = { 100, 100, -100, 0, 50, -50, 0, 50, 0, 0 };
+  static const int8_t polygon[] PROGMEM = { 
+    100, 100, 
+    -100, 0, 
+    50, -50, 
+    0, 50, 
+    0, 0 
+  };
   tft.set_cursor(10,10);
-  tft.draw_poly_P(gon);
+  tft.draw_poly_P(polygon);
   tft.set_cursor(15,20);
-  tft.draw_poly_P(gon);
+  tft.draw_poly_P(polygon);
   tft.set_cursor(20,30);
-  tft.draw_poly_P(gon);
+  tft.draw_poly_P(polygon);
+  ms = (micros() - start) / 1000L;
   INFO("test#9:polygon: %ul ms", ms);
   SLEEP(2);
 
+  // Test#10: Display stroke
+  start = micros();
+  tft.set_canvas_color(Canvas::WHITE);
+  tft.fill_screen();
+  tft.set_cursor(1,1);
+  tft.set_pen_color(Canvas::RED);
+  static const int8_t stroke[] PROGMEM = { 
+    20, -100,
+    20, 100,
+    -30, -50,
+    20, 0,
+    0, 0 
+  };
+  tft.set_cursor(10, 110);
+  tft.draw_stroke_P(stroke);
+  ms = (micros() - start) / 1000L;
+  INFO("test#10:stroke: %ul ms", ms);
+  SLEEP(2);
 
-  // Test#10: Display the Arduino Icons
+  // Test#11: Display the Arduino Icons
   tft.fill_screen();
   tft.set_pen_color(tft.shade(Canvas::CYAN, 80));
   tft.draw_icon((tft.WIDTH-34)/2, (tft.HEIGHT-32)/2, arduino_icon_34x32);
@@ -238,8 +257,8 @@ void loop()
   start = micros();
   tft.draw_icon((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, arduino_icon_96x32);
   ms = (micros() - start) / 1000L;
+  INFO("test#11:draw arduino icon: %ul ms", ms);
   SLEEP(2);
-  INFO("test#10:draw arduino icon: %ul ms", ms);
 
   // Rotate display
   direction = !direction;

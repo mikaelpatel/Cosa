@@ -461,19 +461,20 @@ public:
   }
 
   /**
-   * Draw polygon with given list of delta positions. Terminate with 0, 0.
-   * Update cursor to new position
-   * @param[in] dx
-   * @param[in] dy
-   */
-  virtual void draw_poly(int dx, int dy, ...);
-
-  /**
    * Draw polygon from program memory with current color. Vector of 
-   * delta positions. Terminate with 0, 0. Update cursor to new position.
+   * delta positions, terminate with 0, 0. Update cursor to new position.
    * @param[in] p
    */
   virtual void draw_poly_P(const int8_t* p);
+
+  /**
+   * Draw stroke from program memory with current color. Vector of 
+   * delta positions, terminated with 0, 0. The cursor is moved for
+   * when both dx and dy are zero or negative. Update cursor to new
+   * position. 
+   * @param[in] p
+   */
+  virtual void draw_stroke_P(const int8_t* p);
 
   /**
    * Draw rectangle with current color.
