@@ -6,8 +6,10 @@ small script and measures the execution time.
 
 Circuit
 -------
-Using a HY-1.8 SPI TFT 128* 160 board connect as follows (Arduino ==>
+Using a HY-1.8 SPI TFT 128*160 board connect as follows (Arduino ==>
 HY-1.8 SPI):
+
+![HY-1.8 SPI Board](http://img04.taobaocdn.com/imgextra/i4/39773402/T2dYOmXflaXXXXXXXX_!!39773402.jpg)
 
        GND ==> GND(1)  
        VCC(5V) ==> VCC(2)  

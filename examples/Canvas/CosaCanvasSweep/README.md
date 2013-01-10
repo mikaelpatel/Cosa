@@ -7,7 +7,7 @@ style.
 
 Circuit
 -------
-Using a HY-1.8 SPI TFT 128* 160 board connect as follows (Arduino ==>
+Using a HY-1.8 SPI TFT 128*160 board connect as follows (Arduino ==>
 HY-1.8 SPI):
 
        GND ==> GND(1)  
