@@ -241,11 +241,14 @@ void loop()
   };
   tft.set_cursor(10, 110);
   tft.draw_stroke_P(stroke);
+  tft.set_cursor(11, 111);
+  tft.draw_stroke_P(stroke);
   ms = (micros() - start) / 1000L;
   INFO("test#10:stroke: %ul ms", ms);
   SLEEP(2);
 
   // Test#11: Display the Arduino Icons
+  tft.set_canvas_color(tft.shade(Canvas::WHITE, 10));
   tft.fill_screen();
   tft.set_pen_color(tft.shade(Canvas::CYAN, 80));
   tft.draw_icon((tft.WIDTH-34)/2, (tft.HEIGHT-32)/2, arduino_icon_34x32);
