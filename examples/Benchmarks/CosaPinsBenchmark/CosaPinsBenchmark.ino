@@ -31,6 +31,8 @@
 
 InputPin inPin(7);
 OutputPin outPin(8);
+OutputPin dataPin(9);
+OutputPin clockPin(10);
 AnalogPin analogPin(0);
 
 void setup()
@@ -98,7 +100,16 @@ void setup()
       outPin.clear();
     }
   stop = micros();
-  INFO("Cosa: %ul us per 1000 outPin.set; outPin.clear()\n", (stop - start) / 1000L);
+  INFO("Cosa: %ul us per 1000 outPin.set; outPin.clear()", (stop - start) / 1000L);
+
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      OutputPin::write(8, 1);
+      OutputPin::write(8, 0);
+    }
+  stop = micros();
+  INFO("Cosa: %ul us per 1000 OutputPin::write(8, 1); OutputPin::write(8, 0)\n", (stop - start) / 1000L);
 
   // Measure the time to perform 1,000,000 output pin toggle
   start = micros();
@@ -141,6 +152,98 @@ void setup()
   stop = micros();
   INFO("Cosa: %ul us per 1000 OutputPin::toggle(8)\n", (stop - start) / 1000L);
 
+  // Measure the time to perform 1,000 byte data transfer
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++) {
+    uint8_t data = 0x55;
+    for(uint8_t bit = 0x80; bit; bit >>= 1) {
+      digitalWrite(9, data & bit);
+      digitalWrite(10, 1);
+      digitalWrite(10, 0);
+    }
+  }
+  stop = micros();
+  INFO("Arduino: %ul us per bit data transfer() digitalWrite()", (stop - start) / 8000L);
+  
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++) {
+    uint8_t data = 0x55;
+    for(uint8_t bit = 0x80; bit; bit >>= 1) {
+      dataPin.write(data & bit);
+      clockPin.write(1);
+      clockPin.write(0);
+    }
+  }
+  stop = micros();
+  INFO("Cosa: %ul us per bit data transfer() pin.write()", (stop - start) / 8000L);
+  
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++) {
+    uint8_t data = 0x55;
+    for(uint8_t bit = 0x80; bit; bit >>= 1) {
+      dataPin.write(data & bit);
+      clockPin.toggle();
+      clockPin.toggle();
+    }
+  }
+  stop = micros();
+  INFO("Cosa: %ul us per bit data transfer() pin.write/toggle()", (stop - start) / 8000L);
+  
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++) {
+    uint8_t data = 0x55;
+    for(uint8_t bit = 0x80; bit; bit >>= 1) {
+      OutputPin::write(9, data & bit);
+      OutputPin::write(10, 1);
+      OutputPin::write(10, 0);
+    }
+  }
+  stop = micros();
+  INFO("Cosa: %ul us per bit data transfer() OutputPin::write()", (stop - start) / 8000L);
+  
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++) {
+    uint8_t data = 0x55;
+    for(uint8_t bit = 0x80; bit; bit >>= 1) {
+      OutputPin::write(9, data & bit);
+      OutputPin::toggle(10);
+      OutputPin::toggle(10);
+    }
+  }
+  stop = micros();
+  INFO("Cosa: %ul us per bit data transfer() OutputPin::write/toggle()", (stop - start) / 8000L);
+  
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++) {
+    uint8_t data = 0x55;
+    dataPin.write(data & 0x80);
+    clockPin.toggle();
+    clockPin.toggle();
+    dataPin.write(data & 0x40);
+    clockPin.toggle();
+    clockPin.toggle();
+    dataPin.write(data & 0x20);
+    clockPin.toggle();
+    clockPin.toggle();
+    dataPin.write(data & 0x10);
+    clockPin.toggle();
+    clockPin.toggle();
+    dataPin.write(data & 0x08);
+    clockPin.toggle();
+    clockPin.toggle();
+    dataPin.write(data & 0x04);
+    clockPin.toggle();
+    clockPin.toggle();
+    dataPin.write(data & 0x02);
+    clockPin.toggle();
+    clockPin.toggle();
+    dataPin.write(data & 0x01);
+    clockPin.toggle();
+    clockPin.toggle();
+  }
+  stop = micros();
+  INFO("Cosa: %ul us per bit data transfer() pin.write/toggle() unrolled\n", (stop - start) / 8000L);
+  
   // Measure the time to perform 1,000 analog pin samples
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
