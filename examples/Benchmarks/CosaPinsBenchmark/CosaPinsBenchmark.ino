@@ -131,6 +131,22 @@ void setup()
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
+      if (outPin.is_set()) outPin.clear(); else outPin.set();
+    }
+  stop = micros();
+  INFO("Cosa: %ul us per 1000 outPin.is_set/clear/set()", (stop - start) / 1000L);
+
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      outPin.set(outPin.is_clear());
+    }
+  stop = micros();
+  INFO("Cosa: %ul us per 1000 outPin.set/is_clear()", (stop - start) / 1000L);
+
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
       outPin.toggle();
     }
   stop = micros();
@@ -143,6 +159,17 @@ void setup()
     }
   stop = micros();
   INFO("Cosa: %ul us per 1000 OutputPin::write(8, !OutputPin::read(8))", (stop - start) / 1000L);
+
+  start = micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      if (OutputPin::read(8))
+	OutputPin::write(8, 0);
+      else
+	OutputPin::write(8, 1);
+    }
+  stop = micros();
+  INFO("Cosa: %ul us per 1000 OutputPin::read/write(8,0/1)", (stop - start) / 1000L);
 
   start = micros();
   for (uint16_t i = 0; i < 1000; i++)
