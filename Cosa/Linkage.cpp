@@ -21,7 +21,10 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa class double linked circulic list.
+ * The Cosa collection handling class; double linked circulic list.
+ * 
+ * @section Acknowledgements
+ * These classes are inspired by the Simula-67 SIMSET Linkage classes. 
  * 
  * This file is part of the Arduino Che Cosa project.
  */
