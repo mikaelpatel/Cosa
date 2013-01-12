@@ -69,9 +69,3 @@ Button::on_event(uint8_t type, uint16_t value)
       ((m_mode == ON_CHANGE_MODE) || (new_state == m_mode)))
     on_change(Event::FALLING_TYPE + m_mode);
 }
-
-void 
-Button::on_change(uint8_t type)
-{
-  // Default change event function
-}

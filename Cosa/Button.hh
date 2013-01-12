@@ -91,7 +91,7 @@ public:
    * Event::FALLING_TYPE, Event::RISING_TYPE, and Event::CHANGE_TYPE. 
    * @param[in] type event type.
    */
-  virtual void on_change(uint8_t type);
+  virtual void on_change(uint8_t type) {}
 };
 
 #endif
