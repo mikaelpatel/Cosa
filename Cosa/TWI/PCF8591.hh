@@ -94,6 +94,19 @@ public:
   }
 
   /**
+   * Sample the given channel and return converted value.
+   * @param[in] cntl control byte
+   * @return sample
+   */
+  uint8_t sample(uint8_t cntl)
+  {
+    begin(cntl);
+    uint8_t res = sample();
+    end();
+    return (res);
+  }
+
+  /**
    * Read a sequence of samples the channel defined by the latest
    * begin() call. 
    * @param[in] buf sample buffer.
