@@ -93,8 +93,7 @@ Naming
 * "Cosa"; noun thing, matter; pronoun; what?, what!. 
 * "Che cosa"; pronoun; what. 
 * "Ciao"; interjection hello!, goodbye!. 
-* "Cosa fai"; what are you doing?
-* "Caso"; in the event of.
+* "Cosa fai"; what do you do?
 
 Note
 ----
