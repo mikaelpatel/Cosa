@@ -34,34 +34,33 @@ FSM.hh:		class FSM : private Thing
 BUTTON
 Abstraction of debounced switch or button connected to an input pin.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Button.hh:	class Button : private Thing
+Button.hh:	class Button : public InputPin, private Thing
 ----------------------------------------------------------------------------
 EVENT QUEUE
 Support for pushing events from interrupt handlers and asic event dispatch.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 Event.hh:	class Event
-Event.hh:	      class Handler
+Event.hh:	      class Event::Handler
 Queue.hh:	class Queue
 ----------------------------------------------------------------------------
 WATCHDOG
 Ultra low power timer. Time base for delay and timeout events. Time queues
 using Things. Allow attaching pins etc to receive timeout events.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Watchdog.hh:	class Watchdog (singleton)
-		      => class Things
+Watchdog.hh:	class Watchdog (static, singleton)
 ----------------------------------------------------------------------------
 IOSTREAM
 Stream and device abstraction. 
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 IOStream.hh:	class IOStream
-IOStream.hh:     	class IOStream::Device
-IOStream/UART.hh:      	      class UART : public IOStream::Device
+IOStream.hh:          class IOStream::Device
+IOStream/UART.hh:      	    class UART : public IOStream::Device
 ----------------------------------------------------------------------------
 TRACE
 Trace log support.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 Trace.hh:	Trace trace (singleton)
-Trace.hh:	class Trace : public IOStream [UART]
+Trace.hh:	class Trace : public IOStream
 ----------------------------------------------------------------------------
 CIAO and COSA FAI
 The Cosa data stream handler. See CIAO.txt.
@@ -80,9 +79,11 @@ SPI/ST7735R.hh:       class ST7735R : public Canvas
 FONT
 The Cosa font handler.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+Font/System5x7.hh:	System5x7 system5x7 (singleton)
+Font/Fixednums8x16.hh:	Fixednums8x16 fixednums8x16 (singleton)
 Font.hh:		class Font
-Font/System5x7.hh:	      class System5x7 : public Font (singleton)
-Font/Fixednums8x16.hh:	      class Fixednums8x16 : public Font (singleton)
+Font/System5x7.hh:	      class System5x7 : public Font
+Font/Fixednums8x16.hh:	      class Fixednums8x16 : public Font
 ----------------------------------------------------------------------------
 OWI
 Driver for devices on the one wire bus (1-Wire). Support for DS18B20
@@ -117,7 +118,7 @@ SPI.hh:		      class SPI::Device : public Event::Handler
 SPI.hh:		      class SPI::Driver : public Event::Handler
 SPI/ADXL345.hh:	      	    class ADXL345 : private SPI::Driver
 SPI/NRF24L01P.hh:      	    class NRF24L01P : private SPI::Driver
-SPI/ST7735R.hh:             class ST7735R : public Canvas
+SPI/ST7735R.hh:             class ST7735R : public Canvas, private SPI::Driver
 ----------------------------------------------------------------------------
 DHT11 
 Humidity & Temperature Sensor device driver.
