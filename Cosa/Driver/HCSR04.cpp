@@ -42,13 +42,23 @@ HCSR04::read(uint16_t& distance)
   distance = 0;
   m_trigPin.pulse(10);
   uint16_t timeout = TIMEOUT;
-  uint16_t count = 0;
   while (m_echoPin.is_clear() && timeout--);
   if (timeout == 0) return (0);
+  uint16_t count = 0;
   synchronized {
     while (m_echoPin.is_set() && timeout--) count++;
   }
   if (timeout == 0) return (0);
   distance = (count * 10L) / COUNT_PER_CM;
   return (1);
+}
+
+void 
+HCSR04::on_event(uint8_t type, uint16_t value)
+{
+  uint16_t distance;
+  read(distance);
+  if (m_distance == distance) return;
+  m_distance = distance;
+  on_change(distance);
 }

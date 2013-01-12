@@ -85,14 +85,7 @@ public:
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
-  virtual void on_event(uint8_t type, uint16_t value)
-  {
-    uint16_t distance;
-    read(distance);
-    if (m_distance == distance) return;
-    m_distance = distance;
-    on_change(distance);
-  }
+  virtual void on_event(uint8_t type, uint16_t value);
 
   /**
    * Default on change function. 
