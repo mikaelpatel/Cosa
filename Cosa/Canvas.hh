@@ -27,8 +27,10 @@
  * @section Limitations
  * Color model is 16-bit RBG<5,6,5>. Canvas size is max 256x256.
  *
- * @section Acknowledgement
- * Inspired by graphics library by ladyada/adafruit.
+ * @section Acknowledgements
+ * Inspired by GFX graphics library by ladyada/adafruit, the glcd
+ * library by Michael Margolis and Bill Perry, and scd library by
+ * Sungjune Lee. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -65,6 +67,7 @@ protected:
    */
   Font* m_font;
   uint16_t m_text_color;
+  uint8_t m_text_mode;
   uint8_t m_text_scale;
   struct {
     uint8_t x;
@@ -115,6 +118,7 @@ public:
     m_pen_color(BLACK),
     m_font(font),
     m_text_color(BLACK),
+    m_text_mode(0),
     m_text_scale(1),
     WIDTH(width),
     HEIGHT(height),
@@ -183,6 +187,24 @@ public:
   void set_text_color(uint16_t color)
   {
     m_text_color = color;
+  }
+
+  /**
+   * Get current text mode.
+   * @return mode.
+   */
+  uint8_t get_text_mode()
+  {
+    return (m_text_mode);
+  }
+
+  /**
+   * Set current text mode.
+   * @param[in] mode
+   */
+  void set_text_mode(uint8_t mode)
+  {
+    m_text_mode = mode;
   }
 
   /**
@@ -463,18 +485,20 @@ public:
   /**
    * Draw polygon from program memory with current color. Vector of 
    * delta positions, terminate with 0, 0. Update cursor to new position.
-   * @param[in] p
+   * @param[in] poly
+   * @param[in] scale
    */
-  virtual void draw_poly_P(const int8_t* p);
+  virtual void draw_poly_P(const int8_t* poly, uint8_t scale = 1);
 
   /**
    * Draw stroke from program memory with current color. Vector of 
    * delta positions, terminated with 0, 0. The cursor is moved for
    * when both dx and dy are zero or negative. Update cursor to new
    * position. 
-   * @param[in] p
+   * @param[in] stroke
+   * @param[in] scale
    */
-  virtual void draw_stroke_P(const int8_t* p);
+  virtual void draw_stroke_P(const int8_t* stroke, uint8_t scale = 1);
 
   /**
    * Draw rectangle with current color.
@@ -619,6 +643,7 @@ public:
     DRAW_PIXEL,
     DRAW_LINE,
     DRAW_POLY,
+    DRAW_STROKE,
     DRAW_RECT,
     FILL_RECT,
     FILL_SCREEN,
@@ -655,7 +680,8 @@ public:
 #define CANVAS_DRAW_ICON(ix, s) Canvas::DRAW_ICON, ix, s,
 #define CANVAS_DRAW_PIXEL() Canvas::DRAW_PIXEL,	
 #define CANVAS_DRAW_LINE(x, y) Canvas::DRAW_LINE, x, y,
-#define CANVAS_DRAW_POLY(ix) Canvas::DRAW_POLY, ix,
+#define CANVAS_DRAW_POLY(ix, s) Canvas::DRAW_POLY, ix, s,
+#define CANVAS_DRAW_STROKE(ix, s) Canvas::DRAW_POLY, ix, s,
 #define CANVAS_DRAW_RECT(w, h) Canvas::DRAW_RECT, w, h,
 #define CANVAS_FILL_RECT(w, h) Canvas::FILL_RECT, w, h,
 #define CANVAS_FILL_SCREEN() Canvas::FILL_SCREEN,

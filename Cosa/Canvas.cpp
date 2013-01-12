@@ -25,10 +25,12 @@
  * LCD/TFT. See Cosa/SPI/ST7735R.hh for an example of usage.
  *
  * @section Limitations
- * Color model is 16-bit RBG<5,6,5>.
+ * Color model is 16-bit RBG<5,6,5>. Canvas size is max 256x256.
  *
- * @section Acknowledgement
- * Inspired by graphics library by ladyada/adafruit.
+ * @section Acknowledgements
+ * Inspired by GFX graphics library by ladyada/adafruit, the glcd
+ * library by Michael Margolis and Bill Perry, and scd library by
+ * Sungjune Lee. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -48,10 +50,8 @@ uint16_t
 Canvas::shade(uint16_t color, uint8_t scale)
 {
   if (scale > 100) scale = 100;
-  uint8_t blue = (scale * (color & 0x1fU)) / 100;
-  color >>= 5;
-  uint8_t green = (scale * (color & 0x3fU)) / 100;
-  color >>= 6;
+  uint8_t blue = (scale * (color & 0x1fU)) / 100; color >>= 5;
+  uint8_t green = (scale * (color & 0x3fU)) / 100; color >>= 6;
   uint8_t red = (scale * (color & 0x1fU)) / 100;
   return (((red & 0x1f) << 11)  | ((green & 0x3f) << 5) | (blue & 0x1f));
 }
@@ -59,10 +59,8 @@ Canvas::shade(uint16_t color, uint8_t scale)
 uint16_t 
 Canvas::blend(uint16_t c1, uint16_t c2)
 {
-  uint8_t blue = (c1 + c2)/2;
-  c1 >>= 5; c2 >>= 5; 
-  uint8_t green = (c1 + c2)/2;
-  c1 >>= 6; c2 >>= 6; 
+  uint8_t blue = (c1 + c2)/2; c1 >>= 5; c2 >>= 5; 
+  uint8_t green = (c1 + c2)/2; c1 >>= 6; c2 >>= 6; 
   uint8_t red = (c1 + c2)/2;
   return (((red & 0x1f) << 11)  | ((green & 0x3f) << 5) | (blue & 0x1f));
 }
@@ -155,31 +153,32 @@ Canvas::draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
 }
 
 void 
-Canvas::draw_poly_P(const int8_t* p)
+Canvas::draw_poly_P(const int8_t* poly, uint8_t scale)
 {
+  if (scale == 0) return;
   for (;;) {
-    int8_t dx = pgm_read_byte(p++);
-    int8_t dy = pgm_read_byte(p++);
+    int8_t dx = pgm_read_byte(poly++);
+    int8_t dy = pgm_read_byte(poly++);
     if (dx == 0 && dy == 0) return;
-    uint8_t x = m_cursor.x + dx;
-    uint8_t y = m_cursor.y + dy;
+    uint8_t x = m_cursor.x + dx*scale;
+    uint8_t y = m_cursor.y + dy*scale;
     draw_line(x, y);
   }
 }
 
 void 
-Canvas::draw_stroke_P(const int8_t* p)
+Canvas::draw_stroke_P(const int8_t* stroke, uint8_t scale)
 {
   for (;;) {
-    int8_t dx = pgm_read_byte(p++);
-    int8_t dy = pgm_read_byte(p++);
+    int8_t dx = pgm_read_byte(stroke++);
+    int8_t dy = pgm_read_byte(stroke++);
     if (dx == 0 && dy == 0) return;
     if (dx <= 0 && dy <= 0) {
-      move_cursor(dx, dy);
+      move_cursor(dx*scale, dy*scale);
     }
     else {
-      uint8_t x = m_cursor.x + dx;
-      uint8_t y = m_cursor.y + dy;
+      uint8_t x = m_cursor.x + dx*scale;
+      uint8_t y = m_cursor.y + dy*scale;
       draw_line(x, y);
     }
   }
@@ -246,12 +245,7 @@ Canvas::draw_char(char c)
   m_pen_color = m_text_color;
   m_font->draw(this, c, m_cursor.x, m_cursor.y, m_text_scale);
   m_cursor.x += m_text_scale * (m_font->WIDTH + CHAR_SPACING);
-  if (m_cursor.x > m_text_port.width) {
-    m_cursor.x = m_text_port.x;
-    m_cursor.y += m_text_scale * (m_font->HEIGHT + LINE_SPACING);
-    if (m_cursor.y > m_text_port.width) 
-      m_cursor.y = m_text_port.y;
-  }
+  if (m_cursor.x + CHAR_SPACING > m_text_port.width) putchar('\n');
   m_pen_color = color;
 }
 
@@ -263,8 +257,23 @@ Canvas::putchar(char c)
   if (c == '\n') {
     m_cursor.x = m_text_port.x;
     m_cursor.y += m_text_scale * (m_font->HEIGHT + LINE_SPACING);
-    if (m_cursor.y > m_text_port.width) 
+    if (m_cursor.y > m_text_port.height)
       m_cursor.y = m_text_port.y;
+    if (m_text_mode) {
+      uint16_t saved = m_pen_color;
+      m_pen_color = m_canvas_color;
+      fill_rect(m_cursor.x, m_cursor.y, m_text_port.width, 
+		m_text_scale*(m_font->HEIGHT + LINE_SPACING));
+      m_pen_color = saved;
+    }
+  } 
+  else if (c == '\f') {
+    uint16_t saved = m_pen_color;
+    m_pen_color = m_canvas_color;
+    fill_rect(m_text_port.x, m_text_port.y, m_text_port.width, m_text_port.height);
+    m_pen_color = saved;
+    m_cursor.x = m_text_port.x;
+    m_cursor.y = m_text_port.y;
   }
   return (c);
 }
@@ -341,7 +350,12 @@ Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
     case DRAW_POLY:
       ix = pgm_read_byte(ip++);
       if (ix >= max) return;
-      draw_poly_P((const int8_t*) pgm_read_word(tab + ix));
+      draw_poly_P((const int8_t*) pgm_read_word(tab + ix), pgm_read_byte(ip++));
+      break;
+    case DRAW_STROKE:
+      ix = pgm_read_byte(ip++);
+      if (ix >= max) return;
+      draw_stroke_P((const int8_t*) pgm_read_word(tab + ix), pgm_read_byte(ip++));
       break;
     case DRAW_RECT:
       draw_rect(pgm_read_byte(ip++), pgm_read_byte(ip++));

@@ -65,10 +65,7 @@ CANVAS_SET_CURSOR(30, 20)
 CANVAS_DRAW_STRING(4)
 // Draw triangle in the center of the screen
 CANVAS_SET_CURSOR(60, 60)
-CANVAS_DRAW_POLY(8)
-// CANVAS_DRAW_LINE(100, 100)
-// CANVAS_DRAW_LINE(20, 100)
-// CANVAS_DRAW_LINE(60, 60)
+CANVAS_DRAW_POLY(8, 1)
 // Draw magenta filled/outlined rectangle with a character in center
 CANVAS_SET_PEN_COLOR(0, 0, 0)
 CANVAS_SET_CURSOR(20, 100)
