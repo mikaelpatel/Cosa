@@ -40,7 +40,6 @@
 #include "Cosa/IOStream.hh"
 
 class Ciao {
-  
 public:
   /**
    * Tag attribute: Number for data values in sequence[count]. User defined

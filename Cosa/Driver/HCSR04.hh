@@ -38,16 +38,17 @@
 #define __COSA_DRIVER_HCSR04_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Thing.hh"
 #include "Cosa/Pins.hh"
+#include "Cosa/Linkage.hh"
 
-class HCSR04 : public Thing {
+class HCSR04 : public Link {
 private:
   static const uint16_t TIMEOUT = 0xffffU;
   static const uint16_t COUNT_PER_CM = 54;
   OutputPin m_trigPin;
   InputPin m_echoPin;
   uint16_t m_distance;
+
 public:
   /**
    * Construct connection to a DHT11 device on given in/output-pin.
@@ -55,7 +56,7 @@ public:
    * @param[pin] echo_pin echo pin number.
    */
   HCSR04(uint8_t trig_pin, uint8_t echo_pin) :
-    Thing(),
+    Link(),
     m_trigPin(trig_pin),
     m_echoPin(echo_pin),
     m_distance(0)

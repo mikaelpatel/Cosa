@@ -33,7 +33,6 @@
 #include "Cosa/Types.h"
 
 class IOStream {
-
 public:
   /**
    * Device for in/output of characters or strings.
@@ -113,6 +112,7 @@ public:
   class Filter : public Device {
   protected:
     Device* m_dev;
+
   public:
     Filter(Device* dev) : m_dev(dev) {}
 

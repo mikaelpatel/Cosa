@@ -44,11 +44,10 @@
 #define __COSA_BUTTON_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Thing.hh"
 #include "Cosa/Pins.hh"
+#include "Cosa/Linkage.hh"
 
-class Button : public InputPin, private Thing {
-
+class Button : public InputPin, private Link {
 public:
   /**
    * Button change detection modes; falling (set->clear), 
@@ -61,7 +60,9 @@ public:
   };
 
 protected:
-  // Sample period, current state and change detection mode
+  /**
+   * Sample period, current state and change detection mode.
+   */
   static const uint16_t SAMPLE_MS = 64;
   uint8_t m_state;
   uint8_t m_mode;

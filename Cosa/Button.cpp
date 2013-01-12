@@ -46,7 +46,7 @@
 
 Button::Button(uint8_t pin, Mode mode) : 
   InputPin(pin, InputPin::PULLUP_MODE),
-  Thing(),
+  Link(),
   m_state(is_set()),
   m_mode(mode)
 {

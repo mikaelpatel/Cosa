@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Thing.cpp
+ * @file Cosa/Linkage.cpp
  * @version 1.0
  *
  * @section License
@@ -21,36 +21,32 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa class double linked circulic list item; Thing.
+ * The Cosa class double linked circulic list.
  * 
- * @section See Also
- * Things.hh for collection of Things, and Event.hh for details on
- * event types and parameter passing.  
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Thing.hh"
+#include "Cosa/Linkage.hh"
 
 void 
-Thing::attach(Thing* it)
+Linkage::attach(Linkage* pred)
 {
   synchronized {
     // Check if it needs to be detached first
-    if (it->m_succ != it) {
-      it->m_succ->m_pred = it->m_pred;
-      it->m_pred->m_succ = it->m_succ;
+    if (pred->m_succ != pred) {
+      pred->m_succ->m_pred = pred->m_pred;
+      pred->m_pred->m_succ = pred->m_succ;
     }
-    // Attach it as the new predecessor
-    it->m_succ = this;
-    it->m_pred = this->m_pred;
-    this->m_pred->m_succ = it;
-    this->m_pred = it;
+    // Attach pred as the new predecessor
+    pred->m_succ = this;
+    pred->m_pred = this->m_pred;
+    this->m_pred->m_succ = pred;
+    this->m_pred = pred;
   }
 }
 
 void
-Thing::detach()
+Linkage::detach()
 {
   synchronized {
     // Check that the detach is necessary
@@ -63,5 +59,27 @@ Thing::detach()
     }
   }
 }
+
+void
+Head::on_event(uint8_t type, uint16_t value)
+{
+  // Iterate through the list and dispatch the event
+  for (Linkage* link = m_succ; link != this;) {
+    // Get the successor as the current event call may detach itself
+    Linkage* succ = link->get_succ();
+    link->on_event(type, value);
+    link = succ;
+  }
+}
+
+uint8_t 
+Head::length()
+{
+  uint8_t res = 0;
+  // Iterate through the list and count the length of the queue
+  for (Linkage* link = m_succ; link != this; link = link->get_succ()) res++;
+  return (res);
+}
+
 
 

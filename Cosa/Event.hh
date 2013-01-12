@@ -35,7 +35,6 @@
 #include "Cosa/Trace.hh"
 
 class Event {
-
 public:
   /**
    * Size of event queue.

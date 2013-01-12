@@ -35,7 +35,6 @@
 #include "Cosa/Trace.hh"
 
 class DS1307 : private TWI::Driver {
-
 private:
   static const uint8_t ADDR = 0xD0;
   static const uint8_t RAM_MAX = 0x40;

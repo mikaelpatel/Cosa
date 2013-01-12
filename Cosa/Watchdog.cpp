@@ -31,7 +31,7 @@
 Watchdog::InterruptHandler Watchdog::s_handler = 0;
 void* Watchdog::s_env = 0;
 
-Things Watchdog::s_timeq[Watchdog::TIMEQ_MAX];
+Head Watchdog::s_timeq[Watchdog::TIMEQ_MAX];
 
 volatile uint16_t Watchdog::s_ticks = 0;
 uint8_t Watchdog::s_prescale = 0;
@@ -78,11 +78,11 @@ Watchdog::begin(uint16_t ms,
 }
 
 void 
-Watchdog::attach(Thing* thing, uint16_t ms)
+Watchdog::attach(Link* target, uint16_t ms)
 {
   uint8_t level = log2((ms + 8) >> 5) - 1;
   if (level > 9) level = 9;
-  s_timeq[level].attach(thing);
+  s_timeq[level].attach(target);
 }
 
 void

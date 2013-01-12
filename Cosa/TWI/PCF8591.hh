@@ -33,7 +33,6 @@
 #include "Cosa/TWI.hh"
 
 class PCF8591 : private TWI::Driver {
-
 private:
   // Two-wire address for PCF8591 
   static const uint8_t ADDR = 0x90;

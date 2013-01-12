@@ -44,6 +44,7 @@ void setup()
 
   // Check amount of free memory and size of instance
   TRACE(free_memory());
+  TRACE(sizeof(Event::Handler));
   TRACE(sizeof(InputPin));
   TRACE(sizeof(OutputPin));
   TRACE(sizeof(AnalogPin));

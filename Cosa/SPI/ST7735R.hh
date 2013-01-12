@@ -40,7 +40,6 @@
 #include "Cosa/Pins.hh"
 
 class ST7735R : public Canvas, SPI::Driver {
-
 protected:
   /**
    * Slave select pin (default is pin 10)

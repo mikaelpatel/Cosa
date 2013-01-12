@@ -86,7 +86,7 @@ void setup()
 
   // Check size of instances
   TRACE(sizeof(Event::Handler));
-  TRACE(sizeof(Thing));
+  TRACE(sizeof(Link));
   TRACE(sizeof(FSM));
   TRACE(sizeof(Echo));
 

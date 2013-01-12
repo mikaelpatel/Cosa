@@ -37,7 +37,6 @@
 #include "Cosa/Event.hh"
 
 class SPI {
-
 public:
   /**
    * Device drivers are friends and may have callback/

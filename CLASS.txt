@@ -1,11 +1,12 @@
 ----------------------------------------------------------------------------
 COSA CLASS OVERVIEW
 ----------------------------------------------------------------------------
-Thing 
-The Cosa collection handling. Broadcasts events of a set of things.
+Linkage
+The Cosa collection handling. Broadcasts events of a set of objects.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Thing.hh:	class Thing : public Event::Handler
-Things.hh:	      class Things : public Thing
+Linkage.hh:	class Linkage : public Event::Handler
+Linkage.hh:	      class Link : public Linkage
+Linkage.hh:	      class Head : public Linkage
 ----------------------------------------------------------------------------
 PINS
 Object-oriented approach to sketch pin declaration and function structuring. 
@@ -22,19 +23,19 @@ Pins.hh:	class AnalogPins
 PERIODIC
 Periodic functions. Syntatic sugar for watchdog timeout queue.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Periodic.hh:	class Periodic : private Thing
+Periodic.hh:	class Periodic : private Link
 ----------------------------------------------------------------------------
 FSM
 Finite State Machines
 Support for constructing finite state machines (FSM) with timeout handling
 and periodic execution.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-FSM.hh:		class FSM : private Thing
+FSM.hh:		class FSM : private Link
 ----------------------------------------------------------------------------
 BUTTON
 Abstraction of debounced switch or button connected to an input pin.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Button.hh:	class Button : public InputPin, private Thing
+Button.hh:	class Button : public InputPin, private Link
 ----------------------------------------------------------------------------
 EVENT QUEUE
 Support for pushing events from interrupt handlers and asic event dispatch.
@@ -44,8 +45,8 @@ Event.hh:	      class Event::Handler
 Queue.hh:	class Queue
 ----------------------------------------------------------------------------
 WATCHDOG
-Ultra low power timer. Time base for delay and timeout events. Time queues
-using Things. Allow attaching pins etc to receive timeout events.
+Ultra low power timer. Time base for delay and timeout events. 
+Allow attaching pins etc to receive timeout events.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 Watchdog.hh:	class Watchdog (static, singleton)
 ----------------------------------------------------------------------------
@@ -123,12 +124,12 @@ SPI/ST7735R.hh:             class ST7735R : public Canvas, private SPI::Driver
 DHT11 
 Humidity & Temperature Sensor device driver.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Drivers/DHT11.hh:	class DHT11 : private Thing
+Drivers/DHT11.hh:	class DHT11 : private Link
 ----------------------------------------------------------------------------
 HC-SR04/US-020
 Ultrasonic range module device driver.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Drivers/HCSR04.hh:	class HCSR04 : private Thing
+Drivers/HCSR04.hh:	class HCSR04 : private Link
 ----------------------------------------------------------------------------
 SUPPORT
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  

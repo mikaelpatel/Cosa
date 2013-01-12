@@ -36,7 +36,6 @@
 #include "Cosa/Trace.hh"
 
 class ADXL345 : private SPI::Driver {
-
 private:
   /**
    * SPI commands (See fig. 39, pp. 16)

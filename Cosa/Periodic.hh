@@ -41,11 +41,10 @@
 #define __COSA_PERIODIC_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Thing.hh"
+#include "Cosa/Linkage.hh"
 #include "Cosa/Watchdog.hh"
 
-class Periodic : public Thing {
-
+class Periodic : public Link {
 private:
   /**
    * @override
@@ -66,7 +65,7 @@ public:
    * @param[in] ms period of timeout.
    */
   Periodic(uint16_t ms) : 
-    Thing()
+    Link()
   {
     set_period(ms);
   }
@@ -83,9 +82,7 @@ public:
   /**
    * The default null function. 
    */
-  virtual void run()
-  {
-  }
+  virtual void run() {}
 };
 
 #endif

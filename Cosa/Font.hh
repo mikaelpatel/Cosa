@@ -33,7 +33,6 @@
 #include "Cosa/Canvas.hh"
 
 class Font {
-
 protected:
   /**
    * Font bitmap.

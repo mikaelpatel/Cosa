@@ -35,7 +35,6 @@
 #include "Cosa/Font.hh"
 
 class System5x7 : public Font {
-
 private:
   static const uint8_t bitmap[] PROGMEM;
 

@@ -37,7 +37,6 @@
 #include "Cosa/Font.hh"
 
 class FixedNums8x16 : public Font {
-
 private:
   static const uint8_t bitmap[] PROGMEM;
 

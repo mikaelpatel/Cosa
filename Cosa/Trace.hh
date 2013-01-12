@@ -40,7 +40,6 @@
 extern class Trace trace;
 
 class Trace : public IOStream {
-
 private:
   UART uart;
 

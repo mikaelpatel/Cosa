@@ -35,11 +35,9 @@
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.hh"
-#include "Cosa/Thing.hh"
-#include "Cosa/Things.hh"
+#include "Cosa/Linkage.hh"
 
 class Watchdog {
-
 public:
   /**
    * Interrupt handler function prototype.
@@ -60,7 +58,7 @@ private:
   static void* s_env;
 
   static const uint8_t TIMEQ_MAX = 10;
-  static Things s_timeq[TIMEQ_MAX];
+  static Head s_timeq[TIMEQ_MAX];
 
   static volatile uint16_t s_ticks;
   static uint8_t s_prescale;
@@ -116,12 +114,12 @@ public:
   }
   
   /**
-   * Attach thing to watchdog so that it will receive a timeout
+   * Attach target to watchdog so that it will receive a timeout
    * event with given period in milli-seconds.
-   * @param[in] thing timeout target to add.
+   * @param[in] target timeout target to add.
    * @param[in] ms milliseconds.
    */
-  static void attach(Thing* thing, uint16_t ms);
+  static void attach(Link* target, uint16_t ms);
 
   /**
    * Start watchdog with given period (milli-seconds) and sleep mode.

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Things.hh
+ * @file Cosa/Linkage.hh
  * @version 1.0
  *
  * @section License
@@ -21,30 +21,91 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * The Cosa class hierarchy root object collection; Things.
- * Acts as the head of a circular double linked queue of thing(s).
- * Is responsible for broadcasting events to the collection.
- *
- * @section See Also
- * Thing.hh for Cosa root object, Thing, and Event.hh for details on
- * event types and parameter passing.  
+ * The Cosa class double linked circulic list.
+ * 
+ * @section Acknowlegments
+ * These classes are inspired by the Simula-67 SIMSET Linkage classes. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_THINGS_HH__
-#define __COSA_THINGS_HH__
+#ifndef __COSA_LINKAGE_HH__
+#define __COSA_LINKAGE_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Thing.hh"
+#include "Cosa/Event.hh"
 
-class Things : public Thing {
+class Linkage : public Event::Handler {
+protected:
+  /**
+   * Double linked list pointers. 
+   */
+  Linkage* m_succ;
+  Linkage* m_pred;
 
+  /**
+   * Detach this linkage. Unlink from any list.
+   */
+  void detach();
+
+public:
+  /**
+   * Construct this linkage and initiate to self reference.
+   */
+  Linkage() : 
+    Event::Handler(),
+    m_succ(this),
+    m_pred(this)
+  {}
+  
+  /**
+   * Return successor in sequence.
+   * @return successor linkage.
+   */
+  Linkage* get_succ() 
+  {
+    return (m_succ);
+  }
+
+  /**
+   * Return predecessor in sequence.
+   * @return predecessor linkage.
+   */
+  Linkage* get_pred() 
+  {
+    return (m_pred);
+  }
+
+  /**
+   * Attach given linkage as predecessor. Will check and detach
+   * if already attached.
+   * @param[in] pred linkage to attach.
+   */
+  void attach(Linkage* pred);
+};
+
+class Link : public Linkage {
+public:
+  /**
+   * Construct a link.
+   */
+  Link() : Linkage() {}
+
+  /**
+   * Detach this link. Unlink from any list.
+   */
+  void detach()
+  {
+    Linkage::detach();
+  }
+};
+
+class Head : public Linkage {
 public:
   /**
    * Construct a thing collection.
    */
-  Things() : Thing() {}
+  Head() : Linkage() {}
   
   /**
    * Return number of things.
@@ -64,7 +125,7 @@ public:
 private:
   /**
    * @override
-   * Event handler. Default event handler for thing collections. 
+   * Event handler. Default event handler for collections. 
    * Will boardcase the event to the collection.
    * @param[in] type the event type.
    * @param[in] value the event value.

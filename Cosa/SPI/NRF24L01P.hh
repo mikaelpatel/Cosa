@@ -36,7 +36,6 @@
 #include "Cosa/SPI.hh"
 
 class NRF24L01P : private SPI::Driver {
-
 private:
   /**
    * SPI Commands (See chap. 8.3.1, tab. 20, pp. 51)

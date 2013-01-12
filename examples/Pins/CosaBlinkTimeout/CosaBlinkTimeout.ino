@@ -27,14 +27,16 @@
  */
 
 #include "Cosa/Pins.hh"
+#include "Cosa/Linkage.hh"
 #include "Cosa/Watchdog.hh"
 
 // LED output pin
-class LED : public Thing {
+class LED : public Link {
 private:
   OutputPin m_pin;
 public:
   LED(uint8_t pin, uint8_t initial = 0) : 
+    Link(),
     m_pin(pin, initial)
   {
   }

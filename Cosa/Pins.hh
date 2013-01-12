@@ -38,7 +38,6 @@
 #include "Cosa/Trace.hh"
 
 class Pin : public Event::Handler {
-
 protected:
   volatile uint8_t* const m_sfr;
   const uint8_t m_mask;
@@ -244,7 +243,6 @@ public:
  * Abstract input pin. Allows pullup mode.
  */
 class InputPin : public Pin {
-
 public:
   enum Mode {
     NORMAL_MODE = 0,
@@ -286,7 +284,6 @@ public:
  * changes. 
  */
 class InterruptPin : public InputPin {
-
 public:
   static InterruptPin* ext[2];
   
@@ -347,7 +344,6 @@ public:
  * Abstract output pin. 
  */
 class OutputPin : public Pin {
-
 public:
   /**
    * Construct an abstract output pin for given Arduino pin number.
@@ -501,7 +497,6 @@ public:
  * Abstract pulse width modulation pin.
  */
 class PWMPin : public OutputPin {
-
 public:
   /**
    * Construct an abstract pwm output pin for given Arduino pin number.
@@ -563,7 +558,6 @@ public:
  * Abstract IO-pin that may switch between input and output pin.
  */
 class IOPin : public OutputPin {
-
 public:
   enum Mode {
     OUTPUT_MODE = 0,
@@ -619,7 +613,6 @@ extern "C" void ADC_vect(void) __attribute__ ((signal));
  * Abstract analog pin. Allows asynchronous sampling.
  */
 class AnalogPin : public Pin {
-
 public:
   /**
    * Reference voltage; ARef pin, Vcc or internal 1V1.
@@ -725,7 +718,6 @@ public:
  * interrupt or event handler when completed.
  */
 class AnalogPins : private AnalogPin {
-
 private:
   const uint8_t* m_pin_at;
   uint16_t* m_buffer;

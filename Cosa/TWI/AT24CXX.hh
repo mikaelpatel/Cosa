@@ -33,7 +33,6 @@
 #include "Cosa/TWI.hh"
 
 class AT24CXX : private TWI::Driver {
-
 private:
   static const uint8_t ADDR = 0xa0;
   uint8_t m_addr;

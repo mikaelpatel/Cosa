@@ -71,7 +71,7 @@ void setup()
   TRACE(sizeof(Event::Handler));
   TRACE(sizeof(OutputPin));
   TRACE(sizeof(InputPin));
-  TRACE(sizeof(Thing));
+  TRACE(sizeof(Link));
   TRACE(sizeof(Button));
   TRACE(sizeof(OnOffButton));
 

@@ -33,7 +33,6 @@
 #include <avr/sleep.h>
 
 class Queue {
-
 private:
   uint8_t m_length;
   uint8_t m_nmemb;

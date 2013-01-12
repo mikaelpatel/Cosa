@@ -31,12 +31,11 @@
 #ifndef __COSA_FSM_HH__
 #define __COSA_FSM_HH__
 
-#include "Cosa/Thing.hh"
 #include "Cosa/Event.hh"
+#include "Cosa/Linkage.hh"
 #include "Cosa/Watchdog.hh"
 
-class FSM : public Thing {
-
+class FSM : public Link {
 public:
   /**
    * State handler function prototype. Should return true(1) if
@@ -76,7 +75,7 @@ public:
    * @param{in] period timeout in all states.
    */
   FSM(StateHandler init, uint16_t period = 0) :
-    Thing(), 
+    Link(), 
     m_state(init),
     m_period(period),
     m_param(0)
