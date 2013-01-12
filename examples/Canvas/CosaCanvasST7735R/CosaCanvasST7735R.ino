@@ -110,9 +110,7 @@ void loop()
   tft.draw_rect(4, 4, tft.WIDTH-8, tft.HEIGHT-8);
   tft.set_cursor(5, 5);
   tft.putchar('\f');
-  for (uint16_t x = 0; x < 200; x++) {
-    cout.printf_P(PSTR("%d, "), x);
-  }
+  cout.print(&tft, 200, 16, tft.get_orientation() == Canvas::PORTRAIT ? 4 : 6);
   tft.set_text_mode(0);
   ms = (micros() - start) / 1000L;
   INFO("test#3:scroll text mode: %ul ms", ms);

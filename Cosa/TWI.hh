@@ -32,7 +32,6 @@
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.hh"
-#include "Cosa/Caso.hh"
 #include <avr/sleep.h>
 
 extern "C" void TWI_vect(void) __attribute__ ((signal));
@@ -123,7 +122,7 @@ private:
   static const uint8_t VEC_MAX = 4;
   volatile State m_state;
   volatile uint8_t m_status;
-  Caso* m_target;
+  Event::Handler* m_target;
   uint8_t m_addr;
   uint8_t m_buf[BUF_MAX];
   iovec_t m_vec[VEC_MAX];
@@ -149,7 +148,7 @@ public:
    * Device drivers are friends and may have callback/
    * event handler for completion events.
    */
-  class Driver : public Caso {
+  class Driver : public Event::Handler {
     friend class TWI;
   };
 
@@ -157,7 +156,7 @@ public:
    * Slave devices are friends and may have callback/
    * event handler for request events.
    */
-  class Device : public Caso {
+  class Device : public Event::Handler {
     friend class TWI;
   };
 
@@ -182,7 +181,7 @@ public:
    * @param[in] addr slave address.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(Caso* target = 0, uint8_t addr = 0);
+  bool begin(Event::Handler* target = 0, uint8_t addr = 0);
   
   /**
    * Disconnect usage of the TWI bus logic.

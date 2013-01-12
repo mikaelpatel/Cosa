@@ -33,12 +33,11 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
-#include "Cosa/Caso.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
 
-class Pin : public Caso {
+class Pin : public Event::Handler {
 
 protected:
   volatile uint8_t* const m_sfr;

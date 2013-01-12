@@ -35,7 +35,6 @@
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.hh"
-#include "Cosa/Caso.hh"
 
 class SPI {
 
@@ -44,7 +43,7 @@ public:
    * Device drivers are friends and may have callback/
    * event handler for completion events.
    */
-  class Driver : public Caso {
+  class Driver : public Event::Handler {
     friend class SPI;
   };
 
@@ -52,7 +51,7 @@ public:
    * Slave devices are friends and may have callback/
    * event handler for request events.
    */
-  class Device : public Caso {
+  class Device : public Event::Handler {
     friend class SPI;
   public:
     /**

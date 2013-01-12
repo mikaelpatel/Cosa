@@ -35,7 +35,7 @@
 // Use the built-in led
 OutputPin ledPin(13);
 
-// Input button
+// On-off button
 class OnOffButton : public Button {
 private:
   uint8_t m_count;
@@ -68,7 +68,7 @@ void setup()
 
   // Check amount of free memory and size of instances
   TRACE(free_memory());
-  TRACE(sizeof(Caso));
+  TRACE(sizeof(Event::Handler));
   TRACE(sizeof(OutputPin));
   TRACE(sizeof(InputPin));
   TRACE(sizeof(Thing));

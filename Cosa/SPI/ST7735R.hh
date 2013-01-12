@@ -39,7 +39,7 @@
 #include "Cosa/SPI.hh"
 #include "Cosa/Pins.hh"
 
-class ST7735R : public Canvas {
+class ST7735R : public Canvas, SPI::Driver {
 
 protected:
   /**
@@ -182,6 +182,7 @@ public:
   virtual bool begin();
 
   /**
+   * @override
    * Set screen orientation
    * @param[in] direction
    */

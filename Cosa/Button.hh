@@ -47,7 +47,7 @@
 #include "Cosa/Thing.hh"
 #include "Cosa/Pins.hh"
 
-class Button : private Thing {
+class Button : public InputPin, private Thing {
 
 public:
   /**
@@ -63,7 +63,6 @@ public:
 protected:
   // Sample period, current state and change detection mode
   static const uint16_t SAMPLE_MS = 64;
-  InputPin m_pin;
   uint8_t m_state;
   uint8_t m_mode;
 

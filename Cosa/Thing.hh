@@ -33,9 +33,9 @@
 #define __COSA_THING_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Caso.hh"
+#include "Cosa/Event.hh"
 
-class Thing : public Caso {
+class Thing : public Event::Handler {
 
 protected:
   /**

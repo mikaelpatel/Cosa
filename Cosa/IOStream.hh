@@ -258,8 +258,9 @@ public:
    * @param[in] ptr pointer to data memory.
    * @param[in] size number of bytes.
    * @param[in] base to represent value in (default 10).
+   * @param[in] max number of numbers per line (default 16).
    */
-  void print(void *ptr, size_t size, uint8_t base = 10);
+  void print(void *ptr, size_t size, uint8_t base = 10, uint8_t max = 16);
 
   /**
    * Print pointer as a hexidecimal number to stream.

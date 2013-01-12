@@ -55,12 +55,13 @@ protected:
   uint16_t m_pen_color;
 
   /**
-   * Current position (turtle graphics style)
+   * Current position (turtle graphics style) and screen direction.
    */
   struct {
     uint8_t x;
     uint8_t y;
   } m_cursor;
+  uint8_t m_direction;
 
   /**
    * Text handling; font, color, scale and port.
@@ -116,6 +117,7 @@ public:
     IOStream::Device(),
     m_canvas_color(WHITE),
     m_pen_color(BLACK),
+    m_direction(PORTRAIT),
     m_font(font),
     m_text_color(BLACK),
     m_text_mode(0),
@@ -331,10 +333,22 @@ public:
   }
 
   /**
+   * Get screen orientation.
+   * @return direction (LANDSCAPE/PORTRAIT)
+   */
+  virtual uint8_t get_orientation() 
+  {
+    return (m_direction);
+  }
+
+  /**
    * Set screen orientation.
    * @param[in] direction (LANDSCAPE/PORTRAIT)
    */
-  virtual void set_orientation(uint8_t direction) {}
+  virtual void set_orientation(uint8_t direction) 
+  {
+    m_direction = (direction & 1);
+  }
 
   /**
    * Set pixel with current color.
@@ -595,8 +609,9 @@ public:
    */
   virtual void draw_string(char* s)
   {
-    char c;
-    while ((c = *s++) != 0) draw_char(c);
+    char c; 
+    while ((c = *s++) != 0) 
+      draw_char(c);
   }
 
   /**
@@ -605,8 +620,9 @@ public:
    */
   virtual void draw_string_P(const char* s)
   {
-    char c;
-    while ((c = pgm_read_byte(s++)) != 0) draw_char(c);
+    char c; 
+    while ((c = pgm_read_byte(s++)) != 0) 
+      draw_char(c);
   }
 
   /**

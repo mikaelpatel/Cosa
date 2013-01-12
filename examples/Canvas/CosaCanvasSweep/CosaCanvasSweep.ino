@@ -37,7 +37,7 @@
 // The display and an iostream to the device
 ST7735R tft;
 AnalogPin probe(0);
-uint16_t CANVAS, PEN;
+uint16_t CANVAS, PEN, CARET;
 
 void setup()
 {
@@ -48,8 +48,9 @@ void setup()
   tft.begin();
   PEN = tft.shade(Canvas::GREEN, 50);
   CANVAS = tft.shade(Canvas::WHITE, 10);
+  CARET = tft.shade(Canvas::YELLOW, 50);
   tft.set_pen_color(PEN);
-  tft.set_text_color(PEN);
+  tft.set_text_color(CARET);
   tft.set_canvas_color(CANVAS);
   tft.fill_screen();
   tft.set_orientation(Canvas::LANDSCAPE);
@@ -90,6 +91,6 @@ void loop()
     tft.draw_rect(0, 0, tft.WIDTH - 1, tft.HEIGHT - 1);
   }
 
-  // Wait for the next sample
+  // Wait for the next sample, 8 samples per second
   Watchdog::delay(128);
 }

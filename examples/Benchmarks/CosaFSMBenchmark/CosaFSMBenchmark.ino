@@ -85,10 +85,12 @@ void setup()
   TRACE(free_memory());
 
   // Check size of instances
+  TRACE(sizeof(Event::Handler));
+  TRACE(sizeof(Thing));
   TRACE(sizeof(FSM));
   TRACE(sizeof(Echo));
 
-  // Start the watchdog in default 16 ms ticks
+  // Start the watchdog with default 16 ms ticks
   Watchdog::begin();
 
   // Bind the state machines to each other

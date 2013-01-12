@@ -1,21 +1,16 @@
 ----------------------------------------------------------------------------
 COSA CLASS OVERVIEW
 ----------------------------------------------------------------------------
-Caso
-The Cosa Root class. Basic event dispatch.
--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Caso.hh:	class Caso
-----------------------------------------------------------------------------
 Thing 
 The Cosa collection handling. Broadcasts events of a set of things.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Thing.hh:	class Thing : public Caso
+Thing.hh:	class Thing : public Event::Handler
 Things.hh:	      class Things : public Thing
 ----------------------------------------------------------------------------
 PINS
 Object-oriented approach to sketch pin declaration and function structuring. 
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Pins.hh:	class Pin : public Caso
+Pins.hh:	class Pin : public Event::Handler
 Pins.hh:	      class InputPin : public Pin
 Pins.hh:	      	    class InterruptPin : public InputPin
 Pins.hh:	      class OutputPin : public Pin
@@ -42,9 +37,10 @@ Abstraction of debounced switch or button connected to an input pin.
 Button.hh:	class Button : private Thing
 ----------------------------------------------------------------------------
 EVENT QUEUE
-Support for pushing events from interrupt handlers.
+Support for pushing events from interrupt handlers and asic event dispatch.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 Event.hh:	class Event
+Event.hh:	      class Handler
 Queue.hh:	class Queue
 ----------------------------------------------------------------------------
 WATCHDOG
@@ -104,8 +100,8 @@ PCF8591 2-Wire 8-bit A/D and D/A converter.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 TWI.hh:		TWI twi (singleton)
 TWI.hh:		class TWI
-TWI.hh:		      class TWI::Device : public Caso
-TWI.hh:		      class TWI::Driver : public Caso
+TWI.hh:		      class TWI::Device : public Event::Handler
+TWI.hh:		      class TWI::Driver : public Event::Handler
 TWI/AT24CXX.hh:	      	    class AT24CXX : private TWI::Driver
 TWI/DS1307.hh:	      	    class DS1307 : private TWI::Driver
 TWI/PCF8591.hh:	      	    class PCF8591 : private TWI::Driver
@@ -117,8 +113,8 @@ Transceiver, and ST7735R, 262K Color Single-Chip TFT Controller.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 SPI.hh:		SPI spi (singleton)
 SPI.hh:		class SPI
-SPI.hh:		      class SPI::Device : public Caso
-SPI.hh:		      class SPI::Driver : public Caso
+SPI.hh:		      class SPI::Device : public Event::Handler
+SPI.hh:		      class SPI::Driver : public Event::Handler
 SPI/ADXL345.hh:	      	    class ADXL345 : private SPI::Driver
 SPI/NRF24L01P.hh:      	    class NRF24L01P : private SPI::Driver
 SPI/ST7735R.hh:             class ST7735R : public Canvas
