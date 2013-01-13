@@ -129,6 +129,7 @@ AnalogPin::sample(uint8_t pin, Reference ref)
 uint16_t 
 AnalogPin::sample()
 {
+  if (sampling_pin != 0) return (0xffffU);
   loop_until_bit_is_clear(ADCSRA, ADSC);
   ADMUX = (m_reference | ((m_pin - 14) & 0xf));
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
@@ -163,6 +164,29 @@ AnalogPin::sample_await()
   return (m_value = ADCW);
 }
 
+void 
+AnalogPin::on_interrupt(uint16_t value)
+{ 
+  sampling_pin = 0;
+  Event::push(Event::SAMPLE_COMPLETED_TYPE, this, value);
+}
+
+void 
+AnalogPin::on_event(uint8_t type, uint16_t value)
+{
+  // On timeout events, pins have been attached, issue a sample request
+  if (type == Event::TIMEOUT_TYPE) {
+    sample_request();
+  }
+  // When the sample request is completed check for change and call action
+  else if (type == Event::SAMPLE_COMPLETED_TYPE) {
+    if (value != m_value) {
+      m_value = value;
+      on_change(value);
+    }
+  }
+}
+
 ISR(ADC_vect) 
 { 
   bit_clear(ADCSRA, ADIE);
@@ -187,7 +211,7 @@ AnalogPins::on_interrupt(uint16_t value)
     sample_request(get_pin_at(m_next), m_reference);
   } 
   else {
-    Event::push(Event::SAMPLE_COMPLETED_TYPE, this);
+    Event::push(Event::SAMPLE_COMPLETED_TYPE, this, value);
   }
 }
 

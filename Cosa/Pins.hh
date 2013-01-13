@@ -641,6 +641,7 @@ protected:
    * Interrupt handler is a friend.
    */
   friend void ADC_vect(void);
+
 public:
   /**
    * Construct abstract analog pin for given Arduino pin with reference and
@@ -706,11 +707,22 @@ public:
    * Interrupt service on conversion completion.
    * @param[in] value sample.
    */
-  virtual void on_interrupt(uint16_t value) 
-  { 
-    sampling_pin = 0;
-    m_value = value; 
-  }
+  virtual void on_interrupt(uint16_t value);
+
+  /**
+   * @override
+   * Default device event handler function. Attach to watchdog
+   * timer queue, Watchdog::attach(), to allow perodic reading.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value);
+
+  /**
+   * Default on change function. 
+   * @param[in] value.
+   */
+  virtual void on_change(uint16_t value) {}
 };
 
 /*
