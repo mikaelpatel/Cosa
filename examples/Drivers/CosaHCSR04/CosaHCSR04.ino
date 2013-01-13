@@ -45,13 +45,15 @@ OutputPin ledPin(13);
 #ifdef USE_TFT
 
 #undef putchar
-#include "Cosa/SPI/ST7735R.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Font/FixedNums8x16.hh"
-#include "Cosa/Icon/arduino_icon_96x32.h"
+#include "Cosa/SPI/ST7735R.hh"
+#include "Cosa/Canvas/Element/Textbox.hh"
+#include "Cosa/Canvas/Font/FixedNums8x16.hh"
+#include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
 ST7735R tft;
-IOStream cout(&tft);
+Textbox textbox(&tft);
+IOStream cout(&textbox);
 uint16_t RED, GREEN, BLUE, YELLOW, CYAN, GRAY;
 
 class Ping : private HCSR04 {
@@ -75,7 +77,7 @@ public:
       tft.set_text_scale(saved);
     }
     else {
-      tft.set_cursor(10, 35);
+      textbox.set_caret(10, 35);
       cout.printf_P(PSTR("%d"), distance);
     }
   }
@@ -86,8 +88,8 @@ Ping ping;
 void tft_setup()
 {
   tft.begin();
-  tft.set_text_scale(4);
-  tft.set_text_font(&fixednums8x16);
+  textbox.set_text_scale(4);
+  textbox.set_text_font(&fixednums8x16);
   tft.set_orientation(Canvas::LANDSCAPE);
   RED = tft.shade(Canvas::RED, 75);
   YELLOW = tft.shade(Canvas::YELLOW, 75);
