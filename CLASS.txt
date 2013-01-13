@@ -71,20 +71,25 @@ Ciao.hh:	class Ciao
 Fai.hh:		class Fai : public Ciao
 		      class Fai::Descriptor
 ----------------------------------------------------------------------------
-CANVAS/FONT
+CANVAS
 The Cosa graphics device handler.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Canvas.hh:      class Canvas : public IOStream::Device (abstract)
+Canvas.hh:      class Canvas 
 SPI/ST7735R.hh:       class ST7735R : public Canvas
 ----------------------------------------------------------------------------
 FONT
-The Cosa font handler.
+The Cosa Canvas font handler.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Font/System5x7.hh:	System5x7 system5x7 (singleton)
-Font/Fixednums8x16.hh:	Fixednums8x16 fixednums8x16 (singleton)
-Font.hh:		class Font
-Font/System5x7.hh:	      class System5x7 : public Font
-Font/Fixednums8x16.hh:	      class Fixednums8x16 : public Font
+Canvas/Font/System5x7.hh:     System5x7 system5x7 (singleton)
+Canvas/Font/Fixednums8x16.hh: Fixednums8x16 fixednums8x16 (singleton)
+Canvas/Font.hh:		      class Font
+Canvas/Font/System5x7.hh:     	    class System5x7 : public Font
+Canvas/Font/Fixednums8x16.hh:	    class Fixednums8x16 : public Font
+----------------------------------------------------------------------------
+ELEMENT
+The Cosa Canvas graphical elements.
+-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+Canvas/Element/Textbox:	      class Textbox : public IOStream::Device
 ----------------------------------------------------------------------------
 OWI
 Driver for devices on the one wire bus (1-Wire). Support for DS18B20
