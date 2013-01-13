@@ -32,12 +32,14 @@
  */
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/SPI/ST7735R.hh"
 #include "Cosa/IOStream.hh"
+#include "Cosa/SPI/ST7735R.hh"
+#include "Cosa/Canvas/Element/Textbox.hh"
 
 // The display and an iostream to the device
 ST7735R tft;
-IOStream cout(&tft);
+Textbox textbox(&tft);
+IOStream cout(&textbox);
 uint16_t CANVAS, PEN;
 
 void setup()
@@ -50,12 +52,12 @@ void setup()
   PEN = tft.shade(Canvas::GREEN, 50);
   CANVAS = tft.shade(Canvas::WHITE, 10);
   tft.set_pen_color(PEN);
-  tft.set_text_color(PEN);
   tft.set_canvas_color(CANVAS);
   tft.fill_screen();
   tft.set_orientation(Canvas::LANDSCAPE);
   tft.draw_rect(0, 0, tft.WIDTH - 1, tft.HEIGHT - 1);
-  tft.set_text_port(0, 0, tft.WIDTH, tft.HEIGHT);
+  textbox.set_text_color(PEN);
+  textbox.set_text_port(0, 0, tft.WIDTH, tft.HEIGHT);
 }
 
 void loop()
@@ -81,7 +83,7 @@ void loop()
     height = sample[pin];
     tft.set_pen_color(PEN);
     tft.draw_rect(x, y, width, height);
-    tft.set_cursor(x + 2, tft.HEIGHT - 10);
+    textbox.set_caret(x + 2, tft.HEIGHT - 10);
     cout.print((sample[pin]*500)/tft.HEIGHT);
   }
   Watchdog::delay(128);

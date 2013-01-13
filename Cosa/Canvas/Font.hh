@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Font.hh
+ * @file Cosa/Canvas/Font.hh
  * @version 1.0
  *
  * @section License
@@ -21,13 +21,13 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Bitmap font library.
+ * Bitmap font library handler for Cosa Canvas.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FONT_HH__
-#define __COSA_FONT_HH__
+#ifndef __COSA_CANVAS_FONT_HH__
+#define __COSA_CANVAS_FONT_HH__
 
 #include "Cosa/Types.h"
 #include "Cosa/Canvas.hh"

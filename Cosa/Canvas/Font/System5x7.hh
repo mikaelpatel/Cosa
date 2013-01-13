@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Font/System5x7.hh
+ * @file Cosa/Canvas/Font/System5x7.hh
  * @version 1.0
  *
  * @section License
@@ -29,10 +29,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FONT_SYSTEM5X7_HH__
-#define __COSA_FONT_SYSTEM5X7_HH__
+#ifndef __COSA_CANVAS_FONT_SYSTEM5X7_HH__
+#define __COSA_CANVAS_FONT_SYSTEM5X7_HH__
 
-#include "Cosa/Font.hh"
+#include "Cosa/Canvas/Font.hh"
 
 class System5x7 : public Font {
 private:

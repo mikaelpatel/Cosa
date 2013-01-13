@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Font/FixedNum8x16.cpp
+ * @file Cosa/Canvas/Font/FixedNum8x16.cpp
  * @version 1.0
  *
  * @section License
@@ -31,7 +31,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Font/FixedNums8x16.hh"
+#include "Cosa/Canvas/Font/FixedNums8x16.hh"
 
 FixedNums8x16 fixednums8x16;
 

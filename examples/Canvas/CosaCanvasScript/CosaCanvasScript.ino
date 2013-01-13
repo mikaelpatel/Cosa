@@ -30,9 +30,9 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/SPI/ST7735R.hh"
-#include "Cosa/Icon/arduino_icon_34x32.h"
-#include "Cosa/Font/System5x7.hh"
-#include "Cosa/Font/FixedNums8x16.hh"
+#include "Cosa/Canvas/Icon/arduino_icon_34x32.h"
+#include "Cosa/Canvas/Font/System5x7.hh"
+#include "Cosa/Canvas/Font/FixedNums8x16.hh"
 
 // Use the TFT display as canvas
 ST7735R tft;

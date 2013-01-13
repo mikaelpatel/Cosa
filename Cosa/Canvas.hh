@@ -45,7 +45,8 @@ class Font;
 class System5x7;
 extern System5x7 system5x7;
 
-class Canvas : public IOStream::Device {
+// class Canvas : public IOStream::Device {
+class Canvas {
 
 protected:
   /**
@@ -70,12 +71,7 @@ protected:
   uint16_t m_text_color;
   uint8_t m_text_mode;
   uint8_t m_text_scale;
-  struct {
-    uint8_t x;
-    uint8_t y;
-    uint8_t width;
-    uint8_t height;
-  } m_text_port;
+
 public:
   /**
    * Basic color palette.
@@ -108,13 +104,26 @@ public:
   uint8_t LINE_SPACING;
 
   /**
+   * Canvas drawing elements.
+   */
+  class Element {
+  protected:
+    Canvas* m_canvas;
+  public:
+    Element(Canvas* canvas) :
+      m_canvas(canvas)
+    {
+    }
+  };
+  
+  /**
    * Construct canvas object and initiate.
    * @param[in] width screen width.
    * @param[in] height screen height.
    * @param[in] font text font (default 5x7).
    */
   Canvas(uint8_t width, uint8_t height, Font* font = (Font*) &system5x7) :
-    IOStream::Device(),
+    // IOStream::Device(),
     m_canvas_color(WHITE),
     m_pen_color(BLACK),
     m_direction(PORTRAIT),
@@ -128,7 +137,6 @@ public:
     LINE_SPACING(2)
   {
     set_cursor(0, 0);
-    set_text_port(0, 0, width, height);
   }
 
   /**
@@ -267,36 +275,6 @@ public:
   void set_text_scale(uint8_t scale)
   {
     m_text_scale = (scale > 0 ? scale : 1);
-  }
-
-  /**
-   * Get current text port.
-   * @param[out] x
-   * @param[out] y
-   * @param[out] width
-   * @param[out] height
-   */
-  void get_text_port(uint8_t& x, uint8_t& y, uint8_t& width, uint8_t& height)
-  {
-    x = m_text_port.x;
-    y = m_text_port.y;
-    width = m_text_port.width;
-    height = m_text_port.height;
-  }
-
-  /**
-   * Set current text position.
-   * @param[in] x
-   * @param[in] y
-   * @param[in] width
-   * @param[in] height
-   */
-  void set_text_port(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
-  {
-    m_text_port.x = x;
-    m_text_port.y = y;
-    m_text_port.width = width;
-    m_text_port.height = height;
   }
 
   /**
@@ -631,8 +609,8 @@ public:
    * color, scale and font.  
    * @param[in] c character to write.
    * @return character written or EOF(-1).
-   */
   virtual int putchar(char c);
+   */
 
   /**
    * Stop sequence of interaction with device. Must override.
@@ -650,7 +628,6 @@ public:
     SET_PEN_COLOR,
     SET_TEXT_COLOR,
     SET_TEXT_SCALE,
-    SET_TEXT_PORT,
     SET_TEXT_FONT,
     SET_CURSOR,
     MOVE_CURSOR,

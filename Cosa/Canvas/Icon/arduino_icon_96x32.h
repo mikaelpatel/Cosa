@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Icon/arduino_icon_96x32.h
+ * @file Cosa/Canvas/Icon/arduino_icon_96x32.h
  * @version 1.0
  *
  * @section License
@@ -31,8 +31,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ICON_ARDUINO_96X32_H__
-#define __COSA_ICON_ARDUINO_96X32_H__
+#ifndef __COSA_CANVAS_ICON_ARDUINO_96X32_H__
+#define __COSA_CANVAS_ICON_ARDUINO_96X32_H__
 
 const uint8_t arduino_icon_96x32[] PROGMEM = {
   96,32,

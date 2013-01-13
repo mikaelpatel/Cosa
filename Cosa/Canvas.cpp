@@ -36,7 +36,7 @@
  */
 
 #include "Cosa/Canvas.hh"
-#include "Cosa/Font.hh"
+#include "Cosa/Canvas/Font.hh"
 
 uint16_t 
 Canvas::color(uint8_t red, uint8_t green, uint8_t blue)
@@ -245,37 +245,7 @@ Canvas::draw_char(char c)
   m_pen_color = m_text_color;
   m_font->draw(this, c, m_cursor.x, m_cursor.y, m_text_scale);
   m_cursor.x += m_text_scale * (m_font->WIDTH + CHAR_SPACING);
-  if (m_cursor.x + CHAR_SPACING > m_text_port.width) putchar('\n');
   m_pen_color = color;
-}
-
-int 
-Canvas::putchar(char c) 
-{ 
-  if (c >= ' ') 
-    draw_char(c);
-  if (c == '\n') {
-    m_cursor.x = m_text_port.x;
-    m_cursor.y += m_text_scale * (m_font->HEIGHT + LINE_SPACING);
-    if (m_cursor.y > m_text_port.height)
-      m_cursor.y = m_text_port.y;
-    if (m_text_mode) {
-      uint16_t saved = m_pen_color;
-      m_pen_color = m_canvas_color;
-      fill_rect(m_cursor.x, m_cursor.y, m_text_port.width, 
-		m_text_scale*(m_font->HEIGHT + LINE_SPACING));
-      m_pen_color = saved;
-    }
-  } 
-  else if (c == '\f') {
-    uint16_t saved = m_pen_color;
-    m_pen_color = m_canvas_color;
-    fill_rect(m_text_port.x, m_text_port.y, m_text_port.width, m_text_port.height);
-    m_pen_color = saved;
-    m_cursor.x = m_text_port.x;
-    m_cursor.y = m_text_port.y;
-  }
-  return (c);
 }
 
 void 
@@ -309,12 +279,6 @@ Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
       break;
     case SET_TEXT_SCALE:
       set_text_scale(pgm_read_byte(ip++));
-      break;
-    case SET_TEXT_PORT:
-      set_text_port(pgm_read_byte(ip++),
-		    pgm_read_byte(ip++),
-		    pgm_read_byte(ip++),
-		    pgm_read_byte(ip++));
       break;
     case SET_TEXT_FONT:
       ix = pgm_read_byte(ip++);

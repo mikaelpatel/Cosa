@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Font/System5x7.cpp
+ * @file Cosa/Canvas/Font/System5x7.cpp
  * @version 1.0
  *
  * @section License
@@ -29,7 +29,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Font/System5x7.hh"
+#include "Cosa/Canvas/Font/System5x7.hh"
 
 System5x7 system5x7;
 

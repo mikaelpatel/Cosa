@@ -31,16 +31,18 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Font/System5x7.hh"
-#include "Cosa/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas.hh"
+#include "Cosa/Canvas/Element/Textbox.hh"
+#include "Cosa/Canvas/Icon/arduino_icon_34x32.h"
+#include "Cosa/Canvas/Icon/arduino_icon_64x64.h"
+#include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
+#include "Cosa/Canvas/Font/System5x7.hh"
+#include "Cosa/Canvas/Font/FixedNums8x16.hh"
 #include "Cosa/SPI/ST7735R.hh"
-#include "Cosa/Icon/arduino_icon_34x32.h"
-#include "Cosa/Icon/arduino_icon_64x64.h"
-#include "Cosa/Icon/arduino_icon_96x32.h"
 
 ST7735R tft;
-IOStream cout(&tft);
+Textbox textbox(&tft);
+IOStream console(&textbox);
 #undef putchar
 
 void setup()
@@ -50,11 +52,12 @@ void setup()
 
   // Check amount of free memory and size of objects
   TRACE(free_memory());
+  TRACE(sizeof(Trace));
   TRACE(sizeof(Canvas));
   TRACE(sizeof(Font));
   TRACE(sizeof(IOStream));
   TRACE(sizeof(ST7735R));
-  TRACE(sizeof(Trace));
+  TRACE(sizeof(Textbox));
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
@@ -77,27 +80,26 @@ void loop()
 
   // Test#2: Use the display as an output stream
   start = micros();
-  tft.set_pen_color(tft.shade(Canvas::GREEN, 20));
-  tft.draw_rect(0, 0, tft.WIDTH - 1, tft.HEIGHT - 1);
-  tft.set_text_color(Canvas::BLUE);
-  tft.set_text_scale(1);
-  tft.set_text_port(2, 2, tft.WIDTH, tft.HEIGHT);
-  tft.set_cursor(2, 2);
-  cout.print_P(PSTR("CosaST7735R: started"));
-  cout.println();
-  cout.printf_P(PSTR("text_color(%od)\n"), tft.get_text_color());
-  cout.printf_P(PSTR("text_scale(%d)\n"), tft.get_text_scale());
+  textbox.set_text_color(Canvas::BLUE);
+  textbox.set_text_scale(1);
+  textbox.set_text_port(2, 2, tft.WIDTH, tft.HEIGHT);
+  console.print_P(PSTR("CosaST7735R: started"));
+  console.println();
+  console.printf_P(PSTR("test#1:fill screen %ul ms\n"), ms);
+  console.println();
+  console.printf_P(PSTR("text_color(%od)\n"), textbox.get_text_color());
+  console.printf_P(PSTR("text_scale(%d)\n"), textbox.get_text_scale());
   uint8_t x, y;
-  tft.get_cursor(x, y);
-  cout.printf_P(PSTR("cursor(x = %d, y = %d)\n"), x, y);
-  tft.set_text_color(Canvas::RED);
-  tft.set_text_scale(2);
-  cout.print_P(PSTR("  Hello\n  World"));
-  cout.println();
-  tft.set_text_color(Canvas::BLACK);
-  tft.set_text_scale(1);
+  textbox.get_caret(x, y);
+  console.printf_P(PSTR("caret(x = %d, y = %d)\n"), x, y);
+  textbox.set_text_color(Canvas::RED);
+  textbox.set_text_scale(2);
+  console.print_P(PSTR("  Hello\n  World"));
+  console.println();
   ms = (micros() - start) / 1000L;
-  cout.printf_P(PSTR("test#2:output stream: %ul ms\n"), ms);
+  textbox.set_text_color(Canvas::BLACK);
+  textbox.set_text_scale(1);
+  console.printf_P(PSTR("test#2:output stream: %ul ms\n"), ms);
   SLEEP(2);
 
   // Test#3: Scroll text port
@@ -105,15 +107,12 @@ void loop()
   tft.set_canvas_color(tft.shade(Canvas::WHITE, 50));
   tft.fill_screen();
   tft.set_canvas_color(Canvas::WHITE);
-  tft.set_text_mode(1);
-  tft.set_text_port(5, 5, tft.WIDTH-10, tft.HEIGHT-10);
   tft.draw_rect(4, 4, tft.WIDTH-8, tft.HEIGHT-8);
-  tft.set_cursor(5, 5);
-  tft.putchar('\f');
-  cout.print(&tft, 200, 16, tft.get_orientation() == Canvas::PORTRAIT ? 4 : 6);
-  tft.set_text_mode(0);
+  textbox.set_text_port(5, 5, tft.WIDTH-10, tft.HEIGHT-10);
+  console.print('\f');
+  console.print(&tft, 200, 16, tft.get_orientation() == Canvas::PORTRAIT ? 4 : 6);
   ms = (micros() - start) / 1000L;
-  cout.printf_P(PSTR("%ul ms"), ms);
+  console.printf_P(PSTR("%ul ms"), ms);
   INFO("test#3:scroll text mode: %ul ms", ms);
   SLEEP(2);
 
@@ -159,6 +158,7 @@ void loop()
   // Test#7: Fill circles
   tft.fill_screen();
   tft.set_text_color(Canvas::WHITE);
+  tft.set_text_scale(1);
   start = micros();
   uint16_t color = Canvas::BLUE;
   for (uint8_t x = 0; x < tft.WIDTH; x += 30) {
@@ -211,16 +211,6 @@ void loop()
     tft.draw_line(tft.WIDTH - 1, tft.HEIGHT - 1, 0, y);
   }
   ms = (micros() - start) / 1000L;
-  tft.set_text_color(Canvas::YELLOW);
-  tft.set_cursor(5, 40);
-  tft.set_text_scale(2);
-  tft.set_text_font(&fixednums8x16);
-  tft.set_orientation(Canvas::LANDSCAPE);
-  cout.printf_P(PSTR("%ul"), ms);
-  tft.set_text_scale(4);
-  tft.set_text_font(&system5x7);
-  cout.print_P(PSTR(" ms"));
-  tft.set_orientation(direction);
   INFO("test#9:draw more lines: %ul ms", ms);
   SLEEP(2);
 
@@ -286,4 +276,3 @@ void loop()
   direction = !direction;
   tft.set_orientation(direction);
 }
-
