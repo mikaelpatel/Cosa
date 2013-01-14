@@ -21,8 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Virtual Canvas device/IOStream; abstraction of small screens,
- * LCD/TFT. See Cosa/SPI/ST7735R.hh for an example of usage.
+ * Virtual Canvas device; abstraction of small screens, LCD/TFT. 
+ * See Cosa/SPI/ST7735R.hh for an example of usage.
  *
  * @section Limitations
  * Color model is 16-bit RBG<5,6,5>. Canvas size is max 256x256.
@@ -39,7 +39,6 @@
 #define __COSA_CANVAS_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/IOStream.hh"
 
 class Font;
 class System5x7;
@@ -122,7 +121,6 @@ public:
    * @param[in] font text font (default 5x7).
    */
   Canvas(uint8_t width, uint8_t height, Font* font = (Font*) &system5x7) :
-    // IOStream::Device(),
     m_canvas_color(WHITE),
     m_pen_color(BLACK),
     m_direction(PORTRAIT),
