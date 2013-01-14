@@ -100,6 +100,7 @@ void loop()
   textbox.set_text_color(Canvas::BLACK);
   textbox.set_text_scale(1);
   console.printf_P(PSTR("test#2:output stream: %ul ms\n"), ms);
+  INFO("test#2:output stream: %ul ms", ms);
   SLEEP(2);
 
   // Test#3: Scroll text port
@@ -140,7 +141,7 @@ void loop()
     }
   }
   ms = (micros() - start) / 1000L;
-  INFO("test#5: draw rect grid: %ul ms", ms);
+  INFO("test#5:draw rect grid: %ul ms", ms);
   SLEEP(2);
   
   // Test#6: Fill some of the rectangles
