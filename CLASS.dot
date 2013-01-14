@@ -1,0 +1,95 @@
+digraph {
+
+node[shape=box];
+
+"Linkage" -> "Event::Handler";
+"Link" -> "Linkage";
+"Head" -> "Linkage";
+
+"Event::Handler" -> "Event" [arrowhead=none];
+"Event" -> "Queue" [style=dotted];
+"Watchdog" -> "Head" [style=dotted];
+
+"Periodic" -> "Link";
+"Periodic" -> "Watchdog" [style=dotted];
+
+"FSM" -> "Link";
+"FSM" -> "Watchdog" [style=dotted];
+
+"InputPin" -> "Pin";
+"InterruptPin" -> "InputPin";
+"InterruptPin" -> "Event::Handler";
+"OutputPin" -> "Pin";
+"PWMPin" -> "OutputPin";
+"IOPin" -> "OutputPin";
+"AnalogPin" -> "Pin";
+"AnalogPin" -> "Event::Handler";
+"AnalogPins" -> "AnalogPin";
+
+"Button" -> "InputPin";
+"Button" -> "Link";
+
+"Canvas" -> "Font" [style=dashed,label=m_font];
+"Font" -> "Canvas";
+"system5x7" -> "System5x7" [style=dotted];
+"System5x7" -> "Font";
+"fixednums8x16" -> "FixedNums8x16" [style=dotted];
+"FixedNums8x16" -> "Font";
+
+"Canvas::Element" -> "Canvas" [arrowhead=none,label=m_canvas];
+"Textbox" -> "Canvas::Element";
+"Textbox" -> "IOStream::Device";
+"Textbox" -> "Font" [style=dashed,label=m_font];
+
+"Ciao" -> "IOStream" [style=dashed,label=m_dev];
+"Ciao::Descriptor" -> "Ciao" [arrowhead=none];
+"Fai" -> "Ciao";
+"Fai::Descriptor" -> "Fai" [arrowhead=none];
+
+"trace" -> "Trace" [style=dashed];
+"Trace" -> "IOStream";
+"Trace" -> "UART" [style=dashed,label=uart];
+
+"IOStream::Device" -> "IOStream" [arrowhead=none];
+"IOStream::Filter" -> "IOStream::Device";
+"IOStream::null" -> "IOStream::Device" [style=dotted];
+
+"UART" -> "IOStream::Device";
+
+"DHT11" -> "Link";
+"DHT11" -> "IOPin" [style=dashed,label=m_pin];
+"HCSR04" -> "Link";
+"HCSR04" -> "OutputPin" [style=dashed,label=m_trigPin];
+"HCSR04" -> "InputPin" [style=dashed,label=m_echoPin];
+
+"OWI" -> "IOPin";
+"OWI::Driver" -> "OWI" [arrowhead=none];
+"OWI::Driver" -> "OWI" [style=dashed,label=m_pin];
+"OWI::Device" -> "OWI" [arrowhead=none];
+"OWI::Device" -> "InterruptPin";
+
+"DS18B20" -> "OWI::Driver";
+"DS18B20" -> "FixedPoint" [style=dashed];
+
+"spi" -> "SPI" [style=dashed];
+"SPI::Driver" -> "SPI" [arrowhead=none];
+"SPI::Driver" -> "Event::Handler";
+"SPI::Device" -> "SPI" [arrowhead=none];
+"SPI::Device" -> "Event::Handler";
+
+"ADXL345" -> "SPI::Driver";
+"NRF24L01P" -> "SPI::Driver";
+"ST7735R" -> "SPI::Driver";
+"ST7735R" -> "Canvas";
+
+"twi" -> "TWI" [style=dashed];
+"TWI::Driver" -> "TWI" [arrowhead=none];
+"TWI::Driver" -> "Event::Handler";
+"TWI::Device" -> "TWI" [arrowhead=none];
+"TWI::Device" -> "Event::Handler";
+
+"AT24CXX" -> "TWI::Driver";
+"DS1307" -> "TWI::Driver";
+"PCF8591" -> "TWI::Driver";
+}
+

@@ -24,6 +24,10 @@
  * 1-wire device driver support class. Allows device rom search
  * and connection to multiple devices on one-wire bus.
  *
+ * @section Limitations
+ * The driver will turn off interrupt handling during data read 
+ * from the device. 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

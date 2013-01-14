@@ -37,7 +37,7 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
 
-class Pin : public Event::Handler {
+class Pin {
 protected:
   volatile uint8_t* const m_sfr;
   const uint8_t m_mask;
@@ -283,7 +283,7 @@ public:
  * Abstract interrupt pin. Allows interrupt handling on the pin value 
  * changes. 
  */
-class InterruptPin : public InputPin {
+class InterruptPin : public InputPin, public Event::Handler {
 public:
   static InterruptPin* ext[2];
   
@@ -612,7 +612,7 @@ extern "C" void ADC_vect(void) __attribute__ ((signal));
 /*
  * Abstract analog pin. Allows asynchronous sampling.
  */
-class AnalogPin : public Pin {
+class AnalogPin : public Pin, public Event::Handler {
 public:
   /**
    * Reference voltage; ARef pin, Vcc or internal 1V1.
@@ -625,7 +625,7 @@ public:
 
 protected:
   static AnalogPin* sampling_pin;
-  Reference m_reference;
+  uint8_t m_reference;
   uint16_t m_value;
   
   /**
@@ -635,7 +635,17 @@ protected:
    * @param[in] ref reference voltage.
    * @return bool.
    */
-  bool sample_request(uint8_t pin, Reference ref);
+  bool sample_request(uint8_t pin, uint8_t ref);
+
+  /**
+   * @override
+   * Handle analog pin periodic sampling and sample completed event.
+   * Will call virtual method on_change() if the pin value has changed since
+   * latest sample.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value);
 
   /**
    * Interrupt handler is a friend.
@@ -710,15 +720,6 @@ public:
   virtual void on_interrupt(uint16_t value);
 
   /**
-   * @override
-   * Default device event handler function. Attach to watchdog
-   * timer queue, Watchdog::attach(), to allow perodic reading.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value);
-
-  /**
    * Default on change function. 
    * @param[in] value.
    */
@@ -787,6 +788,14 @@ public:
    * @param[in] value sample.
    */
   virtual void on_interrupt(uint16_t value);
+
+  /**
+   * @override
+   * Default analog pin set event handler function. 
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value) {}
 };
 
 #endif

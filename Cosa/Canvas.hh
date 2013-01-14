@@ -45,7 +45,6 @@ class Font;
 class System5x7;
 extern System5x7 system5x7;
 
-// class Canvas : public IOStream::Device {
 class Canvas {
 
 protected:
