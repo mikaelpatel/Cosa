@@ -55,8 +55,10 @@ void setup()
   TRACE(sizeof(Trace));
   TRACE(sizeof(Canvas));
   TRACE(sizeof(Font));
-  TRACE(sizeof(IOStream));
   TRACE(sizeof(ST7735R));
+  TRACE(sizeof(Canvas::Palette));
+  TRACE(sizeof(Canvas::Element));
+  TRACE(sizeof(IOStream));
   TRACE(sizeof(Textbox));
 
   // Start the watchdog with default timeout (16 ms)
@@ -90,8 +92,8 @@ void loop()
   console.printf_P(PSTR("text_color(%od)\n"), textbox.get_text_color());
   console.printf_P(PSTR("text_scale(%d)\n"), textbox.get_text_scale());
   uint8_t x, y;
-  textbox.get_caret(x, y);
-  console.printf_P(PSTR("caret(x = %d, y = %d)\n"), x, y);
+  textbox.get_cursor(x, y);
+  console.printf_P(PSTR("cursor(x = %d, y = %d)\n"), x, y);
   textbox.set_text_color(Canvas::RED);
   textbox.set_text_scale(2);
   console.print_P(PSTR("  Hello\n  World"));

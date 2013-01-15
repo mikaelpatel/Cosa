@@ -38,7 +38,9 @@
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Font.hh"
 
-uint16_t 
+Canvas::Palette Canvas::palette;
+
+Canvas::color16_t 
 Canvas::color(uint8_t red, uint8_t green, uint8_t blue)
 {
   return ((((red >> 3) & 0x1f) << 11)  | 
@@ -46,8 +48,8 @@ Canvas::color(uint8_t red, uint8_t green, uint8_t blue)
 	  ((blue >> 3) & 0x1f));
 }
 
-uint16_t 
-Canvas::shade(uint16_t color, uint8_t scale)
+Canvas::color16_t 
+Canvas::shade(color16_t color, uint8_t scale)
 {
   if (scale > 100) scale = 100;
   uint8_t blue = (scale * (color & 0x1fU)) / 100; color >>= 5;
@@ -56,8 +58,8 @@ Canvas::shade(uint16_t color, uint8_t scale)
   return (((red & 0x1f) << 11)  | ((green & 0x3f) << 5) | (blue & 0x1f));
 }
 
-uint16_t 
-Canvas::blend(uint16_t c1, uint16_t c2)
+Canvas::color16_t 
+Canvas::blend(color16_t c1, color16_t c2)
 {
   uint8_t blue = (c1 + c2)/2; c1 >>= 5; c2 >>= 5; 
   uint8_t green = (c1 + c2)/2; c1 >>= 6; c2 >>= 6; 
@@ -160,8 +162,10 @@ Canvas::draw_poly_P(const int8_t* poly, uint8_t scale)
     int8_t dx = pgm_read_byte(poly++);
     int8_t dy = pgm_read_byte(poly++);
     if (dx == 0 && dy == 0) return;
-    uint8_t x = m_cursor.x + dx*scale;
-    uint8_t y = m_cursor.y + dy*scale;
+    uint8_t x, y;
+    get_cursor(x, y);
+    x += dx*scale;
+    y += dy*scale;
     draw_line(x, y);
   }
 }
@@ -177,8 +181,10 @@ Canvas::draw_stroke_P(const int8_t* stroke, uint8_t scale)
       move_cursor(dx*scale, dy*scale);
     }
     else {
-      uint8_t x = m_cursor.x + dx*scale;
-      uint8_t y = m_cursor.y + dy*scale;
+      uint8_t x, y;
+      get_cursor(x, y);
+      x += dx*scale;
+      y += dy*scale;
       draw_line(x, y);
     }
   }
@@ -241,11 +247,15 @@ Canvas::fill_circle(uint8_t x, uint8_t y, uint8_t r)
 void 
 Canvas::draw_char(char c)
 {
-  uint16_t color = m_pen_color;
-  m_pen_color = m_text_color;
-  m_font->draw(this, c, m_cursor.x, m_cursor.y, m_text_scale);
-  m_cursor.x += m_text_scale * (m_font->WIDTH + CHAR_SPACING);
-  m_pen_color = color;
+  uint8_t x, y;
+  get_cursor(x, y);
+  uint8_t scale = get_text_scale();
+  color16_t saved = get_pen_color();
+  set_pen_color(get_text_color());
+  Font* font = get_text_font();
+  font->draw(this, c, x, y, scale);
+  set_cursor(x + scale * (font->get_width(c)), y);
+  set_pen_color(saved);
 }
 
 void 

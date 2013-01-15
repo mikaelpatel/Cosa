@@ -21,7 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Canvas Textbox element. 
+ * Canvas Textbox element. Acts as an IOStream/console output to
+ * Canvas. As an element it holds its own canvas state; palette.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -34,33 +35,12 @@
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Font.hh"
 
-class Textbox : private Canvas::Element, public IOStream::Device {
+class Textbox : public Canvas::Element, public IOStream::Device {
 protected:
-  /**
-   * Text handling; font, color, scale, caret and port.
-   */
-  Font* m_font;
-  uint16_t m_text_color;
-  uint8_t m_text_scale;
-  uint16_t m_canvas_color;
-  struct {
-    uint8_t x;
-    uint8_t y;
-  } m_caret;
-  struct {
-    uint8_t x;
-    uint8_t y;
-    uint8_t width;
-    uint8_t height;
-  } m_text_port;
+  Canvas::rect8_t m_text_port;
+  uint8_t m_line_spacing;
 
 public:
-  /**
-   * Character/line spacing
-   */
-  uint8_t CHAR_SPACING;
-  uint8_t LINE_SPACING;
-
   /**
    * Construct canvas object and initiate.
    * @param[in] x.
@@ -69,88 +49,12 @@ public:
    * @param[in] height.
    * @param[in] font.
    */
-  Textbox(Canvas* canvas, Font* font = (Font*) &system5x7) :
+  Textbox(Canvas* canvas) :
     Canvas::Element(canvas),
     IOStream::Device(),
-    m_font(font),
-    m_text_color(Canvas::BLACK),
-    m_text_scale(1),
-    m_canvas_color(Canvas::WHITE),
-    CHAR_SPACING(1),
-    LINE_SPACING(2)
+    m_line_spacing(2)
   {
     set_text_port(0, 0, canvas->WIDTH, canvas->HEIGHT);
-  }
-
-  /**
-   * Get current canvas color.
-   * @return color.
-   */
-  uint16_t get_canvas_color()
-  {
-    return (m_canvas_color);
-  }
-
-  /**
-   * Set current canvas color.
-   * @param[in] color
-   */
-  void set_canvas_color(uint16_t color)
-  {
-    m_canvas_color = color;
-  }
-
-  /**
-   * Get current text color.
-   * @return color.
-   */
-  uint16_t get_text_color()
-  {
-    return (m_text_color);
-  }
-
-  /**
-   * Set current text color.
-   * @param[in] color
-   */
-  void set_text_color(uint16_t color)
-  {
-    m_text_color = color;
-  }
-
-  /**
-   * Get current text font.
-   */
-  Font* get_text_font()
-  {
-    return (m_font);
-  }
-
-  /**
-   * Set current text font.
-   * @param[in] font
-   */
-  void set_text_font(Font* font)
-  {
-    m_font = font;
-  }
-
-  /**
-   * Get current text scale.
-   * @return text scale.
-   */
-  uint8_t get_text_scale()
-  {
-    return (m_text_scale);
-  }
-
-  /**
-   * Set current text scale (1..n).
-   * @param[in] scale.
-   */
-  void set_text_scale(uint8_t scale)
-  {
-    m_text_scale = (scale > 0 ? scale : 1);
   }
 
   /**
@@ -181,29 +85,25 @@ public:
     m_text_port.y = y;
     m_text_port.width = width;
     m_text_port.height = height;
-    set_caret(x, y);
+    set_cursor(x, y);
   }
 
   /**
-   * Get current caret position.
-   * @param[out] x
-   * @param[out] y
+   * Get current line spacing.
+   * @return line spacing.
    */
-  void get_caret(uint8_t& x, uint8_t& y)
+  uint8_t get_line_spacing()
   {
-    x = m_caret.x;
-    y = m_caret.y;
+    return (m_line_spacing);
   }
 
   /**
-   * Set current caret position.
-   * @param[in] x
-   * @param[in] y
+   * Set current line spacing.
+   * @param[in] spacing.
    */
-  void set_caret(uint8_t x, uint8_t y)
+  void set_line_spacing(uint8_t spacing)
   {
-    m_caret.x = x;
-    m_caret.y = y;
+    m_line_spacing = spacing;
   }
 
   /**

@@ -56,11 +56,11 @@ void loop()
     tft.fill_rect(10, y, tft.WIDTH - 20, 16);
     tft.set_pen_color(Canvas::BLACK);
     tft.draw_rect(10, y, tft.WIDTH - 20, 16);
-    textbox.set_caret(15, y + 5);
+    textbox.set_cursor(15, y + 5);
     cout.printf_P(PSTR("D%d"), x);
     tft.set_pen_color(InputPin::read(x) ? Canvas::RED : Canvas::GREEN);
     tft.fill_circle(35, y + 8, 5);
-    textbox.set_caret(55, y + 5);
+    textbox.set_cursor(55, y + 5);
     cout.printf_P(PSTR("A%d %d mV"), x, (AnalogPin::sample(x) * 500L) / 1024);
   }
   SLEEP(1);

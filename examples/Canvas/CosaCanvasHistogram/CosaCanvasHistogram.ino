@@ -83,7 +83,7 @@ void loop()
     height = sample[pin];
     tft.set_pen_color(PEN);
     tft.draw_rect(x, y, width, height);
-    textbox.set_caret(x + 2, tft.HEIGHT - 10);
+    textbox.set_cursor(x + 2, tft.HEIGHT - 10);
     cout.print((sample[pin]*500)/tft.HEIGHT);
   }
   Watchdog::delay(128);

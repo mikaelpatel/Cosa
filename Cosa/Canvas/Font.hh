@@ -45,6 +45,7 @@ public:
    */
   const uint8_t WIDTH;
   const uint8_t HEIGHT;
+  const uint8_t SPACING;
 
   /**
    * Construct font descriptor and bitmap.
@@ -55,7 +56,8 @@ public:
   Font(uint8_t width, uint8_t height, const uint8_t* bitmap) :
     m_bitmap(bitmap),
     WIDTH(width), 
-    HEIGHT(height)
+    HEIGHT(height),
+    SPACING(1)
   {}
   
   /**
@@ -75,7 +77,7 @@ public:
    */
   virtual uint8_t get_width(char c)
   {
-    return (WIDTH);
+    return (WIDTH + SPACING);
   }
   
   /**

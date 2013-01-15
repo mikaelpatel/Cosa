@@ -45,32 +45,12 @@ class System5x7;
 extern System5x7 system5x7;
 
 class Canvas {
-
-protected:
-  /**
-   * Current drawing color; 16-bit RGB<5,6,5>
-   */
-  uint16_t m_canvas_color;
-  uint16_t m_pen_color;
-
-  /**
-   * Current position (turtle graphics style) and screen direction.
-   */
-  struct {
-    uint8_t x;
-    uint8_t y;
-  } m_cursor;
-  uint8_t m_direction;
-
-  /**
-   * Text handling; font, color, scale and port.
-   */
-  Font* m_font;
-  uint16_t m_text_color;
-  uint8_t m_text_mode;
-  uint8_t m_text_scale;
-
 public:
+  /**
+   * 16-bit RGB<5,6,5> color.
+   */
+  typedef uint16_t color16_t;
+
   /**
    * Basic color palette.
    */
@@ -85,6 +65,202 @@ public:
     MAGENTA = RED + BLUE
   };
   
+
+  /**
+   * Canvas position<x,y>.
+   */
+  struct pos8_t {
+    uint8_t x;
+    uint8_t y;
+  };
+
+  /**
+   * Rectangle<x, y, width, height> data structure.
+   */
+  struct rect8_t {
+    uint8_t x;
+    uint8_t y;
+    uint8_t width;
+    uint8_t height;
+  };
+
+  /**
+   * Palette: the drawing context.
+   */
+  class Palette {
+  protected:
+    color16_t m_pen_color;
+    color16_t m_canvas_color;
+    color16_t m_text_color;
+    uint8_t m_text_scale;
+    Font* m_font;
+    pos8_t m_cursor;
+  public:
+    /**
+     * Construct a drawing context.
+     * @param[in] font default is the system font.
+     */
+    Palette(Font* font = (Font*) &system5x7) :
+      m_pen_color(BLACK),
+      m_canvas_color(WHITE),
+      m_text_color(BLACK),
+      m_text_scale(1),
+      m_font(font)
+    {
+      set_cursor(0, 0);
+    }
+
+    /**
+     * Get palette canvas color.
+     * @return color.
+     */
+    color16_t get_canvas_color()
+    {
+      return (m_canvas_color);
+    }
+
+    /**
+     * Set palette canvas color.
+     * @param[in] color
+     */
+    void set_canvas_color(color16_t color)
+    {
+      m_canvas_color = color;
+    }
+
+    /**
+     * Get palette drawing color.
+     * @return color.
+     */
+    color16_t get_pen_color()
+    {
+      return (m_pen_color);
+    }
+
+    /**
+     * Set palette drawing color.
+     * @param[in] color
+     */
+    void set_pen_color(color16_t color)
+    {
+      m_pen_color = color;
+    }
+
+    /**
+     * Get palette text color.
+     * @return color.
+     */
+    color16_t get_text_color()
+    {
+      return (m_text_color);
+    }
+
+    /**
+     * Set palette text color.
+     * @param[in] color
+     */
+    void set_text_color(color16_t color)
+    {
+      m_text_color = color;
+    }
+
+    /**
+     * Get palette text font.
+     */
+    Font* get_text_font()
+    {
+      return (m_font);
+    }
+
+    /**
+     * Set palette text font.
+     * @param[in] font
+     */
+    void set_text_font(Font* font)
+    {
+      m_font = font;
+    }
+
+    /**
+     * Get palette text scale.
+     * @return text scale.
+     */
+    uint8_t get_text_scale()
+    {
+      return (m_text_scale);
+    }
+
+    /**
+     * Set palette text scale (1..n).
+     * @param[in] scale.
+     */
+    void set_text_scale(uint8_t scale)
+    {
+      m_text_scale = (scale > 0 ? scale : 1);
+    }
+
+    /**
+     * Get palette cursor position.
+     * @param[out] x
+     * @param[out] y
+     */
+    void get_cursor(uint8_t& x, uint8_t& y)
+    {
+      x = m_cursor.x;
+      y = m_cursor.y;
+    }
+
+    /**
+     * Set palette cursor position.
+     * @param[in] x
+     * @param[in] y
+     */
+    void set_cursor(uint8_t x, uint8_t y)
+    {
+      m_cursor.x = x;
+      m_cursor.y = y;
+    }
+
+    /**
+     * Move palette cursor to delta position.
+     * @param[in] dx
+     * @param[in] dy
+     */
+    void move_cursor(int8_t dx, int8_t dy)
+    {
+      m_cursor.x += dx;
+      m_cursor.y += dy;
+    }
+  };
+
+  /**
+   * Canvas drawing elements; base class for larger drawing structure
+   * that requires a drawing context.
+   */
+  class Element : public Palette {
+  protected:
+    Canvas* m_canvas;
+  public:
+    Element(Canvas* canvas, Font* font = (Font*) &system5x7) :
+      Palette(font),
+      m_canvas(canvas)
+    {
+    }
+  };
+  
+protected:
+  /**
+   * Canvas palette; default and current.
+   */
+  static Palette palette;
+  Palette* m_palette;
+
+  /**
+   * Canvas direction.
+   */
+  uint8_t m_direction;
+
+public:
   /**
    * Screen size; width/height and orientation
    */
@@ -96,44 +272,17 @@ public:
   };
 
   /**
-   * Character/line spacing
-   */
-  uint8_t CHAR_SPACING;
-  uint8_t LINE_SPACING;
-
-  /**
-   * Canvas drawing elements.
-   */
-  class Element {
-  protected:
-    Canvas* m_canvas;
-  public:
-    Element(Canvas* canvas) :
-      m_canvas(canvas)
-    {
-    }
-  };
-  
-  /**
    * Construct canvas object and initiate.
    * @param[in] width screen width.
    * @param[in] height screen height.
-   * @param[in] font text font (default 5x7).
+   * @param[in] palette canvas state.
    */
-  Canvas(uint8_t width, uint8_t height, Font* font = (Font*) &system5x7) :
-    m_canvas_color(WHITE),
-    m_pen_color(BLACK),
+  Canvas(uint8_t width, uint8_t height, Palette* palette = &Canvas::palette) :
+    m_palette(palette),
     m_direction(PORTRAIT),
-    m_font(font),
-    m_text_color(BLACK),
-    m_text_mode(0),
-    m_text_scale(1),
     WIDTH(width),
-    HEIGHT(height),
-    CHAR_SPACING(1),
-    LINE_SPACING(2)
+    HEIGHT(height)
   {
-    set_cursor(0, 0);
   }
 
   /**
@@ -143,75 +292,75 @@ public:
   virtual bool begin() = 0;
 
   /**
+   * Get current canvas palette.
+   * @return palette.
+   */
+  Palette* get_palette()
+  {
+    return (m_palette);
+  }
+
+  /**
+   * Set current canvas palette.
+   * @param[in] palette.
+   */
+  void set_palette(Palette* palette)
+  {
+    m_palette = palette;
+  }
+
+  /**
    * Get current canvas color.
    * @return color.
    */
-  uint16_t get_canvas_color()
+  color16_t get_canvas_color()
   {
-    return (m_canvas_color);
+    return (m_palette->get_canvas_color());
   }
 
   /**
    * Set current canvas color.
    * @param[in] color
    */
-  void set_canvas_color(uint16_t color)
+  void set_canvas_color(color16_t color)
   {
-    m_canvas_color = color;
+    m_palette->set_canvas_color(color);
   }
 
   /**
    * Get current drawing color.
    * @return color.
    */
-  uint16_t get_pen_color()
+  color16_t get_pen_color()
   {
-    return (m_pen_color);
+    return (m_palette->get_pen_color());
   }
 
   /**
    * Set current drawing color.
    * @param[in] color
    */
-  void set_pen_color(uint16_t color)
+  void set_pen_color(color16_t color)
   {
-    m_pen_color = color;
+    m_palette->set_pen_color(color);
   }
 
   /**
    * Get current text color.
    * @return color.
    */
-  uint16_t get_text_color()
+  color16_t get_text_color()
   {
-    return (m_text_color);
+    return (m_palette->get_text_color());
   }
 
   /**
    * Set current text color.
    * @param[in] color
    */
-  void set_text_color(uint16_t color)
+  void set_text_color(color16_t color)
   {
-    m_text_color = color;
-  }
-
-  /**
-   * Get current text mode.
-   * @return mode.
-   */
-  uint8_t get_text_mode()
-  {
-    return (m_text_mode);
-  }
-
-  /**
-   * Set current text mode.
-   * @param[in] mode
-   */
-  void set_text_mode(uint8_t mode)
-  {
-    m_text_mode = mode;
+    m_palette->set_text_color(color);
   }
 
   /**
@@ -219,7 +368,7 @@ public:
    */
   Font* get_text_font()
   {
-    return (m_font);
+    return (m_palette->get_text_font());;
   }
 
   /**
@@ -228,33 +377,8 @@ public:
    */
   void set_text_font(Font* font)
   {
-    m_font = font;
+    m_palette->set_text_font(font);
   }
-
-  /**
-   * Create 16-bit color from primary colors (RGB).
-   * @param[in] red
-   * @param[in] green
-   * @param[in] blue
-   * @return color.
-   */
-  uint16_t color(uint8_t red, uint8_t green, uint8_t blue);
-
-  /**
-   * Create color shade (0..100%)
-   * @param[in] color
-   * @param[in] scale
-   * @return color shade.
-   */
-  uint16_t shade(uint16_t color, uint8_t scale);
-
-  /**
-   * Blend the two colors.
-   * @param[in] c1
-   * @param[in] c2
-   * @return color blend.
-   */
-  uint16_t blend(uint16_t c1, uint16_t c2);
 
   /**
    * Get current text scale.
@@ -262,7 +386,7 @@ public:
    */
   uint8_t get_text_scale()
   {
-    return (m_text_scale);
+    return (m_palette->get_text_scale());
   }
 
   /**
@@ -271,7 +395,7 @@ public:
    */
   void set_text_scale(uint8_t scale)
   {
-    m_text_scale = (scale > 0 ? scale : 1);
+    m_palette->set_text_scale(scale);
   }
 
   /**
@@ -281,8 +405,7 @@ public:
    */
   void get_cursor(uint8_t& x, uint8_t& y)
   {
-    x = m_cursor.x;
-    y = m_cursor.y;
+    m_palette->get_cursor(x, y);
   }
 
   /**
@@ -292,8 +415,7 @@ public:
    */
   void set_cursor(uint8_t x, uint8_t y)
   {
-    m_cursor.x = x;
-    m_cursor.y = y;
+    m_palette->set_cursor(x, y);
   }
 
   /**
@@ -303,9 +425,33 @@ public:
    */
   void move_cursor(int8_t dx, int8_t dy)
   {
-    m_cursor.x += dx;
-    m_cursor.y += dy;
+    m_palette->move_cursor(dx, dy);
   }
+
+  /**
+   * Create 16-bit color from primary colors (RGB).
+   * @param[in] red
+   * @param[in] green
+   * @param[in] blue
+   * @return color.
+   */
+  color16_t color(uint8_t red, uint8_t green, uint8_t blue);
+
+  /**
+   * Create color shade (0..100%)
+   * @param[in] color
+   * @param[in] scale
+   * @return color shade.
+   */
+  color16_t shade(color16_t color, uint8_t scale);
+
+  /**
+   * Blend the two colors.
+   * @param[in] c1
+   * @param[in] c2
+   * @return color blend.
+   */
+  color16_t blend(color16_t c1, color16_t c2);
 
   /**
    * Get screen orientation.
@@ -326,22 +472,24 @@ public:
   }
 
   /**
-   * Set pixel with current color.
+   * Set pixel with current pen color.
    * @param[in] x
    * @param[in] y
    */
   virtual void draw_pixel(uint8_t x, uint8_t y);
 
   /**
-   * Set pixel at cursor position with current color.
+   * Set pixel at cursor position with current pen color.
    */
   void draw_pixel()
   {
-    draw_pixel(m_cursor.x, m_cursor.y);
+    uint8_t x, y;
+    get_cursor(x, y);
+    draw_pixel(x, y);
   }
 
   /**
-   * Draw bitmap with current color.
+   * Draw bitmap with current pen color.
    * @param[in] x 
    * @param[in] y
    * @param[in] bp
@@ -354,7 +502,7 @@ public:
 			   uint8_t scale = 1);
 
   /**
-   * Draw bitmap at cursor position with current color.
+   * Draw bitmap at cursor position with current pen color.
    * @param[in] bp
    * @param[in] width
    * @param[in] height
@@ -364,11 +512,13 @@ public:
 		   uint8_t width, uint8_t height,
 		   uint8_t scale = 1)
   {
-    draw_bitmap(m_cursor.x, m_cursor.y, bp, width, height, scale);
+    uint8_t x, y;
+    get_cursor(x, y);
+    draw_bitmap(x, y, bp, width, height, scale);
   }
   
   /**
-   * Draw icon at given position with current color.
+   * Draw icon at given position with current pen color.
    * @param[in] x 
    * @param[in] y
    * @param[in] bp
@@ -381,7 +531,7 @@ public:
 			 uint8_t scale = 1);
 
   /**
-   * Draw icon at given position with current color.
+   * Draw icon at given position with current pen color.
    * @param[in] x 
    * @param[in] y
    * @param[in] bp
@@ -396,7 +546,7 @@ public:
   }
 
   /**
-   * Draw icon at cursor position with current color.
+   * Draw icon at cursor position with current pen color.
    * @param[in] bp
    * @param[in] scale
    */
@@ -404,11 +554,13 @@ public:
   {
     uint8_t width = pgm_read_byte(bp++);
     uint8_t height = pgm_read_byte(bp++);
-    draw_icon(m_cursor.x, m_cursor.y, bp, width, height, scale);
+    uint8_t x, y;
+    get_cursor(x, y);
+    draw_icon(x, y, bp, width, height, scale);
   }
   
   /**
-   * Draw line with current color.
+   * Draw line with current pen color.
    * @param[in] x0 
    * @param[in] y0
    * @param[in] x1
@@ -422,15 +574,16 @@ public:
    * @param[in] x
    * @param[in] y
    */
-  void draw_line(uint8_t x, uint8_t y)
+  void draw_line(uint8_t x1, uint8_t y1)
   {
-    draw_line(m_cursor.x, m_cursor.y, x, y);
-    m_cursor.x = x;
-    m_cursor.y = y;
+    uint8_t x0, y0;
+    get_cursor(x0, y0);
+    draw_line(x0, y0, x1, y1);
+    set_cursor(x1, y1);
   }
 
   /**
-   * Draw vertical line with current color.
+   * Draw vertical line with current pen color.
    * @param[in] x 
    * @param[in] y
    * @param[in] length
@@ -441,17 +594,19 @@ public:
   }
 
   /**
-   * Draw vertical line with given length and current color. Update
+   * Draw vertical line with given length and current pen color. Update
    * cursor to new position.
    * @param[in] length
    */
   void draw_vertical_line(uint8_t length)
   {
-    draw_line(m_cursor.x, m_cursor.y + length);
+    uint8_t x, y;
+    get_cursor(x, y);
+    draw_line(x, y + length);
   }
 
   /**
-   * Draw horizontal line with current color.
+   * Draw horizontal line with current pen color.
    * @param[in] x 
    * @param[in] y
    * @param[in] length
@@ -462,17 +617,19 @@ public:
   }
 
   /**
-   * Draw horizontal line with given length and current color. Update
+   * Draw horizontal line with given length and current pen color. Update
    * cursor to new position.
    * @param[in] length
    */
   void draw_horizontal_line(uint8_t length)
   {
-    draw_line(m_cursor.x + length, m_cursor.y);
+    uint8_t x, y;
+    get_cursor(x, y);
+    draw_line(x + length, y);
   }
 
   /**
-   * Draw polygon from program memory with current color. Vector of 
+   * Draw polygon from program memory with current pen color. Vector of 
    * delta positions, terminate with 0, 0. Update cursor to new position.
    * @param[in] poly
    * @param[in] scale
@@ -480,7 +637,7 @@ public:
   virtual void draw_poly_P(const int8_t* poly, uint8_t scale = 1);
 
   /**
-   * Draw stroke from program memory with current color. Vector of 
+   * Draw stroke from program memory with current pen color. Vector of 
    * delta positions, terminated with 0, 0. The cursor is moved for
    * when both dx and dy are zero or negative. Update cursor to new
    * position. 
@@ -490,7 +647,7 @@ public:
   virtual void draw_stroke_P(const int8_t* stroke, uint8_t scale = 1);
 
   /**
-   * Draw rectangle with current color.
+   * Draw rectangle with current pen color.
    * @param[in] x 
    * @param[in] y
    * @param[in] width
@@ -499,17 +656,19 @@ public:
   virtual void draw_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
 
   /**
-   * Draw rectangle at cursor position with current color.
+   * Draw rectangle at cursor position with current pen color.
    * @param[in] width
    * @param[in] height
    */
   void draw_rect(uint8_t width, uint8_t height)
   {
-    draw_rect(m_cursor.x, m_cursor.y, width, height);
+    uint8_t x, y;
+    get_cursor(x, y);
+    draw_rect(x, y, width, height);
   }
 
   /**
-   * Fill rectangle with current color. Must override.
+   * Fill rectangle with current pen color. Must override.
    * @param[in] x 
    * @param[in] y
    * @param[in] width
@@ -518,28 +677,30 @@ public:
   virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) = 0;
 
   /**
-   * Fill rectangle at cursor position with current color.
+   * Fill rectangle at cursor position with current pen color.
    * @param[in] width
    * @param[in] height
    */
   void fill_rect(uint8_t width, uint8_t height)
   {
-    fill_rect(m_cursor.x, m_cursor.y, width, height);
+    uint8_t x, y;
+    get_cursor(x, y);
+    fill_rect(x, y, width, height);
   }
   
   /**
-   * Fill screen with current color.
+   * Fill screen with current pen color.
    */
   virtual void fill_screen()
   {
-    uint16_t saved = m_pen_color;
-    m_pen_color = m_canvas_color;
+    color16_t saved = get_pen_color();
+    set_pen_color(get_canvas_color());
     fill_rect(0, 0, WIDTH, HEIGHT);
-    m_pen_color = saved;
+    set_pen_color(saved);
   }
 
   /**
-   * Draw circle with current color.
+   * Draw circle with current pen color.
    * @param[in] x 
    * @param[in] y
    * @param[in] radius
@@ -547,16 +708,18 @@ public:
   virtual void draw_circle(uint8_t x, uint8_t y, uint8_t radius);
 
   /**
-   * Draw circle at cursor position with current color.
+   * Draw circle at cursor position with current pen color.
    * @param[in] radius
    */
   void draw_circle(uint8_t radius)
   {
-    draw_circle(m_cursor.x, m_cursor.y, radius);
+    uint8_t x, y;
+    get_cursor(x, y);
+    draw_circle(x, y, radius);
   }
 
   /**
-   * Fill circle with current color.
+   * Fill circle with current pen color.
    * @param[in] x 
    * @param[in] y
    * @param[in] radius
@@ -564,22 +727,24 @@ public:
   virtual void fill_circle(uint8_t x, uint8_t y, uint8_t radius);
 
   /**
-   * Fill circle at cursor position with current color.
+   * Fill circle at cursor position with current pen color.
    * @param[in] radius
    */
   void fill_circle(uint8_t radius)
   {
-    fill_circle(m_cursor.x, m_cursor.y, radius);
+    uint8_t x, y;
+    get_cursor(x, y);
+    fill_circle(x, y, radius);
   }
 
   /**
-   * Draw character with current color and font.
+   * Draw character with current text color and font.
    * @param[in] c
    */
   virtual void draw_char(char c);
 
   /**
-   * Draw string in current color and font.
+   * Draw string in current text color and font.
    * @param[in] s
    */
   virtual void draw_string(char* s)
@@ -590,7 +755,7 @@ public:
   }
 
   /**
-   * Draw string from program memory with current color and font.
+   * Draw string from program memory with current text color and font.
    * @param[in] s
    */
   virtual void draw_string_P(const char* s)
@@ -599,15 +764,6 @@ public:
     while ((c = pgm_read_byte(s++)) != 0) 
       draw_char(c);
   }
-
-  /**
-   * @override
-   * Write character at current cursor position, with current text
-   * color, scale and font.  
-   * @param[in] c character to write.
-   * @return character written or EOF(-1).
-  virtual int putchar(char c);
-   */
 
   /**
    * Stop sequence of interaction with device. Must override.

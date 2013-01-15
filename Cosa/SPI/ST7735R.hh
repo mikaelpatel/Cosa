@@ -210,9 +210,10 @@ public:
   virtual void draw_pixel(uint8_t x, uint8_t y)
   {
     set_port(x, y, x + 1, y + 1);
+    color16_t color = get_pen_color();
     SPI_transaction(m_cs) {
-      spi.exchange(m_pen_color >> 8);
-      spi.exchange(m_pen_color);
+      spi.exchange(color >> 8);
+      spi.exchange(color);
     }
   }
 

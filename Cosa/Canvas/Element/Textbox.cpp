@@ -22,7 +22,7 @@
  *
  * @section Description
  * Canvas Textbox element. Acts as an IOStream/console output to
- * Canvas.
+ * Canvas. As an element it holds its own canvas state; palette.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -32,48 +32,43 @@
 int 
 Textbox::putchar(char c)
 { 
-  // Save current canvas drawing state
-  uint8_t x, y; m_canvas->get_cursor(x, y);
-  uint16_t pen_color = m_canvas->get_pen_color();
-  uint16_t text_color = m_canvas->get_text_color();
-  uint16_t canvas_color = m_canvas->get_canvas_color();
-  uint8_t scale = m_canvas->get_text_scale();
-  m_canvas->set_pen_color(m_canvas_color);
-  m_canvas->set_text_color(m_text_color);
-  m_canvas->set_cursor(m_caret.x, m_caret.y);
-  m_canvas->set_text_scale(m_text_scale);
-  m_canvas->set_canvas_color(m_canvas_color);
+  // Save the current palette and setup our palette
+  Canvas::Palette* saved = m_canvas->get_palette();
+  m_canvas->set_palette(this);
 
   // Draw only normal characters
-  if (c >= ' ') {
-    m_canvas->draw_char(c);
-    m_canvas->get_cursor(m_caret.x, m_caret.y);
-  }
+  if (c >= ' ') m_canvas->draw_char(c);
 
   // Handle some special characters, new-line
-  uint8_t width = (m_caret.x + m_font->WIDTH + CHAR_SPACING - m_text_port.x);
+  uint8_t x, y;
+  get_cursor(x, y);
+  uint8_t scale = m_text_scale;
+  uint8_t width = (x + (scale * m_font->get_width(c)) - m_text_port.x);
   if ((c == '\n') || (width > m_text_port.width)) {
-    m_caret.x = m_text_port.x;
-    m_caret.y += m_text_scale * (m_font->HEIGHT + LINE_SPACING);
-    if (m_caret.y + m_font->HEIGHT > m_text_port.y + m_text_port.height)
-      m_caret.y = m_text_port.y;
-    m_canvas->fill_rect(m_caret.x, m_caret.y, m_text_port.width, 
-			m_text_scale*(m_font->HEIGHT + LINE_SPACING));
+    uint8_t font_height = scale * (m_font->HEIGHT);
+    uint8_t line_height = scale * (m_font->HEIGHT + m_line_spacing);
+    uint8_t y = m_cursor.y + line_height;
+    if (y + font_height > m_text_port.y + m_text_port.height) {
+      y = m_text_port.y;
+    }
+    x = m_text_port.x;
+    Canvas::color16_t saved = get_pen_color();
+    set_pen_color(get_canvas_color());
+    set_cursor(x, y);
+    m_canvas->fill_rect(m_text_port.width, line_height);
+    set_pen_color(saved);
   } 
 
   // form-feed
   else if (c == '\f') {
-    m_canvas->fill_rect(m_text_port.x, m_text_port.y, m_text_port.width, 
-			m_text_port.height);
-    m_caret.x = m_text_port.x;
-    m_caret.y = m_text_port.y;
+    Canvas::color16_t saved = get_pen_color();
+    set_pen_color(get_canvas_color());
+    set_cursor(m_text_port.x, m_text_port.y);
+    m_canvas->fill_rect(m_text_port.width, m_text_port.height);
+    set_pen_color(saved);
   }
-
-  // Restore the canvas drawing state
-  m_canvas->set_canvas_color(canvas_color);
-  m_canvas->set_pen_color(pen_color);
-  m_canvas->set_text_color(text_color);
-  m_canvas->set_text_scale(scale);
-  m_canvas->set_cursor(x, y);
+  
+  // Restore the previous canvas state; palette
+  m_canvas->set_palette(saved);
   return (c);
 }

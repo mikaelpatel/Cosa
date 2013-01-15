@@ -180,11 +180,12 @@ ST7735R::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
   if (x + width >= WIDTH) width = WIDTH - x;
   if (y + height >= HEIGHT) height = HEIGHT - y;
   set_port(x, y, x + width - 1, y + height - 1);
+  color16_t color = get_pen_color();
   SPI_transaction(m_cs) {
     for (x = 0; x < width; x++)
       for (y = 0; y < height; y++) {
-	spi.exchange(m_pen_color >> 8);
-	spi.exchange(m_pen_color);
+	spi.exchange(color >> 8);
+	spi.exchange(color);
       }
   }
 }
@@ -201,10 +202,11 @@ ST7735R::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
   }
   if (y + length >= HEIGHT) length = HEIGHT - y;
   set_port(x, y, x, y + length);
+  color16_t color = get_pen_color();
   SPI_transaction(m_cs) {
     while (length--) {
-      spi.exchange(m_pen_color >> 8);
-      spi.exchange(m_pen_color);
+      spi.exchange(color >> 8);
+      spi.exchange(color);
     }
   }
 }
@@ -221,10 +223,11 @@ ST7735R::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
   }
   if (x + length >= WIDTH) length = WIDTH - x;
   set_port(x, y, x + length, y);
+  color16_t color = get_pen_color();
   SPI_transaction(m_cs) {
     while (length--) {
-      spi.exchange(m_pen_color >> 8);
-      spi.exchange(m_pen_color);
+      spi.exchange(color >> 8);
+      spi.exchange(color);
     }
   }
 }
