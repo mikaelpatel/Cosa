@@ -77,7 +77,7 @@ public:
       tft.set_text_scale(saved);
     }
     else {
-      textbox.set_caret(10, 35);
+      textbox.set_cursor(10, 35);
       cout.printf_P(PSTR("%d"), distance);
     }
   }
