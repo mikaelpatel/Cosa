@@ -64,7 +64,6 @@ public:
     CYAN = GREEN + BLUE,
     MAGENTA = RED + BLUE
   };
-  
 
   /**
    * Canvas position<x,y>.
@@ -95,6 +94,7 @@ public:
     uint8_t m_text_scale;
     Font* m_font;
     pos8_t m_cursor;
+
   public:
     /**
      * Construct a drawing context.
