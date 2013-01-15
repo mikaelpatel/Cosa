@@ -7,10 +7,10 @@ node[shape=box];
 "Head" -> "Linkage";
 
 "Event::Handler" -> "Event" [arrowhead=none];
-"Event" -> "Queue" [style=dotted];
+"Event" -> "Queue" [style=dashed];
 "Event" -> "IOStream" [style=dotted];
-"Event" -> "trace" [style=dotted];
-"Watchdog" -> "Head" [style=dotted];
+"Event" -> "trace" [style=dashed];
+"Watchdog" -> "Head" [style=dashed];
 
 "Periodic" -> "Link";
 "Periodic" -> "Watchdog" [style=dotted];
@@ -35,17 +35,20 @@ node[shape=box];
 "Button" -> "Link";
 "Button" -> "Watchdog" [style=dotted];
 
-"Canvas" -> "Font" [style=dashed,label=m_font];
-"Font" -> "Canvas" [style=dashed,label=canvas];
-"system5x7" -> "System5x7" [style=dotted];
-"System5x7" -> "Font";
-"fixednums8x16" -> "FixedNums8x16" [style=dotted];
-"FixedNums8x16" -> "Font";
-
-"Canvas::Element" -> "Canvas" [arrowhead=none,label=m_canvas];
+"Canvas" -> "Canvas::Palette" [style=dashed,label=m_palette];
+"Canvas::Palette" -> "Font" [style=dashed,label=m_font];
+"Canvas::Palette" -> "Canvas" [arrowhead=none];
+"Canvas::Element" -> "Canvas::Palette";
+"Canvas::Element" -> "Canvas" [style=dashed,label=m_canvas];
+"Canvas::Element" -> "Canvas" [arrowhead=none];
 "Textbox" -> "Canvas::Element";
 "Textbox" -> "IOStream::Device";
-"Textbox" -> "Font" [style=dashed,label=m_font];
+
+"Font" -> "Canvas" [style=dotted,label=canvas];
+"system5x7" -> "System5x7" [style=dashed];
+"System5x7" -> "Font";
+"fixednums8x16" -> "FixedNums8x16" [style=dashed];
+"FixedNums8x16" -> "Font";
 
 "Ciao" -> "IOStream" [style=dashed,label=m_dev];
 "Ciao::Descriptor" -> "Ciao" [arrowhead=none];
