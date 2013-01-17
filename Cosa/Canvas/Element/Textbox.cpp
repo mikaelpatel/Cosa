@@ -22,7 +22,7 @@
  *
  * @section Description
  * Canvas Textbox element. Acts as an IOStream/console output to
- * Canvas. As an element it holds its own canvas state; palette.
+ * Canvas. As an element it holds its own canvas state; context.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -32,9 +32,9 @@
 int 
 Textbox::putchar(char c)
 { 
-  // Save the current palette and setup our palette
-  Canvas::Palette* saved = m_canvas->get_palette();
-  m_canvas->set_palette(this);
+  // Save the current context and setup our context
+  Canvas::Context* saved = m_canvas->get_context();
+  m_canvas->set_context(this);
 
   // Draw only normal characters
   if (c >= ' ') m_canvas->draw_char(c);
@@ -68,7 +68,7 @@ Textbox::putchar(char c)
     set_pen_color(saved);
   }
   
-  // Restore the previous canvas state; palette
-  m_canvas->set_palette(saved);
+  // Restore the previous canvas state; context
+  m_canvas->set_context(saved);
   return (c);
 }

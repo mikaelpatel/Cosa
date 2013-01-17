@@ -77,13 +77,13 @@ The Cosa graphics device handler
 Canvas.hh:      class Canvas 
 SPI/ST7735R.hh:       class ST7735R : public Canvas
 ----------------------------------------------------------------------------
-PALETTE
+CANVAS::CONTEXT
 The Cosa Canvas graphical context.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Canvas.hh:     	     	class Canvas::Palette
-Canvas.hh:     	     	class Canvas::Element : public Canvas::Palette
+Canvas.hh:     	     	class Canvas::Context
+Canvas.hh:     	     	class Canvas::Element : public Canvas::Context
 ----------------------------------------------------------------------------
-ELEMENT
+CANVAS::ELEMENT
 The Cosa Canvas graphical elements.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 Canvas/Element/Textbox:	      class Textbox : 

@@ -50,8 +50,8 @@
 class Button : public InputPin, private Link {
 public:
   /**
-   * Button change detection modes; falling (set->clear), 
-   * rising (clear-> set) and change (falling or rising).
+   * Button change detection modes; falling (high->low), 
+   * rising (low -> high) and change (falling or rising).
    */
   enum Mode {
     ON_FALLING_MODE = 0,

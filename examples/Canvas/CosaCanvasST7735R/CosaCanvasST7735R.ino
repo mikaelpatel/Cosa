@@ -56,7 +56,7 @@ void setup()
   TRACE(sizeof(Canvas));
   TRACE(sizeof(Font));
   TRACE(sizeof(ST7735R));
-  TRACE(sizeof(Canvas::Palette));
+  TRACE(sizeof(Canvas::Context));
   TRACE(sizeof(Canvas::Element));
   TRACE(sizeof(IOStream));
   TRACE(sizeof(Textbox));

@@ -84,9 +84,9 @@ public:
   };
 
   /**
-   * Palette: the drawing context.
+   * Drawing context.
    */
-  class Palette {
+  class Context {
   protected:
     color16_t m_pen_color;
     color16_t m_canvas_color;
@@ -100,7 +100,7 @@ public:
      * Construct a drawing context.
      * @param[in] font default is the system font.
      */
-    Palette(Font* font = (Font*) &system5x7) :
+    Context(Font* font = (Font*) &system5x7) :
       m_pen_color(BLACK),
       m_canvas_color(WHITE),
       m_text_color(BLACK),
@@ -111,7 +111,7 @@ public:
     }
 
     /**
-     * Get palette canvas color.
+     * Get context canvas color.
      * @return color.
      */
     color16_t get_canvas_color()
@@ -120,7 +120,7 @@ public:
     }
 
     /**
-     * Set palette canvas color.
+     * Set context canvas color.
      * @param[in] color
      */
     void set_canvas_color(color16_t color)
@@ -129,7 +129,7 @@ public:
     }
 
     /**
-     * Get palette drawing color.
+     * Get context drawing color.
      * @return color.
      */
     color16_t get_pen_color()
@@ -138,7 +138,7 @@ public:
     }
 
     /**
-     * Set palette drawing color.
+     * Set context drawing color.
      * @param[in] color
      */
     void set_pen_color(color16_t color)
@@ -147,7 +147,7 @@ public:
     }
 
     /**
-     * Get palette text color.
+     * Get context text color.
      * @return color.
      */
     color16_t get_text_color()
@@ -156,7 +156,7 @@ public:
     }
 
     /**
-     * Set palette text color.
+     * Set context text color.
      * @param[in] color
      */
     void set_text_color(color16_t color)
@@ -165,7 +165,7 @@ public:
     }
 
     /**
-     * Get palette text font.
+     * Get context text font.
      */
     Font* get_text_font()
     {
@@ -173,7 +173,7 @@ public:
     }
 
     /**
-     * Set palette text font.
+     * Set context text font.
      * @param[in] font
      */
     void set_text_font(Font* font)
@@ -182,7 +182,7 @@ public:
     }
 
     /**
-     * Get palette text scale.
+     * Get context text scale.
      * @return text scale.
      */
     uint8_t get_text_scale()
@@ -191,7 +191,7 @@ public:
     }
 
     /**
-     * Set palette text scale (1..n).
+     * Set context text scale (1..n).
      * @param[in] scale.
      */
     void set_text_scale(uint8_t scale)
@@ -200,7 +200,7 @@ public:
     }
 
     /**
-     * Get palette cursor position.
+     * Get context cursor position.
      * @param[out] x
      * @param[out] y
      */
@@ -211,7 +211,7 @@ public:
     }
 
     /**
-     * Set palette cursor position.
+     * Set context cursor position.
      * @param[in] x
      * @param[in] y
      */
@@ -222,7 +222,7 @@ public:
     }
 
     /**
-     * Move palette cursor to delta position.
+     * Move context cursor to delta position.
      * @param[in] dx
      * @param[in] dy
      */
@@ -237,12 +237,12 @@ public:
    * Canvas drawing elements; base class for larger drawing structure
    * that requires a drawing context.
    */
-  class Element : public Palette {
+  class Element : public Context {
   protected:
     Canvas* m_canvas;
   public:
     Element(Canvas* canvas, Font* font = (Font*) &system5x7) :
-      Palette(font),
+      Context(font),
       m_canvas(canvas)
     {
     }
@@ -250,10 +250,10 @@ public:
   
 protected:
   /**
-   * Canvas palette; default and current.
+   * Canvas context; default and current.
    */
-  static Palette palette;
-  Palette* m_palette;
+  static Context context;
+  Context* m_context;
 
   /**
    * Canvas direction.
@@ -275,10 +275,10 @@ public:
    * Construct canvas object and initiate.
    * @param[in] width screen width.
    * @param[in] height screen height.
-   * @param[in] palette canvas state.
+   * @param[in] context canvas state.
    */
-  Canvas(uint8_t width, uint8_t height, Palette* palette = &Canvas::palette) :
-    m_palette(palette),
+  Canvas(uint8_t width, uint8_t height, Context* context = &Canvas::context) :
+    m_context(context),
     m_direction(PORTRAIT),
     WIDTH(width),
     HEIGHT(height)
@@ -292,21 +292,21 @@ public:
   virtual bool begin() = 0;
 
   /**
-   * Get current canvas palette.
-   * @return palette.
+   * Get current canvas context.
+   * @return context.
    */
-  Palette* get_palette()
+  Context* get_context()
   {
-    return (m_palette);
+    return (m_context);
   }
 
   /**
-   * Set current canvas palette.
-   * @param[in] palette.
+   * Set current canvas context.
+   * @param[in] context.
    */
-  void set_palette(Palette* palette)
+  void set_context(Context* context)
   {
-    m_palette = palette;
+    m_context = context;
   }
 
   /**
@@ -315,7 +315,7 @@ public:
    */
   color16_t get_canvas_color()
   {
-    return (m_palette->get_canvas_color());
+    return (m_context->get_canvas_color());
   }
 
   /**
@@ -324,7 +324,7 @@ public:
    */
   void set_canvas_color(color16_t color)
   {
-    m_palette->set_canvas_color(color);
+    m_context->set_canvas_color(color);
   }
 
   /**
@@ -333,7 +333,7 @@ public:
    */
   color16_t get_pen_color()
   {
-    return (m_palette->get_pen_color());
+    return (m_context->get_pen_color());
   }
 
   /**
@@ -342,7 +342,7 @@ public:
    */
   void set_pen_color(color16_t color)
   {
-    m_palette->set_pen_color(color);
+    m_context->set_pen_color(color);
   }
 
   /**
@@ -351,7 +351,7 @@ public:
    */
   color16_t get_text_color()
   {
-    return (m_palette->get_text_color());
+    return (m_context->get_text_color());
   }
 
   /**
@@ -360,7 +360,7 @@ public:
    */
   void set_text_color(color16_t color)
   {
-    m_palette->set_text_color(color);
+    m_context->set_text_color(color);
   }
 
   /**
@@ -368,7 +368,7 @@ public:
    */
   Font* get_text_font()
   {
-    return (m_palette->get_text_font());;
+    return (m_context->get_text_font());;
   }
 
   /**
@@ -377,7 +377,7 @@ public:
    */
   void set_text_font(Font* font)
   {
-    m_palette->set_text_font(font);
+    m_context->set_text_font(font);
   }
 
   /**
@@ -386,7 +386,7 @@ public:
    */
   uint8_t get_text_scale()
   {
-    return (m_palette->get_text_scale());
+    return (m_context->get_text_scale());
   }
 
   /**
@@ -395,7 +395,7 @@ public:
    */
   void set_text_scale(uint8_t scale)
   {
-    m_palette->set_text_scale(scale);
+    m_context->set_text_scale(scale);
   }
 
   /**
@@ -405,7 +405,7 @@ public:
    */
   void get_cursor(uint8_t& x, uint8_t& y)
   {
-    m_palette->get_cursor(x, y);
+    m_context->get_cursor(x, y);
   }
 
   /**
@@ -415,7 +415,7 @@ public:
    */
   void set_cursor(uint8_t x, uint8_t y)
   {
-    m_palette->set_cursor(x, y);
+    m_context->set_cursor(x, y);
   }
 
   /**
@@ -425,7 +425,7 @@ public:
    */
   void move_cursor(int8_t dx, int8_t dy)
   {
-    m_palette->move_cursor(dx, dy);
+    m_context->move_cursor(dx, dy);
   }
 
   /**

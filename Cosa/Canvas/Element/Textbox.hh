@@ -22,7 +22,7 @@
  *
  * @section Description
  * Canvas Textbox element. Acts as an IOStream/console output to
- * Canvas. As an element it holds its own canvas state; palette.
+ * Canvas. As an element it holds its own canvas state; context.
  *
  * This file is part of the Arduino Che Cosa project.
  */

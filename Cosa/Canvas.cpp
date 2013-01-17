@@ -38,7 +38,7 @@
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Font.hh"
 
-Canvas::Palette Canvas::palette;
+Canvas::Context Canvas::context;
 
 Canvas::color16_t 
 Canvas::color(uint8_t red, uint8_t green, uint8_t blue)

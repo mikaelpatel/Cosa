@@ -35,10 +35,10 @@ node[shape=box];
 "Button" -> "Link";
 "Button" -> "Watchdog" [style=dotted];
 
-"Canvas" -> "Canvas::Palette" [style=dashed,label=m_palette];
-"Canvas::Palette" -> "Font" [style=dashed,label=m_font];
-"Canvas::Palette" -> "Canvas" [arrowhead=none];
-"Canvas::Element" -> "Canvas::Palette";
+"Canvas" -> "Canvas::Context" [style=dashed,label=m_context];
+"Canvas::Context" -> "Font" [style=dashed,label=m_font];
+"Canvas::Context" -> "Canvas" [arrowhead=none];
+"Canvas::Element" -> "Canvas::Context";
 "Canvas::Element" -> "Canvas" [style=dashed,label=m_canvas];
 "Canvas::Element" -> "Canvas" [arrowhead=none];
 "Textbox" -> "Canvas::Element";
