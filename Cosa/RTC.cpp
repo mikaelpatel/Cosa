@@ -33,12 +33,14 @@
 
 #include "Cosa/RTC.hh"
 
+// Real-Time Clock: configuration
 #define COUNT 255
 #define PRESCALE 64
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
 #define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
 #define TIMER_CYCLES(ticks) ((ticks) << 8)
 
+// The number of timer ticks
 static volatile uint32_t g_ticks = 0UL;
 
 bool
@@ -53,7 +55,7 @@ RTC::begin()
     TCCR0B = (_BV(CS01) | _BV(CS00));
     // And enable interrupt on compare match
     TIMSK0 = _BV(OCIE0A);
-    // Reset the counter
+    // Reset the counter and clear interrupts
     TCNT0 = 0;
     TIFR0 = 0;
   }
@@ -63,6 +65,7 @@ RTC::begin()
 bool
 RTC::end()
 {
+  // Disable timer interrupts
   synchronized {
     TIMSK0 = 0;
   }
@@ -73,11 +76,12 @@ uint32_t
 RTC::millis()
 {
   uint32_t res;
+  // Read tick counter
   synchronized {
     res = g_ticks;
   }
-  res = TIMER_CYCLES(res) * US_PER_TIMER_CYCLE / 1000L;
-  return (res);
+  // Convert ticks to milli-seconds
+  return (TIMER_CYCLES(res) * US_PER_TIMER_CYCLE / 1000L);
 }
 
 uint32_t 
@@ -85,20 +89,22 @@ RTC::micros()
 {
   uint32_t res;
   uint8_t cnt;
-  // Read micro-seconds and hardware counter
+  // Read tick count and hardware counter. Adjust if pending interrupt
   synchronized {
     res = g_ticks;
     cnt = TCNT0;
     if (TIFR0 & _BV(OCF0A) && (cnt < COUNT)) res += 1;
   }
-  // Calculate the number of micro-seconds
+  // Convert ticks to micro-seconds
   res = (TIMER_CYCLES(res) + cnt) * US_PER_TIMER_CYCLE;
   return (res);
 }
 
 ISR(TIMER0_COMPA_vect)
 {
+  // Set the top register (again)
   OCR0A = COUNT;
+  // And increment tick counter
   g_ticks = g_ticks + 1;
 }
 
