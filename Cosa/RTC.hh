@@ -35,7 +35,6 @@
 #define __COSA_RTC_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Event.hh"
 
 class RTC {
 private:
