@@ -54,6 +54,8 @@ public:
   typedef bool (*AwaitCondition)(void* env);
 
 private:
+  Watchdog() {}
+
   static InterruptHandler s_handler;
   static void* s_env;
 
