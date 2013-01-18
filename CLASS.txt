@@ -1,12 +1,11 @@
 ----------------------------------------------------------------------------
 COSA CLASS OVERVIEW
 ----------------------------------------------------------------------------
-Linkage
-The Cosa collection handling. Broadcasts events of a set of objects.
+BOARD
+Board Specific Package, class, symbolic names of board pins and
+mapping to processor port register and bit position.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-Linkage.hh:	class Linkage : public Event::Handler
-Linkage.hh:	      class Link : public Linkage
-Linkage.hh:	      class Head : public Linkage
+Board.hh:      class Board
 ----------------------------------------------------------------------------
 PINS
 Object-oriented approach to sketch pin declaration and function structuring. 
@@ -19,6 +18,13 @@ Pins.hh:	      	    class PWMPin : public OutputPin
 Pins.hh:		    class IOPin : public OutputPin
 Pins.hh:	      class AnalogPin : public Pin
 Pins.hh:	class AnalogPins
+----------------------------------------------------------------------------
+Linkage
+The Cosa collection handling. Broadcasts events of a set of objects.
+-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+Linkage.hh:	class Linkage : public Event::Handler
+Linkage.hh:	      class Link : public Linkage
+Linkage.hh:	      class Head : public Linkage
 ----------------------------------------------------------------------------
 PERIODIC
 Periodic functions. Syntatic sugar for watchdog timeout queue.

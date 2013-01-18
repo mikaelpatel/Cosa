@@ -19,6 +19,7 @@ node[shape=box];
 "FSM" -> "Watchdog" [style=dotted];
 "FSM" -> "Event" [style=dotted];
 
+"Pin" -> "Board" [style=dotted];
 "InputPin" -> "Pin";
 "InterruptPin" -> "InputPin";
 "InterruptPin" -> "Event::Handler";
