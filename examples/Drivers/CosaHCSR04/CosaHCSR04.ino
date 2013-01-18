@@ -39,7 +39,7 @@
 #include "Cosa/Driver/HCSR04.hh"
 
 // Heartbeat on built-in led
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 // Use the ST7735R TFT display or the trace iostream
 #ifdef USE_TFT
@@ -58,7 +58,7 @@ uint16_t RED, GREEN, BLUE, YELLOW, CYAN, GRAY;
 
 class Ping : private HCSR04 {
 public:
-  Ping() : HCSR04(2, 3) 
+  Ping() : HCSR04(Board::D2, Board::D3) 
   {
     Watchdog::attach(this, 256);
   }

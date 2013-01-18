@@ -36,7 +36,7 @@
 
 // The display and an iostream to the device
 ST7735R tft;
-AnalogPin probe(0);
+AnalogPin probe(Board::A0);
 uint16_t CANVAS, PEN, CARET;
 
 void setup()

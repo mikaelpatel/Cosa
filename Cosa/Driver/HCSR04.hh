@@ -55,7 +55,7 @@ public:
    * @param[pin] trig_pin trigger pin number.
    * @param[pin] echo_pin echo pin number.
    */
-  HCSR04(uint8_t trig_pin, uint8_t echo_pin) :
+  HCSR04(Board::DigitalPin trig_pin, Board::DigitalPin echo_pin) :
     Link(),
     m_trigPin(trig_pin),
     m_echoPin(echo_pin),

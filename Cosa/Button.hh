@@ -83,7 +83,7 @@ public:
    * @param[in] pin number.
    * @param[in] mode change detection mode.
    */
-  Button(uint8_t pin, Mode mode = ON_CHANGE_MODE);
+  Button(Board::DigitalPin pin, Mode mode = ON_CHANGE_MODE);
 
   /**
    * The button change event handler. Called when a change

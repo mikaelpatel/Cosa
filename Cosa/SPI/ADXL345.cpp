@@ -29,7 +29,7 @@
 
 #include "Cosa/SPI/ADXL345.hh"
 
-ADXL345::ADXL345(uint8_t ss) :
+ADXL345::ADXL345(Board::DigitalPin ss) :
   m_ss(ss, 1) 
 {
   if (begin()) {

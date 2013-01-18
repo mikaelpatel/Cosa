@@ -44,7 +44,7 @@
 #include "Cosa/Button.hh"
 #include "Cosa/Watchdog.hh"
 
-Button::Button(uint8_t pin, Mode mode) : 
+Button::Button(Board::DigitalPin pin, Mode mode) : 
   InputPin(pin, InputPin::PULLUP_MODE),
   Link(),
   m_state(is_set()),

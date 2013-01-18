@@ -33,9 +33,9 @@
 #include "Cosa/Memory.h"
 
 // Connect devices to pins
-DHT11 indoors(7);
-DHT11 outdoors(8);
-OutputPin ledPin(13);
+DHT11 indoors(Board::D7);
+DHT11 outdoors(Board::D8);
+OutputPin ledPin(Board::LED);
 
 void setup()
 {

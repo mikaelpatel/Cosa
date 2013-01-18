@@ -37,7 +37,7 @@ private:
   volatile uint16_t m_counter;
   virtual void on_interrupt() { m_counter++; }
 public:
-  CounterInterruptPin(uint8_t pin) :
+  CounterInterruptPin(Board::InterruptPin pin) :
     InterruptPin(pin, InterruptPin::ON_RISING_MODE),
     m_counter(0)
   {}
@@ -45,11 +45,11 @@ public:
 };
 
 // Input and output pins
-CounterInterruptPin intPin(2);
-PWMPin ledPin(5);
-InputPin onoffPin(7);
-AnalogPin tempVCC(8, AnalogPin::A1V1_REFERENCE);
-AnalogPin levelPin(14);
+CounterInterruptPin intPin(Board::EXT0);
+PWMPin ledPin(Board::PWM1);
+InputPin onoffPin(Board::D7);
+AnalogPin tempVCC(Board::A8, AnalogPin::A1V1_REFERENCE);
+AnalogPin levelPin(Board::A0);
 
 void setup()
 {

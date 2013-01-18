@@ -81,7 +81,7 @@ public:
    * Construct connection to a DHT11 device on given in/output-pin.
    * @param[pin] pin data.
    */
-  DHT11(uint8_t pin) : Link(), m_pin(pin) {}
+  DHT11(Board::DigitalPin pin) : Link(), m_pin(pin) {}
 
   /**
    * Read temperature and humidity from the device. Return true(1) and

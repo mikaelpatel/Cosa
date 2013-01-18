@@ -223,7 +223,7 @@ public:
    * Construct accelerometer object selected with given output pin.
    * @param[in] ss slave selection pin.
    */
-  ADXL345(uint8_t ss = 10);
+  ADXL345(Board::DigitalPin ss = Board::D10);
 
   /**
    * Start interaction with device.

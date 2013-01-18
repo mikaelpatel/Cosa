@@ -41,9 +41,9 @@ public:
 
   // Construct the state machine for the RGB led sequencing
   BlinkRGB(uint16_t period = 512,
-	   uint8_t redLedPinNr = 5, 
-	   uint8_t greenLedPinNr = 6, 
-	   uint8_t blueLedPinNr= 7) :
+	   Board::DigitalPin redLedPinNr = Board::D5, 
+	   Board::DigitalPin greenLedPinNr = Board::D6, 
+	   Board::DigitalPin blueLedPinNr = Board::D7) :
     FSM(redState, period),
     redLedPin(redLedPinNr, 1),
     greenLedPin(greenLedPinNr),
@@ -103,8 +103,8 @@ public:
 };
 
 // The state machines for two RGB leds
-BlinkRGB led1(512, 5, 6, 7);
-BlinkRGB led2(256, 8, 9, 10);
+BlinkRGB led1(512, Board::D5, Board::D6, Board::D7);
+BlinkRGB led2(256, Board::D8, Board::D9, Board::D10);
 
 void setup()
 {

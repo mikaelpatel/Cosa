@@ -30,7 +30,7 @@
 #include "Cosa/Watchdog.hh"
 
 // Use the build-in led
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 void setup()
 {

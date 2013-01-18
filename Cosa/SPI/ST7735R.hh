@@ -171,7 +171,8 @@ public:
    * @param[in] cs slave selection pin (default pin 10).
    * @param[in] dc data/command selection pin (default pin 9).
    */
-  ST7735R(uint8_t cs = 10, uint8_t dc = 9);
+  ST7735R(Board::DigitalPin cs = Board::D10, 
+	  Board::DigitalPin dc = Board::D9);
 
   /**
    * @override

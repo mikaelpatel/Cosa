@@ -54,6 +54,9 @@ public:
   typedef bool (*AwaitCondition)(void* env);
 
 private:
+  /**
+   * Do not allow instances. This is a static singleton.
+   */
   Watchdog() {}
 
   static InterruptHandler s_handler;

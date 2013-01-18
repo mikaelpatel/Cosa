@@ -35,7 +35,7 @@
 PCF8591 adc;
 
 // Use the built-in led
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 void setup()
 {

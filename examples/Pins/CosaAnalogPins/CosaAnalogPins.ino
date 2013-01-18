@@ -47,7 +47,7 @@ uint16_t buffer[membersof(pins)];
 AnalogPins analogPins(pins, buffer, membersof(pins));
 
 // Use the builtin led for a heartbeat
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 void setup()
 {

@@ -61,9 +61,9 @@ Driver::print_status(IOStream& stream)
 }
 
 // The OneWire bus on pin 7 and led heartbeat
-OWI owi(7);
+OWI owi(Board::D7);
 Driver driver(&owi);
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 void setup()
 {

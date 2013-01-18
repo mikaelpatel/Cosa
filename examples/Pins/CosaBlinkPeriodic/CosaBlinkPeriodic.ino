@@ -34,15 +34,15 @@ class LED : public Periodic {
 private:
   OutputPin m_pin;
 public:
-  LED(uint8_t pin, uint16_t ms, uint8_t initial = 0) : 
+  LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) : 
     Periodic(ms), m_pin(pin, initial) {}
   virtual void run() { m_pin.toggle(); }
 };
 
 // Use an RGB LED connected to pins(5,6,7)
-LED redLedPin(5, 512);
-LED greenLedPin(6, 1024, 1);
-LED blueLedPin(7, 1024);
+LED redLedPin(Board::D5, 512);
+LED greenLedPin(Board::D6, 1024, 1);
+LED blueLedPin(Board::D7, 1024);
 
 // Start the watchdog (16 ms timeout, push timeout events)
 void setup()

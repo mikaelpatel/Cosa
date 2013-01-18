@@ -118,7 +118,7 @@ ST7735R::begin()
   return (res);
 }
 
-ST7735R::ST7735R(uint8_t cs, uint8_t dc) :
+ST7735R::ST7735R(Board::DigitalPin cs, Board::DigitalPin dc) :
   Canvas(SCREEN_WIDTH, SCREEN_HEIGHT),
   SPI::Driver(),
   m_cs(cs, 1),

@@ -80,7 +80,7 @@ private:
   private:
     NRF24L01P* m_nrf;
   public:
-    IRQPin(uint8_t pin, Mode mode, NRF24L01P* nrf) : 
+    IRQPin(Board::InterruptPin pin, Mode mode, NRF24L01P* nrf) : 
       InterruptPin(pin, mode),
       m_nrf(nrf)
     {}
@@ -93,14 +93,14 @@ public:
    * Construct NRF transceiver with given channel and pin numbers 
    * for SPI slave select, activity enable and interrupt. 
    * @param[in] channel number (default 64).
-   * @param[in] csn spi slave select pin number (default 10).
-   * @param[in] ce chip enable activates pin number (default 9).
-   * @param[in] irq interrupt pin number (default 2).
+   * @param[in] csn spi slave select pin number (default D10).
+   * @param[in] ce chip enable activates pin number (default D9).
+   * @param[in] irq interrupt pin number (default EXT0).
    */
   NRF24L01P(uint8_t channel = 64, 
-	    uint8_t csn = 10, 
-	    uint8_t ce = 9, 
-	    uint8_t irq = 2);
+	    Board::DigitalPin csn = Board::D10, 
+	    Board::DigitalPin ce = Board::D9, 
+	    Board::InterruptPin irq = Board::EXT0);
 
   /**
    * NRF transceiver states (See chap. 6.1.1, fig. 4, pp. 22)

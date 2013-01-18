@@ -33,14 +33,14 @@
 #include "Cosa/Memory.h"
 
 // Use the built-in led
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 // On-off button
 class OnOffButton : public Button {
 private:
   uint8_t m_count;
 public:
-  OnOffButton(uint8_t pin, Button::Mode mode) : 
+  OnOffButton(Board::DigitalPin pin, Button::Mode mode) : 
     Button(pin, mode),  
     m_count(0)
   {
@@ -59,7 +59,7 @@ public:
   }
 };
 
-OnOffButton onOff(7, Button::ON_FALLING_MODE);
+OnOffButton onOff(Board::D7, Button::ON_FALLING_MODE);
 
 void setup()
 {

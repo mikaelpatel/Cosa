@@ -36,7 +36,10 @@
 #define Tstby2a 130.0
 #define Thce 10.0
 
-NRF24L01P::NRF24L01P(uint8_t channel, uint8_t csn, uint8_t ce, uint8_t irq) : 
+NRF24L01P::NRF24L01P(uint8_t channel, 
+		     Board::DigitalPin csn, 
+		     Board::DigitalPin ce, 
+		     Board::InterruptPin irq) : 
   m_status(0),
   m_channel(channel),
   m_csn(csn, 1),

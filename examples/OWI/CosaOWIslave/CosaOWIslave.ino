@@ -36,9 +36,9 @@ uint8_t rom[OWI::ROM_MAX] = {
   0xC0, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x00, 0xb1
 };
 
-// The OWI connection on pin 2 and led for heartbeat
-OWI::Device slave(2, rom);
-OutputPin ledPin(13);
+// The OWI connection on interrupt pin 0 and led for heartbeat
+OWI::Device slave(Board::EXT0, rom);
+OutputPin ledPin(Board::LED);
 
 void setup()
 {

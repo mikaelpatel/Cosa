@@ -36,6 +36,7 @@
 #include "Cosa/Event.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/Board.hh"
 
 class Pin {
 protected:
@@ -71,34 +72,13 @@ protected:
   }
 
   /**
-   * Return Special Function Register for given Arduino pin number.
-   * @param[in] pin number.
-   * @return special register pointer.
-   */
-  static volatile uint8_t* SFR(uint8_t pin) 
-  { 
-    return (pin < 8 ? &PIND : (pin < 14 ? &PINB : &PINC));
-  }
-
-  /**
-   * Return bit position for given Arduino pin number in Special
-   * Function Register.
-   * @param[in] pin number.
-   * @return pin bit position.
-   */
-  static const uint8_t BIT(uint8_t pin)
-  {
-    return (pin < 8 ? pin : (pin < 14 ? pin - 8 : (pin - 14)));
-  }
-  
-  /**
    * Return bit mask for given Arduino pin number.
    * @param[in] pin number.
    * @return pin bit mask.
    */
   static const uint8_t MASK(uint8_t pin)
   {
-    return (_BV(BIT(pin)));
+    return (_BV(Board::BIT(pin)));
   }
 
   /**
@@ -108,7 +88,7 @@ protected:
    */
   static volatile uint8_t* PIN(uint8_t pin) 
   { 
-    return (SFR(pin));
+    return (Board::SFR(pin));
   }
 
   /**
@@ -118,7 +98,7 @@ protected:
    */
   static volatile uint8_t* DDR(uint8_t pin) 
   { 
-    return (SFR(pin) + 1);
+    return (Board::SFR(pin) + 1);
   }
 
   /**
@@ -128,7 +108,7 @@ protected:
    */
   static volatile uint8_t* PORT(uint8_t pin) 
   { 
-    return (SFR(pin) + 2);
+    return (Board::SFR(pin) + 2);
   }
 
 public:
@@ -137,7 +117,7 @@ public:
    * @param[in] pin number.
    */
   Pin(uint8_t pin) : 
-    m_sfr(SFR(pin)), 
+    m_sfr(Board::SFR(pin)), 
     m_mask(MASK(pin)), 
     m_pin(pin) 
   {}
@@ -221,7 +201,7 @@ public:
    */
   static bool read(uint8_t pin)
   {
-    return ((*SFR(pin) & MASK(pin)) != 0); 
+    return ((*Board::SFR(pin) & MASK(pin)) != 0); 
   }
 
   /**
@@ -254,8 +234,8 @@ public:
    * @param[in] pin number.
    * @param[in] mode pin mode (default NORMAL_MODE).
    */
-  InputPin(uint8_t pin, Mode mode = NORMAL_MODE) :
-    Pin(pin)
+  InputPin(Board::DigitalPin pin, Mode mode = NORMAL_MODE) :
+    Pin((uint8_t) pin)
   {
     if (mode == PULLUP_MODE) {
       synchronized {
@@ -300,19 +280,17 @@ public:
    * @param[in] pin pin number.
    * @param[in] mode pin mode.
    */
-  InterruptPin(uint8_t pin, Mode mode = ON_CHANGE_MODE) :
-    InputPin(pin)
+  InterruptPin(Board::InterruptPin pin, Mode mode = ON_CHANGE_MODE) :
+    InputPin((Board::DigitalPin) pin)
   {
     if (mode & PULLUP_MODE) {
       synchronized {
 	*PORT() |= m_mask; 
       }
     }
-    if (pin > 1 && pin < 4) {
-      pin = pin - 2;
-      ext[pin] = this;
-      EICRA = (EICRA & ~(0b11 << pin)) | (mode << pin);
-    }
+    uint8_t ix = pin - Board::EXT0;
+    ext[ix] = this;
+    EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
   }
 
   /**
@@ -350,8 +328,8 @@ public:
    * @param[in] pin number.
    * @param[in] initial value.
    */
-  OutputPin(uint8_t pin, uint8_t initial = 0) : 
-    Pin(pin) 
+  OutputPin(Board::DigitalPin pin, uint8_t initial = 0) : 
+    Pin((uint8_t) pin) 
   { 
     synchronized {
       *DDR() |= m_mask; 
@@ -503,8 +481,8 @@ public:
    * @param[in] pin number.
    * @param[in] duty cycle (0..255)
    */
-  PWMPin(uint8_t pin, uint8_t duty = 0) : 
-    OutputPin(pin) 
+  PWMPin(Board::PWMPin pin, uint8_t duty = 0) : 
+    OutputPin((Board::DigitalPin) pin) 
   { 
     set(duty); 
   }
@@ -570,7 +548,7 @@ public:
    * @param[in] pin number.
    * @param[in] mode pin mode (normal or pullup).
    */
-  IOPin(uint8_t pin, Mode mode = INPUT_MODE) : 
+  IOPin(Board::DigitalPin pin, Mode mode = INPUT_MODE) : 
     OutputPin(pin),
     m_mode(mode)
   {
@@ -659,8 +637,8 @@ public:
    * @param[in] pin number.
    * @param[in] ref reference voltage.
    */
-  AnalogPin(uint8_t pin, Reference ref = AVCC_REFERENCE) :
-    Pin(pin < 14 ? pin + 14 : pin), 
+  AnalogPin(Board::AnalogPin pin, Reference ref = AVCC_REFERENCE) :
+    Pin((uint8_t) pin),
     m_reference(ref),
     m_value(0)
   {
@@ -748,7 +726,7 @@ public:
   AnalogPins(const uint8_t* pins, 
 	     uint16_t* buffer, uint8_t count,
 	     Reference ref = AVCC_REFERENCE) :
-    AnalogPin(255, ref),
+    AnalogPin((Board::AnalogPin) 255, ref),
     m_pin_at(pins),
     m_buffer(buffer != 0 ? 
 	     buffer : 

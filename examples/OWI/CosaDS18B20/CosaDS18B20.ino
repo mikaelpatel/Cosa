@@ -34,13 +34,13 @@
 #include "Cosa/Memory.h"
 
 // One-wire pin and connected DS18B20 devices
-OWI owi(7);
+OWI owi(Board::D7);
 DS18B20 outdoors(&owi);
 DS18B20 indoors(&owi);
 DS18B20 basement(&owi);
 
 // Use the builtin led for a heartbeat
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 void setup()
 {

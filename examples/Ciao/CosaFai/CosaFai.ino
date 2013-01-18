@@ -38,9 +38,9 @@
 Fai cout;
 
 // Pins to sample and stream
-AnalogPin levelPin(0);
-InputPin onoffPin(2);
-OutputPin ledPin(13);
+AnalogPin levelPin(Board::A0);
+InputPin onoffPin(Board::D2);
+OutputPin ledPin(Board::LED);
 
 // Arduino build includes stdio and putchar macro so we need to undef
 #undef putchar

@@ -34,7 +34,7 @@
 #include "Cosa/Memory.h"
 
 // Use the builtin led as a heartbeat
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 // The serial eeprom (sub-address 0b000)
 AT24CXX rom(0b000);

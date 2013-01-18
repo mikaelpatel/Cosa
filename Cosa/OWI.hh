@@ -254,7 +254,7 @@ public:
      * @param[in] pin number.
      * @param[in] rom identity number.
      */
-    Device(uint8_t pin, uint8_t* rom) : 
+    Device(Board::InterruptPin pin, uint8_t* rom) : 
       InterruptPin(pin, InterruptPin::ON_CHANGE_MODE),
       m_rom(rom),
       m_time(0),
@@ -272,7 +272,7 @@ public:
    * Construct one wire bus connected to the given pin.
    * @param[in] pin number.
    */
-  OWI(uint8_t pin) : IOPin(pin) {}
+  OWI(Board::DigitalPin pin) : IOPin(pin) {}
 
   /**
    * Reset the one wire bus and check that at least one device is

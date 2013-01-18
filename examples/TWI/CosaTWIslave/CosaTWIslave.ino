@@ -68,7 +68,7 @@ TWIslave::on_event(uint8_t type, uint16_t value)
 TWIslave slave;
 
 // Use the builtin led for a heartbeat
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 void setup()
 {

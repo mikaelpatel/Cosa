@@ -35,7 +35,7 @@ class LED : public Link {
 private:
   OutputPin m_pin;
 public:
-  LED(uint8_t pin, uint8_t initial = 0) : 
+  LED(Board::DigitalPin pin, uint8_t initial = 0) : 
     Link(),
     m_pin(pin, initial)
   {
@@ -53,9 +53,12 @@ public:
 };
 
 // Use an RGB LED connected to pins(5,6,7)
-LED redLedPin(5);
-LED greenLedPin(6, 1);
-LED blueLedPin(7);
+LED redLedPin(Board::D5);
+LED greenLedPin(Board::D6, 1);
+LED blueLedPin(Board::D7);
+
+// And builtin LED
+LED builtinPin(Board::LED);
 
 void setup()
 {

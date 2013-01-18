@@ -43,7 +43,7 @@ struct latest_t {
 const uint8_t ram_pos = sizeof(DS1307::timekeeper_t);
 
 // Use the builtin led for a heartbeat
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 void setup()
 {

@@ -31,11 +31,11 @@
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 
-InputPin inPin(7);
-OutputPin outPin(8);
-OutputPin dataPin(9);
-OutputPin clockPin(10);
-AnalogPin analogPin(0);
+InputPin inPin(Board::D7);
+OutputPin outPin(Board::D8);
+OutputPin dataPin(Board::D9);
+OutputPin clockPin(Board::D10);
+AnalogPin analogPin(Board::A0);
 
 void setup()
 {

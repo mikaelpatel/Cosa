@@ -36,7 +36,7 @@
 static const uint8_t ADDR = 0xC05A;
 
 // Use the builtin led for a heartbeat
-OutputPin ledPin(13);
+OutputPin ledPin(Board::LED);
 
 void setup()
 {
