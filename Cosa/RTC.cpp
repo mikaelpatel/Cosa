@@ -39,9 +39,15 @@
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
 #define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
 #define TIMER_CYCLES(ticks) ((ticks) << 8)
+#define MS_COUNT ((F_CPU / PRESCALE / 1000) - 1)
+#define MS_ERR ((COUNT + 1) - MS_COUNT)
 
-// The number of timer ticks
+// Timer ticks counter
 static volatile uint32_t g_ticks = 0UL;
+
+// Milli-second counter
+static volatile uint32_t g_millis = 0UL;
+static volatile uint8_t g_err = 0;
 
 bool
 RTC::begin()
@@ -65,7 +71,7 @@ RTC::begin()
 bool
 RTC::end()
 {
-  // Disable timer interrupts
+  // Disable the timer interrupts
   synchronized {
     TIMSK0 = 0;
   }
@@ -76,12 +82,10 @@ uint32_t
 RTC::millis()
 {
   uint32_t res;
-  // Read tick counter
   synchronized {
-    res = g_ticks;
+    res = g_millis;
   }
-  // Convert ticks to milli-seconds
-  return (TIMER_CYCLES(res) * US_PER_TIMER_CYCLE / 1000L);
+  return (res);
 }
 
 uint32_t 
@@ -104,7 +108,19 @@ ISR(TIMER0_COMPA_vect)
 {
   // Set the top register (again)
   OCR0A = COUNT;
-  // And increment tick counter
+  // Increment tick counter
   g_ticks = g_ticks + 1;
+  // And increment milli-second counter
+  uint32_t millis = g_millis;
+  uint8_t err = g_err + MS_ERR;
+  if (err >= MS_COUNT) {
+    millis += 2;
+    err = 0;
+  } 
+  else {
+    millis += 1;
+  }
+  g_millis = millis;
+  g_err = err;
 }
 
