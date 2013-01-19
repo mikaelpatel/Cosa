@@ -34,17 +34,18 @@ UART* uart = 0;
 bool
 UART::begin(uint32_t baudrate)
 {
-  uint16_t setting = (F_CPU / (baudrate * 16L)) - 1;
+  uint16_t setting = (F_CPU / (baudrate * 8L)) - 1;
 
   // Set up trace buffer
   uart = this;
   m_head = 0;
   m_tail = 0;
   
-  // Check if double rate is needed
-  if (setting & 0x8000) {
+  // Check if double rate is not possible
+  if (setting > 4095) {
+    setting = (F_CPU / (baudrate * 16L)) - 1;
+  } else {
     UCSR0A = _BV(U2X0);
-    setting &= ~0x8000;
   }
 
   // Set baudrate
@@ -96,3 +97,4 @@ ISR(USART_UDRE_vect)
     bit_clear(UCSR0B, UDRIE0);
   }
 }
+
