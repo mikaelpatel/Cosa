@@ -122,10 +122,13 @@ public:
     /**
      * Set context canvas color.
      * @param[in] color
+     * @return previous color.
      */
-    void set_canvas_color(color16_t color)
+    color16_t set_canvas_color(color16_t color)
     {
+      uint16_t previous = m_canvas_color;
       m_canvas_color = color;
+      return (previous);
     }
 
     /**
@@ -140,10 +143,13 @@ public:
     /**
      * Set context drawing color.
      * @param[in] color
+     * @return previous color.
      */
-    void set_pen_color(color16_t color)
+    color16_t set_pen_color(color16_t color)
     {
+      uint16_t previous = m_pen_color;
       m_pen_color = color;
+      return (previous);
     }
 
     /**
@@ -158,10 +164,13 @@ public:
     /**
      * Set context text color.
      * @param[in] color
+     * @return previous color.
      */
-    void set_text_color(color16_t color)
+    color16_t set_text_color(color16_t color)
     {
+      uint16_t previous = m_text_color;
       m_text_color = color;
+      return (previous);
     }
 
     /**
@@ -175,10 +184,13 @@ public:
     /**
      * Set context text font.
      * @param[in] font
+     * @return previous font.
      */
-    void set_text_font(Font* font)
+    Font* set_text_font(Font* font)
     {
+      Font* previous = m_font;
       m_font = font;
+     return (previous);
     }
 
     /**
@@ -194,9 +206,11 @@ public:
      * Set context text scale (1..n).
      * @param[in] scale.
      */
-    void set_text_scale(uint8_t scale)
+    uint8_t set_text_scale(uint8_t scale)
     {
+      uint8_t previous = m_text_scale;
       m_text_scale = (scale > 0 ? scale : 1);
+      return (previous);
     }
 
     /**
@@ -303,10 +317,13 @@ public:
   /**
    * Set current canvas context.
    * @param[in] context.
+   * @return previous context.
    */
-  void set_context(Context* context)
+  Context* set_context(Context* context)
   {
+    Context* previous = m_context;
     m_context = context;
+    return (previous);
   }
 
   /**
@@ -321,10 +338,11 @@ public:
   /**
    * Set current canvas color.
    * @param[in] color
+   * @return previous color.
    */
-  void set_canvas_color(color16_t color)
+  color16_t set_canvas_color(color16_t color)
   {
-    m_context->set_canvas_color(color);
+    return (m_context->set_canvas_color(color));
   }
 
   /**
@@ -339,10 +357,11 @@ public:
   /**
    * Set current drawing color.
    * @param[in] color
+   * @return previous color.
    */
-  void set_pen_color(color16_t color)
+  color16_t set_pen_color(color16_t color)
   {
-    m_context->set_pen_color(color);
+    return (m_context->set_pen_color(color));
   }
 
   /**
@@ -357,10 +376,11 @@ public:
   /**
    * Set current text color.
    * @param[in] color
+   * @return previous color.
    */
-  void set_text_color(color16_t color)
+  color16_t set_text_color(color16_t color)
   {
-    m_context->set_text_color(color);
+    return (m_context->set_text_color(color));
   }
 
   /**
@@ -374,10 +394,11 @@ public:
   /**
    * Set current text font.
    * @param[in] font
+   * @return previous font.
    */
-  void set_text_font(Font* font)
+  Font* set_text_font(Font* font)
   {
-    m_context->set_text_font(font);
+    return (m_context->set_text_font(font));
   }
 
   /**
@@ -392,10 +413,11 @@ public:
   /**
    * Set current text scale (1..n).
    * @param[in] scale.
+   * @return previous scale.
    */
-  void set_text_scale(uint8_t scale)
+  uint8_t set_text_scale(uint8_t scale)
   {
-    m_context->set_text_scale(scale);
+    return (m_context->set_text_scale(scale));
   }
 
   /**
@@ -465,10 +487,13 @@ public:
   /**
    * Set screen orientation.
    * @param[in] direction (LANDSCAPE/PORTRAIT)
+   * @return previous orientation.
    */
-  virtual void set_orientation(uint8_t direction) 
+  virtual uint8_t set_orientation(uint8_t direction) 
   {
+    uint8_t previous = m_direction;
     m_direction = (direction & 1);
+    return (previous);
   }
 
   /**
@@ -693,8 +718,7 @@ public:
    */
   virtual void fill_screen()
   {
-    color16_t saved = get_pen_color();
-    set_pen_color(get_canvas_color());
+    color16_t saved = set_pen_color(get_canvas_color());
     fill_rect(0, 0, WIDTH, HEIGHT);
     set_pen_color(saved);
   }

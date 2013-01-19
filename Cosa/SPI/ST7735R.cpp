@@ -232,8 +232,9 @@ ST7735R::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
   }
 }
 
-void 
+uint8_t
 ST7735R::set_orientation(uint8_t direction) {
+  uint8_t previous = m_direction;
   uint8_t setting = 0;
   if (direction == LANDSCAPE) {
     m_direction = LANDSCAPE;
@@ -248,4 +249,5 @@ ST7735R::set_orientation(uint8_t direction) {
     HEIGHT = SCREEN_HEIGHT;
   }
   write(MADCTL, setting);
+  return (previous);
 }

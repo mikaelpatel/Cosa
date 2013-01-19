@@ -250,8 +250,7 @@ Canvas::draw_char(char c)
   uint8_t x, y;
   get_cursor(x, y);
   uint8_t scale = get_text_scale();
-  color16_t saved = get_pen_color();
-  set_pen_color(get_text_color());
+  color16_t saved = set_pen_color(get_text_color());
   Font* font = get_text_font();
   font->draw(this, c, x, y, scale);
   set_cursor(x + scale * (font->get_width(c)), y);

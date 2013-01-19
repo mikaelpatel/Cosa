@@ -34,7 +34,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/SPI/ST7735R.hh"
 
-// The display and an iostream to the device
+// The display and the analog pin to use as a probe
 ST7735R tft;
 AnalogPin probe(Board::A0);
 uint16_t CANVAS, PEN, CARET;

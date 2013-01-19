@@ -186,7 +186,7 @@ public:
    * Set screen orientation
    * @param[in] direction
    */
-  virtual void set_orientation(uint8_t direction);
+  virtual uint8_t set_orientation(uint8_t direction);
 
   /**
    * Set the current display port.
