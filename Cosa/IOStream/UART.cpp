@@ -48,8 +48,7 @@ UART::begin(uint32_t baudrate)
   }
 
   // Set baudrate
-  UBRR0H = (uint8_t) (setting >> 8);
-  UBRR0L = (uint8_t) setting;
+  UBRR0 = setting;
 
   // Enable transmitter interrupt
   UCSR0B = _BV(TXEN0);
