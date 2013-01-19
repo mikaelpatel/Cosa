@@ -43,12 +43,18 @@ void setup()
 
   // Start the timers
   Watchdog::begin();
+  Watchdog::delay(1);
   RTC::begin();
   
   // Measure baseline
   start = RTC::micros();
   stop = RTC::micros();
   INFO("RTC::micros(): %ul", stop - start);
+
+  start = RTC::micros();
+  uint32_t ms = RTC::millis();
+  stop = RTC::micros();
+  INFO("RTC::millis(): %ul", stop - start);
 
   start = RTC::micros();
   DELAY(1);
