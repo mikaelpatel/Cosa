@@ -30,6 +30,8 @@
 #include "Cosa/FSM.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 /**
@@ -78,8 +80,9 @@ Echo pong;
 
 void setup()
 {
-  // Start the trace output stream
-  trace.begin(9600, PSTR("CosaFSMBenchmark: started"));
+  // Start the UART and trace output stream
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaFSMBenchmark: started"));
 
   // Check amount of free memory
   TRACE(free_memory());
@@ -118,7 +121,7 @@ void loop()
     event.dispatch();
   }
 
-  // Capture the tick count and calculate the time per event and nr of cycles.
+  // Capture the tick count and calculate the time per event and cycles.
   uint16_t ticks = Watchdog::get_ticks();
   uint16_t ms_per_tick = Watchdog::ms_per_tick();
   uint32_t ms = ticks * ms_per_tick;

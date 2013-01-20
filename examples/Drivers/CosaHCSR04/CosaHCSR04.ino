@@ -34,6 +34,7 @@
 
 #include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/HCSR04.hh"
@@ -106,8 +107,9 @@ HCSR04 ping(2, 3);
 
 void setup()
 {
-  // Start trace output stream
-  trace.begin(9600, PSTR("CosaHCSR04: started"));
+  // Start trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaHCSR04: started"));
 
   // Check amount of free memory and size of instances
   TRACE(free_memory());

@@ -29,6 +29,7 @@
 #include "Cosa/OWI.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 // Slave device driver
@@ -67,7 +68,8 @@ OutputPin ledPin(Board::LED);
 
 void setup()
 {
-  trace.begin(9600, PSTR("CosaOWImaster: started"));
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaOWImaster: started"));
   TRACE(free_memory());
   Watchdog::begin();
   driver.connect(0xC0, 0);

@@ -29,6 +29,7 @@
 #include "Cosa/Ciao.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 #include <ctype.h>
@@ -63,8 +64,9 @@ TraceDevice traceDevice;
 
 void setup()
 {
-  // Start trace coutput stream
-  trace.begin(9600, PSTR("CosaCiaoNative: started"));
+  // Start trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaCiaoNative: started"));
 
   // Check amount of free memory and size of instances
   TRACE(free_memory());

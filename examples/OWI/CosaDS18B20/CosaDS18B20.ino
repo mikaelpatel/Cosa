@@ -31,6 +31,7 @@
 #include "Cosa/OWI/DS18B20.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 // One-wire pin and connected DS18B20 devices
@@ -44,8 +45,9 @@ OutputPin ledPin(Board::LED);
 
 void setup()
 {
-  // Start trace output stream
-  trace.begin(9600, PSTR("CosaDS18B20: started"));
+  // Start trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaDS18B20: started"));
 
   // Check amount of free memory
   TRACE(free_memory());

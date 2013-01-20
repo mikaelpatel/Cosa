@@ -28,6 +28,7 @@
  */
 
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/IOStream.hh"
@@ -47,12 +48,15 @@ IOStream console(&textbox);
 
 void setup()
 {
-  // Initiate trace stream
-  trace.begin(9600, PSTR("CosaST7735R: started"));
+  // Initiate trace stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaST7735R: started"));
 
   // Check amount of free memory and size of objects
   TRACE(free_memory());
   TRACE(sizeof(Trace));
+  TRACE(sizeof(IOStream::Device));
+  TRACE(sizeof(UART));
   TRACE(sizeof(Canvas));
   TRACE(sizeof(Font));
   TRACE(sizeof(ST7735R));

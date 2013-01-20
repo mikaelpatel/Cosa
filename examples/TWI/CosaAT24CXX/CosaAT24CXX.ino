@@ -30,6 +30,7 @@
 #include "Cosa/TWI/AT24CXX.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
@@ -42,7 +43,8 @@ AT24CXX rom(0b000);
 void setup()
 {
   // Start trace output stream
-  trace.begin(9600, PSTR("CosaAT24CXX: started"));
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaAT24CXX: started"));
 
   // Check amount of free memory and size of objects
   TRACE(free_memory());

@@ -29,6 +29,7 @@
 #include "Cosa/SPI/ADXL345.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
@@ -37,8 +38,9 @@ ADXL345 adxl;
 
 void setup()
 {
-  // Initiate trace stream
-  trace.begin(9600, PSTR("CosaADXL345: started"));
+  // Initiate trace stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaADXL345: started"));
 
   // Check amount of free memory and size of objects
   TRACE(free_memory());

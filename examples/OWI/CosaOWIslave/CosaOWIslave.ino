@@ -29,6 +29,7 @@
 #include "Cosa/OWI.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 // The slave device rom identity (crc is automatically generated)
@@ -42,7 +43,8 @@ OutputPin ledPin(Board::LED);
 
 void setup()
 {
-  trace.begin(9600, PSTR("CosaOWIslave: started"));
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaOWIslave: started"));
   TRACE(free_memory());
   slave.enable();
   Watchdog::begin();

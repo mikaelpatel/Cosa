@@ -32,6 +32,10 @@
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#define USART_UDRE_vect USART0_UDRE_vect
+#endif
+
 extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
 
 class UART : public IOStream::Device {
@@ -63,6 +67,6 @@ public:
   bool end();
 };
 
-extern UART* uart;
+extern UART uart;
 
 #endif

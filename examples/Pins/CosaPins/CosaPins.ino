@@ -29,6 +29,7 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 // Input interrupt pin with counter
@@ -53,8 +54,9 @@ AnalogPin levelPin(Board::A0);
 
 void setup()
 {
-  // Start trace output stream
-  trace.begin(9600, PSTR("CosaPins: started"));
+  // Start trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaPins: started"));
 
   // Check amount of free memory
   TRACE(free_memory());

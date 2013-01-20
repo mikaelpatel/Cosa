@@ -33,3 +33,13 @@ Trace trace;
 
 uint8_t trace_log_mask = LOG_UPTO(LOG_INFO);
 
+bool 
+Trace::begin(IOStream::Device* dev, const char* banner)
+{
+  set_device(dev);
+  if (banner != 0) {
+    trace.print_P(banner);
+    trace.println();
+  }
+  return (1);
+}

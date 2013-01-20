@@ -30,6 +30,8 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 
 InputPin inPin(Board::D7);
 OutputPin outPin(Board::D8);
@@ -41,8 +43,9 @@ void setup()
 {
   uint32_t start, stop;
 
-  // Start the trace output stream
-  trace.begin(9600, PSTR("CosaPinsBenchmark: started"));
+  // Start the trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaPinsBenchmark: started"));
 
   // Check amount of free memory and size of instance
   TRACE(free_memory());

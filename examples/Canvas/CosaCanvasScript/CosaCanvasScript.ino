@@ -27,6 +27,7 @@
  */
 
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/SPI/ST7735R.hh"
@@ -152,8 +153,9 @@ PGM_VOID_P tab[] PROGMEM = {
 
 void setup()
 {
-  // Initiate trace stream
-  trace.begin(9600, PSTR("CosaCanvasScript: started"));
+  // Initiate trace stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaCanvasScript: started"));
 
   // Check amount of free memory and size of objects
   TRACE(free_memory());

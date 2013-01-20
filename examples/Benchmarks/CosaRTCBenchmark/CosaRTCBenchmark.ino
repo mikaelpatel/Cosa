@@ -30,13 +30,16 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 
 void setup()
 {
   uint32_t start, stop, err;
 
-  // Start the trace output stream
-  trace.begin(9600, PSTR("CosaPinsBenchmark: started"));
+  // Start the trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaPinsBenchmark: started"));
 
   // Check amount of free memory
   TRACE(free_memory());

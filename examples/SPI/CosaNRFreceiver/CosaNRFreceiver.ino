@@ -29,6 +29,7 @@
 #include "Cosa/SPI/NRF24L01P.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 // NRF24L01+ Wireless communication using SPI and default pins(9, 10, 2)
@@ -36,8 +37,9 @@ NRF24L01P nrf;
 
 void setup()
 {
-  // Start trace output
-  trace.begin(9600, PSTR("CosaNRFreceiver: started"));
+  // Start trace output on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaNRFreceiver: started"));
 
   // Check amount of free memory
   TRACE(free_memory());

@@ -29,6 +29,8 @@
 #include "Cosa/TWI/PCF8591.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Pins.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 // The A/D, D/A converter
@@ -39,8 +41,9 @@ OutputPin ledPin(Board::LED);
 
 void setup()
 {
-  // Start trace output stream
-  trace.begin(9600, PSTR("CosaPCF8591: started"));
+  // Start trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaPCF8591: started"));
 
   // Check amount of free memory
   TRACE(free_memory());

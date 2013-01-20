@@ -219,10 +219,14 @@ public:
   /**
    * Set io stream device.
    * @param[in] dev stream device.
+   * @return previous device.
    */
-  void set_device(Device* dev) 
+  Device* set_device(Device* dev) 
   { 
+    Device* previous = m_dev;
+    if (dev == 0) dev = &Device::null;
     m_dev = dev;
+    return (previous);
   }
 
   /**

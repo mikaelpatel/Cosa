@@ -30,6 +30,7 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 // TWI slave address
@@ -40,8 +41,9 @@ OutputPin ledPin(Board::LED);
 
 void setup()
 {
-  // Start trace output stream
-  trace.begin(9600, PSTR("CosaTWImaster: started"));
+  // Start trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaTWImaster: started"));
 
   // Check amount of free memory and size of instances
   TRACE(free_memory());

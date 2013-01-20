@@ -30,6 +30,7 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 // The real-time device, latest start and sample time in ram
@@ -47,8 +48,9 @@ OutputPin ledPin(Board::LED);
 
 void setup()
 {
-  // Start trace output stream
-  trace.begin(9600, PSTR("CosaDS1703: started"));
+  // Start trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaDS1703: started"));
 
   // Check amount of free memory
   TRACE(free_memory());

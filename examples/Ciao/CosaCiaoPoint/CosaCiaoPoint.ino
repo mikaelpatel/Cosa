@@ -30,6 +30,8 @@
 #include "Cosa/Ciao.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
+
 #include <ctype.h>
 
 // Ciao output stream
@@ -93,8 +95,9 @@ TraceDevice traceDevice;
 
 void setup()
 {
-  // Start trace coutput stream
-  trace.begin(9600, PSTR("CosaCiaoPoint: started"));
+  // Start trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaCiaoPoint: started"));
 
   // Setup and start the data output stream on the trace device
   cout.set(&traceDevice);

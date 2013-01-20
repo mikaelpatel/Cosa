@@ -28,6 +28,7 @@
 
 #include "Cosa/SPI/NRF24L01P.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
@@ -40,8 +41,9 @@ NRF24L01P nrf;
 
 void setup()
 {
-  // Start trace output stream
-  trace.begin(9600, PSTR("CosaNRFsender: started"));
+  // Start trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaNRFsender: started"));
 
   // Check amount of free memory
   TRACE(free_memory());

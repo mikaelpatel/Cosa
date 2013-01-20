@@ -21,8 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Basic trace support class. Combind IOStream with UART for trace
- * output.
+ * Basic trace support class. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -32,7 +31,6 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
-#include "Cosa/IOStream/UART.hh"
 
 /**
  * The Trace class singleton. 
@@ -40,31 +38,21 @@
 extern class Trace trace;
 
 class Trace : public IOStream {
-private:
-  UART uart;
-
 public:
   /**
-   * Construct Trace IOStream object and initiate UART object.
-   * The Trace class is actually a singleton; trace.
+   * Construct Trace IOStream object and initiate with null device.
+   * Use begin() to set the trace device. The Trace class is actually 
+   * a singleton; trace. 
    */
-  Trace() : IOStream(&uart) {}
+  Trace() : IOStream() {}
 
   /**
-   * Start trace stream over UART transmitter.
-   * @param[in] baudrate serial bitrate.
+   * Start trace stream over given iostream device.
+   * @param[in] dev iostream device.
    * @param[in] banner trace begin message.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint32_t baudrate = 9600, const char* banner = 0)
-  {
-    if (!uart.begin(baudrate)) return (0);
-    if (banner != 0) {
-      trace.print_P(banner);
-      trace.println();
-    }
-    return (1);
-  }
+  bool begin(IOStream::Device* dev, const char* banner = 0);
 
   /**
    * Stop trace stream over current device.
@@ -72,7 +60,8 @@ public:
    */
   bool end()
   {
-    return (uart.end());
+    set_device(0);
+    return (1);
   }
 };
 

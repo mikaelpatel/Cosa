@@ -30,6 +30,8 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 // Use the built-in led
@@ -63,8 +65,9 @@ OnOffButton onOff(Board::D7, Button::ON_FALLING_MODE);
 
 void setup()
 {
-  // Start trace output stream
-  trace.begin(9600, PSTR("CosaButton: started"));
+  // Start trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaButton: started"));
 
   // Check amount of free memory and size of instances
   TRACE(free_memory());

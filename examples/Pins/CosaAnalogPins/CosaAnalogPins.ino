@@ -29,6 +29,7 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Memory.h"
 
 // Analog pin vector for pin set. Note: use program memory
@@ -52,7 +53,8 @@ OutputPin ledPin(Board::LED);
 void setup()
 {
   // Start the trace output stream
-  trace.begin(9600, PSTR("CosaAnalogPins: started"));
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaAnalogPins: started"));
 
   // Check amount of free memory and size of instances
   TRACE(free_memory());

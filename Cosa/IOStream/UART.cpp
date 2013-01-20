@@ -29,7 +29,7 @@
 #include "Cosa/IOStream/UART.hh"
 #include "Cosa/Bits.h"
 
-UART* uart = 0;
+UART uart;
 
 bool
 UART::begin(uint32_t baudrate)
@@ -37,7 +37,6 @@ UART::begin(uint32_t baudrate)
   uint16_t setting = (F_CPU / (baudrate * 8L)) - 1;
 
   // Set up trace buffer
-  uart = this;
   m_head = 0;
   m_tail = 0;
   
@@ -87,11 +86,10 @@ UART::flush()
 
 ISR(USART_UDRE_vect)
 {
-  if (uart == 0) return;
-  if (uart->m_head != uart->m_tail) {
-    uint8_t next = (uart->m_tail + 1) & UART::BUFFER_MASK;
-    uart->m_tail = next;
-    UDR0 = uart->m_buffer[next];
+  if (uart.m_head != uart.m_tail) {
+    uint8_t next = (uart.m_tail + 1) & UART::BUFFER_MASK;
+    uart.m_tail = next;
+    UDR0 = uart.m_buffer[next];
   }
   else {
     bit_clear(UCSR0B, UDRIE0);

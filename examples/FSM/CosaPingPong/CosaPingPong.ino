@@ -29,6 +29,8 @@
 #include "Cosa/FSM.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/UART.hh"
 
 /**
  * Simple echo state machine: Listens for an event. When received
@@ -102,8 +104,9 @@ Echo pang;
 
 void setup()
 {
-  // Start the trace output stream
-  trace.begin(9600, PSTR("CosaPingPong: started"));
+  // Start the trace output stream on the serial port
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaPingPong: started"));
 
   // Start the watchdog for timeout handling
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
