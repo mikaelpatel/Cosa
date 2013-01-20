@@ -81,6 +81,26 @@ public:
   }
   
   /**
+   * Get width for given string.
+   * @param[in] s string.
+   * @return width.
+   */
+  virtual uint8_t get_width(char* s)
+  {
+    return ((WIDTH + SPACING) * strlen(s));
+  }
+  
+  /**
+   * Get width for given string in program memory.
+   * @param[in] s string in program memory.
+   * @return width.
+   */
+  virtual uint8_t get_width_P(const char* s)
+  {
+    return ((WIDTH + SPACING) * strlen_P(s));
+  }
+  
+  /**
    * Get width for given character.
    * @param[in] c character.
    * @return height.
