@@ -35,6 +35,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.hh"
+#include "Cosa/Board.hh"
 
 class SPI {
 public:
@@ -79,15 +80,6 @@ public:
   };
 
 private:
-  /**
-   * Pins used for SPI interface (in port B, digital pins 10-13).
-   */
-  enum Pin {
-    SS = 2,
-    MOSI = 3,
-    MISO = 4,
-    SCK = 5
-  };
   uint8_t m_cmd;
   uint8_t* m_buffer;
   uint8_t m_max;
@@ -121,7 +113,7 @@ public:
     m_data(0),
     m_dev(dev)
   {
-    bit_clear(DDRB, SS);
+    bit_clear(DDRB, Board::SS);
     if (buffer == 0) {
       m_buffer = &m_data;
       m_max = 1;

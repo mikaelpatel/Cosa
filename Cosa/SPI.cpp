@@ -37,19 +37,19 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
   synchronized {
     if (clock == MASTER_CLOCK) {
       m_put = 0;
-      bit_clear(DDRB, MOSI); 
-      bit_set(DDRB, MISO);	 
-      bit_clear(DDRB, SCK);
-      bit_clear(DDRB, SS);	 
+      bit_clear(DDRB, Board::MOSI); 
+      bit_set(DDRB, Board::MISO);	 
+      bit_clear(DDRB, Board::SCK);
+      bit_clear(DDRB, Board::SS);	 
       SPCR = (_BV(SPIE) | _BV(SPE));
     } 
     // Master pin setting; input(MISO), output(MOSI, SCK)
     else {
-      bit_set(DDRB, MOSI);
-      bit_clear(DDRB, MISO);
-      bit_set(DDRB, SCK);
-      bit_clear(PORTB, SCK);
-      bit_clear(PORTB, MOSI);
+      bit_set(DDRB, Board::MOSI);
+      bit_clear(DDRB, Board::MISO);
+      bit_set(DDRB, Board::SCK);
+      bit_clear(PORTB, Board::SCK);
+      bit_clear(PORTB, Board::MOSI);
       SPCR = (_BV(MSTR) | _BV(SPE));
     }
   }

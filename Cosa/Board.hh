@@ -137,6 +137,15 @@ public:
     EXT1 = 3
   };
 
+  /**
+   * Pins used for SPI interface (in port B, digital pins 10-13).
+   */
+  enum SPIPin {
+    SS = 2,
+    MOSI = 3,
+    MISO = 4,
+    SCK = 5
+  };
 };
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -298,6 +307,16 @@ public:
   enum InterruptPin {
     EXT0 = 2,
     EXT1 = 3
+  };
+
+  /**
+   * Pins used for SPI interface (in port B, digital pins 50-53).
+   */
+  enum SPIPin {
+    SS = 0,
+    MOSI = 2,
+    MISO = 3,
+    SCK = 1
   };
 };
 
