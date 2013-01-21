@@ -32,6 +32,8 @@
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Event.hh"
+#include "Cosa/Board.hh"
+
 #include <avr/sleep.h>
 
 extern "C" void TWI_vect(void) __attribute__ ((signal));
@@ -105,14 +107,6 @@ private:
     ACK_CMD =   _BV(TWINT) | _BV(TWEA) |              _BV(TWEN) | _BV(TWIE),
     NACK_CMD =  _BV(TWINT) |                          _BV(TWEN) | _BV(TWIE),
     STOP_CMD =  _BV(TWINT) | _BV(TWEA) | _BV(TWSTO) | _BV(TWEN) | _BV(TWIE)
-  };
-
-  /**
-   * Pins used for TWI interface (in port C, analog pins).
-   */
-  enum {
-    SDA = 4,
-    SCL = 5
   };
 
   /**

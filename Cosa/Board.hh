@@ -138,6 +138,14 @@ public:
   };
 
   /**
+   * Pins used for TWI interface (in port C, analog pins 18-19).
+   */
+  enum {
+    SDA = 4,
+    SCL = 5
+  };
+
+  /**
    * Pins used for SPI interface (in port B, digital pins 10-13).
    */
   enum SPIPin {
@@ -310,13 +318,21 @@ public:
   };
 
   /**
+   * Pins used for TWI interface (in port D, digital pins 20-21).
+   */
+  enum {
+    SCL = 0,
+    SDA = 1
+  };
+
+  /**
    * Pins used for SPI interface (in port B, digital pins 50-53).
    */
   enum SPIPin {
     SS = 0,
+    SCK = 1,
     MOSI = 2,
-    MISO = 3,
-    SCK = 1
+    MISO = 3
   };
 };
 

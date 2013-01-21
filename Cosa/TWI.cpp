@@ -30,7 +30,7 @@
 #include "Cosa/Watchdog.hh"
 
 /**
- * Default Two-write clock: 100 KHz
+ * Default Two-Wire Interface clock: 100 KHz
  */
 #ifndef TWI_FREQ
 #define TWI_FREQ 100000L
@@ -51,8 +51,8 @@ TWI::begin(Event::Handler* target, uint8_t addr)
   else {
     // Enable internal pullup
     synchronized {
-      bit_set(PORTC, SDA);
-      bit_set(PORTC, SCL);
+      bit_set(PORTC, Board::SDA);
+      bit_set(PORTC, Board::SCL);
     }
   }
   
