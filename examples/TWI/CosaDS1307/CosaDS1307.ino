@@ -62,6 +62,21 @@ void setup()
   latest_t latest;
   rtc.read_ram(&latest, sizeof(latest), ram_pos);
 
+  // Set the time. Adjust below to your current time
+  DS1307::timekeeper_t now;
+#ifdef __RTC_SET_TIME__
+  now.seconds = 0;
+  now.minutes = 0x10;
+  now.hours = 0;
+  now.day = 0x02;
+  now.date = 0x21;
+  now.month = 0x01;
+  now.year = 0x13;
+  now.cntl = 0x00;
+  rtc.set_time(now);
+  latest.set = now;
+#endif
+
   // Convert bcd to binary and print latest set time
   latest.set.to_binary();
   trace.print_P(PSTR("set on "));
@@ -75,7 +90,6 @@ void setup()
   trace.println();
 
   // Update the run time with the current time and update ram
-  DS1307::timekeeper_t now;
   rtc.get_time(now);
   latest.run = now;
   rtc.write_ram(&latest, sizeof(latest), ram_pos);
