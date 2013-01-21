@@ -32,36 +32,33 @@
 UART uart;
 
 bool
-UART::begin(uint32_t baudrate)
+UART::begin(uint32_t baudrate, uint8_t format)
 {
   uint16_t setting = (F_CPU / (baudrate * 8L)) - 1;
 
-  // Set up trace buffer
-  m_head = 0;
-  m_tail = 0;
-  
   // Check if double rate is not possible
   if (setting > 4095) {
     setting = (F_CPU / (baudrate * 16L)) - 1;
   } else {
-    UCSR0A = _BV(U2X0);
+    *UCSRnA() = _BV(U2X0);
   }
 
   // Set baudrate
-  UBRR0 = setting;
+  *UBRRn() = setting;
 
   // Enable transmitter interrupt
-  UCSR0B = _BV(TXEN0);
+  *UCSRnB() = _BV(TXEN0);
     
   // Set frame format: asynchronous, 8data, 2stop bit
-  UCSR0C = _BV(USBS0) | (3 << UCSZ00);
+  *UCSRnC() = format;
   return (1);
 }
 
 bool 
 UART::end()
 {
-  UCSR0B = 0;
+  // Disable interrupts
+  *UCSRnB() = 0;
   return (1);
 }
 
@@ -72,7 +69,7 @@ UART::putchar(char c)
   while (next == m_tail);
   m_buffer[next] = c;
   m_head = next;
-  bit_set(UCSR0B, UDRIE0);
+  *UCSRnB() |= _BV(UDRIE0);
   return (c);
 }
 
@@ -95,4 +92,7 @@ ISR(USART_UDRE_vect)
     bit_clear(UCSR0B, UDRIE0);
   }
 }
+
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#endif
 

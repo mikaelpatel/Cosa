@@ -32,17 +32,12 @@
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 
-/**
- * The Trace class singleton. 
- */
-extern class Trace trace;
-
 class Trace : public IOStream {
 public:
   /**
    * Construct Trace IOStream object and initiate with null device.
    * Use begin() to set the trace device. The Trace class is actually 
-   * a singleton; trace. 
+   * a singleton, trace, as the trace macro set depends on the variable.
    */
   Trace() : IOStream() {}
 
@@ -145,5 +140,10 @@ extern uint8_t trace_log_mask;
 # define INFO(msg, ...)
 # define DEBUG(msg, ...)
 #endif
+
+/**
+ * The Trace class singleton. 
+ */
+extern Trace trace;
 
 #endif

@@ -36,6 +36,7 @@
 
 class Board {
   friend class Pin;
+  friend class UART;
 private:
   /**
    * Do not allow instances. This is a static singleton.
@@ -65,6 +66,16 @@ private:
     return (pin < 8 ? pin : pin < 14 ? pin - 8 : pin - 14);
   }
   
+  /**
+   * Return UART Register for given Arduino serial port.
+   * @param[in] port number.
+   * @return UART register pointer.
+   */
+  static volatile uint8_t* UART(uint8_t port) 
+  { 
+    return (&UCSR0A);
+  }
+
 public:
   /**
    * Digital pin symbols
@@ -125,12 +136,14 @@ public:
     EXT0 = 2,
     EXT1 = 3
   };
+
 };
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
 class Board {
   friend class Pin;
+  friend class UART;
 private:
   /**
    * Do not allow instances. This is a static singleton.
@@ -168,9 +181,22 @@ private:
     return (pin & 0x7);
   }
   
+  /**
+   * Return UART Register for given Arduino serial port.
+   * @param[in] port number.
+   * @return UART register pointer.
+   */
+  static volatile uint8_t* UART(uint8_t port) 
+  { 
+    return (port == 1 ? &UCSR1A :
+	    port == 2 ? &UCSR2A :
+	    port == 3 ? &UCSR3A :
+	    &UCSR0A);
+  }
+
 public:
   /**
-   * Digital pin symbols
+   * Digital pin symbols; mapping from name to port:bit.
    */
   enum DigitalPin {
     D0 = 0,
