@@ -145,7 +145,7 @@ public:
     SCL = 5
   };
 
-  /**
+ /**
    * Pins used for SPI interface (in port B, digital pins 10-13).
    */
   enum SPIPin {
@@ -313,8 +313,8 @@ public:
    * to allow compile time checking.
    */
   enum InterruptPin {
-    EXT0 = 2,
-    EXT1 = 3
+    EXT0 = 4,
+    EXT1 = 5
   };
 
   /**

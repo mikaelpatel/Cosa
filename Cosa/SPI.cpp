@@ -48,6 +48,7 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
       bit_set(DDRB, Board::MOSI);
       bit_clear(DDRB, Board::MISO);
       bit_set(DDRB, Board::SCK);
+      bit_set(DDRB, Board::SS);	 
       bit_clear(PORTB, Board::SCK);
       bit_clear(PORTB, Board::MOSI);
       SPCR = (_BV(MSTR) | _BV(SPE));
