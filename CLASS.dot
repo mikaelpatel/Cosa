@@ -66,6 +66,7 @@ node[shape=box];
 "IOStream::Filter" -> "IOStream::Device" [style=dashed,label=m_dev];
 "IOStream::null" -> "IOStream::Device" [style=dotted];
 
+"UART" -> "Board" [style=dotted];
 "UART" -> "IOStream::Device";
 "UART" -> "Bits";
 
@@ -89,8 +90,9 @@ node[shape=box];
 "DS18B20" -> "FixedPoint" [style=dashed];
 
 "spi" -> "SPI" [style=dashed];
-"SPI" -> "Bits" [style=dashed];
-"SPI" -> "Event" [style=dashed];
+"SPI" -> "Board" [style=dotted];
+"SPI" -> "Bits" [style=dotted];
+"SPI" -> "Event" [style=dotted];
 "SPI" -> "SPI::Driver" [style=dotted,label=m_dev];
 "SPI::Driver" -> "SPI" [arrowhead=none];
 "SPI::Driver" -> "Event::Handler";
@@ -110,6 +112,7 @@ node[shape=box];
 "ST7735R" -> "OutputPin" [style=dotted,label=m_cs,m_dc];
 
 "twi" -> "TWI" [style=dashed];
+"TWI" -> "Board" [style=dotted];
 "TWI" -> "Bits" [style=dotted];
 "TWI" -> "Event" [style=dotted];
 "TWI" -> "TWI:Driver" [style=dotted,label=m_target];
