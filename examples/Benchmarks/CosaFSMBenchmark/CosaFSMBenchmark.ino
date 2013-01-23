@@ -29,10 +29,10 @@
 
 #include "Cosa/FSM.hh"
 #include "Cosa/Pins.hh"
+#include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/UART.hh"
-#include "Cosa/Memory.h"
+#include "Cosa/IOStream/Driver/UART.hh"
 
 /**
  * Number of messages to send in the benchmark.

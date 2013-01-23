@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/AT23CXX.cpp
+ * @file Cosa/TWI/Driver/AT23CXX.cpp
  * @version 1.0
  *
  * @section License
@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/AT24CXX.hh"
+#include "Cosa/TWI/Driver/AT24CXX.hh"
 
 int
 AT24CXX::read(void* buf, uint8_t size, uint16_t addr)

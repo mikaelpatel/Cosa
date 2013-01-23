@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/ST7735R.cpp
+ * @file Cosa/SPI/Driver/ST7735R.cpp
  * @version 1.0
  *
  * @section License
@@ -29,7 +29,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735R.hh"
 
 const uint8_t ST7735R::script[] PROGMEM = {
   // Software Reset

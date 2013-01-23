@@ -31,7 +31,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/UART.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 
 void setup()
 {

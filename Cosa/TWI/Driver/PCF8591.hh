@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/PCF8591.hh
+ * @file Cosa/TWI/Driver/PCF8591.hh
  * @version 1.0
  *
  * @section License
@@ -27,8 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_PCF8591_HH__
-#define __COSA_TWI_PCF8591_HH__
+#ifndef __COSA_TWI_DRIVER_PCF8591_HH__
+#define __COSA_TWI_DRIVER_PCF8591_HH__
 
 #include "Cosa/TWI.hh"
 

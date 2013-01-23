@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/NRF24L01P.cpp
+ * @file Cosa/SPI/Driver/NRF24L01P.cpp
  * @version 1.0
  *
  * @section License
@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/NRF24L01P.hh"
+#include "Cosa/SPI/Driver/NRF24L01P.hh"
 #include <util/delay.h>
 
 // Timing information (ch. 6.1.7, pp. 24)

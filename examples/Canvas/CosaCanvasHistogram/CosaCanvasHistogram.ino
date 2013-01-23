@@ -33,7 +33,7 @@
 
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/SPI/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735R.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 
 // The display and an iostream to the device

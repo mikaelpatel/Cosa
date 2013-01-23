@@ -26,11 +26,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/PCF8591.hh"
+#include "Cosa/TWI/Driver/PCF8591.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/UART.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
 // The A/D, D/A converter

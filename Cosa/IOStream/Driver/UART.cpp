@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/UART.cpp
+ * @file Cosa/IOStream/Driver/UART.cpp
  * @version 1.0
  *
  * @section License
@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Bits.h"
+#include "Cosa/IOStream/Driver/UART.hh"
 
 UART uart;
 

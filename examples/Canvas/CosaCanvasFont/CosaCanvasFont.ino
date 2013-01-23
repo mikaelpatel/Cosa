@@ -28,7 +28,7 @@
  */
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/SPI/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735R.hh"
 
 ST7735R tft;
 

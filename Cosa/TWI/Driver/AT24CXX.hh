@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/AT23CXX.hh
+ * @file Cosa/TWI/Driver/AT23CXX.hh
  * @version 1.0
  *
  * @section License
@@ -27,8 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_AT24CXX_HH__
-#define __COSA_TWI_AT24CXX_HH__
+#ifndef __COSA_TWI_DRIVER_AT24CXX_HH__
+#define __COSA_TWI_DRIVER_AT24CXX_HH__
 
 #include "Cosa/TWI.hh"
 

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/UART.hh
+ * @file Cosa/IOStream/Driver/UART.hh
  * @version 1.0
  *
  * @section License

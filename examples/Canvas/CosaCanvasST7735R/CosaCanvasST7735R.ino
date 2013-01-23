@@ -27,11 +27,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Trace.hh"
-#include "Cosa/IOStream/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/IOStream.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_34x32.h"
@@ -39,7 +39,7 @@
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
-#include "Cosa/SPI/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735R.hh"
 
 ST7735R tft;
 Textbox textbox(&tft);

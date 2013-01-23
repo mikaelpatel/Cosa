@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/DS1307.cpp
+ * @file Cosa/TWI/Driver/DS1307.cpp
  * @version 1.0
  *
  * @section License
@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/DS1307.hh"
+#include "Cosa/TWI/Driver/DS1307.hh"
 #include "Cosa/BCD.h"
 
 void 

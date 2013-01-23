@@ -31,7 +31,7 @@
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/UART.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 
 InputPin inPin(Board::D7);
 OutputPin outPin(Board::D8);

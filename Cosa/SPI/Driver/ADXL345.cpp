@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/ADXL345.cpp
+ * @file Cosa/SPI/Driver/ADXL345.cpp
  * @version 1.0
  *
  * @section License
@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/ADXL345.hh"
+#include "Cosa/SPI/Driver/ADXL345.hh"
 
 ADXL345::ADXL345(Board::DigitalPin ss) :
   m_ss(ss, 1) 

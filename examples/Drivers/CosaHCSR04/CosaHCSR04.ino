@@ -34,7 +34,7 @@
 
 #include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/UART.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/HCSR04.hh"
@@ -47,7 +47,7 @@ OutputPin ledPin(Board::LED);
 
 #undef putchar
 #include "Cosa/IOStream.hh"
-#include "Cosa/SPI/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735R.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"

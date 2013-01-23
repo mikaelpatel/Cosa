@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/PCF8591.cpp
+ * @file Cosa/TWI/Driver/PCF8591.cpp
  * @version 1.0
  *
  * @section License
@@ -27,7 +27,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/PCF8591.hh"
+#include "Cosa/TWI/Driver/PCF8591.hh"
 
 bool
 PCF8591::begin(uint8_t cntl)

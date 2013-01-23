@@ -26,10 +26,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/ADXL345.hh"
+#include "Cosa/SPI/Driver/ADXL345.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/UART.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 

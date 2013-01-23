@@ -29,7 +29,8 @@
 #include "Cosa/Ciao.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/UART.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+
 #include "Cosa/Memory.h"
 
 #include <ctype.h>

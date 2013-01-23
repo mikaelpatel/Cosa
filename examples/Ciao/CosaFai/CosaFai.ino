@@ -30,9 +30,10 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/UART.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
+
 #include <ctype.h>
 
 // Fai::Ciao output stream over the UART
