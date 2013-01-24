@@ -33,9 +33,10 @@
 #include <avr/sleep.h>
 
 #include "Cosa/Types.h"
-#include "Cosa/Bits.h"
 #include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"
+
+extern "C" void WDT_vect(void) __attribute__ ((signal));
 
 class Watchdog {
 public:
@@ -59,16 +60,24 @@ private:
    */
   Watchdog() {}
 
+  // Watchdog interrupt handler and environment.
   static InterruptHandler s_handler;
   static void* s_env;
 
+  // Watchdog timeout queues.
   static const uint8_t TIMEQ_MAX = 10;
   static Head s_timeq[TIMEQ_MAX];
 
+  // Watchdog ticks, prescale and mode.
   static volatile uint16_t s_ticks;
   static uint8_t s_prescale;
   static uint8_t s_mode;
   
+  /**
+   * Interrupt handler is a friend.
+   */
+  friend void WDT_vect(void);
+
 public:
   /**
    * Get number of watchdog cycles.
@@ -155,7 +164,10 @@ public:
    * Delay using watchdog timeouts and sleep mode.
    * @param[in] ms sleep period in milli-seconds.
    */
-  static void delay(uint16_t ms) { await(0, 0, ms); }
+  static void delay(uint16_t ms) 
+  { 
+    await(0, 0, ms); 
+  }
   
   /**
    * Stop watchdog. Turn off timout callback.
@@ -178,15 +190,6 @@ public:
   static void push_watchdog_event(void* env)
   { 
     Event::push(Event::WATCHDOG_TYPE, 0, env);
-  }
-
-  /**
-   * Trampoline function for interrupt service on watchdog timeout.
-   */
-  static void on_timeout()
-  {
-    if (s_handler != 0) s_handler(s_env);
-    s_ticks += 1;
   }
 };
 

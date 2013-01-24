@@ -27,6 +27,7 @@
  */
 
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Bits.h"
 
 Watchdog::InterruptHandler Watchdog::s_handler = 0;
 void* Watchdog::s_env = 0;
@@ -112,5 +113,10 @@ Watchdog::push_timeout_events(void* env)
 
 ISR(WDT_vect)
 {
-  Watchdog::on_timeout();
+  Watchdog::InterruptHandler handler = Watchdog::s_handler;
+  if (handler != 0) {
+    void* env = Watchdog::s_env;
+    handler(env);
+  }
+  Watchdog::s_ticks += 1;
 }
