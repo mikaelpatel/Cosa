@@ -97,15 +97,17 @@ public:
    * @param[in] ce chip enable activates pin number (default D9/D48).
    * @param[in] irq interrupt pin number (default EXT0).
    */
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-  NRF24L01P(uint8_t channel = 64, 
-	    Board::DigitalPin csn = Board::D53, 
-	    Board::DigitalPin ce = Board::D48, 
-	    Board::InterruptPin irq = Board::EXT0);
-#else
+#if defined(__AVR_ATmega8__)   || \
+    defined(__AVR_ATmega168__) || \
+    defined(__AVR_ATmega328P__)
   NRF24L01P(uint8_t channel = 64, 
 	    Board::DigitalPin csn = Board::D10, 
 	    Board::DigitalPin ce = Board::D9, 
+	    Board::InterruptPin irq = Board::EXT0);
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+  NRF24L01P(uint8_t channel = 64, 
+	    Board::DigitalPin csn = Board::D53, 
+	    Board::DigitalPin ce = Board::D48, 
 	    Board::InterruptPin irq = Board::EXT0);
 #endif
 
