@@ -44,7 +44,7 @@ Pin::println(IOStream& stream)
   stream.println();
 }
 
-InterruptPin* InterruptPin::ext[2] = { 0, 0 };
+InterruptPin* InterruptPin::ext[Board::EXT_MAX] = { 0 };
 
 ISR(INT0_vect)
 {
@@ -55,6 +55,28 @@ ISR(INT1_vect)
 {
   if (InterruptPin::ext[1] != 0) InterruptPin::ext[1]->on_interrupt();
 }
+
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+ISR(INT2_vect)
+{
+  if (InterruptPin::ext[2] != 0) InterruptPin::ext[2]->on_interrupt();
+}
+
+ISR(INT3_vect)
+{
+  if (InterruptPin::ext[3] != 0) InterruptPin::ext[3]->on_interrupt();
+}
+
+ISR(INT4_vect)
+{
+  if (InterruptPin::ext[4] != 0) InterruptPin::ext[4]->on_interrupt();
+}
+
+ISR(INT5_vect)
+{
+  if (InterruptPin::ext[5] != 0) InterruptPin::ext[5]->on_interrupt();
+}
+#endif
 
 void 
 OutputPin::pulse(uint16_t us)

@@ -264,8 +264,11 @@ public:
  * changes. 
  */
 class InterruptPin : public InputPin, public Event::Handler {
+private:
+  uint8_t m_ix;
+
 public:
-  static InterruptPin* ext[2];
+  static InterruptPin* ext[Board::EXT_MAX];
   
   enum Mode {
     ON_CHANGE_MODE = _BV(ISC00),
@@ -288,9 +291,27 @@ public:
 	*PORT() |= m_mask; 
       }
     }
-    uint8_t ix = pin - Board::EXT0;
-    ext[ix] = this;
-    EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
+#if defined(__AVR_ATmega8__)   || \
+    defined(__AVR_ATmega168__) || \
+    defined(__AVR_ATmega328P__)
+    m_ix = pin - Board::EXT0;
+    ext[m_ix] = this;
+    EICRA = (EICRA & ~(0b11 << m_ix)) | (mode << m_ix);
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+    uint8_t ix;
+    if (pin < Board::EXT4) {
+      ix = Board::EXT0 - pin;
+      EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
+      ext[ix] = this;
+    } 
+    else {
+      ix = pin - Board::EXT4;
+      EICRB = (EICRB & ~(0b11 << ix)) | (mode << ix);
+      ix += 4;
+      ext[ix] = this;
+    }
+    m_ix = ix;
+#endif
   }
 
   /**
@@ -298,7 +319,7 @@ public:
    */
   void enable() 
   { 
-    bit_set(EIMSK, m_pin - 2); 
+    bit_set(EIMSK, m_ix); 
   }
 
   /**
@@ -306,7 +327,7 @@ public:
    */
   void disable() 
   { 
-    bit_clear(EIMSK, m_pin - 2); 
+    bit_clear(EIMSK, m_ix); 
   }
 
   /**

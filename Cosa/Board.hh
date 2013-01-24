@@ -119,13 +119,13 @@ public:
    */
   enum PWMPin {
 #if !defined(__AVR_ATmega8__)
-    PWM0 = 3,
-    PWM1 = 5,
-    PWM2 = 6,
+    PWM0 = D3,
+    PWM1 = D5,
+    PWM2 = D6,
 #endif
-    PWM3 = 9,
-    PWM4 = 10,
-    PWM5 = 11
+    PWM3 = D9,
+    PWM4 = D10,
+    PWM5 = D11
   };
 
   /**
@@ -133,8 +133,9 @@ public:
    * to allow compile time checking.
    */
   enum InterruptPin {
-    EXT0 = 2,
-    EXT1 = 3
+    EXT0 = D2,
+    EXT1 = D3,
+    EXT_MAX = 2
   };
 
   /**
@@ -313,8 +314,13 @@ public:
    * to allow compile time checking.
    */
   enum InterruptPin {
-    EXT0 = 4,
-    EXT1 = 5
+    EXT0 = D21,
+    EXT1 = D20,
+    EXT2 = D19,
+    EXT3 = D18,
+    EXT4 = D4,
+    EXT5 = D5,
+    EXT_MAX = 6
   };
 
   /**
