@@ -42,7 +42,6 @@ void setup()
   tft.set_orientation(Canvas::LANDSCAPE);
   tft.set_text_font(&segment32x50);
   tft.set_text_color(tft.shade(Canvas::RED, 75));
-  tft.set_pen_color(tft.shade(Canvas::RED, 75));
   tft.fill_screen();
 }
 
@@ -52,7 +51,7 @@ void loop()
   static uint8_t min = 30;
   static uint8_t sec = 00;
 
-  tft.fill_screen();
+  tft.fill_rect(0, 30, tft.WIDTH, segment32x50.HEIGHT);
   tft.set_cursor(8, 30);
   tft.draw_char('0' + min/10);
   tft.draw_char('0' + min%10);
