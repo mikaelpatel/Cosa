@@ -35,9 +35,6 @@ Textbox::putchar(char c)
   // Save the current context and setup our context
   Canvas::Context* saved = m_canvas->set_context(this);
 
-  // Draw only normal characters
-  if (c >= ' ') m_canvas->draw_char(c);
-
   // Handle some special characters, new-line
   uint8_t x, y;
   get_cursor(x, y);
@@ -57,13 +54,16 @@ Textbox::putchar(char c)
     set_pen_color(saved);
   } 
 
-  // form-feed
+  // Form-feed
   else if (c == '\f') {
     Canvas::color16_t saved = set_pen_color(get_canvas_color());
     set_cursor(m_text_port.x, m_text_port.y);
     m_canvas->fill_rect(m_text_port.width, m_text_port.height);
     set_pen_color(saved);
   }
+
+  // Draw only normal characters
+  else if (c >= ' ') m_canvas->draw_char(c);
   
   // Restore the previous canvas state; context
   m_canvas->set_context(saved);

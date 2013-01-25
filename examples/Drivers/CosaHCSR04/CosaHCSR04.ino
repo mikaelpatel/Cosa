@@ -49,7 +49,7 @@ OutputPin ledPin(Board::LED);
 #include "Cosa/IOStream.hh"
 #include "Cosa/SPI/Driver/ST7735R.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
-#include "Cosa/Canvas/Font/FixedNums8x16.hh"
+#include "Cosa/Canvas/Font/Segment32x50.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
 ST7735R tft;
@@ -72,13 +72,10 @@ public:
     else                     tft.set_canvas_color(GRAY);
     tft.fill_screen();
     if (distance < 50 || distance > 3000) {
-      uint8_t saved = tft.get_text_scale();
-      tft.set_text_scale(1);
       tft.draw_icon((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, arduino_icon_96x32);
-      tft.set_text_scale(saved);
     }
     else {
-      textbox.set_cursor(10, 35);
+      textbox.set_cursor(4, 35);
       cout.printf_P(PSTR("%d"), distance);
     }
   }
@@ -89,9 +86,9 @@ Ping ping;
 void tft_setup()
 {
   tft.begin();
-  textbox.set_text_scale(4);
-  textbox.set_text_font(&fixednums8x16);
   tft.set_orientation(Canvas::LANDSCAPE);
+  textbox.set_text_port(0, 0, tft.WIDTH, tft.HEIGHT);
+  textbox.set_text_font(&segment32x50);
   RED = tft.shade(Canvas::RED, 75);
   YELLOW = tft.shade(Canvas::YELLOW, 75);
   GREEN = tft.shade(Canvas::GREEN, 75);
