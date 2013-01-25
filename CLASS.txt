@@ -101,9 +101,14 @@ The Cosa Canvas font handler.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 Canvas/Font/System5x7.hh:     System5x7 system5x7 (singleton)
 Canvas/Font/Fixednums8x16.hh: Fixednums8x16 fixednums8x16 (singleton)
+Canvas/Font/Segment32x50.hh   Segment32x50 segment32x50 (singleton)
+
 Canvas/Font.hh:		      class Font
 Canvas/Font/System5x7.hh:     	    class System5x7 : public Font
 Canvas/Font/Fixednums8x16.hh:	    class Fixednums8x16 : public Font
+
+Canvas/UTFTFont.hh:	      class UTFTFont : public Font
+Canvas/Font/Segment32x50.hh:	    class Segment32x50 : public UTFTFont
 ----------------------------------------------------------------------------
 OWI
 Driver for devices on the one wire bus (1-Wire). Support for DS18B20
