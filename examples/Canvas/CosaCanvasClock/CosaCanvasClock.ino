@@ -56,11 +56,9 @@ void loop()
   tft.set_cursor(8, 30);
   tft.draw_char('0' + min/10);
   tft.draw_char('0' + min%10);
-  tft.move_cursor(1, 20);
-  tft.Canvas::fill_rect(5, 5);
-  tft.move_cursor(0, 20);
-  tft.Canvas::fill_rect(5, 5);
-  tft.move_cursor(9, -40);
+  tft.move_cursor(-12, 0);
+  tft.draw_char('9' + 1);
+  tft.move_cursor(-8, 0);
   tft.draw_char('0' + sec/10);
   tft.draw_char('0' + sec%10);
 

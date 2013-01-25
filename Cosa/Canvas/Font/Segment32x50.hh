@@ -50,7 +50,7 @@ public:
   virtual const uint8_t* get_bitmap(char c)
   {
     c = c - '0';
-    if (c > 9) c = 0;
+    if (c > 9) c = 10;
     return (m_bitmap + (c * HEIGHT) * (WIDTH / CHARBITS));
   }
 };
