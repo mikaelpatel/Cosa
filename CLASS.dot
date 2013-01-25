@@ -46,10 +46,13 @@ node[shape=box];
 "Textbox" -> "IOStream::Device";
 
 "Font" -> "Canvas" [style=dotted,label=canvas];
-"system5x7" -> "System5x7" [style=dashed];
 "System5x7" -> "Font";
-"fixednums8x16" -> "FixedNums8x16" [style=dashed];
+"system5x7" -> "System5x7" [style=dashed];
 "FixedNums8x16" -> "Font";
+"fixednums8x16" -> "FixedNums8x16" [style=dashed];
+"UTFTFont" -> "Font";
+"Segment32x50" -> "UTFTFont";
+"segment32x50" -> "Segment32x50" [style=dashed];
 
 "Ciao" -> "IOStream" [style=dashed,label=m_dev];
 "Ciao::Descriptor" -> "Ciao" [arrowhead=none];
