@@ -10,8 +10,8 @@ found in
 and [CLASS.png](https://github.com/mikaelpatel/Cosa/blob/master/CLASS.png). 
 
 Cosa supports the following AVR/Atmega328P internal hardware modules;
-all pin modes, interrupt pins, PWM, Watchdog, UART (transmit), SPI and
-TWI.  
+all pin modes, interrupt pins, PWM, Watchdog, Timer-0, UART
+(transmit), SPI and TWI.
 
 Cosa also contains a data streaming format (Ciao) for encoding of
 C/C++ language data types such as strings, integer and floating
@@ -50,6 +50,11 @@ Unfortunately Cosa is not a beginners entry level programming
 platform, though following some of the design patterns in Cosa will
 help beginners build more complex small scale embedded systems with
 richer concurrency and low power consumption.  
+
+News
+----
+2013-01-23	Arduino Mega 2560 initial support.
+2013-01-25	UTFT Font support.
 
 Install
 -------
@@ -101,8 +106,8 @@ Note
 ----
 
 Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are
-supported. Timers, EEPROM, UART (receiver) are not directly supported
-but planned. This also applies for Arduino Mega and Leonardo, and
+supported. Timers (1-n), EEPROM, UART (receiver) are not directly supported
+but planned. This also applies for Arduino Leonardo (USB), and
 Attiny devices. 
 
 
