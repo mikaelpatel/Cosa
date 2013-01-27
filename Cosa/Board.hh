@@ -21,8 +21,9 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa Board pin symbol definitions for the standard Atmega328P 
- * based Arduino boards.
+ * Cosa Board pin symbol definitions for the ATmega8, ATmega168
+ * ATmega328P, ATmega1280 and ATmega2560 based Arduino boards;
+ * Arduino Uno, Mini Pro, LilyPad and Mega 2560.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -30,9 +31,7 @@
 #ifndef __COSA_BOARD_HH__
 #define __COSA_BOARD_HH__
 
-#if defined(__AVR_ATmega8__)   || \
-    defined(__AVR_ATmega168__) || \
-    defined(__AVR_ATmega328P__)
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
 
 class Board {
   friend class Pin;
@@ -301,12 +300,18 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = 3,
-    PWM1 = 5,
-    PWM2 = 6,
-    PWM3 = 9,
-    PWM4 = 10,
-    PWM5 = 11
+    PWM0 = D2,
+    PWM1 = D3,
+    PWM2 = D4,
+    PWM3 = D5,
+    PWM4 = D6,
+    PWM5 = D7,
+    PWM6 = D8,
+    PWM7 = D9,
+    PWM8 = D10,
+    PWM9 = D11,
+    PWM10 = D12,
+    PWM11 = D13
   };
 
   /**

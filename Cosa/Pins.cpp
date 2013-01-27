@@ -86,23 +86,48 @@ OutputPin::pulse(uint16_t us)
   toggle();
 }
 
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
+
+uint8_t
+PWMPin::get_duty()
+{
+  switch (m_pin) {
+  case Board::PWM0: return (OCR2B);
+  case Board::PWM1: return (OCR0B);
+  case Board::PWM2: return (OCR0A);
+  case Board::PWM3: return (OCR1A);
+  case Board::PWM4: return (OCR1B);
+  case Board::PWM5: return (OCR2A);
+  default:
+    return (is_set());
+  }
+}
+
 void 
 PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
-  case 3:
+  case Board::PWM0:
     bit_set(TCCR2A, COM2B1);
     OCR2B = duty;
     return;
-  case 5:
-    bit_set(TCCR0A, COM0B1);
+  case Board::PWM1:
+    bit_set(TCCR0B, COM0B1);
     OCR0B = duty;
     return;
-  case 6:
+  case Board::PWM2:
     bit_set(TCCR0A, COM0A1);
     OCR0A = duty;
     return;
-  case 11:
+  case Board::PWM3:
+    bit_set(TCCR1A, COM1A1);
+    OCR1A = duty;
+    return;
+  case Board::PWM4:
+    bit_set(TCCR1B, COM1B1);
+    OCR1B = duty;
+    return;
+  case Board::PWM5:
     bit_set(TCCR2A, COM2A1);
     OCR2A = duty;
     return;
@@ -110,6 +135,87 @@ PWMPin::set(uint8_t duty)
     OutputPin::set(duty);
   }
 }
+
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+
+uint8_t
+PWMPin::get_duty()
+{
+  switch (m_pin) {
+  case Board::PWM0: return (OCR3B);
+  case Board::PWM1: return (OCR3C);
+  case Board::PWM2: return (OCR0B);
+  case Board::PWM3: return (OCR3A);
+  case Board::PWM4: return (OCR4A);
+  case Board::PWM5: return (OCR4B);
+  case Board::PWM6: return (OCR4C);
+  case Board::PWM7: return (OCR2B);
+  case Board::PWM8: return (OCR2A);
+  case Board::PWM9: return (OCR1A);
+  case Board::PWM10: return (OCR1B);
+  case Board::PWM11: return (OCR0A);
+  default:
+    return (is_set());
+  }
+}
+
+void 
+PWMPin::set(uint8_t duty)
+{
+  switch (m_pin) {
+  case Board::PWM0:
+    bit_set(TCCR3B, COM3B1);
+    OCR3B = duty;
+    return;
+  case Board::PWM1:
+    bit_set(TCCR3C, COM3C1);
+    OCR3C = duty;
+    return;
+  case Board::PWM2:
+    bit_set(TCCR0B, COM0B1);
+    OCR0B = duty;
+    return;
+  case Board::PWM3:
+    bit_set(TCCR3A, COM3A1);
+    OCR3A = duty;
+    return;
+  case Board::PWM4:
+    bit_set(TCCR4A, COM4A1);
+    OCR4A = duty;
+    return;
+  case Board::PWM5:
+    bit_set(TCCR4B, COM4B1);
+    OCR4B = duty;
+    return;
+  case Board::PWM6:
+    bit_set(TCCR4C, COM4C1);
+    OCR4C = duty;
+    return;
+  case Board::PWM7:
+    bit_set(TCCR2B, COM2B1);
+    OCR2B = duty;
+    return;
+  case Board::PWM8:
+    bit_set(TCCR2A, COM2A1);
+    OCR2A = duty;
+    return;
+  case Board::PWM9:
+    bit_set(TCCR1A, COM1A1);
+    OCR1A = duty;
+    return;
+  case Board::PWM10:
+    bit_set(TCCR1B, COM1B1);
+    OCR1B = duty;
+    return;
+  case Board::PWM11:
+    bit_set(TCCR0A, COM0A1);
+    OCR0A = duty;
+    return;
+  default:
+    OutputPin::set(duty);
+  }
+}
+#endif
 
 void 
 PWMPin::set(uint16_t value, uint16_t min, uint16_t max)
@@ -119,19 +225,6 @@ PWMPin::set(uint16_t value, uint16_t min, uint16_t max)
   else if (value >= max) duty = 255;
   else duty = (((uint32_t) (value - min)) << 8) / (max - min);
   set(duty);
-}
-
-uint8_t
-PWMPin::get_duty()
-{
-  switch (m_pin) {
-  case 3: return (OCR2B);
-  case 5: return (OCR0B);
-  case 6: return (OCR0A);
-  case 11: return (OCR2A);
-  default:
-    return (is_set());
-  }
 }
 
 AnalogPin* AnalogPin::sampling_pin = 0;
@@ -162,30 +255,11 @@ AnalogPin::sample(uint8_t pin, Reference ref)
 }
 
 uint16_t 
-AnalogPin::sample()
-{
-  return (m_value = AnalogPin::sample(m_pin, (Reference) m_reference));
-}
-
-bool
-AnalogPin::sample_request()
-{
-  return (sample_request(m_pin, (Reference) m_reference));
-}
-
-uint16_t 
 AnalogPin::sample_await()
 {
   if (sampling_pin == 0) return (0xffffU);
   loop_until_bit_is_clear(ADCSRA, ADSC);
   return (m_value = ADCW);
-}
-
-void 
-AnalogPin::on_interrupt(uint16_t value)
-{ 
-  sampling_pin = 0;
-  Event::push(Event::SAMPLE_COMPLETED_TYPE, this, value);
 }
 
 void 
@@ -231,3 +305,10 @@ AnalogPins::on_interrupt(uint16_t value)
   }
 }
 
+AnalogComparator* AnalogComparator::comparator = 0;
+
+ISR(ANALOG_COMP_vect)
+{ 
+  if (AnalogComparator::comparator != 0) 
+    AnalogComparator::comparator->on_interrupt();
+}

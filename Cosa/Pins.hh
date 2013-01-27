@@ -697,14 +697,20 @@ public:
    * returning with sample value.
    * @return sample value.
    */
-  uint16_t sample();
+  uint16_t sample()
+  {
+    return (m_value = AnalogPin::sample(m_pin, (Reference) m_reference));
+  }
 
   /**
    * Request sample of analog pin. Conversion completion function is called
    * if defined otherwise use await_sample().
    * @return bool.
    */
-  bool sample_request();
+  bool sample_request()
+  {
+    return (sample_request(m_pin, (Reference) m_reference));
+  }
 
   /**
    * Await conversion to complete. Returns sample value
@@ -716,7 +722,11 @@ public:
    * Interrupt service on conversion completion.
    * @param[in] value sample.
    */
-  virtual void on_interrupt(uint16_t value);
+  virtual void on_interrupt(uint16_t value)
+  { 
+    sampling_pin = 0;
+    Event::push(Event::SAMPLE_COMPLETED_TYPE, this, value);
+  }
 
   /**
    * Default on change function. 
@@ -795,6 +805,87 @@ public:
    * @param[in] value the event value.
    */
   virtual void on_event(uint8_t type, uint16_t value) {}
+};
+
+extern "C" void ANALOG_COMP_vect(void) __attribute__ ((signal));
+
+/*
+ * Analog Comparator; compare input values on the positive pin AIN0 
+ * and negative pin AIN1 or ADCn. Note: only one instance can be
+ * active/enabled at a time.
+ */
+class AnalogComparator : public Event::Handler {
+public:
+  enum Mode {
+    ON_TOGGLE_MODE = 0,
+    ON_FALLING_MODE = _BV(ACIS1),
+    ON_RISING_MODE = (_BV(ACIS1) | _BV(ACIS0)),
+  };
+
+protected:
+  static AnalogComparator* comparator;
+  static const uint8_t AIN1 = 255;
+  Mode m_mode;
+  uint8_t m_pin;
+
+  /**
+   * Interrupt handler is a friend.
+   */
+  friend void ANALOG_COMP_vect(void);
+
+public:
+  /**
+   * Construct analog comparator handler. Compare with AIN1.
+   * @param[in] mode comparator mode.
+   */
+  AnalogComparator(Mode mode = ON_TOGGLE_MODE) :
+    m_mode(mode),
+    m_pin(AIN1)
+  {
+  }
+
+  /**
+   * Construct analog comparator handler. Compare with given 
+   * analog pin (ADCn).
+   * @param[in] pin analog pin to compare with.
+   * @param[in] mode comparator mode.
+   */
+  AnalogComparator(Board::AnalogPin pin, Mode mode = ON_TOGGLE_MODE) :
+    m_mode(mode),
+    m_pin((uint8_t) (pin - Board::A0))
+  {
+  }
+
+  /**
+   * Enable analog comparator handler.
+   */
+  void enable()
+  {
+    synchronized {
+      comparator = this;
+      ADCSRB = _BV(ACME) | (m_pin == AIN1 ? _BV(ADEN) : m_pin);
+      ACSR = _BV(ACIE) | m_mode;
+    }
+  }
+
+  /**
+   * Disable analog comparator handler.
+   */
+  void disable()
+  {
+    synchronized {
+      bit_clear(ACSR, ACIE);
+      comparator = 0;
+    }
+  }
+
+  /**
+   * Default interrupt service on comparator output rise, fall or toggle.
+   */
+  virtual void on_interrupt() 
+  { 
+    Event::push(Event::CHANGE_TYPE, this);
+  }
 };
 
 #endif
