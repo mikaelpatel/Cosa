@@ -53,8 +53,9 @@ richer concurrency and low power consumption.
 
 News
 ----
-2013-01-23	Arduino Mega 2560 initial support.  
-2013-01-25	UTFT Font support.  
+2013-01-23	Arduino Mega 2560 initial port.
+2013-01-25	UTFT Font support added.  
+2013-01-29	Proto-threads implemented.
 
 Install
 -------
