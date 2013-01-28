@@ -19,6 +19,10 @@ node[shape=box];
 "FSM" -> "Watchdog" [style=dotted];
 "FSM" -> "Event" [style=dotted];
 
+"Thread" -> "Link";
+"Thread" -> "Watchdog" [style=dotted];
+"Thread" -> "Event" [style=dotted];
+
 "Pin" -> "Board" [style=dotted];
 "InputPin" -> "Pin";
 "InterruptPin" -> "InputPin";

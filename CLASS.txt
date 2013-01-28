@@ -38,6 +38,13 @@ and periodic execution.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
 FSM.hh:		class FSM : private Link
 ----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+Thread
+Proto-threads
+Support for constructing simple stackless threads with timeout handling.
+-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+Thread.hh:	class Thread : private Link
+----------------------------------------------------------------------------
 BUTTON
 Abstraction of debounced switch or button connected to an input pin.
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
