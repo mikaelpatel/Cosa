@@ -123,5 +123,12 @@ struct iovec_t {
   size_t size;
 };
 
+/**
+ * Preprocessor tricks.
+ */
+#define CONCAT(var, line) var ## line
+#define MERGE(var, line) CONCAT(var, line)
+#define UNIQUE(var) MERGE(var, __LINE__)
+
 #endif
 

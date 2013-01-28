@@ -95,8 +95,7 @@ public:
   public:
     /**
      * Default null event handler. Should be redefined by sub-classes.
-     * Called by Event::dispatch(). See Event.hh for details on event
-     * types and value passing.
+     * Called by Event::dispatch(). 
      * @param[in] type the event type.
      * @param[in] value the event value.
      */

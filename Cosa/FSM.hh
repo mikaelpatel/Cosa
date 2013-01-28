@@ -57,7 +57,6 @@ private:
    * @override
    * The first level event handler. Filters timeout events and
    * adapt to state handler function prototype.
-   * @param[in] it the target object.
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
