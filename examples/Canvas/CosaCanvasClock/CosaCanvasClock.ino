@@ -35,8 +35,10 @@ ST7735R tft;
 
 void setup()
 {
-  // Start the watchdog and initiate the display
+  // Start the watchdog for low power sleep
   Watchdog::begin();
+
+  // Initiate the display and set orientation and color scheme
   tft.begin();
   tft.set_canvas_color(Canvas::BLACK);
   tft.set_orientation(Canvas::LANDSCAPE);
@@ -51,7 +53,14 @@ void loop()
   static uint8_t min = 30;
   static uint8_t sec = 00;
 
-  tft.fill_rect(0, 30, tft.WIDTH, segment32x50.HEIGHT);
+  // Draw a filled boundary box using the round rectangle
+  Canvas::color16_t saved = tft.set_pen_color(tft.shade(Canvas::RED, 25));
+  tft.fill_roundrect(0, 20, tft.WIDTH - 1, 70, 12);
+  tft.set_pen_color(tft.get_text_color());
+  tft.draw_roundrect(0, 20, tft.WIDTH - 1, 70, 12);
+  tft.set_pen_color(saved);
+
+  // Draw the current counter value
   tft.set_cursor(8, 30);
   tft.draw_char('0' + min/10);
   tft.draw_char('0' + min%10);
@@ -61,6 +70,7 @@ void loop()
   tft.draw_char('0' + sec/10);
   tft.draw_char('0' + sec%10);
 
+  // Decrement counter
   if (sec == 0) {
     if (min != 00) {
       sec = 59;

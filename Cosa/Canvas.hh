@@ -714,15 +714,55 @@ public:
   }
   
   /**
-   * Fill screen with current pen color.
+   * Draw round corner rectangle with current pen color.
+   * @param[in] x 
+   * @param[in] y
+   * @param[in] width
+   * @param[in] height
+   * @param[in] radius
    */
-  virtual void fill_screen()
+  virtual void draw_roundrect(uint8_t x, uint8_t y, 
+			      uint8_t width, uint8_t height,
+			      uint8_t radius);
+
+  /**
+   * Draw round corner rectangle at cursor position with current pen color.
+   * @param[in] width
+   * @param[in] height
+   * @param[in] radius
+   */
+  void draw_roundrect(uint8_t width, uint8_t height, uint8_t radius)
   {
-    color16_t saved = set_pen_color(get_canvas_color());
-    fill_rect(0, 0, WIDTH, HEIGHT);
-    set_pen_color(saved);
+    uint8_t x, y;
+    get_cursor(x, y);
+    draw_roundrect(x, y, width, height, radius);
   }
 
+  /**
+   * Fill round corner rectangle with current pen color. 
+   * @param[in] x 
+   * @param[in] y
+   * @param[in] width
+   * @param[in] height
+   * @param[in] radius
+   */
+  virtual void fill_roundrect(uint8_t x, uint8_t y, 
+			      uint8_t width, uint8_t height,
+			      uint8_t radius);
+
+  /**
+   * Fill round corner rectangle at cursor position with current pen color.
+   * @param[in] width
+   * @param[in] height
+   * @param[in] radius
+   */
+  void fill_roundrect(uint8_t width, uint8_t height, uint8_t radius)
+  {
+    uint8_t x, y;
+    get_cursor(x, y);
+    fill_roundrect(x, y, width, height, radius);
+  }
+  
   /**
    * Draw circle with current pen color.
    * @param[in] x 
@@ -790,6 +830,16 @@ public:
   }
 
   /**
+   * Fill screen with current pen color.
+   */
+  virtual void fill_screen()
+  {
+    color16_t saved = set_pen_color(get_canvas_color());
+    fill_rect(0, 0, WIDTH, HEIGHT);
+    set_pen_color(saved);
+  }
+
+  /**
    * Stop sequence of interaction with device. Must override.
    * @return true(1) if successful otherwise false(0)
    */
@@ -816,11 +866,13 @@ public:
     DRAW_STROKE,
     DRAW_RECT,
     FILL_RECT,
-    FILL_SCREEN,
+    DRAW_ROUNDRECT,
+    FILL_ROUNDRECT,
     DRAW_CIRCLE,
     FILL_CIRCLE,
     DRAW_CHAR,
-    DRAW_STRING
+    DRAW_STRING,
+    FILL_SCREEN
   };
 
   /**
@@ -854,11 +906,13 @@ public:
 #define CANVAS_DRAW_STROKE(ix, s) Canvas::DRAW_POLY, ix, s,
 #define CANVAS_DRAW_RECT(w, h) Canvas::DRAW_RECT, w, h,
 #define CANVAS_FILL_RECT(w, h) Canvas::FILL_RECT, w, h,
-#define CANVAS_FILL_SCREEN() Canvas::FILL_SCREEN,
+#define CANVAS_DRAW_ROUNDRECT(w, h, r) Canvas::DRAW_ROUNDRECT, w, h, r,
+#define CANVAS_FILL_ROUNDRECT(w, h, r) Canvas::FILL_ROUNDRECT, w, h, r,
 #define CANVAS_DRAW_CIRCLE(r) Canvas::DRAW_CIRCLE, r,
 #define CANVAS_FILL_CIRCLE(r) Canvas::FILL_CIRCLE, r,
 #define CANVAS_DRAW_CHAR(c) Canvas::DRAW_CHAR, c,
 #define CANVAS_DRAW_STRING(ix) Canvas::DRAW_STRING, ix,
+#define CANVAS_FILL_SCREEN() Canvas::FILL_SCREEN,
 #define CANVAS_END_SCRIPT Canvas::END_SCRIPT };
 
 #endif

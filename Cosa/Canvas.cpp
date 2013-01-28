@@ -224,16 +224,93 @@ Canvas::draw_circle(uint8_t x, uint8_t y, uint8_t radius)
 }
 
 void 
-Canvas::fill_circle(uint8_t x, uint8_t y, uint8_t r)
+Canvas::fill_circle(uint8_t x, uint8_t y, uint8_t radius)
 {
-  int16_t dx = 0, dy = r;
-  int16_t p = 1 - r;
+  int16_t dx = 0, dy = radius;
+  int16_t p = 1 - radius;
 
   while (dx <= dy) {
     draw_vertical_line(x + dx, y - dy, dy + dy);
     draw_vertical_line(x - dx, y - dy, dy + dy);
     draw_vertical_line(x + dy, y - dx, dx + dx);
     draw_vertical_line(x - dy, y - dx, dx + dx);
+    dx++;
+    if (p < 0)
+      p = p + (dx << 1) + 1;
+    else {
+      dy--;
+      p = p + ((dx - dy) << 1) + 1;
+    }
+  }
+}
+
+void 
+Canvas::draw_roundrect(uint8_t x, uint8_t y, 
+		       uint8_t width, uint8_t height,
+		       uint8_t radius)
+{
+  uint8_t diameter = 2 * radius;
+  int16_t f = 1 - radius;
+  int16_t dx = 1;
+  int16_t dy = -diameter;
+  int8_t rx = 0;
+  int8_t ry = radius;
+
+  // Adjust position, width and height 
+  x += radius;
+  y += radius;
+  width -= diameter;
+  height -= diameter;
+  
+  // Draw the boundary rectangle
+  draw_horizontal_line(x, y - radius, width + 1);
+  draw_vertical_line(x + width + radius, y, height + 1);
+  draw_vertical_line(x - radius, y, height + 1);
+  draw_horizontal_line(x, y + height + radius, width + 1);
+
+  // Draw the round corners
+  while (rx < ry) {
+    if (f >= 0) {
+      ry--;
+      dy += 2;
+      f += dy;
+    }
+    rx++;
+    dx += 2;
+    f += dx;
+    draw_pixel(x + rx + width, y - ry);
+    draw_pixel(x + ry + width, y - rx);
+    draw_pixel(x + rx + width, y + ry + height);
+    draw_pixel(x + ry + width, y + rx + height);
+    draw_pixel(x - rx, y + ry + height);
+    draw_pixel(x - ry, y + rx + height);
+    draw_pixel(x - rx, y - ry);
+    draw_pixel(x - ry, y - rx);
+  }
+}
+
+void 
+Canvas::fill_roundrect(uint8_t x, uint8_t y, 
+		       uint8_t width, uint8_t height, 
+		       uint8_t radius)
+{
+  int16_t dx = 0, dy = radius;
+  int16_t p = 1 - radius;
+  uint8_t diameter = 2 * radius;
+
+  // Adjust the position and fill the inner rectangle
+  x += radius;
+  width -= diameter;
+  fill_rect(x, y, width, height);
+  height -= diameter;
+  y += radius;
+
+  // Draw the outer rectangle and corners
+  while (dx <= dy) {
+    draw_vertical_line(x + dx + width, y - dy, dy + dy + height);
+    draw_vertical_line(x - dx, y - dy, dy + dy + height);
+    draw_vertical_line(x + dy + width, y - dx, dx + dx + height);
+    draw_vertical_line(x - dy, y - dx, dx + dx + height);
     dx++;
     if (p < 0)
       p = p + (dx << 1) + 1;
@@ -336,8 +413,11 @@ Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
     case FILL_RECT:
       fill_rect(pgm_read_byte(ip++), pgm_read_byte(ip++));
       break;
-    case FILL_SCREEN:
-      fill_screen();
+    case DRAW_ROUNDRECT:
+      draw_roundrect(pgm_read_byte(ip++), pgm_read_byte(ip++), pgm_read_byte(ip++));
+      break;
+    case FILL_ROUNDRECT:
+      fill_roundrect(pgm_read_byte(ip++), pgm_read_byte(ip++), pgm_read_byte(ip++));
       break;
     case DRAW_CIRCLE:
       draw_circle(pgm_read_byte(ip++));
@@ -352,6 +432,9 @@ Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
       ix = pgm_read_byte(ip++);
       if (ix >= max) return;
       draw_string_P((const char*) pgm_read_word(tab + ix));
+      break;
+    case FILL_SCREEN:
+      fill_screen();
       break;
     default:
       return;
