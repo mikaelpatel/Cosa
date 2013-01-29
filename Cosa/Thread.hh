@@ -34,7 +34,8 @@
  *
  * @section Acknowledgements
  * Inspired by research and prototype by Adam Dunkels, Oliver Schmidt,
- * Thiermo, Muneeb Ali, and the protothread library by Larry Ruane.
+ * Thiermo Voigt, Muneeb Ali, and the protothread library by Larry
+ * Ruane. 
  *
  * @section References
  * [1] Adam Dunkels et al, Protothreads: Simplifying Event-Driven
