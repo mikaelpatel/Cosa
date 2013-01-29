@@ -28,8 +28,13 @@
  */
 
 #include "Cosa/Thread.hh"
+#include "Cosa/RTC.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
+uint32_t start = 0;
+uint32_t stop = 0;
 
 // Counter thread class; two delay periods before incrementing
 // counter to show how the internal "instruction pointer" is
@@ -46,9 +51,10 @@ public:
     m_delay(delay) 
   {}
   
-  virtual void run()
+  virtual void run(uint8_t type, uint16_t value)
   {
-    INFO("thread#%p: ip = %p, count = %d", this, m_ip, m_count);
+    stop = RTC::micros();
+    DEBUG("thread#%p: ip = %p, count = %d", this, m_ip, m_count);
     THREAD_BEGIN();
     while (1) {
       set_timer(m_delay);
@@ -63,9 +69,9 @@ public:
 };
 
 // Three counter threads with different delay periods
-Counter cnt1(512);
-Counter cnt2(1024);
-Counter cnt3(2048);
+Counter cnt1(32);
+Counter cnt2(128);
+Counter cnt3(512);
 
 void setup()
 {
@@ -77,6 +83,7 @@ void setup()
 
   // Start the watchdog (16 ms timeout, push timeout events)
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  RTC::begin();
 
   // Start the counter threads
   cnt1.begin();
@@ -86,7 +93,20 @@ void setup()
 
 void loop()
 {
+  Thread::dispatch();
+
+  static const uint16_t EVENTS_MAX = 100;
+  uint16_t events = EVENTS_MAX;
+  uint32_t us = 0;
   Event event;
-  Event::queue.await(&event);
-  event.dispatch();
+
+  while (events--) {
+    Event::queue.await(&event);
+    start = RTC::micros();
+    event.dispatch();
+    us += (stop - start);
+  }
+
+  uint32_t us_per_dispatch = us / EVENTS_MAX;
+  INFO("%l us per dispatch (%l cycles)", us_per_dispatch, us_per_dispatch * I_CPU);
 }

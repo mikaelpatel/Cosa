@@ -43,13 +43,22 @@
 
 #include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"
-#include "Cosa/Watchdog.hh"
 
 class Thread : public Link {
+public:
+  enum {
+    INIT = 0,
+    READY,
+    WAITING,
+    TIMEOUT,
+    SLEEPING,
+    RUNNING,
+    TERMINATED = 0xff,
+  };
+
 protected:
-  uint16_t m_param;
-  uint8_t m_type;
-  uint8_t m_timer;
+  static Head runq;
+  uint8_t m_state;
   void* m_ip;
 
   /**
@@ -59,103 +68,96 @@ protected:
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
-  virtual void on_event(uint8_t type, uint16_t value)
-  {
-    if (m_timer) {
-      m_timer = 0;
-      detach();
-    }
-    m_type = type;
-    m_param = value;
-    run();
-  }
+  virtual void on_event(uint8_t type, uint16_t value);
   
 public:
   /**
    * Construct thread and initial.
    */
-  Thread() : 
-    Link(), 
-    m_timer(0)
-  {}
-  
-  /**
-   * Get event type.
-   * @return event type.
-   */
-  uint8_t get_event_type()
-  {
-    return (m_type);
-  }
-  
-  /**
-   * Get event parameter.
-   * @param[out] param event parameter
-   */
-  void get_event_param(uint16_t& param)
-  {
-    param = m_param;
-  }
-  
-  /**
-   * Get event parameter.
-   * @param[out] param event parameter
-   */
-  void get_event_param(void*& param)
-  {
-    param = (void*) m_param;
-  }
+  Thread() : Link() {}
   
   /**
    * Start the thread.
    */
-  bool begin()
-  {
-    m_ip = 0;
-    m_timer = 0;
-    run();
-    return (1);
-  }
+  bool begin();
   
   /**
    * End the thread.
    */
-  void end()
-  {
-    if (m_timer) detach();
-  }
+  void end();
   
   /**
    * Set timer for time out events.
    * @param[in] ms timeout period.
    */
-  void set_timer(uint16_t ms)
-  {
-    m_timer = 1;
-    m_type = 0;
-    Watchdog::attach(this, ms);
-  }
+  void set_timer(uint16_t ms);
 
   /**
    * Check if timer expired. 
    */
   bool timer_expired()
   {
-    return (m_type == Event::TIMEOUT_TYPE);
+    return (m_state == TIMEOUT);
   }
 
   /**
    * Thread activity. Must be overridden. 
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
    */
-  virtual void run() = 0;
+  virtual void run(uint8_t type = Event::NULL_TYPE, uint16_t value = 0) = 0;
+
+
+  /**
+   * Thread dispatch. Run threads in the run queue. If given flag is true
+   * events will be processes.
+   * @param[in] flag process event.
+   */
+  static void dispatch(uint8_t flag = 0);
+
+  /**
+   * Thread schedule. Add the given thread to the run queue.
+   * @param[in] thread 
+   */
+  static void schedule(Thread* thread)
+  {
+    thread->m_state = READY;
+    runq.attach(thread);
+  }
 };
 
 /**
  * Thread action function support macros.
  */
-#define THREAD_BEGIN() if (m_ip != 0) goto *m_ip
-#define THREAD_AWAIT(cond) UNIQUE(L): if (!(cond)) { m_ip = &&UNIQUE(L); return; }
-#define THREAD_END() THREAD_AWAIT(0)
+#define THREAD_BEGIN()					\
+  if (m_ip != 0) goto *m_ip
+
+#define THREAD_YIELD() \
+  do {							\
+    m_ip = &&UNIQUE(L);					\
+    return;						\
+    UNIQUE(L):						\
+  } while (0)
+
+#define THREAD_SLEEP()					\
+  do {							\
+    m_state = SLEEPING;					\
+    THREAD_YIELD();					\
+  } while (0)
+
+#define THREAD_WAKE(t)					\
+  Thread::schedule(t)
+
+#define THREAD_AWAIT(cond)				\
+  do {							\
+    UNIQUE(L): if (!(cond)) {				\
+      m_ip = &&UNIQUE(L);				\
+      return;						\
+    }							\
+  } while (0)
+
+#define THREAD_END()					\
+  Thread::end()
 
 #endif
 
