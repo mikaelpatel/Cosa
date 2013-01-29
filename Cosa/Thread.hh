@@ -45,17 +45,6 @@
 #include "Cosa/Linkage.hh"
 
 class Thread : public Link {
-public:
-  enum {
-    INIT = 0,
-    READY,
-    WAITING,
-    TIMEOUT,
-    SLEEPING,
-    RUNNING,
-    TERMINATED = 0xff,
-  };
-
 protected:
   static Head runq;
   uint8_t m_state;
@@ -71,6 +60,19 @@ protected:
   virtual void on_event(uint8_t type, uint16_t value);
   
 public:
+  /**
+   * Thread states.
+   */
+  enum {
+    INIT = 0,
+    READY,
+    WAITING,
+    TIMEOUT,
+    SLEEPING,
+    RUNNING,
+    TERMINATED = 0xff,
+  };
+
   /**
    * Construct thread and initial.
    */
@@ -159,10 +161,10 @@ public:
 
 #define THREAD_YIELD() \
   do {							\
-    m_ip = &&UNIQUE(LABEL);				\
+    __label__ next;					\
+    m_ip = &&next;					\
     return;						\
-    UNIQUE(LABEL):					\
-      ;							\
+  next: ;						\
   } while (0)
 
 #define THREAD_SLEEP()					\
@@ -180,9 +182,10 @@ public:
 
 #define THREAD_AWAIT(condition)				\
   do {							\
-  UNIQUE(LABEL):					\
+    __label__ next;					\
+  next:							\
     if (!(condition)) {					\
-      m_ip = &&UNIQUE(LABEL);				\
+      m_ip = &&next;					\
       return;						\
     }							\
   } while (0)
