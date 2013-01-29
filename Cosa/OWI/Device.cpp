@@ -27,6 +27,7 @@
  */
 
 #include "Cosa/OWI.hh"
+#include "Cosa/RTC.hh"
 
 int
 OWI::Device::read(uint8_t bits)
@@ -102,27 +103,10 @@ OWI::Device::write(uint8_t value, uint8_t bits)
   return (1);
 }
 
-// FIX: Should become independent of Arduino timers
-extern volatile unsigned long timer0_overflow_count;
-
-static unsigned long 
-micros() 
-{
-  unsigned long m;
-  uint8_t t;
-  synchronized {
-    m = timer0_overflow_count;
-    t = TCNT0;
-    if ((TIFR0 & _BV(TOV0)) && (t < 255))
-      m++;
-  }	
-  return ((m << 8) + t) << 2;
-}
-
 void 
 OWI::Device::on_event(uint8_t type, uint16_t value)
 {
-  uint32_t stop = micros() + 440;
+  uint32_t stop = RTC::micros() + 440;
 
   static uint16_t req = 0;
   static uint16_t fns = 0;
@@ -134,7 +118,7 @@ OWI::Device::on_event(uint8_t type, uint16_t value)
   set();
   set_mode(INPUT_MODE);
   synchronized {
-    DELAY(stop - micros());
+    DELAY(stop - RTC::micros());
 
     m_state = ROM_STATE;
     int cmd = read(8);
@@ -207,7 +191,7 @@ OWI::Device::on_event(uint8_t type, uint16_t value)
 void 
 OWI::Device::on_interrupt()
 {
-  volatile uint32_t now = micros();
+  volatile uint32_t now = RTC::micros();
   if (m_state == IDLE_STATE) {
     if (is_clear()) {
       m_time = now + 400L;
