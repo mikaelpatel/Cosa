@@ -70,8 +70,8 @@ private:
 public:
   /**
    * Construct state machine with given initial state.
-   * @param{in] init initial state handler.
-   * @param{in] period timeout in all states.
+   * @param[in] init initial state handler.
+   * @param[in] period timeout in all states (default no timeout).
    */
   FSM(StateHandler init, uint16_t period = 0) :
     Link(), 
