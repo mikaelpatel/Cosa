@@ -30,6 +30,7 @@
 #include "Cosa/FSM.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Memory.h"
+#include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -95,6 +96,7 @@ void setup()
 
   // Start the watchdog with default 16 ms ticks
   Watchdog::begin();
+  RTC::begin();
 
   // Bind the state machines to each other
   ping.bind(&pong);
@@ -108,10 +110,9 @@ void setup()
 
 void loop()
 {
-  // Initiate the counters and reset the watchdog ticks for measurement.
-  // Note the resolution is only 16 ms ticks by default.
+  // Initiate the counters
   uint32_t events = EVENTS_MAX;
-  Watchdog::reset();
+  uint32_t start = RTC::micros();
 
   // Send a first event to start the benchmark and dispatch events.
   ping.send(Event::USER_TYPE);
@@ -120,11 +121,10 @@ void loop()
     Event::queue.await(&event);
     event.dispatch();
   }
+  uint32_t stop = RTC::micros();
 
   // Capture the tick count and calculate the time per event and cycles.
-  uint16_t ticks = Watchdog::get_ticks();
-  uint16_t ms_per_tick = Watchdog::ms_per_tick();
-  uint32_t ms = ticks * ms_per_tick;
-  uint32_t us_per_event = (ms * 1000L) / EVENTS_MAX;
+  uint32_t us = stop - start;
+  uint32_t us_per_event = us / EVENTS_MAX;
   INFO("%l us per event (%l cycles)", us_per_event, us_per_event * I_CPU);
 }
