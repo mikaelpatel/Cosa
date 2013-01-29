@@ -25,6 +25,10 @@
  * Event handler. Supports timeout events and period timed state 
  * machines.
  *
+ * @section Acknowledgements
+ * The design of FSM is inspired by UML-2 State Machines, QP by Miro
+ * Samek, and ObjecTime by Brian Selic.
+ * 
  * This file is part of the Arduino Che Cosa project.
  */
 
