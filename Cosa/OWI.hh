@@ -293,7 +293,7 @@ public:
   /**
    * Write the given value to the one wire bus. The bits are written
    * from LSB to MSB. 
-   * @param[in] value.
+   * @param[in] value to write.
    * @param[in] bits to be written.
    */
   void write(uint8_t value, uint8_t bits = CHARBITS);

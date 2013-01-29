@@ -79,7 +79,7 @@ private:
 public:
   /**
    * Construct connection to a DHT11 device on given in/output-pin.
-   * @param[pin] pin data.
+   * @param[in] pin data.
    */
   DHT11(Board::DigitalPin pin) : Link(), m_pin(pin) {}
 

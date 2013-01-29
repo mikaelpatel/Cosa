@@ -336,7 +336,7 @@ public:
   /**
    * Write command and status registers. Issue W_REGISTER command.
    * @param[in] reg register address.
-   * @param[in] value new setting.
+   * @param[in] data new setting.
    * @return status.
    */
   uint8_t write(Register reg, uint8_t data);
@@ -363,11 +363,17 @@ public:
     return (m_status);
   }
 
+  /**
+   * Enable interrupt handler.
+   */
   void enable()
   {
     m_irq.enable();
   }
 
+  /**
+   * Disable interrupt handler.
+   */
   void disable()
   {
     m_irq.disable();

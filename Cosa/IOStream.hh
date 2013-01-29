@@ -293,7 +293,7 @@ public:
 
   /**
    * Print string in data memory to stream.
-   * @param[in] ptr pointer to data memory string.
+   * @param[in] s pointer to data memory string.
    */
   void print(char* s) 
   { 

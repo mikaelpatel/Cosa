@@ -297,8 +297,6 @@ Ciao::write(const Descriptor::user_t* desc)
   m_dev->putchar(d.id < 256 ? USER8_DESC_END : USER16_DESC_END);
 }
 
-typedef float float32_t;
-
 static const uint8_t sizeoftype[] PROGMEM = {
   sizeof(uint8_t),
   sizeof(uint16_t),

@@ -361,7 +361,7 @@ public:
   /**
    * Set output pin to mode.
    * @param[in] pin number.
-   * @param[in] mode pin mode (normal or pullup).
+   * @param[in] initial value.
    */
   static void set_mode(uint8_t pin, uint8_t initial = 0)
   {
@@ -527,7 +527,7 @@ public:
    * Set duty cycle for pwm output pin with given value mapping.
    * The value is mapped from ]min..max[ to duty [0..255]. Value
    * below min is mapped to zero(0) and above max to 255.
-   * @param[in] value.
+   * @param[in] value to map.
    * @param[in] min value.
    * @param[in] max value.
    */
@@ -537,7 +537,7 @@ public:
    * Set duty cycle for pwm output pin with given value mapping.
    * The value is mapped from ]min..max[ to duty [0..255]. Value
    * below min is mapped to zero(0) and above max to 255.
-   * @param[in] value.
+   * @param[in] value to map.
    * @param[in] min value.
    * @param[in] max value.
    */
@@ -608,7 +608,7 @@ private:
 
 extern "C" void ADC_vect(void) __attribute__ ((signal));
 
-/*
+/**
  * Abstract analog pin. Allows asynchronous sampling.
  */
 class AnalogPin : public Pin, public Event::Handler {
@@ -735,7 +735,7 @@ public:
   virtual void on_change(uint16_t value) {}
 };
 
-/*
+/**
  * Abstract analog pin set. Allow sampling of a set of pins with
  * interrupt or event handler when completed.
  */
@@ -809,7 +809,7 @@ public:
 
 extern "C" void ANALOG_COMP_vect(void) __attribute__ ((signal));
 
-/*
+/**
  * Analog Comparator; compare input values on the positive pin AIN0 
  * and negative pin AIN1 or ADCn. Note: only one instance can be
  * active/enabled at a time.

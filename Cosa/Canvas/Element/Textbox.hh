@@ -42,12 +42,8 @@ protected:
 
 public:
   /**
-   * Construct canvas object and initiate.
-   * @param[in] x.
-   * @param[in] y.
-   * @param[in] width.
-   * @param[in] height.
-   * @param[in] font.
+   * Construct text box on given canvas. Set textbox port to canvas size.
+   * @param[in] canvas.
    */
   Textbox(Canvas* canvas) :
     Canvas::Element(canvas),

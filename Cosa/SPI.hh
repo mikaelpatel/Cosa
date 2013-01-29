@@ -102,7 +102,7 @@ public:
   
   /**
    * Construct serial peripheral interface for slave.
-   * @param[in] fn interrupt handler. 
+   * @param[in] dev device driver.
    * @param[in] buffer with data to received data.
    * @param[in] max size of buffer.
    */

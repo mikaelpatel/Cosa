@@ -596,8 +596,8 @@ public:
   /**
    * Draw line to given position with current color. Update cursor to
    * new position.
-   * @param[in] x
-   * @param[in] y
+   * @param[in] x1
+   * @param[in] y1
    */
   void draw_line(uint8_t x1, uint8_t y1)
   {

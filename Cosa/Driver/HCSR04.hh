@@ -52,8 +52,8 @@ private:
 public:
   /**
    * Construct connection to a DHT11 device on given in/output-pin.
-   * @param[pin] trig_pin trigger pin number.
-   * @param[pin] echo_pin echo pin number.
+   * @param[in] trig_pin trigger pin number.
+   * @param[in] echo_pin echo pin number.
    */
   HCSR04(Board::DigitalPin trig_pin, Board::DigitalPin echo_pin) :
     Link(),
@@ -90,7 +90,7 @@ public:
 
   /**
    * Default on change function. 
-   * @param[in] value.
+   * @param[in] distance.
    */
   virtual void on_change(uint16_t distance) {}
 };

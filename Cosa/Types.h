@@ -46,6 +46,11 @@
 #define CHARBITS 8
 
 /**
+ * Standard floating point number, 32-bit.
+ */
+typedef float float32_t;
+
+/**
  * Macro for number of elements in a vector.
  * @param[in] x vector
  * @return number of elements
@@ -74,7 +79,7 @@
 
 /**
  * Macro for sleep for number of seconds. 
- * @param[in] s seconds.
+ * @param[in] seconds.
  */
 #define SLEEP(seconds) Watchdog::delay(seconds * 1024)
 

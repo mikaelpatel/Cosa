@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Canvas/Font/FixedNum8x16.cpp
+ * @file Cosa/Canvas/Font/FixedNums8x16.cpp
  * @version 1.0
  *
  * @section License

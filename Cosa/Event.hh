@@ -115,7 +115,6 @@ public:
    * @param[in] type event identity.
    * @param[in] target event receiver.
    * @param[in] value event value.
-   * @param[in] env event environment.
    */
   Event(int8_t type = NULL_TYPE, Handler* target = 0, uint16_t value = 0) :
     m_type(type),
@@ -197,14 +196,14 @@ public:
   /**
    * In debug mode, print event to given stream. Default is the
    * trace stream.
-   * @param[in] steam output stream.
+   * @param[in] stream output stream.
    */
   void print(IOStream& stream = trace);
 
   /**
    * In debug mode, print event to given stream with new-line.
    * Default is the trace stream.
-   * @param[in] steam output stream.
+   * @param[in] stream output stream.
    */
   void println(IOStream& stream = trace);
 

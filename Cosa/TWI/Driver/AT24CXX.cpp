@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/Driver/AT23CXX.cpp
+ * @file Cosa/TWI/Driver/AT24CXX.cpp
  * @version 1.0
  *
  * @section License

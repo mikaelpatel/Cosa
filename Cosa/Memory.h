@@ -29,6 +29,10 @@
 #ifndef __COSA_MEMORY_H__
 #define __COSA_MEMORY_H__
 
+/**
+ * Return amount of free memory.
+ * @return number of bytes.
+ */
 inline int 
 free_memory() 
 {
