@@ -52,6 +52,7 @@ public:
   {
     DEBUG("thread#%p: ip = %p, count = %d", this, m_ip, m_count);
     THREAD_BEGIN();
+    THREAD_YIELD();
     while (1) {
       set_timer(m_delay);
       THREAD_AWAIT(timer_expired());
@@ -89,6 +90,7 @@ void setup()
 
 void loop()
 {
+  Thread::dispatch();
   Thread::dispatch();
 
   static const uint16_t EVENTS_MAX = 100;

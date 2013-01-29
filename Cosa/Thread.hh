@@ -102,6 +102,15 @@ public:
   }
   
   /**
+   * Get current thread state.
+   * @return state.
+   */
+  uint8_t get_state()
+  {
+    return (m_state);
+  }
+
+  /**
    * Set timer for time out events.
    * @param[in] ms timeout period.
    */
@@ -122,13 +131,14 @@ public:
    */
   virtual void run(uint8_t type = Event::NULL_TYPE, uint16_t value = 0) = 0;
 
-
   /**
    * Thread dispatch. Run threads in the run queue. If given flag is true
-   * events will be processes.
+   * events will be processes. Returns number of dispatched threads and
+   * events.
    * @param[in] flag process event.
+   * @return number of dispatched threads and events.
    */
-  static void dispatch(uint8_t flag = 0);
+  static uint16_t dispatch(uint8_t flag = 0);
 
   /**
    * Thread schedule. Add the given thread to the run queue.
@@ -151,7 +161,8 @@ public:
   do {							\
     m_ip = &&UNIQUE(LABEL);				\
     return;						\
-  UNIQUE(LABEL):					\
+    UNIQUE(LABEL):					\
+      ;							\
   } while (0)
 
 #define THREAD_SLEEP()					\
@@ -162,7 +173,10 @@ public:
   } while (0)
 
 #define THREAD_WAKE(thread)				\
-  Thread::schedule(thread)
+  do {							\
+    if (thread->m_state == SLEEPING)			\
+      Thread::schedule(thread);				\
+  } while (0)
 
 #define THREAD_AWAIT(condition)				\
   do {							\

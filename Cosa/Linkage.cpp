@@ -67,7 +67,8 @@ void
 Head::on_event(uint8_t type, uint16_t value)
 {
   // Iterate through the list and dispatch the event
-  for (Linkage* link = m_succ; link != this;) {
+  Linkage* link = m_succ; 
+  while (link != this) {
     // Get the successor as the current event call may detach itself
     Linkage* succ = link->get_succ();
     link->on_event(type, value);

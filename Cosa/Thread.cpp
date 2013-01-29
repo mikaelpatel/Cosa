@@ -69,21 +69,26 @@ Thread::set_timer(uint16_t ms)
   Watchdog::attach(this, ms);
 }
 
-void
+uint16_t
 Thread::dispatch(uint8_t flag)
 {
-  for (Linkage* link = runq.get_succ(); link != &runq;) {
+  Linkage* link = runq.get_succ(); 
+  uint16_t count = 0;
+  while (link != &runq) {
     Linkage* succ = link->get_succ();
     Thread* thread = (Thread*) link;
     thread->run(Event::RUN_TYPE, 0);
     link = succ;
+    count += 1;
     if (flag) {
       while (Event::queue.available()) {
 	Event event;
 	Event::queue.dequeue(&event);
 	event.dispatch();
+	count += 1;
       }
     }
   }
+  return (count);
 }
 
