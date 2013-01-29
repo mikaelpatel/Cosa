@@ -62,22 +62,6 @@ Thread::on_event(uint8_t type, uint16_t value)
   } 
 }
 
-bool 
-Thread::begin()
-{
-  m_ip = 0;
-  m_state = INIT;
-  runq.attach(this);
-  return (1);
-}
-  
-void 
-Thread::end()
-{
-  m_state = TERMINATED;
-  detach();
-}
-  
 void 
 Thread::set_timer(uint16_t ms)
 {

@@ -22,7 +22,7 @@
  *
  * @section Description
  * Cosa Thread Benchmark; number of micro-seconds for a thread
- * dispatch/timer.
+ * dispatch and enqueuing in watchdog timer queue.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -32,9 +32,6 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-
-uint32_t start = 0;
-uint32_t stop = 0;
 
 // Counter thread class; two delay periods before incrementing
 // counter to show how the internal "instruction pointer" is
@@ -53,7 +50,6 @@ public:
   
   virtual void run(uint8_t type, uint16_t value)
   {
-    stop = RTC::micros();
     DEBUG("thread#%p: ip = %p, count = %d", this, m_ip, m_count);
     THREAD_BEGIN();
     while (1) {
@@ -102,8 +98,9 @@ void loop()
 
   while (events--) {
     Event::queue.await(&event);
-    start = RTC::micros();
+    uint32_t start = RTC::micros();
     event.dispatch();
+    uint32_t stop = RTC::micros();
     us += (stop - start);
   }
 

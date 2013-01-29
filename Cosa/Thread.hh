@@ -74,17 +74,32 @@ public:
   /**
    * Construct thread and initial.
    */
-  Thread() : Link() {}
+  Thread() : 
+    Link(),
+    m_state(INIT),
+    m_ip(0)
+  {}
   
   /**
-   * Start the thread.
+   * Start the thread. Must be in INIT state to be allowed to be
+   * scheduled.
+   * @return bool true if scheduled otherwise false.
    */
-  bool begin();
+  bool begin()
+  {
+    if (m_state != INIT) return (0);
+    schedule(this);
+    return (1);
+  }
   
   /**
-   * End the thread.
+   * End the thread. Mark as terminated and remove from any queue.
    */
-  void end();
+  void end()
+  {
+    m_state = TERMINATED;
+    detach();
+  }
   
   /**
    * Set timer for time out events.
@@ -134,24 +149,26 @@ public:
 
 #define THREAD_YIELD() \
   do {							\
-    m_ip = &&UNIQUE(L);					\
+    m_ip = &&UNIQUE(LABEL);				\
     return;						\
-    UNIQUE(L):						\
+  UNIQUE(LABEL):					\
   } while (0)
 
 #define THREAD_SLEEP()					\
   do {							\
     m_state = SLEEPING;					\
+    detach();						\
     THREAD_YIELD();					\
   } while (0)
 
-#define THREAD_WAKE(t)					\
-  Thread::schedule(t)
+#define THREAD_WAKE(thread)				\
+  Thread::schedule(thread)
 
-#define THREAD_AWAIT(cond)				\
+#define THREAD_AWAIT(condition)				\
   do {							\
-    UNIQUE(L): if (!(cond)) {				\
-      m_ip = &&UNIQUE(L);				\
+  UNIQUE(LABEL):					\
+    if (!(condition)) {					\
+      m_ip = &&UNIQUE(LABEL);				\
       return;						\
     }							\
   } while (0)
