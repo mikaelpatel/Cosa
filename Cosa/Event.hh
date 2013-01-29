@@ -63,6 +63,8 @@ public:
     BEGIN_TYPE,			// Finite State Machines
     END_TYPE,
 
+    RUN_TYPE,			// Thread
+
     CONNECT_TYPE,		// Device drivers and protocol stacks
     DISCONNECT_TYPE,
     RECEIVE_REQUEST_TYPE,	
