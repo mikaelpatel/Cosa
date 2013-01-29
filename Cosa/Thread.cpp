@@ -25,15 +25,24 @@
  * low-overhead mechanism for concurrent programming.  Protothreads
  * function as stackless, lightweight threads providing a blocking
  * context cheaply using minimal memory per protothread (on the order
- * of single bytes). http://en.wikipedia.org/wiki/Protothreads
+ * of single bytes). Cosa/Thread supports event to thread mapping and
+ * timers.
  *
  * @section Limitations
  * The thread macro set should only be used within the Thread::run()
  * function. 
  *
  * @section Acknowledgements
- * Inspired by research and prototype by Adam Dunkel and the
- * protothread library by Larry Ruane.
+ * Inspired by research and prototype by Adam Dunkels, Oliver Schmidt,
+ * Thiermo, Muneeb Ali, and the protothread library by Larry Ruane.
+ *
+ * @section References
+ * [1] Adam Dunkels et al, Protothreads: Simplifying Event-Driven
+ * Programming of Memory-Constrained Embedded Systems, SenSys'06,
+ * November 1-3, 2006, Boulder, Colorado, USA.
+ * [2] Larry Ruane, protothread: An extremely lightweight thread
+ * library for GCC, http://code.google.com/p/protothread/
+ * [3] http://en.wikipedia.org/wiki/Protothreads
  *
  * This file is part of the Arduino Che Cosa project.
  */
