@@ -22,11 +22,12 @@
  *
  * @section Description
  * Cosa implementation of protothreads; A protothread is a
- * low-overhead mechanism for concurrent programming.  Protothreads
+ * low-overhead mechanism for concurrent programming. Protothreads
  * function as stackless, lightweight threads providing a blocking
- * context cheaply using minimal memory per protothread (on the order
- * of single bytes). Cosa/Thread supports event to thread mapping and
- * timers.
+ * context using minimal memory per protothread. Cosa/Thread supports
+ * event to thread mapping and timers. The size of Cosa/Thread is 
+ * 9 bytes (3 bytes for state and continuation, 4 bytes for Link and 
+ * 2 bytes for virtual table pointer). 
  *
  * @section Limitations
  * The thread macro set should only be used within the Thread::run()
@@ -74,38 +75,40 @@ public:
    * Thread states.
    */
   enum {
-    INIT = 0,
-    READY,
-    WAITING,
-    TIMEOUT,
-    SLEEPING,
-    RUNNING,
-    TERMINATED = 0xff,
+    INITIATED = 0,		// Constructor
+    READY,			// In run queue
+    WAITING,			// In timer queue
+    TIMEOUT,			// Timeout received and running
+    RUNNING,			// Dispatched and running
+    SLEEPING,			// Detached. Need wakeup call
+    TERMINATED = 0xff,		// Removed from all queues
   };
 
   /**
-   * Construct thread and initial.
+   * Construct thread, initiate state and continuation. Does not 
+   * schedule the thread. This is done with begin().
    */
   Thread() : 
     Link(),
-    m_state(INIT),
+    m_state(INITIATED),
     m_ip(0)
   {}
   
   /**
-   * Start the thread. Must be in INIT state to be allowed to be
-   * scheduled.
+   * Start the thread. Must be in INITIATED state to be allowed to be 
+   * scheduled. Returns false if not in correct state.
    * @return bool true if scheduled otherwise false.
    */
   bool begin()
   {
-    if (m_state != INIT) return (0);
+    if (m_state != INITIATED) return (0);
     schedule(this);
     return (1);
   }
   
   /**
    * End the thread. Mark as terminated and remove from any queue.
+   * Use macro THREAD_END() in thread body (run function).
    */
   void end()
   {
@@ -123,13 +126,23 @@ public:
   }
 
   /**
-   * Set timer for time out events.
+   * Set timer and enqueue thread to receive timeout event.
+   * If the timer expires the thread is put in TIMEOUT state.
    * @param[in] ms timeout period.
    */
   void set_timer(uint16_t ms);
 
   /**
-   * Check if timer expired. 
+   * Cancel timer and dequeue thread from timer queue.
+   */
+  void cancel_timer()
+  {
+    detach();
+  }
+
+  /**
+   * Check if the timer expired; i.e., the thread is in TIMEOUT
+   * state. 
    */
   bool timer_expired()
   {
@@ -137,24 +150,37 @@ public:
   }
 
   /**
-   * Thread activity. Must be overridden. 
+   * Thread activity. Must be overridden. Use the thread macro set in
+   * the following format:
+   * {
+   *   THREAD_BEGIN();
+   *   while (1) {
+   *     ...
+   *     THREAD_AWAIT(condition);
+   *     ...
+   *   }
+   *   THREAD_END();
+   * }
+   * Additional macros are THREAD_YIELD(), THREAD_SLEEP(), and 
+   * THREAD_WAKE().
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
-  virtual void run(uint8_t type = Event::NULL_TYPE, uint16_t value = 0) = 0;
+  virtual void run(uint8_t type = Event::RUN_TYPE, uint16_t value = 0) = 0;
 
   /**
-   * Thread dispatch. Run threads in the run queue. If given flag is true
-   * events will be processes. Returns number of dispatched threads and
-   * events.
-   * @param[in] flag process event.
+   * Run threads in the run queue. If given flag is true events will
+   * be processes. Returns number of dispatched threads and events.
+   * The run queue is only iterated once per call to dispatch to allow
+   * user defined outer loop, i.e., arduino loop() function.
+   * @param[in] flag process events.
    * @return number of dispatched threads and events.
    */
   static uint16_t dispatch(uint8_t flag = 0);
 
   /**
-   * Thread schedule. Add the given thread to the run queue.
-   * @param[in] thread 
+   * Add the given thread to the run queue (last). 
+   * @param[in] thread to enqueue.
    */
   static void schedule(Thread* thread)
   {
@@ -165,6 +191,12 @@ public:
 
 /**
  * Thread action function support macros.
+ * THREAD_BEGIN() must be the first statement in the thread body (run).
+ * THREAD_YIELD() yields execution and returns. Remains in the run queue.
+ * THREAD_AWAIT(condition) yields until the condition is true.
+ * THREAD_SLEEP() yields execution and returns. Removed from the run queue.
+ * THREAD_WAKE(thread) if the thread is SLEEPING it is scheduled.
+ * THREAD_END() marks the thread as TERMINATED and returns.
  */
 #define THREAD_BEGIN()					\
   if (m_ip != 0) goto *m_ip
@@ -201,7 +233,10 @@ public:
   } while (0)
 
 #define THREAD_END()					\
-  Thread::end()
+  do {							\
+    Thread::end();					\
+    return;						\
+  } while (0)
 
 #endif
 

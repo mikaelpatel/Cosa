@@ -22,11 +22,12 @@
  *
  * @section Description
  * Cosa implementation of protothreads; A protothread is a
- * low-overhead mechanism for concurrent programming.  Protothreads
+ * low-overhead mechanism for concurrent programming. Protothreads
  * function as stackless, lightweight threads providing a blocking
- * context cheaply using minimal memory per protothread (on the order
- * of single bytes). Cosa/Thread supports event to thread mapping and
- * timers.
+ * context using minimal memory per protothread. Cosa/Thread supports
+ * event to thread mapping and timers. The size of Cosa/Thread is 
+ * 9 bytes (3 bytes for state and continuation, 4 bytes for Link and 
+ * 2 bytes for virtual table pointer). 
  *
  * @section Limitations
  * The thread macro set should only be used within the Thread::run()
@@ -56,13 +57,8 @@ Head Thread::runq;
 void 
 Thread::on_event(uint8_t type, uint16_t value)
 {
-  if (type == Event::TIMEOUT_TYPE) {
-    m_state = TIMEOUT;
-    detach();
-  } 
-  else {
-    m_state = RUNNING;
-  }
+  if (m_state == WAITING) detach();
+  m_state = (type == Event::TIMEOUT_TYPE) ? TIMEOUT : RUNNING; 
   run(type, value);
   if (m_state == RUNNING) {
     m_state = READY;
@@ -84,12 +80,18 @@ Thread::dispatch(uint8_t flag)
 {
   Linkage* link = runq.get_succ(); 
   uint16_t count = 0;
+  // Iterate once through the run queue and call all threads run method
   while (link != &runq) {
     Linkage* succ = link->get_succ();
     Thread* thread = (Thread*) link;
-    thread->run(Event::RUN_TYPE, 0);
+    thread->m_state = RUNNING; 
+    thread->run();
+    if (thread->m_state == RUNNING) {
+      thread->m_state = READY;
+    }
     link = succ;
     count += 1;
+    // Check if events should be processed
     if (flag) {
       while (Event::queue.available()) {
 	Event event;
@@ -99,6 +101,7 @@ Thread::dispatch(uint8_t flag)
       }
     }
   }
+  // Return total number of function dispatch
   return (count);
 }
 
