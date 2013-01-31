@@ -296,21 +296,21 @@ public:
     defined(__AVR_ATmega328P__)
     m_ix = pin - Board::EXT0;
     ext[m_ix] = this;
-    EICRA = (EICRA & ~(0b11 << m_ix)) | (mode << m_ix);
+    uint8_t ix = (m_ix << 1);
+    EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-    uint8_t ix;
-    if (pin < Board::EXT4) {
-      ix = Board::EXT0 - pin;
+    if (pin <= Board::EXT3) {
+      m_ix = Board::EXT0 - pin;
+      uint8_t ix = (m_ix << 1);
       EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
-      ext[ix] = this;
     } 
     else {
-      ix = pin - Board::EXT4;
+      m_ix = pin - Board::EXT4;
+      uint8_t ix = (m_ix << 1);
       EICRB = (EICRB & ~(0b11 << ix)) | (mode << ix);
-      ix += 4;
-      ext[ix] = this;
+      m_ix += 4;
     }
-    m_ix = ix;
+    ext[m_ix] = this;
 #endif
   }
 

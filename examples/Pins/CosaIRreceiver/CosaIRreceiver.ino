@@ -28,24 +28,30 @@
  */
 
 #include "Cosa/Pins.hh"
+#include "Cosa/RTC.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/RTC.hh"
+
+// Enable to allow the IR receiver interrupt handler to collect time periods
+// #define COLLECT_SAMPLES
 
 class IRreceiver : public InterruptPin {
 private:
   static const uint16_t PRE_DATA = 0x20df;
   static const uint8_t PRE_DATA_BITS = 16;
   static const uint8_t SAMPLE_MAX = 40;
-#ifdef COLLECT_SAMPLES
-  volatile uint16_t m_sample[SAMPLE_MAX];
-#endif
   volatile uint32_t m_threshold;
   volatile uint32_t m_start;
   volatile uint32_t m_code;
   volatile uint8_t m_ix;
   const uint8_t m_max;
+
+#ifdef COLLECT_SAMPLES
+  // Time period samples
+  volatile uint16_t m_sample[SAMPLE_MAX];
+#endif
 
   /**
    * @override
@@ -67,12 +73,12 @@ private:
     // And generate the binary code. Skip two first and last samples
     if (m_ix > 1 && m_ix < m_max - 2)
       m_code = (m_code << 1) + (us > m_threshold);
-#ifdef COLLECT_SAMPLES
-    m_sample[m_ix++] = us;
-#else
-    m_ix += 1;
-#endif
 
+#ifdef COLLECT_SAMPLES
+    m_sample[m_ix] = us;
+#endif
+    
+    m_ix += 1;
     // Push event when all samples have been received
     if (m_ix == m_max) {
       if ((m_code >> PRE_DATA_BITS) == PRE_DATA) 
@@ -89,7 +95,7 @@ public:
    * with the given threshold.
    */
   IRreceiver(Board::InterruptPin pin, uint8_t max, uint32_t threshold) :
-    InterruptPin(pin, InterruptPin::ON_RISING_MODE),
+    InterruptPin(pin, InterruptPin::ON_FALLING_MODE),
     m_threshold(threshold),
     m_start(0),
     m_ix(0),
@@ -138,7 +144,11 @@ void setup()
   TRACE(sizeof(InterruptPin));
   TRACE(sizeof(IRreceiver));
 
+  // Print pin configuration
+  receiver.Pin::print(trace);
+
   // Use the real-time clock for time measurement
+  Watchdog::begin();
   RTC::begin();
 
   // Enable the interrupt pin to capture the remote code sequence
@@ -157,6 +167,7 @@ void loop()
   // Print the posted event code. This is the code that should be used
   uint16_t code = event.get_value();
   INFO("event.value:code = %hd", code);
+  Watchdog::delay(512);
 
   // Reset to allow the next code sequence
   receiver.reset();

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,7 +49,7 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin) 
   { 
-    return (pin < 8 ? &PIND : 
+    return (pin < 8  ? &PIND : 
 	    pin < 14 ? &PINB : 
 	    &PINC);
   }
@@ -62,7 +62,9 @@ private:
    */
   static const uint8_t BIT(uint8_t pin)
   {
-    return (pin < 8 ? pin : pin < 14 ? pin - 8 : pin - 14);
+    return (pin < 8  ? pin : 
+	    pin < 14 ? pin - 8 : 
+	    pin - 14);
   }
   
   /**
@@ -236,8 +238,8 @@ public:
     D17 = 8,
     D18 = 51,
     D19 = 50,
-    D20 = 41,
-    D21 = 40,
+    D20 = 49,
+    D21 = 48,
     D22 = 24,
     D23 = 25,
     D24 = 26,
@@ -323,8 +325,8 @@ public:
     EXT1 = D20,
     EXT2 = D19,
     EXT3 = D18,
-    EXT4 = D4,
-    EXT5 = D5,
+    EXT4 = D2,
+    EXT5 = D3,
     EXT_MAX = 6
   };
 
