@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -283,36 +283,7 @@ public:
    * @param[in] pin pin number.
    * @param[in] mode pin mode.
    */
-  InterruptPin(Board::InterruptPin pin, Mode mode = ON_CHANGE_MODE) :
-    InputPin((Board::DigitalPin) pin)
-  {
-    if (mode & PULLUP_MODE) {
-      synchronized {
-	*PORT() |= m_mask; 
-      }
-    }
-#if defined(__AVR_ATmega8__)   || \
-    defined(__AVR_ATmega168__) || \
-    defined(__AVR_ATmega328P__)
-    m_ix = pin - Board::EXT0;
-    ext[m_ix] = this;
-    uint8_t ix = (m_ix << 1);
-    EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
-#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-    if (pin <= Board::EXT3) {
-      m_ix = Board::EXT0 - pin;
-      uint8_t ix = (m_ix << 1);
-      EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
-    } 
-    else {
-      m_ix = pin - Board::EXT4;
-      uint8_t ix = (m_ix << 1);
-      EICRB = (EICRB & ~(0b11 << ix)) | (mode << ix);
-      m_ix += 4;
-    }
-    ext[m_ix] = this;
-#endif
-  }
+  InterruptPin(Board::InterruptPin pin, Mode mode = ON_CHANGE_MODE);
 
   /**
    * Enable interrupt pin change detection and interrupt handler.
