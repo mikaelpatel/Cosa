@@ -91,11 +91,12 @@ private:
 public:
   /**
    * Construct NRF transceiver with given channel and pin numbers 
-   * for SPI slave select, activity enable and interrupt. 
+   * for SPI slave select, activity enable and interrupt. Default
+   * in parenthesis (Standard/Mega Arduino).
    * @param[in] channel number (default 64).
    * @param[in] csn spi slave select pin number (default D10/D53).
    * @param[in] ce chip enable activates pin number (default D9/D48).
-   * @param[in] irq interrupt pin number (default EXT0).
+   * @param[in] irq interrupt pin number (default EXT0/EXT4).
    */
 #if defined(__AVR_ATmega8__)   || \
     defined(__AVR_ATmega168__) || \
@@ -108,7 +109,7 @@ public:
   NRF24L01P(uint8_t channel = 64, 
 	    Board::DigitalPin csn = Board::D53, 
 	    Board::DigitalPin ce = Board::D48, 
-	    Board::InterruptPin irq = Board::EXT0);
+	    Board::InterruptPin irq = Board::EXT4);
 #endif
 
   /**
