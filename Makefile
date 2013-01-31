@@ -3,11 +3,11 @@ all: CLASS.png doxygen
 CLASS.png: CLASS.dot
 	dot -Tpng CLASS.dot -o CLASS.png
 
-doxygen: doc log
+doxygen: documentation log
 	doxygen 
 
-doc:
-	mkdir doc
+documentation:
+	mkdir documentation
 
 log:
 	mkdir log
