@@ -57,6 +57,7 @@ News
 2013-01-25 UTFT Font support added.  
 2013-01-29 Proto-threads implemented. Draw/fill round rectangle added
 to Canvas.  
+2013-02-01 Adding doxygen generated documentation (doc.zip).
 
 Install
 -------
@@ -64,7 +65,17 @@ Install
 To install download and move the Cosa directory to the Arduino cores
 directory within arduino itself, i.e.,
 your-arduino-install-directory/hardware/arduino/cores/arduino. The
-examples should be moved to your Arduino sketchbook directory.  
+examples should be moved to your Arduino sketchbook directory. 
+
+The programmers application interface documentation is available as
+HTML in the file doc.zip. Uncompress this file and navigate your
+browser to the index file. The documentation contains a full
+hyperlinked description of all functions in Cosa together with UML
+graphs of the class hierarchy. 
+
+The Makefile together with the tools dot/graphwiz may be used to generate
+further information from the source code. The overview class diagram
+is also generated with the tool dot.
 
 Drivers
 -------
