@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Canvas/Font/FixedNums8x16.hh
+ * @file Cosa/Canvas/GLCDFont.hh
  * @version 1.0
  *
  * @section License
@@ -21,28 +21,29 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Bitmap font size 8x16, fixed with font with numbers only.
- *
- * @section Acknowledgement
- * Originates from the GLCD library and adapted for Cosa Canvas.
- * The GLCD library was created by Michael Margolis and improved 
- * by Bill Perry.
+ * GLCD font library handler for Cosa Canvas. Needs a special 
+ * handling of the font bitmap as the decoding is different.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CANVAS_FONT_FIXEDNUMS8X16_HH__
-#define __COSA_CANVAS_FONT_FIXEDNUMS8X16_HH__
+#ifndef __COSA_CANVAS_GLCDFONT_HH__
+#define __COSA_CANVAS_GLCDFONT_HH__
 
-#include "Cosa/Canvas/GLCDFont.hh"
+#include "Cosa/Canvas/Font.hh"
 
-class FixedNums8x16 : public GLCDFont {
-private:
-  static const uint8_t bitmap[] PROGMEM;
-
+class GLCDFont : public Font {
 public:
-  FixedNums8x16() : GLCDFont(8, 15, bitmap) {}
-
+  /**
+   * Construct GLCD font descriptor and bitmap.
+   * @param[in] width character width.
+   * @param[in] height character height.
+   * @param[in] bitmap font storage.
+   */
+  GLCDFont(uint8_t width, uint8_t height, const uint8_t* bitmap) :
+    Font(width, height, bitmap)
+  {}
+  
   /**
    * @overriden
    * Get bitmap for given character.
@@ -51,12 +52,21 @@ public:
    */
   virtual const uint8_t* get_bitmap(char c)
   {
-    c = c - '+';
-    if (c > 16) c = 0;
     return (m_bitmap + (c * WIDTH)*((HEIGHT + 1)/CHARBITS));
   }
+
+  /**
+   * Draw character on given canvas.
+   * @param[in] canvas
+   * @param[in] c character.
+   * @param[in] x position.
+   * @param[in] y position.
+   * @param[in] scale
+   */
+  virtual void draw(Canvas* canvas, char c, uint8_t x, uint8_t y, 
+		    uint8_t scale)
+  {
+    canvas->draw_icon(x, y, get_bitmap(c), WIDTH, HEIGHT, scale);
+  }
 };
-
-extern FixedNums8x16 fixednums8x16;
-
 #endif
