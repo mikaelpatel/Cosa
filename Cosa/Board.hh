@@ -23,7 +23,19 @@
  * @section Description
  * Cosa Board pin symbol definitions for the ATmega8, ATmega168
  * ATmega328P, ATmega1280 and ATmega2560 based Arduino boards;
- * Arduino Uno, Mini Pro, LilyPad and Mega 2560.
+ * Arduino Uno, Mini Pro, Nano, LilyPad and Mega 2560.
+ * Cosa does not use pin numbers are Arduino. Instead strong
+ * data type is used (enum types) for the specific pin classes;
+ * e.g. InterruptPin, AnalogPin, PWMPin.
+ *
+ * @section Limitations
+ * The pin numbers for ATmega8, ATmega168 and ATmega328P are mapped
+ * as in Arduino but ATmega1280 and ATmega2560 are only symbolically
+ * mapped, i.e. a pin number/digit will not work, symbols must be 
+ * used, e.g., Board::D42.
+ *
+ * The static inline functions, SFR, BIT and UART, rely on compiler
+ * optimizations to be reduced. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -56,7 +68,7 @@ private:
 
   /**
    * Return bit position for given Arduino pin number in Special
-   * Function Register.
+   * Function Register. 
    * @param[in] pin number.
    * @return pin bit position.
    */
@@ -142,7 +154,7 @@ public:
   /**
    * Pins used for TWI interface (in port C, analog pins 18-19).
    */
-  enum {
+  enum TWIPin {
     SDA = 4,
     SCL = 5
   };
@@ -215,7 +227,7 @@ private:
 
 public:
   /**
-   * Digital pin symbols; mapping from name to port:bit.
+   * Digital pin symbols; mapping from name to port<5>:bit<3>.
    */
   enum DigitalPin {
     D0 = 0,
@@ -333,7 +345,7 @@ public:
   /**
    * Pins used for TWI interface (in port D, digital pins 20-21).
    */
-  enum {
+  enum TWIPin {
     SCL = 0,
     SDA = 1
   };

@@ -111,11 +111,11 @@ public:
   }
 
   /**
-   * Draw character.
+   * Draw character on given canvas.
    * @param[in] canvas
-   * @param[in] c
-   * @param[in] x 
-   * @param[in] y
+   * @param[in] c character.
+   * @param[in] x position.
+   * @param[in] y position.
    * @param[in] scale
    */
   virtual void draw(Canvas* canvas, char c, 
