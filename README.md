@@ -57,7 +57,7 @@ News
 2013-01-25 UTFT Font support added.  
 2013-01-29 Proto-threads implemented. Draw/fill round rectangle added
 to Canvas.  
-2013-02-01 Adding doxygen generated documentation (doc.zip).
+2013-02-01 Adding doxygen generated documentation (doc.zip).  
 
 Install
 -------
@@ -118,9 +118,10 @@ Naming
 Note
 ----
 
-Atmega328P based Arduino boards (Uno, Mini, Nano, LilyPad, etc) are
-supported. Timers (1-n), EEPROM, UART (receiver) are not directly supported
-but planned. This also applies for Arduino Leonardo (USB), and
-Attiny devices. 
+Atmega328P and Atmega2560 based Arduino boards (Uno, Mini, Nano,
+LilyPad, Mega, etc) are supported. Timers (1-n), EEPROM, UART
+(receiver) are not directly supported but planned. Arduino
+and AVR lib functions may be used together with Cosa.
+
 
 
