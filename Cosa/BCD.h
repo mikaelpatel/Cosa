@@ -26,6 +26,9 @@
  * @section Limitations
  * Handles only two digit BCD numbers (0..99).
  *
+ * @section References
+ * [1] AVR204: BCD Arithmetics, Atmel Corporation, 0938B–AVR–01/03.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
