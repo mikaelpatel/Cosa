@@ -1,0 +1,53 @@
+=====================================
+Measurement:		   2013-02-02
+=====================================
+CosaFSMBenchmark:		 5414
+CosaPinsBenchmark:		12480
+CosaRTCBenchmark:		 5656
+CosaThreadBenchmark:		 5846
+-------------------------------------
+CosaCanvasClock:		11758
+CosaCanvasFont:			 9320
+CosaCanvasHistogram:		10452
+CosaCanvasPins:			11718
+CosaCanvasScript:		14854
+CosaCanvasShades:		 9352
+CosaCanvasST7735R:		18294
+CosaCanvasSweep:		10018
+-------------------------------------
+CosaCiaoNative:			 5342
+CosaCiaoPoint:			 5088
+CosaFai:			 7008
+-------------------------------------
+CosaDH11:			 5130
+CosaHCSR04:			16454
+-------------------------------------
+CosaFSMBlink:			 2950
+CosaPingPong:			 5124
+-------------------------------------
+CosaDS18B20:			 7156
+CosaOWImaster:			 6426
+CosaOWIslave:			 5718
+-------------------------------------
+CosaAnalogPins:			 5210
+CosaBlink:			 1884
+CosaBlinkEvent:			 1870
+CosaBlinkInterrupt:		 1840
+CosaBlinkPeriodic:		 2420
+CosaBlinkTimeout:		 2450
+CosaBlinkWatchdog:		 1838
+CosaButton:			 5462
+CosaIRreceiver:			 6098
+CosaPins:			 7488
+-------------------------------------
+CosaADLX345:			 5222
+CosaNRFreceiver:		 8020
+CosaNRFsender:			 8030
+-------------------------------------
+CosaAT24CXX:			 5754
+CosaDS1307:			 6144
+CosaPCF8591:			 5736
+CosaTWImaster:			 6298
+CosaTWIslave:			 4542
+-------------------------------------
+
