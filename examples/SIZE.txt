@@ -44,7 +44,7 @@ CosaADLX345:			 5222
 CosaNRFreceiver:		 8020
 CosaNRFsender:			 8030
 -------------------------------------
-CosaAT24CXX:			 5754
+CosaAT24CXX:			 5722
 CosaDS1307:			 6144
 CosaPCF8591:			 5736
 CosaTWImaster:			 6298
