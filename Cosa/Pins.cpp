@@ -33,7 +33,7 @@
 void 
 Pin::print(IOStream& stream)
 {
-  stream.printf_P(PSTR("Pin(pin = %d, sfr = %p, mask = %bd)"), 
+  stream.printf_P(PSTR("Pin(pin = %d, sfr = %p, mask = %bd)\n"), 
 		  m_pin, m_sfr, m_mask);
 }
 
