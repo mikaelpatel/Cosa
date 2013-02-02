@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,8 @@
  * @section Description
  * Canvas Textbox element. Acts as an IOStream/console output to
  * Canvas. As an element it holds its own canvas state; context.
+ * The textbox is defined by a port (x, y, width, height) on the
+ * canvas. Basic carriage-return, line- and form-feed are handled.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -35,7 +37,7 @@ Textbox::putchar(char c)
   // Save the current context and setup our context
   Canvas::Context* saved = m_canvas->set_context(this);
 
-  // Handle some special characters, new-line
+  // Handle some special characters, carriage-return, line-feed
   uint8_t x, y;
   get_cursor(x, y);
   uint8_t scale = m_text_scale;

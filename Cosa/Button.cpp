@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,11 +21,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Debounded Button; Sampled input pin with pullup resistor. Uses a
- * watchdog timeout event (64 ms) for sampling and on change calls an
- * event action. Subclass Button and implement the virtual on_change()
- * method. Use the subclass for any state needed for the action
- * function.  
+ * Debounded Button; Sampled input pin (with internal pullup
+ * resistor. Uses a watchdog timeout event (64 ms) for sampling and on 
+ * change calls an event action. Subclass Button and implement the
+ * virtual on_change() method. Use the subclass for any state needed
+ * for the action function.  
  *
  * @section Circuit
  * Connect button/switch from pin to ground. Internal pull-up resistor

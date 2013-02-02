@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,6 +30,16 @@
  * @section See Also
  * Requires an IOSteam::Device. This is used in binary/8-bit character
  * mode. See also Cosa/Fai.hh for details on board state reporting.
+ *
+ * @section References
+ * [1] Sun Microsystems (1987). "XDR: External Data Representation
+ * Standard". RFC 1014. Network Working Group. Retrieved July 11,
+ * 2011. http://tools.ietf.org/html/rfc1014
+ * [2] Boost Serialization, 
+ * http://www.boost.org/doc/libs/1_46_1/libs/serialization/doc/index.html
+ * [3] Java Stream Format,
+ * http://docs.oracle.com/javase/7/docs/platform/serialization/spec/protocol.html#10258
+ * [4] Arduino/Firmata, http://www.firmata.org
  *
  * This file is part of the Arduino Che Cosa project.
  */

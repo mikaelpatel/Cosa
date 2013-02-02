@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,13 +41,22 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Linkage.hh"
 
-class HCSR04 : public Link {
+class HCSR04 : protected Link {
 private:
   static const uint16_t TIMEOUT = 0xffffU;
   static const uint16_t COUNT_PER_CM = 54;
   OutputPin m_trigPin;
   InputPin m_echoPin;
   uint16_t m_distance;
+
+  /**
+   * @override
+   * Default device event handler function. Attach to watchdog
+   * timer queue, Watchdog::attach(), to allow perodic reading.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value);
 
 public:
   /**
@@ -78,15 +87,6 @@ public:
    * @return bool.
    */
   bool read(uint16_t& distance);
-
-  /**
-   * @override
-   * Default device event handler function. Attach to watchdog
-   * timer queue, Watchdog::attach(), to allow perodic reading.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value);
 
   /**
    * Default on change function. 

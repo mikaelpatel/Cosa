@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Bitmap font size 32x50, segments, fixed with font with numbers only.
+ * UTFT bitmap font size 32x50, segments, fixed with font with 
+ * numbers only.
  *
  * @section Acknowledgement
  * Originates from the UTFT library was created by Henning Karlsen.

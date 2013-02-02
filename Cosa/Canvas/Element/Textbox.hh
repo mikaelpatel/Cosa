@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,8 @@
  * @section Description
  * Canvas Textbox element. Acts as an IOStream/console output to
  * Canvas. As an element it holds its own canvas state; context.
+ * The textbox is defined by a port (x, y, width, height) on the
+ * canvas. Basic carriage-return, line- and form-feed are handled.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -37,6 +39,10 @@
 
 class Textbox : public Canvas::Element, public IOStream::Device {
 protected:
+  /**
+   * Textbox port and line spacing. Character spacing is defined
+   * by the font setting.
+   */
   Canvas::rect8_t m_text_port;
   uint8_t m_line_spacing;
 
@@ -105,7 +111,8 @@ public:
   /**
    * @override
    * Write character at current cursor position, with current text
-   * color, scale and font.  
+   * color, scale and font. The textbox will handle carriage-return,
+   * line-feed and form-feed. Scrolling is handled as a wrap-around.
    * @param[in] c character to write.
    * @return character written or EOF(-1).
    */

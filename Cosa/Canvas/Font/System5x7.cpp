@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Bitmap font size 5x7.
+ * Bitmap system font size 5x7. Full ASCII table (0..127).
  *
  * @section Acknowledgement
  * Inspired by graphics library by ladyada/adafruit.

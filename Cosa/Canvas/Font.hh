@@ -41,7 +41,7 @@ protected:
 
 public:
   /**
-   * Font size; width/height 
+   * Font size; width/height and character spacing.
    */
   const uint8_t WIDTH;
   const uint8_t HEIGHT;

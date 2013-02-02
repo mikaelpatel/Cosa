@@ -54,7 +54,7 @@ public:
    */
   virtual const uint8_t* get_bitmap(char c)
   {
-    return (m_bitmap + (c * HEIGHT)*(WIDTH/CHARBITS));
+    return (m_bitmap + (c * HEIGHT) * (WIDTH / CHARBITS));
   }
 
   /**

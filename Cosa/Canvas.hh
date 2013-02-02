@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,10 +22,11 @@
  *
  * @section Description
  * Virtual Canvas device; abstraction of small screens, LCD/TFT. 
- * See Cosa/SPI/ST7735R.hh for an example of usage.
+ * Device drivers need to override at least begin(), fill_rect()
+ * and end(). See Cosa/SPI/ST7735R.hh for an example of usage.
  *
  * @section Limitations
- * Color model is 16-bit RBG<5,6,5>. Canvas size is max 256x256.
+ * Color model is 16-bit RGB<5,6,5>. Canvas size is max 256x256.
  *
  * @section Acknowledgements
  * Inspired by GFX graphics library by ladyada/adafruit, the glcd
@@ -40,6 +41,7 @@
 
 #include "Cosa/Types.h"
 
+// Forward declaration of default system font
 class Font;
 class System5x7;
 extern System5x7 system5x7;
@@ -84,7 +86,16 @@ public:
   };
 
   /**
-   * Drawing context.
+   * circle<x, y, radius> data structure.
+   */
+  struct circle8_t {
+    uint8_t x;
+    uint8_t y;
+    uint8_t radius;
+  };
+
+  /**
+   * Drawing context; canvas, pen and text color. Font and text scale.
    */
   class Context {
   protected:
@@ -97,7 +108,9 @@ public:
 
   public:
     /**
-     * Construct a drawing context.
+     * Construct a drawing context with default pen color(BLACK),
+     * canvas color(WHITE), text color(BLACK), text scale(1),
+     * and cursor at (0, 0).
      * @param[in] font default is the system font.
      */
     Context(Font* font = (Font*) &system5x7) :
@@ -120,7 +133,7 @@ public:
     }
 
     /**
-     * Set context canvas color.
+     * Set context canvas color. Return previous color.
      * @param[in] color
      * @return previous color.
      */
@@ -141,7 +154,7 @@ public:
     }
 
     /**
-     * Set context drawing color.
+     * Set context drawing color. Return previous color.
      * @param[in] color
      * @return previous color.
      */
@@ -162,7 +175,7 @@ public:
     }
 
     /**
-     * Set context text color.
+     * Set context text color. Return previous color.
      * @param[in] color
      * @return previous color.
      */
@@ -182,7 +195,7 @@ public:
     }
 
     /**
-     * Set context text font.
+     * Set context text font. Return previous color.
      * @param[in] font
      * @return previous font.
      */
@@ -203,8 +216,9 @@ public:
     }
 
     /**
-     * Set context text scale (1..n).
+     * Set context text scale (1..n). Return previous text scale.
      * @param[in] scale.
+     * @return previous scale.
      */
     uint8_t set_text_scale(uint8_t scale)
     {
@@ -249,12 +263,18 @@ public:
 
   /**
    * Canvas drawing elements; base class for larger drawing structure
-   * that requires a drawing context.
+   * that requires a drawing context. See Textbox() for an example.
    */
   class Element : public Context {
   protected:
     Canvas* m_canvas;
   public:
+    /**
+     * Construct an element with the default context on the given 
+     * canvas.
+     * @param[in] canvas
+     * @param[in] font
+     */
     Element(Canvas* canvas, Font* font = (Font*) &system5x7) :
       Context(font),
       m_canvas(canvas)
@@ -264,7 +284,7 @@ public:
   
 protected:
   /**
-   * Canvas context; default and current.
+   * Canvas context; default and current. Delegation pattern.
    */
   static Context context;
   Context* m_context;
@@ -315,7 +335,7 @@ public:
   }
 
   /**
-   * Set current canvas context.
+   * Set current canvas context. Return previous context.
    * @param[in] context.
    * @return previous context.
    */
@@ -336,7 +356,7 @@ public:
   }
 
   /**
-   * Set current canvas color.
+   * Set current canvas color. Return previous color.
    * @param[in] color
    * @return previous color.
    */
@@ -355,7 +375,7 @@ public:
   }
 
   /**
-   * Set current drawing color.
+   * Set current drawing color. Return previous color.
    * @param[in] color
    * @return previous color.
    */
@@ -374,7 +394,7 @@ public:
   }
 
   /**
-   * Set current text color.
+   * Set current text color. Return previous color.
    * @param[in] color
    * @return previous color.
    */
@@ -392,7 +412,7 @@ public:
   }
 
   /**
-   * Set current text font.
+   * Set current text font. Return previous font.
    * @param[in] font
    * @return previous font.
    */
@@ -411,7 +431,7 @@ public:
   }
 
   /**
-   * Set current text scale (1..n).
+   * Set current text scale (1..n). Return previous scale.
    * @param[in] scale.
    * @return previous scale.
    */
@@ -477,7 +497,7 @@ public:
 
   /**
    * Get screen orientation.
-   * @return direction (LANDSCAPE/PORTRAIT)
+   * @return direction (Canvas::LANDSCAPE/PORTRAIT)
    */
   virtual uint8_t get_orientation() 
   {
@@ -485,8 +505,8 @@ public:
   }
 
   /**
-   * Set screen orientation.
-   * @param[in] direction (LANDSCAPE/PORTRAIT)
+   * Set screen orientation. Return previous orientation.
+   * @param[in] direction (Canvas::LANDSCAPE/PORTRAIT)
    * @return previous orientation.
    */
   virtual uint8_t set_orientation(uint8_t direction) 
@@ -501,7 +521,10 @@ public:
    * @param[in] x
    * @param[in] y
    */
-  virtual void draw_pixel(uint8_t x, uint8_t y);
+  virtual void draw_pixel(uint8_t x, uint8_t y)
+  {
+    fill_rect(x, y, 1, 1);
+  }
 
   /**
    * Set pixel at cursor position with current pen color.
@@ -514,7 +537,8 @@ public:
   }
 
   /**
-   * Draw bitmap with current pen color.
+   * Draw bitmap with current pen color. The bitmap must be stored
+   * in program memory.
    * @param[in] x 
    * @param[in] y
    * @param[in] bp
@@ -527,7 +551,8 @@ public:
 			   uint8_t scale = 1);
 
   /**
-   * Draw bitmap at cursor position with current pen color.
+   * Draw bitmap at cursor position with current pen color. The bitmap
+   * must be stored in program memory.
    * @param[in] bp
    * @param[in] width
    * @param[in] height
@@ -543,7 +568,8 @@ public:
   }
   
   /**
-   * Draw icon at given position with current pen color.
+   * Draw icon at given position with current pen color. The icon must
+   * be stored in program memory.
    * @param[in] x 
    * @param[in] y
    * @param[in] bp
@@ -556,7 +582,8 @@ public:
 			 uint8_t scale = 1);
 
   /**
-   * Draw icon at given position with current pen color.
+   * Draw icon at given position with current pen color. The icon must
+   * be stored in program memory.
    * @param[in] x 
    * @param[in] y
    * @param[in] bp
@@ -571,7 +598,8 @@ public:
   }
 
   /**
-   * Draw icon at cursor position with current pen color.
+   * Draw icon at cursor position with current pen color. The icon
+   * must be stored in program memory.
    * @param[in] bp
    * @param[in] scale
    */
@@ -655,7 +683,7 @@ public:
 
   /**
    * Draw polygon from program memory with current pen color. Vector of 
-   * delta positions, terminate with 0, 0. Update cursor to new position.
+   * delta positions, terminate with 0, 0. Update cursor to end position.
    * @param[in] poly
    * @param[in] scale
    */
@@ -802,14 +830,14 @@ public:
   }
 
   /**
-   * Draw character with current text color and font.
-   * @param[in] c
+   * Draw character with current text color, font and scale.
+   * @param[in] c character.
    */
   virtual void draw_char(char c);
 
   /**
-   * Draw string in current text color and font.
-   * @param[in] s
+   * Draw string in current text color, font and scale.
+   * @param[in] s string.
    */
   virtual void draw_string(char* s)
   {
@@ -820,7 +848,7 @@ public:
 
   /**
    * Draw string from program memory with current text color and font.
-   * @param[in] s
+   * @param[in] s string in program memory (PSTR).
    */
   virtual void draw_string_P(const char* s)
   {
@@ -830,7 +858,7 @@ public:
   }
 
   /**
-   * Fill screen with current pen color.
+   * Fill screen with canvas color.
    */
   virtual void fill_screen()
   {
@@ -876,10 +904,11 @@ public:
   };
 
   /**
-   * Run canvas drawing script. Table may contain sub-scripts and strings.
-   * All should be in program memory. Use support macro set to write scripts.
+   * Run canvas drawing script. Table may contain sub-scripts, strings
+   * and icons. All should be in program memory. Use the support macro
+   * set to write scripts.
    * @param[in] ix script to run.
-   * @param[in] tab script table.
+   * @param[in] tab script table in program memory.
    * @param[in] max size of script table.
    */
   void run(uint8_t ix, PGM_VOID_P* tab, uint8_t max);

@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Bitmap font size 5x7.
+ * Bitmap system font size 5x7. Full ASCII table (0..127).
  *
  * @section Acknowledgement
  * Inspired by graphics library by ladyada/adafruit.
@@ -39,6 +39,9 @@ private:
   static const uint8_t bitmap[] PROGMEM;
 
 public:
+  /**
+   * Construct system font (5x7) singleton.
+   */
   System5x7() : Font(5, 8, bitmap) {}
 };
 

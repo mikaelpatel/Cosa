@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Bitmap font size 8x16, fixed with font with numbers only.
+ * GLCD bitmap font size 8x16, fixed width font with numbers only.
  *
  * @section Acknowledgement
  * Originates from the GLCD library and adapted for Cosa Canvas.
@@ -41,11 +41,15 @@ private:
   static const uint8_t bitmap[] PROGMEM;
 
 public:
+  /**
+   * Construct fixed number font singleton.
+   */
   FixedNums8x16() : GLCDFont(8, 15, bitmap) {}
 
   /**
    * @overriden
-   * Get bitmap for given character.
+   * Get bitmap for given character. Must be ASCII '+'..'0'..'9'.
+   * Returns pointer to bitmap in program memory.   
    * @param[in] c character.
    * @return bitmap pointer.
    */

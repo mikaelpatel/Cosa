@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,11 +21,12 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Virtual Canvas device/IOStream; abstraction of small screens,
- * LCD/TFT. See Cosa/SPI/ST7735R.hh for an example of usage.
+ * Virtual Canvas device; abstraction of small screens, LCD/TFT. 
+ * Device drivers need to override at least begin(), fill_rect()
+ * and end(). See Cosa/SPI/ST7735R.hh for an example of usage.
  *
  * @section Limitations
- * Color model is 16-bit RBG<5,6,5>. Canvas size is max 256x256.
+ * Color model is 16-bit RGB<5,6,5>. Canvas size is max 256x256.
  *
  * @section Acknowledgements
  * Inspired by GFX graphics library by ladyada/adafruit, the glcd
@@ -388,8 +389,7 @@ Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
     case DRAW_ICON:
       ix = pgm_read_byte(ip++);
       if (ix >= max) return;
-      draw_icon((const uint8_t*) pgm_read_word(tab + ix), 
-		pgm_read_byte(ip++));
+      draw_icon((const uint8_t*) pgm_read_word(tab + ix), pgm_read_byte(ip++));
       break;
     case DRAW_PIXEL:
       draw_pixel();

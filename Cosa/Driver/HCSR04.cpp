@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,15 +40,23 @@ bool
 HCSR04::read(uint16_t& distance)
 {
   distance = 0;
+
+  // Give the device a trigger pulse
   m_trigPin.pulse(10);
   uint16_t timeout = TIMEOUT;
+
+  // Wait for the response
   while (m_echoPin.is_clear() && timeout--);
   if (timeout == 0) return (0);
+
+  // Measure the lenght of the return pulse
   uint16_t count = 0;
   synchronized {
     while (m_echoPin.is_set() && timeout--) count++;
   }
   if (timeout == 0) return (0);
+
+  // And calculate the distance 
   distance = (count * 10L) / COUNT_PER_CM;
   return (1);
 }
@@ -57,8 +65,11 @@ void
 HCSR04::on_event(uint8_t type, uint16_t value)
 {
   uint16_t distance;
-  read(distance);
-  if (m_distance == distance) return;
+
+  // Read the distance and check if there was a change
+  if (!read(distance) && (m_distance == distance)) return;
+
+  // Save the new distance and call the change handler
   m_distance = distance;
   on_change(distance);
 }
