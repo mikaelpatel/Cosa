@@ -22,7 +22,7 @@
  *
  * @section Description
  * Cosa IR receiver for LG remote using a TSOP4838 for decoding
- * IR transmission.
+ * IR transmission. Uses the Watchdog to monitor the decoding.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -35,10 +35,11 @@
 #include "Cosa/Memory.h"
 
 // Enable to allow the IR receiver interrupt handler to collect time periods
-// #define COLLECT_SAMPLES
+#define COLLECT_SAMPLES
 
-class IRreceiver : public InterruptPin {
+class IRreceiver : public InterruptPin, private Link {
 private:
+  static const uint16_t TIMEOUT = 512;
   static const uint16_t PRE_DATA = 0x20df;
   static const uint8_t PRE_DATA_BITS = 16;
   static const uint8_t SAMPLE_MAX = 40;
@@ -57,12 +58,12 @@ private:
    * @override
    * Interrupt pin handler: Measure time period in code sequence from
    * IR receiver circuit. Push an event when a valid code sequence has 
-   * been recieved. Further code sequences are rejected until reset()
-   * is called.
+   * been recieved. 
    */
   virtual void on_interrupt() 
   { 
-    // Check if max samples have been recieved. Reject further samples
+    // Check if the time should be set; i.e. queue for timeout events
+    if (m_ix == 0) Watchdog::attach(this, TIMEOUT);
     if (m_ix == m_max) return;
 
     // Measure the sample period
@@ -70,7 +71,7 @@ private:
     uint32_t us = (stop - m_start);
     m_start = stop;
 
-    // And generate the binary code. Skip two first and last samples
+    // And generate binary code. Skip two first and two last samples
     if (m_ix > 1 && m_ix < m_max - 2)
       m_code = (m_code << 1) + (us > m_threshold);
 
@@ -78,13 +79,15 @@ private:
     m_sample[m_ix] = us;
 #endif
     
-    m_ix += 1;
     // Push event when all samples have been received
+    m_ix += 1;
     if (m_ix == m_max) {
-      if ((m_code >> PRE_DATA_BITS) == PRE_DATA) 
-	Event::push(Event::READ_COMPLETED_TYPE, this, m_code);
-      else
-	reset();
+      // Remove from timer queue; cancel the timer
+      detach();
+      // Check the header and push event
+      if ((m_code >> PRE_DATA_BITS) == PRE_DATA) {
+	Event::push(Event::READ_COMPLETED_TYPE, 0, m_code);
+      }
     }
   }
 
@@ -96,6 +99,7 @@ public:
    */
   IRreceiver(Board::InterruptPin pin, uint8_t max, uint32_t threshold) :
     InterruptPin(pin, InterruptPin::ON_FALLING_MODE),
+    Link(),
     m_threshold(threshold),
     m_start(0),
     m_ix(0),
@@ -104,7 +108,18 @@ public:
   {}
 
   /**
-   * Print the captured binary code to the given output stream.
+   * Reset the IR receive for the next code sequence.
+   */
+  void reset()
+  {
+    detach();
+    m_ix = 0;
+    m_code = 0;
+    m_start = RTC::micros();
+  }
+
+  /**
+   * Print the captured samples to the given output stream.
    * @param[in] out stream.
    */
   void print(IOStream& out)
@@ -114,21 +129,10 @@ public:
       out.printf_P(PSTR("%d: %ud\n"), ix, m_sample[ix]);
     }
 #endif
-    out.printf_P(PSTR("code = %hl\n"), m_code);
-  }
-
-  /**
-   * Reset the IR receive for the next code sequence.
-   */
-  void reset()
-  {
-    m_ix = 0;
-    m_code = 0;
-    m_start = RTC::micros();
   }
 };
 
-// IR receiver for an LG is 36 samples and the binary code is (1000..2000).
+// IR receiver for an LG is 36 samples and the binary threshold [1000..2000].
 IRreceiver receiver(Board::EXT0, 36, 1500);
 
 void setup()
@@ -141,6 +145,7 @@ void setup()
   TRACE(free_memory());
 
   // Check size of instances
+  TRACE(sizeof(Link));
   TRACE(sizeof(InterruptPin));
   TRACE(sizeof(IRreceiver));
 
@@ -148,8 +153,10 @@ void setup()
   receiver.Pin::print(trace);
 
   // Use the real-time clock for time measurement
-  Watchdog::begin();
   RTC::begin();
+
+  // Use the watchdog for timeouts
+  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 
   // Enable the interrupt pin to capture the remote code sequence
   receiver.enable();
@@ -160,15 +167,13 @@ void loop()
   // Wait for an event from the IR receiver
   Event event;
   Event::queue.await(&event);
+  uint8_t type = event.get_type();
 
-  // Print the received remote code
-  receiver.print(trace);
-
-  // Print the posted event code. This is the code that should be used
-  uint16_t code = event.get_value();
-  INFO("event.value:code = %hd", code);
-  Watchdog::delay(512);
-
-  // Reset to allow the next code sequence
+  // Check if a new reading from the IR receiver was completed
+  if (type == Event::READ_COMPLETED_TYPE) {
+    receiver.print(trace);
+    uint16_t code = event.get_value();
+    trace.printf_P(PSTR("code = %hd\n"), code);
+  } 
   receiver.reset();
 }
