@@ -4,10 +4,7 @@ Che Cosa?
 Cosa is an object-oriented platform for Arduino that supports an
 event-driven programming paradigm with simple finite state
 machines. It contains a rich set of classes to support rapid
-prototyping of Internet-of-Things devices. A class overview may be
-found in
-[CLASS.txt](https://github.com/mikaelpatel/Cosa/blob/master/CLASS.txt)
-and [CLASS.png](https://github.com/mikaelpatel/Cosa/blob/master/CLASS.png). 
+prototyping of Internet-of-Things devices. 
 
 Cosa supports the following AVR/Atmega328P internal hardware modules;
 all pin modes, interrupt pins, PWM, Watchdog, Timer-0, UART
