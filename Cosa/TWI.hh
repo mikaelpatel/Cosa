@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -51,7 +51,12 @@ private:
     ST_STATE = 4,
     SR_STATE = 5
   };
+
+  /**
+   * Macro to generate more compact number sequence.
+   */
 # define TWI_STATUS(x) ((x) >> 3)
+
   enum {
     /** General Status Codes */
     START = TWI_STATUS(0x08),
@@ -137,6 +142,7 @@ private:
    * Interrupt handler is a friend.
    */
   friend void TWI_vect(void);
+
 public:
   /**
    * Device drivers are friends and may have callback/

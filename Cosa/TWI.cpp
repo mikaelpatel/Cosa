@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -150,6 +150,9 @@ ISR(TWI_vect)
 {
   twi.m_status = TWI_STATUS(TWSR);
   switch (twi.m_status) {
+    /**
+     * Transaction Start Mode
+     */
   case TWI::START:
   case TWI::REP_START:
     TWDR = twi.m_addr;
@@ -159,9 +162,10 @@ ISR(TWI_vect)
     TWCR = TWI::IDLE_CMD;
     twi.m_state = TWI::ERROR_STATE;
     break;
-  /**
-   * Master Transmitter Mode
-   */
+    
+    /**
+     * Master Transmitter Mode
+     */
   case TWI::MT_SLA_ACK:
   case TWI::MT_DATA_ACK:
     if (twi.m_next == twi.m_vec[twi.m_ix].size) {
@@ -182,9 +186,10 @@ ISR(TWI_vect)
     loop_until_bit_is_clear(TWCR, TWSTO);
     twi.m_state = TWI::IDLE_STATE;
     break;
-  /**
-   * Master Receiver Mode
-   */
+
+    /**
+     * Master Receiver Mode
+     */
   case TWI::MR_DATA_ACK:
     twi.m_vec[twi.m_ix].buf[twi.m_next++] = TWDR;
     twi.m_count++;
@@ -208,9 +213,10 @@ ISR(TWI_vect)
     loop_until_bit_is_clear(TWCR, TWSTO);
     twi.m_state = TWI::IDLE_STATE;
     break;
-  /**
-   * Slave Transmitter Mode
-   */
+
+    /**
+     * Slave Transmitter Mode
+     */
   case TWI::ST_SLA_ACK:
   case TWI::ST_ARB_LOST_SLA_ACK:
     twi.m_state = TWI::ST_STATE;
@@ -231,9 +237,10 @@ ISR(TWI_vect)
     TWCR = TWI::ACK_CMD;
     twi.m_state = TWI::IDLE_STATE;
     break;
-  /**
-   * Slave Receiver Mode
-   */
+
+    /**
+     * Slave Receiver Mode
+     */
   case TWI::SR_SLA_ACK:
   case TWI::SR_GCALL_ACK:
   case TWI::SR_ARB_LOST_SLA_ACK:

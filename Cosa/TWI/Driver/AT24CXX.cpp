@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,8 +21,12 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Driver for the AT24CXX 2-Wire Serial EEPROM.
- * See Atmel Product description (Rev. 0336K-SEEPR-7/03).
+ * Driver for the AT24CXX 2-Wire Serial EEPROM. See Atmel Product
+ * description (Rev. 0336K-SEEPR-7/03), www.atmel.com/images/doc0336.pdf
+ *
+ * @section Limitations
+ * Please check documentation for max rom block size and page alignment.
+ * The driver does currently handle this.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -43,7 +47,6 @@ int
 AT24CXX::write(void* buf, uint8_t size, uint16_t addr)
 {
   if (!twi.begin()) return (-1);
-  twi.write(m_addr, addr);
   int count = twi.write(m_addr, addr, buf, size);
   twi.end();
   if (count > 0) count -= sizeof(addr);

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Low power timer.
+ * The Atmega Watchdog is used as a low power timer for period
+ * events and delay. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -34,10 +35,16 @@ void* Watchdog::s_env = 0;
 
 Head Watchdog::s_timeq[Watchdog::TIMEQ_MAX];
 
-volatile uint16_t Watchdog::s_ticks = 0;
+volatile uint32_t Watchdog::s_ticks = 0;
 uint8_t Watchdog::s_prescale = 0;
 uint8_t Watchdog::s_mode = 0;
 
+/**
+ * Calculate log(2) of the given value. Used to map from delay
+ * to time queue index.
+ * @param[in] value
+ * @return log(2) 
+ */
 inline uint8_t 
 log2(uint16_t value)
 {
@@ -81,15 +88,18 @@ Watchdog::begin(uint16_t ms,
 void 
 Watchdog::attach(Link* target, uint16_t ms)
 {
+  // Map milli-seconds to watchdog time queue index
   uint8_t level = log2((ms + 8) >> 5) - 1;
   if (level > 9) level = 9;
+
+  // Attach the target to the selected time queue
   s_timeq[level].attach(target);
 }
 
 void
 Watchdog::await(AwaitCondition fn, void* env, uint16_t ms)
 {
-  volatile uint16_t ticks = s_ticks + 1;
+  volatile uint32_t ticks = s_ticks + 1;
   if (ms != 0) ticks += (ms / ms_per_tick());
   do {
     if (fn != 0 && fn(env)) return;
@@ -105,7 +115,7 @@ Watchdog::await(AwaitCondition fn, void* env, uint16_t ms)
 void
 Watchdog::push_timeout_events(void* env)
 { 
-  uint16_t changed = (s_ticks ^ (s_ticks + 1));
+  uint32_t changed = (s_ticks ^ (s_ticks + 1));
   for (uint8_t i = s_prescale; i < TIMEQ_MAX; i++, changed >>= 1)
     if ((changed & 1) && !s_timeq[i].is_empty())
       Event::push(Event::TIMEOUT_TYPE, &s_timeq[i], i);

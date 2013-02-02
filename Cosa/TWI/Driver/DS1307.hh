@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,8 @@
  *
  * @section Description
  * Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock.
- * See Maxim Integrated product description (Rev. 100208).
+ * For further details see Maxim Integrated product description; 
+ * http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -52,8 +53,25 @@ public:
     uint8_t month;
     uint8_t year;
     uint8_t cntl;
+
+    /**
+     * Convert time to binary representation (from BCD). 
+     * Apply after reading from device and before any calculation.
+     */
     void to_binary();
+
+    /**
+     * Convert time to BCD representation (from binary).
+     * Apply after setting new value and writing to the device.
+     */
     void to_bcd();
+
+    /**
+     * Print the date to the given stream with the given format.
+     * Default format is PSTR("%d-%d-%d %d:%d:%d").
+     * @param[in] stream output stream (default trace).
+     * @param[in] format string in program memory (default above).
+     */
     void print(IOStream& stream = trace, const char* format = 0);
   };
 

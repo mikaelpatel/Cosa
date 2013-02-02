@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,8 @@
  *
  * @section Description
  * Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock.
- * See Maxim Integrated product description.
+ * For further details see Maxim Integrated product description; 
+ * http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
  * This file is part of the Arduino Che Cosa project.
  */

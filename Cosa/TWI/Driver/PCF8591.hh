@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,6 +42,7 @@ private:
 public:
   /**
    * Control byte; selection of input channel and mode of operation
+   * Fig. 5 Control byte, pp. 6.
    */
   enum {
     AIN0 = 0x00,
@@ -62,7 +63,7 @@ public:
    * chip address.
    * @param[in] addr chip address (0..7)
    */
-  PCF8591(uint8_t addr = 0) : m_addr(ADDR | (addr & 0xe)), m_cntl(0) {}
+  PCF8591(uint8_t addr = 0) : m_addr(ADDR | ((addr << 1) & 0xe)), m_cntl(0) {}
 
   /**
    * Begin a sampling sequence for the channel given by the control

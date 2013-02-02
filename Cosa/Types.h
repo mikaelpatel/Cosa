@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -72,13 +72,14 @@ typedef float float32_t;
 #define I_CPU (F_CPU / 1000000L)
 
 /**
- * Macro for micro-second delay. 
+ * Macro for micro-second level delay. 
  * @param[in] us micro-seconds.
  */
 #define DELAY(us) _delay_loop_2((us) * I_CPU / 4)
 
 /**
- * Macro for sleep for number of seconds. 
+ * Macro for sleep for number of seconds. Requires include of the
+ * Watchdog. Allowed values are; 1, 2, 4, and 8 seconds.
  * @param[in] seconds.
  */
 #define SLEEP(seconds) Watchdog::delay(seconds * 1024)
@@ -87,7 +88,8 @@ typedef float float32_t;
  * Disable interrupts and return flags.
  * @return processor flags.
  */
-inline uint8_t lock() 
+inline uint8_t 
+lock() 
 { 
   uint8_t key = SREG;
   cli();
@@ -98,7 +100,8 @@ inline uint8_t lock()
  * Restore processor flags and possible enable of interrupts.
  * @param[in] key processor flags.
  */
-inline void unlock(uint8_t key)
+inline void 
+unlock(uint8_t key)
 {
   SREG = key;
 }
@@ -106,6 +109,10 @@ inline void unlock(uint8_t key)
 /**
  * Syntactic sugar for synchronized block. Used in the form:
  * synchronized {
+ *   ...
+ *   synchronized_return(expr);
+ *   ...
+ *   synchronized_goto(label);
  *   ...
  * }
  * Interrupts are disabled in the block allowing secure update.
@@ -129,7 +136,7 @@ struct iovec_t {
 };
 
 /**
- * Preprocessor tricks.
+ * Preprocessor tricks. Allow creating symbols.
  */
 #define CONCAT(var, line) var ## line
 #define MERGE(var, line) CONCAT(var, line)

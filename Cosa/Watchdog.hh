@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Low power timer.
+ * The Atmega Watchdog is used as a low power timer for period
+ * events and delay. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -41,7 +42,7 @@ extern "C" void WDT_vect(void) __attribute__ ((signal));
 class Watchdog {
 public:
   /**
-   * Interrupt handler function prototype.
+   * Watchdog interrupt handler function prototype.
    * @param[in] env interrupt handler environment.
    */
   typedef void (*InterruptHandler)(void* env);
@@ -69,7 +70,7 @@ private:
   static Head s_timeq[TIMEQ_MAX];
 
   // Watchdog ticks, prescale and mode.
-  static volatile uint16_t s_ticks;
+  static volatile uint32_t s_ticks;
   static uint8_t s_prescale;
   static uint8_t s_mode;
   
@@ -102,7 +103,7 @@ public:
    */
   static uint16_t ms_per_tick() 
   { 
-    return (16 << s_prescale); 
+    return (I_CPU << s_prescale); 
   }
 
   /**
@@ -150,7 +151,7 @@ public:
 		    void* env = 0);
 
   /**
-   * Await condition. Put into sleep mode according to  begin
+   * Await condition. Put into sleep mode according to begin()
    * setup. Execute function for each wakeup to check if a condition
    * has been valid. If the condition function is null(0) the next
    * tick is awaited. 
@@ -178,13 +179,15 @@ public:
   }
 
   /**
-   * Default interrupt handler for timeout queues. 
+   * Default interrupt handler for timeout queues; push timeout events
+   * to all attached event handlers.
    * @param[in] env interrupt handler environment.
    */
   static void push_timeout_events(void* env);
 
   /**
-   * Alternative interrupt handler for watchdog events. 
+   * Alternative interrupt handler for watchdog events; push watchdog
+   * event to a main top loop. All attached event handlers are ignored.
    * @param[in] env interrupt handler environment.
    */
   static void push_watchdog_event(void* env)
