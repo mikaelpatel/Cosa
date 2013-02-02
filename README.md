@@ -4,11 +4,9 @@ Che Cosa?
 Cosa is an object-oriented platform for Arduino that supports an
 event-driven programming paradigm with simple finite state
 machines. It contains a rich set of classes to support rapid
-prototyping of Internet-of-Things devices. 
-
-Cosa supports the following AVR/Atmega328P internal hardware modules;
-all pin modes, interrupt pins, PWM, Watchdog, Timer-0, UART
-(transmit), SPI and TWI.
+prototyping of Internet-of-Things devices. Cosa supports the following
+AVR/Atmega328P internal hardware modules; all pin modes, interrupt
+pins, PWM, Watchdog, Timer-0, UART (transmit), SPI and TWI.
 
 Cosa also contains a data streaming format (Ciao) for encoding of
 C/C++ language data types such as strings, integer and floating
@@ -26,8 +24,7 @@ The primary programming paradigm is object-oriented and
 state-machine/event driven. There is a large number of device drivers
 available for SPI, TWI/I2C and 1-Wire. A strict directory 
 structure is used to organize the Cosa/driver source
-code. Sub-directories are used for each driver type. Please check the
-class overview for a full list of drivers. 
+code. Sub-directories are used for each driver type. 
 
 Cosa uses the Arduino IDE and build system. Cosa classes are included
 with prefix, e.g. "Cosa/FileName.hh". It is possible to use both
@@ -69,10 +66,6 @@ HTML in the file doc.zip. Uncompress this file and navigate your
 browser to the index file. The documentation contains a full
 hyperlinked description of all functions in Cosa together with UML
 graphs of the class hierarchy. 
-
-The Makefile together with the tools dot/graphwiz may be used to generate
-further information from the source code. The overview class diagram
-is also generated with the tool dot.
 
 Drivers
 -------
