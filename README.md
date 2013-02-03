@@ -48,10 +48,11 @@ richer concurrency and low power consumption.
 News
 ----
 2013-01-23 Arduino Mega 2560 initial port.  
-2013-01-25 UTFT Font support added.  
+2013-01-25 UTFT font support added.  
 2013-01-29 Proto-threads implemented. Draw/fill round rectangle added
 to Canvas.  
-2013-02-01 Adding doxygen generated documentation (doc.zip).  
+2013-02-01 Adding doxygen generated documentation (doc.zip). 
+GLCD font support added. IR remote receiver initial example.
 
 Install
 -------
