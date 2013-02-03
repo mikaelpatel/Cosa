@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -78,9 +78,16 @@ Thread::set_timer(uint16_t ms)
 uint16_t
 Thread::dispatch(uint8_t flag)
 {
-  Linkage* link = runq.get_succ(); 
   uint16_t count = 0;
+  // Check if events should be processed and the run queue is empty
+  if (flag && runq.is_empty()) {
+    Event event;
+    Event::queue.await(&event);
+    event.dispatch();
+    count += 1;
+  }
   // Iterate once through the run queue and call all threads run method
+  Linkage* link = runq.get_succ(); 
   while (link != &runq) {
     Linkage* succ = link->get_succ();
     Thread* thread = (Thread*) link;

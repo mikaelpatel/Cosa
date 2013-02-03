@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -161,8 +161,8 @@ public:
    *   }
    *   THREAD_END();
    * }
-   * Additional macros are THREAD_YIELD(), THREAD_SLEEP(), and 
-   * THREAD_WAKE().
+   * Additional macros are THREAD_YIELD(), THREAD_SLEEP(), THREAD_WAKE(),
+   * and THREAD_DELAY().
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
@@ -173,34 +173,35 @@ public:
    * be processes. Returns number of dispatched threads and events.
    * The run queue is only iterated once per call to dispatch to allow
    * user defined outer loop, i.e., arduino loop() function.
-   * @param[in] flag process events.
+   * Usage: void loop() { Thread::dispatch(1); }
+   * @param[in] flag process events if non zero.
    * @return number of dispatched threads and events.
    */
   static uint16_t dispatch(uint8_t flag = 0);
 
   /**
-   * Add the given thread to the run queue (last). 
+   * Add the given thread to the run queue (last). A terminated thread
+   * may be restarted. 
    * @param[in] thread to enqueue.
    */
   static void schedule(Thread* thread)
   {
+    if (thread->m_state == TERMINATED) thread->m_ip = 0;
     thread->m_state = READY;
     runq.attach(thread);
   }
 };
 
 /**
- * Thread action function support macros.
- * THREAD_BEGIN() must be the first statement in the thread body (run).
- * THREAD_YIELD() yields execution and returns. Remains in the run queue.
- * THREAD_AWAIT(condition) yields until the condition is true.
- * THREAD_SLEEP() yields execution and returns. Removed from the run queue.
- * THREAD_WAKE(thread) if the thread is SLEEPING it is scheduled.
- * THREAD_END() marks the thread as TERMINATED and returns.
+ * First statement in the thread body (run).
  */
 #define THREAD_BEGIN()					\
   if (m_ip != 0) goto *m_ip
 
+/**
+ * Yield execution to other threads ane event handlers. Remains in the
+ * run queue. 
+ */
 #define THREAD_YIELD() \
   do {							\
     __label__ next;					\
@@ -209,6 +210,10 @@ public:
   next: ;						\
   } while (0)
 
+/**
+ * Yield execution and detach from the run queue. Must be activated
+ * with THREAD_WAkE().
+ */
 #define THREAD_SLEEP()					\
   do {							\
     m_state = SLEEPING;					\
@@ -216,12 +221,22 @@ public:
     THREAD_YIELD();					\
   } while (0)
 
+/**
+ * Scedule the given thread if SLEEPING.
+ * @param[in] thread to wake.
+ */
 #define THREAD_WAKE(thread)				\
   do {							\
     if (thread->m_state == SLEEPING)			\
       Thread::schedule(thread);				\
   } while (0)
 
+/**
+ * Check if the given condition is true(1). If not the thread will
+ * yield. The condition is rechecked when the thread is activated
+ * again. 
+ * @param[in] condition to evaluate.
+ */
 #define THREAD_AWAIT(condition)				\
   do {							\
     __label__ next;					\
@@ -232,6 +247,21 @@ public:
     }							\
   } while (0)
 
+/**
+ * Delay the thread for the given ms time period. This is a short form
+ * for set_timer() and THREAD_AWAIT(timer_expired());
+ * @param[in] ms milli-seconds to delay.
+ */
+#define THREAD_DELAY(ms)				\
+  do {							\
+    set_timer(ms);					\
+    THREAD_AWAIT(timer_expired());			\
+  } while (0)
+
+/**
+ * Marks the running thread as TERMINATED and detach from any queue. 
+ * Should be the last statement in the thread run() function.
+ */
 #define THREAD_END()					\
   do {							\
     Thread::end();					\

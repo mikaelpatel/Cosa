@@ -1,10 +1,10 @@
 =====================================
 Measurement:		   2013-02-02
 =====================================
-CosaFSMBenchmark:		 5414
-CosaPinsBenchmark:		12480
-CosaRTCBenchmark:		 5656
-CosaThreadBenchmark:		 5846
+CosaBenchmarkFSM:		 5414
+CosaBenchmarkPins:		12480
+CosaBenchmarkRTC:		 5656
+CosaBenchmarkThread:		 5922
 -------------------------------------
 CosaCanvasClock:		11758
 CosaCanvasFont:			 9320
@@ -34,6 +34,7 @@ CosaBlink:			 1884
 CosaBlinkEvent:			 1870
 CosaBlinkInterrupt:		 1840
 CosaBlinkPeriodic:		 2420
+CosaBlinkThread:		 2818
 CosaBlinkTimeout:		 2450
 CosaBlinkWatchdog:		 1838
 CosaButton:			 5462
