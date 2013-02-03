@@ -1,9 +1,9 @@
 /**
- * @file CosaFSMBenchmark.ino
+ * @file CosaBenchmarkFSM.ino
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -83,7 +83,7 @@ void setup()
 {
   // Start the UART and trace output stream
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaFSMBenchmark: started"));
+  trace.begin(&uart, PSTR("CosaBenchmarkFSM: started"));
 
   // Check amount of free memory
   TRACE(free_memory());
