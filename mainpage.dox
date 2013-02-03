@@ -1,0 +1,90 @@
+/** @mainpage Che Cosa?
+
+Cosa is an object-oriented platform for Arduino that supports an
+event-driven programming paradigm with simple finite state
+machines and proto-threads. It contains a rich set of classes to
+support rapid prototyping of Internet-of-Things devices. Cosa supports
+the following AVR/Atmega328P internal hardware modules; all pin modes,
+interrupt pins, PWM, Watchdog, Timer-0, UART (transmit), SPI and TWI.
+
+Cosa also contains a data streaming format (Ciao) for encoding of
+C/C++ language data types such as strings, integer and floating
+pointer numbers into a binary format. It may be used for a number of
+applications; tracing, remote procedure calls, data exchange between
+Arduino devices, etc. The format allows user data types to be defined
+and values exchanged without additional encoding. The stream header
+itself is a pre-defined serializable data type. Ciao is used to define
+an Arduino monitoring and control language (Cosa Fai) which has much
+in common with Firmata. See CIAO.txt for more details and the example
+code (examples/Ciao). 
+
+The primary programming paradigm is object-oriented and
+state-machine (FSM), event driven (Event::Handler) and proto-threads
+(Thread). There is a large number of device drivers available for SPI,
+TWI/I2C and OWI/1-Wire. A strict directory structure is used to organize
+the Cosa/driver source code. Sub-directories are used for each driver type. 
+
+Cosa uses the Arduino IDE and build system. Cosa classes are included
+with prefix, e.g. "Cosa/FileName.hh". It is possible to use both
+Arduino and Cosa functions together, though in some cases the Cosa
+objects may become inconsistent. 
+
+To improve debugging and testing there is trace/syslog style support. 
+The IOStream class allows output to both serial communication (UART) 
+and small TFT displays (such as the SR7735R). The drawing Canvas class
+supports basic drawing operation and scripting to reduce program
+memory footprint. The Canvas class also supports drawing of icons and
+multiple fonts. 
+
+The goal of this project is to provide an efficient programming
+platform for rapid prototyping of "Internet-of-things"-devices. 
+Unfortunately Cosa is not a beginners entry level programming
+platform, though following some of the design patterns in Cosa will
+help beginners build more complex small scale embedded systems with
+richer concurrency and low power consumption.  
+
+@section References
+
+1. D.tools, http://hci.stanford.edu/research/dtools/<br>
+2. Processing, http://processing.org/<br>
+3. Wiring, http://wiring.org.co/<br>
+4. Arduino, http://www.arduino.cc/<br>
+5. Firmata, http://www.firmata.org/wiki/Main_Page<br>
+6. LilyPad, http://web.media.mit.edu/~leah/LilyPad/<br>
+7. Jeelabs, http://jeelabs.org/<br>
+8. Quantum Leaps, http://www.state-machine.com/<br>
+9. Concurrency.cc, http://concurrency.cc/<br>
+
+@section Naming
+
+* "Cosa"; noun thing, matter; pronoun; what?, what!. <br>
+* "Che cosa"; pronoun; what. <br>
+* "Ciao"; interjection hello!, goodbye!. <br>
+* "Cosa fai"; what do you do? <br>
+
+@section Note
+
+Atmega328P and Atmega2560 based Arduino boards (Uno, Mini, Nano,
+LilyPad, Mega, etc) are supported. Timers (1-n), EEPROM, UART
+(receiver) are not directly supported but planned. Arduino
+and AVR lib functions may be used together with Cosa.
+
+@section License
+Copyright (C) 2012-2013, Mikael Patel
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General
+Public License along with this library; if not, write to the
+Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+Boston, MA  02111-1307  USA
+
+*/
