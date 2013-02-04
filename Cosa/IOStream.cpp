@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -233,3 +233,39 @@ IOStream::vprintf_P(const char* format, va_list args)
     print(c);
   }
 }
+
+IOStream& 
+endl(IOStream& outs)
+{
+  outs.print('\n');
+  return (outs);
+}
+
+IOStream& 
+bin(IOStream& outs)
+{
+  outs.m_base = 2;
+  return (outs);
+}
+
+IOStream& 
+oct(IOStream& outs)
+{
+  outs.m_base = 8;
+  return (outs);
+}
+
+IOStream& 
+dec(IOStream& outs)
+{
+  outs.m_base = 10;
+  return (outs);
+}
+
+IOStream& 
+hex(IOStream& outs)
+{
+  outs.m_base = 16;
+  return (outs);
+}
+

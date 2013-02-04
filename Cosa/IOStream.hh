@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -205,7 +205,7 @@ public:
    * Construct stream with given device. Default is the null device.
    * @param[in] dev stream device.
    */
-  IOStream(Device* dev = &Device::null) : m_dev(dev) {}
+  IOStream(Device* dev = &Device::null) : m_dev(dev), m_base(10) {}
   
   /**
    * Get current device.
@@ -341,8 +341,140 @@ public:
     va_end(args);
   }
 
+  /**
+   * Stream manipulator function prototype. To allow implementation
+   * of base change and end of line.
+   * @param[in] iostream.
+   * @return iostream.
+   */
+  typedef IOStream& (*Manipulator)(IOStream&);
+
+  /**
+   * Output operator for stream manipulator. Apply function.
+   * @param[in] func iostream manipulator.
+   * @return iostream.
+   */
+  IOStream& operator<<(Manipulator func)
+  { 
+    return (func(*this)); 
+  }
+
+  /**
+   * Print integer as string in the current base to stream.
+   * Reset base to decimal.
+   * @param[in] n value to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(int n) 
+  { 
+    print(n, m_base); 
+    m_base = 10;
+    return (*this);
+  }
+
+  /**
+   * Print long integer as string in the current base to stream.
+   * Reset base to decimal.
+   * @param[in] n value to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(long int n)
+  { 
+    print(n, m_base); 
+    m_base = 10;
+    return (*this); 
+  }
+
+  /**
+   * Print unsigned integer as string in the current base to stream.
+   * Reset base to decimal.
+   * @param[in] n value to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(unsigned int n)
+  { 
+    print(n, m_base); 
+    m_base = 10;
+    return (*this); 
+  }
+
+  /**
+   * Print unsigned long integer as string in the current base to stream.
+   * Reset base to decimal.
+   * @param[in] n value to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(unsigned long int n)
+  { 
+    print(n, m_base); 
+    m_base = 10;
+    return (*this); 
+  }
+
+  /**
+   * Print pointer as a hexadecimal number string to stream.
+   * @param[in] ptr pointer to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(void* ptr) 
+  { 
+    print(ptr); 
+    return (*this); 
+  }
+
+  /**
+   * Print program memory pointer as a hexadecimal number 
+   * string to stream.
+   * @param[in] ptr program memory pointer to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(const void* ptr) 
+  { 
+    print(ptr); 
+    return (*this); 
+  }
+
+  /**
+   * Print character to stream.
+   * @param[in] c character to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(char c) 
+  { 
+    print(c); 
+    return (*this); 
+  }
+
+  /**
+   * Print null terminated string to stream.
+   * @param[in] s string to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(char* s) 
+  { 
+    print(s); 
+    return (*this); 
+  }
+
+  /**
+   * Print null terminated string in program memory to stream.
+   * @param[in] s string in program memory to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(const char* s) 
+  { 
+    print_P(s); 
+    return (*this); 
+  }
+
+  friend IOStream& bin(IOStream& outs);
+  friend IOStream& oct(IOStream& outs);
+  friend IOStream& dec(IOStream& outs);
+  friend IOStream& hex(IOStream& outs);
+
  private:
   Device* m_dev;
+  uint8_t m_base;
 
   /**
    * Print number prefix for non decimal base.
@@ -350,5 +482,40 @@ public:
    */
   void print_prefix(uint8_t base);
 };
+
+/**
+ * Set current base to binary(2) for next operator print.
+ * @param[in] outs stream to set base.
+ * @return iostream.
+ */
+extern IOStream& bin(IOStream& outs);
+
+/**
+ * Set current base to octal(8) for next operator print.
+ * @param[in] outs stream to set base.
+ * @return iostream.
+ */
+extern IOStream& oct(IOStream& outs);
+
+/**
+ * Set current base to deciaml(10) for next operator print.
+ * @param[in] outs stream to set base.
+ * @return iostream.
+ */
+extern IOStream& dec(IOStream& outs);
+
+/**
+ * Set current base to hexadecimal(16) for next operator print.
+ * @param[in] outs stream to set base.
+ * @return iostream.
+ */
+extern IOStream& hex(IOStream& outs);
+
+/**
+ * Print end of line; carriage-return-line-feed.
+ * @param[in] outs stream to print end of line to.
+ * @return iostream.
+ */
+extern IOStream& endl(IOStream& outs);
 
 #endif
