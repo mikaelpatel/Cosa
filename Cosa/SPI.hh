@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -183,6 +183,28 @@ public:
   }
 
   /**
+   * Send given data to slave. Allow output operator syntax.
+   * @param[in] data to send.
+   * @return spi.
+   */
+  SPI& operator<<(uint8_t data)
+  {
+    exchange(data);
+    return (*this);
+  }
+
+  /**
+   * Receive data from slave. Allow input operator syntax.
+   * @param[out] data from send.
+   * @return spi.
+   */
+  SPI& operator>>(uint8_t& data)
+  {
+    data = exchange(0xff);
+    return (*this);
+  }
+
+  /**
    * Exchange package with slave. Received data from slave is stored in
    * given buffer. Slave selection is done for package.
    * @param[in] buffer with data to exchange (send/receive).
@@ -263,7 +285,8 @@ public:
 /**
  * Some syntactic sugar to capture the slave selection block
  */
-#define SPI_transaction(ss) for (uint8_t i = (ss.clear(), 1); i != 0; i--, ss.set())
+#define SPI_transaction(ss)					\
+  for (uint8_t i = (ss.clear(), 1); i != 0; i--, ss.set())
 
 /**
  * Singleton instance of the hardware SPI module
