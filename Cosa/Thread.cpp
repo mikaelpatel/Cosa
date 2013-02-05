@@ -112,3 +112,10 @@ Thread::dispatch(uint8_t flag)
   return (count);
 }
 
+void 
+Thread::schedule(Thread* thread)
+{
+  if (thread->m_state == TERMINATED) thread->m_ip = 0;
+  thread->m_state = READY;
+  runq.attach(thread);
+}

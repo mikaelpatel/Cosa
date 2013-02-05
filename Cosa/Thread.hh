@@ -184,16 +184,12 @@ public:
    * may be restarted. 
    * @param[in] thread to enqueue.
    */
-  static void schedule(Thread* thread)
-  {
-    if (thread->m_state == TERMINATED) thread->m_ip = 0;
-    thread->m_state = READY;
-    runq.attach(thread);
-  }
+  static void schedule(Thread* thread);
 };
 
 /**
- * First statement in the thread body (run).
+ * First statement in the thread body, run(). Last statement should be
+ * THREAD_END();
  */
 #define THREAD_BEGIN()					\
   if (m_ip != 0) goto *m_ip
@@ -222,7 +218,7 @@ public:
   } while (0)
 
 /**
- * Scedule the given thread if SLEEPING.
+ * Schedule the given thread if SLEEPING.
  * @param[in] thread to wake.
  */
 #define THREAD_WAKE(thread)				\

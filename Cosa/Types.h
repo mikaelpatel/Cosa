@@ -117,9 +117,12 @@ unlock(uint8_t key)
  * }
  * Interrupts are disabled in the block allowing secure update.
  */
-#define synchronized for (uint8_t __key = lock(), i = 1; i != 0; i--, unlock(__key))
-#define synchronized_return(expr) return (unlock(__key), expr)
-#define synchronized_goto(label) do { unlock(__key); goto label; } while (0)
+#define synchronized							\
+  for (uint8_t __key = lock(), i = 1; i != 0; i--, unlock(__key))
+#define synchronized_return(expr)					\
+  return (unlock(__key), expr)
+#define synchronized_goto(label)					\
+  do { unlock(__key); goto label; } while (0)
 
 /**
  * Force compiler to store all values in memory at this point.
