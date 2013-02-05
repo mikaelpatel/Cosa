@@ -60,7 +60,9 @@ News
 2013-01-29 Proto-threads implemented. Draw/fill round rectangle added
 to Canvas.  
 2013-02-01 Adding doxygen generated documentation (doc.zip). 
-GLCD font support added. IR remote receiver initial example.
+GLCD font support added. IR remote receiver initial example.  
+2013-02-05 Adding input/output operators to IOStream, Pins and
+SPI. More detailed benchmarks and comparison with Arduino added.  
 
 Install
 -------
