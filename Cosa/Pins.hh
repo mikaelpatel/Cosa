@@ -38,6 +38,8 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Board.hh"
 
+class OutputPin;
+
 class Pin {
 protected:
   volatile uint8_t* const m_sfr;
@@ -112,6 +114,11 @@ protected:
   }
 
 public:
+  enum Direction {
+    MSB_FIRST = 0, 
+    LSB_FIRST = 1
+  };
+
   /**
    * Construct abstract pin given Arduino pin number.
    * @param[in] pin number.
@@ -195,6 +202,15 @@ public:
   }
 
   /**
+   * Shift in a byte from the input pin using the given clock
+   * output pin. Shift in according to given direction.
+   * @param[in] clk output pin.
+   * @param[in] order bit first.
+   * @return value.
+   */
+  uint8_t read(OutputPin* clk, Direction order);
+
+  /**
    * Return true(1) if the pin is set otherwise false(0).
    * @param[in] pin number.
    * @return boolean.
@@ -202,6 +218,17 @@ public:
   static bool read(uint8_t pin)
   {
     return ((*Board::SFR(pin) & MASK(pin)) != 0); 
+  }
+
+  /**
+   * Read input pin and assign variable.
+   * @param[out] var to assign.
+   * @return pin.
+   */
+  Pin& operator>>(uint8_t& var)
+  { 
+    var = is_set();
+    return (*this);
   }
 
   /**
@@ -436,6 +463,15 @@ public:
   }
 
   /**
+   * Shift out given byte to the output pin using the given clock
+   * output pin. Shift in according to given direction.
+   * @param[in] clk output pin.
+   * @param[in] order bit first.
+   * @param[in] value to write.
+   */
+  void write(OutputPin* clk, Direction order, uint8_t value);
+
+  /**
    * Set the given output pin with the given value. Zero(0) to 
    * clear and non-zero to set.
    * @param[in] pin number.
@@ -453,6 +489,17 @@ public:
 	*port &= ~mask;
       }
     }
+  }
+
+  /**
+   * Set the output pin with the given value. Zero(0) to clear
+   * and non-zero to set. Output operator syntax.
+   * @param[in] value to write.
+   */
+  OutputPin& operator<<(uint8_t value)
+  {
+    set(value);
+    return (*this);
   }
 
   /**
@@ -671,6 +718,18 @@ public:
   uint16_t sample()
   {
     return (m_value = AnalogPin::sample(m_pin, (Reference) m_reference));
+  }
+
+  /**
+   * Sample analog pin. Wait for conversion to complete before 
+   * returning with sample value.
+   * @param[out] var variable to receive the value.
+   * @return analog pin.
+   */
+  AnalogPin& operator>>(uint16_t& var)
+  { 
+    var = sample();
+    return (*this);
   }
 
   /**

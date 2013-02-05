@@ -30,6 +30,25 @@
 
 #include "Cosa/Pins.hh"
 
+uint8_t 
+Pin::read(OutputPin* clk, Direction order)
+{
+  uint8_t value = 0;
+  for (uint8_t i = 0; i < CHARBITS; ++i) {
+    clk->set();
+    if (order == MSB_FIRST) {
+      value <<= 1;
+      if (is_set()) value |= 0x01;
+    }
+    else {
+      value >>= 1;
+      if (is_set()) value |= 0x80;
+    }
+    clk->clear();
+  }
+  return (value);
+}
+
 void 
 Pin::print(IOStream& stream)
 {
@@ -114,6 +133,24 @@ OutputPin::pulse(uint16_t us)
   toggle();
   DELAY(us);
   toggle();
+}
+
+void 
+OutputPin::write(OutputPin* clk, Direction order, uint8_t value)
+{
+  for (uint8_t i; i < CHARBITS; ++i) {
+    if (order == MSB_FIRST) {
+      write(value & 0x80);
+      value <<= 1;
+    }
+    else {
+      write(value & 0x01);
+      value >>= 1;
+    }
+    clk->set();
+    DELAY(1);
+    clk->clear();
+  }
 }
 
 #if defined(__AVR_ATmega8__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
