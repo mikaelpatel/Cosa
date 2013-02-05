@@ -13,11 +13,12 @@ and pin mask in Cosa compared to Arduino. Also most access functions in
 Cosa are inlined. Though object-oriented and in/output operator syntax
 Cosa is between 2-10X faster allowing high speed protocols. This comes
 with a small price-tag; memory, 4 bytes per digital pin and 9 bytes
-per analog pin. The analog pin holds the latest sample (uint16_t) and 
-allows an event handler.
+per analog pin. The analog pin object holds the latest sample, 
+reference voltage, and allows an event handler. This accounts for 
+the extra 5 bytes. 
 
 Below values are for an Arduino Nano Atmega328P. The speedup is even
-larger for Ardunio Mega 2560. Please note that Cosa is not yet fully
+larger for Arduino Mega 2560. Please note that Cosa is not yet fully
 optimized. 
 
      CosaBenchmarkPins: started  
