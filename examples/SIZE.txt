@@ -3,7 +3,7 @@ Measurement:		   2013-02-05
 Arduino:		    Nano 328P
 =====================================
 CosaBenchmarkFSM:		 5420
-CosaBenchmarkPins:		15110
+CosaBenchmarkPins:		15928
 CosaBenchmarkRTC:		 5662
 CosaBenchmarkThread:		 5924
 -------------------------------------

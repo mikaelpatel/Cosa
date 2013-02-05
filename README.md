@@ -8,6 +8,13 @@ prototyping of Internet-of-Things devices. Cosa supports the following
 AVR/Atmega328P internal hardware modules; all pin modes, interrupt
 pins, PWM, Watchdog, Timer-0, UART (transmit), SPI and TWI.
 
+Though object-oriented with optional operator overloading syntax
+Cosa is between 2-10X faster than Arduino with regard to digital pin
+functions. This comes with a small price-tag; memory, 4 bytes per
+digital pin and 9 bytes per analog pin. Cosa analog pin objects
+holds the latest sample and allows an event handler. See the
+benchmarks in the examples directory for further details.
+
 Cosa also contains a data streaming format (Ciao) for encoding of
 C/C++ language data types such as strings, integer and floating
 pointer numbers into a binary format. It may be used for a number of
@@ -21,10 +28,11 @@ in common with Firmata. See
 for more details and the example code (examples/Ciao). 
 
 The primary programming paradigm is object-oriented and
-state-machine/event driven. There is a large number of device drivers
-available for SPI, TWI/I2C and 1-Wire. A strict directory 
-structure is used to organize the Cosa/driver source
-code. Sub-directories are used for each driver type. 
+state-machine/event driven with proto-threads. There is a large number
+of device drivers available for SPI, TWI/I2C and 1-Wire. A strict
+directory structure is used to organize the Cosa/driver source
+code. Sub-directories are used for each driver type. This allows a
+foundation for scaling and configuration.
 
 Cosa uses the Arduino IDE and build system. Cosa classes are included
 with prefix, e.g. "Cosa/FileName.hh". It is possible to use both
@@ -36,7 +44,7 @@ The IOStream class allows output to both serial communication (UART)
 and small TFT displays (such as the SR7735R). The drawing Canvas class
 supports basic drawing operation and scripting to reduce program
 memory footprint. The Canvas class also supports drawing of icons and
-multiple fonts. 
+multiple fonts (GLCD and UTFT). 
 
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. 
@@ -67,6 +75,10 @@ HTML in the file doc.zip. Uncompress this file and navigate your
 browser to the index file. The documentation contains a full
 hyperlinked description of all functions in Cosa together with UML
 graphs of the class hierarchy. 
+
+The provided documentation is generated with doxygen and may be
+generated for users source code if the Cosa documentation style is
+adapted. See the Doxyfile for configuration of doxygen. 
 
 Drivers
 -------
