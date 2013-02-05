@@ -16,6 +16,10 @@ with a small price-tag; memory, 4 bytes per digital pin and 9 bytes
 per analog pin. The analog pin holds the latest sample (uint16_t) and 
 allows an event handler.
 
+Below values are for an Arduino Nano Atmega328P. The speedup is even
+larger for Ardunio Mega 2560. Please note that Cosa is not yet fully
+optimized. 
+
      CosaBenchmarkPins: started  
      free_memory() = 1673  
      sizeof(Event::Handler) = 2  
