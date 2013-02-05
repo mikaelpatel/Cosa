@@ -1,54 +1,55 @@
 =====================================
-Measurement:		   2013-02-02
+Measurement:		   2013-02-05
+Arduino:		    Nano 328P
 =====================================
-CosaBenchmarkFSM:		 5414
-CosaBenchmarkPins:		12480
-CosaBenchmarkRTC:		 5656
-CosaBenchmarkThread:		 5922
+CosaBenchmarkFSM:		 5420
+CosaBenchmarkPins:		15110
+CosaBenchmarkRTC:		 5662
+CosaBenchmarkThread:		 5924
 -------------------------------------
-CosaCanvasClock:		11758
-CosaCanvasFont:			 9320
-CosaCanvasHistogram:		10452
-CosaCanvasPins:			11718
-CosaCanvasScript:		14854
-CosaCanvasShades:		 9352
-CosaCanvasST7735R:		18294
-CosaCanvasSweep:		10018
+CosaCanvasClock:		11764
+CosaCanvasFont:			 9326
+CosaCanvasHistogram:		10464
+CosaCanvasPins:			11730
+CosaCanvasScript:		14860
+CosaCanvasShades:		 9358
+CosaCanvasST7735R:		18306
+CosaCanvasSweep:		10024
 -------------------------------------
-CosaCiaoNative:			 5342
-CosaCiaoPoint:			 5088
-CosaFai:			 7008
+CosaCiaoNative:			 5348
+CosaCiaoPoint:			 5094
+CosaFai:			 7014
 -------------------------------------
-CosaDH11:			 5130
-CosaHCSR04:			16454
+CosaDH11:			 5136
+CosaHCSR04:			16466
 -------------------------------------
-CosaFSMBlink:			 2950
-CosaPingPong:			 5124
+CosaFSMBlink:			 2956
+CosaPingPong:			 5130
 -------------------------------------
-CosaDS18B20:			 7156
-CosaOWImaster:			 6426
-CosaOWIslave:			 5718
+CosaDS18B20:			 7162
+CosaOWImaster:			 6432
+CosaOWIslave:			 5724
 -------------------------------------
-CosaAnalogPins:			 5210
-CosaBlink:			 1884
-CosaBlinkEvent:			 1870
-CosaBlinkInterrupt:		 1840
-CosaBlinkPeriodic:		 2420
-CosaBlinkThread:		 2818
-CosaBlinkTimeout:		 2450
-CosaBlinkWatchdog:		 1838
-CosaButton:			 5462
-CosaIRreceiver:			 6098
-CosaPins:			 7488
+CosaAnalogPins:			 5216
+CosaBlink:			 1890
+CosaBlinkEvent:			 1876
+CosaBlinkInterrupt:		 1846
+CosaBlinkPeriodic:		 2426
+CosaBlinkThread:		 2824
+CosaBlinkTimeout:		 2456
+CosaBlinkWatchdog:		 1844
+CosaButton:			 5468
+CosaIRreceiver:			 6438
+CosaPins:			 7496
 -------------------------------------
-CosaADLX345:			 5222
-CosaNRFreceiver:		 8020
-CosaNRFsender:			 8030
+CosaADLX345:			 5228
+CosaNRFreceiver:		 8026
+CosaNRFsender:			 8036
 -------------------------------------
-CosaAT24CXX:			 5722
-CosaDS1307:			 6144
-CosaPCF8591:			 5736
-CosaTWImaster:			 6298
-CosaTWIslave:			 4542
+CosaAT24CXX:			 5728
+CosaDS1307:			 6150
+CosaPCF8591:			 5742
+CosaTWImaster:			 6304
+CosaTWIslave:			 4548
 -------------------------------------
 

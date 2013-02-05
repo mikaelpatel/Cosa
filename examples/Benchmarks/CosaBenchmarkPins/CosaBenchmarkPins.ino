@@ -42,6 +42,7 @@ AnalogPin analogPin(Board::A0);
 void setup()
 {
   uint32_t start, stop;
+  uint32_t us, base;
 
   // Start the trace output stream on the serial port
   uart.begin(9600);
@@ -58,31 +59,57 @@ void setup()
   RTC::begin();
   Watchdog::begin();
 
+  // Measure the time to perform 1,000,000; empty loop block
+  start = RTC::micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      __asm__ __volatile__("nop");
+    }
+  stop = RTC::micros();
+  base = (stop - start) / 1000L;
+  INFO("Loop: %ul us per 1,000 nop loops", base);
+
   // Measure the time to perform 1,000,000 input pin reads
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       digitalRead(7);
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Arduino: %ul us per 1000 digitalRead(7)", (stop - start) / 1000L);
+  base = (stop - start) / 1000L;
+  INFO("Arduino: %ul us per 1000 digitalRead(7)", base);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       inPin.is_set();
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 inPin.is_set()", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 inPin.is_set()", base/us, us);
+
+  start = RTC::micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      uint8_t var;
+      inPin >> var;
+      __asm__ __volatile__("nop");
+    }
+  stop = RTC::micros();
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 inPin >> var", base/us, us);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       InputPin::read(7);
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 InputPin::read(7)\n", (stop - start) / 1000L);
-
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 InputPin::read(7)\n", base/us, us);
 
   // Measure the time to perform 1,000,000 output pin writes
   start = RTC::micros();
@@ -90,85 +117,128 @@ void setup()
     for (uint16_t j = 0; j < 1000; j++) {
       digitalWrite(8, 1);
       digitalWrite(8, 0);
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Arduino: %ul us per 1000 digitalWrite(8, 1); digitalWrite(8, 0)", (stop - start) / 1000L);
+  base = (stop - start) / 1000L;
+  INFO("Arduino: %ul us per 1000 digitalWrite(8, 1); digitalWrite(8, 0)", base);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       outPin.write(1);
       outPin.write(0);
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 outPin.write(1); outPin.write(0)", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 outPin.write(1); outPin.write(0)", base/us, us);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       outPin.set();
       outPin.clear();
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 outPin.set; outPin.clear()", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 outPin.set; outPin.clear()", base/us, us);
+
+  start = RTC::micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      outPin << 1;
+      outPin << 0;
+      __asm__ __volatile__("nop");
+    }
+  stop = RTC::micros();
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 outPin << 1; outPin << 0", base/us, us);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       OutputPin::write(8, 1);
       OutputPin::write(8, 0);
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 OutputPin::write(8, 1); OutputPin::write(8, 0)\n", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 OutputPin::write(8, 1); OutputPin::write(8, 0)\n", base/us, us);
 
   // Measure the time to perform 1,000,000 output pin toggle
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       digitalWrite(8, !digitalRead(8));
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Arduino: %ul us per 1000 digitalWrite(8, !digitalRead(8))", (stop - start) / 1000L);
+  base = (stop - start) / 1000L;
+  INFO("Arduino: %ul us per 1000 digitalWrite(8, !digitalRead(8))", base);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       outPin.write(!outPin.read());
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 outPin.write(!outPin.read())", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 outPin.write(!outPin.read())", base/us, us);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       if (outPin.is_set()) outPin.clear(); else outPin.set();
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 outPin.is_set/clear/set()", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 outPin.is_set/clear/set()", base/us, us);
+
+  start = RTC::micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      uint8_t var;
+      outPin >> var;
+      outPin << !var;
+      __asm__ __volatile__("nop");
+    }
+  stop = RTC::micros();
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 outPin >> var; outPin << !var", base/us, us);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       outPin.set(outPin.is_clear());
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 outPin.set/is_clear()", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 outPin.set/is_clear()", base/us, us);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       outPin.toggle();
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 outPin.toggle()", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 outPin.toggle()", base/us, us);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       OutputPin::write(8, !OutputPin::read(8));
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 OutputPin::write(8, !OutputPin::read(8))", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 OutputPin::write(8, !OutputPin::read(8))", base/us, us);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -177,19 +247,23 @@ void setup()
 	OutputPin::write(8, 0);
       else
 	OutputPin::write(8, 1);
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 OutputPin::read/write(8,0/1)", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 OutputPin::read/write(8,0/1)", base/us, us);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
       OutputPin::toggle(8);
+      __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per 1000 OutputPin::toggle(8)\n", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per 1000 OutputPin::toggle(8)\n", base/us, us);
 
-  // Measure the time to perform 1,000 byte data transfer
+  // Measure the time to perform 1,000 byte/8,000 bit data transfer
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
     uint8_t data = 0x55;
@@ -197,10 +271,12 @@ void setup()
       digitalWrite(9, data & bit);
       digitalWrite(10, 1);
       digitalWrite(10, 0);
+      __asm__ __volatile__("nop");
     }
   }
   stop = RTC::micros();
-  INFO("Arduino: %ul us per bit data transfer() digitalWrite()", (stop - start) / 8000L);
+  base = (stop - start) / 8000L;
+  INFO("Arduino: %ul us per bit data transfer() digitalWrite()", base);
   
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -209,10 +285,12 @@ void setup()
       dataPin.write(data & bit);
       clockPin.write(1);
       clockPin.write(0);
+      __asm__ __volatile__("nop");
     }
   }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per bit data transfer() pin.write()", (stop - start) / 8000L);
+  us = (stop - start) / 8000L;
+  INFO("Cosa(%ulX): %ul us per bit data transfer() pin.write()", base/us, us);
   
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -221,10 +299,12 @@ void setup()
       dataPin.write(data & bit);
       clockPin.toggle();
       clockPin.toggle();
+      __asm__ __volatile__("nop");
     }
   }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per bit data transfer() pin.write/toggle()", (stop - start) / 8000L);
+  us = (stop - start) / 8000L;
+  INFO("Cosa(%ulX): %ul us per bit data transfer() pin.write/toggle()", base/us, us);
   
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -233,10 +313,12 @@ void setup()
       OutputPin::write(9, data & bit);
       OutputPin::write(10, 1);
       OutputPin::write(10, 0);
+      __asm__ __volatile__("nop");
     }
   }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per bit data transfer() OutputPin::write()", (stop - start) / 8000L);
+  us = (stop - start) / 8000L;
+  INFO("Cosa(%ulX): %ul us per bit data transfer() OutputPin::write()", base/us, us);
   
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -245,10 +327,12 @@ void setup()
       OutputPin::write(9, data & bit);
       OutputPin::toggle(10);
       OutputPin::toggle(10);
+      __asm__ __volatile__("nop");
     }
   }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per bit data transfer() OutputPin::write/toggle()", (stop - start) / 8000L);
+  us = (stop - start) / 8000L;
+  INFO("Cosa(%ulX): %ul us per bit data transfer() OutputPin::write/toggle()", base/us, us);
   
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -277,28 +361,42 @@ void setup()
     dataPin.write(data & 0x01);
     clockPin.toggle();
     clockPin.toggle();
+    __asm__ __volatile__("nop");
   }
   stop = RTC::micros();
-  INFO("Cosa: %ul us per bit data transfer() pin.write/toggle() unrolled\n", (stop - start) / 8000L);
+  us = (stop - start) / 8000L;
+  INFO("Cosa(%ulX): %ul us per bit data transfer() pin.write/toggle() unrolled\n", base/us, us);
   
   // Measure the time to perform 1,000 analog pin samples
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     analogRead(0);
   stop = RTC::micros();
-  INFO("Arduino: %ul us per analogRead()", (stop - start) / 1000L);
+  base = (stop - start) / 1000L;
+  INFO("Arduino: %ul us per analogRead()", base);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     analogPin.sample();
   stop = RTC::micros();
-  INFO("Cosa: %ul us per analogPin.sample()", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per analogPin.sample()", base/us, us);
+
+  start = RTC::micros();
+  for (uint16_t i = 0; i < 1000; i++) {
+    uint16_t var; 
+    analogPin >> var;
+  }
+  stop = RTC::micros();
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per analogPin >> var", base/us, us);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     AnalogPin::sample(0);
   stop = RTC::micros();
-  INFO("Cosa: %ul us per AnalogPin::sample()", (stop - start) / 1000L);
+  us = (stop - start) / 1000L;
+  INFO("Cosa(%ulX): %ul us per AnalogPin::sample()", base/us, us);
 }
 
 void loop()
