@@ -34,7 +34,7 @@ uint8_t
 Pin::read(OutputPin* clk, Direction order)
 {
   uint8_t value = 0;
-  for (uint8_t i = 0; i < CHARBITS; ++i) {
+  for (uint8_t i = 0; i < CHARBITS; i++) {
     clk->set();
     if (order == MSB_FIRST) {
       value <<= 1;
@@ -135,10 +135,11 @@ OutputPin::pulse(uint16_t us)
   toggle();
 }
 
+
 void 
 OutputPin::write(OutputPin* clk, Direction order, uint8_t value)
 {
-  for (uint8_t i; i < CHARBITS; ++i) {
+  for (uint8_t i = 0; i < CHARBITS; i++) {
     if (order == MSB_FIRST) {
       write(value & 0x80);
       value <<= 1;
@@ -148,7 +149,6 @@ OutputPin::write(OutputPin* clk, Direction order, uint8_t value)
       value >>= 1;
     }
     clk->set();
-    DELAY(1);
     clk->clear();
   }
 }
