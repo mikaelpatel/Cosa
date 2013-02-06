@@ -149,6 +149,7 @@ OutputPin::write(OutputPin* clk, Direction order, uint8_t value)
       value >>= 1;
     }
     clk->set();
+    DELAY(5);
     clk->clear();
   }
 }
