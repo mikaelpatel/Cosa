@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOSTREAM_UART_HH__
-#define __COSA_IOSTREAM_UART_HH__
+#ifndef __COSA_IOSTREAM_DRIVER_UART_HH__
+#define __COSA_IOSTREAM_DRIVER_UART_HH__
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
