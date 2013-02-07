@@ -381,7 +381,7 @@ void setup()
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
     uint8_t data = 0x55;
-    dataPin.write(&clockPin, OutputPin::MSB_FIRST, data);
+    dataPin.write(data, clockPin);
     __asm__ __volatile__("nop");
   }
   stop = RTC::micros();

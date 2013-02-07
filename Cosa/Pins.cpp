@@ -31,11 +31,11 @@
 #include "Cosa/Pins.hh"
 
 uint8_t 
-Pin::read(OutputPin* clk, Direction order)
+Pin::read(OutputPin& clk, Direction order)
 {
   uint8_t value = 0;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    clk->set();
+    clk.set();
     if (order == MSB_FIRST) {
       value <<= 1;
       if (is_set()) value |= 0x01;
@@ -44,7 +44,7 @@ Pin::read(OutputPin* clk, Direction order)
       value >>= 1;
       if (is_set()) value |= 0x80;
     }
-    clk->clear();
+    clk.clear();
   }
   return (value);
 }
@@ -135,9 +135,8 @@ OutputPin::pulse(uint16_t us)
   toggle();
 }
 
-
 void 
-OutputPin::write(OutputPin* clk, Direction order, uint8_t value)
+OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
 {
   for (uint8_t i = 0; i < CHARBITS; i++) {
     if (order == MSB_FIRST) {
@@ -148,9 +147,9 @@ OutputPin::write(OutputPin* clk, Direction order, uint8_t value)
       write(value & 0x01);
       value >>= 1;
     }
-    clk->set();
+    clk.set();
     DELAY(5);
-    clk->clear();
+    clk.clear();
   }
 }
 

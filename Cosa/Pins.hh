@@ -208,7 +208,7 @@ public:
    * @param[in] order bit first.
    * @return value.
    */
-  uint8_t read(OutputPin* clk, Direction order);
+  uint8_t read(OutputPin& clk, Direction order = MSB_FIRST);
 
   /**
    * Return true(1) if the pin is set otherwise false(0).
@@ -466,10 +466,10 @@ public:
    * Shift out given byte to the output pin using the given clock
    * output pin. Shift in according to given direction.
    * @param[in] clk output pin.
-   * @param[in] order bit first.
    * @param[in] value to write.
+   * @param[in] order bit first.
    */
-  void write(OutputPin* clk, Direction order, uint8_t value);
+  void write(uint8_t value, OutputPin& clk, Direction order = MSB_FIRST);
 
   /**
    * Set the given output pin with the given value. Zero(0) to 
