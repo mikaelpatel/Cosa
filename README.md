@@ -63,6 +63,8 @@ to Canvas.
 GLCD font support added. IR remote receiver initial example.  
 2013-02-05 Adding input/output operators to IOStream, Pins and
 SPI. More detailed benchmarks and comparison with Arduino added.  
+2013-02-07 IOStream driver for PCD8544 48x84 pixels matrix LCD
+controller with support for fonts and icons.  
 
 Install
 -------
@@ -94,7 +96,8 @@ Drivers
 7. DHT11 Humidity & Temperature Sensor.
 8. HC-SR04/US-020 Ultrasonic range module.
 9. ST7735R, 262K Color Single-Chip TFT Controller.
-10. Slave device support for SPI, TWI and OWI.
+10. PCD8544 48x84 pixels matrix LCD controller/driver.
+11. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the Cosa/references directory.  
