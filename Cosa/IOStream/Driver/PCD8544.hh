@@ -78,7 +78,30 @@ protected:
   uint8_t m_y;			// Cursor y (0..5)
   uint8_t m_mode;		// Text mode (inverted)
 
+  /**
+   * Set display address for next data block.
+   * @param[in] x position 0..WIDTH-1.
+   * @param[in] y position 0..HEIGHT-1.
+   */
+  void set_address(uint8_t x, uint8_t y);
+  
+  /**
+   * Fill display with given data.
+   * @param[in] data to fill with.
+   * @param[in] count number of bytes to fill.
+   */
+  void fill(uint8_t data, uint16_t count);
+
 public:
+  enum DisplayMode {
+    IDLE_DISPLAY_MODE,
+    NORMAL_DISPLAY_MODE,
+    INVERTED_DISPLAY_MODE,
+  };
+  enum TextMode {
+    NORMAL_TEXT_MODE = 0x00,
+    INVERTED_TEXT_MODE = 0xff
+  };
   static const uint8_t WIDTH = 84;
   static const uint8_t HEIGHT = 48;
   static const uint8_t LINES = HEIGHT / CHARBITS;
@@ -119,6 +142,12 @@ public:
   bool end();
 
   /**
+   * Set display mode. 
+   * @param[in] mode new display mode.
+   */
+  void set_display_mode(DisplayMode mode);
+
+  /**
    * Set cursor to given position.
    * @param[in] x pixel position (0..83).
    * @param[in] y line position (0..5).
@@ -126,14 +155,45 @@ public:
   void set_cursor(uint8_t x, uint8_t y);
 
   /**
-   * Set text mode, non-zero givens normal mode, otherwise text inverted
-   * mode.
-   * @param[in] mode
+   * Set text mode. Return previous text mode.
+   * @param[in] mode new text mode.
+   * @return previous text mode.
    */
-  void set_mode(uint8_t mode)
+  TextMode set_text_mode(TextMode mode)
   {
-    m_mode = (mode ? 0x00 : 0xff);
+    TextMode previous = (TextMode) m_mode;
+    m_mode = mode;
+    return (previous);
   }
+
+  /**
+   * Set text font. Returns previous setting.
+   * @param[in] font.
+   * @return previous font setting.
+   */
+  Font* set_text_font(Font* font)
+  {
+    Font* previous = m_font;
+    m_font = font;
+    return (previous);
+  }
+
+  /**
+   * Draw icon in the current mode. The icon must be stored in program
+   * memory with width, height and data.
+   * @param[in] bp
+   */
+  void draw_icon(const uint8_t* bp);
+
+  /**
+   * Draw a bar at the current position with the given width.
+   * The bar is filled from left to right proportional to the
+   * given procent (0..100).
+   * @param[in] procent filled from left to right.
+   * @param[in] width of bar.
+   * @param[in] pattern of filled section of bar.
+   */
+  void draw_bar(uint8_t procent, uint8_t width, uint8_t pattern = 0x55);
 
   /**
    * @override

@@ -42,6 +42,26 @@ const uint8_t PCD8544::script[] PROGMEM = {
   NOP
 };
 
+void 
+PCD8544::set_address(uint8_t x, uint8_t y)
+{
+  PCD8544_transaction(m_sce) {
+    m_dc.clear();
+    m_sdin.write(SET_X_ADDR | (x & X_ADDR_MASK), m_sclk);
+    m_sdin.write(SET_Y_ADDR | (y & Y_ADDR_MASK), m_sclk);
+    m_dc.set();
+  }
+}
+
+void 
+PCD8544::fill(uint8_t data, uint16_t count)
+{
+  PCD8544_transaction(m_sce) {
+    for (uint16_t i = 0; i < count; i++)
+      m_sdin.write(data, m_sclk);
+  }
+}
+
 bool 
 PCD8544::begin()
 {
@@ -50,9 +70,11 @@ PCD8544::begin()
   PCD8544_transaction(m_sce) {
     m_dc.clear();
     while ((cmd = pgm_read_byte(bp++)) != NOP)
-      m_sdin.write(&m_sclk, Pin::MSB_FIRST, cmd);
+      m_sdin.write(cmd, m_sclk);
     m_dc.set();
   }
+  m_x = 0;
+  m_y = 0;
   return (1);
 }
 
@@ -61,25 +83,74 @@ PCD8544::end()
 {
   PCD8544_transaction(m_sce) {
     m_dc.clear();
-    m_sdin.write(&m_sclk, Pin::MSB_FIRST, BASIC_INST | DISPLAY_OFF);
+    m_sdin.write(BASIC_INST | DISPLAY_CNTL | DISPLAY_OFF, m_sclk);
     m_dc.set();
   }
   return (1);
 }
 
 void 
-PCD8544::set_cursor(uint8_t x, uint8_t y)
+PCD8544::set_display_mode(DisplayMode mode)
 {
-  x = (x & X_ADDR_MASK);
-  y = (y & Y_ADDR_MASK);
+  uint8_t cntl = (mode == IDLE_DISPLAY_MODE ? DISPLAY_OFF :
+		  mode == NORMAL_DISPLAY_MODE ? NORMAL_MODE :
+		  INVERSE_MODE);
   PCD8544_transaction(m_sce) {
     m_dc.clear();
-    m_sdin.write(&m_sclk, Pin::MSB_FIRST, SET_X_ADDR | x);
-    m_sdin.write(&m_sclk, Pin::MSB_FIRST, SET_Y_ADDR | y);
+    m_sdin.write(cntl, m_sclk);
     m_dc.set();
   }
-  m_x = x;
-  m_y = y;
+}
+
+void 
+PCD8544::set_cursor(uint8_t x, uint8_t y)
+{
+  set_address(x, y);
+  m_x = (x & X_ADDR_MASK);
+  m_y = (y & Y_ADDR_MASK);
+}
+
+void 
+PCD8544::draw_icon(const uint8_t* bp)
+{
+  uint8_t width = pgm_read_byte(bp++);
+  uint8_t height = pgm_read_byte(bp++);
+  uint8_t lines = (height >> 3);
+  for (uint8_t y = 0; y < lines; y++) {
+    PCD8544_transaction(m_sce) {
+      for (uint8_t x = 0; x < width; x++) {
+	m_sdin.write(m_mode ^ pgm_read_byte(bp++), m_sclk);
+      }
+    }
+    m_y += 1;
+    set_address(m_x, m_y);
+  }
+  m_y += 1;
+  if (m_y == LINES) m_y = 0;
+  set_address(m_x, m_y);
+}
+
+void 
+PCD8544::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
+{
+  if (procent > 100) procent = 100;
+  uint8_t filled = (procent * (width - 2U)) / 100;
+  uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
+  width -= (filled + 1);
+  PCD8544_transaction(m_sce) {
+    m_sdin.write(m_mode ^ 0xff, m_sclk);
+    while (filled--) {
+      m_sdin.write(m_mode ^ (pattern | boarder), m_sclk);
+      pattern = ~pattern;
+    }
+    m_sdin.write(m_mode ^ 0xff, m_sclk);
+    width -= 1;
+    if (width > 0) {
+      while (width--)
+	m_sdin.write(m_mode ^ boarder, m_sclk);
+      m_sdin.write(m_mode ^ 0xff, m_sclk);
+    }
+  }
 }
 
 int 
@@ -90,18 +161,9 @@ PCD8544::putchar(char c)
     m_x = 0;
     m_y += 1;
     if (m_y == LINES) m_y = 0;
-    PCD8544_transaction(m_sce) {
-      m_dc.clear();
-      m_sdin.write(&m_sclk, Pin::MSB_FIRST, SET_X_ADDR | m_x);
-      m_sdin.write(&m_sclk, Pin::MSB_FIRST, SET_Y_ADDR | m_y);
-      m_dc.set();
-      for (uint8_t i = 0; i < WIDTH; i++) 
-	m_sdin.write(&m_sclk, Pin::MSB_FIRST, 0);
-      m_dc.clear();
-      m_sdin.write(&m_sclk, Pin::MSB_FIRST, SET_X_ADDR | m_x);
-      m_sdin.write(&m_sclk, Pin::MSB_FIRST, SET_Y_ADDR | m_y);
-      m_dc.set();
-    }
+    set_address(m_x, m_y);
+    fill(m_mode, WIDTH);
+    set_address(m_x, m_y);
     return (c);
   }
   
@@ -109,15 +171,8 @@ PCD8544::putchar(char c)
   if (c == '\f') {
     m_x = 0;
     m_y = 0;
-    PCD8544_transaction(m_sce) {
-      for (uint8_t i = 0; i < LINES; i++)
-	for (uint8_t j = 0; j < WIDTH; j++) 
-	  m_sdin.write(&m_sclk, Pin::MSB_FIRST, 0);
-      m_dc.clear();
-      m_sdin.write(&m_sclk, Pin::MSB_FIRST, SET_X_ADDR | m_x);
-      m_sdin.write(&m_sclk, Pin::MSB_FIRST, SET_Y_ADDR | m_y);
-      m_dc.set();
-    }
+    fill(m_mode, LINES * WIDTH);
+    set_address(m_x, m_y);
     return (c);
   }
 
@@ -135,8 +190,8 @@ PCD8544::putchar(char c)
   // Write character to the display memory and an extra byte
   PCD8544_transaction(m_sce) {
     while (--width) 
-      m_sdin.write(&m_sclk, Pin::MSB_FIRST, m_mode ^ pgm_read_byte(bp++));
-    m_sdin.write(&m_sclk, Pin::MSB_FIRST, m_mode);
+      m_sdin.write(m_mode ^ pgm_read_byte(bp++), m_sclk);
+    m_sdin.write(m_mode, m_sclk);
   }
 
   return (c);

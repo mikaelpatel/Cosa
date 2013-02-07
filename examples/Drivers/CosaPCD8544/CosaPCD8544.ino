@@ -27,25 +27,70 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/PCD8544.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Canvas/Icon/arduino_icon_34x32.h"
+#include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
 PCD8544 lcd;
 #undef putchar
 
 void setup()
 {
+  // Set up watchdog for low power sleep
+  Watchdog::begin();
+
+  // Initiate the LCD and clean screen
   lcd.begin();
-  lcd.set_mode(0);
-  trace.begin(&lcd, PSTR("\fCosaPCD8544: started"));
-  lcd.set_mode(1);
-  trace  << PSTR("ABC") << endl;
+  lcd.putchar('\f');
+
+  // Use LCD bind to trace and use inverted text mode for banner
+  PCD8544::TextMode saved = lcd.set_text_mode(PCD8544::INVERTED_TEXT_MODE);
+  trace.begin(&lcd, PSTR("CosaPCD8544: started"));
+  lcd.set_text_mode(saved);
+  SLEEP(2);
+
+  // Use the trace iostream onto the LCD
+  trace << PSTR("01234568901234") << endl;
   trace << bin << 0x55 << endl;
   trace << oct << 0x1234 << endl;
-  trace << hex << 0x1234;
+  trace << hex << 0x1234 << ' ' << '*';
+  SLEEP(2);
+
+  // Clear the display with a form-feed and draw the Arduino icons
+  lcd.putchar('\f');
+  lcd.set_cursor((lcd.WIDTH - 34)/2, 1);
+  lcd.draw_icon(arduino_icon_34x32);
+  SLEEP(2);
+
+  // Dump the LCD object raw format
+  lcd.putchar('\f');
+  trace.print(&lcd, sizeof(lcd) - 1, 16, 2);
+  SLEEP(2);
 }
 
 void loop()
 {
+  // Draw bars with analog sample values (A0..A5)
+  lcd.putchar('\f');
+  for (uint8_t i = 0; i < PCD8544::LINES; i++) {
+    trace.printf_P(PSTR("A%d:"), i);
+    uint8_t procent = (AnalogPin::sample(i) * 100L)/1024;
+    lcd.draw_bar(procent, PCD8544::WIDTH - 20);
+    if (i != PCD8544::LINES - 1) trace << endl;
+  }
+  SLEEP(2);
+
+  // Display the Arduino icon
+  static const uint8_t SHOW_BANNER = 4;
+  static uint8_t banner = 0;
+  if (++banner == SHOW_BANNER) {
+    lcd.putchar('\f');
+    lcd.set_cursor(0, 1);
+    lcd.draw_icon(arduino_icon_96x32);
+    banner = 0;
+    SLEEP(4);
+  }
 }
