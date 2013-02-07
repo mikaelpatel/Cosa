@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/PCD8544.hh"
-#include "Cosa/Canvas/Icon/arduino_icon_34x32.h"
+#include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
 PCD8544 lcd;
@@ -44,40 +44,54 @@ void setup()
 
   // Initiate the LCD and clean screen
   lcd.begin();
-  lcd.putchar('\f');
-
-  // Use LCD bind to trace and use inverted text mode for banner
-  PCD8544::TextMode saved = lcd.set_text_mode(PCD8544::INVERTED_TEXT_MODE);
-  trace.begin(&lcd, PSTR("CosaPCD8544: started"));
-  lcd.set_text_mode(saved);
-  SLEEP(2);
-
-  // Use the trace iostream onto the LCD
-  trace << PSTR("01234568901234") << endl;
-  trace << bin << 0x55 << endl;
-  trace << oct << 0x1234 << endl;
-  trace << hex << 0x1234 << ' ' << '*';
-  SLEEP(2);
 
   // Clear the display with a form-feed and draw the Arduino icons
   lcd.putchar('\f');
-  lcd.set_cursor((lcd.WIDTH - 34)/2, 1);
-  lcd.draw_icon(arduino_icon_34x32);
+  lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
+  lcd.draw_icon(arduino_icon_64x32);
   SLEEP(2);
 
-  // Dump the LCD object raw format
+  // Use LCD bind to trace and use inverted text mode for banner
+  trace.begin(&lcd);
+  PCD8544::TextMode saved = lcd.set_text_mode(PCD8544::INVERTED_TEXT_MODE);
+  trace << PSTR("\fCosaPCD8544: started\n");
+  INFO("saved = %d", saved);
+  lcd.set_text_mode(saved);
+  SLEEP(2);
+
+  // Use the trace iostream onto the LCD with output operator
+  lcd.putchar('\f');
+  trace << PSTR("01234568901234");
+  for (uint8_t i = 0; i < 16; i++) {
+    Watchdog::delay(256);
+    trace << PSTR("\b \b");
+  }
+  uint16_t ticks = Watchdog::get_ticks();
+  TRACE(ticks);
+  trace << bin << 0x55 << endl;
+  trace << oct << 0x55 << endl;
+  trace << dec << 0x55 << endl;
+  trace << hex << 0x55 << endl;
+  trace << &lcd;
+  SLEEP(2);
+
+  // Dump the LCD object raw format with normal print function
   lcd.putchar('\f');
   trace.print(&lcd, sizeof(lcd) - 1, 16, 2);
   SLEEP(2);
 
-  // Dump system font
+  // Dump characters in system font; two pages, 64 characters each
+  saved = lcd.set_text_mode(PCD8544::INVERTED_TEXT_MODE);
   trace << PSTR("\fFont page#1\n");
+  lcd.set_text_mode(saved);
   uint8_t c;
   for (c = 0; c < 64; c++) {
-    trace << (char) (((c == '\n') || (c == '\f')) ? ' ' : c);
+    trace << (char) (((c == '\n') || (c == '\f') || (c == '\b')) ? ' ' : c);
   }
   SLEEP(4);
+  saved = lcd.set_text_mode(PCD8544::INVERTED_TEXT_MODE);
   trace << PSTR("\fFont page#2\n");
+  lcd.set_text_mode(saved);
   for (; c < 128; c++) {
     trace << (char) c;
   }

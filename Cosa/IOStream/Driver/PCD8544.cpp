@@ -173,6 +173,15 @@ PCD8544::putchar(char c)
     return (c);
   }
 
+  // Check for special character: back-space
+  if (c == '\b') {
+    uint8_t width = m_font->get_width(' ');
+    if (m_x < width) width = m_x;
+    m_x -= width;
+    set_address(m_x, m_y);
+    return (c);
+  }
+
   // Access font for character width and bitmap
   uint8_t width = m_font->get_width(c);
   const uint8_t* bp = m_font->get_bitmap(c);
