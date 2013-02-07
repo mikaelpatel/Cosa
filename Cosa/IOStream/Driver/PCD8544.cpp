@@ -32,7 +32,7 @@
 
 const uint8_t PCD8544::script[] PROGMEM = {
   SET_FUNC       | EXTENDED_INST,
-  SET_VOP 	 | 0x31,
+  SET_VOP 	 | 0x2a,
   SET_TEMP_COEFF | 0x00,
   SET_BIAS_SYS   | 0x04,
   SET_FUNC       | BASIC_INST	| HORIZONTAL_ADDR,
