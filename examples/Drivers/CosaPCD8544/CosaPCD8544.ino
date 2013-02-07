@@ -69,6 +69,19 @@ void setup()
   lcd.putchar('\f');
   trace.print(&lcd, sizeof(lcd) - 1, 16, 2);
   SLEEP(2);
+
+  // Dump system font
+  trace << PSTR("\fFont page#1\n");
+  uint8_t c;
+  for (c = 0; c < 64; c++) {
+    trace << (char) (((c == '\n') || (c == '\f')) ? ' ' : c);
+  }
+  SLEEP(4);
+  trace << PSTR("\fFont page#2\n");
+  for (; c < 128; c++) {
+    trace << (char) c;
+  }
+  SLEEP(4);
 }
 
 void loop()
@@ -77,7 +90,7 @@ void loop()
   lcd.putchar('\f');
   for (uint8_t i = 0; i < PCD8544::LINES; i++) {
     trace.printf_P(PSTR("A%d:"), i);
-    uint8_t procent = (AnalogPin::sample(i) * 100L)/1024;
+    uint8_t procent = (AnalogPin::sample(i) * 100L) / 1023;
     lcd.draw_bar(procent, PCD8544::WIDTH - 20);
     if (i != PCD8544::LINES - 1) trace << endl;
   }
@@ -89,8 +102,10 @@ void loop()
   if (++banner == SHOW_BANNER) {
     lcd.putchar('\f');
     lcd.set_cursor(0, 1);
+    lcd.set_display_mode(PCD8544::INVERSE_MODE);
     lcd.draw_icon(arduino_icon_96x32);
-    banner = 0;
     SLEEP(4);
+    lcd.set_display_mode(PCD8544::NORMAL_MODE);
+    banner = 0;
   }
 }

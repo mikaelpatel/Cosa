@@ -52,10 +52,6 @@ protected:
       POWER_UP_MODE = 0x00,	// Power up mode
       POWER_DOWN_MODE = 0x04,	// Power down mode
     DISPLAY_CNTL = 0x08,	// Display control
-      DISPLAY_OFF = 0x00,	// All display segments off
-      DISPLAY_ON = 0x01,	// All display segments on
-      NORMAL_MODE = 0x04,	// Normal mode
-      INVERSE_MODE = 0x05,	// Inverse video mode
     SET_Y_ADDR = 0x40,		// Sets Y-address of RAM (0..5)
       Y_ADDR_MASK = 0x07,	// Mask Y-address
     SET_X_ADDR = 0x80,		// Sets X-address of RAM (0..83)
@@ -94,9 +90,10 @@ protected:
 
 public:
   enum DisplayMode {
-    IDLE_DISPLAY_MODE,
-    NORMAL_DISPLAY_MODE,
-    INVERTED_DISPLAY_MODE,
+    DISPLAY_OFF = 0x00,
+    DISPLAY_ON = 0x01,
+    NORMAL_MODE = 0x04,	
+    INVERSE_MODE = 0x05
   };
   enum TextMode {
     NORMAL_TEXT_MODE = 0x00,

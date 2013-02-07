@@ -83,7 +83,7 @@ PCD8544::end()
 {
   PCD8544_transaction(m_sce) {
     m_dc.clear();
-    m_sdin.write(BASIC_INST | DISPLAY_CNTL | DISPLAY_OFF, m_sclk);
+    m_sdin.write(SET_FUNC | BASIC_INST | POWER_DOWN_MODE);
     m_dc.set();
   }
   return (1);
@@ -92,12 +92,9 @@ PCD8544::end()
 void 
 PCD8544::set_display_mode(DisplayMode mode)
 {
-  uint8_t cntl = (mode == IDLE_DISPLAY_MODE ? DISPLAY_OFF :
-		  mode == NORMAL_DISPLAY_MODE ? NORMAL_MODE :
-		  INVERSE_MODE);
   PCD8544_transaction(m_sce) {
     m_dc.clear();
-    m_sdin.write(cntl, m_sclk);
+    m_sdin.write(DISPLAY_CNTL | mode, m_sclk);
     m_dc.set();
   }
 }
