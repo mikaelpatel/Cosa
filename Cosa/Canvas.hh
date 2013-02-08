@@ -831,10 +831,23 @@ public:
 
   /**
    * Draw character with current text color, font and scale.
+   * @param[in] x position.
+   * @param[in] y position.
    * @param[in] c character.
    */
-  virtual void draw_char(char c);
+  virtual void draw_char(uint8_t x, uint8_t y, char c);
 
+  /**
+   * Draw character with current text color, font and scale.
+   * @param[in] c character.
+   */
+  void draw_char(char c)
+  {
+    uint8_t x, y;
+    get_cursor(x, y);
+    draw_char(x, y, c);
+  }
+  
   /**
    * Draw string in current text color, font and scale.
    * @param[in] s string.

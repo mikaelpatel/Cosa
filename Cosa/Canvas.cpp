@@ -323,10 +323,8 @@ Canvas::fill_roundrect(uint8_t x, uint8_t y,
 }
 
 void 
-Canvas::draw_char(char c)
+Canvas::draw_char(uint8_t x, uint8_t y, char c)
 {
-  uint8_t x, y;
-  get_cursor(x, y);
   uint8_t scale = get_text_scale();
   color16_t saved = set_pen_color(get_text_color());
   Font* font = get_text_font();

@@ -30,6 +30,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Canvas/OffScreen.hh"
 #include "Cosa/IOStream/Driver/PCD8544.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
@@ -95,6 +96,26 @@ void setup()
   for (; c < 128; c++) {
     trace << (char) c;
   }
+  SLEEP(4);
+
+  // Play around with the offscreen canvas
+  OffScreen offscreen(PCD8544::WIDTH, PCD8544::HEIGHT);
+  offscreen.begin();
+  offscreen.draw_rect(0, 0, 10, 10);
+  offscreen.fill_rect(2, 2, 7, 7);
+  offscreen.draw_circle(20, 20, 10);
+  offscreen.fill_circle(20, 20, 8);
+  Canvas::color16_t color = offscreen.set_pen_color(Canvas::WHITE);
+  offscreen.fill_roundrect(20, 20, 40, 20, 10);
+  offscreen.set_pen_color(color);
+  offscreen.draw_roundrect(20, 20, 40, 20, 10);
+  offscreen.fill_roundrect(22, 22, 36, 17, 8);
+  offscreen.set_cursor(15, 0);
+  offscreen.draw_string_P(PSTR("Hello World"));
+
+  // Draw the created off-screen canvas on the LCD
+  lcd.set_cursor(0, 0);
+  lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
   SLEEP(4);
 }
 

@@ -183,6 +183,12 @@ public:
   void draw_icon(const uint8_t* bp);
 
   /**
+   * Draw bitmap in the current mode. 
+   * @param[in] bp
+   */
+  void draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height);
+
+  /**
    * Draw a bar at the current position with the given width.
    * The bar is filled from left to right proportional to the
    * given procent (0..100).

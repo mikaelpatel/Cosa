@@ -128,6 +128,24 @@ PCD8544::draw_icon(const uint8_t* bp)
 }
 
 void 
+PCD8544::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
+{
+  uint8_t lines = (height >> 3);
+  for (uint8_t y = 0; y < lines; y++) {
+    PCD8544_transaction(m_sce) {
+      for (uint8_t x = 0; x < width; x++) {
+	m_sdin.write(m_mode ^ (*bp++), m_sclk);
+      }
+    }
+    m_y += 1;
+    set_address(m_x, m_y);
+  }
+  m_y += 1;
+  if (m_y == LINES) m_y = 0;
+  set_address(m_x, m_y);
+}
+
+void 
 PCD8544::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
 {
   if (procent > 100) procent = 100;
@@ -168,6 +186,7 @@ PCD8544::putchar(char c)
   if (c == '\f') {
     m_x = 0;
     m_y = 0;
+    set_address(m_x, m_y);
     fill(m_mode, LINES * WIDTH);
     set_address(m_x, m_y);
     return (c);
