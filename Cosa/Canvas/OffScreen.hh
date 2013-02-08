@@ -35,13 +35,14 @@
 class OffScreen : public Canvas {
 private:
   uint16_t m_count;		// Size of bitmap (bytes)
-  uint8_t *m_bitmap;		// Pointer to bitmap buffer
+  uint8_t* m_bitmap;		// Pointer to bitmap buffer
   uint8_t m_free;		// Allocation flag
 
 public:
   /**
-   * Construct off-screen canvas with given width, height and depth.
-   * A buffer may be given but must be able to hold the bitmap size.
+   * Construct off-screen canvas with given width and height. A 
+   * buffer may be given but must be able to hold the bitmap size.
+   * If the buffer pointer is null a buffer is allocated.
    * @param[in] width of canvas.
    * @param[in] height of canvas.
    * @param[in] buffer for canvas.
