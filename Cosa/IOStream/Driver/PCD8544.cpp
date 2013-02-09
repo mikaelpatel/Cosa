@@ -30,9 +30,12 @@
 
 #include "Cosa/IOStream/Driver/PCD8544.hh"
 
+#define PCD8544_transaction(sce)				\
+  for (uint8_t i = (sce.clear(), 1); i != 0; i--, sce.set())
+
 const uint8_t PCD8544::script[] PROGMEM = {
   SET_FUNC       | EXTENDED_INST,
-  SET_VOP 	 | 0x2a,
+  SET_VOP 	 | 0x38,
   SET_TEMP_COEFF | 0x00,
   SET_BIAS_SYS   | 0x04,
   SET_FUNC       | BASIC_INST	| HORIZONTAL_ADDR,
@@ -63,7 +66,7 @@ PCD8544::fill(uint8_t data, uint16_t count)
 }
 
 bool 
-PCD8544::begin()
+PCD8544::begin(uint8_t level)
 {
   const uint8_t* bp = script;
   uint8_t cmd;
@@ -73,6 +76,7 @@ PCD8544::begin()
       m_sdin.write(cmd, m_sclk);
     m_dc.set();
   }
+  set_display_contrast(level);
   m_x = 0;
   m_y = 0;
   return (1);
@@ -95,6 +99,18 @@ PCD8544::set_display_mode(DisplayMode mode)
   PCD8544_transaction(m_sce) {
     m_dc.clear();
     m_sdin.write(DISPLAY_CNTL | mode, m_sclk);
+    m_dc.set();
+  }
+}
+
+void 
+PCD8544::set_display_contrast(uint8_t level)
+{
+  PCD8544_transaction(m_sce) {
+    m_dc.clear();
+    m_sdin.write(SET_FUNC | EXTENDED_INST, m_sclk);
+    m_sdin.write(SET_VOP  | (level & VOP_MASK), m_sclk);
+    m_sdin.write(SET_FUNC | BASIC_INST | HORIZONTAL_ADDR, m_sclk);
     m_dc.set();
   }
 }
@@ -163,8 +179,8 @@ PCD8544::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
     if (width > 0) {
       while (width--)
 	m_sdin.write(m_mode ^ boarder, m_sclk);
-      m_sdin.write(m_mode ^ 0xff, m_sclk);
     }
+    m_sdin.write(m_mode ^ 0xff, m_sclk);
   }
 }
 

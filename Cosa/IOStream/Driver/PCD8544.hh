@@ -58,7 +58,8 @@ protected:
       X_ADDR_MASK = 0x7f,	// Mask X-addres
     SET_TEMP_COEFF = 0x04,	// Set temperature coefficient (0..3)
     SET_BIAS_SYS = 0x10,	// Set Bias System (0..7)
-    SET_VOP = 0x80		// Write Vop to register
+    SET_VOP = 0x80,		// Write Vop to register
+      VOP_MASK = 0x7f		// Mask Vop
   };
 
   // Initialization script to reduce memory footprint
@@ -128,9 +129,10 @@ public:
 
   /**
    * Start interaction with display.
+   * @param[in] level contrast.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin();
+  bool begin(uint8_t level = 0x31);
 
   /**
    * Stop sequence of interaction with device.
@@ -143,6 +145,12 @@ public:
    * @param[in] mode new display mode.
    */
   void set_display_mode(DisplayMode mode);
+
+  /**
+   * Set display contrast (0..127).
+   * @param[in] contrast level.
+   */
+  void set_display_contrast(uint8_t level);
 
   /**
    * Set cursor to given position.
@@ -207,11 +215,5 @@ public:
    */
   virtual int putchar(char c);
 };
-
-/**
- * Some syntactic sugar to capture the device selection block
- */
-#define PCD8544_transaction(sce)				\
-  for (uint8_t i = (sce.clear(), 1); i != 0; i--, sce.set())
 
 #endif
