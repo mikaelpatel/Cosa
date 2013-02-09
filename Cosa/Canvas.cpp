@@ -302,7 +302,7 @@ Canvas::fill_roundrect(uint8_t x, uint8_t y,
   // Adjust the position and fill the inner rectangle
   x += radius;
   width -= diameter;
-  fill_rect(x, y, width, height);
+  fill_rect(x, y, width, height + 1);
   height -= diameter;
   y += radius;
 
