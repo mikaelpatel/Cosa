@@ -22,7 +22,7 @@
  *
  * @section Description
  * Demonstration of the PCD8544 device driver with mapping to
- * IOStream::Device.
+ * IOStream::Device, and usage of off-screen canvas.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -32,6 +32,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Canvas/OffScreen.hh"
 #include "Cosa/IOStream/Driver/PCD8544.hh"
+#include "Cosa/Canvas/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
@@ -43,10 +44,8 @@ void setup()
   // Set up watchdog for low power sleep
   Watchdog::begin();
 
-  // Initiate the LCD and clean screen
-  lcd.begin();
-
-  // Clear the display with a form-feed and draw the Arduino icons
+  // Initiate the LCD screen and show arduino icon
+  lcd.begin(0x38);
   lcd.putchar('\f');
   lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
   lcd.draw_icon(arduino_icon_64x32);
@@ -105,15 +104,12 @@ void setup()
   offscreen.fill_rect(2, 2, 7, 7);
   offscreen.draw_circle(20, 20, 10);
   offscreen.fill_circle(20, 20, 8);
-  Canvas::color16_t color = offscreen.set_pen_color(Canvas::WHITE);
-  offscreen.fill_roundrect(20, 20, 40, 20, 10);
-  offscreen.set_pen_color(color);
   offscreen.draw_roundrect(20, 20, 40, 20, 10);
-  offscreen.fill_roundrect(22, 22, 36, 17, 8);
+  offscreen.fill_roundrect(22, 22, 36, 16, 7);
   offscreen.set_cursor(15, 0);
   offscreen.draw_string_P(PSTR("Hello World"));
 
-  // Draw the created off-screen canvas on the LCD
+  // Draw the off-screen canvas on the LCD
   lcd.set_cursor(0, 0);
   lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
   SLEEP(4);
@@ -129,18 +125,51 @@ void loop()
     lcd.draw_bar(procent, PCD8544::WIDTH - 20);
     if (i != PCD8544::LINES - 1) trace << endl;
   }
-  SLEEP(2);
+  SLEEP(1);
 
-  // Display the Arduino icon
+  // Every 4 seconds display the arduino icon and count down time
   static const uint8_t SHOW_BANNER = 4;
   static uint8_t banner = 0;
   if (++banner == SHOW_BANNER) {
+
+    // Display the Arduino icon
     lcd.putchar('\f');
     lcd.set_cursor(0, 1);
     lcd.set_display_mode(PCD8544::INVERSE_MODE);
     lcd.draw_icon(arduino_icon_96x32);
-    SLEEP(4);
+    SLEEP(2);
+
     lcd.set_display_mode(PCD8544::NORMAL_MODE);
     banner = 0;
+
+    // Counters
+    static uint8_t min = 30;
+    static uint8_t sec = 00;
+
+    // Draw the current counter value off-screen
+    OffScreen offscreen(PCD8544::WIDTH, PCD8544::HEIGHT);
+    offscreen.begin();
+    offscreen.set_text_font(&fixednums8x16);
+    offscreen.draw_roundrect(8, 8, lcd.WIDTH - 18, lcd.HEIGHT - 18, 8);
+    offscreen.set_cursor((lcd.WIDTH - (fixednums8x16.get_width('0') * 5))/2,
+			 (lcd.HEIGHT - fixednums8x16.get_height('0'))/2);
+    offscreen.draw_char('0' + min/10);
+    offscreen.draw_char('0' + min%10);
+    offscreen.draw_char(':');
+    offscreen.draw_char('0' + sec/10);
+    offscreen.draw_char('0' + sec%10);
+
+    // Draw the off-screen canvas on the LCD
+    lcd.putchar('\f');
+    lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
+    // Decrement counter
+    if (sec == 0) {
+      if (min != 00) {
+	sec = 50;
+	min -= 1;
+      }
+    } else
+      sec -= 10;
+    SLEEP(4);
   }
 }
