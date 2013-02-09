@@ -485,21 +485,21 @@ public:
 
 /**
  * Set current base to binary(2) for next operator print.
- * @param[in] outs stream to set base.
+ * @param[in] outs stream.
  * @return iostream.
  */
 extern IOStream& bin(IOStream& outs);
 
 /**
  * Set current base to octal(8) for next operator print.
- * @param[in] outs stream to set base.
+ * @param[in] outs stream.
  * @return iostream.
  */
 extern IOStream& oct(IOStream& outs);
 
 /**
  * Set current base to deciaml(10) for next operator print.
- * @param[in] outs stream to set base.
+ * @param[in] outs stream.
  * @return iostream.
  */
 extern IOStream& dec(IOStream& outs);
@@ -513,7 +513,7 @@ extern IOStream& hex(IOStream& outs);
 
 /**
  * Print end of line; carriage-return-line-feed.
- * @param[in] outs stream to print end of line to.
+ * @param[in] outs stream.
  * @return iostream.
  */
 extern IOStream& endl(IOStream& outs);

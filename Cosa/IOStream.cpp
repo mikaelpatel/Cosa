@@ -207,6 +207,9 @@ IOStream::vprintf_P(const char* format, va_list args)
       case 'u': 
 	is_signed = 0; 
 	goto next;
+      case 'c': 
+	print((char) va_arg(args, int)); 
+	continue;
       case 'p': 
 	print(va_arg(args, void*)); 
 	continue;
