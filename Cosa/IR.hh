@@ -36,7 +36,7 @@
 class IR {
 public:
 
-  class Receiver : public InterruptPin, private Link {
+  class Receiver : private InterruptPin, private Link {
   public:
     struct keymap_t {
       uint16_t code;
