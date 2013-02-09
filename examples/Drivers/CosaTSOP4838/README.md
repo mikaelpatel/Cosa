@@ -1,4 +1,4 @@
-CosaIRreceive
+CosaTSOP4838
 =============
 Simple IR remote code receiver using a TSOP4838. Uses an interrupt pin
 and timer-0, real-time clock, to capture the code sequence from the
