@@ -97,7 +97,8 @@ Drivers
 8. HC-SR04/US-020 Ultrasonic range module.
 9. ST7735R, 262K Color Single-Chip TFT Controller.
 10. PCD8544 48x84 pixels matrix LCD controller/driver.
-11. Slave device support for SPI, TWI and OWI.
+11. TSOP4838 IR Receiver Modules for Remote Control Systems.
+12. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the Cosa/references directory.  
