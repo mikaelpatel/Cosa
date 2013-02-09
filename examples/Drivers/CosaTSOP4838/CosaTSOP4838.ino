@@ -112,8 +112,8 @@ void setup()
   // Use the watchdog for timeouts
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 
-  // Enable the interrupt pin to capture the remote code sequence
-  receiver.enable();
+  // Reset the receiver to start up clean
+  receiver.reset();
 }
 
 void loop()
