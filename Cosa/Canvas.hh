@@ -727,7 +727,7 @@ public:
    * @param[in] width
    * @param[in] height
    */
-  virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) = 0;
+  virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
 
   /**
    * Fill rectangle at cursor position with current pen color.

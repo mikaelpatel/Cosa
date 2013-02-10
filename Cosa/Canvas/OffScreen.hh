@@ -22,7 +22,8 @@
  *
  * @section Description
  * Off-screen canvas for drawing before copying to the canvas device.
- * Supports only monochrome, 1-bit, pixel in off-screen buffer.
+ * Supports only monochrome, 1-bit, pixel in off-screen buffer. 
+ * Minimum implementation; draw_pixel() only.
  * 
  * This file is part of the Arduino Che Cosa project.
  */
@@ -95,16 +96,6 @@ public:
       *bp &= ~(1 << pos);
   } 
 
-  /**
-   * @override
-   * Fill rectangle with current color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] width
-   * @param[in] height
-   */
-  virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
-  
   /**
    * @override
    * Stop sequence of interaction with off-screen device.

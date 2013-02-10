@@ -20,9 +20,11 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
-* @section Description
+ * @section Description
  * Off-screen canvas for drawing before copying to the canvas device.
- * 
+ * Supports only monochrome, 1-bit, pixel in off-screen buffer. 
+ * Minimum implementation; draw_pixel() only.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -33,14 +35,6 @@ OffScreen::begin()
 {
   memset(m_bitmap, 0, m_count);
   return (1);
-}
-
-void 
-OffScreen::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
-{
-  for (uint8_t i = 0; i < width; i++)
-    for (uint8_t j = 0; j < height; j++)
-      draw_pixel(x + i, y + j);
 }
 
 bool 

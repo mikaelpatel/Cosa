@@ -121,6 +121,14 @@ Canvas::draw_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
   draw_horizontal_line(x, y + height, width);
 }
 
+void 
+Canvas::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
+{
+  for (uint8_t i = 0; i < width; i++)
+    for (uint8_t j = 0; j < height; j++)
+      draw_pixel(x + i, y + j);
+}
+
 #define dist(x, y) ((x > y) ? (x - y) : (y - x))
 #define swap(a, b) { uint8_t t = a; a = b; b = t; }
 
