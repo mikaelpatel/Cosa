@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Ring buffer for IOStreams.
+ * Circlic buffer for IOStreams. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -41,16 +41,10 @@ IOBuffer::putchar(char c)
 int 
 IOBuffer::getchar()
 {
-  if (is_empty()) return (-1);
+  if (m_head == m_tail) return (-1);
   uint8_t next = (m_tail + 1) & BUFFER_MASK;
-  int c = m_buffer[m_tail];
   m_tail = next;
-  return (c & 0xff);
+  return (m_buffer[next]);
 }
 
-int 
-IOBuffer::flush()
-{
-  m_tail = 0;
-  m_head = 0;
-}
+
