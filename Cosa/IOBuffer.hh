@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Ring buffer for IOStreams.
+ * Circlic buffer for IOStreams. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -44,8 +44,8 @@ public:
   const uint8_t BUFFER_MASK;
 
   /**
-   * Allocate buffer object for iostream operations. 
-   * Buffer size (max) should be power of 2.
+   * Allocate buffer object for iostream operations. Buffer size (max) 
+   * should be power of 2.
    * @param[in] max number of bytes in buffer.
    * @param[in] buffer pointer to buffer.
    */
@@ -79,6 +79,15 @@ public:
   }
 
   /**
+   * Return true(1) if the buffer is full, otherwise false(0).
+   * @return bool
+   */
+  bool is_full()
+  {
+    return (((m_head + 1) & BUFFER_MASK) == m_tail);
+  }
+
+  /**
    * @override
    * Number of bytes available in buffer.
    * @return bytes.
@@ -108,7 +117,11 @@ public:
    * Reset buffer.
    * @return zero(0) or negative error code.
    */
-  virtual int flush();
+  virtual int flush()
+  {
+    m_tail = 0;
+    m_head = 0;
+  }
 };
 
 #endif
