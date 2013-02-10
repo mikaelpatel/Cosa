@@ -36,20 +36,17 @@
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define USART_UDRE_vect USART0_UDRE_vect
+#define USART_RX_vect USART0_RX_vect 
 #endif
 
 extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
+extern "C" void USART_RX_vect(void) __attribute__ ((signal));
 
 class UART : public IOStream::Device {
 private:
-  IOBuffer* m_buffer;
   volatile uint8_t* const m_sfr;
-  friend void USART_UDRE_vect(void);
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-  friend void USART1_UDRE_vect(void);
-  friend void USART2_UDRE_vect(void);
-  friend void USART3_UDRE_vect(void);
-#endif
+  IOBuffer* m_ibuf;
+  IOBuffer* m_obuf;
 
   /**
    * Return pointer to UART Control and Status Register A (UCSRnA).
@@ -96,24 +93,66 @@ private:
     return (m_sfr + 6); 
   }
 
+  // Interrupt handlers are friends
+  friend void USART_UDRE_vect(void);
+  friend void USART_RX_vect(void);
+
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+  friend void USART1_UDRE_vect(void);
+  friend void USART1_RX_vect(void);
+  friend void USART2_UDRE_vect(void);
+  friend void USART2_RX_vect(void);
+  friend void USART3_UDRE_vect(void);
+  friend void USART3_RX_vect(void);
+#endif
+
 public:
   // Default buffer size for standard UART0
   static const uint8_t BUFFER_MAX = 64;
 
+  // Serial formats; DATA + PARITY + STOP
+  enum {
+    DATA5 = 0,
+    DATA6 = _BV(UCSZ00),
+    DATA7 = _BV(UCSZ01),
+    DATA8 = _BV(UCSZ01) | _BV(UCSZ00),
+    DATA9 = _BV(UCSZ02) | _BV(UCSZ01) | _BV(UCSZ00),
+    NO_PARITY = 0,
+    EVEN_PARITY = _BV(UPM01),
+    ODD_PARITY = _BV(UPM01) | _BV(UPM00),
+    STOP1 = 0,
+    STOP2 = _BV(USBS0)
+  };
+
   /**
    * Construct serial port handler for given UART.
    * @param[in] port number.
+   * @param[in] ibuf input stream buffer.
+   * @param[in] obuf output stream buffer.
    */
-  UART(IOBuffer* buffer, uint8_t port = 0) : 
+  UART(uint8_t port, IOBuffer* ibuf, IOBuffer* obuf) : 
     IOStream::Device(),
-    m_buffer(buffer),
-    m_sfr(Board::UART(port))
+    m_sfr(Board::UART(port)),
+    m_ibuf(ibuf),
+    m_obuf(obuf)
   {
   }
 
   /**
    * @override
-   * Write character to serial port.
+   * Number of bytes available in input buffer.
+   * @return bytes.
+   */
+  virtual int available()
+  {
+    return (m_ibuf->available());
+  }
+
+  /**
+   * @override
+   * Write character to serial port output buffer.
+   * Returns character if successful otherwise on error or buffer full
+   * returns EOF(-1),
    * @param[in] c character to write.
    * @return character written or EOF(-1).
    */
@@ -121,10 +160,25 @@ public:
 
   /**
    * @override
+   * Read character from serial port input buffer.
+   * Returns character if successful otherwise on error or buffer empty
+   * returns EOF(-1),
+   * @return character or EOF(-1).
+   */
+  virtual int getchar()
+  {
+    return (m_ibuf->getchar());
+  }
+
+  /**
+   * @override
    * Flush internal device buffers. Wait for device to become idle.
    * @return zero(0) or negative error code.
    */
-  virtual int flush();
+  virtual int flush()
+  {
+    return (m_ibuf->flush() | m_obuf->flush());
+  }
 
   /**
    * Start UART device driver.
@@ -132,8 +186,7 @@ public:
    * @param[in] format serial frame format (default async, 8data, 2stop bit)
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint32_t baudrate = 9600, 
-	     uint8_t format = (_BV(USBS0) | (3 << UCSZ00)));
+  bool begin(uint32_t baudrate = 9600, uint8_t format = DATA8 + STOP2);
 
   /**
    * Stop UART device driver.
