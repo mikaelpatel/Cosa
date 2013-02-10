@@ -2,37 +2,37 @@
 Measurement:		   2013-02-10
 Arduino:		    Nano 328P
 =====================================
-CosaBenchmarkFSM:		 6236
-CosaBenchmarkPins:		16870
-CosaBenchmarkRTC:		 6596
-CosaBenchmarkThread:		 6858
+CosaBenchmarkFSM:		 6522
+CosaBenchmarkPins:		17156
+CosaBenchmarkRTC:		 6882
+CosaBenchmarkThread:		 7144
 -------------------------------------
 CosaCanvasClock:		11904
 CosaCanvasFont:			 9402
 CosaCanvasHistogram:		10510
 CosaCanvasPins:			11818
-CosaCanvasScript:		15600
+CosaCanvasScript:		15886
 CosaCanvasShades:		 9392
-CosaCanvasST7735R:		19286
+CosaCanvasST7735R:		19572
 CosaCanvasSweep:		10070
 -------------------------------------
-CosaCiaoNative:			 6292
-CosaCiaoPoint:			 6038
-CosaFai:			 7958
+CosaCiaoNative:			 6578
+CosaCiaoPoint:			 6324
+CosaFai:			 8244
 -------------------------------------
-CosaDH11:			 6070
-CosaHCSR04:			17400
+CosaDHT11:			 6356
+CosaHCSR04:			17686
 CosaPCD8544:			15644
 CosaTSOP4838:			 9164
 -------------------------------------
 CosaFSMBlink:			 2964
-CosaPingPong:			 6064
+CosaPingPong:			 6350
 -------------------------------------
-CosaDS18B20:			 8096
-CosaOWImaster:			 7370
-CosaOWIslave:			 6616
+CosaDS18B20:			 8382
+CosaOWImaster:			 7656
+CosaOWIslave:			 6902
 -------------------------------------
-CosaAnalogPins:			 5918
+CosaAnalogPins:			 6204
 CosaBlink:			 1898
 CosaBlinkEvent:			 1884
 CosaBlinkInterrupt:		 1854
@@ -40,17 +40,17 @@ CosaBlinkPeriodic:		 2434
 CosaBlinkThread:		 2842
 CosaBlinkTimeout:		 2464
 CosaBlinkWatchdog:		 1852
-CosaButton:			 6402
-CosaPins:			 8222
+CosaButton:			 6688
+CosaPins:			 8508
 -------------------------------------
-CosaADLX345:			 6124
-CosaNRFreceiver:		 8960
-CosaNRFsender:			 8970
+CosaADLX345:			 6410
+CosaNRFreceiver:		 9246
+CosaNRFsender:			 9256
 -------------------------------------
-CosaAT24CXX:			 6624
-CosaDS1307:			 7084
-CosaPCF8591:			 6638
-CosaTWImaster:			 7242
-CosaTWIslave:			 5440
+CosaAT24CXX:			 6910
+CosaDS1307:			 7370
+CosaPCF8591:			 6924
+CosaTWImaster:			 7528
+CosaTWIslave:			 5726
 -------------------------------------
 
