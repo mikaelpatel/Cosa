@@ -31,6 +31,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
+#include "Cosa/IOBuffer.hh"
 #include "Cosa/Board.hh"
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -41,12 +42,7 @@ extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
 
 class UART : public IOStream::Device {
 private:
-  static const uint32_t CYCLES_MAX = 1000000;
-  static const uint8_t BUFFER_MAX = 64;
-  static const uint8_t BUFFER_MASK = BUFFER_MAX - 1;
-  volatile char m_buffer[BUFFER_MAX];
-  volatile uint8_t m_head;
-  volatile uint8_t m_tail;
+  IOBuffer* m_buffer;
   volatile uint8_t* const m_sfr;
   friend void USART_UDRE_vect(void);
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -101,14 +97,16 @@ private:
   }
 
 public:
+  // Default buffer size for standard UART0
+  static const uint8_t BUFFER_MAX = 64;
+
   /**
    * Construct serial port handler for given UART.
    * @param[in] port number.
    */
-  UART(uint8_t port = 0) : 
+  UART(IOBuffer* buffer, uint8_t port = 0) : 
     IOStream::Device(),
-    m_head(0),
-    m_tail(0),
+    m_buffer(buffer),
     m_sfr(Board::UART(port))
   {
   }

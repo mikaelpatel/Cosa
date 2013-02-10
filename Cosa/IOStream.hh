@@ -32,6 +32,8 @@
 
 #include "Cosa/Types.h"
 
+class IOBuffer;
+
 class IOStream {
 public:
   /**
@@ -39,6 +41,12 @@ public:
    */
   class Device {
   public:
+    /**
+     * Number of bytes available.
+     * @return bytes.
+     */
+    virtual int available();
+
     /**
      * Write character to device.
      * @param[in] c character to write.
@@ -75,7 +83,7 @@ public:
      * @return character or EOF(-1).
      */
     virtual int getchar();
-
+    
     /**
      * Read string terminated by new-line or until size into given
      * string buffer.
@@ -342,6 +350,12 @@ public:
   }
 
   /**
+   * Print contents of iobuffer to stream.
+   * @param[in] buffer input/output buffer.
+   */
+  void print(IOBuffer* buffer);
+
+  /**
    * Stream manipulator function prototype. To allow implementation
    * of base change and end of line.
    * @param[in] iostream.
@@ -464,6 +478,17 @@ public:
   IOStream& operator<<(const char* s) 
   { 
     print_P(s); 
+    return (*this); 
+  }
+
+  /**
+   * Print contents of iobuffer to stream.
+   * @param[in] buffer input/output buffer.
+   * @return iostream.
+   */
+  IOStream& operator<<(IOBuffer& buffer) 
+  { 
+    print(&buffer);
     return (*this); 
   }
 

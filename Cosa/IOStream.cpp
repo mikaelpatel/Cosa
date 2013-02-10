@@ -28,9 +28,16 @@
  */
 
 #include "Cosa/IOStream.hh"
+#include "Cosa/IOBuffer.hh"
 #include <stdarg.h>
 
 IOStream::Device IOStream::Device::null;
+
+int 
+IOStream::Device::available()
+{
+  return (0);
+}
 
 int 
 IOStream::Device::putchar(char c) 
@@ -140,6 +147,14 @@ IOStream::print(unsigned long int n, uint8_t base)
   if (base != 10) print_prefix(base);
   char buf[sizeof(long int) * CHARBITS + 1];
   print(ultoa(n, buf, base));
+}
+
+void 
+IOStream::print(IOBuffer* buffer)
+{
+  int c;
+  while ((c = buffer->getchar()) != -1)
+    print((char) c);
 }
 
 void 

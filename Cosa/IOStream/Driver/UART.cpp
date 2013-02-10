@@ -29,7 +29,9 @@
 #include "Cosa/Bits.h"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-UART uart;
+static char buffer[UART::BUFFER_MAX];
+static IOBuffer iobuffer(sizeof(buffer), buffer);
+UART uart(&iobuffer) __attribute__ ((weak));
 
 bool
 UART::begin(uint32_t baudrate, uint8_t format)
@@ -58,17 +60,14 @@ bool
 UART::end()
 {
   // Disable interrupts
-  *UCSRnB() = 0;
+  *UCSRnB() &= ~_BV(TXEN0);
   return (1);
 }
 
 int 
 UART::putchar(char c)
 {
-  uint8_t next = (m_head + 1) & BUFFER_MASK;
-  while (next == m_tail);
-  m_buffer[next] = c;
-  m_head = next;
+  while (m_buffer->putchar(c) == -1);
   *UCSRnB() |= _BV(UDRIE0);
   return (c);
 }
@@ -76,17 +75,14 @@ UART::putchar(char c)
 int 
 UART::flush()
 {
-  uint32_t cycles = CYCLES_MAX;
-  while (m_head != m_tail && cycles != 0) cycles--;
-  return (cycles == 0 ? -1 : 0);
+  return (m_buffer->flush());
 }
 
 ISR(USART_UDRE_vect)
 {
-  if (uart.m_head != uart.m_tail) {
-    uint8_t next = (uart.m_tail + 1) & UART::BUFFER_MASK;
-    uart.m_tail = next;
-    UDR0 = uart.m_buffer[next];
+  int c = uart.m_buffer->getchar();
+  if (c != -1) {
+    UDR0 = c;
   }
   else {
     bit_clear(UCSR0B, UDRIE0);
