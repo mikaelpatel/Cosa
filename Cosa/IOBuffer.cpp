@@ -35,7 +35,7 @@ IOBuffer::putchar(char c)
   if (next == m_tail) return (-1);
   m_buffer[next] = c;
   m_head = next;
-  return (c);
+  return (c & 0xff);
 }
 
 int 
@@ -45,7 +45,7 @@ IOBuffer::getchar()
   uint8_t next = (m_tail + 1) & BUFFER_MASK;
   int c = m_buffer[m_tail];
   m_tail = next;
-  return (c);
+  return (c & 0xff);
 }
 
 int 

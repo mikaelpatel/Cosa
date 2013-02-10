@@ -69,7 +69,7 @@ UART::putchar(char c)
 {
   while (m_buffer->putchar(c) == -1);
   *UCSRnB() |= _BV(UDRIE0);
-  return (c);
+  return (c & 0xff);
 }
 
 int 
