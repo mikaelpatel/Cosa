@@ -102,6 +102,7 @@ References
 7. Jeelabs, http://jeelabs.org/
 8. Quantum Leaps, http://www.state-machine.com/
 9. Concurrency.cc, http://concurrency.cc/
+10. Protothreads, http://dunkels.com/adam/pt/
 
 Naming
 ------
