@@ -53,23 +53,6 @@ platform, though following some of the design patterns in Cosa will
 help beginners build more complex small scale embedded systems with
 richer concurrency and low power consumption.  
 
-News
-----
-2013-01-23 Arduino Mega 2560 initial port.  
-2013-01-25 UTFT font support added.  
-2013-01-29 Proto-threads implemented. Draw/fill round rectangle added
-to Canvas.  
-2013-02-01 Adding doxygen generated documentation (doc.zip). 
-GLCD font support added. IR remote receiver initial example.  
-2013-02-05 Adding input/output operators to IOStream, Pins and
-SPI. More detailed benchmarks and comparison with Arduino added.  
-2013-02-07 IOStream driver for PCD8544 48x84 pixels matrix LCD
-controller with support for fonts and icons.  
-2013-02-10 TSOP4838 IR Receiver Modules support (LG remote
-example). Improving PCD8544 driver with OffScreen canvas.  
-2013-02-11 UART receiver, Device::getchar(), implemented. Adding
-generic circlic buffer for IOStream::Device.  
-
 Install
 -------
 
@@ -78,13 +61,13 @@ directory within arduino itself, i.e.,
 your-arduino-install-directory/hardware/arduino/cores/arduino. The
 examples should be moved to your Arduino sketchbook directory. 
 
-The programmers application interface documentation is available as
+The application programmers interface documentation is available as
 HTML in the file doc.zip. Uncompress this file and navigate your
 browser to the index file. The documentation contains a full
 hyperlinked description of all functions in Cosa together with UML
-graphs of the class hierarchy. 
+graphs of the class hierarchy, include dependencies, and much more.
 
-The provided documentation is generated with doxygen and may be
+The provided documentation is generated with doxygen and may also be
 generated for users source code if the Cosa documentation style is
 adapted. See the Doxyfile for configuration of doxygen. 
 
@@ -135,6 +118,24 @@ Atmega328P and Atmega2560 based Arduino boards (Uno, Mini, Nano,
 LilyPad, Mega, etc) are supported. Timers (1-n), EEPROM, UART
 (receiver) are not directly supported but planned. Arduino
 and AVR lib functions may be used together with Cosa.
+
+News
+----
+
+2013-01-23 Arduino Mega 2560 initial port.  
+2013-01-25 UTFT font support added.  
+2013-01-29 Proto-threads implemented. Draw/fill round rectangle added
+to Canvas.  
+2013-02-01 Adding doxygen generated documentation (doc.zip). 
+GLCD font support added. IR remote receiver initial example.  
+2013-02-05 Adding input/output operators to IOStream, Pins and
+SPI. More detailed benchmarks and comparison with Arduino added.  
+2013-02-07 IOStream driver for PCD8544 48x84 pixels matrix LCD
+controller with support for fonts and icons.  
+2013-02-10 TSOP4838 IR Receiver Modules support (LG remote
+example). Improving PCD8544 driver with OffScreen canvas.  
+2013-02-11 UART receiver, Device::getchar(), implemented. Adding
+generic circlic buffer for IOStream::Device.  
 
 
 
