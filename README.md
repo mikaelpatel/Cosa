@@ -65,7 +65,10 @@ GLCD font support added. IR remote receiver initial example.
 SPI. More detailed benchmarks and comparison with Arduino added.  
 2013-02-07 IOStream driver for PCD8544 48x84 pixels matrix LCD
 controller with support for fonts and icons.  
-2013-02-10 TSOP4838 IR Receiver Modules support (LG remote example).  
+2013-02-10 TSOP4838 IR Receiver Modules support (LG remote
+example). Improving PCD8544 driver with OffScreen canvas.  
+2013-02-11 UART receiver, Device::getchar(), implemented. Adding
+generic circlic buffer for IOStream::Device.  
 
 Install
 -------
