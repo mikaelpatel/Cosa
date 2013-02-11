@@ -103,6 +103,8 @@ References
 8. Quantum Leaps, http://www.state-machine.com/
 9. Concurrency.cc, http://concurrency.cc/
 10. Protothreads, http://dunkels.com/adam/pt/
+11. Arduino ATtiny, http://hlt.media.mit.edu/?p=1695
+12. Arduino Low Power, http://gammon.com.au/power
 
 Naming
 ------
