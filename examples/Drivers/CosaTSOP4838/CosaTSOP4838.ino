@@ -24,6 +24,10 @@
  * Cosa IR receiver for LG remote using a TSOP4838 for decoding
  * IR transmission. Uses the Watchdog to monitor the decoding.
  *
+ * @section Circuit
+ * Connect data output from IR receiver circuit to pin D2 (EXT0).
+ * Don't forget VCC and GND for the IR receiver.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

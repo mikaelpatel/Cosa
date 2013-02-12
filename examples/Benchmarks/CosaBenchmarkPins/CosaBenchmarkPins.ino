@@ -23,6 +23,10 @@
  * @section Description
  * Cosa Pins Benchmark; number of micro-seconds for pin operations.
  *
+ * @section Circuit
+ * This example requires no special circuit. Uses serial output,
+ * and pins D7-D9 and A0.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

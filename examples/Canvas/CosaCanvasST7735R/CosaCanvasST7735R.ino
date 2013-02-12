@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,9 +24,16 @@
  * Cosa demonstration of device driver for ST7735R, 262K Color
  * Single-Chip TFT Controller. 
  *
+ * @section Circuit
+ * Connect Arduino to ST7735R Module (Arduino ==> HY-1.8 SPI):
+ * GND ==> GND(1), VCC(5V) ==> VCC(2), RST ==> RESET(6),
+ * D9 ==> A0(7), MOSI/D11 ==> SDA(8), SCK/D13 ==> SCK(9),
+ * SS/D10 ==> CS(10), VCC(5V) ==> LED+(15), GND ==> LED-(16)    
+ * 
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/IOStream.hh"
@@ -78,14 +85,14 @@ void loop()
   uint32_t start, ms;
 
   // Test#1: Fill screen
-  start = micros();
+  start = RTC::micros();
   tft.set_canvas_color(Canvas::WHITE);
   tft.fill_screen();
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   INFO("test#1:fill screen: %ul ms", ms);
 
   // Test#2: Use the display as an output stream
-  start = micros();
+  start = RTC::micros();
   textbox.set_text_color(Canvas::BLUE);
   textbox.set_text_scale(1);
   textbox.set_text_port(2, 2, tft.WIDTH, tft.HEIGHT);
@@ -102,7 +109,7 @@ void loop()
   textbox.set_text_scale(2);
   console.print_P(PSTR("  Hello\n  World"));
   console.println();
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   textbox.set_text_color(Canvas::BLACK);
   textbox.set_text_scale(1);
   console.printf_P(PSTR("test#2:output stream: %ul ms\n"), ms);
@@ -110,7 +117,7 @@ void loop()
   SLEEP(2);
 
   // Test#3: Scroll text port
-  start = micros();
+  start = RTC::micros();
   tft.set_canvas_color(tft.shade(Canvas::WHITE, 50));
   tft.fill_screen();
   tft.set_canvas_color(Canvas::WHITE);
@@ -118,7 +125,7 @@ void loop()
   textbox.set_text_port(5, 5, tft.WIDTH-10, tft.HEIGHT-10);
   console.print('\f');
   console.print(&tft, 200, 16, tft.get_orientation() == Canvas::PORTRAIT ? 4 : 6);
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   console.printf_P(PSTR("%ul ms"), ms);
   INFO("test#3:scroll text mode: %ul ms", ms);
   SLEEP(2);
@@ -126,7 +133,7 @@ void loop()
   // Test#4: Grid with draw pixel
   tft.fill_screen();
   tft.set_pen_color(Canvas::BLACK);
-  start = micros();
+  start = RTC::micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 2) {
     for (uint8_t y = 0; y < tft.HEIGHT; y += 2) {
       tft.draw_pixel(x, y);
@@ -134,31 +141,31 @@ void loop()
   }
   tft.set_pen_color(Canvas::RED);
   tft.fill_rect(20, 20, 20, 20);
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   INFO("test#4:draw pixel grid: %ul ms", ms);
   SLEEP(2);
 
   // Test#5: Grid with draw rectangle
   tft.set_pen_color(Canvas::BLACK);
-  start = micros();
+  start = RTC::micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
     for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
       tft.draw_rect(x, y, 20, 20);
     }
   }
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   INFO("test#5:draw rect grid: %ul ms", ms);
   SLEEP(2);
   
   // Test#6: Fill some of the rectangles
   tft.set_pen_color(Canvas::WHITE);
-  start = micros();
+  start = RTC::micros();
   for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
     for (uint8_t y = x; y < tft.HEIGHT; y += 40) {
       tft.fill_rect(x + 1, y + 1, 19, 19);
     }
   }
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   INFO("test#6:fill rect grid: %ul ms", ms);
   SLEEP(2);
 
@@ -166,7 +173,7 @@ void loop()
   tft.fill_screen();
   tft.set_text_color(Canvas::WHITE);
   tft.set_text_scale(1);
-  start = micros();
+  start = RTC::micros();
   uint16_t color = Canvas::BLUE;
   for (uint8_t x = 0; x < tft.WIDTH; x += 30) {
     for (uint8_t y = 0; y < tft.HEIGHT; y += 30) {
@@ -179,14 +186,14 @@ void loop()
     }
     color <<= 3;
   }
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   INFO("test#7:draw circle grid: %ul ms", ms);
   SLEEP(2);
 
   // Test#8: Draw lines
   tft.set_canvas_color(tft.shade(Canvas::WHITE, 20));
   tft.fill_screen();
-  start = micros();
+  start = RTC::micros();
   tft.set_pen_color(Canvas::RED);
   for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
     tft.draw_line(0, 0, x, tft.HEIGHT - 1);
@@ -199,12 +206,12 @@ void loop()
   for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
     tft.draw_line(tft.WIDTH - 1, 0, x, tft.HEIGHT - 1);
   }
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   INFO("test#8:draw lines: %ul ms", ms);
   SLEEP(2);
 
   // Test#9: Draw more lines
-  start = micros();
+  start = RTC::micros();
   tft.set_pen_color(Canvas::BLACK);
   tft.fill_screen();
   tft.set_pen_color(Canvas::YELLOW);
@@ -217,12 +224,12 @@ void loop()
   for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
     tft.draw_line(tft.WIDTH - 1, tft.HEIGHT - 1, 0, y);
   }
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   INFO("test#9:draw more lines: %ul ms", ms);
   SLEEP(2);
 
   // Test#10: Display polygons 
-  start = micros();
+  start = RTC::micros();
   tft.set_canvas_color(Canvas::WHITE);
   tft.fill_screen();
   static const int8_t polygon[] PROGMEM = { 
@@ -239,12 +246,12 @@ void loop()
     tft.set_cursor(10 + x, 50 - x);
     tft.draw_poly_P(polygon);
   }
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   INFO("test#10:polygon: %ul ms", ms);
   SLEEP(2);
 
   // Test#11: Display stroke
-  start = micros();
+  start = RTC::micros();
   tft.set_canvas_color(Canvas::WHITE);
   tft.fill_screen();
   static const int8_t stroke[] PROGMEM = { 
@@ -259,7 +266,7 @@ void loop()
     tft.set_cursor(x, 120);
     tft.draw_stroke_P(stroke);
   }
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   INFO("test#11:stroke: %ul ms", ms);
   SLEEP(2);
 
@@ -273,9 +280,9 @@ void loop()
   tft.draw_icon((tft.WIDTH-64)/2, (tft.HEIGHT-64)/2, arduino_icon_64x64);
   SLEEP(2);
   tft.fill_screen();
-  start = micros();
+  start = RTC::micros();
   tft.draw_icon((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, arduino_icon_96x32);
-  ms = (micros() - start) / 1000L;
+  ms = (RTC::micros() - start) / 1000L;
   INFO("test#12:draw arduino icon: %ul ms", ms);
   SLEEP(2);
 

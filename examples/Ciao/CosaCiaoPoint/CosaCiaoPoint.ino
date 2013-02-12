@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,9 @@
  * @section Description
  * Example program for the Ciao streaming format; descriptor and
  * streaming of a data type.
+ *
+ * @section Circuit
+ * This example requires no special circuit. Uses serial output.
  *
  * This file is part of the Arduino Che Cosa project.
  */

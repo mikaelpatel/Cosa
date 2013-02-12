@@ -24,6 +24,14 @@
  * Demonstration of the PCD8544 device driver with mapping to
  * IOStream::Device, and usage of off-screen canvas.
  *
+ * @section Circuit
+ * Connect Arduino to PCD8544 (Arduino => PCD8544):
+ * D6 ==> SDIN, D7 ==> SCLK, D8 ==> DC, D9 ==> SCE.
+ * 
+ * The PCD8544 should be connect using 3.3 V signals and VCC. 
+ * Back-light should be max 3.3 V. Reduce voltage with 100-500 ohm 
+ * resistor to ground.
+ * 
  * This file is part of the Arduino Che Cosa project.
  */
 

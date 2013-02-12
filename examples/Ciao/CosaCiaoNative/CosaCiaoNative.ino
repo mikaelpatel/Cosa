@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,9 @@
  * @section Description
  * Example program for the Ciao streaming format; native data types.
  *
+ * @section Circuit
+ * This example requires no special circuit. Uses serial output.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,7 +33,6 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-
 #include "Cosa/Memory.h"
 
 #include <ctype.h>

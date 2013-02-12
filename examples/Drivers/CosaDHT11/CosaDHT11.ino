@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,15 +23,20 @@
  * @section Description
  * Cosa demonstration of the DHT11 device driver.
  *
+ * @section Circuit
+ * Connect Arduino to DHT11 module#1 (indoors), D7 => DHT data pin, 
+ * DHT11 module#2 (outdoors), D8 => DHT data pin. Connect power (VCC) 
+ * and ground (GND).   
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Pins.hh"
+#include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/DHT11.hh"
-#include "Cosa/Memory.h"
 
 // Connect devices to pins
 DHT11 indoors(Board::D7);

@@ -11,9 +11,9 @@ CosaCanvasClock:		11904
 CosaCanvasFont:			 9402
 CosaCanvasHistogram:		10510
 CosaCanvasPins:			11818
-CosaCanvasScript:		15886
+CosaCanvasScript:		16012
 CosaCanvasShades:		 9392
-CosaCanvasST7735R:		19572
+CosaCanvasST7735R:		19698
 CosaCanvasSweep:		10070
 -------------------------------------
 CosaCiaoNative:			 6578

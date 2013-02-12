@@ -23,6 +23,9 @@
  * @section Description
  * Cosa RTC (Real-Time Clock) Benchmark. Validate and measurements.
  *
+ * @section Circuit
+ * This example requires no special circuit. Uses serial output.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

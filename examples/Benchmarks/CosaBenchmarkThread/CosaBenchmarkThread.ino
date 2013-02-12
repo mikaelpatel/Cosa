@@ -24,6 +24,9 @@
  * Cosa Thread Benchmark; number of micro-seconds for a thread
  * dispatch and enqueuing in watchdog timer queue.
  *
+ * @section Circuit
+ * This example requires no special circuit. Uses serial output.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

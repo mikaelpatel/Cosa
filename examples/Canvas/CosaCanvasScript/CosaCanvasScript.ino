@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,9 +23,16 @@
  * @section Description
  * Cosa Canvas script demonstration for ST7735R device driver.
  *
+ * @section Circuit
+ * Connect Arduino to ST7735R Module (Arduino ==> HY-1.8 SPI):
+ * GND ==> GND(1), VCC(5V) ==> VCC(2), RST ==> RESET(6),
+ * D9 ==> A0(7), MOSI/D11 ==> SDA(8), SCK/D13 ==> SCK(9),
+ * SS/D10 ==> CS(10), VCC(5V) ==> LED+(15), GND ==> LED-(16)    
+ * 
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/RTC.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
@@ -175,29 +182,32 @@ void setup()
   Watchdog::begin();
 
   // Benchmark the display start
-  uint32_t start, ms;
-  start = micros();
+  uint32_t start, stop, ms;
+  start = RTC::micros();
   tft.begin();
   tft.fill_screen();
-  ms = (micros() - start) / 1000L;
+  stop = RTC::micros();
+  ms = (stop - start) / 1000L;
   INFO("begin: %ul ms", ms);
 }
 
 void loop()
 {
-  uint32_t start, ms;
+  uint32_t start, stop, ms;
 
   // Run init script to display arduino icon and banner
-  start = micros();
+  start = RTC::micros();
   tft.run(0, tab, membersof(tab));
-  ms = (micros() - start) / 1000L;
+  stop = RTC::micros();
+  ms = (stop - start) / 1000L;
   INFO("init script run: %ul ms", ms);
   SLEEP(2);
 
   // Run script/sub-script and measure execution time
-  start = micros();
+  start = RTC::micros();
   tft.run(2, tab, membersof(tab));
-  ms = (micros() - start) / 1000L;
+  stop = RTC::micros();
+  ms = (stop - start) / 1000L;
   INFO("scipt run: %ul ms", ms);
   SLEEP(2);
 }

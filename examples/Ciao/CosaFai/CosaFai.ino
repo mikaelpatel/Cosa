@@ -23,6 +23,10 @@
  * @section Description
  * Example program for the Cosa Fai streaming format.
  *
+ * @section Circuit
+ * This example requires no special circuit. Uses serial output,
+ * samples digital pin D2 and analog pin A0.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -33,7 +37,6 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
-
 #include <ctype.h>
 
 // Fai::Ciao output stream over the UART

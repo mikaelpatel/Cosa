@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,6 +24,14 @@
  * Cosa demonstration of Canvas device driver for ST7735R, 262K Color 
  * Single-Chip TFT Controller, and monitoring of Arduino pins.
  *
+ * @section Circuit
+ * Reads digital pins(D0..D7) and analog pins(A0..A7).
+ *
+ * Connect Arduino to ST7735R Module (Arduino ==> HY-1.8 SPI):
+ * GND ==> GND(1), VCC(5V) ==> VCC(2), RST ==> RESET(6),
+ * D9 ==> A0(7), MOSI/D11 ==> SDA(8), SCK/D13 ==> SCK(9),
+ * SS/D10 ==> CS(10), VCC(5V) ==> LED+(15), GND ==> LED-(16)    
+ * 
  * This file is part of the Arduino Che Cosa project.
  */
 

@@ -24,6 +24,9 @@
  * Cosa FSM Benchmark; number of micro-seconds for a send/dispatch 
  * cycle.
  *
+ * @section Circuit
+ * This example requires no special circuit. Uses serial output.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
