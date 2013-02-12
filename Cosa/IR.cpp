@@ -33,9 +33,11 @@
 void 
 IR::Receiver::on_interrupt() 
 { 
+  // Check if the buffer is full
+  if (m_ix == m_max) return;
+
   // Check if the time should be set; i.e. queue for timeout events
   if (m_ix == 0) Watchdog::attach(this, TIMEOUT);
-  if (m_ix == m_max) return;
 
   // Measure the sample period
   uint32_t stop = RTC::micros();
@@ -44,6 +46,8 @@ IR::Receiver::on_interrupt()
   
   // Check if samples should be collected
   if (m_sample != 0) m_sample[m_ix] = us;
+
+  // Fix: Check for repeat code
 
   // And generate binary code. Skip two first and two last samples
   if (m_ix > 1 && m_ix < m_max - 2)
@@ -57,15 +61,20 @@ IR::Receiver::on_interrupt()
   detach();
 
   // Push an event with the received code
-  Event::push(Event::READ_COMPLETED_TYPE, 0, m_code);
+  Event::push(Event::READ_COMPLETED_TYPE, (InterruptPin*) this, m_code);
 }
 
 void 
 IR::Receiver::reset()
 {
+  // Remove from any queue
   detach();
+
+  // Initial state
   m_ix = 0;
   m_code = 0;
+
+  // Reset start time and enable the interrupt handler
   m_start = RTC::micros();
   enable();
 }
@@ -79,7 +88,7 @@ IR::Receiver::print(IOStream& out)
   }
 }
 
-char 
+int
 IR::Receiver::lookup(uint16_t code)
 {
   if (m_keymap == 0) return (-1);

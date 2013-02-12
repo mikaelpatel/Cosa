@@ -38,6 +38,10 @@ public:
 
   class Receiver : private InterruptPin, private Link {
   public:
+    /**
+     * Mapping structure from code to key. Data structure 
+     * for storage in program memory.
+     */
     struct keymap_t {
       uint16_t code;
       char key;
@@ -60,21 +64,24 @@ public:
      * @override
      * Interrupt pin handler: Measure time periods of pulses in sequence 
      * from IR receiver circuit. Push an event when a full sequence has
-     * been recieved. 
+     * been recieved; READ_COMPLETED(this, code) where the code is the
+     * recieved binary code or key if a key map was provided.
      */
     virtual void on_interrupt();
 
   public:
     /**
-     * Construct an IRreceiver connected to the given interrupt pin,
+     * Construct an IR::Receiver connected to the given interrupt pin,
      * capture given max number of samples, and decode to binary
-     * with the given threshold. 
-     * @param[in] pin interrupt pin (EXTn).
+     * with the given threshold. A key map may be provided; pointer 
+     * to vector in program memory and size of vector. To collect
+     * the time period samples provide a storage vector.
+     * @param[in] pin interrupt pin (Board::EXTn).
      * @param[in] max number of samples.
      * @param[in] threshold level for mapping to binary.
      * @param[in] keymap mapping table from code to key.
      * @param[in] keys number of members in keymap.
-     * @param[in] sample vector for samples.
+     * @param[in] sample vector for samples[max].
      */
     Receiver(Board::InterruptPin pin, uint8_t max, uint32_t threshold,
 	     keymap_P keymap = 0, uint8_t keys = 0,
@@ -92,7 +99,7 @@ public:
     {}
 
     /**
-     * Reset the IR receive for the next code sequence.
+     * Reset the receiver for the next code sequence.
      */
     void reset();
 
@@ -107,7 +114,7 @@ public:
      * @param[in] code to lookup in key map.
      * @return key or EOF(-1).
      */
-    char lookup(uint16_t code);
+    int lookup(uint16_t code);
   };
 };
 
