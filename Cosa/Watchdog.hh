@@ -103,7 +103,7 @@ public:
    */
   static uint16_t ms_per_tick() 
   { 
-    return (I_CPU << s_prescale); 
+    return (16 << s_prescale); 
   }
 
   /**
