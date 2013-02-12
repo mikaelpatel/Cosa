@@ -5,7 +5,8 @@ event-driven programming paradigm with simple finite state
 machines and proto-threads. It contains a rich set of classes to
 support rapid prototyping of Internet-of-Things devices. Cosa supports
 the following AVR/Atmega328P internal hardware modules; all pin modes,
-interrupt pins, PWM, Watchdog, Timer-0, UART (transmit), SPI and TWI.
+Digital, Analog and Interrupt Pins, Analog Comparator, PWM, Watchdog,
+Timer0 (RTC), UART, SPI and TWI. 
 
 Cosa also contains a data streaming format (Ciao) for encoding of
 C/C++ language data types such as strings, integer and floating
@@ -31,7 +32,7 @@ objects may become inconsistent.
 
 To improve debugging and testing there is trace/syslog style support. 
 The IOStream class allows output to both serial communication (UART) 
-and small TFT displays (such as the SR7735R). The drawing Canvas class
+and small TFT displays (such as the ST7735R). The drawing Canvas class
 supports basic drawing operation and scripting to reduce program
 memory footprint. The Canvas class also supports drawing of icons and
 multiple fonts. 
@@ -54,6 +55,9 @@ richer concurrency and low power consumption.
 7. Jeelabs, http://jeelabs.org/<br>
 8. Quantum Leaps, http://www.state-machine.com/<br>
 9. Concurrency.cc, http://concurrency.cc/<br>
+10. Protothreads, http://dunkels.com/adam/pt/<br>
+11. Arduino ATtiny, http://hlt.media.mit.edu/?p=1695<br>
+12. Arduino Low Power, http://gammon.com.au/power<br>
 
 @section Naming
 
@@ -65,9 +69,9 @@ richer concurrency and low power consumption.
 @section Note
 
 Atmega328P and Atmega2560 based Arduino boards (Uno, Mini, Nano,
-LilyPad, Mega, etc) are supported. Timers (1-n), EEPROM, UART
-(receiver) are not directly supported but planned. Arduino
-and AVR lib functions may be used together with Cosa.
+LilyPad, Mega, etc) are supported. Timers (1-n) are not directly
+supported but planned. Arduino and AVR lib functions may be used
+together with Cosa. 
 
 @section License
 Copyright (C) 2012-2013, Mikael Patel

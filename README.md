@@ -5,8 +5,9 @@ Cosa is an object-oriented platform for Arduino that supports an
 event-driven programming paradigm with simple finite state
 machines. It contains a rich set of classes to support rapid
 prototyping of Internet-of-Things devices. Cosa supports the following
-AVR/Atmega328P internal hardware modules; all pin modes, interrupt
-pins, PWM, Watchdog, Timer-0, UART (transmit), SPI and TWI.
+AVR/Atmega328P internal hardware modules; all pin modes, Digital,
+Analog and Interrupt Pins, Analog Comparator, PWM, Watchdog, Timer0
+(RTC), UART, SPI and TWI.  
 
 Though object-oriented with optional operator overloading syntax
 Cosa is between 2-10X faster than Arduino with regard to digital pin
@@ -41,7 +42,7 @@ objects may become inconsistent.
 
 To improve debugging and testing there is trace/syslog style support. 
 The IOStream class allows output to both serial communication (UART) 
-and small TFT displays (such as the SR7735R). The drawing Canvas class
+and small TFT displays (such as the ST7735R). The drawing Canvas class
 supports basic drawing operation and scripting to reduce program
 memory footprint. The Canvas class also supports drawing of icons and
 multiple fonts (GLCD and UTFT). 
@@ -118,9 +119,9 @@ Note
 ----
 
 Atmega328P and Atmega2560 based Arduino boards (Uno, Mini, Nano,
-LilyPad, Mega, etc) are supported. Timers (1-n), EEPROM, UART
-(receiver) are not directly supported but planned. Arduino
-and AVR lib functions may be used together with Cosa.
+LilyPad, Mega, etc) are supported. Timers (1-n) are not directly
+supported but planned. Arduino and AVR lib functions may be used
+together with Cosa. 
 
 News
 ----
