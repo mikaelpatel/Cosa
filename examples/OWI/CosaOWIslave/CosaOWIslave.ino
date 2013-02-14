@@ -33,7 +33,7 @@
 #include "Cosa/Memory.h"
 
 // The slave device rom identity (crc is automatically generated)
-uint8_t rom[OWI::ROM_MAX] = {
+uint8_t rom[OWI::ROM_MAX] EEMEM = {
   0xC0, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x00, 0xb1
 };
 

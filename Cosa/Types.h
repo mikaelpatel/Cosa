@@ -30,6 +30,7 @@
 #define __COSA_TYPES_H__
 
 #include <avr/io.h>
+#include <avr/eeprom.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 #include <avr/sfr_defs.h>

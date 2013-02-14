@@ -65,6 +65,7 @@ public:
       LAST = ROMBITS
     };
     uint8_t m_rom[ROM_MAX];
+    const uint8_t* ROM;
     OWI* m_pin;
 
     /**
@@ -90,6 +91,19 @@ public:
     uint8_t* get_rom() 
     {
       return (m_rom);
+    }
+
+    /**
+     * Update the rom identity (in EEPROM). Return true(1) if 
+     * successful otherwise false(0). Typically used to save
+     * configuration after connect().
+     * return bool.
+     */
+    bool update_rom()
+    {
+      if (ROM == 0) return (0);
+      eeprom_write_block(ROM, m_rom, sizeof(m_rom));
+      return (1);
     }
 
     /**
