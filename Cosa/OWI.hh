@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -78,7 +78,8 @@ public:
 
   public:
     /**
-     * Construct one wire device driver.
+     * Construct one wire device driver. Use one wire bus on given pin,
+     * and given rom identity in EEPROM (or NULL).
      * @param[in] pin one wire bus.
      * @param[in] rom identity.
      */
