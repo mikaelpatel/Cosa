@@ -1,5 +1,5 @@
 /**
- * @file CosaTemp.ino
+ * @file CosaTemperature.ino
  * @version 1.0
  *
  * @section License
@@ -70,15 +70,18 @@ void setup()
   trace.begin(&lcd);
   trace << PSTR("\fCosaPCD8544: started\n");
   TRACE(sensor.connect(0));
-  SLEEP(4);
+  SLEEP(3);
+
+  // Pipeline the conversion requests from the sensor
+  sensor.convert_request();
+  SLEEP(1);
 }
 
 void loop()
 {
   // Request a new sample from the sensor and read temperature
-  sensor.convert_request();
-  SLEEP(1);
   sensor.read_temperature();
+  sensor.convert_request();
 
   // Get temperature and convert from fixed point (could use float)
   FixedPoint temp(sensor.get_temperature(), 4);
