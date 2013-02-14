@@ -72,7 +72,7 @@ DHT11::read_data()
   m_pin.set();
   DELAY(40);
   m_pin.set_mode(IOPin::INPUT_MODE);
-  
+
   // Receive bits from the device and calculate check sum
   uint8_t chksum = 0;
   m_latest = 1;
@@ -87,6 +87,7 @@ DHT11::read_data()
       if (i < DATA_LAST) chksum += m_data[i];
     }
   }
+
   // Return check sum validation
   return (chksum == m_data[DATA_LAST]);
 }

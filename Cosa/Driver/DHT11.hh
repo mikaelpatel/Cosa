@@ -95,6 +95,7 @@ public:
     if (!read_data()) return (0);
     temperature = get_temperature();
     humidity = get_humidity();
+    return (1);
   }
 
   /**
