@@ -31,6 +31,7 @@
 #ifndef __COSA_CANVAS_OFFSCREEN_HH__
 #define __COSA_CANVAS_OFFSCREEN_HH__
 
+#include "Cosa/Types.h"
 #include "Cosa/Canvas.hh"
 
 class OffScreen : public Canvas {
@@ -75,10 +76,14 @@ public:
 
   /**
    * @override
-   * Start interaction with off-screen canvas. Clear buffer.
+   * Start interaction with off-screen canvas. Clears buffer.
    * @return true(1) if successful otherwise false(0)
    */
-  virtual bool begin();
+  virtual bool begin()
+  {
+    memset(m_bitmap, 0, m_count);
+    return (1);
+  }
 
   /**
    * @override
@@ -90,7 +95,7 @@ public:
   {
     uint8_t* bp = &m_bitmap[((y >> 3) * WIDTH) + x];
     uint8_t pos = (y & 0x07); 
-    if (get_pen_color() == 0)
+    if (get_pen_color() == Canvas::BLACK)
       *bp |= (1 << pos);
     else
       *bp &= ~(1 << pos);
@@ -101,7 +106,10 @@ public:
    * Stop sequence of interaction with off-screen device.
    * @return true(1) if successful otherwise false(0)
    */
-  virtual bool end();
+  virtual bool end()
+  {
+    return (1);
+  }
 };
 
 #endif

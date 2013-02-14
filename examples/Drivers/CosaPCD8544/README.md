@@ -14,4 +14,5 @@ The default pins are used (Arduino => PCD8544):
     D7 ==> SCLK  
     D8 ==> DC  
     D9 ==> SCE  
+    RST ==> RST  
 

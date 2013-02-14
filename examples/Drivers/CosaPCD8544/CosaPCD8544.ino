@@ -27,6 +27,7 @@
  * @section Circuit
  * Connect Arduino to PCD8544 (Arduino => PCD8544):
  * D6 ==> SDIN, D7 ==> SCLK, D8 ==> DC, D9 ==> SCE.
+ * RST ==> RST.
  * 
  * The PCD8544 should be connect using 3.3 V signals and VCC. 
  * Back-light should be max 3.3 V. Reduce voltage with 100-500 ohm 
@@ -110,11 +111,14 @@ void setup()
   offscreen.begin();
   offscreen.draw_rect(0, 0, 10, 10);
   offscreen.fill_rect(2, 2, 7, 7);
+  offscreen.draw_rect(20, 20, 10, 10);
   offscreen.draw_circle(20, 20, 10);
   offscreen.fill_circle(20, 20, 8);
   offscreen.draw_roundrect(20, 20, 40, 20, 10);
   offscreen.fill_roundrect(22, 22, 36, 16, 7);
-  offscreen.set_cursor(15, 0);
+  offscreen.draw_rect(20, 20, 40, 20);
+  offscreen.draw_rect(0, 0, offscreen.WIDTH - 1, offscreen.HEIGHT - 1);
+  offscreen.set_cursor(15, 2);
   offscreen.draw_string_P(PSTR("Hello World"));
 
   // Draw the off-screen canvas on the LCD
