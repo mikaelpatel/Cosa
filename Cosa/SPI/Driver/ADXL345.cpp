@@ -27,6 +27,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+
+// Fix: ATtinyXX implementation
+
+#else
+
 #include "Cosa/SPI/Driver/ADXL345.hh"
 
 ADXL345::ADXL345(Board::DigitalPin ss) :
@@ -110,4 +118,4 @@ ADXL345::sample_t::println(IOStream& stream)
   stream.println();
 }
 
-
+#endif

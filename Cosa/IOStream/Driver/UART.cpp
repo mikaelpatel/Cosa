@@ -26,6 +26,43 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#if defined(__AVR_ATtiny25__) \
+ || defined(__AVR_ATtiny45__) \
+ || defined(__AVR_ATtiny85__)
+
+#include "Cosa/IOStream/Driver/UART.hh"
+
+bool
+UART::begin(uint32_t baudrate, uint8_t format)
+{
+  m_period = 1000000L / baudrate;
+  m_format = format;
+  return (1);
+}
+
+int 
+UART::putchar(char c)
+{
+  int res = (c & 0xff);
+  uint8_t bits = m_format & DATA_MASK;
+  synchronized {
+    m_pin.write(0);
+    DELAY(m_period);
+    for (uint8_t i = 0; i < bits; i++) {
+      m_pin.write(c & 1);
+      DELAY(m_period);
+      c >>= 1;
+    }
+    m_pin.write(1);
+  }
+  DELAY(m_period * 32);
+  return (res);
+}
+
+UART uart(Board::D0) __attribute__ ((weak));
+
+#else
+
 #include "Cosa/Bits.h"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include <avr/sleep.h>
@@ -103,6 +140,11 @@ ISR(USART_RX_vect)
   uart.m_ibuf->putchar(UDR0);
 }
 
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#if defined(__AVR_ATmega1280__) \
+ || defined(__AVR_ATmega2560__)
+
+// Fix: Add Arduino Mega UART interrupt handlers
+
+#endif
 #endif
 

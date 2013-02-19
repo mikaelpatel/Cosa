@@ -41,7 +41,8 @@
 #include "Cosa/Watchdog.hh"
 
 // Thresholds for wire sampling
-static const uint8_t COUNT_MIN = 40;
+// static const uint8_t COUNT_MIN = 40;
+static const uint8_t COUNT_MIN = 30;
 static const uint8_t COUNT_MAX = 255;
 
 // Index of last member in data buffer

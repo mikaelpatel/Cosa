@@ -63,6 +63,10 @@ Pin::println(IOStream& stream)
   stream.println();
 }
 
+#if defined(__AVR_ATmega8__)			\
+ || defined(__AVR_ATmega168__)			\
+ || defined(__AVR_ATmega328P__)
+
 InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
   InputPin((Board::DigitalPin) pin)
 {
@@ -71,13 +75,22 @@ InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
       *PORT() |= m_mask; 
     }
   }
-#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
   m_ix = pin - Board::EXT0;
   ext[m_ix] = this;
   uint8_t ix = (m_ix << 1);
   EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
-#elif defined(__AVR_ATmega1280__) || \
-  defined(__AVR_ATmega2560__)
+}
+
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+
+InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
+  InputPin((Board::DigitalPin) pin)
+{
+  if (mode & PULLUP_MODE) {
+    synchronized {
+      *PORT() |= m_mask; 
+    }
+  }
   if (pin <= Board::EXT3) {
     m_ix = Board::EXT0 - pin;
     uint8_t ix = (m_ix << 1);
@@ -90,8 +103,26 @@ InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
     m_ix += 4;
   }
   ext[m_ix] = this;
-#endif
 }
+
+#elif defined(__AVR_ATtiny25__)			\
+   || defined(__AVR_ATtiny45__)			\
+   || defined(__AVR_ATtiny85__)
+
+InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
+  InputPin((Board::DigitalPin) pin)
+{
+  if (mode & PULLUP_MODE) {
+    synchronized {
+      *PORT() |= m_mask; 
+    }
+  }
+  m_ix = 0;
+  ext[m_ix] = this;
+  MCUCR = (MCUCR & ~(0b11)) | (mode);
+}
+
+#endif
 
 InterruptPin* InterruptPin::ext[Board::EXT_MAX] = { 0 };
 
@@ -152,7 +183,9 @@ OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
   }
 }
 
-#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
+#if defined(__AVR_ATmega8__)			\
+ || defined(__AVR_ATmega168__)			\
+ || defined(__AVR_ATmega328P__)
 
 uint8_t
 PWMPin::get_duty()
@@ -281,6 +314,39 @@ PWMPin::set(uint8_t duty)
     OutputPin::set(duty);
   }
 }
+
+#elif defined(__AVR_ATtiny25__)		\
+   || defined(__AVR_ATtiny45__)		\
+   || defined(__AVR_ATtiny85__)
+
+uint8_t
+PWMPin::get_duty()
+{
+  switch (m_pin) {
+  case Board::PWM0: return (OCR0A);
+  case Board::PWM1: return (OCR0B);
+  default:
+    return (is_set());
+  }
+}
+
+void 
+PWMPin::set(uint8_t duty)
+{
+  switch (m_pin) {
+  case Board::PWM0:
+    bit_set(TCCR0A, COM0A1);
+    OCR0A = duty;
+    return;
+  case Board::PWM1:
+    bit_set(TCCR0B, COM0B1);
+    OCR0B = duty;
+    return;
+  default:
+    OutputPin::set(duty);
+  }
+}
+
 #endif
 
 void 

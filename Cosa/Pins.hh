@@ -258,7 +258,7 @@ public:
 
   /**
    * Construct abstract input pin given Arduino pin number.
-   * @param[in] pin number.
+   * @param[in] pin number (digital pin).
    * @param[in] mode pin mode (default NORMAL_MODE).
    */
   InputPin(Board::DigitalPin pin, Mode mode = NORMAL_MODE) :
@@ -270,6 +270,12 @@ public:
       }
     }
   }
+
+  /**
+   * Construct abstract input pin given Arduino pin number.
+   * @param[in] pin number (analog pin).
+   * @param[in] mode pin mode (default NORMAL_MODE).
+   */
   InputPin(Board::AnalogPin pin, Mode mode = NORMAL_MODE) :
     Pin((uint8_t) pin)
   {
@@ -324,18 +330,44 @@ public:
   /**
    * Enable interrupt pin change detection and interrupt handler.
    */
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+
+  void enable() 
+  { 
+    bit_set(GIMSK, INT0); 
+  }
+
+#else
+
   void enable() 
   { 
     bit_set(EIMSK, m_ix); 
   }
 
+#endif
+
   /**
    * Disable interrupt pin change detection.
    */
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+
+  void disable() 
+  { 
+    bit_clear(GIMSK, INT0);
+  }
+
+#else
+
   void disable() 
   { 
     bit_clear(EIMSK, m_ix); 
   }
+
+#endif
 
   /**
    * Default interrupt service on pin change interrupt.
@@ -364,6 +396,12 @@ public:
     }
     set(initial);
   }
+
+  /**
+   * Construct an abstract output pin for given Arduino pin number.
+   * @param[in] pin number.
+   * @param[in] initial value.
+   */
   OutputPin(Board::AnalogPin pin, uint8_t initial = 0) : 
     Pin((uint8_t) pin) 
   { 
@@ -556,6 +594,16 @@ public:
   void write(uint8_t duty) 
   { 
     set(duty); 
+  }
+
+  /**
+   * Set duty cycle for pwm output pin.
+   * @param[in] duty cycle (0..255)
+   */
+  PWMPin& operator<<(uint8_t duty)
+  {
+    set(duty);
+    return (*this);
   }
 
   /**

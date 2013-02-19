@@ -1,56 +1,59 @@
 =====================================
-Measurement:		   2013-02-10
+Measurement:		   2013-02-17
 Arduino:		    Nano 328P
 =====================================
 CosaBenchmarkFSM:		 6522
 CosaBenchmarkPins:		17156
-CosaBenchmarkRTC:		 6882
+CosaBenchmarkRTC:		 6896
 CosaBenchmarkThread:		 7144
 -------------------------------------
-CosaCanvasClock:		11904
-CosaCanvasFont:			 9402
-CosaCanvasHistogram:		10510
-CosaCanvasPins:			11818
+CosaCanvasClock:		11886
+CosaCanvasFont:			 9384
+CosaCanvasHistogram:		10492
+CosaCanvasPins:			11800
 CosaCanvasScript:		16012
-CosaCanvasShades:		 9392
+CosaCanvasShades:		 9374
 CosaCanvasST7735R:		19698
-CosaCanvasSweep:		10070
+CosaCanvasSweep:		10052
 -------------------------------------
 CosaCiaoNative:			 6578
 CosaCiaoPoint:			 6324
 CosaFai:			 8244
 -------------------------------------
-CosaDHT11:			 6356
+CosaTemperature:	        14294
+CosaTermostat:			 6650
+-------------------------------------
+CosaDHT11:			 6338
 CosaHCSR04:			17686
-CosaPCD8544:			15644
-CosaTSOP4838:			 9164
+CosaPCD8544:			15610
+CosaTSOP4838:			 9176
 -------------------------------------
 CosaFSMBlink:			 2964
 CosaPingPong:			 6350
 -------------------------------------
-CosaDS18B20:			 8382
-CosaOWImaster:			 7656
-CosaOWIslave:			 6902
+CosaDS18B20:			 8544
+CosaOWImaster:			 7810
+CosaOWIslave:			 6894
 -------------------------------------
-CosaAnalogPins:			 6204
-CosaBlink:			 1898
+CosaAnalogPins:			 6186
+CosaBlink:			 1880
 CosaBlinkEvent:			 1884
-CosaBlinkInterrupt:		 1854
+CosaBlinkInterrupt:		 1836
 CosaBlinkPeriodic:		 2434
 CosaBlinkThread:		 2842
 CosaBlinkTimeout:		 2464
-CosaBlinkWatchdog:		 1852
+CosaBlinkWatchdog:		 1834
 CosaButton:			 6688
 CosaPins:			 8508
 -------------------------------------
-CosaADLX345:			 6410
+CosaADLX345:			 6392
 CosaNRFreceiver:		 9246
-CosaNRFsender:			 9256
+CosaNRFsender:			 9238
 -------------------------------------
-CosaAT24CXX:			 6910
-CosaDS1307:			 7370
+CosaAT24CXX:			 6892
+CosaDS1307:			 7352
 CosaPCF8591:			 6924
-CosaTWImaster:			 7528
+CosaTWImaster:			 7510
 CosaTWIslave:			 5726
 -------------------------------------
 

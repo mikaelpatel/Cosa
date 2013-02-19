@@ -29,15 +29,82 @@
 #ifndef __COSA_IOSTREAM_DRIVER_UART_HH__
 #define __COSA_IOSTREAM_DRIVER_UART_HH__
 
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+
+#include "Cosa/Types.h"
+#include "Cosa/Pins.hh"
+#include "Cosa/Board.hh"
+#include "Cosa/IOStream.hh"
+
+class UART : public IOStream::Device {
+private:
+  OutputPin m_pin;
+  uint16_t m_period;
+  uint8_t m_format;
+
+public:
+
+  // Serial formats; DATA + PARITY + STOP
+  enum {
+    DATA5 = 5,
+    DATA6 = 6,
+    DATA7 = 7,
+    DATA8 = 8,
+    DATA_MASK = 15,
+    NO_PARITY = 0,
+    EVEN_PARITY = 16,
+    ODD_PARITY = 32,
+    STOP1 = 0,
+    STOP2 = 64
+  };
+
+  /**
+   * Construct software serial output device driver handler.
+   * @param[in] pin number.
+   */
+  UART(Board::DigitalPin pin = Board::D0) : 
+    IOStream::Device(),
+    m_pin(pin, 1),
+    m_period(1000000 / 9600),
+    m_format(DATA8 + NO_PARITY + STOP2)
+  {
+  }
+
+  /**
+   * @override
+   * Write character to software serial output device driver.
+   * Returns character if successful otherwise returns EOF(-1),
+   * @param[in] c character to write.
+   * @return character written or EOF(-1).
+   */
+  virtual int putchar(char c);
+
+  /**
+   * Start software serial output device driver.
+   * @param[in] baudrate serial bitrate (default 9600).
+   * @param[in] format serial frame format (default 8data, 2stop bit)
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool begin(uint32_t baudrate = 9600, uint8_t format = DATA8 + STOP2);
+
+  /**
+   * Stop software serial output device driver.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool end()
+  {
+    return (1);
+  }
+};
+
+#else
+
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Board.hh"
-
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#define USART_UDRE_vect USART0_UDRE_vect
-#define USART_RX_vect USART0_RX_vect 
-#endif
 
 extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
 extern "C" void USART_RX_vect(void) __attribute__ ((signal));
@@ -97,7 +164,8 @@ private:
   friend void USART_UDRE_vect(void);
   friend void USART_RX_vect(void);
 
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#if defined(__AVR_ATmega1280__)			\
+ || defined(__AVR_ATmega2560__)
   friend void USART1_UDRE_vect(void);
   friend void USART1_RX_vect(void);
   friend void USART2_UDRE_vect(void);
@@ -194,6 +262,8 @@ public:
    */
   bool end();
 };
+
+#endif
 
 /**
  * Default serial port(0).

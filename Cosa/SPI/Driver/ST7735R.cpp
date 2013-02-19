@@ -29,6 +29,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+
+// Fix: ATtinyXX implementation
+
+#else
+
 #include "Cosa/SPI/Driver/ST7735R.hh"
 
 const uint8_t ST7735R::script[] PROGMEM = {
@@ -233,7 +241,8 @@ ST7735R::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 }
 
 uint8_t
-ST7735R::set_orientation(uint8_t direction) {
+ST7735R::set_orientation(uint8_t direction) 
+{
   uint8_t previous = m_direction;
   uint8_t setting = 0;
   if (direction == LANDSCAPE) {
@@ -251,3 +260,4 @@ ST7735R::set_orientation(uint8_t direction) {
   write(MADCTL, setting);
   return (previous);
 }
+#endif

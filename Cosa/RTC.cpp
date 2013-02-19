@@ -32,6 +32,7 @@
  */
 
 #include "Cosa/RTC.hh"
+#include "Cosa/Board.hh"
 
 // Real-Time Clock: configuration
 #define COUNT 255

@@ -59,14 +59,6 @@ typedef float float32_t;
 #define membersof(x) (sizeof(x)/sizeof(x[0]))
 
 /**
- * Macro for offset to member in structure.
- * @param[in] type data type name.
- * @param[in] member name.
- * @return offset.
- */
-#define offsetof(type, member) __builtin_offsetof(type, member)
-
-/**
  * Instruction clock cycles per micro-second. Assumes clock greater
  * or equal to 1 MHz.
  */

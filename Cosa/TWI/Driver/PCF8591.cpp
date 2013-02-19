@@ -27,6 +27,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+
+// Fix: ATtinyXX implementation
+
+#else
+
 #include "Cosa/TWI/Driver/PCF8591.hh"
 
 bool
@@ -47,3 +55,5 @@ PCF8591::convert(uint8_t value)
   twi.end();
   return (count == (sizeof(m_cntl) + sizeof(value)));
 }
+
+#endif

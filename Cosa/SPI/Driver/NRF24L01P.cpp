@@ -27,6 +27,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+
+// Fix: ATtinyXX implementation
+
+#else
+
 #include "Cosa/SPI/Driver/NRF24L01P.hh"
 #include <util/delay.h>
 
@@ -265,3 +273,4 @@ NRF24L01P::IRQPin::on_interrupt()
     Event::push(Event::RECEIVE_COMPLETED_TYPE, m_nrf, status);
   }
 }
+#endif

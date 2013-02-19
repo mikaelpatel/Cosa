@@ -43,6 +43,20 @@ Fai::begin()
   Ciao::write(&Ciao::Descriptor::header_t, &header, 1);
 }
 
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+
+void 
+Fai::write(uint32_t mask)
+{
+  digital_pins_t dgl;
+  dgl.values = (PINB & mask);
+  Ciao::write(&Descriptor::digital_pins_t, &dgl, 1);
+}
+
+#else
+
 void 
 Fai::write(uint32_t mask)
 {
@@ -50,6 +64,8 @@ Fai::write(uint32_t mask)
   dgl.values = ((PINB << 8) | PIND) & mask;
   Ciao::write(&Descriptor::digital_pins_t, &dgl, 1);
 }
+
+#endif
 
 void 
 Fai::write(Pin* pin)

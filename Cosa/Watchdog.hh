@@ -34,6 +34,7 @@
 #include <avr/sleep.h>
 
 #include "Cosa/Types.h"
+#include "Cosa/Board.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"
 

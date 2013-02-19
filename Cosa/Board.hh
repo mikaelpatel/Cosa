@@ -43,7 +43,9 @@
 #ifndef __COSA_BOARD_HH__
 #define __COSA_BOARD_HH__
 
-#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
+#if defined(__AVR_ATmega8__)			\
+ || defined(__AVR_ATmega168__)			\
+ || defined(__AVR_ATmega328P__)
 
 class Board {
   friend class Pin;
@@ -171,6 +173,9 @@ public:
 };
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+
+#define USART_UDRE_vect USART0_UDRE_vect
+#define USART_RX_vect USART0_RX_vect 
 
 class Board {
   friend class Pin;
@@ -358,6 +363,108 @@ public:
     SCK = 1,
     MOSI = 2,
     MISO = 3
+  };
+};
+
+#elif defined(__AVR_ATtiny25__)		\
+   || defined(__AVR_ATtiny45__)		\
+   || defined(__AVR_ATtiny85__)
+
+#define ANALOG_COMP_vect ANA_COMP_vect
+#define TIMSK0 TIMSK
+#define TIFR0 TIFR
+#define WDTCSR WDTCR
+
+class Board {
+  friend class Pin;
+  friend class UART;
+private:
+  /**
+   * Do not allow instances. This is a static singleton.
+   */
+  Board() {}
+
+  /**
+   * Return Special Function Register for given Arduino pin number.
+   * @param[in] pin number.
+   * @return special register pointer.
+   */
+  static volatile uint8_t* SFR(uint8_t pin) 
+  { 
+    return (&PINB);
+  }
+
+  /**
+   * Return bit position for given Arduino pin number in Special
+   * Function Register. 
+   * @param[in] pin number.
+   * @return pin bit position.
+   */
+  static const uint8_t BIT(uint8_t pin)
+  {
+    return (pin);
+  }
+  
+public:
+  /**
+   * Digital pin symbols
+   */
+  enum DigitalPin {
+    D0 = 0,
+    D1,
+    D2,
+    D3,
+    D4,
+    D5,
+    LED = D4
+  };
+
+  /**
+   * Analog pin symbols
+   */
+  enum AnalogPin {
+    A0 = D5,
+    A1 = D4,
+    A2 = D3,
+    A3 = D2,
+    A4 = D1,
+    A5 = D0
+  };
+
+  /**
+   * PWM pin symbols; sub-set of digital pins to allow compile 
+   * time checking
+   */
+  enum PWMPin {
+    PWM0 = D0,
+    PWM1 = D1
+  };
+
+  /**
+   * External interrupt pin symbols; sub-set of digital pins 
+   * to allow compile time checking.
+   */
+  enum InterruptPin {
+    EXT0 = D2,
+    EXT_MAX = 1
+  };
+
+  /**
+   * Pins used for TWI interface.
+   */
+  enum TWIPin {
+    SDA = 0,
+    SCL = 2
+  };
+
+ /**
+   * Pins used for SPI interface.
+   */
+  enum SPIPin {
+    SS = 4,
+    MOSI = 0,
+    MISO = 1,
+    SCK = 2
   };
 };
 
