@@ -27,6 +27,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+
+// Fix: ATtinyXX implementation
+
+#else
+
 #include "Cosa/Servo.hh"
 
 Servo* Servo::servo[2] = { 0, 0 };
@@ -86,3 +94,5 @@ ISR(TIMER1_COMPB_vect)
   else
     OCR1B = TCNT1 + US_TO_TICKS(Servo::PERIOD - servo->m_width);
 }
+
+#endif
