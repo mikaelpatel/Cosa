@@ -28,6 +28,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+
+// Fix: ATtinyXX implementation
+
+#else
+
 #include "Cosa/IOStream/Driver/PCD8544.hh"
 
 #define PCD8544_transaction(sce)				\
@@ -237,3 +245,5 @@ PCD8544::putchar(char c)
 
   return (c);
 }
+
+#endif

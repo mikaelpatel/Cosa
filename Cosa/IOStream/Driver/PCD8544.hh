@@ -111,19 +111,11 @@ public:
    * @param[in] dc data/command control pin (default D8).
    * @param[in] sce screen chip enable pin (default D9).
    */
-#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-  PCD8544(Board::DigitalPin sdin = Board::D0, 
-	  Board::DigitalPin sclk = Board::D1, 
-	  Board::DigitalPin dc = Board::D2, 
-	  Board::DigitalPin sce = Board::D3,
-	  Font* font = &system5x7) :
-#else
   PCD8544(Board::DigitalPin sdin = Board::D6, 
 	  Board::DigitalPin sclk = Board::D7, 
 	  Board::DigitalPin dc = Board::D8, 
 	  Board::DigitalPin sce = Board::D9,
 	  Font* font = &system5x7) :
-#endif
     IOStream::Device(),
     m_sdin(sdin, 0),
     m_sclk(sclk, 0),
