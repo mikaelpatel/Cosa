@@ -32,6 +32,13 @@
 
 #include "Cosa/Types.h"
 
+// Redefine PSTR so that operator output is possible; needs correct type
+#if defined(PSTR)
+# undef PSTR
+# define PSTR(s)							\
+  ((__extension__({static const char __c[] PROGMEM = (s); &__c[0];})))
+#endif
+
 class IOBuffer;
 
 class IOStream {
