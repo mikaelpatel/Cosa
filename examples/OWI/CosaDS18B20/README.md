@@ -15,5 +15,3 @@ but this is not critical.
 The Arduino Pin 13 (builtin LED) is on during the temperature
 sampling. 
 
-See Bench.jpg for a picture of a typical circuit using three devices,
-a pull-up resistor and an Arduino Nano with an IO shield. 

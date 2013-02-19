@@ -13,7 +13,5 @@ available with both power LED and pullup resistor. Connect Arduino Pin
 The Arduino Pin 13 (builtin LED) is on during the temperature and
 humidity sampling. 
 
-See Bench.jpg for an example of connection with a DHT11 module from an
-Arduino Nano and a Nano IO shield. 
 
 

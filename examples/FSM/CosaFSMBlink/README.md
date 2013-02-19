@@ -1,4 +1,4 @@
-CosaBlinkFSM
+CosaFSMBlink
 ============
 
 The classical LEB blink example program with two RGB LEDs controlled
