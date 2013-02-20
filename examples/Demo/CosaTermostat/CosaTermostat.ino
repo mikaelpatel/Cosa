@@ -80,13 +80,13 @@ void loop()
   trace.print_P(PSTR("sensor:  "));
   trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
 
-  // Check if heater should be turned on @ 15 C and off @ 20 C
+  // Check if heater should be turned on @ 22 C and off @ 26 C
   static uint8_t heating = 0;
   static uint32_t hours = 0;
   static uint8_t minutes = 0;
   static uint8_t seconds = 0;
-  static const uint8_t TEMP_MIN = 15;
-  static const uint8_t TEMP_MAX = 20;
+  static const uint8_t TEMP_MIN = 22;
+  static const uint8_t TEMP_MAX = 26;
   if (heating) {
     seconds += 2;
     if (seconds == 60) {
