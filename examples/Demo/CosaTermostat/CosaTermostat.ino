@@ -35,11 +35,13 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
+#include "Cosa/Servo.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/DHT11.hh"
 
-// Sensor and relay control pins
+// Servo, sensor and relay control pins
+Servo servo(0, Board::D8);
 DHT11 sensor(Board::D7);
 OutputPin heater(Board::D6, 1);
 OutputPin fan(Board::D5, 1);
@@ -55,8 +57,12 @@ void setup()
   TRACE(sizeof(OutputPin));
   TRACE(sizeof(DHT11));
 
-  // Start the watchdog ticks
+  // Start the watchdog ticks and sensor monitoring
   Watchdog::begin();
+  Servo::begin();
+
+  // Initial state
+  servo.set_angle(180);
 }
 
 void loop()
@@ -99,6 +105,7 @@ void loop()
     }
     if (temperature > TEMP_MAX) {
       trace.print_P(PSTR("Heater OFF\n"));
+      trace.printf_P(PSTR("Runtime: %l:%d:%d\n"), hours, minutes, seconds);
       heater.set();
       heating = 0;
     }
@@ -117,12 +124,14 @@ void loop()
     if (humidity < RH_MIN) {
       trace.print_P(PSTR("Fan OFF\n"));
       fan.set();
+      servo.set_angle(180);
       venting = 0;
     }
   }
   else if (humidity > RH_MAX) {
     trace.print_P(PSTR("Fan ON\n"));
     fan.clear();
+    servo.set_angle(90);
     venting = 1;
   }
 
