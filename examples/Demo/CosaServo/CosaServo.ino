@@ -45,16 +45,16 @@ void setup()
 
 void loop()
 {
-  int angle;
+  int degree;
   for (uint8_t inc = 5; inc < 20; inc += 5) {
-    door.set_pos(0);
-    for (angle = 0; angle < 180; angle += inc) {
-      servo.set_pos(angle);
+    door.set_angle(0);
+    for (degree = 0; degree < 180; degree += inc) {
+      servo.set_angle(degree);
       Watchdog::delay(64);
     }
-    door.set_pos(180);
-    for (; angle > 0; angle -= inc) {
-      servo.set_pos(angle);
+    door.set_angle(180);
+    for (; degree > 0; degree -= inc) {
+      servo.set_angle(degree);
       Watchdog::delay(64);
     }
   }

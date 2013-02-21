@@ -48,6 +48,7 @@ private:
   static const uint16_t PERIOD = 20000;
   static const uint16_t MIN_WIDTH = 650;
   static const uint16_t MAX_WIDTH = 2200;
+  static const uint8_t INIT_ANGLE = 90;
   static Servo* servo[2];
 
   /**
@@ -61,7 +62,7 @@ private:
 public:
   /**
    * Construct a servo instance connected to the given pin.
-   * Default angle is 90.
+   * Default angle is 90 degree.
    * @param[in] ix index of servo [0..1].
    * @param[in] pin digital pin to use as servo control output pin.
    */
@@ -70,7 +71,7 @@ public:
     m_min(MIN_WIDTH),
     m_max(MAX_WIDTH)
   {
-    set_pos(90);
+    set_angle(INIT_ANGLE);
     servo[ix != 0] = this;
   }
 
@@ -106,16 +107,16 @@ public:
   }
 
   /**
-   * Set servo position to given angle.
-   * @param[in] angle in degrees 0..180.
+   * Set servo to given angle degree.
+   * @param[in] degree angle, 0..180.
    */
-  void set_pos(uint16_t angle);
+  void set_angle(uint8_t degree);
 
   /**
    * Return servo angle.
-   * @return angle in degrees 0..180.
+   * @return angle in degree, 0..180.
    */
-  uint8_t get_pos() 
+  uint8_t get_angle() 
   {
     return (m_angle);
   }

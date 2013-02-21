@@ -63,13 +63,13 @@ Servo::end()
 }
 
 void 
-Servo::set_pos(uint16_t angle) 
+Servo::set_angle(uint8_t degree) 
 {
-  if (angle > 180) angle = 180;
-  uint16_t width = (((uint32_t) (m_max - m_min)) * angle) / 180L;
+  if (degree > 180) degree = 180;
+  uint16_t width = (((uint32_t) (m_max - m_min)) * degree) / 180L;
   synchronized {
     m_width = m_min + width;
-    m_angle = angle;
+    m_angle = degree;
   }
 }  
 
