@@ -41,8 +41,14 @@
 #include "Cosa/Watchdog.hh"
 
 // Thresholds for wire sampling
-// static const uint8_t COUNT_MIN = 40;
+#if defined(__AVR_ATtiny25__)		\
+ || defined(__AVR_ATtiny45__)		\
+ || defined(__AVR_ATtiny85__)
 static const uint8_t COUNT_MIN = 30;
+#else
+static const uint8_t COUNT_MIN = 40;
+#endif
+
 static const uint8_t COUNT_MAX = 255;
 
 // Index of last member in data buffer
