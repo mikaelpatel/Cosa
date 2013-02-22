@@ -180,6 +180,7 @@ void setup()
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
+  RTC::begin();
 
   // Benchmark the display start
   uint32_t start, stop, ms;

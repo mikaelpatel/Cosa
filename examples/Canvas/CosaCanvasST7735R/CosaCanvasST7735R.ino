@@ -74,6 +74,7 @@ void setup()
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
+  RTC::begin();
 
   // Initiate the display
   TRACE(tft.begin());
