@@ -41,21 +41,24 @@ void setup()
   trace.begin(&uart, PSTR("CosaServo: started"));
   Servo::begin();
   Watchdog::begin();
+  door.set_angle(10);
+  servo.set_angle(10);
 }
 
 void loop()
 {
-  int degree;
-  for (uint8_t inc = 5; inc < 20; inc += 5) {
-    door.set_angle(0);
-    for (degree = 0; degree < 180; degree += inc) {
-      servo.set_angle(degree);
-      Watchdog::delay(64);
-    }
-    door.set_angle(180);
-    for (; degree > 0; degree -= inc) {
-      servo.set_angle(degree);
-      Watchdog::delay(64);
-    }
+  static int degree = 10;
+  static int inc = 45;
+  for (; degree < 170; degree += inc) {
+    door.set_angle(degree);
+    servo.set_angle(degree);
+    Watchdog::delay(512);
   }
+  if (degree > 170) degree -= inc;
+  for (; degree > 10; degree -= inc) {
+    door.set_angle(degree);
+    servo.set_angle(degree);
+    Watchdog::delay(512);
+  }
+  if (degree < 10) degree += inc;
 }
