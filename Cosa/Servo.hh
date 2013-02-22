@@ -47,7 +47,7 @@ private:
 
   static const uint16_t PERIOD = 20000;
   static const uint16_t MIN_WIDTH = 650;
-  static const uint16_t MAX_WIDTH = 2200;
+  static const uint16_t MAX_WIDTH = 2300;
   static const uint8_t INIT_ANGLE = 90;
   static Servo* servo[2];
 
