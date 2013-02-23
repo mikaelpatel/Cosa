@@ -172,6 +172,143 @@ public:
   };
 };
 
+#elif defined(__AVR_ATmega1284P__)
+
+class Board {
+  friend class Pin;
+  friend class UART;
+private:
+  /**
+   * Do not allow instances. This is a static singleton.
+   */
+  Board() {}
+
+  /**
+   * Return Special Function Register for given Arduino pin number.
+   * @param[in] pin number.
+   * @return special register pointer.
+   */
+  static volatile uint8_t* SFR(uint8_t pin) 
+  { 
+    return (pin < 8  ? &PINB : 
+	    pin < 14 ? &PIND : 
+	    pin < 24 ? &PINC :
+	    &PINA);
+  }
+
+  /**
+   * Return bit position for given Arduino pin number in Special
+   * Function Register. 
+   * @param[in] pin number.
+   * @return pin bit position.
+   */
+  static const uint8_t BIT(uint8_t pin)
+  {
+    return (pin & 0x7);
+  }
+  
+  /**
+   * Return UART Register for given Arduino serial port.
+   * @param[in] port number.
+   * @return UART register pointer.
+   */
+  static volatile uint8_t* UART(uint8_t port) 
+  { 
+    return (&UCSR0A);
+  }
+
+public:
+  /**
+   * Digital pin symbols
+   */
+  enum DigitalPin {
+    D0 = 0,
+    D1,
+    D2,
+    D3,
+    D4,
+    D5,
+    D6,
+    D7,
+    D8,
+    D9,
+    D10,
+    D11,
+    D12,
+    D13,
+    D14,
+    D15,
+    D16,
+    D17,
+    D18,
+    D19,
+    D20,
+    D21,
+    D22,
+    D23,
+    LED = D13
+  };
+
+  /**
+   * Analog pin symbols
+   */
+  enum AnalogPin {
+    A0 = 24,
+    A1,
+    A2,
+    A3,
+    A4,
+    A5,
+    A6,
+    A7,
+    A8
+  };
+
+  /**
+   * PWM pin symbols; sub-set of digital pins to allow compile 
+   * time checking
+   */
+  enum PWMPin {
+    PWM0 = D3,
+    PWM1 = D4,
+    PWM2 = D6,
+    PWM3 = D7,
+    PWM4 = D12,
+    PWM5 = D13,
+    PWM6 = D14,
+    PWM7 = D15
+  };
+
+  /**
+   * External interrupt pin symbols; sub-set of digital pins 
+   * to allow compile time checking.
+   */
+  enum InterruptPin {
+    EXT0 = D10,
+    EXT1 = D11,
+    EXT2 = D2,
+    EXT_MAX = 3
+  };
+
+  /**
+   * Pins used for TWI interface (in port C, digital pin 16, 17).
+   */
+  enum TWIPin {
+    SDA = 1,
+    SCL = 0
+  };
+
+ /**
+   * Pins used for SPI interface (in port B, digital pins 4-7).
+   */
+  enum SPIPin {
+    SS = 4,
+    MOSI = 5,
+    MISO = 6,
+    SCK = 7
+  };
+};
+
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
 #define USART_UDRE_vect USART0_UDRE_vect

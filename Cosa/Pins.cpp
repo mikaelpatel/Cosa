@@ -65,7 +65,8 @@ Pin::println(IOStream& stream)
 
 #if defined(__AVR_ATmega8__)			\
  || defined(__AVR_ATmega168__)			\
- || defined(__AVR_ATmega328P__)
+ || defined(__AVR_ATmega328P__)			\
+ || defined(__AVR_ATmega1284P__)
 
 InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
   InputPin((Board::DigitalPin) pin)
@@ -227,6 +228,66 @@ PWMPin::set(uint8_t duty)
     OCR1B = duty;
     return;
   case Board::PWM5:
+    bit_set(TCCR2A, COM2A1);
+    OCR2A = duty;
+    return;
+  default:
+    OutputPin::set(duty);
+  }
+}
+
+#elif defined(__AVR_ATmega1284P__)
+
+uint8_t
+PWMPin::get_duty()
+{
+  switch (m_pin) {
+  case Board::PWM0: return (OCR0A);
+  case Board::PWM1: return (OCR0B);
+  case Board::PWM2: return (OCR3A);
+  case Board::PWM3: return (OCR3B);
+  case Board::PWM4: return (OCR1B);
+  case Board::PWM5: return (OCR1A);
+  case Board::PWM6: return (OCR2B);
+  case Board::PWM7: return (OCR2A);
+  default:
+    return (is_set());
+  }
+}
+
+void 
+PWMPin::set(uint8_t duty)
+{
+  switch (m_pin) {
+  case Board::PWM0:
+    bit_set(TCCR0A, COM0A1);
+    OCR0A = duty;
+    return;
+  case Board::PWM1:
+    bit_set(TCCR0B, COM0B1);
+    OCR0B = duty;
+    return;
+  case Board::PWM2:
+    bit_set(TCCR3A, COM3A1);
+    OCR3A = duty;
+    return;
+  case Board::PWM3:
+    bit_set(TCCR3B, COM3B1);
+    OCR3B = duty;
+    return;
+  case Board::PWM4:
+    bit_set(TCCR1B, COM1B1);
+    OCR1B = duty;
+    return;
+  case Board::PWM5:
+    bit_set(TCCR1A, COM1A1);
+    OCR1A = duty;
+    return;
+  case Board::PWM6:
+    bit_set(TCCR2B, COM2B1);
+    OCR2B = duty;
+    return;
+  case Board::PWM7:
     bit_set(TCCR2A, COM2A1);
     OCR2A = duty;
     return;
