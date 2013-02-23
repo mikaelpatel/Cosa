@@ -147,6 +147,7 @@ example). Improving PCD8544 driver with OffScreen canvas.
 generic circlic buffer for IOStream::Device.  
 2013-02-19 Adding support for ATtinyX5 and Servo motors. Simple ATtiny
 monitor included.
+2013-02-23 Adding support for ATmega1284P/Mighty boards. 
 
 
 
