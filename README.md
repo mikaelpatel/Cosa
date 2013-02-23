@@ -54,6 +54,11 @@ platform, though following some of the design patterns in Cosa will
 help beginners build more complex small scale embedded systems with
 richer concurrency and low power consumption.  
 
+Please follow the development of this project on
+[blogspot](http://cosa-arduino.blogspot.se/) and on the [Arduino
+forum](http://arduino.cc/forum/index.php/topic,150299.0.html).  
+
+
 Install
 -------
 
