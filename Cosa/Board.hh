@@ -174,6 +174,9 @@ public:
 
 #elif defined(__AVR_ATmega1284P__)
 
+#define USART_UDRE_vect USART0_UDRE_vect
+#define USART_RX_vect USART0_RX_vect 
+
 class Board {
   friend class Pin;
   friend class UART;
@@ -214,7 +217,7 @@ private:
    */
   static volatile uint8_t* UART(uint8_t port) 
   { 
-    return (&UCSR0A);
+    return (port == 1 ? &UCSR1A : &UCSR0A);
   }
 
 public:

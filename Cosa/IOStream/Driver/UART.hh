@@ -108,6 +108,18 @@ public:
 
 extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
 extern "C" void USART_RX_vect(void) __attribute__ ((signal));
+#if defined(__AVR_ATmega1284P__)
+extern "C" void USART1_UDRE_vect(void) __attribute__ ((signal));
+extern "C" void USART1_RX_vect(void) __attribute__ ((signal));
+#endif
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+extern "C" void USART1_UDRE_vect(void) __attribute__ ((signal));
+extern "C" void USART1_RX_vect(void) __attribute__ ((signal));
+extern "C" void USART2_UDRE_vect(void) __attribute__ ((signal));
+extern "C" void USART2_RX_vect(void) __attribute__ ((signal));
+extern "C" void USART3_UDRE_vect(void) __attribute__ ((signal));
+extern "C" void USART3_RX_vect(void) __attribute__ ((signal));
+#endif
 
 class UART : public IOStream::Device {
 private:
@@ -163,9 +175,11 @@ private:
   // Interrupt handlers are friends
   friend void USART_UDRE_vect(void);
   friend void USART_RX_vect(void);
-
-#if defined(__AVR_ATmega1280__)			\
- || defined(__AVR_ATmega2560__)
+#if defined(__AVR_ATmega1284P__)
+  friend void USART1_UDRE_vect(void);
+  friend void USART1_RX_vect(void);
+#endif
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   friend void USART1_UDRE_vect(void);
   friend void USART1_RX_vect(void);
   friend void USART2_UDRE_vect(void);

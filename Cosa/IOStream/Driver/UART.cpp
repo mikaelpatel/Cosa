@@ -73,7 +73,7 @@ static IOBuffer ibuf(sizeof(ibuffer), ibuffer);
 static char obuffer[UART::BUFFER_MAX];
 static IOBuffer obuf(sizeof(obuffer), obuffer);
 
-UART uart(0, &ibuf, &obuf) __attribute__ ((weak));
+UART uart(0, &ibuf, &obuf);
 
 bool
 UART::begin(uint32_t baudrate, uint8_t format)
@@ -140,8 +140,30 @@ ISR(USART_RX_vect)
   uart.m_ibuf->putchar(UDR0);
 }
 
-#if defined(__AVR_ATmega1280__) \
- || defined(__AVR_ATmega2560__)
+#if defined(__AVR_ATmega1284P__)
+
+UART* uart1 = 0;
+
+ISR(USART1_UDRE_vect)
+{
+  if (uart1 == 0) return;
+  int c = uart1->m_obuf->getchar();
+  if (c != -1) {
+    UDR1 = c;
+  }
+  else {
+    bit_clear(UCSR1B, UDRIE0);
+  }
+}
+
+ISR(USART1_RX_vect)
+{
+  if (uart1 == 0) return;
+  uart1->m_ibuf->putchar(UDR1);
+}
+#endif
+
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
 // Fix: Add Arduino Mega UART interrupt handlers
 

@@ -121,6 +121,7 @@ public:
   {
     m_tail = 0;
     m_head = 0;
+    return (0);
   }
 };
 
