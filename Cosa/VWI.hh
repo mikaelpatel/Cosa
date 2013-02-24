@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2008-2013, Mike McCauley (Author)
+ * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire)
  * Copyright (C) 2013, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
@@ -22,12 +22,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * VWI (Virtual Wire Interface) an Cosa library that provides features
- * to send short messages, without addressing, retransmit or
+ * VWI (Virtual Wire Interface) is an Cosa library that provides 
+ * features to send short messages, without addressing, retransmit or 
  * acknowledgment, a bit like UDP over wireless, using ASK (Amplitude 
  * Shift Keying). Supports a number of inexpensive radio transmitters
- * and receivers. All that is required is transmit data, receive data
- * and (for transmitters, optionally) a PTT transmitter enable.
+ * and receivers. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -42,11 +41,11 @@ extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal));
 
 class VWI {
 public:
-  /** Maximum number of bytes in a message (incl. byte count and FCS) */
-  static const uint8_t MESSAGE_MAX = 30;
-
   /** The maximum payload length */
-  static const uint8_t PAYLOAD_MAX = MESSAGE_MAX - 3;
+  static const uint8_t PAYLOAD_MAX = 32;
+
+  /** Maximum number of bytes in a message (incl. byte count and FCS) */
+  static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
 
   /** 
    * 4 bit to 6 bit symbol converter table. Used to convert the high
@@ -72,7 +71,7 @@ public:
    */
   static uint8_t symbol_6to4(uint8_t symbol);
 
-  /** Sleep mode while synchonious await */
+  /** Sleep mode while synchronious await */
   static uint8_t s_mode;
   
 public:
@@ -173,7 +172,7 @@ public:
 
     /**
      * Phase locked loop tries to synchronise with the transmitter so
-     * that bit transitions occur at about the time vw_rx_pll_ramp is
+     * that bit transitions occur at about the time (m_pll_ramp) is
      * 0; Then the average is computed over each bit period to deduce
      * the bit value 
      */
@@ -183,7 +182,7 @@ public:
     Receiver(Board::DigitalPin rx);
 
     /**
-     * Start the Phase Locked Loop listening to the receiver.
+     * Start the Phase Locked Loop listening for the receiver.
      * Must do this before you can receive any messages, When a
      * message is available (good checksum or not), available(), 
      * will return non-zero.
@@ -200,7 +199,7 @@ public:
 
     /**
      * Stop the Phase Locked Loop listening to the receiver. No
-     * messages will be received until vw_rx_start() is called
+     * messages will be received until begin() is called
      * again. Saves interrupt processing cycles.
      * @return bool
      */
@@ -220,7 +219,8 @@ public:
     bool await(uint32_t ms = 0);
 
     /**
-     * Returns true if an unread message is available
+     * Returns true if an unread message is available. May have a
+     * back check-sum.
      * @return true(1) if a message is available to read.
      */
     uint8_t available()
@@ -230,14 +230,13 @@ public:
 
     /**
      * If a message is available (good checksum or not), copies up to
-     * len octets to buf. 
-     * @param[in] buf pointer to location to save the read data (must
-     * be at least *len bytes. 
-     * @param[in,out] len available space in buf. Will be set to the
-     * actual number of octets read 
-     * @return true if there was a message and the checksum was good
+     * len bytes to the given buffer, buf. 
+     * @param[in] buf pointer to location to save the read data.
+     * @param[in] len available space in buf. 
+     * @param[in] ms timeout period (zero for non-blocking)
+     * @return number of bytes received or negative error code.
      */
-    bool recv(void* buf, uint8_t* len);
+    int8_t recv(void* buf, uint8_t len, uint32_t ms = 0);
   };
 
   class Transmitter : private OutputPin {
@@ -250,16 +249,18 @@ public:
      * words. Caution, each symbol is transmitted LSBit first, but each
      * byte is transmitted high nybble first.
      */
-    static const uint8_t HEADER_MAX = 8;
     static const uint8_t header[] PROGMEM;
+
+    /** Size of header */
+    static const uint8_t HEADER_MAX = 8;
 
     /** Transmission buffer with symbols and header */
     uint8_t m_buffer[(MESSAGE_MAX * 2) + HEADER_MAX];
 
-    /** Number of symbols in buf to be sent */
+    /** Number of symbols to be sent */
     uint8_t m_length;
 
-    /** Index of the next symbol to send. Ranges from 0..lenght */
+    /** Index of the next symbol to send. Ranges from 0..length-1 */
     uint8_t m_index;
 
     /** Bit number of next bit to send */
@@ -271,7 +272,7 @@ public:
     /** Flag to indicated the transmitter is active */
     volatile uint8_t m_enabled;
 
-    // Total number of messages sent
+    /** Total number of messages sent */
     uint16_t m_msg_count;
 
     /** The interrupt handler is a friend */

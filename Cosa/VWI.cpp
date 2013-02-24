@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2008-2013, Mike McCauley (Author)
+ * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire)
  * Copyright (C) 2013, Mikael Patel (Cosa C++ Port)
  *
  * This library is free software; you can redistribute it and/or
@@ -22,12 +22,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * VWI (Virtual Wire Interface) an Cosa library that provides features
- * to send short messages, without addressing, retransmit or
+ * VWI (Virtual Wire Interface) is an Cosa library that provides 
+ * features to send short messages, without addressing, retransmit or 
  * acknowledgment, a bit like UDP over wireless, using ASK (Amplitude 
  * Shift Keying). Supports a number of inexpensive radio transmitters
- * and receivers. All that is required is transmit data, receive data
- * and (for transmitters, optionally) a PTT transmitter enable.
+ * and receivers. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -263,38 +262,41 @@ VWI::Receiver::Receiver(Board::DigitalPin rx) :
 bool 
 VWI::Receiver::await(unsigned long ms)
 {
-  if (ms == 0) {
-    while (!m_done);
-  }
-  else {
-    unsigned long start = RTC::millis();
-    while (!m_done && ((RTC::millis() - start) < ms));
+  // Allow low power mode while waiting
+  unsigned long start = RTC::millis();
+  while (!m_done && (ms == 0 || ((RTC::millis() - start) < ms))) {
+    cli();
+    set_sleep_mode(s_mode);
+    sleep_enable();
+    sei();
+    sleep_cpu();
+    sleep_disable();
   }
   return (m_done);
 }
 
-bool 
-VWI::Receiver::recv(void* buf, uint8_t* len)
+int8_t
+VWI::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
 {
-  uint8_t rxlen;
-    
   // Message available?
-  if (!m_done) return (0);
+  if (!m_done && (ms == 0 || !await(ms))) return (0);
+
+  // Message check-sum error
+  if (CRC(m_buffer, m_length) != 0xf0b8) return (-1);
     
   // Wait until done is set before reading length then remove
   // bytecount and FCS  
-  rxlen = m_length - 3;
+  uint8_t rxlen = m_length - 3;
     
   // Copy message (good or bad). Skip count byte
-  if (*len > rxlen)
-    *len = rxlen;
-  memcpy(buf, m_buffer + 1, *len);
+  if (len > rxlen) len = rxlen;
+  memcpy(buf, m_buffer + 1, len);
     
   // OK, got that message thanks
   m_done = false;
     
-  // Check the FCS, return goodness
-  return (CRC(m_buffer, m_length) == 0xf0b8);
+  // Return actual number of bytes received
+  return (len);
 }
 
 const uint8_t 
@@ -306,12 +308,12 @@ VWI::Transmitter::Transmitter(Board::DigitalPin tx) :
   OutputPin(tx)
 {
   transmitter = this;
+  memcpy_P(m_buffer, header, sizeof(header));
 }
 
 bool 
 VWI::Transmitter::begin()
 {
-  memcpy_P(m_buffer, header, sizeof(header));
   m_index = 0;
   m_bit = 0;
   m_sample = 0;
@@ -335,42 +337,41 @@ VWI::Transmitter::await()
 bool 
 VWI::Transmitter::send(void* buf, uint8_t len)
 {
-  uint8_t ix = 0;
-  uint16_t crc = 0xffff;
-  uint8_t *p = transmitter->m_buffer + HEADER_MAX;
-  uint8_t *bp = (uint8_t*) buf;
-  uint8_t count = len + 3;
-
   // Check that the message is not too large
   if (len > PAYLOAD_MAX) return (0);
 
+  uint8_t *tp = transmitter->m_buffer + HEADER_MAX;
+  uint8_t *bp = (uint8_t*) buf;
+  uint16_t crc = 0xffff;
+  
   // Wait for transmitter to become available
   await();
 
   // Encode the message length
+  uint8_t count = len + 3;
   crc = _crc_ccitt_update(crc, count);
-  p[ix++] = pgm_read_byte(&symbols[count >> 4]);
-  p[ix++] = pgm_read_byte(&symbols[count & 0xf]);
+  *tp++ = pgm_read_byte(&symbols[count >> 4]);
+  *tp++ = pgm_read_byte(&symbols[count & 0xf]);
 
   // Encode the message into 6 bit symbols. Each byte is converted into 
-  // 2 6-bit symbols, high nybble first, low nybble second
+  // 2 X 6-bit symbols, high nybble first, low nybble second
   for (uint8_t i = 0; i < len; i++) {
     crc = _crc_ccitt_update(crc, bp[i]);
-    p[ix++] = pgm_read_byte(&symbols[bp[i] >> 4]);
-    p[ix++] = pgm_read_byte(&symbols[bp[i] & 0xf]);
+    *tp++ = pgm_read_byte(&symbols[bp[i] >> 4]);
+    *tp++ = pgm_read_byte(&symbols[bp[i] & 0xf]);
   }
 
-  // Append the fcs, 16 bits before encoding (4 6-bit symbols after
-  // encoding) Caution: VW expects the _ones_complement_ of the CCITT
-  // CRC-16 as the FCS VW sends FCS as low byte then hi byte
+  // Append the FCS, 16 bits before encoding (4 X 6-bit symbols after
+  // encoding) Caution: VWI expects the _ones_complement_ of the CCITT
+  // CRC-16 as the FCS VWI sends FCS as low byte then hi byte
   crc = ~crc;
-  p[ix++] = pgm_read_byte(&symbols[(crc >> 4)  & 0xf]);
-  p[ix++] = pgm_read_byte(&symbols[crc & 0xf]);
-  p[ix++] = pgm_read_byte(&symbols[(crc >> 12) & 0xf]);
-  p[ix++] = pgm_read_byte(&symbols[(crc >> 8)  & 0xf]);
+  *tp++ = pgm_read_byte(&symbols[(crc >> 4)  & 0xf]);
+  *tp++ = pgm_read_byte(&symbols[crc & 0xf]);
+  *tp++ = pgm_read_byte(&symbols[(crc >> 12) & 0xf]);
+  *tp++ = pgm_read_byte(&symbols[(crc >> 8)  & 0xf]);
 
   // Total number of 6-bit symbols to send
-  m_length = ix + HEADER_MAX;
+  m_length = HEADER_MAX + (count * 2);
 
   // Start the low level interrupt handler sending symbols
   return (begin());
@@ -381,15 +382,14 @@ VWI::Transmitter::send(void* buf, uint8_t len)
  * overflows. Its job is to output the next bit from the transmitter
  * (every 8 calls) and to call the PLL code if the receiver is enabled.
  */
-#ifdef __AVR_ATtiny85__
+#if defined(__AVR_ATtiny85__)
 ISR(TIM0_COMPA_vect)
 #else 
 ISR(TIMER1_COMPA_vect)
 #endif
 {
   // Check if the receiver pin should be sampled
-  if ((receiver != 0) 
-      && (receiver->m_enabled)
+  if ((receiver != 0 && receiver->m_enabled)
       && (transmitter == 0 || !transmitter->m_enabled))
     receiver->m_sample = receiver->read();
     
@@ -415,9 +415,7 @@ ISR(TIMER1_COMPA_vect)
     if (transmitter->m_sample > 7)
       transmitter->m_sample = 0;
   }
-  
-  if ((receiver != 0) 
-      && (receiver->m_enabled)
+  if ((receiver != 0 && receiver->m_enabled)
       && (transmitter == 0 || !transmitter->m_enabled))
     receiver->PLL();
 }

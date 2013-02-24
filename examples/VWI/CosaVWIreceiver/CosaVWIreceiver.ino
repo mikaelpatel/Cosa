@@ -73,7 +73,9 @@ void loop()
   uint8_t buflen = VWI::MESSAGE_MAX;
 
   // Receive message and print contents
-  if (rx.recv(buf, &buflen)) {
+  rx.await();
+  buflen = rx.recv(buf, buflen);
+  if (buflen > 0) {
     cnt += 1;
 
     // Check that the correct messaage size was received
