@@ -179,6 +179,10 @@ public:
     void PLL();
 
   public:
+    /**
+     * Construct VWI Receiver instance connected to the given pin.
+     * @param[in] rx input pin.
+     */
     Receiver(Board::DigitalPin rx);
 
     /**
@@ -216,7 +220,7 @@ public:
      * @return bool, true if a message is available, false if the wait
      * timed out.
      */
-    bool await(uint32_t ms = 0);
+    bool await(uint32_t ms = 0L);
 
     /**
      * Returns true if an unread message is available. May have a
@@ -236,7 +240,7 @@ public:
      * @param[in] ms timeout period (zero for non-blocking)
      * @return number of bytes received or negative error code.
      */
-    int8_t recv(void* buf, uint8_t len, uint32_t ms = 0);
+    int8_t recv(void* buf, uint8_t len, uint32_t ms = 0L);
   };
 
   class Transmitter : private OutputPin {
@@ -279,6 +283,10 @@ public:
     friend void TIMER1_COMPA_vect(void);
 
   public:
+    /**
+     * Construct VWI Transmitter instance connected to the given pin.
+     * @param[in] tx output pin.
+     */
     Transmitter(Board::DigitalPin tx);
 
     /**

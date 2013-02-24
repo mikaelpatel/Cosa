@@ -73,7 +73,6 @@ void loop()
   rx.await();
   msg_t msg;
   int8_t len = rx.recv(&msg, sizeof(msg));
-  cnt += 1;
 
   // Check that the correct messaage size was received
   if (len != sizeof(msg)) return;
@@ -83,6 +82,7 @@ void loop()
     next = msg.nr;
     err += 1;
   }
+  cnt += 1;
 
   // Print message contents
   trace << hex << msg.id << ':' << msg.nr << ':';
