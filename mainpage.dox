@@ -58,6 +58,7 @@ richer concurrency and low power consumption.
 10. Protothreads, http://dunkels.com/adam/pt/<br>
 11. Arduino ATtiny, http://hlt.media.mit.edu/?p=1695<br>
 12. Arduino Low Power, http://gammon.com.au/power<br>
+13. Virtual Wire, http://www.open.com.au/mikem/arduino/VirtualWire/<br>
 
 @section Naming
 
@@ -68,10 +69,9 @@ richer concurrency and low power consumption.
 
 @section Note
 
-Atmega328P and Atmega2560 based Arduino boards (Uno, Mini, Nano,
-LilyPad, Mega, etc) are supported. Timers (1-n) are not directly
-supported but planned. Arduino and AVR lib functions may be used
-together with Cosa. 
+ATmega328P, ATmega1284P and ATmega2560 based Arduino boards (Uno,
+Mini, Nano, LilyPad, Mega, Mightly, etc) are supported. Arduino and
+AVR lib functions may be used together with Cosa. 
 
 @section License
 Copyright (C) 2012-2013, Mikael Patel
