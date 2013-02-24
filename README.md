@@ -112,6 +112,7 @@ References
 10. Protothreads, http://dunkels.com/adam/pt/
 11. Arduino ATtiny, http://hlt.media.mit.edu/?p=1695
 12. Arduino Low Power, http://gammon.com.au/power
+13. Virtual Wire, http://www.open.com.au/mikem/arduino/VirtualWire/
 
 Naming
 ------
