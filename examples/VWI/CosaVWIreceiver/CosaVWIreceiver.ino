@@ -76,10 +76,7 @@ void loop()
   cnt += 1;
 
   // Check that the correct messaage size was received
-  if (len != sizeof(msg)) {
-    err += 1;
-    return;
-  }
+  if (len != sizeof(msg)) return;
 
   // Check message number 
   if (msg.nr != next) {
