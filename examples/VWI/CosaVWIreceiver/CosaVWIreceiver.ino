@@ -70,7 +70,7 @@ void loop()
   static uint32_t cnt = 0;
 
   char buf[VWI::MESSAGE_MAX];
-  uint8_t buflen = VWI::MESSAGE_MAX;
+  int8_t buflen = VWI::MESSAGE_MAX;
 
   // Receive message and print contents
   rx.await();
