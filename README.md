@@ -91,7 +91,8 @@ Drivers
 9. ST7735R, 262K Color Single-Chip TFT Controller.
 10. PCD8544 48x84 pixels matrix LCD controller/driver.
 11. TSOP4838 IR Receiver Modules for Remote Control Systems.
-12. Slave device support for SPI, TWI and OWI.
+12. Virtual Wire (VWI) on RF315/433 modules.
+13. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the Cosa/references directory.  
@@ -148,6 +149,6 @@ generic circlic buffer for IOStream::Device.
 2013-02-19 Adding support for ATtinyX5 and Servo motors. Simple ATtiny
 monitor included.  
 2013-02-23 Adding support for ATmega1284P/Mighty boards. 
-
+2013-02-24 Refactoring and porting VirtualWire to Cosa.  
 
 
