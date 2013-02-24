@@ -1,5 +1,5 @@
-CosaVWItransmitter
-==================
+CosaVWIsender
+=============
 Demonstration of the Virtual Wire Interface (VWI) driver. Transmits a
 simple message with identity, message number, and 32-bit data element.
 See CosaVWIreceiver.
