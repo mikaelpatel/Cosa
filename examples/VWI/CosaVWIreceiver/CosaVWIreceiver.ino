@@ -69,36 +69,32 @@ void loop()
   static uint32_t err = 0;
   static uint32_t cnt = 0;
 
-  char buf[VWI::MESSAGE_MAX];
-  int8_t buflen = VWI::MESSAGE_MAX;
-
-  // Receive message and print contents
+  // Wait for a message
   rx.await();
-  buflen = rx.recv(buf, buflen);
-  if (buflen > 0) {
-    cnt += 1;
+  msg_t msg;
+  int8_t len = rx.recv(&msg, sizeof(msg));
+  cnt += 1;
 
-    // Check that the correct messaage size was received
-    if (buflen != sizeof(msg_t)) {
-      trace.print(buf, buflen, 16);
-      err += 1;
-    }
-    else {
-      // Check message number
-      msg_t* msg = (msg_t*) buf;
-      if (msg->nr != next) {
-	next = msg->nr;
-	err += 1;
-      }
-      // Print message contents
-      trace << hex << msg->id << ':' << msg->nr << ':';
-      trace << hex << msg->data << endl;
-      next += 1;
-    }
-    // Print message count and errors every 256 messages
-    if (next == 0) {
-      trace << PSTR("count = ") << cnt << endl;
-      trace << PSTR("errors = ") << err << endl;
-    }
+  // Check that the correct messaage size was received
+  if (len != sizeof(msg)) {
+    err += 1;
+    return;
+  }
+
+  // Check message number 
+  if (msg.nr != next) {
+    next = msg.nr;
+    err += 1;
+  }
+
+  // Print message contents
+  trace << hex << msg.id << ':' << msg.nr << ':';
+  trace << hex << msg.data << endl;
+  next += 1;
+
+  // Print message count and errors every 256 messages
+  if (next == 0) {
+    trace << PSTR("count = ") << cnt << endl;
+    trace << PSTR("errors = ") << err << endl;
   }
 }
