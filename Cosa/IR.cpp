@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IR.hh
+ * @file Cosa/IR.cpp
  * @version 1.0
  *
  * @section License
