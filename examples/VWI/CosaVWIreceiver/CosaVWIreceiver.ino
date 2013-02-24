@@ -26,7 +26,7 @@
  * and 32-bit data element.
  *
  * @section Circuit
- * Connect RF433/315 Receiver to Arduino D12.
+ * Connect RF433/315 Receiver to Arduino D11.
  *
  * This file is part of the Arduino Che Cosa project.
  */
