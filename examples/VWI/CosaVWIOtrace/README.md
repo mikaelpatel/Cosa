@@ -6,6 +6,6 @@ Run together with CosaVWImonitor.ino.
 
 Circuit
 -------
-Connect RF433/315 Transmitter to Arduino D11.
+Connect RF433/315 Transmitter to Arduino D12.
 
 
