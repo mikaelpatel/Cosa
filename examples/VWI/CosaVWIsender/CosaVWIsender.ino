@@ -34,8 +34,13 @@
 #include "Cosa/VWI.hh"
 #include "Cosa/Watchdog.hh"
 
+#if defined(__AVR_ATtiny85__)
+// Virtual Wire Interface Transmitter connected to pin D2
+VWI::Transmitter tx(Board::D2);
+#else 
 // Virtual Wire Interface Transmitter connected to pin D12
 VWI::Transmitter tx(Board::D12);
+#endif
 
 void setup()
 {

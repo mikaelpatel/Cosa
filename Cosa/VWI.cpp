@@ -65,52 +65,42 @@ VWI::symbol_6to4(uint8_t symbol)
 static VWI::Transmitter* transmitter = 0;
 static VWI::Receiver* receiver = 0;
 
+#if defined(__AVR_ATtiny85__)
+/** Prescale table for 8-bit Timer1. Index is prescale setting */
+static const uint16_t prescale[] PROGMEM = {
+  0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 
+};
+#else
+/** Prescale table for 16-bit Timer1. Index is prescale setting */
+static const uint16_t prescale[] PROGMEM = {
+  0, 1, 8, 64, 256, 1024
+};
+#endif
+
 /**
- * Common function for setting timer ticks @ prescaler values for
- * speed. Returns prescaler index into {0, 1, 8, 64, 256, 1024} array
- * and sets nticks to compare-match value if lower than max_ticks
- * returns 0 & nticks = 0 on fault 
+ * Calculate timer setting, prescale and count value, given speed (bps),
+ * number of bits in timer. Returns zero(0) if fails otherwise prescale
+ * value/index, and timer top.
+ * @param[in] speed bits per second, transmitter/receiver.
+ * @param[in] bits number of bits in counter (8/16O).
+ * @param[out] nticks timer top value.
+ * @return prescale or zero(0).
  */
-static uint8_t 
-_timer_calc(uint16_t speed, uint16_t max_ticks, uint16_t *nticks) 
+static uint8_t
+timer_setting(uint16_t speed, uint8_t bits, uint16_t* nticks) 
 {
-  // Clock divider (prescaler) values - 0/3333: error flag
-  uint16_t prescalers[] = { 0, 1, 8, 64, 256, 1024, 3333 };
-
-  // Index into array & return bit value
-  uint8_t prescaler = 0; 
-
-  // Calculate by ntick overflow
-  unsigned long ulticks;
-  
-  // Div-by-zero protection
-  if (speed == 0) goto err;
-
-  // Test increasing prescaler (divisor), decreasing until no overflow.
-  for (prescaler = 1; prescaler < 7; prescaler += 1) {
-    // Amount of time per CPU clock tick (in seconds)
-    float clock_time = (1.0 / (float(F_CPU) / float(prescalers[prescaler])));
-    // Fraction of second needed to xmit one bit
-    float bit_time = ((1.0 / float(speed)) / 8.0);
-    // number of prescaled ticks needed to handle bit time @ speed
-    ulticks = long(bit_time / clock_time);
-    // Test if ulticks fits in nticks bitwidth (with 1-tick safety margin)
-    if ((ulticks > 1) && (ulticks < max_ticks)) {
-      break; // found prescaler
+  uint16_t max_ticks = (1 << bits) - 1;
+  uint8_t res = 0;
+  uint8_t i;
+  for (i = membersof(prescale) - 1; i > 0; i--) {
+    uint16_t scale = (uint16_t) pgm_read_word(&prescale[i]);
+    uint16_t count = (F_CPU / scale) / speed;
+    if (count > res && count < max_ticks) {
+      *nticks = count;
+      res = i;
     }
-    // Won't fit, check with next prescaler value
   }
-
-  // Check for error
-  if ((prescaler == 6) || (ulticks < 2) || (ulticks > max_ticks)) 
-    goto err;
-  
-  *nticks = ulticks;
-  return (prescaler);
-
- err:
-  *nticks = 0;
-  return (0);
+  return (res);
 }
 
 void 
@@ -208,27 +198,20 @@ VWI::begin(uint16_t speed, uint8_t mode)
 
 #if defined(__AVR_ATtiny85__)
   // Figure out prescaler value and counter match value
-  prescaler = _timer_calc(speed, (uint8_t)-1, &nticks);
+  prescaler = timer_setting(speed * 8, 8, &nticks);
   if (!prescaler) return (0);
 
   // Turn on CTC mode / Output Compare pins disconnected
-  TCCR0A = 0;
-  TCCR0A = _BV(WGM01);
-
-  // Convert prescaler index to TCCRnB prescaler bits CS00, CS01, CS02
-  TCCR0B = 0;
-  // Set CS00, CS01, CS02 (other bits not needed)
-  TCCR0B = prescaler; 
+  TCCR1 = _BV(PWM1A) | prescaler;
 
   // Number of ticks to count before firing interrupt
-  OCR0A = uint8_t(nticks);
+  OCR1A = uint8_t(nticks);
 
-  // Set mask to fire interrupt when OCF0A bit is set in TIFR0
-  TIMSK |= _BV(OCIE0A);
-
+  // Enable interrup on compare
+  TIMSK |= _BV(OCIE1A);
 #else
   // Figure out prescaler value and counter match value
-  prescaler = _timer_calc(speed, (uint16_t)-1, &nticks);
+  prescaler = timer_setting(speed * 8, 16, &nticks);
   if (!prescaler) return (0);
 
   // Output Compare pins disconnected, and turn on CTC mode
@@ -382,11 +365,7 @@ VWI::Transmitter::send(void* buf, uint8_t len)
  * overflows. Its job is to output the next bit from the transmitter
  * (every 8 calls) and to call the PLL code if the receiver is enabled.
  */
-#if defined(__AVR_ATtiny85__)
-ISR(TIM0_COMPA_vect)
-#else 
 ISR(TIMER1_COMPA_vect)
-#endif
 {
   // Check if the receiver pin should be sampled
   if ((receiver != 0 && receiver->m_enabled)
