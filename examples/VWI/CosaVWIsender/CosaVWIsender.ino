@@ -23,24 +23,36 @@
  * @section Description
  * Demonstration of the Virtual Wire Interface (VWI) driver.
  * Transmits a simple message with identity, message number,
- * and 32-bit data element.
+ * and two data element; analog samples.
  *
  * @section Circuit
- * Connect RF433/315 Transmitter to Arduino D12.
+ * Connect RF433/315 Transmitter Data to Arduino(ATtiny85) D12(D2),
+ * VCC to Arduino D10(D1) and connect GND. Connect Arduino analog pins
+ * A2 and D3 to analog sensors. On ATtiny85 the pins are D2, D1. 
+ * The power control pin D10(D1) can also be used for a LED.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/VWI.hh"
+#include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 
+// Keep build preprocessor happy
+int dummy = 0;
+
+// Virtual Wire Interface Transmitter and Power Control pins
 #if defined(__AVR_ATtiny85__)
-// Virtual Wire Interface Transmitter connected to pin D2
 VWI::Transmitter tx(Board::D2);
+OutputPin pw(Board::D1);
 #else 
-// Virtual Wire Interface Transmitter connected to pin D12
 VWI::Transmitter tx(Board::D12);
+OutputPin pw(Board::D10);
 #endif
+
+// Analog pins to sample for values to send
+AnalogPin luminance(Board::A2);
+AnalogPin temperature(Board::A3);
 
 void setup()
 {
@@ -56,7 +68,7 @@ void setup()
 struct msg_t {
   uint32_t id;
   uint8_t nr;
-  uint32_t data;
+  uint16_t data[2];
 };
 
 void loop()
@@ -64,16 +76,24 @@ void loop()
   static msg_t msg = { 
     0xdeadbeef,
     0, 	
-    0x12345678
+    { 0, 0 }
   };
 
-  // Send message and await completion
+  // Turn power on. While stabilizing sample the analog values
+  pw.on();
+  msg.data[0] = luminance.sample();
+  msg.data[1] = temperature.sample();
+
+  // Send the message with the values and wait for completion
   tx.send(&msg, sizeof(msg));
   tx.await();
 
+  // Turn power off.
+  Watchdog::delay(128);
+  pw.off();
+  
   // Update message number and data
   msg.nr += 1;
-  msg.data += 0x10001;
 
   // Delivery the next message after a 0.5 second delay
   Watchdog::delay(512);

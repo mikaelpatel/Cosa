@@ -23,7 +23,7 @@
  * @section Description
  * Demonstration of the Virtual Wire Interface (VWI) driver.
  * Receive and print a simple message with identity, message number,
- * and 32-bit data element.
+ * and 2x16-bit analog data sample.
  *
  * @section Circuit
  * Connect RF433/315 Receiver to Arduino D11.
@@ -59,7 +59,7 @@ void setup()
 struct msg_t {
   uint32_t id;
   uint8_t nr;
-  uint32_t data;
+  uint16_t data[2];
 };
 
 void loop()
@@ -86,7 +86,7 @@ void loop()
 
   // Print message contents
   trace << hex << msg.id << ':' << msg.nr << ':';
-  trace << hex << msg.data << endl;
+  trace << hex << msg.data[0] << PSTR(", ") << hex << msg.data[1] << endl;
   next += 1;
 
   // Print message count and errors every 256 messages
