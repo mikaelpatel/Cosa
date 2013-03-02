@@ -42,7 +42,9 @@
 int dummy = 0;
 
 // Virtual Wire Interface Transmitter and Power Control pins
-#if defined(__AVR_ATtiny85__)
+#if defined(__AVR_ATtiny25__)		\
+ || defined(__AVR_ATtiny45__)		\
+ || defined(__AVR_ATtiny85__)
 VWI::Transmitter tx(Board::D2);
 OutputPin pw(Board::D1);
 #else 

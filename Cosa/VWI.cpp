@@ -65,7 +65,9 @@ VWI::symbol_6to4(uint8_t symbol)
 static VWI::Transmitter* transmitter = 0;
 static VWI::Receiver* receiver = 0;
 
-#if defined(__AVR_ATtiny85__)
+#if defined(__AVR_ATtiny25__)		\
+ || defined(__AVR_ATtiny45__)		\
+ || defined(__AVR_ATtiny85__)
 /** Prescale table for 8-bit Timer1. Index is prescale setting */
 static const uint16_t prescale[] PROGMEM = {
   0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 
@@ -196,7 +198,9 @@ VWI::begin(uint16_t speed, uint8_t mode)
   // Set sleep mode
   s_mode = mode;
 
-#if defined(__AVR_ATtiny85__)
+#if defined(__AVR_ATtiny25__)		\
+ || defined(__AVR_ATtiny45__)		\
+ || defined(__AVR_ATtiny85__)
   // Figure out prescaler value and counter match value
   prescaler = timer_setting(speed * 8, 8, &nticks);
   if (!prescaler) return (0);
