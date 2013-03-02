@@ -563,12 +563,12 @@ public:
    * Analog pin symbols
    */
   enum AnalogPin {
-    A0 = D5,
-    A1 = D4,
-    A2 = D3,
-    A3 = D2,
-    A4 = D1,
-    A5 = D0
+    A0 = 0,
+    A1,
+    A2,
+    A3,
+    A4,
+    A5
   };
 
   /**

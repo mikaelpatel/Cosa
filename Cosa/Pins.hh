@@ -705,11 +705,22 @@ public:
   /**
    * Reference voltage; ARef pin, Vcc or internal 1V1.
    */
+#if defined(__AVR_ATtiny25__)			\
+ || defined(__AVR_ATtiny45__)			\
+ || defined(__AVR_ATtiny85__)
+  enum Reference {
+    AVCC_REFERENCE = 0,
+    APIN_REFERENCE = _BV(REFS0),
+    A1V1_REFERENCE = _BV(REFS1),
+    A2V56_REFERENCE = (_BV(REFS2) | _BV(REFS1))
+  };
+#else
   enum Reference {
     APIN_REFERENCE = 0,
     AVCC_REFERENCE = _BV(REFS0),
     A1V1_REFERENCE = (_BV(REFS1) | _BV(REFS0))
   };
+#endif
 
 protected:
   static AnalogPin* sampling_pin;
