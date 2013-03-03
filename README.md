@@ -125,10 +125,9 @@ Naming
 Note
 ----
 
-Atmega328P and Atmega2560 based Arduino boards (Uno, Mini, Nano,
-LilyPad, Mega, etc) are supported. Timers (1-n) are not directly
-supported but planned. Arduino and AVR lib functions may be used
-together with Cosa. 
+ATtiny, and Atmega328P, Atmega1284P, Atmega2560 based Arduino boards
+(Uno, Mini, Nano, LilyPad, Mighty, Mega, etc) are supported. 
+Arduino and AVR lib functions may be used together with Cosa. 
 
 News
 ----
@@ -147,9 +146,10 @@ controller with support for fonts and icons.
 example). Improving PCD8544 driver with OffScreen canvas.  
 2013-02-11 UART receiver, Device::getchar(), implemented. Adding
 generic circlic buffer for IOStream::Device.  
-2013-02-19 Adding support for ATtinyX5 and Servo motors. Simple ATtiny
-monitor included.  
+2013-02-19 Adding support for ATtinyX5. Simple ATtiny monitor included.  
+2013-02-19 Adding support for RC Servo.  
 2013-02-23 Adding support for ATmega1284P/Mighty boards.  
 2013-02-24 Refactoring and porting VirtualWire to Cosa.   
-
+2013-03-03 Virtual Wire Interface (VWI) for ATtiny. VWI IOStream
+Device to allow streaming of output over Virtual Wire.   
 
