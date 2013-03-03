@@ -55,7 +55,7 @@ VWI::CRC(uint8_t* ptr, uint8_t count)
 uint8_t 
 VWI::symbol_6to4(uint8_t symbol)
 {
-  for (uint8_t i = 0; i < 16; i++)
+  for (uint8_t i = 0; i < membersof(symbols); i++)
     if (symbol == pgm_read_byte(&symbols[i]))
       return (i);
   return (0);
@@ -190,7 +190,7 @@ bool
 VWI::begin(uint16_t speed, uint8_t mode)
 {
   // Number of prescaled ticks needed
-  uint16_t nticks;
+  uint16_t nticks = 0;
 
   // Bit values for CS0[2:0]
   uint8_t prescaler;
