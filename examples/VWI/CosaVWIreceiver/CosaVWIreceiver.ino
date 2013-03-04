@@ -40,6 +40,9 @@
 // Virtual Wire Interface Receiver connected to pin D11
 VWI::Receiver rx(Board::D11);
 
+#define SPEED 4000
+// #define SPEED 2000
+
 void setup()
 {
   // Start trace on UART. Print available free memory.
@@ -51,7 +54,7 @@ void setup()
   Watchdog::begin();
 
   // Start virtual wire interface and receiver
-  VWI::begin(2000);
+  VWI::begin(SPEED);
   rx.begin();
 }
 

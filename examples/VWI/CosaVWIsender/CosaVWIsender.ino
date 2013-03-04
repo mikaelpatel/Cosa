@@ -38,8 +38,9 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 
-// Keep build preprocessor happy
-int dummy = 0;
+// Analog pins to sample for values to send
+AnalogPin luminance(Board::A2);
+AnalogPin temperature(Board::A3);
 
 // Virtual Wire Interface Transmitter and Power Control pins
 #if defined(__AVR_ATtiny25__)		\
@@ -47,14 +48,12 @@ int dummy = 0;
  || defined(__AVR_ATtiny85__)
 VWI::Transmitter tx(Board::D2);
 OutputPin pw(Board::D1);
+#define SPEED 2000
 #else 
 VWI::Transmitter tx(Board::D12);
 OutputPin pw(Board::D10);
+#define SPEED 4000
 #endif
-
-// Analog pins to sample for values to send
-AnalogPin luminance(Board::A2);
-AnalogPin temperature(Board::A3);
 
 void setup()
 {
@@ -62,7 +61,7 @@ void setup()
   Watchdog::begin();
 
   // Start virtual wire interface and transmitter
-  VWI::begin(2000);
+  VWI::begin(SPEED);
   tx.begin();
 }
 
@@ -76,7 +75,7 @@ struct msg_t {
 void loop()
 {
   static msg_t msg = { 
-    0xdeadbeef,
+    0xC05A0001,
     0, 	
     { 0, 0 }
   };

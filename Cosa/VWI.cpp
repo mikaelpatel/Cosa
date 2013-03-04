@@ -390,13 +390,13 @@ ISR(TIMER1_COMPA_vect)
       else {
 	transmitter->write(transmitter->m_buffer[transmitter->m_index] & 
 			   (1 << transmitter->m_bit++));
-	if (transmitter->m_bit >= 6) {
+	if (transmitter->m_bit >= VWI::BITS_PER_SYMBOL) {
 	  transmitter->m_bit = 0;
 	  transmitter->m_index++;
 	}
       }
     }
-    if (transmitter->m_sample > 7)
+    if (transmitter->m_sample >= VWI::SAMPLES_PER_BIT)
       transmitter->m_sample = 0;
   }
   if ((receiver != 0 && receiver->m_enabled)
