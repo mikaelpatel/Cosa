@@ -128,7 +128,7 @@ VWI::Receiver::PLL()
 
     // Check the integrator to see how many samples in this cycle were
     // high. If < 5 out of 8, then its declared a 0 bit, else a 1;
-    if (m_integrator >= 5)
+    if (m_integrator >= INTEGRATOR_THRESHOLD)
       m_bits |= 0x800;
 
     m_pll_ramp -= RAMP_MAX;
@@ -139,12 +139,13 @@ VWI::Receiver::PLL()
     if (m_active) {
       // We have the start symbol and now we are collecting message
       // bits, 6 per symbol, each which has to be decoded to 4 bits
-      if (++m_bit_count >= 12) {
+      if (++m_bit_count >= (BITS_PER_SYMBOL * 2)) {
 	// Have 12 bits of encoded message == 1 byte encoded. Decode
 	// as 2 lots of 6 bits into 2 lots of 4 bits. The 6 lsbits are
 	// the high nybble.
 	uint8_t data = 
-	  (symbol_6to4(m_bits & 0x3f)) << 4 | symbol_6to4(m_bits >> 6);
+	  (symbol_6to4(m_bits & SYMBOL_MASK) << 4) | 
+	  symbol_6to4(m_bits >> BITS_PER_SYMBOL);
 	
 	// The first decoded byte is the byte count of the following
 	// message the count includes the byte count and the 2
@@ -155,7 +156,7 @@ VWI::Receiver::PLL()
 	  // sensibility. It cant be less than 4, since it includes
 	  // the bytes count itself and the 2 byte FCS 
 	  m_count = data;
-	  if (m_count < 4 || m_count > MESSAGE_MAX) {
+	  if (m_count < MESSAGE_MIN || m_count > MESSAGE_MAX) {
 	    // Stupid message length, drop the whole thing
 	    m_active = false;
 	    m_bad++;
@@ -202,7 +203,7 @@ VWI::begin(uint16_t speed, uint8_t mode)
  || defined(__AVR_ATtiny45__)		\
  || defined(__AVR_ATtiny85__)
   // Figure out prescaler value and counter match value
-  prescaler = timer_setting(speed * 8, 8, &nticks);
+  prescaler = timer_setting(speed * SAMPLES_PER_BIT, 8, &nticks);
   if (!prescaler) return (0);
 
   // Turn on CTC mode / Output Compare pins disconnected
@@ -215,7 +216,7 @@ VWI::begin(uint16_t speed, uint8_t mode)
   TIMSK |= _BV(OCIE1A);
 #else
   // Figure out prescaler value and counter match value
-  prescaler = timer_setting(speed * 8, 16, &nticks);
+  prescaler = timer_setting(speed * SAMPLES_PER_BIT, 16, &nticks);
   if (!prescaler) return (0);
 
   // Output Compare pins disconnected, and turn on CTC mode

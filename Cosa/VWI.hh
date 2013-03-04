@@ -47,6 +47,18 @@ public:
   /** Maximum number of bytes in a message (incl. byte count and FCS) */
   static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
 
+  /** Minimum number of bytes in a message */
+  static const uint8_t MESSAGE_MIN = 4;
+
+  /** Number of samples per bit */
+  static const uint8_t SAMPLES_PER_BIT = 8;
+
+  /** Bits per symbol */
+  static const uint8_t BITS_PER_SYMBOL = 6;
+  
+  /** Symbol bits mask */
+  static const uint8_t SYMBOL_MASK = 0x3f;
+
   /** 
    * 4 bit to 6 bit symbol converter table. Used to convert the high
    * and low nybbles of the transmitted data into 6 bit symbols for
@@ -91,8 +103,8 @@ public:
     /** The size of the receiver ramp. Ramp wraps modulo this number */
     static const uint8_t RAMP_MAX = 160;
 
-    /* Number of samples per bit */
-    static const uint8_t SAMPLES_PER_BIT = 8;
+    /** Number of samples to integrate before mapping to one(1) */
+    static const uint8_t INTEGRATOR_THRESHOLD = 5;
 
     /** 
      * Ramp adjustment parameters. Standard is if a transition occurs
