@@ -27,6 +27,7 @@
  */
 
 #include "Cosa/IOBuffer.hh"
+#include <avr/sleep.h>
 
 int 
 IOBuffer::putchar(char c)
@@ -47,4 +48,16 @@ IOBuffer::getchar()
   return (m_buffer[next]);
 }
 
-
+int
+IOBuffer::flush()
+{
+  while (m_head != m_tail) {
+    cli();
+    set_sleep_mode(SLEEP_MODE_IDLE);
+    sleep_enable();
+    sei();
+    sleep_cpu();
+    sleep_disable();
+  }
+  return (0);
+}

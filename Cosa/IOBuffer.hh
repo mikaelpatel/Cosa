@@ -114,15 +114,10 @@ public:
 
   /**
    * @override
-   * Reset buffer.
+   * Wait for the buffer to become empty.
    * @return zero(0) or negative error code.
    */
-  virtual int flush()
-  {
-    m_tail = 0;
-    m_head = 0;
-    return (0);
-  }
+  virtual int flush();
 };
 
 #endif
