@@ -152,4 +152,4 @@ generic circlic buffer for IOStream::Device.
 2013-02-24 Refactoring and porting VirtualWire to Cosa.   
 2013-03-03 Virtual Wire Interface (VWI) for ATtiny. VWI IOStream
 Device to allow streaming of output over Virtual Wire.   
-
+2013-03-05 Introducing Manchester Phased Encoder (MPE) based on VWI.  
