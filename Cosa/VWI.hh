@@ -59,6 +59,9 @@ public:
   /** Symbol bits mask */
   static const uint8_t SYMBOL_MASK = 0x3f;
 
+  /** Start symbol */
+  static const uint16_t START_SYMBOL = 0xb38;
+
   /** 
    * 4 bit to 6 bit symbol converter table. Used to convert the high
    * and low nybbles of the transmitted data into 6 bit symbols for
@@ -66,6 +69,9 @@ public:
    * consecutive identical bits. 
    */
   static const uint8_t symbols[] PROGMEM;
+
+  /** Check sum for received frame */
+  static const uint16_t CHECK_SUM = 0xf0b8;
 
   /**
    * Compute CRC over count bytes.

@@ -68,15 +68,19 @@ static VWI::Receiver* receiver = 0;
 #if defined(__AVR_ATtiny25__)		\
  || defined(__AVR_ATtiny45__)		\
  || defined(__AVR_ATtiny85__)
+
 /** Prescale table for 8-bit Timer1. Index is prescale setting */
 static const uint16_t prescale[] PROGMEM = {
   0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 
 };
+
 #else
+
 /** Prescale table for 16-bit Timer1. Index is prescale setting */
 static const uint16_t prescale[] PROGMEM = {
   0, 1, 8, 64, 256, 1024
 };
+
 #endif
 
 /**
@@ -176,7 +180,7 @@ VWI::Receiver::PLL()
     }
 
     // Not in a message, see if we have a start symbol
-    else if (m_bits == 0xb38) {
+    else if (m_bits == START_SYMBOL) {
       // Have start symbol, start collecting message
       m_active = true;
       m_bit_count = 0;
@@ -270,7 +274,7 @@ VWI::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
   if (!m_done && (ms == 0 || !await(ms))) return (0);
 
   // Message check-sum error
-  if (CRC(m_buffer, m_length) != 0xf0b8) return (-1);
+  if (CRC(m_buffer, m_length) != CHECK_SUM) return (-1);
     
   // Wait until done is set before reading length then remove
   // bytecount and FCS  

@@ -2,7 +2,7 @@ CosaVWIreceiver
 ===============
 Demonstration of the Virtual Wire Interface (VWI) driver.
 Receive and print a simple message with identity, message number,
-and 32-bit data element. See CosaVWIsender.ino.
+and two analog data samples. See CosaVWIsender.ino.
 
 Circuit
 -------
