@@ -21,12 +21,12 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Manchester Phased Encoder (MPE) with Ethernet frame preamble and 
- * delimiter.
+ * Manchester Phase Encoder (MPE) with Ethernet frame preamble and 
+ * delimiter. 
  *
  * @section Acknowledgements
  * This is a refactoring of the Virtual Wire Interface (VWI) to allow
- * Manchester Phased Encoding (MPE). The orginal VirtualWire library 
+ * Manchester Phase Encoding (MPE). The orginal VirtualWire library 
  * was written by Mike McCauley.
  * 
  * This file is part of the Arduino Che Cosa project.
@@ -69,7 +69,7 @@ public:
   static const uint8_t symbols[] PROGMEM;
 
   /**
-   * Convert a 8-bit encoded symbol into its 4 bit decoded
+   * Convert an 8-bit encoded symbol into its 4 bit decoded
    * equivalent. 
    * @param[in] symbol 8-bit symbol.
    * @return 4-bit decoding.
@@ -92,8 +92,8 @@ public:
   
 public:
   /**
-   * Initialise the Manchester Phased Encoder, to operate at speed
-   * bits per second with given sleep mode. Return true(1) if
+   * Initialise the Manchester Phase Encoder, to operate at speed,
+   * bits per second and with given sleep mode. Return true(1) if
    * successful otherwise false(0). Must be called before transmitting
    * or receiving.
    * @param[in] speed in bits per second.

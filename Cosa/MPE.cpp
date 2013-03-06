@@ -21,18 +21,17 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Manchester Phased Encoder (MPE) with Ethernet frame preamble and 
+ * Manchester Phase Encoder (MPE) with Ethernet frame preamble and 
  * delimiter.
  *
  * @section Acknowledgements
  * This is a refactoring of the Virtual Wire Interface (VWI) to allow
- * Manchester Phased Encoding (MPE). The orginal VirtualWire library 
+ * Manchester Phase Encoding (MPE). The orginal VirtualWire library 
  * was written by Mike McCauley.
  * 
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Trace.hh"
 #include "Cosa/MPE.hh"
 #include "Cosa/RTC.hh"
 #include <util/crc16.h>
@@ -163,15 +162,15 @@ MPE::Receiver::PLL()
       // bits, 8 per symbol, each which has to be decoded to 4 bits
       if (++m_bit_count >= (BITS_PER_SYMBOL * 2)) {
 	// Have 16 bits of encoded message == 1 byte encoded. Decode
-	// as 2 lots of 8 bits into 2 lots of 4 bits. The 8 lsbits are
+	// as 2 lots of 8 bits into 2 lots of 4 bits. The 8 msbits are
 	// the high nybble.
 	uint8_t data = 
-	  (symbol_8to4(m_bits & SYMBOL_MASK)) << 4 | 
-	  symbol_8to4(m_bits >> BITS_PER_SYMBOL);
+	  (symbol_8to4(m_bits >> BITS_PER_SYMBOL) << 4) | 
+	  symbol_8to4(m_bits & SYMBOL_MASK); 
 	
 	// The first decoded byte is the byte count of the following
-	// message the count includes the byte count and the 2
-	// trailing FCS bytes. 
+	// message the count includes the byte count and the 2 trailing 
+	// FCS bytes.  
 	if (m_length == 0) {
 	  // The first byte is the byte count. Check it for
 	  // sensibility. It cant be less than 4, since it includes
@@ -361,25 +360,26 @@ MPE::Transmitter::send(void* buf, uint8_t len)
   // Encode the message length
   uint8_t count = len + 3;
   crc = _crc_ccitt_update(crc, count);
-  *tp++ = pgm_read_byte(&symbols[count >> 4]);
   *tp++ = pgm_read_byte(&symbols[count & 0xf]);
+  *tp++ = pgm_read_byte(&symbols[count >> 4]);
 
   // Encode the message into 8 bit symbols. Each byte is converted into 
-  // 2 X 8-bit symbols, high nybble first, low nybble second
+  // 2 X 8-bit symbols, low nybble first, high nybble second, according
+  // to Ethernet transmission order of bits in a byte.
   for (uint8_t i = 0; i < len; i++) {
     crc = _crc_ccitt_update(crc, bp[i]);
-    *tp++ = pgm_read_byte(&symbols[bp[i] >> 4]);
     *tp++ = pgm_read_byte(&symbols[bp[i] & 0xf]);
+    *tp++ = pgm_read_byte(&symbols[bp[i] >> 4]);
   }
 
   // Append the FCS, 16 bits before encoding (4 X 8-bit symbols after
   // encoding) Caution: MPE expects the _ones_complement_ of the CCITT
   // CRC-16 as the FCS MPE sends FCS as low byte then hi byte
   crc = ~crc;
-  *tp++ = pgm_read_byte(&symbols[(crc >> 4)  & 0xf]);
   *tp++ = pgm_read_byte(&symbols[crc & 0xf]);
-  *tp++ = pgm_read_byte(&symbols[(crc >> 12) & 0xf]);
+  *tp++ = pgm_read_byte(&symbols[(crc >> 4)  & 0xf]);
   *tp++ = pgm_read_byte(&symbols[(crc >> 8)  & 0xf]);
+  *tp++ = pgm_read_byte(&symbols[(crc >> 12) & 0xf]);
 
   // Total number of symbols to send
   m_length = HEADER_MAX + (count * 2);

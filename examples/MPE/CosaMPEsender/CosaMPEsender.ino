@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Manchester Phased Encoder (MPE) driver.
+ * Demonstration of the Manchester Phase Encoder (MPE) driver.
  * Transmits a simple message with identity, message number,
  * and two data element; analog samples.
  *
@@ -90,7 +90,6 @@ void loop()
   tx.await();
 
   // Turn power off.
-  Watchdog::delay(128);
   pw.off();
   
   // Update message number and data

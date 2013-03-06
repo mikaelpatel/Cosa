@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Manchester Phased Encoder (MPE) driver.
+ * Demonstration of the Manchester Phase Encoder (MPE) driver.
  * Receive and print a simple message with identity, message number,
  * and 2x16-bit analog data sample.
  *
@@ -37,7 +37,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
-// Manchester Phased Encoder Receiver connected to pin D11
+// Manchester Phase Encoder Receiver connected to pin D11
 MPE::Receiver rx(Board::D11);
 
 #define SPEED 4000

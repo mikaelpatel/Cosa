@@ -1,6 +1,6 @@
 CosaMPEreceiver
 ===============
-Demonstration of the Manchester Phased Encoder (MPE) driver.
+Demonstration of the Manchester Phase Encoder (MPE) driver.
 Receive and print a simple message with identity, message number,
 and 2x16 bit analog values. See CosaMPEsender.ino.
 
