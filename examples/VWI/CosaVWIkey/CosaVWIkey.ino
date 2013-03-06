@@ -76,7 +76,7 @@ void loop()
     { 0x5a5a, 0xa5a5 }
   };
 
-  // Go to sleep in power mode node (approx. 
+  // Go to sleep in power down mode (approx. 250 uA)
   cli();
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
