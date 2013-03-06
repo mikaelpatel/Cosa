@@ -313,6 +313,7 @@ public:
   static InterruptPin* ext[Board::EXT_MAX];
   
   enum Mode {
+    ON_LOW_LEVEL_MODE = 0,
     ON_CHANGE_MODE = _BV(ISC00),
     ON_FALLING_MODE = _BV(ISC01),
     ON_RISING_MODE = (_BV(ISC01) | _BV(ISC00)),
