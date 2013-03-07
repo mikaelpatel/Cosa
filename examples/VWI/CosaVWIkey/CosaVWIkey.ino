@@ -33,28 +33,39 @@
 
 #include "Cosa/VWI.hh"
 #include "Cosa/Pins.hh"
+#include "Cosa/Power.hh"
 
-// Simple null interrupt handler just for wakeup call
+// Simple interrupt handler just for wakeup call and some bookkeeping just 
+// to see how many times it is called; many as it is called while low.
 class WakeupButton : public InterruptPin {
+private:
+  uint16_t m_count;
 public:
   WakeupButton(Board::InterruptPin pin, InterruptPin::Mode mode) :
-    InterruptPin(pin, mode)
+    InterruptPin(pin, mode),
+    m_count(0)
   {}
-  virtual void on_interrupt() {}
+  virtual void on_interrupt() { m_count++; }
+  uint16_t get_count() { return (m_count); }
 };
 
 // Connect RF433 transmitter to ATtiny/D1
 VWI::Transmitter tx(Board::D1);
-#define SPEED 4000
+const uint16_t SPEED = 4000;
 
 // Connect button with pullup to EXT0/D2
 WakeupButton wakeup(Board::EXT0, InterruptPin::ON_LOW_LEVEL_MODE);
 
 void setup()
 {
-  // Start the Virtual Wire Interface and transmitter at given speed
+  // Start the Virtual Wire Interface/Transmitter
   VWI::begin(SPEED);
   tx.begin();
+  
+  // Disable hardware
+  VWI::disable();
+  Power::adc_disable();
+  Power::usi_disable();
 
   // Enable the interrupt pin
   wakeup.enable();
@@ -73,19 +84,17 @@ void loop()
   static msg_t msg = { 
     0xC05A0003,
     0, 	
-    { 0x5a5a, 0xa5a5 }
+    { 0, 0xa5a5 }
   };
 
-  // Go to sleep in power down mode (approx. 250 uA)
-  cli();
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-  sleep_enable();
-  sei();
-  sleep_cpu();
-  sleep_disable();
+  // Go to sleep in power down mode
+  Power::sleep(SLEEP_MODE_PWR_DOWN);
+  msg.data[0] = wakeup.get_count();
 
   // Send the message and update number
+  VWI::enable();
   tx.send(&msg, sizeof(msg));
   tx.await();
+  VWI::disable();
   msg.nr += 1;
 }

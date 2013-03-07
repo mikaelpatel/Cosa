@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOBuffer.cpp
+ * @file Cosa/Power.cpp
  * @version 1.0
  *
  * @section License
@@ -21,38 +21,20 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Circlic buffer for IOStreams. 
+ * Power Management and Sleep modes.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IOBuffer.hh"
 #include "Cosa/Power.hh"
 
-int 
-IOBuffer::putchar(char c)
+void
+Power::sleep(uint8_t mode)
 {
-  uint8_t next = (m_head + 1) & BUFFER_MASK;
-  if (next == m_tail) return (-1);
-  m_buffer[next] = c;
-  m_head = next;
-  return (c & 0xff);
-}
-
-int 
-IOBuffer::getchar()
-{
-  if (m_head == m_tail) return (-1);
-  uint8_t next = (m_tail + 1) & BUFFER_MASK;
-  m_tail = next;
-  return (m_buffer[next]);
-}
-
-int
-IOBuffer::flush()
-{
-  while (m_head != m_tail) {
-    Power::sleep(SLEEP_MODE_IDLE);
-  }
-  return (0);
+  cli();
+  set_sleep_mode(mode);
+  sleep_enable();
+  sei();
+  sleep_cpu();
+  sleep_disable();
 }

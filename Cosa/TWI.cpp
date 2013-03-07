@@ -36,6 +36,7 @@
 
 #include "Cosa/TWI.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Power.hh"
 
 /**
  * Default Two-Wire Interface clock: 100 KHz
@@ -144,12 +145,7 @@ int
 TWI::await_completed(uint8_t mode)
 {
   do {
-    cli();
-    set_sleep_mode(mode);
-    sleep_enable();
-    sei();
-    sleep_cpu();
-    sleep_disable();
+    Power::sleep(mode);
   } while (m_state > IDLE_STATE);
   return (m_count);
 }

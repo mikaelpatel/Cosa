@@ -28,6 +28,7 @@
  */
 
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Power.hh"
 #include "Cosa/Bits.h"
 
 Watchdog::InterruptHandler Watchdog::s_handler = 0;
@@ -103,12 +104,7 @@ Watchdog::await(AwaitCondition fn, void* env, uint16_t ms)
   if (ms != 0) ticks += (ms / ms_per_tick());
   do {
     if (fn != 0 && fn(env)) return;
-    cli();
-    set_sleep_mode(s_mode);
-    sleep_enable();
-    sei();
-    sleep_cpu();
-    sleep_disable();
+    Power::sleep(s_mode);
   } while ((ticks != s_ticks) || ((ms == 0) && (fn != 0)));
 }
 

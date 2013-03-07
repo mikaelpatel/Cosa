@@ -33,6 +33,7 @@
 
 #include "Cosa/VWI.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Power.hh"
 #include <util/crc16.h>
 
 const uint8_t 
@@ -215,9 +216,6 @@ VWI::begin(uint16_t speed, uint8_t mode)
 
   // Number of ticks to count before firing interrupt
   OCR1A = uint8_t(nticks);
-
-  // Enable interrup on compare
-  TIMSK |= _BV(OCIE1A);
 #else
   // Figure out prescaler value and counter match value
   prescaler = timer_setting(speed * SAMPLES_PER_BIT, 16, &nticks);
@@ -233,7 +231,20 @@ VWI::begin(uint16_t speed, uint8_t mode)
   // Caution: special procedures for setting 16 bit regs
   // is handled by the compiler
   OCR1A = nticks;
+#endif
+  enable();
+  return (1);
+}
 
+void
+VWI::enable()
+{
+#if defined(__AVR_ATtiny25__)		\
+ || defined(__AVR_ATtiny45__)		\
+ || defined(__AVR_ATtiny85__)
+  // Enable interrupt on compare
+  TIMSK |= _BV(OCIE1A);
+#else
   // Enable interrupt
 #ifdef TIMSK1
   TIMSK1 |= _BV(OCIE1A);
@@ -241,8 +252,24 @@ VWI::begin(uint16_t speed, uint8_t mode)
   TIMSK |= _BV(OCIE1A);
 #endif
 #endif
+}
 
-  return (1);
+void
+VWI::disable()
+{
+#if defined(__AVR_ATtiny25__)		\
+ || defined(__AVR_ATtiny45__)		\
+ || defined(__AVR_ATtiny85__)
+  // Enable interrupt on compare
+  TIMSK &= ~_BV(OCIE1A);
+#else
+  // Enable interrupt
+#ifdef TIMSK1
+  TIMSK1 &= ~_BV(OCIE1A);
+#else
+  TIMSK &= ~_BV(OCIE1A);
+#endif
+#endif
 }
 
 VWI::Receiver::Receiver(Board::DigitalPin rx) : 
@@ -257,12 +284,7 @@ VWI::Receiver::await(unsigned long ms)
   // Allow low power mode while waiting
   unsigned long start = RTC::millis();
   while (!m_done && (ms == 0 || ((RTC::millis() - start) < ms))) {
-    cli();
-    set_sleep_mode(s_mode);
-    sleep_enable();
-    sei();
-    sleep_cpu();
-    sleep_disable();
+    Power::sleep(s_mode);
   }
   return (m_done);
 }
@@ -317,12 +339,7 @@ void
 VWI::Transmitter::await()
 {
   while (m_enabled) {
-    cli();
-    set_sleep_mode(s_mode);
-    sleep_enable();
-    sei();
-    sleep_cpu();
-    sleep_disable();
+    Power::sleep(s_mode);
   }
 }
 

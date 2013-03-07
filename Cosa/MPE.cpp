@@ -34,6 +34,7 @@
 
 #include "Cosa/MPE.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Power.hh"
 #include <util/crc16.h>
 
 // Manchester encoder table 4 to 8 bits.
@@ -273,12 +274,7 @@ MPE::Receiver::await(unsigned long ms)
   // Allow low power mode while waiting
   unsigned long start = RTC::millis();
   while (!m_done && (ms == 0 || ((RTC::millis() - start) < ms))) {
-    cli();
-    set_sleep_mode(s_mode);
-    sleep_enable();
-    sei();
-    sleep_cpu();
-    sleep_disable();
+    Power::sleep(s_mode);
   }
   return (m_done);
 }
@@ -335,12 +331,7 @@ void
 MPE::Transmitter::await()
 {
   while (m_enabled) {
-    cli();
-    set_sleep_mode(s_mode);
-    sleep_enable();
-    sei();
-    sleep_cpu();
-    sleep_disable();
+    Power::sleep(s_mode);
   }
 }
 

@@ -27,6 +27,7 @@
  */
 
 #include "Cosa/Queue.hh"
+#include "Cosa/Power.hh"
 
 bool
 Queue::enqueue(void* data)
@@ -71,12 +72,7 @@ void
 Queue::await(void* data, uint8_t mode)
 {
   while (!dequeue(data)) {
-    cli();
-    set_sleep_mode(mode);
-    sleep_enable();
-    sei();
-    sleep_cpu();
-    sleep_disable();
+    Power::sleep(mode);
   }
 }
 

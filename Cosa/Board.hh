@@ -44,8 +44,8 @@
 #define __COSA_BOARD_HH__
 
 #if defined(__AVR_ATmega8__)			\
- || defined(__AVR_ATmega168__)			\
- || defined(__AVR_ATmega328P__)
+  || defined(__AVR_ATmega168__)			\
+  || defined(__AVR_ATmega328P__)
 
 class Board {
   friend class Pin;
@@ -507,8 +507,8 @@ public:
 };
 
 #elif defined(__AVR_ATtiny25__)		\
-   || defined(__AVR_ATtiny45__)		\
-   || defined(__AVR_ATtiny85__)
+  || defined(__AVR_ATtiny45__)		\
+  || defined(__AVR_ATtiny85__)
 
 #define ANALOG_COMP_vect ANA_COMP_vect
 #define TIMSK0 TIMSK

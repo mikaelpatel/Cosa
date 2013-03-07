@@ -65,7 +65,7 @@ UART uart(Board::D0) __attribute__ ((weak));
 
 #include "Cosa/Bits.h"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include <avr/sleep.h>
+#include "Cosa/Power.hh"
 
 static char ibuffer[UART::BUFFER_MAX];
 static IOBuffer ibuf(sizeof(ibuffer), ibuffer);
@@ -113,12 +113,7 @@ UART::putchar(char c)
 {
   uint8_t mode = SLEEP_MODE_IDLE;
   while (m_obuf->putchar(c) == -1) {
-    cli();
-    set_sleep_mode(mode);
-    sleep_enable();
-    sei();
-    sleep_cpu();
-    sleep_disable();
+    Power::sleep(mode);
   }
   *UCSRnB() |= _BV(UDRIE0);
   return (c & 0xff);
