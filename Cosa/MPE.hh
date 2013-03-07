@@ -102,6 +102,18 @@ public:
    */
   static bool begin(uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE);
 
+  /**
+   * Enable the Manchester Phase Encoder interrupt handling after
+   * deep sleep modes.
+   */
+  static void enable();
+
+  /**
+   * Disable the Manchester Phase Encoder interrupt handling for
+   * deep sleep modes.
+   */
+  static void disable();
+
   class Receiver : private InputPin {
   private:
     /** The size of the receiver ramp. Ramp wraps modulo this number */

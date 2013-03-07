@@ -39,9 +39,7 @@
 
 // Manchester Phase Encoder Receiver connected to pin D11
 MPE::Receiver rx(Board::D11);
-
-#define SPEED 4000
-// #define SPEED 2000
+const uint16_t SPEED = 4000;
 
 void setup()
 {

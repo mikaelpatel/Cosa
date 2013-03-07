@@ -232,9 +232,6 @@ MPE::begin(uint16_t speed, uint8_t mode)
 
   // Number of ticks to count before firing interrupt
   OCR1A = uint8_t(nticks);
-
-  // Enable interrup on compare
-  TIMSK |= _BV(OCIE1A);
 #else
   // Figure out prescaler value and counter match value
   prescaler = timer_setting(speed * SAMPLES_PER_BIT, 16, &nticks);
@@ -250,7 +247,20 @@ MPE::begin(uint16_t speed, uint8_t mode)
   // Caution: special procedures for setting 16 bit regs
   // is handled by the compiler
   OCR1A = nticks;
+#endif
+  enable();
+  return (1);
+}
 
+void
+MPE::enable()
+{
+#if defined(__AVR_ATtiny25__)		\
+ || defined(__AVR_ATtiny45__)		\
+ || defined(__AVR_ATtiny85__)
+  // Enable interrupt on compare
+  TIMSK |= _BV(OCIE1A);
+#else
   // Enable interrupt
 #ifdef TIMSK1
   TIMSK1 |= _BV(OCIE1A);
@@ -258,8 +268,24 @@ MPE::begin(uint16_t speed, uint8_t mode)
   TIMSK |= _BV(OCIE1A);
 #endif
 #endif
+}
 
-  return (1);
+void
+MPE::disable()
+{
+#if defined(__AVR_ATtiny25__)		\
+ || defined(__AVR_ATtiny45__)		\
+ || defined(__AVR_ATtiny85__)
+  // Enable interrupt on compare
+  TIMSK &= ~_BV(OCIE1A);
+#else
+  // Enable interrupt
+#ifdef TIMSK1
+  TIMSK1 &= ~_BV(OCIE1A);
+#else
+  TIMSK &= ~_BV(OCIE1A);
+#endif
+#endif
 }
 
 MPE::Receiver::Receiver(Board::DigitalPin rx) : 
@@ -286,7 +312,6 @@ MPE::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
   if (!m_done && (ms == 0 || !await(ms))) return (0);
 
   // Message check-sum error
-  uint16_t crc = CRC(m_buffer, m_length);
   if (CRC(m_buffer, m_length) != CHECK_SUM) return (-1);
     
   // Wait until done is set before reading length then remove

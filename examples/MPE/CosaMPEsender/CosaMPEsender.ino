@@ -48,12 +48,12 @@ AnalogPin temperature(Board::A3);
  || defined(__AVR_ATtiny85__)
 MPE::Transmitter tx(Board::D2);
 OutputPin pw(Board::D1);
-#define SPEED 2000
 #else 
 MPE::Transmitter tx(Board::D12);
 OutputPin pw(Board::D10);
-#define SPEED 4000
 #endif
+
+const uint16_t SPEED = 4000;
 
 void setup()
 {
