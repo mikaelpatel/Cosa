@@ -31,13 +31,15 @@
  */
 
 #include "Cosa/VWI.hh"
+#include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/VWIO.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
 
-VWIO tx(Board::D12);
+VirtualWireCodec codec;
+VWIO tx(Board::D12, &codec);
 
 void setup()
 {
@@ -46,7 +48,7 @@ void setup()
   RTC::begin();
 
   // Start virtual wire output stream and trace
-  tx.begin(2000);
+  tx.begin(4000);
   trace.begin(&tx, PSTR("CosaVWIOtrace: started"));
 
   // Trace some memory information
@@ -63,12 +65,12 @@ void loop()
   for (uint8_t i = 0; i < 11; i++)
     trace << ' ' << InputPin::read(i);
   trace << endl;
-  SLEEP(1);
+  SLEEP(2);
 
   // Monitor analog pin values
   trace << RTC::millis() << PSTR(": A0..7:");
   for (uint8_t i = 0; i < 8; i++)
     trace << ' ' << AnalogPin::sample(i);
   trace << endl;
-  SLEEP(1);
+  SLEEP(2);
 }

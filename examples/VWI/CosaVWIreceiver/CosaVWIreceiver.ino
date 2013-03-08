@@ -32,16 +32,16 @@
  */
 
 #include "Cosa/VWI.hh"
+#include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
 // Virtual Wire Interface Receiver connected to pin D11
-VWI::Receiver rx(Board::D11);
-
-#define SPEED 4000
-// #define SPEED 2000
+VirtualWireCodec codec;
+VWI::Receiver rx(Board::D11, &codec);
+const uint16_t SPEED = 4000;
 
 void setup()
 {

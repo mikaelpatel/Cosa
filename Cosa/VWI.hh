@@ -53,22 +53,69 @@ public:
   /** Number of samples per bit */
   static const uint8_t SAMPLES_PER_BIT = 8;
 
-  /** Bits per symbol */
-  static const uint8_t BITS_PER_SYMBOL = 6;
+  class Codec {
+  public:
+    /** Bits per symbol */
+    const uint8_t BITS_PER_SYMBOL;
   
-  /** Symbol bits mask */
-  static const uint8_t SYMBOL_MASK = 0x3f;
+    /** Start symbol */
+    const uint16_t START_SYMBOL;
 
-  /** Start symbol */
-  static const uint16_t START_SYMBOL = 0xb38;
+    /** Size of header */
+    const uint8_t HEADER_MAX;
 
-  /** 
-   * 4 bit to 6 bit symbol converter table. Used to convert the high
-   * and low nybbles of the transmitted data into 6 bit symbols for
-   * transmission. Each 6-bit symbol has 3 1s and 3 0s with at most 3
-   * consecutive identical bits. 
-   */
-  static const uint8_t symbols[] PROGMEM;
+    /** Symbol mask */
+    uint8_t SYMBOL_MASK;
+
+    /** Symbol MSB */
+    uint16_t BITS_MSB;
+
+    /**
+     * Construct Codec with given symbol and header definition. The Codec is
+     * assumed to code 4 bits to max 8 bits for transmission.
+     * @param[in] bits_per_symbol.
+     * @param[in] start_symbol.
+     * @param[in] header_max.
+     */
+    Codec(uint8_t bits_per_symbol, uint16_t start_symbol, uint8_t header_max) :
+      BITS_PER_SYMBOL(bits_per_symbol),
+      START_SYMBOL(start_symbol),
+      HEADER_MAX(header_max),
+      SYMBOL_MASK((1 << bits_per_symbol) - 1),
+      BITS_MSB(1 << (bits_per_symbol*2 - 1))
+    {}
+
+    /**
+     * Provide pointer to frame header in program memory. HEADER_MAX should
+     * contain the length of the header including start symbol.
+     * @return pointer.
+     */
+    virtual const uint8_t* get_header() = 0;
+
+    /**
+     * Encode 4 bits (nibble) to a symbol.
+     * @param[in] nibble data to encode.
+     * @return encoding.
+     */
+    virtual uint8_t encode4(uint8_t nibble) = 0;
+
+    /**
+     * Decode symbol back to 4 bits (nibble) of data.
+     * @param[in] symbol to decode.
+     * @return data.
+     */
+    virtual uint8_t decode4(uint8_t symbol) = 0;
+
+    /**
+     * Decode symbol (max 16-bit) back to 8 bits (byte) of data.
+     * @param[in] symbol to decode.
+     * @return data.
+     */
+    virtual uint8_t decode8(uint16_t symbol)
+    {
+      return ((decode4(symbol) << 4) | (decode4(symbol >> BITS_PER_SYMBOL)));
+    }
+  };
 
   /** Check sum for received frame */
   static const uint16_t CHECK_SUM = 0xf0b8;
@@ -80,14 +127,6 @@ public:
    * @return CRC.
    */
   static uint16_t CRC(uint8_t* ptr, uint8_t count);
-
-  /**
-   * Convert a 6 bit encoded symbol into its 4 bit decoded
-   * equivalent. 
-   * @param[in] symbol 6-bit symbol.
-   * @return 4-bit decoding.
-   */
-  static uint8_t symbol_6to4(uint8_t symbol);
 
   /** Sleep mode while synchronious await */
   static uint8_t s_mode;
@@ -146,6 +185,9 @@ public:
     static const uint8_t RAMP_INC_ADVANCE = (RAMP_INC + RAMP_ADJUST);
 
     /** Current receiver sample */
+    Codec* m_codec;
+
+    /** Current receiver sample */
     uint8_t m_sample;
 
     /** Last receiver sample */
@@ -183,7 +225,7 @@ public:
     uint8_t m_bit_count;
 
     /** The incoming message buffer */
-    uint8_t m_buffer[VWI::MESSAGE_MAX];
+    uint8_t m_buffer[MESSAGE_MAX];
 
     /** The incoming message expected length */
     uint8_t m_count;
@@ -212,8 +254,9 @@ public:
     /**
      * Construct VWI Receiver instance connected to the given pin.
      * @param[in] rx input pin.
+     * @param[in] codec for the receiver.
      */
-    Receiver(Board::DigitalPin rx);
+    Receiver(Board::DigitalPin rx, Codec* codec);
 
     /**
      * Start the Phase Locked Loop listening for the receiver.
@@ -224,10 +267,9 @@ public:
      */
     bool begin()
     {
-      if (!m_enabled) {
-	m_enabled = true;
-	m_active = false;
-      }
+      if (m_enabled) return (0);
+      m_enabled = true;
+      m_active = false;
       return (1);
     }
 
@@ -275,21 +317,14 @@ public:
 
   class Transmitter : private OutputPin {
   private:
-    /** 
-     * Outgoing message bits grouped as 6-bit words, 36 alternating 1/0
-     * bits, followed by 12 bits of start symbol. Followed immediately
-     * by the 4-6 bit encoded byte count, message buffer and 2 byte
-     * FCS. Each byte from the byte count on is translated into 2x6-bit
-     * words. Caution, each symbol is transmitted LSBit first, but each
-     * byte is transmitted high nybble first.
-     */
-    static const uint8_t header[] PROGMEM;
-
     /** Size of header */
     static const uint8_t HEADER_MAX = 8;
 
     /** Transmission buffer with symbols and header */
     uint8_t m_buffer[(MESSAGE_MAX * 2) + HEADER_MAX];
+
+    /** Current transmitter codec */
+    Codec* m_codec;
 
     /** Number of symbols to be sent */
     uint8_t m_length;
@@ -316,11 +351,13 @@ public:
     /**
      * Construct VWI Transmitter instance connected to the given pin.
      * @param[in] tx output pin.
+     * @param[in] codec for transmitter.
      */
-    Transmitter(Board::DigitalPin tx);
+    Transmitter(Board::DigitalPin tx, Codec* codec);
 
     /**
      * Start transmitter. Returns true(1) if successful otherwise false(0).
+     * @return bool
      */
     bool begin();
     
@@ -329,6 +366,7 @@ public:
      */
     bool end()
     {
+      if (!m_enabled) return (0);
       clear();
       m_enabled = false;
       return (1);

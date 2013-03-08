@@ -36,12 +36,6 @@
 #include "Cosa/Power.hh"
 #include <util/crc16.h>
 
-const uint8_t 
-VWI::symbols[] PROGMEM = {
-  0xd,  0xe,  0x13, 0x15, 0x16, 0x19, 0x1a, 0x1c, 
-  0x23, 0x25, 0x26, 0x29, 0x2a, 0x2c, 0x32, 0x34
-};
-
 uint8_t VWI::s_mode = 0;
 
 uint16_t 
@@ -51,15 +45,6 @@ VWI::CRC(uint8_t* ptr, uint8_t count)
   while (count-- > 0) 
     crc = _crc_ccitt_update(crc, *ptr++);
   return (crc);
-}
-
-uint8_t 
-VWI::symbol_6to4(uint8_t symbol)
-{
-  for (uint8_t i = 0; i < membersof(symbols); i++)
-    if (symbol == pgm_read_byte(&symbols[i]))
-      return (i);
-  return (0);
 }
 
 /** Current transmitter/receiver for interrupt handler access */
@@ -134,7 +119,7 @@ VWI::Receiver::PLL()
     // Check the integrator to see how many samples in this cycle were
     // high. If < 5 out of 8, then its declared a 0 bit, else a 1;
     if (m_integrator >= INTEGRATOR_THRESHOLD)
-      m_bits |= 0x800;
+      m_bits |= m_codec->BITS_MSB;
 
     m_pll_ramp -= RAMP_MAX;
 
@@ -144,13 +129,11 @@ VWI::Receiver::PLL()
     if (m_active) {
       // We have the start symbol and now we are collecting message
       // bits, 6 per symbol, each which has to be decoded to 4 bits
-      if (++m_bit_count >= (BITS_PER_SYMBOL * 2)) {
+      if (++m_bit_count >= (m_codec->BITS_PER_SYMBOL * 2)) {
 	// Have 12 bits of encoded message == 1 byte encoded. Decode
 	// as 2 lots of 6 bits into 2 lots of 4 bits. The 6 lsbits are
 	// the high nybble.
-	uint8_t data = 
-	  (symbol_6to4(m_bits & SYMBOL_MASK) << 4) | 
-	  symbol_6to4(m_bits >> BITS_PER_SYMBOL);
+	uint8_t data = m_codec->decode8(m_bits);
 	
 	// The first decoded byte is the byte count of the following
 	// message the count includes the byte count and the 2
@@ -181,7 +164,7 @@ VWI::Receiver::PLL()
     }
 
     // Not in a message, see if we have a start symbol
-    else if (m_bits == START_SYMBOL) {
+    else if (m_bits == m_codec->START_SYMBOL) {
       // Have start symbol, start collecting message
       m_active = true;
       m_bit_count = 0;
@@ -272,8 +255,9 @@ VWI::disable()
 #endif
 }
 
-VWI::Receiver::Receiver(Board::DigitalPin rx) : 
-  InputPin(rx) 
+VWI::Receiver::Receiver(Board::DigitalPin rx, Codec* codec) : 
+  InputPin(rx),
+  m_codec(codec)
 {
   receiver = this;
 }
@@ -313,16 +297,12 @@ VWI::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
   return (len);
 }
 
-const uint8_t 
-VWI::Transmitter::header[HEADER_MAX] PROGMEM = {
-  0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x38, 0x2c
-};
-
-VWI::Transmitter::Transmitter(Board::DigitalPin tx) :
-  OutputPin(tx)
+VWI::Transmitter::Transmitter(Board::DigitalPin tx, Codec* codec) :
+  OutputPin(tx),
+  m_codec(codec)
 {
   transmitter = this;
-  memcpy_P(m_buffer, header, sizeof(header));
+  memcpy_P(m_buffer, codec->get_header(), codec->HEADER_MAX);
 }
 
 bool 
@@ -338,9 +318,7 @@ VWI::Transmitter::begin()
 void 
 VWI::Transmitter::await()
 {
-  while (m_enabled) {
-    Power::sleep(s_mode);
-  }
+  while (m_enabled) Power::sleep(s_mode);
 }
 
 bool 
@@ -349,7 +327,7 @@ VWI::Transmitter::send(void* buf, uint8_t len)
   // Check that the message is not too large
   if (len > PAYLOAD_MAX) return (0);
 
-  uint8_t *tp = transmitter->m_buffer + HEADER_MAX;
+  uint8_t *tp = transmitter->m_buffer + m_codec->HEADER_MAX;
   uint8_t *bp = (uint8_t*) buf;
   uint16_t crc = 0xffff;
   
@@ -359,28 +337,28 @@ VWI::Transmitter::send(void* buf, uint8_t len)
   // Encode the message length
   uint8_t count = len + 3;
   crc = _crc_ccitt_update(crc, count);
-  *tp++ = pgm_read_byte(&symbols[count >> 4]);
-  *tp++ = pgm_read_byte(&symbols[count & 0xf]);
+  *tp++ = m_codec->encode4(count >> 4);
+  *tp++ = m_codec->encode4(count);
 
   // Encode the message into 6 bit symbols. Each byte is converted into 
   // 2 X 6-bit symbols, high nybble first, low nybble second
   for (uint8_t i = 0; i < len; i++) {
     crc = _crc_ccitt_update(crc, bp[i]);
-    *tp++ = pgm_read_byte(&symbols[bp[i] >> 4]);
-    *tp++ = pgm_read_byte(&symbols[bp[i] & 0xf]);
+    *tp++ = m_codec->encode4(bp[i] >> 4);
+    *tp++ = m_codec->encode4(bp[i]);
   }
 
   // Append the FCS, 16 bits before encoding (4 X 6-bit symbols after
   // encoding) Caution: VWI expects the _ones_complement_ of the CCITT
   // CRC-16 as the FCS VWI sends FCS as low byte then hi byte
   crc = ~crc;
-  *tp++ = pgm_read_byte(&symbols[(crc >> 4)  & 0xf]);
-  *tp++ = pgm_read_byte(&symbols[crc & 0xf]);
-  *tp++ = pgm_read_byte(&symbols[(crc >> 12) & 0xf]);
-  *tp++ = pgm_read_byte(&symbols[(crc >> 8)  & 0xf]);
+  *tp++ = m_codec->encode4(crc >> 4);
+  *tp++ = m_codec->encode4(crc);
+  *tp++ = m_codec->encode4(crc >> 12);
+  *tp++ = m_codec->encode4(crc >> 8);
 
   // Total number of 6-bit symbols to send
-  m_length = HEADER_MAX + (count * 2);
+  m_length = m_codec->HEADER_MAX + (count * 2);
 
   // Start the low level interrupt handler sending symbols
   return (begin());
@@ -411,7 +389,7 @@ ISR(TIMER1_COMPA_vect)
       else {
 	transmitter->write(transmitter->m_buffer[transmitter->m_index] & 
 			   (1 << transmitter->m_bit++));
-	if (transmitter->m_bit >= VWI::BITS_PER_SYMBOL) {
+	if (transmitter->m_bit >= transmitter->m_codec->BITS_PER_SYMBOL) {
 	  transmitter->m_bit = 0;
 	  transmitter->m_index++;
 	}

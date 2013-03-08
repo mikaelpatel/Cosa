@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Manchester Phase Encoder (MPE) driver.
+ * Demonstration of the Manchester Phase Encoder.
  * Receive and print a simple message with identity, message number,
  * and 2x16-bit analog data sample.
  *
@@ -31,14 +31,16 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/MPE.hh"
+#include "Cosa/VWI.hh"
+#include "Cosa/VWI/Codec/ManchesterCodec.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
 // Manchester Phase Encoder Receiver connected to pin D11
-MPE::Receiver rx(Board::D11);
+ManchesterCodec codec;
+VWI::Receiver rx(Board::D11, &codec);
 const uint16_t SPEED = 4000;
 
 void setup()
@@ -52,7 +54,7 @@ void setup()
   Watchdog::begin();
 
   // Start virtual wire interface and receiver
-  MPE::begin(SPEED);
+  VWI::begin(SPEED);
   rx.begin();
 }
 

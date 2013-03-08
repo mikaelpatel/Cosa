@@ -35,6 +35,7 @@
  */
 
 #include "Cosa/VWI.hh"
+#include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 
@@ -43,13 +44,14 @@ AnalogPin luminance(Board::A2);
 AnalogPin temperature(Board::A3);
 
 // Virtual Wire Interface Transmitter and Power Control pins
+VirtualWireCodec codec;
 #if defined(__AVR_ATtiny25__)		\
  || defined(__AVR_ATtiny45__)		\
  || defined(__AVR_ATtiny85__)
-VWI::Transmitter tx(Board::D2);
+VWI::Transmitter tx(Board::D2, &codec);
 OutputPin pw(Board::D1);
 #else 
-VWI::Transmitter tx(Board::D12);
+VWI::Transmitter tx(Board::D12, &codec);
 OutputPin pw(Board::D10);
 #endif
 

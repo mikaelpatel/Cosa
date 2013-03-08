@@ -1,9 +1,10 @@
 /**
- * @file CosaVWImonitor.ino
+ * @file Cosa/VWI/Codec/VirtualWireCodec.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire)
+ * Copyright (C) 2013, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,40 +22,33 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Virtual Wire Interface (VWI) driver.
- * Print incoming messages as a character stream.
- *
- * @section Circuit
- * Connect RF433/315 Receiver to Arduino D11.
+ * VirtualWire 4-to-6 bit codec for the Cosa VWI (Virtual Wire
+ * Interface). 
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Memory.h"
 
-VirtualWireCodec codec;
-VWI::Receiver rx(Board::D11, &codec);
+const uint8_t 
+VirtualWireCodec::symbols[] PROGMEM = {
+  0xd,  0xe,  0x13, 0x15, 0x16, 0x19, 0x1a, 0x1c, 
+  0x23, 0x25, 0x26, 0x29, 0x2a, 0x2c, 0x32, 0x34
+};
 
-void setup()
+const uint8_t 
+VirtualWireCodec::header[] PROGMEM = {
+  0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x38, 0x2c
+};
+
+uint8_t 
+VirtualWireCodec::decode4(uint8_t symbol)
 {
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaVWImonitor: started"));
-  TRACE(free_memory());
-  Watchdog::begin();
-  VWI::begin(4000);
-  rx.begin();
+  symbol &= SYMBOL_MASK;
+  // FIX: Binary search for better speed
+  for (uint8_t i = 0; i < membersof(symbols); i++)
+    if (symbol == pgm_read_byte(&symbols[i]))
+      return (i);
+  return (0);
 }
 
-void loop()
-{
-  rx.await();
-  char buffer[VWI::PAYLOAD_MAX];
-  int8_t len = rx.recv(buffer, sizeof(buffer));
-  for (uint8_t i = 0; i < len; i++)
-    trace.print(buffer[i]);
-}

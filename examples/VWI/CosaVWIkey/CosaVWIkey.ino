@@ -32,8 +32,13 @@
  */
 
 #include "Cosa/VWI.hh"
+#include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Power.hh"
+
+// Analog pins to sample for values to send
+AnalogPin luminance(Board::A2);
+AnalogPin temperature(Board::A3);
 
 // Simple interrupt handler just for wakeup call and some bookkeeping just 
 // to see how many times it is called; many as it is called while low.
@@ -50,7 +55,8 @@ public:
 };
 
 // Connect RF433 transmitter to ATtiny/D1
-VWI::Transmitter tx(Board::D1);
+VirtualWireCodec codec;
+VWI::Transmitter tx(Board::D1, &codec);
 const uint16_t SPEED = 4000;
 
 // Connect button with pullup to EXT0/D2

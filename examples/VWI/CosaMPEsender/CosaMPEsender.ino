@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Manchester Phase Encoder (MPE) driver.
+ * Demonstration of the Manchester Phase Encoder.
  * Transmits a simple message with identity, message number,
  * and two data element; analog samples.
  *
@@ -34,7 +34,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/MPE.hh"
+#include "Cosa/VWI.hh"
+#include "Cosa/VWI/Codec/ManchesterCodec.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 
@@ -43,13 +44,14 @@ AnalogPin luminance(Board::A2);
 AnalogPin temperature(Board::A3);
 
 // Virtual Wire Interface Transmitter and Power Control pins
+ManchesterCodec codec;
 #if defined(__AVR_ATtiny25__)		\
  || defined(__AVR_ATtiny45__)		\
  || defined(__AVR_ATtiny85__)
-MPE::Transmitter tx(Board::D2);
+VWI::Transmitter tx(Board::D2, &codec);
 OutputPin pw(Board::D1);
 #else 
-MPE::Transmitter tx(Board::D12);
+VWI::Transmitter tx(Board::D12, &codec);
 OutputPin pw(Board::D10);
 #endif
 
@@ -61,7 +63,7 @@ void setup()
   Watchdog::begin();
 
   // Start virtual wire interface and transmitter
-  MPE::begin(SPEED);
+  VWI::begin(SPEED);
   tx.begin();
 }
 

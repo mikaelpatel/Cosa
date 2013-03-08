@@ -44,10 +44,11 @@ public:
   /**
    * Construct Virtual Wire Interface Output Stream.
    * @param[in] pin output pin.
+   * @param[in] codec from receiver.
    */
-  VWIO(Board::DigitalPin pin) :
+  VWIO(Board::DigitalPin pin, VWI::Codec* codec) :
     IOStream::Device(),
-    m_tx(pin),
+    m_tx(pin, codec),
     m_ix(0)
   {
   }
