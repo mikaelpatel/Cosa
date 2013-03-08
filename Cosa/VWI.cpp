@@ -74,7 +74,7 @@ static const uint16_t prescale[] PROGMEM = {
  * number of bits in timer. Returns zero(0) if fails otherwise prescale
  * value/index, and timer top.
  * @param[in] speed bits per second, transmitter/receiver.
- * @param[in] bits number of bits in counter (8/16O).
+ * @param[in] bits number of bits in counter (8 or 16 bit timer).
  * @param[out] nticks timer top value.
  * @return prescale or zero(0).
  */
@@ -112,8 +112,7 @@ VWI::Receiver::PLL()
     m_pll_ramp += RAMP_INC;
   }
   if (m_pll_ramp >= RAMP_MAX) {
-    // Add this to the 12th bit of vw_rx_bits, LSB first. The last 12
-    // bits are kept 
+    // Add this to the MSB bit of rx_bits, LSB first. The last bits are kept 
     m_bits >>= 1;
 
     // Check the integrator to see how many samples in this cycle were
@@ -128,20 +127,16 @@ VWI::Receiver::PLL()
 
     if (m_active) {
       // We have the start symbol and now we are collecting message
-      // bits, 6 per symbol, each which has to be decoded to 4 bits
+      // bits for two symbols before decoding to a byte
       if (++m_bit_count >= (m_codec->BITS_PER_SYMBOL * 2)) {
-	// Have 12 bits of encoded message == 1 byte encoded. Decode
-	// as 2 lots of 6 bits into 2 lots of 4 bits. The 6 lsbits are
-	// the high nybble.
 	uint8_t data = m_codec->decode8(m_bits);
 	
 	// The first decoded byte is the byte count of the following
 	// message the count includes the byte count and the 2
-	// trailing FCS bytes. REVISIT: may also include the ACK flag
-	// at 0x40.
+	// trailing FCS bytes. FIX: May also include the ACK flag at 0x40.
 	if (m_length == 0) {
 	  // The first byte is the byte count. Check it for
-	  // sensibility. It cant be less than 4, since it includes
+	  // sensibility. It cant be less than min, since it includes
 	  // the bytes count itself and the 2 byte FCS 
 	  m_count = data;
 	  if (m_count < MESSAGE_MIN || m_count > MESSAGE_MAX) {
@@ -181,7 +176,7 @@ VWI::begin(uint16_t speed, uint8_t mode)
   // Number of prescaled ticks needed
   uint16_t nticks = 0;
 
-  // Bit values for CS0[2:0]
+  // Bit values for prescale register: CS0[2:0]
   uint8_t prescaler;
 
   // Set sleep mode
@@ -206,53 +201,28 @@ VWI::begin(uint16_t speed, uint8_t mode)
 
   // Output Compare pins disconnected, and turn on CTC mode
   TCCR1A = 0; 
-  TCCR1B = _BV(WGM12);
-
-  // Convert prescaler index to TCCRnB prescaler bits CS10, CS11, CS12
-  TCCR1B |= prescaler;
+  TCCR1B = _BV(WGM12) | prescaler;
 
   // Caution: special procedures for setting 16 bit regs
   // is handled by the compiler
   OCR1A = nticks;
 #endif
+  // Enable the interrupt handler
   enable();
+
   return (1);
 }
 
 void
 VWI::enable()
 {
-#if defined(__AVR_ATtiny25__)		\
- || defined(__AVR_ATtiny45__)		\
- || defined(__AVR_ATtiny85__)
-  // Enable interrupt on compare
-  TIMSK |= _BV(OCIE1A);
-#else
-  // Enable interrupt
-#ifdef TIMSK1
   TIMSK1 |= _BV(OCIE1A);
-#else
-  TIMSK |= _BV(OCIE1A);
-#endif
-#endif
 }
 
 void
 VWI::disable()
 {
-#if defined(__AVR_ATtiny25__)		\
- || defined(__AVR_ATtiny45__)		\
- || defined(__AVR_ATtiny85__)
-  // Enable interrupt on compare
-  TIMSK &= ~_BV(OCIE1A);
-#else
-  // Enable interrupt
-#ifdef TIMSK1
   TIMSK1 &= ~_BV(OCIE1A);
-#else
-  TIMSK &= ~_BV(OCIE1A);
-#endif
-#endif
 }
 
 VWI::Receiver::Receiver(Board::DigitalPin rx, Codec* codec) : 
@@ -267,9 +237,8 @@ VWI::Receiver::await(unsigned long ms)
 {
   // Allow low power mode while waiting
   unsigned long start = RTC::millis();
-  while (!m_done && (ms == 0 || ((RTC::millis() - start) < ms))) {
+  while (!m_done && (ms == 0 || ((RTC::millis() - start) < ms)))
     Power::sleep(s_mode);
-  }
   return (m_done);
 }
 
@@ -331,7 +300,7 @@ VWI::Transmitter::send(void* buf, uint8_t len)
   uint8_t *bp = (uint8_t*) buf;
   uint16_t crc = 0xffff;
   
-  // Wait for transmitter to become available
+  // Wait for transmitter to become available. Might be transmitting
   await();
 
   // Encode the message length
@@ -340,16 +309,16 @@ VWI::Transmitter::send(void* buf, uint8_t len)
   *tp++ = m_codec->encode4(count >> 4);
   *tp++ = m_codec->encode4(count);
 
-  // Encode the message into 6 bit symbols. Each byte is converted into 
-  // 2 X 6-bit symbols, high nybble first, low nybble second
+  // Encode the message into symbols. Each byte is converted into 
+  // 2 symbols, high nybble first, low nybble second
   for (uint8_t i = 0; i < len; i++) {
     crc = _crc_ccitt_update(crc, bp[i]);
     *tp++ = m_codec->encode4(bp[i] >> 4);
     *tp++ = m_codec->encode4(bp[i]);
   }
 
-  // Append the FCS, 16 bits before encoding (4 X 6-bit symbols after
-  // encoding) Caution: VWI expects the _ones_complement_ of the CCITT
+  // Append the FCS, 16 bits before encoding (4 symbols after
+  // encoding) Caution: VWI expects the _ones_complement_ of the CCITT 
   // CRC-16 as the FCS VWI sends FCS as low byte then hi byte
   crc = ~crc;
   *tp++ = m_codec->encode4(crc >> 4);
@@ -357,7 +326,7 @@ VWI::Transmitter::send(void* buf, uint8_t len)
   *tp++ = m_codec->encode4(crc >> 12);
   *tp++ = m_codec->encode4(crc >> 8);
 
-  // Total number of 6-bit symbols to send
+  // Total number of symbols to send
   m_length = m_codec->HEADER_MAX + (count * 2);
 
   // Start the low level interrupt handler sending symbols
