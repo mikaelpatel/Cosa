@@ -512,6 +512,7 @@ public:
 
 #define ANALOG_COMP_vect ANA_COMP_vect
 #define TIMSK0 TIMSK
+#define TIMSK1 TIMSK
 #define TIFR0 TIFR
 #define WDTCSR WDTCR
 
