@@ -36,10 +36,6 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Power.hh"
 
-// Analog pins to sample for values to send
-AnalogPin luminance(Board::A2);
-AnalogPin temperature(Board::A3);
-
 // Simple interrupt handler just for wakeup call and some bookkeeping just 
 // to see how many times it is called; many as it is called while low.
 class WakeupButton : public InterruptPin {
