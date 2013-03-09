@@ -153,3 +153,6 @@ generic circlic buffer for IOStream::Device.
 2013-03-03 Virtual Wire Interface (VWI) for ATtiny. VWI IOStream
 Device to allow streaming of output over Virtual Wire.   
 2013-03-05 Introducing Manchester Phase Encoder (MPE) based on VWI.  
+2013-03-07 Introducing class for Power Management and Sleep Modes.   
+2013-03-09 Refactoring VWI to allow easy update of codecs;
+VirtualWire, Manchester and Fixed Bitstuffing.   
