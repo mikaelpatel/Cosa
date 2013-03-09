@@ -542,7 +542,7 @@ public:
 
   /**
    * Shift out given byte to the output pin using the given clock
-   * output pin. Shift in according to given direction.
+   * output pin. Shift out according to given direction.
    * @param[in] clk output pin.
    * @param[in] value to write.
    * @param[in] order bit first.
