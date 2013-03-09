@@ -153,7 +153,7 @@ public:
    */
   bool is_high() 
   { 
-    return (is_set()); 
+    return ((*PIN() & m_mask) != 0); 
   }
 
   /**
@@ -162,7 +162,7 @@ public:
    */
   bool is_on()
   { 
-    return (is_set()); 
+    return ((*PIN() & m_mask) != 0); 
   }
 
   /**
@@ -180,7 +180,7 @@ public:
    */
   bool is_low() 
   { 
-    return (is_clear()); 
+    return ((*PIN() & m_mask) == 0); 
   }
 
   /**
@@ -189,7 +189,7 @@ public:
    */
   bool is_off() 
   { 
-    return (is_clear()); 
+    return ((*PIN() & m_mask) == 0); 
   }
 
   /**
@@ -198,7 +198,7 @@ public:
    */
   bool read()
   { 
-    return (is_set()); 
+    return ((*PIN() & m_mask) != 0); 
   }
 
   /**
@@ -227,7 +227,7 @@ public:
    */
   Pin& operator>>(uint8_t& var)
   { 
-    var = is_set();
+    var = ((*PIN() & m_mask) != 0); 
     return (*this);
   }
 
@@ -440,7 +440,9 @@ public:
    */
   void high() 
   { 
-    set(); 
+    synchronized {
+      *PORT() |= m_mask; 
+    }
   }
 
   /**
@@ -448,7 +450,9 @@ public:
    */
   void on()   
   { 
-    set(); 
+    synchronized {
+      *PORT() |= m_mask; 
+    }
   }
 
   /**
@@ -466,7 +470,9 @@ public:
    */
   void low()
   { 
-    clear(); 
+    synchronized {
+      *PORT() &= ~m_mask; 
+    }
   }
 
   /**
@@ -474,7 +480,9 @@ public:
    */
   void off() 
   { 
-    clear(); 
+    synchronized {
+      *PORT() &= ~m_mask; 
+    }
   }
 
   /**
@@ -505,7 +513,14 @@ public:
    */
   void set(bool value) 
   { 
-    if (value) set(); else clear(); 
+    synchronized {
+      if (value) {
+	*PORT() |= m_mask; 
+      }
+      else {
+	*PORT() &= ~m_mask; 
+      }
+    }
   }
 
   /**
@@ -515,7 +530,14 @@ public:
    */
   void write(uint8_t value) 
   { 
-    set(value); 
+    synchronized {
+      if (value) {
+	*PORT() |= m_mask; 
+      }
+      else {
+	*PORT() &= ~m_mask; 
+      }
+    }
   }
 
   /**
