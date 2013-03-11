@@ -15,11 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- *
  * @section Description
  * Demonstration of the Virtual Wire Interface (VWI) driver.
  * Receive and print a simple message with identity, message number,
@@ -33,13 +28,22 @@
 
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
+#include "Cosa/VWI/Codec/ManchesterCodec.hh"
+#include "Cosa/VWI/Codec/BitstuffingCodec.hh"
+#include "Cosa/VWI/Codec/Block4B5BCodec.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
-// Virtual Wire Interface Receiver connected to pin D11
+// Select the codec to use for the Virtual Wire Interface. Should be the
+// same as in CosaVWIsender.ino
 VirtualWireCodec codec;
+// ManchesterCodec codec;
+// BitstuffingCodec codec;
+// Block4B5BCodec codec;
+
+// Virtual Wire Interface Receiver connected to pin D11
 VWI::Receiver rx(Board::D11, &codec);
 const uint16_t SPEED = 4000;
 

@@ -15,11 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- *
  * @section Description
  * Demonstration of the Virtual Wire Interface (VWI) driver.
  * Transmits a simple message with identity, message number,
@@ -36,6 +31,9 @@
 
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
+#include "Cosa/VWI/Codec/ManchesterCodec.hh"
+#include "Cosa/VWI/Codec/BitstuffingCodec.hh"
+#include "Cosa/VWI/Codec/Block4B5BCodec.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 
@@ -43,8 +41,14 @@
 AnalogPin luminance(Board::A2);
 AnalogPin temperature(Board::A3);
 
-// Virtual Wire Interface Transmitter and Power Control pins
+// Select the codec to use for the Virtual Wire Interface. Should be the
+// same as in CosaVWIreceiver.ino
 VirtualWireCodec codec;
+// ManchesterCodec codec;
+// BitstuffingCodec codec;
+// Block4B5BCodec codec;
+
+// Virtual Wire Interface Transmitter and Power Control pins
 #if defined(__AVR_ATtiny25__)		\
  || defined(__AVR_ATtiny45__)		\
  || defined(__AVR_ATtiny85__)
@@ -99,5 +103,5 @@ void loop()
   msg.nr += 1;
 
   // Delivery the next message after a 0.5 second delay
-  Watchdog::delay(512);
+  Watchdog::delay(128);
 }

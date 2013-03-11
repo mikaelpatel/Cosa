@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel (Cosa C++ port and refactoring)
+ * Copyright (C) 2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,23 +15,19 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- *
  * @section Description
  * Fixed bitstuffing 4 to 5 bit codec for the Cosa VWI (Virtual Wire
  * Interface). 
- *
- * Calculating the start symbol (5-bits per symbol):
- * 0xa, 0x1a => 01010.11010 => 11010.01010 => 11.0100.1010 => 0x34a
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/VWI/Codec/BitstuffingCodec.hh"
 
+/*
+ * Calculating the start symbol (5-bits per symbol):
+ * 0xa, 0x1a => 01010.11010 => 11010.01010 => 11.0100.1010 => 0x34a
+ */
 const uint8_t 
 BitstuffingCodec::header[] PROGMEM = {
   0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x1a
