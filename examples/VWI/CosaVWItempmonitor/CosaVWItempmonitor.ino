@@ -104,7 +104,7 @@ void loop()
   next += 1;
 
   // Print message count and errors every 256 messages
-  if (next == 0) {
+  if (next & 0xff == 0) {
     trace << PSTR("count = ") << cnt << endl;
     trace << PSTR("errors = ") << err << endl;
   }
