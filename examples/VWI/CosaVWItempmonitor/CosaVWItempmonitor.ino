@@ -64,7 +64,7 @@ struct msg_t {
 void loop()
 {
   // Check message number and count errors
-  static uint8_t next = 0;
+  static uint16_t next = 0;
   static uint32_t err = 0;
   static uint32_t cnt = 0;
 
