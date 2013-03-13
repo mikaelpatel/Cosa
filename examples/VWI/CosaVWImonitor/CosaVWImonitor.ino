@@ -28,7 +28,6 @@
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
@@ -40,7 +39,6 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVWImonitor: started"));
   TRACE(free_memory());
-  Watchdog::begin();
   VWI::begin(4000);
   rx.begin();
 }
