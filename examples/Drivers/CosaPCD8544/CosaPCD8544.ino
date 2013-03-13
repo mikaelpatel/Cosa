@@ -20,10 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Demonstration of the PCD8544 device driver with mapping to
- * IOStream::Device, and usage of off-screen canvas.
- *
  * @section Circuit
  * Connect Arduino to PCD8544 (Arduino => PCD8544):
  * D6 ==> SDIN, D7 ==> SCLK, D8 ==> DC, D9 ==> SCE.
