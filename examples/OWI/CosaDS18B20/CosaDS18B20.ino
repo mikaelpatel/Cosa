@@ -15,6 +15,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
+ * You should have received a copy of the GNU Lesser General
+ * Public License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA  02111-1307  USA
+ *
  * @section Description
  * Cosa demonstration of the DS18B20 1-Wire device driver.
  * Assumes three thermometers are connected to 1-Wire bus on
@@ -25,8 +30,8 @@
 
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
 
 // One-wire pin and connected DS18B20 devices

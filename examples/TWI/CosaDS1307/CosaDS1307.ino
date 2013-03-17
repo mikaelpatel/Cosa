@@ -15,6 +15,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
+ * You should have received a copy of the GNU Lesser General
+ * Public License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA  02111-1307  USA
+ *
  * @section Description
  * Cosa demonstration of the DS1307 I2C/Two-Wire Realtime clock device.
  *
@@ -27,6 +32,9 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
+
+// Set the real-time clock
+// #define __RTC_SET_TIME__
 
 // The real-time device, latest start and sample time in ram
 DS1307 rtc;
@@ -61,11 +69,11 @@ void setup()
   DS1307::timekeeper_t now;
 #ifdef __RTC_SET_TIME__
   now.seconds = 0;
-  now.minutes = 0x10;
-  now.hours = 0;
+  now.minutes = 0x46;
+  now.hours = 0x22;
   now.day = 0x02;
-  now.date = 0x21;
-  now.month = 0x01;
+  now.date = 0x16;
+  now.month = 0x03;
   now.year = 0x13;
   now.cntl = 0x00;
   rtc.set_time(now);

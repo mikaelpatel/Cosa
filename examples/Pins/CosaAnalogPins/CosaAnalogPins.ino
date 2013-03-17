@@ -15,6 +15,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
+ * You should have received a copy of the GNU Lesser General
+ * Public License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA  02111-1307  USA
+ *
  * @section Description
  * Cosa demonstration of analog sample set.
  *
@@ -22,17 +27,18 @@
  */
 
 #include "Cosa/Pins.hh"
+#include "Cosa/Board.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
 // Analog pin vector for pin set. Note: use program memory
-const PROGMEM uint8_t pins[] = {
-  0, 
-  1,
-  2,
-  8
+const PROGMEM Board::AnalogPin pins[] = {
+  Board::A0, 
+  Board::A1,
+  Board::A2,
+  Board::A8
 };
 
 // Buffer for sample values
