@@ -58,7 +58,7 @@ public:
     ON_FALLING_MODE = 0,
     ON_RISING_MODE = 1,
     ON_CHANGE_MODE = 2
-  };
+  } __attribute__((packed));
 
 protected:
   /**

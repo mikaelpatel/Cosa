@@ -111,7 +111,7 @@ public:
     D12,
     D13,
     LED = D13
-  };
+  } __attribute__((packed));
 
   /**
    * Analog pin symbols
@@ -126,7 +126,7 @@ public:
     A6,
     A7,
     A8
-  };
+  } __attribute__((packed));
 
   /**
    * PWM pin symbols; sub-set of digital pins to allow compile 
@@ -141,7 +141,7 @@ public:
     PWM3 = D9,
     PWM4 = D10,
     PWM5 = D11
-  };
+  } __attribute__((packed));
 
   /**
    * External interrupt pin symbols; sub-set of digital pins 
@@ -151,7 +151,7 @@ public:
     EXT0 = D2,
     EXT1 = D3,
     EXT_MAX = 2
-  };
+  } __attribute__((packed));
 
   /**
    * Pins used for TWI interface (in port C, analog pins 18-19).
@@ -159,7 +159,7 @@ public:
   enum TWIPin {
     SDA = 4,
     SCL = 5
-  };
+  } __attribute__((packed));
 
  /**
    * Pins used for SPI interface (in port B, digital pins 10-13).
@@ -169,7 +169,7 @@ public:
     MOSI = 3,
     MISO = 4,
     SCK = 5
-  };
+  } __attribute__((packed));
 };
 
 #elif defined(__AVR_ATmega1284P__)
@@ -250,7 +250,7 @@ public:
     D22,
     D23,
     LED = D13
-  };
+  } __attribute__((packed));
 
   /**
    * Analog pin symbols
@@ -265,7 +265,7 @@ public:
     A6,
     A7,
     A8
-  };
+  } __attribute__((packed));
 
   /**
    * PWM pin symbols; sub-set of digital pins to allow compile 
@@ -280,7 +280,7 @@ public:
     PWM5 = D13,
     PWM6 = D14,
     PWM7 = D15
-  };
+  } __attribute__((packed));
 
   /**
    * External interrupt pin symbols; sub-set of digital pins 
@@ -291,7 +291,7 @@ public:
     EXT1 = D11,
     EXT2 = D2,
     EXT_MAX = 3
-  };
+  } __attribute__((packed));
 
   /**
    * Pins used for TWI interface (in port C, digital pin 16, 17).
@@ -299,7 +299,7 @@ public:
   enum TWIPin {
     SDA = 1,
     SCL = 0
-  };
+  } __attribute__((packed));
 
  /**
    * Pins used for SPI interface (in port B, digital pins 4-7).
@@ -309,7 +309,7 @@ public:
     MOSI = 5,
     MISO = 6,
     SCK = 7
-  };
+  } __attribute__((packed));
 };
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -430,7 +430,7 @@ public:
     D52 = 17,
     D53 = 16,
     LED = D13
-  };
+  } __attribute__((packed));
 
   /**
    * Analog pin symbols
@@ -452,7 +452,7 @@ public:
     A13 = 69,
     A14 = 70,
     A15 = 71
-  };
+  } __attribute__((packed));
 
   /**
    * PWM pin symbols; sub-set of digital pins to allow compile 
@@ -471,7 +471,7 @@ public:
     PWM9 = D11,
     PWM10 = D12,
     PWM11 = D13
-  };
+  } __attribute__((packed));
 
   /**
    * External interrupt pin symbols; sub-set of digital pins 
@@ -485,7 +485,7 @@ public:
     EXT4 = D2,
     EXT5 = D3,
     EXT_MAX = 6
-  };
+  } __attribute__((packed));
 
   /**
    * Pins used for TWI interface (in port D, digital pins 20-21).
@@ -493,7 +493,7 @@ public:
   enum TWIPin {
     SCL = 0,
     SDA = 1
-  };
+  } __attribute__((packed));
 
   /**
    * Pins used for SPI interface (in port B, digital pins 50-53).
@@ -503,7 +503,7 @@ public:
     SCK = 1,
     MOSI = 2,
     MISO = 3
-  };
+  } __attribute__((packed));
 };
 
 #elif defined(__AVR_ATtiny25__)		\
@@ -558,7 +558,7 @@ public:
     D4,
     D5,
     LED = D4
-  };
+  } __attribute__((packed));
 
   /**
    * Analog pin symbols
@@ -570,7 +570,7 @@ public:
     A3,
     A4,
     A5
-  };
+  } __attribute__((packed));
 
   /**
    * PWM pin symbols; sub-set of digital pins to allow compile 
@@ -579,7 +579,7 @@ public:
   enum PWMPin {
     PWM0 = D0,
     PWM1 = D1
-  };
+  } __attribute__((packed));
 
   /**
    * External interrupt pin symbols; sub-set of digital pins 
@@ -588,7 +588,7 @@ public:
   enum InterruptPin {
     EXT0 = D2,
     EXT_MAX = 1
-  };
+  } __attribute__((packed));
 
   /**
    * Pins used for TWI interface.
@@ -596,7 +596,7 @@ public:
   enum TWIPin {
     SDA = 0,
     SCL = 2
-  };
+  } __attribute__((packed));
 
  /**
    * Pins used for SPI interface.
@@ -606,7 +606,7 @@ public:
     MOSI = 0,
     MISO = 1,
     SCK = 2
-  };
+  } __attribute__((packed));
 };
 
 #endif

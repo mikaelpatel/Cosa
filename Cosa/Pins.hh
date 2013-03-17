@@ -117,7 +117,7 @@ public:
   enum Direction {
     MSB_FIRST = 0, 
     LSB_FIRST = 1
-  };
+  } __attribute__((packed));
 
   /**
    * Construct abstract pin given Arduino pin number.
@@ -254,7 +254,7 @@ public:
   enum Mode {
     NORMAL_MODE = 0,
     PULLUP_MODE = 1
-  };
+  } __attribute__((packed));
 
   /**
    * Construct abstract input pin given Arduino pin number.
@@ -318,7 +318,7 @@ public:
     ON_FALLING_MODE = _BV(ISC01),
     ON_RISING_MODE = (_BV(ISC01) | _BV(ISC00)),
     PULLUP_MODE = 4
-  };
+  } __attribute__((packed));
 
   /**
    * Construct interrupt pin with given pin number, mode, interrupt
@@ -668,7 +668,7 @@ public:
     OUTPUT_MODE = 0,
     INPUT_MODE = 1,
     PULLUP_MODE = 2
-  };
+  } __attribute__((packed));
 
   /**
    * Construct abstract in/output pin given Arduino pin number.
@@ -736,13 +736,13 @@ public:
     APIN_REFERENCE = _BV(REFS0),
     A1V1_REFERENCE = _BV(REFS1),
     A2V56_REFERENCE = (_BV(REFS2) | _BV(REFS1))
-  };
+  } __attribute__((packed));
 #else
   enum Reference {
     APIN_REFERENCE = 0,
     AVCC_REFERENCE = _BV(REFS0),
     A1V1_REFERENCE = (_BV(REFS1) | _BV(REFS0))
-  };
+  } __attribute__((packed));
 #endif
 
 protected:
@@ -876,7 +876,7 @@ public:
  */
 class AnalogPins : private AnalogPin {
 private:
-  const uint8_t* m_pin_at;
+  const Board::AnalogPin* m_pin_at;
   uint16_t* m_buffer;
   uint8_t m_count;
   uint8_t m_next;
@@ -889,7 +889,7 @@ public:
    * @param[in] pins vector with analog pins.
    * @param[in] count number of analog pins in set.
    */
-  AnalogPins(const uint8_t* pins, 
+  AnalogPins(const Board::AnalogPin* pins, 
 	     uint16_t* buffer, uint8_t count,
 	     Reference ref = AVCC_REFERENCE) :
     AnalogPin((Board::AnalogPin) 255, ref),
@@ -955,7 +955,7 @@ public:
     ON_TOGGLE_MODE = 0,
     ON_FALLING_MODE = _BV(ACIS1),
     ON_RISING_MODE = (_BV(ACIS1) | _BV(ACIS0)),
-  };
+  } __attribute__((packed));
 
 protected:
   static AnalogComparator* comparator;

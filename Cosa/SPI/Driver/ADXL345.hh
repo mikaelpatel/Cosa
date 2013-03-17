@@ -45,7 +45,7 @@ private:
     READ_CMD = 0x80,		// Read command
     MULTIPLE_BYTE = 0x40,	// Multiple byte
     REG_MASK = 0x3f
-  };
+  } __attribute__((packed));
 
 protected:
   /**
@@ -80,7 +80,7 @@ protected:
     DATA = 0x32,		// Data (x, y, z)
     FIFO_CTL = 0x38,		// FIFO control
     FIFO_STATUS = 0x39		// FIFO status
-  };
+  } __attribute__((packed));
 
   /**
    * Register ACT_INACT_CTL bitfields
@@ -94,7 +94,7 @@ protected:
     INACT_X_EN = 2,		// Inactivity x axis enable
     INACT_Y_EN = 1,		// Inactivity x axis enable
     INACT_Z_EN = 0		// Inactivity x axis enable
-  };
+  } __attribute__((packed));
 
   /**
    * Register TAP_AXES bitfields
@@ -104,7 +104,7 @@ protected:
     TAP_X_EN = 2,	        // Tap x enable
     TAP_Y_EN = 1,	        // Tap y enable
     TAP_Z_EN = 0,	        // Tap z enable
-  };
+  } __attribute__((packed));
 
   /**
    * Register ACT_TAP_STATUS bitfields
@@ -117,7 +117,7 @@ protected:
     TAP_X_SRC = 2, 		// Activity x event
     TAP_Y_SRC = 1, 		// Activity x event
     TAP_Z_SRC = 0 		// Activity x event
-  };
+  } __attribute__((packed));
 
   /**
    * Register BW_RATE bitfields
@@ -125,7 +125,7 @@ protected:
   enum {
     LOW_POWER = 4,		// Low power move
     RATE = 0			// Data rate (4 bits)
-  };
+  } __attribute__((packed));
 
   /**
    * Register POWER_CTL bitfields
@@ -136,7 +136,7 @@ protected:
     MEASURE = 3,		// Measurement mode
     SLEEP = 2,			// Sleep mode
     WAKEUP = 0			// Wakeup frequency (2 bits)
-  };
+  } __attribute__((packed));
 
   /**
    * Register INT_ENABLE/INT_MAP/INT_SOURCE bitfields
@@ -150,7 +150,7 @@ protected:
     FREE_FALL = 2,		// Free fall
     WATERMARK = 1,		// Watermark
     OVERRUN = 0			// Overrun interrupt enable/map/source
-  };
+  } __attribute__((packed));
 
   /**
    * Register DATA_FORMAT bitfields
@@ -162,14 +162,14 @@ protected:
     FULL_RES = 3,		// Full resolution
     JUSTIFY = 2,		// Left justified/sign extend
     RANGE = 0			// Range 2-16 g (2 bits)
-  };
+  } __attribute__((packed));
 
   enum {
     RANGE_2G = 0,		// +-2g
     RANGE_4G = 1,		// +-4g
     RANGE_8G = 2,		// +-8g
     RANGE_16G = 3		// +-16g
-  };
+  } __attribute__((packed));
 
   /**
    * Register FIFO_CTL bitfields
@@ -178,7 +178,7 @@ protected:
     FIFO_MODE = 6,		// FIFO Mode
     TRIGGER = 5,		// Trigger event to interrupt pin
     SAMPLES = 0			// Number of samples (5 bits)
-  };
+  } __attribute__((packed));
 
   /**
    * Register FIFO_STATUS bitfields
@@ -186,7 +186,7 @@ protected:
   enum {
     FIFO_TRIG = 7,		// FIFO trigger event occuring
     ENTRIES = 0			// Number of entries in FIFO (6 bits)
-  };
+  } __attribute__((packed));
 
   /**
    * Write given value to register.

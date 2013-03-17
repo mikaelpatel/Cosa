@@ -54,7 +54,7 @@ private:
     PIPE_MASK = 0x07,		// Mask pipe address
     W_ACK_PAYLOAD_NOACK = 0xB0,	// Disable AUTOACK on this specific packet
     NOP = 0xFF			// No operation, return status
-  };
+  } __attribute__((packed));
 
   /**
    * Transmission state
@@ -121,7 +121,7 @@ public:
     STANDBY_STATE = 1,
     RX_STATE = 2,
     TX_STATE = 3
-  };
+  } __attribute__((packed));
 
   /**
    * NRF transceiver registers map (See chap. 9, tab. 28, pp. 57)
@@ -153,7 +153,7 @@ public:
     FIFO_STATUS = 0x17,		// FIFO status register
     DYNPD = 0x1C,		// Enable dynamic payload length
     FEATURE = 0x1D		// Feature register
-  };
+  } __attribute__((packed));
 
   /**
    * Register CONFIG bitfields
@@ -166,12 +166,12 @@ public:
     CRCO = 2,			// CRC encoding scheme (2/1 bytes CRC)
     PWR_UP = 1,			// Power up/down
     PRIM_RX = 0,		// RX/TX control (PRX/PTX)
-  };
+  } __attribute__((packed));
 
   enum {
     POWER_DOWN = 0,		// PWR_UP bit settings
     POWER_UP = _BV(PWR_UP)
-  };
+  } __attribute__((packed));
 
   /**
    * Register EN_AA bitfields
@@ -184,7 +184,7 @@ public:
     ENAA_P1 = 1,		// - data pipe 1
     ENAA_P0 = 0,		// - data pipe 0
     ENAA_PA = 0x3f		// Enable all auto ack on all data pipes
-  };
+  } __attribute__((packed));
   
   /**
    * Register EN_RXADDR bitfields
@@ -197,7 +197,7 @@ public:
     ERX_P1 = 1,			// - data pipe 1
     ERX_P0 = 0,			// - data pipe 0
     ERX_PA = 0x3f		// Enable all data pipes
-  };
+  } __attribute__((packed));
 
   /**
    * Register SETUP_AW bitfields
@@ -207,7 +207,7 @@ public:
     AW3BYTES = 1,		// 3 bytes
     AW4BYTES = 2,		// 4 bytes
     AW5BYTES = 3		// 5 bytes
-  };
+  } __attribute__((packed));
 
   /**
    * Register SETUP_RETR bitfields
@@ -217,7 +217,7 @@ public:
     				// - delay * 250 us (250..4000 us)
     ARC = 0			// Auto retransmit count (bits 4)
     				// - retransmit count (0..15)
-  };
+  } __attribute__((packed));
 
   /**
    * Register RF_SETUP bitfields
@@ -228,7 +228,7 @@ public:
     PLL_LOCK = 4,		// Force PLL lock signal
     RF_DR_HIGH = 3,		// Air data bitrate (2 Mbps)
     RF_PWR = 1			// Set RF output power in TX mode (bits 2)
-  };
+  } __attribute__((packed));
 
   /**
    * Transmission rates RF_DR_LOW/RF_DR_HIGH values
@@ -237,7 +237,7 @@ public:
     RF_DR_1MBPS = 0,
     RF_DR_2MBPS = _BV(RF_DR_HIGH),
     RF_DR_250KBPS = _BV(RF_DR_LOW)
-  };
+  } __attribute__((packed));
 
   /**
    * Output power RF_PWR values
@@ -247,7 +247,7 @@ public:
     RF_PWR_12DBM = 2,		// -12dBm
     RF_PWR_6DBM = 4,		// -6dBm
     RF_PWR_0DBM = 6		//  0dBm
-  };
+  } __attribute__((packed));
 
   /**
    * Register STATUS bitfields
@@ -259,7 +259,7 @@ public:
     RX_P_NO = 1,		// Data pipe number for available payload (bits 3)
     RX_P_NO_MASK = 0x0e,	// Mask pipe number
     TX_FIFO_FULL = 0		// TX FIFO full flag
-  };
+  } __attribute__((packed));
 
   /**
    * Register OBSERVE_TX bitfields
@@ -267,7 +267,7 @@ public:
   enum  {
     PLOS_CNT = 4,		// Count lost packets (bits 4)
     ARC_CNT = 0		        // Count retransmitted packets (bits 4)
-  };
+  } __attribute__((packed));
 
   /**
    * Register FIFO_STATUS bitfields
@@ -278,7 +278,7 @@ public:
     TX_EMPTY = 4,		// TX FIFO empty flag
     RX_FULL = 1,		// RX FIFO full flag
     RX_EMPTY = 0,		// RX FIFO empty flag
-  };
+  } __attribute__((packed));
 
   /**
    * Register DYNPD bitfields
@@ -291,7 +291,7 @@ public:
     DPL_P1 = 1,			// - data pipe 1
     DPL_P0 = 0,			// - data pipe 0
     DPL_PA = 0x3f		// Enable dynamic payload length on all pipes
-  };
+  } __attribute__((packed));
 
   /**
    * Register FEATURE bitfields
@@ -300,7 +300,7 @@ public:
     EN_DPL = 2,			// Enable dynamic payload length
     EN_ACK_PAY = 1,		// Enable payload with ACK
     EN_DYN_ACK = 0		// Enable the W_TX_PAYLOAD_NOACK command
-  };
+  } __attribute__((packed));
 
   /**
    * Configuration max values
@@ -308,7 +308,7 @@ public:
   enum {
     PAYLOAD_MAX = 32,           // Max size of payload
     AW_MAX = 5,                 // Max address width in bytes
-  };
+  } __attribute__((packed));
 
   /**
    * Start interaction with device.

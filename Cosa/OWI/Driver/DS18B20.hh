@@ -47,7 +47,7 @@ private:
     COPY_SCRATCHPAD = 0x48,
     RECALL_E = 0xB8,
     READ_POWER_SUPPLY = 0xB4
-  };
+  } __attribute__((packed));
 
   /**
    * DS18B20 Memory Map (Figure 7, pp 7)

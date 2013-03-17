@@ -82,7 +82,7 @@ public:
     RUNNING,			// Dispatched and running
     SLEEPING,			// Detached. Need wakeup call
     TERMINATED = 0xff,		// Removed from all queues
-  };
+  } __attribute__((packed));
 
   /**
    * Construct thread, initiate state and continuation. Does not 

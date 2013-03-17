@@ -58,7 +58,7 @@ public:
     ODD_PARITY = 32,
     STOP1 = 0,
     STOP2 = 64
-  };
+  } __attribute__((packed));
 
   /**
    * Construct software serial output device driver handler.
@@ -204,7 +204,7 @@ public:
     ODD_PARITY = _BV(UPM01) | _BV(UPM00),
     STOP1 = 0,
     STOP2 = _BV(USBS0)
-  };
+  } __attribute__((packed));
 
   /**
    * Construct serial port handler for given UART.

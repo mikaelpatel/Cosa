@@ -118,7 +118,7 @@ protected:
     GMCTRN1 = 0xE1,		// Negative Gamma Correction
     EXTCTRL = 0xF0,		// Extension Command Control
     VCOM4L = 0xFF		// VCOM 4 Level Control
-  };
+  } __attribute__((packed));
   /**
    *  Memory Data Access Control (bits)
    */
@@ -129,7 +129,7 @@ protected:
     MADCTL_ML = 0x10,
     MADCTL_BGR = 0x08,
     MADCTL_MH = 0x04
-  };
+  } __attribute__((packed));
 
   /**
    * Screen size

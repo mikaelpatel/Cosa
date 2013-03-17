@@ -87,7 +87,7 @@ public:
     USER_TYPE = 64,		// User defined events/messages, 64-254
 
     ERROR_TYPE = 255		// Error event
-  };
+  } __attribute__((packed));
 
   /**
    * Event handler root class.

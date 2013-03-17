@@ -50,7 +50,7 @@ private:
     MR_STATE = 3,
     ST_STATE = 4,
     SR_STATE = 5
-  };
+  } __attribute__((packed));
 
   /**
    * Macro to generate more compact number sequence.
@@ -91,7 +91,7 @@ private:
     /** Misc */
     NO_INFO = TWI_STATUS(0xF8),
     BUS_ERROR = TWI_STATUS(0x00)
-  };
+  } __attribute__((packed));
 
   /**
    * Addressing and read/write bit 
@@ -100,7 +100,7 @@ private:
     WRITE_OP = 0x00,
     READ_OP = 0x01,
     ADDR_MASK = 0xfe
-  };
+  } __attribute__((packed));
 
   /**
    * Commands for TWI hardware
@@ -112,7 +112,7 @@ private:
     ACK_CMD =   _BV(TWINT) | _BV(TWEA) |              _BV(TWEN) | _BV(TWIE),
     NACK_CMD =  _BV(TWINT) |                          _BV(TWEN) | _BV(TWIE),
     STOP_CMD =  _BV(TWINT) | _BV(TWEA) | _BV(TWSTO) | _BV(TWEN) | _BV(TWIE)
-  };
+  } __attribute__((packed));
 
   /**
    * Device state, data buffers and target.

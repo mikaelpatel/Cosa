@@ -63,7 +63,7 @@ public:
     COUNT8_ATTR = 0x08,
     COUNT16_ATTR = 0x09,
     END_SEQUENCE_ATTR = 0x0f
-  };
+  } __attribute__((packed));
 
   /**
    * Data type tag: Predefined data types and tags for extension.
@@ -89,7 +89,7 @@ public:
     FLOAT32_TYPE = 0xd0,
     FLOAT64_TYPE = 0xe0,
     FLOAT80_TYPE = 0xf0
-  };
+  } __attribute__((packed));
 
   /**
    * Data type descriptor structures (program memory)
@@ -133,7 +133,7 @@ public:
   enum {
     LITTLE_ENDIAN = 0,
     BIG_ENDIAN = 1
-  };
+  } __attribute__((packed));
 
 protected:
   // Output streaming device.

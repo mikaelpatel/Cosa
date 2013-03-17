@@ -72,12 +72,12 @@ public:
     DIV64_2X_CLOCK = 0x07,
     MASTER_CLOCK = 0x08,
     DEFAULT_CLOCK = 0x00
-  };
+  } __attribute__((packed));
   
   enum Direction {
     MSB_FIRST = 0, 
     LSB_FIRST = 1
-  };
+  } __attribute__((packed));
 
 private:
   uint8_t m_cmd;

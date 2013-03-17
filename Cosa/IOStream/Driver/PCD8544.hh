@@ -60,7 +60,7 @@ protected:
     SET_BIAS_SYS = 0x10,	// Set Bias System (0..7)
     SET_VOP = 0x80,		// Write Vop to register
       VOP_MASK = 0x7f		// Mask Vop
-  };
+  } __attribute__((packed));
 
   // Initialization script to reduce memory footprint
   static const uint8_t script[] PROGMEM;
@@ -95,11 +95,11 @@ public:
     DISPLAY_ON = 0x01,
     NORMAL_MODE = 0x04,	
     INVERSE_MODE = 0x05
-  };
+  } __attribute__((packed));
   enum TextMode {
     NORMAL_TEXT_MODE = 0x00,
     INVERTED_TEXT_MODE = 0xff
-  };
+  } __attribute__((packed));
   static const uint8_t WIDTH = 84;
   static const uint8_t HEIGHT = 48;
   static const uint8_t LINES = HEIGHT / CHARBITS;

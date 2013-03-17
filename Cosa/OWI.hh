@@ -172,7 +172,7 @@ public:
     enum Mode {
       OUTPUT_MODE = 0,
       INPUT_MODE = 1
-    };
+    } __attribute__((packed));
 
     // One-wire slave states
     enum State {
@@ -181,7 +181,7 @@ public:
       PRESENCE_STATE,
       ROM_STATE,
       FUNCTION_STATE
-    };
+    } __attribute__((packed));
 
     /**
      * Set slave device pin input/output mode.
@@ -261,7 +261,7 @@ public:
     // Slave function codes
     enum {
       STATUS = 0x11
-    };
+    } __attribute__((packed));
 
     /**
      * Construct one wire slave device connected to the given pin and

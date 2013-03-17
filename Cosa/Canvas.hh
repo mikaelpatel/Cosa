@@ -303,7 +303,7 @@ public:
   enum {
     PORTRAIT = 0,
     LANDSCAPE = 1,
-  };
+  } __attribute__((packed));
 
   /**
    * Construct canvas object and initiate.
@@ -914,7 +914,7 @@ public:
     DRAW_CHAR,
     DRAW_STRING,
     FILL_SCREEN
-  };
+  } __attribute__((packed));
 
   /**
    * Run canvas drawing script. Table may contain sub-scripts, strings

@@ -56,7 +56,7 @@ public:
     TWO_MIXED_INPUTS = 0x20,
     TWO_DIFF_INPUTS = 0x30,
     OUTPUT_ENABLE = 0x40
-  };
+  } __attribute__((packed));
 
   /**
    * Construct PCF8591 TWI A/D, D/A converter device access to given

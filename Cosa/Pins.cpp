@@ -450,7 +450,10 @@ AnalogPin::sample(uint8_t pin, Reference ref)
 uint16_t 
 AnalogPin::sample_await()
 {
-  if (sampling_pin == 0) return (0xffffU);
+  if (sampling_pin != this) return (m_value);
+  synchronized {
+    bit_clear(ADCSRA, ADIE);
+  }
   loop_until_bit_is_clear(ADCSRA, ADSC);
   return (m_value = ADCW);
 }
