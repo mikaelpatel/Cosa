@@ -52,6 +52,18 @@
 typedef float float32_t;
 
 /**
+ * Universal type union, 32-bit.
+ */
+union univ32_t {
+  float as_float;
+  long as_long;
+  short as_short[2];
+  char as_char[4];
+  void* as_ptr;
+  const void* as_ptr_P;
+};
+
+/**
  * Macro for number of elements in a vector.
  * @param[in] x vector
  * @return number of elements
