@@ -160,7 +160,65 @@ ISR(USART1_RX_vect)
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
-// Fix: Add Arduino Mega UART interrupt handlers
+UART* uart1 = 0;
+
+ISR(USART1_UDRE_vect)
+{
+  if (uart1 == 0) return;
+  int c = uart1->m_obuf->getchar();
+  if (c != -1) {
+    UDR1 = c;
+  }
+  else {
+    bit_clear(UCSR1B, UDRIE0);
+  }
+}
+
+ISR(USART1_RX_vect)
+{
+  if (uart1 == 0) return;
+  uart1->m_ibuf->putchar(UDR1);
+}
+
+UART* uart2 = 0;
+
+ISR(USART2_UDRE_vect)
+{
+  if (uart2 == 0) return;
+  int c = uart2->m_obuf->getchar();
+  if (c != -1) {
+    UDR2 = c;
+  }
+  else {
+    bit_clear(UCSR2B, UDRIE0);
+  }
+}
+
+ISR(USART2_RX_vect)
+{
+  if (uart2 == 0) return;
+  uart2->m_ibuf->putchar(UDR2);
+}
+
+UART* uart3 = 0;
+
+ISR(USART3_UDRE_vect)
+{
+  if (uart3 == 0) return;
+  int c = uart3->m_obuf->getchar();
+  if (c != -1) {
+    UDR3 = c;
+  }
+  else {
+    bit_clear(UCSR3B, UDRIE0);
+  }
+}
+
+ISR(USART3_RX_vect)
+{
+  if (uart3 == 0) return;
+  uart3->m_ibuf->putchar(UDR3);
+}
 
 #endif
 #endif
