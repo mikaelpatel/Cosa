@@ -27,8 +27,8 @@
  * a message with the received identity and message number.
  *
  * @section Circuit
- * Connect RF433/315 Transmitter Data to Arduino D12, RF433/315
- * Receiver to Arduino D11. Connect VCC and GND. 
+ * Connect RF433/315 Transmitter Data to Arduino D9, RF433/315
+ * Receiver to Arduino D8. Connect VCC and GND. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -52,8 +52,8 @@ VirtualWireCodec codec;
 // Block4B5BCodec codec;
 
 // Virtual Wire Interface Transmitter and Receiver
-VWI::Transmitter tx(Board::D12, &codec);
-VWI::Receiver rx(Board::D11, &codec);
+VWI::Transmitter tx(Board::D9, &codec);
+VWI::Receiver rx(Board::D8, &codec);
 const uint16_t SPEED = 4000;
 
 void setup()
@@ -109,7 +109,10 @@ void loop()
   if (nr != msg.nr) {
     nr = msg.nr;
     trace << hex << msg.id << ':' << msg.nr << ':';
-    trace << hex << msg.data[0] << PSTR(", ") << hex << msg.data[1] << endl;
+    trace << hex << msg.data[0];
+    for (uint8_t i = 1; i < membersof(msg.data); i++)
+      trace << PSTR(", ") << hex << msg.data[i];
+    trace << endl;
   }
 
 }

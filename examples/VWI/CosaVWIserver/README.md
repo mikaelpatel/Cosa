@@ -8,5 +8,5 @@ a message with the received identity and message number.
 
 Circuit
 -------
-Connect RF433/315 Transmitter Data to Arduino D12, RF433/315
-Receiver to Arduino D11. Connect VCC and GND. 
+Connect RF433/315 Transmitter Data to Arduino D9, RF433/315
+Receiver to Arduino D8. Connect VCC and GND. 

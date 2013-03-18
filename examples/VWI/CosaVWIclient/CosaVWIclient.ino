@@ -28,8 +28,8 @@
  * If an acknowledgement is not received a retransmission will occur.
  *
  * @section Circuit
- * Connect RF433/315 Transmitter Data to Arduino D12, RF433/315
- * Receiver to Arduino D11. Connect VCC and GND. Connect Arduino
+ * Connect RF433/315 Transmitter Data to Arduino D9, RF433/315
+ * Receiver to Arduino D8. Connect VCC and GND. Connect Arduino
  * analog pins A2 and A3 to analog sensors.  
  *
  * This file is part of the Arduino Che Cosa project.
@@ -58,8 +58,8 @@ VirtualWireCodec codec;
 // Block4B5BCodec codec;
 
 // Virtual Wire Interface Transmitter and Receiver
-VWI::Transmitter tx(Board::D12, &codec);
-VWI::Receiver rx(Board::D11, &codec);
+VWI::Transmitter tx(Board::D9, &codec);
+VWI::Receiver rx(Board::D8, &codec);
 const uint16_t SPEED = 4000;
 
 void setup()
@@ -108,7 +108,7 @@ void loop()
   msg.data[0] = luminance.sample();
   msg.data[1] = temperature.sample();
   for (uint8_t i = 2; i < membersof(msg.data); i++)
-    msg.data[i] = 0xa5a5;
+    msg.data[i] = ((cnt << 8) | ((i << 4) + i)) ^ 0xa5a5;
 
   // Send message and receive acknowledgement
   uint8_t nr = 0;
