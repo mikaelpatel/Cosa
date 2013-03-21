@@ -165,7 +165,7 @@ public:
   /**
    * Act as slave device connected to a one-wire pin
    */
-  class Device : public InterruptPin {
+  class Device : public ExternalInterruptPin {
     friend class OWI;
   private:
     // One-wire slave pin mode
@@ -269,8 +269,8 @@ public:
      * @param[in] pin number.
      * @param[in] rom identity number.
      */
-    Device(Board::InterruptPin pin, uint8_t* rom) : 
-      InterruptPin(pin, InterruptPin::ON_CHANGE_MODE),
+    Device(Board::ExternalInterruptPin pin, uint8_t* rom) : 
+      ExternalInterruptPin(pin, ExternalInterruptPin::ON_CHANGE_MODE),
       m_rom(rom),
       m_time(0),
       m_crc(0),

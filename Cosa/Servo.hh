@@ -34,6 +34,10 @@
 #include "Cosa/Board.hh"
 #include "Cosa/Pins.hh"
 
+/**
+ * Forward declare interrupt service routines to allow them 
+ * as friends.
+ */
 extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal));
 extern "C" void TIMER1_COMPB_vect(void) __attribute__ ((signal));
 

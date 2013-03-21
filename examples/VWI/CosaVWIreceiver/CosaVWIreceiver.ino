@@ -26,7 +26,7 @@
  * and 2x16-bit analog data sample.
  *
  * @section Circuit
- * Connect RF433/315 Receiver to Arduino D11.
+ * Connect RF433/315 Receiver to Arduino D8.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -48,8 +48,8 @@ VirtualWireCodec codec;
 // BitstuffingCodec codec;
 // Block4B5BCodec codec;
 
-// Virtual Wire Interface Receiver connected to pin D11
-VWI::Receiver rx(Board::D11, &codec);
+// Virtual Wire Interface Receiver connected to pin D9
+VWI::Receiver rx(Board::D8, &codec);
 const uint16_t SPEED = 4000;
 
 void setup()

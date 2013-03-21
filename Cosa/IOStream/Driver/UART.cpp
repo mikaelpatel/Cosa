@@ -26,10 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#if defined(__AVR_ATtiny25__) \
- || defined(__AVR_ATtiny45__) \
- || defined(__AVR_ATtiny85__)
-
+#include "Cosa/Board.hh"
+#if defined(__ARDUINO_TINYX5__)
 #include "Cosa/IOStream/Driver/UART.hh"
 
 bool
@@ -135,7 +133,7 @@ ISR(USART_RX_vect)
   uart.m_ibuf->putchar(UDR0);
 }
 
-#if defined(__AVR_ATmega1284P__)
+#if defined(__ARDUINO_MIGHTY__)
 
 UART* uart1 = 0;
 
@@ -158,7 +156,7 @@ ISR(USART1_RX_vect)
 }
 #endif
 
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#if defined(__ARDUINO_MEGA__)
 
 UART* uart1 = 0;
 

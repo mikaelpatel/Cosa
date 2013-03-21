@@ -50,13 +50,14 @@ HCSR04::read(uint16_t& distance)
   if (timeout == 0) return (0);
 
   // Measure the lenght of the return pulse
+  // Fix: Measure with RTC::micros()?
   uint16_t count = 0;
   synchronized {
     while (m_echoPin.is_set() && timeout--) count++;
   }
   if (timeout == 0) return (0);
 
-  // And calculate the distance 
+  // And calculate the distance in milli-meters
   distance = (count * 10L) / COUNT_PER_CM;
   return (1);
 }

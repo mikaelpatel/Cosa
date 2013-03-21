@@ -75,13 +75,13 @@ private:
   /**
    * Chip interrupt pin (default is pin 2)
    */
-  class IRQPin : public InterruptPin {
+  class IRQPin : public ExternalInterruptPin {
     friend class NRF24L01P;
   private:
     NRF24L01P* m_nrf;
   public:
-    IRQPin(Board::InterruptPin pin, Mode mode, NRF24L01P* nrf) : 
-      InterruptPin(pin, mode),
+    IRQPin(Board::ExternalInterruptPin pin, Mode mode, NRF24L01P* nrf) : 
+      ExternalInterruptPin(pin, mode),
       m_nrf(nrf)
     {}
     virtual void on_interrupt();
@@ -98,19 +98,16 @@ public:
    * @param[in] ce chip enable activates pin number (default D9/D48).
    * @param[in] irq interrupt pin number (default EXT0/EXT4).
    */
-#if defined(__AVR_ATmega8__)     || \
-    defined(__AVR_ATmega168__)   || \
-    defined(__AVR_ATmega328P__)  || \
-    defined(__AVR_ATmega1284P__)
-  NRF24L01P(uint8_t channel = 64, 
-	    Board::DigitalPin csn = Board::D10, 
-	    Board::DigitalPin ce = Board::D9, 
-	    Board::InterruptPin irq = Board::EXT0);
-#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#if defined(__ARDUINO_MEGA__)
   NRF24L01P(uint8_t channel = 64, 
 	    Board::DigitalPin csn = Board::D53, 
 	    Board::DigitalPin ce = Board::D48, 
-	    Board::InterruptPin irq = Board::EXT4);
+	    Board::ExternalInterruptPin irq = Board::EXT4);
+#else
+  NRF24L01P(uint8_t channel = 64, 
+	    Board::DigitalPin csn = Board::D10, 
+	    Board::DigitalPin ce = Board::D9, 
+	    Board::ExternalInterruptPin irq = Board::EXT0);
 #endif
 
   /**

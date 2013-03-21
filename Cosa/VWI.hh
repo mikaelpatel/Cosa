@@ -37,6 +37,10 @@
 #include "Cosa/Pins.hh"
 #include <avr/sleep.h>
 
+/**
+ * Forward declare interrupt service routines to allow them 
+ * as friends.
+ */
 extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal));
 
 class VWI {
@@ -117,7 +121,7 @@ public:
     }
   };
 
-  /** Check sum for received frame */
+  /** CRC checksum for received frame */
   static const uint16_t CHECK_SUM = 0xf0b8;
 
   /**

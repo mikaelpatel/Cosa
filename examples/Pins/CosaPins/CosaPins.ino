@@ -33,13 +33,13 @@
 #include "Cosa/Memory.h"
 
 // Input interrupt pin with counter
-class CounterInterruptPin : public InterruptPin {
+class CounterInterruptPin : public ExternalInterruptPin {
 private:
   volatile uint16_t m_counter;
   virtual void on_interrupt() { m_counter++; }
 public:
-  CounterInterruptPin(Board::InterruptPin pin) :
-    InterruptPin(pin, InterruptPin::ON_RISING_MODE),
+  CounterInterruptPin(Board::ExternalInterruptPin pin) :
+    ExternalInterruptPin(pin, ExternalInterruptPin::ON_RISING_MODE),
     m_counter(0)
   {}
   uint16_t get_counter() { return (m_counter); }
@@ -66,7 +66,7 @@ void setup()
   TRACE(sizeof(Queue));
   TRACE(sizeof(Pin));
   TRACE(sizeof(InputPin));
-  TRACE(sizeof(InterruptPin));
+  TRACE(sizeof(ExternalInterruptPin));
   TRACE(sizeof(CounterInterruptPin));
   TRACE(sizeof(AnalogPin));
   TRACE(sizeof(OutputPin));

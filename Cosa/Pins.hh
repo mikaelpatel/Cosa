@@ -35,6 +35,7 @@
 #include "Cosa/Bits.h"
 #include "Cosa/Event.hh"
 #include "Cosa/IOStream.hh"
+#include "Cosa/Interrupt.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Board.hh"
 
@@ -71,6 +72,15 @@ protected:
   volatile uint8_t* PORT() 
   { 
     return (m_sfr + 2); 
+  }
+
+  /**
+   * Return pin change interrupt mask register.
+   * @return pin change mask register pointer.
+   */
+  volatile uint8_t* PCIMR() 
+  { 
+    return (Board::PCIMR(m_pin));
   }
 
   /**
@@ -211,6 +221,7 @@ public:
   uint8_t read(OutputPin& clk, Direction order = MSB_FIRST);
 
   /**
+   * Use pin number directly to read value. Does not require an instance.
    * Return true(1) if the pin is set otherwise false(0).
    * @param[in] pin number.
    * @return boolean.
@@ -302,16 +313,47 @@ public:
 };
 
 /**
- * Abstract interrupt pin. Allows interrupt handling on the pin value 
- * changes. 
+ * Forward declare interrupt service routines to allow them 
+ * as friends.
  */
-class InterruptPin : public InputPin, public Event::Handler {
+extern "C" void INT0_vect(void) __attribute__ ((signal));
+#if !defined(__ARDUINO_TINYX5__)
+extern "C" void INT1_vect(void) __attribute__ ((signal));
+#if defined(__ARDUINO_MEGA__)
+extern "C" void INT2_vect(void) __attribute__ ((signal));
+extern "C" void INT3_vect(void) __attribute__ ((signal));
+extern "C" void INT4_vect(void) __attribute__ ((signal));
+extern "C" void INT5_vect(void) __attribute__ ((signal));
+#endif
+#endif
+
+/**
+ * Abstract external interrupt pin. Allows interrupt handling on 
+ * the pin value changes. 
+ */
+class ExternalInterruptPin : 
+  public InputPin, 
+  public Event::Handler, 
+  public Interrupt::Handler {
 private:
+  static ExternalInterruptPin* ext[Board::EXT_MAX];
   uint8_t m_ix;
 
+  /**
+   * Interrupt handlers are friends.
+   */
+  friend void INT0_vect(void);
+#if !defined(__ARDUINO_TINYX5__)
+  friend void INT1_vect(void);
+#if defined(__ARDUINO_MEGA__)
+  friend void INT2_vect(void);
+  friend void INT3_vect(void);
+  friend void INT4_vect(void);
+  friend void INT5_vect(void);
+#endif
+#endif
+
 public:
-  static InterruptPin* ext[Board::EXT_MAX];
-  
   enum Mode {
     ON_LOW_LEVEL_MODE = 0,
     ON_CHANGE_MODE = _BV(ISC00),
@@ -321,62 +363,142 @@ public:
   } __attribute__((packed));
 
   /**
-   * Construct interrupt pin with given pin number, mode, interrupt
-   * handler and environment.
+   * Construct external interrupt pin with given pin number and mode.
    * @param[in] pin pin number.
    * @param[in] mode pin mode.
    */
-  InterruptPin(Board::InterruptPin pin, Mode mode = ON_CHANGE_MODE);
+  ExternalInterruptPin(Board::ExternalInterruptPin pin, 
+		       Mode mode = ON_CHANGE_MODE);
 
   /**
    * Enable interrupt pin change detection and interrupt handler.
    */
-#if defined(__AVR_ATtiny25__)			\
- || defined(__AVR_ATtiny45__)			\
- || defined(__AVR_ATtiny85__)
-
   void enable() 
   { 
-    bit_set(GIMSK, INT0); 
-  }
-
+    synchronized {
+#if defined(__ARDUINO_TINYX5__)
+      bit_set(GIMSK, INT0); 
 #else
-
-  void enable() 
-  { 
-    bit_set(EIMSK, m_ix); 
-  }
-
+      bit_set(EIMSK, m_ix); 
 #endif
+    }
+  }
 
   /**
    * Disable interrupt pin change detection.
    */
-#if defined(__AVR_ATtiny25__)			\
- || defined(__AVR_ATtiny45__)			\
- || defined(__AVR_ATtiny85__)
-
   void disable() 
   { 
-    bit_clear(GIMSK, INT0);
-  }
-
+    synchronized {
+#if defined(__ARDUINO_TINYX5__)
+      bit_clear(GIMSK, INT0);
 #else
-
-  void disable() 
-  { 
-    bit_clear(EIMSK, m_ix); 
-  }
-
+      bit_clear(EIMSK, m_ix); 
 #endif
+    }
+  }
 
   /**
+   * @override
+   * Default interrupt service on external interrupt pin change.
+   */
+  virtual void on_interrupt();
+};
+
+/**
+ * Forward declare interrupt service routines to allow them 
+ * as friends.
+ */
+extern "C" void PCINT0_vect(void) __attribute__ ((signal));
+#if !defined(__ARDUINO_TINYX5__)
+extern "C" void PCINT1_vect(void) __attribute__ ((signal));
+extern "C" void PCINT2_vect(void) __attribute__ ((signal));
+#endif
+
+/**
+ * Abstract interrupt pin. Allows interrupt handling on 
+ * the pin value changes. 
+ */
+class InterruptPin : 
+  public InputPin, 
+  public Event::Handler, 
+  public Interrupt::Handler {
+private:
+  static InterruptPin* tab[Board::PIN_MAX];
+  static uint8_t env[Board::PCINT_MAX];
+
+  /**
+   * Map interrupt source: Check which pin(s) are the source of the
+   * pin change interrupt and call the corresponding interrupt handler
+   * per pin.
+   * @param[in] ix port index.
+   * @param8in] mask pin mask.
+   */
+  static void on_interrupt(uint8_t ix, uint8_t mask);
+
+  /**
+   * Interrupt handlers are friends.
+   */
+  friend void PCINT0_vect(void);
+#if !defined(__ARDUINO_TINYX5__)
+  friend void PCINT1_vect(void);
+  friend void PCINT2_vect(void);
+#endif
+  
+public:
+  /**
+   * Start handling of pin change interrupt handling.
+   */
+  static void begin();
+
+  /**
+   * End handling of pin change interrupt handling.
+   */
+  static void end();
+
+  /**
+   * Construct interrupt pin with given pin number.
+   * @param[in] pin pin number.
+   */
+  InterruptPin(Board::DigitalPin pin) : InputPin(pin) 
+  {
+  }
+
+  /**
+   * Construct interrupt pin with given pin number.
+   * @param[in] pin pin number.
+   */
+  InterruptPin(Board::AnalogPin pin) : InputPin(pin)
+  {
+  }
+
+  /**
+   * Enable interrupt pin change detection and interrupt handler.
+   */
+  void enable() 
+  { 
+    synchronized {
+      *PCIMR() |= m_mask;
+      tab[m_pin] = this;
+    }
+  }
+
+  /**
+   * Disable interrupt pin change detection.
+   */
+  void disable() 
+  { 
+    synchronized {
+      *PCIMR() &= ~m_mask;
+      tab[m_pin] = 0;
+    }
+  }
+
+  /**
+   * @override
    * Default interrupt service on pin change interrupt.
    */
-  virtual void on_interrupt() 
-  { 
-    Event::push(Event::CHANGE_TYPE, this);
-  }
+  virtual void on_interrupt();
 };
 
 /**
@@ -718,19 +840,24 @@ private:
   Mode m_mode;
 };
 
+/**
+ * Forward declare interrupt service routines to allow them 
+ * as friends.
+ */
 extern "C" void ADC_vect(void) __attribute__ ((signal));
 
 /**
  * Abstract analog pin. Allows asynchronous sampling.
  */
-class AnalogPin : public Pin, public Event::Handler {
+class AnalogPin : 
+  public Pin, 
+  public Interrupt::Handler,
+  public Event::Handler {
 public:
   /**
    * Reference voltage; ARef pin, Vcc or internal 1V1.
    */
-#if defined(__AVR_ATtiny25__)			\
- || defined(__AVR_ATtiny45__)			\
- || defined(__AVR_ATtiny85__)
+#if defined(__ARDUINO_TINYX5)
   enum Reference {
     AVCC_REFERENCE = 0,
     APIN_REFERENCE = _BV(REFS0),
@@ -854,16 +981,14 @@ public:
   uint16_t sample_await();
 
   /**
+   * @override
    * Interrupt service on conversion completion.
    * @param[in] value sample.
    */
-  virtual void on_interrupt(uint16_t value)
-  { 
-    sampling_pin = 0;
-    Event::push(Event::SAMPLE_COMPLETED_TYPE, this, value);
-  }
+  virtual void on_interrupt(uint16_t value);
 
   /**
+   * @override
    * Default on change function. 
    * @param[in] value.
    */
@@ -942,6 +1067,10 @@ public:
   virtual void on_event(uint8_t type, uint16_t value) {}
 };
 
+/**
+ * Forward declare interrupt service routines to allow them 
+ * as friends.
+ */
 extern "C" void ANALOG_COMP_vect(void) __attribute__ ((signal));
 
 /**
@@ -949,7 +1078,9 @@ extern "C" void ANALOG_COMP_vect(void) __attribute__ ((signal));
  * and negative pin AIN1 or ADCn. Note: only one instance can be
  * active/enabled at a time.
  */
-class AnalogComparator : public Event::Handler {
+class AnalogComparator : 
+  public Interrupt::Handler, 
+  public Event::Handler {
 public:
   enum Mode {
     ON_TOGGLE_MODE = 0,
@@ -1015,12 +1146,10 @@ public:
   }
 
   /**
+   * @override
    * Default interrupt service on comparator output rise, fall or toggle.
    */
-  virtual void on_interrupt() 
-  { 
-    Event::push(Event::CHANGE_TYPE, this);
-  }
+  virtual void on_interrupt();
 };
 
 #endif

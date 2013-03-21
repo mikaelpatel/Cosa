@@ -58,12 +58,7 @@ public:
   static void timer1_enable() { power_timer1_enable(); }
   static void timer1_disable() { power_timer1_disable(); }
 
-#if defined(__AVR_ATmega8__)			\
-  || defined(__AVR_ATmega168__)			\
-  || defined(__AVR_ATmega328P__)		\
-  || defined(__AVR_ATmega1284P__)		\
-  || defined(__AVR_ATmega1280__)		\
-  || defined(__AVR_ATmega2560__)
+#if !defined(__ARDUINO_TINYX5__)
 
   static void spi_enable() { power_spi_enable(); }
   static void spi_disable() { power_spi_disable(); }
@@ -77,7 +72,7 @@ public:
   static void usart0_enable() { power_usart0_enable(); }
   static void usart0_disable() { power_usart0_disable(); }
 
-#if defined(__AVR_ATmega1284P__)
+#if defined(__ARDUINO_MIGHTY__)
 
   static void usart1_enable() { power_usart1_enable(); }
   static void usart1_disable() { power_usart1_disable(); }
@@ -85,8 +80,7 @@ public:
   static void timer3_enable() { power_timer3_enable(); }
   static void timer3_disable() { power_timer3_disable(); }
 
-#elif defined(__AVR_ATmega1280__)		\
-  || defined(__AVR_ATmega2560__)
+#elif defined(__ARDUINO_MEGA__)
   
   static void usart1_enable() { power_usart1_enable(); }
   static void usart1_disable() { power_usart1_disable(); }
@@ -107,10 +101,7 @@ public:
   static void timer5_disable() { power_timer5_disable(); }
 #endif
 
-#elif defined(__AVR_ATtiny25__)		\
-  || defined(__AVR_ATtiny45__)		\
-  || defined(__AVR_ATtiny85__)
-
+#elif defined(__ARDUINO_TINYX5__)
   static void usi_enable() { power_usi_enable(); }
   static void usi_disable() { power_usi_disable(); }
 #endif

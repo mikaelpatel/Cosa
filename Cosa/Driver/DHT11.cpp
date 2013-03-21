@@ -41,9 +41,7 @@
 #include "Cosa/Watchdog.hh"
 
 // Thresholds for wire sampling
-#if defined(__AVR_ATtiny25__)		\
- || defined(__AVR_ATtiny45__)		\
- || defined(__AVR_ATtiny85__)
+#if defined(__ARDUINO_TINYX5__)
 static const uint8_t COUNT_MIN = 30;
 #else
 static const uint8_t COUNT_MIN = 40;

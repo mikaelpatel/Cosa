@@ -27,14 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#if defined(__AVR_ATtiny25__)			\
- || defined(__AVR_ATtiny45__)			\
- || defined(__AVR_ATtiny85__)
-
-// Fix: ATtinyXX implementation
-
-#else
-
+#include "Cosa/Board.hh"
+#if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/SPI/Driver/NRF24L01P.hh"
 #include <util/delay.h>
 
@@ -47,12 +41,12 @@
 NRF24L01P::NRF24L01P(uint8_t channel, 
 		     Board::DigitalPin csn, 
 		     Board::DigitalPin ce, 
-		     Board::InterruptPin irq) : 
+		     Board::ExternalInterruptPin irq) : 
   m_status(0),
   m_channel(channel),
   m_csn(csn, 1),
   m_ce(ce, 0),
-  m_irq(irq, InterruptPin::ON_FALLING_MODE, this),
+  m_irq(irq, ExternalInterruptPin::ON_FALLING_MODE, this),
   m_state(POWER_DOWN_STATE)
 {
   begin();

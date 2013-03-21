@@ -34,17 +34,22 @@ uint8_t
 Pin::read(OutputPin& clk, Direction order)
 {
   uint8_t value = 0;
-  for (uint8_t i = 0; i < CHARBITS; i++) {
-    clk.set();
-    if (order == MSB_FIRST) {
+  uint8_t bits = CHARBITS;
+  if (order == MSB_FIRST) {
+    do {
+      clk.set();
       value <<= 1;
       if (is_set()) value |= 0x01;
-    }
-    else {
+      clk.clear();
+    } while (--bits);
+  }
+  else {
+    do {
+      clk.set();
       value >>= 1;
       if (is_set()) value |= 0x80;
-    }
-    clk.clear();
+      clk.clear();
+    } while (--bits);
   }
   return (value);
 }
@@ -63,12 +68,10 @@ Pin::println(IOStream& stream)
   stream.println();
 }
 
-#if defined(__AVR_ATmega8__)			\
- || defined(__AVR_ATmega168__)			\
- || defined(__AVR_ATmega328P__)			\
- || defined(__AVR_ATmega1284P__)
+#if defined(__ARDUINO_STANDARD__)
 
-InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
+ExternalInterruptPin::
+ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
   InputPin((Board::DigitalPin) pin)
 {
   if (mode & PULLUP_MODE) {
@@ -82,9 +85,10 @@ InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
   EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
 }
 
-#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#elif defined(__ARDUINO_MEGA__)
 
-InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
+ExternalInterruptPin::
+ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
   InputPin((Board::DigitalPin) pin)
 {
   if (mode & PULLUP_MODE) {
@@ -106,11 +110,10 @@ InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
   ext[m_ix] = this;
 }
 
-#elif defined(__AVR_ATtiny25__)			\
-   || defined(__AVR_ATtiny45__)			\
-   || defined(__AVR_ATtiny85__)
+#elif defined(__ARDUINO_TINYX5__)
 
-InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
+ExternalInterruptPin::
+ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
   InputPin((Board::DigitalPin) pin)
 {
   if (mode & PULLUP_MODE) {
@@ -125,37 +128,118 @@ InterruptPin::InterruptPin(Board::InterruptPin pin, Mode mode) :
 
 #endif
 
-InterruptPin* InterruptPin::ext[Board::EXT_MAX] = { 0 };
+ExternalInterruptPin* ExternalInterruptPin::ext[Board::EXT_MAX] = { 0 };
+
+void 
+ExternalInterruptPin::on_interrupt() 
+{ 
+  Event::push(Event::CHANGE_TYPE, this);
+}
 
 ISR(INT0_vect)
 {
-  if (InterruptPin::ext[0] != 0) InterruptPin::ext[0]->on_interrupt();
+  if (ExternalInterruptPin::ext[0] != 0) 
+    ExternalInterruptPin::ext[0]->on_interrupt();
 }
+
+#if !defined(__ARDUINO_TINYX5__)
 
 ISR(INT1_vect)
 {
-  if (InterruptPin::ext[1] != 0) InterruptPin::ext[1]->on_interrupt();
+  if (ExternalInterruptPin::ext[1] != 0) 
+    ExternalInterruptPin::ext[1]->on_interrupt();
 }
 
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#if defined(__ARDUINO_MEGA__)
+
 ISR(INT2_vect)
 {
-  if (InterruptPin::ext[2] != 0) InterruptPin::ext[2]->on_interrupt();
+  if (ExternalInterruptPin::ext[2] != 0) 
+    ExternalInterruptPin::ext[2]->on_interrupt();
 }
 
 ISR(INT3_vect)
 {
-  if (InterruptPin::ext[3] != 0) InterruptPin::ext[3]->on_interrupt();
+  if (ExternalInterruptPin::ext[3] != 0) 
+    ExternalInterruptPin::ext[3]->on_interrupt();
 }
 
 ISR(INT4_vect)
 {
-  if (InterruptPin::ext[4] != 0) InterruptPin::ext[4]->on_interrupt();
+  if (ExternalInterruptPin::ext[4] != 0) 
+    ExternalInterruptPin::ext[4]->on_interrupt();
 }
 
 ISR(INT5_vect)
 {
-  if (InterruptPin::ext[5] != 0) InterruptPin::ext[5]->on_interrupt();
+  if (ExternalInterruptPin::ext[5] != 0) 
+    ExternalInterruptPin::ext[5]->on_interrupt();
+}
+#endif
+#endif
+
+InterruptPin* InterruptPin::tab[Board::PIN_MAX] = { 0 };
+uint8_t InterruptPin::env[Board::PCINT_MAX] = { 0 };
+
+void 
+InterruptPin::begin()
+{
+  for (uint8_t i = 0; i < Board::PCINT_MAX; i++)
+    env[i] = *Pin::PIN(i << 3);
+  synchronized {
+#if defined(__ARDUINO_TINYX5__)
+    GIMSK |= PCIE;
+#else
+    PCIFR |= (_BV(PCIF2) | _BV(PCIF1) | _BV(PCIF0));
+#endif
+  }
+}
+
+void 
+InterruptPin::end()
+{
+  synchronized {
+#if defined(__ARDUINO_TINYX5__)
+    GIMSK &= ~PCIE;
+#else
+    PCIFR &= ~(_BV(PCIF2) | _BV(PCIF1) | _BV(PCIF0));
+#endif
+  }
+}
+
+void
+InterruptPin::on_interrupt()
+{ 
+  Event::push(Event::CHANGE_TYPE, this);
+}
+
+void
+InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
+{
+  uint8_t pin = ix << 3;
+  uint8_t env = *Pin::PIN(pin);
+  uint8_t changed = (env ^ InterruptPin::env[ix]) & mask;
+  for (uint8_t i = 0; i < CHARBITS; i++)
+    if ((changed & 1) && (InterruptPin::tab[i + pin] != 0))
+      InterruptPin::tab[i + pin]->on_interrupt();
+  InterruptPin::env[ix] = env;
+}
+
+ISR(PCINT0_vect)
+{
+  InterruptPin::on_interrupt(0, PCMSK0);
+}
+
+#if !defined(__ARDUINO_TINYX5__)
+
+ISR(PCINT1_vect)
+{
+  InterruptPin::on_interrupt(1, PCMSK1);
+}
+
+ISR(PCINT2_vect)
+{
+  InterruptPin::on_interrupt(2, PCMSK2);
 }
 #endif
 
@@ -170,23 +254,26 @@ OutputPin::pulse(uint16_t us)
 void 
 OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
 {
-  for (uint8_t i = 0; i < CHARBITS; i++) {
-    if (order == MSB_FIRST) {
+  uint8_t bits = CHARBITS;
+  if (order == MSB_FIRST) {
+    do {
       write(value & 0x80);
       value <<= 1;
-    }
-    else {
+      clk.set();
+      clk.clear();
+    } while (--bits);
+  }
+  else {
+    do {
       write(value & 0x01);
       value >>= 1;
-    }
-    clk.set();
-    clk.clear();
+      clk.set();
+      clk.clear();
+    } while (--bits);
   }
 }
 
-#if defined(__AVR_ATmega8__)			\
- || defined(__AVR_ATmega168__)			\
- || defined(__AVR_ATmega328P__)
+#if defined(__ARDUINO_STANDARD__)
 
 uint8_t
 PWMPin::get_duty()
@@ -236,7 +323,7 @@ PWMPin::set(uint8_t duty)
   }
 }
 
-#elif defined(__AVR_ATmega1284P__)
+#elif defined(__ARDUINO_MIGHTY__)
 
 uint8_t
 PWMPin::get_duty()
@@ -296,7 +383,7 @@ PWMPin::set(uint8_t duty)
   }
 }
 
-#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#elif defined(__ARDUINO_MEGA__)
 
 uint8_t
 PWMPin::get_duty()
@@ -376,9 +463,7 @@ PWMPin::set(uint8_t duty)
   }
 }
 
-#elif defined(__AVR_ATtiny25__)		\
-   || defined(__AVR_ATtiny45__)		\
-   || defined(__AVR_ATtiny85__)
+#elif defined(__ARDUINO_TINYX5__)
 
 uint8_t
 PWMPin::get_duty()
@@ -461,17 +546,22 @@ AnalogPin::sample_await()
 void 
 AnalogPin::on_event(uint8_t type, uint16_t value)
 {
-  // On timeout events, pins have been attached, issue a sample request
   if (type == Event::TIMEOUT_TYPE) {
     sample_request();
   }
-  // When the sample request is completed check for change and call action
   else if (type == Event::SAMPLE_COMPLETED_TYPE) {
     if (value != m_value) {
       m_value = value;
       on_change(value);
     }
   }
+}
+
+void
+AnalogPin::on_interrupt(uint16_t value)
+{ 
+  sampling_pin = 0;
+  Event::push(Event::SAMPLE_COMPLETED_TYPE, this, value);
 }
 
 ISR(ADC_vect) 
@@ -502,6 +592,12 @@ AnalogPins::on_interrupt(uint16_t value)
 }
 
 AnalogComparator* AnalogComparator::comparator = 0;
+
+void 
+AnalogComparator::on_interrupt() 
+{ 
+  Event::push(Event::CHANGE_TYPE, this);
+}
 
 ISR(ANALOG_COMP_vect)
 { 

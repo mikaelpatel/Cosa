@@ -6,6 +6,6 @@ and two analog data samples. See CosaVWIsender.ino.
 
 Circuit
 -------
-Connect RF433/315 Receiver to Arduino D11.
+Connect RF433/315 Receiver to Arduino D8.
 
 

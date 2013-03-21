@@ -100,7 +100,7 @@ void setup()
 
   // Check size of instances
   TRACE(sizeof(Link));
-  TRACE(sizeof(InterruptPin));
+  TRACE(sizeof(ExternalInterruptPin));
   TRACE(sizeof(IR::Receiver));
 
   // Print pin configuration

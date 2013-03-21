@@ -31,17 +31,3 @@
 static Event event[Event::QUEUE_MAX];
 Queue Event::queue(Event::QUEUE_MAX, sizeof(Event), event);
 
-void 
-Event::print(IOStream& stream)
-{
-  stream.printf_P(PSTR("Event(type = %d, target = %p, value = %hd)"),
-		  m_type, m_target, m_value);
-}
-
-void 
-Event::println(IOStream& stream) 
-{
-  print();
-  stream.println();
-}
-

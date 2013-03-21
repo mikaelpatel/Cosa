@@ -51,9 +51,7 @@ VWI::CRC(uint8_t* ptr, uint8_t count)
 static VWI::Transmitter* transmitter = 0;
 static VWI::Receiver* receiver = 0;
 
-#if defined(__AVR_ATtiny25__)		\
- || defined(__AVR_ATtiny45__)		\
- || defined(__AVR_ATtiny85__)
+#if defined(__ARDUINO_TINYX5__)
 
 /** Prescale table for 8-bit Timer1. Index is prescale setting */
 static const uint16_t prescale[] PROGMEM = {
@@ -182,9 +180,7 @@ VWI::begin(uint16_t speed, uint8_t mode)
   // Set sleep mode
   s_mode = mode;
 
-#if defined(__AVR_ATtiny25__)		\
- || defined(__AVR_ATtiny45__)		\
- || defined(__AVR_ATtiny85__)
+#if defined(__ARDUINO_TINYX5__)
   // Figure out prescaler value and counter match value
   prescaler = timer_setting(speed * SAMPLES_PER_BIT, 8, &nticks);
   if (!prescaler) return (0);

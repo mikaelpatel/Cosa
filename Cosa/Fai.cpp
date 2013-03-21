@@ -43,9 +43,7 @@ Fai::begin()
   Ciao::write(&Ciao::Descriptor::header_t, &header, 1);
 }
 
-#if defined(__AVR_ATtiny25__)			\
- || defined(__AVR_ATtiny45__)			\
- || defined(__AVR_ATtiny85__)
+#if defined(__ARDUINO_TINYX5__)
 
 void 
 Fai::write(uint32_t mask)

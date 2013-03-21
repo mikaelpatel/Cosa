@@ -1,9 +1,9 @@
 CosaVWIkey
 ==========
 Demonstration of the Virtual Wire Interface (VWI) with VirtualWire
-codec on ATtiny85. Uses the InterruptPin for wakeup after power down. 
-Run CosaVWIreceiver.ino on an Ardunio to receiver the messages sent
-when releasing the button.
+codec on ATtiny85. Uses the ExternalInterruptPin for wakeup after
+power down. Run CosaVWIreceiver.ino on an Ardunio to receiver the
+messages sent when releasing the button.
 
 Circuit
 -------

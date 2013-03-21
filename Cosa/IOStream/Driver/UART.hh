@@ -29,9 +29,7 @@
 #ifndef __COSA_IOSTREAM_DRIVER_UART_HH__
 #define __COSA_IOSTREAM_DRIVER_UART_HH__
 
-#if defined(__AVR_ATtiny25__)			\
- || defined(__AVR_ATtiny45__)			\
- || defined(__AVR_ATtiny85__)
+#if defined(__ARDUINO_TINYX5__)
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
@@ -108,11 +106,11 @@ public:
 
 extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
 extern "C" void USART_RX_vect(void) __attribute__ ((signal));
-#if defined(__AVR_ATmega1284P__)
+#if defined(__ARDUINO_MIGHTY__)
 extern "C" void USART1_UDRE_vect(void) __attribute__ ((signal));
 extern "C" void USART1_RX_vect(void) __attribute__ ((signal));
 #endif
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#if defined(__ARDUINO_MEGA__)
 extern "C" void USART1_UDRE_vect(void) __attribute__ ((signal));
 extern "C" void USART1_RX_vect(void) __attribute__ ((signal));
 extern "C" void USART2_UDRE_vect(void) __attribute__ ((signal));
@@ -175,11 +173,11 @@ private:
   // Interrupt handlers are friends
   friend void USART_UDRE_vect(void);
   friend void USART_RX_vect(void);
-#if defined(__AVR_ATmega1284P__)
+#if defined(__ARDUINO_MIGHTY__)
   friend void USART1_UDRE_vect(void);
   friend void USART1_RX_vect(void);
 #endif
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#if defined(__ARDUINO_MEGA__)
   friend void USART1_UDRE_vect(void);
   friend void USART1_RX_vect(void);
   friend void USART2_UDRE_vect(void);

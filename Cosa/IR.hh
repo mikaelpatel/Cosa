@@ -36,7 +36,7 @@
 class IR {
 public:
 
-  class Receiver : private InterruptPin, private Link {
+  class Receiver : private ExternalInterruptPin, private Link {
   public:
     /**
      * Mapping structure from code to key. Data structure 
@@ -83,10 +83,11 @@ public:
      * @param[in] keys number of members in keymap.
      * @param[in] sample vector for samples[max].
      */
-    Receiver(Board::InterruptPin pin, uint8_t max, uint32_t threshold,
+    Receiver(Board::ExternalInterruptPin pin, 
+	     uint8_t max, uint32_t threshold,
 	     keymap_P keymap = 0, uint8_t keys = 0,
 	     uint16_t* sample = 0) :
-      InterruptPin(pin, InterruptPin::ON_FALLING_MODE),
+      ExternalInterruptPin(pin, ExternalInterruptPin::ON_FALLING_MODE),
       Link(),
       m_threshold(threshold),
       m_sample(sample),

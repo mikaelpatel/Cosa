@@ -22,7 +22,7 @@
  *
  * @section Description
  * Demonstration of the Virtual Wire Interface (VWI) driver
- * and InterruptPin for wakeup after power down on ATtiny85.
+ * and ExternalInterruptPin for wakeup after power down on ATtiny85.
  *
  * @section Circuit
  * Connect RF433/315 Transmitter Data to ATtiny85 D1, connect VCC 
@@ -38,12 +38,13 @@
 
 // Simple interrupt handler just for wakeup call and some bookkeeping just 
 // to see how many times it is called; many as it is called while low.
-class WakeupButton : public InterruptPin {
+class WakeupButton : public ExternalInterruptPin {
 private:
   uint16_t m_count;
 public:
-  WakeupButton(Board::InterruptPin pin, InterruptPin::Mode mode) :
-    InterruptPin(pin, mode),
+  WakeupButton(Board::ExternalInterruptPin pin, 
+	       ExternalInterruptPin::Mode mode) :
+    ExternalInterruptPin(pin, mode),
     m_count(0)
   {}
   virtual void on_interrupt() { m_count++; }
@@ -56,7 +57,7 @@ VWI::Transmitter tx(Board::D1, &codec);
 const uint16_t SPEED = 4000;
 
 // Connect button with pullup to EXT0/D2
-WakeupButton wakeup(Board::EXT0, InterruptPin::ON_LOW_LEVEL_MODE);
+WakeupButton wakeup(Board::EXT0, ExternalInterruptPin::ON_LOW_LEVEL_MODE);
 
 void setup()
 {

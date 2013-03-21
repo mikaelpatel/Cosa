@@ -31,8 +31,6 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Queue.hh"
-#include "Cosa/IOStream.hh"
-#include "Cosa/Trace.hh"
 
 class Event {
 public:
@@ -192,20 +190,6 @@ public:
   {
     return (push(type, target, (uint16_t) env));
   }
-
-  /**
-   * In debug mode, print event to given stream. Default is the
-   * trace stream.
-   * @param[in] stream output stream.
-   */
-  void print(IOStream& stream = trace);
-
-  /**
-   * In debug mode, print event to given stream with new-line.
-   * Default is the trace stream.
-   * @param[in] stream output stream.
-   */
-  void println(IOStream& stream = trace);
 
   /**
    * Event queue of size QUEUE_MAX.

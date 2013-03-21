@@ -26,7 +26,7 @@
  * and two data element; analog samples.
  *
  * @section Circuit
- * Connect RF433/315 Transmitter Data to Arduino(ATtiny85) D12(D2),
+ * Connect RF433/315 Transmitter Data to Arduino(ATtiny85) D9(D2),
  * VCC to Arduino D10(D1) and connect GND. Connect Arduino analog pins
  * A2 and A3 to analog sensors. On ATtiny85 the pins are D2, D1. 
  * The power control pin D10(D1) can also be used for a LED.
@@ -60,7 +60,7 @@ VirtualWireCodec codec;
 VWI::Transmitter tx(Board::D2, &codec);
 OutputPin pw(Board::D1);
 #else 
-VWI::Transmitter tx(Board::D12, &codec);
+VWI::Transmitter tx(Board::D9, &codec);
 OutputPin pw(Board::D10);
 #endif
 
