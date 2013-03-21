@@ -244,6 +244,7 @@ public:
     virtual void on_event(uint8_t type, uint16_t value);
 
     /**
+     * @override
      * Slave device interrupt handler function. Detect reset and initiate
      * presence pulse. Push service_request event for further handling.
      * @param[in] pin reference of changed pin.

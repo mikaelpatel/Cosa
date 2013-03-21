@@ -34,6 +34,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
+#include "Cosa/Interrupt.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Board.hh"
 
@@ -43,7 +44,7 @@ public:
    * Device drivers are friends and may have callback/
    * event handler for completion events.
    */
-  class Driver : public Event::Handler {
+  class Driver : public Interrupt::Handler, public Event::Handler {
     friend class SPI;
   };
 
@@ -51,10 +52,11 @@ public:
    * Slave devices are friends and may have callback/
    * event handler for request events.
    */
-  class Device : public Event::Handler {
+  class Device : public Interrupt::Handler, public Event::Handler {
     friend class SPI;
   public:
     /**
+     * @override
      * Interrupt service on data receive in slave mode.
      * @param[in] data received data.
      */

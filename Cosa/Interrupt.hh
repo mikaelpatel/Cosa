@@ -34,6 +34,7 @@ public:
   class Handler {
   public:
     virtual void on_interrupt() {}
+    virtual void on_interrupt(uint8_t arg) {}
     virtual void on_interrupt(uint16_t arg) {}
   };
 };
