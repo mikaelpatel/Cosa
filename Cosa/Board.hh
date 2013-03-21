@@ -61,6 +61,8 @@
   || defined(__AVR_ATtiny85__)
 #include "Cosa/Board/TinyX5.hh"
 #define __ARDUINO_TINYX5__
+#else
+#error "Cosa/Board.hh: board not supported"
 #endif
 #endif
 
