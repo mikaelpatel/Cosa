@@ -170,7 +170,7 @@ Device to allow streaming of output over Virtual Wire.
 2013-03-07 Introducing class for Power Management and Sleep Modes.   
 2013-03-09 Refactoring VWI to allow easy update of codecs;
 VirtualWire, Manchester and Fixed Bitstuffing.   
-2013-03-11 Additional codex; Block Coding, B4B5. 
+2013-03-11 Additional codex; Block Coding, B4B5.  
 2013-03-21 Introducing an interface for interrupt handlers, and
 support for pin change interrupts. New directory structure for 
 handling boards.  
