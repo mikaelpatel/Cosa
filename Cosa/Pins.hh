@@ -446,6 +446,11 @@ private:
 #endif
   
 public:
+  enum Mode {
+    NORMAL_MODE = 0,
+    PULLUP_MODE = 1
+  } __attribute__((packed));
+
   /**
    * Start handling of pin change interrupt handling.
    */
@@ -459,16 +464,20 @@ public:
   /**
    * Construct interrupt pin with given pin number.
    * @param[in] pin pin number.
+   * @param[in] mode pin mode.
    */
-  InterruptPin(Board::DigitalPin pin) : InputPin(pin) 
+  InterruptPin(Board::DigitalPin pin, Mode mode = NORMAL_MODE) :
+    InputPin(pin, (InputPin::Mode) mode) 
   {
   }
 
   /**
    * Construct interrupt pin with given pin number.
    * @param[in] pin pin number.
+   * @param[in] mode pin mode.
    */
-  InterruptPin(Board::AnalogPin pin) : InputPin(pin)
+  InterruptPin(Board::AnalogPin pin, Mode mode = NORMAL_MODE) :
+    InputPin(pin, (InputPin::Mode) mode) 
   {
   }
 

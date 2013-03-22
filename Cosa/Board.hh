@@ -64,5 +64,6 @@
 #else
 #error "Cosa/Board.hh: board not supported"
 #endif
+
 #endif
 

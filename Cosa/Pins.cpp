@@ -57,7 +57,7 @@ Pin::read(OutputPin& clk, Direction order)
 void 
 Pin::print(IOStream& stream)
 {
-  stream.printf_P(PSTR("Pin(pin = %d, sfr = %p, mask = %bd)\n"), 
+  stream.printf_P(PSTR("Pin(pin = %d, sfr = %p, mask = %bd)"), 
 		  m_pin, m_sfr, m_mask);
 }
 
@@ -190,7 +190,7 @@ InterruptPin::begin()
 #if defined(__ARDUINO_TINYX5__)
     GIMSK |= PCIE;
 #else
-    PCIFR |= (_BV(PCIF2) | _BV(PCIF1) | _BV(PCIF0));
+    PCICR |= (_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #endif
   }
 }
@@ -202,7 +202,7 @@ InterruptPin::end()
 #if defined(__ARDUINO_TINYX5__)
     GIMSK &= ~PCIE;
 #else
-    PCIFR &= ~(_BV(PCIF2) | _BV(PCIF1) | _BV(PCIF0));
+    PCICR &= ~(_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #endif
   }
 }
@@ -216,30 +216,33 @@ InterruptPin::on_interrupt()
 void
 InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
 {
-  uint8_t pin = ix << 3;
+  uint8_t pin = (ix << 3) - (ix < 2 ? 0 : 2);
   uint8_t env = *Pin::PIN(pin);
   uint8_t changed = (env ^ InterruptPin::env[ix]) & mask;
-  for (uint8_t i = 0; i < CHARBITS; i++)
-    if ((changed & 1) && (InterruptPin::tab[i + pin] != 0))
+  for (uint8_t i = 0; i < CHARBITS; i++) {
+    if ((changed & 1) && (InterruptPin::tab[i + pin] != 0)) {
       InterruptPin::tab[i + pin]->on_interrupt();
+    }
+    changed >>= 1;
+  }
   InterruptPin::env[ix] = env;
 }
 
 ISR(PCINT0_vect)
 {
-  InterruptPin::on_interrupt(0, PCMSK0);
+  InterruptPin::on_interrupt(1, PCMSK0);
 }
 
 #if !defined(__ARDUINO_TINYX5__)
 
 ISR(PCINT1_vect)
 {
-  InterruptPin::on_interrupt(1, PCMSK1);
+  InterruptPin::on_interrupt(2, PCMSK1);
 }
 
 ISR(PCINT2_vect)
 {
-  InterruptPin::on_interrupt(2, PCMSK2);
+  InterruptPin::on_interrupt(0, PCMSK2);
 }
 #endif
 
@@ -299,7 +302,7 @@ PWMPin::set(uint8_t duty)
     OCR2B = duty;
     return;
   case Board::PWM1:
-    bit_set(TCCR0B, COM0B1);
+    bit_set(TCCR0A, COM0B1);
     OCR0B = duty;
     return;
   case Board::PWM2:
@@ -537,6 +540,7 @@ AnalogPin::sample_await()
 {
   if (sampling_pin != this) return (m_value);
   synchronized {
+    sampling_pin = 0;
     bit_clear(ADCSRA, ADIE);
   }
   loop_until_bit_is_clear(ADCSRA, ADSC);
