@@ -672,8 +672,10 @@ AnalogPin::on_event(uint8_t type, uint16_t value)
 void
 AnalogPin::on_interrupt(uint16_t value)
 { 
+  sampling_pin->m_value = value;
+  uint8_t event = sampling_pin->m_event;
+  if (event != Event::NULL_TYPE) Event::push(event, this, value);
   sampling_pin = 0;
-  Event::push(Event::SAMPLE_COMPLETED_TYPE, this, value);
 }
 
 ISR(ADC_vect) 

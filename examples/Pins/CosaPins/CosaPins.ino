@@ -130,13 +130,13 @@ void loop()
   Event::queue.await(&event);
   TRACE(event.get_type());
 
+  // Print the time index
+  INFO("ticks = %d", Watchdog::get_ticks());
+  
   // Sample the level
   uint16_t value = levelPin.sample();
   INFO("levelPin = %d", value);
 
-  // Print the time index
-  INFO("ticks = %d", Watchdog::get_ticks());
-  
   // Asynchronous sample internal temperature level
   tempVCC.sample_request();
 

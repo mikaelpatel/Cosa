@@ -895,6 +895,7 @@ protected:
   static AnalogPin* sampling_pin;
   uint8_t m_reference;
   uint16_t m_value;
+  uint8_t m_event;
   
   /**
    * Internal request sample of analog pin. Set up sampling of given pin
@@ -930,7 +931,8 @@ public:
   AnalogPin(Board::AnalogPin pin, Reference ref = AVCC_REFERENCE) :
     Pin((uint8_t) pin),
     m_reference(ref),
-    m_value(0)
+    m_value(0),
+    m_event(Event::NULL_TYPE)
   {
   }
 
@@ -984,12 +986,14 @@ public:
   }
 
   /**
-   * Request sample of analog pin. Conversion completion function is called
-   * if defined otherwise use await_sample().
+   * Request sample of analog pin. Pushes given event on completion. 
+   * Default event is null/no event pushed for sample_await().
+   * @param[in] event to push on completion.
    * @return bool.
    */
-  bool sample_request()
+  bool sample_request(uint8_t event = Event::NULL_TYPE)
   {
+    m_event = event;
     return (sample_request(m_pin, (Reference) m_reference));
   }
 
