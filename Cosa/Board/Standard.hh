@@ -23,9 +23,9 @@
  * @section Description
  * Cosa Board pin symbol definitions for the ATmega8, ATmega168
  * ATmega328P based boards such as Arduino Uno, Mini Pro, Nano, and
- * LilyPad. Cosa does not use pin numbers are Arduino. Instead strong
- * data type is used (enum types) for the specific pin classes;
- * e.g. InterruptPin, AnalogPin, PWMPin.
+ * LilyPad. Cosa does not use pin numbers as Arduino/Wiring, 
+ * instead strong data type is used (enum types) for the specific 
+ * pin classes; e.g. DigitalPin, AnalogPin, PWMPin.
  *
  * @section Limitations
  * The pin numbers for ATmega8, ATmega168 and ATmega328P are mapped
@@ -160,9 +160,32 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pin change interrupt. Number of port registers.
+   * Pin change interrupt (PCI) pins. Number of port registers.
    */
-  enum {
+  enum InterruptPin {
+    PCI0 = D0,
+    PCI1 = D1,
+    PCI2 = D2,
+    PCI3 = D3,
+    PCI4 = D4,
+    PCI5 = D5,
+    PCI6 = D6,
+    PCI7 = D7,
+    PCI8 = D8,
+    PCI9 = D9,
+    PCI10 = D10,
+    PCI11 = D11,
+    PCI12 = D12,
+    PCI13 = D13,
+    PCI14 = A0,
+    PCI15 = A1,
+    PCI16 = A2,
+    PCI17 = A3,
+    PCI18 = A4,
+    PCI19 = A5,
+    PCI20 = A6,
+    PCI21 = A7,
+    PCI22 = A8,
     PCINT_MAX = 3
   } __attribute__((packed));
 

@@ -21,21 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa Board pin symbol definitions for the ATmega8, ATmega168
- * ATmega328P, ATmega1280 and ATmega2560 based Arduino boards;
- * Arduino Uno, Mini Pro, Nano, LilyPad and Mega 2560.
- * Cosa does not use pin numbers are Arduino. Instead strong
- * data type is used (enum types) for the specific pin classes;
- * e.g. InterruptPin, AnalogPin, PWMPin.
- *
- * @section Limitations
- * The pin numbers for ATmega8, ATmega168 and ATmega328P are mapped
- * as in Arduino but ATmega1280 and ATmega2560 are only symbolically
- * mapped, i.e. a pin number/digit will not work, symbols must be 
- * used, e.g., Board::D42.
- *
- * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced. 
+ * Cosa Board pin symbol definitions mapping to difference 
+ * board/processor types.
  *
  * This file is part of the Arduino Che Cosa project.
  */

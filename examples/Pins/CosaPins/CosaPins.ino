@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,35 +32,44 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
-// External Interrupt Pin Handler; count interrupts
-class ExtPin : public ExternalInterruptPin {
+// Counter Class
+class Counter {
 private:
   volatile uint16_t m_counter;
-  virtual void on_interrupt() { m_counter++; }
+public:
+  Counter(uint16_t init = 0) : m_counter(init) {}
+  uint16_t get_counter() { return (m_counter); }
+  void set_counter(uint16_t value) { m_counter = value; }
+  void increment(uint16_t value) { m_counter += value; }
+};
+
+// External Interrupt Pin Handler; count interrupts
+class ExtPin : public ExternalInterruptPin, public Counter {
+private:
+  virtual void on_interrupt() { increment(1); }
 public:
   ExtPin(Board::ExternalInterruptPin pin) :
     ExternalInterruptPin(pin, ExternalInterruptPin::ON_RISING_MODE),
-    m_counter(0)
+    Counter(0)
   {}
-  uint16_t get_counter() { return (m_counter); }
 };
 
 // Pin Change Interrupt Handler; count interrupts
-class IntPin : public InterruptPin {
+class IntPin : public InterruptPin, public Counter {
 private:
-  volatile uint16_t m_counter;
-  virtual void on_interrupt() { m_counter++; }
+  virtual void on_interrupt() { increment(1); }
 public:
-  IntPin(Board::DigitalPin pin) : InterruptPin(pin), m_counter(0) {}
-  IntPin(Board::AnalogPin pin) : InterruptPin(pin), m_counter(0) {}
-  uint16_t get_counter() { return (m_counter); }
+  IntPin(Board::InterruptPin pin) : 
+    InterruptPin(pin), 
+    Counter(0) 
+  {}
 };
 
 // Input and output pins
 ExtPin extPin(Board::EXT0);
-IntPin int0Pin(Board::D9);
-IntPin int1Pin(Board::D3);
-IntPin int2Pin(Board::A4);
+IntPin int0Pin(Board::PCI9);
+IntPin int1Pin(Board::PCI3);
+IntPin int2Pin(Board::PCI15);
 PWMPin ledPin(Board::PWM2);
 InputPin onoffPin(Board::D7);
 AnalogPin tempVCC(Board::A8, AnalogPin::A1V1_REFERENCE);
@@ -138,14 +147,14 @@ void loop()
   if (onoffPin.is_set()) {
     ledPin.set(value, 0, 1023);
     INFO("duty = %d", ledPin.get_duty());
+
+    // Print the interrupt counters
+    TRACE(extPin.get_counter());
+    TRACE(int0Pin.get_counter());
+    TRACE(int1Pin.get_counter());
+    TRACE(int2Pin.get_counter());
   }
   else {
-    ledPin.clear();
+    ledPin.set(0);
   }
-
-  // Print the interrupt counters
-  TRACE(extPin.get_counter());
-  TRACE(int0Pin.get_counter());
-  TRACE(int1Pin.get_counter());
-  TRACE(int2Pin.get_counter());
 }

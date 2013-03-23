@@ -24,9 +24,9 @@
  * Cosa Board pin symbol definitions for the ATmega1280 and ATmega2560
  * based Arduino boards; Mega 1280/2560.
  *
- * Cosa does not use pin numbers are Arduino. Instead strong
+ * Cosa does not use pin numbers as Arduino/Wiring, instead strong
  * data type is used (enum types) for the specific pin classes;
- * e.g. InterruptPin, AnalogPin, PWMPin.
+ * e.g. DigitalPin, AnalogPin.
  *
  * @section Limitations
  * The pin numbers for ATmega1280 and ATmega2560 are only symbolically
@@ -92,8 +92,7 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin) 
   { 
-    // FIX: Create map to correct pin change mask register
-    return (&PCMSK0);
+    return (pin < 24 ? &PCMSK0 : &PCMSK2);
   }
 
   /**
@@ -230,7 +229,23 @@ public:
   /**
    * Pin change interrupt. Number of port registers.
    */
-  enum {
+  enum InterruptPin {
+    PCI0 = D53,
+    PCI1 = D52,
+    PCI2 = D51,
+    PCI3 = D50,
+    PCI4 = D10,
+    PCI5 = D11,
+    PCI6 = D12,
+    PCI7 = D13,
+    PCI16 = A8,
+    PCI17 = A9,
+    PCI18 = A10,
+    PCI19 = A11,
+    PCI20 = A12,
+    PCI21 = A13,
+    PCI22 = A14,
+    PCI23 = A15,
     PCINT_MAX = 3
   } __attribute__((packed));
 

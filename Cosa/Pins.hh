@@ -319,11 +319,13 @@ public:
 extern "C" void INT0_vect(void) __attribute__ ((signal));
 #if !defined(__ARDUINO_TINYX5__)
 extern "C" void INT1_vect(void) __attribute__ ((signal));
-#if defined(__ARDUINO_MEGA__)
+#if !defined(__ARDUINO_STANDARD__)
 extern "C" void INT2_vect(void) __attribute__ ((signal));
+#if defined(__ARDUINO_MEGA__)
 extern "C" void INT3_vect(void) __attribute__ ((signal));
 extern "C" void INT4_vect(void) __attribute__ ((signal));
 extern "C" void INT5_vect(void) __attribute__ ((signal));
+#endif
 #endif
 #endif
 
@@ -345,11 +347,13 @@ private:
   friend void INT0_vect(void);
 #if !defined(__ARDUINO_TINYX5__)
   friend void INT1_vect(void);
-#if defined(__ARDUINO_MEGA__)
+#if !defined(__ARDUINO_STANDARD__)
   friend void INT2_vect(void);
+#if defined(__ARDUINO_MEGA__)
   friend void INT3_vect(void);
   friend void INT4_vect(void);
   friend void INT5_vect(void);
+#endif
 #endif
 #endif
 
@@ -413,6 +417,9 @@ extern "C" void PCINT0_vect(void) __attribute__ ((signal));
 #if !defined(__ARDUINO_TINYX5__)
 extern "C" void PCINT1_vect(void) __attribute__ ((signal));
 extern "C" void PCINT2_vect(void) __attribute__ ((signal));
+#if defined(__ARDUINO_MIGHTY__)
+extern "C" void PCINT3_vect(void) __attribute__ ((signal));
+#endif
 #endif
 
 /**
@@ -424,8 +431,19 @@ class InterruptPin :
   public Event::Handler, 
   public Interrupt::Handler {
 private:
-  static InterruptPin* tab[Board::PIN_MAX];
-  static uint8_t env[Board::PCINT_MAX];
+  static InterruptPin* pin[Board::PIN_MAX];
+  static uint8_t state[Board::PCINT_MAX];
+
+  /**
+   * Interrupt handlers are friends.
+   */
+  friend void PCINT0_vect(void);
+#if !defined(__ARDUINO_TINYX5__)
+  friend void PCINT1_vect(void);
+  friend void PCINT2_vect(void);
+#if defined(__ARDUINO_MIGHTY__)
+  friend void PCINT3_vect(void);
+#endif
 
   /**
    * Map interrupt source: Check which pin(s) are the source of the
@@ -435,14 +453,6 @@ private:
    * @param8in] mask pin mask.
    */
   static void on_interrupt(uint8_t ix, uint8_t mask);
-
-  /**
-   * Interrupt handlers are friends.
-   */
-  friend void PCINT0_vect(void);
-#if !defined(__ARDUINO_TINYX5__)
-  friend void PCINT1_vect(void);
-  friend void PCINT2_vect(void);
 #endif
   
 public:
@@ -466,18 +476,8 @@ public:
    * @param[in] pin pin number.
    * @param[in] mode pin mode.
    */
-  InterruptPin(Board::DigitalPin pin, Mode mode = NORMAL_MODE) :
-    InputPin(pin, (InputPin::Mode) mode) 
-  {
-  }
-
-  /**
-   * Construct interrupt pin with given pin number.
-   * @param[in] pin pin number.
-   * @param[in] mode pin mode.
-   */
-  InterruptPin(Board::AnalogPin pin, Mode mode = NORMAL_MODE) :
-    InputPin(pin, (InputPin::Mode) mode) 
+  InterruptPin(Board::InterruptPin pin, Mode mode = NORMAL_MODE) :
+    InputPin((Board::DigitalPin) pin, (InputPin::Mode) mode) 
   {
   }
 
@@ -488,7 +488,12 @@ public:
   { 
     synchronized {
       *PCIMR() |= m_mask;
-      tab[m_pin] = this;
+#if !defined(__ARDUINO_MEGA__)
+      pin[m_pin] = this;
+#else
+      uint8_t ix = m_pin - (m_pin < 24 ? 24 : 48);
+      pin[ix] = this;
+#endif
     }
   }
 
@@ -499,7 +504,12 @@ public:
   { 
     synchronized {
       *PCIMR() &= ~m_mask;
-      tab[m_pin] = 0;
+#if !defined(__ARDUINO_MEGA__)
+      pin[m_pin] = 0;
+#else
+      uint8_t ix = m_pin - (m_pin < 24 ? 24 : 48);
+      pin[ix] = 0;
+#endif
     }
   }
 

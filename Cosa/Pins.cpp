@@ -110,6 +110,27 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
   ext[m_ix] = this;
 }
 
+#elif defined(__ARDUINO_MIGHTY__)
+
+ExternalInterruptPin::
+ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
+  InputPin((Board::DigitalPin) pin)
+{
+  if (mode & PULLUP_MODE) {
+    synchronized {
+      *PORT() |= m_mask; 
+    }
+  }
+  if (pin == Board::EXT2) {
+    m_ix = 2;
+  } else {
+    m_ix = pin - Board::EXT0;
+  } 
+  uint8_t ix = (m_ix << 1);
+  EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
+  ext[m_ix] = this;
+}
+
 #elif defined(__ARDUINO_TINYX5__)
 
 ExternalInterruptPin::
@@ -150,13 +171,15 @@ ISR(INT1_vect)
     ExternalInterruptPin::ext[1]->on_interrupt();
 }
 
-#if defined(__ARDUINO_MEGA__)
+#if !defined(__ARDUINO_STANDARD__)
 
 ISR(INT2_vect)
 {
   if (ExternalInterruptPin::ext[2] != 0) 
     ExternalInterruptPin::ext[2]->on_interrupt();
 }
+
+#if defined(__ARDUINO_MEGA__)
 
 ISR(INT3_vect)
 {
@@ -177,18 +200,27 @@ ISR(INT5_vect)
 }
 #endif
 #endif
+#endif
 
-InterruptPin* InterruptPin::tab[Board::PIN_MAX] = { 0 };
-uint8_t InterruptPin::env[Board::PCINT_MAX] = { 0 };
+InterruptPin* InterruptPin::pin[Board::PIN_MAX] = { 0 };
+uint8_t InterruptPin::state[Board::PCINT_MAX] = { 0 };
 
 void 
 InterruptPin::begin()
 {
+#if defined(__ARDUINO_MEGA__)
+  state[0] = *Pin::PIN(16);
+  state[1] = 0;
+  state[2] = *Pin::PIN(64);
+#else
   for (uint8_t i = 0; i < Board::PCINT_MAX; i++)
-    env[i] = *Pin::PIN(i << 3);
+    state[i] = *Pin::PIN(i << 3);
+#endif
   synchronized {
 #if defined(__ARDUINO_TINYX5__)
     GIMSK |= PCIE;
+#elif defined(__ARDUINO_MIGHTY__)
+    PCICR |= (_BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #else
     PCICR |= (_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #endif
@@ -201,6 +233,8 @@ InterruptPin::end()
   synchronized {
 #if defined(__ARDUINO_TINYX5__)
     GIMSK &= ~PCIE;
+#elif defined(__ARDUINO_MIGHTY__)
+    PCICR &= ~(_BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #else
     PCICR &= ~(_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #endif
@@ -213,27 +247,43 @@ InterruptPin::on_interrupt()
   Event::push(Event::CHANGE_TYPE, this);
 }
 
-void
-InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
+#if defined(__ARDUINO_TINYX5__)
+
+ISR(PCINT0_vect)
 {
-  uint8_t pin = (ix << 3) - (ix < 2 ? 0 : 2);
-  uint8_t env = *Pin::PIN(pin);
-  uint8_t changed = (env ^ InterruptPin::env[ix]) & mask;
+  uint8_t mask = PCMSK0;
+  uint8_t state = *Pin::PIN(0);
+  uint8_t changed = (state ^ InterruptPin::state[0]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (InterruptPin::tab[i + pin] != 0)) {
-      InterruptPin::tab[i + pin]->on_interrupt();
+    if ((changed & 1) && (InterruptPin::pin[i] != 0)) {
+      InterruptPin::pin[i]->on_interrupt();
     }
     changed >>= 1;
   }
-  InterruptPin::env[ix] = env;
+  InterruptPin::state[0] = state;
+}
+
+#elif defined(__ARDUINO_STANDARD__)
+
+void
+InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
+{
+  uint8_t px = (ix << 3) - (ix < 2 ? 0 : 2);
+  uint8_t state = *Pin::PIN(px);
+  uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
+  for (uint8_t i = 0; i < CHARBITS; i++) {
+    if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
+      InterruptPin::pin[i + px]->on_interrupt();
+    }
+    changed >>= 1;
+  }
+  InterruptPin::state[ix] = state;
 }
 
 ISR(PCINT0_vect)
 {
   InterruptPin::on_interrupt(1, PCMSK0);
 }
-
-#if !defined(__ARDUINO_TINYX5__)
 
 ISR(PCINT1_vect)
 {
@@ -243,6 +293,64 @@ ISR(PCINT1_vect)
 ISR(PCINT2_vect)
 {
   InterruptPin::on_interrupt(0, PCMSK2);
+}
+
+#elif defined(__ARDUINO_MEGA__)
+
+void
+InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
+{
+  uint8_t px = (ix << 3);
+  uint8_t rx = (ix == 0 ? 16 : 64);
+  uint8_t state = *Pin::PIN(rx);
+  uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
+  for (uint8_t i = 0; i < CHARBITS; i++) {
+    if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
+      InterruptPin::pin[i + px]->on_interrupt();
+    }
+    changed >>= 1;
+  }
+  InterruptPin::state[ix] = state;
+}
+
+ISR(PCINT0_vect)
+{
+  InterruptPin::on_interrupt(0, PCMSK0);
+}
+
+ISR(PCINT1_vect)
+{
+  InterruptPin::on_interrupt(1, PCMSK1);
+}
+
+ISR(PCINT2_vect)
+{
+  InterruptPin::on_interrupt(2, PCMSK2);
+}
+
+#elif defined(__ARDUINO_MIGHTY__)
+
+// Fix: Not yet implemented 
+
+void
+InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
+{
+}
+
+ISR(PCINT0_vect)
+{
+}
+
+ISR(PCINT1_vect)
+{
+}
+
+ISR(PCINT2_vect)
+{
+}
+
+ISR(PCINT3_vect)
+{
 }
 #endif
 

@@ -23,13 +23,14 @@
  * @section Description
  * Cosa Board pin symbol definitions for the ATtinyX5 processors.
  *
- * Cosa does not use pin numbers are Arduino. Instead strong
+ * Cosa does not use pin numbers as Arduino/Wiring, instead strong
  * data type is used (enum types) for the specific pin classes;
- * e.g. InterruptPin, AnalogPin, PWMPin.
+ * e.g. DigitalPin, AnalogPin, PWMPin.
  *
  * @section Limitations
  * The pin numbers are only symbolically mapped, i.e. a pin
- * number/digit will not work, symbols must be used, e.g., Board::D2.
+ * number/digit will not work, symbols must be used, 
+ * e.g., Board::D2.
  *
  * The static inline functions, SFR, BIT and UART, rely on compiler
  * optimizations to be reduced. 
@@ -135,7 +136,13 @@ public:
   /**
    * Pin change interrupt. Number of port registers.
    */
-  enum {
+  enum InterruptPin {
+    PCI0 = D0,
+    PCI1 = D1,
+    PCI2 = D2,
+    PCI3 = D3,
+    PCI4 = D4,
+    PCI5 = D5,
     PCINT_MAX = 1
   } __attribute__((packed));
 

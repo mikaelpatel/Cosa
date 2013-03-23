@@ -24,9 +24,9 @@
  * Cosa Board pin symbol definitions for ATmega1248 based Arduino
  * boards; Mighty.
  *
- * Cosa does not use pin numbers are Arduino. Instead strong
+ * Cosa does not use pin numbers as Arduino/Wiring. Instead strong
  * data type is used (enum types) for the specific pin classes;
- * e.g. InterruptPin, AnalogPin, PWMPin.
+ * e.g. DigitalPin, AnalogPin, PWMPin.
  *
  * @section Limitations
  * The static inline functions, SFR, BIT and UART, rely on compiler
@@ -174,7 +174,7 @@ public:
   /**
    * Pin change interrupt. Number of port registers.
    */
-  enum {
+  enum InterruptPin {
     PCINT_MAX = 3
   } __attribute__((packed));
 
