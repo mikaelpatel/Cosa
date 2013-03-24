@@ -37,12 +37,6 @@
 #include "Cosa/Pins.hh"
 #include <avr/sleep.h>
 
-/**
- * Forward declare interrupt service routines to allow them 
- * as friends.
- */
-extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal));
-
 class VWI {
 public:
   /** The maximum payload length */

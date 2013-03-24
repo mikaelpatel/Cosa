@@ -41,13 +41,6 @@
 #ifndef __COSA_BOARD_TINYX5_HH__
 #define __COSA_BOARD_TINYX5_HH__
 
-#define ANALOG_COMP_vect ANA_COMP_vect
-#define PCMSK0 PCMSK
-#define TIMSK0 TIMSK
-#define TIMSK1 TIMSK
-#define TIFR0 TIFR
-#define WDTCSR WDTCR
-
 class Board {
   friend class Pin;
   friend class UART;
@@ -164,6 +157,27 @@ public:
     SCK = 2
   } __attribute__((packed));
 };
+
+/**
+ * Redefinition of symbols to allow generic code.
+ */
+#define ANALOG_COMP_vect ANA_COMP_vect
+#define PCMSK0 PCMSK
+#define TIMSK0 TIMSK
+#define TIMSK1 TIMSK
+#define TIFR0 TIFR
+#define WDTCSR WDTCR
+
+/**
+ * Forward declare interrupt service routines to allow them as friends.
+ */
+extern "C" void INT0_vect(void) __attribute__ ((signal));
+extern "C" void PCINT0_vect(void) __attribute__ ((signal));
+extern "C" void ADC_vect(void) __attribute__ ((signal));
+extern "C" void ANALOG_COMP_vect(void) __attribute__ ((signal));
+extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal));
+extern "C" void TIMER1_COMPB_vect(void) __attribute__ ((signal));
+extern "C" void WDT_vect(void) __attribute__ ((signal));
 
 #endif
 

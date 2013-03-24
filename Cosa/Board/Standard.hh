@@ -207,5 +207,23 @@ public:
     SCK = 5
   } __attribute__((packed));
 };
+
+/**
+ * Forward declare interrupt service routines to allow them as friends.
+ */
+extern "C" void ADC_vect(void) __attribute__ ((signal));
+extern "C" void ANALOG_COMP_vect(void) __attribute__ ((signal));
+extern "C" void INT0_vect(void) __attribute__ ((signal));
+extern "C" void INT1_vect(void) __attribute__ ((signal));
+extern "C" void PCINT0_vect(void) __attribute__ ((signal));
+extern "C" void PCINT1_vect(void) __attribute__ ((signal));
+extern "C" void PCINT2_vect(void) __attribute__ ((signal));
+extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal));
+extern "C" void TIMER1_COMPB_vect(void) __attribute__ ((signal));
+extern "C" void TWI_vect(void) __attribute__ ((signal));
+extern "C" void WDT_vect(void) __attribute__ ((signal));
+extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
+extern "C" void USART_RX_vect(void) __attribute__ ((signal));
+
 #endif
 

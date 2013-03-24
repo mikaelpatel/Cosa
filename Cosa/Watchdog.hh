@@ -38,12 +38,6 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"
 
-/**
- * Forward declare interrupt service routines to allow them 
- * as friends.
- */
-extern "C" void WDT_vect(void) __attribute__ ((signal));
-
 class Watchdog {
 public:
   /**

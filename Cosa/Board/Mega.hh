@@ -42,9 +42,6 @@
 #ifndef __COSA_BOARD_MEGA_HH__
 #define __COSA_BOARD_MEGA_HH__
 
-#define USART_UDRE_vect USART0_UDRE_vect
-#define USART_RX_vect USART0_RX_vect 
-
 class Board {
   friend class Pin;
   friend class UART;
@@ -267,6 +264,39 @@ public:
     MISO = 3
   } __attribute__((packed));
 };
+
+/**
+ * Redefined symbols to allow generic code.
+ */
+#define USART_UDRE_vect USART0_UDRE_vect
+#define USART_RX_vect USART0_RX_vect 
+
+/**
+ * Forward declare interrupt service routines to allow them as friends.
+ */
+extern "C" void ADC_vect(void) __attribute__ ((signal));
+extern "C" void ANALOG_COMP_vect(void) __attribute__ ((signal));
+extern "C" void INT0_vect(void) __attribute__ ((signal));
+extern "C" void INT1_vect(void) __attribute__ ((signal));
+extern "C" void INT2_vect(void) __attribute__ ((signal));
+extern "C" void INT3_vect(void) __attribute__ ((signal));
+extern "C" void INT4_vect(void) __attribute__ ((signal));
+extern "C" void INT5_vect(void) __attribute__ ((signal));
+extern "C" void PCINT0_vect(void) __attribute__ ((signal));
+extern "C" void PCINT1_vect(void) __attribute__ ((signal));
+extern "C" void PCINT2_vect(void) __attribute__ ((signal));
+extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal));
+extern "C" void TIMER1_COMPB_vect(void) __attribute__ ((signal));
+extern "C" void TWI_vect(void) __attribute__ ((signal));
+extern "C" void WDT_vect(void) __attribute__ ((signal));
+extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
+extern "C" void USART_RX_vect(void) __attribute__ ((signal));
+extern "C" void USART1_UDRE_vect(void) __attribute__ ((signal));
+extern "C" void USART1_RX_vect(void) __attribute__ ((signal));
+extern "C" void USART2_UDRE_vect(void) __attribute__ ((signal));
+extern "C" void USART2_RX_vect(void) __attribute__ ((signal));
+extern "C" void USART3_UDRE_vect(void) __attribute__ ((signal));
+extern "C" void USART3_RX_vect(void) __attribute__ ((signal));
 
 #endif
 

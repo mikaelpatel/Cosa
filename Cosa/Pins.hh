@@ -313,23 +313,6 @@ public:
 };
 
 /**
- * Forward declare interrupt service routines to allow them 
- * as friends.
- */
-extern "C" void INT0_vect(void) __attribute__ ((signal));
-#if !defined(__ARDUINO_TINYX5__)
-extern "C" void INT1_vect(void) __attribute__ ((signal));
-#if !defined(__ARDUINO_STANDARD__)
-extern "C" void INT2_vect(void) __attribute__ ((signal));
-#if defined(__ARDUINO_MEGA__)
-extern "C" void INT3_vect(void) __attribute__ ((signal));
-extern "C" void INT4_vect(void) __attribute__ ((signal));
-extern "C" void INT5_vect(void) __attribute__ ((signal));
-#endif
-#endif
-#endif
-
-/**
  * Abstract external interrupt pin. Allows interrupt handling on 
  * the pin value changes. 
  */
@@ -408,19 +391,6 @@ public:
    */
   virtual void on_interrupt();
 };
-
-/**
- * Forward declare interrupt service routines to allow them 
- * as friends.
- */
-extern "C" void PCINT0_vect(void) __attribute__ ((signal));
-#if !defined(__ARDUINO_TINYX5__)
-extern "C" void PCINT1_vect(void) __attribute__ ((signal));
-extern "C" void PCINT2_vect(void) __attribute__ ((signal));
-#if defined(__ARDUINO_MIGHTY__)
-extern "C" void PCINT3_vect(void) __attribute__ ((signal));
-#endif
-#endif
 
 /**
  * Abstract interrupt pin. Allows interrupt handling on 
@@ -860,12 +830,6 @@ private:
 };
 
 /**
- * Forward declare interrupt service routines to allow them 
- * as friends.
- */
-extern "C" void ADC_vect(void) __attribute__ ((signal));
-
-/**
  * Abstract analog pin. Allows asynchronous sampling.
  */
 class AnalogPin : 
@@ -1089,12 +1053,6 @@ public:
    */
   virtual void on_event(uint8_t type, uint16_t value) {}
 };
-
-/**
- * Forward declare interrupt service routines to allow them 
- * as friends.
- */
-extern "C" void ANALOG_COMP_vect(void) __attribute__ ((signal));
 
 /**
  * Analog Comparator; compare input values on the positive pin AIN0 

@@ -104,21 +104,6 @@ public:
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Board.hh"
 
-extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
-extern "C" void USART_RX_vect(void) __attribute__ ((signal));
-#if defined(__ARDUINO_MIGHTY__)
-extern "C" void USART1_UDRE_vect(void) __attribute__ ((signal));
-extern "C" void USART1_RX_vect(void) __attribute__ ((signal));
-#endif
-#if defined(__ARDUINO_MEGA__)
-extern "C" void USART1_UDRE_vect(void) __attribute__ ((signal));
-extern "C" void USART1_RX_vect(void) __attribute__ ((signal));
-extern "C" void USART2_UDRE_vect(void) __attribute__ ((signal));
-extern "C" void USART2_RX_vect(void) __attribute__ ((signal));
-extern "C" void USART3_UDRE_vect(void) __attribute__ ((signal));
-extern "C" void USART3_RX_vect(void) __attribute__ ((signal));
-#endif
-
 class UART : public IOStream::Device {
 private:
   volatile uint8_t* const m_sfr;
