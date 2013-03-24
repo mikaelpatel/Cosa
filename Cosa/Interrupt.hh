@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Interrupt.h
+ * @file Cosa/Interrupt.hh
  * @version 1.0
  *
  * @section License
@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_INTERRUPT_H__
-#define __COSA_INTERRUPT_H__
+#ifndef __COSA_INTERRUPT_HH__
+#define __COSA_INTERRUPT_HH__
 
 class Interrupt {
 public:
