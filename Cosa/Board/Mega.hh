@@ -274,29 +274,30 @@ public:
 /**
  * Forward declare interrupt service routines to allow them as friends.
  */
-extern "C" void ADC_vect(void) __attribute__ ((signal));
-extern "C" void ANALOG_COMP_vect(void) __attribute__ ((signal));
-extern "C" void INT0_vect(void) __attribute__ ((signal));
-extern "C" void INT1_vect(void) __attribute__ ((signal));
-extern "C" void INT2_vect(void) __attribute__ ((signal));
-extern "C" void INT3_vect(void) __attribute__ ((signal));
-extern "C" void INT4_vect(void) __attribute__ ((signal));
-extern "C" void INT5_vect(void) __attribute__ ((signal));
-extern "C" void PCINT0_vect(void) __attribute__ ((signal));
-extern "C" void PCINT1_vect(void) __attribute__ ((signal));
-extern "C" void PCINT2_vect(void) __attribute__ ((signal));
-extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal));
-extern "C" void TIMER1_COMPB_vect(void) __attribute__ ((signal));
-extern "C" void TWI_vect(void) __attribute__ ((signal));
-extern "C" void WDT_vect(void) __attribute__ ((signal));
-extern "C" void USART_UDRE_vect(void) __attribute__ ((signal));
-extern "C" void USART_RX_vect(void) __attribute__ ((signal));
-extern "C" void USART1_UDRE_vect(void) __attribute__ ((signal));
-extern "C" void USART1_RX_vect(void) __attribute__ ((signal));
-extern "C" void USART2_UDRE_vect(void) __attribute__ ((signal));
-extern "C" void USART2_RX_vect(void) __attribute__ ((signal));
-extern "C" void USART3_UDRE_vect(void) __attribute__ ((signal));
-extern "C" void USART3_RX_vect(void) __attribute__ ((signal));
-
+extern "C" {
+  void ADC_vect(void) __attribute__ ((signal));
+  void ANALOG_COMP_vect(void) __attribute__ ((signal));
+  void INT0_vect(void) __attribute__ ((signal));
+  void INT1_vect(void) __attribute__ ((signal));
+  void INT2_vect(void) __attribute__ ((signal));
+  void INT3_vect(void) __attribute__ ((signal));
+  void INT4_vect(void) __attribute__ ((signal));
+  void INT5_vect(void) __attribute__ ((signal));
+  void PCINT0_vect(void) __attribute__ ((signal));
+  void PCINT1_vect(void) __attribute__ ((signal));
+  void PCINT2_vect(void) __attribute__ ((signal));
+  void TIMER1_COMPA_vect(void) __attribute__ ((signal));
+  void TIMER1_COMPB_vect(void) __attribute__ ((signal));
+  void TWI_vect(void) __attribute__ ((signal));
+  void WDT_vect(void) __attribute__ ((signal));
+  void USART_UDRE_vect(void) __attribute__ ((signal));
+  void USART_RX_vect(void) __attribute__ ((signal));
+  void USART1_UDRE_vect(void) __attribute__ ((signal));
+  void USART1_RX_vect(void) __attribute__ ((signal));
+  void USART2_UDRE_vect(void) __attribute__ ((signal));
+  void USART2_RX_vect(void) __attribute__ ((signal));
+  void USART3_UDRE_vect(void) __attribute__ ((signal));
+  void USART3_RX_vect(void) __attribute__ ((signal));
+}
 #endif
 

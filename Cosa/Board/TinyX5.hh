@@ -171,13 +171,14 @@ public:
 /**
  * Forward declare interrupt service routines to allow them as friends.
  */
-extern "C" void INT0_vect(void) __attribute__ ((signal));
-extern "C" void PCINT0_vect(void) __attribute__ ((signal));
-extern "C" void ADC_vect(void) __attribute__ ((signal));
-extern "C" void ANALOG_COMP_vect(void) __attribute__ ((signal));
-extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal));
-extern "C" void TIMER1_COMPB_vect(void) __attribute__ ((signal));
-extern "C" void WDT_vect(void) __attribute__ ((signal));
-
+extern "C" {
+  void INT0_vect(void) __attribute__ ((signal));
+  void PCINT0_vect(void) __attribute__ ((signal));
+  void ADC_vect(void) __attribute__ ((signal));
+  void ANALOG_COMP_vect(void) __attribute__ ((signal));
+  void TIMER1_COMPA_vect(void) __attribute__ ((signal));
+  void TIMER1_COMPB_vect(void) __attribute__ ((signal));
+  void WDT_vect(void) __attribute__ ((signal));
+}
 #endif
 
