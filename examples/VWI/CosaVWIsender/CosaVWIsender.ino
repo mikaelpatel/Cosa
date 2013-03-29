@@ -50,8 +50,8 @@ AnalogPin temperature(Board::A3);
 // same as in CosaVWIreceiver.ino
 VirtualWireCodec codec;
 // ManchesterCodec codec;
-// BitstuffingCodec codec;
 // Block4B5BCodec codec;
+// BitstuffingCodec codec;
 
 // Virtual Wire Interface Transmitter and Power Control pins
 #if defined(__AVR_ATtiny25__)		\

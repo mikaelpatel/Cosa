@@ -48,8 +48,8 @@
 // same as in CosaVWIclient.ino
 VirtualWireCodec codec;
 // ManchesterCodec codec;
-// BitstuffingCodec codec;
 // Block4B5BCodec codec;
+// BitstuffingCodec codec;
 
 // Virtual Wire Interface Transmitter and Receiver
 VWI::Transmitter tx(Board::D9, &codec);
@@ -109,10 +109,7 @@ void loop()
   if (nr != msg.nr) {
     nr = msg.nr;
     trace << hex << msg.id << ':' << msg.nr << ':';
-    trace << hex << msg.data[0];
-    for (uint8_t i = 1; i < membersof(msg.data); i++)
-      trace << PSTR(", ") << hex << msg.data[i];
-    trace << endl;
+    trace << hex << msg.data[0] << PSTR(", ");
+    trace << hex << msg.data[1] << endl;
   }
-
 }

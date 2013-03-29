@@ -54,13 +54,14 @@ AnalogPin temperature(Board::A3);
 // same as in CosaVWIserver.ino
 VirtualWireCodec codec;
 // ManchesterCodec codec;
-// BitstuffingCodec codec;
 // Block4B5BCodec codec;
+// BitstuffingCodec codec;
 
 // Virtual Wire Interface Transmitter and Receiver
 VWI::Transmitter tx(Board::D9, &codec);
 VWI::Receiver rx(Board::D8, &codec);
 const uint16_t SPEED = 4000;
+const uint16_t TIMEOUT = 2000000 / SPEED;
 
 void setup()
 {
@@ -108,7 +109,7 @@ void loop()
   msg.data[0] = luminance.sample();
   msg.data[1] = temperature.sample();
   for (uint8_t i = 2; i < membersof(msg.data); i++)
-    msg.data[i] = ((cnt << 8) | ((i << 4) + i)) ^ 0xa5a5;
+    msg.data[i] = (cnt << 4) + i;
 
   // Send message and receive acknowledgement
   uint8_t nr = 0;
@@ -117,16 +118,17 @@ void loop()
     nr += 1;
     tx.send(&msg, sizeof(msg));
     tx.await();
-    len = rx.recv(&ack, sizeof(ack), 64);
-    if (len != sizeof(ack))
-      DELAY(300);
+    len = rx.recv(&ack, sizeof(ack), TIMEOUT);
   } while (len != sizeof(ack) || (ack.nr != msg.nr) || (ack.id != msg.id));
 
   // Check if a retransmission did occur and print statistics
   if (nr > 1) {
     err += 1;
-    INFO("cnt = %ud, err = %ud, nr = %ud (%ud%%)", 
-	 cnt, err, nr, (err * 100) / cnt);
+    trace << PSTR("cnt = ") << cnt;
+    trace << PSTR(", err = ") << err;
+    trace << PSTR(", nr = ") << nr;
+    trace << PSTR(" (") << (err * 100) / cnt << PSTR("%)");
+    trace << endl;
   }
 
   // Short delay before sending the next message

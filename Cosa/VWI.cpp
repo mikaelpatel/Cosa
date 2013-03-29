@@ -244,9 +244,6 @@ VWI::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
   // Message available?
   if (!m_done && (ms == 0 || !await(ms))) return (0);
 
-  // Message check-sum error
-  if (CRC(m_buffer, m_length) != CHECK_SUM) return (-1);
-    
   // Wait until done is set before reading length then remove
   // bytecount and FCS  
   uint8_t rxlen = m_length - 3;
@@ -257,6 +254,9 @@ VWI::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
     
   // OK, got that message thanks
   m_done = false;
+    
+  // Message check-sum error
+  if (CRC(m_buffer, m_length) != CHECK_SUM) return (-1);
     
   // Return actual number of bytes received
   return (len);

@@ -45,8 +45,8 @@
 // same as in CosaVWIsender.ino
 VirtualWireCodec codec;
 // ManchesterCodec codec;
-// BitstuffingCodec codec;
 // Block4B5BCodec codec;
+// BitstuffingCodec codec;
 
 // Virtual Wire Interface Receiver connected to pin D9
 VWI::Receiver rx(Board::D8, &codec);
@@ -88,22 +88,20 @@ void loop()
 
   // Check that the correct messaage size was received
   if (len != sizeof(msg)) return;
+  cnt += 1;
 
   // Check message number 
   if (msg.nr != next) {
+    for (uint8_t i = next; i < msg.nr; i++) {
+      trace << i << ':' << PSTR("missing") << endl;
+      err += 1;
+    }
     next = msg.nr;
-    err += 1;
+    trace << (100 * err) / cnt << PSTR(" % drop rate") << endl;
   }
-  cnt += 1;
 
   // Print message contents
   trace << hex << msg.id << ':' << msg.nr << ':';
   trace << hex << msg.data[0] << PSTR(", ") << hex << msg.data[1] << endl;
   next += 1;
-
-  // Print message count and errors every 256 messages
-  if (next == 0) {
-    trace << PSTR("count = ") << cnt << endl;
-    trace << PSTR("errors = ") << err << endl;
-  }
 }
