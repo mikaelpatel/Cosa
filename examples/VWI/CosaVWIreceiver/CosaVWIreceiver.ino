@@ -48,7 +48,7 @@ VirtualWireCodec codec;
 // Block4B5BCodec codec;
 // BitstuffingCodec codec;
 
-// Virtual Wire Interface Receiver connected to pin D9
+// Virtual Wire Interface Receiver connected to pin D8
 VWI::Receiver rx(Board::D8, &codec);
 const uint16_t SPEED = 4000;
 
