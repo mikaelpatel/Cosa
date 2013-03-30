@@ -66,7 +66,7 @@ RTC::begin()
     TCNT0 = 0;
     TIFR0 = 0;
   }
-  return (1);
+  return (true);
 }
 
 bool
@@ -76,7 +76,7 @@ RTC::end()
   synchronized {
     TIMSK0 = 0;
   }
-  return (1);
+  return (true);
 }
 
 uint32_t 

@@ -621,20 +621,20 @@ AnalogPin* AnalogPin::sampling_pin = 0;
 bool
 AnalogPin::sample_request(uint8_t pin, uint8_t ref)
 {
-  if (sampling_pin != 0) return (0);
+  if (sampling_pin != 0) return (false);
   if (pin >= Board::A0) pin -= Board::A0;
   loop_until_bit_is_clear(ADCSRA, ADSC);
   ADMUX = (ref | pin);
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
   sampling_pin = this;
   bit_set(ADCSRA, ADIE);
-  return (1);
+  return (true);
 }
 
 uint16_t 
 AnalogPin::sample(uint8_t pin, Reference ref)
 {
-  if (sampling_pin != 0) return (0);
+  if (sampling_pin != 0) return (0xffffU);
   if (pin >= Board::A0) pin -= Board::A0;
   loop_until_bit_is_clear(ADCSRA, ADSC);
   ADMUX = (ref | pin);

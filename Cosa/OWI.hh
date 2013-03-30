@@ -102,9 +102,9 @@ public:
      */
     bool update_rom()
     {
-      if (ROM == 0) return (0);
+      if (ROM == 0) return (false);
       eeprom_write_block(ROM, m_rom, sizeof(m_rom));
-      return (1);
+      return (true);
     }
 
     /**
@@ -317,7 +317,10 @@ public:
   /**
    * Begin a read sequence with CRC.
    */
-  void begin() { m_crc = 0; }
+  void begin() 
+  { 
+    m_crc = 0; 
+  }
 
   /**
    * End a read sequence and return the generated CRC. If the
@@ -325,7 +328,10 @@ public:
    * zero(0).
    * @return generated CRC.
    */
-  uint8_t end() { return (m_crc); }
+  uint8_t end() 
+  { 
+    return (m_crc); 
+  }
 
   /**
    * Print list of connected devices on given stream.

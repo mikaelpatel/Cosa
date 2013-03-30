@@ -91,7 +91,7 @@ OWI::Driver::search_rom(int8_t last)
 bool
 OWI::Driver::read_rom()
 {
-  if (!m_pin->reset()) return (0);
+  if (!m_pin->reset()) return (false);
   m_pin->write(OWI::READ_ROM);
   m_pin->begin();
   for (uint8_t i = 0; i < ROM_MAX; i++) {
@@ -103,20 +103,20 @@ OWI::Driver::read_rom()
 bool
 OWI::Driver::match_rom()
 {
-  if (!m_pin->reset()) return (0);
+  if (!m_pin->reset()) return (false);
   m_pin->write(OWI::MATCH_ROM);
   for (uint8_t i = 0; i < ROM_MAX; i++) {
     m_pin->write(m_rom[i]);
   }
-  return (1);
+  return (true);
 }
 
 bool
 OWI::Driver::skip_rom()
 {
-  if (!m_pin->reset()) return (0);
+  if (!m_pin->reset()) return (false);
   m_pin->write(OWI::SKIP_ROM);
-  return (1);
+  return (true);
 }
 
 int8_t
@@ -143,12 +143,12 @@ OWI::Driver::connect(uint8_t family, uint8_t index)
   int8_t last = FIRST;
   do {
     last = search_rom(last);
-    if (last == ERROR) return (0);
+    if (last == ERROR) return (false);
     if (m_rom[0] == family) {
-      if (index == 0) return (1);
+      if (index == 0) return (true);
       index -= 1;
     }
   } while (last != LAST);
   memset(m_rom, 0, ROM_MAX);
-  return (0);
+  return (false);
 }

@@ -92,10 +92,10 @@ public:
    */
   bool read(uint8_t& temperature, uint8_t& humidity)
   {
-    if (!read_data()) return (0);
+    if (!read_data()) return (false);
     temperature = get_temperature();
     humidity = get_humidity();
-    return (1);
+    return (true);
   }
 
   /**

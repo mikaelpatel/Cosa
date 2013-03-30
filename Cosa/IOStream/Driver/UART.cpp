@@ -35,7 +35,7 @@ UART::begin(uint32_t baudrate, uint8_t format)
 {
   m_period = 1000000L / baudrate;
   m_format = format;
-  return (1);
+  return (true);
 }
 
 int 
@@ -93,7 +93,7 @@ UART::begin(uint32_t baudrate, uint8_t format)
     
   // Set frame format: asynchronous, 8data, 2stop bit
   *UCSRnC() = format;
-  return (1);
+  return (true);
 }
 
 bool 
@@ -103,16 +103,14 @@ UART::end()
   *UCSRnB() &= ~(_BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0));
   m_obuf->flush();
   m_ibuf->flush();
-  return (1);
+  return (true);
 }
 
 int 
 UART::putchar(char c)
 {
   uint8_t mode = SLEEP_MODE_IDLE;
-  while (m_obuf->putchar(c) == -1) {
-    Power::sleep(mode);
-  }
+  while (m_obuf->putchar(c) == -1) Power::sleep(mode);
   *UCSRnB() |= _BV(UDRIE0);
   return (c & 0xff);
 }

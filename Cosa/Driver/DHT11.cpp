@@ -82,11 +82,11 @@ DHT11::read_data()
   uint8_t chksum = 0;
   m_latest = 1;
   synchronized {
-    if (read_bit(3) < 0) synchronized_return (0);
+    if (read_bit(3) < 0) synchronized_return (false);
     for (uint8_t i = 0; i < DATA_MAX; i++) {
       for (uint8_t j = 0; j < CHARBITS; j++) {
 	int8_t bit = read_bit(2);
-	if (bit < 0) synchronized_return (0);
+	if (bit < 0) synchronized_return (false);
 	m_data[i] = (m_data[i] << 1) | bit;
       }
       if (i < DATA_LAST) chksum += m_data[i];

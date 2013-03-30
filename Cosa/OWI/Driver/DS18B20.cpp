@@ -33,15 +33,15 @@
 bool
 DS18B20::convert_request()
 {
-  if (!match_rom()) return (0);
+  if (!match_rom()) return (false);
   m_pin->write(CONVERT_T);
-  return (1);
+  return (true);
 }
 
 bool
 DS18B20::read_scratchpad()
 {
-  if (!match_rom()) return (0);
+  if (!match_rom()) return (false);
   m_pin->write(READ_SCRATCHPAD);
   m_pin->begin();
   uint8_t* ptr = (uint8_t*) &m_scratchpad;

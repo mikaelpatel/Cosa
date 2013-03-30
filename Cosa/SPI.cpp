@@ -61,7 +61,7 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
 	   | ((mode & 0x3) << CPHA) 
 	   | ((clock & 0x3) << SPR0));
   SPSR = (((clock & 0x04) != 0) << SPI2X);
-  return (1);
+  return (true);
 }
 
 void
@@ -115,7 +115,7 @@ bool
 SPI::end()
 { 
   SPCR = 0;     
-  return (1);
+  return (true);
 }
 
 void 

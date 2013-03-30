@@ -183,7 +183,7 @@ VWI::begin(uint16_t speed, uint8_t mode)
 #if defined(__ARDUINO_TINYX5__)
   // Figure out prescaler value and counter match value
   prescaler = timer_setting(speed * SAMPLES_PER_BIT, 8, &nticks);
-  if (!prescaler) return (0);
+  if (!prescaler) return (false);
 
   // Turn on CTC mode / Output Compare pins disconnected
   TCCR1 = _BV(PWM1A) | prescaler;
@@ -193,7 +193,7 @@ VWI::begin(uint16_t speed, uint8_t mode)
 #else
   // Figure out prescaler value and counter match value
   prescaler = timer_setting(speed * SAMPLES_PER_BIT, 16, &nticks);
-  if (!prescaler) return (0);
+  if (!prescaler) return (false);
 
   // Output Compare pins disconnected, and turn on CTC mode
   TCCR1A = 0; 
@@ -206,7 +206,7 @@ VWI::begin(uint16_t speed, uint8_t mode)
   // Enable the interrupt handler
   enable();
 
-  return (1);
+  return (true);
 }
 
 void
@@ -277,7 +277,7 @@ VWI::Transmitter::begin()
   m_bit = 0;
   m_sample = 0;
   m_enabled = true;
-  return (1);
+  return (true);
 }
 
 void 
@@ -290,7 +290,7 @@ bool
 VWI::Transmitter::send(void* buf, uint8_t len)
 {
   // Check that the message is not too large
-  if (len > PAYLOAD_MAX) return (0);
+  if (len > PAYLOAD_MAX) return (false);
 
   uint8_t *tp = transmitter->m_buffer + m_codec->HEADER_MAX;
   uint8_t *bp = (uint8_t*) buf;

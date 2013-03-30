@@ -51,7 +51,7 @@ OWI::reset()
     }
   } while (retry-- && !res);
   DELAY(410);
-  return (res);
+  return (res != 0);
 }
 
 uint8_t

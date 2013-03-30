@@ -81,7 +81,7 @@ PCD8544::begin(uint8_t level)
   set_display_contrast(level);
   m_x = 0;
   m_y = 0;
-  return (1);
+  return (true);
 }
 
 bool 
@@ -92,7 +92,7 @@ PCD8544::end()
     m_sdin.write(SET_FUNC | BASIC_INST | POWER_DOWN_MODE);
     m_dc.set();
   }
-  return (1);
+  return (true);
 }
 
 void 

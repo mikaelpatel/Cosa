@@ -45,7 +45,7 @@ Servo::begin()
   TIMSK1 |= _BV(OCIE1B);
   OCR1A = TCNT1 + PERIOD;
   OCR1B = TCNT1 + PERIOD;
-  return (1);
+  return (true);
 }
 
 bool 
@@ -53,7 +53,7 @@ Servo::end()
 {
   TIMSK1 &= ~_BV(OCIE1A);
   TIMSK1 &= ~_BV(OCIE1B);
-  return (1);
+  return (true);
 }
 
 void 

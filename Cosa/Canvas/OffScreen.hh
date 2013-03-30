@@ -82,7 +82,7 @@ public:
   virtual bool begin()
   {
     memset(m_bitmap, 0, m_count);
-    return (1);
+    return (true);
   }
 
   /**
@@ -108,7 +108,7 @@ public:
    */
   virtual bool end()
   {
-    return (1);
+    return (true);
   }
 };
 

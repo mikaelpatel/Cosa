@@ -35,16 +35,16 @@ bool
 PCF8591::begin(uint8_t cntl)
 {
   m_cntl = cntl;
-  if (twi.begin()) return (0);
+  if (!twi.begin()) return (false);
   twi.write(m_addr, m_cntl);
   sample();
-  return (1);
+  return (true);
 }
 
 bool
 PCF8591::convert(uint8_t value)
 {
-  if (!twi.begin()) return (0);
+  if (!twi.begin()) return (false);
   int count = twi.write(m_addr, m_cntl, &value, 1);
   twi.end();
   return (count == (sizeof(m_cntl) + sizeof(value)));

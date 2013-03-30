@@ -149,7 +149,7 @@ public:
     if ((m_period != 0) && (m_period != TIMEOUT_REQUEST)) 
       Watchdog::attach(this, m_period);
     send(Event::BEGIN_TYPE);
-    return (1);
+    return (true);
   }
   
   /**

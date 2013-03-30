@@ -64,7 +64,7 @@ TWI::begin(Event::Handler* target, uint8_t addr)
   bit_clear(TWSR, TWPS1);
   TWBR = ((F_CPU / TWI_FREQ) - 16) / 2;
   TWCR = IDLE_CMD;
-  return (1);
+  return (true);
 }
 
 bool 
@@ -72,7 +72,7 @@ TWI::end()
 {
   m_target = 0;
   TWCR = 0;
-  return (1);
+  return (true);
 }
 
 bool
@@ -85,7 +85,7 @@ TWI::request(uint8_t addr)
   m_next = 0;
   m_ix = 0;
   TWCR = START_CMD;
-  return (1);
+  return (true);
 }
 
 bool

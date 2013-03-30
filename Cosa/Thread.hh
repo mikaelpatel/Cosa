@@ -101,9 +101,9 @@ public:
    */
   bool begin()
   {
-    if (m_state != INITIATED) return (0);
+    if (m_state != INITIATED) return (false);
     schedule(this);
-    return (1);
+    return (true);
   }
   
   /**

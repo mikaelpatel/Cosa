@@ -80,7 +80,7 @@ OWI::Device::write(uint8_t value, uint8_t bits)
       retry = RETRY_MAX;
       do {
 	while (is_set() && retry--) DELAY(1);
-	if (retry == 0) synchronized_return (0);
+	if (retry == 0) synchronized_return (false);
 	DELAY(1);
       } while (is_set());
       if (value & 1) {
@@ -100,7 +100,7 @@ OWI::Device::write(uint8_t value, uint8_t bits)
       if (mix & 1) m_crc ^= 0x8C;
     }
   }
-  return (1);
+  return (true);
 }
 
 void 
