@@ -32,10 +32,11 @@
 #include "Cosa/Types.h"
 
 class FixedPoint {
+public:
+  const uint8_t POINT;
 private:
   int16_t m_integer;
   uint16_t m_fraction;
-  uint8_t m_point;
 public:
   /** 
    * Construct fixed point integer with given value and binary point.
@@ -45,7 +46,7 @@ public:
   FixedPoint(int16_t value, uint8_t point):
     m_integer(value >> point),
     m_fraction((value < 0 ? -value : value) & ~(-1 << point)),
-    m_point(point)
+    POINT(point)
   {
   }
 

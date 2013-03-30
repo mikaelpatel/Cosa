@@ -1006,9 +1006,7 @@ public:
 	     Reference ref = AVCC_REFERENCE) :
     AnalogPin((Board::AnalogPin) 255, ref),
     m_pin_at(pins),
-    m_buffer(buffer != 0 ? 
-	     buffer : 
-	     (uint16_t*) malloc(sizeof(uint16_t) * count)),
+    m_buffer(buffer),
     m_count(count),
     m_next(0)
   {

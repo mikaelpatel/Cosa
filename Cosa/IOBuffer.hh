@@ -37,7 +37,6 @@ private:
   volatile char* m_buffer;
   volatile uint8_t m_head;
   volatile uint8_t m_tail;
-  uint8_t m_free;
 
 public:
   const uint8_t BUFFER_MAX;
@@ -49,24 +48,14 @@ public:
    * @param[in] max number of bytes in buffer.
    * @param[in] buffer pointer to buffer.
    */
-  IOBuffer(uint8_t max, char* buffer = 0) :
+  IOBuffer(uint8_t max, char* buffer) :
     IOStream::Device(),
-    m_buffer(buffer != 0 ? buffer : (char*) malloc(max)),
+    m_buffer(buffer),
     m_head(0),
     m_tail(0),
-    m_free(buffer == 0),
     BUFFER_MAX(max),
     BUFFER_MASK(max - 1)
   {
-  }
-
-  /**
-   * Deallocate buffer object. Free buffer if allocated
-   * with malloc by constructor.
-   */
-  ~IOBuffer() 
-  {
-    if (m_free) free((void*) m_buffer);
   }
 
   /**

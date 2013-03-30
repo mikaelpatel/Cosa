@@ -52,13 +52,13 @@ public:
    * @param[in] msize size of member.
    * @param[in] buffer pointer to buffer.
    */
-  Queue(uint8_t nmemb, uint8_t msize, void* buffer = 0) :
+  Queue(uint8_t nmemb, uint8_t msize, void* buffer) :
     NMEMB(nmemb),
     MSIZE(msize),
     m_length(0),
     m_put(0),
     m_get(0),
-    m_buffer((uint8_t*) (buffer != 0 ? buffer : malloc(msize * nmemb)))
+    m_buffer((uint8_t*) buffer)
   {
   }
 

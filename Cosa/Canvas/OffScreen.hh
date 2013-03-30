@@ -38,7 +38,6 @@ class OffScreen : public Canvas {
 private:
   uint16_t m_count;		// Size of bitmap (bytes)
   uint8_t* m_bitmap;		// Pointer to bitmap buffer
-  uint8_t m_free;		// Allocation flag
 
 public:
   /**
@@ -49,20 +48,11 @@ public:
    * @param[in] height of canvas.
    * @param[in] buffer for canvas.
    */
-  OffScreen(uint8_t width, uint8_t height, uint8_t* buffer = 0) :
+  OffScreen(uint8_t width, uint8_t height, uint8_t* buffer) :
     Canvas(width, height),
     m_count((width * height) / CHARBITS),
-    m_bitmap(buffer != 0 ? buffer : (uint8_t*) malloc(m_count)),
-    m_free(buffer == 0)
+    m_bitmap(buffer)
   {
-  }
-
-  /**
-   * Destruct off-screen canvas. Check if buffer should be reclaimed.
-   */
-  ~OffScreen()
-  {
-    if (m_free) free(m_bitmap);
   }
 
   /**

@@ -102,7 +102,8 @@ void setup()
   SLEEP(4);
 
   // Play around with the offscreen canvas
-  OffScreen offscreen(PCD8544::WIDTH, PCD8544::HEIGHT);
+  uint8_t buffer[PCD8544::WIDTH * PCD8544::HEIGHT / CHARBITS];
+  OffScreen offscreen(PCD8544::WIDTH, PCD8544::HEIGHT, buffer);
   offscreen.begin();
   offscreen.draw_rect(0, 0, 10, 10);
   offscreen.fill_rect(2, 2, 7, 7);
@@ -154,7 +155,8 @@ void loop()
     static uint8_t sec = 00;
 
     // Draw the current counter value off-screen
-    OffScreen offscreen(PCD8544::WIDTH, PCD8544::HEIGHT);
+    uint8_t buffer[PCD8544::WIDTH * PCD8544::HEIGHT / CHARBITS];
+    OffScreen offscreen(PCD8544::WIDTH, PCD8544::HEIGHT, buffer);
     offscreen.begin();
     offscreen.set_text_font(&fixednums8x16);
     offscreen.draw_roundrect(8, 8, lcd.WIDTH - 18, lcd.HEIGHT - 18, 8);
