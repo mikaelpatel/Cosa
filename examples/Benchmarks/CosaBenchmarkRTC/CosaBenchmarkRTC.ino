@@ -46,6 +46,10 @@ void setup()
   // Check amount of free memory
   TRACE(free_memory());
 
+  // Print CPU clock and instructions per 1MHZ 
+  TRACE(F_CPU);
+  TRACE(I_CPU);
+
   // Start the timers
   Watchdog::begin();
   TRACE(Watchdog::ms_per_tick());
@@ -97,9 +101,10 @@ void setup()
       err++;
     }
   }
-  INFO("Watchdog::delay(30): 100 measurement/validation (err = %ul)", err);
+  INFO("Watchdog::delay(30): 100 measurement/validation (err = %ul)\n", err);
 }
 
 void loop()
 {
+  ASSERT(true == false);
 }

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -56,8 +56,18 @@ public:
   bool end()
   {
     set_device(0);
-    return (1);
+    return (true);
   }
+
+  /**
+   * Support function for ASSERT failure. Prints give function name,
+   * func, line number and expression that could not be validated 
+   * to trace output device before calling exit().
+   * @param[in] expr program memory string with expression.
+   * @param[in] line number.
+   * @param[in] func name of function.
+   */
+  void fatal_P(const char* expr, int line, const char* func);
 };
 
 /**
@@ -82,7 +92,26 @@ public:
 #define LOG_UPTO(prio) (LOG_MASK((prio) + 1) - 1)
 extern uint8_t trace_log_mask;
 
+/**
+ * Prints given message with current function name and line number
+ * to trace device and the program will terminate. The message 
+ * string is stored in program memory.
+ * @param[in] msg message string to print.
+ */
+#define FATAL(msg) trace.fatal_P(PSTR(msg), __LINE__, __func__)
+
 #ifndef NDEBUG
+
+/**
+ * Support macro to check that an expression is valid. The expression
+ * is used as a string and evaluated. If false a message is printed
+ * to the trace device and the program will terminate.
+ * @param[in] expr expression to validate.
+ */
+# define ASSERT(expr)							\
+  do {									\
+    if (!(expr)) FATAL("assert:" #expr);				\
+  } while (0)
 
 /**
  * Support macro for trace of a string in program memory.
@@ -92,7 +121,7 @@ extern uint8_t trace_log_mask;
 
 /**
  * Support macro for trace of an expression. The expression
- * is used as a string and the value is evaluated.
+ * is used as a string and evaluated.
  * @param[in] expr expression.
  */
 # define TRACE(expr)							\
@@ -128,6 +157,7 @@ extern uint8_t trace_log_mask;
 # define DEBUG(msg, ...)						\
   if (IS_LOG_PRIO(LOG_DEBUG)) TRACE_LOG("debug:" msg, __VA_ARGS__)
 #else
+# define ASSERT(expr)
 # define TRACE_PSTR(str)
 # define TRACE(expr)
 # define TRACE_LOG(msg, ...)

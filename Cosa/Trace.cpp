@@ -38,8 +38,16 @@ Trace::begin(IOStream::Device* dev, const char* banner)
 {
   set_device(dev);
   if (banner != 0) {
-    trace.print_P(banner);
-    trace.println();
+    print_P(banner);
+    println();
   }
-  return (1);
+  return (true);
+}
+
+void
+Trace::fatal_P(const char* expr, int line, const char* func)
+{
+  printf_P(PSTR("%d:%s:%S"), line, func, expr);
+  get_device()->flush();
+  exit(0);
 }

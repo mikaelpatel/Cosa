@@ -60,6 +60,10 @@ void setup()
   TRACE(sizeof(OutputPin));
   TRACE(sizeof(AnalogPin));
 
+  // Print CPU clock and instructions per 1MHZ 
+  TRACE(F_CPU);
+  TRACE(I_CPU);
+
   // Start the timers
   RTC::begin();
   Watchdog::begin();
@@ -431,9 +435,10 @@ void setup()
     AnalogPin::sample(0);
   stop = RTC::micros();
   us = (stop - start) / 1000L;
-  INFO("Cosa(%ulX): %ul us per AnalogPin::sample()", base/us, us);
+  INFO("Cosa(%ulX): %ul us per AnalogPin::sample()\n", base/us, us);
 }
 
 void loop()
 {
+  ASSERT(true == false);
 }

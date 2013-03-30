@@ -81,6 +81,10 @@ void setup()
   TRACE(sizeof(Thread));
   TRACE(sizeof(Counter));
 
+  // Print CPU clock and instructions per 1MHZ 
+  TRACE(F_CPU);
+  TRACE(I_CPU);
+
   // Start the watchdog (16 ms timeout, push timeout events)
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
   RTC::begin();
