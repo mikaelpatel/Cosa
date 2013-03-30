@@ -66,7 +66,7 @@ protected:
    */
   static const uint16_t SAMPLE_MS = 64;
   uint8_t m_state;
-  uint8_t m_mode;
+  const uint8_t m_mode;
 
   /**
    * @override

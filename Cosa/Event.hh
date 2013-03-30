@@ -124,7 +124,7 @@ public:
    * Return event type.
    * @return type.
    */
-  int get_type() 
+  uint8_t get_type() 
   { 
     return (m_type); 
   }
@@ -133,7 +133,7 @@ public:
    * Return event target.
    * @return pointer.
    */
-  Handler* get_target() 
+  const Handler* get_target() 
   { 
     return (m_target); 
   } 

@@ -33,10 +33,12 @@
 #include <avr/sleep.h>
 
 class Queue {
+public:
+  const uint8_t NMEMB;
+  const uint8_t MSIZE;
+
 private:
   uint8_t m_length;
-  uint8_t m_nmemb;
-  uint8_t m_msize;
   uint8_t m_put;
   uint8_t m_get;
   uint8_t* m_buffer;
@@ -51,9 +53,9 @@ public:
    * @param[in] buffer pointer to buffer.
    */
   Queue(uint8_t nmemb, uint8_t msize, void* buffer = 0) :
+    NMEMB(nmemb),
+    MSIZE(msize),
     m_length(0),
-    m_nmemb(nmemb),
-    m_msize(msize),
     m_put(0),
     m_get(0),
     m_buffer((uint8_t*) (buffer != 0 ? buffer : malloc(msize * nmemb)))

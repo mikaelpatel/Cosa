@@ -32,47 +32,45 @@
 bool
 Queue::enqueue(void* data)
 {
-  if (m_length == m_nmemb) return (0);
+  if (m_length == NMEMB) return (false);
   synchronized {
-    memcpy(&m_buffer[m_put * m_msize], data, m_msize);
+    memcpy(&m_buffer[m_put * MSIZE], data, MSIZE);
     m_length += 1;
     m_put += 1;
-    if (m_put == m_nmemb) m_put = 0;
+    if (m_put == NMEMB) m_put = 0;
   }
-  return (1);
+  return (true);
 }
 
 bool
 Queue::enqueue_P(const void* data)
 {
-  if (m_length == m_nmemb) return (0);
+  if (m_length == NMEMB) return (false);
   synchronized {
-    memcpy(&m_buffer[m_put * m_msize], data, m_msize);
+    memcpy(&m_buffer[m_put * MSIZE], data, MSIZE);
     m_length += 1;
     m_put += 1;
-    if (m_put == m_nmemb) m_put = 0;
+    if (m_put == NMEMB) m_put = 0;
   }
-  return (1);
+  return (true);
 }
 
 bool
 Queue::dequeue(void* data)
 {
-  if (m_length == 0) return (0);
+  if (m_length == 0) return (false);
   synchronized {
-    memcpy(data, &m_buffer[m_get * m_msize], m_msize);
+    memcpy(data, &m_buffer[m_get * MSIZE], MSIZE);
     m_length -= 1;
     m_get += 1;
-    if (m_get == m_nmemb) m_get = 0;
+    if (m_get == NMEMB) m_get = 0;
   }
-  return (1);
+  return (true);
 }
 
 void
 Queue::await(void* data, uint8_t mode)
 {
-  while (!dequeue(data)) {
-    Power::sleep(mode);
-  }
+  while (!dequeue(data)) Power::sleep(mode);
 }
 

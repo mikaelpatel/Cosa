@@ -63,10 +63,10 @@ public:
     const uint8_t HEADER_MAX;
 
     /** Symbol mask */
-    uint8_t SYMBOL_MASK;
+    const uint8_t SYMBOL_MASK;
 
     /** Symbol MSB */
-    uint16_t BITS_MSB;
+    const uint16_t BITS_MSB;
 
     /**
      * Construct Codec with given symbol and header definition. The Codec is
@@ -265,10 +265,10 @@ public:
      */
     bool begin()
     {
-      if (m_enabled) return (0);
+      if (m_enabled) return (false);
       m_enabled = true;
       m_active = false;
-      return (1);
+      return (true);
     }
 
     /**
@@ -280,7 +280,7 @@ public:
     bool end()
     {
       m_enabled = false;
-      return (1);
+      return (true);
     }
 
     /**
@@ -367,7 +367,7 @@ public:
       if (!m_enabled) return (0);
       clear();
       m_enabled = false;
-      return (1);
+      return (true);
     }
 
     /**
