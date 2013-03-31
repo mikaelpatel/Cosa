@@ -67,29 +67,34 @@ Please follow the development of this project on
 [blogspot](http://cosa-arduino.blogspot.se/) and on the [Arduino
 forum](http://arduino.cc/forum/index.php/topic,150299.0.html).  
 
-
 Install
 -------
 
-To install download and move the Cosa directory to the Arduino cores
-directory within arduino itself, i.e.,
+WINDOWS: To install download and move the Cosa directory to the
+Arduino cores directory within arduino itself, i.e.,
 your-arduino-install-directory/hardware/arduino/cores/arduino. The
 examples should be moved to your Arduino sketchbook directory. 
 
-The application programmers interface documentation is available as
-HTML in the file doc.zip. Uncompress this file and navigate your
-browser to the index file. The documentation contains a full
-hyperlinked description of all functions in Cosa together with UML
-graphs of the class hierarchy, include dependencies, and much more.
+LINUX: Download as above or clone from github. Instead of moving the
+Cosa directory create a symbolic link in arduino to the Cosa source
+directory, and another symbolic link in your sketch directory to the
+Cosa example sketches. 
+
+The application programmers interface documentation is available 
+[online](http://dl.dropbox.com/u/993383/Cosa/doc/html/index.html) and
+compressed for
+[download](http://dl.dropbox.com/u/993383/Cosa/doc.zip). The
+documentation contains a full hyperlinked description of all functions
+in Cosa together with UML graphs of the class hierarchy, include
+dependencies, and much more. 
 
 The provided documentation is generated with doxygen and may also be
 generated for users source code if the Cosa documentation style is
 adapted. See the Doxyfile for configuration of doxygen. 
 
-For ATtiny a patch is needed to allow linking programs larger than 4K;
-Please see
+For ATtinyX5 a patch is needed to allow linking programs larger than
+4K; Please see
 https://github.com/TCWORLD/ATTinyCore/tree/master/PCREL%20Patch%20for%20GCC 
-
 
 Drivers
 -------
@@ -109,7 +114,7 @@ Drivers
 13. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
-be found in the Cosa/references directory.  
+be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  
 
 References
 ----------
@@ -176,4 +181,5 @@ example.
 2013-03-21 Introducing an interface for interrupt handlers, and
 support for pin change interrupts. New directory structure for 
 handling boards.  
-
+2013-03-31 Moving documentation and references to dropbox. Reducing
+size of download from github.   
