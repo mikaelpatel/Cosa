@@ -3,12 +3,12 @@
 Cosa is an object-oriented platform for Arduino that supports an
 event-driven programming paradigm with simple finite state
 machines. It contains a rich set of classes to support rapid
-prototyping of Internet-of-Things devices. Cosa supports the following
+prototyping of Arduino/AVR based devices. Cosa supports the following
 AVR/Atmega328P internal hardware modules; all pin modes, Digital,
 Analog and Interrupt Pins, Analog Comparator, PWM, Watchdog, Timer0
 (RTC), Timer1 (Servo), UART, SPI and TWI.  
 
-Though object-oriented with optional operator overloading syntax
+Though object-oriented with optional operator overloading syntax,
 Cosa is between 2-10X faster than Arduino with regard to digital pin
 functions. This comes with a small price-tag; memory, 4 bytes per
 digital pin and 9 bytes per analog pin. Cosa analog pin objects
@@ -28,8 +28,8 @@ code (examples/Ciao).
 
 The primary programming paradigm is object-oriented and
 state-machine/event driven with proto-threads. There is a large number
-of device drivers available for SPI, TWI/I2C and 1-Wire. A strict
-directory structure is used to organize the Cosa/driver source
+of device drivers available for SPI, I2C (TWI) and 1-Wire (OWI). A
+strict directory structure is used to organize the Cosa/driver source 
 code. Sub-directories are used for each driver type. This allows a
 foundation for scaling and configuration.
 
@@ -38,29 +38,30 @@ with prefix, e.g. "Cosa/FileName.hh". It is possible to use both
 Arduino and Cosa functions together, though in some cases the Cosa
 objects may become inconsistent. 
 
-To improve debugging and testing there is trace/syslog style support. 
-The IOStream class allows output to both serial wire/wireless
+To improve debugging and testing there is assert/trace/syslog style
+support. The IOStream class allows output to both serial wire/wireless
 communication (UART/VWIO) and small TFT displays (such as the ST7735R
 and PCD8544). The drawing Canvas class supports basic drawing operation
 and scripting to reduce program memory footprint. The Canvas class
 also supports drawing of icons and multiple fonts (GLCD and UTFT). 
 
 The popular VirtualWire library has been refactored to the
-object-oriented style of Cosa and extended with three additional
-codecs; Manchester, 4B5B and Fixed Bitstuffing. This allows basic
-ultra cheap wireless nodes with RF315/433 receiver and
-transmitter. For more advanced wireless connections there is also a
-driver for the Nordic Semiconductor NRF24L01+ chip, which allows
-low-power wireless communication of up to 2 Mbps in the 2.4GHz band. 
+object-oriented style of Cosa (VWI) and extended with three additional
+codecs; Manchester, 4B5B and Bitstuffing. This allows basic ultra
+cheap wireless nodes with RF315/433 receiver and transmitter. For more
+advanced wireless connections there is also a driver for the Nordic
+Semiconductor NRF24L01+ chip, which allows low-power wireless
+communication of up to 2 Mbps in the 2.4GHz band.  
 
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. 
+
 Unfortunately Cosa is not a beginners entry level programming
 platform, though following some of the design patterns in Cosa will
 help beginners build more complex small scale embedded systems with
 richer concurrency and low power consumption.  
 
-Please follow the development of this project on
+Please follow the development of this project on the blog 
 http://cosa-arduino.blogspot.se and on the Arduino forum,
 http://arduino.cc/forum/index.php/topic,150299.0.html.
 
@@ -90,7 +91,8 @@ http://arduino.cc/forum/index.php/topic,150299.0.html.
 @section Note
 
 ATmega328P, ATmega1284P and ATmega2560 based Arduino boards (Uno,
-Mini, Nano, LilyPad, Mega, Mightly, etc) are supported. Arduino and
+Mini, Nano, LilyPad, Mega, Mightly, etc) are supported. The ATtinyX5
+processors are also support for a sub-set of the classes. Arduino and
 AVR lib functions may be used together with Cosa. 
 
 @section License
