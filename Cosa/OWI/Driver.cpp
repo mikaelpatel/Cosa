@@ -29,8 +29,8 @@
 #include "Cosa/OWI.hh"
 
 OWI::Driver::Driver(OWI* pin, const uint8_t* rom) : 
-  m_pin(pin),
-  ROM(rom)
+  ROM(rom),
+  m_pin(pin)
 {
   // Check if identity should be loaded from EEPROM
   if (rom != 0) eeprom_read_block(m_rom, rom, sizeof(m_rom));

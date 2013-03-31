@@ -44,9 +44,9 @@ public:
    * @param[in] point fixed point binary point.
    */
   FixedPoint(int16_t value, uint8_t point):
+    POINT(point),
     m_integer(value >> point),
-    m_fraction((value < 0 ? -value : value) & ~(-1 << point)),
-    POINT(point)
+    m_fraction((value < 0 ? -value : value) & ~(-1 << point))
   {
   }
 
