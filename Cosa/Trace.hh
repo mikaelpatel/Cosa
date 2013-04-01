@@ -67,7 +67,8 @@ public:
    * @param[in] line number.
    * @param[in] func name of function.
    */
-  void fatal_P(const char* expr, int line, const char* func);
+  void fatal_P(const char* expr, int line, const char* func) 
+    __attribute__((noreturn));
 };
 
 /**
