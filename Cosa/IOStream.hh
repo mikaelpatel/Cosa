@@ -32,7 +32,7 @@
 
 #include "Cosa/Types.h"
 
-// Redefine PSTR so that operator output is possible; needs correct type
+// Redefine PSTR so that operator<< output is possible
 #if defined(PSTR)
 # undef PSTR
 # define PSTR(s)							\
@@ -115,7 +115,7 @@ public:
     virtual int flush();
 
     /**
-     * The default implementation of device.
+     * The default implementation of device; null device.
      */
     static Device null;
   };
@@ -130,6 +130,15 @@ public:
 
   public:
     Filter(Device* dev) : m_dev(dev) {}
+
+    /**
+     * Number of bytes available.
+     * @return bytes.
+     */
+    virtual int available()
+    {
+      return (m_dev->available());
+    }
 
     /**
      * Write character to device.
@@ -285,7 +294,10 @@ public:
    * Print pointer as a hexidecimal number to stream.
    * @param[in] ptr pointer to data memory.
    */
-  void print(void *ptr) { print((unsigned int) ptr, 16); }
+  void print(void *ptr) 
+  { 
+    print((unsigned int) ptr, 16); 
+  }
 
   /**
    * Print pointer to program memory as a hexidecimal number to 
