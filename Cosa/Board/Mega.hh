@@ -26,12 +26,13 @@
  *
  * Cosa does not use pin numbers as Arduino/Wiring, instead strong
  * data type is used (enum types) for the specific pin classes;
- * e.g. DigitalPin, AnalogPin.
+ * e.g. DigitalPin, AnalogPin, etc.
  *
  * @section Limitations
  * The pin numbers for ATmega1280 and ATmega2560 are only symbolically
  * mapped, i.e. a pin number/digit will not work, symbols must be 
- * used, e.g., Board::D42.
+ * used, e.g., Board::D42. Avoid iterations assuming that the symbols
+ * are in order. 
  *
  * The static inline functions, SFR, BIT and UART, rely on compiler
  * optimizations to be reduced. 
@@ -47,7 +48,7 @@ class Board {
   friend class UART;
 private:
   /**
-   * Do not allow instances. This is a static singleton.
+   * Do not allow instances. This is a static singleton; name space.
    */
   Board() {}
 
@@ -84,6 +85,7 @@ private:
   
   /**
    * Return Pin Change Mask Register for given Arduino pin number.
+   * Arduino Mega does not allow access to all pins.
    * @param[in] pin number.
    * @return pin change mask register pointer.
    */
@@ -168,7 +170,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols
+   * Analog pin symbols; mapping from name to port<5>:bit<3>.
    */
   enum AnalogPin {
     A0 = 56,
@@ -192,7 +194,7 @@ public:
 
   /**
    * PWM pin symbols; sub-set of digital pins to allow compile 
-   * time checking
+   * time checking.
    */
   enum PWMPin {
     PWM0 = D2,
@@ -225,6 +227,7 @@ public:
 
   /**
    * Pin change interrupt. Number of port registers.
+   * Arduino Mega does not allow access to all pins (PCI8..15).
    */
   enum InterruptPin {
     PCI0 = D53,

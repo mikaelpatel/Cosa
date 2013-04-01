@@ -24,7 +24,8 @@
  * Canvas Textbox element. Acts as an IOStream/console output to
  * Canvas. As an element it holds its own canvas state; context.
  * The textbox is defined by a port (x, y, width, height) on the
- * canvas. Basic carriage-return, line- and form-feed are handled.
+ * canvas. Basic special character handling of carriage-return, line-
+ * and form-feed. 
  *
  * This file is part of the Arduino Che Cosa project.
  */

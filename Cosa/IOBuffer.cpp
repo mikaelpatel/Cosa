@@ -51,8 +51,6 @@ IOBuffer::getchar()
 int
 IOBuffer::flush()
 {
-  while (m_head != m_tail) {
-    Power::sleep(SLEEP_MODE_IDLE);
-  }
+  while (m_head != m_tail) Power::sleep(SLEEP_MODE_IDLE);
   return (0);
 }

@@ -35,7 +35,7 @@
 class Event {
 public:
   /**
-   * Size of event queue.
+   * Size of event queue. Adjust depending on application. 
    */
   static const uint8_t QUEUE_MAX = 16;
 

@@ -45,7 +45,7 @@ class Board {
   friend class UART;
 private:
   /**
-   * Do not allow instances. This is a static singleton.
+   * Do not allow instances. This is a static singleton; name space.
    */
   Board() {}
 

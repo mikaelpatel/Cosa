@@ -29,8 +29,6 @@
 #ifndef __COSA_INTERRUPT_HH__
 #define __COSA_INTERRUPT_HH__
 
-#include "Cosa/Event.hh"
-
 class Interrupt {
 public:
   class Handler {

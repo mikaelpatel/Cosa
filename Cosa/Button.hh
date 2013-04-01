@@ -22,8 +22,8 @@
  *
  * @section Description
  * Debounded Button; Sampled input pin (with internal pullup
- * resistor. Uses a watchdog timeout event (64 ms) for sampling and on 
- * change calls an event action. Subclass Button and implement the
+ * resistor). Uses a watchdog timeout event (64 ms) for sampling and 
+ * on change calls an event action. Subclass Button and implement the
  * virtual on_change() method. Use the subclass for any state needed
  * for the action function.  
  *
@@ -71,7 +71,7 @@ protected:
   /**
    * @override
    * Button event handler. Called by event dispatch. Samples the
-   * attached pin and calls pin change handler, on_change(). 
+   * attached pin and calls the pin change handler, on_change(). 
    * @param[in] type the type of event (timeout).
    * @param[in] value the event value.
    */
