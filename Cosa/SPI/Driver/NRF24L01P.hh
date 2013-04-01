@@ -84,7 +84,7 @@ private:
       ExternalInterruptPin(pin, mode),
       m_nrf(nrf)
     {}
-    virtual void on_interrupt();
+    virtual void on_interrupt(uint16_t arg = 0);
   };
   IRQPin m_irq;
 

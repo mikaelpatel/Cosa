@@ -31,7 +31,7 @@
 #include "Cosa/Watchdog.hh"
 
 void 
-IR::Receiver::on_interrupt() 
+IR::Receiver::on_interrupt(uint16_t arg) 
 { 
   // Check if the buffer is full
   if (m_ix == m_max) return;

@@ -68,6 +68,26 @@ Canvas::blend(color16_t c1, color16_t c2)
   return (((red & 0x1f) << 11)  | ((green & 0x3f) << 5) | (blue & 0x1f));
 }
 
+uint8_t 
+Canvas::get_orientation() 
+{
+  return (m_direction);
+}
+
+uint8_t 
+Canvas::set_orientation(uint8_t direction) 
+{
+  uint8_t previous = m_direction;
+  m_direction = (direction & 1);
+  return (previous);
+}
+
+void 
+Canvas::draw_pixel(uint8_t x, uint8_t y)
+{
+  fill_rect(x, y, 1, 1);
+}
+
 void
 Canvas::draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp, 
 		    uint8_t width, uint8_t height,
@@ -110,6 +130,14 @@ Canvas::draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
       }
     }
   }
+}
+
+void 
+Canvas::draw_icon(uint8_t x, uint8_t y, const uint8_t* bp, uint8_t scale)
+{
+  uint8_t width = pgm_read_byte(bp++);
+  uint8_t height = pgm_read_byte(bp++);
+  draw_icon(x, y, bp, width, height, scale);
 }
 
 void
@@ -161,6 +189,18 @@ Canvas::draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
       err += dx;
     }
   }
+}
+
+void 
+Canvas::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
+{
+  draw_line(x, y, x, y + length);
+}
+
+void 
+Canvas::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
+{
+  draw_line(x, y, x + length, y);
 }
 
 void 
@@ -338,6 +378,30 @@ Canvas::draw_char(uint8_t x, uint8_t y, char c)
   Font* font = get_text_font();
   font->draw(this, c, x, y, scale);
   set_cursor(x + scale * (font->get_width(c)), y);
+  set_pen_color(saved);
+}
+
+void 
+Canvas::draw_string(char* s)
+{
+  char c; 
+  while ((c = *s++) != 0) 
+    draw_char(c);
+}
+
+void 
+Canvas::draw_string_P(const char* s)
+{
+  char c; 
+  while ((c = pgm_read_byte(s++)) != 0) 
+    draw_char(c);
+}
+
+void 
+Canvas::fill_screen()
+{
+  color16_t saved = set_pen_color(get_canvas_color());
+  fill_rect(0, 0, WIDTH, HEIGHT);
   set_pen_color(saved);
 }
 

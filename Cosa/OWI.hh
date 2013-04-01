@@ -247,10 +247,9 @@ public:
      * @override
      * Slave device interrupt handler function. Detect reset and initiate
      * presence pulse. Push service_request event for further handling.
-     * @param[in] pin reference of changed pin.
-     * @param[in] env interrupt handler environment. 
+     * @param[in] arg argument from interrupt service routine.
      */
-    virtual void on_interrupt();
+    virtual void on_interrupt(uint16_t arg = 0);
 
   protected:
     uint8_t* m_rom;

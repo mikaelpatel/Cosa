@@ -66,8 +66,9 @@ public:
      * from IR receiver circuit. Push an event when a full sequence has
      * been recieved; READ_COMPLETED(this, code) where the code is the
      * recieved binary code or key if a key map was provided.
+     * @param[in] arg argument from interrupt service routine.
      */
-    virtual void on_interrupt();
+    virtual void on_interrupt(uint16_t arg = 0);
 
   public:
     /**

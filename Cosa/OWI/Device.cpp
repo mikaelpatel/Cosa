@@ -189,7 +189,7 @@ OWI::Device::on_event(uint8_t type, uint16_t value)
 }
 
 void 
-OWI::Device::on_interrupt()
+OWI::Device::on_interrupt(uint16_t arg)
 {
   volatile uint32_t now = RTC::micros();
   if (m_state == IDLE_STATE) {

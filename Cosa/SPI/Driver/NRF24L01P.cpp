@@ -259,7 +259,7 @@ NRF24L01P::flush()
 }
 
 void 
-NRF24L01P::IRQPin::on_interrupt()
+NRF24L01P::IRQPin::on_interrupt(uint16_t arg)
 { 
   uint8_t status = m_nrf->get_status();
   if (status & _BV(RX_DR)) {

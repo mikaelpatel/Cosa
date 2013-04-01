@@ -119,7 +119,7 @@ SPI::end()
 }
 
 void 
-SPI::Device::on_interrupt(uint8_t data) 
+SPI::Device::on_interrupt(uint16_t arg) 
 { 
   // Check for no buffer
   if (spi.m_buffer == 0) {
@@ -130,7 +130,7 @@ SPI::Device::on_interrupt(uint8_t data)
   }
 
   // Append to buffer and call user interrupt handler on full
-  spi.m_buffer[spi.m_put++] = data;
+  spi.m_buffer[spi.m_put++] = arg;
   if (spi.m_put == spi.m_max) {
     Event::push(Event::RECEIVE_COMPLETED_TYPE, this, spi.m_put);
     spi.m_put = 0;

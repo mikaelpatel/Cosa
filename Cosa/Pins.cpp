@@ -152,9 +152,9 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
 ExternalInterruptPin* ExternalInterruptPin::ext[Board::EXT_MAX] = { 0 };
 
 void 
-ExternalInterruptPin::on_interrupt() 
+ExternalInterruptPin::on_interrupt(uint16_t arg) 
 { 
-  Event::push(Event::CHANGE_TYPE, this);
+  Event::push(Event::CHANGE_TYPE, this, arg);
 }
 
 ISR(INT0_vect)
@@ -242,9 +242,9 @@ InterruptPin::end()
 }
 
 void
-InterruptPin::on_interrupt()
+InterruptPin::on_interrupt(uint16_t arg)
 { 
-  Event::push(Event::CHANGE_TYPE, this);
+  Event::push(Event::CHANGE_TYPE, this, arg);
 }
 
 #if defined(__ARDUINO_TINYX5__)
@@ -708,9 +708,9 @@ AnalogPins::on_interrupt(uint16_t value)
 AnalogComparator* AnalogComparator::comparator = 0;
 
 void 
-AnalogComparator::on_interrupt() 
+AnalogComparator::on_interrupt(uint16_t arg) 
 { 
-  Event::push(Event::CHANGE_TYPE, this);
+  Event::push(Event::CHANGE_TYPE, this, arg);
 }
 
 ISR(ANALOG_COMP_vect)

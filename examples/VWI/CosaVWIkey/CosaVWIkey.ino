@@ -47,7 +47,7 @@ public:
     ExternalInterruptPin(pin, mode),
     m_count(0)
   {}
-  virtual void on_interrupt() { m_count++; }
+  virtual void on_interrupt(uint16_t arg) { m_count++; }
   uint16_t get_count() { return (m_count); }
 };
 

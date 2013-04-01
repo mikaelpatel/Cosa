@@ -499,33 +499,22 @@ public:
    * Get screen orientation.
    * @return direction (Canvas::LANDSCAPE/PORTRAIT)
    */
-  virtual uint8_t get_orientation() 
-  {
-    return (m_direction);
-  }
+  virtual uint8_t get_orientation();
 
   /**
    * Set screen orientation. Return previous orientation.
    * @param[in] direction (Canvas::LANDSCAPE/PORTRAIT)
    * @return previous orientation.
    */
-  virtual uint8_t set_orientation(uint8_t direction) 
-  {
-    uint8_t previous = m_direction;
-    m_direction = (direction & 1);
-    return (previous);
-  }
+  virtual uint8_t set_orientation(uint8_t direction);
 
   /**
    * Set pixel with current pen color.
    * @param[in] x
    * @param[in] y
    */
-  virtual void draw_pixel(uint8_t x, uint8_t y)
-  {
-    fill_rect(x, y, 1, 1);
-  }
-
+  virtual void draw_pixel(uint8_t x, uint8_t y);
+  
   /**
    * Set pixel at cursor position with current pen color.
    */
@@ -590,12 +579,7 @@ public:
    * @param[in] scale
    */
   virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp, 
-			 uint8_t scale = 1)
-  {
-    uint8_t width = pgm_read_byte(bp++);
-    uint8_t height = pgm_read_byte(bp++);
-    draw_icon(x, y, bp, width, height, scale);
-  }
+			 uint8_t scale = 1);
 
   /**
    * Draw icon at cursor position with current pen color. The icon
@@ -641,10 +625,7 @@ public:
    * @param[in] y
    * @param[in] length
    */
-  virtual void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
-  {
-    draw_line(x, y, x, y + length);
-  }
+  virtual void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length);
 
   /**
    * Draw vertical line with given length and current pen color. Update
@@ -664,10 +645,7 @@ public:
    * @param[in] y
    * @param[in] length
    */
-  virtual void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
-  {
-    draw_line(x, y, x + length, y);
-  }
+  virtual void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length);
 
   /**
    * Draw horizontal line with given length and current pen color. Update
@@ -852,33 +830,18 @@ public:
    * Draw string in current text color, font and scale.
    * @param[in] s string.
    */
-  virtual void draw_string(char* s)
-  {
-    char c; 
-    while ((c = *s++) != 0) 
-      draw_char(c);
-  }
+  virtual void draw_string(char* s);
 
   /**
    * Draw string from program memory with current text color and font.
    * @param[in] s string in program memory (PSTR).
    */
-  virtual void draw_string_P(const char* s)
-  {
-    char c; 
-    while ((c = pgm_read_byte(s++)) != 0) 
-      draw_char(c);
-  }
+  virtual void draw_string_P(const char* s);
 
   /**
    * Fill screen with canvas color.
    */
-  virtual void fill_screen()
-  {
-    color16_t saved = set_pen_color(get_canvas_color());
-    fill_rect(0, 0, WIDTH, HEIGHT);
-    set_pen_color(saved);
-  }
+  virtual void fill_screen();
 
   /**
    * Stop sequence of interaction with device. Must override.

@@ -29,13 +29,17 @@
 #ifndef __COSA_INTERRUPT_HH__
 #define __COSA_INTERRUPT_HH__
 
+#include "Cosa/Event.hh"
+
 class Interrupt {
 public:
   class Handler {
   public:
-    virtual void on_interrupt() {}
-    virtual void on_interrupt(uint8_t arg) {}
-    virtual void on_interrupt(uint16_t arg) {}
+    /**
+     * Default interrupt handler. Should override.
+     * @param[in] arg argument from interrupt service routine.
+     */
+    virtual void on_interrupt(uint16_t arg = 0) {}
   };
 };
 

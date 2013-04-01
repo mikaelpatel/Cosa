@@ -388,8 +388,9 @@ public:
   /**
    * @override
    * Default interrupt service on external interrupt pin change.
+   * @param[in] arg argument from interrupt service routine.
    */
-  virtual void on_interrupt();
+  virtual void on_interrupt(uint16_t arg = 0);
 };
 
 /**
@@ -486,8 +487,9 @@ public:
   /**
    * @override
    * Default interrupt service on pin change interrupt.
+   * @param[in] arg argument from interrupt service routine.
    */
-  virtual void on_interrupt();
+  virtual void on_interrupt(uint16_t arg = 0);
 };
 
 /**
@@ -970,9 +972,9 @@ public:
   /**
    * @override
    * Interrupt service on conversion completion.
-   * @param[in] value sample.
+   * @param[in] arg sample value.
    */
-  virtual void on_interrupt(uint16_t value);
+  virtual void on_interrupt(uint16_t arg);
 
   /**
    * @override
@@ -1039,9 +1041,9 @@ public:
   /**
    * @override
    * Interrupt service on conversion completion.
-   * @param[in] value sample.
+   * @param[in] arg sample value.
    */
-  virtual void on_interrupt(uint16_t value);
+  virtual void on_interrupt(uint16_t arg);
 
   /**
    * @override
@@ -1127,8 +1129,9 @@ public:
   /**
    * @override
    * Default interrupt service on comparator output rise, fall or toggle.
+   * @param[in] arg argument from interrupt service routine.
    */
-  virtual void on_interrupt();
+  virtual void on_interrupt(uint16_t arg = 0);
 };
 
 #endif

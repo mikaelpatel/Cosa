@@ -46,7 +46,7 @@ public:
 // External Interrupt Pin Handler; count interrupts
 class ExtPin : public ExternalInterruptPin, public Counter {
 private:
-  virtual void on_interrupt() { increment(1); }
+  virtual void on_interrupt(uint16_t arg) { increment(1); }
 public:
   ExtPin(Board::ExternalInterruptPin pin) :
     ExternalInterruptPin(pin, ExternalInterruptPin::ON_RISING_MODE),
@@ -57,7 +57,7 @@ public:
 // Pin Change Interrupt Handler; count interrupts
 class IntPin : public InterruptPin, public Counter {
 private:
-  virtual void on_interrupt() { increment(1); }
+  virtual void on_interrupt(uint16_t arg) { increment(1); }
 public:
   IntPin(Board::InterruptPin pin) : 
     InterruptPin(pin), 
