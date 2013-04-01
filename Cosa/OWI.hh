@@ -34,6 +34,7 @@
 #ifndef __COSA_OWI_HH__
 #define __COSA_OWI_HH__
 
+#include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
@@ -49,7 +50,7 @@ public:
     MATCH_ROM = 0x55,
     SKIP_ROM = 0xCC,
     ALARM_SEARCH = 0xEC
-  };
+  } __attribute__((packed));
   static const uint8_t ROM_MAX = 8;
   static const uint8_t ROMBITS = ROM_MAX * CHARBITS;
 
@@ -63,7 +64,7 @@ public:
       FIRST = -1,
       ERROR = -1,
       LAST = ROMBITS
-    };
+    } __attribute__((packed));
     uint8_t m_rom[ROM_MAX];
     const uint8_t* ROM;
     OWI* m_pin;
