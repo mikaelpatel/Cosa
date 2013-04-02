@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,9 +29,10 @@
  */
 
 #include "Cosa/OWI/Driver/DS18B20.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/FixedPoint.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
 // One-wire pin and connected DS18B20 devices
@@ -42,6 +43,17 @@ DS18B20 basement(&owi);
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
+
+// Print the current temperature reading
+void print_temperature_P(const char* prefix, DS18B20* thermometer)
+{
+  FixedPoint temp(thermometer->get_temperature(), 4);
+  int16_t integer = temp.get_integer();
+  uint16_t fraction = temp.get_fraction(4);
+  trace << prefix << integer << '.';
+  if ((fraction != 0) && (fraction < 1000)) trace << '0';
+  trace << fraction;
+}
 
 void setup()
 {
@@ -78,24 +90,24 @@ void loop()
   // Start outdoors temperature conversion and read the indoors temperature
   ledPin.toggle();
   outdoors.convert_request();
-  indoors.read_temperature();
-  indoors.print_temperature_P(PSTR("indoors = "));
+  indoors.read_scratchpad();
+  print_temperature_P(PSTR("indoors = "), &indoors);
   ledPin.toggle();
   SLEEP(1);
 
   // Start basement temperature conversion and read the outdoors temperature
   ledPin.toggle();
   basement.convert_request();
-  outdoors.read_temperature();
-  outdoors.print_temperature_P(PSTR(", outdoors = "));
+  outdoors.read_scratchpad();
+  print_temperature_P(PSTR(", outdoors = "), &outdoors);
   ledPin.toggle();
   SLEEP(1);
 
   // Start indoors temperature conversion and read the basement temperature
   ledPin.toggle();
   indoors.convert_request();
-  basement.read_temperature();
-  basement.print_temperature_P(PSTR(", basement = "));
+  basement.read_scratchpad();
+  print_temperature_P(PSTR(", basement = "), &basement);
   trace.println();
   ledPin.toggle();
   SLEEP(1);

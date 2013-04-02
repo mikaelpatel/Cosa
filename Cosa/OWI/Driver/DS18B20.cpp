@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,14 +21,23 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Driver for the DS18B20 Programmable Resolution 1-Write
- * Digital Thermometer.
+ * Driver for the DS18B20 Programmable Resolution 1-Write Digital
+ * Thermometer.  
+ * 
+ * See Maxim Integrated product description (REV: 042208) 
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/OWI/Driver/DS18B20.hh"
-#include "Cosa/FixedPoint.hh"
+
+uint16_t 
+DS18B20::set_resolution(uint8_t bits)
+{
+  if (bits < 9) bits = 9; else if (bits > 12) bits = 12;
+  m_scratchpad.configuration = (((bits - 9) << 5) | 0x1f);
+  return (MAX_CONVERSION_TIME >> (12 - bits));
+}
 
 bool
 DS18B20::convert_request()
@@ -48,35 +57,34 @@ DS18B20::read_scratchpad()
   for (uint8_t i = 0; i < sizeof(m_scratchpad); i++) {
     *ptr++ = m_pin->read();
   }
-#ifdef __DEBUG__
-  print_scratchpad();
-#endif
   return (m_pin->end() == 0);
 }
 
-void 
-DS18B20::print_scratchpad(IOStream& stream)
+bool
+DS18B20::write_scratchpad()
 {
-  uint8_t* ptr = (uint8_t*) &m_scratchpad;
-  for (uint8_t i = 0; i < sizeof(m_scratchpad); i++) {
-    stream.printf_P(PSTR("scratchpad[%d] = %hd\n"), i, *ptr++);
+  if (!match_rom()) return (false);
+  m_pin->write(WRITE_SCRATCHPAD);
+  uint8_t* ptr = (uint8_t*) &m_scratchpad.high_trigger;
+  const uint8_t CONFIG_MAX = 3;
+  for (uint8_t i = 0; i < CONFIG_MAX; i++) {
+    m_pin->write(*ptr++);
   }
+  return (true);
 }
 
-int16_t 
-DS18B20::get_temperature()
+bool
+DS18B20::copy_scratchpad()
 {
-  return (m_scratchpad.temperature);
+  if (!match_rom()) return (false);
+  m_pin->write(COPY_SCRATCHPAD);
+  return (true);
 }
 
-void 
-DS18B20::print_temperature_P(const char* prefix, IOStream& stream)
+bool
+DS18B20::recall()
 {
-  FixedPoint temp(m_scratchpad.temperature, 4);
-  int16_t integer = temp.get_integer();
-  uint16_t fraction = temp.get_fraction(4);
-  stream.printf_P(PSTR("%S%d.%s%d C"), prefix,
-		  integer,
-		  ((fraction != 0) && (fraction < 1000) ? "0" : ""),
-		  fraction);
+  if (!match_rom()) return (false);
+  m_pin->write(RECALL_E);
+  return (true);
 }

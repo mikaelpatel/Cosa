@@ -80,7 +80,7 @@ void setup()
 void loop()
 {
   // Request a new sample from the sensor and read temperature
-  sensor.read_temperature();
+  sensor.read_scratchpad();
   sensor.convert_request();
 
   // Get temperature and convert from fixed point (could use float)
