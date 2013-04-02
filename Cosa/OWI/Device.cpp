@@ -112,7 +112,7 @@ OWI::Device::on_event(uint8_t type, uint16_t value)
   static uint16_t fns = 0;
   static uint16_t err = 0;
 
-  // Complete the precense pulse
+  // Complete the presence pulse
   req++;
   DELAY(200);
   set();

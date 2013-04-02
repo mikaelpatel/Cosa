@@ -177,10 +177,9 @@ public:
    */
   void cancel_timer()
   {
-    if (m_period != 0) {
-      detach();
-      m_period = 0;
-    }
+    if (m_period == 0) return;
+    detach();
+    m_period = 0;
   }
 };
 
