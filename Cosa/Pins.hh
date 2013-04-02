@@ -319,7 +319,8 @@ public:
 class ExternalInterruptPin : 
   public InputPin, 
   public Event::Handler, 
-  public Interrupt::Handler {
+  public Interrupt::Handler 
+{
 private:
   static ExternalInterruptPin* ext[Board::EXT_MAX];
   uint8_t m_ix;
@@ -400,7 +401,8 @@ public:
 class InterruptPin : 
   public InputPin, 
   public Event::Handler, 
-  public Interrupt::Handler {
+  public Interrupt::Handler 
+{
 private:
   static InterruptPin* pin[Board::PIN_MAX];
   static uint8_t state[Board::PCINT_MAX];
@@ -837,7 +839,8 @@ private:
 class AnalogPin : 
   public Pin, 
   public Interrupt::Handler,
-  public Event::Handler {
+  public Event::Handler 
+{
 public:
   /**
    * Reference voltage; ARef pin, Vcc or internal 1V1.

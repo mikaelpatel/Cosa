@@ -659,7 +659,7 @@ void
 AnalogPin::on_event(uint8_t type, uint16_t value)
 {
   if (type == Event::TIMEOUT_TYPE) {
-    sample_request();
+    sample_request(m_event);
   }
   else if (type == Event::SAMPLE_COMPLETED_TYPE) {
     if (value != m_value) {
