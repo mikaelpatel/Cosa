@@ -150,5 +150,42 @@ struct iovec_t {
 #define MERGE(var, line) CONCAT(var, line)
 #define UNIQUE(var) MERGE(var, __LINE__)
 
+/**
+ * Swap bytes in 16-bit integer
+ * @param[in] value to byte swap.
+ * @return new value.
+ */
+inline int16_t
+swap(int16_t value)
+{
+  asm volatile("mov __tmp_reg__, %A0" "\n\t"
+	       "mov %A0, %B0" "\n\t"
+	       "mov %B0, __tmp_reg__" "\n\t"
+	       : "=r" (value)
+	       : "0" (value)
+	       );
+  return (value);
+}
+
+/**
+ * Swap bytes in 32-bit integer
+ * @param[in] value to byte swap.
+ * @return new value.
+ */
+inline int32_t
+swap(int32_t value)
+{
+  asm volatile("mov __tmp_reg__, %A0" "\n\t"
+	       "mov %A0, %D0" "\n\t"
+	       "mov %D0, __tmp_reg__" "\n\t"
+	       "mov __tmp_reg__, %B0" "\n\t"
+	       "mov %B0, %C0" "\n\t"
+	       "mov %C0, __tmp_reg__" "\n\t"
+	       : "=r" (value)
+	       : "0" (value)
+	       );
+  return (value);
+}
+
 #endif
 
