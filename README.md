@@ -111,7 +111,8 @@ Drivers
 10. PCD8544 48x84 pixels matrix LCD controller/driver.
 11. TSOP4838 IR Receiver Modules for Remote Control Systems.
 12. Virtual Wire (VWI) on RF315/433 modules.
-13. Slave device support for SPI, TWI and OWI.
+13. HMC5883L 3-Axis Digital Compass IC.
+14. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  
@@ -183,3 +184,4 @@ support for pin change interrupts. New directory structure for
 handling boards.  
 2013-03-31 Moving documentation and references to dropbox. Reducing
 size of download from github.   
+2013-04-03 Adding support for HMC5883L 3-axis digital compass.    
