@@ -33,7 +33,7 @@
 
 #include "Cosa/TWI.hh"
 
-class HMC5883L : private TWI::Driver {
+class HMC5883L : public TWI::Driver {
 public:
   // Data output structure 
   struct data_t {
