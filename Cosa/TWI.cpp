@@ -89,7 +89,7 @@ TWI::request(uint8_t addr)
 }
 
 bool
-TWI::write_request(uint8_t addr, void* buf, uint8_t size)
+TWI::write_request(uint8_t addr, void* buf, size_t size)
 {
   m_vec[0].buf = (uint8_t*) buf;
   m_vec[0].size = size;
@@ -99,7 +99,7 @@ TWI::write_request(uint8_t addr, void* buf, uint8_t size)
 }
 
 bool
-TWI::write_request(uint8_t addr, uint8_t header, void* buf, uint8_t size)
+TWI::write_request(uint8_t addr, uint8_t header, void* buf, size_t size)
 {
   m_buf[0] = header;
   m_vec[0].buf = m_buf;
@@ -112,7 +112,7 @@ TWI::write_request(uint8_t addr, uint8_t header, void* buf, uint8_t size)
 }
 
 bool
-TWI::write_request(uint8_t addr, uint16_t header, void* buf, uint8_t size)
+TWI::write_request(uint8_t addr, uint16_t header, void* buf, size_t size)
 {
   m_buf[0] = (header >> 8);
   m_buf[1] = header;
@@ -126,7 +126,7 @@ TWI::write_request(uint8_t addr, uint16_t header, void* buf, uint8_t size)
 }
 
 bool
-TWI::read_request(uint8_t addr, void* buf, uint8_t size)
+TWI::read_request(uint8_t addr, void* buf, size_t size)
 {
   m_vec[0].buf = (uint8_t*) buf;
   m_vec[0].size = size;

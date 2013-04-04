@@ -124,7 +124,7 @@ private:
   uint8_t m_buf[BUF_MAX];
   iovec_t m_vec[VEC_MAX];
   volatile uint8_t m_ix;
-  volatile uint8_t m_next;
+  volatile size_t m_next;
   volatile int m_count;
 
   /**
@@ -192,7 +192,7 @@ public:
    * @param[in] buf buffer pointer.
    * @param[in] size of buffer.
    */
-  void set_buf(void* buf, uint8_t size)
+  void set_buf(void* buf, size_t size)
   {
     m_vec[0].buf = (uint8_t*) buf;
     m_vec[0].size = size;
@@ -206,7 +206,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return bool
    */
-  bool write_request(uint8_t addr, void* buf, uint8_t size);
+  bool write_request(uint8_t addr, void* buf, size_t size);
 
   /**
    * Issue a write data request to the given slave unit. Return
@@ -217,7 +217,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return bool
    */
-  bool write_request(uint8_t addr, uint8_t header, void* buf, uint8_t size);
+  bool write_request(uint8_t addr, uint8_t header, void* buf, size_t size);
 
   /**
    * Issue a write data request to the given slave unit. Return
@@ -228,7 +228,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return bool
    */
-  bool write_request(uint8_t addr, uint16_t header, void* buf, uint8_t size);
+  bool write_request(uint8_t addr, uint16_t header, void* buf, size_t size);
 
   /**
    * Issue a read data request to the given slave unit. Return
@@ -238,7 +238,7 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes
    */
-  bool read_request(uint8_t addr, void* buf, uint8_t size);
+  bool read_request(uint8_t addr, void* buf, size_t size);
 
   /**
    * Write data to the given slave unit. Returns number of bytes
@@ -248,7 +248,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(uint8_t addr, void* buf, uint8_t size)
+  int write(uint8_t addr, void* buf, size_t size)
   {
     if (!write_request(addr, buf, size)) return (-1);
     return (await_completed());
@@ -263,7 +263,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(uint8_t addr, uint8_t header, void* buf = 0, uint8_t size = 0)
+  int write(uint8_t addr, uint8_t header, void* buf = 0, size_t size = 0)
   {
     if (!write_request(addr, header, buf, size)) return (-1);
     return (await_completed());
@@ -278,7 +278,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(uint8_t addr, uint16_t header, void* buf = 0, uint8_t size = 0)
+  int write(uint8_t addr, uint16_t header, void* buf = 0, size_t size = 0)
   {
     if (!write_request(addr, header, buf, size)) return (-1);
     return (await_completed());
@@ -292,7 +292,7 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes
    */
-  int read(uint8_t addr, void* buf, uint8_t size)
+  int read(uint8_t addr, void* buf, size_t size)
   {
     if (!read_request(addr, buf, size)) return (-1);
     return (await_completed());
