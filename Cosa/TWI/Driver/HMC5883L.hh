@@ -205,7 +205,8 @@ public:
   bool available()
   {
     Status current;
-    return ((!read_status(current)) || (current & HMC5883L::READY_STATUS));
+    if (!read_status(current)) return (false);
+    return ((current & HMC5883L::READY_STATUS) != 0);
   }
   
   /**

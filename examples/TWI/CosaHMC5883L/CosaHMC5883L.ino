@@ -84,7 +84,10 @@ void loop()
   ledPin.toggle();
 
   // Check the device status; output data ready?
-  if (!compass.available()) return;
+  bool res;
+  do {
+    TRACE(res = compass.available());
+  } while (!res);
 
   // Fetch the sample and print
   HMC5883L::data_t output;
