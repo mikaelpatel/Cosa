@@ -24,34 +24,77 @@
  * Driver for the AT24CXX 2-Wire Serial EEPROM. See Atmel Product
  * description (Rev. 0336K-SEEPR-7/03), www.atmel.com/images/doc0336.pdf
  *
- * @section Limitations
- * Please check documentation for max rom block size and page alignment.
- * The driver does currently handle this.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Board.hh"
 #if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/TWI/Driver/AT24CXX.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Power.hh"
+
+bool 
+AT24CXX::poll(uint16_t addr, void* buf, size_t size)
+{
+  uint8_t i = POLL_MAX;
+  int m;
+  do {
+    if (!twi.begin()) return (false);
+    if (buf == 0) {
+      m = twi.write(m_addr, addr);
+      if (m != 0) return (true);
+      twi.end();
+    }
+    else {
+      m = twi.write(m_addr, addr, buf, size);
+      twi.end();
+      if (m != 0) return (true);
+    }
+    Watchdog::delay(16);
+  } while (--i); 
+  return (false);
+}
+
+bool 
+AT24CXX::is_ready()
+{
+  if (!twi.begin()) return (false);
+  uint16_t addr = 0;
+  int m = twi.write(m_addr, addr);
+  twi.end();
+  return (m != 0);
+}
+
+void 
+AT24CXX::write_await(uint8_t mode)
+{
+  while (!is_ready()) Power::sleep(mode);
+}
 
 int
-AT24CXX::read(void* buf, uint8_t size, uint16_t addr)
+AT24CXX::read(void* dest, uint16_t src, size_t size)
 {
-  if (!twi.begin()) return (-1);
-  twi.write(m_addr, addr);
-  int count = twi.read(m_addr, buf, size);
+  if (!poll(src)) return (-1);
+  int n = twi.read(m_addr, dest, size);
   twi.end();
-  return (count);
+  return (n == size ? size : -1);
 }
 
 int 
-AT24CXX::write(void* buf, uint8_t size, uint16_t addr)
+AT24CXX::write(uint16_t dest, void* src, size_t size)
 {
-  if (!twi.begin()) return (-1);
-  int count = twi.write(m_addr, addr, buf, size);
-  twi.end();
-  if (count > 0) count -= sizeof(addr);
-  return (count);
+  size_t s = size;
+  uint8_t* p = (uint8_t*) src;
+  size_t n = WRITE_MAX - (dest & WRITE_MASK);
+  if (!poll(dest, p, n)) return (-1);
+  s -= n;
+  while (s > 0) {
+    dest += n;
+    p += n;
+    n = (s < WRITE_MAX ? s : WRITE_MAX);
+    if (!poll(dest, p, n)) return (-1);
+    s -= n;
+  }
+  return (size);
 }
 #endif

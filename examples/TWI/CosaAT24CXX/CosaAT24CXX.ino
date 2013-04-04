@@ -61,17 +61,23 @@ void loop()
   ledPin.toggle();
 
   // Read the eeprom into memory
-  uint8_t buffer[32];
-  TRACE(rom.read(buffer, sizeof(buffer), 0));
+  uint8_t buffer[300];
+  uint16_t addr = 16;
+  TRACE(rom.read(buffer, addr, sizeof(buffer)));
   trace.print(buffer, sizeof(buffer), 16);
 
   // Update the eeprom (d => d+1)
-  for (uint8_t i = 0; i < sizeof(buffer); i++)
+  for (size_t i = 0; i < sizeof(buffer); i++)
     buffer[i]++;
-  TRACE(rom.write(buffer, sizeof(buffer), 0));
+  TRACE(rom.write(addr, buffer, sizeof(buffer)));
 
+  // Is the write completed? 
+  TRACE(rom.is_ready());
+  rom.write_await();
+  TRACE(rom.is_ready());
+  
   // Read back and check
-  TRACE(rom.read(buffer, sizeof(buffer), 0));
+  TRACE(rom.read(buffer, addr, sizeof(buffer)));
   trace.print(buffer, sizeof(buffer), 16);
   ledPin.toggle();
 }
