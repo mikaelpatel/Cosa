@@ -38,7 +38,7 @@
 OutputPin ledPin(Board::LED);
 
 // The serial eeprom (sub-address 0b000)
-AT24CXX rom(0b000);
+AT24CXX eeprom(0b000);
 
 void setup()
 {
@@ -48,7 +48,7 @@ void setup()
 
   // Check amount of free memory and size of objects
   TRACE(free_memory());
-  TRACE(sizeof(rom));
+  TRACE(sizeof(eeprom));
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
@@ -60,24 +60,24 @@ void loop()
   SLEEP(2);
   ledPin.toggle();
 
-  // Read the eeprom into memory
+  // Read the eepeeprom into memory
   uint8_t buffer[300];
   uint16_t addr = 16;
-  TRACE(rom.read(buffer, addr, sizeof(buffer)));
+  TRACE(eeprom.read(buffer, addr, sizeof(buffer)));
   trace.print(buffer, sizeof(buffer), 16);
 
-  // Update the eeprom (d => d+1)
+  // Update the eepeeprom (d => d+1)
   for (size_t i = 0; i < sizeof(buffer); i++)
     buffer[i]++;
-  TRACE(rom.write(addr, buffer, sizeof(buffer)));
+  TRACE(eeprom.write(addr, buffer, sizeof(buffer)));
 
   // Is the write completed? 
-  TRACE(rom.is_ready());
-  rom.write_await();
-  TRACE(rom.is_ready());
+  TRACE(eeprom.is_ready());
+  eeprom.write_await();
+  TRACE(eeprom.is_ready());
   
   // Read back and check
-  TRACE(rom.read(buffer, addr, sizeof(buffer)));
+  TRACE(eeprom.read(buffer, addr, sizeof(buffer)));
   trace.print(buffer, sizeof(buffer), 16);
   ledPin.toggle();
 }
