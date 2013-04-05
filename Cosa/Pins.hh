@@ -924,6 +924,12 @@ public:
   }
 
   /**
+   * Set analog conversion clock prescale (2..128, step power 2).
+   * @param[in] factor prescale.
+   */
+  static void prescale(uint8_t factor);
+
+  /**
    * Sample analog pin. Wait for conversion to complete before 
    * returning with sample value.
    * @param[in] pin number.

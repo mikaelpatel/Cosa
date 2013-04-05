@@ -82,7 +82,7 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
   m_ix = pin - Board::EXT0;
   ext[m_ix] = this;
   uint8_t ix = (m_ix << 1);
-  EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
+  bit_field_set(EICRA, 0b11 << ix, mode << ix);
 }
 
 #elif defined(__ARDUINO_MEGA__)
@@ -99,12 +99,12 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
   if (pin <= Board::EXT3) {
     m_ix = Board::EXT0 - pin;
     uint8_t ix = (m_ix << 1);
-    EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
+    bit_field_set(EICRA, 0b11 << ix, mode << ix);
   } 
   else {
     m_ix = pin - Board::EXT4;
     uint8_t ix = (m_ix << 1);
-    EICRB = (EICRB & ~(0b11 << ix)) | (mode << ix);
+    bit_field_set(EICRB, 0b11 << ix, mode << ix);
     m_ix += 4;
   }
   ext[m_ix] = this;
@@ -127,7 +127,7 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
     m_ix = pin - Board::EXT0;
   } 
   uint8_t ix = (m_ix << 1);
-  EICRA = (EICRA & ~(0b11 << ix)) | (mode << ix);
+  bit_field_set(EICRA, 0b11 << ix, mode << ix);
   ext[m_ix] = this;
 }
 
@@ -144,7 +144,7 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
   }
   m_ix = 0;
   ext[m_ix] = this;
-  MCUCR = (MCUCR & ~(0b11)) | (mode);
+  bit_field_set(MCUCR, 0b11, mode);
 }
 
 #endif
@@ -218,11 +218,11 @@ InterruptPin::begin()
 #endif
   synchronized {
 #if defined(__ARDUINO_TINYX5__)
-    GIMSK |= PCIE;
+    bit_set(GIMSK, PCIE);
 #elif defined(__ARDUINO_MIGHTY__)
-    PCICR |= (_BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
+    bit_mask_set(PCICR, _BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #else
-    PCICR |= (_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
+    bit_mask_set(PCICR, _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #endif
   }
 }
@@ -232,11 +232,11 @@ InterruptPin::end()
 {
   synchronized {
 #if defined(__ARDUINO_TINYX5__)
-    GIMSK &= ~PCIE;
+    bit_clear(GIMSK, PCIE);
 #elif defined(__ARDUINO_MIGHTY__)
-    PCICR &= ~(_BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
+    bit_mask_clear(PCICR, _BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #else
-    PCICR &= ~(_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
+    bit_mask_clear(PCICR, _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #endif
   }
 }
@@ -618,16 +618,22 @@ PWMPin::set(uint16_t value, uint16_t min, uint16_t max)
 
 AnalogPin* AnalogPin::sampling_pin = 0;
 
+void 
+AnalogPin::prescale(uint8_t factor)
+{
+  const uint8_t MASK = (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0));
+  bit_field_set(ADCSRA, MASK, factor);
+}
+
 bool
 AnalogPin::sample_request(uint8_t pin, uint8_t ref)
 {
   if (sampling_pin != 0) return (false);
   if (pin >= Board::A0) pin -= Board::A0;
   loop_until_bit_is_clear(ADCSRA, ADSC);
-  ADMUX = (ref | pin);
-  bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
   sampling_pin = this;
-  bit_set(ADCSRA, ADIE);
+  ADMUX = (ref | pin);
+  bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC) | _BV(ADIE));
   return (true);
 }
 
