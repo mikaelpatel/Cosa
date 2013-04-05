@@ -52,14 +52,26 @@
 typedef float float32_t;
 
 /**
+ * Universal type union, 16-bit.
+ */
+union univ16_t {
+  short as_short;
+  char as_char[2];
+  void* as_ptr;
+  const void* as_ptr_P;
+};
+typedef univ16_t univ_t;
+
+/**
  * Universal type union, 32-bit.
  */
 union univ32_t {
   float as_float;
   long as_long;
+  univ_t as_univ[2];
   short as_short[2];
   char as_char[4];
-  void* as_ptr;
+  void* as_ptr[2];
   const void* as_ptr_P;
 };
 
@@ -186,6 +198,12 @@ swap(int32_t value)
 	       );
   return (value);
 }
+
+/**
+ * Convert values between host and network byte order 
+ */
+#define ntoh(x) swap(x)
+#define hton(x) swap(x)
 
 #endif
 
