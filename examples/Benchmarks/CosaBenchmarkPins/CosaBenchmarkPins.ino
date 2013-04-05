@@ -435,7 +435,20 @@ void setup()
     AnalogPin::sample(0);
   stop = RTC::micros();
   us = (stop - start) / 1000L;
-  INFO("Cosa(%ulX): %ul us per AnalogPin::sample()\n", base/us, us);
+  INFO("Cosa(%ulX): %ul us per AnalogPin::sample()/n", base/us, us);
+
+  // Measure the time to perform 1,000 analog pin samples
+  // Vary prescale division factor from 128 down to 2.
+  for (uint8_t factor = 7; factor > 0; factor--) {
+    AnalogPin::prescale(factor);
+    start = RTC::micros();
+    for (uint16_t i = 0; i < 1000; i++)
+      analogPin.sample();
+    stop = RTC::micros();
+    us = (stop - start) / 1000L;
+    INFO("Cosa(%ulX):prescale(%d): %ul us per analogPin.sample()", 
+	 base/us, factor, us);
+  }
 }
 
 void loop()
