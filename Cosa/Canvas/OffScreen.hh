@@ -85,7 +85,7 @@ public:
   {
     uint8_t* bp = &m_bitmap[((y >> 3) * WIDTH) + x];
     uint8_t pos = (y & 0x07); 
-    if (get_pen_color() == Canvas::BLACK)
+    if (get_pen_color().rgb == Canvas::BLACK)
       *bp |= (1 << pos);
     else
       *bp &= ~(1 << pos);

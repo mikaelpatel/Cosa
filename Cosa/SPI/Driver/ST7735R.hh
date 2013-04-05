@@ -213,8 +213,8 @@ public:
     set_port(x, y, x + 1, y + 1);
     color16_t color = get_pen_color();
     SPI_transaction(m_cs) {
-      spi.exchange(color >> 8);
-      spi.exchange(color);
+      spi.exchange(color.rgb >> 8);
+      spi.exchange(color.rgb);
     }
   }
 

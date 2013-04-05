@@ -42,30 +42,20 @@
 Canvas::Context Canvas::context;
 
 Canvas::color16_t 
-Canvas::color(uint8_t red, uint8_t green, uint8_t blue)
-{
-  return ((((red >> 3) & 0x1f) << 11)  | 
-	  (((green >> 2) & 0x3f) << 5) | 
-	  ((blue >> 3) & 0x1f));
-}
-
-Canvas::color16_t 
 Canvas::shade(color16_t color, uint8_t scale)
 {
   if (scale > 100) scale = 100;
-  uint8_t blue = (scale * (color & 0x1fU)) / 100; color >>= 5;
-  uint8_t green = (scale * (color & 0x3fU)) / 100; color >>= 6;
-  uint8_t red = (scale * (color & 0x1fU)) / 100;
-  return (((red & 0x1f) << 11)  | ((green & 0x3f) << 5) | (blue & 0x1f));
+  return color16_t((scale * color.red) / 100,
+		   (scale * color.green) / 100,
+		   (scale * color.blue) / 100);
 }
 
 Canvas::color16_t 
 Canvas::blend(color16_t c1, color16_t c2)
 {
-  uint8_t blue = (c1 + c2)/2; c1 >>= 5; c2 >>= 5; 
-  uint8_t green = (c1 + c2)/2; c1 >>= 6; c2 >>= 6; 
-  uint8_t red = (c1 + c2)/2;
-  return (((red & 0x1f) << 11)  | ((green & 0x3f) << 5) | (blue & 0x1f));
+  return color((c1.red + c2.red) / 2, 
+	       (c1.green + c2.green) / 2, 
+	       (c1.blue + c2.blue) / 2);
 }
 
 uint8_t 

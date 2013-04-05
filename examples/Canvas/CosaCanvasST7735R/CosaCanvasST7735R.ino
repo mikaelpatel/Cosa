@@ -101,7 +101,7 @@ void loop()
   console.println();
   console.printf_P(PSTR("test#1:fill screen %ul ms\n"), ms);
   console.println();
-  console.printf_P(PSTR("text_color(%od)\n"), textbox.get_text_color());
+  console.printf_P(PSTR("text_color(%od)\n"), textbox.get_text_color().rgb);
   console.printf_P(PSTR("text_scale(%d)\n"), textbox.get_text_scale());
   uint8_t x, y;
   textbox.get_cursor(x, y);

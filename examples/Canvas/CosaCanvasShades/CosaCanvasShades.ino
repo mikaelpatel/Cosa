@@ -46,9 +46,9 @@ void setup()
   tft.fill_screen();
 }
 
-void draw_shade(uint16_t color)
+void draw_shade(Canvas::color16_t color)
 {
-  uint16_t base = color;
+  Canvas::color16_t base = color;
   for (uint8_t x = 75; x > 0; x -= 25) {
     tft.set_pen_color(tft.WHITE);
     tft.draw_rect(9, 9, tft.WIDTH - 19, tft.HEIGHT - 19);

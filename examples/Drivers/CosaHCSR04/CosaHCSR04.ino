@@ -64,7 +64,7 @@ OutputPin ledPin(Board::LED);
 ST7735R tft;
 Textbox textbox(&tft);
 IOStream cout(&textbox);
-uint16_t RED, GREEN, BLUE, YELLOW, CYAN, GRAY;
+Canvas::color16_t RED, GREEN, BLUE, YELLOW, CYAN, GRAY;
 
 class Ping : private HCSR04 {
 public:

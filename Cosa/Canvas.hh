@@ -51,7 +51,28 @@ public:
   /**
    * 16-bit RGB<5,6,5> color.
    */
-  typedef uint16_t color16_t;
+  union color16_t {
+    uint16_t rgb;
+    struct {
+      unsigned int blue:5;
+      unsigned int green:6;
+      unsigned int red:5;
+    };
+    color16_t()
+    {
+      rgb = 0;
+    }
+    color16_t(uint16_t color) 
+    {
+      rgb = color;
+    }
+    color16_t(uint8_t r, uint8_t g, uint8_t b) 
+    {
+      red = r;
+      green = g;
+      blue = b;
+    }
+  };
 
   /**
    * Basic color palette.
@@ -139,7 +160,7 @@ public:
      */
     color16_t set_canvas_color(color16_t color)
     {
-      uint16_t previous = m_canvas_color;
+      color16_t previous = m_canvas_color;
       m_canvas_color = color;
       return (previous);
     }
@@ -160,7 +181,7 @@ public:
      */
     color16_t set_pen_color(color16_t color)
     {
-      uint16_t previous = m_pen_color;
+      color16_t previous = m_pen_color;
       m_pen_color = color;
       return (previous);
     }
@@ -181,7 +202,7 @@ public:
      */
     color16_t set_text_color(color16_t color)
     {
-      uint16_t previous = m_text_color;
+      color16_t previous = m_text_color;
       m_text_color = color;
       return (previous);
     }
@@ -477,7 +498,10 @@ public:
    * @param[in] blue
    * @return color.
    */
-  color16_t color(uint8_t red, uint8_t green, uint8_t blue);
+  color16_t color(uint8_t red, uint8_t green, uint8_t blue)
+  {
+    return (color16_t(red, green, blue));
+  }
 
   /**
    * Create color shade (0..100%)

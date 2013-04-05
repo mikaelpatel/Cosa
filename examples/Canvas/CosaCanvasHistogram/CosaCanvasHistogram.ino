@@ -44,7 +44,7 @@
 ST7735R tft;
 Textbox textbox(&tft);
 IOStream cout(&textbox);
-uint16_t CANVAS, PEN;
+Canvas::color16_t CANVAS, PEN;
 
 void setup()
 {

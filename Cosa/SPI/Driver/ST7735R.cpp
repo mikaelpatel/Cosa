@@ -186,8 +186,8 @@ ST7735R::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
   SPI_transaction(m_cs) {
     for (x = 0; x < width; x++)
       for (y = 0; y < height; y++) {
-	spi.exchange(color >> 8);
-	spi.exchange(color);
+	spi.exchange(color.rgb >> 8);
+	spi.exchange(color.rgb);
       }
   }
 }
@@ -207,8 +207,8 @@ ST7735R::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
   color16_t color = get_pen_color();
   SPI_transaction(m_cs) {
     while (length--) {
-      spi.exchange(color >> 8);
-      spi.exchange(color);
+      spi.exchange(color.rgb >> 8);
+      spi.exchange(color.rgb);
     }
   }
 }
@@ -228,8 +228,8 @@ ST7735R::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
   color16_t color = get_pen_color();
   SPI_transaction(m_cs) {
     while (length--) {
-      spi.exchange(color >> 8);
-      spi.exchange(color);
+      spi.exchange(color.rgb >> 8);
+      spi.exchange(color.rgb);
     }
   }
 }
