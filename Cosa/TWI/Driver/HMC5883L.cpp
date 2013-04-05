@@ -28,6 +28,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Board.hh"
+#if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/TWI/Driver/HMC5883L.hh"
 
 bool
@@ -114,5 +116,4 @@ HMC5883L::read_data(data_t& data)
   data.z = swap(m_reg.output.z);
   return (count == sizeof(m_reg.output));
 }
-
-
+#endif
