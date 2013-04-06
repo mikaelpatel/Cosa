@@ -30,6 +30,8 @@
 #if defined(__ARDUINO_TINYX5__)
 #include "Cosa/IOStream/Driver/UART.hh"
 
+// Fix: Replace with softserial
+
 bool
 UART::begin(uint32_t baudrate, uint8_t format)
 {
@@ -42,15 +44,15 @@ int
 UART::putchar(char c)
 {
   int res = (c & 0xff);
-  uint8_t bits = m_format & DATA_MASK;
   synchronized {
     m_pin.write(0);
     DELAY(m_period);
-    for (uint8_t i = 0; i < bits; i++) {
+    uint8_t bits = m_format & DATA_MASK;
+    do {
       m_pin.write(c & 1);
       DELAY(m_period);
       c >>= 1;
-    }
+    } while (--bits);
     m_pin.write(1);
   }
   DELAY(m_period * 32);
@@ -85,14 +87,13 @@ UART::begin(uint32_t baudrate, uint8_t format)
     *UCSRnA() = _BV(U2X0);
   }
 
-  // Set baudrate
+  // Set baudrate and format
   *UBRRn() = setting;
-
-  // Enable transmitter interrupt
-  *UCSRnB() = (_BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0));
-    
-  // Set frame format: asynchronous, 8data, 2stop bit
   *UCSRnC() = format;
+
+  // Enable transmitter interrupt 
+  *UCSRnB() = (_BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0));
+
   return (true);
 }
 
@@ -115,42 +116,46 @@ UART::putchar(char c)
   return (c & 0xff);
 }
 
+void
+UART::on_udre_interrupt()
+{
+  int c = m_obuf->getchar();
+  if (c != -1) 
+    *UDRn() = c; 
+  else 
+    *UCSRnB() &= ~_BV(UDRIE0);
+}
+
+void
+UART::on_rx_interrupt()
+{
+  m_ibuf->putchar(*UDRn());
+}
+
 ISR(USART_UDRE_vect)
 {
-  int c = uart.m_obuf->getchar();
-  if (c != -1) {
-    UDR0 = c;
-  }
-  else {
-    bit_clear(UCSR0B, UDRIE0);
-  }
+  uart.on_udre_interrupt();
 }
 
 ISR(USART_RX_vect)
 {
-  uart.m_ibuf->putchar(UDR0);
+  uart.on_rx_interrupt();
 }
 
-#if defined(__ARDUINO_MIGHTY__)
+#if defined(__ARDUINO_MIGHTY__) 
 
 UART* uart1 = 0;
 
 ISR(USART1_UDRE_vect)
 {
   if (uart1 == 0) return;
-  int c = uart1->m_obuf->getchar();
-  if (c != -1) {
-    UDR1 = c;
-  }
-  else {
-    bit_clear(UCSR1B, UDRIE0);
-  }
+  uart1->on_udre_interrupt();
 }
 
 ISR(USART1_RX_vect)
 {
   if (uart1 == 0) return;
-  uart1->m_ibuf->putchar(UDR1);
+  uart1->on_rx_interrupt();
 }
 #endif
 
@@ -161,19 +166,13 @@ UART* uart1 = 0;
 ISR(USART1_UDRE_vect)
 {
   if (uart1 == 0) return;
-  int c = uart1->m_obuf->getchar();
-  if (c != -1) {
-    UDR1 = c;
-  }
-  else {
-    bit_clear(UCSR1B, UDRIE0);
-  }
+  uart1->on_udre_interrupt();
 }
 
 ISR(USART1_RX_vect)
 {
   if (uart1 == 0) return;
-  uart1->m_ibuf->putchar(UDR1);
+  uart1->on_rx_interrupt();
 }
 
 UART* uart2 = 0;
@@ -181,19 +180,13 @@ UART* uart2 = 0;
 ISR(USART2_UDRE_vect)
 {
   if (uart2 == 0) return;
-  int c = uart2->m_obuf->getchar();
-  if (c != -1) {
-    UDR2 = c;
-  }
-  else {
-    bit_clear(UCSR2B, UDRIE0);
-  }
+  uart2->on_udre_interrupt();
 }
 
 ISR(USART2_RX_vect)
 {
   if (uart2 == 0) return;
-  uart2->m_ibuf->putchar(UDR2);
+  uart2->on_rx_interrupt();
 }
 
 UART* uart3 = 0;
@@ -201,19 +194,13 @@ UART* uart3 = 0;
 ISR(USART3_UDRE_vect)
 {
   if (uart3 == 0) return;
-  int c = uart3->m_obuf->getchar();
-  if (c != -1) {
-    UDR3 = c;
-  }
-  else {
-    bit_clear(UCSR3B, UDRIE0);
-  }
+  uart3->on_udre_interrupt();
 }
 
 ISR(USART3_RX_vect)
 {
   if (uart3 == 0) return;
-  uart3->m_ibuf->putchar(UDR3);
+  uart3->on_rx_interrupt();
 }
 
 #endif

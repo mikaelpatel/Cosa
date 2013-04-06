@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -171,6 +171,9 @@ private:
   friend void USART3_RX_vect(void);
 #endif
 
+  void on_udre_interrupt();
+  void on_rx_interrupt();
+
 public:
   // Default buffer size for standard UART0
   static const uint8_t BUFFER_MAX = 64;
@@ -251,7 +254,7 @@ public:
    * @param[in] format serial frame format (default async, 8data, 2stop bit)
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint32_t baudrate = 9600, uint8_t format = DATA8 + STOP2);
+  bool begin(uint32_t baudrate = 9600, uint8_t format = DATA8 + STOP2 + NO_PARITY);
 
   /**
    * Stop UART device driver.
