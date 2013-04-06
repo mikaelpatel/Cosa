@@ -32,8 +32,6 @@
 
 #include "Cosa/SPI.hh"
 #include "Cosa/Pins.hh"
-#include "Cosa/IOStream.hh"
-#include "Cosa/Trace.hh"
 
 class ADXL345 : private SPI::Driver {
 private:
@@ -124,7 +122,8 @@ protected:
    */
   enum {
     LOW_POWER = 4,		// Low power move
-    RATE = 0			// Data rate (4 bits)
+    RATE = 0,			// Data rate (4 bits)
+    RATE_MASK = 0x0f		// Data rate mask
   } __attribute__((packed));
 
   /**
@@ -135,8 +134,15 @@ protected:
     AUTO_SLEEP = 4,		// Auto sleep enable
     MEASURE = 3,		// Measurement mode
     SLEEP = 2,			// Sleep mode
-    WAKEUP = 0			// Wakeup frequency (2 bits)
+    WAKEUP = 0,			// Wakeup frequency (2 bits)
   } __attribute__((packed));
+  enum {
+    WAKEUP_8_HZ = 0,		// 8 hz
+    WAKEUP_4_HZ = 1,		// 4 hz
+    WAKEUP_2_HZ = 2,		// 2 hz
+    WAKEUP_1_HZ = 3,		// 1 hz
+    WAKEUP_MASK = 3		// Wakeup frequency mask
+  };
 
   /**
    * Register INT_ENABLE/INT_MAP/INT_SOURCE bitfields
@@ -163,12 +169,12 @@ protected:
     JUSTIFY = 2,		// Left justified/sign extend
     RANGE = 0			// Range 2-16 g (2 bits)
   } __attribute__((packed));
-
   enum {
     RANGE_2G = 0,		// +-2g
     RANGE_4G = 1,		// +-4g
     RANGE_8G = 2,		// +-8g
-    RANGE_16G = 3		// +-16g
+    RANGE_16G = 3,		// +-16g
+    RANGE_MASK = 3		// Mask range field
   } __attribute__((packed));
 
   /**
@@ -176,16 +182,25 @@ protected:
    */
   enum {
     FIFO_MODE = 6,		// FIFO Mode
-    TRIGGER = 5,		// Trigger event to interrupt pin
-    SAMPLES = 0			// Number of samples (5 bits)
+    FIFO_MASK = 0xc0,		// Dito Mask
+    TRIG = 5,			// Trigger event to interrupt pin
+    SAMPLES = 0,		// Number of samples (5 bits)
+    SAMPLES_MASK = 0x1f		// Dito Mask
   } __attribute__((packed));
-
+  enum {
+    BYPASS = 0x00,		// FIFO is bypassed
+    FIFO = 0x40,		// Collects up to 32 values
+    STREAM = 0x80,		// Holds the latest 32 values
+    TRIGGER = 0xc0		// Latest 32 values before trigger
+  };
+  
   /**
    * Register FIFO_STATUS bitfields
    */
   enum {
     FIFO_TRIG = 7,		// FIFO trigger event occuring
-    ENTRIES = 0			// Number of entries in FIFO (6 bits)
+    ENTRIES = 0,		// Number of entries in FIFO (6 bits)
+    ENTRIES_MASK = 0x3f		// Dito Mask
   } __attribute__((packed));
 
   /**
@@ -274,20 +289,6 @@ public:
     int x;
     int y;
     int z;
-    
-    /**
-     * In debug mode, print sample to given stream. The
-     * default is the trace stream.
-     * @param[in] stream to print on.
-     */
-    void print(IOStream& stream = trace);
-
-    /**
-     * In debug mode, print sample to stream with new-line. The
-     * default is the trace stream.
-     * @param[in] stream to print on.
-     */
-    void println(IOStream& stream = trace);
   };
 
   /**

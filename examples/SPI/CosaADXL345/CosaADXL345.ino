@@ -62,5 +62,8 @@ void loop()
   // Sample the accelerometer and print values to trace stream
   ADXL345::sample_t values;
   adxl.sample(values);
-  values.println();
+  trace << PSTR("x = ") << values.x
+	<< PSTR(", y = ") << values.y
+	<< PSTR(", z = ") << values.z
+	<< endl;
 }

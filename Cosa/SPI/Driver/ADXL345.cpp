@@ -99,17 +99,4 @@ ADXL345::calibrate()
   calibrate(-value.x/4, -value.y/4, -value.z/4);
 }
 
-void 
-ADXL345::sample_t::print(IOStream& stream)
-{
-  stream.printf_P(PSTR("ADXL345::sample_t(x = %d, y = %d, z = %d)"), x, y, z);
-}
-
-void 
-ADXL345::sample_t::println(IOStream& stream)
-{
-  print(stream);
-  stream.println();
-}
-
 #endif
