@@ -157,9 +157,8 @@ ISR(USART1_RX_vect)
   if (uart1 == 0) return;
   uart1->on_rx_interrupt();
 }
-#endif
 
-#if defined(__ARDUINO_MEGA__)
+#elif defined(__ARDUINO_MEGA__)
 
 UART* uart1 = 0;
 

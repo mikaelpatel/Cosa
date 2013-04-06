@@ -161,8 +161,7 @@ private:
 #if defined(__ARDUINO_MIGHTY__)
   friend void USART1_UDRE_vect(void);
   friend void USART1_RX_vect(void);
-#endif
-#if defined(__ARDUINO_MEGA__)
+#elif defined(__ARDUINO_MEGA__)
   friend void USART1_UDRE_vect(void);
   friend void USART1_RX_vect(void);
   friend void USART2_UDRE_vect(void);
@@ -171,7 +170,14 @@ private:
   friend void USART3_RX_vect(void);
 #endif
 
+  /**
+   * Common UART transmit interrupt handler.
+   */
   void on_udre_interrupt();
+
+  /**
+   * Common UART receive interrupt handler.
+   */
   void on_rx_interrupt();
 
 public:
