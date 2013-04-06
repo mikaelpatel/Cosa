@@ -30,11 +30,11 @@
 #ifndef __COSA_TWI_DRIVER_AT24CXX_HH__
 #define __COSA_TWI_DRIVER_AT24CXX_HH__
 
-#include "Cosa/TWI.hh"
 #include "Cosa/Types.h"
-#include <avr/sleep.h>
+#include "Cosa/TWI.hh"
+#include "Cosa/EEPROM.hh"
 
-class AT24CXX : private TWI::Driver {
+class AT24CXX : private TWI::Driver, public EEPROM::Device {
 private:
   static const uint8_t ADDR = 0xa0;
   static const uint8_t POLL_MAX = 2;
@@ -60,23 +60,21 @@ public:
    * @param[in] addr chip address (0..7)
    */
   AT24CXX(uint8_t addr = 0) : 
+    TWI::Driver(), 
+    EEPROM::Device(),
     m_addr(ADDR | ((addr & 0x7) << 1))
   {}
 
   /**
+   * @override
    * Return true(1) if the device is ready, write cycle is completed,
    * otherwise false(0).
    * @return bool
    */
-  bool is_ready();
+  virtual bool is_ready();
 
   /**
-   * Wait for write to complete. 
-   * @param[in] mode of sleep.
-   */
-  void write_await(uint8_t mode = SLEEP_MODE_IDLE);
-
-  /**
+   * @override
    * Read rom block with the given size into the buffer from the address.
    * Return number of bytes read or negative error code.
    * @param[in] dest buffer to read from rom.
@@ -84,19 +82,10 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes or negative error code.
    */
-  int read(void* dest, void* src, size_t size);
-  int read(unsigned char* dest, void* src) { return read(dest, src, sizeof(unsigned char)); }
-  int read(unsigned short* dest, void* src) { return read(dest, src, sizeof(unsigned short)); }
-  int read(unsigned int* dest, void* src) { return read(dest, src, sizeof(unsigned int)); }
-  int read(unsigned long* dest, void* src) { return read(dest, src, sizeof(unsigned long)); }
-  int read(char* dest, void* src) { return read(dest, src, sizeof(char)); }
-  int read(short* dest, void* src) { return read(dest, src, sizeof(short)); }
-  int read(int* dest, void* src) { return read(dest, src, sizeof(int)); }
-  int read(long* dest, void* src) { return read(dest, src, sizeof(long)); }
-  int read(float* dest, void* src) { return read(dest, src, sizeof(float)); }
-  int read(double* dest, void* src) { return read(dest, src, sizeof(double)); }
+  virtual int read(void* dest, void* src, size_t size);
 
   /**
+   * @override
    * Write rom block at given address with the contents from the buffer.
    * Return number of bytes written or negative error code.
    * @param[in] dest address in rom to read write to.
@@ -104,25 +93,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes or negative error code.
    */
-  int write(void* dest, void* src, size_t size);
-  int write(void* dest, unsigned char* src) { return write(dest, src, sizeof(unsigned char)); }
-  int write(void* dest, unsigned short* src) { return write(dest, src, sizeof(unsigned short));}
-  int write(void* dest, unsigned int* src) { return write(dest, src, sizeof(unsigned int)); }
-  int write(void* dest, unsigned long* src) { return write(dest, src, sizeof(unsigned long)); }
-  int write(void* dest, char* src) { return write(dest, src, sizeof(char)); }
-  int write(void* dest, short* src) { return write(dest, src, sizeof(short));}
-  int write(void* dest, int* src) { return write(dest, src, sizeof(int)); }
-  int write(void* dest, long* src) { return write(dest, src, sizeof(long)); }
-  int write(void* dest, float* src) { return write(dest, src, sizeof(float)); }
-  int write(void* dest, double* src) { return write(dest, src, sizeof(double)); }
+  virtual int write(void* dest, void* src, size_t size);
 };
-
-/**
- * Symbolic addressing of structures in EEPROM in given section number.
- * @param[in] nr section number.
- */
-#ifndef EEPROM
-#define	EEPROM(nr) __attribute__((section(".eeprom" #nr)))
-#endif
 
 #endif

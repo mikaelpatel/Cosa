@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,13 +37,14 @@
 // Use the builtin led as a heartbeat
 OutputPin ledPin(Board::LED);
 
-// The serial eeprom (sub-address 0b000)
-AT24CXX eeprom(0b000);
+// The serial eeprom (sub-address 0b000) with binding to eeprom 
+AT24CXX at24c32(0);
+EEPROM eeprom(&at24c32);
 
-// Symbols for data stored in EEPROM
-int x[6] EEPROM(0);
-uint8_t y[300] EEPROM(0);
-float z EEPROM(0);
+// Symbols for data stored in AT24CXX EEPROM memory address space
+int x[6] EEMEM;
+uint8_t y[300] EEMEM;
+float z EEMEM;
 
 // A final marker
 int last;
@@ -62,7 +63,7 @@ void init_eeprom()
   
   float z0 = 1.0;
   trace.print(&z0, sizeof(z), 16);
-  TRACE(eeprom.write(&z, &z0));
+  TRACE(eeprom.write(&z, z0));
 }
 
 void setup()
@@ -77,6 +78,8 @@ void setup()
   // Check memory map
   TRACE(&ledPin);
   TRACE(sizeof(ledPin));
+  TRACE(&at24c32);
+  TRACE(sizeof(at24c32));
   TRACE(&eeprom);
   TRACE(sizeof(eeprom));
   TRACE(&uart);
@@ -89,7 +92,10 @@ void setup()
   TRACE(&y);
   TRACE(&z);
   TRACE(&last);
+
+  // Check free memory and size of program
   TRACE(free_memory());
+  TRACE((void*) &exit);
 
   // Initiate EEPROM variables
   init_eeprom();
@@ -115,6 +121,10 @@ void loop()
   TRACE(eeprom.read(&z1, &z));
   trace.print(&z1, sizeof(z1), 16);
 
+  // Update the floating point number and write back
+  z1 += 0.5;
+  TRACE(eeprom.write(&z, z1));
+  
   // Update the eeprom (y => y+1)
   for (size_t i = 0; i < sizeof(buffer); i++)
     buffer[i]++;

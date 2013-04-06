@@ -65,12 +65,6 @@ AT24CXX::is_ready()
   return (m != 0);
 }
 
-void 
-AT24CXX::write_await(uint8_t mode)
-{
-  while (!is_ready()) Power::sleep(mode);
-}
-
 int
 AT24CXX::read(void* dest, void* src, size_t size)
 {
