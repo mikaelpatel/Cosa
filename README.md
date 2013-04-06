@@ -152,36 +152,31 @@ Arduino and AVR lib functions may be used together with Cosa.
 News
 ----
 
-2013-01-23 Arduino Mega 2560 initial port.  
-2013-01-25 UTFT font support added.  
-2013-01-29 Proto-threads implemented. Draw/fill round rectangle added
-to Canvas.  
-2013-02-01 Adding doxygen generated documentation (doc.zip). 
-GLCD font support added. IR remote receiver initial example.  
-2013-02-05 Adding input/output operators to IOStream, Pins and
-SPI. More detailed benchmarks and comparison with Arduino added.  
-2013-02-07 IOStream driver for PCD8544 48x84 pixels matrix LCD
-controller with support for fonts and icons.  
-2013-02-10 TSOP4838 IR Receiver Modules support (LG remote
-example). Improving PCD8544 driver with OffScreen canvas.  
-2013-02-11 UART receiver, Device::getchar(), implemented. Adding
-generic circlic buffer for IOStream::Device.  
-2013-02-19 Adding support for ATtinyX5. Simple ATtiny monitor included.  
-2013-02-19 Adding support for RC Servo.  
-2013-02-23 Adding support for ATmega1284P/Mighty boards.  
-2013-02-24 Refactoring and porting VirtualWire to Cosa.   
-2013-03-03 Virtual Wire Interface (VWI) for ATtiny. VWI IOStream
-Device to allow streaming of output over Virtual Wire.   
-2013-03-05 Introducing Manchester Phase Encoder (MPE) based on VWI.  
-2013-03-07 Introducing class for Power Management and Sleep Modes.   
-2013-03-09 Refactoring VWI to allow easy update of codecs;
-VirtualWire, Manchester and Fixed Bitstuffing.   
-2013-03-11 Additional codex; Block Coding, B4B5.  
-2013-03-17 New VWI example sketches with retransmission; simple client/server
-example.   
-2013-03-21 Introducing an interface for interrupt handlers, and
-support for pin change interrupts. New directory structure for 
-handling boards.  
-2013-03-31 Moving documentation and references to dropbox. Reducing
-size of download from github.   
-2013-04-03 Adding support for HMC5883L 3-axis digital compass.    
+2013-01 Arduino Mega 2560 initial port. UTFT font support
+added. Proto-threads implemented. Draw/fill round rectangle added to
+Canvas.    
+2013-02 Adding doxygen generated documentation (doc.zip). GLCD font
+support added. IR remote receiver initial example. Adding input/output
+operators to IOStream, Pins and SPI. More detailed benchmarks and
+comparison with Arduino added. IOStream driver for PCD8544 48x84
+pixels matrix LCD controller with support for fonts and icons.
+TSOP4838 IR Receiver Modules support (LG remote example). Improving
+PCD8544 driver with OffScreen canvas. UART receiver,
+Device::getchar(), implemented. Adding generic circlic buffer for
+IOStream::Device. Adding support for ATtinyX5. Simple ATtiny monitor
+included. Adding support for RC Servo. Adding support for
+ATmega1284P/Mighty boards. Refactoring and porting VirtualWire to
+Cosa.    
+2013-03 Virtual Wire Interface (VWI) for ATtiny. VWI IOStream Device
+to allow streaming of output over Virtual Wire. Introducing Manchester
+Phase Encoder (MPE) based on VWI. Introducing class for Power
+Management and Sleep Modes. Refactoring VWI to allow easy update of
+codecs; VirtualWire, Manchester and Fixed Bitstuffing. Additional
+codex; Block Coding, B4B5. New VWI example sketches with
+retransmission; simple client/server example. Introducing an interface
+for interrupt handlers, and support for pin change interrupts. New
+directory structure for handling boards. Moving documentation and
+references to dropbox. Reducing size of download from github.   
+2013-04 Adding support for HMC5883L 3-axis digital compass. Adding
+abstraction of EEPROM with default handling of internal
+EEPROM. Refactoring AT24CXX driver for new EEPROM interface.   
