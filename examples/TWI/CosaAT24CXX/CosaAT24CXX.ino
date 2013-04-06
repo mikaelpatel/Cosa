@@ -115,7 +115,7 @@ void loop()
   TRACE(eeprom.read(&z1, &z));
   trace.print(&z1, sizeof(z1), 16);
 
-  // Update the eepeeprom (d => d+1)
+  // Update the eeprom (y => y+1)
   for (size_t i = 0; i < sizeof(buffer); i++)
     buffer[i]++;
   TRACE(eeprom.write(&y, buffer, sizeof(buffer)));
