@@ -41,12 +41,29 @@ OutputPin ledPin(Board::LED);
 AT24CXX eeprom(0b000);
 
 // Symbols for data stored in EEPROM
-int x[8] EEPROM(0);
+int x[6] EEPROM(0);
 uint8_t y[300] EEPROM(0);
-int z EEPROM(0);
+float z EEPROM(0);
 
 // A final marker
 int last;
+
+void init_eeprom()
+{
+  int x0[membersof(x)];
+  for (uint8_t i = 0; i < membersof(x0); i++) x0[i] = i;
+  trace.print(x0, sizeof(x0), 16);
+  TRACE(eeprom.write(x, x0, sizeof(x)));
+  
+  uint8_t y0[sizeof(y)];
+  memset(y0, 0, sizeof(y));
+  trace.print(y0, sizeof(y0), 16);
+  TRACE(eeprom.write(y, y0, sizeof(y)));
+  
+  float z0 = 1.0;
+  trace.print(&z0, sizeof(z), 16);
+  TRACE(eeprom.write(&z, &z0));
+}
 
 void setup()
 {
@@ -73,6 +90,9 @@ void setup()
   TRACE(&z);
   TRACE(&last);
   TRACE(free_memory());
+
+  // Initiate EEPROM variables
+  init_eeprom();
 }
 
 void loop()
@@ -81,16 +101,24 @@ void loop()
   SLEEP(2);
   ledPin.toggle();
 
-  // Read the eepeeprom into memory
+  // Read the eeprom variables into memory
   uint8_t buffer[sizeof(y)];
-  uint16_t addr = (uint16_t) &y;
-  TRACE(eeprom.read(buffer, addr, sizeof(buffer)));
-  trace.print(buffer, sizeof(buffer), 16);
+  memset(buffer, 0, sizeof(buffer));
+  
+  TRACE(eeprom.read(buffer, &x, sizeof(x)));
+  trace.print(buffer, sizeof(x), 16);
+
+  TRACE(eeprom.read(buffer, &y, sizeof(y)));
+  trace.print(buffer, sizeof(y), 16);
+
+  float z1;
+  TRACE(eeprom.read(&z1, &z));
+  trace.print(&z1, sizeof(z1), 16);
 
   // Update the eepeeprom (d => d+1)
   for (size_t i = 0; i < sizeof(buffer); i++)
     buffer[i]++;
-  TRACE(eeprom.write(addr, buffer, sizeof(buffer)));
+  TRACE(eeprom.write(&y, buffer, sizeof(buffer)));
 
   // Is the write completed? 
   TRACE(eeprom.is_ready());
@@ -98,7 +126,7 @@ void loop()
   TRACE(eeprom.is_ready());
   
   // Read back and check
-  TRACE(eeprom.read(buffer, addr, sizeof(buffer)));
-  trace.print(buffer, sizeof(buffer), 16);
+  TRACE(eeprom.read(buffer, &y, sizeof(y)));
+  trace.print(buffer, sizeof(y), 16);
   ledPin.toggle();
 }

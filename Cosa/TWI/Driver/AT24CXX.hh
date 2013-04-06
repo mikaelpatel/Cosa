@@ -38,9 +38,9 @@ class AT24CXX : private TWI::Driver {
 private:
   static const uint8_t ADDR = 0xa0;
   static const uint8_t POLL_MAX = 2;
-  static const uint8_t PAGE_MAX = 32;
-  static const uint8_t WRITE_MAX = PAGE_MAX;
-  static const uint8_t WRITE_MASK = (WRITE_MAX - 1);
+  static const uint16_t PAGE_MAX = 32;
+  static const uint16_t WRITE_MAX = PAGE_MAX;
+  static const uint16_t WRITE_MASK = (WRITE_MAX - 1);
   uint8_t m_addr;
 
   /**
@@ -51,7 +51,7 @@ private:
    * @param[in] size number to write.
    * @return bool
    */
-  bool poll(uint16_t addr, void* buf = 0, size_t size = 0);
+  bool poll(void* addr, void* buf = 0, size_t size = 0);
 
 public:
   /**
@@ -84,7 +84,17 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes or negative error code.
    */
-  int read(void* dest, uint16_t src, size_t size);
+  int read(void* dest, void* src, size_t size);
+  int read(unsigned char* dest, void* src) { return read(dest, src, sizeof(unsigned char)); }
+  int read(unsigned short* dest, void* src) { return read(dest, src, sizeof(unsigned short)); }
+  int read(unsigned int* dest, void* src) { return read(dest, src, sizeof(unsigned int)); }
+  int read(unsigned long* dest, void* src) { return read(dest, src, sizeof(unsigned long)); }
+  int read(char* dest, void* src) { return read(dest, src, sizeof(char)); }
+  int read(short* dest, void* src) { return read(dest, src, sizeof(short)); }
+  int read(int* dest, void* src) { return read(dest, src, sizeof(int)); }
+  int read(long* dest, void* src) { return read(dest, src, sizeof(long)); }
+  int read(float* dest, void* src) { return read(dest, src, sizeof(float)); }
+  int read(double* dest, void* src) { return read(dest, src, sizeof(double)); }
 
   /**
    * Write rom block at given address with the contents from the buffer.
@@ -94,7 +104,17 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes or negative error code.
    */
-  int write(uint16_t dest, void* src, size_t size);
+  int write(void* dest, void* src, size_t size);
+  int write(void* dest, unsigned char* src) { return write(dest, src, sizeof(unsigned char)); }
+  int write(void* dest, unsigned short* src) { return write(dest, src, sizeof(unsigned short));}
+  int write(void* dest, unsigned int* src) { return write(dest, src, sizeof(unsigned int)); }
+  int write(void* dest, unsigned long* src) { return write(dest, src, sizeof(unsigned long)); }
+  int write(void* dest, char* src) { return write(dest, src, sizeof(char)); }
+  int write(void* dest, short* src) { return write(dest, src, sizeof(short));}
+  int write(void* dest, int* src) { return write(dest, src, sizeof(int)); }
+  int write(void* dest, long* src) { return write(dest, src, sizeof(long)); }
+  int write(void* dest, float* src) { return write(dest, src, sizeof(float)); }
+  int write(void* dest, double* src) { return write(dest, src, sizeof(double)); }
 };
 
 /**

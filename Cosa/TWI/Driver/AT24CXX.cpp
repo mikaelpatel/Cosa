@@ -34,19 +34,19 @@
 #include "Cosa/Power.hh"
 
 bool 
-AT24CXX::poll(uint16_t addr, void* buf, size_t size)
+AT24CXX::poll(void* addr, void* buf, size_t size)
 {
   uint8_t i = POLL_MAX;
   int m;
   do {
     if (!twi.begin()) return (false);
     if (buf == 0) {
-      m = twi.write(m_addr, addr);
+      m = twi.write(m_addr, (uint16_t) addr);
       if (m != 0) return (true);
       twi.end();
     }
     else {
-      m = twi.write(m_addr, addr, buf, size);
+      m = twi.write(m_addr, (uint16_t) addr, buf, size);
       twi.end();
       if (m != 0) return (true);
     }
@@ -72,27 +72,29 @@ AT24CXX::write_await(uint8_t mode)
 }
 
 int
-AT24CXX::read(void* dest, uint16_t src, size_t size)
+AT24CXX::read(void* dest, void* src, size_t size)
 {
   if (!poll(src)) return (-1);
   int n = twi.read(m_addr, dest, size);
   twi.end();
-  return (n == size ? size : -1);
+  return (n);
 }
 
 int 
-AT24CXX::write(uint16_t dest, void* src, size_t size)
+AT24CXX::write(void* dest, void* src, size_t size)
 {
   size_t s = size;
+  uint8_t* q = (uint8_t*) dest;
   uint8_t* p = (uint8_t*) src;
-  size_t n = WRITE_MAX - (dest & WRITE_MASK);
-  if (!poll(dest, p, n)) return (-1);
+  size_t n = WRITE_MAX - (((uint16_t) dest) & WRITE_MASK);
+  if (n > s) n = s;
+  if (!poll(q, p, n)) return (-1);
   s -= n;
   while (s > 0) {
-    dest += n;
+    q += n;
     p += n;
     n = (s < WRITE_MAX ? s : WRITE_MAX);
-    if (!poll(dest, p, n)) return (-1);
+    if (!poll(q, p, n)) return (-1);
     s -= n;
   }
   return (size);
