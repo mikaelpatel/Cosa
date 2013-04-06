@@ -6,12 +6,12 @@ machines. It contains a rich set of classes to support rapid
 prototyping of Arduino/AVR based devices. Cosa supports the following
 AVR/Atmega328P internal hardware modules; all pin modes, Digital,
 Analog and Interrupt Pins, Analog Comparator, PWM, Watchdog, Timer0
-(RTC), Timer1 (Servo), UART, SPI and TWI.  
+(RTC), Timer1 (Servo), EEPROM, UART, SPI and TWI.  
 
 Though object-oriented with optional operator overloading syntax,
 Cosa is between 2-10X faster than Arduino with regard to digital pin
 functions. This comes with a small price-tag; memory, 4 bytes per
-digital pin and 9 bytes per analog pin. Cosa analog pin objects
+digital pin and 12 bytes per analog pin. Cosa analog pin objects
 holds the latest sample and allows an event handler. See the
 benchmarks in the examples directory for further details.
 
@@ -93,7 +93,8 @@ http://arduino.cc/forum/index.php/topic,150299.0.html.
 ATmega328P, ATmega1284P and ATmega2560 based Arduino boards (Uno,
 Mini, Nano, LilyPad, Mega, Mightly, etc) are supported. The ATtinyX5
 processors are also support for a sub-set of the classes. Arduino and
-AVR lib functions may be used together with Cosa. 
+AVR lib functions may be used together with Cosa. ATmega32U4 and other
+devices with internal USB hardware are not currently supported.
 
 @section License
 Copyright (C) 2012-2013, Mikael Patel
