@@ -67,6 +67,9 @@ public:
      */
     virtual int write(void* dest, void* src, size_t size);
     
+    /**
+     * Default EEPROM device; handling of internal EEPROM Data Memory
+     */
     static Device eeprom;
   };
 
@@ -113,51 +116,51 @@ public:
     return (m_dev->read(dest, src, size)); 
   }
 
-  int read(unsigned char* dest, void* src) 
+  int read(unsigned char* dest, unsigned char* src) 
   { 
     return (read(dest, src, sizeof(unsigned char))); 
   }
 
-  int read(unsigned short* dest, void* src) 
+  int read(unsigned short* dest, unsigned short* src) 
   { 
     return (read(dest, src, sizeof(unsigned short))); 
   }
   
-  int read(unsigned int* dest, void* src) 
+  int read(unsigned int* dest, unsigned int* src) 
   { 
     return (read(dest, src, sizeof(unsigned int))); 
   }
 
-  int read(unsigned long* dest, void* src)
+  int read(unsigned long* dest, unsigned long* src)
   { 
     return (read(dest, src, sizeof(unsigned long))); 
   }
   
-  int read(char* dest, void* src) 
+  int read(char* dest, char* src) 
   { 
     return (read(dest, src, sizeof(char))); 
   }
 
-  int read(short* dest, void* src) 
+  int read(short* dest, short* src) 
   { 
     return (read(dest, src, sizeof(short))); 
   }
 
-  int read(int* dest, void* src)
+  int read(int* dest, int* src)
   { 
     return (read(dest, src, sizeof(int))); 
   }
 
-  int read(long* dest, void* src)
+  int read(long* dest, long* src)
   { 
     return (read(dest, src, sizeof(long))); 
   }
 
-  int read(float* dest, void* src)
+  int read(float* dest, float* src)
   { 
     return (read(dest, src, sizeof(float))); 
   }
-
+  
   /**
    * Write rom block at given address with the contents from the buffer.
    * Return number of bytes written or negative error code.
@@ -171,47 +174,47 @@ public:
     return (m_dev->write(dest, src, size)); 
   }
 
-  int write(void* dest, unsigned char src) 
+  int write(unsigned char* dest, unsigned char src) 
   { 
     return (write(dest, &src, sizeof(unsigned char))); 
   }
 
-  int write(void* dest, unsigned short src) 
+  int write(unsigned short* dest, unsigned short src) 
   { 
     return (write(dest, &src, sizeof(unsigned short)));
   }
 
-  int write(void* dest, unsigned int src) 
+  int write(unsigned int* dest, unsigned int src) 
   { 
     return (write(dest, &src, sizeof(unsigned int))); 
   }
 
-  int write(void* dest, unsigned long src) 
+  int write(unsigned long* dest, unsigned long src) 
   { 
     return (write(dest, &src, sizeof(unsigned long))); 
   }
 
-  int write(void* dest, char src) 
+  int write(char* dest, char src) 
   { 
     return (write(dest, &src, sizeof(char))); 
   }
 
-  int write(void* dest, short src) 
+  int write(short* dest, short src) 
   { 
     return (write(dest, &src, sizeof(short)));
   }
 
-  int write(void* dest, int src) 
+  int write(int* dest, int src) 
   { 
     return (write(dest, &src, sizeof(int))); 
   }
 
-  int write(void* dest, long src) 
+  int write(long* dest, long src) 
   { 
     return (write(dest, &src, sizeof(long))); 
   }
 
-  int write(void* dest, float src) 
+  int write(float* dest, float src) 
   { 
     return (write(dest, &src, sizeof(float))); 
   }
