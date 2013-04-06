@@ -97,4 +97,12 @@ public:
   int write(uint16_t dest, void* src, size_t size);
 };
 
+/**
+ * Symbolic addressing of structures in EEPROM in given section number.
+ * @param[in] nr section number.
+ */
+#ifndef EEPROM
+#define	EEPROM(nr) __attribute__((section(".eeprom" #nr)))
+#endif
+
 #endif

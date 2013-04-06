@@ -40,18 +40,39 @@ OutputPin ledPin(Board::LED);
 // The serial eeprom (sub-address 0b000)
 AT24CXX eeprom(0b000);
 
+// Symbols for data stored in EEPROM
+int x[8] EEPROM(0);
+uint8_t y[300] EEPROM(0);
+int z EEPROM(0);
+
+// A final marker
+int last;
+
 void setup()
 {
   // Start trace output stream
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAT24CXX: started"));
 
-  // Check amount of free memory and size of objects
-  TRACE(free_memory());
-  TRACE(sizeof(eeprom));
-
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
+
+  // Check memory map
+  TRACE(&ledPin);
+  TRACE(sizeof(ledPin));
+  TRACE(&eeprom);
+  TRACE(sizeof(eeprom));
+  TRACE(&uart);
+  TRACE(sizeof(uart));
+  TRACE(&twi);
+  TRACE(sizeof(twi));
+  TRACE(&trace);
+  TRACE(sizeof(trace));
+  TRACE(&x);
+  TRACE(&y);
+  TRACE(&z);
+  TRACE(&last);
+  TRACE(free_memory());
 }
 
 void loop()
@@ -61,8 +82,8 @@ void loop()
   ledPin.toggle();
 
   // Read the eepeeprom into memory
-  uint8_t buffer[300];
-  uint16_t addr = 16;
+  uint8_t buffer[sizeof(y)];
+  uint16_t addr = (uint16_t) &y;
   TRACE(eeprom.read(buffer, addr, sizeof(buffer)));
   trace.print(buffer, sizeof(buffer), 16);
 
