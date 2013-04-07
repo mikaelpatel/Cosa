@@ -93,9 +93,8 @@ void setup()
   TRACE(&z);
   TRACE(&last);
 
-  // Check free memory and size of program
+  // Check free memory
   TRACE(free_memory());
-  TRACE((void*) &exit);
 
   // Initiate EEPROM variables
   init_eeprom();
