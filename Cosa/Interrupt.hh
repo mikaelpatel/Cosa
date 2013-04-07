@@ -20,15 +20,15 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Interface for Interrupt Handlers.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #ifndef __COSA_INTERRUPT_HH__
 #define __COSA_INTERRUPT_HH__
 
+/**
+ * Interface for Interrupt Handlers.
+ */
 class Interrupt {
 public:
   class Handler {

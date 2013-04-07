@@ -20,10 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Driver for the PCF8591 2-Wire 8-bit A/D and D/A converter.
- * See Philips Semiconductor product description (Rev. 2003 Jan 27).
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,6 +28,12 @@
 
 #include "Cosa/TWI.hh"
 
+/**
+ * Driver for the PCF8591 2-Wire 8-bit A/D and D/A converter.
+ *
+ * @section See Also
+ * Philips Semiconductor product description (Rev. 2003 Jan 27).
+ */
 class PCF8591 : private TWI::Driver {
 private:
   // Two-wire address for PCF8591 

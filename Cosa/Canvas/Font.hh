@@ -20,9 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Bitmap font library handler for Cosa Canvas.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,6 +29,9 @@
 #include "Cosa/Types.h"
 #include "Cosa/Canvas.hh"
 
+/*
+ * Bitmap font library handler for Cosa Canvas.
+ */
 class Font {
 protected:
   /**

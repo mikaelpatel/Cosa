@@ -20,27 +20,24 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Cosa Board pin symbol definitions for the ATtinyX5 processors.
- *
- * Cosa does not use pin numbers as Arduino/Wiring, instead strong
- * data type is used (enum types) for the specific pin classes;
- * e.g. DigitalPin, AnalogPin, PWMPin.
- *
- * @section Limitations
- * The pin numbers are only symbolically mapped, i.e. a pin
- * number/digit will not work, symbols must be used, 
- * e.g., Board::D2.
- *
- * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #ifndef __COSA_BOARD_TINYX5_HH__
 #define __COSA_BOARD_TINYX5_HH__
 
+/**
+ * Cosa TINYX5 Board pin symbol definitions for the ATtinyX5
+ * processors. Cosa does not use pin numbers as Arduino/Wiring,
+ * instead strong data type is used (enum types) for the specific pin
+ * classes; DigitalPin, AnalogPin, PWMPin, etc.
+ *
+ * The pin numbers are only symbolically mapped, i.e. a pin
+ * number/digit will not work, symbols must be used, Board::D2.
+ *
+ * The static inline functions, SFR, BIT and UART, rely on compiler
+ * optimizations to be reduced. 
+ */
 class Board {
   friend class Pin;
   friend class UART;

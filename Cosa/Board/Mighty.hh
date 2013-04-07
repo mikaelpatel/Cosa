@@ -20,24 +20,21 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Cosa Board pin symbol definitions for ATmega1248 based Arduino
- * boards; Mighty.
- *
- * Cosa does not use pin numbers as Arduino/Wiring. Instead strong
- * data type is used (enum types) for the specific pin classes;
- * e.g. DigitalPin, AnalogPin, PWMPin.
- *
- * @section Limitations
- * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #ifndef __COSA_BOARD_MIGHTY_HH__
 #define __COSA_BOARD_MIGHTY_HH__
 
+/**
+ * Cosa MIGHTY Board pin symbol definitions for ATmega1248 based
+ * Arduino boards; Mighty. Cosa does not use pin numbers as
+ * Arduino/Wiring. Instead strong data type is used (enum types) for
+ * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc.
+ *
+ * The static inline functions, SFR, BIT and UART, rely on compiler
+ * optimizations to be reduced. 
+ */
 class Board {
   friend class Pin;
   friend class UART;

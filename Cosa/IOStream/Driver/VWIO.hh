@@ -20,10 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * IOStream driver for Virtual Wire Interface. Allow IOStream
- * such as Trace over Virtual Wire connection.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,6 +30,12 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/VWI.hh"
 
+/**
+ * IOStream driver for Virtual Wire Interface. Allow IOStream
+ * such as Trace over Virtual Wire connection. Please note that
+ * basic VWI is not reliable and characters may be lost due to 
+ * noise, collisions, etc.
+ */
 class VWIO : public IOStream::Device {
 private:
   VWI::Transmitter m_tx;

@@ -20,12 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Driver for the ATmega/ATtiny internal EEPROM and abstraction of
- * EEPROM devices. See AT24CXX for an example of driver for external
- * EEPROM memory. The default device is the internal EEPROM.
- * The class EEPROM delegates to the device.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -36,8 +30,19 @@
 #include "Cosa/Power.hh"
 #include <avr/sleep.h>
 
+/**
+ * Driver for the ATmega/ATtiny internal EEPROM and abstraction of
+ * EEPROM devices. See AT24CXX for an example of driver for external
+ * EEPROM memory. The default device is the internal EEPROM.
+ * The class EEPROM delegates to the device.
+ */
 class EEPROM {
 public:
+  /**
+   * EEPROM Device abstraction; default device is the processors
+   * internal EEPROM data memory. New devices should sub-class and
+   * implement virtual methods.
+   */
   class Device {
   public:
     /**

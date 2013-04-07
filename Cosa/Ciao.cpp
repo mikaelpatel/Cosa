@@ -20,27 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * The Cosa Ciao data stream handler. Please see CIAO.txt for details.
- *
- * @section Limitations
- * The Ciao class handles only output. The data types 16, 64 and 80-bit
- * floating point are not supported.
- *
- * @section See Also
- * Requires an IOSteam::Device. This is used in binary/8-bit character
- * mode. See also Cosa/Fai.hh for details on board state reporting.
- *
- * @section References
- * [1] Sun Microsystems (1987). "XDR: External Data Representation
- * Standard". RFC 1014. Network Working Group. Retrieved July 11,
- * 2011. http://tools.ietf.org/html/rfc1014
- * [2] Boost Serialization, 
- * http://www.boost.org/doc/libs/1_46_1/libs/serialization/doc/index.html
- * [3] Java Stream Format,
- * http://docs.oracle.com/javase/7/docs/platform/serialization/spec/protocol.html#10258
- * [4] Arduino/Firmata, http://www.firmata.org
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

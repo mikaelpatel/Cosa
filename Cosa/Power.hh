@@ -20,9 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Power Management and Sleep modes.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -35,6 +32,9 @@
 #include <avr/power.h>
 #include <avr/sleep.h>
 
+/**
+ * Power Management and Sleep modes.
+ */
 class Power {
   /**
    * Do not allow instances. This is a static singleton; name space.

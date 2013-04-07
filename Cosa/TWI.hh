@@ -20,9 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Two wire library. Support for the I2C/TWI bus.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -36,6 +33,9 @@
 
 #include <avr/sleep.h>
 
+/**
+ * Two wire library. Support for the I2C/TWI bus.
+ */
 class TWI {
 private:
   /**

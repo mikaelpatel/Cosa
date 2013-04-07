@@ -20,9 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Two wire library. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

@@ -21,13 +21,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * VWI (Virtual Wire Interface) is an Cosa library that provides 
- * features to send short messages, without addressing, retransmit or 
- * acknowledgment, a bit like UDP over wireless, using ASK (Amplitude 
- * Shift Keying). Supports a number of inexpensive radio transmitters
- * and receivers. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

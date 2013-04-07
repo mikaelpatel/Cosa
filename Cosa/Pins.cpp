@@ -20,11 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Arduino pins abstractions; abstract, input, output, interrupt and 
- * analog pin. Captures the mapping from Arduino to processor pins.
- * Forces declarative programming of pins in sketches.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

@@ -20,11 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock.
- * For further details see Maxim Integrated product description; 
- * http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -35,6 +30,11 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
 
+/**
+ * Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock.
+ * For further details see Maxim Integrated product description; 
+ * http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
+ */
 class DS1307 : private TWI::Driver {
 private:
   static const uint8_t ADDR = 0xD0;

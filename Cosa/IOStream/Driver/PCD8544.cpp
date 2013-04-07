@@ -20,11 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * PCD8544 48x84 pixels matrix LCD controller/driver, device driver 
- * for IOStream access. Binding to trace, etc. For furter details
- * see Product Specification, Philips Semiconductors, 1999 Apr 12.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

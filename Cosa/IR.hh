@@ -20,9 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Cosa IR receiver/TSOP4838 driver.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -33,6 +30,12 @@
 #include "Cosa/Linkage.hh"
 #include "Cosa/Trace.hh"
 
+/**
+ * Cosa IR receiver/TSOP4838 driver.
+ * 
+ * @section See Also
+ * http://www.vishay.com/docs/82459/tsop48.pdf
+ */
 class IR {
 public:
 

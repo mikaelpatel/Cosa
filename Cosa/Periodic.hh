@@ -20,7 +20,17 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
+ * This file is part of the Arduino Che Cosa project.
+ */
+
+#ifndef __COSA_PERIODIC_HH__
+#define __COSA_PERIODIC_HH__
+
+#include "Cosa/Types.h"
+#include "Cosa/Linkage.hh"
+#include "Cosa/Watchdog.hh"
+
+/**
  * Periodic function handler. Syntactic sugar for watchdog timeout
  * event handlers. Subclass and implement the virtual method run()
  * as the function to be executed periodically.
@@ -32,18 +42,7 @@
  * @section See Also
  * For details on time period handling see Watchdog.hh. This execution
  * pattern is also available in the FSM (Finite State Machine) class.
- * See FSM.hh.
- *
- * This file is part of the Arduino Che Cosa project.
  */
-
-#ifndef __COSA_PERIODIC_HH__
-#define __COSA_PERIODIC_HH__
-
-#include "Cosa/Types.h"
-#include "Cosa/Linkage.hh"
-#include "Cosa/Watchdog.hh"
-
 class Periodic : public Link {
 private:
   /**

@@ -15,10 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * @section Description
- * Block Coding 4 to 5 bit (4B5B) codec for the Cosa VWI (Virtual Wire 
- * Interface). 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

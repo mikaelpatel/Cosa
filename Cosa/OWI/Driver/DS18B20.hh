@@ -20,12 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Driver for the DS18B20 Programmable Resolution 1-Write Digital
- * Thermometer.  
- * 
- * See Maxim Integrated product description (REV: 042208) 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,6 +28,13 @@
 
 #include "Cosa/OWI.hh"
 
+/**
+ * Driver for the DS18B20 Programmable Resolution 1-Write Digital
+ * Thermometer.  
+ * 
+ * @section See Also
+ * Maxim Integrated product description (REV: 042208) 
+ */
 class DS18B20 : public OWI::Driver {
 private:
   /**

@@ -20,14 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * 1-wire device driver support class. Allows device rom search
- * and connection to multiple devices on one-wire bus.
- *
- * @section Limitations
- * The driver will turn off interrupt handling during data read 
- * from the device. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -39,6 +31,14 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
 
+/**
+ * 1-wire device driver support class. Allows device rom search
+ * and connection to multiple devices on one-wire bus.
+ *
+ * @section Limitations
+ * The driver will turn off interrupt handling during data read 
+ * from the device. 
+ */
 class OWI : private IOPin {
 public:
   /**

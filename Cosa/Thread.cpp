@@ -20,32 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Cosa implementation of protothreads; A protothread is a
- * low-overhead mechanism for concurrent programming. Protothreads
- * function as stackless, lightweight threads providing a blocking
- * context using minimal memory per protothread. Cosa/Thread supports
- * event to thread mapping and timers. The size of Cosa/Thread is 
- * 9 bytes (3 bytes for state and continuation, 4 bytes for Link and 
- * 2 bytes for virtual table pointer). 
- *
- * @section Limitations
- * The thread macro set should only be used within the Thread::run()
- * function. 
- *
- * @section Acknowledgements
- * Inspired by research and prototype by Adam Dunkels, Oliver Schmidt,
- * Thiermo Voigt, Muneeb Ali, and the protothread library by Larry
- * Ruane. 
- *
- * @section References
- * [1] Adam Dunkels et al, Protothreads: Simplifying Event-Driven
- * Programming of Memory-Constrained Embedded Systems, SenSys'06,
- * November 1-3, 2006, Boulder, Colorado, USA.
- * [2] Larry Ruane, protothread: An extremely lightweight thread
- * library for GCC, http://code.google.com/p/protothread/
- * [3] http://en.wikipedia.org/wiki/Protothreads
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

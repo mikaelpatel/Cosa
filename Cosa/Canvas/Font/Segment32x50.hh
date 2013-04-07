@@ -20,13 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * UTFT bitmap font size 32x50, segments, fixed with font with 
- * numbers only.
- *
- * @section Acknowledgement
- * Originates from the UTFT library was created by Henning Karlsen.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -35,6 +28,14 @@
 
 #include "Cosa/Canvas/UTFTFont.hh"
 
+/**
+ * UTFT bitmap font size 32x50, segments, fixed with font with 
+ * numbers only.
+ *
+ * @section Acknowledgement
+ * Font data originates from the UTFT library was created by 
+ * Henning Karlsen.
+ */
 class Segment32x50 : public UTFTFont {
 private:
   static const uint8_t bitmap[] PROGMEM;

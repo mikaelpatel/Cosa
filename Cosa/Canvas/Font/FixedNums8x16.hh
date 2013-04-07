@@ -20,14 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * GLCD bitmap font size 8x16, fixed width font with numbers only.
- *
- * @section Acknowledgement
- * Originates from the GLCD library and adapted for Cosa Canvas.
- * The GLCD library was created by Michael Margolis and improved 
- * by Bill Perry.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -36,6 +28,14 @@
 
 #include "Cosa/Canvas/GLCDFont.hh"
 
+/**
+ * GLCD bitmap font size 8x16, fixed width font with numbers only.
+ *
+ * @section Acknowledgement
+ * Originates from the GLCD library and adapted for Cosa Canvas. The
+ * GLCD library was created by Michael Margolis and improved by Bill
+ * Perry. 
+ */
 class FixedNums8x16 : public GLCDFont {
 private:
   static const uint8_t bitmap[] PROGMEM;

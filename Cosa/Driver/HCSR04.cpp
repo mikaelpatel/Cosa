@@ -20,17 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Device driver for Ultrasonic range module HC-SR04.
- *
- * @section Circuit
- * Connect HC-SR04 module to echo and trigger pin, and VCC and
- * ground. 
- *
- * @section Limitations
- * The driver will turn off interrupt handling during data read 
- * from the device. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

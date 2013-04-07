@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Library for fixed point number representation.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -31,6 +28,9 @@
 
 #include "Cosa/Types.h"
 
+/**
+ * Simple class for fixed point number representation.
+ */
 class FixedPoint {
 public:
   const uint8_t POINT;

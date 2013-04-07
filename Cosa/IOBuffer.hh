@@ -20,9 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Circlic buffer for IOStreams. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,6 +29,10 @@
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 
+/**
+ * Circlic buffer for IOStreams. May be used as a string buffer
+ * device, or to connect different IOStreams.
+ */
 class IOBuffer : public IOStream::Device {
 private:
   volatile char* m_buffer;

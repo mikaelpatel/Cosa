@@ -20,9 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Basic trace support class. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,6 +29,10 @@
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 
+/**
+ * Basic trace support class. Combind IOStream with UART for trace
+ * output.
+ */
 class Trace : public IOStream {
 public:
   /**

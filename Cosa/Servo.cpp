@@ -20,10 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Servo motor driver. Uses Timer1 and the two compare output
- * registers (OCR1A/B).
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

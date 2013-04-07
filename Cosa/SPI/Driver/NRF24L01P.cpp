@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,10 +19,6 @@
  * Public License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
- *
- * @section Description
- * SPI driver for the nRF24L01 Single Chip 2.4GHz Transceiver.
- * See nRF24L01+ Product Specification (Rev. 1.0)
  *
  * This file is part of the Arduino Che Cosa project.
  */

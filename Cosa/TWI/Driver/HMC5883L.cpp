@@ -20,11 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Driver for the HMC5883L 3-Axis Digital Compass IC.
- *
- * See Honeywell product description (Rev. E, February 2013).
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

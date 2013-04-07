@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,20 +20,20 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Arduino icon 96x32.
- *
- * @section Acknowledgement
- * Originates from the GLCD library and adapted for Cosa Canvas.
- * The GLCD library was created by Michael Margolis and improved 
- * by Bill Perry.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #ifndef __COSA_CANVAS_ICON_ARDUINO_96X32_H__
 #define __COSA_CANVAS_ICON_ARDUINO_96X32_H__
 
+/**
+ * Arduino icon 96x32.
+ *
+ * @section Acknowledgement
+ * Originates from the GLCD library and adapted for Cosa Canvas.
+ * The GLCD library was created by Michael Margolis and improved 
+ * by Bill Perry.
+ */
 const uint8_t arduino_icon_96x32[] PROGMEM = {
   96,32,
   0x00,0x00,0xc0,0x20,0x10,0x08,0xc8,0x88,0x08,0x08,0x10,0x20,0xc0,0x00,0x00,0x00, 

@@ -20,10 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * GLCD font library handler for Cosa Canvas. Needs a special 
- * handling of the font bitmap as the decoding is different.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,6 +28,10 @@
 
 #include "Cosa/Canvas/Font.hh"
 
+/**
+ * GLCD font library handler for Cosa Canvas. Needs a special 
+ * handling of the font bitmap as the decoding is different.
+ */
 class GLCDFont : public Font {
 public:
   /**

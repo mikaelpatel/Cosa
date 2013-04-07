@@ -20,7 +20,15 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
+ * This file is part of the Arduino Che Cosa project.
+ */
+
+#ifndef __COSA_CIAO_HH__
+#define __COSA_CIAO_HH__
+
+#include "Cosa/IOStream.hh"
+
+/**
  * The Cosa Ciao data stream handler. Please see CIAO.txt for details.
  *
  * @section Limitations
@@ -34,21 +42,13 @@
  * @section References
  * [1] Sun Microsystems (1987). "XDR: External Data Representation
  * Standard". RFC 1014. Network Working Group. Retrieved July 11,
- * 2011. http://tools.ietf.org/html/rfc1014
+ * 2011. http://tools.ietf.org/html/rfc1014<br>
  * [2] Boost Serialization, 
- * http://www.boost.org/doc/libs/1_46_1/libs/serialization/doc/index.html
+ * http://www.boost.org/doc/libs/1_46_1/libs/serialization/doc/index.html<br>
  * [3] Java Stream Format,
- * http://docs.oracle.com/javase/7/docs/platform/serialization/spec/protocol.html#10258
- * [4] Arduino/Firmata, http://www.firmata.org
- *
- * This file is part of the Arduino Che Cosa project.
+ * http://docs.oracle.com/javase/7/docs/platform/serialization/spec/protocol.html#10258<br>
+ * [4] Arduino/Firmata, http://www.firmata.org<br>
  */
-
-#ifndef __COSA_CIAO_HH__
-#define __COSA_CIAO_HH__
-
-#include "Cosa/IOStream.hh"
-
 class Ciao {
 public:
   /**
@@ -92,7 +92,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * Data type descriptor structures (program memory)
+   * Ciao Data type descriptor structures (program memory)
    */
   class Descriptor {
   public:

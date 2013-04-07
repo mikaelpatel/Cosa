@@ -20,9 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Basic UART device handler with internal buffering.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -36,6 +33,10 @@
 #include "Cosa/Board.hh"
 #include "Cosa/IOStream.hh"
 
+/**
+ * Simple software UART for ATtinyX5. Only realizes the putchar, 
+ * transmitter. See example code for receiver.
+ */
 class UART : public IOStream::Device {
 private:
   OutputPin m_pin;
@@ -104,6 +105,11 @@ public:
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Board.hh"
 
+/**
+ * Basic UART device handler with internal buffering. IOStream
+ * devices may be piped with the IOBuffer class. The UART class
+ * requires an input- and output IOBuffer instance.
+ */
 class UART : public IOStream::Device {
 private:
   volatile uint8_t* const m_sfr;

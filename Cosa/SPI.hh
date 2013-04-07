@@ -20,12 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Serial Peripheral Interface (SPI) device class.
- * http://www.byteparadigm.com/kb/article/AA-00255/22/Introduction-to-SPI-and-IC-protocols.html
- * Typical usage is SPI device drivers inherit from SPI::Driver and 
- * define SPI commands and higher functions. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -38,6 +32,14 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Board.hh"
 
+/**
+ * Serial Peripheral Interface (SPI) device class. Typical usage is
+ * SPI device drivers inherit from SPI::Driver and define SPI commands
+ * and higher functions. 
+ *
+ * @section See Also
+ * http://www.byteparadigm.com/kb/article/AA-00255/22/Introduction-to-SPI-and-IC-protocols.html
+ */
 class SPI {
 public:
   /**

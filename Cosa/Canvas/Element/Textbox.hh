@@ -20,13 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Canvas Textbox element. Acts as an IOStream/console output to
- * Canvas. As an element it holds its own canvas state; context.
- * The textbox is defined by a port (x, y, width, height) on the
- * canvas. Basic special character handling of carriage-return, line-
- * and form-feed. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -38,6 +31,13 @@
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Font.hh"
 
+/**
+ * Canvas Textbox element. Acts as an IOStream/console output to
+ * Canvas. As an element it holds its own canvas state; context. The
+ * textbox is defined by a port (x, y, width, height) on the
+ * canvas. Basic special character handling of carriage-return, line-
+ * and form-feed. 
+ */
 class Textbox : public Canvas::Element, public IOStream::Device {
 protected:
   /**

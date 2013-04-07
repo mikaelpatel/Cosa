@@ -20,7 +20,17 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
+ * This file is part of the Arduino Che Cosa project.
+ */
+
+#ifndef __COSA_DRIVER_DHT11_HH__
+#define __COSA_DRIVER_DHT11_HH__
+
+#include "Cosa/Types.h"
+#include "Cosa/Pins.hh"
+#include "Cosa/Linkage.hh"
+
+/**
  * DHT11 Humidity & Temperature Sensor device driver. Subclass
  * and implement the event handler, on_event(), to allow periodic
  * read of device (attach to watchdog timeout queue).
@@ -34,16 +44,11 @@
  * The driver will turn off interrupt handling during data read 
  * from the device. 
  *
- * This file is part of the Arduino Che Cosa project.
+ * @section See Also
+ * [1] DHT11 Humidity & Temperature Sensor, Robotics UK,
+ * www.droboticsonline.com, http://www.micro4you.com/files/sensor/DHT11.pdf<br>
+ * [2] http://learn.adafruit.com/dht<br>
  */
-
-#ifndef __COSA_DRIVER_DHT11_HH__
-#define __COSA_DRIVER_DHT11_HH__
-
-#include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
-#include "Cosa/Linkage.hh"
-
 class DHT11 : private Link {
 public:
   /**

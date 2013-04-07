@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,10 +19,6 @@
  * Public License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
- *
- * @section Description
- * Analog Devices ADXL345 Digital Accelerometer SPI driver.
- * http://www.analog.com/static/imported-files/data_sheets/ADXL345.pdf
  *
  * This file is part of the Arduino Che Cosa project.
  */

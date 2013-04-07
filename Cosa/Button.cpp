@@ -20,24 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Debounded Button; Sampled input pin (with internal pullup
- * resistor. Uses a watchdog timeout event (64 ms) for sampling and on 
- * change calls an event action. Subclass Button and implement the
- * virtual on_change() method. Use the subclass for any state needed
- * for the action function.  
- *
- * @section Circuit
- * Connect button/switch from pin to ground. Internal pull-up resistor
- * is activated.
- *
- * @section Limitations
- * Button toggle faster than sample period may be missed.
- * 
- * @section See Also
- * The Button event handler requires the usage of an event
- * dispatch. See Event.hh. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

@@ -20,7 +20,16 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
+ * This file is part of the Arduino Che Cosa project.
+ */
+
+#ifndef __COSA_THREAD_HH__
+#define __COSA_THREAD_HH__
+
+#include "Cosa/Event.hh"
+#include "Cosa/Linkage.hh"
+
+/**
  * Cosa implementation of protothreads; A protothread is a
  * low-overhead mechanism for concurrent programming. Protothreads
  * function as stackless, lightweight threads providing a blocking
@@ -41,20 +50,11 @@
  * @section References
  * [1] Adam Dunkels et al, Protothreads: Simplifying Event-Driven
  * Programming of Memory-Constrained Embedded Systems, SenSys'06,
- * November 1-3, 2006, Boulder, Colorado, USA.
+ * November 1-3, 2006, Boulder, Colorado, USA.<br>
  * [2] Larry Ruane, protothread: An extremely lightweight thread
- * library for GCC, http://code.google.com/p/protothread/
- * [3] http://en.wikipedia.org/wiki/Protothreads
- *
- * This file is part of the Arduino Che Cosa project.
+ * library for GCC, http://code.google.com/p/protothread/<br>
+ * [3] http://en.wikipedia.org/wiki/Protothreads<br>
  */
-
-#ifndef __COSA_THREAD_HH__
-#define __COSA_THREAD_HH__
-
-#include "Cosa/Event.hh"
-#include "Cosa/Linkage.hh"
-
 class Thread : public Link {
 protected:
   static Head runq;

@@ -20,26 +20,23 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Cosa Board pin symbol definitions for the ATmega8, ATmega168
- * ATmega328P based boards such as Arduino Uno, Mini Pro, Nano, and
- * LilyPad. Cosa does not use pin numbers as Arduino/Wiring, 
- * instead strong data type is used (enum types) for the specific 
- * pin classes; e.g. DigitalPin, AnalogPin, PWMPin.
- *
- * @section Limitations
- * The pin numbers for ATmega8, ATmega168 and ATmega328P are mapped
- * as in Arduino.
- *
- * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #ifndef __COSA_BOARD_STANDARD_HH__
 #define __COSA_BOARD_STANDARD_HH__
 
+/**
+ * Cosa STANDARD Board pin symbol definitions for the ATmega8,
+ * ATmega168, ATmega328P based boards such as Arduino Uno, Mini Pro,
+ * Nano, and LilyPad. Cosa does not use pin numbers as Arduino/Wiring, 
+ * instead strong data type is used (enum types) for the specific 
+ * pin classes; DigitalPin, AnalogPin, PWMPin, etc.
+ *
+ * The pin numbers for ATmega8, ATmega168 and ATmega328P are mapped
+ * as in Arduino. The static inline functions, SFR, BIT and UART, rely
+ * on compiler optimizations to be reduced. 
+ */
 class Board {
   friend class Pin;
   friend class UART;

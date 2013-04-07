@@ -20,29 +20,27 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Cosa Board pin symbol definitions for the ATmega1280 and ATmega2560
- * based Arduino boards; Mega 1280/2560.
- *
- * Cosa does not use pin numbers as Arduino/Wiring, instead strong
- * data type is used (enum types) for the specific pin classes;
- * e.g. DigitalPin, AnalogPin, etc.
- *
- * @section Limitations
- * The pin numbers for ATmega1280 and ATmega2560 are only symbolically
- * mapped, i.e. a pin number/digit will not work, symbols must be 
- * used, e.g., Board::D42. Avoid iterations assuming that the symbols
- * are in order. 
- *
- * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #ifndef __COSA_BOARD_MEGA_HH__
 #define __COSA_BOARD_MEGA_HH__
 
+/**
+ * Cosa MEGA Board pin symbol definitions for the ATmega1280 and
+ * ATmega2560 based Arduino boards; Mega 1280/2560. Cosa does not use
+ * pin numbers as Arduino/Wiring, instead strong data type is used
+ * (enum types) for the specific pin classes; DigitalPin, AnalogPin,
+ * etc. 
+ *
+ * The pin numbers for ATmega1280 and ATmega2560 are only symbolically
+ * mapped, i.e. a pin number/digit will not work, symbols must be
+ * used, e.g., Board::D42. Avoid iterations assuming that the symbols
+ * are in order. 
+ *
+ * The static inline functions, SFR, BIT and UART, rely on compiler
+ * optimizations to be reduced. 
+ */
 class Board {
   friend class Pin;
   friend class UART;

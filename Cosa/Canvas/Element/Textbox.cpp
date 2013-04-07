@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Canvas/Element/Textbox.hh
+ * @file Cosa/Canvas/Element/Textbox.cpp
  * @version 1.0
  *
  * @section License
@@ -19,12 +19,6 @@
  * Public License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
- *
- * @section Description
- * Canvas Textbox element. Acts as an IOStream/console output to
- * Canvas. As an element it holds its own canvas state; context.
- * The textbox is defined by a port (x, y, width, height) on the
- * canvas. Basic carriage-return, line- and form-feed are handled.
  *
  * This file is part of the Arduino Che Cosa project.
  */

@@ -20,11 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Off-screen canvas for drawing before copying to the canvas device.
- * Supports only monochrome, 1-bit, pixel in off-screen buffer. 
- * Minimum implementation; draw_pixel() only.
- * 
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,6 +29,11 @@
 #include "Cosa/Types.h"
 #include "Cosa/Canvas.hh"
 
+/**
+ * Off-screen canvas for drawing before copying to the canvas device.
+ * Supports only monochrome, 1-bit, pixel in off-screen buffer. 
+ * Minimum implementation; draw_pixel() only.
+ */
 class OffScreen : public Canvas {
 private:
   uint16_t m_count;		// Size of bitmap (bytes)

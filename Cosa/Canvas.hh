@@ -20,19 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Virtual Canvas device; abstraction of small screens, LCD/TFT. 
- * Device drivers need to override at least begin(), fill_rect()
- * and end(). See Cosa/SPI/ST7735R.hh for an example of usage.
- *
- * @section Limitations
- * Color model is 16-bit RGB<5,6,5>. Canvas size is max 256x256.
- *
- * @section Acknowledgements
- * Inspired by GFX graphics library by ladyada/adafruit, the glcd
- * library by Michael Margolis and Bill Perry, and scd library by
- * Sungjune Lee. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -46,6 +33,19 @@ class Font;
 class System5x7;
 extern System5x7 system5x7;
 
+/**
+ * Virtual Canvas device; abstraction of small screens, LCD/TFT. 
+ * Device drivers need to override at least begin(), fill_rect()
+ * and end(). See ST7735R for an example of usage.
+ *
+ * @section Limitations
+ * Color model is 16-bit RGB<5,6,5>. Canvas size is max 256x256.
+ *
+ * @section Acknowledgement
+ * Inspired by GFX graphics library by ladyada/adafruit, the glcd
+ * library by Michael Margolis and Bill Perry, and scd library by
+ * Sungjune Lee. 
+ */
 class Canvas {
 public:
   /**

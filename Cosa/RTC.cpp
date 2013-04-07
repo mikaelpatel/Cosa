@@ -20,14 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Real-time clock; Arduino/ATmega328P Timer0 for micro/milli-
- * second timing.
- *
- * @section Limitations
- * Coexists with the Arduino timer 0 interrupt handler. Alternative
- * design where the counter match interrupt is used.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

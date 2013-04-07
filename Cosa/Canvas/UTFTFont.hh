@@ -20,10 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * UTFT font library handler for Cosa Canvas. Needs a special 
- * handling of the font bitmap as the decoding is different.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,6 +30,10 @@
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Font.hh"
 
+/**
+ * UTFT font library handler for Cosa Canvas. Needs a special 
+ * handling of the font bitmap as the decoding is different.
+ */
 class UTFTFont : public Font {
 public:
   /**

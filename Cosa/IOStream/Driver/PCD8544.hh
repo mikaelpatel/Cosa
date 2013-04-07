@@ -20,11 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * PCD8544 48x84 pixels matrix LCD controller/driver, device driver 
- * for IOStream access. Binding to trace, etc. For furter details
- * see Product Specification, Philips Semiconductors, 1999 Apr 12.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -37,6 +32,15 @@
 #include "Cosa/Canvas/Font.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"
 
+/**
+ * PCD8544 48x84 pixels matrix LCD controller/driver, device driver 
+ * for IOStream access. Binding to trace, etc. 
+ *
+ * @section See Also
+ * For furter details see Product Specification, Philips
+ * Semiconductors, 1999 Apr 12. 
+ * https://www.sparkfun.com/datasheets/LCD/Monochrome/Nokia5110.pdf 
+ */
 class PCD8544 : public IOStream::Device {
 protected:
   /**

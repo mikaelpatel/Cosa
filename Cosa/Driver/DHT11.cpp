@@ -20,20 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * DHT11 Humidity & Temperature Sensor device driver. Subclass
- * and implement the event handler, on_event(), to allow periodic
- * read of device (attach to watchdog timeout queue).
- *
- * @section Circuit
- * Connect DHT11 to pin, VCC and ground. A pullup resistor from
- * the pin to VCC should be used. Most DHT11 modules have a built-in 
- * pullup resistor.
- *
- * @section Limitations
- * The driver will turn off interrupt handling during data read from
- * the device. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

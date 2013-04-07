@@ -20,10 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Basic in-/output stream support class. Requires implementation of
- * Stream::Device and/or Stream::Filter.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -41,6 +37,10 @@
 
 class IOBuffer;
 
+/**
+ * Basic in-/output stream support class. Requires implementation of
+ * Stream::Device and/or Stream::Filter.
+ */
 class IOStream {
 public:
   /**

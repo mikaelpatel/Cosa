@@ -16,10 +16,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * @section Description
- * VirtualWire 4-to-6 bit codec for the Cosa VWI (Virtual Wire
- * Interface). 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,6 +24,10 @@
 
 #include "Cosa/VWI.hh"
 
+/**
+ * VirtualWire 4-to-6 bit codec for the Cosa VWI (Virtual Wire
+ * Interface). 
+ */
 class VirtualWireCodec : public VWI::Codec {
 private:
   /** Symbol mapping table: 4 to 6 bits */

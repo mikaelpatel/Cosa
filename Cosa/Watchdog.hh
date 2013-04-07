@@ -20,10 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * The Atmega Watchdog is used as a low power timer for period
- * events and delay. 
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -38,6 +34,10 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"
 
+/**
+ * The Atmega Watchdog is used as a low power timer for period
+ * events and delay. 
+ */
 class Watchdog {
 public:
   /**

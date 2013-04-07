@@ -20,12 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Bitmap system font size 5x7. Full ASCII table (0..127).
- *
- * @section Acknowledgement
- * Inspired by graphics library by ladyada/adafruit.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 

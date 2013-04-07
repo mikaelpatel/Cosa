@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,12 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * The Cosa collection handling class; double linked circulic list.
- * 
- * @section Acknowledgements
- * These classes are inspired by the Simula-67 SIMSET Linkage classes. 
- * 
  * This file is part of the Arduino Che Cosa project.
  */
 
