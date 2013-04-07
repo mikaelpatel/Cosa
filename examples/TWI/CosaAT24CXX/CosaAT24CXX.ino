@@ -38,7 +38,7 @@
 OutputPin ledPin(Board::LED);
 
 // The serial eeprom (sub-address 0b000) with binding to eeprom 
-AT24CXX at24c32(0);
+AT24C32 at24c32(0);
 EEPROM eeprom(&at24c32);
 
 // Symbols for data stored in AT24CXX EEPROM memory address space

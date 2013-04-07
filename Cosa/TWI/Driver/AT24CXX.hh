@@ -20,10 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Driver for the AT24CXX 2-Wire Serial EEPROM. See Atmel Product
- * description (Rev. 0336K-SEEPR-7/03), www.atmel.com/images/doc0336.pdf
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,35 +30,60 @@
 #include "Cosa/TWI.hh"
 #include "Cosa/EEPROM.hh"
 
+/**
+ * Driver for the AT24CXX 2-Wire Serial EEPROM. Allows page write and
+ * block read. Supports device AT24C32 (8K) to AT24C512 (64K). Default
+ * AT24CXX device is AT24C32.
+ */
 class AT24CXX : private TWI::Driver, public EEPROM::Device {
 private:
   static const uint8_t ADDR = 0xa0;
   static const uint8_t POLL_MAX = 2;
-  static const uint16_t PAGE_MAX = 32;
-  static const uint16_t WRITE_MAX = PAGE_MAX;
-  static const uint16_t WRITE_MASK = (WRITE_MAX - 1);
+  const uint16_t WRITE_MAX;
+  const uint16_t WRITE_MASK;
   uint8_t m_addr;
 
   /**
-   * Return true(1) if the device is ready, write cycle is completed,
-   * otherwise false(0).
+   * Initiate TWI communication with memory device for access of
+   * given memory address. If buffer is not null perform a write
+   * to page. The given size must not exceed the page. Return true(1)
+   * if the device is ready, write cycle is completed, otherwise
+   * false(0). 
    * @param[in] addr address in rom.
-   * @param[in] buf buffer to write rom.
-   * @param[in] size number to write.
+   * @param[in] buf buffer to write rom (default null(0)).
+   * @param[in] size number to write (default zero(0)).
    * @return bool
    */
   bool poll(void* addr, void* buf = 0, size_t size = 0);
 
 public:
   /**
-   * Construct AT24CXX serial TWI EEPROM device access to given
-   * chip address.
-   * @param[in] addr chip address (0..7)
+   * Number of bytes on device.
    */
-  AT24CXX(uint8_t addr = 0) : 
+  const size_t SIZE;
+
+  /**
+   * Number of bytes in max write page size.
+   */
+  const uint16_t PAGE_MAX;
+
+  /**
+   * Construct AT24CXX serial TWI EEPROM device access to given
+   * chip address, page and memory size.
+   * @param[in] addr chip address (0..7, default 0).
+   * @param[in] size in Kbits (default 32).
+   * @param[in] page_max size of memory page (default 32 byte).
+   */
+  AT24CXX(uint8_t addr = 0, 
+	  const size_t size = 32,
+	  const uint16_t page_max = 32) : 
     TWI::Driver(), 
     EEPROM::Device(),
-    m_addr(ADDR | ((addr & 0x7) << 1))
+    WRITE_MAX(page_max),
+    WRITE_MASK(page_max - 1),
+    m_addr(ADDR | ((addr & 0x7) << 1)),
+    SIZE((size / CHARBITS) * 1024),
+    PAGE_MAX(page_max)
   {}
 
   /**
@@ -96,4 +117,68 @@ public:
   virtual int write(void* dest, void* src, size_t size);
 };
 
+/**
+ * The AT24C32 provides 32,768 bits of serial electrically erasable
+ * and programmable read only memory (EEPROM) organized as 4096 words
+ * of 8 bits each. 32-Byte page write mode.
+ *
+ * See Atmel Product description (Rev. 0336K-SEEPR-7/03),
+ * www.atmel.com/images/doc0336.pdf 
+ */
+class AT24C32 : public AT24CXX {
+public:
+  AT24C32(uint8_t addr = 0) : AT24CXX(addr, 32, 32) {}
+};
+
+/**
+ * The AT24C64 provides 65,536 bits of serial electrically erasable
+ * and programmable read only memory (EEPROM) organized as 8192 words
+ * of 8 bits each. 32-Byte page write mode. 
+ *
+ * See Atmel Product description (Rev. 0336K-SEEPR-7/03),
+ * www.atmel.com/images/doc0336.pdf 
+ */
+class AT24C64 : public AT24CXX {
+public:
+  AT24C64(uint8_t addr = 0) : AT24CXX(addr, 64, 32) {}
+};
+
+/**
+ * The AT24C128 provides 131,072 bits of serial electrically erasable
+ * and programmable read only memory (EEPROM) organized as 16,384
+ * words of 8 bits each. 64-Byte page write mode.
+ * 
+ * See Atmel Product description (Rev. 0670T–SEEPR–3/07),
+ * http://www.atmel.com/Images/doc0670.pdf
+ */
+class AT24C128 : public AT24CXX {
+public:
+  AT24C128(uint8_t addr = 0) : AT24CXX(addr, 128, 64) {}
+};
+
+/**
+ * The AT24C256 provides 262,144 bits of serial electrically erasable
+ * and programmable read only memory (EEPROM) organized as
+ * 32,768 words of 8 bits each. 64-Byte page write mode.
+ * 
+ * See Atmel Product description (Rev. 0670T–SEEPR–3/07),
+ * http://www.atmel.com/Images/doc0670.pdf
+ */
+class AT24C256 : public AT24CXX {
+public:
+  AT24C256(uint8_t addr = 0) : AT24CXX(addr, 256, 64) {}
+};
+
+/**
+ * The AT24C512 provides 524,288 bits of serial electrically erasable
+ * and programmable read only memory (EEPROM) organized as 65,536
+ * words of 8 bits each. 128-Byte page write mode.
+ *
+ * See Atmel Product description (Rev. 1116O–SEEPR–1/07),
+ * http://www.atmel.com/Images/doc1116.pdf
+ */
+class AT24C512 : public AT24CXX {
+public:
+  AT24C512(uint8_t addr = 0) : AT24CXX(addr, 512, 128) {}
+};
 #endif

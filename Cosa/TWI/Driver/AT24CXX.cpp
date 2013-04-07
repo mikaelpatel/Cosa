@@ -20,10 +20,6 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Driver for the AT24CXX 2-Wire Serial EEPROM. See Atmel Product
- * description (Rev. 0336K-SEEPR-7/03), www.atmel.com/images/doc0336.pdf
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
