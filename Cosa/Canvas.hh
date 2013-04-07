@@ -68,9 +68,9 @@ public:
     }
     color16_t(uint8_t r, uint8_t g, uint8_t b) 
     {
-      red = r;
-      green = g;
-      blue = b;
+      red = r >> 3;
+      green = g >> 2;
+      blue = b >> 3;
     }
   };
 

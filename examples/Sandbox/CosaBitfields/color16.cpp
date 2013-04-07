@@ -33,9 +33,9 @@ uint16_t
 color16a(uint8_t red, uint8_t green, uint8_t blue)
 {
   color16_t c;
-  c.red = red;
-  c.green = green;
-  c.blue = blue;
+  c.red = red >> 3;
+  c.green = green >> 2;
+  c.blue = blue >> 3;
   return (c.rgb);
 }
 
