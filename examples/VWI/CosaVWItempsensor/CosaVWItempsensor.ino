@@ -41,6 +41,7 @@
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/FixedPoint.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Power.hh"
 
 // Connect to one-wire device. Assuming only one device even if connected
 OWI owi(Board::D2);
@@ -63,6 +64,11 @@ void setup()
   // Connect to the temperature sensor and give some time for startup
   sensor.connect(0);
   SLEEP(1);
+
+  // Disable hardware
+  VWI::disable();
+  Power::adc_disable();
+  Power::usi_disable();
 }
 
 // Message from the device. Use one-wire identity as virtual wire identity
@@ -81,11 +87,13 @@ void loop()
   sensor.convert_request();
   SLEEP(1);
 
-  // Read temperature and send a message with identiy and sequence number
-  sensor.read_temperature();
+  // Read temperature and send a message with identity and sequence number
+  sensor.read_scratchpad();
   memcpy(&msg.id, sensor.get_rom(), sizeof(msg.id));
   msg.nr = nr++;
   msg.temperature = sensor.get_temperature();
+  VWI::enable();
   tx.send(&msg, sizeof(msg));
   tx.await();
+  VWI::disable();
 }
