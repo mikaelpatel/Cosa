@@ -34,7 +34,7 @@
  * Driver for the ATmega/ATtiny internal EEPROM and abstraction of
  * EEPROM devices. See AT24CXX for an example of driver for external
  * EEPROM memory. The default device is the internal EEPROM.
- * The class EEPROM delegates to the device.
+ * The class EEPROM delegates to the EEPROM:Device class instance.
  */
 class EEPROM {
 public:
@@ -123,47 +123,47 @@ public:
 
   int read(unsigned char* dest, unsigned char* src) 
   { 
-    return (read(dest, src, sizeof(unsigned char))); 
+    return (m_dev->read(dest, src, sizeof(unsigned char))); 
   }
 
   int read(unsigned short* dest, unsigned short* src) 
   { 
-    return (read(dest, src, sizeof(unsigned short))); 
+    return (m_dev->read(dest, src, sizeof(unsigned short))); 
   }
   
   int read(unsigned int* dest, unsigned int* src) 
   { 
-    return (read(dest, src, sizeof(unsigned int))); 
+    return (m_dev->read(dest, src, sizeof(unsigned int))); 
   }
 
   int read(unsigned long* dest, unsigned long* src)
   { 
-    return (read(dest, src, sizeof(unsigned long))); 
+    return (m_dev->read(dest, src, sizeof(unsigned long))); 
   }
   
   int read(char* dest, char* src) 
   { 
-    return (read(dest, src, sizeof(char))); 
+    return (m_dev->read(dest, src, sizeof(char))); 
   }
 
   int read(short* dest, short* src) 
   { 
-    return (read(dest, src, sizeof(short))); 
+    return (m_dev->read(dest, src, sizeof(short))); 
   }
 
   int read(int* dest, int* src)
   { 
-    return (read(dest, src, sizeof(int))); 
+    return (m_dev->read(dest, src, sizeof(int))); 
   }
 
   int read(long* dest, long* src)
   { 
-    return (read(dest, src, sizeof(long))); 
+    return (m_dev->read(dest, src, sizeof(long))); 
   }
 
   int read(float* dest, float* src)
   { 
-    return (read(dest, src, sizeof(float))); 
+    return (m_dev->read(dest, src, sizeof(float))); 
   }
   
   /**
@@ -181,47 +181,47 @@ public:
 
   int write(unsigned char* dest, unsigned char src) 
   { 
-    return (write(dest, &src, sizeof(unsigned char))); 
+    return (m_dev->write(dest, &src, sizeof(unsigned char))); 
   }
 
   int write(unsigned short* dest, unsigned short src) 
   { 
-    return (write(dest, &src, sizeof(unsigned short)));
+    return (m_dev->write(dest, &src, sizeof(unsigned short)));
   }
 
   int write(unsigned int* dest, unsigned int src) 
   { 
-    return (write(dest, &src, sizeof(unsigned int))); 
+    return (m_dev->write(dest, &src, sizeof(unsigned int))); 
   }
 
   int write(unsigned long* dest, unsigned long src) 
   { 
-    return (write(dest, &src, sizeof(unsigned long))); 
+    return (m_dev->write(dest, &src, sizeof(unsigned long))); 
   }
 
   int write(char* dest, char src) 
   { 
-    return (write(dest, &src, sizeof(char))); 
+    return (m_dev->write(dest, &src, sizeof(char))); 
   }
 
   int write(short* dest, short src) 
   { 
-    return (write(dest, &src, sizeof(short)));
+    return (m_dev->write(dest, &src, sizeof(short)));
   }
 
   int write(int* dest, int src) 
   { 
-    return (write(dest, &src, sizeof(int))); 
+    return (m_dev->write(dest, &src, sizeof(int))); 
   }
 
   int write(long* dest, long src) 
   { 
-    return (write(dest, &src, sizeof(long))); 
+    return (m_dev->write(dest, &src, sizeof(long))); 
   }
 
   int write(float* dest, float src) 
   { 
-    return (write(dest, &src, sizeof(float))); 
+    return (m_dev->write(dest, &src, sizeof(float))); 
   }
 };
 
