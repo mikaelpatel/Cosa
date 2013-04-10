@@ -31,7 +31,7 @@
 /**
  * Bitmap system font size 5x7. Full ASCII table (0..127).
  *
- * @section Acknowledgement
+ * @section Acknowledgements
  * Inspired by graphics library by ladyada/adafruit.
  */
 class System5x7 : public Font {

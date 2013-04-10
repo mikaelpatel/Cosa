@@ -32,7 +32,7 @@
  * UTFT bitmap font size 32x50, segments, fixed with font with 
  * numbers only.
  *
- * @section Acknowledgement
+ * @section Acknowledgements
  * Font data originates from the UTFT library was created by 
  * Henning Karlsen.
  */

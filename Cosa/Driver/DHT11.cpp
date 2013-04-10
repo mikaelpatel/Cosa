@@ -27,6 +27,7 @@
 #include "Cosa/Watchdog.hh"
 
 // Thresholds for wire sampling
+// Fix: Should be relative to F_CPU
 #if defined(__ARDUINO_TINYX5__)
 static const uint8_t COUNT_MIN = 30;
 #else

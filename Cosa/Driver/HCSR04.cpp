@@ -57,7 +57,7 @@ HCSR04::on_event(uint8_t type, uint16_t value)
   uint16_t distance;
 
   // Read the distance and check if there was a change
-  if (!read(distance) && (m_distance == distance)) return;
+  if (!read(distance) || (m_distance == distance)) return;
 
   // Save the new distance and call the change handler
   m_distance = distance;

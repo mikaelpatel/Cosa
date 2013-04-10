@@ -41,7 +41,7 @@
  * @section Limitations
  * Button toggle faster than sample period may be missed.
  * 
- * @section See
+ * @section See Also
  * The Button event handler requires the usage of an event
  * dispatch. See Event.hh. 
  */

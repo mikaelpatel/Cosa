@@ -41,7 +41,7 @@ extern System5x7 system5x7;
  * @section Limitations
  * Color model is 16-bit RGB<5,6,5>. Canvas size is max 256x256.
  *
- * @section Acknowledgement
+ * @section Acknowledgements
  * Inspired by GFX graphics library by ladyada/adafruit, the glcd
  * library by Michael Margolis and Bill Perry, and scd library by
  * Sungjune Lee. 
@@ -133,6 +133,7 @@ public:
      * canvas color(WHITE), text color(BLACK), text scale(1),
      * and cursor at (0, 0).
      * @param[in] font default is the system font.
+     * @pre font != 0
      */
     Context(Font* font = (Font*) &system5x7) :
       m_pen_color(BLACK),
@@ -219,6 +220,7 @@ public:
      * Set context text font. Return previous color.
      * @param[in] font
      * @return previous font.
+     * @pre font != 0
      */
     Font* set_text_font(Font* font)
     {

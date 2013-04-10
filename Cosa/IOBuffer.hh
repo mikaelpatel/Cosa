@@ -30,18 +30,19 @@
 #include "Cosa/IOStream.hh"
 
 /**
- * Circlic buffer for IOStreams. May be used as a string buffer
- * device, or to connect different IOStreams.
+ * Circlic buffer for IOStreams. Size must be Power(2). May be used as
+ * a string buffer device, or to connect different IOStreams. See
+ * UART.hh for an example.
  */
 class IOBuffer : public IOStream::Device {
 private:
   volatile char* m_buffer;
   volatile uint8_t m_head;
   volatile uint8_t m_tail;
+  const uint8_t BUFFER_MASK;
 
 public:
   const uint8_t BUFFER_MAX;
-  const uint8_t BUFFER_MASK;
 
   /**
    * Allocate buffer object for iostream operations. Buffer size (max) 

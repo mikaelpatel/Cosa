@@ -31,7 +31,7 @@
 /**
  * GLCD bitmap font size 8x16, fixed width font with numbers only.
  *
- * @section Acknowledgement
+ * @section Acknowledgements
  * Originates from the GLCD library and adapted for Cosa Canvas. The
  * GLCD library was created by Michael Margolis and improved by Bill
  * Perry. 
