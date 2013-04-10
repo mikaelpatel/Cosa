@@ -31,7 +31,10 @@
 #include "Cosa/Linkage.hh"
 
 /**
- * Device driver for Ultrasonic range module HC-SR04.
+ * Device driver for Ultrasonic range module HC-SR04. Subclass
+ * and implement the change event handler, on_change(). Attach
+ * to watchdog timeout queue to perform periodic read and check 
+ * of change.
  *
  * @section Circuit
  * Connect HC-SR04 module to echo and trigger pin, and VCC and
@@ -52,7 +55,8 @@ private:
   /**
    * @override
    * Default device event handler function. Attach to watchdog
-   * timer queue, Watchdog::attach(), to allow perodic reading.
+   * timer queue, Watchdog::attach(), to allow perodic reading
+   * and check if the distance has changed.
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
@@ -70,7 +74,7 @@ public:
     m_echoPin(echo_pin),
     m_distance(0)
   {}
-
+  
   /**
    * Latest distance reading.
    * @return distance in millimeters.
@@ -89,7 +93,8 @@ public:
   bool read(uint16_t& distance);
 
   /**
-   * Default on change function. 
+   * Default on change function. Override for callback when the
+   * distance has changed.
    * @param[in] distance.
    */
   virtual void on_change(uint16_t distance) {}
