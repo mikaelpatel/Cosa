@@ -36,7 +36,7 @@
  * @section See Also
  * Sitronix Technology Corp. ST7735R documentation, V2.1, 2010-02-01.
  *
- * @section Acknowledgement
+ * @section Acknowledgements
  * Inspired by graphics library by ladyada/adafruit.
  */
 class ST7735R : public Canvas, SPI::Driver {
