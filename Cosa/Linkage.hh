@@ -32,7 +32,7 @@
 /**
  * The Cosa collection handling class; double linked circulic list.
  * 
- * @section Acknowledgement
+ * @section Acknowledgements
  * These classes are inspired by the Simula-67 SIMSET Linkage classes. 
  *
  * @section See Also
@@ -106,18 +106,18 @@ public:
 class Head : public Linkage {
 public:
   /**
-   * Construct a thing collection.
+   * Construct a double linked list queue head.
    */
   Head() : Linkage() {}
   
   /**
-   * Return number of things.
-   * @return length
+   * Return number of elements in double linked list.
+   * @return elements.
    */
-  uint8_t length();
+  uint8_t available();
 
   /**
-   * Return true(1) if there are no things otherwise false(0).
+   * Return true(1) if the queue is empty otherwise false(0).
    * @return bool.
    */
   bool is_empty()

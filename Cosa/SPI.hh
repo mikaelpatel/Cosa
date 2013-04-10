@@ -145,21 +145,21 @@ public:
   }
 
   /**
-   * Get length of receive buffer.
-   * @return number of bytes.
-   */
-  uint8_t get_length()
-  { 
-    return (m_put);
-  }
-
-  /**
    * Get slave device handler.
    * @return device reference.
    */
   Device* get_device()
   { 
     return (m_dev);
+  }
+
+  /**
+   * Get number of bytes available in receive buffer.
+   * @return number of bytes.
+   */
+  uint8_t available()
+  { 
+    return (m_put);
   }
 
   /**

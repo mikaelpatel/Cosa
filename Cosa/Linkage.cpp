@@ -71,7 +71,7 @@ Head::on_event(uint8_t type, uint16_t value)
 }
 
 uint8_t 
-Head::length()
+Head::available()
 {
   uint8_t res = 0;
   // Iterate through the list and count the length of the queue
