@@ -35,7 +35,8 @@
 class Event {
 public:
   /**
-   * Size of event queue. Adjust depending on application. 
+   * Size of event queue. Adjust depending on application. Must be
+   * Power(2).
    */
   static const uint8_t QUEUE_MAX = 16;
 
@@ -194,7 +195,7 @@ public:
   /**
    * Event queue of size QUEUE_MAX.
    */
-  static Queue queue;
+  static Queue<Event, QUEUE_MAX> queue;
 };
 
 #endif
