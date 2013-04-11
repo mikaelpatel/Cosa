@@ -92,9 +92,12 @@ The provided documentation is generated with doxygen and may also be
 generated for users source code if the Cosa documentation style is
 adapted. See the Doxyfile for configuration of doxygen. 
 
-For ATtinyX5 a patch is needed to allow linking programs larger than
-4K; Please see
-https://github.com/TCWORLD/ATTinyCore/tree/master/PCREL%20Patch%20for%20GCC 
+For ATtinyX5 please install the David Mellis MIT ATtiny
+[core](http://hlt.media.mit.edu/?p=1695). A patch is needed to allow
+linking programs larger than 4K; Please see 
+https://github.com/TCWORLD/ATTinyCore/tree/master/PCREL%20Patch%20for%20GCC. 
+Please do not forget to first program the ATtiny device with the
+bootloader, i.e., set the fuse bits.
 
 Drivers
 -------
