@@ -356,7 +356,7 @@ Device driver for PCD8544 48x84 pixels matrix LCD controller/driver
 (Serial OutputPin).
 */
 
-/** @page page10 Auxilary
+/** @page page10 Auxiliary
 @section AT24CXX
 Driver for the AT24CXX 2-Wire Serial EEPROM (TWI). Allows page
 write and block read. Supports device AT24C32 (8K) to AT24C512
