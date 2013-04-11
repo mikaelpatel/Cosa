@@ -80,7 +80,7 @@ Cosa directory create a symbolic link in arduino to the Cosa source
 directory, and another symbolic link in your sketch directory to the
 Cosa example sketches. 
 
-The application programmers interface documentation is available 
+The Application Programmers Interface (API) documentation is available 
 [online](http://dl.dropbox.com/u/993383/Cosa/doc/html/index.html) and
 compressed for
 [download](http://dl.dropbox.com/u/993383/Cosa/doc.zip). The
