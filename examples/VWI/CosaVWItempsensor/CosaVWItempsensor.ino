@@ -69,6 +69,8 @@ void setup()
   VWI::disable();
   Power::adc_disable();
   Power::usi_disable();
+  Power::timer0_disable();
+  Power::timer1_disable();
 }
 
 // Message from the device. Use one-wire identity as virtual wire identity
@@ -88,12 +90,15 @@ void loop()
   SLEEP(1);
 
   // Read temperature and send a message with identity and sequence number
+  Power::timer1_enable();
+  VWI::enable();
   sensor.read_scratchpad();
   memcpy(&msg.id, sensor.get_rom(), sizeof(msg.id));
   msg.nr = nr++;
   msg.temperature = sensor.get_temperature();
-  VWI::enable();
   tx.send(&msg, sizeof(msg));
   tx.await();
   VWI::disable();
+  Power::timer1_disable();
+  SLEEP(4);
 }
