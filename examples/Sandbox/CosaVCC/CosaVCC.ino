@@ -44,8 +44,8 @@ private:
 #elif defined(__ARDUINO_TINYX5__)
   static const uint8_t VBG = 0b1100;
 #endif
-  uint32_t m_threshold;
-  uint32_t m_vcc;
+  uint16_t m_threshold;
+  uint16_t m_vcc;
   virtual void run()
   {
     m_vcc = 1126400L / AnalogPin::sample(VBG, AnalogPin::A1V1_REFERENCE);
@@ -53,14 +53,14 @@ private:
     on_low_voltage();
   }
 public:
-  VCC(uint32_t mv, uint16_t ms = 1024) : 
+  VCC(uint16_t mv, uint16_t ms = 1024) : 
     Periodic(ms), 
     m_threshold(mv),
     m_vcc(0)
   {}
   virtual void on_low_voltage()
   {
-    INFO("%ul mV", m_vcc);
+    trace << Watchdog::get_millis() / 1000 << ':' << m_vcc << PSTR(" mV\n"); 
   }
 };
 

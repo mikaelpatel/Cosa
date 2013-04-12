@@ -29,18 +29,13 @@
 // Real-Time Clock: configuration
 #define COUNT 255
 #define PRESCALE 64
+#define TIMER_CYCLES(ticks) ((ticks) << 8)
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
 #define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
-#define TIMER_CYCLES(ticks) ((ticks) << 8)
-#define MS_COUNT ((F_CPU / PRESCALE / 1000) - 1)
-#define MS_ERR ((COUNT + 1) - MS_COUNT)
+#define MS_PER_TICK (US_PER_TICK / 1000)
 
 // Timer ticks counter
 static volatile uint32_t g_ticks = 0UL;
-
-// Milli-second counter
-static volatile uint32_t g_millis = 0UL;
-static volatile uint8_t g_err = 0;
 
 bool
 RTC::begin()
@@ -77,8 +72,9 @@ RTC::millis()
   uint32_t res;
   // Read the milli-second counter. Protect from interrupt updates
   synchronized {
-    res = g_millis;
+    res = g_ticks;
   }
+  res = res * MS_PER_TICK;
   return (res);
 }
 
@@ -104,17 +100,5 @@ ISR(TIMER0_COMPA_vect)
   OCR0A = COUNT;
   // Increment tick counter
   g_ticks = g_ticks + 1;
-  // And increment milli-second counter
-  uint32_t millis = g_millis;
-  uint8_t err = g_err + MS_ERR;
-  if (err >= MS_COUNT) {
-    millis += 2;
-    err = 0;
-  } 
-  else {
-    millis += 1;
-  }
-  g_millis = millis;
-  g_err = err;
 }
 

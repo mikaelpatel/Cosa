@@ -96,8 +96,7 @@ Watchdog::attach(Link* target, uint16_t ms)
 void
 Watchdog::await(AwaitCondition fn, void* env, uint16_t ms)
 {
-  volatile uint32_t ticks = s_ticks + 1;
-  if (ms != 0) ticks += (ms / ms_per_tick());
+  volatile uint32_t ticks = s_ticks + (ms == 0 ? 1 : (ms / ms_per_tick()));
   do {
     if (fn != 0 && fn(env)) return;
     Power::sleep(s_mode);
