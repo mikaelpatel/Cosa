@@ -182,8 +182,8 @@ Forces declarative programming of pins in sketches.
 Abstract input pin (class InputPin). Allows pullup mode.
 
 @section ExternalInterruptPin
-Abstract external interrupt pin. Allows interrupt handling on the pin
-value changes. 
+Abstract external interrupt pin (class ExternalInterruptPin). Allows
+interrupt handling on the pin value changes. 
 
 @section InterruptPin
 Abstract interrupt pin (class InterruptPin). Allows interrupt handling
@@ -240,12 +240,13 @@ Cosa contains a number of abstract classes to support writing device
 drivers. These are structured using a delegation design pattern.
 
 @section IOStream
-Basic in-/output stream support class. Requires implementation of
+Basic in-/output stream support class IOStream. Requires implementation of
 Stream::Device and/or Stream::Filter.
 
 @section IOBuffer
-Circlic buffer for IOStreams. Size must be Power(2). May be used as
-a string buffer device, or to connect different IOStreams. 
+Circlic buffer for IOStreams (class IOBuffer). Size must be
+Power(2). May be used as a string buffer device, or to connect
+different IOStreams.  
 
 @section Ciao
 The Cosa Ciao data stream handler is basically a tagged data format
@@ -253,7 +254,7 @@ that supports the C/C++ language data types, descriptors (struct) and
 sequences of these. 
 
 @section Fai
-The Cosa Ciao data stream of Arduino status and commands (Cosa fai).
+The Cosa Ciao data stream of Arduino status and commands (Cosa Fai).
 */
 
 /** @page page5 Wired
@@ -270,16 +271,14 @@ requires an input- and output IOBuffer instance. UART is a sub-class
 of IOStream::Device. See Trace for typical usage.
 
 @section TWI
-Two wire library. Support for the I2C/TWI bus.
+The I2C/TWI device driver support class (Two Wire Interface, TWI).
 
 @section SPI
-Serial Peripheral Interface (SPI) device class. Typical usage is
-SPI device drivers inherit from SPI::Driver and define SPI commands
-and higher functions. 
+The Serial Peripheral Interface (SPI) device driver support class. 
 
 @section OWI
-1-wire device driver support class. Allows device rom search
-and connection to multiple devices on one-wire bus.
+The 1-wire device driver support class (One Wire Interface, OWI). Allows
+device rom search and connection to multiple devices on one-wire bus.
 */
 
 /** @page page6 Wireless
