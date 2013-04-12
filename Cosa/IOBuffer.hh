@@ -55,8 +55,8 @@ public:
     m_buffer(buffer),
     m_head(0),
     m_tail(0),
-    BUFFER_MAX(max),
-    BUFFER_MASK(max - 1)
+    BUFFER_MASK(max - 1),
+    BUFFER_MAX(max)
   {
   }
 
