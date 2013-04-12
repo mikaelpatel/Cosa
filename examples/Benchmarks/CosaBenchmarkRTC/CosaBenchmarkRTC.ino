@@ -91,17 +91,17 @@ void setup()
   err = 0;
   for (uint32_t i = 0; i < 100; i++) {
     start = RTC::millis();
-    Watchdog::delay(120);
+    Watchdog::delay(100);
     stop = RTC::millis();
     uint32_t diff = stop - start;
-    if (diff > 130) {
+    if (diff > 110) {
       trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"), 
 		     i, start, stop, diff);
       Watchdog::delay(128);
       err++;
     }
   }
-  INFO("Watchdog::delay(120): 100 measurement/validation (err = %ul)\n", err);
+  INFO("Watchdog::delay(100): 100 measurement/validation (err = %ul)\n", err);
 }
 
 void loop()

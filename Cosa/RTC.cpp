@@ -70,7 +70,7 @@ uint32_t
 RTC::millis()
 {
   uint32_t res;
-  // Read the milli-second counter. Protect from interrupt updates
+  // Read tick counter and adjust to milli-seconds
   synchronized {
     res = g_ticks;
   }
@@ -87,7 +87,7 @@ RTC::micros()
   synchronized {
     res = g_ticks;
     cnt = TCNT0;
-    if (TIFR0 & _BV(OCF0A) && (cnt < COUNT)) res += 1;
+    if ((TIFR0 & _BV(OCF0A)) && (cnt < COUNT)) res += 1;
   }
   // Convert ticks to micro-seconds
   res = (TIMER_CYCLES(res) + cnt) * US_PER_TIMER_CYCLE;
