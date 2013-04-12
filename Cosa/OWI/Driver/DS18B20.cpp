@@ -37,7 +37,7 @@ bool
 DS18B20::convert_request()
 {
   if (!match_rom()) return (false);
-  m_pin->write(CONVERT_T);
+  m_pin->write(CONVERT_T, CHARBITS, m_parasite);
   return (true);
 }
 
@@ -71,7 +71,7 @@ bool
 DS18B20::copy_scratchpad()
 {
   if (!match_rom()) return (false);
-  m_pin->write(COPY_SCRATCHPAD);
+  m_pin->write(COPY_SCRATCHPAD, CHARBITS, m_parasite);
   return (true);
 }
 
@@ -81,4 +81,13 @@ DS18B20::recall()
   if (!match_rom()) return (false);
   m_pin->write(RECALL_E);
   return (true);
+}
+
+bool
+DS18B20::read_power_supply()
+{
+  if (!match_rom()) return (false);
+  m_pin->write(READ_POWER_SUPPLY);
+  m_parasite = (m_pin->read(1) == 0);
+  return (m_parasite);
 }

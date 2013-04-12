@@ -283,7 +283,8 @@ public:
   
 private:
   uint8_t m_crc;
-  
+  uint8_t m_parasite;
+
 public:
   /**
    * Construct one wire bus connected to the given pin.
@@ -309,11 +310,13 @@ public:
 
   /**
    * Write the given value to the one wire bus. The bits are written
-   * from LSB to MSB. 
+   * from LSB to MSB. Pass true(1) for power parameter to allow 
+   * parasite device to be powered. Should be turned off with power_off().
    * @param[in] value to write.
    * @param[in] bits to be written.
+   * @param[in] power on for parasite device.
    */
-  void write(uint8_t value, uint8_t bits = CHARBITS);
+  void write(uint8_t value, uint8_t bits = CHARBITS, uint8_t power= 0);
 
   /**
    * Begin a read sequence with CRC.
@@ -340,6 +343,14 @@ public:
    * @param[in] stream to print rom to.
    */
   void print_devices(IOStream& stream = trace);
+
+  /**
+   * Turn off parasite powering of pin. See also write().
+   */
+  void power_off()
+  {
+    set_mode(INPUT_MODE);
+  }
 };
 
 #endif

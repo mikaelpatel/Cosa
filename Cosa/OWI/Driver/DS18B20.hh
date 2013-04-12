@@ -62,6 +62,10 @@ private:
     uint8_t crc;
   };
   scratchpad_t m_scratchpad;
+  /**
+   * Parasite power mode.
+   */
+  uint8_t m_parasite;
 
 public:
   /**
@@ -76,7 +80,8 @@ public:
    * @param[in] rom device identity (default null).
    */
   DS18B20(OWI* pin, const uint8_t* rom = 0) : 
-    OWI::Driver(pin, rom) 
+    OWI::Driver(pin, rom),
+    m_parasite(0)
   {}
 
   /**
@@ -178,6 +183,22 @@ public:
    * @return true(1) if successful otherwise false(0).
    */
   bool recall();
+
+  /**
+   * Read power supply. Determine if any device requires parasite 
+   * powering.
+   * @return true(1) if successful otherwise false(0).
+   */
+  bool read_power_supply();
+
+  /**
+   * Turn power off if the device is parasite powered.
+   */
+  void power_off()
+  {
+    if (!m_parasite) return;
+    m_pin->power_off();
+  }
 };
 
 #endif

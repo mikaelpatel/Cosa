@@ -79,7 +79,7 @@ OWI::read(uint8_t bits)
 }
 
 void
-OWI::write(uint8_t value, uint8_t bits)
+OWI::write(uint8_t value, uint8_t bits, uint8_t power)
 {
   uint8_t mix = 0;
   synchronized {
@@ -104,7 +104,7 @@ OWI::write(uint8_t value, uint8_t bits)
       m_crc >>= 1;
       if (mix & 1) m_crc ^= 0x8C;
     }
-    set_mode(INPUT_MODE);
+    if (!power) set_mode(INPUT_MODE);
   }
   DELAY(10);
 }

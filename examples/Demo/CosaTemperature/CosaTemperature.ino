@@ -25,7 +25,7 @@
  * IOStream::Device, and usage of off-screen canvas.
  *
  * @section Circuit
- * Connect Arduino to DS18B20 in D5.
+ * Connect Arduino to DS18B20 in D5 and GND. Parasite powering.
  *
  * Connect Arduino to PCD8544 (Arduino => PCD8544):
  * D6 ==> SDIN, D7 ==> SCLK, D8 ==> DC, D9 ==> SCE.
@@ -69,19 +69,25 @@ void setup()
   // Use LCD bind to trace
   trace.begin(&lcd);
   trace << PSTR("\fCosaPCD8544: started\n");
+  SLEEP(2);
+  trace << '\f';
   TRACE(sensor.connect(0));
+  TRACE(sensor.read_power_supply());
   SLEEP(3);
 
   // Pipeline the conversion requests from the sensor
   sensor.convert_request();
   SLEEP(1);
-}
+  sensor.power_off();
+ }
 
 void loop()
 {
   // Request a new sample from the sensor and read temperature
   sensor.read_scratchpad();
   sensor.convert_request();
+  SLEEP(1);
+  sensor.power_off();
 
   // Get temperature and convert from fixed point (could use float)
   FixedPoint temp(sensor.get_temperature(), 4);
