@@ -248,7 +248,7 @@ public:
    * @param[in] stream to print on.
    */
   void print(IOStream& stream = trace); 
-
+  
   /**
    * Print abstract pin information to given stream with
    * new-line. Default is the trace stream. 
@@ -310,188 +310,6 @@ public:
       }
     }
   }
-};
-
-/**
- * Abstract external interrupt pin. Allows interrupt handling on 
- * the pin value changes. 
- */
-class ExternalInterruptPin : 
-  public InputPin, 
-  public Event::Handler, 
-  public Interrupt::Handler 
-{
-private:
-  static ExternalInterruptPin* ext[Board::EXT_MAX];
-  uint8_t m_ix;
-
-  /**
-   * Interrupt handlers are friends.
-   */
-  friend void INT0_vect(void);
-#if !defined(__ARDUINO_TINYX5__)
-  friend void INT1_vect(void);
-#if !defined(__ARDUINO_STANDARD__)
-  friend void INT2_vect(void);
-#if defined(__ARDUINO_MEGA__)
-  friend void INT3_vect(void);
-  friend void INT4_vect(void);
-  friend void INT5_vect(void);
-#endif
-#endif
-#endif
-
-public:
-  enum Mode {
-    ON_LOW_LEVEL_MODE = 0,
-    ON_CHANGE_MODE = _BV(ISC00),
-    ON_FALLING_MODE = _BV(ISC01),
-    ON_RISING_MODE = (_BV(ISC01) | _BV(ISC00)),
-    PULLUP_MODE = 4
-  } __attribute__((packed));
-
-  /**
-   * Construct external interrupt pin with given pin number and mode.
-   * @param[in] pin pin number.
-   * @param[in] mode pin mode.
-   */
-  ExternalInterruptPin(Board::ExternalInterruptPin pin, 
-		       Mode mode = ON_CHANGE_MODE);
-
-  /**
-   * Enable interrupt pin change detection and interrupt handler.
-   */
-  void enable() 
-  { 
-    synchronized {
-#if defined(__ARDUINO_TINYX5__)
-      bit_set(GIMSK, INT0); 
-#else
-      bit_set(EIMSK, m_ix); 
-#endif
-    }
-  }
-
-  /**
-   * Disable interrupt pin change detection.
-   */
-  void disable() 
-  { 
-    synchronized {
-#if defined(__ARDUINO_TINYX5__)
-      bit_clear(GIMSK, INT0);
-#else
-      bit_clear(EIMSK, m_ix); 
-#endif
-    }
-  }
-
-  /**
-   * @override
-   * Default interrupt service on external interrupt pin change.
-   * @param[in] arg argument from interrupt service routine.
-   */
-  virtual void on_interrupt(uint16_t arg = 0);
-};
-
-/**
- * Abstract interrupt pin. Allows interrupt handling on 
- * the pin value changes. 
- */
-class InterruptPin : 
-  public InputPin, 
-  public Event::Handler, 
-  public Interrupt::Handler 
-{
-private:
-  static InterruptPin* pin[Board::PIN_MAX];
-  static uint8_t state[Board::PCINT_MAX];
-
-  /**
-   * Interrupt handlers are friends.
-   */
-  friend void PCINT0_vect(void);
-#if !defined(__ARDUINO_TINYX5__)
-  friend void PCINT1_vect(void);
-  friend void PCINT2_vect(void);
-#if defined(__ARDUINO_MIGHTY__)
-  friend void PCINT3_vect(void);
-#endif
-
-  /**
-   * Map interrupt source: Check which pin(s) are the source of the
-   * pin change interrupt and call the corresponding interrupt handler
-   * per pin.
-   * @param[in] ix port index.
-   * @param8in] mask pin mask.
-   */
-  static void on_interrupt(uint8_t ix, uint8_t mask);
-#endif
-  
-public:
-  enum Mode {
-    NORMAL_MODE = 0,
-    PULLUP_MODE = 1
-  } __attribute__((packed));
-
-  /**
-   * Start handling of pin change interrupt handling.
-   */
-  static void begin();
-
-  /**
-   * End handling of pin change interrupt handling.
-   */
-  static void end();
-
-  /**
-   * Construct interrupt pin with given pin number.
-   * @param[in] pin pin number.
-   * @param[in] mode pin mode.
-   */
-  InterruptPin(Board::InterruptPin pin, Mode mode = NORMAL_MODE) :
-    InputPin((Board::DigitalPin) pin, (InputPin::Mode) mode) 
-  {
-  }
-
-  /**
-   * Enable interrupt pin change detection and interrupt handler.
-   */
-  void enable() 
-  { 
-    synchronized {
-      *PCIMR() |= m_mask;
-#if !defined(__ARDUINO_MEGA__)
-      pin[m_pin] = this;
-#else
-      uint8_t ix = m_pin - (m_pin < 24 ? 24 : 48);
-      pin[ix] = this;
-#endif
-    }
-  }
-
-  /**
-   * Disable interrupt pin change detection.
-   */
-  void disable() 
-  { 
-    synchronized {
-      *PCIMR() &= ~m_mask;
-#if !defined(__ARDUINO_MEGA__)
-      pin[m_pin] = 0;
-#else
-      uint8_t ix = m_pin - (m_pin < 24 ? 24 : 48);
-      pin[ix] = 0;
-#endif
-    }
-  }
-
-  /**
-   * @override
-   * Default interrupt service on pin change interrupt.
-   * @param[in] arg argument from interrupt service routine.
-   */
-  virtual void on_interrupt(uint16_t arg = 0);
 };
 
 /**
@@ -701,6 +519,16 @@ public:
    * @param[in] us pulse width in micro seconds
    */
   void pulse(uint16_t us);
+
+  /**
+   * Shift out given byte to the output pin using the given pulse
+   * length in micro-seconds. Shift out from LSB to MSB. This
+   * operation is synchronized and will turn off interrupt handling
+   * during the transmission period.
+   * @param[in] value to write.
+   * @param[in] us micro-second bit period.
+   */
+  void pulse(uint8_t value, uint16_t us);
 };
 
 /**

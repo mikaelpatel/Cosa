@@ -26,9 +26,10 @@
 #ifndef __COSA_SPI_DRIVER_NRF24L01P_HH__
 #define __COSA_SPI_DRIVER_NRF24L01P_HH__
 
-#include "Cosa/Pins.hh"
-#include "Cosa/Event.hh"
 #include "Cosa/SPI.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/ExternalInterruptPin.hh"
+#include "Cosa/Event.hh"
 
 /**
  * SPI driver for the nRF24L01 Single Chip 2.4GHz Transceiver.

@@ -59,302 +59,8 @@ Pin::print(IOStream& stream)
 void 
 Pin::println(IOStream& stream)
 {
-  print();
+  print(stream);
   stream.println();
-}
-
-#if defined(__ARDUINO_STANDARD__)
-
-ExternalInterruptPin::
-ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
-  InputPin((Board::DigitalPin) pin)
-{
-  if (mode & PULLUP_MODE) {
-    synchronized {
-      *PORT() |= m_mask; 
-    }
-  }
-  m_ix = pin - Board::EXT0;
-  ext[m_ix] = this;
-  uint8_t ix = (m_ix << 1);
-  bit_field_set(EICRA, 0b11 << ix, mode << ix);
-}
-
-#elif defined(__ARDUINO_MEGA__)
-
-ExternalInterruptPin::
-ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
-  InputPin((Board::DigitalPin) pin)
-{
-  if (mode & PULLUP_MODE) {
-    synchronized {
-      *PORT() |= m_mask; 
-    }
-  }
-  if (pin <= Board::EXT3) {
-    m_ix = Board::EXT0 - pin;
-    uint8_t ix = (m_ix << 1);
-    bit_field_set(EICRA, 0b11 << ix, mode << ix);
-  } 
-  else {
-    m_ix = pin - Board::EXT4;
-    uint8_t ix = (m_ix << 1);
-    bit_field_set(EICRB, 0b11 << ix, mode << ix);
-    m_ix += 4;
-  }
-  ext[m_ix] = this;
-}
-
-#elif defined(__ARDUINO_MIGHTY__)
-
-ExternalInterruptPin::
-ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
-  InputPin((Board::DigitalPin) pin)
-{
-  if (mode & PULLUP_MODE) {
-    synchronized {
-      *PORT() |= m_mask; 
-    }
-  }
-  if (pin == Board::EXT2) {
-    m_ix = 2;
-  } else {
-    m_ix = pin - Board::EXT0;
-  } 
-  uint8_t ix = (m_ix << 1);
-  bit_field_set(EICRA, 0b11 << ix, mode << ix);
-  ext[m_ix] = this;
-}
-
-#elif defined(__ARDUINO_TINYX5__)
-
-ExternalInterruptPin::
-ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
-  InputPin((Board::DigitalPin) pin)
-{
-  if (mode & PULLUP_MODE) {
-    synchronized {
-      *PORT() |= m_mask; 
-    }
-  }
-  m_ix = 0;
-  ext[m_ix] = this;
-  bit_field_set(MCUCR, 0b11, mode);
-}
-
-#endif
-
-ExternalInterruptPin* ExternalInterruptPin::ext[Board::EXT_MAX] = { 0 };
-
-void 
-ExternalInterruptPin::on_interrupt(uint16_t arg) 
-{ 
-  Event::push(Event::CHANGE_TYPE, this, arg);
-}
-
-ISR(INT0_vect)
-{
-  if (ExternalInterruptPin::ext[0] != 0) 
-    ExternalInterruptPin::ext[0]->on_interrupt();
-}
-
-#if !defined(__ARDUINO_TINYX5__)
-
-ISR(INT1_vect)
-{
-  if (ExternalInterruptPin::ext[1] != 0) 
-    ExternalInterruptPin::ext[1]->on_interrupt();
-}
-
-#if !defined(__ARDUINO_STANDARD__)
-
-ISR(INT2_vect)
-{
-  if (ExternalInterruptPin::ext[2] != 0) 
-    ExternalInterruptPin::ext[2]->on_interrupt();
-}
-
-#if defined(__ARDUINO_MEGA__)
-
-ISR(INT3_vect)
-{
-  if (ExternalInterruptPin::ext[3] != 0) 
-    ExternalInterruptPin::ext[3]->on_interrupt();
-}
-
-ISR(INT4_vect)
-{
-  if (ExternalInterruptPin::ext[4] != 0) 
-    ExternalInterruptPin::ext[4]->on_interrupt();
-}
-
-ISR(INT5_vect)
-{
-  if (ExternalInterruptPin::ext[5] != 0) 
-    ExternalInterruptPin::ext[5]->on_interrupt();
-}
-#endif
-#endif
-#endif
-
-InterruptPin* InterruptPin::pin[Board::PIN_MAX] = { 0 };
-uint8_t InterruptPin::state[Board::PCINT_MAX] = { 0 };
-
-void 
-InterruptPin::begin()
-{
-#if defined(__ARDUINO_MEGA__)
-  state[0] = *Pin::PIN(16);
-  state[1] = 0;
-  state[2] = *Pin::PIN(64);
-#else
-  for (uint8_t i = 0; i < Board::PCINT_MAX; i++)
-    state[i] = *Pin::PIN(i << 3);
-#endif
-  synchronized {
-#if defined(__ARDUINO_TINYX5__)
-    bit_set(GIMSK, PCIE);
-#elif defined(__ARDUINO_MIGHTY__)
-    bit_mask_set(PCICR, _BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
-#else
-    bit_mask_set(PCICR, _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
-#endif
-  }
-}
-
-void 
-InterruptPin::end()
-{
-  synchronized {
-#if defined(__ARDUINO_TINYX5__)
-    bit_clear(GIMSK, PCIE);
-#elif defined(__ARDUINO_MIGHTY__)
-    bit_mask_clear(PCICR, _BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
-#else
-    bit_mask_clear(PCICR, _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
-#endif
-  }
-}
-
-void
-InterruptPin::on_interrupt(uint16_t arg)
-{ 
-  Event::push(Event::CHANGE_TYPE, this, arg);
-}
-
-#if defined(__ARDUINO_TINYX5__)
-
-ISR(PCINT0_vect)
-{
-  uint8_t mask = PCMSK0;
-  uint8_t state = *Pin::PIN(0);
-  uint8_t changed = (state ^ InterruptPin::state[0]) & mask;
-  for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (InterruptPin::pin[i] != 0)) {
-      InterruptPin::pin[i]->on_interrupt();
-    }
-    changed >>= 1;
-  }
-  InterruptPin::state[0] = state;
-}
-
-#elif defined(__ARDUINO_STANDARD__)
-
-void
-InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
-{
-  uint8_t px = (ix << 3) - (ix < 2 ? 0 : 2);
-  uint8_t state = *Pin::PIN(px);
-  uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
-  for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
-      InterruptPin::pin[i + px]->on_interrupt();
-    }
-    changed >>= 1;
-  }
-  InterruptPin::state[ix] = state;
-}
-
-ISR(PCINT0_vect)
-{
-  InterruptPin::on_interrupt(1, PCMSK0);
-}
-
-ISR(PCINT1_vect)
-{
-  InterruptPin::on_interrupt(2, PCMSK1);
-}
-
-ISR(PCINT2_vect)
-{
-  InterruptPin::on_interrupt(0, PCMSK2);
-}
-
-#elif defined(__ARDUINO_MEGA__)
-
-void
-InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
-{
-  uint8_t px = (ix << 3);
-  uint8_t rx = (ix == 0 ? 16 : 64);
-  uint8_t state = *Pin::PIN(rx);
-  uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
-  for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
-      InterruptPin::pin[i + px]->on_interrupt();
-    }
-    changed >>= 1;
-  }
-  InterruptPin::state[ix] = state;
-}
-
-ISR(PCINT0_vect)
-{
-  InterruptPin::on_interrupt(0, PCMSK0);
-}
-
-ISR(PCINT1_vect)
-{
-  InterruptPin::on_interrupt(1, PCMSK1);
-}
-
-ISR(PCINT2_vect)
-{
-  InterruptPin::on_interrupt(2, PCMSK2);
-}
-
-#elif defined(__ARDUINO_MIGHTY__)
-
-// Fix: Not yet implemented 
-
-void
-InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
-{
-}
-
-ISR(PCINT0_vect)
-{
-}
-
-ISR(PCINT1_vect)
-{
-}
-
-ISR(PCINT2_vect)
-{
-}
-
-ISR(PCINT3_vect)
-{
-}
-#endif
-
-void 
-OutputPin::pulse(uint16_t us)
-{
-  toggle();
-  DELAY(us);
-  toggle();
 }
 
 void 
@@ -366,6 +72,7 @@ OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
       write(value & 0x80);
       value <<= 1;
       clk.set();
+      DELAY(1);
       clk.clear();
     } while (--bits);
   }
@@ -374,9 +81,35 @@ OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
       write(value & 0x01);
       value >>= 1;
       clk.set();
+      DELAY(1);
       clk.clear();
     } while (--bits);
   }
+}
+
+void 
+OutputPin::pulse(uint16_t us)
+{
+  toggle();
+  DELAY(us);
+  toggle();
+}
+
+void 
+OutputPin::pulse(uint8_t value, uint16_t us)
+{
+  uint8_t bits = CHARBITS;
+  synchronized {
+    write(0);
+    DELAY(us);
+    do {
+      write(value & 0x01);
+      DELAY(us);
+      value >>= 1;
+    } while (--bits);
+    write(1);
+  }
+  DELAY(us);
 }
 
 #if defined(__ARDUINO_STANDARD__)

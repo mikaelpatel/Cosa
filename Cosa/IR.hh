@@ -27,6 +27,7 @@
 #define __COSA_IR_HH__
 
 #include "Cosa/Pins.hh"
+#include "Cosa/ExternalInterruptPin.hh"
 #include "Cosa/Linkage.hh"
 #include "Cosa/Trace.hh"
 
