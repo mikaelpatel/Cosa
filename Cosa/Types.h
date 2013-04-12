@@ -59,6 +59,10 @@ union univ16_t {
   char as_char[2];
   void* as_ptr;
   const void* as_ptr_P;
+  struct {
+    uint8_t low;
+    uint8_t high;
+  };
 };
 typedef univ16_t univ_t;
 
@@ -73,6 +77,10 @@ union univ32_t {
   char as_char[4];
   void* as_ptr[2];
   const void* as_ptr_P;
+  struct {
+    uint16_t low;
+    uint16_t high;
+  };
 };
 
 /**
