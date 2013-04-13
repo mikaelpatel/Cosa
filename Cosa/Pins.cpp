@@ -379,7 +379,8 @@ AnalogPin::bandgap(uint16_t vref)
   ADMUX = (AnalogPin::AVCC_REFERENCE | VBG);
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
   loop_until_bit_is_clear(ADCSRA, ADSC);
-  return ((vref * 1024L) / ADCW);
+  uint16_t sample = ADCW;
+  return ((vref * 1024L) / sample);
 }
 
 uint16_t 
