@@ -38,7 +38,7 @@
 #include "Cosa/Periodic.hh"
 
 class VCC : public Periodic {
-private:
+protected:
   uint16_t m_threshold;
   uint16_t m_vcc;
   virtual void run()
@@ -48,11 +48,12 @@ private:
     on_low_voltage();
   }
 public:
-  VCC(uint16_t mv, uint16_t ms = 1024) : 
-    Periodic(ms), 
+  VCC(uint16_t mv, uint16_t sec = 2) : 
+    Periodic(sec * 1024), 
     m_threshold(mv),
-    m_vcc(0)
-  {}
+    m_vcc(AnalogPin::bandgap())
+  {
+  }
   virtual void on_low_voltage()
   {
     trace << Watchdog::get_millis() / 1000 << ':' << m_vcc << PSTR(" mV\n"); 
