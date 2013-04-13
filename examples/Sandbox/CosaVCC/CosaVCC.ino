@@ -44,8 +44,8 @@ private:
   virtual void run()
   {
     m_vcc = AnalogPin::bandgap();
-    on_low_voltage();
     if (m_vcc > m_threshold) return;
+    on_low_voltage();
   }
 public:
   VCC(uint16_t mv, uint16_t ms = 1024) : 
@@ -59,7 +59,7 @@ public:
   }
 };
 
-VCC lowPower(4500);
+VCC lowPower(4900);
 
 void setup()
 {
