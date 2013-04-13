@@ -368,16 +368,13 @@ AnalogPin::sample_request(uint8_t pin, uint8_t ref)
 uint16_t 
 AnalogPin::bandgap(uint16_t vref)
 {
-#if defined(__ARDUINO_STANDARD__)
-  static const uint8_t VBG = (_BV (MUX3) | _BV (MUX2) | _BV (MUX1));
-#elif defined(__ARDUINO_MEGA__)
-  static const uint8_t VBG = (_BV (MUX4) | _BV (MUX3) | _BV (MUX2) | _BV (MUX1));
-#elif defined(__ARDUINO_TINYX5__)
-  static const uint8_t VBG = (_BV (MUX3) | _BV (MUX2));
-#endif
   loop_until_bit_is_clear(ADCSRA, ADSC);
-  ADMUX = (AnalogPin::AVCC_REFERENCE | VBG);
-  bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
+  ADMUX = (AnalogPin::AVCC_REFERENCE | Board::VBG);
+  bit_mask_set(ADCSRA, _BV(ADEN));
+#if defined(__ARDUINO_TINYX5__)
+  DELAY(1000);
+#endif
+  bit_mask_set(ADCSRA, _BV(ADSC));
   loop_until_bit_is_clear(ADCSRA, ADSC);
   uint16_t sample = ADCW;
   return ((vref * 1024L) / sample);

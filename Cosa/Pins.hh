@@ -673,18 +673,25 @@ public:
   /**
    * Reference voltage; ARef pin, Vcc or internal 1V1.
    */
-#if defined(__ARDUINO_TINYX5)
+#if defined(__ARDUINO_TINYX5__)
   enum Reference {
     AVCC_REFERENCE = 0,
     APIN_REFERENCE = _BV(REFS0),
     A1V1_REFERENCE = _BV(REFS1),
     A2V56_REFERENCE = (_BV(REFS2) | _BV(REFS1))
   } __attribute__((packed));
-#else
+#elif defined(__ARDUINO_STANDARD__)
   enum Reference {
     APIN_REFERENCE = 0,
     AVCC_REFERENCE = _BV(REFS0),
     A1V1_REFERENCE = (_BV(REFS1) | _BV(REFS0))
+  } __attribute__((packed));
+#elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGHTY__)
+  enum Reference {
+    APIN_REFERENCE = 0,
+    AVCC_REFERENCE = _BV(REFS0),
+    A1V1_REFERENCE = _BV(REFS1),
+    A2V56_REFERENCE = (_BV(REFS1) | _BV(REFS0))
   } __attribute__((packed));
 #endif
 

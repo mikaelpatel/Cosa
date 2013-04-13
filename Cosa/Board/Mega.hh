@@ -219,8 +219,7 @@ public:
     EXT2 = D19,
     EXT3 = D18,
     EXT4 = D2,
-    EXT5 = D3,
-    EXT_MAX = 6
+    EXT5 = D3
   } __attribute__((packed));
 
   /**
@@ -243,8 +242,7 @@ public:
     PCI20 = A12,
     PCI21 = A13,
     PCI22 = A14,
-    PCI23 = A15,
-    PCINT_MAX = 3
+    PCI23 = A15
   } __attribute__((packed));
 
   /**
@@ -263,6 +261,15 @@ public:
     SCK = 1,
     MOSI = 2,
     MISO = 3
+  } __attribute__((packed));
+
+  /**
+   * Auxiliary
+   */
+  enum {
+    VBG = (_BV (MUX4) | _BV (MUX3) | _BV (MUX2) | _BV (MUX1)),
+    EXT_MAX = 6,
+    PCINT_MAX = 3
   } __attribute__((packed));
 };
 

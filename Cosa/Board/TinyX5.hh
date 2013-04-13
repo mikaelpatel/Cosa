@@ -119,8 +119,7 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D2,
-    EXT_MAX = 1
+    EXT0 = D2
   } __attribute__((packed));
 
   /**
@@ -132,8 +131,7 @@ public:
     PCI2 = D2,
     PCI3 = D3,
     PCI4 = D4,
-    PCI5 = D5,
-    PCINT_MAX = 1
+    PCI5 = D5
   } __attribute__((packed));
 
   /**
@@ -152,6 +150,15 @@ public:
     MOSI = 0,
     MISO = 1,
     SCK = 2
+  } __attribute__((packed));
+
+  /**
+   * Auxiliary
+   */
+  enum {
+    VBG = (_BV (MUX3) | _BV (MUX2)),
+    EXT_MAX = 1,
+    PCINT_MAX = 1
   } __attribute__((packed));
 };
 

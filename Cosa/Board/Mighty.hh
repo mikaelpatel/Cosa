@@ -161,15 +161,21 @@ public:
   enum ExternalInterruptPin {
     EXT0 = D10,
     EXT1 = D11,
-    EXT2 = D2,
-    EXT_MAX = 3
+    EXT2 = D2
   } __attribute__((packed));
 
   /**
    * Pin change interrupt. Number of port registers.
    */
   enum InterruptPin {
-    PCINT_MAX = 3
+    PCI0 = A0,
+    PCI1 = A1,
+    PCI2 = A2,
+    PCI3 = A3,
+    PCI4 = A4,
+    PCI5 = A5,
+    PCI6 = A6,
+    PCI7 = A7
   } __attribute__((packed));
 
   /**
@@ -188,6 +194,15 @@ public:
     MOSI = 5,
     MISO = 6,
     SCK = 7
+  } __attribute__((packed));
+
+  /**
+   * Auxiliary
+   */
+  enum {
+    VBG = (_BV (MUX4) | _BV (MUX3) | _BV (MUX2) | _BV (MUX1)),
+    EXT_MAX = 3,
+    PCINT_MAX = 3
   } __attribute__((packed));
 };
 
