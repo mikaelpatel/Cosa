@@ -769,9 +769,10 @@ public:
   /**
    * Get power supply voltage in milli-volt. May be used for low battery
    * detection. Uses the internal 1V1 bandgap reference.
+   * @param[in] vref reference voltage in milli-volt (default is 1100).
    * @return milli-volt.
    */
-  static uint16_t bandgap();
+  static uint16_t bandgap(uint16_t vref = 1100);
 
   /**
    * Sample analog pin. Wait for conversion to complete before 
