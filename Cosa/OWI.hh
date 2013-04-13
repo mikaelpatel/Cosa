@@ -328,7 +328,7 @@ public:
 
   /**
    * End a read sequence and return the generated CRC. If the
-   * read block contains a CRC last the returned value will be
+   * read block contains a CRC last then the returned value will be
    * zero(0).
    * @return generated CRC.
    */
