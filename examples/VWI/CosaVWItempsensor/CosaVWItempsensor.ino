@@ -79,6 +79,7 @@ struct msg_t {
   uint8_t id[OWI::ROM_MAX];
   uint16_t nr;
   int16_t temperature;
+  uint16_t voltage;
 };
 
 void loop()
@@ -90,16 +91,25 @@ void loop()
   sensor.convert_request();
   SLEEP(1);
 
-  // Read temperature and send a message with identity and sequence number
+  // Turn on necessary hardware modules
   Power::timer1_enable();
-  VWI::enable();
+  Power::adc_enable();
+
+  // Read the temperature and initiate the message
   sensor.read_scratchpad();
   memcpy(&msg.id, sensor.get_rom(), sizeof(msg.id));
   msg.nr = nr++;
   msg.temperature = sensor.get_temperature();
+  msg.voltage = AnalogPin::bandgap(1100);
+
+  // Enable wireless transmitter and send. Wait completion and disable
+  VWI::enable();
   tx.send(&msg, sizeof(msg));
   tx.await();
   VWI::disable();
+
+  // Turn off hardware and sleep until next sample (period 5 s)
   Power::timer1_disable();
+  Power::adc_disable();
   SLEEP(4);
 }

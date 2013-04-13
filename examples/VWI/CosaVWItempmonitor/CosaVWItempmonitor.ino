@@ -64,6 +64,7 @@ struct msg_t {
   uint8_t id[OWI::ROM_MAX];
   uint16_t nr;
   int16_t temperature;
+  uint16_t voltage;
 };
 
 void loop()
@@ -105,7 +106,8 @@ void loop()
   uint16_t fraction = temp.get_fraction(2);
   trace << integer << '.';
   if (fraction < 10) trace << '0';
-  trace << fraction << endl;
+  trace << fraction;
+  trace << ':' << msg.voltage << endl;
   next += 1;
 
   // Print message count and errors every 256 messages
