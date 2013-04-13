@@ -767,6 +767,13 @@ public:
   static uint16_t sample(uint8_t pin, Reference ref = AVCC_REFERENCE);
 
   /**
+   * Get power supply voltage in milli-volt. May be used for low battery
+   * detection. Uses the internal 1V1 bandgap reference.
+   * @return milli-volt.
+   */
+  static uint16_t bandgap();
+
+  /**
    * Sample analog pin. Wait for conversion to complete before 
    * returning with sample value.
    * @return sample value.

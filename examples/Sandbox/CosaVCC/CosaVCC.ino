@@ -39,18 +39,13 @@
 
 class VCC : public Periodic {
 private:
-#if defined(__ARDUINO_STANDARD__)
-  static const uint8_t VBG = 0b1110;
-#elif defined(__ARDUINO_TINYX5__)
-  static const uint8_t VBG = 0b1100;
-#endif
   uint16_t m_threshold;
   uint16_t m_vcc;
   virtual void run()
   {
-    m_vcc = 1126400L / AnalogPin::sample(VBG, AnalogPin::A1V1_REFERENCE);
-    if (m_vcc > m_threshold) return;
+    m_vcc = AnalogPin::bandgap();
     on_low_voltage();
+    if (m_vcc > m_threshold) return;
   }
 public:
   VCC(uint16_t mv, uint16_t ms = 1024) : 
@@ -64,7 +59,7 @@ public:
   }
 };
 
-VCC lowPower(1150);
+VCC lowPower(4500);
 
 void setup()
 {
