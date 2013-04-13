@@ -350,6 +350,7 @@ public:
   void power_off()
   {
     set_mode(INPUT_MODE);
+    clear();
   }
 };
 

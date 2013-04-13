@@ -104,7 +104,7 @@ OWI::write(uint8_t value, uint8_t bits, uint8_t power)
       m_crc >>= 1;
       if (mix & 1) m_crc ^= 0x8C;
     }
-    if (!power) set_mode(INPUT_MODE);
+    if (!power) power_off();
   }
   DELAY(10);
 }
