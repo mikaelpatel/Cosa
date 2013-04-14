@@ -64,6 +64,7 @@ void setup()
 
   // Connect to the temperature sensor and give some time for startup
   sensor.connect(0);
+  sensor.read_power_supply();
   SLEEP(1);
 
   // Disable hardware
@@ -90,7 +91,8 @@ void loop()
   // Make a conversion request
   sensor.convert_request();
   SLEEP(1);
-
+  sensor.power_off();
+  
   // Turn on necessary hardware modules
   Power::timer1_enable();
   Power::adc_enable();
