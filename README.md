@@ -182,4 +182,7 @@ directory structure for handling boards. Moving documentation and
 references to dropbox. Reducing size of download from github.   
 2013-04 Adding support for HMC5883L 3-axis digital compass. Adding
 abstraction of EEPROM with default handling of internal
-EEPROM. Refactoring AT24CXX driver for new EEPROM interface.   
+EEPROM. Refactoring AT24CXX driver for new EEPROM
+interface. Implemented 1-wire parasite power mode. Improved DS18B20
+1-wire driver and demo sketches with VWI integration. Added support
+for battery voltage monitoring.   
