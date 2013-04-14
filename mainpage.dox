@@ -292,7 +292,7 @@ without addressing, retransmit or acknowledgment, a bit like UDP over
 wireless, using ASK (Amplitude Shift Keying). Supports a number of
 inexpensive radio transmitters and receivers, and may be configured to
 use different codecs; VirtualWireCodec, ManchesterCodec,
-Block4B5Codec, and BitshuffingCodec (InputPin/Timer).
+Block4B5BCodec, and BitstuffingCodec (InputPin/Timer).
 
 @section NRF24L01P
 Driver for the nRF24L01 Single Chip 2.4GHz Transceiver (SPI).

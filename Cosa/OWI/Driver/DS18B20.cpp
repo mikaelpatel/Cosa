@@ -25,7 +25,6 @@
 
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
 
 bool 
 DS18B20::connect(uint8_t index)
