@@ -126,9 +126,7 @@ public:
     A4,
     A5,
     A6,
-    A7,
-    A8,
-    PIN_MAX = A8
+    A7
   } __attribute__((packed));
 
   /**
@@ -180,8 +178,7 @@ public:
     PCI18 = A4,
     PCI19 = A5,
     PCI20 = A6,
-    PCI21 = A7,
-    PCI22 = A8
+    PCI21 = A7
   } __attribute__((packed));
 
   /**
@@ -206,9 +203,10 @@ public:
    * Auxiliary
    */
   enum {
-    VBG = (_BV (MUX3) | _BV (MUX2) | _BV (MUX1)),
+    VBG = (_BV(MUX3) | _BV(MUX2) | _BV(MUX1)),
     EXT_MAX = 2,
-    PCINT_MAX = 3
+    PCINT_MAX = 3,
+    PIN_MAX = A7
   } __attribute__((packed));
 };
 

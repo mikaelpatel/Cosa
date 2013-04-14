@@ -99,10 +99,7 @@ public:
     A0 = 0,
     A1,
     A2,
-    A3,
-    A4,
-    A5,
-    PIN_MAX = A5
+    A3
   } __attribute__((packed));
 
   /**
@@ -156,9 +153,10 @@ public:
    * Auxiliary
    */
   enum {
-    VBG = (_BV (MUX3) | _BV (MUX2)),
+    VBG = (_BV(MUX3) | _BV(MUX2)),
     EXT_MAX = 1,
-    PCINT_MAX = 1
+    PCINT_MAX = 1,
+    PIN_MAX = D5
   } __attribute__((packed));
 };
 
