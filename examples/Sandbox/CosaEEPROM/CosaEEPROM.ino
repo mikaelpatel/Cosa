@@ -33,8 +33,19 @@
 #include "Cosa/EEPROM.hh"
 
 EEPROM eeprom;
+
+// Data vector in EEPROM
 static const int DATA_MAX = 8;
 long data[DATA_MAX] EEMEM;
+
+// Configuration struct in EEPROM
+static const int NAME_MAX = 16;
+struct config_t {
+  int mode;
+  int speed;
+  char name[NAME_MAX];
+};
+config_t config EEMEM;
 
 void setup()
 {
@@ -43,20 +54,42 @@ void setup()
   TRACE(free_memory());
   Watchdog::begin();
   
+  // Initiate data vector with index
   for (uint8_t i = 0; i < DATA_MAX; i++) {
     eeprom.write(&data[i], (long) i);
   }
+
+  // Initiate configuration struct
+  config_t init;
+  init.mode = 17;
+  init.speed = 9600;
+  strcpy_P(init.name, PSTR(".EEPROM"));
+  eeprom.write(&config, &init, sizeof(config));
 }
 
 void loop()
 {
   static int i = 0;
   long x;
+
+  // Read the configuration and print (first time only)
+  if (i == 0) {
+    config_t init;
+    eeprom.read(&init, &config, sizeof(init));
+    trace << PSTR("init(mode = ") << init.mode
+	  << PSTR(", speed = ") << init.speed
+	  << PSTR(", name = \"") << init.name
+	  << PSTR("\")\n");
+  }
+
+  // Read and update data, element at a time
   TRACE(eeprom.read(&x, &data[i]));
   trace << i << ':' << x << endl;
   x += 5;
   TRACE(eeprom.write(&data[i], x));
   i += 1;
   if (i == membersof(data)) i = 0;
-  SLEEP(2);
+
+  // Take a nap
+  SLEEP(5);
 }
