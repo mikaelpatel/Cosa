@@ -26,7 +26,7 @@
  *
  * @section Note
  * Should be compiled for standard Arduino. VCC class may be used 
- * for ATtinyX5. 
+ * for ATtinyX5 by reimplementing on_low_power().
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -37,7 +37,10 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Periodic.hh"
 
-class VCC : public Periodic {
+/**
+ * Monitor power supply for low voltage/battery.
+ */
+class VCC : protected Periodic {
 protected:
   uint16_t m_threshold;
   uint16_t m_vcc;
@@ -51,16 +54,38 @@ public:
   VCC(uint16_t mv, uint16_t sec = 2) : 
     Periodic(sec * 1024), 
     m_threshold(mv),
-    m_vcc(AnalogPin::bandgap())
+    m_vcc(0)
   {
   }
   virtual void on_low_voltage()
   {
-    trace << Watchdog::get_millis() / 1000 << ':' << m_vcc << PSTR(" mV\n"); 
+    trace << Watchdog::get_millis() / 1000 
+	  << PSTR(":VCC = ") << m_vcc << PSTR(" mV\n"); 
+  }
+  uint16_t get_vcc()
+  {
+    return (m_vcc);
+  }
+};
+
+/**
+ * Periodical sampling of analog pin.
+ */
+class Sampler : public AnalogPin, private Periodic {
+public:
+  Sampler(Board::AnalogPin pin, uint16_t ms) :
+    AnalogPin(pin),
+    Periodic(ms)
+  {
+  }
+  virtual void run()
+  {
+    sample_request();
   }
 };
 
 VCC lowPower(4900);
+Sampler in(Board::A4, 256);
 
 void setup()
 {
@@ -74,5 +99,7 @@ void loop()
   Event event;
   Event::queue.await(&event);
   event.dispatch();
+  trace << Watchdog::get_millis() / 1000 << PSTR(":A4  = ") 
+	<< in.get_value() << endl;
 }
 

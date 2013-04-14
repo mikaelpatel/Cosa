@@ -369,11 +369,9 @@ uint16_t
 AnalogPin::bandgap(uint16_t vref)
 {
   loop_until_bit_is_clear(ADCSRA, ADSC);
-  ADMUX = (AnalogPin::AVCC_REFERENCE | Board::VBG);
+  ADMUX = (AVCC_REFERENCE | Board::VBG);
   bit_mask_set(ADCSRA, _BV(ADEN));
-#if defined(__ARDUINO_TINYX5__)
   DELAY(1000);
-#endif
   bit_mask_set(ADCSRA, _BV(ADSC));
   loop_until_bit_is_clear(ADCSRA, ADSC);
   uint16_t sample = ADCW;
