@@ -66,22 +66,21 @@ void setup()
   lcd.draw_icon(arduino_icon_64x32);
   SLEEP(2);
 
-  // Use LCD bind to trace
+  // Use LCD bind to trace; print some startup information
   trace.begin(&lcd);
-  trace << PSTR("\fCosaPCD8544: started\n");
-  TRACE(sensor.connect(0));
+  trace << PSTR("\fCosaTemperature: started\n");
   SLEEP(2);
   trace << '\f';
-
-  // Pipeline the conversion requests from the sensor
-  sensor.convert_request();
+  TRACE(sensor.connect(0));
+  TRACE(sensor.read_power_supply());
+  SLEEP(2);
  }
 
 void loop()
 {
   // Request a new sample from the sensor and read temperature
-  sensor.read_scratchpad();
   sensor.convert_request();
+  sensor.read_scratchpad();
 
   // Get temperature and convert from fixed point (could use float)
   FixedPoint temp(sensor.get_temperature(), 4);
@@ -108,5 +107,7 @@ void loop()
   // Draw the bitmap to the LCD screen
   lcd.putchar('\f');
   lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
+
+  // Take a nap
   SLEEP(1);
 }
