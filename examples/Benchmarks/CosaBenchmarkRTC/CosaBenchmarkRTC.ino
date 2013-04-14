@@ -53,7 +53,7 @@ void setup()
   // Start the timers
   Watchdog::begin();
   TRACE(Watchdog::ms_per_tick());
-  TRACE(Watchdog::get_ticks());
+  TRACE(Watchdog::ticks());
   
   // Measure baseline
   RTC::begin();

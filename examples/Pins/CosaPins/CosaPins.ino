@@ -131,7 +131,7 @@ void loop()
   TRACE(event.get_type());
 
   // Print the time index
-  INFO("ticks = %d", Watchdog::get_ticks());
+  INFO("ticks = %d", Watchdog::ticks());
   
   // Sample the level
   uint16_t value = levelPin.sample();

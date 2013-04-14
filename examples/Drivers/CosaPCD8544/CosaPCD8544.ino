@@ -70,7 +70,7 @@ void setup()
     Watchdog::delay(256);
     trace << PSTR("\b \b");
   }
-  uint16_t ticks = Watchdog::get_ticks();
+  uint16_t ticks = Watchdog::ticks();
   TRACE(ticks);
   trace << bin << 0x55 << endl;
   trace << oct << 0x55 << endl;

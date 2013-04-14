@@ -59,7 +59,7 @@ public:
   }
   virtual void on_low_voltage()
   {
-    trace << Watchdog::get_millis() / 1000 
+    trace << Watchdog::millis() / 1000 
 	  << PSTR(":VCC = ") << m_vcc << PSTR(" mV\n"); 
   }
   uint16_t get_vcc()
@@ -99,7 +99,7 @@ void loop()
   Event event;
   Event::queue.await(&event);
   event.dispatch();
-  trace << Watchdog::get_millis() / 1000 << PSTR(":A4  = ") 
+  trace << Watchdog::millis() / 1000 << PSTR(":A4  = ") 
 	<< in.get_value() << endl;
 }
 

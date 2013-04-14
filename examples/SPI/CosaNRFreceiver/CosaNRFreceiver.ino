@@ -92,7 +92,7 @@ void loop()
   TRACE(event.get_type());
 
   // Print receiver and fifo status
-  uint16_t ticks = Watchdog::get_ticks();
+  uint16_t ticks = Watchdog::ticks();
   uint8_t observe = nrf.read(NRF24L01P::OBSERVE_TX);
   uint8_t status = nrf.get_status();
   uint8_t fifo = nrf.read(NRF24L01P::FIFO_STATUS);

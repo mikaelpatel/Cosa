@@ -110,7 +110,7 @@ void loop()
   msg.status = nrf.get_status();
   msg.observe = nrf.read(NRF24L01P::OBSERVE_TX);
   INFO("%d:SEND(id = %d, lost = %d, retransmit = %d, status = %bd", 
-       Watchdog::get_ticks(), 
+       Watchdog::ticks(), 
        msg.id, msg.observe >> 4, 
        msg.observe & 0xf, 
        msg.status);

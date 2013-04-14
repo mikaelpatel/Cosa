@@ -83,7 +83,7 @@ public:
    * Get number of watchdog cycles.
    * @return number of ticks.
    */
-  static uint32_t get_ticks() 
+  static uint32_t ticks() 
   { 
     return (s_ticks); 
   }
@@ -92,7 +92,7 @@ public:
    * Get Watchdog clock in milli-seconds.
    * @return ms.
    */
-  static uint32_t get_millis() 
+  static uint32_t millis() 
   { 
     return (s_ticks * ms_per_tick()); 
   }
