@@ -82,7 +82,6 @@ void setup()
 
   // Start the conversion pipeline; indoors->outdoors->basement sampling
   indoors.convert_request();
-  SLEEP(1);
 }
 
 void loop()

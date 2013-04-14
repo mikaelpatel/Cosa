@@ -43,7 +43,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 
-// Connect to one-wire device. Assuming only one device even if connected
+// Connect to one-wire device; Assuming there are two sensors
 OWI owi(Board::D2);
 DS18B20 indoors(&owi);
 DS18B20 outdoors(&owi);
@@ -62,12 +62,9 @@ void setup()
   VWI::begin(SPEED);
   tx.begin();
 
-  // Connect to the temperature sensor and give some time for startup
+  // Connect to the temperature sensor
   indoors.connect(0);
-  indoors.read_power_supply();
   outdoors.connect(1);
-  outdoors.read_power_supply();
-  SLEEP(1);
 
   // Disable hardware
   VWI::disable();
@@ -93,8 +90,6 @@ void loop()
 
   // Make a conversion request
   sensor->convert_request();
-  SLEEP(1);
-  sensor->power_off();
   
   // Turn on necessary hardware modules
   Power::timer1_enable();
@@ -113,9 +108,9 @@ void loop()
   tx.await();
   VWI::disable();
 
-  // Turn off hardware and sleep until next sample (period 5 s)
+  // Turn off hardware and sleep until next sample (period 2 s)
   Power::timer1_disable();
   Power::adc_disable();
   sensor = (sensor == &indoors) ? &outdoors : &indoors;
-  SLEEP(4);
+  SLEEP(2);
 }

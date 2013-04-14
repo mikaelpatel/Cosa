@@ -72,13 +72,9 @@ void setup()
   SLEEP(2);
   trace << '\f';
   TRACE(sensor.connect(0));
-  TRACE(sensor.read_power_supply());
-  SLEEP(3);
 
   // Pipeline the conversion requests from the sensor
   sensor.convert_request();
-  SLEEP(1);
-  sensor.power_off();
  }
 
 void loop()
@@ -86,8 +82,6 @@ void loop()
   // Request a new sample from the sensor and read temperature
   sensor.read_scratchpad();
   sensor.convert_request();
-  SLEEP(1);
-  sensor.power_off();
 
   // Get temperature and convert from fixed point (could use float)
   FixedPoint temp(sensor.get_temperature(), 4);

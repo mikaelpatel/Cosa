@@ -62,48 +62,61 @@ private:
     uint8_t crc;
   };
   scratchpad_t m_scratchpad;
-  /**
-   * Parasite power mode.
-   */
+
+  /** Parasite power mode */
   uint8_t m_parasite;
 
-public:
-  /**
-   * Max conversion time for 12-bit conversion (Table 2, pp. 8)
-   */
+  /** Watchdog millis on start */
+  uint32_t m_start;
+
+  /** Converting request pending */
+  uint8_t m_converting;
+
+  /** Max conversion time for 12-bit conversion in milli-seconds */
   static const uint16_t MAX_CONVERSION_TIME = 750;
 
+  /** Min copy configuration time in milli-seconds (parasite mode) */
+  static const uint16_t MIN_COPY_PULLUP = 16;
+
+  /**
+   * Turn power off if the device is parasite powered. Call
+   * read_power_supply() to set the parasite mode for the device. 
+   */
+  void power_off()
+  {
+    if (m_parasite) m_pin->power_off();
+  }
+public:
   /**
    * Construct a DS18B20 device connected to the given one wire bus
    * and device identity (in EEPROM). Default device identity is null.
-   * Use read_power_supply() to determine if the device requires
-   * parasite powering. 
+   * Use connect() to access and set power supply mode and
+   * configuration. Alternatively use read_power_supply() and 
+   * read_scratchpad() directly.
    * @param[in] pin one wire bus pin.
    * @param[in] rom device identity (default null).
    */
   DS18B20(OWI* pin, const uint8_t* rom = 0) : 
     OWI::Driver(pin, rom),
-    m_parasite(0)
+    m_parasite(0),
+    m_start(0L),
+    m_converting(false)
   {}
 
   /**
-   * Connect to DS18B20 device with given index.
+   * Connect to DS18B20 device with given index. Reads configuration,
+   * scratchpad, and power supply setting.
    * @param[in] index device order.
    * @return true(1) if successful otherwise false(0).
    */
-  bool connect(uint8_t index)
-  {
-    return (OWI::Driver::connect(FAMILY_CODE, index));
-  }
+  bool connect(uint8_t index);
 
   /**
    * Set conversion resolution from 9..12 bits. Use write_scratchpad()
-   * and copy_scratchpad() to update device. Returns max conversion
-   * time in milli-seconds.  
+   * and copy_scratchpad() to update device. 
    * @param[in] bits resolution.
-   * @return max conversion time (ms)
    */
-  uint16_t set_resolution(uint8_t bits);
+  void set_resolution(uint8_t bits);
 
   /**
    * Set alarm trigger values; high and low threshold values.
@@ -131,8 +144,8 @@ public:
   }
   
   /**
-   * Get conversion resolution. Use read_scratchpad() to read values
-   * from device. 
+   * Get conversion resolution. Use connect(), or read_scratchpad() to
+   * read values from device before calling this method. 
    * @return number of bits.
    */
   uint8_t get_resolution()
@@ -155,8 +168,7 @@ public:
   /**
    * Initiate a single temperature conversion. With the default
    * setting 12-bit resolution the max conversion time is 750 ms,
-   * MAX_CONVERSION_TIME. Parasite devices require that power_off() is
-   * called after the conversion.
+   * MAX_CONVERSION_TIME. 
    * @return true(1) if successful otherwise false(0).
    */
   bool convert_request();
@@ -176,9 +188,8 @@ public:
 
   /**
    * Copy device scratchpad triggers and configuration data 
-   * to device EEPROM. Parasite devices require that power_off() is
-   * called after at least 10 ms to secure power for the EEPROM
-   * write. 
+   * to device EEPROM. An internal delay is issued to allow the data
+   * to be written.
    * @return true(1) if successful otherwise false(0).
    */
   bool copy_scratchpad();
@@ -197,16 +208,6 @@ public:
    * @return true(1) if parasite power is required otherwise false(0).
    */
   bool read_power_supply();
-
-  /**
-   * Turn power off if the device is parasite powered. Call
-   * read_power_supply() to set the parasite mode for the device. 
-   * And call power_off() after convert_request() and copy_scratchpad().
-   */
-  void power_off()
-  {
-    if (m_parasite) m_pin->power_off();
-  }
 };
 
 #endif

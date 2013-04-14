@@ -24,13 +24,23 @@
  */
 
 #include "Cosa/OWI/Driver/DS18B20.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
 
-uint16_t 
+bool 
+DS18B20::connect(uint8_t index)
+{
+  if (!OWI::Driver::connect(FAMILY_CODE, index)) return (false);
+  if (!read_scratchpad()) return (false);
+  read_power_supply();
+  return (true);
+}
+
+void
 DS18B20::set_resolution(uint8_t bits)
 {
   if (bits < 9) bits = 9; else if (bits > 12) bits = 12;
   m_scratchpad.configuration = (((bits - 9) << 5) | 0x1f);
-  return (MAX_CONVERSION_TIME >> (12 - bits));
 }
 
 bool
@@ -38,12 +48,24 @@ DS18B20::convert_request()
 {
   if (!match_rom()) return (false);
   m_pin->write(CONVERT_T, CHARBITS, m_parasite);
+  m_start = Watchdog::millis();
+  m_converting = true;
   return (true);
 }
 
 bool
 DS18B20::read_scratchpad()
 {
+  if (m_converting) {
+    int32_t ms = Watchdog::millis() - m_start;
+    uint16_t conv_time = (MAX_CONVERSION_TIME >> (12 - get_resolution()));
+    if (ms < conv_time) {
+      ms = conv_time - ms;
+      Watchdog::delay(ms);
+      m_converting = false;
+    }
+    power_off();
+  }
   if (!match_rom()) return (false);
   m_pin->write(READ_SCRATCHPAD);
   m_pin->begin();
@@ -72,6 +94,8 @@ DS18B20::copy_scratchpad()
 {
   if (!match_rom()) return (false);
   m_pin->write(COPY_SCRATCHPAD, CHARBITS, m_parasite);
+  Watchdog::delay(MIN_COPY_PULLUP);
+  power_off();
   return (true);
 }
 
