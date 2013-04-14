@@ -33,7 +33,7 @@
  * 
  * The PCD8544 should be connect using 3.3 V signals and VCC. 
  * Back-light should be max 3.3 V. Reduce voltage with 100-500 ohm 
- * resistor to ground.
+ * resistor to ground or use a 3.3 V Arduino.
  * 
  * This file is part of the Arduino Che Cosa project.
  */
@@ -69,9 +69,9 @@ void setup()
   // Use LCD bind to trace
   trace.begin(&lcd);
   trace << PSTR("\fCosaPCD8544: started\n");
+  TRACE(sensor.connect(0));
   SLEEP(2);
   trace << '\f';
-  TRACE(sensor.connect(0));
 
   // Pipeline the conversion requests from the sensor
   sensor.convert_request();
