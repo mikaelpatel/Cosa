@@ -31,7 +31,6 @@
  * @section Circuit
  * Connect RF433/315 Transmitter Data to ATtiny85 D1, connect VCC 
  * GND. Connect 1-Wire digital thermometer to D2 with pullup resistor.
- * For low voltage (3.3 V) the pullup resistor must be approx. 1 Kohm.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -46,7 +45,8 @@
 
 // Connect to one-wire device. Assuming only one device even if connected
 OWI owi(Board::D2);
-DS18B20 sensor(&owi);
+DS18B20 indoors(&owi);
+DS18B20 outdoors(&owi);
 
 // Connect RF433 transmitter to ATtiny/D1
 VirtualWireCodec codec;
@@ -63,8 +63,10 @@ void setup()
   tx.begin();
 
   // Connect to the temperature sensor and give some time for startup
-  sensor.connect(0);
-  sensor.read_power_supply();
+  indoors.connect(0);
+  indoors.read_power_supply();
+  outdoors.connect(1);
+  outdoors.read_power_supply();
   SLEEP(1);
 
   // Disable hardware
@@ -86,22 +88,23 @@ struct msg_t {
 void loop()
 {
   static uint16_t nr = 0;
+  static DS18B20* sensor = &indoors;
   msg_t msg;
 
   // Make a conversion request
-  sensor.convert_request();
+  sensor->convert_request();
   SLEEP(1);
-  sensor.power_off();
+  sensor->power_off();
   
   // Turn on necessary hardware modules
   Power::timer1_enable();
   Power::adc_enable();
 
   // Read the temperature and initiate the message
-  sensor.read_scratchpad();
-  memcpy(&msg.id, sensor.get_rom(), sizeof(msg.id));
+  sensor->read_scratchpad();
+  memcpy(&msg.id, sensor->get_rom(), sizeof(msg.id));
   msg.nr = nr++;
-  msg.temperature = sensor.get_temperature();
+  msg.temperature = sensor->get_temperature();
   msg.voltage = AnalogPin::bandgap(1100);
 
   // Enable wireless transmitter and send. Wait completion and disable
@@ -113,5 +116,6 @@ void loop()
   // Turn off hardware and sleep until next sample (period 5 s)
   Power::timer1_disable();
   Power::adc_disable();
+  sensor = (sensor == &indoors) ? &outdoors : &indoors;
   SLEEP(4);
 }
