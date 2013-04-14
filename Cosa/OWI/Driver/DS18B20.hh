@@ -66,21 +66,22 @@ private:
   /** Parasite power mode */
   uint8_t m_parasite;
 
-  /** Watchdog millis on start */
+  /** Watchdog millis on convert_request() */
   uint32_t m_start;
 
-  /** Converting request pending */
+  /** Convert request pending */
   uint8_t m_converting;
 
   /** Max conversion time for 12-bit conversion in milli-seconds */
   static const uint16_t MAX_CONVERSION_TIME = 750;
 
   /** Min copy configuration time in milli-seconds (parasite mode) */
-  static const uint16_t MIN_COPY_PULLUP = 16;
+  static const uint16_t MIN_COPY_PULLUP = 10;
 
   /**
    * Turn power off if the device is parasite powered. Call
-   * read_power_supply() to set the parasite mode for the device. 
+   * connect() or read_power_supply() to set the parasite mode for the
+   * device.
    */
   void power_off()
   {
@@ -88,11 +89,11 @@ private:
   }
 public:
   /**
-   * Construct a DS18B20 device connected to the given one wire bus
+   * Construct a DS18B20 device connected to the given 1-Wire bus
    * and device identity (in EEPROM). Default device identity is null.
-   * Use connect() to access and set power supply mode and
-   * configuration. Alternatively use read_power_supply() and 
-   * read_scratchpad() directly.
+   * Use connect() to lookup, set power supply mode and
+   * configuration. Alternatively use read_power_supply() and  
+   * read_scratchpad() directly if rom address is given.
    * @param[in] pin one wire bus pin.
    * @param[in] rom device identity (default null).
    */
@@ -135,7 +136,7 @@ public:
    * Call convert_request() and read_scratchpad() before accessing the
    * scratchpad. Returns at highest resolution a fixed point<12,4>
    * point number. For 11-bit resolution, bit 0 is undefined, 10-bits
-   * bit 1 and 0, and so on.
+   * bit 1 and 0, and so on (LSB).
    * @return temperature
    */
   int16_t get_temperature()
@@ -155,7 +156,7 @@ public:
 
   /**
    * Get alarm trigger values; high and low threshold values.
-   * Use read_scratchpad() to read values from device.
+   * Use connect(), or read_scratchpad() to read values from device.
    * @param[out] high threshold. 
    * @param[out] low threshold.
    */
@@ -181,7 +182,9 @@ public:
   bool write_scratchpad();
 
   /**
-   * Read the contents of the scratchpad to local memory.
+   * Read the contents of the scratchpad to local memory. A internal 
+   * delay will occur if a convert_request() is pending. The delay is
+   * at most max conversion time (750 ms).
    * @return true(1) if successful otherwise false(0).
    */
   bool read_scratchpad();
@@ -202,9 +205,9 @@ public:
 
   /**
    * Read power supply. Determine if the device requires parasite 
-   * powering. The information is cached and used in power_off() and
-   * internally to drive the wire on functions that require additional
-   * power.
+   * powering. The information is cached and used in read_scratchpad()
+   * and copy_scratchpad() for internal delay timing. The function
+   * connect() will call this function automatically.
    * @return true(1) if parasite power is required otherwise false(0).
    */
   bool read_power_supply();

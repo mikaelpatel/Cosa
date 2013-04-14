@@ -102,12 +102,7 @@ public:
      * configuration after connect().
      * return bool.
      */
-    bool update_rom()
-    {
-      if (ROM == 0) return (false);
-      eeprom_write_block(ROM, m_rom, sizeof(m_rom));
-      return (true);
-    }
+    bool update_rom();
 
     /**
      * Search device rom given the last position of discrepancy.
@@ -282,8 +277,8 @@ public:
   };
   
 private:
+  /** Intermediate CRC sum */
   uint8_t m_crc;
-  uint8_t m_parasite;
 
 public:
   /**

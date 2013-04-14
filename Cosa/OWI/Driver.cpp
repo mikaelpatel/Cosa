@@ -33,6 +33,14 @@ OWI::Driver::Driver(OWI* pin, const uint8_t* rom) :
   if (rom != 0) eeprom_read_block(m_rom, rom, sizeof(m_rom));
 }
 
+bool 
+OWI::Driver::update_rom()
+{
+  if (ROM == 0) return (false);
+  eeprom_write_block(ROM, m_rom, sizeof(m_rom));
+  return (true);
+}
+
 int8_t
 OWI::Driver::search(int8_t last)
 {
