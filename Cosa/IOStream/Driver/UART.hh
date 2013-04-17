@@ -273,6 +273,21 @@ public:
    * @return true(1) if successful otherwise false(0)
    */
   bool end();
+
+  /**
+   * Serial port references. Only uart0 is predefined (reference to global
+   * uart). Others are assuped to be allocated by applications and setup
+   * with UART_SETUP().
+   */
+  static UART* uart0;
+#if defined(__ARDUINO_MIGHTY__)
+  static UART* uart1;
+#elif defined(__ARDUINO_MEGA__)
+  static UART* uart1;
+  static UART* uart2;
+  static UART* uart3;
+#endif
+
 };
 
 #endif
@@ -281,25 +296,12 @@ public:
  * Default serial port(0).
  */
 extern UART uart;
-extern UART* g_uart0;
-
-/**
- * Additional serial port references. Assumes that they are allocated by
- * applications. 
- */
-#if defined(__ARDUINO_MIGHTY__)
-extern UART* g_uart1;
-#elif defined(__ARDUINO_MEGA__)
-extern UART* g_uart1;
-extern UART* g_uart2;
-extern UART* g_uart3;
-#endif
 
 /**
  * Setup handling of serial port with given port number and UART instance.
  * @param[in] nr serial port number.
  * @param[in] obj address of UART instance.
  */
-#define UART_SETUP(nr,obj) g_uart ## nr = &obj
+#define UART_SETUP(nr,obj) UART::uart ## nr = &obj
 
 #endif

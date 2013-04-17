@@ -71,7 +71,7 @@ static char obuffer[UART::BUFFER_MAX];
 static IOBuffer obuf(obuffer, sizeof(obuffer));
 
 UART uart(0, &ibuf, &obuf);
-UART* g_uart0 = &uart;
+UART* UART::uart0 = &uart;
 
 bool
 UART::begin(uint32_t baudrate, uint8_t format)
@@ -130,77 +130,42 @@ UART::on_rx_interrupt()
   m_ibuf->putchar(*UDRn());
 }
 
-ISR(USART_UDRE_vect)
-{
-  if (g_uart0 == 0) return;
-  g_uart0->on_udre_interrupt();
+#define UART_ISR_UDRE(vec,uart)			\
+ISR(vec ## _UDRE_vect)				\
+{						\
+  if (UART::uart == 0) return;			\
+  UART::uart->on_udre_interrupt();		\
 }
 
-ISR(USART_RX_vect)
-{
-  if (g_uart0 == 0) return;
-  g_uart0->on_rx_interrupt();
-}
+#define UART_ISR_RX(vec,uart)			\
+  ISR(vec ## _RX_vect)				\
+  {						\
+    if (UART::uart == 0) return;		\
+    UART::uart->on_rx_interrupt();		\
+  }
+
+UART_ISR_UDRE(USART,uart0)
+UART_ISR_RX(USART,uart0)
 
 #if defined(__ARDUINO_MIGHTY__) 
 
-UART* g_uart1 = 0;
-
-ISR(USART1_UDRE_vect)
-{
-  if (g_uart1 == 0) return;
-  g_uart1->on_udre_interrupt();
-}
-
-ISR(USART1_RX_vect)
-{
-  if (g_uart1 == 0) return;
-  g_uart1->on_rx_interrupt();
-}
+UART* UART::uart1 = 0;
+UART_ISR_UDRE(USART1,uart1)
+UART_ISR_RX(USART1,uart1)
 
 #elif defined(__ARDUINO_MEGA__)
 
-UART* g_uart1 = 0;
+UART* UART::uart1 = 0;
+UART_ISR_UDRE(USART1,uart1)
+UART_ISR_RX(USART1,uart1)
 
-ISR(USART1_UDRE_vect)
-{
-  if (g_uart1 == 0) return;
-  g_uart1->on_udre_interrupt();
-}
+UART* UART::uart2 = 0;
+UART_ISR_UDRE(USART2,uart2)
+UART_ISR_RX(USART2,uart2)
 
-ISR(USART1_RX_vect)
-{
-  if (g_uart1 == 0) return;
-  g_uart1->on_rx_interrupt();
-}
-
-UART* g_uart2 = 0;
-
-ISR(USART2_UDRE_vect)
-{
-  if (g_uart2 == 0) return;
-  g_uart2->on_udre_interrupt();
-}
-
-ISR(USART2_RX_vect)
-{
-  if (g_uart2 == 0) return;
-  g_uart2->on_rx_interrupt();
-}
-
-UART* g_uart3 = 0;
-
-ISR(USART3_UDRE_vect)
-{
-  if (g_uart3 == 0) return;
-  g_uart3->on_udre_interrupt();
-}
-
-ISR(USART3_RX_vect)
-{
-  if (g_uart3 == 0) return;
-  g_uart3->on_rx_interrupt();
-}
+UART* UART::uart3 = 0;
+UART_ISR_UDRE(USART3,uart3)
+UART_ISR_RX(USART3,uart3)
 
 #endif
 #endif
