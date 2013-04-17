@@ -35,7 +35,7 @@
 
 /**
  * Simple software UART for ATtinyX5. Only realizes the putchar, 
- * transmitter. See example code for receiver.
+ * transmitter. 
  */
 class UART : public IOStream::Device {
 private:
@@ -281,5 +281,25 @@ public:
  * Default serial port(0).
  */
 extern UART uart;
+extern UART* g_uart0;
+
+/**
+ * Additional serial port references. Assumes that they are allocated by
+ * applications. 
+ */
+#if defined(__ARDUINO_MIGHTY__)
+extern UART* g_uart1;
+#elif defined(__ARDUINO_MEGA__)
+extern UART* g_uart1;
+extern UART* g_uart2;
+extern UART* g_uart3;
+#endif
+
+/**
+ * Setup handling of serial port with given port number and UART instance.
+ * @param[in] nr serial port number.
+ * @param[in] obj address of UART instance.
+ */
+#define UART_SETUP(nr,obj) g_uart ## nr = &obj
 
 #endif

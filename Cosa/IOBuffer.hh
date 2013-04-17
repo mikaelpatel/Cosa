@@ -47,10 +47,10 @@ public:
   /**
    * Allocate buffer object for iostream operations. Buffer size (max) 
    * should be power of 2.
-   * @param[in] max number of bytes in buffer.
    * @param[in] buffer pointer to buffer.
+   * @param[in] max number of bytes in buffer.
    */
-  IOBuffer(uint8_t max, char* buffer) :
+  IOBuffer(char* buffer, uint8_t max) :
     IOStream::Device(),
     m_buffer(buffer),
     m_head(0),

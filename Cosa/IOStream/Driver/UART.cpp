@@ -65,12 +65,13 @@ UART uart(Board::D0) __attribute__ ((weak));
 #include "Cosa/Power.hh"
 
 static char ibuffer[UART::BUFFER_MAX];
-static IOBuffer ibuf(sizeof(ibuffer), ibuffer);
+static IOBuffer ibuf(ibuffer, sizeof(ibuffer));
 
 static char obuffer[UART::BUFFER_MAX];
-static IOBuffer obuf(sizeof(obuffer), obuffer);
+static IOBuffer obuf(obuffer, sizeof(obuffer));
 
 UART uart(0, &ibuf, &obuf);
+UART* g_uart0 = &uart;
 
 bool
 UART::begin(uint32_t baudrate, uint8_t format)
@@ -88,7 +89,7 @@ UART::begin(uint32_t baudrate, uint8_t format)
   *UBRRn() = setting;
   *UCSRnC() = format;
 
-  // Enable transmitter interrupt 
+  // Enable receiver and transmitter interrupt 
   *UCSRnB() = (_BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0));
 
   return (true);
@@ -131,72 +132,74 @@ UART::on_rx_interrupt()
 
 ISR(USART_UDRE_vect)
 {
-  uart.on_udre_interrupt();
+  if (g_uart0 == 0) return;
+  g_uart0->on_udre_interrupt();
 }
 
 ISR(USART_RX_vect)
 {
-  uart.on_rx_interrupt();
+  if (g_uart0 == 0) return;
+  g_uart0->on_rx_interrupt();
 }
 
 #if defined(__ARDUINO_MIGHTY__) 
 
-UART* uart1 = 0;
+UART* g_uart1 = 0;
 
 ISR(USART1_UDRE_vect)
 {
-  if (uart1 == 0) return;
-  uart1->on_udre_interrupt();
+  if (g_uart1 == 0) return;
+  g_uart1->on_udre_interrupt();
 }
 
 ISR(USART1_RX_vect)
 {
-  if (uart1 == 0) return;
-  uart1->on_rx_interrupt();
+  if (g_uart1 == 0) return;
+  g_uart1->on_rx_interrupt();
 }
 
 #elif defined(__ARDUINO_MEGA__)
 
-UART* uart1 = 0;
+UART* g_uart1 = 0;
 
 ISR(USART1_UDRE_vect)
 {
-  if (uart1 == 0) return;
-  uart1->on_udre_interrupt();
+  if (g_uart1 == 0) return;
+  g_uart1->on_udre_interrupt();
 }
 
 ISR(USART1_RX_vect)
 {
-  if (uart1 == 0) return;
-  uart1->on_rx_interrupt();
+  if (g_uart1 == 0) return;
+  g_uart1->on_rx_interrupt();
 }
 
-UART* uart2 = 0;
+UART* g_uart2 = 0;
 
 ISR(USART2_UDRE_vect)
 {
-  if (uart2 == 0) return;
-  uart2->on_udre_interrupt();
+  if (g_uart2 == 0) return;
+  g_uart2->on_udre_interrupt();
 }
 
 ISR(USART2_RX_vect)
 {
-  if (uart2 == 0) return;
-  uart2->on_rx_interrupt();
+  if (g_uart2 == 0) return;
+  g_uart2->on_rx_interrupt();
 }
 
-UART* uart3 = 0;
+UART* g_uart3 = 0;
 
 ISR(USART3_UDRE_vect)
 {
-  if (uart3 == 0) return;
-  uart3->on_udre_interrupt();
+  if (g_uart3 == 0) return;
+  g_uart3->on_udre_interrupt();
 }
 
 ISR(USART3_RX_vect)
 {
-  if (uart3 == 0) return;
-  uart3->on_rx_interrupt();
+  if (g_uart3 == 0) return;
+  g_uart3->on_rx_interrupt();
 }
 
 #endif
