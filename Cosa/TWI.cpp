@@ -243,6 +243,7 @@ ISR(TWI_vect)
     twi.m_state = TWI::SR_STATE;
     twi.m_next = 0;
     TWCR = TWI::ACK_CMD;
+    // Fix: Check if the slave is ready. Should send a NACK if not ready
     break;
   case TWI::SR_DATA_ACK:
   case TWI::SR_GCALL_DATA_ACK:
