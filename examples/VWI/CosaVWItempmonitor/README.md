@@ -6,6 +6,6 @@ digital thermometer. See CosaVWItemperature.
 
 Circuit
 -------
-Connect RF433/315 Receiver to Arduino D11.
+Connect RF433/315 Receiver to Arduino D8.
 
 

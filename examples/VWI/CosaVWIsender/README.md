@@ -1,8 +1,8 @@
 CosaVWIsender
 =============
 Demonstration of the Virtual Wire Interface (VWI) driver. 
-Transmits a simple message with identity, message number, and two
-analog data samples. See CosaVWIreceiver.
+Transmits a simple message with two analog data samples. See
+CosaVWIreceiver. 
 
 Circuit
 -------

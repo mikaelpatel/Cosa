@@ -32,15 +32,13 @@
 
 /**
  * VWI (Virtual Wire Interface) is an Cosa library that provides 
- * features to send short messages, without addressing, retransmit or 
- * acknowledgment, a bit like UDP over wireless, using ASK (Amplitude 
- * Shift Keying). Supports a number of inexpensive radio transmitters
- * and receivers. 
+ * features to send short messages using inexpensive radio
+ * transmitters and receivers.
  */
 class VWI {
 public:
   /** The maximum payload length */
-  static const uint8_t PAYLOAD_MAX = 32;
+  static const uint8_t PAYLOAD_MAX = 37;
 
   /** Maximum number of bytes in a message (incl. byte count and FCS) */
   static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
@@ -51,6 +49,9 @@ public:
   /** Number of samples per bit */
   static const uint8_t SAMPLES_PER_BIT = 8;
 
+  /**
+   * The Virtual Wire Codec.
+   */
   class Codec {
   public:
     /** Bits per symbol */
@@ -69,8 +70,8 @@ public:
     const uint16_t BITS_MSB;
 
     /**
-     * Construct Codec with given symbol and header definition. The Codec is
-     * assumed to code 4 bits to max 8 bits for transmission.
+     * Construct Codec with given symbol and header definition. The 
+     * Codec is assumed to code 4 bits to max 8 bits for transmission.  
      * @param[in] bits_per_symbol.
      * @param[in] start_symbol.
      * @param[in] header_max.
@@ -84,8 +85,9 @@ public:
     {}
 
     /**
-     * Provide pointer to frame header in program memory. HEADER_MAX should
-     * contain the length of the header including start symbol.
+     * Provide pointer to frame header in program memory. HEADER_MAX 
+     * should contain the length of the header including start
+     * symbol. 
      * @return pointer.
      */
     virtual const uint8_t* get_header() = 0;
@@ -119,7 +121,7 @@ public:
   static const uint16_t CHECK_SUM = 0xf0b8;
 
   /**
-   * Compute CRC over count bytes.
+   * Compute CRC over count bytes and return value.
    * @param[in] ptr buffer pointer.
    * @param[in] count number of bytes in buffer.
    * @return CRC.
@@ -129,17 +131,44 @@ public:
   /** Sleep mode while synchronious await */
   static uint8_t s_mode;
   
+  /** Node address used in extended mode in message header */
+  static uint32_t s_addr;
+
 public:
+  /** Extended Virtual Wire Interface message header */
+  struct header_t {
+    uint32_t addr;		//< Transmitter node address
+    uint8_t cmd;		//< Command or message type
+    uint8_t nr;			//< Sequence number
+  };
+
   /**
-   * Initialise the Virtual Wire Interface (VWI), to operate at speed
+   * Initialise the Virtual Wire Interface (VWI), to operate at speed 
    * bits per second with given sleep mode. Return true(1) if
-   * successful otherwise false(0). Must be called before transmitting
+   * successful otherwise false(0). Must be called before transmitting 
    * or receiving.
    * @param[in] speed in bits per second.
    * @param[in] mode sleep mode.
    * @return bool
    */
   static bool begin(uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE);
+
+  /**
+   * Initialise the Virtual Wire Interface (VWI), with the given
+   * node address to operate at speed bits per second with given sleep
+   * mode. Return true(1) if successful otherwise false(0). Must be
+   * called before transmitting or receiving.
+   * @param[in] addr node address.
+   * @param[in] speed in bits per second.
+   * @param[in] mode sleep mode.
+   * @return bool
+   */
+  static bool begin(uint32_t addr, uint16_t speed, 
+		    uint8_t mode = SLEEP_MODE_IDLE)
+  {
+    s_addr = addr;
+    return (begin(speed, mode));
+  }
 
   /**
    * Enable the Virtual Wire Interface (VWI) interrupt handling after
@@ -153,6 +182,9 @@ public:
    */
   static void disable();
 
+  /**
+   * The Virtual Wire Receiver.
+   */
   class Receiver : private InputPin {
   private:
     /** The size of the receiver ramp. Ramp wraps modulo this number */
@@ -184,6 +216,9 @@ public:
 
     /** Current receiver sample */
     Codec* m_codec;
+
+    /** Sub-net mask */
+    uint32_t m_mask;
 
     /** Current receiver sample */
     uint8_t m_sample;
@@ -257,38 +292,29 @@ public:
     Receiver(Board::DigitalPin rx, Codec* codec);
 
     /**
-     * Start the Phase Locked Loop listening for the receiver.
-     * Must do this before you can receive any messages, When a
-     * message is available (good checksum or not), available(), 
-     * will return non-zero.
+     * Start the Phase Locked Loop listening for the receiver. Must do
+     * this before you can receive any messages, When a message is
+     * available (good checksum or not), available(), will return
+     * non-zero. 
+     * @param[in] bits in sub-net mask.
      * @return bool
      */
-    bool begin()
-    {
-      if (m_enabled) return (false);
-      m_enabled = true;
-      m_active = false;
-      return (true);
-    }
-
+    bool begin(uint8_t bits = 0);
+    
     /**
      * Stop the Phase Locked Loop listening to the receiver. No
-     * messages will be received until begin() is called
-     * again. Saves interrupt processing cycles.
+     * messages will be received until begin() is called again. Saves
+     * interrupt processing cycles. 
      * @return bool
      */
-    bool end()
-    {
-      m_enabled = false;
-      return (true);
-    }
+    bool end();
 
     /**
-     * Block until a message is available or for a max time (0 to
-     * forever). 
+     * Block until a message is available or for a max time (default
+     * 0L for block forever). Returns true if a message is available,
+     * false if the wait timed out.
      * @param[in] ms maximum time to wait in milliseconds.
-     * @return bool, true if a message is available, false if the wait
-     * timed out.
+     * @return bool.
      */
     bool await(uint32_t ms = 0L);
 
@@ -313,6 +339,9 @@ public:
     int8_t recv(void* buf, uint8_t len, uint32_t ms = 0L);
   };
 
+  /**
+   * The Virtual Wire Transmitter.
+   */
   class Transmitter : private OutputPin {
   private:
     /** Size of header */
@@ -323,6 +352,9 @@ public:
 
     /** Current transmitter codec */
     Codec* m_codec;
+
+    /** Message sequence number for extended mode */
+    uint8_t m_nr;
 
     /** Number of symbols to be sent */
     uint8_t m_length;
@@ -385,15 +417,27 @@ public:
     void await();
 
     /**
-     * Send a message with the given length. Returns almost
+     * Send a null terminated io vector message. Returns almost
      * immediately, and message will be sent at the right timing by
-     * interrupts. 
-     * @param[in] buf pointer to the data to transmit.
-     * @param[in] len number of octetes to transmit.
+     * interrupts.  
+     * @param[in] vec null terminated io vector.
      * @return true if the message was accepted for transmission,
      * false if the message is too long (> PAYLOAD_MAX) 
      */
-    bool send(void* buf, uint8_t len);
+    bool send(const iovec_t* vec);
+
+    /**
+     * Send a message with the given length. Returns almost
+     * immediately, and message will be sent at the right timing by
+     * interrupts. A command may be given in extended mode with
+     * addressing to allow identification of the message type.
+     * @param[in] buf pointer to the data to transmit.
+     * @param[in] len number of bytes to transmit.
+     * @param[in] cmd command code in extended mode.
+     * @return true if the message was accepted for transmission,
+     * false if the message is too long (> PAYLOAD_MAX) 
+     */
+    bool send(const void* buf, uint8_t len, uint8_t cmd = 0);
   };
 };
 

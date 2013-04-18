@@ -113,6 +113,14 @@ private:
   } __attribute__((packed));
 
   /**
+   * Internal io vector with byte addressing
+   */
+  struct iovec_t {
+    uint8_t* buf;
+    size_t size;
+  };
+
+  /**
    * Device state, data buffers and target.
    */
   static const uint8_t BUF_MAX = 4;

@@ -21,12 +21,14 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration receiving temperature readings from a OneWire DS18B20
+ * Demonstration receiving temperature readings from 1-Wire DS18B20
  * device over the Virtual Wire Interface (VWI). The measurements are
- * sent by the CosaVWItempsensor sketch running on an ATtiny85.
+ * sent by the CosaVWItempsensor sketch running on an ATtiny85. 
+ * VWI is used in extended mode with node addressing, message numbering,
+ * and sub-net mask filtering.
  *
  * @section Circuit
- * Connect RF433/315 Receiver to Arduino D11.
+ * Connect RF433/315 Receiver to Arduino D8.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -40,10 +42,11 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
-// Virtual Wire Interface Receiver connected to pin D11
+// Virtual Wire Interface Receiver connected to pin D8
 VirtualWireCodec codec;
-VWI::Receiver rx(Board::D11, &codec);
+VWI::Receiver rx(Board::D8, &codec);
 const uint16_t SPEED = 4000;
+const uint32_t ADDR = 0xC05a0000;
 
 void setup()
 {
@@ -55,16 +58,25 @@ void setup()
   // Start watchdog for low power delay
   Watchdog::begin();
 
-  // Start virtual wire interface and receiver
-  VWI::begin(SPEED);
-  rx.begin();
+  // Start virtual wire interface and receiver. Use eight bit sub-net mask
+  // Transmitters must have the same 24 MSB address bits as the receiver.
+  VWI::begin(ADDR, SPEED);
+  rx.begin(8);
 }
 
-struct msg_t {
-  uint8_t id[OWI::ROM_MAX];
-  uint16_t nr;
+// Message from the sender
+const uint8_t SAMPLE_CMD = 42;
+struct sample_t {
   int16_t temperature;
   uint16_t voltage;
+};
+
+// Message received from VWI in extended mode
+struct msg_t {
+  VWI::header_t header;
+  union {
+    sample_t sample;
+  };
 };
 
 void loop()
@@ -74,8 +86,7 @@ void loop()
   static uint32_t err = 0;
   static uint32_t cnt = 0;
 
-  // Wait for a message
-  rx.await();
+  // Receive a message
   msg_t msg;
   int8_t len = rx.recv(&msg, sizeof(msg));
 
@@ -83,31 +94,30 @@ void loop()
   if (len != sizeof(msg)) return;
 
   // Check message number 
-  if (msg.nr != next) {
-    next = msg.nr;
+  if (msg.header.nr != next) {
+    next = msg.header.nr;
     err += 1;
   }
   cnt += 1;
 
-  // Print message contents; 1-wire identity in hex
-  for (uint8_t i = 0; i < membersof(msg.id); i++) {
-    uint8_t high = msg.id[i] >> 4;
-    uint8_t low = msg.id[i] & 0xf;
-    trace << (char) (high + (high > 9 ? 'a' - 10 : '0'));
-    trace << (char) (low + (low > 9 ? 'a' - 10: '0'));
-  }
-
-  // Followed by message sequence number
-  trace << ':' << msg.nr << ':';
+  // Print message header and contents
+  trace << hex << msg.header.addr << ':' << msg.header.nr << ':';
 
   // Followed by the temperature reading
-  FixedPoint temp(msg.temperature, 4);
-  int16_t integer = temp.get_integer();
-  uint16_t fraction = temp.get_fraction(2);
-  trace << integer << '.';
-  if (fraction < 10) trace << '0';
-  trace << fraction;
-  trace << ':' << msg.voltage << endl;
+  if (msg.header.cmd == SAMPLE_CMD) {
+    FixedPoint temp(msg.sample.temperature, 4);
+    int16_t integer = temp.get_integer();
+    uint16_t fraction = temp.get_fraction(2);
+    trace << PSTR("sample:") << integer << '.';
+    if (fraction < 10) trace << '0';
+    trace << fraction;
+    trace << ':' << msg.sample.voltage << endl;
+  }
+  else {
+    trace << msg.header.cmd << ':'
+	  << PSTR("unknown message type") 
+	  << endl;
+  }
   next += 1;
 
   // Print message count and errors every 256 messages

@@ -37,9 +37,13 @@
 // Timer ticks counter
 static volatile uint32_t g_ticks = 0UL;
 
+// Initiated state
+static uint8_t g_initiated = 0;
+
 bool
 RTC::begin()
 {
+  if (g_initiated) return (false);
   synchronized {
     // Set the compare/top value
     OCR0A = COUNT;
@@ -53,6 +57,7 @@ RTC::begin()
     TCNT0 = 0;
     TIFR0 = 0;
   }
+  g_initiated = true;
   return (true);
 }
 

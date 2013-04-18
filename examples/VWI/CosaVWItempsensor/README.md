@@ -9,9 +9,9 @@ This sketch is designed for an ATtiny85 running on the internal
 Circuit
 -------
 Connect RF433/315 Transmitter Data to ATtiny85 D1, connect VCC 
-GND. Connect 1-Wire digital thermometer to D2 with pullup resistor
-(approx. 4K7 ohm), connect VCC and GND. In parasite mode connect VCC
-pin also to GND.
+GND. Connect one or two 1-Wire digital thermometer to D2 with pullup
+resistor (approx. 4.7 Kohm), connect VCC and GND. In parasite mode connect
+thermometer VCC pin also to GND.
 
 
 

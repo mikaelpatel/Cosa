@@ -4,7 +4,7 @@
  *
  * @section License
  * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire)
- * Copyright (C) 2013, Mikael Patel (Cosa C++ Port)
+ * Copyright (C) 2013, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,6 +30,7 @@
 #include <util/crc16.h>
 
 uint8_t VWI::s_mode = 0;
+uint32_t VWI::s_addr = 0L;
 
 uint16_t 
 VWI::CRC(uint8_t* ptr, uint8_t count)
@@ -124,7 +125,7 @@ VWI::Receiver::PLL()
 	
 	// The first decoded byte is the byte count of the following
 	// message the count includes the byte count and the 2
-	// trailing FCS bytes. FIX: May also include the ACK flag at 0x40.
+	// trailing FCS bytes. 
 	if (m_length == 0) {
 	  // The first byte is the byte count. Check it for
 	  // sensibility. It cant be less than min, since it includes
@@ -216,9 +217,29 @@ VWI::disable()
 
 VWI::Receiver::Receiver(Board::DigitalPin rx, Codec* codec) : 
   InputPin(rx),
-  m_codec(codec)
+  m_codec(codec),
+  m_mask(0L)
 {
   receiver = this;
+}
+
+bool 
+VWI::Receiver::begin(uint8_t bits)
+{
+  if (m_enabled || bits > 32) return (false);
+  RTC::begin();
+  m_mask = 0xffffffffUL << bits;
+  m_enabled = true;
+  m_active = false;
+  return (true);
+}
+
+bool 
+VWI::Receiver::end()
+{
+  if (!m_enabled) return (false);
+  m_enabled = false;
+  return (true);
 }
 
 bool 
@@ -226,7 +247,7 @@ VWI::Receiver::await(unsigned long ms)
 {
   // Allow low power mode while waiting
   unsigned long start = RTC::millis();
-  while (!m_done && (ms == 0 || ((RTC::millis() - start) < ms)))
+  while (!m_done && (ms == 0 || ((RTC::millis() - start) < ms))) 
     Power::sleep(s_mode);
   return (m_done);
 }
@@ -237,14 +258,18 @@ VWI::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
   // Message available?
   if (!m_done && (ms == 0 || !await(ms))) return (0);
 
-  // Wait until done is set before reading length then remove
-  // bytecount and FCS  
+  // Check if extended mode and correct sub-net address
+  if (VWI::s_addr != 0L) {
+    VWI::header_t* hp = (VWI::header_t*) (m_buffer + 1);
+    if ((hp->addr & m_mask) != VWI::s_addr) {
+      m_done = false;
+      return (0);
+    }
+  }
   uint8_t rxlen = m_length - 3;
-    
-  // Copy message (good or bad). Skip count byte
   if (len > rxlen) len = rxlen;
   memcpy(buf, m_buffer + 1, len);
-    
+  
   // OK, got that message thanks
   m_done = false;
     
@@ -257,7 +282,8 @@ VWI::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
 
 VWI::Transmitter::Transmitter(Board::DigitalPin tx, Codec* codec) :
   OutputPin(tx),
-  m_codec(codec)
+  m_codec(codec),
+  m_nr(0)
 {
   transmitter = this;
   memcpy_P(m_buffer, codec->get_header(), codec->HEADER_MAX);
@@ -280,13 +306,16 @@ VWI::Transmitter::await()
 }
 
 bool 
-VWI::Transmitter::send(void* buf, uint8_t len)
+VWI::Transmitter::send(const iovec_t* vec)
 {
+  size_t len = 0;
+  for (const iovec_t* vp = vec; vp->buf != 0; vp++)
+    len += vp->size;
+
   // Check that the message is not too large
   if (len > PAYLOAD_MAX) return (false);
 
   uint8_t *tp = transmitter->m_buffer + m_codec->HEADER_MAX;
-  uint8_t *bp = (uint8_t*) buf;
   uint16_t crc = 0xffff;
   
   // Wait for transmitter to become available. Might be transmitting
@@ -300,12 +329,16 @@ VWI::Transmitter::send(void* buf, uint8_t len)
 
   // Encode the message into symbols. Each byte is converted into 
   // 2 symbols, high nybble first, low nybble second
-  for (uint8_t i = 0; i < len; i++) {
-    crc = _crc_ccitt_update(crc, bp[i]);
-    *tp++ = m_codec->encode4(bp[i] >> 4);
-    *tp++ = m_codec->encode4(bp[i]);
+  for (const iovec_t* vp = vec; vp->buf != 0; vp++) {
+    uint8_t *bp = (uint8_t*) vp->buf;
+    for (uint8_t i = 0; i < vp->size; i++) {
+      uint8_t data = *bp++;
+      crc = _crc_ccitt_update(crc, data);
+      *tp++ = m_codec->encode4(data >> 4);
+      *tp++ = m_codec->encode4(data);
+    }
   }
-
+  
   // Append the FCS, 16 bits before encoding (4 symbols after
   // encoding) Caution: VWI expects the _ones_complement_ of the CCITT 
   // CRC-16 as the FCS VWI sends FCS as low byte then hi byte
@@ -320,6 +353,32 @@ VWI::Transmitter::send(void* buf, uint8_t len)
 
   // Start the low level interrupt handler sending symbols
   return (begin());
+}
+
+bool 
+VWI::Transmitter::send(const void* buf, uint8_t len, uint8_t cmd)
+{
+  // Check that the message is not too large
+  if (len > PAYLOAD_MAX) return (false);
+  VWI::header_t header;
+  iovec_t vec[3];
+  uint8_t ix = 0;
+
+  // Check for extended mode: add header with address and sequence number
+  if (VWI::s_addr != 0L) {
+    header.addr = s_addr;
+    header.cmd = cmd;
+    header.nr = m_nr++;
+    vec[ix].buf = &header;
+    vec[ix].size = sizeof(header);
+    ix += 1;
+  }
+  vec[ix].buf = (void*) buf;
+  vec[ix].size = len;
+  ix += 1;
+  vec[ix].buf = 0;
+  vec[ix].size = 0;
+  return (send(vec));
 }
 
 /**

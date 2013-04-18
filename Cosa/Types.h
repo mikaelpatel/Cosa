@@ -97,10 +97,23 @@ union univ32_t {
 #define I_CPU (F_CPU / 1000000L)
 
 /**
- * Macro for micro-second level delay. 
+ * Macro for micro-second level delay. See also USLEEP().
  * @param[in] us micro-seconds.
  */
 #define DELAY(us) _delay_loop_2((us) * I_CPU / 4)
+
+/**
+ * Macro for micro-second level delay. See also DELAY().
+ * @param[in] us micro-seconds.
+ */
+#define USLEEP(us) DELAY(us)
+
+/**
+ * Macro for sleep for number of milli-seconds. Requires include of the
+ * Watchdog. 
+ * @param[in] ms milli-seconds.
+ */
+#define MSLEEP(ms) Watchdog::delay(ms)
 
 /**
  * Macro for sleep for number of seconds. Requires include of the
@@ -156,10 +169,10 @@ unlock(uint8_t key)
 #define barrier() __asm__ __volatile__("nop" ::: "memory") 
 
 /**
- * Buffer structure for vector write operations.
+ * Buffer structure for scatter/gather I/O.
  */
 struct iovec_t {
-  uint8_t* buf;
+  void* buf;
   size_t size;
 };
 

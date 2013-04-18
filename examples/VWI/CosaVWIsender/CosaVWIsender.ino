@@ -22,8 +22,7 @@
  *
  * @section Description
  * Demonstration of the Virtual Wire Interface (VWI) driver.
- * Transmits a simple message with identity, message number,
- * and two data element; analog samples.
+ * Transmits a simple message with two analog samples. 
  *
  * @section Circuit
  * Connect RF433/315 Transmitter Data to Arduino(ATtiny85) D9(D2),
@@ -54,16 +53,13 @@ VirtualWireCodec codec;
 // BitstuffingCodec codec;
 
 // Virtual Wire Interface Transmitter and Power Control pins
-#if defined(__AVR_ATtiny25__)		\
- || defined(__AVR_ATtiny45__)		\
- || defined(__AVR_ATtiny85__)
+#if defined(__ARDUINO_TINYX5__)
 VWI::Transmitter tx(Board::D2, &codec);
 OutputPin pw(Board::D1);
 #else 
 VWI::Transmitter tx(Board::D9, &codec);
 OutputPin pw(Board::D10);
 #endif
-
 const uint16_t SPEED = 4000;
 
 void setup()
@@ -76,25 +72,20 @@ void setup()
   tx.begin();
 }
 
-// Message type to send
+// Message type to send (header will be automatically be appended)
 struct msg_t {
-  uint32_t id;
-  uint8_t nr;
-  uint16_t data[2];
+  uint16_t luminance;
+  uint16_t temperature;
 };
 
 void loop()
 {
-  static msg_t msg = { 
-    0xC05A0001,
-    0, 	
-    { 0, 0 }
-  };
+  msg_t msg;
 
   // Turn power on. While stabilizing sample the analog values
   pw.on();
-  msg.data[0] = luminance.sample();
-  msg.data[1] = temperature.sample();
+  msg.luminance = luminance.sample();
+  msg.temperature = temperature.sample();
 
   // Send the message with the values and wait for completion
   tx.send(&msg, sizeof(msg));
@@ -103,9 +94,6 @@ void loop()
   // Turn power off.
   Watchdog::delay(128);
   pw.off();
-  
-  // Update message number and data
-  msg.nr += 1;
 
   // Delivery the next message after a 0.5 second delay
   Watchdog::delay(128);

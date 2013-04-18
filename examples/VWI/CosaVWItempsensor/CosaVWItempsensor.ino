@@ -21,8 +21,9 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration sending temperature readings from a OneWire DS18B20
- * device over the Virtual Wire Interface (VWI). 
+ * Demonstration sending temperature readings from 1-Wire DS18B20
+ * devices over the Virtual Wire Interface (VWI). Uses the VWI 
+ * extended mode with addressing and message numbering.
  *
  * @section Note
  * This sketch is designed for an ATtiny85 running on the internal 
@@ -50,8 +51,13 @@ DS18B20 outdoors(&owi);
 
 // Connect RF433 transmitter to ATtiny/D1
 VirtualWireCodec codec;
+#if defined(__ARDUINO_TINYX5__)
 VWI::Transmitter tx(Board::D1, &codec);
+#else
+VWI::Transmitter tx(Board::D9, &codec);
+#endif
 const uint16_t SPEED = 4000;
+const uint32_t ADDR = 0xC05a0001;
 
 void setup()
 {
@@ -59,7 +65,7 @@ void setup()
   Watchdog::begin(1024, SLEEP_MODE_PWR_DOWN);
 
   // Start the Virtual Wire Interface/Transmitter
-  VWI::begin(SPEED);
+  VWI::begin(ADDR, SPEED);
   tx.begin();
 
   // Connect to the temperature sensor
@@ -74,19 +80,17 @@ void setup()
   Power::timer1_disable();
 }
 
-// Message from the device. Use one-wire identity as virtual wire identity
-struct msg_t {
-  uint8_t id[OWI::ROM_MAX];
-  uint16_t nr;
+// Message from the device; temperature and voltage reading
+const uint8_t SAMPLE_CMD = 42;
+struct sample_t {
   int16_t temperature;
   uint16_t voltage;
 };
 
 void loop()
 {
-  static uint16_t nr = 0;
   static DS18B20* sensor = &indoors;
-  msg_t msg;
+  sample_t msg;
 
   // Make a conversion request
   sensor->convert_request();
@@ -97,14 +101,12 @@ void loop()
 
   // Read the temperature and initiate the message
   sensor->read_scratchpad();
-  memcpy(&msg.id, sensor->get_rom(), sizeof(msg.id));
-  msg.nr = nr++;
   msg.temperature = sensor->get_temperature();
   msg.voltage = AnalogPin::bandgap(1100);
 
   // Enable wireless transmitter and send. Wait completion and disable
   VWI::enable();
-  tx.send(&msg, sizeof(msg));
+  tx.send(&msg, sizeof(msg), SAMPLE_CMD);
   tx.await();
   VWI::disable();
 

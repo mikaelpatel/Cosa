@@ -22,8 +22,7 @@
  *
  * @section Description
  * Demonstration of the Virtual Wire Interface (VWI) driver.
- * Receive and print a simple message with identity, message number,
- * and 2x16-bit analog data sample.
+ * Receive and print a simple message with 2x16-bit analog data sample.
  *
  * @section Circuit
  * Connect RF433/315 Receiver to Arduino D8.
@@ -69,39 +68,17 @@ void setup()
 
 // Message type to receive
 struct msg_t {
-  uint32_t id;
-  uint8_t nr;
-  uint16_t data[2];
+  uint16_t luminance;
+  uint16_t temperature;
 };
 
 void loop()
 {
-  // Check message number and count errors
-  static uint8_t next = 0;
-  static uint32_t err = 0;
-  static uint32_t cnt = 0;
-
   // Wait for a message
-  rx.await();
   msg_t msg;
   int8_t len = rx.recv(&msg, sizeof(msg));
-
-  // Check that the correct messaage size was received
   if (len != sizeof(msg)) return;
-  cnt += 1;
-
-  // Check message number 
-  if (msg.nr != next) {
-    for (uint8_t i = next; i < msg.nr; i++) {
-      trace << i << ':' << PSTR("missing") << endl;
-      err += 1;
-    }
-    next = msg.nr;
-    trace << (100 * err) / cnt << PSTR(" % drop rate") << endl;
-  }
 
   // Print message contents
-  trace << hex << msg.id << ':' << msg.nr << ':';
-  trace << hex << msg.data[0] << PSTR(", ") << hex << msg.data[1] << endl;
-  next += 1;
+  trace << msg.luminance << PSTR(", ") << msg.temperature << endl;
 }
