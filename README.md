@@ -185,4 +185,6 @@ abstraction of EEPROM with default handling of internal
 EEPROM. Refactoring AT24CXX driver for new EEPROM
 interface. Implemented 1-wire parasite power mode. Improved DS18B20
 1-wire driver and demo sketches with VWI integration. Added support
-for battery voltage monitoring.   
+for battery voltage monitoring. New extended mode in VWI with node
+address, sub-net address matching, message sequence numbering and type
+handling.   
