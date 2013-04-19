@@ -70,6 +70,18 @@ IOStream::Device::write(void* buf, size_t size)
 }
 
 int 
+IOStream::Device::writev(const iovec_t* vec)
+{
+  size_t size = 0;
+  for (const iovec_t* vp = vec; vp->buf != 0; vp++) {
+    int res = write(vp->buf, vp->size);
+    if (res != vp->size) return (-1);
+    size += res;
+  }
+  return (size);
+}
+
+int 
 IOStream::Device::getchar() 
 { 
   return (-1); 

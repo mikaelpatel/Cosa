@@ -83,6 +83,13 @@ public:
      * @return number of bytes written or EOF(-1).
      */
     virtual int write(void* buf, size_t size);
+    
+    /**
+     * Write data from buffers in null terminated io vector.
+     * @param[in] vec io vector with buffers to write.
+     * @return number of bytes written or EOF(-1).
+     */
+    virtual int writev(const iovec_t* vec);
 
     /**
      * Read character from device.
