@@ -24,6 +24,7 @@
  */
 
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
+#include "Cosa/Board.hh"
 
 FixedNums8x16 fixednums8x16;
 
