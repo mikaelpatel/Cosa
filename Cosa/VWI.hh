@@ -31,9 +31,9 @@
 #include <avr/sleep.h>
 
 /**
- * VWI (Virtual Wire Interface) is an Cosa library that provides 
+ * VWI (Virtual Wire Interface) is an Cosa library that provides
  * features to send short messages using inexpensive radio
- * transmitters and receivers.
+ * transmitters and receivers. 
  */
 class VWI {
 public:
@@ -49,6 +49,71 @@ public:
   /** Number of samples per bit */
   static const uint8_t SAMPLES_PER_BIT = 8;
 
+  /** CRC checksum for received frame */
+  static const uint16_t CHECK_SUM = 0xf0b8;
+
+  /**
+   * Compute CRC over count bytes and return value.
+   * @param[in] ptr buffer pointer.
+   * @param[in] count number of bytes in buffer.
+   * @return CRC.
+   */
+  static uint16_t CRC(uint8_t* ptr, uint8_t count);
+
+  /** Message header for extended Virtual Wire Interface mode */
+  struct header_t {
+    uint32_t addr;		/**< Transmitter node address */
+    uint8_t cmd;		/**< Command or message type */
+    uint8_t nr;			/**< Message sequence number */
+  };
+
+  /**
+   * Initialise the Virtual Wire Interface (VWI), to operate at speed 
+   * bits per second with given sleep mode. Return true(1) if
+   * successful otherwise false(0). Must be called before transmitting
+   * or receiving.
+   * @param[in] speed in bits per second.
+   * @param[in] mode sleep mode.
+   * @return bool
+   */
+  static bool begin(uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE);
+
+  /**
+   * Initialise the Virtual Wire Interface (VWI), with the given
+   * node address to operate at speed bits per second with given sleep
+   * mode. Return true(1) if successful otherwise false(0). Must be
+   * called before transmitting or receiving.
+   * @param[in] addr node address.
+   * @param[in] speed in bits per second.
+   * @param[in] mode sleep mode.
+   * @return bool
+   */
+  static bool begin(uint32_t addr, uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE)
+  {
+    s_addr = addr;
+    return (begin(speed, mode));
+  }
+
+  /**
+   * Enable the Virtual Wire Interface (VWI) interrupt handling after
+   * deep sleep modes.
+   */
+  static void enable();
+
+  /**
+   * Disable the Virtual Wire Interface (VWI) interrupt handling for
+   * deep sleep modes.
+   */
+  static void disable();
+
+private:
+  /** Sleep mode during await */
+  static uint8_t s_mode;
+  
+  /** Node address used in extended mode in message header */
+  static uint32_t s_addr;
+
+public:
   /**
    * The Virtual Wire Codec.
    */
@@ -116,71 +181,6 @@ public:
       return ((decode4(symbol) << 4) | (decode4(symbol >> BITS_PER_SYMBOL)));
     }
   };
-
-  /** CRC checksum for received frame */
-  static const uint16_t CHECK_SUM = 0xf0b8;
-
-  /**
-   * Compute CRC over count bytes and return value.
-   * @param[in] ptr buffer pointer.
-   * @param[in] count number of bytes in buffer.
-   * @return CRC.
-   */
-  static uint16_t CRC(uint8_t* ptr, uint8_t count);
-
-  /** Sleep mode while synchronious await */
-  static uint8_t s_mode;
-  
-  /** Node address used in extended mode in message header */
-  static uint32_t s_addr;
-
-public:
-  /** Extended Virtual Wire Interface message header */
-  struct header_t {
-    uint32_t addr;		//< Transmitter node address
-    uint8_t cmd;		//< Command or message type
-    uint8_t nr;			//< Sequence number
-  };
-
-  /**
-   * Initialise the Virtual Wire Interface (VWI), to operate at speed 
-   * bits per second with given sleep mode. Return true(1) if
-   * successful otherwise false(0). Must be called before transmitting 
-   * or receiving.
-   * @param[in] speed in bits per second.
-   * @param[in] mode sleep mode.
-   * @return bool
-   */
-  static bool begin(uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE);
-
-  /**
-   * Initialise the Virtual Wire Interface (VWI), with the given
-   * node address to operate at speed bits per second with given sleep
-   * mode. Return true(1) if successful otherwise false(0). Must be
-   * called before transmitting or receiving.
-   * @param[in] addr node address.
-   * @param[in] speed in bits per second.
-   * @param[in] mode sleep mode.
-   * @return bool
-   */
-  static bool begin(uint32_t addr, uint16_t speed, 
-		    uint8_t mode = SLEEP_MODE_IDLE)
-  {
-    s_addr = addr;
-    return (begin(speed, mode));
-  }
-
-  /**
-   * Enable the Virtual Wire Interface (VWI) interrupt handling after
-   * deep sleep modes.
-   */
-  static void enable();
-
-  /**
-   * Disable the Virtual Wire Interface (VWI) interrupt handling for
-   * deep sleep modes.
-   */
-  static void disable();
 
   /**
    * The Virtual Wire Receiver.
