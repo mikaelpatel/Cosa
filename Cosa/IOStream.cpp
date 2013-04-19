@@ -24,7 +24,6 @@
  */
 
 #include "Cosa/IOStream.hh"
-#include "Cosa/IOBuffer.hh"
 #include <stdarg.h>
 
 IOStream::Device IOStream::Device::null;
@@ -108,7 +107,7 @@ IOStream::Device::read(void* buf, size_t size)
 }
 
 int 
-IOStream::Device::flush() 
+IOStream::Device::flush(uint8_t mode) 
 { 
   return (-1); 
 }
@@ -146,7 +145,7 @@ IOStream::print(unsigned long int n, uint8_t base)
 }
 
 void 
-IOStream::print(IOBuffer* buffer)
+IOStream::print(IOStream::Device* buffer)
 {
   int c;
   while ((c = buffer->getchar()) != -1)
@@ -249,13 +248,6 @@ IOStream::vprintf_P(const char* format, va_list args)
 }
 
 IOStream& 
-endl(IOStream& outs)
-{
-  outs.print('\n');
-  return (outs);
-}
-
-IOStream& 
 bin(IOStream& outs)
 {
   outs.m_base = 2;
@@ -280,6 +272,27 @@ IOStream&
 hex(IOStream& outs)
 {
   outs.m_base = 16;
+  return (outs);
+}
+
+IOStream& 
+endl(IOStream& outs)
+{
+  outs.print('\n');
+  return (outs);
+}
+
+IOStream& 
+ends(IOStream& outs)
+{
+  outs.print('\0');
+  return (outs);
+}
+
+IOStream& 
+clear(IOStream& outs)
+{
+  outs.print('\f');
   return (outs);
 }
 

@@ -53,6 +53,7 @@ OWI owi(Board::D5);
 DS18B20 sensor(&owi);
 PCD8544 lcd;
 #undef putchar
+const uint8_t CONTRAST = 0x38;
 
 void setup()
 {
@@ -60,7 +61,7 @@ void setup()
   Watchdog::begin();
 
   // Initiate the LCD screen and show arduino icon
-  lcd.begin(0x38);
+  lcd.begin(CONTRAST);
   lcd.putchar('\f');
   lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
   lcd.draw_icon(arduino_icon_64x32);
@@ -70,7 +71,7 @@ void setup()
   trace.begin(&lcd);
   trace << PSTR("\fCosaTemperature: started\n");
   SLEEP(2);
-  trace << '\f';
+  trace << clear;
   TRACE(sensor.connect(0));
   TRACE(sensor.read_power_supply());
   SLEEP(2);
@@ -109,5 +110,5 @@ void loop()
   lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
 
   // Take a nap
-  SLEEP(1);
+  SLEEP(2);
 }

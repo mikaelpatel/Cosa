@@ -27,6 +27,7 @@
 #define __COSA_IOSTREAM_HH__
 
 #include "Cosa/Types.h"
+#include <avr/sleep.h>
 
 // Redefine PSTR so that operator<< output is possible
 #if defined(PSTR)
@@ -34,8 +35,6 @@
 # define PSTR(s)							\
   ((__extension__({static const char __c[] PROGMEM = (s); &__c[0];})))
 #endif
-
-class IOBuffer;
 
 /**
  * Basic in-/output stream support class. Requires implementation of
@@ -110,9 +109,10 @@ public:
 
     /**
      * Flush internal device buffers. Wait for device to become idle.
+     * @param[in] mode sleep mode on flush wait.
      * @return zero(0) or negative error code.
      */
-    virtual int flush();
+    virtual int flush(uint8_t mode = SLEEP_MODE_IDLE);
 
     /**
      * The default implementation of device; null device.
@@ -217,11 +217,12 @@ public:
 
     /**
      * Flush internal device buffers. Wait for device to become idle.
+     * @param[in] mode sleep mode on flush wait.
      * @return zero(0) or negative error code.
      */
-    virtual int flush()
+    virtual int flush(uint8_t mode = SLEEP_MODE_IDLE)
     {
-      return (m_dev->flush());
+      return (m_dev->flush(mode));
     }
   };
 
@@ -369,10 +370,10 @@ public:
   }
 
   /**
-   * Print contents of iobuffer to stream.
+   * Print contents of iostream to stream.
    * @param[in] buffer input/output buffer.
    */
-  void print(IOBuffer* buffer);
+  void print(IOStream::Device* buffer);
 
   /**
    * Stream manipulator function prototype. To allow implementation
@@ -505,7 +506,7 @@ public:
    * @param[in] buffer input/output buffer.
    * @return iostream.
    */
-  IOStream& operator<<(IOBuffer& buffer) 
+  IOStream& operator<<(IOStream& buffer) 
   { 
     print(&buffer);
     return (*this); 
@@ -556,10 +557,24 @@ extern IOStream& dec(IOStream& outs);
 extern IOStream& hex(IOStream& outs);
 
 /**
- * Print end of line; carriage-return-line-feed.
+ * Print end of line '\n'; carriage-return-line-feed.
  * @param[in] outs stream.
  * @return iostream.
  */
 extern IOStream& endl(IOStream& outs);
+
+/**
+ * Print end of string '\0'; null character
+ * @param[in] outs stream.
+ * @return iostream.
+ */
+extern IOStream& ends(IOStream& outs);
+
+/**
+ * Print form feed '\f'; new page/clear screen
+ * @param[in] outs stream.
+ * @return iostream.
+ */
+extern IOStream& clear(IOStream& outs);
 
 #endif
