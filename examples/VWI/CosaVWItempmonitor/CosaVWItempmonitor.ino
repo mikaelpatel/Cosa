@@ -67,7 +67,7 @@ void setup()
 // Message from the sender
 const uint8_t SAMPLE_CMD = 42;
 struct sample_t {
-  int16_t temperature;
+  int16_t temperature[2];
   uint16_t voltage;
 };
 
@@ -105,13 +105,18 @@ void loop()
 
   // Followed by the temperature reading
   if (msg.header.cmd == SAMPLE_CMD) {
-    FixedPoint temp(msg.sample.temperature, 4);
-    int16_t integer = temp.get_integer();
-    uint16_t fraction = temp.get_fraction(2);
-    trace << PSTR("sample:") << integer << '.';
+    FixedPoint temp0(msg.sample.temperature[0], 4);
+    FixedPoint temp1(msg.sample.temperature[1], 4);
+    uint16_t fraction = temp0.get_fraction(2);
+    trace << PSTR("sample:");
+    trace << temp0.get_integer() << '.';
     if (fraction < 10) trace << '0';
-    trace << fraction;
-    trace << ':' << msg.sample.voltage << endl;
+    trace << fraction << ':';
+    trace << temp1.get_integer() << '.';
+    fraction = temp1.get_fraction(2);
+    if (fraction < 10) trace << '0';
+    trace << fraction << ':';
+    trace << msg.sample.voltage << endl;
   }
   else {
     trace << msg.header.cmd << ':'

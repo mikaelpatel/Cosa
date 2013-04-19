@@ -57,7 +57,11 @@ VWI::Transmitter tx(Board::D1, &codec);
 VWI::Transmitter tx(Board::D9, &codec);
 #endif
 const uint16_t SPEED = 4000;
+#if defined(__ARDUINO_TINYX5__)
 const uint32_t ADDR = 0xC05a0001;
+#else
+const uint32_t ADDR = 0xC05a0002;
+#endif
 
 void setup()
 {
@@ -75,33 +79,37 @@ void setup()
   // Disable hardware
   VWI::disable();
   Power::adc_disable();
-  Power::usi_disable();
   Power::timer0_disable();
   Power::timer1_disable();
+#if defined(__ARDUINO_TINYX5__)
+  Power::usi_disable();
+#endif
 }
 
 // Message from the device; temperature and voltage reading
 const uint8_t SAMPLE_CMD = 42;
 struct sample_t {
-  int16_t temperature;
+  int16_t temperature[2];
   uint16_t voltage;
 };
 
 void loop()
 {
-  static DS18B20* sensor = &indoors;
   sample_t msg;
-
-  // Make a conversion request
-  sensor->convert_request();
   
+  // Make a conversion request and read the temperature (scratchpad)
+  indoors.convert_request();
+  indoors.read_scratchpad();
+  outdoors.convert_request();
+  outdoors.read_scratchpad();
+
   // Turn on necessary hardware modules
   Power::timer1_enable();
   Power::adc_enable();
 
-  // Read the temperature and initiate the message
-  sensor->read_scratchpad();
-  msg.temperature = sensor->get_temperature();
+  // Initiate the message with measurements
+  msg.temperature[0] = indoors.get_temperature();
+  msg.temperature[1] = outdoors.get_temperature();
   msg.voltage = AnalogPin::bandgap(1100);
 
   // Enable wireless transmitter and send. Wait completion and disable
@@ -113,6 +121,5 @@ void loop()
   // Turn off hardware and sleep until next sample (period 2 s)
   Power::timer1_disable();
   Power::adc_disable();
-  sensor = (sensor == &indoors) ? &outdoors : &indoors;
   SLEEP(2);
 }
