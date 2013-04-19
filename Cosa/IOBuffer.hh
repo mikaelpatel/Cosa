@@ -28,35 +28,30 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
+#include "Cosa/Power.hh"
 
 /**
- * Circlic buffer for IOStreams. Size must be Power(2). May be used as
- * a string buffer device, or to connect different IOStreams. See
- * UART.hh for an example.
+ * Circlic buffer template class for IOStreams. Size must be
+ * Power(2). May be used as a string buffer device, or to connect
+ * different IOStreams. See UART.hh for an example. Buffer size should
+ * be power of 2. 
+ * @param[in] size number of bytes in buffer.
  */
+template <uint8_t size>
 class IOBuffer : public IOStream::Device {
 private:
-  volatile char* m_buffer;
+  char m_buffer[size];
   volatile uint8_t m_head;
   volatile uint8_t m_tail;
-  const uint8_t BUFFER_MASK;
 
 public:
-  const uint8_t BUFFER_MAX;
-
   /**
-   * Allocate buffer object for iostream operations. Buffer size (max) 
-   * should be power of 2.
-   * @param[in] buffer pointer to buffer.
-   * @param[in] max number of bytes in buffer.
+   * Allocate buffer object for iostream operations. 
    */
-  IOBuffer(char* buffer, uint8_t max) :
+  IOBuffer() :
     IOStream::Device(),
-    m_buffer(buffer),
     m_head(0),
-    m_tail(0),
-    BUFFER_MASK(max - 1),
-    BUFFER_MAX(max)
+    m_tail(0)
   {
   }
 
@@ -75,7 +70,7 @@ public:
    */
   bool is_full()
   {
-    return (((m_head + 1) & BUFFER_MASK) == m_tail);
+    return (((m_head + 1) & (size - 1)) == m_tail);
   }
 
   /**
@@ -85,7 +80,7 @@ public:
    */
   virtual int available()
   {
-    return ((BUFFER_MASK + m_head - m_tail) % BUFFER_MASK);
+    return (((size - 1) + m_head - m_tail) % (size - 1));
   }
 
   /**
@@ -106,9 +101,39 @@ public:
   /**
    * @override
    * Wait for the buffer to become empty.
+     * @param[in] mode sleep mode on flush wait.
    * @return zero(0) or negative error code.
    */
-  virtual int flush();
+  virtual int flush(uint8_t mode = SLEEP_MODE_IDLE);
 };
+
+template <uint8_t size>
+int 
+IOBuffer<size>::putchar(char c)
+{
+  uint8_t next = (m_head + 1) & (size - 1);
+  if (next == m_tail) return (-1);
+  m_buffer[next] = c;
+  m_head = next;
+  return (c & 0xff);
+}
+
+template <uint8_t size>
+int 
+IOBuffer<size>::getchar()
+{
+  if (m_head == m_tail) return (-1);
+  uint8_t next = (m_tail + 1) & (size - 1);
+  m_tail = next;
+  return (m_buffer[next]);
+}
+
+template <uint8_t size>
+int
+IOBuffer<size>::flush(uint8_t mode)
+{
+  while (m_head != m_tail) Power::sleep(mode);
+  return (0);
+}
 
 #endif

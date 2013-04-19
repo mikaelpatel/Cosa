@@ -26,83 +26,8 @@
 #ifndef __COSA_IOSTREAM_DRIVER_UART_HH__
 #define __COSA_IOSTREAM_DRIVER_UART_HH__
 
-#if defined(__ARDUINO_TINYX5__)
-
-#include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
-#include "Cosa/Board.hh"
-#include "Cosa/IOStream.hh"
-
-/**
- * Simple software UART for ATtinyX5. Only realizes the putchar, 
- * transmitter. 
- */
-class UART : public IOStream::Device {
-private:
-  OutputPin m_pin;
-  uint16_t m_period;
-  uint8_t m_format;
-
-public:
-
-  // Serial formats; DATA + PARITY + STOP
-  enum {
-    DATA5 = 5,
-    DATA6 = 6,
-    DATA7 = 7,
-    DATA8 = 8,
-    DATA_MASK = 15,
-    NO_PARITY = 0,
-    EVEN_PARITY = 16,
-    ODD_PARITY = 32,
-    STOP1 = 0,
-    STOP2 = 64
-  } __attribute__((packed));
-
-  /**
-   * Construct software serial output device driver handler.
-   * @param[in] pin number.
-   */
-  UART(Board::DigitalPin pin = Board::D0) : 
-    IOStream::Device(),
-    m_pin(pin, 1),
-    m_period(1000000 / 9600),
-    m_format(DATA8 + NO_PARITY + STOP2)
-  {
-  }
-
-  /**
-   * @override
-   * Write character to software serial output device driver.
-   * Returns character if successful otherwise returns EOF(-1),
-   * @param[in] c character to write.
-   * @return character written or EOF(-1).
-   */
-  virtual int putchar(char c);
-
-  /**
-   * Start software serial output device driver.
-   * @param[in] baudrate serial bitrate (default 9600).
-   * @param[in] format serial frame format (default 8data, 2stop bit)
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool begin(uint32_t baudrate = 9600, uint8_t format = DATA8 + STOP2);
-
-  /**
-   * Stop software serial output device driver.
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool end()
-  {
-    return (true);
-  }
-};
-
-#else
-
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
-#include "Cosa/IOBuffer.hh"
 #include "Cosa/Board.hh"
 
 /**
@@ -113,8 +38,8 @@ public:
 class UART : public IOStream::Device {
 private:
   volatile uint8_t* const m_sfr;
-  IOBuffer* m_ibuf;
-  IOBuffer* m_obuf;
+  IOStream::Device* m_ibuf;
+  IOStream::Device* m_obuf;
 
   /**
    * Return pointer to UART Control and Status Register A (UCSRnA).
@@ -187,7 +112,7 @@ private:
   void on_rx_interrupt();
 
 public:
-  // Default buffer size for standard UART0
+  // Default buffer size for standard UART0 (at 9600 baud)
   static const uint8_t BUFFER_MAX = 64;
 
   // Serial formats; DATA + PARITY + STOP
@@ -210,7 +135,7 @@ public:
    * @param[in] ibuf input stream buffer.
    * @param[in] obuf output stream buffer.
    */
-  UART(uint8_t port, IOBuffer* ibuf, IOBuffer* obuf) : 
+  UART(uint8_t port, IOStream::Device* ibuf, IOStream::Device* obuf) : 
     IOStream::Device(),
     m_sfr(Board::UART(port)),
     m_ibuf(ibuf),
@@ -253,11 +178,12 @@ public:
   /**
    * @override
    * Flush internal device buffers. Wait for device to become idle.
+   * @param[in] mode sleep mode on flush wait.
    * @return zero(0) or negative error code.
    */
-  virtual int flush()
+  virtual int flush(uint8_t mode)
   {
-    return (m_ibuf->flush() | m_obuf->flush());
+    return (m_obuf->flush(mode));
   }
 
   /**
@@ -289,8 +215,6 @@ public:
 #endif
 
 };
-
-#endif
 
 /**
  * Default serial port(0).

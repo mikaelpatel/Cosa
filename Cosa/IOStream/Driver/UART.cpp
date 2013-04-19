@@ -24,51 +24,15 @@
  */
 
 #include "Cosa/Board.hh"
-#if defined(__ARDUINO_TINYX5__)
-#include "Cosa/IOStream/Driver/UART.hh"
-
-// Fix: Replace with softserial
-
-bool
-UART::begin(uint32_t baudrate, uint8_t format)
-{
-  m_period = 1000000L / baudrate;
-  m_format = format;
-  return (true);
-}
-
-int 
-UART::putchar(char c)
-{
-  int res = (c & 0xff);
-  synchronized {
-    m_pin.write(0);
-    DELAY(m_period);
-    uint8_t bits = m_format & DATA_MASK;
-    do {
-      m_pin.write(c & 1);
-      DELAY(m_period);
-      c >>= 1;
-    } while (--bits);
-    m_pin.write(1);
-  }
-  DELAY(m_period * 32);
-  return (res);
-}
-
-UART uart(Board::D0) __attribute__ ((weak));
-
-#else
+#if !defined(__ARDUINO_TINYX5__)
 
 #include "Cosa/Bits.h"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/IOBuffer.hh"
 #include "Cosa/Power.hh"
 
-static char ibuffer[UART::BUFFER_MAX];
-static IOBuffer ibuf(ibuffer, sizeof(ibuffer));
-
-static char obuffer[UART::BUFFER_MAX];
-static IOBuffer obuf(obuffer, sizeof(obuffer));
+static IOBuffer<UART::BUFFER_MAX> ibuf;
+static IOBuffer<UART::BUFFER_MAX> obuf;
 
 UART uart(0, &ibuf, &obuf);
 UART* UART::uart0 = &uart;
@@ -98,10 +62,8 @@ UART::begin(uint32_t baudrate, uint8_t format)
 bool 
 UART::end()
 {
-  // Disable transmitter interrupt
+  // Disable receiver and transmitter interrupt
   *UCSRnB() &= ~(_BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0));
-  m_obuf->flush();
-  m_ibuf->flush();
   return (true);
 }
 
