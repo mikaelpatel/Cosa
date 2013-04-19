@@ -73,9 +73,10 @@ public:
   /**
    * @override
    * Flush internal device buffers. Wait for device to become idle.
+   * @param[in] mode sleep mode on flush wait.
    * @return zero(0) or negative error code.
    */
-  virtual int flush()
+  virtual int flush(uint8_mode = SLEEP_MODE_IDLE)
   {
     int res = (m_tx.send(m_buffer, m_ix) == m_ix ? 0 : -1);
     m_tx.await();
@@ -85,10 +86,10 @@ public:
 
   /**
    * Start VWI transmitter driver.
-   * @param[in] baudrate serial bitrate (default 2000).
+   * @param[in] baudrate serial bitrate (default 4000).
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint16_t baudrate = 2000) 
+  bool begin(uint16_t baudrate = 4000) 
   {
     return (VWI::begin(baudrate) && m_tx.begin());
   }
