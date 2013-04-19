@@ -31,18 +31,22 @@ Canvas::Context Canvas::context;
 Canvas::color16_t 
 Canvas::shade(color16_t color, uint8_t scale)
 {
+  color16_t res;
   if (scale > 100) scale = 100;
-  return color16_t((scale * color.red) / 100,
-		   (scale * color.green) / 100,
-		   (scale * color.blue) / 100);
+  res.red = (scale * color.red) / 100;
+  res.green = (scale * color.green) / 100;
+  res.blue = (scale * color.blue) / 100;
+  return (res);
 }
 
 Canvas::color16_t 
 Canvas::blend(color16_t c1, color16_t c2)
 {
-  return color((c1.red + c2.red) / 2, 
-	       (c1.green + c2.green) / 2, 
-	       (c1.blue + c2.blue) / 2);
+  color16_t res;
+  res.red = (c1.red + c2.red) / 2;
+  res.green = (c1.green + c2.green) / 2;
+  res.blue = (c1.blue + c2.blue) / 2;
+  return (res);
 }
 
 uint8_t 
