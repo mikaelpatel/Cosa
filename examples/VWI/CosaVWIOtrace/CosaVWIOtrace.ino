@@ -25,7 +25,7 @@
  * driver. 
  *
  * @section Circuit
- * Connect RF433/315 Transmitter to Arduino D12.
+ * Connect RF433/315 Transmitter to Arduino D9.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -39,7 +39,7 @@
 #include "Cosa/Memory.h"
 
 VirtualWireCodec codec;
-VWIO tx(Board::D12, &codec);
+VWIO tx(Board::D9, &codec);
 
 void setup()
 {

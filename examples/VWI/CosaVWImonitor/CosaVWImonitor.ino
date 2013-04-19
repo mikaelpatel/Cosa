@@ -25,7 +25,7 @@
  * Print incoming messages as a character stream.
  *
  * @section Circuit
- * Connect RF433/315 Receiver to Arduino D11.
+ * Connect RF433/315 Receiver to Arduino D8.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -37,7 +37,7 @@
 #include "Cosa/Memory.h"
 
 VirtualWireCodec codec;
-VWI::Receiver rx(Board::D11, &codec);
+VWI::Receiver rx(Board::D8, &codec);
 
 void setup()
 {
