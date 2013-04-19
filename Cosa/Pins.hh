@@ -483,6 +483,17 @@ public:
   void write(uint8_t value, OutputPin& clk, Direction order = MSB_FIRST);
 
   /**
+   * Shift out given value and number of bits to the output pin using
+   * the given pulse length in micro-seconds. Shift out from LSB(0) to
+   * MSB(bits-1). This operation is synchronized and will turn off
+   * interrupt handling during the transmission period.
+   * @param[in] value to write.
+   * @param[in] bits to write.
+   * @param[in] us micro-second bit period.
+   */
+  void write(uint16_t value, uint8_t bits, uint16_t us);
+
+  /**
    * Set the given output pin with the given value. Zero(0) to 
    * clear and non-zero to set.
    * @param[in] pin number.
@@ -519,16 +530,6 @@ public:
    * @param[in] us pulse width in micro seconds
    */
   void pulse(uint16_t us);
-
-  /**
-   * Shift out given byte to the output pin using the given pulse
-   * length in micro-seconds. Shift out from LSB to MSB. This
-   * operation is synchronized and will turn off interrupt handling
-   * during the transmission period.
-   * @param[in] value to write.
-   * @param[in] us micro-second bit period.
-   */
-  void pulse(uint8_t value, uint16_t us);
 };
 
 /**

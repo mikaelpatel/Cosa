@@ -88,28 +88,24 @@ OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
 }
 
 void 
-OutputPin::pulse(uint16_t us)
+OutputPin::write(uint16_t value, uint8_t bits, uint16_t us)
 {
-  toggle();
-  DELAY(us);
-  toggle();
-}
-
-void 
-OutputPin::pulse(uint8_t value, uint16_t us)
-{
-  uint8_t bits = CHARBITS;
+  if (bits == 0) return;
   synchronized {
-    write(0);
-    DELAY(us);
     do {
       write(value & 0x01);
       DELAY(us);
       value >>= 1;
     } while (--bits);
-    write(1);
   }
+}
+
+void 
+OutputPin::pulse(uint16_t us)
+{
+  toggle();
   DELAY(us);
+  toggle();
 }
 
 #if defined(__ARDUINO_STANDARD__)
