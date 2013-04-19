@@ -58,18 +58,19 @@ void setup()
   // Measure baseline
   RTC::begin();
   start = RTC::micros();
+  uint32_t us = RTC::micros();
   stop = RTC::micros();
   INFO("RTC::micros(): %ul", stop - start);
-
+  
   start = RTC::micros();
   uint32_t ms = RTC::millis();
   stop = RTC::micros();
   INFO("RTC::millis(): %ul", stop - start);
 
   start = RTC::micros();
-  DELAY(1);
+  DELAY(10);
   stop = RTC::micros();
-  INFO("DELAY(1): %ul", stop - start);
+  INFO("DELAY(10): %ul", stop - start);
 
   // Measure and validate micro-second level
   err = 0;
