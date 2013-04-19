@@ -53,11 +53,11 @@ void setup()
   TRACE(sizeof(compass));
 
   // Check swap implementation
-  ASSERT(swap(0x1234) == 0x3412);
-  ASSERT(swap(0x12345678) == 0x78563412);
+  // ASSERT(swap(0x1234) == 0x3412);
+  // ASSERT(swap(0x12345678) == 0x78563412);
 
   // Start the watchdog ticks and push time events
-  Watchdog::begin(512, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
+  Watchdog::begin(1024, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
 
   // Start the compass
   TRACE(compass.begin());
@@ -68,9 +68,7 @@ void setup()
   // Fetch the sample and print
   HMC5883L::data_t output;
   TRACE(compass.read_data(output));
-  TRACE(output.x);
-  TRACE(output.y);
-  TRACE(output.z);
+  trace << output.x << '.' << output.y << '.' << output.z << endl;
 
   // Set continous measurement mode
   TRACE(compass.set_mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE));
@@ -92,8 +90,5 @@ void loop()
   // Fetch the sample and print
   HMC5883L::data_t output;
   TRACE(compass.read_data(output));
-  TRACE(output.x);
-  TRACE(output.y);
-  TRACE(output.z);
-  ledPin.toggle();
+  trace << output.x << '.' << output.y << '.' << output.z << endl;
 }

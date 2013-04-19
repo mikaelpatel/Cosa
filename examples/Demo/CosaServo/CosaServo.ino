@@ -26,19 +26,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Types.h"
-#include "Cosa/Trace.hh"
 #include "Cosa/Servo.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
 
 Servo servo(0, Board::D9);
 Servo door(1, Board::D8);
 
 void setup()
 {
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaServo: started"));
   Servo::begin();
   Watchdog::begin();
   door.set_angle(10);
