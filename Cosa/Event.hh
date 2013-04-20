@@ -134,7 +134,7 @@ public:
    * Return event target.
    * @return pointer.
    */
-  const Handler* get_target() 
+  Handler* get_target() 
   { 
     return (m_target); 
   } 
