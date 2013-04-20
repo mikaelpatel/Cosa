@@ -115,7 +115,8 @@ Drivers
 11. TSOP4838 IR Receiver Modules for Remote Control Systems.
 12. Virtual Wire (VWI) on RF315/433 modules.
 13. HMC5883L 3-Axis Digital Compass IC.
-14. Slave device support for SPI, TWI and OWI.
+14. NEXA Wireless Remote command receiver for RF433.
+15. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  
@@ -187,4 +188,4 @@ interface. Implemented 1-wire parasite power mode. Improved DS18B20
 1-wire driver and demo sketches with VWI integration. Added support
 for battery voltage monitoring. New extended mode in VWI with node
 address, sub-net address matching, message sequence numbering and type
-handling.   
+handling. NEXA Wireless Remote command receiver (RF433).   
