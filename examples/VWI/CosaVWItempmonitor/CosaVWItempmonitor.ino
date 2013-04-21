@@ -78,55 +78,35 @@ struct msg_t {
   };
 };
 
+IOStream& operator<<(IOStream& outs, FixedPoint& value)
+{
+  uint16_t fraction = value.get_fraction(2);
+  outs << value.get_integer() << '.';
+  if (fraction < 10) outs << '0';
+  outs << fraction;
+  return (outs);
+}
+
 void loop()
 {
-  // Check message number and count errors
-  static uint16_t next = 0;
-  static uint32_t err = 0;
-  static uint32_t cnt = 0;
-
-  // Receive a message
+  // Receive a message. Sanity check the message size
   msg_t msg;
   int8_t len = rx.recv(&msg, sizeof(msg));
+  if (len <= 0) return;
 
-  // Check that the correct messaage size was received
-  if (len != sizeof(msg)) return;
-
-  // Check message number 
-  if (msg.header.nr != next) {
-    next = msg.header.nr;
-    err += 1;
-  }
-  cnt += 1;
-
-  // Print message header and contents
+  // Print message header; transmitter address and sequence number
   trace << hex << msg.header.addr << ':' << msg.header.nr << ':';
 
-  // Followed by the temperature reading
+  // Check message type and print contents
   if (msg.header.cmd == SAMPLE_CMD) {
     FixedPoint temp0(msg.sample.temperature[0], 4);
     FixedPoint temp1(msg.sample.temperature[1], 4);
-    uint16_t fraction = temp0.get_fraction(2);
-    trace << PSTR("sample:");
-    trace << temp0.get_integer() << '.';
-    if (fraction < 10) trace << '0';
-    trace << fraction << ':';
-    trace << temp1.get_integer() << '.';
-    fraction = temp1.get_fraction(2);
-    if (fraction < 10) trace << '0';
-    trace << fraction << ':';
-    trace << msg.sample.voltage << endl;
-  }
-  else {
-    trace << msg.header.cmd << ':'
-	  << PSTR("unknown message type") 
+    trace << PSTR("sample:") 
+	  << temp0 << ':' << temp1 << ':' 
+	  << msg.sample.voltage / 1000 << '.' << msg.sample.voltage % 1000 
 	  << endl;
   }
-  next += 1;
-
-  // Print message count and errors every 256 messages
-  if ((next & 0xff) == 0) {
-    trace << PSTR("count = ") << cnt << endl;
-    trace << PSTR("errors = ") << err << endl;
+  else {
+    trace << msg.header.cmd << ':' << PSTR("unknown message type") << endl;
   }
 }
