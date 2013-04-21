@@ -28,10 +28,9 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
+#include "Cosa/Interrupt.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Interrupt.hh"
-#include "Cosa/Trace.hh"
 #include "Cosa/Board.hh"
 
 class OutputPin;
@@ -243,18 +242,11 @@ public:
   }
 
   /**
-   * Print abstract pin information to given stream. Default is the
-   * trace stream.  
-   * @param[in] stream to print on.
+   * Print abstract pin information to given stream. 
+   * @param[in] outs output stream to print on.
+   * @param[in] pin to print
    */
-  void print(IOStream& stream = trace); 
-  
-  /**
-   * Print abstract pin information to given stream with
-   * new-line. Default is the trace stream. 
-   * @param[in] stream to print on.
-   */
-  void println(IOStream& stream = trace);
+  friend IOStream& operator<<(IOStream& outs, Pin& pin);
 };
 
 /**

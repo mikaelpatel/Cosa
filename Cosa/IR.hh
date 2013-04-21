@@ -26,10 +26,9 @@
 #ifndef __COSA_IR_HH__
 #define __COSA_IR_HH__
 
-#include "Cosa/Pins.hh"
 #include "Cosa/ExternalInterruptPin.hh"
 #include "Cosa/Linkage.hh"
-#include "Cosa/Trace.hh"
+#include "Cosa/IOStream.hh"
 
 /**
  * Cosa IR receiver/TSOP4838 driver.
@@ -110,17 +109,18 @@ public:
     void reset();
 
     /**
-     * Print the captured samples to the given output stream.
-     * @param[in] out stream (Default trace).
-     */
-    void print(IOStream& out = trace);
-
-    /**
      * Lookup given code and return key or EOF(-1).
      * @param[in] code to lookup in key map.
      * @return key or EOF(-1).
      */
     int lookup(uint16_t code);
+
+    /**
+     * Print the captured samples to the given output stream.
+     * @param[in] outs stream.
+     * @param[in] receiver samples to print.
+     */
+    friend IOStream& operator<<(IOStream& outs, Receiver& receiver);
   };
 };
 

@@ -34,6 +34,7 @@
 #include "Cosa/IR.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
 
 /**
  * Use UART or LCD/PCD8544 for output. 
@@ -102,9 +103,6 @@ void setup()
   TRACE(sizeof(Link));
   TRACE(sizeof(ExternalInterruptPin));
   TRACE(sizeof(IR::Receiver));
-
-  // Print pin configuration
-  receiver.Pin::print(trace);
 #else
   lcd.begin();
   trace.begin(&lcd, PSTR("\fOFF"));
@@ -132,7 +130,7 @@ void loop()
     static uint8_t is_on = 0;
     uint16_t code = event.get_value();
     char key = receiver.lookup(code);
-    receiver.print(trace);
+    trace << receiver;
     // Check special keys; first on/off
     if (key == '~') {
       trace << '\f' << (is_on ? PSTR("OFF") : PSTR("ON")) << endl;

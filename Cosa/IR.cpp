@@ -78,15 +78,6 @@ IR::Receiver::reset()
   enable();
 }
 
-void 
-IR::Receiver::print(IOStream& out)
-{
-  if (m_sample == 0) return;
-  for (uint8_t ix = 0; ix < m_ix; ix++) {
-    out.printf_P(PSTR("%d: %ud\n"), ix, m_sample[ix]);
-  }
-}
-
 int
 IR::Receiver::lookup(uint16_t code)
 {
@@ -95,4 +86,12 @@ IR::Receiver::lookup(uint16_t code)
     if (code == pgm_read_word(&m_keymap[i].code))
       return (pgm_read_word(&m_keymap[i].key));
   return (-1);
+}
+
+IOStream& operator<<(IOStream& outs, IR::Receiver& receiver)
+{
+  if (receiver.m_sample == 0) return (outs);
+  for (uint8_t ix = 0; ix < receiver.m_ix; ix++)
+    outs << ix << ':' << receiver.m_sample[ix] << endl;
+  return (outs);
 }

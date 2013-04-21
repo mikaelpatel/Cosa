@@ -27,6 +27,8 @@
  */
 
 #include "Cosa/Pins.hh"
+#include "Cosa/InterruptPin.hh"
+#include "Cosa/ExternalInterruptPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -72,7 +74,6 @@ IntPin int1Pin(Board::PCI3);
 IntPin int2Pin(Board::PCI15);
 PWMPin ledPin(Board::PWM2);
 InputPin onoffPin(Board::D7);
-AnalogPin tempVCC(Board::A8, AnalogPin::A1V1_REFERENCE);
 AnalogPin levelPin(Board::A0);
 
 void setup()
@@ -86,7 +87,7 @@ void setup()
 
   // Check size of instances
   TRACE(sizeof(Event));
-  TRACE(sizeof(Queue));
+  TRACE(sizeof(Event::queue));
   TRACE(sizeof(Pin));
   TRACE(sizeof(InputPin));
   TRACE(sizeof(ExternalInterruptPin));
@@ -99,15 +100,14 @@ void setup()
   TRACE(sizeof(Watchdog));
 
   // Print debug information about the sketch pins
-  extPin.println();
-  int0Pin.println();
-  int1Pin.println();
-  int2Pin.println();
-  ledPin.println();
-  onoffPin.println();
-  levelPin.println();
-  tempVCC.println();
-
+  trace << extPin << endl;
+  trace << int0Pin << endl;
+  trace << int1Pin << endl;
+  trace << int2Pin << endl;
+  trace << ledPin << endl;
+  trace << onoffPin << endl;
+  trace << levelPin << endl;
+  
   // Check interrupt pin; enable and print interrupt counter
   InterruptPin::begin();
   TRACE(int0Pin.get_counter());
@@ -136,12 +136,6 @@ void loop()
   // Sample the level
   uint16_t value = levelPin.sample();
   INFO("levelPin = %d", value);
-
-  // Asynchronous sample internal temperature level
-  tempVCC.sample_request();
-
-  // Await the sample and print value
-  INFO("tempVCC = %d", tempVCC.sample_await());
 
   // Check if the led should be on and the pwm level updated
   if (onoffPin.is_set()) {

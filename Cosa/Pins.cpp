@@ -49,18 +49,12 @@ Pin::read(OutputPin& clk, Direction order)
   return (value);
 }
 
-void 
-Pin::print(IOStream& stream)
+IOStream& operator<<(IOStream& outs, Pin& pin)
 {
-  stream.printf_P(PSTR("Pin(pin = %d, sfr = %p, mask = %bd)"), 
-		  m_pin, m_sfr, m_mask);
-}
-
-void 
-Pin::println(IOStream& stream)
-{
-  print(stream);
-  stream.println();
+  outs << PSTR("Pin(pin = ") << (uint8_t) pin.m_pin 
+       << PSTR(", sfr = ") << (void*) pin.m_sfr 
+       << PSTR(", mask = ") << bin << (uint8_t) pin.m_mask << ')';
+  return (outs);
 }
 
 void 
