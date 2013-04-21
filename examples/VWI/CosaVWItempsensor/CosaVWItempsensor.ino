@@ -48,7 +48,7 @@ OWI owi(Board::D2);
 DS18B20 indoors(&owi);
 DS18B20 outdoors(&owi);
 
-// Connect RF433 transmitter to ATtiny/D1
+// Connect RF433 transmitter to ATtiny/D1 alt. Arduino/D9
 VirtualWireCodec codec;
 #if defined(__ARDUINO_TINYX5__)
 VWI::Transmitter tx(Board::D1, &codec);
