@@ -30,7 +30,6 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/ExternalInterruptPin.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Trace.hh"
 
 /**
  * 1-wire device driver support class. Allows device rom search
@@ -152,11 +151,10 @@ public:
 
   public:
     /**
-     * Print device rom to output stream. Default stream
-     * is the trace stream.
+     * Print device rom to output stream. 
      * @param[in] stream to print rom to.
      */
-    void print_rom(IOStream& stream = trace);
+    void print_rom(IOStream& stream);
   };
 
   /**
@@ -334,10 +332,9 @@ public:
 
   /**
    * Print list of connected devices on given stream.
-   * Default stream is the trace stream.
    * @param[in] stream to print rom to.
    */
-  void print_devices(IOStream& stream = trace);
+  void print_devices(IOStream& stream);
 
   /**
    * Turn off parasite powering of pin. See also write().
