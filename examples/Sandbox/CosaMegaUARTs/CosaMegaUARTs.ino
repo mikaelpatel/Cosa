@@ -21,7 +21,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of the Arduino Mega addition UART support.
+ * Cosa demonstration of how to use that additional UARTs on the
+ * Arduino Mega. The sketch allocates buffers and initiates usage of
+ * UART1. The IOStream::Device is connected to an IOStream, cout.
+ * The sketch will print a period on cout and when characters are
+ * available, transfer them to the trace iostream.
  *
  * This file is part of the Arduino Che Cosa project.
  */
