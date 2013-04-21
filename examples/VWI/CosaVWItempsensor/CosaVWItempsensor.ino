@@ -40,7 +40,6 @@
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
-#include "Cosa/FixedPoint.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 

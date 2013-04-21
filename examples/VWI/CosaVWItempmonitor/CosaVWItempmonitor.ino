@@ -33,10 +33,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OWI.hh"
-#include "Cosa/FixedPoint.hh"
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
+#include "Cosa/FixedPoint.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
