@@ -36,12 +36,12 @@
 class NEXA {
 public:
   /**
-   * Wireless command code; 32-bit
+   * Wireless command code; 32-bit, little endian order for AVR 
    */
   union code_t {
     uint32_t as_long;
     struct {
-      uint8_t unit:4;
+      uint8_t device:4;
       uint8_t onoff:1;
       uint8_t group:1;
       uint32_t house:26;
@@ -59,20 +59,14 @@ public:
     /**
      * Print command code fields to given output stream.
      * @param[in] outs output stream.
+     * @param[in] code to print.
      */
-    void println(IOStream& outs) 
-    { 
-      outs << PSTR("house = ") << house 
-	   << PSTR(", group = ") << group
-	   << PSTR(", unit = ") << unit
-	   << PSTR(", on/off = ") << onoff 
-	   << endl;
-    }
+    friend IOStream& operator<<(IOStream& outs, code_t code);
   };
   
   /**
    * NEXA Wireless Remote Receiver. May be used in polling or
-   * interrupt sampling mode.  
+   * interrupt sampling mode. 
    */
   class Receiver : public ExternalInterruptPin {
   private:

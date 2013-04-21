@@ -26,6 +26,15 @@
 #include "Cosa/Driver/NEXA.hh"
 #include "Cosa/RTC.hh"
 
+IOStream& operator<<(IOStream& outs, NEXA::code_t code)
+{
+  outs << PSTR("house = ") << code.house 
+       << PSTR(", group = ") << code.group
+       << PSTR(", device = ") << code.device
+       << PSTR(", on/off = ") << code.onoff;
+  return (outs);
+}
+
 void 
 NEXA::Receiver::on_interrupt(uint16_t arg) 
 { 

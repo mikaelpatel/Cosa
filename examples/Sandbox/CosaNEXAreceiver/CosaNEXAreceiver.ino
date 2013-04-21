@@ -45,7 +45,7 @@ void setup()
   RTC::begin();
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
   led.toggle();
-  receiver.read_code().println(trace);
+  trace << receiver.read_code() << endl;
   led.toggle();
   receiver.enable();
 }
@@ -58,7 +58,7 @@ void loop()
   Event::Handler* handler = event.get_target();
   if ((type == Event::READ_COMPLETED_TYPE) && (handler == &receiver)) {
     led.toggle();
-    receiver.get_code().println(trace);
+    trace << receiver.get_code() << endl;
     led.toggle();
   }
 }
