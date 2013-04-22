@@ -68,6 +68,7 @@ void setup()
 
 // Message type to receive
 struct msg_t {
+  uint16_t nr;
   uint16_t luminance;
   uint16_t temperature;
 };
@@ -80,5 +81,7 @@ void loop()
   if (len != sizeof(msg)) return;
 
   // Print message contents
-  trace << msg.luminance << PSTR(", ") << msg.temperature << endl;
+  trace << msg.nr << ':' 
+	<< msg.luminance << PSTR(", ") 
+	<< msg.temperature << endl;
 }

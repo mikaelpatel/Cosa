@@ -74,16 +74,19 @@ void setup()
 
 // Message type to send (header will be automatically be appended)
 struct msg_t {
+  uint16_t nr;
   uint16_t luminance;
   uint16_t temperature;
 };
 
 void loop()
 {
+  static uint16_t nr = 0;
   msg_t msg;
 
   // Turn power on. While stabilizing sample the analog values
   pw.on();
+  msg.nr = nr++;
   msg.luminance = luminance.sample();
   msg.temperature = temperature.sample();
 

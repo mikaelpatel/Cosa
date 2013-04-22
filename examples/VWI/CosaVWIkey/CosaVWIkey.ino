@@ -31,73 +31,66 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Pins.hh"
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/VWI/Codec/VirtualWireCodec.hh"
+#include "Cosa/VWI/Codec/ManchesterCodec.hh"
+#include "Cosa/VWI/Codec/BitstuffingCodec.hh"
+#include "Cosa/VWI/Codec/Block4B5BCodec.hh"
+#include "Cosa/ExternalInterruptPin.hh"
 #include "Cosa/Power.hh"
 
-// Simple interrupt handler just for wakeup call and some bookkeeping just 
-// to see how many times it is called; many as it is called while low.
-class WakeupButton : public ExternalInterruptPin {
-private:
-  uint16_t m_count;
-public:
-  WakeupButton(Board::ExternalInterruptPin pin, 
-	       ExternalInterruptPin::Mode mode) :
-    ExternalInterruptPin(pin, mode),
-    m_count(0)
-  {}
-  virtual void on_interrupt(uint16_t arg) { m_count++; }
-  uint16_t get_count() { return (m_count); }
-};
-
-// Connect RF433 transmitter to ATtiny/D1
+// Select the codec to use for the Virtual Wire Interface. Should be the
+// same as in CosaVWIreceiver.ino
 VirtualWireCodec codec;
+// ManchesterCodec codec;
+// Block4B5BCodec codec;
+// BitstuffingCodec codec;
+
+// Connect RF433 transmitter to ATtiny/D1 or Arduino/D9
+#if defined(__ARDUINO_TINYX5__)
 VWI::Transmitter tx(Board::D1, &codec);
+#else 
+VWI::Transmitter tx(Board::D9, &codec);
+#endif
 const uint16_t SPEED = 4000;
 
 // Connect button with pullup to EXT0/D2
-WakeupButton wakeup(Board::EXT0, ExternalInterruptPin::ON_LOW_LEVEL_MODE);
+ExternalInterruptPin wakeup(Board::EXT0, ExternalInterruptPin::ON_LOW_LEVEL_MODE);
+
+// Analog pins to sample for values to send
+AnalogPin luminance(Board::A2);
+AnalogPin temperature(Board::A3);
 
 void setup()
 {
-  // Start the Virtual Wire Interface/Transmitter
   VWI::begin(SPEED);
   tx.begin();
-  
-  // Disable hardware
   VWI::disable();
   Power::adc_disable();
+#if defined(__ARDUINO_TINYX5__)
   Power::usi_disable();
-
-  // Enable the interrupt pin
+#endif
   wakeup.enable();
 }
 
-// Message type to send
 struct msg_t {
-  uint32_t id;
-  uint8_t nr;
-  uint16_t data[2];
+  uint16_t nr;
+  uint16_t luminance;
+  uint16_t temperature;
 };
 
 void loop()
 {
-  // Some dummy data to send for each wakeup
-  static msg_t msg = { 
-    0xC05A0003,
-    0, 	
-    { 0, 0xa5a5 }
-  };
-
-  // Go to sleep in power down mode
+  static uint16_t nr = 0;
   Power::sleep(SLEEP_MODE_PWR_DOWN);
-  msg.data[0] = wakeup.get_count();
-
-  // Send the message and update number
   VWI::enable();
+  msg_t msg;
+  msg.nr = nr++;
+  msg.luminance = luminance.sample();
+  msg.temperature = temperature.sample();
   tx.send(&msg, sizeof(msg));
   tx.await();
   VWI::disable();
-  msg.nr += 1;
 }
