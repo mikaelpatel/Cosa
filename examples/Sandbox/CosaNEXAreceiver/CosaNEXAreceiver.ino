@@ -30,22 +30,31 @@
 #include "Cosa/Driver/NEXA.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
+
+#if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
+#endif
 
 OutputPin led(Board::LED);
 NEXA::Receiver receiver(Board::EXT0);
 
 void setup()
 {
+#if !defined(__ARDUINO_TINYX5__)
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaNEXAreceiver: started"));
   TRACE(free_memory());
+#endif
   RTC::begin();
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
   led.toggle();
+#if !defined(__ARDUINO_TINYX5__)
   trace << receiver.read_code() << endl;
+#else
+  NEXA::code_t code = receiver.read_code();
+#endif
   led.toggle();
   receiver.enable();
 }
@@ -58,7 +67,11 @@ void loop()
   Event::Handler* handler = event.get_target();
   if ((type == Event::READ_COMPLETED_TYPE) && (handler == &receiver)) {
     led.toggle();
+#if !defined(__ARDUINO_TINYX5__)
     trace << receiver.get_code() << endl;
+#else
+    NEXA::code_t code = receiver.get_code();
+#endif
     led.toggle();
   }
 }
