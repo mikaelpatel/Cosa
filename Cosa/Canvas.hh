@@ -242,6 +242,7 @@ public:
      * Set context text scale (1..n). Return previous text scale.
      * @param[in] scale.
      * @return previous scale.
+     * @pre scale > 0
      */
     uint8_t set_text_scale(uint8_t scale)
     {
@@ -313,7 +314,7 @@ protected:
   Context* m_context;
 
   /**
-   * Canvas direction.
+   * Canvas direction (LANDSCAPE/PORTRAIT).
    */
   uint8_t m_direction;
 
