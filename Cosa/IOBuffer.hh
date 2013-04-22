@@ -40,9 +40,9 @@
 template <uint8_t size>
 class IOBuffer : public IOStream::Device {
 private:
-  char m_buffer[size];
   volatile uint8_t m_head;
   volatile uint8_t m_tail;
+  char m_buffer[size];
 
 public:
   /**
