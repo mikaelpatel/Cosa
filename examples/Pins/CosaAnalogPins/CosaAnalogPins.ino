@@ -38,7 +38,7 @@ const PROGMEM Board::AnalogPin pins[] = {
   Board::A0, 
   Board::A1,
   Board::A2,
-  Board::A8
+  Board::A5
 };
 
 // Buffer for sample values
