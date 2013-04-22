@@ -241,12 +241,15 @@ public:
     return (*this);
   }
 
+#if !defined(__ARDUINO_TINYX5__)
   /**
    * Print abstract pin information to given stream. 
    * @param[in] outs output stream to print on.
    * @param[in] pin to print
    */
   friend IOStream& operator<<(IOStream& outs, Pin& pin);
+#endif
+  
 };
 
 /**

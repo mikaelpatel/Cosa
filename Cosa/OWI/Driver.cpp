@@ -132,16 +132,6 @@ OWI::Driver::alarm_search(int8_t last)
   return (search(last));
 }
 
-void
-OWI::Driver::print_rom(IOStream& stream)
-{
-  uint8_t i;
-  stream.printf_P(PSTR("OWI::rom(family = %hd, id = "), m_rom[0]);
-  for (i = 1; i < ROM_MAX - 1; i++)
-    stream.printf_P(PSTR("%hd, "), m_rom[i]);
-  stream.printf_P(PSTR("crc = %hd)\n"), m_rom[i]);
-}
-
 bool 
 OWI::Driver::connect(uint8_t family, uint8_t index)
 {
@@ -157,3 +147,16 @@ OWI::Driver::connect(uint8_t family, uint8_t index)
   memset(m_rom, 0, ROM_MAX);
   return (false);
 }
+
+#if !defined(__ARDUINO_TINYX5__)
+void
+OWI::Driver::print_rom(IOStream& stream)
+{
+  uint8_t i;
+  stream.printf_P(PSTR("OWI::rom(family = %hd, id = "), m_rom[0]);
+  for (i = 1; i < ROM_MAX - 1; i++)
+    stream.printf_P(PSTR("%hd, "), m_rom[i]);
+  stream.printf_P(PSTR("crc = %hd)\n"), m_rom[i]);
+}
+#endif
+

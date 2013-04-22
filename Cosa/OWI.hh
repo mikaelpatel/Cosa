@@ -150,11 +150,13 @@ public:
     bool connect(uint8_t family, uint8_t index);
 
   public:
+#if !defined(__ARDUINO_TINYX5__)
     /**
      * Print device rom to output stream. 
      * @param[in] stream to print rom to.
      */
     void print_rom(IOStream& stream);
+#endif
   };
 
   /**
@@ -331,12 +333,6 @@ public:
   }
 
   /**
-   * Print list of connected devices on given stream.
-   * @param[in] stream to print rom to.
-   */
-  void print_devices(IOStream& stream);
-
-  /**
    * Turn off parasite powering of pin. See also write().
    */
   void power_off()
@@ -344,6 +340,14 @@ public:
     set_mode(INPUT_MODE);
     clear();
   }
+
+#if !defined(__ARDUINO_TINYX5__)
+  /**
+   * Print list of connected devices on given stream.
+   * @param[in] stream to print rom to.
+   */
+  void print_devices(IOStream& stream);
+#endif
 };
 
 #endif

@@ -253,13 +253,7 @@ public:
    * @param[in] dev stream device.
    * @return previous device.
    */
-  Device* set_device(Device* dev) 
-  { 
-    Device* previous = m_dev;
-    if (dev == 0) dev = &Device::null;
-    m_dev = dev;
-    return (previous);
-  }
+  Device* set_device(Device* dev);
 
   /**
    * Print integer as string with given base to stream.

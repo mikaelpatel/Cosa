@@ -74,7 +74,7 @@ IOStream::Device::writev(const iovec_t* vec)
 {
   size_t size = 0;
   for (const iovec_t* vp = vec; vp->buf != 0; vp++) {
-    int res = write(vp->buf, vp->size);
+    size_t res = (size_t) write(vp->buf, vp->size);
     if (res != vp->size) return (-1);
     size += res;
   }
@@ -122,6 +122,15 @@ int
 IOStream::Device::flush(uint8_t mode) 
 { 
   return (-1); 
+}
+
+IOStream::Device* 
+IOStream::set_device(Device* dev) 
+{ 
+  Device* previous = m_dev;
+  if (dev == 0) dev = &Device::null;
+  m_dev = dev;
+  return (previous);
 }
 
 void 
