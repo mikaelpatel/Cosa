@@ -81,7 +81,7 @@ void setup()
 
   // Dump the LCD object raw format with normal print function
   lcd.putchar('\f');
-  trace.print(&lcd, sizeof(lcd) - 1, 16, 2);
+  trace.print(&lcd, sizeof(lcd) - 1, IOStream::hex, 2);
   SLEEP(2);
 
   // Dump characters in system font; two pages, 64 characters each

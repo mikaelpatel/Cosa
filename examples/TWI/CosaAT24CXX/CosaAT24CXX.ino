@@ -53,16 +53,16 @@ void init_eeprom()
 {
   int x0[membersof(x)];
   for (uint8_t i = 0; i < membersof(x0); i++) x0[i] = i;
-  trace.print(x0, sizeof(x0), 16);
+  trace.print(x0, sizeof(x0), IOStream::hex);
   TRACE(eeprom.write(x, x0, sizeof(x)));
   
   uint8_t y0[sizeof(y)];
   memset(y0, 0, sizeof(y));
-  trace.print(y0, sizeof(y0), 16);
+  trace.print(y0, sizeof(y0), IOStream::hex);
   TRACE(eeprom.write(y, y0, sizeof(y)));
   
   float z0 = 1.0;
-  trace.print(&z0, sizeof(z), 16);
+  trace.print(&z0, sizeof(z), IOStream::hex);
   TRACE(eeprom.write(&z, z0));
 }
 
@@ -111,14 +111,14 @@ void loop()
   memset(buffer, 0, sizeof(buffer));
   
   TRACE(eeprom.read(buffer, &x, sizeof(x)));
-  trace.print(buffer, sizeof(x), 16);
+  trace.print(buffer, sizeof(x), IOStream::hex);
 
   TRACE(eeprom.read(buffer, &y, sizeof(y)));
-  trace.print(buffer, sizeof(y), 16);
+  trace.print(buffer, sizeof(y), IOStream::hex);
 
   float z1;
   TRACE(eeprom.read(&z1, &z));
-  trace.print(&z1, sizeof(z1), 16);
+  trace.print(&z1, sizeof(z1), IOStream::hex);
 
   // Update the floating point number and write back
   z1 += 0.5;
@@ -136,6 +136,6 @@ void loop()
   
   // Read back and check
   TRACE(eeprom.read(buffer, &y, sizeof(y)));
-  trace.print(buffer, sizeof(y), 16);
+  trace.print(buffer, sizeof(y), IOStream::hex);
   ledPin.toggle();
 }
