@@ -51,7 +51,7 @@ class TraceDevice : public IOStream::Device {
 public:
   virtual int putchar(char c)
   { 
-    trace.print((uint8_t) c, 16); 
+    trace.print((uint8_t) c, IOStream::hex); 
     if (isgraph(c)) {
       trace.print_P(PSTR(" '"));
       trace.print(c);
