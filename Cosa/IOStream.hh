@@ -29,9 +29,14 @@
 #include "Cosa/Types.h"
 #include <avr/sleep.h>
 
-// Redefine PSTR so that operator<< output is possible
 #if defined(PSTR)
 # undef PSTR
+/**
+ * Create constant string in program memory. Allow IOStream output 
+ * operator.
+ * @param[in] s string literal (at compile time).
+ * @return string literal in program memory.
+ */
 # define PSTR(s)							\
   ((__extension__({static const char __c[] PROGMEM = (s); &__c[0];})))
 #endif
@@ -89,8 +94,14 @@ public:
      * @param[in] vec io vector with buffers to write.
      * @return number of bytes written or EOF(-1).
      */
-    virtual int writev(const iovec_t* vec);
+    virtual int write(const iovec_t* vec);
 
+    /**
+     * Peek at the next character from device.
+     * @return character or EOF(-1).
+     */
+    virtual int peekchar();
+    
     /**
      * Read character from device.
      * @return character or EOF(-1).
@@ -115,6 +126,13 @@ public:
     virtual int read(void* buf, size_t size);
 
     /**
+     * Read data to given buffers in null terminated io vector.
+     * @param[in] vec io vector with buffers to read into.
+     * @return number of bytes read or EOF(-1).
+     */
+    virtual int read(iovec_t* vec);
+
+    /**
      * Flush internal device buffers. Wait for device to become idle.
      * @param[in] mode sleep mode on flush wait.
      * @return zero(0) or negative error code.
@@ -136,7 +154,7 @@ public:
     Device* m_dev;
 
   public:
-    Filter(Device* dev) : m_dev(dev) {}
+    Filter(Device* dev = 0) : m_dev(dev ? dev : &Device::null) {}
 
     /**
      * Number of bytes available.
@@ -191,6 +209,16 @@ public:
     }
 
     /**
+     * Write data from buffers in null terminated io vector.
+     * @param[in] vec io vector with buffers to write.
+     * @return number of bytes written or EOF(-1).
+     */
+    virtual int write(const iovec_t* vec)
+    {
+      return (m_dev->write(vec));
+    }
+
+    /**
      * Read character from device.
      * @return character or EOF(-1).
      */
@@ -223,6 +251,16 @@ public:
     }
 
     /**
+     * Read data to given buffers in null terminated io vector.
+     * @param[in] vec io vector with buffers to read into.
+     * @return number of bytes read or EOF(-1).
+     */
+    virtual int read(iovec_t* vec)
+    {
+      return (m_dev->read(vec));
+    }
+
+    /**
      * Flush internal device buffers. Wait for device to become idle.
      * @param[in] mode sleep mode on flush wait.
      * @return zero(0) or negative error code.
@@ -232,12 +270,22 @@ public:
       return (m_dev->flush(mode));
     }
   };
+  
+  /**
+   * Base conversion.
+   */
+  enum Base {
+    bin = 2,
+    oct = 8,
+    dec = 10,
+    hex = 16
+  } __attribute__((packed));
 
   /**
    * Construct stream with given device. Default is the null device.
    * @param[in] dev stream device.
    */
-  IOStream(Device* dev = &Device::null) : m_dev(dev), m_base(10) {}
+  IOStream(Device* dev = &Device::null) : m_dev(dev), m_base(dec) {}
   
   /**
    * Get current device.
@@ -260,28 +308,28 @@ public:
    * @param[in] value to print.
    * @param[in] base to represent value in (default 10).
    */
-  void print(int value, uint8_t base = 10);
+  void print(int value, Base base = dec);
 
   /**
    * Print long integer 32-bit value in given base torace stream.
    * @param[in] value to print.
    * @param[in] base to represent value in (default 10).
    */
-  void print(long int value, uint8_t base = 10);
+  void print(long int value, Base base = dec);
 
   /**
    * Print unsigned integer as string with given base to stream.
    * @param[in] value to print.
    * @param[in] base to represent value in (default 10).
    */
-  void print(unsigned int value, uint8_t base = 10);
+  void print(unsigned int value, Base base = dec);
 
   /**
    * Print unsigned long integer 32-bit value in given base to stream.
    * @param[in] value to print.
    * @param[in] base to represent value in (default 10).
    */
-  void print(unsigned long int value, uint8_t base = 10);
+  void print(unsigned long int value, Base base = dec);
 
   /**
    * Print buffer contents in given base to stream.
@@ -290,7 +338,7 @@ public:
    * @param[in] base to represent value in (default 10).
    * @param[in] max number of numbers per line (default 16).
    */
-  void print(void *ptr, size_t size, uint8_t base = 10, uint8_t max = 16);
+  void print(void *ptr, size_t size, Base base = dec, uint8_t max = 16);
 
   /**
    * Print pointer as a hexidecimal number to stream.
@@ -298,7 +346,7 @@ public:
    */
   void print(void *ptr) 
   { 
-    print((unsigned int) ptr, 16); 
+    print((unsigned int) ptr, hex); 
   }
 
   /**
@@ -308,7 +356,7 @@ public:
    */
   void print(const void *ptr) 
   { 
-    print((unsigned int) ptr, 16); 
+    print((unsigned int) ptr, hex); 
   }
 
   /**
@@ -403,7 +451,7 @@ public:
   IOStream& operator<<(int n) 
   { 
     print(n, m_base); 
-    m_base = 10;
+    m_base = dec;
     return (*this);
   }
 
@@ -416,7 +464,7 @@ public:
   IOStream& operator<<(long int n)
   { 
     print(n, m_base); 
-    m_base = 10;
+    m_base = dec;
     return (*this); 
   }
 
@@ -429,7 +477,7 @@ public:
   IOStream& operator<<(unsigned int n)
   { 
     print(n, m_base); 
-    m_base = 10;
+    m_base = dec;
     return (*this); 
   }
 
@@ -442,7 +490,7 @@ public:
   IOStream& operator<<(unsigned long int n)
   { 
     print(n, m_base); 
-    m_base = 10;
+    m_base = dec;
     return (*this); 
   }
 
@@ -520,13 +568,13 @@ public:
 
  private:
   Device* m_dev;
-  uint8_t m_base;
+  Base m_base;
 
   /**
    * Print number prefix for non decimal base.
    * @param[in] base representation.
    */
-  void print_prefix(uint8_t base);
+  void print_prefix(Base base);
 };
 
 /**

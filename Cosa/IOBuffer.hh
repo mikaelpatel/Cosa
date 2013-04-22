@@ -93,6 +93,13 @@ public:
 
   /**
    * @override
+   * Peek at the next character from buffer.
+   * @return character or EOF(-1).
+   */
+  virtual int peekchar();
+    
+  /**
+   * @override
    * Read character from buffer.
    * @return character or EOF(-1).
    */
@@ -116,6 +123,15 @@ IOBuffer<size>::putchar(char c)
   m_buffer[next] = c;
   m_head = next;
   return (c & 0xff);
+}
+
+template <uint8_t size>
+int 
+IOBuffer<size>::peekchar()
+{
+  if (m_head == m_tail) return (-1);
+  uint8_t next = (m_tail + 1) & (size - 1);
+  return (m_buffer[next]);
 }
 
 template <uint8_t size>

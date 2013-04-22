@@ -165,6 +165,18 @@ public:
 
   /**
    * @override
+   * Peek next character from serial port input buffer.
+   * Returns character if successful otherwise on error or buffer empty
+   * returns EOF(-1),
+   * @return character or EOF(-1).
+   */
+  virtual int peekchar()
+  {
+    return (m_ibuf->peekchar());
+  }
+
+  /**
+   * @override
    * Read character from serial port input buffer.
    * Returns character if successful otherwise on error or buffer empty
    * returns EOF(-1),
