@@ -219,6 +219,15 @@ public:
     }
 
     /**
+     * Peek at the next character from device.
+     * @return character or EOF(-1).
+     */
+    virtual int peekchar()
+    {
+      return (m_dev->peekchar());
+    }
+    
+    /**
      * Read character from device.
      * @return character or EOF(-1).
      */
