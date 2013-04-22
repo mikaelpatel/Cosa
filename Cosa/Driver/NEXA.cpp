@@ -86,7 +86,7 @@ NEXA::code_t
 NEXA::Receiver::read_code()
 {
   uint32_t start, stop;
-  uint32_t bits;
+  uint32_t bits = 0L;
   uint16_t us;
   uint16_t ix;
   do {
