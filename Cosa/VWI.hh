@@ -403,6 +403,24 @@ public:
     }
 
     /**
+     * Next message sequence number in extended mode.
+     * @return number
+     */
+    uint8_t get_msg_nr()
+    {
+      return (m_nr);
+    }
+
+    /**
+     * Set next message sequence number in extended mode.
+     * @param[in] next sequence number.
+     */
+    void set_msg_nr(uint8_t next)
+    {
+      m_nr = next;
+    }
+
+    /**
      * Returns the state of the transmitter.
      * @return true if the transmitter is active else false
      */

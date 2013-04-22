@@ -46,15 +46,17 @@
 
 // Select the codec to use for the Virtual Wire Interface. Should be the
 // same as in CosaVWIclient.ino
-VirtualWireCodec codec;
+// VirtualWireCodec codec;
 // ManchesterCodec codec;
 // Block4B5BCodec codec;
-// BitstuffingCodec codec;
+BitstuffingCodec codec;
 
 // Virtual Wire Interface Transmitter and Receiver
 VWI::Transmitter tx(Board::D9, &codec);
 VWI::Receiver rx(Board::D8, &codec);
+const uint32_t ADDR = 0xC05A0000;
 const uint16_t SPEED = 4000;
+const uint8_t MASK = 8;
 
 void setup()
 {
@@ -68,48 +70,53 @@ void setup()
   RTC::begin();
   
   // Start virtual wire interface and receiver
-  VWI::begin(SPEED);
-  rx.begin();
+  VWI::begin(ADDR, SPEED);
+  rx.begin(MASK);
   tx.begin();
 }
 
-// Message type to receive
-struct msg_t {
-  uint32_t id;
-  uint8_t nr;
-  uint16_t data[12];
+// Message to receiver from CosaVWIclient
+const uint8_t SAMPLE_CMD = 17;
+struct sample_t {
+  uint16_t luminance;
+  uint16_t temperature;
 };
 
-// Acknowledge message type
-struct ack_t {
-  uint32_t id;
-  uint8_t nr;
+// Extended mode message with header
+struct msg_t {
+  VWI::header_t header;
+  union {
+    sample_t sample;
+  };
 };
 
 void loop()
 {
   static uint8_t nr = 0xff;
 
-  // Wait for a message
-  rx.await();
+  // Wait for a message. Sanity check the length and message type/cmd
   msg_t msg;
+  rx.await();
   int8_t len = rx.recv(&msg, sizeof(msg));
-
-  // Check that the correct message size was received
   if (len != sizeof(msg)) return;
+  if (msg.header.cmd != SAMPLE_CMD) return;
   
-  // Send an acknowledgement
-  ack_t ack;
-  ack.id = msg.id;
-  ack.nr = msg.nr;
-  tx.send(&ack, sizeof(ack));
+  // Send an acknowledgement; echo the message header (using basic mode)
+  iovec_t vec[2];
+  vec[0].buf = &msg.header;
+  vec[0].size = sizeof(msg.header);
+  vec[1].buf = 0;
+  vec[1].size = 0;
+  tx.send(vec);
   tx.await();
 
-  // Print message contents
-  if (nr != msg.nr) {
-    nr = msg.nr;
-    trace << hex << msg.id << ':' << msg.nr << ':';
-    trace << hex << msg.data[0] << PSTR(", ");
-    trace << hex << msg.data[1] << endl;
+  // Print message contents (only once)
+  if (nr != msg.header.nr) {
+    nr = msg.header.nr;
+    trace << hex << msg.header.addr << ':' 
+	  << msg.header.nr << ':' 
+	  << msg.header.cmd << ':'
+	  << hex << msg.sample.luminance << PSTR(", ")
+	  << hex << msg.sample.temperature << endl;
   }
 }

@@ -52,45 +52,44 @@ AnalogPin temperature(Board::A3);
 
 // Select the codec to use for the Virtual Wire Interface. Should be the
 // same as in CosaVWIserver.ino
-VirtualWireCodec codec;
+// VirtualWireCodec codec;
 // ManchesterCodec codec;
 // Block4B5BCodec codec;
-// BitstuffingCodec codec;
+BitstuffingCodec codec;
 
 // Virtual Wire Interface Transmitter and Receiver
 VWI::Transmitter tx(Board::D9, &codec);
 VWI::Receiver rx(Board::D8, &codec);
+const uint32_t ADDR = 0xC05A0001;
+const uint8_t MASK = 0;
 const uint16_t SPEED = 4000;
 const uint16_t TIMEOUT = 2000000 / SPEED;
 
 void setup()
 {
-  // Start trace on UART. Print available free memory.
+  // Start trace on UART. Print available free memory and configuration
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVWIclient: started"));
   TRACE(free_memory());
+  TRACE(ADDR);
+  TRACE(SPEED);
+  TRACE(TIMEOUT);
 
   // Start watchdog for delay
   Watchdog::begin();
   RTC::begin();
 
-  // Start virtual wire interface, transmitter and receiver
-  VWI::begin(SPEED);
+  // Start virtual wire interface in extended mode
+  VWI::begin(ADDR, SPEED);
+  rx.begin(MASK);
   tx.begin();
-  rx.begin();
 }
 
 // Message type to send
-struct msg_t {
-  uint32_t id;
-  uint8_t nr;
-  uint16_t data[12];
-};
-
-// Acknowledge message type
-struct ack_t {
-  uint32_t id;
-  uint8_t nr;
+const uint8_t SAMPLE_CMD = 17;
+struct sample_t {
+  uint16_t luminance;
+  uint16_t temperature;
 };
 
 void loop()
@@ -99,34 +98,33 @@ void loop()
   static uint16_t cnt = 0;
   static uint16_t err = 0;
 
-  // Message types (data and acknowledgement)
-  msg_t msg;
-  ack_t ack;
-
+  // Message types (samples and acknowledgement)
+  VWI::header_t ack;
+  sample_t sample;
+  
   // Initiate the message with id, sequence number and measurements
-  msg.id = 0xC05A0001;
-  msg.nr = cnt++;
-  msg.data[0] = luminance.sample();
-  msg.data[1] = temperature.sample();
-  for (uint8_t i = 2; i < membersof(msg.data); i++)
-    msg.data[i] = (cnt << 4) + i;
+  sample.luminance = luminance.sample();
+  sample.temperature = temperature.sample();
 
   // Send message and receive acknowledgement
-  uint8_t nr = 0;
+  uint8_t sendnr = 0;
+  uint8_t next = tx.get_msg_nr();
   int8_t len; 
   do {
-    nr += 1;
-    tx.send(&msg, sizeof(msg));
+    sendnr += 1;
+    tx.set_msg_nr(next);
+    tx.send(&sample, sizeof(sample), SAMPLE_CMD);
     tx.await();
     len = rx.recv(&ack, sizeof(ack), TIMEOUT);
-  } while (len != sizeof(ack) || (ack.nr != msg.nr) || (ack.id != msg.id));
-
+  } while (len != sizeof(ack) || (ack.nr != next) || (ack.addr != ADDR));
+  cnt += 1;
+  
   // Check if a retransmission did occur and print statistics
-  if (nr > 1) {
+  if (sendnr > 1) {
     err += 1;
     trace << PSTR("cnt = ") << cnt;
     trace << PSTR(", err = ") << err;
-    trace << PSTR(", nr = ") << nr;
+    trace << PSTR(", nr = ") << sendnr;
     trace << PSTR(" (") << (err * 100) / cnt << PSTR("%)");
     trace << endl;
   }
