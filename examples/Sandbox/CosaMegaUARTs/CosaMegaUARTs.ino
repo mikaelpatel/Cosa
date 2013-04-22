@@ -30,6 +30,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Board.hh"
+#if !defined(__ARDUINO_MEGA__)
+#error CosaMegaUARTs: board not supported.
+#endif
 #include "Cosa/Trace.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
