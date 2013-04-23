@@ -52,9 +52,9 @@ ManchesterCodec::decode4(uint8_t symbol)
   return (res);
 }
 
-// Ethernet frame header; preamble and delimiter
+// Ethernet frame preamble and delimiter/start symbol
 const uint8_t 
-ManchesterCodec::header[] PROGMEM = {
+ManchesterCodec::preamble[] PROGMEM = {
   0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x5d
 };
 

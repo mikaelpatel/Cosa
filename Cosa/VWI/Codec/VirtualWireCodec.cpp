@@ -28,7 +28,7 @@ VirtualWireCodec::symbols[] PROGMEM = {
 };
 
 const uint8_t 
-VirtualWireCodec::header[] PROGMEM = {
+VirtualWireCodec::preamble[] PROGMEM = {
   0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x38, 0x2c
 };
 

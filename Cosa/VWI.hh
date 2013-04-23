@@ -125,8 +125,10 @@ public:
     /** Start symbol */
     const uint16_t START_SYMBOL;
 
-    /** Size of header */
-    const uint8_t HEADER_MAX;
+    /** Size of preamble with start symbol. Should be less or equal to 
+     * Transmitter::PREAMBLE_MAX.
+     */
+    const uint8_t PREAMBLE_MAX;
 
     /** Symbol mask */
     const uint8_t SYMBOL_MASK;
@@ -135,27 +137,26 @@ public:
     const uint16_t BITS_MSB;
 
     /**
-     * Construct Codec with given symbol and header definition. The 
+     * Construct Codec with given symbol and preamble definition. The 
      * Codec is assumed to code 4 bits to max 8 bits for transmission.  
      * @param[in] bits_per_symbol.
      * @param[in] start_symbol.
-     * @param[in] header_max.
+     * @param[in] preamble_max.
      */
-    Codec(uint8_t bits_per_symbol, uint16_t start_symbol, uint8_t header_max) :
+    Codec(uint8_t bits_per_symbol, uint16_t start_symbol, uint8_t preamble_max) :
       BITS_PER_SYMBOL(bits_per_symbol),
       START_SYMBOL(start_symbol),
-      HEADER_MAX(header_max),
+      PREAMBLE_MAX(preamble_max),
       SYMBOL_MASK((1 << bits_per_symbol) - 1),
       BITS_MSB(1 << (bits_per_symbol*2 - 1))
     {}
 
     /**
-     * Provide pointer to frame header in program memory. HEADER_MAX 
-     * should contain the length of the header including start
-     * symbol. 
+     * Provide pointer to frame preamble in program memory. PREAMBLE_MAX 
+     * should contain the length of the preamble including start symbol. 
      * @return pointer.
      */
-    virtual const uint8_t* get_header() = 0;
+    virtual const uint8_t* get_preamble() = 0;
 
     /**
      * Encode 4 bits (nibble) to a symbol.
@@ -344,11 +345,11 @@ public:
    */
   class Transmitter : private OutputPin {
   private:
-    /** Size of header */
-    static const uint8_t HEADER_MAX = 8;
-
-    /** Transmission buffer with symbols and header */
-    uint8_t m_buffer[(MESSAGE_MAX * 2) + HEADER_MAX];
+    /** Max size of preamble and start symbol */
+    static const uint8_t PREAMBLE_MAX = 8;
+    
+    /** Transmission buffer with premable, start symbol, count and payload */
+    uint8_t m_buffer[(MESSAGE_MAX * 2) + PREAMBLE_MAX];
 
     /** Current transmitter codec */
     Codec* m_codec;

@@ -33,24 +33,24 @@ private:
   /** Symbol mapping table: 4 to 6 bits */
   static const uint8_t symbols[] PROGMEM;
 
-  /** Message header */
-  static const uint8_t header[] PROGMEM;
+  /** Message preamble with start symbol */
+  static const uint8_t preamble[] PROGMEM;
   
 public:
   /**
    * Construct VirtualWire codec with given bits per symbol, start symbol,
-   * and header size.
+   * and preamble size.
    */
   VirtualWireCodec() : VWI::Codec(6, 0xb38, 8) {}
   
   /**
    * @override
-   * Returns pointer to VirtualWire frame header in program memory.
+   * Returns pointer to VirtualWire frame preamble in program memory.
    * @return pointer.
    */
-  virtual const uint8_t* get_header() 
+  virtual const uint8_t* get_preamble() 
   { 
-    return (header); 
+    return (preamble); 
   }
   
   /**

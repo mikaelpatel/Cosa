@@ -29,24 +29,24 @@
  */
 class BitstuffingCodec : public VWI::Codec {
 private:
-  /** Message header */
-  static const uint8_t header[] PROGMEM;
+  /** Message preamble */
+  static const uint8_t preamble[] PROGMEM;
   
 public:
   /**
    * Construct fixed bitstuffing codec with given bits per symbol,
-   * start symbol, and header size.
+   * start symbol, and preamble size.
    */
   BitstuffingCodec() : VWI::Codec(5, 0x34a, 8) {}
   
   /**
    * @override
-   * Returns pointer to VirtualWire frame header in program memory.
+   * Returns pointer to Cosa fixed bitstuffing frame preamble in program memory.
    * @return pointer.
    */
-  virtual const uint8_t* get_header() 
+  virtual const uint8_t* get_preamble() 
   { 
-    return (header); 
+    return (preamble); 
   }
   
   /**

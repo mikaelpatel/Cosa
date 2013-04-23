@@ -25,7 +25,7 @@
  * 0x18, 0x11 => 11000.10001 => 10001.11000 => 10.0011.1000 => 0x238
  */
 const uint8_t 
-Block4B5BCodec::header[] PROGMEM = {
+Block4B5BCodec::preamble[] PROGMEM = {
   0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x18, 0x11
 };
 

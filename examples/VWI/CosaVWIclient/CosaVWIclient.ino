@@ -43,12 +43,10 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
+#if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
-
-// Analog pins to sample for values to send
-AnalogPin luminance(Board::A2);
-AnalogPin temperature(Board::A3);
+#endif
 
 // Select the codec to use for the Virtual Wire Interface. Should be the
 // same as in CosaVWIserver.ino
@@ -58,15 +56,36 @@ AnalogPin temperature(Board::A3);
 BitstuffingCodec codec;
 
 // Virtual Wire Interface Transmitter and Receiver
-VWI::Transmitter tx(Board::D9, &codec);
+#if defined(__ARDUINO_TINYX5__)
+VWI::Receiver rx(Board::D0, &codec);
+VWI::Transmitter tx(Board::D1, &codec);
+#else
+#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Memory.h"
 VWI::Receiver rx(Board::D8, &codec);
+VWI::Transmitter tx(Board::D9, &codec);
+#endif
+
+// Network configuration
 const uint32_t ADDR = 0xC05A0001;
 const uint8_t MASK = 0;
 const uint16_t SPEED = 4000;
 const uint16_t TIMEOUT = 2000000 / SPEED;
 
+// Analog pins to sample for values to send
+AnalogPin luminance(Board::A2);
+AnalogPin temperature(Board::A3);
+
+// Message type to send (should be in an include file for client and server)
+const uint8_t SAMPLE_CMD = 17;
+struct sample_t {
+  uint16_t luminance;
+  uint16_t temperature;
+};
+
 void setup()
 {
+#if !defined(__ARDUINO_TINYX5__)
   // Start trace on UART. Print available free memory and configuration
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVWIclient: started"));
@@ -74,6 +93,7 @@ void setup()
   TRACE(ADDR);
   TRACE(SPEED);
   TRACE(TIMEOUT);
+#endif
 
   // Start watchdog for delay
   Watchdog::begin();
@@ -84,13 +104,6 @@ void setup()
   rx.begin(MASK);
   tx.begin();
 }
-
-// Message type to send
-const uint8_t SAMPLE_CMD = 17;
-struct sample_t {
-  uint16_t luminance;
-  uint16_t temperature;
-};
 
 void loop()
 {
@@ -106,7 +119,7 @@ void loop()
   sample.luminance = luminance.sample();
   sample.temperature = temperature.sample();
 
-  // Send message and receive acknowledgement
+  // Send message and receive acknowledgement; retransmit until acknowledged
   uint8_t sendnr = 0;
   uint8_t next = tx.get_msg_nr();
   int8_t len; 
@@ -122,13 +135,15 @@ void loop()
   // Check if a retransmission did occur and print statistics
   if (sendnr > 1) {
     err += 1;
+#if !defined(__ARDUINO_TINYX5__)
     trace << PSTR("cnt = ") << cnt;
     trace << PSTR(", err = ") << err;
     trace << PSTR(", nr = ") << sendnr;
     trace << PSTR(" (") << (err * 100) / cnt << PSTR("%)");
     trace << endl;
+#endif
   }
 
-  // Short delay before sending the next message
-  Watchdog::delay(128);
+  // Take a nap
+  SLEEP(2);
 }

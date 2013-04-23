@@ -286,7 +286,7 @@ VWI::Transmitter::Transmitter(Board::DigitalPin tx, Codec* codec) :
   m_nr(0)
 {
   transmitter = this;
-  memcpy_P(m_buffer, codec->get_header(), codec->HEADER_MAX);
+  memcpy_P(m_buffer, codec->get_preamble(), codec->PREAMBLE_MAX);
 }
 
 bool 
@@ -315,7 +315,7 @@ VWI::Transmitter::send(const iovec_t* vec)
   // Check that the message is not too large
   if (len > PAYLOAD_MAX) return (false);
 
-  uint8_t *tp = transmitter->m_buffer + m_codec->HEADER_MAX;
+  uint8_t *tp = transmitter->m_buffer + m_codec->PREAMBLE_MAX;
   uint16_t crc = 0xffff;
   
   // Wait for transmitter to become available. Might be transmitting
@@ -349,7 +349,7 @@ VWI::Transmitter::send(const iovec_t* vec)
   *tp++ = m_codec->encode4(crc >> 8);
 
   // Total number of symbols to send
-  m_length = m_codec->HEADER_MAX + (count * 2);
+  m_length = m_codec->PREAMBLE_MAX + (count * 2);
 
   // Start the low level interrupt handler sending symbols
   return (begin());

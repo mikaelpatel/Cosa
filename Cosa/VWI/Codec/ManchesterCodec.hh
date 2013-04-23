@@ -33,23 +33,23 @@ private:
   static const uint8_t symbols[] PROGMEM;
 
   /** Message header */
-  static const uint8_t header[] PROGMEM;
+  static const uint8_t preamble[] PROGMEM;
   
 public:
   /**
    * Construct Manchester Phase codec with given bits per symbol,
-   * start symbol, and header size.
+   * start symbol, and preamble size.
    */
   ManchesterCodec() : VWI::Codec(8, 0x5d55, 8) {}
   
   /**
    * @override
-   * Returns pointer to VirtualWire frame header in program memory.
+   * Returns pointer to Manchester frame preamble in program memory.
    * @return pointer.
    */
-  virtual const uint8_t* get_header() 
+  virtual const uint8_t* get_preamble() 
   { 
-    return (header); 
+    return (preamble); 
   }
   
   /**
