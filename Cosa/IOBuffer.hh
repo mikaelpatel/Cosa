@@ -31,7 +31,7 @@
 #include "Cosa/Power.hh"
 
 /**
- * Circlic buffer template class for IOStreams. Size must be
+ * Circular buffer template class for IOStreams. Size must be
  * Power(2). May be used as a string buffer device, or to connect
  * different IOStreams. See UART.hh for an example. Buffer size should
  * be power of 2. 
