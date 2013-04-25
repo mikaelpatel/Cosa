@@ -555,8 +555,9 @@ public:
     /**
      * If a message is available (good checksum or not), copies up to
      * len bytes to the given buffer, buf. Sends an acknowledgement.
-     * Always received with extended mode header. Returns number of
-     * bytes received.
+     * Always received with extended mode header. Caller must check
+     * that the message is not a retransmission by checking the
+     * message sequence number. Returns number of bytes received.
      * @param[in] buf pointer to location to save the read data.
      * @param[in] len available space in buf. 
      * @param[in] ms timeout period (zero for non-blocking)
