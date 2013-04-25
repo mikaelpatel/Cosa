@@ -37,7 +37,6 @@
 #include "Cosa/VWI/Codec/ManchesterCodec.hh"
 #include "Cosa/VWI/Codec/BitstuffingCodec.hh"
 #include "Cosa/VWI/Codec/Block4B5BCodec.hh"
-#include "Cosa/Trace.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
@@ -49,10 +48,10 @@
 BitstuffingCodec codec;
 
 // Network configuration
-const uint32_t ADDR = 0xC05A0001;
+const uint32_t ADDR = 0xc05a0001UL;
 const uint16_t SPEED = 4000;
 
-// Virtual Wire Interface Transmitter and Receiver
+// Virtual Wire Interface Transceiver
 #if defined(__ARDUINO_TINYX5__)
 VWI::Transceiver trx(Board::D0, Board::D1, &codec);
 #else
@@ -68,6 +67,12 @@ const uint8_t SAMPLE_CMD = 1;
 struct sample_t {
   uint16_t luminance;
   uint16_t temperature;
+  
+  sample_t(uint16_t lum, uint16_t temp)
+  {
+    luminance = lum;
+    temperature = temp;
+  }
 };
 
 const uint8_t STAT_CMD = 2;
@@ -77,23 +82,20 @@ struct stat_t {
   uint16_t resent;
   uint16_t received;
   uint16_t failed;
+
+  void update(int8_t nr)
+  {
+    sent += 1;
+    if (nr <= 0) 
+      failed += 1; 
+    else if (nr > 1)
+      resent += (nr - 1);
+  }
 };
 
-// Counters
-uint16_t sent = 0;
-uint16_t resent = 0;
-uint16_t received = 0;
-uint16_t failed = 0;
+// Statistics
+stat_t stat;
   
-void update(int8_t nr)
-{
-  sent += 1;
-  if (nr <= 0) 
-    failed += 1; 
-  else if (nr > 1)
-    resent += (nr - 1);
-}
-
 void setup()
 {
   // Start watchdog for delay
@@ -108,24 +110,17 @@ void setup()
 void loop()
 {
   // Send message with luminance and temperature
-  sample_t sample;
-  sample.luminance = luminance.sample();
-  sample.temperature = temperature.sample();
+  sample_t sample(luminance.sample(), temperature.sample());
   int8_t nr = trx.send(&sample, sizeof(sample), SAMPLE_CMD);
-  update(nr);
+  stat.update(nr);
   
-  // Send message with battery voltage and statistics every 10 messages
-  if (sent % 10 == 0) {
-    stat_t stat;
+  // Send message with battery voltage and statistics every 15 messages
+  if (stat.sent % 15 == 0) {
     stat.voltage = AnalogPin::bandgap(1100);
-    stat.sent = sent;
-    stat.resent = resent;
-    stat.received = received;
-    stat.failed = failed;
     nr = trx.send(&stat, sizeof(stat), STAT_CMD);
-    update(nr);
+    stat.update(nr);
   }
 
   // Take a nap
-  MSLEEP(200);
+  SLEEP(1);
 }
