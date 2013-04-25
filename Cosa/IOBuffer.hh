@@ -34,7 +34,7 @@
  * Circular buffer template class for IOStreams. Size must be
  * Power(2). May be used as a string buffer device, or to connect
  * different IOStreams. See UART.hh for an example. Buffer size should
- * be power of 2. 
+ * be power of 2 and max 256.
  * @param[in] size number of bytes in buffer.
  */
 template <uint8_t size>
@@ -108,7 +108,7 @@ public:
   /**
    * @override
    * Wait for the buffer to become empty.
-     * @param[in] mode sleep mode on flush wait.
+   * @param[in] mode sleep mode on flush wait.
    * @return zero(0) or negative error code.
    */
   virtual int flush(uint8_t mode = SLEEP_MODE_IDLE);
