@@ -45,7 +45,8 @@
 VirtualWireCodec codec;
 VWI::Receiver rx(Board::D8, &codec);
 const uint16_t SPEED = 4000;
-const uint32_t ADDR = 0xC05a0000;
+const uint32_t ADDR = 0xc05a0000UL;
+const uint32_t MASK = 0xffffff00UL;
 
 void setup()
 {
@@ -60,7 +61,7 @@ void setup()
   // Start virtual wire interface and receiver. Use eight bit sub-net mask
   // Transmitters must have the same 24 MSB address bits as the receiver.
   VWI::begin(ADDR, SPEED);
-  rx.begin(8);
+  rx.begin(MASK);
 }
 
 // Message from the sender

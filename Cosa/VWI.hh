@@ -309,10 +309,10 @@ public:
      * Start the Phase Locked Loop listening for the receiver. Must do
      * this before receiving any messages, When a message is available
      * (good checksum or not), available(), will return true.
-     * @param[in] bits in sub-net mask (in extended mode, default 0).
+     * @param[in] mask for sub-net address match.
      * @return bool
      */
-    bool begin(uint8_t bits = 0);
+    bool begin(uint32_t mask = 0xffffffffUL);
     
     /**
      * Stop the Phase Locked Loop listening to the receiver. No
@@ -345,7 +345,7 @@ public:
      * Set sub-net mask in extended mode.
      * @param[in] mask for sub-net address match.
      */
-    uint32_t set_subnet_mask(uint32_t mask = 0xffffffff)
+    uint32_t set_subnet_mask(uint32_t mask = 0xffffffffUL)
     {
       uint32_t previous = m_mask;
       m_mask = mask;
@@ -541,10 +541,10 @@ public:
     /**
      * Start the Phase Locked Loop listening for the receiver, and
      * start transmitter.
-     * @param[in] bits in sub-net mask.
+     * @param[in] mask for sub-net address match.
      * @return bool
      */
-    bool begin(uint8_t bits = 0);
+    bool begin(uint32_t mask = 0xffffffffUL);
 
     /**
      * Stop transmitter and receiver. Returns true(1) if successful

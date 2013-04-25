@@ -50,10 +50,12 @@
 BitstuffingCodec codec;
 
 // Virtual Wire Interface Transceiver
-const uint32_t ADDR = 0xC05A0000;
-const uint16_t SPEED = 4000;
-const uint8_t MASK = 8;
 VWI::Transceiver trx(Board::D8, Board::D9, &codec);
+
+// Network configuration
+const uint32_t ADDR = 0xc05a0000UL;
+const uint32_t MASK = 0xffffff00UL;
+const uint16_t SPEED = 4000;
 
 void setup()
 {

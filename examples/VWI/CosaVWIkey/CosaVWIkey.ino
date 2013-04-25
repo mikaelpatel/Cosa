@@ -39,6 +39,7 @@
 #include "Cosa/VWI/Codec/BitstuffingCodec.hh"
 #include "Cosa/VWI/Codec/Block4B5BCodec.hh"
 #include "Cosa/ExternalInterruptPin.hh"
+#include "Cosa/Event.hh"
 #include "Cosa/Power.hh"
 
 // Select the codec to use for the Virtual Wire Interface. Should be the
@@ -84,7 +85,10 @@ struct msg_t {
 void loop()
 {
   static uint16_t nr = 0;
-  Power::sleep(SLEEP_MODE_PWR_DOWN);
+  Event event;
+  Event::queue.await(&event, SLEEP_MODE_PWR_DOWN);
+  wakeup.disable();
+  Power::adc_enable();
   VWI::enable();
   msg_t msg;
   msg.nr = nr++;
@@ -92,5 +96,7 @@ void loop()
   msg.temperature = temperature.sample();
   tx.send(&msg, sizeof(msg));
   tx.await();
+  Power::adc_disable();
   VWI::disable();
+  wakeup.enable();
 }

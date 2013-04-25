@@ -211,17 +211,16 @@ VWI::disable()
 VWI::Receiver::Receiver(Board::DigitalPin pin, Codec* codec) : 
   InputPin(pin),
   m_codec(codec),
-  m_mask(0L)
+  m_mask(0xffffffffUL)
 {
   receiver = this;
 }
 
 bool 
-VWI::Receiver::begin(uint8_t bits)
+VWI::Receiver::begin(uint32_t mask)
 {
-  if (m_enabled || bits > 32) return (false);
   RTC::begin();
-  m_mask = 0xffffffffUL << bits;
+  m_mask = mask;
   m_enabled = true;
   m_active = false;
   return (true);
@@ -428,7 +427,7 @@ VWI::Transceiver::Transceiver(Board::DigitalPin rx_pin,
 }
 
 bool 
-VWI::Transceiver::begin(uint8_t mask)
+VWI::Transceiver::begin(uint32_t mask)
 {
   return (rx.begin(mask) && tx.begin());
 }
