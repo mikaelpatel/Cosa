@@ -33,13 +33,16 @@
 /**
  * VWI (Virtual Wire Interface) is an Cosa library that provides
  * features to send short messages using inexpensive radio
- * transmitters and receivers. 
+ * transmitters and receivers (RF433).
  */
 class VWI {
 public:
-  /** The maximum payload length */
-  static const uint8_t PAYLOAD_MAX = 37;
-
+  /** 
+   * The maximum payload length; 32 byte application payload and 
+   * 6 byte extended mode header (sizeof(header_t)) 
+   */
+  static const uint8_t PAYLOAD_MAX = 38;
+  
   /** Maximum number of bytes in a message (incl. byte count and FCS) */
   static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
 
@@ -53,7 +56,8 @@ public:
   static const uint16_t CHECK_SUM = 0xf0b8;
 
   /**
-   * Compute CRC over count bytes and return value.
+   * Compute CRC over count bytes and return value. Used for checking
+   * received messages. Return value should be CHECK_SUM.
    * @param[in] ptr buffer pointer.
    * @param[in] count number of bytes in buffer.
    * @return CRC.
@@ -68,24 +72,26 @@ public:
   };
 
   /**
-   * Initialise the Virtual Wire Interface (VWI), to operate at speed 
-   * bits per second with given sleep mode. Return true(1) if
-   * successful otherwise false(0). Must be called before transmitting
-   * or receiving.
+   * Initialise the Virtual Wire Interface (VWI), to operate at given
+   * speed bits per second and with given sleep mode. Return true(1)
+   * if successful otherwise false(0). Must be called before
+   * transmitting or receiving. Default sleep mode is idle.
    * @param[in] speed in bits per second.
-   * @param[in] mode sleep mode.
+   * @param[in] mode sleep mode (Default SLEEP_MODE_IDLE).
    * @return bool
    */
   static bool begin(uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE);
 
   /**
-   * Initialise the Virtual Wire Interface (VWI), with the given
-   * node address to operate at speed bits per second with given sleep
-   * mode. Return true(1) if successful otherwise false(0). Must be
-   * called before transmitting or receiving.
+   * Initialise the Virtual Wire Interface (VWI) for extended mode;
+   * include message header (VWI::header_t). Initiate with the given
+   * node address to operate at speed bits per second and with given
+   * sleep mode. Return true(1) if successful otherwise false(0). Must
+   * be called before transmitting or receiving. Default sleep mode is
+   * idle. 
    * @param[in] addr node address.
    * @param[in] speed in bits per second.
-   * @param[in] mode sleep mode.
+   * @param[in] mode sleep mode (Default SLEEP_MODE_IDLE) 
    * @return bool
    */
   static bool begin(uint32_t addr, uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE)
@@ -115,7 +121,11 @@ private:
 
 public:
   /**
-   * The Virtual Wire Codec.
+   * The Virtual Wire Codec; define message preamble and start
+   * symbol. Supports encode and decoding of data to transmission
+   * symbols. Cosa support several transmission codecs. They may be
+   * used to optimize performance in a given scenario; speed, noise,
+   * message length, etc.
    */
   class Codec {
   public:
@@ -125,7 +135,8 @@ public:
     /** Start symbol */
     const uint16_t START_SYMBOL;
 
-    /** Size of preamble with start symbol. Should be less or equal to 
+    /** 
+     * Size of preamble with start symbol. Should be less or equal to 
      * Transmitter::PREAMBLE_MAX.
      */
     const uint8_t PREAMBLE_MAX;
@@ -138,12 +149,14 @@ public:
 
     /**
      * Construct Codec with given symbol and preamble definition. The 
-     * Codec is assumed to code 4 bits to max 8 bits for transmission.  
+     * Codec is assumed to code 4 bits to max 8 bit symbol for
+     * transmission.
      * @param[in] bits_per_symbol.
      * @param[in] start_symbol.
      * @param[in] preamble_max.
      */
-    Codec(uint8_t bits_per_symbol, uint16_t start_symbol, uint8_t preamble_max) :
+    Codec(uint8_t bits_per_symbol, uint16_t start_symbol, 
+	  uint8_t preamble_max = VWI::Transmitter::PREAMBLE_MAX) :
       BITS_PER_SYMBOL(bits_per_symbol),
       START_SYMBOL(start_symbol),
       PREAMBLE_MAX(preamble_max),
@@ -154,14 +167,14 @@ public:
     /**
      * Provide pointer to frame preamble in program memory. PREAMBLE_MAX 
      * should contain the length of the preamble including start symbol. 
-     * @return pointer.
+     * @return pointer to program memory.
      */
     virtual const uint8_t* get_preamble() = 0;
 
     /**
-     * Encode 4 bits (nibble) to a symbol.
+     * Encode 4 bits (nibble) to a symbol with BITS_PER_SYMBOL.
      * @param[in] nibble data to encode.
-     * @return encoding.
+     * @return symbol.
      */
     virtual uint8_t encode4(uint8_t nibble) = 0;
 
@@ -173,7 +186,8 @@ public:
     virtual uint8_t decode4(uint8_t symbol) = 0;
 
     /**
-     * Decode symbol (max 16-bit) back to 8 bits (byte) of data.
+     * Decode two packed symbols (max 16-bit) back to 8 bits (byte) of
+     * data.
      * @param[in] symbol to decode.
      * @return data.
      */
@@ -218,7 +232,7 @@ public:
     /** Current receiver sample */
     Codec* m_codec;
 
-    /** Sub-net mask */
+    /** Sub-net mask for extended mode address match */
     uint32_t m_mask;
 
     /** Current receiver sample */
@@ -255,7 +269,7 @@ public:
     /** Last 12 bits received, so we can look for the start symbol */
     uint16_t m_bits;
 
-    /** How many bits of message we have received. Ranges from 0 to 12 */
+    /** How many bits of message we have received? Ranges from 0 to 12 */
     uint8_t m_bit_count;
 
     /** The incoming message buffer */
@@ -268,19 +282,18 @@ public:
     volatile uint8_t m_length;
 
     /** Number of bad messages received and dropped due to bad lengths */
-    uint8_t m_bad;
+    uint16_t m_bad;
 
     /** Number of good messages received */
-    uint8_t m_good;
+    uint16_t m_good;
 
     /** The interrupt handler is a friend */
     friend void TIMER1_COMPA_vect(void);
 
     /**
-     * Phase locked loop tries to synchronise with the transmitter so
-     * that bit transitions occur at about the time (m_pll_ramp) is
-     * 0; Then the average is computed over each bit period to deduce
-     * the bit value 
+     * Phase Locked Loop; Synchronises with the transmitter so that
+     * bit transitions occur at about the time (m_pll_ramp) is 0, then
+     * the average is computed over each bit period to deduce the bit value.
      */
     void PLL();
 
@@ -290,14 +303,13 @@ public:
      * @param[in] rx input pin.
      * @param[in] codec for the receiver.
      */
-    Receiver(Board::DigitalPin rx, Codec* codec);
+    Receiver(Board::DigitalPin pin, Codec* codec);
 
     /**
      * Start the Phase Locked Loop listening for the receiver. Must do
-     * this before you can receive any messages, When a message is
-     * available (good checksum or not), available(), will return
-     * non-zero. 
-     * @param[in] bits in sub-net mask.
+     * this before receiving any messages, When a message is available
+     * (good checksum or not), available(), will return true.
+     * @param[in] bits in sub-net mask (in extended mode, default 0).
      * @return bool
      */
     bool begin(uint8_t bits = 0);
@@ -321,14 +333,34 @@ public:
 
     /**
      * Returns true if an unread message is available. May have a
-     * back check-sum.
+     * bad check-sum.
      * @return true(1) if a message is available to read.
      */
-    uint8_t available()
+    bool available()
     {
       return (m_done);
     }
 
+    /**
+     * Set sub-net mask in extended mode.
+     * @param[in] mask for sub-net address match.
+     */
+    uint32_t set_subnet_mask(uint32_t mask = 0xffffffff)
+    {
+      uint32_t previous = m_mask;
+      m_mask = mask;
+      return (previous);
+    }
+
+    /**
+     * Get receiver statistics; number of good and bad messages.
+     */
+    void get_stat(uint16_t& good, uint16_t& bad)
+    {
+      good = m_good;
+      bad = m_bad;
+    }
+    
     /**
      * If a message is available (good checksum or not), copies up to
      * len bytes to the given buffer, buf. 
@@ -345,7 +377,7 @@ public:
    */
   class Transmitter : private OutputPin {
   private:
-    /** Max size of preamble and start symbol */
+    /** Max size of preamble and start symbol. Codec provides actual size */
     static const uint8_t PREAMBLE_MAX = 8;
     
     /** Transmission buffer with premable, start symbol, count and payload */
@@ -373,18 +405,22 @@ public:
     volatile uint8_t m_enabled;
 
     /** Total number of messages sent */
-    uint16_t m_msg_count;
+    uint16_t m_count;
 
     /** The interrupt handler is a friend */
     friend void TIMER1_COMPA_vect(void);
 
+    /** Allow Codec access to PREAMBLE_MAX */
+    friend class Codec;
+
   public:
     /**
-     * Construct VWI Transmitter instance connected to the given pin.
-     * @param[in] tx output pin.
+     * Construct VWI Transmitter instance connected to the given
+     * pin. Use given codec for encoding data.
+     * @param[in] pin transmitter input pin.
      * @param[in] codec for transmitter.
      */
-    Transmitter(Board::DigitalPin tx, Codec* codec);
+    Transmitter(Board::DigitalPin pin, Codec* codec);
 
     /**
      * Start transmitter. Returns true(1) if successful otherwise false(0).
@@ -397,28 +433,9 @@ public:
      */
     bool end()
     {
-      if (!m_enabled) return (0);
       clear();
       m_enabled = false;
       return (true);
-    }
-
-    /**
-     * Next message sequence number in extended mode.
-     * @return number
-     */
-    uint8_t get_msg_nr()
-    {
-      return (m_nr);
-    }
-
-    /**
-     * Set next message sequence number in extended mode.
-     * @param[in] next sequence number.
-     */
-    void set_msg_nr(uint8_t next)
-    {
-      m_nr = next;
     }
 
     /**
@@ -431,17 +448,44 @@ public:
     }
 
     /**
+     * Get next message sequence number in extended mode.
+     * @return message sequence number.
+     */
+    uint8_t get_next_nr()
+    {
+      return (m_nr);
+    }
+
+    /**
+     * Set next message sequence number in extended mode.
+     * @param[in] next sequence number.
+     */
+    void set_next_nr(uint8_t value)
+    {
+      m_nr = value;
+    }
+
+    /**
+     * Get transmitter statistics; number of send messages
+     */
+    void get_stat(uint16_t& count)
+    {
+      count = m_count;
+    }
+    
+    /**
      * Block until the transmitter is idle then returns.
      */
     void await();
 
     /**
-     * Send a null terminated io vector message. Returns almost
-     * immediately, and message will be sent at the right timing by
-     * interrupts.  
+     * Send message using a null terminated io vector message. Returns
+     * almost immediately, and message will be sent at the right
+     * timing by interrupts. Message is gathered from elements in io
+     * vector. The total size of the io vector buffers must be less
+     * than PAYLOAD_MAX.
      * @param[in] vec null terminated io vector.
-     * @return true if the message was accepted for transmission,
-     * false if the message is too long (> PAYLOAD_MAX) 
+     * @return true(1) if accepted for transmission, otherwise false(0).
      */
     bool send(const iovec_t* vec);
 
@@ -449,14 +493,87 @@ public:
      * Send a message with the given length. Returns almost
      * immediately, and message will be sent at the right timing by
      * interrupts. A command may be given in extended mode with
-     * addressing to allow identification of the message type.
+     * addressing to allow identification of the message type. 
+     * The message length (len) must be less than PAYLOAD_MAX.
      * @param[in] buf pointer to the data to transmit.
      * @param[in] len number of bytes to transmit.
      * @param[in] cmd command code in extended mode.
-     * @return true if the message was accepted for transmission,
-     * false if the message is too long (> PAYLOAD_MAX) 
+     * @return true(1) if accepted for transmission, otherwise false(0).
      */
     bool send(const void* buf, uint8_t len, uint8_t cmd = 0);
+
+    /**
+     * Resend previous message. Return true(1) if successful otherwise
+     * false(0).
+     * @return bool
+     */
+    bool resend();
+  };
+
+  /**
+   * Virtual Wire Transceiver with message acknowledgement and
+   * retransmission.
+   */
+  class Transceiver {
+  public:
+    /** Maximum number of retransmission */
+    static const uint8_t RETRANS_MAX = 16;
+
+    /** Timeout on acknowledge receive */
+    static const uint32_t TIMEOUT = 500;
+
+    /** Receiver member variable */
+    Receiver rx;
+
+    /** Transmitter member variable */
+    Transmitter tx;
+
+    /**
+     * Transceiver constructor given node address, speed (bits per
+     * second), transmitter and receiver pin, codec and mode on await.
+     * Default is SLEEP_MODE_IDLE.
+     * @param[in] rx_pin receiver pin.
+     * @param[in] tx_pin transmitter pin.
+     * @param[in] codec encoder/decoder.
+     */
+    Transceiver(Board::DigitalPin rx_pin, Board::DigitalPin tx_pin, Codec* codec);
+
+    /**
+     * Start the Phase Locked Loop listening for the receiver, and
+     * start transmitter.
+     * @param[in] bits in sub-net mask.
+     * @return bool
+     */
+    bool begin(uint8_t bits = 0);
+
+    /**
+     * Stop transmitter and receiver. Returns true(1) if successful
+     * otherwise false(0). 
+     */
+    bool end();
+
+    /**
+     * If a message is available (good checksum or not), copies up to
+     * len bytes to the given buffer, buf. Sends an acknowledgement.
+     * Always received with extended mode header. Returns number of
+     * bytes received.
+     * @param[in] buf pointer to location to save the read data.
+     * @param[in] len available space in buf. 
+     * @param[in] ms timeout period (zero for non-blocking)
+     * @return number of bytes received or negative error code.
+     */
+    int8_t recv(void* buf, uint8_t len, uint32_t ms = 0L);
+    
+    /**
+     * Send a message with the given length, and await acknowledgement.
+     * The message will be retransmitted until an acknowledgement is 
+     * received. The message length (len) must be less than PAYLOAD_MAX.
+     * @param[in] buf pointer to the data to transmit.
+     * @param[in] len number of bytes to transmit.
+     * @param[in] cmd command code in extended mode.
+     * @return true(1) if the message was delivered otherwise false(0).
+     */
+    int8_t send(const void* buf, uint8_t len, uint8_t cmd = 0);
   };
 };
 

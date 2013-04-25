@@ -21,10 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Virtual Wire Interface (VWI) driver.
- * Receive and print a simple message with identity, message number,
- * and 2x16-bit analog data sample. Send an acknowledge by sending 
- * a message with the received identity and message number.
+ * Demonstration of the Virtual Wire Interface (VWI) driver;
+ * Transceiver with acknowledgement and automatic retransmission.
  *
  * @section Circuit
  * Connect RF433/315 Transmitter Data to Arduino D9, RF433/315
@@ -51,12 +49,11 @@
 // Block4B5BCodec codec;
 BitstuffingCodec codec;
 
-// Virtual Wire Interface Transmitter and Receiver
-VWI::Transmitter tx(Board::D9, &codec);
-VWI::Receiver rx(Board::D8, &codec);
+// Virtual Wire Interface Transceiver
 const uint32_t ADDR = 0xC05A0000;
 const uint16_t SPEED = 4000;
 const uint8_t MASK = 8;
+VWI::Transceiver trx(Board::D8, Board::D9, &codec);
 
 void setup()
 {
@@ -69,17 +66,25 @@ void setup()
   Watchdog::begin();
   RTC::begin();
   
-  // Start virtual wire interface and receiver
+  // Start virtual wire interface transceiver
   VWI::begin(ADDR, SPEED);
-  rx.begin(MASK);
-  tx.begin();
+  trx.begin(MASK);
 }
 
-// Message to receiver from CosaVWIclient
-const uint8_t SAMPLE_CMD = 17;
+// Message types
+const uint8_t SAMPLE_CMD = 1;
 struct sample_t {
   uint16_t luminance;
   uint16_t temperature;
+};
+
+const uint8_t STAT_CMD = 2;
+struct stat_t {
+  uint16_t voltage;
+  uint16_t sent;
+  uint16_t resent;
+  uint16_t received;
+  uint16_t failed;
 };
 
 // Extended mode message with header
@@ -87,36 +92,41 @@ struct msg_t {
   VWI::header_t header;
   union {
     sample_t sample;
+    stat_t stat;
   };
 };
 
 void loop()
 {
+  // Processed sequence number (should be one per client)
   static uint8_t nr = 0xff;
 
-  // Wait for a message. Sanity check the length and message type/cmd
+  // Wait for a message. Sanity check the length
   msg_t msg;
-  rx.await();
-  int8_t len = rx.recv(&msg, sizeof(msg));
-  if (len != sizeof(msg)) return;
-  if (msg.header.cmd != SAMPLE_CMD) return;
+  int8_t len = trx.recv(&msg, sizeof(msg));
+  if (len <= 0) return;
   
-  // Send an acknowledgement; echo the message header (using basic mode)
-  iovec_t vec[2];
-  vec[0].buf = &msg.header;
-  vec[0].size = sizeof(msg.header);
-  vec[1].buf = 0;
-  vec[1].size = 0;
-  tx.send(vec);
-  tx.await();
+  // Check that this is not a retransmission
+  if (nr == msg.header.nr) return;
+  nr = msg.header.nr;
 
-  // Print message contents (only once)
-  if (nr != msg.header.nr) {
-    nr = msg.header.nr;
-    trace << hex << msg.header.addr << ':' 
-	  << msg.header.nr << ':' 
-	  << msg.header.cmd << ':'
-	  << hex << msg.sample.luminance << PSTR(", ")
+  // Print header, type message type and print contents
+  trace << hex << msg.header.addr << ':' << msg.header.nr << ':';
+  switch (msg.header.cmd) {
+  case SAMPLE_CMD:
+    trace << PSTR("sample(") << msg.header.cmd << PSTR("):");
+    trace << hex << msg.sample.luminance << PSTR(", ")
 	  << hex << msg.sample.temperature << endl;
+    break;
+  case STAT_CMD:
+    trace << PSTR("stat(") << msg.header.cmd << PSTR("):");
+    trace << msg.stat.voltage << PSTR(", ")
+	  << msg.stat.sent << PSTR(", ")
+	  << msg.stat.resent << PSTR(", ")
+	  << msg.stat.received << PSTR(", ")
+	  << msg.stat.failed << PSTR(" (")
+	  << (msg.stat.resent * 100L) / msg.stat.sent << PSTR("%)")
+	  << endl;
+    break;
   }
 }

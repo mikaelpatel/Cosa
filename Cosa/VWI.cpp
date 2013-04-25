@@ -45,21 +45,14 @@ VWI::CRC(uint8_t* ptr, uint8_t count)
 static VWI::Transmitter* transmitter = 0;
 static VWI::Receiver* receiver = 0;
 
+/** Prescale table for Timer1. Index is prescale setting */
+static const uint16_t prescale[] PROGMEM = {
 #if defined(__ARDUINO_TINYX5__)
-
-/** Prescale table for 8-bit Timer1. Index is prescale setting */
-static const uint16_t prescale[] PROGMEM = {
   0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 
-};
-
 #else
-
-/** Prescale table for 16-bit Timer1. Index is prescale setting */
-static const uint16_t prescale[] PROGMEM = {
   0, 1, 8, 64, 256, 1024
-};
-
 #endif
+};
 
 /**
  * Calculate timer setting, prescale and count value, given speed (bps),
@@ -215,8 +208,8 @@ VWI::disable()
   TIMSK1 &= ~_BV(OCIE1A);
 }
 
-VWI::Receiver::Receiver(Board::DigitalPin rx, Codec* codec) : 
-  InputPin(rx),
+VWI::Receiver::Receiver(Board::DigitalPin pin, Codec* codec) : 
+  InputPin(pin),
   m_codec(codec),
   m_mask(0L)
 {
@@ -237,7 +230,6 @@ VWI::Receiver::begin(uint8_t bits)
 bool 
 VWI::Receiver::end()
 {
-  if (!m_enabled) return (false);
   m_enabled = false;
   return (true);
 }
@@ -280,13 +272,20 @@ VWI::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
   return (len);
 }
 
-VWI::Transmitter::Transmitter(Board::DigitalPin tx, Codec* codec) :
-  OutputPin(tx),
+VWI::Transmitter::Transmitter(Board::DigitalPin pin, Codec* codec) :
+  OutputPin(pin),
   m_codec(codec),
   m_nr(0)
 {
   transmitter = this;
   memcpy_P(m_buffer, codec->get_preamble(), codec->PREAMBLE_MAX);
+}
+
+bool
+VWI::Transmitter::resend()
+{
+  if (m_enabled) return (false);
+  return (begin());
 }
 
 bool 
@@ -401,7 +400,7 @@ ISR(TIMER1_COMPA_vect)
       // whole message? (after waiting one bit period since the last bit)
       if (transmitter->m_index >= transmitter->m_length) {
 	transmitter->end();
-	transmitter->m_msg_count++;
+	transmitter->m_count++;
       }
       else {
 	transmitter->write(transmitter->m_buffer[transmitter->m_index] & 
@@ -420,3 +419,61 @@ ISR(TIMER1_COMPA_vect)
     receiver->PLL();
 }
 
+VWI::Transceiver::Transceiver(Board::DigitalPin rx_pin, 
+			      Board::DigitalPin tx_pin, 
+			      VWI::Codec* codec) :
+  rx(rx_pin, codec),
+  tx(tx_pin, codec)
+{
+}
+
+bool 
+VWI::Transceiver::begin(uint8_t mask)
+{
+  return (rx.begin(mask) && tx.begin());
+}
+
+bool 
+VWI::Transceiver::end()
+{
+  return (rx.end() && tx.end());
+}
+
+int8_t 
+VWI::Transceiver::recv(void* buf, uint8_t len, uint32_t ms)
+{
+  // Receiver extended message
+  int8_t res = rx.recv(buf, len, ms);
+  if (res <= 0) return (res);
+
+  // Send acknowledgement; retransmit the header
+  iovec_t vec[2];
+  vec[0].buf = buf;
+  vec[0].size = sizeof(VWI::header_t);
+  vec[1].buf = 0;
+  vec[1].size = 0;
+  tx.send(vec);
+  return (res);
+}
+
+int8_t
+VWI::Transceiver::send(const void* buf, uint8_t len, uint8_t cmd)
+{
+  VWI::header_t ack;
+  uint8_t retrans = 0;
+  uint8_t nr = tx.get_next_nr();
+
+  // Sent the message and receive an acknowledgement
+  tx.send(buf, len, cmd);
+  while (retrans != RETRANS_MAX) {
+    tx.await();
+    int8_t len = rx.recv(&ack, sizeof(ack), TIMEOUT);
+    // Check acknowledgement and return if valid
+    if ((len == sizeof(ack)) && (ack.nr == nr) && (ack.addr == VWI::s_addr))
+      return (retrans + 1);
+    // Otherwise resend the message (from the transmission buffer)
+    retrans += 1;
+    tx.resend();
+  }
+  return (-1);
+}

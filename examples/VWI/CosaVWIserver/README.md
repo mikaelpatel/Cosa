@@ -1,10 +1,8 @@
 CosaVWIserver
 =============
 
-Demonstration of the Virtual Wire Interface (VWI) driver.
-Receive and print a simple message with identity, message number,
-and 2x16-bit analog data sample. Send an acknowledge by sending 
-a message with the received identity and message number.
+Demonstration of the Virtual Wire Interface (VWI) driver;
+Transceiver with acknowledgement and auto-retransmission.
 
 Circuit
 -------

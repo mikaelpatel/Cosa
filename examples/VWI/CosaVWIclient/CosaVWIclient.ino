@@ -21,11 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Virtual Wire Interface (VWI) driver.
- * Transmits a simple message with identity, message number,
- * and two data element; analog samples. Server should send back
- * an acknowledgement message with the identity and message number.
- * If an acknowledgement is not received a retransmission will occur.
+ * Demonstration of the Virtual Wire Interface (VWI) driver;
+ * Transceiver with acknowledgement and automatic retransmission.
  *
  * @section Circuit
  * Connect RF433/315 Transmitter Data to Arduino D9, RF433/315
@@ -43,10 +40,6 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
-#if !defined(__ARDUINO_TINYX5__)
-#include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Memory.h"
-#endif
 
 // Select the codec to use for the Virtual Wire Interface. Should be the
 // same as in CosaVWIserver.ino
@@ -55,95 +48,84 @@
 // Block4B5BCodec codec;
 BitstuffingCodec codec;
 
-// Virtual Wire Interface Transmitter and Receiver
-#if defined(__ARDUINO_TINYX5__)
-VWI::Receiver rx(Board::D0, &codec);
-VWI::Transmitter tx(Board::D1, &codec);
-#else
-#include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Memory.h"
-VWI::Receiver rx(Board::D8, &codec);
-VWI::Transmitter tx(Board::D9, &codec);
-#endif
-
 // Network configuration
 const uint32_t ADDR = 0xC05A0001;
-const uint8_t MASK = 0;
 const uint16_t SPEED = 4000;
-const uint16_t TIMEOUT = 2000000 / SPEED;
+
+// Virtual Wire Interface Transmitter and Receiver
+#if defined(__ARDUINO_TINYX5__)
+VWI::Transceiver trx(Board::D0, Board::D1, &codec);
+#else
+VWI::Transceiver trx(Board::D8, Board::D9, &codec);
+#endif
 
 // Analog pins to sample for values to send
 AnalogPin luminance(Board::A2);
 AnalogPin temperature(Board::A3);
 
 // Message type to send (should be in an include file for client and server)
-const uint8_t SAMPLE_CMD = 17;
+const uint8_t SAMPLE_CMD = 1;
 struct sample_t {
   uint16_t luminance;
   uint16_t temperature;
 };
 
+const uint8_t STAT_CMD = 2;
+struct stat_t {
+  uint16_t voltage;
+  uint16_t sent;
+  uint16_t resent;
+  uint16_t received;
+  uint16_t failed;
+};
+
+// Counters
+uint16_t sent = 0;
+uint16_t resent = 0;
+uint16_t received = 0;
+uint16_t failed = 0;
+  
+void update(int8_t nr)
+{
+  sent += 1;
+  if (nr <= 0) 
+    failed += 1; 
+  else if (nr > 1)
+    resent += (nr - 1);
+}
+
 void setup()
 {
-#if !defined(__ARDUINO_TINYX5__)
-  // Start trace on UART. Print available free memory and configuration
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaVWIclient: started"));
-  TRACE(free_memory());
-  TRACE(ADDR);
-  TRACE(SPEED);
-  TRACE(TIMEOUT);
-#endif
-
   // Start watchdog for delay
   Watchdog::begin();
   RTC::begin();
 
-  // Start virtual wire interface in extended mode
+  // Start virtual wire interface in extended mode; transceiver
   VWI::begin(ADDR, SPEED);
-  rx.begin(MASK);
-  tx.begin();
+  trx.begin();
 }
 
 void loop()
 {
-  // Statistics; Number of messages and error count (retransmissions)
-  static uint16_t cnt = 0;
-  static uint16_t err = 0;
-
-  // Message types (samples and acknowledgement)
-  VWI::header_t ack;
+  // Send message with luminance and temperature
   sample_t sample;
-  
-  // Initiate the message with id, sequence number and measurements
   sample.luminance = luminance.sample();
   sample.temperature = temperature.sample();
-
-  // Send message and receive acknowledgement; retransmit until acknowledged
-  uint8_t sendnr = 0;
-  uint8_t next = tx.get_msg_nr();
-  int8_t len; 
-  do {
-    sendnr += 1;
-    tx.set_msg_nr(next);
-    tx.send(&sample, sizeof(sample), SAMPLE_CMD);
-    tx.await();
-    len = rx.recv(&ack, sizeof(ack), TIMEOUT);
-  } while (len != sizeof(ack) || (ack.nr != next) || (ack.addr != ADDR));
-  cnt += 1;
+  int8_t nr = trx.send(&sample, sizeof(sample), SAMPLE_CMD);
+  update(nr);
   
-  // Check if a retransmission did occur and print statistics
-  if (sendnr > 1) {
-    err += 1;
-#if !defined(__ARDUINO_TINYX5__)
-    trace << PSTR("cnt = ") << cnt;
-    trace << PSTR(", err = ") << err;
-    trace << PSTR(", nr = ") << sendnr;
-    trace << PSTR(" (") << (err * 100) / cnt << PSTR("%)");
-    trace << endl;
-#endif
+  // Send message with battery voltage and statistics every 10 messages
+  if (sent % 10 == 0) {
+    stat_t stat;
+    stat.voltage = AnalogPin::bandgap(1100);
+    stat.sent = sent;
+    stat.resent = resent;
+    stat.received = received;
+    stat.failed = failed;
+    nr = trx.send(&stat, sizeof(stat), STAT_CMD);
+    update(nr);
   }
 
   // Take a nap
-  SLEEP(2);
+  MSLEEP(200);
 }
