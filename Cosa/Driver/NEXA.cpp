@@ -64,9 +64,7 @@ NEXA::Receiver::on_interrupt(uint16_t arg)
 
   // And when all samples have been read push an event
   Event::push(Event::READ_COMPLETED_TYPE, this);
-  m_start = 0L;
-  return;
-
+  
  exception:
   m_start = 0L;
 }
@@ -90,7 +88,7 @@ NEXA::Receiver::read_code()
   uint16_t us;
   uint16_t ix;
   do {
-    // Wait for start condition
+    // Wait for the start condition
     while (is_low());
     stop = RTC::micros();
 

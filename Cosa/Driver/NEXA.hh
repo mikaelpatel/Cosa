@@ -58,8 +58,8 @@ public:
 
     /**
      * Compare code with other; house and device bits should be equal or 
-     * house bits and group code. The other code should be a received
-     * command code. Note: only address matching.
+     * house bits and group code set. The other code should be a received
+     * command code. 
      * @param[in] other code.
      * @return bool.
      */
@@ -96,17 +96,17 @@ public:
     /**
      * @override
      * Measures the pulse with and decodes the pulse stream. Will push
-     * an Event::READ_COMPLETED_TYPE when completed decoding. Command
+     * an Event::READ_COMPLETED_TYPE when completed decoding. Commands
      * should be retrieved with get_code(). The event will contain the
-     * object as target.
+     * class instance as target.
      * @param[in] arg argument from first level interrupt handler.
      */
     virtual void on_interrupt(uint16_t arg = 0);
 
     /**
      * Decode the current four samples. Return bit, zero(0) or one(1),
-     * if successful otherwise negative error code.
-     * @return decoded bit(0/1) or negative error code(-1).
+     * if successful otherwise negative error code(-1).
+     * @return decoded bit(0/1) or negative error code.
      */
     int8_t decode_bit();
 
