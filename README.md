@@ -188,4 +188,7 @@ interface. Implemented 1-wire parasite power mode. Improved DS18B20
 1-wire driver and demo sketches with VWI integration. Added support
 for battery voltage monitoring. New extended mode in VWI with node
 address, sub-net address matching, message sequence numbering and type
-handling. NEXA Wireless Remote command receiver (RF433).   
+handling. NEXA Wireless Remote command receiver (RF433). Added a
+reliable message passing protocol to the Virtual Wire Interface
+(VWI). The new class VWI::Transceiver supports message acknowledgement
+and auto-retransmission. Full support for message parsing.    
