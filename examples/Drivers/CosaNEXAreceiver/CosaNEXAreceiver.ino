@@ -23,9 +23,9 @@
  * @section Description
  * Simple sketch to demonstrate receiving Nexa Home Wireless Switch
  * Remote codes. First command received will be used as the device 
- * identity. Sucessive commands are compared against the device idenity
- * and if matches the built-in LED is set on/off according to the
- * command. 
+ * identity. Sucessive commands are compared against the device 
+ * identity and if matches the built-in LED is set on/off according 
+ * to the command. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
