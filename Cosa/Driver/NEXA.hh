@@ -57,11 +57,25 @@ public:
     }
 
     /**
+     * Compare code with other; house and device bits should be equal or 
+     * house bits and group code. The other code should be a received
+     * command code. Note: only address matching.
+     * @param[in] other code.
+     * @return bool.
+     */
+    bool operator==(const NEXA::code_t &other) const 
+    {
+      return ((house == other.house) && 
+	      (other.group || (device == other.device)));
+    }
+
+    /**
      * Print command code fields to given output stream.
      * @param[in] outs output stream.
      * @param[in] code to print.
      */
     friend IOStream& operator<<(IOStream& outs, code_t code);
+
   };
   
   /**

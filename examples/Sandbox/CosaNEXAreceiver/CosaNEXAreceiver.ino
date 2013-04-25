@@ -21,7 +21,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Simple sketch to capture Nexa Home Wireless Switch Remote codes.
+ * Simple sketch to demonstrate receiving Nexa Home Wireless Switch
+ * Remote codes. First command received will be used as the device 
+ * identity. Sucessive commands are compared against the device idenity
+ * and if matches the built-in LED is set on/off according to the
+ * command. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -39,6 +43,7 @@
 
 OutputPin led(Board::LED);
 NEXA::Receiver receiver(Board::EXT0);
+NEXA::code_t unit = 0;
 
 void setup()
 {
@@ -47,31 +52,38 @@ void setup()
   trace.begin(&uart, PSTR("CosaNEXAreceiver: started"));
   TRACE(free_memory());
 #endif
+  
+  // Initiate Real-time clock and Watchdog
   RTC::begin();
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
-  led.toggle();
+  Watchdog::begin(16);
+
+  // Use polling version to receive the remote button for device
+  unit = receiver.read_code();
 #if !defined(__ARDUINO_TINYX5__)
-  trace << receiver.read_code() << endl;
-#else
-  NEXA::code_t code = receiver.read_code();
+  trace << PSTR("learning: ") << unit << endl;
 #endif
-  led.toggle();
+
+  // Enable the interrupt driven version
   receiver.enable();
 }
 
 void loop()
 {
+  // Wait for the next event
   Event event;
   Event::queue.await(&event);
   uint8_t type = event.get_type();
   Event::Handler* handler = event.get_target();
-  if ((type == Event::READ_COMPLETED_TYPE) && (handler == &receiver)) {
-    led.toggle();
+
+  // Check that the event is an read completed and from the correct source
+  if ((type != Event::READ_COMPLETED_TYPE) || (handler != &receiver)) return;
+    
+  // Get the received command code and check if it is for this device
+  NEXA::code_t code = receiver.get_code();
+  if (code == unit) {
 #if !defined(__ARDUINO_TINYX5__)
-    trace << receiver.get_code() << endl;
-#else
-    NEXA::code_t code = receiver.get_code();
+    trace << PSTR("matched: ") << code << endl;
 #endif
-    led.toggle();
+    led << code.onoff;
   }
 }
