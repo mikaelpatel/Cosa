@@ -73,10 +73,16 @@ int8_t
 NEXA::Receiver::decode_bit()
 {
   uint8_t bit;
+
+  // The pedantic version checks even the first pulse. This could be removed
   bit = ((m_sample[0] < BIT_THRESHOLD) << 1) | (m_sample[1] < BIT_THRESHOLD);
   if (bit < 2) return (-1);
+
+  // The second pulse has the actual transmitted bit
   bit = ((m_sample[2] < BIT_THRESHOLD) << 1) | (m_sample[3] < BIT_THRESHOLD);
   if (bit < 2) return (-1);
+
+  // And map back to a bit (2 => 0, 3 => 1)
   return (bit > 2);  
 }
 
@@ -95,6 +101,7 @@ NEXA::Receiver::read_code()
     // Collect the samples; high followed by low pulse
     ix = 0;
     while (ix < SAMPLE_MAX) {
+      // Capture length of high period
       start = stop;
       while (is_high());
       stop = RTC::micros();
@@ -102,6 +109,7 @@ NEXA::Receiver::read_code()
       if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) break;
       m_sample[ix & 0x3] = us;
       ix += 1;
+      // Capture length of low period
       start = stop;
       while (is_low());
       stop = RTC::micros();
