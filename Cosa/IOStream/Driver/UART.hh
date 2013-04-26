@@ -26,6 +26,11 @@
 #ifndef __COSA_IOSTREAM_DRIVER_UART_HH__
 #define __COSA_IOSTREAM_DRIVER_UART_HH__
 
+#if defined(__ARDUINO_TINYX5__)
+#include "Cosa/IOStream/Driver/SUART.hh"
+extern SUART uart;
+#else
+
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Board.hh"
@@ -240,4 +245,5 @@ extern UART uart;
  */
 #define UART_SETUP(nr,obj) UART::uart ## nr = &obj
 
+#endif
 #endif

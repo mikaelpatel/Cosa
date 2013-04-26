@@ -24,10 +24,15 @@
  */
 
 #include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINYX5__)
+#include "Cosa/IOStream/Driver/UART.hh"
+
+#if defined(__ARDUINO_TINYX5__)
+
+SUART uart(Board::D0);
+
+#else
 
 #include "Cosa/Bits.h"
-#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Power.hh"
 

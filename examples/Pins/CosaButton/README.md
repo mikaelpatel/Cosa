@@ -8,10 +8,10 @@ frequency sampling (64 ms).
 
 Circuit
 -------
-A button/switch should be connected to Arduino pin 7 and ground. No
+A button/switch should be connected to Arduino pin 2 and ground. No
 additional components are needed as the input pin is configured with
 input pullup resistor. 
 
-The Arduino Pin 13 (builtin LED) is used for on-off state.
+The Arduino builtin LED Pin 13/ATtiny Pin 4, is used for on-off state.
 
 

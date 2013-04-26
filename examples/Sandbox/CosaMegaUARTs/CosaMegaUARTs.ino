@@ -69,13 +69,7 @@ void setup()
 
 void loop()
 {
-  // Tick on cout
-  cout << '.';
-
   // Transfer character from UART1 to trace
   while (uart1.available()) trace << (char) uart1.getchar();
-
-  // And take a nap
-  SLEEP(1);
 }
 

@@ -61,7 +61,7 @@ public:
   }
 };
 
-OnOffButton onOff(Board::D7, Button::ON_FALLING_MODE);
+OnOffButton onOff(Board::D2, Button::ON_FALLING_MODE);
 
 void setup()
 {
