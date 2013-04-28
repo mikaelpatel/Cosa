@@ -29,6 +29,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Board.hh"
 #include "Cosa/Ciao.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
