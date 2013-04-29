@@ -51,16 +51,16 @@ NEXA::Receiver::on_interrupt(uint16_t arg)
   uint32_t us = (stop - m_start);
   m_start = stop;
   if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) goto exception;
-  m_sample[m_ix & 0x3] = us;
+  m_sample[m_ix & IX_MASK] = us;
   m_ix += 1;
 
   // Decode every four pulses to a bit
-  if ((m_ix & 0x3) == 0) {
+  if ((m_ix & IX_MASK) == 0) {
     int8_t bit = decode_bit();
     if (bit < 0) goto exception;
     m_code = (m_code << 1) | bit;
   }
-  if (m_ix != SAMPLE_MAX) return;
+  if (m_ix != IX_MAX) return;
 
   // And when all samples have been read push an event
   Event::push(Event::READ_COMPLETED_TYPE, this);
@@ -73,15 +73,12 @@ int8_t
 NEXA::Receiver::decode_bit()
 {
   uint8_t bit;
-
   // The pedantic version checks even the first pulse. This could be removed
   bit = ((m_sample[0] < BIT_THRESHOLD) << 1) | (m_sample[1] < BIT_THRESHOLD);
   if (bit < 2) return (-1);
-
   // The second pulse has the actual transmitted bit
   bit = ((m_sample[2] < BIT_THRESHOLD) << 1) | (m_sample[3] < BIT_THRESHOLD);
   if (bit < 2) return (-1);
-
   // And map back to a bit (2 => 0, 3 => 1)
   return (bit > 2);  
 }
@@ -100,14 +97,14 @@ NEXA::Receiver::read_code()
 
     // Collect the samples; high followed by low pulse
     ix = 0;
-    while (ix < SAMPLE_MAX) {
+    while (ix < IX_MAX) {
       // Capture length of high period
       start = stop;
       while (is_high());
       stop = RTC::micros();
       us = stop - start;
       if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) break;
-      m_sample[ix & 0x3] = us;
+      m_sample[ix & IX_MASK] = us;
       ix += 1;
       // Capture length of low period
       start = stop;
@@ -115,15 +112,15 @@ NEXA::Receiver::read_code()
       stop = RTC::micros();
       us = stop - start;
       if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) break;
-      m_sample[ix & 0x3] = us;
+      m_sample[ix & IX_MASK] = us;
       ix += 1;
       // Decode every four samples to a code bit
-      if ((ix & 0x3) == 0) {
+      if ((ix & IX_MASK) == 0) {
 	int8_t bit = decode_bit();
 	if (bit < 0) break;
 	bits = (bits << 1) | bit;
       }
     }
-  } while (ix != SAMPLE_MAX);
+  } while (ix != IX_MAX);
   return (m_code = bits);
 }

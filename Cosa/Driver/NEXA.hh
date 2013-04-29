@@ -75,7 +75,6 @@ public:
      * @param[in] code to print.
      */
     friend IOStream& operator<<(IOStream& outs, code_t code);
-
   };
   
   /**
@@ -84,11 +83,13 @@ public:
    */
   class Receiver : public ExternalInterruptPin {
   private:
-    static const uint16_t SAMPLE_MAX = 129;
+    static const uint8_t SAMPLE_MAX = 4;
+    static const uint8_t IX_MAX = 129;    
+    static const uint8_t IX_MASK = SAMPLE_MAX - 1;
     static const uint16_t LOW_THRESHOLD = 200;
     static const uint16_t BIT_THRESHOLD = 500;
     static const uint16_t HIGH_THRESHOLD = 1500;
-    volatile uint16_t m_sample[4];
+    volatile uint16_t m_sample[SAMPLE_MAX];
     volatile uint32_t m_start;
     volatile uint32_t m_code;
     volatile uint8_t m_ix;
