@@ -63,8 +63,8 @@ void setup()
   // Start the watchdog for low power sleep
   Watchdog::begin();
 
-  // Adjust the outdoors device with -1 humidity and +1 temperature
-  outdoors.calibrate(-1,1);
+  // Adjust the indoors device with -1 humidity and +1 temperature
+  indoors.calibrate(-1,1);
 }
 
 void loop()
@@ -76,14 +76,14 @@ void loop()
   ledPin.toggle();
   int16_t humidity;
   int16_t temperature;
-
-  indoors.read(humidity, temperature);
-  trace.print_P(PSTR("indoors:  "));
-  trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
-
-  outdoors.read(humidity, temperature);
-  trace.print_P(PSTR("outdoors: "));
-  trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
+  if (indoors.read(humidity, temperature)) {
+    trace.print_P(PSTR("indoors:  "));
+    trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
+  }
+  if (outdoors.read(humidity, temperature)) {
+    trace.print_P(PSTR("outdoors: "));
+    trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity / 10, temperature / 10);
+  }
 
   // Blink built-in led during active period
   ledPin.toggle();
