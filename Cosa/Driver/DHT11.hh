@@ -47,30 +47,44 @@
  * @section See Also
  * [1] DHT11 Humidity & Temperature Sensor, Robotics UK,
  * www.droboticsonline.com, http://www.micro4you.com/files/sensor/DHT11.pdf<br>
- * [2] http://learn.adafruit.com/dht<br>
+ * [2] DHTxx Sensor Tutorial, http://learn.adafruit.com/dht<br>
  */
 class DHT11 : private Link {
 public:
-  /**
-   * Size of data buffer.
-   */
+  /** Size of data buffer */
   static const uint8_t DATA_MAX = 5;
 
-private:
+  /** Last data elemement index */
+  static const uint8_t DATA_LAST = DATA_MAX - 1;
+
+protected:
   /**
-   * Input/Output pin, Data buffer and latest pin level.
+   * Data read from the device.
+   */
+  union data_t {
+    uint8_t as_byte[DATA_MAX];
+    struct {
+      int16_t humidity;
+      int16_t temperature;
+      uint8_t chksum;
+    };
+  };
+  
+  /**
+   * Input/Output pin, data and offset buffer and latest pin level.
    */
   IOPin m_pin;
+  data_t m_data;
+  data_t m_offset;
   uint8_t m_latest;
-  uint8_t m_data[DATA_MAX];
-
+  
   /** 
    * Read the next bit from the device given number of level
    * changes. Return one(1) if the bit was set, zero(0) if clear,
    * otherwise a negative error code. 
    * @param[in] changes number of level transitions.
-   * @return one(1) if the bit was set, zero(0) if clear, otherwise a
-   * negative error code. 
+   * @return one(1) if the bit was set, zero(0) if clear, otherwise 
+   * a negative error code(-1). 
    */
   int8_t read_bit(uint8_t changes);
   
@@ -81,25 +95,37 @@ private:
    */
   bool read_data();
 
+  /**
+   * Adjust data from the device.
+   */
+  virtual void adjust_data() {}
+
 public:
   /**
    * Construct connection to a DHT11 device on given in/output-pin.
+   * Set humidity and temperature calibration offsets to zero.
    * @param[in] pin data.
    */
-  DHT11(Board::DigitalPin pin) : Link(), m_pin(pin) {}
+  DHT11(Board::DigitalPin pin) : 
+    Link(), 
+    m_pin(pin)
+  {
+    m_offset.humidity = 0;
+    m_offset.temperature = 0;
+  }
 
   /**
    * Read temperature and humidity from the device. Return true(1) and
    * values if successful otherwise false(0).  
-   * @param[out] temperature reading.
    * @param[out] humidity reading.
+   * @param[out] temperature reading.
    * @return bool.
    */
-  bool read(uint8_t& temperature, uint8_t& humidity)
+  bool read(int16_t& humidity, int16_t& temperature)
   {
     if (!read_data()) return (false);
-    temperature = get_temperature();
     humidity = get_humidity();
+    temperature = get_temperature();
     return (true);
   }
 
@@ -107,18 +133,30 @@ public:
    * Return temperature from latest read.
    * @return temperature.
    */
-  uint8_t get_temperature()
+  int16_t get_temperature()
   {
-    return (m_data[2]);
+    return (m_data.temperature + m_offset.temperature);
   }
 
   /**
    * Return humidity from latest read.
    * @return humidity.
    */
-  uint8_t get_humidity()
+  int16_t get_humidity()
   {
-    return (m_data[0]);
+    return (m_data.humidity + m_offset.humidity);
+  }
+
+  /**
+   * Set calibration offset for temperature and humidity readings.
+   * The given values are added to the values read from the device.
+   * @param[in] temperature.
+   * @param[in] humidity.
+   */
+  void calibrate(int16_t humidity, int16_t temperature)
+  {
+    m_offset.humidity = humidity;
+    m_offset.temperature = temperature;
   }
 
   /**

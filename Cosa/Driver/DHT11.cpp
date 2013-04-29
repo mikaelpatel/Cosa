@@ -26,18 +26,15 @@
 #include "Cosa/Driver/DHT11.hh"
 #include "Cosa/Watchdog.hh"
 
-// Thresholds for wire sampling
-// Fix: Should be relative to F_CPU
+// Thresholds for wire sampling. Should be relative to F_CPU not board
 #if defined(__ARDUINO_TINYX5__)
 static const uint8_t COUNT_MIN = 30;
 #else
 static const uint8_t COUNT_MIN = 40;
 #endif
-
+static const uint16_t START_REQUEST = 256;
+static const uint8_t START_RESPONSE = 40;
 static const uint8_t COUNT_MAX = 255;
-
-// Index of last member in data buffer
-static const uint8_t DATA_LAST = DHT11::DATA_MAX - 1;
 
 int8_t
 DHT11::read_bit(uint8_t changes)
@@ -60,9 +57,9 @@ DHT11::read_data()
   // Send start signal to the device
   m_pin.set_mode(IOPin::OUTPUT_MODE);
   m_pin.clear();
-  Watchdog::delay(256);
+  Watchdog::delay(START_REQUEST);
   m_pin.set();
-  DELAY(40);
+  DELAY(START_RESPONSE);
   m_pin.set_mode(IOPin::INPUT_MODE);
 
   // Receive bits from the device and calculate check sum
@@ -74,13 +71,13 @@ DHT11::read_data()
       for (uint8_t j = 0; j < CHARBITS; j++) {
 	int8_t bit = read_bit(2);
 	if (bit < 0) synchronized_return (false);
-	m_data[i] = (m_data[i] << 1) | bit;
+	m_data.as_byte[i] = (m_data.as_byte[i] << 1) | bit;
       }
-      if (i < DATA_LAST) chksum += m_data[i];
+      if (i < DATA_LAST) chksum += m_data.as_byte[i];
     }
   }
 
-  // Return check sum validation
-  return (chksum == m_data[DATA_LAST]);
+  // Adjust data depending version of device
+  adjust_data();
+  return (chksum == m_data.chksum);
 }
-

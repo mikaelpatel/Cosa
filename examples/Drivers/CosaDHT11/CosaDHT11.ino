@@ -21,11 +21,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of the DHT11 device driver.
+ * Cosa demonstration of the DHT11/DHT22 device driver.
  *
  * @section Circuit
- * Connect Arduino to DHT11 module#1 (indoors), D7 => DHT data pin, 
- * DHT11 module#2 (outdoors), D8 => DHT data pin. Connect power (VCC) 
+ * Connect Arduino to DHT11 (indoors), D7 => DHT data pin, 
+ * DHT22 (outdoors), D8 => DHT data pin. Connect power (VCC) 
  * and ground (GND).   
  *
  * This file is part of the Arduino Che Cosa project.
@@ -37,11 +37,16 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/DHT11.hh"
+#include "Cosa/Driver/DHT22.hh"
 
-// Connect devices to pins
-DHT11 indoors(Board::D7);
-DHT11 outdoors(Board::D8);
 OutputPin ledPin(Board::LED);
+#if defined(__ARDUINO_TINYX5__)
+DHT11 indoors(Board::D1);
+DHT22 outdoors(Board::D2);
+#else
+DHT11 indoors(Board::D7);
+DHT22 outdoors(Board::D8);
+#endif
 
 void setup()
 {
@@ -53,9 +58,13 @@ void setup()
   TRACE(free_memory());
   TRACE(sizeof(OutputPin));
   TRACE(sizeof(DHT11));
+  TRACE(sizeof(DHT22));
 
-  // Start the watchdog ticks and push time events
-  Watchdog::begin(16);
+  // Start the watchdog for low power sleep
+  Watchdog::begin();
+
+  // Adjust the outdoors device with -1 humidity and +1 temperature
+  outdoors.calibrate(-1,1);
 }
 
 void loop()
@@ -65,14 +74,14 @@ void loop()
 
   // Read in- and outdoors temperature and humidity
   ledPin.toggle();
-  uint8_t temperature;
-  uint8_t humidity;
+  int16_t humidity;
+  int16_t temperature;
 
-  indoors.read(temperature, humidity);
+  indoors.read(humidity, temperature);
   trace.print_P(PSTR("indoors:  "));
   trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
 
-  outdoors.read(temperature, humidity);
+  outdoors.read(humidity, temperature);
   trace.print_P(PSTR("outdoors: "));
   trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
 
