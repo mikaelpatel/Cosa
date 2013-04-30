@@ -25,9 +25,11 @@
  * control.
  *
  * @section Circuit
- * 1. Connect Arduino to DHT11 module, D7 => DHT data pin. Connect 
- * power (VCC) and ground (GND).   
- * 2. Connect Arduino to Relay module, D6 => relay#1, D5 => relay#2.
+ * 1. Connect Arduino/ATtiny to DHT11 module, D7/D1 => DHT data pin 
+ * with required pullup resistor. Connect power (VCC) and ground (GND).   
+ * 2. Connect Arduino/ATtiny to Relay module, D6/D2 => relay#1, 
+ * D5/D3 => relay#2.
+ * 3. Soft UART ATtiny D0 => UART RX.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -35,16 +37,20 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
-#include "Cosa/Servo.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/DHT11.hh"
 
-// Servo, sensor and relay control pins
-Servo servo(0, Board::D8);
+// Sensor and relay control pins
+#if defined(__ARDUINO_TINYX5__)
+DHT11 sensor(Board::D1);
+OutputPin heater(Board::D2, 1);
+OutputPin fan(Board::D3, 1);
+#else
 DHT11 sensor(Board::D7);
 OutputPin heater(Board::D6, 1);
 OutputPin fan(Board::D5, 1);
+#endif
 
 void setup()
 {
@@ -59,10 +65,6 @@ void setup()
 
   // Start the watchdog ticks and sensor monitoring
   Watchdog::begin();
-  Servo::begin();
-
-  // Initial state
-  servo.set_angle(180);
 }
 
 void loop()
@@ -72,8 +74,8 @@ void loop()
   static const uint8_t ERR_MAX = 30;
 
   // Read temperature and humidity. Handle read errors
-  uint8_t temperature, humidity;
-  if (!sensor.read(temperature, humidity)) {
+  int16_t temperature, humidity;
+  if (!sensor.read(humidity, temperature)) {
     trace.print_P(PSTR("sensor: FAILED\n"));
     err += 1;
     if (err > ERR_MAX) {
@@ -87,7 +89,7 @@ void loop()
   trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
 
   // Check if heater should be turned on @ 22 C and off @ 26 C
-  static uint8_t heating = 0;
+  static bool heating = false;
   static uint32_t hours = 0;
   static uint8_t minutes = 0;
   static uint8_t seconds = 0;
@@ -117,22 +119,20 @@ void loop()
   }
 
   // Check if fan should be turned on @ 70 RH and off @ 50 RH
-  static uint8_t venting = 0;
+  static bool venting = false;
   static const uint8_t RH_MIN = 50;
   static const uint8_t RH_MAX = 70;
   if (venting) {
     if (humidity < RH_MIN) {
       trace.print_P(PSTR("Fan OFF\n"));
       fan.set();
-      servo.set_angle(180);
-      venting = 0;
+      venting = false;
     }
   }
   else if (humidity > RH_MAX) {
     trace.print_P(PSTR("Fan ON\n"));
     fan.clear();
-    servo.set_angle(90);
-    venting = 1;
+    venting = true;
   }
 
   // Sample every 2 seconds
