@@ -50,14 +50,13 @@
  * [2] DHTxx Sensor Tutorial, http://learn.adafruit.com/dht<br>
  */
 class DHT11 : private Link {
-public:
+protected:
   /** Size of data buffer */
   static const uint8_t DATA_MAX = 5;
 
   /** Last data elemement index */
   static const uint8_t DATA_LAST = DATA_MAX - 1;
 
-protected:
   /**
    * Data read from the device.
    */
