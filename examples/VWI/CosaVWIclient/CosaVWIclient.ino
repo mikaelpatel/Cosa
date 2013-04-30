@@ -103,7 +103,7 @@ void setup()
   Watchdog::begin();
   RTC::begin();
 
-  // Start virtual wire interface in extended mode; transceiver
+  // Start virtual wire interface in enhanced mode and use the transceiver
   VWI::begin(ADDR, SPEED);
   trx.begin();
 }
@@ -116,9 +116,9 @@ void loop()
   statistics.update(nr);
   
   // Send message with battery voltage and statistics every 15 messages
-  if (stat.sent % 15 == 0) {
+  if (statistics.sent % 15 == 0) {
     statistics.voltage = AnalogPin::bandgap(1100);
-    nr = trx.send(&stat, sizeof(stat), STAT_CMD);
+    nr = trx.send(&statistics, sizeof(statistics), STAT_CMD);
     statistics.update(nr);
   }
 
