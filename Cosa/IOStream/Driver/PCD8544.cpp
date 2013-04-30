@@ -23,8 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-// #include "Cosa/Board.hh"
-// #if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/IOStream/Driver/PCD8544.hh"
 
 #define PCD8544_transaction(sce)				\
