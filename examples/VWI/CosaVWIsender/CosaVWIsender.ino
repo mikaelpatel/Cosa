@@ -99,5 +99,5 @@ void loop()
   pw.off();
 
   // Delivery the next message after a 0.5 second delay
-  Watchdog::delay(128);
+  Watchdog::delay(512);
 }

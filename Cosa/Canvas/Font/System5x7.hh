@@ -43,8 +43,23 @@ public:
    * Construct system font (5x7) singleton.
    */
   System5x7() : Font(5, 8, bitmap) {}
+
+
+  /**
+   * Get bitmap for given character. ATtinyX5 does not have the
+   * full character table.
+   * @param[in] c character.
+   * @return bitmap pointer.
+   */
+#if defined(__ARDUINO_TINYX5__)
+  virtual const uint8_t* get_bitmap(char c)
+  {
+    return (m_bitmap + ((c - ' ') * WIDTH));
+  }
+#endif
 };
 
 extern System5x7 system5x7;
 
 #endif
+
