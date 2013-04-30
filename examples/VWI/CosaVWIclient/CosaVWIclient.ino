@@ -62,7 +62,7 @@ VWI::Transceiver trx(Board::D8, Board::D9, &codec);
 AnalogPin luminance(Board::A2);
 AnalogPin temperature(Board::A3);
 
-// Message type to send (should be in an include file for client and server)
+// Measurement message
 const uint8_t SAMPLE_CMD = 1;
 struct sample_t {
   uint16_t luminance;
@@ -75,6 +75,7 @@ struct sample_t {
   }
 };
 
+// Statistics message
 const uint8_t STAT_CMD = 2;
 struct stat_t {
   uint16_t voltage;
@@ -93,12 +94,12 @@ struct stat_t {
   }
 };
 
-// Statistics
-stat_t stat;
+// Statistics state
+stat_t statistics;
   
 void setup()
 {
-  // Start watchdog for delay
+  // Start watchdog for delay and RTC for time measurement
   Watchdog::begin();
   RTC::begin();
 
@@ -110,15 +111,15 @@ void setup()
 void loop()
 {
   // Send message with luminance and temperature
-  sample_t sample(luminance.sample(), temperature.sample());
-  int8_t nr = trx.send(&sample, sizeof(sample), SAMPLE_CMD);
-  stat.update(nr);
+  sample_t measurement(luminance.sample(), temperature.sample());
+  int8_t nr = trx.send(&measurement, sizeof(measurement), SAMPLE_CMD);
+  statistics.update(nr);
   
   // Send message with battery voltage and statistics every 15 messages
   if (stat.sent % 15 == 0) {
-    stat.voltage = AnalogPin::bandgap(1100);
+    statistics.voltage = AnalogPin::bandgap(1100);
     nr = trx.send(&stat, sizeof(stat), STAT_CMD);
-    stat.update(nr);
+    statistics.update(nr);
   }
 
   // Take a nap

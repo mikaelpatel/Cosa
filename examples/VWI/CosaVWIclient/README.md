@@ -1,4 +1,4 @@
-CosaVWIsender
+CosaVWIclient
 =============
 Demonstration of the Virtual Wire Interface (VWI) driver.
 Transceiver with acknowledgement and auto-retransmission.
