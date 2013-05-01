@@ -26,7 +26,7 @@
 #ifndef __COSA_DRIVER_DHT22_HH__
 #define __COSA_DRIVER_DHT22_HH__
 
-#include "Cosa/Driver/DHT11.hh"
+#include "Cosa/Driver/DHT.hh"
 
 /**
  * DHT22 Humidity & Temperature Sensor device driver. Subclass
@@ -48,7 +48,7 @@
  * [1] http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Sensors/Weather/RHT03.pdf<br>
  */
 
-class DHT22 : public DHT11 {
+class DHT22 : public DHT {
 private:
   /**
    * @override
@@ -70,7 +70,7 @@ public:
    * Set humidity and temperature calibration offsets to zero.
    * @param[in] pin data.
    */
-  DHT22(Board::DigitalPin pin) : DHT11(pin) {}
+  DHT22(Board::DigitalPin pin) : DHT(pin) {}
 };
 
 #endif

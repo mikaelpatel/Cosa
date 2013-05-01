@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Driver/DHT11.cpp
+ * @file Cosa/Driver/DHT.cpp
  * @version 1.0
  *
  * @section License
@@ -23,21 +23,21 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Driver/DHT11.hh"
+#include "Cosa/Driver/DHT.hh"
 #include "Cosa/Watchdog.hh"
 
-// Thresholds for wire sampling. Should be relative to F_CPU not board
+static const uint16_t START_REQUEST = 16;
+static const uint8_t START_RESPONSE = 40;
 #if defined(__ARDUINO_TINYX5__)
 static const uint8_t COUNT_MIN = 30;
+static const uint8_t COUNT_MAX = 255;
 #else
 static const uint8_t COUNT_MIN = 40;
-#endif
-static const uint16_t START_REQUEST = 256;
-static const uint8_t START_RESPONSE = 40;
 static const uint8_t COUNT_MAX = 255;
+#endif
 
 int8_t
-DHT11::read_bit(uint8_t changes)
+DHT::read_bit(uint8_t changes)
 {
   uint8_t counter = 0;
   while (changes--) {
@@ -52,7 +52,7 @@ DHT11::read_bit(uint8_t changes)
 }
 
 bool 
-DHT11::read_data()
+DHT::read_data()
 {
   // Send start signal to the device
   m_pin.set_mode(IOPin::OUTPUT_MODE);
