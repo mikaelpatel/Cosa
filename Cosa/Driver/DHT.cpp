@@ -77,7 +77,7 @@ DHT::read_data()
     }
   }
 
-  // Adjust data depending version of device
+  // Adjust data depending on version of device
   adjust_data();
   return (chksum == m_data.chksum);
 }
