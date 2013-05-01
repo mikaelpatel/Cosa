@@ -51,7 +51,7 @@ class DHT11 : public DHT {
 private:
   /**
    * @override
-   * Adjust data from the device.
+   * Adjust data from the device not needed for DHT11.
    */
   virtual void adjust_data() {}
 

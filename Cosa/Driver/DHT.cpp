@@ -77,7 +77,9 @@ DHT::read_data()
     }
   }
 
-  // Adjust data depending on version of device
+  // Adjust data depending on version of device and add calibration value
   adjust_data();
+  m_data.humidity += m_offset.humidity;
+  m_data.temperature += m_offset.temperature;
   return (chksum == m_data.chksum);
 }

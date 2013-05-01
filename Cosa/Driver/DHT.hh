@@ -113,21 +113,23 @@ public:
   }
 
   /**
-   * Return temperature from latest read.
+   * Return temperature from latest read adjusted with given calibration
+   * offset.
    * @return temperature.
    */
   int16_t get_temperature()
   {
-    return (m_data.temperature + m_offset.temperature);
+    return (m_data.temperature);
   }
 
   /**
-   * Return humidity from latest read.
+   * Return humidity from latest read adjusted with given calibration 
+   * offset.
    * @return humidity.
    */
   int16_t get_humidity()
   {
-    return (m_data.humidity + m_offset.humidity);
+    return (m_data.humidity);
   }
 
   /**
