@@ -70,7 +70,6 @@ OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
       write(value & 0x80);
       value <<= 1;
       clk.set();
-      DELAY(1);
       clk.clear();
     } while (--bits);
   }
@@ -79,7 +78,6 @@ OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
       write(value & 0x01);
       value >>= 1;
       clk.set();
-      DELAY(1);
       clk.clear();
     } while (--bits);
   }
