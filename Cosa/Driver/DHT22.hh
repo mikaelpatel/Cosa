@@ -60,7 +60,7 @@ private:
     m_data.humidity = swap(m_data.humidity);
     m_data.temperature = swap(m_data.temperature);
     if (m_data.temperature < 0) {
-      m_data.temperature = -(m_data.temperature & 0x7ff);
+      m_data.temperature = -(m_data.temperature & 0x7fff);
     }
   }
 
