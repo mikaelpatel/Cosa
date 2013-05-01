@@ -41,10 +41,10 @@
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 
 PCD8544 lcd;
+
 VirtualWireCodec codec;
 VWI::Receiver rx(Board::D4, &codec);
 const uint16_t SPEED = 4000;
-#undef putchar
 
 void setup()
 {
@@ -90,12 +90,16 @@ void loop()
   nr = msg.nr + 1;
 
   // Display received message and statistics
+  uint16_t vcc = AnalogPin::bandgap(1100);
+  uint16_t ert = (err * 100L) / cnt;
   trace << clear;
-  trace << msg.nr << ':';
-  trace << msg.luminance << PSTR(", ");
-  trace << msg.temperature << endl;
+  trace << msg.nr << ':'
+	<< msg.luminance << PSTR(", ")
+	<< msg.temperature << endl;
   trace << PSTR("cnt = ") << cnt << endl;
   trace << PSTR("err = ") << err << endl;
-  trace << PSTR("err% = ") << (err * 100L) / cnt << '%' << endl;
+  trace << PSTR("err% = ") << ert << '%' << endl;
+  trace << PSTR("Vcc = ") << vcc << PSTR(" mV") << endl;
+  trace << PSTR("ticks = ") << Watchdog::ticks();
 }
 
