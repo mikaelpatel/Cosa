@@ -165,6 +165,17 @@ public:
   void set_display_contrast(uint8_t level);
 
   /**
+   * Get current cursor position.
+   * @param[out] x pixel position (0..83).
+   * @param[out] y line position (0..5).
+   */
+  void get_cursor(uint8_t& x, uint8_t& y)
+  {
+    x = m_x;
+    y = m_y;
+  }
+
+  /**
    * Set cursor to given position.
    * @param[in] x pixel position (0..83).
    * @param[in] y line position (0..5).
@@ -181,6 +192,15 @@ public:
     TextMode previous = (TextMode) m_mode;
     m_mode = mode;
     return (previous);
+  }
+
+  /**
+   * Get current text font. 
+   * @return font setting.
+   */
+  Font* get_text_font()
+  {
+    return (m_font);
   }
 
   /**

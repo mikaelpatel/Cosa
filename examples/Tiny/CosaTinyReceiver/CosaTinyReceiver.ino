@@ -59,7 +59,7 @@ void setup()
   // Start LCD and bind trace output to display
   lcd.begin(0x38);
   trace.begin(&lcd);
-  trace << PSTR("\fCosaTinyReceiver: started\n");
+  trace << PSTR("\fCosaTinyReceiver: started");
   SLEEP(2);
 }
 
@@ -92,7 +92,11 @@ void loop()
   // Display received message and statistics
   uint16_t vcc = AnalogPin::bandgap(1100);
   uint16_t ert = (err * 100L) / cnt;
-  trace << clear;
+  uint32_t s = Watchdog::millis() / 1000L;
+  uint16_t min = s / 60L;
+  uint16_t sec = s % 60L;
+  lcd.set_cursor(0,5);
+  trace << endl;
   trace << msg.nr << ':'
 	<< msg.luminance << PSTR(", ")
 	<< msg.temperature << endl;
@@ -100,6 +104,8 @@ void loop()
   trace << PSTR("err = ") << err << endl;
   trace << PSTR("err% = ") << ert << '%' << endl;
   trace << PSTR("Vcc = ") << vcc << PSTR(" mV") << endl;
-  trace << PSTR("ticks = ") << Watchdog::ticks();
+  trace << PSTR("T = ") << min << ':';
+  if (sec < 10) trace << '0';
+  trace << sec;
 }
 
