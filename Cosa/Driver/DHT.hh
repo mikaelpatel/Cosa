@@ -33,7 +33,7 @@
 /**
  * DHT11/22 Humidity & Temperature Sensor abstract device driver. 
  */
-class DHT : private Link {
+class DHT : public Link {
 protected:
   /** Size of data buffer */
   static const uint8_t DATA_MAX = 5;
@@ -42,7 +42,8 @@ protected:
   static const uint8_t DATA_LAST = DATA_MAX - 1;
 
   /**
-   * Data read from the device.
+   * Data read from the device. Allow mapping between received byte 
+   * vector and data fields.
    */
   union data_t {
     uint8_t as_byte[DATA_MAX];
@@ -53,13 +54,10 @@ protected:
     };
   };
   
-  /**
-   * Input/Output pin, data and offset buffer and latest pin level.
-   */
-  IOPin m_pin;
-  data_t m_data;
-  data_t m_offset;
-  uint8_t m_latest;
+  IOPin m_pin;			/** Pin connected to device */
+  data_t m_data;		/** Latest received data */
+  data_t m_offset;		/** Calibration offset */
+  uint8_t m_latest;		/** Latest pin level read */
   
   /** 
    * Read the next bit from the device given number of level
@@ -79,7 +77,9 @@ protected:
   bool read_data();
 
   /**
-   * Adjust data from the device.
+   * Adjust data from the device. Communication protocol is the same
+   * for the DHT device family but data representation is different,
+   * i.e. data resolution and accuracy. Overridden by DHT11 and DHT22.
    */
   virtual void adjust_data() = 0;
 
@@ -151,10 +151,7 @@ public:
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
-  virtual void on_event(uint8_t type, uint16_t value)
-  {
-    read_data();
-  }
+  virtual void on_event(uint8_t type, uint16_t value);
 };
 
 #endif

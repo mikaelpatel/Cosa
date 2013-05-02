@@ -83,3 +83,9 @@ DHT::read_data()
   m_data.temperature += m_offset.temperature;
   return (chksum == m_data.chksum);
 }
+
+void 
+DHT::on_event(uint8_t type, uint16_t value)
+{
+  read_data();
+}
