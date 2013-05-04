@@ -25,6 +25,7 @@
 
 #include "Cosa/Driver/NEXA.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Watchdog.hh"
 
 IOStream& operator<<(IOStream& outs, NEXA::code_t code)
 {
@@ -83,11 +84,11 @@ NEXA::Receiver::decode_bit()
   return (bit > 2);  
 }
 
-NEXA::code_t
-NEXA::Receiver::read_code()
+void
+NEXA::Receiver::recv(code_t& cmd)
 {
   uint32_t start, stop;
-  uint32_t bits = 0L;
+  int32_t bits = 0L;
   uint16_t us;
   uint16_t ix;
   do {
@@ -122,5 +123,26 @@ NEXA::Receiver::read_code()
       }
     }
   } while (ix != IX_MAX);
-  return (m_code = bits);
+  m_code = bits;
+  cmd = bits;
+}
+
+void
+NEXA::Transmitter::send_code(code_t code, uint8_t mode)
+{
+  // Send the code four times with a pause between each
+  for (uint8_t i = 0; i < SEND_CODE_MAX; i++) {
+    int32_t bits = code.as_long;
+    // Send start pulse with extended delay, code bits and stop pulse
+    send_pulse(0);
+    DELAY(START);
+    for (uint8_t i = 0; i < 32; i++) {
+      send_bit(bits < 0);
+      bits <<= 1;
+    }
+    send_pulse(0);
+    // Wait for the transmission of the code
+    uint32_t start = RTC::millis();
+    while ((RTC::millis() - start) < PAUSE) Power::sleep(mode);
+  }
 }

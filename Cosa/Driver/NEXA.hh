@@ -27,7 +27,9 @@
 #define __COSA_DRIVER_NEXA_HH__
 
 #include "Cosa/Types.h"
+#include "Cosa/Pins.hh"
 #include "Cosa/ExternalInterruptPin.hh"
+#include "Cosa/Power.hh"
 #include "Cosa/IOStream.hh"
 
 /**
@@ -39,34 +41,51 @@ public:
    * Wireless command code; 32-bit, little endian order for AVR 
    */
   union code_t {
-    uint32_t as_long;
+    int32_t as_long;
     struct {
-      uint8_t device:4;
-      uint8_t onoff:1;
-      uint8_t group:1;
-      uint32_t house:26;
+      uint8_t device:4;		/** device number, group:unit<2,2> */
+      uint8_t onoff:1;		/** device mode, off(0), on(1) */
+      uint8_t group:1;		/** group command */
+      uint32_t house:26;	/** house code number */
     };
 
     /**
-     * Convert 32-bit number to command code.
-     * @param[in] value to convert.
+     * Construct command code from given 32-bit number. Default constructor.
+     * @param[in] value to construct as command code.
      */
-    code_t(uint32_t value) 
+    code_t(int32_t value = 0L) 
     { 
       as_long = value; 
     }
 
     /**
-     * Compare code with other; house and device bits should be equal or 
-     * house bits and group code set. The other code should be a received
-     * command code. 
+     * Construct command code from given house, group, device and 
+     * onoff flag.
+     * @param[in] h house.
+     * @param[in] g group.
+     * @param[in] d device.
+     * @param[in] f onoff.
+     */
+    code_t(int32_t h, uint8_t g, uint8_t d, uint8_t f)
+    { 
+      device = d;
+      onoff = f;
+      group = g;
+      house = h;
+    }
+
+    /**
+     * Compare code with other received code. If group command
+     * then compare channels (0..3) else compare house and device
+     * numbers.
      * @param[in] other code.
      * @return bool.
      */
     bool operator==(const NEXA::code_t &other) const 
     {
-      return ((house == other.house) && 
-	      (other.group || (device == other.device)));
+      if (other.group) 
+	return ((device & 0b1100) == (other.device & 0b1100));
+      return ((house == other.house) && (device == other.device));
     }
 
     /**
@@ -99,7 +118,8 @@ public:
      * Measures the pulse with and decodes the pulse stream. Will push
      * an Event::READ_COMPLETED_TYPE when completed decoding. Commands
      * should be retrieved with get_code(). The event will contain the
-     * class instance as target.
+     * class instance as target. This allows sub-classes to override
+     * the Event::Handler::on_event() method and use event dispatch.
      * @param[in] arg argument from first level interrupt handler.
      */
     virtual void on_interrupt(uint16_t arg = 0);
@@ -137,10 +157,113 @@ public:
 
     /**
      * Poll wireless receiver for incoming command. Will busy-wait on
-     * signal change.
-     * @return received decoded command.
+     * signal change. Returns decoded command.
+     * @param[out] cmd received decoded command.
      */
-    code_t read_code();
+    void recv(code_t& cmd);
+  };
+
+  /**
+   * NEXA Wireless Command Code Transmitter. Sends command codes to 
+   * NEXA lighting control equipment or NEXA::Receiver. Delay based 
+   * implementation; transmission will return when completed.
+   */
+  class Transmitter : private OutputPin {
+  private:
+    /** Number of code transmissions */
+    static const uint8_t SEND_CODE_MAX = 4;
+
+    /** Pause between code transmissions (milli-second delay) */
+    static const uint32_t PAUSE = 10L;
+
+    /** Transmission pulse timing (micro-second delay) */
+    static const uint16_t SHORT = 275;
+    static const uint16_t LONG = 1225;
+    static const uint16_t START = 2675 - SHORT;
+
+    /** Transmission house address: 26 bits */
+    uint32_t m_house;
+
+    /**
+     * Send a pulse followed by short delay for zero(0) and long for 
+     * non-zero(1).
+     * @param[in] value (0..1).
+     */
+    void send_pulse(uint8_t value)
+    {
+      set();
+      DELAY(SHORT);
+      clear();
+      DELAY(value ? LONG : SHORT);
+    }
+
+    /**
+     * Send a single bit as Manchester code (0 -> 01, 1 -> 10).
+     * @param[in] value (0..1).
+     */
+    void send_bit(uint8_t value)
+    {
+      send_pulse(value);
+      send_pulse(!value);
+    }
+
+    /**
+     * Send a command code. Transmitted SEND_CODE_MAX times with
+     * pause between each transmission.
+     * @param[in] cmd to transmit.
+     * @param[in] mode sleep mode during pause.
+     */
+    void send_code(code_t cmd, uint8_t mode);
+
+  public:
+    /**
+     * Construct NEXA Command Code Transmitter connected to RF433
+     * Transmitter connected to given pin. The default house code 
+     * is zero(0).
+     * @param[in] pin output pin for transmitter.
+     * @param[in] nr house number.
+     */
+    Transmitter(Board::DigitalPin pin, uint32_t nr = 0L) : 
+      OutputPin(pin),
+      m_house(nr)
+    {
+    }
+
+    /**
+     * Set house code to given number. 
+     * @param[in] nr house number.
+     */
+    void set_house(uint32_t nr)
+    {
+      m_house = nr;
+    }
+
+    /**
+     * Send command code to given device (0..15). Turn device on or 
+     * off according to parameter. Device number is channel:unit<2:2>, 
+     * channel(0..3), unit(0..3). 
+     * @param[in] device (0..15).
+     * @param[in] onoff device mode.
+     * @param[in] mode sleep mode during pause.
+     */
+    void send(uint8_t device, uint8_t onoff, uint8_t mode = SLEEP_MODE_IDLE)
+    {
+      code_t cmd(m_house, 0, device, onoff);
+      send_code(cmd, mode);
+    }
+    
+    /**
+     * Send command code to given group. Turn devices in group on 
+     * or off according to parameter. Group number is (0..3).
+     * @param[in] group (0..3).
+     * @param[in] onoff device mode.
+     * @param[in] mode sleep mode during pause.
+     */
+    void broadcast(uint8_t group, uint8_t onoff, uint8_t mode = SLEEP_MODE_IDLE)
+    {
+      code_t cmd(m_house, 1, group << 2, onoff);
+      send_code(cmd, mode);
+    }
   };
 };
 

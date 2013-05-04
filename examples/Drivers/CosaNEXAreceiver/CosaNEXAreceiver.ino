@@ -25,7 +25,8 @@
  * Remote codes. First command received will be used as the device 
  * identity. Sucessive commands are compared against the device 
  * identity and if matches the built-in LED is set on/off according 
- * to the command. 
+ * to the command. See Also CosaNEXAsender if you wish to run the 
+ * sketch without a NEXA remote control.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -43,7 +44,7 @@
 
 OutputPin led(Board::LED);
 NEXA::Receiver receiver(Board::EXT0);
-NEXA::code_t unit = 0;
+NEXA::code_t device = 0;
 
 void setup()
 {
@@ -53,16 +54,16 @@ void setup()
   TRACE(free_memory());
 #endif
   
-  // Initiate Real-time clock and Watchdog
+  // Initiate Real-Time Clock and Watchdog
   RTC::begin();
-  Watchdog::begin(16);
+  Watchdog::begin();
 
   // Use polling version to receive the remote button for device
-  unit = receiver.read_code();
+  receiver.recv(device);
 #if !defined(__ARDUINO_TINYX5__)
-  trace << PSTR("learning: ") << unit << endl;
+  trace << PSTR("learning: ") << device << endl;
 #endif
-
+  
   // Enable the interrupt driven version
   receiver.enable();
 }
@@ -80,7 +81,7 @@ void loop()
     
   // Get the received command code and check if it is for this device
   NEXA::code_t code = receiver.get_code();
-  if (code == unit) {
+  if (code == device) {
 #if !defined(__ARDUINO_TINYX5__)
     trace << PSTR("matched: ") << code << endl;
 #endif
