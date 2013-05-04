@@ -51,7 +51,7 @@ void setup()
   Watchdog::begin();
 
   // First code will be used by receiver as address (learning mode)
-  transmitter.send(0, 0);
+  transmitter.send(0, 1);
 }
 
 void loop()
@@ -59,7 +59,8 @@ void loop()
   // Blink the transmitter and receiver leds
   led.on();
   transmitter.send(0, 1);
-  transmitter.broadcast(0, 0);
+  SLEEP(1);
+  transmitter.send(0, 0);
   led.off();
   SLEEP(5);
 }
