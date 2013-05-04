@@ -115,7 +115,7 @@ Drivers
 11. TSOP4838 IR Receiver Modules for Remote Control Systems.
 12. Virtual Wire (VWI) on RF315/433 modules.
 13. HMC5883L 3-Axis Digital Compass IC.
-14. NEXA Wireless Remote command receiver for RF433.
+14. NEXA Wireless Remote command transmitter/receiver for RF433.
 15. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
@@ -192,3 +192,5 @@ handling. NEXA Wireless Remote command receiver (RF433). Added a
 reliable message passing protocol to the Virtual Wire Interface
 (VWI). The new class VWI::Transceiver supports message acknowledgement
 and auto-retransmission. Full support for message parsing.    
+2013-05 Improving ATtiny support. Adding driver for DHT22. NEXA
+Wireless Remote command transmitter (RF433).   
