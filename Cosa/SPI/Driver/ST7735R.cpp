@@ -24,7 +24,7 @@
  */
 
 #include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
 #include "Cosa/SPI/Driver/ST7735R.hh"
 
 const uint8_t ST7735R::script[] PROGMEM = {

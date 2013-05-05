@@ -49,7 +49,7 @@ Pin::read(OutputPin& clk, Direction order)
   return (value);
 }
 
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
 
 IOStream& operator<<(IOStream& outs, Pin& pin)
 {
@@ -317,6 +317,46 @@ PWMPin::set(uint8_t duty)
     return;
   case Board::PWM1:
     bit_set(TCCR0B, COM0B1);
+    OCR0B = duty;
+    return;
+  default:
+    OutputPin::set(duty);
+  }
+}
+
+#elif defined(__ARDUINO_TINYX4__)
+
+uint8_t
+PWMPin::get_duty()
+{
+  switch (m_pin) {
+  case Board::PWM0: return (OCR0A);
+  case Board::PWM1: return (OCR0B);
+  case Board::PWM2: return (OCR1A);
+  case Board::PWM3: return (OCR1B);
+  default:
+    return (is_set());
+  }
+}
+
+void 
+PWMPin::set(uint8_t duty)
+{
+  switch (m_pin) {
+  case Board::PWM0:
+    bit_set(TCCR0A, COM0A1);
+    OCR0A = duty;
+    return;
+  case Board::PWM1:
+    bit_set(TCCR0B, COM0B1);
+    OCR0B = duty;
+    return;
+  case Board::PWM2:
+    bit_set(TCCR1A, COM1A1);
+    OCR0A = duty;
+    return;
+  case Board::PWM3:
+    bit_set(TCCR1B, COM1B1);
     OCR0B = duty;
     return;
   default:

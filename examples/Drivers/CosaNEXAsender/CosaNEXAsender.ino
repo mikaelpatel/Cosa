@@ -38,7 +38,7 @@
 #include "Cosa/Watchdog.hh"
 
 OutputPin led(Board::LED);
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 NEXA::Transmitter transmitter(Board::D2, 0xc05a01L);
 #else
 NEXA::Transmitter transmitter(Board::D9, 0xc05a01L);

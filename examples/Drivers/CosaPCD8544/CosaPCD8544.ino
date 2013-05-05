@@ -85,21 +85,16 @@ void setup()
   SLEEP(2);
 
   // Dump characters in system font; two pages, 64 characters each
-  saved = lcd.set_text_mode(PCD8544::INVERTED_TEXT_MODE);
-  trace << PSTR("\fFont page#1\n");
-  lcd.set_text_mode(saved);
-  uint8_t c;
-  for (c = 0; c < 64; c++) {
+  uint8_t page = 0;
+  for (uint8_t c = 0; c < 128; c++) {
+    if ((c & 63) == 0) {
+      saved = lcd.set_text_mode(PCD8544::INVERTED_TEXT_MODE);
+      trace << PSTR("\fFont page#") << page++ << endl;
+      lcd.set_text_mode(saved);
+    }
     trace << (char) (((c == '\n') || (c == '\f') || (c == '\b')) ? ' ' : c);
+    if (((c +  1) & 63) == 0) SLEEP(4);
   }
-  SLEEP(4);
-  saved = lcd.set_text_mode(PCD8544::INVERTED_TEXT_MODE);
-  trace << PSTR("\fFont page#2\n");
-  lcd.set_text_mode(saved);
-  for (; c < 128; c++) {
-    trace << (char) c;
-  }
-  SLEEP(4);
 
   // Play around with the offscreen canvas
   uint8_t buffer[PCD8544::WIDTH * PCD8544::HEIGHT / CHARBITS];

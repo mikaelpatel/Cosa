@@ -26,27 +26,36 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Types.h"
-#include "Cosa/Board.hh"
-#include "Cosa/IOStream.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Memory.h"
+
+OutputPin led(Board::LED);
+#undef putchar
 
 void setup()
 {
-  RTC::begin();
   Watchdog::begin();
-
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaSUART: started"));
-  TRACE(free_memory());
+  uart.puts_P(PSTR("Hello World\n"));
 }
 
 void loop()
 {
-  trace << RTC::millis() << PSTR(":Hello World") << endl;
-  SLEEP(2);
+  static uint8_t pin = 0;
+  led.toggle();
+  uart.putchar('D');
+  if (pin < 10) {
+    uart.putchar(pin + '0');
+  }
+  else {
+    uart.putchar('1');
+    uart.putchar(pin + '0' - 10);
+  }
+  if (Pin::read(pin))
+    uart.puts_P(PSTR(" = on\n"));
+  else uart.puts_P(PSTR(" = off\n"));
+  led.toggle();
+  SLEEP(1);
+  if (pin == Board::PIN_MAX) pin = 0; else pin += 1;
 }

@@ -53,7 +53,7 @@ VirtualWireCodec codec;
 // BitstuffingCodec codec;
 
 // Virtual Wire Interface Transmitter and Power Control pins
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 VWI::Transmitter tx(Board::D2, &codec);
 OutputPin pw(Board::D1);
 #else 

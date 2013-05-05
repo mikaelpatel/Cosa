@@ -109,7 +109,7 @@ OWI::write(uint8_t value, uint8_t bits, uint8_t power)
   DELAY(10);
 }
 
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
 void
 OWI::print_devices(IOStream& stream)
 {

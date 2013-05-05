@@ -42,7 +42,7 @@
 #include "Cosa/Driver/DHT11.hh"
 
 // Sensor and relay control pins
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 DHT11 sensor(Board::D1);
 OutputPin heater(Board::D2, 1);
 OutputPin fan(Board::D3, 1);

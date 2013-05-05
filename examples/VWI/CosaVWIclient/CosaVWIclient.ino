@@ -52,7 +52,7 @@ const uint32_t ADDR = 0xc05a0001UL;
 const uint16_t SPEED = 4000;
 
 // Virtual Wire Interface Transceiver
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 VWI::Transceiver trx(Board::D0, Board::D1, &codec);
 #else
 VWI::Transceiver trx(Board::D8, Board::D9, &codec);

@@ -148,7 +148,7 @@ OWI::Driver::connect(uint8_t family, uint8_t index)
   return (false);
 }
 
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
 void
 OWI::Driver::print_rom(IOStream& stream)
 {

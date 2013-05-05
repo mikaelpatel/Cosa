@@ -40,7 +40,7 @@
 #include "Cosa/Driver/DHT22.hh"
 
 OutputPin ledPin(Board::LED);
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 DHT11 indoors(Board::D1);
 DHT22 outdoors(Board::D2);
 #else

@@ -42,6 +42,8 @@ InterruptPin::begin()
   synchronized {
 #if defined(__ARDUINO_TINYX5__)
     bit_set(GIMSK, PCIE);
+#elif defined(__ARDUINO_TINYX4__)
+    bit_mask_set(GIMSK, _BV(PCIE1) | _BV(PCIE0));
 #elif defined(__ARDUINO_MIGHTY__)
     bit_mask_set(PCICR, _BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #else
@@ -56,6 +58,8 @@ InterruptPin::end()
   synchronized {
 #if defined(__ARDUINO_TINYX5__)
     bit_clear(GIMSK, PCIE);
+#elif defined(__ARDUINO_TINYX4__)
+    bit_mask_clear(GIMSK, _BV(PCIE1) | _BV(PCIE0));
 #elif defined(__ARDUINO_MIGHTY__)
     bit_mask_clear(PCICR, _BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #else
@@ -84,6 +88,33 @@ ISR(PCINT0_vect)
     changed >>= 1;
   }
   InterruptPin::state[0] = state;
+}
+
+#elif defined(__ARDUINO_TINYX4__)
+
+void
+InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
+{
+  uint8_t px = (ix << 3);
+  uint8_t state = *Pin::PIN(ix);
+  uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
+  for (uint8_t i = 0; i < CHARBITS; i++) {
+    if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
+      InterruptPin::pin[i + px]->on_interrupt();
+    }
+    changed >>= 1;
+  }
+  InterruptPin::state[ix] = state;
+}
+
+ISR(PCINT0_vect)
+{
+  InterruptPin::on_interrupt(0, PCMSK0);
+}
+
+ISR(PCINT1_vect)
+{
+  InterruptPin::on_interrupt(1, PCMSK1);
 }
 
 #elif defined(__ARDUINO_STANDARD__)

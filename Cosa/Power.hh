@@ -58,7 +58,12 @@ public:
   static void timer1_enable() { power_timer1_enable(); }
   static void timer1_disable() { power_timer1_disable(); }
 
-#if !defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
+
+  static void usi_enable() { power_usi_enable(); }
+  static void usi_disable() { power_usi_disable(); }
+
+#else
 
   static void spi_enable() { power_spi_enable(); }
   static void spi_disable() { power_spi_disable(); }
@@ -100,10 +105,6 @@ public:
   static void timer5_enable() { power_timer5_enable(); }
   static void timer5_disable() { power_timer5_disable(); }
 #endif
-
-#elif defined(__ARDUINO_TINYX5__)
-  static void usi_enable() { power_usi_enable(); }
-  static void usi_disable() { power_usi_disable(); }
 #endif
 
   static void all_enable() { power_all_enable(); }

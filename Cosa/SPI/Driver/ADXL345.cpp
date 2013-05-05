@@ -24,7 +24,7 @@
  */
 
 #include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
 #include "Cosa/SPI/Driver/ADXL345.hh"
 
 ADXL345::ADXL345(Board::DigitalPin ss) :

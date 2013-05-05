@@ -62,7 +62,7 @@ public:
    * Construct Soft UART with transmitter on given output pin.
    * @param[in] pin transmitter.
    */
-  SUART(Board::DigitalPin pin) :
+  SUART(Board::DigitalPin pin = Board::D0) :
     IOStream::Device(),
     m_pin(pin),
     m_stops(2),

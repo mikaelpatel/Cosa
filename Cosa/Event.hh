@@ -38,8 +38,11 @@ public:
    * Size of event queue. Adjust depending on application. Must be
    * Power(2).
    */
+#if defined(__ARDUINO_TINY__)
+  static const uint8_t QUEUE_MAX = 8;
+#else
   static const uint8_t QUEUE_MAX = 16;
-
+#endif
   /**
    * Event types are added here. Typical mapping from interrupts to
    * events. Note that the event is not a global numbering

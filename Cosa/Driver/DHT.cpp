@@ -28,7 +28,7 @@
 
 static const uint16_t START_REQUEST = 16;
 static const uint8_t START_RESPONSE = 40;
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 static const uint8_t COUNT_MIN = 30;
 static const uint8_t COUNT_MAX = 255;
 #else

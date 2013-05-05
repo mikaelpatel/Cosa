@@ -26,7 +26,7 @@
 #ifndef __COSA_IOSTREAM_DRIVER_UART_HH__
 #define __COSA_IOSTREAM_DRIVER_UART_HH__
 
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 #include "Cosa/IOStream/Driver/SUART.hh"
 extern SUART uart;
 #else

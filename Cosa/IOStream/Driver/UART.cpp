@@ -26,7 +26,7 @@
 #include "Cosa/Board.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 
 SUART uart(Board::D0);
 

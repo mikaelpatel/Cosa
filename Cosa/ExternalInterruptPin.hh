@@ -50,7 +50,7 @@ private:
    * Interrupt handlers are friends.
    */
   friend void INT0_vect(void);
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
   friend void INT1_vect(void);
 #if !defined(__ARDUINO_STANDARD__)
   friend void INT2_vect(void);
@@ -85,7 +85,7 @@ public:
   void enable() 
   { 
     synchronized {
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
       bit_set(GIMSK, INT0); 
 #else
       bit_set(EIMSK, m_ix); 
@@ -99,7 +99,7 @@ public:
   void disable() 
   { 
     synchronized {
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
       bit_clear(GIMSK, INT0);
 #else
       bit_clear(EIMSK, m_ix); 

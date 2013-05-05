@@ -47,7 +47,14 @@
   || defined(__AVR_ATtiny45__)			\
   || defined(__AVR_ATtiny85__)
 #include "Cosa/Board/TinyX5.hh"
+#define __ARDUINO_TINY__ 
 #define __ARDUINO_TINYX5__
+#elif defined(__AVR_ATtiny24__)			\
+  || defined(__AVR_ATtiny44__)			\
+  || defined(__AVR_ATtiny84__)
+#include "Cosa/Board/TinyX4.hh"
+#define __ARDUINO_TINY__ 
+#define __ARDUINO_TINYX4__
 #else
 #error "Cosa/Board.hh: board not supported"
 #endif

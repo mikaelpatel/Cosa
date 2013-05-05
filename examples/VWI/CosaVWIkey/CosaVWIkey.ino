@@ -50,7 +50,7 @@ VirtualWireCodec codec;
 // BitstuffingCodec codec;
 
 // Connect RF433 transmitter to ATtiny/D1 or Arduino/D9
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 VWI::Transmitter tx(Board::D1, &codec);
 #else 
 VWI::Transmitter tx(Board::D9, &codec);
@@ -70,7 +70,7 @@ void setup()
   tx.begin();
   VWI::disable();
   Power::adc_disable();
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
   Power::usi_disable();
 #endif
   wakeup.enable();

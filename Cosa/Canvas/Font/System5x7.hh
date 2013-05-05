@@ -51,7 +51,7 @@ public:
    * @param[in] c character.
    * @return bitmap pointer.
    */
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
   virtual const uint8_t* get_bitmap(char c)
   {
     return (m_bitmap + ((c - ' ') * WIDTH));

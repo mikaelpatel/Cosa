@@ -88,7 +88,7 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
   ext[m_ix] = this;
 }
 
-#elif defined(__ARDUINO_TINYX5__)
+#elif defined(__ARDUINO_TINY__)
 
 ExternalInterruptPin::
 ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
@@ -120,7 +120,7 @@ ISR(INT0_vect)
     ExternalInterruptPin::ext[0]->on_interrupt();
 }
 
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
 
 ISR(INT1_vect)
 {

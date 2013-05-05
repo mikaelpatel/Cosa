@@ -51,9 +51,11 @@ private:
   friend void PCINT0_vect(void);
 #if !defined(__ARDUINO_TINYX5__)
   friend void PCINT1_vect(void);
+#if !defined(__ARDUINO_TINYX4__)
   friend void PCINT2_vect(void);
 #if !defined(__ARDUINO_MIGHTY__)
   friend void PCINT3_vect(void);
+#endif
 #endif
 
   /**
@@ -65,7 +67,7 @@ private:
    */
   static void on_interrupt(uint8_t ix, uint8_t mask);
 #endif
-  
+
 public:
   enum Mode {
     NORMAL_MODE = 0,

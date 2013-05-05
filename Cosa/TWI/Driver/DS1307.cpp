@@ -24,7 +24,7 @@
  */
 
 #include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
 #include "Cosa/TWI/Driver/DS1307.hh"
 #include "Cosa/BCD.h"
 

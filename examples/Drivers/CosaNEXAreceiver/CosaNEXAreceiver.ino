@@ -36,7 +36,7 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
@@ -48,7 +48,7 @@ NEXA::code_t device = 0;
 
 void setup()
 {
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaNEXAreceiver: started"));
   TRACE(free_memory());
@@ -60,7 +60,7 @@ void setup()
 
   // Use polling version to receive the remote button for device
   receiver.recv(device);
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
   trace << PSTR("learning: ") << device << endl;
 #endif
   
@@ -82,7 +82,7 @@ void loop()
   // Get the received command code and check if it is for this device
   NEXA::code_t code = receiver.get_code();
   if (code == device) {
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(__ARDUINO_TINY__)
     trace << PSTR("matched: ") << code << endl;
 #endif
     led << code.onoff;

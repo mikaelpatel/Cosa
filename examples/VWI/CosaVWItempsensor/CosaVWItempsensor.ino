@@ -50,13 +50,13 @@ DS18B20 outdoors(&owi);
 
 // Connect RF433 transmitter to ATtiny/D1 alt. Arduino/D9
 VirtualWireCodec codec;
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 VWI::Transmitter tx(Board::D1, &codec);
 #else
 VWI::Transmitter tx(Board::D9, &codec);
 #endif
 const uint16_t SPEED = 4000;
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
 const uint32_t ADDR = 0xC05a0001;
 #else
 const uint32_t ADDR = 0xC05a0002;
@@ -80,7 +80,7 @@ void setup()
   Power::adc_disable();
   Power::timer0_disable();
   Power::timer1_disable();
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINY__)
   Power::usi_disable();
 #endif
 }
