@@ -34,6 +34,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Board.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
@@ -42,6 +43,7 @@
 #include "Cosa/Driver/DHT11.hh"
 
 // Sensor and relay control pins
+OutputPin led(Board::LED);
 #if defined(__ARDUINO_TINY__)
 DHT11 sensor(Board::D1);
 OutputPin heater(Board::D2, 1);
@@ -83,6 +85,7 @@ void loop()
       fan.set();
       err = 0;
     }
+    SLEEP(2);
     return;
   }
   trace.print_P(PSTR("sensor:  "));
