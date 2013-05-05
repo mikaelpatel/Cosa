@@ -76,18 +76,12 @@ void setup()
   Watchdog::begin();
 
   // Check memory map
-  TRACE(&ledPin);
-  TRACE(sizeof(ledPin));
   TRACE(&at24c32);
   TRACE(sizeof(at24c32));
   TRACE(&eeprom);
   TRACE(sizeof(eeprom));
-  TRACE(&uart);
-  TRACE(sizeof(uart));
   TRACE(&twi);
   TRACE(sizeof(twi));
-  TRACE(&trace);
-  TRACE(sizeof(trace));
   TRACE(&x);
   TRACE(&y);
   TRACE(&z);
