@@ -24,8 +24,8 @@
  * Cosa demonstration of the DHT11/DHT22 device driver.
  *
  * @section Circuit
- * Connect Arduino to DHT11 (indoors), D7 => DHT data pin, 
- * DHT22 (outdoors), D8 => DHT data pin. Connect power (VCC) 
+ * Connect Arduino to DHT11 (indoors), D6 => DHT data pin, 
+ * DHT22 (outdoors), D7 => DHT data pin. Connect power (VCC) 
  * and ground (GND).   
  *
  * This file is part of the Arduino Che Cosa project.
@@ -39,13 +39,16 @@
 #include "Cosa/Driver/DHT11.hh"
 #include "Cosa/Driver/DHT22.hh"
 
+// Test with two DHT11 instead of DHT11 and DHT22
+#define DHT11_ONLY
+
 OutputPin ledPin(Board::LED);
 #if defined(__ARDUINO_TINY__)
 DHT11 indoors(Board::D1);
 DHT22 outdoors(Board::D2);
 #else
-DHT11 indoors(Board::D7);
-DHT22 outdoors(Board::D8);
+DHT11 indoors(Board::D6);
+DHT22 outdoors(Board::D7);
 #endif
 
 void setup()
@@ -81,6 +84,10 @@ void loop()
     trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
   }
   if (outdoors.read(humidity, temperature)) {
+#if defined(DHT11_ONLY)
+    humidity = 10 * swap(humidity);
+    temperature = 10 * swap(temperature);
+#endif
     trace.print_P(PSTR("outdoors: "));
     trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity / 10, temperature / 10);
   }
