@@ -116,12 +116,10 @@ struct msg_t {
 
 void loop()
 {
-  // Wait for a message
+  // Wait for a message with temperature and humidity reading
   msg_t msg;
   int8_t len = rx.recv(&msg, sizeof(msg));
   if (len != sizeof(msg)) return;
-
-  // Read temperature and humidity. Handle read errors
   int16_t humidity = msg.humidity;
   int16_t temperature = msg.temperature;
 
