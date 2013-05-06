@@ -101,8 +101,7 @@ NEXA::Receiver::detach(Listener& device)
     else {
       Listener* d;
       for (d = m_first; (d->m_next != 0) && (d->m_next != &device); d = d->m_next);
-      if (d->m_next == 0) return;
-      d->m_next = device.m_next;
+      if (d->m_next != 0) d->m_next = device.m_next;
     }
   }
   device.m_next = 0;
