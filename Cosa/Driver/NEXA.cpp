@@ -92,13 +92,30 @@ NEXA::Receiver::attach(Listener& device)
 }
 
 void 
+NEXA::Receiver::detach(Listener& device)
+{
+  if (m_first != 0) {
+    if (m_first == &device) {
+      m_first = device.m_next;
+    }
+    else {
+      Listener* d;
+      for (d = m_first; (d->m_next != 0) && (d->m_next != &device); d = d->m_next);
+      if (d->m_next == 0) return;
+      d->m_next = device.m_next;
+    }
+  }
+  device.m_next = 0;
+}
+
+void 
 NEXA::Receiver::dispatch()
 {
   code_t cmd = m_code;
   for (Listener* device = m_first; device != 0; device = device->m_next)
     if (cmd == device->m_unit) {
       device->on_change(cmd.onoff);
-      if (cmd.group) return;
+      if (!cmd.group) return;
     }
 }
 

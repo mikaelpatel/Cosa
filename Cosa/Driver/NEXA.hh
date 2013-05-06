@@ -206,6 +206,12 @@ public:
     void attach(Listener& device);
 
     /** 
+     * Detach given device from list of listeners.
+     * @param[in] device to detach.
+     */
+    void detach(Listener& device);
+
+    /** 
      * Dispatch received command code. Compare device address with received 
      * command code and if matched call the device on_change method. 
      */
