@@ -128,17 +128,30 @@ NEXA::Receiver::recv(code_t& cmd)
 }
 
 void
-NEXA::Transmitter::send_code(code_t code, uint8_t mode)
+NEXA::Transmitter::send_code(code_t cmd, int8_t onoff, uint8_t mode)
 {
   // Send the code four times with a pause between each
   for (uint8_t i = 0; i < SEND_CODE_MAX; i++) {
-    int32_t bits = code.as_long;
+    int32_t bits = cmd.as_long;
     // Send start pulse with extended delay, code bits and stop pulse
     send_pulse(0);
     DELAY(START);
-    for (uint8_t i = 0; i < 32; i++) {
-      send_bit(bits < 0);
+    for (uint8_t j = 0; j < 32; j++) {
+      // Check for dim level (-1..-15)
+      if ((j == 27) && (onoff < 0)) {
+	send_pulse(0);
+	send_pulse(0);
+      }
+      else send_bit(bits < 0);
       bits <<= 1;
+    }
+    // Check for dim level transmission
+    if (onoff < 0) {
+      int8_t level = (-onoff) << 4;
+      for (uint8_t j = 0; j < 4; j++) {
+	send_bit(level < 0);
+	level <<= 1;
+      }
     }
     send_pulse(0);
     // Wait for the transmission of the code

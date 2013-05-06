@@ -199,7 +199,7 @@ public:
 
     /**
      * Send a single bit as Manchester code (0 -> 01, 1 -> 10).
-     * @param[in] value (0..1).
+     * @param[in] value (0..2).
      */
     void send_bit(uint8_t value)
     {
@@ -209,11 +209,13 @@ public:
 
     /**
      * Send a command code. Transmitted SEND_CODE_MAX times with
-     * pause between each transmission.
+     * pause between each transmission. Dimmer levels are onoff 
+     * values -1..-15.
      * @param[in] cmd to transmit.
+     * @param[in] onoff device mode (-15..-1..0..1).
      * @param[in] mode sleep mode during pause.
      */
-    void send_code(code_t cmd, uint8_t mode);
+    void send_code(code_t cmd, int8_t onoff, uint8_t mode);
 
   public:
     /**
@@ -241,28 +243,28 @@ public:
     /**
      * Send command code to given device (0..15). Turn device on or 
      * off according to parameter. Device number is channel:unit<2:2>, 
-     * channel(0..3), unit(0..3). 
+     * channel(0..3), unit(0..3). Dimmer levels are onoff values -1..-15.
      * @param[in] device (0..15).
-     * @param[in] onoff device mode.
+     * @param[in] onoff device mode (-15..-1..0..1).
      * @param[in] mode sleep mode during pause.
      */
-    void send(uint8_t device, uint8_t onoff, uint8_t mode = SLEEP_MODE_IDLE)
+    void send(uint8_t device, int8_t onoff, uint8_t mode = SLEEP_MODE_IDLE)
     {
       code_t cmd(m_house, 0, device, onoff);
-      send_code(cmd, mode);
+      send_code(cmd, onoff, mode);
     }
     
     /**
      * Send command code to given group. Turn devices in group on 
      * or off according to parameter. Group number is (0..3).
      * @param[in] group (0..3).
-     * @param[in] onoff device mode.
+     * @param[in] onoff device mode (0..1).
      * @param[in] mode sleep mode during pause.
      */
-    void broadcast(uint8_t group, uint8_t onoff, uint8_t mode = SLEEP_MODE_IDLE)
+    void broadcast(uint8_t group, int8_t onoff, uint8_t mode = SLEEP_MODE_IDLE)
     {
       code_t cmd(m_house, 1, group << 2, onoff);
-      send_code(cmd, mode);
+      send_code(cmd, onoff != 0, mode);
     }
   };
 };

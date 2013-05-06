@@ -37,6 +37,9 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
+// Enable sending of dimmer level (-1..-15)
+// #define DIMMER
+
 OutputPin led(Board::LED);
 #if defined(__ARDUINO_TINY__)
 NEXA::Transmitter transmitter(Board::D2, 0xc05a01L);
@@ -58,8 +61,15 @@ void loop()
 {
   // Blink the transmitter and receiver leds
   led.on();
+#if defined(DIMMER)
+  for (int8_t level = -1; level > -16; level--) {
+    transmitter.send(0, level);
+    SLEEP(3);
+  }
+#else
   transmitter.send(0, 1);
   SLEEP(1);
+#endif
   transmitter.send(0, 0);
   led.off();
   SLEEP(5);
