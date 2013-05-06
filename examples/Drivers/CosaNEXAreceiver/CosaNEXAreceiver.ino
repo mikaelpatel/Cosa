@@ -36,55 +36,37 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
-#if !defined(__ARDUINO_TINY__)
-#include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Memory.h"
-#endif
+class LED : public NEXA::Receiver::Listener {
+private:
+  OutputPin m_pin;
+public:
+  LED(Board::DigitalPin pin) : NEXA::Receiver::Listener(), m_pin(pin) {}
+  virtual void on_change(uint8_t onoff) { m_pin << onoff; }
+};
 
-OutputPin led(Board::LED);
 NEXA::Receiver receiver(Board::EXT0);
-NEXA::code_t device = 0;
+LED device(Board::LED);
 
 void setup()
 {
-#if !defined(__ARDUINO_TINY__)
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaNEXAreceiver: started"));
-  TRACE(free_memory());
-#endif
-  
   // Initiate Real-Time Clock and Watchdog
   RTC::begin();
   Watchdog::begin();
 
-  // Use polling version to receive the remote button for device
-  receiver.recv(device);
-#if !defined(__ARDUINO_TINY__)
-  trace << PSTR("learning: ") << device << endl;
-#endif
+  // Use polling version to receive the remote button to attach
+  NEXA::code_t cmd;
+  receiver.recv(cmd);
+  device.set_unit(cmd);
+  receiver.attach(device);
   
-  // Enable the interrupt driven version
+  // Enable the interrupt driven version of the receiver
   receiver.enable();
 }
 
 void loop()
 {
-  // Wait for the next event
+  // Wait for the next event and dispatch to listeners
   Event event;
   Event::queue.await(&event);
-  uint8_t type = event.get_type();
-  Event::Handler* handler = event.get_target();
-
-  // Check that the event is an read completed and from the correct source
-  if ((type != Event::READ_COMPLETED_TYPE) || (handler != &receiver)) return;
-    
-  // Get the received command code and check if it is for this device
-  NEXA::code_t code = receiver.get_code();
-  if (code == device) {
-#if !defined(__ARDUINO_TINY__)
-    trace << PSTR("matched: ") << code << endl;
-#endif
-    led << code.onoff;
-  }
+  if (event.get_target() == &receiver) receiver.dispatch();
 }

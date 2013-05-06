@@ -95,13 +95,64 @@ public:
      */
     friend IOStream& operator<<(IOStream& outs, code_t code);
   };
+
+  class Device;
   
   /**
    * NEXA Wireless Remote Receiver. May be used in polling or
    * interrupt sampling mode. 
    */
   class Receiver : public ExternalInterruptPin {
+  public:
+
+    /**
+     * Receiver Listener with unit code. The virtual method on_change()
+     * is called by the Receiver when a command code matches the
+     * listeners unit code. Must be sub-classed.
+     */
+    class Listener {
+      friend class Receiver;
+    private:
+      Listener* m_next;
+      code_t m_unit;
+
+    public:
+      /**
+       * Receiver listener constructor.
+       */
+      Listener() : 
+	m_next(0), 
+	m_unit(0L) 
+      {}
+
+      /**
+       * Get listener device unit code/address.
+       * @param[in] unit code.
+       */
+      code_t get_unit()
+      { 
+	return (m_unit);
+      }
+
+      /**
+       * Set listener device unit code/addres.
+       * @param[in] unit code.
+       */
+      void set_unit(code_t unit) 
+      { 
+	m_unit = unit; 
+      }
+
+      /**
+       * Called when a received command code matches the unit. Must
+       * override in sub-class.
+       * @param[in] onoff device mode.
+       */
+      virtual void on_change(uint8_t onoff) = 0;
+    };
+
   private:
+    Listener* m_first;
     static const uint8_t SAMPLE_MAX = 4;
     static const uint8_t IX_MAX = 129;    
     static const uint8_t IX_MASK = SAMPLE_MAX - 1;
@@ -116,10 +167,12 @@ public:
     /**
      * @override
      * Measures the pulse with and decodes the pulse stream. Will push
-     * an Event::READ_COMPLETED_TYPE when completed decoding. Commands
+     * an Event::RECEIVE_COMPLETED_TYPE when completed decoding. Commands
      * should be retrieved with get_code(). The event will contain the
      * class instance as target. This allows sub-classes to override
      * the Event::Handler::on_event() method and use event dispatch.
+     * Alternatively use the listeners and call dispatch() after
+     * receiving the event.  
      * @param[in] arg argument from first level interrupt handler.
      */
     virtual void on_interrupt(uint16_t arg = 0);
@@ -140,10 +193,23 @@ public:
      */
     Receiver(Board::ExternalInterruptPin pin) :
       ExternalInterruptPin(pin, ExternalInterruptPin::ON_CHANGE_MODE),
+      m_first(0),
       m_start(0),
       m_code(0),
       m_ix(0)
     {}
+
+    /** 
+     * Attach given device to list of listeners.
+     * @param[in] device to attach.
+     */
+    void attach(Listener& device);
+
+    /** 
+     * Dispatch received command code. Compare device address with received 
+     * command code and if matched call the device on_change method. 
+     */
+    void dispatch();
 
     /**
      * Retrieve decoded command after Event::READ_COMPLETED_TYPE, from

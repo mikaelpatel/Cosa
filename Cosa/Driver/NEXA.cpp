@@ -64,7 +64,7 @@ NEXA::Receiver::on_interrupt(uint16_t arg)
   if (m_ix != IX_MAX) return;
 
   // And when all samples have been read push an event
-  Event::push(Event::READ_COMPLETED_TYPE, this);
+  Event::push(Event::RECEIVE_COMPLETED_TYPE, this);
   
  exception:
   m_start = 0L;
@@ -82,6 +82,24 @@ NEXA::Receiver::decode_bit()
   if (bit < 2) return (-1);
   // And map back to a bit (2 => 0, 3 => 1)
   return (bit > 2);  
+}
+
+void 
+NEXA::Receiver::attach(Listener& device)
+{
+  device.m_next = m_first;
+  m_first = &device;
+}
+
+void 
+NEXA::Receiver::dispatch()
+{
+  code_t cmd = m_code;
+  for (Listener* device = m_first; device != 0; device = device->m_next)
+    if (cmd == device->m_unit) {
+      device->on_change(cmd.onoff);
+      if (cmd.group) return;
+    }
 }
 
 void
@@ -132,20 +150,22 @@ NEXA::Transmitter::send_code(code_t cmd, int8_t onoff, uint8_t mode)
 {
   // Send the code four times with a pause between each
   for (uint8_t i = 0; i < SEND_CODE_MAX; i++) {
+    const uint8_t BITS_MAX = 32;
+    const uint8_t ONOFF_POS = 27;
     int32_t bits = cmd.as_long;
     // Send start pulse with extended delay, code bits and stop pulse
     send_pulse(0);
     DELAY(START);
-    for (uint8_t j = 0; j < 32; j++) {
+    for (uint8_t j = 0; j < BITS_MAX; j++) {
       // Check for dim level (-1..-15)
-      if ((j == 27) && (onoff < 0)) {
+      if ((j == ONOFF_POS) && (onoff < 0)) {
 	send_pulse(0);
 	send_pulse(0);
       }
       else send_bit(bits < 0);
       bits <<= 1;
     }
-    // Check for dim level transmission
+    // Check for dim level transmission; level encoded as -1..-15
     if (onoff < 0) {
       int8_t level = (-onoff) << 4;
       for (uint8_t j = 0; j < 4; j++) {
