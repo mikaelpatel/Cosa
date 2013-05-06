@@ -84,9 +84,15 @@ VWI::Receiver rx(Board::D1, &codec);
 #else
 VWI::Receiver rx(Board::D8, &codec);
 #endif
+
 Relay heater(Board::D2);
 Relay fan(Board::D3);
 RemoteRelay vent(Board::D4, 0xc05a01L, 0);
+
+const uint8_t RH_MIN = 50;
+const uint8_t RH_MAX = 70;
+const uint8_t TEMP_MIN = 22;
+const uint8_t TEMP_MAX = 26;
 
 void setup()
 {
@@ -124,16 +130,12 @@ void loop()
   int16_t temperature = msg.temperature;
 
   // Check if heater should be turned on @ 22 C and off @ 26 C
-  static const uint8_t TEMP_MIN = 22;
-  static const uint8_t TEMP_MAX = 26;
   if (heater.is_on()) {
     if (temperature > TEMP_MAX) heater.off();
   }
   else if (temperature < TEMP_MIN) heater.on();
 
   // Check if fan/vent should be turned on @ 70 %RH and off @ 50 %RH.
-  static const uint8_t RH_MIN = 50;
-  static const uint8_t RH_MAX = 70;
   if (fan.is_on()) {
     if (humidity < RH_MIN) {
       fan.off();
@@ -150,7 +152,4 @@ void loop()
   trace << PSTR("T = ") << temperature << PSTR(" C, ");
   trace << PSTR("Heater = ") << (heater.is_on() ? PSTR("ON, ") : PSTR("OFF, "));
   trace << PSTR("Fan = ") << (fan.is_on() ? PSTR("ON\n") : PSTR("OFF\n"));
-
-  // Sample every 2 seconds
-  SLEEP(2);
 }
