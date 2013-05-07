@@ -74,7 +74,7 @@ private:
    */
   static const uint8_t BIT(uint8_t pin)
   {
-    return (pin);
+    return (pin < 8 ? pin : pin - 8);
   }
   
 public:
@@ -179,6 +179,8 @@ public:
  * Redefinition of symbols to allow generic code.
  */
 #define ANALOG_COMP_vect ANA_COMP_vect
+#define TIMER0_COMPA_vect TIM0_COMPA_vect
+#define TIMER0_COMPB_vect TIM0_COMPB_vect
 #define TIMER1_COMPA_vect TIM1_COMPA_vect
 #define TIMER1_COMPB_vect TIM1_COMPB_vect
 
