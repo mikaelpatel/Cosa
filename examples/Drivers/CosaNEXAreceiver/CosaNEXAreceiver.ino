@@ -23,8 +23,8 @@
  * @section Description
  * Simple sketch to demonstrate receiving Nexa Home Wireless Switch
  * Remote codes. First command received will be used as the device 
- * identity. Sucessive commands are compared against the device 
- * identity and if matches the built-in LED is set on/off according 
+ * identity. Sucessive commands are dispatch through the Listener
+ * and code matches the built-in LED is set on/off according 
  * to the command. See Also CosaNEXAsender if you wish to run the 
  * sketch without a NEXA remote control.
  *
@@ -36,12 +36,12 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
-class LED : public NEXA::Receiver::Listener {
+class LED : public NEXA::Receiver::Device {
 private:
   OutputPin m_pin;
 public:
-  LED(Board::DigitalPin pin) : NEXA::Receiver::Listener(), m_pin(pin) {}
-  virtual void on_change(uint8_t onoff) { m_pin << onoff; }
+  LED(Board::DigitalPin pin) : NEXA::Receiver::Device(0L), m_pin(pin) {}
+  virtual void on_event(uint8_t type, uint16_t value) { m_pin << value; }
 };
 
 NEXA::Receiver receiver(Board::EXT0);
@@ -56,8 +56,8 @@ void setup()
   // Use polling version to receive the remote button to attach
   NEXA::code_t cmd;
   receiver.recv(cmd);
-  device.set_unit(cmd);
-  receiver.attach(device);
+  device.set_key(cmd);
+  receiver.attach(&device);
   
   // Enable the interrupt driven version of the receiver
   receiver.enable();
@@ -65,8 +65,8 @@ void setup()
 
 void loop()
 {
-  // Wait for the next event and dispatch to listeners
+  // Wait for the next event and dispatch
   Event event;
   Event::queue.await(&event);
-  if (event.get_target() == &receiver) receiver.dispatch();
+  event.dispatch();
 }

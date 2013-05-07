@@ -84,40 +84,6 @@ NEXA::Receiver::decode_bit()
   return (bit > 2);  
 }
 
-void 
-NEXA::Receiver::attach(Listener& device)
-{
-  device.m_next = m_first;
-  m_first = &device;
-}
-
-void 
-NEXA::Receiver::detach(Listener& device)
-{
-  if (m_first != 0) {
-    if (m_first == &device) {
-      m_first = device.m_next;
-    }
-    else {
-      Listener* d;
-      for (d = m_first; (d->m_next != 0) && (d->m_next != &device); d = d->m_next);
-      if (d->m_next != 0) d->m_next = device.m_next;
-    }
-  }
-  device.m_next = 0;
-}
-
-void 
-NEXA::Receiver::dispatch()
-{
-  code_t cmd = m_code;
-  for (Listener* device = m_first; device != 0; device = device->m_next)
-    if (cmd == device->m_unit) {
-      device->on_change(cmd.onoff);
-      if (!cmd.group) return;
-    }
-}
-
 void
 NEXA::Receiver::recv(code_t& cmd)
 {
@@ -129,7 +95,6 @@ NEXA::Receiver::recv(code_t& cmd)
     // Wait for the start condition
     while (is_low());
     stop = RTC::micros();
-
     // Collect the samples; high followed by low pulse
     ix = 0;
     while (ix < IX_MAX) {
@@ -190,8 +155,6 @@ NEXA::Transmitter::send_code(code_t cmd, int8_t onoff, uint8_t mode)
       }
     }
     send_pulse(0);
-    // Wait for the transmission of the code
-    uint32_t start = RTC::millis();
-    while ((RTC::millis() - start) < PAUSE) Power::sleep(mode);
+    RTC::delay(PAUSE, mode);
   }
 }
