@@ -25,6 +25,7 @@
 
 #include "Cosa/RTC.hh"
 #include "Cosa/Board.hh"
+#include "Cosa/Power.hh"
 
 // Real-Time Clock: configuration
 #define COUNT 255
@@ -97,6 +98,13 @@ RTC::micros()
   // Convert ticks to micro-seconds
   res = (TIMER_CYCLES(res) + cnt) * US_PER_TIMER_CYCLE;
   return (res);
+}
+
+void 
+RTC::delay(uint16_t ms, uint8_t mode)
+{
+  uint32_t start = RTC::millis();
+  while ((RTC::millis() - start) < ms) Power::sleep(mode);
 }
 
 ISR(TIMER0_COMPA_vect)

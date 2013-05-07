@@ -27,6 +27,7 @@
 #define __COSA_RTC_HH__
 
 #include "Cosa/Types.h"
+#include <avr/sleep.h>
 
 /**
  * Real-time clock; Arduino/ATmega328P Timer0 for micro/milli-
@@ -67,6 +68,12 @@ public:
    * @return micro-seconds.
    */
   static uint32_t micros();
+
+  /**
+   * Delay using the real-time clock.
+   * @param[in] ms sleep period in milli-seconds.
+   */
+  static void delay(uint16_t ms, uint8_t mode = SLEEP_MODE_IDLE);
 };
 
 #endif
