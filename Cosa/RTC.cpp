@@ -109,9 +109,8 @@ RTC::delay(uint16_t ms, uint8_t mode)
 
 ISR(TIMER0_COMPA_vect)
 {
-  // Set the top register (again)
+  // Set the top register (again) and increment tick counter
   OCR0A = COUNT;
-  // Increment tick counter
   g_ticks = g_ticks + 1;
 }
 
