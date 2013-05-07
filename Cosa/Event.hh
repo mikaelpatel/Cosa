@@ -95,7 +95,6 @@ public:
    * Event handler root class.
    */
   class Handler {
-
   public:
     /**
      * Default null event handler. Should be redefined by sub-classes.
