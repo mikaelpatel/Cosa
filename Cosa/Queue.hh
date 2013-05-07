@@ -46,8 +46,8 @@ public:
   const uint8_t NMEMB;
 
 private:
-  uint8_t m_put;
-  uint8_t m_get;
+  volatile uint8_t m_put;
+  volatile uint8_t m_get;
   T m_buffer[nmemb];
 
 public:
