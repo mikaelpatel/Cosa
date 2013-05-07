@@ -25,7 +25,6 @@
 
 #include "Cosa/Driver/NEXA.hh"
 #include "Cosa/RTC.hh"
-#include "Cosa/Watchdog.hh"
 
 IOStream& operator<<(IOStream& outs, NEXA::code_t code)
 {
