@@ -193,4 +193,5 @@ reliable message passing protocol to the Virtual Wire Interface
 (VWI). The new class VWI::Transceiver supports message acknowledgement
 and auto-retransmission. Full support for message parsing.    
 2013-05 Improving ATtiny support. Adding driver for DHT22. NEXA
-Wireless Remote command transmitter (RF433).   
+Wireless Remote command transmitter (RF433). Introducing a new
+template class for handling of keyed sets of event handlers.   
