@@ -93,7 +93,7 @@ public:
     D8,
     D9,
     D10,
-    LED = D3
+    LED = D5
   } __attribute__((packed));
 
   /**
