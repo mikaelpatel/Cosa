@@ -50,7 +50,7 @@ Thread::set_timer(uint16_t ms)
 }
 
 uint16_t
-Thread::dispatch(uint8_t flag)
+Thread::dispatch(bool flag)
 {
   uint16_t count = 0;
   // Check if events should be processed and the run queue is empty

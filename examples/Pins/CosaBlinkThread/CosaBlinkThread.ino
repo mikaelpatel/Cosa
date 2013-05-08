@@ -63,5 +63,5 @@ void setup()
 
 void loop()
 {
-  Thread::dispatch(1);
+  Thread::dispatch();
 }

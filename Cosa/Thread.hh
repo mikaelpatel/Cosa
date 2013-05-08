@@ -173,11 +173,10 @@ public:
    * be processes. Returns number of dispatched threads and events.
    * The run queue is only iterated once per call to dispatch to allow
    * user defined outer loop, i.e., arduino loop() function.
-   * Usage: void loop() { Thread::dispatch(1); }
    * @param[in] flag process events if non zero.
    * @return number of dispatched threads and events.
    */
-  static uint16_t dispatch(uint8_t flag = 0);
+  static uint16_t dispatch(bool flag = true);
 
   /**
    * Add the given thread to the run queue (last). A terminated thread
