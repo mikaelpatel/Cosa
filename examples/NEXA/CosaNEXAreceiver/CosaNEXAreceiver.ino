@@ -23,10 +23,10 @@
  * @section Description
  * Simple sketch to demonstrate receiving Nexa Home Wireless Switch
  * Remote codes. First command received will be used as the device 
- * identity. Sucessive commands are dispatch through the Listener
- * and code matches the built-in LED is set on/off according 
- * to the command. See Also CosaNEXAsender if you wish to run the 
- * sketch without a NEXA remote control.
+ * identity. Sucessive commands are dispatched through the Listener.
+ * The built-in LED is set on/off according to the command when the
+ * address of the command matches.. See Also CosaNEXAsender if you 
+ * wish to run the sketch without a NEXA remote control.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -44,7 +44,11 @@ public:
   virtual void on_event(uint8_t type, uint16_t value) { m_pin << value; }
 };
 
+#if defined(__ARDUINO_MEGA__)
+NEXA::Receiver receiver(Board::EXT5);
+#else
 NEXA::Receiver receiver(Board::EXT0);
+#endif
 LED device(Board::LED);
 
 void setup()

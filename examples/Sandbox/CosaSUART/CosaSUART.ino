@@ -21,7 +21,9 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of Soft UART for the ATtinyX5.
+ * Cosa demonstration of Softwar UART for the ATtiny and using the
+ * raw IOStream::Device interface. Will use Hardware UART for other
+ * Arduino variants.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -49,8 +51,8 @@ void loop()
     uart.putchar(pin + '0');
   }
   else {
-    uart.putchar('1');
-    uart.putchar(pin + '0' - 10);
+    uart.putchar(pin/10 + '0');
+    uart.putchar(pin%10 + '0');
   }
   if (Pin::read(pin))
     uart.puts_P(PSTR(" = on\n"));

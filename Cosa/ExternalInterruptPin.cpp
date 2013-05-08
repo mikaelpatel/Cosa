@@ -53,17 +53,17 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
       *PORT() |= m_mask; 
     }
   }
-  if (pin <= Board::EXT3) {
-    m_ix = Board::EXT0 - pin;
-    uint8_t ix = (m_ix << 1);
-    bit_field_set(EICRA, 0b11 << ix, mode << ix);
-  } 
-  else {
+  if (pin <= Board::EXT5) {
     m_ix = pin - Board::EXT4;
     uint8_t ix = (m_ix << 1);
     bit_field_set(EICRB, 0b11 << ix, mode << ix);
     m_ix += 4;
   }
+  else {
+    m_ix = pin - Board::EXT0;
+    uint8_t ix = (m_ix << 1);
+    bit_field_set(EICRA, 0b11 << ix, mode << ix);
+  } 
   ext[m_ix] = this;
 }
 
