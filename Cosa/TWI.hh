@@ -121,6 +121,29 @@ private:
   };
 
   /**
+   * Set io-vector buffer at given index.
+   * @param[in] vec io vector.
+   * @param[in] ix index in vector.
+   * @param[in] buf buffer.
+   * @param[in] size number of bytes.
+   */
+  static void set(iovec_t* vec, uint8_t ix, void* buf, size_t size)
+  {
+    vec[ix].buf = (uint8_t*) buf;
+    vec[ix].size = size;
+  }
+
+  /**
+   * Mark end of io-vector buffer at given index.
+   * @param[in] vec io vector.
+   * @param[in] ix index in vector.
+   */
+  static void end(iovec_t* vec, uint8_t ix)
+  {
+    set(vec, ix, 0, 0);
+  }
+
+  /**
    * Device state, data buffers and target.
    */
   static const uint8_t BUF_MAX = 4;

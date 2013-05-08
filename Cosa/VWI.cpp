@@ -367,15 +367,10 @@ VWI::Transmitter::send(const void* buf, uint8_t len, uint8_t cmd)
     header.addr = s_addr;
     header.cmd = cmd;
     header.nr = m_nr++;
-    vec[ix].buf = &header;
-    vec[ix].size = sizeof(header);
-    ix += 1;
+    iovec_set(vec, ix++, &header, sizeof(header));
   }
-  vec[ix].buf = (void*) buf;
-  vec[ix].size = len;
-  ix += 1;
-  vec[ix].buf = 0;
-  vec[ix].size = 0;
+  iovec_set(vec, ix++, buf, len);
+  iovec_end(vec, ix);
   return (send(vec));
 }
 
@@ -447,10 +442,8 @@ VWI::Transceiver::recv(void* buf, uint8_t len, uint32_t ms)
 
   // Send acknowledgement; retransmit the header
   iovec_t vec[2];
-  vec[0].buf = buf;
-  vec[0].size = sizeof(VWI::header_t);
-  vec[1].buf = 0;
-  vec[1].size = 0;
+  iovec_set(vec, 0, buf, sizeof(VWI::header_t));
+  iovec_end(vec, 1);
   tx.send(vec);
   return (res);
 }

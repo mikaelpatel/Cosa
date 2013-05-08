@@ -169,7 +169,7 @@ unlock(uint8_t key)
 #define barrier() __asm__ __volatile__("nop" ::: "memory") 
 
 /**
- * Buffer structure for scatter/gather I/O.
+ * Buffer structure for scatter/gather.
  */
 struct iovec_t {
   void* buf;
@@ -177,11 +177,29 @@ struct iovec_t {
 };
 
 /**
- * Preprocessor tricks. Allow creating symbols.
+ * Set io-vector buffer at given index.
+ * @param[in] vec io vector.
+ * @param[in] ix index in vector.
+ * @param[in] buf buffer.
+ * @param[in] size number of bytes.
  */
-#define CONCAT(var, line) var ## line
-#define MERGE(var, line) CONCAT(var, line)
-#define UNIQUE(var) MERGE(var, __LINE__)
+inline void 
+iovec_set(iovec_t* vec, uint8_t ix, const void* buf, size_t size)
+{
+  vec[ix].buf = (void*) buf;
+  vec[ix].size = size;
+}
+
+/**
+ * Mark end of io-vector buffer at given index.
+ * @param[in] vec io vector.
+ * @param[in] ix index in vector.
+ */
+inline void 
+iovec_end(iovec_t* vec, uint8_t ix)
+{
+  iovec_set(vec, ix, 0, 0);
+}
 
 /**
  * Swap bytes in 16-bit integer

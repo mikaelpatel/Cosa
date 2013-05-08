@@ -88,10 +88,8 @@ TWI::request(uint8_t addr)
 bool
 TWI::write_request(uint8_t addr, void* buf, size_t size)
 {
-  m_vec[0].buf = (uint8_t*) buf;
-  m_vec[0].size = size;
-  m_vec[1].buf = 0;
-  m_vec[1].size = 0;
+  set(m_vec, 0, buf, size);
+  end(m_vec, 1);
   return (request(addr | WRITE_OP));
 }
 
@@ -99,12 +97,9 @@ bool
 TWI::write_request(uint8_t addr, uint8_t header, void* buf, size_t size)
 {
   m_buf[0] = header;
-  m_vec[0].buf = m_buf;
-  m_vec[0].size = sizeof(header);
-  m_vec[1].buf = (uint8_t*) buf;
-  m_vec[1].size = size;
-  m_vec[2].buf = 0;
-  m_vec[2].size = 0;
+  set(m_vec, 0, m_buf, sizeof(header));
+  set(m_vec, 1, buf, size);
+  end(m_vec, 2);
   return (request(addr | WRITE_OP));
 }
 
@@ -113,31 +108,24 @@ TWI::write_request(uint8_t addr, uint16_t header, void* buf, size_t size)
 {
   m_buf[0] = (header >> 8);
   m_buf[1] = header;
-  m_vec[0].buf = m_buf;
-  m_vec[0].size = sizeof(header);
-  m_vec[1].buf = (uint8_t*) buf;
-  m_vec[1].size = size;
-  m_vec[2].buf = 0;
-  m_vec[2].size = 0;
+  set(m_vec, 0, m_buf, sizeof(header));
+  set(m_vec, 1, buf, size);
+  end(m_vec, 2);
   return (request(addr | WRITE_OP));
 }
 
 bool
 TWI::read_request(uint8_t addr, void* buf, size_t size)
 {
-  m_vec[0].buf = (uint8_t*) buf;
-  m_vec[0].size = size;
-  m_vec[1].buf = 0;
-  m_vec[1].size = 0;
+  set(m_vec, 0, buf, size);
+  end(m_vec, 1);
   return (request(addr | READ_OP));
 }
 
 int
 TWI::await_completed(uint8_t mode)
 {
-  do {
-    Power::sleep(mode);
-  } while (m_state > IDLE_STATE);
+  while (m_state > IDLE_STATE) Power::sleep(mode);
   return (m_count);
 }
 
