@@ -268,7 +268,7 @@ public:
 
     /**
      * Send a single bit as Manchester code (0 -> 01, 1 -> 10).
-     * @param[in] value (0..2).
+     * @param[in] value (0..1).
      */
     void send_bit(uint8_t value)
     {
