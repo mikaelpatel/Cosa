@@ -151,13 +151,11 @@ public:
     bool connect(uint8_t family, uint8_t index);
 
   public:
-#if !defined(__ARDUINO_TINY__)
     /**
      * Print device rom to output stream. 
      * @param[in] stream to print rom to.
      */
     void print_rom(IOStream& stream = trace);
-#endif
   };
 
   /**
@@ -342,13 +340,10 @@ public:
     clear();
   }
 
-#if !defined(__ARDUINO_TINY__)
   /**
    * Print list of connected devices on given stream.
    * @param[in] stream to print rom to.
    */
   void print_devices(IOStream& stream = trace);
-#endif
 };
-
 #endif

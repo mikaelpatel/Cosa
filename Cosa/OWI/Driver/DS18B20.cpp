@@ -61,8 +61,8 @@ DS18B20::read_scratchpad()
     if (ms < conv_time) {
       ms = conv_time - ms;
       Watchdog::delay(ms);
-      m_converting = false;
     }
+    m_converting = false;
     power_off();
   }
   if (!match_rom()) return (false);

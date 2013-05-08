@@ -148,15 +148,13 @@ OWI::Driver::connect(uint8_t family, uint8_t index)
   return (false);
 }
 
-#if !defined(__ARDUINO_TINY__)
 void
 OWI::Driver::print_rom(IOStream& stream)
 {
   uint8_t i;
-  stream.printf_P(PSTR("OWI::rom(family = %hd, id = "), m_rom[0]);
+  stream << PSTR("OWI::rom(family = ") << hex << m_rom[0] << PSTR(", id = ");
   for (i = 1; i < ROM_MAX - 1; i++)
-    stream.printf_P(PSTR("%hd, "), m_rom[i]);
-  stream.printf_P(PSTR("crc = %hd)\n"), m_rom[i]);
+    stream << hex << m_rom[i] << PSTR(", ");
+  stream << PSTR("crc = ") << hex << m_rom[i] << endl;
 }
-#endif
 
