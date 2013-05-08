@@ -27,17 +27,20 @@
  * with the CosaVWIreceiver or CosaTinyReceiver sketch.
  *
  * @section Circuit
- * Connect RF433/315 Transmitter Data to Arduino(ATtiny85) D2,
- * and DHT11 data with pullup (approx. 5 Kohm) to D1.
+ * Connect RF433/315 Transmitter Data to Arduino(ATtiny) D2,
+ * and DHT11 data with pullup (approx. 5 Kohm) to D1. The LED
+ * is on when transmitting.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Pins.hh"
 #include "Cosa/Driver/DHT11.hh"
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/Watchdog.hh"
 
+OutputPin led(Board::LED);
 DHT11 sensor(Board::D1);
 VirtualWireCodec codec;
 VWI::Transmitter tx(Board::D2, &codec);
@@ -62,10 +65,11 @@ void loop()
 {
   // Read sensor and send message every two seconds
   static uint16_t nr = 0;
-  SLEEP(2);
   msg_t msg;
   if (!sensor.read(msg.humidity, msg.temperature)) return;
   msg.nr = nr++;
+  led.toggle();
   tx.send(&msg, sizeof(msg));
-  tx.await();
+  led.toggle();
+  SLEEP(2);
 }
