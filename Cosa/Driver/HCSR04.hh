@@ -29,6 +29,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
 #include "Cosa/Linkage.hh"
+#include "Cosa/Watchdog.hh"
 
 /**
  * Device driver for Ultrasonic range module HC-SR04. Subclass
@@ -44,10 +45,10 @@
  * The driver will turn off interrupt handling during data read 
  * from the device. 
  */
-class HCSR04 : protected Link {
+class HCSR04 : private Link {
 private:
   static const uint16_t TIMEOUT = 0xffffU;
-  static const uint16_t COUNT_PER_CM = 54;
+  static const uint16_t COUNT_PER_DM = (555 * I_CPU) / 16;
   OutputPin m_trigPin;
   InputPin m_echoPin;
   uint16_t m_distance;
@@ -93,9 +94,19 @@ public:
   bool read(uint16_t& distance);
 
   /**
+   * Schedule periodic reading with the given time period in milli-
+   * seconds.
+   * @param[in] ms milli-second sample period.
+   */
+  void periodic(uint16_t ms)
+  {
+    Watchdog::attach(this, ms);
+  }
+  
+  /**
    * Default on change function. Override for callback when the
    * distance has changed.
-   * @param[in] distance.
+   * @param[in] distance in milli-meters.
    */
   virtual void on_change(uint16_t distance) {}
 };

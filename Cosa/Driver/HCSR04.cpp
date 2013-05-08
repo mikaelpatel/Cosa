@@ -46,7 +46,7 @@ HCSR04::read(uint16_t& distance)
   if (timeout == 0) return (false);
 
   // And calculate the distance in milli-meters
-  distance = (count * 10L) / COUNT_PER_CM;
+  distance = (count * 100L) / COUNT_PER_DM;
   return (true);
 }
 
