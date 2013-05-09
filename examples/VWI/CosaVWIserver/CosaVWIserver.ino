@@ -31,6 +31,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/TWI/Driver/DS1307.hh"
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/VWI/Codec/ManchesterCodec.hh"
@@ -44,10 +45,10 @@
 
 // Select the codec to use for the Virtual Wire Interface. Should be the
 // same as in CosaVWIclient.ino
-// VirtualWireCodec codec;
+VirtualWireCodec codec;
 // ManchesterCodec codec;
 // Block4B5BCodec codec;
-BitstuffingCodec codec;
+// BitstuffingCodec codec;
 
 // Virtual Wire Interface Transceiver
 VWI::Transceiver trx(Board::D8, Board::D9, &codec);
@@ -93,12 +94,16 @@ IOStream& operator<<(IOStream& outs, stat_t& stat)
   return (outs);
 }
 
+// Message from the time keeper
+const uint8_t TIMEKEEPER_CMD = 3;
+
 // Extended mode message with header
 struct msg_t {
   VWI::header_t header;
   union {
     sample_t sample;
     stat_t stat;
+    DS1307::timekeeper_t now;
   };
 };
 
@@ -130,9 +135,10 @@ void loop()
 {
   // Wait for a message. Sanity check the length
   msg_t msg;
+  trx.rx.await();
   int8_t len = trx.recv(&msg, sizeof(msg));
   if (len <= 0) return;
-  
+
   // Print header, type message type and contents
   trace << msg;
   switch (msg.header.cmd) {
@@ -141,6 +147,10 @@ void loop()
     break;
   case STAT_CMD: 
     trace << msg.stat << endl; 
+    break;
+  case TIMEKEEPER_CMD: 
+    msg.now.print();
+    trace.println();
     break;
   default:
     trace << PSTR("unknown message type") << endl;

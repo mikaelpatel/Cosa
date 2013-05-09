@@ -465,8 +465,10 @@ VWI::Transceiver::send(const void* buf, uint8_t len, uint8_t cmd)
     if ((len == sizeof(ack)) && (ack.nr == nr) && (ack.addr == VWI::s_addr))
       return (retrans + 1);
     // Otherwise resend the message (from the transmission buffer)
-    retrans += 1;
-    tx.resend();
+    if (len == 0) {
+      retrans += 1;
+      tx.resend();
+    }
   }
   return (-1);
 }
