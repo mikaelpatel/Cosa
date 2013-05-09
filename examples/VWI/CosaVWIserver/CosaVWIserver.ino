@@ -57,6 +57,59 @@ const uint32_t ADDR = 0xc05a0000UL;
 const uint32_t MASK = 0xffffff00UL;
 const uint16_t SPEED = 4000;
 
+// Message types
+const uint8_t SAMPLE_CMD = 1;
+struct sample_t {
+  uint16_t luminance;
+  uint16_t temperature;
+};
+
+IOStream& operator<<(IOStream& outs, sample_t& sample)
+{ 
+  outs << PSTR("sample:") 
+       << sample.luminance << PSTR(", ") 
+       << sample.temperature;
+  return (outs);
+}
+
+const uint8_t STAT_CMD = 2;
+struct stat_t {
+  uint16_t voltage;
+  uint16_t sent;
+  uint16_t resent;
+  uint16_t received;
+  uint16_t failed;
+};
+
+IOStream& operator<<(IOStream& outs, stat_t& stat)
+{ 
+  outs << PSTR("stat:") 
+       << stat.voltage << PSTR(", ")
+       << stat.sent << PSTR(", ")
+       << stat.resent << PSTR(", ")
+       << stat.received << PSTR(", ")
+       << stat.failed << PSTR(" (")
+       << (stat.resent * 100L) / stat.sent << PSTR("%)");
+  return (outs);
+}
+
+// Extended mode message with header
+struct msg_t {
+  VWI::header_t header;
+  union {
+    sample_t sample;
+    stat_t stat;
+  };
+};
+
+IOStream& operator<<(IOStream& outs, msg_t& msg)
+{ 
+  outs << hex << msg.header.addr << ':' 
+       << msg.header.nr << ':'
+       << msg.header.cmd << ':';
+  return (outs);
+}
+
 void setup()
 {
   // Start trace on UART. Print available free memory.
@@ -73,62 +126,23 @@ void setup()
   trx.begin(MASK);
 }
 
-// Message types
-const uint8_t SAMPLE_CMD = 1;
-struct sample_t {
-  uint16_t luminance;
-  uint16_t temperature;
-};
-
-const uint8_t STAT_CMD = 2;
-struct stat_t {
-  uint16_t voltage;
-  uint16_t sent;
-  uint16_t resent;
-  uint16_t received;
-  uint16_t failed;
-};
-
-// Extended mode message with header
-struct msg_t {
-  VWI::header_t header;
-  union {
-    sample_t sample;
-    stat_t stat;
-  };
-};
-
 void loop()
 {
-  // Processed sequence number (should be one per client)
-  static uint8_t nr = 0xff;
-
   // Wait for a message. Sanity check the length
   msg_t msg;
   int8_t len = trx.recv(&msg, sizeof(msg));
   if (len <= 0) return;
   
-  // Check that this is not a retransmission
-  if (nr == msg.header.nr) return;
-  nr = msg.header.nr;
-
-  // Print header, type message type and print contents
-  trace << hex << msg.header.addr << ':' << msg.header.nr << ':';
+  // Print header, type message type and contents
+  trace << msg;
   switch (msg.header.cmd) {
-  case SAMPLE_CMD:
-    trace << PSTR("sample(") << msg.header.cmd << PSTR("):");
-    trace << hex << msg.sample.luminance << PSTR(", ")
-	  << hex << msg.sample.temperature << endl;
+  case SAMPLE_CMD: 
+    trace << msg.sample << endl; 
     break;
-  case STAT_CMD:
-    trace << PSTR("stat(") << msg.header.cmd << PSTR("):");
-    trace << msg.stat.voltage << PSTR(", ")
-	  << msg.stat.sent << PSTR(", ")
-	  << msg.stat.resent << PSTR(", ")
-	  << msg.stat.received << PSTR(", ")
-	  << msg.stat.failed << PSTR(" (")
-	  << (msg.stat.resent * 100L) / msg.stat.sent << PSTR("%)")
-	  << endl;
+  case STAT_CMD: 
+    trace << msg.stat << endl; 
     break;
+  default:
+    trace << PSTR("unknown message type") << endl;
   }
 }

@@ -66,22 +66,26 @@ void setup()
   rx.begin();
 }
 
-// Message type to receive
+// Message type to receive with support output operator
 struct msg_t {
   uint16_t nr;
   uint16_t luminance;
   uint16_t temperature;
 };
 
+IOStream& operator<<(IOStream& outs, msg_t& msg)
+{ 
+  outs << msg.nr << PSTR(": ");
+  outs << msg.luminance << PSTR(", ");
+  outs << msg.temperature;
+  return (outs);
+}
+
 void loop()
 {
-  // Wait for a message
+  // Wait for a message and print contents
   msg_t msg;
   int8_t len = rx.recv(&msg, sizeof(msg));
   if (len != sizeof(msg)) return;
-
-  // Print message contents
-  trace << msg.nr << ':' 
-	<< msg.luminance << PSTR(", ") 
-	<< msg.temperature << endl;
+  trace << msg << endl;
 }
