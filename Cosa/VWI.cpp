@@ -360,17 +360,17 @@ VWI::Transmitter::send(const void* buf, uint8_t len, uint8_t cmd)
   if (len > PAYLOAD_MAX) return (false);
   VWI::header_t header;
   iovec_t vec[3];
-  uint8_t ix = 0;
+  iovec_t* vp = vec;
 
   // Check for extended mode: add header with address and sequence number
   if (VWI::s_addr != 0L) {
     header.addr = s_addr;
     header.cmd = cmd;
     header.nr = m_nr++;
-    iovec_set(vec, ix++, &header, sizeof(header));
+    iovec_arg(vp, &header, sizeof(header));
   }
-  iovec_set(vec, ix++, buf, len);
-  iovec_end(vec, ix);
+  iovec_arg(vp, buf, len);
+  iovec_end(vp);
   return (send(vec));
 }
 
@@ -442,8 +442,9 @@ VWI::Transceiver::recv(void* buf, uint8_t len, uint32_t ms)
 
   // Send acknowledgement; retransmit the header
   iovec_t vec[2];
-  iovec_set(vec, 0, buf, sizeof(VWI::header_t));
-  iovec_end(vec, 1);
+  iovec_t* vp = vec;
+  iovec_arg(vp, buf, sizeof(VWI::header_t));
+  iovec_end(vp);
   tx.send(vec);
   return (res);
 }
