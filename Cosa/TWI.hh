@@ -34,20 +34,21 @@
 #include <avr/sleep.h>
 
 /**
- * Two wire library. Support for the I2C/TWI bus.
+ * Two wire library. Support for the I2C/TWI bus Master and Slave
+ * device drivers.
  */
 class TWI {
 private:
   /**
-   * Two wire state and status codes
+   * Two Wire state and status codes.
    */
   enum State {
-    ERROR_STATE = 0,
-    IDLE_STATE = 1,
-    MT_STATE = 2,
-    MR_STATE = 3,
-    ST_STATE = 4,
-    SR_STATE = 5
+    ERROR_STATE,
+    IDLE_STATE,
+    MT_STATE,
+    MR_STATE,
+    ST_STATE,
+    SR_STATE
   } __attribute__((packed));
 
   /**
@@ -55,6 +56,10 @@ private:
    */
 # define TWI_STATUS(x) ((x) >> 3)
 
+  /**
+   * Two Wire AVR hardware status codes as presented to the interrupt
+   * service routine.
+   */
   enum {
     /** General Status Codes */
     START = TWI_STATUS(0x08),
@@ -92,7 +97,7 @@ private:
   } __attribute__((packed));
 
   /**
-   * Addressing and read/write bit 
+   * Address mask and read/write bit.
    */
   enum {
     WRITE_OP = 0x00,
@@ -101,7 +106,7 @@ private:
   } __attribute__((packed));
 
   /**
-   * Commands for TWI hardware
+   * Commands for TWI hardware.
    */
   enum {
     IDLE_CMD =               _BV(TWEA) |              _BV(TWEN) | _BV(TWIE),
@@ -113,55 +118,25 @@ private:
   } __attribute__((packed));
 
   /**
-   * Internal io vector with byte addressing
-   */
-  struct iovec_t {
-    uint8_t* buf;
-    size_t size;
-  };
-
-  /**
-   * Set io-vector buffer at given index.
-   * @param[in] vec io vector.
-   * @param[in] ix index in vector.
-   * @param[in] buf buffer.
-   * @param[in] size number of bytes.
-   */
-  static void set(iovec_t* vec, uint8_t ix, void* buf, size_t size)
-  {
-    vec[ix].buf = (uint8_t*) buf;
-    vec[ix].size = size;
-  }
-
-  /**
-   * Mark end of io-vector buffer at given index.
-   * @param[in] vec io vector.
-   * @param[in] ix index in vector.
-   */
-  static void end(iovec_t* vec, uint8_t ix)
-  {
-    set(vec, ix, 0, 0);
-  }
-
-  /**
    * Device state, data buffers and target.
    */
-  static const uint8_t BUF_MAX = 4;
+  static const uint8_t HEADER_MAX = 4;
   static const uint8_t VEC_MAX = 4;
+  uint8_t m_header[HEADER_MAX];
+  iovec_t m_vec[VEC_MAX];
+  Event::Handler* m_target;
   volatile State m_state;
   volatile uint8_t m_status;
-  Event::Handler* m_target;
-  uint8_t m_addr;
-  uint8_t m_buf[BUF_MAX];
-  iovec_t m_vec[VEC_MAX];
   volatile uint8_t m_ix;
-  volatile size_t m_next;
+  volatile uint8_t* m_next;
+  volatile uint8_t* m_last;
   volatile int m_count;
+  uint8_t m_addr;
 
   /**
-   * Initiate a request to the slave. The address field is
-   * the TWI address and operation (read/write bit). 
-   * Return true(1) if successful otherwise false(0).
+   * Initiate a request to the slave. The address field is the TWI
+   * address and operation (read/write bit). Return true(1) if
+   * successful otherwise false(0). 
    * @param[in] addr slave address and operation.
    * @return bool
    */
@@ -174,16 +149,16 @@ private:
 
 public:
   /**
-   * Device drivers are friends and may have callback/
-   * event handler for completion events.
+   * Device drivers are friends and may have callback/event handler
+   * for completion events. 
    */
   class Driver : public Event::Handler {
     friend class TWI;
   };
 
   /**
-   * Slave devices are friends and may have callback/
-   * event handler for request events.
+   * Slave devices are friends and may have callback/event handler for
+   * request events. 
    */
   class Device : public Event::Handler {
     friend class TWI;
@@ -191,35 +166,37 @@ public:
 
   /** 
    * Construct two-wire instance. This is actually a single-ton on
-   * current supported hardware.
+   * current supported hardware, i.e. there can only be one unit.
    */
   TWI() :
+    m_target(0),
     m_state(IDLE_STATE),
     m_status(NO_INFO),
-    m_target(0),
-    m_addr(0),
     m_ix(0),
     m_next(0),
-    m_count(0)
+    m_last(0),
+    m_count(0),
+    m_addr(0)
   {
   }
 
   /**
-   * Start TWI bus logic. Default mode is master if address is non zero.
+   * Start TWI bus logic. Default mode is master if address is non
+   * zero. Returns true(1) if successful otherwise false(0).
    * @param[in] target receiver of events on requests.
    * @param[in] addr slave address.
-   * @return true(1) if successful otherwise false(0)
+   * @return true(1) if successful otherwise false(0).
    */
   bool begin(Event::Handler* target = 0, uint8_t addr = 0);
   
   /**
    * Disconnect usage of the TWI bus logic.
-   * @return true(1) if successful otherwise false(0)
+   * @return true(1) if successful otherwise false(0).
    */
   bool end();
 
   /**
-   * Set the input buffer.
+   * Set the input buffer for Slave mode.
    * @param[in] buf buffer pointer.
    * @param[in] size of buffer.
    */
@@ -231,7 +208,7 @@ public:
 
   /**
    * Issue a write data request to the given slave unit. Return
-   * true(1) if successful otherwise(0).
+   * true(1) if successful otherwise(0). 
    * @param[in] addr slave address.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
@@ -240,8 +217,8 @@ public:
   bool write_request(uint8_t addr, void* buf, size_t size);
 
   /**
-   * Issue a write data request to the given slave unit. Return
-   * true(1) if successful otherwise(0).
+   * Issue a write data request to the given slave unit with given
+   * byte header/command. Return true(1) if successful otherwise(0).
    * @param[in] addr slave address.
    * @param[in] header to write before buffer.
    * @param[in] buf data to write.
@@ -251,8 +228,8 @@ public:
   bool write_request(uint8_t addr, uint8_t header, void* buf, size_t size);
 
   /**
-   * Issue a write data request to the given slave unit. Return
-   * true(1) if successful otherwise(0).
+   * Issue a write data request to the given slave unit with given
+   * header/command. Return true(1) if successful otherwise(0).
    * @param[in] addr slave address.
    * @param[in] header to write before buffer.
    * @param[in] buf data to write.
@@ -262,8 +239,8 @@ public:
   bool write_request(uint8_t addr, uint16_t header, void* buf, size_t size);
 
   /**
-   * Issue a read data request to the given slave unit. Return
-   * true(1) if successful otherwise(0).
+   * Issue a read data request to the given slave unit. Return true(1)
+   * if successful otherwise(0). 
    * @param[in] addr slave address.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to read.
@@ -286,8 +263,8 @@ public:
   }
 
   /**
-   * Write data to the given slave unit. Returns number of bytes
-   * written or negative error code.
+   * Write data to the given slave unit with given byte
+   * header. Returns number of bytes written or negative error code.
    * @param[in] addr slave address.
    * @param[in] header to write before buffer.
    * @param[in] buf data to write.
@@ -301,8 +278,8 @@ public:
   }
 
   /**
-   * Write data to the given slave unit. Returns number of bytes
-   * written or negative error code.
+   * Write data to the given slave unit with given header. Returns
+   * number of bytes written or negative error code.
    * @param[in] addr slave address.
    * @param[in] header to write before buffer.
    * @param[in] buf data to write.
@@ -334,11 +311,6 @@ public:
    * or negative error code.
    */
   int await_completed(uint8_t mode = SLEEP_MODE_IDLE);
-
-  /**
-   * TWI state machine. Run by interrupt handler.
-   */
-  void on_bus_event();
 };
 
 /**

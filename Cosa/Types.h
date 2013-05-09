@@ -177,17 +177,17 @@ struct iovec_t {
 };
 
 /**
- * Set io-vector buffer at given index.
- * @param[in] vec io vector.
- * @param[in] ix index in vector.
+ * Set next io-vector buffer.
+ * @param[in,out] vp io vector pointer
  * @param[in] buf buffer.
  * @param[in] size number of bytes.
  */
-inline void 
-iovec_set(iovec_t* vec, uint8_t ix, const void* buf, size_t size)
+inline void
+iovec_arg(iovec_t* &vp, const void* buf, size_t size)
 {
-  vec[ix].buf = (void*) buf;
-  vec[ix].size = size;
+  vp->buf = (void*) buf;
+  vp->size = size;
+  vp++;
 }
 
 /**
@@ -195,10 +195,11 @@ iovec_set(iovec_t* vec, uint8_t ix, const void* buf, size_t size)
  * @param[in] vec io vector.
  * @param[in] ix index in vector.
  */
-inline void 
-iovec_end(iovec_t* vec, uint8_t ix)
+inline void
+iovec_end(iovec_t* &vp)
 {
-  iovec_set(vec, ix, 0, 0);
+  vp->buf = 0;
+  vp->size = 0;
 }
 
 /**

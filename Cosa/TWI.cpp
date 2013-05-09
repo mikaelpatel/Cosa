@@ -78,9 +78,10 @@ TWI::request(uint8_t addr)
   m_addr = addr;
   m_state = (addr & WRITE_OP) ? MT_STATE : MR_STATE;
   m_status = NO_INFO;
-  m_count = 0;
-  m_next = 0;
+  m_next = (uint8_t*) m_vec[0].buf;
+  m_last = m_next + m_vec[0].size;
   m_ix = 0;
+  m_count = 0;
   TWCR = START_CMD;
   return (true);
 }
@@ -88,37 +89,41 @@ TWI::request(uint8_t addr)
 bool
 TWI::write_request(uint8_t addr, void* buf, size_t size)
 {
-  set(m_vec, 0, buf, size);
-  end(m_vec, 1);
+  iovec_t* vp = m_vec;
+  iovec_arg(vp, buf, size);
+  iovec_end(vp);
   return (request(addr | WRITE_OP));
 }
 
 bool
 TWI::write_request(uint8_t addr, uint8_t header, void* buf, size_t size)
 {
-  m_buf[0] = header;
-  set(m_vec, 0, m_buf, sizeof(header));
-  set(m_vec, 1, buf, size);
-  end(m_vec, 2);
+  iovec_t* vp = m_vec;
+  m_header[0] = header;
+  iovec_arg(vp, m_header, sizeof(header));
+  iovec_arg(vp, buf, size);
+  iovec_end(vp);
   return (request(addr | WRITE_OP));
 }
 
 bool
 TWI::write_request(uint8_t addr, uint16_t header, void* buf, size_t size)
 {
-  m_buf[0] = (header >> 8);
-  m_buf[1] = header;
-  set(m_vec, 0, m_buf, sizeof(header));
-  set(m_vec, 1, buf, size);
-  end(m_vec, 2);
+  iovec_t* vp = m_vec;
+  m_header[0] = (header >> 8);
+  m_header[1] = header;
+  iovec_arg(vp, m_header, sizeof(header));
+  iovec_arg(vp, buf, size);
+  iovec_end(vp);
   return (request(addr | WRITE_OP));
 }
 
 bool
 TWI::read_request(uint8_t addr, void* buf, size_t size)
 {
-  set(m_vec, 0, buf, size);
-  end(m_vec, 1);
+  iovec_t* vp = m_vec;
+  iovec_arg(vp, buf, size);
+  iovec_end(vp);
   return (request(addr | READ_OP));
 }
 
@@ -151,16 +156,15 @@ ISR(TWI_vect)
      */
   case TWI::MT_SLA_ACK:
   case TWI::MT_DATA_ACK:
-    if (twi.m_next == twi.m_vec[twi.m_ix].size) {
-      twi.m_ix += 1;
-      twi.m_next = 0;
-    }
-    if (twi.m_next < twi.m_vec[twi.m_ix].size) {
-      TWDR = twi.m_vec[twi.m_ix].buf[twi.m_next++];
+    if (twi.m_next < twi.m_last) {
+      TWDR = *twi.m_next++;
       TWCR = TWI::DATA_CMD;
-      twi.m_count++;
+      twi.m_count += 1;
       break;
     } 
+    twi.m_ix += 1;
+    twi.m_next = (uint8_t*) twi.m_vec[twi.m_ix].buf;
+    twi.m_last = twi.m_next + twi.m_vec[twi.m_ix].size;
     if (twi.m_target != 0) 
       Event::push(Event::WRITE_COMPLETED_TYPE, twi.m_target, &twi);
   case TWI::MT_SLA_NACK:
@@ -174,22 +178,19 @@ ISR(TWI_vect)
      * Master Receiver Mode
      */
   case TWI::MR_DATA_ACK:
-    twi.m_vec[twi.m_ix].buf[twi.m_next++] = TWDR;
-    twi.m_count++;
+    *twi.m_next++ = TWDR;
+    twi.m_count += 1;
   case TWI::MR_SLA_ACK:
-    if (twi.m_next < (twi.m_vec[twi.m_ix].size - 1)) {
-      TWCR = TWI::ACK_CMD;
-    } 
-    else {
-      TWCR = TWI::NACK_CMD;
-    }    
+    TWCR = (twi.m_next < (twi.m_last - 1)) ? TWI::ACK_CMD : TWI::NACK_CMD;
     break; 
   case TWI::MR_DATA_NACK:
-    twi.m_vec[twi.m_ix].buf[twi.m_next++] = TWDR;
-    twi.m_count++;
+    *twi.m_next++ = TWDR;
+    twi.m_count += 1;
     if (twi.m_target != 0) {
       Event::push(Event::READ_COMPLETED_TYPE, twi.m_target, &twi);
-      twi.m_next = 0;
+      twi.m_ix = 0;
+      twi.m_next = (uint8_t*) twi.m_vec[0].buf;
+      twi.m_last = twi.m_next + twi.m_vec[0].size;
     }
   case TWI::MR_SLA_NACK:
     TWCR = TWI::STOP_CMD;
@@ -203,18 +204,15 @@ ISR(TWI_vect)
   case TWI::ST_SLA_ACK:
   case TWI::ST_ARB_LOST_SLA_ACK:
     twi.m_state = TWI::ST_STATE;
-    twi.m_next = 0;
     twi.m_ix = 0;
-    twi.m_vec[twi.m_ix].size = 4;
+    twi.m_count = 0;
+    twi.m_next = (uint8_t*) twi.m_vec[0].buf;
+    twi.m_last = twi.m_next + TWI::HEADER_MAX;
   case TWI::ST_DATA_ACK:
-    TWDR = twi.m_vec[twi.m_ix].buf[twi.m_next++];
-    if (twi.m_next < twi.m_vec[twi.m_ix].size) {
-      TWCR = TWI::ACK_CMD;
-    } 
-    else {
-      TWCR = TWI::NACK_CMD;
-    }
-    break;
+    TWDR = *twi.m_next++;
+    TWCR = (twi.m_next < twi.m_last) ? TWI::ACK_CMD : TWI::NACK_CMD;
+    twi.m_count += 1;
+  break;
   case TWI::ST_DATA_NACK:
   case TWI::ST_LAST_DATA:
     TWCR = TWI::ACK_CMD;
@@ -229,14 +227,18 @@ ISR(TWI_vect)
   case TWI::SR_ARB_LOST_SLA_ACK:
   case TWI::SR_ARB_LOST_GCALL_ACK:
     twi.m_state = TWI::SR_STATE;
-    twi.m_next = 0;
+    twi.m_ix = 0;
+    twi.m_count = 0;
+    twi.m_next = (uint8_t*) twi.m_vec[0].buf;
+    twi.m_last = twi.m_next + twi.m_vec[0].size;
     TWCR = TWI::ACK_CMD;
     // Fix: Check if the slave is ready. Should send a NACK if not ready
     break;
   case TWI::SR_DATA_ACK:
   case TWI::SR_GCALL_DATA_ACK:
-    if (twi.m_next < twi.m_vec[twi.m_ix].size) {
-      twi.m_vec[twi.m_ix].buf[twi.m_next++] = TWDR;
+    if (twi.m_next < twi.m_last) {
+      *twi.m_next++ = TWDR;
+      twi.m_count += 1;
       TWCR = TWI::ACK_CMD;
     }
     else {
