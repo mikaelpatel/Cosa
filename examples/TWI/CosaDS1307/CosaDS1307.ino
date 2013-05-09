@@ -68,26 +68,24 @@ void setup()
   // Set the time. Adjust below to your current time
   DS1307::timekeeper_t now;
 #ifdef __RTC_SET_TIME__
-  now.seconds = 0;
-  now.minutes = 0x46;
-  now.hours = 0x22;
-  now.day = 0x02;
-  now.date = 0x16;
-  now.month = 0x03;
   now.year = 0x13;
+  now.month = 0x03;
   now.cntl = 0x00;
+  now.date = 0x16;
+  now.day = 0x02;
+  now.hours = 0x22;
+  now.minutes = 0x46;
+  now.seconds = 0;
   rtc.set_time(now);
   latest.set = now;
 #endif
 
-  // Convert bcd to binary and print latest set time
-  latest.set.to_binary();
+  // Print latest set time
   trace.print_P(PSTR("set on "));
   latest.set.print();
   trace.println();
 
   // And the latest run time
-  latest.run.to_binary();
   trace.print_P(PSTR("run on "));
   latest.run.print();
   trace.println();
@@ -107,7 +105,6 @@ void loop()
   // Read the time from the rtc device and print
   DS1307::timekeeper_t now;
   rtc.get_time(now);
-  now.to_binary();
   now.print();
   trace.println();
 

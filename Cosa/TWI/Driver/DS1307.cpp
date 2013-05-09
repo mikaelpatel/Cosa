@@ -47,7 +47,7 @@ DS1307::timekeeper_t::to_bcd()
 void 
 DS1307::timekeeper_t::print(IOStream& stream, const char* format)
 {
-  if (format == 0) format = PSTR("%d-%d-%d %d:%d:%d");
+  if (format == 0) format = PSTR("20%Bd-%Bd-%Bd %Bd:%Bd:%Bd");
   stream.printf_P(format, year, month, date, hours, minutes, seconds);
 }
 

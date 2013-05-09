@@ -68,7 +68,9 @@ public:
 
     /**
      * Print the date to the given stream with the given format.
-     * Default format is PSTR("%d-%d-%d %d:%d:%d").
+     * The timekeeper values should be in BCD i.e. not converted 
+     * to binary. Default format is PSTR("20%Bd-%Bd-%Bd %Bd:%Bd:%Bd") 
+     * where "%Bd" is BCD digit.
      * @param[in] stream output stream (default trace).
      * @param[in] format string in program memory (default above).
      */

@@ -284,6 +284,7 @@ public:
    * Base conversion.
    */
   enum Base {
+    bcd = 0,
     bin = 2,
     oct = 8,
     dec = 10,
@@ -570,6 +571,7 @@ public:
     return (*this); 
   }
 
+  friend IOStream& bcd(IOStream& outs);
   friend IOStream& bin(IOStream& outs);
   friend IOStream& oct(IOStream& outs);
   friend IOStream& dec(IOStream& outs);
@@ -585,6 +587,13 @@ public:
    */
   void print_prefix(Base base);
 };
+
+/**
+ * Set current base to bcd for next operator print.
+ * @param[in] outs stream.
+ * @return iostream.
+ */
+extern IOStream& bcd(IOStream& outs);
 
 /**
  * Set current base to binary(2) for next operator print.

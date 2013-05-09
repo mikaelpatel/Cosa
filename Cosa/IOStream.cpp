@@ -154,9 +154,15 @@ IOStream::set_device(Device* dev)
 void 
 IOStream::print(int n, Base base) 
 {
-  print_prefix(base);
-  char buf[sizeof(int) * CHARBITS + 1];
-  print(itoa(n, buf, base));
+  if (base != bcd) {
+    print_prefix(base);
+    char buf[sizeof(int) * CHARBITS + 1];
+    print(itoa(n, buf, base));
+  }
+  else {
+    print((char) ('0' + ((n >> 4) & 0xf)));
+    print((char) ('0' + (n & 0xf)));
+  }
 }
 
 void 
@@ -248,6 +254,9 @@ IOStream::vprintf_P(const char* format, va_list args)
       case 'b': 
 	base = bin; 
 	goto next;
+      case 'B': 
+	base = bcd; 
+	goto next;
       case 'o': 
 	base = oct; 
 	goto next;
@@ -286,6 +295,13 @@ IOStream::vprintf_P(const char* format, va_list args)
     }
     print(c);
   }
+}
+
+IOStream& 
+bcd(IOStream& outs)
+{
+  outs.m_base = IOStream::bcd;
+  return (outs);
 }
 
 IOStream& 
