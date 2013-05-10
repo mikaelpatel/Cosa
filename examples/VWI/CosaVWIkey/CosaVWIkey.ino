@@ -57,8 +57,13 @@ VWI::Transmitter tx(Board::D9, &codec);
 #endif
 const uint16_t SPEED = 4000;
 
-// Connect button with pullup to EXT0/D2
+// Connect button with pullup to Arduino Mega EXT2/D19
+#if defined(__ARDUINO_MEGA__)
+ExternalInterruptPin wakeup(Board::EXT2, ExternalInterruptPin::ON_LOW_LEVEL_MODE);
+// others to Arduino EXT0; Mighty/D10, TinyX4/D10, Standard and TinyX5/D2.
+#else
 ExternalInterruptPin wakeup(Board::EXT0, ExternalInterruptPin::ON_LOW_LEVEL_MODE);
+#endif
 
 // Analog pins to sample for values to send
 AnalogPin luminance(Board::A2);
