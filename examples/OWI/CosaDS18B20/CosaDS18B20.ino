@@ -46,9 +46,9 @@ DS18B20 basement(&owi);
 OutputPin ledPin(Board::LED);
 
 // Print the current temperature reading
-void print_temperature_P(const char* prefix, DS18B20* thermometer)
+void print_temperature_P(const char* prefix, DS18B20& thermometer)
 {
-  FixedPoint temp(thermometer->get_temperature(), 4);
+  FixedPoint temp(thermometer.get_temperature(), 4);
   int16_t integer = temp.get_integer();
   uint16_t fraction = temp.get_fraction(4);
   trace << prefix << integer << '.';
@@ -91,7 +91,7 @@ void loop()
   ledPin.toggle();
   outdoors.convert_request();
   indoors.read_scratchpad();
-  print_temperature_P(PSTR("indoors = "), &indoors);
+  print_temperature_P(PSTR("indoors = "), indoors);
   ledPin.toggle();
   SLEEP(1);
 
@@ -99,7 +99,7 @@ void loop()
   ledPin.toggle();
   basement.convert_request();
   outdoors.read_scratchpad();
-  print_temperature_P(PSTR(", outdoors = "), &outdoors);
+  print_temperature_P(PSTR(", outdoors = "), outdoors);
   ledPin.toggle();
   SLEEP(1);
 
@@ -107,7 +107,7 @@ void loop()
   ledPin.toggle();
   indoors.convert_request();
   basement.read_scratchpad();
-  print_temperature_P(PSTR(", basement = "), &basement);
+  print_temperature_P(PSTR(", basement = "), basement);
   trace.println();
   ledPin.toggle();
   SLEEP(1);
