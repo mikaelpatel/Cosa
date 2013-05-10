@@ -112,7 +112,7 @@ void setup()
     Watchdog::delay(100);
     stop = RTC::millis();
     uint32_t diff = stop - start;
-    if (diff > 101) {
+    if (diff > 108) {
       trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"), 
 		     i, start, stop, diff);
       Watchdog::delay(128);
