@@ -27,38 +27,48 @@
 #include "Cosa/Board.hh"
 #include "Cosa/Power.hh"
 
-// Real-Time Clock: configuration
+// Real-Time Clock configuration
 #define COUNT 255
 #define PRESCALE 64
 #define TIMER_CYCLES(ticks) ((ticks) << 8)
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
 #define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
+#define MS_COUNT ((1000 / US_PER_TICK) - 1)
 #define MS_PER_TICK (US_PER_TICK / 1000)
 
-// Timer ticks counter
-static volatile uint32_t g_ticks = 0UL;
-
 // Initiated state
-static uint8_t g_initiated = 0;
+uint8_t RTC::s_initiated = 0;
+
+// Timer ticks counter
+volatile uint32_t RTC::s_ticks = 0UL;
+volatile uint32_t RTC::s_ms = 0L;
+
+// Interrupt handler extension
+RTC::InterruptHandler RTC::s_handler = 0;
+void* RTC::s_env = 0;
 
 bool
-RTC::begin()
+RTC::begin(InterruptHandler handler, void* env)
 {
-  if (g_initiated) return (false);
+  if (s_initiated) return (false);
   synchronized {
     // Set the compare/top value
     OCR0A = COUNT;
+    OCR0B = MS_COUNT;
     // Use clear time on top mode
     TCCR0A = _BV(WGM01);
     // Set prescaling to 64
     TCCR0B = (_BV(CS01) | _BV(CS00));
     // And enable interrupt on compare match
-    TIMSK0 = _BV(OCIE0A);
+    // TIMSK0 = _BV(OCIE0A);
+    TIMSK0 = _BV(OCIE0A) | _BV(OCIE0B);
     // Reset the counter and clear interrupts
     TCNT0 = 0;
     TIFR0 = 0;
   }
-  g_initiated = true;
+  s_handler = handler;
+  s_env = env;
+  s_initiated = true;
   return (true);
 }
 
@@ -72,15 +82,37 @@ RTC::end()
   return (true);
 }
 
+uint16_t 
+RTC::us_per_tick()
+{
+  return (US_PER_TICK);
+}
+  
+uint32_t 
+RTC::ticks()
+{
+  uint32_t res;
+  uint8_t cnt;
+  // Read tick count and hardware counter. Adjust if pending interrupt
+  synchronized {
+    res = s_ticks;
+    cnt = TCNT0;
+    if ((TIFR0 & _BV(OCF0A)) && (cnt < COUNT)) res += 1;
+  }
+  return (res);
+}
+
 uint32_t 
 RTC::millis()
 {
   uint32_t res;
-  // Read tick counter and adjust to milli-seconds
+  uint8_t cnt;
+  // Read milli-seconds counter. Adjust if pending interrupt
   synchronized {
-    res = g_ticks;
+    res = s_ms;
+    cnt = TCNT0;
+    if ((TIFR0 & _BV(OCF0B)) && (cnt < MS_COUNT)) res += 1;
   }
-  res = res * MS_PER_TICK;
   return (res);
 }
 
@@ -91,7 +123,7 @@ RTC::micros()
   uint8_t cnt;
   // Read tick count and hardware counter. Adjust if pending interrupt
   synchronized {
-    res = g_ticks;
+    res = s_ticks;
     cnt = TCNT0;
     if ((TIFR0 & _BV(OCF0A)) && (cnt < COUNT)) res += 1;
   }
@@ -111,6 +143,19 @@ ISR(TIMER0_COMPA_vect)
 {
   // Set the top register (again) and increment tick counter
   OCR0A = COUNT;
-  g_ticks = g_ticks + 1;
+  RTC::s_ticks += 1;
+}
+
+ISR(TIMER0_COMPB_vect)
+{
+  // Set the top register (again) and increment ms counter
+  OCR0B = MS_COUNT;
+  RTC::s_ms += 1;
+  // Check for callback
+  RTC::InterruptHandler handler = RTC::s_handler;
+  if (handler != 0) {
+    void* env = RTC::s_env;
+    handler(env);
+  }
 }
 

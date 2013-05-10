@@ -26,8 +26,9 @@
 #ifndef __COSA_RTC_HH__
 #define __COSA_RTC_HH__
 
-#include "Cosa/Types.h"
 #include <avr/sleep.h>
+#include "Cosa/Types.h"
+#include "Cosa/Board.hh"
 
 /**
  * Real-time clock; Arduino/ATmega328P Timer0 for micro/milli-
@@ -38,7 +39,25 @@
  * design where the counter match interrupt is used.
  */
 class RTC {
+  /**
+   * Milli-second interrupt handler callback function prototype.
+   * @param[in] env interrupt handler environment.
+   */
+  typedef void (*InterruptHandler)(void* env);
+
 private:
+  static uint8_t s_initiated;
+  static volatile uint32_t s_ticks;
+  static volatile uint32_t s_ms;
+  static InterruptHandler s_handler;
+  static void* s_env;
+
+  /**
+   * Interrupt handlers are friends.
+   */
+  friend void TIMER0_COMPA_vect(void);
+  friend void TIMER0_COMPB_vect(void);
+  
   /**
    * Do not allow instances. This is a static singleton; name space.
    */
@@ -47,15 +66,42 @@ private:
 public:
   /**
    * Start the Real-Time Clock.
+   * @param[in] handler of milli-second interrupts.
+   * @param[in] env handler environment.
    * @return bool true(1) if successful otherwise false(0).
    */
-  static bool begin();
+  static bool begin(InterruptHandler handler = 0, void* env = 0);
 
   /**
    * Stop the Real-Time Clock.
    * @return bool true(1) if successful otherwise false(0).
    */
   static bool end();
+
+  /**
+   * Get number of micro-seconds per tick.
+   * @return micro-seconds.
+   */
+  static uint16_t us_per_tick();
+  
+  /**
+   * Set milli-second timeout interrupt handler.
+   * @param[in] fn interrupt handler.
+   * @param[in] env environment pointer.
+   */
+  static void set(InterruptHandler fn, void* env = 0) 
+  { 
+    synchronized {
+      s_handler = fn; 
+      s_env = env; 
+    }
+  }
+
+  /**
+   * Return the current number of ticks.
+   * @return ticks.
+   */
+  static uint32_t ticks();
 
   /**
    * Return the current clock in milli-seconds.

@@ -224,6 +224,8 @@ extern "C" {
   void PCINT1_vect(void) __attribute__ ((signal));
   void PCINT2_vect(void) __attribute__ ((signal));
   void PCINT3_vect(void) __attribute__ ((signal));
+  void TIMER0_COMPA_vect(void) __attribute__ ((signal));
+  void TIMER0_COMPB_vect(void) __attribute__ ((signal));
   void TIMER1_COMPA_vect(void) __attribute__ ((signal));
   void TIMER1_COMPB_vect(void) __attribute__ ((signal));
   void TWI_vect(void) __attribute__ ((signal));
