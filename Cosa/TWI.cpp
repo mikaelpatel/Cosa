@@ -156,15 +156,17 @@ ISR(TWI_vect)
      */
   case TWI::MT_SLA_ACK:
   case TWI::MT_DATA_ACK:
+    if (twi.m_next == twi.m_last) {
+      twi.m_ix += 1;
+      twi.m_next = (uint8_t*) twi.m_vec[twi.m_ix].buf;
+      twi.m_last = twi.m_next + twi.m_vec[twi.m_ix].size;
+    }
     if (twi.m_next < twi.m_last) {
       TWDR = *twi.m_next++;
       TWCR = TWI::DATA_CMD;
       twi.m_count += 1;
       break;
     } 
-    twi.m_ix += 1;
-    twi.m_next = (uint8_t*) twi.m_vec[twi.m_ix].buf;
-    twi.m_last = twi.m_next + twi.m_vec[twi.m_ix].size;
     if (twi.m_target != 0) 
       Event::push(Event::WRITE_COMPLETED_TYPE, twi.m_target, &twi);
   case TWI::MT_SLA_NACK:
