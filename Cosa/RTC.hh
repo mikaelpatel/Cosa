@@ -47,8 +47,10 @@ class RTC {
 
 private:
   static uint8_t s_initiated;
-  static volatile uint32_t s_ticks;
+  static volatile uint32_t s_uticks;
   static volatile uint32_t s_ms;
+  static volatile uint16_t s_mticks;
+  static volatile uint32_t s_sec;
   static InterruptHandler s_handler;
   static void* s_env;
 
@@ -98,10 +100,22 @@ public:
   }
 
   /**
-   * Return the current number of ticks.
-   * @return ticks.
+   * Set clock (seconds) to real-time (for instance seconds from a
+   * given date).
+   * @param[in] sec.
    */
-  static uint32_t ticks();
+  static void set(uint32_t sec) 
+  { 
+    synchronized {
+      s_sec = sec;
+    }
+  }
+
+  /**
+   * Return the current clock in micro-seconds.
+   * @return micro-seconds.
+   */
+  static uint32_t micros();
 
   /**
    * Return the current clock in milli-seconds.
@@ -110,10 +124,17 @@ public:
   static uint32_t millis();
 
   /**
-   * Return the current clock in micro-seconds.
-   * @return micro-seconds.
+   * Return the current clock in seconds.
+   * @return seconds.
    */
-  static uint32_t micros();
+  static uint32_t seconds()
+  {
+    uint32_t res;
+    synchronized {
+      res = s_sec;
+    }
+    return (res);
+  }
 
   /**
    * Delay using the real-time clock.

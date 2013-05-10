@@ -32,7 +32,7 @@ void* Watchdog::s_env = 0;
 
 Head Watchdog::s_timeq[Watchdog::TIMEQ_MAX];
 
-volatile uint32_t Watchdog::s_ticks = 0;
+volatile uint32_t Watchdog::s_ticks = 0L;
 uint8_t Watchdog::s_prescale = 0;
 uint8_t Watchdog::s_mode = 0;
 
@@ -96,8 +96,8 @@ Watchdog::attach(Link* target, uint16_t ms)
 void
 Watchdog::await(AwaitCondition fn, void* env, uint16_t ms)
 {
-  uint32_t ticks = ms / ms_per_tick();
-  volatile uint32_t stop = s_ticks + (ticks == 0 ? 1 : ticks);
+  uint32_t ticks = (ms + (ms_per_tick() / 2)) / ms_per_tick();
+  uint32_t stop = s_ticks + (ticks == 0 ? 1 : ticks);
   do {
     if (fn != 0 && fn(env)) return;
     Power::sleep(s_mode);
@@ -115,10 +115,9 @@ Watchdog::push_timeout_events(void* env)
 
 ISR(WDT_vect)
 {
-  Watchdog::InterruptHandler handler = Watchdog::s_handler;
-  if (handler != 0) {
-    void* env = Watchdog::s_env;
-    handler(env);
-  }
   Watchdog::s_ticks += 1;
+  Watchdog::InterruptHandler handler = Watchdog::s_handler;
+  if (handler == 0) return;
+  void* env = Watchdog::s_env;
+  handler(env);
 }

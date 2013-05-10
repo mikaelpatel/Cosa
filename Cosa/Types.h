@@ -100,7 +100,7 @@ union univ32_t {
  * Macro for micro-second level delay. See also USLEEP().
  * @param[in] us micro-seconds.
  */
-#define DELAY(us) _delay_loop_2((us) * I_CPU / 4)
+#define DELAY(us) _delay_loop_2(((us) * I_CPU) / 4)
 
 /**
  * Macro for micro-second level delay. See also DELAY().
@@ -120,7 +120,7 @@ union univ32_t {
  * Watchdog. Allowed values are; 1, 2, 4, and 8 seconds.
  * @param[in] seconds.
  */
-#define SLEEP(seconds) Watchdog::delay(seconds * 1024)
+#define SLEEP(seconds) Watchdog::delay(seconds * 1000)
 
 /**
  * Disable interrupts and return flags.

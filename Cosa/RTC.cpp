@@ -30,18 +30,18 @@
 // Real-Time Clock configuration
 #define COUNT 255
 #define PRESCALE 64
-#define TIMER_CYCLES(ticks) ((ticks) << 8)
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
 #define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
-#define MS_COUNT ((1000 / US_PER_TICK) - 1)
-#define MS_PER_TICK (US_PER_TICK / 1000)
+#define MS_COUNT ((1000 / US_PER_TIMER_CYCLE) - 1)
 
 // Initiated state
 uint8_t RTC::s_initiated = 0;
 
 // Timer ticks counter
-volatile uint32_t RTC::s_ticks = 0UL;
+volatile uint32_t RTC::s_uticks = 0UL;
 volatile uint32_t RTC::s_ms = 0L;
+volatile uint16_t RTC::s_mticks = 0;
+volatile uint32_t RTC::s_sec = 0L;
 
 // Interrupt handler extension
 RTC::InterruptHandler RTC::s_handler = 0;
@@ -59,9 +59,8 @@ RTC::begin(InterruptHandler handler, void* env)
     TCCR0A = _BV(WGM01);
     // Set prescaling to 64
     TCCR0B = (_BV(CS01) | _BV(CS00));
-    // And enable interrupt on compare match
-    // TIMSK0 = _BV(OCIE0A);
-    TIMSK0 = _BV(OCIE0A) | _BV(OCIE0B);
+    // And enable interrupt on compare match (both A and B)
+    TIMSK0 = (_BV(OCIE0A) | _BV(OCIE0B));
     // Reset the counter and clear interrupts
     TCNT0 = 0;
     TIFR0 = 0;
@@ -89,20 +88,6 @@ RTC::us_per_tick()
 }
   
 uint32_t 
-RTC::ticks()
-{
-  uint32_t res;
-  uint8_t cnt;
-  // Read tick count and hardware counter. Adjust if pending interrupt
-  synchronized {
-    res = s_ticks;
-    cnt = TCNT0;
-    if ((TIFR0 & _BV(OCF0A)) && (cnt < COUNT)) res += 1;
-  }
-  return (res);
-}
-
-uint32_t 
 RTC::millis()
 {
   uint32_t res;
@@ -123,12 +108,12 @@ RTC::micros()
   uint8_t cnt;
   // Read tick count and hardware counter. Adjust if pending interrupt
   synchronized {
-    res = s_ticks;
+    res = s_uticks;
     cnt = TCNT0;
-    if ((TIFR0 & _BV(OCF0A)) && (cnt < COUNT)) res += 1;
+    if ((TIFR0 & _BV(OCF0A)) && (cnt < COUNT)) res += US_PER_TICK;
   }
   // Convert ticks to micro-seconds
-  res = (TIMER_CYCLES(res) + cnt) * US_PER_TIMER_CYCLE;
+  res += ((uint32_t) cnt) * US_PER_TIMER_CYCLE;
   return (res);
 }
 
@@ -143,7 +128,7 @@ ISR(TIMER0_COMPA_vect)
 {
   // Set the top register (again) and increment tick counter
   OCR0A = COUNT;
-  RTC::s_ticks += 1;
+  RTC::s_uticks += US_PER_TICK;
 }
 
 ISR(TIMER0_COMPB_vect)
@@ -151,11 +136,16 @@ ISR(TIMER0_COMPB_vect)
   // Set the top register (again) and increment ms counter
   OCR0B = MS_COUNT;
   RTC::s_ms += 1;
+  // Increment ms ticks count and check if seconds should be incremented
+  RTC::s_mticks += 1;
+  if (RTC::s_mticks == 1000) {
+    RTC::s_sec += 1;
+    RTC::s_mticks = 0;
+  }
   // Check for callback
   RTC::InterruptHandler handler = RTC::s_handler;
-  if (handler != 0) {
-    void* env = RTC::s_env;
-    handler(env);
-  }
+  if (handler == 0) return;
+  void* env = RTC::s_env;
+  handler(env);
 }
 
