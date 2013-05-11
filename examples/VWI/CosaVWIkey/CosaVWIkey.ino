@@ -22,11 +22,13 @@
  *
  * @section Description
  * Demonstration of the Virtual Wire Interface (VWI) driver
- * and ExternalInterruptPin for wakeup after power down on ATtiny85.
+ * and ExternalInterruptPin for wakeup after power down.
  *
  * @section Circuit
- * Connect RF433/315 Transmitter Data to ATtiny85 D1, connect VCC 
- * GND. Connect button with pullup resistor to D2.
+ * Connect RF433/315 Transmitter Data to Arduino/ATtiny D9/D1, 
+ * connect VCC and GND. Connect button with pullup resistor to 
+ * Arduino EXT0/D2, Mega EXT2/D19, Mighty/D10, TinyX4/D10, and 
+ * TinyX5/D2.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -49,7 +51,7 @@ VirtualWireCodec codec;
 // Block4B5BCodec codec;
 // BitstuffingCodec codec;
 
-// Connect RF433 transmitter to ATtiny/D1 or Arduino/D9
+// Connect RF433 transmitter to Arduno/ATtiny D9/D1
 #if defined(__ARDUINO_TINY__)
 VWI::Transmitter tx(Board::D1, &codec);
 #else 
@@ -57,10 +59,10 @@ VWI::Transmitter tx(Board::D9, &codec);
 #endif
 const uint16_t SPEED = 4000;
 
-// Connect button with pullup to Arduino Mega EXT2/D19
+// Connect button with pullup to Arduino Mega EXT2/D19, others to 
+// Arduino EXT0; Mighty/D10, TinyX4/D10, Standard/D2 and TinyX5/D2.
 #if defined(__ARDUINO_MEGA__)
 ExternalInterruptPin wakeup(Board::EXT2, ExternalInterruptPin::ON_LOW_LEVEL_MODE);
-// others to Arduino EXT0; Mighty/D10, TinyX4/D10, Standard and TinyX5/D2.
 #else
 ExternalInterruptPin wakeup(Board::EXT0, ExternalInterruptPin::ON_LOW_LEVEL_MODE);
 #endif
@@ -71,8 +73,11 @@ AnalogPin temperature(Board::A3);
 
 void setup()
 {
+  // Startup Virtual Wire Interface/Transmitter
   VWI::begin(SPEED);
   tx.begin();
+
+  // Put hardware to sleep and allow interrupts from the button
   VWI::disable();
   Power::adc_disable();
 #if defined(__ARDUINO_TINY__)
@@ -81,6 +86,7 @@ void setup()
   wakeup.enable();
 }
 
+// Message to send
 struct msg_t {
   uint16_t nr;
   uint16_t luminance;
@@ -89,18 +95,25 @@ struct msg_t {
 
 void loop()
 {
+  // Wait for events from the button
   static uint16_t nr = 0;
   Event event;
   Event::queue.await(&event, SLEEP_MODE_PWR_DOWN);
+
+  // Tune off interrupts from button and wake up the hardware
   wakeup.disable();
   Power::adc_enable();
   VWI::enable();
+
+  // Construct the message, sample the values, and send
   msg_t msg;
   msg.nr = nr++;
   msg.luminance = luminance.sample();
   msg.temperature = temperature.sample();
   tx.send(&msg, sizeof(msg));
   tx.await();
+
+  // Put the hardware back to sleep and allow interrupts from the button
   Power::adc_disable();
   VWI::disable();
   wakeup.enable();

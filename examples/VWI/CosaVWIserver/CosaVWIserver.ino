@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Virtual Wire Interface (VWI) driver;
+ * Demonstration of the Enhanced Virtual Wire Interface (VWI) driver;
  * Transceiver with acknowledgement and automatic retransmission.
  *
  * @section Circuit
@@ -54,8 +54,8 @@ VirtualWireCodec codec;
 VWI::Transceiver trx(Board::D8, Board::D9, &codec);
 
 // Network configuration
-const uint16_t ADDR = 0xC000;
-const uint16_t MASK = 0xFF00;
+const uint16_t ADDR = 0xC0A0;
+const uint16_t MASK = 0xFFF0;
 const uint16_t SPEED = 4000;
 
 // Message types
@@ -72,7 +72,7 @@ IOStream& operator<<(IOStream& outs, sample_t& sample)
   return (outs);
 }
 
-const int8_t STAT_CMD = -2;
+const int8_t STAT_CMD = 2;
 struct stat_t {
   uint16_t voltage;
   uint16_t sent;
@@ -93,7 +93,7 @@ IOStream& operator<<(IOStream& outs, stat_t& stat)
 }
 
 // Message from the time keeper
-const int8_t TIMEKEEPER_CMD = -1;
+const int8_t TIMEKEEPER_CMD = 3;
 
 // Extended mode message with header
 struct msg_t {

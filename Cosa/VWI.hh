@@ -39,9 +39,9 @@ class VWI {
 public:
   /** 
    * The maximum payload length; 32 byte application payload and 
-   * 6 byte extended mode header (sizeof(header_t)) 
+   * 4 byte extended mode header (sizeof(header_t)) 
    */
-  static const uint8_t PAYLOAD_MAX = 38;
+  static const uint8_t PAYLOAD_MAX = 36;
   
   /** Maximum number of bytes in a message (incl. byte count and FCS) */
   static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
@@ -67,7 +67,7 @@ public:
   /** Message header for extended Virtual Wire Interface mode */
   struct header_t {
     uint16_t addr;		/**< Transmitter node address */
-    int8_t cmd;			/**< Command or message type */
+    uint8_t cmd;		/**< Command or message type */
     uint8_t nr;			/**< Message sequence number */
   };
 
@@ -493,14 +493,14 @@ public:
      * Send a message with the given length. Returns almost
      * immediately, and message will be sent at the right timing by
      * interrupts. A command may be given in extended mode with
-     * addressing to allow identification of the message type. 
+     * addressing to allow identification of the message type.
      * The message length (len) must be less than PAYLOAD_MAX.
      * @param[in] buf pointer to the data to transmit.
      * @param[in] len number of bytes to transmit.
      * @param[in] cmd command code in extended mode.
      * @return true(1) if accepted for transmission, otherwise false(0).
      */
-    bool send(const void* buf, uint8_t len, int8_t cmd = 0);
+    bool send(const void* buf, uint8_t len, uint8_t cmd = 0);
 
     /**
      * Resend previous message. Return true(1) if successful otherwise
@@ -516,11 +516,17 @@ public:
    */
   class Transceiver {
   public:
+    /** Maximum size of extended mode payload (32 bytes) */
+    static const uint8_t PAYLOAD_MAX = VWI::PAYLOAD_MAX - sizeof(header_t);
+
     /** Maximum number of retransmission */
     static const uint8_t RETRANS_MAX = 16;
 
     /** Timeout on acknowledge receive */
     static const uint32_t TIMEOUT = 500;
+
+    /** Set command as not acknowledged */
+    static const uint8_t NACK = 0x80;	
 
     /** Receiver member variable */
     Receiver rx;
@@ -529,9 +535,8 @@ public:
     Transmitter tx;
 
     /**
-     * Transceiver constructor given node address, speed (bits per
-     * second), transmitter and receiver pin, codec and mode on await.
-     * Default is SLEEP_MODE_IDLE.
+     * Transceiver constructor given transmitter and receiver pin, and
+     * codec.
      * @param[in] rx_pin receiver pin.
      * @param[in] tx_pin transmitter pin.
      * @param[in] codec encoder/decoder.
@@ -539,7 +544,7 @@ public:
     Transceiver(Board::DigitalPin rx_pin, Board::DigitalPin tx_pin, Codec* codec);
 
     /**
-     * Start the Phase Locked Loop listening for the receiver, and
+     * Start the Phase Locked Loop listening for the receiver and
      * start transmitter.
      * @param[in] mask for sub-net address match.
      * @return bool
@@ -566,15 +571,22 @@ public:
     int8_t recv(void* buf, uint8_t len, uint32_t ms = 0L);
     
     /**
-     * Send a message with the given length, and await acknowledgement.
-     * The message will be retransmitted until an acknowledgement is 
-     * received. The message length (len) must be less than PAYLOAD_MAX.
+     * Send a message with the given length, and await acknowledgement
+     * if the nack flag is zero. The message will be retransmitted
+     * until an acknowledgement is received. The message length (len)
+     * must be less than PAYLOAD_MAX. The command code/message type
+     * must be 0..127. Higher command code will mark the message as
+     * non-acknowledged (nack != 0). Returns number of transmissions 
+     * or negative error code(-1) if maximum number of retransmissions
+     * RETRANS_MAX exceeded.
      * @param[in] buf pointer to the data to transmit.
      * @param[in] len number of bytes to transmit.
-     * @param[in] cmd command code in extended mode.
-     * @return true(1) if the message was delivered otherwise false(0).
+     * @param[in] cmd command code in extended mode (0..127).
+     * @param[in] nack non zero for no acknowledgement (Default zero).
+     * @return number of transmissions (1..n) otherwise negative error
+     * code.
      */
-    int8_t send(const void* buf, uint8_t len, int8_t cmd = 0);
+    int8_t send(const void* buf, uint8_t len, uint8_t cmd, uint8_t nack = 0);
   };
 };
 

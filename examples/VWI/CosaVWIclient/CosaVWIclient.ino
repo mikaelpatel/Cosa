@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Virtual Wire Interface (VWI) driver;
+ * Demonstration of the Enhanced Virtual Wire Interface (VWI) driver;
  * Transceiver with acknowledgement and automatic retransmission.
  * Multiple message types.
  *
@@ -77,7 +77,7 @@ struct sample_t {
 };
 
 // Statistics message
-const int8_t STAT_CMD = -2;
+const int8_t STAT_CMD = 2;
 struct stat_t {
   uint16_t voltage;
   uint16_t sent;
@@ -117,10 +117,19 @@ void loop()
   statistics.update(nr);
   
   // Send message with battery voltage and statistics every 15 messages
+  // Every 60 messages send with acknowledgement, otherwise send two
+  // messages without.
   if (statistics.sent % 15 == 0) {
     statistics.voltage = AnalogPin::bandgap(1100);
-    nr = trx.send(&statistics, sizeof(statistics), STAT_CMD);
-    statistics.update(nr);
+    if (statistics.sent % 60 == 0) {
+      nr = trx.send(&statistics, sizeof(statistics), STAT_CMD);
+      statistics.update(nr);
+    } else {
+      for (uint8_t i = 0; i < 2; i++) {
+	nr = trx.send(&statistics, sizeof(statistics), STAT_CMD, 1);
+	statistics.update(nr);
+      }
+    }
   }
 
   // Take a nap

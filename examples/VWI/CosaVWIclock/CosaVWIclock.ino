@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Virtual Wire Interface (VWI) driver;
+ * Demonstration of the Enhanced Virtual Wire Interface (VWI) driver;
  * Transceiver with acknowledgement and automatic retransmission.
  * Reads date and time from DS1307 and transmits to server.
  *
@@ -56,12 +56,8 @@ const uint16_t SPEED = 4000;
 // Virtual Wire Interface Transceiver
 VWI::Transceiver trx(Board::D8, Board::D9, &codec);
 
-// The RTC clock and broadcast message type
-DS1307 rtc;
-const int8_t TIMEKEEPER_CMD = -1;
-  
 // Statistics message
-const int8_t STAT_CMD = -2;
+const int8_t STAT_CMD = 2;
 struct stat_t {
   uint16_t voltage;
   uint16_t sent;
@@ -82,6 +78,10 @@ struct stat_t {
 // Statistics state
 stat_t statistics;
   
+// The RTC clock and broadcast message type
+DS1307 rtc;
+const int8_t TIMEKEEPER_CMD = 3;
+  
 void setup()
 {
   // Start watchdog for delay and RTC for time measurement
@@ -98,13 +98,14 @@ void loop()
   // Read date and time and send message
   DS1307::timekeeper_t now;
   rtc.get_time(now);
-  int8_t nr = trx.send(&now, sizeof(now), TIMEKEEPER_CMD);
+  int8_t nr = trx.send(&now, sizeof(now), TIMEKEEPER_CMD, 1);
   statistics.update(nr);
   
-  // Send message with battery voltage and statistics every 12 messages
+  // Send non-acknowledged message with battery voltage and statistics 
+  // every 12 messages 
   if (statistics.sent % 12 == 0) {
     statistics.voltage = AnalogPin::bandgap(1100);
-    nr = trx.send(&statistics, sizeof(statistics), STAT_CMD);
+    nr = trx.send(&statistics, sizeof(statistics), STAT_CMD, 1);
     statistics.update(nr);
   }
 

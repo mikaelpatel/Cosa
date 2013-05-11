@@ -34,6 +34,7 @@
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/RTC.hh"
 #include "Cosa/Memory.h"
 
 VirtualWireCodec codec;
@@ -44,6 +45,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVWImonitor: started"));
   TRACE(free_memory());
+  RTC::begin();
   VWI::begin(4000);
   rx.begin();
 }
@@ -53,6 +55,26 @@ void loop()
   rx.await();
   char buffer[VWI::PAYLOAD_MAX];
   int8_t len = rx.recv(buffer, sizeof(buffer));
-  for (uint8_t i = 0; i < len; i++)
-    trace.print(buffer[i]);
+  uint8_t is_ascii = 1;
+  static uint32_t start = 0L;
+  static uint16_t nr = 0;
+  for (uint8_t i = 0; i < len; i++) {
+    if (buffer[i] < ' ' || buffer[i] > 127) {
+      is_ascii = 0;
+      break;
+    }
+  }
+  if (is_ascii) {
+    for (uint8_t i = 0; i < len; i++)
+      trace.print(buffer[i]);
+  }
+  else {
+    uint32_t stop = RTC::millis();
+    trace.print(nr++);
+    trace.print(':');
+    trace.print(stop - start);
+    trace.print(':');
+    trace.print(buffer, len, IOStream::hex, sizeof(buffer));
+    start = stop;
+  }
 }

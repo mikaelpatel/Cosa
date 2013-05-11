@@ -354,7 +354,7 @@ VWI::Transmitter::send(const iovec_t* vec)
 }
 
 bool 
-VWI::Transmitter::send(const void* buf, uint8_t len, int8_t cmd)
+VWI::Transmitter::send(const void* buf, uint8_t len, uint8_t cmd)
 {
   // Check that the message is not too large
   if (len > PAYLOAD_MAX) return (false);
@@ -437,9 +437,16 @@ int8_t
 VWI::Transceiver::recv(void* buf, uint8_t len, uint32_t ms)
 {
   // Receiver extended message
+  rx.await();
   int8_t res = rx.recv(buf, len, ms);
   if (res <= 0) return (res);
 
+  // Check for no acknowledgement
+  VWI::header_t* hp = (VWI::header_t*) buf;
+  uint8_t nack = hp->cmd & NACK;
+  hp->cmd = hp->cmd & ~NACK;
+  if (nack) return (res);
+  
   // Send acknowledgement; retransmit the header
   iovec_t vec[2];
   iovec_t* vp = vec;
@@ -450,17 +457,18 @@ VWI::Transceiver::recv(void* buf, uint8_t len, uint32_t ms)
 }
 
 int8_t
-VWI::Transceiver::send(const void* buf, uint8_t len, int8_t cmd)
+VWI::Transceiver::send(const void* buf, uint8_t len, uint8_t cmd, uint8_t nack)
 {
-  VWI::header_t ack;
-  uint8_t retrans = 0;
   uint8_t nr = tx.get_next_nr();
+  uint8_t retrans = 0;
 
   // Sent the message and check for acknowledge is required
-  tx.send(buf, len, cmd);
-  if (cmd <= 0) return (1);
+  if (nack) cmd |= NACK;
+  int8_t res = tx.send(buf, len, cmd);
+  if (nack) return (res);
   while (retrans != RETRANS_MAX) {
     tx.await();
+    VWI::header_t ack;
     int8_t len = rx.recv(&ack, sizeof(ack), TIMEOUT);
     // Check acknowledgement and return if valid
     if ((len == sizeof(ack)) && (ack.nr == nr) && (ack.addr == VWI::s_addr))
