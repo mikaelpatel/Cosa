@@ -35,6 +35,12 @@ IOStream::Device::available()
 }
 
 int 
+IOStream::Device::room()
+{
+  return (0);
+}
+
+int 
 IOStream::Device::putchar(char c) 
 { 
   return (-1); 

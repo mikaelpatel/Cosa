@@ -160,6 +160,16 @@ public:
 
   /**
    * @override
+   * Number of bytes room in output buffer.
+   * @return bytes.
+   */
+  virtual int room()
+  {
+    return (m_obuf->room());
+  }
+
+  /**
+   * @override
    * Write character to serial port output buffer.
    * Returns character if successful otherwise on error or buffer full
    * returns EOF(-1),

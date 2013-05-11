@@ -31,10 +31,10 @@
 #include "Cosa/Power.hh"
 
 /**
- * Circular buffer template class for IOStreams. Size must be
- * Power(2). May be used as a string buffer device, or to connect
- * different IOStreams. See UART.hh for an example. Buffer size should
- * be power of 2 and max 256.
+ * Circular buffer template class for IOStreams. May be used as a
+ * string buffer device, or to connect different IOStreams. See
+ * UART.hh for an example. Buffer size should be power of 2 and 
+ * max 128. 
  * @param[in] size number of bytes in buffer.
  */
 template <uint8_t size>
@@ -46,7 +46,7 @@ private:
 
 public:
   /**
-   * Allocate buffer object for iostream operations. 
+   * Constuct buffer object for stream operations. 
    */
   IOBuffer() :
     IOStream::Device(),
@@ -75,12 +75,22 @@ public:
 
   /**
    * @override
-   * Number of bytes available in buffer.
+   * Number of bytes available in buffer before empty.
    * @return bytes.
    */
   virtual int available()
   {
-    return (((size - 1) + m_head - m_tail) % (size - 1));
+    return (size + m_head - m_tail) & (size - 1);
+  }
+
+  /**
+   * @override
+   * Number of bytes room in buffer before full.
+   * @return bytes.
+   */
+  virtual int room()
+  {
+    return (size - m_head + m_tail - 1) & (size - 1);
   }
 
   /**

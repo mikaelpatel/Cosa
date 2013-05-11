@@ -59,6 +59,12 @@ public:
     virtual int available();
 
     /**
+     * Number of bytes room.
+     * @return bytes.
+     */
+    virtual int room();
+
+    /**
      * Write character to device.
      * @param[in] c character to write.
      * @return character written or EOF(-1).
@@ -163,6 +169,15 @@ public:
     virtual int available()
     {
       return (m_dev->available());
+    }
+
+    /**
+     * Number of bytes room.
+     * @return bytes.
+     */
+    virtual int room()
+    {
+      return (m_dev->room());
     }
 
     /**

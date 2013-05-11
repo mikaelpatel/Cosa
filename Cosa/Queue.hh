@@ -31,11 +31,10 @@
 
 /**
  * Template class for ring-buffer for queueing data elements.
- * Number of members, nmemb, must be power of 2.
  * See Event::queue for an example of usage.
  * @param[in] T element class.
  * @param[in] nmemb number of elements in queue.
- * @pre nmemb is powerof(2)
+ * @pre nmemb is powerof(2) and max 128.
  */
 template <class T, uint8_t nmemb>
 class Queue {
@@ -68,7 +67,16 @@ public:
    */
   uint8_t available() 
   { 
-    return ((m_put - m_get + (nmemb - 1)) % (nmemb - 1));
+    return ((nmemb + m_put - m_get) & (nmemb - 1));
+  }
+
+  /**
+   * Number of elements room in queue.
+   * @return room for elements.
+   */
+  uint8_t room()
+  {
+    return (nmemb - m_put + m_get - 1) & (nmemb - 1);
   }
 
   /**

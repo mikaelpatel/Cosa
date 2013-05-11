@@ -57,6 +57,16 @@ public:
 
   /**
    * @override
+   * Number of bytes room in output buffer.
+   * @return bytes.
+   */
+  virtual int room()
+  {
+    return (sizeof(m_buffer) - m_ix);
+  }
+  
+  /**
+   * @override
    * Write character to output buffer. Flush if full or carrage return
    * character. Returns character if successful otherwise on error or
    * buffer full returns EOF(-1),
