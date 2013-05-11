@@ -52,15 +52,12 @@ DS18B20 outdoors(&owi);
 VirtualWireCodec codec;
 #if defined(__ARDUINO_TINY__)
 VWI::Transmitter tx(Board::D1, &codec);
+const uint16_t ADDR = 0xC051;
 #else
 VWI::Transmitter tx(Board::D9, &codec);
+const uint16_t ADDR = 0xC052;
 #endif
 const uint16_t SPEED = 4000;
-#if defined(__ARDUINO_TINY__)
-const uint32_t ADDR = 0xC05a0001;
-#else
-const uint32_t ADDR = 0xC05a0002;
-#endif
 
 void setup()
 {

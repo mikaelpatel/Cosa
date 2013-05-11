@@ -54,12 +54,12 @@ VirtualWireCodec codec;
 VWI::Transceiver trx(Board::D8, Board::D9, &codec);
 
 // Network configuration
-const uint32_t ADDR = 0xc05a0000UL;
-const uint32_t MASK = 0xffffff00UL;
+const uint16_t ADDR = 0xC000;
+const uint16_t MASK = 0xFF00;
 const uint16_t SPEED = 4000;
 
 // Message types
-const uint8_t SAMPLE_CMD = 1;
+const int8_t SAMPLE_CMD = 1;
 struct sample_t {
   uint16_t luminance;
   uint16_t temperature;
@@ -67,13 +67,12 @@ struct sample_t {
 
 IOStream& operator<<(IOStream& outs, sample_t& sample)
 { 
-  outs << PSTR("sample:") 
-       << sample.luminance << PSTR(", ") 
-       << sample.temperature;
+  outs << PSTR("sample:luminance = ") << sample.luminance 
+       << PSTR(", temperature = ") << sample.temperature;
   return (outs);
 }
 
-const uint8_t STAT_CMD = 2;
+const int8_t STAT_CMD = -2;
 struct stat_t {
   uint16_t voltage;
   uint16_t sent;
@@ -84,18 +83,17 @@ struct stat_t {
 
 IOStream& operator<<(IOStream& outs, stat_t& stat)
 { 
-  outs << PSTR("stat:") 
-       << stat.voltage << PSTR(", ")
-       << stat.sent << PSTR(", ")
-       << stat.resent << PSTR(", ")
-       << stat.received << PSTR(", ")
-       << stat.failed << PSTR(" (")
+  outs << PSTR("stat:vcc = ") << stat.voltage 
+       << PSTR(", send = ") << stat.sent 
+       << PSTR(", resent = ") << stat.resent 
+       << PSTR(", received = ") << stat.received 
+       << PSTR(", failed = ") << stat.failed << PSTR(" (")
        << (stat.resent * 100L) / stat.sent << PSTR("%)");
   return (outs);
 }
 
 // Message from the time keeper
-const uint8_t TIMEKEEPER_CMD = 3;
+const int8_t TIMEKEEPER_CMD = -1;
 
 // Extended mode message with header
 struct msg_t {
@@ -109,9 +107,7 @@ struct msg_t {
 
 IOStream& operator<<(IOStream& outs, msg_t& msg)
 { 
-  outs << hex << msg.header.addr << ':' 
-       << msg.header.nr << ':'
-       << msg.header.cmd << ':';
+  outs << hex << msg.header.addr << ':' << msg.header.nr << ':';
   return (outs);
 }
 
@@ -149,8 +145,9 @@ void loop()
     trace << msg.stat << endl; 
     break;
   case TIMEKEEPER_CMD: 
+    trace << PSTR("timekeeper:");
     msg.now.print();
-    trace.println();
+    trace << endl;
     break;
   default:
     trace << PSTR("unknown message type") << endl;

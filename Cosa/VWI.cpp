@@ -211,13 +211,13 @@ VWI::disable()
 VWI::Receiver::Receiver(Board::DigitalPin pin, Codec* codec) : 
   InputPin(pin),
   m_codec(codec),
-  m_mask(0xffffffffUL)
+  m_mask(0xffffU)
 {
   receiver = this;
 }
 
 bool 
-VWI::Receiver::begin(uint32_t mask)
+VWI::Receiver::begin(uint16_t mask)
 {
   RTC::begin();
   m_mask = mask;
@@ -250,7 +250,7 @@ VWI::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
   if (!m_done && (ms == 0 || !await(ms))) return (0);
 
   // Check if extended mode and correct sub-net address
-  if (VWI::s_addr != 0L) {
+  if (VWI::s_addr != 0) {
     VWI::header_t* hp = (VWI::header_t*) (m_buffer + 1);
     if ((hp->addr & m_mask) != VWI::s_addr) {
       m_done = false;
@@ -354,7 +354,7 @@ VWI::Transmitter::send(const iovec_t* vec)
 }
 
 bool 
-VWI::Transmitter::send(const void* buf, uint8_t len, uint8_t cmd)
+VWI::Transmitter::send(const void* buf, uint8_t len, int8_t cmd)
 {
   // Check that the message is not too large
   if (len > PAYLOAD_MAX) return (false);
@@ -422,7 +422,7 @@ VWI::Transceiver::Transceiver(Board::DigitalPin rx_pin,
 }
 
 bool 
-VWI::Transceiver::begin(uint32_t mask)
+VWI::Transceiver::begin(uint16_t mask)
 {
   return (rx.begin(mask) && tx.begin());
 }
@@ -450,14 +450,15 @@ VWI::Transceiver::recv(void* buf, uint8_t len, uint32_t ms)
 }
 
 int8_t
-VWI::Transceiver::send(const void* buf, uint8_t len, uint8_t cmd)
+VWI::Transceiver::send(const void* buf, uint8_t len, int8_t cmd)
 {
   VWI::header_t ack;
   uint8_t retrans = 0;
   uint8_t nr = tx.get_next_nr();
 
-  // Sent the message and receive an acknowledgement
+  // Sent the message and check for acknowledge is required
   tx.send(buf, len, cmd);
+  if (cmd <= 0) return (1);
   while (retrans != RETRANS_MAX) {
     tx.await();
     int8_t len = rx.recv(&ack, sizeof(ack), TIMEOUT);

@@ -45,8 +45,8 @@
 VirtualWireCodec codec;
 VWI::Receiver rx(Board::D8, &codec);
 const uint16_t SPEED = 4000;
-const uint32_t ADDR = 0xc05a0000UL;
-const uint32_t MASK = 0xffffff00UL;
+const uint16_t ADDR = 0xC050;
+const uint16_t MASK = 0xFFF0;
 
 void setup()
 {

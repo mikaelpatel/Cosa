@@ -49,7 +49,7 @@ VirtualWireCodec codec;
 // BitstuffingCodec codec;
 
 // Network configuration
-const uint32_t ADDR = 0xc05a0001UL;
+const uint16_t ADDR = 0xC051;
 const uint16_t SPEED = 4000;
 
 // Virtual Wire Interface Transceiver
@@ -64,7 +64,7 @@ AnalogPin luminance(Board::A2);
 AnalogPin temperature(Board::A3);
 
 // Measurement message
-const uint8_t SAMPLE_CMD = 1;
+const int8_t SAMPLE_CMD = 1;
 struct sample_t {
   uint16_t luminance;
   uint16_t temperature;
@@ -77,7 +77,7 @@ struct sample_t {
 };
 
 // Statistics message
-const uint8_t STAT_CMD = 2;
+const int8_t STAT_CMD = -2;
 struct stat_t {
   uint16_t voltage;
   uint16_t sent;

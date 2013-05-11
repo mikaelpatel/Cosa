@@ -66,8 +66,8 @@ public:
 
   /** Message header for extended Virtual Wire Interface mode */
   struct header_t {
-    uint32_t addr;		/**< Transmitter node address */
-    uint8_t cmd;		/**< Command or message type */
+    uint16_t addr;		/**< Transmitter node address */
+    int8_t cmd;			/**< Command or message type */
     uint8_t nr;			/**< Message sequence number */
   };
 
@@ -94,7 +94,7 @@ public:
    * @param[in] mode sleep mode (Default SLEEP_MODE_IDLE) 
    * @return bool
    */
-  static bool begin(uint32_t addr, uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE)
+  static bool begin(uint16_t addr, uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE)
   {
     s_addr = addr;
     return (begin(speed, mode));
@@ -233,7 +233,7 @@ public:
     Codec* m_codec;
 
     /** Sub-net mask for extended mode address match */
-    uint32_t m_mask;
+    uint16_t m_mask;
 
     /** Current receiver sample */
     uint8_t m_sample;
@@ -312,7 +312,7 @@ public:
      * @param[in] mask for sub-net address match.
      * @return bool
      */
-    bool begin(uint32_t mask = 0xffffffffUL);
+    bool begin(uint16_t mask = 0xffffU);
     
     /**
      * Stop the Phase Locked Loop listening to the receiver. No
@@ -345,7 +345,7 @@ public:
      * Set sub-net mask in extended mode.
      * @param[in] mask for sub-net address match.
      */
-    uint32_t set_subnet_mask(uint32_t mask = 0xffffffffUL)
+    uint16_t set_subnet_mask(uint16_t mask = 0xffffU)
     {
       uint32_t previous = m_mask;
       m_mask = mask;
@@ -500,7 +500,7 @@ public:
      * @param[in] cmd command code in extended mode.
      * @return true(1) if accepted for transmission, otherwise false(0).
      */
-    bool send(const void* buf, uint8_t len, uint8_t cmd = 0);
+    bool send(const void* buf, uint8_t len, int8_t cmd = 0);
 
     /**
      * Resend previous message. Return true(1) if successful otherwise
@@ -544,7 +544,7 @@ public:
      * @param[in] mask for sub-net address match.
      * @return bool
      */
-    bool begin(uint32_t mask = 0xffffffffUL);
+    bool begin(uint16_t mask = 0xffffU);
 
     /**
      * Stop transmitter and receiver. Returns true(1) if successful
@@ -574,7 +574,7 @@ public:
      * @param[in] cmd command code in extended mode.
      * @return true(1) if the message was delivered otherwise false(0).
      */
-    int8_t send(const void* buf, uint8_t len, uint8_t cmd = 0);
+    int8_t send(const void* buf, uint8_t len, int8_t cmd = 0);
   };
 };
 

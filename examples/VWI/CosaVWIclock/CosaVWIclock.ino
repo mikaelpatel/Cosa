@@ -50,14 +50,37 @@ VirtualWireCodec codec;
 // BitstuffingCodec codec;
 
 // Network configuration
-const uint32_t ADDR = 0xc05a0003UL;
+const uint16_t ADDR = 0xC05A;
 const uint16_t SPEED = 4000;
 
 // Virtual Wire Interface Transceiver
 VWI::Transceiver trx(Board::D8, Board::D9, &codec);
 
+// The RTC clock and broadcast message type
 DS1307 rtc;
-const uint8_t TIMEKEEPER_CMD = 3;
+const int8_t TIMEKEEPER_CMD = -1;
+  
+// Statistics message
+const int8_t STAT_CMD = -2;
+struct stat_t {
+  uint16_t voltage;
+  uint16_t sent;
+  uint16_t resent;
+  uint16_t received;
+  uint16_t failed;
+
+  void update(int8_t nr)
+  {
+    sent += 1;
+    if (nr <= 0) 
+      failed += 1; 
+    else if (nr > 1)
+      resent += (nr - 1);
+  }
+};
+
+// Statistics state
+stat_t statistics;
   
 void setup()
 {
@@ -75,7 +98,15 @@ void loop()
   // Read date and time and send message
   DS1307::timekeeper_t now;
   rtc.get_time(now);
-  trx.send(&now, sizeof(now), TIMEKEEPER_CMD);
+  int8_t nr = trx.send(&now, sizeof(now), TIMEKEEPER_CMD);
+  statistics.update(nr);
+  
+  // Send message with battery voltage and statistics every 12 messages
+  if (statistics.sent % 12 == 0) {
+    statistics.voltage = AnalogPin::bandgap(1100);
+    nr = trx.send(&statistics, sizeof(statistics), STAT_CMD);
+    statistics.update(nr);
+  }
 
   // Take a nap
   SLEEP(5);
