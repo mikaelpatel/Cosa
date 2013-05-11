@@ -234,10 +234,10 @@ VWI::Receiver::end()
 }
 
 bool 
-VWI::Receiver::await(unsigned long ms)
+VWI::Receiver::await(uint32_t ms)
 {
   // Allow low power mode while waiting
-  unsigned long start = RTC::millis();
+  uint32_t start = RTC::millis();
   while (!m_done && (ms == 0 || ((RTC::millis() - start) < ms))) 
     Power::sleep(s_mode);
   return (m_done);

@@ -60,17 +60,14 @@ void setup()
 
 void loop()
 {
-  // Monitor digital pin values
-  trace << RTC::millis() << PSTR(": D0..10:");
-  for (uint8_t i = 0; i < 11; i++)
+  // Read digital and analog pin values
+  uint32_t now = RTC::millis();
+  trace << now << PSTR(":D0..13:A0..A7:");
+  for (uint8_t i = 0; i < 14; i++)
     trace << ' ' << InputPin::read(i);
-  trace << endl;
-  SLEEP(2);
-
-  // Monitor analog pin values
-  trace << RTC::millis() << PSTR(": A0..7:");
+  trace << PSTR(" :");
   for (uint8_t i = 0; i < 8; i++)
     trace << ' ' << AnalogPin::sample(i);
   trace << endl;
-  SLEEP(2);
+  RTC::delay(2000 - (RTC::millis() - now));
 }
