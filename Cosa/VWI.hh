@@ -67,8 +67,8 @@ public:
   /** Message header for extended Virtual Wire Interface mode */
   struct header_t {
     uint16_t addr;		/**< Transmitter node address */
-    uint8_t cmd;		/**< Command or message type */
     uint8_t nr;			/**< Message sequence number */
+    uint8_t cmd;		/**< Command or message type */
   };
 
   /**
@@ -117,7 +117,7 @@ private:
   static uint8_t s_mode;
   
   /** Node address used in extended mode in message header */
-  static uint32_t s_addr;
+  static uint16_t s_addr;
 
 public:
   /**

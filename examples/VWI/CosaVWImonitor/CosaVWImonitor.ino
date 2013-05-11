@@ -59,22 +59,30 @@ void loop()
   static uint32_t start = 0L;
   static uint16_t nr = 0;
   for (uint8_t i = 0; i < len; i++) {
-    if (buffer[i] < ' ' || buffer[i] > 127) {
+    if ((buffer[i] < ' ' && buffer[i] != '\n') || buffer[i] > 127) {
       is_ascii = 0;
       break;
     }
   }
+  trace.print(nr++);
+  trace.print(':');
+  uint32_t stop = RTC::millis();
+  trace.print(stop - start);
+  trace.print(':');
+  trace.print(len);
+  trace.print(':');
+  start = stop;
   if (is_ascii) {
+    trace.print('"');
     for (uint8_t i = 0; i < len; i++)
-      trace.print(buffer[i]);
+      if (buffer[i] != '\n') 
+	trace.print(buffer[i]);
+      else 
+	trace.print_P(PSTR("\\n"));
+    trace.print('"');
+    trace.println();
   }
   else {
-    uint32_t stop = RTC::millis();
-    trace.print(nr++);
-    trace.print(':');
-    trace.print(stop - start);
-    trace.print(':');
     trace.print(buffer, len, IOStream::hex, sizeof(buffer));
-    start = stop;
   }
 }

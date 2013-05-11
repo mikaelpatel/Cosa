@@ -54,7 +54,7 @@ VirtualWireCodec codec;
 VWI::Transceiver trx(Board::D8, Board::D9, &codec);
 
 // Network configuration
-const uint16_t ADDR = 0xC0A0;
+const uint16_t ADDR = 0xC050;
 const uint16_t MASK = 0xFFF0;
 const uint16_t SPEED = 4000;
 

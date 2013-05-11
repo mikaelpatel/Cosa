@@ -30,7 +30,7 @@
 #include <util/crc16.h>
 
 uint8_t VWI::s_mode = 0;
-uint32_t VWI::s_addr = 0L;
+uint16_t VWI::s_addr = 0L;
 
 uint16_t 
 VWI::CRC(uint8_t* ptr, uint8_t count)
@@ -462,22 +462,21 @@ VWI::Transceiver::send(const void* buf, uint8_t len, uint8_t cmd, uint8_t nack)
   uint8_t nr = tx.get_next_nr();
   uint8_t retrans = 0;
 
-  // Sent the message and check for acknowledge is required
+  // Sent the message and check if acknowledgement is not required
   if (nack) cmd |= NACK;
   int8_t res = tx.send(buf, len, cmd);
   if (nack) return (res);
-  while (retrans != RETRANS_MAX) {
-    tx.await();
+
+  // Wait for an acknowledgement. Retransmit if not receive within timeout
+  while (retrans < RETRANS_MAX) {
     VWI::header_t ack;
     int8_t len = rx.recv(&ack, sizeof(ack), TIMEOUT);
-    // Check acknowledgement and return if valid
+    // Check acknowledgement and return if valid with number of transmissions
     if ((len == sizeof(ack)) && (ack.nr == nr) && (ack.addr == VWI::s_addr))
       return (retrans + 1);
     // Otherwise resend the message (from the transmission buffer)
-    if (len == 0) {
-      retrans += 1;
-      tx.resend();
-    }
+    retrans += 1;
+    tx.resend();
   }
   return (-1);
 }
