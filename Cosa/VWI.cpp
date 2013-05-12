@@ -249,12 +249,12 @@ VWI::Receiver::recv(void* buf, uint8_t len, uint32_t ms)
   // Message available?
   if (!m_done && (ms == 0 || !await(ms))) return (0);
 
-  // Check if extended mode and correct sub-net address
+  // Check if enhanced mode and correct sub-net address
   if (VWI::s_addr != 0) {
     VWI::header_t* hp = (VWI::header_t*) (m_buffer + 1);
     if ((hp->addr & m_mask) != VWI::s_addr) {
       m_done = false;
-      return (0);
+      return (-2);
     }
   }
   uint8_t rxlen = m_length - 3;
@@ -362,7 +362,7 @@ VWI::Transmitter::send(const void* buf, uint8_t len, uint8_t cmd)
   iovec_t vec[3];
   iovec_t* vp = vec;
 
-  // Check for extended mode: add header with address and sequence number
+  // Check for enhanced mode: add header with address and sequence number
   if (VWI::s_addr != 0L) {
     header.addr = s_addr;
     header.cmd = cmd;
@@ -436,7 +436,7 @@ VWI::Transceiver::end()
 int8_t 
 VWI::Transceiver::recv(void* buf, uint8_t len, uint32_t ms)
 {
-  // Receiver extended message
+  // Receiver enhanced message
   rx.await();
   int8_t res = rx.recv(buf, len, ms);
   if (res <= 0) return (res);
@@ -457,26 +457,28 @@ VWI::Transceiver::recv(void* buf, uint8_t len, uint32_t ms)
 }
 
 int8_t
-VWI::Transceiver::send(const void* buf, uint8_t len, uint8_t cmd, uint8_t nack)
+VWI::Transceiver::send(const void* buf, uint8_t len, uint8_t cmd, Mode mode)
 {
   uint8_t nr = tx.get_next_nr();
   uint8_t retrans = 0;
 
-  // Sent the message and check if acknowledgement is not required
-  if (nack) cmd |= NACK;
-  int8_t res = tx.send(buf, len, cmd);
-  if (nack) return (res);
+  // Adjust command with acknowledge mode and sent the message 
+  int8_t res = tx.send(buf, len, cmd | mode);
+  if (mode == NACK) return (res);
 
   // Wait for an acknowledgement. Retransmit if not receive within timeout
   while (retrans < RETRANS_MAX) {
     VWI::header_t ack;
+    tx.await();
     int8_t len = rx.recv(&ack, sizeof(ack), TIMEOUT);
     // Check acknowledgement and return if valid with number of transmissions
     if ((len == sizeof(ack)) && (ack.nr == nr) && (ack.addr == VWI::s_addr))
       return (retrans + 1);
-    // Otherwise resend the message (from the transmission buffer)
-    retrans += 1;
-    tx.resend();
+    // Otherwise on timeout resend the message
+    if (len == 0) {
+      retrans += 1;
+      tx.resend();
+    }
   }
   return (-1);
 }

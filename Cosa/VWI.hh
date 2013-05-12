@@ -39,7 +39,7 @@ class VWI {
 public:
   /** 
    * The maximum payload length; 32 byte application payload and 
-   * 4 byte extended mode header (sizeof(header_t)) 
+   * 4 byte enhanced mode header (sizeof(header_t)) 
    */
   static const uint8_t PAYLOAD_MAX = 36;
   
@@ -64,7 +64,7 @@ public:
    */
   static uint16_t CRC(uint8_t* ptr, uint8_t count);
 
-  /** Message header for extended Virtual Wire Interface mode */
+  /** Message header for enhance Virtual Wire Interface mode */
   struct header_t {
     uint16_t addr;		/**< Transmitter node address */
     uint8_t nr;			/**< Message sequence number */
@@ -83,7 +83,7 @@ public:
   static bool begin(uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE);
 
   /**
-   * Initialise the Virtual Wire Interface (VWI) for extended mode;
+   * Initialise the Virtual Wire Interface (VWI) for enhanced mode;
    * include message header (VWI::header_t). Initiate with the given
    * node address to operate at speed bits per second and with given
    * sleep mode. Return true(1) if successful otherwise false(0). Must
@@ -116,7 +116,7 @@ private:
   /** Sleep mode during await */
   static uint8_t s_mode;
   
-  /** Node address used in extended mode in message header */
+  /** Node address used in enhanced mode in message header */
   static uint16_t s_addr;
 
 public:
@@ -232,7 +232,7 @@ public:
     /** Current receiver sample */
     Codec* m_codec;
 
-    /** Sub-net mask for extended mode address match */
+    /** Sub-net mask for enhanced mode address match */
     uint16_t m_mask;
 
     /** Current receiver sample */
@@ -342,7 +342,7 @@ public:
     }
 
     /**
-     * Set sub-net mask in extended mode.
+     * Set sub-net mask in enhanced mode.
      * @param[in] mask for sub-net address match.
      */
     uint16_t set_subnet_mask(uint16_t mask = 0xffffU)
@@ -363,7 +363,9 @@ public:
     
     /**
      * If a message is available (good checksum or not), copies up to
-     * len bytes to the given buffer, buf. 
+     * len bytes to the given buffer, buf. Returns number of bytes 
+     * received/copied, zero(0) for timeout or negative error code; 
+     * bad checksum(-1), and in enhanced mode did not match address(-2).
      * @param[in] buf pointer to location to save the read data.
      * @param[in] len available space in buf. 
      * @param[in] ms timeout period (zero for non-blocking)
@@ -386,7 +388,7 @@ public:
     /** Current transmitter codec */
     Codec* m_codec;
 
-    /** Message sequence number for extended mode */
+    /** Message sequence number for enhanced mode */
     uint8_t m_nr;
 
     /** Number of symbols to be sent */
@@ -448,7 +450,7 @@ public:
     }
 
     /**
-     * Get next message sequence number in extended mode.
+     * Get next message sequence number in enhanced mode.
      * @return message sequence number.
      */
     uint8_t get_next_nr()
@@ -457,7 +459,7 @@ public:
     }
 
     /**
-     * Set next message sequence number in extended mode.
+     * Set next message sequence number in enhanced mode.
      * @param[in] next sequence number.
      */
     void set_next_nr(uint8_t value)
@@ -492,12 +494,12 @@ public:
     /**
      * Send a message with the given length. Returns almost
      * immediately, and message will be sent at the right timing by
-     * interrupts. A command may be given in extended mode with
+     * interrupts. A command may be given in enhanced mode with
      * addressing to allow identification of the message type.
      * The message length (len) must be less than PAYLOAD_MAX.
      * @param[in] buf pointer to the data to transmit.
      * @param[in] len number of bytes to transmit.
-     * @param[in] cmd command code in extended mode.
+     * @param[in] cmd command code in enhanced mode.
      * @return true(1) if accepted for transmission, otherwise false(0).
      */
     bool send(const void* buf, uint8_t len, uint8_t cmd = 0);
@@ -516,17 +518,20 @@ public:
    */
   class Transceiver {
   public:
-    /** Maximum size of extended mode payload (32 bytes) */
+    /** Maximum size of enhanced mode payload (32 bytes) */
     static const uint8_t PAYLOAD_MAX = VWI::PAYLOAD_MAX - sizeof(header_t);
 
     /** Maximum number of retransmission */
     static const uint8_t RETRANS_MAX = 16;
 
     /** Timeout on acknowledge receive */
-    static const uint32_t TIMEOUT = 500;
+    static const uint32_t TIMEOUT = 200;
 
-    /** Set command as not acknowledged */
-    static const uint8_t NACK = 0x80;	
+    /** Acknowledgement mode */
+    enum Mode {
+      ACK = 0x00,
+      NACK = 0x80
+    } __attribute__((packed));
 
     /** Receiver member variable */
     Receiver rx;
@@ -560,9 +565,11 @@ public:
     /**
      * If a message is available (good checksum or not), copies up to
      * len bytes to the given buffer, buf. Sends an acknowledgement.
-     * Always received with extended mode header. Caller must check
+     * Always received with enhanced mode header. Caller must check
      * that the message is not a retransmission by checking the
-     * message sequence number. Returns number of bytes received.
+     * message sequence number. Returns number of bytes received,
+     * zero(0) for timeout or negative error code; bad checksum(-1), 
+     * and did not match address(-2).
      * @param[in] buf pointer to location to save the read data.
      * @param[in] len available space in buf. 
      * @param[in] ms timeout period (zero for non-blocking)
@@ -581,12 +588,12 @@ public:
      * RETRANS_MAX exceeded.
      * @param[in] buf pointer to the data to transmit.
      * @param[in] len number of bytes to transmit.
-     * @param[in] cmd command code in extended mode (0..127).
-     * @param[in] nack non zero for no acknowledgement (Default zero).
+     * @param[in] cmd command code in enhanced mode (0..127).
+     * @param[in] mode acknowledgement mode (Default ACK).
      * @return number of transmissions (1..n) otherwise negative error
      * code.
      */
-    int8_t send(const void* buf, uint8_t len, uint8_t cmd, uint8_t nack = 0);
+    int8_t send(const void* buf, uint8_t len, uint8_t cmd, Mode mode = ACK);
   };
 };
 

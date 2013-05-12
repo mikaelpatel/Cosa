@@ -24,7 +24,7 @@
  * Demonstration receiving temperature readings from 1-Wire DS18B20
  * device over the Virtual Wire Interface (VWI). The measurements are
  * sent by the CosaVWItempsensor sketch running on an ATtiny85. 
- * VWI is used in extended mode with node addressing, message numbering,
+ * VWI is used in enhanced mode with node addressing, message numbering,
  * and sub-net mask filtering.
  *
  * @section Circuit
@@ -71,7 +71,7 @@ struct sample_t {
   uint16_t voltage;
 };
 
-// Message received from VWI in extended mode
+// Message received from VWI in enhanced mode
 struct msg_t {
   VWI::header_t header;
   union {

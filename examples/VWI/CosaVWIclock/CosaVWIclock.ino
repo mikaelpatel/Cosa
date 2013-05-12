@@ -23,7 +23,7 @@
  * @section Description
  * Demonstration of the Enhanced Virtual Wire Interface (VWI) driver;
  * Transceiver with acknowledgement and automatic retransmission.
- * Reads date and time from DS1307 and transmits to server.
+ * Reads date and time from TWI/DS1307 and transmits to server.
  *
  * @section Circuit
  * Connect RF433/315 Transmitter Data to Arduino D9, RF433/315
@@ -50,7 +50,7 @@ VirtualWireCodec codec;
 // BitstuffingCodec codec;
 
 // Network configuration
-const uint16_t ADDR = 0xC05A;
+const uint16_t ADDR = 0xCE51;
 const uint16_t SPEED = 4000;
 
 // Virtual Wire Interface Transceiver
@@ -78,7 +78,7 @@ struct stat_t {
 // Statistics state
 stat_t statistics;
   
-// The RTC clock and broadcast message type
+// The RTC clock and message type. Note: the timekeeper struct is send
 DS1307 rtc;
 const int8_t TIMEKEEPER_CMD = 3;
   
@@ -95,17 +95,17 @@ void setup()
 
 void loop()
 {
-  // Read date and time and send message
+  // Read date and time and send message with timekeeper struct (BCD)
   DS1307::timekeeper_t now;
   rtc.get_time(now);
-  int8_t nr = trx.send(&now, sizeof(now), TIMEKEEPER_CMD, 1);
+  int8_t nr = trx.send(&now, sizeof(now), TIMEKEEPER_CMD);
   statistics.update(nr);
   
   // Send non-acknowledged message with battery voltage and statistics 
   // every 12 messages 
   if (statistics.sent % 12 == 0) {
     statistics.voltage = AnalogPin::bandgap(1100);
-    nr = trx.send(&statistics, sizeof(statistics), STAT_CMD, 1);
+    nr = trx.send(&statistics, sizeof(statistics), STAT_CMD, VWI::Transceiver::NACK);
     statistics.update(nr);
   }
 

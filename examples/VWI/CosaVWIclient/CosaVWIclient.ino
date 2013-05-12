@@ -49,7 +49,7 @@ VirtualWireCodec codec;
 // BitstuffingCodec codec;
 
 // Network configuration
-const uint16_t ADDR = 0xC051;
+const uint16_t ADDR = 0xCE52;
 const uint16_t SPEED = 4000;
 
 // Virtual Wire Interface Transceiver
@@ -126,7 +126,7 @@ void loop()
       statistics.update(nr);
     } else {
       for (uint8_t i = 0; i < 2; i++) {
-	nr = trx.send(&statistics, sizeof(statistics), STAT_CMD, 1);
+	nr = trx.send(&statistics, sizeof(statistics), STAT_CMD, VWI::Transceiver::NACK);
 	statistics.update(nr);
       }
     }

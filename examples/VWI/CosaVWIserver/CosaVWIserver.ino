@@ -54,7 +54,7 @@ VirtualWireCodec codec;
 VWI::Transceiver trx(Board::D8, Board::D9, &codec);
 
 // Network configuration
-const uint16_t ADDR = 0xC050;
+const uint16_t ADDR = 0xCE50;
 const uint16_t MASK = 0xFFF0;
 const uint16_t SPEED = 4000;
 
@@ -136,7 +136,10 @@ void loop()
   if (len <= 0) return;
 
   // Print header, type message type and contents
-  trace << msg;
+  static uint32_t start = 0L;
+  uint32_t stop = RTC::millis();
+  trace << stop - start << ':' << msg;
+  start = stop;
   switch (msg.header.cmd) {
   case SAMPLE_CMD: 
     trace << msg.sample << endl; 

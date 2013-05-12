@@ -23,7 +23,7 @@
  * @section Description
  * Demonstration sending temperature readings from 1-Wire DS18B20
  * devices over the Virtual Wire Interface (VWI). Uses the VWI 
- * extended mode with addressing and message numbering.
+ * enhanced mode with addressing and message numbering.
  *
  * @section Note
  * This sketch is designed for an ATtiny85 running on the internal 
