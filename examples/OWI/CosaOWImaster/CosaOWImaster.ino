@@ -61,8 +61,12 @@ Driver::print_status(IOStream& stream)
   stream.print(m_status, sizeof(m_status));
 }
 
-// The OneWire bus on pin 7 and led heartbeat
+// The OneWire bus on pin 7/1 and led heartbeat
+#if defined(__ARDUINO_TINY__)
+OWI owi(Board::D1);
+#else
 OWI owi(Board::D7);
+#endif
 Driver driver(&owi);
 OutputPin ledPin(Board::LED);
 

@@ -37,7 +37,11 @@
 #include "Cosa/Memory.h"
 
 // One-wire pin and connected DS18B20 devices
+#if defined(__ARDUINO_TINY__)
+OWI owi(Board::D1);
+#else
 OWI owi(Board::D7);
+#endif
 DS18B20 outdoors(&owi);
 DS18B20 indoors(&owi);
 DS18B20 basement(&owi);

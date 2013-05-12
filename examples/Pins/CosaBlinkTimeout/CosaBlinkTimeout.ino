@@ -52,10 +52,16 @@ public:
   }
 };
 
-// Use an RGB LED connected to pins(5,6,7)
+// Use an RGB LED connected to pins(5,6,7)/ATtiny(1,2,3)
+#if defined(__ARDUINO_TINY__)
+LED redLedPin(Board::D1);
+LED greenLedPin(Board::D2, 1);
+LED blueLedPin(Board::D3);
+#else
 LED redLedPin(Board::D5);
 LED greenLedPin(Board::D6, 1);
 LED blueLedPin(Board::D7);
+#endif
 
 // And builtin LED
 LED builtinPin(Board::LED);

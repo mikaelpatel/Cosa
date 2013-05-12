@@ -36,10 +36,14 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 
+#if defined(__ARDUINO_TINY__)
+#define USE_UART
+#endif
+
 /**
  * Use UART or LCD/PCD8544 for output. 
  */
-#ifdef USE_UART
+#if defined(USE_UART)
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 #else
@@ -74,7 +78,7 @@ static const IR::Receiver::keymap_t LG_keymap[] PROGMEM = {
 /**
  * Samples are collected when using an UART.
  */
-#ifdef USE_UART
+#if defined(USE_UART)
 uint16_t sample[40];
 #else
 PCD8544 lcd;

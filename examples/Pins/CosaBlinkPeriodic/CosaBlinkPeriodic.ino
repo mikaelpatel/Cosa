@@ -39,10 +39,16 @@ public:
   virtual void run() { m_pin.toggle(); }
 };
 
-// Use an RGB LED connected to pins(5,6,7)
+// Use an RGB LED connected to pins(5,6,7)/ATtiny(1,2,3)
+#if defined(__ARDUINO_TINY__)
+LED redLedPin(Board::D1, 512);
+LED greenLedPin(Board::D2, 1024, 1);
+LED blueLedPin(Board::D3, 1024);
+#else
 LED redLedPin(Board::D5, 512);
 LED greenLedPin(Board::D6, 1024, 1);
 LED blueLedPin(Board::D7, 1024);
+#endif
 
 // Start the watchdog (16 ms timeout, push timeout events)
 void setup()
