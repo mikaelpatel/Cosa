@@ -1,5 +1,5 @@
 /**
- * @file CosaVWIDHT11.ino
+ * @file CosaVWIdht11.ino
  * @version 1.0
  *
  * @section License
