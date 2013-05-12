@@ -47,11 +47,10 @@ const uint32_t TIMEOUT = 1000;
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaVWImonitor: started"));
+  trace.begin(&uart, PSTR("CosaVWIdebug: started"));
   TRACE(free_memory());
   VWI::begin(SPEED);
   rx.begin();
-  trace << PSTR("Format: id:dt(ms):length:message") << endl;
 }
 
 void loop()
@@ -66,10 +65,10 @@ void loop()
   uint32_t stop = RTC::millis();
 
   // Check if the message is printable
-  uint8_t is_ascii = 1;
+  bool is_ascii = true;
   for (uint8_t i = 0; i < len; i++) {
     if ((buffer[i] < ' ' && buffer[i] != '\n') || buffer[i] > 127) {
-      is_ascii = 0;
+      is_ascii = false;
       break;
     }
   }

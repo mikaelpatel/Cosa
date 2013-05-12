@@ -1,5 +1,5 @@
 /**
- * @file CosaVWIclient.ino
+ * @file CosaVWIPclock.ino
  * @version 1.0
  *
  * @section License
@@ -23,16 +23,17 @@
  * @section Description
  * Demonstration of the Enhanced Virtual Wire Interface (VWI) driver;
  * Transceiver with acknowledgement and automatic retransmission.
- * Multiple message types.
+ * Reads date and time from TWI/DS1307 and transmits to server.
  *
  * @section Circuit
  * Connect RF433/315 Transmitter Data to Arduino D9, RF433/315
- * Receiver to Arduino D8. Connect VCC and GND. Connect Arduino
- * analog pins A2 and A3 to analog sensors.  
+ * Receiver to Arduino D8. Connect VCC and GND. Connect DS1307
+ * to TWI bus.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/TWI/Driver/DS1307.hh"
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/VWI/Codec/ManchesterCodec.hh"
@@ -49,32 +50,11 @@ VirtualWireCodec codec;
 // BitstuffingCodec codec;
 
 // Network configuration
-const uint16_t ADDR = 0xCE52;
+const uint16_t ADDR = 0xCE51;
 const uint16_t SPEED = 4000;
 
 // Virtual Wire Interface Transceiver
-#if defined(__ARDUINO_TINY__)
-VWI::Transceiver trx(Board::D0, Board::D1, &codec);
-#else
 VWI::Transceiver trx(Board::D8, Board::D9, &codec);
-#endif
-
-// Analog pins to sample for values to send
-AnalogPin luminance(Board::A2);
-AnalogPin temperature(Board::A3);
-
-// Measurement message
-const int8_t SAMPLE_CMD = 1;
-struct sample_t {
-  uint16_t luminance;
-  uint16_t temperature;
-  
-  sample_t(uint16_t lum, uint16_t temp)
-  {
-    luminance = lum;
-    temperature = temp;
-  }
-};
 
 // Statistics message
 const int8_t STAT_CMD = 2;
@@ -98,6 +78,10 @@ struct stat_t {
 // Statistics state
 stat_t statistics;
   
+// The RTC clock and message type. Note: the timekeeper struct is send
+DS1307 rtc;
+const int8_t TIMEKEEPER_CMD = 3;
+  
 void setup()
 {
   // Start watchdog for delay and RTC for time measurement
@@ -111,27 +95,20 @@ void setup()
 
 void loop()
 {
-  // Send message with luminance and temperature
-  sample_t measurement(luminance.sample(), temperature.sample());
-  int8_t nr = trx.send(&measurement, sizeof(measurement), SAMPLE_CMD);
+  // Read date and time and send message with timekeeper struct (BCD)
+  DS1307::timekeeper_t now;
+  rtc.get_time(now);
+  int8_t nr = trx.send(&now, sizeof(now), TIMEKEEPER_CMD);
   statistics.update(nr);
   
-  // Send message with battery voltage and statistics every 15 messages
-  // Every 60 messages send with acknowledgement, otherwise send two
-  // messages without.
-  if (statistics.sent % 15 == 0) {
+  // Send non-acknowledged message with battery voltage and statistics 
+  // every 12 messages 
+  if (statistics.sent % 12 == 0) {
     statistics.voltage = AnalogPin::bandgap(1100);
-    if (statistics.sent % 60 == 0) {
-      nr = trx.send(&statistics, sizeof(statistics), STAT_CMD);
-      statistics.update(nr);
-    } else {
-      for (uint8_t i = 0; i < 2; i++) {
-	nr = trx.send(&statistics, sizeof(statistics), STAT_CMD, VWI::Transceiver::NACK);
-	statistics.update(nr);
-      }
-    }
+    nr = trx.send(&statistics, sizeof(statistics), STAT_CMD, VWI::Transceiver::NACK);
+    statistics.update(nr);
   }
 
   // Take a nap
-  SLEEP(1);
+  SLEEP(5);
 }

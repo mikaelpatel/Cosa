@@ -1,5 +1,5 @@
 /**
- * @file CosaVWIserver.ino
+ * @file CosaVWIPserver.ino
  * @version 1.0
  *
  * @section License
@@ -115,7 +115,7 @@ void setup()
 {
   // Start trace on UART. Print available free memory.
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaVWIserver: started"));
+  trace.begin(&uart, PSTR("CosaVWIPserver: started"));
   TRACE(free_memory());
 
   // Start watchdog for low power delay

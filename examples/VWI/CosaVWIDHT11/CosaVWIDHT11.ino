@@ -1,5 +1,5 @@
 /**
- * @file CosaTinyDHT11.ino
+ * @file CosaVWIDHT11.ino
  * @version 1.0
  *
  * @section License
@@ -21,15 +21,15 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the DHT11 and Virtual Wire Interface (VWI) driver
- * on ATtinyX5. Transmits a simple message with humidity and 
- * temperature readings from DHT11. The messages may be monitored 
- * with the CosaVWIreceiver or CosaTinyReceiver sketch.
+ * Demonstration of the DHT11 and Virtual Wire Interface (VWI) driver.
+ * Transmits a simple message with humidity and temperature readings
+ * from DHT11. The messages may be monitored with the CosaVWIreceiver
+ * or the CosaVWIdebug sketch.
  *
  * @section Circuit
- * Connect RF433/315 Transmitter Data to Arduino(ATtiny) D2,
- * and DHT11 data with pullup (approx. 5 Kohm) to D1. The LED
- * is on when transmitting.
+ * Connect RF433/315 Transmitter Data to Arduino/ATtiny D9/D2,
+ * and DHT11 data with pullup (approx. 5 Kohm) to D7/D1. 
+ * The LED is on when transmitting.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -41,10 +41,16 @@
 #include "Cosa/Watchdog.hh"
 
 OutputPin led(Board::LED);
-DHT11 sensor(Board::D1);
 VirtualWireCodec codec;
-VWI::Transmitter tx(Board::D2, &codec);
 const uint16_t SPEED = 4000;
+
+#if defined(__ARDUINO_TINY__)
+DHT11 sensor(Board::D1);
+VWI::Transmitter tx(Board::D2, &codec);
+#else
+DHT11 sensor(Board::D7);
+VWI::Transmitter tx(Board::D9, &codec);
+#endif
 
 // Message with DHT11 reading
 struct msg_t {
