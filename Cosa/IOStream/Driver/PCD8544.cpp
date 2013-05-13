@@ -82,7 +82,7 @@ PCD8544::end()
 {
   PCD8544_transaction(m_sce) {
     m_dc.clear();
-    m_sdin.write(SET_FUNC | BASIC_INST | POWER_DOWN_MODE);
+    m_sdin.write(SET_FUNC | BASIC_INST | POWER_DOWN_MODE, m_sclk);
     m_dc.set();
   }
   return (true);
@@ -232,5 +232,3 @@ PCD8544::putchar(char c)
 
   return (c);
 }
-
-// #endif
