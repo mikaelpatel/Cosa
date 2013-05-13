@@ -40,10 +40,10 @@ objects may become inconsistent.
 
 To improve debugging and testing there is assert/trace/syslog style
 support. The IOStream class allows output to both serial wire/wireless
-communication (UART/VWIO) and small TFT displays (such as the ST7735R
-and PCD8544). The drawing Canvas class supports basic drawing operation
-and scripting to reduce program memory footprint. The Canvas class
-also supports drawing of icons and multiple fonts (GLCD and UTFT). 
+communication (UART/VWIO) and small TFT displays (such as the ST7735R,
+ST7565, and PCD8544). The drawing Canvas class supports basic drawing 
+operation and scripting to reduce program memory footprint. The Canvas 
+class also supports drawing of icons and multiple fonts (GLCD and UTFT). 
 
 The popular VirtualWire library has been refactored to the
 object-oriented style of Cosa (VWI) and extended with three additional
@@ -91,7 +91,7 @@ http://arduino.cc/forum/index.php/topic,150299.0.html.
 @section Note
 
 ATmega328P, ATmega1284P and ATmega2560 based Arduino boards (Uno,
-Mini, Nano, LilyPad, Mega, Mightly, etc) are supported. The ATtinyX5
+Mini, Nano, LilyPad, Mega, Mightly, etc) are supported. The ATtinyX5/X4
 processors are also support for a sub-set of the classes. Arduino and
 AVR lib functions may be used together with Cosa. ATmega32U4 and other
 devices with internal USB hardware are not currently supported.

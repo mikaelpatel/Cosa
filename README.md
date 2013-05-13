@@ -42,7 +42,7 @@ objects may become inconsistent.
 
 To improve debugging and testing there is trace/syslog style support. 
 The IOStream class allows output to both serial communication
-(UART/VWIO) and small TFT displays (such as the ST7735R and
+(UART/VWIO) and small TFT displays (such as the ST7735R, ST7564P and
 PCD8544). The drawing Canvas class supports basic drawing operation
 and scripting to reduce program memory footprint. The Canvas class
 also supports drawing of icons and multiple fonts (GLCD and UTFT). 
@@ -116,7 +116,8 @@ Drivers
 12. Virtual Wire (VWI) on RF315/433 modules.
 13. HMC5883L 3-Axis Digital Compass IC.
 14. NEXA Wireless Remote command transmitter/receiver for RF433.
-15. Slave device support for SPI, TWI and OWI.
+15. ST7565, 65x132 Dot Matrix LCD Controller/Driver.
+16. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  
@@ -194,4 +195,5 @@ reliable message passing protocol to the Virtual Wire Interface
 and auto-retransmission. Full support for message parsing.    
 2013-05 Improving ATtiny support. Adding driver for DHT22. NEXA
 Wireless Remote command transmitter (RF433). Introducing a new
-template class for handling of keyed sets of event handlers.   
+template class for handling of keyed sets of event handlers. Added
+support for LCD ST7565.   
