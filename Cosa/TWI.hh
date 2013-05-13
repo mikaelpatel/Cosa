@@ -202,8 +202,9 @@ public:
    */
   void set_buf(void* buf, size_t size)
   {
-    m_vec[0].buf = (uint8_t*) buf;
-    m_vec[0].size = size;
+    iovec_t* vp = m_vec;
+    iovec_arg(vp, buf, size);
+    iovec_end(vp);
   }
 
   /**
