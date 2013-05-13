@@ -40,7 +40,7 @@
 #include "Cosa/Driver/DHT22.hh"
 
 // Test with two DHT11 instead of DHT11 and DHT22
-#define DHT11_ONLY
+// #define DHT11_ONLY
 
 OutputPin ledPin(Board::LED);
 #if defined(__ARDUINO_TINY__)
@@ -67,7 +67,7 @@ void setup()
   Watchdog::begin();
 
   // Adjust the indoors device with -1 humidity and +1 temperature
-  indoors.calibrate(-1,1);
+  // indoors.calibrate(-1,1);
 }
 
 void loop()
@@ -89,7 +89,8 @@ void loop()
     temperature = 10 * swap(temperature);
 #endif
     trace.print_P(PSTR("outdoors: "));
-    trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity / 10, temperature / 10);
+    trace.printf_P(PSTR("RH = %d.%d%%, "), humidity / 10, humidity % 10);
+    trace.printf_P(PSTR("T = %d.%d C\n"), temperature / 10, temperature % 10);
   }
 
   // Blink built-in led during active period

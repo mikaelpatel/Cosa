@@ -26,15 +26,14 @@
 #include "Cosa/Driver/DHT.hh"
 #include "Cosa/Watchdog.hh"
 
-static const uint16_t START_REQUEST = 16;
+static const uint16_t START_REQUEST = 1;
 static const uint8_t START_RESPONSE = 40;
-#if defined(__ARDUINO_TINY__)
-static const uint8_t COUNT_MIN = 30;
-static const uint8_t COUNT_MAX = 255;
-#else
+#if (I_CPU < 16)
 static const uint8_t COUNT_MIN = 40;
-static const uint8_t COUNT_MAX = 255;
+#else
+static const uint8_t COUNT_MIN = 50;
 #endif
+static const uint8_t COUNT_MAX = 255;
 
 int8_t
 DHT::read_bit(uint8_t changes)
