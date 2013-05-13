@@ -58,9 +58,9 @@ void setup()
   lcd.putchar('\f');
   trace << PSTR("CosaST7565P: started\n");
   lcd.set_cursor(0, 1);
-  trace << PSTR("====================");
+  trace << PSTR("====================\n");
   INFO("saved = %d", saved);
-  lcd.set_text_mode(saved);
+  TRACE(lcd.set_text_mode(saved));
   SLEEP(2);
 
   // Use the trace iostream onto the LCD with output operator
@@ -85,9 +85,9 @@ void setup()
   trace.print(&lcd, sizeof(lcd) - 1, IOStream::hex, 5);
   SLEEP(2);
 
-  // Dump characters in system font; two pages, 64 characters each
+  // Dump characters in system font
   lcd.putchar('\f');
-  for (uint8_t c = 0; c < 64; c++) {
+  for (uint8_t c = 0; c < 128; c++) {
     trace << (char) (((c == '\n') || (c == '\f') || (c == '\b')) ? ' ' : c);
   }
   SLEEP(2);
