@@ -33,12 +33,12 @@
 #include "Cosa/Canvas/Font/System5x7.hh"
 
 /**
- * ST7565P 64x118 pixels matrix LCD controller/driver, device driver 
+ * ST7565P 64x128 pixels matrix LCD controller/driver, device driver 
  * for IOStream access. Binding to trace, etc. 
  *
  * @section See Also
- * For furter details see Product Specification, Sitronix 65x132 Dot
- * Matrix LCD Controller/Driver, Ver 1.3, 2004 May 18.
+ * For further details see Sitronix 65x132 Dot Matrix LCD Controller/
+ * Driver, Ver 1.3, 2004 May 18.
  */
 class ST7565P : public IOStream::Device {
 protected:
@@ -81,8 +81,9 @@ protected:
     BOOSTER_RATIO_234X = 0,
     BOOSTER_RATIO_5X = 1,
     BOOSTER_RATIO_6X = 3,
-    WAIT = 0xE3,
-    STOP = 0xFF
+    NOP = 0xE3,
+    SCRIPT_PAUSE = 0xF0,
+    SCRIPT_END = 0xFF
   } __attribute__((packed));
 
   // Initialization script to reduce memory footprint
@@ -103,14 +104,30 @@ protected:
    * @param[in] x position (0..WIDTH-1).
    * @param[in] y position (0..LINES-1).
    */
-  void set_address(uint8_t x, uint8_t y);
+  void set(uint8_t x, uint8_t y);
   
+  /**
+   * Write given data to display according to mode.
+   * Chip select and/or Command/Data pin asserted.
+   * @param[in] data to fill write to device.
+   */
+  void write(uint8_t data)
+  {
+    m_si.write(data, m_scl);
+  }
+
   /**
    * Fill display with given data.
    * @param[in] data to fill with.
    * @param[in] count number of bytes to fill.
    */
-  void fill(uint8_t data, uint16_t count);
+  void fill(uint8_t data, uint16_t count) 
+  {
+    m_cs.clear();
+    for (uint16_t i = 0; i < count; i++) 
+      write(data);
+    m_cs.set();
+  }
 
 public:
   enum DisplayMode {
@@ -127,6 +144,7 @@ public:
 
   /**
    * Construct display device driver with given pins and font.
+   * Defaults are digital pin for Arduino/Tiny.
    * @param[in] si screen data pin (default D0/D6).
    * @param[in] scl screen clock pin (default D1/D7). 
    * @param[in] dc data/command control pin (default D2/D8).

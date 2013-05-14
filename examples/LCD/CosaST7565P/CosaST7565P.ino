@@ -55,8 +55,7 @@ void setup()
   // Use LCD bind to trace and use inverted text mode for banner
   trace.begin(&lcd);
   ST7565P::TextMode saved = lcd.set_text_mode(ST7565P::INVERTED_TEXT_MODE);
-  lcd.putchar('\f');
-  trace << PSTR("CosaST7565P: started\n");
+  trace << PSTR("\fCosaST7565P: started\n");
   lcd.set_cursor(0, 1);
   trace << PSTR("====================\n");
   INFO("saved = %d", saved);
@@ -64,9 +63,8 @@ void setup()
   SLEEP(2);
 
   // Use the trace iostream onto the LCD with output operator
-  lcd.putchar('\f');
-  trace << PSTR("01234568901234");
-  for (uint8_t i = 0; i < 16; i++) {
+  trace << PSTR("\f0123456890ABCDEFGHIJK");
+  for (uint8_t i = 0; i < 22; i++) {
     Watchdog::delay(256);
     trace << PSTR("\b \b");
   }
@@ -80,13 +78,12 @@ void setup()
   SLEEP(2);
 
   // Dump the LCD object raw format with normal print function
-  lcd.putchar('\f');
-  lcd.set_cursor(0,0);
-  trace.print(&lcd, sizeof(lcd) - 1, IOStream::hex, 5);
+  trace << PSTR("\fST7565P lcd dump\n");
+  trace.print(&lcd, sizeof(lcd), IOStream::hex, 5);
   SLEEP(2);
 
   // Dump characters in system font
-  lcd.putchar('\f');
+  trace << PSTR("\fSystem Font 5x7\n");
   for (uint8_t c = 0; c < 128; c++) {
     trace << (char) (((c == '\n') || (c == '\f') || (c == '\b')) ? ' ' : c);
   }

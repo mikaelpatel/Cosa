@@ -26,46 +26,53 @@
 #include "Cosa/IOStream/Driver/ST7565P.hh"
 #include "Cosa/Watchdog.hh"
 
-#define ST7565P_transaction(cs)					\
-  for (uint8_t i = (cs.clear(), 1); i != 0; i--, cs.set())
+// Enable to allow reversed display type
+#define MIRRORED
 
+// Mark block as data write operations
+#define data							\
+  for (uint8_t i = (m_cs.clear(), 1); i != 0; i--, m_cs.set())
+
+// Mark block as command write operations
+#define commands							\
+  for (uint8_t i = (m_cs.clear(), m_dc.clear(), 1);			\
+       i != 0;								\
+       i--, m_dc.set(), m_cs.set())
+
+// Initialization script
 const uint8_t ST7565P::script[] PROGMEM = {
+#if defined(MIRRORED)
   LCD_BIAS_9,
   ADC_REVERSE,
+#else
+  LCD_BIAS_7,
+  ADC_NORMAL,
+#endif
   COM_OUTPUT_NORMAL,
   SET_DISPLAY_START 	| 0,
   SET_POWER_CONTROL 	| 0x04,
-  WAIT			, 50,
+  SCRIPT_PAUSE		, 50,
   SET_POWER_CONTROL 	| 0x06,
-  WAIT			, 50,
+  SCRIPT_PAUSE		, 50,
   SET_POWER_CONTROL 	| 0x07,
-  WAIT			, 10,
+  SCRIPT_PAUSE		, 10,
   SET_RESISTOR_RATIO 	| 0x06,
   DISPLAY_ON,
   DISPLAY_NORMAL,
   DISPLAY_NORMAL_POINTS,
-  STOP
+  SCRIPT_END
 };
 
 void 
-ST7565P::set_address(uint8_t x, uint8_t y)
+ST7565P::set(uint8_t x, uint8_t y)
 {
-  x += 4;
-  ST7565P_transaction(m_cs) {
-    m_dc.clear();
-    m_si.write(SET_X_ADDR | ((x >> 4) & X_ADDR_MASK), m_scl);
-    m_si.write(x & X_ADDR_MASK, m_scl);
-    m_si.write(SET_Y_ADDR | (y & Y_ADDR_MASK), m_scl);
-    m_dc.set();
-  }
-}
-
-void 
-ST7565P::fill(uint8_t data, uint16_t count)
-{
-  ST7565P_transaction(m_cs) {
-    for (uint16_t i = 0; i < count; i++) 
-      m_si.write(data, m_scl);
+#if defined(MIRRORED)
+  x += 132 - WIDTH;
+#endif
+  commands {
+    write(SET_X_ADDR | ((x >> 4) & X_ADDR_MASK));
+    write(x & X_ADDR_MASK);
+    write(SET_Y_ADDR | (y & Y_ADDR_MASK));
   }
 }
 
@@ -74,33 +81,27 @@ ST7565P::begin(uint8_t level)
 {
   const uint8_t* bp = script;
   uint8_t cmd;
-  ST7565P_transaction(m_cs) {
-    m_dc.clear();
-    while ((cmd = pgm_read_byte(bp++)) != STOP) {
-      if (cmd != WAIT) {
-	m_si.write(cmd, m_scl);
-      }
-      else {
+  commands {
+    while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END) {
+      if (cmd == SCRIPT_PAUSE) {
 	uint8_t ms = pgm_read_byte(bp++);
 	Watchdog::delay(ms);
       }
+      else write(cmd);
     }
-    m_dc.set();
   }
   set_display_contrast(level);
   m_x = 0;
   m_y = 0;
-  set_address(m_x, m_y);
+  set(m_x, m_y);
   return (true);
 }
 
 bool 
 ST7565P::end()
 {
-  ST7565P_transaction(m_cs) {
-    m_dc.clear();
-    m_si.write(DISPLAY_OFF, m_scl);
-    m_dc.set();
+  commands {
+    write(DISPLAY_OFF);
   }
   return (true);
 }
@@ -108,30 +109,26 @@ ST7565P::end()
 void 
 ST7565P::set_display_mode(DisplayMode mode)
 {
-  ST7565P_transaction(m_cs) {
-    m_dc.clear();
-    m_si.write(DISPLAY_NORMAL | mode, m_scl);
-    m_dc.set();
+  commands {
+    write(DISPLAY_NORMAL | mode);
   }
 }
 
 void 
 ST7565P::set_display_contrast(uint8_t level)
 {
-  ST7565P_transaction(m_cs) {
-    m_dc.clear();
-    m_si.write(SET_CONSTRAST, m_scl);
-    m_si.write(CONSTRAST_MASK & level, m_scl);
-    m_dc.set();
+  commands {
+    write(SET_CONSTRAST);
+    write(CONSTRAST_MASK & level);
   }
 }
 
 void 
 ST7565P::set_cursor(uint8_t x, uint8_t y)
 {
-  set_address(x, y);
-  m_x = x;
-  m_y = (y & Y_ADDR_MASK);
+  set(x, y);
+  m_x = (x & (WIDTH - 1));
+  m_y = (y & (LINES - 1));
 }
 
 void 
@@ -141,17 +138,14 @@ ST7565P::draw_icon(const uint8_t* bp)
   uint8_t height = pgm_read_byte(bp++);
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    ST7565P_transaction(m_cs) {
+    data {
       for (uint8_t x = 0; x < width; x++) {
-	m_si.write(m_mode ^ pgm_read_byte(bp++), m_scl);
+	write(m_mode ^ pgm_read_byte(bp++));
       }
     }
-    m_y += 1;
-    set_address(m_x, m_y);
+    set_cursor(m_x, m_y + 1);
   }
-  m_y += 1;
-  if (m_y == LINES) m_y = 0;
-  set_address(m_x, m_y);
+  set_cursor(m_x, m_y + 1);
 }
 
 void 
@@ -159,17 +153,14 @@ ST7565P::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 {
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    ST7565P_transaction(m_cs) {
+    data {
       for (uint8_t x = 0; x < width; x++) {
-	m_si.write(m_mode ^ (*bp++), m_scl);
+	write(m_mode ^ (*bp++));
       }
     }
-    m_y += 1;
-    set_address(m_x, m_y);
+    set_cursor(m_x, m_y + 1);
   }
-  m_y += 1;
-  if (m_y == LINES) m_y = 0;
-  set_address(m_x, m_y);
+  set_cursor(m_x, m_y + 1);
 }
 
 void 
@@ -179,19 +170,19 @@ ST7565P::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
   uint8_t filled = (procent * (width - 2U)) / 100;
   uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
   width -= (filled + 1);
-  ST7565P_transaction(m_cs) {
-    m_si.write(m_mode ^ 0xff, m_scl);
+  data {
+    write(m_mode ^ 0xff);
     while (filled--) {
-      m_si.write(m_mode ^ (pattern | boarder), m_scl);
+      write(m_mode ^ (pattern | boarder));
       pattern = ~pattern;
     }
-    m_si.write(m_mode ^ 0xff, m_scl);
+    write(m_mode ^ 0xff);
     width -= 1;
     if (width > 0) {
       while (width--)
-	m_si.write(m_mode ^ boarder, m_scl);
+	write(m_mode ^ boarder);
     }
-    m_si.write(m_mode ^ 0xff, m_scl);
+    write(m_mode ^ 0xff);
   }
 }
 
@@ -200,24 +191,19 @@ ST7565P::putchar(char c)
 {
   // Check for special characters; carriage-return-line-feed
   if (c == '\n') {
-    m_x = 0;
-    m_y += 1;
-    if (m_y == LINES) m_y = 0;
-    set_address(m_x, m_y);
+    set_cursor(0, m_y + 1);
     fill(m_mode, WIDTH);
-    set_address(m_x, m_y);
+    set(m_x, m_y);
     return (c);
   }
   
   // Check for special character: form-feed
   if (c == '\f') {
     for (uint8_t y = 0; y < LINES; y++) {
-      set_address(0, y);
+      set(0, y);
       fill(m_mode, WIDTH);
     }
-    m_x = 0;
-    m_y = 0;
-    set_address(m_x, m_y);
+    set_cursor(0, 0);
     return (c);
   }
 
@@ -225,8 +211,7 @@ ST7565P::putchar(char c)
   if (c == '\b') {
     uint8_t width = m_font->get_width(' ');
     if (m_x < width) width = m_x;
-    m_x -= width;
-    set_address(m_x, m_y);
+    set_cursor(m_x - width, m_y);
     return (c);
   }
 
@@ -242,10 +227,10 @@ ST7565P::putchar(char c)
   }
 
   // Write character to the display memory and an extra byte
-  ST7565P_transaction(m_cs) {
+  data {
     while (--width) 
-      m_si.write(m_mode ^ pgm_read_byte(bp++), m_scl);
-    m_si.write(m_mode, m_scl);
+      write(m_mode ^ pgm_read_byte(bp++));
+    write(m_mode);
   }
 
   return (c);
