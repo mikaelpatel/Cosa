@@ -48,9 +48,6 @@ const uint8_t ST7565P::script[] PROGMEM = {
 void 
 ST7565P::set(uint8_t x, uint8_t y)
 {
-#if defined(MIRRORED)
-  x += 132 - WIDTH;
-#endif
   inverted(m_cs) {
     inverted(m_dc) {
       write(SET_X_ADDR | ((x >> 4) & X_ADDR_MASK));
