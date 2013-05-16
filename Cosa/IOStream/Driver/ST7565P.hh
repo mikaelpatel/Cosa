@@ -46,58 +46,59 @@ protected:
    * Instruction set (table 16, pp. 52)
    */
   enum {
-    DISPLAY_OFF = 0xAE,
-    DISPLAY_ON = 0xAF,
-    SET_DISPLAY_START = 0x40,
-    DISPLAY_START_MASK = 0x3f,
-    SET_Y_ADDR = 0xB0,
-    Y_ADDR_MASK = 0x0f,
-    SET_X_ADDR = 0x10,
-    X_ADDR_MASK = 0x0f,
-    ADC_NORMAL = 0xA0,
-    ADC_REVERSE = 0xA1,
-    DISPLAY_NORMAL = 0xA6,
-    DISPLAY_REVERSE = 0xA7,
-    DISPLAY_NORMAL_POINTS = 0xA4,
-    DISPLAY_ALL_POINTS = 0xA5,
-    LCD_BIAS_9 = 0xA2,
-    LCD_BIAS_7 = 0xA3,
-    X_ADDR_INC = 0xE0,
-    X_ADDR_CLEAR = 0xEE,
-    INTERNAL_RESET = 0xE2,
-    COM_OUTPUT_NORMAL = 0xC0,
-    COM_OUTPUT_REVERSE = 0xC8,
-    SET_POWER_CONTROL = 0x28,
-    POWER_MASK = 0x07,
-    SET_RESISTOR_RATIO = 0x20,
-    RESISTOR_MASK = 0x07,
-    SET_CONSTRAST = 0x81,
-    CONSTRAST_MASK = 0x3f,
-    INDICATOR_OFF = 0xAC,
-    INDICATOR_ON = 0xAD,
-    FLASHING_OFF = 0x00,
-    FLASHING_ON = 0x01,
-    SET_BOOSTER_RATIO = 0xF8,
-    BOOSTER_RATIO_234X = 0,
-    BOOSTER_RATIO_5X = 1,
-    BOOSTER_RATIO_6X = 3,
-    NOP = 0xE3,
-    SCRIPT_PAUSE = 0xF0,
-    SCRIPT_END = 0xFF
+    DISPLAY_OFF = 0xAE,		  // Turn display off
+    DISPLAY_ON = 0xAF,		  // Turn display on
+    SET_DISPLAY_START = 0x40,	  // Set start line address
+    DISPLAY_START_MASK = 0x3f,	  // - line address mask
+    SET_Y_ADDR = 0xB0,		  // Set page address
+    Y_ADDR_MASK = 0x0f,		  // - page address mask
+    SET_X_ADDR = 0x10,		  // Set column address (2x4 bits) 
+    X_ADDR_MASK = 0x0f,		  // - colum address mask
+    ADC_NORMAL = 0xA0,		  // Set normal address correspondence
+    ADC_REVERSE = 0xA1,		  // Set reverse address correspondence
+    DISPLAY_NORMAL = 0xA6,	  // Normal display mode
+    DISPLAY_REVERSE = 0xA7,	  // Reverse display mode
+    DISPLAY_NORMAL_POINTS = 0xA4, // Display normal
+    DISPLAY_ALL_POINTS = 0xA5,	  // Display all points
+    LCD_BIAS_9 = 0xA2,		  // Voltage ratio 1/9 bias
+    LCD_BIAS_7 = 0xA3,		  // Voltage ratio 1/7 bias
+    X_ADDR_INC = 0xE0,		  // Column address increment
+    X_ADDR_CLEAR = 0xEE,	  // Clear read/modify/write
+    INTERNAL_RESET = 0xE2,	  // Internal reset
+    COM_OUTPUT_NORMAL = 0xC0,	  // Normal output scan direction
+    COM_OUTPUT_REVERSE = 0xC8,	  // - reverse direction
+    SET_POWER_CONTROL = 0x28,	  // Select internal power supply mode
+    POWER_MASK = 0x07,		  // - operation mode mask
+    SET_RESISTOR_RATIO = 0x20,	  // Select internal resistor ratio
+    RESISTOR_MASK = 0x07,	  // - resistor ratio mask
+    SET_CONSTRAST = 0x81,	  // Set output voltage volume register
+    CONSTRAST_MASK = 0x3f,	  // - electronic volume mask
+    INDICATOR_OFF = 0xAC,	  // Static indicator off
+    INDICATOR_ON = 0xAD,	  // - on
+    FLASHING_OFF = 0x00,	  // Set indicator flashing mode off
+    FLASHING_ON = 0x01,		  // - on
+    SET_BOOSTER_RATIO = 0xF8,	  // Set booster ratio
+    BOOSTER_RATIO_234X = 0,	  // - 2x, 3x, 4x
+    BOOSTER_RATIO_5X = 1,	  // - 5x
+    BOOSTER_RATIO_6X = 3,	  // - 6x
+    NOP = 0xE3,			  // Non-operation
+    SCRIPT_PAUSE = 0xF0,	  // Init script pause (ms)
+    SCRIPT_END = 0xFF		  // Init script end
   } __attribute__((packed));
 
   // Initialization script to reduce memory footprint
   static const uint8_t script[] PROGMEM;
 
   // Display pins and state
-  OutputPin m_si;		// Serial input
-  OutputPin m_scl;		// Serial clock input
-  OutputPin m_dc;		// Data(1) or command(0)
-  OutputPin m_cs;		// Chip select
-  Font* m_font;			// Font
-  uint8_t m_x;			// Cursor x (0..WIDTH-1)
-  uint8_t m_y;			// Cursor y (0..LINES-1)
-  uint8_t m_mode;		// Text mode (inverted)
+  OutputPin m_si;		  // Serial input
+  OutputPin m_scl;		  // Serial clock input
+  OutputPin m_dc;		  // Data(1) or command(0)
+  OutputPin m_cs;		  // Chip select (active low)
+  uint8_t m_x;			  // Cursor x (0..WIDTH-1)
+  uint8_t m_y;			  // Cursor y (0..LINES-1)
+  uint8_t m_line;		  // Display start line
+  uint8_t m_mode;		  // Text mode (inverted)
+  Font* m_font;			  // Font
 
   /**
    * Set display address for next data block.
@@ -123,10 +124,10 @@ protected:
    */
   void fill(uint8_t data, uint16_t count) 
   {
-    m_cs.clear();
-    for (uint16_t i = 0; i < count; i++) 
-      write(data);
-    m_cs.set();
+    inverted(m_cs) {
+      for (uint16_t i = 0; i < count; i++) 
+	write(data);
+    }
   }
 
 public:
@@ -168,10 +169,11 @@ public:
     m_scl(scl, 0),
     m_dc(dc, 1),
     m_cs(cs, 1),
-    m_font(font),
     m_x(0),
     m_y(0),
-    m_mode(0)
+    m_line(0),
+    m_mode(0),
+    m_font(font)
   {}
 
   /**

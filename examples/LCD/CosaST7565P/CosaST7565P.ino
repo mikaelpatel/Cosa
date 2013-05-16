@@ -24,7 +24,6 @@
  * D6 ==> SI, D7 ==> SCL, D8 ==> DC, D9 ==> CS.
  * RST ==> RST.
  * 
- * 
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -57,28 +56,41 @@ void setup()
   ST7565P::TextMode saved = lcd.set_text_mode(ST7565P::INVERTED_TEXT_MODE);
   trace << PSTR("\fCosaST7565P: started\n");
   lcd.set_cursor(0, 1);
-  trace << PSTR("====================\n");
-  INFO("saved = %d", saved);
   TRACE(lcd.set_text_mode(saved));
+  trace << PSTR("=====================\n");
+  INFO("saved = %d", saved);
   SLEEP(2);
 
   // Use the trace iostream onto the LCD with output operator
+  trace << PSTR("\fBackspace\n");
   trace << PSTR("\f0123456890ABCDEFGHIJK");
   for (uint8_t i = 0; i < 22; i++) {
     Watchdog::delay(256);
     trace << PSTR("\b \b");
   }
+  
+  // Use number base handling 
+  trace << PSTR("\fNumber base\n");
   uint16_t ticks = Watchdog::ticks();
   TRACE(ticks);
-  trace << bin << 0x55 << endl;
-  trace << oct << 0x55 << endl;
-  trace << dec << 0x55 << endl;
-  trace << hex << 0x55 << endl;
-  trace << &lcd;
+  trace << PSTR("bcd = ") << bcd << 0x55 << endl;
+  trace << PSTR("bin = ") << bin << 0x55 << endl;
+  trace << PSTR("oct = ") << oct << 0x55 << endl;
+  trace << PSTR("dec = ") << dec << 0x55 << endl;
+  trace << PSTR("hex = ") << hex << 0x55 << endl;
+  trace << PSTR("ptr = ") << &lcd;
+  SLEEP(2);
+
+  // Scrolling
+  trace << PSTR("\fScrolling\n");
+  for (uint8_t i = 0; i < 64; i++) {
+    trace << PSTR("The quick brown fox jumps over the lazy dog. ");
+    Watchdog::delay(128);
+  }
   SLEEP(2);
 
   // Dump the LCD object raw format with normal print function
-  trace << PSTR("\fST7565P lcd dump\n");
+  trace << PSTR("\fBuffer dump\n");
   trace.print(&lcd, sizeof(lcd), IOStream::hex, 5);
   SLEEP(2);
 
@@ -103,7 +115,7 @@ void setup()
   offscreen.draw_rect(20, 20, 40, 20);
   offscreen.draw_rect(0, 0, offscreen.WIDTH - 1, offscreen.HEIGHT - 1);
   offscreen.set_cursor(15, 2);
-  offscreen.draw_string_P(PSTR("Hello World"));
+  offscreen.draw_string_P(PSTR("OffScreen Canvas"));
 
   // Draw the off-screen canvas on the LCD
   lcd.set_cursor(0, 0);

@@ -29,16 +29,6 @@
 // Enable to allow reversed display type
 #define MIRRORED
 
-// Mark block as data write operations
-#define data							\
-  for (uint8_t i = (m_cs.clear(), 1); i != 0; i--, m_cs.set())
-
-// Mark block as command write operations
-#define commands							\
-  for (uint8_t i = (m_cs.clear(), m_dc.clear(), 1);			\
-       i != 0;								\
-       i--, m_dc.set(), m_cs.set())
-
 // Initialization script
 const uint8_t ST7565P::script[] PROGMEM = {
 #if defined(MIRRORED)
@@ -69,57 +59,12 @@ ST7565P::set(uint8_t x, uint8_t y)
 #if defined(MIRRORED)
   x += 132 - WIDTH;
 #endif
-  commands {
-    write(SET_X_ADDR | ((x >> 4) & X_ADDR_MASK));
-    write(x & X_ADDR_MASK);
-    write(SET_Y_ADDR | (y & Y_ADDR_MASK));
-  }
-}
-
-bool 
-ST7565P::begin(uint8_t level)
-{
-  const uint8_t* bp = script;
-  uint8_t cmd;
-  commands {
-    while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END) {
-      if (cmd == SCRIPT_PAUSE) {
-	uint8_t ms = pgm_read_byte(bp++);
-	Watchdog::delay(ms);
-      }
-      else write(cmd);
+  inverted(m_cs) {
+    inverted(m_dc) {
+      write(SET_X_ADDR | ((x >> 4) & X_ADDR_MASK));
+      write(x & X_ADDR_MASK);
+      write(SET_Y_ADDR | (y & Y_ADDR_MASK));
     }
-  }
-  set_display_contrast(level);
-  m_x = 0;
-  m_y = 0;
-  set(m_x, m_y);
-  return (true);
-}
-
-bool 
-ST7565P::end()
-{
-  commands {
-    write(DISPLAY_OFF);
-  }
-  return (true);
-}
-
-void 
-ST7565P::set_display_mode(DisplayMode mode)
-{
-  commands {
-    write(DISPLAY_NORMAL | mode);
-  }
-}
-
-void 
-ST7565P::set_display_contrast(uint8_t level)
-{
-  commands {
-    write(SET_CONSTRAST);
-    write(CONSTRAST_MASK & level);
   }
 }
 
@@ -129,6 +74,66 @@ ST7565P::set_cursor(uint8_t x, uint8_t y)
   set(x, y);
   m_x = (x & (WIDTH - 1));
   m_y = (y & (LINES - 1));
+  if ((m_x != 0) || (m_y != 0)) return;
+  m_line = 0;
+  inverted(m_cs) {
+    inverted(m_dc) {
+      write(SET_DISPLAY_START | m_line);
+    }
+  }
+}
+
+bool 
+ST7565P::begin(uint8_t level)
+{
+  const uint8_t* bp = script;
+  uint8_t cmd;
+  inverted(m_cs) {
+    inverted(m_dc) {
+      while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END) {
+	if (cmd == SCRIPT_PAUSE) {
+	  uint8_t ms = pgm_read_byte(bp++);
+	  Watchdog::delay(ms);
+	}
+	else write(cmd);
+      }
+    }
+  }
+  set_display_contrast(level);
+  set_cursor(0, 0);
+  return (true);
+}
+
+bool 
+ST7565P::end()
+{
+  inverted(m_cs) {
+    inverted(m_dc) {
+      write(DISPLAY_OFF);
+    }
+  }
+  return (true);
+}
+
+void 
+ST7565P::set_display_mode(DisplayMode mode)
+{
+  inverted(m_cs) {
+    inverted(m_dc) {
+      write(DISPLAY_NORMAL | mode);
+    }
+  }
+}
+
+void 
+ST7565P::set_display_contrast(uint8_t level)
+{
+  inverted(m_cs) {
+    inverted(m_dc) {
+      write(SET_CONSTRAST);
+      write(CONSTRAST_MASK & level);
+    }
+  }
 }
 
 void 
@@ -138,7 +143,7 @@ ST7565P::draw_icon(const uint8_t* bp)
   uint8_t height = pgm_read_byte(bp++);
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    data {
+    inverted(m_cs) {
       for (uint8_t x = 0; x < width; x++) {
 	write(m_mode ^ pgm_read_byte(bp++));
       }
@@ -153,7 +158,7 @@ ST7565P::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 {
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    data {
+    inverted(m_cs) {
       for (uint8_t x = 0; x < width; x++) {
 	write(m_mode ^ (*bp++));
       }
@@ -170,7 +175,7 @@ ST7565P::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
   uint8_t filled = (procent * (width - 2U)) / 100;
   uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
   width -= (filled + 1);
-  data {
+  inverted(m_cs) {
     write(m_mode ^ 0xff);
     while (filled--) {
       write(m_mode ^ (pattern | boarder));
@@ -191,9 +196,26 @@ ST7565P::putchar(char c)
 {
   // Check for special characters; carriage-return-line-feed
   if (c == '\n') {
-    set_cursor(0, m_y + 1);
-    fill(m_mode, WIDTH);
-    set(m_x, m_y);
+    // Use display start line to implement scrolling
+    if (m_y == (LINES - 1)) {
+      m_line = (m_line + CHARBITS) & DISPLAY_START_MASK;
+      inverted(m_cs) {
+	inverted(m_dc) {
+	  write(SET_DISPLAY_START | m_line);
+	}
+      }
+      uint8_t y = m_line / CHARBITS;
+      if (y == 0) y = 7; else y = y - 1;
+      set(0, y);
+      fill(m_mode, WIDTH);
+      set(0, y);
+      m_x = 0;
+    } 
+    else {
+      set_cursor(0, m_y + 1);
+      fill(m_mode, WIDTH);
+      set(m_x, m_y);
+    }
     return (c);
   }
   
@@ -215,19 +237,15 @@ ST7565P::putchar(char c)
     return (c);
   }
 
-  // Access font for character width and bitmap
+  // Write character to the display with an extra space
   uint8_t width = m_font->get_width(c);
   const uint8_t* bp = m_font->get_bitmap(c);
   m_x += width;
-
-  // Check that the character is not clipped
   if (m_x > WIDTH) {
     putchar('\n');
     m_x = width;
   }
-
-  // Write character to the display memory and an extra byte
-  data {
+  inverted(m_cs) {
     while (--width) 
       write(m_mode ^ pgm_read_byte(bp++));
     write(m_mode);
