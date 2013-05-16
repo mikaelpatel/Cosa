@@ -98,6 +98,14 @@ PCD8544::set_display_contrast(uint8_t level)
 }
 
 void 
+PCD8544::set_cursor(uint8_t x, uint8_t y)
+{
+  set(x, y);
+  m_x = x;
+  m_y = y;
+}
+
+void 
 PCD8544::draw_icon(const uint8_t* bp)
 {
   uint8_t width = pgm_read_byte(bp++);
@@ -158,7 +166,9 @@ PCD8544::putchar(char c)
 {
   // Check for special characters; carriage-return-line-feed
   if (c == '\n') {
-    set_cursor(0, m_y + 1);
+    m_y += 1;
+    if (m_y == LINES) m_y = 0;
+    set_cursor(0, m_y);
     fill(m_mode, WIDTH);
     set(m_x, m_y);
     return (c);
@@ -177,6 +187,12 @@ PCD8544::putchar(char c)
     uint8_t width = m_font->get_width(' ');
     if (m_x < width) width = m_x;
     set_cursor(m_x - width, m_y);
+    return (c);
+  }
+
+  // Check for special character: alert
+  if (c == '\a') {
+    m_mode = ~m_mode;
     return (c);
   }
 

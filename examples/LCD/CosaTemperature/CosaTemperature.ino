@@ -89,8 +89,7 @@ void loop()
   uint16_t fraction = temp.get_fraction(2);
 
   // Create an offscreen bitmap for the presentation
-  uint8_t buffer[PCD8544::WIDTH * PCD8544::HEIGHT / CHARBITS];
-  OffScreen offscreen(PCD8544::WIDTH, PCD8544::HEIGHT, buffer);
+  OffScreen<PCD8544::WIDTH, PCD8544::HEIGHT> offscreen;
 
   // Use a textbox for the font and position
   Textbox textbox(&offscreen);

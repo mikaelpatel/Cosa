@@ -51,54 +51,64 @@ void setup()
   // Initiate the LCD screen and show arduino icon
   lcd.begin(0x38);
   lcd.putchar('\f');
-  lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
+  lcd.set_cursor((lcd.WIDTH - 64)/2, 0);
   lcd.draw_icon(arduino_icon_64x32);
-  SLEEP(2);
 
   // Use LCD bind to trace and use inverted text mode for banner
   trace.begin(&lcd);
-  PCD8544::TextMode saved = lcd.set_text_mode(PCD8544::INVERTED_TEXT_MODE);
-  trace << PSTR("\fCosaPCD8544: started\n");
-  INFO("saved = %d", saved);
-  lcd.set_text_mode(saved);
-  SLEEP(2);
-
-  // Use the trace iostream onto the LCD with output operator
-  lcd.putchar('\f');
-  trace << PSTR("01234568901234");
-  for (uint8_t i = 0; i < 16; i++) {
-    Watchdog::delay(256);
-    trace << PSTR("\b \b");
-  }
-  uint16_t ticks = Watchdog::ticks();
-  TRACE(ticks);
-  trace << bin << 0x55 << endl;
-  trace << oct << 0x55 << endl;
-  trace << dec << 0x55 << endl;
-  trace << hex << 0x55 << endl;
-  trace << &lcd;
-  SLEEP(2);
-
-  // Dump the LCD object raw format with normal print function
-  lcd.putchar('\f');
-  trace.print(&lcd, sizeof(lcd) - 1, IOStream::hex, 2);
+  lcd.set_cursor(8, 4);
+  trace << PSTR("\aCosaPCD8544\a");
   SLEEP(2);
 
   // Dump characters in system font; two pages, 64 characters each
   uint8_t page = 0;
   for (uint8_t c = 0; c < 128; c++) {
     if ((c & 63) == 0) {
-      saved = lcd.set_text_mode(PCD8544::INVERTED_TEXT_MODE);
-      trace << PSTR("\fFont page#") << page++ << endl;
-      lcd.set_text_mode(saved);
+      trace << PSTR("\f\aFont page#") << page++ << '\a' << endl;
     }
-    trace << (char) (((c == '\n') || (c == '\f') || (c == '\b')) ? ' ' : c);
+    if ((c == '\n') || (c == '\f') || (c == '\b') || (c == '\a')) 
+      trace << ' ';
+    else
+      trace << (char) c;
     if (((c +  1) & 63) == 0) SLEEP(4);
   }
 
+  // Use the trace iostream onto the LCD with output operator
+  trace << PSTR("\f\aSPECIAL CHARACTERS\a\n\n");
+  trace << PSTR("01234568901234");
+  for (uint8_t i = 0; i < 16; i++) {
+    Watchdog::delay(256);
+    trace << PSTR("\b \b");
+  }
+
+  // Scrolling
+  trace << PSTR("\f\aSCROLLING\a\n");
+  static const char msg[] PROGMEM = "The quick brown fox jumps over the lazy dog. ";
+  for (uint8_t i = 0; i < 4; i++) {
+    uint8_t len = strlen_P(msg);
+    for (uint8_t j = 0; j < len; j++) {
+      trace << (char) pgm_read_byte(msg + j);
+      Watchdog::delay(64);
+    }
+  }
+  SLEEP(2);
+
+  // Use number base handling 
+  trace << PSTR("\f\aNUMBER BASE\a\n");
+  trace << PSTR("bcd = ") << bcd << 0x55 << endl;
+  trace << PSTR("oct = ") << oct << 0x55 << endl;
+  trace << PSTR("dec = ") << dec << 0x55 << endl;
+  trace << PSTR("hex = ") << hex << 0x55 << endl;
+  trace << PSTR("ptr = ") << &lcd;
+  SLEEP(2);
+
+  // Dump the LCD object raw format with normal print function
+  trace << PSTR("\f\aBUFFER DUMP\a\n");
+  trace.print(&lcd, 8, IOStream::hex, 2);
+  SLEEP(2);
+
   // Play around with the offscreen canvas
-  uint8_t buffer[PCD8544::WIDTH * PCD8544::HEIGHT / CHARBITS];
-  OffScreen offscreen(PCD8544::WIDTH, PCD8544::HEIGHT, buffer);
+  OffScreen<PCD8544::WIDTH, PCD8544::HEIGHT> offscreen;
   offscreen.begin();
   offscreen.draw_rect(0, 0, 10, 10);
   offscreen.fill_rect(2, 2, 7, 7);
@@ -110,7 +120,7 @@ void setup()
   offscreen.draw_rect(20, 20, 40, 20);
   offscreen.draw_rect(0, 0, offscreen.WIDTH - 1, offscreen.HEIGHT - 1);
   offscreen.set_cursor(15, 2);
-  offscreen.draw_string_P(PSTR("Hello World"));
+  offscreen.draw_string_P(PSTR("OffScreen"));
 
   // Draw the off-screen canvas on the LCD
   lcd.set_cursor(0, 0);
@@ -150,8 +160,7 @@ void loop()
     static uint8_t sec = 00;
 
     // Draw the current counter value off-screen
-    uint8_t buffer[PCD8544::WIDTH * PCD8544::HEIGHT / CHARBITS];
-    OffScreen offscreen(PCD8544::WIDTH, PCD8544::HEIGHT, buffer);
+    OffScreen<PCD8544::WIDTH, PCD8544::HEIGHT> offscreen;
     offscreen.begin();
     offscreen.set_text_font(&fixednums8x16);
     offscreen.draw_roundrect(8, 8, lcd.WIDTH - 18, lcd.HEIGHT - 18, 8);

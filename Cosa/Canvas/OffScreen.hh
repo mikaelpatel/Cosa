@@ -31,29 +31,24 @@
 
 /**
  * Off-screen canvas for drawing before copying to the canvas device.
- * Supports only monochrome, 1-bit, pixel in off-screen buffer. 
+ * Supports monochrome, 1-bit, pixel in off-screen buffer. 
  * Minimum implementation; draw_pixel() only.
+ * @param[in] width of canvas.
+ * @param[in] height of canvas.
  */
+template<uint8_t width, uint8_t height>
 class OffScreen : public Canvas {
 private:
-  uint16_t m_count;		// Size of bitmap (bytes)
-  uint8_t* m_bitmap;		// Pointer to bitmap buffer
+  static const uint16_t COUNT = (width * height) / CHARBITS;
+  uint8_t m_bitmap[COUNT];
 
 public:
   /**
    * Construct off-screen canvas with given width and height. A 
    * buffer may be given but must be able to hold the bitmap size.
    * If the buffer pointer is null a buffer is allocated.
-   * @param[in] width of canvas.
-   * @param[in] height of canvas.
-   * @param[in] buffer for canvas.
    */
-  OffScreen(uint8_t width, uint8_t height, uint8_t* buffer) :
-    Canvas(width, height),
-    m_count((width * height) / CHARBITS),
-    m_bitmap(buffer)
-  {
-  }
+  OffScreen() : Canvas(width, height) {}
 
   /**
    * Get bitmap for the off-screen canvas.
@@ -66,12 +61,12 @@ public:
 
   /**
    * @override
-   * Start interaction with off-screen canvas. Clears buffer.
+   * Start interaction with off-screen canvas.
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool begin()
   {
-    memset(m_bitmap, 0, m_count);
+    fill_screen();
     return (true);
   }
 
@@ -83,6 +78,7 @@ public:
    */
   virtual void draw_pixel(uint8_t x, uint8_t y)
   {
+    if ((x > WIDTH) || (y > HEIGHT)) return;
     uint8_t* bp = &m_bitmap[((y >> 3) * WIDTH) + x];
     uint8_t pos = (y & 0x07); 
     if (get_pen_color().rgb == Canvas::BLACK)
@@ -90,6 +86,15 @@ public:
     else
       *bp &= ~(1 << pos);
   } 
+
+  /**
+   * @override
+   * Fill offscreen buffer with canvas background color.
+   */
+  virtual void fill_screen()
+  {
+    memset(m_bitmap, (get_canvas_color().rgb == Canvas::BLACK), COUNT);
+  }
 
   /**
    * @override

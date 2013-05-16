@@ -199,12 +199,7 @@ public:
    * @param[in] x pixel position (0..WIDTH-1).
    * @param[in] y line position (0..LINES-1).
    */
-  void set_cursor(uint8_t x, uint8_t y)
-  {
-    set(x, y);
-    m_x = (x & X_ADDR_MASK);
-    m_y = (y & Y_ADDR_MASK);
-  }
+  void set_cursor(uint8_t x, uint8_t y);
 
   /**
    * Set text mode. Return previous text mode.

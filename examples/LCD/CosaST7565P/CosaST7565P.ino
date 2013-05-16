@@ -56,26 +56,28 @@ void setup()
   trace << PSTR("CosaST7565P: started");
   SLEEP(2);
 
+  // Dump characters in system font
+  trace << PSTR("\f\aSYSTEM FONT 5x7\a\n");
+  for (uint8_t c = 0; c < 128; c++) {
+    if ((c == '\n') || (c == '\f') || (c == '\b') || (c == '\a')) 
+      trace << ' ';
+    else
+      trace << (char) c;
+  }
+  SLEEP(2);
+
   // Use the trace iostream onto the LCD with output operator
-  trace << PSTR("\f\aBACKSPACE\a\n\n");
+  trace << PSTR("\f\aSPECIAL CHARACTERS\a\n\n");
+  trace << PSTR("\af - form-feed\a\n");
+  trace << PSTR("\an - new-line\a\n");
+  trace << PSTR("\aa - alert\a\n");
+  trace << PSTR("\ab - backspace\a\n\n");
   trace << PSTR("0123456890ABCDEFGHIJK");
   for (uint8_t i = 0; i < 22; i++) {
     Watchdog::delay(256);
     trace << PSTR("\b \b");
   }
   
-  // Use number base handling 
-  trace << PSTR("\f\aNUMBER BASE\a\n");
-  uint16_t ticks = Watchdog::ticks();
-  TRACE(ticks);
-  trace << PSTR("bcd = ") << bcd << 0x55 << endl;
-  trace << PSTR("bin = ") << bin << 0x55 << endl;
-  trace << PSTR("oct = ") << oct << 0x55 << endl;
-  trace << PSTR("dec = ") << dec << 0x55 << endl;
-  trace << PSTR("hex = ") << hex << 0x55 << endl;
-  trace << PSTR("ptr = ") << &lcd;
-  SLEEP(2);
-
   // Scrolling
   trace << PSTR("\f\aSCROLLING\a\n");
   static const char msg[] PROGMEM = "The quick brown fox jumps over the lazy dog. ";
@@ -88,24 +90,25 @@ void setup()
   }
   SLEEP(2);
 
+  // Use number base handling 
+  trace << PSTR("\f\aNUMBER BASE\a\n");
+  uint16_t ticks = Watchdog::ticks();
+  TRACE(ticks);
+  trace << PSTR("bcd = ") << bcd << 0x55 << endl;
+  trace << PSTR("bin = ") << bin << 0x55 << endl;
+  trace << PSTR("oct = ") << oct << 0x55 << endl;
+  trace << PSTR("dec = ") << dec << 0x55 << endl;
+  trace << PSTR("hex = ") << hex << 0x55 << endl;
+  trace << PSTR("ptr = ") << &lcd;
+  SLEEP(2);
+
   // Dump the LCD object raw format with normal print function
   trace << PSTR("\f\aBUFFER DUMP\a\n");
   trace.print(&lcd, sizeof(lcd), IOStream::hex, 5);
   SLEEP(2);
 
-  // Dump characters in system font
-  trace << PSTR("\f\aSYSTEM FONT 5x7\a\n");
-  for (uint8_t c = 0; c < 128; c++) {
-    if ((c == '\n') || (c == '\f') || (c == '\b') || (c == '\a')) 
-      trace << ' ';
-    else
-      trace << (char) c;
-  }
-  SLEEP(2);
-
   // Play around with the offscreen canvas
-  uint8_t buffer[ST7565P::WIDTH * ST7565P::HEIGHT / CHARBITS];
-  OffScreen offscreen(ST7565P::WIDTH, ST7565P::HEIGHT, buffer);
+  OffScreen<ST7565P::WIDTH, ST7565P::HEIGHT> offscreen;
   offscreen.begin();
   offscreen.draw_rect(0, 0, 10, 10);
   offscreen.fill_rect(2, 2, 7, 7);
@@ -160,8 +163,7 @@ void loop()
     static uint8_t sec = 00;
 
     // Draw the current counter value off-screen
-    uint8_t buffer[ST7565P::WIDTH * ST7565P::HEIGHT / CHARBITS];
-    OffScreen offscreen(ST7565P::WIDTH, ST7565P::HEIGHT, buffer);
+    OffScreen<ST7565P::WIDTH, ST7565P::HEIGHT> offscreen;
     offscreen.begin();
     offscreen.set_text_font(&fixednums8x16);
     offscreen.draw_roundrect(8, 8, lcd.WIDTH - 18, lcd.HEIGHT - 18, 8);
