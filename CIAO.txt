@@ -1,8 +1,8 @@
 CIAO: DATA STREAMING FORMAT FOR COSA
 
 Author:	       Mikael Patel
-Date:	       2012-12-18
-Rev.:	       1.0.4
+Date:	       2013-05-15
+Rev.:	       1.0.5
 
 This is a desciption of the Cosa data streaming format; Ciao. It
 is basically a tagged data format that supports the C/C++ language
@@ -11,7 +11,7 @@ not supported in the streaming format.
 
 Each data object is tagged with a prefix byte. It contains a four bit
 type tag and a four bit attribute. Additional prefix attributes are
-used for sequence length and user defined types. 
+used for sequence length and user defined data types. 
 
 The prefix information (type tag and length) is stored in MSB first
 (big-endian) while data is stored according to endian setting in the
@@ -169,14 +169,14 @@ Cosa/Fai-directory.
 
 EXPRESSION			ENCODING
 uint8_t x = 15;			[0x01] [0x0f]
-int32_t y = -2;			[0xa1] [0xfe] [0xff]
+int32_t y = -2;			[0xa1] [0xfe][0xff][0xff][0xff]
 char* s = "Ciao!"		[0x00] ['C']['i']['a']['o']['!'][0]
-struct Point {			[0x50] [0x10] [0x42] ['P']['o']['i']['n']['t'][0]
+struct Point {			[0x50] [0x10][0x42] ['P']['o']['i']['n']['t'][0]
   int16_t x;   			[0x91] ['x'][0]
   int16_t y;			[0x91] ['y'][0]
 };	  			[0x5f]
-Point p = { 1, -1 };		[0x71] [0x10] [0x42] [0x01][0x00] [0xff][0xff]
-Point q[100];  	  		[0x78] [100] [0x10] [0x42] [..][..]...[..][..]
+Point p = { 1, -1 };		[0x71] [0x10][0x42] [0x01][0x00][0xff][0xff]
+Point q[100];  	  		[0x78] [100] [0x10][0x42] [..][..]...[..][..]
 
 In the example above the struct Point is given the identity (0x1042).
 
