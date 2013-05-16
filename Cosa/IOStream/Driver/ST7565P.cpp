@@ -226,6 +226,12 @@ ST7565P::putchar(char c)
     return (c);
   }
 
+  // Check for special character: alert
+  if (c == '\a') {
+    m_mode = ~m_mode;
+    return (c);
+  }
+
   // Write character to the display with an extra space
   uint8_t width = m_font->get_width(c);
   const uint8_t* bp = m_font->get_bitmap(c);

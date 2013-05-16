@@ -49,28 +49,23 @@ void setup()
   lcd.putchar('\f');
   lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
   lcd.draw_icon(arduino_icon_64x32);
-  SLEEP(2);
   
   // Use LCD bind to trace and use inverted text mode for banner
   trace.begin(&lcd);
-  ST7565P::TextMode saved = lcd.set_text_mode(ST7565P::INVERTED_TEXT_MODE);
-  trace << PSTR("\fCosaST7565P: started\n");
-  lcd.set_cursor(0, 1);
-  TRACE(lcd.set_text_mode(saved));
-  trace << PSTR("=====================\n");
-  INFO("saved = %d", saved);
+  lcd.set_cursor(0, lcd.LINES - 1);
+  trace << PSTR("CosaST7565P: started");
   SLEEP(2);
 
   // Use the trace iostream onto the LCD with output operator
-  trace << PSTR("\fBackspace\n");
-  trace << PSTR("\f0123456890ABCDEFGHIJK");
+  trace << PSTR("\f\aBACKSPACE\a\n\n");
+  trace << PSTR("0123456890ABCDEFGHIJK");
   for (uint8_t i = 0; i < 22; i++) {
     Watchdog::delay(256);
     trace << PSTR("\b \b");
   }
   
   // Use number base handling 
-  trace << PSTR("\fNumber base\n");
+  trace << PSTR("\f\aNUMBER BASE\a\n");
   uint16_t ticks = Watchdog::ticks();
   TRACE(ticks);
   trace << PSTR("bcd = ") << bcd << 0x55 << endl;
@@ -82,22 +77,29 @@ void setup()
   SLEEP(2);
 
   // Scrolling
-  trace << PSTR("\fScrolling\n");
-  for (uint8_t i = 0; i < 64; i++) {
-    trace << PSTR("The quick brown fox jumps over the lazy dog. ");
-    Watchdog::delay(128);
+  trace << PSTR("\f\aSCROLLING\a\n");
+  static const char msg[] PROGMEM = "The quick brown fox jumps over the lazy dog. ";
+  for (uint8_t i = 0; i < 8; i++) {
+    uint8_t len = strlen_P(msg);
+    for (uint8_t j = 0; j < len; j++) {
+      trace << (char) pgm_read_byte(msg + j);
+      Watchdog::delay(64);
+    }
   }
   SLEEP(2);
 
   // Dump the LCD object raw format with normal print function
-  trace << PSTR("\fBuffer dump\n");
+  trace << PSTR("\f\aBUFFER DUMP\a\n");
   trace.print(&lcd, sizeof(lcd), IOStream::hex, 5);
   SLEEP(2);
 
   // Dump characters in system font
-  trace << PSTR("\fSystem Font 5x7\n");
+  trace << PSTR("\f\aSYSTEM FONT 5x7\a\n");
   for (uint8_t c = 0; c < 128; c++) {
-    trace << (char) (((c == '\n') || (c == '\f') || (c == '\b')) ? ' ' : c);
+    if ((c == '\n') || (c == '\f') || (c == '\b') || (c == '\a')) 
+      trace << ' ';
+    else
+      trace << (char) c;
   }
   SLEEP(2);
 
@@ -110,10 +112,13 @@ void setup()
   offscreen.draw_rect(20, 20, 10, 10);
   offscreen.draw_circle(20, 20, 10);
   offscreen.fill_circle(20, 20, 8);
-  offscreen.draw_roundrect(20, 20, 40, 20, 10);
-  offscreen.fill_roundrect(22, 22, 36, 16, 7);
-  offscreen.draw_rect(20, 20, 40, 20);
+  offscreen.draw_roundrect(70, 10, 40, 20, 10);
+  offscreen.fill_roundrect(72, 12, 36, 16, 7);
+  offscreen.draw_rect(70, 10, 40, 20);
   offscreen.draw_rect(0, 0, offscreen.WIDTH - 1, offscreen.HEIGHT - 1);
+  for (uint8_t width = 0; width < ST7565P::WIDTH; width += 8) {
+    offscreen.draw_line(20, 20, width, ST7565P::HEIGHT - 1);
+  }
   offscreen.set_cursor(15, 2);
   offscreen.draw_string_P(PSTR("OffScreen Canvas"));
 

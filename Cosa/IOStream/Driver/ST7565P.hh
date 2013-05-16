@@ -184,7 +184,7 @@ public:
    * @param[in] level contrast.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint8_t level = 0x06);
+  bool begin(uint8_t level = 0x08);
 
   /**
    * Stop sequence of interaction with device.
