@@ -25,9 +25,6 @@
 
 #include "Cosa/IOStream/Driver/PCD8544.hh"
 
-#define PCD8544_transaction(sce)				\
-  for (uint8_t i = (sce.clear(), 1); i != 0; i--, sce.set())
-
 const uint8_t PCD8544::script[] PROGMEM = {
   SET_FUNC       | EXTENDED_INST,
   SET_VOP 	 | 0x38,
@@ -37,26 +34,17 @@ const uint8_t PCD8544::script[] PROGMEM = {
   DISPLAY_CNTL   | NORMAL_MODE,
   SET_X_ADDR     | 0,
   SET_Y_ADDR     | 0,
-  NOP
+  SCRIPT_END
 };
 
 void 
-PCD8544::set_address(uint8_t x, uint8_t y)
+PCD8544::set(uint8_t x, uint8_t y)
 {
-  PCD8544_transaction(m_sce) {
-    m_dc.clear();
-    m_sdin.write(SET_X_ADDR | (x & X_ADDR_MASK), m_sclk);
-    m_sdin.write(SET_Y_ADDR | (y & Y_ADDR_MASK), m_sclk);
-    m_dc.set();
-  }
-}
-
-void 
-PCD8544::fill(uint8_t data, uint16_t count)
-{
-  PCD8544_transaction(m_sce) {
-    for (uint16_t i = 0; i < count; i++)
-      m_sdin.write(data, m_sclk);
+  inverted(m_sce) {
+    inverted(m_dc) {
+      write(SET_X_ADDR | (x & X_ADDR_MASK));
+      write(SET_Y_ADDR | (y & Y_ADDR_MASK));
+    }
   }
 }
 
@@ -65,25 +53,24 @@ PCD8544::begin(uint8_t level)
 {
   const uint8_t* bp = script;
   uint8_t cmd;
-  PCD8544_transaction(m_sce) {
-    m_dc.clear();
-    while ((cmd = pgm_read_byte(bp++)) != NOP)
-      m_sdin.write(cmd, m_sclk);
-    m_dc.set();
+  inverted(m_sce) {
+    inverted(m_dc) {
+      while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END)
+	write(cmd);
+    }
   }
   set_display_contrast(level);
-  m_x = 0;
-  m_y = 0;
+  set_cursor(0, 0);
   return (true);
 }
 
 bool 
 PCD8544::end()
 {
-  PCD8544_transaction(m_sce) {
-    m_dc.clear();
-    m_sdin.write(SET_FUNC | BASIC_INST | POWER_DOWN_MODE, m_sclk);
-    m_dc.set();
+  inverted(m_sce) {
+    inverted(m_dc) {
+      write(SET_FUNC | BASIC_INST | POWER_DOWN_MODE);
+    }
   }
   return (true);
 }
@@ -91,31 +78,23 @@ PCD8544::end()
 void 
 PCD8544::set_display_mode(DisplayMode mode)
 {
-  PCD8544_transaction(m_sce) {
-    m_dc.clear();
-    m_sdin.write(DISPLAY_CNTL | mode, m_sclk);
-    m_dc.set();
+  inverted(m_sce) {
+    inverted(m_dc) {
+      write(DISPLAY_CNTL | mode);
+    }
   }
 }
 
 void 
 PCD8544::set_display_contrast(uint8_t level)
 {
-  PCD8544_transaction(m_sce) {
-    m_dc.clear();
-    m_sdin.write(SET_FUNC | EXTENDED_INST, m_sclk);
-    m_sdin.write(SET_VOP  | (level & VOP_MASK), m_sclk);
-    m_sdin.write(SET_FUNC | BASIC_INST | HORIZONTAL_ADDR, m_sclk);
-    m_dc.set();
+  inverted(m_sce) {
+    inverted(m_dc) {
+      write(SET_FUNC | EXTENDED_INST);
+      write(SET_VOP  | (level & VOP_MASK));
+      write(SET_FUNC | BASIC_INST | HORIZONTAL_ADDR);
+    }
   }
-}
-
-void 
-PCD8544::set_cursor(uint8_t x, uint8_t y)
-{
-  set_address(x, y);
-  m_x = (x & X_ADDR_MASK);
-  m_y = (y & Y_ADDR_MASK);
 }
 
 void 
@@ -125,17 +104,14 @@ PCD8544::draw_icon(const uint8_t* bp)
   uint8_t height = pgm_read_byte(bp++);
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    PCD8544_transaction(m_sce) {
+    inverted(m_sce) {
       for (uint8_t x = 0; x < width; x++) {
-	m_sdin.write(m_mode ^ pgm_read_byte(bp++), m_sclk);
+	write(m_mode ^ pgm_read_byte(bp++));
       }
     }
-    m_y += 1;
-    set_address(m_x, m_y);
+    set_cursor(m_x, m_y + 1);
   }
-  m_y += 1;
-  if (m_y == LINES) m_y = 0;
-  set_address(m_x, m_y);
+  set_cursor(m_x, m_y + 1);
 }
 
 void 
@@ -143,17 +119,15 @@ PCD8544::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 {
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    PCD8544_transaction(m_sce) {
+    inverted(m_sce) {
       for (uint8_t x = 0; x < width; x++) {
-	m_sdin.write(m_mode ^ (*bp++), m_sclk);
+	write(m_mode ^ (*bp++));
       }
     }
-    m_y += 1;
-    set_address(m_x, m_y);
+    set_cursor(m_x, m_y + 1);
   }
   m_y += 1;
-  if (m_y == LINES) m_y = 0;
-  set_address(m_x, m_y);
+  set_cursor(m_x, m_y + 1);
 }
 
 void 
@@ -163,19 +137,19 @@ PCD8544::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
   uint8_t filled = (procent * (width - 2U)) / 100;
   uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
   width -= (filled + 1);
-  PCD8544_transaction(m_sce) {
-    m_sdin.write(m_mode ^ 0xff, m_sclk);
+  inverted(m_sce) {
+    write(m_mode ^ 0xff);
     while (filled--) {
-      m_sdin.write(m_mode ^ (pattern | boarder), m_sclk);
+      write(m_mode ^ (pattern | boarder));
       pattern = ~pattern;
     }
-    m_sdin.write(m_mode ^ 0xff, m_sclk);
+    write(m_mode ^ 0xff);
     width -= 1;
     if (width > 0) {
       while (width--)
-	m_sdin.write(m_mode ^ boarder, m_sclk);
+	write(m_mode ^ boarder);
     }
-    m_sdin.write(m_mode ^ 0xff, m_sclk);
+    write(m_mode ^ 0xff);
   }
 }
 
@@ -184,22 +158,17 @@ PCD8544::putchar(char c)
 {
   // Check for special characters; carriage-return-line-feed
   if (c == '\n') {
-    m_x = 0;
-    m_y += 1;
-    if (m_y == LINES) m_y = 0;
-    set_address(m_x, m_y);
+    set_cursor(0, m_y + 1);
     fill(m_mode, WIDTH);
-    set_address(m_x, m_y);
+    set(m_x, m_y);
     return (c);
   }
   
   // Check for special character: form-feed
   if (c == '\f') {
-    m_x = 0;
-    m_y = 0;
-    set_address(m_x, m_y);
+    set_cursor(0, 0);
     fill(m_mode, LINES * WIDTH);
-    set_address(m_x, m_y);
+    set(m_x, m_y);
     return (c);
   }
 
@@ -207,8 +176,7 @@ PCD8544::putchar(char c)
   if (c == '\b') {
     uint8_t width = m_font->get_width(' ');
     if (m_x < width) width = m_x;
-    m_x -= width;
-    set_address(m_x, m_y);
+    set_cursor(m_x - width, m_y);
     return (c);
   }
 
@@ -224,10 +192,10 @@ PCD8544::putchar(char c)
   }
 
   // Write character to the display memory and an extra byte
-  PCD8544_transaction(m_sce) {
+  inverted(m_sce) {
     while (--width) 
-      m_sdin.write(m_mode ^ pgm_read_byte(bp++), m_sclk);
-    m_sdin.write(m_mode, m_sclk);
+      write(m_mode ^ pgm_read_byte(bp++));
+    write(m_mode);
   }
 
   return (c);

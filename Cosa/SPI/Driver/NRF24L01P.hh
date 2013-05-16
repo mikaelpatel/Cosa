@@ -331,7 +331,14 @@ public:
    * @param[in] reg register address.
    * @return register value.
    */
-  uint8_t read(Register reg);
+  uint8_t read(Register reg)
+  {
+    uint8_t res;
+    inverted(m_csn) {
+      res = spi.read(R_REGISTER | (REG_MASK & reg));
+    }
+    return (res);
+  }
 
   /**
    * Write command and status registers. Issue W_REGISTER command.
@@ -339,7 +346,13 @@ public:
    * @param[in] data new setting.
    * @return status.
    */
-  uint8_t write(Register reg, uint8_t data);
+  uint8_t write(Register reg, uint8_t data)
+  {
+    inverted(m_csn) {
+      m_status = spi.write(W_REGISTER | (REG_MASK & reg), data);
+    }
+    return (m_status);
+  }
 
   /**
    * Write command and status registers. Issue W_REGISTER command and
@@ -349,7 +362,13 @@ public:
    * @param[in] count number of bytes to write.
    * @return status.
    */
-  uint8_t write(Register reg, const void* buffer, uint8_t count);
+  uint8_t write(Register reg, const void* buffer, uint8_t count)
+  {
+    inverted(m_csn) {
+      m_status = spi.write(W_REGISTER | (REG_MASK & reg), buffer, count);
+    }
+    return (m_status);
+  }
 
   /**
    * Get status of latest operation. Issue NOP command.
@@ -357,7 +376,7 @@ public:
    */
   uint8_t get_status()
   {
-    SPI_transaction(m_csn) {
+    inverted(m_csn) {
       m_status = spi.exchange(NOP);
     }
     return (m_status);

@@ -63,7 +63,8 @@ protected:
     SET_TEMP_COEFF = 0x04,	// Set temperature coefficient (0..3)
     SET_BIAS_SYS = 0x10,	// Set Bias System (0..7)
     SET_VOP = 0x80,		// Write Vop to register
-      VOP_MASK = 0x7f		// Mask Vop
+      VOP_MASK = 0x7f,		// Mask Vop
+    SCRIPT_END = 0xff		// Init script end
   } __attribute__((packed));
 
   // Initialization script to reduce memory footprint
@@ -74,24 +75,39 @@ protected:
   OutputPin m_sclk;		// Serial clock input
   OutputPin m_dc;		// Data/command
   OutputPin m_sce;		// Chip enable
-  Font* m_font;			// Font
-  uint8_t m_x;			// Cursor x (0..83)
-  uint8_t m_y;			// Cursor y (0..5)
+  uint8_t m_x;			// Cursor x (0..WIDTH-1)
+  uint8_t m_y;			// Cursor y (0..LINES-1)
   uint8_t m_mode;		// Text mode (inverted)
+  Font* m_font;			// Font
 
   /**
    * Set display address for next data block.
    * @param[in] x position 0..WIDTH-1.
    * @param[in] y position 0..HEIGHT-1.
    */
-  void set_address(uint8_t x, uint8_t y);
+  void set(uint8_t x, uint8_t y);
   
+  /**
+   * Write given data to display according to mode.
+   * @param[in] data to fill write to device.
+   */
+  void write(uint8_t data)
+  {
+    m_sdin.write(data, m_sclk);
+  }
+
   /**
    * Fill display with given data.
    * @param[in] data to fill with.
    * @param[in] count number of bytes to fill.
    */
-  void fill(uint8_t data, uint16_t count);
+  void fill(uint8_t data, uint16_t count)
+  {
+    inverted(m_sce) {
+      for (uint16_t i = 0; i < count; i++)
+	write(data);
+    }
+  }
 
 public:
   enum DisplayMode {
@@ -133,10 +149,10 @@ public:
     m_sclk(sclk, 0),
     m_dc(dc, 1),
     m_sce(sce, 1),
-    m_font(font),
     m_x(0),
     m_y(0),
-    m_mode(0)
+    m_mode(0),
+    m_font(font)
   {}
 
   /**
@@ -166,8 +182,8 @@ public:
 
   /**
    * Get current cursor position.
-   * @param[out] x pixel position (0..83).
-   * @param[out] y line position (0..5).
+   * @param[out] x pixel position (0..WIDTH-1).
+   * @param[out] y line position (0..LINES-1).
    */
   void get_cursor(uint8_t& x, uint8_t& y)
   {
@@ -177,10 +193,15 @@ public:
 
   /**
    * Set cursor to given position.
-   * @param[in] x pixel position (0..83).
-   * @param[in] y line position (0..5).
+   * @param[in] x pixel position (0..WIDTH-1).
+   * @param[in] y line position (0..LINES-1).
    */
-  void set_cursor(uint8_t x, uint8_t y);
+  void set_cursor(uint8_t x, uint8_t y)
+  {
+    set(x, y);
+    m_x = (x & X_ADDR_MASK);
+    m_y = (y & Y_ADDR_MASK);
+  }
 
   /**
    * Set text mode. Return previous text mode.

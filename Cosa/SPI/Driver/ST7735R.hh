@@ -141,21 +141,45 @@ protected:
    * Write command to device.
    * @param[in] cmd command to write.
    */
-  void write(Command cmd);
+  void write(Command cmd)
+  {
+    inverted(m_cs) {
+      inverted(m_dc) {
+	spi.exchange(cmd);
+      }
+    }
+  }
 
   /**
    * Write command and data to device.
    * @param[in] cmd command to write.
    * @param[in] data to write.
    */
-  void write(Command cmd, uint8_t data);
+  void write(Command cmd, uint8_t data)
+  {
+    inverted(m_cs) {
+      inverted(m_dc) {
+	spi.exchange(cmd);
+      }
+      spi.exchange(data);
+    }
+  }
 
   /**
    * Write command and data to device.
    * @param[in] cmd command to write.
    * @param[in] data to write.
    */
-  void write(Command cmd, uint16_t data);
+  void write(Command cmd, uint16_t data)
+  {
+    inverted(m_cs) {
+      inverted(m_dc) {
+	spi.exchange(cmd);
+      }
+      spi.exchange(data >> 8);
+      spi.exchange(data);
+    }
+  }
 
   /**
    * Write command and data to device.
@@ -163,7 +187,18 @@ protected:
    * @param[in] x data to write.
    * @param[in] y data to write.
    */
-  void write(Command cmd, uint16_t x, uint16_t y);
+  void write(Command cmd, uint16_t x, uint16_t y)
+  {
+    inverted(m_cs) {
+      inverted(m_dc) {
+	spi.exchange(cmd);
+      }
+      spi.exchange(x >> 8);
+      spi.exchange(x);
+      spi.exchange(y >> 8);
+      spi.exchange(y);
+    }
+  }
 
 public:
   /**
@@ -212,7 +247,7 @@ public:
   {
     set_port(x, y, x + 1, y + 1);
     color16_t color = get_pen_color();
-    SPI_transaction(m_cs) {
+    inverted(m_cs) {
       spi.exchange(color.rgb >> 8);
       spi.exchange(color.rgb);
     }

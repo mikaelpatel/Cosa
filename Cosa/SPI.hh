@@ -287,12 +287,6 @@ public:
 };
 
 /**
- * Some syntactic sugar to capture the slave selection block
- */
-#define SPI_transaction(ss)					\
-  for (uint8_t i = (ss.clear(), 1); i != 0; i--, ss.set())
-
-/**
  * Singleton instance of the hardware SPI module
  */
 extern SPI spi;

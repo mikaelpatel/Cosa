@@ -48,34 +48,6 @@ NRF24L01P::NRF24L01P(uint8_t channel,
   begin();
 }
 
-uint8_t
-NRF24L01P::read(Register reg)
-{
-  uint8_t res;
-  SPI_transaction(m_csn) {
-    res = spi.read(R_REGISTER | (REG_MASK & reg));
-  }
-  return (res);
-}
-
-uint8_t 
-NRF24L01P::write(Register reg, uint8_t data)
-{
-  SPI_transaction(m_csn) {
-    m_status = spi.write(W_REGISTER | (REG_MASK & reg), data);
-  }
-  return (m_status);
-}
-
-uint8_t 
-NRF24L01P::write(Register reg, const void* buffer, uint8_t count)
-{
-  SPI_transaction(m_csn) {
-    m_status = spi.write(W_REGISTER | (REG_MASK & reg), buffer, count);
-  }
-  return (m_status);
-}
-
 void
 NRF24L01P::set_powerup_mode()
 {
@@ -165,10 +137,10 @@ NRF24L01P::recv(void* buffer, uint8_t* pipe)
   if (no == RX_P_NO_MASK) return (0);
   if (pipe != 0) *pipe = no >> RX_P_NO;
   uint8_t count;
-  SPI_transaction(m_csn) {
+  inverted(m_csn) {
     count = spi.read(R_RX_PL_WID);
   }
-  SPI_transaction(m_csn) {
+  inverted(m_csn) {
     m_status = spi.read(R_RX_PAYLOAD, buffer, count);
   }
   return (count);
@@ -200,7 +172,7 @@ NRF24L01P::ack(const void* buffer, uint8_t count, uint8_t pipe)
 {
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
-  SPI_transaction(m_csn) {
+  inverted(m_csn) {
     m_status = spi.write(W_ACK_PAYLOAD | (PIPE_MASK & pipe), buffer, count);
   }
   return (count);
@@ -211,7 +183,7 @@ NRF24L01P::ack_P(const void* buffer, uint8_t count, uint8_t pipe)
 {
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
-  SPI_transaction(m_csn) {
+  inverted(m_csn) {
     m_status = spi.write_P(W_ACK_PAYLOAD | (PIPE_MASK & pipe), buffer, count);
   }
   return (count);
@@ -222,7 +194,7 @@ NRF24L01P::send(const void* buffer, uint8_t count)
 {
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
-  SPI_transaction(m_csn) {
+  inverted(m_csn) {
     m_status = spi.write(W_TX_PAYLOAD, buffer, count);
   }
   return (count);
@@ -233,7 +205,7 @@ NRF24L01P::send_P(const void* buffer, uint8_t count)
 {
   if (!is_ready()) return (0);
   if (count > PAYLOAD_MAX) count = PAYLOAD_MAX;
-  SPI_transaction(m_csn) {
+  inverted(m_csn) {
     m_status = spi.write_P(W_TX_PAYLOAD, buffer, count);
   }
   return (count);
@@ -242,7 +214,7 @@ NRF24L01P::send_P(const void* buffer, uint8_t count)
 uint8_t 
 NRF24L01P::flush()
 {
-  SPI_transaction(m_csn) {
+  inverted(m_csn) {
     m_status = spi.exchange(FLUSH_RX);
     m_status = spi.exchange(FLUSH_TX);
   }

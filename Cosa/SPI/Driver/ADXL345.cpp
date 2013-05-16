@@ -39,7 +39,7 @@ ADXL345::ADXL345(Board::DigitalPin ss) :
 void 
 ADXL345::write(Register reg, uint8_t value)
 {
-  SPI_transaction(m_ss) {
+  inverted(m_ss) {
     spi.write(WRITE_CMD | (reg & REG_MASK), value);
   }
 }
@@ -47,7 +47,7 @@ ADXL345::write(Register reg, uint8_t value)
 void 
 ADXL345::write(Register reg, void* buffer, uint8_t count)
 {
-  SPI_transaction(m_ss) {
+  inverted(m_ss) {
     spi.write(WRITE_CMD | MULTIPLE_BYTE | (reg & REG_MASK), buffer, count);
   }
 }
@@ -56,7 +56,7 @@ uint8_t
 ADXL345::read(Register reg)
 {
   uint8_t res;
-  SPI_transaction(m_ss) {
+  inverted(m_ss) {
     res = spi.read(READ_CMD | (reg & REG_MASK));
   }
   return (res);
@@ -65,7 +65,7 @@ ADXL345::read(Register reg)
 void 
 ADXL345::read(Register reg, void* buffer, uint8_t count)
 {
-  SPI_transaction(m_ss) {
+  inverted(m_ss) {
     spi.read(READ_CMD | MULTIPLE_BYTE | (reg & REG_MASK), buffer, count);
   }
 }
