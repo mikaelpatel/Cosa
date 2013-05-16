@@ -84,11 +84,12 @@ public:
   } __attribute__((packed));
 
 private:
+  static const uint8_t DATA_MAX = 4;
+  uint8_t m_data[DATA_MAX];
   uint8_t m_cmd;
   uint8_t* m_buffer;
   uint8_t m_max;
   uint8_t m_put;
-  uint8_t m_data;
   Device* m_dev;
 
 public:
@@ -96,10 +97,10 @@ public:
    * Construct serial peripheral interface for master.
    */
   SPI() : 
+    m_cmd(0),
     m_buffer(0),
     m_max(0),
     m_put(0),
-    m_data(0),
     m_dev(0)
   {
   }
@@ -111,16 +112,16 @@ public:
    * @param[in] max size of buffer.
    */
   SPI(Device* dev, void* buffer, uint8_t max) : 
+    m_cmd(0),
     m_buffer((uint8_t*) buffer),
     m_max(max),
     m_put(0),
-    m_data(0),
     m_dev(dev)
   {
     bit_clear(DDRB, Board::SS);
     if (buffer == 0) {
-      m_buffer = &m_data;
-      m_max = 1;
+      m_buffer = m_data;
+      m_max = DATA_MAX;
     }
   }
 

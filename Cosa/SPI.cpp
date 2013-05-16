@@ -118,24 +118,20 @@ SPI::end()
 void 
 SPI::Device::on_interrupt(uint16_t arg) 
 { 
-  // Check for no buffer
-  if (spi.m_buffer == 0) {
-    spi.m_put = 1;
-    Event::push(Event::RECEIVE_COMPLETED_TYPE, this, spi.m_put);
-    spi.m_put = 0;
-    return;
-  }
+  // Sanity check that a buffer is defined
+  if (spi.m_buffer == 0) return;
 
-  // Append to buffer and call user interrupt handler on full
+  // Append to buffer and push event when buffer is full
   spi.m_buffer[spi.m_put++] = arg;
-  if (spi.m_put == spi.m_max) {
-    Event::push(Event::RECEIVE_COMPLETED_TYPE, this, spi.m_put);
-    spi.m_put = 0;
-  }
+  if (spi.m_put != spi.m_max) return;
+  
+  Event::push(Event::RECEIVE_COMPLETED_TYPE, this, spi.m_put);
+  spi.m_put = 0;
 }
 
 ISR(SPI_STC_vect)
 {
+  // Sanity check that a device is defined
   SPI::Device* device = spi.get_device();
   if (device != 0) device->on_interrupt(SPDR);
 }
