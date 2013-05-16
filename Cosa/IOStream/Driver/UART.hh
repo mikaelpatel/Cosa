@@ -27,8 +27,8 @@
 #define __COSA_IOSTREAM_DRIVER_UART_HH__
 
 #if defined(__ARDUINO_TINY__)
-#include "Cosa/IOStream/Driver/SUART.hh"
-extern SUART uart;
+#include "Cosa/Soft/UART.hh"
+extern Soft::UART uart;
 #else
 
 #include "Cosa/Types.h"

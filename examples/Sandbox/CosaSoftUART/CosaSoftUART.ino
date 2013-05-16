@@ -30,8 +30,9 @@
 
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Soft/UART.hh"
 
+Soft::UART uart(Board::D0);
 OutputPin led(Board::LED);
 #undef putchar
 

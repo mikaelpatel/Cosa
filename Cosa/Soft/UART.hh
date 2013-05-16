@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/SUART.hh
+ * @file Cosa/Soft/UART.hh
  * @version 1.0
  *
  * @section License
@@ -23,20 +23,22 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOSTREAM_DRIVER_SUART_HH__
-#define __COSA_IOSTREAM_DRIVER_SUART_HH__
+#ifndef __COSA_SOFT_UART_HH__
+#define __COSA_SOFT_UART_HH__
 
 #include "Cosa/Types.h"
 #include "Cosa/Board.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/IOStream.hh"
 
+namespace Soft {
+
 /**
  * Soft UART for transmission only using the OutputPin serial 
- * write method. May be used for trace output from ATtinyX5
- * devices. See UART.hh.
+ * write method. May be used for trace output from ATtiny
+ * devices. See Cosa/IOStream/Device/UART.hh.
  */
-class SUART : public IOStream::Device {
+class UART : public IOStream::Device {
 private:
   static const uint8_t DATA_MASK = 7;
   OutputPin m_pin;
@@ -60,9 +62,9 @@ public:
 
   /**
    * Construct Soft UART with transmitter on given output pin.
-   * @param[in] pin transmitter.
+   * @param[in] pin transmitter (default D0).
    */
-  SUART(Board::DigitalPin pin = Board::D0) :
+  UART(Board::DigitalPin pin = Board::D0) :
     IOStream::Device(),
     m_pin(pin),
     m_stops(2),
@@ -110,6 +112,7 @@ public:
   {
     return (true);
   }
+};
 };
 
 #endif

@@ -28,7 +28,7 @@
 
 #if defined(__ARDUINO_TINY__)
 
-SUART uart(Board::D0);
+Soft::UART uart(Board::D0);
 
 #else
 
