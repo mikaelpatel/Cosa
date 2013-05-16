@@ -34,7 +34,10 @@
 
 /**
  * PCD8544 48x84 pixels matrix LCD controller/driver, device driver 
- * for IOStream access. Binding to trace, etc. 
+ * for IOStream access. Binding to trace, etc. Supports simple text 
+ * scroll, cursor, and handling of special characters such as form-feed, 
+ * back-space and new-line. Graphics should be performed with OffScreen
+ * Canvas and copied to the display with draw_bitmap().
  *
  * @section See Also
  * For furter details see Product Specification, Philips

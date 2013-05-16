@@ -34,7 +34,10 @@
 
 /**
  * ST7565P 64x128 pixels matrix LCD controller/driver, device driver 
- * for IOStream access. Binding to trace, etc. 
+ * for IOStream access. Binding to trace, etc. Support natural text scroll,
+ * cursor, and handling of special characters such as form-feed, back-
+ * space and new-line. Graphics should be performed with OffScreen
+ * Canvas and copied to the display with draw_bitmap().
  *
  * @section See Also
  * For further details see Sitronix 65x132 Dot Matrix LCD Controller/
@@ -58,8 +61,8 @@ protected:
     ADC_REVERSE = 0xA1,		  // Set reverse address correspondence
     DISPLAY_NORMAL = 0xA6,	  // Normal display mode
     DISPLAY_REVERSE = 0xA7,	  // Reverse display mode
-    DISPLAY_NORMAL_POINTS = 0xA4, // Display normal
-    DISPLAY_ALL_POINTS = 0xA5,	  // Display all points
+    DISPLAY_64X128_POINTS = 0xA4, // Display normal
+    DISPLAY_65X132_POINTS = 0xA5, // Display all points
     LCD_BIAS_9 = 0xA2,		  // Voltage ratio 1/9 bias
     LCD_BIAS_7 = 0xA3,		  // Voltage ratio 1/7 bias
     X_ADDR_INC = 0xE0,		  // Column address increment
@@ -181,7 +184,7 @@ public:
    * @param[in] level contrast.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint8_t level = 0x10);
+  bool begin(uint8_t level = 0x06);
 
   /**
    * Stop sequence of interaction with device.
@@ -277,8 +280,8 @@ public:
 
   /**
    * @override
-   * Write character to display. Handles carriage-return-line-feed, and
-   * form-feed. Returns character or EOF on error.
+   * Write character to display. Handles carriage-return-line-feed, back-
+   * space and form-feed. Returns character or EOF on error.
    * @param[in] c character to write.
    * @return character written or EOF(-1).
    */

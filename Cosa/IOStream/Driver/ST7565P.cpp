@@ -26,19 +26,11 @@
 #include "Cosa/IOStream/Driver/ST7565P.hh"
 #include "Cosa/Watchdog.hh"
 
-// Enable to allow reversed display type
-#define MIRRORED
-
 // Initialization script
 const uint8_t ST7565P::script[] PROGMEM = {
-#if defined(MIRRORED)
   LCD_BIAS_9,
-  ADC_REVERSE,
-#else
-  LCD_BIAS_7,
   ADC_NORMAL,
-#endif
-  COM_OUTPUT_NORMAL,
+  COM_OUTPUT_REVERSE,
   SET_DISPLAY_START 	| 0,
   SET_POWER_CONTROL 	| 0x04,
   SCRIPT_PAUSE		, 50,
@@ -49,7 +41,7 @@ const uint8_t ST7565P::script[] PROGMEM = {
   SET_RESISTOR_RATIO 	| 0x06,
   DISPLAY_ON,
   DISPLAY_NORMAL,
-  DISPLAY_NORMAL_POINTS,
+  DISPLAY_64X128_POINTS,
   SCRIPT_END
 };
 
