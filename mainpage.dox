@@ -290,12 +290,16 @@ NRF24L01+ chip.
 VWI (Virtual Wire Interface) provides features to send short messages,
 without addressing, retransmit or acknowledgment, a bit like UDP over
 wireless, using ASK (Amplitude Shift Keying). Supports a number of
-inexpensive radio transmitters and receivers, and may be configured to
-use different codecs; VirtualWireCodec, ManchesterCodec,
+inexpensive radio transmitters and receivers (RF315/433), and may be
+configured to use different codecs; VirtualWireCodec, ManchesterCodec,
 Block4B5BCodec, and BitstuffingCodec (InputPin/Timer).
 
 @section NRF24L01P
 Driver for the nRF24L01 Single Chip 2.4GHz Transceiver (SPI).
+
+@section NEXA
+NEXA Wireless (RF433) Lighting Control receiver and transmitter
+(ExternalInterruptPin/OutputPin). 
 
 @section IR
 An elementary IR receiver driver class for TSOP4838 (InputPin).
@@ -349,6 +353,10 @@ example of Element.
 
 @section ST7735R
 Device driver for ST7735R, 262K Color Single-Chip TFT Controller (SPI).
+
+@section ST7565P
+Device driver for ST7565P 64x128 pixels matrix LCD controller/driver
+(Serial OutputPin).
 
 @section PCD8544 
 Device driver for PCD8544 48x84 pixels matrix LCD controller/driver
