@@ -988,4 +988,20 @@ public:
   virtual void on_interrupt(uint16_t arg = 0);
 };
 
+/**
+ * Synatatic sugar for an asserted block (active high). Used as a block
+ * prefix.
+ * @param[in] pin to assert.
+ */
+#define asserted(pin)							\
+  for (uint8_t __i = (pin.set(), 1); __i != 0; __i--, pin.clear())
+
+/**
+ * Synatatic sugar for an asserted block (active low). Used as a block
+ * prefix.
+ * @param[in] pin to invert.
+ */
+#define inverted(pin)							\
+  for (uint8_t __i = (pin.clear(), 1); __i != 0; __i--, pin.set())
+
 #endif
