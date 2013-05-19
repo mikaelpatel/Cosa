@@ -26,6 +26,7 @@
 #include "Cosa/Board.hh"
 #if !defined(__ARDUINO_TINY__)
 #include "Cosa/TWI.hh"
+#include "Cosa/Bits.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 
@@ -45,7 +46,8 @@ TWI::begin(Event::Handler* target, uint8_t addr)
   m_addr = addr;
 
   // Check for slave mode and set device address
-  if (target != 0 && addr != 0) {
+  if (addr != 0) {
+    if (target == 0) return (false);
     TWAR = m_addr;
   } 
   else {
@@ -69,6 +71,7 @@ TWI::end()
 {
   m_target = 0;
   TWCR = 0;
+  TWAR = 0;
   return (true);
 }
 
@@ -149,6 +152,7 @@ ISR(TWI_vect)
   case TWI::ARB_LOST:
     TWCR = TWI::IDLE_CMD;
     twi.m_state = TWI::ERROR_STATE;
+    twi.m_count = -1;
     break;
     
     /**
@@ -167,13 +171,16 @@ ISR(TWI_vect)
       twi.m_count += 1;
       break;
     } 
-    if (twi.m_target != 0) 
-      Event::push(Event::WRITE_COMPLETED_TYPE, twi.m_target, &twi);
-  case TWI::MT_SLA_NACK:
-  case TWI::MT_DATA_NACK:
+  case TWI::MT_DATA_NACK: 
     TWCR = TWI::STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
     twi.m_state = TWI::IDLE_STATE;
+    break;
+  case TWI::MT_SLA_NACK: 
+    TWCR = TWI::STOP_CMD;
+    loop_until_bit_is_clear(TWCR, TWSTO);
+    twi.m_count = -1;
+    twi.m_state = TWI::ERROR_STATE;
     break;
 
     /**
@@ -188,16 +195,15 @@ ISR(TWI_vect)
   case TWI::MR_DATA_NACK:
     *twi.m_next++ = TWDR;
     twi.m_count += 1;
-    if (twi.m_target != 0) {
-      Event::push(Event::READ_COMPLETED_TYPE, twi.m_target, &twi);
-      twi.m_ix = 0;
-      twi.m_next = (uint8_t*) twi.m_vec[0].buf;
-      twi.m_last = twi.m_next + twi.m_vec[0].size;
-    }
-  case TWI::MR_SLA_NACK:
     TWCR = TWI::STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
     twi.m_state = TWI::IDLE_STATE;
+    break;
+  case TWI::MR_SLA_NACK: 
+    TWCR = TWI::STOP_CMD;
+    loop_until_bit_is_clear(TWCR, TWSTO);
+    twi.m_count = -1;
+    twi.m_state = TWI::ERROR_STATE;
     break;
 
     /**
@@ -205,16 +211,20 @@ ISR(TWI_vect)
      */
   case TWI::ST_SLA_ACK:
   case TWI::ST_ARB_LOST_SLA_ACK:
-    twi.m_state = TWI::ST_STATE;
-    twi.m_ix = 0;
+    twi.m_next = (uint8_t*) twi.m_vec[TWI::Device::READ_IX].buf;
+    twi.m_last = twi.m_next + twi.m_vec[TWI::Device::READ_IX].size;
     twi.m_count = 0;
-    twi.m_next = (uint8_t*) twi.m_vec[0].buf;
-    twi.m_last = twi.m_next + TWI::HEADER_MAX;
+    twi.m_state = TWI::ST_STATE;
   case TWI::ST_DATA_ACK:
-    TWDR = *twi.m_next++;
-    TWCR = (twi.m_next < twi.m_last) ? TWI::ACK_CMD : TWI::NACK_CMD;
-    twi.m_count += 1;
-  break;
+    if (twi.m_next < twi.m_last) {
+      TWDR = *twi.m_next++;
+      TWCR = TWI::ACK_CMD;
+      twi.m_count += 1;
+    } else {
+      TWDR = 255;
+      TWCR = TWI::NACK_CMD;
+    }
+    break;
   case TWI::ST_DATA_NACK:
   case TWI::ST_LAST_DATA:
     TWCR = TWI::ACK_CMD;
@@ -228,13 +238,11 @@ ISR(TWI_vect)
   case TWI::SR_GCALL_ACK:
   case TWI::SR_ARB_LOST_SLA_ACK:
   case TWI::SR_ARB_LOST_GCALL_ACK:
-    twi.m_state = TWI::SR_STATE;
-    twi.m_ix = 0;
+    twi.m_next = (uint8_t*) twi.m_vec[TWI::Device::READ_IX].buf;
+    twi.m_last = twi.m_next + twi.m_vec[TWI::Device::READ_IX].size;
     twi.m_count = 0;
-    twi.m_next = (uint8_t*) twi.m_vec[0].buf;
-    twi.m_last = twi.m_next + twi.m_vec[0].size;
     TWCR = TWI::ACK_CMD;
-    // Fix: Check if the slave is ready. Should send a NACK if not ready
+    twi.m_state = TWI::SR_STATE;
     break;
   case TWI::SR_DATA_ACK:
   case TWI::SR_GCALL_DATA_ACK:
@@ -250,21 +258,52 @@ ISR(TWI_vect)
   case TWI::SR_STOP:
     TWCR = TWI::STOP_CMD;
     loop_until_bit_is_clear(TWCR, TWSTO);
-    if (twi.m_target != 0) 
-      Event::push(Event::SERVICE_REQUEST_TYPE, twi.m_target, &twi);
     twi.m_state = TWI::IDLE_STATE;
-    TWCR = TWI::IDLE_CMD; 
+    TWAR = 0;
+    Event::push(Event::WRITE_COMPLETED_TYPE, twi.m_target, twi.m_count);
     break;
   case TWI::SR_DATA_NACK:
   case TWI::SR_GCALL_DATA_NACK:
     TWCR = TWI::NACK_CMD;
     break;
+
   case TWI::NO_INFO:
     break;
-  case TWI::BUS_ERROR:
+
+  case TWI::BUS_ERROR: 
+    TWCR = TWI::STOP_CMD;
+    loop_until_bit_is_clear(TWCR, TWSTO);
+    twi.m_count = -1;
+    twi.m_state = TWI::ERROR_STATE;
+    break;
+    
   default:     
     TWCR = TWI::IDLE_CMD; 
   }
+}
+
+void 
+TWI::Device::on_event(uint8_t type, uint16_t value)
+{
+  if (type != Event::WRITE_COMPLETED_TYPE) return;
+  void* buf = twi.m_vec[WRITE_IX].buf;
+  size_t size = value;
+  on_request(buf, size);
+  TWAR = twi.m_addr;
+}
+
+void 
+TWI::Device::set_write_buf(void* buf, size_t size)
+{
+  twi.m_vec[WRITE_IX].buf = buf;
+  twi.m_vec[WRITE_IX].size = size;
+}
+
+void 
+TWI::Device::set_read_buf(void* buf, size_t size)
+{
+  twi.m_vec[READ_IX].buf = buf;
+  twi.m_vec[READ_IX].size = size;
 }
 
 #endif

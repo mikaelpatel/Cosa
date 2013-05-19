@@ -27,9 +27,7 @@
 #define __COSA_TWI_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Bits.h"
 #include "Cosa/Event.hh"
-#include "Cosa/Board.hh"
 
 #include <avr/sleep.h>
 
@@ -162,6 +160,48 @@ public:
    */
   class Device : public Event::Handler {
     friend class TWI;
+    friend void TWI_vect(void);
+  protected:
+    /**
+     * Internal index in io-vector for read/write buffers.
+     */
+    static const uint8_t WRITE_IX = 0;
+    static const uint8_t READ_IX = 1;
+
+    /**
+     * Filter Event::WRITE_COMPLETED_TYPE(size) and calls on_request()
+     * with given write block as argument. The device is marked as ready
+     * when the request has been completed and a possible result block
+     * is available.
+     * @param[in] type the event type.
+     * @param[in] value the event value.
+     */
+    virtual void on_event(uint8_t type, uint16_t value);
+
+  public:
+    /**
+     * Set read (result) buffer. Must be called before starting TWI.
+     * @param[in] buf buffer pointer.
+     * @param[in] size of buffer.
+     */
+    void set_read_buf(void* buf, size_t size);
+
+    /**
+     * Set write (argument) buffer. Must be called before starting TWI.
+     * @param[in] buf buffer pointer.
+     * @param[in] size of buffer.
+     */
+    void set_write_buf(void* buf, size_t size);
+
+    /**
+     * Service request callback with write has been completed, i.e.,
+     * an argument block as been written. Must be defined by sub-class.
+     * Must handle write-read and write-write sequences. The device will 
+     * become ready after the completion. 
+     * @param[in] buf buffer pointer.
+     * @param[in] size of buffer.
+     */
+    virtual void on_request(void* buf, size_t size) = 0;
   };
 
   /** 
@@ -178,6 +218,10 @@ public:
     m_count(0),
     m_addr(0)
   {
+    for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
+      m_vec[ix].buf = 0;
+      m_vec[ix].size = 0;
+    }
   }
 
   /**
@@ -194,18 +238,6 @@ public:
    * @return true(1) if successful otherwise false(0).
    */
   bool end();
-
-  /**
-   * Set the input buffer for Slave mode.
-   * @param[in] buf buffer pointer.
-   * @param[in] size of buffer.
-   */
-  void set_buf(void* buf, size_t size)
-  {
-    iovec_t* vp = m_vec;
-    iovec_arg(vp, buf, size);
-    iovec_end(vp);
-  }
 
   /**
    * Issue a write data request to the given slave unit. Return

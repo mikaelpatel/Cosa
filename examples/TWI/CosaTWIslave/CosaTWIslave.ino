@@ -39,28 +39,31 @@ private:
   // Address of device on TWI bus
   static const uint8_t ADDR = 0xC05A;
 
-  // Buffer for request and respons
+  // Buffer for request and response
   static const uint8_t BUF_MAX = 4;
   uint8_t m_buf[BUF_MAX];
 
 public:
   // Request handler; events from incoming requests
-  virtual void on_event(uint8_t type, uint16_t value);
+  virtual void on_request(void* buf, size_t size);
   
-  // Connect to the two wire bus and service
+  // Connect to the two wire bus and service requests
   bool begin();
 };
 
 bool 
 TWIslave::begin() 
 { 
-  twi.set_buf(m_buf, sizeof(m_buf));
+  set_write_buf(m_buf, sizeof(m_buf));
+  set_read_buf(m_buf, sizeof(m_buf));
   return (twi.begin(this, ADDR)); 
 }
 
 void
-TWIslave::on_event(uint8_t type, uint16_t value)
+TWIslave::on_request(void* buf, size_t size)
 {
+  Watchdog::delay(64);
+  m_buf[0] += 1;
   for (uint8_t i = 1; i < sizeof(m_buf); i++)
     m_buf[i] = m_buf[0] + i;
 }

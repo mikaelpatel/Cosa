@@ -38,13 +38,13 @@ AT24CXX::poll(void* addr, void* buf, size_t size)
     if (!twi.begin()) return (false);
     if (buf == 0) {
       m = twi.write(m_addr, (uint16_t) addr);
-      if (m != 0) return (true);
+      if (m > 0) return (true);
       twi.end();
     }
     else {
       m = twi.write(m_addr, (uint16_t) addr, buf, size);
       twi.end();
-      if (m != 0) return (true);
+      if (m > 0) return (true);
     }
     Watchdog::delay(16);
   } while (--i); 

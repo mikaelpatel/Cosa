@@ -29,6 +29,7 @@
 #include "Cosa/TWI.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
@@ -52,30 +53,41 @@ void setup()
   
   // Start the watchdog ticks counter
   Watchdog::begin();
+  RTC::begin();
 }
 
 void loop()
 {
-  Watchdog::delay(512);
+   // Write a command to the slave
+  static uint32_t cmd = 0;
+  static uint32_t start = 0;
+  uint32_t delta;
+  uint32_t now;
+  int count;
 
-  // Write a command to the slave
-  static uint8_t cmd = 0;
-  uint8_t buf[4];
   ledPin.toggle();
-  buf[0] = cmd++;
-  for (uint8_t i = 1; i < sizeof(buf); i++) buf[i] = 0;
-  INFO("WRITE(cmd = %d)", cmd);
-  trace.print(buf, sizeof(buf));
   twi.begin();
-  twi.write(ADDR, buf, sizeof(buf));
-  twi.end();
-
+  now = RTC::millis();
+  delta = now - start;
+  start = now;
+  trace << delta << ':';
+  TRACE(count = twi.write(ADDR, &cmd, sizeof(cmd)));
+  if (count > 0) trace.print(&cmd, count);
+  
   // Read back the result
-  twi.begin();
-  int count = twi.read(ADDR, buf, sizeof(buf));
+  uint8_t buf[4];
+  do {
+    now = RTC::millis();
+    delta = now - start;
+    start = now;
+    trace << delta << ':';
+    TRACE(count = twi.read(ADDR, buf, sizeof(buf)));
+  } while (count < 0);
   twi.end();
-  INFO("READ(count = %d)", count);
-  if (count > 0) 
-    trace.print(buf, count);
+  if (count > 0) trace.print(buf, count);
   ledPin.toggle();
+
+  // Next transaction
+  cmd += 1;
+  SLEEP(2);
 }
