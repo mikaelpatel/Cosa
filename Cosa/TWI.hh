@@ -41,16 +41,16 @@ private:
    * Two Wire state and status codes.
    */
   enum State {
-    ERROR_STATE,
-    IDLE_STATE,
-    MT_STATE,
-    MR_STATE,
-    ST_STATE,
-    SR_STATE
+    ERROR_STATE,		// Error state
+    IDLE_STATE,			// Idle state
+    MT_STATE,			// Master transmit state
+    MR_STATE,			// Master receive state
+    ST_STATE,			// Slave transmit state
+    SR_STATE			// Slave receive state
   } __attribute__((packed));
 
   /**
-   * Macro to generate more compact number sequence.
+   * Macro to generate more compact status number sequence.
    */
 # define TWI_STATUS(x) ((x) >> 3)
 
@@ -98,10 +98,13 @@ private:
    * Address mask and read/write bit.
    */
   enum {
-    WRITE_OP = 0x00,
-    READ_OP = 0x01,
-    ADDR_MASK = 0xfe
+    WRITE_OP = 0x00,		// Write operation
+    READ_OP = 0x01,		// Read operation
+    ADDR_MASK = 0xfe		// Address mask
   } __attribute__((packed));
+
+  /** Default argument for start */
+  static const uint8_t NEXT_IX = 255;
 
   /**
    * Commands for TWI hardware.
@@ -132,13 +135,44 @@ private:
   uint8_t m_addr;
 
   /**
-   * Initiate a request to the slave. The address field is the TWI
-   * address and operation (read/write bit). Return true(1) if
+   * Initiate a request to the device. The address field is the bus
+   * address with operation (read/write bit). Return true(1) if
    * successful otherwise false(0). 
    * @param[in] addr slave address and operation.
    * @return bool
    */
   bool request(uint8_t addr);
+
+  /**
+   * Start block transfer. Setup internal buffer pointers.
+   * @param[in] state next state.
+   * @param[in] ix io vector index. Default is next io vector index.
+   */
+  void start(State state, uint8_t ix = NEXT_IX);
+
+  /**
+   * Write next byte to hardware device and issue command. Returns
+   * true if byte was written else false.
+   * @param[in] cmd command to write with byte.
+   * @return bool
+   */
+  bool write(uint8_t cmd);
+
+  /**
+   * Read next byte from hardware device and store into buffer.
+   * Return true if byte was stored else false.
+   * @param[in] cmd command to write (default is no command).
+   * @return bool
+   */
+  bool read(uint8_t cmd = 0);
+
+  /**
+   * Stop block transfer and step to given state. If error sets count to
+   * negative error code(-1).
+   * @param[in] state to step to.
+   * @param[in] type of event to push (default no event).
+   */
+  void stop(State state, uint8_t type = Event::NULL_TYPE);
 
   /**
    * Interrupt handler is a friend.
@@ -155,8 +189,8 @@ public:
   };
 
   /**
-   * Slave devices are friends and may have callback/event handler for
-   * request events. 
+   * Slave devices are friends and shall have a request handler for
+   * incoming block transfers.
    */
   class Device : public Event::Handler {
     friend class TWI;
@@ -194,10 +228,10 @@ public:
     void set_write_buf(void* buf, size_t size);
 
     /**
-     * Service request callback with write has been completed, i.e.,
+     * Service request callback when a write has been completed, i.e.,
      * an argument block as been written. Must be defined by sub-class.
      * Must handle write-read and write-write sequences. The device will 
-     * become ready after the completion. 
+     * become ready after the completion of the function. 
      * @param[in] buf buffer pointer.
      * @param[in] size of buffer.
      */
