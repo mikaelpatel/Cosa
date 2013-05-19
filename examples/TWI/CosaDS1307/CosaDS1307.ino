@@ -69,12 +69,12 @@ void setup()
   DS1307::timekeeper_t now;
 #ifdef __RTC_SET_TIME__
   now.year = 0x13;
-  now.month = 0x03;
+  now.month = 0x05;
   now.cntl = 0x00;
-  now.date = 0x16;
-  now.day = 0x02;
-  now.hours = 0x22;
-  now.minutes = 0x46;
+  now.date = 0x18;
+  now.day = 0x06;
+  now.hours = 0x10;
+  now.minutes = 0x49;
   now.seconds = 0;
   rtc.set_time(now);
   latest.set = now;
