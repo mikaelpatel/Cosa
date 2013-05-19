@@ -196,4 +196,5 @@ and auto-retransmission. Full support for message parsing.
 2013-05 Improving ATtiny support. Adding driver for DHT22. NEXA
 Wireless Remote command transmitter (RF433). Introducing a new
 template class for handling of keyed sets of event handlers. Added
-support for LCD ST7565 with natural text scrolling.   
+support for LCD ST7565 with natural text scrolling. Making it easy to
+implement TWI slave devices with TWI::Device.   
