@@ -112,13 +112,24 @@ public:
   }
 
   /**
+   * Returns difference between given time stamps.
+   * @param[in] x
+   * @param[in] y
+   * @return (x - y)
+   */
+  static uint32_t diff(uint32_t x, uint32_t y)
+  {
+    return ((((uint32_t) -1L) - y) + x);
+  }
+
+  /**
    * Returns number of milli-seconds from given start.
    * @param[in] start
-   * @return (now - start)
+   * @return (millis()- start)
    */
   static uint32_t since(uint32_t start)
   {
-    return ((((uint32_t) -1L) - start) + RTC::millis());
+    return (diff(millis(), start));
   }
 
   /**
