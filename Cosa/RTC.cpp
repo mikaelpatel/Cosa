@@ -121,7 +121,7 @@ void
 RTC::delay(uint16_t ms, uint8_t mode)
 {
   uint32_t start = RTC::millis();
-  while ((RTC::millis() - start) < ms) Power::sleep(mode);
+  while (RTC::since(start) < ms) Power::sleep(mode);
 }
 
 ISR(TIMER0_COMPA_vect)

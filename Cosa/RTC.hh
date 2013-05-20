@@ -112,6 +112,16 @@ public:
   }
 
   /**
+   * Returns number of milli-seconds from given start.
+   * @param[in] start
+   * @return (now - start)
+   */
+  static uint32_t since(uint32_t start)
+  {
+    return ((((uint32_t) -1L) - start) + RTC::millis());
+  }
+
+  /**
    * Return the current clock in micro-seconds.
    * @return micro-seconds.
    */
