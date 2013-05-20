@@ -935,7 +935,7 @@ public:
 #define CANVAS_DRAW_PIXEL() Canvas::DRAW_PIXEL,	
 #define CANVAS_DRAW_LINE(x, y) Canvas::DRAW_LINE, x, y,
 #define CANVAS_DRAW_POLY(ix, s) Canvas::DRAW_POLY, ix, s,
-#define CANVAS_DRAW_STROKE(ix, s) Canvas::DRAW_POLY, ix, s,
+#define CANVAS_DRAW_STROKE(ix, s) Canvas::DRAW_STROKE, ix, s,
 #define CANVAS_DRAW_RECT(w, h) Canvas::DRAW_RECT, w, h,
 #define CANVAS_FILL_RECT(w, h) Canvas::FILL_RECT, w, h,
 #define CANVAS_DRAW_ROUNDRECT(w, h, r) Canvas::DRAW_ROUNDRECT, w, h, r,
