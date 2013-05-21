@@ -119,17 +119,17 @@ public:
    */
   static uint32_t diff(uint32_t x, uint32_t y)
   {
-    return ((((uint32_t) -1L) - y) + x);
+    return (x - y);
   }
 
   /**
    * Returns number of milli-seconds from given start.
    * @param[in] start
-   * @return (millis()- start)
+   * @return (millis() - start)
    */
   static uint32_t since(uint32_t start)
   {
-    return (diff(millis(), start));
+    return (millis() - start);
   }
 
   /**
