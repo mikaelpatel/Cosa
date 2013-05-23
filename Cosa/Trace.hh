@@ -176,6 +176,6 @@ extern uint8_t trace_log_mask;
 /**
  * The Trace class singleton. 
  */
-extern Trace trace;
+extern Trace trace  __attribute__ ((weak));
 
 #endif
