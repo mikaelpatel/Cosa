@@ -68,6 +68,15 @@ private:
   }
 
   /**
+   * Return Universal Serial Interface SFR register.
+   * @return special register pointer.
+   */
+  static volatile uint8_t* USI() 
+  { 
+    return (&PINB);
+  }
+
+  /**
    * Return bit position for given Arduino pin number in Special
    * Function Register. 
    * @param[in] pin number.
@@ -135,18 +144,18 @@ public:
    * Pins used for TWI interface.
    */
   enum TWIPin {
-    SDA = 0,
-    SCL = 2
+    SDA = D0,
+    SCL = D2
   } __attribute__((packed));
 
  /**
    * Pins used for SPI interface.
    */
   enum SPIPin {
-    SS = 4,
-    MOSI = 0,
-    MISO = 1,
-    SCK = 2
+    SS = D4,
+    MOSI = D0,
+    MISO = D1,
+    SCK = D2
   } __attribute__((packed));
 
   /**

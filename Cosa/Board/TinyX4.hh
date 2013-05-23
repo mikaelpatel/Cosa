@@ -150,18 +150,18 @@ public:
    * Pins used for TWI interface.
    */
   enum TWIPin {
-    SDA = 6,
-    SCL = 4
+    SDA = D6,
+    SCL = D4
   } __attribute__((packed));
-
+  
  /**
    * Pins used for SPI interface.
    */
   enum SPIPin {
-    SS = 3,
-    MOSI = 6,
-    MISO = 7,
-    SCK = 4
+    SS = D3,
+    MOSI = D6,
+    MISO = D7,
+    SCK = D4
   } __attribute__((packed));
 
   /**
@@ -202,4 +202,3 @@ extern "C" {
   void USI_OVF_vect(void) __attribute__ ((signal));
 }
 #endif
-
