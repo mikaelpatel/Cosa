@@ -665,6 +665,7 @@ class AnalogPin :
   public Interrupt::Handler,
   public Event::Handler 
 {
+  friend void ADC_vect(void);
 public:
   /**
    * Reference voltage; ARef pin, Vcc or internal 1V1.
@@ -721,11 +722,6 @@ protected:
    * @param[in] value the event value.
    */
   virtual void on_event(uint8_t type, uint16_t value);
-
-  /**
-   * Interrupt handler is a friend.
-   */
-  friend void ADC_vect(void);
 
 public:
   /**
@@ -915,7 +911,9 @@ public:
  */
 class AnalogComparator : 
   public Interrupt::Handler, 
-  public Event::Handler {
+  public Event::Handler 
+{
+  friend void ANALOG_COMP_vect(void);
 public:
   enum Mode {
     ON_TOGGLE_MODE = 0,
@@ -928,11 +926,6 @@ protected:
   static const uint8_t AIN1 = 255;
   Mode m_mode;
   uint8_t m_pin;
-
-  /**
-   * Interrupt handler is a friend.
-   */
-  friend void ANALOG_COMP_vect(void);
 
 public:
   /**

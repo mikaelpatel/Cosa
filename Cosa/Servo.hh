@@ -35,13 +35,9 @@
  * registers.
  */
 class Servo : private OutputPin {
-private:
-  /**
-   * Interrupt handlers are friends.
-   */
   friend void TIMER1_COMPA_vect(void);
   friend void TIMER1_COMPB_vect(void);
-
+private:
   static const uint16_t PERIOD = 20000;
   static const uint16_t MIN_WIDTH = 650;
   static const uint16_t MAX_WIDTH = 2300;

@@ -41,6 +41,19 @@ extern Soft::UART uart;
  * requires an input- and output IOBuffer instance.
  */
 class UART : public IOStream::Device {
+  friend void USART_UDRE_vect(void);
+  friend void USART_RX_vect(void);
+#if defined(__ARDUINO_MIGHTY__)
+  friend void USART1_UDRE_vect(void);
+  friend void USART1_RX_vect(void);
+#elif defined(__ARDUINO_MEGA__)
+  friend void USART1_UDRE_vect(void);
+  friend void USART1_RX_vect(void);
+  friend void USART2_UDRE_vect(void);
+  friend void USART2_RX_vect(void);
+  friend void USART3_UDRE_vect(void);
+  friend void USART3_RX_vect(void);
+#endif
 private:
   volatile uint8_t* const m_sfr;
   IOStream::Device* m_ibuf;
@@ -90,21 +103,6 @@ private:
   { 
     return (m_sfr + 6); 
   }
-
-  // Interrupt handlers are friends
-  friend void USART_UDRE_vect(void);
-  friend void USART_RX_vect(void);
-#if defined(__ARDUINO_MIGHTY__)
-  friend void USART1_UDRE_vect(void);
-  friend void USART1_RX_vect(void);
-#elif defined(__ARDUINO_MEGA__)
-  friend void USART1_UDRE_vect(void);
-  friend void USART1_RX_vect(void);
-  friend void USART2_UDRE_vect(void);
-  friend void USART2_RX_vect(void);
-  friend void USART3_UDRE_vect(void);
-  friend void USART3_RX_vect(void);
-#endif
 
   /**
    * Common UART transmit interrupt handler.

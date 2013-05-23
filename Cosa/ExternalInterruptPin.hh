@@ -42,13 +42,6 @@ class ExternalInterruptPin :
   public Event::Handler, 
   public Interrupt::Handler 
 {
-private:
-  static ExternalInterruptPin* ext[Board::EXT_MAX];
-  uint8_t m_ix;
-
-  /**
-   * Interrupt handlers are friends.
-   */
   friend void INT0_vect(void);
 #if !defined(__ARDUINO_TINY__)
   friend void INT1_vect(void);
@@ -61,6 +54,9 @@ private:
 #endif
 #endif
 #endif
+private:
+  static ExternalInterruptPin* ext[Board::EXT_MAX];
+  uint8_t m_ix;
 
 public:
   enum Mode {

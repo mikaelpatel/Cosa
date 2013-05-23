@@ -201,6 +201,7 @@ public:
    * The Virtual Wire Receiver.
    */
   class Receiver : private InputPin {
+    friend void TIMER1_COMPA_vect(void);
   private:
     /** The size of the receiver ramp. Ramp wraps modulo this number */
     static const uint8_t RAMP_MAX = 160;
@@ -286,9 +287,6 @@ public:
 
     /** Number of good messages received */
     uint16_t m_good;
-
-    /** The interrupt handler is a friend */
-    friend void TIMER1_COMPA_vect(void);
 
     /**
      * Phase Locked Loop; Synchronises with the transmitter so that
@@ -378,6 +376,8 @@ public:
    * The Virtual Wire Transmitter.
    */
   class Transmitter : private OutputPin {
+    friend void TIMER1_COMPA_vect(void);
+    friend class Codec;
   private:
     /** Max size of preamble and start symbol. Codec provides actual size */
     static const uint8_t PREAMBLE_MAX = 8;
@@ -408,12 +408,6 @@ public:
 
     /** Total number of messages sent */
     uint16_t m_count;
-
-    /** The interrupt handler is a friend */
-    friend void TIMER1_COMPA_vect(void);
-
-    /** Allow Codec access to PREAMBLE_MAX */
-    friend class Codec;
 
   public:
     /**

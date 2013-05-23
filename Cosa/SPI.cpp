@@ -27,7 +27,7 @@
 #if !defined(__ARDUINO_TINY__)
 #include "Cosa/SPI.hh"
 
-SPI spi;
+SPI spi  __attribute__ ((weak));
 
 bool
 SPI::begin(Clock clock, uint8_t mode, Direction direction)

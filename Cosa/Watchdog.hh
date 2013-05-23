@@ -39,6 +39,7 @@
  * events and delay. 
  */
 class Watchdog {
+  friend void WDT_vect(void);
 public:
   /**
    * Watchdog interrupt handler function prototype.
@@ -72,11 +73,6 @@ private:
   static volatile uint32_t s_ticks;
   static uint8_t s_prescale;
   static uint8_t s_mode;
-  
-  /**
-   * Interrupt handler is a friend.
-   */
-  friend void WDT_vect(void);
 
 public:
   /**

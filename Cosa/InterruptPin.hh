@@ -45,9 +45,6 @@ private:
   static InterruptPin* pin[Board::PIN_MAX];
   static uint8_t state[Board::PCINT_MAX];
 
-  /**
-   * Interrupt handlers are friends.
-   */
   friend void PCINT0_vect(void);
 #if !defined(__ARDUINO_TINYX5__)
   friend void PCINT1_vect(void);
@@ -57,7 +54,6 @@ private:
   friend void PCINT3_vect(void);
 #endif
 #endif
-
   /**
    * Map interrupt source: Check which pin(s) are the source of the
    * pin change interrupt and call the corresponding interrupt handler

@@ -39,6 +39,9 @@
  * design where the counter match interrupt is used.
  */
 class RTC {
+  friend void TIMER0_COMPA_vect(void);
+  friend void TIMER0_COMPB_vect(void);
+public:
   /**
    * Milli-second interrupt handler callback function prototype.
    * @param[in] env interrupt handler environment.
@@ -53,12 +56,6 @@ private:
   static volatile uint32_t s_sec;
   static InterruptHandler s_handler;
   static void* s_env;
-
-  /**
-   * Interrupt handlers are friends.
-   */
-  friend void TIMER0_COMPA_vect(void);
-  friend void TIMER0_COMPB_vect(void);
   
   /**
    * Do not allow instances. This is a static singleton; name space.
