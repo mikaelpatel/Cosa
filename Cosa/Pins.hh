@@ -605,8 +605,7 @@ class IOPin : public OutputPin {
 public:
   enum Mode {
     OUTPUT_MODE = 0,
-    INPUT_MODE = 1,
-    PULLUP_MODE = 2
+    INPUT_MODE = 1
   } __attribute__((packed));
 
   /**
@@ -614,16 +613,20 @@ public:
    * @param[in] pin number.
    * @param[in] mode pin mode (normal or pullup).
    */
-  IOPin(Board::DigitalPin pin, Mode mode = INPUT_MODE) : 
+  IOPin(Board::DigitalPin pin, Mode mode = INPUT_MODE, bool pullup = false) : 
     OutputPin(pin),
     m_mode(mode)
   {
+    if (pullup)
+      *PORT() |= m_mask; 
     set_mode(mode);
   }
-  IOPin(Board::AnalogPin pin, Mode mode = INPUT_MODE) : 
+  IOPin(Board::AnalogPin pin, Mode mode = INPUT_MODE, bool pullup = false) : 
     OutputPin(pin),
     m_mode(mode)
   {
+    if (pullup)
+      *PORT() |= m_mask; 
     set_mode(mode);
   }
 
@@ -638,8 +641,6 @@ public:
 	*DDR() |= m_mask; 
       else
 	*DDR() &= ~m_mask; 
-      if (mode == PULLUP_MODE)
-	*PORT() |= m_mask; 
     }
     m_mode = mode;
   }
