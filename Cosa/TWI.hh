@@ -479,6 +479,8 @@ private:
     SR_CLEAR_ACK = SR_CLEAR | (0x0E << USICNT0),
     // Clear flags. Set USI counter to shift 8 bits (16 edges)
     SR_CLEAR_DATA = SR_CLEAR | (0x0 << USICNT0),
+    // Set USI TWI mode(0). External clock source
+    CR_SERVICE_MODE = _BV(USIWM1) |  _BV(USICS1),
     // Enable start condition. Set USI TWI mode(0). External clock source
     CR_START_MODE = _BV(USISIE) | _BV(USIWM1) |  _BV(USICS1),
     // Enable start and overflow. Set USI TWI mode(1). External clock
@@ -528,6 +530,7 @@ private:
   void set_mode(IOPin::Mode mode)
   {
     m_sda.set_mode(mode);
+    if (mode == IOPin::INPUT_MODE) m_sda.set();
   }
 
   /**
@@ -584,8 +587,8 @@ public:
    * current supported hardware, i.e. there can only be one unit.
    */
   TWI() :
-    m_sda((Board::DigitalPin) Board::SDA, IOPin::INPUT_MODE),
-    m_scl((Board::DigitalPin) Board::SCL, IOPin::OUTPUT_MODE),
+    m_sda((Board::DigitalPin) Board::SDA, IOPin::INPUT_MODE, true),
+    m_scl((Board::DigitalPin) Board::SCL, IOPin::OUTPUT_MODE, true),
     m_target(0),
     m_state(IDLE),
     m_status(0),
@@ -625,8 +628,3 @@ public:
 */
 extern TWI twi;
 #endif
-
-
-
-
-

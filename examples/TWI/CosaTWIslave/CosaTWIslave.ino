@@ -37,10 +37,10 @@
 class TWIslave : public TWI::Device {
 private:
   // Address of device on TWI bus
-  static const uint8_t ADDR = 0xC05A;
+  static const uint8_t ADDR = 0x5A;
 
   // Buffer for request and response
-  static const uint8_t BUF_MAX = 4;
+  static const uint8_t BUF_MAX = 8;
   uint8_t m_buf[BUF_MAX];
 
 public:
@@ -62,7 +62,6 @@ TWIslave::begin()
 void
 TWIslave::on_request(void* buf, size_t size)
 {
-  Watchdog::delay(64);
   m_buf[0] += 1;
   for (uint8_t i = 1; i < sizeof(m_buf); i++)
     m_buf[i] = m_buf[0] + i;
@@ -73,6 +72,10 @@ TWIslave slave;
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
+
+#if defined(__ARDUINO_TINYX5__)
+Soft::UART uart(Board::D1);
+#endif
 
 void setup()
 {

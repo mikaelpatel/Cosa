@@ -35,7 +35,7 @@
 #include "Cosa/Memory.h"
 
 // TWI slave address
-static const uint8_t ADDR = 0xC05A;
+static const uint8_t ADDR = 0x5A;
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
@@ -59,33 +59,43 @@ void setup()
 void loop()
 {
    // Write a command to the slave
-  static uint32_t cmd = 0;
-  static uint32_t start = 0;
-  uint32_t delta;
-  uint32_t now;
+  static uint16_t cmd = 0;
+  uint32_t time;
   int count;
 
   ledPin.toggle();
+  time = RTC::micros();
   twi.begin();
-  now = RTC::millis();
-  delta = now - start;
-  start = now;
-  trace << delta << ':';
-  TRACE(count = twi.write(ADDR, &cmd, sizeof(cmd)));
+  count = twi.write(ADDR, &cmd, sizeof(cmd));
+  twi.end();
+  time = RTC::micros() - time;
+  trace << PSTR("write(2):") << time << ':' << time/sizeof(cmd) << ':';
   if (count > 0) trace.print(&cmd, count);
-  
+
   // Read back the result
-  uint8_t buf[4];
+  uint8_t buf[8];
+
+  time = RTC::micros();
+  twi.begin();
   do {
-    now = RTC::millis();
-    delta = now - start;
-    start = now;
-    trace << delta << ':';
-    TRACE(count = twi.read(ADDR, buf, sizeof(buf)));
+    count = twi.read(ADDR, buf, sizeof(buf));
   } while (count < 0);
   twi.end();
+  time = RTC::micros() - time;
+  trace << PSTR("read(8):") << time << ':' << time/sizeof(buf) << ':';
+  if (count > 0) trace.print(buf, count);
+  twi.begin();
+
+  time  = RTC::micros();
+  do {
+    count = twi.read(ADDR, buf, sizeof(buf) - 4);
+  } while (count < 0);
+  twi.end();
+  time = RTC::micros() - time;
+  trace << PSTR("read(4):") << time << ':' << time/(sizeof(buf) - 4) << ':';
   if (count > 0) trace.print(buf, count);
   ledPin.toggle();
+  trace << endl;
 
   // Next transaction
   cmd += 1;
