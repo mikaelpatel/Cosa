@@ -27,7 +27,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 #if defined(__ARDUINO_TINY__)
-Soft::UART uart(Board::D0);
+Soft::UART uart(Board::D0) __attribute__ ((weak));
 #else
 
 #include "Cosa/Bits.h"
@@ -37,7 +37,7 @@ Soft::UART uart(Board::D0);
 static IOBuffer<UART::BUFFER_MAX> ibuf;
 static IOBuffer<UART::BUFFER_MAX> obuf;
 
-UART uart(0, &ibuf, &obuf);
+UART uart(0, &ibuf, &obuf)  __attribute__ ((weak));
 UART* UART::uart0 = &uart;
 
 bool
