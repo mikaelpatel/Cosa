@@ -499,7 +499,6 @@ private:
   IOPin m_scl;
   Device* m_target;
   volatile State m_state;
-  volatile uint8_t m_status;
   volatile uint8_t* m_next;
   volatile uint8_t* m_last;
   volatile int m_count;
@@ -591,7 +590,6 @@ public:
     m_scl((Board::DigitalPin) Board::SCL, IOPin::OUTPUT_MODE, true),
     m_target(0),
     m_state(IDLE),
-    m_status(0),
     m_next(0),
     m_last(0),
     m_count(0),
