@@ -654,6 +654,23 @@ public:
     return (m_mode);
   }
   
+  /**
+   * Change IO-pin to given mode.
+   * @param[in] pin number.
+   * @param[in] mode new operation mode.
+   */
+  static void set_mode(uint8_t pin, Mode mode) 
+  { 
+    volatile uint8_t* ddr = DDR(pin);
+    const uint8_t mask = MASK(pin);
+    synchronized {
+      if (mode == OUTPUT_MODE)
+	*ddr |= mask; 
+      else
+	*ddr &= ~mask; 
+    }
+  }
+
 private:
   Mode m_mode;
 };
