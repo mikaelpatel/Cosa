@@ -312,6 +312,11 @@ resistor). Uses a watchdog timeout event (64 ms) for sampling and
 on change calls an event action. Subclass Button and implement the  
 virtual on_change() method. 
 
+@section Rotary Encoder
+State machine based Rotary Encoder handler. Uses interrupt pins and
+pushes an Event::CHANGE_TYPE on change with direction. Subclass
+Rotary::Encoder and implement the virtual on_event() method.
+
 @section DHT11
 DHT11 Humidity & Temperature Sensor device driver. Subclass
 and implement the event handler, on_event(), to allow periodic

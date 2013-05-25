@@ -115,9 +115,10 @@ Drivers
 11. TSOP4838 IR Receiver Modules for Remote Control Systems.
 12. Virtual Wire (VWI) on RF315/433 modules.
 13. HMC5883L 3-Axis Digital Compass IC.
-14. NEXA Wireless Remote command transmitter/receiver for RF433.
+14. NEXA/HomeEasy Wireless Remote command transmitter/receiver for RF433.
 15. ST7565, 65x132 Dot Matrix LCD Controller/Driver.
-16. Slave device support for SPI, TWI and OWI.
+16. Debounced button and Rotary Encoder.
+17. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  
@@ -197,4 +198,5 @@ and auto-retransmission. Full support for message parsing.
 Wireless Remote command transmitter (RF433). Introducing a new
 template class for handling of keyed sets of event handlers. Added
 support for LCD ST7565 with natural text scrolling. Making it easy to
-implement TWI slave devices with TWI::Device.   
+implement TWI slave devices with TWI::Device. Including support for
+event driven Rotary Encoder handler.     
