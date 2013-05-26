@@ -30,36 +30,9 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-/**
- * Use a Rotary Encoder as a simple dail (integer value, +- 32K)
- */
-class Dail : private Rotary::Encoder {
-private:
-  int m_value;
-
-  /**
-   * Update the dail value on change. The event value is the
-   * direction (CW or CCW).
-   */
-  virtual void on_event(uint8_t type, uint16_t value)
-  {
-    m_value += (value == CW ? 1 : -1);
-  }
-
-public:
-  Dail(Board::InterruptPin clk, Board::InterruptPin dt) :
-    Rotary::Encoder(clk, dt),
-    m_value(0)
-  {}
-
-  int get_value()
-  {
-    return (m_value);
-  }
-};
-
 // Dail instance is connected to D6 and D7 (as interrupt pins)
-Dail dail(Board::PCI6, Board::PCI7);
+// Min: -100, Max: 10, Init: -100
+Rotary::Dail dail(Board::PCI6, Board::PCI7, -100, 10, -100);
 
 void setup()
 {

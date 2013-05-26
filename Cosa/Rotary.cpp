@@ -90,14 +90,14 @@ static const uint8_t ttable[7][4] PROGMEM = {
 void
 Rotary::InputPin::on_interrupt(uint16_t arg)
 {
-  m_encoder->process();
+  Rotary::Encoder::Direction change = m_encoder->process();
+  if (change) Event::push(Event::CHANGE_TYPE, m_encoder, change);
 }
 
-void 
+Rotary::Encoder::Direction
 Rotary::Encoder::process()
 {
   uint8_t pins = (m_dt.is_set() << 1) | m_clk.is_set();
   m_state = pgm_read_byte(&ttable[m_state & 0xf][pins]);
-  uint8_t change = (m_state & 0xf0);
-  if (change) Event::push(Event::CHANGE_TYPE, this, change);
+  return ((Direction) (m_state & 0xf0));
 }

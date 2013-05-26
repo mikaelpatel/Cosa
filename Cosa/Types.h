@@ -46,6 +46,11 @@
  */
 #define CHARBITS 8
 
+#ifndef INT_MAX
+# define INT_MAX 0x7fff
+# define INT_MIN 0x8000
+#endif
+
 /**
  * Standard floating point number, 32-bit.
  */

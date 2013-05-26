@@ -26,6 +26,7 @@
 #ifndef __COSA_ROTARY_HH__
 #define __COSA_ROTARY_HH__
 
+#include "Cosa/Types.h"
 #include "Cosa/InterruptPin.hh"
 
 /**
@@ -86,9 +87,8 @@
  * measured.
  *
  * Another advantage is the ability to properly handle bad state, such
- * as due to EMI, etc.
- * It is also a lot simpler than others - a static state table and less
- * than 10 lines of logic.
+ * as due to EMI, etc. It is also a lot simpler than others - a static
+ * state table and less than 10 lines of logic.
  *
  * @see also
  * http://www.buxtronix.net/2011/10/rotary-encoders-done-properly.html
@@ -105,7 +105,12 @@ private:
   class InputPin : public InterruptPin {
   private:
     Encoder* m_encoder;
+    /**
+     * Pin interrupt handler. Check possible state change and will
+     * push Event::CHANGE_TYPE with direction (CW or CCW).
+     */
     virtual void on_interrupt(uint16_t arg);
+
   public:
     InputPin(Board::InterruptPin pin, Encoder* encoder) : 
       InterruptPin(pin), 
@@ -119,23 +124,24 @@ public:
    */
   class Encoder : public Event::Handler {
     friend class InputPin;
-  private:
+  public:
+    enum Direction {
+      NONE = 0x00,		// No direction change
+      CW = 0x10,		// Clock-wise direction
+      CCW = 0x20		// Anti-clock-wise direction
+    } __attribute__((packed));
+
+  protected:
     InputPin m_clk;
     InputPin m_dt;
     uint8_t m_state;
 
     /**
-     * Process input pin state change. Push Event::CHANGE_TYPE with
-     * direction (CW or CCW) when the encoder changes.
+     * Process input pin state change. 
      */
-    void process();
+    Direction process();
     
   public:
-    enum {
-      CW = 0x10,		// Clock-wise direction
-      CCW = 0x20		// Anti-clock-wise direction
-    };
-
     /**
      * Create Rotary Encoder with given interrupt pins. Setup must
      * call InterruptPin::begin() to initiate handling of pins.
@@ -148,6 +154,72 @@ public:
       m_clk.enable();
       m_dt.enable();
     }
+  };
+
+  /**
+   * Use a Rotary Encoder as a simple dail (integer value, +- 32K).
+   * Allows a dail within an integer range (min, max) and a given
+   * initial value.
+   */
+  class Dail : private Encoder {
+  private:
+    int m_value;
+    int m_min;
+    int m_max;
+
+    /**
+     * @override
+     * Update the dail value on change. The event value is the
+     * direction (CW or CCW).
+     * @param[in] type the event type.
+     * @param[in] value the event value.
+     */
+    virtual void on_event(uint8_t type, uint16_t value)
+    {
+      if (value == CW) {
+	if (m_value == m_max) return;
+	m_value += 1;
+      }
+      else {
+	if (m_value == m_min) return;
+	m_value -= 1;
+      }
+      on_change(m_value);
+    }
+
+  public:
+    /**
+     * Construct Rotary Dail connected to given interrupt pins with given
+     * max, min and initial value.
+     * @param[in] clk interrupt pin.
+     * @param[in] dt interrupt pin.
+     * @param[in] min value.
+     * @param[in] max value.
+     * @param[in] initial value.
+     */
+    Dail(Board::InterruptPin clk, Board::InterruptPin dt, 
+	 int min = INT_MIN, int max = INT_MAX, int initial = 0) :
+      Encoder(clk, dt),
+      m_value(initial),
+      m_min(min),
+      m_max(max)
+    {}
+    
+    /**
+     * Return current dial value.
+     * @return value.
+     */
+    int get_value()
+    {
+      return (m_value);
+    }
+
+    /**
+     * @override
+     * Default on change function. 
+     * @param[in] value.
+     */
+    virtual void on_change(int value) {}
   };
 };
 #endif
