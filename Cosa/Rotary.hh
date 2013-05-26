@@ -95,35 +95,10 @@
  */
 class Rotary {
 public:
-  class Encoder;
-
-private:
-  /**
-   * Interrupt pin handler. Delegates to Rotary Encoder to process 
-   * new state.
-   */
-  class InputPin : public InterruptPin {
-  private:
-    Encoder* m_encoder;
-    /**
-     * Pin interrupt handler. Check possible state change and will
-     * push Event::CHANGE_TYPE with direction (CW or CCW).
-     */
-    virtual void on_interrupt(uint16_t arg);
-
-  public:
-    InputPin(Board::InterruptPin pin, Encoder* encoder) : 
-      InterruptPin(pin), 
-      m_encoder(encoder)
-    {}
-  };
-
-public:
   /**
    * Rotary Encoder.
    */
   class Encoder : public Event::Handler {
-    friend class InputPin;
   public:
     enum Direction {
       NONE = 0x00,		// No direction change
@@ -132,8 +107,30 @@ public:
     } __attribute__((packed));
 
   protected:
-    InputPin m_clk;
-    InputPin m_dt;
+    /**
+     * Rotary signal pin handler. Delegates to Rotary Encoder to process 
+     * new state.
+     */
+    class SignalPin : public InterruptPin {
+    private:
+      Encoder* m_encoder;
+
+      /**
+       * Signal pin interrupt handler. Check possible state change and will
+       * push Event::CHANGE_TYPE with direction (CW or CCW).
+       */
+      virtual void on_interrupt(uint16_t arg);
+      
+    public:
+      SignalPin(Board::InterruptPin pin, Encoder* encoder) : 
+	InterruptPin(pin), 
+	m_encoder(encoder)
+      {}
+    };
+
+    // Signal pins and previous state
+    SignalPin m_clk;
+    SignalPin m_dt;
     uint8_t m_state;
 
     /**
@@ -157,7 +154,7 @@ public:
   };
 
   /**
-   * Use a Rotary Encoder as a simple dail (integer value, +- 32K).
+   * Use Rotary Encoder as a simple dail (integer value).
    * Allows a dail within an integer range (min, max) and a given
    * initial value.
    */

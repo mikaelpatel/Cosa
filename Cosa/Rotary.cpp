@@ -88,7 +88,7 @@ static const uint8_t ttable[7][4] PROGMEM = {
 #endif
 
 void
-Rotary::InputPin::on_interrupt(uint16_t arg)
+Rotary::Encoder::SignalPin::on_interrupt(uint16_t arg)
 {
   Rotary::Encoder::Direction change = m_encoder->process();
   if (change) Event::push(Event::CHANGE_TYPE, m_encoder, change);
