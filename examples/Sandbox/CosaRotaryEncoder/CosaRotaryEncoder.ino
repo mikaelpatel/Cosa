@@ -30,10 +30,6 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Rotary Dail is connected to D6 and D7 (as interrupt pins)
-// Min: -100, Max: 10, Initial: -100
-Rotary::Dail dail(Board::PCI6, Board::PCI7, -100, 10, -100);
-
 void setup()
 {
   // Use the UART as output stream
@@ -43,6 +39,14 @@ void setup()
   // Start the interrupt pin handler
   InterruptPin::begin();
 }
+
+// Rotary Dail is connected to D6/D1 and D7/D2 (as interrupt pins)
+// Min: -100, Max: 10, Initial: -100
+#if defined(__ARDUINO_TINY__)
+Rotary::Dail dail(Board::PCI1, Board::PCI2, -100, 10, -100);
+#else
+Rotary::Dail dail(Board::PCI6, Board::PCI7, -100, 10, -100);
+#endif
 
 void loop()
 {
