@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Common data types and syntax abstractions.
+ * Common literals, data types and syntax abstractions.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -46,9 +46,24 @@
  */
 #define CHARBITS 8
 
+/**
+ * Standard integer range
+ */
+#ifndef INT8_MAX
+# define INT8_MIN 0x80
+# define INT8_MAX 0x7f
+#endif
+#ifndef INT16_MAX
+# define INT16_MIN 0x8000
+# define INT16_MAX 0x7fff
+#endif
+#ifndef INT32_MAX
+# define INT32_MIN 0x80000000L
+# define INT32_MAX 0x7fffffffL
+#endif
 #ifndef INT_MAX
-# define INT_MAX 0x7fff
-# define INT_MIN 0x8000
+# define INT_MIN INT16_MIN
+# define INT_MAX INT16_MAX
 #endif
 
 /**
@@ -60,10 +75,10 @@ typedef float float32_t;
  * Universal type union, 16-bit.
  */
 union univ16_t {
-  short as_short;
-  char as_char[2];
-  void* as_ptr;
+  int16_t as_int16;
+  int8_t as_int8[2];
   const void* as_ptr_P;
+  void* as_ptr;
   struct {
     uint8_t low;
     uint8_t high;
@@ -75,13 +90,13 @@ typedef univ16_t univ_t;
  * Universal type union, 32-bit.
  */
 union univ32_t {
-  float as_float;
-  long as_long;
-  univ_t as_univ[2];
-  short as_short[2];
-  char as_char[4];
+  float32_t as_float32;
+  int32_t as_int32;
+  univ16_t as_univ16[2];
+  int16_t as_int16[2];
+  int8_t as_int8[4];
+  const void* as_ptr_P[2];
   void* as_ptr[2];
-  const void* as_ptr_P;
   struct {
     uint16_t low;
     uint16_t high;
@@ -208,7 +223,7 @@ iovec_end(iovec_t* &vp)
 }
 
 /**
- * Swap bytes in 16-bit integer
+ * Swap bytes in 16-bit integer.
  * @param[in] value to byte swap.
  * @return new value.
  */
@@ -225,7 +240,7 @@ swap(int16_t value)
 }
 
 /**
- * Swap bytes in 32-bit integer
+ * Swap bytes in 32-bit integer.
  * @param[in] value to byte swap.
  * @return new value.
  */
@@ -245,7 +260,8 @@ swap(int32_t value)
 }
 
 /**
- * Convert values between host and network byte order 
+ * Convert values between host and network byte order. AVR is
+ * littlendian and network is bigendian so byte swap.
  */
 #define ntoh(x) swap(x)
 #define hton(x) swap(x)

@@ -30,8 +30,8 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Dail instance is connected to D6 and D7 (as interrupt pins)
-// Min: -100, Max: 10, Init: -100
+// Rotary Dail is connected to D6 and D7 (as interrupt pins)
+// Min: -100, Max: 10, Initial: -100
 Rotary::Dail dail(Board::PCI6, Board::PCI7, -100, 10, -100);
 
 void setup()
@@ -46,11 +46,11 @@ void setup()
 
 void loop()
 {
-  // Rotary Encoder will push event when a change occurs
+  // Rotary Encoder/Dail will push event when a change occurs
   Event event;
   Event::queue.await(&event);
 
-  // Dispath the event so that the dail value is updated
+  // Dispatch the event so that the dail value is updated
   event.dispatch();
 
   // Print the new value

@@ -190,7 +190,7 @@ public:
   public:
     /**
      * Construct Rotary Dail connected to given interrupt pins with given
-     * max, min and initial value.
+     * min, max and initial value.
      * @param[in] clk interrupt pin.
      * @param[in] dt interrupt pin.
      * @param[in] min value.
