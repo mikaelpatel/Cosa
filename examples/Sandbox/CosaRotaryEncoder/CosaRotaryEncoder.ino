@@ -40,24 +40,24 @@ void setup()
   InterruptPin::begin();
 }
 
-// Rotary Dail is connected to D6/D1 and D7/D2 (as interrupt pins)
+// Rotary Dial is connected to D6/D1 and D7/D2 (as interrupt pins)
 // Min: -100, Max: 10, Initial: -100
 #if defined(__ARDUINO_TINY__)
-Rotary::Dail dail(Board::PCI1, Board::PCI2, -100, 10, -100);
+Rotary::Dial dial(Board::PCI1, Board::PCI2, -100, 10, -100);
 #else
-Rotary::Dail dail(Board::PCI6, Board::PCI7, -100, 10, -100);
+Rotary::Dial dial(Board::PCI6, Board::PCI7, -100, 10, -100);
 #endif
 
 void loop()
 {
-  // Rotary Encoder/Dail will push event when a change occurs
+  // Rotary Encoder/Dial will push event when a change occurs
   Event event;
   Event::queue.await(&event);
 
-  // Dispatch the event so that the dail value is updated
+  // Dispatch the event so that the dial value is updated
   event.dispatch();
 
   // Print the new value
-  TRACE(dail.get_value());
+  TRACE(dial.get_value());
 }
 

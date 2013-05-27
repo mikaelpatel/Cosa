@@ -155,10 +155,10 @@ public:
 
   /**
    * Use Rotary Encoder as a simple dail (integer value).
-   * Allows a dail within an integer range (min, max) and a given
+   * Allows a dial within an integer range (min, max) and a given
    * initial value.
    */
-  class Dail : private Encoder {
+  class Dial : private Encoder {
   private:
     int m_value;
     int m_min;
@@ -166,7 +166,7 @@ public:
 
     /**
      * @override
-     * Update the dail value on change. The event value is the
+     * Update the dial value on change. The event value is the
      * direction (CW or CCW).
      * @param[in] type the event type.
      * @param[in] value the event value.
@@ -186,7 +186,7 @@ public:
 
   public:
     /**
-     * Construct Rotary Dail connected to given interrupt pins with given
+     * Construct Rotary Dial connected to given interrupt pins with given
      * min, max and initial value.
      * @param[in] clk interrupt pin.
      * @param[in] dt interrupt pin.
@@ -194,7 +194,7 @@ public:
      * @param[in] max value.
      * @param[in] initial value.
      */
-    Dail(Board::InterruptPin clk, Board::InterruptPin dt, 
+    Dial(Board::InterruptPin clk, Board::InterruptPin dt, 
 	 int min = INT_MIN, int max = INT_MAX, int initial = 0) :
       Encoder(clk, dt),
       m_value(initial),
