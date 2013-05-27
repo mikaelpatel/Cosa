@@ -28,6 +28,7 @@
 
 #include "Cosa/SPI/Driver/NRF24L01P.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
@@ -47,6 +48,7 @@ void setup()
 
   // Start the watchdog
   Watchdog::begin(1024);
+  RTC::begin();
 
   // Powerup the transceiver and select receiver mode.
   nrf.set_powerup_mode();
@@ -69,17 +71,12 @@ void setup()
 
   // Allow interrupt handler for receiver
   nrf.enable();
-
-  // Turn off Arduino timer0 until init is replaced
-  TIMSK0 = 0;
 }
 
 // Message block
 typedef struct msg_t msg_t;
 struct msg_t {
   uint16_t id;
-  uint8_t observe;
-  uint8_t status;
 };
 
 void loop()
@@ -88,22 +85,23 @@ void loop()
   Event event;
   Event::queue.await(&event);
 
-  // Print event type
+  // Print event type (should be Event::RECEIVE_COMPLETED_TYPE)
   TRACE(event.get_type());
 
-  // Print receiver and fifo status
-  uint16_t ticks = Watchdog::ticks();
-  uint8_t observe = nrf.read(NRF24L01P::OBSERVE_TX);
-  uint8_t status = nrf.get_status();
-  uint8_t fifo = nrf.read(NRF24L01P::FIFO_STATUS);
-  INFO("%d:RECV(observe = %bd, status = %bd, fifo = %bd)", 
-       ticks, observe, status, fifo);
+  // Print transceiver status
+  NRF24L01P::observe_tx_t observe = nrf.read(NRF24L01P::OBSERVE_TX);
+  NRF24L01P::status_t status = nrf.get_status();
+  NRF24L01P::fifo_status_t fifo = nrf.read(NRF24L01P::FIFO_STATUS);
+
+  TRACE(RTC::seconds());
+  trace.printf_P(PSTR("STATUS(RX_DR = %d, TX_DS = %d, MAX_RT = %d, RX_P_NO = %d, TX_FULL = %d)\n"), status.rx_dr, status.tx_ds, status.max_rt, status.rx_p_no, status.tx_full);
+  trace.printf_P(PSTR("OBSERVE_TX(PLOS_CNT = %d, ARC_CNT = %d)\n"), observe.plos_cnt, observe.arc_cnt);
+  trace.printf_P(PSTR("FIFO_STATUS(RX_EMPTY = %d, RX_FULL = %d, TX_EMPTY = %d, TX_FULL = %d, TX_REUSE = %d)\n"), fifo.rx_empty, fifo.rx_full, fifo.tx_empty, fifo.tx_full, fifo.tx_reuse);
 
   // Attempt to receive and print a message
   msg_t msg;
   uint8_t pipe; 
-  if (nrf.recv(&msg, &pipe)) {
-    INFO("PIPE(%d):msg(id = %d, observe = %bd, status = %bd)", 
-	 pipe, msg.id, msg.observe, msg.status);
-  }
+  if (nrf.recv(&msg, &pipe)) 
+    trace.printf_P(PSTR("PIPE(%d):msg(id = %d)\n"), pipe, msg.id);
+  trace.println();
 }

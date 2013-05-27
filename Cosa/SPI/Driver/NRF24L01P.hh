@@ -258,6 +258,20 @@ public:
     RX_P_NO_MASK = 0x0e,	// Mask pipe number
     TX_FIFO_FULL = 0		// TX FIFO full flag
   } __attribute__((packed));
+  union status_t {
+    uint8_t as_byte;
+    struct {
+      uint8_t tx_full:1;
+      uint8_t rx_p_no:3;
+      uint8_t max_rt:1;
+      uint8_t tx_ds:1;
+      uint8_t rx_dr:1;
+    };
+    status_t(uint8_t value)
+    {
+      as_byte = value;
+    }
+  };
 
   /**
    * Register OBSERVE_TX bitfields
@@ -266,6 +280,17 @@ public:
     PLOS_CNT = 4,		// Count lost packets (bits 4)
     ARC_CNT = 0		        // Count retransmitted packets (bits 4)
   } __attribute__((packed));
+  union observe_tx_t {
+    uint8_t as_byte;
+    struct {
+      uint8_t arc_cnt:4;
+      uint8_t plos_cnt:4;
+    };
+    observe_tx_t(uint8_t value)
+    {
+      as_byte = value;
+    }
+  };
 
   /**
    * Register FIFO_STATUS bitfields
@@ -277,7 +302,22 @@ public:
     RX_FULL = 1,		// RX FIFO full flag
     RX_EMPTY = 0,		// RX FIFO empty flag
   } __attribute__((packed));
-
+  union fifo_status_t {
+    uint8_t as_byte;
+    struct {
+      uint8_t rx_empty:1;
+      uint8_t rx_full:1;
+      uint8_t reserved:2;
+      uint8_t tx_empty:1;
+      uint8_t tx_full:1;
+      uint8_t tx_reuse:1;
+    };
+    fifo_status_t(uint8_t value)
+    {
+      as_byte = value;
+    }
+  };
+  
   /**
    * Register DYNPD bitfields
    */

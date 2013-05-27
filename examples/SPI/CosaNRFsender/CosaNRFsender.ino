@@ -30,14 +30,11 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/RTC.hh"
 #include "Cosa/Memory.h"
 
 // NRF24L01+ Wireless communication using SPI and default pins(9, 10, 2)
 NRF24L01P nrf;
-
-// Configuration
-#define USE_WATCHDOG_DELAY
-// #define USE_EVENT_AWAIT
 
 void setup()
 {
@@ -50,12 +47,8 @@ void setup()
   TRACE(sizeof(nrf));
 
   // Start the watchdog ticks counter and push timeout events
-#ifdef USE_EVENT_AWAIT
   Watchdog::begin(1024, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
-#endif
-#ifdef USE_WATCHDOG_DELAY
-  Watchdog::begin(64);
-#endif
+  RTC::begin();
 
   // Power up the transceiver
   nrf.set_powerup_mode();
@@ -79,49 +72,37 @@ void setup()
   TRACE(nrf.read(NRF24L01P::SETUP_AW));
   TRACE(nrf.read(NRF24L01P::DYNPD));
   TRACE(nrf.read(NRF24L01P::CONFIG));
-
-  // Turn off Arduino timer0 to reduce wakeups
-  TIMSK0 = 0;
 }
 
 // Message block
-typedef struct msg_t msg_t;
 struct msg_t {
-  uint16_t id; 
-  uint8_t observe;
-  uint8_t status;
+  uint16_t id;
 };
-
 msg_t msg = { 0 };
-const uint8_t count = sizeof(msg);
 
 void loop()
 {
-#ifdef USE_WATCHDOG_DELAY
-  Watchdog::delay(1024);
-#endif
-#ifdef USE_EVENT_AWAIT
   Event event;
   Event::queue.await(&event);
+
+  // Print event type (should be Event::WATCHDOG_TYPE)
   TRACE(event.get_type());
-#endif
+
+  // Print transceiver status
+  NRF24L01P::observe_tx_t observe = nrf.read(NRF24L01P::OBSERVE_TX);
+  NRF24L01P::status_t status = nrf.get_status();
+  NRF24L01P::fifo_status_t fifo = nrf.read(NRF24L01P::FIFO_STATUS);
+
+  TRACE(RTC::seconds());
+  trace.printf_P(PSTR("STATUS(RX_DR = %d, TX_DS = %d, MAX_RT = %d, RX_P_NO = %d, TX_FULL = %d)\n"), status.rx_dr, status.tx_ds, status.max_rt, status.rx_p_no, status.tx_full);
+  trace.printf_P(PSTR("OBSERVE_TX(PLOS_CNT = %d, ARC_CNT = %d)\n"), observe.plos_cnt, observe.arc_cnt);
+  trace.printf_P(PSTR("FIFO_STATUS(RX_EMPTY = %d, RX_FULL = %d, TX_EMPTY = %d, TX_FULL = %d, TX_REUSE = %d)\n"), fifo.rx_empty, fifo.rx_full, fifo.tx_empty, fifo.tx_full, fifo.tx_reuse);
 
   // Attempt to send a message
-  msg.status = nrf.get_status();
-  msg.observe = nrf.read(NRF24L01P::OBSERVE_TX);
-  INFO("%d:SEND(id = %d, lost = %d, retransmit = %d, status = %bd", 
-       Watchdog::ticks(), 
-       msg.id, msg.observe >> 4, 
-       msg.observe & 0xf, 
-       msg.status);
-  if (nrf.send(&msg, count) != count) {
-    INFO("FAILED(count = %d)", count);
-  } 
-  else {
-    msg.id += 1;
-  }
+  uint8_t res = nrf.send(&msg, sizeof(msg));
+  trace.printf_P(PSTR("SEND(id = %d, res = %d)\n\n"), msg.id, res);
+  if (res == sizeof(msg)) msg.id += 1;
+  
   // Check if the transmission fifo needs flushing
-  if (!nrf.is_ready() && nrf.is_max_retransmit()) {
-    nrf.flush();
-  }
+  if (!nrf.is_ready() && nrf.is_max_retransmit()) nrf.flush();
 }
