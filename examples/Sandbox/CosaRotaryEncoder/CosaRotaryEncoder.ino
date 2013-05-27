@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of Rotary Encoder.
+ * Cosa demonstration of Rotary Encoder and Dial.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -41,11 +41,15 @@ void setup()
 }
 
 // Rotary Dial is connected to D6/D1 and D7/D2 (as interrupt pins)
-// Min: -100, Max: 10, Initial: -100
+// Mode: full step, Initial: -100, Min: -100, Max: 10
 #if defined(__ARDUINO_TINY__)
-Rotary::Dial dial(Board::PCI1, Board::PCI2, -100, 10, -100);
+Rotary::Dial dial(Board::PCI1, Board::PCI2, 
+		  Rotary::Encoder::FULL_STEP, 
+		  -100, -100, 10);
 #else
-Rotary::Dial dial(Board::PCI6, Board::PCI7, -100, 10, -100);
+Rotary::Dial dial(Board::PCI6, Board::PCI7, 
+		  Rotary::Encoder::FULL_STEP, 
+		  -100, -100, 10);
 #endif
 
 void loop()
@@ -57,7 +61,16 @@ void loop()
   // Dispatch the event so that the dial value is updated
   event.dispatch();
 
+  // Change step mode at min and max value
+  static int old_value = -100;
+  int new_value = dial.get_value();
+  if (old_value == -100 && new_value == -99)
+    dial.set_step(Rotary::Encoder::FULL_STEP);
+  else if (old_value == 10 && new_value == 9)
+    dial.set_step(Rotary::Encoder::HALF_STEP);
+  old_value = new_value;
+
   // Print the new value
-  TRACE(dial.get_value());
+  trace << new_value << endl;
 }
 

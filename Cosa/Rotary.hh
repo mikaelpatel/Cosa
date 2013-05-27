@@ -100,11 +100,22 @@ public:
    */
   class Encoder : public Event::Handler {
   public:
+    /**
+     * Rotary Encoder turn direction
+     */
     enum Direction {
       NONE = 0x00,		// No direction change
       CW = 0x10,		// Clock-wise direction
       CCW = 0x20		// Anti-clock-wise direction
     } __attribute__((packed));
+    
+    /**
+     * Rotary Encoder stepping mode
+     */
+    enum Step {
+      HALF_STEP,
+      FULL_STEP
+    }  __attribute__((packed));
 
   protected:
     /**
@@ -128,37 +139,63 @@ public:
       {}
     };
 
-    // Signal pins and previous state
+    // Signal pins, previous state and stepping mode.
     SignalPin m_clk;
     SignalPin m_dt;
     uint8_t m_state;
-
+    Step m_step;
+    
     /**
-     * Process input pin state change. 
+     * Run Rotary Encoder state machine. Reads current input pin values and
+     * performs a possible state change. Return turn direction or none.
+     * @return direction
      */
-    Direction process();
+    Direction run();
     
   public:
     /**
      * Create Rotary Encoder with given interrupt pins. Setup must
      * call InterruptPin::begin() to initiate handling of pins.
+     * @param[in] clk pin.
+     * @param[in] dt pin.
+     * @param[in] mode step.
      */
-    Encoder(Board::InterruptPin clk, Board::InterruptPin dt) :
+    Encoder(Board::InterruptPin clk, Board::InterruptPin dt, Step mode = FULL_STEP) :
       m_clk(clk, this),
       m_dt(dt, this),
-      m_state(0)
+      m_state(0),
+      m_step(mode)
     {
       m_clk.enable();
       m_dt.enable();
     }
+
+    /**
+     * Get current stepping mode.
+     * @return step.
+     */
+    Step get_step()
+    {
+      return (m_step);
+    }
+    
+    /**
+     * Set stepping mode.
+     * @param[in] mode step.
+     */
+    void set_step(Step mode)
+    {
+      m_step = mode;
+    }
+
   };
 
   /**
-   * Use Rotary Encoder as a simple dail (integer value).
+   * Use Rotary Encoder as a simple dial (integer value).
    * Allows a dial within an integer range (min, max) and a given
    * initial value.
    */
-  class Dial : private Encoder {
+  class Dial : public Encoder {
   private:
     int m_value;
     int m_min;
@@ -190,13 +227,15 @@ public:
      * min, max and initial value.
      * @param[in] clk interrupt pin.
      * @param[in] dt interrupt pin.
+     * @param[in] mode step.
+     * @param[in] initial value.
      * @param[in] min value.
      * @param[in] max value.
-     * @param[in] initial value.
      */
     Dial(Board::InterruptPin clk, Board::InterruptPin dt, 
-	 int min = INT_MIN, int max = INT_MAX, int initial = 0) :
-      Encoder(clk, dt),
+	 Step mode = FULL_STEP, 
+	 int initial = 0, int min = INT_MIN, int max = INT_MAX) :
+      Encoder(clk, dt, mode),
       m_value(initial),
       m_min(min),
       m_max(max)
