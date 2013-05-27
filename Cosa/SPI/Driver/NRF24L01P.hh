@@ -334,7 +334,7 @@ public:
   uint8_t read(Register reg)
   {
     uint8_t res;
-    inverted(m_csn) {
+    asserted(m_csn) {
       res = spi.read(R_REGISTER | (REG_MASK & reg));
     }
     return (res);
@@ -348,7 +348,7 @@ public:
    */
   uint8_t write(Register reg, uint8_t data)
   {
-    inverted(m_csn) {
+    asserted(m_csn) {
       m_status = spi.write(W_REGISTER | (REG_MASK & reg), data);
     }
     return (m_status);
@@ -364,7 +364,7 @@ public:
    */
   uint8_t write(Register reg, const void* buffer, uint8_t count)
   {
-    inverted(m_csn) {
+    asserted(m_csn) {
       m_status = spi.write(W_REGISTER | (REG_MASK & reg), buffer, count);
     }
     return (m_status);
@@ -376,7 +376,7 @@ public:
    */
   uint8_t get_status()
   {
-    inverted(m_csn) {
+    asserted(m_csn) {
       m_status = spi.exchange(NOP);
     }
     return (m_status);

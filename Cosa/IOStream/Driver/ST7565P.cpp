@@ -48,8 +48,8 @@ const uint8_t ST7565P::script[] PROGMEM = {
 void 
 ST7565P::set(uint8_t x, uint8_t y)
 {
-  inverted(m_cs) {
-    inverted(m_dc) {
+  asserted(m_cs) {
+    asserted(m_dc) {
       write(SET_X_ADDR | ((x >> 4) & X_ADDR_MASK));
       write(x & X_ADDR_MASK);
       write(SET_Y_ADDR | (y & Y_ADDR_MASK));
@@ -65,8 +65,8 @@ ST7565P::set_cursor(uint8_t x, uint8_t y)
   m_y = (y & (LINES - 1));
   if ((m_x != 0) || (m_y != 0)) return;
   m_line = 0;
-  inverted(m_cs) {
-    inverted(m_dc) {
+  asserted(m_cs) {
+    asserted(m_dc) {
       write(SET_DISPLAY_START | m_line);
     }
   }
@@ -77,8 +77,8 @@ ST7565P::begin(uint8_t level)
 {
   const uint8_t* bp = script;
   uint8_t cmd;
-  inverted(m_cs) {
-    inverted(m_dc) {
+  asserted(m_cs) {
+    asserted(m_dc) {
       while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END) {
 	if (cmd == SCRIPT_PAUSE) {
 	  uint8_t ms = pgm_read_byte(bp++);
@@ -96,8 +96,8 @@ ST7565P::begin(uint8_t level)
 bool 
 ST7565P::end()
 {
-  inverted(m_cs) {
-    inverted(m_dc) {
+  asserted(m_cs) {
+    asserted(m_dc) {
       write(DISPLAY_OFF);
     }
   }
@@ -107,8 +107,8 @@ ST7565P::end()
 void 
 ST7565P::set_display_mode(DisplayMode mode)
 {
-  inverted(m_cs) {
-    inverted(m_dc) {
+  asserted(m_cs) {
+    asserted(m_dc) {
       write(DISPLAY_NORMAL | mode);
     }
   }
@@ -117,8 +117,8 @@ ST7565P::set_display_mode(DisplayMode mode)
 void 
 ST7565P::set_display_contrast(uint8_t level)
 {
-  inverted(m_cs) {
-    inverted(m_dc) {
+  asserted(m_cs) {
+    asserted(m_dc) {
       write(SET_CONSTRAST);
       write(CONSTRAST_MASK & level);
     }
@@ -132,7 +132,7 @@ ST7565P::draw_icon(const uint8_t* bp)
   uint8_t height = pgm_read_byte(bp++);
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    inverted(m_cs) {
+    asserted(m_cs) {
       for (uint8_t x = 0; x < width; x++) {
 	write(m_mode ^ pgm_read_byte(bp++));
       }
@@ -147,7 +147,7 @@ ST7565P::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 {
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    inverted(m_cs) {
+    asserted(m_cs) {
       for (uint8_t x = 0; x < width; x++) {
 	write(m_mode ^ (*bp++));
       }
@@ -164,7 +164,7 @@ ST7565P::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
   uint8_t filled = (procent * (width - 2U)) / 100;
   uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
   width -= (filled + 1);
-  inverted(m_cs) {
+  asserted(m_cs) {
     write(m_mode ^ 0xff);
     while (filled--) {
       write(m_mode ^ (pattern | boarder));
@@ -188,8 +188,8 @@ ST7565P::putchar(char c)
     // Use display start line to implement scrolling
     if (m_y == (LINES - 1)) {
       m_line = (m_line + CHARBITS) & DISPLAY_START_MASK;
-      inverted(m_cs) {
-	inverted(m_dc) {
+      asserted(m_cs) {
+	asserted(m_dc) {
 	  write(SET_DISPLAY_START | m_line);
 	}
       }
@@ -240,7 +240,7 @@ ST7565P::putchar(char c)
     putchar('\n');
     m_x = width;
   }
-  inverted(m_cs) {
+  asserted(m_cs) {
     while (--width) 
       write(m_mode ^ pgm_read_byte(bp++));
     write(m_mode);

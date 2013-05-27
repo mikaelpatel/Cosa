@@ -96,14 +96,14 @@ ST7735R::begin()
   const uint8_t* bp = script;
   uint8_t count;
   uint8_t cmd;
-  inverted(m_cs) {
+  asserted(m_cs) {
     while ((cmd = pgm_read_byte(bp++)) != SCRIPTEND) {
       count = pgm_read_byte(bp++);
       if (cmd == SWDELAY) {
 	DELAY(count);
       } 
       else {
-	inverted(m_dc) {
+	asserted(m_dc) {
 	  spi.exchange(cmd);
 	}
 	while (count--) spi.exchange(pgm_read_byte(bp++));
@@ -130,7 +130,7 @@ ST7735R::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
   if (y + height >= HEIGHT) height = HEIGHT - y;
   set_port(x, y, x + width - 1, y + height - 1);
   color16_t color = get_pen_color();
-  inverted(m_cs) {
+  asserted(m_cs) {
     for (x = 0; x < width; x++)
       for (y = 0; y < height; y++) {
 	spi.exchange(color.rgb >> 8);
@@ -152,7 +152,7 @@ ST7735R::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
   if (y + length >= HEIGHT) length = HEIGHT - y;
   set_port(x, y, x, y + length);
   color16_t color = get_pen_color();
-  inverted(m_cs) {
+  asserted(m_cs) {
     while (length--) {
       spi.exchange(color.rgb >> 8);
       spi.exchange(color.rgb);
@@ -173,7 +173,7 @@ ST7735R::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
   if (x + length >= WIDTH) length = WIDTH - x;
   set_port(x, y, x + length, y);
   color16_t color = get_pen_color();
-  inverted(m_cs) {
+  asserted(m_cs) {
     while (length--) {
       spi.exchange(color.rgb >> 8);
       spi.exchange(color.rgb);

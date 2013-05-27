@@ -40,8 +40,8 @@ const uint8_t PCD8544::script[] PROGMEM = {
 void 
 PCD8544::set(uint8_t x, uint8_t y)
 {
-  inverted(m_sce) {
-    inverted(m_dc) {
+  asserted(m_sce) {
+    asserted(m_dc) {
       write(SET_X_ADDR | (x & X_ADDR_MASK));
       write(SET_Y_ADDR | (y & Y_ADDR_MASK));
     }
@@ -53,8 +53,8 @@ PCD8544::begin(uint8_t level)
 {
   const uint8_t* bp = script;
   uint8_t cmd;
-  inverted(m_sce) {
-    inverted(m_dc) {
+  asserted(m_sce) {
+    asserted(m_dc) {
       while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END)
 	write(cmd);
     }
@@ -67,8 +67,8 @@ PCD8544::begin(uint8_t level)
 bool 
 PCD8544::end()
 {
-  inverted(m_sce) {
-    inverted(m_dc) {
+  asserted(m_sce) {
+    asserted(m_dc) {
       write(SET_FUNC | BASIC_INST | POWER_DOWN_MODE);
     }
   }
@@ -78,8 +78,8 @@ PCD8544::end()
 void 
 PCD8544::set_display_mode(DisplayMode mode)
 {
-  inverted(m_sce) {
-    inverted(m_dc) {
+  asserted(m_sce) {
+    asserted(m_dc) {
       write(DISPLAY_CNTL | mode);
     }
   }
@@ -88,8 +88,8 @@ PCD8544::set_display_mode(DisplayMode mode)
 void 
 PCD8544::set_display_contrast(uint8_t level)
 {
-  inverted(m_sce) {
-    inverted(m_dc) {
+  asserted(m_sce) {
+    asserted(m_dc) {
       write(SET_FUNC | EXTENDED_INST);
       write(SET_VOP  | (level & VOP_MASK));
       write(SET_FUNC | BASIC_INST | HORIZONTAL_ADDR);
@@ -112,7 +112,7 @@ PCD8544::draw_icon(const uint8_t* bp)
   uint8_t height = pgm_read_byte(bp++);
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    inverted(m_sce) {
+    asserted(m_sce) {
       for (uint8_t x = 0; x < width; x++) {
 	write(m_mode ^ pgm_read_byte(bp++));
       }
@@ -127,7 +127,7 @@ PCD8544::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 {
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    inverted(m_sce) {
+    asserted(m_sce) {
       for (uint8_t x = 0; x < width; x++) {
 	write(m_mode ^ (*bp++));
       }
@@ -145,7 +145,7 @@ PCD8544::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
   uint8_t filled = (procent * (width - 2U)) / 100;
   uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
   width -= (filled + 1);
-  inverted(m_sce) {
+  asserted(m_sce) {
     write(m_mode ^ 0xff);
     while (filled--) {
       write(m_mode ^ (pattern | boarder));
@@ -208,7 +208,7 @@ PCD8544::putchar(char c)
   }
 
   // Write character to the display memory and an extra byte
-  inverted(m_sce) {
+  asserted(m_sce) {
     while (--width) 
       write(m_mode ^ pgm_read_byte(bp++));
     write(m_mode);

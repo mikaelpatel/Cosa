@@ -143,8 +143,8 @@ protected:
    */
   void write(Command cmd)
   {
-    inverted(m_cs) {
-      inverted(m_dc) {
+    asserted(m_cs) {
+      asserted(m_dc) {
 	spi.exchange(cmd);
       }
     }
@@ -157,8 +157,8 @@ protected:
    */
   void write(Command cmd, uint8_t data)
   {
-    inverted(m_cs) {
-      inverted(m_dc) {
+    asserted(m_cs) {
+      asserted(m_dc) {
 	spi.exchange(cmd);
       }
       spi.exchange(data);
@@ -172,8 +172,8 @@ protected:
    */
   void write(Command cmd, uint16_t data)
   {
-    inverted(m_cs) {
-      inverted(m_dc) {
+    asserted(m_cs) {
+      asserted(m_dc) {
 	spi.exchange(cmd);
       }
       spi.exchange(data >> 8);
@@ -189,8 +189,8 @@ protected:
    */
   void write(Command cmd, uint16_t x, uint16_t y)
   {
-    inverted(m_cs) {
-      inverted(m_dc) {
+    asserted(m_cs) {
+      asserted(m_dc) {
 	spi.exchange(cmd);
       }
       spi.exchange(x >> 8);
@@ -247,7 +247,7 @@ public:
   {
     set_port(x, y, x + 1, y + 1);
     color16_t color = get_pen_color();
-    inverted(m_cs) {
+    asserted(m_cs) {
       spi.exchange(color.rgb >> 8);
       spi.exchange(color.rgb);
     }

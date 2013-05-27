@@ -127,7 +127,7 @@ protected:
    */
   void fill(uint8_t data, uint16_t count) 
   {
-    inverted(m_cs) {
+    asserted(m_cs) {
       for (uint16_t i = 0; i < count; i++) 
 	write(data);
     }

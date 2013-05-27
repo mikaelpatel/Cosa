@@ -1000,19 +1000,11 @@ public:
 };
 
 /**
- * Synatatic sugar for an asserted block (active high). Used as a block
- * prefix.
+ * Synatatic sugar for an asserted block. The given in will be toggled.
+ * Initiating the pin to zero(0) will give active low logic.
  * @param[in] pin to assert.
  */
 #define asserted(pin)							\
-  for (uint8_t __i = (pin.set(), 1); __i != 0; __i--, pin.clear())
-
-/**
- * Synatatic sugar for an asserted block (active low). Used as a block
- * prefix.
- * @param[in] pin to invert.
- */
-#define inverted(pin)							\
-  for (uint8_t __i = (pin.clear(), 1); __i != 0; __i--, pin.set())
+  for (uint8_t __i = (pin.toggle(), 1); __i != 0; __i--, pin.toggle())
 
 #endif
