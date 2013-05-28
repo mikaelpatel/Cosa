@@ -120,6 +120,14 @@ public:
     D21,
     D22,
     D23,
+    D24,
+    D25,
+    D26,
+    D27,
+    D28,
+    D29,
+    D30,
+    D31,
     LED = D13
   } __attribute__((packed));
 
@@ -127,7 +135,7 @@ public:
    * Analog pin symbols
    */
   enum AnalogPin {
-    A0 = 24,
+    A0 = D24,
     A1,
     A2,
     A3,
