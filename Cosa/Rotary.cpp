@@ -26,14 +26,14 @@
 
 #include "Cosa/Rotary.hh"
 
-// No complete step yet.
+// No complete step yet
 #define DIR_NONE 0x0
-// Clockwise step.
+// Clockwise step
 #define DIR_CW 0x10
-// Anti-clockwise step.
+// Anti-clockwise step
 #define DIR_CCW 0x20
 
-// Use the half-step state table (emits a code at 00 and 11)
+// Use the half-cycle state table (emits a code at 00 and 11)
 #define R_START 0x0
 #define R_CCW_BEGIN 0x1
 #define R_CW_BEGIN 0x2
@@ -41,7 +41,7 @@
 #define R_CW_BEGIN_M 0x4
 #define R_CCW_BEGIN_M 0x5
 
-static const uint8_t half_step_table[6][4] PROGMEM = {
+static const uint8_t half_cycle_table[6][4] PROGMEM = {
   // R_START (00)
   {R_START_M,            R_CW_BEGIN,     R_CCW_BEGIN,  R_START},
   // R_CCW_BEGIN
@@ -57,7 +57,7 @@ static const uint8_t half_step_table[6][4] PROGMEM = {
 };
 #undef R_CCW_BEGIN
 
-// Use the full-step state table (emits a code at 00 only)
+// Use the full-cycle state table (emits a code at 00 only)
 #define R_CW_FINAL 0x1
 #define R_CW_BEGIN 0x2
 #define R_CW_NEXT 0x3
@@ -65,7 +65,7 @@ static const uint8_t half_step_table[6][4] PROGMEM = {
 #define R_CCW_FINAL 0x5
 #define R_CCW_NEXT 0x6
 
-static const uint8_t full_step_table[7][4] PROGMEM = {
+static const uint8_t full_cycle_table[7][4] PROGMEM = {
   // R_START
   {R_START,    R_CW_BEGIN,  R_CCW_BEGIN, R_START},
   // R_CW_FINAL
@@ -85,17 +85,17 @@ static const uint8_t full_step_table[7][4] PROGMEM = {
 void
 Rotary::Encoder::SignalPin::on_interrupt(uint16_t arg)
 {
-  Rotary::Encoder::Direction change = m_encoder->run();
+  Rotary::Encoder::Direction change = m_encoder->detect();
   if (change) Event::push(Event::CHANGE_TYPE, m_encoder, change);
 }
 
 Rotary::Encoder::Direction
-Rotary::Encoder::run()
+Rotary::Encoder::detect()
 {
   uint8_t pins = (m_dt.is_set() << 1) | m_clk.is_set();
-  if (m_step == FULL_STEP)
-    m_state = pgm_read_byte(&full_step_table[m_state & 0xf][pins]);
+  if (m_mode == FULL_CYCLE)
+    m_state = pgm_read_byte(&full_cycle_table[m_state & 0xf][pins]);
   else
-    m_state = pgm_read_byte(&half_step_table[m_state & 0xf][pins]);
+    m_state = pgm_read_byte(&half_cycle_table[m_state & 0xf][pins]);
   return ((Direction) (m_state & 0xf0));
 }

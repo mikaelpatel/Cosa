@@ -110,11 +110,11 @@ public:
     } __attribute__((packed));
     
     /**
-     * Rotary Encoder stepping mode
+     * Rotary Encoder cycle mode
      */
-    enum Step {
-      HALF_STEP,
-      FULL_STEP
+    enum Mode {
+      HALF_CYCLE,
+      FULL_CYCLE
     }  __attribute__((packed));
 
   protected:
@@ -143,14 +143,15 @@ public:
     SignalPin m_clk;
     SignalPin m_dt;
     uint8_t m_state;
-    Step m_step;
+    Mode m_mode;
     
     /**
-     * Run Rotary Encoder state machine. Reads current input pin values and
-     * performs a possible state change. Return turn direction or none.
+     * Detect Rotary Encoder state change. Reads current input pin
+     * values and performs a possible state change. Return turn
+     * direction or none. 
      * @return direction
      */
-    Direction run();
+    Direction detect();
     
   public:
     /**
@@ -158,48 +159,52 @@ public:
      * call InterruptPin::begin() to initiate handling of pins.
      * @param[in] clk pin.
      * @param[in] dt pin.
-     * @param[in] mode step.
+     * @param[in] mode cycle.
      */
-    Encoder(Board::InterruptPin clk, Board::InterruptPin dt, Step mode = FULL_STEP) :
+    Encoder(Board::InterruptPin clk, Board::InterruptPin dt, 
+	    Mode mode = FULL_CYCLE) :
       m_clk(clk, this),
       m_dt(dt, this),
       m_state(0),
-      m_step(mode)
+      m_mode(mode)
     {
       m_clk.enable();
       m_dt.enable();
     }
 
     /**
-     * Get current stepping mode.
-     * @return step.
+     * Get current cycle mode.
+     * @return mode.
      */
-    Step get_step()
+    Mode get_mode()
     {
-      return (m_step);
+      return (m_mode);
     }
     
     /**
-     * Set stepping mode.
-     * @param[in] mode step.
+     * Set cycle mode.
+     * @param[in] mode cycle.
      */
-    void set_step(Step mode)
+    void set_mode(Mode mode)
     {
-      m_step = mode;
+      m_mode = mode;
     }
 
   };
 
   /**
-   * Use Rotary Encoder as a simple dial (integer value).
-   * Allows a dial within an integer range (min, max) and a given
-   * initial value.
+   * Use Rotary Encoder as a simple dial (integer value). Allows a
+   * dial within a given number(T) range (min, max) and a given
+   * initial value. 
+   * @param[in] T value type.
    */
+  template<typename T>
   class Dial : public Encoder {
   private:
-    int m_value;
-    int m_min;
-    int m_max;
+    T m_value;
+    T m_step;
+    T m_min;
+    T m_max;
 
     /**
      * @override
@@ -212,11 +217,11 @@ public:
     {
       if (value == CW) {
 	if (m_value == m_max) return;
-	m_value += 1;
+	m_value += m_step;
       }
       else {
 	if (m_value == m_min) return;
-	m_value -= 1;
+	m_value -= m_step;
       }
       on_change(m_value);
     }
@@ -231,23 +236,42 @@ public:
      * @param[in] initial value.
      * @param[in] min value.
      * @param[in] max value.
+     * @param[in] step value.
      */
-    Dial(Board::InterruptPin clk, Board::InterruptPin dt, 
-	 Step mode = FULL_STEP, 
-	 int initial = 0, int min = INT_MIN, int max = INT_MAX) :
+    Dial(Board::InterruptPin clk, Board::InterruptPin dt, Mode mode, 
+	 T initial, T min, T max, T step) :
       Encoder(clk, dt, mode),
       m_value(initial),
       m_min(min),
-      m_max(max)
+      m_max(max),
+      m_step(step)
     {}
     
     /**
      * Return current dial value.
      * @return value.
      */
-    int get_value()
+    T get_value()
     {
       return (m_value);
+    }
+    
+    /**
+     * Get current step (increment/decrement).
+     * @return step.
+     */
+    T get_step()
+    {
+      return (m_step);
+    }
+    
+    /**
+     * Set step (increment/decrement).
+     * @param[in] step value.
+     */
+    void set_cycle(T step)
+    {
+      m_step = step;
     }
 
     /**
@@ -255,7 +279,7 @@ public:
      * Default on change function. 
      * @param[in] value.
      */
-    virtual void on_change(int value) {}
+    virtual void on_change(T value) {}
   };
 };
 #endif

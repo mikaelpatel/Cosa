@@ -41,15 +41,15 @@ void setup()
 }
 
 // Rotary Dial is connected to D6/D1 and D7/D2 (as interrupt pins)
-// Mode: full step, Initial: -100, Min: -100, Max: 10
+// Mode: full cycle, Initial: -100, Min: -100, Max: 10, Step: 1
 #if defined(__ARDUINO_TINY__)
-Rotary::Dial dial(Board::PCI1, Board::PCI2, 
-		  Rotary::Encoder::FULL_STEP, 
-		  -100, -100, 10);
+Rotary::Dial<int> dial(Board::PCI1, Board::PCI2, 
+		       Rotary::Encoder::FULL_CYCLE, 
+		       -100, -100, 10, 1);
 #else
-Rotary::Dial dial(Board::PCI6, Board::PCI7, 
-		  Rotary::Encoder::FULL_STEP, 
-		  -100, -100, 10);
+Rotary::Dial<int> dial(Board::PCI6, Board::PCI7, 
+		       Rotary::Encoder::FULL_CYCLE, 
+		       -100, -100, 10, 1);
 #endif
 
 void loop()
@@ -65,9 +65,9 @@ void loop()
   static int old_value = -100;
   int new_value = dial.get_value();
   if (old_value == -100 && new_value == -99)
-    dial.set_step(Rotary::Encoder::FULL_STEP);
+    dial.set_mode(Rotary::Encoder::FULL_CYCLE);
   else if (old_value == 10 && new_value == 9)
-    dial.set_step(Rotary::Encoder::HALF_STEP);
+    dial.set_mode(Rotary::Encoder::HALF_CYCLE);
   old_value = new_value;
 
   // Print the new value
