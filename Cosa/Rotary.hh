@@ -202,9 +202,9 @@ public:
   class Dial : public Encoder {
   private:
     T m_value;
-    T m_step;
     T m_min;
     T m_max;
+    T m_step;
 
     /**
      * @override

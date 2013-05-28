@@ -27,7 +27,7 @@
 #define __COSA_BOARD_MIGHTY_HH__
 
 /**
- * Cosa MIGHTY Board pin symbol definitions for ATmega1248 based
+ * Cosa MIGHTY Board pin symbol definitions for ATmega1284P based
  * Arduino boards; Mighty. Cosa does not use pin numbers as
  * Arduino/Wiring. Instead strong data type is used (enum types) for
  * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc.
