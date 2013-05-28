@@ -173,7 +173,31 @@ public:
     PCI4 = A4,
     PCI5 = A5,
     PCI6 = A6,
-    PCI7 = A7
+    PCI7 = A7,
+    PCI8 = D0,
+    PCI9 = D1,
+    PCI10 = D2,
+    PCI11 = D3,
+    PCI12 = D4,
+    PCI13 = D5,
+    PCI14 = D6,
+    PCI15 = D7,
+    PCI16 = D16,
+    PCI17 = D17,
+    PCI18 = D18,
+    PCI19 = D19,
+    PCI20 = D20,
+    PCI21 = D21,
+    PCI22 = D22,
+    PCI23 = D23,
+    PCI24 = D8,
+    PCI25 = D9,
+    PCI26 = D10,
+    PCI27 = D11,
+    PCI28 = D12,
+    PCI29 = D13,
+    PCI30 = D14,
+    PCI31 = D15
   } __attribute__((packed));
 
   /**

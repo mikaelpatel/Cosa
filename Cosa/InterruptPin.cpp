@@ -96,7 +96,7 @@ void
 InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
 {
   uint8_t px = (ix << 3);
-  uint8_t state = *Pin::PIN(ix);
+  uint8_t state = *Pin::PIN(px);
   uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
     if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
@@ -184,26 +184,38 @@ ISR(PCINT2_vect)
 
 #elif defined(__ARDUINO_MIGHTY__)
 
-// Fix: Not yet implemented 
-
 void
 InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
 {
+  uint8_t px = (ix << 3);
+  uint8_t state = *Pin::PIN(px);
+  uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
+  for (uint8_t i = 0; i < CHARBITS; i++) {
+    if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
+      InterruptPin::pin[i + px]->on_interrupt();
+    }
+    changed >>= 1;
+  }
+  InterruptPin::state[ix] = state;
 }
 
 ISR(PCINT0_vect)
 {
+  InterruptPin::on_interrupt(0, PCMSK0);
 }
 
 ISR(PCINT1_vect)
 {
+  InterruptPin::on_interrupt(1, PCMSK1);
 }
 
 ISR(PCINT2_vect)
 {
+  InterruptPin::on_interrupt(2, PCMSK2);
 }
 
 ISR(PCINT3_vect)
 {
+  InterruptPin::on_interrupt(3, PCMSK3);
 }
 #endif
