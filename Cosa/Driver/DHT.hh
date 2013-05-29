@@ -29,11 +29,12 @@
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
 #include "Cosa/Linkage.hh"
+#include "Cosa/Watchdog.hh"
 
 /**
  * DHT11/22 Humidity & Temperature Sensor abstract device driver. 
  */
-class DHT : public Link {
+class DHT : private Link {
 protected:
   /** Size of data buffer */
   static const uint8_t DATA_MAX = 5;
@@ -145,13 +146,30 @@ public:
   }
 
   /**
+   * Attach to periodic handling.
+   * @param[in] ms period of timeout.
+   */
+  void attach(uint16_t ms)
+  {
+    Watchdog::attach(this, ms);
+  }
+
+  /**
+   * Detach from periodic handling.
+   * @param[in] ms period of timeout.
+   */
+  void detach()
+  {
+    Link::detach();
+  }
+
+  /**
    * @override
-   * Default device event handler function. Attach to watchdog
-   * timer queue, Watchdog::attach(), to allow perodic reading.
+   * Default device event handler function. Attach to timer queue to
+   * allow perodic reading. See attach()/detach().
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
   virtual void on_event(uint8_t type, uint16_t value);
 };
-
 #endif
