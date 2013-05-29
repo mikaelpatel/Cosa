@@ -43,13 +43,13 @@ void setup()
 // Rotary Dial is connected to D6/D1 and D7/D2 (as interrupt pins)
 // Mode: full cycle, Initial: -100, Min: -100, Max: 10, Step: 1
 #if defined(__ARDUINO_TINY__)
-Rotary::Dial<int> dial(Board::PCI1, Board::PCI2, 
-		       Rotary::Encoder::FULL_CYCLE, 
-		       -100, -100, 10, 1);
+Rotary::Dial<int> 
+dial(Board::PCI1, Board::PCI2, Rotary::Encoder::FULL_CYCLE, -100, -100, 10, 1);
 #else
-Rotary::Dial<int> dial(Board::PCI6, Board::PCI7, 
-		       Rotary::Encoder::FULL_CYCLE, 
-		       -100, -100, 10, 1);
+// Rotary::AcceleratedDial<int, 100> 
+// dial(Board::PCI6, Board::PCI7, Rotary::Encoder::FULL_CYCLE, -100, -100, 10, 1, 10);
+Rotary::Dial<int> 
+dial(Board::PCI6, Board::PCI7, Rotary::Encoder::FULL_CYCLE, -100, -100, 10, 1);
 #endif
 
 void loop()

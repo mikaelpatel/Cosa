@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel (Cosa port and adaptation)
+ * Copyright (C) 2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,75 +28,24 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/InterruptPin.hh"
+#include "Cosa/RTC.hh"
 
-/**
- * Copyright 2011 Ben Buxton. Licenced under the GNU GPL Version 3.
- * Contact: bb@cactii.net
+/** 
+ * Rotary Encoder class with support for dials (normal and
+ * accelerated).
  *
- * A typical mechanical rotary encoder emits a two bit gray code
- * on 3 output pins. Every step in the output (often accompanied
- * by a physical 'click') generates a specific sequence of output
- * codes on the pins.
- *
- * There are 3 pins used for the rotary encoding - one common and
- * two 'bit' pins.
- *
- * The following is the typical sequence of code on the output when
- * moving from one step to the next:
- *
- *   Position   Bit1   Bit2
- *   ----------------------
- *     Step1     0      0
- *      1/4      1      0
- *      1/2      1      1
- *      3/4      0      1
- *     Step2     0      0
- *
- * From this table, we can see that when moving from one 'click' to
- * the next, there are 4 changes in the output code.
- *
- * - From an initial 0 - 0, Bit1 goes high, Bit0 stays low.
- * - Then both bits are high, halfway through the step.
- * - Then Bit1 goes low, but Bit2 stays high.
- * - Finally at the end of the step, both bits return to 0.
- *
- * Detecting the direction is easy - the table simply goes in the other
- * direction (read up instead of down).
- *
- * To decode this, we use a simple state machine. Every time the output
- * code changes, it follows state, until finally a full steps worth of
- * code is received (in the correct order). At the final 0-0, it returns
- * a value indicating a step in one direction or the other.
- *
- * It's also possible to use 'half-step' mode. This just emits an event
- * at both the 0-0 and 1-1 positions. This might be useful for some
- * encoders where you want to detect all positions.
- *
- * If an invalid state happens (for example we go from '0-1' straight
- * to '1-0'), the state machine resets to the start until 0-0 and the
- * next valid codes occur.
- *
- * The biggest advantage of using a state machine over other algorithms
- * is that this has inherent debounce built in. Other algorithms emit 
- * spurious output with switch bounce, but this one will simply flip 
- * between sub-states until the bounce settles, then continue along the 
- * state machine.
- *
- * A side effect of debounce is that fast rotations can cause steps to
- * be skipped. By not requiring debounce, fast rotations can be accurately
- * measured.
- *
- * Another advantage is the ability to properly handle bad state, such
- * as due to EMI, etc. It is also a lot simpler than others - a static
- * state table and less than 10 lines of logic.
- *
- * @see also
+ * @section Acknowledgements
+ * The Rotary Encoder algorithm is based on an implementation by Ben
+ * Buxton. See comment block in Cosa/Rotary.cpp for more details and
+ * the blog; 
  * http://www.buxtronix.net/2011/10/rotary-encoders-done-properly.html
  */
 class Rotary {
 public:
   /**
-   * Rotary Encoder.
+   * Rotary Encoder using pin change interrupts. Handles half and full
+   * cycle detection. Will push an Event::CHANGE_TYPE with the
+   * direction of the change.
    */
   class Encoder : public Event::Handler {
   public:
@@ -119,8 +68,8 @@ public:
 
   protected:
     /**
-     * Rotary signal pin handler. Delegates to Rotary Encoder to process 
-     * new state.
+     * Rotary signal pin handler (pin change interrupt). Delegates to
+     * Rotary Encoder to process new state.
      */
     class SignalPin : public InterruptPin {
     private:
@@ -139,7 +88,11 @@ public:
       {}
     };
 
-    // Signal pins, previous state and stepping mode.
+    // State Transition tables.
+    static const uint8_t half_cycle_table[6][4] PROGMEM;
+    static const uint8_t full_cycle_table[7][4] PROGMEM;
+
+    // Signal pins, previous state and cycle mode.
     SignalPin m_clk;
     SignalPin m_dt;
     uint8_t m_state;
@@ -159,7 +112,7 @@ public:
      * call InterruptPin::begin() to initiate handling of pins.
      * @param[in] clk pin.
      * @param[in] dt pin.
-     * @param[in] mode cycle.
+     * @param[in] mode cycle (default FULL_CYCLE).
      */
     Encoder(Board::InterruptPin clk, Board::InterruptPin dt, 
 	    Mode mode = FULL_CYCLE) :
@@ -168,8 +121,7 @@ public:
       m_state(0),
       m_mode(mode)
     {
-      m_clk.enable();
-      m_dt.enable();
+      enable();
     }
 
     /**
@@ -190,6 +142,23 @@ public:
       m_mode = mode;
     }
 
+    /**
+     * Enable the encoder. 
+     */
+    void enable()
+    {
+      m_clk.enable();
+      m_dt.enable();
+    }
+
+    /**
+     * Disable the encoder.
+     */
+    void disable()
+    {
+      m_clk.disable();
+      m_dt.disable();
+    }
   };
 
   /**
@@ -200,7 +169,7 @@ public:
    */
   template<typename T>
   class Dial : public Encoder {
-  private:
+  protected:
     T m_value;
     T m_min;
     T m_max;
@@ -225,11 +194,12 @@ public:
       }
       on_change(m_value);
     }
-
+    
   public:
     /**
      * Construct Rotary Dial connected to given interrupt pins with given
-     * min, max and initial value.
+     * mode, min, max, initial and step value. The mode is one of the
+     * Rotary Encoder modes; HALF_CYCLE or FULL_CYCLE.
      * @param[in] clk interrupt pin.
      * @param[in] dt interrupt pin.
      * @param[in] mode step.
@@ -269,9 +239,136 @@ public:
      * Set step (increment/decrement).
      * @param[in] step value.
      */
-    void set_cycle(T step)
+    void set_step(T step)
     {
       m_step = step;
+    }
+
+    /**
+     * @override
+     * Default on change function. 
+     * @param[in] value.
+     */
+    virtual void on_change(T value) {}
+  };
+
+  /**
+   * Use Rotary Encoder as an accelerated dial (integer). Allows a
+   * dial within a given number(T) range (min, max) and a given
+   * initial value. Two levels of step (increment/decrement) are
+   * allowed and selected depending on timing.
+   */
+  template<typename T, uint32_t THRESHOLD>
+  class AcceleratedDial : public Encoder {
+  private:
+    uint32_t m_latest;
+    T m_value;
+    T m_min;
+    T m_max;
+    T m_step;
+    T m_steps;
+
+    /**
+     * @override
+     * Update the accelerated dial value on change. The event value is the
+     * direction (CW or CCW). If the time period between events is
+     * larger than the threshold a slow step is used otherwise the
+     * fast step (steps).
+     * @param[in] type the event type.
+     * @param[in] direction the event value.
+     */
+    virtual void on_event(uint8_t type, uint16_t direction)
+    {
+      uint32_t now = RTC::micros();
+      uint32_t diff = now - m_latest;
+      m_latest = now;
+      if (direction == CW) {
+	if (m_value == m_max) return;
+	if (diff > THRESHOLD)
+	  m_value += m_step;
+	else
+	  m_value += m_steps;
+	if (m_value > m_max) m_value = m_max;
+      }
+      else {
+	if (m_value == m_min) return;
+	if (diff > THRESHOLD)
+	  m_value -= m_step;
+	else
+	  m_value -= m_steps;
+	if (m_value < m_min) m_value = m_min;
+      }
+      on_change(m_value);
+    }
+
+  public:
+    /**
+     * Construct Rotary Dial connected to given interrupt pins with given
+     * mode, min, max, initial, step on slow turn and steps on fast turn.
+     * The mode is one of the Rotary Encoder modes; HALF_CYCLE or FULL_CYCLE.
+     * @param[in] clk interrupt pin.
+     * @param[in] dt interrupt pin.
+     * @param[in] mode step.
+     * @param[in] initial value.
+     * @param[in] min value.
+     * @param[in] max value.
+     * @param[in] step value.
+     * @param[in] steps value.
+     */
+    AcceleratedDial(Board::InterruptPin clk, Board::InterruptPin dt, Mode mode,
+		    T initial, T min, T max, T step, T steps) :
+      Encoder(clk, dt, mode),
+      m_latest(0L),
+      m_value(initial),
+      m_min(min),
+      m_max(max),
+      m_step(step),
+      m_steps(steps)
+    {}
+    
+    /**
+     * Return current dial value.
+     * @return value.
+     */
+    T get_value()
+    {
+      return (m_value);
+    }
+    
+    /**
+     * Get current step (slow increment/decrement).
+     * @return step.
+     */
+    T get_step()
+    {
+      return (m_step);
+    }
+    
+    /**
+     * Set step (slow increment/decrement).
+     * @param[in] step value.
+     */
+    void set_step(T step)
+    {
+      m_step = step;
+    }
+
+    /**
+     * Get current steps (fast increment/decrement).
+     * @return steps.
+     */
+    T get_steps()
+    {
+      return (m_steps);
+    }
+    
+    /**
+     * Set step (fast increment/decrement).
+     * @param[in] steps value.
+     */
+    void set_steps(T steps)
+    {
+      m_steps = steps;
     }
 
     /**
