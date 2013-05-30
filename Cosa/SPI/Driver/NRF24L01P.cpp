@@ -23,8 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/SPI/Driver/NRF24L01P.hh"
 #include <util/delay.h>
 
@@ -235,4 +233,4 @@ NRF24L01P::IRQPin::on_interrupt(uint16_t arg)
     Event::push(Event::RECEIVE_COMPLETED_TYPE, m_nrf, status);
   }
 }
-#endif
+

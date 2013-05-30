@@ -24,10 +24,69 @@
  */
 
 #include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/SPI.hh"
 
 SPI spi  __attribute__ ((weak));
+
+#if defined(__ARDUINO_TINYX4__)
+#include "Cosa/Pins.hh"
+
+bool
+SPI::begin(Clock clock, uint8_t mode, Direction direction)
+{
+  // Mode value to be used when clocking data
+  m_mode = _BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC);
+  // Check for data capture on falling edge
+  if (mode == 1 || mode == 2) m_mode |= _BV(USICS0);
+  synchronized {
+    bit_set(DDRA, Board::MOSI);
+    bit_set(DDRA, Board::SCK);
+    bit_clear(DDRA, Board::MISO);
+    bit_set(PORTA, Board::MISO);
+    // Check for inversed clock
+    if (mode & 0x02) bit_set(PORTB, Board::SCK);
+  };
+  return (true);
+}
+
+bool
+SPI::end()
+{ 
+  bit_clear(DDRA, Board::MOSI);
+  bit_clear(DDRA, Board::SCK);
+  return (true);
+}
+
+#elif defined(__ARDUINO_TINYX5__)
+#include "Cosa/Pins.hh"
+
+bool
+SPI::begin(Clock clock, uint8_t mode, Direction direction)
+{
+  // Mode value to be used when clocking data
+  m_mode = _BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC);
+  // Check for data capture on falling edge
+  if (mode == 1 || mode == 2) m_mode |= _BV(USICS0);
+  synchronized {
+    bit_set(DDRB, Board::MOSI);
+    bit_set(DDRB, Board::SCK);
+    bit_clear(DDRB, Board::MISO);
+    bit_set(PORTB, Board::MISO);
+    // Check for inversed clock
+    if (mode & 0x02) bit_set(PORTB, Board::SCK);
+  };
+  return (true);
+}
+
+bool
+SPI::end()
+{ 
+  bit_clear(DDRB, Board::MOSI);
+  bit_clear(DDRB, Board::SCK);
+  return (true);
+}
+
+#else
 
 bool
 SPI::begin(Clock clock, uint8_t mode, Direction direction)
@@ -60,6 +119,20 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
   SPSR = (((clock & 0x04) != 0) << SPI2X);
   return (true);
 }
+
+bool
+SPI::end()
+{ 
+  SPCR = 0;     
+  return (true);
+}
+
+ISR(SPI_STC_vect)
+{
+  SPI::Device* device = spi.get_device();
+  if (device != 0) device->on_interrupt(SPDR);
+}
+#endif
 
 void
 SPI::exchange(void* buffer, uint8_t count)
@@ -108,13 +181,6 @@ SPI::write_P(uint8_t cmd, const void* buffer, uint8_t count)
   return (status);
 }
 
-bool
-SPI::end()
-{ 
-  SPCR = 0;     
-  return (true);
-}
-
 void 
 SPI::Device::on_interrupt(uint16_t arg) 
 { 
@@ -128,12 +194,3 @@ SPI::Device::on_interrupt(uint16_t arg)
   Event::push(Event::RECEIVE_COMPLETED_TYPE, this, spi.m_put);
   spi.m_put = 0;
 }
-
-ISR(SPI_STC_vect)
-{
-  // Sanity check that a device is defined
-  SPI::Device* device = spi.get_device();
-  if (device != 0) device->on_interrupt(SPDR);
-}
-
-#endif

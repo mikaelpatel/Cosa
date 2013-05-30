@@ -238,7 +238,11 @@ public:
    * Construct accelerometer object selected with given output pin.
    * @param[in] ss slave selection pin.
    */
+#if defined(__ARDUINO_TINY__)
+  ADXL345(Board::DigitalPin ss = Board::D3);
+#else
   ADXL345(Board::DigitalPin ss = Board::D10);
+#endif
 
   /**
    * Start interaction with device.

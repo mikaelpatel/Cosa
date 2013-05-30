@@ -23,8 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/SPI/Driver/ADXL345.hh"
 
 ADXL345::ADXL345(Board::DigitalPin ss) :
@@ -94,5 +92,3 @@ ADXL345::calibrate()
   sample(value);
   calibrate(-value.x/4, -value.y/4, -value.z/4);
 }
-
-#endif

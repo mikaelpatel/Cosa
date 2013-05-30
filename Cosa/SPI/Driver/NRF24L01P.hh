@@ -104,6 +104,16 @@ public:
 	    Board::DigitalPin csn = Board::D53, 
 	    Board::DigitalPin ce = Board::D48, 
 	    Board::ExternalInterruptPin irq = Board::EXT4);
+#elif defined(__ARDUINO_TINYX4__)
+  NRF24L01P(uint8_t channel = 64, 
+	    Board::DigitalPin csn = Board::D2, 
+	    Board::DigitalPin ce = Board::D3, 
+	    Board::ExternalInterruptPin irq = Board::EXT0);
+#elif defined(__ARDUINO_TINYX5__)
+  NRF24L01P(uint8_t channel = 64, 
+	    Board::DigitalPin csn = Board::D3, 
+	    Board::DigitalPin ce = Board::D4, 
+	    Board::ExternalInterruptPin irq = Board::EXT0);
 #else
   NRF24L01P(uint8_t channel = 64, 
 	    Board::DigitalPin csn = Board::D10, 

@@ -36,9 +36,6 @@
  * Serial Peripheral Interface (SPI) device class. Typical usage is
  * SPI device drivers inherit from SPI::Driver and define SPI commands
  * and higher functions. 
- *
- * @section See Also
- * http://www.byteparadigm.com/kb/article/AA-00255/22/Introduction-to-SPI-and-IC-protocols.html
  */
 class SPI {
 public:
@@ -84,6 +81,9 @@ public:
   } __attribute__((packed));
 
 private:
+#if defined(__ARDUINO_TINY__)
+  uint8_t m_mode;
+#endif
   static const uint8_t DATA_MAX = 4;
   uint8_t m_data[DATA_MAX];
   uint8_t m_cmd;
@@ -91,12 +91,15 @@ private:
   uint8_t m_max;
   uint8_t m_put;
   Device* m_dev;
-
+  
 public:
   /**
    * Construct serial peripheral interface for master.
    */
   SPI() : 
+#if defined(__ARDUINO_TINY__)
+    m_mode(0),
+#endif
     m_cmd(0),
     m_buffer(0),
     m_max(0),
@@ -112,13 +115,20 @@ public:
    * @param[in] max size of buffer.
    */
   SPI(Device* dev, void* buffer, uint8_t max) : 
+#if defined(__ARDUINO_TINY__)
+    m_mode(0),
+#endif
     m_cmd(0),
     m_buffer((uint8_t*) buffer),
     m_max(max),
     m_put(0),
     m_dev(dev)
   {
+#if defined(__ARDUINO_TINY__)
+    // Fix: Add enable of interrupt pin
+#else
     bit_clear(DDRB, Board::SS);
+#endif
     if (buffer == 0) {
       m_buffer = m_data;
       m_max = DATA_MAX;
@@ -182,9 +192,18 @@ public:
    */
   uint8_t exchange(uint8_t data)
   {
+#if defined(__ARDUINO_TINY__)
+    USIDR = data;
+    USISR = _BV(USIOIF);
+    do {
+      USICR = m_mode;
+    } while((USISR & _BV(USIOIF)) == 0);
+    return (USIDR);
+#else
     SPDR = data;
     loop_until_bit_is_set(SPSR, SPIF);
     return (SPDR);
+#endif
   }
 
   /**

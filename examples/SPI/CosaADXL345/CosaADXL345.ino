@@ -36,6 +36,11 @@
 // Digital Accelerometer using SPI and default slave select pin(10)
 ADXL345 adxl;
 
+#if defined(__ARDUINO_TINYX5__)
+#include "Cosa/Soft/UART.hh"
+Soft::UART uart(Board::D4);
+#endif
+
 void setup()
 {
   // Initiate trace stream on the serial port

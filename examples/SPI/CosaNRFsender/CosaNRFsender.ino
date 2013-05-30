@@ -57,6 +57,7 @@ void setup()
   nrf.set_transmitter_mode("cosa1");
 
   // Print configuration
+#if !defined(__ARDUINO_TINY__)
   TRACE(nrf.read(NRF24L01P::FEATURE));
   TRACE(nrf.read(NRF24L01P::RF_CH));
   TRACE(nrf.read(NRF24L01P::RF_SETUP));
@@ -72,8 +73,8 @@ void setup()
   TRACE(nrf.read(NRF24L01P::SETUP_AW));
   TRACE(nrf.read(NRF24L01P::DYNPD));
   TRACE(nrf.read(NRF24L01P::CONFIG));
+#endif
 }
-
 // Message block
 struct msg_t {
   uint16_t id;

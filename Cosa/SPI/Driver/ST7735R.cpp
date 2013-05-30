@@ -23,8 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/SPI/Driver/ST7735R.hh"
 
 const uint8_t ST7735R::script[] PROGMEM = {
@@ -201,4 +199,3 @@ ST7735R::set_orientation(uint8_t direction)
   write(MADCTL, setting);
   return (previous);
 }
-#endif
