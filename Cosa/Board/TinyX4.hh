@@ -154,14 +154,13 @@ public:
     SCL = D4
   } __attribute__((packed));
   
- /**
-   * Pins used for SPI interface.
+  /**
+   * Pins used for SPI interface (in Port A)
    */
   enum SPIPin {
-    SS = D3,
-    MOSI = D6,
-    MISO = D7,
-    SCK = D4
+    MOSI = 5,
+    MISO = 6,
+    SCK = 4
   } __attribute__((packed));
 
   /**
