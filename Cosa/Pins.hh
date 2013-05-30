@@ -82,6 +82,7 @@ protected:
     return (Board::PCIMR(m_pin));
   }
 
+public:
   /**
    * Return bit mask for given Arduino pin number.
    * @param[in] pin number.
@@ -122,7 +123,6 @@ protected:
     return (Board::SFR(pin) + 2);
   }
 
-public:
   enum Direction {
     MSB_FIRST = 0, 
     LSB_FIRST = 1
