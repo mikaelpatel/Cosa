@@ -39,6 +39,19 @@ namespace Soft {
    */
   class SPI {
   public:
+    enum Clock {
+      DIV4_CLOCK = 0x00,
+      DIV16_CLOCK = 0x01,
+      DIV64_CLOCK = 0x02,
+      DIV128_CLOCK = 0x03,
+      DIV2_2X_CLOCK = 0x04,
+      DIV8_2X_CLOCK = 0x05,
+      DIV32_2X_CLOCK = 0x06,
+      DIV64_2X_CLOCK = 0x07,
+      MASTER_CLOCK = 0x08,
+      DEFAULT_CLOCK = 0x00
+    } __attribute__((packed));
+  
     enum Direction {
       MSB_FIRST = 0, 
       LSB_FIRST = 1
@@ -61,21 +74,25 @@ namespace Soft {
     }
   
     /**
-     * Start master serial send block. 
+     * Start master/slave serial send/receive block. 
+     * @param[in] clock mode.
+     * @param[in] mode data/clock sampling mode.
      * @param[in] direction data bit order.
      * @return true(1) if successful otherwise false(0)
      */
-    bool begin(Direction direction = MSB_FIRST)
+    bool begin(Clock clock = DEFAULT_CLOCK, 
+	       uint8_t mode = 0, 
+	       Direction direction = MSB_FIRST)
     {
       m_direction = (Pin::Direction) direction;
       return (true);
     }
 
     /**
-     * Exchange data with slave. Slave select must be done before send.
-     * Returns always zero(0) as soft serial 
+     * Exchange data with slave. Slave select must be done before exchange
+     * of data. Returns always zero(0) in soft variant.
      * @param[in] data to send.
-     * @return value received.
+     * @return zero
      */
     uint8_t exchange(uint8_t data)
     {
