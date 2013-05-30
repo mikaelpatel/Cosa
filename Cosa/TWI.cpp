@@ -23,8 +23,146 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Board.hh"
 #include "Cosa/TWI.hh"
-#if !defined(__ARDUINO_TINY__)
+
+TWI twi  __attribute__ ((weak));
+
+#if defined(__ARDUINO_TINY__)
+
+bool 
+TWI::begin(Device* target, uint8_t addr)
+{
+  if (target == 0 || addr == 0) return (false);
+  m_target = target;
+  m_addr = addr;
+  m_state = IDLE;
+  synchronized {
+    USICR = CR_START_MODE;
+    USISR = SR_CLEAR_ALL;
+  }
+  return (true);
+}
+
+bool 
+TWI::end()
+{
+  m_target = 0;
+  m_addr = 0;
+  m_state = IDLE;
+  USICR = 0;
+  USISR = 0;
+  return (true);
+}
+
+ISR(USI_START_vect) 
+{
+  if (twi.get_state() != TWI::IDLE) return;
+  twi.set_mode(IOPin::INPUT_MODE);
+  USICR = TWI::CR_TRANSFER_MODE;
+  USISR = TWI::SR_CLEAR_ALL;
+  twi.set_state(TWI::START_CHECK);
+}
+
+ISR(USI_OVF_vect) 
+{
+  switch (twi.get_state()) {
+    /**
+     * Transaction Start Mode
+     */
+  case TWI::START_CHECK:
+    {
+      uint8_t addr = USIDR;
+      if ((addr & TWI::ADDR_MASK) != twi.m_addr) goto restart;
+      if (addr & TWI::READ_OP) {
+	twi.set_state(TWI::READ_REQUEST);
+	twi.set_buf(TWI::READ_IX);
+      }
+      else {
+	twi.set_state(TWI::WRITE_REQUEST);
+	twi.set_buf(TWI::WRITE_IX);
+      }
+      USIDR = 0;
+      twi.set_mode(IOPin::OUTPUT_MODE);
+      USISR = TWI::SR_CLEAR_ACK;
+    }
+    break;
+
+    /**
+     * Slave Transmitter Mode
+     */
+  case TWI::ACK_CHECK:
+    if (USIDR) goto restart;
+
+  case TWI::READ_REQUEST:
+    {
+      uint8_t data;
+      if (!twi.get(data)) goto restart;
+      USIDR = data;
+      twi.set_mode(IOPin::OUTPUT_MODE);
+      USISR = TWI::SR_CLEAR_DATA;
+      twi.set_state(TWI::READ_COMPLETED);
+    }
+    break;
+
+  case TWI::READ_COMPLETED:
+    twi.set_mode(IOPin::INPUT_MODE);
+    USIDR = 0;
+    USISR = TWI::SR_CLEAR_ACK;
+    twi.set_state(TWI::ACK_CHECK);
+    break;
+
+    /**
+     * Slave Receiver Mode
+     */
+  case TWI::WRITE_REQUEST:
+    twi.set_mode(IOPin::INPUT_MODE);
+    USISR = TWI::SR_CLEAR_DATA;
+    twi.set_state(TWI::WRITE_COMPLETED);
+    DELAY(20);
+    if (USISR & _BV(USIPF)) {
+      USICR = TWI::CR_SERVICE_MODE;
+      USISR = TWI::SR_CLEAR_ALL;
+      Event::push(Event::WRITE_COMPLETED_TYPE, twi.m_target, twi.m_count);
+      twi.set_state(TWI::SERVICE_REQUEST);
+    }
+    break;
+    
+  case TWI::WRITE_COMPLETED:
+    {
+      uint8_t data = USIDR;
+      USIDR = (twi.put(data) ? 0x00 : 0x80);
+      twi.set_mode(IOPin::OUTPUT_MODE);
+      USISR = TWI::SR_CLEAR_ACK;
+      twi.set_state(TWI::WRITE_REQUEST);
+    }
+    break;
+
+  restart:
+  default:
+    twi.set_mode(IOPin::INPUT_MODE);
+    USICR = TWI::CR_START_MODE;
+    USISR = TWI::SR_CLEAR_DATA;
+    twi.set_state(TWI::IDLE);
+  }
+}
+
+void 
+TWI::Device::on_event(uint8_t type, uint16_t value)
+{
+  if (type != Event::WRITE_COMPLETED_TYPE) return;
+  void* buf = twi.m_vec[WRITE_IX].buf;
+  size_t size = value;
+  on_request(buf, size);
+  twi.set_state(IDLE);
+  synchronized {
+    USICR = TWI::CR_START_MODE;
+    USISR = TWI::SR_CLEAR_DATA;
+  }
+}
+
+#else
+
 #include "Cosa/Bits.h"
 #include "Cosa/Power.hh"
 
@@ -287,138 +425,6 @@ TWI::Device::on_event(uint8_t type, uint16_t value)
   TWAR = twi.m_addr;
 }
 
-#else
-
-bool 
-TWI::begin(Device* target, uint8_t addr)
-{
-  if (target == 0 || addr == 0) return (false);
-  m_target = target;
-  m_addr = addr;
-  m_state = IDLE;
-  synchronized {
-    USICR = CR_START_MODE;
-    USISR = SR_CLEAR_ALL;
-  }
-  return (true);
-}
-
-bool 
-TWI::end()
-{
-  m_target = 0;
-  m_addr = 0;
-  m_state = IDLE;
-  USICR = 0;
-  USISR = 0;
-  return (true);
-}
-
-ISR(USI_START_vect) 
-{
-  if (twi.get_state() != TWI::IDLE) return;
-  twi.set_mode(IOPin::INPUT_MODE);
-  USICR = TWI::CR_TRANSFER_MODE;
-  USISR = TWI::SR_CLEAR_ALL;
-  twi.set_state(TWI::START_CHECK);
-}
-
-ISR(USI_OVF_vect) 
-{
-  switch (twi.get_state()) {
-    /**
-     * Transaction Start Mode
-     */
-  case TWI::START_CHECK:
-    {
-      uint8_t addr = USIDR;
-      if ((addr & TWI::ADDR_MASK) != twi.m_addr) goto restart;
-      if (addr & TWI::READ_OP) {
-	twi.set_state(TWI::READ_REQUEST);
-	twi.set_buf(TWI::READ_IX);
-      }
-      else {
-	twi.set_state(TWI::WRITE_REQUEST);
-	twi.set_buf(TWI::WRITE_IX);
-      }
-      USIDR = 0;
-      twi.set_mode(IOPin::OUTPUT_MODE);
-      USISR = TWI::SR_CLEAR_ACK;
-    }
-    break;
-
-    /**
-     * Slave Transmitter Mode
-     */
-  case TWI::ACK_CHECK:
-    if (USIDR) goto restart;
-
-  case TWI::READ_REQUEST:
-    {
-      uint8_t data;
-      if (!twi.get(data)) goto restart;
-      USIDR = data;
-      twi.set_mode(IOPin::OUTPUT_MODE);
-      USISR = TWI::SR_CLEAR_DATA;
-      twi.set_state(TWI::READ_COMPLETED);
-    }
-    break;
-
-  case TWI::READ_COMPLETED:
-    twi.set_mode(IOPin::INPUT_MODE);
-    USIDR = 0;
-    USISR = TWI::SR_CLEAR_ACK;
-    twi.set_state(TWI::ACK_CHECK);
-    break;
-
-    /**
-     * Slave Receiver Mode
-     */
-  case TWI::WRITE_REQUEST:
-    twi.set_mode(IOPin::INPUT_MODE);
-    USISR = TWI::SR_CLEAR_DATA;
-    twi.set_state(TWI::WRITE_COMPLETED);
-    DELAY(20);
-    if (USISR & _BV(USIPF)) {
-      USICR = TWI::CR_SERVICE_MODE;
-      USISR = TWI::SR_CLEAR_ALL;
-      Event::push(Event::WRITE_COMPLETED_TYPE, twi.m_target, twi.m_count);
-      twi.set_state(TWI::SERVICE_REQUEST);
-    }
-    break;
-    
-  case TWI::WRITE_COMPLETED:
-    {
-      uint8_t data = USIDR;
-      USIDR = (twi.put(data) ? 0x00 : 0x80);
-      twi.set_mode(IOPin::OUTPUT_MODE);
-      USISR = TWI::SR_CLEAR_ACK;
-      twi.set_state(TWI::WRITE_REQUEST);
-    }
-    break;
-
-  restart:
-  default:
-    twi.set_mode(IOPin::INPUT_MODE);
-    USICR = TWI::CR_START_MODE;
-    USISR = TWI::SR_CLEAR_DATA;
-    twi.set_state(TWI::IDLE);
-  }
-}
-
-void 
-TWI::Device::on_event(uint8_t type, uint16_t value)
-{
-  if (type != Event::WRITE_COMPLETED_TYPE) return;
-  void* buf = twi.m_vec[WRITE_IX].buf;
-  size_t size = value;
-  on_request(buf, size);
-  twi.set_state(IDLE);
-  synchronized {
-    USICR = TWI::CR_START_MODE;
-    USISR = TWI::SR_CLEAR_DATA;
-  }
-}
 #endif
 
 void 
@@ -435,4 +441,3 @@ TWI::Device::set_read_buf(void* buf, size_t size)
   twi.m_vec[READ_IX].size = size;
 }
 
-TWI twi;
