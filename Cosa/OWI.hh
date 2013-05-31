@@ -28,7 +28,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
-#include "Cosa/ExternalInterruptPin.hh"
+#include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
 
@@ -161,7 +161,7 @@ public:
   /**
    * Act as slave device connected to a one-wire pin
    */
-  class Device : public ExternalInterruptPin {
+  class Device : public ExternalInterrupt {
     friend class OWI;
   private:
     // One-wire slave pin mode
@@ -266,7 +266,7 @@ public:
      * @param[in] rom identity number.
      */
     Device(Board::ExternalInterruptPin pin, uint8_t* rom) : 
-      ExternalInterruptPin(pin, ExternalInterruptPin::ON_CHANGE_MODE),
+      ExternalInterrupt(pin, ExternalInterrupt::ON_CHANGE_MODE),
       m_rom(rom),
       m_time(0),
       m_crc(0),

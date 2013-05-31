@@ -28,52 +28,33 @@
 
 SPI spi  __attribute__ ((weak));
 
-#if defined(__ARDUINO_TINYX4__)
+#if defined(__ARDUINO_TINY__)
 #include "Cosa/Pins.hh"
 
 bool
 SPI::begin(Clock clock, uint8_t mode, Direction direction)
 {
+  if (clock == MASTER_CLOCK) return (false);
   // Mode value to be used when clocking data
   m_mode = _BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC);
   // Check for data capture on falling edge
   if (mode == 1 || mode == 2) m_mode |= _BV(USICS0);
   synchronized {
+#if defined(__ARDUINO_TINYX4__)
     bit_set(DDRA, Board::MOSI);
     bit_set(DDRA, Board::SCK);
     bit_clear(DDRA, Board::MISO);
     bit_set(PORTA, Board::MISO);
     // Check for inversed clock
     if (mode & 0x02) bit_set(PORTB, Board::SCK);
-  };
-  return (true);
-}
-
-bool
-SPI::end()
-{ 
-  bit_clear(DDRA, Board::MOSI);
-  bit_clear(DDRA, Board::SCK);
-  return (true);
-}
-
 #elif defined(__ARDUINO_TINYX5__)
-#include "Cosa/Pins.hh"
-
-bool
-SPI::begin(Clock clock, uint8_t mode, Direction direction)
-{
-  // Mode value to be used when clocking data
-  m_mode = _BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC);
-  // Check for data capture on falling edge
-  if (mode == 1 || mode == 2) m_mode |= _BV(USICS0);
-  synchronized {
     bit_set(DDRB, Board::MOSI);
     bit_set(DDRB, Board::SCK);
     bit_clear(DDRB, Board::MISO);
     bit_set(PORTB, Board::MISO);
     // Check for inversed clock
     if (mode & 0x02) bit_set(PORTB, Board::SCK);
+#endif
   };
   return (true);
 }
@@ -81,8 +62,13 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
 bool
 SPI::end()
 { 
+#if defined(__ARDUINO_TINYX4__)
+  bit_clear(DDRA, Board::MOSI);
+  bit_clear(DDRA, Board::SCK);
+#elif defined(__ARDUINO_TINYX5__)
   bit_clear(DDRB, Board::MOSI);
   bit_clear(DDRB, Board::SCK);
+#endif
   return (true);
 }
 

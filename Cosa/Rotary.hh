@@ -27,7 +27,7 @@
 #define __COSA_ROTARY_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/InterruptPin.hh"
+#include "Cosa/PinChangeInterrupt.hh"
 #include "Cosa/RTC.hh"
 
 /** 
@@ -71,7 +71,7 @@ public:
      * Rotary signal pin handler (pin change interrupt). Delegates to
      * Rotary Encoder to process new state.
      */
-    class SignalPin : public InterruptPin {
+    class SignalPin : public PinChangeInterrupt {
     private:
       Encoder* m_encoder;
 
@@ -83,7 +83,7 @@ public:
       
     public:
       SignalPin(Board::InterruptPin pin, Encoder* encoder) : 
-	InterruptPin(pin), 
+	PinChangeInterrupt(pin), 
 	m_encoder(encoder)
       {}
     };

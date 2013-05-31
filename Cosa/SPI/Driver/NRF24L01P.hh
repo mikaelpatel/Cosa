@@ -28,7 +28,7 @@
 
 #include "Cosa/SPI.hh"
 #include "Cosa/Pins.hh"
-#include "Cosa/ExternalInterruptPin.hh"
+#include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Event.hh"
 
 /**
@@ -76,13 +76,13 @@ private:
   /**
    * Chip interrupt pin (default is pin 2)
    */
-  class IRQPin : public ExternalInterruptPin {
+  class IRQPin : public ExternalInterrupt {
     friend class NRF24L01P;
   private:
     NRF24L01P* m_nrf;
   public:
     IRQPin(Board::ExternalInterruptPin pin, Mode mode, NRF24L01P* nrf) : 
-      ExternalInterruptPin(pin, mode),
+      ExternalInterrupt(pin, mode),
       m_nrf(nrf)
     {}
     virtual void on_interrupt(uint16_t arg = 0);

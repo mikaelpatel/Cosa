@@ -29,18 +29,6 @@
 #include "Cosa/Types.h"
 #include <avr/sleep.h>
 
-#if defined(PSTR)
-# undef PSTR
-/**
- * Create constant string in program memory. Allow IOStream output 
- * operator.
- * @param[in] s string literal (at compile time).
- * @return string literal in program memory.
- */
-# define PSTR(s)							\
-  ((__extension__({static const char __c[] PROGMEM = (s); &__c[0];})))
-#endif
-
 /**
  * Basic in-/output stream support class. Requires implementation of
  * Stream::Device and/or Stream::Filter.

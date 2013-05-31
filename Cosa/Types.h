@@ -110,6 +110,15 @@ union univ32_t {
  */
 #define membersof(x) (sizeof(x)/sizeof(x[0]))
 
+#undef PSTR
+/**
+ * Create constant string in program memory. Allow IOStream output 
+ * operator.
+ * @param[in] s string literal (at compile time).
+ * @return string literal in program memory.
+ */
+#define PSTR(s) (__extension__({static const char __c[] PROGMEM = (s); &__c[0];}))
+
 /**
  * Instruction clock cycles per micro-second. Assumes clock greater
  * or equal to 1 MHz.

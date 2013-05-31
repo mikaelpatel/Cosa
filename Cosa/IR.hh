@@ -26,7 +26,7 @@
 #ifndef __COSA_IR_HH__
 #define __COSA_IR_HH__
 
-#include "Cosa/ExternalInterruptPin.hh"
+#include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Linkage.hh"
 #include "Cosa/IOStream.hh"
 
@@ -39,7 +39,7 @@
 class IR {
 public:
 
-  class Receiver : private ExternalInterruptPin, private Link {
+  class Receiver : private ExternalInterrupt, private Link {
   public:
     /**
      * Mapping structure from code to key. Data structure 
@@ -49,8 +49,7 @@ public:
       uint16_t code;
       char key;
     };
-    typedef struct keymap_t keymap_t;
-    typedef const PROGMEM keymap_t* keymap_P;
+    typedef const keymap_t* keymap_P;
 
   private:
     static const uint16_t TIMEOUT = 512;
@@ -91,7 +90,7 @@ public:
 	     uint8_t max, uint32_t threshold,
 	     keymap_P keymap = 0, uint8_t keys = 0,
 	     uint16_t* sample = 0) :
-      ExternalInterruptPin(pin, ExternalInterruptPin::ON_FALLING_MODE),
+      ExternalInterrupt(pin, ExternalInterrupt::ON_FALLING_MODE),
       Link(),
       m_threshold(threshold),
       m_sample(sample),

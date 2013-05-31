@@ -37,7 +37,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaRotaryEncoder: started"));
 
   // Start the interrupt pin handler
-  InterruptPin::begin();
+  PinChangeInterrupt::begin();
 }
 
 // Rotary Dial is connected to D6/D1 and D7/D2 (as interrupt pins)

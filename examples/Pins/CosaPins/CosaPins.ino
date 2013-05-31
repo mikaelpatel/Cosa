@@ -27,8 +27,8 @@
  */
 
 #include "Cosa/Pins.hh"
-#include "Cosa/InterruptPin.hh"
-#include "Cosa/ExternalInterruptPin.hh"
+#include "Cosa/PinChangeInterrupt.hh"
+#include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -46,23 +46,23 @@ public:
 };
 
 // External Interrupt Pin Handler; count interrupts
-class ExtPin : public ExternalInterruptPin, public Counter {
+class ExtPin : public ExternalInterrupt, public Counter {
 private:
   virtual void on_interrupt(uint16_t arg) { increment(1); }
 public:
   ExtPin(Board::ExternalInterruptPin pin) :
-    ExternalInterruptPin(pin, ExternalInterruptPin::ON_RISING_MODE),
+    ExternalInterrupt(pin, ExternalInterrupt::ON_RISING_MODE),
     Counter(0)
   {}
 };
 
 // Pin Change Interrupt Handler; count interrupts
-class IntPin : public InterruptPin, public Counter {
+class IntPin : public PinChangeInterrupt, public Counter {
 private:
   virtual void on_interrupt(uint16_t arg) { increment(1); }
 public:
   IntPin(Board::InterruptPin pin) : 
-    InterruptPin(pin), 
+    PinChangeInterrupt(pin), 
     Counter(0) 
   {}
 };
@@ -90,9 +90,9 @@ void setup()
   TRACE(sizeof(Event::queue));
   TRACE(sizeof(Pin));
   TRACE(sizeof(InputPin));
-  TRACE(sizeof(ExternalInterruptPin));
+  TRACE(sizeof(ExternalInterrupt));
   TRACE(sizeof(ExtPin));
-  TRACE(sizeof(InterruptPin));
+  TRACE(sizeof(PinChangeInterrupt));
   TRACE(sizeof(IntPin));
   TRACE(sizeof(AnalogPin));
   TRACE(sizeof(OutputPin));
@@ -109,7 +109,7 @@ void setup()
   trace << levelPin << endl;
   
   // Check interrupt pin; enable and print interrupt counter
-  InterruptPin::begin();
+  PinChangeInterrupt::begin();
   TRACE(int0Pin.get_counter());
   int0Pin.enable();
   TRACE(int1Pin.get_counter());

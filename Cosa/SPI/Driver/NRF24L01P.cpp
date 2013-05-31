@@ -40,7 +40,7 @@ NRF24L01P::NRF24L01P(uint8_t channel,
   m_channel(channel),
   m_csn(csn, 1),
   m_ce(ce, 0),
-  m_irq(irq, ExternalInterruptPin::ON_FALLING_MODE, this),
+  m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
   m_state(POWER_DOWN_STATE)
 {
   begin();

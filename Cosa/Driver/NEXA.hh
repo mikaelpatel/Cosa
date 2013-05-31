@@ -28,7 +28,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
-#include "Cosa/ExternalInterruptPin.hh"
+#include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Listener.hh"
 
@@ -113,7 +113,7 @@ public:
    * NEXA Wireless Remote Receiver. May be used in polling or
    * interrupt sampling mode. 
    */
-  class Receiver : private ExternalInterruptPin {
+  class Receiver : private ExternalInterrupt {
   public:
     /**
      * NEXA::Receiver::Listener with code as key. The virtual method
@@ -180,7 +180,7 @@ public:
      * @param[in] pin external interrupt pin.
      */
     Receiver(Board::ExternalInterruptPin pin) :
-      ExternalInterruptPin(pin, ExternalInterruptPin::ON_CHANGE_MODE),
+      ExternalInterrupt(pin, ExternalInterrupt::ON_CHANGE_MODE),
       m_listeners(),
       m_start(0),
       m_code(0),
@@ -220,7 +220,7 @@ public:
      */
     void enable() 
     { 
-      ExternalInterruptPin::enable();
+      ExternalInterrupt::enable();
     }
 
     /**
@@ -228,7 +228,7 @@ public:
      */
     void disable() 
     { 
-      ExternalInterruptPin::disable();
+      ExternalInterrupt::disable();
     }
   };
 

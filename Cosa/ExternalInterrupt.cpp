@@ -1,5 +1,5 @@
 /**
- * @file Cosa/ExternalInterruptPin.cpp
+ * @file Cosa/ExternalInterrupt.cpp
  * @version 1.0
  *
  * @section License
@@ -23,12 +23,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/ExternalInterruptPin.hh"
+#include "Cosa/ExternalInterrupt.hh"
 
 #if defined(__ARDUINO_STANDARD__)
 
-ExternalInterruptPin::
-ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
+ExternalInterrupt::
+ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
   InputPin((Board::DigitalPin) pin)
 {
   if (mode & PULLUP_MODE) {
@@ -44,8 +44,8 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
 
 #elif defined(__ARDUINO_MEGA__)
 
-ExternalInterruptPin::
-ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
+ExternalInterrupt::
+ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
   InputPin((Board::DigitalPin) pin)
 {
   if (mode & PULLUP_MODE) {
@@ -69,8 +69,8 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
 
 #elif defined(__ARDUINO_MIGHTY__)
 
-ExternalInterruptPin::
-ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
+ExternalInterrupt::
+ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
   InputPin((Board::DigitalPin) pin)
 {
   if (mode & PULLUP_MODE) {
@@ -90,8 +90,8 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
 
 #elif defined(__ARDUINO_TINY__)
 
-ExternalInterruptPin::
-ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
+ExternalInterrupt::
+ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
   InputPin((Board::DigitalPin) pin)
 {
   if (mode & PULLUP_MODE) {
@@ -106,55 +106,30 @@ ExternalInterruptPin(Board::ExternalInterruptPin pin, Mode mode) :
 
 #endif
 
-ExternalInterruptPin* ExternalInterruptPin::ext[Board::EXT_MAX] = { 0 };
+ExternalInterrupt* ExternalInterrupt::ext[Board::EXT_MAX] = { 0 };
 
 void 
-ExternalInterruptPin::on_interrupt(uint16_t arg) 
+ExternalInterrupt::on_interrupt(uint16_t arg) 
 { 
   Event::push(Event::CHANGE_TYPE, this, arg);
 }
 
-ISR(INT0_vect)
-{
-  if (ExternalInterruptPin::ext[0] != 0) 
-    ExternalInterruptPin::ext[0]->on_interrupt();
+#define INT_ISR(nr)				\
+ISR(INT ## nr ## _vect)				\
+{						\
+ if (ExternalInterrupt::ext[nr] != 0)		\
+   ExternalInterrupt::ext[nr]->on_interrupt();	\
 }
 
+INT_ISR(0)
 #if !defined(__ARDUINO_TINY__)
-
-ISR(INT1_vect)
-{
-  if (ExternalInterruptPin::ext[1] != 0) 
-    ExternalInterruptPin::ext[1]->on_interrupt();
-}
-
+INT_ISR(1)
 #if !defined(__ARDUINO_STANDARD__)
-
-ISR(INT2_vect)
-{
-  if (ExternalInterruptPin::ext[2] != 0) 
-    ExternalInterruptPin::ext[2]->on_interrupt();
-}
-
+INT_ISR(2)
 #if defined(__ARDUINO_MEGA__)
-
-ISR(INT3_vect)
-{
-  if (ExternalInterruptPin::ext[3] != 0) 
-    ExternalInterruptPin::ext[3]->on_interrupt();
-}
-
-ISR(INT4_vect)
-{
-  if (ExternalInterruptPin::ext[4] != 0) 
-    ExternalInterruptPin::ext[4]->on_interrupt();
-}
-
-ISR(INT5_vect)
-{
-  if (ExternalInterruptPin::ext[5] != 0) 
-    ExternalInterruptPin::ext[5]->on_interrupt();
-}
+INT_ISR(3)
+INT_ISR(4)
+INT_ISR(5)
 #endif
 #endif
 #endif

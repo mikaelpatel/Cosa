@@ -1,5 +1,5 @@
 /**
- * @file Cosa/InterruptPin.cpp
+ * @file Cosa/PinChangeInterrupt.cpp
  * @version 1.0
  *
  * @section License
@@ -23,13 +23,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/InterruptPin.hh"
+#include "Cosa/PinChangeInterrupt.hh"
 
-InterruptPin* InterruptPin::pin[Board::PIN_MAX] = { 0 };
-uint8_t InterruptPin::state[Board::PCINT_MAX] = { 0 };
+PinChangeInterrupt* PinChangeInterrupt::pin[Board::PIN_MAX] = { 0 };
+uint8_t PinChangeInterrupt::state[Board::PCINT_MAX] = { 0 };
 
 void 
-InterruptPin::begin()
+PinChangeInterrupt::begin()
 {
 #if defined(__ARDUINO_MEGA__)
   state[0] = *Pin::PIN(16);
@@ -53,7 +53,7 @@ InterruptPin::begin()
 }
 
 void 
-InterruptPin::end()
+PinChangeInterrupt::end()
 {
   synchronized {
 #if defined(__ARDUINO_TINYX5__)
@@ -69,7 +69,7 @@ InterruptPin::end()
 }
 
 void
-InterruptPin::on_interrupt(uint16_t arg)
+PinChangeInterrupt::on_interrupt(uint16_t arg)
 { 
   Event::push(Event::CHANGE_TYPE, this, arg);
 }
@@ -80,142 +80,142 @@ ISR(PCINT0_vect)
 {
   uint8_t mask = PCMSK0;
   uint8_t state = *Pin::PIN(0);
-  uint8_t changed = (state ^ InterruptPin::state[0]) & mask;
+  uint8_t changed = (state ^ PinChangeInterrupt::state[0]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (InterruptPin::pin[i] != 0)) {
-      InterruptPin::pin[i]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::pin[i] != 0)) {
+      PinChangeInterrupt::pin[i]->on_interrupt();
     }
     changed >>= 1;
   }
-  InterruptPin::state[0] = state;
+  PinChangeInterrupt::state[0] = state;
 }
 
 #elif defined(__ARDUINO_TINYX4__)
 
 void
-InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
+PinChangeInterrupt::on_interrupt(uint8_t ix, uint8_t mask)
 {
   uint8_t px = (ix << 3);
   uint8_t state = *Pin::PIN(px);
-  uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
+  uint8_t changed = (state ^ PinChangeInterrupt::state[ix]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
-      InterruptPin::pin[i + px]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::pin[i + px] != 0)) {
+      PinChangeInterrupt::pin[i + px]->on_interrupt();
     }
     changed >>= 1;
   }
-  InterruptPin::state[ix] = state;
+  PinChangeInterrupt::state[ix] = state;
 }
 
 ISR(PCINT0_vect)
 {
-  InterruptPin::on_interrupt(0, PCMSK0);
+  PinChangeInterrupt::on_interrupt(0, PCMSK0);
 }
 
 ISR(PCINT1_vect)
 {
-  InterruptPin::on_interrupt(1, PCMSK1);
+  PinChangeInterrupt::on_interrupt(1, PCMSK1);
 }
 
 #elif defined(__ARDUINO_STANDARD__)
 
 void
-InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
+PinChangeInterrupt::on_interrupt(uint8_t ix, uint8_t mask)
 {
   uint8_t px = (ix << 3) - (ix < 2 ? 0 : 2);
   uint8_t state = *Pin::PIN(px);
-  uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
+  uint8_t changed = (state ^ PinChangeInterrupt::state[ix]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
-      InterruptPin::pin[i + px]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::pin[i + px] != 0)) {
+      PinChangeInterrupt::pin[i + px]->on_interrupt();
     }
     changed >>= 1;
   }
-  InterruptPin::state[ix] = state;
+  PinChangeInterrupt::state[ix] = state;
 }
 
 ISR(PCINT0_vect)
 {
-  InterruptPin::on_interrupt(1, PCMSK0);
+  PinChangeInterrupt::on_interrupt(1, PCMSK0);
 }
 
 ISR(PCINT1_vect)
 {
-  InterruptPin::on_interrupt(2, PCMSK1);
+  PinChangeInterrupt::on_interrupt(2, PCMSK1);
 }
 
 ISR(PCINT2_vect)
 {
-  InterruptPin::on_interrupt(0, PCMSK2);
+  PinChangeInterrupt::on_interrupt(0, PCMSK2);
 }
 
 #elif defined(__ARDUINO_MEGA__)
 
 void
-InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
+PinChangeInterrupt::on_interrupt(uint8_t ix, uint8_t mask)
 {
   uint8_t px = (ix << 3);
   uint8_t rx = (ix == 0 ? 16 : 64);
   uint8_t state = *Pin::PIN(rx);
-  uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
+  uint8_t changed = (state ^ PinChangeInterrupt::state[ix]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
-      InterruptPin::pin[i + px]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::pin[i + px] != 0)) {
+      PinChangeInterrupt::pin[i + px]->on_interrupt();
     }
     changed >>= 1;
   }
-  InterruptPin::state[ix] = state;
+  PinChangeInterrupt::state[ix] = state;
 }
 
 ISR(PCINT0_vect)
 {
-  InterruptPin::on_interrupt(0, PCMSK0);
+  PinChangeInterrupt::on_interrupt(0, PCMSK0);
 }
 
 ISR(PCINT1_vect)
 {
-  InterruptPin::on_interrupt(1, PCMSK1);
+  PinChangeInterrupt::on_interrupt(1, PCMSK1);
 }
 
 ISR(PCINT2_vect)
 {
-  InterruptPin::on_interrupt(2, PCMSK2);
+  PinChangeInterrupt::on_interrupt(2, PCMSK2);
 }
 
 #elif defined(__ARDUINO_MIGHTY__)
 
 void
-InterruptPin::on_interrupt(uint8_t ix, uint8_t mask)
+PinChangeInterrupt::on_interrupt(uint8_t ix, uint8_t mask)
 {
   uint8_t px = (ix << 3);
   uint8_t state = *Pin::PIN(px);
-  uint8_t changed = (state ^ InterruptPin::state[ix]) & mask;
+  uint8_t changed = (state ^ PinChangeInterrupt::state[ix]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (InterruptPin::pin[i + px] != 0)) {
-      InterruptPin::pin[i + px]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::pin[i + px] != 0)) {
+      PinChangeInterrupt::pin[i + px]->on_interrupt();
     }
     changed >>= 1;
   }
-  InterruptPin::state[ix] = state;
+  PinChangeInterrupt::state[ix] = state;
 }
 
 ISR(PCINT0_vect)
 {
-  InterruptPin::on_interrupt(0, PCMSK0);
+  PinChangeInterrupt::on_interrupt(0, PCMSK0);
 }
 
 ISR(PCINT1_vect)
 {
-  InterruptPin::on_interrupt(1, PCMSK1);
+  PinChangeInterrupt::on_interrupt(1, PCMSK1);
 }
 
 ISR(PCINT2_vect)
 {
-  InterruptPin::on_interrupt(2, PCMSK2);
+  PinChangeInterrupt::on_interrupt(2, PCMSK2);
 }
 
 ISR(PCINT3_vect)
 {
-  InterruptPin::on_interrupt(3, PCMSK3);
+  PinChangeInterrupt::on_interrupt(3, PCMSK3);
 }
 #endif
