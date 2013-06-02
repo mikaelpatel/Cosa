@@ -54,9 +54,9 @@ NRF24L01P::set_powerup_mode()
   write(FEATURE, _BV(EN_DPL) | _BV(EN_ACK_PAY) | _BV(EN_DYN_ACK));
   write(RF_CH, m_channel);
   write(RF_SETUP, RF_DR_2MBPS | RF_PWR_0DBM);
-  write(SETUP_RETR, (2 << ARD) | (15 << ARC));  
+  write(SETUP_RETR, (2 << ARD) | (15 << ARC));
   write(EN_AA, ENAA_PA);
-  write(EN_RXADDR, ERX_PA);           
+  write(EN_RXADDR, ERX_PA); 
   write(DYNPD, DPL_PA);
   write(CONFIG, _BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP));
   _delay_ms(Tpd2stby);
@@ -68,13 +68,17 @@ NRF24L01P::set_receiver_mode(const void* addr, uint8_t width)
 {
   if (width > AW_MAX) width = AW_MAX;
   else if (width < 3) width = 3;
+  uint8_t buf[AW_MAX];
+  for (uint8_t i = 0; i < width; i++)
+    buf[i] = ((uint8_t*) addr)[width - i - 1];
+  uint8_t nr = buf[0] + 1;
   write(SETUP_AW, (width - 2) & 0x3);
-  write(RX_ADDR_P1, addr, width);
-  uint8_t nr = ((uint8_t*) addr)[width - 1] + 1;
+  write(RX_ADDR_P1, buf, width);
   write(RX_ADDR_P2, nr++);
   write(RX_ADDR_P3, nr++);
   write(RX_ADDR_P4, nr++);
   write(RX_ADDR_P5, nr);
+  write(EN_RXADDR, ERX_PA);
   write(CONFIG, 
 	_BV(MASK_TX_DS) | _BV(MASK_MAX_RT) | 
 	_BV(EN_CRC) | _BV(CRCO) | 
@@ -92,8 +96,11 @@ NRF24L01P::set_transmitter_mode(const void* addr, uint8_t width)
   if (width > AW_MAX) width = AW_MAX;
   else if (width < 3) width = 3;
   write(SETUP_AW, (width - 2) & 0x3);
-  write(TX_ADDR, addr, width);
-  write(RX_ADDR_P0, addr, width);
+  uint8_t buf[AW_MAX];
+  for (uint8_t i = 0; i < width; i++)
+    buf[i] = ((uint8_t*) addr)[width - i - 1];
+  write(TX_ADDR, buf, width);
+  write(RX_ADDR_P0, buf, width);
   write(CONFIG, 
 	_BV(MASK_RX_DR) | _BV(MASK_TX_DS) | _BV(MASK_MAX_RT) | 
 	_BV(EN_CRC) | _BV(CRCO) | 
@@ -141,6 +148,7 @@ NRF24L01P::recv(void* buffer, uint8_t* pipe)
   asserted(m_csn) {
     m_status = spi.read(R_RX_PAYLOAD, buffer, count);
   }
+  spi.write(STATUS, _BV(RX_DR));
   return (count);
 }
 
@@ -228,9 +236,8 @@ void
 NRF24L01P::IRQPin::on_interrupt(uint16_t arg)
 { 
   uint8_t status = m_nrf->get_status();
-  if (status & _BV(RX_DR)) {
-    m_nrf->write(NRF24L01P::STATUS, _BV(RX_DR));
-    Event::push(Event::RECEIVE_COMPLETED_TYPE, m_nrf, status);
-  }
+  if ((status & _BV(RX_DR)) == 0) return;
+  m_nrf->write(NRF24L01P::STATUS, _BV(RX_DR));
+  Event::push(Event::RECEIVE_COMPLETED_TYPE, m_nrf, status);
 }
 

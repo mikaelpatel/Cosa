@@ -53,11 +53,11 @@ void setup()
   // Power up the transceiver
   nrf.set_powerup_mode();
 
-  // Check configuration and setup transmitter mode
-  nrf.set_transmitter_mode("cosa1");
-
-  // Print configuration
-#if !defined(__ARDUINO_TINY__)
+  // Setup transmitter mode and print configuration
+#if defined(__ARDUINO_TINY__)
+  nrf.set_transmitter_mode("cosa2");
+#else
+  nrf.set_transmitter_mode("cosa3");
   TRACE(nrf.read(NRF24L01P::FEATURE));
   TRACE(nrf.read(NRF24L01P::RF_CH));
   TRACE(nrf.read(NRF24L01P::RF_SETUP));
