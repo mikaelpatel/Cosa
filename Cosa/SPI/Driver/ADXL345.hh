@@ -240,6 +240,8 @@ public:
    */
 #if defined(__ARDUINO_TINY__)
   ADXL345(Board::DigitalPin ss = Board::D3);
+#elif defined(__ARDUINO_MEGA__)
+  ADXL345(Board::DigitalPin ss = Board::D53);
 #else
   ADXL345(Board::DigitalPin ss = Board::D10);
 #endif
