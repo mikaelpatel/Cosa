@@ -36,6 +36,9 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
+// Dummy for Arduino preprocessor
+int dummy;
+
 // One-wire pin and connected DS18B20 devices
 #if defined(__ARDUINO_TINY__)
 OWI owi(Board::D1);
