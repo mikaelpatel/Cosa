@@ -84,7 +84,7 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
       bit_clear(DDRB, Board::MOSI); 
       bit_set(DDRB, Board::MISO);	 
       bit_clear(DDRB, Board::SCK);
-      bit_clear(DDRB, Board::SS);	 
+      bit_clear(DDRB, Board::SS);
       SPCR = (_BV(SPIE) | _BV(SPE));
     } 
     // Master pin setting; input(MISO), output(MOSI, SCK)
@@ -95,6 +95,7 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
       bit_set(DDRB, Board::SS);	 
       bit_clear(PORTB, Board::SCK);
       bit_clear(PORTB, Board::MOSI);
+      bit_set(PORTB, Board::SS);	 
       SPCR = (_BV(MSTR) | _BV(SPE));
     }
   }
