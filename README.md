@@ -117,7 +117,7 @@ Drivers
 13. HMC5883L 3-Axis Digital Compass IC.
 14. NEXA/HomeEasy Wireless Remote command transmitter/receiver for RF433.
 15. ST7565, 65x132 Dot Matrix LCD Controller/Driver.
-16. Debounced button and Rotary Encoder.
+16. Debounced button and dials with Rotary Encoder.
 17. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
