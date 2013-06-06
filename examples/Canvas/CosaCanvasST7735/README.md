@@ -1,7 +1,7 @@
-CosaCanvasST7735R
+CosaCanvasST7735
 =================
 
-Demonstration of the ST7735R, 262K Color Single-Chip TFT Controller
+Demonstration of the ST7735, 262K Color Single-Chip TFT Controller
 device driver. Shows binding to IOStream::Device.
 
 Circuit

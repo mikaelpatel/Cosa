@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/Driver/ST7735R.hh
+ * @file Cosa/SPI/Driver/ST7735.hh
  * @version 1.0
  *
  * @section License
@@ -23,23 +23,23 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SPI_DRIVER_ST7735R_HH__
-#define __COSA_SPI_DRIVER_ST7735R_HH__
+#ifndef __COSA_SPI_DRIVER_ST7735_HH__
+#define __COSA_SPI_DRIVER_ST7735_HH__
 
 #include "Cosa/Canvas.hh"
 #include "Cosa/SPI.hh"
 #include "Cosa/Pins.hh"
 
 /**
- * Device driver for ST7735R, 262K Color Single-Chip TFT Controller.
+ * Device driver for ST7735, 262K Color Single-Chip TFT Controller.
  * 
  * @section See Also
- * Sitronix Technology Corp. ST7735R documentation, V2.1, 2010-02-01.
+ * Sitronix Technology Corp. ST7735 documentation, V2.1, 2010-02-01.
  *
  * @section Acknowledgements
  * Inspired by graphics library by ladyada/adafruit.
  */
-class ST7735R : public Canvas, SPI::Driver {
+class ST7735 : public Canvas, SPI::Driver {
 protected:
   /**
    * Slave select pin (default is pin 10)
@@ -207,14 +207,14 @@ public:
    * @param[in] dc data/command selection pin (default pin 9).
    */
 #if defined(__ARDUINO_TINYX4__)
-  ST7735R(Board::DigitalPin cs = Board::D3, 
-	  Board::DigitalPin dc = Board::D7);
+  ST7735(Board::DigitalPin cs = Board::D3, 
+	 Board::DigitalPin dc = Board::D7);
 #elif defined(__ARDUINO_TINYX5__)
-  ST7735R(Board::DigitalPin cs = Board::D3, 
-	  Board::DigitalPin dc = Board::D4);
+  ST7735(Board::DigitalPin cs = Board::D3, 
+	 Board::DigitalPin dc = Board::D4);
 #else
-  ST7735R(Board::DigitalPin cs = Board::D10, 
-	  Board::DigitalPin dc = Board::D9);
+  ST7735(Board::DigitalPin cs = Board::D10, 
+	 Board::DigitalPin dc = Board::D9);
 #endif
 
   /**

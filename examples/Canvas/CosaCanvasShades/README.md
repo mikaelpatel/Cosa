@@ -1,7 +1,7 @@
 CosaShade
 =========
 
-Demonstration of the Cosa Canvas color shade on ST7735R, 262K Color
+Demonstration of the Cosa Canvas color shade on ST7735, 262K Color
 Single-Chip TFT Controller device driver. 
 
 Circuit

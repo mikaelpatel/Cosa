@@ -1,7 +1,7 @@
 CosaCanvasHistogram
 ===============
 
-Cosa demonstration of Canvas device driver for ST7735R, 262K Color
+Cosa demonstration of Canvas device driver for ST7735, 262K Color
 Single-Chip TFT Controller, and monitoring of analog pins as a histogram.
 Use the analog pin(0..MAX-1) as the probe pins.
 

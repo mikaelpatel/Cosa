@@ -1,7 +1,7 @@
 CosaCanvasFont
 ==============
 
-Demonstration of the Cosa Canvas/Font manager on the ST7735R, 262K Color
+Demonstration of the Cosa Canvas/Font manager on the ST7735, 262K Color
 Single-Chip TFT Controller device driver. 
 
 Circuit

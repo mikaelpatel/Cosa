@@ -22,10 +22,10 @@
  *
  * @section Description
  * Cosa demonstration of Canvas Segment Font handling and device 
- * driver for ST7735R, 262K Color Single-Chip TFT Controller.
+ * driver for ST7735, 262K Color Single-Chip TFT Controller.
  *
  * @section Circuit
- * Connect Arduino to ST7735R Module (Arduino ==> HY-1.8 SPI):
+ * Connect Arduino to ST7735 Module (Arduino ==> HY-1.8 SPI):
  * GND ==> GND(1), VCC(5V) ==> VCC(2), RST ==> RESET(6),
  * D9 ==> A0(7), MOSI/D11 ==> SDA(8), SCK/D13 ==> SCK(9),
  * SS/D10 ==> CS(10), VCC(5V) ==> LED+(15), GND ==> LED-(16)    
@@ -34,10 +34,10 @@
  */
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/SPI/Driver/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735.hh"
 #include "Cosa/Canvas/Font/Segment32x50.hh"
 
-ST7735R tft;
+ST7735 tft;
 const Canvas::color16_t BACKGROUND = tft.shade(Canvas::RED, 25);
 const Canvas::color16_t TEXT_COLOR = tft.shade(Canvas::RED, 75);
 uint8_t min = 30;

@@ -1,7 +1,7 @@
 CosaCanvasSweep
 ===============
 
-Cosa demonstration of Canvas device driver for ST7735R, 262K Color 
+Cosa demonstration of Canvas device driver for ST7735, 262K Color 
 Single-Chip TFT Controller, and monitoring of an analog pin in EKG
 style. 
 

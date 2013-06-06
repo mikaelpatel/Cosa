@@ -21,10 +21,10 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa Canvas script demonstration for ST7735R device driver.
+ * Cosa Canvas script demonstration for ST7735 device driver.
  *
  * @section Circuit
- * Connect Arduino to ST7735R Module (Arduino ==> HY-1.8 SPI):
+ * Connect Arduino to ST7735 Module (Arduino ==> HY-1.8 SPI):
  * GND ==> GND(1), VCC(5V) ==> VCC(2), RST ==> RESET(6),
  * D9 ==> A0(7), MOSI/D11 ==> SDA(8), SCK/D13 ==> SCK(9),
  * SS/D10 ==> CS(10), VCC(5V) ==> LED+(15), GND ==> LED-(16)    
@@ -40,10 +40,10 @@
 #include "Cosa/Canvas/Icon/arduino_icon_34x32.h"
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
-#include "Cosa/SPI/Driver/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735.hh"
 
 // Use the TFT display as canvas
-ST7735R tft;
+ST7735 tft;
 
 // An init-script: Draw arduino icon and canvas script banner
 CANVAS_BEGIN_SCRIPT(init_script)

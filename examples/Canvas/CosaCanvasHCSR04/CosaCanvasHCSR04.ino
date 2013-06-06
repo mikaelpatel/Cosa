@@ -28,7 +28,7 @@
  * Connect Arduino to HC-SR04 sensor/module; D2 => Trig, D3 => Echo. 
  * Connect power (VCC) and ground (GND).  
  *
- * Connect Arduino to ST7735R Module (Arduino ==> HY-1.8 SPI):
+ * Connect Arduino to ST7735 Module (Arduino ==> HY-1.8 SPI):
  * GND ==> GND(1), VCC(5V) ==> VCC(2), RST ==> RESET(6),
  * D9 ==> A0(7), MOSI/D11 ==> SDA(8), SCK/D13 ==> SCK(9),
  * SS/D10 ==> CS(10), VCC(5) ==> 300-500 ohm ==> LED+(15), 
@@ -41,13 +41,13 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/HCSR04.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/SPI/Driver/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/Segment32x50.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
-ST7735R tft;
+ST7735 tft;
 Textbox textbox(&tft);
 IOStream cout(&textbox);
 

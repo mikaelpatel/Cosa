@@ -1,7 +1,7 @@
 CosaCanvasClock
 ===============
 
-Demonstration of the Cosa Canvas/UTF Font manager on the ST7735R, 262K Color
+Demonstration of the Cosa Canvas/UTF Font manager on the ST7735, 262K Color
 Single-Chip TFT Controller device driver; A simple count down clock.
 
 Circuit

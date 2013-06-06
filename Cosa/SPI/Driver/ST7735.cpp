@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/Driver/ST7735R.cpp
+ * @file Cosa/SPI/Driver/ST7735.cpp
  * @version 1.0
  *
  * @section License
@@ -23,9 +23,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/Driver/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735.hh"
 
-const uint8_t ST7735R::script[] PROGMEM = {
+const uint8_t ST7735::script[] PROGMEM = {
   // Software Reset
   SWRESET, 0, 
   // Software Delay 
@@ -87,7 +87,7 @@ const uint8_t ST7735R::script[] PROGMEM = {
 };
 
 bool 
-ST7735R::begin()
+ST7735::begin()
 {
   bool res = spi.begin(SPI::DEFAULT_CLOCK, 3, SPI::MSB_FIRST);
   if (!res || m_initiated) return (res);
@@ -112,7 +112,7 @@ ST7735R::begin()
   return (res);
 }
 
-ST7735R::ST7735R(Board::DigitalPin cs, Board::DigitalPin dc) :
+ST7735::ST7735(Board::DigitalPin cs, Board::DigitalPin dc) :
   Canvas(SCREEN_WIDTH, SCREEN_HEIGHT),
   SPI::Driver(),
   m_cs(cs, 1),
@@ -122,7 +122,7 @@ ST7735R::ST7735R(Board::DigitalPin cs, Board::DigitalPin dc) :
 }
 
 void 
-ST7735R::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
+ST7735::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 {
   if (x + width >= WIDTH) width = WIDTH - x;
   if (y + height >= HEIGHT) height = HEIGHT - y;
@@ -138,7 +138,7 @@ ST7735R::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 }
 
 void 
-ST7735R::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
+ST7735::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 {
   if (x >= WIDTH || length == 0) return;
   if (y >= HEIGHT) {
@@ -159,7 +159,7 @@ ST7735R::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 }
 
 void 
-ST7735R::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
+ST7735::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 {
   if (y >= HEIGHT || length == 0) return;
   if (x >= WIDTH) {
@@ -180,7 +180,7 @@ ST7735R::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 }
 
 uint8_t
-ST7735R::set_orientation(uint8_t direction) 
+ST7735::set_orientation(uint8_t direction) 
 {
   uint8_t previous = m_direction;
   uint8_t setting = 0;

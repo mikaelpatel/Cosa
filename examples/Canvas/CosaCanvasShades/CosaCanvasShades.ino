@@ -21,11 +21,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of Cosa Canvas color shades on ST7735R, 
+ * Cosa demonstration of Cosa Canvas color shades on ST7735, 
  * 262K Color Single-Chip TFT Controller. 
  *
  * @section Circuit
- * Connect Arduino to ST7735R Module (Arduino ==> HY-1.8 SPI):
+ * Connect Arduino to ST7735 Module (Arduino ==> HY-1.8 SPI):
  * GND ==> GND(1), VCC(5V) ==> VCC(2), RST ==> RESET(6),
  * D9 ==> A0(7), MOSI/D11 ==> SDA(8), SCK/D13 ==> SCK(9),
  * SS/D10 ==> CS(10), VCC(5V) ==> LED+(15), GND ==> LED-(16)    
@@ -34,9 +34,9 @@
  */
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/SPI/Driver/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735.hh"
 
-ST7735R tft;
+ST7735 tft;
 
 void setup()
 {

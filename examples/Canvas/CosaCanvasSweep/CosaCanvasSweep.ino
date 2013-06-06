@@ -21,14 +21,14 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of Canvas device driver for ST7735R, 262K Color 
+ * Cosa demonstration of Canvas device driver for ST7735, 262K Color 
  * Single-Chip TFT Controller, and monitoring of an analog pin in
  * EKG style.
  *
  * @section Circuit
  * Use the analog pin(0) as the probe pin.
  *
- * Connect Arduino to ST7735R Module (Arduino ==> HY-1.8 SPI):
+ * Connect Arduino to ST7735 Module (Arduino ==> HY-1.8 SPI):
  * GND ==> GND(1), VCC(5V) ==> VCC(2), RST ==> RESET(6),
  * D9 ==> A0(7), MOSI/D11 ==> SDA(8), SCK/D13 ==> SCK(9),
  * SS/D10 ==> CS(10), VCC(5V) ==> LED+(15), GND ==> LED-(16)    
@@ -37,10 +37,10 @@
  */
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/SPI/Driver/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735.hh"
 
 // The display and the analog pin to use as a probe
-ST7735R tft;
+ST7735 tft;
 AnalogPin probe(Board::A0);
 Canvas::color16_t CANVAS, PEN, CARET;
 

@@ -1,5 +1,5 @@
 /**
- * @file CosaCanvasST7735R.ino
+ * @file CosaCanvasST7735.ino
  * @version 1.0
  *
  * @section License
@@ -21,11 +21,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of device driver for ST7735R, 262K Color
+ * Cosa demonstration of device driver for ST7735, 262K Color
  * Single-Chip TFT Controller. 
  *
  * @section Circuit
- * Connect Arduino to ST7735R Module (Arduino ==> HY-1.8 SPI):
+ * Connect Arduino to ST7735 Module (Arduino ==> HY-1.8 SPI):
  * GND ==> GND(1), VCC(5V) ==> VCC(2), RST ==> RESET(6),
  * D9 ==> A0(7), MOSI/D11 ==> SDA(8), SCK/D13 ==> SCK(9),
  * SS/D10 ==> CS(10), VCC(5V) ==> LED+(15), GND ==> LED-(16)    
@@ -46,9 +46,9 @@
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
-#include "Cosa/SPI/Driver/ST7735R.hh"
+#include "Cosa/SPI/Driver/ST7735.hh"
 
-ST7735R tft;
+ST7735 tft;
 Textbox textbox(&tft);
 IOStream console(&textbox);
 #undef putchar
@@ -57,7 +57,7 @@ void setup()
 {
   // Initiate trace stream on the serial port
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaST7735R: started"));
+  trace.begin(&uart, PSTR("CosaST7735: started"));
 
   // Check amount of free memory and size of objects
   TRACE(free_memory());
@@ -66,7 +66,7 @@ void setup()
   TRACE(sizeof(UART));
   TRACE(sizeof(Canvas));
   TRACE(sizeof(Font));
-  TRACE(sizeof(ST7735R));
+  TRACE(sizeof(ST7735));
   TRACE(sizeof(Canvas::Context));
   TRACE(sizeof(Canvas::Element));
   TRACE(sizeof(IOStream));
@@ -97,7 +97,7 @@ void loop()
   textbox.set_text_color(Canvas::BLUE);
   textbox.set_text_scale(1);
   textbox.set_text_port(2, 2, tft.WIDTH, tft.HEIGHT);
-  console.print_P(PSTR("CosaST7735R: started"));
+  console.print_P(PSTR("CosaST7735: started"));
   console.println();
   console.printf_P(PSTR("test#1:fill screen %ul ms\n"), ms);
   console.println();
