@@ -117,9 +117,9 @@ public:
   public:
     /**
      * NEXA::Receiver::Listener with code as key. The virtual method
-     * on_event() is called by when a command code matches the
-     * listeners key. The listener will receive Event::CHANGE_TYPE and
-     * the value of the onoff member of the received command code.
+     * on_event() is called when a command code matches the listeners 
+     * key. The listener will receive Event::CHANGE_TYPE and the value 
+     * of the onoff member of the received command code.
      */
     typedef Listener<code_t> Device;
 
