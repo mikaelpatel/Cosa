@@ -170,15 +170,31 @@ HD44780::end()
 int 
 HD44780::putchar(char c)
 {
-  if (c == '\n')      set_cursor(0, m_y + 1);
-  else if (c == '\b') set_cursor(m_x - 1, m_y);
-  else if (c == '\f') display_clear();
+  if (c == '\n') 
+    set_cursor(0, m_y + 1);
+  else if (c == '\b') 
+    set_cursor(m_x - 1, m_y);
+  else if (c == '\f') 
+    display_clear();
+  else if (c == '\t') {
+    uint8_t x = m_x + m_tab - (m_x % m_tab);
+    uint8_t y = m_y + (x >= WIDTH);
+    set_cursor(x, y);
+  }
   else {
+    if (m_x == WIDTH) {
+      uint8_t x, y;
+      set_cursor(0, m_y + 1);
+      get_cursor(x, y);
+      asserted(m_rs) {
+	for (uint8_t i = 0; i < WIDTH; i++) write(' ');
+      }
+      set_cursor(x, y);
+    }
     asserted(m_rs) {
       write(c);
     }
     m_x += 1;
-    if (m_x == WIDTH) set_cursor(0, m_y + 1);
   }
   return (c & 0xff);
 }

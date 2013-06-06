@@ -1,6 +1,6 @@
 CosaHD44780
 ===========
-Demonstration of the HD44780 (1602) LCD device driver with mapping 
+Demonstration of the HD44780 (aka 1602) LCD device driver with mapping 
 to IOStream::Device.
 
 Circuit
