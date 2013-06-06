@@ -41,9 +41,10 @@ objects may become inconsistent.
 To improve debugging and testing there is assert/trace/syslog style
 support. The IOStream class allows output to both serial wire/wireless
 communication (UART/VWIO) and small TFT displays (such as the ST7735R,
-ST7565P, and PCD8544). The drawing Canvas class supports basic drawing 
-operation and scripting to reduce program memory footprint. The Canvas 
-class also supports drawing of icons and multiple fonts (GLCD and UTFT). 
+ST7565, HD44780, and PCD8544). The drawing Canvas class supports basic 
+drawing operation and scripting to reduce program memory
+footprint. The Canvas class also supports drawing of icons and
+multiple fonts (GLCD and UTFT).  
 
 The popular VirtualWire library has been refactored to the
 object-oriented style of Cosa (VWI) and extended with three additional
@@ -315,7 +316,8 @@ virtual on_change() method.
 @section Rotary Encoder
 State machine based Rotary Encoder handler. Uses interrupt pins and
 pushes an Event::CHANGE_TYPE on change with direction. Subclass
-Rotary::Encoder and implement the virtual on_event() method.
+Rotary::Encoder and implement the virtual on_event() method. Support
+for Dials both normal and accelerated.
 
 @section DHT11
 DHT11 Humidity & Temperature Sensor device driver. Subclass
@@ -356,16 +358,20 @@ Font and Icon handling. The class Element may be used to define
 graphical objects with local graphical Context. See Textbox for an
 example of Element.
 
-@section ST7735R
-Device driver for ST7735R, 262K Color Single-Chip TFT Controller (SPI).
+@section ST7735
+Device driver for ST7735, 262K Color Single-Chip TFT Controller (SPI).
 
-@section ST7565P
-Device driver for ST7565P 64x128 pixels matrix LCD controller/driver
+@section ST7565
+Device driver for ST7565 64x128 pixels matrix LCD controller/driver
 (Serial OutputPin).
 
 @section PCD8544 
 Device driver for PCD8544 48x84 pixels matrix LCD controller/driver
 (Serial OutputPin).
+
+@section HD44780 
+Device driver for HD44780 (aka 1602) 16x2 character LCD
+controller/driver (Serial OutputPin/Port direct).
 */
 
 /** @page page10 Auxiliary

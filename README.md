@@ -42,10 +42,10 @@ objects may become inconsistent.
 
 To improve debugging and testing there is trace/syslog style support. 
 The IOStream class allows output to both serial communication
-(UART/VWIO) and small TFT displays (such as the ST7735R, ST7564P and
-PCD8544). The drawing Canvas class supports basic drawing operation
-and scripting to reduce program memory footprint. The Canvas class
-also supports drawing of icons and multiple fonts (GLCD and UTFT). 
+(UART/VWIO) and small TFT displays (such as the ST7735, ST7564,
+HD44780 and PCD8544). The drawing Canvas class supports basic drawing
+operation and scripting to reduce program memory footprint. The Canvas
+class also supports drawing of icons and multiple fonts (GLCD and UTFT). 
 
 The popular VirtualWire library has been refactored to the
 object-oriented style of Cosa and extended with three additional
@@ -110,7 +110,7 @@ Drivers
 6. nRF24L01 Single Chip 2.4GHz Transceiver. 
 7. DHT11 Humidity & Temperature Sensor.
 8. HC-SR04/US-020 Ultrasonic range module.
-9. ST7735R, 262K Color Single-Chip TFT Controller.
+9. ST7735, 262K Color Single-Chip TFT Controller.
 10. PCD8544 48x84 pixels matrix LCD controller/driver.
 11. TSOP4838 IR Receiver Modules for Remote Control Systems.
 12. Virtual Wire (VWI) on RF315/433 modules.
@@ -118,7 +118,8 @@ Drivers
 14. NEXA/HomeEasy Wireless Remote command transmitter/receiver for RF433.
 15. ST7565, 65x132 Dot Matrix LCD Controller/Driver.
 16. Debounced button and dials with Rotary Encoder.
-17. Slave device support for SPI, TWI and OWI.
+17. HD44780 (aka 1602) LCD Controller/Driver.
+18. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  
@@ -199,4 +200,5 @@ Wireless Remote command transmitter (RF433). Introducing a new
 template class for handling of keyed sets of event handlers. Added
 support for LCD ST7565 with natural text scrolling. Making it easy to
 implement TWI slave devices with TWI::Device. Including support for
-event driven Rotary Encoder handler.     
+event driven Rotary Encoder handler.   
+2013-06 HD44780 (1602) LCD device driver.    
