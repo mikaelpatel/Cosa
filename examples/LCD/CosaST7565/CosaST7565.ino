@@ -1,5 +1,5 @@
 /**
- * @file CosaST7565P.ino
+ * @file CosaST7565.ino
  * @version 1.0
  *
  * @section License
@@ -16,11 +16,11 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Demonstration of the ST7565P device driver with mapping to 
+ * Demonstration of the ST7565 device driver with mapping to 
  * IOStream::Device.
  * 
  * @section Circuit
- * Connect Arduino to ST7565P (Arduino => ST7565P):
+ * Connect Arduino to ST7565 (Arduino => ST7565):
  * D6 ==> SI, D7 ==> SCL, D8 ==> DC, D9 ==> CS.
  * RST ==> RST.
  * 
@@ -31,12 +31,12 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Canvas/OffScreen.hh"
-#include "Cosa/IOStream/Driver/ST7565P.hh"
+#include "Cosa/IOStream/Driver/ST7565.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
-ST7565P lcd;
+ST7565 lcd;
 #undef putchar
 
 void setup()
@@ -53,7 +53,7 @@ void setup()
   // Use LCD bind to trace and use inverted text mode for banner
   trace.begin(&lcd);
   lcd.set_cursor(0, lcd.LINES - 1);
-  trace << PSTR("CosaST7565P: started");
+  trace << PSTR("CosaST7565: started");
   SLEEP(2);
 
   // Dump characters in system font
@@ -108,7 +108,7 @@ void setup()
   SLEEP(2);
 
   // Play around with the offscreen canvas
-  OffScreen<ST7565P::WIDTH, ST7565P::HEIGHT> offscreen;
+  OffScreen<ST7565::WIDTH, ST7565::HEIGHT> offscreen;
   offscreen.begin();
   offscreen.draw_rect(0, 0, 10, 10);
   offscreen.fill_rect(2, 2, 7, 7);
@@ -119,8 +119,8 @@ void setup()
   offscreen.fill_roundrect(72, 12, 36, 16, 7);
   offscreen.draw_rect(70, 10, 40, 20);
   offscreen.draw_rect(0, 0, offscreen.WIDTH - 1, offscreen.HEIGHT - 1);
-  for (uint8_t width = 0; width < ST7565P::WIDTH; width += 8) {
-    offscreen.draw_line(20, 20, width, ST7565P::HEIGHT - 1);
+  for (uint8_t width = 0; width < ST7565::WIDTH; width += 8) {
+    offscreen.draw_line(20, 20, width, ST7565::HEIGHT - 1);
   }
   offscreen.set_cursor(15, 2);
   offscreen.draw_string_P(PSTR("OffScreen Canvas"));
@@ -135,11 +135,11 @@ void loop()
 {
   // Draw bars with analog sample values (A0..A5)
   lcd.putchar('\f');
-  for (uint8_t i = 0; i < ST7565P::LINES; i++) {
+  for (uint8_t i = 0; i < ST7565::LINES; i++) {
     trace.printf_P(PSTR("A%d:"), i);
     uint8_t procent = (AnalogPin::sample(i) * 100L) / 1023;
-    lcd.draw_bar(procent, ST7565P::WIDTH - 20);
-    if (i != ST7565P::LINES - 1) trace << endl;
+    lcd.draw_bar(procent, ST7565::WIDTH - 20);
+    if (i != ST7565::LINES - 1) trace << endl;
   }
   SLEEP(1);
 
@@ -151,11 +151,11 @@ void loop()
     // Display the Arduino icon
     lcd.putchar('\f');
     lcd.set_cursor((lcd.WIDTH - 96)/2, 1);
-    lcd.set_display_mode(ST7565P::REVERSE_DISPLAY_MODE);
+    lcd.set_display_mode(ST7565::REVERSE_DISPLAY_MODE);
     lcd.draw_icon(arduino_icon_96x32);
     SLEEP(2);
 
-    lcd.set_display_mode(ST7565P::NORMAL_DISPLAY_MODE);
+    lcd.set_display_mode(ST7565::NORMAL_DISPLAY_MODE);
     banner = 0;
 
     // Counters
@@ -163,7 +163,7 @@ void loop()
     static uint8_t sec = 00;
 
     // Draw the current counter value off-screen
-    OffScreen<ST7565P::WIDTH, ST7565P::HEIGHT> offscreen;
+    OffScreen<ST7565::WIDTH, ST7565::HEIGHT> offscreen;
     offscreen.begin();
     offscreen.set_text_font(&fixednums8x16);
     offscreen.draw_roundrect(8, 8, lcd.WIDTH - 18, lcd.HEIGHT - 18, 8);

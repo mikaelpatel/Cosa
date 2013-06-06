@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/PCD8544.hh
+ * @file Cosa/IOStream/Driver/ST7565.hh
  * @version 1.0
  *
  * @section License
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOSTREAM_DRIVER_ST7565P_HH__
-#define __COSA_IOSTREAM_DRIVER_ST7565P_HH__
+#ifndef __COSA_IOSTREAM_DRIVER_ST7565_HH__
+#define __COSA_IOSTREAM_DRIVER_ST7565_HH__
 
 #include "Cosa/Pins.hh"
 #include "Cosa/Board.hh"
@@ -33,7 +33,7 @@
 #include "Cosa/Canvas/Font/System5x7.hh"
 
 /**
- * ST7565P 64x128 pixels matrix LCD controller/driver, device driver 
+ * ST7565 64x128 pixels matrix LCD controller/driver, device driver 
  * for IOStream access. Binding to trace, etc. Support natural text scroll,
  * cursor, and handling of special characters such as form-feed, back-
  * space and new-line. Graphics should be performed with OffScreen
@@ -43,7 +43,7 @@
  * For further details see Sitronix 65x132 Dot Matrix LCD Controller/
  * Driver, Ver 1.3, 2004 May 18.
  */
-class ST7565P : public IOStream::Device {
+class ST7565 : public IOStream::Device {
 protected:
   /**
    * Instruction set (table 16, pp. 52)
@@ -155,28 +155,28 @@ public:
    * @param[in] cs screen chip enable pin (default D3/D9).
    */
 #if defined(__ARDUINO_TINY__)
-  ST7565P(Board::DigitalPin si = Board::D0, 
-	  Board::DigitalPin scl = Board::D1, 
-	  Board::DigitalPin dc = Board::D2, 
-	  Board::DigitalPin cs = Board::D3,
-	  Font* font = &system5x7) :
+  ST7565(Board::DigitalPin si = Board::D0, 
+	 Board::DigitalPin scl = Board::D1, 
+	 Board::DigitalPin dc = Board::D2, 
+	 Board::DigitalPin cs = Board::D3,
+	 Font* font = &system5x7) :
 #else
-  ST7565P(Board::DigitalPin si = Board::D6, 
-	  Board::DigitalPin scl = Board::D7, 
-	  Board::DigitalPin dc = Board::D8, 
-	  Board::DigitalPin cs = Board::D9,
-	  Font* font = &system5x7) :
+  ST7565(Board::DigitalPin si = Board::D6, 
+	 Board::DigitalPin scl = Board::D7, 
+	 Board::DigitalPin dc = Board::D8, 
+	 Board::DigitalPin cs = Board::D9,
+	 Font* font = &system5x7) :
 #endif
-    IOStream::Device(),
-    m_si(si, 0),
-    m_scl(scl, 0),
-    m_dc(dc, 1),
-    m_cs(cs, 1),
-    m_x(0),
-    m_y(0),
-    m_line(0),
-    m_mode(0),
-    m_font(font)
+  IOStream::Device(),
+  m_si(si, 0),
+  m_scl(scl, 0),
+  m_dc(dc, 1),
+  m_cs(cs, 1),
+  m_x(0),
+  m_y(0),
+  m_line(0),
+  m_mode(0),
+  m_font(font)
   {}
 
   /**

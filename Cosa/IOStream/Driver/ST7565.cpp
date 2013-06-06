@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/ST7565P.cpp
+ * @file Cosa/IOStream/Driver/ST7565.cpp
  * @version 1.0
  *
  * @section License
@@ -23,11 +23,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IOStream/Driver/ST7565P.hh"
+#include "Cosa/IOStream/Driver/ST7565.hh"
 #include "Cosa/Watchdog.hh"
 
 // Initialization script
-const uint8_t ST7565P::script[] PROGMEM = {
+const uint8_t ST7565::script[] PROGMEM = {
   LCD_BIAS_9,
   ADC_NORMAL,
   COM_OUTPUT_REVERSE,
@@ -46,7 +46,7 @@ const uint8_t ST7565P::script[] PROGMEM = {
 };
 
 void 
-ST7565P::set(uint8_t x, uint8_t y)
+ST7565::set(uint8_t x, uint8_t y)
 {
   asserted(m_cs) {
     asserted(m_dc) {
@@ -58,7 +58,7 @@ ST7565P::set(uint8_t x, uint8_t y)
 }
 
 void 
-ST7565P::set_cursor(uint8_t x, uint8_t y)
+ST7565::set_cursor(uint8_t x, uint8_t y)
 {
   set(x, y);
   m_x = (x & (WIDTH - 1));
@@ -73,7 +73,7 @@ ST7565P::set_cursor(uint8_t x, uint8_t y)
 }
 
 bool 
-ST7565P::begin(uint8_t level)
+ST7565::begin(uint8_t level)
 {
   const uint8_t* bp = script;
   uint8_t cmd;
@@ -94,7 +94,7 @@ ST7565P::begin(uint8_t level)
 }
 
 bool 
-ST7565P::end()
+ST7565::end()
 {
   asserted(m_cs) {
     asserted(m_dc) {
@@ -105,7 +105,7 @@ ST7565P::end()
 }
 
 void 
-ST7565P::set_display_mode(DisplayMode mode)
+ST7565::set_display_mode(DisplayMode mode)
 {
   asserted(m_cs) {
     asserted(m_dc) {
@@ -115,7 +115,7 @@ ST7565P::set_display_mode(DisplayMode mode)
 }
 
 void 
-ST7565P::set_display_contrast(uint8_t level)
+ST7565::set_display_contrast(uint8_t level)
 {
   asserted(m_cs) {
     asserted(m_dc) {
@@ -126,7 +126,7 @@ ST7565P::set_display_contrast(uint8_t level)
 }
 
 void 
-ST7565P::draw_icon(const uint8_t* bp)
+ST7565::draw_icon(const uint8_t* bp)
 {
   uint8_t width = pgm_read_byte(bp++);
   uint8_t height = pgm_read_byte(bp++);
@@ -143,7 +143,7 @@ ST7565P::draw_icon(const uint8_t* bp)
 }
 
 void 
-ST7565P::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
+ST7565::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 {
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
@@ -158,7 +158,7 @@ ST7565P::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 }
 
 void 
-ST7565P::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
+ST7565::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
 {
   if (procent > 100) procent = 100;
   uint8_t filled = (procent * (width - 2U)) / 100;
@@ -181,7 +181,7 @@ ST7565P::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
 }
 
 int 
-ST7565P::putchar(char c)
+ST7565::putchar(char c)
 {
   // Check for special characters; carriage-return-line-feed
   if (c == '\n') {
