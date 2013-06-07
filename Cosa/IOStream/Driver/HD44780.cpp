@@ -170,32 +170,51 @@ HD44780::end()
 int 
 HD44780::putchar(char c)
 {
-  if (c == '\n') 
+  // Check for special characters; carriage-return-line-feed
+  if (c == '\n') {
+    uint8_t x, y;
     set_cursor(0, m_y + 1);
-  else if (c == '\b') 
+    get_cursor(x, y);
+    asserted(m_rs) {
+      for (uint8_t i = 0; i < WIDTH; i++) write(' ');
+    }
+    set_cursor(x, y);
+    return (c);
+  }
+
+  // Check for special character: back-space
+  if (c == '\b') {
     set_cursor(m_x - 1, m_y);
-  else if (c == '\f') 
+    return (c);
+  }
+
+  // Check for special character: alert
+  if (c == '\a') {
+    // Fix: Should have some indication
+    return (c);
+  }
+
+  // Check for special character: form-feed
+  if (c == '\f') {
     display_clear();
-  else if (c == '\t') {
+    return (c);
+  }
+
+  // Check for horizontal tab
+  if (c == '\t') {
     uint8_t x = m_x + m_tab - (m_x % m_tab);
     uint8_t y = m_y + (x >= WIDTH);
     set_cursor(x, y);
+    return (c);
   }
-  else {
-    if (m_x == WIDTH) {
-      uint8_t x, y;
-      set_cursor(0, m_y + 1);
-      get_cursor(x, y);
-      asserted(m_rs) {
-	for (uint8_t i = 0; i < WIDTH; i++) write(' ');
-      }
-      set_cursor(x, y);
-    }
-    asserted(m_rs) {
-      write(c);
-    }
-    m_x += 1;
+
+  // Write character
+  if (m_x == WIDTH) putchar('\n');
+  asserted(m_rs) {
+    write(c);
   }
+  m_x += 1;
+
   return (c & 0xff);
 }
 #endif

@@ -83,6 +83,8 @@ const uint8_t bitmaps[] PROGMEM = {
   0b11111,
   0b11111,
 };
+const uint8_t SIZEOF_BITMAP = 8;
+const uint8_t BITMAPS_MAX = membersof(bitmaps) / SIZEOF_BITMAP;
 
 void setup()
 {
@@ -94,16 +96,15 @@ void setup()
   lcd.set_tab_step(2);
   lcd.cursor_underline_off();
   lcd.cursor_blink_off();
-  uint8_t n = membersof(bitmaps)/8;
-  for (char c = 0; c < n; c++) 
-    lcd.set_custom_char_P(c, &bitmaps[c*8]);
+  for (char c = 0; c < BITMAPS_MAX; c++) 
+    lcd.set_custom_char_P(c, &bitmaps[c*SIZEOF_BITMAP]);
 
   // Bind LCD to trace output and print the custom characters
   trace.begin(&lcd, PSTR("\fCosaHD44780"));
   for (uint8_t i = 0; i < lcd.WIDTH; i++) {
     uint8_t x, y;
     lcd.get_cursor(x, y);
-    for (char c = 0; c < n; c++) {
+    for (char c = 0; c < BITMAPS_MAX; c++) {
       lcd.set_cursor(x, y);
       trace << c;
       Watchdog::delay(64);
@@ -112,8 +113,8 @@ void setup()
   trace << clear;
 
   // Simple scrolling text
-  static const char msg[] PROGMEM = 
-    "The quick brown fox jumps over the lazy dog. ";
+  trace << PSTR("\f\aSCROLLING\a\n");
+  static const char msg[] PROGMEM = "The quick brown fox jumps over the lazy dog. ";
   for (uint8_t i = 0; i < 8; i++) {
     uint8_t len = strlen_P(msg);
     for (uint8_t j = 0; j < len; j++) {
@@ -121,7 +122,17 @@ void setup()
       Watchdog::delay(64);
     }
   }
+
+  // Use number base handling 
+  trace << PSTR("\f\aNUMBER BASE\a\n");
+  trace << bcd << 0x55 << ' ' 
+	<< oct << 0x55 << ' '
+	<< dec << 0x55 << ' '
+	<< hex << 0x55;
   SLEEP(2);
+
+  // Banner for font display
+  trace << PSTR("\f\aFONT\a\n");
 }
 
 void loop()
