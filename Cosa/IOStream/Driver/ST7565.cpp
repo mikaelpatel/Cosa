@@ -90,6 +90,7 @@ ST7565::begin(uint8_t level)
   }
   set_display_contrast(level);
   set_cursor(0, 0);
+  putchar('\f');
   return (true);
 }
 
@@ -255,6 +256,6 @@ ST7565::putchar(char c)
     write(m_mode);
   }
 
-  return (c);
+  return (c & 0xff);
 }
 

@@ -281,8 +281,9 @@ public:
 
   /**
    * @override
-   * Write character to display. Handles carriage-return-line-feed, and
-   * form-feed. Returns character or EOF on error.
+   * Write character to display. Handles carriage-return-line-feed, back-
+   * space, alert, horizontal tab and form-feed. Returns character or EOF 
+   * on error.
    * @param[in] c character to write.
    * @return character written or EOF(-1).
    */

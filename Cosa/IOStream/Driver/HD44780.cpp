@@ -210,10 +210,10 @@ HD44780::putchar(char c)
 
   // Write character
   if (m_x == WIDTH) putchar('\n');
+  m_x += 1;
   asserted(m_rs) {
     write(c);
   }
-  m_x += 1;
 
   return (c & 0xff);
 }

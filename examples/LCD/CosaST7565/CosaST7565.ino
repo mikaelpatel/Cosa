@@ -46,7 +46,6 @@ void setup()
 
   // Initiate the LCD screen and show arduino icon
   lcd.begin();
-  lcd.putchar('\f');
   lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
   lcd.draw_icon(arduino_icon_64x32);
   

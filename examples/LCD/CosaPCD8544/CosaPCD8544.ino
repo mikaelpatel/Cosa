@@ -50,9 +50,11 @@ void setup()
 
   // Initiate the LCD screen and show arduino icon
   lcd.begin(0x38);
+#if !defined(__ARDUINO_TINY__)
   lcd.putchar('\f');
   lcd.set_cursor((lcd.WIDTH - 64)/2, 0);
   lcd.draw_icon(arduino_icon_64x32);
+#endif
 
   // Use LCD bind to trace and use inverted text mode for banner
   trace.begin(&lcd);
@@ -108,6 +110,7 @@ void setup()
   SLEEP(2);
 
   // Play around with the offscreen canvas
+#if !defined(__ARDUINO_TINY__)
   OffScreen<PCD8544::WIDTH, PCD8544::HEIGHT> offscreen;
   offscreen.begin();
   offscreen.draw_rect(0, 0, 10, 10);
@@ -126,6 +129,7 @@ void setup()
   lcd.set_cursor(0, 0);
   lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
   SLEEP(4);
+#endif
 }
 
 void loop()
@@ -141,6 +145,7 @@ void loop()
   SLEEP(1);
 
   // Every 4 seconds display the arduino icon and count down time
+#if !defined(__ARDUINO_TINY__)
   static const uint8_t SHOW_BANNER = 4;
   static uint8_t banner = 0;
   if (++banner == SHOW_BANNER) {
@@ -175,6 +180,7 @@ void loop()
     // Draw the off-screen canvas on the LCD
     lcd.putchar('\f');
     lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
+
     // Decrement counter
     if (sec == 0) {
       if (min != 00) {
@@ -185,4 +191,5 @@ void loop()
       sec -= 10;
     SLEEP(4);
   }
+#endif
 }
