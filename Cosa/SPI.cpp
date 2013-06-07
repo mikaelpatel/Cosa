@@ -82,7 +82,7 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
     if (clock == MASTER_CLOCK) {
       m_put = 0;
       bit_clear(DDRB, Board::MOSI); 
-      bit_set(DDRB, Board::MISO);	 
+      bit_set(DDRB, Board::MISO);
       bit_clear(DDRB, Board::SCK);
       bit_clear(DDRB, Board::SS);
       SPCR = (_BV(SPIE) | _BV(SPE));
@@ -92,10 +92,10 @@ SPI::begin(Clock clock, uint8_t mode, Direction direction)
       bit_set(DDRB, Board::MOSI);
       bit_clear(DDRB, Board::MISO);
       bit_set(DDRB, Board::SCK);
-      bit_set(DDRB, Board::SS);	 
+      bit_set(DDRB, Board::SS);
       bit_clear(PORTB, Board::SCK);
       bit_clear(PORTB, Board::MOSI);
-      bit_set(PORTB, Board::SS);	 
+      bit_set(PORTB, Board::SS);
       SPCR = (_BV(MSTR) | _BV(SPE));
     }
   }
