@@ -66,7 +66,7 @@ void setup()
     if ((c & 63) == 0) {
       trace << PSTR("\f\aFont page#") << page++ << '\a' << endl;
     }
-    if ((c == '\n') || (c == '\f') || (c == '\b') || (c == '\a')) 
+    if ((c == '\n') || (c == '\f') || (c == '\b') || (c == '\a') || (c == '\t')) 
       trace << ' ';
     else
       trace << (char) c;
@@ -75,7 +75,7 @@ void setup()
 
   // Use the trace iostream onto the LCD with output operator
   trace << PSTR("\f\aSPECIAL CHARACTERS\a\n\n");
-  trace << PSTR("01234568901234");
+  trace << PSTR("01\t23\t45\t67\t89");
   for (uint8_t i = 0; i < 16; i++) {
     Watchdog::delay(256);
     trace << PSTR("\b \b");

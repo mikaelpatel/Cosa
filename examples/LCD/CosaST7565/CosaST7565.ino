@@ -59,7 +59,7 @@ void setup()
   // Dump characters in system font
   trace << PSTR("\f\aSYSTEM FONT 5x7\a\n");
   for (uint8_t c = 0; c < 128; c++) {
-    if ((c == '\n') || (c == '\f') || (c == '\b') || (c == '\a')) 
+    if ((c == '\n') || (c == '\f') || (c == '\b') || (c == '\a') || (c == '\t'))
       trace << ' ';
     else
       trace << (char) c;
@@ -67,12 +67,13 @@ void setup()
   SLEEP(2);
 
   // Use the trace iostream onto the LCD with output operator
-  trace << PSTR("\f\aSPECIAL CHARACTERS\a\n\n");
-  trace << PSTR("\af - form-feed\a\n");
-  trace << PSTR("\an - new-line\a\n");
-  trace << PSTR("\aa - alert\a\n");
-  trace << PSTR("\ab - backspace\a\n\n");
-  trace << PSTR("0123456890ABCDEFGHIJK");
+  trace << PSTR("\f\aSPECIAL CHARACTERS\a\n");
+  trace << PSTR("\aa\a - alert\n");
+  trace << PSTR("\ab\a - backspace\n");
+  trace << PSTR("\af\a - form-feed\n");
+  trace << PSTR("\an\a - new-line\n");
+  trace << PSTR("\at\a - tab\n\n");
+  trace << PSTR("01\t23\t45\t67\t89");
   for (uint8_t i = 0; i < 22; i++) {
     Watchdog::delay(256);
     trace << PSTR("\b \b");

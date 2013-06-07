@@ -99,6 +99,7 @@ protected:
   OutputPin m_cs;		  // Chip select (active low)
   uint8_t m_x;			  // Cursor x (0..WIDTH-1)
   uint8_t m_y;			  // Cursor y (0..LINES-1)
+  uint8_t m_tab;		  // Tab step
   uint8_t m_line;		  // Display start line
   uint8_t m_mode;		  // Text mode (inverted)
   Font* m_font;			  // Font
@@ -174,6 +175,7 @@ public:
   m_cs(cs, 1),
   m_x(0),
   m_y(0),
+  m_tab(4),
   m_line(0),
   m_mode(0),
   m_font(font)
@@ -203,6 +205,26 @@ public:
    * @param[in] contrast level.
    */
   void set_display_contrast(uint8_t level);
+
+  /**
+   * Get tab step.
+   * @return tab step (1..WIDTH/2).
+   */
+  uint8_t get_tab_step()
+  {
+    return (m_tab);
+  }
+
+  /**
+   * Set tab step to given value (1..WIDTH/2).
+   * @param[in] tab step.
+   */
+  void set_tab_step(uint8_t step)
+  {
+    if (step == 0) step = 1;
+    else if (step > (WIDTH/2)) step = WIDTH/2;
+    m_tab = step;
+  }
 
   /**
    * Get current cursor position.

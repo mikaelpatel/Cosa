@@ -196,6 +196,14 @@ PCD8544::putchar(char c)
     return (c);
   }
 
+  // Check for horizontal tab
+  if (c == '\t') {
+    uint8_t x = m_x + m_tab - (m_x % m_tab);
+    uint8_t y = m_y + (x >= WIDTH);
+    set_cursor(x, y);
+    return (c);
+  }
+
   // Access font for character width and bitmap
   uint8_t width = m_font->get_width(c);
   const uint8_t* bp = m_font->get_bitmap(c);

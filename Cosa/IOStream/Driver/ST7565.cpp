@@ -232,6 +232,15 @@ ST7565::putchar(char c)
     return (c);
   }
 
+  // Check for special character: horizontal tab
+  if (c == '\t') {
+    uint8_t tab = m_tab * m_font->get_width(' ');
+    uint8_t x = m_x + tab - (m_x % tab);
+    uint8_t y = m_y + (x >= WIDTH);
+    set_cursor(x, y);
+    return (c);
+  }
+
   // Write character to the display with an extra space
   uint8_t width = m_font->get_width(c);
   const uint8_t* bp = m_font->get_bitmap(c);
