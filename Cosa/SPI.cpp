@@ -138,6 +138,14 @@ SPI::exchange_P(const void* buffer, uint8_t count)
   }
 }
 
+void
+SPI::read(void* buffer, uint8_t count)
+{
+  for (uint8_t* bp = (uint8_t*) buffer; count != 0; bp++, count--) {
+    *bp = exchange(0);
+  }
+}
+
 uint8_t
 SPI::read(uint8_t cmd, void* buffer, uint8_t count)
 {
@@ -146,6 +154,14 @@ SPI::read(uint8_t cmd, void* buffer, uint8_t count)
     *bp = exchange(0);
   }
   return (status);
+}
+
+void
+SPI::write(const void* buffer, uint8_t count)
+{
+  for (uint8_t* bp = (uint8_t*) buffer; count != 0; bp++, count--) {
+    exchange(*bp);
+  }
 }
 
 uint8_t

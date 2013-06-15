@@ -265,6 +265,7 @@ public:
    * @return status.
    */
   uint8_t read(uint8_t cmd, void* buffer, uint8_t count);
+  void read(void* buffer, uint8_t count);
 
   /**
    * Write data to slave device; send address/command and send data.
@@ -288,6 +289,7 @@ public:
    * @return status.
    */
   uint8_t write(uint8_t cmd, const void* buffer, uint8_t count);
+  void write(const void* buffer, uint8_t count);
   
   /**
    * Write data to slave device; send address/command and send data 
