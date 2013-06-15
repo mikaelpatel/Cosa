@@ -29,17 +29,18 @@
 
 // Binary sketch size:  MEGA/STD*/TINY bytes
 // =========================================
+// Baseline:		1118/916/700   bytes
 // HD44780: 		3312/3088/2868 bytes
 // PCD8544: 		4482/4260/3916 bytes
 // ST7565:  		5008/4802/4460 bytes
 // =========================================
-// Move comment prefix to compile different
-// LCD drivers and compare size.
+// The baseline is the Watchdog and Arduino
+// init code. Move comment prefix to compile 
+// different LCD drivers and compare size.
 // =========================================
 
 #include "Cosa/IOStream/Driver/HD44780.hh"
 HD44780 lcd;
-
 // #include "Cosa/IOStream/Driver/PCD8544.hh"
 // PCD8544 lcd;
 // #include "Cosa/IOStream/Driver/ST7565.hh"
