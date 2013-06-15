@@ -75,7 +75,9 @@ typedef float float32_t;
  * Universal type union, 16-bit.
  */
 union univ16_t {
+  uint16_t as_uint16;
   int16_t as_int16;
+  uint8_t as_uint8[2];
   int8_t as_int8[2];
   const void* as_ptr_P;
   void* as_ptr;
@@ -91,9 +93,12 @@ typedef univ16_t univ_t;
  */
 union univ32_t {
   float32_t as_float32;
+  uint32_t as_uint32;
   int32_t as_int32;
   univ16_t as_univ16[2];
+  uint16_t as_uint16[2];
   int16_t as_int16[2];
+  uint8_t as_uint8[4];
   int8_t as_int8[4];
   const void* as_ptr_P[2];
   void* as_ptr[2];
