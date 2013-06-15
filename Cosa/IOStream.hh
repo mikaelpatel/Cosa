@@ -351,10 +351,10 @@ public:
    * @param[in] base to represent value in (default 10).
    * @param[in] max number of numbers per line (default 16).
    */
-  void print(void *ptr, size_t size, Base base = dec, uint8_t max = 16);
+  void print(const void *ptr, size_t size, Base base = dec, uint8_t max = 16);
 
   /**
-   * Print pointer as a hexidecimal number to stream.
+   * Print pointer as a hexadecimal number to stream.
    * @param[in] ptr pointer to data memory.
    */
   void print(void *ptr) 
@@ -363,7 +363,7 @@ public:
   }
 
   /**
-   * Print pointer to program memory as a hexidecimal number to 
+   * Print pointer to program memory as a hexadecimal number to 
    * stream.
    * @param[in] ptr pointer to program memory.
    */

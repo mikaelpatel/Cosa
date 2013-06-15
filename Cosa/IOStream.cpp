@@ -95,7 +95,7 @@ IOStream::print_prefix(Base base)
 }
 
 void 
-IOStream::print(void *ptr, size_t size, Base base, uint8_t max)
+IOStream::print(const void *ptr, size_t size, Base base, uint8_t max)
 {
   uint8_t* p = (uint8_t*) ptr;
   unsigned int v_adj = (base == dec ? 0 : (base == oct ? 01000 : 0x100));
