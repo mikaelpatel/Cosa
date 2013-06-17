@@ -167,7 +167,7 @@ public:
    * Auxiliary
    */
   enum {
-    VBG = (_BV(MUX3) | _BV(MUX2)),
+    VBG = (_BV(MUX5) | _BV(MUX0)),
     EXT_MAX = 1,
     PCINT_MAX = 10,
     PIN_MAX = D10
