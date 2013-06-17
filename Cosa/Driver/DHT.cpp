@@ -29,7 +29,7 @@
 static const uint16_t START_REQUEST = 1;
 static const uint8_t START_RESPONSE = 40;
 #if (I_CPU < 16)
-static const uint8_t COUNT_MIN = 40;
+static const uint8_t COUNT_MIN = 30;
 #else
 static const uint8_t COUNT_MIN = 50;
 #endif
