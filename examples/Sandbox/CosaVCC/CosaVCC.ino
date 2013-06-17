@@ -54,7 +54,7 @@ public:
   VCC(uint16_t mv, uint16_t sec = 2) : 
     Periodic(sec * 1024), 
     m_threshold(mv),
-    m_vcc(0)
+    m_vcc(AnalogPin::bandgap())
   {
   }
   virtual void on_low_voltage()
@@ -99,7 +99,8 @@ void loop()
   Event event;
   Event::queue.await(&event);
   event.dispatch();
-  trace << Watchdog::millis() / 1000 << PSTR(":A4  = ") 
-	<< in.get_value() << endl;
+  trace << Watchdog::millis() / 1000 << PSTR(":A4  = ") << in.get_value() 
+	<< PSTR(":Vcc  = ") << lowPower.get_vcc() 
+	<< endl;
 }
 
