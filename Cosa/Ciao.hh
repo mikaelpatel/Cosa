@@ -101,9 +101,9 @@ public:
      * User data type tags are 256..64K.
      */
     enum {
-      HEADER_ID = 0x00,		// Ciao header descriptor (8-bit, 1-15 reserved)
-      COSA_FAI_ID = 0x10,	// Cosa Fai descriptors (8-bit, 16-)
-      USER_ID = 0x0100		// User descriptors (16-bit, 256-)
+      HEADER_ID = 0x00,	       // Ciao header descriptor (8-bit, 1-15)
+      COSA_FAI_ID = 0x10,      // Cosa Fai descriptors (8-bit, 16-)
+      USER_ID = 0x0100	       // User descriptors (16-bit, 256-)
     };
     struct member_t {
       uint8_t type;
@@ -136,7 +136,6 @@ public:
   } __attribute__((packed));
 
 protected:
-  // Output streaming device.
   IOStream::Device* m_dev;
 
   /**
@@ -151,7 +150,7 @@ public:
    * Construct data streaming for given device.
    * @param[in] dev output device.
    */
-  Ciao(IOStream::Device* dev = 0) : m_dev(dev) {}
+  Ciao(IOStream::Device* dev = &IOStream::Device::null) : m_dev(dev) {}
 
   /**
    * Set io-stream device.
@@ -159,6 +158,7 @@ public:
    */
   void set(IOStream::Device* dev) 
   { 
+    if (dev == 0) dev = &IOStream::Device::null;
     m_dev = dev;
   }
 
