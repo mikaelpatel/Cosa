@@ -24,7 +24,6 @@
  */
 
 #include "Cosa/EEPROM.hh"
-#include <avr/eeprom.h>
 
 bool 
 EEPROM::Device::is_ready()
