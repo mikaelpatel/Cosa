@@ -97,6 +97,7 @@ public:
   class Handler {
   public:
     /**
+     * @override
      * Default null event handler. Should be redefined by sub-classes.
      * Called by Event::dispatch(). 
      * @param[in] type the event type.
@@ -112,10 +113,10 @@ private:
 
 public:
   /**
-   * Construct event with given type, source and value.
-   * @param[in] type event identity.
-   * @param[in] target event receiver.
-   * @param[in] value event value.
+   * Construct event with given type, target and value.
+   * @param[in] type event identity (default NULL_TYPE(0)).
+   * @param[in] target event receiver (default null(0)).
+   * @param[in] value event value (default zero(0)).
    */
   Event(int8_t type = NULL_TYPE, Handler* target = 0, uint16_t value = 0) :
     m_type(type),
