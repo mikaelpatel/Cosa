@@ -33,23 +33,24 @@
 /**
  * Debounded Button; Sampled input pin (with internal pullup
  * resistor). Uses a watchdog timeout event (64 ms) for sampling and
- * on change calls an event action. Subclass Button and implement the  
+ * on change calls an event action. Subclass Button and implement the
  * virtual on_change() method. Use the subclass for any state needed
  * for the action function. Connect button/switch from pin to
- * ground. Internal pull-up resistor is activated.
+ * ground. Internal pull-up resistor is activated. 
  *
  * @section Limitations
- * Button toggle faster than sample period may be missed.
+ * Button toggle faster than sample period may be missed. This is the
+ * case when connecting to a Rotary Encoder.
  * 
  * @section See Also
- * The Button event handler requires the usage of an event
- * dispatch. See Event.hh. 
+ * The Button event handler requires the usage of an event dispatch. 
+ * See Event.hh. 
  */
 class Button : public InputPin, private Link {
 public:
   /**
-   * Button change detection modes; falling (high to low), 
-   * rising (low to high) and change (falling or rising).
+   * Button change detection modes; falling (high to low), rising (low
+   * to high) and change (falling or rising). 
    */
   enum Mode {
     ON_FALLING_MODE = 0,
@@ -84,10 +85,11 @@ public:
   Button(Board::DigitalPin pin, Mode mode = ON_CHANGE_MODE);
 
   /**
+   * @override
    * The button change event handler. Called when a change
    * corresponding to the mode has been detected. Event types are;
    * Event::FALLING_TYPE, Event::RISING_TYPE, and Event::CHANGE_TYPE. 
-   * Override this method.
+   * Sub-class must override this method.
    * @param[in] type event type.
    */
   virtual void on_change(uint8_t type) = 0;
