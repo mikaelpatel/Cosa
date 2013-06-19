@@ -28,20 +28,19 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Power.hh"
-#include <avr/sleep.h>
 
 /**
  * Driver for the ATmega/ATtiny internal EEPROM and abstraction of
- * EEPROM devices. See AT24CXX for an example of driver for external
- * EEPROM memory. The default device is the internal EEPROM.
- * The class EEPROM delegates to the EEPROM:Device class instance.
+ * EEPROM devices. See AT24CXX for an example of driver for external 
+ * EEPROM memory. The default device is the internal EEPROM. The class
+ * EEPROM delegates to the EEPROM:Device class instance. 
  */
 class EEPROM {
 public:
   /**
    * EEPROM Device abstraction; default device is the processors
-   * internal EEPROM data memory. New devices should sub-class and
-   * implement virtual methods.
+   * internal EEPROM data memory. New devices should sub-class and 
+   * implement virtual methods. 
    */
   class Device {
   public:
@@ -83,8 +82,8 @@ private:
 
 public:
   /**
-   * Construct access object for EEPROM given device. Default 
-   * device is the internal EEPROM memory.
+   * Construct access object for EEPROM given device. Default device
+   * is the internal EEPROM memory. 
    * @param[in] dev device.
    */
   EEPROM(Device* dev = &Device::eeprom) : m_dev(dev) {}
