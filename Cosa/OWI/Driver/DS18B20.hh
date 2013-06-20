@@ -89,21 +89,35 @@ private:
   }
 public:
   /**
-   * Construct a DS18B20 device connected to the given 1-Wire bus
-   * and device identity (in EEPROM). Default device identity is null.
+   * Construct a DS18B20 device connected to the given 1-Wire bus.
    * Use connect() to lookup, set power supply mode and
-   * configuration. Alternatively use read_power_supply() and  
+   * configuration. Alternatively use read_power_supply() and
    * read_scratchpad() directly if rom address is given.
    * @param[in] pin one wire bus pin.
    * @param[in] rom device identity (default null).
    */
-  DS18B20(OWI* pin, const uint8_t* rom = 0) : 
-    OWI::Driver(pin, rom),
+  DS18B20(OWI* pin) : 
+    OWI::Driver(pin),
     m_parasite(0),
     m_start(0L),
     m_converting(false)
   {}
 
+  /**
+   * Construct a DS18B20 device connected to the given 1-Wire bus
+   * and device identity (in EEPROM). Use connect() to lookup, set
+   * power supply mode and configuration. Alternatively use
+   * read_power_supply() and read_scratchpad() directly if rom address
+   * is given.
+   * @param[in] pin one wire bus pin.
+   * @param[in] rom device identity (default null).
+   */
+  DS18B20(OWI* pin, const uint8_t* rom) : 
+    OWI::Driver(pin, rom),
+    m_parasite(0),
+    m_start(0L),
+    m_converting(false)
+  {}
   /**
    * Connect to DS18B20 device with given index. Reads configuration,
    * scratchpad, and power supply setting.

@@ -32,6 +32,7 @@
 
 #include "Cosa/Socket/Driver/NRF24L01P.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/OWI.hh"
 #include "Cosa/FixedPoint.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
@@ -66,9 +67,9 @@ class LTB : public Sensor {
 public:
   struct msg_t {
     uint16_t nr;
-    uint16_t voltage;
     uint16_t luminance;
     uint16_t temperature;
+    uint16_t voltage;
   };
   LTB(Device* dev, uint16_t port) : Sensor(dev, port, sizeof(msg_t)) {}
   virtual void print(IOStream& outs, const void* buf);
@@ -80,9 +81,9 @@ LTB::print(IOStream& outs, const void* buf)
 {
   msg_t* msg = (msg_t*) buf;
   outs << PSTR("LTB:") << msg->nr << ':'
-       << PSTR("voltage = ") << msg->voltage << ':'
        << PSTR("luminance = ") << msg->luminance << ':'
-       << PSTR("temperature = ") << msg->temperature;
+       << PSTR("temperature = ") << msg->temperature << ':'
+       << PSTR("voltage = ") << msg->voltage;
 }
 
 // Humidity and Temperature sensor reading receiver on port(7001)
@@ -90,9 +91,9 @@ class HTB : public Sensor {
 public:
   struct msg_t {
     uint16_t nr;
-    uint16_t voltage;
     uint16_t humidity;
     uint16_t temperature;
+    uint16_t voltage;
   };
   HTB(Device* dev, uint16_t port) : Sensor(dev, port, sizeof(msg_t)) {}
   virtual void print(IOStream& outs, const void* buf);
@@ -104,9 +105,9 @@ HTB::print(IOStream& outs, const void* buf)
 {
   msg_t* msg = (msg_t*) buf;
   outs << PSTR("HTB:") << msg->nr << ':'
-       << PSTR("voltage = ") << msg->voltage << ':'
        << PSTR("humidity = ") << msg->humidity << ':'
-       << PSTR("temperature = ") << msg->temperature;
+       << PSTR("temperature = ") << msg->temperature << ':'
+       << PSTR("voltage = ") << msg->voltage;
 }
 
 // OneWire temperature reading receiver on port(7002)
@@ -114,26 +115,42 @@ class OWT : public Sensor {
 public:
   struct msg_t {
     uint16_t nr;
-    uint16_t voltage;
+    uint8_t id[OWI::ROM_MAX];
     uint16_t temperature;
+    uint16_t voltage;
   };
   OWT(Device* dev, uint16_t port) : Sensor(dev, port, sizeof(msg_t)) {}
   virtual void print(IOStream& outs, const void* buf);
+  void print(IOStream& outs, uint8_t x);
 };
 OWT owt(&nrf, 7002);
+
+void 
+OWT::print(IOStream& outs, uint8_t x)
+{
+  char c;
+  c = (x >> 4);
+  c += ((c > 9) ? 'a'- 9 : '0');
+  outs << c;
+  c = (x & 0x0f);
+  c += ((c > 9) ? 'a' - 9 : '0');
+  outs << c;
+}
 
 void 
 OWT::print(IOStream& outs, const void* buf)
 {
   msg_t* msg = (msg_t*) buf;
-  outs << PSTR("OWT:") << msg->nr << ':'
-       << PSTR("voltage = ") << msg->voltage << ':'
-       << PSTR("temperature = ");
+  uint8_t i;
+  outs << PSTR("OWI:") << msg->nr << ':';
+  for (i = 0; i < OWI::ROM_MAX; i++) print(outs, msg->id[i]);
+  outs << PSTR(":temperature = ");
   FixedPoint temperature(msg->temperature, 4);
   uint16_t fraction = temperature.get_fraction(2);
   outs << temperature.get_integer() << '.';
   if (fraction < 10) outs << '0';
   outs << fraction;
+  outs << PSTR(":voltage = ") << msg->voltage;
 }
 
 void setup()

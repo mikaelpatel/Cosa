@@ -49,8 +49,6 @@ Pin::read(OutputPin& clk, Direction order)
   return (value);
 }
 
-#if !defined(__ARDUINO_TINY__)
-
 IOStream& operator<<(IOStream& outs, Pin& pin)
 {
   outs << PSTR("Pin(pin = ") << (uint8_t) pin.m_pin 
@@ -58,8 +56,6 @@ IOStream& operator<<(IOStream& outs, Pin& pin)
        << PSTR(", mask = ") << bin << (uint8_t) pin.m_mask << ')';
   return (outs);
 }
-
-#endif
 
 void 
 OutputPin::write(uint8_t value, OutputPin& clk, Direction order)

@@ -110,23 +110,10 @@ OWI::write(uint8_t value, uint8_t bits, uint8_t power)
   DELAY(10);
 }
 
-void
-OWI::print_devices(IOStream& stream)
-{
-  Driver dev(this);
-  int8_t last = Driver::FIRST;
-  do {
-    last = dev.search_rom(last);
-    if (last == Driver::ERROR) return;
-    dev.print_rom(stream);
-  } while (last != Driver::LAST);
-}
-
 OWI::Driver::Driver(OWI* pin, const uint8_t* rom) : 
   ROM(rom),
   m_pin(pin)
 {
-  // Check if identity should be loaded from EEPROM
   if (rom != 0) eeprom_read_block(m_rom, rom, sizeof(m_rom));
 }
 
@@ -243,16 +230,6 @@ OWI::Driver::connect(uint8_t family, uint8_t index)
   } while (last != LAST);
   memset(m_rom, 0, ROM_MAX);
   return (false);
-}
-
-void
-OWI::Driver::print_rom(IOStream& stream)
-{
-  uint8_t i;
-  stream << PSTR("OWI::rom(family = ") << hex << m_rom[0] << PSTR(", id = ");
-  for (i = 1; i < ROM_MAX - 1; i++)
-    stream << hex << m_rom[i] << PSTR(", ");
-  stream << PSTR("crc = ") << hex << m_rom[i] << endl;
 }
 
 int
@@ -434,4 +411,26 @@ OWI::Device::on_interrupt(uint16_t arg)
     Event::push(Event::CHANGE_TYPE, this);
   }
   else m_state = IDLE_STATE;
+}
+
+IOStream& operator<<(IOStream& outs, OWI::Driver& dev)
+{
+  uint8_t i;
+  outs << PSTR("OWI::rom(family = ") << hex << dev.m_rom[0] << PSTR(", id = ");
+  for (i = 1; i < OWI::ROM_MAX - 1; i++)
+    outs << hex << dev.m_rom[i] << PSTR(", ");
+  outs << PSTR("crc = ") << hex << dev.m_rom[i] << ')';
+  return (outs);
+}
+
+IOStream& operator<<(IOStream& outs, OWI& owi)
+{
+  OWI::Driver dev(&owi);
+  int8_t last = OWI::Driver::FIRST;
+  do {
+    last = dev.search_rom(last);
+    if (last == OWI::Driver::ERROR) return (outs);
+    outs << dev << endl;
+  } while (last != OWI::Driver::LAST);
+  return (outs);
 }

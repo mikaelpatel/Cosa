@@ -82,13 +82,11 @@ void setup()
 
   // Print latest set time
   trace.print_P(PSTR("set on "));
-  latest.set.print();
-  trace.println();
+  trace << latest.set << endl;
 
   // And the latest run time
   trace.print_P(PSTR("run on "));
-  latest.run.print();
-  trace.println();
+  trace << latest.run << endl;
 
   // Update the run time with the current time and update ram
   rtc.get_time(now);
@@ -105,8 +103,7 @@ void loop()
   // Read the time from the rtc device and print
   DS1307::timekeeper_t now;
   rtc.get_time(now);
-  now.print();
-  trace.println();
+  trace << now << endl;
 
   // Heartbeat
   ledPin.toggle();

@@ -40,6 +40,7 @@
 // NRF24L01+ Wireless communication using default pins(SPI, D9, D10, D2)
 NRF24L01P nrf(0xc05a0001);
 
+#ifndef __ARDUINO_TINY__
 // Luminance and temperature sensor based on analog pins(A2, A3)
 #include "Cosa/Pins.hh"
 namespace LTB {
@@ -51,9 +52,9 @@ namespace LTB {
 
   struct msg_t {
     uint16_t nr;
-    uint16_t voltage;
     uint16_t luminance;
     uint16_t temperature;
+    uint16_t voltage;
   };
 
   void send_update()
@@ -66,6 +67,7 @@ namespace LTB {
     socket.send(&msg, sizeof(msg), dest);
   }
 };
+#endif
 
 // Digital humidity and temperture sensor on pin(D7)
 #include "Cosa/Driver/DHT11.hh"
@@ -77,9 +79,9 @@ namespace HTB {
 
   struct msg_t {
     uint16_t nr;
-    uint16_t voltage;
     int16_t humidity;
     int16_t temperature;
+    uint16_t voltage;
   };
 
   void send_update()
@@ -92,6 +94,7 @@ namespace HTB {
   }
 };
 
+#ifndef __ARDUINO_TINY__
 // OneWire temperature sensor on pin(D8)
 #include "Cosa/OWI/Driver/DS18B20.hh"
 namespace OWT {
@@ -103,27 +106,32 @@ namespace OWT {
 
   struct msg_t {
     uint16_t nr;
-    uint16_t voltage;
+    uint8_t id[OWI::ROM_MAX];
     int16_t temperature;
+    uint16_t voltage;
   };
 
   void begin()
   {
     outdoors.connect(0);
-    outdoors.convert_request();
   }
 
   void send_update()
   {
     msg_t msg;
+    outdoors.convert_request();
     outdoors.read_scratchpad();
     msg.nr = nr++;
+    memcpy(msg.id, outdoors.get_rom(), sizeof(msg.id));
     msg.temperature = outdoors.get_temperature();
     msg.voltage = AnalogPin::bandgap(1100);
     socket.send(&msg, sizeof(msg), dest);
-    outdoors.convert_request();
   }
 };
+#endif
+
+#ifndef __ARDUINO_TINY__
+// The Arduino Standard version: All sensors (analog pin, DHT11 and DS18B20)
 
 void setup()
 {
@@ -135,9 +143,23 @@ void setup()
 void loop()
 {
   LTB::send_update();
-  SLEEP(1);
   HTB::send_update();
-  SLEEP(1);
   OWT::send_update();
-  SLEEP(1);
+  SLEEP(2);
 }
+
+#else
+// The Arduino Tiny version: DHT11 sensor only
+
+void setup()
+{
+  Watchdog::begin();
+  nrf.begin();
+}
+
+void loop()
+{
+  HTB::send_update();
+  SLEEP(2);
+}
+#endif

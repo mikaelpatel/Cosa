@@ -23,7 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
 #include "Cosa/TWI.hh"
 
 TWI twi  __attribute__ ((weak));

@@ -28,7 +28,6 @@
 
 #include "Cosa/TWI.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Trace.hh"
 
 /**
  * Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock.
@@ -65,16 +64,6 @@ public:
      * Apply after setting new value and writing to the device.
      */
     void to_bcd();
-
-    /**
-     * Print the date to the given stream with the given format.
-     * The timekeeper values should be in BCD i.e. not converted 
-     * to binary. Default format is PSTR("20%Bd-%Bd-%Bd %Bd:%Bd:%Bd") 
-     * where "%Bd" is BCD digit.
-     * @param[in] stream output stream (default trace).
-     * @param[in] format string in program memory (default above).
-     */
-    void print(IOStream& stream = trace, const char* format = 0);
   };
 
   /**
@@ -121,5 +110,13 @@ public:
   }
 
 };
+
+/**
+ * Print the date to the given stream with the format (20YY-MM-DD HH:MM:SS).
+ * The timekeeper values should be in BCD i.e. not converted to binary. 
+ * @param[in] outs output stream.
+ * @param[in] t time keeper structure.
+ */
+IOStream& operator<<(IOStream& outs, DS1307::timekeeper_t& t);
 
 #endif

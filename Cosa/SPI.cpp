@@ -23,7 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
 #include "Cosa/SPI.hh"
 
 SPI spi  __attribute__ ((weak));

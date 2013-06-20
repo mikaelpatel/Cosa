@@ -30,7 +30,6 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Trace.hh"
 
 /**
  * 1-wire device driver support class. Allows device rom search
@@ -60,6 +59,8 @@ public:
    */
   class Driver {
     friend class OWI;
+    friend IOStream& operator<<(IOStream& outs, OWI& owi);
+    friend IOStream& operator<<(IOStream& outs, Driver& dev);
   protected:
     enum {
       FIRST = -1,
@@ -80,12 +81,18 @@ public:
 
   public:
     /**
+     * Construct one wire device driver. Use one wire bus on given pin.
+     * @param[in] pin one wire bus.
+     */
+    Driver(OWI* pin) : ROM(0), m_pin(pin) {}
+
+    /**
      * Construct one wire device driver. Use one wire bus on given pin,
      * and given rom identity in EEPROM (or NULL).
      * @param[in] pin one wire bus.
      * @param[in] rom identity.
      */
-    Driver(OWI* pin, const uint8_t* rom = 0);
+    Driver(OWI* pin, const uint8_t* rom);
 
     /**
      * Return pointer to device rom. 
@@ -149,13 +156,6 @@ public:
      * @return true(1) if successful otherwise false(0).
      */
     bool connect(uint8_t family, uint8_t index);
-
-  public:
-    /**
-     * Print device rom to output stream. 
-     * @param[in] stream to print rom to.
-     */
-    void print_rom(IOStream& stream = trace);
   };
 
   /**
@@ -339,11 +339,21 @@ public:
     set_mode(INPUT_MODE);
     clear();
   }
-
-  /**
-   * Print list of connected devices on given stream.
-   * @param[in] stream to print rom to.
-   */
-  void print_devices(IOStream& stream = trace);
 };
+
+/**
+ * Print device driver rom to output stream. 
+ * @param[in] outs stream to print to.
+ * @param[in] dev owi device driver.
+ */
+IOStream& operator<<(IOStream& outs, OWI::Driver& dev);
+
+/**
+ * Print list of connected devices on given stream.
+ * @param[in] outs stream to print device information to.
+ * @param[in] owi one-wire bus.
+ */
+IOStream& operator<<(IOStream& outs, OWI& owi);
+
 #endif
+

@@ -73,16 +73,20 @@ void setup()
   TRACE(free_memory());
 
   // List connected devices
-  owi.print_devices();
+  //  owi.print_devices(trace);
+  trace << owi << endl;
 
   // Connect to the devices and print rom contents
   ledPin.toggle();
   TRACE(indoors.connect(0));
-  indoors.print_rom();
+  // indoors.print_rom(trace);
+  trace << indoors << endl;
   TRACE(outdoors.connect(1));
-  outdoors.print_rom();
+  // outdoors.print_rom(trace);
+  trace << outdoors << endl;
   TRACE(basement.connect(2));
-  basement.print_rom();
+  // basement.print_rom(trace);
+  trace << basement << endl;
   ledPin.toggle();
 
   // Start the watchdog ticks counter with 16 ms period
