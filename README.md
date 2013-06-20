@@ -55,13 +55,18 @@ transmitter. For more advanced wireless connections there is also a
 driver for the Nordic Semiconductor NRF24L01+ chip, which allows
 low-power wireless communication of up to 2 Mbps in the 2.4GHz band. 
 
-
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. 
 Unfortunately Cosa is not a beginners entry level programming
 platform, though following some of the design patterns in Cosa will
 help beginners build more complex small scale embedded systems with
 richer concurrency and low power consumption.  
+
+The projects main principle of evolution is iterative with many
+rewrites and refactoring. With that said this phase of the project
+will require users to align with the interface changes. When
+interfaces become stable the project will switch to a normal release
+style.
 
 Please follow the development of this project on
 [blogspot](http://cosa-arduino.blogspot.se/) and on the [Arduino
@@ -201,4 +206,5 @@ template class for handling of keyed sets of event handlers. Added
 support for LCD ST7565 with natural text scrolling. Making it easy to
 implement TWI slave devices with TWI::Device. Including support for
 event driven Rotary Encoder handler.   
-2013-06 HD44780 (1602) LCD device driver.    
+2013-06 HD44780 (1602) LCD device driver. Adding support for
+Sockets. Refactoring NRF24L01P device driver to a Socker::Device.   

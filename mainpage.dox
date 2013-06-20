@@ -52,7 +52,9 @@ codecs; Manchester, 4B5B and Bitstuffing. This allows basic ultra
 cheap wireless nodes with RF315/433 receiver and transmitter. For more
 advanced wireless connections there is also a driver for the Nordic
 Semiconductor NRF24L01+ chip, which allows low-power wireless
-communication of up to 2 Mbps in the 2.4GHz band.  
+communication of up to 2 Mbps in the 2.4GHz band. This driver
+implements the Socket::Device interface. This allows it to be used
+with the communication network abstraction (Socket/Client/Server).
 
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. 
