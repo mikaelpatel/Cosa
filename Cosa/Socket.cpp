@@ -37,10 +37,10 @@ IOStream& operator<<(IOStream& outs, const Socket::addr_t& src)
   return (outs);
 }
 
-int
+int8_t
 Socket::Device::attach(Socket* s)
 {
-  int res = -1;
+  int8_t res = -1;
   for (uint8_t i = 0; i < SOCKET_MAX; i++) {
     if (m_socket[i] == s) return (i);
     if (m_socket[i] == 0 && res < 0) res = i;

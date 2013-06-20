@@ -75,7 +75,7 @@ public:
      * @param[in] s socket to attach.
      * @return binding or negative error code.
      */
-    int attach(Socket* s);
+    int8_t attach(Socket* s);
 
     /**
      * Detach given socket from device. 

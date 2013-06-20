@@ -41,6 +41,14 @@
  * http://www.nordicsemi.com/kor/nordic/download_resource/8765/2/17776224
  */
 class NRF24L01P : private SPI::Driver, public Socket::Device {
+public:
+  /**
+   * Configuration max values
+   */
+  enum {
+    PAYLOAD_MAX = 32		// Max size of payload
+  } __attribute__((packed));
+
 private:
   /**
    * NRF transceiver states (See chap. 6.1.1, fig. 4, pp. 22)
@@ -233,14 +241,6 @@ private:
     }
   };
 
-  /** 
-   * Output operator for status field print out.
-   * @param[in] outs output stream.
-   * @param[in] status value to print.
-   * @return stream.
-   */
-  friend IOStream& operator<<(IOStream& outs, status_t status);
-
   /**
    * Register OBSERVE_TX bitfields, performance statistics
    */
@@ -269,14 +269,6 @@ private:
       as_byte = value;
     }
   };
-
-  /** 
-   * Output operator for performance statistics field print out.
-   * @param[in] outs output stream.
-   * @param[in] status value to print.
-   * @return stream.
-   */
-  friend IOStream& operator<<(IOStream& outs, observe_tx_t observe);
 
   /**
    * Register FIFO_STATUS bitfields, transmission queue status
@@ -313,14 +305,6 @@ private:
     }
   };
   
-  /** 
-   * Output operator for transmitter queue status field print out.
-   * @param[in] outs output stream.
-   * @param[in] status value to print.
-   * @return stream.
-   */
-  friend IOStream& operator<<(IOStream& outs, fifo_status_t status);
-
   /**
    * Register DYNPD bitfields
    */
@@ -347,7 +331,6 @@ private:
    * Configuration max values
    */
   enum {
-    PAYLOAD_MAX = 32,           // Max size of payload
     AW_MAX = 5,                 // Max address width in bytes
     PIPE_MAX = 6,		// Max number of pipes
   } __attribute__((packed));
@@ -433,7 +416,7 @@ private:
    * @param[in] c client socket to attach.
    * @return binding or negative error code.
    */
-  int attach(Client* c);
+  int8_t attach(Client* c);
 
   /**
    * Detach given client socket from device. 
@@ -769,6 +752,34 @@ public:
    * @return bool.
    */
   virtual bool listen(Server* s);
+
+  friend IOStream& operator<<(IOStream& outs, status_t status);
+  friend IOStream& operator<<(IOStream& outs, fifo_status_t status);
+  friend IOStream& operator<<(IOStream& outs, observe_tx_t observe);
 };
+
+/** 
+ * Output operator for status field print out.
+ * @param[in] outs output stream.
+ * @param[in] status value to print.
+ * @return stream.
+ */
+IOStream& operator<<(IOStream& outs, NRF24L01P::status_t status);
+
+/** 
+ * Output operator for transmitter queue status field print out.
+ * @param[in] outs output stream.
+ * @param[in] status value to print.
+ * @return stream.
+ */
+IOStream& operator<<(IOStream& outs, NRF24L01P::fifo_status_t status);
+
+/** 
+ * Output operator for performance statistics field print out.
+ * @param[in] outs output stream.
+ * @param[in] status value to print.
+ * @return stream.
+ */
+IOStream& operator<<(IOStream& outs, NRF24L01P::observe_tx_t observe);
 
 #endif
