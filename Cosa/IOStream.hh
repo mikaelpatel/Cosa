@@ -27,7 +27,6 @@
 #define __COSA_IOSTREAM_HH__
 
 #include "Cosa/Types.h"
-#include <avr/sleep.h>
 
 /**
  * Basic in-/output stream support class. Requires implementation of

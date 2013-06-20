@@ -27,7 +27,6 @@
 #define __COSA_SERVO_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Board.hh"
 #include "Cosa/Pins.hh"
 
 /**

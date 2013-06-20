@@ -26,9 +26,7 @@
 #ifndef __COSA_RTC_HH__
 #define __COSA_RTC_HH__
 
-#include <avr/sleep.h>
 #include "Cosa/Types.h"
-#include "Cosa/Board.hh"
 
 /**
  * Real-time clock; Arduino/ATmega328P Timer0 for micro/milli-

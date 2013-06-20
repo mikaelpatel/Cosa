@@ -28,7 +28,6 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
-#include "Cosa/Board.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Interrupt.hh"
 

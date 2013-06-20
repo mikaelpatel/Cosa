@@ -30,6 +30,7 @@
 #define __COSA_TYPES_H__
 
 #include <avr/io.h>
+#include <avr/sleep.h>
 #include <avr/eeprom.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
@@ -40,6 +41,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "Cosa/Board.hh"
 
 /**
  * Number of bits in a character.

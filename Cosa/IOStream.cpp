@@ -24,7 +24,6 @@
  */
 
 #include "Cosa/IOStream.hh"
-#include <stdarg.h>
 
 IOStream::Device* 
 IOStream::set_device(Device* dev) 

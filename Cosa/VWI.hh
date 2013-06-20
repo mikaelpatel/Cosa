@@ -28,7 +28,6 @@
 #define __COSA_VWI_HH__
 
 #include "Cosa/Pins.hh"
-#include <avr/sleep.h>
 
 /**
  * VWI (Virtual Wire Interface) is an Cosa library that provides

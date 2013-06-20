@@ -26,7 +26,7 @@
 #ifndef __COSA_SOFT_SPI_HH__
 #define __COSA_SOFT_SPI_HH__
 
-#include "Cosa/Board.hh"
+#include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
 
 /**

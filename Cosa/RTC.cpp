@@ -24,7 +24,6 @@
  */
 
 #include "Cosa/RTC.hh"
-#include "Cosa/Board.hh"
 #include "Cosa/Power.hh"
 
 // Real-Time Clock configuration

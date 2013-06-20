@@ -27,10 +27,7 @@
 #define __COSA_POWER_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Board.hh"
-
 #include <avr/power.h>
-#include <avr/sleep.h>
 
 /**
  * Power Management and Sleep modes.

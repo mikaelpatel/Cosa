@@ -31,7 +31,6 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Interrupt.hh"
-#include "Cosa/Board.hh"
 
 /**
  * Abstract external interrupt pin. Allows interrupt handling on 

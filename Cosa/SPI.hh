@@ -30,7 +30,6 @@
 #include "Cosa/Bits.h"
 #include "Cosa/Interrupt.hh"
 #include "Cosa/Event.hh"
-#include "Cosa/Board.hh"
 
 /**
  * Serial Peripheral Interface (SPI) device class. Typical usage is

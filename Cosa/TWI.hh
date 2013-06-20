@@ -26,11 +26,9 @@
 #ifndef __COSA_TWI_HH__
 #define __COSA_TWI_HH__
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/Types.h"
+#if !defined(__ARDUINO_TINY__)
 #include "Cosa/Event.hh"
-#include <avr/sleep.h>
 
 /**
  * Two wire library. Support for the I2C/TWI bus Master and Slave

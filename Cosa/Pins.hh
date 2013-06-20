@@ -31,7 +31,6 @@
 #include "Cosa/Interrupt.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Board.hh"
 
 class OutputPin;
 
@@ -241,15 +240,12 @@ public:
     return (*this);
   }
 
-#if !defined(__ARDUINO_TINY__)
   /**
    * Print abstract pin information to given stream. 
    * @param[in] outs output stream to print on.
    * @param[in] pin to print
    */
   friend IOStream& operator<<(IOStream& outs, Pin& pin);
-#endif
-  
 };
 
 /**
