@@ -28,7 +28,6 @@
 #include <util/delay.h>
 
 // Output operators for bitfield status registers
-
 IOStream& operator<<(IOStream& outs, NRF24L01P::status_t status)
 {
   outs << PSTR("RX_DR = ") << status.rx_dr 
@@ -62,14 +61,14 @@ int
 NRF24L01P::attach(Client* c)
 {
   if (m_clients == CLIENT_MAX) return (-1);
-  int res = 0;
   for (uint8_t i = 1; i < CLIENT_MAX; i++) {
-    if (m_client[i] == c) return (i);
-    if (m_client[i] == 0) res = i;
+    if (m_client[i] == 0) {
+      m_client[i] = c;
+      m_clients += 1;
+      return (i);
+    }
   }
-  m_client[res] = c;
-  m_clients += 1;
-  return (res);
+  return (-1);
 }
 
 void
@@ -138,6 +137,7 @@ NRF24L01P::set_powerup_mode()
 
   // Setup configuration for powerup
   write(CONFIG, _BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP));
+
   _delay_ms(Tpd2stby_ms);
   m_state = STANDBY_STATE;
 }
@@ -145,6 +145,9 @@ NRF24L01P::set_powerup_mode()
 void
 NRF24L01P::set_receiver_mode()
 {
+  // Fix: Should be handled by the interrupt handler on TX_DS interrupt
+  if (m_state == TX_STATE) Watchdog::delay(10);
+
   // Setup hardware receive pipe address for incoming datagram
   uint8_t rx_addr[AW_MAX];
   set_address(rx_addr, m_addr, 0);
@@ -234,45 +237,50 @@ NRF24L01P::on_event(uint8_t type, uint16_t value)
   uint8_t payload[PAYLOAD_MAX];
   int res = recv(dest, payload, sizeof(payload), src);
   if (res <= 0) return;
-  
+
   // Map to the receiving socket
   Socket* socket = (dest < PIPE_MAX) ? m_client[dest] : lookup(dest);
   if (socket == 0) return;
 
   // Check if the socket is a connection-less or a client
-  if (!socket->is_server()) {
+  if ((!socket->is_server()) && (dest < Socket::DYNAMIC_PORT)) {
     socket->on_recv(payload, res, src);
-    if (m_state == RX_STATE) return;
-    Watchdog::delay(10);
     set_receiver_mode();
     return;
   }
 
-  // Handle the incoming request to server
+  // Handle the incoming request to server/client
   if (res != sizeof(request_t)) return;
   request_t* request = (request_t*) payload;
   Server* server = (Server*) socket;
   Client* client;
+  uint16_t port;
   switch (request->op) {
   case CONNECT_REQUEST:
     if (m_clients == CLIENT_MAX) return;
     client = server->on_connect_request(src);
     if (client == 0) return;
-    dest = attach(client);
+    port = attach(client) + Socket::DYNAMIC_PORT;
+    set_port(client, port);
     request->op = CONNECT_RESPONSE;
-    request->param = dest;
-    send(dest, request, sizeof(request_t), src);
+    send(port, request, sizeof(request_t), src);
+    set_receiver_mode();
     break;
   case CONNECT_RESPONSE:
-    dest = request->param;
+    port = src.port - Socket::DYNAMIC_PORT;
+    if (!((port > 0) && (port < CLIENT_MAX))) return;
+    dest = dest - Socket::DYNAMIC_PORT;
     if (!((dest > 0) && (dest < CLIENT_MAX))) return;
     client = (Client*) m_client[dest];
     if (client == 0) return;
-    set_connected(client);
+    set_connected(client, src);
+    client->on_connected();
     break;
   case DISCONNECT_REQUEST:
+    // FIX:
     break;
   case DISCONNECT_RESPONSE:
+    // FIX:
     break;
   }
 }
@@ -338,6 +346,14 @@ NRF24L01P::recv(uint16_t& dest, void* buf, size_t size,
   asserted(m_csn) {
     count = spi.read(R_RX_PL_WID);
   }
+
+  // Check for payload error from device (Tab. 20, pp. 51, R_RX_PL_WID)
+  if (count > PAYLOAD_MAX) {
+    flush();
+    return (-1);
+  }
+
+  // Check for datagram handling
   if (pipe == DATAGRAM_PIPE) {
     header_t header;
     count -= sizeof(header);
@@ -358,8 +374,6 @@ NRF24L01P::recv(uint16_t& dest, void* buf, size_t size,
     m_status = spi.read(R_RX_PAYLOAD, buf, count);
   }
   write(STATUS, _BV(RX_DR));
-  src.addr = 0L;
-  src.port = 0L;
   dest = pipe;
   return (count);
 }
@@ -369,7 +383,10 @@ NRF24L01P::begin(bool mode)
 {
   spi.begin(SPI::DIV4_CLOCK, 0, SPI::MSB_FIRST);
   set_powerup_mode();
-  if (mode) set_receiver_mode();
+  if (mode) 
+    set_receiver_mode();
+  else
+    set_transmitter_mode();
   flush();
   enable();
   return (true);
@@ -414,31 +431,40 @@ NRF24L01P::connect(Client* c, const Socket::addr_t& server)
 {
   int src = attach(c);
   if (src < 0) return (false);
+  uint16_t port = src + Socket::DYNAMIC_PORT;
+  set_port(c, port);
   request_t request;
   request.op = CONNECT_REQUEST;
-  request.param = src;
-  return (send(src, &request, sizeof(request), server) == sizeof(request));
+  int res = send(port, &request, sizeof(request), server);
+  set_receiver_mode();
+  return (res == sizeof(request));
 }
 
 bool 
 NRF24L01P::disconnect(Client* c)
 {
+  // Fix: Should send a disconnect message to the original server.
+  // This may require additional address parameter in request message
+  // if the server allocated a client handler on another node.
   return (false);
 }
 
 int 
 NRF24L01P::send(Client* c, const void* buf, size_t size)
 {
-  Socket::addr_t dest;
-  get_dest_address(c, dest);
+  Socket::addr_t dest = get_dest_address(c);
+  dest.port -= Socket::DYNAMIC_PORT;
   return (send(c->get_port(), buf, size, dest));
 }
 
 int 
 NRF24L01P::recv(Client* c, void* buf, size_t size)
 {
+  uint16_t port = c->get_port() - Socket::DYNAMIC_PORT;
+  status_t status = get_status();
+  uint8_t pipe = status.rx_p_no;
+  if ((pipe >= PIPE_MAX) || (pipe != port)) return (0);
   Socket::addr_t src;
-  uint16_t port = c->get_port();
   return (recv(port, buf, size, src));
 }
 
@@ -452,7 +478,7 @@ void
 NRF24L01P::IRQPin::on_interrupt(uint16_t arg)
 { 
   NRF24L01P::status_t status = m_nrf->get_status();
-  m_nrf->write(NRF24L01P::STATUS, _BV(RX_DR) | _BV(TX_DS));
+  m_nrf->write(NRF24L01P::STATUS, (_BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT)));
   if (!status.rx_dr) return;
   Event::push(Event::RECEIVE_COMPLETED_TYPE, m_nrf);
 }

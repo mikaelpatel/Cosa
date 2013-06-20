@@ -33,16 +33,15 @@
 #include "Cosa/Socket.hh"
 
 /**
- * Socket device driver for the nRF24L01 Single Chip 2.4GHz
- * Transceiver. Allow nRF24L01 be used as a device in the socket
+ * Socket device driver for the nRF24L01+ Single Chip 2.4GHz
+ * Transceiver. Allow nRF24L01+ be used as a device in the socket
  * interface. Supports datagrams and connection-oriented communication
- * using the nRF24L01 pipes. For further details on the Socket
+ * using the nRF24L01+ pipes. For further details on the Socket
  * interface see Socket.hh and nRF24L01+ Product Specification (Rev. 1.0) 
  * http://www.nordicsemi.com/kor/nordic/download_resource/8765/2/17776224
  */
 class NRF24L01P : private SPI::Driver, public Socket::Device {
-  // private:
-public:
+private:
   /**
    * NRF transceiver states (See chap. 6.1.1, fig. 4, pp. 22)
    */
@@ -217,30 +216,30 @@ public:
   union status_t {
     uint8_t as_byte;
     struct {
-      uint8_t tx_full:1;
-      uint8_t rx_p_no:3;
-      uint8_t max_rt:1;
-      uint8_t tx_ds:1;
-      uint8_t rx_dr:1;
+      uint8_t tx_full:1;	// TX FIFO full
+      uint8_t rx_p_no:3;	// Data pipe number for available payload
+      uint8_t max_rt:1;		// Maximum number of TX retransmit interrupt
+      uint8_t tx_ds:1;		// Data send TX FIFO interrupt
+      uint8_t rx_dr:1;		// Data ready RX FIFO interrupt
     };
 
     /**
-     * Construct status from register reading
+     * Construct status from register reading.
      * @param[in] value register reading.
      */
     status_t(uint8_t value) 
     { 
       as_byte = value;
     }
-
-    /** 
-     * Output operator for status field print 
-     * @param[in] outs output stream.
-     * @param[in] status value to print.
-     * @return stream.
-     */
-    friend IOStream& operator<<(IOStream& outs, status_t status);
   };
+
+  /** 
+   * Output operator for status field print out.
+   * @param[in] outs output stream.
+   * @param[in] status value to print.
+   * @return stream.
+   */
+  friend IOStream& operator<<(IOStream& outs, status_t status);
 
   /**
    * Register OBSERVE_TX bitfields, performance statistics
@@ -256,8 +255,8 @@ public:
   union observe_tx_t {
     uint8_t as_byte;
     struct {
-      uint8_t arc_cnt:4;
-      uint8_t plos_cnt:4;
+      uint8_t arc_cnt:4;	// Count retransmitted packets 
+      uint8_t plos_cnt:4;	// Count lost packets
     };
 
     /**
@@ -269,15 +268,15 @@ public:
     {
       as_byte = value;
     }
-
-    /** 
-     * Output operator for performance statistics field print.
-     * @param[in] outs output stream.
-     * @param[in] status value to print.
-     * @return stream.
-     */
-    friend IOStream& operator<<(IOStream& outs, observe_tx_t observe);
   };
+
+  /** 
+   * Output operator for performance statistics field print out.
+   * @param[in] outs output stream.
+   * @param[in] status value to print.
+   * @return stream.
+   */
+  friend IOStream& operator<<(IOStream& outs, observe_tx_t observe);
 
   /**
    * Register FIFO_STATUS bitfields, transmission queue status
@@ -289,7 +288,6 @@ public:
     RX_FULL = 1,		// RX FIFO full flag
     RX_EMPTY = 0,		// RX FIFO empty flag
   } __attribute__((packed));
-
   
   /**
    * Register FIFO_STATUS data type, transmission queue status
@@ -297,12 +295,12 @@ public:
   union fifo_status_t {
     uint8_t as_byte;
     struct {
-      uint8_t rx_empty:1;
-      uint8_t rx_full:1;
+      uint8_t rx_empty:1;	// RX FIFO empty flag
+      uint8_t rx_full:1;	// RX FIFO full flag
       uint8_t reserved:2;
-      uint8_t tx_empty:1;
-      uint8_t tx_full:1;
-      uint8_t tx_reuse:1;
+      uint8_t tx_empty:1;	// TX FIFO empty flag
+      uint8_t tx_full:1;	// TX FIFO full flag
+      uint8_t tx_reuse:1;	// Reuse last transmitted data packat
     };
 
     /**
@@ -313,16 +311,16 @@ public:
     {
       as_byte = value;
     }
-
-    /** 
-     * Output operator for transmitter queue status field print.
-     * @param[in] outs output stream.
-     * @param[in] status value to print.
-     * @return stream.
-     */
-    friend IOStream& operator<<(IOStream& outs, fifo_status_t status);
   };
   
+  /** 
+   * Output operator for transmitter queue status field print out.
+   * @param[in] outs output stream.
+   * @param[in] status value to print.
+   * @return stream.
+   */
+  friend IOStream& operator<<(IOStream& outs, fifo_status_t status);
+
   /**
    * Register DYNPD bitfields
    */
@@ -354,15 +352,22 @@ public:
     PIPE_MAX = 6,		// Max number of pipes
   } __attribute__((packed));
 
+  /** Datagrams are sent/received on pipe(0), others are connections */
+  static const uint8_t DATAGRAM_PIPE = 0;
+  
   /**
-   * Datagram header
+   * Datagram header with destination port and source address/node.
+   * Destination address is in hardware register (RX_ADDR_P0/P1).
    */
   struct header_t {
-    Socket::addr_t src;		// Source node address and port
-    struct {			// Destination node address is pipe
+    struct {			// Destination node address is pipe address
       uint16_t port;		// Destination port
     } dest;
+    Socket::addr_t src;		// Source node address and port
   };
+
+  /** Maximum size of payload for datagram */
+  static const uint8_t DATAGRAM_MAX = PAYLOAD_MAX - sizeof(header_t);
 
   /**
    * Connection request message operations
@@ -375,15 +380,15 @@ public:
   } __attribute__((packed));
 
   /**
-   * Connection request message
+   * Connection request/response message
    */
   struct request_t {
     uint8_t op;			// Request/response operation code
-    uint16_t param;		// Parameter (port)
+    uint16_t param;		// Parameter (optional)
   };
   
   /**
-   * Chip interrupt handler
+   * Interrupt handler
    */
   class IRQPin : public ExternalInterrupt {
     friend class NRF24L01P;
@@ -397,19 +402,13 @@ public:
     virtual void on_interrupt(uint16_t arg = 0);
   };
   
-  /** Maximum size of payload for datagram */
-  static const uint8_t DATAGRAM_MAX = PAYLOAD_MAX - sizeof(header_t);
-
-  /** Pipe symbols */
-  static const uint8_t DATAGRAM_PIPE = 0;
-  
-  /** Slave select pin (default is pin 10) */
+  /** Slave select pin */
   OutputPin m_csn;
 
-  /**Chip enable activity RX/TX select pin (default is pin 9) */
+  /**Chip enable activity RX/TX select pin */
   OutputPin m_ce;
 
-  /** Chip interrupt pin (default is pin 2) */
+  /** Chip interrupt pin */
   IRQPin m_irq;
   
   /** Transceiver state */
@@ -419,18 +418,18 @@ public:
   uint8_t m_channel;
   uint8_t m_status;
 
-  /** Number of messages */
+  /** Number of messages transmitted and received */
   uint16_t m_nr_tx;
   uint16_t m_nr_rx;
-  
-  /** Mapping from pipe to sockets. Pipe(0) is used for datagrams */
+
+  /** Mapping from pipe to sockets */
   static const uint8_t CLIENT_MAX = PIPE_MAX;
   Client* m_client[CLIENT_MAX];
   uint8_t m_clients;
 
   /**
-   * Attach given client socket to device. Return socket binding or
-   * negative error code.
+   * Attach given client socket to device. Return socket binding 
+   * (allocated pipe) or negative error code.
    * @param[in] c client socket to attach.
    * @return binding or negative error code.
    */
@@ -444,7 +443,8 @@ public:
 
   /**
    * Map source address and port to the destination device address.
-   * @param[out] dest device address (AW_MAX).
+   * Prepare for loading ADDR_RX/P0/P1 register (little endian);
+   * @param[out] dest device address (size must be AW_MAX).
    * @param[in] src network address.
    * @param[in] port address.
    */
@@ -501,7 +501,7 @@ public:
   /**
    * @override
    * Handle receive message from interrupt handler. Reads message from
-   * the device and dispatches to the Socket on_recv() method for
+   * the device and dispatches to the Socket::on_recv() method for
    * bound sockets. Handles listen server connect/disconnect messages.
    * @param[in] type the event type.
    * @param[in] value the event value.
@@ -512,11 +512,11 @@ public:
   /**
    * Construct NRF transceiver with given channel and pin numbers 
    * for SPI slave select, activity enable and interrupt. Default
-   * in parenthesis (Standard/Mega Arduino).
+   * in parenthesis (Standard/Mega Arduino/TinyX4/TinyX5).
    * @param[in] channel number (default 64).
-   * @param[in] csn spi slave select pin number (default D10/D53).
-   * @param[in] ce chip enable activates pin number (default D9/D48).
-   * @param[in] irq interrupt pin number (default EXT0/EXT4).
+   * @param[in] csn spi slave select pin number (default D10/D53/D2/D3).
+   * @param[in] ce chip enable activates pin number (default D9/D48/D3/D4).
+   * @param[in] irq interrupt pin number (default EXT0/EXT4/EXT0/EXT0).
    */
 #if defined(__ARDUINO_MEGA__)
   NRF24L01P(uint32_t addr,
@@ -545,7 +545,7 @@ public:
 #endif
 
   /**
-   * Get status of latest operation. Issue NOP command.
+   * Get status of latest operation. Issue NOP command to read status.
    * @return status.
    */
   uint8_t get_status()
@@ -655,8 +655,8 @@ public:
   /**
    * None blocking attempt to receive a message from device. Returns
    * message in given buffer, source node address and port, and
-   * destination port/pipe.
-   * @param[out] dest destination port/pipe.
+   * destination port or pipe.
+   * @param[out] dest destination port or pipe.
    * @param[in/out] buf pointer to message buffer.
    * @param[in] size of message buffer.
    * @param[out] src source address and port.

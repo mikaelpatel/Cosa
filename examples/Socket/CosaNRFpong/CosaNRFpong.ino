@@ -66,7 +66,6 @@ Echo::begin()
   Socket::addr_t dest = { 0xc05a0002, 8000 };
   uint32_t msg = 0L;
   send(&msg, sizeof(msg), dest);
-  Watchdog::delay(20);
   nrf->set_receiver_mode();
 }
 

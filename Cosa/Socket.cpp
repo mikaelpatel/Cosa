@@ -72,9 +72,10 @@ Socket::Device::lookup(uint16_t port)
 }
 
 void 
-Socket::Device::set_connected(Client* client)
+Socket::Device::set_connected(Client* client, const Socket::addr_t& dest)
 {
   client->m_state = Client::CONNECTED_STATE;
+  client->m_dest = dest;
 }
 
 void 
@@ -89,8 +90,8 @@ Socket::Device::set_port(Client* client, uint16_t port)
   client->m_port = port;
 }
 
-void 
-Socket::Device::get_dest_address(Client* client, Socket::addr_t& dest)
+Socket::addr_t
+Socket::Device::get_dest_address(Client* client)
 {
-  dest = client->m_dest;
+  return (client->m_dest);
 }

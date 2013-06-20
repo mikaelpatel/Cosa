@@ -92,10 +92,11 @@ public:
     Socket* lookup(uint16_t port);
 
     /**
-     * Mark given client as connected
+     * Mark given client as connected to the given destination.
      * @param[in] client.
+     * @param[in] dest.
      */
-    void set_connected(Client* client);
+    void set_connected(Client* client, const Socket::addr_t& dest);
 
     /**
      * Mark given client as disconnected
@@ -113,10 +114,10 @@ public:
     /**
      * Get destination address of given client.
      * @param[in] client.
-     * @param[out] dest.
+     * @return node address.
      */
-    void get_dest_address(Client* client, Socket::addr_t& dest);
-
+    Socket::addr_t get_dest_address(Client* client);
+    
   public:
     /**
      * Construct socket driver with given network address (32b)
@@ -125,6 +126,17 @@ public:
     Device(uint32_t addr) :
       m_addr(addr)
     {
+      memset(m_socket, 0, sizeof(m_socket));
+    }
+
+    /**
+     * Construct socket driver with given network address (32b) in
+     * EEPROM.
+     * @param[in] addr node address (EEMEM variable).
+     */
+    Device(const uint32_t* addr)
+    {
+      m_addr = (uint32_t) pgm_read_dword(addr);
       memset(m_socket, 0, sizeof(m_socket));
     }
 
@@ -259,16 +271,6 @@ public:
 
   /**
    * Get socket network address.
-   * @param[out] src address.
-   */
-  void get_address(addr_t& src)
-  {
-    src.addr = m_dev->m_addr;
-    src.port = m_port;
-  }
-
-  /**
-   * Get socket network address.
    * @return address.
    */
   addr_t get_address()
@@ -379,7 +381,6 @@ public:
   }
 };
 
-
 /**
  * Write given network address and port to given output stream. The
  * address is written in dot notation with port. 
@@ -416,12 +417,28 @@ protected:
     DISCONNECTING_STATE
   } __attribute__((packed));
 
-  /** Destination node address */
+  /** Server node address, defined on connect */
+  addr_t m_server;
+  
+  /** Destination node address, defined when connected */
   addr_t m_dest;
 
   /** Current client state */
   State m_state;
   
+  /**
+   * @override
+   * Callback when a message is received. Forward to client version where
+   * src address is already known through the binding.
+   * @param[in] buf buffer pointer.
+   * @param[in] size of buffer.
+   * @param[in] src address and port of destination.
+   */
+  virtual void on_recv(const void* buf, size_t size, const addr_t& src) 
+  {
+    on_recv(buf, size);
+  }
+
 public:
   /**
    * Create client on given device. Further initialization is
@@ -430,7 +447,7 @@ public:
    * @param[in] dev socket device driver.
    */
   Client(Socket::Device* dev) : 
-    Socket(dev, DYNAMIC_PORT),
+    Socket(dev, 0),
     m_state(DISCONNECTED_STATE)
   {}
 
@@ -450,9 +467,9 @@ public:
    * method is none blocking. 
    * @return bool
    */
-  bool connect(Socket::addr_t& server)
+  bool connect(const Socket::addr_t& server)
   {
-    m_dest = server;
+    m_server = server;
     m_state = CONNECTING_STATE;
     return (m_dev->connect(this, server));
   }
@@ -515,6 +532,34 @@ public:
     if (m_state != CONNECTED_STATE) return (-1);
     return (m_dev->recv(this, buf, size));
   }
+
+  /**
+   * @override
+   * Client callback when a connection is established and the socket 
+   * is ready for communication.
+   */
+  virtual void on_connected() 
+  {
+  }
+
+  /**
+   * @override
+   * Callback when a message is received. Default is an empty methods.
+   * @param[in] buf buffer pointer.
+   * @param[in] size of buffer.
+   */
+  virtual void on_recv(const void* buf, size_t size) 
+  {
+  }
+
+  /**
+   * @override
+   * Client callback when disconnected by server. Default is an empty 
+   * method.
+   */
+  virtual void on_disconnected() 
+  {
+  }
 };
 
 /**
@@ -555,9 +600,10 @@ public:
   /**
    * @override
    * Server callback on connect request from given source node. Return
-   * created client otherwise null(0). Must be defined by sub-class.
+   * accepted client handler otherwise null(0) to rejesst. 
+   * Must be defined by sub-class. 
    * @param[in] src source node address.
-   * @return client
+   * @return client or null(0)
    */
   virtual Client* on_connect_request(Socket::addr_t& src) = 0;
 
