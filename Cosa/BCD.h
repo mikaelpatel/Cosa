@@ -35,13 +35,15 @@
 #ifndef __COSA_BCD_H__
 #define __COSA_BCD_H__
 
+#include "Cosa/Types.h"
+
 /**
  * Convert given two digit BCD (0x00..0x99) to binary value (0..99).
  * @param[in] value to convert.
  * @return binary value.
  */
 inline uint8_t
-bcd_to_bin(uint8_t value)
+to_binary(uint8_t value)
 {
   uint8_t high = (value >> 4);
   uint8_t low = (value & 0x0f);
@@ -54,7 +56,7 @@ bcd_to_bin(uint8_t value)
  * @return BCD value.
  */
 inline uint8_t
-bin_to_bcd(uint8_t value)
+to_bcd(uint8_t value)
 {
   uint8_t res = 0;
   while (value > 9) {
@@ -62,6 +64,30 @@ bin_to_bcd(uint8_t value)
     value -= 10;
   }
   return (res + value);
+}
+
+/**
+ * Convert to binary representation (from BCD) per byte (00..99).
+ * @param[in] buf buffer to convert to binary.
+ * @param[in] size number of bytes to convert.
+ */
+inline void 
+to_binary(uint8_t* buf, size_t size)
+{
+  for (uint8_t i = 0; i < size; i++)
+    buf[i] = to_binary(buf[i]);
+}
+
+/**
+ * Convert to BCD representation (from binary) per byte (00..99).
+ * @param[in] buf buffer to convert to BCD.
+ * @param[in] size number of bytes to convert.
+ */
+inline void 
+to_bcd(uint8_t* buf, size_t size)
+{
+  for (uint8_t i = 0; i < size; i++)
+    buf[i] = to_bcd(buf[i]);
 }
 
 #endif
