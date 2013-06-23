@@ -41,10 +41,9 @@ DS1307 rtc;
 
 // Data structure stored in device ram; last set and run time
 struct latest_t {
-  DS1307::timekeeper_t set;
-  DS1307::timekeeper_t run;
+  time_t set;
+  time_t run;
 };
-const uint8_t ram_pos = sizeof(DS1307::timekeeper_t);
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
@@ -63,18 +62,17 @@ void setup()
 
   // Read the latest set and run time
   latest_t latest;
-  rtc.read_ram(&latest, sizeof(latest), ram_pos);
+  rtc.read(&latest, sizeof(latest), DS1307::RAM_ADDR);
 
   // Set the time. Adjust below to your current time
-  DS1307::timekeeper_t now;
+  time_t now;
 #ifdef __RTC_SET_TIME__
   now.year = 0x13;
-  now.month = 0x05;
-  now.cntl = 0x00;
-  now.date = 0x18;
-  now.day = 0x06;
-  now.hours = 0x10;
-  now.minutes = 0x49;
+  now.month = 0x06;
+  now.date = 0x23;
+  now.day = 0x01;
+  now.hours = 0x22;
+  now.minutes = 0x06;
   now.seconds = 0;
   rtc.set_time(now);
   latest.set = now;
@@ -91,7 +89,7 @@ void setup()
   // Update the run time with the current time and update ram
   rtc.get_time(now);
   latest.run = now;
-  rtc.write_ram(&latest, sizeof(latest), ram_pos);
+  rtc.write(&latest, sizeof(latest), DS1307::RAM_ADDR);
 }
 
 void loop()
@@ -101,7 +99,7 @@ void loop()
   ledPin.toggle();
 
   // Read the time from the rtc device and print
-  DS1307::timekeeper_t now;
+  time_t now;
   rtc.get_time(now);
   trace << now << endl;
 

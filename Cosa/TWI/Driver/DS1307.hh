@@ -28,6 +28,7 @@
 
 #include "Cosa/TWI.hh"
 #include "Cosa/IOStream.hh"
+#include "Cosa/Time.hh"
 
 /**
  * Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock.
@@ -37,44 +38,36 @@
 class DS1307 : private TWI::Driver {
 private:
   static const uint8_t ADDR = 0xD0;
-  static const uint8_t RAM_MAX = 0x40;
 
 public:
   /**
    * The Timekeeper Registers (Table 2, pp. 8)
    */
   struct timekeeper_t {
-    uint8_t seconds;
-    uint8_t minutes;
-    uint8_t hours;
-    uint8_t day;
-    uint8_t date;
-    uint8_t month;
-    uint8_t year;
-    uint8_t cntl;
-
-    /**
-     * Convert time to binary representation (from BCD). 
-     * Apply after reading from device and before any calculation.
-     */
-    void to_binary();
-
-    /**
-     * Convert time to BCD representation (from binary).
-     * Apply after setting new value and writing to the device.
-     */
-    void to_bcd();
+    time_t clock;
+    union {
+      uint8_t as_uint8;
+      struct {
+	uint8_t rs:2;		// Rate Select
+	uint8_t reserved1:2;	// Reserved/1
+	uint8_t sqwe:1;		// Square-Ware Enable
+	uint8_t reserved2:2;	// Reserved/2
+	uint8_t out:1;		// Output Control
+      };
+    } control;
   };
+  const static uint8_t RAM_ADDR = sizeof(timekeeper_t);
+  const static uint8_t RAM_MAX = 0x40;
 
   /**
    * Read ram block with the given size into the buffer from the position.
    * Return number of bytes read or negative error code.
-   * @param[in] buf buffer to read from ram.
+   * @param[in] ram buffer to read from ram.
    * @param[in] size number of bytes to read.
    * @param[in] pos address in ram to read from.
    * @return number of bytes or negative error code.
    */
-  int read_ram(void* buf, uint8_t size, uint8_t pos = 0);
+  int read(void* ram, uint8_t size, uint8_t pos = 0);
 
   /**
    * Write ram block at given position with the contents from buffer.
@@ -84,7 +77,7 @@ public:
    * @param[in] pos address in ram to read write to.
    * @return number of bytes or negative error code.
    */
-  int write_ram(void* buf, uint8_t size, uint8_t pos = 0);
+  int write(void* ram, uint8_t size, uint8_t pos = 0);
 
   /**
    * Read current time from real-time clock. Return true(1)
@@ -92,9 +85,9 @@ public:
    * @param[out] now time structure return value.
    * @return boolean.
    */
-  bool get_time(timekeeper_t& now) 
+  bool get_time(time_t& now) 
   {
-    return (read_ram(&now, sizeof(now)) == sizeof(now));
+    return (read(&now, sizeof(now)) == sizeof(now));
   }
 
   /**
@@ -103,20 +96,10 @@ public:
    * @param[in] now time structure to set.
    * @return boolean.
    */
-  bool set_time(timekeeper_t& now)
+  bool set_time(time_t& now)
   {
-    return (write_ram(&now, sizeof(now)) == sizeof(now) ||
-	    write_ram(&now, sizeof(now), sizeof(timekeeper_t)) == sizeof(now));
+    return (write(&now, sizeof(now)) == sizeof(now));
   }
-
 };
-
-/**
- * Print the date to the given stream with the format (20YY-MM-DD HH:MM:SS).
- * The timekeeper values should be in BCD i.e. not converted to binary. 
- * @param[in] outs output stream.
- * @param[in] t time keeper structure.
- */
-IOStream& operator<<(IOStream& outs, DS1307::timekeeper_t& t);
 
 #endif

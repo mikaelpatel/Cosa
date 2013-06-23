@@ -26,52 +26,24 @@
 #include "Cosa/Board.hh"
 #if !defined(__ARDUINO_TINY__)
 #include "Cosa/TWI/Driver/DS1307.hh"
-#include "Cosa/BCD.h"
-
-void 
-DS1307::timekeeper_t::to_binary()
-{
-  uint8_t* buf = (uint8_t*) &seconds;
-  for (uint8_t i = 0; i < sizeof(timekeeper_t); i++)
-    buf[i] = bcd_to_bin(buf[i]);
-}
-
-void 
-DS1307::timekeeper_t::to_bcd()
-{
-  uint8_t* buf = (uint8_t*) &seconds;
-  for (uint8_t i = 0; i < sizeof(timekeeper_t); i++)
-    buf[i] = bin_to_bcd(buf[i]);
-}
 
 int
-DS1307::read_ram(void* buf, uint8_t size, uint8_t pos)
+DS1307::read(void* ram, uint8_t size, uint8_t pos)
 {
   if (!twi.begin()) return (-1);
   twi.write(ADDR, pos);
-  int count = twi.read(ADDR, buf, size);
+  int count = twi.read(ADDR, ram, size);
   twi.end();
   return (count);
 }
 
 int
-DS1307::write_ram(void* buf, uint8_t size, uint8_t pos)
+DS1307::write(void* ram, uint8_t size, uint8_t pos)
 {
   if (!twi.begin()) return (-1);
-  int count = twi.write(ADDR, pos, buf, size);
+  int count = twi.write(ADDR, pos, ram, size);
   twi.end();
   return (count);
-}
-
-IOStream& operator<<(IOStream& outs, DS1307::timekeeper_t& t)
-{
-  outs << PSTR("20") << bcd << t.year << '-'
-       << bcd << t.month << '-'
-       << bcd << t.date << ' '
-       << bcd << t.hours << ':'
-       << bcd << t.minutes << ':'
-       << bcd << t.seconds;
-  return (outs);
 }
 
 #endif
