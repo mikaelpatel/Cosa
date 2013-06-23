@@ -101,9 +101,9 @@ For ATtiny install the David Mellis MIT ATtiny
 [core](http://hlt.media.mit.edu/?p=1695). A patch is 
 needed for Arduino version less than 1.0.5 to allow linking programs
 larger than 4K; See 
-https://github.com/TCWORLD/ATTinyCore/tree/master/PCREL%20Patch%20for%20GCC.  
-Do not forget to program the ATtiny device with the bootloader, i.e.,
-set the fuse bits, before using the device for the first time.
+https://github.com/TCWORLD/ATTinyCore/tree/master/PCREL%20Patch%20for%20GCC. Do
+not forget to program the ATtiny device with the bootloader, i.e., set
+the fuse bits, before using the device for the first time. 
 
 Drivers
 -------
