@@ -124,7 +124,8 @@ Drivers
 15. ST7565, 65x132 Dot Matrix LCD Controller/Driver.
 16. Debounced button and dials with Rotary Encoder.
 17. HD44780 (aka 1602) LCD Controller/Driver.
-18. Slave device support for SPI, TWI and OWI.
+18. DS3231, Extremely Accurate I2C-Integrated RTC/TCXO/Crystal. 
+19. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  

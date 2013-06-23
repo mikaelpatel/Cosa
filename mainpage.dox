@@ -384,4 +384,7 @@ write and block read. Supports device AT24C32 (8K) to AT24C512
 
 @section DS1307
 Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock (TWI).
+
+@section DS3231
+Driver for the DS3231, Extremely Accurate I2C-Integrated RTC/TCXO/Crystal. 
 */
