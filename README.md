@@ -208,4 +208,7 @@ support for LCD ST7565 with natural text scrolling. Making it easy to
 implement TWI slave devices with TWI::Device. Including support for
 event driven Rotary Encoder handler.   
 2013-06 HD44780 (1602) LCD device driver. Adding support for
-Sockets. Refactoring NRF24L01P device driver to a Socker::Device.   
+Sockets. Refactoring NRF24L01P device driver to a
+Socker::Device with support for both connection-less and
+connection-oriented communication. DS3231 device driver and example
+sketches.    
