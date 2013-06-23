@@ -97,10 +97,10 @@ The provided documentation is generated with doxygen and may also be
 generated for users source code if the Cosa documentation style is
 adapted. See the Doxyfile for configuration of doxygen. 
 
-For ATtinyX5 install the David Mellis MIT ATtiny
-[core](http://hlt.media.mit.edu/?p=1695). A patch is needed to allow 
-linking programs larger than 4K; See 
-https://github.com/TCWORLD/ATTinyCore/tree/master/PCREL%20Patch%20for%20GCC. 
+For ATtiny and Arduino version less than 1.0.5 install the David
+Mellis MIT ATtiny [core](http://hlt.media.mit.edu/?p=1695). A patch is
+needed to allow linking programs larger than 4K; See
+https://github.com/TCWORLD/ATTinyCore/tree/master/PCREL%20Patch%20for%20GCC.  
 Do not forget to program the ATtiny device with the bootloader, i.e.,
 set the fuse bits, before using the device for the first time.
 
@@ -158,9 +158,9 @@ Naming
 Note
 ----
 
-ATtiny, and Atmega328P, Atmega1284P, Atmega2560 based Arduino boards
-(Uno, Mini, Nano, LilyPad, Mighty, Mega, etc) are supported. 
-Arduino and AVR lib functions may be used together with Cosa. 
+ATtinyX4/X5, and Atmega328P, Atmega1284P, Atmega2560 based Arduino
+boards (Uno, Mini, Nano, LilyPad, Mighty, Mega, etc) are supported. 
+Arduino and AVR lib functions may be used together with Cosa.  
 
 News
 ----
