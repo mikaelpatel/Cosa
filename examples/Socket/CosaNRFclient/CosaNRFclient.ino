@@ -40,8 +40,13 @@ NRF24L01P nrf(0xc05a0004);
 
 // Demonstrate client socket connection and periodic sending of message
 class Demo : public Client, public Periodic {
+  uint8_t m_size;
 public:
-  Demo(Socket::Device* dev, uint16_t ms) : Client(dev), Periodic(ms) {}
+  Demo(Socket::Device* dev, uint16_t ms) : 
+    Client(dev), 
+    Periodic(ms), 
+    m_size(1)
+  {}
   virtual void on_connected();
   virtual void on_recv(const void* buf, size_t size);
   virtual void run();
@@ -70,11 +75,13 @@ Demo::run()
   // Send a message of max payload size to server
   uint8_t msg[NRF24L01P::PAYLOAD_MAX];
   static uint8_t nr = 0;
-  for (uint8_t i = 0; i < sizeof(msg); i++)
+  for (uint8_t i = 0; i < m_size; i++)
     msg[i] = nr + i;
   trace << PSTR("Demo::run()::");
-  TRACE(send(&msg, sizeof(msg)));
+  TRACE(send(&msg, m_size));
   nr += 1;
+  m_size += 1;
+  if (m_size > sizeof(msg)) m_size = 1;
 }
 
 Demo client(&nrf, 1024);
