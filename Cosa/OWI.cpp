@@ -79,8 +79,17 @@ OWI::read(uint8_t bits)
   return (res);
 }
 
+bool
+OWI::read(void* buf, uint8_t size)
+{
+  uint8_t* bp = (uint8_t*) buf;
+  m_crc = 0;
+  while (size--) *bp++ = read();
+  return (m_crc == 0);
+}
+
 void
-OWI::write(uint8_t value, uint8_t bits, uint8_t power)
+OWI::write(uint8_t value, uint8_t bits, bool power)
 {
   uint8_t mix = 0;
   synchronized {
@@ -108,6 +117,14 @@ OWI::write(uint8_t value, uint8_t bits, uint8_t power)
     if (!power) power_off();
   }
   DELAY(10);
+}
+
+void 
+OWI::write(uint8_t value, void* buf, uint8_t size)
+{
+  write(value);
+  uint8_t* bp = (uint8_t*) buf;
+  while (size--) write(*bp++);
 }
 
 OWI::Driver::Driver(OWI* pin, const uint8_t* rom) : 
@@ -182,21 +199,14 @@ OWI::Driver::read_rom()
 {
   if (!m_pin->reset()) return (false);
   m_pin->write(OWI::READ_ROM);
-  m_pin->begin();
-  for (uint8_t i = 0; i < ROM_MAX; i++) {
-    m_rom[i] = m_pin->read();
-  }
-  return (m_pin->end() == 0);
+  return (m_pin->read(m_rom, ROM_MAX));
 }
 
 bool
 OWI::Driver::match_rom()
 {
   if (!m_pin->reset()) return (false);
-  m_pin->write(OWI::MATCH_ROM);
-  for (uint8_t i = 0; i < ROM_MAX; i++) {
-    m_pin->write(m_rom[i]);
-  }
+  m_pin->write(OWI::MATCH_ROM, m_rom, ROM_MAX);
   return (true);
 }
 

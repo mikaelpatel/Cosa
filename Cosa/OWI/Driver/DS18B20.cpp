@@ -25,6 +25,7 @@
 
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/FixedPoint.hh"
 
 bool 
 DS18B20::connect(uint8_t index)
@@ -67,24 +68,14 @@ DS18B20::read_scratchpad()
   }
   if (!match_rom()) return (false);
   m_pin->write(READ_SCRATCHPAD);
-  m_pin->begin();
-  uint8_t* ptr = (uint8_t*) &m_scratchpad;
-  for (uint8_t i = 0; i < sizeof(m_scratchpad); i++) {
-    *ptr++ = m_pin->read();
-  }
-  return (m_pin->end() == 0);
+  return (m_pin->read(&m_scratchpad, sizeof(m_scratchpad)));
 }
 
 bool
 DS18B20::write_scratchpad()
 {
   if (!match_rom()) return (false);
-  m_pin->write(WRITE_SCRATCHPAD);
-  uint8_t* ptr = (uint8_t*) &m_scratchpad.high_trigger;
-  const uint8_t CONFIG_MAX = 3;
-  for (uint8_t i = 0; i < CONFIG_MAX; i++) {
-    m_pin->write(*ptr++);
-  }
+  m_pin->write(WRITE_SCRATCHPAD, &m_scratchpad.high_trigger, CONFIG_MAX);
   return (true);
 }
 
@@ -113,4 +104,15 @@ DS18B20::read_power_supply()
   m_pin->write(READ_POWER_SUPPLY);
   m_parasite = (m_pin->read(1) == 0);
   return (m_parasite);
+}
+
+IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
+{
+  FixedPoint temp(thermometer.get_temperature(), 4);
+  int16_t integer = temp.get_integer();
+  uint16_t fraction = temp.get_fraction(4);
+  outs << integer << '.';
+  if ((fraction != 0) && (fraction < 1000)) outs << '0';
+  outs << fraction;
+  return (outs);
 }

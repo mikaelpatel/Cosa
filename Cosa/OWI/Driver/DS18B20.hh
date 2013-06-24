@@ -27,6 +27,7 @@
 #define __COSA_OWI_DRIVER_DS18B20_HH__
 
 #include "Cosa/OWI.hh"
+#include "Cosa/IOStream.hh"
 
 /**
  * Driver for the DS18B20 Programmable Resolution 1-Write Digital
@@ -62,6 +63,9 @@ private:
     uint8_t crc;
   };
   scratchpad_t m_scratchpad;
+
+  /** Size of configuration; high/low trigger and configuration byte */
+  static const uint8_t CONFIG_MAX = 3;
 
   /** Parasite power mode */
   uint8_t m_parasite;
@@ -226,5 +230,13 @@ public:
    */
   bool read_power_supply();
 };
+
+/**
+ * Print latest temperature reading to given output stream.
+ * @param[in] outs stream to print device information to.
+ * @param[in] thermometer device.
+ * @return output stream.
+ */
+IOStream& operator<<(IOStream& outs, DS18B20& thermometer);
 
 #endif

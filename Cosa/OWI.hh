@@ -296,11 +296,19 @@ public:
   /**
    * Read the given number of bits from the one wire bus (slave).
    * Default number of bits is 8. Returns the value read LSB aligned.
-   * The internal CRC is updated (see begin() and end()).
    * @param[in] bits to be read.
    * @return value read.
    */
   uint8_t read(uint8_t bits = CHARBITS);
+
+  /**
+   * Read given number of bytes from one wire bus (slave) to given
+   * buffer. Return true(1) if correctly read otherwise false(0).
+   * @param[in] buf buffer pointer.
+   * @param[in] size number of bytes to read.
+   * @return bool.
+   */
+  bool read(void* buf, uint8_t size);
 
   /**
    * Write the given value to the one wire bus. The bits are written
@@ -310,26 +318,16 @@ public:
    * @param[in] bits to be written.
    * @param[in] power on for parasite device.
    */
-  void write(uint8_t value, uint8_t bits = CHARBITS, uint8_t power= 0);
+  void write(uint8_t value, uint8_t bits = CHARBITS, bool power = false);
 
   /**
-   * Begin a read sequence with CRC.
+   * Write the given value and given number of bytes from buffer to
+   * the one wire bus (slave).
+   * @param[in] value to write.
+   * @param[in] buf buffer pointer.
+   * @param[in] size number of bytes to write.
    */
-  void begin() 
-  { 
-    m_crc = 0; 
-  }
-
-  /**
-   * End a read sequence and return the generated CRC. If the
-   * read block contains a CRC last then the returned value will be
-   * zero(0).
-   * @return generated CRC.
-   */
-  uint8_t end() 
-  { 
-    return (m_crc); 
-  }
+  void write(uint8_t value, void* buf, uint8_t size);
 
   /**
    * Turn off parasite powering of pin. See also write().
@@ -345,6 +343,7 @@ public:
  * Print device driver rom to output stream. 
  * @param[in] outs stream to print to.
  * @param[in] dev owi device driver.
+ * @return output stream.
  */
 IOStream& operator<<(IOStream& outs, OWI::Driver& dev);
 
@@ -352,6 +351,7 @@ IOStream& operator<<(IOStream& outs, OWI::Driver& dev);
  * Print list of connected devices on given stream.
  * @param[in] outs stream to print device information to.
  * @param[in] owi one-wire bus.
+ * @return output stream.
  */
 IOStream& operator<<(IOStream& outs, OWI& owi);
 

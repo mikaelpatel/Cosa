@@ -32,12 +32,11 @@
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/FixedPoint.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
-// Dummy for Arduino preprocessor
-int dummy;
+// Use the builtin led for a heartbeat
+OutputPin ledPin(Board::LED);
 
 // One-wire pin and connected DS18B20 devices
 #if defined(__ARDUINO_TINY__)
@@ -49,20 +48,6 @@ DS18B20 outdoors(&owi);
 DS18B20 indoors(&owi);
 DS18B20 basement(&owi);
 
-// Use the builtin led for a heartbeat
-OutputPin ledPin(Board::LED);
-
-// Print the current temperature reading
-void print_temperature_P(const char* prefix, DS18B20& thermometer)
-{
-  FixedPoint temp(thermometer.get_temperature(), 4);
-  int16_t integer = temp.get_integer();
-  uint16_t fraction = temp.get_fraction(4);
-  trace << prefix << integer << '.';
-  if ((fraction != 0) && (fraction < 1000)) trace << '0';
-  trace << fraction;
-}
-
 void setup()
 {
   // Start trace output stream on the serial port
@@ -71,26 +56,24 @@ void setup()
 
   // Check amount of free memory
   TRACE(free_memory());
+  TRACE(sizeof(OWI));
+  TRACE(sizeof(DS18B20));
+
+  // Start the watchdog ticks counter
+  Watchdog::begin();
 
   // List connected devices
-  //  owi.print_devices(trace);
   trace << owi << endl;
 
   // Connect to the devices and print rom contents
   ledPin.toggle();
   TRACE(indoors.connect(0));
-  // indoors.print_rom(trace);
-  trace << indoors << endl;
+  trace << (OWI::Driver&) indoors << endl;
   TRACE(outdoors.connect(1));
-  // outdoors.print_rom(trace);
-  trace << outdoors << endl;
+  trace << (OWI::Driver&) outdoors << endl;
   TRACE(basement.connect(2));
-  // basement.print_rom(trace);
-  trace << basement << endl;
+  trace << (OWI::Driver&) basement << endl;
   ledPin.toggle();
-
-  // Start the watchdog ticks counter with 16 ms period
-  Watchdog::begin(16);
 
   // Start the conversion pipeline; indoors->outdoors->basement sampling
   indoors.convert_request();
@@ -102,7 +85,7 @@ void loop()
   ledPin.toggle();
   outdoors.convert_request();
   indoors.read_scratchpad();
-  print_temperature_P(PSTR("indoors = "), indoors);
+  trace << PSTR("indoors = ") << indoors;
   ledPin.toggle();
   SLEEP(1);
 
@@ -110,7 +93,7 @@ void loop()
   ledPin.toggle();
   basement.convert_request();
   outdoors.read_scratchpad();
-  print_temperature_P(PSTR(", outdoors = "), outdoors);
+  trace << PSTR(", outdoors = ") << outdoors;
   ledPin.toggle();
   SLEEP(1);
 
@@ -118,8 +101,7 @@ void loop()
   ledPin.toggle();
   indoors.convert_request();
   basement.read_scratchpad();
-  print_temperature_P(PSTR(", basement = "), basement);
-  trace.println();
+  trace << PSTR(", basement = ") << basement << endl;
   ledPin.toggle();
   SLEEP(1);
 }
