@@ -25,7 +25,6 @@
 
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/FixedPoint.hh"
 
 bool 
 DS18B20::connect(uint8_t index)
@@ -108,11 +107,11 @@ DS18B20::read_power_supply()
 
 IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
 {
-  FixedPoint temp(thermometer.get_temperature(), 4);
-  int16_t integer = temp.get_integer();
-  uint16_t fraction = temp.get_fraction(4);
+  int16_t temp = thermometer.get_temperature();
+  uint16_t fraction = (625 * (temp & 0xf)) / 100;
+  int16_t integer = (temp >> 4);
   outs << integer << '.';
-  if ((fraction != 0) && (fraction < 1000)) outs << '0';
+  if (fraction < 10) outs << '0';
   outs << fraction;
   return (outs);
 }

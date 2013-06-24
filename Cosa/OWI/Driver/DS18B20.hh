@@ -232,7 +232,8 @@ public:
 };
 
 /**
- * Print latest temperature reading to given output stream.
+ * Print the latest temperature reading with two decimals to given
+ * output stream. The temperature is in Celcius.
  * @param[in] outs stream to print device information to.
  * @param[in] thermometer device.
  * @return output stream.

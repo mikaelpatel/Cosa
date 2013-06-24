@@ -41,7 +41,6 @@
 #include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/FixedPoint.hh"
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/IOStream/Driver/PCD8544.hh"
 #include "Cosa/Canvas/OffScreen.hh"
@@ -83,11 +82,6 @@ void loop()
   sensor.convert_request();
   sensor.read_scratchpad();
 
-  // Get temperature and convert from fixed point (could use float)
-  FixedPoint temp(sensor.get_temperature(), 4);
-  int16_t integer = temp.get_integer();
-  uint16_t fraction = temp.get_fraction(2);
-
   // Create an offscreen bitmap for the presentation
   OffScreen<PCD8544::WIDTH, PCD8544::HEIGHT> offscreen;
 
@@ -100,9 +94,7 @@ void loop()
   // Draw the offscreen bitmap with the temperature
   offscreen.begin();
   offscreen.draw_roundrect(8, 8, lcd.WIDTH - 16, lcd.HEIGHT - 16, 8);
-  console << integer << '.'; 
-  if (fraction < 10) console << '0';
-  console << fraction;  
+  console << sensor;
 
   // Draw the bitmap to the LCD screen
   lcd.putchar('\f');
