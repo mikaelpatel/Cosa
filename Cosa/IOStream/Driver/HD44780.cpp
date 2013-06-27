@@ -117,6 +117,7 @@ HD44780::begin()
   // Initialization with the function, control and mode setting
   write(m_func);
   write(m_cntl);
+  backlight_on();
   display_on();
   display_clear();
   write(m_mode);

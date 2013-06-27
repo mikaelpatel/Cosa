@@ -36,10 +36,11 @@
 #include "Cosa/IOStream/Driver/HD44780.hh"
 
 // LCD and communication port
-// HD44780::Port port;
-// HD44780 lcd(&port);
-HD44780::MJKDZ port;
-HD44780 lcd(&port, 20, 4);
+HD44780::Port port;
+HD44780 lcd(&port);
+// HD44780::MJKDZ port;
+// HD44780::DFRobot port;
+// HD44780 lcd(&port, 20, 4);
 #undef putchar
 
 const uint8_t bitmaps[] PROGMEM = {
