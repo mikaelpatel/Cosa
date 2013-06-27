@@ -26,13 +26,16 @@
 #ifndef __COSA_IOSTREAM_DRIVER_HD44780_HH__
 #define __COSA_IOSTREAM_DRIVER_HD44780_HH__
 
-#include "Cosa/Pins.hh"
 #include "Cosa/Board.hh"
-#include "Cosa/IOStream.hh"
-
 #if defined(__ARDUINO_TINYX5__)
 #error "Cosa/IOStream/Driver/HD4480.hh: board not supported"
 #endif
+
+#if !defined(__ARDUINO_TINY__)
+#include "Cosa/TWI/Driver/PCF8574.hh"
+#endif
+#include "Cosa/IOStream.hh"
+#include "Cosa/Pins.hh"
 
 /**
  * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
@@ -46,6 +49,53 @@
  */
 class HD44780 : public IOStream::Device {
 protected:
+  /**
+   * Abstract HD44780 LCD IO handler to isolate communication specific
+   * functions and allow access over parallel and serial interfaces;
+   * Ports and TWI.
+   */
+  class IO {
+  public:
+    /**
+     * @override
+     * Initiate port for IO.
+     */
+    virtual void setup() = 0;
+
+    /**
+     * @override
+     * Write LSB nibble to display.
+     * @param[in] data (4b) to write.
+     */
+    virtual void write4b(uint8_t data) = 0;
+
+    /**
+     * @override
+     * Set data/command mode; zero for command, non-zero for data mode. 
+     * @param[in] flag.
+     */
+    virtual void set_mode(uint8_t flag) = 0;
+
+    /**
+     * @override
+     * Set backlight on/off.
+     * @param[in] flag.
+     */
+    virtual void set_backlight(uint8_t flag) = 0;
+  };
+
+  /**
+   * Bus Timing Characteristics (in micro-seconds), fig. 25, pp. 50
+   */
+  static const uint16_t SETUP_TIME = 1;
+  static const uint16_t ENABLE_PULSE_WIDTH = 1;
+  static const uint16_t HOLD_TIME = 1;
+  static const uint16_t SHORT_EXEC_TIME = 50;
+  static const uint16_t LONG_EXEC_TIME = 2000;
+  static const uint16_t POWER_ON_TIME = 32;
+  static const uint16_t INIT0_TIME = 4500;
+  static const uint16_t INIT1_TIME = 150;
+
   /**
    * Instructions (Table 6, pp. 24), RS(0), RW(0)
    */
@@ -102,9 +152,45 @@ protected:
     FONT_5X10DOTS = 0x04	// - 5X10 dots
   } __attribute__((packed));
 
+  /**
+   * @override
+   * Write data or command to display.
+   * @param[in] data to write.
+   */
+  void write(uint8_t data);
+    
+  /**
+   * Set display attribute.
+   * @param[in,out] cmd command variable.
+   * @param[in] mask function.
+   */
+  void set(uint8_t& cmd, uint8_t mask) 
+  { 
+    write(cmd |= mask); 
+  }
+
+  /**
+   * Clear display attribute.
+   * @param[in,out] cmd command variable.
+   * @param[in] mask function.
+   */
+  void clear(uint8_t& cmd, uint8_t mask) 
+  { 
+    write(cmd &= ~mask); 
+  }
+
+  /**
+   * Set data mode.
+   */
+  void set_data_mode();
+
+  /**
+   * Set instruction mode.
+   */
+  void set_instruction_mode();
+
   // Display pins and state
-  OutputPin m_rs;		// Register select (0/instruction, 1/data)
-  OutputPin m_en;		// Starts data read/write
+  IO* m_io;			// IO port handler
   uint8_t m_x;			// Cursor position x
   uint8_t m_y;			// Cursor position y
   uint8_t m_tab;		// Tab step
@@ -112,27 +198,8 @@ protected:
   uint8_t m_cntl;		// Control
   uint8_t m_func;		// Function set
 
-  /**
-   * Generate enable pulse and transfer data or command (4-bits).
-   */
-  void pulse();
-
-  /**
-   * Write data or command to display
-   * @param[in] data to write.
-   */
-  void write(uint8_t data);
-
-  /**
-   * Set/clear display attribute.
-   * @param[in,out] cmd command variable.
-   * @param[in] mask function.
-   */
-  void set(uint8_t& cmd, uint8_t mask) { write(cmd |= mask); }
-  void clear(uint8_t& cmd, uint8_t mask) { write(cmd &= ~mask); }
-
 public:
-  // Max size of bitmap
+  // Max size of custom character font bitmap
   static const uint8_t BITMAP_MAX = 8;
   
   // Display width (characters per line) and height (lines)
@@ -140,22 +207,15 @@ public:
   const uint16_t HEIGHT;
 
   /**
-   * Construct LCD connected to given command and enable pin. Data
-   * pins are implicit; D4..D7 for Arduino/Standard, Mighty and
-   * ATtinyX4. D10..D13 for Arduino/Mega. Connect to LCD pins D4..D7. 
-   * The display is initiated when calling begin().
-   * @param[in] rs command/data select pin (Default D8).
-   * @param[in] en enable pin (Default D9).
+   * Construct HD44780 LCD connected to given io port handler. The
+   * display is initiated when calling begin(). 
+   * @param[in] io handler.
    * @param[in] width of display, characters per lin (Default 16).
    * @param[in] height of display, number of lines (Default 2).
    */
-  HD44780(Board::DigitalPin rs = Board::D8, 
-	  Board::DigitalPin en = Board::D9,
-	  uint8_t width = 16,
-	  uint8_t height = 2) :
+  HD44780(IO* io, uint8_t width = 16, uint8_t height = 2) :
     IOStream::Device(),
-    m_rs(rs, 0),
-    m_en(en, 0),
+    m_io(io),
     m_x(0),
     m_y(0),
     m_tab(4),
@@ -168,21 +228,57 @@ public:
   }
   
   /**
+   * Turn display backlight on. 
+   */
+  void backlight_on() 
+  { 
+    m_io->set_backlight(1);
+  }
+
+  /**
+   * Turn display backlight off. 
+   */
+  void backlight_off() 
+  { 
+    m_io->set_backlight(0);
+  }
+
+  /**
    * Clear display and move cursor to home.
    */
   void display_clear();
 
   /**
-   * Turn display on/off. 
+   * Turn display on. 
    */
-  void display_on() { set(m_cntl, DISPLAY_ON); }
-  void display_off() { clear(m_cntl, DISPLAY_ON); }
+  void display_on() 
+  { 
+    set(m_cntl, DISPLAY_ON); 
+  }
 
   /**
-   * Set display scrolling left/right.
+   * Turn display off. 
    */
-  void display_scroll_left() { write(SHIFT_SET | DISPLAY_MOVE | MOVE_LEFT); }
-  void display_scroll_right() { write(SHIFT_SET | DISPLAY_MOVE |  MOVE_RIGHT); }
+  void display_off() 
+  { 
+    clear(m_cntl, DISPLAY_ON); 
+  }
+
+  /**
+   * Set display scrolling left.
+   */
+  void display_scroll_left() 
+  { 
+    write(SHIFT_SET | DISPLAY_MOVE | MOVE_LEFT); 
+  }
+
+  /**
+   * Set display scrolling right.
+   */
+  void display_scroll_right() 
+  { 
+    write(SHIFT_SET | DISPLAY_MOVE |  MOVE_RIGHT); 
+  }
   
   /**
    * Move cursor to home position.
@@ -190,32 +286,72 @@ public:
   void cursor_home();
 
   /**
-   * Turn underline cursor on/off.
+   * Turn underline cursor on.
    */
-  void cursor_underline_on() { set(m_cntl, CURSOR_ON);  }
-  void cursor_underline_off() { clear(m_cntl, CURSOR_ON);  }
+  void cursor_underline_on() 
+  { 
+    set(m_cntl, CURSOR_ON);  
+  }
 
   /**
-   * Turn cursor blink on/off.
+   * Turn underline cursor off.
    */
-  void cursor_blink_on() { set(m_cntl, BLINK_ON); }
-  void cursor_blink_off() { clear(m_cntl, BLINK_ON); }
+  void cursor_underline_off() 
+  { 
+    clear(m_cntl, CURSOR_ON);  
+  }
 
   /**
-   * Set text flow left-to-right or right-to-left.
+   * Turn cursor blink on.
    */
-  void text_flow_left_to_right() { set(m_mode, INCREMENT); }
-  void text_flow_right_to_left() { clear(m_mode, INCREMENT); }
+  void cursor_blink_on() 
+  { 
+    set(m_cntl, BLINK_ON); 
+  }
 
   /**
-   * Set text scroll right adjust or left adjust.
+   * Turn cursor blink off.
    */
-  void text_scroll_left_adjust() { set(m_mode, DISPLAY_SHIFT); }
-  void text_scroll_right_adjust() { clear(m_mode, DISPLAY_SHIFT); }
+  void cursor_blink_off() 
+  { 
+    clear(m_cntl, BLINK_ON); 
+  }
+
+  /**
+   * Set text flow left-to-right.
+   */
+  void text_flow_left_to_right() 
+  { 
+    set(m_mode, INCREMENT);
+  }
+
+  /**
+   * Set text flow right-to-left.
+   */
+  void text_flow_right_to_left() 
+  { 
+    clear(m_mode, INCREMENT); 
+  }
+
+  /**
+   * Set text scroll left adjust.
+   */
+  void text_scroll_left_adjust() 
+  { 
+    set(m_mode, DISPLAY_SHIFT); 
+  }
+
+  /**
+   * Set text scroll right adjust.
+   */
+  void text_scroll_right_adjust() 
+  { 
+    clear(m_mode, DISPLAY_SHIFT); 
+  }
 
   /**
    * Get tab step.
-   * @return tab step (1..WIDTH/2).
+   * @return tab step.
    */
   uint8_t get_tab_step()
   {
@@ -223,13 +359,11 @@ public:
   }
 
   /**
-   * Set tab step to given value (1..WIDTH/2).
+   * Set tab step to given value.
    * @param[in] tab step.
    */
   void set_tab_step(uint8_t step)
   {
-    if (step == 0) step = 1;
-    else if (step > (WIDTH/2)) step = WIDTH/2;
     m_tab = step;
   }
 
@@ -288,6 +422,125 @@ public:
    * @return character written or EOF(-1).
    */
   virtual int putchar(char c);
+
+  /**
+   * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
+   * IO Port.
+   */
+  class Port : public IO {
+  private:
+    OutputPin m_rs;		// Register select (0/instruction, 1/data)
+    OutputPin m_en;		// Starts data read/write
+    OutputPin m_bt;		// Back-light control (0/on, 1/off)
+
+  public:
+    /**
+     * Construct HD44780 4-bit parallel port connected to given command
+     * and enable pin. Data pins are implicit; D4..D7 for Arduino
+     * Standard, Mighty and ATtinyX4. D10..D13 for Arduino/Mega. Connect
+     * to LCD pins D4..D7.  
+     * @param[in] rs command/data select pin (Default D8).
+     * @param[in] en enable pin (Default D9).
+     * @param[in] bt backlight pin (Default D10).
+     */
+    Port(Board::DigitalPin rs = Board::D8, 
+	 Board::DigitalPin en = Board::D9,
+	 Board::DigitalPin bt = Board::D10) :
+      m_rs(rs, 0),
+      m_en(en, 0),
+      m_bt(bt, 1)
+    {
+    }
+
+    /**
+     * @override
+     * Initiate 4-bit parallel port (D4..D7).
+     */
+    virtual void setup();
+
+    /**
+     * @override
+     * Write LSB nibble to display using parallel port (D4..D7).
+     * @param[in] data (4b) to write.
+     */
+    virtual void write4b(uint8_t data);
+    
+    /**
+     * @override
+     * Set instruction/data mode using given rs pin; zero for
+     * instruction, non-zero for data mode.
+     * @param[in] flag.
+     */
+    virtual void set_mode(uint8_t flag);
+
+    /**
+     * @override
+     * Set backlight on/off using bt pin.
+     * @param[in] flag.
+     */
+    virtual void set_backlight(uint8_t flag);
+  };
+
+#if !defined(__ARDUINO_TINY__)
+  /**
+   * IO handler for HD44780 (LCD-II) Dot Matix Liquid Crystal Display
+   * Controller/Driver when using the MJKDZ IO expander board based on
+   * PCF8574. 
+   */
+  class MJKDZ : public IO, private PCF8574 {
+  private:
+    union {
+      uint8_t as_uint8;
+      struct {
+	uint8_t data:4;		// Data port (P0..P3)
+	uint8_t en:1;		// Enable/pulse (P4)
+	uint8_t rw:1;		// Read/Write (P5)
+	uint8_t rs:1;		// Command/Data select (P6)
+	uint8_t bt:1;		// Back-light (P7)
+      };
+    } m_port;
+
+  public:
+    /**
+     * Construct HD44780 IO port handler using the MJKDZ I2C/TWI
+     * I/O expander with given sub-address (A0..A2).
+     * @param[in] subaddr sub-address (0..7, default 7).
+     */
+    MJKDZ(uint8_t subaddr = 7) : 
+      PCF8574(PCF8574::ADDR, subaddr)
+    {
+      m_port.as_uint8 = 0;
+    }
+    
+    /**
+     * @override
+     * Initiate TWI interface.
+     */
+    virtual void setup();
+
+    /**
+     * @override
+     * Write nibble to display using TWI interface.
+     * @param[in] data (4b) to write.
+     */
+    virtual void write4b(uint8_t data);
+
+    /**
+     * @override
+     * Set instruction/data mode; zero for instruction, non-zero for
+     * data mode. 
+     * @param[in] flag.
+     */
+    virtual void set_mode(uint8_t flag);
+
+    /**
+     * @override
+     * Set backlight on/off.
+     * @param[in] flag.
+     */
+    virtual void set_backlight(uint8_t flag);
+  };
+#endif
 };
 
 #endif

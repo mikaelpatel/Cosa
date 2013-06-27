@@ -25,6 +25,8 @@
  * For Arduino/Mega: D8 ==> RS, D9 ==> EN, D10 ==> D4, D11 => D5, 
  * D12 ==> D6, and D13 ==> D7.
  *
+ * For MJKDZ connect to the I2C bus (A4/A5).
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -33,7 +35,11 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/HD44780.hh"
 
-HD44780 lcd;
+// LCD and communication port
+// HD44780::Port port;
+// HD44780 lcd(&port);
+HD44780::MJKDZ port;
+HD44780 lcd(&port, 20, 4);
 #undef putchar
 
 const uint8_t bitmaps[] PROGMEM = {
@@ -111,6 +117,14 @@ void setup()
     }
   }
   trace << clear;
+
+  trace << PSTR("\f\aBACKLIGHT\a\n");
+  for (uint8_t i = 0; i < 4; i++) {
+    MSLEEP(100);
+    lcd.backlight_off();
+    MSLEEP(100);
+    lcd.backlight_on();
+  }
 
   // Simple scrolling text
   trace << PSTR("\f\aSCROLLING\a\n");

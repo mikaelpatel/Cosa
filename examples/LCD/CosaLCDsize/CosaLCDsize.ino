@@ -30,7 +30,9 @@
 // Binary sketch size:  MEGA/STD*/TINY bytes
 // =========================================
 // Baseline:		1118/916/700   bytes
-// HD44780: 		3312/3088/2868 bytes
+// HD44780:		3312/3088/2868 bytes
+// HD44780::Port:	3562/3336/3118 bytes
+// HD44780::MJKDZ:	4502/4360/NA   bytes
 // PCD8544: 		4482/4260/3916 bytes
 // ST7565:  		5008/4802/4460 bytes
 // =========================================
@@ -40,9 +42,14 @@
 // =========================================
 
 #include "Cosa/IOStream/Driver/HD44780.hh"
-HD44780 lcd;
+
+// HD44780::Port port;
+HD44780::MJKDZ port;
+HD44780 lcd(&port);
+
 // #include "Cosa/IOStream/Driver/PCD8544.hh"
 // PCD8544 lcd;
+
 // #include "Cosa/IOStream/Driver/ST7565.hh"
 // ST7565 lcd;
 
@@ -50,7 +57,7 @@ void setup()
 {
   Watchdog::begin();
   lcd.begin();
-  lcd.puts_P(PSTR("Hello world"));
+  lcd.puts_P(PSTR("Hello World!"));
 }
 
 void loop()

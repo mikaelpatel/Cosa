@@ -23,62 +23,27 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/IOStream/Driver/HD44780.hh"
 #include "Cosa/Watchdog.hh"
-
-// Bus Timing Characteristics, fig. 25, pp. 50
-#define SETUP_TIME 1
-#define ENABLE_PULSE_WIDTH 1
-#define HOLD_TIME 1
-#define SHORT_EXEC_TIME 50
-#define LONG_EXEC_TIME 2000
-#define POWER_ON_TIME 32
-#define INIT0_TIME 4500
-#define INIT1_TIME 150
-
-/**
- * Data direction and port register for data/command transfer.
- */
-#if defined(__ARDUINO_STANDARD__)
-# define DDR DDRD
-# define PORT PORTD
-#elif defined(__ARDUINO_TINYX4__)
-# define DDR DDRA
-# define PORT PORTA
-#elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGHTY__)
-# define DDR DDRB
-# define PORT PORTB
-#endif
-
-/**
- * Setup data port.
- */
-#define setup4bit() DDR |= 0xf0
-
-/**
- * Write data to port. Transfer most significant 4-bits.
- * @param[in] data.
- */
-#define write4bit(data) PORT = (((data) & 0xf0) | (PORT & 0x0f))
-
-void 
-HD44780::pulse()
-{
-  DELAY(SETUP_TIME);
-  m_en.pulse(ENABLE_PULSE_WIDTH);
-  DELAY(HOLD_TIME);
-}
 
 void 
 HD44780::write(uint8_t data)
 {
-  write4bit(data);
-  pulse();
-  write4bit(data << 4);
-  pulse();
+  m_io->write4b(data >> 4);
+  m_io->write4b(data);
   DELAY(SHORT_EXEC_TIME);
+}
+
+void 
+HD44780::set_data_mode()
+{
+  m_io->set_mode(1);
+}
+
+void
+HD44780::set_instruction_mode()
+{
+  m_io->set_mode(0);
 }
 
 void 
@@ -115,41 +80,39 @@ void
 HD44780::set_custom_char(uint8_t id, const uint8_t* bitmap)
 {
   write(SET_CGRAM_ADDR | ((id << 3) & SET_CGRAM_MASK));
-  asserted(m_rs) {
-    for (uint8_t i = 0; i < BITMAP_MAX; i++) {
+  set_data_mode();
+  {
+    for (uint8_t i = 0; i < BITMAP_MAX; i++)
       write(*bitmap++);
-    }
   }
+  set_instruction_mode();
 }
 
 void 
 HD44780::set_custom_char_P(uint8_t id, const uint8_t* bitmap)
 {
   write(SET_CGRAM_ADDR | ((id << 3) & SET_CGRAM_MASK));
-  asserted(m_rs) {
-    for (uint8_t i = 0; i < BITMAP_MAX; i++, bitmap++) {
+  set_data_mode();
+  {
+    for (uint8_t i = 0; i < BITMAP_MAX; i++, bitmap++)
       write(pgm_read_byte(bitmap));
-    }
   }
+  set_instruction_mode();
 }
 
 bool 
 HD44780::begin()
 {
   // Initiate display; See fig. 24, 4-bit interface, pp. 46
-  setup4bit();
+  const uint8_t INIT0 = ((FUNCTION_SET | DATA_LENGTH_8BITS) >> 4);
+  const uint8_t INIT1 = ((FUNCTION_SET | DATA_LENGTH_4BITS) >> 4);
+  m_io->setup();
   Watchdog::delay(POWER_ON_TIME);
-  write4bit(FUNCTION_SET | DATA_LENGTH_8BITS);
-  pulse();
+  m_io->write4b(INIT0);
   DELAY(INIT0_TIME);
-  write4bit(FUNCTION_SET | DATA_LENGTH_8BITS);
-  pulse();
-  DELAY(INIT0_TIME);
-  write4bit(FUNCTION_SET | DATA_LENGTH_8BITS);
-  pulse();
+  m_io->write4b(INIT0);
   DELAY(INIT1_TIME);
-  write4bit(FUNCTION_SET | DATA_LENGTH_4BITS);
-  pulse();
+  m_io->write4b(INIT1);
 
   // Initialization with the function, control and mode setting
   write(m_func);
@@ -175,9 +138,11 @@ HD44780::putchar(char c)
     uint8_t x, y;
     set_cursor(0, m_y + 1);
     get_cursor(x, y);
-    asserted(m_rs) {
+    set_data_mode();
+    {
       for (uint8_t i = 0; i < WIDTH; i++) write(' ');
     }
+    set_instruction_mode();
     set_cursor(x, y);
     return (c);
   }
@@ -211,10 +176,12 @@ HD44780::putchar(char c)
   // Write character
   if (m_x == WIDTH) putchar('\n');
   m_x += 1;
-  asserted(m_rs) {
+  set_data_mode();
+  {
     write(c);
   }
+  set_instruction_mode();
 
   return (c & 0xff);
 }
-#endif
+
