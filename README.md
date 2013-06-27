@@ -124,9 +124,10 @@ Drivers
 14. NEXA/HomeEasy Wireless Remote command transmitter/receiver for RF433.
 15. ST7565, 65x132 Dot Matrix LCD Controller/Driver.
 16. Debounced button and dials with Rotary Encoder.
-17. HD44780 (aka 1602) LCD Controller/Driver.
+17. HD44780 (aka 1602, 2004) LCD Controller/Driver.
 18. DS3231, Extremely Accurate I2C-Integrated RTC/TCXO/Crystal. 
-19. Slave device support for SPI, TWI and OWI.
+19. PCF8574/PCF8574A Remote 8-bit I/O expander for I2C-bus with interrupt. 
+20. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  
@@ -212,4 +213,6 @@ event driven Rotary Encoder handler.
 Sockets. Refactoring NRF24L01P device driver to a
 Socker::Device with support for both connection-less and
 connection-oriented communication. DS3231 device driver and example
-sketches.    
+sketches.  Driver for the PCF8574/PCF8574A Remote 8-bit I/O expander
+for I2C-bus with interrupt. Support for 20x4 LCD.   
+    

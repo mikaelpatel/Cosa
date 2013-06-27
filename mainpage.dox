@@ -390,4 +390,8 @@ Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock (TWI).
 
 @section DS3231
 Driver for the DS3231, Extremely Accurate I2C-Integrated RTC/TCXO/Crystal. 
+
+@section PCF8574
+Driver for the PCF8574/PCF8574A Remote 8-bit I/O expander for I2C-bus
+with interrupt.
 */
