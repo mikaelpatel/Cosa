@@ -244,6 +244,7 @@ public:
    * Print abstract pin information to given stream. 
    * @param[in] outs output stream to print on.
    * @param[in] pin to print
+   * @return iostream.
    */
   friend IOStream& operator<<(IOStream& outs, Pin& pin);
 };
@@ -508,6 +509,7 @@ public:
    * Set the output pin with the given value. Zero(0) to clear
    * and non-zero to set. Output operator syntax.
    * @param[in] value to write.
+   * @return output pin.
    */
   OutputPin& operator<<(uint8_t value)
   {
@@ -557,6 +559,7 @@ public:
   /**
    * Set duty cycle for pwm output pin.
    * @param[in] duty cycle (0..255)
+   * @return pwm pin.
    */
   PWMPin& operator<<(uint8_t duty)
   {

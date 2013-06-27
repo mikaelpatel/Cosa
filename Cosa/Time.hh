@@ -68,6 +68,7 @@ struct time_t {
  * converted to binary.  
  * @param[in] outs output stream.
  * @param[in] t time structure.
+ * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, time_t& t);
 

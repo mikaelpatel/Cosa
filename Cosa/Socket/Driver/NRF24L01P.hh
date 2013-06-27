@@ -762,7 +762,7 @@ public:
  * Output operator for status field print out.
  * @param[in] outs output stream.
  * @param[in] status value to print.
- * @return stream.
+ * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, NRF24L01P::status_t status);
 
@@ -770,7 +770,7 @@ IOStream& operator<<(IOStream& outs, NRF24L01P::status_t status);
  * Output operator for transmitter queue status field print out.
  * @param[in] outs output stream.
  * @param[in] status value to print.
- * @return stream.
+ * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, NRF24L01P::fifo_status_t status);
 
@@ -778,7 +778,7 @@ IOStream& operator<<(IOStream& outs, NRF24L01P::fifo_status_t status);
  * Output operator for performance statistics field print out.
  * @param[in] outs output stream.
  * @param[in] status value to print.
- * @return stream.
+ * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, NRF24L01P::observe_tx_t observe);
 

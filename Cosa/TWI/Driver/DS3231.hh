@@ -288,7 +288,7 @@ public:
  * The values should be in BCD i.e. not converted to binary. 
  * @param[in] outs output stream.
  * @param[in] t alarm time structure.
- * @return output stream.
+ * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, DS3231::alarm1_t& t);
 
@@ -297,7 +297,7 @@ IOStream& operator<<(IOStream& outs, DS3231::alarm1_t& t);
  * The values should be in BCD i.e. not converted to binary. 
  * @param[in] outs output stream.
  * @param[in] t alarm time structure.
- * @return output stream.
+ * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, DS3231::alarm2_t& t);
 
@@ -306,7 +306,7 @@ IOStream& operator<<(IOStream& outs, DS3231::alarm2_t& t);
  * values should be in BCD i.e. not converted to binary.  
  * @param[in] outs output stream.
  * @param[in] t alarm time structure.
- * @return output stream.
+ * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, DS3231::timekeeper_t& t);
 

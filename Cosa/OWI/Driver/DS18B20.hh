@@ -236,7 +236,7 @@ public:
  * output stream. The temperature is in Celcius.
  * @param[in] outs stream to print device information to.
  * @param[in] thermometer device.
- * @return output stream.
+ * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, DS18B20& thermometer);
 

@@ -105,6 +105,7 @@ public:
      * Print command code fields to given output stream.
      * @param[in] outs output stream.
      * @param[in] code to print.
+     * @return iostream.
      */
     friend IOStream& operator<<(IOStream& outs, code_t code);
   };

@@ -386,7 +386,7 @@ public:
  * address is written in dot notation with port. 
  * @param[in] outs output stream.
  * @param[in] src source node address and port.
- * @return stream
+ * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, const Socket::addr_t& src);
 

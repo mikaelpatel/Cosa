@@ -118,6 +118,7 @@ public:
      * Print the captured samples to the given output stream.
      * @param[in] outs stream.
      * @param[in] receiver samples to print.
+     * @return iostream.
      */
     friend IOStream& operator<<(IOStream& outs, Receiver& receiver);
   };
