@@ -23,6 +23,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+
+#include "Cosa/Board.hh"
+#if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/IOStream/Driver/HD44780.hh"
 #include "Cosa/Watchdog.hh"
 
@@ -185,4 +188,4 @@ HD44780::putchar(char c)
 
   return (c & 0xff);
 }
-
+#endif
