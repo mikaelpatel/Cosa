@@ -568,6 +568,18 @@ public:
 class Server : public Socket {
 public:
   /**
+   * Service handler; Server side handling of a Client connection.
+   */
+  class Service : public Client {
+  public:
+    /**
+     * Create service handler on given device.
+     * @param[in] dev socket device driver.
+     */
+    Service(Socket::Device* dev) : Client(dev) {}
+  };
+
+  /**
    * Create server with given network device driver and listen port.
    * @param[in] dev device driver.
    * @param[in] port number.
@@ -600,20 +612,21 @@ public:
   /**
    * @override
    * Server callback on connect request from given source node. Return
-   * accepted client handler otherwise null(0) to rejesst. 
+   * accepted service handler otherwise null(0) to reject. 
    * Must be defined by sub-class. 
    * @param[in] src source node address.
-   * @return client or null(0)
+   * @return service handler or null(0)
    */
-  virtual Client* on_connect_request(Socket::addr_t& src) = 0;
+  virtual Service* on_connect_request(Socket::addr_t& src) = 0;
 
   /**
    * @override
-   * Server callback on disconnect request for given client. Server
-   * should notify client and reclaim client structure.
+   * Server callback on disconnect request for given service
+   * handler. Server should notify client and reclaim client structure.
+   * Must be defined by sub-class. 
    * @param[in] client.
    * @return client
    */
-  virtual void on_disconnect_request(Client* client) = 0;
+  virtual void on_disconnect_request(Service* service) = 0;
 };
 #endif

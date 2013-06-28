@@ -39,10 +39,9 @@ NRF24L01P nrf(0xc05a0005);
 
 class Monitor : public Server {
 private:
-  class Demo : public Client {
-    friend class LTB;
+  class Demo : public Service {
   public:
-    Demo(Socket::Device* dev) : Client(dev) {}
+    Demo(Socket::Device* dev) : Service(dev) {}
     virtual void on_recv(const void* buf, size_t size);
   };
   Demo m_demo;
@@ -52,8 +51,8 @@ public:
     Server(dev, port),
     m_demo(dev) 
   {}
-  virtual Client* on_connect_request(Socket::addr_t& src);
-  virtual void on_disconnect_request(Client* client);
+  virtual Service* on_connect_request(Socket::addr_t& src);
+  virtual void on_disconnect_request(Service* service);
 };
 
 
@@ -65,7 +64,7 @@ Monitor::Demo::on_recv(const void* buf, size_t size)
   trace.print(buf, size, IOStream::hex);
 }
 
-Client* 
+Server::Service* 
 Monitor::on_connect_request(Socket::addr_t& src)
 {
   trace << PSTR("Monitor::on_connect_request(Socket::addr_t& src = ");
@@ -74,7 +73,7 @@ Monitor::on_connect_request(Socket::addr_t& src)
 }
 
 void 
-Monitor::on_disconnect_request(Client* client)
+Monitor::on_disconnect_request(Service* service)
 {
 }
 

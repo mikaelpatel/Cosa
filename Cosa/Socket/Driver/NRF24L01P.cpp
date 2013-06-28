@@ -396,7 +396,7 @@ NRF24L01P::disconnect(Client* c)
 {
   // Fix: Should send a disconnect message to the original server.
   // This may require additional address parameter in request message
-  // if the server allocated a client handler on another node.
+  // if the server allocated a service handler on another node.
   return (false);
 }
 
