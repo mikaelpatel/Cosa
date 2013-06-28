@@ -53,6 +53,21 @@ DS18B20::convert_request()
 }
 
 bool
+DS18B20::convert_request(OWI* owi, uint8_t resolution)
+{
+  if (!owi->reset()) return (false);
+  owi->write(OWI::SKIP_ROM);
+  owi->write(CONVERT_T);
+  if (resolution > 0) {
+    if (resolution < 9) resolution = 9;
+    else if (resolution > 12) resolution = 12;
+    uint16_t ms = (MAX_CONVERSION_TIME >> (12 - resolution));
+    Watchdog::delay(ms);
+  }
+  return (true);
+}
+
+bool
 DS18B20::read_scratchpad()
 {
   if (m_converting) {

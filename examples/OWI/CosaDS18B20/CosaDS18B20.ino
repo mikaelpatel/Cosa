@@ -74,34 +74,22 @@ void setup()
   TRACE(basement.connect(2));
   trace << (OWI::Driver&) basement << endl;
   ledPin.toggle();
-
-  // Start the conversion pipeline; indoors->outdoors->basement sampling
-  indoors.convert_request();
 }
 
 void loop()
 {
-  // Start outdoors temperature conversion and read the indoors temperature
+  // Boardcast convert request to all devices, read and print results
   ledPin.toggle();
-  outdoors.convert_request();
+  DS18B20::convert_request(&owi);
   indoors.read_scratchpad();
-  trace << PSTR("indoors = ") << indoors;
-  ledPin.toggle();
-  SLEEP(1);
-
-  // Start basement temperature conversion and read the outdoors temperature
-  ledPin.toggle();
-  basement.convert_request();
   outdoors.read_scratchpad();
-  trace << PSTR(", outdoors = ") << outdoors;
-  ledPin.toggle();
-  SLEEP(1);
-
-  // Start indoors temperature conversion and read the basement temperature
-  ledPin.toggle();
-  indoors.convert_request();
   basement.read_scratchpad();
-  trace << PSTR(", basement = ") << basement << endl;
+  trace << PSTR("indoors = ") << indoors
+	<< PSTR(", outdoors = ") << outdoors
+	<< PSTR(", basement = ") << basement 
+	<< endl;
   ledPin.toggle();
+
+  // Sleep before requesting a new sample
   SLEEP(1);
 }
