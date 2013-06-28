@@ -41,20 +41,33 @@ private:
 
 public:
   /**
+   * The Timekeeper Control Register (pp. 9)
+   */
+  union control_t {
+    uint8_t as_uint8;
+    struct {
+      uint8_t rs:2;		// Rate Select
+      uint8_t reserved1:2;	// Reserved/1
+      uint8_t sqwe:1;		// Square-Ware Enable
+      uint8_t reserved2:2;	// Reserved/2
+      uint8_t out:1;		// Output Control
+    };
+  };
+
+  // Rate Selection (pp. 9)
+  enum {
+    RS_1_HZ,
+    RS_4_096_KHZ,
+    RS_8_192_KHZ,
+    RS_32_768_KHZ
+  } __attribute__((packed));
+
+  /**
    * The Timekeeper Registers (Table 2, pp. 8)
    */
   struct timekeeper_t {
     time_t clock;
-    union {
-      uint8_t as_uint8;
-      struct {
-	uint8_t rs:2;		// Rate Select
-	uint8_t reserved1:2;	// Reserved/1
-	uint8_t sqwe:1;		// Square-Ware Enable
-	uint8_t reserved2:2;	// Reserved/2
-	uint8_t out:1;		// Output Control
-      };
-    } control;
+    control_t control;
   };
   const static uint8_t RAM_ADDR = sizeof(timekeeper_t);
   const static uint8_t RAM_MAX = 0x40;
