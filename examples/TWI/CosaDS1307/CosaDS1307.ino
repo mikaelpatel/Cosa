@@ -62,7 +62,7 @@ void setup()
 
   // Read the latest set and run time
   latest_t latest;
-  rtc.read(&latest, sizeof(latest), DS1307::RAM_ADDR);
+  rtc.read(&latest, sizeof(latest), DS1307::RAM_START);
 
   // Set the time. Adjust below to your current time
   time_t now;
@@ -89,7 +89,7 @@ void setup()
   // Update the run time with the current time and update ram
   rtc.get_time(now);
   latest.run = now;
-  rtc.write(&latest, sizeof(latest), DS1307::RAM_ADDR);
+  rtc.write(&latest, sizeof(latest), DS1307::RAM_START);
 }
 
 void loop()

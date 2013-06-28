@@ -31,30 +31,36 @@
 #include "Cosa/Time.hh"
 
 /**
- * Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock.
+ * Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock,
+ * a low-power, full binary-coded decimal (BCD) clock/calendar plus 
+ * 56 bytes of NV SRAM. 
+ *
  * For further details see Maxim Integrated product description; 
  * http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  */
 class DS1307 : private TWI::Driver {
 private:
+  /** Device Address, R/W-bit adjusted */
   static const uint8_t ADDR = 0xD0;
 
 public:
   /**
-   * The Timekeeper Control Register (pp. 9)
+   * The Timekeeper Control Register bitfields (pp. 9)
    */
   union control_t {
-    uint8_t as_uint8;
+    uint8_t as_uint8;		/**< Unsigned byte access */
     struct {
-      uint8_t rs:2;		// Rate Select
-      uint8_t reserved1:2;	// Reserved/1
-      uint8_t sqwe:1;		// Square-Ware Enable
-      uint8_t reserved2:2;	// Reserved/2
-      uint8_t out:1;		// Output Control
+      uint8_t rs:2;		/**< Rate Select */
+      uint8_t reserved1:2;	/**< Reserved/1 */
+      uint8_t sqwe:1;		/**< Square-Ware Enable */
+      uint8_t reserved2:2;	/**< Reserved/2 */
+      uint8_t out:1;		/**< Output Control */
     };
   };
 
-  // Rate Selection (pp. 9)
+  /**
+   * Rate Selection (pp. 9)
+   */
   enum {
     RS_1_HZ,
     RS_4_096_KHZ,
@@ -66,11 +72,18 @@ public:
    * The Timekeeper Registers (Table 2, pp. 8)
    */
   struct timekeeper_t {
-    time_t clock;
-    control_t control;
+    time_t clock;		/**< Time/Date in BCD */
+    control_t control;		/**< Timekeeper control register */
   };
-  const static uint8_t RAM_ADDR = sizeof(timekeeper_t);
-  const static uint8_t RAM_MAX = 0x40;
+
+  /** Start of application RAM */
+  const static uint8_t RAM_START = sizeof(timekeeper_t);
+
+  /** End of application RAM */
+  const static uint8_t RAM_END = 0x37;
+
+  /** Max size of application RAM (56 bytes) */
+  const static uint8_t RAM_MAX = RAM_END - RAM_START + 1;
 
   /**
    * Read ram block with the given size into the buffer from the position.
@@ -80,7 +93,7 @@ public:
    * @param[in] pos address in ram to read from.
    * @return number of bytes or negative error code.
    */
-  int read(void* ram, uint8_t size, uint8_t pos = 0);
+  int read(void* ram, uint8_t size = sizeof(time_t), uint8_t pos = 0);
 
   /**
    * Write ram block at given position with the contents from buffer.
@@ -90,7 +103,7 @@ public:
    * @param[in] pos address in ram to read write to.
    * @return number of bytes or negative error code.
    */
-  int write(void* ram, uint8_t size, uint8_t pos = 0);
+  int write(void* ram, uint8_t size = sizeof(time_t), uint8_t pos = 0);
 
   /**
    * Read current time from real-time clock. Return true(1)
@@ -100,7 +113,7 @@ public:
    */
   bool get_time(time_t& now) 
   {
-    return (read(&now, sizeof(now)) == sizeof(now));
+    return (read(&now) == sizeof(now));
   }
 
   /**
@@ -111,7 +124,7 @@ public:
    */
   bool set_time(time_t& now)
   {
-    return (write(&now, sizeof(now)) == sizeof(now));
+    return (write(&now) == sizeof(now));
   }
 };
 
