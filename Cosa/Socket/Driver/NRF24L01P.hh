@@ -224,11 +224,11 @@ private:
   union status_t {
     uint8_t as_byte;
     struct {
-      uint8_t tx_full:1;	// TX FIFO full
-      uint8_t rx_p_no:3;	// Data pipe number for available payload
-      uint8_t max_rt:1;		// Maximum number of TX retransmit interrupt
-      uint8_t tx_ds:1;		// Data send TX FIFO interrupt
-      uint8_t rx_dr:1;		// Data ready RX FIFO interrupt
+      uint8_t tx_full:1;	/**< TX FIFO full */
+      uint8_t rx_p_no:3;	/**< Data pipe number for available payload */
+      uint8_t max_rt:1;		/**< Max number of TX retransmit interrupt */
+      uint8_t tx_ds:1;		/**< Data send TX FIFO interrupt */
+      uint8_t rx_dr:1;		/**< Data ready RX FIFO interrupt */
     };
 
     /**
@@ -255,8 +255,8 @@ private:
   union observe_tx_t {
     uint8_t as_byte;
     struct {
-      uint8_t arc_cnt:4;	// Count retransmitted packets 
-      uint8_t plos_cnt:4;	// Count lost packets
+      uint8_t arc_cnt:4;	/**< Count retransmitted packets */
+      uint8_t plos_cnt:4;	/**< Count lost packets */
     };
 
     /**
@@ -287,12 +287,12 @@ private:
   union fifo_status_t {
     uint8_t as_byte;
     struct {
-      uint8_t rx_empty:1;	// RX FIFO empty flag
-      uint8_t rx_full:1;	// RX FIFO full flag
+      uint8_t rx_empty:1;	/**< RX FIFO empty flag */
+      uint8_t rx_full:1;	/**< RX FIFO full flag */
       uint8_t reserved:2;
-      uint8_t tx_empty:1;	// TX FIFO empty flag
-      uint8_t tx_full:1;	// TX FIFO full flag
-      uint8_t tx_reuse:1;	// Reuse last transmitted data packat
+      uint8_t tx_empty:1;	/**< TX FIFO empty flag */
+      uint8_t tx_full:1;	/**< TX FIFO full flag */
+      uint8_t tx_reuse:1;	/**< Reuse last transmitted data packat */
     };
 
     /**
@@ -343,10 +343,10 @@ private:
    * Destination address is in hardware register (RX_ADDR_P0/P1).
    */
   struct header_t {
-    struct {			// Destination node address is pipe address
-      uint16_t port;		// Destination port
+    struct {			/**< Destination node address is in pipe */
+      uint16_t port;		/**< Destination port */
     } dest;
-    Socket::addr_t src;		// Source node address and port
+    Socket::addr_t src;		/**< Source node address and port */
   };
 
   /** Maximum size of payload for datagram */
@@ -366,8 +366,8 @@ private:
    * Connection request/response message
    */
   struct request_t {
-    uint8_t op;			// Request/response operation code
-    uint16_t param;		// Parameter (optional)
+    uint8_t op;			/**< Request/response operation code */
+    uint16_t param;		/**< Parameter (optional) */
   };
   
   /**

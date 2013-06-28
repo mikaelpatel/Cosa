@@ -74,15 +74,15 @@ protected:
   static const uint8_t script[] PROGMEM;
 
   // Display pins and state
-  OutputPin m_sdin;		// Serial data input
-  OutputPin m_sclk;		// Serial clock input
-  OutputPin m_dc;		// Data/command
-  OutputPin m_sce;		// Chip enable
-  uint8_t m_x;			// Cursor x (0..WIDTH-1)
-  uint8_t m_y;			// Cursor y (0..LINES-1)
-  uint8_t m_tab;		// Tab step
-  uint8_t m_mode;		// Text mode (inverted)
-  Font* m_font;			// Font
+  OutputPin m_sdin;		/**< Serial data input */
+  OutputPin m_sclk;		/**< Serial clock input */
+  OutputPin m_dc;		/**< Data/command */
+  OutputPin m_sce;		/**< Chip enable */
+  uint8_t m_x;			/**< Cursor x (0..WIDTH-1) */
+  uint8_t m_y;			/**< Cursor y (0..LINES-1) */
+  uint8_t m_tab;		/**< Tab step */
+  uint8_t m_mode;		/**< Text mode (inverted) */
+  Font* m_font;			/**< Font */
 
   /**
    * Set display address for next data block.

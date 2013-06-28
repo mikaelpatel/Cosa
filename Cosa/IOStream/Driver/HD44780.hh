@@ -490,13 +490,13 @@ public:
   class MJKDZ : public IO, private PCF8574 {
   private:
     union {
-      uint8_t as_uint8;
+      uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
-	uint8_t data:4;		// Data port (P0..P3)
-	uint8_t en:1;		// Enable/pulse (P4)
-	uint8_t rw:1;		// Read/Write (P5)
-	uint8_t rs:1;		// Command/Data select (P6)
-	uint8_t bt:1;		// Back-light (P7)
+	uint8_t data:4;		/**< Data port (P0..P3) */
+	uint8_t en:1;		/**< Enable/pulse (P4) */
+	uint8_t rw:1;		/**< Read/Write (P5) */
+	uint8_t rs:1;		/**< Command/Data select (P6) */
+	uint8_t bt:1;		/**< Back-light (P7) */
       };
     } m_port;
 
@@ -551,11 +551,11 @@ public:
     union {
       uint8_t as_uint8;
       struct {
-	uint8_t rs:1;		// Command/Data select (P0)
-	uint8_t rw:1;		// Read/Write (P1)
-	uint8_t en:1;		// Enable/pulse (P2)
-	uint8_t bt:1;		// Back-light (P3)
-	uint8_t data:4;		// Data port (P4..P7)
+	uint8_t rs:1;		/**< Command/Data select (P0) */
+	uint8_t rw:1;		/**< Read/Write (P1) */
+	uint8_t en:1;		/**< Enable/pulse (P2) */
+	uint8_t bt:1;		/**< Back-light (P3) */
+	uint8_t data:4;		/**< Data port (P4..P7) */
       };
     } m_port;
 
