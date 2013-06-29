@@ -92,8 +92,9 @@ public:
      */
     Driver(OWI* pin, const char* name = 0) : 
       ROM(0), 
-      NAME(name),
-      m_pin(pin) 
+      m_next(0),
+      m_pin(pin),
+      NAME(name)
     {}
 
     /**
@@ -101,8 +102,9 @@ public:
      * and given rom identity in EEPROM (or NULL).
      * @param[in] pin one wire bus.
      * @param[in] rom identity.
+     * @param[in] name of device driver instance.
      */
-    Driver(OWI* pin, const uint8_t* rom);
+    Driver(OWI* pin, const uint8_t* rom, const char* name = 0);
 
     /**
      * Return pointer to device rom. 

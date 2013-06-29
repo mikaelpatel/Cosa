@@ -162,17 +162,16 @@ IOStream& operator<<(IOStream& outs, OWI& owi)
   return (outs);
 }
 
-OWI::Driver::Driver(OWI* pin, const uint8_t* rom) : 
-  ROM(rom),
+OWI::Driver::Driver(OWI* pin, const uint8_t* rom, const char* name) :
+  ROM(rom), 
   m_next(0),
-  m_pin(pin)
+  m_pin(pin),
+  NAME(name)
 {
-  if (rom != 0) {
-    eeprom_read_block(m_rom, rom, sizeof(m_rom));
-    m_pin->m_devices += 1;
-    m_next = m_pin->m_device;
-    m_pin->m_device = this;
-  }
+  eeprom_read_block(m_rom, rom, sizeof(m_rom));
+  m_pin->m_devices += 1;
+  m_next = m_pin->m_device;
+  m_pin->m_device = this;
 }
 
 bool 
