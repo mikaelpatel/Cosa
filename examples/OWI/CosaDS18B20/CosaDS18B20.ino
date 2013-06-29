@@ -108,14 +108,15 @@ void loop()
   ledPin.toggle();
 
   // Testcase#2: Do an alarm search and read alarms
+  DS18B20::convert_request(&owi, 12, true);
   DS18B20::Search iter(&owi);
   DS18B20* temp;
   while ((temp = iter.next()) != 0) {
-    temp->read_scratchpad();
     trace << PSTR("ALARM:") << *temp << endl;
   }
 
   // Testcase#3: Calls on_alarm() for each device with alarm set
+  DS18B20::convert_request(&owi, 12, true);
   owi.alarm_dispatch();
 
   // Sleep before requesting a new sample

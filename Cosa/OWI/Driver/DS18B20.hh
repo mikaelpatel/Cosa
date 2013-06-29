@@ -106,13 +106,11 @@ public:
     
     /**
      * Get the next thermometer with active alarm since latest
-     * convert request. 
+     * convert request. A read_scratchpad() is issued to read the
+     * temperature conversion that triggered the alarm.
      * @return pointer to driver or null(0).
      */
-    DS18B20* next() 
-    { 
-      return ((DS18B20*) OWI::Search::next()); 
-    }
+    DS18B20* next();
   };
 
   /**

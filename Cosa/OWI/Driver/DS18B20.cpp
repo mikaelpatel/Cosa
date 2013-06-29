@@ -26,6 +26,15 @@
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/Watchdog.hh"
 
+DS18B20* 
+DS18B20::Search::next()
+{ 
+  DS18B20* dev = (DS18B20*) OWI::Search::next(); 
+  if (dev == 0) return (0);
+  dev->read_scratchpad();
+  return (dev);
+}
+
 bool 
 DS18B20::connect(uint8_t index)
 {
