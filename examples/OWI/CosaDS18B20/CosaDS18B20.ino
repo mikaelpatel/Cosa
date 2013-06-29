@@ -44,9 +44,16 @@ OWI owi(Board::D1);
 #else
 OWI owi(Board::D7);
 #endif
-DS18B20 outdoors(&owi);
-DS18B20 indoors(&owi);
-DS18B20 basement(&owi);
+
+// Support macro to create name strings in program memory
+#define THERMOMETER(name)			\
+  const char name ## _PSTR[] PROGMEM = #name;	\
+  DS18B20 name(&owi, name ## _PSTR)
+
+// The devices connected to the one-wire bus
+THERMOMETER(outdoors);
+THERMOMETER(indoors);
+THERMOMETER(basement);
 
 void setup()
 {
@@ -65,30 +72,50 @@ void setup()
   // List connected devices
   trace << owi << endl;
 
-  // Connect to the devices and print rom contents
+  // Connect to the devices and print rom contents/trigger setting
   ledPin.toggle();
-  TRACE(indoors.connect(0));
-  trace << (OWI::Driver&) indoors << endl;
-  TRACE(outdoors.connect(1));
-  trace << (OWI::Driver&) outdoors << endl;
-  TRACE(basement.connect(2));
-  trace << (OWI::Driver&) basement << endl;
+  DS18B20* temp[] = { &indoors, &outdoors, &basement };
+  for (uint8_t i = 0; i < membersof(temp); i++) {
+    int8_t high, low;
+    uint8_t resolution;
+    DS18B20* t = temp[i];
+    t->connect(i);
+    t->get_trigger(high, low);
+    resolution = t->get_resolution();
+    trace << (OWI::Driver&) *t << endl;
+    trace << PSTR("resolution = ") << resolution << endl;
+    trace << PSTR("trigger = ") << high << ':' << low << endl;
+    t->set_trigger(30, 20);
+    t->write_scratchpad();
+    trace << endl;
+  }
   ledPin.toggle();
 }
 
 void loop()
 {
-  // Boardcast convert request to all devices, read and print results
+  // Boardcast convert request to all devices
   ledPin.toggle();
   DS18B20::convert_request(&owi, 12, true);
+
+  // Read back results; first will wait for the conversion to complete
   indoors.read_scratchpad();
   outdoors.read_scratchpad();
   basement.read_scratchpad();
-  trace << PSTR("indoors = ") << indoors
-	<< PSTR(", outdoors = ") << outdoors
-	<< PSTR(", basement = ") << basement 
-	<< endl;
+
+  // Print measurement with device name
+  trace << indoors << PSTR(", ") << outdoors << PSTR(", ") << basement << endl;
   ledPin.toggle();
+
+  // Do an alarm search
+  DS18B20::Search iter(&owi);
+  DS18B20* temp;
+  while ((temp = iter.next()) != 0) {
+    trace << PSTR("ALARM:") << *temp << endl;
+  }
+
+  // Do alarm dispatch; Calls on_alarm() for each device with alarm set
+  owi.alarm_dispatch();
 
   // Sleep before requesting a new sample
   SLEEP(1);

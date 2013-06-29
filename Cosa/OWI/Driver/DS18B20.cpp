@@ -126,6 +126,7 @@ IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
   int16_t temp = thermometer.get_temperature();
   uint16_t fraction = (625 * (temp & 0xf)) / 100;
   int16_t integer = (temp >> 4);
+  if (thermometer.NAME != 0) outs << thermometer.NAME << PSTR(" = ");
   outs << integer << '.';
   if (fraction < 10) outs << '0';
   outs << fraction;

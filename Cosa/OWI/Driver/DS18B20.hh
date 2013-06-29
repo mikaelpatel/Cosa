@@ -93,15 +93,38 @@ private:
   }
 public:
   /**
+   * Alarm search support class.
+   */
+  class Search : public OWI::Search {
+  public:
+    /**
+     * Construct an alarm search iterator for the thermometer
+     * device family.
+     * @param[in] owi one-wire pin to search.
+     */
+    Search(OWI* owi) : OWI::Search(owi, FAMILY_CODE) {}
+    
+    /**
+     * Get the next thermometer with active alarm since latest
+     * convert request. 
+     * @return pointer to driver or null(0).
+     */
+    DS18B20* next() 
+    { 
+      return ((DS18B20*) OWI::Search::next()); 
+    }
+  };
+
+  /**
    * Construct a DS18B20 device connected to the given 1-Wire bus.
    * Use connect() to lookup, set power supply mode and
    * configuration. Alternatively use read_power_supply() and
    * read_scratchpad() directly if rom address is given.
    * @param[in] pin one wire bus pin.
-   * @param[in] rom device identity (default null).
+   * @param[in] name of device.
    */
-  DS18B20(OWI* pin) : 
-    OWI::Driver(pin),
+  DS18B20(OWI* pin, const char* name = 0) : 
+    OWI::Driver(pin, name),
     m_parasite(0),
     m_start(0L),
     m_converting(false)
@@ -122,6 +145,7 @@ public:
     m_start(0L),
     m_converting(false)
   {}
+
   /**
    * Connect to DS18B20 device with given index. Reads configuration,
    * scratchpad, and power supply setting.
@@ -143,7 +167,7 @@ public:
    * @param[in] high threshold. 
    * @param[in] low threshold.
    */
-  void set_trigger(uint8_t high, uint8_t low)
+  void set_trigger(int8_t high, int8_t low)
   {
     m_scratchpad.high_trigger = high;
     m_scratchpad.low_trigger = low;
@@ -169,6 +193,7 @@ public:
    */
   uint8_t get_resolution()
   {
+    if (m_rom[0] == 0) return (0);
     return (9 + (m_scratchpad.configuration >> 5));
   }
 
@@ -178,7 +203,7 @@ public:
    * @param[out] high threshold. 
    * @param[out] low threshold.
    */
-  void get_trigger(uint8_t& high, uint8_t& low)
+  void get_trigger(int8_t& high, int8_t& low)
   {
     high = m_scratchpad.high_trigger;
     low = m_scratchpad.low_trigger;
@@ -248,8 +273,9 @@ public:
 };
 
 /**
- * Print the latest temperature reading with two decimals to given
- * output stream. The temperature is in Celcius.
+ * Print the name of the thermometer and latest temperature reading
+ * with two decimals to given output stream. The temperature is in
+ * Celcius. 
  * @param[in] outs stream to print device information to.
  * @param[in] thermometer device.
  * @return iostream.

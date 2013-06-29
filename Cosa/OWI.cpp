@@ -127,11 +127,52 @@ OWI::write(uint8_t value, void* buf, uint8_t size)
   while (size--) write(*bp++);
 }
 
+OWI::Driver* 
+OWI::lookup(uint8_t* rom)
+{
+  for (Driver* dev = m_device; dev != 0; dev = dev->m_next) {
+    if (!memcmp(dev->m_rom, rom, ROM_MAX))
+      return (dev);
+  }
+  return (0);
+}
+
+bool
+OWI::alarm_dispatch()
+{
+  OWI::Search iter(this);
+  OWI::Driver* dev = iter.next();
+  if (dev == 0) return (false);
+  do {
+    dev->on_alarm();
+    dev = iter.next();
+  } while (dev != 0);
+  return (true);
+}
+
+IOStream& operator<<(IOStream& outs, OWI& owi)
+{
+  OWI::Driver dev(&owi);
+  int8_t last = OWI::Driver::FIRST;
+  do {
+    last = dev.search_rom(last);
+    if (last == OWI::Driver::ERROR) return (outs);
+    outs << dev << endl;
+  } while (last != OWI::Driver::LAST);
+  return (outs);
+}
+
 OWI::Driver::Driver(OWI* pin, const uint8_t* rom) : 
   ROM(rom),
+  m_next(0),
   m_pin(pin)
 {
-  if (rom != 0) eeprom_read_block(m_rom, rom, sizeof(m_rom));
+  if (rom != 0) {
+    eeprom_read_block(m_rom, rom, sizeof(m_rom));
+    m_pin->m_devices += 1;
+    m_next = m_pin->m_device;
+    m_pin->m_device = this;
+  }
 }
 
 bool 
@@ -205,8 +246,12 @@ OWI::Driver::read_rom()
 bool
 OWI::Driver::match_rom()
 {
+  if (m_rom[0] == 0) return (false);
   if (!m_pin->reset()) return (false);
-  m_pin->write(OWI::MATCH_ROM, m_rom, ROM_MAX);
+  if (m_pin->m_devices > 1) 
+    m_pin->write(OWI::MATCH_ROM, m_rom, ROM_MAX);
+  else
+    m_pin->write(OWI::SKIP_ROM);
   return (true);
 }
 
@@ -234,12 +279,39 @@ OWI::Driver::connect(uint8_t family, uint8_t index)
     last = search_rom(last);
     if (last == ERROR) return (false);
     if (m_rom[0] == family) {
-      if (index == 0) return (true);
+      if (index == 0) {
+	m_pin->m_devices += 1;
+	m_next = m_pin->m_device;
+	m_pin->m_device = this;
+	return (true);
+      }
       index -= 1;
     }
   } while (last != LAST);
   memset(m_rom, 0, ROM_MAX);
   return (false);
+}
+
+IOStream& operator<<(IOStream& outs, OWI::Driver& dev)
+{
+  uint8_t i;
+  if (dev.NAME != 0) outs << dev.NAME << ':';
+  outs << PSTR("OWI::rom(family = ") << hex << dev.m_rom[0] << PSTR(", id = ");
+  for (i = 1; i < OWI::ROM_MAX - 1; i++)
+    outs << hex << dev.m_rom[i] << PSTR(", ");
+  outs << PSTR("crc = ") << hex << dev.m_rom[i] << ')';
+  return (outs);
+}
+
+OWI::Driver* 
+OWI::Search::next()
+{
+  do {
+    if (m_last == LAST) return (0);
+    m_last = alarm_search(m_last);
+    if (m_last == ERROR) return (0);
+  } while ((m_family != 0) && (m_rom[0] != m_family));
+  return (m_pin->lookup(m_rom));
 }
 
 int
@@ -423,24 +495,3 @@ OWI::Device::on_interrupt(uint16_t arg)
   else m_state = IDLE_STATE;
 }
 
-IOStream& operator<<(IOStream& outs, OWI::Driver& dev)
-{
-  uint8_t i;
-  outs << PSTR("OWI::rom(family = ") << hex << dev.m_rom[0] << PSTR(", id = ");
-  for (i = 1; i < OWI::ROM_MAX - 1; i++)
-    outs << hex << dev.m_rom[i] << PSTR(", ");
-  outs << PSTR("crc = ") << hex << dev.m_rom[i] << ')';
-  return (outs);
-}
-
-IOStream& operator<<(IOStream& outs, OWI& owi)
-{
-  OWI::Driver dev(&owi);
-  int8_t last = OWI::Driver::FIRST;
-  do {
-    last = dev.search_rom(last);
-    if (last == OWI::Driver::ERROR) return (outs);
-    outs << dev << endl;
-  } while (last != OWI::Driver::LAST);
-  return (outs);
-}

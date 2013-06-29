@@ -33,7 +33,7 @@
 
 /**
  * 1-wire device driver support class. Allows device rom search
- * and connection to multiple devices on one-wire bus.
+ * and connection to multiple devices on one-wire bus. 
  *
  * @section Limitations
  * The driver will turn off interrupt handling during data read 
@@ -55,20 +55,22 @@ public:
   static const uint8_t ROMBITS = ROM_MAX * CHARBITS;
 
   /**
-   * Driver for device connected to a one-wire pin
+   * Driver for device connected to a one-wire bus.
    */
   class Driver {
     friend class OWI;
     friend IOStream& operator<<(IOStream& outs, OWI& owi);
     friend IOStream& operator<<(IOStream& outs, Driver& dev);
-  protected:
+  public:
     enum {
       FIRST = -1,
       ERROR = -1,
       LAST = ROMBITS
     } __attribute__((packed));
+  protected:
     uint8_t m_rom[ROM_MAX];
     const uint8_t* ROM;
+    Driver* m_next;
     OWI* m_pin;
 
     /**
@@ -80,11 +82,19 @@ public:
     int8_t search(int8_t last = FIRST);
 
   public:
+    /** Name of device driver instance */
+    const char* NAME;
+    
     /**
      * Construct one wire device driver. Use one wire bus on given pin.
      * @param[in] pin one wire bus.
+     * @param[in] name of device driver instance.
      */
-    Driver(OWI* pin) : ROM(0), m_pin(pin) {}
+    Driver(OWI* pin, const char* name = 0) : 
+      ROM(0), 
+      NAME(name),
+      m_pin(pin) 
+    {}
 
     /**
      * Construct one wire device driver. Use one wire bus on given pin,
@@ -156,10 +166,52 @@ public:
      * @return true(1) if successful otherwise false(0).
      */
     bool connect(uint8_t family, uint8_t index);
+
+    /**
+     * @override
+     * Callback on alarm dispatch. Default is empty function.
+     */
+    virtual void on_alarm() {}
   };
 
   /**
-   * Act as slave device connected to a one-wire pin
+   * Alarm search iterator class.
+   */
+  class Search : private Driver {
+  private:
+    uint8_t m_family;
+    int8_t m_last;
+  public:
+    /**
+     * Initiate an alarm search iterator for the given one-wire bus and 
+     * device family code.
+     * @param[in] owi one-wire bus.
+     * @param[in] family code (default all).
+     */
+    Search(OWI* owi, uint8_t family = 0) : 
+      Driver(owi),
+      m_family(family),
+      m_last(FIRST)
+    {
+    }
+
+    /**
+     * Get the next device with an active alarm.
+     * @return pointer to driver or null(0).
+     */
+    Driver* next();
+
+    /**
+     * Reset iterator.
+     */
+    void reset()
+    {
+      m_last = FIRST;
+    }
+  };
+
+  /**
+   * Act as slave device connected to a one-wire bus.
    */
   class Device : public ExternalInterrupt {
     friend class OWI;
@@ -276,6 +328,12 @@ public:
   };
   
 private:
+  /** Number of devices */
+  uint8_t m_devices;
+
+  /** List of slave devices */
+  Driver* m_device;
+
   /** Intermediate CRC sum */
   uint8_t m_crc;
 
@@ -284,7 +342,12 @@ public:
    * Construct one wire bus connected to the given pin.
    * @param[in] pin number.
    */
-  OWI(Board::DigitalPin pin) : IOPin(pin) {}
+  OWI(Board::DigitalPin pin) : 
+    IOPin(pin), 
+    m_devices(0),
+    m_device(0),
+    m_crc(0)
+  {}
 
   /**
    * Reset the one wire bus and check that at least one device is
@@ -313,7 +376,7 @@ public:
   /**
    * Write the given value to the one wire bus. The bits are written
    * from LSB to MSB. Pass true(1) for power parameter to allow 
-   * parasite device to be powered. Should be turned off with power_off().
+   * parasite devices to be powered. Should be turned off with power_off().
    * @param[in] value to write.
    * @param[in] bits to be written.
    * @param[in] power on for parasite device.
@@ -337,10 +400,24 @@ public:
     set_mode(INPUT_MODE);
     clear();
   }
+
+  /**
+   * Lookup the driver instance with the given rom address.
+   * @return driver pointer or null(0).
+   */
+  Driver* lookup(uint8_t* rom);
+
+  /**
+   * Search drivers with alarm setting and call on_alarm().
+   * Return true(1) if there was at least one driver with an alarm,
+   * otherwise when no alarms false(0).
+   * @return bool.
+   */
+  bool alarm_dispatch();
 };
 
 /**
- * Print device driver rom to output stream. 
+ * Print device driver name and rom to output stream. 
  * @param[in] outs stream to print to.
  * @param[in] dev owi device driver.
  * @return output stream.
