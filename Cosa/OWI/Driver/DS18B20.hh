@@ -196,13 +196,17 @@ public:
    * Initiate connected devices to perform a simple temperature
    * conversion (boardcast). With the default setting 12-bit
    * resolution the max conversion time is 750 ms,
-   * MAX_CONVERSION_TIME. Give zero(0) as resolution to omit delay.
-   * Parasite power is not allowed for broadcasted operation.
+   * MAX_CONVERSION_TIME. Give zero(0) as resolution to omit
+   * conversion wait. Parasite power by passing true for the mode
+   * flag. Returns true(1) if successful otherwise false(0).
    * @param[in] owi one-wire interface pin.
    * @param[in] resolution of conversion.
+   * @param[in] parasite power mode flag.
    * @return true(1) if successful otherwise false(0).
    */
-  static bool convert_request(OWI* owi, uint8_t resolution = 12);
+  static bool convert_request(OWI* owi, 
+			      uint8_t resolution = 12, 
+			      bool parasite = false);
 
   /**
    * Write the contents of the scratchpad triggers and configuration

@@ -80,7 +80,7 @@ void loop()
 {
   // Boardcast convert request to all devices, read and print results
   ledPin.toggle();
-  DS18B20::convert_request(&owi);
+  DS18B20::convert_request(&owi, 12, true);
   indoors.read_scratchpad();
   outdoors.read_scratchpad();
   basement.read_scratchpad();
