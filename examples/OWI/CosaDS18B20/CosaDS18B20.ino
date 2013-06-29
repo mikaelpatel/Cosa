@@ -94,7 +94,7 @@ void setup()
 
 void loop()
 {
-  // Boardcast convert request to all devices
+  // Testcase#1: Boardcast convert request to all devices
   ledPin.toggle();
   DS18B20::convert_request(&owi, 12, true);
 
@@ -107,14 +107,15 @@ void loop()
   trace << indoors << PSTR(", ") << outdoors << PSTR(", ") << basement << endl;
   ledPin.toggle();
 
-  // Do an alarm search
+  // Testcase#2: Do an alarm search and read alarms
   DS18B20::Search iter(&owi);
   DS18B20* temp;
   while ((temp = iter.next()) != 0) {
+    temp->read_scratchpad();
     trace << PSTR("ALARM:") << *temp << endl;
   }
 
-  // Do alarm dispatch; Calls on_alarm() for each device with alarm set
+  // Testcase#3: Calls on_alarm() for each device with alarm set
   owi.alarm_dispatch();
 
   // Sleep before requesting a new sample
