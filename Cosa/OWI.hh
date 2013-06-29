@@ -179,8 +179,8 @@ public:
   /**
    * Alarm search iterator class.
    */
-  class Search : private Driver {
-  private:
+  class Search : protected Driver {
+  protected:
     uint8_t m_family;
     int8_t m_last;
   public:
