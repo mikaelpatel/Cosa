@@ -31,7 +31,9 @@ DS18B20::Search::next()
 { 
   DS18B20* dev = (DS18B20*) OWI::Search::next(); 
   if (dev == 0) return (0);
-  dev->read_scratchpad();
+  m_pin->write(READ_SCRATCHPAD);
+  m_pin->read(&dev->m_scratchpad.temperature, 
+	      sizeof(dev->m_scratchpad.temperature));
   return (dev);
 }
 
