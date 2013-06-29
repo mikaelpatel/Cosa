@@ -105,7 +105,6 @@ void loop()
 
   // Print measurement with device name
   trace << indoors << PSTR(", ") << outdoors << PSTR(", ") << basement << endl;
-  ledPin.toggle();
 
   // Testcase#2: Do an alarm search and read alarms
   DS18B20::convert_request(&owi, 12, true);
@@ -118,6 +117,7 @@ void loop()
   // Testcase#3: Calls on_alarm() for each device with alarm set
   DS18B20::convert_request(&owi, 12, true);
   owi.alarm_dispatch();
+  ledPin.toggle();
 
   // Sleep before requesting a new sample
   SLEEP(1);
