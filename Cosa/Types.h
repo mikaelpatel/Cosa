@@ -112,6 +112,12 @@ union univ32_t {
 };
 
 /**
+ * Compiler branch prediction hinting.
+ */
+#define LIKELY(x) __builtin_expect((x),1)
+#define UNLIKELY(x) __builtin_expect((x),0)
+
+/**
  * Macro for number of elements in a vector.
  * @param[in] x vector
  * @return number of elements
