@@ -23,7 +23,7 @@
  * @section Description
  * Cosa demonstration of the DS18B20 1-Wire device driver.
  * Assumes three thermometers are connected to 1-Wire bus on
- * pin(7) in search order. Will not work in parasite power mode.
+ * pin(7) in search order. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
