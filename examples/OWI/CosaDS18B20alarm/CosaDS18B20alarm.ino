@@ -1,5 +1,5 @@
 /**
- * @file CosaDS18B20.ino
+ * @file CosaDS18B20alarm.ino
  * @version 1.0
  *
  * @section License
@@ -21,10 +21,15 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of the DS18B20 1-Wire device driver. Assumes
- * three thermometers are connected to 1-Wire bus on pin(D7). They may
- * be in parasite power mode.
+ * Cosa demonstration of the DS18B20 1-Wire device driver alarm
+ * callback. Assumes three thermometers are connected to 1-Wire bus on
+ * pin(D7). They may be in parasite power mode.
  *
+ * Note that temperature is only read on an alarm. A conversion
+ * request is issued every second. The request is boardcasted to all
+ * connected devices (i.e. a single command is sent without rom
+ * address).
+  *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -33,7 +38,6 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Memory.h"
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
@@ -45,10 +49,25 @@ OWI owi(Board::D1);
 OWI owi(Board::D7);
 #endif
 
-// Support macro to create name strings in program memory
+// Simple alarm callback handler
+class Thermometer : public DS18B20 {
+public:
+  Thermometer(OWI* owi, const char* name) : DS18B20(owi, name) {}
+  virtual void on_alarm();
+};
+
+void 
+Thermometer::on_alarm() 
+{ 
+  // Read and print temperature. Do not need reset and precense pulse
+  read_scratchpad(false);
+  trace << Watchdog::millis() << PSTR(":ALARM:") << *this << endl; 
+}
+
+// Support macro to create name strings in program memory for devices
 #define THERMOMETER(name)			\
   const char name ## _PSTR[] PROGMEM = #name;	\
-  DS18B20 name(&owi, name ## _PSTR)
+  Thermometer name(&owi, name ## _PSTR)
 
 // The devices connected to the one-wire bus
 THERMOMETER(outdoors);
@@ -59,61 +78,38 @@ void setup()
 {
   // Start trace output stream on the serial port
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaDS18B20: started"));
-
-  // Check amount of free memory
-  TRACE(free_memory());
-  TRACE(sizeof(OWI));
-  TRACE(sizeof(DS18B20));
+  trace.begin(&uart, PSTR("CosaDS18B20alarm: started"));
 
   // Start the watchdog ticks counter
   Watchdog::begin();
 
-  // List connected devices
-  trace << owi << endl;
-
-  // Connect to the devices and print rom contents/trigger setting
+  // Connect to the devices and set trigger thresholds
   ledPin.toggle();
-  DS18B20* temp[] = { &indoors, &outdoors, &basement };
-  for (uint8_t i = 0; i < membersof(temp); i++) {
-    int8_t high, low;
-    uint8_t resolution;
-    DS18B20* t = temp[i];
-    t->connect(i);
-    t->get_trigger(high, low);
-    resolution = t->get_resolution();
-    trace << (OWI::Driver&) *t << endl;
-    trace << PSTR("resolution = ") << resolution << endl;
-    trace << PSTR("trigger = ") << high << ':' << low << endl;
-    t->set_trigger(30, 20);
-    t->write_scratchpad();
-    trace << endl;
-  }
+
+  indoors.connect(0);
+  indoors.set_trigger(30, 20);
+  indoors.write_scratchpad();
+  trace << (OWI::Driver&) indoors << endl;
+
+  outdoors.connect(1);
+  outdoors.set_trigger(30, 20);
+  outdoors.write_scratchpad();
+  trace << (OWI::Driver&) outdoors << endl;
+
+  basement.connect(2);
+  basement.set_trigger(30, 20);
+  basement.write_scratchpad();
+  trace << (OWI::Driver&) basement << endl;
+
   ledPin.toggle();
 }
 
 void loop()
 {
-  // Boardcast convert request to all devices
+  // Issue a convert request and check for alarms
   ledPin.toggle();
   DS18B20::convert_request(&owi, 12, true);
-
-  // Read back results; first will wait for the conversion to complete
-  indoors.read_scratchpad();
-  outdoors.read_scratchpad();
-  basement.read_scratchpad();
-
-  // Print measurement with device name
-  trace << indoors << PSTR(", ") << outdoors << PSTR(", ") << basement << endl;
-
-  // Do an alarm search and print alarmed devices
-  DS18B20::convert_request(&owi, 12, true);
-  DS18B20::Search iter(&owi);
-  DS18B20* temp;
-  while ((temp = iter.next()) != 0) {
-    trace << PSTR("ALARM:") << *temp << endl;
-  }
-
-  // Sleep before requesting a new sample
+  owi.alarm_dispatch();
+  ledPin.toggle();
   SLEEP(1);
 }

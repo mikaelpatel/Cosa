@@ -31,9 +31,7 @@ DS18B20::Search::next()
 { 
   DS18B20* dev = (DS18B20*) OWI::Search::next(); 
   if (dev == 0) return (0);
-  m_pin->write(READ_SCRATCHPAD);
-  m_pin->read(&dev->m_scratchpad.temperature, 
-	      sizeof(dev->m_scratchpad.temperature));
+  dev->read_scratchpad(false);
   return (dev);
 }
 
@@ -80,7 +78,7 @@ DS18B20::convert_request(OWI* owi, uint8_t resolution, bool parasite)
 }
 
 bool
-DS18B20::read_scratchpad()
+DS18B20::read_scratchpad(bool flag)
 {
   if (m_converting) {
     int32_t ms = Watchdog::millis() - m_start;
@@ -92,7 +90,7 @@ DS18B20::read_scratchpad()
     m_converting = false;
     power_off();
   }
-  if (!match_rom()) return (false);
+  if (flag && !match_rom()) return (false);
   m_pin->write(READ_SCRATCHPAD);
   return (m_pin->read(&m_scratchpad, sizeof(m_scratchpad)));
 }
@@ -135,6 +133,10 @@ DS18B20::read_power_supply()
 IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
 {
   int16_t temp = thermometer.get_temperature();
+  if (temp < 0) {
+    temp = -temp;
+    outs << '-';
+  }
   uint16_t fraction = (625 * (temp & 0xf)) / 100;
   int16_t integer = (temp >> 4);
   if (thermometer.NAME != 0) outs << thermometer.NAME << PSTR(" = ");

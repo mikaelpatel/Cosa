@@ -1,7 +1,7 @@
-CosaDS18B20
-===========
+CosaDS18B20alarm
+================
 
-Demonstration of Cosa DS18B20 1-Wire driver. 
+Demonstration of Cosa DS18B20 1-Wire driver alarm handling. 
 
 Circuit
 -------

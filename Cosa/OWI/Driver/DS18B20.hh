@@ -106,8 +106,8 @@ public:
     
     /**
      * Get the next thermometer with active alarm since latest
-     * convert request. A read_scratchpad() is issued to read the
-     * temperature conversion that triggered the alarm.
+     * convert request. The temperature value that triggered the alarm
+     * is read.
      * @return pointer to driver or null(0).
      */
     DS18B20* next();
@@ -241,10 +241,12 @@ public:
   /**
    * Read the contents of the scratchpad to local memory. A internal 
    * delay will occur if a convert_request() is pending. The delay is
-   * at most max conversion time (750 ms).
+   * at most max conversion time (750 ms). The flag parameter may be
+   * used when a device has been addressed with search (alarm).
+   * @param[in] flag to reset before reading (default true).
    * @return true(1) if successful otherwise false(0).
    */
-  bool read_scratchpad();
+  bool read_scratchpad(bool flag = true);
 
   /**
    * Copy device scratchpad triggers and configuration data 
