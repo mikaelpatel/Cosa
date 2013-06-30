@@ -70,7 +70,7 @@ Thermometer::on_alarm()
   uint32_t now = Watchdog::millis();
 #endif
 
-  // Read and print temperature. Do not need reset and precense pulse
+  // Read and print temperature. Do not need reset and presence pulse
   read_scratchpad(false);
   trace << now << PSTR(":ALARM:") << *this << endl; 
 }
