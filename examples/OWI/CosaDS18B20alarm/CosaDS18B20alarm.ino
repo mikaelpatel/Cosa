@@ -26,7 +26,7 @@
  * pin(D7). They may be in parasite power mode.
  *
  * Note that temperature is only read on an alarm. A conversion
- * request is issued every second. The request is boardcasted to all
+ * request is issued every 2 seconds. The request is boardcasted to all
  * connected devices (i.e. a single command is sent without rom
  * address).
   *
@@ -47,6 +47,13 @@ OutputPin ledPin(Board::LED);
 OWI owi(Board::D1);
 #else
 OWI owi(Board::D7);
+#define USE_RTC
+#endif
+
+#ifdef USE_RTC
+#include "Cosa/TWI/Driver/DS1307.hh"
+DS1307 rtc;
+time_t now;
 #endif
 
 // Simple alarm callback handler
@@ -59,15 +66,19 @@ public:
 void 
 Thermometer::on_alarm() 
 { 
+#ifndef USE_RTC
+  uint32_t now = Watchdog::millis();
+#endif
+
   // Read and print temperature. Do not need reset and precense pulse
   read_scratchpad(false);
-  trace << Watchdog::millis() << PSTR(":ALARM:") << *this << endl; 
+  trace << now << PSTR(":ALARM:") << *this << endl; 
 }
 
 // Support macro to create name strings in program memory for devices
-#define THERMOMETER(name)			\
-  const char name ## _PSTR[] PROGMEM = #name;	\
-  Thermometer name(&owi, name ## _PSTR)
+#define THERMOMETER(var)					\
+  const char var ## _name[] PROGMEM = #var;			\
+  Thermometer var(&owi, var ## _name)
 
 // The devices connected to the one-wire bus
 THERMOMETER(outdoors);
@@ -106,10 +117,19 @@ void setup()
 
 void loop()
 {
-  // Issue a convert request and check for alarms
+  // Turn the builtin led on while working
   ledPin.toggle();
+
+#ifdef USE_RTC
+  // Get the current time for logging
+  rtc.get_time(now);
+#endif
+
+  // Issue a convert request and check for alarms
   DS18B20::convert_request(&owi, 12, true);
   owi.alarm_dispatch();
+
+  // Turn the builtin led off and sleep
   ledPin.toggle();
-  SLEEP(1);
+  SLEEP(2);
 }
