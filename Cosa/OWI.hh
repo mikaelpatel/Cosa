@@ -183,6 +183,7 @@ public:
   protected:
     uint8_t m_family;
     int8_t m_last;
+
   public:
     /**
      * Initiate an alarm search iterator for the given one-wire bus and 
@@ -212,123 +213,6 @@ public:
     }
   };
 
-  /**
-   * Act as slave device connected to a one-wire bus.
-   */
-  class Device : public ExternalInterrupt {
-    friend class OWI;
-  private:
-    // One-wire slave pin mode
-    enum Mode {
-      OUTPUT_MODE = 0,
-      INPUT_MODE = 1
-    } __attribute__((packed));
-
-    // One-wire slave states
-    enum State {
-      IDLE_STATE,
-      RESET_STATE,
-      PRESENCE_STATE,
-      ROM_STATE,
-      FUNCTION_STATE
-    } __attribute__((packed));
-
-    /**
-     * Set slave device pin input/output mode.
-     * @param[in] mode pin mode.
-     */
-    void set_mode(Mode mode)
-    {
-      synchronized {
-	if (mode == OUTPUT_MODE)
-	  *DDR() |= m_mask; 
-	else
-	  *DDR() &= ~m_mask; 
-      }
-    }
-
-    /**
-     * Set slave device pin.
-     */
-    void set() 
-    { 
-      synchronized {
-	*PORT() |= m_mask; 
-      }
-    }
-
-    /**
-     * Clear slave device pin.
-     */
-    void clear() 
-    { 
-      synchronized {
-	*PORT() &= ~m_mask; 
-      }
-    }
-
-    /**
-     * Read the given number of bits from the one wire bus (master).
-     * Default number of bits is 8. Returns the value read LSB aligned.
-     * or negative error code.
-     * @param[in] bits to be read.
-     * @return value read.
-     */
-    int read(uint8_t bits = CHARBITS);
-
-    /**
-     * Write the given value to the one wire bus. The bits are written
-     * from LSB to MSB. Return true(1) if successful otherwise false(0).
-     * @param[in] value.
-     * @param[in] bits to be written.
-     */
-    bool write(uint8_t value, uint8_t bits);
-
-    /**
-     * @override
-     * Slave device event handler function. Handle presence pulse and
-     * rom/function command parsing.
-     * @param[in] type the type of event.
-     * @param[in] value the event value.
-     */
-    virtual void on_event(uint8_t type, uint16_t value);
-
-    /**
-     * @override
-     * Slave device interrupt handler function. Detect reset and initiate
-     * presence pulse. Push service_request event for further handling.
-     * @param[in] arg argument from interrupt service routine.
-     */
-    virtual void on_interrupt(uint16_t arg = 0);
-
-  protected:
-    uint8_t* m_rom;
-    volatile uint32_t m_time;
-    volatile uint8_t m_crc;
-    volatile State m_state;
-
-  public:
-    // Slave function codes
-    enum {
-      STATUS = 0x11
-    } __attribute__((packed));
-
-    /**
-     * Construct one wire slave device connected to the given pin and
-     * rom identity code. Note: crc is generated automatically.
-     * @param[in] pin number.
-     * @param[in] rom identity number.
-     */
-    Device(Board::ExternalInterruptPin pin, uint8_t* rom) : 
-      ExternalInterrupt(pin, ExternalInterrupt::ON_CHANGE_MODE),
-      m_rom(rom),
-      m_time(0),
-      m_crc(0),
-      m_state(IDLE_STATE)
-    {
-    }
-  };
-  
 private:
   /** Number of devices */
   uint8_t m_devices;
