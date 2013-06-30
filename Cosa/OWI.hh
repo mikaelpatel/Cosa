@@ -99,7 +99,7 @@ public:
 
     /**
      * Construct one wire device driver. Use one wire bus on given pin,
-     * and given rom identity in EEPROM (or NULL).
+     * given rom identity in EEPROM (or null), and device name.
      * @param[in] pin one wire bus.
      * @param[in] rom identity.
      * @param[in] name of device driver instance.
