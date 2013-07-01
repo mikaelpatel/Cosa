@@ -57,4 +57,16 @@ void setup()
 
 void loop()
 {
+  // Search for alarms
+  OWI::Driver dev(&owi);
+  int8_t last = OWI::Driver::FIRST;
+  do {
+    last = dev.alarm_search(last);
+    if (last == OWI::Driver::ERROR) break;
+    trace << dev << endl;
+  } while (last != OWI::Driver::LAST);
+  trace << endl;
+  
+  // Sleep awhile before checking again
+  SLEEP(2);
 }

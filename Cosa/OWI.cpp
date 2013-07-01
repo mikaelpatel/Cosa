@@ -200,12 +200,14 @@ OWI::Driver::search(int8_t last)
 	else if (pos > last) {
 	  m_pin->write(0, 1); 
 	  next = pos;
-	} else if (m_rom[i] & (1 << j)) {
+	} 
+	else if (m_rom[i] & (1 << j)) {
 	  m_pin->write(1, 1);
 	  data |= 0x80; 
 	} 
 	else {
 	  m_pin->write(0, 1);
+	  next = pos;
 	}
 	break;
       case 0b01: // Only one's at this position 
