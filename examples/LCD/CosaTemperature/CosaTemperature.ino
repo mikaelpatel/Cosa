@@ -22,10 +22,12 @@
  *
  * @section Description
  * Demonstration of the PCD8544 device driver with mapping to
- * IOStream::Device, and usage of off-screen canvas.
+ * IOStream::Device, and off-screen canvas. Uses 1-wire temperature 
+ * sensor, DS18B20.
  *
  * @section Circuit
- * Connect Arduino to DS18B20 in D5 and GND. Parasite powering.
+ * Connect Arduino to DS18B20 in D5 and GND. May use parasite 
+ * powering (connect DS18B20 VCC to GND) otherwise to VCC.
  *
  * Connect Arduino to PCD8544 (Arduino => PCD8544):
  * D6 ==> SDIN, D7 ==> SCLK, D8 ==> DC, D9 ==> SCE.
