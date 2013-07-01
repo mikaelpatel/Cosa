@@ -80,13 +80,14 @@ void setup()
     uint8_t resolution;
     DS18B20* t = temp[i];
     t->connect(i);
+    t->set_resolution(10);
+    t->set_trigger(30, 20);
+    t->write_scratchpad();
     t->get_trigger(high, low);
     resolution = t->get_resolution();
     trace << (OWI::Driver&) *t << endl;
     trace << PSTR("resolution = ") << resolution << endl;
     trace << PSTR("trigger = ") << high << ':' << low << endl;
-    t->set_trigger(30, 20);
-    t->write_scratchpad();
     trace << endl;
   }
   ledPin.toggle();
