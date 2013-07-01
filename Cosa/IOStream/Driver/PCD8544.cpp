@@ -38,6 +38,16 @@ const uint8_t PCD8544::script[] PROGMEM = {
 };
 
 void 
+PCD8544::set(uint8_t cmd)
+{
+  asserted(m_sce) {
+    asserted(m_dc) {
+      write(cmd);
+    }
+  }
+}
+
+void 
 PCD8544::set(uint8_t x, uint8_t y)
 {
   asserted(m_sce) {
@@ -60,29 +70,23 @@ PCD8544::begin(uint8_t level)
     }
   }
   set_display_contrast(level);
-  set_cursor(0, 0);
+  display_clear();
   return (true);
 }
 
 bool 
 PCD8544::end()
 {
-  asserted(m_sce) {
-    asserted(m_dc) {
-      write(SET_FUNC | BASIC_INST | POWER_DOWN_MODE);
-    }
-  }
+  set(SET_FUNC | BASIC_INST | POWER_DOWN_MODE);
   return (true);
 }
 
 void 
-PCD8544::set_display_mode(DisplayMode mode)
+PCD8544::display_clear()
 {
-  asserted(m_sce) {
-    asserted(m_dc) {
-      write(DISPLAY_CNTL | mode);
-    }
-  }
+  set_cursor(0, 0);
+  fill(m_mode, LINES * WIDTH);
+  set(m_x, m_y);
 }
 
 void 
@@ -176,9 +180,7 @@ PCD8544::putchar(char c)
   
   // Check for special character: form-feed
   if (c == '\f') {
-    set_cursor(0, 0);
-    fill(m_mode, LINES * WIDTH);
-    set(m_x, m_y);
+    display_clear();
     return (c);
   }
 

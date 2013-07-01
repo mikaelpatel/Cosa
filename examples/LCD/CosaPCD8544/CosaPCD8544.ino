@@ -153,11 +153,11 @@ void loop()
     // Display the Arduino icon
     lcd.putchar('\f');
     lcd.set_cursor(0, 1);
-    lcd.set_display_mode(PCD8544::INVERSE_MODE);
+    lcd.display_inverse();
     lcd.draw_icon(arduino_icon_96x32);
     SLEEP(2);
 
-    lcd.set_display_mode(PCD8544::NORMAL_MODE);
+    lcd.display_normal();
     banner = 0;
 
     // Counters

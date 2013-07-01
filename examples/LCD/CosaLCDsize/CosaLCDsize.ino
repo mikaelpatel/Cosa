@@ -34,7 +34,7 @@
 // HD44780::Port:	3544/3318/3100 bytes
 // HD44780::MJKDZ:	4484/4342/NA   bytes
 // HD44780::DFRobot:	4474/4332/NA   bytes
-// PCD8544: 		4482/4260/3916 bytes
+// PCD8544: 		4484/4264/3918 bytes
 // ST7565:  		5008/4802/4460 bytes
 // =========================================
 // The baseline is the Watchdog and Arduino

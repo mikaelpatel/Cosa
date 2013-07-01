@@ -59,6 +59,10 @@ protected:
       POWER_UP_MODE = 0x00,	// Power up mode
       POWER_DOWN_MODE = 0x04,	// Power down mode
     DISPLAY_CNTL = 0x08,	// Display control
+      DISPLAY_OFF = 0x00,	// Turn display off
+      DISPLAY_ON = 0x01,	// Turn display on
+      NORMAL_MODE = 0x04,	// Normal display mode
+      INVERSE_MODE = 0x05,	// Inverse display mode
     SET_Y_ADDR = 0x40,		// Sets Y-address of RAM (0..5)
       Y_ADDR_MASK = 0x07,	// Mask Y-address
     SET_X_ADDR = 0x80,		// Sets X-address of RAM (0..83)
@@ -85,13 +89,6 @@ protected:
   Font* m_font;			/**< Font */
 
   /**
-   * Set display address for next data block.
-   * @param[in] x position 0..WIDTH-1.
-   * @param[in] y position 0..HEIGHT-1.
-   */
-  void set(uint8_t x, uint8_t y);
-  
-  /**
    * Write given data to display according to mode.
    * @param[in] data to fill write to device.
    */
@@ -101,6 +98,19 @@ protected:
   }
 
   /**
+   * Set the given command code.
+   * @param[in] cmd command code.
+   */
+  void set(uint8_t cmd);
+  
+  /**
+   * Set display address for next data block.
+   * @param[in] x position 0..WIDTH-1.
+   * @param[in] y position 0..HEIGHT-1.
+   */
+  void set(uint8_t x, uint8_t y);
+  
+  /**
    * Fill display with given data.
    * @param[in] data to fill with.
    * @param[in] count number of bytes to fill.
@@ -108,18 +118,11 @@ protected:
   void fill(uint8_t data, uint16_t count)
   {
     asserted(m_sce) {
-      for (uint16_t i = 0; i < count; i++)
-	write(data);
+      while (count--) write(data);
     }
   }
 
 public:
-  enum DisplayMode {
-    DISPLAY_OFF = 0x00,
-    DISPLAY_ON = 0x01,
-    NORMAL_MODE = 0x04,	
-    INVERSE_MODE = 0x05
-  } __attribute__((packed));
   enum TextMode {
     NORMAL_TEXT_MODE = 0x00,
     INVERTED_TEXT_MODE = 0xff
@@ -151,7 +154,7 @@ public:
     IOStream::Device(),
     m_sdin(sdin, 0),
     m_sclk(sclk, 0),
-    m_dc(dc, 1),
+  m_dc(dc, 1),
     m_sce(sce, 1),
     m_x(0),
     m_y(0),
@@ -174,10 +177,41 @@ public:
   bool end();
 
   /**
-   * Set display mode. 
-   * @param[in] mode new display mode.
+   * Turn display on. 
    */
-  void set_display_mode(DisplayMode mode);
+  void display_on() 
+  { 
+    set(DISPLAY_CNTL | DISPLAY_ON); 
+  }
+
+  /**
+   * Turn display off. 
+   */
+  void display_off() 
+  { 
+    set(DISPLAY_CNTL | DISPLAY_OFF); 
+  }
+
+  /**
+   * Display normal mode.
+   */
+  void display_normal() 
+  { 
+    set(DISPLAY_CNTL | NORMAL_MODE); 
+  }
+
+  /**
+   * Display inverse mode. 
+   */
+  void display_inverse() 
+  { 
+    set(DISPLAY_CNTL | INVERSE_MODE); 
+  }
+
+  /**
+   * Clear display and move cursor to home.
+   */
+  void display_clear();
 
   /**
    * Set display contrast (0..127).
