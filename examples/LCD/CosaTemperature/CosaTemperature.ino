@@ -59,9 +59,8 @@ void setup()
   // Set up watchdog for low power sleep
   Watchdog::begin();
 
-  // Initiate the LCD screen and show arduino icon
+  // Initiate the LCD screen and show splash screen with arduino icon
   lcd.begin(CONTRAST);
-  lcd.putchar('\f');
   lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
   lcd.draw_icon(arduino_icon_64x32);
   SLEEP(2);
@@ -78,9 +77,8 @@ void setup()
 
 void loop()
 {
-  // Request a new sample from the sensor and read temperature
+  // Request a new sample from the sensor, Read temperature later on
   sensor.convert_request();
-  sensor.read_scratchpad();
 
   // Create an offscreen bitmap for the presentation
   OffScreen<PCD8544::WIDTH, PCD8544::HEIGHT> offscreen;
@@ -94,10 +92,13 @@ void loop()
   // Draw the offscreen bitmap with the temperature
   offscreen.begin();
   offscreen.draw_roundrect(8, 8, lcd.WIDTH - 16, lcd.HEIGHT - 16, 8);
+
+  // Read temperature and print to offscreen bitmap
+  sensor.read_scratchpad();
   console << sensor;
 
   // Draw the bitmap to the LCD screen
-  lcd.putchar('\f');
+  lcd.set_cursor(0, 0);
   lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
 
   // Take a nap
