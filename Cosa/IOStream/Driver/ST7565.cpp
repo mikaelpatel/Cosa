@@ -46,6 +46,16 @@ const uint8_t ST7565::script[] PROGMEM = {
 };
 
 void 
+ST7565::set(uint8_t cmd)
+{
+  asserted(m_cs) {
+    asserted(m_dc) {
+      write(cmd);
+    }
+  }
+}
+
+void 
 ST7565::set(uint8_t x, uint8_t y)
 {
   asserted(m_cs) {
@@ -58,17 +68,10 @@ ST7565::set(uint8_t x, uint8_t y)
 }
 
 void 
-ST7565::set_cursor(uint8_t x, uint8_t y)
+ST7565::fill(uint8_t data, uint16_t count) 
 {
-  set(x, y);
-  m_x = (x & (WIDTH - 1));
-  m_y = (y & (LINES - 1));
-  if ((m_x != 0) || (m_y != 0)) return;
-  m_line = 0;
   asserted(m_cs) {
-    asserted(m_dc) {
-      write(SET_DISPLAY_START | m_line);
-    }
+    while (count--) write(data);
   }
 }
 
@@ -89,30 +92,25 @@ ST7565::begin(uint8_t level)
     }
   }
   set_display_contrast(level);
-  set_cursor(0, 0);
-  putchar('\f');
+  display_clear();
   return (true);
 }
 
 bool 
 ST7565::end()
 {
-  asserted(m_cs) {
-    asserted(m_dc) {
-      write(DISPLAY_OFF);
-    }
-  }
+  set(DISPLAY_OFF);
   return (true);
 }
 
 void 
-ST7565::set_display_mode(DisplayMode mode)
+ST7565::display_clear()
 {
-  asserted(m_cs) {
-    asserted(m_dc) {
-      write(DISPLAY_NORMAL | mode);
-    }
+  for (uint8_t y = 0; y < LINES; y++) {
+    set(0, y);
+    fill(m_mode, WIDTH);
   }
+  set_cursor(0, 0);
 }
 
 void 
@@ -124,6 +122,17 @@ ST7565::set_display_contrast(uint8_t level)
       write(CONSTRAST_MASK & level);
     }
   }
+}
+
+void 
+ST7565::set_cursor(uint8_t x, uint8_t y)
+{
+  set(x, y);
+  m_x = (x & (WIDTH - 1));
+  m_y = (y & (LINES - 1));
+  if ((m_x != 0) || (m_y != 0)) return;
+  m_line = 0;
+  set(SET_DISPLAY_START | m_line);
 }
 
 void 
@@ -189,11 +198,7 @@ ST7565::putchar(char c)
     // Use display start line to implement scrolling
     if (m_y == (LINES - 1)) {
       m_line = (m_line + CHARBITS) & DISPLAY_START_MASK;
-      asserted(m_cs) {
-	asserted(m_dc) {
-	  write(SET_DISPLAY_START | m_line);
-	}
-      }
+      set(SET_DISPLAY_START | m_line);
       uint8_t y = m_line / CHARBITS;
       if (y == 0) y = 7; else y = y - 1;
       set(0, y);
@@ -211,11 +216,7 @@ ST7565::putchar(char c)
   
   // Check for special character: form-feed
   if (c == '\f') {
-    for (uint8_t y = 0; y < LINES; y++) {
-      set(0, y);
-      fill(m_mode, WIDTH);
-    }
-    set_cursor(0, 0);
+    display_clear();
     return (c);
   }
 

@@ -105,13 +105,6 @@ protected:
   Font* m_font;			  /**< Font */
 
   /**
-   * Set display address for next data block.
-   * @param[in] x position (0..WIDTH-1).
-   * @param[in] y position (0..LINES-1).
-   */
-  void set(uint8_t x, uint8_t y);
-  
-  /**
    * Write given data to display according to mode.
    * Chip select and/or Command/Data pin asserted.
    * @param[in] data to fill write to device.
@@ -122,27 +115,33 @@ protected:
   }
 
   /**
+   * Set the given command code.
+   * @param[in] cmd command code.
+   */
+  void set(uint8_t cmd);
+  
+  /**
+   * Set display address for next data block.
+   * @param[in] x position (0..WIDTH-1).
+   * @param[in] y position (0..LINES-1).
+   */
+  void set(uint8_t x, uint8_t y);
+  
+  /**
    * Fill display with given data.
    * @param[in] data to fill with.
    * @param[in] count number of bytes to fill.
    */
-  void fill(uint8_t data, uint16_t count) 
-  {
-    asserted(m_cs) {
-      for (uint16_t i = 0; i < count; i++) 
-	write(data);
-    }
-  }
+  void fill(uint8_t data, uint16_t count);
 
 public:
-  enum DisplayMode {
-    NORMAL_DISPLAY_MODE,
-    REVERSE_DISPLAY_MODE
-  } __attribute__((packed));
+  // Text mode
   enum TextMode {
     NORMAL_TEXT_MODE = 0x00,
     INVERTED_TEXT_MODE = 0xff
   } __attribute__((packed));
+
+  // Display width and height (in pixels)
   static const uint8_t WIDTH = 128;
   static const uint8_t HEIGHT = 64;
   static const uint8_t LINES = 8;
@@ -195,36 +194,47 @@ public:
   bool end();
 
   /**
-   * Set display mode. 
-   * @param[in] mode new display mode.
+   * Turn display on. 
    */
-  void set_display_mode(DisplayMode mode);
+  void display_on() 
+  { 
+    set(DISPLAY_ON); 
+  }
+
+  /**
+   * Turn display off. 
+   */
+  void display_off() 
+  { 
+    set(DISPLAY_OFF); 
+  }
+
+  /**
+   * Display normal mode.
+   */
+  void display_normal() 
+  { 
+    set(DISPLAY_NORMAL); 
+  }
+
+  /**
+   * Display inverse mode. 
+   */
+  void display_inverse() 
+  { 
+    set(DISPLAY_REVERSE); 
+  }
+
+  /**
+   * Clear display and move cursor to home.
+   */
+  void display_clear();
 
   /**
    * Set display contrast (0..63).
    * @param[in] contrast level.
    */
   void set_display_contrast(uint8_t level);
-
-  /**
-   * Get tab step.
-   * @return tab step (1..WIDTH/2).
-   */
-  uint8_t get_tab_step()
-  {
-    return (m_tab);
-  }
-
-  /**
-   * Set tab step to given value (1..WIDTH/2).
-   * @param[in] tab step.
-   */
-  void set_tab_step(uint8_t step)
-  {
-    if (step == 0) step = 1;
-    else if (step > (WIDTH/2)) step = WIDTH/2;
-    m_tab = step;
-  }
 
   /**
    * Get current cursor position.
@@ -243,6 +253,24 @@ public:
    * @param[in] y line position (0..LINES-1).
    */
   void set_cursor(uint8_t x, uint8_t y);
+
+  /**
+   * Get tab step.
+   * @return tab step.
+   */
+  uint8_t get_tab_step()
+  {
+    return (m_tab);
+  }
+
+  /**
+   * Set tab step to given value.
+   * @param[in] tab step.
+   */
+  void set_tab_step(uint8_t step)
+  {
+    m_tab = step;
+  }
 
   /**
    * Set text mode. Return previous text mode.

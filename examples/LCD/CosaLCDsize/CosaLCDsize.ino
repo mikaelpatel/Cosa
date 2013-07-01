@@ -30,12 +30,11 @@
 // Binary sketch size:  MEGA/STD*/TINY bytes
 // =========================================
 // Baseline:		1118/916/700   bytes
-// HD44780:		3312/3088/2868 bytes
 // HD44780::Port:	3544/3318/3100 bytes
 // HD44780::MJKDZ:	4484/4342/NA   bytes
 // HD44780::DFRobot:	4474/4332/NA   bytes
 // PCD8544: 		4484/4264/3918 bytes
-// ST7565:  		5008/4802/4460 bytes
+// ST7565:  		4954/4752/4406 bytes
 // =========================================
 // The baseline is the Watchdog and Arduino
 // init code. Move comment prefix to compile 
@@ -43,7 +42,6 @@
 // =========================================
 
 #include "Cosa/IOStream/Driver/HD44780.hh"
-
 HD44780::Port port;
 // HD44780::MJKDZ port;
 // HD44780::DFRobot port;

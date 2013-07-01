@@ -228,6 +228,19 @@ public:
   }
   
   /**
+   * Start display for text output. Returns true if successful otherwise
+   * false.
+   * @return boolean.
+   */
+  bool begin();
+
+  /**
+   * Stop display and power down. Returns true if successful otherwise
+   * false.
+   */
+  bool end();
+
+  /**
    * Turn display backlight on. 
    */
   void backlight_on() 
@@ -242,11 +255,6 @@ public:
   { 
     m_io->set_backlight(0);
   }
-
-  /**
-   * Clear display and move cursor to home.
-   */
-  void display_clear();
 
   /**
    * Turn display on. 
@@ -280,6 +288,11 @@ public:
     write(SHIFT_SET | DISPLAY_MOVE |  MOVE_RIGHT); 
   }
   
+  /**
+   * Clear display and move cursor to home.
+   */
+  void display_clear();
+
   /**
    * Move cursor to home position.
    */
@@ -318,6 +331,24 @@ public:
   }
 
   /**
+   * Get current cursor position.
+   * @param[out] x.
+   * @param[out] y.
+   */
+  void get_cursor(uint8_t& x, uint8_t& y)
+  {
+    x = m_x;
+    y = m_y;
+  }
+
+  /**
+   * Set cursor position to given position.
+   * @param[in] x.
+   * @param[in] y.
+   */
+  void set_cursor(uint8_t x, uint8_t y);
+
+  /**
    * Set text flow left-to-right.
    */
   void text_flow_left_to_right() 
@@ -350,6 +381,21 @@ public:
   }
 
   /**
+   * Set custom character bitmap to given id (0..7). 
+   * @param[in] id character.
+   * @param[in] bitmap pointer to bitmap.
+   */
+  void set_custom_char(uint8_t id, const uint8_t* bitmap);
+
+  /**
+   * Set custom character bitmap to given id (0..7). 
+   * The bitmap should be stored in program memory.
+   * @param[in] id character.
+   * @param[in] bitmap pointer to program memory bitmap.
+   */
+  void set_custom_char_P(uint8_t id, const uint8_t* bitmap);
+
+  /**
    * Get tab step.
    * @return tab step.
    */
@@ -366,52 +412,6 @@ public:
   {
     m_tab = step;
   }
-
-  /**
-   * Get current cursor position.
-   * @param[out] x.
-   * @param[out] y.
-   */
-  void get_cursor(uint8_t& x, uint8_t& y)
-  {
-    x = m_x;
-    y = m_y;
-  }
-
-  /**
-   * Set cursor position to given position.
-   * @param[in] x.
-   * @param[in] y.
-   */
-  void set_cursor(uint8_t x, uint8_t y);
-
-  /**
-   * Set custom character bitmap to given id (0..7). 
-   * @param[in] id character.
-   * @param[in] bitmap pointer to bitmap.
-   */
-  void set_custom_char(uint8_t id, const uint8_t* bitmap);
-
-  /**
-   * Set custom character bitmap to given id (0..7). 
-   * The bitmap should be stored in program memory.
-   * @param[in] id character.
-   * @param[in] bitmap pointer to program memory bitmap.
-   */
-  void set_custom_char_P(uint8_t id, const uint8_t* bitmap);
-
-  /**
-   * Start display for text output. Returns true if successful otherwise
-   * false.
-   * @return boolean.
-   */
-  bool begin();
-
-  /**
-   * Stop display and power down. Returns true if successful otherwise
-   * false.
-   */
-  bool end();
 
   /**
    * @override

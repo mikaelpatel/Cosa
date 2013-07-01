@@ -58,6 +58,14 @@ PCD8544::set(uint8_t x, uint8_t y)
   }
 }
 
+void 
+PCD8544::fill(uint8_t data, uint16_t count)
+{
+  asserted(m_sce) {
+    while (count--) write(data);
+  }
+}
+
 bool 
 PCD8544::begin(uint8_t level)
 {

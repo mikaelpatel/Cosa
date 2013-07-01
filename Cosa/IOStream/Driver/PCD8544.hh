@@ -115,12 +115,7 @@ protected:
    * @param[in] data to fill with.
    * @param[in] count number of bytes to fill.
    */
-  void fill(uint8_t data, uint16_t count)
-  {
-    asserted(m_sce) {
-      while (count--) write(data);
-    }
-  }
+  void fill(uint8_t data, uint16_t count);
 
 public:
   enum TextMode {
@@ -220,26 +215,6 @@ public:
   void set_display_contrast(uint8_t level);
 
   /**
-   * Get tab step.
-   * @return tab step (1..WIDTH/2).
-   */
-  uint8_t get_tab_step()
-  {
-    return (m_tab);
-  }
-
-  /**
-   * Set tab step to given value (1..WIDTH/2).
-   * @param[in] tab step.
-   */
-  void set_tab_step(uint8_t step)
-  {
-    if (step == 0) step = 1;
-    else if (step > (WIDTH/2)) step = WIDTH/2;
-    m_tab = step;
-  }
-
-  /**
    * Get current cursor position.
    * @param[out] x pixel position (0..WIDTH-1).
    * @param[out] y line position (0..LINES-1).
@@ -288,6 +263,24 @@ public:
     Font* previous = m_font;
     m_font = font;
     return (previous);
+  }
+
+  /**
+   * Get tab step.
+   * @return tab step.
+   */
+  uint8_t get_tab_step()
+  {
+    return (m_tab);
+  }
+
+  /**
+   * Set tab step to given value.
+   * @param[in] tab step.
+   */
+  void set_tab_step(uint8_t step)
+  {
+    m_tab = step;
   }
 
   /**

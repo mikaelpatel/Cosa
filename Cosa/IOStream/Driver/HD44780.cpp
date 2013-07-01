@@ -49,6 +49,37 @@ HD44780::set_instruction_mode()
   m_io->set_mode(0);
 }
 
+bool 
+HD44780::begin()
+{
+  // Initiate display; See fig. 24, 4-bit interface, pp. 46
+  const uint8_t INIT0 = ((FUNCTION_SET | DATA_LENGTH_8BITS) >> 4);
+  const uint8_t INIT1 = ((FUNCTION_SET | DATA_LENGTH_4BITS) >> 4);
+  m_io->setup();
+  Watchdog::delay(POWER_ON_TIME);
+  m_io->write4b(INIT0);
+  DELAY(INIT0_TIME);
+  m_io->write4b(INIT0);
+  DELAY(INIT1_TIME);
+  m_io->write4b(INIT1);
+
+  // Initialization with the function, control and mode setting
+  write(m_func);
+  write(m_cntl);
+  backlight_on();
+  display_on();
+  display_clear();
+  write(m_mode);
+  return (true);
+}
+
+bool 
+HD44780::end()
+{
+  display_off();
+  return (true);
+}
+
 void 
 HD44780::display_clear() 
 {
@@ -101,37 +132,6 @@ HD44780::set_custom_char_P(uint8_t id, const uint8_t* bitmap)
       write(pgm_read_byte(bitmap));
   }
   set_instruction_mode();
-}
-
-bool 
-HD44780::begin()
-{
-  // Initiate display; See fig. 24, 4-bit interface, pp. 46
-  const uint8_t INIT0 = ((FUNCTION_SET | DATA_LENGTH_8BITS) >> 4);
-  const uint8_t INIT1 = ((FUNCTION_SET | DATA_LENGTH_4BITS) >> 4);
-  m_io->setup();
-  Watchdog::delay(POWER_ON_TIME);
-  m_io->write4b(INIT0);
-  DELAY(INIT0_TIME);
-  m_io->write4b(INIT0);
-  DELAY(INIT1_TIME);
-  m_io->write4b(INIT1);
-
-  // Initialization with the function, control and mode setting
-  write(m_func);
-  write(m_cntl);
-  backlight_on();
-  display_on();
-  display_clear();
-  write(m_mode);
-  return (true);
-}
-
-bool 
-HD44780::end()
-{
-  display_off();
-  return (true);
 }
 
 int 

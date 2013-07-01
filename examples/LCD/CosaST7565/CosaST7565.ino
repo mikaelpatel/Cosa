@@ -151,11 +151,11 @@ void loop()
     // Display the Arduino icon
     lcd.putchar('\f');
     lcd.set_cursor((lcd.WIDTH - 96)/2, 1);
-    lcd.set_display_mode(ST7565::REVERSE_DISPLAY_MODE);
+    lcd.display_inverse();
     lcd.draw_icon(arduino_icon_96x32);
     SLEEP(2);
 
-    lcd.set_display_mode(ST7565::NORMAL_DISPLAY_MODE);
+    lcd.display_normal();
     banner = 0;
 
     // Counters
