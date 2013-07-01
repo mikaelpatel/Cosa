@@ -52,7 +52,7 @@ void setup()
 {
   // Start trace output stream on the serial port
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaDS1703: started"));
+  trace.begin(&uart, PSTR("CosaDS1307: started"));
 
   // Check amount of free memory
   TRACE(free_memory());
@@ -68,12 +68,12 @@ void setup()
   time_t now;
 #ifdef __RTC_SET_TIME__
   now.year = 0x13;
-  now.month = 0x06;
-  now.date = 0x23;
-  now.day = 0x01;
-  now.hours = 0x22;
-  now.minutes = 0x06;
-  now.seconds = 0;
+  now.month = 0x07;
+  now.date = 0x01;
+  now.day = 0x02;
+  now.hours = 0x13;
+  now.minutes = 0x20;
+  now.seconds = 0x30;
   rtc.set_time(now);
   latest.set = now;
 #endif
