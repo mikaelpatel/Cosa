@@ -35,7 +35,7 @@
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
 
-// One-wire pin and connected DS18B20 devices
+// One-wire pin
 #if defined(__ARDUINO_TINY__)
 OWI owi(Board::D1);
 #else
@@ -58,6 +58,7 @@ void setup()
 void loop()
 {
   // Search for alarms
+  ledPin.toggle();
   OWI::Driver dev(&owi);
   int8_t last = OWI::Driver::FIRST;
   do {
@@ -66,6 +67,7 @@ void loop()
     trace << dev << endl;
   } while (last != OWI::Driver::LAST);
   trace << endl;
+  ledPin.toggle();
   
   // Sleep awhile before checking again
   SLEEP(2);
