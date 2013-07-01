@@ -91,7 +91,7 @@ ST7565::begin(uint8_t level)
       }
     }
   }
-  set_display_contrast(level);
+  display_contrast(level);
   display_clear();
   return (true);
 }
@@ -114,7 +114,7 @@ ST7565::display_clear()
 }
 
 void 
-ST7565::set_display_contrast(uint8_t level)
+ST7565::display_contrast(uint8_t level)
 {
   asserted(m_cs) {
     asserted(m_dc) {

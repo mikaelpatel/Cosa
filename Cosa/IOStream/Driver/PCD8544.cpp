@@ -77,7 +77,7 @@ PCD8544::begin(uint8_t level)
 	write(cmd);
     }
   }
-  set_display_contrast(level);
+  display_contrast(level);
   display_clear();
   return (true);
 }
@@ -98,7 +98,7 @@ PCD8544::display_clear()
 }
 
 void 
-PCD8544::set_display_contrast(uint8_t level)
+PCD8544::display_contrast(uint8_t level)
 {
   asserted(m_sce) {
     asserted(m_dc) {

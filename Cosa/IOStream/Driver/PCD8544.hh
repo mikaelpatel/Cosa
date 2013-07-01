@@ -212,7 +212,7 @@ public:
    * Set display contrast (0..127).
    * @param[in] contrast level.
    */
-  void set_display_contrast(uint8_t level);
+  void display_contrast(uint8_t level);
 
   /**
    * Get current cursor position.
