@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/ST7565.cpp
+ * @file Cosa/LCD/Driver/ST7565.cpp
  * @version 1.0
  *
  * @section License
@@ -23,7 +23,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IOStream/Driver/ST7565.hh"
+#include "Cosa/LCD/Driver/ST7565.hh"
 #include "Cosa/Watchdog.hh"
 
 // Initialization script
@@ -39,6 +39,7 @@ const uint8_t ST7565::script[] PROGMEM = {
   SET_POWER_CONTROL 	| 0x07,
   SCRIPT_PAUSE		, 10,
   SET_RESISTOR_RATIO 	| 0x06,
+  SET_CONSTRAST		, 0x08,
   DISPLAY_ON,
   DISPLAY_NORMAL,
   DISPLAY_64X128_POINTS,
@@ -76,7 +77,7 @@ ST7565::fill(uint8_t data, uint16_t count)
 }
 
 bool 
-ST7565::begin(uint8_t level)
+ST7565::begin()
 {
   const uint8_t* bp = script;
   uint8_t cmd;
@@ -91,7 +92,6 @@ ST7565::begin(uint8_t level)
       }
     }
   }
-  display_contrast(level);
   display_clear();
   return (true);
 }
@@ -104,16 +104,6 @@ ST7565::end()
 }
 
 void 
-ST7565::display_clear()
-{
-  for (uint8_t y = 0; y < LINES; y++) {
-    set(0, y);
-    fill(m_mode, WIDTH);
-  }
-  set_cursor(0, 0);
-}
-
-void 
 ST7565::display_contrast(uint8_t level)
 {
   asserted(m_cs) {
@@ -122,6 +112,40 @@ ST7565::display_contrast(uint8_t level)
       write(CONSTRAST_MASK & level);
     }
   }
+}
+
+void 
+ST7565::display_on() 
+{ 
+  set(DISPLAY_ON); 
+}
+
+void 
+ST7565::display_off() 
+{ 
+  set(DISPLAY_OFF); 
+}
+
+void 
+ST7565::display_normal() 
+{ 
+  set(DISPLAY_NORMAL); 
+}
+
+void 
+ST7565::display_inverse() 
+{ 
+  set(DISPLAY_REVERSE); 
+}
+
+void 
+ST7565::display_clear()
+{
+  for (uint8_t y = 0; y < LINES; y++) {
+    set(0, y);
+    fill(m_mode, WIDTH);
+  }
+  set_cursor(0, 0);
 }
 
 void 

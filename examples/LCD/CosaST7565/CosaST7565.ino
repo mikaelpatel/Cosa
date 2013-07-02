@@ -31,7 +31,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Canvas/OffScreen.hh"
-#include "Cosa/IOStream/Driver/ST7565.hh"
+#include "Cosa/LCD/Driver/ST7565.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/HD44780_IO_DFRobot.cpp
+ * @file Cosa/LCD/Driver/HD44780_IO_DFRobot.cpp
  * @version 1.0
  *
  * @section License
@@ -25,7 +25,7 @@
 
 #include "Cosa/Board.hh"
 #if !defined(__ARDUINO_TINY__)
-#include "Cosa/IOStream/Driver/HD44780.hh"
+#include "Cosa/LCD/Driver/HD44780.hh"
 
 void 
 HD44780::DFRobot::setup()

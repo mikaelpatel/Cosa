@@ -164,6 +164,13 @@ public:
 
   /**
    * @override
+   * Set display contrast (0..127).
+   * @param[in] contrast level.
+   */
+  virtual void display_contrast(uint8_t level);
+
+  /**
+   * @override
    * Turn display on. 
    */
   virtual void display_on();
@@ -190,12 +197,6 @@ public:
    * Clear display and move cursor to home.
    */
   virtual void display_clear();
-
-  /**
-   * Set display contrast (0..127).
-   * @param[in] contrast level.
-   */
-  void display_contrast(uint8_t level);
 
   /**
    * Set cursor to given position.

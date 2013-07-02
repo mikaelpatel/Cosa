@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/HD44780_IO_MJKDZ.cpp
+ * @file Cosa/LCD/Driver/HD44780_IO_Port.cpp
  * @version 1.0
  *
  * @section License
@@ -24,38 +24,48 @@
  */
 
 #include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
-#include "Cosa/IOStream/Driver/HD44780.hh"
+#if !defined(__ARDUINO_TINYX5__)
+#include "Cosa/LCD/Driver/HD44780.hh"
 
-void 
-HD44780::MJKDZ::setup()
-{
-  m_port.as_uint8 = 0;
-  set_data_direction(0);
-}
-
-void 
-HD44780::MJKDZ::write4b(uint8_t data)
-{
-  m_port.data = data;
-  m_port.en = 1;
-  write(m_port.as_uint8);
-  m_port.en = 0;
-  write(m_port.as_uint8);
-}
-
-void 
-HD44780::MJKDZ::set_mode(uint8_t flag)
-{
-  m_port.rs = flag;
-}
-
-void 
-HD44780::MJKDZ::set_backlight(uint8_t flag)
-{
-  m_port.bt = !flag;
-  write(m_port.as_uint8);
-}
+/**
+ * Data direction and port register for data transfer (D4..D7).
+ */
+#if defined(__ARDUINO_STANDARD__)
+# define DDR DDRD
+# define PORT PORTD
+#elif defined(__ARDUINO_TINYX4__)
+# define DDR DDRA
+# define PORT PORTA
+#elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGHTY__)
+# define DDR DDRB
+# define PORT PORTB
 #endif
 
+void 
+HD44780::Port::setup()
+{
+  DDR |= 0xf0;
+}
+
+void 
+HD44780::Port::write4b(uint8_t data)
+{
+  PORT = ((data << 4) | (PORT & 0x0f));
+  DELAY(SETUP_TIME);
+  m_en.pulse(ENABLE_PULSE_WIDTH);
+  DELAY(HOLD_TIME);
+}
+
+void 
+HD44780::Port::set_mode(uint8_t flag)
+{
+  m_rs.write(flag);
+}
+
+void 
+HD44780::Port::set_backlight(uint8_t flag)
+{
+  m_bt.write(flag);
+}
+#endif
 

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/HD44780.hh
+ * @file Cosa/LCD/Driver/HD44780.hh
  * @version 1.0
  *
  * @section License
@@ -23,18 +23,18 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOSTREAM_DRIVER_HD44780_HH__
-#define __COSA_IOSTREAM_DRIVER_HD44780_HH__
+#ifndef __COSA_LCD_DRIVER_HD44780_HH__
+#define __COSA_LCD_DRIVER_HD44780_HH__
 
 #include "Cosa/Board.hh"
 #if defined(__ARDUINO_TINYX5__)
-#error "Cosa/IOStream/Driver/HD4480.hh: board not supported"
+#error "Cosa/LCD/Driver/HD4480.hh: board not supported"
 #endif
 
 #if !defined(__ARDUINO_TINY__)
 #include "Cosa/TWI/Driver/PCF8574.hh"
 #endif
-#include "Cosa/IOStream.hh"
+#include "Cosa/LCD.hh"
 #include "Cosa/Pins.hh"
 
 /**
@@ -47,7 +47,7 @@
  * For furter details see Product Specification, Hitachi, HD4478U,
  * ADE-207-272(Z), '99.9, Rev. 0.0.
  */
-class HD44780 : public IOStream::Device {
+class HD44780 : public LCD::Device {
 protected:
   /**
    * Abstract HD44780 LCD IO handler to isolate communication specific
@@ -191,9 +191,6 @@ protected:
 
   // Display pins and state
   IO* m_io;			// IO port handler
-  uint8_t m_x;			// Cursor position x
-  uint8_t m_y;			// Cursor position y
-  uint8_t m_tab;		// Tab step
   uint8_t m_mode;		// Entry mode
   uint8_t m_cntl;		// Control
   uint8_t m_func;		// Function set
@@ -214,11 +211,8 @@ public:
    * @param[in] height of display, number of lines (Default 2).
    */
   HD44780(IO* io, uint8_t width = 16, uint8_t height = 2) :
-    IOStream::Device(),
+    LCD::Device(),
     m_io(io),
-    m_x(0),
-    m_y(0),
-    m_tab(4),
     m_mode(ENTRY_MODE_SET | INCREMENT),
     m_cntl(CONTROL_SET | BLINK_ON | CURSOR_ON | DISPLAY_ON),
     m_func(FUNCTION_SET | DATA_LENGTH_4BITS | NR_LINES_2 | FONT_5X8DOTS),
@@ -228,49 +222,43 @@ public:
   }
   
   /**
-   * Start display for text output. Returns true if successful otherwise
-   * false.
+   * @override
+   * Start display for text output. Returns true if successful
+   * otherwise false.
    * @return boolean.
    */
-  bool begin();
+  virtual bool begin();
 
   /**
+   * @override
    * Stop display and power down. Returns true if successful otherwise
    * false.
    */
-  bool end();
+  virtual bool end();
 
   /**
+   * @override
    * Turn display backlight on. 
    */
-  void backlight_on() 
-  { 
-    m_io->set_backlight(1);
-  }
+  virtual void backlight_on();
 
   /**
+   * @override
    * Turn display backlight off. 
    */
-  void backlight_off() 
-  { 
-    m_io->set_backlight(0);
-  }
+  virtual void backlight_off();
 
   /**
+   * @override
    * Turn display on. 
    */
-  void display_on() 
-  { 
-    set(m_cntl, DISPLAY_ON); 
-  }
+  virtual void display_on();
 
   /**
+   * @override
    * Turn display off. 
    */
-  void display_off() 
-  { 
-    clear(m_cntl, DISPLAY_ON); 
-  }
+  virtual void display_off();
 
   /**
    * Set display scrolling left.
@@ -291,7 +279,7 @@ public:
   /**
    * Clear display and move cursor to home.
    */
-  void display_clear();
+  virtual void display_clear();
 
   /**
    * Move cursor to home position.
@@ -331,22 +319,12 @@ public:
   }
 
   /**
-   * Get current cursor position.
-   * @param[out] x.
-   * @param[out] y.
-   */
-  void get_cursor(uint8_t& x, uint8_t& y)
-  {
-    x = m_x;
-    y = m_y;
-  }
-
-  /**
+   * @override
    * Set cursor position to given position.
    * @param[in] x.
    * @param[in] y.
    */
-  void set_cursor(uint8_t x, uint8_t y);
+  virtual void set_cursor(uint8_t x, uint8_t y);
 
   /**
    * Set text flow left-to-right.
@@ -394,24 +372,6 @@ public:
    * @param[in] bitmap pointer to program memory bitmap.
    */
   void set_custom_char_P(uint8_t id, const uint8_t* bitmap);
-
-  /**
-   * Get tab step.
-   * @return tab step.
-   */
-  uint8_t get_tab_step()
-  {
-    return (m_tab);
-  }
-
-  /**
-   * Set tab step to given value.
-   * @param[in] tab step.
-   */
-  void set_tab_step(uint8_t step)
-  {
-    m_tab = step;
-  }
 
   /**
    * @override

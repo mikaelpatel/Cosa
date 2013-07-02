@@ -88,6 +88,12 @@ public:
     virtual void backlight_off() {}
 
     /**
+     * Set display contrast level.
+     * @param[in] contrast level.
+     */
+    virtual void display_contrast(uint8_t level) {}
+
+    /**
      * @override
      * Turn display on. 
      */

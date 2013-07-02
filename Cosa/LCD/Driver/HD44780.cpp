@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/HD44780.cpp
+ * @file Cosa/LCD/Driver/HD44780.cpp
  * @version 1.0
  *
  * @section License
@@ -26,7 +26,7 @@
 
 #include "Cosa/Board.hh"
 #if !defined(__ARDUINO_TINYX5__)
-#include "Cosa/IOStream/Driver/HD44780.hh"
+#include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/Watchdog.hh"
 
 void 
@@ -78,6 +78,30 @@ HD44780::end()
 {
   display_off();
   return (true);
+}
+
+void 
+HD44780::backlight_on() 
+{ 
+  m_io->set_backlight(1);
+}
+
+void 
+HD44780::backlight_off() 
+{ 
+  m_io->set_backlight(0);
+}
+
+void 
+HD44780::display_on() 
+{ 
+  set(m_cntl, DISPLAY_ON); 
+}
+
+void 
+HD44780::display_off() 
+{ 
+  clear(m_cntl, DISPLAY_ON); 
 }
 
 void 

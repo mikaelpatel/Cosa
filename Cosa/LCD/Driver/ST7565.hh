@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/ST7565.hh
+ * @file Cosa/LCD/Driver/ST7565.hh
  * @version 1.0
  *
  * @section License
@@ -23,12 +23,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOSTREAM_DRIVER_ST7565_HH__
-#define __COSA_IOSTREAM_DRIVER_ST7565_HH__
+#ifndef __COSA_LCD_DRIVER_ST7565_HH__
+#define __COSA_LCD_DRIVER_ST7565_HH__
 
 #include "Cosa/Pins.hh"
 #include "Cosa/Board.hh"
-#include "Cosa/IOStream.hh"
+#include "Cosa/LCD.hh"
 #include "Cosa/Canvas/Font.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"
 
@@ -43,7 +43,7 @@
  * For further details see Sitronix 65x132 Dot Matrix LCD Controller/
  * Driver, Ver 1.3, 2004 May 18.
  */
-class ST7565 : public IOStream::Device {
+class ST7565 : public LCD::Device {
 protected:
   /**
    * Instruction set (table 16, pp. 52)
@@ -97,11 +97,7 @@ protected:
   OutputPin m_scl;		  /**< Serial clock input */
   OutputPin m_dc;		  /**< Data(1) or command(0) */
   OutputPin m_cs;		  /**< Chip select (active low) */
-  uint8_t m_x;			  /**< Cursor x (0..WIDTH-1) */
-  uint8_t m_y;			  /**< Cursor y (0..LINES-1) */
-  uint8_t m_tab;		  /**< Tab step */
   uint8_t m_line;		  /**< Display start line */
-  uint8_t m_mode;		  /**< Text mode (inverted) */
   Font* m_font;			  /**< Font */
 
   /**
@@ -135,12 +131,6 @@ protected:
   void fill(uint8_t data, uint16_t count);
 
 public:
-  // Text mode
-  enum TextMode {
-    NORMAL_TEXT_MODE = 0x00,
-    INVERTED_TEXT_MODE = 0xff
-  } __attribute__((packed));
-
   // Display width and height (in pixels)
   static const uint8_t WIDTH = 128;
   static const uint8_t HEIGHT = 64;
@@ -167,122 +157,73 @@ public:
 	 Board::DigitalPin cs = Board::D9,
 	 Font* font = &system5x7) :
 #endif
-  IOStream::Device(),
+  LCD::Device(),
   m_si(si, 0),
   m_scl(scl, 0),
   m_dc(dc, 1),
   m_cs(cs, 1),
-  m_x(0),
-  m_y(0),
-  m_tab(4),
   m_line(0),
-  m_mode(0),
   m_font(font)
   {}
 
   /**
+   * @override
    * Start interaction with display.
-   * @param[in] level contrast.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint8_t level = 0x08);
+  virtual bool begin();
 
   /**
+   * @override
    * Stop sequence of interaction with device.
    * @return true(1) if successful otherwise false(0)
    */
-  bool end();
+  virtual bool end();
 
   /**
-   * Turn display on. 
-   */
-  void display_on() 
-  { 
-    set(DISPLAY_ON); 
-  }
-
-  /**
-   * Turn display off. 
-   */
-  void display_off() 
-  { 
-    set(DISPLAY_OFF); 
-  }
-
-  /**
-   * Display normal mode.
-   */
-  void display_normal() 
-  { 
-    set(DISPLAY_NORMAL); 
-  }
-
-  /**
-   * Display inverse mode. 
-   */
-  void display_inverse() 
-  { 
-    set(DISPLAY_REVERSE); 
-  }
-
-  /**
-   * Clear display and move cursor to home.
-   */
-  void display_clear();
-
-  /**
+   * @override
    * Set display contrast (0..63).
    * @param[in] contrast level.
    */
-  void display_contrast(uint8_t level);
+  virtual void display_contrast(uint8_t level);
 
   /**
-   * Get current cursor position.
-   * @param[out] x pixel position (0..WIDTH-1).
-   * @param[out] y line position (0..LINES-1).
+   * @override
+   * Turn display on. 
    */
-  void get_cursor(uint8_t& x, uint8_t& y)
-  {
-    x = m_x;
-    y = m_y;
-  }
+  virtual void display_on();
 
   /**
+   * @override
+   * Turn display off. 
+   */
+  virtual void display_off();
+
+  /**
+   * @override
+   * Display normal mode.
+   */
+  virtual void display_normal();
+
+  /**
+   * @override
+   * Display inverse mode. 
+   */
+  virtual void display_inverse();
+
+  /**
+   * @override
+   * Clear display and move cursor to home.
+   */
+  virtual void display_clear();
+
+  /**
+   * @override
    * Set cursor to given position.
    * @param[in] x pixel position (0..WIDTH-1).
    * @param[in] y line position (0..LINES-1).
    */
-  void set_cursor(uint8_t x, uint8_t y);
-
-  /**
-   * Get tab step.
-   * @return tab step.
-   */
-  uint8_t get_tab_step()
-  {
-    return (m_tab);
-  }
-
-  /**
-   * Set tab step to given value.
-   * @param[in] tab step.
-   */
-  void set_tab_step(uint8_t step)
-  {
-    m_tab = step;
-  }
-
-  /**
-   * Set text mode. Return previous text mode.
-   * @param[in] mode new text mode.
-   * @return previous text mode.
-   */
-  TextMode set_text_mode(TextMode mode)
-  {
-    TextMode previous = (TextMode) m_mode;
-    m_mode = mode;
-    return (previous);
-  }
+  virtual void set_cursor(uint8_t x, uint8_t y);
 
   /**
    * Get current text font. 

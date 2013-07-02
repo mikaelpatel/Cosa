@@ -33,7 +33,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/HD44780.hh"
+#include "Cosa/LCD/Driver/HD44780.hh"
 
 // LCD and communication port
 HD44780::Port port;
