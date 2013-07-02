@@ -204,7 +204,7 @@ public:
   
   // Display width (characters per line) and height (lines)
   const uint8_t WIDTH;
-  const uint16_t HEIGHT;
+  const uint8_t HEIGHT;
 
   /**
    * Construct HD44780 LCD connected to given io port handler. The
