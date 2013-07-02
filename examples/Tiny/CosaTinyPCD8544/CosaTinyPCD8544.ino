@@ -34,7 +34,7 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/PCD8544.hh"
+#include "Cosa/LCD/Driver/PCD8544.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 
 AnalogPin data(Board::A2);
@@ -45,7 +45,7 @@ void setup()
 {
   Watchdog::begin();
 
-  lcd.begin(0x38);
+  lcd.begin();
   lcd.putchar('\f');
   lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
   lcd.draw_icon(arduino_icon_64x32);

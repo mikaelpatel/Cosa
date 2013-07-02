@@ -44,7 +44,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OWI/Driver/DS18B20.hh"
-#include "Cosa/IOStream/Driver/PCD8544.hh"
+#include "Cosa/LCD/Driver/PCD8544.hh"
 #include "Cosa/Canvas/OffScreen.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
@@ -54,7 +54,6 @@ OWI owi(Board::D5);
 DS18B20 sensor(&owi);
 PCD8544 lcd;
 #undef putchar
-const uint8_t CONTRAST = 0x38;
 
 void setup()
 {
@@ -62,7 +61,7 @@ void setup()
   Watchdog::begin();
 
   // Initiate the LCD screen and show splash screen with arduino icon
-  lcd.begin(CONTRAST);
+  lcd.begin();
   lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
   lcd.draw_icon(arduino_icon_64x32);
   SLEEP(2);

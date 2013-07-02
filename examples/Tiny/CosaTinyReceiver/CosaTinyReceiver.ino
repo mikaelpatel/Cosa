@@ -36,7 +36,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/PCD8544.hh"
+#include "Cosa/LCD/Driver/PCD8544.hh"
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 
@@ -57,7 +57,7 @@ void setup()
   rx.begin();
 
   // Start LCD and bind trace output to display
-  lcd.begin(0x38);
+  lcd.begin();
   trace.begin(&lcd);
   trace << PSTR("\fCosaTinyReceiver: started");
   SLEEP(2);
