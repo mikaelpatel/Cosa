@@ -33,11 +33,12 @@
 #include "Cosa/Canvas/Font/System5x7.hh"
 
 /**
- * ST7565 64x128 pixels matrix LCD controller/driver, device driver 
- * for IOStream access. Binding to trace, etc. Support natural text scroll,
- * cursor, and handling of special characters such as form-feed, back-
- * space and new-line. Graphics should be performed with OffScreen
- * Canvas and copied to the display with draw_bitmap().
+ * ST7565 64x128 pixels matrix LCD controller/driver, device driver
+ * for IOStream/LCD access. Binding to trace, etc. Support natural
+ * text scroll, cursor, and handling of special characters such as
+ * carriage-return, form-feed, back-space, horizontal tab and
+ * new-line. Graphics should be performed with OffScreen Canvas and
+ * copied to the display with draw_bitmap(). 
  *
  * @section See Also
  * For further details see Sitronix 65x132 Dot Matrix LCD Controller/

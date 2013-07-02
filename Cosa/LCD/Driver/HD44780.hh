@@ -39,9 +39,9 @@
 
 /**
  * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
- * for IOStream access. Binding to trace, etc. Supports simple text 
- * scroll, cursor, and handling of special characters such as form-feed, 
- * back-space and new-line. 
+ * for LCD/IOStream access. Binding to trace, etc. Supports simple text 
+ * scroll, cursor, and handling of special characters such as carriage-
+ * return, form-feed, back-space, horizontal tab and new-line. 
  *
  * @section See Also
  * For furter details see Product Specification, Hitachi, HD4478U,
@@ -52,26 +52,26 @@ protected:
   /**
    * Abstract HD44780 LCD IO handler to isolate communication specific
    * functions and allow access over parallel and serial interfaces;
-   * Ports and TWI.
+   * Ports and I2C/TWI.
    */
   class IO {
   public:
     /**
      * @override
-     * Initiate port for IO.
+     * Initiate IO port. Called by HD44780::begin().
      */
     virtual void setup() = 0;
 
     /**
      * @override
-     * Write LSB nibble to display.
+     * Write LSB nibble (4bit) to display.
      * @param[in] data (4b) to write.
      */
     virtual void write4b(uint8_t data) = 0;
 
     /**
      * @override
-     * Set data/command mode; zero for command, non-zero for data mode. 
+     * Set data/command mode; zero(0) for command, non-zero(1) for data mode. 
      * @param[in] flag.
      */
     virtual void set_mode(uint8_t flag) = 0;
@@ -160,7 +160,7 @@ protected:
   void write(uint8_t data);
     
   /**
-   * Set display attribute.
+   * Set display attribute and update driver mirror variable.
    * @param[in,out] cmd command variable.
    * @param[in] mask function.
    */
@@ -170,7 +170,7 @@ protected:
   }
 
   /**
-   * Clear display attribute.
+   * Clear display attribute and update driver mirror variable.
    * @param[in,out] cmd command variable.
    * @param[in] mask function.
    */
@@ -180,16 +180,16 @@ protected:
   }
 
   /**
-   * Set data mode.
+   * Set communication in data stream mode.
    */
   void set_data_mode();
 
   /**
-   * Set instruction mode.
+   * Set communication in instruction stream mode.
    */
   void set_instruction_mode();
 
-  // Display pins and state
+  // Display pins and state (mirror of device registers)
   IO* m_io;			// IO port handler
   uint8_t m_mode;		// Entry mode
   uint8_t m_cntl;		// Control
@@ -207,7 +207,7 @@ public:
    * Construct HD44780 LCD connected to given io port handler. The
    * display is initiated when calling begin(). 
    * @param[in] io handler.
-   * @param[in] width of display, characters per lin (Default 16).
+   * @param[in] width of display, characters per line (Default 16).
    * @param[in] height of display, number of lines (Default 2).
    */
   HD44780(IO* io, uint8_t width = 16, uint8_t height = 2) :
@@ -385,7 +385,8 @@ public:
 
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
-   * IO Port.
+   * IO Port. Arduino pins directly to LCD in 4-bit mode. Data port is 
+   * implicitly defined (D4..D7).
    */
   class Port : public IO {
   private:
