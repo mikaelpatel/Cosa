@@ -33,7 +33,7 @@
 // HD44780::Port:	3544/3318/3100 bytes
 // HD44780::MJKDZ:	4484/4342/NA   bytes
 // HD44780::DFRobot:	4474/4332/NA   bytes
-// PCD8544: 		4484/4264/3918 bytes
+// PCD8544: 		4484/4264/4014 bytes
 // ST7565:  		4954/4752/4406 bytes
 // =========================================
 // The baseline is the Watchdog and Arduino
@@ -41,14 +41,14 @@
 // different LCD drivers and compare size.
 // =========================================
 
-#include "Cosa/IOStream/Driver/HD44780.hh"
-HD44780::Port port;
+// #include "Cosa/IOStream/Driver/HD44780.hh"
+// HD44780::Port port;
 // HD44780::MJKDZ port;
 // HD44780::DFRobot port;
-HD44780 lcd(&port);
+// HD44780 lcd(&port);
 
-// #include "Cosa/IOStream/Driver/PCD8544.hh"
-// PCD8544 lcd;
+#include "Cosa/LCD/Driver/PCD8544.hh"
+PCD8544 lcd;
 
 // #include "Cosa/IOStream/Driver/ST7565.hh"
 // ST7565 lcd;

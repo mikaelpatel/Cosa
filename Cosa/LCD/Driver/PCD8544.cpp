@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/PCD8544.cpp
+ * @file Cosa/LCD/Driver/PCD8544.cpp
  * @version 1.0
  *
  * @section License
@@ -23,7 +23,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IOStream/Driver/PCD8544.hh"
+#include "Cosa/LCD/Driver/PCD8544.hh"
 
 const uint8_t PCD8544::script[] PROGMEM = {
   SET_FUNC       | EXTENDED_INST,
@@ -67,7 +67,7 @@ PCD8544::fill(uint8_t data, uint16_t count)
 }
 
 bool 
-PCD8544::begin(uint8_t level)
+PCD8544::begin()
 {
   const uint8_t* bp = script;
   uint8_t cmd;
@@ -77,7 +77,6 @@ PCD8544::begin(uint8_t level)
 	write(cmd);
     }
   }
-  display_contrast(level);
   display_clear();
   return (true);
 }
@@ -87,6 +86,30 @@ PCD8544::end()
 {
   set(SET_FUNC | BASIC_INST | POWER_DOWN_MODE);
   return (true);
+}
+
+void 
+PCD8544::display_on() 
+{ 
+  set(DISPLAY_CNTL | DISPLAY_ON); 
+}
+
+void 
+PCD8544::display_off() 
+{ 
+  set(DISPLAY_CNTL | DISPLAY_OFF); 
+}
+
+void 
+PCD8544::display_normal()
+{ 
+  set(DISPLAY_CNTL | NORMAL_MODE); 
+}
+
+void 
+PCD8544::display_inverse() 
+{ 
+  set(DISPLAY_CNTL | INVERSE_MODE); 
 }
 
 void 

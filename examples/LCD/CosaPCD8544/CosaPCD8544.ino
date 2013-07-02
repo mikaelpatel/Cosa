@@ -35,7 +35,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Canvas/OffScreen.hh"
-#include "Cosa/IOStream/Driver/PCD8544.hh"
+#include "Cosa/LCD/Driver/PCD8544.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
@@ -49,7 +49,7 @@ void setup()
   Watchdog::begin();
 
   // Initiate the LCD screen and show arduino icon
-  lcd.begin(0x38);
+  lcd.begin();
 #if !defined(__ARDUINO_TINY__)
   lcd.putchar('\f');
   lcd.set_cursor((lcd.WIDTH - 64)/2, 0);
@@ -136,11 +136,11 @@ void loop()
 {
   // Draw bars with analog sample values (A0..A5)
   lcd.putchar('\f');
-  for (uint8_t i = 0; i < PCD8544::LINES; i++) {
+  for (uint8_t i = 0; i < lcd.LINES; i++) {
     trace.printf_P(PSTR("A%d:"), i);
     uint8_t procent = (AnalogPin::sample(i) * 100L) / 1023;
-    lcd.draw_bar(procent, PCD8544::WIDTH - 20);
-    if (i != PCD8544::LINES - 1) trace << endl;
+    lcd.draw_bar(procent, lcd.WIDTH - 20);
+    if (i != lcd.LINES - 1) trace << endl;
   }
   SLEEP(1);
 
