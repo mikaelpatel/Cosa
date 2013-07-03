@@ -168,44 +168,48 @@ HD44780::set_custom_char_P(uint8_t id, const uint8_t* bitmap)
 int 
 HD44780::putchar(char c)
 {
-  // Check for special characters; carriage-return-line-feed
-  if (c == '\n') {
-    uint8_t x, y;
-    set_cursor(0, m_y + 1);
-    get_cursor(x, y);
-    set_data_mode();
-    {
-      for (uint8_t i = 0; i < WIDTH; i++) write(' ');
+  // Check for special characters
+  if (c < ' ') {
+
+    // Alert
+    if (c == '\a') {
+      // Fix: Should have some indication
+      return (c);
     }
-    set_instruction_mode();
-    set_cursor(x, y);
-    return (c);
-  }
 
-  // Check for special character: back-space
-  if (c == '\b') {
-    set_cursor(m_x - 1, m_y);
-    return (c);
-  }
+    // Back-space
+    if (c == '\b') {
+      set_cursor(m_x - 1, m_y);
+      return (c);
+    }
 
-  // Check for special character: alert
-  if (c == '\a') {
-    // Fix: Should have some indication
-    return (c);
-  }
+    // Form-feed
+    if (c == '\f') {
+      display_clear();
+      return (c);
+    }
+    
+    // Carriage-return-line-feed
+    if (c == '\n') {
+      uint8_t x, y;
+      set_cursor(0, m_y + 1);
+      get_cursor(x, y);
+      set_data_mode();
+      {
+	for (uint8_t i = 0; i < WIDTH; i++) write(' ');
+      }
+      set_instruction_mode();
+      set_cursor(x, y);
+      return (c);
+    }
 
-  // Check for special character: form-feed
-  if (c == '\f') {
-    display_clear();
-    return (c);
-  }
-
-  // Check for horizontal tab
-  if (c == '\t') {
-    uint8_t x = m_x + m_tab - (m_x % m_tab);
-    uint8_t y = m_y + (x >= WIDTH);
-    set_cursor(x, y);
-    return (c);
+    // Horizontal tab
+    if (c == '\t') {
+      uint8_t x = m_x + m_tab - (m_x % m_tab);
+      uint8_t y = m_y + (x >= WIDTH);
+      set_cursor(x, y);
+      return (c);
+    }
   }
 
   // Write character
