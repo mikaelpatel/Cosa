@@ -30,10 +30,16 @@
 #include "Cosa/Watchdog.hh"
 
 void 
+HD44780::IO::write8b(uint8_t data)
+{
+  write4b(data >> 4);
+  write4b(data);
+}
+
+void 
 HD44780::write(uint8_t data)
 {
-  m_io->write4b(data >> 4);
-  m_io->write4b(data);
+  m_io->write8b(data);
   DELAY(SHORT_EXEC_TIME);
 }
 

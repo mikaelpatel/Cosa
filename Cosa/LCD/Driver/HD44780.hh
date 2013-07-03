@@ -71,6 +71,13 @@ protected:
 
     /**
      * @override
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write8b(uint8_t data);
+
+    /**
+     * @override
      * Set data/command mode; zero(0) for command, non-zero(1) for data mode. 
      * @param[in] flag.
      */
@@ -428,6 +435,13 @@ public:
     
     /**
      * @override
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write8b(uint8_t data);
+
+    /**
+     * @override
      * Set instruction/data mode using given rs pin; zero for
      * instruction, non-zero for data mode.
      * @param[in] flag.
@@ -488,6 +502,13 @@ public:
 
     /**
      * @override
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write8b(uint8_t data);
+
+    /**
+     * @override
      * Set instruction/data mode; zero for instruction, non-zero for
      * data mode. 
      * @param[in] flag.
@@ -544,6 +565,13 @@ public:
      * @param[in] data (4b) to write.
      */
     virtual void write4b(uint8_t data);
+
+    /**
+     * @override
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write8b(uint8_t data);
 
     /**
      * @override

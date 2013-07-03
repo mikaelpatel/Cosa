@@ -142,6 +142,14 @@ public:
    * @return bool.
    */
   bool write(uint8_t value);
+
+  /**
+   * Write given value to the output pins. Return true if successful
+   * otherwise false. Return true if successful otherwise false.
+   * @param[in] value.
+   * @return bool.
+   */
+  bool write(void* buf, size_t size);
 };
 
 class PCF8574A : protected PCF8574 {

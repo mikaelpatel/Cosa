@@ -57,6 +57,18 @@ HD44780::Port::write4b(uint8_t data)
 }
 
 void 
+HD44780::Port::write8b(uint8_t data)
+{
+  PORT = ((data & 0xf0) | (PORT & 0x0f));
+  DELAY(SETUP_TIME);
+  m_en.pulse(ENABLE_PULSE_WIDTH);
+  DELAY(HOLD_TIME);
+  PORT = ((data << 4) | (PORT & 0x0f));
+  DELAY(SETUP_TIME);
+  m_en.pulse(ENABLE_PULSE_WIDTH);
+}
+
+void 
 HD44780::Port::set_mode(uint8_t flag)
 {
   m_rs.write(flag);

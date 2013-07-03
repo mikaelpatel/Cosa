@@ -37,11 +37,30 @@ HD44780::MJKDZ::setup()
 void 
 HD44780::MJKDZ::write4b(uint8_t data)
 {
+  uint8_t buf[2];
   m_port.data = data;
   m_port.en = 1;
-  write(m_port.as_uint8);
+  buf[0] = m_port.as_uint8;
   m_port.en = 0;
-  write(m_port.as_uint8);
+  buf[1] = m_port.as_uint8;
+  write(buf, sizeof(buf));
+}
+
+void 
+HD44780::MJKDZ::write8b(uint8_t data)
+{
+  uint8_t buf[4];
+  m_port.data = (data >> 4);
+  m_port.en = 1;
+  buf[0] = m_port.as_uint8;
+  m_port.en = 0;
+  buf[1] = m_port.as_uint8;
+  m_port.data = data;
+  m_port.en = 1;
+  buf[2] = m_port.as_uint8;
+  m_port.en = 0;
+  buf[3] = m_port.as_uint8;
+  write(buf, sizeof(buf));
 }
 
 void 
