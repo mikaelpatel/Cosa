@@ -90,8 +90,8 @@ protected:
   static const uint16_t SETUP_TIME = 1;
   static const uint16_t ENABLE_PULSE_WIDTH = 1;
   static const uint16_t HOLD_TIME = 1;
-  static const uint16_t SHORT_EXEC_TIME = 50;
-  static const uint16_t LONG_EXEC_TIME = 2000;
+  static const uint16_t SHORT_EXEC_TIME = 37;
+  static const uint16_t LONG_EXEC_TIME = 1500;
   static const uint16_t POWER_ON_TIME = 32;
   static const uint16_t INIT0_TIME = 4500;
   static const uint16_t INIT1_TIME = 150;
