@@ -41,10 +41,11 @@ objects may become inconsistent.
 To improve debugging and testing there is assert/trace/syslog style
 support. The IOStream class allows output to both serial wire/wireless
 communication (UART/VWIO) and small TFT displays (such as the ST7735,
-ST7565, HD44780, and PCD8544). The drawing Canvas class supports basic 
-drawing operation and scripting to reduce program memory
-footprint. The Canvas class also supports drawing of icons and
-multiple fonts (GLCD and UTFT).  
+ST7565, HD44780, and PCD8544). The Cosa LCD class extends
+IOStream::Device with additional common LCD functions. The drawing
+Canvas class supports basic drawing operation and scripting to reduce
+program memory footprint. The Canvas class also supports drawing of
+icons and multiple fonts (GLCD and UTFT). 
 
 The popular VirtualWire library has been refactored to the
 object-oriented style of Cosa (VWI) and extended with three additional

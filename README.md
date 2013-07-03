@@ -43,9 +43,11 @@ objects may become inconsistent.
 To improve debugging and testing there is trace/syslog style support. 
 The IOStream class allows output to both serial communication
 (UART/VWIO) and small TFT displays (such as the ST7735, ST7564,
-HD44780 and PCD8544). The drawing Canvas class supports basic drawing
-operation and scripting to reduce program memory footprint. The Canvas
-class also supports drawing of icons and multiple fonts (GLCD and UTFT). 
+HD44780 and PCD8544). The Cosa LCD class extends IOStream::Device with
+additional common LCD functions. The drawing Canvas class supports
+basic drawing operation and scripting to reduce program memory
+footprint. The Canvas class also supports drawing of icons and
+multiple fonts (GLCD and UTFT).  
 
 The popular VirtualWire library has been refactored to the
 object-oriented style of Cosa and extended with three additional
@@ -214,5 +216,6 @@ Sockets. Refactoring NRF24L01P device driver to a
 Socker::Device with support for both connection-less and
 connection-oriented communication. DS3231 device driver and example
 sketches.  Driver for the PCF8574/PCF8574A Remote 8-bit I/O expander
-for I2C-bus with interrupt. Support for 20x4 LCD.   
-    
+for I2C-bus with interrupt. Support for 20x4 LCD.    
+2013-07 Introducing an abstract LCD::Device class and refactoring LCD
+device drivers. Benchmarking and optimizing LCD device drivers.    
