@@ -144,9 +144,10 @@ public:
   bool write(uint8_t value);
 
   /**
-   * Write given value to the output pins. Return true if successful
+   * Write given values to the output pins. Return true if successful
    * otherwise false. Return true if successful otherwise false.
-   * @param[in] value.
+   * @param[in] buf pointer to data to write to device.
+   * @param[in] size of buffer.
    * @return bool.
    */
   bool write(void* buf, size_t size);
