@@ -214,7 +214,9 @@ public:
     LCD::Device(),
     m_io(io),
     m_mode(ENTRY_MODE_SET | INCREMENT),
-    m_cntl(CONTROL_SET | BLINK_ON | CURSOR_ON | DISPLAY_ON),
+    // Alternative initial setting with cursor on
+    // m_cntl(CONTROL_SET | BLINK_ON | CURSOR_ON | DISPLAY_ON),
+    m_cntl(CONTROL_SET | DISPLAY_ON),
     m_func(FUNCTION_SET | DATA_LENGTH_4BITS | NR_LINES_2 | FONT_5X8DOTS),
     WIDTH(width),
     HEIGHT(height)
