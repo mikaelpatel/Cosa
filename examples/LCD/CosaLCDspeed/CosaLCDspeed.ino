@@ -21,6 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 
@@ -55,6 +56,7 @@ void measure(const char* name, benchmark_t fn, uint16_t nr);
 
 void setup()
 {
+  RTC::begin();
   Watchdog::begin();
   lcd.begin();
   trace.begin(&lcd, PSTR("CosaLCDspeed:"));
@@ -63,7 +65,7 @@ void setup()
 
 void loop()
 {
-  MEASURE(clear_display, 100);
+  MEASURE(clear_display, 10);
   SLEEP(4);
   MEASURE(write_char, 100);
   SLEEP(4);
@@ -73,7 +75,7 @@ void loop()
   SLEEP(4);
   MEASURE(write_dec_uint16, 10000);
   SLEEP(4);
-  MEASURE(write_bin_uint16, 10000);
+  MEASURE(write_bin_uint16, 1000);
   SLEEP(4);
 }
 
@@ -94,10 +96,11 @@ void write_char(uint16_t nr)
   uint8_t WIDTH = lcd.WIDTH / lcd.get_text_font()->get_width(' ');
 #endif
   while (nr--) {
-    lcd.set_cursor(0, 0);
-    for (uint8_t height = 0; height < HEIGHT; height++)
+    for (uint8_t height = 0; height < HEIGHT; height++) {
+      lcd.set_cursor(0, height);
       for (uint8_t width = 0; width < WIDTH; width++)
 	lcd.putchar(' ' + (nr & 0x1f));
+    }
   }
 }
 
@@ -105,9 +108,9 @@ void write_str(uint16_t nr)
 {
   while (nr--) {
     lcd.set_cursor(0, 1);
-    lcd.puts("1234567890123456");
+    lcd.puts("12345678901234");
     lcd.set_cursor(0, 1);
-    lcd.puts("ABCDEFGHIJKLMNOP");
+    lcd.puts("ABCDEFGHIJKLMN");
   }
 }
 
@@ -115,9 +118,9 @@ void write_pstr(uint16_t nr)
 {
   while (nr--) {
     lcd.set_cursor(0, 1);
-    lcd.puts_P(PSTR("1234567890123456"));
+    lcd.puts_P(PSTR("12345678901234"));
     lcd.set_cursor(0, 1);
-    lcd.puts_P(PSTR("ABCDEFGHIJKLMNOP"));
+    lcd.puts_P(PSTR("ABCDEFGHIJKLMN"));
   }
 }
 
@@ -141,13 +144,12 @@ void measure(const char* name, benchmark_t fn, uint16_t nr)
 {
   lcd.display_clear();
   lcd.puts_P(name);
-  uint32_t start = Watchdog::millis();
+  uint32_t start = RTC::micros();
   fn(nr);
-  uint32_t ms = Watchdog::millis() - start;
+  uint32_t us = (RTC::micros() - start) / nr;
+  uint32_t ops = 1000000L / us;
   lcd.display_clear();
-  lcd.puts_P(name);
-  trace << endl;
-  trace << (nr * 1000L) / ms << PSTR("/s, ");
-  trace << (ms * 1000L) / nr << PSTR(" us");
+  trace << name << endl;
+  trace << ops << PSTR(" ops, ") << us << PSTR(" us");
 }
 
