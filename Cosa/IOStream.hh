@@ -27,6 +27,8 @@
 #define __COSA_IOSTREAM_HH__
 
 #include "Cosa/Types.h"
+#undef putchar
+#undef getchar
 
 /**
  * Basic in-/output stream support class. Requires implementation of
