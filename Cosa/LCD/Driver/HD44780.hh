@@ -157,12 +157,17 @@ protected:
     FONT_5X10DOTS = 0x04	// - 5X10 dots
   } __attribute__((packed));
 
+  // Row offset tables
+  static const uint8_t offset0[] PROGMEM;
+  static const uint8_t offset1[] PROGMEM;
+
   // Display pins and state (mirror of device registers)
   IO* m_io;			// IO port handler
   uint8_t m_mode;		// Entry mode
   uint8_t m_cntl;		// Control
   uint8_t m_func;		// Function set
-
+  const uint8_t* m_offset;	// Row offset table
+  
   /**
    * @override
    * Write data or command to display.
@@ -196,12 +201,18 @@ protected:
   /**
    * Set communication in data stream mode.
    */
-  void set_data_mode();
+  void set_data_mode()
+  {
+    m_io->set_mode(1);
+  }
 
   /**
    * Set communication in instruction stream mode.
    */
-  void set_instruction_mode();
+  void set_instruction_mode()
+  {
+    m_io->set_mode(0);
+  }
 
 public:
   // Max size of custom character font bitmap
@@ -227,6 +238,7 @@ public:
     WIDTH(width),
     HEIGHT(height)
   {
+    m_offset = ((height == 4) && (width == 16)) ? offset1 : offset0;
   }
   
   /**
@@ -406,8 +418,8 @@ public:
     /**
      * Construct HD44780 4-bit parallel port connected to given command
      * and enable pin. Data pins are implicit; D4..D7 for Arduino
-     * Standard, Mighty and ATtinyX4. D10..D13 for Arduino/Mega. Connect
-     * to LCD pins D4..D7.  
+     * Standard, Mighty and ATtinyX4. D10..D13 for Arduino/Mega. 
+     * Connect to LCD pins D4..D7.  
      * @param[in] rs command/data select pin (Default D8).
      * @param[in] en enable pin (Default D9).
      * @param[in] bt backlight pin (Default D10).

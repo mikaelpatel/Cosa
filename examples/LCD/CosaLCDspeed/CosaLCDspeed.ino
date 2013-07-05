@@ -38,8 +38,6 @@ HD44780 lcd(&port);
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
 
-#undef putchar
-
 // Benchmarks
 typedef void (*benchmark_t)(uint16_t);
 void clear_display(uint16_t nr);
@@ -66,7 +64,7 @@ void loop()
 {
   MEASURE(clear_display, 10);
   SLEEP(4);
-  MEASURE(write_char, 100);
+  MEASURE(write_char, 1000);
   SLEEP(4);
   MEASURE(write_str, 1000);
   SLEEP(4);
@@ -87,11 +85,11 @@ void clear_display(uint16_t nr)
 void write_char(uint16_t nr)
 {
 #if defined(__COSA_LCD_DRIVER_HD44780_HH__)
-  uint8_t WIDTH = 16;
-  uint8_t HEIGHT = 2;
+  const uint8_t WIDTH = 16;
+  const uint8_t HEIGHT = 2;
 #else
-  uint8_t WIDTH = lcd.WIDTH / lcd.get_text_font()->get_width(' ');
-  uint8_t HEIGHT = lcd.LINES;
+  const uint8_t WIDTH = lcd.WIDTH / lcd.get_text_font()->get_width(' ');
+  const uint8_t HEIGHT = lcd.LINES;
 #endif
   while (nr--) {
     char c = ' ' + (nr & 0x1f);
@@ -147,8 +145,7 @@ void measure(const char* name, benchmark_t fn, uint16_t nr)
   fn(nr);
   uint32_t us = (RTC::micros() - start) / nr;
   uint32_t ops = 1000000L / us;
-  lcd.display_clear();
-  trace << name << endl;
+  trace << clear << name << endl;
   trace << ops << PSTR(" ops, ") << us << PSTR(" us");
 }
 

@@ -29,23 +29,14 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/Watchdog.hh"
 
+const uint8_t HD44780::offset0[] PROGMEM = { 0x00, 0x40, 0x14, 0x54 };
+const uint8_t HD44780::offset1[] PROGMEM = { 0x00, 0x40, 0x10, 0x50 };
+
 void 
 HD44780::IO::write8b(uint8_t data)
 {
   write4b(data >> 4);
   write4b(data);
-}
-
-void 
-HD44780::set_data_mode()
-{
-  m_io->set_mode(1);
-}
-
-void
-HD44780::set_instruction_mode()
-{
-  m_io->set_mode(0);
 }
 
 bool 
@@ -132,10 +123,10 @@ HD44780::cursor_home()
 void 
 HD44780::set_cursor(uint8_t x, uint8_t y)
 {
-  const uint8_t offset[] = { 0x00, 0x40, 0x14, 0x54 };
   if (x >= WIDTH) x = 0;
   if (y >= HEIGHT) y = 0;
-  write(SET_DDRAM_ADDR | ((x + offset[y]) & SET_DDRAM_MASK));
+  uint8_t offset = (uint8_t) pgm_read_byte(&m_offset[y]);
+  write(SET_DDRAM_ADDR | ((x + offset) & SET_DDRAM_MASK));
   m_x = x;
   m_y = y;
 }
