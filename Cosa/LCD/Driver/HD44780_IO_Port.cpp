@@ -44,28 +44,35 @@
 void 
 HD44780::Port::setup()
 {
-  DDR |= 0xf0;
+  synchronized {
+    DDR |= 0xf0;
+  }
 }
 
 void 
 HD44780::Port::write4b(uint8_t data)
 {
-  PORT = ((data << 4) | (PORT & 0x0f));
-  DELAY(SETUP_TIME);
-  m_en.pulse(ENABLE_PULSE_WIDTH);
-  DELAY(HOLD_TIME);
+  synchronized {
+    PORT = ((data << 4) | (PORT & 0x0f));
+  }
+  m_en.toggle();
+  m_en.toggle();
 }
 
 void 
 HD44780::Port::write8b(uint8_t data)
 {
-  PORT = ((data & 0xf0) | (PORT & 0x0f));
-  DELAY(SETUP_TIME);
-  m_en.pulse(ENABLE_PULSE_WIDTH);
-  DELAY(HOLD_TIME);
-  PORT = ((data << 4) | (PORT & 0x0f));
-  DELAY(SETUP_TIME);
-  m_en.pulse(ENABLE_PULSE_WIDTH);
+  synchronized {
+    PORT = ((data & 0xf0) | (PORT & 0x0f));
+  }
+  m_en.toggle();
+  m_en.toggle();
+  synchronized {
+    PORT = ((data << 4) | (PORT & 0x0f));
+  }
+  m_en.toggle();
+  m_en.toggle();
+  DELAY(SHORT_EXEC_TIME);
 }
 
 void 

@@ -37,13 +37,6 @@ HD44780::IO::write8b(uint8_t data)
 }
 
 void 
-HD44780::write(uint8_t data)
-{
-  m_io->write8b(data);
-  DELAY(SHORT_EXEC_TIME);
-}
-
-void 
 HD44780::set_data_mode()
 {
   m_io->set_mode(1);

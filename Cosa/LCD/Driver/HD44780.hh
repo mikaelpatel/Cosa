@@ -94,9 +94,7 @@ protected:
   /**
    * Bus Timing Characteristics (in micro-seconds), fig. 25, pp. 50
    */
-  static const uint16_t SETUP_TIME = 1;
   static const uint16_t ENABLE_PULSE_WIDTH = 1;
-  static const uint16_t HOLD_TIME = 1;
   static const uint16_t SHORT_EXEC_TIME = 37;
   static const uint16_t LONG_EXEC_TIME = 1500;
   static const uint16_t POWER_ON_TIME = 32;
@@ -159,13 +157,22 @@ protected:
     FONT_5X10DOTS = 0x04	// - 5X10 dots
   } __attribute__((packed));
 
+  // Display pins and state (mirror of device registers)
+  IO* m_io;			// IO port handler
+  uint8_t m_mode;		// Entry mode
+  uint8_t m_cntl;		// Control
+  uint8_t m_func;		// Function set
+
   /**
    * @override
    * Write data or command to display.
    * @param[in] data to write.
    */
-  void write(uint8_t data);
-    
+  void write(uint8_t data)
+  {
+    m_io->write8b(data);
+  }
+
   /**
    * Set display attribute and update driver mirror variable.
    * @param[in,out] cmd command variable.
@@ -195,12 +202,6 @@ protected:
    * Set communication in instruction stream mode.
    */
   void set_instruction_mode();
-
-  // Display pins and state (mirror of device registers)
-  IO* m_io;			// IO port handler
-  uint8_t m_mode;		// Entry mode
-  uint8_t m_cntl;		// Control
-  uint8_t m_func;		// Function set
 
 public:
   // Max size of custom character font bitmap

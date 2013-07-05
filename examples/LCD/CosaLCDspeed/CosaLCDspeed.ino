@@ -27,10 +27,9 @@
 
 // Select the LCD device for the benchmark
 #include "Cosa/LCD/Driver/HD44780.hh"
-// HD44780::MJKDZ port;
+HD44780::MJKDZ port;
 // HD44780::DFRobot port;
-// HD44780 lcd(&port, 20, 4);
-HD44780::Port port;
+// HD44780::Port port;
 HD44780 lcd(&port);
 
 // #include "Cosa/LCD/Driver/PCD8544.hh"
@@ -87,19 +86,19 @@ void clear_display(uint16_t nr)
 
 void write_char(uint16_t nr)
 {
-  // Calculate width and height in characters (and not pixels)
-#ifdef __COSA_LCD_DRIVER_HD44780_HH__
-  uint8_t HEIGHT = lcd.HEIGHT;
-  uint8_t WIDTH = lcd.WIDTH;
+#if defined(__COSA_LCD_DRIVER_HD44780_HH__)
+  uint8_t WIDTH = 16;
+  uint8_t HEIGHT = 2;
 #else
-  uint8_t HEIGHT = lcd.LINES;
   uint8_t WIDTH = lcd.WIDTH / lcd.get_text_font()->get_width(' ');
+  uint8_t HEIGHT = lcd.LINES;
 #endif
   while (nr--) {
+    char c = ' ' + (nr & 0x1f);
     for (uint8_t height = 0; height < HEIGHT; height++) {
       lcd.set_cursor(0, height);
       for (uint8_t width = 0; width < WIDTH; width++)
-	lcd.putchar(' ' + (nr & 0x1f));
+	lcd.putchar(c);
     }
   }
 }
