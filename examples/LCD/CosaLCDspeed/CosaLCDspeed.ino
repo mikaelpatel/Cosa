@@ -38,6 +38,8 @@ HD44780 lcd(&port);
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
 
+#undef putchar
+
 // Benchmarks
 typedef void (*benchmark_t)(uint16_t);
 void clear_display(uint16_t nr);
