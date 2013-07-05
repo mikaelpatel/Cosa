@@ -26,7 +26,10 @@
 #include "Cosa/Driver/DHT.hh"
 #include "Cosa/Watchdog.hh"
 
-static const uint16_t START_REQUEST = 1;
+// Start pulse (low) in milli-seconds
+static const uint16_t START_REQUEST = 18;
+
+// Response pulse width
 static const uint8_t START_RESPONSE = 40;
 #if (I_CPU < 16)
 static const uint8_t COUNT_MIN = 30;
