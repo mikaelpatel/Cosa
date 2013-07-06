@@ -125,7 +125,7 @@ Drivers
 13. HMC5883L 3-Axis Digital Compass IC.
 14. NEXA/HomeEasy Wireless Remote command transmitter/receiver for RF433.
 15. ST7565, 65x132 Dot Matrix LCD Controller/Driver.
-16. Debounced button and dials with Rotary Encoder.
+16. Debounced button, keypad and dials with Rotary Encoder.
 17. HD44780 (aka 1602, 2004) LCD Controller/Driver.
 18. DS3231, Extremely Accurate I2C-Integrated RTC/TCXO/Crystal. 
 19. PCF8574/PCF8574A Remote 8-bit I/O expander for I2C-bus with interrupt. 
@@ -218,4 +218,6 @@ connection-oriented communication. DS3231 device driver and example
 sketches.  Driver for the PCF8574/PCF8574A Remote 8-bit I/O expander
 for I2C-bus with interrupt. Support for 20x4 LCD.    
 2013-07 Introducing an abstract LCD::Device class and refactoring LCD
-device drivers. Benchmarking and optimizing LCD device drivers.    
+device drivers. Benchmarking and optimizing LCD device drivers. Added
+an event driven resistor net keypad handler and support for the
+DFRobot LCD Keypad shield.      
