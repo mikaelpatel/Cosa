@@ -32,7 +32,6 @@ Keypad::Key::on_change(uint16_t value)
   while (value < (uint16_t) pgm_read_word(&m_map[nr])) nr++;
   if (nr == m_latest) return;
   m_latest = nr;
-  if (nr == 0) return;
   m_keypad->on_key(nr);
 }
 
@@ -43,6 +42,6 @@ Keypad::on_event(uint8_t type, uint16_t value)
   m_key.sample_request(Event::SAMPLE_COMPLETED_TYPE);
 }
 
-const uint16_t DFRobotKeypad::m_map[] PROGMEM = { 
+const uint16_t DFRobotLCDKeypad::m_map[] PROGMEM = { 
   1000, 700, 400, 300, 100, 0
 };

@@ -40,17 +40,20 @@ HD44780::Port port;
 HD44780 lcd(&port);
 IOStream cout(&lcd);
 
-class KeypadTrace : public DFRobotKeypad {
+class KeypadTrace : public DFRobotLCDKeypad {
 public:
-  KeypadTrace() : DFRobotKeypad() {}
+  KeypadTrace() : DFRobotLCDKeypad() {}
   virtual void on_key(uint8_t nr);
 };
 
 void 
 KeypadTrace::on_key(uint8_t nr)
 {
-  cout << PSTR("\fkey = ") << nr << endl;
+  cout << clear;
   switch (nr) {
+  case NO_KEY: 
+    cout << PSTR("NO_KEY"); 
+    break;
   case SELECT_KEY: 
     cout << PSTR("SELECT_KEY"); 
     break;
@@ -67,6 +70,7 @@ KeypadTrace::on_key(uint8_t nr)
     cout << PSTR("RIGHT_KEY"); 
     break;
   }
+  cout << endl << PSTR("key = ") << nr;
 }
 
 KeypadTrace keypad;

@@ -102,7 +102,7 @@ public:
 /**
  * DFRobot LCD Keypad shield, keypad handler.
  */
-class DFRobotKeypad : public Keypad {
+class DFRobotLCDKeypad : public Keypad {
 private:
   // Analog reading to key index map
   static const uint16_t m_map[] PROGMEM;
@@ -117,7 +117,7 @@ public:
     UP_KEY,
     RIGHT_KEY
   } __attribute__((packed));
-  DFRobotKeypad() : Keypad(Board::A0, m_map) {}
+  DFRobotLCDKeypad() : Keypad(Board::A0, m_map) {}
 };
 
 #endif
