@@ -447,9 +447,11 @@ AnalogPin::on_event(uint8_t type, uint16_t value)
 void
 AnalogPin::on_interrupt(uint16_t value)
 { 
-  sampling_pin->m_value = value;
   uint8_t event = sampling_pin->m_event;
-  if (event != Event::NULL_TYPE) Event::push(event, this, value);
+  if (event == Event::NULL_TYPE) 
+    sampling_pin->m_value = value;
+  else
+    Event::push(event, this, value);
   sampling_pin = 0;
 }
 
