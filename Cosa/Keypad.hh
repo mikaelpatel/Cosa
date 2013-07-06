@@ -34,7 +34,7 @@
 /**
  * Handling of keypad using resistor net and analog reading. Periodically
  * samples the analog pin and maps to key code. Callback on_key() is called
- * when a key down is detected.
+ * when a key down/up is detected.
  */
 class Keypad : private Link {
 
@@ -93,7 +93,7 @@ public:
 
   /**
    * @override
-   * Callback method when a key down is detected. Must override.
+   * Callback method when a key down/up is detected. Must override.
    * @param[in] nr key number (index in map).
    */
   virtual void on_key(uint8_t nr) = 0;
