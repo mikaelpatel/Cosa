@@ -43,11 +43,13 @@ IOStream cout(&lcd);
 class KeypadTrace : public DFRobotLCDKeypad {
 public:
   KeypadTrace() : DFRobotLCDKeypad() {}
-  virtual void on_key(uint8_t nr);
+  void trace(const char* msg, uint8_t nr);
+  virtual void on_key_down(uint8_t nr) { trace(PSTR("down"), nr); }
+  virtual void on_key_up(uint8_t nr) { trace(PSTR("up"), nr); }
 };
 
 void 
-KeypadTrace::on_key(uint8_t nr)
+KeypadTrace::trace(const char* msg, uint8_t nr)
 {
   cout << clear;
   switch (nr) {
@@ -70,7 +72,7 @@ KeypadTrace::on_key(uint8_t nr)
     cout << PSTR("RIGHT_KEY"); 
     break;
   }
-  cout << endl << PSTR("key = ") << nr;
+  cout << ' ' << msg << endl << PSTR("key = ") << nr;
 }
 
 KeypadTrace keypad;

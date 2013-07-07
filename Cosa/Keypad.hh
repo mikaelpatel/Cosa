@@ -81,6 +81,8 @@ class Keypad : private Link {
 public:
   /**
    * Construct keypad handler with given analog pin and mapping.
+   * The mapping should be a decending sequence of thresholds and
+   * should be stored in program memory.
    * @param[in] pin analog pin.
    * @param[in] map between analog value and key.
    */
@@ -93,14 +95,24 @@ public:
 
   /**
    * @override
-   * Callback method when a key down/up is detected. Must override.
+   * Callback method when a key down is detected. Must override.
    * @param[in] nr key number (index in map).
    */
-  virtual void on_key(uint8_t nr) = 0;
+  virtual void on_key_down(uint8_t nr) = 0;
+
+  /**
+   * @override
+   * Callback method when a key up is detected. Default is null
+   * function.
+   * @param[in] nr key number (index in map).
+   */
+  virtual void on_key_up(uint8_t nr) {}
 };
 
 /**
- * DFRobot LCD Keypad shield, keypad handler.
+ * DFRobot LCD Keypad shield, keypad handler. The class represents
+ * the necessary configuration; keypad sensor on analog pin A0 and
+ * mapping vector.
  */
 class DFRobotLCDKeypad : public Keypad {
 private:

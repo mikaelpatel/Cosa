@@ -31,8 +31,11 @@ Keypad::Key::on_change(uint16_t value)
   uint8_t nr = 0;
   while (value < (uint16_t) pgm_read_word(&m_map[nr])) nr++;
   if (nr == m_latest) return;
+  if (nr != 0)
+    m_keypad->on_key_down(nr);
+  else
+    m_keypad->on_key_up(m_latest);
   m_latest = nr;
-  m_keypad->on_key(nr);
 }
 
 void 
