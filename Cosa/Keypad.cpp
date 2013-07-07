@@ -45,6 +45,6 @@ Keypad::on_event(uint8_t type, uint16_t value)
   m_key.sample_request(Event::SAMPLE_COMPLETED_TYPE);
 }
 
-const uint16_t DFRobotLCDKeypad::m_map[] PROGMEM = { 
+const uint16_t LCDKeypad::m_map[] PROGMEM = { 
   1000, 700, 400, 300, 100, 0
 };

@@ -110,11 +110,11 @@ public:
 };
 
 /**
- * DFRobot LCD Keypad shield, keypad handler. The class represents
- * the necessary configuration; keypad sensor on analog pin A0 and
+ * LCD Keypad shield, keypad handler. The class represents the
+ * necessary configuration; keypad sensor on analog pin A0 and 
  * mapping vector.
  */
-class DFRobotLCDKeypad : public Keypad {
+class LCDKeypad : public Keypad {
 private:
   // Analog reading to key index map
   static const uint16_t m_map[] PROGMEM;
@@ -129,7 +129,7 @@ public:
     UP_KEY,
     RIGHT_KEY
   } __attribute__((packed));
-  DFRobotLCDKeypad() : Keypad(Board::A0, m_map) {}
+  LCDKeypad() : Keypad(Board::A0, m_map) {}
 };
 
 #endif

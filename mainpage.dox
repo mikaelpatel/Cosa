@@ -321,8 +321,8 @@ virtual on_change() method.
 
 @section Keypad
 Handling of keypad using resistor net and analog reading. Periodically
-samples the analog pin and maps to key code. Callback on_key() is called
-when a key down/up is detected.
+samples the analog pin and maps to key code. Callback on_key_down/up()
+are called when a key down/up is detected.
 
 @section Rotary Encoder
 State machine based Rotary Encoder handler. Uses interrupt pins and

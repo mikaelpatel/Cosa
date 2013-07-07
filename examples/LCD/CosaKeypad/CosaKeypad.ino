@@ -21,13 +21,12 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of DFRobot LCD Keypad shield handler;
- * Simple trace of callback, on_key_down/up(), with printout 
- * of key, name/index, to the LCD as an IOStream.
+ * Cosa demonstration of LCD Keypad shield handler; Simple trace of
+ * callback, on_key_down/up(), with printout of key, name/index, to
+ * the LCD as an IOStream. 
  *
  * @section Circuit
- * Requires a DFRobot LCD Keypad shield with 16x2 HD44780 LCD
- * and six buttons.
+ * Requires a LCD Keypad shield with 16x2 HD44780 LCD and six buttons.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -37,11 +36,11 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
 
-class KeypadTrace : public DFRobotLCDKeypad {
+class KeypadTrace : public LCDKeypad {
 private:
   IOStream m_out;
 public:
-  KeypadTrace(IOStream::Device* dev) : DFRobotLCDKeypad(), m_out(dev) {}
+  KeypadTrace(IOStream::Device* dev) : LCDKeypad(), m_out(dev) {}
   virtual void on_key_down(uint8_t nr) { trace(PSTR("down"), nr); }
   virtual void on_key_up(uint8_t nr) { trace(PSTR("up"), nr); }
   void trace(const char* msg, uint8_t nr);
