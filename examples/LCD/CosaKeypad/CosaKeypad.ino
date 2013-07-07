@@ -22,7 +22,8 @@
  *
  * @section Description
  * Cosa demonstration of DFRobot LCD Keypad shield handler;
- * Simple trace of callback, on_key(), with printout to the LCD.
+ * Simple trace of callback, on_key_down/up(), with printout 
+ * of key, name/index, to the LCD as an IOStream.
  *
  * @section Circuit
  * Requires a DFRobot LCD Keypad shield with 16x2 HD44780 LCD
@@ -36,52 +37,53 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
 
-HD44780::Port port;
-HD44780 lcd(&port);
-IOStream cout(&lcd);
-
 class KeypadTrace : public DFRobotLCDKeypad {
+private:
+  IOStream m_out;
 public:
-  KeypadTrace() : DFRobotLCDKeypad() {}
-  void trace(const char* msg, uint8_t nr);
+  KeypadTrace(IOStream::Device* dev) : DFRobotLCDKeypad(), m_out(dev) {}
   virtual void on_key_down(uint8_t nr) { trace(PSTR("down"), nr); }
   virtual void on_key_up(uint8_t nr) { trace(PSTR("up"), nr); }
+  void trace(const char* msg, uint8_t nr);
 };
 
 void 
 KeypadTrace::trace(const char* msg, uint8_t nr)
 {
-  cout << clear;
+  m_out << clear;
   switch (nr) {
   case NO_KEY: 
-    cout << PSTR("NO_KEY"); 
+    m_out << PSTR("NO_KEY"); 
     break;
   case SELECT_KEY: 
-    cout << PSTR("SELECT_KEY"); 
+    m_out << PSTR("SELECT_KEY"); 
     break;
   case LEFT_KEY: 
-    cout << PSTR("LEFT_KEY"); 
+    m_out << PSTR("LEFT_KEY"); 
     break;
   case DOWN_KEY: 
-    cout << PSTR("DOWN_KEY"); 
+    m_out << PSTR("DOWN_KEY"); 
     break;
   case UP_KEY: 
-    cout << PSTR("UP_KEY"); 
+    m_out << PSTR("UP_KEY"); 
     break;
   case RIGHT_KEY: 
-    cout << PSTR("RIGHT_KEY"); 
+    m_out << PSTR("RIGHT_KEY"); 
     break;
   }
-  cout << ' ' << msg << endl << PSTR("key = ") << nr;
+  m_out << ' ' << msg << endl;
+  m_out << PSTR("key = ") << nr;
 }
 
-KeypadTrace keypad;
+HD44780::Port port;
+HD44780 lcd(&port);
+KeypadTrace keypad(&lcd);
 
 void setup()
 {
    Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
    lcd.begin();
-   cout << PSTR("CosaKeypad: started");
+   lcd.puts_P(PSTR("CosaKeypad: started"));
 }
 
 void loop()
