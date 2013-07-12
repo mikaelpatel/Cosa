@@ -34,10 +34,21 @@ public:
   class Handler {
   public:
     /**
+     * @override
      * Default interrupt handler. Should override.
      * @param[in] arg argument from interrupt service routine.
      */
     virtual void on_interrupt(uint16_t arg = 0) {}
+    /**
+     * @override
+     * Enable interrupt handler.
+     */
+    virtual void enable() {}
+    /**
+     * @override
+     * Disable interrupt handler.
+     */
+    virtual void disable() {}
   };
 };
 
