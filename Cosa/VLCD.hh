@@ -38,6 +38,12 @@ private:
   // Max size of program memory string
   static const uint8_t BUF_MAX = 40;
 
+  /**
+   * Write given command to slave device.
+   * @param[in] cmd command.
+   */
+  void write(uint8_t cmd);
+
 public:
   /**
    * Virtual LCD Slave device
@@ -183,6 +189,14 @@ public:
    * @return zero(0) or negative error code.
    */
   virtual int puts_P(const char* s);
+
+  /**
+   * Write data from buffer with given size to device.
+   * @param[in] buf buffer to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes written or EOF(-1).
+   */
+  virtual int write(void* buf, size_t size);
 };
 
 #endif

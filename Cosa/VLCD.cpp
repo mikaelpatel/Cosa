@@ -31,7 +31,9 @@ VLCD::Slave::on_request(void* buf, size_t size)
 {
   char c = (char) m_buf[0];
   if (c != 0) {
-    m_lcd->IOStream::Device::write(buf, size);
+    m_lcd->putchar(c);
+    for (uint8_t i = 1; i < size; i++)
+      m_lcd->putchar(m_buf[i]);
     return;
   }
   if (size == 2) {
@@ -54,6 +56,17 @@ VLCD::Slave::on_request(void* buf, size_t size)
 
 #include "Cosa/Watchdog.hh"
 
+void 
+VLCD::write(uint8_t cmd)
+{
+  uint8_t buf[2];
+  buf[0] = Slave::COMMAND;
+  buf[1] = cmd;
+  if (!twi.begin()) return;
+  twi.write(ADDR, buf, sizeof(buf));
+  twi.end();
+}
+
 bool 
 VLCD::begin()
 {
@@ -74,46 +87,25 @@ VLCD::end()
 void 
 VLCD::backlight_off() 
 { 
-  uint8_t buf[2];
-  buf[0] = Slave::COMMAND;
-  buf[1] = Slave::BACKLIGHT_OFF_CMD;
-  if (!twi.begin()) return;
-  twi.write(ADDR, buf, sizeof(buf));
-  twi.end();
+  write(Slave::BACKLIGHT_OFF_CMD);
 }
 
 void 
 VLCD::backlight_on() 
 { 
-  uint8_t buf[2];
-  buf[0] = Slave::COMMAND;
-  buf[1] = Slave::BACKLIGHT_ON_CMD;
-  if (!twi.begin()) return;
-  twi.write(ADDR, buf, sizeof(buf));
-  twi.end();
+  write(Slave::BACKLIGHT_ON_CMD);
 }
 
 void 
 VLCD::display_off() 
 { 
-  uint8_t buf[2];
-  buf[0] = Slave::COMMAND;
-  buf[1] = Slave::DISPLAY_OFF_CMD;
-  if (!twi.begin()) return;
-  twi.write(ADDR, buf, sizeof(buf));
-  twi.end();
-
+  write(Slave::DISPLAY_OFF_CMD);
 }
 
 void 
 VLCD::display_on() 
 { 
-  uint8_t buf[2];
-  buf[0] = Slave::COMMAND;
-  buf[1] = Slave::DISPLAY_ON_CMD;
-  if (!twi.begin()) return;
-  twi.write(ADDR, buf, sizeof(buf));
-  twi.end();
+  write(Slave::DISPLAY_ON_CMD);
 }
 
 void 
@@ -138,9 +130,9 @@ int
 VLCD::putchar(char c)
 {
   if (!twi.begin()) return (-1);
-  twi.write(ADDR, &c, sizeof(c));
+  int n = twi.write(ADDR, &c, sizeof(c));
   twi.end();
-  return (c & 0xff);
+  return (n == 1 ? c & 0xff : -1);
 }
 
 int 
@@ -148,9 +140,9 @@ VLCD::puts(char* s)
 {
   if (!twi.begin()) return (-1);
   size_t len = strlen(s);
-  twi.write(ADDR, s, len);
+  int n = twi.write(ADDR, s, len);
   twi.end();
-  return (0);
+  return (n == len ? 0 : -1);
 }
 
 int 
@@ -162,8 +154,17 @@ VLCD::puts_P(const char* s)
   while (((c = pgm_read_byte(s++)) != 0) && len != BUF_MAX)
     buf[len++] = c;
   if (!twi.begin()) return (-1);
-  twi.write(ADDR, buf, len);
+  int n = twi.write(ADDR, buf, len);
   twi.end();
-  return (0);
+  return (n == len ? 0 : -1);
+}
+
+int 
+VLCD::write(void* buf, size_t size)
+{
+  if (!twi.begin()) return (-1);
+  int n = twi.write(ADDR, buf, size);
+  twi.end();
+  return (n);
 }
 #endif
