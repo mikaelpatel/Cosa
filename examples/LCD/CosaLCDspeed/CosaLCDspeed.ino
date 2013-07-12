@@ -26,17 +26,20 @@
 #include "Cosa/Trace.hh"
 
 // Select the LCD device for the benchmark
-#include "Cosa/LCD/Driver/HD44780.hh"
-HD44780::MJKDZ port;
+// #include "Cosa/LCD/Driver/HD44780.hh"
+// HD44780::MJKDZ port;
 // HD44780::DFRobot port;
 // HD44780::Port port;
-HD44780 lcd(&port);
+// HD44780 lcd(&port);
 
 // #include "Cosa/LCD/Driver/PCD8544.hh"
 // PCD8544 lcd;
 
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
+
+#include "Cosa/VLCD.hh"
+VLCD lcd;
 
 #undef putchar
 
@@ -86,7 +89,7 @@ void clear_display(uint16_t nr)
 
 void write_char(uint16_t nr)
 {
-#if defined(__COSA_LCD_DRIVER_HD44780_HH__)
+#if defined(__COSA_LCD_DRIVER_HD44780_HH__) || defined(__COSA_VLCD_HH__) 
   const uint8_t WIDTH = 16;
   const uint8_t HEIGHT = 2;
 #else

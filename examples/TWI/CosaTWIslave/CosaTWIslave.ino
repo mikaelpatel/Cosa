@@ -34,41 +34,34 @@
 #include "Cosa/Memory.h"
 
 // A simple TWI slave device
-class TWIslave : public TWI::Device {
+class Echo : public TWI::Slave {
 private:
-  // Address of device on TWI bus
-  static const uint8_t ADDR = 0x5A;
-
   // Buffer for request and response
   static const uint8_t BUF_MAX = 8;
   uint8_t m_buf[BUF_MAX];
 
 public:
+  // Construct the echo slave device
+  Echo() : TWI::Slave(0x5A) 
+  {
+    set_write_buf(m_buf, sizeof(m_buf));
+    set_read_buf(m_buf, sizeof(m_buf));
+  }
+
   // Request handler; events from incoming requests
   virtual void on_request(void* buf, size_t size);
-  
-  // Connect to the two wire bus and service requests
-  bool begin();
 };
 
-bool 
-TWIslave::begin() 
-{ 
-  set_write_buf(m_buf, sizeof(m_buf));
-  set_read_buf(m_buf, sizeof(m_buf));
-  return (twi.begin(this, ADDR)); 
-}
-
 void
-TWIslave::on_request(void* buf, size_t size)
+Echo::on_request(void* buf, size_t size)
 {
   m_buf[0] += 1;
   for (uint8_t i = 1; i < sizeof(m_buf); i++)
     m_buf[i] = m_buf[0] + i;
 }
 
-// The TWI slave
-TWIslave slave;
+// The TWI echo device
+Echo echo;
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
@@ -85,14 +78,14 @@ void setup()
 
   // Check amount of free memory and size of classes
   TRACE(free_memory());
-  TRACE(sizeof(TWIslave));
+  TRACE(sizeof(Echo));
   TRACE(sizeof(OutputPin));
 
   // Start the watchdog ticks counter
   Watchdog::begin();
 
-  // Start the TWI slave 
-  slave.begin();
+  // Start the TWI echo device 
+  echo.begin();
 }
 
 void loop()
