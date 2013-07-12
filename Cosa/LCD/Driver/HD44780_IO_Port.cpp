@@ -41,6 +41,43 @@
 # define PORT PORTB
 #endif
 
+#if defined(__ARDUINO_TINYX4__)
+void 
+HD44780::Port::setup()
+{
+  synchronized {
+    DDR |= 0x0f;
+  }
+}
+
+void 
+HD44780::Port::write4b(uint8_t data)
+{
+  synchronized {
+    PORT = ((data & 0x0f) | (PORT & 0xf0));
+  }
+  m_en.toggle();
+  m_en.toggle();
+}
+
+void 
+HD44780::Port::write8b(uint8_t data)
+{
+  synchronized {
+    PORT = (((data >> 4) & 0x0f) | (PORT & 0xf0));
+  }
+  m_en.toggle();
+  m_en.toggle();
+  synchronized {
+    PORT = ((data & 0x0f) | (PORT & 0xf0));
+  }
+  m_en.toggle();
+  m_en.toggle();
+  DELAY(SHORT_EXEC_TIME);
+}
+
+#else
+
 void 
 HD44780::Port::setup()
 {
@@ -74,6 +111,7 @@ HD44780::Port::write8b(uint8_t data)
   m_en.toggle();
   DELAY(SHORT_EXEC_TIME);
 }
+#endif
 
 void 
 HD44780::Port::set_mode(uint8_t flag)

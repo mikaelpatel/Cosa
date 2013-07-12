@@ -418,7 +418,7 @@ public:
     /**
      * Construct HD44780 4-bit parallel port connected to given command
      * and enable pin. Data pins are implicit; D4..D7 for Arduino
-     * Standard, Mighty and ATtinyX4. D10..D13 for Arduino/Mega. 
+     * Standard and Mighty. D10..D13 for Arduino/Mega. D0..D3 for ATtinyX4.
      * Connect to LCD pins D4..D7.  
      * @param[in] rs command/data select pin (Default D8).
      * @param[in] en enable pin (Default D9).
