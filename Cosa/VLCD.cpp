@@ -55,6 +55,7 @@ VLCD::Slave::on_request(void* buf, size_t size)
 #if !defined(__ARDUINO_TINY__)
 
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
 
 void 
 VLCD::write(uint8_t cmd)
@@ -63,7 +64,11 @@ VLCD::write(uint8_t cmd)
   buf[0] = Slave::COMMAND;
   buf[1] = cmd;
   if (!twi.begin()) return;
-  twi.write(ADDR, buf, sizeof(buf));
+  uint8_t retry = 3; 
+  do {
+    int res = twi.write(ADDR, buf, sizeof(buf));
+    if (res == sizeof(buf)) break;
+  } while (--retry);
   twi.end();
 }
 
@@ -124,6 +129,8 @@ VLCD::set_cursor(uint8_t x, uint8_t y)
   if (!twi.begin()) return;
   twi.write(ADDR, buf, sizeof(buf));
   twi.end();
+  m_x = x;
+  m_y = y;
 }
 
 int 
@@ -132,7 +139,28 @@ VLCD::putchar(char c)
   if (!twi.begin()) return (-1);
   int n = twi.write(ADDR, &c, sizeof(c));
   twi.end();
-  return (n == 1 ? c & 0xff : -1);
+  if (n != 1) return (-1);
+  if (c >= ' ') return (c & 0xff);
+  switch (c) {
+  case '\b':
+    if (m_x > 0) m_x -= 1;
+    break;
+  case '\f':
+    m_x = 0;
+    m_y = 0;
+    break;
+  case '\n':
+    m_x = 0;
+    m_y += 1;
+    if (m_y > HEIGHT) m_y = 0; 
+    break;
+  case '\t':
+    m_x += m_tab - (m_x % m_tab);
+    m_y += (m_x >= WIDTH);
+    if (m_x >= WIDTH) m_x = 0;
+    break;
+  }
+  return (c & 0xff);
 }
 
 int 
@@ -142,7 +170,9 @@ VLCD::puts(char* s)
   size_t len = strlen(s);
   int n = twi.write(ADDR, s, len);
   twi.end();
-  return (n == len ? 0 : -1);
+  if (n != len) return (-1);
+  m_x += len;
+  return (0);
 }
 
 int 
@@ -156,7 +186,9 @@ VLCD::puts_P(const char* s)
   if (!twi.begin()) return (-1);
   int n = twi.write(ADDR, buf, len);
   twi.end();
-  return (n == len ? 0 : -1);
+  if (n != len) return (-1);
+  m_x += len;
+  return (0);
 }
 
 int 
@@ -165,6 +197,8 @@ VLCD::write(void* buf, size_t size)
   if (!twi.begin()) return (-1);
   int n = twi.write(ADDR, buf, size);
   twi.end();
+  if (n < 0) return (-1);
+  m_x += size;
   return (n);
 }
 #endif
