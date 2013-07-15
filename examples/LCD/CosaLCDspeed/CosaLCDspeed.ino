@@ -26,11 +26,11 @@
 #include "Cosa/Trace.hh"
 
 // Select the LCD device for the benchmark
-// #include "Cosa/LCD/Driver/HD44780.hh"
-// HD44780::MJKDZ port;
-// HD44780::DFRobot port;
+#include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port port;
-// HD44780 lcd(&port);
+// HD44780::MJKDZ port;
+HD44780::DFRobot port;
+HD44780 lcd(&port);
 
 // #include "Cosa/LCD/Driver/PCD8544.hh"
 // PCD8544 lcd;
@@ -38,8 +38,8 @@
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
 
-#include "Cosa/VLCD.hh"
-VLCD lcd;
+// #include "Cosa/VLCD.hh"
+// VLCD lcd;
 
 #undef putchar
 
@@ -62,7 +62,16 @@ void setup()
   Watchdog::begin();
   lcd.begin();
   trace.begin(&lcd, PSTR("CosaLCDspeed:"));
+#if defined(__COSA_VLCD_HH__)
+  trace << lcd.MAJOR << '.' << lcd.MINOR;
+  SLEEP(2);
+  trace << clear;
+  trace << PSTR("WIDTH = ") << lcd.WIDTH << endl;
+  trace << PSTR("HEIGHT = ") << lcd.HEIGHT;
+  SLEEP(2);
+#else
   SLEEP(1);
+#endif
 }
 
 void loop()

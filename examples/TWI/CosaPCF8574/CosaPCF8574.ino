@@ -69,7 +69,7 @@ void loop()
   ledPin.toggle();
 
   start = RTC::micros(); 
-  port.write(0, v);
+  port.write((uint8_t) 0, v);
   stop = RTC::micros();
   trace << stop - start 
 	<< PSTR(": write(0, ") << v << ')' 

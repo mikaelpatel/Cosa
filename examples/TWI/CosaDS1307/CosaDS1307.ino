@@ -48,6 +48,11 @@ struct latest_t {
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
 
+#if defined(__ARDUINO_TINYX5__)
+#include "Cosa/Soft/UART.hh"
+Soft::UART uart(Board::D4);
+#endif
+
 void setup()
 {
   // Start trace output stream on the serial port
@@ -69,11 +74,11 @@ void setup()
 #ifdef __RTC_SET_TIME__
   now.year = 0x13;
   now.month = 0x07;
-  now.date = 0x01;
+  now.date = 0x15;
   now.day = 0x02;
-  now.hours = 0x13;
-  now.minutes = 0x20;
-  now.seconds = 0x30;
+  now.hours = 0x12;
+  now.minutes = 0x45;
+  now.seconds = 0x00;
   rtc.set_time(now);
   latest.set = now;
 #endif

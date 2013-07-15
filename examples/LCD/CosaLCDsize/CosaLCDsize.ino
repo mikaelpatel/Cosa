@@ -30,9 +30,10 @@
 // Binary sketch size:  MEGA/STD*/TINY bytes
 // =========================================
 // Baseline:		1118/916/700   bytes
-// HD44780::Port:	3728/3496/3288 bytes
-// HD44780::MJKDZ:	4672/4342/NA   bytes
-// HD44780::DFRobot:	4474/4332/NA   bytes
+// VLCD:		4664/4534/5164 bytes
+// HD44780::Port:	3760/3496/3348 bytes
+// HD44780::MJKDZ:	5046/4342/NA   bytes
+// HD44780::DFRobot:	5026/4332/NA   bytes
 // PCD8544: 		4680/4466/4122 bytes
 // ST7565:  		5052/4854/4512 bytes
 // =========================================
@@ -41,14 +42,14 @@
 // different LCD drivers and compare size.
 // =========================================
 
-#include "Cosa/VLCD.hh"
-VLCD lcd;
+// #include "Cosa/VLCD.hh"
+// VLCD lcd;
 
-// #include "Cosa/LCD/Driver/HD44780.hh"
+#include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port port;
 // HD44780::MJKDZ port;
-// HD44780::DFRobot port;
-// HD44780 lcd(&port);
+HD44780::DFRobot port;
+HD44780 lcd(&port);
 
 // #include "Cosa/LCD/Driver/PCD8544.hh"
 // PCD8544 lcd;

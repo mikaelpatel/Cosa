@@ -23,8 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/TWI/Driver/DS1307.hh"
 
 int
@@ -45,5 +43,3 @@ DS1307::write(void* ram, uint8_t size, uint8_t pos)
   twi.end();
   return (count);
 }
-
-#endif

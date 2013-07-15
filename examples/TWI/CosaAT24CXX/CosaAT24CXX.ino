@@ -32,7 +32,6 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Memory.h"
 
 // Use the builtin led as a heartbeat
 OutputPin ledPin(Board::LED);
@@ -46,24 +45,18 @@ int x[6] EEMEM;
 uint8_t y[300] EEMEM;
 float z EEMEM;
 
-// A final marker
-int last;
-
 void init_eeprom()
 {
   int x0[membersof(x)];
   for (uint8_t i = 0; i < membersof(x0); i++) x0[i] = i;
-  trace.print(x0, sizeof(x0), IOStream::hex);
-  TRACE(eeprom.write(x, x0, sizeof(x)));
+  eeprom.write(x, x0, sizeof(x));
   
   uint8_t y0[sizeof(y)];
   memset(y0, 0, sizeof(y));
-  trace.print(y0, sizeof(y0), IOStream::hex);
-  TRACE(eeprom.write(y, y0, sizeof(y)));
+  eeprom.write(y, y0, sizeof(y));
   
   float z0 = 1.0;
-  trace.print(&z0, sizeof(z), IOStream::hex);
-  TRACE(eeprom.write(&z, z0));
+  eeprom.write(&z, z0);
 }
 
 void setup()
@@ -75,61 +68,39 @@ void setup()
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
 
-  // Check memory map
-  TRACE(&at24c32);
-  TRACE(sizeof(at24c32));
-  TRACE(&eeprom);
-  TRACE(sizeof(eeprom));
-  TRACE(&twi);
-  TRACE(sizeof(twi));
-  TRACE(&x);
-  TRACE(&y);
-  TRACE(&z);
-  TRACE(&last);
-
-  // Check free memory
-  TRACE(free_memory());
-
   // Initiate EEPROM variables
   init_eeprom();
 }
 
 void loop()
 {
-  // Wait for 2 seconds; we don't want to burn too many write cycles
   SLEEP(2);
   ledPin.toggle();
 
-  // Read the eeprom variables into memory
+  // Buffer for update loop
   uint8_t buffer[sizeof(y)];
   memset(buffer, 0, sizeof(buffer));
   
-  TRACE(eeprom.read(buffer, &x, sizeof(x)));
+  // Read x and print contents
+  eeprom.read(buffer, &x, sizeof(x));
   trace.print(buffer, sizeof(x), IOStream::hex);
 
-  TRACE(eeprom.read(buffer, &y, sizeof(y)));
+  // Read y, print contents and update 
+  eeprom.read(buffer, &y, sizeof(y));
   trace.print(buffer, sizeof(y), IOStream::hex);
-
-  float z1;
-  TRACE(eeprom.read(&z1, &z));
-  trace.print(&z1, sizeof(z1), IOStream::hex);
-
-  // Update the floating point number and write back
-  z1 += 0.5;
-  TRACE(eeprom.write(&z, z1));
-  
-  // Update the eeprom (y => y+1)
   for (size_t i = 0; i < sizeof(buffer); i++)
     buffer[i]++;
-  TRACE(eeprom.write(&y, buffer, sizeof(buffer)));
-
-  // Is the write completed? 
+  eeprom.write(&y, buffer, sizeof(buffer));
   TRACE(eeprom.is_ready());
   eeprom.write_await();
   TRACE(eeprom.is_ready());
   
-  // Read back and check
-  TRACE(eeprom.read(buffer, &y, sizeof(y)));
-  trace.print(buffer, sizeof(y), IOStream::hex);
+  // Read z and update
+  float z1;
+  eeprom.read(&z1, &z);
+  trace.print(&z1, sizeof(z1), IOStream::hex);
+  z1 += 0.5;
+  TRACE(eeprom.write(&z, z1));
+
   ledPin.toggle();
 }

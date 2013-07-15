@@ -23,8 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/TWI/Driver/AT24CXX.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
@@ -89,4 +87,4 @@ AT24CXX::write(void* dest, void* src, size_t size)
   }
   return (size);
 }
-#endif
+
