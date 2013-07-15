@@ -42,6 +42,14 @@ class TWI {
   friend void ::USI_OVF_vect(void);
 public:
   /**
+   * Device drivers are friends and may have callback/event handler
+   * for completion events. 
+   */
+  class Driver : public Event::Handler {
+    friend class TWI;
+  };
+
+  /**
    * USI/TWI slave device. Handles incoming requests from TWI master;
    * performs address matching, byte data transfer with ack/nack,
    * and device callback. 
@@ -151,16 +159,22 @@ private:
     // Enable start condition. Set USI TWI mode(0). External clock source
     CR_START_MODE = _BV(USISIE) | _BV(USIWM1) |  _BV(USICS1),
     // Enable start and overflow. Set USI TWI mode(1). External clock
-    CR_TRANSFER_MODE = _BV(USISIE) |  _BV(USIOIE) | _BV(USIWM1) | _BV(USIWM0)
-    | _BV(USICS1)
+    CR_TRANSFER_MODE = _BV(USISIE) |  _BV(USIOIE) | _BV(USIWM1) | _BV(USIWM0) 
+    | _BV(USICS1),
+    // Master initialization. Software clock strobe
+    CR_INIT_MODE =  _BV(USIWM1) | _BV(USICS1) | _BV(USICLK),
+    // Master data transfer. Software clock strobe
+    CR_DATA_MODE = _BV(USIWM1) | _BV(USICS1) | _BV(USICLK) | _BV(USITC)
   } __attribute__((packed));
 
   /**
    * Device state, data buffers and target.
    */
-  static const uint8_t VEC_MAX = 2;
+  static const uint8_t HEADER_MAX = 4;
+  static const uint8_t VEC_MAX = 4;
   static const uint8_t WRITE_IX = 0;
   static const uint8_t READ_IX = 1;
+  uint8_t m_header[HEADER_MAX];
   iovec_t m_vec[VEC_MAX];
   IOPin m_sda;
   IOPin m_scl;
@@ -257,28 +271,107 @@ private:
     return (true);
   }
 
+  // TWI timing constants (us) for standard mode (100 kHz)
+  static const uint16_t T2 = 4;
+  static const uint16_t T4 = 3;
+  
+  /**
+   * Generate a TWI start condition. Return true(1) if successful
+   * otherwise false(0).
+   * @return bool
+   */
+  bool start();
+
+  /**
+   * Transfer data to the TWI bus. Data in USI data register.
+   * @param[in] data to transfer.
+   * @param[in] bits to transfer (default CHARBITS).
+   * @return data
+   */
+  uint8_t transfer(uint8_t data, uint8_t bits = CHARBITS);
+
+  /**
+   * Generate a TWI stop condition. Return true(1) if successful
+   * otherwise false(0).
+   * @return bool
+   */
+  bool stop();
+
+  /**
+   * Initiate a request to the device. The address field is the bus
+   * address with operation (read/write bit). Return number of bytes
+   * transfered or negative error code(-1).
+   * @param[in] addr slave address and operation.
+   * @return number of bytes or negative error code.
+   */
+  int request(uint8_t addr);
+
 public:
   /** 
    * Construct two-wire instance. This is actually a single-ton on
    * current supported hardware, i.e. there can only be one unit.
    */
-  TWI() :
-    m_sda((Board::DigitalPin) Board::SDA, IOPin::INPUT_MODE, true),
-    m_scl((Board::DigitalPin) Board::SCL, IOPin::OUTPUT_MODE, true),
-    m_target(0),
-    m_state(IDLE),
-    m_next(0),
-    m_last(0),
-    m_count(0),
-    m_addr(0)
+  TWI();
+
+  /**
+   * Start TWI logic for a transaction. Use given event handler for
+   * completion events. Returns true(1) if successful otherwise
+   * false(0). 
+   * @param[in] target receiver of events on requests.
+   * @return true(1) if successful otherwise false(0).
+   */
+  bool begin(Event::Handler* target = 0);
+  
+  /**
+   * Stop usage of the TWI bus logic. 
+   * @return true(1) if successful otherwise false(0).
+   */
+  bool end()
   {
-    m_sda.set();
-    m_scl.set();
-    for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
-      m_vec[ix].buf = 0;
-      m_vec[ix].size = 0;
-    }
+    return (true);
   }
+
+  /**
+   * Write data to the given slave unit. Returns number of bytes
+   * written or negative error code.
+   * @param[in] addr slave address.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes
+   */
+  int write(uint8_t addr, void* buf, size_t size);
+
+  /**
+   * Write data to the given slave unit with given byte
+   * header. Returns number of bytes written or negative error code.
+   * @param[in] addr slave address.
+   * @param[in] header to write before buffer.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes
+   */
+  int write(uint8_t addr, uint8_t header, void* buf = 0, size_t size = 0);
+
+  /**
+   * Write data to the given slave unit with given header. Returns
+   * number of bytes written or negative error code.
+   * @param[in] addr slave address.
+   * @param[in] header to write before buffer.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes
+   */
+  int write(uint8_t addr, uint16_t header, void* buf = 0, size_t size = 0);
+
+  /**
+   * Read data to the given slave unit. Returns number of bytes read
+   * or negative error code.
+   * @param[in] addr slave address.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to read.
+   * @return number of bytes
+   */
+  int read(uint8_t addr, void* buf, size_t size);
 };
 #endif
 #endif
