@@ -25,17 +25,21 @@
 
 #include "Cosa/Board.hh"
 #include "Cosa/VLCD.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
 
 void
 VLCD::Slave::on_request(void* buf, size_t size)
 {
+  // Check for non command prefix
   char c = (char) m_buf[0];
-  if (c != 0) {
+  if (c != COMMAND) {
     m_lcd->putchar(c);
     for (uint8_t i = 1; i < size; i++)
       m_lcd->putchar(m_buf[i]);
     return;
   }
+  // Handle command: COMMAND(uint8_t cmd)
   if (size == 2) {
     uint8_t cmd = m_buf[1];
     switch (cmd) {
@@ -43,19 +47,27 @@ VLCD::Slave::on_request(void* buf, size_t size)
     case BACKLIGHT_ON_CMD: m_lcd->backlight_on(); return;
     case DISPLAY_OFF_CMD: m_lcd->display_off(); return;
     case DISPLAY_ON_CMD: m_lcd->display_on(); return;
+    case INIT_CMD: 
+      m_lcd->display_clear();
+      m_lcd->display_on();
+      m_lcd->backlight_on();
+      info_t* info = (info_t*) m_buf;
+      info->major = MAJOR;
+      info->minor = MINOR;
+      // Fix: Should be defined by LCD
+      info->width = 16;
+      info->height = 2;
+      return;
     }
   }
-  else if (size == 3) {
+  // Handle command: SET_CURSOR(uint8_t x, uint8_t y)
+  if (size == 3) {
     uint8_t x = m_buf[1];
     uint8_t y = m_buf[2];
     m_lcd->set_cursor(x, y);
+    return;
   }
 }
-
-#if !defined(__ARDUINO_TINY__)
-
-#include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
 
 void 
 VLCD::write(uint8_t cmd)
@@ -76,9 +88,19 @@ bool
 VLCD::begin()
 {
   SLEEP(1);
-  display_clear();
-  display_on();
-  backlight_on();
+  write(Slave::INIT_CMD);
+  if (!twi.begin()) return (false);
+  uint8_t retry = 3; 
+  info_t info;
+  do {
+    int res = twi.read(ADDR, &info, sizeof(info));
+    if (res == sizeof(info)) break;
+  } while (--retry);
+  twi.end();
+  MAJOR = info.major;
+  MINOR = info.minor;
+  WIDTH = info.width;
+  HEIGHT = info.height;
   return (true);
 }
 
@@ -175,30 +197,3 @@ VLCD::puts(char* s)
   return (0);
 }
 
-int 
-VLCD::puts_P(const char* s)
-{
-  uint8_t buf[BUF_MAX];
-  size_t len = 0;
-  char c;
-  while (((c = pgm_read_byte(s++)) != 0) && len != BUF_MAX)
-    buf[len++] = c;
-  if (!twi.begin()) return (-1);
-  int n = twi.write(ADDR, buf, len);
-  twi.end();
-  if (n != len) return (-1);
-  m_x += len;
-  return (0);
-}
-
-int 
-VLCD::write(void* buf, size_t size)
-{
-  if (!twi.begin()) return (-1);
-  int n = twi.write(ADDR, buf, size);
-  twi.end();
-  if (n < 0) return (-1);
-  m_x += size;
-  return (n);
-}
-#endif

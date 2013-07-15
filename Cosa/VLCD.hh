@@ -35,7 +35,15 @@
  */
 class VLCD : public LCD::Device {
 private:
-  // Max size of program memory string
+  // Version information
+  struct info_t {
+    uint8_t major;
+    uint8_t minor;
+    uint8_t width;
+    uint8_t height;
+  };
+
+  // Max size of buffer
   static const uint8_t BUF_MAX = 40;
 
   /**
@@ -51,6 +59,10 @@ public:
   class Slave : public TWI::Slave {
     friend class VLCD;
   private:
+    // Version code
+    static const uint8_t MAJOR = 1;
+    static const uint8_t MINOR = 0;
+
     // Command prefix byte
     static const uint8_t COMMAND = 0;
 
@@ -59,11 +71,11 @@ public:
       BACKLIGHT_OFF_CMD = 0,
       BACKLIGHT_ON_CMD,
       DISPLAY_OFF_CMD,
-      DISPLAY_ON_CMD
+      DISPLAY_ON_CMD,
+      INIT_CMD = 0xff
     } __attribute__((packed));
 
-    // Buffer for transaction
-    static const uint8_t BUF_MAX = 64;
+    // Buffer for transactions (max string write)
     uint8_t m_buf[BUF_MAX];
 
     // The actual LCD implementation
@@ -94,28 +106,33 @@ public:
   // Display TWI address
   const uint8_t ADDR;
   
+  // Display protocol version (valid after initialization, begin())
+  uint8_t MAJOR;
+  uint8_t MINOR;
+
   // Display width (characters per line) and height (lines)
-  const uint8_t WIDTH;
-  const uint8_t HEIGHT;
+  uint8_t WIDTH;
+  uint8_t HEIGHT;
   
   /**
    * Construct Virtual LCD connected to given TWI address.
    * @param[in] addr address of Virtual LCD (Default 0x5a);
-   * @param[in] width of display, characters per line (Default 16).
-   * @param[in] height of display, number of lines (Default 2).
    */
-  VLCD(uint8_t addr = 0x5a, uint8_t width = 16, uint8_t height = 2) :
+  VLCD(uint8_t addr = 0x5a) :
     LCD::Device(),
     ADDR(addr),
-    WIDTH(width),
-    HEIGHT(height)
+    MAJOR(0),
+    MINOR(0),
+    WIDTH(0),
+    HEIGHT(0)
   {
   }
   
   /**
    * @override
-   * Start display for text output. Returns true if successful
-   * otherwise false.
+   * Start display for text output. Initiate display and retrieve
+   * version and dimension information (MAJOR/MINOR and WIDTH/HEIGHT).
+   * Returns true if successful otherwise false.
    * @return boolean.
    */
   virtual bool begin();
@@ -176,27 +193,12 @@ public:
 
   /**
    * @override
-   * Write null terminated string to device. Terminating null is not written.
+   * Write null terminated string to device. Terminating null is not
+   * written. 
    * @param[in] s string to write.
    * @return zero(0) or negative error code.
    */
   virtual int puts(char* s);
-
-  /**
-   * Write null terminated string from program memory to device.
-   * Terminating null is not written.
-   * @param[in] s string in program memory to write.
-   * @return zero(0) or negative error code.
-   */
-  virtual int puts_P(const char* s);
-
-  /**
-   * Write data from buffer with given size to device.
-   * @param[in] buf buffer to write.
-   * @param[in] size number of bytes to write.
-   * @return number of bytes written or EOF(-1).
-   */
-  virtual int write(void* buf, size_t size);
 };
 
 #endif
