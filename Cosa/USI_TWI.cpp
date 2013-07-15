@@ -252,30 +252,23 @@ TWI::request(uint8_t addr)
   if (transfer(0, 1)) goto nack;
 
   // Read or write data
-  if (is_read) {
-    for (uint8_t ix = 1; next != 0; ix++) {
-      while (next != last) {
+  for (uint8_t ix = 1; next != 0; ix++) {
+    while (next != last) {
+      count += 1;
+      if (is_read) {
 	set_mode(IOPin::INPUT_MODE);
 	*next++ = transfer(0);
 	transfer((next != last) ? 0x00 : 0xff, 1);
-	count += 1;
       }
-      next = (uint8_t*) m_vec[ix].buf;
-      last = next + m_vec[ix].size;
-    }
-  }
-  else {
-    for (uint8_t ix = 1; next != 0; ix++) {
-      while (next != last) {
+      else {
 	m_scl.clear();
 	transfer(*next++);
-	count += 1;
 	set_mode(IOPin::INPUT_MODE);
 	if (transfer(0, 1)) goto nack;
       }
-      next = (uint8_t*) m_vec[ix].buf;
-      last = next + m_vec[ix].size;
     }
+    next = (uint8_t*) m_vec[ix].buf;
+    last = next + m_vec[ix].size;
   }
   
  nack:

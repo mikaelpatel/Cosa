@@ -412,7 +412,7 @@ public:
    */
   virtual int write(void* buf, size_t size);
 
-#if !defined(__ARDUINO_TINY__)
+#if !defined(__ARDUINO_TINYX5__)
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
    * IO Port. Arduino pins directly to LCD in 4-bit mode. Data port is 

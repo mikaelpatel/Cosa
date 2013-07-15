@@ -28,8 +28,8 @@
 // Select the LCD device for the benchmark
 #include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port port;
-// HD44780::MJKDZ port;
-HD44780::DFRobot port;
+HD44780::MJKDZ port;
+// HD44780::DFRobot port;
 HD44780 lcd(&port);
 
 // #include "Cosa/LCD/Driver/PCD8544.hh"
