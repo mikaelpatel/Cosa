@@ -26,14 +26,7 @@
 #ifndef __COSA_LCD_DRIVER_HD44780_HH__
 #define __COSA_LCD_DRIVER_HD44780_HH__
 
-#include "Cosa/Board.hh"
-#if defined(__ARDUINO_TINYX5__)
-#error "Cosa/LCD/Driver/HD4480.hh: board not supported"
-#endif
-
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/TWI/Driver/PCF8574.hh"
-#endif
 #include "Cosa/LCD.hh"
 #include "Cosa/Pins.hh"
 
@@ -419,6 +412,7 @@ public:
    */
   virtual int write(void* buf, size_t size);
 
+#if !defined(__ARDUINO_TINY__)
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
    * IO Port. Arduino pins directly to LCD in 4-bit mode. Data port is 
@@ -484,8 +478,8 @@ public:
      */
     virtual void set_backlight(uint8_t flag);
   };
+#endif
 
-#if !defined(__ARDUINO_TINY__)
   /**
    * IO handler for HD44780 (LCD-II) Dot Matix Liquid Crystal Display
    * Controller/Driver when using the MJKDZ IO expander board based on
@@ -639,7 +633,5 @@ public:
      */
     virtual void set_backlight(uint8_t flag);
   };
-#endif
 };
-
 #endif

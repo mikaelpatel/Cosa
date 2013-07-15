@@ -23,8 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 void 
@@ -101,6 +99,6 @@ HD44780::DFRobot::set_backlight(uint8_t flag)
   m_port.bt = flag;
   write(m_port.as_uint8);
 }
-#endif
+
 
 

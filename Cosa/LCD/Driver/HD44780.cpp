@@ -23,9 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/Watchdog.hh"
 
@@ -232,4 +229,3 @@ HD44780::write(void* buf, size_t size)
   m_x += size;
   return (size);
 }
-#endif
