@@ -23,8 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/TWI/Driver/PCF8574.hh"
 
 uint8_t 
@@ -72,5 +70,3 @@ PCF8574::write(void* buf, size_t size)
   twi.end();
   return (res == size);
 }
-
-#endif
