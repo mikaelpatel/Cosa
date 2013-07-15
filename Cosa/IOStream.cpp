@@ -259,19 +259,20 @@ IOStream::Device::putchar(char c)
 int 
 IOStream::Device::puts(char* s) 
 { 
-  char c;
-  while ((c = *s++) != 0) 
-    if (putchar(c) < 0) return (-1);
-  return (0); 
+  return (write(s, strlen(s)));
 }
 
 int 
 IOStream::Device::puts_P(const char* s)
 { 
   char c;
+  int n = 0;
   while ((c = pgm_read_byte(s++)) != 0)
-    if (putchar(c) < 0) return (-1);
-  return (0); 
+    if (putchar(c) < 0) 
+      return (-1);
+    else
+      n += 1;
+  return (n); 
 }
 
 int 

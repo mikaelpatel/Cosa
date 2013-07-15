@@ -192,13 +192,12 @@ public:
   virtual int putchar(char c);
 
   /**
-   * @override
-   * Write null terminated string to device. Terminating null is not
-   * written. 
-   * @param[in] s string to write.
-   * @return zero(0) or negative error code.
+   * Write data from buffer with given size to device.
+   * @param[in] buf buffer to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes written or EOF(-1).
    */
-  virtual int puts(char* s);
+  virtual int write(void* buf, size_t size);
 };
 
 #endif

@@ -186,14 +186,12 @@ VLCD::putchar(char c)
 }
 
 int 
-VLCD::puts(char* s)
+VLCD::write(void* buf, size_t size)
 {
   if (!twi.begin()) return (-1);
-  size_t len = strlen(s);
-  int n = twi.write(ADDR, s, len);
+  int n = twi.write(ADDR, buf, size);
   twi.end();
-  if (n != len) return (-1);
-  m_x += len;
-  return (0);
+  if (n < 0) return (-1);
+  m_x += size;
+  return (n);
 }
-
