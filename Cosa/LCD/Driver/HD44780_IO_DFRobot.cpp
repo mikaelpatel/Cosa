@@ -64,6 +64,32 @@ HD44780::DFRobot::write8b(uint8_t data)
 }
 
 void 
+HD44780::DFRobot::write8n(void* buf, size_t size)
+{
+  uint8_t* bp = (uint8_t*) buf;
+  while (size != 0) {
+    uint8_t tmp[TMP_MAX];
+    uint8_t n = (size > sizeof(tmp) / 4 ? sizeof(tmp) / 4 : size);
+    size -= n;
+    uint8_t m = n * 4;
+    for (uint8_t i = 0; i < m;) {
+      uint8_t data = *bp++;
+      m_port.data = (data >> 4);
+      m_port.en = 1;
+      tmp[i++] = m_port.as_uint8;
+      m_port.en = 0;
+      tmp[i++] = m_port.as_uint8;
+      m_port.data = data;
+      m_port.en = 1;
+      tmp[i++] = m_port.as_uint8;
+      m_port.en = 0;
+      tmp[i++] = m_port.as_uint8;
+    }
+    write(tmp, m);
+  }
+}
+
+void 
 HD44780::DFRobot::set_mode(uint8_t flag)
 {
   m_port.rs = flag;

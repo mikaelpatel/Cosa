@@ -39,6 +39,13 @@ HD44780::IO::write8b(uint8_t data)
   write4b(data);
 }
 
+void 
+HD44780::IO::write8n(void* buf, size_t size)
+{
+  uint8_t* bp = (uint8_t*) buf;
+  while (size--) write8b(*bp++);
+}
+
 bool 
 HD44780::begin()
 {
@@ -212,5 +219,17 @@ HD44780::putchar(char c)
   set_instruction_mode();
 
   return (c & 0xff);
+}
+
+int 
+HD44780::write(void* buf, size_t size)
+{
+  set_data_mode();
+  {
+    m_io->write8n(buf, size);
+  }
+  set_instruction_mode();
+  m_x += size;
+  return (size);
 }
 #endif

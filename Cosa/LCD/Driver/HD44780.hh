@@ -78,6 +78,14 @@ protected:
 
     /**
      * @override
+     * Write character buffer to display.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write8n(void* buf, size_t size);
+    
+    /**
+     * @override
      * Set data/command mode; zero(0) for command, non-zero(1) for data mode. 
      * @param[in] flag.
      */
@@ -185,7 +193,7 @@ protected:
    */
   void set(uint8_t& cmd, uint8_t mask) 
   { 
-    write(cmd |= mask); 
+    m_io->write8b(cmd |= mask); 
   }
 
   /**
@@ -195,7 +203,7 @@ protected:
    */
   void clear(uint8_t& cmd, uint8_t mask) 
   { 
-    write(cmd &= ~mask); 
+    m_io->write8b(cmd &= ~mask); 
   }
 
   /**
@@ -404,6 +412,14 @@ public:
   virtual int putchar(char c);
 
   /**
+   * Write data from buffer with given size to device.
+   * @param[in] buf buffer to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes written or EOF(-1).
+   */
+  virtual int write(void* buf, size_t size);
+
+  /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
    * IO Port. Arduino pins directly to LCD in 4-bit mode. Data port is 
    * implicitly defined (D4..D7).
@@ -477,6 +493,9 @@ public:
    */
   class MJKDZ : public IO, private PCF8574 {
   private:
+    // Max size of temporary buffer for TWI message
+    static const uint8_t TMP_MAX = 32;
+    
     union {
       uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
@@ -522,6 +541,14 @@ public:
 
     /**
      * @override
+     * Write character buffer to display.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write8n(void* buf, size_t size);
+
+    /**
+     * @override
      * Set instruction/data mode; zero for instruction, non-zero for
      * data mode. 
      * @param[in] flag.
@@ -543,6 +570,9 @@ public:
    */
   class DFRobot : public IO, private PCF8574 {
   private:
+    // Max size of temporary buffer for TWI message
+    static const uint8_t TMP_MAX = 32;
+    
     union {
       uint8_t as_uint8;
       struct {
@@ -585,6 +615,14 @@ public:
      * @param[in] data (8b) to write.
      */
     virtual void write8b(uint8_t data);
+
+    /**
+     * @override
+     * Write character buffer to display.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write8n(void* buf, size_t size);
 
     /**
      * @override
