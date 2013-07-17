@@ -55,9 +55,9 @@ HD44780::Port::write4b(uint8_t data)
 {
   synchronized {
     PORT = ((data & 0x0f) | (PORT & 0xf0));
+    m_en.toggle();
+    m_en.toggle();
   }
-  m_en.toggle();
-  m_en.toggle();
 }
 
 void 
@@ -65,14 +65,12 @@ HD44780::Port::write8b(uint8_t data)
 {
   synchronized {
     PORT = (((data >> 4) & 0x0f) | (PORT & 0xf0));
-  }
-  m_en.toggle();
-  m_en.toggle();
-  synchronized {
+    m_en.toggle();
+    m_en.toggle();
     PORT = ((data & 0x0f) | (PORT & 0xf0));
+    m_en.toggle();
+    m_en.toggle();
   }
-  m_en.toggle();
-  m_en.toggle();
   DELAY(SHORT_EXEC_TIME);
 }
 
@@ -91,9 +89,9 @@ HD44780::Port::write4b(uint8_t data)
 {
   synchronized {
     PORT = ((data << 4) | (PORT & 0x0f));
+    m_en.toggle();
+    m_en.toggle();
   }
-  m_en.toggle();
-  m_en.toggle();
 }
 
 void 
@@ -101,14 +99,12 @@ HD44780::Port::write8b(uint8_t data)
 {
   synchronized {
     PORT = ((data & 0xf0) | (PORT & 0x0f));
-  }
-  m_en.toggle();
-  m_en.toggle();
-  synchronized {
+    m_en.toggle();
+    m_en.toggle();
     PORT = ((data << 4) | (PORT & 0x0f));
+    m_en.toggle();
+    m_en.toggle();
   }
-  m_en.toggle();
-  m_en.toggle();
   DELAY(SHORT_EXEC_TIME);
 }
 #endif
