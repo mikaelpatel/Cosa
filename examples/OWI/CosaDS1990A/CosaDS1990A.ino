@@ -32,26 +32,28 @@
 
 #include "Cosa/Board.hh"
 #include "Cosa/OWI.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Watchdog.hh"
 
-// Use the builtin led to signal valid/invalid key
-OutputPin ledPin(Board::LED);
-
-// One-wire pin
-#if defined(__ARDUINO_TINY__)
-OWI owi(Board::D1);
-#else
-OWI owi(Board::D7);
-#endif
-
-// Table with valid keys (8 bytes per entry)
+// Table with valid keys (64 bit 1-Wire identity, 8 bytes per entry)
 uint8_t KEY[] PROGMEM = {
   0x01, 0x23, 0x81, 0xa3, 0x09, 0x00, 0x00, 0x7b,
   0x01, 0x29, 0x01, 0x27, 0x09, 0x00, 0x00, 0xa8,
   0x01, 0x26, 0xd9, 0x3e, 0x09, 0x00, 0x00, 0x47
 };
+
+// One-wire pin (D1 on ATtiny, D7 on others)
+#if defined(__ARDUINO_TINY__)
+OWI owi(Board::D1);
+OutputPin redLed(Board::D2);
+OutputPin greenLed(Board::D4);
+#else
+OWI owi(Board::D7);
+OutputPin ledPin(Board::LED);
+#define redLed ledPin
+#define greenLed ledPin
+#endif
 
 void setup()
 {
@@ -59,7 +61,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaDS1990A: started"));
 
-  // Initiate the watchdog for sleep
+  // Initiate the watchdog for low-power sleep mode
   Watchdog::begin();
 }
 
@@ -77,9 +79,9 @@ void loop()
   for (uint8_t i = 0; i < sizeof(KEY); i += OWI::ROM_MAX) {
     if (!memcmp_P(rom, &KEY[i], OWI::ROM_MAX)) {
       trace << dev << PSTR(":AUTHORIZED KEY") << endl;
-      ledPin.on();
+      greenLed.on();
       SLEEP(5);
-      ledPin.off();
+      greenLed.off();
       return;
     }
   }
@@ -87,9 +89,9 @@ void loop()
   // Otherwise it is an illegal key. Flash led for 5 seconds
   trace << dev << PSTR(":ILLEGAL KEY") << endl;
   for (uint8_t i = 0; i < 10; i++) {
-    ledPin.on();
+    redLed.on();
     MSLEEP(250);
-    ledPin.off();
+    redLed.off();
     MSLEEP(250);
   }
 }
