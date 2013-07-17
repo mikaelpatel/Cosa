@@ -149,7 +149,8 @@ public:
     Device* m_dev;
 
   public:
-    Filter(Device* dev = 0) : m_dev(dev ? dev : &Device::null) {}
+    Filter(Device* dev);
+    Filter();
 
     /**
      * Number of bytes available.
@@ -299,7 +300,8 @@ public:
    * Construct stream with given device. Default is the null device.
    * @param[in] dev stream device.
    */
-  IOStream(Device* dev = &Device::null) : m_dev(dev), m_base(dec) {}
+  IOStream(Device* dev);
+  IOStream();
   
   /**
    * Get current device.
