@@ -38,8 +38,6 @@ operator<<(IOStream& outs, Menu::Walker& walker)
   outs << (const char*) pgm_read_word(&item->name) << endl;
   type = (Menu::type_t) pgm_read_byte(&item->type);
   switch (type) {
-  case Menu::ITEM_LIST:
-    break;
   case Menu::ENUM:
     {
       Menu::enum_P evar = (Menu::enum_P) item;
@@ -56,12 +54,6 @@ operator<<(IOStream& outs, Menu::Walker& walker)
       outs << *rvp << PSTR(" [")
 	   << (int16_t) pgm_read_word(&range->low) << PSTR("..")
 	   << (int16_t) pgm_read_word(&range->high) << PSTR("]");
-    }
-    break;
-  case Menu::ACTION:
-    {
-      Menu::action_P action = (Menu::action_P) item;
-      outs << PSTR("action = ") << (void*) pgm_read_word(&action->obj);
     }
     break;
   }

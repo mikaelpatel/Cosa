@@ -19,8 +19,8 @@
  * Cosa LCD menu system demo.
  * 
  * @section Footprint
- * Baseline(Watchdog, LCD) 4006 bytes, +Menu::Walker 6640 bytes 
- * and +Demo menu code 6888 bytes.
+ * Baseline(Watchdog, LCD) 4006 bytes, +Menu::Walker 6430 bytes 
+ * and +Demo menu code 6678 bytes.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -57,7 +57,7 @@ MENU_ITEM(open_action)
 MENU_END(file_menu)
 
 // Menu Enumeration Variable -------------------------------------------------
-// Menu item with enumeration to change program state change
+// Menu item with enumeration to change program state
 // 1. Define the symbols needed for the enumeration type
 MENU_SYMB(on_symb,"On")
 MENU_SYMB(off_symb,"Off")
@@ -105,12 +105,12 @@ MENU_END(edit_menu)
 // Sub-Menu ------------------------------------------------------------------
 // Menu item list may contain other menu item lists (sub-menues)
 MENU_BEGIN(root_menu,"demo")
-  MENU_ITEM(file_menu)
-  MENU_ITEM(edit_menu)
+ MENU_ITEM(file_menu)
+ MENU_ITEM(edit_menu)
 MENU_END(root_menu)
 
 // The menu handler ----------------------------------------------------------
-// The walker will recieve key events from the keypad
+// The walker will receive key events from the keypad
 Menu::Walker walker(&lcd, &root_menu);
 
 void setup()
