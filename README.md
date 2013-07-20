@@ -220,4 +220,5 @@ for I2C-bus with interrupt. Support for 20x4 LCD.
 2013-07 Introducing an abstract LCD::Device class and refactoring LCD
 device drivers. Benchmarking and optimizing LCD device drivers. Added
 an event driven resistor net keypad handler and support for the
-DFRobot LCD Keypad shield.      
+DFRobot LCD Keypad shield. Boosting LCD performance to 2-6X faster
+than Arduino library. Added a new LCD menu system.       
