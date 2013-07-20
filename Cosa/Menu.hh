@@ -31,8 +31,8 @@
 #include "Cosa/Keypad.hh"
 
 /**
- * LCD Menu abstraction. Allows definition of tree structured menues with
- * items, enumerations, range values and actions.
+ * LCD Menu abstraction. Allows definition of menus with sub-menus,
+ * items, enumerations, bitsets, range values and actions.
  */
 class Menu {
 public:
@@ -40,7 +40,8 @@ public:
   enum type_t {
     ITEM,			// Menu item/symbol
     ITEM_LIST,			// Menu item/enum list
-    ENUM,			// Menu enumeration variable
+    ENUM,			// Menu enumeration variable (one-of)
+    BITSET,			// Menu bitset variable (zero-or-many)
     RANGE,			// Menu integer range variable
     ACTION			// Menu action
   } __attribute__((packed));
@@ -63,13 +64,17 @@ public:
   };
   typedef const PROGMEM item_list_t* item_list_P;
 
-  // Enumeration variable symbols list
+  // Enumeration variable symbols list (one-of)
   struct enum_t {
     item_t item;		// Item header(ENUM)
     item_vec_P list;		// Enum item list in program memory
     uint16_t* value;		// Pointer to value
   };
   typedef const PROGMEM enum_t* enum_P;
+
+  // Bitset variable symbols list (zero-or-many), Item header(BITSET)
+  typedef enum_t bitset_t;
+  typedef const PROGMEM bitset_t* bitset_P;
 
   // Integer range variable 
   struct range_t {
@@ -116,7 +121,10 @@ public:
     // Current menu list item index
     uint8_t m_ix;
 
-    // Selection state
+    // Current menu bitset index
+    uint8_t m_bv;
+
+    // Item selection state
     bool m_selected;
 
     // Output stream for menu printout
@@ -139,6 +147,7 @@ public:
       LCDKeypad(), 
       m_top(0) ,
       m_ix(0),
+      m_bv(0),
       m_selected(false),
       m_out(lcd)
     {
@@ -159,42 +168,6 @@ public:
      */
     friend IOStream& operator<<(IOStream& outs, Walker& walker);
   };
-};
-
-/**
- * Support macro to define a menu action in program memory.
- * @param[in] var menu action item to create.
- * @param[in] name string of menu item.
- * @param[in] obj pointer to menu action handler.
- */
-#define MENU_ACTION(var,name,obj)			\
-  const char var ## _name[] PROGMEM = name;		\
-  const Menu::action_t var PROGMEM = {			\
-  {							\
-    Menu::ACTION,					\
-    var ## _name					\
-  },							\
-  &obj							\
-  };
-
-/**
- * Support macro to define a menu integer range in program memory.
- * @param[in] var menu range item to create.
- * @param[in] name string of menu item.
- * @param[in] low range value.
- * @param[in] high range value.
- * @param[in] value variable name.
- */
-#define MENU_RANGE(var,name,low,high,value)		\
-  const char var ## _name[] PROGMEM = name;		\
-  const Menu::range_t var PROGMEM = {			\
-  {							\
-    Menu::RANGE,					\
-    var ## _name					\
-  },							\
-  low,							\
-  high,							\
-  &value						\
 };
 
 /**
@@ -298,4 +271,58 @@ public:
   type ## _list,					\
   &value						\
 };
+
+/**
+ * Support macro to define a menu bitset variable.
+ * @param[in] type enumeration list.
+ * @param[in] var menu bitset variable to create.
+ * @param[in] name string for menu bitset variable.
+ * @param[in] value variable with runtime value.
+ */
+#define MENU_BITSET(type,var,name,value)		\
+  const char var ## _name[] PROGMEM = name;		\
+  const Menu::enum_t var PROGMEM = {			\
+  {							\
+    Menu::BITSET,					\
+    var ## _name					\
+  },							\
+  type ## _list,					\
+  &value						\
+};
+
+/**
+ * Support macro to define a menu integer range in program memory.
+ * @param[in] var menu range item to create.
+ * @param[in] name string of menu item.
+ * @param[in] low range value.
+ * @param[in] high range value.
+ * @param[in] value variable name.
+ */
+#define MENU_RANGE(var,name,low,high,value)		\
+  const char var ## _name[] PROGMEM = name;		\
+  const Menu::range_t var PROGMEM = {			\
+  {							\
+    Menu::RANGE,					\
+    var ## _name					\
+  },							\
+  low,							\
+  high,							\
+  &value						\
+};
+
+/**
+ * Support macro to define a menu action in program memory.
+ * @param[in] var menu action item to create.
+ * @param[in] name string of menu item.
+ * @param[in] obj pointer to menu action handler.
+ */
+#define MENU_ACTION(var,name,obj)			\
+  const char var ## _name[] PROGMEM = name;		\
+  const Menu::action_t var PROGMEM = {			\
+  {							\
+    Menu::ACTION,					\
+    var ## _name					\
+  },							\
+  &obj							\
+  };
 #endif

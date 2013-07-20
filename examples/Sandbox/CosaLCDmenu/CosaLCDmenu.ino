@@ -19,8 +19,8 @@
  * Cosa LCD menu system demo.
  * 
  * @section Footprint
- * Baseline(Watchdog, LCD) 4006 bytes, +Menu::Walker 6430 bytes 
- * and +Demo menu code 6678 bytes.
+ * Baseline(Watchdog, LCD) 4006 bytes, +Menu::Walker 6732 bytes (+2726)
+ * and +Demo menu code 7046 bytes (+314).
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -34,25 +34,26 @@ HD44780::Port port;
 HD44780 lcd(&port);
 
 // Menu Action ---------------------------------------------------------------
-// Menu item with binding to action function and state (object)
-// 1. Create an action handler by sub-classing Menu::Action
+// Menu item with binding to an action function and state (object)
+// 1. Create an action handler by sub-classing Menu::Action and implement
+// the virtual member function run().
 
 class FileOpenAction : public Menu::Action {
 public:
   virtual void run(Menu::item_P item) 
   {
     lcd.display_clear();
-    lcd.puts_P(PSTR("opening file..."));
+    lcd.puts_P(PSTR("Opening File..."));
     SLEEP(2);
   }
 };
 
 // 2. Create an instance and bind to a menu item.
 FileOpenAction do_open;
-MENU_ACTION(open_action,"open",do_open)
+MENU_ACTION(open_action,"Open",do_open)
 
 // 3. Add to a menu item list.
-MENU_BEGIN(file_menu,"file")
+MENU_BEGIN(file_menu,"File")
 MENU_ITEM(open_action)
 MENU_END(file_menu)
 
@@ -62,64 +63,94 @@ MENU_END(file_menu)
 MENU_SYMB(on_symb,"On")
 MENU_SYMB(off_symb,"Off")
 
-// 2. Define the enumeration type
+// 2. Define the enumeration type. Symbol order is the value set (0..1).
 MENU_ENUM_BEGIN(onoff_enum_t)
   MENU_ENUM_ITEM(off_symb)
   MENU_ENUM_ITEM(on_symb)
 MENU_ENUM_END(onoff_enum_t);
 
-// 3. Create a menu item with reference to program state to control
+// 3. Create a menu item with reference to the program state to control
 uint16_t tracing = 1;
-MENU_ENUM(onoff_enum_t,tracing_enum,"tracing",tracing)
+MENU_ENUM(onoff_enum_t,tracing_enum,"Tracing",tracing)
 
+// Menu Enumeration Variable -------------------------------------------------
+// Menu item with enumeration to change program state
+// 1. Define the symbols needed for the enumeration type
 MENU_SYMB(idle_symb,"Idle")
 MENU_SYMB(running_symb,"Running")
 MENU_SYMB(waiting_symb,"Waiting")
 
+// 2. Define the enumeration type. Symbol order is the value set (0..2).
 MENU_ENUM_BEGIN(state_enum_t)
   MENU_ENUM_ITEM(idle_symb)
   MENU_ENUM_ITEM(running_symb)
   MENU_ENUM_ITEM(waiting_symb)
 MENU_ENUM_END(state_enum_t);
 
+// 3. Create a menu item with reference to the program state to control
 uint16_t state = 0;
-MENU_ENUM(state_enum_t,state_enum,"state",state)
+MENU_ENUM(state_enum_t,state_enum,"State",state)
+
+// Menu Bitset Variable ------------------------------------------------------
+// Menu item with bitset to change program state
+// 1. Define the symbols needed for the enumeration type
+MENU_SYMB(break_symb,"Break")
+MENU_SYMB(mockup_symb,"Mockup")
+MENU_SYMB(profile_symb,"Profile")
+MENU_SYMB(trace_symb,"Trace")
+
+// 2. Define the enumeration type. Symbol order is the value set (0.3).
+MENU_ENUM_BEGIN(debug_enum_t)
+  MENU_ENUM_ITEM(break_symb)
+  MENU_ENUM_ITEM(mockup_symb)
+  MENU_ENUM_ITEM(profile_symb)
+  MENU_ENUM_ITEM(trace_symb)
+MENU_ENUM_END(debug_enum_t);
+
+// 3. Create a menu item with reference to program state to control
+// The enumeration type values are bit positions. The initial value is
+// Break | Mockup.
+uint16_t debug = 3;
+MENU_BITSET(debug_enum_t,debug_enum,"Debug",debug)
 
 // Menu Integer Range Variable -----------------------------------------------
 // Menu item with integer range(low..high) to change program state change
 // 1. Create menu item with integer range and reference to variable
-int16_t count = 42;
-MENU_RANGE(count_range,"count",-100,100,count)
-
-// 2. Add menu item to menu item list
-MENU_BEGIN(options_menu,"options")
-  MENU_ITEM(tracing_enum)
-  MENU_ITEM(state_enum)
-  MENU_ITEM(count_range)
-MENU_END(options_menu)
-
-MENU_BEGIN(edit_menu,"edit")
-  MENU_ITEM(options_menu)
-MENU_END(edit_menu)
+int16_t limit = 42;
+MENU_RANGE(limit_range,"Limit",-10,100,limit)
 
 // Sub-Menu ------------------------------------------------------------------
 // Menu item list may contain other menu item lists (sub-menues)
-MENU_BEGIN(root_menu,"demo")
- MENU_ITEM(file_menu)
- MENU_ITEM(edit_menu)
+
+MENU_BEGIN(options_menu,"Options")
+  MENU_ITEM(tracing_enum)
+  MENU_ITEM(state_enum)
+  MENU_ITEM(limit_range)
+MENU_END(options_menu)
+
+MENU_BEGIN(edit_menu,"Edit")
+  MENU_ITEM(options_menu)
+  MENU_ITEM(debug_enum)
+MENU_END(edit_menu)
+
+MENU_BEGIN(root_menu,"Demo")
+  MENU_ITEM(file_menu)
+  MENU_ITEM(edit_menu)
 MENU_END(root_menu)
 
 // The menu handler ----------------------------------------------------------
-// The walker will receive key events from the keypad
+// The watchdog issues timeout events which periodically activate the
+// keypad handler. It polls the keys and issues key events to the
+// menu walker.
 Menu::Walker walker(&lcd, &root_menu);
 
 void setup()
 {
-   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
-   lcd.begin();
-   lcd.puts_P(PSTR("CosaLCDmenu: started"));
-   SLEEP(2);
-   walker.begin();
+  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  lcd.begin();
+  lcd.puts_P(PSTR("CosaLCDmenu: started"));
+  SLEEP(2);
+  walker.begin();
 }
 
 void loop()
