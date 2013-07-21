@@ -23,8 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/TWI/Driver/DS3231.hh"
 #include "Cosa/BCD.h"
 
@@ -113,5 +111,3 @@ IOStream& operator<<(IOStream& outs, DS3231::timekeeper_t& t)
        << (temp >> 2) << '.' << (25 * (temp & 0x3));
   return (outs);
 }
-
-#endif
