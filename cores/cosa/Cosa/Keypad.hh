@@ -98,7 +98,7 @@ public:
    * Callback method when a key down is detected. Must override.
    * @param[in] nr key number (index in map).
    */
-  virtual void on_key_down(uint8_t nr) = 0;
+  virtual void on_key_down(uint8_t nr) {}
 
   /**
    * @override

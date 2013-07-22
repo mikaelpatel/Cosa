@@ -84,6 +84,8 @@ operator<<(IOStream& outs, Menu::Walker& walker)
 	   << PSTR("]");
     }
     break;
+  default:
+    ;
   }
   return (outs);
 }
@@ -199,6 +201,8 @@ Menu::Walker::on_key_down(uint8_t nr)
 	  *vp = value - 1;
 	}
 	break;
+      default:
+	;
       }
     }
     break;
@@ -239,6 +243,8 @@ Menu::Walker::on_key_down(uint8_t nr)
 	  *vp = value + 1;
 	}
 	break;
+      default:
+	;
       }
     }
     break;

@@ -214,7 +214,7 @@ mighty.bootloader.lock_bits=0x0F
 mighty.build.mcu=atmega1284p
 mighty.build.f_cpu=16000000L
 mighty.build.core=cosa
-mighty.build.variant=standard
+mighty.build.variant=mighty
 
 mighty_opt.name=Cosa Mighty (ATmega1284, Optiboot)
 mighty_opt.upload.protocol=arduino
@@ -230,7 +230,7 @@ mighty_opt.bootloader.lock_bits=0x0F
 mighty_opt.build.mcu=atmega1284p
 mighty_opt.build.f_cpu=16000000L
 mighty_opt.build.core=cosa
-mighty_opt.build.variant=standard
+mighty_opt.build.variant=mighty
 
 ##
 # ARDUINO MEGA
