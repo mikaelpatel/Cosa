@@ -31,12 +31,12 @@
 #define target_name 0
 #define value_name 0
 #else
-static const char descr_name[] PROGMEM = "Cosa::Event";
-static const char type_name[] PROGMEM = "type";
-static const char target_name[] PROGMEM = "target";
-static const char value_name[] PROGMEM = "value";
+static const char descr_name[] __PROGMEM = "Cosa::Event";
+static const char type_name[] __PROGMEM = "type";
+static const char target_name[] __PROGMEM = "target";
+static const char value_name[] __PROGMEM = "value";
 #endif
-static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
+static const Ciao::Descriptor::member_t descr_members[] __PROGMEM = {
   {
     Ciao::UINT8_TYPE,
     1,
@@ -56,7 +56,7 @@ static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
     0
   }
 };
-const Ciao::Descriptor::user_t Fai::Descriptor::event_t PROGMEM = {
+const Ciao::Descriptor::user_t Fai::Descriptor::event_t __PROGMEM = {
   Fai::Descriptor::EVENT_ID,
   descr_name,
   descr_members,

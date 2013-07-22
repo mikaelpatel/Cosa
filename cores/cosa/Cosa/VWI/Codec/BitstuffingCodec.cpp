@@ -25,7 +25,7 @@
  * 0xa, 0x1a => 01010.11010 => 11010.01010 => 11.0100.1010 => 0x34a
  */
 const uint8_t 
-BitstuffingCodec::preamble[] PROGMEM = {
+BitstuffingCodec::preamble[] __PROGMEM = {
   0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x1a
 };
 

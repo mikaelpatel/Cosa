@@ -124,6 +124,11 @@ union univ32_t {
  */
 #define membersof(x) (sizeof(x)/sizeof(x[0]))
 
+/**
+ * Workaround for gcc program memory data warning.
+ */
+#define __PROGMEM  __attribute__((section(".progmem.cosa")))
+
 #undef PSTR
 /**
  * Create constant string in program memory. Allow IOStream output 
@@ -131,7 +136,14 @@ union univ32_t {
  * @param[in] s string literal (at compile time).
  * @return string literal in program memory.
  */
-#define PSTR(s) (__extension__({static const char __c[] PROGMEM = (s); &__c[0];}))
+#define PSTR(s)								\
+  (__extension__(							\
+  {									\
+    static const char __c[]						\
+      __attribute__((section(".progmem.pstr"))) = (s);			\
+    &__c[0];								\
+  }									\
+  ))
 
 /**
  * Instruction clock cycles per micro-second. Assumes clock greater

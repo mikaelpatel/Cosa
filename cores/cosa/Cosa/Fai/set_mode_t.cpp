@@ -30,11 +30,11 @@
 #define pin_name 0
 #define mode_name 0
 #else
-static const char descr_name[] PROGMEM = "Ciao::Fai::set_mode_t";
-static const char pin_name[] PROGMEM = "pin";
-static const char mode_name[] PROGMEM = "mode";
+static const char descr_name[] __PROGMEM = "Ciao::Fai::set_mode_t";
+static const char pin_name[] __PROGMEM = "pin";
+static const char mode_name[] __PROGMEM = "mode";
 #endif
-static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
+static const Ciao::Descriptor::member_t descr_members[] __PROGMEM = {
   {
     Ciao::UINT8_TYPE,
     1,
@@ -48,7 +48,7 @@ static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
     0
   }
 };
-const Ciao::Descriptor::user_t Fai::Descriptor::set_mode_t PROGMEM = {
+const Ciao::Descriptor::user_t Fai::Descriptor::set_mode_t __PROGMEM = {
   Fai::Descriptor::SET_MODE_ID,
   descr_name,
   descr_members,

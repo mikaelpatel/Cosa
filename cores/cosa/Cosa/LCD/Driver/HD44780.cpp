@@ -26,8 +26,8 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/Watchdog.hh"
 
-const uint8_t HD44780::offset0[] PROGMEM = { 0x00, 0x40, 0x14, 0x54 };
-const uint8_t HD44780::offset1[] PROGMEM = { 0x00, 0x40, 0x10, 0x50 };
+const uint8_t HD44780::offset0[] __PROGMEM = { 0x00, 0x40, 0x14, 0x54 };
+const uint8_t HD44780::offset1[] __PROGMEM = { 0x00, 0x40, 0x10, 0x50 };
 
 void 
 HD44780::IO::write8b(uint8_t data)

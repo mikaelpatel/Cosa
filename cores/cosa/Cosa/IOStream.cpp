@@ -275,9 +275,9 @@ IOStream::Device::putchar(char c)
 }
     
 int 
-IOStream::Device::puts(char* s) 
+IOStream::Device::puts(const char* s) 
 { 
-  return (write(s, strlen(s)));
+  return (write((void*) s, strlen(s)));
 }
 
 int 

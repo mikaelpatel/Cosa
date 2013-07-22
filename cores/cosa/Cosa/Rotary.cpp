@@ -138,7 +138,7 @@
  * }
  * @enddot
  */
-const uint8_t Rotary::Encoder::half_cycle_table[6][4] PROGMEM = {
+const uint8_t Rotary::Encoder::half_cycle_table[6][4] __PROGMEM = {
 // R_START (00)
   {R_START_M,            R_CW_BEGIN,     R_CCW_BEGIN,  R_START},
 // R_CCW_BEGIN
@@ -198,7 +198,7 @@ const uint8_t Rotary::Encoder::half_cycle_table[6][4] PROGMEM = {
  * }
  * @enddot
  */
-const uint8_t Rotary::Encoder::full_cycle_table[7][4] PROGMEM = {
+const uint8_t Rotary::Encoder::full_cycle_table[7][4] __PROGMEM = {
 // R_START
   {R_START,    R_CW_BEGIN,  R_CCW_BEGIN, R_START},
 // R_CW_FINAL

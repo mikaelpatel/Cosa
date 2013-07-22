@@ -25,7 +25,7 @@
 
 #include "Cosa/SPI/Driver/ST7735.hh"
 
-const uint8_t ST7735::script[] PROGMEM = {
+const uint8_t ST7735::script[] __PROGMEM = {
   // Software Reset
   SWRESET, 0, 
   // Software Delay 

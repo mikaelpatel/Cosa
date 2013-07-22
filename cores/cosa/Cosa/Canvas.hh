@@ -920,7 +920,7 @@ public:
 /**
  * Script support macro. Generate script code in program memory.
  */
-#define CANVAS_BEGIN_SCRIPT(name) const uint8_t name[] PROGMEM = {
+#define CANVAS_BEGIN_SCRIPT(name) const uint8_t name[] __PROGMEM = {
 #define CANVAS_CALL_SCRIPT(ix) Canvas::CALL_SCRIPT, ix,
 #define CANVAS_SET_CANVAS_COLOR(r, g, b) Canvas::SET_CANVAS_COLOR, r, g, b,
 #define CANVAS_SET_PEN_COLOR(r, g, b) Canvas::SET_PEN_COLOR, r, g, b,

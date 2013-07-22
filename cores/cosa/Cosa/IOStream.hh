@@ -66,7 +66,7 @@ public:
      * @param[in] s string to write.
      * @return zero(0) or negative error code.
      */
-    virtual int puts(char* s);
+    virtual int puts(const char* s);
 
     /**
      * Write null terminated string from program memory to device.
@@ -186,7 +186,7 @@ public:
      * @param[in] s string to write.
      * @return zero(0) or negative error code.
      */
-    virtual int puts(char* s)
+    virtual int puts(const char* s)
     {
       return (m_dev->puts(s));
     }
@@ -388,7 +388,7 @@ public:
    * Print string in data memory to stream.
    * @param[in] s pointer to data memory string.
    */
-  void print(char* s) 
+  void print(const char* s) 
   { 
     m_dev->puts(s); 
   }

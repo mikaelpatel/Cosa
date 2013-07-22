@@ -287,6 +287,7 @@ TWI::begin(Event::Handler* target)
 
   // Setup event target (for completed event)
   m_target = target;
+  return (true);
 }
 
 int

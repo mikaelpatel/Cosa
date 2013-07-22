@@ -100,7 +100,7 @@ nano328.build.f_cpu=16000000L
 nano328.build.core=cosa
 nano328.build.variant=eightanaloginputs
 
-lilypad328.name=Cosa LilyPad Arduino (ATmega328)
+lilypad328.name=Cosa LilyPad Arduino (ATmega328, 8 MHz)
 lilypad328.upload.protocol=arduino
 lilypad328.upload.maximum_size=30720
 lilypad328.upload.speed=57600
@@ -116,7 +116,7 @@ lilypad328.build.f_cpu=8000000L
 lilypad328.build.core=cosa
 lilypad328.build.variant=standard
 
-lilypad.name=Cosa LilyPad Arduino (ATmega168)
+lilypad.name=Cosa LilyPad Arduino (ATmega168, 8 MHz)
 lilypad.upload.protocol=arduino
 lilypad.upload.maximum_size=14336
 lilypad.upload.speed=19200
@@ -132,7 +132,7 @@ lilypad.build.f_cpu=8000000L
 lilypad.build.core=cosa
 lilypad.build.variant=standard
 
-pro5v328.name=Cosa Arduino Pro Mini (ATmega328, 5V, 16 MHz)
+pro5v328.name=Cosa Arduino Pro Mini (ATmega328)
 pro5v328.upload.protocol=arduino
 pro5v328.upload.maximum_size=30720
 pro5v328.upload.speed=57600
@@ -148,7 +148,7 @@ pro5v328.build.f_cpu=16000000L
 pro5v328.build.core=cosa
 pro5v328.build.variant=standard
 
-pro5v.name=Cosa Arduino Pro Mini (ATmega168, 5V, 16 MHz)
+pro5v.name=Cosa Arduino Pro Mini (ATmega168)
 pro5v.upload.protocol=arduino
 pro5v.upload.maximum_size=14336
 pro5v.upload.speed=19200

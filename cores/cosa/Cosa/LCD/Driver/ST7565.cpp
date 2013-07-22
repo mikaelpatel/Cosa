@@ -27,7 +27,7 @@
 #include "Cosa/Watchdog.hh"
 
 // Initialization script
-const uint8_t ST7565::script[] PROGMEM = {
+const uint8_t ST7565::script[] __PROGMEM = {
   LCD_BIAS_9,
   ADC_NORMAL,
   COM_OUTPUT_REVERSE,

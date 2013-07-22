@@ -38,13 +38,13 @@ static const uint8_t MINOR = 0;
 #define minor_name 0
 #define endian_name 0
 #else
-static const char descr_name[] PROGMEM = "Ciao::header_t";
-static const char magic_name[]  PROGMEM = "magic";
-static const char major_name[]  PROGMEM = "major";
-static const char minor_name[]  PROGMEM = "minor";
-static const char endian_name[] PROGMEM = "endian";
+static const char descr_name[] __PROGMEM = "Ciao::header_t"; 
+static const char magic_name[] __PROGMEM= "magic";
+static const char major_name[] __PROGMEM= "major";
+static const char minor_name[] __PROGMEM= "minor";
+static const char endian_name[] __PROGMEM = "endian";
 #endif
-static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
+static const Ciao::Descriptor::member_t descr_members[] __PROGMEM = {
   {
     Ciao::UINT8_TYPE,
     0,
@@ -70,7 +70,7 @@ static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
     0
   }
 };
-const Ciao::Descriptor::user_t Ciao::Descriptor::header_t PROGMEM = {
+const Ciao::Descriptor::user_t Ciao::Descriptor::header_t __PROGMEM = {
   Ciao::Descriptor::HEADER_ID,
   descr_name,
   descr_members,
@@ -286,7 +286,7 @@ Ciao::write(const Descriptor::user_t* desc)
   m_dev->putchar(d.id < 256 ? USER8_DESC_END : USER16_DESC_END);
 }
 
-static const uint8_t sizeoftype[] PROGMEM = {
+static const uint8_t sizeoftype[] __PROGMEM = {
   sizeof(uint8_t),
   sizeof(uint16_t),
   sizeof(uint32_t),

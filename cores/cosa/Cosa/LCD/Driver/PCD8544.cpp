@@ -25,7 +25,7 @@
 
 #include "Cosa/LCD/Driver/PCD8544.hh"
 
-const uint8_t PCD8544::script[] PROGMEM = {
+const uint8_t PCD8544::script[] __PROGMEM = {
   SET_FUNC       | EXTENDED_INST,
   SET_VOP 	 | 0x38,
   SET_TEMP_COEFF | 0x00,

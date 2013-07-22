@@ -29,10 +29,10 @@
 #define descr_name 0
 #define values_name 0
 #else
-static const char descr_name[] PROGMEM = "Cosa::Fai::digital_pins_t";
-static const char values_name[] PROGMEM = "values";
+static const char descr_name[] __PROGMEM = "Cosa::Fai::digital_pins_t";
+static const char values_name[] __PROGMEM = "values";
 #endif
-static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
+static const Ciao::Descriptor::member_t descr_members[] __PROGMEM = {
   {
     Ciao::UINT32_TYPE,
     1,
@@ -40,7 +40,7 @@ static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
     0
   }
 };
-const Ciao::Descriptor::user_t Fai::Descriptor::digital_pins_t PROGMEM = {
+const Ciao::Descriptor::user_t Fai::Descriptor::digital_pins_t __PROGMEM = {
   Fai::Descriptor::DIGITAL_PINS_ID,
   descr_name,
   descr_members,

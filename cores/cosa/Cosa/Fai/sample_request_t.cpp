@@ -30,11 +30,11 @@
 #define pins_name 0
 #define period_name 0
 #else
-static const char descr_name[] PROGMEM = "Ciao::Fai::sample_request_t";
-static const char pins_name[] PROGMEM = "pins";
-static const char period_name[] PROGMEM = "period";
+static const char descr_name[] __PROGMEM = "Ciao::Fai::sample_request_t";
+static const char pins_name[] __PROGMEM = "pins";
+static const char period_name[] __PROGMEM = "period";
 #endif
-static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
+static const Ciao::Descriptor::member_t descr_members[] __PROGMEM = {
   {
     Ciao::UINT32_TYPE,
     1,
@@ -48,7 +48,7 @@ static const Ciao::Descriptor::member_t descr_members[] PROGMEM = {
     0
   }
 };
-const Ciao::Descriptor::user_t Fai::Descriptor::sample_request_t PROGMEM = {
+const Ciao::Descriptor::user_t Fai::Descriptor::sample_request_t __PROGMEM = {
   Fai::Descriptor::SAMPLE_REQUEST_ID,
   descr_name,
   descr_members,

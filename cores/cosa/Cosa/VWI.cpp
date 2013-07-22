@@ -46,7 +46,7 @@ static VWI::Transmitter* transmitter = 0;
 static VWI::Receiver* receiver = 0;
 
 /** Prescale table for Timer1. Index is prescale setting */
-static const uint16_t prescale[] PROGMEM = {
+static const uint16_t prescale[] __PROGMEM = {
 #if defined(__ARDUINO_TINYX5__)
   0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 
 #else

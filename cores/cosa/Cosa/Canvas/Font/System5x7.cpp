@@ -28,7 +28,7 @@
 
 System5x7 system5x7;
 
-const uint8_t System5x7::bitmap[] PROGMEM = {
+const uint8_t System5x7::bitmap[] __PROGMEM = {
 #if !defined(__ARDUINO_TINY__)
   0x00, 0x00, 0x00, 0x00, 0x00,   
   0x3E, 0x5B, 0x4F, 0x5B, 0x3E, 	
