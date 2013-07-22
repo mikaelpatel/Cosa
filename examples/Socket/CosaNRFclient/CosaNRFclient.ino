@@ -100,10 +100,3 @@ void setup()
   const Socket::addr_t SERVER = { 0xc05a0005, 6000 };
   TRACE(client.connect(SERVER));
 }
-
-void loop()
-{
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}

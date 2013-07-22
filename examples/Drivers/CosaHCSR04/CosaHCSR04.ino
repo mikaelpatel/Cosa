@@ -62,12 +62,3 @@ void setup()
   ping.periodic(256);
 }
 
-void loop()
-{
-  // Wait and dispatch event for reading of distance
-  Event event;
-  Event::queue.await(&event);
-  ledPin.toggle();
-  event.dispatch();
-  ledPin.toggle();
-}

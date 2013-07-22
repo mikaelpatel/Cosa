@@ -85,10 +85,3 @@ void setup()
    lcd.puts_P(PSTR("CosaKeypad: started"));
 }
 
-void loop()
-{
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}
-

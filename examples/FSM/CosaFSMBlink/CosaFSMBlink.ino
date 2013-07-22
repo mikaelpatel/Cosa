@@ -117,11 +117,4 @@ void setup()
   led2.begin();
 }
 
-void loop()
-{
-  // The basic event dispatcher
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}
 

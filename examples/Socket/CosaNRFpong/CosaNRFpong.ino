@@ -79,11 +79,3 @@ void setup()
   Watchdog::begin();
   pong.begin();
 }
-
-void loop()
-{
-  // Wait for the next event. Go to low power during the wait.
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}

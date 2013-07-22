@@ -93,9 +93,3 @@ void setup()
   server.listen();
 }
 
-void loop()
-{
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}

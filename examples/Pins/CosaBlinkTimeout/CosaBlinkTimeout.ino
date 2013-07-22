@@ -77,11 +77,3 @@ void setup()
   greenLedPin.blink(1024);
   blueLedPin.blink(1024);
 }
-
-void loop()
-{
-  // The basic event dispatcher
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}

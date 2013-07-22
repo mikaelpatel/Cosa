@@ -27,16 +27,16 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include <avr/interrupt.h>
 #include <avr/io.h>
+#include <avr/interrupt.h>
+#include "Cosa/Event.hh"
 
 extern void setup(void);
-extern void loop(void);
 
+void init() __attribute__((weak));
 void init()
 {
-  // Set ADC prescale factor to 128 and enable conversion
-  // 16 MHz / 128 = 125 KHz, inside the desired 50-200 KHz range.
+  // Set ADC prescale factor and enable conversion
 #if F_CPU >= 16000000L
   ADCSRA |= (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0) | _BV(ADEN));
 #elif F_CPU >= 8000000L
@@ -46,17 +46,32 @@ void init()
 #endif
   
   // The bootloader connects pins 0 and 1 to the USART; disconnect them
-  // here so they can be used as normal digital i/o.
+  // here so they can be used as normal digital IO.
 #if defined(UCSRB)
   UCSRB = 0;
 #elif defined(UCSR0B)
   UCSR0B = 0;
 #endif
 
-  // Allow interrupts
+  // Allow interrupts from here on
   sei();
 }
 
+/**
+ * The default event dispatcher. This function may be overridden.
+ */
+void loop() __attribute__((weak));
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
+}
+
+/**
+ * The main function
+ */
+int main(void) __attribute__((weak));
 int main(void)
 {
   init();

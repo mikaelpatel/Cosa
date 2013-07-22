@@ -154,10 +154,3 @@ void setup()
   SLEEP(2);
   walker.begin();
 }
-
-void loop()
-{
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}

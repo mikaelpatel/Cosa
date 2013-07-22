@@ -66,11 +66,3 @@ void setup()
   // Enable the interrupt driven version of the receiver
   receiver.enable();
 }
-
-void loop()
-{
-  // Wait for the next event and dispatch
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}

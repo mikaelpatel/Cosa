@@ -63,9 +63,6 @@ Echo::on_request(void* buf, size_t size)
 // The TWI echo device
 Echo echo;
 
-// Use the builtin led for a heartbeat
-OutputPin ledPin(Board::LED);
-
 #if defined(__ARDUINO_TINYX5__)
 Soft::UART uart(Board::D1);
 #endif
@@ -86,14 +83,4 @@ void setup()
 
   // Start the TWI echo device 
   echo.begin();
-}
-
-void loop()
-{
-  // Await for events to service
-  Event event;
-  Event::queue.await(&event);
-  ledPin.toggle();
-  event.dispatch();
-  ledPin.toggle();
 }
