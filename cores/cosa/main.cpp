@@ -33,6 +33,10 @@
 
 extern void setup(void);
 
+/**
+ * The init function; minimum setup of hardware after the bootloader.
+ * This function may be overridden.
+ */
 void init() __attribute__((weak));
 void init()
 {
@@ -40,9 +44,9 @@ void init()
 #if F_CPU >= 16000000L
   ADCSRA |= (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0) | _BV(ADEN));
 #elif F_CPU >= 8000000L
-  ADCSRA |= (_BV(ADPS2) | _BV(ADPS1) | _BV(ADEN));
+  ADCSRA |= (_BV(ADPS2) | _BV(ADPS1)              | _BV(ADEN));
 #else
-  ADCSRA |= (_BV(ADPS1) | _BV(ADPS0) | _BV(ADEN));
+  ADCSRA |= (             _BV(ADPS1) | _BV(ADPS0) | _BV(ADEN));
 #endif
   
   // The bootloader connects pins 0 and 1 to the USART; disconnect them
@@ -58,7 +62,8 @@ void init()
 }
 
 /**
- * The default event dispatcher. This function may be overridden.
+ * The default loop function; event dispatcher. This function may be
+ * overridden.
  */
 void loop() __attribute__((weak));
 void loop()
@@ -69,7 +74,7 @@ void loop()
 }
 
 /**
- * The main function
+ * The main function. This function may be overridden.
  */
 int main(void) __attribute__((weak));
 int main(void)

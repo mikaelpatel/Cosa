@@ -3,8 +3,11 @@
  * @version 1.0
  *
  * @section Description
+ * The Arduino pre-processor requires a file named "Arduino.h".
+ * The Cosa framework and library is self contained and does not
+ * really need this but....
  *
- *   The Bellman himself they all praised to the skies--
+ *   "The Bellman himself they all praised to the skies--
  *   Such a carriage, such ease and such grace!
  *   Such solemnity, too! One could see he was wise,
  *   The moment one looked in his face!
@@ -22,7 +25,7 @@
  *   "Other maps are such shapes, with their islands and capes!
  *   But we've got our brave Captain to thank:
  *   (So the crew would protest) "that he's bought us the best--
- *   A perfect and absolute blank!" 
+ *   A perfect and absolute blank!""
  *
  *                       Lewis Carroll, The Hunting of the Snark
  */
