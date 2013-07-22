@@ -92,34 +92,12 @@ public:
   /**
    * Enable interrupt pin change detection and interrupt handler.
    */
-  void enable() 
-  { 
-    synchronized {
-      *PCIMR() |= m_mask;
-#if !defined(__ARDUINO_MEGA__)
-      pin[m_pin] = this;
-#else
-      uint8_t ix = m_pin - (m_pin < 24 ? 24 : 48);
-      pin[ix] = this;
-#endif
-    }
-  }
+  virtual void enable();
 
   /**
    * Disable interrupt pin change detection.
    */
-  void disable() 
-  { 
-    synchronized {
-      *PCIMR() &= ~m_mask;
-#if !defined(__ARDUINO_MEGA__)
-      pin[m_pin] = 0;
-#else
-      uint8_t ix = m_pin - (m_pin < 24 ? 24 : 48);
-      pin[ix] = 0;
-#endif
-    }
-  }
+  virtual void disable();
 
   /**
    * @override

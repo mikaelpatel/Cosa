@@ -42,6 +42,30 @@ ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
   bit_field_set(EICRA, 0b11 << ix, mode << ix);
 }
 
+void 
+ExternalInterrupt::enable() 
+{ 
+  synchronized {
+#if defined(__ARDUINO_TINY__)
+    bit_set(GIMSK, INT0); 
+#else
+    bit_set(EIMSK, m_ix); 
+#endif
+  }
+}
+
+void 
+ExternalInterrupt::disable() 
+{ 
+  synchronized {
+#if defined(__ARDUINO_TINY__)
+    bit_clear(GIMSK, INT0);
+#else
+    bit_clear(EIMSK, m_ix); 
+#endif
+  }
+}
+
 #elif defined(__ARDUINO_MEGA__)
 
 ExternalInterrupt::

@@ -29,6 +29,34 @@ PinChangeInterrupt* PinChangeInterrupt::pin[Board::PIN_MAX] = { 0 };
 uint8_t PinChangeInterrupt::state[Board::PCINT_MAX] = { 0 };
 
 void 
+PinChangeInterrupt::enable() 
+{ 
+  synchronized {
+    *PCIMR() |= m_mask;
+#if !defined(__ARDUINO_MEGA__)
+    pin[m_pin] = this;
+#else
+    uint8_t ix = m_pin - (m_pin < 24 ? 24 : 48);
+    pin[ix] = this;
+#endif
+  }
+}
+
+void 
+PinChangeInterrupt::disable() 
+{ 
+  synchronized {
+    *PCIMR() &= ~m_mask;
+#if !defined(__ARDUINO_MEGA__)
+    pin[m_pin] = 0;
+#else
+    uint8_t ix = m_pin - (m_pin < 24 ? 24 : 48);
+    pin[ix] = 0;
+#endif
+  }
+}
+
+void 
 PinChangeInterrupt::begin()
 {
 #if defined(__ARDUINO_MEGA__)

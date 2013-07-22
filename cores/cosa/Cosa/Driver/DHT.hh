@@ -82,7 +82,7 @@ protected:
    * for the DHT device family but data representation is different,
    * i.e. data resolution and accuracy. Overridden by DHT11 and DHT22.
    */
-  virtual void adjust_data() = 0;
+  virtual void adjust_data() {}
 
 public:
   /**

@@ -50,6 +50,8 @@ LED greenLedPin(Board::D6, 1024, 1);
 LED blueLedPin(Board::D7, 1024);
 #endif
 
+LED heartbeat(Board::LED, 512);
+
 // Start the watchdog (16 ms timeout, push timeout events)
 void setup()
 {

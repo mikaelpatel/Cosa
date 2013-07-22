@@ -75,32 +75,16 @@ public:
 		    Mode mode = ON_CHANGE_MODE);
 
   /**
+   * @override
    * Enable interrupt pin change detection and interrupt handler.
    */
-  void enable() 
-  { 
-    synchronized {
-#if defined(__ARDUINO_TINY__)
-      bit_set(GIMSK, INT0); 
-#else
-      bit_set(EIMSK, m_ix); 
-#endif
-    }
-  }
+  virtual void enable();
 
   /**
+   * @override
    * Disable interrupt pin change detection.
    */
-  void disable() 
-  { 
-    synchronized {
-#if defined(__ARDUINO_TINY__)
-      bit_clear(GIMSK, INT0);
-#else
-      bit_clear(EIMSK, m_ix); 
-#endif
-    }
-  }
+  virtual void disable();
 
   /**
    * @override

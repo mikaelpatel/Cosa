@@ -41,8 +41,6 @@ HD44780 lcd(&port);
 // #include "Cosa/VLCD.hh"
 // VLCD lcd;
 
-#undef putchar
-
 // Benchmarks
 typedef void (*benchmark_t)(uint16_t);
 void clear_display(uint16_t nr);
@@ -54,7 +52,11 @@ void write_bin_uint16(uint16_t nr);
 
 // Measurement support
 void measure(const char* name, benchmark_t fn, uint16_t nr);
-#define MEASURE(fn,nr) measure(PSTR(#fn),fn,nr)
+#define MEASURE(fn,nr)				\
+  do {						\
+    measure(PSTR(#fn),fn,nr);			\
+    SLEEP(4);					\
+  } while (0)
 
 void setup()
 {
@@ -77,17 +79,11 @@ void setup()
 void loop()
 {
   MEASURE(clear_display, 10);
-  SLEEP(4);
   MEASURE(write_char, 1000);
-  SLEEP(4);
   MEASURE(write_str, 1000);
-  SLEEP(4);
   MEASURE(write_pstr, 1000);
-  SLEEP(4);
   MEASURE(write_dec_uint16, 10000);
-  SLEEP(4);
   MEASURE(write_bin_uint16, 1000);
-  SLEEP(4);
 }
 
 void clear_display(uint16_t nr)
@@ -115,13 +111,21 @@ void write_char(uint16_t nr)
   }
 }
 
+#ifdef __COSA_LCD_DRIVER_PCD8544_HH__
+# define NUM_STR   "12345678901234"
+# define ALPHA_STR "ABCDEFGHIJKLMN"
+#else
+# define NUM_STR   "1234567890123456"
+# define ALPHA_STR "ABCDEFGHIJKLMNOP"
+#endif
+
 void write_str(uint16_t nr)
 {
   while (nr--) {
     lcd.set_cursor(0, 1);
-    lcd.puts("12345678901234");
+    lcd.puts(NUM_STR);
     lcd.set_cursor(0, 1);
-    lcd.puts("ABCDEFGHIJKLMN");
+    lcd.puts(ALPHA_STR);
   }
 }
 
@@ -129,9 +133,9 @@ void write_pstr(uint16_t nr)
 {
   while (nr--) {
     lcd.set_cursor(0, 1);
-    lcd.puts_P(PSTR("12345678901234"));
+    lcd.puts_P(PSTR(NUM_STR));
     lcd.set_cursor(0, 1);
-    lcd.puts_P(PSTR("ABCDEFGHIJKLMN"));
+    lcd.puts_P(PSTR(ALPHA_STR));
   }
 }
 

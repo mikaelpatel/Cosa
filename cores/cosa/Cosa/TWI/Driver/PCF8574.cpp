@@ -63,10 +63,10 @@ bool
 PCF8574::write(void* buf, size_t size)
 {
   if (!twi.begin()) return (false);
-  uint8_t* bp = (uint8_t*) bp;
+  uint8_t* bp = (uint8_t*) buf;
   size_t n = size;
   while (n--) *bp++ &= ~m_ddr;
   int res = twi.write(m_addr, buf, size);
   twi.end();
-  return (res == size);
+  return (res == (int) size);
 }
