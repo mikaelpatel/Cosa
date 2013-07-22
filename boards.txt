@@ -1,0 +1,255 @@
+# @file boards.txt
+# @version 1.0
+#
+# @section License
+# Copyright (C) 2013, Mikael Patel
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General
+# Public License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+# Boston, MA  02111-1307  USA
+#
+# @section Description
+# The Cosa Arduino core boards definition file.
+#
+# This file is part of the Arduino Che Cosa project.
+
+##
+# ARDUINO TINY
+##
+
+attiny84-8.name=Cosa Tiny (ATtiny84, 8 MHz)
+attiny84-8.bootloader.low_fuses=0xe2
+attiny84-8.bootloader.high_fuses=0xdf
+attiny84-8.bootloader.extended_fuses=0xff
+attiny84-8.upload.maximum_size=8192
+attiny84-8.build.mcu=attiny84
+attiny84-8.build.f_cpu=8000000L
+attiny84-8.build.core=cosa
+attiny84-8.build.variant=tiny14
+
+attiny85-8.name=Cosa Tiny (ATtiny85, 8 MHz)
+attiny85-8.bootloader.low_fuses=0xe2
+attiny85-8.bootloader.high_fuses=0xdf
+attiny85-8.bootloader.extended_fuses=0xff
+attiny85-8.upload.maximum_size=8192
+attiny85-8.build.mcu=attiny85
+attiny85-8.build.f_cpu=8000000L
+attiny85-8.build.core=cosa
+attiny85-8.build.variant=tiny8
+
+##
+# ARDUINO STANDARD
+##
+
+uno.name=Cosa Arduino Uno (ATmega328)
+uno.upload.protocol=arduino
+uno.upload.maximum_size=32256
+uno.upload.speed=115200
+uno.bootloader.low_fuses=0xff
+uno.bootloader.high_fuses=0xde
+uno.bootloader.extended_fuses=0x05
+uno.bootloader.path=optiboot
+uno.bootloader.file=optiboot_atmega328.hex
+uno.bootloader.unlock_bits=0x3F
+uno.bootloader.lock_bits=0x0F
+uno.build.mcu=atmega328p
+uno.build.f_cpu=16000000L
+uno.build.core=cosa
+uno.build.variant=standard
+
+atmega328.name=Cosa Arduino Duemilanove (ATmega328)
+atmega328.upload.protocol=arduino
+atmega328.upload.maximum_size=30720
+atmega328.upload.speed=57600
+atmega328.bootloader.low_fuses=0xFF
+atmega328.bootloader.high_fuses=0xDA
+atmega328.bootloader.extended_fuses=0x05
+atmega328.bootloader.path=atmega
+atmega328.bootloader.file=ATmegaBOOT_168_atmega328.hex
+atmega328.bootloader.unlock_bits=0x3F
+atmega328.bootloader.lock_bits=0x0F
+atmega328.build.mcu=atmega328p
+atmega328.build.f_cpu=16000000L
+atmega328.build.core=cosa
+atmega328.build.variant=standard
+
+nano328.name=Cosa Arduino Nano (ATmega328)
+nano328.upload.protocol=arduino
+nano328.upload.maximum_size=30720
+nano328.upload.speed=57600
+nano328.bootloader.low_fuses=0xFF
+nano328.bootloader.high_fuses=0xDA
+nano328.bootloader.extended_fuses=0x05
+nano328.bootloader.path=atmega
+nano328.bootloader.file=ATmegaBOOT_168_atmega328.hex
+nano328.bootloader.unlock_bits=0x3F
+nano328.bootloader.lock_bits=0x0F
+nano328.build.mcu=atmega328p
+nano328.build.f_cpu=16000000L
+nano328.build.core=cosa
+nano328.build.variant=eightanaloginputs
+
+lilypad328.name=Cosa LilyPad Arduino (ATmega328)
+lilypad328.upload.protocol=arduino
+lilypad328.upload.maximum_size=30720
+lilypad328.upload.speed=57600
+lilypad328.bootloader.low_fuses=0xFF
+lilypad328.bootloader.high_fuses=0xDA
+lilypad328.bootloader.extended_fuses=0x05
+lilypad328.bootloader.path=atmega
+lilypad328.bootloader.file=ATmegaBOOT_168_atmega328_pro_8MHz.hex
+lilypad328.bootloader.unlock_bits=0x3F
+lilypad328.bootloader.lock_bits=0x0F
+lilypad328.build.mcu=atmega328p
+lilypad328.build.f_cpu=8000000L
+lilypad328.build.core=cosa
+lilypad328.build.variant=standard
+
+lilypad.name=Cosa Small LilyPad Arduino (ATmega168)
+lilypad.upload.protocol=arduino
+lilypad.upload.maximum_size=14336
+lilypad.upload.speed=19200
+lilypad.bootloader.low_fuses=0xe2
+lilypad.bootloader.high_fuses=0xdd
+lilypad.bootloader.extended_fuses=0x00
+lilypad.bootloader.path=lilypad
+lilypad.bootloader.file=LilyPadBOOT_168.hex
+lilypad.bootloader.unlock_bits=0x3F
+lilypad.bootloader.lock_bits=0x0F
+lilypad.build.mcu=atmega168
+lilypad.build.f_cpu=8000000L
+lilypad.build.core=cosa
+lilypad.build.variant=standard
+
+pro5v328.name=Cosa Arduino Pro Mini (ATmega328, 5V, 16 MHz)
+pro5v328.upload.protocol=arduino
+pro5v328.upload.maximum_size=30720
+pro5v328.upload.speed=57600
+pro5v328.bootloader.low_fuses=0xFF
+pro5v328.bootloader.high_fuses=0xDA
+pro5v328.bootloader.extended_fuses=0x05
+pro5v328.bootloader.path=atmega
+pro5v328.bootloader.file=ATmegaBOOT_168_atmega328.hex
+pro5v328.bootloader.unlock_bits=0x3F
+pro5v328.bootloader.lock_bits=0x0F
+pro5v328.build.mcu=atmega328p
+pro5v328.build.f_cpu=16000000L
+pro5v328.build.core=cosa
+pro5v328.build.variant=standard
+
+pro5v.name=Cosa Small Arduino Pro Mini (ATmega168, 5V, 16 MHz)
+pro5v.upload.protocol=arduino
+pro5v.upload.maximum_size=14336
+pro5v.upload.speed=19200
+pro5v.bootloader.low_fuses=0xff
+pro5v.bootloader.high_fuses=0xdd
+pro5v.bootloader.extended_fuses=0x00
+pro5v.bootloader.path=atmega
+pro5v.bootloader.file=ATmegaBOOT_168_diecimila.hex
+pro5v.bootloader.unlock_bits=0x3F
+pro5v.bootloader.lock_bits=0x0F
+pro5v.build.mcu=atmega168
+pro5v.build.f_cpu=16000000L
+pro5v.build.core=cosa
+pro5v.build.variant=standard
+
+pro328.name=Cosa Low-Voltage Arduino Pro Mini (ATmega328, 3.3V, 8 MHz)
+pro328.upload.protocol=arduino
+pro328.upload.maximum_size=30720
+pro328.upload.speed=57600
+pro328.bootloader.low_fuses=0xFF
+pro328.bootloader.high_fuses=0xDA
+pro328.bootloader.extended_fuses=0x05
+pro328.bootloader.path=atmega
+pro328.bootloader.file=ATmegaBOOT_168_atmega328_pro_8MHz.hex
+pro328.bootloader.unlock_bits=0x3F
+pro328.bootloader.lock_bits=0x0F
+pro328.build.mcu=atmega328p
+pro328.build.f_cpu=8000000L
+pro328.build.core=cosa
+pro328.build.variant=standard
+
+pro.name=Cosa Low-Voltage Small Arduino Pro Mini (ATmega168, 3.3V, 8 MHz)
+pro.upload.protocol=arduino
+pro.upload.maximum_size=14336
+pro.upload.speed=19200
+pro.bootloader.low_fuses=0xc6
+pro.bootloader.high_fuses=0xdd
+pro.bootloader.extended_fuses=0x00
+pro.bootloader.path=atmega
+pro.bootloader.file=ATmegaBOOT_168_pro_8MHz.hex
+pro.bootloader.unlock_bits=0x3F
+pro.bootloader.lock_bits=0x0F
+pro.build.mcu=atmega168
+pro.build.f_cpu=8000000L
+pro.build.core=cosa
+pro.build.variant=standard
+
+##
+# ARDUINO MIGHTY
+##
+
+mighty.name=Cosa Mighty (ATmega1284)
+mighty.upload.protocol=stk500v1
+mighty.upload.maximum_size=129024
+mighty.upload.speed=57600
+mighty.bootloader.low_fuses=0xff
+mighty.bootloader.high_fuses=0xdc
+mighty.bootloader.extended_fuses=0xfd
+mighty.bootloader.path=standard
+mighty.bootloader.file=ATmegaBOOT_1284P.hex
+mighty.bootloader.unlock_bits=0x3F
+mighty.bootloader.lock_bits=0x0F
+mighty.build.mcu=atmega1284p
+mighty.build.f_cpu=16000000L
+mighty.build.core=cosa
+mighty.build.variant=standard
+
+mighty_opt.name=Cosa Mighty (ATmega1284, Optiboot)
+mighty_opt.upload.protocol=arduino
+mighty_opt.upload.maximum_size=130048
+mighty_opt.upload.speed=115200
+mighty_opt.bootloader.low_fuses=0xff
+mighty_opt.bootloader.high_fuses=0xde
+mighty_opt.bootloader.extended_fuses=0xfd
+mighty_opt.bootloader.path=optiboot
+mighty_opt.bootloader.file=optiboot_atmega1284p.hex
+mighty_opt.bootloader.unlock_bits=0x3F
+mighty_opt.bootloader.lock_bits=0x0F
+mighty_opt.build.mcu=atmega1284p
+mighty_opt.build.f_cpu=16000000L
+mighty_opt.build.core=cosa
+mighty_opt.build.variant=standard
+
+##
+# ARDUINO MEGA
+##
+
+mega2560.name=Cosa Arduino Mega (ATmega2560)
+mega2560.upload.protocol=wiring
+mega2560.upload.maximum_size=258048
+mega2560.upload.speed=115200
+
+mega2560.bootloader.low_fuses=0xFF
+mega2560.bootloader.high_fuses=0xD8
+mega2560.bootloader.extended_fuses=0xFD
+mega2560.bootloader.path=stk500v2
+mega2560.bootloader.file=stk500boot_v2_mega2560.hex
+mega2560.bootloader.unlock_bits=0x3F
+mega2560.bootloader.lock_bits=0x0F
+
+mega2560.build.mcu=atmega2560
+mega2560.build.f_cpu=16000000L
+mega2560.build.core=cosa
+mega2560.build.variant=mega
