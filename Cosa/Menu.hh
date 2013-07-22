@@ -94,10 +94,12 @@ public:
   public:
     /**
      * @override
-     * Menu action function for given menu item.
+     * Menu action function for given menu item. Return true(1) if the
+     * menu walker should render the display otherwise if the false(0).
      * @param[in] item menu item reference.
+     * @return bool
      */
-    virtual void run(Menu::item_P item) = 0;
+    virtual bool run(Menu::item_P item) = 0;
   };
 
   // Menu action item
@@ -111,7 +113,7 @@ public:
    * The Menu Walker reacts to key events from the key pad. It maintains
    * a stack with the path to the current position in the menu three.
    */
-  class Walker : public LCDKeypad {
+  class Walker {
   private:
     // Stack for menu walker path
     static const uint8_t STACK_MAX = 8;
@@ -130,22 +132,24 @@ public:
     // Output stream for menu printout
     IOStream m_out;
 
-  /**
-   * @override
-   * The menu walker key interpretor.
-   * @param[in] nr key number (index in map).
-   */
-    virtual void on_key_down(uint8_t nr);
-
   public:
+    // Menu walker key index (same as LCDkeypad map for simplicity)
+    enum {
+      NO_KEY = 0,
+      SELECT_KEY,
+      LEFT_KEY,
+      DOWN_KEY,
+      UP_KEY,
+      RIGHT_KEY
+    } __attribute__((packed));
+    
     /** 
      * Construct a menu walker for the given menu. 
      * @param[in] lcd device. 
      * @param[in] root menu item list.
      */
     Walker(LCD::Device* lcd, item_list_P root) : 
-      LCDKeypad(), 
-      m_top(0) ,
+      m_top(0),
       m_ix(0),
       m_bv(0),
       m_selected(false),
@@ -160,6 +164,14 @@ public:
     void begin() { m_out << clear << *this; }
 
     /**
+     * The menu walker key interpretor. Should be called by a menu
+     * controller, i.e. an adapter of controller events to the menu
+     * walker key.
+     * @param[in] nr key number (index in map).
+     */
+    void on_key_down(uint8_t nr);
+
+    /**
      * Print menu walker state, current menu position to given
      * output stream.
      * @param[in] outs output stream.
@@ -167,6 +179,36 @@ public:
      * @return output stream
      */
     friend IOStream& operator<<(IOStream& outs, Walker& walker);
+  };
+
+  /**
+   * Menu walker controller for the LCD keypad. Adapt the keypad
+   * key down events to the Menu walker. For simplicity the key
+   * map for the walker and the LCD keypad are the same.
+   */
+  class KeypadController : public LCDKeypad {
+  public:
+    Walker* m_walker;
+    
+  public:
+    /**
+     * Construct keypad event adapter for menu walker.
+     * @param[in] walker to control.
+     */
+    KeypadController(Walker* walker) :
+      LCDKeypad(),
+      m_walker(walker)
+    {}
+    
+    /**
+     * @override
+     * The menu walker key interpretor.
+     * @param[in] nr key number (index in map).
+     */
+    virtual void on_key_down(uint8_t nr)
+    {
+      m_walker->on_key_down(nr);
+    }
   };
 };
 

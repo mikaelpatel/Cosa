@@ -40,11 +40,12 @@ HD44780 lcd(&port);
 
 class FileOpenAction : public Menu::Action {
 public:
-  virtual void run(Menu::item_P item) 
+  virtual bool run(Menu::item_P item) 
   {
     lcd.display_clear();
     lcd.puts_P(PSTR("Opening File..."));
     SLEEP(2);
+    return (true);
   }
 };
 
@@ -143,6 +144,7 @@ MENU_END(root_menu)
 // keypad handler. It polls the keys and issues key events to the
 // menu walker.
 Menu::Walker walker(&lcd, &root_menu);
+Menu::KeypadController controller(&walker);
 
 void setup()
 {

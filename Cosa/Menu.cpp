@@ -135,9 +135,10 @@ Menu::Walker::on_key_down(uint8_t nr)
       {
 	Menu::action_P action = (Menu::action_P) item;
 	Menu::Action* obj = (Menu::Action*) pgm_read_word(&action->obj);
-	obj->run(item);
+	bool res = obj->run(item);
 	m_top = 0;
 	m_ix = 0;
+	if (!res) return;
       }
       break;
     default:
