@@ -77,15 +77,9 @@ forum](http://arduino.cc/forum/index.php/topic,150299.0.html).
 Install
 -------
 
-WINDOWS: To install download and move the Cosa directory to the
-Arduino cores directory within arduino itself, i.e.,
-your-arduino-install-directory/hardware/arduino/cores/arduino. The
-examples should be moved to your Arduino sketchbook directory. 
-
-LINUX: Download as above or clone from github. Instead of moving the
-Cosa directory create a symbolic link in arduino to the Cosa source
-directory, and another symbolic link in your sketch directory to the
-Cosa example sketches. 
+The Cosa zip file is an Arduino core package. Download and unzip in
+your Sketchbook hardware directory. Restart the Arduino IDE and Cosa
+will show up as a number of boards and example sketches.
 
 The Application Programmers Interface (API) documentation is available 
 [online](http://dl.dropbox.com/u/993383/Cosa/doc/html/index.html) and
@@ -98,14 +92,6 @@ dependencies, and much more.
 The provided documentation is generated with doxygen and may also be
 generated for users source code if the Cosa documentation style is
 adapted. See the Doxyfile for configuration of doxygen. 
-
-For ATtiny install the David Mellis MIT ATtiny
-[core](http://hlt.media.mit.edu/?p=1695). A patch is 
-needed for Arduino version less than 1.0.5 to allow linking programs
-larger than 4K; See 
-https://github.com/TCWORLD/ATTinyCore/tree/master/PCREL%20Patch%20for%20GCC. Do
-not forget to program the ATtiny device with the bootloader, i.e., set
-the fuse bits, before using the device for the first time. 
 
 Drivers
 -------
@@ -221,4 +207,5 @@ for I2C-bus with interrupt. Support for 20x4 LCD.
 device drivers. Benchmarking and optimizing LCD device drivers. Added
 an event driven resistor net keypad handler and support for the
 DFRobot LCD Keypad shield. Boosting LCD performance to 2-6X faster
-than Arduino library. Added a new LCD menu system.       
+than Arduino library. Added a new LCD menu system. Refactored Cosa
+directory structure to match the Arduino core file structure.       
