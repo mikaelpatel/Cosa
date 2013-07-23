@@ -387,7 +387,7 @@ Device driver for PCD8544 48x84 pixels matrix LCD controller/driver
 (Serial OutputPin).
 
 @section HD44780 
-Device driver for HD44780 (aka 1602) 16x2 character LCD
+Device driver for HD44780 (aka 1602) 16x2/20x4 character LCD
 controller/driver (Serial OutputPin/Port direct).
 */
 
