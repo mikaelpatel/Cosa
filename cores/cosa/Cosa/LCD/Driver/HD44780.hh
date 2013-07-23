@@ -95,8 +95,6 @@ protected:
   /**
    * Bus Timing Characteristics (in micro-seconds), fig. 25, pp. 50
    */
-  static const uint16_t ENABLE_PULSE_WIDTH = 1;
-  static const uint16_t SHORT_EXEC_TIME = 35;
   static const uint16_t LONG_EXEC_TIME = 1500;
   static const uint16_t POWER_ON_TIME = 32;
   static const uint16_t INIT0_TIME = 4500;
@@ -420,6 +418,8 @@ public:
    */
   class Port : public IO {
   private:
+    static const uint16_t SHORT_EXEC_TIME = 35;
+
     OutputPin m_rs;		// Register select (0/instruction, 1/data)
     OutputPin m_en;		// Starts data read/write
     OutputPin m_bt;		// Back-light control (0/on, 1/off)
@@ -481,7 +481,7 @@ public:
 #endif
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
-   * Shift Register 3-Wire Port, 74HC595, 
+   * Shift Register 3-Wire Port, 74HC595, with digital output pins.
    * @section Circuit
    *   SR:QA..QD => LCD:D4..D7
    *       SR:QE => LCD:RS
@@ -520,6 +520,79 @@ public:
 	 Board::DigitalPin en = Board::D5) :
       m_sda(sda),
       m_scl(scl),
+      m_en(en)
+    {
+    }
+
+    /**
+     * @override
+     * Initiate serial port.
+     */
+    virtual void setup();
+
+    /**
+     * @override
+     * Write LSB nibble to display using serial port.
+     * @param[in] data (4b) to write.
+     */
+    virtual void write4b(uint8_t data);
+    
+    /**
+     * @override
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write8b(uint8_t data);
+
+    /**
+     * @override
+     * Set instruction/data mode using given rs pin; zero for
+     * instruction, non-zero for data mode.
+     * @param[in] flag.
+     */
+    virtual void set_mode(uint8_t flag);
+
+    /**
+     * @override
+     * Set backlight on/off using bt pin.
+     * @param[in] flag.
+     */
+    virtual void set_backlight(uint8_t flag);
+  };
+
+  /**
+   * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
+   * Shift Register 3-Wire Port, 74HC595, using SPI.
+   * @section Circuit
+   *   SR:QA..QD => LCD:D4..D7
+   *       SR:QE => LCD:RS
+   *      SR:SER <= MOSI (Arduino:D11)
+   *    SR:SRCLK <= SCK(Arduino:D13)
+   *    SR:RCLCK <= EN (Arduino:D5) and LCD:EN
+   *       SR:OE <= GND
+   *    SR:SRCLR <= VCC
+   */
+  class SR3WSPI : public IO {
+  private:
+    static const uint16_t SHORT_EXEC_TIME = 25;
+    union {
+      uint8_t as_uint8;
+      struct {
+	uint8_t data:4;		/**< Data port (P0..P3) */
+	uint8_t rs:1;		/**< Command/Data select (P4) */
+	uint8_t bt:1;		/**< Back-light control (P5) */
+	uint8_t reserved:2;	/**< Reserved */
+      };
+    } m_port;
+    OutputPin m_en;		// Starts data read/write
+    
+  public:
+    /**
+     * Construct HD44780 3-wire serial port connected to given enable pin. 
+     * Uses the SPI::MOSI(D11) and SPI:SCK(D13) pins.
+     * @param[in] en enable pulse (Default D5)
+     */
+    SR3WSPI(Board::DigitalPin en = Board::D5) :
       m_en(en)
     {
     }
