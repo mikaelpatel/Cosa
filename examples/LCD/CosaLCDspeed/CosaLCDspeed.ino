@@ -28,8 +28,8 @@
 // Select the LCD device for the benchmark
 #include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port port;
-HD44780::SR3W port;
-// HD44780::MJKDZ port;
+// HD44780::SR3W port;
+HD44780::MJKDZ port;
 // HD44780::DFRobot port;
 HD44780 lcd(&port);
 
@@ -50,6 +50,7 @@ void write_str(uint16_t nr);
 void write_pstr(uint16_t nr);
 void write_dec_uint16(uint16_t nr);
 void write_bin_uint16(uint16_t nr);
+void write_pos(uint16_t nr);
 
 // Measurement support
 void measure(const char* name, benchmark_t fn, uint16_t nr);
@@ -83,6 +84,7 @@ void loop()
   MEASURE(write_char, 1000);
   MEASURE(write_str, 1000);
   MEASURE(write_pstr, 1000);
+  MEASURE(write_pos, 10);
   MEASURE(write_dec_uint16, 10000);
   MEASURE(write_bin_uint16, 1000);
 }
@@ -153,6 +155,27 @@ void write_bin_uint16(uint16_t nr)
   while (nr--) {
     lcd.set_cursor(0, 1);
     trace << bin << nr;
+  }
+}
+
+void write_pos(uint16_t nr)
+{
+#if defined(__COSA_LCD_DRIVER_HD44780_HH__) || defined(__COSA_VLCD_HH__) 
+  const uint8_t WIDTH = 16;
+  const uint8_t HEIGHT = 2;
+#else
+  const uint8_t WIDTH = lcd.WIDTH / lcd.get_text_font()->get_width(' ');
+  const uint8_t HEIGHT = lcd.LINES;
+#endif
+  while (nr--) {
+    for (uint8_t c = 'A'; c < 'F'; c++) {
+      for (uint8_t height = 0; height < HEIGHT; height++) {
+	for (uint8_t width = 0; width < WIDTH; width++) {
+	  lcd.set_cursor(width, height);
+	  lcd.putchar(c);
+	}
+      }
+    }
   }
 }
 
