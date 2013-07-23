@@ -60,21 +60,29 @@ IOStream& operator<<(IOStream& outs, Pin& pin)
 void 
 OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
 {
-  uint8_t bits = CHARBITS;
+  register uint8_t bits = CHARBITS / 2;
   if (order == MSB_FIRST) {
     do {
       write(value & 0x80);
+      clk.toggle();
       value <<= 1;
-      clk.set();
-      clk.clear();
+      clk.toggle();
+      write(value & 0x80);
+      clk.toggle();
+      value <<= 1;
+      clk.toggle();
     } while (--bits);
   }
   else {
     do {
       write(value & 0x01);
+      clk.toggle();
       value >>= 1;
-      clk.set();
-      clk.clear();
+      clk.toggle();
+      write(value & 0x01);
+      clk.toggle();
+      value >>= 1;
+      clk.toggle();
     } while (--bits);
   }
 }

@@ -479,6 +479,86 @@ public:
     virtual void set_backlight(uint8_t flag);
   };
 #endif
+  /**
+   * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
+   * Shift Register 3-Wire Port, 74HC595, 
+   * @section Circuit
+   *   SR:QA..QD => LCD:D4..D7
+   *       SR:QE => LCD:RS
+   *      SR:SER <= SDA(Arduino:D7)
+   *    SR:SRCLK <= SCL (Arduino:D6)
+   *    SR:RCLCK <= EN (Arduino:D5) and LCD:EN
+   *       SR:OE <= GND
+   *    SR:SRCLR <= VCC
+   */
+  class SR3W : public IO {
+  private:
+    union {
+      uint8_t as_uint8;
+      struct {
+	uint8_t data:4;		/**< Data port (P0..P3) */
+	uint8_t rs:1;		/**< Command/Data select (P4) */
+	uint8_t bt:1;		/**< Back-light control (P5) */
+	uint8_t reserved:2;	/**< Reserved */
+      };
+    } m_port;
+
+    OutputPin m_sda;		// Serial data output
+    OutputPin m_scl;		// Serial clock
+    OutputPin m_en;		// Starts data read/write
+    
+  public:
+    /**
+     * Construct HD44780 3-wire serial port connected to given command
+     * and enable pin. 
+     * @param[in] sda serial data pin (Default D7)
+     * @param[in] scl serial clock pin (Default D6)
+     * @param[in] en enable pulse (Default D5)
+     */
+    SR3W(Board::DigitalPin sda = Board::D7, 
+	 Board::DigitalPin scl = Board::D6,
+	 Board::DigitalPin en = Board::D5) :
+      m_sda(sda),
+      m_scl(scl),
+      m_en(en)
+    {
+    }
+
+    /**
+     * @override
+     * Initiate serial port.
+     */
+    virtual void setup();
+
+    /**
+     * @override
+     * Write LSB nibble to display using serial port.
+     * @param[in] data (4b) to write.
+     */
+    virtual void write4b(uint8_t data);
+    
+    /**
+     * @override
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write8b(uint8_t data);
+
+    /**
+     * @override
+     * Set instruction/data mode using given rs pin; zero for
+     * instruction, non-zero for data mode.
+     * @param[in] flag.
+     */
+    virtual void set_mode(uint8_t flag);
+
+    /**
+     * @override
+     * Set backlight on/off using bt pin.
+     * @param[in] flag.
+     */
+    virtual void set_backlight(uint8_t flag);
+  };
 
   /**
    * IO handler for HD44780 (LCD-II) Dot Matix Liquid Crystal Display

@@ -468,8 +468,8 @@ public:
   /**
    * Shift out given byte to the output pin using the given clock
    * output pin. Shift out according to given direction.
-   * @param[in] clk output pin.
    * @param[in] value to write.
+   * @param[in] clk output pin.
    * @param[in] order bit first.
    */
   void write(uint8_t value, OutputPin& clk, Direction order = MSB_FIRST);
