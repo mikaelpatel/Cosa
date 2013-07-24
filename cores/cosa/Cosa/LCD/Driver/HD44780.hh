@@ -95,8 +95,8 @@ protected:
   /**
    * Bus Timing Characteristics (in micro-seconds), fig. 25, pp. 50
    */
-  static const uint16_t LONG_EXEC_TIME = 1500;
-  static const uint16_t POWER_ON_TIME = 32;
+  static const uint16_t LONG_EXEC_TIME = 1600;
+  static const uint16_t POWER_ON_TIME = 48;
   static const uint16_t INIT0_TIME = 4500;
   static const uint16_t INIT1_TIME = 150;
 
@@ -418,7 +418,11 @@ public:
    */
   class Port : public IO {
   private:
-    static const uint16_t SHORT_EXEC_TIME = 35;
+#if !defined(__ARDUINO_TINY__)
+    static const uint16_t SHORT_EXEC_TIME = (33 * I_CPU) / 16;
+#else
+    static const uint16_t SHORT_EXEC_TIME = (17 * I_CPU) / 8;
+#endif
 
     OutputPin m_rs;		// Register select (0/instruction, 1/data)
     OutputPin m_en;		// Starts data read/write
@@ -493,6 +497,7 @@ public:
    */
   class SR3W : public IO {
   private:
+    static const uint16_t SHORT_EXEC_TIME = (6 * I_CPU) / 16;
     union {
       uint8_t as_uint8;
       struct {
@@ -515,6 +520,7 @@ public:
      * @param[in] scl serial clock pin (Default D6)
      * @param[in] en enable pulse (Default D5)
      */
+#if !defined(__ARDUINO_TINY__)
     SR3W(Board::DigitalPin sda = Board::D7, 
 	 Board::DigitalPin scl = Board::D6,
 	 Board::DigitalPin en = Board::D5) :
@@ -523,6 +529,16 @@ public:
       m_en(en)
     {
     }
+#else
+    SR3W(Board::DigitalPin sda = Board::D1, 
+	 Board::DigitalPin scl = Board::D2,
+	 Board::DigitalPin en = Board::D3) :
+      m_sda(sda),
+      m_scl(scl),
+      m_en(en)
+    {
+    }
+#endif
 
     /**
      * @override
@@ -574,7 +590,12 @@ public:
    */
   class SR3WSPI : public IO {
   private:
-    static const uint16_t SHORT_EXEC_TIME = 25;
+#if !defined(__ARDUINO_TINY__)
+    static const uint16_t SHORT_EXEC_TIME = (25 * I_CPU) / 16;
+#else
+    static const uint16_t SHORT_EXEC_TIME = (12 * I_CPU) / 8;
+#endif
+
     union {
       uint8_t as_uint8;
       struct {
@@ -592,10 +613,17 @@ public:
      * Uses the SPI::MOSI(D11) and SPI:SCK(D13) pins.
      * @param[in] en enable pulse (Default D5)
      */
+#if !defined(__ARDUINO_TINY__)
     SR3WSPI(Board::DigitalPin en = Board::D5) :
       m_en(en)
     {
     }
+#else
+    SR3WSPI(Board::DigitalPin en = Board::D3) :
+      m_en(en)
+    {
+    }
+#endif
 
     /**
      * @override

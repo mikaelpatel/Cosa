@@ -35,7 +35,25 @@ void
 HD44780::SR3W::write4b(uint8_t data)
 {
   m_port.data = data;
-  m_sda.write(m_port.as_uint8, m_scl);
+  uint8_t value = m_port.as_uint8;
+  m_sda.write(value & 0x20);
+  m_scl.toggle();
+  m_scl.toggle();
+  m_sda.write(value & 0x10);
+  m_scl.toggle();
+  m_scl.toggle();
+  m_sda.write(value & 0x08);
+  m_scl.toggle();
+  m_scl.toggle();
+  m_sda.write(value & 0x04);
+  m_scl.toggle();
+  m_scl.toggle();
+  m_sda.write(value & 0x02);
+  m_scl.toggle();
+  m_scl.toggle();
+  m_sda.write(value & 0x01);
+  m_scl.toggle();
+  m_scl.toggle();
   m_en.toggle();
   m_en.toggle();
 }
@@ -44,13 +62,34 @@ void
 HD44780::SR3W::write8b(uint8_t data)
 {
   m_port.data = data >> 4;
-  m_sda.write(m_port.as_uint8, m_scl);
-  m_en.toggle();
-  m_en.toggle();
-  m_port.data = data;
-  m_sda.write(m_port.as_uint8, m_scl);
-  m_en.toggle();
-  m_en.toggle();
+  uint8_t value = m_port.as_uint8;
+  for (uint8_t i = 0; i < 2; i++) {
+    m_sda.write(value & 0x20);
+    m_scl.toggle();
+    m_scl.toggle();
+    m_sda.write(value & 0x10);
+    m_scl.toggle();
+    m_scl.toggle();
+    m_sda.write(value & 0x08);
+    m_scl.toggle();
+    m_scl.toggle();
+    m_sda.write(value & 0x04);
+    m_scl.toggle();
+    m_scl.toggle();
+    m_sda.write(value & 0x02);
+    m_scl.toggle();
+    m_scl.toggle();
+    m_sda.write(value & 0x01);
+    m_scl.toggle();
+    m_scl.toggle();
+    m_en.toggle();
+    m_en.toggle();
+    m_port.data = data;
+    value = m_port.as_uint8;
+  }
+#if (I_CPU >= 16)
+  DELAY(SHORT_EXEC_TIME);
+#endif
 }
 
 void 
@@ -64,5 +103,3 @@ HD44780::SR3W::set_backlight(uint8_t flag)
 {
   m_port.bt = flag;
 }
-
-
