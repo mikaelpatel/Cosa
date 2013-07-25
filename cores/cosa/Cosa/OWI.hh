@@ -95,7 +95,9 @@ public:
       m_next(0),
       m_pin(pin),
       NAME(name)
-    {}
+    {
+      memset(m_rom, 0, sizeof(m_rom));
+    }
 
     /**
      * Construct one wire device driver. Use one wire bus on given pin,

@@ -137,8 +137,8 @@ public:
    * @param[in] pin one wire bus pin.
    * @param[in] rom device identity (default null).
    */
-  DS18B20(OWI* pin, const uint8_t* rom) : 
-    OWI::Driver(pin, rom),
+  DS18B20(OWI* pin, const uint8_t* rom, const char* name = 0) :
+    OWI::Driver(pin, rom, name),
     m_parasite(0),
     m_start(0L),
     m_converting(false)

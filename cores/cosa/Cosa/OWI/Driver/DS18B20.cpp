@@ -39,7 +39,7 @@ bool
 DS18B20::connect(uint8_t index)
 {
   if (!OWI::Driver::connect(FAMILY_CODE, index)) return (false);
-  if (!read_scratchpad()) return (false);
+  if (!read_scratchpad(false)) return (false);
   read_power_supply();
   return (true);
 }
@@ -132,6 +132,7 @@ DS18B20::read_power_supply()
 
 IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
 {
+  if (thermometer.NAME != 0) outs << thermometer.NAME << PSTR(" = ");
   int16_t temp = thermometer.get_temperature();
   if (temp < 0) {
     temp = -temp;
@@ -139,7 +140,6 @@ IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
   }
   uint16_t fraction = (625 * (temp & 0xf)) / 100;
   int16_t integer = (temp >> 4);
-  if (thermometer.NAME != 0) outs << thermometer.NAME << PSTR(" = ");
   outs << integer << '.';
   if (fraction < 10) outs << '0';
   outs << fraction;

@@ -69,10 +69,10 @@ OWI::read(uint8_t bits)
       else {
 	mix = (m_crc ^ 0);
       }
-      m_crc >>= 1;
-      if (mix & 1) m_crc ^= 0x8C;
-      DELAY(55);
     }
+    m_crc >>= 1;
+    if (mix & 1) m_crc ^= 0x8C;
+    DELAY(55);
   }
   res >>= adjust;
   return (res);
