@@ -30,8 +30,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "Cosa/Event.hh"
-
-extern void setup(void);
+#include "Cosa/Watchdog.hh"
 
 /**
  * The init function; minimum setup of hardware after the bootloader.
@@ -59,6 +58,17 @@ void init()
 
   // Allow interrupts from here on
   sei();
+}
+
+/**
+ * The default setup function; initiate the watchdog. This function may be
+ * overridden.
+ */
+void setup() __attribute__((weak));
+void setup()
+{
+  // Start the watchdog ticks and push time events
+  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 }
 
 /**
