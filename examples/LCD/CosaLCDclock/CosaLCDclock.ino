@@ -21,6 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
@@ -35,13 +36,13 @@ DS3231 rtc;
 // HD44780::MJKDZ port;
 HD44780::DFRobot port;
 HD44780 lcd(&port);
-IOStream console(&lcd);
+IOStream cout(&lcd);
 
 void setup()
 {
   Watchdog::begin();
   lcd.begin();
-  console << PSTR("CosaLCDclock: started");
+  cout << PSTR("CosaLCDclock: started");
 
 #ifdef RTC_SET_TIME
   time_t now;
@@ -66,18 +67,20 @@ void loop()
   int16_t temp = rtc.get_temperature();
 
   // Update the LCD with the reading
-  console << clear;
+  cout << clear;
 
   // First line with date and temperature
-  console << PSTR("20") << bcd << now.year << '-'
-	  << bcd << now.month << '-'
-	  << bcd << now.date;
-  console << PSTR("  ");
-  console << (temp >> 2) << PSTR(" C");
+  cout << PSTR("20") << bcd << now.year << '-'
+       << bcd << now.month << '-'
+       << bcd << now.date << PSTR("  ")
+       << (temp >> 2) << PSTR(" C");
 
-  // Second line with time
-  console << bcd << now.hours << ':'
-	  << bcd << now.minutes << ':'
-	  << bcd << now.seconds;
+  // Second line with time and battery status
+  cout << bcd << now.hours << ':'
+       << bcd << now.minutes << ':'
+       << bcd << now.seconds << ' '
+       << AnalogPin::bandgap(1100) << PSTR(" mV");
+
+  // Take a nap
   SLEEP(1);
 }

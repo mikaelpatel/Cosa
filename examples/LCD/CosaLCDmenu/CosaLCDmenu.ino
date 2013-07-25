@@ -24,10 +24,10 @@
  *  +LCD           3176
  *  +port          3746
  *  +walker        4902
- *  +controller    6472
- *  +demo menu     6804
+ *  +controller    6472 (Data: 380)
+ *  +demo menu     6804 (Data: 396)
  * Demo menu system with action code is only 332 bytes program
- * memory.
+ * memory (PROGMEM) and 16 bytes data memory (SRAM).
  *
  * This file is part of the Arduino Che Cosa project.
  */
