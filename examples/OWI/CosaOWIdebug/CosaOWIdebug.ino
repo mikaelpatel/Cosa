@@ -66,7 +66,6 @@ void loop()
     if (last == OWI::Driver::ERROR) break;
     trace << dev << endl;
   } while (last != OWI::Driver::LAST);
-  trace << endl;
   ledPin.toggle();
   
   // Sleep awhile before checking again
