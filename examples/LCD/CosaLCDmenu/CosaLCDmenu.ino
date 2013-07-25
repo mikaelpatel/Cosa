@@ -19,8 +19,15 @@
  * Cosa LCD menu system demo.
  * 
  * @section Footprint
- * Baseline(Watchdog, LCD) 4006 bytes, +Menu::Walker 6732 bytes (+2726)
- * and +Demo menu code 7046 bytes (+314).
+ * Standard Arduino (Uno), LCD Keypad Shield
+ *  Baseline       1204 
+ *  +LCD           3176
+ *  +port          3746
+ *  +walker        4902
+ *  +controller    6472
+ *  +demo menu     6804
+ * Demo menu system with action code is only 332 bytes program
+ * memory.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -37,7 +44,6 @@ HD44780 lcd(&port);
 // Menu item with binding to an action function and state (object)
 // 1. Create an action handler by sub-classing Menu::Action and implement
 // the virtual member function run().
-
 class FileOpenAction : public Menu::Action {
 public:
   virtual bool run(Menu::item_P item) 
