@@ -25,49 +25,51 @@
 
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
+#include "Cosa/IOStream.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
 
-// Select the LCD port for the benchmark
-// HD44780::Port port;
+// Select the port for the benchmark
+HD44780::Port port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
-HD44780::MJKDZ port;
+// HD44780::MJKDZ port;
 // HD44780::DFRobot port;
 HD44780 lcd(&port);
+IOStream cout(&lcd);
 
-// Benchmarks
+// Display configuration
+const uint16_t WIDTH = 16;
+const uint16_t HEIGHT = 2;
+
+// Measurement support
 typedef void (*benchmark_t)(uint16_t);
+void measure(const char* name, benchmark_t fn, uint16_t nr, uint16_t bytes);
+#define MEASURE(fn,bytes) measure(PSTR(#fn),fn,10,bytes)
+
+// The benchmarks
 void benchmark1(uint16_t nr);
 void benchmark2(uint16_t nr);
 void benchmark3(uint16_t nr);
 void benchmark4(uint16_t nr);
 
-// Measurement support
-void measure(const char* name, benchmark_t fn, uint16_t nr, uint16_t bytes);
-#define MEASURE(fn,bytes)						\
-  do {									\
-    measure(PSTR(#fn),fn,10,bytes);					\
-    SLEEP(4);								\
-  } while (0)
+// Benchmark configuration
+#define CHAR_MAX 6
+#define NUM_STR   "1234567890123456"
+#define ALPHA_STR "ABCDEFGHIJKLMNOP"
 
 void setup()
 {
   RTC::begin();
   Watchdog::begin();
   lcd.begin();
-  trace.begin(&lcd, PSTR("CosaLCDbench: "));
+  cout << PSTR("CosaLCDbench:");
   SLEEP(2);
 }
-
-// Display configuration
-const uint16_t WIDTH = 16;
-const uint16_t HEIGHT = 2;
 
 void loop()
 {
   MEASURE(benchmark1, WIDTH * HEIGHT + 2);
-  MEASURE(benchmark2, WIDTH * HEIGHT * 6 * 2);
+  MEASURE(benchmark2, WIDTH * HEIGHT * CHAR_MAX * 2);
   MEASURE(benchmark3, WIDTH * HEIGHT + 2);
   MEASURE(benchmark4, WIDTH * HEIGHT + 2);
 }
@@ -87,7 +89,7 @@ void benchmark1(uint16_t nr)
 void benchmark2(uint16_t nr)
 {
   while (nr--) {
-    for (uint8_t c = 'A'; c <= 'A' + 5; c++) {
+    for (uint8_t c = 'A'; c < 'A' + CHAR_MAX; c++) {
       for (uint8_t height = 0; height < HEIGHT; height++) {
 	for (uint8_t width = 0; width < WIDTH; width++) {
 	  lcd.set_cursor(width, height);
@@ -97,9 +99,6 @@ void benchmark2(uint16_t nr)
     }
   }
 }
-
-#define NUM_STR   "1234567890123456"
-#define ALPHA_STR "ABCDEFGHIJKLMNOP"
 
 void benchmark3(uint16_t nr)
 {
@@ -123,14 +122,14 @@ void benchmark4(uint16_t nr)
 
 void measure(const char* name, benchmark_t fn, uint16_t nr, uint16_t bytes)
 {
-  lcd.display_clear();
-  lcd.puts_P(name);
+  cout << clear << name;
   uint32_t start = RTC::micros();
   {
     fn(nr);
   }
   uint32_t us = (RTC::micros() - start) / nr;
-  trace << clear << name << endl;
-  trace << us << PSTR(" us (") << us / bytes << PSTR(")");
+  cout << clear << name << endl;
+  cout << us << PSTR(" us (") << us / bytes << PSTR(")");
+  SLEEP(4);
 }
 
