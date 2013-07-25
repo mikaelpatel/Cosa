@@ -418,12 +418,11 @@ public:
    */
   class Port : public IO {
   private:
-#if !defined(__ARDUINO_TINY__)
-    static const uint16_t SHORT_EXEC_TIME = (33 * I_CPU) / 16;
+#if defined(__ARDUINO_TINYX4__)
+    static const uint16_t SHORT_EXEC_TIME = (29 * I_CPU) / 8;
 #else
-    static const uint16_t SHORT_EXEC_TIME = (17 * I_CPU) / 8;
+    static const uint16_t SHORT_EXEC_TIME = (33 * I_CPU) / 16;
 #endif
-
     OutputPin m_rs;		// Register select (0/instruction, 1/data)
     OutputPin m_en;		// Starts data read/write
     OutputPin m_bt;		// Back-light control (0/on, 1/off)
@@ -593,7 +592,7 @@ public:
 #if !defined(__ARDUINO_TINY__)
     static const uint16_t SHORT_EXEC_TIME = (25 * I_CPU) / 16;
 #else
-    static const uint16_t SHORT_EXEC_TIME = (12 * I_CPU) / 8;
+    static const uint16_t SHORT_EXEC_TIME = (13 * I_CPU) / 8;
 #endif
 
     union {
