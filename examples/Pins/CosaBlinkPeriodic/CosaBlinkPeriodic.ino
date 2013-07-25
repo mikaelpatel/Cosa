@@ -50,11 +50,7 @@ LED greenLedPin(Board::D6, 1024, 1);
 LED blueLedPin(Board::D7, 1024);
 #endif
 
+// Use the builtin led
 LED heartbeat(Board::LED, 512);
 
-// Start the watchdog (16 ms timeout, push timeout events)
-void setup()
-{
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
-}
-
+// Thats all. No setup() or loop() function necessary. Use the default
