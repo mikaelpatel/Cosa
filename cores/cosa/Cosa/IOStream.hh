@@ -584,8 +584,8 @@ public:
   friend IOStream& hex(IOStream& outs);
 
  private:
-  Device* m_dev;
-  Base m_base;
+  Device* m_dev;		/**< IOStream Device */
+  Base m_base;			/**< Base for next output operator */
 
   /**
    * Print number prefix for non decimal base.
@@ -599,55 +599,106 @@ public:
  * @param[in] outs stream.
  * @return iostream.
  */
-extern IOStream& bcd(IOStream& outs);
+inline IOStream& 
+bcd(IOStream& outs)
+{
+  outs.m_base = IOStream::bcd;
+  return (outs);
+}
 
 /**
  * Set current base to binary(2) for next operator print.
  * @param[in] outs stream.
  * @return iostream.
  */
-extern IOStream& bin(IOStream& outs);
+inline IOStream& 
+bin(IOStream& outs)
+{
+  outs.m_base = IOStream::bin;
+  return (outs);
+}
 
 /**
  * Set current base to octal(8) for next operator print.
  * @param[in] outs stream.
  * @return iostream.
  */
-extern IOStream& oct(IOStream& outs);
+inline IOStream& 
+oct(IOStream& outs)
+{
+  outs.m_base = IOStream::oct;
+  return (outs);
+}
 
 /**
  * Set current base to deciaml(10) for next operator print.
  * @param[in] outs stream.
  * @return iostream.
  */
-extern IOStream& dec(IOStream& outs);
+inline IOStream& 
+dec(IOStream& outs)
+{
+  outs.m_base = IOStream::dec;
+  return (outs);
+}
 
 /**
  * Set current base to hexadecimal(16) for next operator print.
  * @param[in] outs stream to set base.
  * @return iostream.
  */
-extern IOStream& hex(IOStream& outs);
+inline IOStream& 
+hex(IOStream& outs)
+{
+  outs.m_base = IOStream::hex;
+  return (outs);
+}
+
+/**
+ * Print horizontal tab '\t'.
+ * @param[in] outs stream.
+ * @return iostream.
+ */
+inline IOStream& 
+tab(IOStream& outs)
+{
+  outs.print('\t');
+  return (outs);
+}
 
 /**
  * Print end of line '\n'; carriage-return-line-feed.
  * @param[in] outs stream.
  * @return iostream.
  */
-extern IOStream& endl(IOStream& outs);
+inline IOStream& 
+endl(IOStream& outs)
+{
+  outs.print('\n');
+  return (outs);
+}
 
 /**
  * Print end of string '\0'; null character
  * @param[in] outs stream.
  * @return iostream.
  */
-extern IOStream& ends(IOStream& outs);
+inline IOStream& 
+ends(IOStream& outs)
+{
+  outs.print('\0');
+  return (outs);
+}
 
 /**
  * Print form feed '\f'; new page/clear screen
  * @param[in] outs stream.
  * @return iostream.
  */
-extern IOStream& clear(IOStream& outs);
-
+inline IOStream& 
+clear(IOStream& outs)
+{
+  outs.print('\f');
+  return (outs);
+}
 #endif

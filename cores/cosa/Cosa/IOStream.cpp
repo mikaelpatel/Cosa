@@ -56,7 +56,7 @@ void
 IOStream::print(int n, Base base) 
 {
   if (base != bcd) {
-    print_prefix(base);
+    if (base != dec) print_prefix(base);
     char buf[sizeof(int) * CHARBITS + 1];
     print(itoa(n, buf, base));
   }
@@ -69,7 +69,7 @@ IOStream::print(int n, Base base)
 void 
 IOStream::print(long int n, Base base)
 {
-  print_prefix(base);
+  if (base != dec) print_prefix(base);
   char buf[sizeof(long int) * CHARBITS + 1];
   print(ltoa(n, buf, base));
 }
@@ -77,7 +77,7 @@ IOStream::print(long int n, Base base)
 void 
 IOStream::print(unsigned int n, Base base) 
 {
-  print_prefix(base);
+  if (base != dec) print_prefix(base);
   char buf[sizeof(int) * CHARBITS + 1];
   print(utoa(n, buf, base));
 }
@@ -85,7 +85,7 @@ IOStream::print(unsigned int n, Base base)
 void 
 IOStream::print(unsigned long int n, Base base)
 {
-  print_prefix(base);
+  if (base != dec) print_prefix(base);
   char buf[sizeof(long int) * CHARBITS + 1];
   print(ultoa(n, buf, base));
 }
@@ -101,9 +101,7 @@ IOStream::print(IOStream::Device* buffer)
 void 
 IOStream::print_prefix(Base base)
 {
-  if (base == dec)
-    return;
-  else if (base == hex)
+  if (base == hex)
     print_P(PSTR("0x"));
   else if (base == bin)
     print_P(PSTR("0b"));
@@ -196,62 +194,6 @@ IOStream::vprintf_P(const char* format, va_list args)
     }
     print(c);
   }
-}
-
-IOStream& 
-bcd(IOStream& outs)
-{
-  outs.m_base = IOStream::bcd;
-  return (outs);
-}
-
-IOStream& 
-bin(IOStream& outs)
-{
-  outs.m_base = IOStream::bin;
-  return (outs);
-}
-
-IOStream& 
-oct(IOStream& outs)
-{
-  outs.m_base = IOStream::oct;
-  return (outs);
-}
-
-IOStream& 
-dec(IOStream& outs)
-{
-  outs.m_base = IOStream::dec;
-  return (outs);
-}
-
-IOStream& 
-hex(IOStream& outs)
-{
-  outs.m_base = IOStream::hex;
-  return (outs);
-}
-
-IOStream& 
-endl(IOStream& outs)
-{
-  outs.print('\n');
-  return (outs);
-}
-
-IOStream& 
-ends(IOStream& outs)
-{
-  outs.print('\0');
-  return (outs);
-}
-
-IOStream& 
-clear(IOStream& outs)
-{
-  outs.print('\f');
-  return (outs);
 }
 
 IOStream::Device IOStream::Device::null;
