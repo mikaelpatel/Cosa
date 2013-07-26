@@ -415,6 +415,11 @@ public:
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
    * IO Port. Arduino pins directly to LCD in 4-bit mode. Data port is 
    * implicitly defined (D4..D7).
+   * @section Circuit
+   *   D4..D7 (Arduino), D0..D3 (Tiny) => LCD:D4..D7
+   *   D8 (Arduino) => LCD:RS
+   *   D9 (Arduino) => LCD:EN
+   *   D10 (Arduino) => BT
    */
   class Port : public IO {
   private:
@@ -423,9 +428,9 @@ public:
 #else
     static const uint16_t SHORT_EXEC_TIME = (33 * I_CPU) / 16;
 #endif
-    OutputPin m_rs;		// Register select (0/instruction, 1/data)
-    OutputPin m_en;		// Starts data read/write
-    OutputPin m_bt;		// Back-light control (0/on, 1/off)
+    OutputPin m_rs;		/**< Register select (0/instruction, 1/data) */
+    OutputPin m_en;		/**< Starts data read/write */
+    OutputPin m_bt;		/**< Back-light control (0/on, 1/off) */
 
   public:
     /**
@@ -484,15 +489,16 @@ public:
 #endif
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
-   * Shift Register 3-Wire Port, 74HC595, with digital output pins.
+   * Shift Register 3-Wire Port, 74HC595 (SR[pin]), with digital output pins.
    * @section Circuit
-   *   SR:QA..QD => LCD:D4..D7
-   *       SR:QE => LCD:RS
-   *      SR:SER <= SDA(Arduino:D7)
-   *    SR:SRCLK <= SCL (Arduino:D6)
-   *    SR:RCLCK <= EN (Arduino:D5) and LCD:EN
-   *       SR:OE <= GND
-   *    SR:SRCLR <= VCC
+   *   SDA(Arduino:D7) => SR:SER[14]
+   *   SCL (Arduino:D6) => SR:SRCLK[11]
+   *   EN (Arduino:D5) => SR:RCLK[12]
+   *   VCC => /SR:SRCLR[10]
+   *   GND => /SR:OE[13]
+   *   SR:QA..QD[15,1..3] => LCD:D4..D7
+   *   EN (Arduino:D5) => LCD:EN
+   *   SR:QE[4] => LCD:RS
    */
   class SR3W : public IO {
   private:
@@ -506,10 +512,9 @@ public:
 	uint8_t reserved:2;	/**< Reserved */
       };
     } m_port;
-
-    OutputPin m_sda;		// Serial data output
-    OutputPin m_scl;		// Serial clock
-    OutputPin m_en;		// Starts data read/write
+    OutputPin m_sda;		/**< Serial data output */
+    OutputPin m_scl;		/**< Serial clock */
+    OutputPin m_en;		/**< Starts data read/write */
     
   public:
     /**
@@ -577,15 +582,15 @@ public:
 
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
-   * Shift Register 3-Wire Port, 74HC595, using SPI.
+   * Shift Register 3-Wire Port, 74HC595 (SR[pin]), using SPI.
    * @section Circuit
-   *   SR:QA..QD => LCD:D4..D7
-   *       SR:QE => LCD:RS
-   *      SR:SER <= MOSI (Arduino:D11)
-   *    SR:SRCLK <= SCK(Arduino:D13)
-   *    SR:RCLCK <= EN (Arduino:D5) and LCD:EN
-   *       SR:OE <= GND
-   *    SR:SRCLR <= VCC
+   *   MOSI (Arduino:D11) => SR:SER[14]
+   *   SCK (Arduino:D13) => SR:SRCLK[11]
+   *   EN (Arduino:D5) => SR:RCLK[12]
+   *   VCC => /SR:SRCLR[10]
+   *   GND => /SR:OE[13]
+   *   SR:QA..QD[15,1..3] => LCD:D4..D7
+   *   SR:QE[4] => LCD:RS
    */
   class SR3WSPI : public IO {
   private:
@@ -594,7 +599,6 @@ public:
 #else
     static const uint16_t SHORT_EXEC_TIME = (13 * I_CPU) / 8;
 #endif
-
     union {
       uint8_t as_uint8;
       struct {
@@ -604,7 +608,7 @@ public:
 	uint8_t reserved:2;	/**< Reserved */
       };
     } m_port;
-    OutputPin m_en;		// Starts data read/write
+    OutputPin m_en;		/**< Starts data read/write */
     
   public:
     /**
