@@ -81,6 +81,12 @@ The Cosa zip file is an Arduino core package. Download and unzip in
 your Sketchbook hardware directory. Restart the Arduino IDE and Cosa
 will show up as a number of boards and example sketches.
 
+For ATtiny a patch is needed for Arduino Windows version to allow
+linking programs larger than 4K; See
+https://github.com/TCWORLD/ATTinyCore/tree/master/PCREL%20Patch%20for%20GCC. 
+Do not forget to program the ATtiny device with the bootloader, i.e.,
+set the fuse bits, before using the device for the first time.  
+
 The Application Programmers Interface (API) documentation is available 
 [online](http://dl.dropbox.com/u/993383/Cosa/doc/html/index.html) and
 compressed for
