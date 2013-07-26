@@ -77,9 +77,11 @@ forum](http://arduino.cc/forum/index.php/topic,150299.0.html).
 Install
 -------
 
-The Cosa zip file is an Arduino core package. Download and unzip in
-your Sketchbook hardware directory. Restart the Arduino IDE and Cosa
-will show up as a number of boards and example sketches.
+The [Cosa zip file]
+(https://github.com/mikaelpatel/Cosa/archive/master.zip) is an Arduino
+core package. Download and unzip in your Sketchbook hardware
+folder. Create the folder if missing. Restart the Arduino IDE and Cosa
+will show up as a number of boards and example sketches.  
 
 For ATtiny a patch is needed for Arduino Windows version to allow
 linking programs larger than 4K; See
