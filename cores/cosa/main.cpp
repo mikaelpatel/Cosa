@@ -29,8 +29,10 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Pins.hh"
 
 /**
  * The init function; minimum setup of hardware after the bootloader.
@@ -61,6 +63,18 @@ void init()
 }
 
 /**
+ * The default behaviour for an empty sketch is the classical blink.
+ * This is not included with the default stepup() function is overridden.
+ */
+class LED : public Link {
+private:
+  OutputPin m_pin;
+public:
+  LED(Board::DigitalPin pin = Board::LED) : Link(), m_pin(pin) {}
+  virtual void on_event(uint8_t type, uint16_t value) { m_pin.toggle(); }
+};
+
+/**
  * The default setup function; initiate the watchdog. This function may be
  * overridden.
  */
@@ -69,6 +83,10 @@ void setup()
 {
   // Start the watchdog ticks and push time events
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+
+  // Start the heatbeat using the built-in LED
+  static LED heartbeat;
+  Watchdog::attach(&heartbeat, 512);
 }
 
 /**
@@ -93,5 +111,17 @@ int main(void)
   setup();
   while (1) loop();
   return (0);
+}
+
+/**
+ * Support for local static variables
+ */
+namespace __cxxabiv1 
+{
+  typedef int __guard;
+  extern "C" int __cxa_guard_acquire (__guard *g) { return (1); }
+  extern "C" void __cxa_guard_release (__guard *g) {}
+  extern "C" void __cxa_guard_abort (__guard *) {}
+  extern "C" void __cxa_pure_virtual(void) {}; 
 }
 
