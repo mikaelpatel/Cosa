@@ -22,7 +22,7 @@
  *
  * @section Description
  * Cosa Arduino main program. Calls sketch functions; setup() and
- * loop() and handles the iteration.
+ * loop() and handles the iteration. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -32,7 +32,7 @@
 
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/LED.hh"
 
 /**
  * The init function; minimum setup of hardware after the bootloader.
@@ -63,18 +63,6 @@ void init()
 }
 
 /**
- * The default behaviour for an empty sketch is the classical blink.
- * This is not included with the default stepup() function is overridden.
- */
-class LED : public Link {
-private:
-  OutputPin m_pin;
-public:
-  LED(Board::DigitalPin pin = Board::LED) : Link(), m_pin(pin) {}
-  virtual void on_event(uint8_t type, uint16_t value) { m_pin.toggle(); }
-};
-
-/**
  * The default setup function; initiate the watchdog. This function may be
  * overridden.
  */
@@ -84,9 +72,9 @@ void setup()
   // Start the watchdog ticks and push time events
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 
-  // Start the heatbeat using the built-in LED
-  static LED heartbeat;
-  Watchdog::attach(&heartbeat, 512);
+  // Start the built-in LED in alert mode
+  static LED builtin;
+  builtin.alert_mode();
 }
 
 /**
