@@ -33,8 +33,10 @@ DS3231 rtc;
 
 // Select the access port for the LCD
 // HD44780::Port port;
-// HD44780::MJKDZ port;
-HD44780::DFRobot port;
+// HD44780::SR3W port;
+// HD44780::SR3WSPI port;
+HD44780::MJKDZ port;
+// HD44780::DFRobot port;
 HD44780 lcd(&port);
 IOStream cout(&lcd);
 
@@ -76,6 +78,7 @@ void loop()
        << (temp >> 2) << PSTR(" C");
 
   // Second line with time and battery status
+  lcd.set_cursor(0, 1);
   cout << bcd << now.hours << ':'
        << bcd << now.minutes << ':'
        << bcd << now.seconds << ' '
