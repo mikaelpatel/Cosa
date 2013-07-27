@@ -34,6 +34,10 @@
  */
 class LCD : public IOStream {
 public:
+
+  /**
+   * LCD device driver interface. LCD delegates to device driver.
+   */
   class Device : public IOStream::Device {
   protected:
     uint8_t m_x;		/**< Cursor position x */

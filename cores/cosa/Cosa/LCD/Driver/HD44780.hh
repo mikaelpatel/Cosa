@@ -79,7 +79,8 @@ protected:
     
     /**
      * @override
-     * Set data/command mode; zero(0) for command, non-zero(1) for data mode. 
+     * Set data/command mode; zero(0) for command, 
+     * non-zero(1) for data mode. 
      * @param[in] flag.
      */
     virtual void set_mode(uint8_t flag) = 0;
@@ -156,7 +157,7 @@ protected:
     FONT_5X10DOTS = 0x04	// - 5X10 dots
   } __attribute__((packed));
 
-  // Row offset tables
+  // Row offset tables for display times (16X1, 16X2, 16X4 20X4)
   static const uint8_t offset0[] PROGMEM;
   static const uint8_t offset1[] PROGMEM;
 
@@ -250,8 +251,8 @@ public:
 
   /**
    * @override
-   * Stop display and power down. Returns true if successful otherwise
-   * false.
+   * Stop display and power down. Returns true if successful 
+   * otherwise false.
    */
   virtual bool end();
 
@@ -415,6 +416,7 @@ public:
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
    * IO Port. Arduino pins directly to LCD in 4-bit mode. Data port is 
    * implicitly defined (D4..D7).
+   *
    * @section Circuit
    *   D4..D7 (Arduino), D0..D3 (Tiny) => LCD:D4..D7
    *   D8 (Arduino) => LCD:RS
@@ -431,11 +433,11 @@ public:
     OutputPin m_rs;		/**< Register select (0/instruction, 1/data) */
     OutputPin m_en;		/**< Starts data read/write */
     OutputPin m_bt;		/**< Back-light control (0/on, 1/off) */
-
+    
   public:
     /**
-     * Construct HD44780 4-bit parallel port connected to given command
-     * and enable pin. Data pins are implicit; D4..D7 for Arduino
+     * Construct HD44780 4-bit parallel port connected to given command,
+     * enable and backlight pin. Data pins are implicit; D4..D7 for Arduino
      * Standard and Mighty. D10..D13 for Arduino/Mega. D0..D3 for ATtinyX4.
      * Connect to LCD pins D4..D7.  
      * @param[in] rs command/data select pin (Default D8).
@@ -489,16 +491,19 @@ public:
 #endif
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
-   * Shift Register 3-Wire Port, 74HC595 (SR[pin]), with digital output pins.
+   * Shift Register 3-Wire Port (SR3W), 74HC595 (SR[pin]), with digital 
+   * output pins.
+   *
    * @section Circuit
-   *   SDA(Arduino:D7) => SR:SER[14]
-   *   SCL (Arduino:D6) => SR:SRCLK[11]
-   *   EN (Arduino:D5) => SR:RCLK[12]
+   *   SDA (Arduino:D7/Tiny:D1) => SR:SER[14]
+   *   SCL (Arduino:D6/Tiny:D2) => SR:SRCLK[11]
+   *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
    *   VCC => /SR:SRCLR[10]
    *   GND => /SR:OE[13]
    *   SR:QA..QD[15,1..3] => LCD:D4..D7
-   *   EN (Arduino:D5) => LCD:EN
+   *   EN (Arduino:D5/Tiny:D3) => LCD:EN
    *   SR:QE[4] => LCD:RS
+   *   SR:QF[5] => LCD:BT (Backlight)
    */
   class SR3W : public IO {
   private:
@@ -509,7 +514,8 @@ public:
 	uint8_t data:4;		/**< Data port (P0..P3) */
 	uint8_t rs:1;		/**< Command/Data select (P4) */
 	uint8_t bt:1;		/**< Back-light control (P5) */
-	uint8_t reserved:2;	/**< Reserved */
+	uint8_t app2:1;		/**< Application bit#2 (P6) */
+	uint8_t app1:1;		/**< Application bit#1 (P7) */
       };
     } m_port;
     OutputPin m_sda;		/**< Serial data output */
@@ -518,8 +524,8 @@ public:
     
   public:
     /**
-     * Construct HD44780 3-wire serial port connected to given command
-     * and enable pin. 
+     * Construct HD44780 3-wire serial port connected to given serial
+     * data, clock and enable pulse pin. 
      * @param[in] sda serial data pin (Default D7)
      * @param[in] scl serial clock pin (Default D6)
      * @param[in] en enable pulse (Default D5)
@@ -582,15 +588,17 @@ public:
 
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
-   * Shift Register 3-Wire Port, 74HC595 (SR[pin]), using SPI.
+   * Shift Register 3-Wire Port (SR3WSPI), 74HC595 (SR[pin]), using SPI.
+   *
    * @section Circuit
-   *   MOSI (Arduino:D11) => SR:SER[14]
-   *   SCK (Arduino:D13) => SR:SRCLK[11]
-   *   EN (Arduino:D5) => SR:RCLK[12]
+   *   MOSI (Arduino:D11/TinyX4:D5/TinyX5:D0) => SR:SER[14]
+   *   SCK (Arduino:D13/TinyX4:D5/TinyX5:D2) => SR:SRCLK[11]
+   *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
    *   VCC => /SR:SRCLR[10]
    *   GND => /SR:OE[13]
    *   SR:QA..QD[15,1..3] => LCD:D4..D7
    *   SR:QE[4] => LCD:RS
+   *   SR:QF[5] => LCD:BT (Backlight)
    */
   class SR3WSPI : public IO {
   private:
@@ -605,7 +613,8 @@ public:
 	uint8_t data:4;		/**< Data port (P0..P3) */
 	uint8_t rs:1;		/**< Command/Data select (P4) */
 	uint8_t bt:1;		/**< Back-light control (P5) */
-	uint8_t reserved:2;	/**< Reserved */
+	uint8_t app2:1;		/**< Application bit#2 (P6) */
+	uint8_t app1:1;		/**< Application bit#1 (P7) */
       };
     } m_port;
     OutputPin m_en;		/**< Starts data read/write */
@@ -617,15 +626,9 @@ public:
      * @param[in] en enable pulse (Default D5)
      */
 #if !defined(__ARDUINO_TINY__)
-    SR3WSPI(Board::DigitalPin en = Board::D5) :
-      m_en(en)
-    {
-    }
+    SR3WSPI(Board::DigitalPin en = Board::D5) : m_en(en) {}
 #else
-    SR3WSPI(Board::DigitalPin en = Board::D3) :
-      m_en(en)
-    {
-    }
+    SR3WSPI(Board::DigitalPin en = Board::D3) : m_en(en) {}
 #endif
 
     /**
@@ -667,18 +670,18 @@ public:
   /**
    * IO handler for HD44780 (LCD-II) Dot Matix Liquid Crystal Display
    * Controller/Driver when using the MJKDZ IO expander board based on
-   * PCF8574. 
+   * PCF8574 I2C IO expander device driver. 
    */
   class MJKDZ : public IO, private PCF8574 {
   private:
-    // Max size of temporary buffer for TWI message
+    // Max size of temporary buffer for TWI message (8 encoded bytes)
     static const uint8_t TMP_MAX = 32;
     
     union {
       uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
 	uint8_t data:4;		/**< Data port (P0..P3) */
-	uint8_t en:1;		/**< Enable/pulse (P4) */
+	uint8_t en:1;		/**< Enable pulse (P4) */
 	uint8_t rw:1;		/**< Read/Write (P5) */
 	uint8_t rs:1;		/**< Command/Data select (P6) */
 	uint8_t bt:1;		/**< Back-light (P7) */
@@ -691,8 +694,7 @@ public:
      * I/O expander with given sub-address (A0..A2).
      * @param[in] subaddr sub-address (0..7, default 7).
      */
-    MJKDZ(uint8_t subaddr = 7) : 
-      PCF8574(PCF8574::ADDR, subaddr)
+    MJKDZ(uint8_t subaddr = 7) : PCF8574(PCF8574::ADDR, subaddr) 
     {
       m_port.as_uint8 = 0;
     }
@@ -727,8 +729,8 @@ public:
 
     /**
      * @override
-     * Set instruction/data mode; zero for instruction, non-zero for
-     * data mode. 
+     * Set instruction/data mode; zero for instruction, 
+     * non-zero for data mode. 
      * @param[in] flag.
      */
     virtual void set_mode(uint8_t flag);
@@ -744,7 +746,7 @@ public:
   /**
    * IO handler for HD44780 (LCD-II) Dot Matix Liquid Crystal Display
    * Controller/Driver when using the DFRobot IO expander board based 
-   * on PCF8574. 
+   * on PCF8574 I2C IO expander device driver. 
    */
   class DFRobot : public IO, private PCF8574 {
   private:
@@ -756,7 +758,7 @@ public:
       struct {
 	uint8_t rs:1;		/**< Command/Data select (P0) */
 	uint8_t rw:1;		/**< Read/Write (P1) */
-	uint8_t en:1;		/**< Enable/pulse (P2) */
+	uint8_t en:1;		/**< Enable pulse (P2) */
 	uint8_t bt:1;		/**< Back-light (P3) */
 	uint8_t data:4;		/**< Data port (P4..P7) */
       };
@@ -768,8 +770,7 @@ public:
      * I/O expander with given sub-address (A0..A2).
      * @param[in] subaddr sub-address (0..7, default 7).
      */
-    DFRobot(uint8_t subaddr = 7) : 
-      PCF8574(PCF8574::ADDR, subaddr)
+    DFRobot(uint8_t subaddr = 7) : PCF8574(PCF8574::ADDR, subaddr)
     {
       m_port.as_uint8 = 0;
     }
@@ -804,8 +805,8 @@ public:
 
     /**
      * @override
-     * Set instruction/data mode; zero for instruction, non-zero for
-     * data mode. 
+     * Set instruction/data mode; zero for instruction, 
+     * non-zero for data mode. 
      * @param[in] flag.
      */
     virtual void set_mode(uint8_t flag);
