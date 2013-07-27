@@ -29,33 +29,37 @@
 
 // Binary sketch size:  MEGA/STD*/TINY bytes
 // =========================================
-// Baseline:		1118/916/700   bytes
-// VLCD:		4664/4534/5164 bytes
-// HD44780::Port:	3760/3496/3348 bytes
-// HD44780::MJKDZ:	5046/4342/NA   bytes
-// HD44780::DFRobot:	5026/4332/NA   bytes
-// PCD8544: 		4680/4466/4122 bytes
-// ST7565:  		5052/4854/4512 bytes
+// Baseline:		 780/ 656/ 558 bytes
+// HD44780::Port:	3622/3452/3314 bytes
+// HD44780::SR3W:	4538/4368/4224 bytes
+// HD44780::SR3WSPI:	3862/3748/3508 bytes
+// HD44780::MJKDZ:	5122/5028/5570 bytes
+// HD44780::DFRobot:	5092/4998/5540 bytes
+// PCD8544: 		4458/4322/4004 bytes
+// ST7565:  		4830/4710/4394 bytes
+// VLCD:		4008/3948/4370 bytes
 // =========================================
 // The baseline is the Watchdog and Arduino
 // init code. Move comment prefix to compile 
 // different LCD drivers and compare size.
 // =========================================
 
-// #include "Cosa/VLCD.hh"
-// VLCD lcd;
-
-#include "Cosa/LCD/Driver/HD44780.hh"
+// #include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port port;
+// HD44780::SR3W port;
+// HD44780::SR3WSPI port;
 // HD44780::MJKDZ port;
-HD44780::DFRobot port;
-HD44780 lcd(&port);
+// HD44780::DFRobot port;
+// HD44780 lcd(&port);
 
 // #include "Cosa/LCD/Driver/PCD8544.hh"
 // PCD8544 lcd;
 
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
+
+#include "Cosa/VLCD.hh"
+VLCD lcd;
 
 void setup()
 {

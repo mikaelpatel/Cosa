@@ -37,7 +37,8 @@
 
 // LCD and communication port
 HD44780::Port port;
-// HD44780 lcd(&port);
+// HD44780::SR3W port;
+// HD44780::SR3WSPI port;
 // HD44780::MJKDZ port;
 // HD44780::DFRobot port;
 // HD44780 lcd(&port, 20, 4);
