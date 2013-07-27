@@ -21,6 +21,11 @@
  * Boston, MA  02111-1307  USA
  *
  * This file is part of the Arduino Che Cosa project.
+ *
+ * @section References
+ * The timing of 1-Wire read/write operations are according to
+ * AVR318: Dallas 1-Wire(R) master, Rev. 2579A-AVR-09/04, 
+ * Table 3. Bit transfer layer delays.
  */
 
 #include "Cosa/OWI.hh"
@@ -28,8 +33,8 @@
 bool
 OWI::reset()
 {
-  uint8_t res = 0;
   uint8_t retry = 4;
+  uint8_t res = 0;
   do {
     set_mode(OUTPUT_MODE);
     set();
@@ -41,8 +46,8 @@ OWI::reset()
       DELAY(70);
       res = is_clear();
     }
+    DELAY(410);
   } while (retry-- && !res);
-  DELAY(410);
   return (res != 0);
 }
 
@@ -52,7 +57,6 @@ OWI::read(uint8_t bits)
   uint8_t res = 0;
   uint8_t mix = 0;
   uint8_t adjust = CHARBITS - bits;
-  DELAY(5);
   while (bits--) {
     synchronized {
       set_mode(OUTPUT_MODE);
@@ -91,11 +95,10 @@ void
 OWI::write(uint8_t value, uint8_t bits, bool power)
 {
   uint8_t mix = 0;
-  synchronized {
-    set_mode(OUTPUT_MODE);
-    set();
-    DELAY(5);
-    while (bits--) {
+  set_mode(OUTPUT_MODE);
+  set();
+  while (bits--) {
+    synchronized {
       clear();
       if (value & 1) {
 	DELAY(6);
@@ -109,13 +112,12 @@ OWI::write(uint8_t value, uint8_t bits, bool power)
 	DELAY(10);
 	mix = (m_crc ^ 0);
       }
-      value >>= 1;
-      m_crc >>= 1;
-      if (mix & 1) m_crc ^= 0x8C;
     }
-    if (!power) power_off();
+    value >>= 1;
+    m_crc >>= 1;
+    if (mix & 1) m_crc ^= 0x8C;
   }
-  DELAY(10);
+  if (!power) power_off();
 }
 
 void 

@@ -72,7 +72,7 @@ Thermometer::on_alarm()
 
   // Read and print temperature. Do not need reset and presence pulse
   read_scratchpad(false);
-  trace << now << PSTR(":ALARM:") << *this << endl; 
+  trace << now << PSTR(" alarm ") << *this << endl; 
 }
 
 // Support macro to create name strings in program memory for devices
