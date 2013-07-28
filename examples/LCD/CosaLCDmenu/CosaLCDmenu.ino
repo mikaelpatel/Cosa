@@ -20,12 +20,12 @@
  * 
  * @section Footprint
  * Standard Arduino (Uno), LCD Keypad Shield
- *  Baseline       1204 
- *  +LCD           3176
- *  +port          3746
+ *  Baseline        954 
+ *  +LCD           3160
+ *  +port          3730
  *  +walker        4902
- *  +controller    6472 (Data: 380)
- *  +demo menu     6804 (Data: 396)
+ *  +controller    6493
+ *  +demo menu     6824
  * Demo menu system with action code is only 332 bytes program
  * memory (PROGMEM) and 16 bytes data memory (SRAM).
  *
@@ -36,8 +36,10 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/Menu.hh"
 
-// Use the HD44780 LCD driver with 4-bit parallel port and keypad shield
+// LCD Device  ---------------------------------------------------------------
+// Select port type to use with the LCD device driver.
 HD44780::Port port;
+// HD44780::SR3W port;
 HD44780 lcd(&port);
 
 // Menu Action ---------------------------------------------------------------
@@ -146,11 +148,11 @@ MENU_BEGIN(root_menu,"Demo")
 MENU_END(root_menu)
 
 // The menu handler ----------------------------------------------------------
-// The watchdog issues timeout events which periodically activate the
-// keypad handler. It polls the keys and issues key events to the
-// menu walker.
+// Control the menu walker with keypad (analog pin) or rotary encoder with
+// push button.
 Menu::Walker walker(&lcd, &root_menu);
-Menu::KeypadController controller(&walker);
+Menu::KeypadController keypad(&walker);
+// Menu::RotaryController rotary(&walker);
 
 void setup()
 {
@@ -159,4 +161,5 @@ void setup()
   lcd.puts_P(PSTR("CosaLCDmenu: started"));
   SLEEP(2);
   walker.begin();
+  // rotary.begin();
 }

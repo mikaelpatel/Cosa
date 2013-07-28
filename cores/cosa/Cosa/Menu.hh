@@ -29,6 +29,8 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/LCD.hh"
 #include "Cosa/Keypad.hh"
+#include "Cosa/Rotary.hh"
+#include "Cosa/Button.hh"
 
 /**
  * LCD Menu abstraction. Allows definition of menus with sub-menus,
@@ -159,11 +161,6 @@ public:
     }
 
     /**
-     * Print initial menu state.
-     */
-    void begin() { m_out << clear << *this; }
-
-    /**
      * The menu walker key interpretor. Should be called by a menu
      * controller, i.e. an adapter of controller events to the menu
      * walker key.
@@ -179,6 +176,20 @@ public:
      * @return output stream
      */
     friend IOStream& operator<<(IOStream& outs, Walker& walker);
+
+    /**
+     * Initiate the menu. If the given flag is true the menu state
+     * is printed.
+     */
+    void begin(bool flag = true) 
+    { 
+      if (flag) m_out << clear << *this; 
+    }
+
+    /**
+     * Get current menu item type.
+     */
+    Menu::type_t get_type();
   };
 
   /**
@@ -208,6 +219,81 @@ public:
     virtual void on_key_down(uint8_t nr)
     {
       m_walker->on_key_down(nr);
+    }
+  };
+
+  /**
+   * Menu walker controller for the Rotary encoder with push button.
+   * Rotary encoder CW is mapped to DOWN_KEY, CCW to UP_KEY. The
+   * push button is mapped to SELECT_KEY.
+   */
+  class RotaryController : public Rotary::Encoder {
+  private:
+    class RotaryButton : public Button {
+    private:
+      Menu::Walker* m_walker;
+  
+    public:
+      /**
+       * Create rotary encoder push button handler for given pin.
+       * @param[in] walker to control.
+       * @param[in] pin rotary encoder push button.
+       */
+      RotaryButton(Menu::Walker* walker, Board::DigitalPin pin = Board::D2) :
+	Button(pin, Button::ON_FALLING_MODE),  
+	m_walker(walker)
+      {
+      }
+      
+      /**
+       * @override
+       * The rotary encoder button generates a SELECT_KEY.
+       * @param[in] type of change.
+       */
+      virtual void on_change(uint8_t type)
+      {
+	m_walker->on_key_down(Menu::Walker::SELECT_KEY);
+      }
+    };
+
+    // The menu walker to control
+    Menu::Walker* m_walker;
+
+    // The rotary encoder push button handler
+    RotaryButton m_sw;
+  
+  public:
+    /**
+     * Construct rotary encoder event adapter for menu walker.
+     * @param[in] walker to control.
+     * @param[in] clk rotary encoder clock pin (Default PCI4).
+     * @param[in] dt rotary encoder data pin (Default PCI3).
+     * @param[in] sw rotary encoder switch pin (Default D2).
+     */
+    RotaryController(Menu::Walker* walker, 
+		     Board::InterruptPin clk = Board::PCI4, 
+		     Board::InterruptPin dt = Board::PCI3,
+		     Board::DigitalPin sw = Board::D2) :
+      Rotary::Encoder(clk, dt),
+      m_walker(walker),
+      m_sw(walker, sw)
+    {}
+    
+    /**
+     * @override
+     * Rotary change event handler. Forward change as a key; CW is mapped
+     * to DOWN_KEY and CCW to UP_KEY (and reverse for RANGE).
+     * @param[in] type the event type.
+     * @param[in] direction the event value.
+     */
+    virtual void on_event(uint8_t type, uint16_t direction);
+
+    /**
+     * Start the rotary encoder change detector.
+     */
+    void begin()
+    {
+      PinChangeInterrupt::begin();
     }
   };
 };
