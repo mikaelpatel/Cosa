@@ -1,9 +1,9 @@
 /**
- * @file Cosa/SPI/Driver/ADXL345.hh
+ * @file Cosa/TWI/Driver/ADXL345.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,33 +23,24 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SPI_DRIVER_ADXL345_HH__
-#define __COSA_SPI_DRIVER_ADXL345_HH__
+#ifndef __COSA_TWI_DRIVER_ADXL345_HH__
+#define __COSA_TWI_DRIVER_ADXL345_HH__
 
-#include "Cosa/SPI.hh"
+#include "Cosa/TWI.hh"
 #include "Cosa/Pins.hh"
+#include "Cosa/IOStream.hh"
 
 /**
- * Cosa driver for Analog Devices ADXL345 Digital Accelerometer SPI.
+ * Cosa TWI driver for Analog Devices ADXL345 Digital Accelerometer.
  * http://www.analog.com/static/imported-files/data_sheets/ADXL345.pdf
+ * Rev. C, 2009-2011.
  */
-class ADXL345 : private SPI::Driver {
-private:
-  /**
-   * SPI commands (See fig. 39, pp. 16)
-   */
-  enum {
-    WRITE_CMD = 0x00,		// Write command (6 bit addr)
-    READ_CMD = 0x80,		// Read command
-    MULTIPLE_BYTE = 0x40,	// Multiple byte
-    REG_MASK = 0x3f
-  } __attribute__((packed));
-
+class ADXL345 : private TWI::Driver {
 protected:
   /**
-   * Slave select pin (default is pin 10)
+   * ADXL345 Alternate I2C address (pp. 18)
    */
-  OutputPin m_ss;
+  static const uint8_t ADDR = 0xa6;
 
   /**
    * Registers Map (See tab. 19, pp. 23)
@@ -223,8 +214,13 @@ protected:
    * @param[in] reg register address.
    * @return register value.
    */
-  uint8_t read(Register reg);
-
+  uint8_t read(Register reg)
+  {
+    uint8_t res;
+    read(reg, &res, sizeof(res));
+    return (res);
+  }
+  
   /**
    * Read contents of registers, multiple values from give address.
    * @param[in] reg register address.
@@ -235,34 +231,17 @@ protected:
 
 public:
   /**
-   * Construct accelerometer object selected with given output pin.
-   * @param[in] ss slave selection pin.
-   */
-#if defined(__ARDUINO_TINY__)
-  ADXL345(Board::DigitalPin ss = Board::D3);
-#elif defined(__ARDUINO_MEGA__)
-  ADXL345(Board::DigitalPin ss = Board::D53);
-#else
-  ADXL345(Board::DigitalPin ss = Board::D10);
-#endif
-
-  /**
-   * Start interaction with device.
+   * Start interaction with device. Set full resolution and 16G.
+   * Turn on measurement. 
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin()
-  {
-    return (spi.begin(SPI::DIV4_CLOCK, 3, SPI::MSB_FIRST));
-  }
+  bool begin();
 
   /**
-   * Stop sequence of interaction with device.
+   * Stop sequence of interaction with device. Turn off measurement.
    * @return true(1) if successful otherwise false(0)
    */
-  bool end()
-  {
-    return (spi.end());
-  }
+  bool end();
 
   /**
    * Accelerometer offset calibration structure.
@@ -279,7 +258,14 @@ public:
    * @param[in] y axis offset
    * @param[in] z axis offset
    */
-  void calibrate(int8_t x, int8_t y, int8_t z);
+  void calibrate(int8_t x, int8_t y, int8_t z)
+  {
+    offset_t ofs; 
+    ofs.x = x;
+    ofs.y = y;
+    ofs.z = z;
+    write(OFS, &ofs, sizeof(ofs));
+  }
 
   /**
    * Calibrate accelerometer by resetting offset and
@@ -296,12 +282,17 @@ public:
     int y;
     int z;
   };
-
+  
   /**
    * Sample accelerometer. Return sample is given data structure
    * @param[in] s sample storage.
    */
-  void sample(sample_t& s);
+  void sample(sample_t& s)
+  {
+    read(DATA, &s, sizeof(s));
+  }
 };
+
+extern IOStream& operator<<(IOStream& outs, ADXL345& adxl);
 
 #endif
