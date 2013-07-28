@@ -23,8 +23,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINY__)
 #include "Cosa/TWI/Driver/PCF8591.hh"
 
 bool
@@ -45,5 +43,3 @@ PCF8591::convert(uint8_t value)
   twi.end();
   return (count == (sizeof(m_cntl) + sizeof(value)));
 }
-
-#endif
