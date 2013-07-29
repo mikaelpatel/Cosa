@@ -30,6 +30,7 @@
 
 /**
  * Vigenere auto-key cipher.
+ * @param[in] N number of bytes in key.
  * @section See Also
  * http://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
  */
@@ -44,7 +45,8 @@ private:
 public:
   /**
    * Construct Vigenere crypto with key generated from given seed.
-   * An autokey is generated for when n is less than N (max key length).
+   * An autokey is generated when key length (n) is less than max key
+   * length (N). 
    * @param[in] seed for random key generation.
    * @param[in] n length of random key.
    */
@@ -61,7 +63,7 @@ public:
 
   /**
    * Construct Vigenere crypto with given password. An autokey is
-   * generated for when password length is less than N (max key length). 
+   * generated when the password length is less than max key length (N). 
    * @param[in] password.
    */
   Vigenere(char* password)
@@ -75,7 +77,7 @@ public:
   }
 
   /**
-   * Restart the crypto. Generate a new auto-key if needed.
+   * Restart the crypto. Generate a new auto-key.
    */
   void restart()
   {
