@@ -79,7 +79,7 @@ void setup()
   s = msg;
   while ((c = pgm_read_byte(s++)) != 0)
     trace << sender.encode(c);
-
+  trace << endl;
   // Test#3: Running the message through the encoder/decoder
   trace << PSTR("DECODED MESSAGE") << endl;
   Vigenere<32> receiver("QUEENLY");
