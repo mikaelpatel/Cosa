@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Crypto/Vigenere.hh
+ * @file Cosa/Cipher/Vigenere.hh
  * @version 1.0
  *
  * @section License
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CRYPTO_VIGENERE_HH__
-#define __COSA_CRYPTO_VIGENERE_HH__
+#ifndef __COSA_CIPHER_VIGENERE_HH__
+#define __COSA_CIPHER_VIGENERE_HH__
 
 #include "Cosa/Types.h"
 
@@ -66,7 +66,7 @@ public:
    * generated when the password length is less than max key length (N). 
    * @param[in] password.
    */
-  Vigenere(char* password)
+  Vigenere(const char* password)
   { 
     uint8_t i;
     for (i = 0; i < N && password[i]; i++) 
@@ -86,11 +86,11 @@ public:
   }
 
   /**
-   * Encode the given character.
+   * Encrypt the given character.
    * @param[in] c character to encode.
    * @return encoded character.
    */
-  char encode(char c) 
+  char encrypt(char c) 
   {
     char res = c + m_key[m_nr++];
     if (m_max != N) m_key[m_max++] = c;
@@ -99,16 +99,64 @@ public:
   }
 
   /**
-   * Decode the given character.
+   * Encrypt the given buffer.
+   * @param[in] buf buffer pointer.
+   * @param[in] n number of bytes.
+   */
+  void encrypt(void* buf, size_t n)
+  {
+    char* bp = (char*) buf;
+    while (n--) *bp++ = encrypt(*bp);
+  }
+
+  /**
+   * Encrypt the given src buffer to the dest buffer.
+   * @param[in] dest buffer pointer.
+   * @param[in] src buffer pointer.
+   * @param[in] n number of bytes.
+   */
+  void encrypt(void* dest, const void* src, size_t n) 
+  {
+    char* dp = (char*) dest;
+    const char* sp = (const char*) src;
+    while (n--) *dp++ = encrypt(*sp++);
+  }
+
+  /**
+   * Decrypt the given character.
    * @param[in] c character to decode.
    * @return decoded character.
    */
-  char decode(char c)
+  char decrypt(char c)
   {
     char res = c - m_key[m_nr++];
     if (m_max != N) m_key[m_max++] = res;
     if (m_nr == N) m_nr = 0;
     return (res);
+  }
+
+  /**
+   * Decrypt the given buffer.
+   * @param[in] buf buffer pointer.
+   * @param[in] n number of bytes.
+   */
+  void decrypt(void* buf, size_t n) 
+  {
+    char* bp = (char*) buf;
+    while (n--) *bp++ = decrypt(*bp);
+  }
+
+  /**
+   * Decrypt the given src buffer to the dest buffer.
+   * @param[in] dest buffer pointer.
+   * @param[in] src buffer pointer.
+   * @param[in] n number of bytes.
+   */
+  void decrypt(void* dest, const void* src, size_t n) 
+  {
+    char* dp = (char*) dest;
+    const char* sp = (const char*) src;
+    while (n--) *dp++ = decrypt(*sp++);
   }
 };
 

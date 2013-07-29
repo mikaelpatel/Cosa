@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Crypto/Vigenere.hh"
+#include "Cosa/Cipher/Vigenere.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/RTC.hh"
@@ -56,15 +56,16 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVigenere: started"));
 
-  // Test#1: Encode the message and measure processing time
+  // Test#1: Encrypt the message and measure processing time
   Vigenere<32> sender("QUEENLY");
   TRACE(sizeof(sender));
+  trace << endl << PSTR("ENCRYPT MESSAGE") << endl;
   char c;
   const char* s = msg;
   uint8_t sum = 0;
   uint32_t start = RTC::micros();
   while ((c = pgm_read_byte(s++)) != 0)
-    sum += sender.encode(c);
+    sum += sender.encrypt(c);
   uint32_t us = RTC::micros() - start;
   uint16_t len = strlen_P(msg);
   TRACE(sum);
@@ -73,18 +74,32 @@ void setup()
 	<< (us * 1000) / len << PSTR(" ns/byte)")
 	<< endl;
 
-  // Test#2: Running the message through the encoder
-  trace << PSTR("ENCODED MESSAGE") << endl;
+  // Test#2: Running the message through the cryptograph
+  trace << endl << PSTR("ENCRYPT MESSAGE") << endl;
   sender.restart();
   s = msg;
   while ((c = pgm_read_byte(s++)) != 0)
-    trace << sender.encode(c);
+    trace << sender.decrypt(c);
   trace << endl;
-  // Test#3: Running the message through the encoder/decoder
-  trace << PSTR("DECODED MESSAGE") << endl;
+
+  // Test#3: Running the message through the cryptograph
+  trace << endl << PSTR("DECRYPT MESSAGE") << endl;
   Vigenere<32> receiver("QUEENLY");
   sender.restart();
   s = msg;
   while ((c = pgm_read_byte(s++)) != 0)
-    trace << receiver.decode(sender.encode(c));
+    trace << receiver.decrypt(sender.encrypt(c));
+  trace << endl;
+  
+  // Test#4: Fill buffer 
+  trace << endl << PSTR("ENCRYPT MESSAGE") << endl;
+  sender.restart();
+  receiver.restart();
+  char buf[128];
+  memcpy_P(buf, &msg[0], sizeof(buf));
+  sender.encrypt(buf, sizeof(buf));
+  receiver.decrypt(buf, sizeof(buf));
+  for (size_t i = 0; i < sizeof(buf); i++)
+    trace << buf[i];
+  trace << endl;
 }
