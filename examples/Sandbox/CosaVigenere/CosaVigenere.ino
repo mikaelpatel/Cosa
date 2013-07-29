@@ -31,7 +31,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/RTC.hh"
 
-char msg[] PROGMEM = 
+static char msg[] __PROGMEM = 
 "The Vigenere cipher is a method of encrypting alphabetic text by\n"
 "using a series of different Caesar ciphers based on the letters of\n" 
 "a keyword. It is a simple form of polyalphabetic substitution.\n"
@@ -48,7 +48,7 @@ char msg[] PROGMEM =
 "(French for 'the indecipherable cipher'). Many people have\n" 
 "tried to implement encryption schemes that are essentially\n" 
 "Vigenere ciphers. Friedrich Kasiski was the first to publish\n" 
-"a general method of deciphering a Vigenere cipher.";
+"a general method of deciphering a Vigenere cipher.\n";
 
 void setup()
 {
@@ -68,11 +68,11 @@ void setup()
     sum += sender.encrypt(c);
   uint32_t us = RTC::micros() - start;
   uint16_t len = strlen_P(msg);
-  TRACE(sum);
   trace << len << PSTR(" bytes, ")
 	<< us << PSTR(" us (")
 	<< (us * 1000) / len << PSTR(" ns/byte)")
 	<< endl;
+  TRACE(sum);
 
   // Test#2: Running the message through the cryptograph
   trace << endl << PSTR("ENCRYPT MESSAGE") << endl;
@@ -89,7 +89,6 @@ void setup()
   s = msg;
   while ((c = pgm_read_byte(s++)) != 0)
     trace << receiver.decrypt(sender.encrypt(c));
-  trace << endl;
   
   // Test#4: Fill buffer 
   trace << endl << PSTR("ENCRYPT MESSAGE") << endl;

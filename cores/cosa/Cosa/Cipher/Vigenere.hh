@@ -105,8 +105,8 @@ public:
    */
   void encrypt(void* buf, size_t n)
   {
-    char* bp = (char*) buf;
-    while (n--) *bp++ = encrypt(*bp);
+    for (char* bp = (char*) buf; n--; bp++)
+      *bp = encrypt(*bp);
   }
 
   /**
@@ -134,7 +134,7 @@ public:
     if (m_nr == N) m_nr = 0;
     return (res);
   }
-
+  
   /**
    * Decrypt the given buffer.
    * @param[in] buf buffer pointer.
@@ -142,8 +142,8 @@ public:
    */
   void decrypt(void* buf, size_t n) 
   {
-    char* bp = (char*) buf;
-    while (n--) *bp++ = decrypt(*bp);
+    for (char* bp = (char*) buf; n--; bp++)
+      *bp = decrypt(*bp);
   }
 
   /**
