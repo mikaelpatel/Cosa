@@ -61,11 +61,13 @@ void setup()
   TRACE(sizeof(sender));
   char c;
   const char* s = msg;
+  uint8_t sum = 0;
   uint32_t start = RTC::micros();
   while ((c = pgm_read_byte(s++)) != 0)
-    c = sender.encode(c);
+    sum += sender.encode(c);
   uint32_t us = RTC::micros() - start;
   uint16_t len = strlen_P(msg);
+  TRACE(sum);
   trace << len << PSTR(" bytes, ")
 	<< us << PSTR(" us (")
 	<< (us * 1000) / len << PSTR(" ns/byte)")
@@ -86,6 +88,3 @@ void setup()
   while ((c = pgm_read_byte(s++)) != 0)
     trace << receiver.decode(sender.encode(c));
 }
-
-
-
