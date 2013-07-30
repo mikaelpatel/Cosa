@@ -26,7 +26,7 @@
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
 
-HD44780::Port port;
+HD44780::Port4b port;
 HD44780 lcd(&port);
 IOStream console(&lcd);
 #if defined(__ARDUINO_TINYX4__)

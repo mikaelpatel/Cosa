@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/HD44780_IO_Port.cpp
+ * @file Cosa/LCD/Driver/HD44780_IO_Port4b.cpp
  * @version 1.0
  *
  * @section License
@@ -43,7 +43,7 @@
 
 #if defined(__ARDUINO_TINYX4__)
 void 
-HD44780::Port::setup()
+HD44780::Port4b::setup()
 {
   synchronized {
     DDR |= 0x0f;
@@ -51,7 +51,7 @@ HD44780::Port::setup()
 }
 
 void 
-HD44780::Port::write4b(uint8_t data)
+HD44780::Port4b::write4b(uint8_t data)
 {
   synchronized {
     PORT = ((data & 0x0f) | (PORT & 0xf0));
@@ -61,7 +61,7 @@ HD44780::Port::write4b(uint8_t data)
 }
 
 void 
-HD44780::Port::write8b(uint8_t data)
+HD44780::Port4b::write8b(uint8_t data)
 {
   synchronized {
     PORT = (((data >> 4) & 0x0f) | (PORT & 0xf0));
@@ -77,7 +77,7 @@ HD44780::Port::write8b(uint8_t data)
 #else
 
 void 
-HD44780::Port::setup()
+HD44780::Port4b::setup()
 {
   synchronized {
     DDR |= 0xf0;
@@ -85,7 +85,7 @@ HD44780::Port::setup()
 }
 
 void 
-HD44780::Port::write4b(uint8_t data)
+HD44780::Port4b::write4b(uint8_t data)
 {
   synchronized {
     PORT = ((data << 4) | (PORT & 0x0f));
@@ -95,7 +95,7 @@ HD44780::Port::write4b(uint8_t data)
 }
 
 void 
-HD44780::Port::write8b(uint8_t data)
+HD44780::Port4b::write8b(uint8_t data)
 {
   synchronized {
     PORT = ((data & 0xf0) | (PORT & 0x0f));
@@ -110,13 +110,13 @@ HD44780::Port::write8b(uint8_t data)
 #endif
 
 void 
-HD44780::Port::set_mode(uint8_t flag)
+HD44780::Port4b::set_mode(uint8_t flag)
 {
   m_rs.write(flag);
 }
 
 void 
-HD44780::Port::set_backlight(uint8_t flag)
+HD44780::Port4b::set_backlight(uint8_t flag)
 {
   m_bt.write(flag);
 }

@@ -423,7 +423,7 @@ public:
    *   D9 (Arduino) => LCD:EN
    *   D10 (Arduino) => BT
    */
-  class Port : public IO {
+  class Port4b : public IO {
   private:
 #if defined(__ARDUINO_TINYX4__)
     static const uint16_t SHORT_EXEC_TIME = (29 * I_CPU) / 8;
@@ -444,9 +444,9 @@ public:
      * @param[in] en enable pin (Default D9).
      * @param[in] bt backlight pin (Default D10).
      */
-    Port(Board::DigitalPin rs = Board::D8, 
-	 Board::DigitalPin en = Board::D9,
-	 Board::DigitalPin bt = Board::D10) :
+    Port4b(Board::DigitalPin rs = Board::D8, 
+	   Board::DigitalPin en = Board::D9,
+	   Board::DigitalPin bt = Board::D10) :
       m_rs(rs, 0),
       m_en(en, 0),
       m_bt(bt, 1)

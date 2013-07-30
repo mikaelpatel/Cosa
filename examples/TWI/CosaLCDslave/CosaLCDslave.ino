@@ -31,7 +31,7 @@
 #include "Cosa/VLCD.hh"
 
 // Use a 4-bit parallel port for the HD44780 LCD (16X2 default)
-HD44780::Port port;
+HD44780::Port4b port;
 HD44780 lcd(&port);
 
 // And use the LCD for the implementation of the Virtual LCD slave

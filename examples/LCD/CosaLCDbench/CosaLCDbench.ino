@@ -29,7 +29,7 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 // Select the port for the benchmark
-HD44780::Port port;
+HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::MJKDZ port;

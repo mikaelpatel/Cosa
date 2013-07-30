@@ -74,7 +74,7 @@ KeypadTrace::trace(const char* msg, uint8_t nr)
   m_out << PSTR("key = ") << nr;
 }
 
-HD44780::Port port;
+HD44780::Port4b port;
 HD44780 lcd(&port);
 KeypadTrace keypad(&lcd);
 

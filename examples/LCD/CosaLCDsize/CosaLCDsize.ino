@@ -30,7 +30,7 @@
 // Binary sketch size:  MEGA/STD*/TINY bytes
 // =========================================
 // Baseline:		 780/ 656/ 558 bytes
-// HD44780::Port:	3622/3452/3314 bytes
+// HD44780::Port4b:	3622/3452/3314 bytes
 // HD44780::SR3W:	4538/4368/4224 bytes
 // HD44780::SR3WSPI:	3862/3748/3508 bytes
 // HD44780::MJKDZ:	5122/5028/5570 bytes
@@ -45,7 +45,7 @@
 // =========================================
 
 // #include "Cosa/LCD/Driver/HD44780.hh"
-// HD44780::Port port;
+// HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::MJKDZ port;
