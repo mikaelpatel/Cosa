@@ -216,4 +216,7 @@ device drivers. Benchmarking and optimizing LCD device drivers. Added
 an event driven resistor net keypad handler and support for the
 DFRobot LCD Keypad shield. Boosting LCD performance to 2-6X faster
 than Arduino library. Added a new LCD menu system. Refactored Cosa
-directory structure to match the Arduino core file structure.       
+directory structure to match the Arduino core file
+structure. Performance tuning LCD adapters; additional adapters with
+shift register support (SR3W and SR4W). Adding Vigenere autokey and
+RC4 cipher.       
