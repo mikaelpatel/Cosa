@@ -60,7 +60,7 @@ IOStream& operator<<(IOStream& outs, Pin& pin)
 void 
 OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
 {
-  register uint8_t bits = CHARBITS / 2;
+  uint8_t bits = CHARBITS / 2;
   if (order == MSB_FIRST) {
     do {
       write(value & 0x80);
