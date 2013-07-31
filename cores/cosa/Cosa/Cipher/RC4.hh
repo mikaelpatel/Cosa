@@ -65,11 +65,13 @@ public:
    */
   char encrypt(char c) 
   {
-    m_y = m_y + m_state[++m_x];
-    uint8_t tmp = m_state[m_x];
-    m_state[m_x] = m_state[m_y];
-    m_state[m_y] = tmp;
-    uint8_t ix = m_state[m_x] + m_state[m_y];
+    m_x += 1;
+    uint8_t sx = m_state[m_x];
+    m_y += sx;
+    uint8_t sy = m_state[m_y];
+    m_state[m_x] = sy;
+    m_state[m_y] = sx;
+    uint8_t ix = sx + sy;
     return (c ^ m_state[ix]);
   }
   
