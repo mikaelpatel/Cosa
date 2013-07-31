@@ -28,15 +28,14 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 // Select LCD and Port
-HD44780::Port4b port;
+// HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
-// HD44780::MJKDZ port;
+HD44780::MJKDZ port;
 // HD44780::DFRobot port;
-// HD44780 lcd(&port, 20, 4);
-HD44780 lcd(&port);
+HD44780 lcd(&port, 20, 4);
+// HD44780 lcd(&port);
 
-#define BIND_LCD_UART 
 #ifndef BIND_LCD_UART 
 /**
  * A standard version: Setup uart and lcd. Wait in low-power mode 

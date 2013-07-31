@@ -681,6 +681,109 @@ public:
   };
 
   /**
+   * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
+   * Shift Register 4-Wire/8-bit Port, 74HC595 (SR[pin]), with digital 
+   * output pins.
+   * @section Circuit
+   *   SDA (Arduino:D7) => SR:SER[14]
+   *   SCL (Arduino:D6) => SR:SRCLK[11]
+   *   EN (Arduino:D5) => SR:RCLK[12] 
+   *   VCC => /SR:SRCLR[10]
+   *   GND => /SR:OE[13]
+   *   SR:QA..QH[15,1..7] => LCD:D0..D7
+   *   SDA (Arduino:D7) => LCD::RS
+   *   EN (Arduino:D5) => LCD:EN
+   */
+  class SR4W : public IO {
+  private:
+    static const uint16_t SHORT_EXEC_TIME = (4 * I_CPU) / 16;
+    OutputPin m_sda;		/**< Serial data output */
+    OutputPin m_scl;		/**< Serial clock */
+    OutputPin m_en;		/**< Starts data read/write */
+    OutputPin m_bt;		/**< Backlight control */
+    uint8_t m_rs;		/**< Command/Data select */
+    
+  public:
+    /**
+     * Construct HD44780 4-wire/8-bit serial port connected to given 
+     * data, clock, enable and backlight control pins.
+     * @param[in] sda serial data pin (Default D7)
+     * @param[in] scl serial clock pin (Default D6)
+     * @param[in] en enable pulse (Default D5)
+     * @param[in] bt backlight control (Default D4)
+     */
+#if !defined(__ARDUINO_TINY__)
+    SR4W(Board::DigitalPin sda = Board::D7, 
+	 Board::DigitalPin scl = Board::D6,
+	 Board::DigitalPin en = Board::D5,
+	 Board::DigitalPin bt = Board::D4) :
+      m_sda(sda),
+      m_scl(scl),
+      m_en(en),
+      m_bt(bt, 1),
+      m_rs(0)
+    {
+    }
+#else
+    SR4W(Board::DigitalPin sda = Board::D1, 
+	 Board::DigitalPin scl = Board::D2,
+	 Board::DigitalPin en = Board::D3,
+	 Board::DigitalPin bt = Board::D4) :
+      m_sda(sda),
+      m_scl(scl),
+      m_en(en),
+      m_bt(bt, 1),
+      m_rs(0)
+    {
+    }
+#endif
+
+    /**
+     * @override
+     * Initiate port for 8-bit serial mode. Returns true(1).
+     * @return true(1).
+     */
+    virtual bool setup();
+
+    /**
+     * @override
+     * Write LSB nibble to display using serial port.
+     * @param[in] data (4b) to write.
+     */
+    virtual void write4b(uint8_t data);
+    
+    /**
+     * @override
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write8b(uint8_t data);
+
+    /**
+     * @override
+     * Write character buffer to display.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write8n(void* buf, size_t size);
+    
+    /**
+     * @override
+     * Set instruction/data mode using given rs pin; zero for
+     * instruction, non-zero for data mode.
+     * @param[in] flag.
+     */
+    virtual void set_mode(uint8_t flag);
+
+    /**
+     * @override
+     * Set backlight on/off using bt pin.
+     * @param[in] flag.
+     */
+    virtual void set_backlight(uint8_t flag);
+  };
+
+  /**
    * IO handler for HD44780 (LCD-II) Dot Matix Liquid Crystal Display
    * Controller/Driver when using the MJKDZ IO expander board based on
    * PCF8574 I2C IO expander device driver. 

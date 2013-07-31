@@ -53,18 +53,19 @@ HD44780::begin()
   const uint8_t FS1 = (FUNCTION_SET | DATA_LENGTH_4BITS);
   bool mode = m_io->setup();
   Watchdog::delay(POWER_ON_TIME);
-  m_io->write4b(FS0 >> 4);
-  DELAY(INIT0_TIME);
-  m_io->write4b(FS0 >> 4);
-  DELAY(INIT1_TIME);
-  m_io->write4b(FS0 >> 4);
-  DELAY(INIT1_TIME);
   if (!mode) {
+    m_io->write4b(FS0 >> 4);
+    DELAY(INIT0_TIME);
+    m_io->write4b(FS0 >> 4);
+    DELAY(INIT1_TIME);
+    m_io->write4b(FS0 >> 4);
+    DELAY(INIT1_TIME);
     m_io->write4b(FS1 >> 4);
     DELAY(INIT1_TIME);
   }
+  // 8-bit initialization
   else {
-    m_func |= DATA_LENGTH_8BITS;
+    set(m_func, DATA_LENGTH_8BITS);
   }
 
   // Initialization with the function, control and mode setting
