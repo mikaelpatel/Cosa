@@ -104,17 +104,25 @@ void setup()
   trace.begin(&uart, PSTR("CosaRC4: started"));
 
   // Test#1: Encrypt the message and measure processing time
-  const char key[] = "QUEENLY";
-  RC4 sender(key, strlen(key));
-  TRACE(sizeof(sender));
-  trace << endl << PSTR("ENCRYPT MESSAGE") << endl;
+  trace << endl << PSTR("BASELINE") << endl;
   char c;
   const char* s = msg;
   uint8_t sum = 0;
   uint32_t start = RTC::micros();
   while ((c = pgm_read_byte(s++)) != 0)
+    sum += c;
+  uint32_t base = RTC::micros() - start;
+  TRACE(base);
+  TRACE(sum);
+  const char key[] = "QUEENLY";
+  RC4 sender(key, strlen(key));
+  TRACE(sizeof(sender));
+  s = msg;
+  sum = 0;
+  start = RTC::micros();
+  while ((c = pgm_read_byte(s++)) != 0)
     sum += sender.encrypt(c);
-  uint32_t us = RTC::micros() - start;
+  uint32_t us = RTC::micros() - start - base;
   uint16_t len = strlen_P(msg);
   trace << len << PSTR(" bytes, ")
 	<< us << PSTR(" us (")
@@ -139,7 +147,7 @@ void setup()
     trace << receiver.decrypt(sender.encrypt(c));
   trace << endl;
   
-  // Test#4: Fill buffer 
+  // Test#4: Fill buffer and encrypt/decrypt before print
   trace << endl << PSTR("ENCRYPT MESSAGE") << endl;
   sender.restart(key, strlen(key));
   receiver.restart(key, strlen(key));
@@ -155,10 +163,16 @@ void setup()
   trace << endl << PSTR("OPENSSL TEST VECTORS") << endl;
   bool failed = false;
   for (uint8_t i = 0; i < 7; i++) {
-    receiver.restart(&keys[i][1], keys[i][0]);
+    sender.restart(&keys[i][1], keys[i][0]);
     memcpy(buf, data[i], data_len[i]);
-    receiver.encrypt(buf, data_len[i]);
+    sender.encrypt(buf, data_len[i]);
     if (memcmp(buf, output[i], data_len[i])) {
+      trace << i << PSTR(": TEST FAILED") << endl;
+      failed = true;
+    }
+    receiver.restart(&keys[i][1], keys[i][0]);
+    receiver.decrypt(buf, data_len[i]);
+    if (memcmp(buf, data[i], data_len[i])) {
       trace << i << PSTR(": TEST FAILED") << endl;
       failed = true;
     }

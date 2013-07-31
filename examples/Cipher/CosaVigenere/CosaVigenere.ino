@@ -57,16 +57,25 @@ void setup()
   trace.begin(&uart, PSTR("CosaVigenere: started"));
 
   // Test#1: Encrypt the message and measure processing time
-  Vigenere<32> sender("QUEENLY");
-  TRACE(sizeof(sender));
-  trace << endl << PSTR("ENCRYPT MESSAGE") << endl;
+  trace << endl << PSTR("BASELINE") << endl;
   char c;
   const char* s = msg;
   uint8_t sum = 0;
   uint32_t start = RTC::micros();
   while ((c = pgm_read_byte(s++)) != 0)
+    sum += c;
+  uint32_t base = RTC::micros() - start;
+  TRACE(base);
+  TRACE(sum);
+  char key[] = "QUEENLY";
+  Vigenere<32> sender(key);
+  TRACE(sizeof(sender));
+  s = msg;
+  sum = 0;
+  start = RTC::micros();
+  while ((c = pgm_read_byte(s++)) != 0)
     sum += sender.encrypt(c);
-  uint32_t us = RTC::micros() - start;
+  uint32_t us = RTC::micros() - start - base;
   uint16_t len = strlen_P(msg);
   trace << len << PSTR(" bytes, ")
 	<< us << PSTR(" us (")
@@ -84,14 +93,14 @@ void setup()
 
   // Test#3: Running the message through the cryptograph
   trace << endl << PSTR("DECRYPT MESSAGE") << endl;
-  Vigenere<32> receiver("QUEENLY");
+  Vigenere<32> receiver(key);
   sender.restart();
   s = msg;
   while ((c = pgm_read_byte(s++)) != 0)
     trace << receiver.decrypt(sender.encrypt(c));
   
   // Test#4: Fill buffer 
-  trace << endl << PSTR("ENCRYPT MESSAGE") << endl;
+  trace << endl << PSTR("ENCRYPT/DECRYPT MESSAGE") << endl;
   sender.restart();
   receiver.restart();
   char buf[128];
