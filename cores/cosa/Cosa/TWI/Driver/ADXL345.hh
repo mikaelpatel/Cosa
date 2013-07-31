@@ -40,7 +40,7 @@ protected:
   /**
    * ADXL345 Alternate I2C address (pp. 18)
    */
-  static const uint8_t ADDR = 0xa6;
+  static const uint8_t ADDR = 0x53;
 
   /**
    * Registers Map (See tab. 19, pp. 23)

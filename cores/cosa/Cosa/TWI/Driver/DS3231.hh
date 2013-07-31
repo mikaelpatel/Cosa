@@ -37,7 +37,7 @@
  */
 class DS3231 : private TWI::Driver {
 private:
-  static const uint8_t ADDR = 0xD0;
+  static const uint8_t ADDR = 0x68;
 
   /**
    * Read alarm setting, time and mask, from real-time clock. Return

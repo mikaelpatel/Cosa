@@ -37,6 +37,9 @@
  */
 class PCF8574 : private TWI::Driver {
 protected:
+  // Two-wire address for PCF8574 
+  static const uint8_t ADDR = 0x20;
+
   // Sub-address mask
   static const uint8_t SUBADDR_MASK = 0x07;
   
@@ -67,9 +70,6 @@ protected:
   }
 
 public:
-  // Two-wire address for PCF8574 
-  static const uint8_t ADDR = 0x40;
-
   /**
    * Construct connection to PCF8574 Remote 8-bit I/O expander with
    * given sub-address.

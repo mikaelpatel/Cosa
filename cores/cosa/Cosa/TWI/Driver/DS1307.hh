@@ -40,8 +40,8 @@
  */
 class DS1307 : private TWI::Driver {
 private:
-  /** Device Address, R/W-bit adjusted */
-  static const uint8_t ADDR = 0xD0;
+  /** Device Address */
+  static const uint8_t ADDR = 0x68;
 
 public:
   /**

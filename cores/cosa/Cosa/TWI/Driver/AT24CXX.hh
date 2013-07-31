@@ -37,7 +37,7 @@
  */
 class AT24CXX : private TWI::Driver, public EEPROM::Device {
 private:
-  static const uint8_t ADDR = 0xa0;
+  static const uint8_t ADDR = 0x50;
   static const uint8_t POLL_MAX = 3;
   const uint16_t WRITE_MAX;
   const uint16_t WRITE_MASK;

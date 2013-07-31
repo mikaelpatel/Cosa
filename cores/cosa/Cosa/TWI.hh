@@ -82,7 +82,7 @@ public:
      * Construct slave with given address.
      * @param[in] addr slave address.
      */
-    Slave(uint8_t addr) : Event::Handler(), ADDR(addr) {}
+    Slave(uint8_t addr) : Event::Handler(), ADDR(addr << 1) {}
 
     /**
      * Set read (result) buffer. Must be called before starting TWI.

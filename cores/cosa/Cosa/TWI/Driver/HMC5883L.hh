@@ -47,7 +47,7 @@ protected:
   /**
    * Two-wire address for HMC5883L (pp 11)
    */
-  static const uint8_t ADDR = 0x3C;
+  static const uint8_t ADDR = 0x1e;
 
   /**
    * Masks for the different configuration and mode fields

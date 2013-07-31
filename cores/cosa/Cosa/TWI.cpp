@@ -78,7 +78,7 @@ TWI::write_request(uint8_t addr, void* buf, size_t size)
   iovec_t* vp = m_vec;
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr | WRITE_OP));
+  return (request(addr << 1 | WRITE_OP));
 }
 
 bool
@@ -89,7 +89,7 @@ TWI::write_request(uint8_t addr, uint8_t header, void* buf, size_t size)
   iovec_arg(vp, m_header, sizeof(header));
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr | WRITE_OP));
+  return (request(addr << 1 | WRITE_OP));
 }
 
 bool
@@ -101,7 +101,7 @@ TWI::write_request(uint8_t addr, uint16_t header, void* buf, size_t size)
   iovec_arg(vp, m_header, sizeof(header));
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr | WRITE_OP));
+  return (request(addr << 1 | WRITE_OP));
 }
 
 bool
@@ -110,7 +110,7 @@ TWI::read_request(uint8_t addr, void* buf, size_t size)
   iovec_t* vp = m_vec;
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr | READ_OP));
+  return (request(addr << 1 | READ_OP));
 }
 
 void 
