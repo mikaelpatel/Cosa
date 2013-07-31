@@ -506,6 +506,22 @@ public:
    * output pins.
    *
    * @section Circuit
+   *                         74HC595    (VCC)
+   *                       +----U----+    |
+   * (LCD D5)------------1-|Q1    VCC|-16-+
+   * (LCD D6)------------2-|Q2     Q0|-15-----------(LCD D4)
+   * (LCD D7)------------3-|Q3    SER|-14-----------(SDA)
+   * (LCD RS)------------4-|Q4    /OE|-13-----------(GND)
+   * (LCD BT)------------5-|Q5    Q6'|--9
+   *                       |         |          
+   *                     6-|Q6   SCLK|-11-----------(SCL)
+   *                     7-|Q7    /MR|-10-----------(VCC)
+   *                   +-8-|GND  RCLK|-12-----+
+   *                   |   +---------+        |
+   *                   |      0.1uF           |
+   *                 (GND)-----||----(VCC)    |
+   * (LCD EN)---------------------------------+-----(EN)
+   *
    *   SDA (Arduino:D7/Tiny:D1) => SR:SER[14]
    *   SCL (Arduino:D6/Tiny:D2) => SR:SRCLK[11]
    *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
@@ -515,6 +531,10 @@ public:
    *   EN (Arduino:D5/Tiny:D3) => LCD:EN
    *   SR:QE[4] => LCD:RS
    *   SR:QF[5] => LCD:BT (Backlight)
+   *
+   * @section Performance
+   * The LSB of the shift register is used to allow reduction
+   * of number of shift operations. 
    */
   class SR3W : public IO {
   private:
@@ -603,6 +623,22 @@ public:
    * Shift Register 3-Wire Port (SR3WSPI), 74HC595 (SR[pin]), using SPI.
    *
    * @section Circuit
+   *                         74HC595    (VCC)
+   *                       +----U----+    |
+   * (LCD D5)------------1-|Q1    VCC|-16-+
+   * (LCD D6)------------2-|Q2     Q0|-15-----------(LCD D4)
+   * (LCD D7)------------3-|Q3    SER|-14-----------(MOSI)
+   * (LCD RS)------------4-|Q4    /OE|-13-----------(GND)
+   * (LCD BT)------------5-|Q5    Q6'|--9
+   *                       |         |          
+   *                     6-|Q6   SCLK|-11-----------(SCK)
+   *                     7-|Q7    /MR|-10-----------(VCC)
+   *                   +-8-|GND  RCLK|-12-----+
+   *                   |   +---------+        |
+   *                   |      0.1uF           |
+   *                 (GND)-----||----(VCC)    |
+   * (LCD EN)---------------------------------+-----(EN)
+   *
    *   MOSI (Arduino:D11/TinyX4:D5/TinyX5:D0) => SR:SER[14]
    *   SCK (Arduino:D13/TinyX4:D5/TinyX5:D2) => SR:SRCLK[11]
    *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
@@ -611,6 +647,9 @@ public:
    *   SR:QA..QD[15,1..3] => LCD:D4..D7
    *   SR:QE[4] => LCD:RS
    *   SR:QF[5] => LCD:BT (Backlight)
+   *
+   * @section Performance
+   * The SPI transfer is so fast that a longer delay is required.
    */
   class SR3WSPI : public IO {
   private:
@@ -684,7 +723,25 @@ public:
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
    * Shift Register 4-Wire/8-bit Port, 74HC595 (SR[pin]), with digital 
    * output pins.
+   *
    * @section Circuit
+   *                         74HC595    (VCC)
+   *                       +----U----+    |
+   * (LCD D1)------------1-|Q1    VCC|-16-+
+   * (LCD D2)------------2-|Q2     Q0|-15-----------(LCD D0)
+   * (LCD D3)------------3-|Q3    SER|-14-----------(SDA)
+   * (LCD D4)------------4-|Q4    /OE|-13-----------(GND)
+   * (LCD D5)------------5-|Q5    Q6'|--9     +-----(LCD RS)
+   * (LCD D6)------------6-|Q6       |        | 
+   * (LCD D7)------------7-|Q7   SCLK|-11-----+-----(SCL)
+   *                       |      /MR|-10-----------(VCC)
+   *                   +-8-|GND  RCLK|-12-----+
+   *                   |   +---------+        |
+   *                   |      0.1uF           |
+   *                 (GND)-----||----(VCC)    |
+   * (LCD EN)---------------------------------+-----(EN)
+   * (LCD BT)---------------------------------------(BT)
+   *
    *   SDA (Arduino:D7) => SR:SER[14]
    *   SCL (Arduino:D6) => SR:SRCLK[11]
    *   EN (Arduino:D5) => SR:RCLK[12] 
@@ -693,6 +750,13 @@ public:
    *   SR:QA..QH[15,1..7] => LCD:D0..D7
    *   SDA (Arduino:D7) => LCD::RS
    *   EN (Arduino:D5) => LCD:EN
+   *   BT (Arduino:D4) => LCD:BT
+   *
+   * @section Performance
+   * Delay required even when using Cosa serial write. No
+   * need for SPI. SCL/SDA can still be connected to other
+   * inputs. The Backlight control pin (BT) can be removed
+   * if always on.
    */
   class SR4W : public IO {
   private:
