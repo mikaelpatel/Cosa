@@ -63,7 +63,7 @@ protected:
    */
   PCF8574(uint8_t addr, uint8_t subaddr = 7) :
     TWI::Driver(),
-    m_addr(addr | ((subaddr & SUBADDR_MASK) << 1)),
+    m_addr(addr | (subaddr & SUBADDR_MASK)),
     m_ddr(0xff),
     m_port(0)
   {
