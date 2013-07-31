@@ -25,10 +25,11 @@
 
 #include "Cosa/LCD/Driver/HD44780.hh"
 
-void 
+bool
 HD44780::SR3W::setup()
 {
   m_port.as_uint8 = 0;
+  return (false);
 }
 
 void 

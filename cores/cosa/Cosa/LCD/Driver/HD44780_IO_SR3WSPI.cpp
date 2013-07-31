@@ -26,10 +26,11 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/SPI.hh"
 
-void 
+bool
 HD44780::SR3WSPI::setup()
 {
   m_port.as_uint8 = 0;
+  return (false);
 }
 
 void 

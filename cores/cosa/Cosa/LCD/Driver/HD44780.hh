@@ -51,9 +51,11 @@ protected:
   public:
     /**
      * @override
-     * Initiate IO port. Called by HD44780::begin().
+     * Initiate IO port. Called by HD44780::begin(). Should return true(1)
+     * for 8-bit mode otherwise false for 4-bit mode.
+     * @return bool.
      */
-    virtual void setup() = 0;
+    virtual bool setup() = 0;
 
     /**
      * @override
@@ -112,9 +114,15 @@ protected:
     SHIFT_SET = 0x10,		// Set cursor and shifts display 
     FUNCTION_SET = 0x20,	// Sets interface data length, line and font.
     SET_CGRAM_ADDR = 0x40,	// Sets CGRAM address
-    SET_CGRAM_MASK = 0x3f,	// Mask CGRAM address (6-bit)
+    SET_CGRAM_MASK = 0x3f,	// - Mask (6-bit)
     SET_DDRAM_ADDR = 0x80,	// Sets DDRAM address
-    SET_DDRAM_MASK = 0x7f	// Mask DDRAM address (7-bit)
+    SET_DDRAM_MASK = 0x7f,	// - Mask (7-bit)
+    BIAS_RESISTOR_SET = 0x04,	// Bias resistor select
+    BIAS_RESISTOR_MASK = 0x03,	// - Mask (2-bit)
+    COM_SEG_SET = 0x40,		// COM SEG direction select
+    COM_SET_MASK = 0x0f,	// - mask (4 bit)
+    SET_DDATA_LENGTH = 0x80,	// Set display data length
+    SET_DDATA_MASK = 0x7f	// - mask (7 bit, 0..79 => 1..80)
   } __attribute__((packed));
 
   /**
@@ -154,7 +162,9 @@ protected:
     NR_LINES_1 = 0x00,		// Sets the number of display lines, 1 or
     NR_LINES_2 = 0x08,		// - 2.
     FONT_5X8DOTS = 0x00,	// Sets the character font, 5X8 dots or
-    FONT_5X10DOTS = 0x04	// - 5X10 dots
+    FONT_5X10DOTS = 0x04,	// - 5X10 dots
+    BASIC_SET = 0x00,		// Sets basic instruction set
+    EXTENDED_SET = 0x04		// - extended instruction set
   } __attribute__((packed));
 
   // Row offset tables for display times (16X1, 16X2, 16X4 20X4)
@@ -455,9 +465,10 @@ public:
 
     /**
      * @override
-     * Initiate 4-bit parallel port (D4..D7).
+     * Initiate 4-bit parallel port (D4..D7). Returns false.
+     * @return bool.
      */
-    virtual void setup();
+    virtual bool setup();
 
     /**
      * @override
@@ -552,9 +563,10 @@ public:
 
     /**
      * @override
-     * Initiate serial port.
+     * Initiate serial port. Returns false.
+     * @return bool.
      */
-    virtual void setup();
+    virtual bool setup();
 
     /**
      * @override
@@ -633,9 +645,10 @@ public:
 
     /**
      * @override
-     * Initiate serial port.
+     * Initiate serial port. Returns false.
+     * @return bool.
      */
-    virtual void setup();
+    virtual bool setup();
 
     /**
      * @override
@@ -701,9 +714,10 @@ public:
     
     /**
      * @override
-     * Initiate TWI interface.
+     * Initiate TWI interface. Returns false.
+     * @return bool.
      */
-    virtual void setup();
+    virtual bool setup();
 
     /**
      * @override
@@ -777,9 +791,10 @@ public:
     
     /**
      * @override
-     * Initiate TWI interface.
+     * Initiate TWI interface. Returns false.
+     * @return bool.
      */
-    virtual void setup();
+    virtual bool setup();
 
     /**
      * @override
@@ -814,6 +829,107 @@ public:
     /**
      * @override
      * Set backlight on/off.
+     * @param[in] flag.
+     */
+    virtual void set_backlight(uint8_t flag);
+  };
+
+  /**
+   * ERM1602-5 Series, Character Display Module, adapter with digital 
+   * output pins.
+   *
+   * @section Circuit
+   *   SDA (Arduino:D7/Tiny:D1) => J2:DI[6]
+   *   SCL (Arduino:D6/Tiny:D2) => J2:SCL[5]
+   *   EN (Arduino:D5/Tiny:D3) => J2:CS[4]
+   *   BT (Arduino:D4/Tiny:D4) => BT
+   */
+  class ERM1602_5 : public IO {
+  private:
+    static const uint16_t SHORT_EXEC_TIME = (12 * I_CPU) / 16;
+    OutputPin m_sda;		/**< Serial data output */
+    OutputPin m_scl;		/**< Serial clock */
+    OutputPin m_en;		/**< Starts data read/write */
+    OutputPin m_bt;		/**< Back-light control (0/on, 1/off) */
+    uint8_t m_rs;		/**< Register select (0/instruction, 1/data) */
+    uint8_t m_dirty;		/**< Mark register select change required */
+  public:
+    /**
+     * Construct ERM1602-5 3-wire serial port connected to given serial
+     * data, clock, enable pulse and backlight control pin. 
+     * @param[in] sda serial data pin (Default D7)
+     * @param[in] scl serial clock pin (Default D6)
+     * @param[in] en enable pulse (Default D5)
+     * @param[in] bt backlight control (Default D4)
+     */
+#if !defined(__ARDUINO_TINY__)
+    ERM1602_5(Board::DigitalPin sda = Board::D7, 
+	      Board::DigitalPin scl = Board::D6,
+	      Board::DigitalPin en = Board::D5,
+	      Board::DigitalPin bt = Board::D4) :
+      m_sda(sda),
+      m_scl(scl, 1),
+      m_en(en, 1),
+      m_bt(bt, 1),
+      m_rs(0),
+      m_dirty(false)
+    {
+    }
+#else
+    ERM1602_5(Board::DigitalPin sda = Board::D1, 
+	      Board::DigitalPin scl = Board::D2,
+	      Board::DigitalPin en = Board::D3,
+	      Board::DigitalPin bt = Board::D4) :
+      m_sda(sda),
+      m_scl(scl, 1),
+      m_en(en, 1),
+      m_bt(bt, 1),
+      m_rs(0),
+      m_dirty(false)
+    {
+    }
+#endif
+
+    /**
+     * @override
+     * Initiate serial port. Returns true.
+     * @return bool.
+     */
+    virtual bool setup();
+
+    /**
+     * @override
+     * Write LSB nibble to display using serial port.
+     * @param[in] data (4b) to write.
+     */
+    virtual void write4b(uint8_t data);
+    
+    /**
+     * @override
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write8b(uint8_t data);
+
+    /**
+     * @override
+     * Write character buffer to display.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write8n(void* buf, size_t size);
+
+    /**
+     * @override
+     * Set instruction/data mode using given rs pin; zero for
+     * instruction, non-zero for data mode.
+     * @param[in] flag.
+     */
+    virtual void set_mode(uint8_t flag);
+
+    /**
+     * @override
+     * Set backlight on/off using bt pin.
      * @param[in] flag.
      */
     virtual void set_backlight(uint8_t flag);

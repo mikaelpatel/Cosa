@@ -42,12 +42,13 @@
 #endif
 
 #if defined(__ARDUINO_TINYX4__)
-void 
+bool
 HD44780::Port4b::setup()
 {
   synchronized {
     DDR |= 0x0f;
   }
+  return (false);
 }
 
 void 
@@ -76,12 +77,13 @@ HD44780::Port4b::write8b(uint8_t data)
 
 #else
 
-void 
+bool
 HD44780::Port4b::setup()
 {
   synchronized {
     DDR |= 0xf0;
   }
+  return (false);
 }
 
 void 

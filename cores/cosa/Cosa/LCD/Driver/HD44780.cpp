@@ -49,18 +49,23 @@ HD44780::begin()
   // Initiate display; See fig. 24, 4-bit interface, pp. 46.
   // http://web.alfredstate.edu/weimandn/lcd/lcd_initialization/-
   // LCD%204-bit%20Initialization%20v06.pdf
-  const uint8_t FS0 = ((FUNCTION_SET | DATA_LENGTH_8BITS) >> 4);
-  const uint8_t FS1 = ((FUNCTION_SET | DATA_LENGTH_4BITS) >> 4);
-  m_io->setup();
+  const uint8_t FS0 = (FUNCTION_SET | DATA_LENGTH_8BITS);
+  const uint8_t FS1 = (FUNCTION_SET | DATA_LENGTH_4BITS);
+  bool mode = m_io->setup();
   Watchdog::delay(POWER_ON_TIME);
-  m_io->write4b(FS0);
+  m_io->write4b(FS0 >> 4);
   DELAY(INIT0_TIME);
-  m_io->write4b(FS0);
+  m_io->write4b(FS0 >> 4);
   DELAY(INIT1_TIME);
-  m_io->write4b(FS0);
+  m_io->write4b(FS0 >> 4);
   DELAY(INIT1_TIME);
-  m_io->write4b(FS1);
-  DELAY(INIT1_TIME);
+  if (!mode) {
+    m_io->write4b(FS1 >> 4);
+    DELAY(INIT1_TIME);
+  }
+  else {
+    m_func |= DATA_LENGTH_8BITS;
+  }
 
   // Initialization with the function, control and mode setting
   write(m_func);

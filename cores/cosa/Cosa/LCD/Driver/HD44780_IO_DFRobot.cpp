@@ -25,11 +25,12 @@
 
 #include "Cosa/LCD/Driver/HD44780.hh"
 
-void 
+bool
 HD44780::DFRobot::setup()
 {
   m_port.as_uint8 = 0;
   set_data_direction(0);
+  return (false);
 }
 
 void 
