@@ -512,29 +512,31 @@ public:
    * (LCD D6)------------2-|Q2     Q0|-15-----------(LCD D4)
    * (LCD D7)------------3-|Q3    SER|-14-----------(SDA)
    * (LCD RS)------------4-|Q4    /OE|-13-----------(GND)
-   * (LCD BT)------------5-|Q5    Q6'|--9
-   *                       |         |          
+   * (LCD BT)------------5-|Q5   RCLK|-12-----------(EN)
    *                     6-|Q6   SCLK|-11-----------(SCL)
    *                     7-|Q7    /MR|-10-----------(VCC)
-   *                   +-8-|GND  RCLK|-12-----+
-   *                   |   +---------+        |
-   *                   |      0.1uF           |
-   *                 (GND)-----||----(VCC)    |
-   * (LCD EN)---------------------------------+-----(EN)
+   *                   +-8-|GND   Q6'|--9
+   *                   |   +---------+
+   *                   |      0.1uF          
+   *                 (GND)-----||----(VCC)
+   * (LCD EN)---------------------------------------(EN)
+   * (LCD RW)---------------------------------------(GND)
    *
    *   SDA (Arduino:D7/Tiny:D1) => SR:SER[14]
-   *   SCL (Arduino:D6/Tiny:D2) => SR:SRCLK[11]
+   *   SCL (Arduino:D6/Tiny:D2) => SR:SCLK[11]
    *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
-   *   VCC => /SR:SRCLR[10]
-   *   GND => /SR:OE[13]
-   *   SR:QA..QD[15,1..3] => LCD:D4..D7
+   *   VCC => SR:/MR[10]
+   *   GND => SR:/OE[13]
+   *
+   *   SR:Q0..Q3[15,1..3] => LCD:D4..D7
+   *   SR:Q4[4] => LCD:RS
+   *   SR:Q5[5] => LCD:BT (Backlight)
    *   EN (Arduino:D5/Tiny:D3) => LCD:EN
-   *   SR:QE[4] => LCD:RS
-   *   SR:QF[5] => LCD:BT (Backlight)
+   *   GND => LCD:RW
    *
    * @section Performance
    * The LSB of the shift register is used to allow reduction
-   * of number of shift operations. 
+   * of number of shift operations (i.e. 6-bit shift). 
    */
   class SR3W : public IO {
   private:
@@ -542,11 +544,11 @@ public:
     union {
       uint8_t as_uint8;
       struct {
-	uint8_t data:4;		/**< Data port (P0..P3) */
-	uint8_t rs:1;		/**< Command/Data select (P4) */
-	uint8_t bt:1;		/**< Back-light control (P5) */
-	uint8_t app2:1;		/**< Application bit#2 (P6) */
-	uint8_t app1:1;		/**< Application bit#1 (P7) */
+	uint8_t data:4;		/**< Data port (Q0..Q3) */
+	uint8_t rs:1;		/**< Command/Data select (Q4) */
+	uint8_t bt:1;		/**< Back-light control (Q5) */
+	uint8_t app2:1;		/**< Application bit#2 (Q6) */
+	uint8_t app1:1;		/**< Application bit#1 (Q7) */
       };
     } m_port;
     OutputPin m_sda;		/**< Serial data output */
@@ -627,26 +629,29 @@ public:
    *                       +----U----+    |
    * (LCD D5)------------1-|Q1    VCC|-16-+
    * (LCD D6)------------2-|Q2     Q0|-15-----------(LCD D4)
-   * (LCD D7)------------3-|Q3    SER|-14-----------(MOSI)
+   * (LCD D7)------------3-|Q3    SER|-14-----------(MISO)
    * (LCD RS)------------4-|Q4    /OE|-13-----------(GND)
-   * (LCD BT)------------5-|Q5    Q6'|--9
-   *                       |         |          
+   * (LCD BT)------------5-|Q5   RCLK|-12-----------(EN)
    *                     6-|Q6   SCLK|-11-----------(SCK)
    *                     7-|Q7    /MR|-10-----------(VCC)
-   *                   +-8-|GND  RCLK|-12-----+
-   *                   |   +---------+        |
-   *                   |      0.1uF           |
-   *                 (GND)-----||----(VCC)    |
-   * (LCD EN)---------------------------------+-----(EN)
+   *                   +-8-|GND   Q6'|--9
+   *                   |   +---------+
+   *                   |      0.1uF          
+   *                 (GND)-----||----(VCC)
+   * (LCD EN)---------------------------------------(EN)
+   * (LCD RW)---------------------------------------(GND)
    *
    *   MOSI (Arduino:D11/TinyX4:D5/TinyX5:D0) => SR:SER[14]
-   *   SCK (Arduino:D13/TinyX4:D5/TinyX5:D2) => SR:SRCLK[11]
+   *   SCK (Arduino:D13/TinyX4:D5/TinyX5:D2) => SR:SCLK[11]
    *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
-   *   VCC => /SR:SRCLR[10]
-   *   GND => /SR:OE[13]
-   *   SR:QA..QD[15,1..3] => LCD:D4..D7
-   *   SR:QE[4] => LCD:RS
-   *   SR:QF[5] => LCD:BT (Backlight)
+   *   VCC => SR:/MR[10]
+   *   GND => SR:/OE[13]
+   *
+   *   SR:Q0..Q3[15,1..3] => LCD:D4..D7
+   *   SR:Q4[4] => LCD:RS
+   *   SR:Q5[5] => LCD:BT (Backlight)
+   *   EN (Arduino:D5/Tiny:D3) => LCD:EN
+   *   GND => LCD:RW
    *
    * @section Performance
    * The SPI transfer is so fast that a longer delay is required.
@@ -661,11 +666,11 @@ public:
     union {
       uint8_t as_uint8;
       struct {
-	uint8_t data:4;		/**< Data port (P0..P3) */
-	uint8_t rs:1;		/**< Command/Data select (P4) */
-	uint8_t bt:1;		/**< Back-light control (P5) */
-	uint8_t app2:1;		/**< Application bit#2 (P6) */
-	uint8_t app1:1;		/**< Application bit#1 (P7) */
+	uint8_t data:4;		/**< Data port (Q0..Q3) */
+	uint8_t rs:1;		/**< Command/Data select (Q4) */
+	uint8_t bt:1;		/**< Back-light control (Q5) */
+	uint8_t app2:1;		/**< Application bit#2 (Q6) */
+	uint8_t app1:1;		/**< Application bit#1 (Q7) */
       };
     } m_port;
     OutputPin m_en;		/**< Starts data read/write */
@@ -729,28 +734,31 @@ public:
    *                       +----U----+    |
    * (LCD D1)------------1-|Q1    VCC|-16-+
    * (LCD D2)------------2-|Q2     Q0|-15-----------(LCD D0)
-   * (LCD D3)------------3-|Q3    SER|-14-----------(SDA)
-   * (LCD D4)------------4-|Q4    /OE|-13-----------(GND)
-   * (LCD D5)------------5-|Q5    Q6'|--9     +-----(LCD RS)
-   * (LCD D6)------------6-|Q6       |        | 
-   * (LCD D7)------------7-|Q7   SCLK|-11-----+-----(SCL)
-   *                       |      /MR|-10-----------(VCC)
-   *                   +-8-|GND  RCLK|-12-----+
-   *                   |   +---------+        |
-   *                   |      0.1uF           |
-   *                 (GND)-----||----(VCC)    |
-   * (LCD EN)---------------------------------+-----(EN)
+   * (LCD D3)------------3-|Q3    /OE|-13-----------(GND)  
+   * (LCD D4)------------4-|Q4    SER|-14-----------(SDA)
+   * (LCD D5)------------5-|Q5   RCLK|-12-----------(EN)
+   * (LCD D6)------------6-|Q6   SCLK|-11-----------(SCL)
+   * (LCD D7)------------7-|Q7    /MR|-10-----------(VCC)
+   *                   +-8-|GND   Q6'|-9
+   *                   |   +---------+
+   *                   |      0.1uF
+   *                 (GND)-----||----(VCC)
+   * (LCD RS)---------------------------------------(SDA)
+   * (LCD EN)---------------------------------------(EN)
    * (LCD BT)---------------------------------------(BT)
+   * (LCD RW)---------------------------------------(GND)
    *
-   *   SDA (Arduino:D7) => SR:SER[14]
-   *   SCL (Arduino:D6) => SR:SRCLK[11]
-   *   EN (Arduino:D5) => SR:RCLK[12] 
-   *   VCC => /SR:SRCLR[10]
-   *   GND => /SR:OE[13]
-   *   SR:QA..QH[15,1..7] => LCD:D0..D7
+   *   SDA (Arduino:D7/Tiny:D1) => SR:SER[14]
+   *   SCL (Arduino:D6/Tiny:D2) => SR:SCLK[11]
+   *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12] 
+   *   VCC => SR:/MR[10]
+   *   GND => SR:/OE[13]
+   *
+   *   SR:Q0..Q7[15,1..7] => LCD:D0..D7
    *   SDA (Arduino:D7) => LCD::RS
-   *   EN (Arduino:D5) => LCD:EN
-   *   BT (Arduino:D4) => LCD:BT
+   *   EN (Arduino:D5/Tiny:D3) => LCD:EN
+   *   BT (Arduino:D4) => LCD:BT (Backlight)
+   *   GND => LCD:RW
    *
    * @section Performance
    * Delay required even when using Cosa serial write. No
