@@ -20,7 +20,7 @@
  * type of sketch.
  * 
  * @section Circuit
- * No circuit as this is a build demonstration.
+ * No circuit as this is a build size demonstration.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -30,11 +30,12 @@
 // Binary sketch size:  MEGA/STD*/TINY bytes
 // =========================================
 // Baseline:		 780/ 656/ 558 bytes
-// HD44780::Port4b:	3622/3452/3314 bytes
-// HD44780::SR3W:	4538/4368/4224 bytes
-// HD44780::SR3WSPI:	3862/3748/3508 bytes
-// HD44780::MJKDZ:	5122/5028/5570 bytes
-// HD44780::DFRobot:	5092/4998/5540 bytes
+// HD44780::Port4b:	3618/3448/3310 bytes
+// HD44780::SR3W:	4534/4364/4220 bytes
+// HD44780::SR3WSPI:	3858/3744/3504 bytes
+// HD44780::SR4W:	4054/3872/3712 bytes
+// HD44780::MJKDZ:	5106/5012/5568 bytes
+// HD44780::DFRobot:	5076/4982/5538 bytes
 // PCD8544: 		4458/4322/4004 bytes
 // ST7565:  		4830/4710/4394 bytes
 // VLCD:		4008/3948/4370 bytes
@@ -48,6 +49,7 @@
 // HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
+// HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::DFRobot port;
 // HD44780 lcd(&port);
@@ -58,8 +60,8 @@
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
 
-#include "Cosa/VLCD.hh"
-VLCD lcd;
+// #include "Cosa/VLCD.hh"
+// VLCD lcd;
 
 void setup()
 {
