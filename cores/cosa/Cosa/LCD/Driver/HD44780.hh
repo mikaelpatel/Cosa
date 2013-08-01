@@ -765,6 +765,11 @@ public:
    * need for SPI. SCL/SDA can still be connected to other
    * inputs. The Backlight control pin (BT) can be removed
    * if always on.
+   *
+   * @section Acknowledgement
+   * Inspired by a solution by Stefan Heinzmann.
+   * http://web.archive.org/web/20100210142839/
+   * http://home.iae.nl/users/pouweha/lcd/lcd_examp.shtml#_3
    */
   class SR4W : public IO {
   private:
