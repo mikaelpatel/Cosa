@@ -767,7 +767,9 @@ public:
    * if always on.
    *
    * @section Acknowledgement
-   * Inspired by a solution by Stefan Heinzmann.
+   * Inspired by AVR2LCD, a solution by Frank Henriquez. The original
+   * 74HC164 based design is by Stefan Heinzmann and Marc Simons.  
+   * http://frank.bol.ucla.edu/avr2lcd.htm
    * http://web.archive.org/web/20100210142839/
    * http://home.iae.nl/users/pouweha/lcd/lcd_examp.shtml#_3
    */
