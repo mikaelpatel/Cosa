@@ -58,7 +58,7 @@ IR::Receiver::on_interrupt(uint16_t arg)
   detach();
 
   // Push an event with the received code
-  Event::push(Event::READ_COMPLETED_TYPE, (ExternalInterrupt*) this, m_code);
+  Event::push(Event::READ_COMPLETED_TYPE, this, m_code);
 }
 
 void 
