@@ -28,55 +28,21 @@
 #if defined(__ARDUINO_STANDARD__)
 
 ExternalInterrupt::
-ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
-  InputPin((Board::DigitalPin) pin)
+ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
+  IOPin((Board::DigitalPin) pin, IOPin::INPUT_MODE, pullup)
 {
-  if (mode & PULLUP_MODE) {
-    synchronized {
-      *PORT() |= m_mask; 
-    }
-  }
   m_ix = pin - Board::EXT0;
   ext[m_ix] = this;
   uint8_t ix = (m_ix << 1);
   bit_field_set(EICRA, 0b11 << ix, mode << ix);
 }
 
-void 
-ExternalInterrupt::enable() 
-{ 
-  synchronized {
-#if defined(__ARDUINO_TINY__)
-    bit_set(GIMSK, INT0); 
-#else
-    bit_set(EIMSK, m_ix); 
-#endif
-  }
-}
-
-void 
-ExternalInterrupt::disable() 
-{ 
-  synchronized {
-#if defined(__ARDUINO_TINY__)
-    bit_clear(GIMSK, INT0);
-#else
-    bit_clear(EIMSK, m_ix); 
-#endif
-  }
-}
-
 #elif defined(__ARDUINO_MEGA__)
 
 ExternalInterrupt::
-ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
-  InputPin((Board::DigitalPin) pin)
+ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
+  IOPin((Board::DigitalPin) pin, IOPin::INPUT_MODE, pullup)
 {
-  if (mode & PULLUP_MODE) {
-    synchronized {
-      *PORT() |= m_mask; 
-    }
-  }
   if (pin <= Board::EXT5) {
     m_ix = pin - Board::EXT4;
     uint8_t ix = (m_ix << 1);
@@ -94,14 +60,9 @@ ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
 #elif defined(__ARDUINO_MIGHTY__)
 
 ExternalInterrupt::
-ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
-  InputPin((Board::DigitalPin) pin)
+ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
+  IOPin((Board::DigitalPin) pin, IOPin::INPUT_MODE, pullup)
 {
-  if (mode & PULLUP_MODE) {
-    synchronized {
-      *PORT() |= m_mask; 
-    }
-  }
   if (pin == Board::EXT2) {
     m_ix = 2;
   } else {
@@ -115,28 +76,53 @@ ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
 #elif defined(__ARDUINO_TINY__)
 
 ExternalInterrupt::
-ExternalInterrupt(Board::ExternalInterruptPin pin, Mode mode) :
-  InputPin((Board::DigitalPin) pin)
+ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
+  IOPin((Board::DigitalPin) pin, IOPin::INPUT_MODE, pullup)
 {
-  if (mode & PULLUP_MODE) {
-    synchronized {
-      *PORT() |= m_mask; 
-    }
-  }
   m_ix = 0;
   ext[m_ix] = this;
   bit_field_set(MCUCR, 0b11, mode);
 }
 
+void 
+ExternalInterrupt::enable() 
+{ 
+  synchronized {
+    bit_clear(GIFR, INTF0); 
+    bit_set(GIMSK, INT0); 
+  }
+}
+
+void 
+ExternalInterrupt::disable() 
+{ 
+  synchronized {
+    bit_clear(GIMSK, INT0);
+  }
+}
+
+#endif
+
+#if !defined(__ARDUINO_TINY__)
+void 
+ExternalInterrupt::enable() 
+{ 
+  synchronized {
+    bit_clear(EIFR, m_ix); 
+    bit_set(EIMSK, m_ix); 
+  }
+}
+
+void 
+ExternalInterrupt::disable() 
+{ 
+  synchronized {
+    bit_clear(EIMSK, m_ix); 
+  }
+}
 #endif
 
 ExternalInterrupt* ExternalInterrupt::ext[Board::EXT_MAX] = { 0 };
-
-void 
-ExternalInterrupt::on_interrupt(uint16_t arg) 
-{ 
-  Event::push(Event::CHANGE_TYPE, this, arg);
-}
 
 #define INT_ISR(nr)				\
 ISR(INT ## nr ## _vect)				\

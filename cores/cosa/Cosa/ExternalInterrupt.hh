@@ -29,18 +29,13 @@
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
 #include "Cosa/Pins.hh"
-#include "Cosa/Event.hh"
 #include "Cosa/Interrupt.hh"
 
 /**
  * Abstract external interrupt pin. Allows interrupt handling on 
  * the pin value changes. 
  */
-class ExternalInterrupt : 
-  public InputPin, 
-  public Event::Handler, 
-  public Interrupt::Handler 
-{
+class ExternalInterrupt : public IOPin, public Interrupt::Handler {
   friend void INT0_vect(void);
 #if !defined(__ARDUINO_TINY__)
   friend void INT1_vect(void);
@@ -58,21 +53,23 @@ private:
   uint8_t m_ix;
 
 public:
-  enum Mode {
+  enum InterruptMode {
     ON_LOW_LEVEL_MODE = 0,
     ON_CHANGE_MODE = _BV(ISC00),
     ON_FALLING_MODE = _BV(ISC01),
-    ON_RISING_MODE = (_BV(ISC01) | _BV(ISC00)),
-    PULLUP_MODE = 4
+    ON_RISING_MODE = (_BV(ISC01) | _BV(ISC00))
   } __attribute__((packed));
 
   /**
-   * Construct external interrupt pin with given pin number and mode.
+   * Construct external interrupt pin with given pin number, mode and
+   * pullup flag.
    * @param[in] pin pin number.
-   * @param[in] mode pin mode.
+   * @param[in] mode pin mode (Default ON_CHANGE_MODE).
+   * @param[in] pullup flag (Default false).
    */
   ExternalInterrupt(Board::ExternalInterruptPin pin, 
-		    Mode mode = ON_CHANGE_MODE);
+		    InterruptMode mode = ON_CHANGE_MODE,
+		    bool pullup = false);
 
   /**
    * @override
@@ -88,9 +85,9 @@ public:
 
   /**
    * @override
-   * Default interrupt service on external interrupt pin change.
+   * Interrupt service callback on external interrupt pin change.
    * @param[in] arg argument from interrupt service routine.
    */
-  virtual void on_interrupt(uint16_t arg = 0);
+  virtual void on_interrupt(uint16_t arg = 0) = 0;
 };
 #endif
