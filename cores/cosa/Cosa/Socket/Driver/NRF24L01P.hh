@@ -371,14 +371,16 @@ private:
   };
   
   /**
-   * Interrupt handler
+   * Handler for interrupt pin.
    */
   class IRQPin : public ExternalInterrupt {
     friend class NRF24L01P;
   private:
     NRF24L01P* m_nrf;
   public:
-    IRQPin(Board::ExternalInterruptPin pin, Mode mode, NRF24L01P* nrf) : 
+    IRQPin(Board::ExternalInterruptPin pin, 
+	   InterruptMode mode, 
+	   NRF24L01P* nrf) : 
       ExternalInterrupt(pin, mode),
       m_nrf(nrf)
     {}

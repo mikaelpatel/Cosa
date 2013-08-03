@@ -28,6 +28,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
+#include "Cosa/Event.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Listener.hh"
@@ -114,7 +115,7 @@ public:
    * NEXA Wireless Remote Receiver. May be used in polling or
    * interrupt sampling mode. 
    */
-  class Receiver : private ExternalInterrupt {
+  class Receiver : private ExternalInterrupt, public Event::Handler {
   public:
     /**
      * NEXA::Receiver::Listener with code as key. The virtual method
