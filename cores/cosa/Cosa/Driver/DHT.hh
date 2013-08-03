@@ -27,15 +27,34 @@
 #define __COSA_DRIVER_DHT_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Linkage.hh"
-#include "Cosa/Watchdog.hh"
+#include "Cosa/Power.hh"
+#include "Cosa/IOStream.hh"
 
 /**
  * DHT11/22 Humidity & Temperature Sensor abstract device driver. 
  */
-class DHT : private Link {
+class DHT : public ExternalInterrupt, public Link {
 protected:
+  // States
+  enum {
+    INIT,			// Initial state
+    IDLE,			// Periodic wait
+    REQUEST,			// Issued a request
+    RESPONSE,			// Waiting for response
+    SAMPLING,			// Collecting samples
+    COMPLETED			// Data transfer completed
+  } __attribute__((packed));
+
+  /** Minimum periodic wait */
+  static const uint16_t MIN_PERIOD = 2048;
+
+  /** Sample thresholds */
+  static const uint16_t LOW_THRESHOLD = 50;
+  static const uint16_t BIT_THRESHOLD = 100;
+  static const uint16_t HIGH_THRESHOLD = 200;
+
   /** Size of data buffer */
   static const uint8_t DATA_MAX = 5;
 
@@ -55,27 +74,54 @@ protected:
     };
   };
   
-  IOPin m_pin;			/** Pin connected to device */
-  data_t m_data;		/** Latest received data */
-  data_t m_offset;		/** Calibration offset */
-  uint8_t m_latest;		/** Latest pin level read */
-  
-  /** 
-   * Read the next bit from the device given number of level
-   * changes. Return one(1) if the bit was set, zero(0) if clear,
-   * otherwise a negative error code. 
-   * @param[in] changes number of level transitions.
-   * @return one(1) if the bit was set, zero(0) if clear, otherwise 
-   * a negative error code(-1). 
-   */
-  int8_t read_bit(uint8_t changes);
+  /** State of device driver */
+  volatile uint8_t m_state;
+
+  /** Number of errors detected; transfer or checksum */
+  volatile uint8_t m_errors;
+
+  /** Micro-seconds since latest rising of data signal; pulse start */
+  volatile uint32_t m_start;
+
+  /** Number of milli-seconds between requests */
+  volatile uint16_t m_period;
+
+  /** Current byte being read from device */
+  volatile uint8_t m_value;
+
+  /** Current number of bits read */
+  volatile uint8_t m_bits;
+
+  /** Current data byte index stream */
+  volatile uint8_t m_ix;
+
+  /** Current data being transfered */
+  data_t m_data;
+
+  /* Latest valid reading */
+  data_t m_latest;
   
   /**
-   * Read data from the device. Return true(1) if successful otherwise
-   * false(0).    
-   * @return bool.
+   * @override
+   * The device driver interrupt level state machine.
+   * @param[in] arg argument from interrupt service routine.
    */
-  bool read_data();
+  virtual void on_interrupt(uint16_t arg = 0);
+
+  /**
+   * @override
+   * The device driver event level state machine.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value);
+
+  /**
+   * Read data directly from the device. DHT::begin() should
+   * not have been called. Return true(1) if successful
+   * otherwise false(0).
+   */
+  bool read_data(uint8_t mode = SLEEP_MODE_IDLE);
 
   /**
    * Adjust data from the device. Communication protocol is the same
@@ -84,18 +130,67 @@ protected:
    */
   virtual void adjust_data() {}
 
-public:
+public:  
   /**
-   * Construct connection to a DHT device on given in/output-pin.
-   * Set humidity and temperature calibration offsets to zero.
-   * @param[in] pin data.
+   * Construct DHT device connected to given pin.
+   * @param[in] pin external interrupt pin (Default EXT0).
    */
-  DHT(Board::DigitalPin pin) : 
-    Link(), 
-    m_pin(pin)
+  DHT(Board::ExternalInterruptPin pin = Board::EXT0) : 
+    ExternalInterrupt(pin, ExternalInterrupt::ON_RISING_MODE),
+    Link(),
+    m_state(INIT),
+    m_errors(0),
+    m_start(0L),
+    m_period(0),
+    m_value(0),
+    m_bits(0),
+    m_ix(0)
   {
-    m_offset.humidity = 0;
-    m_offset.temperature = 0;
+  }
+  
+  /**
+   * Start the DHT device driver with the given sampling period.
+   * @param[in] ms sampling period (Default 2048 ms).
+   */
+  void begin(uint16_t ms = MIN_PERIOD);
+
+  /**
+   * @override
+   * Callback when data read is completed.
+   */
+  virtual void on_read_completed() {}
+
+  /**
+   * Stop the DHT device driver.
+   */
+  void end();
+
+  /**
+   * Return temperature from latest read.
+   * @return temperature.
+   */
+  int16_t get_temperature()
+  {
+    return (m_latest.temperature);
+  }
+
+  /**
+   * Return humidity from latest read.
+   * @return humidity.
+   */
+  int16_t get_humidity()
+  {
+    return (m_latest.humidity);
+  }
+
+  /**
+   * Read temperature and humidity from the device. Return true(1) and
+   * values if successful otherwise false(0).  
+   * @return bool.
+   */
+  bool read()
+  {
+    return (read_data());
   }
 
   /**
@@ -114,62 +209,84 @@ public:
   }
 
   /**
-   * Return temperature from latest read adjusted with given calibration
-   * offset.
-   * @return temperature.
+   * Print latest humidity and temperature reading to the
+   * given stream.
+   * @param[in] outs output stream.
+   * @param[in] dht device to print.
+   * @return stream.
    */
-  int16_t get_temperature()
-  {
-    return (m_data.temperature);
-  }
+  friend IOStream& operator<<(IOStream& outs, DHT& dht);
+};
 
-  /**
-   * Return humidity from latest read adjusted with given calibration 
-   * offset.
-   * @return humidity.
-   */
-  int16_t get_humidity()
-  {
-    return (m_data.humidity);
-  }
-
-  /**
-   * Set calibration offset for temperature and humidity readings.
-   * The given values are added to the values read from the device.
-   * @param[in] temperature.
-   * @param[in] humidity.
-   */
-  void calibrate(int16_t humidity, int16_t temperature)
-  {
-    m_offset.humidity = humidity;
-    m_offset.temperature = temperature;
-  }
-
-  /**
-   * Attach to periodic handling.
-   * @param[in] ms period of timeout.
-   */
-  void attach(uint16_t ms)
-  {
-    Watchdog::attach(this, ms);
-  }
-
-  /**
-   * Detach from periodic handling.
-   * @param[in] ms period of timeout.
-   */
-  void detach()
-  {
-    Link::detach();
-  }
-
+/**
+ * DHT11 Humidity & Temperature Sensor device driver. 
+ *
+ * @section Circuit
+ * Connect DHT11 to pin, VCC and ground. A pullup resistor from
+ * the pin to VCC should be used. Most DHT11 modules have a built-in 
+ * pullup resistor.
+ *
+ * @section See Also
+ * [1] DHT11 Humidity & Temperature Sensor, Robotics UK,
+ * www.droboticsonline.com, http://www.micro4you.com/files/sensor/DHT11.pdf<br>
+ * [2] DHTxx Sensor Tutorial, http://learn.adafruit.com/dht<br>
+ */
+class DHT11 : public DHT {
+public:
   /**
    * @override
-   * Default device event handler function. Attach to timer queue to
-   * allow perodic reading. See attach()/detach().
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
+   * Adjust data from the device. Byte order and representation of 
+   * negative temperature values.
    */
-  virtual void on_event(uint8_t type, uint16_t value);
+  virtual void adjust_data() 
+  {
+    m_data.humidity *= 10;
+    m_data.temperature *= 10;
+  }
+
+  /**
+   * Construct connection to a DHT11 device on given in/output-pin.
+   * Set humidity and temperature calibration offsets to zero.
+   * @param[in] pin data.
+   */
+  DHT11(Board::ExternalInterruptPin pin = Board::EXT0) : DHT(pin) {}
+};
+
+/**
+ * DHT22 Humidity & Temperature Sensor device driver. Note that the
+ * values read from the device are scaled by a factor of 10, i.e. one
+ * decimal accurracy. 
+ *
+ * @section Circuit
+ * Connect DHT22 to pin, VCC and ground. A pullup resistor from
+ * the pin to VCC should be used. Most DHT22 modules have a built-in 
+ * pullup resistor.
+ *
+ * @section See Also
+ * [1] http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Sensors/Weather/RHT03.pdf<br>
+ */
+class DHT22 : public DHT {
+private:
+  /**
+   * @override
+   * Adjust data from the device. Byte order and representation of 
+   * negative temperature values.
+   */
+  virtual void adjust_data() 
+  {
+    m_data.humidity = swap(m_data.humidity);
+    m_data.temperature = swap(m_data.temperature);
+    if (m_data.temperature < 0) {
+      m_data.temperature = -(m_data.temperature & 0x7fff);
+    }
+  }
+
+public:
+  /**
+   * Construct connection to a DHT22 device on given in/output-pin.
+   * Set humidity and temperature calibration offsets to zero.
+   * @param[in] pin data.
+   */
+  DHT22(Board::ExternalInterruptPin pin = Board::EXT0) : DHT(pin) {}
 };
 #endif

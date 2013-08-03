@@ -24,70 +24,165 @@
  */
 
 #include "Cosa/Driver/DHT.hh"
+#include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
-// Start pulse (low) in milli-seconds
-static const uint16_t START_REQUEST = 18;
-
-// Response pulse width
-static const uint8_t START_RESPONSE = 40;
-#if (I_CPU < 16)
-static const uint8_t COUNT_MIN = 30;
-#else
-static const uint8_t COUNT_MIN = 50;
-#endif
-static const uint8_t COUNT_MAX = 255;
-
-int8_t
-DHT::read_bit(uint8_t changes)
-{
-  uint8_t counter = 0;
-  while (changes--) {
-    while (m_pin.is_set() == m_latest) {
-      counter++;
-      DELAY(1);
-      if (counter == COUNT_MAX) return (-1);
-    }
-    m_latest = !m_latest;
-  }
-  return (counter > COUNT_MIN);
-}
-
-bool 
-DHT::read_data()
-{
-  // Send start signal to the device
-  m_pin.set_mode(IOPin::OUTPUT_MODE);
-  m_pin.clear();
-  Watchdog::delay(START_REQUEST);
-  m_pin.set();
-  DELAY(START_RESPONSE);
-  m_pin.set_mode(IOPin::INPUT_MODE);
-
-  // Receive bits from the device and calculate check sum
-  uint8_t chksum = 0;
-  m_latest = 1;
-  synchronized {
-    if (read_bit(3) < 0) synchronized_return (false);
-    for (uint8_t i = 0; i < DATA_MAX; i++) {
-      for (uint8_t j = 0; j < CHARBITS; j++) {
-	int8_t bit = read_bit(2);
-	if (bit < 0) synchronized_return (false);
-	m_data.as_byte[i] = (m_data.as_byte[i] << 1) | bit;
-      }
-      if (i < DATA_LAST) chksum += m_data.as_byte[i];
-    }
+void 
+DHT::on_interrupt(uint16_t arg) 
+{ 
+  // Check start condition
+  if (m_start == 0L) {
+    if (is_clear()) return;
+    m_start = RTC::micros();
+    m_bits = 0;
+    m_ix = 0;
+    return;
   }
 
-  // Adjust data depending on version of device and add calibration value
-  adjust_data();
-  m_data.humidity += m_offset.humidity;
-  m_data.temperature += m_offset.temperature;
-  return (chksum == m_data.chksum);
+  // Calculate the pulse width and check against thresholds
+  uint32_t stop = RTC::micros();
+  uint32_t us = (stop - m_start);
+  if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) goto exception;
+  m_start = stop;
+
+  // Check the initial response pulse
+  if (m_state == RESPONSE) {
+    if (us < BIT_THRESHOLD) goto exception;
+    m_state = SAMPLING;
+    return;
+  }
+
+  // Sample was valid, collect data
+  m_value = (m_value << 1) + (us > BIT_THRESHOLD);
+  m_bits += 1;
+  if (m_bits != CHARBITS) return;
+
+  // Next byte ready
+  m_data.as_byte[m_ix++] = m_value;
+  m_bits = 0;
+  if (m_ix == DATA_MAX) goto completed;
+  return;
+
+  // Invalid sample reject sequence
+ exception:
+  m_start = 0L;
+  m_ix = 0;
+
+  // Sequence completed
+ completed:
+  m_state = COMPLETED;
+  disable();
+  if (m_period == 0) return;
+  Event::push(Event::RECEIVE_COMPLETED_TYPE, this);
 }
 
 void 
 DHT::on_event(uint8_t type, uint16_t value)
 {
-  read_data();
+  switch (m_state) {
+
+  case IDLE: 
+    // Issue a request; pull down for more than 18 ms
+    m_state = REQUEST;
+    m_start = 0L;
+    set_mode(OUTPUT_MODE);
+    set();
+    clear();
+    Watchdog::attach(this, 32);
+    break;
+
+  case REQUEST: 
+    // Request pulse completed; pull up for 40 us and collect
+    // data as a sequence of on rising mode interrupts
+    m_state = RESPONSE;
+    detach();
+    set();
+    set_mode(INPUT_MODE);
+    DELAY(40);
+    enable();
+    break;
+
+  case COMPLETED:
+    // Data reading was completed; validate data and check sum
+    // Wait before issueing the next request
+    uint8_t invalid = true;
+    if (m_ix == DATA_MAX) {
+      uint8_t sum = 0;
+      for (uint8_t i = 0; i < DATA_LAST; i++) 
+	sum += m_data.as_byte[i];
+      if (sum == m_data.chksum) {
+	invalid = false;
+	adjust_data();
+	memcpy(m_latest.as_byte, m_data.as_byte, DATA_MAX);
+      }
+      on_read_completed();
+    }
+    m_errors += invalid;
+    m_state = IDLE;
+    Watchdog::attach(this, m_period);
+    break;
+  }
+}
+
+void
+DHT::begin(uint16_t ms)
+{
+  if (m_state != INIT) return;
+  if (ms < MIN_PERIOD) ms = MIN_PERIOD;
+  m_state = IDLE;
+  m_period = ms;
+  on_event(0,0);
+}
+
+void
+DHT::end()
+{
+  disable();
+  detach();
+}
+
+bool
+DHT::read_data(uint8_t mode)
+{
+  // Issue a request; pull down for more than 18 ms
+  if (m_state != INIT) return (false);
+  set_mode(OUTPUT_MODE);
+  set();
+  clear();
+  Watchdog::delay(32);
+
+  // Request pulse completed; pull up for 40 us and collect
+  // data as a sequence of on rising mode interrupts
+  set();
+  set_mode(INPUT_MODE);
+  DELAY(40);
+  m_state = RESPONSE;
+  m_start = 0L;
+  enable();
+  uint32_t start = RTC::millis();
+  while (m_state != COMPLETED && RTC::since(start) < MIN_PERIOD) 
+    Power::sleep(mode);
+  if (m_state != COMPLETED) return (false);
+
+  // Data reading was completed; validate data and check sum
+  m_state = INIT;
+  if (m_ix != DATA_MAX) return (false);
+  uint8_t sum = 0;
+  for (uint8_t i = 0; i < DATA_LAST; i++) 
+    sum += m_data.as_byte[i];
+  if (sum != m_data.chksum) return (false);
+  adjust_data();
+  memcpy(m_latest.as_byte, m_data.as_byte, DATA_MAX);
+  return (true);
+}
+
+IOStream& 
+operator<<(IOStream& outs, DHT& dht)
+{
+  outs << PSTR("RH = ") << dht.m_latest.humidity / 10
+       << '.' << dht.m_latest.humidity % 10
+       << PSTR("%, T = ") << dht.m_latest.temperature / 10
+       << '.' << dht.m_latest.temperature % 10
+       << PSTR(" C");
+  return (outs);
 }
