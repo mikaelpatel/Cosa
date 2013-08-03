@@ -13,8 +13,5 @@ interrupt with pin D2 (IRQ). The pins are wired as on the Nano IO
 shield. 
 
 Luminance and temperature sensor based on analog pins(A2, A3). Digital
-humidity and temperture sensor on pin(D7). 1-Wire bus with temperature
+humidity and temperture sensor on pin(D3). 1-Wire bus with temperature
 sensor DS18B20 on pin(D8).
-
-
-

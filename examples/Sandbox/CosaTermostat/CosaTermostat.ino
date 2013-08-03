@@ -25,9 +25,9 @@
  * control.
  *
  * @section Circuit
- * 1. Connect Arduino/ATtiny to DHT11 module, D7/D1 => DHT data pin 
+ * 1. Connect Arduino/ATtiny to DHT11 module, EXT0 => DHT data pin 
  * with required pullup resistor. Connect power (VCC) and ground (GND).   
- * 2. Connect Arduino/ATtiny to Relay module, D6/D2 => relay#1, 
+ * 2. Connect Arduino/ATtiny to Relay module, D6/D1 => relay#1, 
  * D5/D3 => relay#2.
  * 3. Soft UART ATtiny D0 => UART RX.
  *
@@ -40,19 +40,25 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Driver/DHT11.hh"
+#include "Cosa/RTC.hh"
+#include "Cosa/Driver/DHT.hh"
 
 // Sensor and relay control pins
 OutputPin led(Board::LED);
+DHT11 sensor(Board::EXT0);
 #if defined(__ARDUINO_TINY__)
-DHT11 sensor(Board::D1);
-OutputPin heater(Board::D2, 1);
+OutputPin heater(Board::D1, 1);
 OutputPin fan(Board::D3, 1);
 #else
-DHT11 sensor(Board::D7);
 OutputPin heater(Board::D6, 1);
 OutputPin fan(Board::D5, 1);
 #endif
+
+const char* 
+PSTATE(uint8_t state)
+{
+  return (state ? PSTR(" on") : PSTR(" off"));
+}
 
 void setup()
 {
@@ -67,6 +73,7 @@ void setup()
 
   // Start the watchdog ticks and sensor monitoring
   Watchdog::begin();
+  RTC::begin();
 }
 
 void loop()
@@ -78,7 +85,7 @@ void loop()
   // Read temperature and humidity. Handle read errors
   int16_t temperature, humidity;
   if (!sensor.read(humidity, temperature)) {
-    trace.print_P(PSTR("sensor: FAILED\n"));
+    trace << PSTR("sensor: FAILED") << endl;
     err += 1;
     if (err > ERR_MAX) {
       heater.set();
@@ -88,16 +95,14 @@ void loop()
     SLEEP(2);
     return;
   }
-  trace.print_P(PSTR("sensor:  "));
-  trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
 
-  // Check if heater should be turned on @ 22 C and off @ 26 C
+  // Check if heater should be turned on @ T 22 C and off @ T 26 C
   static bool heating = false;
   static uint32_t hours = 0;
   static uint8_t minutes = 0;
   static uint8_t seconds = 0;
-  static const uint8_t TEMP_MIN = 22;
-  static const uint8_t TEMP_MAX = 26;
+  static const int16_t TEMP_MIN = 220;
+  static const int16_t TEMP_MAX = 260;
   if (heating) {
     seconds += 2;
     if (seconds == 60) {
@@ -109,34 +114,39 @@ void loop()
       }
     }
     if (temperature > TEMP_MAX) {
-      trace.print_P(PSTR("Heater OFF\n"));
+      trace << PSTR("Heater OFF") << endl;
       trace.printf_P(PSTR("Runtime: %l:%d:%d\n"), hours, minutes, seconds);
       heater.set();
       heating = 0;
     }
   }
   else if (temperature < TEMP_MIN) {
-    trace.print_P(PSTR("Heater ON\n"));
+    trace << PSTR("Heater ON") << endl;
     heater.clear();
     heating = 1;
   }
 
-  // Check if fan should be turned on @ 70 RH and off @ 50 RH
+  // Check if fan should be turned on @ RH 70% and off @ RH 50%
   static bool venting = false;
-  static const uint8_t RH_MIN = 50;
-  static const uint8_t RH_MAX = 70;
+  static const int16_t RH_MIN = 500;
+  static const int16_t RH_MAX = 700;
   if (venting) {
     if (humidity < RH_MIN) {
-      trace.print_P(PSTR("Fan OFF\n"));
+      trace << PSTR("Fan OFF") << endl;
       fan.set();
       venting = false;
     }
   }
   else if (humidity > RH_MAX) {
-    trace.print_P(PSTR("Fan ON\n"));
+    trace << PSTR("Fan ON") << endl;
     fan.clear();
     venting = true;
   }
+
+  trace << sensor 
+	<< PSTR(", Heater = ") << heating 
+	<< PSTR(", Fan = ") << venting 
+	<< endl;
 
   // Sample every 2 seconds
   SLEEP(2);

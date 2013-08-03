@@ -24,31 +24,23 @@
  * Cosa demonstration of the DHT11/DHT22 device driver.
  *
  * @section Circuit
- * Connect Arduino to DHT11 (indoors), D6 => DHT data pin, 
- * DHT22 (outdoors), D7 => DHT data pin. Connect power (VCC) 
- * and ground (GND).   
+ * Connect Arduino:D2 to DHT11 data pin. Connect D3 to DHT22 data 
+ * pin. Pullup resistors (4K7) necessary if long wires. Internal 
+ * pullup active. Connect power (VCC) and ground (GND).   
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Driver/DHT11.hh"
-#include "Cosa/Driver/DHT22.hh"
+#include "Cosa/Driver/DHT.hh"
 
-// Test with two DHT11 instead of DHT11 and DHT22
-// #define DHT11_ONLY
-
-OutputPin ledPin(Board::LED);
-#if defined(__ARDUINO_TINY__)
-DHT11 indoors(Board::D1);
-DHT22 outdoors(Board::D2);
-#else
-DHT11 indoors(Board::D6);
-DHT22 outdoors(Board::D7);
+DHT11 outdoors(Board::EXT0);
+#if !defined(__ARDUINO_TINY__)
+DHT22 indoors(Board::EXT1);
 #endif
 
 void setup()
@@ -57,17 +49,13 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaDHT11: started"));
 
-  // Check amount of free memory and size of instances
+  // Check amount of free memory and size of instance
   TRACE(free_memory());
-  TRACE(sizeof(OutputPin));
-  TRACE(sizeof(DHT11));
-  TRACE(sizeof(DHT22));
+  TRACE(sizeof(DHT));
 
   // Start the watchdog for low power sleep
   Watchdog::begin();
-
-  // Adjust the indoors device with -1 humidity and +1 temperature
-  // indoors.calibrate(-1,1);
+  RTC::begin();
 }
 
 void loop()
@@ -75,24 +63,12 @@ void loop()
   // Sample every 2 seconds
   SLEEP(2);
 
-  // Read in- and outdoors temperature and humidity
-  ledPin.toggle();
-  int16_t humidity;
-  int16_t temperature;
-  if (indoors.read(humidity, temperature)) {
-    trace.print_P(PSTR("indoors:  "));
-    trace.printf_P(PSTR("RH = %d%%, T = %d C\n"), humidity, temperature);
-  }
-  if (outdoors.read(humidity, temperature)) {
-#if defined(DHT11_ONLY)
-    humidity = 10 * swap(humidity);
-    temperature = 10 * swap(temperature);
+  // Read and print humidity and temperature
+#if !defined(__ARDUINO_TINY__)
+  indoors.read();
+  trace << PSTR("indoors: ") << indoors << endl;
 #endif
-    trace.print_P(PSTR("outdoors: "));
-    trace.printf_P(PSTR("RH = %d.%d%%, "), humidity / 10, humidity % 10);
-    trace.printf_P(PSTR("T = %d.%d C\n"), temperature / 10, temperature % 10);
-  }
-
-  // Blink built-in led during active period
-  ledPin.toggle();
+  outdoors.read();
+  trace << PSTR("outdoors: ") << outdoors << endl;
+  trace << endl;
 }

@@ -69,11 +69,11 @@ namespace LTB {
 };
 #endif
 
-// Digital humidity and temperture sensor on pin(D7)
-#include "Cosa/Driver/DHT11.hh"
+// Digital humidity and temperture sensor on pin(D3)
+#include "Cosa/Driver/DHT.hh"
 namespace HTB {
   const Socket::addr_t dest = { 0xc05a0002, 7001 };
-  DHT11 indoors(Board::D7);
+  DHT11 indoors(Board::EXT1);
   Socket socket(&nrf, 6001);
   uint16_t nr = 0;
 

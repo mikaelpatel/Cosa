@@ -27,28 +27,26 @@
  * or the CosaVWIdebug sketch.
  *
  * @section Circuit
- * Connect RF433/315 Transmitter Data to Arduino/ATtiny D9/D2,
- * and DHT11 data with pullup (approx. 5 Kohm) to D7/D1. 
- * The LED is on when transmitting.
+ * Connect RF433/315 Transmitter Data to Arduino/ATtiny84/85 D9/D3/D3,
+ * and DHT11 data with pullup (approx. 5 Kohm) to D7/D10/D2. 
+ * The LED (ATtiny84/85 D4/D5) is on when transmitting.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Pins.hh"
-#include "Cosa/Driver/DHT11.hh"
+#include "Cosa/Driver/DHT.hh"
 #include "Cosa/VWI.hh"
 #include "Cosa/VWI/Codec/VirtualWireCodec.hh"
 #include "Cosa/Watchdog.hh"
 
 OutputPin led(Board::LED);
+DHT11 sensor(Board::EXT0);
 VirtualWireCodec codec;
 const uint16_t SPEED = 4000;
-
 #if defined(__ARDUINO_TINY__)
-DHT11 sensor(Board::D1);
-VWI::Transmitter tx(Board::D2, &codec);
+VWI::Transmitter tx(Board::D3, &codec);
 #else
-DHT11 sensor(Board::D7);
 VWI::Transmitter tx(Board::D9, &codec);
 #endif
 

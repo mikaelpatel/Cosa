@@ -7,12 +7,11 @@ driver. Sample and print values.
 Circuit
 -------
 For this example you need a DHT11 and a DHT22 sensor/module. There are
-modules available with both power LED and pullup resistor. Connect
-Arduino Pin 6(1) to DHT11 data pin and Pin 7(2) to DHT22 data pin. Connect
-power (VCC) and ground. For ATtiny connect Pin 0 to UART RX.
+modules available with both power LED and pullup resistor. 
+Connect Arduino:D2 to DHT11 data pin. Connect D3 to DHT22 data 
+pin. Pullup resistors (4K7) necessary if long wires. Internal 
+pullup active. Connect power (VCC) and ground (GND).   
 
-The Arduino Pin 13 (builtin LED) is on during the temperature and
-humidity sampling. 
 
 
 
