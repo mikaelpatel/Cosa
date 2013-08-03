@@ -96,12 +96,6 @@ PinChangeInterrupt::end()
   }
 }
 
-void
-PinChangeInterrupt::on_interrupt(uint16_t arg)
-{ 
-  Event::push(Event::CHANGE_TYPE, this, arg);
-}
-
 #if defined(__ARDUINO_TINYX5__)
 
 ISR(PCINT0_vect)

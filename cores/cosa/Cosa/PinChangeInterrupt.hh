@@ -28,18 +28,13 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
-#include "Cosa/Event.hh"
 #include "Cosa/Interrupt.hh"
 
 /**
  * Abstract interrupt pin. Allows interrupt handling on 
  * the pin value changes. 
  */
-class PinChangeInterrupt : 
-  public InputPin, 
-  public Event::Handler, 
-  public Interrupt::Handler 
-{
+class PinChangeInterrupt : public IOPin, public Interrupt::Handler {
 private:
   static PinChangeInterrupt* pin[Board::PIN_MAX];
   static uint8_t state[Board::PCINT_MAX];
@@ -64,11 +59,6 @@ private:
 #endif
 
 public:
-  enum Mode {
-    NORMAL_MODE = 0,
-    PULLUP_MODE = 1
-  } __attribute__((packed));
-
   /**
    * Start handling of pin change interrupt handling.
    */
@@ -84,8 +74,8 @@ public:
    * @param[in] pin pin number.
    * @param[in] mode pin mode.
    */
-  PinChangeInterrupt(Board::InterruptPin pin, Mode mode = NORMAL_MODE) :
-    InputPin((Board::DigitalPin) pin, (InputPin::Mode) mode) 
+  PinChangeInterrupt(Board::InterruptPin pin, bool pullup = false) :
+    IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
   {
   }
 
@@ -104,6 +94,6 @@ public:
    * Default interrupt service on pin change interrupt.
    * @param[in] arg argument from interrupt service routine.
    */
-  virtual void on_interrupt(uint16_t arg = 0);
+  virtual void on_interrupt(uint16_t arg = 0) = 0;
 };
 #endif
