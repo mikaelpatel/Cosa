@@ -41,6 +41,7 @@
  * starts interrupt handler and stops on max time.
  */
 class Probe : public ExternalInterrupt {
+  friend IOStream& operator<<(IOStream& outs, Probe& probe);
 private:
   static const uint8_t SAMPLE_MAX = 128;
 
@@ -69,8 +70,6 @@ public:
 
   void sample_request();
   void sample_await(uint32_t ms);
-
-  friend IOStream& operator<<(IOStream& outs, Probe& probe);
 };
 
 IOStream& operator<<(IOStream& outs, Probe& probe)
@@ -109,17 +108,22 @@ Probe::sample_request()
   enable();
 }
 
-void 
+void
 Probe::sample_await(uint32_t ms)
 {
   uint32_t start = RTC::millis();
-  while (m_sampling && RTC::since(start) < ms) Power::sleep(SLEEP_MODE_IDLE);
+  DELAY(HIGH_THRESHOLD);
+  while (m_sampling && (RTC::since(start) < ms)) {
+    Power::sleep(SLEEP_MODE_IDLE);
+    uint16_t us = (RTC::micros() - m_start);
+    if (us > 1000) break;
+  }
   disable();
 }
 
 // Probe probe(Board::EXT0, ExternalInterrupt::ON_CHANGE_MODE, 20, 100);
-Probe probe(Board::EXT1, ExternalInterrupt::ON_FALLING_MODE, 30, 300);
-// Probe probe(Board::EXT1, ExternalInterrupt::ON_RISING_MODE, 30, 300);
+Probe probe(Board::EXT0, ExternalInterrupt::ON_FALLING_MODE, 30, 300);
+// Probe probe(Board::EXT0, ExternalInterrupt::ON_RISING_MODE, 30, 300);
 
 void setup()
 {
@@ -141,9 +145,9 @@ void loop()
   probe.set_mode(IOPin::INPUT_MODE);
   DELAY(40);
 
-  // Wait for the response
+  // Wait for the response max 100 ms
   probe.sample_request();
-  probe.sample_await(1000);
+  probe.sample_await(100);
 
   // Print samples (micro-second pulses)
   trace << probe << endl;
