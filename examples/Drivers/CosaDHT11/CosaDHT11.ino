@@ -65,10 +65,9 @@ void loop()
 
   // Read and print humidity and temperature
 #if !defined(__ARDUINO_TINY__)
-  indoors.read();
+  indoors.sample();
   trace << PSTR("indoors: ") << indoors << endl;
 #endif
-  outdoors.read();
+  outdoors.sample();
   trace << PSTR("outdoors: ") << outdoors << endl;
-  trace << endl;
 }
