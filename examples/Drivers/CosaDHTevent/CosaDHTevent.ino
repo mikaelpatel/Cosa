@@ -38,19 +38,27 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
-class Tracer : public DHT22 {
+// Example of DHT22 sub-class and periodic member function;
+// on_sample_completed() prints current value to the trace stream.
+class DHTevent : public DHT22 {
 public:
-  Tracer(Board::ExternalInterruptPin pin) : DHT22(pin) {}
+  DHTevent(Board::ExternalInterruptPin pin) : DHT22(pin) {}
   virtual void on_sample_completed() { trace << *this << endl; }
 };
 
-Tracer dht(Board::EXT0);
+// The DHT event object
+DHTevent dht(Board::EXT1);
 
 void setup()
 {
+  // The trace output stream on serial output
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaDHTevent: started"));
+
+  // Watchdog will issue timeout events
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
   RTC::begin();
+
+  // The DHT event object is started with default 2 second period
   dht.begin();
 }

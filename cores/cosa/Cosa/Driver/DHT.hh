@@ -47,7 +47,7 @@ protected:
     COMPLETED			// Data transfer completed
   } __attribute__((packed));
 
-  /** Minimum periodic wait */
+  /** Minimum periodic wait (approx. 2 seconds) */
   static const uint16_t MIN_PERIOD = 2048;
 
   /** Sample thresholds */
@@ -81,7 +81,7 @@ protected:
   volatile uint8_t m_errors;
 
   /** Micro-seconds since latest rising of data signal; pulse start */
-  volatile uint32_t m_start;
+  volatile uint16_t m_start;
 
   /** Number of milli-seconds between requests */
   volatile uint16_t m_period;
@@ -99,7 +99,8 @@ protected:
   data_t m_data;
 
   /* Latest valid reading */
-  data_t m_latest;
+  int16_t m_humidity;
+  int16_t m_temperature;
   
   /**
    * @override
@@ -121,7 +122,7 @@ protected:
    * for the DHT device family but data representation is different,
    * i.e. data resolution and accuracy. Overridden by DHT11 and DHT22.
    */
-  virtual void adjust_data() {}
+  virtual void adjust_data() = 0;
 
 public:  
   /**
@@ -129,15 +130,17 @@ public:
    * @param[in] pin external interrupt pin (Default EXT0).
    */
   DHT(Board::ExternalInterruptPin pin = Board::EXT0) : 
-    ExternalInterrupt(pin, ExternalInterrupt::ON_RISING_MODE),
+    ExternalInterrupt(pin, ExternalInterrupt::ON_FALLING_MODE),
     Link(),
     m_state(INIT),
     m_errors(0),
-    m_start(0L),
+    m_start(0),
     m_period(0),
     m_value(0),
     m_bits(0),
-    m_ix(0)
+    m_ix(0),
+    m_humidity(0),
+    m_temperature(0)
   {
   }
   
@@ -159,21 +162,21 @@ public:
   void end();
 
   /**
-   * Return temperature from latest read.
-   * @return temperature.
-   */
-  int16_t get_temperature()
-  {
-    return (m_latest.temperature);
-  }
-
-  /**
    * Return humidity from latest read.
    * @return humidity.
    */
   int16_t get_humidity()
   {
-    return (m_latest.humidity);
+    return (m_humidity);
+  }
+
+  /**
+   * Return temperature from latest read.
+   * @return temperature.
+   */
+  int16_t get_temperature()
+  {
+    return (m_temperature);
   }
 
   /**
@@ -210,8 +213,8 @@ public:
   bool sample(int16_t& humidity, int16_t& temperature)
   {
     if (!sample()) return (false);
-    humidity = get_humidity();
-    temperature = get_temperature();
+    humidity = m_humidity;
+    temperature = m_temperature;
     return (true);
   }
 

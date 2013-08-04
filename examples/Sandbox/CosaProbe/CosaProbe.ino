@@ -46,7 +46,7 @@ private:
 
   volatile uint16_t m_sample[SAMPLE_MAX];
   volatile uint8_t m_sampling;
-  volatile uint32_t m_start;
+  volatile uint16_t m_start;
   volatile uint8_t m_ix;
   
   const uint16_t LOW_THRESHOLD;
@@ -55,8 +55,10 @@ private:
   virtual void on_interrupt(uint16_t arg = 0);
 
 public:
-  Probe(Board::ExternalInterruptPin pin, uint16_t low, uint16_t high) : 
-    ExternalInterrupt(pin, ExternalInterrupt::ON_CHANGE_MODE),
+  Probe(Board::ExternalInterruptPin pin, 
+	ExternalInterrupt::InterruptMode mode,
+	uint16_t low, uint16_t high) : 
+    ExternalInterrupt(pin, mode),
     m_sampling(false),
     m_start(0L),
     m_ix(0),
@@ -82,12 +84,12 @@ IOStream& operator<<(IOStream& outs, Probe& probe)
 void 
 Probe::on_interrupt(uint16_t arg) 
 { 
-  if (m_start == 0L) {
+  if (m_start == 0) {
     m_start = RTC::micros();
     m_ix = 0;
     return;
   }
-  uint32_t stop = RTC::micros();
+  uint16_t stop = RTC::micros();
   uint16_t us = (stop - m_start);
   m_start = stop;
   m_sample[m_ix++] = us;
@@ -103,7 +105,7 @@ void
 Probe::sample_request()
 {
   m_sampling = true;
-  m_start = 0L;
+  m_start = 0;
   enable();
 }
 
@@ -115,7 +117,9 @@ Probe::sample_await(uint32_t ms)
   disable();
 }
 
-Probe probe(Board::EXT0, 20, 100);
+// Probe probe(Board::EXT0, ExternalInterrupt::ON_CHANGE_MODE, 20, 100);
+Probe probe(Board::EXT1, ExternalInterrupt::ON_FALLING_MODE, 30, 300);
+// Probe probe(Board::EXT1, ExternalInterrupt::ON_RISING_MODE, 30, 300);
 
 void setup()
 {
@@ -131,7 +135,6 @@ void loop()
 
   // Make a request (DHT)
   probe.set_mode(IOPin::OUTPUT_MODE);
-  probe.set();
   probe.clear();
   Watchdog::delay(32);
   probe.set();
@@ -142,7 +145,7 @@ void loop()
   probe.sample_request();
   probe.sample_await(1000);
 
-  // Print samples
+  // Print samples (micro-second pulses)
   trace << probe << endl;
 }
 

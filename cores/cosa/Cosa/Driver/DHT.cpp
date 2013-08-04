@@ -27,21 +27,25 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
+// The interrupt handler, enabled after the request pulse, and
+// on falling (low to high) transition. This allows lower interrupt
+// frequency than on change mode (which would be required for
+// pin change interrupts. First pulse is the device response and
+// is a one(1) bit is encoded as a long pulse (54 + 80 = 134 us), 
+// a zero(0) bit as a short pulse (54 + 24 = 78 us). Sequence ends
+// with a low pulse (54 us) which allows falling/rising detection.
 void 
 DHT::on_interrupt(uint16_t arg) 
 { 
   // Check start condition
-  if (m_start == 0L) {
-    if (is_clear()) return;
+  if (m_start == 0) {
     m_start = RTC::micros();
-    m_bits = 0;
-    m_ix = 0;
     return;
   }
 
   // Calculate the pulse width and check against thresholds
-  uint32_t stop = RTC::micros();
-  uint32_t us = (stop - m_start);
+  uint16_t stop = RTC::micros();
+  uint16_t us = (stop - m_start);
   if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) goto exception;
   m_start = stop;
 
@@ -49,6 +53,8 @@ DHT::on_interrupt(uint16_t arg)
   if (m_state == RESPONSE) {
     if (us < BIT_THRESHOLD) goto exception;
     m_state = SAMPLING;
+    m_bits = 0;
+    m_ix = 0;
     return;
   }
 
@@ -65,7 +71,7 @@ DHT::on_interrupt(uint16_t arg)
 
   // Invalid sample reject sequence
  exception:
-  m_start = 0L;
+  m_start = 0;
   m_ix = 0;
 
   // Sequence completed
@@ -93,7 +99,7 @@ DHT::on_event(uint8_t type, uint16_t value)
     // Request pulse completed; pull up for 40 us and collect
     // data as a sequence of on rising mode interrupts
     m_state = RESPONSE;
-    m_start = 0L;
+    m_start = 0;
     detach();
     set();
     set_mode(INPUT_MODE);
@@ -104,15 +110,14 @@ DHT::on_event(uint8_t type, uint16_t value)
   case COMPLETED:
     // Data reading was completed; validate data and check sum
     // Wait before issueing the next request
-    uint8_t invalid = true;
+    uint8_t invalid = 1;
     if (m_ix == DATA_MAX) {
       uint8_t sum = 0;
       for (uint8_t i = 0; i < DATA_LAST; i++) 
 	sum += m_data.as_byte[i];
       if (sum == m_data.chksum) {
-	invalid = false;
+	invalid = 0;
 	adjust_data();
-	memcpy(m_latest.as_byte, m_data.as_byte, DATA_MAX);
       }
       on_sample_completed();
     }
@@ -138,13 +143,15 @@ DHT::end()
 {
   disable();
   detach();
+  m_state = INIT;
+  m_period = 0;
 }
 
 bool
 DHT::sample_request()
 {
   // Issue a request; pull down for more than 18 ms
-  // if (m_state != INIT) return (false);
+  if (m_period != 0) return (true);
   set_mode(OUTPUT_MODE);
   set();
   clear();
@@ -156,7 +163,7 @@ DHT::sample_request()
   set_mode(INPUT_MODE);
   DELAY(40);
   m_state = RESPONSE;
-  m_start = 0L;
+  m_start = 0;
   enable();
   return (true);
 }
@@ -164,6 +171,7 @@ DHT::sample_request()
 bool
 DHT::sample_await(uint8_t mode)
 {
+  if (m_period != 0) return (true);
   uint32_t start = RTC::millis();
   while (m_state != COMPLETED && RTC::since(start) < MIN_PERIOD) 
     Power::sleep(mode);
@@ -177,34 +185,33 @@ DHT::sample_await(uint8_t mode)
     sum += m_data.as_byte[i];
   if (sum != m_data.chksum) return (false);
   adjust_data();
-  memcpy(m_latest.as_byte, m_data.as_byte, DATA_MAX);
   return (true);
 }
 
 void 
 DHT11::adjust_data()
 {
-  m_data.humidity *= 10;
-  m_data.temperature *= 10;
+  m_humidity = m_data.humidity * 10;
+  m_temperature = m_data.temperature * 10;
 }
 
 void
 DHT22::adjust_data() 
 {
-  m_data.humidity = swap(m_data.humidity);
-  m_data.temperature = swap(m_data.temperature);
-  if (m_data.temperature < 0) {
-    m_data.temperature = -(m_data.temperature & 0x7fff);
+  m_humidity = swap(m_data.humidity);
+  m_temperature = swap(m_data.temperature);
+  if (m_temperature < 0) {
+    m_temperature = -(m_temperature & 0x7fff);
   }
 }
 
 IOStream& 
 operator<<(IOStream& outs, DHT& dht)
 {
-  outs << PSTR("RH = ") << dht.m_latest.humidity / 10
-       << '.' << dht.m_latest.humidity % 10
-       << PSTR("%, T = ") << dht.m_latest.temperature / 10
-       << '.' << dht.m_latest.temperature % 10
+  outs << PSTR("RH = ") << dht.m_humidity / 10
+       << '.' << dht.m_humidity % 10
+       << PSTR("%, T = ") << dht.m_temperature / 10
+       << '.' << dht.m_temperature % 10
        << PSTR(" C");
   return (outs);
 }
