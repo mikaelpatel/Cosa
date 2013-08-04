@@ -1,5 +1,5 @@
-CosaDHT11
-=========
+CosaDHT
+=======
 
 Demonstration of Cosa DHT11/DHT22 Humidity & Temperature Sensor device
 driver. Sample and print values. 
