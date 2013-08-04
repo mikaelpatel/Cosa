@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -73,7 +73,7 @@ DHT::on_interrupt(uint16_t arg)
   m_state = COMPLETED;
   disable();
   if (m_period == 0) return;
-  Event::push(Event::RECEIVE_COMPLETED_TYPE, this);
+  Event::push(Event::SAMPLE_COMPLETED_TYPE, this);
 }
 
 void 
@@ -84,9 +84,7 @@ DHT::on_event(uint8_t type, uint16_t value)
   case IDLE: 
     // Issue a request; pull down for more than 18 ms
     m_state = REQUEST;
-    m_start = 0L;
     set_mode(OUTPUT_MODE);
-    set();
     clear();
     Watchdog::attach(this, 32);
     break;
@@ -95,6 +93,7 @@ DHT::on_event(uint8_t type, uint16_t value)
     // Request pulse completed; pull up for 40 us and collect
     // data as a sequence of on rising mode interrupts
     m_state = RESPONSE;
+    m_start = 0L;
     detach();
     set();
     set_mode(INPUT_MODE);
@@ -115,7 +114,7 @@ DHT::on_event(uint8_t type, uint16_t value)
 	adjust_data();
 	memcpy(m_latest.as_byte, m_data.as_byte, DATA_MAX);
       }
-      on_read_completed();
+      on_sample_completed();
     }
     m_errors += invalid;
     m_state = IDLE;
@@ -131,7 +130,7 @@ DHT::begin(uint16_t ms)
   if (ms < MIN_PERIOD) ms = MIN_PERIOD;
   m_state = IDLE;
   m_period = ms;
-  on_event(0,0);
+  Watchdog::attach(this, m_period);
 }
 
 void
@@ -142,10 +141,10 @@ DHT::end()
 }
 
 bool
-DHT::read_data(uint8_t mode)
+DHT::sample_request()
 {
   // Issue a request; pull down for more than 18 ms
-  if (m_state != INIT) return (false);
+  // if (m_state != INIT) return (false);
   set_mode(OUTPUT_MODE);
   set();
   clear();
@@ -159,6 +158,12 @@ DHT::read_data(uint8_t mode)
   m_state = RESPONSE;
   m_start = 0L;
   enable();
+  return (true);
+}
+
+bool
+DHT::sample_await(uint8_t mode)
+{
   uint32_t start = RTC::millis();
   while (m_state != COMPLETED && RTC::since(start) < MIN_PERIOD) 
     Power::sleep(mode);
@@ -174,6 +179,23 @@ DHT::read_data(uint8_t mode)
   adjust_data();
   memcpy(m_latest.as_byte, m_data.as_byte, DATA_MAX);
   return (true);
+}
+
+void 
+DHT11::adjust_data()
+{
+  m_data.humidity *= 10;
+  m_data.temperature *= 10;
+}
+
+void
+DHT22::adjust_data() 
+{
+  m_data.humidity = swap(m_data.humidity);
+  m_data.temperature = swap(m_data.temperature);
+  if (m_data.temperature < 0) {
+    m_data.temperature = -(m_data.temperature & 0x7fff);
+  }
 }
 
 IOStream& 

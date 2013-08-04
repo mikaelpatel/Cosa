@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -117,13 +117,6 @@ protected:
   virtual void on_event(uint8_t type, uint16_t value);
 
   /**
-   * Read data directly from the device. DHT::begin() should
-   * not have been called. Return true(1) if successful
-   * otherwise false(0).
-   */
-  bool read_data(uint8_t mode = SLEEP_MODE_IDLE);
-
-  /**
    * Adjust data from the device. Communication protocol is the same
    * for the DHT device family but data representation is different,
    * i.e. data resolution and accuracy. Overridden by DHT11 and DHT22.
@@ -156,9 +149,9 @@ public:
 
   /**
    * @override
-   * Callback when data read is completed.
+   * Callback when data sample is completed.
    */
-  virtual void on_read_completed() {}
+  virtual void on_sample_completed() {}
 
   /**
    * Stop the DHT device driver.
@@ -184,13 +177,27 @@ public:
   }
 
   /**
+   * Initiate a sample request from the device. Return true(1) and
+   * values if successful otherwise false(0).  
+   * @return bool.
+   */
+  bool sample_request();
+
+  /**
+   * Wait for a sample request to complete. Return true(1) and
+   * values if successful otherwise false(0).  
+   * @return bool.
+   */
+  bool sample_await(uint8_t mode = SLEEP_MODE_IDLE);
+
+  /**
    * Read temperature and humidity from the device. Return true(1) and
    * values if successful otherwise false(0).  
    * @return bool.
    */
-  bool read()
+  bool sample()
   {
-    return (read_data());
+    return (sample_request() && sample_await());
   }
 
   /**
@@ -200,9 +207,9 @@ public:
    * @param[out] temperature reading.
    * @return bool.
    */
-  bool read(int16_t& humidity, int16_t& temperature)
+  bool sample(int16_t& humidity, int16_t& temperature)
   {
-    if (!read_data()) return (false);
+    if (!sample()) return (false);
     humidity = get_humidity();
     temperature = get_temperature();
     return (true);
@@ -235,14 +242,10 @@ class DHT11 : public DHT {
 public:
   /**
    * @override
-   * Adjust data from the device. Byte order and representation of 
-   * negative temperature values.
+   * Adjust data from the DHT11 device; scale by 10 for uniform 
+   * number range as DHT22.
    */
-  virtual void adjust_data() 
-  {
-    m_data.humidity *= 10;
-    m_data.temperature *= 10;
-  }
+  virtual void adjust_data();
 
   /**
    * Construct connection to a DHT11 device on given in/output-pin.
@@ -263,23 +266,16 @@ public:
  * pullup resistor.
  *
  * @section See Also
- * [1] http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Sensors/Weather/RHT03.pdf<br>
+ * [1] http://www.humiditycn.com/pic/20135318405067570.pdf
  */
 class DHT22 : public DHT {
 private:
   /**
    * @override
-   * Adjust data from the device. Byte order and representation of 
+   * Adjust data from the DHT22 device. Byte order and representation of 
    * negative temperature values.
    */
-  virtual void adjust_data() 
-  {
-    m_data.humidity = swap(m_data.humidity);
-    m_data.temperature = swap(m_data.temperature);
-    if (m_data.temperature < 0) {
-      m_data.temperature = -(m_data.temperature & 0x7fff);
-    }
-  }
+  virtual void adjust_data();
 
 public:
   /**
