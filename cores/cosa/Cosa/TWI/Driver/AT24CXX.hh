@@ -38,6 +38,7 @@
 class AT24CXX : private TWI::Driver, public EEPROM::Device {
 private:
   static const uint8_t ADDR = 0x50;
+  static const uint8_t SUBADDR_MASK = 0x07;
   static const uint8_t POLL_MAX = 3;
   const uint16_t WRITE_MAX;
   const uint16_t WRITE_MASK;
@@ -70,18 +71,18 @@ public:
   /**
    * Construct AT24CXX serial TWI EEPROM device access to given
    * chip address, page and memory size.
-   * @param[in] addr chip address (0..7, default 0).
+   * @param[in] subaddr chip address (0..7, default 0).
    * @param[in] size in Kbits (default 32).
    * @param[in] page_max size of memory page (default 32 byte).
    */
-  AT24CXX(uint8_t addr = 0, 
+  AT24CXX(uint8_t subaddr = 0, 
 	  const size_t size = 32,
 	  const uint16_t page_max = 32) : 
     TWI::Driver(), 
     EEPROM::Device(),
     WRITE_MAX(page_max),
     WRITE_MASK(page_max - 1),
-    m_addr(ADDR | ((addr & 0x7) << 1)),
+    m_addr(ADDR | (subaddr & SUBADDR_MASK)),
     SIZE((size / CHARBITS) * 1024),
     PAGE_MAX(page_max)
   {}
