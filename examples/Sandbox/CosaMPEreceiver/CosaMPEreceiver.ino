@@ -68,7 +68,7 @@ void loop()
     trace << PSTR("Packages received:") << count
 	  << endl
 	  << PSTR("Packages per second:") << pps 
-	  << PSTR("(") << n << PSTR(" bytes)") 
+	  << PSTR(" (") << n << PSTR(" bytes)") 
 	  << endl
 	  << PSTR("Bytes per second:") << pps * n 
 	  << endl
