@@ -35,7 +35,11 @@
  * transmitters and receivers (RF433).
  */
 class VWI {
+  friend void TIMER1_COMPA_vect(void);
 public:
+  class Receiver;
+  class Transmitter;
+
   /** 
    * The maximum payload length; 32 byte application payload and 
    * 4 byte enhanced mode header (sizeof(header_t)) 
@@ -112,6 +116,12 @@ public:
   static void disable();
 
 private:
+  /** Current transmitter */
+  static Transmitter* s_transmitter;
+
+  /** Current receiver */
+  static Receiver* s_receiver;
+
   /** Sleep mode during await */
   static uint8_t s_mode;
   
