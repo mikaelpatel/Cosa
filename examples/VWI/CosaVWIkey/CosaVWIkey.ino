@@ -40,7 +40,7 @@
 #include "Cosa/VWI/Codec/ManchesterCodec.hh"
 #include "Cosa/VWI/Codec/BitstuffingCodec.hh"
 #include "Cosa/VWI/Codec/Block4B5BCodec.hh"
-#include "Cosa/ExternalInterruptPin.hh"
+#include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Power.hh"
 
@@ -62,9 +62,9 @@ const uint16_t SPEED = 4000;
 // Connect button with pullup to Arduino Mega EXT2/D19, others to 
 // Arduino EXT0; Mighty/D10, TinyX4/D10, Standard/D2 and TinyX5/D2.
 #if defined(__ARDUINO_MEGA__)
-ExternalInterruptPin wakeup(Board::EXT2, ExternalInterruptPin::ON_LOW_LEVEL_MODE);
+ExternalInterrupt wakeup(Board::EXT2, ExternalInterrupt::ON_LOW_LEVEL_MODE);
 #else
-ExternalInterruptPin wakeup(Board::EXT0, ExternalInterruptPin::ON_LOW_LEVEL_MODE);
+ExternalInterrupt wakeup(Board::EXT0, ExternalInterrupt::ON_LOW_LEVEL_MODE);
 #endif
 
 // Analog pins to sample for values to send

@@ -88,6 +88,6 @@ public:
    * Interrupt service callback on external interrupt pin change.
    * @param[in] arg argument from interrupt service routine.
    */
-  virtual void on_interrupt(uint16_t arg = 0) = 0;
+  virtual void on_interrupt(uint16_t arg = 0) {}
 };
 #endif
