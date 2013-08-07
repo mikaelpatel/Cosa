@@ -22,12 +22,13 @@
  *
  * @section Description
  * Demonstraction of Cosa MPE (Manchester Phase Encoding); 
- * Connect RF433 receiver module to Board::EXT0 (D2).
+ * Connect RF433 receiver module to Board::PCI8 (D8).
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/MPE.hh"
+#include "Cosa/PinChangeInterrupt.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
@@ -41,6 +42,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaMPEreceiver: started"));
   Watchdog::begin();
   RTC::begin();
+  PinChangeInterrupt::begin();
   rx.begin();
 }
 

@@ -28,7 +28,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
-#include "Cosa/ExternalInterrupt.hh"
+#include "Cosa/PinChangeInterrupt.hh"
 
 /**
  * MPE (Manchester Phase Encoding) is an Cosa library that provides
@@ -50,7 +50,6 @@ private:
   static const uint8_t FRAME_MAX = PAYLOAD_MAX + FRAMING;
 
 public:
-
   /**
    * Manchester Phased Encoding Transmitter. 
    */
@@ -127,7 +126,7 @@ public:
   /**
    * Manchester Phased Encoding Receiver. 
    */
-  class Receiver : public ExternalInterrupt {
+  class Receiver : private PinChangeInterrupt {
   public:
     const uint16_t HIGH_THRESHOLD;
     const uint16_t LOW_THRESHOLD;
@@ -154,14 +153,13 @@ public:
   public:
     /**
      * Create Manchester Phased Encoding Receiver with input pulse
-     * sequence from the given external interrupt pin and speed,
+     * sequence from the given pin change interrupt pin and speed,
      * air bits per second.
-     * @param[in] pin external interrupt (Default EXT0).
+     * @param[in] pin change interrupt (Default PCI8).
      * @param[in] speed bits per second (Default 4000).
      */
-    Receiver(Board::ExternalInterruptPin pin = Board::EXT0, 
-	     uint16_t speed = 4000) : 
-      ExternalInterrupt(pin, ExternalInterrupt::ON_CHANGE_MODE),
+    Receiver(Board::InterruptPin pin = Board::PCI8, uint16_t speed = 4000) : 
+      PinChangeInterrupt(pin),
       HIGH_THRESHOLD(speed / 2),
       LOW_THRESHOLD(speed / 20),
       m_available(false),
