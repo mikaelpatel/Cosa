@@ -33,7 +33,7 @@
 /**
  * Cosa TWI driver for Analog Devices ADXL345 Digital Accelerometer.
  * http://www.analog.com/static/imported-files/data_sheets/ADXL345.pdf
- * Rev. C, 2009-2011.
+ * Rev. D, 2/13.
  */
 class ADXL345 : private TWI::Driver {
 protected:
