@@ -31,10 +31,6 @@
 /**
  * Real-time clock; Arduino/ATmega328P Timer0 for micro/milli-
  * second timing.
- *
- * @section Limitations
- * Coexists with the Arduino timer 0 interrupt handler. Alternative
- * design where the counter match interrupt is used.
  */
 class RTC {
   friend void TIMER0_COMPA_vect(void);
