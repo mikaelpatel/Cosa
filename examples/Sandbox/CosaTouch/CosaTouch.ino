@@ -33,7 +33,7 @@
 #include "Cosa/Touch.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStram.hh"
+#include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
 IOStream cout(&uart);
@@ -42,11 +42,12 @@ class Counter : private Touch {
 private:
   uint16_t m_count;
 public:
-  Counter(Board::DigitalPin pin) : Touch(pin), m_count(0) {}
+  Counter(Board::DigitalPin pin, uint16_t init) : Touch(pin), m_count(init) {}
   virtual void on_key_down() { cout << PSTR("count = ") << ++m_count << endl; }
 };
 
-Counter key(Board::D3);
+Counter c1(Board::D3, 100);
+Counter c2(Board::D4, 0);
 
 void setup()
 {
