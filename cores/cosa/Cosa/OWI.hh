@@ -28,7 +28,6 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
-#include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/IOStream.hh"
 
 /**
