@@ -24,7 +24,7 @@
  * Demonstration of Cosa Touch capacitive sensor.
  *
  * @section Circuit
- * Connect a 1-10 Mohm pullup resistor to digital pin D3.
+ * Connect a 1-10 Mohm pullup resistor to digital pin D3 and D4.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -38,16 +38,33 @@
 
 IOStream cout(&uart);
 
-class Counter : private Touch {
+class Key : private Touch {
 private:
-  uint16_t m_count;
+  static int16_t s_value;
+  int8_t m_offset;
+  virtual void on_touch() 
+  { 
+    s_value += m_offset;
+    cout << PSTR("value = ") << s_value << endl; 
+  }
 public:
-  Counter(Board::DigitalPin pin, uint16_t init) : Touch(pin), m_count(init) {}
-  virtual void on_key_down() { cout << PSTR("count = ") << ++m_count << endl; }
+  Key(Board::DigitalPin pin, int8_t offset) : 
+    Touch(pin), 
+    m_offset(offset) 
+  {}
+  static void set_value(int16_t value)
+  {
+    s_value = value;
+  }
+  static int16_t get_value()
+  {
+    return (s_value);
+  }
 };
+int16_t Key::s_value = 0;
 
-Counter c1(Board::D3, 100);
-Counter c2(Board::D4, 0);
+Key upkey(Board::D3, 1);
+Key downkey(Board::D4, -1);
 
 void setup()
 {
@@ -55,5 +72,6 @@ void setup()
   cout << PSTR("CosaTouch: started") << endl;
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
   RTC::begin();
+  Key::set_value(0);
 }
 

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,15 +24,15 @@
  */
 
 #include "Cosa/Touch.hh"
-#include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/RTC.hh"
 
 Touch::Touch(Board::DigitalPin pin, uint16_t threshold) :
   IOPin(pin),
   Link(),
   THRESHOLD(threshold),
   m_sampling(false),
-  m_key_down(false)
+  m_touched(false)
 {
   set_mode(OUTPUT_MODE);
   clear();
@@ -58,16 +58,16 @@ Touch::on_event(uint8_t type, uint16_t value)
   // Did the pin was charge during the sampling period 
   if (state) {
     m_start = RTC::millis();
-    if (!m_key_down) {
-      on_key_down();
-      m_key_down = true;
+    if (!m_touched) {
+      on_touch();
+      m_touched = true;
     }
     return;
   }
 
   // The pin was discharge; low-pass filter 
-  if (m_key_down && RTC::since(m_start) > THRESHOLD) {
-    m_key_down = false;
+  if (m_touched && RTC::since(m_start) > THRESHOLD) {
+    m_touched = false;
   }
 }
 

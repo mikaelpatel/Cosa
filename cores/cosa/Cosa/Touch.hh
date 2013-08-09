@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -52,7 +52,7 @@ protected:
   uint8_t m_sampling;
 
   /** Current state */
-  uint8_t m_key_down;
+  uint8_t m_touched;
 
   /**
    * @override
@@ -75,7 +75,7 @@ public:
    * @override
    * Callback virtual member function; Should be implemented by sub-class.
    */
-  virtual void on_key_down() = 0;
+  virtual void on_touch() = 0;
 };
 
 #endif
