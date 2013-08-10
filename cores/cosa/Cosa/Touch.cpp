@@ -55,7 +55,7 @@ Touch::on_event(uint8_t type, uint16_t value)
   clear();
   m_sampling = false;
 
-  // Did the pin was charge during the sampling period 
+  // Was the pin discharge during the sampling period 
   if (state) {
     m_start = RTC::millis();
     if (!m_touched) {
@@ -65,7 +65,7 @@ Touch::on_event(uint8_t type, uint16_t value)
     return;
   }
 
-  // The pin was discharge; low-pass filter 
+  // The pin was discharge; low-pass filter pin change
   if (m_touched && RTC::since(m_start) > THRESHOLD) {
     m_touched = false;
   }
