@@ -36,6 +36,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Pins.hh"
 #include "Cosa/OWI.hh"
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/VWI.hh"
@@ -45,6 +46,7 @@
 
 // Connect to one-wire device; Assuming there are two sensors
 OWI owi(Board::D2);
+OutputPin pw(Board::D3, 0);
 DS18B20 indoors(&owi);
 DS18B20 outdoors(&owi);
 
@@ -69,9 +71,11 @@ void setup()
   tx.begin();
 
   // Connect to the temperature sensor
+  pw.on();
   indoors.connect(0);
   outdoors.connect(1);
-
+  pw.off();
+  
   // Disable hardware
   VWI::disable();
   Power::adc_disable();
@@ -79,6 +83,11 @@ void setup()
   Power::timer1_disable();
 #if defined(__ARDUINO_TINY__)
   Power::usi_disable();
+#else
+  Power::spi_disable();
+  Power::twi_disable();
+  Power::timer2_disable();
+  Power::usart0_disable();
 #endif
 }
 
@@ -94,11 +103,12 @@ void loop()
   sample_t msg;
   
   // Make a conversion request and read the temperature (scratchpad)
-  indoors.convert_request();
+  pw.on();
+  DS18B20::convert_request(&owi, 12, true);
   indoors.read_scratchpad();
-  outdoors.convert_request();
   outdoors.read_scratchpad();
-
+  pw.off();
+  
   // Turn on necessary hardware modules
   Power::timer1_enable();
   Power::adc_enable();

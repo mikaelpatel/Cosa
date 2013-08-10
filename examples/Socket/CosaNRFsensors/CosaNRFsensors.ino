@@ -40,7 +40,6 @@
 // NRF24L01+ Wireless communication using default pins(SPI, D9, D10, D2)
 NRF24L01P nrf(0xc05a0001);
 
-#ifndef __ARDUINO_TINY__
 // Luminance and temperature sensor based on analog pins(A2, A3)
 #include "Cosa/Pins.hh"
 namespace LTB {
@@ -67,13 +66,13 @@ namespace LTB {
     socket.send(&msg, sizeof(msg), dest);
   }
 };
-#endif
 
+#ifndef __ARDUINO_TINY__
 // Digital humidity and temperture sensor on pin(D3)
 #include "Cosa/Driver/DHT.hh"
 namespace HTB {
   const Socket::addr_t dest = { 0xc05a0002, 7001 };
-  DHT11 indoors(Board::EXT1);
+  DHT11 indoors(Board::EXT0);
   Socket socket(&nrf, 6001);
   uint16_t nr = 0;
 
@@ -87,12 +86,13 @@ namespace HTB {
   void send_update()
   {
     msg_t msg;
-    if (!indoors.read(msg.humidity, msg.temperature)) return;
+    if (!indoors.sample(msg.humidity, msg.temperature)) return;
     msg.nr = nr++;
     msg.voltage = AnalogPin::bandgap(1100);
     socket.send(&msg, sizeof(msg), dest);
   }
 };
+#endif
 
 #ifndef __ARDUINO_TINY__
 // OneWire temperature sensor on pin(D8)
@@ -149,7 +149,7 @@ void loop()
 }
 
 #else
-// The Arduino Tiny version: DHT11 sensor only
+// The Arduino Tiny version: Analog pin sensor only
 
 void setup()
 {
@@ -159,7 +159,7 @@ void setup()
 
 void loop()
 {
-  HTB::send_update();
+  LTB::send_update();
   SLEEP(2);
 }
 #endif
