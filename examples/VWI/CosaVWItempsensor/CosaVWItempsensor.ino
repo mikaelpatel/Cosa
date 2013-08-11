@@ -32,6 +32,9 @@
  * @section Circuit
  * Connect RF433/315 Transmitter Data to ATtiny85 D1, connect VCC 
  * GND. Connect 1-Wire digital thermometer to D2 with pullup resistor.
+ * The pullup resistor (4K7) may be connected to D3 to allow power
+ * control. This sketch supports parasite powered DS18B20 devices.
+ * Connect the DS18B20 VCC to GND. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
