@@ -350,16 +350,6 @@ void setup()
   ns = (stop - start) / 1000L;
   INFO("byte data transfer() pin.write/toggle() unrolled:%ul ns\n", ns);
 
-  start = RTC::micros();
-  for (uint16_t i = 0; i < 1000; i++) {
-    uint8_t data = 0x55;
-    dataPin.write(data, clockPin);
-    __asm__ __volatile__("nop");
-  }
-  stop = RTC::micros();
-  ns = (stop - start) / 1000L;
-  INFO("byte data transfer() dataPin.write():%ul ns\n", ns);
-
   // Measure the time to perform 1,000 analog pin samples
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
