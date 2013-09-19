@@ -387,7 +387,7 @@ Canvas::fill_screen()
 }
 
 void 
-Canvas::run(uint8_t ix, PGM_VOID_P* tab, uint8_t max)
+Canvas::run(uint8_t ix, void_P* tab, uint8_t max)
 {
   if (ix >= max) return;
   const uint8_t* ip = (const uint8_t*) pgm_read_word(tab + ix);

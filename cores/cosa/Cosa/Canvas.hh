@@ -914,7 +914,7 @@ public:
    * @param[in] tab script table in program memory.
    * @param[in] max size of script table.
    */
-  void run(uint8_t ix, PGM_VOID_P* tab, uint8_t max);
+  void run(uint8_t ix, void_P* tab, uint8_t max);
 };
 
 /**
