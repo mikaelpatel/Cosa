@@ -29,7 +29,7 @@
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
-  IOPin((Board::DigitalPin) pin, IOPin::INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
 {
   m_ix = pin - Board::EXT0;
   ext[m_ix] = this;
@@ -41,7 +41,7 @@ ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pull
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
-  IOPin((Board::DigitalPin) pin, IOPin::INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
 {
   if (pin <= Board::EXT5) {
     m_ix = pin - Board::EXT4;
@@ -61,7 +61,7 @@ ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pull
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
-  IOPin((Board::DigitalPin) pin, IOPin::INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
 {
   if (pin == Board::EXT2) {
     m_ix = 2;
@@ -77,7 +77,7 @@ ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pull
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
-  IOPin((Board::DigitalPin) pin, IOPin::INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
 {
   m_ix = 0;
   ext[m_ix] = this;

@@ -53,6 +53,5 @@ public:
     virtual void disable() {}
   };
 };
-
 #endif
 

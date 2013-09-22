@@ -90,4 +90,5 @@ public:
    */
   virtual void on_interrupt(uint16_t arg = 0) {}
 };
+
 #endif
