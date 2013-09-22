@@ -145,6 +145,10 @@ union univ32_t {
   }									\
   ))
 
+/** Pointer table in program memory */
+typedef const PROGMEM void* void_P;
+typedef const PROGMEM void_P void_vec_P;
+
 /**
  * Instruction clock cycles per micro-second. Assumes clock greater
  * or equal to 1 MHz.
