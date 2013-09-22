@@ -36,15 +36,16 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 // LCD and communication port
-HD44780::Port4b port;
+// HD44780::Port4b port;
 // HD44780::SR3W port;
-// HD44780::SR3WSPI port;
+HD44780::SR3WSPI port;
+// HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::DFRobot port;
 // HD44780 lcd(&port, 20, 4);
 HD44780 lcd(&port);
 
-const uint8_t bitmaps[] PROGMEM = {
+const uint8_t bitmaps[] __PROGMEM = {
   // Bar(1)
   0b10000,
   0b10000,
@@ -115,7 +116,7 @@ void setup()
     for (char c = 0; c < BITMAPS_MAX; c++) {
       lcd.set_cursor(x, y);
       trace << c;
-      Watchdog::delay(64);
+      MSLEEP(64);
     }
   }
   trace << clear;
@@ -130,13 +131,15 @@ void setup()
 
   // Simple scrolling text
   trace << PSTR("\f\aSCROLLING\a\n");
-  static const char msg[] PROGMEM = "The quick brown fox jumps over the lazy dog. ";
+  static const char msg[] __PROGMEM = 
+    "The quick brown fox jumps over the lazy dog.";
   for (uint8_t i = 0; i < 8; i++) {
     uint8_t len = strlen_P(msg);
     for (uint8_t j = 0; j < len; j++) {
       trace << (char) pgm_read_byte(msg + j);
-      Watchdog::delay(64);
+      MSLEEP(64);
     }
+    trace << ' ';
   }
 
   // Use number base handling 
@@ -156,5 +159,5 @@ void loop()
   // Step through the LCD font. Use tab steps between characters
   static char c = 0;
   trace << c++ << '\t';
-  Watchdog::delay(64);
+  Watchdog::MSLEEP(64);
 }

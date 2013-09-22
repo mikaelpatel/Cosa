@@ -135,6 +135,7 @@ PCD8544::display_contrast(uint8_t level)
 void 
 PCD8544::set_cursor(uint8_t x, uint8_t y)
 {
+  // x *= m_font->get_width(' ');
   set(x, y);
   m_x = x;
   m_y = y;

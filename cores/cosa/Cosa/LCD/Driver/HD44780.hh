@@ -27,6 +27,7 @@
 #define __COSA_LCD_DRIVER_HD44780_HH__
 
 #include "Cosa/TWI/Driver/PCF8574.hh"
+#include "Cosa/SPI.hh"
 #include "Cosa/LCD.hh"
 #include "Cosa/Pins.hh"
 
@@ -167,7 +168,7 @@ protected:
     EXTENDED_SET = 0x04		// - extended instruction set
   } __attribute__((packed));
 
-  // Row offset tables for display times (16X1, 16X2, 16X4 20X4)
+  // Row offset tables for display times (16X1, 16X2, 16X4, 20X4)
   static const uint8_t offset0[] PROGMEM;
   static const uint8_t offset1[] PROGMEM;
 
@@ -432,6 +433,9 @@ public:
    *   D8 (Arduino) => LCD:RS
    *   D9 (Arduino) => LCD:EN
    *   D10 (Arduino) => BT
+   *
+   * @section Limitations
+   * Requires too many pins for ATtinyX5.
    */
   class Port4b : public IO {
   private:
@@ -500,6 +504,7 @@ public:
     virtual void set_backlight(uint8_t flag);
   };
 #endif
+
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
    * Shift Register 3-Wire Port (SR3W), 74HC595 (SR[pin]), with digital 
@@ -622,7 +627,8 @@ public:
 
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
-   * Shift Register 3-Wire Port (SR3WSPI), 74HC595 (SR[pin]), using SPI.
+   * Shift Register 3-Wire Port using SPI (SR3WSPI), 74HC595 (SR[pin]).
+   * The enable pulse pin acts as the SPI chip select.
    *
    * @section Circuit
    *                         74HC595    (VCC)
@@ -645,7 +651,6 @@ public:
    *   SCK (Arduino:D13/TinyX4:D5/TinyX5:D2) => SR:SCLK[11]
    *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
    *   VCC => SR:/MR[10]
-   *   GND => SR:/OE[13]
    *
    *   SR:Q0..Q3[15,1..3] => LCD:D4..D7
    *   SR:Q4[4] => LCD:RS
@@ -656,12 +661,12 @@ public:
    * @section Performance
    * The SPI transfer is so fast that a longer delay is required.
    */
-  class SR3WSPI : public IO {
+  class SR3WSPI : public IO, public SPI::Driver {
   private:
 #if !defined(__ARDUINO_TINY__)
-    static const uint16_t SHORT_EXEC_TIME = (25 * I_CPU) / 16;
+    static const uint16_t SHORT_EXEC_TIME = (20 * I_CPU) / 16;
 #else
-    static const uint16_t SHORT_EXEC_TIME = (13 * I_CPU) / 8;
+    static const uint16_t SHORT_EXEC_TIME = (10 * I_CPU) / 8;
 #endif
     union {
       uint8_t as_uint8;
@@ -673,19 +678,21 @@ public:
 	uint8_t app1:1;		/**< Application bit#1 (Q7) */
       };
     } m_port;
-    OutputPin m_en;		/**< Starts data read/write */
     
   public:
     /**
-     * Construct HD44780 3-wire serial port connected to given enable pin. 
-     * Uses the SPI::MOSI(D11) and SPI:SCK(D13) pins.
+     * Construct HD44780 4-wire serial port connected to given enable 
+     * and chip select pin. Uses the SPI::MOSI(D11) and SPI:SCK(D13) pins.
      * @param[in] en enable pulse (Default D5)
      */
 #if !defined(__ARDUINO_TINY__)
-    SR3WSPI(Board::DigitalPin en = Board::D5) : m_en(en) {}
+    SR3WSPI(Board::DigitalPin en = Board::D5) : 
 #else
-    SR3WSPI(Board::DigitalPin en = Board::D3) : m_en(en) {}
+    SR3WSPI(Board::DigitalPin en = Board::D3) : 
 #endif
+      SPI::Driver(en, 2)
+    {
+    }
 
     /**
      * @override

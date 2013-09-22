@@ -39,6 +39,7 @@ namespace Soft {
    */
   class SPI {
   public:
+    /** Clock selectors. MASTER_CLOCK for slave mode is not supported */
     enum Clock {
       DIV4_CLOCK = 0x00,
       DIV16_CLOCK = 0x01,
@@ -49,16 +50,52 @@ namespace Soft {
       DIV32_2X_CLOCK = 0x06,
       DIV64_2X_CLOCK = 0x07,
       MASTER_CLOCK = 0x08,
-      DEFAULT_CLOCK = 0x00
-    } __attribute__((packed));
-  
-    enum Direction {
-      MSB_FIRST = 0, 
-      LSB_FIRST = 1
+      DEFAULT_CLOCK = DIV4_CLOCK
     } __attribute__((packed));
 
+    /** Bitorder selectors */
+    enum Order {
+      MSB_ORDER = 0, 
+      LSB_ORDER = 1,
+      DEFAULT_ORDER = MSB_ORDER
+    } __attribute__((packed));
+  
+    /**
+     * SPI device driver abstract class. Holds SPI/USI state to allow 
+     * handling of several SPI devices with different clock, mode and/or
+     * bit order. 
+     */
+    class Driver {
+      friend class SPI;
+    protected:
+      /** Device chip select pin; initiated high for active low logic */
+      OutputPin m_cs;
+      /** Mutual exclusion flag. Require lock during transaction */
+      const bool m_mutex;
+      /** Data direction; bit order */
+      Pin::Direction m_direction;
+      
+    public:
+      /**
+       * Construct SPI Device driver with given chip select pin, clock, 
+       * mode, and bit order. The chip select pin is initiated for 
+       * active low logic. 
+       * @param[in] cs chip select pin.
+       * @param[in] flag lock during transaction (default false).
+       * @param[in] clock SPI hardware setting (default DIV4_CLOCK).
+       * @param[in] mode SPI mode for phase and transition (0..3, default 0).
+       * @param[in] order bit order (default MSB_ORDER).
+       */
+      Driver(Board::DigitalPin cs, 
+	     bool flag = false, 
+	     Clock clock = DEFAULT_CLOCK, 
+	     uint8_t mode = 0, 
+	     Order order = MSB_ORDER);
+    };
+
   private:
-    Pin::Direction m_direction;
+    Driver* m_dev;
+    uint8_t m_key;
     OutputPin m_mosi;
     OutputPin m_sck;
   
@@ -67,24 +104,44 @@ namespace Soft {
      * Construct soft serial peripheral interface master.
      */
     SPI(Board::DigitalPin mosi, Board::DigitalPin sck) : 
-      m_direction(Pin::MSB_FIRST),
+      m_dev(0),
+      m_key(0),
       m_mosi(mosi, 0),
       m_sck(sck, 0)
     {
     }
   
     /**
-     * Start master/slave serial send/receive block. 
-     * @param[in] clock mode.
-     * @param[in] mode data/clock sampling mode.
-     * @param[in] direction data bit order.
+     * Start master serial interaction block. 
+     * @param[in] dev device driver context.
      * @return true(1) if successful otherwise false(0)
      */
-    bool begin(Clock clock = DEFAULT_CLOCK, 
-	       uint8_t mode = 0, 
-	       Direction direction = MSB_FIRST)
+    bool begin(Driver* dev)
     {
-      m_direction = (Pin::Direction) direction;
+      // Sanity check that the SPI hardware is free
+      if (m_dev != 0) return (false);
+  
+      // Initiate the SPI interaction; disable interrupt and enable device
+      if (dev->m_mutex) m_key = lock();
+      m_dev = dev;
+      m_dev->m_cs.toggle();
+      return (true);
+    }
+  
+    /**
+     * End of master interaction.
+     * @return true(1) if successful otherwise false(0)
+     */
+    bool end() 
+    {
+      // Sanity check device driver reference
+      if (m_dev == 0) return (false);
+
+      // Release SPI hardware and enable interrups
+      bool flag = m_dev->m_mutex;
+      m_dev->m_cs.toggle();
+      m_dev = 0;
+      if (flag) unlock(m_key);
       return (true);
     }
 
@@ -94,7 +151,7 @@ namespace Soft {
      * @param[in] data to send.
      * @return zero
      */
-    uint8_t exchange(uint8_t data)
+    uint8_t transfer(uint8_t data)
     {
       m_mosi.write(data, m_sck, m_direction);
       return (0);
@@ -107,7 +164,7 @@ namespace Soft {
      */
     SPI& operator<<(uint8_t data)
     {
-      exchange(data);
+      transfer(data);
       return (*this);
     }
 
@@ -117,25 +174,25 @@ namespace Soft {
      * @param[in] buffer with data to exchange (send/receive).
      * @param[in] count size of buffer.
      */
-    void exchange(void* buffer, uint8_t count)
+    void transfer(void* buffer, uint8_t count)
     {
       uint8_t* bp = (uint8_t*) buffer;
-      while (count--) exchange(*bp++);
+      while (count--) {
+	*bp = transfer(*bp);
+	bp += 1;
+      }
     }
 
     /**
-     * Exchange package in program memory to slave. Received data 
-     * from slave is ignored. Slave selection is done for package.
-     * @param[in] buffer with data in program memory.
-     * @param[in] count size of buffer.
+     * Write data to slave device.
+     * @param[in] data to write.
+     * @return status.
      */
-    void exchange_P(const void* buffer, uint8_t count)
+    uint8_t write(uint8_t data)
     {
-      uint8_t* bp = (uint8_t*) buffer;
-      while (count--) exchange(pgm_read_byte(bp++));
+      return (transfer(data));
     }
-
-
+    
     /**
      * Write data to slave device; send address/command and send data.
      * @param[in] cmd command.
@@ -144,9 +201,20 @@ namespace Soft {
      */
     uint8_t write(uint8_t cmd, uint8_t data)
     {
-      uint8_t status = exchange(cmd);
-      exchange(data);
+      uint8_t status = transfer(cmd);
+      transfer(data);
       return (status);
+    }
+
+    /**
+     * Write data buffer to slave device.
+     * @param[in] buffer with data to send.
+     * @param[in] count size of buffer.
+     */
+    void write(const void* buffer, uint8_t count)
+    {
+      uint8_t* bp = (uint8_t*) buffer; 
+      while (count--) transfer(*bp++);
     }
 
     /**
@@ -159,35 +227,10 @@ namespace Soft {
      */
     uint8_t write(uint8_t cmd, const void* buffer, uint8_t count)
     {
-      exchange(cmd);
-      exchange((void*) buffer, count);
-      return (0);
+      uint8_t status = transfer(cmd);
+      write(buffer, count);
+      return (status);
     }
-  
-    /**
-     * Write data to slave device; send address/command and send data 
-     * from buffer in program memory.
-     * @param[in] cmd command.
-     * @param[in] buffer with data to send.
-     * @param[in] count size of buffer.
-     * @return status.
-     */
-    uint8_t write_P(uint8_t cmd, const void* buffer, uint8_t count)
-    {
-      exchange(cmd);
-      exchange_P(buffer, count);
-      return (0);
-    }
-  
-    /**
-     * End of master interaction.
-     * @return true(1) if successful otherwise false(0)
-     */
-    bool end()
-    {
-      return (true);
-    }
-
   };
 };
 

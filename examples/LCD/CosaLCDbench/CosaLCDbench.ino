@@ -26,8 +26,15 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/LCD/Driver/HD44780.hh"
 
+// Select the LCD device for the benchmark
+// #include "Cosa/LCD/Driver/PCD8544.hh"
+// PCD8544 lcd;
+
+// #include "Cosa/LCD/Driver/ST7565.hh"
+// ST7565 lcd;
+
+#include "Cosa/LCD/Driver/HD44780.hh"
 // Select the port for the benchmark
 // HD44780::Port4b port;
 // HD44780::SR3W port; 
@@ -37,6 +44,8 @@ HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::DFRobot port;
 HD44780 lcd(&port);
+
+// Connect IOStream to LCD
 IOStream cout(&lcd);
 
 // Display configuration

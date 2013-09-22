@@ -40,6 +40,7 @@
 // Select port type to use with the LCD device driver.
 // HD44780::Port4b port;
 // HD44780::SR3W port;
+// HD44780::SR3WSPI port;
 HD44780::SR4W port;
 HD44780 lcd(&port);
 
@@ -81,7 +82,7 @@ MENU_ENUM_END(onoff_enum_t);
 
 // 3. Create a menu item with reference to the program state to control
 uint16_t tracing = 1;
-MENU_ENUM(onoff_enum_t,tracing_enum,"Tracing",tracing)
+MENU_ONE_OF(onoff_enum_t,tracing_one_of,"Tracing",tracing)
 
 // Menu Enumeration Variable -------------------------------------------------
 // Menu item with enumeration to change program state
@@ -99,7 +100,7 @@ MENU_ENUM_END(state_enum_t);
 
 // 3. Create a menu item with reference to the program state to control
 uint16_t state = 0;
-MENU_ENUM(state_enum_t,state_enum,"State",state)
+MENU_ONE_OF(state_enum_t,state_one_of,"State",state)
 
 // Menu Bitset Variable ------------------------------------------------------
 // Menu item with bitset to change program state
@@ -121,20 +122,20 @@ MENU_ENUM_END(debug_enum_t);
 // The enumeration type values are bit positions. The initial value is
 // Break | Mockup.
 uint16_t debug = 3;
-MENU_BITSET(debug_enum_t,debug_enum,"Debug",debug)
+MENU_ZERO_OR_MANY(debug_enum_t,debug_enum,"Debug",debug)
 
 // Menu Integer Range Variable -----------------------------------------------
 // Menu item with integer range(low..high) to change program state change
 // 1. Create menu item with integer range and reference to variable
 int16_t limit = 42;
-MENU_RANGE(limit_range,"Limit",-10,100,limit)
+MENU_INT_RANGE(limit_range,"Limit",-10,100,limit)
 
 // Sub-Menu ------------------------------------------------------------------
 // Menu item list may contain other menu item lists (sub-menues)
 
 MENU_BEGIN(options_menu,"Options")
-  MENU_ITEM(tracing_enum)
-  MENU_ITEM(state_enum)
+  MENU_ITEM(tracing_one_of)
+  MENU_ITEM(state_one_of)
   MENU_ITEM(limit_range)
 MENU_END(options_menu)
 

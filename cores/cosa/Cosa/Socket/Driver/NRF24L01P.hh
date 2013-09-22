@@ -40,7 +40,10 @@
  * interface see Socket.hh and nRF24L01+ Product Specification (Rev. 1.0) 
  * http://www.nordicsemi.com/kor/nordic/download_resource/8765/2/17776224
  */
-class NRF24L01P : private SPI::Driver, public Socket::Device {
+class NRF24L01P : private SPI::Driver, 
+		  public Socket::Device, 
+		  private Event::Handler 
+{
 public:
   /**
    * Configuration max values
@@ -328,6 +331,13 @@ private:
   } __attribute__((packed));
 
   /**
+   * Timing information (ch. 6.1.7, tab. 16, pp. 24)
+   */
+  static const uint16_t Tpd2stby_ms = 3;
+  static const uint16_t Tstby2a_us = 130;
+  static const uint16_t Thce_us = 10;
+  
+  /**
    * Configuration max values
    */
   enum {
@@ -387,9 +397,6 @@ private:
     virtual void on_interrupt(uint16_t arg = 0);
   };
   
-  /** Slave select pin */
-  OutputPin m_csn;
-
   /**Chip enable activity RX/TX select pin */
   OutputPin m_ce;
 
@@ -446,11 +453,17 @@ private:
    */
   uint8_t read(Register reg)
   {
-    uint8_t res;
-    asserted(m_csn) {
-      res = spi.read(R_REGISTER | (REG_MASK & reg));
-    }
-    return (res);
+    return (spi.read(R_REGISTER | (REG_MASK & reg)));
+  }
+
+  /**
+   * Write command to display controller.
+   * @param[in] cmd command to write.
+   * @return status.
+   */
+  uint8_t write(Command cmd)
+  {
+    return (spi.write(cmd));
   }
 
   /**
@@ -461,10 +474,7 @@ private:
    */
   uint8_t write(Register reg, uint8_t data)
   {
-    asserted(m_csn) {
-      m_status = spi.write(W_REGISTER | (REG_MASK & reg), data);
-    }
-    return (m_status);
+    return (spi.write(W_REGISTER | (REG_MASK & reg), data));
   }
 
   /**
@@ -477,12 +487,43 @@ private:
    */
   uint8_t write(Register reg, const void* buffer, uint8_t count)
   {
-    asserted(m_csn) {
-      m_status = spi.write(W_REGISTER | (REG_MASK & reg), buffer, count);
-    }
-    return (m_status);
+    return (spi.write(W_REGISTER | (REG_MASK & reg), buffer, count));
   }
   
+  /**
+   * Return true(1) if device is ready, otherwise false(0).
+   * @return boolean.
+   */
+  bool is_ready()
+  {
+    spi.begin(this);
+    fifo_status_t fifo = read(FIFO_STATUS);
+    spi.end();
+    return (!fifo.tx_full);
+  }
+
+  /**
+   * Return true(1) if max retransmit attempts otherwise false(0).
+   * @return boolean.
+   */
+  bool is_max_retransmit()
+  {
+    status_t status = get_status();
+    return (status.max_rt);
+  }
+
+  /**
+   * Return true(1) if max lost packets count otherwise false(0).
+   * @return boolean.
+   */
+  bool is_max_lost()
+  {
+    spi.begin(this);
+    observe_tx_t observe = read(OBSERVE_TX);
+    spi.end();
+    return (observe.plos_cnt == 15);
+  }
+
   /**
    * @override
    * Handle receive message from interrupt handler. Reads message from
@@ -530,34 +571,6 @@ public:
 #endif
 
   /**
-   * Get status of latest operation. Issue NOP command to read status.
-   * @return status.
-   */
-  uint8_t get_status()
-  {
-    asserted(m_csn) {
-      m_status = spi.exchange(NOP);
-    }
-    return (m_status);
-  }
-
-  /**
-   * Enable interrupt handler.
-   */
-  void enable()
-  {
-    m_irq.enable();
-  }
-
-  /**
-   * Disable interrupt handler.
-   */
-  void disable()
-  {
-    m_irq.disable();
-  }
-
-  /**
    * Set power up mode. Will initiate radio with necessary settings
    * after power on reset. 
    */
@@ -587,33 +600,15 @@ public:
   void set_powerdown_mode();
 
   /**
-   * Return true(1) if device is ready, otherwise false(0).
-   * @return boolean.
+   * Get status of latest operation. Issue NOP command to read status.
+   * @return status.
    */
-  bool is_ready()
+  uint8_t get_status()
   {
-    fifo_status_t fifo = read(FIFO_STATUS);
-    return (!fifo.tx_full);
-  }
-
-  /**
-   * Return true(1) if max retransmit attempts otherwise false(0).
-   * @return boolean.
-   */
-  bool is_max_retransmit()
-  {
-    status_t status = get_status();
-    return (status.max_rt);
-  }
-
-  /**
-   * Return true(1) if max lost packets count otherwise false(0).
-   * @return boolean.
-   */
-  bool is_max_lost()
-  {
-    observe_tx_t observe = read(OBSERVE_TX);
-    return (observe.plos_cnt == 15);
+    spi.begin(this);
+    m_status = spi.transfer(NOP);
+    spi.end();
+    return (m_status);
   }
 
   /**

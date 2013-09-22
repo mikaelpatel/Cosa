@@ -85,7 +85,8 @@ void setup()
 
   // Scrolling
   trace << PSTR("\f\aSCROLLING\a\n");
-  static const char msg[] PROGMEM = "The quick brown fox jumps over the lazy dog. ";
+  static const char msg[] __PROGMEM = 
+    "The quick brown fox jumps over the lazy dog. ";
   for (uint8_t i = 0; i < 4; i++) {
     uint8_t len = strlen_P(msg);
     for (uint8_t j = 0; j < len; j++) {

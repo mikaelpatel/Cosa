@@ -89,33 +89,31 @@ const uint8_t ST7735::script[] __PROGMEM = {
 bool 
 ST7735::begin()
 {
-  bool res = spi.begin(SPI::DEFAULT_CLOCK, 3, SPI::MSB_FIRST);
-  if (!res || m_initiated) return (res);
+  if (m_initiated) return (false);
   const uint8_t* bp = script;
   uint8_t count;
   uint8_t cmd;
-  asserted(m_cs) {
-    while ((cmd = pgm_read_byte(bp++)) != SCRIPTEND) {
-      count = pgm_read_byte(bp++);
-      if (cmd == SWDELAY) {
-	DELAY(count);
-      } 
-      else {
-	asserted(m_dc) {
-	  spi.exchange(cmd);
-	}
-	while (count--) spi.exchange(pgm_read_byte(bp++));
+  spi.begin(this);
+  while ((cmd = pgm_read_byte(bp++)) != SCRIPTEND) {
+    count = pgm_read_byte(bp++);
+    if (cmd == SWDELAY) {
+      DELAY(count);
+    } 
+    else {
+      asserted(m_dc) {
+	spi.transfer(cmd);
       }
+      while (count--) spi.transfer(pgm_read_byte(bp++));
     }
   }
+  spi.end();
   m_initiated = 1;
-  return (res);
+  return (true);
 }
 
 ST7735::ST7735(Board::DigitalPin cs, Board::DigitalPin dc) :
   Canvas(SCREEN_WIDTH, SCREEN_HEIGHT),
-  SPI::Driver(),
-  m_cs(cs, 1),
+  SPI::Driver(cs, 0, SPI::DEFAULT_CLOCK, 3, SPI::MSB_ORDER, 0),
   m_dc(dc, 1),
   m_initiated(0)
 {
@@ -128,13 +126,14 @@ ST7735::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
   if (y + height >= HEIGHT) height = HEIGHT - y;
   set_port(x, y, x + width - 1, y + height - 1);
   color16_t color = get_pen_color();
-  asserted(m_cs) {
-    for (x = 0; x < width; x++)
-      for (y = 0; y < height; y++) {
-	spi.exchange(color.rgb >> 8);
-	spi.exchange(color.rgb);
-      }
+  spi.begin(this);
+  for (x = 0; x < width; x++) {
+    for (y = 0; y < height; y++) {
+      spi.transfer(color.rgb >> 8);
+      spi.transfer(color.rgb);
+    }
   }
+  spi.end();
 }
 
 void 
@@ -150,12 +149,12 @@ ST7735::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
   if (y + length >= HEIGHT) length = HEIGHT - y;
   set_port(x, y, x, y + length);
   color16_t color = get_pen_color();
-  asserted(m_cs) {
-    while (length--) {
-      spi.exchange(color.rgb >> 8);
-      spi.exchange(color.rgb);
-    }
+  spi.begin(this);
+  while (length--) {
+    spi.transfer(color.rgb >> 8);
+    spi.transfer(color.rgb);
   }
+  spi.end();
 }
 
 void 
@@ -171,12 +170,12 @@ ST7735::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
   if (x + length >= WIDTH) length = WIDTH - x;
   set_port(x, y, x + length, y);
   color16_t color = get_pen_color();
-  asserted(m_cs) {
-    while (length--) {
-      spi.exchange(color.rgb >> 8);
-      spi.exchange(color.rgb);
-    }
+  spi.begin(this);
+  while (length--) {
+    spi.transfer(color.rgb >> 8);
+    spi.transfer(color.rgb);
   }
+  spi.end();
 }
 
 uint8_t
@@ -196,6 +195,8 @@ ST7735::set_orientation(uint8_t direction)
     WIDTH  = SCREEN_WIDTH;
     HEIGHT = SCREEN_HEIGHT;
   }
+  spi.begin(this);
   write(MADCTL, setting);
+  spi.end();
   return (previous);
 }

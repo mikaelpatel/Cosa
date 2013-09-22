@@ -28,39 +28,20 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
+#include "Cosa/Pins.hh"
 #include "Cosa/Interrupt.hh"
 #include "Cosa/Event.hh"
 
 /**
- * Serial Peripheral Interface (SPI) device class. Typical usage is
- * SPI device drivers inherit from SPI::Driver and define SPI commands
- * and higher functions. 
+ * Serial Peripheral Interface (SPI) device class. A device driver should
+ * inherit from SPI::Driver and defined SPI commands and higher level
+ * functions. The SPI::Driver class supports multiple SPI devices with
+ * possible different configuration (clock, bit order, mode) and
+ * integrates with both device chip select and possible interrupt pins.
  */
 class SPI {
 public:
-  /**
-   * Device drivers are friends and may have callback/
-   * event handler for completion events.
-   */
-  class Driver : public Interrupt::Handler, public Event::Handler {
-    friend class SPI;
-  };
-
-  /**
-   * Slave devices are friends and may have callback/
-   * event handler for request events.
-   */
-  class Device : public Interrupt::Handler, public Event::Handler {
-    friend class SPI;
-  public:
-    /**
-     * @override
-     * Interrupt service on data receive in slave mode.
-     * @param[in] data received data.
-     */
-    virtual void on_interrupt(uint16_t data);
-  };
-
+  /** Clock selectors */
   enum Clock {
     DIV4_CLOCK = 0x00,
     DIV16_CLOCK = 0x01,
@@ -71,132 +52,197 @@ public:
     DIV32_2X_CLOCK = 0x06,
     DIV64_2X_CLOCK = 0x07,
     MASTER_CLOCK = 0x08,
-    DEFAULT_CLOCK = 0x00
-  } __attribute__((packed));
-  
-  enum Direction {
-    MSB_FIRST = 0, 
-    LSB_FIRST = 1
+    DEFAULT_CLOCK = DIV4_CLOCK
   } __attribute__((packed));
 
-private:
+  /** Bit order selectors */
+  enum Order {
+    MSB_ORDER = 0, 
+    LSB_ORDER = 1,
+    DEFAULT_ORDER = MSB_ORDER
+  } __attribute__((packed));
+  
+  /**
+   * SPI device driver abstract class. Holds SPI/USI hardware settings 
+   * to allow handling of several SPI devices with different clock, mode 
+   * and/or bit order. Handles device chip select and disables/enables
+   * interrupts during SPI transaction.
+   */
+  class Driver {
+    friend class SPI;
+  protected:
+    /** List of drivers */
+    Driver* m_next;
+    /** Interrupt handler */
+    Interrupt::Handler* m_irq;
+    /** Device chip select pin */
+    OutputPin m_cs;
+    /** Chip select pulse width; 
+     *  0 for active low logic during the transaction,
+     *  1 for active high logic,
+     *  n pulse width on end of transaction.
+     */
+    uint8_t m_pulse;
+    
 #if defined(__ARDUINO_TINY__)
-  uint8_t m_mode;
+    /** SPI mode for clock polatity setting */
+    const uint8_t m_mode;
+    /** USI hardware control register setting */
+    uint8_t m_usicr;
+#else
+    /** SPI hardware control register (SPCR) setting */
+    uint8_t m_spcr;
+    /** SPI hardware control bit in status register (SPSR) setting */
+    uint8_t m_spsr;
 #endif
-  static const uint8_t DATA_MAX = 4;
-  uint8_t m_data[DATA_MAX];
-  uint8_t m_cmd;
-  uint8_t* m_buffer;
-  uint8_t m_max;
-  uint8_t m_put;
-  Device* m_dev;
+
+  public:
+    /**
+     * Construct SPI Device driver with given chip select pin, pulse,
+     * clock, mode, and bit order. Zero(0) pulse will give active low
+     * chip select during transaction, One(1) acive high, otherwise
+     * pulse width on end(). 
+     * @param[in] cs chip select pin.
+     * @param[in] pulse chip select pulse mode (default active low, 0).
+     * @param[in] clock SPI hardware setting (default DIV4_CLOCK).
+     * @param[in] mode SPI mode for phase and transition (0..3, default 0).
+     * @param[in] order bit order (default MSB_ORDER).
+     * @param[in] irq interrupt handler (default null).
+     */
+    Driver(Board::DigitalPin cs, 
+	   uint8_t pulse = 0,
+	   Clock clock = DEFAULT_CLOCK, 
+	   uint8_t mode = 0, 
+	   Order order = MSB_ORDER,
+	   Interrupt::Handler* irq = 0);
+  };
+
+  /**
+   * SPI slave device support. Allows Arduino/AVR to act as a hardware
+   * device on the SPI bus. 
+   */
+  class Slave : public Interrupt::Handler, public Event::Handler {
+    friend void SPI_STC_vect(void);
+    friend class SPI;
+  private:
+    static const uint8_t DATA_MAX = 32;
+    uint8_t m_data[DATA_MAX];
+    uint8_t m_cmd;
+    uint8_t* m_buffer;
+    uint8_t m_max;
+    uint8_t m_put;
+    static Slave* s_device;
+  public:
+    /**
+     * Construct serial peripheral interface for slave.
+     * @param[in] buffer with data to received data.
+     * @param[in] max size of buffer.
+     */
+    Slave(void* buffer = 0, uint8_t max = 0) : 
+      m_cmd(0),
+      m_buffer((uint8_t*) buffer),
+      m_max(max),
+      m_put(0)
+    {
+      if (buffer == 0) {
+	m_buffer = m_data;
+	m_max = DATA_MAX;
+      }
+      s_device = this;
+    }
+
+    /**
+     * Set data receive buffer for package receive mode.
+     * @param[in] buffer pointer to buffer.
+     * @param[in] max max size of data package.
+     */
+    void set_buf(void* buffer, uint8_t max) 
+    { 
+      if (buffer == 0) {
+	m_buffer = m_data;
+	m_max = DATA_MAX;
+      }
+      else {
+	m_buffer = (uint8_t*) buffer; 
+	m_max = max; 
+      }
+    }
+
+    /**
+     * Get data receive buffer for package receive mode.
+     * @return buffer pointer to buffer.
+     */
+    void* get_buf()
+    { 
+      return (m_buffer);
+    }
+    
+    /**
+     * Get number of bytes available in receive buffer.
+     * @return number of bytes.
+     */
+    uint8_t available()
+    { 
+      return (m_put);
+    }
+
+    /**
+     * @override
+     * Interrupt service on data receive in slave mode.
+     * @param[in] data received data.
+     */
+    virtual void on_interrupt(uint16_t data);
+  };
+
+private:
+  /** List of attached devices for interrupt disable/enable */
+  Driver* m_list;
+  /** Current device using the SPI hardware */
+  Driver* m_dev;
   
 public:
   /**
    * Construct serial peripheral interface for master.
    */
-  SPI() : 
-#if defined(__ARDUINO_TINY__)
-    m_mode(0),
-#endif
-    m_cmd(0),
-    m_buffer(0),
-    m_max(0),
-    m_put(0),
-    m_dev(0)
-  {
-  }
-  
+  SPI();
+
   /**
    * Construct serial peripheral interface for slave.
-   * @param[in] dev device driver.
-   * @param[in] buffer with data to received data.
-   * @param[in] max size of buffer.
    */
-  SPI(Device* dev, void* buffer, uint8_t max) : 
-#if defined(__ARDUINO_TINY__)
-    m_mode(0),
-#endif
-    m_cmd(0),
-    m_buffer((uint8_t*) buffer),
-    m_max(max),
-    m_put(0),
-    m_dev(dev)
-  {
-#if defined(__ARDUINO_TINY__)
-    // Fix: Add enable of interrupt pin
-#else
-    bit_clear(DDRB, Board::SS);
-#endif
-    if (buffer == 0) {
-      m_buffer = m_data;
-      m_max = DATA_MAX;
-    }
-  }
+  SPI(uint8_t mode, Order order);
 
   /**
-   * Set data receive buffer for package receive mode.
-   * @param[in] buffer pointer to buffer.
-   * @param[in] max max size of data package.
-   */
-  void set_buf(void* buffer, uint8_t max) 
-  { 
-    m_buffer = (uint8_t*) buffer; 
-    m_max = max; 
-  }
-
-  /**
-   * Get data receive buffer for package receive mode.
-   * @return buffer pointer to buffer.
-   */
-  void* get_buf()
-  { 
-    return (m_buffer);
-  }
-
-  /**
-   * Get slave device handler.
-   * @return device reference.
-   */
-  Device* get_device()
-  { 
-    return (m_dev);
-  }
-
-  /**
-   * Get number of bytes available in receive buffer.
-   * @return number of bytes.
-   */
-  uint8_t available()
-  { 
-    return (m_put);
-  }
-
-  /**
-   * Start master/slave serial send/receive block. 
-   * @param[in] clock mode.
-   * @param[in] mode data/clock sampling mode.
-   * @param[in] direction data bit order.
+   * Start of SPI master interaction block. Initiate SPI hardware 
+   * registers, disable SPI interrupt sources and assert chip select
+   * pin. Return true(1) if successful otherwise false(0) if the
+   * hardware was currently in used.
+   * @param[in] dev device driver context.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(Clock clock = DEFAULT_CLOCK, 
-	     uint8_t mode = 0, 
-	     Direction direction = MSB_FIRST);
+  bool begin(Driver* dev);
+  
+  /**
+   * End of SPI master interaction block. Deselect device and 
+   * enable SPI interrupt sources.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool end();
 
   /**
-   * Exchange data with slave. Return value received. Slave select must be
-   * done before send.
+   * Exchange data with slave. Should only be used within a SPI
+   * transaction; begin()-end() block. Return received value.
    * @param[in] data to send.
    * @return value received.
    */
-  uint8_t exchange(uint8_t data)
+  uint8_t transfer(uint8_t data)
   {
 #if defined(__ARDUINO_TINY__)
     USIDR = data;
     USISR = _BV(USIOIF);
+    register uint8_t cntl = m_dev->m_usicr;
     do {
-      USICR = m_mode;
-    } while((USISR & _BV(USIOIF)) == 0);
+      USICR = cntl;
+    } while ((USISR & _BV(USIOIF)) == 0);
     return (USIDR);
 #else
     SPDR = data;
@@ -206,42 +252,35 @@ public:
   }
 
   /**
-   * Send given data to slave. Allow output operator syntax.
-   * @param[in] data to send.
-   * @return spi.
+   * Exchange package with slave. Should only be used within a SPI
+   * transaction; begin()-end() block. Received data from slave is
+   * stored in given buffer. 
+   * @param[in] buffer with data to transfer (send/receive).
+   * @param[in] count size of buffer.
    */
-  SPI& operator<<(uint8_t data)
+  void transfer(void* buffer, uint8_t count)
   {
-    exchange(data);
-    return (*this);
+    uint8_t* bp = (uint8_t*) buffer;
+    while (count--) {
+      *bp = transfer(*bp);
+      bp += 1;
+    }
   }
 
   /**
-   * Receive data from slave. Allow input operator syntax.
-   * @param[out] data from send.
-   * @return spi.
+   * Exchange package with slave. Should only be used within a SPI
+   * transaction; begin()-end() block. Received data from slave is
+   * stored in destination buffer. 
+   * @param[in] dst destination buffer for received data.
+   * @param[in] src source buffer with data to send.
+   * @param[in] count size of buffers.
    */
-  SPI& operator>>(uint8_t& data)
+  void transfer(void* dst, void* src, uint8_t count)
   {
-    data = exchange(0xff);
-    return (*this);
+    uint8_t* dp = (uint8_t*) dst;
+    uint8_t* sp = (uint8_t*) src;
+    while (count--) *dp++ = transfer(*sp++);
   }
-
-  /**
-   * Exchange package with slave. Received data from slave is stored in
-   * given buffer. Slave selection is done for package.
-   * @param[in] buffer with data to exchange (send/receive).
-   * @param[in] count size of buffer.
-   */
-  void exchange(void* buffer, uint8_t count);
-
-  /**
-   * Exchange package in program memory to slave. Received data 
-   * from slave is ignored. Slave selection is done for package.
-   * @param[in] buffer with data in program memory.
-   * @param[in] count size of buffer.
-   */
-  void exchange_P(const void* buffer, uint8_t count);
 
   /**
    * Read data from slave device; send address/command and return
@@ -251,8 +290,20 @@ public:
    */
   uint8_t read(uint8_t cmd)
   {
-    exchange(cmd);
-    return (exchange(0));
+    transfer(cmd);
+    return (transfer(0));
+  }
+
+  /**
+   * Read data buffer from slave device.
+   * @param[in] buffer for received data.
+   * @param[in] count size of buffer.
+   * @return status.
+   */
+  void read(void* buffer, uint8_t count)
+  {
+    uint8_t* bp = (uint8_t*) buffer; 
+    while (count--) *bp++ = transfer(0);
   }
 
   /**
@@ -263,8 +314,22 @@ public:
    * @param[in] count size of buffer.
    * @return status.
    */
-  uint8_t read(uint8_t cmd, void* buffer, uint8_t count);
-  void read(void* buffer, uint8_t count);
+  uint8_t read(uint8_t cmd, void* buffer, uint8_t count)
+  {
+    uint8_t status = transfer(cmd);
+    read(buffer, count);
+    return (status);
+  }
+
+  /**
+   * Write data to slave device.
+   * @param[in] data to write.
+   * @return status.
+   */
+  uint8_t write(uint8_t data)
+  {
+    return (transfer(data));
+  }
 
   /**
    * Write data to slave device; send address/command and send data.
@@ -274,9 +339,20 @@ public:
    */
   uint8_t write(uint8_t cmd, uint8_t data)
   {
-    uint8_t status = exchange(cmd);
-    exchange(data);
+    uint8_t status = transfer(cmd);
+    transfer(data);
     return (status);
+  }
+
+  /**
+   * Write data buffer to slave device.
+   * @param[in] buffer with data to send.
+   * @param[in] count size of buffer.
+   */
+  void write(const void* buffer, uint8_t count)
+  {
+    uint8_t* bp = (uint8_t*) buffer; 
+    while (count--) transfer(*bp++);
   }
 
   /**
@@ -287,24 +363,34 @@ public:
    * @param[in] count size of buffer.
    * @return status.
    */
-  uint8_t write(uint8_t cmd, const void* buffer, uint8_t count);
-  void write(const void* buffer, uint8_t count);
-  
+  uint8_t write(uint8_t cmd, const void* buffer, uint8_t count)
+  {
+    uint8_t status = transfer(cmd);
+    write(buffer, count);
+    return (status);
+  }
+
   /**
-   * Write data to slave device; send address/command and send data 
-   * from buffer in program memory.
-   * @param[in] cmd command.
-   * @param[in] buffer with data to send.
-   * @param[in] count size of buffer.
-   * @return status.
+   * Send given data to slave. Allow output operator syntax.
+   * @param[in] data to send.
+   * @return spi.
    */
-  uint8_t write_P(uint8_t cmd, const void* buffer, uint8_t count);
-  
+  SPI& operator<<(uint8_t data)
+  {
+    transfer(data);
+    return (*this);
+  }
+
   /**
-   * End of master/slave interaction.
-   * @return true(1) if successful otherwise false(0)
+   * Receive data from slave. Allow input operator syntax.
+   * @param[out] data from send.
+   * @return spi.
    */
-  bool end();
+  SPI& operator>>(uint8_t& data)
+  {
+    data = transfer(0xff);
+    return (*this);
+  }
 };
 
 /**

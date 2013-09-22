@@ -134,11 +134,11 @@ CANVAS_MOVE_CURSOR(8, 8)
 CANVAS_END_SCRIPT
 
 // The messages and banner
-const char msg[] PROGMEM = "Hello World";
-const char banner[] PROGMEM = "Cosa Canvas 1.0";
+const char msg[] __PROGMEM = "Hello World";
+const char banner[] __PROGMEM = "Cosa Canvas 1.0";
 
 // A polygon
-const int8_t poly[] PROGMEM = {
+const int8_t poly[] __PROGMEM = {
    40,  40,
   -80,   0,
    40, -40,
@@ -146,7 +146,7 @@ const int8_t poly[] PROGMEM = {
 };
 
 // The script table: the order is important as index is used in scripts
-PGM_VOID_P tab[] PROGMEM = {
+void_P table[] PROGMEM = {
   init_script,
   arduino_icon_34x32,
   script,
@@ -168,7 +168,7 @@ void setup()
   TRACE(free_memory());
   TRACE(sizeof(Canvas));
   TRACE(sizeof(tft));
-  TRACE(sizeof(tab));
+  TRACE(sizeof(table));
   TRACE(sizeof(init_script));
   TRACE(sizeof(script));
   TRACE(sizeof(sub_script));
@@ -198,7 +198,7 @@ void loop()
 
   // Run init script to display arduino icon and banner
   start = RTC::micros();
-  tft.run(0, tab, membersof(tab));
+  tft.run(0, table, membersof(table));
   stop = RTC::micros();
   ms = (stop - start) / 1000L;
   INFO("init script run: %ul ms", ms);
@@ -206,7 +206,7 @@ void loop()
 
   // Run script/sub-script and measure execution time
   start = RTC::micros();
-  tft.run(2, tab, membersof(tab));
+  tft.run(2, table, membersof(table));
   stop = RTC::micros();
   ms = (stop - start) / 1000L;
   INFO("scipt run: %ul ms", ms);

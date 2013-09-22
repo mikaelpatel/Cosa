@@ -45,14 +45,14 @@
 // different LCD drivers and compare size.
 // =========================================
 
-// #include "Cosa/LCD/Driver/HD44780.hh"
-// HD44780::Port4b port;
+#include "Cosa/LCD/Driver/HD44780.hh"
+HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::DFRobot port;
-// HD44780 lcd(&port);
+HD44780 lcd(&port);
 
 // #include "Cosa/LCD/Driver/PCD8544.hh"
 // PCD8544 lcd;

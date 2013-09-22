@@ -54,20 +54,14 @@ NRF24L01P::detach(Client* c)
   }
 }
 
-// Timing information (ch. 6.1.7, tab. 16, pp. 24)
-
-#define Tpd2stby_ms 3
-#define Tstby2a_us 130
-#define Thce_us 10
-
 NRF24L01P::NRF24L01P(uint32_t addr,
 		     uint8_t channel, 
 		     Board::DigitalPin csn, 
 		     Board::DigitalPin ce, 
 		     Board::ExternalInterruptPin irq) : 
-  SPI::Driver(),
+  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
   Socket::Device(addr),
-  m_csn(csn, 1),
+  Event::Handler(),
   m_ce(ce, 0),
   m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
   m_state(POWER_DOWN_STATE),
@@ -86,6 +80,9 @@ NRF24L01P::set_powerup_mode()
   if (m_state != POWER_DOWN_STATE) return;
   m_ce.clear();
 
+  // Start SPI interaction block
+  spi.begin(this);
+  
   // Setup hardware features, channel, bitrate, retransmission, dynamic payload
   write(FEATURE, _BV(EN_DPL) | _BV(EN_ACK_PAY) | _BV(EN_DYN_ACK));
   write(RF_CH, m_channel);
@@ -111,6 +108,9 @@ NRF24L01P::set_powerup_mode()
   write(CONFIG, _BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP));
   write(STATUS, (_BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT)));
 
+  // End of SPI block
+  spi.end();
+  
   _delay_ms(Tpd2stby_ms);
   m_state = STANDBY_STATE;
 }
@@ -124,10 +124,13 @@ NRF24L01P::set_receiver_mode()
   // Setup hardware receive pipe address for incoming datagram
   uint8_t rx_addr[AW_MAX];
   set_address(rx_addr, m_addr, DATAGRAM_PIPE);
-  write(RX_ADDR_P0, rx_addr, AW_MAX);
 
-  // Setup configruation for primary receiver mode
+  // Configure primary receiver mode and set address
+  spi.begin(this);
+  write(RX_ADDR_P0, rx_addr, AW_MAX);
   write(CONFIG, _BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP) | _BV(PRIM_RX));
+  spi.end();
+
   m_ce.set();
   if (m_state == STANDBY_STATE) _delay_us(Tstby2a_us);
   m_state = RX_STATE;
@@ -142,14 +145,25 @@ NRF24L01P::set_transmitter_mode(uint32_t addr, uint8_t port)
   // Setup hardware transmitter/receiver pipe address for acknowledgement
   uint8_t tx_addr[AW_MAX];
   set_address(tx_addr, addr, port);
+
+  // Setup primary transmitter address
+  spi.begin(this);
   write(TX_ADDR, tx_addr, AW_MAX);
   write(RX_ADDR_P0, tx_addr, AW_MAX);  
-  if (m_state == TX_STATE) return;
-  m_ce.clear();
   
-  // Setup configruation for primary transmitter mode
+  // Check if the transmitter is already in correct mode
+  if (m_state == TX_STATE) {
+    spi.end();
+    return;
+  }
+
+  // Setup primary transmitter mode
+  m_ce.clear();
   write(CONFIG, _BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP));
+  spi.end();
   m_ce.set();
+
+  // Wait for the transmitter to become active
   if (m_state == STANDBY_STATE) _delay_us(Tstby2a_us);
   m_state = TX_STATE;
 }
@@ -166,28 +180,28 @@ void
 NRF24L01P::set_powerdown_mode()
 {
   m_ce.clear();
+  spi.begin(this);
   write(CONFIG, _BV(EN_CRC) | _BV(CRCO));
+  spi.end();
   m_state = POWER_DOWN_STATE;
 }
 
 uint8_t 
 NRF24L01P::flush()
 {
+  spi.begin(this);
   if (is_max_lost()) {
     write(RF_CH, m_channel);
     m_status = 0xff;
   }
   if (m_state == RX_STATE) {
-    asserted(m_csn) {
-      spi.exchange(FLUSH_RX);
-    }
+    write(FLUSH_RX);
   } 
   else if (m_state == TX_STATE) {
-    asserted(m_csn) {
-      spi.exchange(FLUSH_TX);
-    }
+    write(FLUSH_TX);
   }
   write(STATUS, 0xf0);
+  spi.end();
   return (m_status);
 }
 
@@ -235,9 +249,9 @@ NRF24L01P::on_event(uint8_t type, uint16_t value)
     break;
   case CONNECT_RESPONSE:
     port = src.port - Socket::DYNAMIC_PORT;
-    if (!((port > 0) && (port < CLIENT_MAX))) return;
+    if (port > CLIENT_MAX) return;
     dest = dest - Socket::DYNAMIC_PORT;
-    if (!((dest > 0) && (dest < CLIENT_MAX))) return;
+    if (dest > CLIENT_MAX) return;
     client = m_client[dest];
     if (client == 0) return;
     set_connected(client, src);
@@ -258,7 +272,9 @@ NRF24L01P::send(uint16_t src, const void* buf, size_t size,
 {
   // Check if previous send did not succeed
   if (is_max_retransmit()) {
+    spi.begin(this);
     write(STATUS, _BV(MAX_RT));
+    spi.end();
     set_transmitter_mode();
     flush();
   }
@@ -272,13 +288,15 @@ NRF24L01P::send(uint16_t src, const void* buf, size_t size,
   header.dest.port = dest.port;
   header.src.addr = m_addr;
   header.src.port = src;
-  asserted(m_csn) {
-    spi.write(W_TX_PAYLOAD, &header, sizeof(header));
-    spi.write(buf, size);
-  }
+  spi.begin(this);
+  spi.write(W_TX_PAYLOAD, &header, sizeof(header));
+  spi.write(buf, size);
+  spi.end();
   
-  // Return size of payload actually sent
+  // Update transmission statistics
   m_nr_tx += 1;
+
+  // Return size of payload actually sent
   return (size);
 }
 
@@ -294,9 +312,9 @@ NRF24L01P::recv(uint16_t& dest, void* buf, size_t size,
   // Check if it is a datagram to a connectionless port
   m_nr_rx += 1;
   uint8_t count;
-  asserted(m_csn) {
-    count = spi.read(R_RX_PL_WID);
-  }
+  spi.begin(this);
+  count = spi.read(R_RX_PL_WID);
+  spi.end();
 
   // Check for payload error from device (Tab. 20, pp. 51, R_RX_PL_WID)
   if (count > PAYLOAD_MAX) {
@@ -309,11 +327,11 @@ NRF24L01P::recv(uint16_t& dest, void* buf, size_t size,
     header_t header;
     count -= sizeof(header);
     if (count > size) count = size;
-    asserted(m_csn) {
-      m_status = spi.read(R_RX_PAYLOAD, &header, sizeof(header));
-      spi.read(buf, count);
-    }
+    spi.begin(this);
+    m_status = spi.read(R_RX_PAYLOAD, &header, sizeof(header));
+    spi.read(buf, count);
     write(STATUS, _BV(RX_DR));
+    spi.end();
     src = header.src;
     dest = header.dest.port;
     return (count);
@@ -321,10 +339,10 @@ NRF24L01P::recv(uint16_t& dest, void* buf, size_t size,
   
   // Otherwise the payload is to a connection-oriented port
   if (count > size) count = size;
-  asserted(m_csn) {
-    m_status = spi.read(R_RX_PAYLOAD, buf, count);
-  }
+  spi.begin(this);
+  m_status = spi.read(R_RX_PAYLOAD, buf, count);
   write(STATUS, _BV(RX_DR));
+  spi.end();
   dest = pipe;
   return (count);
 }
@@ -332,14 +350,12 @@ NRF24L01P::recv(uint16_t& dest, void* buf, size_t size,
 bool 
 NRF24L01P::begin(bool mode)
 {
-  spi.begin(SPI::DIV4_CLOCK, 0, SPI::MSB_FIRST);
   set_powerup_mode();
   if (mode) 
     set_receiver_mode();
   else
     set_transmitter_mode();
   flush();
-  enable();
   return (true);
 }
 
@@ -347,7 +363,6 @@ bool
 NRF24L01P::end()
 {
   set_standby_mode();
-  spi.end();
   return (true);
 }
 
@@ -410,9 +425,9 @@ NRF24L01P::send(Client* c, const void* buf, size_t size)
   if (size > PAYLOAD_MAX) size = PAYLOAD_MAX;
   Socket::addr_t dest = get_dest_address(c);
   set_transmitter_mode(dest.addr, dest.port - Socket::DYNAMIC_PORT);
-  asserted(m_csn) {
-    m_status = spi.write(W_TX_PAYLOAD, buf, size);
-  }
+  spi.begin(this);
+  m_status = spi.write(W_TX_PAYLOAD, buf, size);
+  spi.end();
   
   // Return size of payload actually sent
   m_nr_tx += 1;
@@ -442,8 +457,11 @@ void
 NRF24L01P::IRQPin::on_interrupt(uint16_t arg)
 { 
   if (m_nrf == 0) return;
-  NRF24L01P::status_t status = m_nrf->get_status();
-  m_nrf->write(NRF24L01P::STATUS, (_BV(RX_DR) | _BV(TX_DS)));
+  NRF24L01P::status_t status = 0;
+  spi.begin(m_nrf);
+  status = spi.write((W_REGISTER | NRF24L01P::STATUS), 
+		     (_BV(RX_DR) | _BV(TX_DS)));
+  spi.end();
   if (!status.rx_dr) return;
   Event::push(Event::RECEIVE_COMPLETED_TYPE, m_nrf);
 }

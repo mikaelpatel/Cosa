@@ -24,12 +24,14 @@
  */
 
 #include "Cosa/SPI.hh"
+#include "Cosa/Power.hh"
 
 SPI spi  __attribute__ ((weak));
 
 #if defined(__ARDUINO_TINY__)
 #include "Cosa/Pins.hh"
 
+// Create mapping to USI data direction register and port for ATtiny variants
 #if defined(__ARDUINO_TINYX4__)
 #define DDR DDRA
 #define PORT PORTA
@@ -38,155 +40,190 @@ SPI spi  __attribute__ ((weak));
 #define PORT PORTB
 #endif
 
-bool
-SPI::begin(Clock clock, uint8_t mode, Direction direction)
+SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
+		    Clock clock, uint8_t mode, Order order,
+		    Interrupt::Handler* irq) :
+  m_next(0),
+  m_irq(irq),
+  m_cs(cs, (pulse == 0)),
+  m_pulse(pulse),
+  m_mode(mode)
 {
-  if (clock == MASTER_CLOCK) return (false);
-  // Mode value to be used when clocking data
-  m_mode = _BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC);
-  // Check for data capture on falling edge
-  if (mode == 1 || mode == 2) m_mode |= _BV(USICS0);
+  // USI command for hardware supported bit banging 
+  m_usicr = (_BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC));
+  if (mode == 1 || mode == 2) m_usicr |= _BV(USICS0);
+
+  // Attach driver to SPI bus controller device list
+  m_next = spi.m_list;
+  spi.m_list = this;
+}
+
+SPI::SPI(uint8_t mode, Order order) :
+  m_dev(0)
+{
+  // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
+  // Do not confuse with SPI chip programming pins
   synchronized {
     bit_set(DDR, Board::MOSI);
     bit_set(DDR, Board::SCK);
     bit_clear(DDR, Board::MISO);
     bit_set(PORT, Board::MISO);
-    // Check for inversed clock
-    if (mode & 0x02) bit_set(PORT, Board::SCK);
-  };
-  return (true);
+    USICR = (_BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC));
+    if (mode == 1 || mode == 2) USICR |= _BV(USICS0);
+  }
+}
+
+SPI::SPI() :
+  m_dev(0)
+{
+  // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
+  // Do not confuse with SPI chip programming pins
+  synchronized {
+    bit_set(DDR, Board::MOSI);
+    bit_set(DDR, Board::SCK);
+    bit_clear(DDR, Board::MISO);
+    bit_set(PORT, Board::MISO);
+  }
 }
 
 bool
-SPI::end()
-{ 
-  bit_clear(DDR, Board::MOSI);
-  bit_clear(DDR, Board::SCK);
+SPI::begin(Driver* dev)
+{
+  synchronized {
+    if (m_dev != 0) synchronized_return (false);
+    // Acquire the driver controller
+    m_dev = dev;
+    // Set clock polarity
+    if (dev->m_mode & 0x02) 
+      bit_set(PORT, Board::SCK);
+    else
+      bit_clear(PORT, Board::SCK);
+    // Enable device
+    if (dev->m_pulse < 2) dev->m_cs.toggle();
+    // Disable all interrupt sources on SPI bus
+    for (dev = spi.m_list; dev != 0; dev = dev->m_next)
+      if (dev->m_irq) dev->m_irq->disable();
+  }
   return (true);
 }
 
 #else
 
-bool
-SPI::begin(Clock clock, uint8_t mode, Direction direction)
+SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
+		    Clock clock, uint8_t mode, Order order,
+		    Interrupt::Handler* irq) :
+  m_irq(irq),
+  m_cs(cs, (pulse == 0)),
+  m_pulse(pulse),
+  // SPI Control Register for master mode
+  m_spcr(_BV(SPE)                	| 
+	 ((order & 0x1) << DORD) 	| 
+	 _BV(MSTR)               	|
+	 ((mode & 0x3) << CPHA)  	| 
+	 ((clock & 0x3) << SPR0)),
+  // SPI Clock control in Status Register 
+  m_spsr(((clock & 0x04) != 0) << SPI2X)
 {
-  // Check for slave pin setting; input(MOSI, SS, SCK), output(MISO)
+  // Attach driver to SPI bus controller device list
+  m_next = spi.m_list;
+  spi.m_list = this;
+}
+
+SPI::SPI(uint8_t mode, Order order) :
+  m_list(0),
+  m_dev(0)
+{
+  // Initiate the SPI port and control for slave mode
   synchronized {
-    if (clock == MASTER_CLOCK) {
-      m_put = 0;
-      bit_clear(DDRB, Board::MOSI); 
-      bit_set(DDRB, Board::MISO);
-      bit_clear(DDRB, Board::SCK);
-      bit_clear(DDRB, Board::SS);
-      SPCR = (_BV(SPIE) | _BV(SPE));
-    } 
-    // Master pin setting; input(MISO), output(MOSI, SCK)
-    else {
-      bit_set(DDRB, Board::MOSI);
-      bit_clear(DDRB, Board::MISO);
-      bit_set(DDRB, Board::SCK);
-      bit_set(DDRB, Board::SS);
-      bit_clear(PORTB, Board::SCK);
-      bit_clear(PORTB, Board::MOSI);
-      bit_set(PORTB, Board::SS);
-      SPCR = (_BV(MSTR) | _BV(SPE));
-    }
+    bit_clear(DDRB, Board::MOSI); 
+    bit_set(DDRB, Board::MISO);
+    bit_clear(DDRB, Board::SCK);
+    bit_clear(DDRB, Board::SS);
+    SPCR = (_BV(SPIE) 			| 
+	    _BV(SPE)			| 
+	    ((order & 0x1) << DORD) 	|
+	    ((mode & 0x3) << CPHA)); 
   }
-  // Set control register according to parameters
-  SPCR |= ((direction << DORD) 
-	   | ((mode & 0x3) << CPHA) 
-	   | ((clock & 0x3) << SPR0));
-  SPSR = (((clock & 0x04) != 0) << SPI2X);
-  return (true);
+}
+
+SPI::SPI() :
+  m_list(0),
+  m_dev(0)
+{
+  // Initiate the SPI data direction for master mode
+  synchronized {
+    bit_set(DDRB, Board::MOSI);
+    bit_clear(DDRB, Board::MISO);
+    bit_set(DDRB, Board::SCK);
+    bit_set(DDRB, Board::SS);
+    bit_clear(PORTB, Board::SCK);
+    bit_clear(PORTB, Board::MOSI);
+    bit_set(PORTB, Board::SS);
+  }
+  // Other the SPI setup is done by the SPI::Driver::begin()
 }
 
 bool
-SPI::end()
-{ 
-  SPCR = 0;     
+SPI::begin(Driver* dev)
+{
+  synchronized {
+    if (m_dev != 0) synchronized_return (false);
+    // Acquire the driver controller
+    m_dev = dev;
+    // Initiate SPI hardware with device settings
+    SPCR = dev->m_spcr;
+    SPSR = dev->m_spsr;
+    // Enable device
+    if (dev->m_pulse < 2) {
+      DELAY(dev->m_pulse);
+      dev->m_cs.toggle();
+    }
+    // Disable all interrupt sources on SPI bus
+    for (dev = spi.m_list; dev != 0; dev = dev->m_next)
+      if (dev->m_irq) dev->m_irq->disable();
+  }
   return (true);
 }
+
+
+void 
+SPI::Slave::on_interrupt(uint16_t arg) 
+{ 
+  // Sanity check that a buffer is defined
+  if (m_buffer == 0) return;
+
+  // Append to buffer and push event when buffer is full
+  m_buffer[m_put++] = arg;
+  if (m_put != m_max) return;
+  
+  // Push receive completed to event dispatch
+  Event::push(Event::RECEIVE_COMPLETED_TYPE, this, m_put);
+  m_put = 0;
+}
+
+// Current slave device. Should be a singleton
+SPI::Slave* SPI::Slave::s_device = 0;
 
 ISR(SPI_STC_vect)
 {
-  SPI::Device* device = spi.get_device();
+  SPI::Slave* device = SPI::Slave::s_device;
   if (device != 0) device->on_interrupt(SPDR);
 }
 #endif
 
-void
-SPI::exchange(void* buffer, uint8_t count)
-{
-  uint8_t* bp = (uint8_t*) buffer;
-  for(; count != 0; bp++, count--) {
-    *bp = exchange(*bp);
-  }
-}
-
-void 
-SPI::exchange_P(const void* buffer, uint8_t count)
-{
-  for (const uint8_t* bp = (const uint8_t*) buffer; count != 0; bp++, count--) {
-    exchange(pgm_read_byte(*bp));
-  }
-}
-
-void
-SPI::read(void* buffer, uint8_t count)
-{
-  for (uint8_t* bp = (uint8_t*) buffer; count != 0; bp++, count--) {
-    *bp = exchange(0);
-  }
-}
-
-uint8_t
-SPI::read(uint8_t cmd, void* buffer, uint8_t count)
-{
-  uint8_t status = exchange(cmd);
-  for (uint8_t* bp = (uint8_t*) buffer; count != 0; bp++, count--) {
-    *bp = exchange(0);
-  }
-  return (status);
-}
-
-void
-SPI::write(const void* buffer, uint8_t count)
-{
-  for (uint8_t* bp = (uint8_t*) buffer; count != 0; bp++, count--) {
-    exchange(*bp);
-  }
-}
-
-uint8_t
-SPI::write(uint8_t cmd, const void* buffer, uint8_t count)
-{
-  uint8_t status = exchange(cmd);
-  for (uint8_t* bp = (uint8_t*) buffer; count != 0; bp++, count--) {
-    exchange(*bp);
-  }
-  return (status);
-}
-
-uint8_t
-SPI::write_P(uint8_t cmd, const void* buffer, uint8_t count)
-{
-  uint8_t status = exchange(cmd);
-  for (uint8_t* bp = (uint8_t*) buffer; count != 0; bp++, count--) {
-    exchange(pgm_read_byte(bp));
-  }
-  return (status);
-}
-
-void 
-SPI::Device::on_interrupt(uint16_t arg) 
+bool
+SPI::end()
 { 
-  // Sanity check that a buffer is defined
-  if (spi.m_buffer == 0) return;
-
-  // Append to buffer and push event when buffer is full
-  spi.m_buffer[spi.m_put++] = arg;
-  if (spi.m_put != spi.m_max) return;
-  
-  Event::push(Event::RECEIVE_COMPLETED_TYPE, this, spi.m_put);
-  spi.m_put = 0;
+  synchronized {
+    if (m_dev == 0) synchronized_return (false);
+    // Disable the device or give pulse if required
+    m_dev->m_cs.toggle();
+    if (m_dev->m_pulse > 1) m_dev->m_cs.toggle();
+    // Enable the bus devices with interrupts
+    for (Driver* dev = spi.m_list; dev != 0; dev = dev->m_next)
+      if (dev->m_irq != 0) dev->m_irq->enable();
+    // Release the driver controller
+    m_dev = 0;
+  }
+  return (true);
 }

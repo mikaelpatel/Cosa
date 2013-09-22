@@ -42,11 +42,6 @@
 class ST7735 : public Canvas, SPI::Driver {
 protected:
   /**
-   * Slave select pin (default is pin 10)
-   */
-  OutputPin m_cs;
-
-  /**
    * Data/Command select pin (default is pin 9)
    */
   OutputPin m_dc;
@@ -54,8 +49,8 @@ protected:
   /**
    * Initialization script (in program memory).
    */
-  uint8_t m_initiated;
   static const uint8_t script[] PROGMEM;
+  uint8_t m_initiated;
 
   /**
    * SPI commands (ch. 10 Command, pp. 77-78, pp. 119-120)
@@ -143,10 +138,8 @@ protected:
    */
   void write(Command cmd)
   {
-    asserted(m_cs) {
-      asserted(m_dc) {
-	spi.exchange(cmd);
-      }
+    asserted(m_dc) {
+      spi.transfer(cmd);
     }
   }
 
@@ -157,12 +150,10 @@ protected:
    */
   void write(Command cmd, uint8_t data)
   {
-    asserted(m_cs) {
-      asserted(m_dc) {
-	spi.exchange(cmd);
-      }
-      spi.exchange(data);
+    asserted(m_dc) {
+      spi.transfer(cmd);
     }
+    spi.transfer(data);
   }
 
   /**
@@ -172,13 +163,11 @@ protected:
    */
   void write(Command cmd, uint16_t data)
   {
-    asserted(m_cs) {
-      asserted(m_dc) {
-	spi.exchange(cmd);
-      }
-      spi.exchange(data >> 8);
-      spi.exchange(data);
+    asserted(m_dc) {
+      spi.transfer(cmd);
     }
+    spi.transfer(data >> 8);
+    spi.transfer(data);
   }
 
   /**
@@ -189,15 +178,13 @@ protected:
    */
   void write(Command cmd, uint16_t x, uint16_t y)
   {
-    asserted(m_cs) {
-      asserted(m_dc) {
-	spi.exchange(cmd);
-      }
-      spi.exchange(x >> 8);
-      spi.exchange(x);
-      spi.exchange(y >> 8);
-      spi.exchange(y);
+    asserted(m_dc) {
+      spi.transfer(cmd);
     }
+    spi.transfer(x >> 8);
+    spi.transfer(x);
+    spi.transfer(y >> 8);
+    spi.transfer(y);
   }
 
 public:
@@ -240,9 +227,11 @@ public:
    */
   void set_port(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
   {
+    spi.begin(this);
     write(CASET, x0, x1); 
     write(RASET, y0, y1);
     write(RAMWR);
+    spi.end();
   }
 
   /**
@@ -255,10 +244,10 @@ public:
   {
     set_port(x, y, x + 1, y + 1);
     color16_t color = get_pen_color();
-    asserted(m_cs) {
-      spi.exchange(color.rgb >> 8);
-      spi.exchange(color.rgb);
-    }
+    spi.begin(this);
+    spi.transfer(color.rgb >> 8);
+    spi.transfer(color.rgb);
+    spi.end();
   }
 
   /**
@@ -296,7 +285,7 @@ public:
    */
   virtual bool end()
   {
-    return (spi.end());
+    return (true);
   }
 };
 

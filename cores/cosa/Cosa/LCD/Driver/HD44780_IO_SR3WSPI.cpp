@@ -24,7 +24,6 @@
  */
 
 #include "Cosa/LCD/Driver/HD44780.hh"
-#include "Cosa/SPI.hh"
 
 bool
 HD44780::SR3WSPI::setup()
@@ -36,26 +35,22 @@ HD44780::SR3WSPI::setup()
 void 
 HD44780::SR3WSPI::write4b(uint8_t data)
 {
-  spi.begin();
   m_port.data = data;
-  spi << m_port.as_uint8;
-  m_en.toggle();
-  m_en.toggle();
+  spi.begin(this);
+  spi.transfer(m_port.as_uint8);
   spi.end();
 }
 
 void 
 HD44780::SR3WSPI::write8b(uint8_t data)
 {
-  spi.begin();
-  m_port.data = data >> 4;
-  spi << m_port.as_uint8;
-  m_en.toggle();
-  m_en.toggle();
+  spi.begin(this);
+  m_port.data = (data >> 4);
+  spi.transfer(m_port.as_uint8);
+  m_cs.toggle();
+  m_cs.toggle();
   m_port.data = data;
-  spi << m_port.as_uint8;
-  m_en.toggle();
-  m_en.toggle();
+  spi.transfer(m_port.as_uint8);
   spi.end();
   DELAY(SHORT_EXEC_TIME);
 }

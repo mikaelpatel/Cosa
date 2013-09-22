@@ -234,7 +234,7 @@ void loop()
   start = RTC::micros();
   tft.set_canvas_color(Canvas::WHITE);
   tft.fill_screen();
-  static const int8_t polygon[] PROGMEM = { 
+  static const int8_t polygon[] __PROGMEM = { 
     100, 100, 
     -100, 0, 
     50, -50, 
@@ -256,7 +256,7 @@ void loop()
   start = RTC::micros();
   tft.set_canvas_color(Canvas::WHITE);
   tft.fill_screen();
-  static const int8_t stroke[] PROGMEM = { 
+  static const int8_t stroke[] __PROGMEM = { 
     20, -100,
     20, 100,
     -30, -50,
