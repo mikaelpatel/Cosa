@@ -34,7 +34,7 @@
 #include "Cosa/Memory.h"
 
 // Analog pin vector for pin set. Note: use program memory
-const PROGMEM Board::AnalogPin pins[] = {
+const Board::AnalogPin pins[] __PROGMEM = {
   Board::A0, 
   Board::A1,
   Board::A2,
