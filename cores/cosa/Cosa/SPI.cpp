@@ -174,10 +174,7 @@ SPI::begin(Driver* dev)
     SPCR = dev->m_spcr;
     SPSR = dev->m_spsr;
     // Enable device
-    if (dev->m_pulse < 2) {
-      DELAY(dev->m_pulse);
-      dev->m_cs.toggle();
-    }
+    if (dev->m_pulse < 2) dev->m_cs.toggle();
     // Disable all interrupt sources on SPI bus
     for (dev = spi.m_list; dev != 0; dev = dev->m_next)
       if (dev->m_irq) dev->m_irq->disable();

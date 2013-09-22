@@ -447,47 +447,76 @@ private:
   }
   
   /**
-   * Read command and status registers. Issue R_REGISTER command.
+   * Read command register. Return value.
+   * @param[in] cmd command register to read.
+   */
+  uint8_t read(Command cmd)
+  {
+    return (spi.transfer(cmd));
+  }
+  
+  /**
+   * Read registers. Issue R_REGISTER command.
    * @param[in] reg register address.
    * @return register value.
    */
   uint8_t read(Register reg)
   {
-    return (spi.read(R_REGISTER | (REG_MASK & reg)));
+    spi.transfer(R_REGISTER | (REG_MASK & reg));
+    return (spi.transfer(0));
   }
 
   /**
-   * Write command to display controller.
-   * @param[in] cmd command to write.
-   * @return status.
+   * Read data block to device.
+   * @param[in] buffer data storage.
+   * @param[in] count number of bytes to write.
    */
-  uint8_t write(Command cmd)
+  void read(void* buffer, size_t count)
   {
-    return (spi.write(cmd));
+    uint8_t* bp = (uint8_t*) buffer; 
+    while (count--) *bp++ = spi.transfer(0);
   }
 
   /**
-   * Write command and status registers. Issue W_REGISTER command.
+   * Write command. Return status.
+   * @param[in] cmd command to write.
+   */
+  void write(Command cmd)
+  {
+    m_status = spi.transfer(cmd);
+  }
+  
+  /**
+   * Write command.
+   * @param[in] cmd command to write.
+   */
+  void write(Register reg)
+  {
+    m_status = spi.transfer(W_REGISTER | (REG_MASK & reg));
+  }
+  
+  /**
+   * Write command and status registers. Issue W_REGISTER command and
+   * write data.
    * @param[in] reg register address.
    * @param[in] data new setting.
    * @return status.
    */
-  uint8_t write(Register reg, uint8_t data)
+  void write(Register reg, uint8_t data)
   {
-    return (spi.write(W_REGISTER | (REG_MASK & reg), data));
+    m_status = spi.transfer(W_REGISTER | (REG_MASK & reg));
+    spi.transfer(data);
   }
 
   /**
-   * Write command and status registers. Issue W_REGISTER command and
-   * multiple values.
-   * @param[in] reg register address.
+   * Write data block to device.
    * @param[in] buffer data storage.
    * @param[in] count number of bytes to write.
-   * @return status.
    */
-  uint8_t write(Register reg, const void* buffer, uint8_t count)
+  void write(const void* buffer, size_t count)
   {
-    return (spi.write(W_REGISTER | (REG_MASK & reg), buffer, count));
+    uint8_t* bp = (uint8_t*) buffer; 
+    while (count--) spi.transfer(*bp++);
   }
   
   /**

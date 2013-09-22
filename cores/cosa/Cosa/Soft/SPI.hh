@@ -68,35 +68,58 @@ namespace Soft {
     class Driver {
       friend class SPI;
     protected:
-      /** Device chip select pin; initiated high for active low logic */
+      /** List of drivers */
+      Driver* m_next;
+      /** Interrupt handler */
+      Interrupt::Handler* m_irq;
+      /** Device chip select pin */
       OutputPin m_cs;
-      /** Mutual exclusion flag. Require lock during transaction */
-      const bool m_mutex;
+      /** Chip select pulse width; 
+       *  0 for active low logic during the transaction,
+       *  1 for active high logic,
+       *  n pulse width on end of transaction.
+       */
+      uint8_t m_pulse;
       /** Data direction; bit order */
       Pin::Direction m_direction;
       
     public:
       /**
-       * Construct SPI Device driver with given chip select pin, clock, 
-       * mode, and bit order. The chip select pin is initiated for 
-       * active low logic. 
+       * Construct SPI Device driver with given chip select pin, pulse,
+       * clock, mode, and bit order. Zero(0) pulse will give active low
+       * chip select during transaction, One(1) acive high, otherwise
+       * pulse width on end(). 
        * @param[in] cs chip select pin.
-       * @param[in] flag lock during transaction (default false).
+       * @param[in] pulse chip select pulse mode (default active low, 0).
        * @param[in] clock SPI hardware setting (default DIV4_CLOCK).
        * @param[in] mode SPI mode for phase and transition (0..3, default 0).
        * @param[in] order bit order (default MSB_ORDER).
+       * @param[in] irq interrupt handler (default null).
        */
       Driver(Board::DigitalPin cs, 
-	     bool flag = false, 
+	     uint8_t pulse = 0,
 	     Clock clock = DEFAULT_CLOCK, 
 	     uint8_t mode = 0, 
-	     Order order = MSB_ORDER);
+	     Order order = MSB_ORDER,
+	     Interrupt::Handler* irq = 0) :
+	m_irq(irq),
+	m_cs(cs, (pulse == 0)),
+	m_pulse(pulse),
+	m_order(order)
+      {
+	m_next = spi.m_list;
+	spi.m_list = this;
+      }
     };
 
   private:
+    /** List of attached devices for interrupt disable/enable */
+    Driver* m_list;
+    /** Current device using the SPI hardware */
     Driver* m_dev;
-    uint8_t m_key;
+    /** Master Output Slave Input pin */
     OutputPin m_mosi;
+    /** Serial Clock pin */
     OutputPin m_sck;
   
   public:
@@ -104,8 +127,8 @@ namespace Soft {
      * Construct soft serial peripheral interface master.
      */
     SPI(Board::DigitalPin mosi, Board::DigitalPin sck) : 
+      m_list(0),
       m_dev(0),
-      m_key(0),
       m_mosi(mosi, 0),
       m_sck(sck, 0)
     {
@@ -118,13 +141,19 @@ namespace Soft {
      */
     bool begin(Driver* dev)
     {
-      // Sanity check that the SPI hardware is free
-      if (m_dev != 0) return (false);
-  
-      // Initiate the SPI interaction; disable interrupt and enable device
-      if (dev->m_mutex) m_key = lock();
-      m_dev = dev;
-      m_dev->m_cs.toggle();
+      synchronized {
+	if (m_dev != 0) synchronized_return (false);
+	// Acquire the driver controller
+	m_dev = dev;
+	// Enable device
+	if (dev->m_pulse < 2) {
+	  DELAY(dev->m_pulse);
+	  dev->m_cs.toggle();
+	}
+	// Disable all interrupt sources on SPI bus
+	for (dev = spi.m_list; dev != 0; dev = dev->m_next)
+	  if (dev->m_irq) dev->m_irq->disable();
+      }
       return (true);
     }
   
@@ -134,14 +163,17 @@ namespace Soft {
      */
     bool end() 
     {
-      // Sanity check device driver reference
-      if (m_dev == 0) return (false);
-
-      // Release SPI hardware and enable interrups
-      bool flag = m_dev->m_mutex;
-      m_dev->m_cs.toggle();
-      m_dev = 0;
-      if (flag) unlock(m_key);
+      synchronized {
+	if (m_dev == 0) synchronized_return (false);
+	// Disable the device or give pulse if required
+	m_dev->m_cs.toggle();
+	if (m_dev->m_pulse > 1) m_dev->m_cs.toggle();
+	// Enable the bus devices with interrupts
+	for (Driver* dev = spi.m_list; dev != 0; dev = dev->m_next)
+	  if (dev->m_irq != 0) dev->m_irq->enable();
+	// Release the driver controller
+	m_dev = 0;
+      }
       return (true);
     }
 
@@ -182,56 +214,6 @@ namespace Soft {
 	bp += 1;
       }
     }
-
-    /**
-     * Write data to slave device.
-     * @param[in] data to write.
-     * @return status.
-     */
-    uint8_t write(uint8_t data)
-    {
-      return (transfer(data));
-    }
-    
-    /**
-     * Write data to slave device; send address/command and send data.
-     * @param[in] cmd command.
-     * @param[in] data to write.
-     * @return status.
-     */
-    uint8_t write(uint8_t cmd, uint8_t data)
-    {
-      uint8_t status = transfer(cmd);
-      transfer(data);
-      return (status);
-    }
-
-    /**
-     * Write data buffer to slave device.
-     * @param[in] buffer with data to send.
-     * @param[in] count size of buffer.
-     */
-    void write(const void* buffer, uint8_t count)
-    {
-      uint8_t* bp = (uint8_t*) buffer; 
-      while (count--) transfer(*bp++);
-    }
-
-    /**
-     * Write data to slave device; send address/command and send data
-     * from buffer.
-     * @param[in] cmd command.
-     * @param[in] buffer with data to send.
-     * @param[in] count size of buffer.
-     * @return status.
-     */
-    uint8_t write(uint8_t cmd, const void* buffer, uint8_t count)
-    {
-      uint8_t status = transfer(cmd);
-      write(buffer, count);
-      return (status);
-    }
-  };
+  }
 };
-
 #endif

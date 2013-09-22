@@ -38,8 +38,8 @@
 // Select the port for the benchmark
 // HD44780::Port4b port;
 // HD44780::SR3W port; 
-// HD44780::SR3WSPI port;
-HD44780::SR4W port; 
+HD44780::SR3WSPI port;
+// HD44780::SR4W port; 
 // HD44780::ERM1602_5 port;
 // HD44780::MJKDZ port;
 // HD44780::DFRobot port;
