@@ -34,7 +34,7 @@
  */
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/SPI/Driver/ST7735.hh"
+#include "Cosa/Canvas/Driver/ST7735.hh"
 #include "Cosa/Canvas/Font/Segment32x50.hh"
 
 ST7735 tft;

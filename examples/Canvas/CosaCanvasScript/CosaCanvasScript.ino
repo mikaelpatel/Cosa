@@ -40,7 +40,7 @@
 #include "Cosa/Canvas/Icon/arduino_icon_34x32.h"
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
-#include "Cosa/SPI/Driver/ST7735.hh"
+#include "Cosa/Canvas/Driver/ST7735.hh"
 
 // Use the TFT display as canvas
 ST7735 tft;

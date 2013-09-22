@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/Driver/ST7735.hh
+ * @file Cosa/Canvas/Driver/ST7735.hh
  * @version 1.0
  *
  * @section License
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SPI_DRIVER_ST7735_HH__
-#define __COSA_SPI_DRIVER_ST7735_HH__
+#ifndef __COSA_CANVAS_DRIVER_ST7735_HH__
+#define __COSA_CANVAS_DRIVER_ST7735_HH__
 
 #include "Cosa/Canvas.hh"
 #include "Cosa/SPI.hh"

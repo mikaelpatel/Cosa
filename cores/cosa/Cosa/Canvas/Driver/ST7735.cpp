@@ -23,7 +23,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/Driver/ST7735.hh"
+#include "Cosa/Canvas/Driver/ST7735.hh"
 
 const uint8_t ST7735::script[] __PROGMEM = {
   // Software Reset

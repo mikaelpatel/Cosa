@@ -41,7 +41,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/HCSR04.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/SPI/Driver/ST7735.hh"
+#include "Cosa/Canvas/Driver/ST7735.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/Segment32x50.hh"

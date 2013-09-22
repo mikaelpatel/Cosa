@@ -37,7 +37,7 @@
  */
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/SPI/Driver/ST7735.hh"
+#include "Cosa/Canvas/Driver/ST7735.hh"
 
 // The display and the analog pin to use as a probe
 ST7735 tft;
