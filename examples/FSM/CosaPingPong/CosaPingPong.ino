@@ -76,7 +76,7 @@ public:
     trace.print_P(echo->m_name);
     trace.println();
     fsm->set_state(listenState);
-    return (1);
+    return (true);
   }
 
   static bool listenState(FSM* fsm, uint8_t type)
@@ -86,7 +86,7 @@ public:
     trace.printf_P(PSTR("(count = %d)\n"), echo->m_count++);
     fsm->set_state(echoState);
     fsm->set_timer(512);
-    return (1);
+    return (true);
   }
 
   static bool echoState(FSM* fsm, uint8_t type)
@@ -94,6 +94,7 @@ public:
     Echo* echo = (Echo*) fsm;
     echo->m_port->send(Event::USER_TYPE);
     fsm->set_state(listenState);
+    return (true);
   };
 };
 
