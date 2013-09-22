@@ -42,9 +42,10 @@ public:
   enum type_t {
     ITEM,			// Menu item/symbol
     ITEM_LIST,			// Menu item/enum list
-    ENUM,			// Menu enumeration variable (one-of)
-    BITSET,			// Menu bitset variable (zero-or-many)
-    RANGE,			// Menu integer range variable
+    ONE_OF,			// Menu enumeration variable (one-of)
+    ZERO_OR_MANY,		// Menu bitset variable (zero-or-many)
+    BCD_RANGE,			// Menu bcd(2) range variable
+    INT_RANGE,			// Menu integer range variable
     ACTION			// Menu action
   } __attribute__((packed));
 
@@ -67,25 +68,37 @@ public:
   typedef const PROGMEM item_list_t* item_list_P;
 
   // Enumeration variable symbols list (one-of)
-  struct enum_t {
-    item_t item;		// Item header(ENUM)
-    item_vec_P list;		// Enum item list in program memory
+  struct one_of_t {
+    item_t item;		// Item header(ONE_OF)
+    item_vec_P list;		// Item list in program memory
     uint16_t* value;		// Pointer to value
   };
-  typedef const PROGMEM enum_t* enum_P;
+  typedef const PROGMEM one_of_t* one_of_P;
+  static void print(IOStream& outs, one_of_P var);
 
-  // Bitset variable symbols list (zero-or-many), Item header(BITSET)
-  typedef enum_t bitset_t;
-  typedef const PROGMEM bitset_t* bitset_P;
+  // Zero-or-many variable symbols list, Item header(ZERO_OR_MANY)
+  typedef one_of_t zero_or_many_t;
+  typedef const PROGMEM zero_or_many_t* zero_or_many_P;
+  static void print(IOStream& outs, zero_or_many_P var, bool selected, uint8_t bv);
+
+  // Bcd(2) range variable 
+  struct bcd_range_t {
+    item_t item;		// Item header(BCD_RANGE)
+    uint8_t low;		// Range low value
+    uint8_t high;		// Range high value
+    uint8_t* value;		// Pointer to value
+  };
+  typedef const PROGMEM bcd_range_t* bcd_range_P;
 
   // Integer range variable 
-  struct range_t {
-    item_t item;		// Item header(RANGE)
+  struct int_range_t {
+    item_t item;		// Item header(INT_RANGE)
     int16_t low;		// Range low value
     int16_t high;		// Range high value
     int16_t* value;		// Pointer to value
   };
-  typedef const PROGMEM range_t* range_P;
+  typedef const PROGMEM int_range_t* int_range_P;
+  static void print(IOStream& outs, int_range_P var, bool selected);
 
   /**
    * Menu Action handler. Must be sub-classed and the virtual member
@@ -133,6 +146,8 @@ public:
 
     // Output stream for menu printout
     IOStream m_out;
+
+    void on_key_down(uint8_t nr, zero_or_many_P var);
 
   public:
     // Menu walker key index (same as LCDkeypad map for simplicity)
@@ -383,17 +398,17 @@ public:
   };
 
 /**
- * Support macro to define a menu enumeration variable.
+ * Support macro to define a menu one-of variable.
  * @param[in] type enumeration list.
- * @param[in] var menu enumeration variable to create.
- * @param[in] name string for menu enumeration variable.
+ * @param[in] var menu one-of variable to create.
+ * @param[in] name string for menu one-of variable.
  * @param[in] value variable with runtime value.
  */
-#define MENU_ENUM(type,var,name,value)			\
+#define MENU_ONE_OF(type,var,name,value)		\
   const char var ## _name[] PROGMEM = name;		\
-  const Menu::enum_t var PROGMEM = {			\
+  const Menu::one_of_t var PROGMEM = {			\
   {							\
-    Menu::ENUM,						\
+    Menu::ONE_OF,					\
     var ## _name					\
   },							\
   type ## _list,					\
@@ -401,17 +416,17 @@ public:
 };
 
 /**
- * Support macro to define a menu bitset variable.
+ * Support macro to define a menu zero-or-many variable.
  * @param[in] type enumeration list.
- * @param[in] var menu bitset variable to create.
- * @param[in] name string for menu bitset variable.
+ * @param[in] var menu zero-or-many variable to create.
+ * @param[in] name string for menu zero-or-many variable.
  * @param[in] value variable with runtime value.
  */
-#define MENU_BITSET(type,var,name,value)		\
+#define MENU_ZERO_OR_MANY(type,var,name,value)		\
   const char var ## _name[] PROGMEM = name;		\
-  const Menu::enum_t var PROGMEM = {			\
+  const Menu::zero_or_many_t var PROGMEM = {		\
   {							\
-    Menu::BITSET,					\
+    Menu::ZERO_OR_MANY,					\
     var ## _name					\
   },							\
   type ## _list,					\
@@ -426,11 +441,11 @@ public:
  * @param[in] high range value.
  * @param[in] value variable name.
  */
-#define MENU_RANGE(var,name,low,high,value)		\
+#define MENU_INT_RANGE(var,name,low,high,value)		\
   const char var ## _name[] PROGMEM = name;		\
-  const Menu::range_t var PROGMEM = {			\
+  const Menu::int_range_t var PROGMEM = {		\
   {							\
-    Menu::RANGE,					\
+    Menu::INT_RANGE,					\
     var ## _name					\
   },							\
   low,							\

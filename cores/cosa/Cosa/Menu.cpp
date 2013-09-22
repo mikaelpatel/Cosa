@@ -25,6 +25,42 @@
 
 #include "Menu.hh"
 
+void
+Menu::print(IOStream& outs, Menu::one_of_P var)
+{
+  uint16_t ix = *((uint16_t*) pgm_read_word(&var->value));
+  item_vec_P list = (item_vec_P) pgm_read_word(&var->list);
+  item_P item = (item_P) pgm_read_word(&list[ix]);
+  outs << (const char*) pgm_read_word(&item->name);
+}
+
+void 
+Menu::print(IOStream& outs, zero_or_many_P var, bool selected, uint8_t bv)
+{
+  if (!selected) return;
+  uint16_t value = *((uint16_t*) pgm_read_word(&var->value));
+  item_vec_P list = (item_vec_P) pgm_read_word(&var->list);
+  item_P item = (item_P) pgm_read_word(&list[bv]);
+  if (value & _BV(bv)) 
+    outs << PSTR("[x] ");
+  else outs << PSTR("[ ] ");
+  outs << (const char*) pgm_read_word(&item->name);
+}
+
+void
+Menu::print(IOStream& outs, int_range_P var, bool selected)
+{
+  int16_t* vp = (int16_t*) pgm_read_word(&var->value);
+  int16_t value = *vp;
+  outs << value;
+  if (!selected) return;
+  outs << PSTR(" [") 
+       << (int16_t) pgm_read_word(&var->low) 
+       << PSTR("..")
+       << (int16_t) pgm_read_word(&var->high) 
+       << PSTR("]");
+}
+
 IOStream& 
 operator<<(IOStream& outs, Menu::Walker& walker)
 {
@@ -45,44 +81,18 @@ operator<<(IOStream& outs, Menu::Walker& walker)
 
   // Print possible value of current menu item
   switch (type) {
-  case Menu::ENUM:
-    // Print the enumeration variable value string
-    {
-      Menu::enum_P var = (Menu::enum_P) item;
-      uint16_t ix = *((uint16_t*) pgm_read_word(&var->value));
-      list = (Menu::item_vec_P) pgm_read_word(&var->list);
-      item = (Menu::item_P) pgm_read_word(&list[ix]);
-      outs << (const char*) pgm_read_word(&item->name);
-    }
+  case Menu::ONE_OF: 
+    // Print the one-of variable value string
+    Menu::print(outs, (Menu::one_of_P) item);
     break;
-    // Print the bitset variable when selected
-  case Menu::BITSET:
-    {
-      if (!walker.m_selected) break;
-      Menu::bitset_P var = (Menu::bitset_P) item;
-      uint16_t value = *((uint16_t*) pgm_read_word(&var->value));
-      list = (Menu::item_vec_P) pgm_read_word(&var->list);
-      item = (Menu::item_P) pgm_read_word(&list[walker.m_bv]);
-      if (value & _BV(walker.m_bv)) 
-	outs << PSTR("[x] ");
-      else outs << PSTR("[ ] ");
-      outs << (const char*) pgm_read_word(&item->name);
-    }
+  case Menu::ZERO_OR_MANY: 
+    // Print the zero-or-many variable when selected
+    Menu::print(outs, (Menu::zero_or_many_P) item, 
+		walker.m_selected, walker.m_bv);
     break;
+  case Menu::INT_RANGE:
     // Print the range variable and limits when selected
-  case Menu::RANGE:
-    {
-      Menu::range_P var = (Menu::range_P) item;
-      int16_t* vp = (int*) pgm_read_word(&var->value);
-      int16_t value = *vp;
-      outs << value;
-      if (!walker.m_selected) break;
-      outs << PSTR(" [") 
-	   << (int16_t) pgm_read_word(&var->low) 
-	   << PSTR("..")
-	   << (int16_t) pgm_read_word(&var->high) 
-	   << PSTR("]");
-    }
+    Menu::print(outs, (Menu::int_range_P) item, walker.m_selected);
     break;
   default:
     ;
@@ -106,15 +116,15 @@ Menu::Walker::on_key_down(uint8_t nr)
   case SELECT_KEY: 
   case RIGHT_KEY:
     switch (type) {
-    case Menu::BITSET:
-      // Select bitset or toggle current bitset item
+    case Menu::ZERO_OR_MANY:
+      // Select zero-or-many variable or toggle current item
       {
 	if (!m_selected) {
 	  m_selected = true;
 	  m_bv = 0;
 	  break;
 	}
-	Menu::bitset_P var = (Menu::bitset_P) item;
+	Menu::zero_or_many_P var = (Menu::zero_or_many_P) item;
 	uint16_t* vp = (uint16_t*) pgm_read_word(&var->value);
 	list = (Menu::item_vec_P) pgm_read_word(&var->list);	  
 	item = (Menu::item_P) pgm_read_word(&list[m_bv]);
@@ -168,10 +178,10 @@ Menu::Walker::on_key_down(uint8_t nr)
     }
     else {
       switch (type) {
-      case Menu::ENUM:
+      case Menu::ONE_OF:
 	// Step to the next enumeration value
 	{
-	  Menu::enum_P evar = (Menu::enum_P) item;
+	  Menu::one_of_P evar = (Menu::one_of_P) item;
 	  uint16_t* vp = (uint16_t*) pgm_read_word(&evar->value);
 	  uint16_t value = *vp + 1;
 	  list = (Menu::item_vec_P) pgm_read_word(&evar->list);	  
@@ -180,20 +190,20 @@ Menu::Walker::on_key_down(uint8_t nr)
 	  *vp = value;
 	}
 	break;
-      case Menu::BITSET:
-	// Step to the next bitset value
+      case Menu::ZERO_OR_MANY:
+	// Step to the next item
 	{
-	  Menu::enum_P bitset = (Menu::enum_P) item;
+	  Menu::zero_or_many_P bitset = (Menu::zero_or_many_P) item;
 	  list = (Menu::item_vec_P) pgm_read_word(&bitset->list);	  
 	  item = (Menu::item_P) pgm_read_word(&list[m_bv + 1]);
 	  if (item == 0) break;
 	  m_bv += 1;
 	}
 	break;
-      case Menu::RANGE:
+      case Menu::INT_RANGE:
 	// Decrement the integer variable if within the range
 	{
-	  Menu::range_P range = (Menu::range_P) item;
+	  Menu::int_range_P range = (Menu::int_range_P) item;
 	  int16_t* vp = (int16_t*) pgm_read_word(&range->value);
 	  int value = *vp;
 	  int low = (int) pgm_read_word(&range->low);
@@ -217,10 +227,10 @@ Menu::Walker::on_key_down(uint8_t nr)
     }
     else {
       switch (type) {
-      case Menu::ENUM:
+      case Menu::ONE_OF:
 	// Step to the previous enumeration value
 	{
-	  Menu::enum_P evar = (Menu::enum_P) item;
+	  Menu::one_of_P evar = (Menu::one_of_P) item;
 	  uint16_t* vp = (uint16_t*) pgm_read_word(&evar->value);
 	  uint16_t value = *vp;
 	  if (value == 0) break;
@@ -230,7 +240,7 @@ Menu::Walker::on_key_down(uint8_t nr)
 	  *vp = value;
 	}
 	break;
-      case Menu::BITSET:
+      case Menu::ZERO_OR_MANY:
 	// Step to the previous bitset value
 	{
 	  if (m_bv == 0) {
@@ -240,10 +250,10 @@ Menu::Walker::on_key_down(uint8_t nr)
 	  m_bv -= 1;
 	}
 	break;
-      case Menu::RANGE:
+      case Menu::INT_RANGE:
 	// Increment the integer variable in within range
 	{
-	  Menu::range_P range = (Menu::range_P) item;
+	  Menu::int_range_P range = (Menu::int_range_P) item;
 	  int16_t* vp = (int16_t*) pgm_read_word(&range->value);
 	  int value = *vp;
 	  int high = (int) pgm_read_word(&range->high);
@@ -276,10 +286,12 @@ Menu::Walker::get_type()
 void 
 Menu::RotaryController::on_event(uint8_t type, uint16_t direction)
 {
-  if (m_walker->get_type() == Menu::RANGE)
-    m_walker->on_key_down(direction == CW ? Menu::Walker::UP_KEY : 
+  if (m_walker->get_type() == Menu::INT_RANGE)
+    m_walker->on_key_down(direction == CW ? 
+			  Menu::Walker::UP_KEY : 
 			  Menu::Walker::DOWN_KEY);
   else
-    m_walker->on_key_down(direction == CW ? Menu::Walker::DOWN_KEY : 
+    m_walker->on_key_down(direction == CW ? 
+			  Menu::Walker::DOWN_KEY : 
 			  Menu::Walker::UP_KEY);
 }
