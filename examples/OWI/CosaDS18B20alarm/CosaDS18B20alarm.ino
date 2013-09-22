@@ -77,7 +77,7 @@ Thermometer::on_alarm()
 
 // Support macro to create name strings in program memory for devices
 #define THERMOMETER(var)					\
-  const char var ## _name[] PROGMEM = #var;			\
+  const char var ## _name[] __PROGMEM = #var;			\
   Thermometer var(&owi, var ## _name)
 
 // The devices connected to the one-wire bus

@@ -47,7 +47,7 @@ OWI owi(Board::D7);
 
 // Support macro to create name strings in program memory
 #define THERMOMETER(name)			\
-  const char name ## _PSTR[] PROGMEM = #name;	\
+  const char name ## _PSTR[] __PROGMEM = #name;	\
   DS18B20 name(&owi, name ## _PSTR)
 
 // The devices connected to the one-wire bus
@@ -76,13 +76,17 @@ void setup()
   ledPin.toggle();
   DS18B20* temp[] = { &indoors, &outdoors, &basement };
   for (uint8_t i = 0; i < membersof(temp); i++) {
-    int8_t high, low;
-    uint8_t resolution;
     DS18B20* t = temp[i];
     if (!t->connect(i)) break;
     t->set_resolution(10);
     t->set_trigger(30, 20);
     t->write_scratchpad();
+  }
+  ledPin.toggle();
+  for (uint8_t i = 0; i < membersof(temp); i++) {
+    int8_t high, low;
+    uint8_t resolution;
+    DS18B20* t = temp[i];
     t->read_scratchpad();
     t->get_trigger(high, low);
     resolution = t->get_resolution();
@@ -92,7 +96,6 @@ void setup()
     trace << PSTR("trigger = ") << low << PSTR("..") << high << endl;
     trace << endl;
   }
-  ledPin.toggle();
 }
 
 void loop()
