@@ -43,6 +43,28 @@ OutputPin dataPin(Board::D9);
 OutputPin clockPin(Board::D10);
 AnalogPin analogPin(Board::A0);
 
+// Simple adaptation of the Arduino/Wiring API
+
+inline void digitalWrite(uint8_t pin, uint8_t value)
+{
+  OutputPin::write(pin, value);
+}
+
+inline int digitalRead(uint8_t pin) 
+{
+  return (InputPin::read(pin));
+}
+
+inline int analogRead(uint8_t pin)
+{
+  return (AnalogPin::sample(pin));
+}
+
+inline void pinMode(uint8_t pin, uint8_t mode)
+{
+  IOPin::set_mode(pin, (IOPin::Mode) mode);
+}
+
 void setup()
 {
   // Start the trace output stream on the serial port
@@ -118,7 +140,19 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read pin:InputPin::read(7):%ul ns\n", ns);
+  INFO("read pin:InputPin::read(7):%ul ns", ns);
+  if (cnt == 0) TRACE(cnt);
+
+  cnt = 0;
+  start = RTC::micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      if (digitalRead(7)) cnt++; else cnt--;
+      __asm__ __volatile__("nop");
+    }
+  stop = RTC::micros();
+  ns = (stop - start) / 1000L;
+  INFO("read digitalRead(7):%ul ns\n", ns);
   if (cnt == 0) TRACE(cnt);
 
   // Measure the time to perform 1,000,000 output pin writes
@@ -165,6 +199,17 @@ void loop()
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
   INFO("write pin:OutputPin::write(8, 1); OutputPin::write(8, 0):%ul ns", ns);
+
+  start = RTC::micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++) {
+      digitalWrite(8, 1);
+      digitalWrite(8, 0);
+      __asm__ __volatile__("nop");
+    }
+  stop = RTC::micros();
+  ns = (stop - start) / 1000L;
+  INFO("write pin:digitalWrite(8, 1); OutputPin::write(8, 0):%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
