@@ -84,7 +84,7 @@ void setup()
   cout.begin();
 
   // Values to stream
-  char* s = "Tjena, tjabba";
+  char s[] = "Tjena, tjabba";
   uint8_t x = 15;
   int32_t y = -2;
   int16_t z[] = { 1, 2, 3, 4 };
