@@ -47,13 +47,13 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 #else
-#include "Cosa/IOStream/Driver/PCD8544.hh"
+#include "Cosa/LCD/Driver/PCD8544.hh"
 #endif
 
 /**
  * Key mapping for LG AKB72913104. Store in program memory.
  */
-static const IR::Receiver::keymap_t LG_keymap[] PROGMEM = {
+static const IR::Receiver::keymap_t LG_keymap[] __PROGMEM = {
   { 0x08f7, '0'  },
   { 0x8877, '1'  },
   { 0x48b7, '2'  },
