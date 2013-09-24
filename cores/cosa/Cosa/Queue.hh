@@ -36,18 +36,13 @@
  * @param[in] nmemb number of elements in queue.
  * @pre nmemb is powerof(2) and max 128.
  */
-template <class T, uint8_t nmemb>
+template <class T, uint8_t NMEMB>
 class Queue {
-public:
-  /**
-   * Maximum number elements in queue.
-   */
-  const uint8_t NMEMB;
-
 private:
+  static const uint8_t MASK = (NMEMB - 1);
   volatile uint8_t m_put;
   volatile uint8_t m_get;
-  T m_buffer[nmemb];
+  T m_buffer[NMEMB];
 
 public:
   /**
@@ -55,7 +50,6 @@ public:
    * member type.
    */
   Queue() :
-    NMEMB(nmemb),
     m_put(0),
     m_get(0)
   {
@@ -67,7 +61,7 @@ public:
    */
   uint8_t available() 
   { 
-    return ((nmemb + m_put - m_get) & (nmemb - 1));
+    return ((NMEMB + m_put - m_get) & MASK);
   }
 
   /**
@@ -76,7 +70,7 @@ public:
    */
   uint8_t room()
   {
-    return (nmemb - m_put + m_get - 1) & (nmemb - 1);
+    return (NMEMB - m_put + m_get - 1) & MASK;
   }
 
   /**
@@ -120,12 +114,12 @@ public:
   void await(T* data, uint8_t mode = SLEEP_MODE_IDLE);
 };
 
-template <class T, uint8_t nmemb>
+template <class T, uint8_t NMEMB>
 bool
-Queue<T,nmemb>::enqueue(T* data)
+Queue<T,NMEMB>::enqueue(T* data)
 {
   synchronized {
-    uint8_t next = (m_put + 1) & (nmemb - 1);
+    uint8_t next = (m_put + 1) & MASK;
     if (next == m_get) synchronized_return (false);
     m_buffer[next] = *data;
     m_put = next;
@@ -133,12 +127,12 @@ Queue<T,nmemb>::enqueue(T* data)
   return (true);
 }
 
-template <class T, uint8_t nmemb>
+template <class T, uint8_t NMEMB>
 bool
-Queue<T,nmemb>::enqueue_P(const T* data)
+Queue<T,NMEMB>::enqueue_P(const T* data)
 {
   synchronized {
-    uint8_t next = (m_put + 1) & (nmemb - 1);
+    uint8_t next = (m_put + 1) & MASK;
     if (next == m_get) synchronized_return (false);
     memcpy_P(&m_buffer[next], data, sizeof(T));
     m_put = next;
@@ -146,22 +140,22 @@ Queue<T,nmemb>::enqueue_P(const T* data)
   return (true);
 }
 
-template <class T, uint8_t nmemb>
+template <class T, uint8_t NMEMB>
 bool
-Queue<T,nmemb>::dequeue(T* data)
+Queue<T,NMEMB>::dequeue(T* data)
 {
   if (m_get == m_put) return (false);
   synchronized {
-    uint8_t next = (m_get + 1) & (nmemb - 1);
+    uint8_t next = (m_get + 1) & MASK;
     m_get = next;
     *data = m_buffer[next];
   }
   return (true);
 }
 
-template <class T, uint8_t nmemb>
+template <class T, uint8_t NMEMB>
 void
-Queue<T,nmemb>::await(T* data, uint8_t mode)
+Queue<T,NMEMB>::await(T* data, uint8_t mode)
 {
   while (!dequeue(data)) Power::sleep(mode);
 }

@@ -35,14 +35,15 @@
  * string buffer device, or to connect different IOStreams. See
  * UART.hh for an example. Buffer size should be power of 2 and 
  * max 128. 
- * @param[in] size number of bytes in buffer.
+ * @param[in] SIZE number of bytes in buffer.
  */
-template <uint8_t size>
+template <uint8_t SIZE>
 class IOBuffer : public IOStream::Device {
 private:
+  static const uint8_t MASK = (SIZE - 1);
   volatile uint8_t m_head;
   volatile uint8_t m_tail;
-  char m_buffer[size];
+  char m_buffer[SIZE];
 
 public:
   /**
@@ -70,7 +71,7 @@ public:
    */
   bool is_full()
   {
-    return (((m_head + 1) & (size - 1)) == m_tail);
+    return (((m_head + 1) & MASK) == m_tail);
   }
 
   /**
@@ -80,7 +81,7 @@ public:
    */
   virtual int available()
   {
-    return (size + m_head - m_tail) & (size - 1);
+    return (SIZE + m_head - m_tail) & MASK;
   }
 
   /**
@@ -90,7 +91,7 @@ public:
    */
   virtual int room()
   {
-    return (size - m_head + m_tail - 1) & (size - 1);
+    return (SIZE - m_head + m_tail - 1) & MASK;
   }
 
   /**
@@ -124,39 +125,39 @@ public:
   virtual int flush(uint8_t mode = SLEEP_MODE_IDLE);
 };
 
-template <uint8_t size>
+template <uint8_t SIZE>
 int 
-IOBuffer<size>::putchar(char c)
+IOBuffer<SIZE>::putchar(char c)
 {
-  uint8_t next = (m_head + 1) & (size - 1);
+  uint8_t next = (m_head + 1) & MASK;
   if (next == m_tail) return (-1);
   m_buffer[next] = c;
   m_head = next;
   return (c & 0xff);
 }
 
-template <uint8_t size>
+template <uint8_t SIZE>
 int 
-IOBuffer<size>::peekchar()
+IOBuffer<SIZE>::peekchar()
 {
   if (m_head == m_tail) return (-1);
-  uint8_t next = (m_tail + 1) & (size - 1);
+  uint8_t next = (m_tail + 1) & MASK;
   return (m_buffer[next]);
 }
 
-template <uint8_t size>
+template <uint8_t SIZE>
 int 
-IOBuffer<size>::getchar()
+IOBuffer<SIZE>::getchar()
 {
   if (m_head == m_tail) return (-1);
-  uint8_t next = (m_tail + 1) & (size - 1);
+  uint8_t next = (m_tail + 1) & MASK;
   m_tail = next;
   return (m_buffer[next]);
 }
 
-template <uint8_t size>
+template <uint8_t SIZE>
 int
-IOBuffer<size>::flush(uint8_t mode)
+IOBuffer<SIZE>::flush(uint8_t mode)
 {
   while (m_head != m_tail) Power::sleep(mode);
   return (0);
