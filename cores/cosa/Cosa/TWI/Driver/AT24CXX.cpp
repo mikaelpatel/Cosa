@@ -33,14 +33,14 @@ AT24CXX::poll(void* addr, void* buf, size_t size)
   uint8_t i = POLL_MAX;
   int m;
   do {
-    if (!twi.begin()) return (false);
+    if (!twi.begin(this)) return (false);
     if (buf == 0) {
-      m = twi.write(m_addr, (uint16_t) addr);
+      m = twi.write((uint16_t) addr);
       if (m > 0) return (true);
       twi.end();
     }
     else {
-      m = twi.write(m_addr, (uint16_t) addr, buf, size);
+      m = twi.write((uint16_t) addr, buf, size);
       twi.end();
       if (m > 0) return (true);
     }
@@ -52,9 +52,9 @@ AT24CXX::poll(void* addr, void* buf, size_t size)
 bool 
 AT24CXX::is_ready()
 {
-  if (!twi.begin()) return (false);
+  if (!twi.begin(this)) return (false);
   uint16_t addr = 0;
-  int m = twi.write(m_addr, addr);
+  int m = twi.write(addr);
   twi.end();
   return (m != 0);
 }
@@ -63,7 +63,7 @@ int
 AT24CXX::read(void* dest, void* src, size_t size)
 {
   if (!poll(src)) return (-1);
-  int n = twi.read(m_addr, dest, size);
+  int n = twi.read(dest, size);
   twi.end();
   return (n);
 }

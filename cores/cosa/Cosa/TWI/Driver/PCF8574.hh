@@ -37,15 +37,6 @@
  */
 class PCF8574 : private TWI::Driver {
 protected:
-  // Two-wire address for PCF8574 
-  static const uint8_t ADDR = 0x20;
-
-  // Sub-address mask
-  static const uint8_t SUBADDR_MASK = 0x07;
-  
-  // Device Address 
-  uint8_t m_addr;
-  
   // Pin number mask
   static const uint8_t PIN_MASK = 0x07;
   
@@ -59,11 +50,10 @@ protected:
    * Construct connection to PCF8574 Remote 8-bit I/O expander with
    * given address.
    * @param[in] addr bus address.
-   * @param[in] subaddr device sub address (0..7, default 7).
+   * @param[in] subaddr device sub address.
    */
-  PCF8574(uint8_t addr, uint8_t subaddr = 7) :
-    TWI::Driver(),
-    m_addr(addr | (subaddr & SUBADDR_MASK)),
+  PCF8574(uint8_t addr, uint8_t subaddr) :
+    TWI::Driver(addr | (subaddr & 0x7)),
     m_ddr(0xff),
     m_port(0)
   {
@@ -76,8 +66,7 @@ public:
    * @param[in] subaddr sub-address (0..7, default 7).
    */
   PCF8574(uint8_t subaddr = 7) :
-    TWI::Driver(),
-    m_addr(ADDR | ((subaddr & SUBADDR_MASK) << 1)),
+    TWI::Driver(0x20 | (subaddr & 0x7)), 
     m_ddr(0xff),
     m_port(0)
   {
@@ -155,14 +144,11 @@ public:
 
 class PCF8574A : protected PCF8574 {
 public:
-  // Two-wire address for PCF8574A
-  static const uint8_t ADDR = 0x70;
-
   /**
    * Construct connection to PCF8574A Remote 8-bit I/O expander with
    * given sub-address.
    * @param[in] subaddr sub-address (0..7, default 7).
    */
-  PCF8574A(uint8_t subaddr = 7) : PCF8574(ADDR, subaddr) {}
+  PCF8574A(uint8_t subaddr = 7) : PCF8574(0x70, subaddr) {}
 };
 #endif

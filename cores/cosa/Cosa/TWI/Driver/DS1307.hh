@@ -39,10 +39,6 @@
  * http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  */
 class DS1307 : private TWI::Driver {
-private:
-  /** Device Address */
-  static const uint8_t ADDR = 0x68;
-
 public:
   /**
    * The Timekeeper Control Register bitfields (pp. 9)
@@ -84,6 +80,11 @@ public:
 
   /** Max size of application RAM (56 bytes) */
   const static uint8_t RAM_MAX = RAM_END - RAM_START + 1;
+
+  /** 
+   * Construct DS1307 device driver with bus address(0x68).
+   */
+  DS1307() : TWI::Driver(0x68) {}
 
   /**
    * Read ram block with the given size into the buffer from the position.

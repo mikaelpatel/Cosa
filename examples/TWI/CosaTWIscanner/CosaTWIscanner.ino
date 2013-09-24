@@ -36,9 +36,10 @@ void setup()
 {
   uart.begin(9600);
   for (uint8_t addr = 3; addr < 128; addr++) {
-    twi.begin();
+    TWI::Driver dev(addr);
+    twi.begin(&dev);
     uint8_t data;
-    int count = twi.read(addr, &data, sizeof(data));
+    int count = twi.read(&data, sizeof(data));
     twi.end();
     if (count == sizeof(data)) {
       cout << PSTR("device = ") << hex << addr 

@@ -47,6 +47,18 @@ public:
    */
   class Driver : public Event::Handler {
     friend class TWI;
+    friend void ::USI_START_vect(void);
+    friend void ::USI_OVF_vect(void);
+  protected:
+    /** Device bus address */
+    uint8_t m_addr;
+
+  public:
+    /**
+     * Construct TWI driver with given bus address.
+     * @param[in] addr bus address (7-bit LSB).
+     */
+    Driver(uint8_t addr) : m_addr(addr << 1) {}
   };
 
   /**
@@ -54,7 +66,7 @@ public:
    * performs address matching, byte data transfer with ack/nack,
    * and device callback. 
    */
-  class Slave : public Event::Handler {
+  class Slave : public TWI::Driver {
     friend void ::USI_START_vect(void);
     friend void ::USI_OVF_vect(void);
   protected:
@@ -69,14 +81,11 @@ public:
     virtual void on_event(uint8_t type, uint16_t value);
 
   public:
-    /** Slave address */
-    const uint8_t ADDR;
-
     /**
      * Construct slave with given address.
      * @param[in] addr slave address.
      */
-    Slave(uint8_t addr) : Event::Handler(), ADDR(addr) {}
+    Slave(uint8_t addr) : TWI::Driver(addr) {}
 
     /**
      * Set read (result) buffer. Must be called before starting
@@ -183,17 +192,7 @@ private:
   volatile uint8_t* m_next;
   volatile uint8_t* m_last;
   volatile int m_count;
-  volatile uint8_t m_addr;
-
-  /**
-   * Set slave mode
-   * @param[in] slave device.
-   */
-  void set_slave(Slave* slave)
-  {
-    m_target = slave;
-    m_addr = slave->ADDR;
-  }
+  Driver* m_dev;
 
   /**
    * Get current driver state.
@@ -301,10 +300,10 @@ private:
    * Initiate a request to the device. The address field is the bus
    * address with operation (read/write bit). Return number of bytes
    * transfered or negative error code(-1).
-   * @param[in] addr slave address and operation.
+   * @param[in] op slave operation request.
    * @return number of bytes or negative error code.
    */
-  int request(uint8_t addr);
+  int request(uint8_t op);
 
 public:
   /** 
@@ -314,14 +313,15 @@ public:
   TWI();
 
   /**
-   * Start TWI logic for a transaction. Use given event handler for
-   * completion events. Returns true(1) if successful otherwise
-   * false(0). 
-   * @param[in] target receiver of events on requests.
+   * Start TWI logic for a device transaction block. Use given event
+   * handler for completion events. Returns true(1) if successful
+   * otherwise false(0). 
+   * @param[in] dev device.
+   * @param[in] target receiver of events on requests (default NULL).
    * @return true(1) if successful otherwise false(0).
    */
-  bool begin(Event::Handler* target = 0);
-  
+  bool begin(TWI::Driver* dev, Event::Handler* target = NULL);
+
   /**
    * Stop usage of the TWI bus logic. 
    * @return true(1) if successful otherwise false(0).
@@ -332,46 +332,42 @@ public:
   }
 
   /**
-   * Write data to the given slave unit. Returns number of bytes
-   * written or negative error code.
-   * @param[in] addr slave address.
+   * Write data to the current driver. Returns number of bytes written
+   * or negative error code. 
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(uint8_t addr, void* buf, size_t size);
+  int write(void* buf, size_t size);
 
   /**
-   * Write data to the given slave unit with given byte
-   * header. Returns number of bytes written or negative error code.
-   * @param[in] addr slave address.
+   * Write data to the current driver with given byte header. Returns
+   * number of bytes written or negative error code. 
    * @param[in] header to write before buffer.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(uint8_t addr, uint8_t header, void* buf = 0, size_t size = 0);
+  int write(uint8_t header, void* buf = 0, size_t size = 0);
 
   /**
-   * Write data to the given slave unit with given header. Returns
+   * Write data to the current driver with given header. Returns
    * number of bytes written or negative error code.
-   * @param[in] addr slave address.
    * @param[in] header to write before buffer.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(uint8_t addr, uint16_t header, void* buf = 0, size_t size = 0);
+  int write(uint16_t header, void* buf = 0, size_t size = 0);
 
   /**
-   * Read data to the given slave unit. Returns number of bytes read
+   * Read data to the current driver. Returns number of bytes read
    * or negative error code.
-   * @param[in] addr slave address.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to read.
    * @return number of bytes
    */
-  int read(uint8_t addr, void* buf, size_t size);
+  int read(void* buf, size_t size);
 };
 #endif
 #endif

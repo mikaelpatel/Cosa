@@ -33,10 +33,11 @@
 TWI twi  __attribute__ ((weak));
 
 bool 
-TWI::begin(Event::Handler* target)
+TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
   // Set up receiver of completion events
   m_target = target;
+  m_dev = dev;
   synchronized {
     // Enable internal pullup
     bit_mask_set(PORTC, _BV(Board::SDA) | _BV(Board::SCL));
@@ -59,10 +60,10 @@ TWI::end()
 }
 
 bool
-TWI::request(uint8_t addr)
+TWI::request(uint8_t op)
 {
-  m_addr = addr;
-  m_state = (addr & READ_OP) ? MR_STATE : MT_STATE;
+  m_state = (op == READ_OP) ? MR_STATE : MT_STATE;
+  m_addr = (m_dev->m_addr | op);
   m_status = NO_INFO;
   m_next = (uint8_t*) m_vec[0].buf;
   m_last = m_next + m_vec[0].size;
@@ -73,27 +74,27 @@ TWI::request(uint8_t addr)
 }
 
 bool
-TWI::write_request(uint8_t addr, void* buf, size_t size)
+TWI::write_request(void* buf, size_t size)
 {
   iovec_t* vp = m_vec;
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr << 1 | WRITE_OP));
+  return (request(WRITE_OP));
 }
 
 bool
-TWI::write_request(uint8_t addr, uint8_t header, void* buf, size_t size)
+TWI::write_request(uint8_t header, void* buf, size_t size)
 {
   iovec_t* vp = m_vec;
   m_header[0] = header;
   iovec_arg(vp, m_header, sizeof(header));
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr << 1 | WRITE_OP));
+  return (request(WRITE_OP));
 }
 
 bool
-TWI::write_request(uint8_t addr, uint16_t header, void* buf, size_t size)
+TWI::write_request(uint16_t header, void* buf, size_t size)
 {
   iovec_t* vp = m_vec;
   m_header[0] = (header >> 8);
@@ -101,16 +102,16 @@ TWI::write_request(uint8_t addr, uint16_t header, void* buf, size_t size)
   iovec_arg(vp, m_header, sizeof(header));
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr << 1 | WRITE_OP));
+  return (request(WRITE_OP));
 }
 
 bool
-TWI::read_request(uint8_t addr, void* buf, size_t size)
+TWI::read_request(void* buf, size_t size)
 {
   iovec_t* vp = m_vec;
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr << 1 | READ_OP));
+  return (request(READ_OP));
 }
 
 void 
@@ -138,7 +139,7 @@ TWI::stop(State state, uint8_t type)
 }
 
 bool
-TWI::write(uint8_t cmd)
+TWI::write(Command cmd)
 {
   if (m_next == m_last) return (false);
   TWDR = *m_next++;
@@ -148,7 +149,7 @@ TWI::write(uint8_t cmd)
 }
 
 bool
-TWI::read(uint8_t cmd)
+TWI::read(Command cmd)
 {
   if (m_next == m_last) return (false);
   *m_next++ = TWDR;
@@ -267,9 +268,10 @@ ISR(TWI_vect)
 bool 
 TWI::Slave::begin()
 {
-  twi.set_slave(this);
+  twi.m_target = this;
+  twi.m_dev = this;
   synchronized {
-    TWAR = ADDR;
+    TWAR = m_addr;
     bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
     TWBR = ((F_CPU / TWI::FREQ) - 16) / 2;
     TWCR = TWI::IDLE_CMD;
@@ -284,7 +286,7 @@ TWI::Slave::on_event(uint8_t type, uint16_t value)
   void* buf = twi.m_vec[WRITE_IX].buf;
   size_t size = value;
   on_request(buf, size);
-  TWAR = twi.m_addr;
+  TWAR = twi.m_dev->m_addr;
 }
 
 void 

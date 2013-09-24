@@ -33,7 +33,7 @@
  * Virtual Dot Matix Liquid Crystal Display Controller/Driver
  * for LCD/IOStream access. Acts as a proxy for an LCD slave.
  */
-class VLCD : public LCD::Device {
+class VLCD : public LCD::Device, private TWI::Driver {
 private:
   // Version information
   struct info_t {
@@ -103,9 +103,6 @@ public:
     virtual void on_request(void* buf, size_t size);
   };
 
-  // Display TWI address
-  const uint8_t ADDR;
-  
   // Display protocol version (valid after initialization, begin())
   uint8_t MAJOR;
   uint8_t MINOR;
@@ -120,7 +117,7 @@ public:
    */
   VLCD(uint8_t addr = 0x5a) :
     LCD::Device(),
-    ADDR(addr),
+    TWI::Driver(addr),
     MAJOR(0),
     MINOR(0),
     WIDTH(0),

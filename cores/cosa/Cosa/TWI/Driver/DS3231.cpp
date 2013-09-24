@@ -29,9 +29,9 @@
 int
 DS3231::read(void* regs, uint8_t size, uint8_t pos)
 {
-  if (!twi.begin()) return (-1);
-  twi.write(ADDR, pos);
-  int count = twi.read(ADDR, regs, size);
+  if (!twi.begin(this)) return (-1);
+  twi.write(pos);
+  int count = twi.read(regs, size);
   twi.end();
   return (count);
 }
@@ -39,8 +39,8 @@ DS3231::read(void* regs, uint8_t size, uint8_t pos)
 int
 DS3231::write(void* regs, uint8_t size, uint8_t pos)
 {
-  if (!twi.begin()) return (-1);
-  int count = twi.write(ADDR, pos, regs, size);
+  if (!twi.begin(this)) return (-1);
+  int count = twi.write(pos, regs, size);
   twi.end();
   return (count);
 }

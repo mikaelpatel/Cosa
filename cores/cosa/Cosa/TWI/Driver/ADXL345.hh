@@ -38,11 +38,6 @@
 class ADXL345 : private TWI::Driver {
 protected:
   /**
-   * ADXL345 Alternate I2C address (pp. 18)
-   */
-  static const uint8_t ADDR = 0x53;
-
-  /**
    * Registers Map (See tab. 19, pp. 23)
    */
   enum Register {
@@ -230,6 +225,11 @@ protected:
   void read(Register reg, void* buffer, uint8_t count);
 
 public:
+  /**
+   * Construct ADXL345 driver with alternate I2C address (pp. 18)
+   */
+  ADXL345() : TWI::Driver(0x53) {}
+
   /**
    * Start interaction with device. Set full resolution and 16G.
    * Turn on measurement. 

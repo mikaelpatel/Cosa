@@ -37,8 +37,6 @@
  */
 class DS3231 : private TWI::Driver {
 private:
-  static const uint8_t ADDR = 0x68;
-
   /**
    * Read alarm setting, time and mask, from real-time clock. Return
    * true(1) if successful otherwise false(0).
@@ -185,6 +183,11 @@ public:
     int8_t aging;
     int16_t temp;
   };
+
+  /**
+   * Construct DS3231 device with bus address(0x68).
+   */
+  DS3231() : TWI::Driver(0x68) {}
 
   /**
    * Read register block with the given size into the buffer from the

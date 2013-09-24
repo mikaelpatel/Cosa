@@ -43,25 +43,25 @@ ADXL345::end()
 void 
 ADXL345::write(Register reg, uint8_t value)
 {
-  twi.begin();
-  twi.write(ADDR, (uint8_t) reg, &value, sizeof(value));
+  twi.begin(this);
+  twi.write((uint8_t) reg, &value, sizeof(value));
   twi.end();
 }
 
 void 
 ADXL345::write(Register reg, void* buffer, uint8_t count)
 {
-  twi.begin();
-  twi.write(ADDR, (uint8_t) reg, buffer, count);
+  twi.begin(this);
+  twi.write((uint8_t) reg, buffer, count);
   twi.end();
 }
 
 void 
 ADXL345::read(Register reg, void* buffer, uint8_t count)
 {
-  twi.begin();
-  twi.write(ADDR, (uint8_t) reg); 
-  twi.read(ADDR, buffer, count);
+  twi.begin(this);
+  twi.write((uint8_t) reg); 
+  twi.read(buffer, count);
   twi.end();
 }
 

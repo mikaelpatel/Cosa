@@ -896,7 +896,7 @@ public:
      * I/O expander with given sub-address (A0..A2).
      * @param[in] subaddr sub-address (0..7, default 7).
      */
-    MJKDZ(uint8_t subaddr = 7) : PCF8574(PCF8574::ADDR, subaddr) 
+    MJKDZ(uint8_t subaddr = 7) : PCF8574(subaddr) 
     {
       m_port.as_uint8 = 0;
     }
@@ -973,7 +973,7 @@ public:
      * I/O expander with given sub-address (A0..A2).
      * @param[in] subaddr sub-address (0..7, default 7).
      */
-    DFRobot(uint8_t subaddr = 7) : PCF8574(PCF8574::ADDR, subaddr)
+    DFRobot(uint8_t subaddr = 7) : PCF8574(subaddr)
     {
       m_port.as_uint8 = 0;
     }

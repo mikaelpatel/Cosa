@@ -28,9 +28,9 @@
 int
 DS1307::read(void* ram, uint8_t size, uint8_t pos)
 {
-  if (!twi.begin()) return (-1);
-  twi.write(ADDR, pos);
-  int count = twi.read(ADDR, ram, size);
+  if (!twi.begin(this)) return (-1);
+  twi.write(pos);
+  int count = twi.read(ram, size);
   twi.end();
   return (count);
 }
@@ -38,8 +38,8 @@ DS1307::read(void* ram, uint8_t size, uint8_t pos)
 int
 DS1307::write(void* ram, uint8_t size, uint8_t pos)
 {
-  if (!twi.begin()) return (-1);
-  int count = twi.write(ADDR, pos, ram, size);
+  if (!twi.begin(this)) return (-1);
+  int count = twi.write(pos, ram, size);
   twi.end();
   return (count);
 }

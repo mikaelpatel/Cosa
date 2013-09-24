@@ -48,11 +48,6 @@ public:
   
 protected:
   /**
-   * Two-wire address for HMC5883L (pp 11)
-   */
-  static const uint8_t ADDR = 0x1e;
-
-  /**
    * Masks for the different configuration and mode fields
    */
   enum {
@@ -132,6 +127,11 @@ public:
     READY_STATUS = 0x01,
     LOCK_STATUS = 0x02
   } __attribute__((packed));
+
+  /**
+   * Construct HMC5883L device with bus address(0x1e) (pp. 11)
+   */
+  HMC5883L() : TWI::Driver(0x1e) {}
 
   /**
    * Begin interaction with device. Return true(1) if successful

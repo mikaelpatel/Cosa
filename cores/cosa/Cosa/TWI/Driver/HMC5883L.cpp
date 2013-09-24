@@ -28,9 +28,9 @@
 bool
 HMC5883L::begin()
 {
-  if (!twi.begin()) return (false);
-  twi.write(ADDR, (uint8_t) 0);
-  int count = twi.read(ADDR, &m_reg, sizeof(m_reg));
+  if (!twi.begin(this)) return (false);
+  twi.write((uint8_t) 0);
+  int count = twi.read(&m_reg, sizeof(m_reg));
   twi.end();
   return (count == sizeof(m_reg));
 }
@@ -68,8 +68,8 @@ HMC5883L::set_range(Range range)
 bool
 HMC5883L::write_config()
 {
-  if (!twi.begin()) return (false);
-  int count = twi.write(ADDR, (uint8_t) offsetof(reg_t, config), 
+  if (!twi.begin(this)) return (false);
+  int count = twi.write((uint8_t) offsetof(reg_t, config), 
 			&m_reg.config, sizeof(m_reg.config));
   twi.end();
   return (count == (sizeof(m_reg.config) + 1));
@@ -79,8 +79,8 @@ bool
 HMC5883L::set_mode(Mode mode)
 {
   m_reg.mode = (m_reg.mode & ~MEASUREMENT_MODE_MASK) | mode;
-  if (!twi.begin()) return (false);
-  int count = twi.write(ADDR, (uint8_t) offsetof(reg_t, mode), 
+  if (!twi.begin(this)) return (false);
+  int count = twi.write((uint8_t) offsetof(reg_t, mode), 
 			&m_reg.mode, sizeof(m_reg.mode));
   twi.end();
   return (count == (sizeof(m_reg.mode) + 1));
@@ -89,9 +89,9 @@ HMC5883L::set_mode(Mode mode)
 bool 
 HMC5883L::read_status(Status& status)
 {
-  if (!twi.begin()) return (false);
-  twi.write(ADDR, (uint8_t) offsetof(reg_t, status));
-  int count = twi.read(ADDR, &m_reg.status, sizeof(m_reg.status));
+  if (!twi.begin(this)) return (false);
+  twi.write((uint8_t) offsetof(reg_t, status));
+  int count = twi.read(&m_reg.status, sizeof(m_reg.status));
   twi.end();
   status = (Status) m_reg.status;
   return (count == sizeof(m_reg.status));
@@ -100,9 +100,9 @@ HMC5883L::read_status(Status& status)
 bool 
 HMC5883L::read_data(data_t& data)
 {
-  if (!twi.begin()) return (false);
-  twi.write(ADDR, (uint8_t) offsetof(reg_t, output));
-  int count = twi.read(ADDR, &m_reg.output, sizeof(m_reg.output));
+  if (!twi.begin(this)) return (false);
+  twi.write((uint8_t) offsetof(reg_t, output));
+  int count = twi.read(&m_reg.output, sizeof(m_reg.output));
   twi.end();
   data.x = swap(m_reg.output.x);
   data.y = swap(m_reg.output.y);

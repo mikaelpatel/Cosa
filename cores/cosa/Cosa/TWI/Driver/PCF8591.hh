@@ -36,9 +36,7 @@
  */
 class PCF8591 : private TWI::Driver {
 private:
-  // Two-wire address for PCF8591 
-  static const uint8_t ADDR = 0x48;
-  uint8_t m_addr;
+  /** Shadow copy of control register */
   uint8_t m_cntl;
 
 public:
@@ -65,7 +63,10 @@ public:
    * chip address.
    * @param[in] addr chip address (0..7)
    */
-  PCF8591(uint8_t addr = 0) : m_addr(ADDR | ((addr << 1) & 0xe)), m_cntl(0) {}
+  PCF8591(uint8_t addr = 0) : 
+    TWI::Driver(0x48 | (addr & 0x7)),
+    m_cntl(0) 
+  {}
 
   /**
    * Begin a sampling sequence for the channel given by the control
@@ -91,7 +92,7 @@ public:
   uint8_t sample()
   {
     uint8_t res;
-    twi.read(m_addr, &res, 1);
+    twi.read(&res, 1);
     return (res);
   }
 
@@ -117,7 +118,7 @@ public:
    */
   int sample(uint8_t* buf, uint8_t size)
   {
-    return (twi.read(m_addr, buf, size));
+    return (twi.read(buf, size));
   }
 
   /**

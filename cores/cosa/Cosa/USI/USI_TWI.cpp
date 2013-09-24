@@ -46,7 +46,8 @@ TWI::Slave::set_read_buf(void* buf, size_t size)
 bool 
 TWI::Slave::begin()
 {
-  twi.set_slave(this);
+  twi.m_dev = this;
+  twi.m_target = this;
   twi.set_state(TWI::IDLE);
   synchronized {
     USICR = TWI::CR_START_MODE;
@@ -73,7 +74,7 @@ ISR(USI_OVF_vect)
   case TWI::START_CHECK:
     {
       uint8_t addr = USIDR;
-      if ((addr & TWI::ADDR_MASK) != twi.m_addr) goto restart;
+      if ((addr & TWI::ADDR_MASK) != twi.m_dev->m_addr) goto restart;
       if (addr & TWI::READ_OP) {
 	twi.set_state(TWI::READ_REQUEST);
 	twi.set_buf(TWI::READ_IX);
@@ -169,7 +170,7 @@ TWI::TWI() :
   m_next(0),
   m_last(0),
   m_count(0),
-  m_addr(0)
+  m_dev(0)
 {
   for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
     m_vec[ix].buf = 0;
@@ -237,9 +238,9 @@ TWI::stop()
 }
 
 int
-TWI::request(uint8_t addr)
+TWI::request(uint8_t op)
 {
-  bool is_read = (addr & READ_OP);
+  bool is_read = (op & READ_OP);
   uint8_t* next = (uint8_t*) m_vec[0].buf;
   uint8_t* last = next + m_vec[0].size;
   int count = 0;
@@ -247,7 +248,7 @@ TWI::request(uint8_t addr)
   // Send start condition and write address
   if (!start()) return (-1);
   m_scl.clear();
-  transfer(addr);
+  transfer(m_dev->m_addr | is_read);
   set_mode(IOPin::INPUT_MODE);
   if (transfer(0, 1)) goto nack;
 
@@ -277,7 +278,7 @@ TWI::request(uint8_t addr)
 }
 
 bool
-TWI::begin(Event::Handler* target)
+TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
   // Release level data and init mode
   USIDR = 0xff;
@@ -291,27 +292,27 @@ TWI::begin(Event::Handler* target)
 }
 
 int
-TWI::write(uint8_t addr, void* buf, size_t size)
+TWI::write(void* buf, size_t size)
 {
   iovec_t* vp = m_vec;
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr << 1 | WRITE_OP));
+  return (request(WRITE_OP));
 }
 
 int
-TWI::write(uint8_t addr, uint8_t header, void* buf, size_t size)
+TWI::write(uint8_t header, void* buf, size_t size)
 {
   iovec_t* vp = m_vec;
   m_header[0] = header;
   iovec_arg(vp, m_header, sizeof(header));
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr << 1 | WRITE_OP));
+  return (request(WRITE_OP));
 }
 
 int
-TWI::write(uint8_t addr, uint16_t header, void* buf, size_t size)
+TWI::write(uint16_t header, void* buf, size_t size)
 {
   iovec_t* vp = m_vec;
   m_header[0] = (header >> 8);
@@ -319,15 +320,15 @@ TWI::write(uint8_t addr, uint16_t header, void* buf, size_t size)
   iovec_arg(vp, m_header, sizeof(header));
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr << 1 | WRITE_OP));
+  return (request(WRITE_OP));
 }
 
 int
-TWI::read(uint8_t addr, void* buf, size_t size)
+TWI::read(void* buf, size_t size)
 {
   iovec_t* vp = m_vec;
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (request(addr << 1 | READ_OP));
+  return (request(READ_OP));
 }
 #endif
