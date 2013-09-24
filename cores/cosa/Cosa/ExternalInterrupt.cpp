@@ -28,7 +28,9 @@
 #if defined(__ARDUINO_STANDARD__)
 
 ExternalInterrupt::
-ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
+ExternalInterrupt(Board::ExternalInterruptPin pin, 
+		  InterruptMode mode, 
+		  bool pullup) :
   IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
 {
   m_ix = pin - Board::EXT0;
@@ -40,7 +42,9 @@ ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pull
 #elif defined(__ARDUINO_MEGA__)
 
 ExternalInterrupt::
-ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
+ExternalInterrupt(Board::ExternalInterruptPin pin, 
+		  InterruptMode mode, 
+		  bool pullup) :
   IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
 {
   if (pin <= Board::EXT5) {
@@ -60,7 +64,9 @@ ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pull
 #elif defined(__ARDUINO_MIGHTY__)
 
 ExternalInterrupt::
-ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
+ExternalInterrupt(Board::ExternalInterruptPin pin, 
+		  InterruptMode mode, 
+		  bool pullup) :
   IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
 {
   if (pin == Board::EXT2) {
@@ -76,7 +82,9 @@ ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pull
 #elif defined(__ARDUINO_TINY__)
 
 ExternalInterrupt::
-ExternalInterrupt(Board::ExternalInterruptPin pin, InterruptMode mode, bool pullup) :
+ExternalInterrupt(Board::ExternalInterruptPin pin, 
+		  InterruptMode mode, 
+		  bool pullup) :
   IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
 {
   m_ix = 0;
