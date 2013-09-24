@@ -63,8 +63,8 @@ protected:
    * Sample period, current state and change detection mode.
    */
   static const uint16_t SAMPLE_MS = 64;
+  const Mode MODE;
   uint8_t m_state;
-  const uint8_t m_mode;
 
   /**
    * @override

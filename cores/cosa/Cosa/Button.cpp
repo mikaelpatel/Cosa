@@ -29,8 +29,8 @@
 Button::Button(Board::DigitalPin pin, Mode mode) : 
   InputPin(pin, InputPin::PULLUP_MODE),
   Link(),
-  m_state(is_set()),
-  m_mode(mode)
+  MODE(mode),
+  m_state(is_set())
 {
   // Attach to watchdog timeout queue to sample
   Watchdog::attach(this, SAMPLE_MS);
@@ -49,6 +49,6 @@ Button::on_event(uint8_t type, uint16_t value)
 
   // If changed according to mode call the pin change handler
   if ((old_state != new_state) && 
-      ((m_mode == ON_CHANGE_MODE) || (new_state == m_mode)))
-    on_change(Event::FALLING_TYPE + m_mode);
+      ((MODE == ON_CHANGE_MODE) || (new_state == MODE)))
+    on_change(Event::FALLING_TYPE + MODE);
 }
