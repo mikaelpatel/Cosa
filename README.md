@@ -221,4 +221,5 @@ structure. Performance tuning LCD adapters; additional adapters with
 shift register support (SR3W and SR4W). Adding Vigenere autokey and
 RC4 cipher.       
 2013-08 Updating DHT11/22 device driver. Adding a simple touch
-capacitive sensor.      
+capacitive sensor.
+2013-09 Major refactoring of SPI and TWI device driver support.      
