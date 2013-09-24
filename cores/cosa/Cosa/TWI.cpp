@@ -35,14 +35,15 @@ TWI twi  __attribute__ ((weak));
 bool 
 TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
+  // Check that the driver support is not in use
+  if (m_dev != NULL) return (false);
+  m_dev = dev;
   // Set up receiver of completion events
   m_target = target;
-  m_dev = dev;
   synchronized {
     // Enable internal pullup
     bit_mask_set(PORTC, _BV(Board::SDA) | _BV(Board::SCL));
     bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
-  
     // Set clock prescale and bit rate
     TWBR = ((F_CPU / FREQ) - 16) / 2;
     TWCR = IDLE_CMD;
@@ -53,8 +54,11 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
 bool 
 TWI::end()
 {
+  // Check if an asynchronious read/write was issued 
   if (m_target != 0) await_completed();
+  // Put into idle state
   m_target = 0;
+  m_dev = 0;
   TWCR = 0;
   return (true);
 }
@@ -62,6 +66,7 @@ TWI::end()
 bool
 TWI::request(uint8_t op)
 {
+  // Setup buffer pointers
   m_state = (op == READ_OP) ? MR_STATE : MT_STATE;
   m_addr = (m_dev->m_addr | op);
   m_status = NO_INFO;
@@ -69,6 +74,7 @@ TWI::request(uint8_t op)
   m_last = m_next + m_vec[0].size;
   m_ix = 0;
   m_count = 0;
+  // And issue start command
   TWCR = START_CMD;
   return (true);
 }
@@ -114,8 +120,15 @@ TWI::read_request(void* buf, size_t size)
   return (request(READ_OP));
 }
 
+int
+TWI::await_completed(uint8_t mode)
+{
+  while (m_state > IDLE_STATE) Power::sleep(mode);
+  return (m_count);
+}
+
 void 
-TWI::start(State state, uint8_t ix)
+TWI::isr_start(State state, uint8_t ix)
 {
   if (ix == NEXT_IX) {
     m_ix += 1;
@@ -128,7 +141,7 @@ TWI::start(State state, uint8_t ix)
 }
 
 void 
-TWI::stop(State state, uint8_t type)
+TWI::isr_stop(State state, uint8_t type)
 {
   TWCR = TWI::STOP_CMD;
   loop_until_bit_is_clear(TWCR, TWSTO);
@@ -139,7 +152,7 @@ TWI::stop(State state, uint8_t type)
 }
 
 bool
-TWI::write(Command cmd)
+TWI::isr_write(Command cmd)
 {
   if (m_next == m_last) return (false);
   TWDR = *m_next++;
@@ -149,20 +162,13 @@ TWI::write(Command cmd)
 }
 
 bool
-TWI::read(Command cmd)
+TWI::isr_read(Command cmd)
 {
   if (m_next == m_last) return (false);
   *m_next++ = TWDR;
   m_count += 1;
   if (cmd != 0) TWCR = cmd;
   return (true);
-}
-
-int
-TWI::await_completed(uint8_t mode)
-{
-  while (m_state > IDLE_STATE) Power::sleep(mode);
-  return (m_count);
 }
 
 ISR(TWI_vect) 
@@ -190,29 +196,29 @@ ISR(TWI_vect)
      */
   case TWI::MT_SLA_ACK:
   case TWI::MT_DATA_ACK:
-    if (twi.m_next == twi.m_last) twi.start(TWI::MT_STATE, TWI::NEXT_IX);
-    if (twi.write(TWI::DATA_CMD)) break;
+    if (twi.m_next == twi.m_last) twi.isr_start(TWI::MT_STATE, TWI::NEXT_IX);
+    if (twi.isr_write(TWI::DATA_CMD)) break;
   case TWI::MT_DATA_NACK: 
-    twi.stop(TWI::IDLE_STATE, Event::WRITE_COMPLETED_TYPE);
+    twi.isr_stop(TWI::IDLE_STATE, Event::WRITE_COMPLETED_TYPE);
     break;
   case TWI::MT_SLA_NACK: 
-    twi.stop(TWI::ERROR_STATE, Event::ERROR_TYPE);
+    twi.isr_stop(TWI::ERROR_STATE, Event::ERROR_TYPE);
     break;
 
     /**
      * Master Receiver Mode
      */
   case TWI::MR_DATA_ACK:
-    twi.read();
+    twi.isr_read();
   case TWI::MR_SLA_ACK:
     TWCR = (twi.m_next < (twi.m_last - 1)) ? TWI::ACK_CMD : TWI::NACK_CMD;
     break; 
   case TWI::MR_DATA_NACK:
-    twi.read();
-    twi.stop(TWI::IDLE_STATE, Event::READ_COMPLETED_TYPE);
+    twi.isr_read();
+    twi.isr_stop(TWI::IDLE_STATE, Event::READ_COMPLETED_TYPE);
     break;
   case TWI::MR_SLA_NACK: 
-    twi.stop(TWI::ERROR_STATE, Event::ERROR_TYPE);
+    twi.isr_stop(TWI::ERROR_STATE, Event::ERROR_TYPE);
     break;
 
     /**
@@ -220,9 +226,9 @@ ISR(TWI_vect)
      */
   case TWI::ST_SLA_ACK:
   case TWI::ST_ARB_LOST_SLA_ACK:
-    twi.start(TWI::ST_STATE, TWI::Slave::READ_IX);
+    twi.isr_start(TWI::ST_STATE, TWI::Slave::READ_IX);
   case TWI::ST_DATA_ACK:
-    if (twi.write(TWI::ACK_CMD)) break;
+    if (twi.isr_write(TWI::ACK_CMD)) break;
     TWCR = TWI::NACK_CMD;
     break;
   case TWI::ST_DATA_NACK:
@@ -238,18 +244,18 @@ ISR(TWI_vect)
   case TWI::SR_GCALL_ACK:
   case TWI::SR_ARB_LOST_SLA_ACK:
   case TWI::SR_ARB_LOST_GCALL_ACK:
-    twi.start(TWI::SR_STATE, TWI::Slave::WRITE_IX);
+    twi.isr_start(TWI::SR_STATE, TWI::Slave::WRITE_IX);
     TWCR = TWI::ACK_CMD;
     break;
   case TWI::SR_DATA_ACK:
   case TWI::SR_GCALL_DATA_ACK:
-    if (twi.read(TWI::ACK_CMD)) break;
+    if (twi.isr_read(TWI::ACK_CMD)) break;
   case TWI::SR_DATA_NACK:
   case TWI::SR_GCALL_DATA_NACK:
     TWCR = TWI::NACK_CMD;
     break;
   case TWI::SR_STOP:
-    twi.stop(TWI::IDLE_STATE, Event::WRITE_COMPLETED_TYPE);
+    twi.isr_stop(TWI::IDLE_STATE, Event::WRITE_COMPLETED_TYPE);
     TWAR = 0;
     break;
 
@@ -257,7 +263,7 @@ ISR(TWI_vect)
     break;
 
   case TWI::BUS_ERROR: 
-    twi.stop(TWI::ERROR_STATE);
+    twi.isr_stop(TWI::ERROR_STATE);
     break;
     
   default:     

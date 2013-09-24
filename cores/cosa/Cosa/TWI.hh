@@ -139,6 +139,7 @@ private:
 
   /**
    * Macro to generate more compact status number sequence.
+   * And improve compiler code generation.
    */
 # define TWI_STATUS(x) ((x) >> 3)
 
@@ -218,7 +219,7 @@ private:
   } __attribute__((packed));
 
   /**
-   * Device state, data buffers and target.
+   * Device state, data buffers, current device and target.
    */
   static const uint8_t HEADER_MAX = 4;
   static const uint8_t VEC_MAX = 4;
@@ -235,6 +236,39 @@ private:
   Driver* m_dev;
   
   /**
+   * Start block transfer. Setup internal buffer pointers.
+   * Part of the TWI ISR state machine.
+   * @param[in] state next state.
+   * @param[in] ix io vector index.
+   */
+  void isr_start(State state, uint8_t ix);
+
+  /**
+   * Write next byte to hardware device and issue command. Returns
+   * true if byte was written else false. Part of the TWI ISR state machine.
+   * @param[in] cmd command to write with byte.
+   * @return bool
+   */
+  bool isr_write(Command cmd);
+
+  /**
+   * Read next byte from hardware device and store into buffer.
+   * Part of the TWI ISR state machine.
+   * Return true if byte was stored else false.
+   * @param[in] cmd command to write (default is no command, NULL_CMD).
+   * @return bool
+   */
+  bool isr_read(Command cmd = NULL_CMD);
+
+  /**
+   * Stop block transfer and step to given state. If error sets count to
+   * negative error code(-1).  Part of the TWI ISR state machine.
+   * @param[in] state to step to.
+   * @param[in] type of event to push (default no event).
+   */
+  void isr_stop(State state, uint8_t type = Event::NULL_TYPE);
+
+  /**
    * Initiate a request to the device. Return true(1) if successful
    * otherwise false(0).  
    * @param[in] op slave operation.
@@ -242,51 +276,20 @@ private:
    */
   bool request(uint8_t op);
 
-  /**
-   * Start block transfer. Setup internal buffer pointers.
-   * @param[in] state next state.
-   * @param[in] ix io vector index.
-   */
-  void start(State state, uint8_t ix);
-
-  /**
-   * Write next byte to hardware device and issue command. Returns
-   * true if byte was written else false.
-   * @param[in] cmd command to write with byte.
-   * @return bool
-   */
-  bool write(Command cmd);
-
-  /**
-   * Read next byte from hardware device and store into buffer.
-   * Return true if byte was stored else false.
-   * @param[in] cmd command to write (default is no command, NULL_CMD).
-   * @return bool
-   */
-  bool read(Command cmd = NULL_CMD);
-
-  /**
-   * Stop block transfer and step to given state. If error sets count to
-   * negative error code(-1).
-   * @param[in] state to step to.
-   * @param[in] type of event to push (default no event).
-   */
-  void stop(State state, uint8_t type = Event::NULL_TYPE);
-
 public:
   /** 
    * Construct two-wire instance. This is actually a single-ton on
    * current supported hardware, i.e. there can only be one unit.
    */
   TWI() :
-    m_target(0),
+    m_target(NULL),
     m_state(IDLE_STATE),
     m_status(NO_INFO),
     m_ix(0),
-    m_next(0),
-    m_last(0),
+    m_next(NULL),
+    m_last(NULL),
     m_count(0),
-    m_dev(0)
+    m_dev(NULL)
   {
     for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
       m_vec[ix].buf = 0;
@@ -297,7 +300,7 @@ public:
   /**
    * Start TWI logic for a device transaction block. Use given event
    * handler for completion events. Returns true(1) if successful
-   * otherwise false(0). 
+   * otherwise false(0).
    * @param[in] dev device.
    * @param[in] target receiver of events on requests (default NULL).
    * @return true(1) if successful otherwise false(0).
@@ -342,7 +345,7 @@ public:
   /**
    * Issue a read data request to the current driver. Return true(1)
    * if successful otherwise(0). 
-   * @param[in] buf data to write.
+   * @param[in] buf data to read.
    * @param[in] size number of bytes to read.
    * @return number of bytes
    */

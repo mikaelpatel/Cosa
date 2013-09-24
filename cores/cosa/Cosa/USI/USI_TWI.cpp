@@ -280,6 +280,10 @@ TWI::request(uint8_t op)
 bool
 TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
+  // Check that the driver support is not in use
+  if (m_dev != NULL) return (false);
+  m_dev = dev;
+
   // Release level data and init mode
   USIDR = 0xff;
   USICR = CR_INIT_MODE;
