@@ -43,7 +43,6 @@ SPI spi  __attribute__ ((weak));
 SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
 		    Clock clock, uint8_t mode, Order order,
 		    Interrupt::Handler* irq) :
-  m_next(0),
   m_irq(irq),
   m_cs(cs, (pulse == 0)),
   m_pulse(pulse),
@@ -135,8 +134,8 @@ SPI::SPI(uint8_t mode, Order order) :
 {
   // Initiate the SPI port and control for slave mode
   synchronized {
-    bit_clear(DDRB, Board::MOSI); 
     bit_set(DDRB, Board::MISO);
+    bit_clear(DDRB, Board::MOSI); 
     bit_clear(DDRB, Board::SCK);
     bit_clear(DDRB, Board::SS);
     SPCR = (_BV(SPIE) 			| 
@@ -151,11 +150,12 @@ SPI::SPI() :
   m_dev(0)
 {
   // Initiate the SPI data direction for master mode
+  // The SPI/SS pin must be an output pin in master mode
   synchronized {
     bit_set(DDRB, Board::MOSI);
-    bit_clear(DDRB, Board::MISO);
     bit_set(DDRB, Board::SCK);
     bit_set(DDRB, Board::SS);
+    bit_clear(DDRB, Board::MISO);
     bit_clear(PORTB, Board::SCK);
     bit_clear(PORTB, Board::MOSI);
     bit_set(PORTB, Board::SS);
@@ -181,7 +181,6 @@ SPI::begin(Driver* dev)
   }
   return (true);
 }
-
 
 void 
 SPI::Slave::on_interrupt(uint16_t arg) 

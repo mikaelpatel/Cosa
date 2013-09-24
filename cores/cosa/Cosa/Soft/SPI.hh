@@ -39,7 +39,7 @@ namespace Soft {
    */
   class SPI {
   public:
-    /** Clock selectors. MASTER_CLOCK for slave mode is not supported */
+    /** Clock selectors */
     enum Clock {
       DIV4_CLOCK = 0x00,
       DIV16_CLOCK = 0x01,
@@ -49,11 +49,10 @@ namespace Soft {
       DIV8_2X_CLOCK = 0x05,
       DIV32_2X_CLOCK = 0x06,
       DIV64_2X_CLOCK = 0x07,
-      MASTER_CLOCK = 0x08,
       DEFAULT_CLOCK = DIV4_CLOCK
     } __attribute__((packed));
 
-    /** Bitorder selectors */
+    /** Bit order selectors */
     enum Order {
       MSB_ORDER = 0, 
       LSB_ORDER = 1,
@@ -74,10 +73,10 @@ namespace Soft {
       Interrupt::Handler* m_irq;
       /** Device chip select pin */
       OutputPin m_cs;
-      /** Chip select pulse width; 
+      /** Chip select pulse mode; 
        *  0 for active low logic during the transaction,
        *  1 for active high logic,
-       *  n pulse width on end of transaction.
+       *  2 pulse at end of transaction.
        */
       uint8_t m_pulse;
       /** Data direction; bit order */
@@ -135,7 +134,10 @@ namespace Soft {
     }
   
     /**
-     * Start master serial interaction block. 
+     * Start of SPI master interaction block. Sisable SPI interrupt
+     * sources and assert chip select pin. Return true(1) if
+     * successful otherwise false(0) if the hardware was currently in
+     * used. 
      * @param[in] dev device driver context.
      * @return true(1) if successful otherwise false(0)
      */
@@ -146,10 +148,7 @@ namespace Soft {
 	// Acquire the driver controller
 	m_dev = dev;
 	// Enable device
-	if (dev->m_pulse < 2) {
-	  DELAY(dev->m_pulse);
-	  dev->m_cs.toggle();
-	}
+	if (dev->m_pulse < 2) dev->m_cs.toggle();
 	// Disable all interrupt sources on SPI bus
 	for (dev = spi.m_list; dev != 0; dev = dev->m_next)
 	  if (dev->m_irq) dev->m_irq->disable();
@@ -158,7 +157,8 @@ namespace Soft {
     }
   
     /**
-     * End of master interaction.
+     * End of SPI master interaction block. Deselect device and 
+     * enable SPI interrupt sources.
      * @return true(1) if successful otherwise false(0)
      */
     bool end() 
@@ -187,32 +187,6 @@ namespace Soft {
     {
       m_mosi.write(data, m_sck, m_direction);
       return (0);
-    }
-
-    /**
-     * Send given data to slave. Allow output operator syntax.
-     * @param[in] data to send.
-     * @return spi.
-     */
-    SPI& operator<<(uint8_t data)
-    {
-      transfer(data);
-      return (*this);
-    }
-
-    /**
-     * Exchange package with slave. Received data from slave is stored in
-     * given buffer. Slave selection is done for package.
-     * @param[in] buffer with data to exchange (send/receive).
-     * @param[in] count size of buffer.
-     */
-    void transfer(void* buffer, uint8_t count)
-    {
-      uint8_t* bp = (uint8_t*) buffer;
-      while (count--) {
-	*bp = transfer(*bp);
-	bp += 1;
-      }
     }
   }
 };

@@ -51,7 +51,6 @@ public:
     DIV8_2X_CLOCK = 0x05,
     DIV32_2X_CLOCK = 0x06,
     DIV64_2X_CLOCK = 0x07,
-    MASTER_CLOCK = 0x08,
     DEFAULT_CLOCK = DIV4_CLOCK
   } __attribute__((packed));
 
@@ -80,7 +79,7 @@ public:
     /** Chip select pulse width; 
      *  0 for active low logic during the transaction,
      *  1 for active high logic,
-     *  n pulse width on end of transaction.
+     *  2 pulse on end of transaction.
      */
     uint8_t m_pulse;
     
@@ -101,7 +100,7 @@ public:
      * Construct SPI Device driver with given chip select pin, pulse,
      * clock, mode, and bit order. Zero(0) pulse will give active low
      * chip select during transaction, One(1) acive high, otherwise
-     * pulse width on end(). 
+     * pulse on end(). 
      * @param[in] cs chip select pin.
      * @param[in] pulse chip select pulse mode (default active low, 0).
      * @param[in] clock SPI hardware setting (default DIV4_CLOCK).
@@ -114,7 +113,7 @@ public:
 	   Clock clock = DEFAULT_CLOCK, 
 	   uint8_t mode = 0, 
 	   Order order = MSB_ORDER,
-	   Interrupt::Handler* irq = 0);
+	   Interrupt::Handler* irq = NULL);
   };
 
   /**
@@ -138,7 +137,7 @@ public:
      * @param[in] buffer with data to received data.
      * @param[in] max size of buffer.
      */
-    Slave(void* buffer = 0, uint8_t max = 0) : 
+    Slave(void* buffer = NULL, uint8_t max = 0) : 
       m_cmd(0),
       m_buffer((uint8_t*) buffer),
       m_max(max),
@@ -252,9 +251,9 @@ public:
   }
 
   /**
-   * Exchange package with slave. Should only be used within a SPI
-   * transaction; begin()-end() block. Received data from slave is
-   * stored in given buffer. 
+   * Exchange package with slave. Received data from slave is stored
+   * in given buffer. Should only be used within a SPI transaction;
+   * begin()-end() block.  
    * @param[in] buffer with data to transfer (send/receive).
    * @param[in] count size of buffer.
    */
@@ -268,17 +267,17 @@ public:
   }
 
   /**
-   * Exchange package with slave. Should only be used within a SPI
-   * transaction; begin()-end() block. Received data from slave is
-   * stored in destination buffer. 
+   * Exchange package with slave. Received data from slave is stored
+   * in given destination buffer. Should only be used within a SPI
+   * transaction; begin()-end() block.  
    * @param[in] dst destination buffer for received data.
    * @param[in] src source buffer with data to send.
    * @param[in] count size of buffers.
    */
-  void transfer(void* dst, void* src, uint8_t count)
+  void transfer(void* dst, const void* src, uint8_t count)
   {
     uint8_t* dp = (uint8_t*) dst;
-    uint8_t* sp = (uint8_t*) src;
+    const uint8_t* sp = (const uint8_t*) src;
     while (count--) *dp++ = transfer(*sp++);
   }
 };
