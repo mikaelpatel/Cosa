@@ -70,6 +70,13 @@
 #endif
 
 /**
+ * Standard null pointer
+ */
+#ifndef NULL
+# define NULL ((void*) 0)
+#endif
+
+/**
  * Standard floating point number, 32-bit.
  */
 typedef float float32_t;

@@ -113,7 +113,7 @@ public:
    * @param[in] fn interrupt handler.
    * @param[in] env environment pointer.
    */
-  static void set(InterruptHandler fn, void* env = 0) 
+  static void set(InterruptHandler fn, void* env = NULL) 
   { 
     synchronized {
       s_handler = fn; 
@@ -149,8 +149,8 @@ public:
    */
   static void begin(uint16_t ms = 16, 
 		    uint8_t mode = SLEEP_MODE_IDLE,
-		    InterruptHandler handler = 0,
-		    void* env = 0);
+		    InterruptHandler handler = NULL,
+		    void* env = NULL);
 
   /**
    * Await condition. Put into sleep mode according to begin()
@@ -161,7 +161,9 @@ public:
    * @param[in] env function environment.
    * @param[in] ms max sleep period in milli-seconds.
    */
-  static void await(AwaitCondition fn = 0, void* env = 0, uint16_t ms = 0);
+  static void await(AwaitCondition fn = NULL, 
+		    void* env = NULL, 
+		    uint16_t ms = 0);
 
   /**
    * Delay using watchdog timeouts and sleep mode.

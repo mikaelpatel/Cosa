@@ -26,7 +26,7 @@
 #include "Cosa/IOStream.hh"
 
 IOStream::Filter::Filter(Device* dev) : 
-  m_dev(dev ? dev : &Device::null) 
+  m_dev(dev != NULL ? dev : &Device::null) 
 {}
 
 IOStream::Filter::Filter() : 
@@ -34,7 +34,7 @@ IOStream::Filter::Filter() :
 {}
 
 IOStream::IOStream(Device* dev) : 
-  m_dev(dev != 0 ? dev : &Device::null), 
+  m_dev(dev != NULL ? dev : &Device::null), 
   m_base(dec) 
 {}
 
@@ -47,7 +47,7 @@ IOStream::Device*
 IOStream::set_device(Device* dev) 
 { 
   Device* previous = m_dev;
-  if (dev == 0) dev = &Device::null;
+  if (dev == NULL) dev = &Device::null;
   m_dev = dev;
   return (previous);
 }

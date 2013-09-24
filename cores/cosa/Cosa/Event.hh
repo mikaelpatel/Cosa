@@ -118,7 +118,7 @@ public:
    * @param[in] target event receiver (default null(0)).
    * @param[in] value event value (default zero(0)).
    */
-  Event(int8_t type = NULL_TYPE, Handler* target = 0, uint16_t value = 0) :
+  Event(int8_t type = NULL_TYPE, Handler* target = NULL, uint16_t value = 0) :
     m_type(type),
     m_target(target),
     m_value(value)

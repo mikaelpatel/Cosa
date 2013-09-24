@@ -48,7 +48,7 @@ public:
    * @param[in] banner trace begin message.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(IOStream::Device* dev, const char* banner = 0);
+  bool begin(IOStream::Device* dev, const char* banner = NULL);
 
   /**
    * Stop trace stream over current device.

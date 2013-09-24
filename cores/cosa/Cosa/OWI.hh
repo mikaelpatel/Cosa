@@ -89,7 +89,7 @@ public:
      * @param[in] pin one wire bus.
      * @param[in] name of device driver instance.
      */
-    Driver(OWI* pin, const char* name = 0) : 
+    Driver(OWI* pin, const char* name = NULL) : 
       ROM(0), 
       m_next(0),
       m_pin(pin),
@@ -105,7 +105,7 @@ public:
      * @param[in] rom identity.
      * @param[in] name of device driver instance.
      */
-    Driver(OWI* pin, const uint8_t* rom, const char* name = 0);
+    Driver(OWI* pin, const uint8_t* rom, const char* name = NULL);
 
     /**
      * Return pointer to device rom. 

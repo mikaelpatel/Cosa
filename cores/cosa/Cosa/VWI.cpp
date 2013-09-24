@@ -139,13 +139,13 @@ ISR(TIMER1_COMPA_vect)
   VWI::Transmitter* transmitter = VWI::s_transmitter;
 
   // Check if the receiver pin should be sampled
-  if ((receiver != 0 && receiver->m_enabled)
-      && (transmitter == 0 || !transmitter->m_enabled))
+  if ((receiver != NULL && receiver->m_enabled)
+      && (transmitter == NULL || !transmitter->m_enabled))
     receiver->m_sample = receiver->read();
     
   // Do transmitter stuff first to reduce transmitter bit jitter due 
   // to variable receiver processing
-  if (transmitter != 0) {
+  if (transmitter != NULL) {
     if (transmitter->m_enabled && transmitter->m_sample++ == 0) {
       // Send next bit. Symbols are sent LSB first. Finished sending the
       // whole message? (after waiting one bit period since the last bit)
@@ -165,7 +165,7 @@ ISR(TIMER1_COMPA_vect)
     if (transmitter->m_sample >= VWI::SAMPLES_PER_BIT)
       transmitter->m_sample = 0;
   }
-  if ((receiver != 0 && receiver->m_enabled)
-      && (transmitter == 0 || !transmitter->m_enabled))
+  if ((receiver != NULL && receiver->m_enabled)
+      && (transmitter == NULL || !transmitter->m_enabled))
     receiver->PLL();
 }

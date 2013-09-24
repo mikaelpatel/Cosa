@@ -117,7 +117,7 @@ ISR(WDT_vect)
 {
   Watchdog::s_ticks += 1;
   Watchdog::InterruptHandler handler = Watchdog::s_handler;
-  if (handler == 0) return;
+  if (handler == NULL) return;
   void* env = Watchdog::s_env;
   handler(env);
 }

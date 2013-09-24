@@ -63,7 +63,7 @@ public:
    * @param[in] env handler environment.
    * @return bool true(1) if successful otherwise false(0).
    */
-  static bool begin(InterruptHandler handler = 0, void* env = 0);
+  static bool begin(InterruptHandler handler = NULL, void* env = NULL);
 
   /**
    * Stop the Real-Time Clock.
@@ -82,7 +82,7 @@ public:
    * @param[in] fn interrupt handler.
    * @param[in] env environment pointer.
    */
-  static void set(InterruptHandler fn, void* env = 0) 
+  static void set(InterruptHandler fn, void* env = NULL) 
   { 
     synchronized {
       s_handler = fn; 

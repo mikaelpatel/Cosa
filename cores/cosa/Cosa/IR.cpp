@@ -42,7 +42,7 @@ IR::Receiver::on_interrupt(uint16_t arg)
   m_start = stop;
   
   // Check if samples should be collected
-  if (m_sample != 0) m_sample[m_ix] = us;
+  if (m_sample != NULL) m_sample[m_ix] = us;
 
   // Fix: Check for repeat code
 
@@ -79,7 +79,7 @@ IR::Receiver::reset()
 int
 IR::Receiver::lookup(uint16_t code)
 {
-  if (m_keymap == 0) return (-1);
+  if (m_keymap == NULL) return (-1);
   for (uint8_t i = 0; i < m_keys; i++)
     if (code == pgm_read_word(&m_keymap[i].code))
       return (pgm_read_word(&m_keymap[i].key));
@@ -88,7 +88,7 @@ IR::Receiver::lookup(uint16_t code)
 
 IOStream& operator<<(IOStream& outs, IR::Receiver& receiver)
 {
-  if (receiver.m_sample == 0) return (outs);
+  if (receiver.m_sample == NULL) return (outs);
   for (uint8_t ix = 0; ix < receiver.m_ix; ix++)
     outs << ix << ':' << receiver.m_sample[ix] << endl;
   return (outs);

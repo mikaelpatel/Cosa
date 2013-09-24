@@ -114,6 +114,7 @@ protected:
     EXTCTRL = 0xF0,		// Extension Command Control
     VCOM4L = 0xFF		// VCOM 4 Level Control
   } __attribute__((packed));
+
   /**
    *  Memory Data Access Control (bits)
    */

@@ -88,8 +88,8 @@ public:
      */
     Receiver(Board::ExternalInterruptPin pin, 
 	     uint8_t max, uint32_t threshold,
-	     keymap_P keymap = 0, uint8_t keys = 0,
-	     uint16_t* sample = 0) :
+	     keymap_P keymap = NULL, uint8_t keys = 0,
+	     uint16_t* sample = NULL) :
       ExternalInterrupt(pin, ExternalInterrupt::ON_FALLING_MODE),
       Link(),
       m_threshold(threshold),
