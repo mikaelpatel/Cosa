@@ -32,23 +32,23 @@ EEPROM::Device::is_ready()
 }
 
 int 
-EEPROM::Device::read(void* dest, void* src, size_t size)
+EEPROM::Device::read(void* dest, const void* src, size_t size)
 {
-  uint8_t* d = (uint8_t*) dest;
-  uint8_t* s = (uint8_t*) src;
-  size_t n = size;
-  while (n--) *d++ = eeprom_read_byte(s++);
-  return (size);
+  uint8_t* dp = (uint8_t*) dest;
+  const uint8_t* sp = (const uint8_t*) src;
+  size_t res = size;
+  while (size--) *dp++ = eeprom_read_byte(sp++);
+  return (res);
 }
 
 int 
-EEPROM::Device::write(void* dest, void* src, size_t size)
+EEPROM::Device::write(void* dest, const void* src, size_t size)
 {
-  uint8_t* d = (uint8_t*) dest;
-  uint8_t* s = (uint8_t*) src;
-  size_t n = size;
-  while (n--) eeprom_write_byte(d++, *s++);
-  return (size);
+  uint8_t* dp = (uint8_t*) dest;
+  const uint8_t* sp = (const uint8_t*) src;
+  size_t res = size;
+  while (size--) eeprom_write_byte(dp++, *sp++);
+  return (res);
 }
 
 EEPROM::Device EEPROM::Device::eeprom;

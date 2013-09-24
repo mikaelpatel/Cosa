@@ -54,22 +54,22 @@ public:
     /**
      * Read rom block with the given size into the buffer from the address.
      * Return number of bytes read or negative error code.
-     * @param[in] dest buffer to read from rom.
+     * @param[in] dest buffer to read from rom into.
      * @param[in] src address in rom to read from.
      * @param[in] size number of bytes to read.
      * @return number of bytes or negative error code.
      */
-    virtual int read(void* dest, void* src, size_t size);
+    virtual int read(void* dest, const void* src, size_t size);
 
     /**
      * Write rom block at given address with the contents from the buffer.
      * Return number of bytes written or negative error code.
-     * @param[in] dest address in rom to read write to.
+     * @param[in] dest address in rom to write to.
      * @param[in] src buffer to write to rom.
      * @param[in] size number of bytes to write.
      * @return number of bytes or negative error code.
      */
-    virtual int write(void* dest, void* src, size_t size);
+    virtual int write(void* dest, const void* src, size_t size);
     
     /**
      * Default EEPROM device; handling of internal EEPROM Data Memory
