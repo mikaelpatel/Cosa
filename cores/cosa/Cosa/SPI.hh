@@ -259,11 +259,12 @@ public:
    */
   void transfer(void* buffer, size_t count)
   {
+    if (count == 0) return;
     uint8_t* bp = (uint8_t*) buffer;
-    while (count--) {
+    do {
       *bp = transfer(*bp);
       bp += 1;
-    }
+    } while (--count);
   }
 
   /**
@@ -276,9 +277,10 @@ public:
    */
   void transfer(void* dst, const void* src, size_t count)
   {
+    if (count == 0) return;
     uint8_t* dp = (uint8_t*) dst;
     const uint8_t* sp = (const uint8_t*) src;
-    while (count--) *dp++ = transfer(*sp++);
+    do *dp++ = transfer(*sp++); while (--count);
   }
 };
 
