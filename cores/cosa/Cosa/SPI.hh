@@ -257,7 +257,7 @@ public:
    * @param[in] buffer with data to transfer (send/receive).
    * @param[in] count size of buffer.
    */
-  void transfer(void* buffer, uint8_t count)
+  void transfer(void* buffer, size_t count)
   {
     uint8_t* bp = (uint8_t*) buffer;
     while (count--) {
@@ -274,7 +274,7 @@ public:
    * @param[in] src source buffer with data to send.
    * @param[in] count size of buffers.
    */
-  void transfer(void* dst, const void* src, uint8_t count)
+  void transfer(void* dst, const void* src, size_t count)
   {
     uint8_t* dp = (uint8_t*) dst;
     const uint8_t* sp = (const uint8_t*) src;
