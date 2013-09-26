@@ -426,10 +426,10 @@ public:
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
    * IO Port. Arduino pins directly to LCD in 4-bit mode. Data port is 
-   * implicitly defined (D4..D7).
+   * implicitly defined (D4..D7/Arduino, D10..D13/Mega).
    *
    * @section Circuit
-   *   D4..D7 (Arduino), D0..D3 (Tiny) => LCD:D4..D7
+   *   D4..D7 (Arduino), D0..D3 (Tiny), D10..D13 (Mega) => LCD:D4..D7
    *   D8 (Arduino) => LCD:RS
    *   D9 (Arduino) => LCD:EN
    *   D10 (Arduino) => BT
@@ -439,11 +439,9 @@ public:
    */
   class Port4b : public IO {
   private:
-#if defined(__ARDUINO_TINYX4__)
-    static const uint16_t SHORT_EXEC_TIME = (29 * I_CPU) / 8;
-#else
-    static const uint16_t SHORT_EXEC_TIME = (33 * I_CPU) / 16;
-#endif
+    /** Execution time delay (us) */
+    static const uint16_t SHORT_EXEC_TIME = 34;
+
     OutputPin m_rs;		/**< Register select (0/instruction, 1/data) */
     OutputPin m_en;		/**< Starts data read/write */
     OutputPin m_bt;		/**< Back-light control (0/on, 1/off) */
@@ -545,9 +543,12 @@ public:
    */
   class SR3W : public IO {
   private:
-    static const uint16_t SHORT_EXEC_TIME = (6 * I_CPU) / 16;
+    /** Execution time delay (us) */
+    static const uint16_t SHORT_EXEC_TIME = 6;
+
+    /** Shift register port bit fields; little endian */
     union {
-      uint8_t as_uint8;
+      uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
 	uint8_t data:4;		/**< Data port (Q0..Q3) */
 	uint8_t rs:1;		/**< Command/Data select (Q4) */
@@ -556,6 +557,7 @@ public:
 	uint8_t app1:1;		/**< Application bit#1 (Q7) */
       };
     } m_port;
+
     OutputPin m_sda;		/**< Serial data output */
     OutputPin m_scl;		/**< Serial clock */
     OutputPin m_en;		/**< Starts data read/write */
@@ -564,9 +566,9 @@ public:
     /**
      * Construct HD44780 3-wire serial port connected to given serial
      * data, clock and enable pulse pin. 
-     * @param[in] sda serial data pin (Default D7)
-     * @param[in] scl serial clock pin (Default D6)
-     * @param[in] en enable pulse (Default D5)
+     * @param[in] sda serial data pin (Default D7, Tiny/D1)
+     * @param[in] scl serial clock pin (Default D6, Tiny/D2)
+     * @param[in] en enable pulse (Default D5, Tiny/D3)
      */
 #if !defined(__ARDUINO_TINY__)
     SR3W(Board::DigitalPin sda = Board::D7, 
@@ -663,13 +665,12 @@ public:
    */
   class SR3WSPI : public IO, public SPI::Driver {
   private:
-#if !defined(__ARDUINO_TINY__)
-    static const uint16_t SHORT_EXEC_TIME = (20 * I_CPU) / 16;
-#else
-    static const uint16_t SHORT_EXEC_TIME = (10 * I_CPU) / 8;
-#endif
+    /** Execution time delay (us) */
+    static const uint16_t SHORT_EXEC_TIME = 20;
+
+    /** Shift register port bit fields; little endian */
     union {
-      uint8_t as_uint8;
+      uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
 	uint8_t data:4;		/**< Data port (Q0..Q3) */
 	uint8_t rs:1;		/**< Command/Data select (Q4) */
@@ -683,7 +684,7 @@ public:
     /**
      * Construct HD44780 4-wire serial port connected to given enable 
      * and chip select pin. Uses the SPI::MOSI(D11) and SPI:SCK(D13) pins.
-     * @param[in] en enable pulse (Default D5)
+     * @param[in] en enable pulse (Default D5, Tiny/D3)
      */
 #if !defined(__ARDUINO_TINY__)
     SR3WSPI(Board::DigitalPin en = Board::D5) : 
@@ -782,7 +783,9 @@ public:
    */
   class SR4W : public IO {
   private:
-    static const uint16_t SHORT_EXEC_TIME = (4 * I_CPU) / 16;
+    /** Execution time delay (us) */
+    static const uint16_t SHORT_EXEC_TIME = 4;
+
     OutputPin m_sda;		/**< Serial data output */
     OutputPin m_scl;		/**< Serial clock */
     OutputPin m_en;		/**< Starts data read/write */
@@ -793,10 +796,10 @@ public:
     /**
      * Construct HD44780 4-wire/8-bit serial port connected to given 
      * data, clock, enable and backlight control pins.
-     * @param[in] sda serial data pin (Default D7)
-     * @param[in] scl serial clock pin (Default D6)
-     * @param[in] en enable pulse (Default D5)
-     * @param[in] bt backlight control (Default D4)
+     * @param[in] sda serial data pin (Default D7, Tiny/D1)
+     * @param[in] scl serial clock pin (Default D6, Tiny/D2)
+     * @param[in] en enable pulse (Default D5, Tiny/D3)
+     * @param[in] bt backlight control (Default D4, Tiny/D4)
      */
 #if !defined(__ARDUINO_TINY__)
     SR4W(Board::DigitalPin sda = Board::D7, 
@@ -879,6 +882,7 @@ public:
     // Max size of temporary buffer for TWI message (8 encoded bytes)
     static const uint8_t TMP_MAX = 32;
     
+    /** Expander port bit fields; little endian */
     union {
       uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
@@ -956,8 +960,9 @@ public:
     // Max size of temporary buffer for TWI message
     static const uint8_t TMP_MAX = 32;
     
+    /** Expander port bit fields; little endian */
     union {
-      uint8_t as_uint8;
+      uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
 	uint8_t rs:1;		/**< Command/Data select (P0) */
 	uint8_t rw:1;		/**< Read/Write (P1) */
@@ -1035,7 +1040,9 @@ public:
    */
   class ERM1602_5 : public IO {
   private:
-    static const uint16_t SHORT_EXEC_TIME = (12 * I_CPU) / 16;
+    /** Execution time delay (us) */
+    static const uint16_t SHORT_EXEC_TIME = 12;
+
     OutputPin m_sda;		/**< Serial data output */
     OutputPin m_scl;		/**< Serial clock */
     OutputPin m_en;		/**< Starts data read/write */

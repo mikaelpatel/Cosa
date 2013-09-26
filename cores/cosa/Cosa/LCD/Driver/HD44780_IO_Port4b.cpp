@@ -28,25 +28,30 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 /**
- * Data direction and port register for data transfer (D4..D7).
+ * Data direction and port register for data transfer (D4..D7 for
+ * Arduino Standard/Mighty/Mega and D0..D3 for TinyX4).
  */
 #if defined(__ARDUINO_STANDARD__)
 # define DDR DDRD
 # define PORT PORTD
+# define POS 4
 #elif defined(__ARDUINO_TINYX4__)
 # define DDR DDRA
 # define PORT PORTA
+# define POS 0
 #elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGHTY__)
 # define DDR DDRB
 # define PORT PORTB
+# define POS 4
 #endif
+#define MASK (0x0f << POS)
+#define WRITE4B(data) PORT = ((((data) & 0x0f) << POS) | (PORT & ~MASK))
 
-#if defined(__ARDUINO_TINYX4__)
 bool
 HD44780::Port4b::setup()
 {
   synchronized {
-    DDR |= 0x0f;
+    DDR |= MASK;
   }
   return (false);
 }
@@ -55,7 +60,7 @@ void
 HD44780::Port4b::write4b(uint8_t data)
 {
   synchronized {
-    PORT = ((data & 0x0f) | (PORT & 0xf0));
+    WRITE4B(data);
     m_en.toggle();
     m_en.toggle();
   }
@@ -65,51 +70,15 @@ void
 HD44780::Port4b::write8b(uint8_t data)
 {
   synchronized {
-    PORT = (((data >> 4) & 0x0f) | (PORT & 0xf0));
+    WRITE4B(data >> 4);
     m_en.toggle();
     m_en.toggle();
-    PORT = ((data & 0x0f) | (PORT & 0xf0));
-    m_en.toggle();
-    m_en.toggle();
-  }
-  DELAY(SHORT_EXEC_TIME);
-}
-
-#else
-
-bool
-HD44780::Port4b::setup()
-{
-  synchronized {
-    DDR |= 0xf0;
-  }
-  return (false);
-}
-
-void 
-HD44780::Port4b::write4b(uint8_t data)
-{
-  synchronized {
-    PORT = ((data << 4) | (PORT & 0x0f));
-    m_en.toggle();
-    m_en.toggle();
-  }
-}
-
-void 
-HD44780::Port4b::write8b(uint8_t data)
-{
-  synchronized {
-    PORT = ((data & 0xf0) | (PORT & 0x0f));
-    m_en.toggle();
-    m_en.toggle();
-    PORT = ((data << 4) | (PORT & 0x0f));
+    WRITE4B(data);
     m_en.toggle();
     m_en.toggle();
   }
   DELAY(SHORT_EXEC_TIME);
 }
-#endif
 
 void 
 HD44780::Port4b::set_mode(uint8_t flag)
@@ -122,5 +91,5 @@ HD44780::Port4b::set_backlight(uint8_t flag)
 {
   m_bt.write(flag);
 }
-#endif
 
+#endif
