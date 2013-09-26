@@ -36,9 +36,9 @@
 
 #include "Cosa/LCD/Driver/HD44780.hh"
 // Select the port for the benchmark
-// HD44780::Port4b port;
+HD44780::Port4b port;
 // HD44780::SR3W port; 
-HD44780::SR3WSPI port;
+// HD44780::SR3WSPI port;
 // HD44780::SR4W port; 
 // HD44780::ERM1602_5 port;
 // HD44780::MJKDZ port;
@@ -49,8 +49,13 @@ HD44780 lcd(&port);
 IOStream cout(&lcd);
 
 // Display configuration
+#ifdef __COSA_LCD_DRIVER_PCD8544_HH__
+const uint16_t WIDTH = 14;
+const uint16_t HEIGHT = 2;
+#else
 const uint16_t WIDTH = 16;
 const uint16_t HEIGHT = 2;
+#endif
 
 // Measurement support
 typedef void (*benchmark_t)(uint16_t);
