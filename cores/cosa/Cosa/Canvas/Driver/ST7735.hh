@@ -134,6 +134,16 @@ protected:
   static const uint8_t SCREEN_HEIGHT = 160;
 
   /**
+   * Write 16-bit data to device, MSB first.
+   * @param[in] data to write.
+   */
+  void write(uint16_t data)
+  {
+    spi.transfer(data >> 8);
+    spi.transfer(data);
+  }
+
+  /**
    * Write command to device.
    * @param[in] cmd command to write.
    */
@@ -220,36 +230,12 @@ public:
   virtual uint8_t set_orientation(uint8_t direction);
 
   /**
-   * Set the current display port.
-   * @param[in] x0 
-   * @param[in] y0
-   * @param[in] x1
-   * @param[in] y1
-   */
-  void set_port(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
-  {
-    spi.begin(this);
-    write(CASET, x0, x1); 
-    write(RASET, y0, y1);
-    write(RAMWR);
-    spi.end();
-  }
-
-  /**
    * @override
    * Set pixel with current color.
    * @param[in] x
    * @param[in] y
    */
-  virtual void draw_pixel(uint8_t x, uint8_t y)
-  {
-    set_port(x, y, x + 1, y + 1);
-    color16_t color = get_pen_color();
-    spi.begin(this);
-    spi.transfer(color.rgb >> 8);
-    spi.transfer(color.rgb);
-    spi.end();
-  }
+  virtual void draw_pixel(uint8_t x, uint8_t y);
 
   /**
    * @override
@@ -284,10 +270,7 @@ public:
    * Stop sequence of interaction with device.
    * @return true(1) if successful otherwise false(0)
    */
-  virtual bool end()
-  {
-    return (true);
-  }
+  virtual bool end();
 };
 
 #endif

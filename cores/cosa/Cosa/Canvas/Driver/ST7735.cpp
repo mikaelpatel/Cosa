@@ -119,65 +119,6 @@ ST7735::ST7735(Board::DigitalPin cs, Board::DigitalPin dc) :
 {
 }
 
-void 
-ST7735::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
-{
-  if (x + width >= WIDTH) width = WIDTH - x;
-  if (y + height >= HEIGHT) height = HEIGHT - y;
-  set_port(x, y, x + width - 1, y + height - 1);
-  color16_t color = get_pen_color();
-  spi.begin(this);
-  for (x = 0; x < width; x++) {
-    for (y = 0; y < height; y++) {
-      spi.transfer(color.rgb >> 8);
-      spi.transfer(color.rgb);
-    }
-  }
-  spi.end();
-}
-
-void 
-ST7735::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
-{
-  if (x >= WIDTH || length == 0) return;
-  if (y >= HEIGHT) {
-    int8_t z = y + length;
-    if (z >= HEIGHT) return;
-    length = z;
-    y = 0;
-  }
-  if (y + length >= HEIGHT) length = HEIGHT - y;
-  set_port(x, y, x, y + length);
-  color16_t color = get_pen_color();
-  spi.begin(this);
-  while (length--) {
-    spi.transfer(color.rgb >> 8);
-    spi.transfer(color.rgb);
-  }
-  spi.end();
-}
-
-void 
-ST7735::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
-{
-  if (y >= HEIGHT || length == 0) return;
-  if (x >= WIDTH) {
-    int8_t z = x + length;
-    if (z >= WIDTH) return;
-    length = z;
-    x = 0;
-  }
-  if (x + length >= WIDTH) length = WIDTH - x;
-  set_port(x, y, x + length, y);
-  color16_t color = get_pen_color();
-  spi.begin(this);
-  while (length--) {
-    spi.transfer(color.rgb >> 8);
-    spi.transfer(color.rgb);
-  }
-  spi.end();
-}
-
 uint8_t
 ST7735::set_orientation(uint8_t direction) 
 {
@@ -199,4 +140,78 @@ ST7735::set_orientation(uint8_t direction)
   write(MADCTL, setting);
   spi.end();
   return (previous);
+}
+
+void 
+ST7735::draw_pixel(uint8_t x, uint8_t y)
+{
+  color16_t color = get_pen_color();
+  spi.begin(this);
+  write(CASET, x, x + 1); 
+  write(RASET, y, y + 1);
+  write(RAMWR);
+  write(color.rgb);
+  spi.end();
+}
+
+void 
+ST7735::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
+{
+  if (x >= WIDTH || length == 0) return;
+  if (y >= HEIGHT) {
+    int8_t z = y + length;
+    if (z >= HEIGHT) return;
+    length = z;
+    y = 0;
+  }
+  if (y + length >= HEIGHT) length = HEIGHT - y;
+  color16_t color = get_pen_color();
+  spi.begin(this);
+  write(CASET, x, x);
+  write(RASET, y, y + length);
+  write(RAMWR);
+  do write(color.rgb); while (--length);
+  spi.end();
+}
+
+void 
+ST7735::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
+{
+  if (y >= HEIGHT || length == 0) return;
+  if (x >= WIDTH) {
+    int8_t z = x + length;
+    if (z >= WIDTH) return;
+    length = z;
+    x = 0;
+  }
+  if (x + length >= WIDTH) length = WIDTH - x;
+  color16_t color = get_pen_color();
+  spi.begin(this);
+  write(CASET, x, x + length); 
+  write(RASET, y, y);
+  write(RAMWR);
+  do write(color.rgb); while (--length);
+  spi.end();
+}
+
+void 
+ST7735::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
+{
+  if (x + width >= WIDTH) width = WIDTH - x;
+  if (y + height >= HEIGHT) height = HEIGHT - y;
+  color16_t color = get_pen_color();
+  spi.begin(this);
+  write(CASET, x, x + width - 1);
+  write(RASET, y, y + height - 1);
+  write(RAMWR);
+  for (x = 0; x < width; x++) 
+    for (y = 0; y < height; y++) 
+      write(color.rgb);
+  spi.end();
+}
+
+bool
+ST7735::end()
+{
+  return (true);
 }
