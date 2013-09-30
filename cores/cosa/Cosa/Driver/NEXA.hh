@@ -89,6 +89,15 @@ public:
     }
 
     /**
+     * Cast to code to long value.
+     * @return value.
+     */
+    operator int32_t()
+    {
+      return (as_long);
+    }
+
+    /**
      * Compare code with other received code. If group command
      * then compare channels (0..3) else compare house and device
      * numbers.
@@ -248,9 +257,9 @@ public:
     static const uint32_t PAUSE = 10L;
 
     /** Transmission pulse timing (micro-second delay) */
-    static const uint16_t SHORT = 275;
-    static const uint16_t LONG = 1225;
-    static const uint16_t START = 2675 - SHORT;
+    static const uint16_t SHORT_PULSE = 275;
+    static const uint16_t LONG_PULSE = 1225;
+    static const uint16_t START_PULSE = 2675 - SHORT_PULSE;
 
     /** Transmission house address: 26 bits */
     uint32_t m_house;
@@ -263,9 +272,9 @@ public:
     void send_pulse(uint8_t value)
     {
       set();
-      DELAY(SHORT);
+      DELAY(SHORT_PULSE);
       clear();
-      DELAY(value ? LONG : SHORT);
+      DELAY(value ? LONG_PULSE : SHORT_PULSE);
     }
 
     /**

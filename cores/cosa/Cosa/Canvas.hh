@@ -72,6 +72,10 @@ public:
       green = g >> 2;
       blue = b >> 3;
     }
+    operator uint16_t()
+    {
+      return (rgb);
+    }
   };
 
   /**

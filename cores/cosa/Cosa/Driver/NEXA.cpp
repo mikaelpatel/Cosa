@@ -132,10 +132,10 @@ NEXA::Transmitter::send_code(code_t cmd, int8_t onoff, uint8_t mode)
   for (uint8_t i = 0; i < SEND_CODE_MAX; i++) {
     const uint8_t BITS_MAX = 32;
     const uint8_t ONOFF_POS = 27;
-    int32_t bits = cmd.as_long;
+    int32_t bits = cmd;
     // Send start pulse with extended delay, code bits and stop pulse
     send_pulse(0);
-    DELAY(START);
+    DELAY(START_PULSE);
     for (uint8_t j = 0; j < BITS_MAX; j++) {
       // Check for dim level (-1..-15)
       if ((j == ONOFF_POS) && (onoff < 0)) {
