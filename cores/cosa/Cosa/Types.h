@@ -286,6 +286,18 @@ swap(int16_t value)
 }
 
 /**
+ * Swap bytes in 16-bit integer vector.
+ * @param[in] dest destination buffer.
+ * @param[in] src source buffer.
+ * @param[in] size number of integers to swap.
+ */
+inline void
+swap(int16_t* dest, const int16_t* src, size_t size)
+{
+  while (size--) *dest++ = swap(*src++);
+}
+
+/**
  * Swap bytes in 32-bit integer.
  * @param[in] value to byte swap.
  * @return new value.
