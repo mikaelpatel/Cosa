@@ -351,6 +351,14 @@ public:
   }
 
   /**
+   * Set the output pin. Unprotected version.
+   */
+  void _set() 
+  { 
+    *PORT() |= m_mask; 
+  }
+
+  /**
    * Set the output pin.
    */
   void set() 
@@ -378,6 +386,14 @@ public:
     synchronized {
       *PORT() |= m_mask; 
     }
+  }
+
+  /**
+   * Clear the output pin. Unprotected version.
+   */
+  void _clear() 
+  { 
+    *PORT() &= ~m_mask; 
   }
 
   /**
@@ -411,6 +427,14 @@ public:
   }
 
   /**
+   * Toggle the output pin. Unprotected version.
+   */
+  void _toggle() 
+  { 
+    *PIN() = m_mask; 
+  }
+
+  /**
    * Toggle the output pin.
    */
   void toggle() 
@@ -428,6 +452,21 @@ public:
   { 
     synchronized {
       *PIN(pin) = MASK(pin); 
+    }
+  }
+
+  /**
+   * Set the output pin with the given value. Zero(0) to clear
+   * and non-zero to set. Unprotected version.
+   * @param[in] value to set.
+   */
+  void _set(bool value) 
+  { 
+    if (value) {
+      *PORT() |= m_mask; 
+    }
+    else {
+      *PORT() &= ~m_mask; 
     }
   }
 
@@ -522,7 +561,12 @@ public:
    * micro-seconds.
    * @param[in] us pulse width in micro seconds
    */
-  void pulse(uint16_t us);
+  void pulse(uint16_t us)
+  {
+    toggle();
+    DELAY(us);
+    toggle();
+  }
 };
 
 /**
