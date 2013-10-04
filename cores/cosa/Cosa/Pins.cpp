@@ -100,14 +100,6 @@ OutputPin::write(uint16_t value, uint8_t bits, uint16_t us)
   }
 }
 
-void 
-OutputPin::pulse(uint16_t us)
-{
-  toggle();
-  DELAY(us);
-  toggle();
-}
-
 #if defined(__ARDUINO_STANDARD__)
 
 uint8_t
