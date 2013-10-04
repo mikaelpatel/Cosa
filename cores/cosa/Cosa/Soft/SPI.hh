@@ -188,6 +188,31 @@ namespace Soft {
       m_mosi.write(data, m_sck, m_direction);
       return (0);
     }
+
+    /**
+     * Write package to the device slave. Should only be used within a
+     * SPI transaction; begin()-end() block.  
+     * @param[in] buf buffer with data to write.
+     * @param[in] count number of bytes to write.
+     */
+    void write(const void* buf, size_t count)
+    {
+      if (count == 0) return;
+      const uint8_t* bp = (const uint8_t*) buf;
+      do transfer(*bp++); while (--count);
+    }
+
+    /**
+     * Write package to the device slave. Should only be used within a
+     * SPI transaction; begin()-end() block.  
+     * @param[in] buf buffer with data to write.
+     * @param[in] count number of bytes to write.
+     */
+    void write_P(const uint8_t* buf, size_t count)
+    {
+      if (count == 0) return;
+      do transfer(pgm_read_byte(buf++)); while (--count);
+    }
   }
 };
 #endif

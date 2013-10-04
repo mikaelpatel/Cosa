@@ -282,6 +282,44 @@ public:
     const uint8_t* sp = (const uint8_t*) src;
     do *dp++ = transfer(*sp++); while (--count);
   }
+
+  /**
+   * Read package from the device slave. Should only be used within a
+   * SPI transaction; begin()-end() block.  
+   * @param[in] buf buffer for read data.
+   * @param[in] count number of bytes to read.
+   */
+  void read(void* buf, size_t count)
+  {
+    if (count == 0) return;
+    uint8_t* bp = (uint8_t*) buf;
+    do *bp++ = transfer(0); while (--count);
+  }
+
+  /**
+   * Write package to the device slave. Should only be used within a
+   * SPI transaction; begin()-end() block.  
+   * @param[in] buf buffer with data to write.
+   * @param[in] count number of bytes to write.
+   */
+  void write(const void* buf, size_t count)
+  {
+    if (count == 0) return;
+    const uint8_t* bp = (const uint8_t*) buf;
+    do transfer(*bp++); while (--count);
+  }
+
+  /**
+   * Write package to the device slave. Should only be used within a
+   * SPI transaction; begin()-end() block.  
+   * @param[in] buf buffer with data to write.
+   * @param[in] count number of bytes to write.
+   */
+  void write_P(const uint8_t* buf, size_t count)
+  {
+    if (count == 0) return;
+    do transfer(pgm_read_byte(buf++)); while (--count);
+  }
 };
 
 /**
