@@ -94,7 +94,7 @@ void loop()
   uint32_t ns;
   uint8_t cnt;
 
-  // Measure the time to perform 1,000,000; empty loop block
+  INFO("Measure the time to perform 1,000 empty loop block", 0);
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
@@ -104,7 +104,7 @@ void loop()
   ns = (stop - start) / 1000L;
   INFO("nop:%ul ns\n", ns);
 
-  // Measure the time to perform 1,000,000 input pin reads
+  INFO("Measure the time to perform 1,000 input pin reads", 0);
   cnt = 0;
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -114,7 +114,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read pin:inPin.is_set():%ul ns", ns);
+  INFO("inPin.is_set():%ul ns", ns);
   if (cnt == 0) TRACE(cnt);
 
   cnt = 0;
@@ -128,7 +128,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read pin:inPin >> var:%ul ns", ns);
+  INFO("inPin >> var:%ul ns", ns);
   if (cnt == 0) TRACE(cnt);
 
   cnt = 0;
@@ -140,7 +140,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read pin:InputPin::read(7):%ul ns", ns);
+  INFO("InputPin::read(7):%ul ns", ns);
   if (cnt == 0) TRACE(cnt);
 
   cnt = 0;
@@ -155,17 +155,17 @@ void loop()
   INFO("read digitalRead(7):%ul ns\n", ns);
   if (cnt == 0) TRACE(cnt);
 
-  // Measure the time to perform 1,000,000 output pin writes
+  INFO("Measure the time to perform 1,000 output pin writes", 0);
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
-      outPin.write(1);
+      outPin.write(0);
       outPin.write(0);
       __asm__ __volatile__("nop");
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("write pin:outPin.write(1); outPin.write(0):%ul ns", ns);
+  INFO("outPin.write(1); outPin.write(0):%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -176,7 +176,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("write pin:outPin.set; outPin.clear():%ul ns", ns);
+  INFO("outPin.set; outPin.clear():%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -187,7 +187,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("write pin:outPin << 1; outPin << 0:%ul ns", ns);
+  INFO("outPin << 1; outPin << 0:%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -198,7 +198,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("write pin:OutputPin::write(8, 1); OutputPin::write(8, 0):%ul ns", ns);
+  INFO("OutputPin::write(8, 1); OutputPin::write(8, 0):%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -209,7 +209,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("write pin:digitalWrite(8, 1); OutputPin::write(8, 0):%ul ns", ns);
+  INFO("write pin:digitalWrite(8, 1); digitalWrite(8, 0):%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -220,7 +220,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("write pin:outPin.toggle():%ul ns", ns);
+  INFO("outPin.toggle(); outPin.toggle():%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -233,7 +233,7 @@ void loop()
   ns = (stop - start) / 1000L;
   INFO("write pin:OutputPin::toggle(8):%ul ns\n", ns);
   
-  // Measure the time to perform 1,000,000 output pin toggle
+  INFO("Measure the time to perform 1,000 output pin toggle", 0);
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     for (uint16_t j = 0; j < 1000; j++) {
@@ -242,7 +242,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read-write pin:outPin.write(!inPin.read()):%ul ns", ns);
+  INFO("outPin.write(!inPin.read()):%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -252,7 +252,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read-write pin:inPin.is_set/outPin.clear/set():%ul ns", ns);
+  INFO("inPin.is_set/outPin.clear/set():%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -264,7 +264,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read-write pin:inPin >> var; outPin << !var:%ul ns", ns);
+  INFO("inPin >> var; outPin << !var:%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -274,7 +274,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read-write pin:outPin.set(inPin.is_clear()):%ul ns", ns);
+  INFO("outPin.set(inPin.is_clear()):%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -284,7 +284,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read-write pin:OutputPin::write(8, !InputPin::read(7)):%ul ns", ns);
+  INFO("OutputPin::write(8, !InputPin::read(7)):%ul ns", ns);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
@@ -297,9 +297,9 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read-write pin:OutputPin::read(7)/write(8,0/1):%ul ns\n", ns);
+  INFO("OutputPin::read(7)/write(8,0/1):%ul ns\n", ns);
 
-  // Measure the time to perform 1,000 byte/8,000 bit data transfer
+  INFO("Measure the time to perform 8-bit serial data transfer", 0);
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
     uint8_t data = 0x55;
@@ -307,8 +307,8 @@ void loop()
     __asm__ __volatile__("nop");
   }
   stop = RTC::micros();
-  ns = (stop - start) / 1000L;
-  INFO("write serial(8):pin.write(data,clk):%ul ns", ns);
+  ns = (stop - start);
+  INFO("pin.write(data,clk):%ul us", ns / 1000L);
   
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -321,8 +321,8 @@ void loop()
     }
   }
   stop = RTC::micros();
-  ns = (stop - start) / 1000L;
-  INFO("write serial(8)::pin.write();clock.write(1/0):%ul ns", ns);
+  ns = (stop - start);
+  INFO("pin.write();clock.write(1/0):%ul us", ns / 1000L);
   
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -335,8 +335,8 @@ void loop()
     }
   }
   stop = RTC::micros();
-  ns = (stop - start) / 1000L;
-  INFO("write serial(8):pin.write/toggle():%ul ns", ns);
+  ns = (stop - start);
+  INFO("pin.write/toggle():%ul us", ns  / 1000L);
   
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -349,8 +349,8 @@ void loop()
     }
   }
   stop = RTC::micros();
-  ns = (stop - start) / 1000L;
-  INFO("write serial(8):OutputPin::write():%ul ns", ns);
+  ns = (stop - start);
+  INFO("OutputPin::write():%ul us", ns / 1000L);
   
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -363,8 +363,8 @@ void loop()
     }
   }
   stop = RTC::micros();
-  ns = (stop - start) / 8000L;
-  INFO("write serial(8):OutputPin::write/toggle():%ul ns", ns);
+  ns = (stop - start);
+  INFO("OutputPin::write/toggle():%ul us", ns / 1000L);
   
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -395,18 +395,17 @@ void loop()
     clockPin.toggle();
     __asm__ __volatile__("nop");
   }
-
   stop = RTC::micros();
-  ns = (stop - start) / 1000L;
-  INFO("write serial(8):pin.write/toggle() unrolled:%ul ns\n", ns);
+  ns = (stop - start);
+  INFO("pin.write/toggle() unrolled:%ul us\n", ns / 1000L);
 
-  // Measure the time to perform 1,000 analog pin samples
+  INFO("Measure the time to read analog pin", 0);
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     analogPin.sample();
   stop = RTC::micros();
-  ns = (stop - start) / 1000L;
-  INFO("read analog pin:analogPin.sample():%ul us", ns);
+  ns = (stop - start);
+  INFO("analogPin.sample():%ul us", ns / 1000L);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -414,8 +413,8 @@ void loop()
     analogPin.sample_await();
   }
   stop = RTC::micros();
-  ns = (stop - start) / 1000L;
-  INFO("read analog pin:analogPin.sample_request/await():%ul us", ns);
+  ns = (stop - start);
+  INFO("analogPin.sample_request/await():%ul us", ns / 1000L);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++) {
@@ -423,27 +422,26 @@ void loop()
     analogPin >> var;
   }
   stop = RTC::micros();
-  ns = (stop - start) / 1000L;
-  INFO("read analog pin:analogPin >> var:%ul us", ns);
+  ns = (stop - start);
+  INFO("analogPin >> var:%ul us", ns / 1000L);
 
   start = RTC::micros();
   for (uint16_t i = 0; i < 1000; i++)
     AnalogPin::sample(0);
   stop = RTC::micros();
-  ns = (stop - start) / 1000L;
-  INFO("read analog pin:AnalogPin::sample():%ul us\n", ns);
+  ns = (stop - start);
+  INFO("AnalogPin::sample():%ul us\n", ns / 1000L);
 
-  // Measure the time to perform 1,000 analog pin samples
-  // Vary prescale division factor from 128 down to 2.
+  INFO("Measure the time to read analog pin with varying prescale", 0);
   for (uint8_t factor = 7; factor > 0; factor--) {
     AnalogPin::prescale(factor);
     start = RTC::micros();
     for (uint16_t i = 0; i < 1000; i++)
       analogPin.sample();
     stop = RTC::micros();
-    ns = (stop - start) / 1000L;
-    INFO("read analog pin:prescale(%d):bits(%d):analogPin.sample():%ul us", 
-	 1 << factor, factor + 3, ns);
+    ns = (stop - start);
+    INFO("prescale(%d):bits(%d):analogPin.sample():%ul us", 
+	 1 << factor, factor + 3, ns / 1000L);
   }
   trace.println();
 
