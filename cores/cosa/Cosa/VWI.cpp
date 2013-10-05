@@ -1,5 +1,5 @@
 /**
- * @file Cosa/VWI/VWI_Receiver.cpp
+ * @file Cosa/VWI/VWI.cpp
  * @version 1.0
  *
  * @section License
