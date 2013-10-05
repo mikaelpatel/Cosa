@@ -1,0 +1,709 @@
+/**
+ * @file Cosa/Wireless/Driver/CC1101.hh
+ * @version 1.0
+ *
+ * @section License
+ * Copyright (C) 2013, Mikael Patel
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General
+ * Public License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA  02111-1307  USA
+ *
+ * This file is part of the Arduino Che Cosa project.
+ */
+
+#ifndef __COSA_WIRELESS_DRIVER_CC1101_HH__
+#define __COSA_WIRELESS_DRIVER_CC1101_HH__
+
+#include "Cosa/SPI.hh"
+#include "Cosa/Pins.hh"
+#include "Cosa/ExternalInterrupt.hh"
+
+/**
+ * Cosa Device Driver for Texas Instruments CC1101, Low-Power Sub-1
+ * GHz RF Transceiver.
+ * @See Also
+ * Product Description, SWRS061H, Rev. H, 2012-10-09
+ * http://www.ti.com/lit/ds/symlink/cc1101.pdf
+ */
+class CC1101 : private SPI::Driver {
+private:
+  /**
+   * Transaction header (pp. 29)
+   */
+  union header_t {
+    uint8_t as_uint8;		/**< 8-bit representation */
+    struct {			/**< Bit-field representation (little endian) */
+      uint8_t reg:6;		/**< Register address */
+      uint8_t burst:1;		/**< Burst(1) or Single(0) byte mode */
+      uint8_t rw:1;		/**< Read(1) or Write(0) */
+    };
+
+    /**
+     * Construct header with given register address, burst and read
+     * flag.
+     * @param[in] addr register address.
+     * @param[in] is_burst flag for burst mode.
+     * @param[in] is_read flag for read mode.
+     */
+    header_t(uint8_t addr, uint8_t is_burst, uint8_t is_read)
+    {
+      reg = addr;
+      burst = is_burst;
+      rw = is_read;
+    }
+
+    /**
+     * Cast header bit-field to byte.
+     */
+    operator uint8_t() 
+    {
+      return (as_uint8);
+    }
+  };
+
+  /**
+   * Read single register value and status. Access status with
+   * get_status(). Returns register value.
+   * @param[in] reg register address.
+   * @return value
+   */
+  uint8_t read(uint8_t reg);
+
+  /**
+   * Read multiple register values into given buffer. Access status
+   * with get_status(). 
+   * @param[in] reg start register address.
+   * @param[in] buf buffer to store register values.
+   * @param[in] count size of buffer and number of registers to read.
+   */
+  void read(uint8_t reg, void* buf, size_t count);
+
+  /**
+   * Write single register value. Access status with get_status().
+   * @param[in] reg register address.
+   * @param[in] value to write to register.
+   */
+  void write(uint8_t reg, uint8_t value);
+
+  /**
+   * Write multiple register values from given buffer. Access status
+   * with get_status().
+   * @param[in] reg start register address.
+   * @param[in] buf buffer with new register values.
+   * @param[in] count size of buffer and number of registers to read.
+   */
+  void write(uint8_t reg, const void* buf, size_t count);
+
+  /**
+   * Write multiple register values from given buffer in program memory.
+   * Access status with get_status().
+   * @param[in] reg start register address.
+   * @param[in] buf buffer in program memory with new register values.
+   * @param[in] count size of buffer (and number of registers) to write
+   */
+  void write_P(uint8_t reg, const uint8_t* buf, size_t count);
+
+  /**
+   * Handler for interrupt pin. Service interrupt on incoming package
+   * with valid checksum.
+   */
+  class IRQPin : public ExternalInterrupt {
+    friend class CC1101;
+  private:
+    /** Device reference */
+    CC1101* m_rf;
+
+  public:
+    /**
+     * Construct interrupt pin handler for CC1101 on message receive
+     * interrupt.
+     * @param[in] pin external interrupt pin.
+     * @param[in] mode interrupt mode.
+     * @param[in] rf device.
+     */
+    IRQPin(Board::ExternalInterruptPin pin, InterruptMode mode, CC1101* rf) : 
+      ExternalInterrupt(pin, mode, true),
+      m_rf(rf)
+    {}
+    
+    /**
+     * @override
+     * Signal message has been receive and is available in receive fifo.
+     * @param[in] arg (not used).
+     */
+    virtual void on_interrupt(uint16_t arg = 0);
+  };
+  
+public:
+  /**
+   * Configuration Registers (Table 43, pp. 68)
+   */
+  enum Config {
+    IOCFG2 = 0x00,		// GDO2 output pin configuration
+    IOCFG1 = 0x01,		// GDO1 output pin configuration
+    IOCFG0 = 0x02,		// GDO0 output pin configuration
+    FIFOTH = 0x03,		// RX FIFO and TX FIFO thresholds
+    SYNC1  = 0x04,		// Sync word, high byte
+    SYNC0  = 0x05,		// Sync word, low byte
+    PKTLEN = 0x06,		// Packet length
+    PKTCTR = 0x07,		// Packet automation control
+    PKTCTRL0 = 0x08,		// Packet automation control
+    ADDR = 0x09,		// Device address
+    CHANNR = 0x0A,		// Channel number
+    FSCTRL1 = 0x0B,		// Frequency synthesizer control
+    FSCTRL0 = 0x0C,		// Frequency synthesizer control
+    FREQ2 = 0x0D,		// Frequency control word, high byte
+    FREQ1 = 0x0E,		// Frequency control word, middle byte
+    FREQ0 = 0x0F,		// Frequency control word, low byte
+    MDMCFG4 = 0x10,		// Modem configuration
+    MDMCFG3 = 0x11,		// Modem configuration
+    MDMCFG2 = 0x12,		// Modem configuration
+    MDMCFG1 = 0x13,		// Modem configuration
+    MDMCFG0 = 0x14,		// Modem configuration
+    DEVIATN = 0x15,		// Modem deviation setting
+    MCSM2 = 0x16,	        // Main Radio Cntrl State Machine config
+    MCSM1 = 0x17,	        // Main Radio Cntrl State Machine config
+    MCSM0 = 0x18,	        // Main Radio Cntrl State Machine config
+    FOCCFG = 0x19,	        // Frequency Offset Compensation config
+    BSCFG = 0x1A,		// Bit Synchronization configuration
+    AGCCTRL2 = 0x1B,		// AGC control
+    AGCCTRL1 = 0x1C,		// AGC control
+    AGCCTRL0 = 0x1D,		// AGC control
+    WOREVT1 = 0x1E,		// High byte Event 0 timeout
+    WOREVT0 = 0x1F,		// Low byte Event 0 timeout
+    WORCTRL = 0x20,		// Wake On Radio control
+    FREND1 = 0x21,		// Front end RX configuration
+    FREND0 = 0x22,		// Front end TX configuration
+    FSCAL3 = 0x23,		// Frequency synthesizer calibration
+    FSCAL2 = 0x24,		// Frequency synthesizer calibration
+    FSCAL1 = 0x25,		// Frequency synthesizer calibration
+    FSCAL0 = 0x26,		// Frequency synthesizer calibration
+    RCCTRL1 = 0x27,		// RC oscillator configuration
+    RCCTRL0 = 0x28,		// RC oscillator configuration
+    FSTEST = 0x29,		// Frequency synthesizer cal control
+    PTEST = 0x2A,		// Production test
+    AGCTEST = 0x2B,		// AGC test
+    TEST2 = 0x2C,		// Various test settings
+    TEST1 = 0x2D,		// Various test settings
+    TEST0 = 0x2E,		// Various test settings
+    CONFIG_MAX = 0x29		// Number of configuration registers
+  } __attribute__((packed));
+  
+  /** Network address */
+  uint8_t m_addr;
+
+  /**
+   * Read single configuration register value.
+   * @param[in] reg register address.
+   * @return value
+   */
+  uint8_t read(Config reg)
+  {
+    return (read((uint8_t) reg));
+  }
+
+  /**
+   * Read given number of configuration register values into given
+   * buffer. 
+   * @param[in] reg start register address.
+   * @param[in] buf buffer to store register values.
+   * @param[in] count size of buffer and number of registers to read.
+   */
+  void read(Config reg, void* buf, size_t count)
+  {
+    read((uint8_t) reg, buf, count);
+  }
+
+  /**
+   * Write single configuration register value.
+   * @param[in] reg register address.
+   * @param[in] value to write to register.
+   */
+  void write(Config reg, uint8_t value)
+  {
+    write((uint8_t) reg, value);
+  }
+
+  /**
+   * Write given number of configuration register values from given buffer.
+   * @param[in] reg start register address.
+   * @param[in] buf buffer with new register values.
+   * @param[in] count size of buffer and number of registers to read.
+   */
+  void write(Config reg, const void* buf, size_t count)
+  {
+    write((uint8_t) reg, buf, count);
+  }
+
+  /**
+   * Write multiple configuration register values from given buffer in
+   * program memory.
+   * @param[in] reg start register address.
+   * @param[in] buf buffer in program memory with new register values.
+   * @param[in] count size of buffer (and number of registers) to write
+   */
+  void write_P(Config reg, const uint8_t* buf, size_t count)
+  {
+    write_P((uint8_t) reg, buf, count);
+  }
+
+  /**
+   * Data access registers (chap. FIFO and PATABLE Access, pp. 32-33).
+   */
+  enum Data {
+    PATABLE = 0x3E,		// PA control table
+    TXFIFO = 0x3F,		// Transmitter FIFO
+    RXFIFO = 0x3F,		// Receiver FIFO
+  } __attribute__((packed));
+
+  /**
+   * Maximum size of PA table.
+   */
+  static const size_t PATABLE_MAX = 8;
+
+  /**
+   * Maximum size of payload. Addressing will require one byte and
+   * radio status an additional two bytes.
+   */
+  static const size_t PAYLOAD_MAX = 61;
+
+  /**
+   * Read value from data register.
+   * @param[in] reg data register address.
+   * @return value
+   */
+  uint8_t read(Data reg)
+  {
+    return (read((uint8_t) reg));
+  }
+
+  /**
+   * Read data register values into given buffer.
+   * @param[in] reg register address.
+   * @param[in] buf buffer to store register values.
+   * @param[in] count size of buffer and number of registers to read.
+   */
+  void read(Data reg, void* buf, size_t count)
+  {
+    read((uint8_t) reg, buf, count);
+  }
+
+  /**
+   * Write value to data register.
+   * @param[in] reg register address.
+   * @param[in] value to write to register.
+   */
+  void write(Data reg, uint8_t value)
+  {
+    write((uint8_t) reg, value);
+  }
+
+  /**
+   * Write given buffer to data register (Table/FIFO).
+   * @param[in] reg data register address.
+   * @param[in] buf buffer with data.
+   * @param[in] count size of buffer and number of bytes to write.
+   */
+  void write(Data reg, const void* buf, size_t count)
+  {
+    write((uint8_t) reg, buf, count);
+  }
+
+  /**
+   * Write fiven buffer in program memory to data register.
+   * @param[in] reg data register address.
+   * @param[in] buf buffer in program memory with new data to write.
+   * @param[in] count size of buffer.
+   */
+  void write_P(Data reg, const uint8_t* buf, size_t count)
+  {
+    write_P((uint8_t) reg, buf, count);
+  }
+
+  /**
+   * Status Registers (Table 44, pp. 69)
+   */
+  enum Status {
+    PARTNUM = 0x30,		// Part number
+    VERSION = 0x31,		// Current version number
+    FREQEST = 0x32,		// Frequency offset estimate
+    LQI = 0x33,		        // Demodulator estimate for link quality
+    RSSI = 0x34,	        // Received signal strength indication
+    MARCSTATE = 0x35,	        // Control state machine state
+    WORTIME1 = 0x36,		// High byte of WOR timer
+    WORTIME0 = 0x37,		// Low byte of WOR timer
+    PKTSTATUS = 0x38,	        // Current GDOx status and packet status
+    VCO = 0x39,		        // Current setting from PLL cal module
+    TXBYTES = 0x3A,	        // Underflow and # of bytes in TXFIFO
+    RXBYTES = 0x3B,	        // Overflow and # of bytes in RXFIFO
+    BYTES_MASK = 0x7f,		// Mask # bytes
+    FIFO_MASK = 0x80,		// Mask fifo state
+    RCCTRL1_STATUS = 0x3C,	// Last RC oscillator calibration result
+    RCCTRL0_STATUS = 0x3D,	// Last RC oscillator calibration result
+    STATUS_MAX = 0x0E,		// Number of status registers
+  } __attribute__((packed));
+
+  /**
+   * Read single status register value.
+   * @param[in] reg register address.
+   * @return value
+   */
+  uint8_t read(Status reg)
+  {
+    uint8_t res;    
+    read((uint8_t) reg, &res, sizeof(res));
+    return (res);
+  }
+
+  /**
+   * Command Strobes (Table 42, pp. 67)
+   */
+  enum Command {
+    SRES = 0x30,		// Reset chip.
+    SFSTXON = 0x31,             // Enable and calibrate frequency synthesizer 
+    SXOFF = 0x32,		// Turn off crystal oscillator.
+    SCAL = 0x33,		// Calibrate frequency synthesizer
+    SRX = 0x34,			// Enable RX
+    STX = 0x35,	                // Enable TX
+    SIDLE = 0x36,               // Exit RX/TX
+    SAFC = 0x37,                // AFC adjustment of the frequency synthesizer
+    SWOR = 0x38,                // Start automatic Wake-on-Radio
+    SPWD = 0x39,	        // Power down mode when CSn goes high.
+    SFRX = 0x3A,		// Flush the RX FIFO buffer.
+    SFTX = 0x3B,		// Flush the TX FIFO buffer.
+    SWORRST = 0x3C,		// Reset real time clock.
+    SNOP = 0x3D			// No operation
+  } __attribute__((packed));
+
+  /**
+   * Issue given command to device. Check documentation for required
+   * timing delay.
+   * @param[in] cmd command.
+   */
+  void strobe(Command cmd);
+  
+public:
+  /**
+   * Status Byte Summary (Table 23, pp. 31)
+   */
+  enum Mode {		  	// Main State Machine Mode
+    IDLE_MODE = 0,		// Idle state
+    RX_MODE,			// Receiver mode
+    TX_MODE,			// Transmit mode
+    FSTXON_MODE,		// Fast Transmit ready
+    CALIBRATION_MODE,		// Frequency synthesizer calibration running
+    SETTLING_MODE,		// PLL is settling
+    RXFIFO_OVERFLOW_MODE,	// RX FIFO has overflowed
+    TXFIFO_UNDERFLOW_MODE	// TX FIFO har underflowed
+  } __attribute__((packed));
+
+  union status_t {
+    uint8_t as_uint8;		/**< 8-bit representation */
+    struct {			/**< Bit-field representation (little endian) */
+      uint8_t avail:4;		/**< Number of bytes in RX or TX FIFO */
+      uint8_t mode:3;		/**< Current main state machine mode */
+      uint8_t ready:1;		/**< Chip ready (should be low) */
+    };
+    
+    status_t(uint8_t value)
+    {
+      as_uint8 = value;
+    }
+  };
+  
+  /** 
+   * Get latest transaction status byte.
+   * @return status
+   */
+  status_t get_status()
+  {
+    return (m_status);
+  }
+
+  /** 
+   * Read status byte.
+   * @return status
+   */
+  status_t read_status()
+  {
+    spi.begin(this);
+    m_status = spi.transfer(header_t(0,0,1));
+    spi.end();
+    return (m_status);
+  }
+
+  /**
+   * Set device in given mode. Return true(1) if successful otherwise
+   * false(0).
+   * @param[in] mode of operation.
+   * @param[in] cmd command.
+   * @param[in] retry number of attempts.
+   * @return bool
+   */
+  bool set_mode(Mode mode, Command cmd, uint8_t retry);
+
+  /**
+   * Main Radio Control State Machine State (pp. 93)
+   */
+  enum State {			  	// State (Figure 24, pp 50)
+    SLEEP_STATE = 0x00,			// SLEEP
+    IDLE_STATE = 0x01,			// IDLE
+    XOFF_STATE = 0x02,			// XOFF
+    VCOON_MC_STATE = 0x03,		// MANCAL
+    REGON_MC_STATE = 0x04,		// MANCAL
+    MANCAL_STATE = 0x05,		// MANCAL
+    VCOON_STATE = 0x06,			// FS_WAKEUP
+    REGON_STATE = 0x07,			// FS_WAKEUP
+    STARTCAL_STATE = 0x08,		// CALIBRATE
+    BWBOOST_STATE = 0x09,		// SETTLING
+    FS_LOCK_STATE = 0x0A,		// SETTLING
+    IFADCON_STATE = 0x0B,		// SETTLING
+    ENDCAL_STATE = 0x0C,		// CALIBRATE
+    RX_STATE = 0x0D,			// RX
+    RX_END_STATE = 0x0E,		// RX
+    RX_RST_STATE = 0x0F,		// RX
+    TXRX_SWITCH_STATE = 0x10,		// TXRX_SETTLING
+    RXFIFO_OVERFLOW_STATE = 0x11,	// RXFIFO_OVERFLOW
+    FSTXON_STATE = 0x12,		// FSTXON
+    TX_STATE = 0x13,			// TX
+    TX_END_STATE = 0x14,		// TX
+    RXTX_SWITCH_STATE = 0x15,		// RXTX_SETTLING
+    TXFIFO_UNDERFLOW_STATE = 0x16	// TXFIFO_UNDERFLOW
+  } __attribute__((packed));
+
+  /**
+   * Read Main Radio Control State Machine State.
+   * @return state
+   */
+  uint8_t read_marc_state()
+  {
+    return (read(MARCSTATE));
+  }
+
+  /**
+   * Received Package Status Bytes (Table. 27/28, pp. 37)
+   */
+  union recv_status_t {
+    uint8_t status[2];		/**< Two status bytes last in frame */
+    struct {			/**< Bit-field representation (little endian) */
+      uint8_t rssi;		/**< RSSI value */
+      uint8_t lqi:7;		/**< Link Quality Indication */
+      uint8_t crc:1;		/**< CRC status */
+    };
+
+    recv_status_t()
+    {
+      status[0] = 0;
+      status[1] = 0;
+    }
+  };
+  
+private:
+  /** Default configuration */
+  static const uint8_t config[] __PROGMEM;
+
+  /** Interrupt Pin */
+  IRQPin m_irq;
+  
+  /** Package is available */
+  volatile uint8_t m_avail;
+
+  /** Latest transaction status */
+  status_t m_status;
+
+  /** Latest receive status */
+  recv_status_t m_recv_status;
+
+public:
+  /**
+   * Construct C1101 device driver connected to SPI bus with given
+   * chip select. 
+   * @param[in] addr network address.
+   * @param[in] csn chip select pin (Default D10).
+   * @param[in] irq interrupt pin (Default D2/EXT0).
+   */
+  CC1101(uint8_t addr, 
+	 Board::DigitalPin csn = Board::D10,
+	 Board::ExternalInterruptPin irq = Board::EXT0) :
+    SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+    m_addr(addr),
+    m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
+    m_avail(0),
+    m_status(0)
+  {
+  }
+
+  /**
+   * Start and configure C1101 device driver. The configuration must
+   * set GDO2 to assert on received package. This device pin is
+   * assumed to be connected the device driver interrupt pin (EXTn).
+   * @param[in] setting configuration (default NULL, use internal)
+   */
+  void begin(const uint8_t* setting = NULL);
+
+  /**
+   * Set device in power down mode. Must be in idle mode.
+   */
+  void set_power_down_mode()
+  {
+    strobe(SPWD);
+  }
+
+  /**
+   * Set device in wakeup on radio mode. Must be in idle mode.
+   */
+  void set_wakeup_on_radio_mode()
+  {
+    strobe(SWOR);
+  }
+
+  /**
+   * Set device in receive mode. Return true(1) if successful otherwise
+   * false(0).
+   * @return bool
+   */
+  bool set_receive_mode(uint8_t retry = 8)
+  {
+    return (set_mode(RX_MODE, SRX, retry));
+  }
+
+  /**
+   * Set device in transmit mode. Return true(1) if successful otherwise
+   * false(0).
+   * @return bool
+   */
+  bool set_transmit_mode(uint8_t retry = 8)
+  {
+    return (set_mode(TX_MODE, STX, retry));
+  }
+
+  /**
+   * Set device address. 
+   * @param[in] addr address to set.
+   */
+  void set_address(uint8_t addr)
+  {
+    write(ADDR, addr);
+  }
+
+  /**
+   * Set communication synchronization word (16-bit).
+   * @param[in] word to use as synchronization.
+   */
+  void set_sync_word(int16_t word)
+  {
+    word = swap(word);
+    write(SYNC1, &word, sizeof(word));
+  }
+
+  /**
+   * Set device channel.
+   * @param[in] channel.
+   */
+  void set_channel(uint8_t channel)
+  {
+    write(CHANNR, channel);
+  }
+
+  /**
+   * Send message using a null terminated io vector message. Message
+   * is gathered from elements in io vector. The total size of the io
+   * vector buffers must be less than PAYLOAD_MAX. Returns error
+   * code(-1) if number of bytes is larger than number PAYLOAD_MAX. 
+   * Return error code(-2) if fails to set transmit mode.  
+   * @param[in] vec null terminated io vector.
+   * @return number of bytes send or negative error code.
+   */
+  int send(const iovec_t* vec);
+
+  /**
+   * Send message in given buffer, with given number of bytes. Returns
+   * number of bytes sent. Returns error code(-1) if number of bytes
+   * is larger than number PAYLOAD_MAX. Return error code(-2) if fails
+   * to set transmit mode. 
+   * @param[in] dest destination network address.
+   * @param[in] buf buffer to transmit.
+   * @param[in] count number of bytes in buffer.
+   * @return number of bytes send or negative error code.
+   */
+  int send(uint8_t dest, const void* buf, size_t count)
+  {
+    iovec_t vec[3];
+    iovec_t* vp = vec;
+    iovec_arg(vp, &dest, sizeof(dest));
+    iovec_arg(vp, buf, count);
+    iovec_end(vp);
+    return (send(vec));
+  }
+
+  /**
+   * Wait for incoming package for maximum of given number of
+   * milli-seconds. Returns true(1) if a package is available,
+   * otherwise on timeout false(0).
+   * @param[in] ms milli-seconds timeout.
+   * return bool
+   */
+  bool await(uint32_t ms);
+  
+  /**
+   * Receive message and store into given buffer with given maximum
+   * size. Returns error code(-2) if no message is available and/or a
+   * timeout occured. Returns error code(-1) if the buffer size if to
+   * small for incoming message or if the receiver fifo has overflowed. 
+   * Otherwise the actual number of received bytes is returned. 
+   * @param[in] buf buffer to store incoming message.
+   * @param[in] count maximum number of bytes to receive.
+   * @param[in] ms maximum time out period.
+   * @return number of bytes received or negative error code.
+   */
+  int recv(void* buf, size_t count, uint32_t ms = 0L);
+  
+  /**
+   * Receive message and store into given buffer with given maximum
+   * size. The source network address is returned in the parameter src.
+   * Returns error code(-2) if no message is available and/or a
+   * timeout occured. Returns error code(-1) if the buffer size if to
+   * small for incoming message or if the receiver fifo has overflowed. 
+   * Otherwise the actual number of received bytes is returned. It is
+   * possible to receive an empty message. Source network address will
+   * be valid.
+   * @param[out] src source network address.
+   * @param[in] buf buffer to store incoming message.
+   * @param[in] count maximum number of bytes to receive.
+   * @param[in] ms maximum time out period.
+   * @return number of bytes received or negative error code.
+   */
+  int recv(uint8_t& src, void* buf, size_t count, uint32_t ms = 0L);
+
+  /**
+   * Return estimated input power level (dBm) from latest successful
+   * message receive.
+   */
+  int get_input_power_level()
+  {
+    int rssi = m_recv_status.rssi;
+    return (((rssi < 128) ? rssi : rssi - 256) / 2 - 74);
+  }
+
+  /**
+   * Return link quality indicator from latest successful receive
+   * message. Lower level is better.
+   */
+  int get_link_quality_indicator()
+  {
+    return (m_recv_status.lqi);
+  }
+};
+#endif
