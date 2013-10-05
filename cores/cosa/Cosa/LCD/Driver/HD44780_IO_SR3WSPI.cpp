@@ -28,7 +28,6 @@
 bool
 HD44780::SR3WSPI::setup()
 {
-  m_port.as_uint8 = 0;
   return (false);
 }
 
@@ -37,7 +36,7 @@ HD44780::SR3WSPI::write4b(uint8_t data)
 {
   m_port.data = data;
   spi.begin(this);
-  spi.transfer(m_port.as_uint8);
+  spi.transfer(m_port);
   spi.end();
 }
 
@@ -46,11 +45,11 @@ HD44780::SR3WSPI::write8b(uint8_t data)
 {
   spi.begin(this);
   m_port.data = (data >> 4);
-  spi.transfer(m_port.as_uint8);
+  spi.transfer(m_port);
   m_cs.toggle();
   m_cs.toggle();
   m_port.data = data;
-  spi.transfer(m_port.as_uint8);
+  spi.transfer(m_port);
   spi.end();
   DELAY(SHORT_EXEC_TIME);
 }

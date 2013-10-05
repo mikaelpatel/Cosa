@@ -28,7 +28,6 @@
 bool
 HD44780::SR3W::setup()
 {
-  m_port.as_uint8 = 0;
   return (false);
 }
 
@@ -36,7 +35,7 @@ void
 HD44780::SR3W::write4b(uint8_t data)
 {
   m_port.data = data;
-  uint8_t value = m_port.as_uint8;
+  uint8_t value = m_port;
   m_sda.write(value & 0x20);
   m_scl.toggle();
   m_scl.toggle();
@@ -63,7 +62,7 @@ void
 HD44780::SR3W::write8b(uint8_t data)
 {
   m_port.data = data >> 4;
-  uint8_t value = m_port.as_uint8;
+  uint8_t value = m_port;
   for (uint8_t i = 0; i < 2; i++) {
     m_sda.write(value & 0x20);
     m_scl.toggle();
@@ -86,7 +85,7 @@ HD44780::SR3W::write8b(uint8_t data)
     m_en.toggle();
     m_en.toggle();
     m_port.data = data;
-    value = m_port.as_uint8;
+    value = m_port;
   }
 #if (I_CPU >= 16)
   DELAY(SHORT_EXEC_TIME);

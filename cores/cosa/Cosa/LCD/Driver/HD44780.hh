@@ -547,7 +547,7 @@ public:
     static const uint16_t SHORT_EXEC_TIME = 6;
 
     /** Shift register port bit fields; little endian */
-    union {
+    union port_t {
       uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
 	uint8_t data:4;		/**< Data port (Q0..Q3) */
@@ -556,8 +556,16 @@ public:
 	uint8_t app2:1;		/**< Application bit#2 (Q6) */
 	uint8_t app1:1;		/**< Application bit#1 (Q7) */
       };
-    } m_port;
-
+      operator uint8_t()
+      {
+	return (as_uint8);
+      }
+      port_t()
+      {
+	as_uint8 = 0;
+      }
+    };
+    port_t m_port;		/**< Port setting */
     OutputPin m_sda;		/**< Serial data output */
     OutputPin m_scl;		/**< Serial clock */
     OutputPin m_en;		/**< Starts data read/write */
@@ -574,6 +582,7 @@ public:
     SR3W(Board::DigitalPin sda = Board::D7, 
 	 Board::DigitalPin scl = Board::D6,
 	 Board::DigitalPin en = Board::D5) :
+      m_port(),
       m_sda(sda),
       m_scl(scl),
       m_en(en)
@@ -583,6 +592,7 @@ public:
     SR3W(Board::DigitalPin sda = Board::D1, 
 	 Board::DigitalPin scl = Board::D2,
 	 Board::DigitalPin en = Board::D3) :
+      m_port(),
       m_sda(sda),
       m_scl(scl),
       m_en(en)
@@ -669,7 +679,7 @@ public:
     static const uint16_t SHORT_EXEC_TIME = 20;
 
     /** Shift register port bit fields; little endian */
-    union {
+    union port_t {
       uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
 	uint8_t data:4;		/**< Data port (Q0..Q3) */
@@ -678,7 +688,16 @@ public:
 	uint8_t app2:1;		/**< Application bit#2 (Q6) */
 	uint8_t app1:1;		/**< Application bit#1 (Q7) */
       };
-    } m_port;
+      operator uint8_t()
+      {
+	return (as_uint8);
+      }
+      port_t()
+      {
+	as_uint8 = 0;
+      }
+    };
+    port_t m_port;		/**< Port setting */
     
   public:
     /**
@@ -691,7 +710,8 @@ public:
 #else
     SR3WSPI(Board::DigitalPin en = Board::D3) : 
 #endif
-      SPI::Driver(en, 2)
+      SPI::Driver(en, 2),
+      m_port()
     {
     }
 
@@ -883,7 +903,7 @@ public:
     static const uint8_t TMP_MAX = 32;
     
     /** Expander port bit fields; little endian */
-    union {
+    union port_t {
       uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
 	uint8_t data:4;		/**< Data port (P0..P3) */
@@ -892,7 +912,16 @@ public:
 	uint8_t rs:1;		/**< Command/Data select (P6) */
 	uint8_t bt:1;		/**< Back-light (P7) */
       };
-    } m_port;
+      operator uint8_t()
+      {
+	return (as_uint8);
+      }
+      port_t()
+      {
+	as_uint8 = 0;
+      }
+    };
+    port_t m_port;		/**< Port setting */
 
   public:
     /**
@@ -900,10 +929,7 @@ public:
      * I/O expander with given sub-address (A0..A2).
      * @param[in] subaddr sub-address (0..7, default 7).
      */
-    MJKDZ(uint8_t subaddr = 7) : PCF8574(subaddr) 
-    {
-      m_port.as_uint8 = 0;
-    }
+    MJKDZ(uint8_t subaddr = 7) : PCF8574(subaddr), m_port() {}
     
     /**
      * @override
@@ -961,7 +987,7 @@ public:
     static const uint8_t TMP_MAX = 32;
     
     /** Expander port bit fields; little endian */
-    union {
+    union port_t {
       uint8_t as_uint8;		/**< Unsigned byte access */
       struct {
 	uint8_t rs:1;		/**< Command/Data select (P0) */
@@ -970,7 +996,16 @@ public:
 	uint8_t bt:1;		/**< Back-light (P3) */
 	uint8_t data:4;		/**< Data port (P4..P7) */
       };
-    } m_port;
+      operator uint8_t()
+      {
+	return (as_uint8);
+      }
+      port_t()
+      {
+	as_uint8 = 0;
+      }
+    };
+    port_t m_port;		/**< Port setting */
 
   public:
     /**
@@ -978,10 +1013,7 @@ public:
      * I/O expander with given sub-address (A0..A2).
      * @param[in] subaddr sub-address (0..7, default 7).
      */
-    DFRobot(uint8_t subaddr = 7) : PCF8574(subaddr)
-    {
-      m_port.as_uint8 = 0;
-    }
+    DFRobot(uint8_t subaddr = 7) : PCF8574(subaddr), m_port() {}
     
     /**
      * @override

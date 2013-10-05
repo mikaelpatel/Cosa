@@ -28,7 +28,6 @@
 bool
 HD44780::MJKDZ::setup()
 {
-  m_port.as_uint8 = 0;
   set_data_direction(0);
   return (false);
 }
@@ -39,9 +38,9 @@ HD44780::MJKDZ::write4b(uint8_t data)
   uint8_t buf[2];
   m_port.data = data;
   m_port.en = 1;
-  buf[0] = m_port.as_uint8;
+  buf[0] = m_port;
   m_port.en = 0;
-  buf[1] = m_port.as_uint8;
+  buf[1] = m_port;
   write(buf, sizeof(buf));
 }
 
@@ -51,14 +50,14 @@ HD44780::MJKDZ::write8b(uint8_t data)
   uint8_t buf[4];
   m_port.data = (data >> 4);
   m_port.en = 1;
-  buf[0] = m_port.as_uint8;
+  buf[0] = m_port;
   m_port.en = 0;
-  buf[1] = m_port.as_uint8;
+  buf[1] = m_port;
   m_port.data = data;
   m_port.en = 1;
-  buf[2] = m_port.as_uint8;
+  buf[2] = m_port;
   m_port.en = 0;
-  buf[3] = m_port.as_uint8;
+  buf[3] = m_port;
   write(buf, sizeof(buf));
 }
 
@@ -75,14 +74,14 @@ HD44780::MJKDZ::write8n(void* buf, size_t size)
       uint8_t data = *bp++;
       m_port.data = (data >> 4);
       m_port.en = 1;
-      tmp[i++] = m_port.as_uint8;
+      tmp[i++] = m_port;
       m_port.en = 0;
-      tmp[i++] = m_port.as_uint8;
+      tmp[i++] = m_port;
       m_port.data = data;
       m_port.en = 1;
-      tmp[i++] = m_port.as_uint8;
+      tmp[i++] = m_port;
       m_port.en = 0;
-      tmp[i++] = m_port.as_uint8;
+      tmp[i++] = m_port;
     }
     write(tmp, m);
   }
