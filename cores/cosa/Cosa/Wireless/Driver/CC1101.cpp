@@ -28,6 +28,19 @@
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
 
+/**
+ * Default configuration (generated with TI SmartRF Studio tool):
+ * Radio: 433 MHz, 38 kbps, GFSK. Whitening. 
+ * Packet: Variable packet length with CRC, address check and broadcast(0x00)
+ * FIFO: Append status. 
+ * Frame: sync(2/0xC05A), length(1), address(1), payload(max 61), crc(2)
+ * - Send: length(1), address(1), payload(max 61)
+ * - Received: length(1), address(1), payload(max 61), status(2)
+ * Digital Output Pins:
+ * - GDO2: valid frame received, active low
+ * - GDO1: high impedance, not used
+ * - GDO0: high impedance, not used
+ */
 const uint8_t CC1101::config[CC1101::CONFIG_MAX] __PROGMEM = {
   0x47,		// GDO2 Output Pin Configuration
   0x2E,		// GDO1 Output Pin Configuration
@@ -122,7 +135,7 @@ void
 CC1101::IRQPin::on_interrupt(uint16_t arg)
 {
   if (m_rf == 0) return;
-  m_rf->m_avail = 1;
+  m_rf->m_avail = true;
 }
 
 void 
@@ -133,28 +146,24 @@ CC1101::strobe(Command cmd)
   spi.end();
 }
 
-bool 
-CC1101::set_mode(Mode mode, Command cmd, uint8_t retry)
+void 
+CC1101::await(Mode mode)
 {
-  while (read_status().mode != IDLE_MODE) Power::sleep(SLEEP_MODE_IDLE);
-  do {
-    if (read_status().mode == mode) return (true);
-    strobe(cmd);
-    DELAY(100);
-  } while (--retry);
-  return (false);
+  while (read_status().mode != mode) 
+    Power::sleep(SLEEP_MODE_IDLE);
 }
 
 void 
-CC1101::begin(const uint8_t* setting)
+CC1101::begin(const uint8_t* config)
 {
   m_cs.pulse(30);
   DELAY(30);
   strobe(SRES);
   DELAY(300);
-  write_P(IOCFG2, setting ? setting : config, CONFIG_MAX);
+  write_P(IOCFG2, config ? config : CC1101::config, CONFIG_MAX);
   write(ADDR, m_addr);
   write(PATABLE, 0x60);
+  m_avail = false;
   m_irq.enable();
 }
 
@@ -164,12 +173,12 @@ CC1101::send(const iovec_t* vec)
   size_t count = 0;
   for (const iovec_t* vp = vec; vp->buf != 0; vp++) 
     count += vp->size;
-  if (count > PAYLOAD_MAX) return (-3);
-  while (read_status().mode != IDLE_MODE) Power::sleep(SLEEP_MODE_IDLE);
+  if (count > PAYLOAD_MAX) return (-1);
+  await(IDLE_MODE);
   write(TXFIFO, count);
   for (const iovec_t* vp = vec; vp->buf != 0; vp++) 
     write(TXFIFO, vp->buf, vp->size);
-  if (!set_transmit_mode()) return (-1);
+  set_transmit_mode();
   return (count);
 }
 
@@ -187,14 +196,14 @@ CC1101::recv(void* buf, size_t count, uint32_t ms)
 {
   set_receive_mode();
   if (!await(ms)) return (-2);
-  m_avail = 0;
+  m_avail = false;
   uint8_t size = read(RXFIFO);
   if (size > count) goto exception;
   read(RXFIFO, buf, size);
   read(RXFIFO, &m_recv_status, sizeof(m_recv_status));
   return (size);
  exception:
-  if (read_status().mode != IDLE_MODE) strobe(SIDLE);
+  strobe(SIDLE);
   strobe(SFRX);
   return (-1);
 }
@@ -204,7 +213,7 @@ CC1101::recv(uint8_t& src, void* buf, size_t count, uint32_t ms)
 {
   set_receive_mode();
   if (!await(ms)) return (-2);
-  m_avail = 0;
+  m_avail = false;
   uint8_t size = read(RXFIFO) - 1;
   if (size > count) goto exception;
   src = read(RXFIFO);
@@ -212,7 +221,7 @@ CC1101::recv(uint8_t& src, void* buf, size_t count, uint32_t ms)
   read(RXFIFO, &m_recv_status, sizeof(m_recv_status));
   return (size);
  exception:
-  if (read_status().mode != IDLE_MODE) strobe(SIDLE);
+  strobe(SIDLE);
   strobe(SFRX);
   return (-1);
 }

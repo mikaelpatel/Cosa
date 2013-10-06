@@ -28,8 +28,6 @@
  */
 
 #include "Cosa/Wireless/Driver/CC1101.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
@@ -37,6 +35,9 @@ CC1101 rf(0x01);
 
 // #define DEBUG_CC1101
 #if defined(DEBUG_CC1101)
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+
 void dump(uint8_t addr, uint8_t* reg, size_t size)
 {
   for (uint8_t i = 0; i < size; i++) 
@@ -47,12 +48,12 @@ void dump(uint8_t addr, uint8_t* reg, size_t size)
 
 void setup()
 {
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaCC1101sender: started"));
   Watchdog::begin();
   RTC::begin();
 
 #if defined(DEBUG_CC1101)
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaCC1101sender: started"));
   uint8_t reg[CC1101::CONFIG_MAX];
 
   INFO("Read default register values", 0);

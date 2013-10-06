@@ -32,7 +32,7 @@
 
 /**
  * Cosa Device Driver for Texas Instruments CC1101, Low-Power Sub-1
- * GHz RF Transceiver.
+ * GHz RF Transceiver. 
  * @See Also
  * Product Description, SWRS061H, Rev. H, 2012-10-09
  * http://www.ti.com/lit/ds/symlink/cc1101.pdf
@@ -40,7 +40,8 @@
 class CC1101 : private SPI::Driver {
 private:
   /**
-   * Transaction header (pp. 29)
+   * Transaction header (pp. 29). Note 16-bit configuration variables are
+   * read/written in big endian order (MSB first).
    */
   union header_t {
     uint8_t as_uint8;		/**< 8-bit representation */
@@ -116,8 +117,8 @@ private:
   void write_P(uint8_t reg, const uint8_t* buf, size_t count);
 
   /**
-   * Handler for interrupt pin. Service interrupt on incoming package
-   * with valid checksum.
+   * Handler for interrupt pin. Service interrupt on incoming message
+   * with valid checksum. 
    */
   class IRQPin : public ExternalInterrupt {
     friend class CC1101;
@@ -445,6 +446,12 @@ public:
   }
 
   /**
+   * Await given mode. 
+   * @param[in] mode to await.
+   */
+  void await(Mode mode);
+
+  /**
    * Set device in given mode. Return true(1) if successful otherwise
    * false(0).
    * @param[in] mode of operation.
@@ -487,13 +494,13 @@ public:
    * Read Main Radio Control State Machine State.
    * @return state
    */
-  uint8_t read_marc_state()
+  State read_marc_state()
   {
-    return (read(MARCSTATE));
+    return ((State) read(MARCSTATE));
   }
 
   /**
-   * Received Package Status Bytes (Table. 27/28, pp. 37)
+   * Received Message Status Bytes (Table. 27/28, pp. 37)
    */
   union recv_status_t {
     uint8_t status[2];		/**< Two status bytes last in frame */
@@ -514,11 +521,11 @@ private:
   /** Default configuration */
   static const uint8_t config[] __PROGMEM;
 
-  /** Interrupt Pin */
+  /** Interrupt Handler */
   IRQPin m_irq;
   
-  /** Package is available */
-  volatile uint8_t m_avail;
+  /** Valid message is available. Set by interrupt handler */
+  volatile bool m_avail;
 
   /** Latest transaction status */
   status_t m_status;
@@ -529,7 +536,9 @@ private:
 public:
   /**
    * Construct C1101 device driver connected to SPI bus with given
-   * chip select. 
+   * chip select. Default pins are Arduino Nano IO Shield for CC1101 
+   * module. Boardcast address is zero(0) and should not be used as
+   * node network address.
    * @param[in] addr network address.
    * @param[in] csn chip select pin (Default D10).
    * @param[in] irq interrupt pin (Default D2/EXT0).
@@ -540,57 +549,21 @@ public:
     SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
     m_addr(addr),
     m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
-    m_avail(0),
+    m_avail(false),
     m_status(0)
   {
   }
 
   /**
    * Start and configure C1101 device driver. The configuration must
-   * set GDO2 to assert on received package. This device pin is
+   * set GDO2 to assert on received message. This device pin is
    * assumed to be connected the device driver interrupt pin (EXTn).
-   * @param[in] setting configuration (default NULL, use internal)
+   * @param[in] config configuration vector (default NULL, use internal)
    */
-  void begin(const uint8_t* setting = NULL);
+  void begin(const uint8_t* config = NULL);
 
   /**
-   * Set device in power down mode. Must be in idle mode.
-   */
-  void set_power_down_mode()
-  {
-    strobe(SPWD);
-  }
-
-  /**
-   * Set device in wakeup on radio mode. Must be in idle mode.
-   */
-  void set_wakeup_on_radio_mode()
-  {
-    strobe(SWOR);
-  }
-
-  /**
-   * Set device in receive mode. Return true(1) if successful otherwise
-   * false(0).
-   * @return bool
-   */
-  bool set_receive_mode(uint8_t retry = 8)
-  {
-    return (set_mode(RX_MODE, SRX, retry));
-  }
-
-  /**
-   * Set device in transmit mode. Return true(1) if successful otherwise
-   * false(0).
-   * @return bool
-   */
-  bool set_transmit_mode(uint8_t retry = 8)
-  {
-    return (set_mode(TX_MODE, STX, retry));
-  }
-
-  /**
-   * Set device address. 
+   * Set device address. Do not use the broadcast address(0).
    * @param[in] addr address to set.
    */
   void set_address(uint8_t addr)
@@ -599,7 +572,8 @@ public:
   }
 
   /**
-   * Set communication synchronization word (16-bit).
+   * Set communication synchronization word (16-bit). May be used for
+   * to separate different product families.
    * @param[in] word to use as synchronization.
    */
   void set_sync_word(int16_t word)
@@ -618,11 +592,56 @@ public:
   }
 
   /**
+   * Set device in power down mode. 
+   */
+  void set_power_down_mode()
+  {
+    await(IDLE_MODE);
+    strobe(SPWD);
+  }
+
+  /**
+   * Set device in wakeup on radio mode. 
+   */
+  void set_wakeup_on_radio_mode()
+  {
+    await(IDLE_MODE);
+    strobe(SWOR);
+  }
+
+  /**
+   * Set device in idle mode. 
+   */
+  void set_idle_mode()
+  {
+    strobe(SIDLE);
+  }
+
+  /**
+   * Set device in receive mode. 
+   */
+  void set_receive_mode()
+  {
+    await(IDLE_MODE);
+    strobe(SRX);
+    await(RX_MODE);
+  }
+
+  /**
+   * Set device in transmit mode. 
+   */
+  void set_transmit_mode()
+  {
+    await(IDLE_MODE);
+    strobe(STX);
+  }
+
+  /**
    * Send message using a null terminated io vector message. Message
-   * is gathered from elements in io vector. The total size of the io
-   * vector buffers must be less than PAYLOAD_MAX. Returns error
-   * code(-1) if number of bytes is larger than number PAYLOAD_MAX. 
-   * Return error code(-2) if fails to set transmit mode.  
+   * is gathered from elements in the given io vector. The total size of 
+   * the io vector buffers must be less than PAYLOAD_MAX. Returns error
+   * code(-1) if number of bytes is greater than PAYLOAD_MAX. Return
+   * error code(-2) if fails to set transmit mode.   
    * @param[in] vec null terminated io vector.
    * @return number of bytes send or negative error code.
    */
@@ -631,8 +650,8 @@ public:
   /**
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes
-   * is larger than number PAYLOAD_MAX. Return error code(-2) if fails
-   * to set transmit mode. 
+   * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
+   * set transmit mode.  
    * @param[in] dest destination network address.
    * @param[in] buf buffer to transmit.
    * @param[in] count number of bytes in buffer.
@@ -649,8 +668,17 @@ public:
   }
 
   /**
-   * Wait for incoming package for maximum of given number of
-   * milli-seconds. Returns true(1) if a package is available,
+   * Return true(1) if a message is available otherwise false(0).
+   * @return bool
+   */
+  bool available()
+  {
+    return (m_avail);
+  }
+
+  /**
+   * Wait for incoming message for maximum of given number of
+   * milli-seconds. Returns true(1) if a message is available,
    * otherwise on timeout false(0).
    * @param[in] ms milli-seconds timeout.
    * return bool
@@ -676,9 +704,7 @@ public:
    * Returns error code(-2) if no message is available and/or a
    * timeout occured. Returns error code(-1) if the buffer size if to
    * small for incoming message or if the receiver fifo has overflowed. 
-   * Otherwise the actual number of received bytes is returned. It is
-   * possible to receive an empty message. Source network address will
-   * be valid.
+   * Otherwise the actual number of received bytes is returned
    * @param[out] src source network address.
    * @param[in] buf buffer to store incoming message.
    * @param[in] count maximum number of bytes to receive.
@@ -689,7 +715,7 @@ public:
 
   /**
    * Return estimated input power level (dBm) from latest successful
-   * message receive.
+   * message received. 
    */
   int get_input_power_level()
   {
@@ -699,7 +725,7 @@ public:
 
   /**
    * Return link quality indicator from latest successful receive
-   * message. Lower level is better.
+   * message. Lower level is better quality.
    */
   int get_link_quality_indicator()
   {
