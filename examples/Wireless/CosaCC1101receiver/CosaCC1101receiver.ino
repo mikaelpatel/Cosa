@@ -76,17 +76,16 @@ void setup()
 
 void loop()
 {
-  // Receive message. Wait max 2000 ms
+  // Receive message
   uint8_t msg[CC1101::PAYLOAD_MAX];
   uint8_t src;
-  int count = rf.recv(src, msg, sizeof(msg), 2000);
-
+  int count = rf.recv(src, msg, sizeof(msg), 1000);
   // Check error codes
   if (count == -1) {
-    trace << PSTR("illegal frame size") << endl;
+    trace << PSTR("illegal frame size(-1)\n");
   }
   else if (count == -2) {
-    trace << PSTR("timeout") << endl;
+    trace << PSTR("timeout(-2)\n");
   }
   else if (count < 0) {
     trace << PSTR("error(") << count << PSTR(")\n");

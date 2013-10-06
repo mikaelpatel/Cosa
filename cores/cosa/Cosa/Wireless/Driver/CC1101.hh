@@ -533,6 +533,9 @@ private:
   /** Latest receive status */
   recv_status_t m_recv_status;
 
+  /** Power sleep mode while waiting */
+  uint8_t m_mode;
+
 public:
   /**
    * Construct C1101 device driver connected to SPI bus with given
@@ -550,7 +553,8 @@ public:
     m_addr(addr),
     m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
     m_avail(false),
-    m_status(0)
+    m_status(0),
+    m_mode(SLEEP_MODE_IDLE)
   {
   }
 
@@ -592,6 +596,15 @@ public:
   }
 
   /**
+   * Set power sleep mode during wait.
+   * @param[in] mode of sleep.
+   */
+  void set_sleep(uint8_t mode)
+  {
+    m_mode = mode;
+  }
+
+  /**
    * Set device in power down mode. 
    */
   void set_power_down_mode()
@@ -622,9 +635,7 @@ public:
    */
   void set_receive_mode()
   {
-    await(IDLE_MODE);
     strobe(SRX);
-    await(RX_MODE);
   }
 
   /**
@@ -637,17 +648,6 @@ public:
   }
 
   /**
-   * Send message using a null terminated io vector message. Message
-   * is gathered from elements in the given io vector. The total size of 
-   * the io vector buffers must be less than PAYLOAD_MAX. Returns error
-   * code(-1) if number of bytes is greater than PAYLOAD_MAX. Return
-   * error code(-2) if fails to set transmit mode.   
-   * @param[in] vec null terminated io vector.
-   * @return number of bytes send or negative error code.
-   */
-  int send(const iovec_t* vec);
-
-  /**
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
@@ -657,15 +657,7 @@ public:
    * @param[in] count number of bytes in buffer.
    * @return number of bytes send or negative error code.
    */
-  int send(uint8_t dest, const void* buf, size_t count)
-  {
-    iovec_t vec[3];
-    iovec_t* vp = vec;
-    iovec_arg(vp, &dest, sizeof(dest));
-    iovec_arg(vp, buf, count);
-    iovec_end(vp);
-    return (send(vec));
-  }
+  int send(uint8_t dest, const void* buf, size_t count);
 
   /**
    * Return true(1) if a message is available otherwise false(0).
@@ -676,28 +668,6 @@ public:
     return (m_avail);
   }
 
-  /**
-   * Wait for incoming message for maximum of given number of
-   * milli-seconds. Returns true(1) if a message is available,
-   * otherwise on timeout false(0).
-   * @param[in] ms milli-seconds timeout.
-   * return bool
-   */
-  bool await(uint32_t ms);
-  
-  /**
-   * Receive message and store into given buffer with given maximum
-   * size. Returns error code(-2) if no message is available and/or a
-   * timeout occured. Returns error code(-1) if the buffer size if to
-   * small for incoming message or if the receiver fifo has overflowed. 
-   * Otherwise the actual number of received bytes is returned. 
-   * @param[in] buf buffer to store incoming message.
-   * @param[in] count maximum number of bytes to receive.
-   * @param[in] ms maximum time out period.
-   * @return number of bytes received or negative error code.
-   */
-  int recv(void* buf, size_t count, uint32_t ms = 0L);
-  
   /**
    * Receive message and store into given buffer with given maximum
    * size. The source network address is returned in the parameter src.

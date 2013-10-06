@@ -150,7 +150,7 @@ void
 CC1101::await(Mode mode)
 {
   while (read_status().mode != mode) 
-    Power::sleep(SLEEP_MODE_IDLE);
+    Power::sleep(m_mode);
 }
 
 void 
@@ -168,60 +168,36 @@ CC1101::begin(const uint8_t* config)
 }
 
 int 
-CC1101::send(const iovec_t* vec)
+CC1101::send(uint8_t dest, const void* buf, size_t count)
 {
-  size_t count = 0;
-  for (const iovec_t* vp = vec; vp->buf != 0; vp++) 
-    count += vp->size;
   if (count > PAYLOAD_MAX) return (-1);
   await(IDLE_MODE);
-  write(TXFIFO, count);
-  for (const iovec_t* vp = vec; vp->buf != 0; vp++) 
-    write(TXFIFO, vp->buf, vp->size);
+  write(TXFIFO, count + 1);
+  write(TXFIFO, dest);
+  write(TXFIFO, buf, count);
   set_transmit_mode();
   return (count);
-}
-
-bool 
-CC1101::await(uint32_t ms)
-{
-  uint32_t start = RTC::millis();
-  while (!m_avail && (ms == 0 || (RTC::since(start) < ms))) 
-    Power::sleep(SLEEP_MODE_IDLE);
-  return (m_avail);
-}
-
-int 
-CC1101::recv(void* buf, size_t count, uint32_t ms)
-{
-  set_receive_mode();
-  if (!await(ms)) return (-2);
-  m_avail = false;
-  uint8_t size = read(RXFIFO);
-  if (size > count) goto exception;
-  read(RXFIFO, buf, size);
-  read(RXFIFO, &m_recv_status, sizeof(m_recv_status));
-  return (size);
- exception:
-  strobe(SIDLE);
-  strobe(SFRX);
-  return (-1);
 }
 
 int 
 CC1101::recv(uint8_t& src, void* buf, size_t count, uint32_t ms)
 {
   set_receive_mode();
-  if (!await(ms)) return (-2);
+  if (!m_avail) {
+    uint32_t start = RTC::millis();
+    while (!m_avail && (ms == 0 || (RTC::since(start) < ms))) 
+      Power::sleep(m_mode);
+    if (!m_avail) return (-2);
+  }
   m_avail = false;
   uint8_t size = read(RXFIFO) - 1;
-  if (size > count) goto exception;
+  if (size > count) {
+    strobe(SIDLE);
+    strobe(SFRX);
+    return (-1);
+  }
   src = read(RXFIFO);
   read(RXFIFO, buf, size);
   read(RXFIFO, &m_recv_status, sizeof(m_recv_status));
   return (size);
- exception:
-  strobe(SIDLE);
-  strobe(SFRX);
-  return (-1);
 }
