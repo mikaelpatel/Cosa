@@ -59,9 +59,10 @@ codecs; Manchester, 4B5B and Bitstuffing. This allows basic ultra
 cheap wireless nodes with RF315/433 receiver and transmitter. For more
 advanced wireless connections there is also a driver for the Nordic
 Semiconductor NRF24L01+ chip, which allows low-power wireless
-communication of up to 2 Mbps in the 2.4GHz band. This driver
-implements the Socket::Device interface. This allows it to be used
-with the communication network abstraction (Socket/Client/Server).
+communication of up to 2 Mbps in the 2.4GHz band, and the TI CC1101
+Low-Power Sub-1 GHz RF Transceiver. The NRF24L01+ driver implements
+the Socket::Device interface. This allows it to be used with the
+communication network abstraction (Socket/Client/Server). 
 
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. 
@@ -299,6 +300,9 @@ Cosa provides an object-oriented version of VirtualWire (VWI) which
 acts as a device driver for RF433/335 modules. Cosa also support the
 NRF24L01+ chip.
 
+@section CC1101
+Device driver for the TI CC1101 Low-Power Sub-1 GHz RF Transceiver. 
+
 @section VWI
 VWI (Virtual Wire Interface) provides features to send short messages,
 without addressing, retransmit or acknowledgment, a bit like UDP over
@@ -359,6 +363,9 @@ Driver for the HMC5883L 3-Axis Digital Compass (TWI).
 
 @section PCF8591
 Driver for the PCF8591 2-Wire 8-bit A/D and D/A converter (TWI).
+
+@section BMP085
+Driver for the BMP085 Digital Pressure sensor.
 */
 
 /** @page page8 Actuator

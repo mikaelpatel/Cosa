@@ -55,7 +55,8 @@ codecs; Manchester, 4B5B and Fixed Bitstuffing. This allows basic
 ultra cheap wireless nodes with RF315/433 receiver and
 transmitter. For more advanced wireless connections there is also a
 driver for the Nordic Semiconductor NRF24L01+ chip, which allows
-low-power wireless communication of up to 2 Mbps in the 2.4GHz band. 
+low-power wireless communication of up to 2 Mbps in the 2.4GHz band,
+and the TI CC1101 Low-Power Sub-1 GHz RF Transceiver.   
 
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. 
@@ -123,7 +124,9 @@ Drivers
 17. HD44780 (aka 1602, 2004) LCD Controller/Driver.
 18. DS3231, Extremely Accurate I2C-Integrated RTC/TCXO/Crystal. 
 19. PCF8574/PCF8574A Remote 8-bit I/O expander for I2C-bus with interrupt. 
-20. Slave device support for SPI, TWI and OWI.
+20. BMP085 Digital Pressure Sensor.
+21. TI CC1101 Low-Power Sub-1 GHz RF Transceiver.
+22. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  
@@ -221,5 +224,6 @@ structure. Performance tuning LCD adapters; additional adapters with
 shift register support (SR3W and SR4W). Adding Vigenere autokey and
 RC4 cipher.       
 2013-08 Updating DHT11/22 device driver. Adding a simple touch
-capacitive sensor.
-2013-09 Major refactoring of SPI and TWI device driver support.      
+capacitive sensor.     
+2013-09 Major refactoring of SPI and TWI device driver support.    
+2013-10 Device driver for CC1101 and BMP085 introduced.    
