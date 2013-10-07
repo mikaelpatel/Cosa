@@ -544,7 +544,7 @@ public:
   class SR3W : public IO {
   private:
     /** Execution time delay (us) */
-    static const uint16_t SHORT_EXEC_TIME = 6;
+    static const uint16_t SHORT_EXEC_TIME = 8;
 
     /** Shift register port bit fields; little endian */
     union port_t {
@@ -804,7 +804,7 @@ public:
   class SR4W : public IO {
   private:
     /** Execution time delay (us) */
-    static const uint16_t SHORT_EXEC_TIME = 4;
+    static const uint16_t SHORT_EXEC_TIME = 8;
 
     OutputPin m_sda;		/**< Serial data output */
     OutputPin m_scl;		/**< Serial clock */

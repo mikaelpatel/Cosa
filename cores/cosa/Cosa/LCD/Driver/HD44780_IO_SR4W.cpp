@@ -41,9 +41,11 @@ void
 HD44780::SR4W::write8b(uint8_t data)
 {
   m_sda.write(data, m_scl);
-  m_sda.write(m_rs);
-  m_en.toggle();
-  m_en.toggle();
+  synchronized {
+    m_sda._write(m_rs);
+    m_en._toggle();
+    m_en._toggle();
+  }
   DELAY(SHORT_EXEC_TIME);
 }
 

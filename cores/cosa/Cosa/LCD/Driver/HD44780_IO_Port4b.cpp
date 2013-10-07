@@ -61,8 +61,8 @@ HD44780::Port4b::write4b(uint8_t data)
 {
   synchronized {
     WRITE4B(data);
-    m_en.toggle();
-    m_en.toggle();
+    m_en._toggle();
+    m_en._toggle();
   }
 }
 
@@ -71,11 +71,11 @@ HD44780::Port4b::write8b(uint8_t data)
 {
   synchronized {
     WRITE4B(data >> 4);
-    m_en.toggle();
-    m_en.toggle();
+    m_en._toggle();
+    m_en._toggle();
     WRITE4B(data);
-    m_en.toggle();
-    m_en.toggle();
+    m_en._toggle();
+    m_en._toggle();
   }
   DELAY(SHORT_EXEC_TIME);
 }
