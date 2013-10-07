@@ -489,6 +489,21 @@ public:
 
   /**
    * Set the output pin with the given value. Zero(0) to clear
+   * and non-zero to set. Unprotected version.
+   * @param[in] value to set.
+   */
+  void _write(bool value) 
+  { 
+    if (value) {
+      *PORT() |= m_mask; 
+    }
+    else {
+      *PORT() &= ~m_mask; 
+    }
+  }
+
+  /**
+   * Set the output pin with the given value. Zero(0) to clear
    * and non-zero to set.
    * @param[in] value to write.
    */
