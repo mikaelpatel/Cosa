@@ -153,36 +153,41 @@ CC1101::await(Mode mode)
     Power::sleep(m_mode);
 }
 
-void 
-CC1101::begin(const uint8_t* config)
+bool
+CC1101::begin(const void* config)
 {
   m_cs.pulse(30);
   DELAY(30);
   strobe(SRES);
   DELAY(300);
-  write_P(IOCFG2, config ? config : CC1101::config, CONFIG_MAX);
-  write(ADDR, m_addr);
+  write_P(IOCFG2, config ? (const uint8_t*) config : CC1101::config, CONFIG_MAX);
+  write(ADDR, m_addr.device);
+  uint16_t sync = swap(m_addr.network);
+  write(SYNC1, &sync, sizeof(sync));
+  write(CHANNR, m_channel);
   write(PATABLE, 0x60);
   m_avail = false;
   m_irq.enable();
+  return (true);
 }
 
 int 
-CC1101::send(uint8_t dest, const void* buf, size_t count)
+CC1101::send(uint8_t dest, const void* buf, size_t len)
 {
-  if (count > PAYLOAD_MAX) return (-1);
+  if (len > PAYLOAD_MAX) return (-1);
   await(IDLE_MODE);
-  write(TXFIFO, count + 1);
+  write(TXFIFO, len + 1);
   write(TXFIFO, dest);
-  write(TXFIFO, buf, count);
-  set_transmit_mode();
-  return (count);
+  write(TXFIFO, buf, len);
+  await(IDLE_MODE);
+  strobe(STX);
+  return (len);
 }
 
 int 
-CC1101::recv(uint8_t& src, void* buf, size_t count, uint32_t ms)
+CC1101::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
 {
-  set_receive_mode();
+  strobe(SRX);
   if (!m_avail) {
     uint32_t start = RTC::millis();
     while (!m_avail && (ms == 0 || (RTC::since(start) < ms))) 
@@ -191,7 +196,7 @@ CC1101::recv(uint8_t& src, void* buf, size_t count, uint32_t ms)
   }
   m_avail = false;
   uint8_t size = read(RXFIFO) - 1;
-  if (size > count) {
+  if (size > len) {
     strobe(SIDLE);
     strobe(SFRX);
     return (-1);
@@ -201,3 +206,18 @@ CC1101::recv(uint8_t& src, void* buf, size_t count, uint32_t ms)
   read(RXFIFO, &m_recv_status, sizeof(m_recv_status));
   return (size);
 }
+
+void 
+CC1101::powerdown()
+{
+  await(IDLE_MODE);
+  strobe(SPWD);
+}
+
+void 
+CC1101::wakeup_on_radio()
+{
+  await(IDLE_MODE);
+  strobe(SWOR);
+}
+

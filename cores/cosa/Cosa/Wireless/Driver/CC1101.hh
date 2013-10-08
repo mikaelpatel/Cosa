@@ -29,6 +29,7 @@
 #include "Cosa/SPI.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/ExternalInterrupt.hh"
+#include "Cosa/Wireless.hh"
 
 /**
  * Cosa Device Driver for Texas Instruments CC1101, Low-Power Sub-1
@@ -37,7 +38,7 @@
  * Product Description, SWRS061H, Rev. H, 2012-10-09
  * http://www.ti.com/lit/ds/symlink/cc1101.pdf
  */
-class CC1101 : private SPI::Driver {
+class CC1101 : private SPI::Driver, public Wireless::Driver {
 private:
   /**
    * Transaction header (pp. 29). Note 16-bit configuration variables are
@@ -202,9 +203,6 @@ public:
     CONFIG_MAX = 0x29		// Number of configuration registers
   } __attribute__((packed));
   
-  /** Network address */
-  uint8_t m_addr;
-
   /**
    * Read single configuration register value.
    * @param[in] reg register address.
@@ -273,12 +271,6 @@ public:
    * Maximum size of PA table.
    */
   static const size_t PATABLE_MAX = 8;
-
-  /**
-   * Maximum size of payload. Addressing will require one byte and
-   * radio status an additional two bytes.
-   */
-  static const size_t PAYLOAD_MAX = 61;
 
   /**
    * Read value from data register.
@@ -524,19 +516,19 @@ private:
   /** Interrupt Handler */
   IRQPin m_irq;
   
-  /** Valid message is available. Set by interrupt handler */
-  volatile bool m_avail;
-
   /** Latest transaction status */
   status_t m_status;
 
   /** Latest receive status */
   recv_status_t m_recv_status;
 
-  /** Power sleep mode while waiting */
-  uint8_t m_mode;
-
 public:
+  /**
+   * Maximum size of payload. Addressing will require one byte and
+   * radio status an additional two bytes.
+   */
+  static const size_t PAYLOAD_MAX = 61;
+  
   /**
    * Construct C1101 device driver connected to SPI bus with given
    * chip select. Default pins are Arduino Nano IO Shield for CC1101 
@@ -546,142 +538,65 @@ public:
    * @param[in] csn chip select pin (Default D10).
    * @param[in] irq interrupt pin (Default D2/EXT0).
    */
-  CC1101(uint8_t addr, 
-	 Board::DigitalPin csn = Board::D10,
+  CC1101(uint8_t addr, Board::DigitalPin csn = Board::D10,
 	 Board::ExternalInterruptPin irq = Board::EXT0) :
     SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
-    m_addr(addr),
+    Wireless::Driver(0xC05A, addr),
     m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
-    m_avail(false),
-    m_status(0),
-    m_mode(SLEEP_MODE_IDLE)
+    m_status(0)
   {
   }
 
   /**
+   * @override Wireless::Driver
    * Start and configure C1101 device driver. The configuration must
    * set GDO2 to assert on received message. This device pin is
    * assumed to be connected the device driver interrupt pin (EXTn).
-   * @param[in] config configuration vector (default NULL, use internal)
+   * Return true(1) if successful othewise false(0).
+   * @param[in] config configuration vector (default NULL)
    */
-  void begin(const uint8_t* config = NULL);
+  virtual bool begin(const void* config = NULL);
 
   /**
-   * Set device address. Do not use the broadcast address(0).
-   * @param[in] addr address to set.
-   */
-  void set_address(uint8_t addr)
-  {
-    write(ADDR, addr);
-  }
-
-  /**
-   * Set communication synchronization word (16-bit). May be used for
-   * to separate different product families.
-   * @param[in] word to use as synchronization.
-   */
-  void set_sync_word(int16_t word)
-  {
-    word = swap(word);
-    write(SYNC1, &word, sizeof(word));
-  }
-
-  /**
-   * Set device channel.
-   * @param[in] channel.
-   */
-  void set_channel(uint8_t channel)
-  {
-    write(CHANNR, channel);
-  }
-
-  /**
-   * Set power sleep mode during wait.
-   * @param[in] mode of sleep.
-   */
-  void set_sleep(uint8_t mode)
-  {
-    m_mode = mode;
-  }
-
-  /**
-   * Set device in power down mode. 
-   */
-  void set_power_down_mode()
-  {
-    await(IDLE_MODE);
-    strobe(SPWD);
-  }
-
-  /**
-   * Set device in wakeup on radio mode. 
-   */
-  void set_wakeup_on_radio_mode()
-  {
-    await(IDLE_MODE);
-    strobe(SWOR);
-  }
-
-  /**
-   * Set device in idle mode. 
-   */
-  void set_idle_mode()
-  {
-    strobe(SIDLE);
-  }
-
-  /**
-   * Set device in receive mode. 
-   */
-  void set_receive_mode()
-  {
-    strobe(SRX);
-  }
-
-  /**
-   * Set device in transmit mode. 
-   */
-  void set_transmit_mode()
-  {
-    await(IDLE_MODE);
-    strobe(STX);
-  }
-
-  /**
+   * @override Wireless::Device
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
    * set transmit mode.  
    * @param[in] dest destination network address.
    * @param[in] buf buffer to transmit.
-   * @param[in] count number of bytes in buffer.
+   * @param[in] len number of bytes in buffer.
    * @return number of bytes send or negative error code.
    */
-  int send(uint8_t dest, const void* buf, size_t count);
+  virtual int send(uint8_t dest, const void* buf, size_t len);
 
   /**
-   * Return true(1) if a message is available otherwise false(0).
-   * @return bool
-   */
-  bool available()
-  {
-    return (m_avail);
-  }
-
-  /**
+   * @override Wireless::Device
    * Receive message and store into given buffer with given maximum
-   * size. The source network address is returned in the parameter src.
+   * length. The source network address is returned in the parameter src.
    * Returns error code(-2) if no message is available and/or a
    * timeout occured. Returns error code(-1) if the buffer size if to
    * small for incoming message or if the receiver fifo has overflowed. 
    * Otherwise the actual number of received bytes is returned
    * @param[out] src source network address.
    * @param[in] buf buffer to store incoming message.
-   * @param[in] count maximum number of bytes to receive.
+   * @param[in] len maximum number of bytes to receive.
    * @param[in] ms maximum time out period.
    * @return number of bytes received or negative error code.
    */
-  int recv(uint8_t& src, void* buf, size_t count, uint32_t ms = 0L);
+  virtual int recv(uint8_t& src, void* buf, size_t len, uint32_t ms = 0L);
+
+  /**
+   * @override Wireless::Driver
+   * Set device in power down mode. 
+   */
+  virtual void powerdown();
+
+  /**
+   * @override Wireless::Driver
+   * Set device in wakeup on radio mode. 
+   */
+  virtual void wakeup_on_radio();
 
   /**
    * Return estimated input power level (dBm) from latest successful
