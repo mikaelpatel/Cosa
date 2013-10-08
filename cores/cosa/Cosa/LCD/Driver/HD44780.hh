@@ -438,7 +438,7 @@ public:
    * Requires too many pins for ATtinyX5.
    */
   class Port4b : public IO {
-  private:
+  protected:
     /** Execution time delay (us) */
     static const uint16_t SHORT_EXEC_TIME = 34;
 
