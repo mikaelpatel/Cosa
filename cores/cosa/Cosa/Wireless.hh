@@ -160,6 +160,20 @@ public:
     virtual int send(uint8_t dest, const void* buf, size_t len) = 0;
 
     /**
+     * Boardcast message in given buffer, with given number of bytes. 
+     * Returns number of bytes sent. Returns error code(-1) if number
+     * of bytes is greater than PAYLOAD_MAX. Return error code(-2) if
+     * fails to set transmit mode.  
+     * @param[in] buf buffer to transmit.
+     * @param[in] len number of bytes in buffer.
+     * @return number of bytes send or negative error code.
+     */
+    int broadcast(const void* buf, size_t len)
+    {
+      return (send(0x00, buf, len));
+    }
+
+    /**
      * Receive message and store into given buffer with given maximum
      * length. The source network address is returned in the parameter src.
      * Returns error code(-2) if no message is available and/or a
