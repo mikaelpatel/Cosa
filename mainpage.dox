@@ -60,9 +60,7 @@ cheap wireless nodes with RF315/433 receiver and transmitter. For more
 advanced wireless connections there is also a driver for the Nordic
 Semiconductor NRF24L01+ chip, which allows low-power wireless
 communication of up to 2 Mbps in the 2.4GHz band, and the TI CC1101
-Low-Power Sub-1 GHz RF Transceiver. The NRF24L01+ driver implements
-the Socket::Device interface. This allows it to be used with the
-communication network abstraction (Socket/Client/Server). 
+Low-Power Sub-1 GHz RF Transceiver. 
 
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. 
