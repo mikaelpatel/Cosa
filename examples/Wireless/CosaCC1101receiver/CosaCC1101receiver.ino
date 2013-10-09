@@ -55,18 +55,17 @@ void setup()
 
 #if defined(DEBUG_CC1101)
   uint8_t reg[CC1101::CONFIG_MAX];
-
   INFO("Read default register values", 0);
   rf.read(CC1101::IOCFG2, reg, sizeof(reg));
   dump(CC1101::IOCFG2, reg, sizeof(reg));
-
   INFO("Start device and read registers", 0);
 #endif
+
   rf.begin();
+
 #if defined(DEBUG_CC1101)
   rf.read(CC1101::IOCFG2, reg, sizeof(reg));
   dump(CC1101::IOCFG2, reg, sizeof(reg));
-
   INFO("Read status registers ", 0);
   for (uint8_t i = 0; i < CC1101::STATUS_MAX; i++) 
     reg[i] = rf.read((CC1101::Status) (CC1101::PARTNUM + i));
@@ -77,9 +76,10 @@ void setup()
 void loop()
 {
   // Receive message
-  uint8_t msg[CC1101::PAYLOAD_MAX];
+  const uint8_t MSG_MAX = 32;
+  uint8_t msg[MSG_MAX];
   uint8_t src;
-  int count = rf.recv(src, msg, sizeof(msg), 1000);
+  int count = rf.recv(src, msg, sizeof(msg), 1000L);
   // Check error codes
   if (count == -1) {
     trace << PSTR("illegal frame size(-1)\n");
@@ -96,6 +96,8 @@ void loop()
 	  << rf.get_input_power_level() << ',' 
 	  << rf.get_link_quality_indicator() << PSTR("]:")
 	  << count << ':';
-    trace.print(msg, count, IOStream::hex);
+    if (count > 0)
+      trace.print(msg, count, IOStream::hex);
+    else trace << msg << ':' << endl;
   }
 }

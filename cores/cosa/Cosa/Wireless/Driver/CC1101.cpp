@@ -33,9 +33,9 @@
  * Radio: 433 MHz, 38 kbps, GFSK. Whitening. 
  * Packet: Variable packet length with CRC, address check and broadcast(0x00)
  * FIFO: Append status. 
- * Frame: sync(2/0xC05A), length(1), address(1), payload(max 61), crc(2)
- * - Send: length(1), address(1), payload(max 61)
- * - Received: length(1), address(1), payload(max 61), status(2)
+ * Frame: sync(2), addr(1), length(1), payload(max 60), crc(2)
+ * - Send: length(1), addr(1), payload(max 60)
+ * - Received: length(1), addr(1), payload(max 60), status(2)
  * Digital Output Pins:
  * - GDO2: valid frame received, active low
  * - GDO1: high impedance, not used
@@ -156,30 +156,45 @@ CC1101::await(Mode mode)
 bool
 CC1101::begin(const void* config)
 {
+  // Reset the device
   m_cs.pulse(30);
   DELAY(30);
   strobe(SRES);
   DELAY(300);
+  // Upload the configuration 
   write_P(IOCFG2, config ? (const uint8_t*) config : CC1101::config, CONFIG_MAX);
+  write(PATABLE, 0x60);
+  // Adjust configuration;
   write(ADDR, m_addr.device);
   uint16_t sync = swap(m_addr.network);
   write(SYNC1, &sync, sizeof(sync));
   write(CHANNR, m_channel);
-  write(PATABLE, 0x60);
+  // Initiate device driver state and enable interrupt handler
   m_avail = false;
   m_irq.enable();
+  return (true);
+}
+
+bool 
+CC1101::end()
+{
+  m_irq.disable();
+  powerdown();
   return (true);
 }
 
 int 
 CC1101::send(uint8_t dest, const void* buf, size_t len)
 {
+  // Sanity check the payload size
   if (len > PAYLOAD_MAX) return (-1);
+  // Wait for the device to become idle before writing the frame
   await(IDLE_MODE);
-  write(TXFIFO, len + 1);
+  write(TXFIFO, len + 2);
   write(TXFIFO, dest);
+  write(TXFIFO, m_addr.device);
   write(TXFIFO, buf, len);
-  await(IDLE_MODE);
+  // Trigger the transmit
   strobe(STX);
   return (len);
 }
@@ -187,20 +202,27 @@ CC1101::send(uint8_t dest, const void* buf, size_t len)
 int 
 CC1101::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
 {
-  strobe(SRX);
+  // Check if we need to wait for a message
   if (!m_avail) {
+    // Fix: Use wakeup on radio to reduce power during wait
     uint32_t start = RTC::millis();
-    while (!m_avail && (ms == 0 || (RTC::since(start) < ms))) 
+    strobe(SRX);
+    while (!m_avail && ((ms == 0) || (RTC::since(start) < ms)))
       Power::sleep(m_mode);
     if (!m_avail) return (-2);
   }
   m_avail = false;
-  uint8_t size = read(RXFIFO) - 1;
+  // Read the payload size. Adjust for source address
+  uint8_t size = read(RXFIFO) - 2;
+  // Check that the buffer can hold the message
   if (size > len) {
     strobe(SIDLE);
     strobe(SFRX);
     return (-1);
   }
+  // Read the frame and the appended link quality
+  // Fix: Add possible address checking for robustness
+  read(RXFIFO);
   src = read(RXFIFO);
   read(RXFIFO, buf, size);
   read(RXFIFO, &m_recv_status, sizeof(m_recv_status));

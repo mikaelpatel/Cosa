@@ -524,10 +524,11 @@ private:
 
 public:
   /**
-   * Maximum size of payload. Addressing will require one byte and
+   * Maximum size of payload. The device allows 64 bytes payload. 
+   * The length and addressing will require two bytes and
    * radio status an additional two bytes.
    */
-  static const size_t PAYLOAD_MAX = 61;
+  static const size_t PAYLOAD_MAX = 60;
   
   /**
    * Construct C1101 device driver connected to SPI bus with given
@@ -557,6 +558,14 @@ public:
    */
   virtual bool begin(const void* config = NULL);
 
+  /**
+   * @override Wireless::Driver
+   * Shut down the device driver. Return true(1) if successful
+   * otherwise false(0).
+   * @return bool
+   */
+  virtual bool end();
+    
   /**
    * @override Wireless::Device
    * Send message in given buffer, with given number of bytes. Returns
