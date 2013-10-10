@@ -5,9 +5,10 @@ Cosa is an object-oriented platform for Arduino that supports an
 event-driven programming paradigm with simple finite state
 machines. It contains a rich set of classes to support rapid
 prototyping of Internet-of-Things devices. Cosa supports the following
-AVR/Atmega328P internal hardware modules; all pin modes, Digital,
-Analog and Interrupt Pins, Analog Comparator, PWM, Watchdog, Timer0
-(RTC), Timer1 (Servo), UART, SPI and TWI.  
+AVR/ATmega/ATtiny internal hardware modules; all pin modes, Digital,
+and Analog Pins, External and Pin Change Interrupts, Analog
+Comparator, PWM, Watchdog, Timer0 (RTC), Timer1 (Servo), UART, USI,
+SPI, TWI and EEPROM.   
 
 Though object-oriented with optional operator overloading syntax
 Cosa is between 2-10X faster than Arduino with regard to digital pin
@@ -229,4 +230,4 @@ capacitive sensor.
 2013-09 Major refactoring of SPI and TWI device driver support.    
 2013-10 Device driver for CC1101 and BMP085 introduced. Introducting
 an abstract Wireless device interface. Refactoring CC1101 and
-NRF24L01P to the new interface.     
+NRF24L01P to the new interface.        
