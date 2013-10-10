@@ -37,8 +37,8 @@ public:
   public:
     /** Network address */
     struct addr_t {
-      int16_t network;
-      uint8_t device;
+      uint8_t device;		/**< device address (LSB) */
+      int16_t network;		/**< network address */
       addr_t(int16_t net, uint8_t dev) 
       {
 	network = net;
