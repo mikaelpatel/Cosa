@@ -30,6 +30,7 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Wireless.hh"
+#if !defined(__ARDUINO_TINYX5__)
 
 /**
  * Cosa Device Driver for Texas Instruments CC1101, Low-Power Sub-1
@@ -42,7 +43,7 @@ class CC1101 : private SPI::Driver, public Wireless::Driver {
 private:
   /**
    * Transaction header (pp. 29). Note 16-bit configuration variables are
-   * read/written in big endian order (MSB first).
+   * read/written in big endian order (MSB first) and require swapping.
    */
   union header_t {
     uint8_t as_uint8;		/**< 8-bit representation */
@@ -81,7 +82,12 @@ private:
    * @param[in] reg register address.
    * @return value
    */
-  uint8_t read(uint8_t reg);
+  uint8_t read(uint8_t reg)
+  {
+    m_status = spi.transfer(header_t(reg, 0, 1));
+    uint8_t res = spi.transfer(0);
+    return (res);
+  }
 
   /**
    * Read multiple register values into given buffer. Access status
@@ -90,14 +96,22 @@ private:
    * @param[in] buf buffer to store register values.
    * @param[in] count size of buffer and number of registers to read.
    */
-  void read(uint8_t reg, void* buf, size_t count);
+  void read(uint8_t reg, void* buf, size_t count)
+  {
+    m_status = spi.transfer(header_t(reg, 1, 1));
+    spi.read(buf, count);
+  }
 
   /**
    * Write single register value. Access status with get_status().
    * @param[in] reg register address.
    * @param[in] value to write to register.
    */
-  void write(uint8_t reg, uint8_t value);
+  void write(uint8_t reg, uint8_t value)
+  {
+    m_status = spi.transfer(header_t(reg, 0, 0));
+    spi.transfer(value);
+  }
 
   /**
    * Write multiple register values from given buffer. Access status
@@ -106,7 +120,11 @@ private:
    * @param[in] buf buffer with new register values.
    * @param[in] count size of buffer and number of registers to read.
    */
-  void write(uint8_t reg, const void* buf, size_t count);
+  void write(uint8_t reg, const void* buf, size_t count)
+  {
+    m_status = spi.transfer(header_t(reg, 1, 0));
+    spi.write(buf, count);
+  }
 
   /**
    * Write multiple register values from given buffer in program memory.
@@ -115,7 +133,11 @@ private:
    * @param[in] buf buffer in program memory with new register values.
    * @param[in] count size of buffer (and number of registers) to write
    */
-  void write_P(uint8_t reg, const uint8_t* buf, size_t count);
+  void write_P(uint8_t reg, const uint8_t* buf, size_t count)
+  {
+    m_status = spi.transfer(header_t(reg, 1, 0));
+    spi.write_P(buf, count);
+  }
 
   /**
    * Handler for interrupt pin. Service interrupt on incoming message
@@ -382,10 +404,15 @@ public:
 
   /**
    * Issue given command to device. Check documentation for required
-   * timing delay.
+   * timing delay per command.
    * @param[in] cmd command.
    */
-  void strobe(Command cmd);
+  void strobe(Command cmd)
+  {
+    spi.begin(this);
+    m_status = spi.transfer(header_t(cmd, 0, 0));
+    spi.end();
+  }
   
 public:
   /**
@@ -407,7 +434,7 @@ public:
     struct {			/**< Bit-field representation (little endian) */
       uint8_t avail:4;		/**< Number of bytes in RX or TX FIFO */
       uint8_t mode:3;		/**< Current main state machine mode */
-      uint8_t ready:1;		/**< Chip ready (should be low) */
+      uint8_t ready:1;		/**< Chip ready */
     };
     
     status_t(uint8_t value)
@@ -417,7 +444,7 @@ public:
   };
   
   /** 
-   * Get latest transaction status byte.
+   * Get latest transaction status.
    * @return status
    */
   status_t get_status()
@@ -442,16 +469,6 @@ public:
    * @param[in] mode to await.
    */
   void await(Mode mode);
-
-  /**
-   * Set device in given mode. Return true(1) if successful otherwise
-   * false(0).
-   * @param[in] mode of operation.
-   * @param[in] cmd command.
-   * @param[in] retry number of attempts.
-   * @return bool
-   */
-  bool set_mode(Mode mode, Command cmd, uint8_t retry);
 
   /**
    * Main Radio Control State Machine State (pp. 93)
@@ -524,11 +541,12 @@ private:
 
 public:
   /**
-   * Maximum size of payload. The device allows 64 bytes payload. 
-   * The length and addressing will require two bytes and
-   * radio status an additional two bytes.
+   * Maximum size of payload. The device allows 64 bytes payload.
+   * The length and destination addressing will require two bytes,
+   * source address one byte and radio status an additional two bytes.
+   * This gives a payload max of 64 - 5 = 59.
    */
-  static const size_t PAYLOAD_MAX = 60;
+  static const size_t PAYLOAD_MAX = 59;
   
   /**
    * Construct C1101 device driver connected to SPI bus with given
@@ -539,7 +557,14 @@ public:
    * @param[in] csn chip select pin (Default D10).
    * @param[in] irq interrupt pin (Default D2/EXT0).
    */
-  CC1101(uint8_t addr, Board::DigitalPin csn = Board::D10,
+  CC1101(uint8_t addr, 
+#if defined(__ARDUINO_TINYX4__)
+	 Board::DigitalPin csn = Board::D2,
+#elif defined(__ARDUINO_MEGA__)
+	 Board::DigitalPin csn = Board::D53,
+#else
+	 Board::DigitalPin csn = Board::D10,
+#endif
 	 Board::ExternalInterruptPin irq = Board::EXT0) :
     SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
     Wireless::Driver(0xC05A, addr),
@@ -626,4 +651,5 @@ public:
     return (m_recv_status.lqi);
   }
 };
+#endif
 #endif

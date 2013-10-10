@@ -24,6 +24,8 @@
  */
 
 #include "Cosa/Wireless/Driver/CC1101.hh"
+
+#if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
@@ -32,10 +34,10 @@
  * Default configuration (generated with TI SmartRF Studio tool):
  * Radio: 433 MHz, 38 kbps, GFSK. Whitening. 
  * Packet: Variable packet length with CRC, address check and broadcast(0x00)
- * FIFO: Append status. 
- * Frame: sync(2), addr(1), length(1), payload(max 60), crc(2)
- * - Send: length(1), addr(1), payload(max 60)
- * - Received: length(1), addr(1), payload(max 60), status(2)
+ * FIFO: Append link status. 
+ * Frame: sync(2), length(1), dest(1), payload(max 59), crc(2)
+ * - Send(62): length(1), dest(1), src(1), payload(max 59)
+ * - Received(64): length(1), dest(1), src(1), payload(max 59), status(2)
  * Digital Output Pins:
  * - GDO2: valid frame received, active low
  * - GDO1: high impedance, not used
@@ -85,65 +87,11 @@ const uint8_t CC1101::config[CC1101::CONFIG_MAX] __PROGMEM = {
   0x00		// RC Oscillator Configuration
 };
 
-uint8_t 
-CC1101::read(uint8_t reg)
-{
-  spi.begin(this);
-  m_status = spi.transfer(header_t(reg, 0, 1));
-  uint8_t res = spi.transfer(0);
-  spi.end();
-  return (res);
-}
-
-void 
-CC1101::read(uint8_t reg, void* buf, size_t count)
-{
-  spi.begin(this);
-  m_status = spi.transfer(header_t(reg, 1, 1));
-  spi.read(buf, count);
-  spi.end();
-}
-
-void 
-CC1101::write(uint8_t reg, uint8_t value)
-{
-  spi.begin(this);
-  m_status = spi.transfer(header_t(reg, 0, 0));
-  spi.transfer(value);
-  spi.end();
-}
-
-void 
-CC1101::write(uint8_t reg, const void* buf, size_t count)
-{
-  spi.begin(this);
-  m_status = spi.transfer(header_t(reg, 1, 0));
-  spi.write(buf, count);
-  spi.end();
-}
-
-void 
-CC1101::write_P(uint8_t reg, const uint8_t* buf, size_t count)
-{
-  spi.begin(this);
-  m_status = spi.transfer(header_t(reg, 1, 0));
-  spi.write_P(buf, count);
-  spi.end();
-}
-
 void 
 CC1101::IRQPin::on_interrupt(uint16_t arg)
 {
   if (m_rf == 0) return;
   m_rf->m_avail = true;
-}
-
-void 
-CC1101::strobe(Command cmd)
-{
-  spi.begin(this);
-  m_status = spi.transfer(header_t(cmd, 0, 0));
-  spi.end();
 }
 
 void 
@@ -161,14 +109,20 @@ CC1101::begin(const void* config)
   DELAY(30);
   strobe(SRES);
   DELAY(300);
-  // Upload the configuration 
-  write_P(IOCFG2, config ? (const uint8_t*) config : CC1101::config, CONFIG_MAX);
-  write(PATABLE, 0x60);
-  // Adjust configuration;
-  write(ADDR, m_addr.device);
+  // Upload the configuration. Check for default configuration
+  spi.begin(this);
+  write_P(IOCFG2, 
+	  config ? (const uint8_t*) config : CC1101::config, 
+	  CONFIG_MAX);
+  spi.end();
+  // Adjust configuration with instance specific state
   uint16_t sync = swap(m_addr.network);
-  write(SYNC1, &sync, sizeof(sync));
+  spi.begin(this);
+  write(PATABLE, 0x60);
   write(CHANNR, m_channel);
+  write(ADDR, m_addr.device);
+  write(SYNC1, &sync, sizeof(sync));
+  spi.end();
   // Initiate device driver state and enable interrupt handler
   m_avail = false;
   m_irq.enable();
@@ -190,10 +144,12 @@ CC1101::send(uint8_t dest, const void* buf, size_t len)
   if (len > PAYLOAD_MAX) return (-1);
   // Wait for the device to become idle before writing the frame
   await(IDLE_MODE);
+  spi.begin(this);
   write(TXFIFO, len + 2);
   write(TXFIFO, dest);
   write(TXFIFO, m_addr.device);
   write(TXFIFO, buf, len);
+  spi.end();
   // Trigger the transmit
   strobe(STX);
   return (len);
@@ -212,20 +168,25 @@ CC1101::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
     if (!m_avail) return (-2);
   }
   m_avail = false;
-  // Read the payload size. Adjust for source address
+  // Read the payload size and check against buffer length
+  spi.begin(this);
   uint8_t size = read(RXFIFO) - 2;
-  // Check that the buffer can hold the message
   if (size > len) {
+    spi.end();
     strobe(SIDLE);
     strobe(SFRX);
     return (-1);
   }
-  // Read the frame and the appended link quality
-  // Fix: Add possible address checking for robustness
-  read(RXFIFO);
+  // Read the frame (dest, src, payload)
+  uint8_t dest = read(RXFIFO);
   src = read(RXFIFO);
   read(RXFIFO, buf, size);
+  spi.end();
+  // Read the link quality status
+  spi.begin(this);
   read(RXFIFO, &m_recv_status, sizeof(m_recv_status));
+  spi.end();
+  // Fix: Add possible address checking for robustness
   return (size);
 }
 
@@ -242,4 +203,4 @@ CC1101::wakeup_on_radio()
   await(IDLE_MODE);
   strobe(SWOR);
 }
-
+#endif
