@@ -30,6 +30,7 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Wireless.hh"
+#if !defined(__ARDUINO_TINYX5__)
 
 /**
  * Nordic Semiconductor nRF24L01+ Single Chip 2.4GHz Transceiver
@@ -508,10 +509,10 @@ public:
   /**
    * Construct NRF transceiver with given channel and pin numbers 
    * for SPI slave select, activity enable and interrupt. Default
-   * in parenthesis (Standard/Mega Arduino/TinyX4/TinyX5).
+   * in parenthesis (Standard/Mega Arduino/TinyX4).
    * @param[in] addr device address.
-   * @param[in] csn spi slave select pin number (default D10/D53/D2/D3).
-   * @param[in] ce chip enable activates pin number (default D9/D48/D3/D4).
+   * @param[in] csn spi slave select pin number (default D10/D53/D2).
+   * @param[in] ce chip enable activates pin number (default D9/D48/D3).
    * @param[in] irq interrupt pin number (default EXT0/EXT4/EXT0/EXT0).
    */
 #if defined(__ARDUINO_MEGA__)
@@ -524,11 +525,6 @@ public:
 	    Board::DigitalPin csn = Board::D2, 
 	    Board::DigitalPin ce = Board::D3, 
 	    Board::ExternalInterruptPin irq = Board::EXT0) : 
-#elif defined(__ARDUINO_TINYX5__)
-  NRF24L01P(uint8_t addr,
-	    Board::DigitalPin csn = Board::D3, 
-	    Board::DigitalPin ce = Board::D4, 
-	    Board::ExternalInterruptPin irq = Board::EXT0) :
 #else // __ARDUINO_STANDARD__ || __ARDUINO_MIGHTY__
   NRF24L01P(uint8_t addr,
 	    Board::DigitalPin csn = Board::D10, 
@@ -659,4 +655,5 @@ IOStream& operator<<(IOStream& outs, NRF24L01P::fifo_status_t status);
  */
 IOStream& operator<<(IOStream& outs, NRF24L01P::observe_tx_t observe);
 
+#endif
 #endif

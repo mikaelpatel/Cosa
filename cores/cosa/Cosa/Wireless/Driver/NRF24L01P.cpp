@@ -24,6 +24,8 @@
  */
 
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
+#if !defined(__ARDUINO_TINYX5__)
+
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
@@ -35,9 +37,6 @@ NRF24L01P::powerup()
   if (m_state != POWER_DOWN_STATE) return;
   m_ce.clear();
 
-  // Receiver address (broadcast)
-  addr_t rx_addr = m_addr;
-  
   // Start SPI interaction block
   spi.begin(this);
   
@@ -46,18 +45,23 @@ NRF24L01P::powerup()
   write(RF_CH, m_channel);
   write(RF_SETUP, (RF_DR_2MBPS | RF_PWR_0DBM));
   write(SETUP_RETR, ((2 << ARD) | (15 << ARC)));
-  write(EN_AA, ENAA_PA);
   write(DYNPD, DPL_PA);
 
-  // Setup hardware receive pipes (0:broadcast, 1:device) and enable
+  // Setup hardware receive pipes (0:ack, 1:device, 2:broadcast)
+  addr_t rx_addr(0,0);
   write(SETUP_AW, AW_3BYTES);
-  rx_addr.device = 0;
   write(RX_ADDR_P0);
   write(&rx_addr, sizeof(rx_addr));
+  rx_addr = m_addr;
   write(RX_ADDR_P1);
-  rx_addr.device = m_addr.device;
   write(&rx_addr, sizeof(rx_addr));
-  write(EN_RXADDR, (_BV(ERX_P0) | _BV(ERX_P1))); 
+  rx_addr.device = 0;
+  write(RX_ADDR_P2);
+  write(&rx_addr, sizeof(rx_addr));
+  write(EN_RXADDR, (_BV(ERX_P0) | _BV(ERX_P1) | _BV(ERX_P2))); 
+
+  // Auto-acknowledgement on device pipe
+  write(EN_AA, _BV(ENAA_P1));
 
   // Setup configuration for powerup and clear interrupts
   write(CONFIG, (_BV(EN_CRC) | _BV(CRCO)  | _BV(PWR_UP)));
@@ -79,14 +83,8 @@ NRF24L01P::set_receiver_mode()
   // Fix: Should be handled by the interrupt handler on TX_DS interrupt
   if (m_state == TX_STATE) Watchdog::delay(16);
 
-  // Reset broadcast address
-  addr_t rx_addr = m_addr;
-  rx_addr.device = 0;
-
   // Configure primary receiver mode
   spi.begin(this);
-  write(RX_ADDR_P0);
-  write(&rx_addr, sizeof(rx_addr));  
   write(CONFIG, (_BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP) | _BV(PRIM_RX)));
   spi.end();
 
@@ -96,20 +94,22 @@ NRF24L01P::set_receiver_mode()
 }
 
 void
-NRF24L01P::set_transmit_mode(uint8_t addr)
+NRF24L01P::set_transmit_mode(uint8_t dest)
 {
   // Setup primary transmit address and acknowledge address
-  addr_t tx_addr = m_addr;
-  tx_addr.device = addr;
+  addr_t tx_addr(m_addr.network, dest);
   spi.begin(this);
   write(TX_ADDR);
   write(&tx_addr, sizeof(tx_addr));
   write(RX_ADDR_P0);
   write(&tx_addr, sizeof(tx_addr));  
   if (m_state != TX_STATE) {
+    bool state = m_ce.is_set();
     m_ce.clear();
     write(CONFIG, (_BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP)));
-    m_ce.set();
+    m_ce.pulse(10);
+    DELAY(10);
+    m_ce.set(state);
   }
   spi.end();
 
@@ -232,3 +232,4 @@ IOStream& operator<<(IOStream& outs, NRF24L01P::fifo_status_t fifo)
   return (outs);
 }
 
+#endif
