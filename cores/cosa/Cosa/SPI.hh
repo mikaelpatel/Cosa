@@ -84,8 +84,8 @@ public:
     uint8_t m_pulse;
     
 #if defined(__ARDUINO_TINY__)
-    /** SPI mode for clock polatity setting */
-    const uint8_t m_mode;
+    /** SPI mode for clock polatity (CPOL) setting */
+    const uint8_t m_cpol;
     /** USI hardware control register setting */
     uint8_t m_usicr;
 #else
@@ -257,15 +257,7 @@ public:
    * @param[in] buffer with data to transfer (send/receive).
    * @param[in] count size of buffer.
    */
-  void transfer(void* buffer, size_t count)
-  {
-    if (count == 0) return;
-    uint8_t* bp = (uint8_t*) buffer;
-    do {
-      *bp = transfer(*bp);
-      bp += 1;
-    } while (--count);
-  }
+  void transfer(void* buffer, size_t count);
 
   /**
    * Exchange package with slave. Received data from slave is stored
@@ -275,13 +267,7 @@ public:
    * @param[in] src source buffer with data to send.
    * @param[in] count size of buffers.
    */
-  void transfer(void* dst, const void* src, size_t count)
-  {
-    if (count == 0) return;
-    uint8_t* dp = (uint8_t*) dst;
-    const uint8_t* sp = (const uint8_t*) src;
-    do *dp++ = transfer(*sp++); while (--count);
-  }
+  void transfer(void* dst, const void* src, size_t count);
 
   /**
    * Read package from the device slave. Should only be used within a
@@ -289,12 +275,7 @@ public:
    * @param[in] buf buffer for read data.
    * @param[in] count number of bytes to read.
    */
-  void read(void* buf, size_t count)
-  {
-    if (count == 0) return;
-    uint8_t* bp = (uint8_t*) buf;
-    do *bp++ = transfer(0); while (--count);
-  }
+  void read(void* buf, size_t count);
 
   /**
    * Write package to the device slave. Should only be used within a
@@ -302,12 +283,7 @@ public:
    * @param[in] buf buffer with data to write.
    * @param[in] count number of bytes to write.
    */
-  void write(const void* buf, size_t count)
-  {
-    if (count == 0) return;
-    const uint8_t* bp = (const uint8_t*) buf;
-    do transfer(*bp++); while (--count);
-  }
+  void write(const void* buf, size_t count);
 
   /**
    * Write package to the device slave. Should only be used within a
@@ -315,11 +291,7 @@ public:
    * @param[in] buf buffer with data to write.
    * @param[in] count number of bytes to write.
    */
-  void write_P(const uint8_t* buf, size_t count)
-  {
-    if (count == 0) return;
-    do transfer(pgm_read_byte(buf++)); while (--count);
-  }
+  void write_P(const uint8_t* buf, size_t count);
 };
 
 /**

@@ -46,7 +46,7 @@ SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
   m_irq(irq),
   m_cs(cs, (pulse == 0)),
   m_pulse(pulse),
-  m_mode(mode)
+  m_cpol(mode)
 {
   // USI command for hardware supported bit banging 
   m_usicr = (_BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC));
@@ -93,7 +93,7 @@ SPI::begin(Driver* dev)
     // Acquire the driver controller
     m_dev = dev;
     // Set clock polarity
-    if (dev->m_mode & 0x02) 
+    if (dev->m_cpol & 0x02) 
       bit_set(PORT, Board::SCK);
     else
       bit_clear(PORT, Board::SCK);
@@ -207,6 +207,7 @@ ISR(SPI_STC_vect)
 }
 #endif
 
+
 bool
 SPI::end()
 { 
@@ -222,4 +223,47 @@ SPI::end()
     m_dev = 0;
   }
   return (true);
+}
+
+void 
+SPI::transfer(void* buffer, size_t count)
+{
+  if (count == 0) return;
+  uint8_t* bp = (uint8_t*) buffer;
+  do {
+    *bp = transfer(*bp);
+    bp += 1;
+  } while (--count);
+}
+
+void 
+SPI::transfer(void* dst, const void* src, size_t count)
+{
+  if (count == 0) return;
+  uint8_t* dp = (uint8_t*) dst;
+  const uint8_t* sp = (const uint8_t*) src;
+  do *dp++ = transfer(*sp++); while (--count);
+}
+
+void 
+SPI::read(void* buf, size_t count)
+{
+  if (count == 0) return;
+  uint8_t* bp = (uint8_t*) buf;
+  do *bp++ = transfer(0); while (--count);
+}
+
+void 
+SPI::write(const void* buf, size_t count)
+{
+  if (count == 0) return;
+  const uint8_t* bp = (const uint8_t*) buf;
+  do transfer(*bp++); while (--count);
+}
+
+void 
+SPI::write_P(const uint8_t* buf, size_t count)
+{
+  if (count == 0) return;
+  do transfer(pgm_read_byte(buf++)); while (--count);
 }
