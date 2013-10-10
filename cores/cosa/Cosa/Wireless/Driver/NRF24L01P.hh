@@ -74,28 +74,45 @@ private:
     R_RX_PL_WID = 0x60,		// Read RX payload width
     W_ACK_PAYLOAD = 0xa8,	// Write TX payload with ACK (3 bit addr)
     PIPE_MASK = 0x07,		// Mask pipe address
-    W_ACK_PAYLOAD_NOACK = 0xb0,	// Disable AUTOACK on this specific packet
+    W_TX_PAYLOAD_NO_ACK = 0xb0,	// Disable AUTOACK on this specific packet
     NOP = 0xff			// No operation, return status
   } __attribute__((packed));
 
   /**
-   * Read command register. Return value. Must be in SPI transaction block.
-   * @param[in] cmd command register to read.
-   * @return value.
+   * Read command. 
+   * @param[in] cmd command.
+   * @return command value.
    */
-  uint8_t read(Command cmd)
-  {
-    return (spi.transfer(cmd));
-  }
+  uint8_t read(Command cmd);
 
   /**
-   * Write command. Sets status. Must be in SPI transaction block.
-   * @param[in] cmd command to write.
+   * Read command value. 
+   * @param[in] cmd command.
+   * @param[in] buf buffer for read data.
+   * @param[in] size number of bytes to read.
    */
-  void write(Command cmd)
-  {
-    m_status = spi.transfer(cmd);
-  }
+  void read(Command cmd, void* buf, size_t size);
+  
+  /**
+   * Write command.
+   * @param[in] cmd command.
+   */
+  void write(Command cmd);
+
+  /**
+   * Write command and value.
+   * @param[in] cmd command.
+   * @param[in] data new setting.
+   */
+  void write(Command cmd, uint8_t data);
+
+  /**
+   * Write command value. 
+   * @param[in] cmd command.
+   * @param[in] buf buffer with data to write.
+   * @param[in] size number of bytes to write.
+   */
+  void write(Command cmd, const void* buf, size_t size);
   
   /**
    * NRF transceiver registers map (See chap. 9, tab. 28, pp. 57)
@@ -247,6 +264,7 @@ private:
       uint8_t max_rt:1;		/**< Max number of TX retransmit interrupt */
       uint8_t tx_ds:1;		/**< Data send TX FIFO interrupt */
       uint8_t rx_dr:1;		/**< Data ready RX FIFO interrupt */
+      uint8_t reserved:1;
     };
 
     /**
@@ -307,10 +325,11 @@ private:
     struct {
       uint8_t rx_empty:1;	/**< RX FIFO empty flag */
       uint8_t rx_full:1;	/**< RX FIFO full flag */
-      uint8_t reserved:2;
+      uint8_t reserved1:2;
       uint8_t tx_empty:1;	/**< TX FIFO empty flag */
       uint8_t tx_full:1;	/**< TX FIFO full flag */
       uint8_t tx_reuse:1;	/**< Reuse last transmitted data packat */
+      uint8_t reserved2:1;
     };
 
     /**
@@ -353,17 +372,18 @@ private:
    */
   uint8_t read(Register reg)
   {
-    spi.transfer(R_REGISTER | (REG_MASK & reg));
-    return (spi.transfer(0));
+    return (read((Command) (R_REGISTER | (REG_MASK & reg))));
   }
 
   /**
-   * Write command.
-   * @param[in] cmd command to write.
+   * Read registers. Issue R_REGISTER command.
+   * @param[in] reg register address.
+   * @param[in] buf buffer for read data.
+   * @param[in] size number of bytes to read.
    */
-  void write(Register reg)
+  void read(Register reg, void* buf, size_t size)
   {
-    m_status = spi.transfer(W_REGISTER | (REG_MASK & reg));
+    read((Command) (R_REGISTER | (REG_MASK & reg)), buf, size);
   }
   
   /**
@@ -375,10 +395,22 @@ private:
    */
   void write(Register reg, uint8_t data)
   {
-    m_status = spi.transfer(W_REGISTER | (REG_MASK & reg));
-    spi.transfer(data);
+    write((Command) (W_REGISTER | (REG_MASK & reg)), data);
   }
 
+  /**
+   * Write command and status registers. Issue W_REGISTER command and
+   * write data.
+   * @param[in] reg register address.
+   * @param[in] buf buffer with data to write.
+   * @param[in] size number of bytes to write.
+   * @return status.
+   */
+  void write(Register reg, const void* buf, size_t size)
+  {
+    write((Command) (W_REGISTER | (REG_MASK & reg)), buf, size);
+  }
+  
   /**
    * Timing information (ch. 6.1.7, tab. 16, pp. 24)
    */
@@ -408,7 +440,6 @@ private:
       ExternalInterrupt(pin, mode),
       m_nrf(nrf)
     {}
-    virtual void on_interrupt(uint16_t arg = 0);
   };
   
   /** Chip enable activity RX/TX select pin */
@@ -423,75 +454,33 @@ private:
   /** Transceiver state */
   State m_state;
 
-  /**
-   * Read data from device.
-   * @return data
-   */
-  uint8_t read()
-  {
-    return (spi.transfer(0));
-  }
+public:
 
-  /**
-   * Read data block to device.
-   * @param[in] buffer data storage.
-   * @param[in] count number of bytes to write.
-   */
-  void read(void* buffer, size_t count)
-  {
-    spi.read(buffer, count);
-  }
-
-  /**
-   * Write data to device.
-   * @param[in] data to write.
-   */
-  void write(uint8_t data)
-  {
-    spi.transfer(data);
-  }
-  
-  /**
-   * Write data block to device.
-   * @param[in] buffer data storage.
-   * @param[in] count number of bytes to write.
-   */
-  void write(const void* buffer, size_t count)
-  {
-    spi.write(buffer, count);
-  }
-  
   /**
    * Read status. Issue NOP command to read status.
    * @return status.
    */
   status_t read_status()
   {
-    spi.begin(this);
-    m_status = spi.transfer(NOP);
-    spi.end();
-    return (m_status);
+    return (read(NOP));
   }
 
   /**
-   * Return true(1) if max retransmit attempts otherwise false(0).
-   * @return boolean.
+   * Read status. Issue NOP command to read status.
+   * @return status.
    */
-  bool is_max_retransmit()
+  fifo_status_t read_fifo_status()
   {
-    return (read_status().max_rt);
+    return (read(FIFO_STATUS));
   }
 
   /**
-   * Return true(1) if max lost packets count otherwise false(0).
-   * @return boolean.
+   * Read status. Issue NOP command to read status.
+   * @return status.
    */
-  bool is_max_lost()
+  observe_tx_t read_observe_tx()
   {
-    spi.begin(this);
-    observe_tx_t observe = read(OBSERVE_TX);
-    spi.end();
-    return (observe.plos_cnt == 15);
+    return (read(OBSERVE_TX));;
   }
 
   /**
@@ -562,11 +551,7 @@ public:
    * otherwise false(0). 
    * @return bool
    */
-  virtual bool begin(const void* config = NULL)
-  {
-    powerup();
-    return (true);
-  }
+  virtual bool begin(const void* config = NULL);
 
   /**
    * Shut down the device driver. Return true(1) if successful
@@ -584,20 +569,14 @@ public:
    * false(0). 
    * @return bool
    */
-  virtual bool available()
-  {
-    return (read_status().rx_p_no < PIPE_MAX);
-  }
+  virtual bool available();
 
   /**
    * Return true(1) if there is room to send on the device otherwise
    * false(0).  
    * @return bool
    */
-  virtual bool room()
-  {
-    return (!read_status().tx_full);
-  }
+  virtual bool room();
   
   /**
    * Send message in given buffer, with given number of bytes. Returns

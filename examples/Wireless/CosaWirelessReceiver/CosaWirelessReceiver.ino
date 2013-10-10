@@ -32,11 +32,11 @@
 #include "Cosa/RTC.hh"
 
 // Select Wireless device driver
-#include "Cosa/Wireless/Driver/CC1101.hh"
-CC1101 rf(0x02);
+// #include "Cosa/Wireless/Driver/CC1101.hh"
+// CC1101 rf(0x02);
 
-// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-// NRF24L01P rf(0x02);
+#include "Cosa/Wireless/Driver/NRF24L01P.hh"
+NRF24L01P rf(0x02);
 
 void setup()
 {
@@ -68,10 +68,9 @@ void loop()
 
   // Print the message
   else {
-    trace << hex << src 
+    trace << hex << src << ':'
 #if defined(__COSA_WIRELESS_DRIVER_CC1101_HH__)
-	  << PSTR(":[") 
-	  << rf.get_input_power_level() << ',' 
+	  << '[' << rf.get_input_power_level() << ',' 
 	  << rf.get_link_quality_indicator() << PSTR("]:")
 #endif
 	  << count << ':';

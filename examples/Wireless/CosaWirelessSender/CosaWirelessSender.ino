@@ -33,16 +33,16 @@
 #include "Cosa/RTC.hh"
 
 // Select Wireless device driver
-#include "Cosa/Wireless/Driver/CC1101.hh"
-CC1101 rf(0x02);
+// #include "Cosa/Wireless/Driver/CC1101.hh"
+// CC1101 rf(0x01);
 
-// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-// NRF24L01P rf(0x02);
+#include "Cosa/Wireless/Driver/NRF24L01P.hh"
+NRF24L01P rf(0x01);
 
 void setup()
 {
-  // uart.begin(9600);
-  // trace.begin(&uart, PSTR("CosaWirelessSender: started"));
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaWirelessSender: started"));
   Watchdog::begin();
   RTC::begin();
   rf.begin();
@@ -55,9 +55,9 @@ void loop()
   static size_t len = 0;
   
   // Send message; broadcast(0x00) and send to nodes 0x01 to 0x03
-  rf.broadcast(&msg, len = (len == 0) ? MSG_MAX : len - 1);
-  for (uint8_t dest = 0x01; dest < 0x04; dest++)
-    rf.send(dest, &msg, sizeof(msg));
+  // len = (len == 0) ? MSG_MAX : len - 1;
+  // rf.broadcast(&msg, len);
+  rf.send(0x02, &msg, sizeof(msg));
 
   // Update message; increment bytes
   for (uint8_t i = 0; i < MSG_MAX; i++) {

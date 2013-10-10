@@ -30,6 +30,52 @@
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
 #include <util/delay.h>
+#include "Cosa/Trace.hh"
+
+uint8_t 
+NRF24L01P::read(Command cmd)
+{
+  spi.begin(this);
+  m_status = spi.transfer(cmd);
+  uint8_t res = spi.transfer(0);
+  spi.end();
+  return (res);
+}
+
+void 
+NRF24L01P::read(Command cmd, void* buf, size_t size)
+{
+  spi.begin(this);
+  m_status = spi.transfer(cmd);
+  spi.read(buf, size);
+  spi.end();
+}
+
+void 
+NRF24L01P::write(Command cmd)
+{
+  spi.begin(this);
+  m_status = spi.transfer(cmd);
+  spi.end();
+}
+
+void 
+NRF24L01P::write(Command cmd, uint8_t data)
+{
+  spi.begin(this);
+  m_status = spi.transfer(cmd);
+  spi.transfer(data);
+  spi.end();
+}
+
+void 
+NRF24L01P::write(Command cmd, const void* buf, size_t size)
+{
+  spi.begin(this);
+  m_status = spi.transfer(cmd);
+  spi.write(buf, size);
+  spi.end();
+}
 
 void
 NRF24L01P::powerup()
@@ -37,41 +83,15 @@ NRF24L01P::powerup()
   if (m_state != POWER_DOWN_STATE) return;
   m_ce.clear();
 
-  // Start SPI interaction block
-  spi.begin(this);
-  
-  // Setup hardware features, channel, bitrate, retransmission, dynamic payload
-  write(FEATURE, (_BV(EN_DPL) | _BV(EN_ACK_PAY) | _BV(EN_DYN_ACK)));
-  write(RF_CH, m_channel);
-  write(RF_SETUP, (RF_DR_2MBPS | RF_PWR_0DBM));
-  write(SETUP_RETR, ((2 << ARD) | (15 << ARC)));
-  write(DYNPD, DPL_PA);
-
-  // Setup hardware receive pipes (0:ack, 1:device, 2:broadcast)
-  addr_t rx_addr(0,0);
-  write(SETUP_AW, AW_3BYTES);
-  write(RX_ADDR_P0);
-  write(&rx_addr, sizeof(rx_addr));
-  rx_addr = m_addr;
-  write(RX_ADDR_P1);
-  write(&rx_addr, sizeof(rx_addr));
-  rx_addr.device = 0;
-  write(RX_ADDR_P2);
-  write(&rx_addr, sizeof(rx_addr));
-  write(EN_RXADDR, (_BV(ERX_P0) | _BV(ERX_P1) | _BV(ERX_P2))); 
-
-  // Auto-acknowledgement on device pipe
-  write(EN_AA, _BV(ENAA_P1));
-
   // Setup configuration for powerup and clear interrupts
   write(CONFIG, (_BV(EN_CRC) | _BV(CRCO)  | _BV(PWR_UP)));
-  write(STATUS, (_BV(RX_DR)  | _BV(TX_DS) | _BV(MAX_RT)));
-
-  // End of SPI block
-  spi.end();
-  
   _delay_ms(Tpd2stby_ms);
   m_state = STANDBY_STATE;
+
+  // Flush status
+  write(STATUS, (_BV(RX_DR)  | _BV(TX_DS) | _BV(MAX_RT)));
+  write(FLUSH_TX);
+  write(FLUSH_RX);
 }
 
 void
@@ -80,14 +100,8 @@ NRF24L01P::set_receiver_mode()
   // Check already in receive mode
   if (m_state == RX_STATE) return;
 
-  // Fix: Should be handled by the interrupt handler on TX_DS interrupt
-  if (m_state == TX_STATE) Watchdog::delay(16);
-
   // Configure primary receiver mode
-  spi.begin(this);
   write(CONFIG, (_BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP) | _BV(PRIM_RX)));
-  spi.end();
-
   m_ce.set();
   if (m_state == STANDBY_STATE) _delay_us(Tstby2a_us);
   m_state = RX_STATE;
@@ -96,22 +110,18 @@ NRF24L01P::set_receiver_mode()
 void
 NRF24L01P::set_transmit_mode(uint8_t dest)
 {
-  // Setup primary transmit address and acknowledge address
+  // Setup primary transmit address
   addr_t tx_addr(m_addr.network, dest);
-  spi.begin(this);
-  write(TX_ADDR);
-  write(&tx_addr, sizeof(tx_addr));
-  write(RX_ADDR_P0);
-  write(&tx_addr, sizeof(tx_addr));  
-  if (m_state != TX_STATE) {
-    bool state = m_ce.is_set();
-    m_ce.clear();
-    write(CONFIG, (_BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP)));
-    m_ce.pulse(10);
-    DELAY(10);
-    m_ce.set(state);
-  }
-  spi.end();
+  write(TX_ADDR, &tx_addr, sizeof(tx_addr));
+  write(RX_ADDR_P0, &tx_addr, sizeof(tx_addr));  
+
+  // Clear interrupts if any
+  // write(STATUS, (_BV(TX_DS) | _BV(MAX_RT)));
+
+  // Trigger the transmitter mode
+  m_ce.clear();
+  write(CONFIG, (_BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP)));
+  m_ce.set();
 
   // Wait for the transmitter to become active
   if (m_state == STANDBY_STATE) _delay_us(Tstby2a_us);
@@ -129,11 +139,51 @@ NRF24L01P::standby()
 void
 NRF24L01P::powerdown()
 {
+  Watchdog::delay(32);
   m_ce.clear();
-  spi.begin(this);
   write(CONFIG, (_BV(EN_CRC) | _BV(CRCO)));
-  spi.end();
   m_state = POWER_DOWN_STATE;
+}
+
+bool 
+NRF24L01P::begin(const void* config)
+{
+  // Setup hardware features, channel, bitrate, retransmission, dynamic payload
+  write(FEATURE, (_BV(EN_DPL) | _BV(EN_ACK_PAY) | _BV(EN_DYN_ACK)));
+  write(RF_CH, m_channel);
+  write(RF_SETUP, (RF_DR_2MBPS | RF_PWR_0DBM));
+  write(SETUP_RETR, ((2 << ARD) | (15 << ARC)));
+  write(DYNPD, DPL_PA);
+  write(SETUP_AW, AW_3BYTES);
+
+  // Setup hardware receive pipes (0:ack, 1:device, 2:broadcast)
+  addr_t rx_addr = m_addr;
+  write(RX_ADDR_P1, &rx_addr, sizeof(rx_addr));
+  write(RX_ADDR_P2, 0);
+  write(EN_RXADDR, (_BV(ERX_P2) | _BV(ERX_P1) | _BV(ERX_P0)));
+  
+  // Auto-acknowledgement on device pipe
+  write(EN_AA, (_BV(ENAA_P2) | _BV(ENAA_P1) | _BV(ENAA_P0)));
+
+  // Ready to go
+  powerup();
+  m_irq.enable();
+  return (true);
+}
+
+bool
+NRF24L01P::room()
+{
+  // Sanity check the max number of retransmissions and flush if necessary
+  if (read_status().max_rt) {
+    write(STATUS, _BV(MAX_RT));
+    write(FLUSH_TX);
+    write(RF_CH, m_channel);
+    return (false);
+  }
+
+  // Return the transmitter fifo status
+  return (!read_status().tx_full);
 }
 
 int
@@ -142,66 +192,63 @@ NRF24L01P::send(uint8_t dest, const void* buf, size_t size)
   // Check buffer and payload size
   if ((buf == NULL) || (size > PAYLOAD_MAX)) return (-1);
 
-  // Check if previous send did not succeed
-  if (is_max_retransmit()) {
-    spi.begin(this);
-    write(STATUS, _BV(MAX_RT));
-    write(FLUSH_TX);
-    spi.end();
-  }
-
   // Wait for room before setting transmit destination
   while (!room()) Power::sleep(SLEEP_MODE_IDLE);
   set_transmit_mode(dest);
 
   // Write source address and payload to the transmit fifo
   spi.begin(this);
-  write(W_TX_PAYLOAD);
-  write(m_addr.device);
-  write(buf, size);
+  m_status = spi.transfer(dest ? W_TX_PAYLOAD : W_TX_PAYLOAD_NO_ACK);
+  spi.transfer(m_addr.device);
+  spi.write(buf, size);
   spi.end();
-  
+
   // Return size of payload actually sent
   return (size);
+}
+
+bool
+NRF24L01P::available()
+{
+  // Check the receiver fifo
+  if (read_fifo_status().rx_empty) 
+    return (false);
+  // Sanity check the size of the payload. Might require a flush
+  if (read(R_RX_PL_WID) > 32) {
+    write(FLUSH_RX);
+    return (false);
+  }
+  return (true);
 }
 
 int
 NRF24L01P::recv(uint8_t& src, void* buf, size_t size, uint32_t ms)
 {
+  // Run in receiver mode
+  set_receiver_mode();
+
   // Check if there is data available on any pipe
   uint32_t start = RTC::millis();
   while (!available()) {
-    if (ms != 0 && (RTC::since(start) > ms)) return (-2);
+    if ((ms != 0) && (RTC::since(start) > ms)) return (-2);
     Power::sleep(SLEEP_MODE_IDLE);
   } 
-
-  // Read the payload size
-  uint8_t count;
-  spi.begin(this);
-  count = read(R_RX_PL_WID);
-  spi.end();
-
+  write(STATUS, _BV(RX_DR));
+  
   // Check for payload error from device (Tab. 20, pp. 51, R_RX_PL_WID)
+  uint8_t count = read(R_RX_PL_WID) - 1;
   if ((count > PAYLOAD_MAX) || (count > size)) {
     write(FLUSH_RX);
     return (-1);
   }
-  size = count - 1;
 
-  // Read the payload
+  // Read the source address and payload
   spi.begin(this);
-  write(R_RX_PAYLOAD);
-  src = read();
-  read(buf, size);
-  write(STATUS, _BV(RX_DR));
+  m_status = spi.transfer(R_RX_PAYLOAD);
+  src = spi.transfer(0);
+  spi.read(buf, count);
   spi.end();
-  return (size);
-}
-
-void 
-NRF24L01P::IRQPin::on_interrupt(uint16_t arg)
-{ 
-  // Interrupts will wake any sleep
+  return (count);
 }
 
 // Output operators for bitfield status registers
