@@ -120,13 +120,14 @@ Drivers
 13. HMC5883L 3-Axis Digital Compass IC.
 14. NEXA/HomeEasy Wireless Remote command transmitter/receiver for RF433.
 15. ST7565, 65x132 Dot Matrix LCD Controller/Driver.
-16. Debounced button, keypad and dials with Rotary Encoder.
-17. HD44780 (aka 1602, 2004) LCD Controller/Driver.
-18. DS3231, Extremely Accurate I2C-Integrated RTC/TCXO/Crystal. 
-19. PCF8574/PCF8574A Remote 8-bit I/O expander for I2C-bus with interrupt. 
-20. BMP085 Digital Pressure Sensor.
-21. TI CC1101 Low-Power Sub-1 GHz RF Transceiver.
-22. Slave device support for SPI, TWI and OWI.
+16. Touch capacitive sensor, debounced button and keypad.
+17. Dials with Rotary Encoder.
+18. HD44780 (aka 1602, 2004) LCD Controller/Driver.
+19. DS3231, Extremely Accurate I2C-Integrated RTC/TCXO/Crystal. 
+20. PCF8574/PCF8574A Remote 8-bit I/O expander for I2C-bus with interrupt. 
+21. BMP085 Digital Pressure Sensor.
+22. TI CC1101 Low-Power Sub-1 GHz RF Transceiver.
+23. Slave device support for SPI, TWI and OWI.
 
 The reference documentation for each device driver hardware module may
 be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  
@@ -226,4 +227,6 @@ RC4 cipher.
 2013-08 Updating DHT11/22 device driver. Adding a simple touch
 capacitive sensor.     
 2013-09 Major refactoring of SPI and TWI device driver support.    
-2013-10 Device driver for CC1101 and BMP085 introduced.    
+2013-10 Device driver for CC1101 and BMP085 introduced. Introducting
+an abstract Wireless device interface. Refactoring CC1101 and
+NRF24L01P to the new interface.     
