@@ -1,5 +1,5 @@
 /**
- * @file CosaCC1101sender.ino
+ * @file CosaWirelessSender.ino
  * @version 1.0
  *
  * @section License
@@ -21,66 +21,41 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Simple CC1101 transmitter demo; send messages; broadcast and
- * to nodes 1 to 3.
+ * Cosa Wireless interface demo; send messages; broadcast and
+ * to nodes 1 to 3 (CosaWirelessReceiver).
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Wireless/Driver/CC1101.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
-CC1101 rf(0x01);
+// Select Wireless device driver
+#include "Cosa/Wireless/Driver/CC1101.hh"
+CC1101 rf(0x02);
 
-// #define DEBUG_CC1101
-#if defined(DEBUG_CC1101)
-#include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
-
-void dump(uint8_t addr, uint8_t* reg, size_t size)
-{
-  for (uint8_t i = 0; i < size; i++) 
-    trace << hex << i + addr << ':' << reg[i] 
-	  << PSTR(" (") << hex << reg[i] << PSTR(")") << endl;
-}
-#endif
+// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
+// NRF24L01P rf(0x02);
 
 void setup()
 {
+  // uart.begin(9600);
+  // trace.begin(&uart, PSTR("CosaWirelessSender: started"));
   Watchdog::begin();
   RTC::begin();
-
-#if defined(DEBUG_CC1101)
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaCC1101sender: started"));
-  uint8_t reg[CC1101::CONFIG_MAX];
-  INFO("Read default register values", 0);
-  rf.read(CC1101::IOCFG2, reg, sizeof(reg));
-  dump(CC1101::IOCFG2, reg, sizeof(reg));
-  INFO("Start device and read registers", 0);
-#endif
-
   rf.begin();
-
-#if defined(DEBUG_CC1101)
-  rf.read(CC1101::IOCFG2, reg, sizeof(reg));
-  dump(CC1101::IOCFG2, reg, sizeof(reg));
-  INFO("Read status registers ", 0);
-  for (uint8_t i = 0; i < CC1101::STATUS_MAX; i++) 
-    reg[i] = rf.read((CC1101::Status) (CC1101::PARTNUM + i));
-  dump(CC1101::PARTNUM, reg, CC1101::STATUS_MAX);
-#endif
 }
 
 void loop()
 {
-  static const uint8_t MSG_MAX = 16;
+  static const uint8_t MSG_MAX = 8;
   static uint8_t msg[MSG_MAX] = { 0x00 };
-  static size_t len = MSG_MAX;
+  static size_t len = 0;
   
   // Send message; broadcast(0x00) and send to nodes 0x01 to 0x03
-  rf.broadcast(&msg, len);
+  rf.broadcast(&msg, len = (len == 0) ? MSG_MAX : len - 1);
   for (uint8_t dest = 0x01; dest < 0x04; dest++)
     rf.send(dest, &msg, sizeof(msg));
 
@@ -89,7 +64,6 @@ void loop()
     msg[i] += 1;
     if (msg[i] != 0) break;
   }
-  len = (len == 0) ? MSG_MAX : len - 1;
 
   // Sleep in power down mode
   rf.powerdown();
