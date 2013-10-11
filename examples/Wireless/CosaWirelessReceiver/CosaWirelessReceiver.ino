@@ -57,10 +57,10 @@ void loop()
 
   // Check error codes
   if (count == -1) {
-    trace << PSTR("illegal frame size(-1)\n");
+    trace << PSTR("error:illegal frame size(-1)\n");
   }
   else if (count == -2) {
-    trace << PSTR("timeout(-2)\n");
+    trace << PSTR("error:timeout(-2)\n");
   }
   else if (count < 0) {
     trace << PSTR("error(") << count << PSTR(")\n");
@@ -68,7 +68,9 @@ void loop()
 
   // Print the message
   else {
-    trace << hex << src << ':'
+    trace << PSTR("msg(src = ") 
+	  << hex << src 
+	  << PSTR("):")
 #if defined(__COSA_WIRELESS_DRIVER_CC1101_HH__)
 	  << '[' << rf.get_input_power_level() << ',' 
 	  << rf.get_link_quality_indicator() << PSTR("]:")

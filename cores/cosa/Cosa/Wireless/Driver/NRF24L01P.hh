@@ -454,16 +454,13 @@ private:
   /** Transceiver state */
   State m_state;
 
-public:
+protected:
 
   /**
    * Read status. Issue NOP command to read status.
    * @return status.
    */
-  status_t read_status()
-  {
-    return (read(NOP));
-  }
+  status_t read_status();
 
   /**
    * Read status. Issue NOP command to read status.
@@ -571,13 +568,6 @@ public:
    */
   virtual bool available();
 
-  /**
-   * Return true(1) if there is room to send on the device otherwise
-   * false(0).  
-   * @return bool
-   */
-  virtual bool room();
-  
   /**
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes

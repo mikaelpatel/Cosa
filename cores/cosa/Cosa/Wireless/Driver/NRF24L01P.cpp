@@ -77,6 +77,15 @@ NRF24L01P::write(Command cmd, const void* buf, size_t size)
   spi.end();
 }
 
+NRF24L01P::status_t
+NRF24L01P::read_status()
+{
+  spi.begin(this);
+  m_status = spi.transfer(NOP);
+  spi.end();
+  return (m_status);
+}
+
 void
 NRF24L01P::powerup()
 {
@@ -115,13 +124,12 @@ NRF24L01P::set_transmit_mode(uint8_t dest)
   write(TX_ADDR, &tx_addr, sizeof(tx_addr));
   write(RX_ADDR_P0, &tx_addr, sizeof(tx_addr));  
 
-  // Clear interrupts if any
-  // write(STATUS, (_BV(TX_DS) | _BV(MAX_RT)));
-
   // Trigger the transmitter mode
-  m_ce.clear();
-  write(CONFIG, (_BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP)));
-  m_ce.set();
+  if (m_state != TX_STATE) {
+    m_ce.clear();
+    write(CONFIG, (_BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP)));
+    m_ce.set();
+  }
 
   // Wait for the transmitter to become active
   if (m_state == STANDBY_STATE) _delay_us(Tstby2a_us);
@@ -171,48 +179,44 @@ NRF24L01P::begin(const void* config)
   return (true);
 }
 
-bool
-NRF24L01P::room()
-{
-  // Sanity check the max number of retransmissions and flush if necessary
-  if (read_status().max_rt) {
-    write(STATUS, _BV(MAX_RT));
-    write(FLUSH_TX);
-    write(RF_CH, m_channel);
-    return (false);
-  }
-
-  // Return the transmitter fifo status
-  return (!read_status().tx_full);
-}
-
 int
 NRF24L01P::send(uint8_t dest, const void* buf, size_t size)
 {
   // Check buffer and payload size
   if ((buf == NULL) || (size > PAYLOAD_MAX)) return (-1);
 
-  // Wait for room before setting transmit destination
-  while (!room()) Power::sleep(SLEEP_MODE_IDLE);
+  // Setting transmit destination
   set_transmit_mode(dest);
 
   // Write source address and payload to the transmit fifo
+  // Fix: Allow larger payload(30*3) with fragmentation
   spi.begin(this);
   m_status = spi.transfer(dest ? W_TX_PAYLOAD : W_TX_PAYLOAD_NO_ACK);
   spi.transfer(m_addr.device);
   spi.write(buf, size);
   spi.end();
 
-  // Return size of payload actually sent
-  return (size);
+  // Wait for transmission
+  do {
+    Power::sleep(SLEEP_MODE_IDLE);
+    read_status();
+  } while (!m_status.tx_ds && !m_status.max_rt);
+  write(STATUS, _BV(MAX_RT) | _BV(TX_DS));
+
+  // Check that the message was delivered
+  if (m_status.tx_ds) return (size);
+
+  // Failed to delivery
+  write(FLUSH_TX);
+  return (-2);
 }
 
 bool
 NRF24L01P::available()
 {
   // Check the receiver fifo
-  if (read_fifo_status().rx_empty) 
-    return (false);
+  if (read_fifo_status().rx_empty) return (false);
+
   // Sanity check the size of the payload. Might require a flush
   if (read(R_RX_PL_WID) > 32) {
     write(FLUSH_RX);

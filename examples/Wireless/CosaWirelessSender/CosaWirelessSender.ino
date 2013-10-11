@@ -55,14 +55,17 @@ void loop()
   static size_t len = 0;
   
   // Send message; broadcast(0x00) and send to nodes 0x01 to 0x03
-  // len = (len == 0) ? MSG_MAX : len - 1;
-  // rf.broadcast(&msg, len);
-  rf.send(0x02, &msg, sizeof(msg));
+  len = (len == 0) ? MSG_MAX : len - 1;
+  rf.broadcast(&msg, len);
+  for (uint8_t dest = 0x00; dest < 0x05; dest++)
+    if (rf.send(dest, &msg, sizeof(msg)) < 0)
+      trace << PSTR("err(dest = ") 
+	    << hex << dest 
+	    << PSTR("):no ack") << endl;
 
   // Update message; increment bytes
   for (uint8_t i = 0; i < MSG_MAX; i++) {
     msg[i] += 1;
-    if (msg[i] != 0) break;
   }
 
   // Sleep in power down mode
