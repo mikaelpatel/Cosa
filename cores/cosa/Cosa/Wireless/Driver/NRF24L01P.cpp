@@ -198,7 +198,7 @@ NRF24L01P::send(uint8_t dest, const void* buf, size_t size)
 
   // Wait for transmission
   do {
-    Power::sleep(SLEEP_MODE_IDLE);
+    Power::sleep(m_mode);
     read_status();
   } while (!m_status.tx_ds && !m_status.max_rt);
   write(STATUS, _BV(MAX_RT) | _BV(TX_DS));
@@ -235,7 +235,7 @@ NRF24L01P::recv(uint8_t& src, void* buf, size_t size, uint32_t ms)
   uint32_t start = RTC::millis();
   while (!available()) {
     if ((ms != 0) && (RTC::since(start) > ms)) return (-2);
-    Power::sleep(SLEEP_MODE_IDLE);
+    Power::sleep(m_mode);
   } 
   write(STATUS, _BV(RX_DR));
   
