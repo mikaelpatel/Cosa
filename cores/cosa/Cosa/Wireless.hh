@@ -29,7 +29,7 @@
 #include "Cosa/Power.hh"
 
 /**
- * Cosa Common Wireless devise driver interface.
+ * Cosa Common Wireless device driver interface.
  */
 class Wireless {
 public:
