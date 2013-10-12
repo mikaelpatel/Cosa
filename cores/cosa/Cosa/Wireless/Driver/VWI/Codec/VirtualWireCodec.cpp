@@ -19,7 +19,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/VWI/Codec/VirtualWireCodec.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
 
 const uint8_t 
 VirtualWireCodec::symbols[] __PROGMEM = {

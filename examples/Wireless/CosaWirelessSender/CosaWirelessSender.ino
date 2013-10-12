@@ -36,8 +36,13 @@
 // #include "Cosa/Wireless/Driver/CC1101.hh"
 // CC1101 rf(0xC05A, 0x01);
 
-#include "Cosa/Wireless/Driver/NRF24L01P.hh"
-NRF24L01P rf(0xC05A, 0x01);
+// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
+// NRF24L01P rf(0xC05A, 0x01);
+
+#include "Cosa/Wireless/Driver/VWI.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+VirtualWireCodec codec;
+VWI rf(0xC05A, 0x01, 4000, Board::D7, Board::D8, &codec);
 
 void setup()
 {
@@ -58,7 +63,7 @@ void loop()
   len = (len == 0) ? MSG_MAX : len - 1;
   rf.broadcast(msg, len);
   for (uint8_t dest = 0x01; dest < 0x04; dest++)
-    if (rf.send((uint8_t) dest, msg, sizeof(msg)) < 0)
+    if (rf.send(dest, msg, sizeof(msg)) < 0)
       trace << PSTR("err(dest = ") 
 	    << hex << dest 
 	    << PSTR("):no ack") << endl;

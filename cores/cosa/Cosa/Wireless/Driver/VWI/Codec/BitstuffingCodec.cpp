@@ -1,5 +1,5 @@
 /**
- * @file Cosa/VWI/Codec/BitstuffingCodec.cpp
+ * @file Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/VWI/Codec/BitstuffingCodec.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh"
 
 /*
  * Calculating the start symbol (5-bits per symbol):

@@ -1,10 +1,9 @@
 /**
- * @file Cosa/VWI/Codec/VirtualWireCodec.hh
+ * @file Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire)
- * Copyright (C) 2013, Mikael Patel (Cosa C++ port and refactoring)
+ * Copyright (C) 2013, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,33 +18,30 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_VWI_CODEC_VIRTUALWIRECODEC_HH__
-#define __COSA_VWI_CODEC_VIRTUALWIRECODEC_HH__
+#ifndef __COSA_WIRELESS_DRIVER_VWI_CODEC_BITSTUFFINGCODEC_HH__
+#define __COSA_WIRELESS_DRIVER_VWI_CODEC_BITSTUFFINGCODEC_HH__
 
-#include "Cosa/VWI.hh"
+#include "Cosa/Wireless/Driver/VWI.hh"
 
 /**
- * VirtualWire 4-to-6 bit codec for the Cosa VWI (Virtual Wire
+ * Fixed bitstuffing 4 to 5 bit codec for the Cosa VWI (Virtual Wire
  * Interface). 
  */
-class VirtualWireCodec : public VWI::Codec {
+class BitstuffingCodec : public VWI::Codec {
 private:
-  /** Symbol mapping table: 4 to 6 bits */
-  static const uint8_t symbols[] PROGMEM;
-
-  /** Message preamble with start symbol */
+  /** Message preamble */
   static const uint8_t preamble[] PROGMEM;
   
 public:
   /**
-   * Construct VirtualWire codec with given bits per symbol, start symbol,
-   * and preamble size.
+   * Construct fixed bitstuffing codec with given bits per symbol,
+   * start symbol, and preamble size.
    */
-  VirtualWireCodec() : VWI::Codec(6, 0xb38, 8) {}
+  BitstuffingCodec() : VWI::Codec(5, 0x34a, 8) {}
   
   /**
    * @override
-   * Returns pointer to VirtualWire frame preamble in program memory.
+   * Returns pointer to Cosa fixed bitstuffing frame preamble in program memory.
    * @return pointer.
    */
   virtual const uint8_t* get_preamble() 
@@ -55,20 +51,23 @@ public:
   
   /**
    * @override
-   * Returns symbol for given 4-bit data.
-   * @return 6-bit code.
+   * Returns fixed bitstuffed symbol for given 4-bit data.
+   * @return 5-bit bitstuffed code.
    */
   virtual uint8_t encode4(uint8_t nibble) 
   { 
-    return (pgm_read_byte(&symbols[nibble & 0xf]));
+    return (((nibble & 0xf) << 1) + ((nibble & 0x1) == 0));
   };
 
   /**
    * @override
-   * Returns 4-bit data for given symbol.
+   * Returns 4-bit data for given fixed bitstuffed symbol.
    * @return 4-bit data.
    */
-  virtual uint8_t decode4(uint8_t symbol);
+  virtual uint8_t decode4(uint8_t symbol)
+  {
+    return ((symbol >> 1) & 0xf);
+  }
 };
 
 #endif

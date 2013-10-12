@@ -589,7 +589,7 @@ public:
   virtual bool end();
     
   /**
-   * @override Wireless::Device
+   * @override Wireless::Driver
    * Send message in given null terminated io vector. Returns number
    * of bytes sent. Returns error code(-1) if number of bytes is
    * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
@@ -601,7 +601,7 @@ public:
   virtual int send(uint8_t dest, const iovec_t* vec);
 
   /**
-   * @override Wireless::Device
+   * @override Wireless::Driver
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
@@ -614,7 +614,7 @@ public:
   virtual int send(uint8_t dest, const void* buf, size_t len);
 
   /**
-   * @override Wireless::Device
+   * @override Wireless::Driver
    * Receive message and store into given buffer with given maximum
    * length. The source network address is returned in the parameter src.
    * Returns error code(-2) if no message is available and/or a

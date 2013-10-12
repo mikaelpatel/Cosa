@@ -79,14 +79,14 @@ private:
   } __attribute__((packed));
 
   /**
-   * Read command. 
+   * Issue read command register.
    * @param[in] cmd command.
    * @return command value.
    */
   uint8_t read(Command cmd);
 
   /**
-   * Read command value. 
+   * Read command values into given buffer.
    * @param[in] cmd command.
    * @param[in] buf buffer for read data.
    * @param[in] size number of bytes to read.
@@ -94,7 +94,7 @@ private:
   void read(Command cmd, void* buf, size_t size);
   
   /**
-   * Write command.
+   * Issue command.
    * @param[in] cmd command.
    */
   void write(Command cmd);
@@ -107,7 +107,7 @@ private:
   void write(Command cmd, uint8_t data);
 
   /**
-   * Write command value. 
+   * Write command and values from given buffer.
    * @param[in] cmd command.
    * @param[in] buf buffer with data to write.
    * @param[in] size number of bytes to write.
@@ -366,7 +366,8 @@ private:
 
 
   /**
-   * Read registers. Issue R_REGISTER command.
+   * Read register value. Issue R_REGISTER command with given
+   * register and read value.
    * @param[in] reg register address.
    * @return register value.
    */
@@ -376,7 +377,8 @@ private:
   }
 
   /**
-   * Read registers. Issue R_REGISTER command.
+   * Read register values. Issue R_REGISTER command with given
+   * register and write given buffer.
    * @param[in] reg register address.
    * @param[in] buf buffer for read data.
    * @param[in] size number of bytes to read.
@@ -387,8 +389,8 @@ private:
   }
   
   /**
-   * Write command and status registers. Issue W_REGISTER command and
-   * write data.
+   * Write command and value. Issue W_REGISTER command with register
+   * and write data. 
    * @param[in] reg register address.
    * @param[in] data new setting.
    * @return status.
@@ -399,8 +401,8 @@ private:
   }
 
   /**
-   * Write command and status registers. Issue W_REGISTER command and
-   * write data.
+   * Write command and values. Issue W_REGISTER command with register
+   * and write data from given buffer.
    * @param[in] reg register address.
    * @param[in] buf buffer with data to write.
    * @param[in] size number of bytes to write.
@@ -463,8 +465,8 @@ protected:
   status_t read_status();
 
   /**
-   * Read status. Issue NOP command to read status.
-   * @return status.
+   * Read FIFO status. Issue FIFO_STATUS command to read status.
+   * @return fifo status.
    */
   fifo_status_t read_fifo_status()
   {
@@ -472,8 +474,9 @@ protected:
   }
 
   /**
-   * Read status. Issue NOP command to read status.
-   * @return status.
+   * Read transmission status. Issue OBSERVE_TX command to read
+   * status. 
+   * @return observe tx status.
    */
   observe_tx_t read_observe_tx()
   {
@@ -481,7 +484,7 @@ protected:
   }
 
   /**
-   * Set transmit mode to given destination node.
+   * Set transmit mode and given destination device address.
    * @param[n] dest destination device address.
    */
   void set_transmit_mode(uint8_t dest);

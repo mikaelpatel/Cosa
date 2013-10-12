@@ -1,9 +1,9 @@
 /**
- * @file Cosa/VWI.hh
+ * @file Cosa/Wireless/Driver/VWI.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire)
+ * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire rev. 1.19)
  * Copyright (C) 2013, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
@@ -24,109 +24,47 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_VWI_HH__
-#define __COSA_VWI_HH__
+#ifndef __COSA_WIRELESS_DRIVER_VWI_HH__
+#define __COSA_WIRELESS_DRIVER_VWI_HH__
 
 #include "Cosa/Pins.hh"
+#include "Cosa/Wireless.hh"
 
 /**
- * VWI (Virtual Wire Interface) is an Cosa library that provides
- * features to send short messages using inexpensive radio
- * transmitters and receivers (RF433).
+ * VWI is an Cosa library that provides features to send short
+ * messages using inexpensive radio transmitters and receivers (VWI).
+ * This library is an object-oriented refactoring and extension of the
+ * Virtual Wire library. 
  */
-class VWI {
+class VWI : public Wireless::Driver {
   friend void TIMER1_COMPA_vect(void);
-public:
-  class Receiver;
-  class Transmitter;
-
+private:
+  /**
+   * Frame header; Transmitted in little endian order; network LSB first.
+   */
+  struct header_t {
+    int16_t network;		/**< Network address */
+    uint8_t dest;		/**< Destination device address */
+    uint8_t src;		/**< Source device address */
+  };
+  
   /** 
    * The maximum payload length; 32 byte application payload and 
-   * 4 byte enhanced mode header (sizeof(header_t)) 
+   * 4 byte frame header with network(2)
    */
-  static const uint8_t PAYLOAD_MAX = 36;
+  static const uint8_t PAYLOAD_MAX = 32 + sizeof(header_t);
   
   /** Maximum number of bytes in a message (incl. byte count and FCS) */
   static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
 
   /** Minimum number of bytes in a message */
-  static const uint8_t MESSAGE_MIN = 4;
+  static const uint8_t MESSAGE_MIN = sizeof(header_t);
 
   /** Number of samples per bit */
   static const uint8_t SAMPLES_PER_BIT = 8;
 
   /** CRC checksum for received frame */
   static const uint16_t CHECK_SUM = 0xf0b8;
-
-  /**
-   * Compute CRC over count bytes and return value. Used for checking
-   * received messages. Return value should be CHECK_SUM.
-   * @param[in] ptr buffer pointer.
-   * @param[in] count number of bytes in buffer.
-   * @return CRC.
-   */
-  static uint16_t CRC(uint8_t* ptr, uint8_t count);
-
-  /** Message header for enhance Virtual Wire Interface mode */
-  struct header_t {
-    uint16_t addr;		/**< Transmitter node address */
-    uint8_t nr;			/**< Message sequence number */
-    uint8_t cmd;		/**< Command or message type */
-  };
-
-  /**
-   * Initialise the Virtual Wire Interface (VWI), to operate at given
-   * speed bits per second and with given sleep mode. Return true(1)
-   * if successful otherwise false(0). Must be called before
-   * transmitting or receiving. Default sleep mode is idle.
-   * @param[in] speed in bits per second.
-   * @param[in] mode sleep mode (Default SLEEP_MODE_IDLE).
-   * @return bool
-   */
-  static bool begin(uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE);
-
-  /**
-   * Initialise the Virtual Wire Interface (VWI) for enhanced mode;
-   * include message header (VWI::header_t). Initiate with the given
-   * node address to operate at speed bits per second and with given
-   * sleep mode. Return true(1) if successful otherwise false(0). Must
-   * be called before transmitting or receiving. Default sleep mode is
-   * idle. 
-   * @param[in] addr node address.
-   * @param[in] speed in bits per second.
-   * @param[in] mode sleep mode (Default SLEEP_MODE_IDLE) 
-   * @return bool
-   */
-  static bool begin(uint16_t addr, uint16_t speed, uint8_t mode = SLEEP_MODE_IDLE)
-  {
-    s_addr = addr;
-    return (begin(speed, mode));
-  }
-
-  /**
-   * Enable the Virtual Wire Interface (VWI) interrupt handling after
-   * deep sleep modes.
-   */
-  static void enable();
-
-  /**
-   * Disable the Virtual Wire Interface (VWI) interrupt handling for
-   * deep sleep modes.
-   */
-  static void disable();
-
-private:
-  /** Current transmitter */
-  static Transmitter* s_transmitter;
-
-  /** Current receiver */
-  static Receiver* s_receiver;
-
-  /** Sleep mode during await */
-  static uint8_t s_mode;
-  
-  /** Node address used in enhanced mode in message header */
-  static uint16_t s_addr;
 
 public:
   /**
@@ -206,8 +144,9 @@ public:
     }
   };
 
+private:
   /**
-   * The Virtual Wire Receiver.
+   * Internal Virtual Wire Receiver.
    */
   class Receiver : private InputPin {
     friend void TIMER1_COMPA_vect(void);
@@ -241,9 +180,6 @@ public:
 
     /** Current receiver sample */
     Codec* m_codec;
-
-    /** Sub-net mask for enhanced mode address match */
-    uint16_t m_mask;
 
     /** Current receiver sample */
     uint8_t m_sample;
@@ -291,12 +227,6 @@ public:
     /** The incoming message buffer length received so far */
     volatile uint8_t m_length;
 
-    /** Number of bad messages received and dropped due to bad lengths */
-    uint16_t m_bad;
-
-    /** Number of good messages received */
-    uint16_t m_good;
-
     /**
      * Phase Locked Loop; Synchronises with the transmitter so that
      * bit transitions occur at about the time (m_pll_ramp) is 0, then
@@ -311,32 +241,26 @@ public:
      * @param[in] codec for the receiver.
      */
     Receiver(Board::DigitalPin pin, Codec* codec);
-
+    
     /**
      * Start the Phase Locked Loop listening for the receiver. Must do
-     * this before receiving any messages, When a message is available
-     * (good checksum or not), available(), will return true.
-     * @param[in] mask for sub-net address match.
-     * @return bool
+     * this before receiving any messages, 
      */
-    bool begin(uint16_t mask = 0xffffU);
+    void begin()
+    {
+      m_enabled = true;
+      m_active = false;
+    }
     
     /**
      * Stop the Phase Locked Loop listening to the receiver. No
      * messages will be received until begin() is called again. Saves
      * interrupt processing cycles. 
-     * @return bool
      */
-    bool end();
-
-    /**
-     * Block until a message is available or for a max time (default
-     * 0L for block forever). Returns true if a message is available,
-     * false if the wait timed out.
-     * @param[in] ms maximum time to wait in milliseconds.
-     * @return bool.
-     */
-    bool await(uint32_t ms = 0L);
+    void end()
+    {
+      m_enabled = false;
+    }
 
     /**
      * Returns true if an unread message is available. May have a
@@ -347,42 +271,23 @@ public:
     {
       return (m_done);
     }
-
-    /**
-     * Set sub-net mask in enhanced mode.
-     * @param[in] mask for sub-net address match.
-     */
-    uint16_t set_subnet_mask(uint16_t mask = 0xffffU)
-    {
-      uint32_t previous = m_mask;
-      m_mask = mask;
-      return (previous);
-    }
-
-    /**
-     * Get receiver statistics; number of good and bad messages.
-     */
-    void get_stat(uint16_t& good, uint16_t& bad)
-    {
-      good = m_good;
-      bad = m_bad;
-    }
     
     /**
      * If a message is available (good checksum or not), copies up to
      * len bytes to the given buffer, buf. Returns number of bytes 
      * received/copied, zero(0) for timeout or negative error code; 
      * bad checksum(-1), and in enhanced mode did not match address(-2).
+     * @param[out] src source network address.
      * @param[in] buf pointer to location to save the read data.
      * @param[in] len available space in buf. 
      * @param[in] ms timeout period (zero for non-blocking)
      * @return number of bytes received or negative error code.
      */
-    int8_t recv(void* buf, uint8_t len, uint32_t ms = 0L);
+    int recv(uint8_t& src, void* buf, size_t len, uint32_t ms = 0L);
   };
 
   /**
-   * The Virtual Wire Transmitter.
+   * Internal Virtual Wire Transmitter.
    */
   class Transmitter : private OutputPin {
     friend void TIMER1_COMPA_vect(void);
@@ -396,9 +301,6 @@ public:
 
     /** Current transmitter codec */
     Codec* m_codec;
-
-    /** Message sequence number for enhanced mode */
-    uint8_t m_nr;
 
     /** Number of symbols to be sent */
     uint8_t m_length;
@@ -415,9 +317,6 @@ public:
     /** Flag to indicated the transmitter is active */
     volatile uint8_t m_enabled;
 
-    /** Total number of messages sent */
-    uint16_t m_count;
-
   public:
     /**
      * Construct VWI Transmitter instance connected to the given
@@ -428,20 +327,14 @@ public:
     Transmitter(Board::DigitalPin pin, Codec* codec);
 
     /**
-     * Start transmitter. Returns true(1) if successful otherwise false(0).
-     * @return bool
+     * Start transmitter. 
      */
-    bool begin();
+    void begin();
     
     /**
-     * Stop transmitter. Returns true(1) if successful otherwise false(0).
+     * Stop transmitter. 
      */
-    bool end()
-    {
-      clear();
-      m_enabled = false;
-      return (true);
-    }
+    void end();
 
     /**
      * Returns the state of the transmitter.
@@ -453,46 +346,16 @@ public:
     }
 
     /**
-     * Get next message sequence number in enhanced mode.
-     * @return message sequence number.
-     */
-    uint8_t get_next_nr()
-    {
-      return (m_nr);
-    }
-
-    /**
-     * Set next message sequence number in enhanced mode.
-     * @param[in] next sequence number.
-     */
-    void set_next_nr(uint8_t value)
-    {
-      m_nr = value;
-    }
-
-    /**
-     * Get transmitter statistics; number of send messages
-     */
-    void get_stat(uint16_t& count)
-    {
-      count = m_count;
-    }
-    
-    /**
-     * Block until the transmitter is idle then returns.
-     */
-    void await();
-
-    /**
      * Send message using a null terminated io vector message. Returns
      * almost immediately, and message will be sent at the right
      * timing by interrupts. Message is gathered from elements in io
      * vector. The total size of the io vector buffers must be less
      * than PAYLOAD_MAX.
+     * @param[in] dest destination network address.
      * @param[in] vec null terminated io vector.
-     * @return true(1) if accepted for transmission, otherwise false(0).
+     * @return number of bytes transmitted or negative error code.
      */
-    bool send(const iovec_t* vec);
+    int send(uint8_t dest, const iovec_t* vec);
 
     /**
      * Send a message with the given length. Returns almost
@@ -500,104 +363,115 @@ public:
      * interrupts. A command may be given in enhanced mode with
      * addressing to allow identification of the message type.
      * The message length (len) must be less than PAYLOAD_MAX.
+     * @param[in] dest destination network address.
      * @param[in] buf pointer to the data to transmit.
      * @param[in] len number of bytes to transmit.
-     * @param[in] cmd command code in enhanced mode.
-     * @return true(1) if accepted for transmission, otherwise false(0).
+     * @return number of bytes transmitted or negative error code.
      */
-    bool send(const void* buf, uint8_t len, uint8_t cmd = 0);
-
-    /**
-     * Resend previous message. Return true(1) if successful otherwise
-     * false(0).
-     * @return bool
-     */
-    bool resend();
+    int send(uint8_t dest, const void* buf, size_t len);
   };
+
+private:
+  /** Self-reference for interrupt handler */
+  static VWI* s_rf;
+
+  /** Receiver member variable */
+  Receiver m_rx;
+
+  /** Transmitter member variable */
+  Transmitter m_tx;
+
+  /** Bit per second */
+  uint16_t m_speed;
+
+public:
+  /**
+   * Construct Virtual Wire Interface with given network, device
+   * address and speed (bits per second). Attach Receiver to given rx
+   * pin and Transmitter to tx pin. Use the given Codec for coding and
+   * decoding messages.
+   */
+  VWI(int16_t net, uint8_t dev, 
+      uint16_t speed, 
+      Board::DigitalPin rx, 
+      Board::DigitalPin tx,
+      Codec* codec);
 
   /**
-   * Virtual Wire Transceiver with message acknowledgement and
-   * retransmission.
+   * @override Wireless::Driver
+   * Start the Wireless device driver. Return true(1) if successful
+   * otherwise false(0).
+   * @param[in] config configuration vector (default NULL)
+   * @return bool
    */
-  class Transceiver {
-  public:
-    /** Maximum size of enhanced mode payload (32 bytes) */
-    static const uint8_t PAYLOAD_MAX = VWI::PAYLOAD_MAX - sizeof(header_t);
+  virtual bool begin(const void* config = NULL);
 
-    /** Maximum number of retransmission */
-    static const uint8_t RETRANS_MAX = 16;
-
-    /** Timeout on acknowledge receive */
-    static const uint32_t TIMEOUT = 200;
-
-    /** Acknowledgement mode */
-    enum Mode {
-      ACK = 0x00,
-      NACK = 0x80
-    } __attribute__((packed));
-
-    /** Receiver member variable */
-    Receiver rx;
-
-    /** Transmitter member variable */
-    Transmitter tx;
-
-    /**
-     * Transceiver constructor given transmitter and receiver pin, and
-     * codec.
-     * @param[in] rx_pin receiver pin.
-     * @param[in] tx_pin transmitter pin.
-     * @param[in] codec encoder/decoder.
-     */
-    Transceiver(Board::DigitalPin rx_pin, Board::DigitalPin tx_pin, Codec* codec);
-
-    /**
-     * Start the Phase Locked Loop listening for the receiver and
-     * start transmitter.
-     * @param[in] mask for sub-net address match.
-     * @return bool
-     */
-    bool begin(uint16_t mask = 0xffffU);
-
-    /**
-     * Stop transmitter and receiver. Returns true(1) if successful
-     * otherwise false(0). 
-     */
-    bool end();
-
-    /**
-     * If a message is available (good checksum or not), copies up to
-     * len bytes to the given buffer, buf. Sends an acknowledgement.
-     * Always received with enhanced mode header. Caller must check
-     * that the message is not a retransmission by checking the
-     * message sequence number. Returns number of bytes received,
-     * zero(0) for timeout or negative error code; bad checksum(-1), 
-     * and did not match address(-2).
-     * @param[in] buf pointer to location to save the read data.
-     * @param[in] len available space in buf. 
-     * @param[in] ms timeout period (zero for non-blocking)
-     * @return number of bytes received or negative error code.
-     */
-    int8_t recv(void* buf, uint8_t len, uint32_t ms = 0L);
+  /**
+   * @override Wireless::Driver
+   * Shut down the device driver. Return true(1) if successful
+   * otherwise false(0).
+   * @return bool
+   */
+  virtual bool end();
     
-    /**
-     * Send a message with the given length, and await acknowledgement
-     * if the nack flag is zero. The message will be retransmitted
-     * until an acknowledgement is received. The message length (len)
-     * must be less than PAYLOAD_MAX. The command code/message type
-     * must be 0..127. Higher command code will mark the message as
-     * non-acknowledged (nack != 0). Returns number of transmissions 
-     * or negative error code(-1) if maximum number of retransmissions
-     * RETRANS_MAX exceeded.
-     * @param[in] buf pointer to the data to transmit.
-     * @param[in] len number of bytes to transmit.
-     * @param[in] cmd command code in enhanced mode (0..127).
-     * @param[in] mode acknowledgement mode (Default ACK).
-     * @return number of transmissions (1..n) otherwise negative error
-     * code.
-     */
-    int8_t send(const void* buf, uint8_t len, uint8_t cmd, Mode mode = ACK);
-  };
-};
+  /**
+   * @override Wireless::Driver
+   * Set device in power up mode. 
+   */
+  virtual void powerup();
 
+  /**
+   * @override Wireless::Driver
+   * Set device in power down mode. 
+   */
+  virtual void powerdown();
+
+  /**
+   * @override Wireless::Driver
+   * Return true(1) if a message is available otherwise false(0).
+   * @return bool
+   */
+  virtual bool available();
+
+  /**
+   * @override Wireless::Driver
+   * Send message in given null terminated io vector. Returns number
+   * of bytes sent. Returns error code(-1) if number of bytes is
+   * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
+   * transmit mode.
+   * @param[in] dest destination network address.
+   * @param[in] vec null termianted io vector.
+   * @return number of bytes send or negative error code.
+   */
+  virtual int send(uint8_t dest, const iovec_t* vec);;
+
+  /**
+   * @override Wireless::Driver
+   * Send message in given buffer, with given number of bytes. Returns
+   * number of bytes sent. Returns error code(-1) if number of bytes
+   * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
+   * set transmit mode.  
+   * @param[in] dest destination network address.
+   * @param[in] buf buffer to transmit.
+   * @param[in] len number of bytes in buffer.
+   * @return number of bytes send or negative error code.
+   */
+  virtual int send(uint8_t dest, const void* buf, size_t len);
+
+  /**
+   * @override Wireless::Driver
+   * Receive message and store into given buffer with given maximum
+   * length. The source network address is returned in the parameter src.
+   * Returns error code(-2) if no message is available and/or a
+   * timeout occured. Returns error code(-1) if the buffer size if to
+   * small for incoming message or if the receiver fifo has overflowed. 
+   * Otherwise the actual number of received bytes is returned
+   * @param[out] src source network address.
+   * @param[in] buf buffer to store incoming message.
+   * @param[in] len maximum number of bytes to receive.
+   * @param[in] ms maximum time out period.
+   * @return number of bytes received or negative error code.
+   */
+  virtual int recv(uint8_t& src, void* buf, size_t len, uint32_t ms = 0L);
+};
 #endif
