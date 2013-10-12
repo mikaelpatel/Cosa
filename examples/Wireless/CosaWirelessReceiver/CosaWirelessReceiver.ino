@@ -33,10 +33,10 @@
 
 // Select Wireless device driver
 // #include "Cosa/Wireless/Driver/CC1101.hh"
-// CC1101 rf(0x02);
+// CC1101 rf(0xC05A, 0x02);
 
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-NRF24L01P rf(0x02);
+NRF24L01P rf(0xC05A, 0x02);
 
 void setup()
 {

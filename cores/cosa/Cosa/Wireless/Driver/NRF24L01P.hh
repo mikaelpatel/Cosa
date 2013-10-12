@@ -496,29 +496,30 @@ public:
    * Construct NRF transceiver with given channel and pin numbers 
    * for SPI slave select, activity enable and interrupt. Default
    * in parenthesis (Standard/Mega Arduino/TinyX4).
-   * @param[in] addr device address.
+   * @param[in] net network address.
+   * @param[in] dev device address.
    * @param[in] csn spi slave select pin number (default D10/D53/D2).
    * @param[in] ce chip enable activates pin number (default D9/D48/D3).
    * @param[in] irq interrupt pin number (default EXT0/EXT4/EXT0/EXT0).
    */
 #if defined(__ARDUINO_MEGA__)
-  NRF24L01P(uint8_t addr,
+  NRF24L01P(uint16_t net, uint8_t dev,
 	    Board::DigitalPin csn = Board::D53, 
 	    Board::DigitalPin ce = Board::D48, 
 	    Board::ExternalInterruptPin irq = Board::EXT4) :
 #elif defined(__ARDUINO_TINYX4__)
-  NRF24L01P(uint8_t addr,
+  NRF24L01P(uint16_t net, uint8_t dev,
 	    Board::DigitalPin csn = Board::D2, 
 	    Board::DigitalPin ce = Board::D3, 
 	    Board::ExternalInterruptPin irq = Board::EXT0) : 
 #else // __ARDUINO_STANDARD__ || __ARDUINO_MIGHTY__
-  NRF24L01P(uint8_t addr,
+  NRF24L01P(uint16_t net, uint8_t dev,
 	    Board::DigitalPin csn = Board::D10, 
 	    Board::DigitalPin ce = Board::D9, 
 	    Board::ExternalInterruptPin irq = Board::EXT0) :
 #endif
   SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
-  Wireless::Driver(0xC05A, addr),
+  Wireless::Driver(net, dev),
   m_ce(ce, 0),
   m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
   m_status(0),
@@ -539,11 +540,13 @@ public:
   void standby();
 
   /**
+   * @override Wireless::Device
    * Set power down. Turn off radio and go into low power mode. 
    */
   virtual void powerdown();
 
   /**
+   * @override Wireless::Device
    * Start up the device driver. Return true(1) if successful
    * otherwise false(0). 
    * @return bool
@@ -551,6 +554,7 @@ public:
   virtual bool begin(const void* config = NULL);
 
   /**
+   * @override Wireless::Device
    * Shut down the device driver. Return true(1) if successful
    * otherwise false(0).
    * @return bool
@@ -562,6 +566,7 @@ public:
   }
 
   /**
+   * @override Wireless::Device
    * Return true(1) if the data to receive on the device otherwise
    * false(0). 
    * @return bool
@@ -569,6 +574,19 @@ public:
   virtual bool available();
 
   /**
+   * @override Wireless::Device
+   * Send message in given null terminated io vector. Returns number
+   * of bytes sent. Returns error code(-1) if number of bytes is
+   * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
+   * transmit mode.
+   * @param[in] dest destination network address.
+   * @param[in] vec null termianted io vector.
+   * @return number of bytes send or negative error code.
+   */
+  virtual int send(uint8_t dest, const iovec_t* vec);
+
+  /**
+   * @override Wireless::Device
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
@@ -581,6 +599,7 @@ public:
   virtual int send(uint8_t dest, const void* buf, size_t count);
 
   /**
+   * @override Wireless::Device
    * Receive message and store into given buffer with given maximum
    * size. The source network address is returned in the parameter src.
    * Returns error code(-2) if no message is available and/or a

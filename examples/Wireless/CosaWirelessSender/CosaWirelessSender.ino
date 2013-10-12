@@ -34,10 +34,10 @@
 
 // Select Wireless device driver
 // #include "Cosa/Wireless/Driver/CC1101.hh"
-// CC1101 rf(0x01);
+// CC1101 rf(0xC05A, 0x01);
 
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-NRF24L01P rf(0x01);
+NRF24L01P rf(0xC05A, 0x01);
 
 void setup()
 {
@@ -56,9 +56,9 @@ void loop()
   
   // Send message; broadcast(0x00) and send to nodes 0x01 to 0x03
   len = (len == 0) ? MSG_MAX : len - 1;
-  rf.broadcast(&msg, len);
-  for (uint8_t dest = 0x00; dest < 0x05; dest++)
-    if (rf.send(dest, &msg, sizeof(msg)) < 0)
+  rf.broadcast(msg, len);
+  for (uint8_t dest = 0x01; dest < 0x04; dest++)
+    if (rf.send((uint8_t) dest, msg, sizeof(msg)) < 0)
       trace << PSTR("err(dest = ") 
 	    << hex << dest 
 	    << PSTR("):no ack") << endl;

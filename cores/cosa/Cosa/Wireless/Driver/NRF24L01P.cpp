@@ -180,10 +180,14 @@ NRF24L01P::begin(const void* config)
 }
 
 int
-NRF24L01P::send(uint8_t dest, const void* buf, size_t size)
+NRF24L01P::send(uint8_t dest, const iovec_t* vec)
 {
-  // Check buffer and payload size
-  if ((buf == NULL) || (size > PAYLOAD_MAX)) return (-1);
+  // Sanity check the payload size
+  if (vec == NULL) return (-1);
+  size_t len = 0;
+  for (const iovec_t* vp = vec; vp->buf != 0; vp++)
+    len += vp->size;
+  if (len > PAYLOAD_MAX) return (-1);
 
   // Setting transmit destination
   set_transmit_mode(dest);
@@ -193,7 +197,8 @@ NRF24L01P::send(uint8_t dest, const void* buf, size_t size)
   spi.begin(this);
   m_status = spi.transfer(dest ? W_TX_PAYLOAD : W_TX_PAYLOAD_NO_ACK);
   spi.transfer(m_addr.device);
-  spi.write(buf, size);
+  for (const iovec_t* vp = vec; vp->buf != 0; vp++)
+    spi.write(vp->buf, vp->size);
   spi.end();
 
   // Wait for transmission
@@ -204,11 +209,21 @@ NRF24L01P::send(uint8_t dest, const void* buf, size_t size)
   write(STATUS, _BV(MAX_RT) | _BV(TX_DS));
 
   // Check that the message was delivered
-  if (m_status.tx_ds) return (size);
+  if (m_status.tx_ds) return (len);
 
   // Failed to delivery
   write(FLUSH_TX);
   return (-2);
+}
+
+int 
+NRF24L01P::send(uint8_t dest, const void* buf, size_t len)
+{
+  iovec_t vec[2];
+  iovec_t* vp = vec;
+  iovec_arg(vp, buf, len);
+  iovec_end(vp);
+  return (send(dest, vec));
 }
 
 bool

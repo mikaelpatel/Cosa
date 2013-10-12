@@ -26,6 +26,7 @@
 #ifndef __COSA_WIRELESS_HH__
 #define __COSA_WIRELESS_HH__
 
+#include "Cosa/Types.h"
 #include "Cosa/Power.hh"
 
 /**
@@ -148,6 +149,17 @@ public:
     }
   
     /**
+     * Send message in given null terminated io vector. Returns number
+     * of bytes sent. Returns error code(-1) if number of bytes is
+     * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
+     * transmit mode.
+     * @param[in] dest destination network address.
+     * @param[in] vec null termianted io vector.
+     * @return number of bytes send or negative error code.
+     */
+    virtual int send(uint8_t dest, const iovec_t* vec) = 0;
+
+    /**
      * Send message in given buffer, with given number of bytes. Returns
      * number of bytes sent. Returns error code(-1) if number of bytes
      * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
@@ -168,7 +180,7 @@ public:
      * @param[in] len number of bytes in buffer.
      * @return number of bytes send or negative error code.
      */
-    int broadcast(const void* buf, size_t len)
+    virtual int broadcast(const void* buf, size_t len)
     {
       return (send(0x00, buf, len));
     }

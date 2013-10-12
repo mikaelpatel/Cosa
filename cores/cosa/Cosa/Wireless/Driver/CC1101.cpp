@@ -109,12 +109,14 @@ CC1101::begin(const void* config)
   DELAY(30);
   strobe(SRES);
   DELAY(300);
+
   // Upload the configuration. Check for default configuration
   spi.begin(this);
   write_P(IOCFG2, 
 	  config ? (const uint8_t*) config : CC1101::config, 
 	  CONFIG_MAX);
   spi.end();
+
   // Adjust configuration with instance specific state
   uint16_t sync = swap(m_addr.network);
   spi.begin(this);
@@ -123,6 +125,7 @@ CC1101::begin(const void* config)
   write(ADDR, m_addr.device);
   write(SYNC1, &sync, sizeof(sync));
   spi.end();
+
   // Initiate device driver state and enable interrupt handler
   m_avail = false;
   m_irq.enable();
@@ -138,21 +141,45 @@ CC1101::end()
 }
 
 int 
-CC1101::send(uint8_t dest, const void* buf, size_t len)
+CC1101::send(uint8_t dest, const iovec_t* vec)
 {
   // Sanity check the payload size
+  if (vec == NULL) return (-1);
+  size_t len = 0;
+  for (const iovec_t* vp = vec; vp->buf != 0; vp++)
+    len += vp->size;
   if (len > PAYLOAD_MAX) return (-1);
+
   // Wait for the device to become idle before writing the frame
   await(IDLE_MODE);
+
+  // Write frame header(length, dest, src)
   spi.begin(this);
   write(TXFIFO, len + 2);
   write(TXFIFO, dest);
   write(TXFIFO, m_addr.device);
-  write(TXFIFO, buf, len);
   spi.end();
+
+  // Write frame payload
+  for (const iovec_t* vp = vec; vp->buf != 0; vp++) {
+    spi.begin(this);
+    write(TXFIFO, vp->buf, vp->size);
+    spi.end();
+  }
+
   // Trigger the transmit
   strobe(STX);
   return (len);
+}
+
+int 
+CC1101::send(uint8_t dest, const void* buf, size_t len)
+{
+  iovec_t vec[2];
+  iovec_t* vp = vec;
+  iovec_arg(vp, buf, len);
+  iovec_end(vp);
+  return (send(dest, vec));
 }
 
 int 
@@ -168,6 +195,7 @@ CC1101::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
     if (!m_avail) return (-2);
   }
   m_avail = false;
+
   // Read the payload size and check against buffer length
   spi.begin(this);
   uint8_t size = read(RXFIFO) - 2;
@@ -177,15 +205,18 @@ CC1101::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
     strobe(SFRX);
     return (-1);
   }
+
   // Read the frame (dest, src, payload)
   uint8_t dest = read(RXFIFO);
   src = read(RXFIFO);
   read(RXFIFO, buf, size);
   spi.end();
+
   // Read the link quality status
   spi.begin(this);
   read(RXFIFO, &m_recv_status, sizeof(m_recv_status));
   spi.end();
+
   // Fix: Add possible address checking for robustness
   return (size);
 }

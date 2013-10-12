@@ -34,7 +34,8 @@
 
 /**
  * Cosa Device Driver for Texas Instruments CC1101, Low-Power Sub-1
- * GHz RF Transceiver. 
+ * GHz RF Transceiver. Note that this device requires data in big
+ * endian order. 
  * @See Also
  * Product Description, SWRS061H, Rev. H, 2012-10-09
  * http://www.ti.com/lit/ds/symlink/cc1101.pdf
@@ -52,7 +53,7 @@ private:
       uint8_t burst:1;		/**< Burst(1) or Single(0) byte mode */
       uint8_t rw:1;		/**< Read(1) or Write(0) */
     };
-
+    
     /**
      * Construct header with given register address, burst and read
      * flag.
@@ -78,7 +79,7 @@ private:
 
   /**
    * Read single register value and status. Access status with
-   * get_status(). Returns register value.
+   * get_status(). Returns register value. 
    * @param[in] reg register address.
    * @return value
    */
@@ -454,12 +455,13 @@ public:
 
   /** 
    * Read status byte.
+   * @param[in] fifo status (0 = write, 1 = read)
    * @return status
    */
-  status_t read_status()
+  status_t read_status(uint8_t fifo = 1)
   {
     spi.begin(this);
-    m_status = spi.transfer(header_t(0,0,1));
+    m_status = spi.transfer(header_t(0,0,fifo));
     spi.end();
     return (m_status);
   }
@@ -518,12 +520,6 @@ public:
       uint8_t lqi:7;		/**< Link Quality Indication */
       uint8_t crc:1;		/**< CRC status */
     };
-
-    recv_status_t()
-    {
-      status[0] = 0;
-      status[1] = 0;
-    }
   };
   
 private:
@@ -549,15 +545,16 @@ public:
   static const size_t PAYLOAD_MAX = 59;
   
   /**
-   * Construct C1101 device driver connected to SPI bus with given
-   * chip select. Default pins are Arduino Nano IO Shield for CC1101 
-   * module. Boardcast address is zero(0) and should not be used as
-   * node network address.
-   * @param[in] addr network address.
-   * @param[in] csn chip select pin (Default D10).
-   * @param[in] irq interrupt pin (Default D2/EXT0).
+   * Construct C1101 device driver with given network and device
+   * address. Connected to SPI bus and given chip select pin. Default
+   * pins are Arduino Nano IO Shield for CC1101 module are D10 chip
+   * select and D2/EXT0 external interrupt pin.
+   * @param[in] net network address.
+   * @param[in] dev device address.
+   * @param[in] csn chip select pin (Default D2/D10/D53).
+   * @param[in] irq interrupt pin (Default EXT0).
    */
-  CC1101(uint8_t addr, 
+  CC1101(uint16_t net, uint8_t dev, 
 #if defined(__ARDUINO_TINYX4__)
 	 Board::DigitalPin csn = Board::D2,
 #elif defined(__ARDUINO_MEGA__)
@@ -567,7 +564,7 @@ public:
 #endif
 	 Board::ExternalInterruptPin irq = Board::EXT0) :
     SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
-    Wireless::Driver(0xC05A, addr),
+    Wireless::Driver(net, dev),
     m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
     m_status(0)
   {
@@ -591,6 +588,18 @@ public:
    */
   virtual bool end();
     
+  /**
+   * @override Wireless::Device
+   * Send message in given null terminated io vector. Returns number
+   * of bytes sent. Returns error code(-1) if number of bytes is
+   * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
+   * transmit mode.
+   * @param[in] dest destination network address.
+   * @param[in] vec null termianted io vector.
+   * @return number of bytes send or negative error code.
+   */
+  virtual int send(uint8_t dest, const iovec_t* vec);
+
   /**
    * @override Wireless::Device
    * Send message in given buffer, with given number of bytes. Returns
