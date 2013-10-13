@@ -30,19 +30,20 @@
 #include <util/crc16.h>
 
 /**
- * Compute CRC over count bytes and return value. Used for checking
- * received messages. Return value should be CHECK_SUM.
+ * Calculate check sum for given buffer and number of bytes with CRC. 
+ * Return true(1) if equals correct CCITT 16b check sum else
+ * false(0). 
  * @param[in] ptr buffer pointer.
  * @param[in] count number of bytes in buffer.
- * @return CRC.
+ * @return bool.
  */
-static uint16_t 
-CRC(uint8_t* ptr, uint8_t count)
+static bool
+is_valid_crc(uint8_t* ptr, uint8_t count)
 {
   uint16_t crc = 0xffff;
   while (count-- > 0) 
     crc = _crc_ccitt_update(crc, *ptr++);
-  return (crc);
+  return (crc == 0xf0b8);
 }
 
 /** Prescale table for Timer1. Index is prescale setting */
@@ -68,8 +69,7 @@ timer_setting(uint16_t speed, uint8_t bits, uint16_t* nticks)
 {
   uint16_t max_ticks = (1 << bits) - 1;
   uint8_t res = 0;
-  uint8_t i;
-  for (i = membersof(prescale) - 1; i > 0; i--) {
+  for (uint8_t i = membersof(prescale) - 1; i > 0; i--) {
     uint16_t scale = (uint16_t) pgm_read_word(&prescale[i]);
     uint16_t count = (F_CPU / scale) / speed;
     if (count > res && count < max_ticks) {
@@ -127,7 +127,6 @@ VWI::Receiver::PLL()
 	  if (m_count < MESSAGE_MIN || m_count > MESSAGE_MAX) {
 	    // Stupid message length, drop the whole thing
 	    m_active = false;
-	    // m_bad++;
 	    return;
 	  }
 	}
@@ -135,7 +134,6 @@ VWI::Receiver::PLL()
 	if (m_length >= m_count) {
 	  // Got all the bytes now
 	  m_active = false;
-	  // m_good++;
 	  // Better come get it before the next one starts
 	  m_done = true;
 	}
@@ -155,12 +153,6 @@ VWI::Receiver::PLL()
   }
 }
 
-VWI::Receiver::Receiver(Board::DigitalPin pin, Codec* codec) : 
-  InputPin(pin),
-  m_codec(codec)
-{
-}
-
 int
 VWI::Receiver::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
 {
@@ -173,7 +165,7 @@ VWI::Receiver::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
     if (!m_done) return (-2);
   
     // Check the crc and the network and device destination address
-    if ((CRC(m_buffer, m_length) != CHECK_SUM) ||
+    if (!is_valid_crc(m_buffer, m_length) ||
 	(hp->network != s_rf->m_addr.network)  || 
 	((hp->dest != 0) && (hp->dest != s_rf->m_addr.device))) {
       m_done = false;
@@ -195,30 +187,6 @@ VWI::Receiver::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
   return (rxlen);
 }
 
-VWI::Transmitter::Transmitter(Board::DigitalPin pin, Codec* codec) :
-  OutputPin(pin),
-  m_codec(codec)
-{
-  memcpy_P(m_buffer, codec->get_preamble(), codec->PREAMBLE_MAX);
-}
-
-void 
-VWI::Transmitter::begin()
-{
-  TIMSK1 |= _BV(OCIE1A);
-  m_index = 0;
-  m_bit = 0;
-  m_sample = 0;
-  m_enabled = true;
-}
-
-void 
-VWI::Transmitter::end()
-{
-  clear();
-  m_enabled = false;
-}
-
 int
 VWI::Transmitter::send(uint8_t dest, const iovec_t* vec)
 {
@@ -237,7 +205,7 @@ VWI::Transmitter::send(uint8_t dest, const iovec_t* vec)
   // Wait for transmitter to become available. Might be transmitting
   while (m_enabled) Power::sleep(s_rf->m_mode);
 
-  // Encode the message total length
+  // Encode the message total length = length(1)+header(4)+payload(len)+crc(2)
   uint8_t count = 1 + sizeof(header_t) + len + 2;
   crc = _crc_ccitt_update(crc, count);
   *tp++ = m_codec->encode4(count >> 4);
@@ -298,19 +266,6 @@ VWI::Transmitter::send(uint8_t dest, const void* buf, size_t len)
 
 /** Current transmitter/receiver for interrupt handler access */
 VWI* VWI::s_rf = 0;
-
-VWI::VWI(int16_t net, uint8_t dev, 
-	 uint16_t speed, 
-	 Board::DigitalPin rx, 
-	 Board::DigitalPin tx,
-	 Codec* codec) :
-  Wireless::Driver(net, dev),
-  m_rx(rx, codec),
-  m_tx(tx, codec),
-  m_speed(speed)
-{
-  s_rf = this;
-}
 
 bool 
 VWI::begin(const void* config)
@@ -402,33 +357,29 @@ ISR(TIMER1_COMPA_vect)
   VWI::Receiver* receiver = &VWI::s_rf->m_rx;
 
   // Check if the receiver pin should be sampled
-  if ((receiver != NULL && receiver->m_enabled)
-      && (transmitter == NULL || !transmitter->m_enabled))
+  if (receiver->m_enabled && !transmitter->m_enabled)
     receiver->m_sample = receiver->read();
     
   // Do transmitter stuff first to reduce transmitter bit jitter due 
   // to variable receiver processing
-  if (transmitter != NULL) {
-    if (transmitter->m_enabled && transmitter->m_sample++ == 0) {
-      // Send next bit. Symbols are sent LSB first. Finished sending the
-      // whole message? (after waiting one bit period since the last bit)
-      if (transmitter->m_index >= transmitter->m_length) {
-	transmitter->end();
-      }
-      else {
-	transmitter->write(transmitter->m_buffer[transmitter->m_index] & 
-			   (1 << transmitter->m_bit++));
-	if (transmitter->m_bit >= transmitter->m_codec->BITS_PER_SYMBOL) {
-	  transmitter->m_bit = 0;
-	  transmitter->m_index++;
-	}
+  if (transmitter->m_enabled && transmitter->m_sample++ == 0) {
+    // Send next bit. Symbols are sent LSB first. Finished sending the
+    // whole message? (after waiting one bit period since the last bit)
+    if (transmitter->m_index >= transmitter->m_length) {
+      transmitter->end();
+    }
+    else {
+      transmitter->write(transmitter->m_buffer[transmitter->m_index] & 
+			 (1 << transmitter->m_bit++));
+      if (transmitter->m_bit >= transmitter->m_codec->BITS_PER_SYMBOL) {
+	transmitter->m_bit = 0;
+	transmitter->m_index++;
       }
     }
-    if (transmitter->m_sample >= VWI::SAMPLES_PER_BIT)
-      transmitter->m_sample = 0;
   }
-  if ((receiver != NULL && receiver->m_enabled)
-      && (transmitter == NULL || !transmitter->m_enabled))
+  if (transmitter->m_sample >= VWI::SAMPLES_PER_BIT) 
+    transmitter->m_sample = 0;
+  if (receiver->m_enabled && !transmitter->m_enabled)
     receiver->PLL();
 }
 

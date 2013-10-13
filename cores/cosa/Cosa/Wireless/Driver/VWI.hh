@@ -63,9 +63,6 @@ private:
   /** Number of samples per bit */
   static const uint8_t SAMPLES_PER_BIT = 8;
 
-  /** CRC checksum for received frame */
-  static const uint16_t CHECK_SUM = 0xf0b8;
-
 public:
   /**
    * The Virtual Wire Codec; define message preamble and start
@@ -112,6 +109,7 @@ public:
     {}
 
     /**
+     * @override VWI::Codec
      * Provide pointer to frame preamble in program memory. PREAMBLE_MAX 
      * should contain the length of the preamble including start symbol. 
      * @return pointer to program memory.
@@ -119,6 +117,7 @@ public:
     virtual const uint8_t* get_preamble() = 0;
 
     /**
+     * @override VWI::Codec
      * Encode 4 bits (nibble) to a symbol with BITS_PER_SYMBOL.
      * @param[in] nibble data to encode.
      * @return symbol.
@@ -126,6 +125,7 @@ public:
     virtual uint8_t encode4(uint8_t nibble) = 0;
 
     /**
+     * @override VWI::Codec
      * Decode symbol back to 4 bits (nibble) of data.
      * @param[in] symbol to decode.
      * @return data.
@@ -133,6 +133,7 @@ public:
     virtual uint8_t decode4(uint8_t symbol) = 0;
 
     /**
+     * @override VWI::Codec
      * Decode two packed symbols (max 16-bit) back to 8 bits (byte) of
      * data.
      * @param[in] symbol to decode.
@@ -240,7 +241,11 @@ private:
      * @param[in] rx input pin.
      * @param[in] codec for the receiver.
      */
-    Receiver(Board::DigitalPin pin, Codec* codec);
+    Receiver(Board::DigitalPin pin, Codec* codec) :
+      InputPin(pin),
+      m_codec(codec)
+    {
+    }
     
     /**
      * Start the Phase Locked Loop listening for the receiver. Must do
@@ -324,17 +329,33 @@ private:
      * @param[in] pin transmitter input pin.
      * @param[in] codec for transmitter.
      */
-    Transmitter(Board::DigitalPin pin, Codec* codec);
+    Transmitter(Board::DigitalPin pin, Codec* codec) :
+      OutputPin(pin),
+      m_codec(codec)
+    {
+      memcpy_P(m_buffer, codec->get_preamble(), codec->PREAMBLE_MAX);
+    }
 
     /**
      * Start transmitter. 
      */
-    void begin();
+    void begin()
+    {
+      TIMSK1 |= _BV(OCIE1A);
+      m_index = 0;
+      m_bit = 0;
+      m_sample = 0;
+      m_enabled = true;
+    }
     
     /**
      * Stop transmitter. 
      */
-    void end();
+    void end()
+    {
+      clear();
+      m_enabled = false;
+    }
 
     /**
      * Returns the state of the transmitter.
@@ -395,7 +416,14 @@ public:
       uint16_t speed, 
       Board::DigitalPin rx, 
       Board::DigitalPin tx,
-      Codec* codec);
+      Codec* codec) :
+    Wireless::Driver(net, dev),
+    m_rx(rx, codec),
+    m_tx(tx, codec),
+    m_speed(speed)
+  {
+    s_rf = this;
+  }
 
   /**
    * @override Wireless::Driver
@@ -443,7 +471,7 @@ public:
    * @param[in] vec null termianted io vector.
    * @return number of bytes send or negative error code.
    */
-  virtual int send(uint8_t dest, const iovec_t* vec);;
+  virtual int send(uint8_t dest, const iovec_t* vec);
 
   /**
    * @override Wireless::Driver
