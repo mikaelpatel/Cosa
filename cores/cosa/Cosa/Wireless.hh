@@ -183,7 +183,14 @@ public:
      * @param[in] len number of bytes in buffer.
      * @return number of bytes send or negative error code.
      */
-    virtual int send(uint8_t dest, const void* buf, size_t len) = 0;
+    virtual int send(uint8_t dest, const void* buf, size_t len)
+    {
+      iovec_t vec[2];
+      iovec_t* vp = vec;
+      iovec_arg(vp, buf, len);
+      iovec_end(vp);
+      return (send(dest, vec));
+    }
 
     /**
      * @override Wireless::Driver
