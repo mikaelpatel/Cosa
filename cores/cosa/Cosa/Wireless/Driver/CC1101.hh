@@ -164,7 +164,7 @@ private:
     {}
     
     /**
-     * @override
+     * @override Interrupt::Handler
      * Signal message has been receive and is available in receive fifo.
      * @param[in] arg (not used).
      */

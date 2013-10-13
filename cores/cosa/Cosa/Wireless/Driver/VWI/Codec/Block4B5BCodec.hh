@@ -46,7 +46,7 @@ public:
   Block4B5BCodec() : VWI::Codec(5, 0x238, 8) {}
   
   /**
-   * @override
+   * @override VWI::Codec
    * Returns pointer to 4B5B frame preamble in program memory.
    * @return pointer.
    */
@@ -56,7 +56,7 @@ public:
   }
   
   /**
-   * @override
+   * @override VWI::Codec
    * Returns block 5-bit symbol for given 4-bit data.
    * @return 5-bit bitstuffed code.
    */
@@ -66,7 +66,7 @@ public:
   };
 
   /**
-   * @override
+   * @override VWI::Codec
    * Returns 4-bit data for given block 5-bit symbol.
    * @return 4-bit data.
    */

@@ -40,7 +40,7 @@ public:
   BitstuffingCodec() : VWI::Codec(5, 0x34a, 8) {}
   
   /**
-   * @override
+   * @override VWI::Codec
    * Returns pointer to Cosa fixed bitstuffing frame preamble in program memory.
    * @return pointer.
    */
@@ -50,7 +50,7 @@ public:
   }
   
   /**
-   * @override
+   * @override VWI::Codec
    * Returns fixed bitstuffed symbol for given 4-bit data.
    * @return 5-bit bitstuffed code.
    */
@@ -60,7 +60,7 @@ public:
   };
 
   /**
-   * @override
+   * @override VWI::Codec
    * Returns 4-bit data for given fixed bitstuffed symbol.
    * @return 4-bit data.
    */

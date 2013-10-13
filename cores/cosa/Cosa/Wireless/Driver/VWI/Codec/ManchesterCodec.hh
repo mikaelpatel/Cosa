@@ -43,7 +43,7 @@ public:
   ManchesterCodec() : VWI::Codec(8, 0x5d55, 8) {}
   
   /**
-   * @override
+   * @override VWI::Codec
    * Returns pointer to Manchester frame preamble in program memory.
    * @return pointer.
    */
@@ -53,7 +53,7 @@ public:
   }
   
   /**
-   * @override
+   * @override VWI::Codec
    * Returns symbol for given 4-bit data.
    * @return 8-bit Manchester code.
    */
@@ -63,7 +63,7 @@ public:
   };
 
   /**
-   * @override
+   * @override VWI::Codec
    * Returns 4-bit data for given Manchester symbol.
    * @return 4-bit data.
    */
