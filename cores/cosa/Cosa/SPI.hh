@@ -186,7 +186,7 @@ public:
     }
 
     /**
-     * @override
+     * @override Interrupt::Handler
      * Interrupt service on data receive in slave mode.
      * @param[in] data received data.
      */

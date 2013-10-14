@@ -348,6 +348,7 @@ public:
   }
 
   /**
+   * @override Canvas
    * Start interaction with device. Must override.
    * @return true(1) if successful otherwise false(0)
    */
@@ -527,12 +528,14 @@ public:
   color16_t blend(color16_t c1, color16_t c2);
 
   /**
+   * @override Canvas
    * Get screen orientation.
    * @return direction (Canvas::LANDSCAPE/PORTRAIT)
    */
   virtual uint8_t get_orientation();
 
   /**
+   * @override Canvas
    * Set screen orientation. Return previous orientation.
    * @param[in] direction (Canvas::LANDSCAPE/PORTRAIT)
    * @return previous orientation.
@@ -540,6 +543,7 @@ public:
   virtual uint8_t set_orientation(uint8_t direction);
 
   /**
+   * @override Canvas
    * Set pixel with current pen color.
    * @param[in] x
    * @param[in] y
@@ -557,6 +561,7 @@ public:
   }
 
   /**
+   * @override Canvas
    * Draw bitmap with current pen color. The bitmap must be stored
    * in program memory.
    * @param[in] x 
@@ -588,6 +593,7 @@ public:
   }
   
   /**
+   * @override Canvas
    * Draw icon at given position with current pen color. The icon must
    * be stored in program memory.
    * @param[in] x 
@@ -602,6 +608,7 @@ public:
 			 uint8_t scale = 1);
 
   /**
+   * @override Canvas
    * Draw icon at given position with current pen color. The icon must
    * be stored in program memory.
    * @param[in] x 
@@ -628,6 +635,7 @@ public:
   }
   
   /**
+   * @override Canvas
    * Draw line with current pen color.
    * @param[in] x0 
    * @param[in] y0
@@ -651,6 +659,7 @@ public:
   }
 
   /**
+   * @override Canvas
    * Draw vertical line with current pen color.
    * @param[in] x 
    * @param[in] y
@@ -671,6 +680,7 @@ public:
   }
 
   /**
+   * @override Canvas
    * Draw horizontal line with current pen color.
    * @param[in] x 
    * @param[in] y
@@ -691,6 +701,7 @@ public:
   }
 
   /**
+   * @override Canvas
    * Draw polygon from program memory with current pen color. Vector of 
    * delta positions, terminate with 0, 0. Update cursor to end position.
    * @param[in] poly
@@ -699,6 +710,7 @@ public:
   virtual void draw_poly_P(const int8_t* poly, uint8_t scale = 1);
 
   /**
+   * @override Canvas
    * Draw stroke from program memory with current pen color. Vector of 
    * delta positions, terminated with 0, 0. The cursor is moved for
    * when both dx and dy are zero or negative. Update cursor to new
@@ -709,6 +721,7 @@ public:
   virtual void draw_stroke_P(const int8_t* stroke, uint8_t scale = 1);
 
   /**
+   * @override Canvas
    * Draw rectangle with current pen color.
    * @param[in] x 
    * @param[in] y
@@ -730,6 +743,7 @@ public:
   }
 
   /**
+   * @override Canvas
    * Fill rectangle with current pen color. Must override.
    * @param[in] x 
    * @param[in] y
@@ -751,6 +765,7 @@ public:
   }
   
   /**
+   * @override Canvas
    * Draw round corner rectangle with current pen color.
    * @param[in] x 
    * @param[in] y
@@ -776,6 +791,7 @@ public:
   }
 
   /**
+   * @override Canvas
    * Fill round corner rectangle with current pen color. 
    * @param[in] x 
    * @param[in] y
@@ -801,6 +817,7 @@ public:
   }
   
   /**
+   * @override Canvas
    * Draw circle with current pen color.
    * @param[in] x 
    * @param[in] y
@@ -820,6 +837,7 @@ public:
   }
 
   /**
+   * @override Canvas
    * Fill circle with current pen color.
    * @param[in] x 
    * @param[in] y
@@ -839,6 +857,7 @@ public:
   }
 
   /**
+   * @override Canvas
    * Draw character with current text color, font and scale.
    * @param[in] x position.
    * @param[in] y position.
@@ -858,23 +877,27 @@ public:
   }
   
   /**
+   * @override Canvas
    * Draw string in current text color, font and scale.
    * @param[in] s string.
    */
   virtual void draw_string(char* s);
 
   /**
+   * @override Canvas
    * Draw string from program memory with current text color and font.
    * @param[in] s string in program memory (PSTR).
    */
   virtual void draw_string_P(const char* s);
 
   /**
+   * @override Canvas
    * Fill screen with canvas color.
    */
   virtual void fill_screen();
 
   /**
+   * @override Canvas
    * Stop sequence of interaction with device. Must override.
    * @return true(1) if successful otherwise false(0)
    */

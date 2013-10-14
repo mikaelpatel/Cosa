@@ -47,6 +47,12 @@ class Keypad : private Link {
     Keypad* m_keypad;
     const uint16_t* m_map;
     uint8_t m_latest;
+
+    /**
+     * @override AnalogPin
+     * Callback member function when the analog pin value changes.
+     * @param[in] value new reading.
+     */
     virtual void on_change(uint16_t value);
 
   public:
@@ -71,7 +77,7 @@ class Keypad : private Link {
   Key m_key;
 
   /**
-   * @override
+   * @override Event::Handler
    * Periodic sampling of analog pin.
    * @param[in] type the event type.
    * @param[in] value the event value.
@@ -94,14 +100,14 @@ public:
   }
 
   /**
-   * @override
+   * @override Keypad
    * Callback method when a key down is detected. Must override.
    * @param[in] nr key number (index in map).
    */
   virtual void on_key_down(uint8_t nr) {}
 
   /**
-   * @override
+   * @override Keypad
    * Callback method when a key up is detected. Default is null
    * function.
    * @param[in] nr key number (index in map).

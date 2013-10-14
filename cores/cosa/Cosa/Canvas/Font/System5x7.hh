@@ -46,6 +46,7 @@ public:
 
 
   /**
+   * @override Font
    * Get bitmap for given character. ATtinyX5 does not have the
    * full character table.
    * @param[in] c character.

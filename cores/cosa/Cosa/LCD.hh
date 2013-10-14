@@ -65,7 +65,7 @@ public:
     }
     
     /**
-     * @override
+     * @override LCD::Device
      * Start display for text output. Returns true if successful 
      * otherwise false.
      * @return boolean.
@@ -73,56 +73,57 @@ public:
     virtual bool begin() = 0;
 
     /**
-     * @override
+     * @override LCD::Device
      * Stop display and power down. Returns true if successful 
      * otherwise false.
      */
     virtual bool end() = 0;
     
     /**
-     * @override
+     * @override LCD::Device
      * Turn display backlight on. 
      */
     virtual void backlight_on() {}
 
     /**
-     * @override
+     * @override LCD::Device
      * Turn display backlight off. 
      */
     virtual void backlight_off() {}
 
     /**
+     * @override LCD::Device
      * Set display contrast level.
      * @param[in] contrast level.
      */
     virtual void display_contrast(uint8_t level) {}
 
     /**
-     * @override
+     * @override LCD::Device
      * Turn display on. 
      */
     virtual void display_on() = 0;
 
     /**
-     * @override
+     * @override LCD::Device
      * Turn display off. 
      */
     virtual void display_off() = 0;
   
     /**
-     * @override
+     * @override LCD::Device
      * Display normal mode.
      */
     virtual void display_normal() {}
 
     /**
-     * @override
+     * @override LCD::Device
      * Display inverse mode. 
      */
     virtual void display_inverse() {}
 
     /**
-     * @override
+     * @override LCD::Device
      * Clear display and move cursor to home.
      */
     virtual void display_clear() = 0;
@@ -139,7 +140,7 @@ public:
     }
 
     /**
-     * @override
+     * @override LCD::Device
      * Set cursor position to given position.
      * @param[in] x.
      * @param[in] y.

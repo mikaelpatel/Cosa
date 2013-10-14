@@ -108,7 +108,7 @@ public:
   class Action {
   public:
     /**
-     * @override
+     * @override Menu::Action
      * Menu action function for given menu item. Return true(1) if the
      * menu walker should render the display otherwise if the false(0).
      * @param[in] item menu item reference.
@@ -227,7 +227,7 @@ public:
     {}
     
     /**
-     * @override
+     * @override Keypad
      * The menu walker key interpretor.
      * @param[in] nr key number (index in map).
      */
@@ -261,7 +261,7 @@ public:
       }
       
       /**
-       * @override
+       * @override Button
        * The rotary encoder button generates a SELECT_KEY.
        * @param[in] type of change.
        */
@@ -295,7 +295,7 @@ public:
     {}
     
     /**
-     * @override
+     * @override Event::Handler
      * Rotary change event handler. Forward change as a key; CW is mapped
      * to DOWN_KEY and CCW to UP_KEY (and reverse for RANGE).
      * @param[in] type the event type.

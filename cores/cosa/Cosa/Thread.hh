@@ -62,7 +62,7 @@ protected:
   void* m_ip;
 
   /**
-   * @override
+   * @override Event::Handler
    * The first level event handler. Filters timeout events and
    * run the thread action function.
    * @param[in] type the type of event.
@@ -150,6 +150,7 @@ public:
   }
 
   /**
+   * @override Thread
    * Thread activity. Must be overridden. Use the thread macro set in
    * the following format:
    * {

@@ -80,17 +80,19 @@ public:
   }
 
   /**
+   * @override Interrupt::Handler
    * Enable interrupt pin change detection and interrupt handler.
    */
   virtual void enable();
 
   /**
+   * @override Interrupt::Handler
    * Disable interrupt pin change detection.
    */
   virtual void disable();
 
   /**
-   * @override
+   * @override Interrupt::Handler
    * Default interrupt service on pin change interrupt.
    * @param[in] arg argument from interrupt service routine.
    */

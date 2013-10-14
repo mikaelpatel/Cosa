@@ -63,7 +63,7 @@ public:
     const uint8_t m_keys;
 
     /**
-     * @override
+     * @override Interrupt::Handler
      * Interrupt pin handler: Measure time periods of pulses in sequence 
      * from IR receiver circuit. Push an event when a full sequence has
      * been recieved; READ_COMPLETED(this, code) where the code is the

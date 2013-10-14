@@ -47,7 +47,7 @@ public:
   Segment32x50() : UTFTFont(32, 50, bitmap) {}
 
   /**
-   * @override
+   * @override Font
    * Get bitmap for given character ('0'..'9', ':'). Returns pointer
    * to bitmap in program memory.
    * @param[in] c character.

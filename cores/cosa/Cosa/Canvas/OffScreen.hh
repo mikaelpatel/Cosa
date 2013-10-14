@@ -60,7 +60,7 @@ public:
   }
 
   /**
-   * @override
+   * @override Canvas
    * Start interaction with off-screen canvas.
    * @return true(1) if successful otherwise false(0)
    */
@@ -71,7 +71,7 @@ public:
   }
 
   /**
-   * @override
+   * @override Canvas
    * Set pixel according to the current pen color.
    * @param[in] x.
    * @param[in] y.
@@ -88,7 +88,7 @@ public:
   } 
 
   /**
-   * @override
+   * @override Canvas
    * Fill offscreen buffer with canvas background color.
    */
   virtual void fill_screen()
@@ -97,7 +97,7 @@ public:
   }
 
   /**
-   * @override
+   * @override Canvas
    * Stop sequence of interaction with off-screen device.
    * @return true(1) if successful otherwise false(0)
    */

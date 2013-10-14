@@ -110,7 +110,7 @@ public:
   }
 
   /**
-   * @override
+   * @override IOStream::Device
    * Write character at current cursor position, with current text
    * color, scale and font. The textbox will handle carriage-return,
    * line-feed and form-feed. Scrolling is handled as a wrap-around.

@@ -97,7 +97,7 @@ public:
   class Handler {
   public:
     /**
-     * @override
+     * @override Event::Handler
      * Default null event handler. Should be redefined by sub-classes.
      * Called by Event::dispatch(). 
      * @param[in] type the event type.

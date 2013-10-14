@@ -46,7 +46,7 @@
 class Periodic : public Link {
 private:
   /**
-   * @override
+   * @override Event::Handler
    * Periodic event handler; dispatch the run() function on
    * timeout events.
    * @param[in] type the type of event.
@@ -79,6 +79,7 @@ public:
   }
 
   /**
+   * @override Periodic
    * The default null function. 
    */
   virtual void run() {}

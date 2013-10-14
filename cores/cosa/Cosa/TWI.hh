@@ -76,6 +76,7 @@ public:
     static const uint8_t READ_IX = 1;
 
     /**
+     * @override Event::Handler
      * Filter Event::WRITE_COMPLETED_TYPE(size) and calls on_request()
      * with given write block as argument. The device is marked as ready
      * when the request has been completed and a possible result block
@@ -114,6 +115,7 @@ public:
     bool begin();
 
     /**
+     * @override TWI::Slave
      * Service request callback when a write has been completed, i.e.,
      * an argument block as been written. Must be defined by sub-class.
      * Must handle write-read and write-write sequences. The device will 

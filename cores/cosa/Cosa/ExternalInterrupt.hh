@@ -72,19 +72,19 @@ public:
 		    bool pullup = false);
 
   /**
-   * @override
+   * @override Interrupt::Handler
    * Enable interrupt pin change detection and interrupt handler.
    */
   virtual void enable();
 
   /**
-   * @override
+   * @override Interrupt::Handler
    * Disable interrupt pin change detection.
    */
   virtual void disable();
 
   /**
-   * @override
+   * @override Interrupt::Handler
    * Interrupt service callback on external interrupt pin change.
    * @param[in] arg argument from interrupt service routine.
    */

@@ -61,6 +61,7 @@ public:
   {}
   
   /**
+   * @override Font
    * Get bitmap for given character.
    * @param[in] c character.
    * @return bitmap pointer.
@@ -71,6 +72,7 @@ public:
   }
 
   /**
+   * @override Font
    * Get width for given character.
    * @param[in] c character.
    * @return width.
@@ -81,6 +83,7 @@ public:
   }
   
   /**
+   * @override Font
    * Get width for given string.
    * @param[in] s string.
    * @return width.
@@ -91,6 +94,7 @@ public:
   }
   
   /**
+   * @override Font
    * Get width for given string in program memory.
    * @param[in] s string in program memory.
    * @return width.
@@ -101,6 +105,7 @@ public:
   }
   
   /**
+   * @override Font
    * Get width for given character.
    * @param[in] c character.
    * @return height.
@@ -111,6 +116,7 @@ public:
   }
 
   /**
+   * @override Font
    * Draw character on given canvas.
    * @param[in] canvas
    * @param[in] c character.

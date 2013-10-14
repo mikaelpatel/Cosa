@@ -67,7 +67,7 @@ protected:
   uint8_t m_state;
 
   /**
-   * @override
+   * @override Event::Handler
    * Button event handler. Called by event dispatch. Samples the
    * attached pin and calls the pin change handler, on_change(). 
    * @param[in] type the type of event (timeout).
@@ -85,7 +85,7 @@ public:
   Button(Board::DigitalPin pin, Mode mode = ON_CHANGE_MODE);
 
   /**
-   * @override
+   * @override Button
    * The button change event handler. Called when a change
    * corresponding to the mode has been detected. Event types are;
    * Event::FALLING_TYPE, Event::RISING_TYPE, and Event::CHANGE_TYPE. 

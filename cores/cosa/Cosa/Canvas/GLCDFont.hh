@@ -45,7 +45,7 @@ public:
   {}
   
   /**
-   * @overriden
+   * @overriden Font
    * Get bitmap for given character.
    * @param[in] c character.
    * @return bitmap pointer.
@@ -56,6 +56,7 @@ public:
   }
 
   /**
+   * @override Font
    * Draw character on given canvas.
    * @param[in] canvas
    * @param[in] c character.

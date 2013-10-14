@@ -168,58 +168,58 @@ public:
   {}
 
   /**
-   * @override
+   * @override LCD::Device
    * Start interaction with display.
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool begin();
 
   /**
-   * @override
+   * @override LCD::Device
    * Stop sequence of interaction with device.
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool end();
 
   /**
-   * @override
+   * @override LCD::Device
    * Set display contrast (0..63).
    * @param[in] contrast level.
    */
   virtual void display_contrast(uint8_t level);
 
   /**
-   * @override
+   * @override LCD::Device
    * Turn display on. 
    */
   virtual void display_on();
 
   /**
-   * @override
+   * @override LCD::Device
    * Turn display off. 
    */
   virtual void display_off();
 
   /**
-   * @override
+   * @override LCD::Device
    * Display normal mode.
    */
   virtual void display_normal();
 
   /**
-   * @override
+   * @override LCD::Device
    * Display inverse mode. 
    */
   virtual void display_inverse();
 
   /**
-   * @override
+   * @override LCD::Device
    * Clear display and move cursor to home.
    */
   virtual void display_clear();
 
   /**
-   * @override
+   * @override LCD::Device
    * Set cursor to given position.
    * @param[in] x pixel position (0..WIDTH-1).
    * @param[in] y line position (0..LINES-1).
@@ -271,7 +271,7 @@ public:
   void draw_bar(uint8_t procent, uint8_t width, uint8_t pattern = 0x55);
 
   /**
-   * @override
+   * @override IOStream::Device
    * Write character to display. Handles carriage-return-line-feed, back-
    * space, alert, horizontal tab and form-feed. Returns character or EOF 
    * on error.

@@ -76,6 +76,7 @@ public:
       Encoder* m_encoder;
 
       /**
+       * @override Interrupt::Handler
        * Signal pin interrupt handler. Check possible state change and will
        * push Event::CHANGE_TYPE with direction (CW or CCW).
        */
@@ -176,7 +177,7 @@ public:
     T m_step;
 
     /**
-     * @override
+     * @override Event::Handler
      * Update the dial value on change. The event value is the
      * direction (CW or CCW).
      * @param[in] type the event type.
@@ -245,7 +246,7 @@ public:
     }
 
     /**
-     * @override
+     * @override Rotary::Dial
      * Default on change function. 
      * @param[in] value.
      */
@@ -269,7 +270,7 @@ public:
     T m_steps;
 
     /**
-     * @override
+     * @override Event::Handler
      * Update the accelerated dial value on change. The event value is the
      * direction (CW or CCW). If the time period between events is
      * larger than the threshold a slow step is used otherwise the
@@ -372,7 +373,7 @@ public:
     }
 
     /**
-     * @override
+     * @override Rotary::AcceleratedDial
      * Default on change function. 
      * @param[in] value.
      */

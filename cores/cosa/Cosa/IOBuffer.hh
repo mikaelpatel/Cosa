@@ -75,7 +75,7 @@ public:
   }
 
   /**
-   * @override
+   * @override IOStream::Device
    * Number of bytes available in buffer before empty.
    * @return bytes.
    */
@@ -85,7 +85,7 @@ public:
   }
 
   /**
-   * @override
+   * @override IOStream::Device
    * Number of bytes room in buffer before full.
    * @return bytes.
    */
@@ -95,7 +95,7 @@ public:
   }
 
   /**
-   * @override
+   * @override IOStream::Device
    * Write character to buffer.
    * @param[in] c character to write.
    * @return character written or EOF(-1).
@@ -103,21 +103,21 @@ public:
   virtual int putchar(char c);
 
   /**
-   * @override
+   * @override IOStream::Device
    * Peek at the next character from buffer.
    * @return character or EOF(-1).
    */
   virtual int peekchar();
     
   /**
-   * @override
+   * @override IOStream::Device
    * Read character from buffer.
    * @return character or EOF(-1).
    */
   virtual int getchar();
 
   /**
-   * @override
+   * @override IOStream::Device
    * Wait for the buffer to become empty.
    * @param[in] mode sleep mode on flush wait.
    * @return zero(0) or negative error code.

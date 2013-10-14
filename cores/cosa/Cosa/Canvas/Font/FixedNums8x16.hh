@@ -47,7 +47,7 @@ public:
   FixedNums8x16() : GLCDFont(8, 15, bitmap) {}
 
   /**
-   * @overriden
+   * @overriden Font
    * Get bitmap for given character. Must be ASCII '+'..'0'..'9'.
    * Returns pointer to bitmap in program memory.   
    * @param[in] c character.

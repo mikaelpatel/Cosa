@@ -41,7 +41,7 @@ private:
   OutputPin m_pin;
 
   /**
-   * @override
+   * @override Event::Handler
    * LED event handler; Toggle LED on timeout event.
    * @param[in] type the type of event (timeout).
    * @param[in] value the event value.

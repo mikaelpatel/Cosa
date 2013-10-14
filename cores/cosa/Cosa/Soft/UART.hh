@@ -77,7 +77,7 @@ namespace Soft {
     }
 
     /**
-     * @override
+     * @override IOStream::Device
      * Write character to serial 
      * Returns character if successful otherwise on error or buffer full
      * returns EOF(-1),

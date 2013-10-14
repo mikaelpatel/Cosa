@@ -790,7 +790,7 @@ protected:
   bool sample_request(uint8_t pin, uint8_t ref);
 
   /**
-   * @override
+   * @override Event::Handler
    * Handle analog pin periodic sampling and sample completed event.
    * Will call virtual method on_change() if the pin value has changed since
    * latest sample.
@@ -896,14 +896,14 @@ public:
   uint16_t sample_await();
 
   /**
-   * @override
+   * @override Interrupt::Handler
    * Interrupt service on conversion completion.
    * @param[in] arg sample value.
    */
   virtual void on_interrupt(uint16_t arg);
 
   /**
-   * @override
+   * @override AnalogPin
    * Default on change function. 
    * @param[in] value.
    */
@@ -965,14 +965,14 @@ public:
   bool samples_request();
 
   /**
-   * @override
+   * @override Interrupt::Handler
    * Interrupt service on conversion completion.
    * @param[in] arg sample value.
    */
   virtual void on_interrupt(uint16_t arg);
 
   /**
-   * @override
+   * @override Event::Handler
    * Default analog pin set event handler function. 
    * @param[in] type the type of event.
    * @param[in] value the event value.
@@ -1050,7 +1050,7 @@ public:
   }
 
   /**
-   * @override
+   * @override Interrupt::Handler
    * Default interrupt service on comparator output rise, fall or toggle.
    * @param[in] arg argument from interrupt service routine.
    */

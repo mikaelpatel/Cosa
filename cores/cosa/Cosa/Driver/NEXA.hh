@@ -148,7 +148,7 @@ public:
     volatile uint8_t m_ix;
 
     /**
-     * @override
+     * @override Interrupt::Handler
      * Measures the pulse with and decodes the pulse stream. Will push
      * an Event::RECEIVE_COMPLETED_TYPE when completed decoding. Commands
      * should be retrieved with get_code(). The event will contain the
@@ -161,7 +161,7 @@ public:
     virtual void on_interrupt(uint16_t arg = 0);
 
     /**
-     * @override
+     * @override Event::Handler
      * Handle events from interrupt handler; dispatch to listeners.
      * The incoming event should be Event::RECEIVE_COMPLETED_TYPE.
      * The event handler, on_event(), of each listener that matches

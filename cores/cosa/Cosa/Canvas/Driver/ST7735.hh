@@ -216,21 +216,21 @@ public:
 #endif
 
   /**
-   * @override
+   * @override Canvas
    * Start interaction with device.
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool begin();
 
   /**
-   * @override
+   * @override Canvas
    * Set screen orientation
    * @param[in] direction
    */
   virtual uint8_t set_orientation(uint8_t direction);
 
   /**
-   * @override
+   * @override Canvas
    * Set pixel with current color.
    * @param[in] x
    * @param[in] y
@@ -238,7 +238,7 @@ public:
   virtual void draw_pixel(uint8_t x, uint8_t y);
 
   /**
-   * @override
+   * @override Canvas
    * Draw vertical line with current color.
    * @param[in] x 
    * @param[in] y
@@ -247,7 +247,7 @@ public:
   virtual void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length);
 
   /**
-   * @override
+   * @override Canvas
    * Draw horizontal line with current color.
    * @param[in] x 
    * @param[in] y
@@ -256,7 +256,7 @@ public:
   virtual void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length);
 
   /**
-   * @override
+   * @override Canvas
    * Fill rectangle with current color.
    * @param[in] x 
    * @param[in] y
@@ -266,7 +266,7 @@ public:
   virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
   
   /**
-   * @override
+   * @override Canvas
    * Stop sequence of interaction with device.
    * @return true(1) if successful otherwise false(0)
    */

@@ -111,6 +111,7 @@ public:
     bool begin();
 
     /**
+     * @override TWI::Slave
      * Service request callback when a write has been completed,
      * i.e., an argument block as been written. Must be defined by
      * sub-class. Must handle write-read and write-write

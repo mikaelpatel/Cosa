@@ -103,14 +103,14 @@ protected:
   int16_t m_temperature;
   
   /**
-   * @override
+   * @override Interrupt::Handler
    * The device driver interrupt level state machine.
    * @param[in] arg argument from interrupt service routine.
    */
   virtual void on_interrupt(uint16_t arg = 0);
 
   /**
-   * @override
+   * @override Event::Handler
    * The device driver event level state machine.
    * @param[in] type the type of event.
    * @param[in] value the event value.
@@ -118,6 +118,7 @@ protected:
   virtual void on_event(uint8_t type, uint16_t value);
 
   /**
+   * @override DHT
    * Adjust data from the device. Communication protocol is the same
    * for the DHT device family but data representation is different,
    * i.e. data resolution and accuracy. Overridden by DHT11 and DHT22.
@@ -151,7 +152,7 @@ public:
   void begin(uint16_t ms = MIN_PERIOD);
 
   /**
-   * @override
+   * @override DHT
    * Callback when data sample is completed.
    */
   virtual void on_sample_completed() {}
@@ -244,7 +245,7 @@ public:
 class DHT11 : public DHT {
 public:
   /**
-   * @override
+   * @override DHT
    * Adjust data from the DHT11 device; scale by 10 for uniform 
    * number range as DHT22.
    */
@@ -274,7 +275,7 @@ public:
 class DHT22 : public DHT {
 private:
   /**
-   * @override
+   * @override DHT
    * Adjust data from the DHT22 device. Byte order and representation of 
    * negative temperature values.
    */

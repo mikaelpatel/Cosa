@@ -75,7 +75,7 @@ public:
   class Action {
   public:
     /**
-     * @override
+     * @override Registry::Action
      * Registry action function for given registry item. Should return
      * true(1) if successful otherwise false(0).
      * @param[in] item registry item reference.

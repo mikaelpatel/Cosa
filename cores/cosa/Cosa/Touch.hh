@@ -55,7 +55,7 @@ protected:
   uint8_t m_touched;
 
   /**
-   * @override
+   * @override Event::Handler
    * Called on watchdog timeout. Two state period function where the
    * io-pin is discharged and sampled.
    * @param[in] type the event type.
@@ -72,7 +72,7 @@ public:
   Touch(Board::DigitalPin pin, uint16_t threshold = 250);
   
   /**
-   * @override
+   * @override Touch
    * Callback virtual member function; Should be implemented by sub-class.
    */
   virtual void on_touch() = 0;
