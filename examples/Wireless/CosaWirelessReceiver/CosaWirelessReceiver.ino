@@ -32,11 +32,11 @@
 #include "Cosa/RTC.hh"
 
 // Select Wireless device driver
-// #include "Cosa/Wireless/Driver/CC1101.hh"
-// CC1101 rf(0xC05A, 0x02);
+#include "Cosa/Wireless/Driver/CC1101.hh"
+CC1101 rf(0xC05A, 0x02);
 
-#include "Cosa/Wireless/Driver/NRF24L01P.hh"
-NRF24L01P rf(0xC05A, 0x02);
+// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
+// NRF24L01P rf(0xC05A, 0x02);
 
 // #include "Cosa/Wireless/Driver/VWI.hh"
 // #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
@@ -55,10 +55,11 @@ void setup()
 void loop()
 {
   // Receive message
+  static const uint32_t TIMEOUT = 1000L;
   const uint8_t MSG_MAX = 16;
   uint8_t msg[MSG_MAX];
   uint8_t src;
-  int count = rf.recv(src, msg, sizeof(msg), 1000L);
+  int count = rf.recv(src, msg, sizeof(msg), TIMEOUT);
 
   // Check error codes
   if (count == -1) {
