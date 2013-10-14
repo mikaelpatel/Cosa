@@ -26,19 +26,18 @@
 #include "Cosa/Registry.hh"
 
 Registry::item_P 
-Registry::lookup(const uint8_t* path)
+Registry::lookup(const uint8_t* path, size_t count)
 {
   // Check for root path
   item_P item = (item_P) m_root;
   if (path == NULL) return (item);
   // Paths should not exceed the maximum length
-  for (uint8_t i = 0; i < PATH_MAX; i++) {
+  if (count > PATH_MAX) return (NULL);
+  for (uint8_t i = 0; i < count; i++) {
     uint8_t ix = path[i]; 
-    // Check if we have reached the end of the path
-    if (ix == EOP) return (item);
     // Check that the current item is a list
     type_t type = (type_t) pgm_read_byte(&item->type);
-    if ((path[i + 1] != EOP) && (type != ITEM_LIST)) return (NULL);
+    if (((i + 1) < count) && (type != ITEM_LIST)) return (NULL);
     // Check that the current index is within the list length
     item_list_P items = (item_list_P) item;
     uint8_t len = pgm_read_byte(&items->length);
@@ -47,20 +46,40 @@ Registry::lookup(const uint8_t* path)
     item_vec_P vec = (item_vec_P) pgm_read_word(&items->list);
     item = (item_P) pgm_read_word(&vec[ix]);
   }
-  return (NULL);
+  return (item);
 }
 
 int 
-Registry::apply(const uint8_t* path, const void* arg, size_t size)
+Registry::run(action_P action, void* buf, size_t size)
 {
-  // Lookup the item given the path
-  item_P item = lookup(path);
-  // Check that it is valid and an action
-  if (item == NULL) return (-1);
-  type_t type = (type_t) pgm_read_byte(&item->type);
-  if (type != ACTION) return (-1);
-  // Apply the action with the given argument block
-  action_P action = (action_P) item;
+  // Sanity check the parameters
+  if (action == NULL) return (-1);
+  if (pgm_read_byte(&action->item.type) != ACTION) return (-2);
+  // Access the action object 
   Action* obj = (Action*) pgm_read_word(&action->obj);
-  return (obj->run(item, arg, size));
+  if (obj == NULL) return (-3);
+  // And run the member function
+  return (obj->run(buf, size));
 }
+  
+int 
+Registry::get_value(blob_P blob, void* buf, size_t len)
+{
+  // Sanity check the parameters
+  if ((blob == NULL) || (buf == NULL)) return (-1);
+  if (pgm_read_byte(&blob->item.type) != BLOB) return (-2);
+  if (len == 0) return (0);
+  size_t size = (size_t) pgm_read_word(&blob->size);
+  if (size == 0) return (0);
+  if (size > len) return (-3);
+  // Check where the value is stored and copy into buffer
+  storage_t storage = (storage_t) pgm_read_byte(&blob->item.storage);
+  if (storage == IN_PROGMEM) 
+    memcpy_P(buf, (const void*) pgm_read_word(&blob->value), size);
+  else if (storage == IN_SRAM) 
+    memcpy(buf, (const void*) pgm_read_word(&blob->value), size);
+  else return (-4);
+  return (size);
+}
+
+
