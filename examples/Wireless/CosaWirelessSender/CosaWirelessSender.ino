@@ -36,18 +36,24 @@
 // #include "Cosa/Wireless/Driver/CC1101.hh"
 // CC1101 rf(0xC05A, 0x01);
 
-// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-// NRF24L01P rf(0xC05A, 0x01);
+#include "Cosa/Wireless/Driver/NRF24L01P.hh"
+NRF24L01P rf(0xC05A, 0x01);
 
-#include "Cosa/Wireless/Driver/VWI.hh"
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-VirtualWireCodec codec;
-VWI rf(0xC05A, 0x01, 4000, Board::D7, Board::D8, &codec);
+// #include "Cosa/Wireless/Driver/VWI.hh"
+// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+// VirtualWireCodec codec;
+// #if defined(__ARDUINO_TINYX5__)
+// VWI rf(0xC05A, 0x01, 4000, Board::D1, Board::D2, &codec);
+// #else
+// VWI rf(0xC05A, 0x01, 4000, Board::D7, Board::D8, &codec);
+// #endif
 
 void setup()
 {
+#if !defined(__COSA_WIRELESS_DRIVER_VWI_HH__)
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaWirelessSender: started"));
+#endif
   Watchdog::begin();
   RTC::begin();
   rf.begin();
@@ -55,7 +61,7 @@ void setup()
 
 void loop()
 {
-  static const uint8_t MSG_MAX = 8;
+  static const uint8_t MSG_MAX = 16;
   static uint8_t msg[MSG_MAX] = { 0x00 };
   static size_t len = 0;
   
@@ -64,9 +70,13 @@ void loop()
   rf.broadcast(msg, len);
   for (uint8_t dest = 0x01; dest < 0x04; dest++)
     if (rf.send(dest, msg, sizeof(msg)) < 0)
+#if !defined(__COSA_WIRELESS_DRIVER_VWI_HH__)
       trace << PSTR("err(dest = ") 
 	    << hex << dest 
 	    << PSTR("):no ack") << endl;
+#else
+  ;
+#endif
 
   // Update message; increment bytes
   for (uint8_t i = 0; i < MSG_MAX; i++) {
