@@ -27,6 +27,7 @@
 #define __COSA_REGISTRY_HH__
 
 #include "Cosa/Types.h"
+#include "Cosa/EEPROM.hh"
 
 /**
  * Cosa Configuration Registry. Allow path (x0.x1..xn) access to
@@ -39,35 +40,34 @@
 class Registry {
 public:
   /**
-   * Type tags
+   * Registry item type tags
    */
-  enum type_t {
+  enum type_t {			// Item types
     ITEM = 0,			// Item descriptor
-    ITEM_LIST,			// List of items
-    ACTION,			// Action function
-    BLOB,			// General Binary Object
-    APPL,			// Application Binary Object
-  };
+    ITEM_LIST = 1,		// List of items
+    ACTION = 2,			// Action function
+    BLOB = 3,			// General Binary Object
+    APPL = 4			// Application Binary Object
+  } __attribute__((packed));
   
   /**
-   * Storage tags
+   * Storage type tags
    */
-  enum storage_t {
-    IN_SRAM,			// In data memory
-    IN_PROGMEM,			// In program memory
-    IN_EEMEM			// In eeprom 
-  };
+  enum storage_t {		// Storage type tag values
+    IN_PROGMEM = 0,		// In program memory
+    IN_SRAM = 1,		// In data memory
+    IN_EEMEM = 2,		// In eeprom 
+  } __attribute__((packed));
 
-  // Pointer type for character string in program memory
-  typedef const PROGMEM char* str_P;
+  static const uint8_t STORAGE_MASK = 0x7f;
+  static const uint8_t READONLY = 0x80;
 
-  // Registry item header
   struct item_t {
     type_t type;		// Item type tag(ITEM)
-    str_P name;			// Item string in program memory
-    storage_t storage;		// Value storage
-
+    str_P name;			// Name string in program memory
+    uint8_t attr;		// Attributes
   };
+
   typedef const PROGMEM item_t* item_P;
   typedef const PROGMEM item_P* item_vec_P;
   
@@ -99,7 +99,19 @@ public:
    */
   static storage_t get_storage(item_P item)
   {
-    return ((storage_t) pgm_read_byte(&item->storage));
+    uint8_t attr = pgm_read_byte(&item->attr);
+    return ((storage_t) (attr & STORAGE_MASK));
+  }
+
+  /**
+   * Return true if the item storage is readonly otherwise false.
+   * @param [in] item pointer to item in program memory.
+   * @return bool.
+   */
+  static bool is_readonly(item_P item)
+  {
+    uint8_t attr = pgm_read_byte(&item->attr);
+    return ((attr & READONLY) != 0);
   }
 
   // Registry item lists
@@ -109,6 +121,67 @@ public:
     item_vec_P list;		// Item list in program memory
   };
   typedef const PROGMEM item_list_t* item_list_P;
+
+  /**
+   * Type check given item pointer and convert to an item list.
+   * Return NULL if the item is not tagged as an ITEM_LIST.
+   * @param [in] item pointer to item in program memory.
+   * @return pointer to item list in program memory.
+   */
+  static item_list_P to_list(item_P item)
+  {
+    type_t type = get_type(item);
+    return (type == ITEM_LIST ? (item_list_P) item : NULL);
+  }
+
+  /**
+   * Return number of items in item list or negative error code.
+   * @param [in] list pointer to item list in program memory.
+   * @return 
+   */
+  static int get_length(item_list_P list)
+  {
+    if ((type_t) pgm_read_byte(&list->item.type) != ITEM_LIST) return (-1);
+    return ((int) pgm_read_byte(&list->length));
+  }
+
+  /**
+   * Registry item list iterator.
+   */
+  class Iterator {
+  private:
+    item_vec_P m_vec;		/**< item vector from item list */
+    uint8_t m_length;		/**< length of vector */ 
+    uint8_t m_next;		/**< current index in vector */
+  public:
+    /**
+     * Construct iterator on given item list.
+     * @param[in] list of items.
+     */
+    Iterator(item_list_P list) :
+      m_vec((item_vec_P) pgm_read_word(&list->list)),
+      m_length((uint8_t) pgm_read_byte(&list->length)),
+      m_next(0)
+    {
+    }
+
+    /**
+     * Return the next item in the item list otherwise NULL.
+     */
+    item_P next()
+    {
+      if (m_next == m_length) return (NULL);
+      return ((item_P) pgm_read_word(&m_vec[m_next++]));
+    }
+
+    /**
+     * Reset iterator to start position.
+     */
+    void reset()
+    {
+      m_next = 0;
+    }
+  };
 
   /**
    * Registry Action handler. Must be sub-classed and the virtual member
@@ -152,8 +225,8 @@ public:
 
   /**
    * Run the action item with the given argument block and given
-   * number of bytes. Return number of return bytes in buffer or
-   * negative error code.
+   * number of bytes. Return number of bytes in buffer (return value)
+   * or negative error code.
    * @param [in] action item.
    * @param [inout] buf argument/result buffer.
    * @param [in] size number of bytes argument.
@@ -178,7 +251,7 @@ public:
   static blob_P to_blob(item_P item)
   {
     type_t type = get_type(item);
-    return (type == BLOB ? (blob_P) item : NULL);
+    return (type >= BLOB ? (blob_P) item : NULL);
   }
 
   /**
@@ -190,7 +263,18 @@ public:
    * @param [in] len number of bytes maximum in buffer. 
    * @return number of bytes or negative error code. 
    */
-  static int get_value(blob_P blob, void* buf, size_t len);
+  int get_value(blob_P blob, void* buf, size_t len);
+  
+  /**
+   * Copy in given buffer with given maximum size (len) to
+   * blob. Return number of bytes copied from buffer or negative 
+   * error code. The storage type must be SRAM or EEMEM.
+   * @param [in] blob pointer to blob in program memory.
+   * @param [out] buf pointer to buffer for value.
+   * @param [in] len number of bytes maximum in buffer. 
+   * @return number of bytes or negative error code. 
+   */
+  int set_value(blob_P blob, const void* buf, size_t len);
   
   /** Max length of a path */
   static const size_t PATH_MAX = 8;
@@ -198,8 +282,12 @@ public:
   /**
    * Construct registery root object.
    * @param[in] root item list.
+   * @param[in] eeprom device driver (default internal EEPROM).
    */
-  Registry(item_list_P root) : m_root(root) {}
+  Registry(item_list_P root, EEPROM::Device* eeprom = NULL) : 
+    m_root(root),
+    m_eeprom(eeprom == NULL ? &EEPROM::Device::eeprom : eeprom)
+  {}
   
   /**
    * Lookup registry item for given path. Returns pointer to item if
@@ -227,7 +315,11 @@ public:
   }
 
 private:
+  // Root item list
   item_list_P m_root;
+
+  // EEPROM device driver
+  EEPROM::Device* m_eeprom;
 };
 
 /**
@@ -266,7 +358,7 @@ private:
     {							\
       Registry::ITEM_LIST,				\
       var ## _name,					\
-      Registry::IN_PROGMEM				\
+      Registry::IN_PROGMEM | Registry::READONLY,	\
     },							\
     membersof(var ## _list),				\
     var ## _list					\
@@ -283,7 +375,7 @@ private:
     {							\
       Registry::ACTION,					\
       var ## _name,					\
-      Registry::IN_SRAM					\
+      Registry::IN_SRAM | Registry::READONLY		\
     },							\
     &var						\
   };
@@ -293,16 +385,16 @@ private:
  * memory. 
  * @param[in] var registry range item to create.
  * @param[in] name string of registry item.
- * @param[in] value name.
- * @param[in] size of value.
+ * @param[in] mem storage type (SRAM, PROGMEM or EEMEM).
+ * @param[in] readonly access.
  */
-#define REGISTRY_BLOB(var,name,mem)			\
+#define REGISTRY_BLOB(var,name,mem,readonly)		\
   const char var ## _blob_name[] PROGMEM = name;	\
   const Registry::blob_t var ## _blob PROGMEM = {	\
     {							\
       Registry::BLOB,					\
       var ## _blob_name,				\
-      Registry::IN_ ## mem				\
+      Registry::IN_ ## mem | (readonly << 7)		\
     },							\
     (void*) &var,					\
     sizeof(var)						\
