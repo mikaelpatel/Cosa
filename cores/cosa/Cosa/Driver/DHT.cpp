@@ -200,9 +200,8 @@ DHT22::adjust_data()
 {
   m_humidity = swap(m_data.humidity);
   m_temperature = swap(m_data.temperature);
-  if (m_temperature < 0) {
-    m_temperature = -(m_temperature & 0x7fff);
-  }
+  if (m_temperature >= 0) return;
+  m_temperature = -(m_temperature & 0x7fff);
 }
 
 IOStream& 
