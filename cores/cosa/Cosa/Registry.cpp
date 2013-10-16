@@ -125,7 +125,7 @@ Registry::set_value(blob_P blob, const void* buf, size_t len)
 IOStream& operator<<(IOStream& outs, Registry::item_P item)
 {
   outs << PSTR("item@") << (void*) item;
-  if (item == NULL)
+  if (item != NULL)
     outs << PSTR("(type = ") << Registry::get_type(item)
 	 << PSTR(", name = ") << Registry::get_name(item)
 	 << PSTR(", storage = ") << Registry::get_storage(item)
