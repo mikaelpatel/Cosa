@@ -1,5 +1,5 @@
 /**
- * @file Cosa/VLCD.cpp
+ * @file Cosa/LCD/Driver/VLCD.cpp
  * @version 1.0
  *
  * @section License
@@ -24,9 +24,8 @@
  */
 
 #include "Cosa/Board.hh"
-#include "Cosa/VLCD.hh"
+#include "Cosa/LCD/Driver/VLCD.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
 
 void
 VLCD::Slave::on_request(void* buf, size_t size)

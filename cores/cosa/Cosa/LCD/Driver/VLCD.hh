@@ -1,5 +1,5 @@
 /**
- * @file Cosa/VLCD.hh
+ * @file Cosa/LCD/Driver/VLCD.hh
  * @version 1.0
  *
  * @section License
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_VLCD_HH__
-#define __COSA_VLCD_HH__
+#ifndef __COSA_LCD_DRIVER_VLCD_HH__
+#define __COSA_LCD_DRIVER_VLCD_HH__
 
 #include "Cosa/LCD.hh"
 #include "Cosa/TWI.hh"
@@ -64,7 +64,7 @@ public:
     static const uint8_t MINOR = 0;
 
     // Command prefix byte
-    static const uint8_t COMMAND = 0;
+    static const uint8_t COMMAND = 255;
 
     // Command codes
     enum {

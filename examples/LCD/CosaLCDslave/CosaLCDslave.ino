@@ -28,7 +28,7 @@
 
 #include "Cosa/Watchdog.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
-#include "Cosa/VLCD.hh"
+#include "Cosa/LCD/Driver/VLCD.hh"
 
 // Use a 4-bit parallel port for the HD44780 LCD (16X2 default)
 HD44780::Port4b port;
