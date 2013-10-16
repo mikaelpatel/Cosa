@@ -238,6 +238,10 @@ void loop()
   // Access 3.1 action broadcast sensor data
   path[0] = 3; 
   path[1] = 1; 
+  item = reg.lookup(path, sizeof(path));
+  trace << item << endl;
+  blob = Registry::to_blob(item);
+  ASSERT(blob != NULL);
   bool flag;
   ASSERT(reg.get_value(blob, &flag, sizeof(flag)) == sizeof(flag));
   trace << PSTR("flag = ") << flag << endl;
