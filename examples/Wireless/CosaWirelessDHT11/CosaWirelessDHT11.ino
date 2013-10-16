@@ -80,6 +80,7 @@ void loop()
 {
   // Read sensor and send message every two seconds
   static uint16_t nr = 0;
+  uint32_t start = RTC::millis();
   msg_t msg;
   if (!sensor.sample(msg.humidity, msg.temperature)) return;
   msg.nr = nr++;
@@ -87,5 +88,5 @@ void loop()
   rf.broadcast(&msg, sizeof(msg));
   led.toggle();
   rf.powerdown();
-  SLEEP(2);
+  MSLEEP(1858L - RTC::since(start));
 }

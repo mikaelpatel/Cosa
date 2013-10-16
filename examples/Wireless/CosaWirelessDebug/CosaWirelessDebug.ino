@@ -82,7 +82,6 @@ void loop()
 	<< stop - start << ':' 
 	<< src << ':' 
 	<< count << ':';
-  start = stop;
   if (is_ascii) {
     trace << '"';
     for (uint8_t i = 0; i < count; i++)
@@ -94,4 +93,5 @@ void loop()
   }
   else 
     trace.print(buffer, count, IOStream::hex, sizeof(buffer));
+  start = stop;
 }
