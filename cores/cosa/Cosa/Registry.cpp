@@ -122,4 +122,27 @@ Registry::set_value(blob_P blob, const void* buf, size_t len)
   return (size);
 }
 
+IOStream& operator<<(IOStream& outs, Registry::item_P item)
+{
+  outs << PSTR("item@") << (void*) item;
+  if (item == NULL)
+    outs << PSTR("(type = ") << Registry::get_type(item)
+	 << PSTR(", name = ") << Registry::get_name(item)
+	 << PSTR(", storage = ") << Registry::get_storage(item)
+	 << PSTR(", readonly = ") << Registry::is_readonly(item)
+	 << PSTR(")");
+  else
+    outs << PSTR("(NULL)");
+  return (outs);
+}
+
+IOStream& operator<<(IOStream& outs, Registry::item_list_P list)
+{
+  if (list == NULL) return (outs);
+  Registry::Iterator iter(list);
+  Registry::item_P item;
+  while ((item = iter.next()) != NULL)
+    outs << item << endl;
+  return (outs);
+}
 

@@ -22,6 +22,21 @@
  *
  * @section Description
  * Cosa demonstration of Registry.
+ * Path Description
+ *   0 product information management
+ *   0.0 product name
+ *   0.1 version string
+ *   1 configuration
+ *   1.0 network address (16b)
+ *   1.1 device address (8b)
+ *   1.2 sleep period (ms)
+ *   2 status
+ *   2.0 battery satus (mV)
+ *   2.1 processor load (%)
+ *   2.2 error count
+ *   3 actions
+ *   3.0 restart device
+ *   3.1 broadcast sensor data
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -31,18 +46,17 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 
-static const char PRODUCT[] PROGMEM = "registry-demo";
-static const char VERSION[] PROGMEM = "1.0";
+// Product information management registry
+REGISTRY_BLOB_PSTR(PRODUCT, "product name", "registry-demo")
+REGISTRY_BLOB_PSTR(VERSION, "version string", "1.0")
 
-REGISTRY_BLOB(PRODUCT, "product name", PROGMEM, true)
-REGISTRY_BLOB(VERSION, "version string", PROGMEM, true)
-
-REGISTRY_BEGIN(PIM, "product information management")
-  REGISTRY_BLOB_ITEM(PRODUCT)	// 0.0
-  REGISTRY_BLOB_ITEM(VERSION)	// 0.1
+REGISTRY_BEGIN(PIM, "product information management") // 0
+  REGISTRY_BLOB_ITEM(PRODUCT)		// 0.0
+  REGISTRY_BLOB_ITEM(VERSION)		// 0.1
 REGISTRY_END(PIM)
 
-static int16_t NETWORK EEMEM = 0xC05A;
+// Configuration variables and registry
+static int16_t NETWORK EEMEM = 0xc05a;
 static uint8_t DEVICE EEMEM = 0x42;
 static uint16_t TIMEOUT EEMEM = 2000;
 
@@ -50,26 +64,24 @@ REGISTRY_BLOB(NETWORK, "network address (16b)", EEMEM, false)
 REGISTRY_BLOB(DEVICE, "device address (8b)", EEMEM, false)
 REGISTRY_BLOB(TIMEOUT, "sleep period (ms)", EEMEM, false)
 
-REGISTRY_BEGIN(CM, "configuration")
-  REGISTRY_BLOB_ITEM(NETWORK)	// 1.0
-  REGISTRY_BLOB_ITEM(DEVICE)	// 1.1
-  REGISTRY_BLOB_ITEM(TIMEOUT)	// 1.2
+REGISTRY_BEGIN(CM, "configuration") 	// 1
+  REGISTRY_BLOB_ITEM(NETWORK)		// 1.0
+  REGISTRY_BLOB_ITEM(DEVICE)		// 1.1
+  REGISTRY_BLOB_ITEM(TIMEOUT)		// 1.2
 REGISTRY_END(CM)
 
-static uint16_t vcc = 4943;
-static uint8_t load = 4;
-static uint16_t errors = 0;
+// Status variables and registry
+REGISTRY_BLOB_VAR(uint16_t, vcc, "battery status (mV)", 4943, true)
+REGISTRY_BLOB_VAR(uint8_t, load, "processor load (%)", 4, true)
+REGISTRY_BLOB_VAR(uint16_t, errors, "error count", 0, false)
 
-REGISTRY_BLOB(vcc, "battery status (mV)", SRAM, true)
-REGISTRY_BLOB(load, "processor load (%)", SRAM, true)
-REGISTRY_BLOB(errors, "error count", SRAM, false)
-
-REGISTRY_BEGIN(STATUS, "status")
-  REGISTRY_BLOB_ITEM(vcc)	// 2.0
-  REGISTRY_BLOB_ITEM(load)	// 2.1
-  REGISTRY_BLOB_ITEM(errors)	// 2.2
+REGISTRY_BEGIN(STATUS, "status") 	// 2
+  REGISTRY_BLOB_ITEM(vcc)		// 2.0
+  REGISTRY_BLOB_ITEM(load)		// 2.1
+  REGISTRY_BLOB_ITEM(errors)		// 2.2
 REGISTRY_END(STATUS)
 
+// Action class and registry
 class Restart : public Registry::Action {
 public:
   virtual int run(void* buf, size_t size) 
@@ -78,55 +90,34 @@ public:
     return (strlen_P((const char*) buf));
   }
 };
-Restart restart;
-REGISTRY_ACTION(restart, "restart device");
+Restart do_restart;
+REGISTRY_ACTION(do_restart, "restart device");
+REGISTRY_BLOB_VAR(bool, do_broadcast, "broadcast sensor data", false, false)
 
-REGISTRY_BEGIN(ACTION, "actions")
-  REGISTRY_ACTION_ITEM(restart)	// 3.0
+REGISTRY_BEGIN(ACTION, "actions")  	// 3
+  REGISTRY_ACTION_ITEM(do_restart)	// 3.0
+  REGISTRY_BLOB_ITEM(do_broadcast)	// 3.1
 REGISTRY_END(ACTION)
 
-REGISTRY_BEGIN(ROOT, "root")
-  REGISTRY_LIST_ITEM(PIM)	// 0
-  REGISTRY_LIST_ITEM(CM)	// 1
-  REGISTRY_LIST_ITEM(STATUS)	// 2
-  REGISTRY_LIST_ITEM(ACTION)	// 3
+// Root registry
+REGISTRY_BEGIN(ROOT, "root")		// -
+  REGISTRY_LIST_ITEM(PIM)		// 0
+  REGISTRY_LIST_ITEM(CM)		// 1
+  REGISTRY_LIST_ITEM(STATUS)		// 2
+  REGISTRY_LIST_ITEM(ACTION)		// 3
 REGISTRY_END(ROOT)
 
+// Application registry (1218 bytes)
 Registry reg(&ROOT);
-
-IOStream& operator<<(IOStream& outs, Registry::item_P item)
-{
-  outs << PSTR("item@") << (void*) item;
-  if (item != NULL)
-    outs << PSTR("(type = ") << Registry::get_type(item)
-	 << PSTR(", name = ") << Registry::get_name(item)
-	 << PSTR(", storage = ") << Registry::get_storage(item)
-	 << PSTR(", readonly = ") << Registry::is_readonly(item)
-	 << PSTR(")");
-  else
-    outs << PSTR("(NULL)");
-  return (outs);
-}
-
-IOStream& operator<<(IOStream& outs, Registry::item_list_P list)
-{
-  if (list != NULL) {
-    Registry::Iterator iter(list);
-    Registry::item_P item;
-    while ((item = iter.next()) != NULL)
-      trace << item << endl;
-  }
-  return (outs);
-}
 
 void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaRegistry: started"));
   Watchdog::begin();
-
-  // Initiate EEMEM variables (once)
-  int16_t network = 0xC05A;
+  
+  // Initiate EEMEM variables. Arduino build does not handle .eeprom section
+  int16_t network = 0xc05a;
   uint8_t device = 0x42;
   uint16_t timeout = 2000;
   EEPROM::Device::eeprom.write(&NETWORK, &network, sizeof(network));
@@ -190,9 +181,11 @@ void loop()
   uint16_t network;
   ASSERT(reg.get_value(blob, &network, sizeof(network)) == sizeof(NETWORK));
   trace << hex << network << endl;
-  network = 0xBEEF;
+  network = 0xbeef;
   ASSERT(reg.set_value(blob, &network, sizeof(network)) == sizeof(NETWORK));
+  network = 0;
   ASSERT(reg.get_value(blob, &network, sizeof(network)) == sizeof(NETWORK));
+  ASSERT(network == 0xbeef);
   trace << hex << network << endl;
 
   // Access 2.0 blob battery status (mV)
@@ -242,11 +235,20 @@ void loop()
   path[1] = 0; 
   trace << reg.apply(path, sizeof(path), (void*) PSTR("rebooting..."), 0) << endl;
 
-  // Access 3.1 illegal access path
+  // Access 3.1 action broadcast sensor data
   path[0] = 3; 
   path[1] = 1; 
+  bool flag;
+  ASSERT(reg.get_value(blob, &flag, sizeof(flag)) == sizeof(flag));
+  trace << PSTR("flag = ") << flag << endl;
+  flag = true;
+  ASSERT(reg.set_value(blob, &flag, sizeof(flag)) == sizeof(flag));
+
+  // Access 3.2 illegal path
+  path[0] = 3; 
+  path[1] = 2; 
   item = reg.lookup(path, sizeof(path));
   trace << item << endl;
-  ASSERT(true == false);
+  ASSERT(item != NULL);
 }
 

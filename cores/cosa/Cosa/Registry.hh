@@ -28,6 +28,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/EEPROM.hh"
+#include "Cosa/IOStream.hh"
 
 /**
  * Cosa Configuration Registry. Allow path (x0.x1..xn) access to
@@ -323,6 +324,22 @@ private:
 };
 
 /**
+ * Print item to given output stream.
+ * @param[in] outs output stream.
+ * @param[in] item registry item.
+ * @return output stream.
+ */
+IOStream& operator<<(IOStream& outs, Registry::item_P item);
+
+/**
+ * Print item list to given output stream.
+ * @param[in] outs output stream.
+ * @param[in] list registry item list.
+ * @return output stream.
+ */
+IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
+
+/**
  * Support macro to start the definition of a registery item list in
  * program memory. 
  * Used in the form:
@@ -383,7 +400,7 @@ private:
 /**
  * Support macro to define a registry binary object item in program
  * memory. 
- * @param[in] var registry range item to create.
+ * @param[in] var registry blob to create.
  * @param[in] name string of registry item.
  * @param[in] mem storage type (SRAM, PROGMEM or EEMEM).
  * @param[in] readonly access.
@@ -399,6 +416,30 @@ private:
     (void*) &var,					\
     sizeof(var)						\
   };
+
+/**
+ * Support macro to define a registry binary object item in program
+ * memory and variable in SRAM as reference.
+ * @param[in] var registry blob to create.
+ * @param[in] name string of registry item.
+ * @param[in] value of variable (initial).
+ * @param[in] readonly access.
+ */
+#define REGISTRY_BLOB_VAR(type,var,name,value,readonly)	\
+  static type var = value;				\
+  REGISTRY_BLOB(var,name,SRAM,readonly)
+
+/**
+ * Support macro to define a registry binary object item in program
+ * memory and string variable in program memory as reference. Values
+ * is always READONLY.
+ * @param[in] var registry blob to create.
+ * @param[in] name string of registry item.
+ * @param[in] value string for variable.
+ */
+#define REGISTRY_BLOB_PSTR(var,name,value)		\
+  static const char var[] PROGMEM = value;		\
+  REGISTRY_BLOB(var,name,PROGMEM,true)
 
 #endif
 
