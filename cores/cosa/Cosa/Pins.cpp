@@ -390,9 +390,9 @@ AnalogPin::bandgap(uint16_t vref)
 {
   loop_until_bit_is_clear(ADCSRA, ADSC);
   ADMUX = (AVCC_REFERENCE | Board::VBG);
-  bit_mask_set(ADCSRA, _BV(ADEN));
+  bit_set(ADCSRA, ADEN);
   DELAY(1000);
-  bit_mask_set(ADCSRA, _BV(ADSC));
+  bit_set(ADCSRA, ADSC);
   loop_until_bit_is_clear(ADCSRA, ADSC);
   uint16_t sample = ADCW;
   return ((vref * 1024L) / sample);

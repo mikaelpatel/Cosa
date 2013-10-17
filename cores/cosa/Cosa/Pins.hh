@@ -856,6 +856,22 @@ public:
   static uint16_t bandgap(uint16_t vref = 1100);
 
   /**
+   * Enable analog conversion.
+   */
+  static void powerup()
+  {
+    bit_set(ADCSRA, ADEN);
+  }
+
+  /**
+   * Disable analog conversion.
+   */
+  static void powerdown()
+  {
+    bit_clear(ADCSRA, ADEN);
+  }
+
+  /**
    * Sample analog pin. Wait for conversion to complete before 
    * returning with sample value.
    * @return sample value.
@@ -985,10 +1001,7 @@ public:
  * and negative pin AIN1 or ADCn. Note: only one instance can be
  * active/enabled at a time.
  */
-class AnalogComparator : 
-  public Interrupt::Handler, 
-  public Event::Handler 
-{
+class AnalogComparator : public Interrupt::Handler, public Event::Handler {
   friend void ANALOG_COMP_vect(void);
 public:
   enum Mode {
@@ -1027,9 +1040,10 @@ public:
   }
 
   /**
+   * @override Interrupt::Handler
    * Enable analog comparator handler.
    */
-  void enable()
+  virtual void enable()
   {
     synchronized {
       comparator = this;
@@ -1039,12 +1053,13 @@ public:
   }
 
   /**
+   * @override Interrupt::Handler
    * Disable analog comparator handler.
    */
-  void disable()
+  virtual void disable()
   {
     synchronized {
-      bit_clear(ACSR, ACIE);
+      ACSR = _BV(ACD);
       comparator = 0;
     }
   }
@@ -1058,7 +1073,7 @@ public:
 };
 
 /**
- * Synatatic sugar for an asserted block. The given in will be toggled.
+ * Synatatic sugar for an asserted block. The given pin will be toggled.
  * Initiating the pin to zero(0) will give active low logic.
  * @param[in] pin to assert.
  */
