@@ -41,57 +41,69 @@
  * Monitor power supply for low voltage/battery.
  */
 class VCC : protected Periodic {
-protected:
+private:
   uint16_t m_threshold;
   uint16_t m_vcc;
+public:
+  VCC(uint16_t mv, uint16_t sec = 2) : 
+    Periodic(sec * 1024), 
+    m_threshold(mv), 
+    m_vcc(0)
+  {
+  }
   virtual void run()
   {
     m_vcc = AnalogPin::bandgap();
     if (m_vcc > m_threshold) return;
     on_low_voltage();
   }
-public:
-  VCC(uint16_t mv, uint16_t sec = 2) : 
-    Periodic(sec * 1024), 
-    m_threshold(mv),
-    m_vcc(AnalogPin::bandgap())
-  {
-  }
   virtual void on_low_voltage()
   {
-    trace << Watchdog::millis() / 1000 
-	  << PSTR(":VCC = ") << m_vcc << PSTR(" mV\n"); 
+    trace << Watchdog::millis() 
+	  << PSTR(":warning:low voltage(VCC = ") 
+	  << m_vcc << PSTR(" mV)\n"); 
   }
-  uint16_t get_vcc()
-  {
-    return (m_vcc);
-  }
+  uint16_t get_vcc() { return (m_vcc); }
 };
+
+// Monitor low voltage at 4.4 V
+VCC lowPower(4400);
 
 /**
  * Periodical sampling of analog pin.
  */
 class Sampler : public AnalogPin, private Periodic {
 public:
-  Sampler(Board::AnalogPin pin, uint16_t ms) :
-    AnalogPin(pin),
-    Periodic(ms)
-  {
-  }
+  Sampler(Board::AnalogPin pin, uint16_t ms) : AnalogPin(pin), Periodic(ms) {}
+  virtual void run() { sample_request(); }
+};
+
+// Sample analog pin A4 four times per second
+Sampler in(Board::A4, 256);
+
+/**
+ * Periodical display the values
+ */
+class Display : private Periodic {
+public:
+  Display(uint16_t ms) : Periodic(ms) {}
   virtual void run()
   {
-    sample_request();
+    trace << Watchdog::millis() << PSTR(":A4  = ") << in.get_value() 
+	  << PSTR(":Vcc  = ") << lowPower.get_vcc() 
+	  << endl;
   }
 };
 
-VCC lowPower(4900);
-Sampler in(Board::A4, 256);
+// Print the latest sample value and voltage
+Display display(1024);
 
 void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVCC: started"));
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  lowPower.run();
 }
 
 void loop()
@@ -99,8 +111,7 @@ void loop()
   Event event;
   Event::queue.await(&event);
   event.dispatch();
-  trace << Watchdog::millis() / 1000 << PSTR(":A4  = ") << in.get_value() 
-	<< PSTR(":Vcc  = ") << lowPower.get_vcc() 
-	<< endl;
+  if (event.get_type() == Event::SAMPLE_COMPLETED_TYPE) 
+    AnalogPin::powerdown();
 }
 
