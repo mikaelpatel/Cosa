@@ -178,6 +178,7 @@ VWI::Receiver::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
 
   // Copy payload and source device address
   memcpy(buf, m_buffer + sizeof(header_t) + 1, rxlen);
+  s_rf->m_dest = hp->dest;
   src = hp->src;
   
   // OK, got that message thanks
@@ -322,6 +323,7 @@ VWI::powerup()
 void 
 VWI::powerdown()
 {
+  while (m_tx.is_active()) Power::sleep(m_mode);
   m_tx.end();
   m_rx.end();
   TIMSK1 &= ~_BV(OCIE1A);

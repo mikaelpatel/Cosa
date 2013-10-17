@@ -252,6 +252,7 @@ NRF24L01P::recv(uint8_t& src, void* buf, size_t size, uint32_t ms)
     if ((ms != 0) && (RTC::since(start) > ms)) return (-2);
     Power::sleep(m_mode);
   } 
+  m_dest = (m_status.rx_p_no == 1 ? m_addr.device : 0);
   write(STATUS, _BV(RX_DR));
   
   // Check for payload error from device (Tab. 20, pp. 51, R_RX_PL_WID)

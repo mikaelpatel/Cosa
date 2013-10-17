@@ -501,5 +501,6 @@ public:
    * @return number of bytes received or negative error code.
    */
   virtual int recv(uint8_t& src, void* buf, size_t len, uint32_t ms = 0L);
+
 };
 #endif

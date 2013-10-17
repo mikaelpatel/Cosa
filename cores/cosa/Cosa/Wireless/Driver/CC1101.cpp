@@ -207,7 +207,7 @@ CC1101::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
   }
 
   // Read the frame (dest, src, payload)
-  uint8_t dest = read(RXFIFO);
+  m_dest = read(RXFIFO);
   src = read(RXFIFO);
   read(RXFIFO, buf, size);
   spi.end();

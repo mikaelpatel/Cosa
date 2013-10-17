@@ -50,12 +50,18 @@ public:
   protected:
     /** Current channel */
     uint8_t m_channel;
+
     /** Current network and device address */
     addr_t m_addr;
+
     /** Message available */
     volatile bool m_avail;
+
     /** Sleep mode on wait */
     uint8_t m_mode;
+
+    /** Latest message destination device address */
+    uint8_t m_dest;
 
   public:
     /**
@@ -67,8 +73,25 @@ public:
       m_channel(0),
       m_addr(network, device),
       m_avail(false),
-      m_mode(SLEEP_MODE_IDLE)
+      m_mode(SLEEP_MODE_IDLE),
+      m_dest(0)
     {}
+
+    /**
+     * Get network address. 
+     */
+    int16_t get_network_address()
+    {
+      return (m_addr.network);
+    }
+
+    /**
+     * Get device address. 
+     */
+    uint8_t get_device_address()
+    {
+      return (m_addr.device);
+    }
 
     /**
      * Set power sleep mode during wait.
@@ -222,6 +245,16 @@ public:
      * @return number of bytes received or negative error code.
      */
     virtual int recv(uint8_t& src, void* buf, size_t len, uint32_t ms = 0L) = 0;
+
+    /**
+     * @override Wireless::Driver
+     * Return true(1) if the latest received message was a broadcast
+     * otherwise false(0). 
+     */
+    virtual bool is_broadcast()
+    {
+      return (m_dest == 0);
+    }
   };
 };
 #endif
