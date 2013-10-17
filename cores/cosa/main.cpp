@@ -41,15 +41,18 @@
 void init() __attribute__((weak));
 void init()
 {
-  // Set ADC prescale factor and enable conversion
+  // Set analog converter prescale factor and but do not enable conversion
 #if F_CPU >= 16000000L
-  ADCSRA |= (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0) | _BV(ADEN));
+  ADCSRA |= (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0));
 #elif F_CPU >= 8000000L
-  ADCSRA |= (_BV(ADPS2) | _BV(ADPS1)              | _BV(ADEN));
+  ADCSRA |= (_BV(ADPS2) | _BV(ADPS1)             );
 #else
-  ADCSRA |= (             _BV(ADPS1) | _BV(ADPS0) | _BV(ADEN));
+  ADCSRA |= (             _BV(ADPS1) | _BV(ADPS0));
 #endif
   
+  // Disable analog comparator 
+  ACSR = _BV(ACD);
+
   // The bootloader connects pins 0 and 1 to the USART; disconnect them
   // here so they can be used as normal digital IO.
 #if defined(UCSRB)
