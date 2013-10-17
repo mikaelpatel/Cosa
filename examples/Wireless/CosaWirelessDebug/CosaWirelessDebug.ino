@@ -39,17 +39,17 @@
 CC1101 rf(0xC05A, 0x01);
 
 // #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-// NRF24L01P rf(0xC05A, 0x02);
+// NRF24L01P rf(0xC05A, 0x01);
 
 // #include "Cosa/Wireless/Driver/VWI.hh"
 // #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-// VirtualWireCodec codec;
-// VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
+// nVirtualWireCodec codec;
+// VWI rf(0xC05A, 0x01, 4000, Board::D7, Board::D8, &codec);
 
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaWirelessReceiver: started"));
+  trace.begin(&uart, PSTR("CosaWirelessDebug: started"));
   Watchdog::begin();
   RTC::begin();
   rf.begin();
@@ -60,38 +60,40 @@ void loop()
   // Receive message
   static uint32_t start = 0L;
   static uint16_t nr = 0;
-  const uint8_t BUFFER_MAX = 64;
-  uint8_t buffer[BUFFER_MAX];
+  const uint8_t MSG_MAX = 64;
+  uint8_t msg[MSG_MAX];
   uint8_t src;
 
-  int count = rf.recv(src, buffer, sizeof(buffer));
+  int count = rf.recv(src, msg, sizeof(msg));
+  nr += 1;
   if (count <= 0) return;
   uint32_t stop = RTC::millis();
 
   // Check if the message is printable
   bool is_ascii = true;
   for (uint8_t i = 0; i < count; i++) {
-    if ((buffer[i] < ' ' && buffer[i] != '\n') || buffer[i] > 127) {
+    if ((msg[i] < ' ' && msg[i] != '\n') || msg[i] > 127) {
       is_ascii = false;
       break;
     }
   }
 
   // Print prefix with message number, delta time, source and length of message
-  trace << nr++ << ':' 
-	<< stop - start << ':' 
-	<< src << ':' 
-	<< count << ':';
+  trace << nr << ':' 
+	<< stop - start 
+	<< PSTR(":src=") << src 
+	<< PSTR(",dest=") << (rf.is_broadcast() ? 0 : rf.get_device_address())
+	<< PSTR(",msg[") << count << PSTR("]=");
   if (is_ascii) {
     trace << '"';
     for (uint8_t i = 0; i < count; i++)
-      if (buffer[i] != '\n') 
-	trace << buffer[i];
+      if (msg[i] != '\n') 
+	trace << (char) msg[i];
       else 
 	trace << PSTR("\\n");
     trace << '"' << endl;
   }
   else 
-    trace.print(buffer, count, IOStream::hex, sizeof(buffer));
+    trace.print(msg, count, IOStream::hex, sizeof(msg));
   start = stop;
 }
