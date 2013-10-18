@@ -64,11 +64,7 @@ OWI::read(uint8_t bits)
       clear();
       DELAY(6);
       set_mode(INPUT_MODE);
-#if (I_CPU <= 8)
-      DELAY(7);
-#else
       DELAY(9);
-#endif
       res >>= 1;
       if (is_set()) {
 	res |= 0x80;
@@ -80,11 +76,7 @@ OWI::read(uint8_t bits)
     }
     m_crc >>= 1;
     if (mix & 1) m_crc ^= 0x8C;
-#if (I_CPU <= 8)
-    DELAY(45);
-#else
     DELAY(55);
-#endif
   }
   res >>= adjust;
   return (res);
