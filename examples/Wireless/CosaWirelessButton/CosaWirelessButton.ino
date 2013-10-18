@@ -22,7 +22,8 @@
  *
  * @section Description
  * Demonstration of the Wireless interface and ExternalInterruptPin
- * for wakeup after power down. 
+ * for wakeup after power down. An ATtiny85-20PU running this example
+ * sketch will require 5 uA in power down mode (VWI transmitter).
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -33,7 +34,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
-// Select Wireless device driver
+// Select Wireless device driver (network = 0xC05A, device = 0x02)
 // #include "Cosa/Wireless/Driver/CC1101.hh"
 // CC1101 rf(0xC05A, 0x02);
 
@@ -46,24 +47,22 @@ VirtualWireCodec codec;
 #if defined(__ARDUINO_TINYX5__)
 VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
 #else
-VWI rf(0xC05A, 0x03, 4000, Board::D7, Board::D8, &codec);
+VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
 #endif
 
-// Connect button with pullup to Arduino Mega EXT2/D19, others to 
-// Arduino EXT0; Mighty/D10, TinyX4/D10, Standard/D2 and TinyX5/D2.
+// Connect button between ground and pin TinyX4 EXT0/D10, TinyX5
+// EXT0/D2, Mega EXT2/D29 and others to Arduino EXT1 which is
+// Standard/D3 and Mighty/D11.
 class Button : public ExternalInterrupt {
 public:
   Button() : 
-    ExternalInterrupt(
 #if defined(__ARDUINO_MEGA__)
-		      Board::EXT2, 
+    ExternalInterrupt(Board::EXT2, ExternalInterrupt::ON_LOW_LEVEL_MODE, true)
 #elif defined(__ARDUINO_TINY__)
-		      Board::EXT0, 
+    ExternalInterrupt(Board::EXT0, ExternalInterrupt::ON_LOW_LEVEL_MODE, true)
 #else
-		      Board::EXT1, 
+    ExternalInterrupt(Board::EXT1, ExternalInterrupt::ON_LOW_LEVEL_MODE, true)
 #endif
-		      ExternalInterrupt::ON_LOW_LEVEL_MODE,
-		      true)
   {}
 
   virtual void on_interrupt(uint16_t arg = 0) 
@@ -125,7 +124,7 @@ void loop()
   Power::all_disable();
 
   // Debounce the button before allowing further interrupts. This also
-  // give a periodic message send when the button is kept low 
+  // gives periodic (1 second) message send when the button is kept low.
   Watchdog::delay(1024);
   wakeup.enable();  
 }
