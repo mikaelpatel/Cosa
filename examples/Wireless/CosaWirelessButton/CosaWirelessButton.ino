@@ -34,16 +34,20 @@
 #include "Cosa/RTC.hh"
 
 // Select Wireless device driver
-#include "Cosa/Wireless/Driver/CC1101.hh"
-CC1101 rf(0xC05A, 0x02);
+// #include "Cosa/Wireless/Driver/CC1101.hh"
+// CC1101 rf(0xC05A, 0x02);
 
 // #include "Cosa/Wireless/Driver/NRF24L01P.hh"
 // NRF24L01P rf(0xC05A, 0x02);
 
-// #include "Cosa/Wireless/Driver/VWI.hh"
-// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-// VirtualWireCodec codec;
-// VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
+#include "Cosa/Wireless/Driver/VWI.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+VirtualWireCodec codec;
+#if defined(__ARDUINO_TINYX5__)
+VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
+#else
+VWI rf(0xC05A, 0x03, 4000, Board::D7, Board::D8, &codec);
+#endif
 
 // Connect button with pullup to Arduino Mega EXT2/D19, others to 
 // Arduino EXT0; Mighty/D10, TinyX4/D10, Standard/D2 and TinyX5/D2.
@@ -91,6 +95,7 @@ struct msg_t {
   uint32_t timestamp;
   uint16_t luminance;
   uint16_t temperature;
+  uint16_t battery;
 };
 
 void loop()
@@ -99,24 +104,28 @@ void loop()
   Event event;
   Event::queue.await(&event, SLEEP_MODE_PWR_DOWN);
 
-  // Tune off interrupts from button and wake up the hardware
+  // Wake up the hardware
   Power::all_enable();
   AnalogPin::powerup();
 
-  // Construct the message, sample the values, and broadcast
+  // Construct the message with sample values
   msg_t msg;
   msg.timestamp = RTC::micros();
   msg.luminance = luminance.sample();
   msg.temperature = temperature.sample();
+  msg.battery = AnalogPin::bandgap();
+
+  // Broadcast but also send addressed to node(1)
   rf.broadcast(&msg, sizeof(msg));
   rf.send(0x01, &msg, sizeof(msg));
 
-  // Put the hardware to sleep
+  // Put the hardware back to sleep
   rf.powerdown();
   AnalogPin::powerdown();
   Power::all_disable();
 
-  // Debounce the button before allowing interrupts from the button
+  // Debounce the button before allowing further interrupts. This also
+  // give a periodic message send when the button is kept low 
   Watchdog::delay(1024);
   wakeup.enable();  
 }
