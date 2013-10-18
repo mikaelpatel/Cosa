@@ -169,7 +169,7 @@ public:
   enum {
     VBG = (_BV(MUX5) | _BV(MUX0)),
     EXT_MAX = 1,
-    PCINT_MAX = 10,
+    PCINT_MAX = 2,
     PIN_MAX = D10
   } __attribute__((packed));
 };
