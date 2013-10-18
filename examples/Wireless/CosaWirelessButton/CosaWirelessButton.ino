@@ -81,11 +81,16 @@ AnalogPin temperature(Board::A3);
 
 void setup()
 {
+  // Initiate Watchdog with 512 ms period. Start RTC and Wireless device
   Watchdog::begin(512);
   RTC::begin();
   rf.begin();
+  
+  // Put the hardware in power down
   AnalogPin::powerdown();
   Power::all_disable();
+
+  // Allow wakeup on button
   wakeup.enable();  
 }
 
@@ -114,8 +119,9 @@ void loop()
   msg.temperature = temperature.sample();
   msg.battery = AnalogPin::bandgap();
 
-  // Broadcast but also send addressed to node(1)
+  // Broadcast the message and send addressed to node(1)
   rf.broadcast(&msg, sizeof(msg));
+  msg.timestamp = RTC::micros();
   rf.send(0x01, &msg, sizeof(msg));
 
   // Put the hardware back to sleep
