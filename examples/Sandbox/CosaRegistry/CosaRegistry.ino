@@ -21,7 +21,9 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of Registry.
+ * Cosa Registry demonstration; example of an application directory
+ * with typical information for a wireless sensor.
+ *
  * Path Description
  *   0 product information management
  *   0.0 product name
@@ -42,9 +44,10 @@
  */
 
 #include "Cosa/Registry.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/Watchdog.hh"
+#include "Cosa/Pins.hh"
 
 // Product information management registry
 REGISTRY_BLOB_PSTR(PRODUCT, "product name", "registry-demo")
@@ -71,8 +74,8 @@ REGISTRY_BEGIN(CM, "configuration") 	// 1
 REGISTRY_END(CM)
 
 // Status variables and registry
-REGISTRY_BLOB_VAR(uint16_t, vcc, "battery status (mV)", 4943, true)
-REGISTRY_BLOB_VAR(uint8_t, load, "processor load (%)", 4, true)
+REGISTRY_BLOB_VAR(uint16_t, vcc, "battery status (mV)", 0, true)
+REGISTRY_BLOB_VAR(uint8_t, load, "processor load (%)", -1, true)
 REGISTRY_BLOB_VAR(uint16_t, errors, "error count", 0, false)
 
 REGISTRY_BEGIN(STATUS, "status") 	// 2
@@ -110,6 +113,9 @@ REGISTRY_END(ROOT)
 // Application registry (1218 bytes)
 Registry reg(&ROOT);
 
+// Use internal eeprom for some application settings
+EEPROM eeprom;
+
 void setup()
 {
   uart.begin(9600);
@@ -117,12 +123,12 @@ void setup()
   Watchdog::begin();
   
   // Initiate EEMEM variables. Arduino build does not handle .eeprom section
-  int16_t network = 0xc05a;
-  uint8_t device = 0x42;
-  uint16_t timeout = 2000;
-  EEPROM::Device::eeprom.write(&NETWORK, &network, sizeof(network));
-  EEPROM::Device::eeprom.write(&DEVICE, &device, sizeof(device));
-  EEPROM::Device::eeprom.write(&TIMEOUT, &timeout, sizeof(timeout));
+  eeprom.write(&NETWORK, 0xc05a);
+  eeprom.write(&DEVICE, 0x42);
+  eeprom.write(&TIMEOUT, 2000);
+
+  // Initiate battery status
+  vcc = AnalogPin::bandgap(1100);
 }
 
 void loop()
