@@ -1,5 +1,5 @@
 /**
- * @file CosaWirelessThermometer.ino
+ * @file CosaWirelessDS18B20.ino
  * @version 1.0
  *
  * @section License
@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration sending temperature readings from 1-Wire DS18B20
+ * Demonstration sending temperature readings from two 1-Wire DS18B20
  * devices over the Wireless Interface and devices. 
  *
  * @section Note
@@ -31,7 +31,7 @@
  * @section Circuit
  * Connect RF433/315 Transmitter Data to ATtiny85 D0, connect VCC 
  * GND. Connect 1-Wire digital thermometer to D3 with pullup resistor.
- * The pullup resistor (4K7) may be connected to D4 to allow power
+ * The pullup resistor (4K7) may be connected to D4 to allow active power
  * control. This sketch supports parasite powered DS18B20 devices.
  * Connect the DS18B20 VCC to GND. 
  *
