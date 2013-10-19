@@ -92,7 +92,7 @@ void setup()
 
 // Message from the device; temperature and voltage reading
 struct sample_t {
-  uint8_t nr;
+  uint16_t nr;
   int16_t indoors;
   int16_t outdoors;
   uint16_t voltage;
@@ -100,7 +100,7 @@ struct sample_t {
 
 void loop()
 {
-  static sample_t msg = { 0xff };
+  static sample_t msg = { 0xffff };
   
   // Make a conversion request and read the temperature (scratchpad)
   pw.on();
