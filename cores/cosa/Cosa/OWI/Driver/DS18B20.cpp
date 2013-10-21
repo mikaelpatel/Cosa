@@ -130,10 +130,9 @@ DS18B20::read_power_supply()
   return (m_parasite);
 }
 
-IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
+void 
+DS18B20::print(IOStream& outs, int16_t temp)
 {
-  if (thermometer.NAME != 0) outs << thermometer.NAME << PSTR(" = ");
-  int16_t temp = thermometer.get_temperature();
   if (temp < 0) {
     temp = -temp;
     outs << '-';
@@ -143,5 +142,12 @@ IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
   outs << integer << '.';
   if (fraction < 10) outs << '0';
   outs << fraction;
+}
+
+IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
+{
+  if (thermometer.NAME != 0) outs << thermometer.NAME << PSTR(" = ");
+  DS18B20::print(outs, thermometer.get_temperature());
   return (outs);
 }
+

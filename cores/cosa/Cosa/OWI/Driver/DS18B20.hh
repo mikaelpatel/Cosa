@@ -270,6 +270,14 @@ public:
    * @return true(1) if parasite power is required otherwise false(0).
    */
   bool read_power_supply();
+
+  /**
+   * Print the given thermometer reading with two decimals to given
+   * output stream. The temperature is in Celcius. 
+   * @param[in] outs stream to print device information to.
+   * @param[in] thermometer device.
+   */
+  static void print(IOStream& outs, int16_t temperature);
 };
 
 /**
