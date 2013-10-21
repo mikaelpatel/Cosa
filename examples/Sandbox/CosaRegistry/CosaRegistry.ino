@@ -190,7 +190,7 @@ void loop()
   network = 0xbeef;
   ASSERT(reg.set_value(blob, &network, sizeof(network)) == sizeof(NETWORK));
   network = 0;
-  ASSERT(reg.get_value(blob, &network, sizeof(network)) == sizeof(NETWORK));
+  ASSERT(reg.get_value<uint16_t>(blob, &network));
   ASSERT(network == 0xbeef);
   trace << hex << network << endl;
 
@@ -203,7 +203,7 @@ void loop()
   ASSERT(blob != NULL);
   uint16_t vcc;
   ASSERT(reg.get_value(blob, &vcc, sizeof(vcc)) == sizeof(vcc));
-  ASSERT(reg.set_value(blob, buf, sizeof(buf)) < 0);
+  ASSERT(!reg.set_value<uint16_t>(blob, &vcc));
   trace << PSTR("vcc = ") << vcc << PSTR(" mV") << endl;
 
   // Access 2.1 blob processor load %
@@ -214,8 +214,8 @@ void loop()
   blob = Registry::to_blob(item);
   ASSERT(blob != NULL);
   uint8_t load;
-  ASSERT(reg.get_value(blob, &load, sizeof(load)) == sizeof(load));
-  ASSERT(reg.set_value(blob, buf, sizeof(buf)) < 0);
+  ASSERT(reg.get_value<uint8_t>(blob, &load));
+  ASSERT(!reg.set_value<uint8_t>(blob, &load));
   trace << PSTR("load = ") << load << PSTR(" %") << endl;
 
   // Access 2.2 blob errors
@@ -226,14 +226,14 @@ void loop()
   blob = Registry::to_blob(item);
   ASSERT(blob != NULL);
   uint16_t errs;
-  ASSERT(reg.get_value(blob, &errs, sizeof(errs)) == sizeof(errors));
+  ASSERT(reg.get_value<uint16_t>(blob, &errs));
   trace << errs << endl;
   errors += 42;
-  ASSERT(reg.get_value(blob, &errs, sizeof(errs)) == sizeof(errors));
+  ASSERT(reg.get_value<uint16_t>(blob, &errs));
   trace << PSTR("errors = ") << errs << endl;
   errs = 0;
-  ASSERT(reg.set_value(blob, &errs, sizeof(errs)) == sizeof(errors));
-  ASSERT(reg.get_value(blob, &errs, sizeof(errs)) == sizeof(errors));
+  ASSERT(reg.set_value<uint16_t>(blob, &errs));
+  ASSERT(reg.get_value<uint16_t>(blob, &errs));
   trace << PSTR("errors = ") << errs << endl;
 
   // Access 3.0 action restart
@@ -249,10 +249,10 @@ void loop()
   blob = Registry::to_blob(item);
   ASSERT(blob != NULL);
   bool flag;
-  ASSERT(reg.get_value(blob, &flag, sizeof(flag)) == sizeof(flag));
+  ASSERT(reg.get_value<bool>(blob, &flag));
   trace << PSTR("flag = ") << flag << endl;
   flag = true;
-  ASSERT(reg.set_value(blob, &flag, sizeof(flag)) == sizeof(flag));
+  ASSERT(reg.set_value<bool>(blob, &flag));
 
   // Access 3.2 illegal path
   path[0] = 3; 

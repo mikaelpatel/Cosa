@@ -265,18 +265,44 @@ public:
    * @return number of bytes or negative error code. 
    */
   int get_value(blob_P blob, void* buf, size_t len);
+
+  /**
+   * Template function to assign blob value into given value storage
+   * of given type. Returns true(1) if successful otherwise false(0).
+   * @param [in] blob pointer to blob in program memory.
+   * @param [out] value buffer.
+   * @return boolean.
+   */
+  template<class T> bool get_value(blob_P blob, T* value)
+  {
+    return (get_value(blob, value, sizeof(T)) == sizeof(T));
+  }
   
   /**
    * Copy in given buffer with given maximum size (len) to
    * blob. Return number of bytes copied from buffer or negative 
    * error code. The storage type must be SRAM or EEMEM.
    * @param [in] blob pointer to blob in program memory.
-   * @param [out] buf pointer to buffer for value.
+   * @param [in] buf pointer to buffer for value.
    * @param [in] len number of bytes maximum in buffer. 
    * @return number of bytes or negative error code. 
    */
   int set_value(blob_P blob, const void* buf, size_t len);
-  
+
+  /**
+   * Template function copy in given value of given type to
+   * blob. Return true(1) if successful otherwise false(0).
+   * The storage type must be SRAM or EEMEM.
+   * @param [in] T value type.
+   * @param [in] blob pointer to blob in program memory.
+   * @param [in] value value to set.
+   * @return boolean.
+   */
+  template<class T> bool set_value(blob_P blob, const T* value)
+  {
+    return (set_value(blob, value, sizeof(T)) == sizeof(T));
+  }
+
   /** Max length of a path */
   static const size_t PATH_MAX = 8;
   
