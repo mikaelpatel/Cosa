@@ -58,7 +58,7 @@ void setup()
 
 void loop()
 {
-  const uint32_t TIMEOUT = 2000L;
+  const uint32_t TIMEOUT = 10000L;
   const uint8_t MSG_MAX = 64;
   static uint32_t start = 0L;
   static uint16_t nr = 0;

@@ -48,17 +48,17 @@
 // #include "Cosa/Wireless/Driver/CC1101.hh"
 // CC1101 rf(0xC05A, 0x02);
 
-// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-// NRF24L01P rf(0xC05A, 0x02);
+#include "Cosa/Wireless/Driver/NRF24L01P.hh"
+NRF24L01P rf(0xC05A, 0x02);
 
-#include "Cosa/Wireless/Driver/VWI.hh"
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-VirtualWireCodec codec;
+//#include "Cosa/Wireless/Driver/VWI.hh"
+// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+// VirtualWireCodec codec;
 #if defined(__ARDUINO_TINY__)
-VWI rf(0xC05A, 0x04, 4000, Board::D1, Board::D0, &codec);
+// VWI rf(0xC05A, 0x04, 4000, Board::D1, Board::D0, &codec);
 DHT11 sensor(Board::EXT0);
 #else
-VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
+// VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
 DHT11 sensor(Board::EXT1);
 #endif
 
@@ -85,13 +85,14 @@ void setup()
 
 void loop()
 {
-  static dht_msg_t msg = { 0 };
+  static uint8_t nr = 0;
   asserted(led) {
+    dht_msg_t msg;
+    msg.nr = nr++;
     sensor.sample(msg.humidity, msg.temperature);
     msg.battery = AnalogPin::bandgap(1100);
     rf.broadcast(DIGITAL_HUMIDITY_TEMPERATURE_TYPE, &msg, sizeof(msg));
     rf.powerdown();
-    msg.nr += 1;
   }
   SLEEP(2);
 }

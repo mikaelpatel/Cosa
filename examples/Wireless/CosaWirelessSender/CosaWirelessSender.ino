@@ -58,7 +58,7 @@ void setup()
 }
 
 // Message from the device; message string
-static const uint8_t PAYLOAD_MAX = 14;
+static const uint8_t PAYLOAD_MAX = 15;
 struct msg_t {
   uint8_t nr;
   uint8_t payload[PAYLOAD_MAX];
