@@ -38,39 +38,46 @@
 #include "Cosa/Driver/DHT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
-// #include "Cosa/IOStream/Driver/UART.hh"
-// #include "Cosa/Trace.hh"
+
+#if !defined(__ARDUINO_TINY__)
+#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Trace.hh"
+#endif
 
 // Select Wireless device driver
-#include "Cosa/Wireless/Driver/CC1101.hh"
-CC1101 rf(0xC05A, 0x02);
+// #include "Cosa/Wireless/Driver/CC1101.hh"
+// CC1101 rf(0xC05A, 0x02);
 
 // #include "Cosa/Wireless/Driver/NRF24L01P.hh"
 // NRF24L01P rf(0xC05A, 0x02);
 
-// #include "Cosa/Wireless/Driver/VWI.hh"
-// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-// VirtualWireCodec codec;
-// #if defined(__ARDUINO_TINY__)
-// VWI rf(0xC05A, 0x02, 4000, Board::D3, Board::D4, &codec);
-// #else
-// VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
-// #endif
+#include "Cosa/Wireless/Driver/VWI.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+VirtualWireCodec codec;
+#if defined(__ARDUINO_TINY__)
+VWI rf(0xC05A, 0x04, 4000, Board::D1, Board::D0, &codec);
+DHT11 sensor(Board::EXT0);
+#else
+VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
+DHT11 sensor(Board::EXT1);
+#endif
 
 OutputPin led(Board::LED);
-DHT11 sensor(Board::EXT1);
 
-// Message with DHT11 reading
-struct msg_t {
-  uint16_t nr;
+struct dht_msg_t {
+  uint8_t nr;
   int16_t humidity;
   int16_t temperature;
+  uint16_t battery;
 };
+static const uint8_t DIGITAL_HUMIDITY_TEMPERATURE_TYPE = 0x02;
 
 void setup()
 {
-  // uart.begin(9600);
-  // trace.begin(&uart, PSTR("CosaWirelessDHT11: started"));
+#if !defined(__ARDUINO_TINY__)
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaWirelessDHT11: started"));
+#endif
   Watchdog::begin();
   RTC::begin();
   rf.begin();
@@ -78,15 +85,13 @@ void setup()
 
 void loop()
 {
-  // Read sensor and send message every two seconds
-  static uint16_t nr = 0;
-  uint32_t start = RTC::millis();
-  msg_t msg;
-  if (!sensor.sample(msg.humidity, msg.temperature)) return;
-  msg.nr = nr++;
-  led.toggle();
-  rf.broadcast(&msg, sizeof(msg));
-  led.toggle();
-  rf.powerdown();
-  MSLEEP(1858L - RTC::since(start));
+  static dht_msg_t msg = { 0 };
+  asserted(led) {
+    sensor.sample(msg.humidity, msg.temperature);
+    msg.battery = AnalogPin::bandgap(1100);
+    rf.broadcast(DIGITAL_HUMIDITY_TEMPERATURE_TYPE, &msg, sizeof(msg));
+    rf.powerdown();
+    msg.nr += 1;
+  }
+  SLEEP(2);
 }

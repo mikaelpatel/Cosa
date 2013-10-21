@@ -94,13 +94,13 @@ void setup()
   wakeup.enable();  
 }
 
-// Message to send
-struct msg_t {
+struct dlt_msg_t {
   uint32_t timestamp;
   uint16_t luminance;
   uint16_t temperature;
   uint16_t battery;
 };
+static const uint8_t DIGITAL_LUMINANCE_TEMPERATURE_TYPE = 0x03;
 
 void loop()
 {
@@ -112,17 +112,13 @@ void loop()
   Power::all_enable();
   AnalogPin::powerup();
 
-  // Construct the message with sample values
-  msg_t msg;
+  // Construct the message with sample values and broadcast
+  dlt_msg_t msg;
   msg.timestamp = RTC::micros();
   msg.luminance = luminance.sample();
   msg.temperature = temperature.sample();
   msg.battery = AnalogPin::bandgap();
-
-  // Broadcast the message and send addressed to node(1)
-  rf.broadcast(&msg, sizeof(msg));
-  msg.timestamp = RTC::micros();
-  rf.send(0x01, &msg, sizeof(msg));
+  rf.broadcast(DIGITAL_LUMINANCE_TEMPERATURE_TYPE, &msg, sizeof(msg));
 
   // Put the hardware back to sleep
   rf.powerdown();

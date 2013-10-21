@@ -36,52 +36,47 @@
 // #include "Cosa/Wireless/Driver/CC1101.hh"
 // CC1101 rf(0xC05A, 0x02);
 
-// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-// NRF24L01P rf(0xC05A, 0x02);
+#include "Cosa/Wireless/Driver/NRF24L01P.hh"
+NRF24L01P rf(0xC05A, 0x02);
 
-#include "Cosa/Wireless/Driver/VWI.hh"
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-VirtualWireCodec codec;
-#if defined(__ARDUINO_TINYX5__)
-VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
-#else
-VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
-#endif
+// #include "Cosa/Wireless/Driver/VWI.hh"
+// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+// VirtualWireCodec codec;
+// #if defined(__ARDUINO_TINYX5__)
+// VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
+// #else
+// VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
+// #endif
 
 void setup()
 {
-#if !defined(__COSA_WIRELESS_DRIVER_VWI_HH__)
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaWirelessSender: started"));
-#endif
   Watchdog::begin();
   RTC::begin();
   rf.begin();
 }
 
+// Message from the device; message string
+static const uint8_t PAYLOAD_MAX = 14;
+struct msg_t {
+  uint8_t nr;
+  uint8_t payload[PAYLOAD_MAX];
+};
+static const uint8_t PAYLOAD_TYPE = 0x00;
+
 void loop()
 {
-  static const uint8_t MSG_MAX = 16;
-  static uint8_t msg[MSG_MAX] = { 0x00 };
-  static size_t len = 0;
+  static msg_t msg = { 0 };
   
-  // Send message; broadcast(0x00) and send to nodes 0x01 to 0x03
-  len = (len == 0) ? MSG_MAX : len - 1;
-  rf.broadcast(msg, len);
-  for (uint8_t dest = 0x01; dest < 0x04; dest++)
-    if (rf.send(dest, msg, sizeof(msg)) < 0)
-#if !defined(__COSA_WIRELESS_DRIVER_VWI_HH__)
-      trace << PSTR("err(dest = ") 
-	    << hex << dest 
-	    << PSTR("):no ack") << endl;
-#else
-  ;
-#endif
+  // Send to nodes 0x01 to 0x03
+  for (uint8_t dest = 0x01; dest < 0x04; dest++) {
+    rf.send(dest, PAYLOAD_TYPE, &msg, sizeof(msg));
+    msg.nr += 1;
+  }
 
   // Update message; increment bytes
-  for (uint8_t i = 0; i < MSG_MAX; i++) {
-    msg[i] += 1;
-  }
+  for (uint8_t i = 0; i < PAYLOAD_MAX; i++) msg.payload[i] += 1;
 
   // Sleep in power down mode
   rf.powerdown();

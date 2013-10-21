@@ -141,7 +141,7 @@ CC1101::end()
 }
 
 int 
-CC1101::send(uint8_t dest, const iovec_t* vec)
+CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
   if (vec == NULL) return (-1);
@@ -153,11 +153,12 @@ CC1101::send(uint8_t dest, const iovec_t* vec)
   // Wait for the device to become idle before writing the frame
   await(IDLE_MODE);
 
-  // Write frame header(length, dest, src)
+  // Write frame header(length, dest, src, port)
   spi.begin(this);
-  write(TXFIFO, len + 2);
+  write(TXFIFO, len + 3);
   write(TXFIFO, dest);
   write(TXFIFO, m_addr.device);
+  write(TXFIFO, port);
   spi.end();
 
   // Write frame payload
@@ -173,17 +174,17 @@ CC1101::send(uint8_t dest, const iovec_t* vec)
 }
 
 int 
-CC1101::send(uint8_t dest, const void* buf, size_t len)
+CC1101::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 {
   iovec_t vec[2];
   iovec_t* vp = vec;
   iovec_arg(vp, buf, len);
   iovec_end(vp);
-  return (send(dest, vec));
+  return (send(dest, port, vec));
 }
 
 int 
-CC1101::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
+CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 {
   // Check if we need to wait for a message
   if (!m_avail) {
@@ -198,7 +199,7 @@ CC1101::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
 
   // Read the payload size and check against buffer length
   spi.begin(this);
-  uint8_t size = read(RXFIFO) - 2;
+  uint8_t size = read(RXFIFO) - 3;
   if (size > len) {
     spi.end();
     strobe(SIDLE);
@@ -209,6 +210,7 @@ CC1101::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
   // Read the frame (dest, src, payload)
   m_dest = read(RXFIFO);
   src = read(RXFIFO);
+  port = read(RXFIFO);
   read(RXFIFO, buf, size);
   spi.end();
 

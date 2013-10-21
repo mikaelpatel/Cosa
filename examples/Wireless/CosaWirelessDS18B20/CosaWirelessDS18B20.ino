@@ -49,22 +49,24 @@
 // #include "Cosa/Wireless/Driver/CC1101.hh"
 // CC1101 rf(0xC05A, 0x02);
 
-// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-// NRF24L01P rf(0xC05A, 0x02);
+#include "Cosa/Wireless/Driver/NRF24L01P.hh"
+NRF24L01P rf(0xC05A, 0x02);
 
-#include "Cosa/Wireless/Driver/VWI.hh"
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-VirtualWireCodec codec;
-#if defined(__ARDUINO_TINYX5__)
-VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
-#else
-VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
-#endif
+// #include "Cosa/Wireless/Driver/VWI.hh"
+// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+// VirtualWireCodec codec;
+// #if defined(__ARDUINO_TINYX5__)
+// VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
+// #else
+// VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
+// #endif
 
 // Connect to one-wire device; Assuming there are two sensors
 OWI owi(Board::D3);
 DS18B20 indoors(&owi);
+#if !defined(__ARDUINO_TINY__)
 DS18B20 outdoors(&owi);
+#endif
 
 // Active pullup
 OutputPin pw(Board::D4);
@@ -82,7 +84,9 @@ void setup()
   // Connect to the temperature sensor
   pw.on();
   indoors.connect(0);
+#if !defined(__ARDUINO_TINY__)
   outdoors.connect(1);
+#endif
   pw.off();
   
   // Put the hardware in power down
@@ -91,38 +95,48 @@ void setup()
 }
 
 // Message from the device; temperature and voltage reading
-struct sample_t {
-  uint16_t nr;
+struct dt_msg_t {
+  uint8_t nr;
   int16_t indoors;
   int16_t outdoors;
-  uint16_t voltage;
+  uint16_t battery;
 };
+static const uint8_t DIGITAL_TEMP_TYPE = 0x01;
 
 void loop()
 {
-  static sample_t msg = { 0xffff };
-  
+  // Message sequence number initialization
+  static uint8_t nr = 0;
+
   // Make a conversion request and read the temperature (scratchpad)
   pw.on();
   DS18B20::convert_request(&owi, 12, true);
   indoors.read_scratchpad();
+#if !defined(__ARDUINO_TINY__)
   outdoors.read_scratchpad();
+#endif
   pw.off();
   
   // Turn on necessary hardware modules
   Power::timer0_enable();
   Power::timer1_enable();
   Power::adc_enable();
+#if !defined(__ARDUINO_TINY__)
+  Power::spi_enable();
+#endif
   AnalogPin::powerup();
 
   // Initiate the message with measurements
-  msg.nr += 1;
+  dt_msg_t msg;
+  msg.nr = nr++;
   msg.indoors = indoors.get_temperature();
+#if !defined(__ARDUINO_TINY__)
   msg.outdoors = outdoors.get_temperature();
-  msg.voltage = AnalogPin::bandgap(1100);
+#endif
+  msg.battery = AnalogPin::bandgap(1100);
 
   // Broadcast the message and power down after completion
-  rf.broadcast(&msg, sizeof(msg));
+  rf.broadcast(DIGITAL_TEMP_TYPE, &msg, sizeof(msg));
   rf.powerdown();
 
   // Turn off hardware and deep sleep until next sample (period 2 s)
@@ -130,5 +144,9 @@ void loop()
   Power::adc_disable();
   Power::timer1_disable();
   Power::timer0_disable();
+#if !defined(__ARDUINO_TINY__)
+  Power::spi_disable();
+#endif
   SLEEP(2);
 }
+

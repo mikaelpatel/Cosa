@@ -21,10 +21,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Wireless Interface and device drivers.
- * Handy tool for debugging message streams. The sketch will 
- * listen to transmissions and print received messages. Checks
- * if the message is printable otherwise printed as a hex dump.
+ * Demonstration of the Wireless Interface and device drivers. Handy
+ * tool for debugging message streams. The sketch will listen to
+ * transmissions and print received messages. Checks if the message is
+ * printable otherwise printed as a hex dump. The sketch will receive
+ * any broadcast or addressed message to the node(0x01) on all ports.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -57,17 +58,27 @@ void setup()
 
 void loop()
 {
-  // Receive message
+  const uint32_t TIMEOUT = 2000L;
+  const uint8_t MSG_MAX = 64;
   static uint32_t start = 0L;
   static uint16_t nr = 0;
-  const uint8_t MSG_MAX = 64;
   uint8_t msg[MSG_MAX];
   uint8_t src;
-
-  int count = rf.recv(src, msg, sizeof(msg));
-  nr += 1;
-  if (count <= 0) return;
+  uint8_t port;
+  
+  // Receive message
+  int count = rf.recv(src, port, msg, sizeof(msg), TIMEOUT);
   uint32_t stop = RTC::millis();
+  
+  // Print prefix with message number, delta time
+  trace << nr << ':' << stop - start;
+  nr += 1;
+
+  // Check for errors
+  if (count < 0) {
+    trace << PSTR(":error(") << count << PSTR(")\n");
+    return;
+  }
 
   // Check if the message is printable
   bool is_ascii = true;
@@ -78,12 +89,13 @@ void loop()
     }
   }
 
-  // Print prefix with message number, delta time, source and length of message
-  trace << nr << ':' 
-	<< stop - start 
-	<< PSTR(":src=") << src 
+  // Print source, destination, port, and length of message
+  trace << PSTR(":src=") << src 
 	<< PSTR(",dest=") << (rf.is_broadcast() ? 0 : rf.get_device_address())
+	<< PSTR(",port=") << port
 	<< PSTR(",msg[") << count << PSTR("]=");
+
+  // Check if the message is printable as a string
   if (is_ascii) {
     trace << '"';
     for (uint8_t i = 0; i < count; i++)
@@ -93,7 +105,11 @@ void loop()
 	trace << PSTR("\\n");
     trace << '"' << endl;
   }
+
+  // Otherwise do a hex dump
   else 
     trace.print(msg, count, IOStream::hex, sizeof(msg));
+
+  // Save the timestamp 
   start = stop;
 }

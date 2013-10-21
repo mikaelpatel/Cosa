@@ -154,7 +154,9 @@ VWI::Receiver::PLL()
 }
 
 int
-VWI::Receiver::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
+VWI::Receiver::recv(uint8_t& src, uint8_t& port, 
+		    void* buf, size_t len, 
+		    uint32_t ms)
 {
   // Wait until a valid message is available or timeout
   uint32_t start = RTC::millis();
@@ -180,7 +182,8 @@ VWI::Receiver::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
   memcpy(buf, m_buffer + sizeof(header_t) + 1, rxlen);
   s_rf->m_dest = hp->dest;
   src = hp->src;
-  
+  port = hp->port;
+
   // OK, got that message thanks
   m_done = false;
 
@@ -189,7 +192,7 @@ VWI::Receiver::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
 }
 
 int
-VWI::Transmitter::send(uint8_t dest, const iovec_t* vec)
+VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Santiy check the io vector
   if (vec == NULL) return (-1);
@@ -217,6 +220,7 @@ VWI::Transmitter::send(uint8_t dest, const iovec_t* vec)
   header.network = s_rf->m_addr.network;
   header.src = s_rf->m_addr.device;
   header.dest = dest;
+  header.port = port;
   uint8_t* bp = (uint8_t*) &header;
   for (uint8_t i = 0; i < sizeof(header); i++) {
     uint8_t data = *bp++;
@@ -255,14 +259,14 @@ VWI::Transmitter::send(uint8_t dest, const iovec_t* vec)
 }
 
 int
-VWI::Transmitter::send(uint8_t dest, const void* buf, size_t len)
+VWI::Transmitter::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 {
   if (len > PAYLOAD_MAX) return (-1);
   iovec_t vec[2];
   iovec_t* vp = vec;
   iovec_arg(vp, buf, len);
   iovec_end(vp);
-  return (send(dest, vec));
+  return (send(dest, port, vec));
 }
 
 /** Current transmitter/receiver for interrupt handler access */
@@ -336,21 +340,21 @@ VWI::available()
 }
 
 int 
-VWI::send(uint8_t dest, const iovec_t* vec)
+VWI::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
-  return (m_tx.send(dest, vec));
+  return (m_tx.send(dest, port, vec));
 }
 
 int 
-VWI::send(uint8_t dest, const void* buf, size_t len)
+VWI::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 {
-  return (m_tx.send(dest, buf, len));
+  return (m_tx.send(dest, port, buf, len));
 }
 
 int 
-VWI::recv(uint8_t& src, void* buf, size_t len, uint32_t ms)
+VWI::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 {
-  return (m_rx.recv(src, buf, len, ms));
+  return (m_rx.recv(src, port, buf, len, ms));
 }
 
 ISR(TIMER1_COMPA_vect)

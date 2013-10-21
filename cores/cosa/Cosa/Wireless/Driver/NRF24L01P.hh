@@ -45,7 +45,7 @@ public:
    * Configuration max values
    */
   enum {
-    PAYLOAD_MAX = 31		// Max size of payload (32 - src addr)
+    PAYLOAD_MAX = 30		// Max size of payload (32 - src - port)
   } __attribute__((packed));
 
 private:
@@ -583,10 +583,11 @@ public:
    * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
    * transmit mode.
    * @param[in] dest destination network address.
+   * @param[in] port device port (or message type).
    * @param[in] vec null termianted io vector.
    * @return number of bytes send or negative error code.
    */
-  virtual int send(uint8_t dest, const iovec_t* vec);
+  virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec);
 
   /**
    * @override Wireless::Device
@@ -595,11 +596,12 @@ public:
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
    * set transmit mode.  
    * @param[in] dest destination network address.
+   * @param[in] port device port (or message type).
    * @param[in] buf buffer to transmit.
    * @param[in] count number of bytes in buffer.
    * @return number of bytes send or negative error code.
    */
-  virtual int send(uint8_t dest, const void* buf, size_t count);
+  virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t count);
 
   /**
    * @override Wireless::Device
@@ -610,13 +612,16 @@ public:
    * small for incoming message or if the receiver fifo has overflowed. 
    * Otherwise the actual number of received bytes is returned
    * @param[out] src source network address.
+   * @param[out] port device port (or message type).
    * @param[in] buf buffer to store incoming message.
    * @param[in] count maximum number of bytes to receive.
    * @param[in] ms maximum time out period.
    * @return number of bytes received or negative error code.
    */
-  virtual int recv(uint8_t& src, void* buf, size_t count, uint32_t ms = 0L);
-  
+  virtual int recv(uint8_t& src, uint8_t& port, 
+		   void* buf, size_t count, 
+		   uint32_t ms = 0L);
+
   friend IOStream& operator<<(IOStream& outs, status_t status);
   friend IOStream& operator<<(IOStream& outs, fifo_status_t status);
   friend IOStream& operator<<(IOStream& outs, observe_tx_t observe);

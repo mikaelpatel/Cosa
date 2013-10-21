@@ -190,10 +190,11 @@ public:
      * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
      * transmit mode.
      * @param[in] dest destination network address.
+     * @param[in] port device port (or message type).
      * @param[in] vec null termianted io vector.
      * @return number of bytes send or negative error code.
      */
-    virtual int send(uint8_t dest, const iovec_t* vec) = 0;
+    virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec) = 0;
 
     /**
      * @override Wireless::Driver
@@ -202,17 +203,18 @@ public:
      * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
      * set transmit mode.  
      * @param[in] dest destination network address.
+     * @param[in] port device port (or message type).
      * @param[in] buf buffer to transmit.
      * @param[in] len number of bytes in buffer.
      * @return number of bytes send or negative error code.
      */
-    virtual int send(uint8_t dest, const void* buf, size_t len)
+    virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len)
     {
       iovec_t vec[2];
       iovec_t* vp = vec;
       iovec_arg(vp, buf, len);
       iovec_end(vp);
-      return (send(dest, vec));
+      return (send(dest, port, vec));
     }
 
     /**
@@ -221,13 +223,14 @@ public:
      * Returns number of bytes sent. Returns error code(-1) if number
      * of bytes is greater than PAYLOAD_MAX. Return error code(-2) if
      * fails to set transmit mode.  
+     * @param[in] port device port (or message type).
      * @param[in] buf buffer to transmit.
      * @param[in] len number of bytes in buffer.
      * @return number of bytes send or negative error code.
      */
-    virtual int broadcast(const void* buf, size_t len)
+    virtual int broadcast(uint8_t port, const void* buf, size_t len)
     {
-      return (send(0x00, buf, len));
+      return (send(0x00, port, buf, len));
     }
 
     /**
@@ -239,12 +242,15 @@ public:
      * small for incoming message or if the receiver fifo has overflowed. 
      * Otherwise the actual number of received bytes is returned
      * @param[out] src source network address.
+     * @param[out] port device port (or message type).
      * @param[in] buf buffer to store incoming message.
      * @param[in] len maximum number of bytes to receive.
      * @param[in] ms maximum time out period.
      * @return number of bytes received or negative error code.
      */
-    virtual int recv(uint8_t& src, void* buf, size_t len, uint32_t ms = 0L) = 0;
+    virtual int recv(uint8_t& src, uint8_t& port, 
+		     void* buf, size_t len, 
+		     uint32_t ms = 0L) = 0;
 
     /**
      * @override Wireless::Driver

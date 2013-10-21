@@ -46,13 +46,14 @@ private:
     int16_t network;		/**< Network address */
     uint8_t dest;		/**< Destination device address */
     uint8_t src;		/**< Source device address */
+    uint8_t port;		/**< Port or message type */
   };
   
   /** 
-   * The maximum payload length; 32 byte application payload and 
+   * The maximum payload length; 30 byte application payload and 
    * 4 byte frame header with network(2)
    */
-  static const uint8_t PAYLOAD_MAX = 32 + sizeof(header_t);
+  static const uint8_t PAYLOAD_MAX = 30 + sizeof(header_t);
   
   /** Maximum number of bytes in a message (incl. byte count and FCS) */
   static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
@@ -283,12 +284,15 @@ private:
      * received/copied, zero(0) for timeout or negative error code; 
      * bad checksum(-1), and in enhanced mode did not match address(-2).
      * @param[out] src source network address.
+     * @param[out] port device port (or message type).
      * @param[in] buf pointer to location to save the read data.
      * @param[in] len available space in buf. 
-     * @param[in] ms timeout period (zero for non-blocking)
+     * @param[in] ms timeout period (zero for blocking)
      * @return number of bytes received or negative error code.
      */
-    int recv(uint8_t& src, void* buf, size_t len, uint32_t ms = 0L);
+    int recv(uint8_t& src, uint8_t& port, 
+	     void* buf, size_t len, 
+	     uint32_t ms = 0L);
   };
 
   /**
@@ -373,10 +377,11 @@ private:
      * vector. The total size of the io vector buffers must be less
      * than PAYLOAD_MAX.
      * @param[in] dest destination network address.
+     * @param[in] port device port (or message type).
      * @param[in] vec null terminated io vector.
      * @return number of bytes transmitted or negative error code.
      */
-    int send(uint8_t dest, const iovec_t* vec);
+    int send(uint8_t dest, uint8_t port, const iovec_t* vec);
 
     /**
      * Send a message with the given length. Returns almost
@@ -385,11 +390,12 @@ private:
      * addressing to allow identification of the message type.
      * The message length (len) must be less than PAYLOAD_MAX.
      * @param[in] dest destination network address.
+     * @param[in] port device port (or message type).
      * @param[in] buf pointer to the data to transmit.
      * @param[in] len number of bytes to transmit.
      * @return number of bytes transmitted or negative error code.
      */
-    int send(uint8_t dest, const void* buf, size_t len);
+    int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
   };
 
 private:
@@ -468,10 +474,11 @@ public:
    * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
    * transmit mode.
    * @param[in] dest destination network address.
+   * @param[in] port device port (or message type).
    * @param[in] vec null termianted io vector.
    * @return number of bytes send or negative error code.
    */
-  virtual int send(uint8_t dest, const iovec_t* vec);
+  virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec);
 
   /**
    * @override Wireless::Driver
@@ -480,11 +487,12 @@ public:
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
    * set transmit mode.  
    * @param[in] dest destination network address.
+   * @param[in] port device port (or message type).
    * @param[in] buf buffer to transmit.
    * @param[in] len number of bytes in buffer.
    * @return number of bytes send or negative error code.
    */
-  virtual int send(uint8_t dest, const void* buf, size_t len);
+  virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
 
   /**
    * @override Wireless::Driver
@@ -495,12 +503,15 @@ public:
    * small for incoming message or if the receiver fifo has overflowed. 
    * Otherwise the actual number of received bytes is returned
    * @param[out] src source network address.
+   * @param[out] port device port (or message type).
    * @param[in] buf buffer to store incoming message.
    * @param[in] len maximum number of bytes to receive.
    * @param[in] ms maximum time out period.
    * @return number of bytes received or negative error code.
    */
-  virtual int recv(uint8_t& src, void* buf, size_t len, uint32_t ms = 0L);
+  virtual int recv(uint8_t& src, uint8_t& port, 
+		   void* buf, size_t len, 
+		   uint32_t ms = 0L);
 
 };
 #endif

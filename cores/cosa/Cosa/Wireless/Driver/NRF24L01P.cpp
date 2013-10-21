@@ -180,7 +180,7 @@ NRF24L01P::begin(const void* config)
 }
 
 int
-NRF24L01P::send(uint8_t dest, const iovec_t* vec)
+NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
   if (vec == NULL) return (-1);
@@ -197,6 +197,7 @@ NRF24L01P::send(uint8_t dest, const iovec_t* vec)
   spi.begin(this);
   m_status = spi.transfer(dest ? W_TX_PAYLOAD : W_TX_PAYLOAD_NO_ACK);
   spi.transfer(m_addr.device);
+  spi.transfer(port);
   for (const iovec_t* vp = vec; vp->buf != 0; vp++)
     spi.write(vp->buf, vp->size);
   spi.end();
@@ -217,13 +218,13 @@ NRF24L01P::send(uint8_t dest, const iovec_t* vec)
 }
 
 int 
-NRF24L01P::send(uint8_t dest, const void* buf, size_t len)
+NRF24L01P::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 {
   iovec_t vec[2];
   iovec_t* vp = vec;
   iovec_arg(vp, buf, len);
   iovec_end(vp);
-  return (send(dest, vec));
+  return (send(dest, port, vec));
 }
 
 bool
@@ -241,7 +242,9 @@ NRF24L01P::available()
 }
 
 int
-NRF24L01P::recv(uint8_t& src, void* buf, size_t size, uint32_t ms)
+NRF24L01P::recv(uint8_t& src, uint8_t& port, 
+		void* buf, size_t size, 
+		uint32_t ms)
 {
   // Run in receiver mode
   set_receiver_mode();
@@ -262,10 +265,11 @@ NRF24L01P::recv(uint8_t& src, void* buf, size_t size, uint32_t ms)
     return (-1);
   }
 
-  // Read the source address and payload
+  // Read the source address, port and payload
   spi.begin(this);
   m_status = spi.transfer(R_RX_PAYLOAD);
   src = spi.transfer(0);
+  port = spi.transfer(0);
   spi.read(buf, count);
   spi.end();
   return (count);
