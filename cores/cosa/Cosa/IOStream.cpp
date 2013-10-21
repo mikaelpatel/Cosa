@@ -116,11 +116,9 @@ IOStream::print(const void *ptr, size_t size, Base base, uint8_t max)
   unsigned int v_adj = (base == dec ? 0 : (base == oct ? 01000 : 0x100));
   uint8_t adj = (v_adj != 0);
   uint8_t n = 0;
+  print(p);
+  print_P(PSTR(": "));
   while (size--) {
-    if (n == 0) {
-      print(p);
-      print_P(PSTR(": "));
-    }
     char buf[sizeof(int) * CHARBITS + 1];
     unsigned int v = (*p++) + v_adj;
     print(utoa(v, buf, base) + adj);
@@ -130,6 +128,10 @@ IOStream::print(const void *ptr, size_t size, Base base, uint8_t max)
     else {
       println();
       n = 0;
+      if (size > 0) {
+	print(p);
+	print_P(PSTR(": "));
+      }
     }
   }
   if (n != 0) println();
