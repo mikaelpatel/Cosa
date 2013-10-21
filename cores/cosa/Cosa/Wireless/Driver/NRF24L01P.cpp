@@ -259,7 +259,7 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
   write(STATUS, _BV(RX_DR));
   
   // Check for payload error from device (Tab. 20, pp. 51, R_RX_PL_WID)
-  uint8_t count = read(R_RX_PL_WID) - 1;
+  uint8_t count = read(R_RX_PL_WID) - 2;
   if ((count > PAYLOAD_MAX) || (count > size)) {
     write(FLUSH_RX);
     return (-1);
