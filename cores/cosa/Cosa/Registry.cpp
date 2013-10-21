@@ -37,8 +37,9 @@ Registry::lookup(const uint8_t* path, size_t count)
   for (uint8_t i = 0; i < count; i++) {
     // Check that the current item is a list
     uint8_t ix = path[i]; 
+    uint8_t nx = i + 1;
     type_t type = (type_t) pgm_read_byte(&item->type);
-    if (((i + 1) < count) && (type != ITEM_LIST)) return (NULL);
+    if ((nx < count) && (type != ITEM_LIST)) return (NULL);
 
     // Check that the current index is within the list length
     item_list_P items = (item_list_P) item;
