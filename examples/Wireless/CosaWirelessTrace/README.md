@@ -1,4 +1,4 @@
-CosaWirelessDebug
+CosaWirelessTrace
 =================
 Demonstration of the Wireless Interface and device drivers. Handy tool
 for debugging message streams. The sketch will listen to transmissions

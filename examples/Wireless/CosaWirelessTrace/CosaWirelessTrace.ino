@@ -1,5 +1,5 @@
 /**
- * @file CosaWirelessDebug.ino
+ * @file CosaWirelessTrace.ino
  * @version 1.0
  *
  * @section License
@@ -22,7 +22,7 @@
  *
  * @section Description
  * Demonstration of the Wireless Interface and device drivers. Handy
- * tool for debugging message streams. The sketch will listen to
+ * tool for tracing message streams. The sketch will listen to
  * transmissions and print received messages. Checks if the message is
  * printable otherwise printed as a hex dump. The sketch will receive
  * any broadcast or addressed message to the node(0x01) on all ports.
@@ -36,11 +36,11 @@
 #include "Cosa/RTC.hh"
 
 // Select Wireless device driver
-#include "Cosa/Wireless/Driver/CC1101.hh"
-CC1101 rf(0xC05A, 0x01);
+// #include "Cosa/Wireless/Driver/CC1101.hh"
+// CC1101 rf(0xC05A, 0x01);
 
-// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-// NRF24L01P rf(0xC05A, 0x01);
+#include "Cosa/Wireless/Driver/NRF24L01P.hh"
+NRF24L01P rf(0xC05A, 0x01);
 
 // #include "Cosa/Wireless/Driver/VWI.hh"
 // #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
@@ -50,7 +50,7 @@ CC1101 rf(0xC05A, 0x01);
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaWirelessDebug: started"));
+  trace.begin(&uart, PSTR("CosaWirelessTrace: started"));
   Watchdog::begin();
   RTC::begin();
   rf.begin();
