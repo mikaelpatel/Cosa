@@ -89,6 +89,7 @@ void setup()
   // Put the hardware in power down
   AnalogPin::powerdown();
   Power::all_disable();
+  Watchdog::end();
 
   // Allow wakeup on button
   wakeup.enable();  
@@ -100,7 +101,7 @@ struct dlt_msg_t {
   uint16_t temperature;
   uint16_t battery;
 };
-static const uint8_t DIGITAL_LUMINANCE_TEMPERATURE_TYPE = 0x03;
+static const uint8_t DIGITAL_LUMINANCE_TEMPERATURE_TYPE = 0x04;
 
 void loop()
 {

@@ -70,7 +70,7 @@ struct dht_msg_t {
   int16_t temperature;
   uint16_t battery;
 };
-static const uint8_t DIGITAL_HUMIDITY_TEMPERATURE_TYPE = 0x02;
+static const uint8_t DIGITAL_HUMIDITY_TEMPERATURE_TYPE = 0x03;
 
 void setup()
 {

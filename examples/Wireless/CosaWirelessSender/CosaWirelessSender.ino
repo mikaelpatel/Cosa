@@ -63,7 +63,7 @@ struct msg_t {
   uint8_t nr;
   uint8_t payload[PAYLOAD_MAX];
 };
-static const uint8_t PAYLOAD_TYPE = 0x00;
+static const uint8_t PAYLOAD_TYPE = 0x01;
 
 void loop()
 {

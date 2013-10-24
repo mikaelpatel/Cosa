@@ -101,7 +101,7 @@ struct dt_msg_t {
   int16_t outdoors;
   uint16_t battery;
 };
-static const uint8_t DIGITAL_TEMP_TYPE = 0x01;
+static const uint8_t DIGITAL_TEMP_TYPE = 0x02;
 
 void loop()
 {

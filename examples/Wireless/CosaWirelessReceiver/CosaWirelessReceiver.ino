@@ -53,12 +53,14 @@ void setup()
   rf.begin();
 }
 
+static const uint8_t IOSTREAM_TYPE = 0x00;
+
 static const uint8_t PAYLOAD_MAX = 14;
 struct payload_msg_t {
   uint8_t nr;
   uint8_t payload[PAYLOAD_MAX];
 };
-static const uint8_t PAYLOAD_TYPE = 0x00;
+static const uint8_t PAYLOAD_TYPE = 0x01;
 
 IOStream& operator<<(IOStream& outs, payload_msg_t* msg)
 {
@@ -73,7 +75,7 @@ struct dt_msg_t {
   int16_t outdoors;
   uint16_t battery;
 };
-static const uint8_t DIGITAL_TEMPERATURE_TYPE = 0x01;
+static const uint8_t DIGITAL_TEMPERATURE_TYPE = 0x02;
 
 IOStream& operator<<(IOStream& outs, dt_msg_t* msg)
 {
@@ -93,7 +95,7 @@ struct dht_msg_t {
   int16_t temperature;
   uint16_t battery;
 };
-static const uint8_t DIGITAL_HUMIDITY_TEMPERATURE_TYPE = 0x02;
+static const uint8_t DIGITAL_HUMIDITY_TEMPERATURE_TYPE = 0x03;
 
 IOStream& operator<<(IOStream& outs, dht_msg_t* msg)
 {
@@ -111,7 +113,7 @@ struct dlt_msg_t {
   uint16_t temperature;
   uint16_t battery;
 };
-static const uint8_t DIGITAL_LUMINANCE_TEMPERATURE_TYPE = 0x03;
+static const uint8_t DIGITAL_LUMINANCE_TEMPERATURE_TYPE = 0x04;
 
 IOStream& operator<<(IOStream& outs, dlt_msg_t* msg)
 {
@@ -147,6 +149,10 @@ void loop()
 
     // Print the message payload according to port/message type
     switch (port) {
+    case IOSTREAM_TYPE:
+      trace.print(msg, count);
+      trace.println();
+      break;
     case PAYLOAD_TYPE: 
       trace << (payload_msg_t*) msg; 
       break;
