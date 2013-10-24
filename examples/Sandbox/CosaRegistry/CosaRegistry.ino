@@ -227,7 +227,7 @@ void loop()
   ASSERT(blob != NULL);
   uint16_t errs;
   ASSERT(reg.get_value<uint16_t>(blob, &errs));
-  trace << errs << endl;
+  trace << PSTR("errors = ") << errs << endl;
   errors += 42;
   ASSERT(reg.get_value<uint16_t>(blob, &errs));
   trace << PSTR("errors = ") << errs << endl;
