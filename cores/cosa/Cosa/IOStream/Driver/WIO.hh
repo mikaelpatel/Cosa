@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/VWIO.hh
+ * @file Cosa/IOStream/Driver/WIO.hh
  * @version 1.0
  *
  * @section License
@@ -23,35 +23,45 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOSTREAM_DRIVER_VWIO_HH__
-#define __COSA_IOSTREAM_DRIVER_VWIO_HH__
+#ifndef __COSA_IOSTREAM_DRIVER_WIO_HH__
+#define __COSA_IOSTREAM_DRIVER_WIO_HH__
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
-#include "Cosa/VWI.hh"
+#include "Cosa/Wireless.hh"
 
 /**
- * IOStream driver for Virtual Wire Interface. Allow IOStream
- * such as Trace over Virtual Wire connection. Please note that
- * basic VWI is not reliable and characters may be lost due to 
- * noise, collisions, etc.
+ * IOStream driver for Wireless Interface. Allow IOStream such as
+ * Trace over Wireless connection. Please note that most Wireless
+ * device drivers do not provide a reliable link and characters may be
+ * lost due to noise, collisions, etc.
  */
-class VWIO : public IOStream::Device {
+class WIO : public IOStream::Device {
+public:
+  // Max size of payload
+  static const uint8_t PAYLOAD_MAX = 30;
 private:
-  VWI::Transmitter m_tx;
-  uint8_t m_buffer[VWI::PAYLOAD_MAX];
+  // Buffered output 
+  uint8_t m_buffer[PAYLOAD_MAX];
   uint8_t m_ix;
+
+  // Current wireless device driver, destination and port
+  Wireless::Driver* m_dev;
+  uint8_t m_dest;
+  uint8_t m_port;
 
 public:
   /**
-   * Construct Virtual Wire Interface Output Stream.
-   * @param[in] pin output pin.
-   * @param[in] codec from receiver.
+   * Construct Wireless Interface Output Stream.
+   * @param[in] dev wireless device driver.
+   * @param[in] dest destination device address.
+   * @param[in] port message type (Default 0x00).
    */
-  VWIO(Board::DigitalPin pin, VWI::Codec* codec) :
+  WIO(Wireless::Driver* dev, uint8_t dest, uint8_t port = 0x00) :
     IOStream::Device(),
-    m_tx(pin, codec),
-    m_ix(0)
+    m_ix(0),
+    m_dev(dev),
+    m_dest(dest)
   {
   }
 
@@ -88,28 +98,9 @@ public:
    */
   virtual int flush(uint8_t mode = SLEEP_MODE_IDLE)
   {
-    int res = (m_tx.send(m_buffer, m_ix) == m_ix ? 0 : -1);
+    int res = (m_dev->send(m_dest, m_port, m_buffer, m_ix) == m_ix ? 0 : -1);
     m_ix = 0;
     return (res);
-  }
-
-  /**
-   * Start VWI transmitter driver.
-   * @param[in] baudrate serial bitrate (default 4000).
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool begin(uint16_t baudrate = 4000) 
-  {
-    return (VWI::begin(baudrate) && m_tx.begin());
-  }
-
-  /**
-   * Stop VWI transitter device driver.
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool end()
-  {
-    return (m_tx.end());
   }
 };
 
