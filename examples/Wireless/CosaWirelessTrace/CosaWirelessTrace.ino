@@ -83,7 +83,7 @@ void loop()
   // Check if the message is printable
   bool is_ascii = true;
   for (uint8_t i = 0; i < count; i++) {
-    if ((msg[i] < ' ' && msg[i] != '\n') || msg[i] > 127) {
+    if ((msg[i] < ' ' && msg[i] != '\n' && msg[i] != '\f') || msg[i] > 127) {
       is_ascii = false;
       break;
     }
@@ -99,10 +99,12 @@ void loop()
   if (is_ascii) {
     trace << '"';
     for (uint8_t i = 0; i < count; i++)
-      if (msg[i] != '\n') 
-	trace << (char) msg[i];
-      else 
+      if (msg[i] == '\f')
+	trace << PSTR("\\f");
+      else if (msg[i] == '\n')
 	trace << PSTR("\\n");
+      else 
+	trace << (char) msg[i];
     trace << '"' << endl;
   }
 

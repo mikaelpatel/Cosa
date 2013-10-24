@@ -150,8 +150,10 @@ void loop()
     // Print the message payload according to port/message type
     switch (port) {
     case IOSTREAM_TYPE:
-      trace.print(msg, count);
-      trace.println();
+      for (uint8_t i = 0; i < count; i++)
+	if (msg[i] != '\f' && msg[i] != '\n') 
+	  trace << (char) msg[i];
+      trace << endl;
       break;
     case PAYLOAD_TYPE: 
       trace << (payload_msg_t*) msg; 
