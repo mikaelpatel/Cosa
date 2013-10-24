@@ -333,30 +333,6 @@ VWI::powerdown()
   TIMSK1 &= ~_BV(OCIE1A);
 }
 
-bool 
-VWI::available()
-{
-  return (m_rx.available());
-}
-
-int 
-VWI::send(uint8_t dest, uint8_t port, const iovec_t* vec)
-{
-  return (m_tx.send(dest, port, vec));
-}
-
-int 
-VWI::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
-{
-  return (m_tx.send(dest, port, buf, len));
-}
-
-int 
-VWI::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
-{
-  return (m_rx.recv(src, port, buf, len, ms));
-}
-
 ISR(TIMER1_COMPA_vect)
 {
   VWI::Transmitter* transmitter = &VWI::s_rf->m_tx;

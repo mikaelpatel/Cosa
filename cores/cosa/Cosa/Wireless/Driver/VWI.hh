@@ -32,7 +32,7 @@
 
 /**
  * VWI is an Cosa library that provides features to send short
- * messages using inexpensive radio transmitters and receivers (VWI).
+ * messages using inexpensive radio transmitters and receivers (VWI). 
  * This library is an object-oriented refactoring and extension of the
  * Virtual Wire library. 
  */
@@ -230,7 +230,7 @@ private:
     volatile uint8_t m_length;
 
     /**
-     * Phase Locked Loop; Synchronises with the transmitter so that
+     * Phase Locked Loop; Synchronizes with the transmitter so that
      * bit transitions occur at about the time (m_pll_ramp) is 0, then
      * the average is computed over each bit period to deduce the bit value.
      */
@@ -465,7 +465,10 @@ public:
    * Return true(1) if a message is available otherwise false(0).
    * @return bool
    */
-  virtual bool available();
+  virtual bool available()
+  {
+    return (m_rx.available());
+  }
 
   /**
    * @override Wireless::Driver
@@ -478,7 +481,10 @@ public:
    * @param[in] vec null termianted io vector.
    * @return number of bytes send or negative error code.
    */
-  virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec);
+  virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec)
+  {
+    return (m_tx.send(dest, port, vec));
+  }
 
   /**
    * @override Wireless::Driver
@@ -492,7 +498,10 @@ public:
    * @param[in] len number of bytes in buffer.
    * @return number of bytes send or negative error code.
    */
-  virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
+  virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len)
+  {
+    return (m_tx.send(dest, port, buf, len));
+  }
 
   /**
    * @override Wireless::Driver
@@ -511,7 +520,9 @@ public:
    */
   virtual int recv(uint8_t& src, uint8_t& port, 
 		   void* buf, size_t len, 
-		   uint32_t ms = 0L);
-
+		   uint32_t ms = 0L)
+  {
+    return (m_rx.recv(src, port, buf, len, ms));
+  }
 };
 #endif
