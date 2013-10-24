@@ -134,7 +134,7 @@ union univ32_t {
 /**
  * Workaround for gcc program memory data warning.
  */
-#define __PROGMEM  __attribute__((section(".progmem.cosa")))
+#define __PROGMEM  __attribute__((section(".progmem.data")))
 
 #undef PSTR
 /**
@@ -147,7 +147,7 @@ union univ32_t {
   (__extension__(							\
   {									\
     static const char __c[]						\
-      __attribute__((section(".progmem.pstr"))) = (s);			\
+      __attribute__((section(".progmem.data"))) = (s);			\
     &__c[0];								\
   }									\
   ))
