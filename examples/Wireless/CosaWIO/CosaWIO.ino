@@ -58,40 +58,45 @@ void setup()
   Watchdog::begin();
   RTC::begin();
   rf.begin();
-  trace << PSTR("\fWIO: connected");
-  wio.flush();
+  trace << PSTR("\fWIO: connected") << flush;
   SLEEP(2);
+}
+
+void bar(uint16_t value, uint8_t pos, uint16_t max)
+{
+  uint16_t div = (value * pos) / max;
+  uint16_t rem = ((value * pos) % max) * 4 / max;
+  for (uint8_t i = 0; i < div; i++) trace << (char) 4;
+  if (rem != 0) trace << (char) (rem - 1);
 }
 
 void loop()
 {
   // Print analog pins
-  for (uint8_t pin = 0; pin < 8;) {
-    trace << clear;
-    trace << 'A' << pin << PSTR(": ");
-    trace << AnalogPin::sample(pin++) << endl;
-    trace << 'A' << pin << PSTR(": ");
-    trace << AnalogPin::sample(pin++);
-    wio.flush();
-    SLEEP(2);
+  for (uint8_t pin = 0; pin < 8; pin++) {
+    uint16_t sample = AnalogPin::sample(pin);
+    trace << clear << 'A' << pin << PSTR(": ") << sample << endl;
+    bar(sample, 16, 1023);
+    trace << flush;
+    SLEEP(1);
   }
 
   // Print bandgap voltage
-  trace << clear;
-  trace << PSTR("VCC: ") << AnalogPin::bandgap() << PSTR(" mV");
-  wio.flush();
+  uint16_t vcc = AnalogPin::bandgap();
+  trace << clear << PSTR("VCC: ") << vcc << PSTR(" mV") << endl;
+  bar(vcc, 16, 5500);
+  trace << flush;
   SLEEP(2);
 
   // Print digital pins
-  trace << clear;
-  trace << PSTR("D0-7:  "); 
+  trace << clear << PSTR("D0-7:  "); 
   for (uint8_t pin = 0; pin < 8; pin++) 
     trace << InputPin::read(pin);
   trace << endl;
   trace << PSTR("D8-16: "); 
   for (uint8_t pin = 8; pin < 16; pin++) 
     trace << InputPin::read(pin);
-  wio.flush();
+  trace << flush;
   SLEEP(2);
 
   // Print statistics
@@ -100,7 +105,7 @@ void loop()
   trace << PSTR("TN: ") << rf.get_trans() << endl;
   trace << PSTR("ER: ") << rf.get_retrans();
   trace << PSTR(",") << rf.get_drops();
-  wio.flush();
+  trace << flush;
   SLEEP(2);
 #endif
 }
