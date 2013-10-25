@@ -128,9 +128,10 @@ void setup()
   lcd.cursor_blink_off();
   for (char c = 0; c < BITMAPS_MAX; c++) 
     lcd.set_custom_char_P(c, &bitmaps[c*SIZEOF_BITMAP]);
-  trace.begin(&lcd, PSTR("Monitor: started"));
+  trace.begin(&lcd, PSTR("\fMonitor: started"));
 #endif
   rf.begin();
+  SLEEP(1);
 }
 
 void loop()

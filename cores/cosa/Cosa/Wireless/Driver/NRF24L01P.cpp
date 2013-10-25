@@ -201,19 +201,26 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   for (const iovec_t* vp = vec; vp->buf != 0; vp++)
     spi.write(vp->buf, vp->size);
   spi.end();
+  m_trans += 1;
 
   // Wait for transmission
   do {
     Power::sleep(m_mode);
     read_status();
   } while (!m_status.tx_ds && !m_status.max_rt);
+  bool data_sent = m_status.tx_ds;
+
+  // Reset status bits and read retransmission counter and update
   write(STATUS, _BV(MAX_RT) | _BV(TX_DS));
+  observe_tx_t observe = read_observe_tx();
+  m_retrans += observe.arc_cnt;
 
   // Check that the message was delivered
-  if (m_status.tx_ds) return (len);
+  if (data_sent) return (len);
 
   // Failed to delivery
   write(FLUSH_TX);
+  m_drops += 1;
   return (-2);
 }
 

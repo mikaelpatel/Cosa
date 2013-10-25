@@ -65,12 +65,20 @@ void setup()
 
 void loop()
 {
-  // Print analog pins and bandgap voltage
+  // Print analog pins
+  for (uint8_t pin = 0; pin < 8;) {
+    trace << clear;
+    trace << 'A' << pin << PSTR(": ");
+    trace << AnalogPin::sample(pin++) << endl;
+    trace << 'A' << pin << PSTR(": ");
+    trace << AnalogPin::sample(pin++);
+    wio.flush();
+    SLEEP(2);
+  }
+
+  // Print bandgap voltage
   trace << clear;
-  trace << PSTR("A0-1: ") << AnalogPin::sample(0) 
-	<< PSTR(", ") << AnalogPin::sample(1) 
-	<< endl;
-  trace << PSTR("VCC = ") << AnalogPin::bandgap() << PSTR(" mV");
+  trace << PSTR("VCC: ") << AnalogPin::bandgap() << PSTR(" mV");
   wio.flush();
   SLEEP(2);
 
@@ -85,4 +93,14 @@ void loop()
     trace << InputPin::read(pin);
   wio.flush();
   SLEEP(2);
+
+  // Print statistics
+#if defined(__COSA_WIRELESS_DRIVER_NRF24L01P_HH__)
+  trace << clear;
+  trace << PSTR("TN: ") << rf.get_trans() << endl;
+  trace << PSTR("ER: ") << rf.get_retrans();
+  trace << PSTR(",") << rf.get_drops();
+  wio.flush();
+  SLEEP(2);
+#endif
 }

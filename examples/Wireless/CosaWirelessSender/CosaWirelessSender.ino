@@ -71,9 +71,20 @@ void loop()
   
   // Send to nodes 0x01 to 0x03
   for (uint8_t dest = 0x01; dest < 0x04; dest++) {
-    rf.send(dest, PAYLOAD_TYPE, &msg, sizeof(msg));
+    int res = rf.send(dest, PAYLOAD_TYPE, &msg, sizeof(msg));
+    if (res != sizeof(msg)) {
+      trace << PSTR("dest=") << dest
+	    << PSTR(",nr=") << msg.nr 
+	    << PSTR(",res=") << res
+	    << PSTR(":failed to send") 
+	    << endl;
+    }
     msg.nr += 1;
   }
+
+  // Broadcast message
+  rf.broadcast(PAYLOAD_TYPE, &msg, sizeof(msg));
+  msg.nr += 1;
 
   // Update message; increment bytes
   for (uint8_t i = 0; i < PAYLOAD_MAX; i++) msg.payload[i] += 1;

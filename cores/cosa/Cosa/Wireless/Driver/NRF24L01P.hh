@@ -456,8 +456,16 @@ private:
   /** Transceiver state */
   State m_state;
 
-protected:
+  /** Send count */
+  uint16_t m_trans;
 
+  /** Retransmittion count */
+  uint16_t m_retrans;
+
+  /** Dropped messages */
+  uint16_t m_drops;
+
+protected:
   /**
    * Read status. Issue NOP command to read status.
    * @return status.
@@ -526,7 +534,10 @@ public:
   m_ce(ce, 0),
   m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
   m_status(0),
-  m_state(POWER_DOWN_STATE)
+  m_state(POWER_DOWN_STATE),
+  m_trans(0),
+  m_retrans(0),
+  m_drops(0)
   {
     set_channel(64);
   }
@@ -621,6 +632,21 @@ public:
   virtual int recv(uint8_t& src, uint8_t& port, 
 		   void* buf, size_t count, 
 		   uint32_t ms = 0L);
+
+  /**
+   * Return number of transmitted messages.
+   */
+  uint16_t get_trans() { return (m_trans); }
+
+  /**
+   * Return number of retransmissions.
+   */
+  uint16_t get_retrans() { return (m_retrans); }
+
+  /**
+   * Return number of dropped messages.
+   */
+  uint16_t get_drops() { return (m_drops); }
 
   friend IOStream& operator<<(IOStream& outs, status_t status);
   friend IOStream& operator<<(IOStream& outs, fifo_status_t status);
