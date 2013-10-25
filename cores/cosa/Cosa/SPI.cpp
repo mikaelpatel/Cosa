@@ -55,6 +55,15 @@ SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
   // Attach driver to SPI bus controller device list
   m_next = spi.m_list;
   spi.m_list = this;
+
+  // Set ports
+  synchronized {
+    bit_set(DDR, Board::MOSI);
+    bit_set(DDR, Board::SCK);
+    bit_clear(DDR, Board::MISO);
+    bit_set(PORT, Board::MISO);
+    USICR = m_usicr;
+  }
 }
 
 SPI::SPI(uint8_t mode, Order order) :
