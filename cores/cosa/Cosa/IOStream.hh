@@ -608,6 +608,7 @@ public:
   friend IOStream& oct(IOStream& outs);
   friend IOStream& dec(IOStream& outs);
   friend IOStream& hex(IOStream& outs);
+  friend IOStream& flush(IOStream& outs);
 
  private:
   Device* m_dev;		/**< IOStream Device */
@@ -725,6 +726,18 @@ inline IOStream&
 clear(IOStream& outs)
 {
   outs.print('\f');
+  return (outs);
+}
+
+/**
+ * Flush buffer to device.
+ * @param[in] outs stream.
+ * @return iostream.
+ */
+inline IOStream& 
+flush(IOStream& outs)
+{
+  outs.m_dev->flush();
   return (outs);
 }
 #endif
