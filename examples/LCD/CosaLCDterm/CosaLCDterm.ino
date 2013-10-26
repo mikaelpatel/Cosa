@@ -30,18 +30,13 @@
 // Select LCD and Port
 // HD44780::Port4b port;
 // HD44780::SR3W port;
-HD44780::SR3WSPI port;
+// HD44780::SR3WSPI port;
 // HD44780::SR4 port;
 // HD44780::MJKDZ port;
+HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 // HD44780 lcd(&port, 20, 4);
 HD44780 lcd(&port);
-
-#ifndef BIND_LCD_UART 
-/**
- * A standard version: Setup uart and lcd. Wait in low-power mode 
- * until data is available. Echo data from uart to lcd.
- */
 
 void setup()
 {
@@ -55,27 +50,3 @@ void loop()
   while (uart.available()) lcd.putchar(uart.getchar());
   Power::sleep(SLEEP_MODE_IDLE);
 }
-
-#else
-/**
- * An iostream bind version: Setup uart with iobuffer for output but
- * bind input directly the lcd. 
- *   IOBuffer<UART::BUFFER_MAX> obuf;
- *   UART uart(0, &lcd, &obuf);
- * Setup uart input to lcd and output to the null device.
- */
-UART uart(0, &lcd, &IOStream::Device::null);
-
-void setup()
-{
-  UART_SETUP(0, uart);
-  Watchdog::begin();
-  uart.begin(9600);
-  lcd.begin();
-}
-
-void loop()
-{
-  SLEEP(1);
-}
-#endif

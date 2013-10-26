@@ -980,6 +980,23 @@ public:
 
   /**
    * IO handler for HD44780 (LCD-II) Dot Matix Liquid Crystal Display
+   * Controller/Driver when using the GYIICLCD IO expander board based 
+   * on PCF8574 I2C IO expander device driver. Has the same port
+   * connection as MJKDZ. The difference is the default TWI
+   * sub-address. 
+   */
+  class GYIICLCD : public MJKDZ {
+  public:
+    /**
+     * Construct HD44780 IO port handler using the GY-IICLCD I2C/TWI
+     * I/O expander with given sub-address (A0..A2). 
+     * @param[in] subaddr sub-address (0..7, default 0).
+     */
+    GYIICLCD(uint8_t subaddr = 0) : MJKDZ(subaddr) {}
+  };
+
+  /**
+   * IO handler for HD44780 (LCD-II) Dot Matix Liquid Crystal Display
    * Controller/Driver when using the DFRobot IO expander board based 
    * on PCF8574 I2C IO expander device driver. 
    */
