@@ -64,8 +64,9 @@ void setup()
 
 void bar(uint16_t value, uint8_t pos, uint16_t max)
 {
-  uint16_t div = (value * pos) / max;
-  uint16_t rem = ((value * pos) % max) * 4 / max;
+  uint32_t scale = ((uint32_t) value) * pos;
+  uint16_t div = scale / max;
+  uint16_t rem = ((scale % max) * 4) / max;
   for (uint8_t i = 0; i < div; i++) trace << (char) 4;
   if (rem != 0) trace << (char) (rem - 1);
 }

@@ -147,7 +147,7 @@ union univ32_t {
   (__extension__(							\
   {									\
     static const char __c[]						\
-      __attribute__((section(".progmem.data"))) = (s);			\
+      __attribute__((section(".progmem.pstr"))) = (s);			\
     &__c[0];								\
   }									\
   ))
