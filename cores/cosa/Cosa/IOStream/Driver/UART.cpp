@@ -27,7 +27,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 #if defined(__ARDUINO_TINY__)
-Soft::UART  __attribute__ ((weak)) uart(Board::D0);
+Soft::UART  __attribute__ ((weak)) uart(Board::D1);
 #else
 
 #include "Cosa/Bits.h"
