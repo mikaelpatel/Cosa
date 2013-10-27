@@ -13,7 +13,7 @@ SPI, TWI and EEPROM.
 Though object-oriented with optional operator overloading syntax
 Cosa is between 2-10X faster than Arduino with regard to digital pin
 functions. This comes with a small price-tag; memory, 4 bytes per
-digital pin and 9 bytes per analog pin. Cosa analog pin objects
+digital pin and 12 bytes per analog pin. Cosa analog pin objects
 holds the latest sample and allows an event handler. See the
 benchmarks in the examples directory for further details.
 
@@ -54,17 +54,17 @@ The popular VirtualWire library has been refactored to the
 object-oriented style of Cosa and extended with three additional
 codecs; Manchester, 4B5B and Fixed Bitstuffing. This allows basic
 ultra cheap wireless nodes with RF315/433 receiver and
-transmitter. For more advanced wireless connections there is also a
-driver for the Nordic Semiconductor NRF24L01+ chip, which allows
-low-power wireless communication of up to 2 Mbps in the 2.4GHz band,
-and the TI CC1101 Low-Power Sub-1 GHz RF Transceiver.   
+transmitter. For more advanced wireless connections there are also
+drivers for the TI CC1101 Low-Power Sub-1 GHz RF Transceiver and the
+Nordic Semiconductor NRF24L01+ chip, which allows low-power wireless
+communication of up to 2 Mbps in the 2.4GHz band.
 
-The goal of this project is to provide an efficient programming
-platform for rapid prototyping of "Internet-of-things"-devices. 
-Unfortunately Cosa is not a beginners entry level programming
-platform, though following some of the design patterns in Cosa will
-help beginners build more complex small scale embedded systems with
-richer concurrency and low power consumption.  
+The primary goal of this project is to provide an efficient programming
+platform for rapid prototyping of "Internet-of-things"-devices and
+sensor networks. Unfortunately Cosa is not a beginners entry level
+programming platform, though following some of the design patterns in
+Cosa will help beginners build more complex small scale embedded
+systems with richer concurrency and low power consumption.  
 
 The projects main principle of evolution is iterative with many
 rewrites and refactoring. With that said this phase of the project
@@ -130,9 +130,6 @@ Drivers
 22. TI CC1101 Low-Power Sub-1 GHz RF Transceiver.
 23. Slave device support for SPI, TWI and OWI.
 
-The reference documentation for each device driver hardware module may
-be found in the [references](https://www.dropbox.com/sh/vehf8d7kaj68t37/oNxzC5Fwb-/Cosa/references) directory.  
-
 References
 ----------
 
@@ -157,6 +154,7 @@ Naming
 * "Che cosa"; pronoun; what. 
 * "Ciao"; interjection hello!, goodbye!. 
 * "Cosa fai"; what do you do?
+* "Reti"; networks
 
 Note
 ----
@@ -229,5 +227,12 @@ RC4 cipher.
 capacitive sensor.     
 2013-09 Major refactoring of SPI and TWI device driver support.    
 2013-10 Device driver for CC1101 and BMP085 introduced. Introducting
-an abstract Wireless device interface. Refactoring CC1101 and
-NRF24L01P to the new interface.        
+an abstract Wireless device interface. Refactoring Virtual Wire,
+CC1101 and NRF24L01P to the new interface. Improving support for low
+power mode. Adding a Registry for mapping from path (index sequence)
+to data storage in PROGMEM, EEPROM and SRAM. Mapping may also be to
+Action object in SRAM. Support for LCD TWI port expander
+GY-IICLCD. Wireless IOStream class introduced to allow binding of
+Wireless device driver to IOStream and trace output over
+Wireless. First draft of RETI; data distribution and network
+management protocol.          
