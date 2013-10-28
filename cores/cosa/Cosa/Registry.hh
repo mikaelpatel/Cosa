@@ -34,9 +34,9 @@
  * Cosa Configuration Registry. Allow path (x0.x1..xn) access to
  * registry items. Supports actions and binary objects in tree
  * structure. The binary object is a mapping from program memory to
- * data. The low level access is type-less. Applications may add
- * run-time data-types by extending the item type system. Any type tag
- * larger than BLOB may be used. 
+ * data stored in SRAM, PROGMEM or EEMEM. The low level access is
+ * type-less. Applications may add run-time data-types by extending
+ * the item type system. Any type tag larger than BLOB may be used. 
  */
 class Registry {
 public:
@@ -47,8 +47,8 @@ public:
     ITEM = 0,			// Item descriptor
     ITEM_LIST = 1,		// List of items
     ACTION = 2,			// Action function
-    BLOB = 3,			// General Binary Object
-    APPL = 4			// Application Binary Object
+    BLOB = 3,			// General binary object
+    APPL = 4			// Application binary object
   } __attribute__((packed));
   
   /**
@@ -60,22 +60,31 @@ public:
     IN_EEMEM = 2,		// In eeprom 
   } __attribute__((packed));
 
+  /** Mask storage bits of item attributes */
   static const uint8_t STORAGE_MASK = 0x7f;
+
+  /** Mask readonly bit of item attributes */
   static const uint8_t READONLY = 0x80;
 
+  /**
+   * Registry item structure.
+   */
   struct item_t {
     type_t type;		// Item type tag(ITEM)
     str_P name;			// Name string in program memory
     uint8_t attr;		// Attributes
   };
 
+  /** Pointer to item in program memory */
   typedef const PROGMEM item_t* item_P;
+
+  /** Pointer to vector of item pointers in program memory */
   typedef const PROGMEM item_P* item_vec_P;
   
   /**
    * Return item type given pointer to item in program memory.
    * @param [in] item pointer to item in program memory.
-   * @return type_t
+   * @return item type.
    */
   static type_t get_type(item_P item)
   {
@@ -84,7 +93,7 @@ public:
 
   /**
    * Return pointer to name string given pointer to item in program
-   * memory.  
+   * memory. 
    * @param [in] item pointer to item in program memory.
    * @return pointer to string in program memory.
    */
@@ -96,12 +105,11 @@ public:
   /**
    * Return item storage type given pointer to item in program memory.
    * @param [in] item pointer to item in program memory.
-   * @return storage_t
+   * @return storage type.
    */
   static storage_t get_storage(item_P item)
   {
-    uint8_t attr = pgm_read_byte(&item->attr);
-    return ((storage_t) (attr & STORAGE_MASK));
+    return ((storage_t) (pgm_read_byte(&item->attr) & STORAGE_MASK));
   }
 
   /**
@@ -111,38 +119,41 @@ public:
    */
   static bool is_readonly(item_P item)
   {
-    uint8_t attr = pgm_read_byte(&item->attr);
-    return ((attr & READONLY) != 0);
+    return ((pgm_read_byte(&item->attr) & READONLY) != 0);
   }
 
-  // Registry item lists
+  /**
+   * Registry item list structure.
+   */
   struct item_list_t {
     item_t item;		// Item header(ITEM_LIST)
-    uint8_t length;		// Item list length (for boundary checking)
-    item_vec_P list;		// Item list in program memory
+    uint8_t length;		// Item vector length (for boundary checking)
+    item_vec_P list;		// Item vector in program memory
   };
+
+  /** Pointer to item list in program memory */
   typedef const PROGMEM item_list_t* item_list_P;
 
   /**
-   * Type check given item pointer and convert to an item list.
-   * Return NULL if the item is not tagged as an ITEM_LIST.
+   * Type check given item pointer and convert it to an item list.
+   * Return pointer to item list in program memory if successful
+   * otherwise NULL. This function provides run-time type checking. 
    * @param [in] item pointer to item in program memory.
    * @return pointer to item list in program memory.
    */
   static item_list_P to_list(item_P item)
   {
-    type_t type = get_type(item);
-    return (type == ITEM_LIST ? (item_list_P) item : NULL);
+    return (get_type(item) == ITEM_LIST ? (item_list_P) item : NULL);
   }
 
   /**
-   * Return number of items in item list or negative error code.
+   * Return number of items in item vector or negative error code.
    * @param [in] list pointer to item list in program memory.
-   * @return 
+   * @return number of items.
    */
   static int get_length(item_list_P list)
   {
-    if ((type_t) pgm_read_byte(&list->item.type) != ITEM_LIST) return (-1);
+    if (get_type(&list->item) != ITEM_LIST) return (-1);
     return ((int) pgm_read_byte(&list->length));
   }
 
@@ -156,7 +167,7 @@ public:
     uint8_t m_next;		/**< current index in vector */
   public:
     /**
-     * Construct iterator on given item list.
+     * Construct iterator on given item list in program memory.
      * @param[in] list of items.
      */
     Iterator(item_list_P list) :
@@ -194,40 +205,42 @@ public:
      * @override Registry::Action
      * Registry action function for given registry item. Should return
      * number of bytes in buffer as return value or negative error
-     * code. 
+     * code (EINVAL if illegal parameter, ENXIO if no object defined).
      * @param[inout] buf pointer to parameter block.
      * @param[in] size of parameter block.
      * @return number of bytes or negative error code.
      */
-    virtual int run(void* buf, size_t size) 
-    {
-      return (0);
-    }
+    virtual int run(void* buf, size_t size) = 0;
   };
 
-  // Registry action item
+  /**
+   * Registry action item.
+   */
   struct action_t {
     item_t item;		// Item header(ACTION)
-    Action* obj;		// Pointer to action handler
+    Action* obj;		// Pointer to action handler instance.
   };
+
+  /** Pointer to action item in program memory */
   typedef const PROGMEM action_t* action_P;
 
   /**
    * Type check given item pointer and convert to an action pointer. 
-   * Return NULL if the item is not tagged as an ACTION.
+   * Returns a pointer to action item in program memory if successful
+   * otherwise NULL. This function provides run-time type checking. 
    * @param [in] item pointer to item in program memory.
    * @return pointer to action in program memory.
    */
   static action_P to_action(item_P item)
   {
-    type_t type = get_type(item);
-    return (type == ACTION ? (action_P) item : NULL);
+    return (get_type(item) == ACTION ? (action_P) item : NULL);
   }
 
   /**
    * Run the action item with the given argument block and given
    * number of bytes. Return number of bytes in buffer (return value)
-   * or negative error code.
+   * or negative error code (EINVAL if illegal parameter, ENXIO if no
+   * object defined).
    * @param [in] action item.
    * @param [inout] buf argument/result buffer.
    * @param [in] size number of bytes argument.
@@ -235,30 +248,37 @@ public:
    */
   static int run(action_P action, void* buf, size_t size);
   
-  // Binary object variable 
+  /**
+   * Registry binary object variable. Mappning between registry and
+   * application data.
+   */
   struct blob_t {
     item_t item;		// Item header(>= BLOB)
     void* value;		// Pointer to value
     size_t size;		// Size of object
   };
+
+  /** Pointer to blob registry item in program memory */
   typedef const PROGMEM blob_t* blob_P;
 
   /**
    * Type check given item pointer and convert to a blob pointer. 
-   * Return NULL if the item is not tagged as a BLOB.
+   * Returns pointer to blob registry item in program memory if
+   * successful otherwise NULL. This function provides run-time type
+   * checking.
    * @param [in] item pointer to item in program memory.
    * @return pointer to blob in program memory.
    */
   static blob_P to_blob(item_P item)
   {
-    type_t type = get_type(item);
-    return (type >= BLOB ? (blob_P) item : NULL);
+    return (get_type(item) >= BLOB ? (blob_P) item : NULL);
   }
 
   /**
    * Copy blob value into given buffer with given maximum size
    * (len). Return number of bytes copied into buffer or negative
-   * error code.
+   * error code (EINVAL if illegal parameter, ENOBUFS if the buffer is
+   * too small for the stored data, ENXIO if storage is not recognized).
    * @param [in] blob pointer to blob in program memory.
    * @param [out] buf pointer to buffer for value.
    * @param [in] len number of bytes maximum in buffer. 
@@ -267,8 +287,9 @@ public:
   int get_value(blob_P blob, void* buf, size_t len);
 
   /**
-   * Template function to assign blob value into given value storage
+   * Template function to copy blob value into given value storage
    * of given type. Returns true(1) if successful otherwise false(0).
+   * @param [in] T type of variable to copy.
    * @param [in] blob pointer to blob in program memory.
    * @param [out] value buffer.
    * @return boolean.
@@ -279,18 +300,21 @@ public:
   }
   
   /**
-   * Copy in given buffer with given maximum size (len) to
-   * blob. Return number of bytes copied from buffer or negative 
-   * error code. The storage type must be SRAM or EEMEM.
+   * Copy value in given buffer of given maximum size (len) to blob. 
+   * Return number of bytes copied from buffer or negative error 
+   * code (EINVAL if illegal parameter, EACCES if the blob is
+   * readonly, ENOBUFS if the buffer is too small for the stored data,
+   * ENXIO if storage is not recognized). The storage type must be
+   * SRAM or EEMEM. 
    * @param [in] blob pointer to blob in program memory.
-   * @param [in] buf pointer to buffer for value.
+   * @param [in] buf pointer to buffer with new value.
    * @param [in] len number of bytes maximum in buffer. 
    * @return number of bytes or negative error code. 
    */
   int set_value(blob_P blob, const void* buf, size_t len);
 
   /**
-   * Template function copy in given value of given type to
+   * Template function to copy given value of given type to
    * blob. Return true(1) if successful otherwise false(0).
    * The storage type must be SRAM or EEMEM.
    * @param [in] T value type.
@@ -302,7 +326,7 @@ public:
   {
     return (set_value(blob, value, sizeof(T)) == sizeof(T));
   }
-
+  
   /** Max length of a path */
   static const size_t PATH_MAX = 8;
   
@@ -318,15 +342,15 @@ public:
   
   /**
    * Lookup registry item for given path. Returns pointer to item if
-   * found otherwise NULL(0).
-   * @param[in] path registry index sequence.
-   * @param[in] count number of bytes in path.
+   * found otherwise NULL. Default parameters will give root item.
+   * @param[in] path registry index sequence (Default NULL).
+   * @param[in] count number of bytes in path (Default 0).
    * @return item pointer or NULL.
    */
   item_P lookup(const uint8_t* path = NULL, size_t count = 0);
 
   /**
-   * Lookup registry item for given path. If the item is an action
+   * Lookup registry item for given path and if the item is an action
    * call the run() member function with the given argument block.
    * Return error code(-1) if the path is not valid otherwise return
    * value from run().
@@ -401,7 +425,7 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
     {							\
       Registry::ITEM_LIST,				\
       var ## _name,					\
-      Registry::IN_PROGMEM | Registry::READONLY,	\
+      Registry::IN_PROGMEM | Registry::READONLY		\
     },							\
     membersof(var ## _list),				\
     var ## _list					\
@@ -446,6 +470,7 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
 /**
  * Support macro to define a registry binary object item in program
  * memory and variable in SRAM as reference.
+ * @param[in] type variable data type.
  * @param[in] var registry blob to create.
  * @param[in] name string of registry item.
  * @param[in] value of variable (initial).
@@ -453,6 +478,18 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
  */
 #define REGISTRY_BLOB_VAR(type,var,name,value,readonly)	\
   static type var = value;				\
+  REGISTRY_BLOB(var,name,SRAM,readonly)
+
+/**
+ * Support macro to define a registry binary object item in program
+ * memory and struct variable in SRAM as reference.
+ * @param[in] type variable data type.
+ * @param[in] var registry blob to create.
+ * @param[in] name string of registry item.
+ * @param[in] readonly access.
+ */
+#define REGISTRY_BLOB_STRUCT(type,var,name,readonly)	\
+  static type var;					\
   REGISTRY_BLOB(var,name,SRAM,readonly)
 
 /**

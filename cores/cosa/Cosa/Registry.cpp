@@ -59,12 +59,12 @@ int
 Registry::run(action_P action, void* buf, size_t size)
 {
   // Sanity check the parameters
-  if (action == NULL) return (-1);
-  if (pgm_read_byte(&action->item.type) != ACTION) return (-2);
+  if (action == NULL) return (-EINVAL);
+  if (pgm_read_byte(&action->item.type) != ACTION) return (-EINVAL);
 
   // Access the action object 
   Action* obj = (Action*) pgm_read_word(&action->obj);
-  if (obj == NULL) return (-3);
+  if (obj == NULL) return (-ENXIO);
 
   // And run the member function
   return (obj->run(buf, size));
@@ -75,13 +75,13 @@ Registry::get_value(blob_P blob, void* buf, size_t len)
 {
   // Sanity check the parameters
   if (len == 0) return (0);
-  if ((blob == NULL) || (buf == NULL)) return (-1);
-  if (pgm_read_byte(&blob->item.type) < BLOB) return (-2);
+  if ((blob == NULL) || (buf == NULL)) return (-EINVAL);
+  if (pgm_read_byte(&blob->item.type) < BLOB) return (-EINVAL);
 
   // Check size of blob
   size_t size = (size_t) pgm_read_word(&blob->size);
   if (size == 0) return (0);
-  if (size > len) return (-4);
+  if (size > len) return (-ENOBUFS);
 
   // Check where the value is stored and copy into buffer
   storage_t storage = get_storage(&blob->item);
@@ -91,7 +91,7 @@ Registry::get_value(blob_P blob, void* buf, size_t len)
     memcpy(buf, (const void*) pgm_read_word(&blob->value), size);
   else if (storage == IN_EEMEM && m_eeprom != NULL)
     m_eeprom->read(buf, (const void*) pgm_read_word(&blob->value), size);
-  else return (-5);
+  else return (-ENXIO);
 
   // Return the number of bytes read
   return (size);
@@ -102,14 +102,14 @@ Registry::set_value(blob_P blob, const void* buf, size_t len)
 {
   // Sanity check the parameters
   if (len == 0) return (0);
-  if ((blob == NULL) || (buf == NULL)) return (-1);
-  if (pgm_read_byte(&blob->item.type) < BLOB) return (-2);
-  if (is_readonly(&blob->item)) return (-3);
+  if ((blob == NULL) || (buf == NULL)) return (-EINVAL);
+  if (pgm_read_byte(&blob->item.type) < BLOB) return (-EINVAL);
+  if (is_readonly(&blob->item)) return (-EACCES);
 
-  // Check size of blob
+  // Check size of blob against given value in buffer
   size_t size = (size_t) pgm_read_word(&blob->size);
   if (size == 0) return (0);
-  if (size != len) return (-4);
+  if (size != len) return (-ENOBUFS);
 
   // Check where the value is stored and copy into buffer
   storage_t storage = get_storage(&blob->item);
@@ -117,7 +117,7 @@ Registry::set_value(blob_P blob, const void* buf, size_t len)
     memcpy((void*) pgm_read_word(&blob->value), buf, size);
   else if (storage == IN_EEMEM && m_eeprom != NULL)
     m_eeprom->write((void*) pgm_read_word(&blob->value), buf, size);
-  else return (-5);
+  else return (-ENXIO);
 
   // Return the number of bytes written
   return (size);
@@ -126,19 +126,51 @@ Registry::set_value(blob_P blob, const void* buf, size_t len)
 IOStream& operator<<(IOStream& outs, Registry::item_P item)
 {
   outs << PSTR("item@") << (void*) item;
-  if (item != NULL)
-    outs << PSTR("(type = ") << Registry::get_type(item)
-	 << PSTR(", name = ") << Registry::get_name(item)
-	 << PSTR(", storage = ") << Registry::get_storage(item)
-	 << PSTR(", readonly = ") << Registry::is_readonly(item)
-	 << PSTR(")");
-  else
+  if (item == NULL) {
     outs << PSTR("(NULL)");
+    return (outs);
+  }
+  outs << PSTR("(type = ");
+  uint8_t type = Registry::get_type(item);
+  switch (type) {
+  case Registry::ITEM:
+    outs << PSTR("ITEM");      
+    break;
+  case Registry::ITEM_LIST:  
+    outs << PSTR("ITEM_LIST"); 
+    break;
+  case Registry::ACTION:
+    outs << PSTR("ACTION");    
+    break;
+  case Registry::BLOB:
+    outs << PSTR("BLOB");
+    break;
+  default:
+    outs << PSTR("APPL(") << type << ')';
+  }
+  outs << PSTR(", name = ") << Registry::get_name(item);
+  outs << PSTR(", storage = ");
+  switch (Registry::get_storage(item)) {
+  case Registry::IN_SRAM:    
+    outs << PSTR("SRAM");      
+    break;
+  case Registry::IN_PROGMEM: 
+    outs << PSTR("PROGMEM");   
+    break;
+  case Registry::IN_EEMEM:
+    outs << PSTR("EEMEM");
+    break;
+  default:
+    outs << PSTR("???");
+  }
+  if (Registry::is_readonly(item)) outs << PSTR(", readonly");
+  outs << PSTR(")");
   return (outs);
 }
 
 IOStream& operator<<(IOStream& outs, Registry::item_list_P list)
 {
+  outs << (Registry::item_P) list << endl;
   if (list == NULL) return (outs);
   Registry::Iterator iter(list);
   Registry::item_P item;
