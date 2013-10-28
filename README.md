@@ -154,7 +154,7 @@ Naming
 * "Che cosa"; pronoun; what. 
 * "Ciao"; interjection hello!, goodbye!. 
 * "Cosa fai"; what do you do?
-* "Reti"; networks
+* "Rete"; network
 
 Note
 ----
