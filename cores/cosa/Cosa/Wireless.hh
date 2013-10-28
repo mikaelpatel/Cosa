@@ -46,6 +46,9 @@ public:
 	device = dev;
       }
     };
+
+    /** Broadcast device address */
+    static const uint8_t BROADCAST = 0x00;
     
   protected:
     /** Current channel */
@@ -230,7 +233,7 @@ public:
      */
     virtual int broadcast(uint8_t port, const void* buf, size_t len)
     {
-      return (send(0x00, port, buf, len));
+      return (send(BROADCAST, port, buf, len));
     }
 
     /**
@@ -259,7 +262,7 @@ public:
      */
     virtual bool is_broadcast()
     {
-      return (m_dest == 0);
+      return (m_dest == BROADCAST);
     }
   };
 };
