@@ -222,6 +222,21 @@ public:
 
     /**
      * @override Wireless::Driver
+     * Broadcast message in given null terminated io vector. Returns
+     * number of bytes sent. Returns error code(-1) if number of bytes
+     * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
+     * set transmit mode.
+     * @param[in] port device port (or message type).
+     * @param[in] vec null termianted io vector.
+     * @return number of bytes send or negative error code.
+     */
+    virtual int broadcast(uint8_t port, const iovec_t* vec)
+    {
+      return (send(BROADCAST, port, vec));
+    }
+
+    /**
+     * @override Wireless::Driver
      * Boardcast message in given buffer, with given number of bytes. 
      * Returns number of bytes sent. Returns error code(-1) if number
      * of bytes is greater than PAYLOAD_MAX. Return error code(-2) if
