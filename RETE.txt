@@ -1,10 +1,10 @@
 RETE: COSA DATA DISTRIBUTION AND NETWORK MANAGEMENT PROTOCOL
 
 Author:	       Mikael Patel
-Date:	       2013-10-27
-Rev.:	       1.0.1
+Date:	       2013-10-28
+Rev.:	       1.0.2
 
-This document shortly describes the messages in the Cose data
+This document is a short description of the messages in the Cose data
 distribution and network mangement protocol RETE. The protocol is
 inspired by the OMG DDS and SNMP but very much adapted to a small
 scale embedded system. 
@@ -16,7 +16,7 @@ sensor nodes.
 To achieve low power sensor devices the management protocol is often
 piggy-backed on either acknowledgements or transmitted directly after
 receiving a data update event from the sensor. A sensor will attempt
-to recv management messages for a short period after sending a data
+to receive management messages for a short period after sending a data
 update and before going back to power down mode.
 
 PROTOCOL AND MESSAGES
@@ -80,32 +80,6 @@ indexies(uint8_t) in the attribute tree.
 4. PRODUCT IDENTITY(uint16_t)
 
 A product identity(uint16_t) is used to identify the root of a path
-within a given attribute tree. 
-
-IMPLEMENTATION
-
-Below is a sketch of message send functions:
-
-int get_request(uint8_t dest, uint8_t id, uint8_t length, uint8_t* path)
-{
-  iovec_t vec[4];
-  iovec_t* vp = vec;
-  iovec_arg(vp, &id, sizeof(id));
-  iovec_arg(vp, &length, sizeof(length));
-  iovec_arg(vp, path, length);
-  iovec_end(vp);
-  return (rf.send(dest, GET_REQUEST, vec));
-}
-
-int publish(uint16_t pid, uint8_t length, uint8_t* path, void* buf, size_t size)
-{
-  iovec_t vec[5];
-  iovec_t* vp = vec;
-  iovec_arg(vp, &pid, sizeof(pid));
-  iovec_arg(vp, &length, sizeof(length));
-  iovec_arg(vp, path, length);
-  iovec_arg(vp, buf, size);
-  iovec_end(vp);
-  return (rf.send(Wireless::BROADCAST, PUBLISH, vec));
-}
+within a given attribute tree. The product identity is the key to the
+MIB. 
 

@@ -53,15 +53,17 @@ protected:
    * Message types.
    */
   enum {
-    GET_REQUEST = 0,		// Get registry item value request
-    GET_RESPONSE = 1		// - response with value
-    PUT_REQUEST = 2,		// Put registry item value request
-    PUT_RESPONSE = 3,		// - response with status
-    APPLY_REQUEST = 4,		// Apply registry action request
-    APPLY_RESPONSE = 5,		// - reponse with result
-    PUBLISH = 6			// Publish registry update
+    RETE_BASE = 128,		// Base message number
+    PUBLISH = RETE_BASE,	// Publish registry update
+    GET_REQUEST,		// Get registry item value request
+    GET_RESPONSE,		// - response with value
+    PUT_REQUEST,		// Put registry item value request
+    PUT_RESPONSE,		// - response with status
+    APPLY_REQUEST,		// Apply registry action request
+    APPLY_RESPONSE,		// - reponse with result
   } __attribute__((packed));
 
+public:
   /** 
    * A Rete::Device is the base-class of wireless sensor nodes. The
    * default behaviour is a periodic function that will handle power
@@ -153,8 +155,9 @@ protected:
      */
     int get_request(uint8_t dest, const uint8_t* path, size_t len)
     {
-      iovec_t vec[2];
+      iovec_t vec[3];
       iovec_t* vp = vec;
+      iovec_arg(vp, &m_tid, sizeof(m_tid));
       iovec_arg(vp, path, len);
       iovec_end(vp);
       int res = m_dev->send(dest, GET_REQUEST, vec);
@@ -175,8 +178,9 @@ protected:
     int put_request(uint8_t dest, const uint8_t* path, size_t len,
 		    const void* buf, size_t size)
     {
-      iovec_t vec[3];
+      iovec_t vec[4];
       iovec_t* vp = vec;
+      iovec_arg(vp, &m_tid, sizeof(m_tid));
       iovec_arg(vp, path, len);
       iovec_arg(vp, buf, size);
       iovec_end(vp);
@@ -198,8 +202,9 @@ protected:
     int apply_request(uint8_t dest, const uint8_t* path, size_t len,
 		      const void* args, size_t size)
     {
-      iovec_t vec[3];
+      iovec_t vec[4];
       iovec_t* vp = vec;
+      iovec_arg(vp, &m_tid, sizeof(m_tid));
       iovec_arg(vp, path, len);
       iovec_arg(vp, args, size);
       iovec_end(vp);

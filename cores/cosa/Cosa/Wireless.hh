@@ -36,7 +36,9 @@ class Wireless {
 public:
   class Driver {
   public:
-    /** Network address */
+    /** 
+     * Network address together with port.
+     */
     struct addr_t {
       uint8_t device;		/**< device address (LSB) */
       int16_t network;		/**< network address */
@@ -191,7 +193,8 @@ public:
      * Send message in given null terminated io vector. Returns number
      * of bytes sent. Returns error code(-1) if number of bytes is
      * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
-     * transmit mode.
+     * transmit mode. Note that port numbers (128 and higher are
+     * reserved for system protocols).
      * @param[in] dest destination network address.
      * @param[in] port device port (or message type).
      * @param[in] vec null termianted io vector.
@@ -204,7 +207,8 @@ public:
      * Send message in given buffer, with given number of bytes. Returns
      * number of bytes sent. Returns error code(-1) if number of bytes
      * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
-     * set transmit mode.  
+     * set transmit mode. Note that port numbers (128 and higher are
+     * reserved for system protocols).
      * @param[in] dest destination network address.
      * @param[in] port device port (or message type).
      * @param[in] buf buffer to transmit.
@@ -225,7 +229,8 @@ public:
      * Broadcast message in given null terminated io vector. Returns
      * number of bytes sent. Returns error code(-1) if number of bytes
      * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
-     * set transmit mode.
+     * set transmit mode. Note that port numbers (128 and higher are
+     * reserved for system protocols).
      * @param[in] port device port (or message type).
      * @param[in] vec null termianted io vector.
      * @return number of bytes send or negative error code.
@@ -240,7 +245,8 @@ public:
      * Boardcast message in given buffer, with given number of bytes. 
      * Returns number of bytes sent. Returns error code(-1) if number
      * of bytes is greater than PAYLOAD_MAX. Return error code(-2) if
-     * fails to set transmit mode.  
+     * fails to set transmit mode. Note that port numbers (128 and
+     * higher are reserved for system protocols).
      * @param[in] port device port (or message type).
      * @param[in] buf buffer to transmit.
      * @param[in] len number of bytes in buffer.
