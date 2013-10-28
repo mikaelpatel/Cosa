@@ -33,7 +33,7 @@
  *   1.1 device address (8b)
  *   1.2 sleep period (ms)
  *   2 status
- *   2.0 battery satus (mV)
+ *   2.0 sensor data
  *   2.1 processor load (%)
  *   2.2 error count
  *   3 actions
@@ -74,12 +74,17 @@ REGISTRY_BEGIN(CM, "configuration") 	// 1
 REGISTRY_END(CM)
 
 // Status variables and registry
-REGISTRY_BLOB_VAR(uint16_t, vcc, "battery status (mV)", 0, true)
+struct sensor_t {
+  int16_t temperature;
+  uint16_t battery;
+};
+
+REGISTRY_BLOB_STRUCT(sensor_t, sensor, "sensor data", true)
 REGISTRY_BLOB_VAR(uint8_t, load, "processor load (%)", -1, true)
 REGISTRY_BLOB_VAR(uint16_t, errors, "error count", 0, false)
 
 REGISTRY_BEGIN(STATUS, "status") 	// 2
-  REGISTRY_BLOB_ITEM(vcc)		// 2.0
+  REGISTRY_BLOB_ITEM(sensor)		// 2.0
   REGISTRY_BLOB_ITEM(load)		// 2.1
   REGISTRY_BLOB_ITEM(errors)		// 2.2
 REGISTRY_END(STATUS)
@@ -89,7 +94,7 @@ class Restart : public Registry::Action {
 public:
   virtual int run(void* buf, size_t size) 
   {
-    trace << (const char*) buf << endl;
+    trace << PSTR("Action::Restart:") << (const char*) buf << endl;
     return (strlen_P((const char*) buf));
   }
 };
@@ -127,8 +132,9 @@ void setup()
   eeprom.write(&DEVICE, 0x42);
   eeprom.write(&TIMEOUT, 2000);
 
-  // Initiate battery status
-  vcc = AnalogPin::bandgap(1100);
+  // Initiate sensor status
+  sensor.battery = AnalogPin::bandgap(1100);
+  sensor.temperature = 200;
 }
 
 void loop()
@@ -142,7 +148,6 @@ void loop()
 
   // Access reg root item (item list)
   item = reg.lookup(NULL);
-  trace << item << endl;
   list = Registry::to_list(item);
   ASSERT(list != NULL);
   trace << list << endl;
@@ -150,7 +155,6 @@ void loop()
   // Access 0 blob product information management
   path[0] = 0;
   item = reg.lookup(path, 1);
-  trace << item << endl;
   list = Registry::to_list(item);
   ASSERT(list != NULL);
   trace << list << endl;
@@ -194,17 +198,18 @@ void loop()
   ASSERT(network == 0xbeef);
   trace << hex << network << endl;
 
-  // Access 2.0 blob battery status (mV)
+  // Access 2.0 blob sensor data
   path[0] = 2; 
   path[1] = 0; 
   item = reg.lookup(path, sizeof(path));
   trace << item << endl;
   blob = Registry::to_blob(item);
   ASSERT(blob != NULL);
-  uint16_t vcc;
-  ASSERT(reg.get_value(blob, &vcc, sizeof(vcc)) == sizeof(vcc));
-  ASSERT(!reg.set_value<uint16_t>(blob, &vcc));
-  trace << PSTR("vcc = ") << vcc << PSTR(" mV") << endl;
+  sensor_t sensor;
+  ASSERT(reg.get_value(blob, &sensor, sizeof(sensor)) == sizeof(sensor));
+  ASSERT(!reg.set_value<sensor_t>(blob, &sensor));
+  trace << sensor.temperature << PSTR(" C") << endl;
+  trace << sensor.battery << PSTR(" mV") << endl;
 
   // Access 2.1 blob processor load %
   path[0] = 2; 
@@ -216,7 +221,7 @@ void loop()
   uint8_t load;
   ASSERT(reg.get_value<uint8_t>(blob, &load));
   ASSERT(!reg.set_value<uint8_t>(blob, &load));
-  trace << PSTR("load = ") << load << PSTR(" %") << endl;
+  trace << load << PSTR(" %") << endl;
 
   // Access 2.2 blob errors
   path[0] = 2; 
@@ -227,14 +232,14 @@ void loop()
   ASSERT(blob != NULL);
   uint16_t errs;
   ASSERT(reg.get_value<uint16_t>(blob, &errs));
-  trace << PSTR("errors = ") << errs << endl;
+  trace << errs << endl;
   errors += 42;
   ASSERT(reg.get_value<uint16_t>(blob, &errs));
-  trace << PSTR("errors = ") << errs << endl;
+  trace << errs << endl;
   errs = 0;
   ASSERT(reg.set_value<uint16_t>(blob, &errs));
   ASSERT(reg.get_value<uint16_t>(blob, &errs));
-  trace << PSTR("errors = ") << errs << endl;
+  trace << errs << endl;
 
   // Access 3.0 action restart
   path[0] = 3; 
@@ -250,9 +255,11 @@ void loop()
   ASSERT(blob != NULL);
   bool flag;
   ASSERT(reg.get_value<bool>(blob, &flag));
-  trace << PSTR("flag = ") << flag << endl;
+  trace << flag << endl;
   flag = true;
   ASSERT(reg.set_value<bool>(blob, &flag));
+  ASSERT(reg.get_value<bool>(blob, &flag));
+  trace << flag << endl;
 
   // Access 3.2 illegal path
   path[0] = 3; 
