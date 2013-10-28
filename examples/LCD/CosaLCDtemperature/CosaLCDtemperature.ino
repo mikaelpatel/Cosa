@@ -21,16 +21,21 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/OWI/Driver/DS18B20.hh"
-#include "Cosa/LCD/Driver/HD44780.hh"
+#include "Cosa/LCD/Driver/PCD8544.hh"
 
-HD44780::Port4b port;
-HD44780 lcd(&port);
+PCD8544 lcd;
+
+// #include "Cosa/LCD/Driver/HD44780.hh"
+// HD44780::Port4b port;
+// HD44780 lcd(&port);
+
 IOStream console(&lcd);
-#if defined(__ARDUINO_TINYX4__)
-OWI owi(Board::D5);
+#if defined(__ARDUINO_TINY__)
+OWI owi(Board::D4);
 #else
 OWI owi(Board::D11);
 #endif
@@ -47,6 +52,7 @@ void loop()
 {
   sensor.convert_request();
   sensor.read_scratchpad();
-  console << clear << sensor << PSTR(" C");
+  console << clear << sensor << PSTR(" C") << endl;
+  console << AnalogPin::bandgap() << PSTR(" mV");
   SLEEP(2);
 }
