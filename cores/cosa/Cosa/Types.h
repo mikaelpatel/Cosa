@@ -42,6 +42,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "Cosa/Errno.h"
 #include "Cosa/Board.hh"
 
 /**
