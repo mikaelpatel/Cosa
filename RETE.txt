@@ -1,11 +1,11 @@
-RETI: COSA DATA DISTRIBUTION AND NETWORK MANAGEMENT PROTOCOL
+RETE: COSA DATA DISTRIBUTION AND NETWORK MANAGEMENT PROTOCOL
 
 Author:	       Mikael Patel
 Date:	       2013-10-27
 Rev.:	       1.0.1
 
 This document shortly describes the messages in the Cose data
-distribution and network mangement protocol RETI. The protocol is
+distribution and network mangement protocol RETE. The protocol is
 inspired by the OMG DDS and SNMP but very much adapted to a small
 scale embedded system. 
 
@@ -64,7 +64,7 @@ ENCODING
 
 1. MESSAGE TYPE(uint8_t)
 
-The messages are encoded in the RETI message type sequence. The
+The messages are encoded in the RETE message type sequence. The
 numbers are the indexies. 
 
 2. ADDRESSING(uint16_t, uint8_t)
@@ -94,7 +94,7 @@ int get_request(uint8_t dest, uint8_t id, uint8_t length, uint8_t* path)
   iovec_arg(vp, &length, sizeof(length));
   iovec_arg(vp, path, length);
   iovec_end(vp);
-  return (rf.send(dest, RETI_GET_REQUEST, vec));
+  return (rf.send(dest, GET_REQUEST, vec));
 }
 
 int publish(uint16_t pid, uint8_t length, uint8_t* path, void* buf, size_t size)
@@ -106,6 +106,6 @@ int publish(uint16_t pid, uint8_t length, uint8_t* path, void* buf, size_t size)
   iovec_arg(vp, path, length);
   iovec_arg(vp, buf, size);
   iovec_end(vp);
-  return (rf.send(BROADCAST, RETI_PUBLISH, vec));
+  return (rf.send(Wireless::BROADCAST, PUBLISH, vec));
 }
 
