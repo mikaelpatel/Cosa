@@ -296,10 +296,10 @@ device rom search and connection to multiple devices on one-wire bus.
 /** @page page6 Wireless
 Cosa provides an object-oriented version of VirtualWire (VWI) which
 acts as a device driver for RF433/335 modules. Cosa also support the
-NRF24L01+ chip.
+NRF24L01+ and TI CC1101 devices.
 
 @section CC1101
-Device driver for the TI CC1101 Low-Power Sub-1 GHz RF Transceiver. 
+Device driver for the TI CC1101 Low-Power Sub-1 GHz RF Transceiver (SPI). 
 
 @section VWI
 VWI (Virtual Wire Interface) provides features to send short messages,
@@ -338,6 +338,10 @@ pushes an Event::CHANGE_TYPE on change with direction. Subclass
 Rotary::Encoder and implement the virtual on_event() method. Support
 for Dials both normal and accelerated.
 
+@section Touch
+Touch Capacitive Sensor using periodic discharging to detect a 
+sensor touch. 
+
 @section DHT11
 DHT11 Humidity & Temperature Sensor device driver. Subclass
 and implement the event handler, on_event(), to allow periodic
@@ -354,7 +358,7 @@ Driver for the DS18B20 Programmable Resolution 1-Write Digital
 Thermometer (OWI).  
 
 @section ADXL345
-Driver for the ADXL345 Digital Accelerometer (SPI).
+Driver for the ADXL345 Digital Accelerometer (TWI).
 
 @section HMC5883L
 Driver for the HMC5883L 3-Axis Digital Compass (TWI).
@@ -363,7 +367,10 @@ Driver for the HMC5883L 3-Axis Digital Compass (TWI).
 Driver for the PCF8591 2-Wire 8-bit A/D and D/A converter (TWI).
 
 @section BMP085
-Driver for the BMP085 Digital Pressure sensor.
+Driver for the BMP085 Digital Pressure sensor (TWI).
+
+@section L3G4200D
+Driver for the L3G4200D Digital Gyroscope (TWI).
 */
 
 /** @page page8 Actuator

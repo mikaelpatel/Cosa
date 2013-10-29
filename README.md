@@ -128,7 +128,8 @@ Drivers
 20. PCF8574/PCF8574A Remote 8-bit I/O expander for I2C-bus with interrupt. 
 21. BMP085 Digital Pressure Sensor.
 22. TI CC1101 Low-Power Sub-1 GHz RF Transceiver.
-23. Slave device support for SPI, TWI and OWI.
+23. L3G4200D Digital Gryposcope.
+24. Slave device support for SPI, TWI and OWI.
 
 References
 ----------
@@ -234,5 +235,5 @@ to data storage in PROGMEM, EEPROM and SRAM. Mapping may also be to
 Action object in SRAM. Support for LCD TWI port expander
 GY-IICLCD. Wireless IOStream class introduced to allow binding of
 Wireless device driver to IOStream and trace output over
-Wireless. First draft of RETI; data distribution and network
-management protocol.          
+Wireless. First draft of RETE; data distribution and network
+management protocol. Adding support for L3G4200D digital gyroscope.         
