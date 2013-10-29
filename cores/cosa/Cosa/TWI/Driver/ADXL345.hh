@@ -293,6 +293,6 @@ public:
   }
 };
 
-extern IOStream& operator<<(IOStream& outs, ADXL345& adxl);
+extern IOStream& operator<<(IOStream& outs, ADXL345& accelerometer);
 
 #endif

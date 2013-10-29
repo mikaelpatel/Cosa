@@ -76,10 +76,10 @@ ADXL345::calibrate()
 
 
 IOStream& 
-operator<<(IOStream& outs, ADXL345& adxl)
+operator<<(IOStream& outs, ADXL345& accelerometer)
 {
   ADXL345::sample_t value;
-  adxl.sample(value);
+  accelerometer.sample(value);
   outs << PSTR("ADXL345(x = ") << value.x
        << PSTR(", y = ") << value.y
        << PSTR(", z = ") << value.z
