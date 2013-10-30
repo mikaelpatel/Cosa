@@ -1,5 +1,5 @@
 /**
- * @file CosaWIO.ino
+ * @file CosaWirelessIOStream.ino
  * @version 1.0
  *
  * @section License
