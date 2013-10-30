@@ -32,9 +32,9 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 
-// Select Wireless device driver (network = 0xC05A, device = 0x02)
+// Select Wireless device driver (network = 0xC05A, device = 0x01)
 // #include "Cosa/Wireless/Driver/CC1101.hh"
-// CC1101 rf(0xC05A, 0x02);
+// CC1101 rf(0xC05A, 0x01);
 
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
 NRF24L01P rf(0xC05A, 0x01);
@@ -43,9 +43,9 @@ NRF24L01P rf(0xC05A, 0x01);
 // #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
 // VirtualWireCodec codec;
 // #if defined(__ARDUINO_TINYX5__)
-// VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
+// VWI rf(0xC05A, 0x01, 4000, Board::D1, Board::D0, &codec);
 // #else
-// VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
+// VWI rf(0xC05A, 0x01, 4000, Board::D7, Board::D8, &codec);
 // #endif
 
 static const uint8_t IOSTREAM_TYPE = 0x00;
