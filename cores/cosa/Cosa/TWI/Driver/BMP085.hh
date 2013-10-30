@@ -31,11 +31,7 @@
 /**
  * Cosa TWI driver for Bosch BMP085 Digital pressure sensor
  * http://media.digikey.com/pdf/Data%20Sheets/Bosch/BMP085.pdf
- * BST-BMP085-DS000-03, 01 July 2008.
- *
- * @see Acknowledgements
- * Inspired by the improved Adafruit BMP085 library by Michal
- * Canecky/Cano.  
+ * BST-BMP085-DS000-03, Rev. 1.0, 01 July 2008.
  */
 class BMP085 : private TWI::Driver {
 public:
@@ -51,14 +47,14 @@ public:
 
 protected:
   /**
-   * Temperature conversion time max (us).
+   * Temperature conversion time max (ms).
    */
-  static const uint16_t TEMP_CONV_US = 4500;
+  static const uint8_t TEMP_CONV_MS = 5;
 
   /**
-   * Pressure conversion time max (us).
+   * Pressure conversion time max (ms).
    */
-  static const uint16_t PRESSURE_CONV_US[] __PROGMEM;
+  static const uint8_t PRESSURE_CONV_MS[] __PROGMEM;
 
   /**
    * Calibration coefficients (chap. 3.4, pp. 11). Data from device is
@@ -90,64 +86,111 @@ protected:
   /** Pressure conversion command */
   static const uint8_t PRESSURE_CONV_CMD = 0x34;
 
-  /** Pressure conversion mode */
-  Mode m_mode;
   /** Device calibration data */
   param_t m_param;
 
+  /** Pressure conversion mode */
+  Mode m_mode;
+
+  /** Currrent command */
+  uint8_t m_cmd;
+
+  /** Sample request start time (ms) */
+  uint16_t m_start;
+
+  /** Common intermediate temperature factor */
+  int32_t B5;
+
+  /** Latest calculated pressure */
+  int32_t m_pressure;
+  
 public:
   /**
-   * Construct BMP085 driver with I2C address(0x77).
-   * @param[in] mode of operation (default ULTRA_HIGH_RESOLUTION).
+   * Construct BMP085 driver with I2C address(0x77) and default
+   * ULTRA_LOW_POWER mode. 
    */
-  BMP085(Mode mode = ULTRA_HIGH_RESOLUTION) : 
-    TWI::Driver(0x77),
-    m_mode(mode)
+  BMP085() : 
+    TWI::Driver(0x77), 
+    m_mode(ULTRA_LOW_POWER), 
+    m_cmd(0),
+    m_start(0),
+    B5(0),
+    m_pressure(0)
   {}
 
   /**
-   * Set mode of operation.
-   * @param[in] mode.
+   * Initiate device driver. Load calibration coefficients from device.
+   * Return true if successful otherwise false.
+   * @param[in] mode oversampling mode (Default ULTRA_LOW_POWER).
+   * @return boolean.
    */
-  void set(Mode mode)
+  bool begin(Mode mode = ULTRA_LOW_POWER);
+
+  /**
+   * Issue a sample raw temperature sensor request. Return true(1) if
+   * successful otherwise false. 
+   * @return bool
+   */
+  bool sample_temperature_request();
+
+  /**
+   * Read the raw temperature sensor. Will wait for the conversion to
+   * complete. Return true(1) if successful otherwise false.  
+   * @return bool
+   */
+  bool read_temperature();
+
+  /**
+   * Sample the raw temperature sensor. Return true(1) if successful
+   * otherwise false. 
+   * @return bool
+   */
+  bool sample_temperature()
   {
-    m_mode = mode;
+    return (sample_temperature_request() && read_temperature());
   }
 
   /**
-   * Initiate device driver. Load calibration coefficients.
-   */
-  bool begin();
-
-  /**
-   * Sample the raw temperature sensor. Return true(1) if successful 
-   * otherwise false.
-   * @param[out] UT temperature reading.
+   * Issue a sample request of the raw pressure sensor. Will wait for
+   * the conversion to complete. Return true(1) if successful otherwise false. 
    * @return bool
    */
-  bool sample(int32_t& UT);
+  bool sample_pressure_request();
 
   /**
-   * Sample the raw pressure sensor. Return true(1) if successful 
-   * otherwise false.
-   * @param[out] UP pressure reading.
+   * Read the raw pressure sensor. Return true(1) if successful
+   * otherwise false. 
    * @return bool
    */
-  bool sample(uint32_t& UP);
+  bool read_pressure();
 
   /**
-   * Calculate temperature from raw sensor reading.
-   * @param[in] UT raw temperature reading.
-   * @return calculated temperature.
+   * Sample and read the raw pressure sensor. Return true(1) if
+   * successful otherwise false. 
+   * @return bool
    */
-  int16_t calculate(int32_t UT);
+  bool sample_pressure()
+  {
+    return (sample_pressure_request() && read_pressure());
+  }
 
   /**
-   * Calculate pressure from raw sensor readings.
-   * @param[in] UP raw pressure reading.
-   * @param[in] UT raw temperature reading.
-   * @return calculated temperature.
+   * Calculate temperature from the latest raw sensor reading.
+   * @return calculated temperature in steps of 0.1 C
    */
-  uint32_t calculate(uint32_t UP, int32_t UT);
+  int16_t get_temperature()
+  {
+    return ((B5 + 8) >> 4);
+  }
+  
+  /**
+   * Return latest calculated pressure from temperature and pressure
+   * raw sensor data.
+   * @return calculated pressure in steps of 1 Pa (0,01 hPa).
+   */
+  int32_t get_pressure()
+  {
+    return (m_pressure);
+  }
 };
 #endif

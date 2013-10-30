@@ -24,110 +24,138 @@
  */
 
 #include "Cosa/TWI/Driver/BMP085.hh"
+#include "Cosa/Watchdog.hh"
 
-const uint16_t BMP085::PRESSURE_CONV_US[] __PROGMEM = {
-  4500,
-  7500,
-  13500,
-  25500
+// Pressure convertion time depending on mode (pp. 10). 
+// Watchdog::delay() with a resolution of 16 ms is used.
+const uint8_t BMP085::PRESSURE_CONV_MS[] __PROGMEM = {
+  5,
+  8,
+  14,
+  26
 };
 
 bool 
-BMP085::begin()
+BMP085::begin(Mode mode)
 {
+  // Set the operation mode
+  m_mode = mode;
+  
+  // Read coefficients from the device
   if (!twi.begin(this)) return (false);
   twi.write(COEFF_REG);
-  int res = twi.read(&m_param, sizeof(m_param));
+  twi.read(&m_param, sizeof(m_param));
   twi.end();
 
-  if (res != sizeof(m_param)) return (false);
-  swap(&m_param.ac1, &m_param.ac1, sizeof(m_param) / 2);
-
+  // Adjust for little endien
+  swap(&m_param.ac1, &m_param.ac1, sizeof(m_param) / sizeof(int16_t));
   return (true);
 }
 
 bool 
-BMP085::sample(int32_t& UT)
+BMP085::sample_temperature_request()
 {
-  uint8_t cmd = TEMP_CONV_CMD;
+  // Check that a conversion request is not in process
+  if (m_cmd != 0) return (false);
+  
+  // Start a temperature measurement and wait
+  m_cmd = TEMP_CONV_CMD;
   if (!twi.begin(this)) return (false);
-  twi.write(CMD_REG, &cmd, sizeof(cmd));
+  twi.write(CMD_REG, &m_cmd, sizeof(m_cmd));
   twi.end();
-  DELAY(TEMP_CONV_US);
 
-  int16_t res;
+  // Set start time for completion
+  m_start = Watchdog::millis();
+  return (true);
+}
+
+bool 
+BMP085::read_temperature()
+{
+  // Check that a temperature conversion request was issued
+  if (m_cmd != TEMP_CONV_CMD) return (false);
+  m_cmd = 0;
+  
+  // Check if we need to wait for the conversion to complete
+  int16_t ms = Watchdog::millis() - m_start + TEMP_CONV_MS;
+  if (ms > 0) Watchdog::delay(ms);
+
+  // Read the raw temperature sensor data
+  int16_t UT;
   if (!twi.begin(this)) return (false);
   twi.write(RES_REG);
-  twi.read(&res, sizeof(res));
+  twi.read(&UT, sizeof(UT));
   twi.end();
-  res = swap(res);
-  UT = (int32_t) res;
+
+  // Adjust for little endien
+  UT = swap(UT);
+
+  // Temperature calculation
+  int32_t X1 = ((((int32_t) UT) - m_param.ac6) * m_param.ac5) >> 15;
+  int32_t X2 = (((int32_t) m_param.mc) << 11) / (X1 + m_param.md);
+  B5 = X1 + X2;
   return (true);
 }
-  
-bool 
-BMP085::sample(uint32_t& UP)
-{
-  uint8_t cmd = PRESSURE_CONV_CMD + (m_mode << 6);
-  if (!twi.begin(this)) return (false);
-  twi.write(CMD_REG, &cmd, sizeof(cmd));
-  twi.end();
-  DELAY(PRESSURE_CONV_US[m_mode]);
 
+bool 
+BMP085::sample_pressure_request()
+{
+  // Check that a conversion request is not in process
+  if (m_cmd != 0) return (false);
+  
+  // Start a pressure measurement
+  if (!twi.begin(this)) return (false);
+  m_cmd = PRESSURE_CONV_CMD + (m_mode << 6);
+  twi.write(CMD_REG, &m_cmd, sizeof(m_cmd));
+  twi.end();
+
+  // Set start time for completion
+  m_start = Watchdog::millis();
+  return (true);
+}
+
+bool 
+BMP085::read_pressure()
+{
+  // Check that a conversion request was issued
+  if (m_cmd != (PRESSURE_CONV_CMD + (m_mode << 6))) return (false);
+  m_cmd = 0;
+
+  // Check if we need to wait for the conversion to complete
+  int16_t ms = Watchdog::millis() - m_start;
+  ms += pgm_read_byte(&PRESSURE_CONV_MS[m_mode]);
+  if (ms) Watchdog::delay(ms);
+  
+  // Read the raw pressure sensor data
   univ32_t res;
   res.as_uint8[0] = 0;
   if (!twi.begin(this)) return (false);
   twi.write(RES_REG);
   twi.read(&res.as_uint8[1], 3);
   twi.end();
-  UP = swap(res.as_int32);
-  UP = UP >> (8 - m_mode);
-  return (true);
-}
 
-int16_t 
-BMP085::calculate(int32_t UT)
-{
-  int32_t X1, X2, B5;
-  X1 = ((UT - ((int32_t) m_param.ac6)) * ((int32_t) m_param.ac5)) >> 15;
-  X2 = (((int32_t) m_param.mc) << 11) / (X1 + ((int32_t) m_param.md));
-  B5 = X1 + X2;
-  return ((B5 + 8) >> 4);
-}
-
-uint32_t
-BMP085::calculate(uint32_t UP, int32_t UT)
-{
-  int32_t B3, B5, B6, X1, X2, X3, pressure;
+  // Adjust for little endian and resolution (oversampling mode)
+  int32_t UP = swap(res.as_int32) >> (8 - m_mode);
+  int32_t B3, B6, X1, X2, X3;
   uint32_t B4, B7;
-
-  // Temperature calculation
-  X1 = (((int32_t) UT - m_param.ac6) * ((int32_t) m_param.ac5)) >> 15;
-  X2 = (((int32_t) m_param.mc) << 11) / (X1 + ((int32_t) m_param.md));
-  B5 = X1 + X2;
 
   // Pressure calculation
   B6 = B5 - 4000;
-  X1 = ((int32_t) m_param.b2 * ((B6 * B6) >> 12)) >> 11;
-  X2 = ((int32_t) m_param.ac2 * B6) >> 11;
+  X1 = (m_param.b2 * ((B6 * B6) >> 12)) >> 11;
+  X2 = (m_param.ac2 * B6) >> 11;
   X3 = X1 + X2;
-  B3 = ((((int32_t) m_param.ac1*4 + X3) << m_mode) + 2) >> 2;
-
-  X1 = ((int32_t) m_param.ac3 * B6) >> 13;
-  X2 = ((int32_t) m_param.b1 * ((B6 * B6) >> 12)) >> 16;
+  B3 = ((((((int32_t) m_param.ac1) << 2) + X3) << m_mode) + 2) >> 2;
+  X1 = (m_param.ac3 * B6) >> 13;
+  X2 = (m_param.b1 * ((B6 * B6) >> 12)) >> 16;
   X3 = ((X1 + X2) + 2) >> 2;
-  B4 = ((uint32_t) m_param.ac4 * (uint32_t) (X3 + 32768)) >> 15;
-  B7 = ((uint32_t) UP - B3) * (uint32_t) (50000UL >> m_mode);
-
-  if (B7 < 0x80000000UL) {
-    pressure = (B7 * 2) / B4;
-  } else {
-    pressure = (B7 / B4) * 2;
-  }
-  X1 = (pressure >> 8) * (pressure >> 8);
+  B4 = (m_param.ac4 * (uint32_t) (X3 + 32768)) >> 15;
+  B7 = ((uint32_t) UP - B3) * (50000 >> m_mode);
+  m_pressure = (B7 < 0x80000000) ? (B7 << 1) / B4 : (B7 / B4) << 1;
+  X1 = (m_pressure >> 8) * (m_pressure >> 8);
   X1 = (X1 * 3038) >> 16;
-  X2 = (-7357 * pressure) >> 16;
-  
-  pressure += ((X1 + X2 + 3791) >> 4);
-  return (pressure);
+  X2 = (-7357 * m_pressure) >> 16;
+  m_pressure += (X1 + X2 + 3791) >> 4;
+
+  return (true);
 }
+
