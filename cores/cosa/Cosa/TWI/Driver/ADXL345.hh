@@ -65,6 +65,9 @@ protected:
     FIFO_STATUS = 0x39		// FIFO status
   } __attribute__((packed));
 
+  /** Register DEVID value (345) */
+  static const uint8_t ID = 0xe5;
+
   /**
    * Register ACT_INACT_CTL bitfields
    */

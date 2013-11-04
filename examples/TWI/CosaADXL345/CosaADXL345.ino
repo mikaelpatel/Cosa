@@ -30,16 +30,25 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Memory.h"
 
 // Digital acceleratometer with alternative address
 ADXL345 acceleratometer(true);
 
 void setup()
 {
+  // Start trace output stream on the serial port
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaADXL345: started"));
+
+  // Print some memory statistics
+  TRACE(free_memory());
+  TRACE(sizeof(TWI::Driver));
+  TRACE(sizeof(ADXL345));
+
+  // Start the watchdog ticks and the acceleratometer
   Watchdog::begin();
-  acceleratometer.begin();
+  TRACE(acceleratometer.begin());
 }
 
 void loop()

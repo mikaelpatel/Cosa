@@ -28,6 +28,9 @@
 bool 
 ADXL345::begin()
 {
+  // Read device register and santity check
+  uint8_t id = read(DEVID);
+  if (id != ID) return (false);
   write(DATA_FORMAT, _BV(FULL_RES) | RANGE_16G);
   write(POWER_CTL, _BV(MEASURE) | _BV(SLEEP) | WAKEUP_8_HZ);
   return (true);
