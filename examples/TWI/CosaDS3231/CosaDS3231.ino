@@ -57,8 +57,8 @@ void setup()
   Watchdog::begin();
 
   // Initiate time keeper
-  time_t now;
 #ifdef __RTC_SET_TIME__
+  time_t now;
   now.seconds = 0x00;
   now.minutes = 0x24;
   now.hours = 0x22;
