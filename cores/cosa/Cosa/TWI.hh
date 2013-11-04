@@ -57,7 +57,7 @@ public:
      * Construct TWI driver with given bus address.
      * @param[in] addr bus address (7-bit LSB).
      */
-    Driver(uint8_t addr) : m_addr(addr << 1) {}
+    Driver(uint8_t addr) : Event::Handler(), m_addr(addr << 1) {}
   };
 
   /**
