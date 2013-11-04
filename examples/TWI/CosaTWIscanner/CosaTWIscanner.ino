@@ -38,6 +38,8 @@
 struct tab_t {
   uint8_t addr;
   uint8_t mask;
+  uint8_t subaddr;
+  uint8_t id;
   str_P name;
 };
 
@@ -45,39 +47,56 @@ const char adxl345[]  __PROGMEM = "ADXL345, Digital Accelermeter";
 const char at24cxx[]  __PROGMEM = "AT24CXX, Serial EEPROM";
 const char bmp085[]   __PROGMEM = "BMP085, Digital Pressure Sensor";
 const char ds1307[]   __PROGMEM = "DS1307, Real-Time Clock";
+const char ds3231[]   __PROGMEM = "DS3231, Extremely Accurated RTC/TCXO/Crystal";
 const char hmc5883l[] __PROGMEM = "HMC5883L, 3-Axis Digital Compass";
 const char pcf8574[]  __PROGMEM = "PCF8574, Remote 8-bit I/O Expander";
 const char pcf8574a[] __PROGMEM = "PCF8574A, Remote 8-bit I/O Expander";
 const char pcf8591[]  __PROGMEM = "PCF8591, 8-bit A/D and D/A Converter";
 const char l3g4200d[] __PROGMEM = "L3G4200D, 3-Axis Digital Gyroscope";
+const char mpu60x0[]  __PROGMEM = "MPU-60X0, Motion Processing Unit";
 
 /**
  * Device table in program memory.
  */
-const tab_t dev[] __PROGMEM = {
-  { 0x53, 0xff, adxl345  },
-  { 0x50, 0xf8, at24cxx  },
-  { 0x77, 0xff, bmp085   },
-  { 0x68, 0xff, ds1307   },
-  { 0x1e, 0xff, hmc5883l },
-  { 0x20, 0xf8, pcf8574  },
-  { 0x70, 0xf8, pcf8574a },
-  { 0x48, 0xf8, pcf8591  },
-  { 0x68, 0xfe, l3g4200d },
+const tab_t devs[] __PROGMEM = {
+  { 0x1d, 0xff, 0,    0xe5, adxl345  },
+  { 0x1e, 0xff, 0x0a, 0x48, hmc5883l },
+  { 0x20, 0xf8, 0,       0, pcf8574  },
+  { 0x48, 0xf8, 0,       0, pcf8591  },
+  { 0x50, 0xf8, 0,       0, at24cxx  },
+  { 0x53, 0xff, 0,    0xe5, adxl345  },
+  { 0x68, 0xff, 0x75, 0x68, mpu60x0  },
+  { 0x68, 0xfe, 0x0f, 0xd3, l3g4200d },
+  { 0x68, 0xff, 0,       0, ds1307   },
+  { 0x70, 0xf8, 0,       0, pcf8574a },
+  { 0x77, 0xff, 0,       0, bmp085   },
+  { 0xd0, 0xff, 0,       0, ds3231   },
 };
 
 /**
  * Lookup up device given bus address. Return name string in program memory 
  * if successful otherwise NULL.
  * @param[in] addr device bus address (with possible sub-address).
+ * @param[in] dev twi driver.
  * @return program memory string pointer or NULL.
  */
 str_P 
-lookup(uint8_t addr)
+lookup(uint8_t addr, TWI::Driver* dev)
 {
-  for (uint8_t i = 0; i < membersof(dev); i++)
-    if (pgm_read_byte(&dev[i].addr) == (addr & pgm_read_byte(&dev[i].mask)))
-      return ((str_P) pgm_read_word(&dev[i].name));
+  for (uint8_t i = 0; i < membersof(devs); i++) {
+    if (pgm_read_byte(&devs[i].addr) == (addr & pgm_read_byte(&devs[i].mask))) {
+      uint8_t subaddr = pgm_read_byte(&devs[i].subaddr);
+      if (subaddr != 0) {
+	uint8_t id = 0;
+	twi.begin(dev);
+	twi.write(subaddr);
+	twi.read(&id, sizeof(id));
+	twi.end();
+	if (id != pgm_read_byte(&devs[i].id)) continue;
+      }
+      return ((str_P) pgm_read_word(&devs[i].name));
+    }
+  }
   return (NULL);
 }
 
@@ -94,7 +113,7 @@ void setup()
     if (count == sizeof(data)) {
       cout << PSTR("device = ") << hex << addr 
 	   << PSTR(":group = ") << (addr >> 3) << '.' << (addr & 0x07);
-      str_P name = lookup(addr);
+      str_P name = lookup(addr, &dev);
       if (name != NULL) cout << ':' << name;
       cout << endl;
     }
