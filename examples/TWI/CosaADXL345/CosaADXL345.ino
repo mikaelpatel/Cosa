@@ -31,19 +31,18 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 
-// Digital Accelerometer
-ADXL345 adxl;
+ADXL345 acceleratometer;
 
 void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaADXL345: started"));
   Watchdog::begin();
-  adxl.begin();
+  acceleratometer.begin();
 }
 
 void loop()
 {
-  trace << adxl << endl;
+  trace << acceleratometer;
   SLEEP(2);
 }
