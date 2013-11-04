@@ -27,7 +27,6 @@
 #define __COSA_TWI_DRIVER_ADXL345_HH__
 
 #include "Cosa/TWI.hh"
-#include "Cosa/Pins.hh"
 #include "Cosa/IOStream.hh"
 
 /**

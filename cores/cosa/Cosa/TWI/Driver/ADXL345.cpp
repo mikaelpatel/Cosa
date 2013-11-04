@@ -83,7 +83,7 @@ operator<<(IOStream& outs, ADXL345& accelerometer)
   outs << PSTR("ADXL345(x = ") << value.x
        << PSTR(", y = ") << value.y
        << PSTR(", z = ") << value.z
-       << PSTR(")");
+       << PSTR(")") << endl;
   return (outs);
 }
 
