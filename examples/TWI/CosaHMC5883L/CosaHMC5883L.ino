@@ -27,17 +27,13 @@
  */
 
 #include "Cosa/TWI/Driver/HMC5883L.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
 // The 3-Axis Digital Compass
 HMC5883L compass;
-
-// Use the built-in led as a heartbeat
-OutputPin ledPin(Board::LED);
 
 void setup()
 {
@@ -45,50 +41,37 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaHMC5883L: started"));
 
-  // Check amount of free memory
+  // Print some memory statistics
   TRACE(free_memory());
+  TRACE(sizeof(TWI::Driver));
+  TRACE(sizeof(HMC5883L));
 
-  // Check size of instances
-  TRACE(sizeof(TWI));
-  TRACE(sizeof(compass));
+  // Start the watchdog ticks and the compass
+  Watchdog::begin();
+  compass.begin();
 
-  // Check swap implementation
-  // ASSERT(swap(0x1234) == 0x3412);
-  // ASSERT(swap(0x12345678) == 0x78563412);
+  // Read the first sample
+  compass.read_heading();
+  trace << compass << endl;
+  compass.end();
 
-  // Start the watchdog ticks and push time events
-  Watchdog::begin(1024, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
-
-  // Start the compass
-  TRACE(compass.begin());
-
-  // Check the device status; output data ready?
-  while (!compass.available()) SLEEP(1);
-  
-  // Fetch the sample and print
-  HMC5883L::data_t output;
-  TRACE(compass.read_data(output));
-  trace << output.x << '.' << output.y << '.' << output.z << endl;
-
-  // Set continous measurement mode
-  TRACE(compass.set_mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE));
+  // Set continous measurement mode, 3 Hz output, avg 8 samples, +-4.0 Gauss
+  compass.set_output_rate(HMC5883L::OUTPUT_RATE_3_HZ);
+  compass.set_samples_avg(HMC5883L::SAMPLES_AVG_8);
+  compass.set_range(HMC5883L::RANGE_4_0_GA);
+  compass.set_mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE);
+  compass.begin();
 }
 
 void loop()
 {
-  // Wait for the watchdog event
-  Event event;
-  Event::queue.await(&event);
-  ledPin.toggle();
+  // Read the heading and print the raw data
+  compass.read_heading();
+  trace << compass;
 
-  // Check the device status; output data ready?
-  bool res;
-  do {
-    TRACE(res = compass.available());
-  } while (!res);
-
-  // Fetch the sample and print
-  HMC5883L::data_t output;
-  TRACE(compass.read_data(output));
-  trace << output.x << '.' << output.y << '.' << output.z << endl;
+  // Scale to milli gauss and print the data
+  compass.to_milli_gauss();
+  trace << compass;
+  trace << endl;
+  SLEEP(2);
 }

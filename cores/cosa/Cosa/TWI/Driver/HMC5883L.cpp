@@ -25,88 +25,110 @@
 
 #include "Cosa/TWI/Driver/HMC5883L.hh"
 
+const uint16_t HMC5883L::s_gain[] __PROGMEM = {
+  1370,
+  1090,
+  820,
+  660,
+  440,
+  390,
+  330,
+  230
+};
+
 bool
 HMC5883L::begin()
 {
+  // Read the device identity register
+  uint8_t id[3];
   if (!twi.begin(this)) return (false);
-  twi.write((uint8_t) 0);
-  int count = twi.read(&m_reg, sizeof(m_reg));
+  twi.write((uint8_t) IDENTITY);
+  twi.read(id, sizeof(id));
   twi.end();
-  return (count == sizeof(m_reg));
-}
 
-bool
-HMC5883L::end()
-{
-  return (set_mode(IDLE_MEASUREMENT_MODE));
-}
+  // Sanity check the identity 
+  static const uint8_t ID[3] __PROGMEM = { 'H', '4', '3' };
+  if (memcmp_P(id, ID, sizeof(ID))) return (false);
 
-void
-HMC5883L::set_bias(Bias bias)
-{
-  m_reg.config[0] = (m_reg.config[0] & ~BIAS_MASK) | bias;
-}
-
-void 
-HMC5883L::set_output_rate(Rate rate)
-{
-  m_reg.config[0] = (m_reg.config[0] & ~OUTPUT_RATE_MASK) | rate;
-}
-
-void
-HMC5883L::set_sample_avg(Avg avg)
-{
-  m_reg.config[0] = (m_reg.config[0] & ~SAMPLES_AVG_MASK) | avg;
-}
-
-void
-HMC5883L::set_range(Range range)
-{
-  m_reg.config[1] = (m_reg.config[1] & ~RANGE_MASK) | range;
+  // Write configuration
+  return (write_config());
 }
 
 bool
 HMC5883L::write_config()
 {
   if (!twi.begin(this)) return (false);
-  int count = twi.write((uint8_t) offsetof(reg_t, config), 
-			&m_reg.config, sizeof(m_reg.config));
+  int count = twi.write((uint8_t) CONFIG, &m_config, sizeof(m_config));
   twi.end();
-  return (count == (sizeof(m_reg.config) + 1));
+  return (count == (sizeof(m_config) + 1));
 }
 
 bool
 HMC5883L::set_mode(Mode mode)
 {
-  m_reg.mode = (m_reg.mode & ~MEASUREMENT_MODE_MASK) | mode;
   if (!twi.begin(this)) return (false);
-  int count = twi.write((uint8_t) offsetof(reg_t, mode), 
-			&m_reg.mode, sizeof(m_reg.mode));
+  int count = twi.write((uint8_t) MODE, &mode, sizeof(mode));
   twi.end();
-  return (count == (sizeof(m_reg.mode) + 1));
+  return (count == (sizeof(mode) + 1));
 }
 
 bool 
-HMC5883L::read_status(Status& status)
+HMC5883L::read_status(status_t& status)
 {
   if (!twi.begin(this)) return (false);
-  twi.write((uint8_t) offsetof(reg_t, status));
-  int count = twi.read(&m_reg.status, sizeof(m_reg.status));
+  twi.write((uint8_t) STATUS);
+  int count = twi.read(&status, sizeof(status));
   twi.end();
-  status = (Status) m_reg.status;
-  return (count == sizeof(m_reg.status));
+  return (count == sizeof(status));
 }
 
 bool 
-HMC5883L::read_data(data_t& data)
+HMC5883L::read_heading()
 {
+  // Read output data from the device
   if (!twi.begin(this)) return (false);
-  twi.write((uint8_t) offsetof(reg_t, output));
-  int count = twi.read(&m_reg.output, sizeof(m_reg.output));
+  twi.write((uint8_t) OUTPUT);
+  int count = twi.read(&m_output, sizeof(m_output));
   twi.end();
-  data.x = swap(m_reg.output.x);
-  data.y = swap(m_reg.output.y);
-  data.z = swap(m_reg.output.z);
-  return (count == sizeof(m_reg.output));
+  if (count != sizeof(m_output)) return (false);
+
+  // Adjust to little endian
+  swap(&m_output.x, &m_output.x, sizeof(m_output) / sizeof(int16_t));
+
+  // Check if an overflow occured
+  m_overflow = 
+    (m_output.x == -4096) || 
+    (m_output.y == -4096) || 
+    (m_output.z == -4096);
+  return (true);
 }
 
+void 
+HMC5883L::to_milli_gauss()
+{
+  // Do not scale if overflow
+  if (is_overflow()) return;
+
+  // Scale with the current gain setting
+  uint16_t gain = pgm_read_word(&s_gain[m_config.GN]);
+  m_output.x = (1000L * m_output.x) / gain;
+  m_output.y = (1000L * m_output.y) / gain;
+  m_output.z = (1000L * m_output.z) / gain;
+}
+
+IOStream& 
+operator<<(IOStream& outs, HMC5883L& compass)
+{
+  if (compass.is_overflow()) {
+    outs << PSTR("HMC5883L(overflow)") << endl;
+  }
+  else {
+    HMC5883L::data_t value;
+    compass.get_heading(value);
+    outs << PSTR("HMC5883L(x = ") << value.x
+	 << PSTR(", y = ") << value.y
+	 << PSTR(", z = ") << value.z
+	 << PSTR(")") << endl;
+  }
+  return (outs);
+}
