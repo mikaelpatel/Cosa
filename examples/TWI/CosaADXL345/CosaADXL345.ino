@@ -31,7 +31,8 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 
-ADXL345 acceleratometer;
+// Digital acceleratometer with alternative address
+ADXL345 acceleratometer(true);
 
 void setup()
 {
@@ -43,6 +44,7 @@ void setup()
 
 void loop()
 {
+  // Sample and print measurement to output stream
   trace << acceleratometer;
   SLEEP(2);
 }
