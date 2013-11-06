@@ -51,13 +51,13 @@ footprint. The Canvas class also supports drawing of icons and
 multiple fonts (GLCD and UTFT).  
 
 The popular VirtualWire library has been refactored to the
-object-oriented style of Cosa and extended with three additional
-codecs; Manchester, 4B5B and Fixed Bitstuffing. This allows basic
-ultra cheap wireless nodes with RF315/433 receiver and
-transmitter. For more advanced wireless connections there are also
-drivers for the TI CC1101 Low-Power Sub-1 GHz RF Transceiver and the
-Nordic Semiconductor NRF24L01+ chip, which allows low-power wireless
-communication of up to 2 Mbps in the 2.4GHz band.
+object-oriented style of Cosa (VWI) and extended with three additional
+codecs; Manchester, 4B5B and Bitstuffing. This allows basic ultra
+cheap wireless nodes with RF315/433 receiver and transmitter. For more
+advanced wireless connections there is also a driver for the Nordic
+Semiconductor NRF24L01+ chip, which allows low-power wireless
+communication of up to 2 Mbps in the 2.4GHz band, and the TI CC1101
+Low-Power Sub-1 GHz RF Transceiver. 
 
 The primary goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices and
@@ -129,7 +129,9 @@ Drivers
 21. BMP085 Digital Pressure Sensor.
 22. TI CC1101 Low-Power Sub-1 GHz RF Transceiver.
 23. L3G4200D Digital Gryposcope.
-24. Slave device support for SPI, TWI and OWI.
+24. MPU6050 Motion Processing Unit; Digital thermometer, accelerometer
+and gyroscope.
+25. Slave device support for SPI, TWI and OWI.
 
 References
 ----------
@@ -236,4 +238,7 @@ Action object in SRAM. Support for LCD TWI port expander
 GY-IICLCD. Wireless IOStream class introduced to allow binding of
 Wireless device driver to IOStream and trace output over
 Wireless. First draft of RETE; data distribution and network
-management protocol. Adding support for L3G4200D digital gyroscope.         
+management protocol. Adding support for L3G4200D digital gyroscope.    
+2013-11 New device driver for MPU6050 Motion Processing Unit; Digital
+thermometer, accelerometer and gyroscope.    
+

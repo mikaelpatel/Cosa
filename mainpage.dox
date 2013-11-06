@@ -3,10 +3,11 @@
 Cosa is an object-oriented platform for Arduino that supports an
 event-driven programming paradigm with simple finite state
 machines. It contains a rich set of classes to support rapid
-prototyping of Arduino/AVR based devices. Cosa supports the following
-AVR/Atmega328P internal hardware modules; all pin modes, Digital,
-Analog and Interrupt Pins, Analog Comparator, PWM, Watchdog, Timer0
-(RTC), Timer1 (Servo), EEPROM, UART, SPI and TWI.  
+prototyping of Internet-of-Things devices. Cosa supports the following
+AVR/ATmega/ATtiny internal hardware modules; all pin modes, Digital,
+and Analog Pins, External and Pin Change Interrupts, Analog
+Comparator, PWM, Watchdog, Timer0 (RTC), Timer1 (Servo), UART, USI,
+SPI, TWI and EEPROM.   
 
 Though object-oriented with optional operator overloading syntax,
 Cosa is between 2-10X faster than Arduino with regard to digital pin
@@ -371,6 +372,10 @@ Driver for the BMP085 Digital Pressure sensor (TWI).
 
 @section L3G4200D
 Driver for the L3G4200D Digital Gyroscope (TWI).
+
+@section MPU6050
+Driver for MPU6050 Motion Processing Unit; Digital thermometer,
+accelerometer and gyroscope (TWI).
 */
 
 /** @page page8 Actuator
