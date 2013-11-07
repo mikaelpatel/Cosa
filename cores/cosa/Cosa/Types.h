@@ -299,7 +299,48 @@ swap(int16_t value)
 inline void
 swap(int16_t* dest, const int16_t* src, size_t size)
 {
-  while (size--) *dest++ = swap(*src++);
+  if (size == 0) return;
+  do { 
+    *dest++ = swap(*src++); 
+  } while (--size);
+}
+
+/**
+ * Swap bytes in 16-bit integers in struct.
+ * @param[in] T type of struct.
+ * @param[in] dest destination buffer.
+ * @param[in] src source buffer.
+ */
+template<class T> 
+void swap(T* dest, const T* src)
+{
+  swap((int16_t*) dest, (const int16_t*) src, sizeof(T) / sizeof(int16_t));
+}
+
+/**
+ * Destructive swap bytes in 16-bit integer vector.
+ * @param[in] buf buffer.
+ * @param[in] size number of integers to swap.
+ */
+inline void
+swap(int16_t* buf, size_t size)
+{
+  if (size == 0) return;
+  do { 
+    int16_t data = *buf;
+    *buf++ = swap(data); 
+  } while (--size);
+}
+
+/**
+ * Destructive swap bytes in 16-bit integers in struct.
+ * @param[in] T type of struct.
+ * @param[in] buf buffer.
+ */
+template<class T> 
+void swap(T* buf)
+{
+  swap((int16_t*) buf, sizeof(T) / sizeof(int16_t));
 }
 
 /**
