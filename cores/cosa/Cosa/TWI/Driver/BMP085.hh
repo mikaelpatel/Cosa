@@ -26,7 +26,9 @@
 #ifndef __COSA_TWI_DRIVER_BMP085_HH__
 #define __COSA_TWI_DRIVER_BMP085_HH__
 
+#include "Cosa/Types.h"
 #include "Cosa/TWI.hh"
+#include "Cosa/IOStream.hh"
 
 /**
  * Cosa TWI driver for Bosch BMP085 Digital pressure sensor
@@ -175,6 +177,16 @@ public:
   }
 
   /**
+   * Sample and read the raw temperature and pressure sensor. Return
+   * true(1) if successful otherwise false. 
+   * @return bool
+   */
+  bool sample()
+  {
+    return (sample_temperature() && sample_pressure());
+  }
+
+  /**
    * Calculate temperature from the latest raw sensor reading.
    * @return calculated temperature in steps of 0.1 C
    */
@@ -193,4 +205,13 @@ public:
     return (m_pressure);
   }
 };
+
+/**
+ * Print the latest reading to the given output stream.
+ * @param[in] outs output stream.
+ * @param[in] bmp instance.
+ * @return output stream.
+ */
+extern IOStream& operator<<(IOStream& outs, BMP085& bmp);
+
 #endif

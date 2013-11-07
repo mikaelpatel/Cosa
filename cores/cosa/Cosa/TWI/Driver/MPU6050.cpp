@@ -103,7 +103,7 @@ void
 MPU6050::read_motion(motion_t& m)
 {
   read(ACCEL_OUT, &m, sizeof(m));
-  swap(&m.accel.x, &m.accel.x, sizeof(m) / sizeof(int16_t));
+  swap<motion_t>(&m);
   m.temp = (m.temp + 12410) / 34;
 }
   
@@ -111,14 +111,14 @@ void
 MPU6050::read_accelerometer(sample_t& s)
 {
   read(ACCEL_OUT, &s, sizeof(s));
-  swap(&s.x, &s.x, sizeof(s) / sizeof(int16_t));
+  swap<sample_t>(&s);
 }
   
 void 
 MPU6050::read_gyroscope(sample_t& s)
 {
   read(GYRO_OUT, &s, sizeof(s));
-  swap(&s.x, &s.x, sizeof(s) / sizeof(int16_t));
+  swap<sample_t>(&s);
 }
 
 IOStream& 

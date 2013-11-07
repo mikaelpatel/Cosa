@@ -36,13 +36,16 @@
  * Device table structure with address, sub-address mask and name/description.
  */
 struct tab_t {
-  uint8_t addr;
-  uint8_t mask;
-  uint8_t subaddr;
-  uint8_t id;
-  str_P name;
+  uint8_t addr;			// I2C address
+  uint8_t mask;			// Sub-address mask
+  uint8_t regaddr;		// Identity register address
+  uint8_t id;			// Identity value to match
+  str_P name;			// Name and short description
 };
 
+/**
+ * Device name/description strings in program memory.
+ */
 const char adxl345[]  __PROGMEM = "ADXL345, Digital Accelermeter";
 const char at24cxx[]  __PROGMEM = "AT24CXX, Serial EEPROM";
 const char bmp085[]   __PROGMEM = "BMP085, Digital Pressure Sensor";
@@ -58,7 +61,7 @@ const char mpu60x0[]  __PROGMEM = "MPU-60X0, Motion Processing Unit";
 /**
  * Device table in program memory.
  */
-const tab_t devs[] __PROGMEM = {
+const tab_t dev_tab[] __PROGMEM = {
   { 0x1d, 0xff, 0,    0xe5, adxl345  },
   { 0x1e, 0xff, 0x0a, 0x48, hmc5883l },
   { 0x20, 0xf8, 0,       0, pcf8574  },
@@ -83,18 +86,26 @@ const tab_t devs[] __PROGMEM = {
 str_P 
 lookup(uint8_t addr, TWI::Driver* dev)
 {
-  for (uint8_t i = 0; i < membersof(devs); i++) {
-    if (pgm_read_byte(&devs[i].addr) == (addr & pgm_read_byte(&devs[i].mask))) {
-      uint8_t subaddr = pgm_read_byte(&devs[i].subaddr);
-      if (subaddr != 0) {
+  // Iterate over all devices in table
+  for (uint8_t i = 0; i < membersof(dev_tab); i++) {
+    uint8_t dev_addr = pgm_read_byte(&dev_tab[i].addr);
+    uint8_t dev_mask = pgm_read_byte(&dev_tab[i].mask);
+    // Check if device table address against the parameter address
+    if (dev_addr == (addr & dev_mask)) {
+      // Check the identity register address
+      uint8_t regaddr = pgm_read_byte(&dev_tab[i].regaddr);
+      if (regaddr != 0) {
+	// Read the register and compare with the expected value
 	uint8_t id = 0;
 	twi.begin(dev);
-	twi.write(subaddr);
+	twi.write(regaddr);
 	twi.read(&id, sizeof(id));
 	twi.end();
-	if (id != pgm_read_byte(&devs[i].id)) continue;
+	// Continue with the next table entry if no match
+	if (id != pgm_read_byte(&dev_tab[i].id)) continue;
       }
-      return ((str_P) pgm_read_word(&devs[i].name));
+      // Return the name/description string
+      return ((str_P) pgm_read_word(&dev_tab[i].name));
     }
   }
   return (NULL);
@@ -102,24 +113,25 @@ lookup(uint8_t addr, TWI::Driver* dev)
 
 void setup()
 {
+  // Bind the UART to en output stream for print out
   IOStream cout(&uart);
   uart.begin(9600);
+  // Iterate through all bus addresses
   for (uint8_t addr = 3; addr < 128; addr++) {
+    // Attempt to read from the device
     TWI::Driver dev(addr);
     twi.begin(&dev);
     uint8_t data;
     int count = twi.read(&data, sizeof(data));
     twi.end();
-    if (count == sizeof(data)) {
-      cout << PSTR("device = ") << hex << addr 
-	   << PSTR(":group = ") << (addr >> 3) << '.' << (addr & 0x07);
-      str_P name = lookup(addr, &dev);
-      if (name != NULL) cout << ':' << name;
-      cout << endl;
-    }
+    // Continue with the next address if there was no device
+    if (count != sizeof(data)) continue;
+    // Print information about the device
+    cout << PSTR("device = ") << hex << addr 
+	 << PSTR(":group = ") << (addr >> 3) << '.' << (addr & 0x07);
+    str_P name = lookup(addr, &dev);
+    if (name != NULL) cout << ':' << name;
+    cout << endl;
   }
 }
 
-void loop()
-{
-}

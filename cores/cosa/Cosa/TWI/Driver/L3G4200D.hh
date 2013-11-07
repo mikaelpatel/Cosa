@@ -92,7 +92,7 @@ protected:
       uint8_t BW:2;		// Bandwidth selection
       uint8_t DR:2;		// Output Data Rate selection
     };
-    ctrl_reg1_t() { as_uint8 = 0; }
+    ctrl_reg1_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
   enum {			// Data rate (table 22)
@@ -118,7 +118,7 @@ protected:
       uint8_t HPM:2;		// High Pass filter Mode Selection
       uint8_t reserved:2;	// Zero
     };
-    ctrl_reg2_t() { as_uint8 = 0; }
+    ctrl_reg2_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
   enum {			// High pass filter mode (table 26)
@@ -142,7 +142,7 @@ protected:
       uint8_t I1_Boot:1;	// Boot status available on INT1
       uint8_t I1_Int1:1;	// Interrupt enable
     };
-    ctrl_reg3_t() { as_uint8 = 0; }
+    ctrl_reg3_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
 
@@ -159,7 +159,7 @@ protected:
       uint8_t BLE:1;		// Big/Little Endian Data Selection
       uint8_t BDU:1;		// Block Data Update
     };
-    ctrl_reg4_t() { as_uint8 = 0; }
+    ctrl_reg4_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
 
@@ -175,7 +175,7 @@ protected:
       uint8_t FIFO_EN:1;	// FIFO enable
       uint8_t BOOT:1;		// Reboot memory content
     };
-    ctrl_reg5_t() { as_uint8 = 0; }
+    ctrl_reg5_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
 
@@ -194,7 +194,7 @@ protected:
       uint8_t ZOR:1;		// Z axis data overrun
       uint8_t XYZOR:1;		// X,Y,Z-axis data overrun
     };
-    status_reg_t() { as_uint8 = 0; }
+    status_reg_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
 
@@ -207,7 +207,7 @@ protected:
       uint8_t WTM:5;		// FIFO threshold. Watermark level setting
       uint8_t FM:3;		// FIFO mode selection
     };
-    fifo_ctrl_reg_t() { as_uint8 = 0; }
+    fifo_ctrl_reg_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
   enum {			// FIFO mode configuration (table 45)
@@ -229,7 +229,7 @@ protected:
       uint8_t OVRN:1;		// Overrun bit status
       uint8_t WTM:1;		// Watermark status
     };
-    fifo_src_reg_t() { as_uint8 = 0; }
+    fifo_src_reg_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
 
@@ -248,7 +248,7 @@ protected:
       uint8_t LIR:1;		// Latch Interrup Request
       uint8_t AND_OR:1;		// AND/OR combination of interrupt events
     };
-    int1_cfg_t() { as_uint8 = 0; }
+    int1_cfg_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
 
@@ -267,7 +267,7 @@ protected:
       uint8_t IA:1;		// Interrupt active
       uint8_t reserved:1;
     };
-    int1_src_t() { as_uint8 = 0; }
+    int1_src_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
 
@@ -280,7 +280,7 @@ protected:
       uint8_t value:7;		// Duration value
       uint8_t WAIT:1;		// Wait enable
     };
-    int1_duration_t() { as_uint8 = 0; }
+    int1_duration_t(uint8_t value = 0) { as_uint8 = value; }
     operator uint8_t() { return (as_uint8); }
   };
 

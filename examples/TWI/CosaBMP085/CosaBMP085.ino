@@ -32,45 +32,30 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
-// Digital pressure sensor
+// Digital temperature and pressure sensor
 BMP085 bmp;
 
 void setup()
 {
+  // Start trace output stream on the serial port
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaBMP085: started"));
-#if !defined(__ARDUINO_TINY__)
+
+  // Print some memory statistics
   TRACE(free_memory());
   TRACE(sizeof(TWI::Driver));
   TRACE(sizeof(BMP085));
-#endif
+
+  // Start the watchdog ticks and the pressure sensor
   Watchdog::begin();
-  bmp.begin(BMP085::ULTRA_LOW_POWER);
+  TRACE(bmp.begin(BMP085::ULTRA_LOW_POWER));
+  SLEEP(1);
 }
 
 void loop()
 {
-  static uint8_t mode = BMP085::ULTRA_LOW_POWER;
-  static uint8_t nr = 0;
-
-  // Read raw temperature and pressure sensors and calculate
-  uint32_t start = Watchdog::millis();
-  bmp.sample_temperature();
-  bmp.sample_pressure();
-  uint32_t stop = Watchdog::millis();
-
-  // Calculate and print values
-  trace << PSTR("BMP085(mode = ") << mode
-	<< PSTR(", temperature = ") << bmp.get_temperature()
-	<< PSTR(", pressure = ") << bmp.get_pressure()
-	<< PSTR(", delay = ") << (stop - start)
-	<< PSTR(")") << endl;
-
+  // Sample sensor and print temperature and pressure
+  bmp.sample();
+  trace << bmp << endl;
   SLEEP(2);
-
-  // Check if it is time to increment the operation mode
-  nr += 1;
-  if (nr & 0x03) return;
-  mode = (mode + 1) & 0x03;
-  bmp.begin((BMP085::Mode) mode);
 }

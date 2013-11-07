@@ -48,7 +48,7 @@ BMP085::begin(Mode mode)
   twi.end();
 
   // Adjust for little endien
-  swap(&m_param.ac1, &m_param.ac1, sizeof(m_param) / sizeof(int16_t));
+  swap<param_t>(&m_param);
   return (true);
 }
 
@@ -159,3 +159,11 @@ BMP085::read_pressure()
   return (true);
 }
 
+IOStream& 
+operator<<(IOStream& outs, BMP085& bmp)
+{
+  outs << PSTR("BMP085(temperature = ") << bmp.get_temperature()
+       << PSTR(", pressure = ") << bmp.get_pressure()
+       << PSTR(")");
+  return (outs);
+}

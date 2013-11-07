@@ -27,19 +27,28 @@
  */
 
 #include "Cosa/TWI/Driver/L3G4200D.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Memory.h"
 
-// Using sub-addres(1) on breakout board
+// Digital Gyroscope using sub-address(1) on breakout board
 L3G4200D gyroscope(1);
 
 void setup()
 {
+  // Start trace output stream on the serial port
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaL3G4200D: started"));
+
+  // Print some memory statistics
+  TRACE(free_memory());
+  TRACE(sizeof(TWI::Driver));
+  TRACE(sizeof(L3G4200D));
+
+  // Start the watchdog ticks and the gyroscope
   Watchdog::begin();
-  gyroscope.begin();
+  TRACE(gyroscope.begin());
 }
 
 void loop()

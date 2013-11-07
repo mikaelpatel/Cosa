@@ -93,7 +93,7 @@ HMC5883L::read_heading()
   if (count != sizeof(m_output)) return (false);
 
   // Adjust to little endian
-  swap(&m_output.x, &m_output.x, sizeof(m_output) / sizeof(int16_t));
+  swap<data_t>(&m_output);
 
   // Check if an overflow occured
   m_overflow = 
@@ -120,7 +120,7 @@ IOStream&
 operator<<(IOStream& outs, HMC5883L& compass)
 {
   if (compass.is_overflow()) {
-    outs << PSTR("HMC5883L(overflow)") << endl;
+    outs << PSTR("HMC5883L(overflow)");
   }
   else {
     HMC5883L::data_t value;
@@ -128,7 +128,7 @@ operator<<(IOStream& outs, HMC5883L& compass)
     outs << PSTR("HMC5883L(x = ") << value.x
 	 << PSTR(", y = ") << value.y
 	 << PSTR(", z = ") << value.z
-	 << PSTR(")") << endl;
+	 << PSTR(")");
   }
   return (outs);
 }

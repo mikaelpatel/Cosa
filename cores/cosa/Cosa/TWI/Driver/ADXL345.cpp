@@ -77,7 +77,6 @@ ADXL345::calibrate()
   calibrate(-value.x/4, -value.y/4, -value.z/4);
 }
 
-
 IOStream& 
 operator<<(IOStream& outs, ADXL345& accelerometer)
 {
@@ -86,7 +85,7 @@ operator<<(IOStream& outs, ADXL345& accelerometer)
   outs << PSTR("ADXL345(x = ") << value.x
        << PSTR(", y = ") << value.y
        << PSTR(", z = ") << value.z
-       << PSTR(")") << endl;
+       << PSTR(")");
   return (outs);
 }
 
