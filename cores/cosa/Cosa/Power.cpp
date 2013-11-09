@@ -25,13 +25,18 @@
 
 #include "Cosa/Power.hh"
 
+// Software disable low voltage detect (23 uA at 5 V)
+// #define BOD_DISABLE
+
 void
 Power::sleep(uint8_t mode)
 {
-  cli();
   set_sleep_mode(mode);
   sleep_enable();
-  sei();
+#if defined(BOD_DISABLE)
+  MCUCR = _BV(BODS) | _BV(BODSE);
+  MCUCR = _BV(BODS);
+#endif
   sleep_cpu();
   sleep_disable();
 }
