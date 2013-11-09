@@ -34,6 +34,10 @@
  *    a. Connected to VCC/GND, 32 uA
  *    b. Connected to RAW/GND, 840 uA
  *
+ * Arduino Lilypad, 8 Mhz, no modifications
+ * 1. Powered via FTDI USB/TTY adapter 5 V, 18 uA
+ * 2. Powered with LiPo 3,7 V, 16 uA
+ * 
  * This file is part of the Arduino Che Cosa project.
  */
 
