@@ -594,11 +594,7 @@ public:
    * @param[in] pin number.
    * @param[in] duty cycle (0..255)
    */
-  PWMPin(Board::PWMPin pin, uint8_t duty = 0) : 
-    OutputPin((Board::DigitalPin) pin) 
-  { 
-    set(duty); 
-  }
+  PWMPin(Board::PWMPin pin, uint8_t duty = 0);
 
   /**
    * Set duty cycle for pwm output pin.

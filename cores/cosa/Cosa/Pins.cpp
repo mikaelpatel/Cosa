@@ -92,6 +92,28 @@ OutputPin::write(uint16_t value, uint8_t bits, uint16_t us)
   }
 }
 
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
+  OutputPin((Board::DigitalPin) pin) 
+{ 
+  // PWM1(0A), PMW2(0A), Fast PWM, prescale 64
+  TCCR0A |= _BV(WGM01) | _BV(WGM00);
+  TCCR0B |= _BV(CS01) | _BV(CS00);
+
+#if defined(TCCR1A)
+  // PWM3(1A), PWM4(1B), PWM phase correct, 8-bit, prescale 64
+  TCCR1A |= _BV(WGM10);
+  TCCR1B |= _BV(CS11) | _BV(CS10);
+#endif
+  
+#if defined(TCCR2A)
+  // PWM0(2A), PWM5(2A), PWM phase correct, prescale 64
+  TCCR2A |= _BV(WGM20);
+  TCCR2B |= _BV(CS22);
+#endif
+
+  set(duty); 
+}
+
 #if defined(__ARDUINO_STANDARD__)
 
 uint8_t
@@ -130,7 +152,7 @@ PWMPin::set(uint8_t duty)
     OCR1A = duty;
     return;
   case Board::PWM4:
-    bit_set(TCCR1B, COM1B1);
+    bit_set(TCCR1A, COM1B1);
     OCR1B = duty;
     return;
   case Board::PWM5:
