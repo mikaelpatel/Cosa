@@ -92,29 +92,35 @@ OutputPin::write(uint16_t value, uint8_t bits, uint16_t us)
   }
 }
 
+#if defined(__ARDUINO_STANDARD__)
+
 PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
   OutputPin((Board::DigitalPin) pin) 
 { 
-  // PWM1(0A), PMW2(0A), Fast PWM, prescale 64
-  TCCR0A |= _BV(WGM01) | _BV(WGM00);
-  TCCR0B |= _BV(CS01) | _BV(CS00);
+  switch (pin) {
+  case Board::PWM1:
+  case Board::PWM2:
+    // PWM1(0B), PMW2(0A), Fast PWM, prescale 64
+    TCCR0A |= _BV(WGM01) | _BV(WGM00);
+    TCCR0B |= _BV(CS01) | _BV(CS00);
+    break;
 
-#if defined(TCCR1A)
-  // PWM3(1A), PWM4(1B), PWM phase correct, 8-bit, prescale 64
-  TCCR1A |= _BV(WGM10);
-  TCCR1B |= _BV(CS11) | _BV(CS10);
-#endif
+  case Board::PWM3:
+  case Board::PWM4:
+    // PWM3(1A), PWM4(1B), PWM phase correct, 8-bit, prescale 64
+    TCCR1A |= _BV(WGM10);
+    TCCR1B |= _BV(CS11) | _BV(CS10);
+    break;
   
-#if defined(TCCR2A)
-  // PWM0(2A), PWM5(2A), PWM phase correct, prescale 64
-  TCCR2A |= _BV(WGM20);
-  TCCR2B |= _BV(CS22);
-#endif
-
+  case Board::PWM0:
+  case Board::PWM5:
+    // PWM0(2B), PWM5(2A), PWM phase correct, prescale 64
+    TCCR2A |= _BV(WGM20);
+    TCCR2B |= _BV(CS22);
+    break;
+  }
   set(duty); 
 }
-
-#if defined(__ARDUINO_STANDARD__)
 
 uint8_t
 PWMPin::get_duty()
@@ -165,6 +171,41 @@ PWMPin::set(uint8_t duty)
 }
 
 #elif defined(__ARDUINO_MIGHTY__)
+
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
+  OutputPin((Board::DigitalPin) pin) 
+{ 
+  switch (pin) {
+  case Board::PWM0:
+  case Board::PWM1:
+    // PWM0(0A), PMW1(0A), Fast PWM, prescale 64
+    TCCR0A |= _BV(WGM01) | _BV(WGM00);
+    TCCR0B |= _BV(CS01) | _BV(CS00);
+    break;
+
+  case Board::PWM2:
+  case Board::PWM3:
+    // PWM2(3A), PWM3(3B) PWM phase correct, 8-bit, prescale 64
+    TCCR3A |= _BV(WGM30);
+    TCCR3B |= _BV(CS31) | _BV(CS30);
+    break;
+
+  case Board::PWM4:
+  case Board::PWM5:
+    // PWM5(1A), PWM4(1B), PWM phase correct, 8-bit, prescale 64
+    TCCR1A |= _BV(WGM10);
+    TCCR1B |= _BV(CS11) | _BV(CS10);
+    break;
+
+  case Board::PWM6:
+  case Board::PWM7:
+    // PWM6(2B), PWM7(2A), PWM phase correct, prescale 64
+    TCCR2A |= _BV(WGM20);
+    TCCR2B |= _BV(CS22);
+    break;
+  }
+  set(duty); 
+}
 
 uint8_t
 PWMPin::get_duty()
@@ -225,6 +266,50 @@ PWMPin::set(uint8_t duty)
 }
 
 #elif defined(__ARDUINO_MEGA__)
+
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
+  OutputPin((Board::DigitalPin) pin) 
+{ 
+  switch (pin) {
+  case Board::PWM2: 
+  case Board::PWM11:
+    // PWM2(0B), PMW11(0A), Fast PWM, prescale 64
+    TCCR0A |= _BV(WGM01) | _BV(WGM00);
+    TCCR0B |= _BV(CS01) | _BV(CS00);
+    break;
+
+  case Board::PWM9:
+  case Board::PWM10:
+    // PWM9(1A), PWM10(1B), PWM phase correct, 8-bit, prescale 64
+    TCCR1A |= _BV(WGM10);
+    TCCR1B |= _BV(CS11) | _BV(CS10);
+    break;
+    
+  case Board::PWM7: 
+  case Board::PWM8: 
+    // PWM7(2B), PWM8(2A), PWM phase correct, prescale 64
+    TCCR2A |= _BV(WGM20);
+    TCCR2B |= _BV(CS22);
+    break;
+
+  case Board::PWM3:
+  case Board::PWM0:
+  case Board::PWM1:
+    // PWM3(3A), PWM0(3B), PWM1(3C) PWM phase correct, 8-bit, prescale 64
+    TCCR3A |= _BV(WGM30);
+    TCCR3B |= _BV(CS31) | _BV(CS30);
+    break;
+
+  case Board::PWM4:
+  case Board::PWM5:
+  case Board::PWM6:
+    // PWM4(3A), PWM5(3B), PWM6(3C) PWM phase correct, 8-bit, prescale 64
+    TCCR4A |= _BV(WGM40);
+    TCCR4B |= _BV(CS41) | _BV(CS40);
+    break;
+  }
+  set(duty); 
+}
 
 uint8_t
 PWMPin::get_duty()
@@ -306,6 +391,14 @@ PWMPin::set(uint8_t duty)
 
 #elif defined(__ARDUINO_TINYX5__)
 
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
+  OutputPin((Board::DigitalPin) pin) 
+{ 
+  TCCR0A |= _BV(WGM01) | _BV(WGM00);
+  TCCR0B |= _BV(CS01)  | _BV(CS00);
+  set(duty); 
+}
+
 uint8_t
 PWMPin::get_duty()
 {
@@ -335,6 +428,24 @@ PWMPin::set(uint8_t duty)
 }
 
 #elif defined(__ARDUINO_TINYX4__)
+
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
+  OutputPin((Board::DigitalPin) pin) 
+{ 
+  switch (pin) {
+  case Board::PWM0:
+  case Board::PWM1:
+    TCCR0A |= _BV(WGM01) | _BV(WGM00);
+    TCCR0B |= _BV(CS01)  | _BV(CS00);
+    break;
+  case Board::PWM2:
+  case Board::PWM3:
+    TCCR1A |= _BV(WGM10);
+    TCCR1B |= _BV(CS11) | _BV(CS10);
+    break;
+  }
+  set(duty); 
+}
 
 uint8_t
 PWMPin::get_duty()

@@ -32,7 +32,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
-PWMPin ledPin(Board::PWM5);
+PWMPin ledPin(Board::PWM0);
 
 void setup()
 {
