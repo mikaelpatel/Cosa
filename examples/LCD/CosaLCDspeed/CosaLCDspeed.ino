@@ -25,6 +25,18 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 
+// Enable power down during testing and delay
+// #define USE_LOW_POWER
+#if defined(USE_LOW_POWER)
+#undef SLEEP
+#define SLEEP(x)				\
+  do {						\
+    Power::all_disable();			\
+    Watchdog::delay(x * 1024);			\
+    Power::all_enable();			\
+  } while (0)
+#endif
+
 // Select the LCD device for the benchmark
 // #include "Cosa/LCD/Driver/PCD8544.hh"
 // PCD8544 lcd;
@@ -43,8 +55,8 @@
 // HD44780::SR4W port;
 // HD44780::ERM1602_5 port;
 // HD44780::MJKDZ port;
-HD44780::GYIICLCD port;
-// HD44780::DFRobot port;
+// HD44780::GYIICLCD port;
+HD44780::DFRobot port;
 HD44780 lcd(&port);
 
 // Benchmarks
@@ -59,16 +71,12 @@ void write_pos(uint16_t nr);
 
 // Measurement support
 void measure(const char* name, benchmark_t fn, uint16_t nr);
-#define MEASURE(fn,nr)						\
-  do {								\
-    measure(PSTR(#fn),fn,nr);					\
-    SLEEP(4);							\
-  } while (0)
+#define MEASURE(fn,nr) measure(PSTR(#fn),fn,nr)
 
 void setup()
 {
   RTC::begin();
-  Watchdog::begin();
+  Watchdog::begin(16, SLEEP_MODE_PWR_DOWN);
   lcd.begin();
   trace.begin(&lcd, PSTR("CosaLCDspeed:"));
 #if defined(__COSA_VLCD_HH__)
@@ -184,13 +192,21 @@ void write_pos(uint16_t nr)
 
 void measure(const char* name, benchmark_t fn, uint16_t nr)
 {
-  lcd.display_clear();
-  lcd.puts_P(name);
+#if defined(USE_LOW_POWER)
+  lcd.display_off();
+  lcd.backlight_off();
+#endif
   uint32_t start = RTC::micros();
   fn(nr);
   uint32_t us = (RTC::micros() - start) / nr;
   uint32_t ops = 1000000L / us;
+  lcd.display_clear();
+  lcd.puts_P(name);
   trace << clear << name << endl;
   trace << ops << PSTR(" ops, ") << us << PSTR(" us");
+#if defined(USE_LOW_POWER)
+  lcd.backlight_on();
+  lcd.display_on();
+#endif
+  SLEEP(4);
 }
-

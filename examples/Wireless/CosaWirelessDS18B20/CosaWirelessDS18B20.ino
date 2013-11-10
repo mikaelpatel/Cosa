@@ -25,7 +25,7 @@
  * devices over the Wireless Interface and devices. 
  *
  * @section Note
- * This sketch is designed to run on an ATtiny85 running on the
+ * This sketch is designed to also run on an ATtiny85 running on the
  * internal 8 MHz clock. 
  *
  * @section Circuit
@@ -34,6 +34,12 @@
  * The pullup resistor (4K7) may be connected to D4 to allow active power
  * control. This sketch supports parasite powered DS18B20 devices.
  * Connect the DS18B20 VCC to GND. 
+ *
+ * @section Measurements
+ * Arduino Mini Pro 16 Mhz (Power LED removed).
+ * Power	Idle	Sampling	Transmitting	
+ * LiPo 3.9 V	40 uA	1.3 mA 		6 mA (RF433).
+ * FTDI 5,1 V	190 uA	1.5 mA		10 mA (RF433).
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -45,28 +51,28 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
-// Select Wireless device driver (network = 0xC05A, device = 0x02)
+// Select Wireless device driver with network = 0xC05A, device = 0x02, 
+// and tiny-device = 0x03.
+
 // #include "Cosa/Wireless/Driver/CC1101.hh"
 // CC1101 rf(0xC05A, 0x02);
 
-#include "Cosa/Wireless/Driver/NRF24L01P.hh"
-NRF24L01P rf(0xC05A, 0x02);
+// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
+// NRF24L01P rf(0xC05A, 0x02);
 
-// #include "Cosa/Wireless/Driver/VWI.hh"
-// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-// VirtualWireCodec codec;
-// #if defined(__ARDUINO_TINYX5__)
-// VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
-// #else
-// VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
-// #endif
+#include "Cosa/Wireless/Driver/VWI.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+VirtualWireCodec codec;
+#if defined(__ARDUINO_TINYX5__)
+VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
+#else
+VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
+#endif
 
 // Connect to one-wire device; Assuming there are two sensors
 OWI owi(Board::D3);
 DS18B20 indoors(&owi);
-#if !defined(__ARDUINO_TINY__)
 DS18B20 outdoors(&owi);
-#endif
 
 // Active pullup
 OutputPin pw(Board::D4);
@@ -81,16 +87,13 @@ void setup()
   rf.begin();
   rf.powerdown();
 
-  // Connect to the temperature sensor
+  // Connect to the temperature sensors
   pw.on();
   indoors.connect(0);
-#if !defined(__ARDUINO_TINY__)
   outdoors.connect(1);
-#endif
   pw.off();
   
   // Put the hardware in power down
-  AnalogPin::powerdown();
   Power::all_disable();
 }
 
@@ -112,41 +115,25 @@ void loop()
   pw.on();
   DS18B20::convert_request(&owi, 12, true);
   indoors.read_scratchpad();
-#if !defined(__ARDUINO_TINY__)
   outdoors.read_scratchpad();
-#endif
   pw.off();
   
   // Turn on necessary hardware modules
-  Power::timer0_enable();
-  Power::timer1_enable();
-  Power::adc_enable();
-#if !defined(__ARDUINO_TINY__)
-  Power::spi_enable();
-#endif
-  AnalogPin::powerup();
+  Power::all_enable();
 
   // Initiate the message with measurements
   dt_msg_t msg;
   msg.nr = nr++;
   msg.indoors = indoors.get_temperature();
-#if !defined(__ARDUINO_TINY__)
   msg.outdoors = outdoors.get_temperature();
-#endif
   msg.battery = AnalogPin::bandgap(1100);
 
   // Broadcast the message and power down after completion
   rf.broadcast(DIGITAL_TEMP_TYPE, &msg, sizeof(msg));
   rf.powerdown();
 
-  // Turn off hardware and deep sleep until next sample (period 2 s)
-  AnalogPin::powerdown();
-  Power::adc_disable();
-  Power::timer1_disable();
-  Power::timer0_disable();
-#if !defined(__ARDUINO_TINY__)
-  Power::spi_disable();
-#endif
-  SLEEP(2);
+  // Turn off hardware and deep sleep until next sample (period 5 s)
+  Power::all_disable();
+  SLEEP(5);
 }
 

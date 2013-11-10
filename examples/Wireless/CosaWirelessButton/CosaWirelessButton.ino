@@ -35,20 +35,20 @@
 #include "Cosa/RTC.hh"
 
 // Select Wireless device driver (network = 0xC05A, device = 0x02)
-#include "Cosa/Wireless/Driver/CC1101.hh"
-CC1101 rf(0xC05A, 0x02);
+// #include "Cosa/Wireless/Driver/CC1101.hh"
+// CC1101 rf(0xC05A, 0x02);
 
 // #include "Cosa/Wireless/Driver/NRF24L01P.hh"
 // NRF24L01P rf(0xC05A, 0x02);
 
-// #include "Cosa/Wireless/Driver/VWI.hh"
-// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-// VirtualWireCodec codec;
-// #if defined(__ARDUINO_TINYX5__)
-// VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
-// #else
-// VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
-// #endif
+#include "Cosa/Wireless/Driver/VWI.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+VirtualWireCodec codec;
+#if defined(__ARDUINO_TINYX5__)
+VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
+#else
+VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
+#endif
 
 // Connect button between ground and pin TinyX4 EXT0/D10, TinyX5
 // EXT0/D2, Mega EXT2/D29 and others to Arduino EXT1 which is
@@ -82,14 +82,12 @@ AnalogPin temperature(Board::A3);
 void setup()
 {
   // Initiate Watchdog with 512 ms period. Start RTC and Wireless device
-  Watchdog::begin(512);
   RTC::begin();
   rf.begin();
   
   // Put the hardware in power down
-  AnalogPin::powerdown();
   Power::all_disable();
-  Watchdog::end();
+  rf.powerdown();
 
   // Allow wakeup on button
   wakeup.enable();  
@@ -111,7 +109,6 @@ void loop()
 
   // Wake up the hardware
   Power::all_enable();
-  AnalogPin::powerup();
 
   // Construct the message with sample values and broadcast
   dlt_msg_t msg;
@@ -123,11 +120,12 @@ void loop()
 
   // Put the hardware back to sleep
   rf.powerdown();
-  AnalogPin::powerdown();
   Power::all_disable();
 
   // Debounce the button before allowing further interrupts. This also
   // gives periodic (1 second) message send when the button is kept low.
+  Watchdog::begin(512, SLEEP_MODE_PWR_DOWN);
   Watchdog::delay(1024);
+  Watchdog::end();
   wakeup.enable();  
 }

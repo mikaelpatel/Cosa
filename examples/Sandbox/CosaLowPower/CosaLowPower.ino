@@ -124,5 +124,6 @@ void loop()
   led.off();
 #endif
 
+  Power::all_disable();
   wakeup.enable();  
 }

@@ -27,6 +27,7 @@
 #define __COSA_POWER_HH__
 
 #include "Cosa/Types.h"
+#include "Cosa/Bits.h"
 #include <avr/power.h>
 
 /**
@@ -46,8 +47,17 @@ public:
    */
   static void sleep(uint8_t mode = SLEEP_MODE_IDLE);
 
-  static void adc_enable() { power_adc_enable(); }
-  static void adc_disable() { power_adc_disable(); }
+  static void adc_enable() 
+  { 
+    power_adc_enable(); 
+    bit_set(ADCSRA, ADEN);
+  }
+
+  static void adc_disable() 
+  { 
+    bit_clear(ADCSRA, ADEN);
+    power_adc_disable(); 
+  }
 
   static void timer0_enable() { power_timer0_enable(); }
   static void timer0_disable() { power_timer0_disable(); }
@@ -104,8 +114,17 @@ public:
 #endif
 #endif
 
-  static void all_enable() { power_all_enable(); }
-  static void all_disable() { power_all_disable(); }
+  static void all_enable() 
+  { 
+    power_all_enable(); 
+    bit_set(ADCSRA, ADEN);
+  }
+
+  static void all_disable() 
+  { 
+    bit_clear(ADCSRA, ADEN);
+    power_all_disable(); 
+  }
 };
 
 #endif

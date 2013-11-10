@@ -67,13 +67,11 @@ DS18B20::convert_request(OWI* owi, uint8_t resolution, bool parasite)
   if (!owi->reset()) return (false);
   owi->write(OWI::SKIP_ROM);
   owi->write(CONVERT_T, CHARBITS, parasite);
-  if (resolution > 0) {
-    if (resolution < 9) resolution = 9;
-    else if (resolution > 12) resolution = 12;
-    uint16_t ms = (MAX_CONVERSION_TIME >> (12 - resolution));
-    Watchdog::delay(ms);
-    if (parasite) owi->power_off();
-  }
+  if (resolution < 9) resolution = 9;
+  else if (resolution > 12) resolution = 12;
+  uint16_t ms = (MAX_CONVERSION_TIME >> (12 - resolution));
+  Watchdog::delay(ms);
+  if (parasite) owi->power_off();
   return (true);
 }
 
