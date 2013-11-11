@@ -557,12 +557,14 @@ public:
   CC1101(uint16_t net, uint8_t dev, 
 #if defined(__ARDUINO_TINYX4__)
 	 Board::DigitalPin csn = Board::D2,
+	 Board::ExternalInterruptPin irq = Board::EXT0) :
 #elif defined(__ARDUINO_MEGA__)
 	 Board::DigitalPin csn = Board::D53,
+	 Board::ExternalInterruptPin irq = Board::EXT4) :
 #else
 	 Board::DigitalPin csn = Board::D10,
-#endif
 	 Board::ExternalInterruptPin irq = Board::EXT0) :
+#endif
     SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
     Wireless::Driver(net, dev),
     m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),

@@ -97,8 +97,7 @@ CC1101::IRQPin::on_interrupt(uint16_t arg)
 void 
 CC1101::await(Mode mode)
 {
-  while (read_status().mode != mode) 
-    Power::sleep(m_mode);
+  while (read_status().mode != mode) Watchdog::delay(24);
 }
 
 bool
