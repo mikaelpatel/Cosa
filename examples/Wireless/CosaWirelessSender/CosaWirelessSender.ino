@@ -32,21 +32,30 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
+// Allow multiple senders
+#if defined(__ARDUINO_TINY__)
+#define DEVICE 0x04
+#elif defined(__ARDUINO_MEGA__)
+#define DEVICE 0x03
+#else
+#define DEVICE 0x02
+#endif
+
 // Select Wireless device driver
-// #include "Cosa/Wireless/Driver/CC1101.hh"
-// CC1101 rf(0xC05A, 0x02);
+#include "Cosa/Wireless/Driver/CC1101.hh"
+CC1101 rf(0xC05A, DEVICE);
 
 // #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-// NRF24L01P rf(0xC05A, 0x02);
+// NRF24L01P rf(0xC05A, DEVICE);
 
-#include "Cosa/Wireless/Driver/VWI.hh"
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-VirtualWireCodec codec;
-#if defined(__ARDUINO_TINYX5__)
-VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
-#else
-VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
-#endif
+// #include "Cosa/Wireless/Driver/VWI.hh"
+// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+// VirtualWireCodec codec;
+// #if defined(__ARDUINO_TINYX5__)
+// VWI rf(0xC05A, DEVICE, 4000, Board::D1, Board::D0, &codec);
+// #else
+// VWI rf(0xC05A, DEVICE, 4000, Board::D7, Board::D8, &codec);
+// #endif
 
 void setup()
 {
