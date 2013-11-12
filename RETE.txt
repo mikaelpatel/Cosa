@@ -1,8 +1,8 @@
 RETE: COSA DATA DISTRIBUTION AND NETWORK MANAGEMENT PROTOCOL
 
 Author:	       Mikael Patel
-Date:	       2013-10-28
-Rev.:	       1.0.2
+Date:	       2013-11-12
+Rev.:	       1.0.3
 
 This document is a short description of the messages in the Cose data
 distribution and network mangement protocol RETE. The protocol is
@@ -52,13 +52,12 @@ request and possible return values from the function. APPLY may be
 seen as generalization of the PUT request with a response with the
 result. 
 
-6:PUBLISH(network, device, prod-id, path, value)
+6:PUBLISH(network, device, idenity, path, value)
 
-The PUBLISH message is a message sent from a sensor node. A product
-identity together with attribute path and value are given. Receiving
-nodes may SUBSCRIBE to messages by filtering this message
-type. Filtering may be achieve on network, device, product identity  
-and path. 
+The PUBLISH message is a message sent from a sensor node. An identity
+together with attribute path and value are given. Receiving nodes may
+SUBSCRIBE to messages by filtering this message type. Filtering may be
+achieve on network, device, identity and path. 
 
 ENCODING
 
@@ -67,19 +66,47 @@ ENCODING
 The messages are encoded in the RETE message type sequence. The
 numbers are the indexies. 
 
-2. ADDRESSING(uint16_t, uint8_t)
+2. ADDRESSING(uint16_t network, uint8_t device)
 
 The network/device addressing is part of the parameters to the
 Wireless interface.
 
-3. PATH(uint8_t, {uint8_t*})
+3. PATH(uint8_t length, {uint8_t index*})
 
-The path parameter is a length(uint8_t) prefixed sequence of
-indexies(uint8_t) in the attribute tree. 
+The path parameter is a length prefixed sequence of indexies(uint8_t)
+in the attribute tree. The path may be viewed as a protocol family
+unique key to an attribute or set of attributes.
 
-4. PRODUCT IDENTITY(uint16_t)
+4. IDENTITY(uint16_t family,vendor,serialnr)
 
-A product identity(uint16_t) is used to identify the root of a path
-within a given attribute tree. The product identity is the key to the
-MIB. 
+The family code is used to identity the root of a path within a given
+attribute tree. The family code is the key to the MIB. The individual
+device number is composed of the vendor identity and a serial number. 
+
+5. DATA ENCODING
+
+RETE does not defined to encoding of data (i.e. attribute
+values). Most wireless sensor data are small in size (less than 32
+bytes) and there is no gain by encoding. 
+
+From a security point of view it is very important to encrypt at least
+registry updates. If there are actuators directly listening to sensor
+data the sensor data publish must also be encrypted to reduce
+tampering. With the limited amount of processing power and memory in
+very small embedded wireless sensor efficient encryption algorithms
+are difficult to find. Cosa supports RC4 and Vigenere which both
+require very little resources to implement and are extremly fast (< 10
+us per byte). 
+
+LOW POWER CONSIDERATION
+
+In battery powered wireless sensor networks it is important to
+consider low power design of the wireless protocol. The transceiver
+must be turned off and the device put in power down state as often as
+possible. 
+
+For a periodically reporting sensor it is natural to have a listening
+period directly following the sensor data transmission. The further
+reduce transmission it is possible to synchronize the sensors to a
+controller/rounter pulse (i.e. beacon). 
 
