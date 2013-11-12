@@ -30,10 +30,10 @@
 
 /**
  * Simple class for fixed point number representation.
+ * @param[in] POINT fixed point binary point.
  */
+template <uint8_t POINT>
 class FixedPoint {
-public:
-  const uint8_t POINT;
 private:
   int16_t m_integer;
   uint16_t m_fraction;
@@ -41,12 +41,10 @@ public:
   /** 
    * Construct fixed point integer with given value and binary point.
    * @param[in] value fixed point binary number.
-   * @param[in] point fixed point binary point.
    */
-  FixedPoint(int16_t value, uint8_t point):
-    POINT(point),
-    m_integer(value >> point),
-    m_fraction((value < 0 ? -value : value) & ~(-1 << point))
+  FixedPoint(int16_t value):
+    m_integer(value >> POINT),
+    m_fraction((value < 0 ? -value : value) & ~(-1 << POINT))
   {
   }
 
@@ -76,5 +74,20 @@ public:
    */
   uint16_t get_fraction(uint8_t scale);
 };
+
+template<uint8_t POINT>
+uint16_t 
+FixedPoint<POINT>::get_fraction(uint8_t scale)
+{
+  uint16_t half = 5;
+  uint16_t result = 0;
+  if (scale == 0) return (m_fraction);
+  while (--scale) 
+    half = (half << 3) + (half << 1);
+  for (uint8_t bit = (1 << (POINT - 1)); bit; bit >>= 1, half >>= 1)
+    if (bit & m_fraction)
+      result += half;
+  return (result);
+}
 
 #endif
