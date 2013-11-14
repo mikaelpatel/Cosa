@@ -238,7 +238,7 @@ IOStream::Device::puts_P(const char* s)
 }
 
 int 
-IOStream::Device::write(void* buf, size_t size) 
+IOStream::Device::write(const void* buf, size_t size) 
 { 
   char* ptr = (char*) buf;
   size_t n = 0;
