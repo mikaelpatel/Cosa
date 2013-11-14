@@ -370,5 +370,20 @@ swap(int32_t value)
 #define ntoh(x) swap(x)
 #define hton(x) swap(x)
 
+/**
+ * Template map function for given class/data type.
+ * @param[in] T class value to map.
+ * @param[in] x value to map.
+ * @param[in] in_min minimum value in input range.
+ * @param[in] in_max maximum value in input range.
+ * @param[in] out_min minimum value in output range.
+ * @param[in] out_max maximum value in output range.
+ * @return mapping
+ */
+template<class T>
+T map(T x, T in_min, T in_max, T out_min, T out_max)
+{
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 #endif
 
