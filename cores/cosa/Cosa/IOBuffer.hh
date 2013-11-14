@@ -123,6 +123,22 @@ public:
    * @return zero(0) or negative error code.
    */
   virtual int flush(uint8_t mode = SLEEP_MODE_IDLE);
+
+  /**
+   * Empty the buffer.
+   */
+  void empty()
+  {
+    m_head = m_tail = 0;
+  }
+
+  /**
+   * Cast iobuffer to a character pointer.
+   */
+  operator const char*()
+  {
+    return (&m_buffer[m_tail + 1]);
+  }
 };
 
 template <uint8_t SIZE>
