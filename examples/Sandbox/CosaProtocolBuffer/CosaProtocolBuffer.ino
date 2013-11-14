@@ -34,9 +34,10 @@
 #define TEST_RANGE
 #define TEST_LIMITS
 #define TEST_STRUCT
+#define TEST_EXAMPLES
 
-IOBuffer<32> buf;
-ProtocolBuffer pb(&buf, &buf);
+IOBuffer<32> iob;
+ProtocolBuffer pb(&iob, &iob);
 
 void setup()
 {
@@ -50,7 +51,7 @@ void setup()
 
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaProtocolBuffer: started"));
-  TRACE(sizeof(buf));
+  TRACE(sizeof(iob));
   TRACE(sizeof(pb));
 
 #if defined(TEST_LIMITS)
@@ -170,6 +171,109 @@ void setup()
   memset(buf, 0, sizeof(buf));
   ASSERT(pb.read(buf, sizeof(buf)) == sizeof(foo));
   ASSERT(memcmp(buf, &foo, sizeof(foo)) == 0);
+#endif
+
+#if defined(TEST_EXAMPLES)
+  // Examples from Google Developers Protocol Buffers Encoding 
+  // https://developers.google.com/protocol-buffers/docs/encoding
+  //
+  // A SIMPLE MESSAGE
+  //
+  //   message Test1 {
+  //     required int32 a = 1;
+  //   }
+  // 
+  // In an application, you create a Test1 message and set a to
+  // 150. You then serialize the message to an output stream. If you
+  // were able to examine the encoded message, you'd see three bytes:  
+  u = 150;
+  ASSERT(pb.write(1, u) == 3);
+  trace.print((const char*) iob, iob.available(), IOStream::hex);
+  iob.empty();
+  // Result: 08 96 01
+  // 
+  // MORE VALUE TYPES: SIGNED INTEGER
+  // 
+  // ZigZag encoding maps signed integers to unsigned integers so that
+  // numbers with a small absolute value (for instance, -1) have a
+  // small varint encoded value too. It does this in a way that
+  // "zig-zags" back and forth through the positive and negative
+  // integers, so that -1 is encoded as 1, 1 is encoded as 2, -2 is
+  // encoded as 3, and so on.
+  v = -1;
+  ASSERT(pb.write(1, v) == 2);
+  trace.print((const char*) iob, iob.available(), IOStream::hex);
+  iob.empty();
+  // Result: 08 01
+  v = -2;
+  ASSERT(pb.write(1, v) == 2);
+  trace.print((const char*) iob, iob.available(), IOStream::hex);
+  iob.empty();
+  // Result: 08 03
+  //
+  // MORE VALUE TYPES: STRINGS
+  //
+  // A wire type of 2 (length-delimited) means that the value is a
+  // varint encoded length followed by the specified number of bytes
+  // of data.  
+  //
+  //   message Test2 {
+  //     required string b = 2;
+  //   }
+  // 
+  // Setting the value of b to "testing".
+  const char b[] = "testing";
+  ASSERT(pb.write(2, b, strlen(b)) == strlen(b) + 2);
+  trace.print((const char*) iob, iob.available(), IOStream::hex);
+  iob.empty();
+  // Result: 12 07 74 65 73 74 69 6e 67
+  //
+  // EMBEDDED MESSAGES
+  //
+  // Here's a message definition with an embedded message of our
+  // example type, Test1:  
+  // 
+  //   message Test3 {
+  //     required Test1 c = 3;
+  //   }
+  // 
+  // And here's the encoded version, again with the Test1's a field
+  // set to 150:  
+  IOBuffer<32> tmp;
+  ProtocolBuffer c(&tmp, &tmp);
+  u = 150;
+  ASSERT(c.write(1, u) == 3);
+  ASSERT(pb.write(3, (const char*) tmp, tmp.available()) == 
+	 tmp.available() + 2);
+  trace.print((const char*) iob, iob.available(), IOStream::hex);
+  iob.empty();
+  tmp.empty();
+  // Result: 1a 03 08 96 01
+  //
+  // REPEATED ELEMENTS
+  // 
+  // Version 2.1.0 introduced packed repeated fields, which are
+  // declared like repeated fields but with the special [packed=true]
+  // option. These function like repeated fields, but are encoded
+  // differently. A packed repeated field containing zero elements
+  // does not appear in the encoded message. Otherwise, all of the
+  // elements of the field are packed into a single key-value pair
+  // with wire type 2 (length-delimited). Each element is encoded the
+  // same way it would be normally, except without a tag preceding it.  
+  // 
+  //   message Test4 {
+  //     repeated int32 d = 4 [packed=true];
+  //   }
+  //
+  // Now let's say you construct a Test4, providing the values 3, 270,
+  // and 86942 for the repeated field d. 
+  ASSERT(c.write(3UL) == 1);
+  ASSERT(c.write(270UL) == 2);
+  ASSERT(c.write(86942UL) == 3);
+  ASSERT(pb.write(4, (const char*) tmp, tmp.available()) == 
+	 tmp.available() + 2);
+  trace.print((const char*) iob, iob.available(), IOStream::hex);
+  // Result: 22 06 03 8e 02 9e a7 05 
 #endif
 }
 

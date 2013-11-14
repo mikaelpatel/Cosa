@@ -35,42 +35,9 @@ ProtocolBuffer::getchar()
 }
 
 int 
-ProtocolBuffer::read(uint8_t& tag, Type& type)
+ProtocolBuffer::write(uint32_t value)
 {
-  uint8_t data = getchar();
-  tag = (data >> 3);
-  type = (Type) (data & 0x7);
-  return (type <= FIXED32);
-}
-
-int 
-ProtocolBuffer::read(int32_t& value)
-{
-  uint8_t data = getchar();
-  int32_t res = (data & 0x7f) >> 1;
-  bool more = (data & 0x80);
-  bool neg = (data & 1);
-  int cnt = 1;
-  int pos = 6;
-  while (more) {
-    data = getchar();
-    more = (data & 0x80);
-    res |= (((uint32_t) (data & 0x7f)) << pos);
-    pos += 7;
-    cnt += 1;
-    if (cnt > (int) (sizeof(value) + 1)) return (-1);
-  }
-  if (neg) res = ~res;
-  value = res;
-  return (cnt);
-}
-
-int 
-ProtocolBuffer::write(uint8_t tag, uint32_t value)
-{
-  if (tag & 0xe0) return (-1);
-  putchar(tag << 3 | VARINT);
-  int res = 1;
+  int res = 0;
   do {
     uint8_t data = value & 0x7f;
     value = value >> 7;
@@ -114,15 +81,6 @@ ProtocolBuffer::read(void* buf, uint8_t count)
 }
 
 int 
-ProtocolBuffer::write(uint8_t tag, const void* buf, uint8_t count)
-{
-  if (tag & 0xe0) return (-1);
-  if (putchar(tag << 3 | LENGTH_DELIMITED) < 0) return (-1);
-  if (putchar(count) < 0) return (-1);
-  return (write(buf, count) + 2);
-}
-
-int 
 ProtocolBuffer::read(float32_t& value)
 {
   uint8_t size = sizeof(value);
@@ -131,10 +89,3 @@ ProtocolBuffer::read(float32_t& value)
   return (sizeof(value));
 }
 
-int 
-ProtocolBuffer::write(uint8_t tag, float32_t value)
-{
-  if (tag & 0xe0) return (-1);
-  if (putchar(tag << 3 | FIXED32) < 0) return (-1);
-  return (write(&value, sizeof(value)) + 1);
-}
