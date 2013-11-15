@@ -30,8 +30,12 @@
 #include "Cosa/IOStream.hh"
 
 /**
- * Google Protocol Buffers data stream encoder/decoder. Adapted to
+ * Google Protocol Buffers data stream encoder/decoder. Adapted for
  * AVR/8-bit processors to allow simple data exchange with hosts.
+ * Implements encoding and decoding of signed/unsigned integers and
+ * floating point up to 32-bits. 64-bit integers and double are not
+ * supported. Support length delimited blocks from both SRAM and
+ * PROGMEM.
  */
 class ProtocolBuffer {
 public:
@@ -39,12 +43,13 @@ public:
    * Encoding type
    */
   enum Type {
-    VARINT,
-    FIXED64,
-    LENGTH_DELIMITED,
-    START_GROUP,
-    END_GROUP,
-    FIXED32
+    VARINT,		// int8..32, uint8..32, bool, enum
+    FIXED64,		// not supported
+    LENGTH_DELIMITED,	// string, bytes, embedded messages, 
+    			// and packed repeated fields	
+    START_GROUP,	// not supported, deprecated
+    END_GROUP,		// not supported, deprecated
+    FIXED32		// float
   } __attribute__((packed));
 
   /** Max value of tag */
@@ -57,22 +62,6 @@ protected:
   /** Output stream */
   IOStream::Device* m_outs;
 
-  /**
-   * Read next byte from input stream.
-   * @return next byte or negative error code.
-   */
-  int getchar();
-
-  /**
-   * Write byte from input stream.
-   * @param[in] c character to write.
-   * @return bytes written or negative error code.
-   */
-  int putchar(char c)
-  {
-    return (m_outs->putchar(c));
-  }
-
 public:
   /**
    * Construct stream with given device. Default is the null device.
@@ -84,6 +73,22 @@ public:
     m_outs(outs)
   {}
   
+  /**
+   * Read next byte from the input stream.
+   * @return next byte or negative error code.
+   */
+  int getchar();
+
+  /**
+   * Write byte to the output stream.
+   * @param[in] c character to write.
+   * @return bytes written or negative error code.
+   */
+  int putchar(char c)
+  {
+    return (m_outs->putchar(c));
+  }
+
   /**
    * Read tag and type from input stream. Return number of bytes 
    * read or negative error code.
@@ -193,8 +198,18 @@ public:
    */
   int write(const void* buf, uint8_t count)
   {
+    if (m_outs == NULL) return (-1);
     return (m_outs->write(buf, count));
   }
+
+  /**
+   * Write count number of bytes from given buffer in program
+   * memory. Returns number of bytes written or negative error code.
+   * @param[in] buf pointer to buffer in program memory.
+   * @param[in] count number of bytes in buffer.
+   * @return byte written or negative error code.
+   */
+  int write_P(const void* buf, uint8_t count);
 
   /**
    * Write given signed integer value and tag into the output stream. 
@@ -255,7 +270,21 @@ public:
   {
     if (write(tag, LENGTH_DELIMITED) < 0) return (-1);
     if (putchar(count) < 0) return (-1);
-    if (write(buf, count) < 0) return (-1);
+    int res = write(buf, count);
+    if (res != count) return (-1);
+    return (count + 2);
+  }
+  int write(uint8_t tag, const char* str)
+  {
+    return (write(tag, str, strlen(str)));
+  }
+  int write_P(uint8_t tag, const char* str)
+  {
+    if (write(tag, LENGTH_DELIMITED) < 0) return (-1);
+    uint8_t count = strlen_P(str);
+    if (putchar(count) < 0) return (-1);
+    int res = write_P(str, count);
+    if (res != count) return (-1);
     return (count + 2);
   }
 

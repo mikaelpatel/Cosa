@@ -69,6 +69,15 @@ ProtocolBuffer::read(uint32_t& value)
 }
 
 int 
+ProtocolBuffer::write_P(const void* buf, uint8_t count)
+{
+  int res = count;
+  const uint8_t* bp = (const uint8_t*) buf;
+  while (count--) putchar(pgm_read_byte(bp++));
+  return (res);
+}
+
+int 
 ProtocolBuffer::read(void* buf, uint8_t count)
 {
   uint8_t size = getchar();

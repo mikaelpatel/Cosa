@@ -30,17 +30,18 @@
 #include "Cosa/ProtocolBuffer.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Memory.h"
 
+// Selectable test suites
 #define TEST_RANGE
 #define TEST_LIMITS
 #define TEST_STRUCT
 #define TEST_EXAMPLES
 
-IOBuffer<32> iob;
-ProtocolBuffer pb(&iob, &iob);
-
 void setup()
 {
+  IOBuffer<32> iob;
+  ProtocolBuffer pb(&iob, &iob);
   static char s[] = "Google Protocol Buffers";
   ProtocolBuffer::Type type;
   char buf[32];
@@ -48,9 +49,11 @@ void setup()
   float32_t f;
   uint32_t u;
   int32_t v;
+  int count;
 
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaProtocolBuffer: started"));
+  TRACE(free_memory());
   TRACE(sizeof(iob));
   TRACE(sizeof(pb));
 
@@ -174,7 +177,7 @@ void setup()
 #endif
 
 #if defined(TEST_EXAMPLES)
-  // Examples from Google Developers Protocol Buffers Encoding 
+  // From Google Developers Protocol Buffers Encoding 
   // https://developers.google.com/protocol-buffers/docs/encoding
   //
   // A SIMPLE MESSAGE
@@ -189,8 +192,12 @@ void setup()
   u = 150;
   ASSERT(pb.write(1, u) == 3);
   trace.print((const char*) iob, iob.available(), IOStream::hex);
-  iob.empty();
   // Result: 08 96 01
+  ASSERT(pb.read(tag, type) == 1);
+  ASSERT(tag == 1 && type == ProtocolBuffer::VARINT);
+  u = 0;
+  ASSERT(pb.read(u) == 2);
+  ASSERT(u == 150);
   // 
   // MORE VALUE TYPES: SIGNED INTEGER
   // 
@@ -203,13 +210,22 @@ void setup()
   v = -1;
   ASSERT(pb.write(1, v) == 2);
   trace.print((const char*) iob, iob.available(), IOStream::hex);
-  iob.empty();
   // Result: 08 01
+  ASSERT(pb.read(tag, type) == 1);
+  ASSERT(tag == 1 && type == ProtocolBuffer::VARINT);
+  v = 0;
+  ASSERT(pb.read(v) == 1);
+  ASSERT(v == -1);
+  //
   v = -2;
   ASSERT(pb.write(1, v) == 2);
   trace.print((const char*) iob, iob.available(), IOStream::hex);
-  iob.empty();
   // Result: 08 03
+  ASSERT(pb.read(tag, type) == 1);
+  ASSERT(tag == 1 && type == ProtocolBuffer::VARINT);
+  v = 0;
+  ASSERT(pb.read(v) == 1);
+  ASSERT(v == -2);
   //
   // MORE VALUE TYPES: STRINGS
   //
@@ -223,10 +239,25 @@ void setup()
   // 
   // Setting the value of b to "testing".
   const char b[] = "testing";
-  ASSERT(pb.write(2, b, strlen(b)) == strlen(b) + 2);
+  ASSERT(pb.write(2, b) == strlen(b) + 2);
   trace.print((const char*) iob, iob.available(), IOStream::hex);
-  iob.empty();
   // Result: 12 07 74 65 73 74 69 6e 67
+  ASSERT(pb.read(tag, type) == 1);
+  ASSERT(tag == 2 && type == ProtocolBuffer::LENGTH_DELIMITED);
+  memset(buf, 0, sizeof(buf));
+  ASSERT(pb.read(buf, sizeof(buf)) == (int) strlen(b));
+  ASSERT(memcmp(buf, b, strlen(b)) == 0);
+  //
+  // Use a string in program memory.
+  static const char b_P[] __PROGMEM = "testing";
+  ASSERT(pb.write_P(2, b_P) == (int) strlen_P(b_P) + 2);
+  trace.print((const char*) iob, iob.available(), IOStream::hex);
+  // Result: 12 07 74 65 73 74 69 6e 67
+  ASSERT(pb.read(tag, type) == 1);
+  ASSERT(tag == 2 && type == ProtocolBuffer::LENGTH_DELIMITED);
+  memset(buf, 0, sizeof(buf));
+  ASSERT(pb.read(buf, sizeof(buf)) == (int) strlen(b));
+  ASSERT(memcmp(buf, b, strlen(b)) == 0);
   //
   // EMBEDDED MESSAGES
   //
@@ -238,7 +269,8 @@ void setup()
   //   }
   // 
   // And here's the encoded version, again with the Test1's a field
-  // set to 150:  
+  // set to 150. Use a temporary buffer for the encoding of the
+  // embedded message.
   IOBuffer<32> tmp;
   ProtocolBuffer c(&tmp, &tmp);
   u = 150;
@@ -246,9 +278,16 @@ void setup()
   ASSERT(pb.write(3, (const char*) tmp, tmp.available()) == 
 	 tmp.available() + 2);
   trace.print((const char*) iob, iob.available(), IOStream::hex);
-  iob.empty();
-  tmp.empty();
   // Result: 1a 03 08 96 01
+  ASSERT(pb.read(tag, type) == 1);
+  ASSERT(tag == 3 && type == ProtocolBuffer::LENGTH_DELIMITED);
+  ASSERT((count = pb.getchar()) == 3);
+  ASSERT(pb.read(tag, type) == 1);
+  ASSERT(tag == 1 && type == ProtocolBuffer::VARINT);
+  u = 0;
+  ASSERT(pb.read(u) == 2);
+  ASSERT(u == 150);
+  tmp.empty();
   //
   // REPEATED ELEMENTS
   // 
@@ -274,11 +313,21 @@ void setup()
 	 tmp.available() + 2);
   trace.print((const char*) iob, iob.available(), IOStream::hex);
   // Result: 22 06 03 8e 02 9e a7 05 
+  ASSERT(pb.read(tag, type) == 1);
+  ASSERT(tag == 4 && type == ProtocolBuffer::LENGTH_DELIMITED);
+  ASSERT((count = pb.getchar()) == 6);
+  ASSERT(pb.read(u) == 1);
+  ASSERT(u == 3UL);
+  ASSERT(pb.read(u) == 2);
+  ASSERT(u == 270UL);
+  ASSERT(pb.read(u) == 3);
+  ASSERT(u == 86942UL);
 #endif
 }
 
 void loop()
 {
+  TRACE(free_memory());
   ASSERT(true == false);
 }
 
