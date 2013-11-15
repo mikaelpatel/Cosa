@@ -34,22 +34,21 @@
 
 // Selectable test suites
 #define TEST_RANGE
-#define TEST_LIMITS
 #define TEST_STRUCT
+#if !defined(__ARDUINO_TINY__)
+#define TEST_LIMITS
 #define TEST_EXAMPLES
+#endif
 
 void setup()
 {
   IOBuffer<32> iob;
   ProtocolBuffer pb(&iob, &iob);
-  static char s[] = "Google Protocol Buffers";
   ProtocolBuffer::Type type;
   char buf[32];
   uint8_t tag;
-  float32_t f;
   uint32_t u;
   int32_t v;
-  int count;
 
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaProtocolBuffer: started"));
@@ -95,6 +94,7 @@ void setup()
   ASSERT(v == (int32_t) 0x80000000);
 
   // Test a length delimited string
+  static char s[] = "Google Protocol Buffers";
   ASSERT(pb.write(1, s, strlen(s) + 1) == (int) strlen(s) + 3);
   ASSERT(pb.read(tag, type) == 1);
   ASSERT(tag == 1 && type == ProtocolBuffer::LENGTH_DELIMITED);
@@ -104,7 +104,7 @@ void setup()
   trace << buf << endl;
 
   // Test a floating point number
-  f = -1.53729e-3;
+  float32_t f = -1.53729e-3;
   ASSERT(pb.write(1, f) == (sizeof(f) + 1));
   ASSERT(pb.read(tag, type) == 1);
   ASSERT(tag == 1 && type == ProtocolBuffer::FIXED32);
@@ -247,6 +247,7 @@ void setup()
   memset(buf, 0, sizeof(buf));
   ASSERT(pb.read(buf, sizeof(buf)) == (int) strlen(b));
   ASSERT(memcmp(buf, b, strlen(b)) == 0);
+  iob.empty();
   //
   // Use a string in program memory.
   static const char b_P[] __PROGMEM = "testing";
@@ -256,8 +257,9 @@ void setup()
   ASSERT(pb.read(tag, type) == 1);
   ASSERT(tag == 2 && type == ProtocolBuffer::LENGTH_DELIMITED);
   memset(buf, 0, sizeof(buf));
-  ASSERT(pb.read(buf, sizeof(buf)) == (int) strlen(b));
-  ASSERT(memcmp(buf, b, strlen(b)) == 0);
+  ASSERT(pb.read(buf, sizeof(buf)) == (int) strlen_P(b_P));
+  ASSERT(memcmp_P(buf, b_P, strlen_P(b_P)) == 0);
+  iob.empty();
   //
   // EMBEDDED MESSAGES
   //
@@ -273,6 +275,7 @@ void setup()
   // embedded message.
   IOBuffer<32> tmp;
   ProtocolBuffer c(&tmp, &tmp);
+  int count;
   u = 150;
   ASSERT(c.write(1, u) == 3);
   ASSERT(pb.write(3, (const char*) tmp, tmp.available()) == 
