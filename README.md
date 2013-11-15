@@ -240,5 +240,6 @@ Wireless device driver to IOStream and trace output over
 Wireless. First draft of RETE; data distribution and network
 management protocol. Adding support for L3G4200D digital gyroscope.    
 2013-11 New device driver for MPU6050 Motion Processing Unit; Digital
-thermometer, accelerometer and gyroscope.    
+thermometer, accelerometer and gyroscope. Adding support for bitsets
+and Google Protocol Buffers data encoding/decoding.    
 
