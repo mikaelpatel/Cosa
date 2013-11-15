@@ -189,7 +189,10 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   if (!m_avail) {
     // Fix: Use wakeup on radio to reduce power during wait
     uint32_t start = RTC::millis();
-    strobe(SRX);
+    if (read_status().mode == IDLE_MODE) {
+      strobe(SFRX);
+      strobe(SRX);
+    }
     while (!m_avail && ((ms == 0) || (RTC::since(start) < ms)))
       Power::sleep(m_mode);
     if (!m_avail) return (-2);

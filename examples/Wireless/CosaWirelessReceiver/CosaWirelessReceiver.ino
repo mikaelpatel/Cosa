@@ -128,11 +128,12 @@ IOStream& operator<<(IOStream& outs, dlt_msg_t* msg)
 void loop()
 {
   // Receive a message
+  const uint32_t TIMEOUT = 5000;
   const uint8_t MSG_MAX = 32;
   uint8_t msg[MSG_MAX];
   uint8_t src;
   uint8_t port;
-  int count = rf.recv(src, port, msg, sizeof(msg));
+  int count = rf.recv(src, port, msg, sizeof(msg), TIMEOUT);
 
   // Print the message header
   if (count >= 0) {
