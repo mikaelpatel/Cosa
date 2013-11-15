@@ -115,10 +115,10 @@ public:
    */
   int read(int32_t& value)
   {
-    uint32_t v;
-    int res = read(v);
+    uint32_t zigzag;
+    int res = read(zigzag);
     if (res < 0) return (-1);
-    value = ((v & 1) ? ~(v >> 1) : (v >> 1));
+    value = ((zigzag & 1) ? ~(zigzag >> 1) : (zigzag >> 1));
     return (res);
   }
 
