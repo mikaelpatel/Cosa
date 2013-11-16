@@ -285,6 +285,31 @@ public:
     {
       return (m_dest == BROADCAST);
     }
+
+    /**
+     * @override Wireless::Driver
+     * Set output power level in dBm. Default no-operation.
+     * @param[in] dBm.
+     */
+    virtual void set_output_power_level(int8_t dBm) {}
+
+    /**
+     * @override Wireless::Driver
+     * Return estimated input power level (dBm). Default zero(0).
+     */
+    virtual int get_input_power_level() 
+    {
+      return (0);
+    }
+
+    /**
+     * @override Wireless::Driver
+     * Return link quality indicator. Default zero(0).
+     */
+    int get_link_quality_indicator()
+    {
+      return (0);
+    }
   };
 };
 #endif

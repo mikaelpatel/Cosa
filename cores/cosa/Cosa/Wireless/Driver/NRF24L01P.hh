@@ -634,6 +634,13 @@ public:
 		   uint32_t ms = 0L);
 
   /**
+   * @override Wireless::Driver
+   * Set output power level (-30..10 dBm)
+   * @param[in] dBm.
+   */
+  virtual void set_output_power_level(int8_t dBm);
+
+  /**
    * Return number of transmitted messages.
    */
   uint16_t get_trans() { return (m_trans); }

@@ -32,7 +32,7 @@
 
 /**
  * Default configuration (generated with TI SmartRF Studio tool):
- * Radio: 433 MHz, 38 kbps, GFSK. Whitening. 
+ * Radio: 433 MHz, 38 kbps, GFSK. Whitening, 0 dBm. 
  * Packet: Variable packet length with CRC, address check and broadcast(0x00)
  * FIFO: Append link status. 
  * Frame: sync(2), length(1), dest(1), payload(max 59), crc(2)
@@ -237,5 +237,28 @@ CC1101::wakeup_on_radio()
 {
   await(IDLE_MODE);
   strobe(SWOR);
+}
+
+void 
+CC1101::set_output_power_level(int8_t dBm)
+{
+  uint8_t pa = 0xC0;
+  if      (dBm < -20) pa = 0x12; 
+  else if (dBm < -15) pa = 0x0E; 
+  else if (dBm < -10) pa = 0x1D; 
+  else if (dBm < 0)   pa = 0x34; 
+  else if (dBm < 5)   pa = 0x60; 
+  else if (dBm < 7)   pa = 0x84; 
+  else if (dBm < 10)  pa = 0xC4; 
+  spi.begin(this);
+  write(PATABLE, pa);
+  spi.end();
+}
+
+int 
+CC1101::get_input_power_level()
+{
+  int rssi = m_recv_status.rssi;
+  return (((rssi < 128) ? rssi : rssi - 256) / 2 - 74);
 }
 #endif

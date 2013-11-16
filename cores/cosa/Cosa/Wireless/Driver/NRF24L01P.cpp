@@ -282,6 +282,16 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
   return (count);
 }
 
+void 
+NRF24L01P::set_output_power_level(int8_t dBm)
+{
+  uint8_t pwr = RF_PWR_0DBM;
+  if      (dBm < -12) pwr = RF_PWR_18DBM;
+  else if (dBm < -6)  pwr = RF_PWR_12DBM; 
+  else if (dBm < 0)   pwr = RF_PWR_6DBM;
+  write(RF_SETUP, (RF_DR_2MBPS | pwr));
+}
+
 // Output operators for bitfield status registers
 IOStream& operator<<(IOStream& outs, NRF24L01P::status_t status)
 {

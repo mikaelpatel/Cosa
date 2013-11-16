@@ -554,14 +554,16 @@ public:
    * @param[in] csn chip select pin (Default D2/D10/D53).
    * @param[in] irq interrupt pin (Default EXT0).
    */
-  CC1101(uint16_t net, uint8_t dev, 
 #if defined(__ARDUINO_TINYX4__)
+  CC1101(uint16_t net, uint8_t dev, 
 	 Board::DigitalPin csn = Board::D2,
 	 Board::ExternalInterruptPin irq = Board::EXT0) :
 #elif defined(__ARDUINO_MEGA__)
+  CC1101(uint16_t net, uint8_t dev, 
 	 Board::DigitalPin csn = Board::D53,
 	 Board::ExternalInterruptPin irq = Board::EXT4) :
 #else
+  CC1101(uint16_t net, uint8_t dev, 
 	 Board::DigitalPin csn = Board::D10,
 	 Board::ExternalInterruptPin irq = Board::EXT0) :
 #endif
@@ -649,20 +651,25 @@ public:
   virtual void wakeup_on_radio();
 
   /**
+   * @override Wireless::Driver
+   * Set output power level (-30..10 dBm)
+   * @param[in] dBm.
+   */
+  virtual void set_output_power_level(int8_t dBm);
+
+  /**
+   * @override Wireless::Driver
    * Return estimated input power level (dBm) from latest successful
    * message received. 
    */
-  int get_input_power_level()
-  {
-    int rssi = m_recv_status.rssi;
-    return (((rssi < 128) ? rssi : rssi - 256) / 2 - 74);
-  }
+  virtual int get_input_power_level();
 
   /**
+   * @override Wireless::Driver
    * Return link quality indicator from latest successful receive
    * message. Lower level is better quality.
    */
-  int get_link_quality_indicator()
+  virtual int get_link_quality_indicator()
   {
     return (m_recv_status.lqi);
   }
