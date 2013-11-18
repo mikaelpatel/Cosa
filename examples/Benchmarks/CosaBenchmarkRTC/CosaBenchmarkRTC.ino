@@ -64,22 +64,22 @@ void setup()
   start = RTC::micros();
   uint32_t us = RTC::micros();
   stop = RTC::micros();
-  INFO("RTC::micros(): %ul", stop - start);
+  INFO("RTC::micros(): %ul us", stop - start);
   
   start = RTC::micros();
   uint32_t ms = RTC::millis();
   stop = RTC::micros();
-  INFO("RTC::millis(): %ul", stop - start);
+  INFO("RTC::millis(): %ul us", stop - start);
 
   start = RTC::micros();
   DELAY(10);
   stop = RTC::micros();
-  INFO("DELAY(10): %ul", stop - start);
+  INFO("DELAY(10): %ul us", stop - start);
 
   start = RTC::micros();
   DELAY(100);
   stop = RTC::micros();
-  INFO("DELAY(100): %ul", stop - start);
+  INFO("DELAY(100): %ul us", stop - start);
 
   // Start the measurement
   TRACE(RTC::seconds());

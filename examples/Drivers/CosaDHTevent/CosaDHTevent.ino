@@ -38,6 +38,13 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
+// DHT22 data pin configuration
+#if defined(__ARDUINO_TINY__)
+#define EXT Board::EXT0
+#else
+#define EXT Board::EXT1
+#endif
+
 // Example of DHT22 sub-class and periodic member function;
 // on_sample_completed() prints current value to the trace stream.
 class DHTevent : public DHT22 {
@@ -47,7 +54,7 @@ public:
 };
 
 // The DHT event object
-DHTevent dht(Board::EXT1);
+DHTevent dht(EXT);
 
 void setup()
 {

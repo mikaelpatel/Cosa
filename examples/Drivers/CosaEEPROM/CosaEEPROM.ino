@@ -31,14 +31,12 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/EEPROM.hh"
+#include "Cosa/Pins.hh"
 
+// EEPROM access object
 EEPROM eeprom;
 
-// Data vector in EEPROM
-static const int DATA_MAX = 8;
-long data[DATA_MAX] EEMEM;
-
-// Configuration struct in EEPROM
+// Simple configuration struct in EEPROM
 static const int NAME_MAX = 16;
 struct config_t {
   int mode;
@@ -47,49 +45,63 @@ struct config_t {
 };
 config_t config EEMEM;
 
+// Sensor log in EEPROM
+static const int DATA_MAX = 8;
+uint16_t data[DATA_MAX] EEMEM;
+
+// Analog input pin
+AnalogPin sensor(Board::A0);
+
 void setup()
 {
+  // Use serial as output stream
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaEEPROM: started"));
   TRACE(free_memory());
   Watchdog::begin();
   
   // Initiate data vector with index
-  for (uint8_t i = 0; i < DATA_MAX; i++) {
-    eeprom.write(&data[i], (long) i);
-  }
+  for (uint8_t i = 0; i < DATA_MAX; i++) 
+    ASSERT(eeprom.write(&data[i], (uint16_t) 0xffff) == sizeof(uint16_t));
 
   // Initiate configuration struct
   config_t init;
   init.mode = 17;
   init.speed = 9600;
   strcpy_P(init.name, PSTR(".EEPROM"));
-  eeprom.write(&config, &init, sizeof(config));
+  ASSERT(eeprom.write(&config, &init, sizeof(config)) == sizeof(config));
+
+  // Read the configuration and print
+  ASSERT(eeprom.read(&init, &config, sizeof(init)) == sizeof(init));
+  trace << PSTR("init(mode = ") << init.mode
+	<< PSTR(", speed = ") << init.speed
+	<< PSTR(", name = \"") << init.name
+	<< PSTR("\")\n");
 }
 
 void loop()
 {
   static int i = 0;
-  long x;
-
-  // Read the configuration and print (first time only)
+  uint16_t x;
+  
+  // Print sensor samples
   if (i == 0) {
-    config_t init;
-    eeprom.read(&init, &config, sizeof(init));
-    trace << PSTR("init(mode = ") << init.mode
-	  << PSTR(", speed = ") << init.speed
-	  << PSTR(", name = \"") << init.name
-	  << PSTR("\")\n");
+    for (i = 0; i < membersof(data); i++) {
+      ASSERT(eeprom.read(&x, &data[i]) == sizeof(x));
+      trace << PSTR("data[") << i << PSTR("] = ") << x << endl;
+    }
+    i = 0;
+    trace << endl;
   }
 
-  // Read and update data, element at a time
-  TRACE(eeprom.read(&x, &data[i]));
-  trace << i << ':' << x << endl;
-  x += 5;
-  TRACE(eeprom.write(&data[i], x));
+  // Update data element and write back
+  x = sensor.sample();
+  ASSERT(eeprom.write(&data[i], x) == sizeof(x));
+
+  // Iterate to the next data element
   i += 1;
   if (i == membersof(data)) i = 0;
 
   // Take a nap
-  SLEEP(5);
+  SLEEP(2);
 }

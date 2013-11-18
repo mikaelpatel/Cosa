@@ -25,7 +25,8 @@
  * cycle.
  *
  * @section Circuit
- * This example requires no special circuit. Uses serial output.
+ * This example requires no special circuit. Uses serial output,
+ * internal timer for RTC and watchdog.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -47,9 +48,8 @@ const uint32_t EVENTS_MAX = 100000L;
  * Simple echo state machine with a single state. 
  */
 class Echo : public FSM {
-
 private:
-  FSM* m_port;
+  FSM* m_port;			//< FSM to send event to
 
 public:
   /**
@@ -74,7 +74,7 @@ public:
   {
     Echo* echo = (Echo*) fsm;
     echo->m_port->send(Event::USER_TYPE);
-    return (1);
+    return (true);
   }
 };
 
@@ -97,6 +97,11 @@ void setup()
   TRACE(sizeof(FSM));
   TRACE(sizeof(Echo));
 
+  // Give some more startup info
+  TRACE(EVENTS_MAX);
+  TRACE(F_CPU);
+  TRACE(I_CPU);
+
   // Start the watchdog with default 16 ms ticks
   Watchdog::begin();
   RTC::begin();
@@ -105,10 +110,8 @@ void setup()
   ping.bind(&pong);
   pong.bind(&ping);
 
-  // Give some more startup info
-  TRACE(F_CPU);
-  TRACE(I_CPU);
-  TRACE(EVENTS_MAX);
+  // Send a first event to start the benchmark
+  ping.send(Event::USER_TYPE);
 }
 
 void loop()
@@ -117,8 +120,7 @@ void loop()
   uint32_t events = EVENTS_MAX;
   uint32_t start = RTC::micros();
 
-  // Send a first event to start the benchmark and dispatch events.
-  ping.send(Event::USER_TYPE);
+  // Dispatch events and measure total time
   while (events--) {
     Event event;
     Event::queue.await(&event);
@@ -126,7 +128,7 @@ void loop()
   }
   uint32_t stop = RTC::micros();
 
-  // Capture the tick count and calculate the time per event and cycles.
+  // Capture the tick count and calculate the time per event and cycles
   uint32_t us = stop - start;
   uint32_t us_per_event = us / EVENTS_MAX;
   INFO("%l us per event (%l cycles)", us_per_event, us_per_event * I_CPU);

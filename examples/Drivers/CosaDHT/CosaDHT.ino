@@ -38,7 +38,9 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/DHT.hh"
 
+// Use DHT11 for outdoors measurement and DHT22 for indoors
 DHT11 outdoors(Board::EXT0);
+// ATtiny has only one external interrupt pin
 #if !defined(__ARDUINO_TINY__)
 DHT22 indoors(Board::EXT1);
 #endif
