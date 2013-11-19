@@ -28,7 +28,7 @@
 # ARDUINO TINY
 ##
 
-attiny84-8.name=Cosa Tiny (ATtiny84, 8 MHz)
+attiny84-8.name=Cosa Tiny (ATtiny84, 8 MHz internal clock)
 attiny84-8.bootloader.low_fuses=0xe2
 attiny84-8.bootloader.high_fuses=0xdf
 attiny84-8.bootloader.extended_fuses=0xff
@@ -38,7 +38,7 @@ attiny84-8.build.f_cpu=8000000L
 attiny84-8.build.core=cosa
 attiny84-8.build.variant=tiny14
 
-attiny85-8.name=Cosa Tiny (ATtiny85, 8 MHz)
+attiny85-8.name=Cosa Tiny (ATtiny85, 8 MHz internal clock)
 attiny85-8.bootloader.low_fuses=0xe2
 attiny85-8.bootloader.high_fuses=0xdf
 attiny85-8.bootloader.extended_fuses=0xff
