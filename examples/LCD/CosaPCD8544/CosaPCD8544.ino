@@ -41,7 +41,6 @@
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
 PCD8544 lcd;
-#undef putchar
 
 void setup()
 {

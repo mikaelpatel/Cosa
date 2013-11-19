@@ -34,7 +34,6 @@
 
 Soft::UART uart(Board::D0);
 OutputPin led(Board::LED);
-#undef putchar
 
 void setup()
 {

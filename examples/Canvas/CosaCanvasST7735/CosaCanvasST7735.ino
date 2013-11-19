@@ -51,7 +51,6 @@
 ST7735 tft;
 Textbox textbox(&tft);
 IOStream console(&textbox);
-#undef putchar
 
 void setup()
 {

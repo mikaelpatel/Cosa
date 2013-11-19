@@ -47,9 +47,6 @@ AnalogPin levelPin(Board::A0);
 InputPin onoffPin(Board::D2);
 OutputPin ledPin(Board::LED);
 
-// Arduino build includes stdio and putchar macro so we need to undef
-#undef putchar
-
 // We need a trick to allow mapping the binary stream to textual trace
 // This is basically an example of the Decorator Design Pattern
 // Otherwise we would need to write a host program

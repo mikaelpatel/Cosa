@@ -53,7 +53,6 @@
 OWI owi(Board::D5);
 DS18B20 sensor(&owi);
 PCD8544 lcd;
-#undef putchar
 
 void setup()
 {

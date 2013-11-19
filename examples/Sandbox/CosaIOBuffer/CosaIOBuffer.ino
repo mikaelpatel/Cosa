@@ -31,8 +31,6 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 IOBuffer<16> buffer;
-#undef putchar
-#undef getchar
 
 void setup()
 {

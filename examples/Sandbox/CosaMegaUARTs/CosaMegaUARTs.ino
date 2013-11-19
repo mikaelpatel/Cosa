@@ -47,9 +47,6 @@ static IOBuffer<UART::BUFFER_MAX> obuf;
 UART uart1(1, &ibuf, &obuf);
 IOStream cout(&uart1);
 
-// Undefine as this is a macro in AVR
-#undef getchar
-
 void setup()
 {
   // Bind UART1 to the Interrupt Service Routine

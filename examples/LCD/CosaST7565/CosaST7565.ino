@@ -37,7 +37,6 @@
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
 ST7565 lcd;
-#undef putchar
 
 void setup()
 {

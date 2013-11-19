@@ -73,9 +73,6 @@ const Ciao::Descriptor::user_t Point_desc __PROGMEM = {
   membersof(Point_members)
 };  
 
-// Arduino build includes stdio and putchar macro so we need to undef
-#undef putchar
-
 // We need a trick to allow mapping the binary stream to textual trace
 // This is basically an example of the Decorator Design Pattern
 // Otherwise we would need to write a host program
