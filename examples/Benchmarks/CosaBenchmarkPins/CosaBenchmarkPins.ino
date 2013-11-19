@@ -37,6 +37,8 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+// Pins used in the benchmark (Note will not compile for ATtinyX5)
+
 InputPin inPin(Board::D7);
 OutputPin outPin(Board::D8);
 OutputPin dataPin(Board::D9);
