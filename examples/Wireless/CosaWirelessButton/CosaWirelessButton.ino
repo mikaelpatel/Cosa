@@ -37,32 +37,42 @@
 // Connect button between ground and pin TinyX4 EXT0/D10, TinyX5 EXT0/D2, 
 // Mega EXT2/D29 and others to Arduino EXT1 which is Standard/D3 and 
 // Mighty/D11.
+#define NETWORK 0xC05A
 #if defined(__ARDUINO_MEGA__)
+#define DEVICE 0x52
 #define EXT Board::EXT2
-#define DEVICE 0x04
 #elif defined(__ARDUINO_TINY__)
+#define DEVICE 0x50
 #define EXT Board::EXT0
-#define DEVICE 0x03
 #else
+#define DEVICE 0x51
 #define EXT Board::EXT1
-#define DEVICE 0x02
 #endif
 
-// Select Wireless device driver (network = 0xC05A, device = 0x02)
-// #include "Cosa/Wireless/Driver/CC1101.hh"
-// CC1101 rf(0xC05A, DEVICE);
+// Select Wireless device driver
+#define USE_CC1101
+// #define USE_NRF24L01P
+// #define USE_VWI
 
+#if defined(USE_CC1101)
+#include "Cosa/Wireless/Driver/CC1101.hh"
+CC1101 rf(NETWORK, DEVICE);
+
+#elif defined(USE_NRF24L01P)
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-NRF24L01P rf(0xC05A, DEVICE);
+NRF24L01P rf(NETWORK, DEVICE);
 
-// #include "Cosa/Wireless/Driver/VWI.hh"
-// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-// VirtualWireCodec codec;
-// #if defined(__ARDUINO_TINYX5__)
-// VWI rf(0xC05A, DEVICE, 4000, Board::D1, Board::D0, &codec);
-// #else
-// VWI rf(0xC05A, DEVICE, 4000, Board::D7, Board::D8, &codec);
-// #endif
+#elif defined(USE_VWI)
+#include "Cosa/Wireless/Driver/VWI.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+VirtualWireCodec codec;
+#define SPEED 4000
+#if defined(__ARDUINO_TINY__)
+VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
+#else
+VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
+#endif
+#endif
 
 class Button : public ExternalInterrupt {
 public:

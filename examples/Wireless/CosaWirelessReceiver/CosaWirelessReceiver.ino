@@ -32,17 +32,34 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
+// Configuration; network and device addresses
+#define NETWORK 0xC05A
+#define DEVICE 0x01
+
 // Select Wireless device driver
-// #include "Cosa/Wireless/Driver/CC1101.hh"
-// CC1101 rf(0xC05A, 0x01);
+#define USE_CC1101
+// #define USE_NRF24L01P
+// #define USE_VWI
 
+#if defined(USE_CC1101)
+#include "Cosa/Wireless/Driver/CC1101.hh"
+CC1101 rf(NETWORK, DEVICE);
+
+#elif defined(USE_NRF24L01P)
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-NRF24L01P rf(0xC05A, 0x01);
+NRF24L01P rf(NETWORK, DEVICE);
 
-// #include "Cosa/Wireless/Driver/VWI.hh"
-// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-// VirtualWireCodec codec;
-// VWI rf(0xC05A, 0x01, 4000, Board::D7, Board::D8, &codec);
+#elif defined(USE_VWI)
+#include "Cosa/Wireless/Driver/VWI.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+VirtualWireCodec codec;
+#define SPEED 4000
+#if defined(__ARDUINO_TINY__)
+VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
+#else
+VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
+#endif
+#endif
 
 void setup()
 {

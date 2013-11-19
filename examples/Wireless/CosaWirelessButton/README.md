@@ -2,7 +2,7 @@ CosaWirelessButton
 ==================
 Demonstration of the Wireless interface and device drivers. Uses the
 ExternalInterruptPin for wakeup after power down. Run
-CosaWirelessDebug.ino or CosaWirelessReceiver.ino to receiver the
+CosaWirelessTrace.ino or CosaWirelessReceiver.ino to receiver the 
 messages sent when the button is pushed. 
 
 Circuit

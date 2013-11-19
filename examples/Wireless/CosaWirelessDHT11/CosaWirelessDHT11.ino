@@ -39,30 +39,43 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
-#if !defined(__ARDUINO_TINY__)
-#include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Trace.hh"
+// Configuration; network and device addresses, and sensor pin
+#define NETWORK 0xC05A
+#if defined(__ARDUINO_TINY__)
+#define DEVICE 0x20
+#define EXT Board::EXT0
+#else
+#define DEVICE 0x21
+#define EXT Board::EXT1
 #endif
 
 // Select Wireless device driver
-// #include "Cosa/Wireless/Driver/CC1101.hh"
-// CC1101 rf(0xC05A, 0x02);
+#define USE_CC1101
+// #define USE_NRF24L01P
+// #define USE_VWI
 
+#if defined(USE_CC1101)
+#include "Cosa/Wireless/Driver/CC1101.hh"
+CC1101 rf(NETWORK, DEVICE);
+
+#elif defined(USE_NRF24L01P)
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-NRF24L01P rf(0xC05A, 0x02);
+NRF24L01P rf(NETWORK, DEVICE);
 
-//#include "Cosa/Wireless/Driver/VWI.hh"
-// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-// VirtualWireCodec codec;
+#elif defined(USE_VWI)
+#include "Cosa/Wireless/Driver/VWI.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+VirtualWireCodec codec;
+#define SPEED 4000
 #if defined(__ARDUINO_TINY__)
-// VWI rf(0xC05A, 0x04, 4000, Board::D1, Board::D0, &codec);
-DHT11 sensor(Board::EXT0);
+VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
 #else
-// VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
-DHT11 sensor(Board::EXT1);
+VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
+#endif
 #endif
 
 OutputPin led(Board::LED);
+DHT11 sensor(EXT);
 
 struct dht_msg_t {
   uint8_t nr;
@@ -74,10 +87,6 @@ static const uint8_t DIGITAL_HUMIDITY_TEMPERATURE_TYPE = 0x03;
 
 void setup()
 {
-#if !defined(__ARDUINO_TINY__)
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaWirelessDHT11: started"));
-#endif
   Watchdog::begin();
   RTC::begin();
   rf.begin();

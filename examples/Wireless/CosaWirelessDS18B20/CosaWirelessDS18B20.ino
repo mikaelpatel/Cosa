@@ -24,10 +24,6 @@
  * Demonstration sending temperature readings from two 1-Wire DS18B20
  * devices over the Wireless Interface and devices. 
  *
- * @section Note
- * This sketch is designed to also run on an ATtiny85 running on the
- * internal 8 MHz clock. 
- *
  * @section Circuit
  * Connect RF433/315 Transmitter Data to ATtiny85 D0, connect VCC 
  * GND. Connect 1-Wire digital thermometer to D3 with pullup resistor.
@@ -41,6 +37,10 @@
  * LiPo 3.9 V	40 uA	1.3 mA 		6 mA (RF433).
  * FTDI 5,1 V	190 uA	1.5 mA		10 mA (RF433).
  *
+ * @section Note
+ * This sketch is designed to also run on an ATtiny85 running on the
+ * internal 8 MHz clock. 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -51,22 +51,37 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
-// Select Wireless device driver with network = 0xC05A, device = 0x02, 
-// and tiny-device = 0x03.
+// Configuration; network and device addresses
+#define NETWORK 0xC05A
+#if defined(__ARDUINO_TINY__)
+#define DEVICE 0x30
+#else
+#define DEVICE 0x31
+#endif
 
-// #include "Cosa/Wireless/Driver/CC1101.hh"
-// CC1101 rf(0xC05A, 0x02);
+// Select Wireless device driver
+#define USE_CC1101
+// #define USE_NRF24L01P
+// #define USE_VWI
 
-// #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-// NRF24L01P rf(0xC05A, 0x02);
+#if defined(USE_CC1101)
+#include "Cosa/Wireless/Driver/CC1101.hh"
+CC1101 rf(NETWORK, DEVICE);
 
+#elif defined(USE_NRF24L01P)
+#include "Cosa/Wireless/Driver/NRF24L01P.hh"
+NRF24L01P rf(NETWORK, DEVICE);
+
+#elif defined(USE_VWI)
 #include "Cosa/Wireless/Driver/VWI.hh"
 #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
 VirtualWireCodec codec;
-#if defined(__ARDUINO_TINYX5__)
-VWI rf(0xC05A, 0x03, 4000, Board::D1, Board::D0, &codec);
+#define SPEED 4000
+#if defined(__ARDUINO_TINY__)
+VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
 #else
-VWI rf(0xC05A, 0x02, 4000, Board::D7, Board::D8, &codec);
+VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
+#endif
 #endif
 
 // Connect to one-wire device; Assuming there are two sensors
@@ -74,7 +89,7 @@ OWI owi(Board::D3);
 DS18B20 indoors(&owi);
 DS18B20 outdoors(&owi);
 
-// Active pullup
+// Active pullup (pullup resistor connected to this pin)
 OutputPin pw(Board::D4);
 
 void setup()

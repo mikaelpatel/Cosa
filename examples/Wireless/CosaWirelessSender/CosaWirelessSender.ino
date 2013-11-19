@@ -32,30 +32,40 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
-// Allow multiple senders
+// Configuration; network and device addresses. Allow multiple senders
+#define NETWORK 0xC05A
 #if defined(__ARDUINO_TINY__)
-#define DEVICE 0x04
+#define DEVICE 0x10
 #elif defined(__ARDUINO_MEGA__)
-#define DEVICE 0x03
+#define DEVICE 0x12
 #else
-#define DEVICE 0x02
+#define DEVICE 0x11
 #endif
 
 // Select Wireless device driver
-// #include "Cosa/Wireless/Driver/CC1101.hh"
-// CC1101 rf(0xC05A, DEVICE);
+#define USE_CC1101
+// #define USE_NRF24L01P
+// #define USE_VWI
 
+#if defined(USE_CC1101)
+#include "Cosa/Wireless/Driver/CC1101.hh"
+CC1101 rf(NETWORK, DEVICE);
+
+#elif defined(USE_NRF24L01P)
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-NRF24L01P rf(0xC05A, DEVICE);
+NRF24L01P rf(NETWORK, DEVICE);
 
-// #include "Cosa/Wireless/Driver/VWI.hh"
-// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-// VirtualWireCodec codec;
-// #if defined(__ARDUINO_TINYX5__)
-// VWI rf(0xC05A, DEVICE, 4000, Board::D1, Board::D0, &codec);
-// #else
-// VWI rf(0xC05A, DEVICE, 4000, Board::D7, Board::D8, &codec);
-// #endif
+#elif defined(USE_VWI)
+#include "Cosa/Wireless/Driver/VWI.hh"
+#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+VirtualWireCodec codec;
+#define SPEED 4000
+#if defined(__ARDUINO_TINY__)
+VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
+#else
+VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
+#endif
+#endif
 
 void setup()
 {
