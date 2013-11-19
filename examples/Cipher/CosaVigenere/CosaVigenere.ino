@@ -29,9 +29,10 @@
 #include "Cosa/Cipher/Vigenere.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Memory.h"
 #include "Cosa/RTC.hh"
 
-static char msg[] __PROGMEM = 
+static const char msg[] __PROGMEM = 
 "The Vigenere cipher is a method of encrypting alphabetic text by\n"
 "using a series of different Caesar ciphers based on the letters of\n" 
 "a keyword. It is a simple form of polyalphabetic substitution.\n"
@@ -55,6 +56,11 @@ void setup()
   RTC::begin();
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVigenere: started"));
+
+  // Check memory size
+  TRACE(sizeof(uart));
+  TRACE(sizeof(trace));
+  TRACE(free_memory());
 
   // Test#1: Encrypt the message and measure processing time
   trace << endl << PSTR("BASELINE") << endl;
@@ -110,4 +116,11 @@ void setup()
   for (size_t i = 0; i < sizeof(buf); i++)
     trace << buf[i];
   trace << endl;
+}
+
+void loop()
+{
+  // Check amount of free memory
+  TRACE(free_memory());
+  ASSERT(true == false);
 }

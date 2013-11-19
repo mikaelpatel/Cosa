@@ -30,6 +30,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Memory.h"
 
 static char msg[] __PROGMEM = 
 "RC4 was designed by Ron Rivest of RSA Security in 1987. While it is\n"
@@ -56,8 +57,9 @@ static char msg[] __PROGMEM =
 /**
  * OpenSSL test vectors.
  * https://github.com/openssl/openssl/blob/master/crypto/rc4/rc4test.c
+ * Note that these are not stored in PROGMEM and take a lot of SRAM.
  */
-static unsigned char keys[7][30]={
+static unsigned char keys[7][30] = {
   {8,0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef},
   {8,0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef},
   {8,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
@@ -66,8 +68,8 @@ static unsigned char keys[7][30]={
   {4,0xef,0x01,0x23,0x45},
 };
 
-static unsigned char data_len[7]={8,8,8,20,28,10};
-static unsigned char data[7][30]={
+static unsigned char data_len[7] = { 8,8,8,20,28,10 };
+static unsigned char data[7][30] = {
   {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0xff},
   {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff},
   {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff},
@@ -82,7 +84,7 @@ static unsigned char data[7][30]={
   {0},
 };
 
-static unsigned char output[7][30]={
+static unsigned char output[7][30] = {
   {0x75,0xb7,0x87,0x80,0x99,0xe0,0xc5,0x96,0x00},
   {0x74,0x94,0xc2,0xe7,0x10,0x4b,0x08,0x79,0x00},
   {0xde,0x18,0x89,0x41,0xa3,0x37,0x5d,0x3a,0x00},
@@ -102,6 +104,7 @@ void setup()
   RTC::begin();
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaRC4: started"));
+  TRACE(free_memory());
 
   // Test#1: Encrypt the message and measure processing time
   trace << endl << PSTR("BASELINE") << endl;
@@ -179,4 +182,11 @@ void setup()
   }
   if (failed) return;
   trace << PSTR("OK") << endl;
+}
+
+void loop()
+{
+  // Check amount of free memory
+  TRACE(free_memory());
+  ASSERT(true == false);
 }
