@@ -503,6 +503,6 @@ void loop()
   trace.println();
 
   // Stop the benchmark
-  TRACE(cnt);
+  DEBUG("cnt = %d", cnt);
   ASSERT(true == false);
 }
