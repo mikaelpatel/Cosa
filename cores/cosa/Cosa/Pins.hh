@@ -275,21 +275,6 @@ public:
   }
 
   /**
-   * Construct abstract input pin given Arduino pin number.
-   * @param[in] pin number (analog pin).
-   * @param[in] mode pin mode (default NORMAL_MODE).
-   */
-  InputPin(Board::AnalogPin pin, Mode mode = NORMAL_MODE) :
-    Pin((uint8_t) pin)
-  {
-    if (mode == PULLUP_MODE) {
-      synchronized {
-	*PORT() |= m_mask; 
-      }
-    }
-  }
-
-  /**
    * Set input pin to given mode.
    * @param[in] pin number.
    * @param[in] mode pin mode (default NORMAL_MODE).
@@ -315,20 +300,6 @@ public:
    * @param[in] initial value.
    */
   OutputPin(Board::DigitalPin pin, uint8_t initial = 0) : 
-    Pin((uint8_t) pin) 
-  { 
-    synchronized {
-      *DDR() |= m_mask; 
-    }
-    set(initial);
-  }
-
-  /**
-   * Construct an abstract output pin for given Arduino pin number.
-   * @param[in] pin number.
-   * @param[in] initial value.
-   */
-  OutputPin(Board::AnalogPin pin, uint8_t initial = 0) : 
     Pin((uint8_t) pin) 
   { 
     synchronized {
@@ -668,14 +639,6 @@ public:
    * @param[in] mode pin mode (normal or pullup).
    */
   IOPin(Board::DigitalPin pin, Mode mode = INPUT_MODE, bool pullup = false) : 
-    OutputPin(pin),
-    m_mode(mode)
-  {
-    if (pullup)
-      *PORT() |= m_mask; 
-    set_mode(mode);
-  }
-  IOPin(Board::AnalogPin pin, Mode mode = INPUT_MODE, bool pullup = false) : 
     OutputPin(pin),
     m_mode(mode)
   {
