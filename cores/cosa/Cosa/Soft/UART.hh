@@ -78,11 +78,9 @@ namespace Soft {
 
     /**
      * @override IOStream::Device
-     * Write character to serial 
-     * Returns character if successful otherwise on error or buffer full
-     * returns EOF(-1),
+     * Write character to Soft UART output pin. Returns character.
      * @param[in] c character to write.
-     * @return character written or EOF(-1).
+     * @return character.
      */
     virtual int putchar(char c)
     {
@@ -95,7 +93,7 @@ namespace Soft {
      * Start Soft UART device driver.
      * @param[in] baudrate serial bitrate (default 9600).
      * @param[in] format serial frame format (default async, 8data, 2stop bit)
-     * @return true(1) if successful otherwise false(0)
+     * @return true(1) if successful otherwise false(0).
      */
     bool begin(uint32_t baudrate = 9600UL, 
 	       uint8_t format = DATA8 + NO_PARITY + STOP2)
