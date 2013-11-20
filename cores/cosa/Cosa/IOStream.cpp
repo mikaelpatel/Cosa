@@ -24,6 +24,7 @@
  */
 
 #include "Cosa/IOStream.hh"
+#include "Cosa/Power.hh"
 
 IOStream::Filter::Filter(Device* dev) : 
   m_dev(dev != NULL ? dev : &Device::null) 
@@ -94,7 +95,7 @@ void
 IOStream::print(IOStream::Device* buffer)
 {
   int c;
-  while ((c = buffer->getchar()) != -1)
+  while ((c = buffer->getchar()) != EOF)
     print((char) c);
 }
 
@@ -215,7 +216,7 @@ IOStream::Device::room()
 int 
 IOStream::Device::putchar(char c) 
 { 
-  return (-1); 
+  return (EOF); 
 }
     
 int 
@@ -231,7 +232,7 @@ IOStream::Device::puts_P(const char* s)
   int n = 0;
   while ((c = pgm_read_byte(s++)) != 0)
     if (putchar(c) < 0) 
-      return (-1);
+      return (EOF);
     else
       n += 1;
   return (n); 
@@ -263,13 +264,19 @@ IOStream::Device::write(const iovec_t* vec)
 int 
 IOStream::Device::peekchar() 
 { 
-  return (-1); 
+  return (EOF); 
+}
+
+int 
+IOStream::Device::peekchar(char c) 
+{ 
+  return (EOF); 
 }
 
 int 
 IOStream::Device::getchar() 
 { 
-  return (-1); 
+  return (EOF); 
 }
 
 char* 
@@ -278,17 +285,16 @@ IOStream::Device::gets(char *s, size_t count)
   char* res = s;
   while (count--) {
     int c = getchar();
-    if (c < 0) {
-      *s = 0;
-      return (0);
+    if (c == EOF && m_mode != NON_BLOCKING) {
+      while (c == EOF) {
+	Power::sleep(m_mode);
+	c = getchar();
+      }
     }
-    if (c == '\n') {
-      *s = 0;
-      return (res);
-    }
+    if (c == '\n' || c == IOStream::EOF) break;
     *s++ = c;
   }
-  *--s = 0;
+  *s = 0;
   return (res);
 }
 
@@ -316,7 +322,7 @@ IOStream::Device::read(iovec_t* vec)
 }
 
 int 
-IOStream::Device::flush(uint8_t mode) 
+IOStream::Device::flush() 
 { 
-  return (-1); 
+  return (EOF); 
 }

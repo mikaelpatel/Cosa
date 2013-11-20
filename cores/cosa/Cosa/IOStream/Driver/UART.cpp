@@ -73,8 +73,12 @@ UART::end()
 int 
 UART::putchar(char c)
 {
-  uint8_t mode = SLEEP_MODE_IDLE;
-  while (m_obuf->putchar(c) == -1) Power::sleep(mode);
+  if (m_obuf->putchar(c) == IOStream::EOF) {
+    if (m_mode == NON_BLOCKING) return (IOStream::EOF);
+    do {
+      Power::sleep(m_mode);
+    } while (m_obuf->putchar(c) == IOStream::EOF);
+  }
   *UCSRnB() |= _BV(UDRIE0);
   return (c & 0xff);
 }
@@ -83,7 +87,7 @@ void
 UART::on_udre_interrupt()
 {
   int c = m_obuf->getchar();
-  if (c != -1) 
+  if (c != IOStream::EOF) 
     *UDRn() = c; 
   else 
     *UCSRnB() &= ~_BV(UDRIE0);
@@ -98,14 +102,14 @@ UART::on_rx_interrupt()
 #define UART_ISR_UDRE(vec,uart)			\
 ISR(vec ## _UDRE_vect)				\
 {						\
-  if (UART::uart == 0) return;			\
+  if (UART::uart == NULL) return;		\
   UART::uart->on_udre_interrupt();		\
 }
 
 #define UART_ISR_RX(vec,uart)			\
   ISR(vec ## _RX_vect)				\
   {						\
-    if (UART::uart == 0) return;		\
+    if (UART::uart == NULL) return;		\
     UART::uart->on_rx_interrupt();		\
   }
 
@@ -114,21 +118,21 @@ UART_ISR_RX(USART,uart0)
 
 #if defined(__ARDUINO_MIGHTY__) 
 
-UART* UART::uart1 = 0;
+UART* UART::uart1 = NULL;
 UART_ISR_UDRE(USART1,uart1)
 UART_ISR_RX(USART1,uart1)
 
 #elif defined(__ARDUINO_MEGA__)
 
-UART* UART::uart1 = 0;
+UART* UART::uart1 = NULL;
 UART_ISR_UDRE(USART1,uart1)
 UART_ISR_RX(USART1,uart1)
 
-UART* UART::uart2 = 0;
+UART* UART::uart2 = NULL;
 UART_ISR_UDRE(USART2,uart2)
 UART_ISR_RX(USART2,uart2)
 
-UART* UART::uart3 = 0;
+UART* UART::uart3 = NULL;
 UART_ISR_UDRE(USART3,uart3)
 UART_ISR_RX(USART3,uart3)
 

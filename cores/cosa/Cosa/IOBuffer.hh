@@ -50,7 +50,7 @@ public:
    * Constuct buffer object for stream operations. 
    */
   IOBuffer() :
-    IOStream::Device(),
+    IOStream::Device(SLEEP_MODE_IDLE),
     m_head(0),
     m_tail(0)
   {
@@ -111,6 +111,14 @@ public:
     
   /**
    * @override IOStream::Device
+   * Peek for the given character in the stream. Return number of character
+   * or EOF(-1).
+   * @return number of characters or EOF(-1).
+   */
+  virtual int peekchar(char c);
+    
+  /**
+   * @override IOStream::Device
    * Read character from buffer.
    * @return character or EOF(-1).
    */
@@ -118,11 +126,20 @@ public:
 
   /**
    * @override IOStream::Device
+   * Read string terminated by new-line or until size into given
+   * string buffer.
+   * @param[in] s string buffer to read into.
+   * @param[in] count max number of bytes to read.
+   * @return string pointer or NULL.
+   */
+  virtual char* gets(char *s, size_t count);
+
+  /**
+   * @override IOStream::Device
    * Wait for the buffer to become empty.
-   * @param[in] mode sleep mode on flush wait.
    * @return zero(0) or negative error code.
    */
-  virtual int flush(uint8_t mode = SLEEP_MODE_IDLE);
+  virtual int flush();
 
   /**
    * Empty the buffer.
@@ -146,7 +163,7 @@ int
 IOBuffer<SIZE>::putchar(char c)
 {
   uint8_t next = (m_head + 1) & MASK;
-  if (next == m_tail) return (-1);
+  if (next == m_tail) return (IOStream::EOF);
   m_buffer[next] = c;
   m_head = next;
   return (c & 0xff);
@@ -156,26 +173,55 @@ template <uint8_t SIZE>
 int 
 IOBuffer<SIZE>::peekchar()
 {
-  if (m_head == m_tail) return (-1);
+  if (m_head == m_tail) return (IOStream::EOF);
   uint8_t next = (m_tail + 1) & MASK;
   return (m_buffer[next]);
 }
 
 template <uint8_t SIZE>
 int 
+IOBuffer<SIZE>::peekchar(char c)
+{
+  uint8_t tail = m_tail;
+  int res = 0;
+  while (tail != m_head) {
+    res += 1;
+    tail = (tail + 1) & MASK;
+    if (m_buffer[tail] == c) return (res);
+  }
+  return (IOStream::EOF);
+}
+
+template <uint8_t SIZE>
+int 
 IOBuffer<SIZE>::getchar()
 {
-  if (m_head == m_tail) return (-1);
+  if (m_head == m_tail) return (IOStream::EOF);
   uint8_t next = (m_tail + 1) & MASK;
   m_tail = next;
   return (m_buffer[next]);
 }
 
 template <uint8_t SIZE>
+char*
+IOBuffer<SIZE>::gets(char *s, size_t count) 
+{ 
+  char* res = s;
+  while (count--) {
+    int c = getchar();
+    if (c == '\n' || c == IOStream::EOF) break;
+    *s++ = c;
+  }
+  *s = 0;
+  return (res);
+}
+
+template <uint8_t SIZE>
 int
-IOBuffer<SIZE>::flush(uint8_t mode)
+IOBuffer<SIZE>::flush()
 {
-  while (m_head != m_tail) Power::sleep(mode);
+  if (m_mode == NON_BLOCKING) return (IOStream::EOF);
+  while (m_head != m_tail) Power::sleep(m_mode);
   return (0);
 }
 

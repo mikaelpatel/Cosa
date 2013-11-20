@@ -43,53 +43,92 @@ void setup()
 
 void loop()
 {
+  // Check initial state of buffer
+  ASSERT(buffer.is_empty());
+  ASSERT(!buffer.is_full());
+  ASSERT(buffer.available() == 0);
+  ASSERT(buffer.room() == 15);
 
-  INFO("Check initial state of buffer", 0);
-  TRACE(buffer.is_empty());
-  TRACE(buffer.is_full());
-  TRACE(buffer.available());
-  TRACE(buffer.room());
+  // Try to peek and get a character when empty
+  ASSERT(buffer.peekchar() == IOStream::EOF);
+  ASSERT(buffer.peekchar('a') == IOStream::EOF);
+  ASSERT(buffer.getchar() == IOStream::EOF);
 
-  INFO("Try to peek and get a character when empty", 1);
-  TRACE(buffer.peekchar());
-  TRACE(buffer.getchar());
+  // Put a character and check the state
+  ASSERT(buffer.putchar('*') == '*');
+  ASSERT(!buffer.is_empty());
+  ASSERT(!buffer.is_full());
+  ASSERT(buffer.available() == 1);
+  ASSERT(buffer.room() == 14);
 
-  INFO("Put a character and check the state", 2);
-  TRACE(buffer.putchar('*'));
-  TRACE(buffer.is_empty());
-  TRACE(buffer.is_full());
-  TRACE(buffer.available());
-  TRACE(buffer.room());
+  // Peek again and check that the state did not change
+  ASSERT(buffer.peekchar() == '*');
+  ASSERT(buffer.peekchar('*') == 1);
+  ASSERT(!buffer.is_empty());
+  ASSERT(!buffer.is_full());
+  ASSERT(buffer.available() == 1);
+  ASSERT(buffer.room() == 14);
 
-  INFO("Peek again and check that the state did not change", 3);
-  TRACE(buffer.peekchar());
-  TRACE(buffer.is_empty());
-  TRACE(buffer.is_full());
-  TRACE(buffer.available());
-  TRACE(buffer.room());
+  // Get again and check the new state
+  ASSERT(buffer.getchar() == '*');
+  ASSERT(buffer.is_empty());
+  ASSERT(!buffer.is_full());
+  ASSERT(buffer.available() == 0);
+  ASSERT(buffer.room() == 15);
 
-  INFO("Get again and check the new state", 4);
-  TRACE(buffer.getchar());
-  TRACE(buffer.is_empty());
-  TRACE(buffer.is_full());
-  TRACE(buffer.available());
-  TRACE(buffer.room());
+  // Fill the buffer and check the state
+  for (char c = 'A'; !buffer.is_full(); c++) 
+    ASSERT(buffer.putchar(c) == c);
+  ASSERT(!buffer.is_empty());
+  ASSERT(buffer.is_full());
+  ASSERT(buffer.available() == 15);
+  ASSERT(buffer.room() == 0);
+  ASSERT(buffer.peekchar('A') == 1);
+  for (char c = 'A'; !buffer.is_full(); c++) 
+    ASSERT(buffer.peekchar(c) == c - 'A' + 1);
 
-  INFO("Fill the buffer and check the state", 5);
-  for (char c = 'A'; !buffer.is_full(); c++) TRACE(buffer.putchar(c));
-  TRACE(buffer.is_empty());
-  TRACE(buffer.is_full());
-  TRACE(buffer.available());
-  TRACE(buffer.room());
+  // Empty the buffer
+  for (char c = 'A'; !buffer.is_empty(); c++) 
+    ASSERT(buffer.getchar() == c);
+  ASSERT(buffer.is_empty());
+  ASSERT(!buffer.is_full());
+  ASSERT(buffer.available() == 0);
+  ASSERT(buffer.room() == 15);
 
-  INFO("Empty the buffer", 6);
-  while (buffer.available()) trace << (char) buffer.getchar();
-  trace << endl;
-  TRACE(buffer.is_empty());
-  TRACE(buffer.is_full());
-  TRACE(buffer.available());
-  TRACE(buffer.room());
+  // Fill the buffer again. Put another character and it should fail
+  for (char c = 'A'; !buffer.is_full(); c++) 
+    ASSERT(buffer.putchar(c) == c);
+  ASSERT(buffer.putchar('-') == IOStream::EOF);
+  ASSERT(buffer.getchar() == 'A');
 
+  // Scan the buffer
+  char s[16];
+  ASSERT(buffer.gets(s, sizeof(s)) == s);
+  ASSERT(strlen(s) == 14);
+  ASSERT(!strcmp_P(s, PSTR("BCDEFGHIJKLMNO")));
+
+  // Scan the buffer
+  ASSERT(buffer.putchar('A') == 'A');
+  ASSERT(buffer.putchar('B') == 'B');
+  ASSERT(buffer.putchar('C') == 'C');
+  ASSERT(buffer.putchar('\n') == '\n');
+  ASSERT(buffer.putchar('1') == '1');
+  ASSERT(buffer.putchar('2') == '2');
+  ASSERT(buffer.putchar('3') == '3');
+  ASSERT(buffer.putchar('\n') == '\n');
+
+  ASSERT(buffer.gets(s, sizeof(s)) == s);
+  ASSERT(strlen(s) == 3);
+  ASSERT(!strcmp_P(s, PSTR("ABC")));
+
+  ASSERT(buffer.gets(s, sizeof(s)) == s);
+  ASSERT(strlen(s) == 3);
+  ASSERT(!strcmp_P(s, PSTR("123")));
+
+  ASSERT(buffer.gets(s, sizeof(s)) == s);
+  ASSERT(strlen(s) == 0);
+
+  // End the test suite
   ASSERT(true == false);
 }
 

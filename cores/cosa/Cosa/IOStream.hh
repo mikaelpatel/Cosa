@@ -27,8 +27,6 @@
 #define __COSA_IOSTREAM_HH__
 
 #include "Cosa/Types.h"
-#undef putchar
-#undef getchar
 
 /**
  * Basic in-/output stream support class. Requires implementation of
@@ -36,11 +34,43 @@
  */
 class IOStream {
 public:
+  /** End Of File, returned when device operations fails (empty or full) */
+  static const int EOF = -1;
+
   /**
    * Device for in/output of characters or strings.
    */
   class Device {
+  protected:
+    static const uint8_t NON_BLOCKING = 255;
+
+    /** Sleep mode if blocking otherwise NON_BLOCKING */
+    uint8_t m_mode;
+
   public:
+    /**
+     * Default constructor for IOStream devices.
+     * @param[in] mode sleep mode (Default SLEEP_MODE_IDLE)
+     */
+    Device(uint8_t mode = SLEEP_MODE_IDLE) : m_mode(mode) {}
+
+    /**
+     * Set non-blocking mode.
+     */
+    void set_non_blocking()
+    {
+      m_mode = NON_BLOCKING;
+    }
+
+    /**
+     * Set blocking mode with given sleep mode.
+     * @param[in] mode sleep mode.
+     */
+    void set_blocking(uint8_t mode)
+    {
+      m_mode = mode;
+    }
+
     /**
      * @override IOStream::Device
      * Number of bytes available.
@@ -107,6 +137,13 @@ public:
     
     /**
      * @override IOStream::Device
+     * Peek for given character from device. 
+     * @return available or EOF(-1).
+     */
+    virtual int peekchar(char c);
+    
+    /**
+     * @override IOStream::Device
      * Read character from device.
      * @return character or EOF(-1).
      */
@@ -118,7 +155,7 @@ public:
      * string buffer.
      * @param[in] s string buffer to read into.
      * @param[in] count max number of bytes to read.
-     * @return number of characters read or EOF(-1).
+     * @return string pointer or NULL.
      */
     virtual char* gets(char *s, size_t count);
 
@@ -142,10 +179,9 @@ public:
     /**
      * @override IOStream::Device
      * Flush internal device buffers. Wait for device to become idle.
-     * @param[in] mode sleep mode on flush wait.
      * @return zero(0) or negative error code.
      */
-    virtual int flush(uint8_t mode = SLEEP_MODE_IDLE);
+    virtual int flush();
 
     /**
      * The default implementation of device; null device.
@@ -155,7 +191,7 @@ public:
 
   /**
    * Filter for device (decorator). Default implementation is a 
-   * null filter.
+   * pass through filter.
    */
   class Filter : public Device {
   protected:
@@ -302,12 +338,11 @@ public:
     /**
      * @override IOStream::Device
      * Flush internal device buffers. Wait for device to become idle.
-     * @param[in] mode sleep mode on flush wait.
      * @return zero(0) or negative error code.
      */
-    virtual int flush(uint8_t mode = SLEEP_MODE_IDLE)
+    virtual int flush()
     {
-      return (m_dev->flush(mode));
+      return (m_dev->flush());
     }
   };
   

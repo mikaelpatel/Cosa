@@ -133,7 +133,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * Construct serial port handler for given UART.
+   * Construct serial port handler for given UART. 
    * @param[in] port number.
    * @param[in] ibuf input stream buffer.
    * @param[in] obuf output stream buffer.
@@ -203,12 +203,11 @@ public:
   /**
    * @override IOStream::Device
    * Flush internal device buffers. Wait for device to become idle.
-   * @param[in] mode sleep mode on flush wait.
    * @return zero(0) or negative error code.
    */
-  virtual int flush(uint8_t mode)
+  virtual int flush()
   {
-    return (m_obuf->flush(mode));
+    return (m_obuf->flush());
   }
 
   /**
