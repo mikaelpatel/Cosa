@@ -29,6 +29,7 @@
 ##
 
 attiny84-8.name=Cosa Tiny (ATtiny84, 8 MHz internal clock)
+attiny84-8.upload.using=arduino:arduinoisp
 attiny84-8.bootloader.low_fuses=0xe2
 attiny84-8.bootloader.high_fuses=0xdf
 attiny84-8.bootloader.extended_fuses=0xff
@@ -39,6 +40,7 @@ attiny84-8.build.core=cosa
 attiny84-8.build.variant=tiny14
 
 attiny85-8.name=Cosa Tiny (ATtiny85, 8 MHz internal clock)
+attiny85-8.upload.using=arduino:arduinoisp
 attiny85-8.bootloader.low_fuses=0xe2
 attiny85-8.bootloader.high_fuses=0xdf
 attiny85-8.bootloader.extended_fuses=0xff
@@ -47,6 +49,27 @@ attiny85-8.build.mcu=attiny85
 attiny85-8.build.f_cpu=8000000L
 attiny85-8.build.core=cosa
 attiny85-8.build.variant=tiny8
+
+##
+# ARDUINO BREADBOARD
+##
+
+atmega328.name=Cosa Arduino Basetta (ATmega328, 8 MHz internal clock)
+# atmega328.upload.using=arduino:arduinoisp
+atmega328.upload.protocol=usbasp
+atmega328.upload.maximum_size=32256
+atmega328.upload.speed=115200
+atmega328.bootloader.low_fuses=0xE2
+atmega328.bootloader.high_fuses=0xDE
+atmega328.bootloader.extended_fuses=0xFD
+# atmega328.bootloader.path=optiboot
+# atmega328.bootloader.file=optiboot_atmega328.hex
+# atmega328.bootloader.unlock_bits=0x3F
+# atmega328.bootloader.lock_bits=0x0F
+atmega328.build.mcu=atmega328p
+atmega328.build.f_cpu=8000000L
+atmega328.build.core=cosa
+atmega328.build.variant=standard
 
 ##
 # ARDUINO STANDARD
@@ -68,21 +91,21 @@ uno.build.f_cpu=16000000L
 uno.build.core=cosa
 uno.build.variant=standard
 
-atmega328.name=Cosa Arduino Duemilanove (ATmega328)
-atmega328.upload.protocol=arduino
-atmega328.upload.maximum_size=30720
-atmega328.upload.speed=57600
-atmega328.bootloader.low_fuses=0xFF
-atmega328.bootloader.high_fuses=0xDA
-atmega328.bootloader.extended_fuses=0x05
-# atmega328.bootloader.path=atmega
-# atmega328.bootloader.file=ATmegaBOOT_168_atmega328.hex
-# atmega328.bootloader.unlock_bits=0x3F
-# atmega328.bootloader.lock_bits=0x0F
-atmega328.build.mcu=atmega328p
-atmega328.build.f_cpu=16000000L
-atmega328.build.core=cosa
-atmega328.build.variant=standard
+duemi.name=Cosa Arduino Duemilanove (ATmega328)
+duemi.upload.protocol=arduino
+duemi.upload.maximum_size=30720
+duemi.upload.speed=57600
+duemi.bootloader.low_fuses=0xFF
+duemi.bootloader.high_fuses=0xDA
+duemi.bootloader.extended_fuses=0x05
+# duemi.bootloader.path=atmega
+# duemi.bootloader.file=ATmegaBOOT_168_atmega328.hex
+# duemi.bootloader.unlock_bits=0x3F
+# duemi.bootloader.lock_bits=0x0F
+duemi.build.mcu=atmega328p
+duemi.build.f_cpu=16000000L
+duemi.build.core=cosa
+duemi.build.variant=standard
 
 nano328.name=Cosa Arduino Nano (ATmega328)
 nano328.upload.protocol=arduino
