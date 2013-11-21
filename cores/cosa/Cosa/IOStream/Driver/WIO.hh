@@ -93,10 +93,9 @@ public:
   /**
    * @override IOStream::Device
    * Flush internal device buffers. Wait for device to become idle.
-   * @param[in] mode sleep mode on flush wait.
    * @return zero(0) or negative error code.
    */
-  virtual int flush(uint8_t mode = SLEEP_MODE_IDLE)
+  virtual int flush()
   {
     int res = (m_dev->send(m_dest, m_port, m_buffer, m_ix) == m_ix ? 0 : -1);
     m_ix = 0;
