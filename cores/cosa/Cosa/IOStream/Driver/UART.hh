@@ -190,6 +190,16 @@ public:
 
   /**
    * @override IOStream::Device
+   * Peek for given character from serial port input buffer.
+   * @return available or EOF(-1).
+   */
+  virtual int peekchar(char c)
+  {
+    return (m_ibuf->peekchar(c));
+  }
+    
+  /**
+   * @override IOStream::Device
    * Read character from serial port input buffer.
    * Returns character if successful otherwise on error or buffer empty
    * returns EOF(-1),
