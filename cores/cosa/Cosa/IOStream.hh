@@ -137,7 +137,8 @@ public:
     
     /**
      * @override IOStream::Device
-     * Peek for given character from device. 
+     * Peek for the given character in device buffer. Return number 
+     * of character or EOF(-1).
      * @return available or EOF(-1).
      */
     virtual int peekchar(char c);
@@ -152,7 +153,7 @@ public:
     /**
      * @override IOStream::Device
      * Read string terminated by new-line or until size into given
-     * string buffer.
+     * string buffer. Returns pointer to string or NULL if empty line.
      * @param[in] s string buffer to read into.
      * @param[in] count max number of bytes to read.
      * @return string pointer or NULL.
