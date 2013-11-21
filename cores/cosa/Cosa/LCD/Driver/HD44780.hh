@@ -44,9 +44,9 @@
 class HD44780 : public LCD::Device {
 protected:
   /**
-   * Abstract HD44780 LCD IO handler to isolate communication specific
+   * Abstract HD44780 LCD IO adapter to isolate communication specific
    * functions and allow access over parallel and serial interfaces;
-   * Ports and I2C/TWI.
+   * Ports, SR and I2C/TWI.
    */
   class IO {
   public:
@@ -168,7 +168,7 @@ protected:
     EXTENDED_SET = 0x04		// - extended instruction set
   } __attribute__((packed));
 
-  // Row offset tables for display times (16X1, 16X2, 16X4, 20X4)
+  // Row offset tables for display dimensions (16X1, 16X2, 16X4, 20X4)
   static const uint8_t offset0[] PROGMEM;
   static const uint8_t offset1[] PROGMEM;
 
@@ -246,10 +246,10 @@ public:
     m_mode(ENTRY_MODE_SET | INCREMENT),
     m_cntl(CONTROL_SET),
     m_func(FUNCTION_SET | DATA_LENGTH_4BITS | NR_LINES_2 | FONT_5X8DOTS),
+    m_offset((height == 4) && (width == 16) ? offset1 : offset0),
     WIDTH(width),
     HEIGHT(height)
   {
-    m_offset = ((height == 4) && (width == 16)) ? offset1 : offset0;
   }
   
   /**
@@ -309,12 +309,12 @@ public:
   
   /**
    * @override LCD::Device
-   * Clear display and move cursor to home.
+   * Clear display and move cursor to home(0, 0).
    */
   virtual void display_clear();
 
   /**
-   * Move cursor to home position.
+   * Move cursor to home position(0, 0) .
    */
   void cursor_home();
 
@@ -391,14 +391,14 @@ public:
   }
 
   /**
-   * Set custom character bitmap to given id (0..7). 
+   * Set custom character bitmap for given identity (0..7). 
    * @param[in] id character.
    * @param[in] bitmap pointer to bitmap.
    */
   void set_custom_char(uint8_t id, const uint8_t* bitmap);
 
   /**
-   * Set custom character bitmap to given id (0..7). 
+   * Set custom character bitmap to given identity (0..7). 
    * The bitmap should be stored in program memory.
    * @param[in] id character.
    * @param[in] bitmap pointer to program memory bitmap.
