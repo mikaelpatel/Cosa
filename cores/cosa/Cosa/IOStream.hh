@@ -303,10 +303,10 @@ public:
     /**
      * @override IOStream::Device
      * Read string terminated by new-line or until size into given
-     * string buffer.
+     * string buffer. Returns pointer to string or NULL if empty line.
      * @param[in] s string buffer to read into.
      * @param[in] count max number of bytes to read.
-     * @return number of characters read or EOF(-1).
+     * @return string pointer or NULL.
      */
     virtual char* gets(char *s, size_t count)
     {
@@ -502,6 +502,15 @@ public:
    */
   void print(IOStream::Device* buffer);
 
+  /**
+   * Scan next token from the input stream. Returns pointer to string
+   * or NULL if not stream is empty. 
+   * @param[in] s string buffer to read into.
+   * @param[in] count max number of bytes to read.
+   * @return string pointer or NULL.
+   */
+  char* scan(char *s, size_t count);
+  
   /**
    * Stream manipulator function prototype. To allow implementation
    * of base change and end of line.

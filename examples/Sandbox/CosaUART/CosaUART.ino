@@ -38,7 +38,8 @@ void loop()
 {
   // Count the number of wake-ups
   static uint32_t n = 0;
-
+  static bool is_scan_mode = false;
+  
   // Sleep and wait for something to happen
   Power::sleep(SLEEP_MODE_IDLE);
   n += 1;
@@ -46,11 +47,33 @@ void loop()
   // Check if a complete line is available
   if (uart.peekchar('\n') < 0) return;
 
-  // Scan the line. Skip empty lines
   char s[32];
-  if (uart.gets(s, sizeof(s)) == NULL) return;
+  if (is_scan_mode) {
+    // Scan tokens until new-line
+    if (trace.scan(s, sizeof(s)) && *s == '\n') return;
+    trace << Watchdog::millis() << ':' << n << ':';
+    trace << PSTR("echo('") << s << PSTR("')") << endl;
+    // Check for mode change command
+    if (strcmp_P(s, PSTR("LINE")) == 0) {
+      if (trace.scan(s, sizeof(s)) && *s == '\n') {
+	is_scan_mode = false;
+	return;
+      }
+      trace << Watchdog::millis() << ':' << n << ':';
+      trace << PSTR("echo('") << s << PSTR("')") << endl;
+    }
+    while (trace.scan(s, sizeof(s)) && *s != '\n') {
+      trace << Watchdog::millis() << ':' << n << ':';
+      trace << PSTR("echo('") << s << PSTR("')") << endl;
+    }
+  } 
+  else {
+    // Scan the line. Skip empty lines
+    if (uart.gets(s, sizeof(s)) == NULL) return;
+    trace << Watchdog::millis() << ':' << n << ':';
+    trace << PSTR("echo('") << s << PSTR("')") << endl;
 
-  // Echo the line with some time statistics
-  trace << Watchdog::millis() << ':' << n << ':';
-  trace << PSTR("echo('") << s << PSTR("')") << endl;
+    // Check for mode change command
+    is_scan_mode = strcmp_P(s, PSTR("SCAN")) == 0;
+  }
 }

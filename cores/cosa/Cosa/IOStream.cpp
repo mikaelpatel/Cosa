@@ -25,6 +25,7 @@
 
 #include "Cosa/IOStream.hh"
 #include "Cosa/Power.hh"
+#include <ctype.h>
 
 IOStream::Filter::Filter(Device* dev) : 
   m_dev(dev != NULL ? dev : &Device::null) 
@@ -197,6 +198,44 @@ IOStream::vprintf_P(const char* format, va_list args)
     }
     print(c);
   }
+}
+
+char* 
+IOStream::scan(char *s, size_t count)
+{
+  if (m_dev == NULL) return (NULL);
+  char* res = s;
+
+  // Skip whitespace
+  int c = m_dev->peekchar();
+  while (c <= ' ' && c != '\n') {
+    if (c == EOF) return (NULL);
+    c = m_dev->getchar();
+    c = m_dev->peekchar();
+  }
+  c = m_dev->getchar();
+
+  // Scan the token; identifier, number or special character
+  count -= 1;
+  *s++ = c;
+  if (isalpha(c)) {
+    while (count--) {
+      c = m_dev->peekchar();
+      if (!isalnum(c)) break;
+      c = m_dev->getchar();
+      *s++ = c;
+    }
+  }
+  else if (isdigit(c) || c == '-') {
+    while (count--) {
+      c = m_dev->peekchar();
+      if (!isdigit(c)) break;
+      c = m_dev->getchar();
+      *s++ = c;
+    }
+  }
+  *s = 0;
+  return (res);
 }
 
 IOStream::Device IOStream::Device::null;
