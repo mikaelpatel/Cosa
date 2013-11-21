@@ -213,7 +213,7 @@ IOBuffer<SIZE>::gets(char *s, size_t count)
     *s++ = c;
   }
   *s = 0;
-  return (res);
+  return (s == res ? NULL : res);
 }
 
 template <uint8_t SIZE>
