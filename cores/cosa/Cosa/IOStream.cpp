@@ -292,7 +292,7 @@ int
 IOStream::Device::write(const iovec_t* vec)
 {
   size_t size = 0;
-  for (const iovec_t* vp = vec; vp->buf != 0; vp++) {
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
     size_t res = (size_t) write(vp->buf, vp->size);
     if (res == 0) break;
     size += res;
@@ -352,7 +352,7 @@ int
 IOStream::Device::read(iovec_t* vec) 
 {
   size_t size = 0;
-  for (const iovec_t* vp = vec; vp->buf != 0; vp++) {
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
     size_t res = (size_t) read(vp->buf, vp->size);
     if (res == 0) break;
     size += res;

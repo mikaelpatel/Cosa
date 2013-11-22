@@ -67,7 +67,7 @@ SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
 }
 
 SPI::SPI(uint8_t mode, Order order) :
-  m_dev(0)
+  m_dev(NULL)
 {
   // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
   // Do not confuse with SPI chip programming pins
@@ -82,7 +82,7 @@ SPI::SPI(uint8_t mode, Order order) :
 }
 
 SPI::SPI() :
-  m_dev(0)
+  m_dev(NULL)
 {
   // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
   // Do not confuse with SPI chip programming pins
@@ -98,7 +98,7 @@ bool
 SPI::begin(Driver* dev)
 {
   synchronized {
-    if (m_dev != 0) synchronized_return (false);
+    if (m_dev != NULL) synchronized_return (false);
     // Acquire the driver controller
     m_dev = dev;
     // Set clock polarity
@@ -109,7 +109,7 @@ SPI::begin(Driver* dev)
     // Enable device
     if (dev->m_pulse < 2) dev->m_cs.toggle();
     // Disable all interrupt sources on SPI bus
-    for (dev = spi.m_list; dev != 0; dev = dev->m_next)
+    for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
       if (dev->m_irq) dev->m_irq->disable();
   }
   return (true);
@@ -138,8 +138,8 @@ SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
 }
 
 SPI::SPI(uint8_t mode, Order order) :
-  m_list(0),
-  m_dev(0)
+  m_list(NULL),
+  m_dev(NULL)
 {
   // Initiate the SPI port and control for slave mode
   synchronized {
@@ -176,7 +176,7 @@ bool
 SPI::begin(Driver* dev)
 {
   synchronized {
-    if (m_dev != 0) synchronized_return (false);
+    if (m_dev != NULL) synchronized_return (false);
     // Acquire the driver controller
     m_dev = dev;
     // Initiate SPI hardware with device settings
@@ -185,7 +185,7 @@ SPI::begin(Driver* dev)
     // Enable device
     if (dev->m_pulse < 2) dev->m_cs.toggle();
     // Disable all interrupt sources on SPI bus
-    for (dev = spi.m_list; dev != 0; dev = dev->m_next)
+    for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
       if (dev->m_irq) dev->m_irq->disable();
   }
   return (true);
@@ -195,7 +195,7 @@ void
 SPI::Slave::on_interrupt(uint16_t arg) 
 { 
   // Sanity check that a buffer is defined
-  if (m_buffer == 0) return;
+  if (m_buffer == NULL) return;
 
   // Append to buffer and push event when buffer is full
   m_buffer[m_put++] = arg;
@@ -207,12 +207,12 @@ SPI::Slave::on_interrupt(uint16_t arg)
 }
 
 // Current slave device. Should be a singleton
-SPI::Slave* SPI::Slave::s_device = 0;
+SPI::Slave* SPI::Slave::s_device = NULL;
 
 ISR(SPI_STC_vect)
 {
   SPI::Slave* device = SPI::Slave::s_device;
-  if (device != 0) device->on_interrupt(SPDR);
+  if (device != NULL) device->on_interrupt(SPDR);
 }
 #endif
 
@@ -221,15 +221,15 @@ bool
 SPI::end()
 { 
   synchronized {
-    if (m_dev == 0) synchronized_return (false);
+    if (m_dev == NULL) synchronized_return (false);
     // Disable the device or give pulse if required
     m_dev->m_cs.toggle();
     if (m_dev->m_pulse > 1) m_dev->m_cs.toggle();
     // Enable the bus devices with interrupts
-    for (Driver* dev = spi.m_list; dev != 0; dev = dev->m_next)
-      if (dev->m_irq != 0) dev->m_irq->enable();
+    for (Driver* dev = spi.m_list; dev != NULL; dev = dev->m_next)
+      if (dev->m_irq != NULL) dev->m_irq->enable();
     // Release the driver controller
-    m_dev = 0;
+    m_dev = NULL;
   }
   return (true);
 }

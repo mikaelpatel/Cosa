@@ -174,7 +174,7 @@ Menu::Walker::on_key_down(uint8_t nr)
     if (!m_selected) {
       m_ix += 1;
       item = (Menu::item_P) pgm_read_word(&list[m_ix]);
-      if (item == 0) m_ix -= 1;
+      if (item == NULL) m_ix -= 1;
     }
     else {
       switch (type) {
@@ -186,7 +186,7 @@ Menu::Walker::on_key_down(uint8_t nr)
 	  uint16_t value = *vp + 1;
 	  list = (Menu::item_vec_P) pgm_read_word(&evar->list);	  
 	  item = (Menu::item_P) pgm_read_word(&list[value]);
-	  if (item == 0) break;
+	  if (item == NULL) break;
 	  *vp = value;
 	}
 	break;
@@ -196,7 +196,7 @@ Menu::Walker::on_key_down(uint8_t nr)
 	  Menu::zero_or_many_P bitset = (Menu::zero_or_many_P) item;
 	  list = (Menu::item_vec_P) pgm_read_word(&bitset->list);	  
 	  item = (Menu::item_P) pgm_read_word(&list[m_bv + 1]);
-	  if (item == 0) break;
+	  if (item == NULL) break;
 	  m_bv += 1;
 	}
 	break;

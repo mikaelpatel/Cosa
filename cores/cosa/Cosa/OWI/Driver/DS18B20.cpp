@@ -30,7 +30,7 @@ DS18B20*
 DS18B20::Search::next()
 { 
   DS18B20* dev = (DS18B20*) OWI::Search::next(); 
-  if (dev == 0) return (0);
+  if (dev == NULL) return (NULL);
   dev->read_scratchpad(false);
   return (dev);
 }
@@ -128,9 +128,10 @@ DS18B20::read_power_supply()
   return (m_parasite);
 }
 
-void 
-DS18B20::print(IOStream& outs, int16_t temp)
+IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
 {
+  if (thermometer.NAME != NULL) outs << thermometer.NAME << PSTR(" = ");
+  int16_t temp = thermometer.get_temperature();
   if (temp < 0) {
     temp = -temp;
     outs << '-';
@@ -140,12 +141,6 @@ DS18B20::print(IOStream& outs, int16_t temp)
   outs << integer << '.';
   if (fraction < 10) outs << '0';
   outs << fraction;
-}
-
-IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
-{
-  if (thermometer.NAME != 0) outs << thermometer.NAME << PSTR(" = ");
-  DS18B20::print(outs, thermometer.get_temperature());
   return (outs);
 }
 

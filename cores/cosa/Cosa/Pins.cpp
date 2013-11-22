@@ -497,7 +497,7 @@ PWMPin::set(uint16_t value, uint16_t min, uint16_t max)
   set(duty);
 }
 
-AnalogPin* AnalogPin::sampling_pin = 0;
+AnalogPin* AnalogPin::sampling_pin = NULL;
 
 void 
 AnalogPin::prescale(uint8_t factor)
@@ -534,7 +534,7 @@ AnalogPin::bandgap(uint16_t vref)
 uint16_t 
 AnalogPin::sample(uint8_t pin, Reference ref)
 {
-  if (sampling_pin != 0) return (0xffffU);
+  if (sampling_pin != NULL) return (0xffffU);
   if (pin >= Board::A0) pin -= Board::A0;
   loop_until_bit_is_clear(ADCSRA, ADSC);
   ADMUX = (ref | pin);
@@ -548,7 +548,7 @@ AnalogPin::sample_await()
 {
   if (sampling_pin != this) return (m_value);
   synchronized {
-    sampling_pin = 0;
+    sampling_pin = NULL;
     bit_clear(ADCSRA, ADIE);
   }
   loop_until_bit_is_clear(ADCSRA, ADSC);
@@ -577,13 +577,13 @@ AnalogPin::on_interrupt(uint16_t value)
     sampling_pin->m_value = value;
   else
     Event::push(event, this, value);
-  sampling_pin = 0;
+  sampling_pin = NULL;
 }
 
 ISR(ADC_vect) 
 { 
   bit_clear(ADCSRA, ADIE);
-  if (AnalogPin::sampling_pin != 0) 
+  if (AnalogPin::sampling_pin != NULL) 
     AnalogPin::sampling_pin->on_interrupt(ADCW);
 }
 
@@ -607,7 +607,7 @@ AnalogPins::on_interrupt(uint16_t value)
   }
 }
 
-AnalogComparator* AnalogComparator::comparator = 0;
+AnalogComparator* AnalogComparator::comparator = NULL;
 
 void 
 AnalogComparator::on_interrupt(uint16_t arg) 
@@ -617,6 +617,6 @@ AnalogComparator::on_interrupt(uint16_t arg)
 
 ISR(ANALOG_COMP_vect)
 { 
-  if (AnalogComparator::comparator != 0) 
+  if (AnalogComparator::comparator != NULL) 
     AnalogComparator::comparator->on_interrupt();
 }

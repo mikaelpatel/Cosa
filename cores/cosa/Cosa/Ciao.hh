@@ -158,7 +158,7 @@ public:
    */
   void set(IOStream::Device* dev) 
   { 
-    if (dev == 0) dev = &IOStream::Device::null;
+    if (dev == NULL) dev = &IOStream::Device::null;
     m_dev = dev;
   }
 

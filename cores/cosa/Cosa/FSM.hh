@@ -90,7 +90,7 @@ public:
    */
   void set_state(StateHandler fn) 
   {
-    if (fn == 0) return;
+    if (fn == NULL) return;
     m_state = fn;
   }
   

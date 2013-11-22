@@ -130,13 +130,13 @@ ExternalInterrupt::disable()
 }
 #endif
 
-ExternalInterrupt* ExternalInterrupt::ext[Board::EXT_MAX] = { 0 };
+ExternalInterrupt* ExternalInterrupt::ext[Board::EXT_MAX] = { NULL };
 
-#define INT_ISR(nr)				\
-ISR(INT ## nr ## _vect)				\
-{						\
- if (ExternalInterrupt::ext[nr] != 0)		\
-   ExternalInterrupt::ext[nr]->on_interrupt();	\
+#define INT_ISR(nr)					\
+ISR(INT ## nr ## _vect)					\
+{							\
+  if (ExternalInterrupt::ext[nr] != NULL)		\
+    ExternalInterrupt::ext[nr]->on_interrupt();		\
 }
 
 INT_ISR(0)

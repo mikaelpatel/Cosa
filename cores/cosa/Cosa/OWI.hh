@@ -90,8 +90,8 @@ public:
      * @param[in] name of device driver instance.
      */
     Driver(OWI* pin, const char* name = NULL) : 
-      ROM(0), 
-      m_next(0),
+      ROM(NULL), 
+      m_next(NULL),
       m_pin(pin),
       NAME(name)
     {
@@ -232,7 +232,7 @@ public:
   OWI(Board::DigitalPin pin) : 
     IOPin(pin), 
     m_devices(0),
-    m_device(0),
+    m_device(NULL),
     m_crc(0)
   {}
 

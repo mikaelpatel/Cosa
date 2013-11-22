@@ -165,7 +165,7 @@ public:
    */
   void dispatch()
   {
-    if (m_target != 0) m_target->on_event(m_type, m_value);
+    if (m_target != NULL) m_target->on_event(m_type, m_value);
   }
 
   /**
