@@ -26,18 +26,24 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+void echo(uint16_t n, char* s)
+{
+  trace << Watchdog::millis() << ':' << n << ':';
+  trace << PSTR("echo('") << s << PSTR("')") << endl;
+}
+
 void setup()
 {
   // Start the UART and Watchdog
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaUART: started"));
+  trace.begin(&uart, PSTR("CosaUART: started (LINE MODE)"));
   Watchdog::begin();
 }
 
 void loop()
 {
   // Count the number of wake-ups
-  static uint32_t n = 0;
+  static uint16_t n = 0;
   static bool is_scan_mode = false;
   
   // Sleep and wait for something to happen
@@ -51,29 +57,25 @@ void loop()
   if (is_scan_mode) {
     // Scan tokens until new-line
     if (trace.scan(s, sizeof(s)) && *s == '\n') return;
-    trace << Watchdog::millis() << ':' << n << ':';
-    trace << PSTR("echo('") << s << PSTR("')") << endl;
+    echo(n, s);
     // Check for mode change command
     if (strcmp_P(s, PSTR("LINE")) == 0) {
       if (trace.scan(s, sizeof(s)) && *s == '\n') {
+	trace << PSTR("LINE MODE") << endl;
 	is_scan_mode = false;
 	return;
       }
-      trace << Watchdog::millis() << ':' << n << ':';
-      trace << PSTR("echo('") << s << PSTR("')") << endl;
+      echo(n, s);
     }
-    while (trace.scan(s, sizeof(s)) && *s != '\n') {
-      trace << Watchdog::millis() << ':' << n << ':';
-      trace << PSTR("echo('") << s << PSTR("')") << endl;
-    }
+    while (trace.scan(s, sizeof(s)) && *s != '\n') echo(n, s);
   } 
   else {
     // Scan the line. Skip empty lines
     if (uart.gets(s, sizeof(s)) == NULL) return;
-    trace << Watchdog::millis() << ':' << n << ':';
-    trace << PSTR("echo('") << s << PSTR("')") << endl;
+    echo(n, s);
 
     // Check for mode change command
     is_scan_mode = strcmp_P(s, PSTR("SCAN")) == 0;
+    if (is_scan_mode) trace << PSTR("SCAN MODE") << endl;
   }
 }
