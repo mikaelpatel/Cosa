@@ -52,38 +52,46 @@ void setup()
   TRACE(free_memory());
   TRACE(sizeof(a));
   
-  TRACE(b[GREEN]);
+  // Check that the bitset is empty
+  ASSERT(b.isempty());
+  ASSERT(a == b);
+  
+  // Add and remove elements
+  ASSERT(!b[GREEN]);
   b += GREEN;
-  TRACE(b[GREEN]);
+  ASSERT(b[GREEN]);
   b -= GREEN;
-  TRACE(b[GREEN]);
+  ASSERT(!b[GREEN]);
   b += RED;
   b += CYAN;
-  trace << PSTR("B0:");
-  b.print(trace);
+  ASSERT(b[RED] && b[CYAN]);
+  trace << PSTR("B0:") << b << endl;
 
+  // Assign and check that they are equal
+  a = b;
+  ASSERT(a == b);
+  trace << PSTR("A0:") << a << endl;
+
+  // Add element and another bitset
   a += a.members() / 2;
-  trace << PSTR("A0:");
-  a.print(trace);
-  a += b;
-  trace << PSTR("A1:");
-  a.print(trace);
+  trace << PSTR("A1:") << a << endl;
 
+  // Try adding element outside the bitset
   b += 67;
   b += 68;
   b += 100;
-  trace << PSTR("B1:");
-  b.print(trace);
+  trace << PSTR("B1:") << b << endl;
+  ASSERT(b[RED] && b[CYAN] && b[67]);
+  ASSERT(!b[68] && !b[100]);
 
+  // Remove bitset and the last element
   b -= a;
-  trace << PSTR("B2:");
-  b.print(trace);
-
-  b.empty();
+  b -= 67;
+  trace << PSTR("B2:") << b << endl;
+  ASSERT(b.isempty());
   for (uint16_t i = 4; i < b.members(); i += 5)
     b += i;
-  trace << PSTR("B3:");
-  b.print(trace);
+  trace << PSTR("B3:") << b << endl;
 }
 
 void loop()

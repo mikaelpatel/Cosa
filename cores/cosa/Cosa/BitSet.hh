@@ -32,12 +32,12 @@
 /**
  * Bitset implemented as a template class with a byte vector for the 
  * elements as bits.
- * @param[in] N number of elements.
+ * @param[in] N max number of elements in bitset.
  */
 template<uint16_t N>
 class BitSet {
 private:
-  // Mask bit address
+  // Mask bit address and set size
   static const uint8_t MASK = (CHARBITS - 1);
   static const size_t SET_MAX = (N + (CHARBITS/2)) / CHARBITS;
  
@@ -54,7 +54,7 @@ public:
   }
 
   /**
-   * Return number of elements in the bitset.
+   * Return max number of elements in the bitset.
    */
   uint16_t members() 
   {
@@ -67,6 +67,16 @@ public:
   void empty()
   {
     memset(m_set, 0, sizeof(m_set));
+  }
+
+  /**
+   * Return true if the bitset is empty.
+   */
+  bool isempty()
+  {
+    for (uint16_t i = 0; i < sizeof(m_set); i++) 
+      if (m_set[i] != 0) return (false);
+    return (true);
   }
 
   /**
@@ -98,42 +108,59 @@ public:
 
   /**
    * Assign bitset with given value. Bitset must be the same size.
-   * @param[in] x bitset to assign from.
+   * @param[in] rhs bitset to assign from.
    */
-  void operator=(BitSet& x)
+  void operator=(BitSet& rhs)
   {
-    if (x.members() != N) return;
+    if (rhs.members() != N) return;
     for (uint16_t i = 0; i < sizeof(m_set); i++) 
-      m_set[i] = x.m_set[i];
+      m_set[i] = rhs.m_set[i];
   }
 
   /**
    * Add element from the given bitset. Bitset must be the same size.
-   * @param[in] x bitset to add from.
+   * @param[in] rhs bitset to add from.
    */
-  void operator+=(BitSet& x)
+  void operator+=(BitSet& rhs)
   {
-    if (x.members() != N) return;
+    if (rhs.members() != N) return;
     for (uint16_t i = 0; i < sizeof(m_set); i++) 
-      m_set[i] |= x.m_set[i];
+      m_set[i] |= rhs.m_set[i];
   }
 
   /**
    * Remove elements from the given bitset. Bitset must be the same size.
-   * @param[in] x bitset to remove.
+   * @param[in] rhs bitset to remove.
    */
-  void operator-=(BitSet& x)
+  void operator-=(BitSet& rhs)
   {
-    if (x.members() != N) return;
+    if (rhs.members() != N) return;
     for (uint16_t i = 0; i < sizeof(m_set); i++) 
-      m_set[i] &= ~x.m_set[i];
+      m_set[i] &= ~rhs.m_set[i];
   }
 
-  void print(IOStream& outs)
+  /**
+   * Check if the bitsets are equal. Return false if they are not of same
+   * size.
+   * @param[in] rhs bitset to assign from.
+   */
+  bool operator==(BitSet& rhs)
+  {
+    if (rhs.members() != N) return (false);
+    return (memcmp(m_set, rhs.m_set, sizeof(m_set)) == 0);
+  }
+
+  /**
+   * Print bitset to the given output stream.
+   * @param[in] outs output stream.
+   * @param[in] rhs bit set to print.
+   * @return output stream.
+   */
+  friend IOStream& operator<<(IOStream& outs, BitSet& rhs)
   {
     for (uint16_t i = 0; i < N; i++) 
-      outs << ((m_set[i / CHARBITS] & _BV(i & MASK)) != 0);
-    outs << endl;
+      outs << ((rhs.m_set[i / CHARBITS] & _BV(i & MASK)) != 0);
+    return (outs);
   }
 };
 #endif
