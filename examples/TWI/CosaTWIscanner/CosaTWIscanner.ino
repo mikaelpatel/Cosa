@@ -116,6 +116,7 @@ void setup()
   // Bind the UART to en output stream for print out
   IOStream cout(&uart);
   uart.begin(9600);
+  cout << PSTR("CosaTWIscanner: started") << endl;
   // Iterate through all bus addresses
   for (uint8_t addr = 3; addr < 128; addr++) {
     // Attempt to read from the device
