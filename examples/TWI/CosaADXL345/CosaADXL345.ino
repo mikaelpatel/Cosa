@@ -32,8 +32,8 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
-// Digital acceleratometer with alternative address
-ADXL345 acceleratometer(1);
+// Digital accelerometer with alternative address
+ADXL345 accelerometer(1);
 
 void setup()
 {
@@ -46,14 +46,14 @@ void setup()
   TRACE(sizeof(TWI::Driver));
   TRACE(sizeof(ADXL345));
 
-  // Start the watchdog ticks and the acceleratometer
+  // Start the watchdog ticks and the accelerometer
   Watchdog::begin();
-  TRACE(acceleratometer.begin());
+  TRACE(accelerometer.begin());
 }
 
 void loop()
 {
   // Sample and print measurement to output stream
-  trace << acceleratometer << endl;
+  trace << accelerometer << endl;
   SLEEP(2);
 }
