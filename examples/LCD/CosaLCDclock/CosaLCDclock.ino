@@ -16,8 +16,9 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Cosa LCD demo with RTC.
- * 
+ * Cosa LCD demo with RTC. For Arduino Mega this sketch will require
+ * an 2004 LCD, an ADXL345 Accelerometer and a HMC5883L Digital Compass.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -27,20 +28,37 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/TWI/Driver/DS3231.hh"
 
-// Remove comment to set real-time clock (update below)
-// #define RTC_SET_TIME
-DS3231 rtc;
-
 // Select the access port for the LCD
 // HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::ERM1602_5 port;
-// HD44780::MJKDZ port;
-HD44780::GYIICLCD port;
+HD44780::MJKDZ port;
+// HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
-HD44780 lcd(&port);
+
+#if defined(__ARDUINO_MEGA__)
+#include "Cosa/TWI/Driver/ADXL345.hh"
+#include "Cosa/TWI/Driver/HMC5883L.hh"
+
+// Digital acceleratometer with alternative address
+ADXL345 accelerometer(1);
+
+// The 3-Axis Digital Compass
+HMC5883L compass;
+
+// Use LCD with width=20 characters, height=4 lines
+HD44780 lcd(&port, 20, 4);
+#else
+HD44780 lcd;
+#endif
+
+// Remove comment to set real-time clock (update below)
+// #define RTC_SET_TIME
+DS3231 rtc;
+
+// Bind the lcd to an io-stream
 IOStream cout(&lcd);
 
 void setup()
@@ -60,8 +78,23 @@ void setup()
   now.year = 0x13;
   rtc.set_time(now);
 #endif
-  
-  SLEEP(2);
+
+#if defined(__ARDUINO_MEGA__)
+  // Start the accelerometer with the default settings
+  accelerometer.begin();
+
+  // Set continous measurement mode, 3 Hz output, avg 8 samples, +-4.0 Gauss
+  compass.set_output_rate(HMC5883L::OUTPUT_RATE_3_HZ);
+  compass.set_samples_avg(HMC5883L::SAMPLES_AVG_8);
+  compass.set_range(HMC5883L::RANGE_4_0_GA);
+  compass.set_mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE);
+
+  // And start the compass
+  compass.begin();
+#endif
+
+  // Give the sensors some time for startup
+  SLEEP(1);
 }
 
 void loop()
@@ -74,10 +107,10 @@ void loop()
   // Update the LCD with the reading
   cout << clear;
 
-  // First line with date and temperature
+  // First line with date and temperature. Use BCD format output
   cout << PSTR("20") << bcd << now.year << '-'
        << bcd << now.month << '-'
-       << bcd << now.date << PSTR("  ")
+       << bcd << now.date << ' '
        << (temp >> 2) << PSTR(" C");
 
   // Second line with time and battery status
@@ -86,6 +119,22 @@ void loop()
        << bcd << now.minutes << ':'
        << bcd << now.seconds << ' '
        << AnalogPin::bandgap(1100) << PSTR(" mV");
+
+#if defined(__ARDUINO_MEGA__)
+  // Read the heading, scale to milli gauss and print the data
+  compass.read_heading();
+  compass.to_milli_gauss();
+  HMC5883L::data_t dir;
+  compass.get_heading(dir);
+  lcd.set_cursor(0, 2);
+  cout << dir.x << PSTR(", ") << dir.y << PSTR(", ") << dir.z << PSTR(" mG");
+
+  // Read the accelerometer and print the data
+  ADXL345::sample_t acc;
+  accelerometer.sample(acc);
+  lcd.set_cursor(0, 3);
+  cout << acc.x << PSTR(", ") << acc.y << PSTR(", ") << acc.z << PSTR(" mg");
+#endif
 
   // Take a nap
   SLEEP(1);
