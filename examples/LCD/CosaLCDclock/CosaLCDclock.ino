@@ -51,7 +51,7 @@ HMC5883L compass;
 // Use LCD with width=20 characters, height=4 lines
 HD44780 lcd(&port, 20, 4);
 #else
-HD44780 lcd;
+HD44780 lcd(&port);
 #endif
 
 // Remove comment to set real-time clock (update below)
