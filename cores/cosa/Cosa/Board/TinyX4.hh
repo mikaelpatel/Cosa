@@ -178,8 +178,10 @@ public:
  * Redefinition of symbols to allow generic code.
  */
 #define ANALOG_COMP_vect ANA_COMP_vect
+#define TIMER0_OVF_vect TIM0_OVF_vect
 #define TIMER0_COMPA_vect TIM0_COMPA_vect
 #define TIMER0_COMPB_vect TIM0_COMPB_vect
+#define TIMER1_OVF_vect TIM1_OVF_vect
 #define TIMER1_COMPA_vect TIM1_COMPA_vect
 #define TIMER1_COMPB_vect TIM1_COMPB_vect
 
@@ -187,15 +189,17 @@ public:
  * Forward declare interrupt service routines to allow them as friends.
  */
 extern "C" {
+  void ADC_vect(void) __attribute__ ((signal));
+  void ANALOG_COMP_vect(void) __attribute__ ((signal));
   void INT0_vect(void) __attribute__ ((signal));
   void PCINT0_vect(void) __attribute__ ((signal));
   void PCINT1_vect(void) __attribute__ ((signal));
-  void ADC_vect(void) __attribute__ ((signal));
-  void ANALOG_COMP_vect(void) __attribute__ ((signal));
   void TIMER0_COMPA_vect(void) __attribute__ ((signal));
   void TIMER0_COMPB_vect(void) __attribute__ ((signal));
+  void TIMER0_OVF_vect(void) __attribute__ ((signal));
   void TIMER1_COMPA_vect(void) __attribute__ ((signal));
   void TIMER1_COMPB_vect(void) __attribute__ ((signal));
+  void TIMER1_OVF_vect(void) __attribute__ ((signal));
   void WDT_vect(void) __attribute__ ((signal));
   void USI_START_vect(void) __attribute__ ((signal));
   void USI_OVF_vect(void) __attribute__ ((signal));

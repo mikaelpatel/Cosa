@@ -33,8 +33,7 @@
  * second timing.
  */
 class RTC {
-  friend void TIMER0_COMPA_vect(void);
-  friend void TIMER0_COMPB_vect(void);
+  friend void TIMER0_OVF_vect(void);
 public:
   /**
    * Milli-second interrupt handler callback function prototype.
@@ -43,10 +42,9 @@ public:
   typedef void (*InterruptHandler)(void* env);
 
 private:
-  static uint8_t s_initiated;
+  static bool s_initiated;
   static volatile uint32_t s_uticks;
-  static volatile uint32_t s_ms;
-  static volatile uint16_t s_mticks;
+  static volatile uint16_t s_ticks;
   static volatile uint32_t s_sec;
   static InterruptHandler s_handler;
   static void* s_env;
@@ -133,7 +131,10 @@ public:
    * Return the current clock in milli-seconds.
    * @return milli-seconds.
    */
-  static uint32_t millis();
+  static uint32_t millis()
+  {
+    return (micros() / 1000L);
+  }
 
   /**
    * Return the current clock in seconds.

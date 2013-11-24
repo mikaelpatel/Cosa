@@ -242,6 +242,7 @@ public:
  */
 #define USART_UDRE_vect USART0_UDRE_vect
 #define USART_RX_vect USART0_RX_vect 
+#define USART_TX_vect USART0_TX_vect
 
 /**
  * Forward declare interrupt service routines to allow them as friends.
@@ -259,14 +260,26 @@ extern "C" {
   void SPI_STC_vect(void) __attribute__ ((signal));
   void TIMER0_COMPA_vect(void) __attribute__ ((signal));
   void TIMER0_COMPB_vect(void) __attribute__ ((signal));
+  void TIMER0_OVF_vect(void) __attribute__ ((signal));
+  void TIMER1_CAPT_vect(void) __attribute__ ((signal));
   void TIMER1_COMPA_vect(void) __attribute__ ((signal));
   void TIMER1_COMPB_vect(void) __attribute__ ((signal));
+  void TIMER1_OVF_vect(void) __attribute__ ((signal));
+  void TIMER2_COMPA_vect(void) __attribute__ ((signal));
+  void TIMER2_COMPB_vect(void) __attribute__ ((signal));
+  void TIMER2_OVF_vect(void) __attribute__ ((signal));
+  void TIMER3_CAPT_vect(void) __attribute__ ((signal));
+  void TIMER3_COMPA_vect(void) __attribute__ ((signal));
+  void TIMER3_COMPB_vect(void) __attribute__ ((signal));
+  void TIMER3_OVF_vect(void) __attribute__ ((signal));
   void TWI_vect(void) __attribute__ ((signal));
   void WDT_vect(void) __attribute__ ((signal));
-  void USART_UDRE_vect(void) __attribute__ ((signal));
   void USART_RX_vect(void) __attribute__ ((signal));
-  void USART1_UDRE_vect(void) __attribute__ ((signal));
+  void USART_TX_vect(void) __attribute__ ((signal));
+  void USART_UDRE_vect(void) __attribute__ ((signal));
   void USART1_RX_vect(void) __attribute__ ((signal));
+  void USART1_UDRE_vect(void) __attribute__ ((signal));
+  void USART1_TX_vect(void) __attribute__ ((signal));
 }
 #endif
 
