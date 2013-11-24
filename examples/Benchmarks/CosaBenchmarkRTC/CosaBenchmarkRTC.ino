@@ -81,10 +81,19 @@ void setup()
   stop = RTC::micros();
   INFO("DELAY(100): %ul us", stop - start);
 
+  start = RTC::micros();
+  SLEEP(1);
+  stop = RTC::micros();
+  INFO("SLEEP(1): %ul us", stop - start);
+
   // Start the measurement
   TRACE(RTC::seconds());
+  TRACE(RTC::micros());
+  TRACE(RTC::millis());
   for (uint8_t i = 0; i < 5; i++) {
-    SLEEP(1);
+    Watchdog::delay(1000);
+    TRACE(RTC::micros());
+    TRACE(RTC::millis());
     TRACE(RTC::seconds());
   }
 
