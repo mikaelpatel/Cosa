@@ -31,9 +31,7 @@
 #define __COSA_BOARD_HH__
 
 #include "Cosa/Types.h"
-#if defined(__AVR_ATmega8__)			\
-  || defined(__AVR_ATmega168__)			\
-  || defined(__AVR_ATmega328P__)
+#if defined(__AVR_ATmega328P__)
 #include "Cosa/Board/Standard.hh"
 #define __ARDUINO_STANDARD__
 #elif defined(__AVR_ATmega1284P__)

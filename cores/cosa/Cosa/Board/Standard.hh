@@ -27,15 +27,15 @@
 #define __COSA_BOARD_STANDARD_HH__
 
 /**
- * Cosa STANDARD Board pin symbol definitions for the ATmega8,
- * ATmega168, ATmega328P based boards such as Arduino Uno, Mini Pro,
- * Nano, and LilyPad. Cosa does not use pin numbers as Arduino/Wiring, 
- * instead strong data type is used (enum types) for the specific 
- * pin classes; DigitalPin, AnalogPin, PWMPin, etc.
+ * Cosa STANDARD Board pin symbol definitions for the ATmega328P based
+ * boards such as Arduino Uno, Mini Pro, Nano, and LilyPad. Cosa does
+ * not use pin numbers as Arduino/Wiring, instead strong data type is
+ * used (enum types) for the specific pin classes; DigitalPin,
+ * AnalogPin, PWMPin, etc. 
  *
- * The pin numbers for ATmega8, ATmega168 and ATmega328P are mapped
- * as in Arduino. The static inline functions, SFR, BIT and UART, rely
- * on compiler optimizations to be reduced. 
+ * The pin numbers for ATmega328P are mapped as in Arduino. The static
+ * inline functions, SFR, BIT and UART, rely on compiler optimizations
+ * to be reduced.  
  */
 class Board {
   friend class Pin;
@@ -142,11 +142,9 @@ public:
    * time checking
    */
   enum PWMPin {
-#if !defined(__AVR_ATmega8__)
     PWM0 = D3,
     PWM1 = D5,
     PWM2 = D6,
-#endif
     PWM3 = D9,
     PWM4 = D10,
     PWM5 = D11
@@ -217,10 +215,6 @@ public:
     PIN_MAX = A7
   } __attribute__((packed));
 };
-
-#if defined(__AVR_ATmega8__)
-#define ANA_COMP_vect ANALOG_COMP_vect
-#endif
 
 /**
  * Forward declare interrupt service routines to allow them as friends.
