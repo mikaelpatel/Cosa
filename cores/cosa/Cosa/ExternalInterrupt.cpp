@@ -79,6 +79,36 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
   ext[m_ix] = this;
 }
 
+#elif defined(__ARDUINO_TINYX61__)
+
+ExternalInterrupt::
+ExternalInterrupt(Board::ExternalInterruptPin pin, 
+		  InterruptMode mode, 
+		  bool pullup) :
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+{
+  m_ix = (pin == Board::EXT1);
+  ext[m_ix] = this;
+  bit_field_set(MCUCR, 0b11, mode);
+}
+
+void 
+ExternalInterrupt::enable() 
+{ 
+  synchronized {
+    bit_clear(GIFR, INTF0 + m_ix); 
+    bit_set(GIMSK, INT0 + m_ix); 
+  }
+}
+
+void 
+ExternalInterrupt::disable() 
+{ 
+  synchronized {
+    bit_clear(GIMSK, INT0 + m_ix);
+  }
+}
+
 #elif defined(__ARDUINO_TINY__)
 
 ExternalInterrupt::
@@ -140,11 +170,11 @@ ISR(INT ## nr ## _vect)					\
 }
 
 INT_ISR(0)
-#if !defined(__ARDUINO_TINY__)
+#if defined(INT1_vect)
 INT_ISR(1)
-#if !defined(__ARDUINO_STANDARD__)
+#if defined(INT2_vect)
 INT_ISR(2)
-#if defined(__ARDUINO_MEGA__)
+#if defined(INT3_vect)
 INT_ISR(3)
 INT_ISR(4)
 INT_ISR(5)

@@ -50,7 +50,7 @@ Fai::write(uint32_t mask)
   Ciao::write(&Descriptor::digital_pins_t, &dgl, 1);
 }
 
-#elif defined(__ARDUINO_TINYX4__)
+#elif defined(__ARDUINO_TINYX4__) || defined(__ARDUINO_TINYX61__)
 
 void 
 Fai::write(uint32_t mask)

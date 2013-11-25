@@ -37,11 +37,11 @@
  */
 class ExternalInterrupt : public IOPin, public Interrupt::Handler {
   friend void INT0_vect(void);
-#if !defined(__ARDUINO_TINY__)
+#if defined(INT1_vect)
   friend void INT1_vect(void);
-#if !defined(__ARDUINO_STANDARD__)
+#if defined(INT2_vect)
   friend void INT2_vect(void);
-#if defined(__ARDUINO_MEGA__)
+#if defined(INT3_vect)
   friend void INT3_vect(void);
   friend void INT4_vect(void);
   friend void INT5_vect(void);

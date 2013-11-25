@@ -389,44 +389,6 @@ PWMPin::set(uint8_t duty)
   }
 }
 
-#elif defined(__ARDUINO_TINYX5__)
-
-PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
-  OutputPin((Board::DigitalPin) pin) 
-{ 
-  TCCR0A |= _BV(WGM01) | _BV(WGM00);
-  TCCR0B |= _BV(CS01)  | _BV(CS00);
-  set(duty); 
-}
-
-uint8_t
-PWMPin::get_duty()
-{
-  switch (m_pin) {
-  case Board::PWM0: return (OCR0A);
-  case Board::PWM1: return (OCR0B);
-  default:
-    return (is_set());
-  }
-}
-
-void 
-PWMPin::set(uint8_t duty)
-{
-  switch (m_pin) {
-  case Board::PWM0:
-    bit_set(TCCR0A, COM0A1);
-    OCR0A = duty;
-    return;
-  case Board::PWM1:
-    bit_set(TCCR0B, COM0B1);
-    OCR0B = duty;
-    return;
-  default:
-    OutputPin::set(duty);
-  }
-}
-
 #elif defined(__ARDUINO_TINYX4__)
 
 PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
@@ -479,6 +441,87 @@ PWMPin::set(uint8_t duty)
   case Board::PWM3:
     bit_set(TCCR1B, COM1B1);
     OCR0B = duty;
+    return;
+  default:
+    OutputPin::set(duty);
+  }
+}
+
+#elif defined(__ARDUINO_TINYX5__)
+
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
+  OutputPin((Board::DigitalPin) pin) 
+{ 
+  TCCR0A |= _BV(WGM01) | _BV(WGM00);
+  TCCR0B |= _BV(CS01)  | _BV(CS00);
+  set(duty); 
+}
+
+uint8_t
+PWMPin::get_duty()
+{
+  switch (m_pin) {
+  case Board::PWM0: return (OCR0A);
+  case Board::PWM1: return (OCR0B);
+  default:
+    return (is_set());
+  }
+}
+
+void 
+PWMPin::set(uint8_t duty)
+{
+  switch (m_pin) {
+  case Board::PWM0:
+    bit_set(TCCR0A, COM0A1);
+    OCR0A = duty;
+    return;
+  case Board::PWM1:
+    bit_set(TCCR0B, COM0B1);
+    OCR0B = duty;
+    return;
+  default:
+    OutputPin::set(duty);
+  }
+}
+
+#elif defined(__ARDUINO_TINYX61__)
+
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
+  OutputPin((Board::DigitalPin) pin) 
+{ 
+  TCCR1B |= _BV(CS11)  | _BV(CS10);
+  TCCR1D |= _BV(WGM11) | _BV(WGM10);
+  set(duty); 
+}
+
+uint8_t
+PWMPin::get_duty()
+{
+  switch (m_pin) {
+  case Board::PWM0: return (OCR1A);
+  case Board::PWM1: return (OCR1B);
+  case Board::PWM2: return (OCR1D);
+  default:
+    return (is_set());
+  }
+}
+
+void 
+PWMPin::set(uint8_t duty)
+{
+  switch (m_pin) {
+  case Board::PWM0:
+    bit_set(TCCR1C, COM1A1);
+    OCR1A = duty;
+    return;
+  case Board::PWM1:
+    bit_set(TCCR1C, COM1B1);
+    OCR1B = duty;
+    return;
+  case Board::PWM2:
+    bit_set(TCCR1C, COM1D1);
+    OCR1D = duty;
     return;
   default:
     OutputPin::set(duty);

@@ -718,18 +718,18 @@ public:
     A1V1_REFERENCE = _BV(REFS1),
     A2V56_REFERENCE = (_BV(REFS1) | _BV(REFS0))
   } __attribute__((packed));
-#elif defined(__ARDUINO_TINYX5__)
-  enum Reference {
-    AVCC_REFERENCE = 0,
-    APIN_REFERENCE = _BV(REFS0),
-    A1V1_REFERENCE = _BV(REFS1),
-    A2V56_REFERENCE = (_BV(REFS2) | _BV(REFS1))
-  } __attribute__((packed));
 #elif defined(__ARDUINO_TINYX4__)
   enum Reference {
     AVCC_REFERENCE = 0,
     APIN_REFERENCE = _BV(REFS0),
     A1V1_REFERENCE = _BV(REFS1)
+  } __attribute__((packed));
+#elif defined(__ARDUINO_TINYX5__) || defined(__ARDUINO_TINYX61__)
+  enum Reference {
+    AVCC_REFERENCE = 0,
+    APIN_REFERENCE = _BV(REFS0),
+    A1V1_REFERENCE = _BV(REFS1),
+    A2V56_REFERENCE = (_BV(REFS2) | _BV(REFS1))
   } __attribute__((packed));
 #endif
 

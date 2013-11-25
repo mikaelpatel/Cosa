@@ -54,6 +54,19 @@ attiny85-8.build.mcu=attiny85
 attiny85-8.build.f_cpu=8000000L
 attiny85-8.build.core=cosa
 
+# AVR:ATtiny861
+# Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
+# Brown-out detection disabled. Serial program downloading enabled
+attiny861-8.name=Cosa Tiny (ATtiny861, 8 MHz internal clock)
+attiny861-8.upload.using=arduino:arduinoisp
+attiny861-8.bootloader.low_fuses=0xe2
+attiny861-8.bootloader.high_fuses=0xdf
+attiny861-8.bootloader.extended_fuses=0xff
+attiny861-8.upload.maximum_size=8192
+attiny861-8.build.mcu=attiny861
+attiny861-8.build.f_cpu=8000000L
+attiny861-8.build.core=cosa
+
 ##
 # ARDUINO BREADBOARD
 ##

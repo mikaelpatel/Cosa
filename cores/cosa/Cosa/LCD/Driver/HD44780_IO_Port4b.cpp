@@ -35,13 +35,17 @@
 # define DDR DDRD
 # define PORT PORTD
 # define POS 4
+#elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGHTY__)
+# define DDR DDRB
+# define PORT PORTB
+# define POS 4
 #elif defined(__ARDUINO_TINYX4__)
 # define DDR DDRA
 # define PORT PORTA
 # define POS 0
-#elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGHTY__)
-# define DDR DDRB
-# define PORT PORTB
+#elif defined(__ARDUINO_TINYX61__)
+# define DDR DDRA
+# define PORT PORTA
 # define POS 4
 #endif
 #define MASK (0x0f << POS)

@@ -41,18 +41,24 @@
   || defined(__AVR_ATmega2560__)
 #include "Cosa/Board/Mega.hh"
 #define __ARDUINO_MEGA__
-#elif defined(__AVR_ATtiny25__)			\
-  || defined(__AVR_ATtiny45__)			\
-  || defined(__AVR_ATtiny85__)
-#include "Cosa/Board/TinyX5.hh"
-#define __ARDUINO_TINY__ 
-#define __ARDUINO_TINYX5__
 #elif defined(__AVR_ATtiny24__)			\
   || defined(__AVR_ATtiny44__)			\
   || defined(__AVR_ATtiny84__)
 #include "Cosa/Board/TinyX4.hh"
 #define __ARDUINO_TINY__ 
 #define __ARDUINO_TINYX4__
+#elif defined(__AVR_ATtiny25__)			\
+  || defined(__AVR_ATtiny45__)			\
+  || defined(__AVR_ATtiny85__)
+#include "Cosa/Board/TinyX5.hh"
+#define __ARDUINO_TINY__ 
+#define __ARDUINO_TINYX5__
+#elif defined(__AVR_ATtiny261__)		\
+  || defined(__AVR_ATtiny461__)			\
+  || defined(__AVR_ATtiny861__)
+#include "Cosa/Board/TinyX61.hh"
+#define __ARDUINO_TINY__ 
+#define __ARDUINO_TINYX61__
 #else
 #error "Cosa/Board.hh: board not supported"
 #endif

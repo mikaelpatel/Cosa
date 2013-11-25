@@ -40,11 +40,11 @@ private:
   static uint8_t state[Board::PCINT_MAX];
 
   friend void PCINT0_vect(void);
-#if !defined(__ARDUINO_TINYX5__)
+#if defined(PCINT1_vect)
   friend void PCINT1_vect(void);
-#if !defined(__ARDUINO_TINYX4__)
+#if defined(PCINT2_vect)
   friend void PCINT2_vect(void);
-#if !defined(__ARDUINO_MEGA__)
+#if defined(PCINT3_vect)
   friend void PCINT3_vect(void);
 #endif
 #endif

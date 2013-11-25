@@ -48,7 +48,7 @@ is_valid_crc(uint8_t* ptr, uint8_t count)
 
 /** Prescale table for Timer1. Index is prescale setting */
 static const uint16_t prescale[] __PROGMEM = {
-#if defined(__ARDUINO_TINYX5__)
+#if defined(__ARDUINO_TINYX5__) || defined(__ARDUINO_TINYX61__)
   0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 
 #else
   0, 1, 8, 64, 256, 1024
@@ -288,6 +288,17 @@ VWI::begin(const void* config)
 
   // Turn on CTC mode / Output Compare pins disconnected
   TCCR1 = _BV(PWM1A) | prescaler;
+
+  // Number of ticks to count before firing interrupt
+  OCR1A = uint8_t(nticks);
+#elif defined(__ARDUINO_TINYX61__)
+  // Figure out prescaler value and counter match value
+  prescaler = timer_setting(m_speed * SAMPLES_PER_BIT, 8, &nticks);
+  if (!prescaler) return (false);
+
+  // Turn on CTC mode / Output Compare pins disconnected
+  TCCR1A = _BV(PWM1A);
+  TCCR1A = prescaler;
 
   // Number of ticks to count before firing interrupt
   OCR1A = uint8_t(nticks);
