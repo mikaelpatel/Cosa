@@ -33,7 +33,7 @@ bool
 Trace::begin(IOStream::Device* dev, const char* banner)
 {
   set_device(dev);
-  if (banner != 0) {
+  if (banner != NULL) {
     print_P(banner);
     println();
   }

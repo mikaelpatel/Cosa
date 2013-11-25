@@ -145,7 +145,7 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   // Sanity check the payload size
   if (vec == NULL) return (-1);
   size_t len = 0;
-  for (const iovec_t* vp = vec; vp->buf != 0; vp++)
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
     len += vp->size;
   if (len > PAYLOAD_MAX) return (-1);
 
@@ -161,7 +161,7 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   spi.end();
 
   // Write frame payload
-  for (const iovec_t* vp = vec; vp->buf != 0; vp++) {
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
     spi.begin(this);
     write(TXFIFO, vp->buf, vp->size);
     spi.end();

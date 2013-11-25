@@ -552,7 +552,7 @@ AnalogPin::prescale(uint8_t factor)
 bool
 AnalogPin::sample_request(uint8_t pin, uint8_t ref)
 {
-  if (sampling_pin != 0) return (false);
+  if (sampling_pin != NULL) return (false);
   if (pin >= Board::A0) pin -= Board::A0;
   loop_until_bit_is_clear(ADCSRA, ADSC);
   sampling_pin = this;

@@ -169,7 +169,7 @@ VWI::Receiver::recv(uint8_t& src, uint8_t& port,
     // Check the crc and the network and device destination address
     if (!is_valid_crc(m_buffer, m_length) ||
 	(hp->network != s_rf->m_addr.network)  || 
-	((hp->dest != 0) && (hp->dest != s_rf->m_addr.device))) {
+	((hp->dest != BROADCAST) && (hp->dest != s_rf->m_addr.device))) {
       m_done = false;
     }
   } while (!m_done);
@@ -199,7 +199,7 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 
   // Check that the message is not too large
   size_t len = 0;
-  for (const iovec_t* vp = vec; vp->buf != 0; vp++)
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
     len += vp->size;
   if (len > PAYLOAD_MAX) return (-1);
 
@@ -231,7 +231,7 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 
   // Encode the message into symbols. Each byte is converted into 
   // 2 symbols, high nybble first, low nybble second
-  for (const iovec_t* vp = vec; vp->buf != 0; vp++) {
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
     uint8_t *bp = (uint8_t*) vp->buf;
     for (uint8_t i = 0; i < vp->size; i++) {
       uint8_t data = *bp++;

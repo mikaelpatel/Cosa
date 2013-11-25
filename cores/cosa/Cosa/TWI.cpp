@@ -55,10 +55,10 @@ bool
 TWI::end()
 {
   // Check if an asynchronious read/write was issued 
-  if (m_target != 0) await_completed();
+  if (m_target != NULL) await_completed();
   // Put into idle state
-  m_target = 0;
-  m_dev = 0;
+  m_target = NULL;
+  m_dev = NULL;
   TWCR = 0;
   return (true);
 }
@@ -147,7 +147,7 @@ TWI::isr_stop(State state, uint8_t type)
   loop_until_bit_is_clear(TWCR, TWSTO);
   if (state == TWI::ERROR_STATE) m_count = -1;
   m_state = state;
-  if (type != Event::NULL_TYPE && m_target != 0)
+  if (type != Event::NULL_TYPE && m_target != NULL)
     Event::push(type, m_target, m_count);
 }
 

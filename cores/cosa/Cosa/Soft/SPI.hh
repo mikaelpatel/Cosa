@@ -144,13 +144,13 @@ namespace Soft {
     bool begin(Driver* dev)
     {
       synchronized {
-	if (m_dev != 0) synchronized_return (false);
+	if (m_dev != NULL) synchronized_return (false);
 	// Acquire the driver controller
 	m_dev = dev;
 	// Enable device
 	if (dev->m_pulse < 2) dev->m_cs.toggle();
 	// Disable all interrupt sources on SPI bus
-	for (dev = spi.m_list; dev != 0; dev = dev->m_next)
+	for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
 	  if (dev->m_irq) dev->m_irq->disable();
       }
       return (true);
@@ -169,8 +169,8 @@ namespace Soft {
 	m_dev->m_cs.toggle();
 	if (m_dev->m_pulse > 1) m_dev->m_cs.toggle();
 	// Enable the bus devices with interrupts
-	for (Driver* dev = spi.m_list; dev != 0; dev = dev->m_next)
-	  if (dev->m_irq != 0) dev->m_irq->enable();
+	for (Driver* dev = spi.m_list; dev != NULL; dev = dev->m_next)
+	  if (dev->m_irq != NULL) dev->m_irq->enable();
 	// Release the driver controller
 	m_dev = 0;
       }

@@ -185,7 +185,7 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   // Sanity check the payload size
   if (vec == NULL) return (-1);
   size_t len = 0;
-  for (const iovec_t* vp = vec; vp->buf != 0; vp++)
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
     len += vp->size;
   if (len > PAYLOAD_MAX) return (-1);
 
@@ -198,7 +198,7 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   m_status = spi.transfer(dest ? W_TX_PAYLOAD : W_TX_PAYLOAD_NO_ACK);
   spi.transfer(m_addr.device);
   spi.transfer(port);
-  for (const iovec_t* vp = vec; vp->buf != 0; vp++)
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
     spi.write(vp->buf, vp->size);
   spi.end();
   m_trans += 1;
