@@ -150,7 +150,6 @@ public:
   /**
    * @override LCD::Device
    * Start interaction with display.
-   * @param[in] level contrast.
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool begin();
@@ -237,7 +236,9 @@ public:
 
   /**
    * Draw bitmap in the current mode. 
-   * @param[in] bp
+   * @param[in] bp.
+   * @param[in] width.
+   * @param[in] height.
    */
   void draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height);
 

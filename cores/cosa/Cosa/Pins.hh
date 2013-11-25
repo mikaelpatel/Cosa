@@ -902,7 +902,9 @@ public:
    * interrupt handler and environment. The vector of pins should be 
    * defined in program memory using PROGMEM.
    * @param[in] pins vector with analog pins.
-   * @param[in] count number of analog pins in set.
+   * @param[in] buffer analog pin value storage.
+   * @param[in] count number of pins in vector.
+   * @param[in] ref reference voltage.
    */
   AnalogPins(const Board::AnalogPin* pins, 
 	     uint16_t* buffer, uint8_t count,

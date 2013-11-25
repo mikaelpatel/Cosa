@@ -184,7 +184,7 @@ public:
   /**
    * @override LCD::Device
    * Set display contrast (0..63).
-   * @param[in] contrast level.
+   * @param[in] level.
    */
   virtual void display_contrast(uint8_t level);
 
@@ -256,7 +256,9 @@ public:
 
   /**
    * Draw bitmap in the current mode. 
-   * @param[in] bp
+   * @param[in] bp.
+   * @param[in] width.
+   * @param[in] height.
    */
   void draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height);
 

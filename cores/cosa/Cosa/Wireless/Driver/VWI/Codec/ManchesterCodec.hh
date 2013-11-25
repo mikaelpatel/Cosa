@@ -55,6 +55,7 @@ public:
   /**
    * @override VWI::Codec
    * Returns symbol for given 4-bit data.
+   * @param[in] nibble to encode.
    * @return 8-bit Manchester code.
    */
   virtual uint8_t encode4(uint8_t nibble) 
@@ -65,6 +66,7 @@ public:
   /**
    * @override VWI::Codec
    * Returns 4-bit data for given Manchester symbol.
+   * @param[in] symbol to decode.
    * @return 4-bit data.
    */
   virtual uint8_t decode4(uint8_t symbol);

@@ -118,11 +118,11 @@ public:
   /**
    * @override Font
    * Draw character on given canvas.
-   * @param[in] canvas
+   * @param[in] canvas.
    * @param[in] c character.
    * @param[in] x position.
    * @param[in] y position.
-   * @param[in] scale
+   * @param[in] scale.
    */
   virtual void draw(Canvas* canvas, char c, 
 		    uint8_t x, uint8_t y, 

@@ -52,6 +52,7 @@ public:
   /**
    * @override VWI::Codec
    * Returns fixed bitstuffed symbol for given 4-bit data.
+   * @param[in] nibble to encode.
    * @return 5-bit bitstuffed code.
    */
   virtual uint8_t encode4(uint8_t nibble) 
@@ -62,6 +63,7 @@ public:
   /**
    * @override VWI::Codec
    * Returns 4-bit data for given fixed bitstuffed symbol.
+   * @param[in] symbol to decode.
    * @return 4-bit data.
    */
   virtual uint8_t decode4(uint8_t symbol)

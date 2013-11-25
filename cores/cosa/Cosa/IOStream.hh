@@ -138,7 +138,8 @@ public:
     /**
      * @override IOStream::Device
      * Peek for the given character in device buffer. Return number 
-     * of character or EOF(-1).
+     * of characters or EOF(-1).
+     * @param[in] c character to peek for.
      * @return available or EOF(-1).
      */
     virtual int peekchar(char c);
@@ -456,10 +457,9 @@ public:
   }
 
   /**
-   * Print string in program memory to stream.
-   * Use macro PSTR() to generate a string constants in 
-   * program memory.
-   * @param[in] ptr pointer to program memory string.
+   * Print string in program memory to stream. Use macro PSTR() to generate 
+   * a string constants in program memory.
+   * @param[in] s pointer to program memory string.
    */
   void print_P(const char* s) 
   { 

@@ -545,8 +545,8 @@ public:
   /**
    * @override Canvas
    * Set pixel with current pen color.
-   * @param[in] x
-   * @param[in] y
+   * @param[in] x.
+   * @param[in] y.
    */
   virtual void draw_pixel(uint8_t x, uint8_t y);
   
@@ -564,12 +564,12 @@ public:
    * @override Canvas
    * Draw bitmap with current pen color. The bitmap must be stored
    * in program memory.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] bp
-   * @param[in] width
-   * @param[in] height
-   * @param[in] scale
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] bp.
+   * @param[in] width.
+   * @param[in] height.
+   * @param[in] scale.
    */
   virtual void draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp, 
 			   uint8_t width, uint8_t height, 
@@ -578,10 +578,10 @@ public:
   /**
    * Draw bitmap at cursor position with current pen color. The bitmap
    * must be stored in program memory.
-   * @param[in] bp
-   * @param[in] width
-   * @param[in] height
-   * @param[in] scale
+   * @param[in] bp.
+   * @param[in] width.
+   * @param[in] height.
+   * @param[in] scale.
    */
   void draw_bitmap(const uint8_t* bp, 
 		   uint8_t width, uint8_t height,
@@ -596,12 +596,12 @@ public:
    * @override Canvas
    * Draw icon at given position with current pen color. The icon must
    * be stored in program memory.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] bp
-   * @param[in] width
-   * @param[in] height
-   * @param[in] scale
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] bp.
+   * @param[in] width.
+   * @param[in] height.
+   * @param[in] scale.
    */
   virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
 			 uint8_t width, uint8_t height,
@@ -611,10 +611,10 @@ public:
    * @override Canvas
    * Draw icon at given position with current pen color. The icon must
    * be stored in program memory.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] bp
-   * @param[in] scale
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] bp.
+   * @param[in] scale.
    */
   virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp, 
 			 uint8_t scale = 1);
@@ -622,8 +622,8 @@ public:
   /**
    * Draw icon at cursor position with current pen color. The icon
    * must be stored in program memory.
-   * @param[in] bp
-   * @param[in] scale
+   * @param[in] bp.
+   * @param[in] scale.
    */
   void draw_icon(const uint8_t* bp, uint8_t scale = 1)
   {
@@ -637,10 +637,10 @@ public:
   /**
    * @override Canvas
    * Draw line with current pen color.
-   * @param[in] x0 
-   * @param[in] y0
-   * @param[in] x1
-   * @param[in] y1
+   * @param[in] x0. 
+   * @param[in] y0.
+   * @param[in] x1.
+   * @param[in] y1.
    */
   virtual void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
 
@@ -661,9 +661,9 @@ public:
   /**
    * @override Canvas
    * Draw vertical line with current pen color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] length
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] length.
    */
   virtual void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length);
 
@@ -682,9 +682,9 @@ public:
   /**
    * @override Canvas
    * Draw horizontal line with current pen color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] length
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] length.
    */
   virtual void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length);
 
@@ -704,8 +704,8 @@ public:
    * @override Canvas
    * Draw polygon from program memory with current pen color. Vector of 
    * delta positions, terminate with 0, 0. Update cursor to end position.
-   * @param[in] poly
-   * @param[in] scale
+   * @param[in] poly.
+   * @param[in] scale.
    */
   virtual void draw_poly_P(const int8_t* poly, uint8_t scale = 1);
 
@@ -715,25 +715,25 @@ public:
    * delta positions, terminated with 0, 0. The cursor is moved for
    * when both dx and dy are zero or negative. Update cursor to new
    * position. 
-   * @param[in] stroke
-   * @param[in] scale
+   * @param[in] stroke.
+   * @param[in] scale.
    */
   virtual void draw_stroke_P(const int8_t* stroke, uint8_t scale = 1);
 
   /**
    * @override Canvas
    * Draw rectangle with current pen color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] width
-   * @param[in] height
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] width.
+   * @param[in] height.
    */
   virtual void draw_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
 
   /**
    * Draw rectangle at cursor position with current pen color.
-   * @param[in] width
-   * @param[in] height
+   * @param[in] width.
+   * @param[in] height.
    */
   void draw_rect(uint8_t width, uint8_t height)
   {
@@ -745,17 +745,17 @@ public:
   /**
    * @override Canvas
    * Fill rectangle with current pen color. Must override.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] width
-   * @param[in] height
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] width.
+   * @param[in] height.
    */
   virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
 
   /**
    * Fill rectangle at cursor position with current pen color.
-   * @param[in] width
-   * @param[in] height
+   * @param[in] width.
+   * @param[in] height.
    */
   void fill_rect(uint8_t width, uint8_t height)
   {
@@ -767,11 +767,11 @@ public:
   /**
    * @override Canvas
    * Draw round corner rectangle with current pen color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] width
-   * @param[in] height
-   * @param[in] radius
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] width.
+   * @param[in] height.
+   * @param[in] radius.
    */
   virtual void draw_roundrect(uint8_t x, uint8_t y, 
 			      uint8_t width, uint8_t height,
@@ -779,9 +779,9 @@ public:
 
   /**
    * Draw round corner rectangle at cursor position with current pen color.
-   * @param[in] width
-   * @param[in] height
-   * @param[in] radius
+   * @param[in] width.
+   * @param[in] height.
+   * @param[in] radius.
    */
   void draw_roundrect(uint8_t width, uint8_t height, uint8_t radius)
   {
@@ -793,11 +793,11 @@ public:
   /**
    * @override Canvas
    * Fill round corner rectangle with current pen color. 
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] width
-   * @param[in] height
-   * @param[in] radius
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] width.
+   * @param[in] height.
+   * @param[in] radius.
    */
   virtual void fill_roundrect(uint8_t x, uint8_t y, 
 			      uint8_t width, uint8_t height,
@@ -805,9 +805,9 @@ public:
 
   /**
    * Fill round corner rectangle at cursor position with current pen color.
-   * @param[in] width
-   * @param[in] height
-   * @param[in] radius
+   * @param[in] width.
+   * @param[in] height.
+   * @param[in] radius.
    */
   void fill_roundrect(uint8_t width, uint8_t height, uint8_t radius)
   {
@@ -819,9 +819,9 @@ public:
   /**
    * @override Canvas
    * Draw circle with current pen color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] radius
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] radius.
    */
   virtual void draw_circle(uint8_t x, uint8_t y, uint8_t radius);
 
@@ -839,15 +839,15 @@ public:
   /**
    * @override Canvas
    * Fill circle with current pen color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] radius
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] radius.
    */
   virtual void fill_circle(uint8_t x, uint8_t y, uint8_t radius);
 
   /**
    * Fill circle at cursor position with current pen color.
-   * @param[in] radius
+   * @param[in] radius.
    */
   void fill_circle(uint8_t radius)
   {

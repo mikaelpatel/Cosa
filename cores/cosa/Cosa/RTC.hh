@@ -152,6 +152,7 @@ public:
   /**
    * Delay using the real-time clock.
    * @param[in] ms sleep period in milli-seconds.
+   * @param[in] mode during sleep (Default SLEEP_MODE_IDLE).
    */
   static void delay(uint16_t ms, uint8_t mode = SLEEP_MODE_IDLE);
 };

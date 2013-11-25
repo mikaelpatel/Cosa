@@ -71,8 +71,8 @@ public:
 
   /**
    * Construct interrupt pin with given pin number.
-   * @param[in] pin pin number.
-   * @param[in] mode pin mode.
+   * @param[in] pin.
+   * @param[in] mode.
    */
   PinChangeInterrupt(Board::InterruptPin pin, bool pullup = false) :
     IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)

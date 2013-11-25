@@ -191,6 +191,7 @@ public:
   /**
    * @override IOStream::Device
    * Peek for given character from serial port input buffer.
+   * @param[in] c character to peek for.
    * @return available or EOF(-1).
    */
   virtual int peekchar(char c)

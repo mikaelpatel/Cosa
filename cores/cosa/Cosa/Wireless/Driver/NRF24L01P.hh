@@ -563,6 +563,7 @@ public:
    * @override Wireless::Device
    * Start up the device driver. Return true(1) if successful
    * otherwise false(0). 
+   * @param[in] config device configuration (default NULL).
    * @return bool
    */
   virtual bool begin(const void* config = NULL);
@@ -677,9 +678,9 @@ IOStream& operator<<(IOStream& outs, NRF24L01P::status_t status);
 IOStream& operator<<(IOStream& outs, NRF24L01P::fifo_status_t status);
 
 /** 
- * Output operator for performance statistics field print out.
+ * Output operator for observe statistics field print out.
  * @param[in] outs output stream.
- * @param[in] status value to print.
+ * @param[in] observe value to print.
  * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, NRF24L01P::observe_tx_t observe);

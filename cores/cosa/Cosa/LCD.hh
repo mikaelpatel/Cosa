@@ -94,7 +94,7 @@ public:
     /**
      * @override LCD::Device
      * Set display contrast level.
-     * @param[in] contrast level.
+     * @param[in] level to set.
      */
     virtual void display_contrast(uint8_t level) {}
 
@@ -158,7 +158,7 @@ public:
 
     /**
      * Set tab step to given value.
-     * @param[in] tab step.
+     * @param[in] step tab.
      */
     void set_tab_step(uint8_t step)
     {

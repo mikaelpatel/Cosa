@@ -263,8 +263,7 @@ iovec_arg(iovec_t* &vp, const void* buf, size_t size)
 
 /**
  * Mark end of io-vector buffer at given index.
- * @param[in] vec io vector.
- * @param[in] ix index in vector.
+ * @param[inout] vp io vector.
  */
 inline void
 iovec_end(iovec_t* &vp)

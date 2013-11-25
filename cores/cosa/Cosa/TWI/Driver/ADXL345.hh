@@ -228,8 +228,7 @@ protected:
 
 public:
   /**
-   * Construct ADXL345 driver with normal or alternative address
-   * (pp. 18).  
+   * Construct ADXL345 driver with normal or alternative address (pp. 18).  
    * @param[in] use_alt_address.
    */
   ADXL345(bool use_alt_address = false) : 

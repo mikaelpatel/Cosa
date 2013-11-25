@@ -225,15 +225,15 @@ public:
   /**
    * @override Canvas
    * Set screen orientation
-   * @param[in] direction
+   * @param[in] direction.
    */
   virtual uint8_t set_orientation(uint8_t direction);
 
   /**
    * @override Canvas
    * Set pixel with current color.
-   * @param[in] x
-   * @param[in] y
+   * @param[in] x.
+   * @param[in] y.
    */
   virtual void draw_pixel(uint8_t x, uint8_t y);
 
@@ -249,19 +249,19 @@ public:
   /**
    * @override Canvas
    * Draw horizontal line with current color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] length
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] length.
    */
   virtual void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length);
 
   /**
    * @override Canvas
    * Fill rectangle with current color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] width
-   * @param[in] height
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] width.
+   * @param[in] height.
    */
   virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
   
