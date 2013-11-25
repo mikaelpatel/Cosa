@@ -28,7 +28,7 @@
 #include "Cosa/Power.hh"
 
 bool 
-AT24CXX::poll(void* addr, void* buf, size_t size)
+AT24CXX::poll(const void* addr, const void* buf, size_t size)
 {
   uint8_t i = POLL_MAX;
   int m;
@@ -40,7 +40,7 @@ AT24CXX::poll(void* addr, void* buf, size_t size)
       twi.end();
     }
     else {
-      m = twi.write((uint16_t) addr, buf, size);
+      m = twi.write((uint16_t) addr, (void*) buf, size);
       twi.end();
       if (m > 0) return (true);
     }
@@ -60,7 +60,7 @@ AT24CXX::is_ready()
 }
 
 int
-AT24CXX::read(void* dest, void* src, size_t size)
+AT24CXX::read(void* dest, const void* src, size_t size)
 {
   if (!poll(src)) return (-1);
   int n = twi.read(dest, size);
@@ -69,7 +69,7 @@ AT24CXX::read(void* dest, void* src, size_t size)
 }
 
 int 
-AT24CXX::write(void* dest, void* src, size_t size)
+AT24CXX::write(void* dest, const void* src, size_t size)
 {
   size_t s = size;
   uint8_t* q = (uint8_t*) dest;

@@ -52,7 +52,7 @@ private:
    * @param[in] size number to write (default zero(0)).
    * @return bool
    */
-  bool poll(void* addr, void* buf = 0, size_t size = 0);
+  bool poll(const void* addr, const void* buf = NULL, size_t size = 0);
 
 public:
   /**
@@ -100,7 +100,7 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes or negative error code.
    */
-  virtual int read(void* dest, void* src, size_t size);
+  virtual int read(void* dest, const void* src, size_t size);
 
   /**
    * @override EEPROM::Device
@@ -111,7 +111,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes or negative error code.
    */
-  virtual int write(void* dest, void* src, size_t size);
+  virtual int write(void* dest, const void* src, size_t size);
 };
 
 /**

@@ -118,7 +118,7 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes or negative error code.
    */
-  int read(void* dest, void* src, size_t size) 
+  int read(void* dest, const void* src, size_t size) 
   { 
     return (m_dev->read(dest, src, size)); 
   }
@@ -189,7 +189,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes or negative error code.
    */
-  int write(void* dest, void* src, size_t size) 
+  int write(void* dest, const void* src, size_t size) 
   { 
     return (m_dev->write(dest, src, size)); 
   }
