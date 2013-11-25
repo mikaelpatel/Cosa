@@ -17,16 +17,18 @@ digital pin and 12 bytes per analog pin. Cosa analog pin objects
 holds the latest sample and allows an event handler. See the
 benchmarks in the examples directory for further details.
 
-Cosa also contains a data streaming format (Ciao) for encoding of
-C/C++ language data types such as strings, integer and floating
-pointer numbers into a binary format. It may be used for a number of
-applications; tracing, remote procedure calls, data exchange between
-Arduino devices, etc. The format allows user data types to be defined
-and values exchanged without additional encoding. The stream header
-itself is a pre-defined serializable data type. Ciao is used to define
-an Arduino monitoring and control language (Cosa fai) which has much
-in common with Firmata. See
-[CIAO.txt](https://github.com/mikaelpatel/Cosa/blob/master/CIAO.txt)
+Cosa contains several data streaming formats for message passing and
+data streaming. Google Protocol Buffers are supported together with a
+data streaming format (Ciao) for encoding of C/C++ language data types
+such as strings, integer and floating pointer numbers into a binary
+format. It may be used for a number of applications; tracing, remote
+procedure calls, data exchange between Arduino devices, etc. The
+format allows user data types to be defined and values exchanged
+without additional encoding. The stream header itself is a pre-defined
+serializable data type. Ciao is used to define an Arduino monitoring
+and control language (Cosa fai) which has much in common with
+Firmata. See
+[CIAO.txt](https://github.com/mikaelpatel/Cosa/blob/master/CIAO.txt) 
 for more details and the example code (examples/Ciao). 
 
 The primary programming paradigm is object-oriented and
@@ -57,7 +59,8 @@ cheap wireless nodes with RF315/433 receiver and transmitter. For more
 advanced wireless connections there is also a driver for the Nordic
 Semiconductor NRF24L01+ chip, which allows low-power wireless
 communication of up to 2 Mbps in the 2.4GHz band, and the TI CC1101
-Low-Power Sub-1 GHz RF Transceiver. 
+Low-Power Sub-1 GHz RF Transceiver. These are interchangable through
+an abstract Wireless interface.
 
 The primary goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices and
@@ -241,5 +244,7 @@ Wireless. First draft of RETE; data distribution and network
 management protocol. Adding support for L3G4200D digital gyroscope.    
 2013-11 New device driver for MPU6050 Motion Processing Unit; Digital
 thermometer, accelerometer and gyroscope. Adding support for bitsets
-and Google Protocol Buffers data encoding/decoding.    
+and Google Protocol Buffers data encoding/decoding. Character and
+token scanner to IOStream. Allowing blocking and non-blocking IOStream
+device mode. Added support for ATtinyX61; new board definition.          
 
