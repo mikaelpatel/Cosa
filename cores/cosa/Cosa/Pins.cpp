@@ -85,7 +85,7 @@ OutputPin::write(uint16_t value, uint8_t bits, uint16_t us)
   if (bits == 0) return;
   synchronized {
     do {
-      write(value & 0x01);
+      _write(value & 0x01);
       DELAY(us);
       value >>= 1;
     } while (--bits);
