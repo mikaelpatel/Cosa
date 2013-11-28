@@ -246,5 +246,6 @@ management protocol. Adding support for L3G4200D digital gyroscope.
 thermometer, accelerometer and gyroscope. Adding support for bitsets
 and Google Protocol Buffers data encoding/decoding. Character and
 token scanner to IOStream. Allowing blocking and non-blocking IOStream
-device mode. Added support for ATtinyX61; new board definition.          
+device mode. Added support for ATtinyX61 and a variant of Base64 for
+encoding of binary data.          
 

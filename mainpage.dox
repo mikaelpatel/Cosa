@@ -16,16 +16,19 @@ digital pin and 12 bytes per analog pin. Cosa analog pin objects
 holds the latest sample and allows an event handler. See the
 benchmarks in the examples directory for further details.
 
-Cosa also contains a data streaming format (Ciao) for encoding of
-C/C++ language data types such as strings, integer and floating
-pointer numbers into a binary format. It may be used for a number of
-applications; tracing, remote procedure calls, data exchange between
-Arduino devices, etc. The format allows user data types to be defined
-and values exchanged without additional encoding. The stream header
-itself is a pre-defined serializable data type. Ciao is used to define
-an Arduino monitoring and control language (Cosa fai) which has much
-in common with Firmata. See CIAO.txt for more details and the example
-code (examples/Ciao).   
+Cosa contains several data streaming formats for message passing and
+data streaming. Google Protocol Buffers are supported together with a
+data streaming format (Ciao) for encoding of C/C++ language data types
+such as strings, integer and floating pointer numbers into a binary
+format. It may be used for a number of applications; tracing, remote
+procedure calls, data exchange between Arduino devices, etc. The
+format allows user data types to be defined and values exchanged
+without additional encoding. The stream header itself is a pre-defined
+serializable data type. Ciao is used to define an Arduino monitoring
+and control language (Cosa fai) which has much in common with
+Firmata. See
+[CIAO.txt](https://github.com/mikaelpatel/Cosa/blob/master/CIAO.txt) 
+for more details and the example code (examples/Ciao). 
 
 The primary programming paradigm is object-oriented and
 state-machine/event driven with proto-threads. There is a large number
