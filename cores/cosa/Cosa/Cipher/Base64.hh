@@ -33,8 +33,10 @@
  * Non-standard ultra fast Base64 encoder/decoder. Maps 24-bits to
  * printable 32-bits (4 characters), 3x8 => 4X6. Each 6-bit binary
  * value is encoded by added the BASE character, '0'. The mapping
- * gives the character range '0'..'_'. Three character blocks are
- * padded with the PAD character.
+ * gives the character range '0'..'_'. Blocks are padded with the PAD
+ * character. Allows encoding directly to an IOStream::Device such as
+ * the UART. Long string to an device is broken into multiple lines
+ * with a max length of 64 characters.
  */
 class Base64 {
 private:
@@ -70,7 +72,8 @@ public:
 
   /**
    * Encode the size number of bytes in the source buffer to given 
-   * iostream device. 
+   * iostream device. New-line is emitted every 64 characters (16 code
+   * blocks).
    * @param[in] dest output stream device.
    * @param[in] src source buffer pointer (binary).
    * @param[in] size number of bytes to encode.
@@ -82,7 +85,10 @@ public:
    * Encode the size number of bytes in the source buffer to a
    * null-terminated printable string in the given destination
    * buffer. The destination buffer must be able to hold the 
-   * encoded data and the terminating null.
+   * encoded data and the terminating null. New-line is emitted every
+   * 64 characters (16 code 
+   * blocks).
+
    * @param[in] dest destination buffer pointer (string).
    * @param[in] src source buffer pointer (binary, in program memory).
    * @param[in] size number of bytes to encode.
