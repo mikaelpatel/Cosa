@@ -30,17 +30,26 @@
 #include "Cosa/IOStream.hh"
 
 /**
- * Base64 encoder/decoder. Maps 24-bits to printable 32-bits (4
- * characters), 3x8 => 4X6. Allows encoding directly to an
+ * Base64 encoder/decoder. Maps 3 bytes (24-bits) binary data to
+ * 4 printable characters, 32-bits. Allows encoding directly to an
  * IOStream::Device such as the UART. Long string to an device is
  * broken into multiple lines with a max length of 64 characters.
+ *
+ * @Acknowledgements
+ * Inspired by implementation method by Bob Trower and Arduino Forum
+ * discussions.
+ *
+ * @See Also
+ * 1. http://en.wikipedia.org/wiki/Base64
+ * 2. https://tools.ietf.org/html/rfc4648
+ * 3. http://base64.sourceforge.net
  */
 class Base64 {
 private:
   /** Padding character for last encoded block */
   static const char PAD = '=';
 
-  /** Mapping between 3-characters and 4X6-bits */ 
+  /** Mapping between 3-characters and 4-bitfields(6 bits) */ 
   union base64_t {
     uint8_t d[3];
     struct {
@@ -51,16 +60,27 @@ private:
     };
   };
 
-  /** Encode table */
+  /** Encoding table in program memory */
   static const char ENCODE[] PROGMEM;
+  
+  /**
+   * Encode given 6-bit number to a character.
+   * @param[in] bits to encode.
+   * @return character.
+   */
   static char encode(uint8_t bits)
   {
     return (pgm_read_byte(&ENCODE[bits]));
   }
 
-public:
-  /** Decode table */
+  /** Decoding table in program memory */
   static const char DECODE[] PROGMEM;
+
+  /**
+   * Decode given character to 6-bit number.
+   * @param[in] c character to decode.
+   * @return 6-bit representation.
+   */
   static uint8_t decode(char c)
   {
     if (c < 43 || c > 122) return (0);
@@ -68,6 +88,7 @@ public:
     return (bits == '$' ? 0 : bits - 62);
   }
 
+public:
   /**
    * Encode the size number of bytes in the source buffer to a
    * null-terminated printable string in the given destination
@@ -81,30 +102,27 @@ public:
   static int encode(char* dest, const void* src, size_t size);
 
   /**
-   * Encode the size number of bytes in the source buffer to given 
-   * iostream device. New-line is emitted every 64 characters (16 code
-   * blocks).
-   * @param[in] dest output stream device.
-   * @param[in] src source buffer pointer (binary).
-   * @param[in] size number of bytes to encode.
-   * @return length of string or negative error code.
-   */
-  static int encode(IOStream::Device* dest, const void* src, size_t size);
-
-  /**
    * Encode the size number of bytes in the source buffer to a
    * null-terminated printable string in the given destination
    * buffer. The destination buffer must be able to hold the 
-   * encoded data and the terminating null. New-line is emitted every
-   * 64 characters (16 code 
-   * blocks).
-
+   * encoded data and the terminating null. A new-line is emitted
+   * every 64 characters.
    * @param[in] dest destination buffer pointer (string).
    * @param[in] src source buffer pointer (binary, in program memory).
    * @param[in] size number of bytes to encode.
    * @return length of string or negative error code.
    */
   static int encode_P(char* dest, const void* src, size_t size);
+
+  /**
+   * Encode the size number of bytes in the source buffer to given 
+   * iostream device. A new-line is emitted every 64 characters.
+   * @param[in] dest output stream device.
+   * @param[in] src source buffer pointer (binary).
+   * @param[in] size number of bytes to encode.
+   * @return length of string or negative error code.
+   */
+  static int encode(IOStream::Device* dest, const void* src, size_t size);
 
   /**
    * Encode the size number of bytes in the source buffer to given 

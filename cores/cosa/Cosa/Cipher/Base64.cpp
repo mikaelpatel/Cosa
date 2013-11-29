@@ -56,54 +56,17 @@ Base64::encode(char* dest, const void* src, size_t size)
   // Pad and encode any remaining bytes
   if (size != 0) {
     temp.d[2] = *sp++; 
-    temp.d[1] = *sp++; 
-    temp.d[0] = *sp++; 
+    temp.d[1] = (size > 1 ? *sp : 0); 
+    temp.d[0] = 0;
     *dp++ = encode(temp.c3);
     *dp++ = encode(temp.c2);
     *dp++ = size > 1 ? encode(temp.c1) : PAD;
-    *dp++ = size > 2 ? encode(temp.c0) : PAD;
+    *dp++ = PAD;
     res = res + 4;
   }
 
   // Zero terminate string and return length
   *dp = 0;
-  return (res);
-}
-
-int 
-Base64::encode(IOStream::Device* dest, const void* src, size_t size)
-{
-  const uint8_t* sp = (const uint8_t*) src;
-  base64_t temp;
-  int res = 0;
-
-  // Encode three byte blocks
-  while (size > 2) {
-    temp.d[2] = *sp++; 
-    temp.d[1] = *sp++; 
-    temp.d[0] = *sp++; 
-    size = size - 3;
-    dest->putchar(encode(temp.c3));
-    dest->putchar(encode(temp.c2));
-    dest->putchar(encode(temp.c1));
-    dest->putchar(encode(temp.c0));
-    res = res + 4;
-    if ((res & 0x3f) == 0) dest->putchar('\n');
-  }
-
-  // Pad and encode any remaining bytes
-  if (size != 0) {
-    temp.d[2] = *sp++; 
-    temp.d[1] = *sp++; 
-    temp.d[0] = *sp++; 
-    dest->putchar(encode(temp.c3));
-    dest->putchar(encode(temp.c2));
-    dest->putchar(size > 1 ? encode(temp.c1) : PAD);
-    dest->putchar(size > 2 ? encode(temp.c0) : PAD);
-    res = res + 4;
-    if ((res & 0x3f) == 0) dest->putchar('\n');
-  }
-
   return (res);
 }
 
@@ -131,17 +94,54 @@ Base64::encode_P(char* dest, const void* src, size_t size)
   // Pad and encode any remaining bytes
   if (size != 0) {
     temp.d[2] = pgm_read_byte(sp++);
-    temp.d[1] = pgm_read_byte(sp++);
-    temp.d[0] = pgm_read_byte(sp++);
+    temp.d[1] = size > 1 ? pgm_read_byte(sp) : 0;
+    temp.d[0] = 0;
     *dp++ = encode(temp.c3);
     *dp++ = encode(temp.c2);
     *dp++ = size > 1 ? encode(temp.c1) : PAD;
-    *dp++ = size > 2 ? encode(temp.c0) : PAD;
+    *dp++ = PAD;
     res = res + 4;
   }
 
   // Zero terminate string and return length
   *dp = 0;
+  return (res);
+}
+
+int 
+Base64::encode(IOStream::Device* dest, const void* src, size_t size)
+{
+  const uint8_t* sp = (const uint8_t*) src;
+  base64_t temp;
+  int res = 0;
+
+  // Encode three byte blocks with line break every 64 characters
+  while (size > 2) {
+    temp.d[2] = *sp++; 
+    temp.d[1] = *sp++; 
+    temp.d[0] = *sp++; 
+    size = size - 3;
+    dest->putchar(encode(temp.c3));
+    dest->putchar(encode(temp.c2));
+    dest->putchar(encode(temp.c1));
+    dest->putchar(encode(temp.c0));
+    res = res + 4;
+    if ((res & 0x3f) == 0) dest->putchar('\n');
+  }
+
+  // Pad and encode any remaining bytes with possible line break
+  if (size != 0) {
+    temp.d[2] = *sp++; 
+    temp.d[1] = size > 1 ? *sp : 0; 
+    temp.d[0] = 0;
+    dest->putchar(encode(temp.c3));
+    dest->putchar(encode(temp.c2));
+    dest->putchar(size > 1 ? encode(temp.c1) : PAD);
+    dest->putchar(PAD);
+    res = res + 4;
+    if ((res & 0x3f) == 0) dest->putchar('\n');
+  }
+
   return (res);
 }
 
@@ -152,7 +152,7 @@ Base64::encode_P(IOStream::Device* dest, const void* src, size_t size)
   base64_t temp;
   int res = 0;
 
-  // Encode three byte blocks
+  // Encode three byte blocks with line break every 64 characters
   while (size > 2) {
     temp.d[2] = pgm_read_byte(sp++);
     temp.d[1] = pgm_read_byte(sp++);
@@ -166,15 +166,15 @@ Base64::encode_P(IOStream::Device* dest, const void* src, size_t size)
     if ((res & 0x3f) == 0) dest->putchar('\n');
   }
 
-  // Pad and encode any remaining bytes
+  // Pad and encode any remaining bytes with possible line break
   if (size != 0) {
     temp.d[2] = pgm_read_byte(sp++);
-    temp.d[1] = pgm_read_byte(sp++);
-    temp.d[0] = pgm_read_byte(sp++);
+    temp.d[1] = size > 1 ? pgm_read_byte(sp) : 0;
+    temp.d[0] = 0;
     dest->putchar(encode(temp.c3));
     dest->putchar(encode(temp.c2));
     dest->putchar(size > 1 ? encode(temp.c1) : PAD);
-    dest->putchar(size > 2 ? encode(temp.c0) : PAD);
+    dest->putchar(PAD);
     res = res + 4;
     if ((res & 0x3f) == 0) dest->putchar('\n');
   }
@@ -185,7 +185,7 @@ Base64::encode_P(IOStream::Device* dest, const void* src, size_t size)
 int 
 Base64::decode(void* dest, const char* src, size_t size)
 {
-  // Check for illegal string length
+  // Check for illegal length (even 4 character blocks)
   if (size & 0x3) return (-1);
   
   uint8_t* dp = (uint8_t*) dest;
