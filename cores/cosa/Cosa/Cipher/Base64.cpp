@@ -25,6 +25,13 @@
 
 #include "Cosa/Cipher/Base64.hh"
 
+const char Base64::ENCODE[] __PROGMEM = 
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+const char Base64::DECODE[] __PROGMEM = 
+  "|$$$}rstuvwxyz{$$$$$$$>?@ABCDEFGHIJKLMNOPQRSTUVW$$$$$$XYZ[\\]^_`"
+  "abcdefghijklmnopq";
+
 int 
 Base64::encode(char* dest, const void* src, size_t size)
 {
@@ -35,25 +42,26 @@ Base64::encode(char* dest, const void* src, size_t size)
 
   // Encode three bytes block
   while (size > 2) {
-    temp.d[0] = *sp++; 
-    temp.d[1] = *sp++; 
     temp.d[2] = *sp++; 
+    temp.d[1] = *sp++; 
+    temp.d[0] = *sp++; 
     size = size - 3;
-    *dp++ = temp.c0 + BASE;
-    *dp++ = temp.c1 + BASE;
-    *dp++ = temp.c2 + BASE;
-    *dp++ = temp.c3 + BASE;
+    *dp++ = encode(temp.c3);
+    *dp++ = encode(temp.c2);
+    *dp++ = encode(temp.c1);
+    *dp++ = encode(temp.c0);
     res = res + 4;
   }
 
   // Pad and encode any remaining bytes
   if (size != 0) {
-    for (uint8_t i = 0; i < size; i++) temp.d[i] = *sp++; 
-    for (uint8_t i = size; i < 3; i++) temp.d[i] = 0;
-    *dp++ = temp.c0 + BASE;
-    *dp++ = temp.c1 + BASE;
-    *dp++ = size > 1 ? temp.c2 + BASE : PAD;
-    *dp++ = size > 2 ? temp.c3 + BASE : PAD;
+    temp.d[2] = *sp++; 
+    temp.d[1] = *sp++; 
+    temp.d[0] = *sp++; 
+    *dp++ = encode(temp.c3);
+    *dp++ = encode(temp.c2);
+    *dp++ = size > 1 ? encode(temp.c1) : PAD;
+    *dp++ = size > 2 ? encode(temp.c0) : PAD;
     res = res + 4;
   }
 
@@ -71,26 +79,27 @@ Base64::encode(IOStream::Device* dest, const void* src, size_t size)
 
   // Encode three byte blocks
   while (size > 2) {
-    temp.d[0] = *sp++;
-    temp.d[1] = *sp++;
-    temp.d[2] = *sp++;
+    temp.d[2] = *sp++; 
+    temp.d[1] = *sp++; 
+    temp.d[0] = *sp++; 
     size = size - 3;
-    dest->putchar(temp.c0 + BASE);
-    dest->putchar(temp.c1 + BASE);
-    dest->putchar(temp.c2 + BASE);
-    dest->putchar(temp.c3 + BASE);
+    dest->putchar(encode(temp.c3));
+    dest->putchar(encode(temp.c2));
+    dest->putchar(encode(temp.c1));
+    dest->putchar(encode(temp.c0));
     res = res + 4;
     if ((res & 0x3f) == 0) dest->putchar('\n');
   }
 
   // Pad and encode any remaining bytes
   if (size != 0) {
-    for (uint8_t i = 0; i < size; i++) temp.d[i] = *sp++; 
-    for (uint8_t i = size; i < 3; i++) temp.d[i] = 0;
-    dest->putchar(temp.c0 + BASE);
-    dest->putchar(temp.c1 + BASE);
-    dest->putchar(size > 1 ? temp.c2 + BASE : PAD);
-    dest->putchar(size > 2 ? temp.c3 + BASE : PAD);
+    temp.d[2] = *sp++; 
+    temp.d[1] = *sp++; 
+    temp.d[0] = *sp++; 
+    dest->putchar(encode(temp.c3));
+    dest->putchar(encode(temp.c2));
+    dest->putchar(size > 1 ? encode(temp.c1) : PAD);
+    dest->putchar(size > 2 ? encode(temp.c0) : PAD);
     res = res + 4;
     if ((res & 0x3f) == 0) dest->putchar('\n');
   }
@@ -108,25 +117,26 @@ Base64::encode_P(char* dest, const void* src, size_t size)
 
   // Encode three byte blocks
   while (size > 2) {
-    temp.d[0] = pgm_read_byte(sp++);
-    temp.d[1] = pgm_read_byte(sp++);
     temp.d[2] = pgm_read_byte(sp++);
+    temp.d[1] = pgm_read_byte(sp++);
+    temp.d[0] = pgm_read_byte(sp++);
     size = size - 3;
-    *dp++ = temp.c0 + BASE;
-    *dp++ = temp.c1 + BASE;
-    *dp++ = temp.c2 + BASE;
-    *dp++ = temp.c3 + BASE;
+    *dp++ = encode(temp.c3);
+    *dp++ = encode(temp.c2);
+    *dp++ = encode(temp.c1);
+    *dp++ = encode(temp.c0);
     res = res + 4;
   }
 
   // Pad and encode any remaining bytes
   if (size != 0) {
-    for (uint8_t i = 0; i < size; i++) temp.d[i] = pgm_read_byte(sp++); 
-    for (uint8_t i = size; i < 3; i++) temp.d[i] = 0;
-    *dp++ = temp.c0 + BASE;
-    *dp++ = temp.c1 + BASE;
-    *dp++ = size > 1 ? temp.c2 + BASE : PAD;
-    *dp++ = size > 2 ? temp.c3 + BASE : PAD;
+    temp.d[2] = pgm_read_byte(sp++);
+    temp.d[1] = pgm_read_byte(sp++);
+    temp.d[0] = pgm_read_byte(sp++);
+    *dp++ = encode(temp.c3);
+    *dp++ = encode(temp.c2);
+    *dp++ = size > 1 ? encode(temp.c1) : PAD;
+    *dp++ = size > 2 ? encode(temp.c0) : PAD;
     res = res + 4;
   }
 
@@ -144,26 +154,27 @@ Base64::encode_P(IOStream::Device* dest, const void* src, size_t size)
 
   // Encode three byte blocks
   while (size > 2) {
-    temp.d[0] = pgm_read_byte(sp++);
-    temp.d[1] = pgm_read_byte(sp++);
     temp.d[2] = pgm_read_byte(sp++);
+    temp.d[1] = pgm_read_byte(sp++);
+    temp.d[0] = pgm_read_byte(sp++);
     size = size - 3;
-    dest->putchar(temp.c0 + BASE);
-    dest->putchar(temp.c1 + BASE);
-    dest->putchar(temp.c2 + BASE);
-    dest->putchar(temp.c3 + BASE);
+    dest->putchar(encode(temp.c3));
+    dest->putchar(encode(temp.c2));
+    dest->putchar(encode(temp.c1));
+    dest->putchar(encode(temp.c0));
     res = res + 4;
     if ((res & 0x3f) == 0) dest->putchar('\n');
   }
 
   // Pad and encode any remaining bytes
   if (size != 0) {
-    for (uint8_t i = 0; i < size; i++) temp.d[i] = pgm_read_byte(sp++); 
-    for (uint8_t i = size; i < 3; i++) temp.d[i] = 0;
-    dest->putchar(temp.c0 + BASE);
-    dest->putchar(temp.c1 + BASE);
-    dest->putchar(size > 1 ? temp.c2 + BASE : PAD);
-    dest->putchar(size > 2 ? temp.c3 + BASE : PAD);
+    temp.d[2] = pgm_read_byte(sp++);
+    temp.d[1] = pgm_read_byte(sp++);
+    temp.d[0] = pgm_read_byte(sp++);
+    dest->putchar(encode(temp.c3));
+    dest->putchar(encode(temp.c2));
+    dest->putchar(size > 1 ? encode(temp.c1) : PAD);
+    dest->putchar(size > 2 ? encode(temp.c0) : PAD);
     res = res + 4;
     if ((res & 0x3f) == 0) dest->putchar('\n');
   }
@@ -184,13 +195,14 @@ Base64::decode(void* dest, const char* src, size_t size)
   // Decode four character to three bytes
   while (size != 0) {
     base64_t temp;
-    temp.c0 = (*sp++) - BASE;
-    temp.c1 = (*sp++) - BASE;
-    temp.c2 = (*sp++) - BASE;
-    temp.c3 = (*sp++) - BASE;
+    temp.c3 = decode(*sp++);
+    temp.c2 = decode(*sp++);
+    temp.c1 = decode(*sp++);
+    temp.c0 = decode(*sp++);
     size = size - 4;
-    for (uint8_t i = 0; i < 3; i++) 
-      *dp++ = temp.d[i];
+    *dp++ = temp.d[2];
+    *dp++ = temp.d[1];
+    *dp++ = temp.d[0];
     res = res + 3;
   }
 

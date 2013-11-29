@@ -30,21 +30,15 @@
 #include "Cosa/IOStream.hh"
 
 /**
- * Non-standard ultra fast Base64 encoder/decoder. Maps 24-bits to
- * printable 32-bits (4 characters), 3x8 => 4X6. Each 6-bit binary
- * value is encoded by added the BASE character, '0'. The mapping
- * gives the character range '0'..'_'. Blocks are padded with the PAD
- * character. Allows encoding directly to an IOStream::Device such as
- * the UART. Long string to an device is broken into multiple lines
- * with a max length of 64 characters.
+ * Base64 encoder/decoder. Maps 24-bits to printable 32-bits (4
+ * characters), 3x8 => 4X6. Allows encoding directly to an
+ * IOStream::Device such as the UART. Long string to an device is
+ * broken into multiple lines with a max length of 64 characters.
  */
 class Base64 {
 private:
-  /** Base character for mapping binary value (0..63) to character */
-  static const char BASE = '0';
-
   /** Padding character for last encoded block */
-  static const char PAD = BASE + 64;
+  static const char PAD = '=';
 
   /** Mapping between 3-characters and 4X6-bits */ 
   union base64_t {
@@ -57,7 +51,23 @@ private:
     };
   };
 
+  /** Encode table */
+  static const char ENCODE[] PROGMEM;
+  static char encode(uint8_t bits)
+  {
+    return (pgm_read_byte(&ENCODE[bits]));
+  }
+
 public:
+  /** Decode table */
+  static const char DECODE[] PROGMEM;
+  static uint8_t decode(char c)
+  {
+    if (c < 43 || c > 122) return (0);
+    uint8_t bits = pgm_read_byte(&DECODE[c - 43]);
+    return (bits == '$' ? 0 : bits - 62);
+  }
+
   /**
    * Encode the size number of bytes in the source buffer to a
    * null-terminated printable string in the given destination

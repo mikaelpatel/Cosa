@@ -21,9 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Demonstration of the Cosa Base64 encoder/decoder; This is a  
- * non standard Base64 algorithm that produces printable characters
- * in a given ASCII range instead of the RFC1113 standard.
+ * Demonstration of the Cosa Base64 encoder/decoder.
  *
  * This file is part of the Arduino Che Cosa project.
  */
