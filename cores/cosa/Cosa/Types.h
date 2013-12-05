@@ -126,6 +126,11 @@ union univ32_t {
 #define UNLIKELY(x) __builtin_expect((x),0)
 
 /**
+ * Compiler warning on unused varable.
+ */
+#define UNUSED(x) (void) (x)
+
+/**
  * Macro for number of elements in a vector.
  * @param[in] x vector
  * @return number of elements
