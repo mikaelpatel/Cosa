@@ -160,7 +160,8 @@ public:
   enum SPIPin {
     MOSI = 5,
     MISO = 6,
-    SCK = 4
+    SCK = 4,
+    SS = 3
   } __attribute__((packed));
 
   /**
