@@ -67,7 +67,7 @@ void loop()
   start = RTC::micros();
   n = Base64::encode_P(res, PSTR("Nisse badar"), 12);
   stop = RTC::micros();
-  trace << n << PSTR(":encode:ms = ") << (stop - start) << PSTR(" us") << endl;
+  trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
   trace << res << endl;
   trace << endl;
   SLEEP(1);
@@ -76,7 +76,7 @@ void loop()
   start = RTC::micros();
   m = Base64::decode(temp, res, n);
   stop = RTC::micros();
-  trace << m << PSTR(":decode:ms = ") << (stop - start) << PSTR(" us") << endl;
+  trace << m << PSTR(":decode:") << (stop - start) << PSTR(" us") << endl;
   trace << (char*) temp << endl;
   trace << endl;
   SLEEP(1);
@@ -89,13 +89,13 @@ void loop()
     start = RTC::micros();
     n = Base64::encode(res, data, i);
     stop = RTC::micros();
-    trace << n << PSTR(":encode:ms = ") << (stop - start) << PSTR(" us") << endl;
+    trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
     trace << res << endl;
 
     start = RTC::micros();
     m = Base64::decode(temp, res, n);
     stop = RTC::micros();
-    trace << m << PSTR(":decode:ms = ") << (stop - start) << PSTR(" us") << endl;
+    trace << m << PSTR(":decode:") << (stop - start) << PSTR(" us") << endl;
     trace.print(temp, m, IOStream::hex);
     trace << endl;
     SLEEP(1);
@@ -106,7 +106,7 @@ void loop()
   n = Base64::encode(&uart, data, sizeof(data));
   stop = RTC::micros();
   trace << endl;
-  trace << n << PSTR(":encode:ms = ") << (stop - start) << PSTR(" us") << endl;
+  trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
   trace << endl;
   SLEEP(1);
 
@@ -115,7 +115,7 @@ void loop()
   n = Base64::encode_P(&uart, citation, strlen_P(citation));
   stop = RTC::micros();
   trace << endl;
-  trace << n << PSTR(":encode:ms = ") << (stop - start) << PSTR(" us") << endl;
+  trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
   trace << endl;
   SLEEP(1);
 
