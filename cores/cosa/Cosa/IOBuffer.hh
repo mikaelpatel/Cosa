@@ -175,7 +175,7 @@ IOBuffer<SIZE>::peekchar()
 {
   if (m_head == m_tail) return (IOStream::EOF);
   uint8_t next = (m_tail + 1) & MASK;
-  return (m_buffer[next]);
+  return (m_buffer[next] & 0xff);
 }
 
 template <uint8_t SIZE>
@@ -199,7 +199,7 @@ IOBuffer<SIZE>::getchar()
   if (m_head == m_tail) return (IOStream::EOF);
   uint8_t next = (m_tail + 1) & MASK;
   m_tail = next;
-  return (m_buffer[next]);
+  return (m_buffer[next] & 0xff);
 }
 
 template <uint8_t SIZE>
