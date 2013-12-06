@@ -337,15 +337,15 @@ PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
   case Board::PWM0:
-    bit_set(TCCR3B, COM3B1);
+    bit_set(TCCR3A, COM3B1);
     OCR3B = duty;
     return;
   case Board::PWM1:
-    bit_set(TCCR3C, COM3C1);
+    bit_set(TCCR3A, COM3C1);
     OCR3C = duty;
     return;
   case Board::PWM2:
-    bit_set(TCCR0B, COM0B1);
+    bit_set(TCCR0A, COM0B1);
     OCR0B = duty;
     return;
   case Board::PWM3:
@@ -357,15 +357,15 @@ PWMPin::set(uint8_t duty)
     OCR4A = duty;
     return;
   case Board::PWM5:
-    bit_set(TCCR4B, COM4B1);
+    bit_set(TCCR4A, COM4B1);
     OCR4B = duty;
     return;
   case Board::PWM6:
-    bit_set(TCCR4C, COM4C1);
+    bit_set(TCCR4A, COM4C1);
     OCR4C = duty;
     return;
   case Board::PWM7:
-    bit_set(TCCR2B, COM2B1);
+    bit_set(TCCR2A, COM2B1);
     OCR2B = duty;
     return;
   case Board::PWM8:
@@ -377,7 +377,7 @@ PWMPin::set(uint8_t duty)
     OCR1A = duty;
     return;
   case Board::PWM10:
-    bit_set(TCCR1B, COM1B1);
+    bit_set(TCCR1A, COM1B1);
     OCR1B = duty;
     return;
   case Board::PWM11:
@@ -489,9 +489,22 @@ PWMPin::set(uint8_t duty)
 
 PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
   OutputPin((Board::DigitalPin) pin) 
-{ 
-  TCCR1B |= _BV(CS11)  | _BV(CS10);
-  TCCR1D |= _BV(WGM11) | _BV(WGM10);
+{
+  // Prescale(64)
+  TCCR1B |= _BV(CS12)  | _BV(CS11)  | _BV(CS10);
+
+  // PWM mode
+  switch (m_pin) {
+  case Board::PWM0: 
+    TCCR1A |= _BV(PWM1A);
+    break;
+  case Board::PWM1: 
+    TCCR1A |= _BV(PWM1B);
+    break;
+  case Board::PWM2: 
+    TCCR1C |= _BV(PWM1D);
+    break;
+  }
   set(duty); 
 }
 
@@ -512,15 +525,15 @@ PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
   case Board::PWM0:
-    bit_set(TCCR1C, COM1A1);
+    bit_set(TCCR1C, COM1A0);
     OCR1A = duty;
     return;
   case Board::PWM1:
-    bit_set(TCCR1C, COM1B1);
+    bit_set(TCCR1C, COM1B0);
     OCR1B = duty;
     return;
   case Board::PWM2:
-    bit_set(TCCR1C, COM1D1);
+    bit_set(TCCR1C, COM1D0);
     OCR1D = duty;
     return;
   default:
