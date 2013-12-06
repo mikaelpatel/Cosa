@@ -163,8 +163,8 @@ public:
    * Pins used for TWI interface.
    */
   enum TWIPin {
-    SDA = D0,
-    SCL = D2
+    SDA = D8,
+    SCL = D10
   } __attribute__((packed));
   
   /**

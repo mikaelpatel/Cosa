@@ -59,10 +59,10 @@ void setup()
   isp.read_eeprom_memory(buf, 0x01fc, 4);
   trace.print(buf, 4, IOStream::hex);
   
-  isp.write_eeprom_memory(0x01fc, 0x55);
-  isp.write_eeprom_memory(0x01fd, 0x55);
-  isp.write_eeprom_memory(0x01fe, 0x55);
-  isp.write_eeprom_memory(0x01ff, 0x55);
+  isp.write_eeprom_memory(0x01fc, 0xde);
+  isp.write_eeprom_memory(0x01fd, 0xad);
+  isp.write_eeprom_memory(0x01fe, 0xbe);
+  isp.write_eeprom_memory(0x01ff, 0xef);
   isp.read_eeprom_memory(buf, 0x01fc, 4);
   trace.print(buf, 4, IOStream::hex);
   
