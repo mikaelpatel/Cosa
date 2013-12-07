@@ -134,7 +134,8 @@ Drivers
 23. L3G4200D Digital Gryposcope.
 24. MPU6050 Motion Processing Unit; Digital thermometer, accelerometer
 and gyroscope.
-25. Slave device support for SPI, TWI and OWI.
+25. DS1302 Tickle-Charge Timekeeping Chip.
+26. Slave device support for SPI, TWI and OWI.
 
 References
 ----------
@@ -247,5 +248,7 @@ thermometer, accelerometer and gyroscope. Adding support for bitsets
 and Google Protocol Buffers data encoding/decoding. Character and
 token scanner to IOStream. Allowing blocking and non-blocking IOStream
 device mode. Added support for ATtinyX61 and a variant of Base64 for
-encoding of binary data.          
+encoding of binary data.    
+2013-12 DS1302 RTC.       
+
 

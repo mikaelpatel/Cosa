@@ -417,6 +417,9 @@ Driver for the AT24CXX 2-Wire Serial EEPROM (TWI). Allows page
 write and block read. Supports device AT24C32 (8K) to AT24C512
 (64K). 
 
+@section DS1302
+Driver for the DS1302, Trickle-Charge Timekeeping Chip, 31 X 8 RAM (Pins).
+
 @section DS1307
 Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock (TWI).
 
