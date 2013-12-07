@@ -271,6 +271,14 @@ public:
    */
   bool read_power_supply();
 
+  /**
+   * Print temperature reading (fixed point value) to given output
+   * stream. 
+   * @param[in] outs output stream.
+   * @param[in] temp temperature fixed point number.
+   */
+  static void print(IOStream& outs, int16_t temp);
+
   friend IOStream& operator<<(IOStream& outs, DS18B20& thermometer);
 };
 
