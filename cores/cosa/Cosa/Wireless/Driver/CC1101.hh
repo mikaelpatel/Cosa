@@ -408,12 +408,7 @@ public:
    * timing delay per command.
    * @param[in] cmd command.
    */
-  void strobe(Command cmd)
-  {
-    spi.begin(this);
-    m_status = spi.transfer(header_t(cmd, 0, 0));
-    spi.end();
-  }
+  void strobe(Command cmd);
   
 public:
   /**

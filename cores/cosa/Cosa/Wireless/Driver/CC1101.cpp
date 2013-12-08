@@ -30,6 +30,12 @@
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
 
+#if defined(__ARDUINO_TINY__)
+#define PIN PINA
+#else
+#define PIN PINB
+#endif
+
 /**
  * Default configuration (generated with TI SmartRF Studio tool):
  * Radio: 433 MHz, 38 kbps, GFSK. Whitening, 0 dBm. 
@@ -94,6 +100,15 @@ CC1101::IRQPin::on_interrupt(uint16_t arg)
   m_rf->m_avail = true;
 }
 
+void
+CC1101::strobe(Command cmd)
+{
+  spi.begin(this);
+  loop_until_bit_is_clear(PIN, Board::MISO);
+  m_status = spi.transfer(header_t(cmd, 0, 0));
+  spi.end();
+}
+
 void 
 CC1101::await(Mode mode)
 {
@@ -108,6 +123,7 @@ CC1101::begin(const void* config)
   DELAY(30);
   strobe(SRES);
   DELAY(300);
+  loop_until_bit_is_clear(PIN, Board::MISO);
 
   // Upload the configuration. Check for default configuration
   spi.begin(this);
