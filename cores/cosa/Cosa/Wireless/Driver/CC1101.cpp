@@ -123,10 +123,10 @@ CC1101::begin(const void* config)
   DELAY(30);
   strobe(SRES);
   DELAY(300);
-  loop_until_bit_is_clear(PIN, Board::MISO);
 
   // Upload the configuration. Check for default configuration
   spi.begin(this);
+  loop_until_bit_is_clear(PIN, Board::MISO);
   write_P(IOCFG2, 
 	  config ? (const uint8_t*) config : CC1101::config, 
 	  CONFIG_MAX);
@@ -135,6 +135,7 @@ CC1101::begin(const void* config)
   // Adjust configuration with instance specific state
   uint16_t sync = hton(m_addr.network);
   spi.begin(this);
+  loop_until_bit_is_clear(PIN, Board::MISO);
   write(PATABLE, 0x60);
   write(CHANNR, m_channel);
   write(ADDR, m_addr.device);
@@ -170,6 +171,7 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 
   // Write frame header(length, dest, src, port)
   spi.begin(this);
+  loop_until_bit_is_clear(PIN, Board::MISO);
   write(TXFIFO, len + 3);
   write(TXFIFO, dest);
   write(TXFIFO, m_addr.device);
@@ -179,6 +181,7 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   // Write frame payload
   for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
     spi.begin(this);
+    loop_until_bit_is_clear(PIN, Board::MISO);
     write(TXFIFO, vp->buf, vp->size);
     spi.end();
   }
@@ -217,6 +220,7 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 
   // Read the payload size and check against buffer length
   spi.begin(this);
+  loop_until_bit_is_clear(PIN, Board::MISO);
   uint8_t size = read(RXFIFO) - 3;
   if (size > len) {
     spi.end();
@@ -234,6 +238,7 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 
   // Read the link quality status
   spi.begin(this);
+  loop_until_bit_is_clear(PIN, Board::MISO);
   read(RXFIFO, &m_recv_status, sizeof(m_recv_status));
   spi.end();
 
@@ -267,6 +272,7 @@ CC1101::set_output_power_level(int8_t dBm)
   else if (dBm < 7)   pa = 0x84; 
   else if (dBm < 10)  pa = 0xC4; 
   spi.begin(this);
+  loop_until_bit_is_clear(PIN, Board::MISO);
   write(PATABLE, pa);
   spi.end();
 }
