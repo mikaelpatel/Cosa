@@ -431,16 +431,16 @@ PWMPin::set(uint8_t duty)
     OCR0A = duty;
     return;
   case Board::PWM1:
-    bit_set(TCCR0B, COM0B1);
+    bit_set(TCCR0A, COM0B1);
     OCR0B = duty;
     return;
   case Board::PWM2:
     bit_set(TCCR1A, COM1A1);
-    OCR0A = duty;
+    OCR1A = duty;
     return;
   case Board::PWM3:
-    bit_set(TCCR1B, COM1B1);
-    OCR0B = duty;
+    bit_set(TCCR1A, COM1B1);
+    OCR1B = duty;
     return;
   default:
     OutputPin::set(duty);
@@ -453,7 +453,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
   OutputPin((Board::DigitalPin) pin) 
 { 
   TCCR0A |= _BV(WGM01) | _BV(WGM00);
-  TCCR0B |= _BV(CS01)  | _BV(CS00);
+  TCCR0B |= _BV(CS01) | _BV(CS00);
   set(duty); 
 }
 
@@ -477,7 +477,7 @@ PWMPin::set(uint8_t duty)
     OCR0A = duty;
     return;
   case Board::PWM1:
-    bit_set(TCCR0B, COM0B1);
+    bit_set(TCCR0A, COM0B1);
     OCR0B = duty;
     return;
   default:
