@@ -35,7 +35,9 @@
 #include "Cosa/Memory.h"
 
 // PCF8574 Remote 8-bit I/O expander with default sub-address (0x27/0x4e)
-PCF8574 port;
+// PCF8574 port;
+// PCF8574 Remote 8-bit I/O expander with sub-address (0x27/0x4e)
+PCF8574 port(0);
 
 // Use the built-in led
 OutputPin ledPin(Board::LED);

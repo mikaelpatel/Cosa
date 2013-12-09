@@ -74,29 +74,30 @@ public:
 
   /**
    * Set data direction for port pin P0..P7; 0 for output, 1 for input.
+   * Return true if set otherwise false.
    * @param[in] ddr data direction mask.
+   * @return bool.
    */
-  void set_data_direction(uint8_t ddr)
+  bool set_data_direction(uint8_t ddr);
+
+  /**
+   * Set given pin as input. Return true if set otherwise false.
+   * @param[in] pin number (0..7).
+   * @return bool.
+   */
+  bool set_input_pin(uint8_t pin)
   {
-    m_ddr = ddr;
+    return (set_data_direction(m_ddr | _BV(pin & PIN_MASK)));
   }
 
   /**
-   * Set given pin as input.
+   * Set given pin as output. Return true if set otherwise false.
    * @param[in] pin number (0..7).
+   * @return bool.
    */
-  void set_input_pin(uint8_t pin)
+  bool set_output_pin(uint8_t pin)
   {
-    m_ddr |= _BV(pin & PIN_MASK);
-  }
-
-  /**
-   * Set given pin as output.
-   * @param[in] pin number (0..7).
-   */
-  void set_output_pin(uint8_t pin)
-  {
-    m_ddr &= ~_BV(pin & PIN_MASK);
+    return (set_data_direction(m_ddr & ~_BV(pin & PIN_MASK)));
   }
 
   /**
