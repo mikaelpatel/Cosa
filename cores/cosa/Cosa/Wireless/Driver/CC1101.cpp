@@ -205,6 +205,7 @@ int
 CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 {
   // Check if we need to wait for a message
+  uint8_t size;
   if (!m_avail) {
     // Fix: Use wakeup on radio to reduce power during wait
     uint32_t start = RTC::millis();
@@ -212,16 +213,22 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
       strobe(SFRX);
       strobe(SRX);
     }
-    while (!m_avail && ((ms == 0) || (RTC::since(start) < ms)))
-      Power::sleep(m_mode);
-    if (!m_avail) return (-2);
+    do {
+      while (!m_avail && ((ms == 0) || (RTC::since(start) < ms)))
+	Power::sleep(m_mode);
+      if (!m_avail) return (-2);
+      spi.begin(this);
+      loop_until_bit_is_clear(PIN, Board::MISO);
+      size = read(RXBYTES);
+      spi.end();
+    } while ((size & RXBYTES) == 0);
   }
   m_avail = false;
 
   // Read the payload size and check against buffer length
   spi.begin(this);
   loop_until_bit_is_clear(PIN, Board::MISO);
-  uint8_t size = read(RXFIFO) - 3;
+  size = read(RXFIFO) - 3;
   if (size > len) {
     spi.end();
     strobe(SIDLE);
