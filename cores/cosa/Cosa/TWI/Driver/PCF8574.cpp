@@ -33,7 +33,7 @@ PCF8574::set_data_direction(uint8_t ddr)
   if (!twi.begin(this)) return (false);
   int res = twi.write(&m_port, sizeof(m_port));
   twi.end();
-  return (true);
+  return (res == sizeof(m_port));
 }
 
 uint8_t 
