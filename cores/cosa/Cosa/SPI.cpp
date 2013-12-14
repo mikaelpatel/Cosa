@@ -41,7 +41,7 @@ SPI spi  __attribute__ ((weak));
 #endif
 
 SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
-		    Clock clock, uint8_t mode, Order order,
+		    Clock rate, uint8_t mode, Order order,
 		    Interrupt::Handler* irq) :
   m_irq(irq),
   m_cs(cs, (pulse == 0)),
@@ -115,10 +115,15 @@ SPI::begin(Driver* dev)
   return (true);
 }
 
+void
+SPI::Driver::set_clock(Clock rate)
+{
+}
+
 #else
 
 SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
-		    Clock clock, uint8_t mode, Order order,
+		    Clock rate, uint8_t mode, Order order,
 		    Interrupt::Handler* irq) :
   m_irq(irq),
   m_cs(cs, (pulse == 0)),
@@ -128,9 +133,9 @@ SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
 	 ((order & 0x1) << DORD) 	| 
 	 _BV(MSTR)               	|
 	 ((mode & 0x3) << CPHA)  	| 
-	 ((clock & 0x3) << SPR0)),
+	 ((rate & 0x3) << SPR0)),
   // SPI Clock control in Status Register 
-  m_spsr(((clock & 0x04) != 0) << SPI2X)
+  m_spsr(((rate & 0x04) != 0) << SPI2X)
 {
   // Attach driver to SPI bus controller device list
   m_next = spi.m_list;
@@ -189,6 +194,13 @@ SPI::begin(Driver* dev)
       if (dev->m_irq) dev->m_irq->disable();
   }
   return (true);
+}
+
+void
+SPI::Driver::set_clock(Clock rate)
+{
+  m_spcr = (m_spcr & ~(0x3 << SPR0)) | ((rate & 0x3) << SPR0);
+  m_spsr = (m_spsr & ~(1 << SPI2X)) | (((rate & 0x04) != 0) << SPI2X);
 }
 
 void 

@@ -110,10 +110,16 @@ public:
      */
     Driver(Board::DigitalPin cs, 
 	   uint8_t pulse = 0,
-	   Clock clock = DEFAULT_CLOCK, 
+	   Clock rate = DEFAULT_CLOCK, 
 	   uint8_t mode = 0, 
 	   Order order = MSB_ORDER,
 	   Interrupt::Handler* irq = NULL);
+    
+    /**
+     * Set SPI master clock rate.
+     * @param[in] clock rate.
+     */
+    void set_clock(Clock rate);
   };
 
   /**
