@@ -29,23 +29,73 @@
 
 SD sd;
 
+#define USE_ST7735
+
+#ifdef USE_ST7735
+#include "Cosa/Canvas.hh"
+#include "Cosa/Canvas/Element/Textbox.hh"
+#include "Cosa/Canvas/Driver/ST7735.hh"
+
+ST7735 tft;
+Textbox textbox(&tft);
+#endif
+
 void setup()
 {
   uint8_t buf[SD::BLOCK_MAX];
   uint8_t save[16];
+  SD::cid_t* cid = (SD::cid_t*) save;
+  SD::csd_t* csd = (SD::csd_t*) save;
 
+#ifdef USE_ST7735
+  static const uint8_t WIDTH = 6;
+  IOStream::Device* dev = &textbox;
+  tft.begin();
+  tft.set_canvas_color(Canvas::WHITE);
+  tft.set_orientation(Canvas::LANDSCAPE);
+  textbox.set_text_color(Canvas::BLACK);
+  textbox.set_text_port(2, 2, tft.WIDTH, tft.HEIGHT);
+  tft.fill_screen();
+#else
+  IOStream::Device* dev = &uart;
+  static const uint8_t WIDTH = 32;
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaDS: started"));
+#endif
+
   Watchdog::begin();
   RTC::begin();
+  trace.begin(dev, PSTR("CosaDS: started"));
 
   INFO("Connect to card and switch to a higher clock frequency", 0);
   ASSERT(sd.begin(SPI::DIV4_CLOCK));
   ASSERT(sd.get_type());
 
-  INFO("Read block zero and print", 0);
+  INFO("Read CID and print fields", 0);
+  ASSERT(sd.read(cid));
+  trace.print(cid, sizeof(SD::cid_t), IOStream::hex, WIDTH);
+  SLEEP(1);
+  trace << PSTR("Manufacturer ID:") << cid->mid << endl;
+  trace << PSTR("OEM/Application ID:") << cid->oid[0] << cid->oid[1] << endl;
+  trace << PSTR("Product name:");
+  for (uint8_t i = 0; i < 5; i++) 
+    trace << cid->pnm[i];
+  trace << endl;
+  trace << PSTR("Product revision:") << bcd << cid->prv << endl;
+  trace << PSTR("Product serial number:") << swap((int32_t) cid->psn) << endl;
+  trace << PSTR("Manufacturing date:"); 
+  cid->mdt = swap((int16_t) cid->mdt);
+  trace << (cid->mdt & 0xf) << '-' << (cid->mdt >> 4) << endl;
+  SLEEP(1);
+  
+  INFO("Read CSD and dump", 0);
+  ASSERT(sd.read(csd));
+  trace.print(csd, sizeof(SD::csd_t), IOStream::hex, WIDTH);
+  trace << PSTR("CSD version:") << csd->v1.csd_ver+1 << endl;
+  SLEEP(1);
+
+  INFO("Read block zero and dump", 0);
   ASSERT(sd.read(0, buf));
-  trace.print(buf, sizeof(buf), IOStream::hex);
+  trace.print(buf, sizeof(buf), IOStream::hex, WIDTH);
 
   INFO("Modify first 16 bytes and write to card", 0);
   for (uint8_t i = 0; i < sizeof(save); i++) {
@@ -53,21 +103,25 @@ void setup()
     buf[i] = 0xa5;
   }
   ASSERT(sd.write(0, buf));
+  SLEEP(1);
 
   INFO("Read back and restore content", 0);
   ASSERT(sd.read(0, buf));
-  trace.print(buf, sizeof(buf), IOStream::hex);
+  trace.print(buf, sizeof(buf), IOStream::hex, WIDTH);
   for (uint8_t i = 0; i < sizeof(save); i++) {
-    buf[i] = save[i];
+    // buf[i] = save[i];
+    buf[i] = 0;
   }
   ASSERT(sd.write(0, buf));
+  SLEEP(1);
   
-  INFO("Read four first blocks and print", 0);
+  INFO("Read four first blocks and dump", 0);
   for (uint8_t block = 0; block < 4; block++) {
     TRACE(block);
     ASSERT(sd.read(block, buf));
-    trace.print(buf, sizeof(buf), IOStream::hex);
+    trace.print(buf, sizeof(buf), IOStream::hex, WIDTH);
   }
+  SLEEP(1);
 
   ASSERT(sd.end());
 }

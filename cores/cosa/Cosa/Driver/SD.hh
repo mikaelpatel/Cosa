@@ -51,6 +51,107 @@ public:
     TYPE_SDHC = 3
   } __attribute__((packed));
 
+  /** CID, Card Identification register, table 5-2 */
+  struct cid_t {
+    uint8_t mid;		// Manufacturer ID
+    char oid[2];		// OEM/Application ID
+    char pnm[5];		// Product name
+    uint8_t prv; 		// Product revision
+    uint32_t psn;		// Product serial number
+    uint16_t mdt;		// Manufacturing date
+    uint8_t crc;		// CRC7 checksum
+  };
+
+  /** CSD, Card-Specific Data register, version 1.00 */
+  struct csd_v1_t {
+    uint8_t reserved1:6;
+    uint8_t csd_ver:2;
+    uint8_t taac;
+    uint8_t nsac;
+    uint8_t tran_speed;
+    uint8_t ccc_high;
+    uint8_t read_bl_len:4;
+    uint8_t ccc_low:4;
+    uint8_t c_size_high:2;
+    uint8_t reserved2:2;
+    uint8_t dsr_imp:1;
+    uint8_t read_blk_misalign:1;
+    uint8_t write_blk_misalign:1;
+    uint8_t read_bl_partial:1;
+    uint8_t c_size_mid;
+    uint8_t vdd_r_curr_max:3;
+    uint8_t vdd_r_curr_min:3;
+    uint8_t c_size_low :2;
+    uint8_t c_size_mult_high:2;
+    uint8_t vdd_w_cur_max:3;
+    uint8_t vdd_w_curr_min:3;
+    uint8_t sector_size_high:6;
+    uint8_t erase_blk_en:1;
+    uint8_t c_size_mult_low:1;
+    uint8_t wp_grp_size:7;
+    uint8_t sector_size_low:1;
+    uint8_t write_bl_len_high:2;
+    uint8_t r2w_factor:3;
+    uint8_t reserved3:2;
+    uint8_t wp_grp_enable:1;
+    uint8_t reserved4:5;
+    uint8_t write_partial:1;
+    uint8_t write_bl_len_low:2;
+    uint8_t reserved5:2;
+    uint8_t file_format:2;
+    uint8_t tmp_write_protect:1;
+    uint8_t perm_write_protect:1;
+    uint8_t copy:1;
+    uint8_t file_format_grp:1;
+    uint8_t crc;
+  };
+
+  /** CSD, Card-Specific Data register, version 2.00 */
+  struct csd_v2_t {
+    uint8_t reserved1:6;
+    uint8_t csd_ver:2;
+    uint8_t taac;
+    uint8_t nsac;
+    uint8_t tran_speed;
+    uint8_t ccc_high;
+    uint8_t read_bl_len:4;
+    uint8_t ccc_low:4;
+    uint8_t reserved2:4;
+    uint8_t dsr_imp:1;
+    uint8_t read_blk_misalign:1;
+    uint8_t write_blk_misalign:1;
+    uint8_t read_bl_partial:1;
+    uint8_t c_size_high:6;
+    uint8_t reserved3:2;
+    uint8_t c_size_mid;
+    uint8_t c_size_low;
+    uint8_t sector_size_high:6;
+    uint8_t erase_blk_en:1;
+    uint8_t reserved4:1;
+    uint8_t wp_grp_size:7;
+    uint8_t sector_size_low:1;
+    uint8_t write_bl_len_high:2;
+    uint8_t r2w_factor:3;
+    uint8_t reserved5:2;
+    uint8_t wp_grp_enable:1;
+    uint8_t reserved6:5;
+    uint8_t write_partial:1;
+    uint8_t write_bl_len_low:2;
+    uint8_t reserved7:2;
+    uint8_t file_format:2;
+    uint8_t tmp_write_protect:1;
+    uint8_t perm_write_protect:1;
+    uint8_t copy:1;
+    uint8_t file_format_grp:1;
+    uint8_t crc;
+  };
+
+  /** CSD, Card-Specific Data register */
+  union csd_t {
+    csd_v1_t v1;
+    csd_v2_t v2;
+  };
+  
 protected:
   /** Command Abbreviations */
   enum CMD {
@@ -263,13 +364,25 @@ protected:
    */
   uint32_t receive();
 
+  /**
+   * Send given command and argument and transfer data response into
+   * given buffer with given number of bytes. Returns true if
+   * successful otherwise false. 
+   * @param[in] command to send.
+   * @param[in] arg argument.
+   * @param[in] buf pointer to buffer for response data.
+   * @param[in] count number of bytes.
+   * @return bool.
+   */
+  bool read(CMD command, uint32_t arg, void* buf, size_t count);
+
 public:
   /**
    * Construct Secure Disk low-level SPI device driver with given chip
    * select pin. 
    * @param[in] csn chip select pin.
    */
-  SD(Board::DigitalPin csn = Board::D10) :
+  SD(Board::DigitalPin csn = Board::D8) :
     SPI::Driver(csn, 0, SPI::DIV128_CLOCK, 0, SPI::MSB_ORDER, NULL),
     m_type(TYPE_UNKNOWN)
   {}
@@ -315,8 +428,35 @@ public:
    * @param[in] dst pointer to destination buffer.
    * @return bool.
    */
-  bool read(uint32_t block, uint8_t* dst);
+  bool read(uint32_t block, uint8_t* dst)
+  {
+    if (m_type != TYPE_SDHC) block <<= 9;
+    return (read(READ_SINGLE_BLOCK, block, dst, BLOCK_MAX));
+  }
 
+  /**
+   * Read card CID register. The CID contains card identification 
+   * information such as Manufacturer ID, Product name, Product serial
+   * number and Manufacturing date. 
+   * @param[out] cid pointer to cid data store.
+   * @return true for successful otherwise false.
+   */
+  bool read(cid_t* cid)
+  {
+    return (read(SEND_CID, 0, cid, sizeof(cid_t)));
+  }
+
+  /**
+   * Read card CSD register. The CSD contains that provides
+   * information regarding access to the card's contents. 
+   * @param[out] csd pointer to csd data store.
+   * @return true for successful otherwise false.
+   */
+  bool read(csd_t* csd)
+  {
+    return (read(SEND_CSD, 0, csd, sizeof(csd_t)));
+  }
+  
   /**
    * Write given source buffer with BLOCK_MAX bytes to the given
    * block. Returns true if successful otherwise false. 

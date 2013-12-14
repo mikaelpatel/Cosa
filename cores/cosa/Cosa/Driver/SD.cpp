@@ -119,6 +119,33 @@ SD::receive()
   return (res.as_uint32);
 }
 
+bool 
+SD::read(CMD command, uint32_t arg, void* buf, size_t count)
+{
+  uint8_t* dst = (uint8_t*) buf;
+  uint16_t crc = 0;
+  bool res = false;
+
+  // Issue read command and receive data into buffer
+  spi.begin(this);
+  if (send(command, arg)) goto error;
+  if (!await(READ_TIMEOUT, DATA_START_BLOCK)) goto error;
+  do {
+    uint8_t data = spi.transfer(0xff); 
+    *dst++ = data;
+    crc = _crc_xmodem_update(crc, data);
+  } while (--count);
+  
+  // Receive the check sum and check
+  crc = _crc_xmodem_update(crc, spi.transfer(0xff));
+  crc = _crc_xmodem_update(crc, spi.transfer(0xff));
+  res = (crc == 0);
+
+ error:
+  spi.end();
+  return (res);
+}
+
 bool
 SD::begin(SPI::Clock rate)
 {
@@ -200,36 +227,6 @@ SD::erase(uint32_t start, uint32_t end)
 }
 
 bool 
-SD::read(uint32_t block, uint8_t* dst) 
-{
-  uint16_t crc = 0;
-  uint16_t count = BLOCK_MAX;
-  bool res = false;
-
-  // Check for byte address adjustment
-  if (m_type != TYPE_SDHC) block <<= 9;
-
-  // Issue read command and receive data into buffer
-  spi.begin(this);
-  if (send(READ_SINGLE_BLOCK, block)) goto error;
-  if (!await(READ_TIMEOUT, DATA_START_BLOCK)) goto error;
-  do {
-    uint8_t data = spi.transfer(0xff); 
-    *dst++ = data;
-    crc = _crc_xmodem_update(crc, data);
-  } while (--count);
-
-  // Receive the check sum and check
-  crc = _crc_xmodem_update(crc, spi.transfer(0xff));
-  crc = _crc_xmodem_update(crc, spi.transfer(0xff));
-  res = (crc == 0);
-
- error:
-  spi.end();
-  return (res);
-}
-
-bool 
 SD::write(uint32_t block, const uint8_t* src) 
 {
   uint16_t crc = 0;
@@ -267,3 +264,4 @@ SD::write(uint32_t block, const uint8_t* src)
   spi.end();
   return (res);
 }
+
