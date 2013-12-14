@@ -16,7 +16,17 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Demonstration and test of the SD card device driver.
+ * Demonstration and test of the SD card device driver. Allows trace 
+ * to the ST7735 TFT Canvas and Textbox (IOStream::Device). This also
+ * allows test and validation of the multiple SPI device handling.
+ *
+ * @section Circuit
+ * This sketch was designed for a HY-1.8 SPI LCD/SD module but may be
+ * used with other SD modules and ST7735 TFT modules. The sketch uses
+ * SPI pins (MOSI, MISO, SCK) and chip/mode select pins. The SPI pins
+ * are common to both SD and TFT. TFT does not use MISO. The default
+ * pins for chip/mode select are used; SD::CS/D8, TFT::CS/D10 and
+ * TFT::A0/D9 (this is the mode pin).
  * 
  * This file is part of the Arduino Che Cosa project.
  */
@@ -27,28 +37,27 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 
-SD sd;
-
-#define USE_ST7735
-
+// Uncomment to allow trace output to TFT/Canvas/Textbox
+// #define USE_ST7735
 #ifdef USE_ST7735
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 #include "Cosa/Canvas/Driver/ST7735.hh"
 
+// Use ST7735 default pins; SPI (MOSI, SCK), CS (D10), AO (D9)
 ST7735 tft;
 Textbox textbox(&tft);
+static const uint8_t WIDTH = 6;
+#else
+static const uint8_t WIDTH = 32;
 #endif
+
+// Use SD default pins; SPI (MISO, MOSI, SCK), CS (D8)
+SD sd;
 
 void setup()
 {
-  uint8_t buf[SD::BLOCK_MAX];
-  uint8_t save[16];
-  SD::cid_t* cid = (SD::cid_t*) save;
-  SD::csd_t* csd = (SD::csd_t*) save;
-
 #ifdef USE_ST7735
-  static const uint8_t WIDTH = 6;
   IOStream::Device* dev = &textbox;
   tft.begin();
   tft.set_canvas_color(Canvas::WHITE);
@@ -58,13 +67,20 @@ void setup()
   tft.fill_screen();
 #else
   IOStream::Device* dev = &uart;
-  static const uint8_t WIDTH = 32;
   uart.begin(9600);
 #endif
 
   Watchdog::begin();
   RTC::begin();
   trace.begin(dev, PSTR("CosaDS: started"));
+}
+
+void loop()
+{
+  uint8_t buf[SD::BLOCK_MAX];
+  uint8_t save[16];
+  SD::cid_t* cid = (SD::cid_t*) save;
+  SD::csd_t* csd = (SD::csd_t*) save;
 
   INFO("Connect to card and switch to a higher clock frequency", 0);
   ASSERT(sd.begin(SPI::DIV4_CLOCK));
@@ -124,9 +140,5 @@ void setup()
   SLEEP(1);
 
   ASSERT(sd.end());
-}
-
-void loop()
-{
   ASSERT(true == false);
 }
