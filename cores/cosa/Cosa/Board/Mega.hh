@@ -311,12 +311,16 @@ extern "C" {
   void WDT_vect(void) __attribute__ ((signal));
   void USART_UDRE_vect(void) __attribute__ ((signal));
   void USART_RX_vect(void) __attribute__ ((signal));
+  void USART_TX_vect(void) __attribute__ ((signal));
   void USART1_UDRE_vect(void) __attribute__ ((signal));
   void USART1_RX_vect(void) __attribute__ ((signal));
+  void USART1_TX_vect(void) __attribute__ ((signal));
   void USART2_UDRE_vect(void) __attribute__ ((signal));
   void USART2_RX_vect(void) __attribute__ ((signal));
+  void USART2_TX_vect(void) __attribute__ ((signal));
   void USART3_UDRE_vect(void) __attribute__ ((signal));
   void USART3_RX_vect(void) __attribute__ ((signal));
+  void USART3_TX_vect(void) __attribute__ ((signal));
 }
 #endif
 
