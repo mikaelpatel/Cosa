@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2009 by William Greiman (Arduino Fat16 Library)
+ * Copyright (C) 2009, William Greiman (Arduino Fat16 Library)
  * Copyright (C) 2013, Mikael Patel (Refactoring)
  *
  * This library is free software; you can redistribute it and/or
