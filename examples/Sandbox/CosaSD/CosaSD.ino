@@ -18,7 +18,7 @@
  * @section Description
  * Demonstration and test of the SD card device driver. Allows trace 
  * to the ST7735 TFT Canvas and Textbox (IOStream::Device). This also
- * allows test and validation of the multiple SPI device handling.
+ * allows test and validation of Cosa multiple SPI device handling.
  *
  * @section Circuit
  * This sketch was designed for a HY-1.8 SPI LCD/SD module but may be
@@ -31,13 +31,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Driver/SD.hh"
+#include "Cosa/SPI/Driver/SD.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 
-// Uncomment to allow trace output to TFT/Canvas/Textbox
+// Uncomment/comment to enable/disable trace output to TFT/Canvas/Textbox
 // #define USE_ST7735
 #ifdef USE_ST7735
 #include "Cosa/Canvas.hh"

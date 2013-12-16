@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Driver/SD.cpp
+ * @file Cosa/SPI/Driver/SD.cpp
  * @version 1.0
  *
  * @section License
@@ -23,7 +23,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Driver/SD.hh"
+#include "Cosa/SPI/Driver/SD.hh"
 #include "Cosa/RTC.hh"
 #include <util/crc16.h>
 
