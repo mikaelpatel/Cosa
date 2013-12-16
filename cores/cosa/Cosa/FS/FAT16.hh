@@ -25,10 +25,6 @@
 #include "Cosa/SPI/Driver/SD.hh"
 #include "Cosa/IOStream.hh"
 
-// #include "Cosa/RTC.hh"
-// #include "Cosa/Trace.hh"
-// #include "Cosa/Watchdog.hh"
-
 /**
  * FAT16::File::open modes; use one or many.
  */
