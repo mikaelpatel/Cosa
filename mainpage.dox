@@ -246,8 +246,16 @@ ATmega2560 based Arduino boards; Mega 1280/2560.
 Cosa Mighty board pin symbol definitions for ATmega1248 based
 Arduino boards; Mighty.
 
+@section TinyX4
+Cosa TinyX4 board pin symbol definitions for the ATtinyX4
+processors.
+
 @section TinyX5
 Cosa TinyX5 board pin symbol definitions for the ATtinyX5
+processors.
+
+@section TinyX61
+Cosa TinyX61 board pin symbol definitions for the ATtinyX61
 processors.
 */
 
@@ -429,4 +437,10 @@ Driver for the DS3231, Extremely Accurate I2C-Integrated RTC/TCXO/Crystal.
 @section PCF8574
 Driver for the PCF8574/PCF8574A Remote 8-bit I/O expander for I2C-bus
 with interrupt.
+
+@section SD
+Driver for block level access of SD cards (SPI).
+
+@section FAT16
+FAT16 file system and file access on SD cards (SPI).
 */
