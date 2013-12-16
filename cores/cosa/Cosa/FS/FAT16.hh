@@ -509,13 +509,11 @@ protected:
    * 01/01/1980. Here is the format (bit 0 is the LSB of the 16-bit
    * word, bit 15 is the MSB of the 16-bit word):
    *   
-   * Bits 9-15: Count of years from 1980, valid value range 0-127 
-   * inclusive (1980-2107).
-   *   
+   * Bits 0-4: Day of month, valid value range 1-31 inclusive.
    * Bits 5-8: Month of year, 1 = January, valid value range 1-12
    * inclusive. 
-   *
-   * Bits 0-4: Day of month, valid value range 1-31 inclusive.
+   * Bits 9-15: Count of years from 1980, valid value range 0-127 
+   * inclusive (1980-2107).
    */
   union date_t {
     uint16_t as_uint16;
@@ -546,18 +544,18 @@ protected:
    * (bit 0 is the LSB of the 16-bit word, bit 15 is the MSB of the
    * 16-bit word). 
    *
-   * Bits 11-15: Hours, valid value range 0-23 inclusive.
-   * Bits 5-10: Minutes, valid value range 0-59 inclusive.
    * Bits 0-4: 2-second count, valid value range 0-29 inclusive 
    * (0-58 seconds). 
+   * Bits 5-10: Minutes, valid value range 0-59 inclusive.
+   * Bits 11-15: Hours, valid value range 0-23 inclusive.
    *   
    * The valid time range is from Midnight 00:00:00 to 23:59:58.
    */
   union time_t {
     uint16_t as_uint16;
     struct {
-      uint8_t seconds:4;
-      uint8_t minutes:7;
+      uint8_t seconds:5;
+      uint8_t minutes:6;
       uint8_t hours:5;
     };
     time_t(uint16_t h, uint8_t m, uint8_t s) 

@@ -38,7 +38,7 @@
 #include "Cosa/Watchdog.hh"
 
 // Uncomment/comment to enable/disable trace output to TFT/Canvas/Textbox
-// #define USE_ST7735
+#define USE_ST7735
 #ifdef USE_ST7735
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
