@@ -16,7 +16,8 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * 
+ * Short demo, test and benchmark of the FAT16/SD file access class.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -31,9 +32,9 @@ SD sd;
 
 void setup()
 {
-  uart.begin(9600);
   Watchdog::begin();
   RTC::begin();
+  uart.begin(9600);
   trace.begin(&uart, PSTR("CosaFAT16: started"));
   ASSERT(sd.begin(SPI::DIV4_CLOCK));
   ASSERT(FAT16::begin(&sd));
@@ -48,10 +49,12 @@ void loop()
   FAT16::File file;
   int size, count;
 
+  // List the files
   ASSERT(!file.is_open());
   FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
   trace << endl;
 
+  // Measure time to open/create a file. List the files
   start = RTC::millis();
   ASSERT(file.open("TMP.TXT", O_WRITE | O_CREAT));
   stop = RTC::millis();
@@ -59,6 +62,7 @@ void loop()
   FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
   trace << endl;
 
+  // Measure time to write a large block (1 K)
   start = RTC::millis();
   for (uint8_t i = 0; i < K_BYTE; i++) file.write(NULL, 1024);
   stop = RTC::millis();
@@ -66,6 +70,7 @@ void loop()
   trace << stop - start << PSTR(" ms") << endl;
   trace << endl;
 
+  // Measure time to close a file
   start = RTC::millis();
   ASSERT(file.close());
   stop = RTC::millis();
@@ -73,6 +78,7 @@ void loop()
   FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
   trace << endl;
 
+  // Reopen the time and measure the time to read a smaller buffer (256 byte)
   ASSERT(file.open("TMP.TXT", O_READ));
   size = 0;
   start = RTC::millis();
@@ -83,6 +89,7 @@ void loop()
   trace << stop - start << PSTR(" ms") << endl;
   trace << endl;
 
+  // Remove the file and list
   start = RTC::millis();
   ASSERT(FAT16::rm("TMP.TXT"));
   stop = RTC::millis();
@@ -90,6 +97,7 @@ void loop()
   FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
   trace << endl;
 
+  // Open a new file and write a short message. Measure total time
   start = RTC::millis();
   ASSERT(file.open("NISSE.TXT", O_WRITE | O_TRUNC | O_CREAT));
   ASSERT(file.is_open());
@@ -101,6 +109,7 @@ void loop()
   trace << PSTR("Open/Write/Close file:");
   trace << stop - start << PSTR(" ms") << endl;
 
+  // Reopen and read the message. Measure total time
   start = RTC::millis();
   ASSERT(file.open("NISSE.TXT", O_READ));
   ASSERT(file.is_open());
