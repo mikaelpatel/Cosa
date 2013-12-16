@@ -582,7 +582,7 @@ protected:
 
 public:
   
-  class File : IOStream::Device {
+  class File : public IOStream::Device {
   public:
     /**
      * Construct file access instance. Must be use open() before any
