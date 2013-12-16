@@ -41,31 +41,52 @@ void setup()
 
 void loop()
 {
+  static const size_t BUF_MAX = 256;
+  static const uint8_t K_BYTE = 8;
+  uint8_t buf[BUF_MAX];
   uint32_t start, stop;
   FAT16::File file;
+  int size, count;
 
+  ASSERT(!file.is_open());
   FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
   trace << endl;
 
   start = RTC::millis();
   ASSERT(file.open("TMP.TXT", O_WRITE | O_CREAT));
-  for (uint8_t i = 0; i < 4; i++)
-    file.write(NULL, 1024);
-  ASSERT(file.close());
   stop = RTC::millis();
-  trace << PSTR("Open/Write/Close file (4 KByte):");
+  trace << PSTR("Open file:") << stop - start << PSTR(" ms") << endl;
+  FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
+  trace << endl;
+
+  start = RTC::millis();
+  for (uint8_t i = 0; i < K_BYTE; i++) file.write(NULL, 1024);
+  stop = RTC::millis();
+  trace << PSTR("Write file (") << K_BYTE << PSTR(" KByte):");
   trace << stop - start << PSTR(" ms") << endl;
   trace << endl;
 
+  start = RTC::millis();
+  ASSERT(file.close());
+  stop = RTC::millis();
+  trace << PSTR("Close file:") << stop - start << PSTR(" ms") << endl;
   FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
+  trace << endl;
+
+  ASSERT(file.open("TMP.TXT", O_READ));
+  size = 0;
+  start = RTC::millis();
+  while ((count = file.read(buf, sizeof(buf))) > 0) size += count;
+  stop = RTC::millis();
+  ASSERT(file.close());
+  trace << PSTR("Read file (") << size / 1024 << PSTR(" KByte):");
+  trace << stop - start << PSTR(" ms") << endl;
   trace << endl;
 
   start = RTC::millis();
   ASSERT(FAT16::rm("TMP.TXT"));
   stop = RTC::millis();
   trace << PSTR("Remove file:") << stop - start << PSTR(" ms") << endl;
-  trace << endl;
-
   FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
   trace << endl;
 
@@ -73,10 +94,11 @@ void loop()
   ASSERT(file.open("NISSE.TXT", O_WRITE | O_TRUNC | O_CREAT));
   ASSERT(file.is_open());
   char msg[] = "Nisse badar.\n";
-  ASSERT(file.write(msg, strlen(msg)) == (int) strlen(msg));
+  size = strlen(msg);
+  ASSERT(file.write(msg, strlen(msg)) == size);
   ASSERT(file.close());
   stop = RTC::millis();
-  trace << PSTR("Open/Write/Close file (13 Byte):");
+  trace << PSTR("Open/Write/Close file:");
   trace << stop - start << PSTR(" ms") << endl;
 
   start = RTC::millis();
@@ -86,7 +108,7 @@ void loop()
   while ((c = file.getchar()) != -1) trace << (char) c; 
   ASSERT(file.close());
   stop = RTC::millis();
-  trace << PSTR("Open/Read/Close file (13 Byte):");
+  trace << PSTR("Open/Read/Close file:");
   trace << stop - start << PSTR(" ms") << endl;
   trace << endl;
 
