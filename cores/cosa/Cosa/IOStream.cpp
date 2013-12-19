@@ -271,7 +271,7 @@ IOStream::Device::puts_P(const char* s)
   int n = 0;
   while ((c = pgm_read_byte(s++)) != 0)
     if (putchar(c) < 0) 
-      return (EOF);
+      break;
     else
       n += 1;
   return (n); 
@@ -342,9 +342,11 @@ IOStream::Device::read(void* buf, size_t size)
 { 
   char* ptr = (char*) buf;
   size_t n = 0; 
-  for (; n < size; n++)
-    if ((*ptr++ = getchar()) < 0)
-      break;
+  for (; n < size; n++) {
+    int c = getchar();
+    if (c < 0) break;
+    *ptr++ = c;
+  }
   return (n);
 }
 
