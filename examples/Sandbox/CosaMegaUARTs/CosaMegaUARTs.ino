@@ -49,9 +49,6 @@ IOStream cout(&uart1);
 
 void setup()
 {
-  // Bind UART1 to the Interrupt Service Routine
-  UART_SETUP(1, uart1);
-
   // Start the normal trace output
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaMegaUARTs: started"));

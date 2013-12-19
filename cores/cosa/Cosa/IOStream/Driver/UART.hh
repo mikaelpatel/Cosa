@@ -154,6 +154,7 @@ public:
     m_ibuf(ibuf),
     m_obuf(obuf)
   {
+    uart[port] = this;
   }
 
   /**
@@ -257,28 +258,12 @@ public:
    * uart). Others are assuped to be allocated by applications and setup
    * with UART_SETUP().
    */
-  static UART* uart0;
-#if defined(__ARDUINO_MIGHTY__)
-  static UART* uart1;
-#elif defined(__ARDUINO_MEGA__)
-  static UART* uart1;
-  static UART* uart2;
-  static UART* uart3;
-#endif
-
+  static UART* uart[Board::UART_MAX];
 };
 
 /**
- * Default serial port(0).
+ * Default serial port(0). Weakly defined (See UART.cpp).
  */
 extern UART uart;
-
-/**
- * Setup handling of serial port with given port number and UART instance.
- * @param[in] nr serial port number.
- * @param[in] obj address of UART instance.
- */
-#define UART_SETUP(nr,obj) UART::uart ## nr = &obj
-
 #endif
 #endif

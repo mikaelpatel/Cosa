@@ -210,6 +210,7 @@ public:
    */
   enum {
     VBG = (_BV(MUX3) | _BV(MUX2) | _BV(MUX1)),
+    UART_MAX = 1,
     EXT_MAX = 2,
     PCINT_MAX = 3,
     PIN_MAX = A7

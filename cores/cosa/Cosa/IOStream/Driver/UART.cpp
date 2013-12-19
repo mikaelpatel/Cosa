@@ -38,7 +38,7 @@ static IOBuffer<UART::BUFFER_MAX> ibuf;
 static IOBuffer<UART::BUFFER_MAX> obuf;
 
 UART __attribute__ ((weak)) uart(0, &ibuf, &obuf);
-UART* UART::uart0 = &uart;
+UART* UART::uart[Board::UART_MAX] = { 0 };
 
 bool
 UART::begin(uint32_t baudrate, uint8_t format)
@@ -108,54 +108,50 @@ UART::on_tx_interrupt()
   on_transmit_completed();
 }
 
-#define UART_ISR_UDRE(vec,uart)			\
+#define UART_ISR_UDRE(vec,nr)			\
 ISR(vec ## _UDRE_vect)				\
 {						\
-  if (UART::uart == NULL) return;		\
-  UART::uart->on_udre_interrupt();		\
+  if (UART::uart[nr] == NULL) return;		\
+  UART::uart[nr]->on_udre_interrupt();		\
 }
 
-#define UART_ISR_RX(vec,uart)			\
+#define UART_ISR_RX(vec,nr)			\
   ISR(vec ## _RX_vect)				\
   {						\
-    if (UART::uart == NULL) return;		\
-    UART::uart->on_rx_interrupt();		\
+    if (UART::uart[nr] == NULL) return;		\
+    UART::uart[nr]->on_rx_interrupt();		\
   }
 
-#define UART_ISR_TX(vec,uart)			\
+#define UART_ISR_TX(vec,nr)			\
   ISR(vec ## _TX_vect)				\
   {						\
-    if (UART::uart == NULL) return;		\
-    UART::uart->on_tx_interrupt();		\
+    if (UART::uart[nr] == NULL) return;		\
+    UART::uart[nr]->on_tx_interrupt();		\
   }
 
-UART_ISR_UDRE(USART,uart0)
-UART_ISR_RX(USART,uart0)
-UART_ISR_TX(USART,uart0)
+UART_ISR_UDRE(USART, 0)
+UART_ISR_RX(USART, 0)
+UART_ISR_TX(USART, 0)
 
 #if defined(__ARDUINO_MIGHTY__) 
 
-UART* UART::uart1 = NULL;
-UART_ISR_UDRE(USART1,uart1)
-UART_ISR_RX(USART1,uart1)
-UART_ISR_TX(USART1,uart1)
+UART_ISR_UDRE(USART1, 1)
+UART_ISR_RX(USART1, 1)
+UART_ISR_TX(USART1, 1)
 
 #elif defined(__ARDUINO_MEGA__)
 
-UART* UART::uart1 = NULL;
-UART_ISR_UDRE(USART1,uart1)
-UART_ISR_RX(USART1,uart1)
-UART_ISR_TX(USART1,uart1)
+UART_ISR_UDRE(USART1, 1)
+UART_ISR_RX(USART1, 1)
+UART_ISR_TX(USART1, 1)
 
-UART* UART::uart2 = NULL;
-UART_ISR_UDRE(USART2,uart2)
-UART_ISR_RX(USART2,uart2)
-UART_ISR_TX(USART2,uart2)
+UART_ISR_UDRE(USART2, 2)
+UART_ISR_RX(USART2, 2)
+UART_ISR_TX(USART2, 2)
 
-UART* UART::uart3 = NULL;
-UART_ISR_UDRE(USART3,uart3)
-UART_ISR_RX(USART3,uart3)
-UART_ISR_TX(USART3,uart3)
+UART_ISR_UDRE(USART3, 3)
+UART_ISR_RX(USART3, 3)
+UART_ISR_TX(USART3, 3)
 
 #endif
 #endif
