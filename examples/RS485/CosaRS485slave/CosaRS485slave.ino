@@ -85,6 +85,6 @@ void loop()
   }
   DELAY(1000);
 
-  // Send reply
+  // Send the reply
   if (rs485.send(&msg, sizeof(msg)) < 0) return;
 }
