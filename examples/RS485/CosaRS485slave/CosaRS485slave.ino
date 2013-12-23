@@ -85,6 +85,6 @@ void loop()
   }
   DELAY(1000);
 
-  // Send reply and increment sequence number if successful
+  // Send reply
   if (rs485.send(&msg, sizeof(msg)) < 0) return;
 }
