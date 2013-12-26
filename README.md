@@ -136,7 +136,8 @@ Drivers
 and gyroscope.
 25. DS1302 Tickle-Charge Timekeeping Chip.
 26. SD card, SPI driver.
-27. Slave device support for SPI, TWI and OWI.
+27. RS485 support; master-slave protocol.
+28. Slave device support for SPI, TWI and OWI.
 
 References
 ----------
@@ -250,6 +251,7 @@ and Google Protocol Buffers data encoding/decoding. Character and
 token scanner to IOStream. Allowing blocking and non-blocking IOStream
 device mode. Added support for ATtinyX61 and a variant of Base64 for
 encoding of binary data.    
-2013-12 DS1302 RTC and SD card support. Simple FAT16 library using SD.      
+2013-12 DS1302 RTC and SD card support. Simple FAT16 library using
+SD. Support for RS485 with master-slave protocol.      
 
 

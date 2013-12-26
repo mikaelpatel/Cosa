@@ -293,6 +293,11 @@ may act as a device on the wire.
 Basic UART device handler with internal buffering. The class
 requires an input- and output IOBuffer instance. UART is a sub-class
 of IOStream::Device. See Trace for typical usage.
+ 
+@section RS485
+Basic RS485 device handler with internal buffering. An extension of
+the UART class with 485/DE signal handling on message
+completion. Simple master/slave protocol inspired by MODBUS.
 
 @section TWI
 The I2C/TWI device driver support class (Two Wire Interface, TWI).
