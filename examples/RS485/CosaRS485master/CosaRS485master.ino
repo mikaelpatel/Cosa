@@ -59,7 +59,7 @@ void setup()
 
 void loop()
 {
-  static uint32_t TIMEOUT = 500L;
+  static const uint32_t TIMEOUT = 500L;
   static uint16_t errors = 0;
   static uint8_t nr = 0;
   static uint8_t func = GET_MILLIS;
@@ -73,20 +73,20 @@ void loop()
   msg.param[1] = nr;
   count = rs485.send(&msg, sizeof(msg), dest);
   count = rs485.recv(&msg, sizeof(msg), TIMEOUT);
-  trace << nr++ << PSTR(":recv[") << dest << PSTR("]:");
+  trace << nr++ << PSTR(":recv:")
+	<< PSTR("dest=") << dest 
+	<< PSTR(",count=") << count 
+	<< PSTR(",index=") << msg.param[0]
+	<< PSTR(",nr=") << msg.param[1];
 
   // Check for errors
   if (count <= 0) {
-    trace << PSTR("index=") << msg.param[0]
-	  << PSTR(",nr=") << msg.param[1]
-	  << PSTR(",errno=") << count
+    trace << PSTR(",errno=") << count
 	  << PSTR(",errors=") << ++errors;
   }
 
   // Print signal response
   else {
-    trace << PSTR("index=") << msg.param[0]
-	  << PSTR(",nr=") << msg.param[1];
     if (msg.func == GET_MILLIS) {
       trace << PSTR(",millis=");
     } 
@@ -106,6 +106,6 @@ void loop()
   if (func > GET_TEMPERATURE) {
     func = GET_MILLIS;
     dest += 1;
-    if (dest > 3) dest = 1;
+    if (dest > 2) dest = 1;
   }
 }

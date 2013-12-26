@@ -33,20 +33,32 @@
 
 /**
  * RS485 link handler; Master-Slave protocol. Master always initiates
- * communication with request message to Slave who response. The
- * Master may also broadcast messages to all slave devices. The frame
- * format is; <length,dest,payload,crc> where length is the total
- * length of the frame, dest is the destination device address or the
- * broadcast address(0x00), payload is the message data and crc is a
- * 16 bit CCITT check-sum.
+ * communication with request message to Slave who responds. The
+ * Master may also broadcast messages to all slave devices. The
+ * message format is; <header,payload,crc> where header contains the
+ * length of the payload, the destination and source device address or
+ * the broadcast address(0x00), the source device address and a 8-bit
+ * CRC7 check-sum for the header. The payload is the message data and
+ * a 16-bit payload CCITT/XMODEM check-sum.
  */
 class RS485 : public UART {
 public:
   /** Start of transmission token */
   static const uint8_t SOT = 0x01;
   
-  /** Size of frame; length(1), dest(1), crc(2) */
-  static const uint8_t FRAME_MAX = 4;
+  /** Frame header with check-sum; crc7(1 byte) */
+  struct header_t {
+    uint8_t length;		// Number of bytes in payload
+    uint8_t dest;		// Destination node address
+    uint8_t src;		// Source node address
+    uint8_t crc;		// Header check-sum
+  };
+
+  /** Size of frame; SOT, header and crc */
+  static const uint8_t FRAME_MAX = sizeof(header_t) + sizeof(uint16_t) + 1;
+
+  /** Send/receive header */
+  header_t m_header;
 
   /** Input buffer */
   IOBuffer<UART::BUFFER_MAX> m_ibuf;
@@ -59,6 +71,9 @@ public:
 
   /** Network address; Special cases are MASTER and BROADCAST */
   uint8_t m_addr;
+
+  /** Receive state; wait for start symbol, header, payload and check-sum */
+  uint8_t m_state;
 
 public:
   /** Max size of payload */
@@ -80,7 +95,8 @@ public:
   RS485(uint8_t port, Board::DigitalPin de, uint8_t addr = MASTER) : 
     UART(port, &m_ibuf, &m_obuf),
     m_de(de),
-    m_addr(addr)
+    m_addr(addr),
+    m_state(0)
   {
   }
 

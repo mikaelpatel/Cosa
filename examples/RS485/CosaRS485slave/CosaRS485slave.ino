@@ -53,10 +53,10 @@ struct signal_t {
 
 void setup()
 {
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaRS485slave: started"));
   Watchdog::begin();
   RTC::begin();
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaRS485slave: started"));
   TRACE(free_memory());
   TRACE(sizeof(RS485));
   ASSERT(rs485.begin(9600));
@@ -64,12 +64,24 @@ void setup()
 
 void loop()
 {
+  static const uint32_t TIMEOUT = 1000L;
+  static uint16_t nr = 1;
   signal_t msg;
-  
-  // Wait for a request signal
-  while (rs485.recv(&msg, sizeof(msg)) <= 0);
+  int count;
 
+  // Wait for a request signal
+  while (1) {
+    count = rs485.recv(&msg, sizeof(msg), TIMEOUT);
+    trace << nr << PSTR(":recv:count=") << count;
+    if (count == sizeof(msg)) break;
+    trace << endl;
+  }
+  
   // Decode function code and dispatch
+  trace << PSTR(",func=") << msg.func 
+	<< PSTR(",index=") << msg.param[0] 
+	<< PSTR(",nr=") << msg.param[1] 
+	<< endl;
   switch (msg.func) {
   case GET_MILLIS:
     msg.param[2] = RTC::millis();
@@ -83,8 +95,8 @@ void loop()
   default:
     return;
   }
-  DELAY(1000);
-
-  // Send the reply
-  if (rs485.send(&msg, sizeof(msg)) < 0) return;
+  count = rs485.send(&msg, sizeof(msg));
+  trace << nr++ << PSTR(":send:count=") << count 
+	<< PSTR(",res=") << msg.param[2]  
+	<< endl;
 }
