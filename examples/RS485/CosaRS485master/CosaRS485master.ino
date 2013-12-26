@@ -27,8 +27,9 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
 
-// Communication channel on UART(1)
-RS485 rs485(1, Board::LED);
+static const uint8_t PORT = 1;
+static const uint8_t SLAVE = 0x02;
+RS485 rs485(PORT, Board::LED);
 
 // Function codes
 enum {
@@ -48,10 +49,10 @@ struct signal_t {
 
 void setup()
 {
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaRS485master: started"));
   Watchdog::begin();
   RTC::begin();
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaRS485master: started"));
   TRACE(free_memory());
   TRACE(sizeof(RS485));
   ASSERT(rs485.begin(9600));
@@ -73,6 +74,7 @@ void loop()
   msg.param[1] = nr;
   count = rs485.send(&msg, sizeof(msg), dest);
   trace << nr << PSTR(":send:")
+	<< PSTR("dest=") << dest 
 	<< PSTR(",count=") << count 
 	<< PSTR(",func=") << func 
 	<< PSTR(",index=") << msg.param[0] 
@@ -80,8 +82,8 @@ void loop()
 	<< endl;
   count = rs485.recv(&msg, sizeof(msg), TIMEOUT);
   trace << nr++ << PSTR(":recv:")
-	<< PSTR("dest=") << dest 
-	<< PSTR(",count=") << count 
+	<< PSTR("count=") << count 
+	<< PSTR(",func=") << msg.func
 	<< PSTR(",index=") << msg.param[0]
 	<< PSTR(",nr=") << msg.param[1];
 
@@ -105,13 +107,13 @@ void loop()
     trace << msg.param[2];
   }
   trace << endl;
-  Watchdog::delay(500);
 
-  // Step to next function code
+  // Step to next function code and on full cycle step to next destination
   func += 1;
   if (func > GET_TEMPERATURE) {
     func = GET_MILLIS;
     dest += 1;
     if (dest > 2) dest = 1;
   }
+  Watchdog::delay(500);
 }

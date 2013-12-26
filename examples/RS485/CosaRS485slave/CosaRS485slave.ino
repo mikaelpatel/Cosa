@@ -16,20 +16,27 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * RS485 slave example for Mega/Mighty. See also CosaRS485master.
+ * RS485 slave example. Possible to run on Standard, Mighty and
+ * Mega (UART). See also CosaRS485master.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/IOStream/Driver/RS485.hh"
-#include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
-#include "Cosa/Memory.h"
 
-// Communication channel on UART(1)
+#if defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGTHY__)
+#include "Cosa/Trace.hh"
+#include "Cosa/Memory.h"
+static const uint8_t SLAVE = 0x01;
+#define PORT 1
+#else
 static const uint8_t SLAVE = 0x02;
-RS485 rs485(1, Board::LED, SLAVE);
+#define PORT 0
+#endif
+
+RS485 rs485(PORT, Board::LED, SLAVE);
 
 // Simulated sensors; analog pins (0 and 1)
 AnalogPin humidity(Board::A0);
@@ -55,11 +62,16 @@ void setup()
 {
   Watchdog::begin();
   RTC::begin();
+
+#if defined(TRACE)
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaRS485slave: started"));
   TRACE(free_memory());
   TRACE(sizeof(RS485));
   ASSERT(rs485.begin(9600));
+#else
+  rs485.begin(9600);
+#endif
 }
 
 void loop()
@@ -70,18 +82,22 @@ void loop()
   int count;
 
   // Wait for a request signal
+#if defined(TRACE)
   while (1) {
     count = rs485.recv(&msg, sizeof(msg), TIMEOUT);
     trace << nr << PSTR(":recv:count=") << count;
     if (count == sizeof(msg)) break;
     trace << endl;
   }
-  
-  // Decode function code and dispatch
   trace << PSTR(",func=") << msg.func 
 	<< PSTR(",index=") << msg.param[0] 
 	<< PSTR(",nr=") << msg.param[1] 
 	<< endl;
+#else
+  while ((count = rs485.recv(&msg, sizeof(msg), TIMEOUT)) != sizeof(msg));
+#endif
+  
+  // Decode function code and dispatch
   switch (msg.func) {
   case GET_MILLIS:
     msg.param[2] = RTC::millis();
@@ -96,7 +112,10 @@ void loop()
     return;
   }
   count = rs485.send(&msg, sizeof(msg));
+
+#if defined(TRACE)
   trace << nr++ << PSTR(":send:count=") << count 
 	<< PSTR(",res=") << msg.param[2]  
 	<< endl;
+#endif
 }
