@@ -72,6 +72,12 @@ void loop()
   msg.param[0] = 0;
   msg.param[1] = nr;
   count = rs485.send(&msg, sizeof(msg), dest);
+  trace << nr << PSTR(":send:")
+	<< PSTR(",count=") << count 
+	<< PSTR(",func=") << func 
+	<< PSTR(",index=") << msg.param[0] 
+	<< PSTR(",nr=") << msg.param[1]
+	<< endl;
   count = rs485.recv(&msg, sizeof(msg), TIMEOUT);
   trace << nr++ << PSTR(":recv:")
 	<< PSTR("dest=") << dest 
