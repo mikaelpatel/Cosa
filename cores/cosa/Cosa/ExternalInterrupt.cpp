@@ -142,6 +142,7 @@ ExternalInterrupt::disable()
 #endif
 
 #if !defined(__ARDUINO_TINY__)
+
 void 
 ExternalInterrupt::enable() 
 { 
@@ -162,22 +163,26 @@ ExternalInterrupt::disable()
 
 ExternalInterrupt* ExternalInterrupt::ext[Board::EXT_MAX] = { NULL };
 
-#define INT_ISR(nr)					\
-ISR(INT ## nr ## _vect)					\
-{							\
-  if (ExternalInterrupt::ext[nr] != NULL)		\
-    ExternalInterrupt::ext[nr]->on_interrupt();		\
+#define INT_ISR(nr)							\
+ISR(INT ## nr ## _vect)							\
+{									\
+  if (ExternalInterrupt::ext[nr] != NULL)				\
+    ExternalInterrupt::ext[nr]->on_interrupt();				\
 }
 
 INT_ISR(0)
 #if defined(INT1_vect)
 INT_ISR(1)
+#endif
 #if defined(INT2_vect)
 INT_ISR(2)
+#endif
 #if defined(INT3_vect)
 INT_ISR(3)
+#endif
+#if defined(INT4_vect)
 INT_ISR(4)
+#endif
+#if defined(INT5_vect)
 INT_ISR(5)
-#endif
-#endif
 #endif

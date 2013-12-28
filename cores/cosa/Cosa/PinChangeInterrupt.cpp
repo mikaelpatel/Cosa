@@ -72,6 +72,8 @@ PinChangeInterrupt::begin()
     bit_set(GIMSK, PCIE);
 #elif defined(__ARDUINO_TINYX4__) || defined(__ARDUINO_TINYX61__)
     bit_mask_set(GIMSK, _BV(PCIE1) | _BV(PCIE0));
+#elif defined(__ARDUINO_STANDARD_USB__)
+    bit_mask_set(PCICR, _BV(PCIE0));
 #elif defined(__ARDUINO_MIGHTY__)
     bit_mask_set(PCICR, _BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #else
@@ -88,6 +90,8 @@ PinChangeInterrupt::end()
     bit_clear(GIMSK, PCIE);
 #elif defined(__ARDUINO_TINYX4__) || defined(__ARDUINO_TINYX61__)
     bit_mask_clear(GIMSK, _BV(PCIE1) | _BV(PCIE0));
+#elif defined(__ARDUINO_STANDARD_USB__)
+    bit_mask_clear(PCICR, _BV(PCIE0));
 #elif defined(__ARDUINO_MIGHTY__)
     bit_mask_clear(PCICR, _BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
 #else
@@ -195,6 +199,22 @@ ISR(PCINT1_vect)
 ISR(PCINT2_vect)
 {
   PinChangeInterrupt::on_interrupt(0, PCMSK2);
+}
+
+#elif defined(__ARDUINO_STANDARD_USB__)
+
+ISR(PCINT0_vect)
+{
+  uint8_t mask = PCMSK0;
+  uint8_t state = *Pin::PIN(0);
+  uint8_t changed = (state ^ PinChangeInterrupt::state[0]) & mask;
+  for (uint8_t i = 0; i < CHARBITS; i++) {
+    if ((changed & 1) && (PinChangeInterrupt::pin[i] != NULL)) {
+      PinChangeInterrupt::pin[i]->on_interrupt();
+    }
+    changed >>= 1;
+  }
+  PinChangeInterrupt::state[0] = state;
 }
 
 #elif defined(__ARDUINO_MEGA__)

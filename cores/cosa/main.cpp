@@ -116,3 +116,12 @@ namespace __cxxabiv1
   extern "C" void __cxa_pure_virtual(void) {}; 
 }
 
+/**
+ * Fix: Temporary solution for Arduino Leonardo and other boards based 
+ * on ATmega32u4 until support for USB/CDC.
+ */
+#if defined(UDINT)
+ISR(USB_COM_vect) {}
+ISR(USB_GEN_vect) { UDINT = 0; }
+#endif
+

@@ -29,13 +29,15 @@
 
 /**
  * Data direction and port register for data transfer (D4..D7 for
- * Arduino Standard/Mighty/Mega and D0..D3 for TinyX4).
+ * Arduino Standard/USB/Mighty/Mega and D0..D3 for TinyX4).
  */
 #if defined(__ARDUINO_STANDARD__)
 # define DDR DDRD
 # define PORT PORTD
 # define POS 4
-#elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGHTY__)
+#elif defined(__ARDUINO_MEGA__)			\
+  || defined(__ARDUINO_MIGHTY__)		\
+  || defined(__ARDUINO_STANDARD_USB__)
 # define DDR DDRB
 # define PORT PORTB
 # define POS 4
@@ -48,6 +50,7 @@
 # define PORT PORTA
 # define POS 4
 #endif
+
 #define MASK (0x0f << POS)
 #define WRITE4B(data) PORT = ((((data) & 0x0f) << POS) | (PORT & ~MASK))
 

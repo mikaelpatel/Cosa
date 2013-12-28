@@ -566,7 +566,11 @@ bool
 AnalogPin::sample_request(uint8_t pin, uint8_t ref)
 {
   if (sampling_pin != NULL) return (false);
+#if defined(__ARDUINO_STANDARD_USB__)
+  pin = pin & 0x07;
+#else
   if (pin >= Board::A0) pin -= Board::A0;
+#endif
   loop_until_bit_is_clear(ADCSRA, ADSC);
   sampling_pin = this;
   ADMUX = (ref | pin);
@@ -591,7 +595,11 @@ uint16_t
 AnalogPin::sample(uint8_t pin, Reference ref)
 {
   if (sampling_pin != NULL) return (0xffffU);
+#if defined(__ARDUINO_STANDARD_USB__)
+  pin = pin & 0x07;
+#else
   if (pin >= Board::A0) pin -= Board::A0;
+#endif
   loop_until_bit_is_clear(ADCSRA, ADSC);
   ADMUX = (ref | pin);
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));

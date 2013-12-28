@@ -39,15 +39,20 @@ class ExternalInterrupt : public IOPin, public Interrupt::Handler {
   friend void INT0_vect(void);
 #if defined(INT1_vect)
   friend void INT1_vect(void);
+#endif
 #if defined(INT2_vect)
   friend void INT2_vect(void);
+#endif
 #if defined(INT3_vect)
   friend void INT3_vect(void);
+#endif
+#if defined(INT4_vect)
   friend void INT4_vect(void);
+#endif
+#if defined(INT5_vect)
   friend void INT5_vect(void);
 #endif
-#endif
-#endif
+
 private:
   static ExternalInterrupt* ext[Board::EXT_MAX];
   uint8_t m_ix;

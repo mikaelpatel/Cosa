@@ -711,6 +711,12 @@ public:
     AVCC_REFERENCE = _BV(REFS0),
     A1V1_REFERENCE = (_BV(REFS1) | _BV(REFS0))
   } __attribute__((packed));
+#elif defined(__ARDUINO_STANDARD_USB__)
+  enum Reference {
+    APIN_REFERENCE = 0,
+    AVCC_REFERENCE = _BV(REFS0),
+    A2V56_REFERENCE = (_BV(REFS1) | _BV(REFS0))
+  } __attribute__((packed));
 #elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGHTY__)
   enum Reference {
     APIN_REFERENCE = 0,

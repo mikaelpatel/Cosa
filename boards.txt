@@ -221,3 +221,22 @@ mega.bootloader.extended_fuses=0xFD
 mega.build.mcu=atmega2560
 mega.build.f_cpu=16000000L
 mega.build.core=cosa
+
+##
+# ARDUINO STANDARD USB
+##
+
+leonardo.name=Cosa Arduino Leonardo (ATmega32U4)
+leonardo.upload.protocol=avr109
+leonardo.upload.maximum_size=28672
+leonardo.upload.speed=57600
+leonardo.upload.disable_flushing=true
+leonardo.bootloader.low_fuses=0xff
+leonardo.bootloader.high_fuses=0xd8
+leonardo.bootloader.extended_fuses=0xcb
+leonardo.build.mcu=atmega32u4
+leonardo.build.f_cpu=16000000L
+leonardo.build.vid=0x2341
+leonardo.build.pid=0x8036
+leonardo.build.core=cosa
+
