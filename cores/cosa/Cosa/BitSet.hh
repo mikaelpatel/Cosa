@@ -62,6 +62,14 @@ public:
   }
 
   /**
+   * Return bit vector.
+   */
+  const uint8_t* bits()
+  {
+    return (m_set);
+  }
+
+  /**
    * Empty bitset.
    */
   void empty()
