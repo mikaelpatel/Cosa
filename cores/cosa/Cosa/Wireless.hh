@@ -82,6 +82,14 @@ public:
       m_dest(0)
     {}
 
+    /** 
+     * Get channel.
+     */
+    uint8_t get_channel()
+    {
+      return (m_channel);
+    }
+
     /**
      * Get network address. 
      */
