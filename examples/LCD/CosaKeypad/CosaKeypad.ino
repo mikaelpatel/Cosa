@@ -72,6 +72,7 @@ KeypadTrace::trace(const char* msg, uint8_t nr)
   }
   m_out << ' ' << msg << endl;
   m_out << PSTR("key = ") << nr;
+  m_out << PSTR(" (") << m_key.get_value() << ')';
 }
 
 HD44780::Port4b port;

@@ -37,7 +37,7 @@
  * when a key down/up is detected.
  */
 class Keypad : private Link {
-
+protected:
   /**
    * Internal analog pin sampler to detect key down. Samples are maps
    * to key code. 
@@ -124,7 +124,7 @@ class LCDKeypad : public Keypad {
 private:
   // Analog reading to key index map
   static const uint16_t m_map[] PROGMEM;
-
+  
 public:
   // Key index
   enum {
