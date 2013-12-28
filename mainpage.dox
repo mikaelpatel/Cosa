@@ -103,11 +103,10 @@ http://arduino.cc/forum/index.php/topic,150299.0.html.
 
 @section Note
 
-ATmega328P, ATmega1284P and ATmega2560 based Arduino boards (Uno,
-Mini, Nano, LilyPad, Mega, Mightly, etc) are supported. The ATtinyX5/X4
-processors are also support for a sub-set of the classes. Arduino and
-AVR lib functions may be used together with Cosa. ATmega32U4 and other
-devices with internal USB hardware are not currently supported.
+ATtinyX4/X5/X61, Atmega328P, Atmega1284P, Atmega2560 and Atmega32u4
+based Arduino boards (Uno, Mini, Mini Pro, Micro, Nano, Leonardo,
+LilyPad, LilyPad USB, Mighty, Mega, etc) are supported. ATmega32U4 
+internal USB hardware (e.g. CDC) is not currently supported.
 
 @section License
 Copyright (C) 2012-2013, Mikael Patel
@@ -234,9 +233,12 @@ specific pin classes; DigitalPin, AnalogPin, PWMPin, etc. The actual
 board implementation class is selected by the build.
 
 @section Standard
-Cosa Standard board pin symbol definitions for the ATmega8,
-ATmega168, ATmega328P based boards such as Arduino Uno, Mini Pro,
-Nano, and LilyPad.
+Cosa Standard board pin symbol definitions for the ATmega328P based
+boards such as Arduino Uno, Mini Pro, Nano, and LilyPad.
+
+@section Standard USB
+Cosa Standard USB board pin symbol definitions for the ATmega32u4 such
+as Arduino Micro, Leonardo, and LilyPad USB.
 
 @section Mega
 Cosa Mega board pin symbol definitions for the ATmega1280 and

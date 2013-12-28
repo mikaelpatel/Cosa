@@ -168,9 +168,10 @@ Naming
 Note
 ----
 
-ATtinyX4/X5, and Atmega328P, Atmega1284P, Atmega2560 based Arduino
-boards (Uno, Mini, Nano, LilyPad, Mighty, Mega, etc) are supported. 
-Arduino and AVR lib functions may be used together with Cosa.  
+ATtinyX4/X5/X61, Atmega328P, Atmega1284P, Atmega2560 and Atmega32u4
+based Arduino boards (Uno, Mini, Mini Pro, Micro, Nano, Leonardo,
+LilyPad, LilyPad USB, Mighty, Mega, etc) are supported. ATmega32U4 
+internal USB hardware (e.g. CDC) is not currently supported.
 
 News
 ----
@@ -252,6 +253,7 @@ token scanner to IOStream. Allowing blocking and non-blocking IOStream
 device mode. Added support for ATtinyX61 and a variant of Base64 for
 encoding of binary data.    
 2013-12 DS1302 RTC and SD card support. Simple FAT16 library using
-SD. Support for RS485 with master-slave protocol.      
+SD. Support for RS485 with master-slave protocol. ATmega32u4 support
+added.      
 
 
