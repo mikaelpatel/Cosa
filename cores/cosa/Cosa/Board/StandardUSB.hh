@@ -256,6 +256,8 @@ extern "C" {
   void USART_RX_vect(void) __attribute__ ((signal));
   void USART_TX_vect(void) __attribute__ ((signal));
   void USART_UDRE_vect(void) __attribute__ ((signal));
+  void USB_COM_vect(void) __attribute__ ((signal));
+  void USB_GEN_vect(void) __attribute__ ((signal));
 }
 #endif
 
