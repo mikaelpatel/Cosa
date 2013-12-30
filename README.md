@@ -254,6 +254,6 @@ device mode. Added support for ATtinyX61 and a variant of Base64 for
 encoding of binary data.    
 2013-12 DS1302 RTC and SD card support. Simple FAT16 library using
 SD. Support for RS485 with master-slave protocol. ATmega32u4 support
-added.      
+added with USB/CDC.      
 
 

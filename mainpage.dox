@@ -296,6 +296,9 @@ Basic UART device handler with internal buffering. The class
 requires an input- and output IOBuffer instance. UART is a sub-class
 of IOStream::Device. See Trace for typical usage.
  
+@section CDC
+USB Serial communication with internal buffering. 
+ 
 @section RS485
 Basic RS485 device handler with internal buffering. An extension of
 the UART class with 485/DE signal handling on message
