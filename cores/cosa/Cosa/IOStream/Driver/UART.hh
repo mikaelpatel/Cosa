@@ -262,8 +262,14 @@ public:
 };
 
 /**
- * Default serial port(0). Weakly defined (See UART.cpp).
+ * Default serial port(0). Weakly defined (See UART.cpp). On Leonardo
+ * and other ATmega32u4 based boards the standard serial is CDC.
  */
+#if defined(__ARDUINO_STANDARD_USB__)
+#include "Cosa/IOStream/Driver/CDC.hh"
+#define uart cdc
+#else
 extern UART uart;
+#endif
 #endif
 #endif

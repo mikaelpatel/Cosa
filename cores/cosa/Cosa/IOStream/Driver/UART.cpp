@@ -31,13 +31,17 @@ Soft::UART  __attribute__ ((weak)) uart(Board::D1);
 #else
 
 #include "Cosa/Bits.h"
-#include "Cosa/IOBuffer.hh"
 #include "Cosa/Power.hh"
 
+#if defined(__ARDUINO_STANDARD_USB__)
+#undef uart
+#else
+#include "Cosa/IOBuffer.hh"
 static IOBuffer<UART::BUFFER_MAX> ibuf;
 static IOBuffer<UART::BUFFER_MAX> obuf;
-
 UART __attribute__ ((weak)) uart(0, &ibuf, &obuf);
+#endif
+
 UART* UART::uart[Board::UART_MAX] = { 0 };
 
 bool
