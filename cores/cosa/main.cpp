@@ -34,6 +34,10 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/LED.hh"
 
+#if defined(USBCON)
+#include "Cosa/USB/Platform.h"
+#endif
+
 /**
  * The init function; minimum setup of hardware after the bootloader.
  * This function may be overridden.
@@ -59,6 +63,11 @@ void init()
   UCSRB = 0;
 #elif defined(UCSR0B)
   UCSR0B = 0;
+#endif
+
+  // Attach the USB module and possible CDC/HID
+#if defined(USBCON)
+  USBDevice.attach();
 #endif
 
   // Allow interrupts from here on
@@ -115,4 +124,3 @@ namespace __cxxabiv1
   extern "C" void __cxa_guard_abort (__guard *) {}
   extern "C" void __cxa_pure_virtual(void) {}; 
 }
-

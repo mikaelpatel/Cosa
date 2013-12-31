@@ -130,13 +130,14 @@ CDC_Setup(Setup& setup)
 bool 
 CDC::begin(uint32_t baudrate, uint8_t format)
 {
-  USBDevice.attach();
   while (_usbLineInfo.lineState == 0);
+  if (!Watchdog::is_initiated()) Watchdog::begin();
   Watchdog::delay(500);
   return (true);
 }
 
-void CDC::accept() 
+void 
+CDC::accept() 
 {
   while (m_ibuf->room()) {
     int c = USB_Recv(CDC_RX);
