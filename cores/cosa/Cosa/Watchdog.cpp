@@ -35,6 +35,7 @@ Head Watchdog::s_timeq[Watchdog::TIMEQ_MAX];
 volatile uint32_t Watchdog::s_ticks = 0L;
 uint8_t Watchdog::s_prescale = 0;
 uint8_t Watchdog::s_mode = 0;
+bool Watchdog::s_initiated = false;
 
 /**
  * Calculate log(2) of the given value. Used to map from delay
@@ -80,6 +81,7 @@ Watchdog::begin(uint16_t ms,
   s_env = env;
   s_prescale = prescale;
   s_mode = mode;
+  s_initiated = true;
 }
 
 void 

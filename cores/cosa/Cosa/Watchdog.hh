@@ -71,8 +71,18 @@ private:
   static volatile uint32_t s_ticks;
   static uint8_t s_prescale;
   static uint8_t s_mode;
+  static bool s_initiated;
 
 public:
+  /**
+   * Get initiated state.
+   * @return bool.
+   */
+  static bool is_initiated()
+  {
+    return (s_initiated);
+  }
+
   /**
    * Get number of watchdog cycles.
    * @return number of ticks.
