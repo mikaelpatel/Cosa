@@ -29,7 +29,12 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
+#define USE_ETHERNET_SHIELD
+#if defined(USE_ETHERNET_SHIELD)
+SD sd(Board::D4);
+#else
 SD sd;
+#endif
 
 void setup()
 {
