@@ -53,8 +53,13 @@ static const uint8_t WIDTH = 6;
 static const uint8_t WIDTH = 32;
 #endif
 
-// Use SD default pins; SPI (MISO, MOSI, SCK), CS (D8)
+// Use SD default pins; SPI (MISO, MOSI, SCK), CS (D4/D8)
+#define USE_ETHERNET_SHIELD
+#if defined(USE_ETHERNET_SHIELD)
+SD sd(Board::D4);
+#else
 SD sd;
+#endif
 
 void setup()
 {
