@@ -39,6 +39,20 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
   bit_field_set(EICRA, 0b11 << ix, mode << ix);
 }
 
+#elif defined(__ARDUINO_STANDARD_USB__)
+
+ExternalInterrupt::
+ExternalInterrupt(Board::ExternalInterruptPin pin, 
+		  InterruptMode mode, 
+		  bool pullup) :
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+{
+  m_ix = pin - Board::EXT0;
+  ext[m_ix] = this;
+  uint8_t ix = (m_ix << 1);
+  bit_field_set(EICRA, 0b11 << ix, mode << ix);
+}
+
 #elif defined(__ARDUINO_MEGA__)
 
 ExternalInterrupt::
