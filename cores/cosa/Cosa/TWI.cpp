@@ -42,9 +42,13 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
   m_target = target;
   synchronized {
     // Enable internal pullup
+#if defined(__ARDUINO_STANDARD_USB__)
+    bit_mask_set(PORTD, _BV(Board::SDA) | _BV(Board::SCL));
+#else
     bit_mask_set(PORTC, _BV(Board::SDA) | _BV(Board::SCL));
-    bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
+#endif
     // Set clock prescale and bit rate
+    bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
     TWBR = ((F_CPU / FREQ) - 16) / 2;
     TWCR = IDLE_CMD;
   }
