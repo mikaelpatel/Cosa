@@ -27,6 +27,16 @@
 #if defined(__ARDUINO_TINY__)
 #include "Cosa/USI/TWI.hh"
 
+#if defined(USE_FAST_MODE)
+// TWI timing constants (us) for fast mode (100-400 kHz)
+#define T2 ((((I_CPU * 1300) / 10000) + 1) / 4)
+#define T4 ((((I_CPU * 600) / 10000) + 1) / 4)
+#else
+// TWI timing constants (us) for standard mode (100 kHz)
+#define T2 ((((I_CPU * 4700) / 10000) + 1) / 4)
+#define T4 ((((I_CPU * 4000) / 10000) + 1) / 4)
+#endif
+
 TWI twi  __attribute__ ((weak));
 
 void 
@@ -184,7 +194,7 @@ TWI::start()
   // Release SCL to ensure that (repeated) start can be performed 
   m_scl.set();
   while (!m_scl.is_set());
-  DELAY(T2);
+  DELAY(T4);
 
   // Generate the start condition
   m_sda.clear();

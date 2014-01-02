@@ -33,8 +33,7 @@
 
 /**
  * Two wire library. Support for ATtiny I2C/TWI bus slave devices 
- * using the USI hardware support. Note that master device for ATtiny
- * USI is not yet implemented. See also Cosa/TWI.hh. The public
+ * using the USI hardware support. See also Cosa/TWI.hh. The public
  * interface should be maintained the same for portability.
  */
 class TWI {
@@ -58,7 +57,7 @@ public:
      * Construct TWI driver with given bus address.
      * @param[in] addr bus address (7-bit LSB).
      */
-    Driver(uint8_t addr) : m_addr(addr << 1) {}
+    Driver(uint8_t addr) : Event::Handler(), m_addr(addr << 1) {}
   };
 
   /**
@@ -271,10 +270,6 @@ private:
     return (true);
   }
 
-  // TWI timing constants (us) for standard mode (100 kHz)
-  static const uint16_t T2 = 4;
-  static const uint16_t T4 = 3;
-  
   /**
    * Generate a TWI start condition. Return true(1) if successful
    * otherwise false(0).
@@ -329,6 +324,7 @@ public:
    */
   bool end()
   {
+    m_dev = NULL;
     return (true);
   }
 
