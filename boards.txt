@@ -2,7 +2,7 @@
 # @version 1.0
 #
 # @section License
-# Copyright (C) 2013, Mikael Patel
+# Copyright (C) 2013-2014, Mikael Patel
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -95,7 +95,7 @@ atmega328-8.build.core=cosa
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (256 words, 0x3f00). 
-uno.name=Cosa Arduino Uno (ATmega328)
+uno.name=Cosa Arduino Uno (ATmega328/Optiboot)
 uno.upload.protocol=arduino
 uno.upload.maximum_size=32256
 uno.upload.speed=115200
@@ -110,7 +110,7 @@ uno.build.core=cosa
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (1024 words, 0x3c00). 
-duemilanove.name=Cosa Arduino Duemilanove (ATmega328)
+duemilanove.name=Cosa Arduino Duemilanove (ATmega328/BOOT_168)
 duemilanove.upload.protocol=arduino
 duemilanove.upload.maximum_size=30720
 duemilanove.upload.speed=57600
@@ -121,11 +121,7 @@ duemilanove.build.mcu=atmega328p
 duemilanove.build.f_cpu=16000000L
 duemilanove.build.core=cosa
 
-# AVR:ATmega328
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16 CK/14 CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
-nano.name=Cosa Arduino Nano (ATmega328)
+nano.name=Cosa Arduino Nano (ATmega328/BOOT_168)
 nano.upload.protocol=arduino
 nano.upload.maximum_size=30720
 nano.upload.speed=57600
@@ -136,7 +132,7 @@ nano.build.mcu=atmega328p
 nano.build.f_cpu=16000000L
 nano.build.core=cosa
 
-lilypad.name=Cosa LilyPad Arduino (ATmega328, 8 MHz)
+lilypad.name=Cosa LilyPad Arduino (ATmega328/BOOT_168, 8 MHz)
 lilypad.upload.protocol=arduino
 lilypad.upload.maximum_size=30720
 lilypad.upload.speed=57600
@@ -147,7 +143,7 @@ lilypad.build.mcu=atmega328p
 lilypad.build.f_cpu=8000000L
 lilypad.build.core=cosa
 
-pro-mini.name=Cosa Arduino Pro Mini (ATmega328)
+pro-mini.name=Cosa Arduino Pro Mini (ATmega328/BOOT_168)
 pro-mini.upload.protocol=arduino
 pro-mini.upload.maximum_size=30720
 pro-mini.upload.speed=57600
@@ -158,7 +154,7 @@ pro-mini.build.mcu=atmega328p
 pro-mini.build.f_cpu=16000000L
 pro-mini.build.core=cosa
 
-pro-mini-8.name=Cosa Arduino Pro Mini (ATmega328, 3.3V, 8 MHz)
+pro-mini-8.name=Cosa Arduino Pro Mini (ATmega328/BOOT_168, 3.3V, 8 MHz)
 pro-mini-8.upload.protocol=arduino
 pro-mini-8.upload.maximum_size=30720
 pro-mini-8.upload.speed=57600
@@ -173,11 +169,11 @@ pro-mini-8.build.core=cosa
 # ARDUINO MIGHTY
 ##
 
-# AVR:ATmega1248
+# AVR:ATmega1284
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (1024 words, 0xfc00). 
-mighty.name=Cosa Arduino Mighty (ATmega1284)
+mighty.name=Cosa Arduino Mighty (ATmega1284/BOOT_1284P)
 mighty.upload.protocol=stk500v1
 mighty.upload.maximum_size=129024
 mighty.upload.speed=57600
@@ -188,11 +184,11 @@ mighty.build.mcu=atmega1284p
 mighty.build.f_cpu=16000000L
 mighty.build.core=cosa
 
-# AVR:ATmega1248
+# AVR:ATmega1284
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (512 words, 0xfe00). 
-mighty-opt.name=Cosa Arduino Mighty (ATmega1284, Optiboot)
+mighty-opt.name=Cosa Arduino Mighty (ATmega1284/Optiboot)
 mighty-opt.upload.protocol=arduino
 mighty-opt.upload.maximum_size=130048
 mighty-opt.upload.speed=115200
@@ -211,7 +207,7 @@ mighty-opt.build.core=cosa
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (4096 words, 0x1f000). 
-mega.name=Cosa Arduino Mega (ATmega2560)
+mega.name=Cosa Arduino Mega (ATmega2560/STK500v2)
 mega.upload.protocol=wiring
 mega.upload.maximum_size=258048
 mega.upload.speed=115200
@@ -226,7 +222,7 @@ mega.build.core=cosa
 # ARDUINO STANDARD USB
 ##
 
-leonardo.name=Cosa Arduino Leonardo (ATmega32U4)
+leonardo.name=Cosa Arduino Leonardo (ATmega32U4/Caterina)
 leonardo.upload.protocol=avr109
 leonardo.upload.maximum_size=28672
 leonardo.upload.speed=57600
@@ -239,4 +235,33 @@ leonardo.build.f_cpu=16000000L
 leonardo.build.vid=0x2341
 leonardo.build.pid=0x8036
 leonardo.build.core=cosa
+
+micro.name=Cosa Arduino Micro (ATmega32U4/Caterina)
+micro.upload.protocol=avr109
+micro.upload.maximum_size=28672
+micro.upload.speed=57600
+micro.upload.disable_flushing=true
+micro.bootloader.low_fuses=0xff
+micro.bootloader.high_fuses=0xd8
+micro.bootloader.extended_fuses=0xcb
+micro.build.mcu=atmega32u4
+micro.build.f_cpu=16000000L
+micro.build.vid=0x2341
+micro.build.pid=0x8037
+micro.build.core=cosa
+
+lilypad_usb.name=Cosa LilyPad Arduino USB (ATmega32U4/Caterina, 8 MHz)
+lilypad_usb.upload.protocol=avr109
+lilypad_usb.upload.maximum_size=28672
+lilypad_usb.upload.speed=57600
+lilypad_usb.upload.disable_flushing=true
+lilypad_usb.bootloader.low_fuses=0xff
+lilypad_usb.bootloader.high_fuses=0xd8
+lilypad_usb.bootloader.extended_fuses=0xce
+lilypad_usb.build.mcu=atmega32u4
+lilypad_usb.build.f_cpu=8000000L
+lilypad_usb.build.vid=0x1B4F
+lilypad_usb.build.pid=0x9208
+lilypad_usb.build.core=cosa
+
 
