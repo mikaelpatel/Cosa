@@ -121,6 +121,10 @@ duemilanove.build.mcu=atmega328p
 duemilanove.build.f_cpu=16000000L
 duemilanove.build.core=cosa
 
+# AVR:ATmega328
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (1024 words, 0x3c00). 
 nano.name=Cosa Arduino Nano (ATmega328/BOOT_168)
 nano.upload.protocol=arduino
 nano.upload.maximum_size=30720
@@ -132,6 +136,10 @@ nano.build.mcu=atmega328p
 nano.build.f_cpu=16000000L
 nano.build.core=cosa
 
+# AVR:ATmega328
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (1024 words, 0x3c00). 
 lilypad.name=Cosa LilyPad Arduino (ATmega328/BOOT_168, 8 MHz)
 lilypad.upload.protocol=arduino
 lilypad.upload.maximum_size=30720
@@ -143,6 +151,10 @@ lilypad.build.mcu=atmega328p
 lilypad.build.f_cpu=8000000L
 lilypad.build.core=cosa
 
+# AVR:ATmega328
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (1024 words, 0x3c00). 
 pro-mini.name=Cosa Arduino Pro Mini (ATmega328/BOOT_168)
 pro-mini.upload.protocol=arduino
 pro-mini.upload.maximum_size=30720
@@ -154,6 +166,10 @@ pro-mini.build.mcu=atmega328p
 pro-mini.build.f_cpu=16000000L
 pro-mini.build.core=cosa
 
+# AVR:ATmega328
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (1024 words, 0x3c00). 
 pro-mini-8.name=Cosa Arduino Pro Mini (ATmega328/BOOT_168, 3.3V, 8 MHz)
 pro-mini-8.upload.protocol=arduino
 pro-mini-8.upload.maximum_size=30720
@@ -222,6 +238,10 @@ mega.build.core=cosa
 # ARDUINO STANDARD USB
 ##
 
+# AVR:ATmega32u4
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.6 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
 leonardo.name=Cosa Arduino Leonardo (ATmega32U4/Caterina)
 leonardo.upload.protocol=avr109
 leonardo.upload.maximum_size=28672
@@ -236,6 +256,10 @@ leonardo.build.vid=0x2341
 leonardo.build.pid=0x8036
 leonardo.build.core=cosa
 
+# AVR:ATmega32u4
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.6 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
 micro.name=Cosa Arduino Micro (ATmega32U4/Caterina)
 micro.upload.protocol=avr109
 micro.upload.maximum_size=28672
@@ -250,18 +274,22 @@ micro.build.vid=0x2341
 micro.build.pid=0x8037
 micro.build.core=cosa
 
-lilypad_usb.name=Cosa LilyPad Arduino USB (ATmega32U4/Caterina, 8 MHz)
-lilypad_usb.upload.protocol=avr109
-lilypad_usb.upload.maximum_size=28672
-lilypad_usb.upload.speed=57600
-lilypad_usb.upload.disable_flushing=true
-lilypad_usb.bootloader.low_fuses=0xff
-lilypad_usb.bootloader.high_fuses=0xd8
-lilypad_usb.bootloader.extended_fuses=0xce
-lilypad_usb.build.mcu=atmega32u4
-lilypad_usb.build.f_cpu=8000000L
-lilypad_usb.build.vid=0x1B4F
-lilypad_usb.build.pid=0x9208
-lilypad_usb.build.core=cosa
+# AVR:ATmega32u4
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.0 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
+lilypad-usb.name=Cosa LilyPad Arduino USB (ATmega32U4/Caterina, 8 MHz)
+lilypad-usb.upload.protocol=avr109
+lilypad-usb.upload.maximum_size=28672
+lilypad-usb.upload.speed=57600
+lilypad-usb.upload.disable_flushing=true
+lilypad-usb.bootloader.low_fuses=0xff
+lilypad-usb.bootloader.high_fuses=0xd8
+lilypad-usb.bootloader.extended_fuses=0xce
+lilypad-usb.build.mcu=atmega32u4
+lilypad-usb.build.f_cpu=8000000L
+lilypad-usb.build.vid=0x1B4F
+lilypad-usb.build.pid=0x9208
+lilypad-usb.build.core=cosa
 
 
