@@ -84,9 +84,19 @@ Install
 
 The [Cosa zip file]
 (https://github.com/mikaelpatel/Cosa/archive/master.zip) is an Arduino
-core package. Download and unzip in your Sketchbook hardware
-folder. Create the folder if missing. Restart the Arduino IDE and Cosa
-will show up as a number of boards and example sketches.  
+core package. 
+
+Arduino 1.0.X: Download and unzip in your Sketchbook hardware
+folder. Create the hardware folder if missing. Path: Sketchbook/hardware/Cosa.     
+
+Arduino 1.5.X: Create a folder named Cosa in your Sketchbook hardware
+folder. Create the hardware folder if missing. Download and unzip in
+your Sketchbook hardware/Cosa folder. Your should have the path;
+Sketchbook/hardware/Cosa/Cosa. Rename the inner Cosa to avr;
+Sketchbook/hardware/Cosa/avr. 
+
+Restart the Arduino IDE and Cosa will show up as a number of boards
+and example sketches.  
 
 For ATtiny a patch is needed for Arduino Windows version to allow
 linking programs larger than 4K; See
@@ -255,5 +265,4 @@ encoding of binary data.
 2013-12 DS1302 RTC and SD card support. Simple FAT16 library using
 SD. Support for RS485 with master-slave protocol. ATmega32u4 support
 added with USB/CDC.      
-
-
+2014-01 Adding support for Arduino IDE 1.5.X.     
