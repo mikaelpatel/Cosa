@@ -180,8 +180,7 @@ Note
 
 ATtinyX4/X5/X61, Atmega328P, Atmega1284P, Atmega2560 and Atmega32u4
 based Arduino boards (Uno, Mini, Mini Pro, Micro, Nano, Leonardo,
-LilyPad, LilyPad USB, Mighty, Mega, etc) are supported. ATmega32U4 
-internal USB hardware (e.g. CDC) is not currently supported.
+LilyPad, LilyPad USB, Mighty, Mega, etc) are supported.
 
 News
 ----
