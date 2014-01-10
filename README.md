@@ -147,7 +147,8 @@ and gyroscope.
 25. DS1302 Tickle-Charge Timekeeping Chip.
 26. SD card, SPI driver.
 27. RS485 support; master-slave protocol.
-28. Slave device support for SPI, TWI and OWI.
+28. RFM69W/HW ISM Transceiver Module.
+29. Slave device support for SPI, TWI and OWI.
 
 References
 ----------
@@ -264,4 +265,5 @@ encoding of binary data.
 2013-12 DS1302 RTC and SD card support. Simple FAT16 library using
 SD. Support for RS485 with master-slave protocol. ATmega32u4 support
 added with USB/CDC.      
-2014-01 Adding support for Arduino IDE 1.5.X.     
+2014-01 Adding support for Arduino IDE 1.5.X. Including a Wireless
+interface implementation for RFM69W/HW.     
