@@ -142,9 +142,9 @@ union univ32_t {
  * with older version of AVR-GCC.
  */
 #ifdef ARDUINO
-#define __PROGMEM  __attribute__((section(".progmem.data")))
-#elif
-#define __PROGMEM PROGMEM
+# define __PROGMEM  __attribute__((section(".progmem.data")))
+#else
+# define __PROGMEM PROGMEM
 #endif
 
 #undef PSTR
