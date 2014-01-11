@@ -407,7 +407,8 @@ T map(T x, T in_min, T in_max, T out_min, T out_max)
  * @return constrain
  */
 template<class T>
-T constrain(T x, T low, T high) {
+T constrain(T x, T low, T high) 
+{
   return (x < low ? low : (x > high ? high : x));
 }
 
