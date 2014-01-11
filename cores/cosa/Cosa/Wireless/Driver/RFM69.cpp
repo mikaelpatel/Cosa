@@ -30,7 +30,7 @@
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
 
-// Device configuration support macro
+// Device configuration support macros
 #define REG_VALUE8(reg,value) (reg), (value)
 #define REG_VALUE16(reg,value)					\
   REG_VALUE8(reg,value >> 8),					\
@@ -41,22 +41,32 @@
   REG_VALUE8(reg+2,value)
 #define REG_VALUE_END() 0
 
+// Crystal Oscillator Frequency; 32 MHz, 61.0 Hz
+#define FXOSC 32000000L
+#define FSTEP (FXOSC >> 19)
+
 // RF Carrier Frequency; 24-bit
 #define FRF_315_MHZ 0x4EC000L
 #define FRF_434_MHZ 0x6C8000L
 #define FRF_868_MHZ 0xD90000L
 #define FRF_915_MHZ 0xE4C000L
-#define FRF_MHZ FRF_868_MHZ
+#define FRF_SETTING FRF_868_MHZ
 
-// Bitrate, 4.8 Kbps; 16-bit
-#define BITRATE_315_MHZ 0x682B
-#define BITRATE_434_MHZ 0x3415
-#define BITRATE_868_MHZ 0x1A0B
-#define BITRATE_915_MHZ 0x0D05
-#define BITRATE_BPS BITRATE_868_MHZ
+// Bitrates; 16-bit (FSOSC / BITRATE)
+#define BITRATE_1200_BPS 0x682B
+#define BITRATE_2400_BPS 0x3415
+#define BITRATE_4800_BPS 0x1A0B
+#define BITRATE_9600_BPS 0x0D05
+#define BITRATE_19200_BPS 0x0683
+#define BITRATE_38400_BPS 0x0341
+#define BITRATE_57600_BPS 0x022C
+#define BITRATE_76800_BPS 0x01A1
+#define BITRATE_115200_BPS 0x0116
+#define BITRATE_153600_BPS 0x00D0
+#define BITRATE_SETTING BITRATE_4800_BPS
 
 // Frequency deviation, 5 KHz; 16-bit
-#define FDEV_KHZ 0x0052
+#define FDEV_SETTING 0x0052
 
 /**
  * Default configuration:
@@ -69,9 +79,9 @@ const uint8_t RFM69::config[] __PROGMEM = {
   // Common Configuration Registers
   REG_VALUE8(OP_MODE, SEQUENCER_ON | LISTEN_OFF | STANDBY_MODE),
   REG_VALUE8(DATA_MODUL, PACKET_MODE | FSK_MODULATION | FSK_NO_SHAPING),
-  REG_VALUE16(BITRATE, BITRATE_BPS),
-  REG_VALUE16(FDEV, FDEV_KHZ),
-  REG_VALUE24(FRF, FRF_MHZ),
+  REG_VALUE16(BITRATE, BITRATE_SETTING),
+  REG_VALUE16(FDEV, FDEV_SETTING),
+  REG_VALUE24(FRF, FRF_SETTING),
   REG_VALUE8(AFC_CTRL, AFC_LOW_BETA_OFF),
   // Transmitter Registers
   REG_VALUE8(PA_LEVEL, PA0_ON | PA1_OFF | PA2_OFF | FULL_OUTPUT_POWER),
@@ -261,8 +271,10 @@ void
 RFM69::set_output_power_level(int8_t dBm)
 {
   // Fix: High power level setting for RFM69HW
+  if (dBm < -18) dBm = -18; else if (dBm > 13) dBm = 13;
+  uint8_t level = (dBm + 18) & OUTPUT_POWER_MASK;
   uint8_t pa_level = read(PA_LEVEL) & ~OUTPUT_POWER_MASK;
-  write(PA_LEVEL, pa_level | (dBm & OUTPUT_POWER_MASK));
+  write(PA_LEVEL, pa_level | level);
 }
 
 int 

@@ -85,14 +85,12 @@ private:
     RSSI_CONFIG = 0x23,		// RSSI-related settings
     RSSI_VALUE = 0x24,		// RSSI value in dBm
     DIO_MAPPING1 = 0x25,	// Mapping of pins DIO0 to DIO3
-    DIO_MAPPING2 = 0x26, 	// Mapping of pins DIO4 to DIO5, clkout frequecy
-    IRQ_FLAGS1 = 0x27, 		// PLL Lock state, Timeout, RSSI > Threshold... 
+    DIO_MAPPING2 = 0x26, 	// Mapping of pins DIO4 to DIO5, CLKOUT frequency
+    IRQ_FLAGS1 = 0x27, 		// PLL Lock state, Timeout, RSSI Threshold...
     IRQ_FLAGS2 = 0x28,	    	// FIFO handling flags...
     RSSI_THRESH = 0x29,		// RSSI Threshold control
-    RX_TIMEOUT1 = 0x2A,		// Timeout duration between Rx request
-				// and RSSI detection 
-    RX_TIMEOUT2 = 0x2B,		// Timeout duration between RSSI
-				// detection and PayloadReady 
+    RX_TIMEOUT1 = 0x2A,		// Time from Rx request to RSSI detection 
+    RX_TIMEOUT2 = 0x2B,		// Time from RSSI detection and PayloadReady 
     PREAMBLE = 0x2C,		// Preamble length (16-bit)
     PREAMBLE_MSB = 0x2C,	// Preamble length (MSB)
     PREAMBLE_LSB = 0x2D,	// Preamble length (LSB)
@@ -376,7 +374,7 @@ private:
   } __attribute__((packed));
 
   /**
-   * Register IRQ_FLAGS1/2 bitfields (Table 27, pp. 69-70)
+   * Register IRQ_FLAGS1 bitfields (Table 27, pp. 69)
    */
   enum {
     MODE_READY = 0x80,		// Operation mode ready
@@ -387,6 +385,12 @@ private:
     TIMEOUT = 0x04,		// Set when a timeout occurs
     AUTO_MODE = 0x02,		// Set when entering intermediate mode
     SYNC_ADDR_MATCH = 0x01,	// Set when sync word and node addres matched
+  } __attribute__((packed));
+
+  /**
+   * Register IRQ_FLAGS2 bitfields (Table 27, pp. 70)
+   */
+  enum {
     FIFO_FULL = 0x80,		// Set when FIFO is full
     FIFO_NOT_EMPTY = 0x40,	// Set when FIFO contains at least one byte
     FIFO_LEVEL = 0x20, 		// Set when the FIFO threshold is exceeded
@@ -411,7 +415,7 @@ private:
   } __attribute__((packed));
 
   /**
-   * Register PACKET_CONFIG1/2 bitfields (Table 28, pp. 72-73)
+   * Register PACKET_CONFIG1 bitfields (Table 28, pp. 72)
    */
   enum {
     FIXED_LENGTH = 0x00,	// Packet formats; fixed
@@ -421,6 +425,12 @@ private:
     WHITENING = 0x40,		// 
     CRC_OFF = 0x00,		// CRC calculation/check
     CRC_ON = 0x10,		// 
+  } __attribute__((packed));
+
+  /**
+   * Register PACKET_CONFIG2 bitfields (Table 28, pp. 73)
+   */
+  enum {
     CRC_AUTO_CLEAR_OFF = 0x08,	// Do not clear FIFO. PAYLOAD_READY issued
     CRC_AUTO_CLEAR_ON = 0x00,	// Clear FIFO and restart new packet reception
     ADDR_FILTER_OFF = 0x00,	// Address filtering based on node/boardcast
@@ -478,6 +488,10 @@ private:
     RECEIVER_MODE = 0x10
   } __attribute__((packed));
 
+  /**
+   * Set the given operation mode and wait for mode to become ready.
+   * @param[in] mode to set.
+   */
   void set(Mode mode);
 
   /**
@@ -506,6 +520,7 @@ private:
     /**
      * @override Interrupt::Handler
      * Signal message has been receive and is available in receive fifo.
+     * Or message has been sent and transceiver is ready.
      * @param[in] arg (not used).
      */
     virtual void on_interrupt(uint16_t arg = 0);
@@ -588,7 +603,7 @@ public:
    * Send message in given null terminated io vector. Returns number
    * of bytes sent. Returns error code(-1) if number of bytes is
    * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
-   * transmit mode.
+   * transmit mode and/or packet is available to receive.
    * @param[in] dest destination network address.
    * @param[in] port device port (or message type).
    * @param[in] vec null termianted io vector.
@@ -642,7 +657,7 @@ public:
   
   /**
    * @override Wireless::Driver
-   * Set output power level (-30..10 dBm)
+   * Set output power level [-18..13] dBm.
    * @param[in] dBm.
    */
   virtual void set_output_power_level(int8_t dBm);
