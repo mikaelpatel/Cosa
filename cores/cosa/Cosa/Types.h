@@ -135,15 +135,18 @@ union univ32_t {
  * @param[in] x vector
  * @return number of elements
  */
-#define membersof(x) (sizeof(x)/sizeof(x[0]))
+#define membersof(x) (sizeof(x) / sizeof(x[0]))
 
 /**
  * Workaround for gcc program memory data warning in Arduino build
- * with older version of AVR-GCC.
+ * with older version of AVR-GCC. 
  */
 #ifdef ARDUINO
 # define __PROGMEM  __attribute__((section(".progmem.data")))
 #else
+# ifndef PROGMEM
+#   define PROGMEM  __attribute__((section(".progmem.data")))
+# endif
 # define __PROGMEM PROGMEM
 #endif
 
@@ -394,5 +397,19 @@ T map(T x, T in_min, T in_max, T out_min, T out_max)
 {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
+
+/**
+ * Template constrain function for given class/data type.
+ * @param[in] T class value to constrain.
+ * @param[in] x value to constrain.
+ * @param[in] low minimum value.
+ * @param[in] high maximum value.
+ * @return constrain
+ */
+template<class T>
+T constrain(T x, T low, T high) {
+  return (x < low ? low : (x > high ? high : x));
+}
+
 #endif
 
