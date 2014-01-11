@@ -138,12 +138,13 @@ union univ32_t {
 #define membersof(x) (sizeof(x)/sizeof(x[0]))
 
 /**
- * Workaround for gcc program memory data warning.
+ * Workaround for gcc program memory data warning in Arduino build
+ * with older version of AVR-GCC.
  */
 #ifdef ARDUINO
-	#define __PROGMEM  __attribute__((section(".progmem.data")))
+#define __PROGMEM  __attribute__((section(".progmem.data")))
 #elif
-	#define __PROGMEM PROGMEM
+#define __PROGMEM PROGMEM
 #endif
 
 #undef PSTR
