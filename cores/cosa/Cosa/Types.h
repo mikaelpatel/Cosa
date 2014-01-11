@@ -140,7 +140,11 @@ union univ32_t {
 /**
  * Workaround for gcc program memory data warning.
  */
-#define __PROGMEM  __attribute__((section(".progmem.data")))
+#ifdef ARDUINO
+	#define __PROGMEM  __attribute__((section(".progmem.data")))
+#elif
+	#define __PROGMEM PROGMEM
+#endif
 
 #undef PSTR
 /**
