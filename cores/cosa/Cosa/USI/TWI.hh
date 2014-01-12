@@ -32,9 +32,12 @@
 #include "Cosa/Event.hh"
 
 /**
- * Two wire library. Support for ATtiny I2C/TWI bus slave devices 
- * using the USI hardware support. See also Cosa/TWI.hh. The public
- * interface should be maintained the same for portability.
+ * Two wire library. Support for ATtiny I2C/TWI bus master and slave
+ * devices using the USI hardware support. See also Cosa/TWI.hh. The
+ * public interface should be maintained the same for portability.
+ * Note: The internal pullup resistors on the USI pins are
+ * active. External pullup resistors (4K7 ohm) are required for longer
+ * wires and/or higher loads. 
  */
 class TWI {
   friend void ::USI_START_vect(void);
