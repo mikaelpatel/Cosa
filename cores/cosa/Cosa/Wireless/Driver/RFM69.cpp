@@ -31,7 +31,7 @@
 #include "Cosa/RTC.hh"
 
 // Device configuration support macros
-#define REG_VALUE8(reg,value) (reg), (value)
+#define REG_VALUE8(reg,value) (reg), (uint8_t) (value)
 #define REG_VALUE16(reg,value)					\
   REG_VALUE8(reg,value >> 8),					\
   REG_VALUE8(reg+1,value)
@@ -39,20 +39,19 @@
   REG_VALUE8(reg,value >> 16),					\
   REG_VALUE8(reg+1,value >> 8),					\
   REG_VALUE8(reg+2,value)
-#define REG_VALUE_END() 0
 
-// Crystal Oscillator Frequency; 32 MHz, 61.0 Hz
+// Crystal Oscillator Frequency/Step; 32 MHz/61.0 Hz
 #define FXOSC 32000000L
 #define FSTEP (FXOSC >> 19)
 
-// RF Carrier Frequency; 24-bit
+// RF Carrier Frequency, 24-bit (RF / FSTEP)
 #define FRF_315_MHZ 0x4EC000L
 #define FRF_434_MHZ 0x6C8000L
 #define FRF_868_MHZ 0xD90000L
 #define FRF_915_MHZ 0xE4C000L
 #define FRF_SETTING FRF_868_MHZ
 
-// Bitrates; 16-bit (FSOSC / BITRATE)
+// Bitrates, 16-bit (FSOSC / BITRATE)
 #define BITRATE_1200_BPS 0x682B
 #define BITRATE_2400_BPS 0x3415
 #define BITRATE_4800_BPS 0x1A0B
@@ -65,12 +64,12 @@
 #define BITRATE_153600_BPS 0x00D0
 #define BITRATE_SETTING BITRATE_4800_BPS
 
-// Frequency deviation, 5 KHz; 16-bit
+// Frequency deviation, 16-bit (FDEV / FSTEP); 5 KHz
 #define FDEV_SETTING 0x0052
 
 /**
  * Default configuration:
- * Radio: 868 MHz, 4.8 kbps, GFSK(0). Whitening, 0 dBm. 
+ * Radio: 868 MHz, 4.8 kbps, GFSK(0). Whitening, 13 dBm. 
  * Packet: Variable packet length with CRC, address check and broadcast(0x00)
  * Frame: sync(2), length(1), dest(1), src(1), port(1), payload(max 63), crc(2)
  * Digital Output Pins: DIO0, Asserts: RX:CRC_OK, TX:PACKET_SENT
@@ -106,7 +105,7 @@ const uint8_t RFM69::config[] __PROGMEM = {
 	     | AUTO_RX_RESTART_ON 
 	     | AES_OFF),
   REG_VALUE8(TEST_DAGC, TEST_DAGC_IMPROVED_MARGIN_AFC_LOG_BETA_OFF),
-  REG_VALUE_END()
+  0
 };
 
 void 
