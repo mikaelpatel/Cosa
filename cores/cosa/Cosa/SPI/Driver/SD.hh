@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SD.hh
+ * @file Cosa/SPI/Driver/SD.hh
  * @version 1.0
  *
  * @section License
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_DRIVER_SD_HH__
-#define __COSA_DRIVER_SD_HH__
+#ifndef __COSA_SPI_DRIVER_SD_HH__
+#define __COSA_SPI_DRIVER_SD_HH__
 
 #include "Cosa/Types.h"
 #include "Cosa/SPI.hh"
