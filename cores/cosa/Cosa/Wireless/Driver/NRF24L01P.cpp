@@ -30,7 +30,6 @@
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
 #include <util/delay.h>
-#include "Cosa/Trace.hh"
 
 uint8_t 
 NRF24L01P::read(Command cmd)
