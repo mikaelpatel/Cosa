@@ -36,7 +36,7 @@ PinChangeInterrupt::enable()
 #if !defined(__ARDUINO_MEGA__)
     pin[m_pin] = this;
 #else
-    uint8_t ix = m_pin - (m_pin < 24 ? 24 : 48);
+    uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
     pin[ix] = this;
 #endif
   }
@@ -50,7 +50,7 @@ PinChangeInterrupt::disable()
 #if !defined(__ARDUINO_MEGA__)
     pin[m_pin] = 0;
 #else
-    uint8_t ix = m_pin - (m_pin < 24 ? 24 : 48);
+    uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
     pin[ix] = 0;
 #endif
   }
