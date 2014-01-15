@@ -25,8 +25,8 @@
 
 #include "Cosa/PinChangeInterrupt.hh"
 
-PinChangeInterrupt* PinChangeInterrupt::pin  [Board::PCINT_MAX * CHARBITS] = { 0 };
-uint8_t             PinChangeInterrupt::state[Board::PCINT_MAX           ] = { 0 };
+PinChangeInterrupt* PinChangeInterrupt::instance[Board::PCINT_MAX * CHARBITS] = { 0 };
+uint8_t             PinChangeInterrupt::state   [Board::PCINT_MAX           ] = { 0 };
 
 void 
 PinChangeInterrupt::enable() 
@@ -34,10 +34,10 @@ PinChangeInterrupt::enable()
   synchronized {
     *PCIMR() |= m_mask;
 #if !defined(__ARDUINO_MEGA__)
-    pin[m_pin] = this;
+    instance[m_pin] = this;
 #else
     uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
-    pin[ix] = this;
+    instance[ix] = this;
 #endif
   }
 }
@@ -48,10 +48,10 @@ PinChangeInterrupt::disable()
   synchronized {
     *PCIMR() &= ~m_mask;
 #if !defined(__ARDUINO_MEGA__)
-    pin[m_pin] = 0;
+    instance[m_pin] = 0;
 #else
     uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
-    pin[ix] = 0;
+    instance[ix] = 0;
 #endif
   }
 }
@@ -108,8 +108,8 @@ ISR(PCINT0_vect)
   uint8_t state = *Pin::PIN(0);
   uint8_t changed = (state ^ PinChangeInterrupt::state[0]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (PinChangeInterrupt::pin[i] != NULL)) {
-      PinChangeInterrupt::pin[i]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::instance[i] != NULL)) {
+      PinChangeInterrupt::instance[i]->on_interrupt();
     }
     changed >>= 1;
   }
@@ -125,8 +125,8 @@ PinChangeInterrupt::on_interrupt(uint8_t ix, uint8_t mask)
   uint8_t state = *Pin::PIN(px);
   uint8_t changed = (state ^ PinChangeInterrupt::state[ix]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (PinChangeInterrupt::pin[i + px] != NULL)) {
-      PinChangeInterrupt::pin[i + px]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::instance[i + px] != NULL)) {
+      PinChangeInterrupt::instance[i + px]->on_interrupt();
     }
     changed >>= 1;
   }
@@ -161,8 +161,8 @@ ISR(PCINT0_vect)
     changed = (state ^ PinChangeInterrupt::state[1]) & mask;
   }
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (PinChangeInterrupt::pin[i] != NULL)) {
-      PinChangeInterrupt::pin[i]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::instance[i] != NULL)) {
+      PinChangeInterrupt::instance[i]->on_interrupt();
     }
     changed >>= 1;
   }
@@ -178,8 +178,8 @@ PinChangeInterrupt::on_interrupt(uint8_t ix, uint8_t mask)
   uint8_t state = *Pin::PIN(px);
   uint8_t changed = (state ^ PinChangeInterrupt::state[ix]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (PinChangeInterrupt::pin[i + px] != NULL)) {
-      PinChangeInterrupt::pin[i + px]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::instance[i + px] != NULL)) {
+      PinChangeInterrupt::instance[i + px]->on_interrupt();
     }
     changed >>= 1;
   }
@@ -209,8 +209,8 @@ ISR(PCINT0_vect)
   uint8_t state = *Pin::PIN(0);
   uint8_t changed = (state ^ PinChangeInterrupt::state[0]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (PinChangeInterrupt::pin[i] != NULL)) {
-      PinChangeInterrupt::pin[i]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::instance[i] != NULL)) {
+      PinChangeInterrupt::instance[i]->on_interrupt();
     }
     changed >>= 1;
   }
@@ -227,8 +227,8 @@ PinChangeInterrupt::on_interrupt(uint8_t ix, uint8_t mask)
   uint8_t state = *Pin::PIN(rx);
   uint8_t changed = (state ^ PinChangeInterrupt::state[ix]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (PinChangeInterrupt::pin[i + px] != NULL)) {
-      PinChangeInterrupt::pin[i + px]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::instance[i + px] != NULL)) {
+      PinChangeInterrupt::instance[i + px]->on_interrupt();
     }
     changed >>= 1;
   }
@@ -259,8 +259,8 @@ PinChangeInterrupt::on_interrupt(uint8_t ix, uint8_t mask)
   uint8_t state = *Pin::PIN(px);
   uint8_t changed = (state ^ PinChangeInterrupt::state[ix]) & mask;
   for (uint8_t i = 0; i < CHARBITS; i++) {
-    if ((changed & 1) && (PinChangeInterrupt::pin[i + px] != NULL)) {
-      PinChangeInterrupt::pin[i + px]->on_interrupt();
+    if ((changed & 1) && (PinChangeInterrupt::instance[i + px] != NULL)) {
+      PinChangeInterrupt::instance[i + px]->on_interrupt();
     }
     changed >>= 1;
   }
