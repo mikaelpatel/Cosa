@@ -33,11 +33,11 @@ PinChangeInterrupt::enable()
 { 
   synchronized {
     *PCIMR() |= m_mask;
-#if !defined(__ARDUINO_MEGA__)
-    instance[m_pin] = this;
-#else
+#if defined(__ARDUINO_MEGA__)
     uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
     instance[ix] = this;
+#else
+    instance[m_pin] = this;
 #endif
   }
 }
@@ -47,11 +47,11 @@ PinChangeInterrupt::disable()
 { 
   synchronized {
     *PCIMR() &= ~m_mask;
-#if !defined(__ARDUINO_MEGA__)
-    instance[m_pin] = 0;
-#else
+#if defined(__ARDUINO_MEGA__)
     uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
     instance[ix] = 0;
+#else
+    instance[m_pin] = 0;
 #endif
   }
 }
