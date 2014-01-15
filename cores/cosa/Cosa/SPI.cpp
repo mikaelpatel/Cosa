@@ -160,8 +160,8 @@ SPI::SPI(uint8_t mode, Order order) :
 }
 
 SPI::SPI() :
-  m_list(0),
-  m_dev(0)
+  m_list(NULL),
+  m_dev(NULL)
 {
   // Initiate the SPI data direction for master mode
   // The SPI/SS pin must be an output pin in master mode
@@ -187,11 +187,11 @@ SPI::begin(Driver* dev)
     // Initiate SPI hardware with device settings
     SPCR = dev->m_spcr;
     SPSR = dev->m_spsr;
-    // Enable device
-    if (dev->m_pulse < 2) dev->m_cs.toggle();
     // Disable all interrupt sources on SPI bus
     for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
       if (dev->m_irq) dev->m_irq->disable();
+    // Enable device
+    if (dev->m_pulse < 2) dev->m_cs.toggle();
   }
   return (true);
 }
@@ -227,7 +227,6 @@ ISR(SPI_STC_vect)
   if (device != NULL) device->on_interrupt(SPDR);
 }
 #endif
-
 
 bool
 SPI::end()
