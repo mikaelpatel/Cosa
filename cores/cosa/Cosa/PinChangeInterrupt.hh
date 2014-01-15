@@ -36,8 +36,8 @@
  */
 class PinChangeInterrupt : public IOPin, public Interrupt::Handler {
 private:
-  static PinChangeInterrupt* pin[Board::PIN_MAX];
-  static uint8_t state[Board::PCINT_MAX];
+  static PinChangeInterrupt* pin  [Board::PCINT_MAX * CHARBITS];
+  static uint8_t             state[Board::PCINT_MAX           ];
 
   friend void PCINT0_vect(void);
 #if defined(PCINT1_vect)

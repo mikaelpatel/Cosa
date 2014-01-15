@@ -25,8 +25,8 @@
 
 #include "Cosa/PinChangeInterrupt.hh"
 
-PinChangeInterrupt* PinChangeInterrupt::pin[Board::PIN_MAX] = { 0 };
-uint8_t PinChangeInterrupt::state[Board::PCINT_MAX] = { 0 };
+PinChangeInterrupt* PinChangeInterrupt::pin  [Board::PCINT_MAX * CHARBITS] = { 0 };
+uint8_t             PinChangeInterrupt::state[Board::PCINT_MAX           ] = { 0 };
 
 void 
 PinChangeInterrupt::enable() 
