@@ -25,8 +25,22 @@
 
 #include "Cosa/PinChangeInterrupt.hh"
 
-PinChangeInterrupt* PinChangeInterrupt::instance[Board::PCINT_MAX * CHARBITS] = { 0 };
-uint8_t             PinChangeInterrupt::state   [Board::PCINT_MAX           ] = { 0 };
+// Define symbols for enable/disable pin change interrupts
+#if defined(__ARDUINO_TINYX5__)
+#define PCICR GIMSK
+#elif defined(__ARDUINO_TINYX4__) || defined(__ARDUINO_TINYX61__)
+#define PCICR GIMSK
+#define PCIE ( _BV(PCIE1) | _BV(PCIE0))
+#elif defined(__ARDUINO_STANDARD_USB__)
+#define PCIE (_BV(PCIE0))
+#elif defined(__ARDUINO_MIGHTY__)
+#define PCIE (_BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
+#elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_STANDARD__)
+#define PCIE (_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
+#endif
+
+PinChangeInterrupt* PinChangeInterrupt::instance[INSTANCE_MAX] = { NULL };
+uint8_t PinChangeInterrupt::state[Board::PCINT_MAX] = { 0 };
 
 void 
 PinChangeInterrupt::enable() 
@@ -34,7 +48,7 @@ PinChangeInterrupt::enable()
   synchronized {
     *PCIMR() |= m_mask;
 #if defined(__ARDUINO_MEGA__)
-    uint8_t ix   = m_pin - (m_pin < 24 ? 16 : 48);
+    uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
     instance[ix] = this;
 #else
     instance[m_pin] = this;
@@ -48,10 +62,10 @@ PinChangeInterrupt::disable()
   synchronized {
     *PCIMR() &= ~m_mask;
 #if defined(__ARDUINO_MEGA__)
-    uint8_t ix   = m_pin - (m_pin < 24 ? 16 : 48);
-    instance[ix] = 0;
+    uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
+    instance[ix] = NULL;
 #else
-    instance[m_pin] = 0;
+    instance[m_pin] = NULL;
 #endif
   }
 }
@@ -69,17 +83,7 @@ PinChangeInterrupt::begin()
 #endif
 
   synchronized {
-#if defined(__ARDUINO_TINYX5__)
-    bit_set(GIMSK, PCIE);
-#elif defined(__ARDUINO_TINYX4__) || defined(__ARDUINO_TINYX61__)
-    bit_mask_set(GIMSK, _BV(PCIE1) | _BV(PCIE0));
-#elif defined(__ARDUINO_STANDARD_USB__)
-    bit_mask_set(PCICR, _BV(PCIE0));
-#elif defined(__ARDUINO_MIGHTY__)
-    bit_mask_set(PCICR, _BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
-#else
-    bit_mask_set(PCICR, _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
-#endif
+    bit_mask_set(PCICR, PCIE);
   }
 }
 
@@ -87,57 +91,34 @@ void
 PinChangeInterrupt::end()
 {
   synchronized {
-#if defined(__ARDUINO_TINYX5__)
-    bit_clear(GIMSK, PCIE);
-#elif defined(__ARDUINO_TINYX4__) || defined(__ARDUINO_TINYX61__)
-    bit_mask_clear(GIMSK, _BV(PCIE1) | _BV(PCIE0));
-#elif defined(__ARDUINO_STANDARD_USB__)
-    bit_mask_clear(PCICR, _BV(PCIE0));
-#elif defined(__ARDUINO_MIGHTY__)
-    bit_mask_clear(PCICR, _BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
-#else
-    bit_mask_clear(PCICR, _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0));
-#endif
+    bit_mask_clear(PCICR, PCIE);
   }
 }
 
 void
-PinChangeInterrupt::on_interrupt( uint8_t pcint, uint8_t mask, uint8_t base_pin )
+PinChangeInterrupt::on_interrupt(uint8_t pcint, uint8_t mask, uint8_t base)
 {
-  uint8_t newState      = *Pin::PIN(base_pin);
-  uint8_t changed       = (newState ^ state[pcint]) & mask;
-  uint8_t base_instance = pcint << 3;
-
+  uint8_t new_state = *Pin::PIN(base);
+  uint8_t changed = (new_state ^ state[pcint]) & mask;
+  base = (pcint << 3);
+  
   for (uint8_t i = 0; changed && (i < CHARBITS); i++) {
-    if ((changed & 1) && (instance[base_instance + i] != NULL)) {
-      instance[base_instance + i]->on_interrupt();
+    if ((changed & 1) && (instance[base + i] != NULL)) {
+      instance[base + i]->on_interrupt();
     }
     changed >>= 1;
   }
 
-  state[pcint] = newState;
+  state[pcint] = new_state;
 }
 
-#if defined(__ARDUINO_TINYX5__)
-
-ISR(PCINT0_vect)
-{
-  PinChangeInterrupt::on_interrupt( 0, PCMSK0, 0 );
+#define PCINT_ISR(vec,pcint,base)				\
+ISR(PCINT ## vec ## _vect)					\
+{								\
+  PinChangeInterrupt::on_interrupt(pcint, PCMSK ## vec, base);	\
 }
 
-#elif defined(__ARDUINO_TINYX4__)
-
-ISR(PCINT0_vect)
-{
-  PinChangeInterrupt::on_interrupt(0, PCMSK0, 0);
-}
-
-ISR(PCINT1_vect)
-{
-  PinChangeInterrupt::on_interrupt(1, PCMSK1, 8);
-}
-
-#elif defined(__ARDUINO_TINYX61__)
+#if defined(__ARDUINO_TINYX61__)
 
 ISR(PCINT0_vect)
 {
@@ -146,84 +127,44 @@ ISR(PCINT0_vect)
 
   if (GIFR & _BV(INTF0)) {
     mask = PCMSK0;
-    ix   = 0;
+    ix = 0;
   } else {
     mask = PCMSK1;
-    ix   = 1;
+    ix = 1;
   }
-  PinChangeInterrupt::on_interrupt( ix, mask, (ix << 3) );
+  PinChangeInterrupt::on_interrupt(ix, mask, (ix << 3));
 }
+
+#elif defined(__ARDUINO_TINYX5__)
+
+PCINT_ISR(0, 0, 0);
+
+#elif defined(__ARDUINO_TINYX4__)
+
+PCINT_ISR(0, 0, 0);
+PCINT_ISR(1, 1, 8);
 
 #elif defined(__ARDUINO_STANDARD__)
 
-ISR(PCINT0_vect)
-{
-  PinChangeInterrupt::on_interrupt(1, PCMSK0, 8); // only 8..13 are available
-}
-
-ISR(PCINT1_vect)
-{
-  PinChangeInterrupt::on_interrupt(2, PCMSK1, 14); // instance[22..23] not used
-}
-
-ISR(PCINT2_vect)
-{
-  PinChangeInterrupt::on_interrupt(0, PCMSK2, 0);
-}
+PCINT_ISR(0, 1, 8);
+PCINT_ISR(1, 2, 14);
+PCINT_ISR(2, 0, 0);
 
 #elif defined(__ARDUINO_STANDARD_USB__)
 
-ISR(PCINT0_vect)
-{
-  PinChangeInterrupt::on_interrupt(0, PCMSK0, 0);
-}
+PCINT_ISR(0, 0, 0);
 
 #elif defined(__ARDUINO_MEGA__)
 
-ISR(PCINT0_vect)
-{
-  PinChangeInterrupt::on_interrupt(0, PCMSK0, 16);
-}
-
-/*
-  Although not implemented, these PCINTs are actually available:
-    PCINT8  is PE0 (RXD0) aka RX0 aka D0
-    PCINT9  is PJ0 (RXD3) aka D15
-    PCINT10 is PJ1 (TXD3) aka D14
-    (PCINT11..15 are not available)
-
-  Because of the non-sequential pins, handling would be quite different
-*/
-
-ISR(PCINT1_vect)
-{
-//  PinChangeInterrupt::on_interrupt(1, PCMSK1, ??);
-}
-
-ISR(PCINT2_vect)
-{
-  PinChangeInterrupt::on_interrupt(2, PCMSK2, 64);
-}
+PCINT_ISR(0, 0, 16);
+ISR(PCINT1_vect) {}
+PCINT_ISR(2, 2, 64);
 
 #elif defined(__ARDUINO_MIGHTY__)
 
-ISR(PCINT0_vect)
-{
-  PinChangeInterrupt::on_interrupt(0, PCMSK0, 0);
-}
+PCINT_ISR(0, 0, 0);
+PCINT_ISR(1, 1, 8);
+PCINT_ISR(2, 2, 16);
+PCINT_ISR(3, 3, 24);
 
-ISR(PCINT1_vect)
-{
-  PinChangeInterrupt::on_interrupt(1, PCMSK1, 8);
-}
-
-ISR(PCINT2_vect)
-{
-  PinChangeInterrupt::on_interrupt(2, PCMSK2, 16);
-}
-
-ISR(PCINT3_vect)
-{
-  PinChangeInterrupt::on_interrupt(3, PCMSK3);
-}
 #endif

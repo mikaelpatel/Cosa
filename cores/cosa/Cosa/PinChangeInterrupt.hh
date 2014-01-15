@@ -36,8 +36,9 @@
  */
 class PinChangeInterrupt : public IOPin, public Interrupt::Handler {
 private:
-  static PinChangeInterrupt* instance[Board::PCINT_MAX * CHARBITS];
-  static uint8_t             state   [Board::PCINT_MAX           ];
+  static const uint8_t INSTANCE_MAX = Board::PCINT_MAX * CHARBITS;
+  static PinChangeInterrupt* instance[INSTANCE_MAX];
+  static uint8_t state[Board::PCINT_MAX];
 
   friend void PCINT0_vect(void);
 #if defined(PCINT1_vect)
@@ -57,7 +58,7 @@ private:
    * @param[in] mask pin mask.
    * @param[in] base pin number from IDE.
    */
-  static void on_interrupt(uint8_t ix, uint8_t mask, uint8_t base_pin );
+  static void on_interrupt(uint8_t ix, uint8_t mask, uint8_t base);
 
 public:
   /**
