@@ -48,15 +48,16 @@ private:
   friend void PCINT3_vect(void);
 #endif
 #endif
+#endif
   /**
    * Map interrupt source: Check which pin(s) are the source of the
    * pin change interrupt and call the corresponding interrupt handler
    * per pin.
    * @param[in] ix port index.
    * @param[in] mask pin mask.
+   * @param[in] base pin number from IDE.
    */
-  static void on_interrupt(uint8_t ix, uint8_t mask);
-#endif
+  static void on_interrupt(uint8_t ix, uint8_t mask, uint8_t base_pin );
 
 public:
   /**
