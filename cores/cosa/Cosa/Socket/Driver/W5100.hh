@@ -302,7 +302,9 @@ public:
   public:
     /**
      * @override Socket
-     * Initiate socket to the given protocol and possible port.
+     * Initiate socket to the given protocol and possible
+     * port. Returns zero if successful otherwise negative error code;
+     * -2 already open, -1 failed to open socket.
      * @param[in] proto protocol.
      * @param[in] port source port.
      * @param[in] flag socket options.
@@ -312,7 +314,8 @@ public:
 
     /**
      * @override Socket
-     * Close the socket. 
+     * Close the socket. Returns zero if successful otherwise negative
+     * error code; -2 already closed.
      * @param[in] proto protocol.
      * @param[in] port source port.
      * @param[in] flag socket options.
@@ -322,16 +325,20 @@ public:
 
     /**
      * @override Socket
-     * Mark socket for incoming requests; server mode.
+     * Mark socket for incoming requests; server mode. Returns zero if
+     * successful otherwise negative error code; -2 illegal protocol,
+     * -1 failed to mark socket for listen (socket is closed). 
      * @return zero if successful otherwise negative error code.
      */
     virtual int listen();
 
     /**
      * @override Socket
-     * Check for incoming requests from clients. Return zero if 
-     * the socket has accepted a request and a connection is
-     * established. 
+     * Check for incoming requests from clients. Return positive
+     * number if the socket has accepted a request and a connection is
+     * established, zero if in listening mode otherwise a negative
+     * error code; -2 illegal protocol, -1 illegal state (socket is
+     * closed).
      * @return zero if successful otherwise negative error code.
      */
     virtual int accept();
@@ -339,6 +346,8 @@ public:
     /**
      * @override Socket
      * Connect the socket to the given address and port; client mode. 
+     * Returns a zero if successful otherwise a negative error code; 
+     * -2 illegal protocol, -1 address/port not valid.
      * @param[in] addr destination address.
      * @param[in] port destination port.
      * @return zero if successful otherwise negative error code.
@@ -347,7 +356,8 @@ public:
 
     /**
      * @override Socket
-     * Disconnect socket from server.
+     * Disconnect socket from server. Returns zero if successful
+     * otherwise a negative error code; -2 illegal protocol. 
      * @return zero if successful otherwise negative error code.
      */
     virtual int disconnect();
@@ -355,7 +365,8 @@ public:
     /**
      * @override Socket
      * Send given data in buffer on connection-oriented socket. Return
-     * number of bytes or negative error code.
+     * number of bytes or negative error code; -4 socket closed by
+     * peer, -3 connection not estabilished, -2 illegal protocol.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @return number of bytes sent if successful otherwise negative error code. 
@@ -366,7 +377,8 @@ public:
      * @override Socket
      * Receive data from connection-oriented socket. The data is stored
      * in given buffer with given maximum number of bytes. Return number of
-     * bytes or negative error code. 
+     * bytes or negative error code; -3 socket not established, 
+     * -2 illegal protocol.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @return number of bytes sent if successful otherwise negative error code. 
@@ -377,7 +389,8 @@ public:
      * @override Socket
      * Send given data in buffer on connectionless socket as a datagram
      * to given destination address (dest:port). Return number of bytes
-     * sent or negative error code. 
+     * sent or negative error code; -2 illegal protocol, -1 illegal
+     * destination address or port.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @param[in] dest destination address.
@@ -390,7 +403,8 @@ public:
      * @override Socket
      * Receive datagram on connectionless socket into given buffer with
      * given maximum size. Returns zero(0) if successful with
-     * information in Datagram otherwise negative error code. 
+     * information in Datagram otherwise negative error code; 
+     * -2 illegal protocol.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @param[in] src source address.
@@ -406,19 +420,16 @@ public:
   /** Pointer to common registers; symbolic field calculation */
   CommonRegister* m_creg;
 
-  /** Next local port number */
+  /** Next local port number; DYNAMIC_PORT(49152)-UINT16_MAX(65535) */
   uint16_t m_local;
 
   /** Interrupt pin handler */
   IRQPin m_irq;
 
-  /** Errata 2. Subnet address handling */
-  uint8_t m_subr[4];
+  /** Hardware address (in program memory) */
+  const uint8_t* m_mac;
 
-  /** Hardware address */
-  uint8_t m_mac[6];
-
-  /** SPI Command codes */
+  /** SPI Command codes. Format: [Command 8b] [Address 16b] [data 8b] */
   enum {
     OP_WRITE = 0xf0,
     OP_READ = 0x0f
@@ -466,11 +477,11 @@ public:
   /**
    * Construct W5100 device driver with given hardware address, chip
    * select and external interrupt pin.
-   * @param[in] mac hardware address.
+   * @param[in] mac hardware address (in program memory).
    * @param[in] csn chip selection pin (Default D10).
    * @param[in] irq external interrupt pin (Default EXT0).
    */
-  W5100(uint8_t mac[6], Board::DigitalPin csn = Board::D10, 
+  W5100(const uint8_t* mac, Board::DigitalPin csn = Board::D10, 
 	Board::ExternalInterruptPin irq = Board::EXT0);
 
   /**
