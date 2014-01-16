@@ -304,8 +304,8 @@ public:
   { 
     synchronized {
       *DDR() |= m_mask; 
+      _set(initial);
     }
-    set(initial);
   }
 
   /**
