@@ -43,6 +43,7 @@ SPI spi  __attribute__ ((weak));
 SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
 		    Clock rate, uint8_t mode, Order order,
 		    Interrupt::Handler* irq) :
+  m_next(NULL),
   m_irq(irq),
   m_cs(cs, (pulse == 0)),
   m_pulse(pulse),
@@ -51,10 +52,6 @@ SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
   // USI command for hardware supported bit banging 
   m_usicr = (_BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC));
   if (mode == 1 || mode == 2) m_usicr |= _BV(USICS0);
-
-  // Attach driver to SPI bus controller device list
-  m_next = spi.m_list;
-  spi.m_list = this;
 
   // Set ports
   synchronized {
@@ -67,6 +64,7 @@ SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
 }
 
 SPI::SPI(uint8_t mode, Order order) :
+  m_list(NULL),
   m_dev(NULL)
 {
   // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
@@ -82,6 +80,7 @@ SPI::SPI(uint8_t mode, Order order) :
 }
 
 SPI::SPI() :
+  m_list(NULL),
   m_dev(NULL)
 {
   // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
@@ -125,6 +124,7 @@ SPI::Driver::set_clock(Clock rate)
 SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
 		    Clock rate, uint8_t mode, Order order,
 		    Interrupt::Handler* irq) :
+  m_next(NULL),
   m_irq(irq),
   m_cs(cs, (pulse == 0)),
   m_pulse(pulse),
@@ -137,9 +137,6 @@ SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
   // SPI Clock control in Status Register 
   m_spsr(((rate & 0x04) != 0) << SPI2X)
 {
-  // Attach driver to SPI bus controller device list
-  m_next = spi.m_list;
-  spi.m_list = this;
 }
 
 SPI::SPI(uint8_t mode, Order order) :
@@ -172,7 +169,6 @@ SPI::SPI() :
     bit_clear(DDRB, Board::MISO);
     bit_clear(PORTB, Board::SCK);
     bit_clear(PORTB, Board::MOSI);
-    bit_set(PORTB, Board::SS);
   }
   // Other the SPI setup is done by the SPI::Driver::begin()
 }
@@ -187,11 +183,11 @@ SPI::begin(Driver* dev)
     // Initiate SPI hardware with device settings
     SPCR = dev->m_spcr;
     SPSR = dev->m_spsr;
+    // Enable device
+    if (dev->m_pulse < 2) dev->m_cs.toggle();
     // Disable all interrupt sources on SPI bus
     for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
       if (dev->m_irq) dev->m_irq->disable();
-    // Enable device
-    if (dev->m_pulse < 2) dev->m_cs.toggle();
   }
   return (true);
 }
@@ -227,6 +223,15 @@ ISR(SPI_STC_vect)
   if (device != NULL) device->on_interrupt(SPDR);
 }
 #endif
+
+bool 
+SPI::attach(Driver* dev)
+{
+  if (dev->m_next != NULL) return (false);
+  dev->m_next = m_list;
+  m_list = dev;
+  return (true);
+}
 
 bool
 SPI::end()
