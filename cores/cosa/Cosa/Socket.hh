@@ -98,10 +98,33 @@ public:
 
   /**
    * @override Socket
+   * Returns positive integer if a connection is established, zero is
+   * not yet established, otherwise a negative error code.
+   * @return positive integer connected, zero if not otherwise
+   * negative error code. 
+   */
+  virtual int isconnected() = 0;
+
+  /**
+   * @override Socket
    * Disconnect socket from server.
    * @return zero if successful otherwise negative error code.
    */
   virtual int disconnect() = 0;
+
+  /**
+   * @override Socket
+   * Return number of bytes available to receive or negative error code.
+   * @return number of bytes receive otherwise negative error code. 
+   */
+  virtual int available() = 0;
+
+  /**
+   * @override Socket
+   * Return number of bytes possible to send or negative error code.
+   * @return number of bytes otherwise negative error code. 
+   */
+  virtual int room() = 0;
 
   /**
    * @override Socket
@@ -112,6 +135,16 @@ public:
    * @return number of bytes sent if successful otherwise negative error code. 
    */
   virtual int send(const void* buf, size_t len) = 0;
+
+  /**
+   * @override Socket
+   * Send given data in program memory buffer on connection-oriented
+   * socket. Return number of bytes or negative error code.
+   * @param[in] buf program memory pointer.
+   * @param[in] len number of bytes in buffer.
+   * @return number of bytes sent if successful otherwise negative error code. 
+   */
+  virtual int send_P(const void* buf, size_t len) = 0;
 
   /**
    * @override Socket
@@ -135,7 +168,23 @@ public:
    * @param[in] port destination port.
    * @return number of bytes sent if successful otherwise negative error code. 
    */
-  virtual int send(const void* buf, size_t len, uint8_t dest[4], uint16_t port) = 0;
+  virtual int send(const void* buf, size_t len, 
+		   uint8_t dest[4], uint16_t port) = 0;
+  
+  /**
+   * @override Socket
+   * Send given data in program memory buffer on connectionless socket
+   * as a datagram to given destination address (dest:port). Return
+   * number of bytes 
+   * sent or negative error code. 
+   * @param[in] buf buffer pointer.
+   * @param[in] len number of bytes in buffer.
+   * @param[in] dest destination address.
+   * @param[in] port destination port.
+   * @return number of bytes sent if successful otherwise negative error code. 
+   */
+  virtual int send_P(const void* buf, size_t len, 
+		     uint8_t dest[4], uint16_t port) = 0;
   
   /**
    * @override Socket
