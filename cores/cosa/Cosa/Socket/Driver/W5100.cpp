@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -276,29 +276,6 @@ W5100::Driver::write_P(const void* buf, size_t len)
 
   // Return number of bytes written
   return (len);
-}
-
-int await_send_completion()
-{
-  /*
-  if (m_proto == TCP) {
-    while ((m_dev->read(uint16_t(&m_sreg->IR)) & IR_SEND_OK) == 0)
-      if (m_dev->read(uint16_t(&m_sreg->SR)) == SR_CLOSED) {
-	close();
-	return (-1);
-      }
-    m_dev->write(uint16_t(&m_sreg->IR), IR_SEND_OK);
-  } 
-  else {
-    uint8_t ir;
-    do {
-      ir = m_dev->read(uint16_t(&m_sreg->IR));
-    } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
-    m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
-    if (ir & IR_TIMEOUT) return (-4);
-  }
-  */
-  return (0);
 }
 
 int
