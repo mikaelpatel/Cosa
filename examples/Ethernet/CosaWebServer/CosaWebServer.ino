@@ -45,7 +45,7 @@ W5100 ethernet(mac);
 Socket* sock;
 
 // Debugging mode; trace print
-#define NDEBUG
+// #define NDEBUG
 #ifdef NDEBUG
 #undef TRACE
 #define TRACE(x) x
@@ -74,9 +74,8 @@ void setup()
 
 void loop()
 {
-  // Take a nap and wait for incoming connection requests
-  Watchdog::delay(250);
-  if (!sock->accept()) return;
+  // Wait for incoming connection requests
+  while (!sock->accept()) Watchdog::delay(32);
 
   // Request sequence number
   static uint16_t nr = 1;
@@ -86,9 +85,10 @@ void loop()
   while ((res = sock->available()) == 0);
   ASSERT(res > 0);
   TRACE(sock->available());
+  trace << PSTR("Request#") << nr << endl;
 
   // Read request and print in debug mode. Ignore contents
-  char buf[128];
+  char buf[32];
   while ((res = sock->recv(buf, sizeof(buf) - 1)) > 0) {
 #ifndef NDEBUG
     buf[res] = 0;
@@ -97,6 +97,7 @@ void loop()
   }
 
   // Reply header. Note that refesh every 5 seconds from client
+  static const char BR[] PROGMEM = "<BR/>";
   static const char header[] PROGMEM = 
     "HTTP/1.1 200 OK" CRLF
     "Content-Type: text/html" CRLF
@@ -104,25 +105,41 @@ void loop()
     "Refresh: 5" CRLF CRLF
     "<!DOCTYPE HTML>" CRLF
     "<HTML>" CRLF
-    "CosaWebServer#";
-  static const char footer[] PROGMEM = "</HTML>" CRLF;
-  static const char BR[] PROGMEM = "<BR/>";
+    "<HEAD><TITLE>CosaWebServer</TITLE></HEAD>" CRLF 
+    "<BODY>" CRLF;
+  static const char footer[] PROGMEM = CRLF "</BODY></HTML>" CRLF;
+
+  // Use an io-buffer for the dynamic part of the page
   IOBuffer<128> page;
   IOStream cout(&page);
 
-  // Reply page with data. First header message and then data and footer
-  TRACE(sock->send_P(header, strlen_P(header)));
-  cout << nr++ << BR;
-  for (uint8_t i = 0; i < 4; i++) {
+  // Header message
+  TRACE(res = sock->send_P(header, sizeof(header)));
+  if (res < 0) goto error;
+
+  // Data message
+  cout << PSTR("Requests: ") << nr++ << BR;
+  for (uint8_t i = 0; i < 4; i++)
     cout << 'A' << i << PSTR(": ") << AnalogPin::sample(i) << BR;
-  }
-  cout << PSTR("VCC: ") << AnalogPin::bandgap() << PSTR(" mV") << BR;
-  cout << PSTR("MEM: ") << free_memory();
-  cout << PSTR("(") << setup_free_memory << PSTR(") byte") << BR;
+  TRACE(res = sock->send(page, page.available()));
+  if (res < 0) goto error;
+  page.empty();
+
+  // State message
+  cout << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
+  cout << PSTR("Memory (byte): ") << free_memory();
+  cout << PSTR("(") << setup_free_memory << PSTR(")") << BR;
+  cout << PSTR("Uptime (s): ") << Watchdog::millis() / 1000 << BR;
+  TRACE(res = sock->send(page, page.available()));
+  if (res < 0) goto error;
+  page.empty();
+
+  // Footer message
   cout << footer;
-  TRACE(sock->send(page, page.available()));
+  TRACE(res = sock->send(page, page.available()));
 
   // Disconnect the client and allow new connection requests
+ error:
   TRACE(sock->disconnect());
   TRACE(sock->listen());
 }

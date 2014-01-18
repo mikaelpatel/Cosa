@@ -203,7 +203,7 @@ W5100::Driver::read(void* buf, size_t len)
 }
 
 int
-W5100::Driver::write(const void* buf, size_t len)
+W5100::Driver::write(const void* buf, size_t len, bool progmem)
 {
   // Check buffer size
   if (len == 0) return (0);
@@ -224,49 +224,20 @@ W5100::Driver::write(const void* buf, size_t len)
   uint16_t offset = ptr & BUF_MASK;
   if (offset + len > BUF_MAX) {
     uint16_t size = BUF_MAX - offset;
-    m_dev->write(m_tx_buf + offset, bp, size);
-    m_dev->write(m_tx_buf, bp + size, len - size);
+    if (progmem) {
+      m_dev->write_P(m_tx_buf + offset, bp, size);
+      m_dev->write_P(m_tx_buf, bp + size, len - size);
+    }
+    else {
+      m_dev->write(m_tx_buf + offset, bp, size);
+      m_dev->write(m_tx_buf, bp + size, len - size);
+    }
   } 
   else {
-    m_dev->write(m_tx_buf + offset, bp, len);
-  }
-
-  // Update transmitter buffer pointer
-  ptr += len;
-  ptr = swap((int16_t) ptr);
-  m_dev->write(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
-
-  // Return number of bytes written
-  return (len);
-}
-
-int
-W5100::Driver::write_P(const void* buf, size_t len)
-{
-  // Check buffer size
-  if (len == 0) return (0);
-  if (len > BUF_MAX) len = BUF_MAX;
-  
-  // Wait for transmitter buffer space
-  int res;
-  do {
-    res = room();
-    if (res < 0) return (res);
-  } while (res < len);
-
-  // Write packet to transmitter buffer. Handle possible buffer wrapping
-  const uint8_t* bp = (const uint8_t*) buf;
-  uint16_t ptr;
-  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
-  ptr = swap((int16_t) ptr);
-  uint16_t offset = ptr & BUF_MASK;
-  if (offset + len > BUF_MAX) {
-    uint16_t size = BUF_MAX - offset;
-    m_dev->write_P(m_tx_buf + offset, bp, size);
-    m_dev->write_P(m_tx_buf, bp + size, len - size);
-  } 
-  else {
-    m_dev->write_P(m_tx_buf + offset, bp, len);
+    if (progmem)
+      m_dev->write_P(m_tx_buf + offset, bp, len);
+    else
+      m_dev->write(m_tx_buf + offset, bp, len);
   }
 
   // Update transmitter buffer pointer
@@ -335,7 +306,6 @@ W5100::Driver::connect(uint8_t addr[4], uint16_t port)
   m_dev->write(uint16_t(&m_sreg->DIPR), addr, sizeof(m_sreg->DIPR));
   m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(m_sreg->DPORT));
   m_dev->issue(uint16_t(&m_sreg->CR), CR_CONNECT);
-
   return (0);
 }
 
@@ -366,7 +336,6 @@ W5100::Driver::listen()
   if (m_proto != TCP) return (-2);
   m_dev->issue(uint16_t(&m_sreg->CR), CR_LISTEN);
   if (m_dev->read(uint16_t(&m_sreg->SR)) == SR_LISTEN) return (0);
-  close();
   return (-1);
 }
 
@@ -378,7 +347,6 @@ W5100::Driver::accept()
   uint8_t status = m_dev->read(uint16_t(&m_sreg->SR));
   if ((status == SR_LISTEN) || (status == SR_ARP)) return (0);
   if (status == SR_ESTABLISHED) return (1);
-  close();
   return (-1);
 }
 
@@ -407,7 +375,7 @@ W5100::Driver::room()
 }
 
 int 
-W5100::Driver::send(const void* buf, size_t len)
+W5100::Driver::send(const void* buf, size_t len, bool progmem)
 {
   // Check that the socket is in TCP mode
   if (m_proto != TCP) return (-2);
@@ -415,24 +383,18 @@ W5100::Driver::send(const void* buf, size_t len)
   if (len == 0) return (0);
   if (len > BUF_MAX) len = BUF_MAX;
 
-  // Write data to transmitter buffer and issue send
-  int res = write(buf, len);
-  if (res > 0) m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
-  return (res);
-}
+  // Write data to transmitter buffer
+  int res = write(buf, len, progmem);
+  if (res <= 0) return (res);
 
-int 
-W5100::Driver::send_P(const void* buf, size_t len)
-{
-  // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
-  if (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED) return (-3);
-  if (len == 0) return (0);
-  if (len > BUF_MAX) len = BUF_MAX;
-
-  // Write data to transmitter buffer and issue send
-  int res = write_P(buf, len);
-  if (res > 0) m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
+  // Issue send command and wait for completion or timeout
+  m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
+  uint8_t ir;
+  do {
+    ir = m_dev->read(uint16_t(&m_sreg->IR));
+  } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
+  m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
+  if (ir & IR_TIMEOUT) return (-4);
   return (res);
 }
 
@@ -451,32 +413,31 @@ W5100::Driver::recv(void* buf, size_t len)
 }
 
 int 
-W5100::Driver::send(const void* buf, size_t len, uint8_t dest[4], uint16_t port)
+W5100::Driver::send(const void* buf, size_t len, 
+		    uint8_t dest[4], uint16_t port, 
+		    bool progmem)
 {
-  if ((m_proto != UDP) && (m_proto != IPRAW) && (m_proto != MACRAW)) return (-2);
+  if ((m_proto != UDP) 
+      && (m_proto != IPRAW) 
+      && (m_proto != MACRAW)) return (-2);
   if (is_illegal(dest, port)) return (-1);
 
   // Write parameters (destination address and data), and issue command
   port = swap((int16_t) port);
   m_dev->write(uint16_t(&m_sreg->DIPR), dest, sizeof(m_sreg->DIPR));
   m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(port));
-  int res = write(buf, len);
-  if (res > 0) m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
+  int res = write(buf, len, progmem);
+  if (res <= 0) return (res);
+
+  // Issue send and wait for completion (transmit or timeout)
+  m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
+  uint8_t ir;
+  do {
+    ir = m_dev->read(uint16_t(&m_sreg->IR));
+  } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
+  m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
+  if (ir & IR_TIMEOUT) return (-4);
   return (res);
-}
-
-int 
-W5100::Driver::send_P(const void* buf, size_t len, uint8_t dest[4], uint16_t port)
-{
-  if ((m_proto != UDP) && (m_proto != IPRAW) && (m_proto != MACRAW)) return (-2);
-  if (is_illegal(dest, port)) return (-1);
-
-  // Write parameters (destination address and data), and issue command
-  port = swap((int16_t) port);
-  m_dev->write(uint16_t(&m_sreg->DIPR), dest, sizeof(m_sreg->DIPR));
-  m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(port));
-  int res = write_P(buf, len);
-  if (res > 0) m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
 }
 
 int 

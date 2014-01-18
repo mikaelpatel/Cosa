@@ -279,20 +279,11 @@ public:
      * with the given number of bytes.
      * @param[in] buf pointer to buffer with data.
      * @param[in] len number of bytes in buffer.
+     * @param[in] progmem program memory pointer flag.
      * @return number of bytes written if successful otherwise negative
      * error code.
      */
-    int write(const void* buf, size_t len);
-
-    /**
-     * Write data in program memory buffer to the socket transmitter
-     * buffer from the given buffer with the given number of bytes.
-     * @param[in] buf pointer to buffer in program memory.
-     * @param[in] len number of bytes in buffer.
-     * @return number of bytes written if successful otherwise negative
-     * error code.
-     */
-    int write_P(const void* buf, size_t len);
+    int write(const void* buf, size_t len, bool progmem);
 
     /** Pointer to socket registers; symbolic address calculation */
     SocketRegister* m_sreg;
@@ -366,8 +357,8 @@ public:
 
     /**
      * @override Socket
-     * Returns positive integer if a connection is established, zero is
-     * not yet established, otherwise a negative error code.
+     * Returns positive integer if a connection is established, zero
+     * is not yet established, otherwise a negative error code.
      * @return positive integer connected, zero if not otherwise
      * negative error code. 
      */
@@ -383,7 +374,8 @@ public:
 
     /**
      * @override Socket
-     * Return number of bytes available to receive or negative error code.
+     * Return number of bytes available to receive or negative error
+     * code. 
      * @return number of bytes to receive otherwise negative error code. 
      */
     virtual int available();
@@ -397,26 +389,17 @@ public:
 
     /**
      * @override Socket
-     * Send given data in buffer on connection-oriented socket. Return
-     * number of bytes or negative error code; -4 socket closed by
-     * peer, -3 connection not estabilished, -2 illegal protocol.
+     * Send given data in buffer on connection-oriented socket. Boolean flag
+     * progmem defined if the buffer is in program memory. Return number
+     * of bytes or negative error code; -4 socket closed by peer, -3
+     * connection not estabilished, -2 illegal protocol. 
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
-     * @return number of bytes sent if successful otherwise negative error code. 
+     * @param[in] progmem program memory pointer flag.
+     * @return number of bytes sent if successful otherwise negative
+     * error code.
      */
-    virtual int send(const void* buf, size_t len);
-
-    /**
-     * @override Socket
-     * Send given data in program memory buffer on connection-oriented
-     * socket. Return number of bytes or negative error code; 
-     * -4 socket closed by peer, -3 connection not estabilished, 
-     * -2 illegal protocol. 
-     * @param[in] buf program memory pointer.
-     * @param[in] len number of bytes in buffer.
-     * @return number of bytes sent if successful otherwise negative error code. 
-     */
-    virtual int send_P(const void* buf, size_t len);
+    virtual int send(const void* buf, size_t len, bool progmem);
 
     /**
      * @override Socket
@@ -426,54 +409,46 @@ public:
      * -2 illegal protocol.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
-     * @return number of bytes sent if successful otherwise negative error code. 
+     * @return number of bytes sent if successful otherwise negative
+     * error code.  
      */
     virtual int recv(void* buf, size_t len);
   
     /**
      * @override Socket
-     * Send given data in buffer on connectionless socket as a datagram
-     * to given destination address (dest:port). Return number of bytes
-     * sent or negative error code; -2 illegal protocol, -1 illegal
-     * destination address or port.
+     * Send given data on connectionless socket as a datagram to given
+     * destination address (dest:port). Return number of bytes sent or
+     * negative error code; -2 illegal protocol, -1 illegal
+     * destination address or port. 
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @param[in] dest destination address.
      * @param[in] port destination port.
-     * @return number of bytes sent if successful otherwise negative error code. 
+     * @param[in] progmem program memory pointer flag.
+     * @return number of bytes sent if successful otherwise negative
+     * error code.  
      */
     virtual int send(const void* buf, size_t len, 
-		     uint8_t dest[4], uint16_t port);
-  
+		     uint8_t dest[4], uint16_t port,
+		     bool progmem);
+
     /**
      * @override Socket
-     * Send given data in program memory buffer on connectionless socket
-     * as a datagram to given destination address (dest:port). Return number 
-     * of bytes sent or negative error code; -2 illegal protocol, -1
-     * illegal destination address or port.
-     * @param[in] buf buffer pointer.
-     * @param[in] len number of bytes in buffer.
-     * @param[in] dest destination address.
-     * @param[in] port destination port.
-     * @return number of bytes sent if successful otherwise negative error code. 
-     */
-    virtual int send_P(const void* buf, size_t len, 
-		       uint8_t dest[4], uint16_t port);
-  
-    /**
-     * @override Socket
-     * Receive datagram on connectionless socket into given buffer with
-     * given maximum size. Returns zero(0) if successful with
+     * Receive datagram on connectionless socket into given buffer
+     * with given maximum size. Returns zero(0) if successful with
      * information in Datagram otherwise negative error code; 
      * -2 illegal protocol.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @param[in] src source address.
      * @param[in] port source port.
-     * @return number of bytes received if successful otherwise negative error code. 
+     * @return number of bytes received if successful otherwise
+     * negative error code.  
      */
     virtual int recv(void* buf, size_t len, 
 		     uint8_t src[4], uint16_t& port);
+
+
   };
 
   /** Sockets on device */
