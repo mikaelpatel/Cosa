@@ -239,6 +239,17 @@ W5100::Driver::write(const void* buf, size_t len, bool progmem)
   return (len);
 }
 
+int 
+W5100::Driver::get_dest(uint8_t mac[6], uint8_t addr[4], uint16_t& port)
+{
+  int16_t dport;
+  m_dev->read(uint16_t(&m_sreg->DHAR), mac, sizeof(m_sreg->DHAR));
+  m_dev->read(uint16_t(&m_sreg->DIPR), addr, sizeof(m_sreg->DIPR));
+  m_dev->read(uint16_t(&m_sreg->DPORT), &dport, sizeof(m_sreg->DPORT));
+  port = swap(dport);
+  return (0);
+}
+
 int
 W5100::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
 {

@@ -90,6 +90,17 @@ public:
 
   /**
    * @override Socket
+   * Get destination machine address, network address and port.
+   * socket. Returns zero if successful otherwise negative error code.
+   * @param[in] mac hardware address.
+   * @param[in] addr network address.
+   * @param[in] port port number.
+   * @return zero if successful otherwise negative error code.
+   */
+  virtual int get_dest(uint8_t mac[6], uint8_t addr[4], uint16_t& port) = 0;
+
+  /**
+   * @override Socket
    * Initiate socket to the given protocol and possible port.
    * @param[in] proto protocol.
    * @param[in] port source port.

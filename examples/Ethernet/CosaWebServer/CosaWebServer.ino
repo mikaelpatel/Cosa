@@ -82,8 +82,14 @@ void loop()
 
   // Bind the socket to an iostream
   IOStream page(sock);
+  uint8_t mac[6];
+  uint8_t ip[4];
   char buf[32];
+  uint16_t port;
   int res;
+
+  // Get connection information
+  sock->get_dest(mac, ip, port);
 
   // Wait for the HTTP request
   while ((res = sock->available()) == 0);
@@ -127,6 +133,13 @@ void loop()
   page << PSTR("(") << setup_free_memory << PSTR(")") << BR;
   page << PSTR("Uptime (s): ") << Watchdog::millis() / 1000 << BR;
   page << PSTR("Requests: ") << nr++ << BR;
+  page << PSTR("MAC: ") << mac[0];
+  for (uint8_t i = 1; i < 6; i++) page << PSTR(".") << mac[i];
+  page << BR;
+  page << PSTR("IP: ") << ip[0];
+  for (uint8_t i = 1; i < 4; i++) page << PSTR(".") << ip[i];
+  page << BR;
+  page << PSTR("PORT: ") << port << BR;
   page << footer;
   page << flush;
 

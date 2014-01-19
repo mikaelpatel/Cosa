@@ -357,6 +357,20 @@ public:
 
     /**
      * @override Socket
+     * Get destination machine address, network address and port. In
+     * server mode (listen/accept) the address of the connecting
+     * client is returned. In client mode (connect) the given server
+     * address is returned. Returns zero if successful otherwise negative
+     * error code. 
+     * @param[in] mac hardware address.
+     * @param[in] addr network address.
+     * @param[in] port port number.
+     * @return zero if successful otherwise negative error code.
+     */
+    virtual int get_dest(uint8_t mac[6], uint8_t addr[4], uint16_t& port);
+
+    /**
+     * @override Socket
      * Initiate socket to the given protocol and possible
      * port. Returns zero if successful otherwise negative error code;
      * -2 already open, -1 failed to open socket.
