@@ -255,26 +255,20 @@ IOStream::Device::room()
 int 
 IOStream::Device::putchar(char c) 
 { 
-  return (EOF); 
+  int res = write(&c, sizeof(c));
+  return (res == sizeof(c) ? c & 0xff : res);
 }
     
 int 
 IOStream::Device::puts(const char* s) 
 { 
-  return (write((void*) s, strlen(s)));
+  return (write(s, strlen(s)));
 }
 
 int 
 IOStream::Device::puts_P(const char* s)
 { 
-  char c;
-  int n = 0;
-  while ((c = pgm_read_byte(s++)) != 0)
-    if (putchar(c) < 0) 
-      break;
-    else
-      n += 1;
-  return (n); 
+  return (write_P(s, strlen_P(s)));
 }
 
 int 
@@ -284,6 +278,17 @@ IOStream::Device::write(const void* buf, size_t size)
   size_t n = 0;
   for(; n < size; n++)
     if (putchar(*ptr++) < 0)
+      break;
+  return (n);
+}
+
+int 
+IOStream::Device::write_P(const void* buf, size_t size) 
+{ 
+  char* ptr = (char*) buf;
+  size_t n = 0;
+  for(; n < size; n++)
+    if (putchar(pgm_read_byte(ptr++)) < 0)
       break;
   return (n);
 }
