@@ -25,6 +25,32 @@
 
 #include "Cosa/Socket.hh"
 
+int 
+Socket::write(const void* buf, size_t size)
+{
+  return (send(buf, size));
+}
+
+int 
+Socket::write_P(const void* buf, size_t size)
+{
+  return (send_P(buf, size));
+}
+
+int 
+Socket::getchar()
+{
+  char c;
+  int res = recv(&c, sizeof(c));
+  return (res == sizeof(c) ? (c & 0xff) : res);
+}
+
+int 
+Socket::read(void* buf, size_t size)
+{
+  return (recv(buf, size));
+}
+
 bool
 Socket::is_illegal(uint8_t addr[4], uint16_t port)
 {

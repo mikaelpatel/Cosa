@@ -27,11 +27,12 @@
 #define __COSA_SOCKET_HH__
 
 #include "Cosa/Types.h"
+#include "Cosa/IOStream.hh"
 
 /**
  * Abstract Interface for Internet Sockets.
  */
-class Socket {
+class Socket : public IOStream::Device {
 public:
   /** Dynamic, private or ephemeral start ports number */
   static const uint16_t DYNAMIC_PORT = 49152;
@@ -44,6 +45,42 @@ public:
     MACRAW = 0x04,
     PPPoE = 0x05
   } __attribute__((packed));
+
+  Socket() : IOStream::Device() {}
+
+  /**
+   * @override IOStream::Device
+   * Write data from buffer with given size to device.
+   * @param[in] buf buffer to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes written or EOF(-1).
+   */
+  virtual int write(const void* buf, size_t size);
+    
+  /**
+   * @override IOStream::Device
+   * Write data from buffer in program memory with given size to device.
+   * @param[in] buf buffer to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes written or EOF(-1).
+   */
+  virtual int write_P(const void* buf, size_t size);
+
+  /**
+   * @override IOStream::Device
+   * Read character from device.
+   * @return character or EOF(-1).
+   */
+  virtual int getchar();
+    
+  /**
+   * @override IOStream::Device
+   * Read data to given buffer with given size from device.
+   * @param[in] buf buffer to read into.
+   * @param[in] size number of bytes to read.
+   * @return number of bytes read or EOF(-1).
+   */
+  virtual int read(void* buf, size_t size);
 
   /**
    * Check if the given address is illegal (0.0.0.0/255.255.255.255:0)
@@ -111,20 +148,6 @@ public:
    * @return zero if successful otherwise negative error code.
    */
   virtual int disconnect() = 0;
-
-  /**
-   * @override Socket
-   * Return number of bytes available to receive or negative error code.
-   * @return number of bytes receive otherwise negative error code. 
-   */
-  virtual int available() = 0;
-
-  /**
-   * @override Socket
-   * Return number of bytes possible to send or negative error code.
-   * @return number of bytes otherwise negative error code. 
-   */
-  virtual int room() = 0;
 
   /**
    * Send given data in buffer on connection-oriented socket. Return
