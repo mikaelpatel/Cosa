@@ -89,15 +89,16 @@ void loop()
   while ((res = sock->available()) == 0);
   if (res < 0) goto error;
   TRACE(sock->available());
-  trace << PSTR("Request#") << nr << endl;
 
   // Read request and print in debug mode. Ignore contents
-  while ((res = sock->recv(buf, sizeof(buf) - 1)) > 0) {
 #ifndef NDEBUG
+  trace << PSTR("Request#") << nr << endl;
+  while ((res = sock->recv(buf, sizeof(buf) - 1)) > 0) {
     buf[res] = 0;
     trace << buf;
-#endif
   }
+  trace << endl;
+#endif
 
   // Reply page; header and footer are static, contents dynamic
   static const char header[] PROGMEM = 
@@ -117,13 +118,15 @@ void loop()
 
   // Construct the page; header-contents-footer
   page << header;
-  page << PSTR("Requests: ") << nr++ << BR;
+  for (uint8_t i = 0; i < 14; i++)
+    page << PSTR("D") << i << PSTR(": ") << InputPin::read(i) << BR;
   for (uint8_t i = 0; i < 4; i++)
     page << PSTR("A") << i << PSTR(": ") << AnalogPin::sample(i) << BR;
   page << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
   page << PSTR("Memory (byte): ") << free_memory();
   page << PSTR("(") << setup_free_memory << PSTR(")") << BR;
   page << PSTR("Uptime (s): ") << Watchdog::millis() / 1000 << BR;
+  page << PSTR("Requests: ") << nr++ << BR;
   page << footer;
   page << flush;
 
