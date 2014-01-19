@@ -37,6 +37,22 @@
  *
  * The static inline functions, SFR, BIT and UART, rely on compiler
  * optimizations to be reduced. 
+ *
+ * @section Circuit
+ *                    ATinyX61
+ *                  +----U----+
+ * (D8/SDA)-------1-|PB0   PA0|-20------(D0/A0/MISO)
+ * (D9)-----------2-|PB1   PA1|-19------(D1/A1/MOSI)
+ * (D10/SCL)------3-|PB2   PA2|-18--(D2/A2/EXT1/SCK)
+ * (/RESET)-------4-|PB3   PA3|-17------(D3/AREF/SS)
+ * (VCC)----------5-|VCC  AGND|-16------------(AGND)
+ * (GND)----------6-|GND  AVCC|-15------------(AVCC)
+ * (D12/A7)-------7-|PB4   PA4|-14-----------(D4/A3)
+ * (D13/A8)-------8-|PB5   PA5|-13-------(D5/A4/LED)
+ * (D14/A9/EXT0)--9-|PB6   PA6|-12-----------(D6/A5)
+ * (/RESET)------10-|PB7   PA7|-11-----------(D7/A6)
+ *                  +---------+
+ *
  */
 class Board {
   friend class Pin;
@@ -108,7 +124,7 @@ public:
     A0 = 0,
     A1,
     A2,
-    A3,
+    A3 = 4,
     A4,
     A5, 
     A6,
