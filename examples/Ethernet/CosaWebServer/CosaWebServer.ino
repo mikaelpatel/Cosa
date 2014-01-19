@@ -45,7 +45,7 @@ W5100 ethernet(mac);
 Socket* sock;
 
 // Debugging mode; trace print
-// #define NDEBUG
+#define NDEBUG
 #ifdef NDEBUG
 #undef TRACE
 #define TRACE(x) x
@@ -75,7 +75,7 @@ void setup()
 void loop()
 {
   // Wait for incoming connection requests
-  while (!sock->accept()) Watchdog::delay(32);
+  while (sock->accept() != 0) Watchdog::delay(32);
 
   // Request sequence number
   static uint16_t nr = 1;
@@ -96,12 +96,12 @@ void loop()
 #endif
   }
 
-  // Reply header. Note that refesh every 5 seconds from client
+  // Reply header. Note that refresh every 5 seconds from client
   static const char BR[] PROGMEM = "<BR/>";
   static const char header[] PROGMEM = 
     "HTTP/1.1 200 OK" CRLF
     "Content-Type: text/html" CRLF
-    "Connection: close" CRLF
+    "Connection: close" CRLF 
     "Refresh: 5" CRLF CRLF
     "<!DOCTYPE HTML>" CRLF
     "<HTML>" CRLF
@@ -109,34 +109,18 @@ void loop()
     "<BODY>" CRLF;
   static const char footer[] PROGMEM = CRLF "</BODY></HTML>" CRLF;
 
-  // Use an io-buffer for the dynamic part of the page
-  IOBuffer<128> page;
-  IOStream cout(&page);
-
-  // Header message
-  TRACE(res = sock->send_P(header, sizeof(header)));
-  if (res < 0) goto error;
-
-  // Data message
+  // Bind the socket to an output stream and construct page
+  IOStream cout(sock);
+  cout << header;
   cout << PSTR("Requests: ") << nr++ << BR;
   for (uint8_t i = 0; i < 4; i++)
-    cout << 'A' << i << PSTR(": ") << AnalogPin::sample(i) << BR;
-  TRACE(res = sock->send(page, page.available()));
-  if (res < 0) goto error;
-  page.empty();
-
-  // State message
+    cout << PSTR("A") << i << PSTR(": ") << AnalogPin::sample(i) << BR;
   cout << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
   cout << PSTR("Memory (byte): ") << free_memory();
   cout << PSTR("(") << setup_free_memory << PSTR(")") << BR;
   cout << PSTR("Uptime (s): ") << Watchdog::millis() / 1000 << BR;
-  TRACE(res = sock->send(page, page.available()));
-  if (res < 0) goto error;
-  page.empty();
-
-  // Footer message
   cout << footer;
-  TRACE(res = sock->send(page, page.available()));
+  cout << flush;
 
   // Disconnect the client and allow new connection requests
  error:

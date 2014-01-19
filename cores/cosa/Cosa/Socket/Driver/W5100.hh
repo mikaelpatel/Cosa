@@ -34,7 +34,11 @@
 #include "Cosa/ExternalInterrupt.hh"
 
 /**
- * Cosa W5100 low-level device driver class. 
+ * Cosa WIZnet W5100 device driver class. Provides an implementation
+ * of the Cosa Socket and Cosa IOStream::Device classes. A socket may
+ * be bound directly to a Cosa IOStream. The device internal
+ * transmitter buffer is used. The buffer is sent on flush or when
+ * full. 
  * 
  * @See Also
  * 1. W5100 Datasheet Version 1.2.4, Sep. 20, 2011,
@@ -223,13 +227,16 @@ public:
   static const uint16_t RX_MEMORY_BASE = 0x6000;
   static const uint16_t RX_MEMORY_MAX = 0x2000;
   
-  /** Socket Buffer Size */
+  /** Socket Buffer Size; 2Kbyte TX/RX per socket */
   static const size_t BUF_MAX = 2048;
   static const uint16_t BUF_MASK = 0x07ff;
   static const uint8_t TX_MEMORY_SIZE = 0x55;
   static const uint8_t RX_MEMORY_SIZE = 0x55;
 
-  /** Maximum number of sockets */
+  /** TX Message Size; internal buffer size for flush threshold */
+  static const size_t MSG_MAX = BUF_MAX / 2;
+
+  /** Maximum number of sockets on device */
   static const uint8_t SOCK_MAX = 4;
   
   /**
@@ -291,16 +298,63 @@ public:
     /** Pointer to device context */
     W5100* m_dev;
 
-    /** Offset to socket transmitter buffer */
+    /** Pointer to socket transmitter buffer */
     uint16_t m_tx_buf;
 
-    /** Offset to socket receiver buffer */
+    /** Offset in socket transmitter buffer */
+    uint16_t m_tx_offset;
+
+    /** Length of message in socket transmitter buffer */
+    uint16_t m_tx_len;
+    
+    /** Pointer to socket receiver buffer */
     uint16_t m_rx_buf;
 
     /** Socket protocol if open otherwise zero(0) */
     uint8_t m_proto;
 
   public:
+    Driver() : Socket() {}
+
+    /**
+     * @override IOStream::Device
+     * Number of bytes available in receiver buffer.
+     * @return bytes.
+     */
+    virtual int available();
+
+    /**
+     * @override IOStream::Device
+     * Number of bytes room in transmitter buffer.
+     * @return bytes.
+     */
+    virtual int room();
+
+    /**
+     * @override IOStream::Device
+     * Write data from buffer with given size to device.
+     * @param[in] buf buffer to write.
+     * @param[in] len number of bytes to write.
+     * @return number of bytes written or EOF(-1).
+     */
+    virtual int write(const void* buf, size_t size);
+    
+    /**
+     * @override IOStream::Device
+     * Write data from buffer in program memory with given size to device.
+     * @param[in] buf buffer to write.
+     * @param[in] size number of bytes to write.
+     * @return number of bytes written or EOF(-1).
+     */
+    virtual int write_P(const void* buf, size_t size);
+
+    /**
+     * @override IOStream::Device
+     * Flush internal device buffers. Wait for device to become idle.
+     * @return zero(0) or negative error code.
+     */
+    virtual int flush();
+
     /**
      * @override Socket
      * Initiate socket to the given protocol and possible
@@ -335,11 +389,11 @@ public:
 
     /**
      * @override Socket
-     * Check for incoming requests from clients. Return positive
-     * number if the socket has accepted a request and a connection is
-     * established, zero if in listening mode otherwise a negative
-     * error code; -2 illegal protocol, -1 illegal state (socket is
-     * closed).
+     * Check for incoming requests from clients. Return zero if the
+     * socket has accepted a request and a connection is established,
+     * otherwise a negative error code; -3 listening or connection in
+     * progress, -2 illegal protocol, -1 illegal state (socket is
+     * closed). 
      * @return zero if successful otherwise negative error code.
      */
     virtual int accept();
@@ -371,21 +425,6 @@ public:
      * @return zero if successful otherwise negative error code.
      */
     virtual int disconnect();
-
-    /**
-     * @override Socket
-     * Return number of bytes available to receive or negative error
-     * code. 
-     * @return number of bytes to receive otherwise negative error code. 
-     */
-    virtual int available();
-
-    /**
-     * @override Socket
-     * Return number of bytes possible to send or negative error code.
-     * @return number of bytes otherwise negative error code. 
-     */
-    virtual int room();
 
     /**
      * @override Socket

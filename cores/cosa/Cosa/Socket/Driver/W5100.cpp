@@ -209,19 +209,9 @@ W5100::Driver::write(const void* buf, size_t len, bool progmem)
   if (len == 0) return (0);
   if (len > BUF_MAX) len = BUF_MAX;
   
-  // Wait for transmitter buffer space
-  int res;
-  do {
-    res = room();
-    if (res < 0) return (res);
-  } while (res < len);
-
   // Write packet to transmitter buffer. Handle possible buffer wrapping
   const uint8_t* bp = (const uint8_t*) buf;
-  uint16_t ptr;
-  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
-  ptr = swap((int16_t) ptr);
-  uint16_t offset = ptr & BUF_MASK;
+  uint16_t offset = m_tx_offset;
   if (offset + len > BUF_MAX) {
     uint16_t size = BUF_MAX - offset;
     if (progmem) {
@@ -232,19 +222,19 @@ W5100::Driver::write(const void* buf, size_t len, bool progmem)
       m_dev->write(m_tx_buf + offset, bp, size);
       m_dev->write(m_tx_buf, bp + size, len - size);
     }
+    m_tx_offset = len - size;
   } 
   else {
     if (progmem)
       m_dev->write_P(m_tx_buf + offset, bp, len);
     else
       m_dev->write(m_tx_buf + offset, bp, len);
+    m_tx_offset += len;
   }
 
   // Update transmitter buffer pointer
-  ptr += len;
-  ptr = swap((int16_t) ptr);
-  m_dev->write(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
-
+  m_tx_len += len;
+  
   // Return number of bytes written
   return (len);
 }
@@ -317,6 +307,14 @@ W5100::Driver::isconnected()
   uint8_t ir = m_dev->read(uint16_t(&m_sreg->IR));
   if (ir & IR_CON) return (1);
   if (ir & IR_TIMEOUT) return (-1);
+
+  // Wait for transmit buffer and setup write pointers
+  while (room() < MSG_MAX);
+  uint16_t ptr;
+  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
+  ptr = swap((int16_t) ptr);
+  m_tx_offset = ptr & BUF_MASK;
+  m_tx_len = 0;
   return (0);
 }
 
@@ -345,9 +343,17 @@ W5100::Driver::accept()
   // Check that the socket is in TCP mode
   if (m_proto != TCP) return (-2);
   uint8_t status = m_dev->read(uint16_t(&m_sreg->SR));
-  if ((status == SR_LISTEN) || (status == SR_ARP)) return (0);
-  if (status == SR_ESTABLISHED) return (1);
-  return (-1);
+  if ((status == SR_LISTEN) || (status == SR_ARP)) return (-3);
+  if (status != SR_ESTABLISHED) return (-1);
+
+  // Wait for transmit buffer and setup write pointers
+  while (room() < MSG_MAX);
+  uint16_t ptr;
+  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
+  ptr = swap((int16_t) ptr);
+  m_tx_offset = ptr & BUF_MASK;
+  m_tx_len = 0;
+  return (0);
 }
 
 int 
@@ -366,12 +372,81 @@ int
 W5100::Driver::room()
 {
   // Read transmit free size register until stable value
-  int16_t res, size;
+  int res, size;
   do {
-    m_dev->read(uint16_t(&m_sreg->TX_FSR), &res, sizeof(res));
-    m_dev->read(uint16_t(&m_sreg->TX_FSR), &size, sizeof(size));
-  } while (res != size);
-  return (swap(res));
+    do {
+      m_dev->read(uint16_t(&m_sreg->TX_FSR), &res, sizeof(res));
+      m_dev->read(uint16_t(&m_sreg->TX_FSR), &size, sizeof(size));
+    } while (res != size);
+    res = swap(res);
+  } while (res < 0 || res > BUF_MAX);
+  return (res);
+}
+
+int 
+W5100::Driver::write(const void* buf, size_t len)
+{
+  // Check that the socket is in TCP mode
+  if (m_proto != TCP) return (-2);
+  if (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED) return (-3);
+  if (len == 0) return (0);
+  const uint8_t* bp = (const uint8_t*) buf;
+  int size = len;
+  while (size > 0) {
+    if (m_tx_len == MSG_MAX) flush();
+    int n = MSG_MAX - m_tx_len;
+    if (n > size) n = size;
+    int res = write(bp, n, false);
+    if (res < 0) return (res);
+    size -= n;
+    bp += n;
+  }
+  return (len);
+}
+
+int 
+W5100::Driver::write_P(const void* buf, size_t len)
+{
+  // Check that the socket is in TCP mode
+  if (m_proto != TCP) return (-2);
+  if (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED) return (-3);
+  if (len == 0) return (0);
+  const uint8_t* bp = (const uint8_t*) buf;
+  int size = len;
+  while (size > 0) {
+    if (m_tx_len == MSG_MAX) flush();
+    int n = MSG_MAX - m_tx_len;
+    if (n > size) n = size;
+    int res = write(bp, n, true);
+    if (res < 0) return (res);
+    size -= n;
+    bp += n;
+  }
+  return (len);
+}
+
+int 
+W5100::Driver::flush()
+{
+  uint16_t ptr;
+  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
+  ptr = swap((int16_t) ptr);
+  ptr += m_tx_len;
+  ptr = swap((int16_t) ptr);
+  m_dev->write(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
+  m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
+  uint8_t ir;
+  do {
+    ir = m_dev->read(uint16_t(&m_sreg->IR));
+  } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
+  m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
+  if (ir & IR_TIMEOUT) return (-1);
+  while (room() < MSG_MAX);
+  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
+  ptr = swap((int16_t) ptr);
+  m_tx_offset = ptr & BUF_MASK;
+  m_tx_len = 0;
+  return (0);
 }
 
 int 
@@ -388,14 +463,7 @@ W5100::Driver::send(const void* buf, size_t len, bool progmem)
   if (res <= 0) return (res);
 
   // Issue send command and wait for completion or timeout
-  m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
-  uint8_t ir;
-  do {
-    ir = m_dev->read(uint16_t(&m_sreg->IR));
-  } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
-  m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
-  if (ir & IR_TIMEOUT) return (-4);
-  return (res);
+  return (flush() ? -4 : res);
 }
 
 int 
@@ -426,18 +494,13 @@ W5100::Driver::send(const void* buf, size_t len,
   port = swap((int16_t) port);
   m_dev->write(uint16_t(&m_sreg->DIPR), dest, sizeof(m_sreg->DIPR));
   m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(port));
+
+  // Write data to transmitter buffer
   int res = write(buf, len, progmem);
   if (res <= 0) return (res);
 
-  // Issue send and wait for completion (transmit or timeout)
-  m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
-  uint8_t ir;
-  do {
-    ir = m_dev->read(uint16_t(&m_sreg->IR));
-  } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
-  m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
-  if (ir & IR_TIMEOUT) return (-4);
-  return (res);
+  // Issue send command and wait for completion or timeout
+  return (flush() ? -4 : res);
 }
 
 int 
