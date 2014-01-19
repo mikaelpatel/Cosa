@@ -74,21 +74,24 @@ void setup()
 
 void loop()
 {
-  // Wait for incoming connection requests
-  while (sock->accept() != 0) Watchdog::delay(32);
-
   // Request sequence number
   static uint16_t nr = 1;
 
-  // Wait for the HTTP request
+  // Wait for incoming connection requests
+  while (sock->accept() != 0) Watchdog::delay(32);
+
+  // Bind the socket to an iostream
+  IOStream page(sock);
+  char buf[32];
   int res;
+
+  // Wait for the HTTP request
   while ((res = sock->available()) == 0);
-  ASSERT(res > 0);
+  if (res < 0) goto error;
   TRACE(sock->available());
   trace << PSTR("Request#") << nr << endl;
 
   // Read request and print in debug mode. Ignore contents
-  char buf[32];
   while ((res = sock->recv(buf, sizeof(buf) - 1)) > 0) {
 #ifndef NDEBUG
     buf[res] = 0;
@@ -96,8 +99,7 @@ void loop()
 #endif
   }
 
-  // Reply header. Note that refresh every 5 seconds from client
-  static const char BR[] PROGMEM = "<BR/>";
+  // Reply page; header and footer are static, contents dynamic
   static const char header[] PROGMEM = 
     "HTTP/1.1 200 OK" CRLF
     "Content-Type: text/html" CRLF
@@ -107,20 +109,23 @@ void loop()
     "<HTML>" CRLF
     "<HEAD><TITLE>CosaWebServer</TITLE></HEAD>" CRLF 
     "<BODY>" CRLF;
-  static const char footer[] PROGMEM = CRLF "</BODY></HTML>" CRLF;
+  static const char footer[] PROGMEM = 
+    "</BODY>" CRLF 
+    "</HTML>";
+  static const char BR[] PROGMEM = 
+    "<BR/>" CRLF;
 
-  // Bind the socket to an output stream and construct page
-  IOStream cout(sock);
-  cout << header;
-  cout << PSTR("Requests: ") << nr++ << BR;
+  // Construct the page; header-contents-footer
+  page << header;
+  page << PSTR("Requests: ") << nr++ << BR;
   for (uint8_t i = 0; i < 4; i++)
-    cout << PSTR("A") << i << PSTR(": ") << AnalogPin::sample(i) << BR;
-  cout << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
-  cout << PSTR("Memory (byte): ") << free_memory();
-  cout << PSTR("(") << setup_free_memory << PSTR(")") << BR;
-  cout << PSTR("Uptime (s): ") << Watchdog::millis() / 1000 << BR;
-  cout << footer;
-  cout << flush;
+    page << PSTR("A") << i << PSTR(": ") << AnalogPin::sample(i) << BR;
+  page << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
+  page << PSTR("Memory (byte): ") << free_memory();
+  page << PSTR("(") << setup_free_memory << PSTR(")") << BR;
+  page << PSTR("Uptime (s): ") << Watchdog::millis() / 1000 << BR;
+  page << footer;
+  page << flush;
 
   // Disconnect the client and allow new connection requests
  error:
