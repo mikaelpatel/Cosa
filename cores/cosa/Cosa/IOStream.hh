@@ -609,7 +609,8 @@ public:
    */
   IOStream& operator<<(void* ptr) 
   { 
-    print(ptr); 
+    print(ptr, hex); 
+    m_base = dec;
     return (*this); 
   }
 
@@ -621,7 +622,8 @@ public:
    */
   IOStream& operator<<(const void* ptr) 
   { 
-    print(ptr); 
+    print(ptr, hex); 
+    m_base = dec;
     return (*this); 
   }
 
