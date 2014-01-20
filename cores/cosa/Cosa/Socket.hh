@@ -112,9 +112,6 @@ public:
   /**
    * @override Socket
    * Close the socket. 
-   * @param[in] proto protocol.
-   * @param[in] port source port.
-   * @param[in] flag socket options.
    * @return zero if successful otherwise negative error code.
    */
   virtual int close() = 0;
@@ -245,6 +242,7 @@ public:
   }
   
   /**
+   * @override Socket
    * Send given data on connectionless socket as a datagram to given
    * destination address (dest:port). Return number of bytes 
    * sent or negative error code. 
@@ -258,7 +256,7 @@ public:
    */
   virtual int send(const void* buf, size_t len, 
 		   uint8_t dest[4], uint16_t port,
-		   bool progmem);
+		   bool progmem) = 0;
 
   /**
    * @override Socket

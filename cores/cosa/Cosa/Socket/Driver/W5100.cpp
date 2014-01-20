@@ -26,7 +26,6 @@
 #include "Cosa/Socket/Driver/W5100.hh"
 
 #if !defined(__ARDUINO_TINY__)
-#include "Cosa/Watchdog.hh"
 
 #define NDEBUG
 #ifndef NDEBUG
