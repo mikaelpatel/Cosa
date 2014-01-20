@@ -239,6 +239,17 @@ W5100::Driver::write(const void* buf, size_t len, bool progmem)
   return (len);
 }
 
+void 
+W5100::Driver::setup()
+{
+  while (room() < MSG_MAX);
+  uint16_t ptr;
+  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
+  ptr = swap((int16_t) ptr);
+  m_tx_offset = ptr & BUF_MASK;
+  m_tx_len = 0;
+}
+
 int 
 W5100::Driver::get_dest(uint8_t mac[6], uint8_t addr[4], uint16_t& port)
 {
@@ -318,14 +329,7 @@ W5100::Driver::isconnected()
   uint8_t ir = m_dev->read(uint16_t(&m_sreg->IR));
   if (ir & IR_CON) return (1);
   if (ir & IR_TIMEOUT) return (-1);
-
-  // Wait for transmit buffer and setup write pointers
-  while (room() < MSG_MAX);
-  uint16_t ptr;
-  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
-  ptr = swap((int16_t) ptr);
-  m_tx_offset = ptr & BUF_MASK;
-  m_tx_len = 0;
+  setup();
   return (0);
 }
 
@@ -356,14 +360,7 @@ W5100::Driver::accept()
   uint8_t status = m_dev->read(uint16_t(&m_sreg->SR));
   if ((status == SR_LISTEN) || (status == SR_ARP)) return (-3);
   if (status != SR_ESTABLISHED) return (-1);
-
-  // Wait for transmit buffer and setup write pointers
-  while (room() < MSG_MAX);
-  uint16_t ptr;
-  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
-  ptr = swap((int16_t) ptr);
-  m_tx_offset = ptr & BUF_MASK;
-  m_tx_len = 0;
+  setup();
   return (0);
 }
 
@@ -452,11 +449,7 @@ W5100::Driver::flush()
   } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
   m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
   if (ir & IR_TIMEOUT) return (-1);
-  while (room() < MSG_MAX);
-  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
-  ptr = swap((int16_t) ptr);
-  m_tx_offset = ptr & BUF_MASK;
-  m_tx_len = 0;
+  setup();
   return (0);
 }
 

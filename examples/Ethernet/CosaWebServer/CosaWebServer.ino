@@ -17,8 +17,10 @@
  * 
  * @section Description
  * W5100 Ethernet Controller device driver example code; HTTP server.
- * Waits for requests. Reply with sequence number, analog pin(0..3)
- * samples, voltage (bandgap) and amount of free memory.
+ * Waits for requests. Reply with reading of digital pin(0..13), 
+ * analog pin(0..3) samples, voltage (bandgap), amount of free memory
+ * in loop and at setup, uptime (seconds), number of requests, and
+ * the connecting client address (MAC, IP and port).
  *
  * This file is part of the Arduino Che Cosa project.
  */

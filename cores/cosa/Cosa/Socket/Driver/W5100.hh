@@ -292,6 +292,13 @@ public:
      */
     int write(const void* buf, size_t len, bool progmem);
 
+    /**
+     * Wait for given maximum message size in internal transmit buffer.
+     * Setup transmitter offset and initiate length for new message
+     * construction. 
+     */
+    void setup();
+
     /** Pointer to socket registers; symbolic address calculation */
     SocketRegister* m_sreg;
 
