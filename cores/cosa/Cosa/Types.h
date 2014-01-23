@@ -379,8 +379,8 @@ swap(int32_t value)
  * Convert values between host and network byte order. AVR is
  * littlendian and network is bigendian so byte swap.
  */
-#define ntoh(x) swap(x)
-#define hton(x) swap(x)
+#define ntoh swap
+#define hton swap
 
 /**
  * Template map function for given class/data type.
