@@ -82,6 +82,12 @@ void loop()
   // Wait for incoming connection requests
   while (sock->accept() != 0) Watchdog::delay(32);
 
+  // Uptime in seconds
+  uint32_t uptime =  Watchdog::millis() / 1000;
+  uint16_t h = uptime / 3600;
+  uint8_t m = (uptime / 60) % 60;
+  uint8_t s = uptime % 60;
+
   // Bind the socket to an iostream
   IOStream page(sock);
   uint8_t mac[6];
@@ -90,16 +96,16 @@ void loop()
   uint16_t port;
   int res;
 
-  // Get connection information
-  sock->get_dest(mac, ip, port);
+  // Get client connection information; MAC, IP address and port
+  sock->get_src(mac, ip, port);
 
   // Wait for the HTTP request
   while ((res = sock->available()) == 0);
   if (res < 0) goto error;
   TRACE(sock->available());
 
-  // Read request and print in debug mode. Ignore contents
 #ifndef NDEBUG
+  // Read request and print in debug mode. Ignore contents
   trace << PSTR("Request#") << nr << endl;
   while ((res = sock->recv(buf, sizeof(buf) - 1)) > 0) {
     buf[res] = 0;
@@ -133,7 +139,7 @@ void loop()
   page << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
   page << PSTR("Memory (byte): ") << free_memory();
   page << PSTR("(") << setup_free_memory << PSTR(")") << BR;
-  page << PSTR("Uptime (s): ") << Watchdog::millis() / 1000 << BR;
+  page << PSTR("Uptime (h:m:s): ") << h << ':' << m << ':' << s << BR;
   page << PSTR("Requests: ") << nr++ << BR;
   page << PSTR("MAC: ") << mac[0];
   for (uint8_t i = 1; i < 6; i++) page << PSTR(".") << mac[i];
