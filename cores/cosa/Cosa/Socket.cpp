@@ -25,6 +25,14 @@
 
 #include "Cosa/Socket.hh"
 
+Socket::Socket() : 
+  IOStream::Device(),
+  m_port(0)
+{
+  memset(m_mac, 0, sizeof(m_mac));
+  memset(m_addr, 0, sizeof(m_addr));
+}
+
 int 
 Socket::write(const void* buf, size_t size)
 {

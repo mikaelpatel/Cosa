@@ -196,6 +196,7 @@ W5100::Driver::read(void* buf, size_t len)
   ptr += len;
   ptr = swap((int16_t) ptr);
   m_dev->write(uint16_t(&m_sreg->RX_RD), &ptr, sizeof(ptr));
+  m_dev->issue(uint16_t(&m_sreg->CR), CR_RECV);
   
   // Return the number of bytes read
   return (len);
@@ -249,17 +250,6 @@ W5100::Driver::setup()
   m_tx_len = 0;
 }
 
-int 
-W5100::Driver::get_dest(uint8_t mac[6], uint8_t addr[4], uint16_t& port)
-{
-  int16_t dport;
-  m_dev->read(uint16_t(&m_sreg->DHAR), mac, sizeof(m_sreg->DHAR));
-  m_dev->read(uint16_t(&m_sreg->DIPR), addr, sizeof(m_sreg->DIPR));
-  m_dev->read(uint16_t(&m_sreg->DPORT), &dport, sizeof(m_sreg->DPORT));
-  port = swap(dport);
-  return (0);
-}
-
 int
 W5100::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
 {
@@ -275,7 +265,7 @@ W5100::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
     m_dev->write(uint16_t(&m_sreg->PORT), &port, sizeof(m_sreg->PORT));
   }
   m_dev->issue(uint16_t(&m_sreg->CR), CR_OPEN);
-
+  
   // Validate status
   uint8_t status = m_dev->read(uint16_t(&m_sreg->SR));
   if (((proto == TCP) && (status != SR_INIT)) 
@@ -359,6 +349,13 @@ W5100::Driver::accept()
   uint8_t status = m_dev->read(uint16_t(&m_sreg->SR));
   if ((status == SR_LISTEN) || (status == SR_ARP)) return (-3);
   if (status != SR_ESTABLISHED) return (-1);
+
+  // Get connecting client address and setup transmit buffer 
+  int16_t dport;
+  m_dev->read(uint16_t(&m_sreg->DHAR), m_mac, sizeof(m_sreg->DHAR));
+  m_dev->read(uint16_t(&m_sreg->DIPR), m_addr, sizeof(m_sreg->DIPR));
+  m_dev->read(uint16_t(&m_sreg->DPORT), &dport, sizeof(m_sreg->DPORT));
+  m_port = swap(dport);
   setup();
   return (0);
 }
@@ -393,9 +390,9 @@ W5100::Driver::room()
 int 
 W5100::Driver::write(const void* buf, size_t len)
 {
-  // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
-  if (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED) return (-3);
+  if ((m_proto == TCP) 
+      && (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED))
+    return (-3);
   if (len == 0) return (0);
   const uint8_t* bp = (const uint8_t*) buf;
   int size = len;
@@ -414,9 +411,9 @@ W5100::Driver::write(const void* buf, size_t len)
 int 
 W5100::Driver::write_P(const void* buf, size_t len)
 {
-  // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
-  if (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED) return (-3);
+  if ((m_proto == TCP) 
+      && (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED))
+    return (-3);
   if (len == 0) return (0);
   const uint8_t* bp = (const uint8_t*) buf;
   int size = len;
@@ -435,6 +432,7 @@ W5100::Driver::write_P(const void* buf, size_t len)
 int 
 W5100::Driver::flush()
 {
+  // Update transmit buffer pointer and issue send command
   uint16_t ptr;
   m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
   ptr = swap((int16_t) ptr);
@@ -448,6 +446,22 @@ W5100::Driver::flush()
   } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
   m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
   if (ir & IR_TIMEOUT) return (-1);
+  setup();
+  return (0);
+}
+
+int 
+W5100::Driver::datagram(uint8_t addr[4], uint16_t port)
+{
+  // Check that the socket is in UDP mode
+  if (m_proto != UDP) return (-2);
+
+  // Copy address and setup hardware transmit address registers
+  memcpy(m_addr, addr, sizeof(m_addr));
+  m_port = port;
+  port = swap((int16_t) port);
+  m_dev->write(uint16_t(&m_sreg->DIPR), addr, sizeof(m_sreg->DIPR));
+  m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(port));
   setup();
   return (0);
 }
@@ -479,7 +493,6 @@ W5100::Driver::recv(void* buf, size_t len)
   // Check if data has been received
   if ((m_dev->read(uint16_t(&m_sreg->IR)) & IR_RECV) == 0) return (0);
   int res = read(buf, len);
-  if (res > 0) m_dev->issue(uint16_t(&m_sreg->CR), CR_RECV);
   return (res);
 }
 
@@ -547,7 +560,11 @@ W5100::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
   default :
     break;
   }
-  if (res > 0) m_dev->issue(uint16_t(&m_sreg->CR), CR_RECV);
+  if (res <= 0) return (res);
+  int16_t dport;
+  memset(m_mac, 0, sizeof(m_mac));
+  memcpy(m_addr, src, sizeof(m_addr));
+  m_port = port;
   return (res);
 }
 
@@ -614,7 +631,6 @@ W5100::socket(Socket::Protocol proto, uint16_t port, uint8_t flag)
 
   // Check for dynamic local port allocation
   if (port == 0) {
-    if (proto != Socket::TCP) return (NULL);
     port = m_local++;
     if (m_local == 0) m_local = Socket::DYNAMIC_PORT;
   }

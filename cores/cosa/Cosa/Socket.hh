@@ -46,7 +46,10 @@ public:
     PPPoE = 0x05
   } __attribute__((packed));
 
-  Socket() : IOStream::Device() {}
+  /**
+   * Socket constructor. Initial state of socket.
+   */
+  Socket();
 
   /**
    * @override IOStream::Device
@@ -90,14 +93,18 @@ public:
 
   /**
    * @override Socket
-   * Get destination machine address, network address and port.
-   * socket. Returns zero if successful otherwise negative error code.
+   * Get source machine address, network address and port. Returns
+   * zero if successful otherwise negative error code. 
    * @param[in] mac hardware address.
    * @param[in] addr network address.
    * @param[in] port port number.
-   * @return zero if successful otherwise negative error code.
    */
-  virtual int get_dest(uint8_t mac[6], uint8_t addr[4], uint16_t& port) = 0;
+  void get_src(uint8_t mac[6], uint8_t addr[4], uint16_t& port)
+  {
+    memcpy(mac, m_mac, sizeof(m_mac));
+    memcpy(addr, m_addr, sizeof(m_addr));
+    port = m_port;
+  }  
 
   /**
    * @override Socket
@@ -158,6 +165,16 @@ public:
   virtual int disconnect() = 0;
 
   /**
+   * @override Socket
+   * Start the construction of a datagram to the given address and
+   * port.
+   * @param[in] addr destination address.
+   * @param[in] port destination port.
+   * @return zero if successful otherwise negative error code.
+   */
+  virtual int datagram(uint8_t addr[4], uint16_t port) = 0;
+
+  /**
    * Send given data in buffer on connection-oriented socket. Return
    * number of bytes or negative error code.
    * @param[in] buf buffer pointer.
@@ -194,7 +211,7 @@ public:
    * @return number of bytes sent if successful otherwise negative
    * error code.  
    */
-  virtual int send(const void* buf, size_t len, bool progmem);
+  virtual int send(const void* buf, size_t len, bool progmem) = 0;
 
   /**
    * @override Socket
@@ -271,5 +288,14 @@ public:
    * error code.  
    */
   virtual int recv(void* buf, size_t len, uint8_t src[4], uint16_t& port) = 0;
+
+protected:
+  /** Source address; MAC, IP and port */
+  uint8_t m_mac[6];
+  uint8_t m_addr[4];
+  uint16_t m_port;
+
+  /** Socket protocol if open otherwise zero(0) */
+  uint8_t m_proto;
 };
 #endif

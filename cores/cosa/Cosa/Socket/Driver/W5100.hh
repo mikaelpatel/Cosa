@@ -317,9 +317,6 @@ public:
     /** Pointer to socket receiver buffer */
     uint16_t m_rx_buf;
 
-    /** Socket protocol if open otherwise zero(0) */
-    uint8_t m_proto;
-
   public:
     Driver() : Socket() {}
 
@@ -361,20 +358,6 @@ public:
      * @return zero(0) or negative error code.
      */
     virtual int flush();
-
-    /**
-     * @override Socket
-     * Get destination machine address, network address and port. In
-     * server mode (listen/accept) the address of the connecting
-     * client is returned. In client mode (connect) the given server
-     * address is returned. Returns zero if successful otherwise negative
-     * error code. 
-     * @param[in] mac hardware address.
-     * @param[in] addr network address.
-     * @param[in] port port number.
-     * @return zero if successful otherwise negative error code.
-     */
-    virtual int get_dest(uint8_t mac[6], uint8_t addr[4], uint16_t& port);
 
     /**
      * @override Socket
@@ -446,6 +429,17 @@ public:
      * @return zero if successful otherwise negative error code.
      */
     virtual int disconnect();
+
+    /**
+     * @override Socket
+     * Start the construction of a datagram to the given address and
+     * port. Checks that the socket is connection-less (UDP). Returns
+     * zero or negative error code.
+     * @param[in] addr destination address.
+     * @param[in] port destination port.
+     * @return zero if successful otherwise negative error code.
+     */
+    virtual int datagram(uint8_t addr[4], uint16_t port);
 
     /**
      * @override Socket
