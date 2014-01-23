@@ -268,4 +268,5 @@ SD. Support for RS485 with master-slave protocol. ATmega32u4 support
 added with USB/CDC.      
 2014-01 Adding support for Arduino IDE 1.5.X. Including a Wireless
 interface implementation for RFM69W/HW. Socket interface and device
-driver for W5100 Ethernet Controller.      
+driver for W5100 Ethernet Controller. INET network address handler and 
+DNS client/request handler.       
