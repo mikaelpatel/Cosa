@@ -26,6 +26,23 @@
 #include "Cosa/INET.hh"
 #include <ctype.h>
 
+bool
+INET::is_illegal(uint8_t addr[4], uint16_t port)
+{
+  return 
+    (((addr[0] == 0xff) 
+      && (addr[1] == 0xff) 
+      && (addr[2] == 0xff) 
+      && (addr[3] == 0xff)) 
+     ||
+     ((addr[0] == 0x00) 
+      && (addr[1] == 0x00) 
+      && (addr[2] == 0x00) 
+      && (addr[3] == 0x00)) 
+     ||
+     (port == 0x0000));
+}
+
 int 
 INET::aton_P(const char* addr, uint8_t ip[4])
 {
@@ -97,15 +114,10 @@ INET::print_path(IOStream& outs, const char* path)
 }
 
 void
-INET::print_addr(IOStream& outs, const uint8_t* addr)
+INET::print_addr(IOStream& outs, const uint8_t* addr, uint16_t port)
 {
   outs << addr[0];
   for (uint8_t i = 1; i < IP_MAX; i++) outs << '.' << addr[i];
-}
-
-void
-INET::print_addr(IOStream& outs, const uint8_t* addr, uint16_t port)
-{
-  print_addr(outs, addr);
+  if (port == 0) return;
   outs << ':' << port;
 }

@@ -39,10 +39,9 @@
 #define SUBNET 255,255,255,0
 #define GATEWAY 192,168,0,1
 #define PORT 80
-#define CRLF "\r\n"
 
 // W5100 Ethernet Controller with MAC-address
-const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
+static const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 Socket* sock;
 
@@ -53,11 +52,14 @@ Socket* sock;
 #define TRACE(x) x
 #endif
 
+// HTML end of line
+#define CRLF "\r\n"
+
+// Amount of free memory at setup (to compare with loop)
 uint16_t setup_free_memory;
 
 void setup()
 {
-  // Amount of free memory at startup
   setup_free_memory = free_memory();
 
   uart.begin(9600);
@@ -90,14 +92,12 @@ void loop()
 
   // Bind the socket to an iostream
   IOStream page(sock);
-  uint8_t mac[6];
-  uint8_t ip[4];
+  INET::addr_t addr;
   char buf[32];
-  uint16_t port;
   int res;
 
   // Get client connection information; MAC, IP address and port
-  sock->get_src(mac, ip, port);
+  sock->get_src(addr);
 
   // Wait for the HTTP request
   while ((res = sock->available()) == 0);
@@ -141,13 +141,13 @@ void loop()
   page << PSTR("(") << setup_free_memory << PSTR(")") << BR;
   page << PSTR("Uptime (h:m:s): ") << h << ':' << m << ':' << s << BR;
   page << PSTR("Requests: ") << nr++ << BR;
-  page << PSTR("MAC: ") << mac[0];
-  for (uint8_t i = 1; i < 6; i++) page << PSTR(".") << mac[i];
+  page << PSTR("MAC: ") << addr.mac[0];
+  for (uint8_t i = 1; i < 6; i++) page << PSTR(".") << addr.mac[i];
   page << BR;
-  page << PSTR("IP: ") << ip[0];
-  for (uint8_t i = 1; i < 4; i++) page << PSTR(".") << ip[i];
+  page << PSTR("IP: ") << addr.ip[0];
+  for (uint8_t i = 1; i < 4; i++) page << PSTR(".") << addr.ip[i];
   page << BR;
-  page << PSTR("PORT: ") << port << BR;
+  page << PSTR("PORT: ") << addr.port << BR;
   page << footer;
   page << flush;
 

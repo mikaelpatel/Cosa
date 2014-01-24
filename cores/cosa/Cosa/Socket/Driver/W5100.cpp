@@ -300,7 +300,7 @@ W5100::Driver::connect(uint8_t addr[4], uint16_t port)
 {
   // Check that the socket is in TCP mode and address/port
   if (m_proto != TCP) return (-2);
-  if (is_illegal(addr, port)) return (-1);
+  if (INET::is_illegal(addr, port)) return (-1);
 
   // Set server address and port
   port = swap((int16_t) port);
@@ -352,10 +352,10 @@ W5100::Driver::accept()
 
   // Get connecting client address and setup transmit buffer 
   int16_t dport;
-  m_dev->read(uint16_t(&m_sreg->DHAR), m_mac, sizeof(m_sreg->DHAR));
-  m_dev->read(uint16_t(&m_sreg->DIPR), m_addr, sizeof(m_sreg->DIPR));
+  m_dev->read(uint16_t(&m_sreg->DHAR), m_src.mac, sizeof(m_sreg->DHAR));
+  m_dev->read(uint16_t(&m_sreg->DIPR), m_src.ip, sizeof(m_sreg->DIPR));
   m_dev->read(uint16_t(&m_sreg->DPORT), &dport, sizeof(m_sreg->DPORT));
-  m_port = swap(dport);
+  m_src.port = swap(dport);
   setup();
   return (0);
 }
@@ -456,9 +456,7 @@ W5100::Driver::datagram(uint8_t addr[4], uint16_t port)
   // Check that the socket is in UDP mode
   if (m_proto != UDP) return (-2);
 
-  // Copy address and setup hardware transmit address registers
-  memcpy(m_addr, addr, sizeof(m_addr));
-  m_port = port;
+  // Setup hardware transmit address registers
   port = swap((int16_t) port);
   m_dev->write(uint16_t(&m_sreg->DIPR), addr, sizeof(m_sreg->DIPR));
   m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(port));
@@ -504,7 +502,6 @@ W5100::Driver::send(const void* buf, size_t len,
   if ((m_proto != UDP) 
       && (m_proto != IPRAW) 
       && (m_proto != MACRAW)) return (-2);
-  if (is_illegal(dest, port)) return (-1);
 
   // Write parameters (destination address and data), and issue command
   port = swap((int16_t) port);
@@ -561,10 +558,9 @@ W5100::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
     break;
   }
   if (res <= 0) return (res);
-  int16_t dport;
-  memset(m_mac, 0, sizeof(m_mac));
-  memcpy(m_addr, src, sizeof(m_addr));
-  m_port = port;
+  memset(m_src.mac, 0, sizeof(m_src.mac));
+  memcpy(m_src.ip, src, sizeof(m_src.ip));
+  m_src.port = port;
   return (res);
 }
 

@@ -27,6 +27,7 @@
 #define __COSA_SOCKET_HH__
 
 #include "Cosa/Types.h"
+#include "Cosa/INET.hh"
 #include "Cosa/IOStream.hh"
 
 /**
@@ -86,12 +87,6 @@ public:
   virtual int read(void* buf, size_t size);
 
   /**
-   * Check if the given address is illegal (0.0.0.0/255.255.255.255:0)
-   * @return true if illegal otherwise false.
-   */
-  bool is_illegal(uint8_t addr[4], uint16_t port);
-
-  /**
    * @override Socket
    * Get source machine address, network address and port. Returns
    * zero if successful otherwise negative error code. 
@@ -99,11 +94,9 @@ public:
    * @param[in] addr network address.
    * @param[in] port port number.
    */
-  void get_src(uint8_t mac[6], uint8_t addr[4], uint16_t& port)
+  void get_src(INET::addr_t& addr)
   {
-    memcpy(mac, m_mac, sizeof(m_mac));
-    memcpy(addr, m_addr, sizeof(m_addr));
-    port = m_port;
+    addr = m_src;
   }  
 
   /**
@@ -291,9 +284,7 @@ public:
 
 protected:
   /** Source address; MAC, IP and port */
-  uint8_t m_mac[6];
-  uint8_t m_addr[4];
-  uint16_t m_port;
+  INET::addr_t m_src;
 
   /** Socket protocol if open otherwise zero(0) */
   uint8_t m_proto;

@@ -25,12 +25,9 @@
 
 #include "Cosa/Socket.hh"
 
-Socket::Socket() : 
-  IOStream::Device(),
-  m_port(0)
+Socket::Socket() : IOStream::Device()
 {
-  memset(m_mac, 0, sizeof(m_mac));
-  memset(m_addr, 0, sizeof(m_addr));
+  memset(&m_src, 0, sizeof(m_src));
 }
 
 int 
@@ -57,14 +54,5 @@ int
 Socket::read(void* buf, size_t size)
 {
   return (recv(buf, size));
-}
-
-bool
-Socket::is_illegal(uint8_t addr[4], uint16_t port)
-{
-  return 
-    (((addr[0] == 0xff) && (addr[1] == 0xff) && (addr[2] == 0xff) && (addr[3] == 0xff)) ||
-     ((addr[0] == 0x00) && (addr[1] == 0x00) && (addr[2] == 0x00) && (addr[3] == 0x00)) ||
-     (port == 0x0000));
 }
 
