@@ -156,7 +156,7 @@ W5100::issue(uint16_t addr, uint8_t cmd)
 }
 
 int
-W5100::Driver::read(void* buf, size_t len)
+W5100::Driver::dev_read(void* buf, size_t len)
 {
   // Check if there is data available
   int res = available();
@@ -203,7 +203,7 @@ W5100::Driver::read(void* buf, size_t len)
 }
 
 int
-W5100::Driver::write(const void* buf, size_t len, bool progmem)
+W5100::Driver::dev_write(const void* buf, size_t len, bool progmem)
 {
   // Check buffer size
   if (len == 0) return (0);
@@ -240,7 +240,7 @@ W5100::Driver::write(const void* buf, size_t len, bool progmem)
 }
 
 void 
-W5100::Driver::setup()
+W5100::Driver::dev_setup()
 {
   while (room() < MSG_MAX);
   uint16_t ptr;
@@ -248,6 +248,60 @@ W5100::Driver::setup()
   ptr = swap((int16_t) ptr);
   m_tx_offset = ptr & BUF_MASK;
   m_tx_len = 0;
+}
+
+int 
+W5100::Driver::available() 
+{
+  // Read receive size register until stable value
+  int16_t res, size;
+  do {
+    m_dev->read(uint16_t(&m_sreg->RX_RSR), &res, sizeof(res));
+    m_dev->read(uint16_t(&m_sreg->RX_RSR), &size, sizeof(size));
+  } while (res != size);
+  return (swap(res));
+}
+
+int 
+W5100::Driver::room()
+{
+  // Read transmit free size register until stable value
+  int res, size;
+  do {
+    do {
+      m_dev->read(uint16_t(&m_sreg->TX_FSR), &res, sizeof(res));
+      m_dev->read(uint16_t(&m_sreg->TX_FSR), &size, sizeof(size));
+    } while (res != size);
+    res = swap(res);
+  } while (res < 0 || res > BUF_MAX);
+  return (res);
+}
+
+int 
+W5100::Driver::read(void* buf, size_t size)
+{
+  return (dev_read(buf, size));
+}
+
+int 
+W5100::Driver::flush()
+{
+  // Update transmit buffer pointer and issue send command
+  uint16_t ptr;
+  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
+  ptr = swap((int16_t) ptr);
+  ptr += m_tx_len;
+  ptr = swap((int16_t) ptr);
+  m_dev->write(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
+  m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
+  uint8_t ir;
+  do {
+    ir = m_dev->read(uint16_t(&m_sreg->IR));
+  } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
+  m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
+  if (ir & IR_TIMEOUT) return (-1);
+  dev_setup();
+  return (0);
 }
 
 int
@@ -295,41 +349,6 @@ W5100::Driver::close()
   return (0);
 }
 
-int 
-W5100::Driver::connect(uint8_t addr[4], uint16_t port)
-{
-  // Check that the socket is in TCP mode and address/port
-  if (m_proto != TCP) return (-2);
-  if (INET::is_illegal(addr, port)) return (-1);
-
-  // Set server address and port
-  port = swap((int16_t) port);
-  m_dev->write(uint16_t(&m_sreg->DIPR), addr, sizeof(m_sreg->DIPR));
-  m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(m_sreg->DPORT));
-  m_dev->issue(uint16_t(&m_sreg->CR), CR_CONNECT);
-  return (0);
-}
-
-int 
-W5100::Driver::isconnected()
-{
-  // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
-  uint8_t ir = m_dev->read(uint16_t(&m_sreg->IR));
-  if (ir & IR_CON) return (1);
-  if (ir & IR_TIMEOUT) return (-1);
-  setup();
-  return (0);
-}
-
-int 
-W5100::Driver::disconnect()
-{
-  // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
-  m_dev->issue(uint16_t(&m_sreg->CR), CR_DISCON);
-  return (0);
-}
 
 int 
 W5100::Driver::listen()
@@ -356,97 +375,43 @@ W5100::Driver::accept()
   m_dev->read(uint16_t(&m_sreg->DIPR), m_src.ip, sizeof(m_sreg->DIPR));
   m_dev->read(uint16_t(&m_sreg->DPORT), &dport, sizeof(m_sreg->DPORT));
   m_src.port = swap(dport);
-  setup();
+  dev_setup();
   return (0);
 }
 
 int 
-W5100::Driver::available() 
+W5100::Driver::connect(uint8_t addr[4], uint16_t port)
 {
-  // Read receive size register until stable value
-  int16_t res, size;
-  do {
-    m_dev->read(uint16_t(&m_sreg->RX_RSR), &res, sizeof(res));
-    m_dev->read(uint16_t(&m_sreg->RX_RSR), &size, sizeof(size));
-  } while (res != size);
-  return (swap(res));
+  // Check that the socket is in TCP mode and address/port
+  if (m_proto != TCP) return (-2);
+  if (INET::is_illegal(addr, port)) return (-1);
+
+  // Set server address and port
+  port = swap((int16_t) port);
+  m_dev->write(uint16_t(&m_sreg->DIPR), addr, sizeof(m_sreg->DIPR));
+  m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(m_sreg->DPORT));
+  m_dev->issue(uint16_t(&m_sreg->CR), CR_CONNECT);
+  return (0);
 }
 
 int 
-W5100::Driver::room()
+W5100::Driver::isconnected()
 {
-  // Read transmit free size register until stable value
-  int res, size;
-  do {
-    do {
-      m_dev->read(uint16_t(&m_sreg->TX_FSR), &res, sizeof(res));
-      m_dev->read(uint16_t(&m_sreg->TX_FSR), &size, sizeof(size));
-    } while (res != size);
-    res = swap(res);
-  } while (res < 0 || res > BUF_MAX);
-  return (res);
-}
-
-int 
-W5100::Driver::write(const void* buf, size_t len)
-{
-  if ((m_proto == TCP) 
-      && (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED))
-    return (-3);
-  if (len == 0) return (0);
-  const uint8_t* bp = (const uint8_t*) buf;
-  int size = len;
-  while (size > 0) {
-    if (m_tx_len == MSG_MAX) flush();
-    int n = MSG_MAX - m_tx_len;
-    if (n > size) n = size;
-    int res = write(bp, n, false);
-    if (res < 0) return (res);
-    size -= n;
-    bp += n;
-  }
-  return (len);
-}
-
-int 
-W5100::Driver::write_P(const void* buf, size_t len)
-{
-  if ((m_proto == TCP) 
-      && (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED))
-    return (-3);
-  if (len == 0) return (0);
-  const uint8_t* bp = (const uint8_t*) buf;
-  int size = len;
-  while (size > 0) {
-    if (m_tx_len == MSG_MAX) flush();
-    int n = MSG_MAX - m_tx_len;
-    if (n > size) n = size;
-    int res = write(bp, n, true);
-    if (res < 0) return (res);
-    size -= n;
-    bp += n;
-  }
-  return (len);
-}
-
-int 
-W5100::Driver::flush()
-{
-  // Update transmit buffer pointer and issue send command
-  uint16_t ptr;
-  m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
-  ptr = swap((int16_t) ptr);
-  ptr += m_tx_len;
-  ptr = swap((int16_t) ptr);
-  m_dev->write(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
-  m_dev->issue(uint16_t(&m_sreg->CR), CR_SEND);
-  uint8_t ir;
-  do {
-    ir = m_dev->read(uint16_t(&m_sreg->IR));
-  } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
-  m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
+  // Check that the socket is in TCP mode
+  if (m_proto != TCP) return (-2);
+  uint8_t ir = m_dev->read(uint16_t(&m_sreg->IR));
+  if (ir & IR_CON) return (1);
   if (ir & IR_TIMEOUT) return (-1);
-  setup();
+  dev_setup();
+  return (0);
+}
+
+int 
+W5100::Driver::disconnect()
+{
+  // Check that the socket is in TCP mode
+  if (m_proto != TCP) return (-2);
+  m_dev->issue(uint16_t(&m_sreg->CR), CR_DISCON);
   return (0);
 }
 
@@ -460,8 +425,93 @@ W5100::Driver::datagram(uint8_t addr[4], uint16_t port)
   port = swap((int16_t) port);
   m_dev->write(uint16_t(&m_sreg->DIPR), addr, sizeof(m_sreg->DIPR));
   m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(port));
-  setup();
+  dev_setup();
   return (0);
+}
+
+int 
+W5100::Driver::recv(void* buf, size_t len)
+{
+  // Check that the socket is in TCP mode
+  if (m_proto != TCP) return (-2);
+  if (len == 0) return (0);
+
+  // Check if data has been received
+  if ((m_dev->read(uint16_t(&m_sreg->IR)) & IR_RECV) == 0) return (0);
+  int res = dev_read(buf, len);
+  return (res);
+}
+
+int 
+W5100::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
+{
+  if ((m_proto != UDP) 
+      && (m_proto != IPRAW) 
+      && (m_proto != MACRAW)) 
+    return (-2);
+  if (len == 0) return (0);
+  
+  uint8_t header[8];
+  uint16_t size;
+  int res = -1;
+
+  // Check type of protocol. Read header and data
+  switch (m_dev->read(uint16_t(&m_sreg->MR)) & MR_PROTO_MASK) {
+  case MR_PROTO_UDP:
+    res = dev_read(header, 8);
+    if (res != 8) return (-1);
+    memcpy(src, header, 4);
+    port = (header[4] << 8) | header[5];
+    size = (header[6] << 8) | header[7];
+    if (size > len) size = len;
+    res = dev_read(buf, size);
+    break;
+  case MR_PROTO_IPRAW :
+    res = dev_read(header, 6);
+    if (res != 6) return (-1);
+    memcpy(src, header, 4);
+    port = 0;
+    size = (header[4] << 8) | header[5];
+    if (size > len) size = len;
+    res = dev_read(buf, size);
+    break;
+  case MR_PROTO_MACRAW:
+    res = dev_read(header, 2);
+    if (res != 2) return (-1);
+    memset(src, 0, 4);
+    port = 0;
+    size = (header[0] << 8) | header[1];
+    if (size > len) size = len;
+    res = dev_read(buf, size);
+  default :
+    break;
+  }
+  if (res <= 0) return (res);
+  memset(m_src.mac, 0, sizeof(m_src.mac));
+  memcpy(m_src.ip, src, sizeof(m_src.ip));
+  m_src.port = port;
+  return (res);
+}
+
+int 
+W5100::Driver::write(const void* buf, size_t len, bool progmem)
+{
+  if ((m_proto == TCP) 
+      && (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED))
+    return (-3);
+  if (len == 0) return (0);
+  const uint8_t* bp = (const uint8_t*) buf;
+  int size = len;
+  while (size > 0) {
+    if (m_tx_len == MSG_MAX) flush();
+    int n = MSG_MAX - m_tx_len;
+    if (n > size) n = size;
+    int res = dev_write(bp, n, progmem);
+    if (res < 0) return (res);
+    size -= n;
+    bp += n;
+  }
+  return (len);
 }
 
 int 
@@ -474,24 +524,11 @@ W5100::Driver::send(const void* buf, size_t len, bool progmem)
   if (len > BUF_MAX) len = BUF_MAX;
 
   // Write data to transmitter buffer
-  int res = write(buf, len, progmem);
+  int res = dev_write(buf, len, progmem);
   if (res <= 0) return (res);
 
   // Issue send command and wait for completion or timeout
   return (flush() ? -4 : res);
-}
-
-int 
-W5100::Driver::recv(void* buf, size_t len)
-{
-  // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
-  if (len == 0) return (0);
-
-  // Check if data has been received
-  if ((m_dev->read(uint16_t(&m_sreg->IR)) & IR_RECV) == 0) return (0);
-  int res = read(buf, len);
-  return (res);
 }
 
 int 
@@ -509,59 +546,11 @@ W5100::Driver::send(const void* buf, size_t len,
   m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(port));
 
   // Write data to transmitter buffer
-  int res = write(buf, len, progmem);
+  int res = dev_write(buf, len, progmem);
   if (res <= 0) return (res);
 
   // Issue send command and wait for completion or timeout
   return (flush() ? -4 : res);
-}
-
-int 
-W5100::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
-{
-  if ((m_proto != UDP) && (m_proto != IPRAW) && (m_proto != MACRAW)) return (-2);
-  if (len == 0) return (0);
-  
-  uint8_t header[8];
-  uint16_t size;
-  int res = -1;
-
-  // Check type of protocol. Read header and data
-  switch (m_dev->read(uint16_t(&m_sreg->MR)) & MR_PROTO_MASK) {
-  case MR_PROTO_UDP:
-    res = read(header, 8);
-    if (res != 8) return (-1);
-    memcpy(src, header, 4);
-    port = (header[4] << 8) | header[5];
-    size = (header[6] << 8) | header[7];
-    if (size > len) return (-1);
-    res = read(buf, size);
-    break;
-  case MR_PROTO_IPRAW :
-    res = read(header, 6);
-    if (res != 6) return (-1);
-    memcpy(src, header, 4);
-    port = 0;
-    size = (header[4] << 8) | header[5];
-    if (size > len) return (-1);
-    res = read(buf, size);
-    break;
-  case MR_PROTO_MACRAW:
-    res = read(header, 2);
-    if (res != 2) return (-1);
-    memset(src, 0, 4);
-    port = 0;
-    size = (header[0] << 8) | header[1];
-    if (size > len) return (-1);
-    res = read(buf, size);
-  default :
-    break;
-  }
-  if (res <= 0) return (res);
-  memset(m_src.mac, 0, sizeof(m_src.mac));
-  memcpy(m_src.ip, src, sizeof(m_src.ip));
-  m_src.port = port;
-  return (res);
 }
 
 bool 
@@ -577,6 +566,13 @@ W5100::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
     m_sock[i].m_dev = this;
   }
 
+  // Check for default network address
+  uint8_t BROADCAST[4] = { 0, 0, 0, 0 };
+  if (ip == NULL || subnet == NULL) {
+    subnet = BROADCAST;
+    ip = BROADCAST;
+  }
+  
   // Adjust timeout period to 100 us scale
   timeout = swap((int16_t) timeout * 10);
 
@@ -603,6 +599,25 @@ W5100::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
   spi.attach(this);
 
   return (true);
+}
+
+bool 
+W5100::bind(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
+{
+  // Check for default gateware. Assume router is first addres on network
+  uint8_t ROUTER[4];
+  if (gateway == NULL) {
+    memcpy(ROUTER, ip, sizeof(ROUTER) - 1);
+    ROUTER[3] = 1;
+    gateway = ROUTER;
+  }
+
+  // Write the new network address, subnet mask and gateway address
+  write(uint16_t(&m_creg->SIPR), ip, sizeof(m_creg->SIPR));
+  write(uint16_t(&m_creg->SUBR), subnet, sizeof(m_creg->SUBR));
+  write(uint16_t(&m_creg->GAR), gateway, sizeof(m_creg->GAR));
+
+  return (0);
 }
 
 bool 

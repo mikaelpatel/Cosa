@@ -279,7 +279,7 @@ public:
      * @return number of bytes read if successful otherwise negative
      * error code.
      */
-    int read(void* buf, size_t len);
+    int dev_read(void* buf, size_t len);
 
     /**
      * Write data to the socket transmitter buffer from the given buffer
@@ -290,14 +290,14 @@ public:
      * @return number of bytes written if successful otherwise negative
      * error code.
      */
-    int write(const void* buf, size_t len, bool progmem);
+    int dev_write(const void* buf, size_t len, bool progmem);
 
     /**
      * Wait for given maximum message size in internal transmit buffer.
      * Setup transmitter offset and initiate length for new message
      * construction. 
      */
-    void setup();
+    void dev_setup();
 
     /** Pointer to socket registers; symbolic address calculation */
     SocketRegister* m_sreg;
@@ -318,6 +318,7 @@ public:
     uint16_t m_rx_buf;
 
   public:
+    /** Default constructor */
     Driver() : Socket() {}
 
     /**
@@ -333,24 +334,15 @@ public:
      * @return bytes.
      */
     virtual int room();
-
-    /**
-     * @override IOStream::Device
-     * Write data from buffer with given size to device.
-     * @param[in] buf buffer to write.
-     * @param[in] len number of bytes to write.
-     * @return number of bytes written or EOF(-1).
-     */
-    virtual int write(const void* buf, size_t size);
     
     /**
      * @override IOStream::Device
-     * Write data from buffer in program memory with given size to device.
-     * @param[in] buf buffer to write.
-     * @param[in] size number of bytes to write.
-     * @return number of bytes written or EOF(-1).
+     * Read data to given buffer with given size from device.
+     * @param[in] buf buffer to read into.
+     * @param[in] size number of bytes to read.
+     * @return number of bytes read or EOF(-1).
      */
-    virtual int write_P(const void* buf, size_t size);
+    virtual int read(void* buf, size_t size);
 
     /**
      * @override IOStream::Device
@@ -443,20 +435,6 @@ public:
 
     /**
      * @override Socket
-     * Send given data in buffer on connection-oriented socket. Boolean flag
-     * progmem defined if the buffer is in program memory. Return number
-     * of bytes or negative error code; -4 socket closed by peer, -3
-     * connection not estabilished, -2 illegal protocol. 
-     * @param[in] buf buffer pointer.
-     * @param[in] len number of bytes in buffer.
-     * @param[in] progmem program memory pointer flag.
-     * @return number of bytes sent if successful otherwise negative
-     * error code.
-     */
-    virtual int send(const void* buf, size_t len, bool progmem);
-
-    /**
-     * @override Socket
      * Receive data from connection-oriented socket. The data is stored
      * in given buffer with given maximum number of bytes. Return number of
      * bytes or negative error code; -3 socket not established, 
@@ -467,24 +445,6 @@ public:
      * error code.  
      */
     virtual int recv(void* buf, size_t len);
-  
-    /**
-     * @override Socket
-     * Send given data on connectionless socket as a datagram to given
-     * destination address (dest:port). Return number of bytes sent or
-     * negative error code; -2 illegal protocol, -1 illegal
-     * destination address or port. 
-     * @param[in] buf buffer pointer.
-     * @param[in] len number of bytes in buffer.
-     * @param[in] dest destination address.
-     * @param[in] port destination port.
-     * @param[in] progmem program memory pointer flag.
-     * @return number of bytes sent if successful otherwise negative
-     * error code.  
-     */
-    virtual int send(const void* buf, size_t len, 
-		     uint8_t dest[4], uint16_t port,
-		     bool progmem);
 
     /**
      * @override Socket
@@ -502,7 +462,50 @@ public:
     virtual int recv(void* buf, size_t len, 
 		     uint8_t src[4], uint16_t& port);
 
+  protected:
+    /**
+     * @override Socket
+     * Write data from buffer with given size to device. Boolean flag
+     * progmem defined if the buffer is in program memory. Return number
+     * of bytes or negative error code. 
+     * @param[in] buf buffer to write.
+     * @param[in] size number of bytes to write.
+     * @param[in] progmem program memory pointer flag.
+     * @return number of bytes written or EOF(-1).
+     */
+    virtual int write(const void* buf, size_t size, bool progmem);
+    
+    /**
+     * @override Socket
+     * Send given data in buffer on connection-oriented socket. Boolean flag
+     * progmem defined if the buffer is in program memory. Return number
+     * of bytes or negative error code; -4 socket closed by peer, -3
+     * connection not estabilished, -2 illegal protocol. 
+     * @param[in] buf buffer pointer.
+     * @param[in] len number of bytes in buffer.
+     * @param[in] progmem program memory pointer flag.
+     * @return number of bytes sent if successful otherwise negative
+     * error code.
+     */
+    virtual int send(const void* buf, size_t len, bool progmem);
 
+    /**
+     * @override Socket
+     * Send given data on connectionless socket as a datagram to given
+     * destination address (dest:port). Return number of bytes sent or
+     * negative error code; -2 illegal protocol, -1 illegal
+     * destination address or port. 
+     * @param[in] buf buffer pointer.
+     * @param[in] len number of bytes in buffer.
+     * @param[in] dest destination address.
+     * @param[in] port destination port.
+     * @param[in] progmem program memory pointer flag.
+     * @return number of bytes sent if successful otherwise negative
+     * error code.  
+     */
+    virtual int send(const void* buf, size_t len, 
+		     uint8_t dest[4], uint16_t port,
+		     bool progmem);
   };
 
   /** Sockets on device */
@@ -587,12 +590,23 @@ public:
   /**
    * Initiate W510 device driver with given network address and subnet
    * mask. Returns true if successful otherwise false.
-   * @param[in] ip network address.
-   * @param[in] subnet mask.
+   * @param[in] ip network address (Default NULL, 0.0.0.0).
+   * @param[in] subnet mask (Default NULL, 0.0.0.0).
    * @param[in] timeout retry timeout period (Default 500 ms).
    * @return bool.
    */
-  bool begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout = 500);
+  bool begin(uint8_t ip[4] = NULL, uint8_t subnet[4] = NULL, 
+	     uint16_t timeout = 500);
+
+  /**
+   * Bind to the given network address and subnet mask. Returns true
+   * if successful otherwise false.
+   * @param[in] ip network address.
+   * @param[in] subnet mask.
+   * @param[in] gateway network address (Default NULL).
+   * @return bool.
+   */
+  bool bind(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4] = NULL);
 
   /**
    * Allocate socket with the given protocol, port and flags. Returns
