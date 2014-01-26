@@ -141,7 +141,7 @@ public:
 
   /**
    * Read clock and calender from the device. 
-   * @param[inout] now time structure for return value.
+   * @param[in,out] now time structure for return value.
    */
   void get_time(time_t& now);
 };

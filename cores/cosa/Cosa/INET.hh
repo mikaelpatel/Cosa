@@ -57,7 +57,7 @@ public:
    * Convert an address string in dot notation to binary form.
    * Returns zero if successful otherwise negative error code.
    * @param[in] addr address string in program memory.
-   * @param[inout] ip network address.
+   * @param[in,out] ip network address.
    * @return zero if successful otherwise negative error code. 
    */
   static int aton_P(const char* addr, uint8_t ip[IP_MAX]);
@@ -68,7 +68,7 @@ public:
    * characters. Returns length of path is successful otherwise
    * negative error code.
    * @param[in] hostname address string in program memory.
-   * @param[inout] path generated path from hostname.
+   * @param[in,out] path generated path from hostname.
    * @return length of path if successful otherwise negative error
    * code.  
    */

@@ -424,20 +424,20 @@ public:
   /**
    * Read accelerometer and return values in given sample data
    * structure.
-   * @param[inout] m samples storage.
+   * @param[in,out] m samples storage.
    */
   void read_motion(motion_t& m);
   
   /**
    * Read accelerometer and return values in given sample data
    * structure.
-   * @param[inout] s sample storage.
+   * @param[in,out] s sample storage.
    */
   void read_accelerometer(sample_t& s);
 
   /**
    * Read gyroscope and return values in given data structure
-   * @param[inout] s sample storage.
+   * @param[in,out] s sample storage.
    */
   void read_gyroscope(sample_t& s);
 };

@@ -198,8 +198,8 @@ public:
    * code; -1 not initiated, -2 request failed, -3 no response.
    * Client network address and subnet mask are returned in
    * given reference parameters.
-   * @param[inout] ip granted network address.
-   * @param[inout] subnet mask.
+   * @param[in,out] ip granted network address.
+   * @param[in,out] subnet mask.
    * @return zero if successful otherwise a negative error code. 
    */
   int request(uint8_t ip[4], uint8_t subnet[4]);
