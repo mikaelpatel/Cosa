@@ -109,6 +109,9 @@ private:
   /** DHCP server address */
   uint8_t m_dhcp[4];
 
+  /** Router in network (DHCP option) */
+  uint8_t m_gateway[4];
+
   /** DNS server address (DHCP option) */
   uint8_t m_dns[4];
 
@@ -183,7 +186,8 @@ public:
 
   /**
    * Discover DHCP servers and receive client network address
-   * offer. Return zero if successful otherwise a negative error code.
+   * offer. Return zero if successful otherwise a negative error code;
+   * -1 not initiated, -2 discover failed, -3 no response.
    * @return zero if successful otherwise a negative error code. 
    */
   int discover();
@@ -191,7 +195,8 @@ public:
   /**
    * Accept the offer provided by DHCP server on successful
    * discover(). Return zero if successful otherwise a negative error
-   * code. Client network address and subnet mask are returned in
+   * code; -1 not initiated, -2 request failed, -3 no response.
+   * Client network address and subnet mask are returned in
    * given reference parameters.
    * @param[inout] ip granted network address.
    * @param[inout] subnet mask.
@@ -201,16 +206,23 @@ public:
 
   /**
    * Renew the granted network address lease from successful request().
+   * Returns zero if successful otherwise a negative error code; -1
+   * illegal state, -2 request failed, -3 no response. 
+   * @param[in] sock connection-less socket to use for release.
    * @return zero if successful otherwise a negative error code. 
    */
-  int renew();
+  int renew(Socket* sock);
 
   /**
    * Release the granted network address lease from successful
-   * request(). 
+   * request(). Returns zero if successful otherwise a negative error
+   * code; -1 illegal state, -2 request failed, -3 no response. 
+   * The given socket is closed and the DHCP client handler is put in
+   * idle state. 
+   * @param[in] sock connection-less socket to use for release.
    * @return zero if successful otherwise a negative error code. 
    */
-  int release();
+  int release(Socket* sock);
 
   /** Return time when lease was obtained */
   uint32_t get_lease_obtained() { return (m_lease_obtained); }
@@ -223,6 +235,9 @@ public:
 
   /** Return network address of DNS server */
   const uint8_t* get_dns_addr() { return (m_dns); }
+
+  /** Return network address of gateway (router) */
+  const uint8_t* get_gateway_addr() { return (m_gateway); }
 };
 
 #endif

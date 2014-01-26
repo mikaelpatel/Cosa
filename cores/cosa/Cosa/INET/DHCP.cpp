@@ -160,6 +160,9 @@ DHCP::recv(uint8_t type, uint16_t ms)
     case DNS_SERVER:
       memcpy(m_dns, buf, sizeof(m_dns));
       break;
+    case ROUTERS_ON_SUBNET:
+      memcpy(m_gateway, buf, sizeof(m_gateway));
+      break;
     case IP_ADDR_LEASE_TIME:
       m_lease_obtained = Watchdog::millis() / 1000;
       m_lease_expires = ntoh(*(int32_t*) buf) + m_lease_obtained;
@@ -205,3 +208,32 @@ DHCP::request(uint8_t ip[4], uint8_t subnet[4])
   memcpy(subnet, m_subnet, sizeof(m_subnet));
   return (0);
 }
+
+int 
+DHCP::renew(Socket* sock)
+{
+  if (m_sock != NULL) return (-1);
+  if (m_lease_expires == 0L) return (-1);
+  m_sock = sock;
+  if (send(DHCP_REQUEST) < 0) return (-2);
+  if (recv(DHCP_ACK) < 0) return (-3);
+  m_sock->close();
+  m_sock = NULL;
+  return (0);
+}
+
+int 
+DHCP::release(Socket* sock)
+{
+  if (m_sock != NULL) return (-1);
+  m_sock = sock;
+  if (send(DHCP_RELEASE) < 0) return (-2);
+  if (recv(DHCP_ACK) < 0) return (-3);
+  m_sock->close();
+  m_sock = NULL;
+  memset(m_ip, 0, sizeof(m_ip));
+  m_lease_obtained = 0L;
+  m_lease_expires = 0L;
+  return (0);
+}
+
