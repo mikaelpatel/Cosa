@@ -195,19 +195,6 @@ public:
 
   /**
    * @override Socket
-   * Send given data in buffer on connection-oriented socket. Boolean flag
-   * progmem defined if the buffer is in program memory. Return number
-   * of bytes or negative error code. 
-   * @param[in] buf buffer pointer.
-   * @param[in] len number of bytes in buffer.
-   * @param[in] progmem program memory pointer flag.
-   * @return number of bytes sent if successful otherwise negative
-   * error code.  
-   */
-  virtual int send(const void* buf, size_t len, bool progmem) = 0;
-
-  /**
-   * @override Socket
    * Receive data from connection-oriented socket. The data is stored
    * in given buffer with given maximum number of bytes. Return number of
    * bytes or negative error code. 
@@ -253,23 +240,6 @@ public:
   
   /**
    * @override Socket
-   * Send given data on connectionless socket as a datagram to given
-   * destination address (dest:port). Return number of bytes 
-   * sent or negative error code. 
-   * @param[in] buf buffer pointer.
-   * @param[in] len number of bytes in buffer.
-   * @param[in] dest destination address.
-   * @param[in] port destination port.
-   * @param[in] progmem program memory pointer flag.
-   * @return number of bytes sent if successful otherwise negative
-   * error code.  
-   */
-  virtual int send(const void* buf, size_t len, 
-		   uint8_t dest[4], uint16_t port,
-		   bool progmem) = 0;
-
-  /**
-   * @override Socket
    * Receive datagram on connectionless socket into given buffer with
    * given maximum size. Returns zero(0) if successful with
    * information in Datagram otherwise negative error code. 
@@ -288,5 +258,47 @@ protected:
 
   /** Socket protocol if open otherwise zero(0) */
   uint8_t m_proto;
+
+  /**
+   * @override Socket
+   * Write data from buffer with given size to device. Boolean flag
+   * progmem defined if the buffer is in program memory. Return number
+   * of bytes or negative error code. 
+   * @param[in] buf buffer to write.
+   * @param[in] size number of bytes to write.
+   * @param[in] progmem program memory pointer flag.
+   * @return number of bytes written or EOF(-1).
+   */
+  virtual int write(const void* buf, size_t size, bool progmem) = 0;
+    
+  /**
+   * @override Socket
+   * Send given data in buffer on connection-oriented socket. Boolean flag
+   * progmem defined if the buffer is in program memory. Return number
+   * of bytes or negative error code. 
+   * @param[in] buf buffer pointer.
+   * @param[in] len number of bytes in buffer.
+   * @param[in] progmem program memory pointer flag.
+   * @return number of bytes sent if successful otherwise negative
+   * error code.  
+   */
+  virtual int send(const void* buf, size_t len, bool progmem) = 0;
+
+  /**
+   * @override Socket
+   * Send given data on connectionless socket as a datagram to given
+   * destination address (dest:port). Return number of bytes 
+   * sent or negative error code. 
+   * @param[in] buf buffer pointer.
+   * @param[in] len number of bytes in buffer.
+   * @param[in] dest destination address.
+   * @param[in] port destination port.
+   * @param[in] progmem program memory pointer flag.
+   * @return number of bytes sent if successful otherwise negative
+   * error code.  
+   */
+  virtual int send(const void* buf, size_t len, 
+		   uint8_t dest[4], uint16_t port,
+		   bool progmem) = 0;
 };
 #endif

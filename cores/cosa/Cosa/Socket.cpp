@@ -25,7 +25,7 @@
 
 #include "Cosa/Socket.hh"
 
-Socket::Socket() : IOStream::Device()
+Socket::Socket() : IOStream::Device(), m_proto(0)
 {
   memset(&m_src, 0, sizeof(m_src));
 }
@@ -33,13 +33,13 @@ Socket::Socket() : IOStream::Device()
 int 
 Socket::write(const void* buf, size_t size)
 {
-  return (send(buf, size));
+  return (write(buf, size, false));
 }
 
 int 
 Socket::write_P(const void* buf, size_t size)
 {
-  return (send_P(buf, size));
+  return (write(buf, size, true));
 }
 
 int 
@@ -54,5 +54,11 @@ int
 Socket::read(void* buf, size_t size)
 {
   return (recv(buf, size));
+}
+
+int 
+Socket::write(const void* buf, size_t size, bool progmem)
+{
+  return (send(buf, size, progmem));
 }
 
