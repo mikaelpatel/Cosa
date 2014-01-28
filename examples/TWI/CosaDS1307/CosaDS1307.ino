@@ -34,7 +34,7 @@
 #include "Cosa/Memory.h"
 
 // Set the real-time clock
-// #define __RTC_SET_TIME__
+#define SET_TIME
 
 // The real-time device, latest start and sample time in ram
 DS1307 rtc;
@@ -47,11 +47,6 @@ struct latest_t {
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
-
-#if defined(__ARDUINO_TINYX5__)
-#include "Cosa/Soft/UART.hh"
-Soft::UART uart(Board::D4);
-#endif
 
 void setup()
 {
@@ -67,34 +62,35 @@ void setup()
 
   // Read the latest set and run time
   latest_t latest;
-  rtc.read(&latest, sizeof(latest), DS1307::RAM_START);
+  int count = rtc.read(&latest, sizeof(latest), DS1307::RAM_START);
+  TRACE(count);
 
-  // Set the time. Adjust below to your current time
-  time_t now;
-#ifdef __RTC_SET_TIME__
-  now.year = 0x13;
-  now.month = 0x07;
-  now.date = 0x15;
-  now.day = 0x02;
-  now.hours = 0x12;
-  now.minutes = 0x45;
-  now.seconds = 0x00;
-  rtc.set_time(now);
-  latest.set = now;
-#endif
-
-  // Print latest set time
+  // Print latest set and the latest run time
   trace.print_P(PSTR("set on "));
   trace << latest.set << endl;
-
-  // And the latest run time
   trace.print_P(PSTR("run on "));
   trace << latest.run << endl;
 
-  // Update the run time with the current time and update ram
+  // Set the time. Adjust below to your current time
+  time_t now;
+#if defined(SET_TIME)
+  now.year = 0x13;
+  now.month = 0x12;
+  now.date = 0x31;
+  now.day = 0x02;
+  now.hours = 0x23;
+  now.minutes = 0x55;
+  now.seconds = 0x00;
+  rtc.set_time(now);
+  latest.set = now;
+#else
   rtc.get_time(now);
+#endif
+
+  // Update the run time with the current time and update ram
   latest.run = now;
-  rtc.write(&latest, sizeof(latest), DS1307::RAM_START);
+  count = rtc.write(&latest, sizeof(latest), DS1307::RAM_START);
+  TRACE(count);
 }
 
 void loop()
@@ -105,8 +101,8 @@ void loop()
 
   // Read the time from the rtc device and print
   time_t now;
-  rtc.get_time(now);
-  trace << now << endl;
+  if (rtc.get_time(now))
+    trace << now << endl;
 
   // Heartbeat
   ledPin.toggle();
