@@ -27,6 +27,8 @@
 
 #if !defined(__ARDUINO_TINY__)
 
+#include "Cosa/INET/DHCP.hh"
+
 #define NDEBUG
 #ifndef NDEBUG
 #include "Cosa/Trace.hh"
@@ -45,6 +47,7 @@ W5100::W5100(const uint8_t* mac, Board::DigitalPin csn, Board::ExternalInterrupt
   m_creg((CommonRegister*) COMMON_REGISTER_BASE),
   m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this)
 {
+  memset(m_dns, 0, sizeof(m_dns));
 }
 
 void
@@ -534,6 +537,29 @@ W5100::Driver::send(const void* buf, size_t len,
 {
   if (datagram(dest, port) < 0) return (-1);
   return (send(buf, len, progmem));
+}
+
+bool 
+W5100::begin(const char* hostname, uint16_t timeout)
+{
+  // Initiate the socket structures and device
+  if (!begin(NULL, NULL, timeout)) return (false);
+
+  // Request a network address from the DHCP server
+  DHCP dhcp(hostname, m_mac);
+  if (!dhcp.begin(socket(Socket::UDP, DHCP::PORT))) return (false);
+  for (uint8_t retry = 0; retry < DNS_RETRY_MAX; retry++) {
+    int res = dhcp.discover();
+    if (res != 0) continue;
+    uint8_t ip[4], subnet[4], gateway[4];
+    res = dhcp.request(ip, subnet, gateway);
+    if (res != 0) continue;
+    bind(ip, subnet, gateway);
+    memcpy(m_dns, dhcp.get_dns_addr(), sizeof(m_dns));
+    dhcp.end();
+    return (true);
+  }
+  return (false);
 }
 
 bool 

@@ -200,9 +200,10 @@ public:
    * given reference parameters.
    * @param[in,out] ip granted network address.
    * @param[in,out] subnet mask.
+   * @param[in,out] gateway network address.
    * @return zero if successful otherwise a negative error code. 
    */
-  int request(uint8_t ip[4], uint8_t subnet[4]);
+  int request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4]);
 
   /**
    * Renew the granted network address lease from successful request().

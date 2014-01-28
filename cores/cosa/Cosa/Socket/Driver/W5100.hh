@@ -37,8 +37,10 @@
  * Cosa WIZnet W5100 device driver class. Provides an implementation
  * of the Cosa Socket and Cosa IOStream::Device classes. A socket may
  * be bound directly to a Cosa IOStream. The device internal
- * transmitter buffer is used. The buffer is sent on flush or when
- * full. 
+ * transmitter buffer is used. The buffer is sent on flush (TCP/UDP)
+ * or when full (TCP). Integrated with Cosa INET/DHCP so that ethernet
+ * controll may obtain a network address and information from a DHCP
+ * server. 
  * 
  * @See Also
  * 1. W5100 Datasheet Version 1.2.4, Sep. 20, 2011,
@@ -227,7 +229,7 @@ public:
   static const uint16_t RX_MEMORY_BASE = 0x6000;
   static const uint16_t RX_MEMORY_MAX = 0x2000;
   
-  /** Socket Buffer Size; 2Kbyte TX/RX per socket */
+  /** Socket Buffer Size; 2 Kbyte TX/RX per socket */
   static const size_t BUF_MAX = 2048;
   static const uint16_t BUF_MASK = 0x07ff;
   static const uint8_t TX_MEMORY_SIZE = 0x55;
@@ -239,6 +241,9 @@ public:
   /** Maximum number of sockets on device */
   static const uint8_t SOCK_MAX = 4;
   
+  /** Maximum number of DNS request retries */
+  static const uint8_t DNS_RETRY_MAX = 4;
+
   /**
    * Handler for device interrupt pin.
    */
@@ -523,6 +528,9 @@ public:
   /** Hardware address (in program memory) */
   const uint8_t* m_mac;
 
+  /** DNS server network address (provided by DHCP) */
+  uint8_t m_dns[4];
+
   /** SPI Command codes. Format: [Command 8b] [Address 16b] [data 8b] */
   enum {
     OP_WRITE = 0xf0,
@@ -588,7 +596,24 @@ public:
 	Board::ExternalInterruptPin irq = Board::EXT0);
 
   /**
-   * Initiate W510 device driver with given network address and subnet
+   * Get DNS network address if W5100 device driver was initiated with
+   * hostname and obtained network address from DHCP. 
+   * @param[in,out] ip network address.
+   */
+  void get_dns_addr(uint8_t ip[4]) { memcpy(ip, m_dns, sizeof(m_dns)); }
+
+  /**
+   * Initiate W5100 device driver with given hostname. Network address,
+   * subnet mask and gateway should be obtained from DNS. Returns true
+   * if successful otherwise false. 
+   * @param[in] hostname string in program memory.
+   * @param[in] timeout retry timeout period (Default 500 ms).
+   * @return bool.
+   */
+  bool begin(const char* hostname, uint16_t timeout = 500);
+
+  /**
+   * Initiate W5100 device driver with given network address and subnet
    * mask. Returns true if successful otherwise false.
    * @param[in] ip network address (Default NULL, 0.0.0.0).
    * @param[in] subnet mask (Default NULL, 0.0.0.0).

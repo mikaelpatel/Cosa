@@ -54,10 +54,10 @@ void loop()
   Socket* sock = ethernet.socket(Socket::UDP, DHCP::PORT);
 
   // Discover DHCP server and request a network address
-  uint8_t ip[4], subnet[4];
+  uint8_t ip[4], subnet[4], gateway[4];
   if (!dhcp.begin(sock)) return;
   if (dhcp.discover()) goto error;
-  if (dhcp.request(ip, subnet)) goto error;
+  if (dhcp.request(ip, subnet, gateway)) goto error;
   dhcp.end();
 
   // Print dynamic configuration
@@ -69,12 +69,12 @@ void loop()
   INET::print_addr(trace, dhcp.get_dns_addr());
   trace << endl;
 
-  trace << PSTR("GATEWAY = ");
-  INET::print_addr(trace, dhcp.get_gateway_addr());
-  trace << endl;
-
   trace << PSTR("IP = "); 
   INET::print_addr(trace, ip); 
+  trace << endl;
+
+  trace << PSTR("GATEWAY = ");
+  INET::print_addr(trace, gateway);
   trace << endl;
 
   trace << PSTR("SUBNET = "); 

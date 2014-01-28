@@ -199,13 +199,14 @@ DHCP::discover()
 }
   
 int 
-DHCP::request(uint8_t ip[4], uint8_t subnet[4])
+DHCP::request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
 {
   if (m_sock == NULL) return (-1);
   if (send(DHCP_REQUEST) < 0) return (-2);
   if (recv(DHCP_ACK) < 0) return (-3);
   memcpy(ip, m_ip, sizeof(m_ip));
   memcpy(subnet, m_subnet, sizeof(m_subnet));
+  memcpy(gateway, m_gateway, sizeof(m_gateway));
   return (0);
 }
 

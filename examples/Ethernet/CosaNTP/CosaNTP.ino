@@ -21,11 +21,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/INET/DHCP.hh"
 #include "Cosa/INET/NTP.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
-  
-#include "Cosa/Time.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -36,6 +33,7 @@
 #define TIME_NIST_GOV 64,236,96,53
 #define NTP_UBUNTU_COM 91,189,94,4
 #define SERVER SE_POOL_NTP_ORG
+#define ZONE 1
 
 static const uint8_t mac[6] PROGMEM = { MAC };
 static const char hostname[] PROGMEM = "CosaNTP";
@@ -45,39 +43,30 @@ W5100 ethernet(mac);
 
 void setup()
 {
-  static const uint8_t RETRY_MAX = 4;
-
+  // Initiate trace iostream on uart. Use watchdog for basic timing
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaNTP:started"));
   Watchdog::begin();
 
-  // Get network address from DHCP server
-  ASSERT(ethernet.begin());
-  DHCP dhcp(hostname, mac);
-  ASSERT(dhcp.begin(ethernet.socket(Socket::UDP, DHCP::PORT)));
-  uint8_t res;
-  for (uint8_t retry = 0; retry < RETRY_MAX; retry++) {
-    res = dhcp.discover();
-    if (res != 0) continue;
-    uint8_t ip[4], subnet[4];
-    res = dhcp.request(ip, subnet);
-    if (res != 0) continue;
-    dhcp.end();
-    ethernet.bind(ip, subnet);
-    return;
-  }
-  ASSERT(res == 0);
+  // Initiate the Ethernet Controller using DHCP
+  ASSERT(ethernet.begin(hostname));
 }
 
 void loop()
 {
-  // Get the time from NTP server
+  // Connect to the NTP server using given socket
   uint8_t server[4] = { SERVER };
-  NTP ntp(ethernet.socket(Socket::UDP), server, 1);
+  NTP ntp(ethernet.socket(Socket::UDP), server, ZONE);
+
+  // Get current time in seconds since NTP epoch
   clock_t clock = ntp.time();
   if (clock == 0L) return;
-  time_t now(clock);
   trace << clock << ' ';
+
+  // Convert to time structure and print
+  time_t now(clock);
   trace << now << endl;
+
+  // Take a nap for 10 seconds (this is not 10 seconds period)
   SLEEP(10);
 }
