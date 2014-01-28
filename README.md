@@ -269,4 +269,5 @@ added with USB/CDC.
 2014-01 Adding support for Arduino IDE 1.5.X. Including a Wireless
 interface implementation for RFM69W/HW. Socket interface and device
 driver for W5100 Ethernet Controller. INET network address handler
-support. DHCP and DNS client/request handler.       
+support. DHCP, DNS and NTP client/request handler. Simple Telnet port
+handler for trace output.       
