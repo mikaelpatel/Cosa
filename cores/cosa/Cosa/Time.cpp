@@ -51,7 +51,7 @@ days_per(uint16_t year)
 time_t::time_t(clock_t c, uint8_t zone)
 {
   static const uint8_t days_in[] PROGMEM = {
-    31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+    0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
   };
   uint16_t dayno = c / 86400L;
   day = (dayno % 7) + 1;
