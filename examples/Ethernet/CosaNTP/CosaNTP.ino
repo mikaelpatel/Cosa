@@ -58,14 +58,14 @@ void loop()
   uint8_t server[4] = { SERVER };
   NTP ntp(ethernet.socket(Socket::UDP), server, ZONE);
 
-  // Get current time in seconds since NTP epoch
+  // Get current time in stardate notation; dayno.secondno
   clock_t clock = ntp.time();
   if (clock == 0L) return;
-  trace << clock << ' ';
+  trace << (clock / SECONDS_PER_DAY) << '.' << (clock % SECONDS_PER_DAY) << ' ';
 
-  // Convert to time structure and print
+  // Convert to time structure and print day followed by date and time
   time_t now(clock);
-  trace << now << endl;
+  trace << now.day << ' ' << now << endl;
 
   // Take a nap for 10 seconds (this is not 10 seconds period)
   SLEEP(10);

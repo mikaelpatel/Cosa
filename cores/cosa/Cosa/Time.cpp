@@ -36,6 +36,12 @@ IOStream& operator<<(IOStream& outs, time_t& t)
   return (outs);
 }
 
+IOStream& operator<<(IOStream& outs, clock_t& c)
+{
+  outs << (c / 86400L) << '.' << (c % 86400L);
+  return (outs);
+}
+
 static bool 
 is_leap(uint16_t year)
 {
@@ -53,8 +59,8 @@ time_t::time_t(clock_t c, uint8_t zone)
   static const uint8_t days_in[] PROGMEM = {
     0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
   };
-  uint16_t dayno = c / 86400L;
-  day = (dayno % 7) + 1;
+  uint16_t dayno = c / SECONDS_PER_DAY;
+  day = (dayno % DAYS_PER_WEEK) + 1;
   year = 0;
   while (1) {
     uint16_t days = days_per(year);
@@ -72,8 +78,8 @@ time_t::time_t(clock_t c, uint8_t zone)
     month += 1;
   }
   date = dayno + 1;
-  hours = (c % 86400L) / 3600;
-  minutes = (c % 3600) / 60;
-  seconds = (c % 60);
+  hours = (c % SECONDS_PER_DAY) / SECONDS_PER_HOUR;
+  minutes = (c % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE;
+  seconds = (c % SECONDS_PER_MINUTE);
   to_bcd();
 }

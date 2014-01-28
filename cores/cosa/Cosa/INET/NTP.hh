@@ -42,7 +42,7 @@ private:
   static const uint16_t PORT = 123;
 
   /** Timeout period for response from time server (milli-seconds) */
-  static const uint16_t TIMEOUT = 16;
+  static const uint16_t TIMEOUT = 32;
 
   /** Network address of server */
   uint8_t m_server[4];
