@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General
  * Public License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -26,7 +26,7 @@
 #ifndef __COSA_RTC_HH__
 #define __COSA_RTC_HH__
 
-#include "Cosa/Types.h"
+#include "Cosa/Linkage.hh"
 
 /**
  * Real-time clock; Arduino/ATmega328P Timer0 for micro/milli-
@@ -41,6 +41,26 @@ public:
    */
   typedef void (*InterruptHandler)(void* env);
 
+  class Timer : protected Link
+  {
+             static Head    queue;
+    volatile static uint8_t queue_ticks;
+
+    static void setup( uint32_t uS );
+    static void check_queue();
+
+    friend void TIMER0_OVF_vect(void);
+    friend void TIMER0_COMPA_vect(void);
+    volatile static bool in_ISR;
+
+  public:
+    uint32_t expiration;
+
+    virtual void start();
+
+    virtual void on_interrupt() = 0;
+  };
+
 private:
   static bool s_initiated;
   static volatile uint32_t s_uticks;
@@ -48,7 +68,7 @@ private:
   static volatile uint32_t s_sec;
   static InterruptHandler s_handler;
   static void* s_env;
-  
+
   /**
    * Do not allow instances. This is a static singleton; name space.
    */
@@ -74,17 +94,17 @@ public:
    * @return micro-seconds.
    */
   static uint16_t us_per_tick();
-  
+
   /**
    * Set milli-second timeout interrupt handler.
    * @param[in] fn interrupt handler.
    * @param[in] env environment pointer.
    */
-  static void set(InterruptHandler fn, void* env = NULL) 
-  { 
+  static void set(InterruptHandler fn, void* env = NULL)
+  {
     synchronized {
-      s_handler = fn; 
-      s_env = env; 
+      s_handler = fn;
+      s_env = env;
     }
   }
 
@@ -93,8 +113,8 @@ public:
    * given date).
    * @param[in] sec.
    */
-  static void set(uint32_t sec) 
-  { 
+  static void set(uint32_t sec)
+  {
     synchronized {
       s_sec = sec;
     }
