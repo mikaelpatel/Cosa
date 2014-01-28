@@ -69,6 +69,10 @@ void loop()
   INET::print_addr(trace, dhcp.get_dns_addr());
   trace << endl;
 
+  trace << PSTR("GATEWAY = ");
+  INET::print_addr(trace, dhcp.get_gateway_addr());
+  trace << endl;
+
   trace << PSTR("IP = "); 
   INET::print_addr(trace, ip); 
   trace << endl;

@@ -286,6 +286,9 @@ W5100::Driver::read(void* buf, size_t size)
 int 
 W5100::Driver::flush()
 {
+  // Sanity check transmission buffer length
+  if (m_tx_len == 0) return (0);
+  
   // Update transmit buffer pointer and issue send command
   uint16_t ptr;
   m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
@@ -299,8 +302,8 @@ W5100::Driver::flush()
     ir = m_dev->read(uint16_t(&m_sreg->IR));
   } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
   m_dev->write(uint16_t(&m_sreg->IR), (IR_SEND_OK | IR_TIMEOUT));
-  if (ir & IR_TIMEOUT) return (-1);
   dev_setup();
+  if (ir & IR_TIMEOUT) return (-1);
   return (0);
 }
 
@@ -418,9 +421,11 @@ W5100::Driver::disconnect()
 int 
 W5100::Driver::datagram(uint8_t addr[4], uint16_t port)
 {
-  // Check that the socket is in UDP mode
-  if (m_proto != UDP) return (-2);
-
+  // Check that the socket is in UDP/IPRAW/MACRAW mode
+  if ((m_proto != UDP) 
+      && (m_proto != IPRAW) 
+      && (m_proto != MACRAW)) return (-2);
+  
   // Setup hardware transmit address registers
   port = swap((int16_t) port);
   m_dev->write(uint16_t(&m_sreg->DIPR), addr, sizeof(m_sreg->DIPR));
@@ -517,17 +522,8 @@ W5100::Driver::write(const void* buf, size_t len, bool progmem)
 int 
 W5100::Driver::send(const void* buf, size_t len, bool progmem)
 {
-  // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
-  if (m_dev->read(uint16_t(&m_sreg->SR)) != SR_ESTABLISHED) return (-3);
-  if (len == 0) return (0);
-  if (len > BUF_MAX) len = BUF_MAX;
-
-  // Write data to transmitter buffer
-  int res = dev_write(buf, len, progmem);
-  if (res <= 0) return (res);
-
-  // Issue send command and wait for completion or timeout
+  int res = write(buf, len, progmem);
+  if (res < 0) return (res);
   return (flush() ? -4 : res);
 }
 
@@ -536,21 +532,8 @@ W5100::Driver::send(const void* buf, size_t len,
 		    uint8_t dest[4], uint16_t port, 
 		    bool progmem)
 {
-  if ((m_proto != UDP) 
-      && (m_proto != IPRAW) 
-      && (m_proto != MACRAW)) return (-2);
-
-  // Write parameters (destination address and data), and issue command
-  port = swap((int16_t) port);
-  m_dev->write(uint16_t(&m_sreg->DIPR), dest, sizeof(m_sreg->DIPR));
-  m_dev->write(uint16_t(&m_sreg->DPORT), &port, sizeof(port));
-
-  // Write data to transmitter buffer
-  int res = dev_write(buf, len, progmem);
-  if (res <= 0) return (res);
-
-  // Issue send command and wait for completion or timeout
-  return (flush() ? -4 : res);
+  if (datagram(dest, port) < 0) return (-1);
+  return (send(buf, len, progmem));
 }
 
 bool 
