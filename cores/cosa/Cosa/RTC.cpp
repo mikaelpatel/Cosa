@@ -118,21 +118,18 @@ ISR(TIMER0_OVF_vect)
   
   if (RTC::Timer::queue_ticks > 0) {
     // Decrement the most significant part of the
-    //    RTC::Timer that is expiring first.
+    //    RTC::Timer that's expiring first.
     RTC::Timer::queue_ticks--;
 
     if (RTC::Timer::queue_ticks == 0) {
-      //  The remainder of the RTC::Timer expiration is
-      //    handled by OCR0A.
 
       if (TCNT0 >= OCR0A) {
         //  TCNT0 is already past the requested OCR0A time.
-        //    Disabled interrupts must have kept us from 
-        //    getting here in time, 
+        //    Interrupt disabling must have kept us from getting here in time.
         RTC::Timer::check_queue();
       } else {
-        //  It's not time yet.  Clear the previous interrupt, 
-        //    because the correct one will be here soon.
+        //  The remaining time will be caught by OCR0A.  Clear the previous
+        //    match, because the correct one will be here soon.
         TIFR0  |= _BV(OCF0A);
         TIMSK0 |= _BV(OCIE0A);
       }
@@ -167,7 +164,7 @@ RTC::Timer::setup( uint32_t uS )
     //     (1) Stop the timer while we're messing with the registers; or
     //     (2) Add one to a timer_cycle of 0 so that a match will happen *soon*,
     //            but perhaps not immediately as requested.
-    //  Let's do the latter.
+    //  Let's do the latter so we don't lose the occasional RTC tick.
     if (timer_cycles == 0)
       timer_cycles = 1;
 
@@ -230,7 +227,7 @@ RTC::Timer::start()
           } while (timer != &queue);
         }
 
-        succ->attach( this ); // Wut.  This is a prepend.  Or an insert.
+        succ->attach( this );
 
         if (first_changed) {
           // That took some time...
@@ -249,7 +246,7 @@ RTC::Timer::start()
       in_ISR = oldISR;
     }
   }
-} // Start
+} // start
 
 //----------------------------------------------
 
@@ -275,6 +272,8 @@ RTC::Timer::check_queue()
   in_ISR = false;
 
 } // check_queue
+
+//----------------------------------------------
 
 ISR(TIMER0_COMPA_vect)
 {
