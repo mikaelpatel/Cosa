@@ -58,9 +58,14 @@ void loop()
   uint8_t server[4] = { SERVER };
   NTP ntp(ethernet.socket(Socket::UDP), server, ZONE);
 
-  // Get current time in stardate notation; dayno.secondno
-  clock_t clock = ntp.time();
-  if (clock == 0L) return;
+  // Get current time. Allow a number of retries
+  const uint8_t RETRY_MAX = 13;
+  clock_t clock;
+  for (uint8_t retry = 0; retry < RETRY_MAX; retry++)
+    if ((clock = ntp.time()) != 0L) break;
+  ASSERT(clock != 0L);
+
+  // Print in stardate notation; dayno.secondno
   trace << (clock / SECONDS_PER_DAY) << '.' << (clock % SECONDS_PER_DAY) << ' ';
 
   // Convert to time structure and print day followed by date and time
