@@ -136,6 +136,7 @@ ISR(TIMER0_OVF_vect)
   }
 }
 
+// Timer queue and state
 Head RTC::Timer::s_queue;
 volatile uint8_t RTC::Timer::s_queue_ticks = 0;
 volatile bool RTC::Timer::s_running = false;
@@ -150,47 +151,47 @@ RTC::Timer::setup(uint32_t us)
     TIMSK0 &= ~_BV(OCIE0A);
     TIFR0 |=  _BV(OCF0A);
     s_queue_ticks = timer_cycles >> 8;
+    return;
+  } 
+
+  // For the case where timer_cycles == 0, there is a small chance 
+  // that TCNT0 could advance /after/ its value has been read and 
+  // added to timer_cycles, which is then written to OCR0A.
+  // Then the OC interrupt would *not* trigger immediately as
+  // requested. Instead, 255 cycles would have to elapse.  There seems
+  // to be two choices: 
+  // (1) Stop the timer while we're messing with the registers; or
+  // (2) Add one to a timer_cycle of 0 so that a match will happen
+  // *soon*, but perhaps not immediately as requested.
+  // Let's do the latter so we don't lose the occasional RTC tick.
+  if (timer_cycles == 0)
+    timer_cycles = 1;
+
+  TIFR0 |= _BV(OCF0A);
+  OCR0A  = TCNT0 + (uint8_t) timer_cycles;
+  if (OCR0A == 0) {
+    // Catch it in TIMER0_OVF
+    TIMSK0 &= ~_BV(OCIE0A);
+    s_queue_ticks = 1;
   } 
   else {
-    // For the case where timer_cycles == 0, there is a small chance 
-    // that TCNT0 could advance /after/ its value has been read and 
-    // added to timer_cycles, which is then written to OCR0A.
-    // Then the OC interrupt would *not* trigger immediately as requested.
-    // Instead, 255 cycles would have to elapse.  There seems to be
-    // two choices: 
-    // (1) Stop the timer while we're messing with the registers; or
-    // (2) Add one to a timer_cycle of 0 so that a match will happen
-    // *soon*, but perhaps not immediately as requested.
-    // Let's do the latter so we don't lose the occasional RTC tick.
-    if (timer_cycles == 0)
-      timer_cycles = 1;
-
-    TIFR0 |= _BV(OCF0A);
-    OCR0A  = TCNT0 + (uint8_t) timer_cycles;
-    if (OCR0A == 0) {
-      // Catch it in TIMER0_OVF
-      TIMSK0 &= ~_BV(OCIE0A);
-      s_queue_ticks = 1;
-    } 
-    else {
-      // Catch it in TIMER0_OCR0A
-      TIMSK0 |= _BV(OCIE0A);
-      s_queue_ticks = 0;
-    }
+    // Catch it in TIMER0_OCR0A
+    TIMSK0 |= _BV(OCIE0A);
+    s_queue_ticks = 0;
   }
 }
 
 void
-RTC::Timer::start(uint32_t us)
+RTC::Timer::start()
 {
   // Check if already queued
-  if (get_pred() != this) return;
+  if (is_started()) return;
 
   // Not started yet. If this timer is getting *reStarted*, and we
   // are still within the ISR context, stack overflow would be
   // happening soon. Instead, put it in `s_queue` for later, even
   // though it might happen a little later than requested.
-  // int32_t us = m_expires - RTC::micros();
+  int32_t us = m_expires - RTC::micros();
   bool immediate = (us <= US_PER_TIMER_CYCLE);
   if (immediate) {
     us = 0;
@@ -228,7 +229,7 @@ RTC::Timer::start(uint32_t us)
 void
 RTC::Timer::stop()
 {
-  if (get_pred() == this) return;
+  if (!is_started()) return;
   synchronized {
     bool was_first = (get_pred() == &s_queue);
     detach();

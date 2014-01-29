@@ -78,10 +78,29 @@ public:
     Timer() : Link(), m_expires(0L) {}
 
     /**
-     * Start timer with the given timeout period. The member function
-     * on_expired() is called when the timeout period has expired. 
+     * Set timer expire time (absolute time, RTC::micro based).
+     * @param[in] us expire time.
      */
-    void start(uint32_t us);
+    void expire_at(uint32_t us)
+    {
+      m_expires = us;
+    }
+
+    /**
+     * Return true if the timer is queued.
+     * @return bool.
+     */
+    bool is_started()
+    {
+      return (get_pred() != this);
+    }
+
+    /**
+     * Start timer. Expire time should be set with expires_at(). The
+     * member function on_expired() is called when the timeout period
+     * has expired.
+     */
+    void start();
 
     /**
      * Stop the timer and remove from the RTC::Timer queue.
