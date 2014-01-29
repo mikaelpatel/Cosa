@@ -37,6 +37,16 @@
  *
  * The static inline functions, SFR, BIT and UART, rely on compiler
  * optimizations to be reduced. 
+ *
+ * @section Circuit
+ *                  ATinyX5   
+ *                +----U----+
+ * (/RESET)-----1-|PB5   VCC|-8-----------------(VCC)
+ * (D3/A3)------2-|PB3   PB2|-7--(D2/A1/EXT0/SCL/SCK)
+ * (LED/D4/A2)--3-|PB4   PB1|-6-------------(D1/MOSI)
+ * (GND)--------4-|GND   PB0|-5---------(D0/SDA/MISO)
+ *                +---------+
+ *
  */
 class Board {
   friend class Pin;
@@ -105,10 +115,10 @@ public:
    * Analog pin symbols
    */
   enum AnalogPin {
-    A0 = 0,
-    A1,
-    A2,
-    A3
+    A0 = 5,
+    A1 = 2,
+    A2 = 3,
+    A3 = 4
   } __attribute__((packed));
 
   /**

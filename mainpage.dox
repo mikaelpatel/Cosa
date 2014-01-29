@@ -105,11 +105,10 @@ http://arduino.cc/forum/index.php/topic,150299.0.html.
 
 ATtinyX4/X5/X61, Atmega328P, Atmega1284P, Atmega2560 and Atmega32u4
 based Arduino boards (Uno, Mini, Mini Pro, Micro, Nano, Leonardo,
-LilyPad, LilyPad USB, Mighty, Mega, etc) are supported. ATmega32U4 
-internal USB hardware (e.g. CDC) is not currently supported.
+LilyPad, LilyPad USB, Mighty, Mega, etc) are all supported. 
 
 @section License
-Copyright (C) 2012-2013, Mikael Patel
+Copyright (C) 2012-2014, Mikael Patel
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -298,21 +297,28 @@ of IOStream::Device. See Trace for typical usage.
  
 @section CDC
 USB Serial communication with internal buffering. 
- 
+
+@section W5100
+The W5100 Ethernet Controller device driver support class
+(SPI). Implements the Socket Interface.
+
+@section OWI
+The 1-wire device driver support class (One Wire Interface, OWI). Allows
+device rom search and connection to multiple devices on one-wire bus.
+
 @section RS485
 Basic RS485 device handler with internal buffering. An extension of
 the UART class with 485/DE signal handling on message
 completion. Simple master/slave protocol inspired by MODBUS.
 
-@section TWI
-The I2C/TWI device driver support class (Two Wire Interface, TWI).
+@section Socket
+Abstract network interface. Implemented by W5100 (SPI) device driver.
 
 @section SPI
 The Serial Peripheral Interface (SPI) device driver support class. 
 
-@section OWI
-The 1-wire device driver support class (One Wire Interface, OWI). Allows
-device rom search and connection to multiple devices on one-wire bus.
+@section TWI
+The I2C/TWI device driver support class (Two Wire Interface, TWI).
 */
 
 /** @page page6 Wireless

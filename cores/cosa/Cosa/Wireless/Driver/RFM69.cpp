@@ -154,6 +154,7 @@ RFM69::begin(const void* config)
   // Initiate device driver state and enable interrupt handler
   m_avail = false;
   m_done = true;
+  spi.attach(this);
   m_irq.enable();
   return (true);
 }

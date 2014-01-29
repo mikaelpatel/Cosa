@@ -174,6 +174,7 @@ NRF24L01P::begin(const void* config)
 
   // Ready to go
   powerup();
+  spi.attach(this);
   m_irq.enable();
   return (true);
 }

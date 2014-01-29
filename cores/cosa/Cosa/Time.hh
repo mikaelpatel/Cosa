@@ -31,17 +31,27 @@
 #include "Cosa/IOStream.hh"
 
 /**
+ * Number of seconds elapsed since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
+ */
+typedef uint32_t clock_t;
+
+const uint32_t SECONDS_PER_DAY = 86400L;
+const uint16_t SECONDS_PER_HOUR = 3600;
+const uint16_t SECONDS_PER_MINUTE = 60;
+const uint8_t DAYS_PER_WEEK = 7;
+
+/**
  * Common date/time structure for real-time clocks. Data on devices
  * is stored in BCD (DS1307/DS3231).
  */
-struct time_t {
-  uint8_t seconds;
-  uint8_t minutes;
-  uint8_t hours;
-  uint8_t day;
-  uint8_t date;
-  uint8_t month;
-  uint8_t year;
+struct time_t {			// Range
+  uint8_t seconds;		// 00-59 Seconds
+  uint8_t minutes;		// 00-59 Minutes
+  uint8_t hours;		// 00-23 Hours
+  uint8_t day;			// 01-07 Day
+  uint8_t date;			// 01-31 Date
+  uint8_t month;		// 01-12 Month
+  uint8_t year;			// 00-99 Year
 
   /**
    * Convert time to binary representation (from BCD). 
@@ -60,6 +70,18 @@ struct time_t {
   {
     ::to_bcd(&seconds, sizeof(time_t));
   }
+
+  /**
+   * Default constructor.
+   */
+  time_t() {}
+
+  /**
+   * Construct time record (in BCD) from seconds from NTP Epoch.
+   * @param[in] c clock.
+   * @param[in] zone time (hours adjustment from UTC).
+   */
+  time_t(clock_t c, uint8_t zone = 0);
 };
 
 /**

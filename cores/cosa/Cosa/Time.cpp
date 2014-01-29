@@ -35,3 +35,51 @@ IOStream& operator<<(IOStream& outs, time_t& t)
        << bcd << t.seconds;
   return (outs);
 }
+
+IOStream& operator<<(IOStream& outs, clock_t& c)
+{
+  outs << (c / 86400L) << '.' << (c % 86400L);
+  return (outs);
+}
+
+static bool 
+is_leap(uint16_t year)
+{
+  return (!((year) % 4) && (((year) % 100) || (!((year) % 400))));
+}
+
+static uint16_t
+days_per(uint16_t year)
+{
+  return (is_leap(year) ? 366 : 365);
+}
+
+time_t::time_t(clock_t c, uint8_t zone)
+{
+  static const uint8_t days_in[] PROGMEM = {
+    0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+  };
+  uint16_t dayno = c / SECONDS_PER_DAY;
+  day = (dayno % DAYS_PER_WEEK) + 1;
+  year = 0;
+  while (1) {
+    uint16_t days = days_per(year);
+    if (dayno < days) break;
+    dayno -= days;
+    year += 1;
+  }
+  year %= 100;
+  month = 1;
+  while (1) {
+    uint8_t days = pgm_read_byte(&days_in[month]);
+    if (is_leap(year) && (month == 2)) days += 1;
+    if (dayno < days) break;
+    dayno -= days;
+    month += 1;
+  }
+  date = dayno + 1;
+  hours = (c % SECONDS_PER_DAY) / SECONDS_PER_HOUR;
+  minutes = (c % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE;
+  seconds = (c % SECONDS_PER_MINUTE);
+  to_bcd();
+}

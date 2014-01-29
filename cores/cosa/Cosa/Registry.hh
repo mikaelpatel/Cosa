@@ -206,7 +206,7 @@ public:
      * Registry action function for given registry item. Should return
      * number of bytes in buffer as return value or negative error
      * code (EINVAL if illegal parameter, ENXIO if no object defined).
-     * @param[inout] buf pointer to parameter block.
+     * @param[in,out] buf pointer to parameter block.
      * @param[in] size of parameter block.
      * @return number of bytes or negative error code.
      */
@@ -242,7 +242,7 @@ public:
    * or negative error code (EINVAL if illegal parameter, ENXIO if no
    * object defined).
    * @param [in] action item.
-   * @param [inout] buf argument/result buffer.
+   * @param [in,out] buf argument/result buffer.
    * @param [in] size number of bytes argument.
    * @return number of bytes result or negative error code.
    */
@@ -356,7 +356,7 @@ public:
    * value from run().
    * @param[in] path registry index sequence.
    * @param[in] count number of bytes in path.
-   * @param[inout] buf pointer to argument/result block.
+   * @param[in,out] buf pointer to argument/result block.
    * @param[in] len of argument block.
    * @return negative error code or return value from action.
    */

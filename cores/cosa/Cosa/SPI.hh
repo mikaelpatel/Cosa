@@ -217,6 +217,13 @@ public:
   SPI(uint8_t mode, Order order);
 
   /**
+   * Attach given SPI device driver context.
+   * @param[in] dev device driver context.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool attach(Driver* dev);
+  
+  /**
    * Start of SPI master interaction block. Initiate SPI hardware 
    * registers, disable SPI interrupt sources and assert chip select
    * pin. Return true(1) if successful otherwise false(0) if the
