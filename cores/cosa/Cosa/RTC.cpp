@@ -170,10 +170,11 @@ RTC::Timer::setup( uint32_t uS )
 
     TIFR0 |= _BV(OCF0A);
     OCR0A  = TCNT0 + (uint8_t) timer_cycles;
-    if (OCR0A == 0)
+    if (OCR0A == 0) {
       // catch it in TIMER0_OVF
+      TIMSK0 &= ~_BV(OCIE0A);
       queue_ticks = 1;
-    else {
+    } else {
       // catch it in TIMER0_OCR0A
       TIMSK0 |= _BV(OCIE0A);
       queue_ticks = 0;
@@ -210,21 +211,20 @@ RTC::Timer::start()
 
       synchronized {
         // Insert 'this' in the right spot...
-        Linkage *succ      = &queue;
-        bool     was_empty = queue.is_empty();
+        Linkage *succ = &queue;
 
-        if (!was_empty) {
-          Linkage *timer = succ->get_pred(); // start at the end
+        while (true) {
+          Linkage *timer = succ->get_pred();
 
-          do {
-            if (((RTC::Timer *)timer)->expiration <= expiration) {
-              first_changed = false;
-              break;
-            }
+          if (timer == &queue)
+            break;
 
-            succ  = timer;
-            timer = succ->get_pred();
-          } while (timer != &queue);
+          if (((RTC::Timer *)timer)->expiration <= expiration) {
+            first_changed = false;
+            break;
+          }
+
+          succ  = timer;
         }
 
         succ->attach( this );
@@ -247,6 +247,21 @@ RTC::Timer::start()
     }
   }
 } // start
+
+//------------------------------------------------
+
+void
+RTC::Timer::stop()
+{
+  if (get_pred() != this) {
+    synchronized {
+      bool was_first = (get_pred() == &queue);
+      detach();
+      if (was_first)
+        check_queue();
+    }
+  }
+} // stop
 
 //----------------------------------------------
 

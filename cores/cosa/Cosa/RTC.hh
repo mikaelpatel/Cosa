@@ -57,6 +57,7 @@ public:
     uint32_t expiration;
 
     virtual void start();
+    virtual void stop();
 
     virtual void on_interrupt() = 0;
   };
