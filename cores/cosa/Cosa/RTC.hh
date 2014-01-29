@@ -41,25 +41,59 @@ public:
    */
   typedef void (*InterruptHandler)(void* env);
 
-  class Timer : protected Link
-  {
-             static Head    queue;
-    volatile static uint8_t queue_ticks;
-
-    static void setup( uint32_t uS );
-    static void check_queue();
-
-    friend void TIMER0_OVF_vect(void);
+  /**
+   * Real-time clock Timer class for scheduling of micro/milli-
+   * second callbacks.
+   */
+  class Timer : protected Link {
     friend void TIMER0_COMPA_vect(void);
-    volatile static bool in_ISR;
+    friend void TIMER0_OVF_vect(void);
+  private:
+    /** Queue of timers */
+    static Head s_queue;
+
+    /** Queue tick counter (MSB) */
+    volatile static uint8_t s_queue_ticks;
+
+    /** Running state of timer handler */
+    volatile static bool s_running;
+
+    /** Timer expire time in micro-seconds (RTC::micros) */
+    uint32_t m_expires;
+
+    /**
+     * Setup timer counter to trigger in given number of micro-seconds.
+     */
+    static void setup(uint32_t us);
+
+    /**
+     * Execute all expired timers and setup timer for next timeout period.
+     */
+    static void schedule();
 
   public:
-    uint32_t expiration;
+    /**
+     * Construct timer handler, delayed function.
+     */
+    Timer() : Link(), m_expires(0L) {}
 
-    virtual void start();
-    virtual void stop();
+    /**
+     * Start timer with the given timeout period. The member function
+     * on_expired() is called when the timeout period has expired. 
+     */
+    void start(uint32_t us);
 
-    virtual void on_interrupt() = 0;
+    /**
+     * Stop the timer and remove from the RTC::Timer queue.
+     */
+    void stop();
+
+    /**
+     * @override RTC::Timer
+     * Timer member function that is called when the timeout period 
+     * has expired. This member function must be overridden.
+     */
+    virtual void on_expired() = 0;
   };
 
 private:
