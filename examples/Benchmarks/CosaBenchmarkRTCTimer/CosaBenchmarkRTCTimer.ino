@@ -36,16 +36,14 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "RTCMeasure.h"
 
-class Simple : public RTC::Timer
-{
+class Simple : public RTC::Timer {
 public:
   volatile static bool flag;
   virtual void on_expired() { flag = !flag; }
 };
 volatile bool Simple::flag = false;
 
-class OneShot : public Simple
-{
+class OneShot : public Simple {
 public:
   volatile static uint32_t time_stamp;
   virtual void on_expired()
@@ -56,8 +54,7 @@ public:
 };
 volatile uint32_t OneShot::time_stamp;
 
-class TimerGroup : public RTC::Timer
-{
+class TimerGroup : public RTC::Timer {
 public:
   volatile static uint8_t started;
   virtual void start() { started++; RTC::Timer::start(); }
