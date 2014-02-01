@@ -157,8 +157,8 @@ public:
     static uint8_t enter_schedule_cycle;
     static uint8_t enter_ISR_cycle;
     static uint8_t enter_on_interrupt_cycle;
-//#define RTC_TIMER_MEASURE
-#ifdef RTC_TIMER_MEASURE
+
+#if defined(RTC_TIMER_MEASURE)
     static const bool MEASURE = true;
     friend class RTCMeasure;
 #else

@@ -151,16 +151,13 @@ Head RTC::Timer::s_queue;
 volatile uint32_t RTC::Timer::s_queue_ticks = 0;
 volatile bool RTC::Timer::s_running = false;
 
-#ifdef RTC_TIMER_MEASURE
-
-uint8_t RTC::Timer::enter_setup_cycle        = 0;
-uint8_t RTC::Timer::exit_setup_cycle         = 0;
-uint8_t RTC::Timer::enter_start_cycle        = 0;
-uint8_t RTC::Timer::enter_schedule_cycle     = 0;
-uint8_t RTC::Timer::enter_ISR_cycle          = 0;
-uint8_t RTC::Timer::enter_on_interrupt_cycle = 0;
-
-#endif
+// Measurement static members
+uint8_t RTC::Timer::enter_setup_cycle;
+uint8_t RTC::Timer::exit_setup_cycle;
+uint8_t RTC::Timer::enter_start_cycle;
+uint8_t RTC::Timer::enter_schedule_cycle;
+uint8_t RTC::Timer::enter_ISR_cycle;
+uint8_t RTC::Timer::enter_on_interrupt_cycle;
 
 /**
  * Measured timings, deduced from Timer0 cycles with 16MHz MCU clock*
@@ -182,9 +179,11 @@ static const int32_t START_US = (320 / I_CPU);
 /** Number of instructions from the beginning of ::setup to the end of ::setup */
 static const int32_t SETUP_US = (128 / I_CPU);
   
-/** Number of instructions from ISR to on_interrupt */
+/** 
+ * Number of instructions from ISR to on_interrupt. Added 1 cycle for
+ * int vectoring because TCNT0 is always OCR0A+1 at start of ISR 
+ */
 static const int32_t DISPATCH_US = ((272+64) / I_CPU);
-  // added 1 cycle for int vectoring because TCNT0 is always OCR0A+1 at start of ISR
 
 /** Visible constant computed from hidden constants */
 const uint32_t

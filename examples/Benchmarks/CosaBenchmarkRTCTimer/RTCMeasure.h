@@ -28,8 +28,6 @@
 
 #include "Cosa/RTC.hh"
 
-#ifdef RTC_TIMER_MEASURE
-
 /**
  * This class is used to gather performance timings of the RTC::Timer class.
  *   See also RTC.CPP and CosaBenchmarkRTCTimer.ino
@@ -52,7 +50,5 @@ public:
   
   static const uint16_t I_PER_CYCLE;
 };
-
-#endif
 
 #endif

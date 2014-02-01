@@ -23,9 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTCMeasure.hh"
-
-#ifdef RTC_TIMER_MEASURE
+#define RTC_TIMER_MEASURE
+#include "RTCMeasure.h"
 
 uint8_t RTCMeasure::start_immediate_cycles = 0;
 uint8_t RTCMeasure::start_queued_cycles    = 0;
@@ -73,5 +72,3 @@ RTCMeasure::on_expired()
   
   m_dispatched = true;
 }
-
-#endif
