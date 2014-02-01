@@ -95,7 +95,7 @@ RTC::micros()
   synchronized {
     res = s_uticks;
     cnt = TCNT0;
-    if (TIFR0 & _BV(TOV0)) res += US_PER_TICK;
+    if ((TIFR0 & _BV(TOV0)) && cnt < COUNT) res += US_PER_TICK;
   }
   // Convert ticks to micro-seconds
   res += ((uint32_t) cnt) * US_PER_TIMER_CYCLE;
