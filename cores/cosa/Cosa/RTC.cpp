@@ -80,6 +80,12 @@ RTC::us_per_tick()
   return (US_PER_TICK);
 }
 
+uint16_t
+RTC::us_per_timer_cycle()
+{
+  return (US_PER_TIMER_CYCLE);
+}
+
 uint32_t
 RTC::micros()
 {
@@ -89,7 +95,7 @@ RTC::micros()
   synchronized {
     res = s_uticks;
     cnt = TCNT0;
-    if ((TIFR0 & _BV(TOV0)) && cnt < COUNT) res += US_PER_TICK;
+    if (TIFR0 & _BV(TOV0)) res += US_PER_TICK;
   }
   // Convert ticks to micro-seconds
   res += ((uint32_t) cnt) * US_PER_TIMER_CYCLE;
@@ -118,6 +124,8 @@ ISR(TIMER0_OVF_vect)
   RTC::s_uticks += US_PER_TICK;
   
   if (RTC::Timer::s_queue_ticks > 0) {
+    if (RTC::Timer::MEASURE)
+      RTC::Timer::enter_ISR_cycle = TCNT0;
     // Decrement the most significant part of the RTC::Timer that's
     // expiring first. 
     RTC::Timer::s_queue_ticks--;
@@ -125,6 +133,8 @@ ISR(TIMER0_OVF_vect)
       if (TCNT0 >= OCR0A) {
         // TCNT0 is already past the requested OCR0A time. Interrupt
         // disabling must have kept us from getting here in time. 
+	// RTC::micros() doesn't need to add US_PER_TICK any more
+        TIFR0 |= _BV(TOV0);
         RTC::Timer::schedule();
       } else {
         // The remaining time will be caught by OCR0A. Clear the
@@ -138,17 +148,59 @@ ISR(TIMER0_OVF_vect)
 
 // Timer queue and state
 Head RTC::Timer::s_queue;
-volatile uint8_t RTC::Timer::s_queue_ticks = 0;
+volatile uint32_t RTC::Timer::s_queue_ticks = 0;
 volatile bool RTC::Timer::s_running = false;
+
+#ifdef RTC_TIMER_MEASURE
+
+uint8_t RTC::Timer::enter_setup_cycle        = 0;
+uint8_t RTC::Timer::exit_setup_cycle         = 0;
+uint8_t RTC::Timer::enter_start_cycle        = 0;
+uint8_t RTC::Timer::enter_schedule_cycle     = 0;
+uint8_t RTC::Timer::enter_ISR_cycle          = 0;
+uint8_t RTC::Timer::enter_on_interrupt_cycle = 0;
+
+#endif
+
+/**
+ * Measured timings, deduced from Timer0 cycles with 16MHz MCU clock*
+ *
+ * After making any code changes in RTC or RTC::Timer, you may want to re-measure
+ * the times for various RTC::Timer operations by using a test program such as
+ * CosaBenchmarkRTCTimer.ino.  The procedure is as follows:
+ * (1) Reduce all xxx_US constants to 16 instructions.
+ * (2) Rebuild and run a test program to obtain new values.
+ * (3) Rebuild and verify that actual times are 0-2 timer cycles *greater*
+ *     than the expiration times.  The actual time includes returning from 
+ *     the interrupt and calling RTC::micros() for the stop time, so the
+ *     actual time should always report taking a little longer than requested.
+ */
+
+/** Number of instructions from ::start to ::setup (queued dispatch) */
+static const int32_t START_US = (320 / I_CPU);
+
+/** Number of instructions from the beginning of ::setup to the end of ::setup */
+static const int32_t SETUP_US = (128 / I_CPU);
+  
+/** Number of instructions from ISR to on_interrupt */
+static const int32_t DISPATCH_US = ((272+64) / I_CPU);
+  // added 1 cycle for int vectoring because TCNT0 is always OCR0A+1 at start of ISR
+
+/** Visible constant computed from hidden constants */
+const uint32_t
+RTC::Timer::QUEUED_DISPATCH_TIME = (START_US + SETUP_US + DISPATCH_US);
 
 void
 RTC::Timer::setup(uint32_t us)
 {
+  if (MEASURE)
+    enter_setup_cycle=TCNT0;
+
   uint32_t timer_cycles  = us / US_PER_TIMER_CYCLE;
   if (timer_cycles >= 256) {
     timer_cycles += TCNT0;
-    OCR0A = (uint8_t) timer_cycles;
     TIMSK0 &= ~_BV(OCIE0A);
+    OCR0A = (uint8_t) timer_cycles;
     TIFR0 |=  _BV(OCF0A);
     s_queue_ticks = timer_cycles >> 8;
     return;
@@ -179,6 +231,8 @@ RTC::Timer::setup(uint32_t us)
     TIMSK0 |= _BV(OCIE0A);
     s_queue_ticks = 0;
   }
+  if (MEASURE)
+    exit_setup_cycle = TCNT0;
 }
 
 void
@@ -187,12 +241,15 @@ RTC::Timer::start()
   // Check if already queued
   if (is_started()) return;
 
+  if (MEASURE)
+    enter_start_cycle = TCNT0;
+
   // Not started yet. If this timer is getting *reStarted*, and we
   // are still within the ISR context, stack overflow would be
   // happening soon. Instead, put it in `s_queue` for later, even
   // though it might happen a little later than requested.
   int32_t us = m_expires - RTC::micros();
-  bool immediate = (us <= US_PER_TIMER_CYCLE);
+  bool immediate = (us <= (int32_t)QUEUED_DISPATCH_TIME);
   if (immediate) {
     us = 0;
     if (s_running)
@@ -205,16 +262,20 @@ RTC::Timer::start()
       Linkage* succ = &s_queue;
       Linkage* timer;
       while ((timer = succ->get_pred()) != &s_queue) {
-	if (((RTC::Timer*) timer)->m_expires <= m_expires) {
-	  first_changed = false;
-	  break;
-	}
-	succ = timer;
+        if (((RTC::Timer*) timer)->m_expires <= m_expires) {
+          first_changed = false;
+          break;
+        }
+        succ = timer;
       }
       succ->attach(this);
       if (first_changed) {
-	us = m_expires - RTC::micros();
-	setup(us);
+        us = m_expires - RTC::micros();
+        if (us >= (SETUP_US + DISPATCH_US))
+          us -= DISPATCH_US;
+        else
+          us = 0;
+        setup(us);
       }
     }
   } 
@@ -241,11 +302,15 @@ RTC::Timer::stop()
 void
 RTC::Timer::schedule()
 {
+  if (MEASURE)
+    enter_schedule_cycle = TCNT0;
+
   s_running = true;
   Linkage* timer;
   while ((timer = s_queue.get_succ()) != &s_queue) {
     int32_t us = ((RTC::Timer*) timer)->m_expires - RTC::micros();
-    if (us > US_PER_TIMER_CYCLE) {
+    if (us >= (SETUP_US + DISPATCH_US)) {
+      us -= DISPATCH_US;
       setup(us);
       break;
     }
@@ -257,6 +322,8 @@ RTC::Timer::schedule()
 
 ISR(TIMER0_COMPA_vect)
 {
+  if (RTC::Timer::MEASURE)
+    RTC::Timer::enter_ISR_cycle = TCNT0;
   TIMSK0 &= ~_BV(OCIE0A);
   RTC::Timer::schedule();
 }

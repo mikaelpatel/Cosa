@@ -53,7 +53,7 @@ public:
     static Head s_queue;
 
     /** Queue tick counter (MSB) */
-    volatile static uint8_t s_queue_ticks;
+    volatile static uint32_t s_queue_ticks;
 
     /** Running state of timer handler */
     volatile static bool s_running;
@@ -87,6 +87,31 @@ public:
     }
 
     /**
+     * Get timer expire time (absolute time, RTC::micro based).
+     */
+    uint32_t expire_at() const
+    {
+      return m_expires;
+    }
+
+    /**
+     * Set timer expire time (relative time, RTC::micro based).
+     * @param[in] us expire time.
+     */
+    void expire_after(uint32_t us)
+    {
+      m_expires = RTC::micros() + us;
+    }
+
+    /**
+     * Get timer expire time (relative time, RTC::micro based).
+     */
+    uint32_t expire_after() const
+    {
+      return RTC::micros() - m_expires;
+    }
+
+    /**
      * Return true if the timer is queued.
      * @return bool.
      */
@@ -113,6 +138,32 @@ public:
      * has expired. This member function must be overridden.
      */
     virtual void on_expired() = 0;
+    
+    /**
+     * Minimum relative expiration in order to be queued for ISR dispatch.
+     * NOTE: All timers with an expiration less than this will be
+     * immediately dispatched.  The actual elapsed time will be
+     * IMMEDIATE_DISPATCH_TIME, possibly much sooner than requested.
+     */
+    static const uint32_t QUEUED_DISPATCH_TIME;
+
+    /** Actual elapsed time for an immediate dispatch */
+    static const uint32_t IMMEDIATE_DISPATCH_TIME = (160 / I_CPU);
+
+  private:
+    static uint8_t enter_setup_cycle;
+    static uint8_t exit_setup_cycle;
+    static uint8_t enter_start_cycle;
+    static uint8_t enter_schedule_cycle;
+    static uint8_t enter_ISR_cycle;
+    static uint8_t enter_on_interrupt_cycle;
+//#define RTC_TIMER_MEASURE
+#ifdef RTC_TIMER_MEASURE
+    static const bool MEASURE = true;
+    friend class RTCMeasure;
+#else
+    static const bool MEASURE = false;
+#endif
   };
 
 private:
@@ -148,6 +199,12 @@ public:
    * @return micro-seconds.
    */
   static uint16_t us_per_tick();
+
+  /**
+   * Get number of micro-seconds per timer cycle.
+   * @return micro-seconds.
+   */
+  static uint16_t us_per_timer_cycle();
 
   /**
    * Set milli-second timeout interrupt handler.
