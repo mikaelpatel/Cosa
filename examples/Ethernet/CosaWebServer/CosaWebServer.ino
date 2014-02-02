@@ -142,7 +142,7 @@ void loop()
   page << PSTR("Uptime (h:m:s): ") << h << ':' << m << ':' << s << BR;
   page << PSTR("Requests: ") << nr++ << BR;
   page << PSTR("MAC: ") << addr.mac[0];
-  for (uint8_t i = 1; i < 6; i++) page << PSTR(".") << addr.mac[i];
+  for (uint8_t i = 1; i < 6; i++) page << PSTR(":") << addr.mac[i];
   page << BR;
   page << PSTR("IP: ") << addr.ip[0];
   for (uint8_t i = 1; i < 4; i++) page << PSTR(".") << addr.ip[i];
