@@ -114,6 +114,14 @@ INET::print_path(IOStream& outs, const char* path)
 }
 
 void
+INET::print_mac(IOStream& outs, const uint8_t* mac)
+{
+  outs << toHEX(mac[0] >> 4) << toHEX(mac[0]);
+  for (uint8_t i = 1; i < MAC_MAX; i++) 
+    outs << ':' << toHEX(mac[i] >> 4) << toHEX(mac[i]);
+}
+
+void
 INET::print_addr(IOStream& outs, const uint8_t* addr, uint16_t port)
 {
   outs << addr[0];

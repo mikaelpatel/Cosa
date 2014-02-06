@@ -82,6 +82,14 @@ public:
   static void print_path(IOStream& outs, const char* path);
 
   /**
+   * Print machine network address hex-colon notation to given
+   * output stream. 
+   * @param[in] outs output stream.
+   * @param[in] mac machine address to print.
+   */
+  static void print_mac(IOStream& outs, const uint8_t mac[MAC_MAX]);
+
+  /**
    * Print network address and port in extended dot notation to given
    * output stream. 
    * @param[in] outs output stream.
