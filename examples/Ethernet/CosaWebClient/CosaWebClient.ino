@@ -51,7 +51,7 @@ W5100 ethernet(mac);
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaWebClient:started"));
+  trace.begin(&uart, PSTR("CosaWebClient: started"));
   Watchdog::begin();
 
   // Initiate ethernet controller with address

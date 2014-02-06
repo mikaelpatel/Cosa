@@ -26,6 +26,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/RTC.hh"
 
 // Network configuration
 #define MAC 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed
@@ -45,8 +46,9 @@ void setup()
 {
   // Initiate trace iostream on uart. Use watchdog for basic timing
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaNTP:started"));
+  trace.begin(&uart, PSTR("CosaNTP: started"));
   Watchdog::begin();
+  RTC::begin();
 
   // Initiate the Ethernet Controller using DHCP
   ASSERT(ethernet.begin(hostname));
@@ -54,6 +56,8 @@ void setup()
 
 void loop()
 {
+  static bool initiated = false;
+
   // Connect to the NTP server using given socket
   uint8_t server[4] = { SERVER };
   NTP ntp(ethernet.socket(Socket::UDP), server, ZONE);
@@ -65,12 +69,19 @@ void loop()
     if ((clock = ntp.time()) != 0L) break;
   ASSERT(clock != 0L);
 
+  // Check if the RTC should be set
+  if (!initiated) {
+    RTC::time(clock);
+    initiated = true;
+  }
+  
   // Print in stardate notation; dayno.secondno
   trace << (clock / SECONDS_PER_DAY) << '.' << (clock % SECONDS_PER_DAY) << ' ';
 
   // Convert to time structure and print day followed by date and time
+  time_t rtc(RTC::seconds());
   time_t now(clock);
-  trace << now.day << ' ' << now << endl;
+  trace << now.day << ' ' << now << ' ' << rtc << endl;
 
   // Take a nap for 10 seconds (this is not 10 seconds period)
   SLEEP(10);

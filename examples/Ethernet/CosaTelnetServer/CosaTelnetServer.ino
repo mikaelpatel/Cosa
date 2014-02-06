@@ -59,7 +59,7 @@ void setup()
 
   // Wait for incoming connection requests
   while (sock->accept() != 0) Watchdog::delay(32);
-  trace.begin(sock, PSTR("CosaTelnetServer:started"));
+  trace.begin(sock, PSTR("CosaTelnetServer: started"));
   trace << flush;
 }
 

@@ -43,7 +43,7 @@ DHCP dhcp(hostname, mac);
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaDHCP:started"));
+  trace.begin(&uart, PSTR("CosaDHCP: started"));
   Watchdog::begin();
   ASSERT(ethernet.begin());
 }

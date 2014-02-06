@@ -49,7 +49,7 @@ W5100 ethernet(mac);
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaDNSstarted"));
+  trace.begin(&uart, PSTR("CosaDNS: started"));
   Watchdog::begin();
 
   uint8_t ip[4] = { IP };
