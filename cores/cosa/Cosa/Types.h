@@ -412,5 +412,33 @@ T constrain(T x, T low, T high)
   return (x < low ? low : (x > high ? high : x));
 }
 
+/**
+ * Convert 4-bit LSB value to hexadecimal character ('0'..'f').
+ * @param[in] value.
+ * @return character.
+ */
+inline char
+tohex(uint8_t value)
+{
+  value &= 0xf;
+  if (value > 9) 
+    return (value - 10 + 'a');
+  return (value + '0');
+}
+
+/**
+ * Convert 4-bit LSB value to hexadecimal character ('0'..'F').
+ * @param[in] value.
+ * @return character.
+ */
+inline char
+toHEX(uint8_t value)
+{
+  value &= 0xf;
+  if (value > 9) 
+    return (value - 10 + 'A');
+  return (value + '0');
+}
+
 #endif
 
