@@ -45,13 +45,6 @@ static const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 Socket* sock;
 
-// Debugging mode; trace print
-#define NDEBUG
-#ifdef NDEBUG
-#undef TRACE
-#define TRACE(x) x
-#endif
-
 // HTML end of line
 #define CRLF "\r\n"
 
@@ -63,7 +56,7 @@ void setup()
   setup_free_memory = free_memory();
 
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaWebServer:started"));
+  trace.begin(&uart, PSTR("CosaWebServer: started"));
   Watchdog::begin();
 
   // Initiate ethernet controller with address
@@ -93,26 +86,19 @@ void loop()
   // Bind the socket to an iostream
   IOStream page(sock);
   INET::addr_t addr;
-  char buf[32];
+  char buf[64];
   int res;
 
   // Get client connection information; MAC, IP address and port
   sock->get_src(addr);
 
   // Wait for the HTTP request
-  while ((res = sock->available()) == 0);
+  while ((res = sock->available()) == 0) Watchdog::delay(32);
   if (res < 0) goto error;
-  TRACE(sock->available());
 
-#ifndef NDEBUG
-  // Read request and print in debug mode. Ignore contents
-  trace << PSTR("Request#") << nr << endl;
-  while ((res = sock->recv(buf, sizeof(buf) - 1)) > 0) {
-    buf[res] = 0;
-    trace << buf;
-  }
-  trace << endl;
-#endif
+  // Read request and print contents
+  sock->gets(buf, sizeof(buf));
+  trace << uptime << ':' << nr << ':' << buf << endl;
 
   // Reply page; header and footer are static, contents dynamic
   static const char header[] PROGMEM = 
@@ -141,18 +127,13 @@ void loop()
   page << PSTR("(") << setup_free_memory << PSTR(")") << BR;
   page << PSTR("Uptime (h:m:s): ") << h << ':' << m << ':' << s << BR;
   page << PSTR("Requests: ") << nr++ << BR;
-  page << PSTR("MAC: ") << addr.mac[0];
-  for (uint8_t i = 1; i < 6; i++) page << PSTR(":") << addr.mac[i];
-  page << BR;
-  page << PSTR("IP: ") << addr.ip[0];
-  for (uint8_t i = 1; i < 4; i++) page << PSTR(".") << addr.ip[i];
-  page << BR;
-  page << PSTR("PORT: ") << addr.port << BR;
+  page << PSTR("MAC: "); INET::print_mac(page, addr.mac); page << BR;
+  page << PSTR("IP: "); INET::print_addr(page, addr.ip, addr.port); page << BR;
   page << footer;
   page << flush;
 
   // Disconnect the client and allow new connection requests
  error:
-  TRACE(sock->disconnect());
-  TRACE(sock->listen());
+  sock->disconnect();
+  sock->listen();
 }
