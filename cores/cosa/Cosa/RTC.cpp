@@ -39,14 +39,10 @@ bool RTC::s_initiated = false;
 // Timer ticks counter
 volatile uint32_t RTC::s_uticks = 0UL;
 volatile uint16_t RTC::s_ticks = 0;
-volatile uint32_t RTC::s_sec = 0L;
-
-// Interrupt handler extension
-RTC::InterruptHandler RTC::s_handler = NULL;
-void* RTC::s_env = NULL;
+volatile clock_t RTC::s_sec = 0L;
 
 bool
-RTC::begin(InterruptHandler handler, void* env)
+RTC::begin()
 {
   if (s_initiated) return (false);
   synchronized {
@@ -58,8 +54,6 @@ RTC::begin(InterruptHandler handler, void* env)
     TCNT0 = 0;
     TIFR0 = 0;
   }
-  s_handler = handler;
-  s_env = env;
   s_initiated = true;
   return (true);
 }
@@ -124,8 +118,7 @@ ISR(TIMER0_OVF_vect)
   RTC::s_uticks += US_PER_TICK;
   
   if (RTC::Timer::s_queue_ticks > 0) {
-    if (RTC::Timer::MEASURE)
-      RTC::Timer::enter_ISR_cycle = TCNT0;
+    if (RTC::Timer::MEASURE) RTC::Timer::enter_ISR_cycle = TCNT0;
     // Decrement the most significant part of the RTC::Timer that's
     // expiring first. 
     RTC::Timer::s_queue_ticks--;
@@ -192,8 +185,7 @@ RTC::Timer::QUEUED_DISPATCH_TIME = (START_US + SETUP_US + DISPATCH_US);
 void
 RTC::Timer::setup(uint32_t us)
 {
-  if (MEASURE)
-    enter_setup_cycle=TCNT0;
+  if (MEASURE) enter_setup_cycle=TCNT0;
 
   uint32_t timer_cycles  = us / US_PER_TIMER_CYCLE;
   if (timer_cycles >= 256) {
@@ -230,8 +222,7 @@ RTC::Timer::setup(uint32_t us)
     TIMSK0 |= _BV(OCIE0A);
     s_queue_ticks = 0;
   }
-  if (MEASURE)
-    exit_setup_cycle = TCNT0;
+  if (MEASURE) exit_setup_cycle = TCNT0;
 }
 
 void
@@ -240,13 +231,11 @@ RTC::Timer::start()
   // Check if already queued
   if (is_started()) return;
 
-  if (MEASURE)
-    enter_start_cycle = TCNT0;
-
   // Not started yet. If this timer is getting *reStarted*, and we
   // are still within the ISR context, stack overflow would be
   // happening soon. Instead, put it in `s_queue` for later, even
   // though it might happen a little later than requested.
+  if (MEASURE) enter_start_cycle = TCNT0;
   int32_t us = m_expires - RTC::micros();
   bool immediate = (us <= (int32_t)QUEUED_DISPATCH_TIME);
   if (immediate) {
@@ -301,9 +290,7 @@ RTC::Timer::stop()
 void
 RTC::Timer::schedule()
 {
-  if (MEASURE)
-    enter_schedule_cycle = TCNT0;
-
+  if (MEASURE) enter_schedule_cycle = TCNT0;
   s_running = true;
   Linkage* timer;
   while ((timer = s_queue.get_succ()) != &s_queue) {
@@ -321,8 +308,7 @@ RTC::Timer::schedule()
 
 ISR(TIMER0_COMPA_vect)
 {
-  if (RTC::Timer::MEASURE)
-    RTC::Timer::enter_ISR_cycle = TCNT0;
+  if (RTC::Timer::MEASURE) RTC::Timer::enter_ISR_cycle = TCNT0;
   TIMSK0 &= ~_BV(OCIE0A);
   RTC::Timer::schedule();
 }

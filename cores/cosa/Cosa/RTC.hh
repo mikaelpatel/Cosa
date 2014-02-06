@@ -27,6 +27,7 @@
 #define __COSA_RTC_HH__
 
 #include "Cosa/Linkage.hh"
+#include "Cosa/Time.hh"
 
 /**
  * Real-time clock; Arduino/ATmega328P Timer0 for micro/milli-
@@ -170,9 +171,7 @@ private:
   static bool s_initiated;
   static volatile uint32_t s_uticks;
   static volatile uint16_t s_ticks;
-  static volatile uint32_t s_sec;
-  static InterruptHandler s_handler;
-  static void* s_env;
+  static volatile clock_t s_sec;
 
   /**
    * Do not allow instances. This is a static singleton; name space.
@@ -182,11 +181,9 @@ private:
 public:
   /**
    * Start the Real-Time Clock.
-   * @param[in] handler of milli-second interrupts.
-   * @param[in] env handler environment.
    * @return bool true(1) if successful otherwise false(0).
    */
-  static bool begin(InterruptHandler handler = NULL, void* env = NULL);
+  static bool begin();
 
   /**
    * Stop the Real-Time Clock.
@@ -207,24 +204,11 @@ public:
   static uint16_t us_per_timer_cycle();
 
   /**
-   * Set milli-second timeout interrupt handler.
-   * @param[in] fn interrupt handler.
-   * @param[in] env environment pointer.
-   */
-  static void set(InterruptHandler fn, void* env = NULL)
-  {
-    synchronized {
-      s_handler = fn;
-      s_env = env;
-    }
-  }
-
-  /**
    * Set clock (seconds) to real-time (for instance seconds from a
    * given date).
    * @param[in] sec.
    */
-  static void set(uint32_t sec)
+  static void time(clock_t sec)
   {
     synchronized {
       s_sec = sec;
