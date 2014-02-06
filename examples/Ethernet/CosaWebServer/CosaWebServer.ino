@@ -29,8 +29,8 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/INET.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/IOBuffer.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
@@ -98,7 +98,6 @@ void loop()
 
   // Read request and print contents
   sock->gets(buf, sizeof(buf));
-  trace << uptime << ':' << nr << ':' << buf << endl;
 
   // Reply page; header and footer are static, contents dynamic
   static const char header[] PROGMEM = 
@@ -126,7 +125,7 @@ void loop()
   page << PSTR("Memory (byte): ") << free_memory();
   page << PSTR("(") << setup_free_memory << PSTR(")") << BR;
   page << PSTR("Uptime (h:m:s): ") << h << ':' << m << ':' << s << BR;
-  page << PSTR("Requests: ") << nr++ << BR;
+  page << PSTR("Request(") << nr++ << PSTR("): ") << buf << BR;
   page << PSTR("MAC: "); INET::print_mac(page, addr.mac); page << BR;
   page << PSTR("IP: "); INET::print_addr(page, addr.ip, addr.port); page << BR;
   page << footer;
