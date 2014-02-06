@@ -243,6 +243,20 @@ W5100::Driver::dev_write(const void* buf, size_t len, bool progmem)
 }
 
 void 
+W5100::Driver::dev_flush()
+{
+  int res = available();
+  if (!(res > 0)) return;
+  uint16_t ptr;
+  m_dev->read(uint16_t(&m_sreg->RX_RD), &ptr, sizeof(ptr));
+  ptr = swap((int16_t) ptr);
+  ptr += res;
+  ptr = swap((int16_t) ptr);
+  m_dev->write(uint16_t(&m_sreg->RX_RD), &ptr, sizeof(ptr));
+  m_dev->issue(uint16_t(&m_sreg->CR), CR_RECV);
+}
+
+void 
 W5100::Driver::dev_setup()
 {
   while (room() < MSG_MAX);
@@ -417,6 +431,7 @@ W5100::Driver::disconnect()
 {
   // Check that the socket is in TCP mode
   if (m_proto != TCP) return (-2);
+  dev_flush();
   m_dev->issue(uint16_t(&m_sreg->CR), CR_DISCON);
   return (0);
 }
@@ -539,6 +554,13 @@ W5100::Driver::send(const void* buf, size_t len,
   return (send(buf, len, progmem));
 }
 
+void 
+W5100::get_addr(uint8_t ip[4], uint8_t subnet[4])
+{
+  read(uint16_t(&m_creg->SIPR), ip, sizeof(m_creg->SIPR));
+  read(uint16_t(&m_creg->SUBR), subnet, sizeof(m_creg->SUBR));
+}
+
 bool 
 W5100::begin(const char* hostname, uint16_t timeout)
 {
@@ -589,20 +611,15 @@ W5100::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
   uint8_t mac[6];
   memcpy_P(mac, m_mac, sizeof(mac));
 
-  // Gateway address; assume that the gateway is the first node on local network
-  uint8_t gateway[4];
-  memcpy(gateway, ip, sizeof(gateway));
-  gateway[3] = 1;
-
   // Reset and setup registers
   write(uint16_t(&m_creg->MR), MR_RST);
   write(uint16_t(&m_creg->SHAR), mac, sizeof(m_creg->SHAR));
-  write(uint16_t(&m_creg->SIPR), ip, sizeof(m_creg->SIPR));
-  write(uint16_t(&m_creg->SUBR), subnet, sizeof(m_creg->SUBR));
-  write(uint16_t(&m_creg->GAR), gateway, sizeof(m_creg->GAR));
   write(uint16_t(&m_creg->RTR), &timeout, sizeof(m_creg->RTR));
   write(uint16_t(&m_creg->TMSR), TX_MEMORY_SIZE);
   write(uint16_t(&m_creg->RMSR), RX_MEMORY_SIZE);
+
+  // Set source network address, subnet mask and default gateway
+  bind(ip, subnet);
 
   // Attach interrupt handler 
   spi.attach(this);
@@ -610,7 +627,7 @@ W5100::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
   return (true);
 }
 
-bool 
+int
 W5100::bind(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
 {
   // Check for default gateware. Assume router is first addres on network

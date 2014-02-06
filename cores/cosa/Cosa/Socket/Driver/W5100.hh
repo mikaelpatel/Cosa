@@ -298,6 +298,11 @@ public:
     int dev_write(const void* buf, size_t len, bool progmem);
 
     /**
+     * Flush any waiting data in the socket receiver buffer.
+     */
+    void dev_flush();
+
+    /**
      * Wait for given maximum message size in internal transmit buffer.
      * Setup transmitter offset and initiate length for new message
      * construction. 
@@ -596,6 +601,13 @@ public:
 	Board::ExternalInterruptPin irq = Board::EXT0);
 
   /**
+   * Get the current network address and subnet mask. 
+   * @param[in] ip network address.
+   * @param[in] subnet mask.
+   */
+  void get_addr(uint8_t ip[4], uint8_t subnet[4]);
+
+  /**
    * Get DNS network address if W5100 device driver was initiated with
    * hostname and obtained network address from DHCP. 
    * @param[in,out] ip network address.
@@ -624,14 +636,14 @@ public:
 	     uint16_t timeout = 500);
 
   /**
-   * Bind to the given network address and subnet mask. Returns true
-   * if successful otherwise false.
+   * Bind to the given network address and subnet mask. Returns zero
+   * if successful otherwise negative error code.
    * @param[in] ip network address.
    * @param[in] subnet mask.
    * @param[in] gateway network address (Default NULL).
-   * @return bool.
+   * @return zero if successful otherwise negative error code.
    */
-  bool bind(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4] = NULL);
+  int bind(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4] = NULL);
 
   /**
    * Allocate socket with the given protocol, port and flags. Returns
