@@ -61,14 +61,14 @@ bool arduino_mib(SNMP::PDU& pdu)
   if (pdu.type == SNMP::PDU_GET) {
     switch (sys) {
     case SNMP::ardDigitalPin:
-      if (pin > 22) 
-	pdu.error_status = SNMP::BAD_VALUE;
+      if (pin > 22)
+	pdu.error_status = SNMP::NO_SUCH_NAME;
       else
 	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) InputPin::read(pin));
       break;
     case SNMP::ardAnalogPin:
       if (pin > 7)
-	pdu.error_status = SNMP::BAD_VALUE;
+	pdu.error_status = SNMP::NO_SUCH_NAME;
       else
 	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::sample(pin));
       break;
