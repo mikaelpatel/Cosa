@@ -112,7 +112,7 @@ public:
     sysServices = 7		// Integer(0..127), read-only, mandatory
   } __attribute__((packet));
 
-  // Arduno MIB OID(1.3.6.1.4.1.36582)
+  // Arduino MIB OID(1.3.6.1.4.1.36582)
   const static uint8_t ARDUINO_MIB[] PROGMEM;
   enum {
     ardDigitalPin = 1,		// DigitalPin[0..22](0..1), read-write
