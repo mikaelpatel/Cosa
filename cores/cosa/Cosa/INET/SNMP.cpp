@@ -42,6 +42,28 @@ IOStream& operator<<(IOStream& outs, SNMP::OID& oid)
   return (outs);
 }
 
+int 
+SNMP::OID::match(const uint8_t* coid, bool flag)
+{
+  uint8_t clen = pgm_read_byte(&coid[0]);
+  if (length < clen) return (-1);
+  for (uint8_t i = 0; i < clen; i++) 
+    if (name[i] != pgm_read_byte(&coid[i + 1])) return (-1);
+  if (flag) {
+    if (length - 1 == clen) return (name[clen]);
+    return (-1);
+  }
+  return (length == clen ? 0 : clen);
+}
+
+const uint8_t SNMP::MIB2_SYSTEM[] __PROGMEM = {
+  7,1,3,6,1,2,1,1
+};
+
+const uint8_t SNMP::ARDUINO_MIB[] __PROGMEM = {
+  9,1,3,6,1,4,1,130,157,102
+};
+
 IOStream& operator<<(IOStream& outs, SNMP::PDU& pdu)
 {
   outs << PSTR("dest = "); INET::print_addr(outs, pdu.dest, pdu.port); outs << endl;
@@ -52,7 +74,7 @@ IOStream& operator<<(IOStream& outs, SNMP::PDU& pdu)
   outs << PSTR("error_status = ") << pdu.error_status << endl;
   outs << PSTR("error_index = ") << pdu.error_index << endl;
   outs << PSTR("oid = ") << pdu.oid << endl;
-  outs << PSTR("value = ");
+  outs << PSTR("value = ") << pdu.value.length << endl;
   outs.print(&pdu.value, pdu.value.length + 2, IOStream::hex);
   return (outs);
 }
@@ -60,7 +82,8 @@ IOStream& operator<<(IOStream& outs, SNMP::PDU& pdu)
 bool
 SNMP::VALUE::encode(SYNTAX syn, const char* value, size_t size) 
 {
-  if ((syn == SYNTAX_OCTETS) || (syn == SYNTAX_OPAQUE)) {
+  if ((syn == SYNTAX_OCTETS) 
+      || (syn == SYNTAX_OPAQUE)) {
     if (size < DATA_MAX) {
       length = size;
       syntax = syn;
@@ -72,9 +95,26 @@ SNMP::VALUE::encode(SYNTAX syn, const char* value, size_t size)
 }
 
 bool
-SNMP::VALUE::encode(SYNTAX syn, const int16_t value) 
+SNMP::VALUE::encode_P(SYNTAX syn, const char* value, size_t size) 
 {
-  if ((syn == SYNTAX_INT) || (syn == SYNTAX_OPAQUE)) {
+  if ((syn == SYNTAX_OCTETS) 
+      || (syn == SYNTAX_OPAQUE)
+      || (syn == SYNTAX_OID)) {
+    if (size < DATA_MAX) {
+      length = size;
+      syntax = syn;
+      memcpy_P(data, value, size);
+      return (true);
+    }
+  }
+  return (false);
+}
+
+bool
+SNMP::VALUE::encode(SYNTAX syn, int16_t value) 
+{
+  if ((syn == SYNTAX_INT) 
+      || (syn == SYNTAX_OPAQUE)) {
     uint8_t *p = (uint8_t*) &value;
     length = sizeof(value);
     syntax = syn;
@@ -86,9 +126,10 @@ SNMP::VALUE::encode(SYNTAX syn, const int16_t value)
 }
 
 bool
-SNMP::VALUE::encode(SYNTAX syn, const int32_t value) 
+SNMP::VALUE::encode(SYNTAX syn, int32_t value) 
 {
-  if ((syn == SYNTAX_INT32) || (syn == SYNTAX_OPAQUE)) {
+  if ((syn == SYNTAX_INT32) 
+      || (syn == SYNTAX_OPAQUE)) {
     uint8_t *p = (uint8_t*) &value;
     length = sizeof(value);
     syntax = syn;
@@ -102,13 +143,13 @@ SNMP::VALUE::encode(SYNTAX syn, const int32_t value)
 }
 
 bool
-SNMP::VALUE::encode(SYNTAX syn, const uint32_t value) 
+SNMP::VALUE::encode(SYNTAX syn, uint32_t value) 
 {
-  if ((syn == SYNTAX_COUNTER) || 
-      (syn == SYNTAX_TIME_TICKS) || 
-      (syn == SYNTAX_GAUGE) || 
-      (syn == SYNTAX_UINT32) || 
-      (syn == SYNTAX_OPAQUE)) {
+  if ((syn == SYNTAX_COUNTER) 
+      || (syn == SYNTAX_TIME_TICKS) 
+      || (syn == SYNTAX_GAUGE) 
+      || (syn == SYNTAX_UINT32) 
+      || (syn == SYNTAX_OPAQUE)) {
     uint8_t *p = (uint8_t*) &value;
     length = sizeof(value);
     syntax = syn;
@@ -124,9 +165,9 @@ SNMP::VALUE::encode(SYNTAX syn, const uint32_t value)
 bool
 SNMP::VALUE::encode(SYNTAX syn, const uint8_t* value)
 {
-  if ((syn == SYNTAX_IP_ADDRESS) || 
-      (syn == SYNTAX_NSAPADDR) || 
-      (syn == SYNTAX_OPAQUE)) {
+  if ((syn == SYNTAX_IP_ADDRESS) 
+      || (syn == SYNTAX_NSAPADDR) 
+      || (syn == SYNTAX_OPAQUE)) {
     uint8_t *p = (uint8_t*) &value;
     length = sizeof(uint32_t);
     syntax = syn;
@@ -140,9 +181,10 @@ SNMP::VALUE::encode(SYNTAX syn, const uint8_t* value)
 }
 
 bool
-SNMP::VALUE::encode(SYNTAX syn, const bool value)
+SNMP::VALUE::encode(SYNTAX syn, bool value)
 {
-  if ((syn == SYNTAX_BOOL) || (syn == SYNTAX_OPAQUE)) {
+  if ((syn == SYNTAX_BOOL) 
+      || (syn == SYNTAX_OPAQUE)) {
     length = sizeof(uint8_t);
     syntax = syn;
     data[0] = value ? 0xff : 0x00;
@@ -154,7 +196,8 @@ SNMP::VALUE::encode(SYNTAX syn, const bool value)
 bool
 SNMP::VALUE::encode(SYNTAX syn) 
 {
-  if ((syn == SYNTAX_NULL) || (syn == SYNTAX_OPAQUE)) {
+  if ((syn == SYNTAX_NULL) 
+      || (syn == SYNTAX_OPAQUE)) {
     length = 0;
     syntax = syn;
     return (true);

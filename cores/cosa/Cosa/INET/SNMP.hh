@@ -97,7 +97,28 @@ public:
     static const size_t NAME_MAX = 32;
     uint8_t length;
     uint8_t name[NAME_MAX];
+    int match(const uint8_t* coid, bool flag = true);
   };
+
+  // SNMP MIB-2 System OID(1.3.6.1.2.1.1)
+  const static uint8_t MIB2_SYSTEM[] PROGMEM;
+  enum {
+    sysDescr = 1,		// DisplayString(0..255), read-only, mandatory
+    sysObjectID = 2,		// OID, read-only, mandatory
+    sysUpTime = 3,		// TimeTicks, read-only, mandatory
+    sysContact = 4,		// DisplayString(0..255), read-write, mandatory
+    sysName = 5,		// DisplayString(0..255), read-write, mandatory
+    sysLocation = 6,		// DisplayString(0..255), read-write, mandatory
+    sysServices = 7		// Integer(0..127), read-only, mandatory
+  } __attribute__((packet));
+
+  // Arduno MIB OID(1.3.6.1.4.1.36582)
+  const static uint8_t ARDUINO_MIB[] PROGMEM;
+  enum {
+    ardDigitalPin = 1,		// DigitalPin[0..22](0..1), read-write
+    ardAnalogPin = 2,		// AnalogPin[0..7](0..1023), read-only
+    ardVcc = 3,			// Powersupply[n](0..VCC), mV, read-only
+  } __attribute__((packet));
 
   // Object Value in Basic Encoding Rule (ASN.1 BER)
   struct VALUE {
@@ -106,17 +127,18 @@ public:
     uint8_t length;
     uint8_t data[DATA_MAX];
     bool encode(SYNTAX syn, const char* value, size_t size);
-    bool encode(SYNTAX syn, const int16_t value);
-    bool encode(SYNTAX syn, const int32_t value);
-    bool encode(SYNTAX syn, const uint32_t value);
+    bool encode_P(SYNTAX syn, const char* value, size_t size);
+    bool encode(SYNTAX syn, int16_t value);
+    bool encode(SYNTAX syn, int32_t value);
+    bool encode(SYNTAX syn, uint32_t value);
     bool encode(SYNTAX syn, const uint8_t* value);
-    bool encode(SYNTAX syn, const bool value);
+    bool encode(SYNTAX syn, bool value);
     bool encode(SYNTAX syn);
   };
 
   // SNMP Protocol Data Unit (PDU)
   struct PDU {
-    static const uint8_t COMMUNITY_MAX = 32;
+    static const uint8_t COMMUNITY_MAX = 16;
     uint8_t dest[INET::IP_MAX];
     uint16_t port;
     int32_t version;
@@ -195,7 +217,20 @@ protected:
   Socket* m_sock;
 };
 
+/**
+ * Print given Object Identity path to given output stream.
+ * @param[in] outs output stream.
+ * @param[in] oid object identity structure.
+ * @return output stream.
+ */
 IOStream& operator<<(IOStream& outs, SNMP::OID& oid);
+
+/**
+ * Print given SNMP Protocol Data Unit (PDU) to given output stream. 
+ * @param[in] outs output stream.
+ * @param[in] pdu protocol data unit.
+ * @return output stream.
+ */
 IOStream& operator<<(IOStream& outs, SNMP::PDU& pdu);
 
 #endif
