@@ -169,6 +169,9 @@ DHCP::recv(uint8_t type, uint16_t ms)
       break;
     };
   };
+
+  // Flush any remains of the reply
+  while (m_sock->available() > 0) m_sock->read(buf, sizeof(buf));
   return (res);
 }
 
