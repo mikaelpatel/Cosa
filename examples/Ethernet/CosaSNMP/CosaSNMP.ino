@@ -16,7 +16,17 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * W5100 Ethernet Controller device driver example code; SNMP agent.
+ * W5100 Ethernet Controller device driver example code; SNMP agent
+ * with support for GET/GETNEXT/SET for MIB-2 SYSTEM and Arduino MIB. 
+ *
+ * @section Testing
+ * Test with Linux snmp commands:
+ * 1. Access the MIB-2 SYSTEM (sysDescr)
+ *   snmpget -v1 -c public 192.168.0.18 0.1.3.6.1.2.1.1.1
+ * 2. Access the Arduino MIB (ardDigitalPin.0)
+ *   snmpget -v1 -c public 192.168.0.18 0.1.3.6.1.4.1.36582.1.0
+ * 3. Walk the OID tree
+ *   snmpwalk -v1 -c public 192.168.0.18 0
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -49,14 +59,47 @@ SNMP snmp;
 bool arduino_mib(SNMP::PDU& pdu)
 {
   // Match with Arduino MIB OID root
-  int sys = pdu.oid.match(SNMP::ARDUINO_MIB, false);
-  if (sys < 0 || pdu.oid.length != 11) return (false);
+  int pos = pdu.oid.match(SNMP::ARDUINO_MIB, false);
+  if (pos < 0 || pdu.oid.length != 11) return (false);
 
-  // Access pin number and requested object
-  uint8_t pin = pdu.oid.name[sys + 1];
-  sys = pdu.oid.name[sys];
+  // Access pin type and number
+  uint8_t sys = pdu.oid.name[pos];
+  uint8_t pin = pdu.oid.name[pos + 1];
+  
+  // Get next value; adjust pin referens
+  if (pdu.type == SNMP::PDU_GET_NEXT) {
+    switch (sys) {
+    case 0:
+      sys = SNMP::ardDigitalPin;
+      pin = 0;
+      break;
+    case SNMP::ardDigitalPin:
+      if (pin < 22)
+	pin += 1;
+      else {
+	pin = 0;
+	sys = SNMP::ardAnalogPin;
+      } 
+      break;
+    case SNMP::ardAnalogPin:
+      if (pin < 7)
+	pin += 1;
+      else {
+	pin = 0; 
+	sys = SNMP::ardVcc;
+      }
+      break;
+    case SNMP::ardVcc:
+      return (false);
+    }
+    pdu.oid.name[pos] = sys;
+    pdu.oid.name[pos + 1] = pin;
+    pdu.type = SNMP::PDU_GET;
+  }
+
+  // Check request type
   if (sys < SNMP::ardDigitalPin || sys > SNMP::ardVcc) return (false);
-
+  
   // Get value for digital or analog pin, or power supply voltage
   if (pdu.type == SNMP::PDU_GET) {
     switch (sys) {
@@ -73,7 +116,10 @@ bool arduino_mib(SNMP::PDU& pdu)
 	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::sample(pin));
       break;
     case SNMP::ardVcc:
-      pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::bandgap());
+      if (pin > 0)
+	pdu.error_status = SNMP::NO_SUCH_NAME;
+      else
+	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::bandgap());
       break;
     }
   }
@@ -95,6 +141,24 @@ bool system_mib(SNMP::PDU& pdu)
 {
   // Match with SNMP MIB-2 System OID root
   int sys = pdu.oid.match(SNMP::MIB2_SYSTEM);
+  if (sys < 0) return (false);
+
+  // Get next value or step to next mib
+  if (pdu.type == SNMP::PDU_GET_NEXT) {
+    if (sys < SNMP::sysServices) {
+      sys += 1;
+      pdu.oid.name[pdu.oid.length - 1] = sys;
+      pdu.type = SNMP::PDU_GET;
+    }
+    else {
+      memcpy_P(&pdu.oid, SNMP::ARDUINO_MIB, pgm_read_byte(SNMP::ARDUINO_MIB) + 1);
+      pdu.oid.name[pdu.oid.length++] = 0;
+      pdu.oid.name[pdu.oid.length++] = 0;
+      return (false);
+    }
+  }
+
+  // Check request type
   if (sys < SNMP::sysDescr || sys > SNMP::sysServices) return (false);
 
   // Get system value
@@ -112,7 +176,7 @@ bool system_mib(SNMP::PDU& pdu)
       pdu.value.encode(SNMP::SYNTAX_UINT32, Watchdog::millis() / 1000L);
       break;
     case SNMP::sysServices:
-      pdu.value.encode(SNMP::SYNTAX_INT, 42);
+      pdu.value.encode(SNMP::SYNTAX_INT, 0x42);
       break;
     case SNMP::sysContact:
       static const char CONTACT[] PROGMEM = "<your name>";
@@ -186,8 +250,16 @@ void loop()
   // Wait for a request
   if (snmp.recv(pdu) < 0) return;
 
+  // Check for root getnext request
+  if ((pdu.type == SNMP::PDU_GET_NEXT) 
+      && (pdu.oid.length == 1) 
+      && (pdu.oid.name[0] == 0)) {
+    memcpy_P(&pdu.oid, SNMP::MIB2_SYSTEM, pgm_read_byte(SNMP::MIB2_SYSTEM) + 1);
+    pdu.oid.name[pdu.oid.length++] = 0;
+  }
+
   // Match with MIB handlers
-  if (!arduino_mib(pdu) && !system_mib(pdu))
+  if (!system_mib(pdu) && !arduino_mib(pdu))
     pdu.error_status = SNMP::NO_SUCH_NAME;
   
   // Send the response value
