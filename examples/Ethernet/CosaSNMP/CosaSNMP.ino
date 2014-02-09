@@ -161,15 +161,16 @@ static const char name[] PROGMEM = "name";
 static const char location[] PROGMEM = "location";
 
 W5100 ethernet(mac);
-SNMP snmp;
 SNMP::MIB2_SYSTEM mib2(descr, contact, name, location);
 ARDUINO_MIB arduino;
+SNMP snmp;
 
 void setup()
 {
   uint8_t ip[4] = { IP };
   uint8_t subnet[4] = { SUBNET };
 
+  // Start watchdog and uart. Use uart for trace output
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaSNMP: started"));
   Watchdog::begin();
@@ -182,12 +183,10 @@ void setup()
 
   // Print the given or default network address
   ethernet.get_addr(ip, subnet);
-  trace.print_P(PSTR("HOSTNAME = "));
-  trace.print_P(hostname);
-  trace.println();
-  trace.print_P(PSTR("IP = "));
+  trace << PSTR("HOSTNAME = ") << hostname << endl;
+  trace << PSTR("IP = ");
   INET::print_addr(trace, ip);
-  trace.println();
+  trace << endl;
   
   // Print some memory statistics
   TRACE(free_memory());
