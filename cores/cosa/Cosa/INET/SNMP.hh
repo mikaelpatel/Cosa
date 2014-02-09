@@ -100,26 +100,6 @@ public:
     int match(const uint8_t* coid, bool flag = true);
   };
 
-  // SNMP MIB-2 System OID(1.3.6.1.2.1.1)
-  const static uint8_t MIB2_SYSTEM[] PROGMEM;
-  enum {
-    sysDescr = 1,		// DisplayString(0..255), read-only, mandatory
-    sysObjectID = 2,		// OID, read-only, mandatory
-    sysUpTime = 3,		// TimeTicks, read-only, mandatory
-    sysContact = 4,		// DisplayString(0..255), read-write, mandatory
-    sysName = 5,		// DisplayString(0..255), read-write, mandatory
-    sysLocation = 6,		// DisplayString(0..255), read-write, mandatory
-    sysServices = 7		// Integer(0..127), read-only, mandatory
-  } __attribute__((packet));
-
-  // Arduino MIB OID(1.3.6.1.4.1.36582)
-  const static uint8_t ARDUINO_MIB[] PROGMEM;
-  enum {
-    ardDigitalPin = 1,		// DigitalPin[0..22](0..1), read-write
-    ardAnalogPin = 2,		// AnalogPin[0..7](0..1023), read-only
-    ardVcc = 3,			// Powersupply[n](0..VCC), mV, read-only
-  } __attribute__((packet));
-
   // Object Value in Basic Encoding Rule (ASN.1 BER)
   struct VALUE {
     static const uint8_t DATA_MAX = 64;
@@ -152,6 +132,91 @@ public:
   };
   
   /**
+   * Abstract MIB handler. Should hold object identity root and 
+   * answer request query.
+   */
+  class MIB {
+  public:
+    /**
+     * @override SNMP::MIB
+     * Return object identity root for given mib.
+     */
+    virtual const uint8_t* get_oid() = 0;
+
+    /**
+     * @override SNMP::MIB
+     * Check if the given protocol data unit is a request to the mib.
+     * Returns true and value for SNMP::GET in given protocol data
+     * unit, otherwise false.  
+     * @param[in,out] pdu protocol data unit.
+     * @return bool
+     */
+    virtual bool is_request(PDU& pdu) = 0;
+  };
+
+  /**
+   * Mandatory SNMP MIB MIB-2 System OID(1.3.6.1.2.1.1.n)
+   */
+  class MIB2_SYSTEM : public MIB {
+    friend class SNMP;
+  private:
+    static const uint8_t OID[] PROGMEM;
+    const char* m_descr;
+    const char* m_contact;
+    const char* m_name;
+    const char* m_location;
+    enum {
+      sysDescr = 1,		// DisplayString(0..255), read-only, mandatory
+      sysObjectID = 2,		// OID, read-only, mandatory
+      sysUpTime = 3,		// TimeTicks, read-only, mandatory
+      sysContact = 4,		// DisplayString(0..255), read-write, mandatory
+      sysName = 5,		// DisplayString(0..255), read-write, mandatory
+      sysLocation = 6,		// DisplayString(0..255), read-write, mandatory
+      sysServices = 7		// Integer(0..127), read-only, mandatory
+    } __attribute__((packet));
+
+  public:
+    /**
+     * Construct mib-2 system mib with given static data.
+     * @param[in] descr description string (in program memory).
+     * @param[in] contact contact string (in program memory).
+     * @param[in] name device name string (in program memory).
+     * @param[in] location device location string (in program memory).
+     */
+    MIB2_SYSTEM(const char* descr, 
+		const char* contact,
+		const char* name,
+		const char* location) :
+      m_descr(descr),
+      m_contact(contact),
+      m_name(name),
+      m_location(location)
+    {
+    }
+    
+    /**
+     * @override SNMP::MIB
+     * Return object identity root for MIB-2 SYSTEM.
+     */
+    virtual const uint8_t* get_oid()
+    {
+      return (OID);
+    }
+    
+    /**
+     * @override SNMP::MIB
+     * Handle SNMP MIB-2 System objects SNMP requests. Returns true and
+     * value for SNMP::GET in given protocol data unit, otherwise false. 
+     * @param[in,out] pdu protocol data unit.
+     * @return bool
+     */
+    virtual bool is_request(PDU& pdu);
+  };
+
+  /** Arduino MIB OID(1.3.6.1.4.1.36582) */
+  static const uint8_t ARDUINO_MIB_OID[] PROGMEM;
+
+  /**
    * The SNMP Agent standard port.
    */
   static const uint16_t PORT = 161;
@@ -160,9 +225,11 @@ public:
    * Start SNMP agent with the given socket (UDP::PORT). Returns true
    * if successful otherwise false.
    * @param[in] sock connection-less socket on SNMP::PORT.
+   * @param[in] sys mib-2 system.
+   * @param[in] mib application mib.
    * @return bool
    */
-  bool begin(Socket* sock);
+  bool begin(Socket* sock, MIB2_SYSTEM* sys, MIB* mib);
 
   /**
    * Stop SNMP agent. Returns true if successful otherwise false.
@@ -170,6 +237,17 @@ public:
    */
   bool end();
 
+  /**
+   * Receive SNMP protocol data unit (PDU) request within given time
+   * limit in milli-seconds, process and send response. Returns zero
+   * and data in given PDU otherwise a negative error code.
+   * @param[in,out] pdu protocol unit. 
+   * @param[in] ms time-out period in milli-seconds (Default BLOCK).
+   * @return zero if successful otherwise a negative error code.
+   */
+  int request(PDU& pdu, uint32_t ms = 0L);
+
+protected:
   /**
    * Receive SNMP protocol data unit (PDU) request within given time
    * limit in milli-seconds. Returns zero and data in given PDU
@@ -190,7 +268,6 @@ public:
    */
   int send(PDU& pdu);
 
-protected:
   bool read_byte(uint8_t& value);
   bool read_tag(uint8_t expect, uint8_t& length);
 
@@ -215,6 +292,10 @@ protected:
 
   // Connection-less socket for incoming requests
   Socket* m_sock;
+
+  // Attached MIB to service
+  MIB2_SYSTEM* m_sys;
+  MIB* m_mib;
 };
 
 /**

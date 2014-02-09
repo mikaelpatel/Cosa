@@ -39,27 +39,42 @@
 #include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Network configuration
-#define IP 192,168,0,100
-#define SUBNET 255,255,255,0
-#define GATEWAY 192,168,0,1
-
-static const char hostname[] PROGMEM = "CosaSNMPAgent";
-static const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
-
-W5100 ethernet(mac);
-SNMP snmp;
-
 /**
- * Handle Arduino MIB objects SNMP requests. Returns true and value
- * for SNMP::GET in given protocol data unit, otherwise false.
- * @param[in,out] pdu protocol data unit.
- * @return bool
+ * Arduino MIB OID(1.3.6.1.4.1.36582)
  */
-bool arduino_mib(SNMP::PDU& pdu)
+class ARDUINO_MIB : public SNMP::MIB {
+private:
+  enum {
+    ardDigitalPin = 1,	      // Digital pin[0..22](0..1), read-only
+    ardAnalogPin = 2,	      // Analog pin[0..7](0..1023), read-only
+    ardVcc = 3,		      // Power supply[0](0..VCC), mV, read-only
+  } __attribute__((packet));
+
+public:
+  /**
+   * @override SNMP::MIB
+   * Return object identity root for Arduino MIB.
+   */
+  virtual const uint8_t* get_oid()
+  {
+    return (SNMP::ARDUINO_MIB_OID);
+  }
+    
+  /**
+   * @override SNMP::MIB
+   * Handle Arduino MIB objects SNMP requests. Returns true and
+   * value for SNMP::GET in given protocol data unit, otherwise false.
+   * @param[in,out] pdu protocol data unit.
+   * @return bool
+   */
+  virtual bool is_request(SNMP::PDU& pdu);
+};
+
+bool 
+ARDUINO_MIB::is_request(SNMP::PDU& pdu)
 {
   // Match with Arduino MIB OID root
-  int pos = pdu.oid.match(SNMP::ARDUINO_MIB, false);
+  int pos = pdu.oid.match(get_oid(), false);
   if (pos < 0 || pdu.oid.length != 11) return (false);
 
   // Access pin type and number
@@ -70,26 +85,26 @@ bool arduino_mib(SNMP::PDU& pdu)
   if (pdu.type == SNMP::PDU_GET_NEXT) {
     switch (sys) {
     case 0:
-      sys = SNMP::ardDigitalPin;
+      sys = ardDigitalPin;
       pin = 0;
       break;
-    case SNMP::ardDigitalPin:
+    case ardDigitalPin:
       if (pin < 22)
 	pin += 1;
       else {
 	pin = 0;
-	sys = SNMP::ardAnalogPin;
+	sys = ardAnalogPin;
       } 
       break;
-    case SNMP::ardAnalogPin:
+    case ardAnalogPin:
       if (pin < 7)
 	pin += 1;
       else {
 	pin = 0; 
-	sys = SNMP::ardVcc;
+	sys = ardVcc;
       }
       break;
-    case SNMP::ardVcc:
+    case ardVcc:
       return (false);
     }
     pdu.oid.name[pos] = sys;
@@ -98,24 +113,24 @@ bool arduino_mib(SNMP::PDU& pdu)
   }
 
   // Check request type
-  if (sys < SNMP::ardDigitalPin || sys > SNMP::ardVcc) return (false);
+  if (sys < ardDigitalPin || sys > ardVcc) return (false);
   
   // Get value for digital or analog pin, or power supply voltage
   if (pdu.type == SNMP::PDU_GET) {
     switch (sys) {
-    case SNMP::ardDigitalPin:
+    case ardDigitalPin:
       if (pin > 22)
 	pdu.error_status = SNMP::NO_SUCH_NAME;
       else
 	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) InputPin::read(pin));
       break;
-    case SNMP::ardAnalogPin:
+    case ardAnalogPin:
       if (pin > 7)
 	pdu.error_status = SNMP::NO_SUCH_NAME;
       else
 	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::sample(pin));
       break;
-    case SNMP::ardVcc:
+    case ardVcc:
       if (pin > 0)
 	pdu.error_status = SNMP::NO_SUCH_NAME;
       else
@@ -124,88 +139,31 @@ bool arduino_mib(SNMP::PDU& pdu)
     }
   }
 
-  // Set value is not allowed
+  // Set value is not allowed (yet)
   else if (pdu.type == SNMP::PDU_SET) {
     pdu.error_status = SNMP::READ_ONLY;
   }
   return (true);
 }
 
-/**
- * Handle SNMP MIB-2 System objects SNMP requests. Returns true and
- * value for SNMP::GET in given protocol data unit, otherwise false. 
- * @param[in,out] pdu protocol data unit.
- * @return bool
- */
-bool system_mib(SNMP::PDU& pdu)
-{
-  // Match with SNMP MIB-2 System OID root
-  int sys = pdu.oid.match(SNMP::MIB2_SYSTEM);
-  if (sys < 0) return (false);
+// Network configuration
+#define IP 192,168,0,100
+#define SUBNET 255,255,255,0
+#define GATEWAY 192,168,0,1
 
-  // Get next value or step to next mib
-  if (pdu.type == SNMP::PDU_GET_NEXT) {
-    if (sys < SNMP::sysServices) {
-      sys += 1;
-      pdu.oid.name[pdu.oid.length - 1] = sys;
-      pdu.type = SNMP::PDU_GET;
-    }
-    else {
-      memcpy_P(&pdu.oid, SNMP::ARDUINO_MIB, pgm_read_byte(SNMP::ARDUINO_MIB) + 1);
-      pdu.oid.name[pdu.oid.length++] = 0;
-      pdu.oid.name[pdu.oid.length++] = 0;
-      return (false);
-    }
-  }
+static const char hostname[] PROGMEM = "CosaSNMPAgent";
+static const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 
-  // Check request type
-  if (sys < SNMP::sysDescr || sys > SNMP::sysServices) return (false);
+// SNMP MIB-2 System configuration
+static const char descr[] PROGMEM = "description";
+static const char contact[] PROGMEM = "contact";
+static const char name[] PROGMEM = "name";
+static const char location[] PROGMEM = "location";
 
-  // Get system value
-  if (pdu.type == SNMP::PDU_GET) {
-    switch (sys) {
-    case SNMP::sysDescr:
-      static const char DESCR[] PROGMEM = "<description>";
-      pdu.value.encode_P(SNMP::SYNTAX_OCTETS, DESCR, sizeof(DESCR) - 1);
-      break;
-    case SNMP::sysObjectID:
-      pdu.value.encode_P(SNMP::SYNTAX_OID, (const char*) SNMP::ARDUINO_MIB, 
-			 pgm_read_byte(SNMP::ARDUINO_MIB) + 1);
-      break;
-    case SNMP::sysUpTime:
-      pdu.value.encode(SNMP::SYNTAX_UINT32, Watchdog::millis() / 1000L);
-      break;
-    case SNMP::sysServices:
-      pdu.value.encode(SNMP::SYNTAX_INT, 0x42);
-      break;
-    case SNMP::sysContact:
-      static const char CONTACT[] PROGMEM = "<your name>";
-      pdu.value.encode_P(SNMP::SYNTAX_OCTETS, CONTACT, sizeof(CONTACT) - 1);
-      break;
-    case SNMP::sysName:
-      static const char NAME[] PROGMEM = "<device name>";
-      pdu.value.encode_P(SNMP::SYNTAX_OCTETS, NAME, sizeof(NAME) - 1);
-      break;
-    case SNMP::sysLocation:
-      static const char LOCATION[] PROGMEM = "<device location>";
-      pdu.value.encode_P(SNMP::SYNTAX_OCTETS, LOCATION, sizeof(LOCATION) - 1);
-      break;
-    }
-  }
-
-  // Set system value
-  else if (pdu.type == SNMP::PDU_SET) {
-    switch (sys) {
-    case SNMP::sysContact:
-    case SNMP::sysName:
-    case SNMP::sysLocation:
-      break;
-    default:
-      pdu.error_status = SNMP::READ_ONLY;
-    }
-  }
-  return (true);
-}
+W5100 ethernet(mac);
+SNMP snmp;
+SNMP::MIB2_SYSTEM mib2(descr, contact, name, location);
+ARDUINO_MIB arduino;
 
 void setup()
 {
@@ -238,34 +196,20 @@ void setup()
   TRACE(sizeof(SNMP::OID));
   TRACE(sizeof(SNMP::VALUE));
   TRACE(sizeof(SNMP::PDU));
+  TRACE(sizeof(SNMP::MIB2_SYSTEM));
+  TRACE(sizeof(ARDUINO_MIB));
 
   // Start the SNMP manager with a connection-less socket
-  ASSERT(snmp.begin(ethernet.socket(Socket::UDP, SNMP::PORT)));
+  ASSERT(snmp.begin(ethernet.socket(Socket::UDP, SNMP::PORT), &mib2, &arduino));
 }
 
 void loop()
 {
+  // Service SNMP requests with given MIB handlers
   SNMP::PDU pdu;
+  if (snmp.request(pdu) < 0) return;
 
-  // Wait for a request
-  if (snmp.recv(pdu) < 0) return;
-
-  // Check for root getnext request
-  if ((pdu.type == SNMP::PDU_GET_NEXT) 
-      && (pdu.oid.length == 1) 
-      && (pdu.oid.name[0] == 0)) {
-    memcpy_P(&pdu.oid, SNMP::MIB2_SYSTEM, pgm_read_byte(SNMP::MIB2_SYSTEM) + 1);
-    pdu.oid.name[pdu.oid.length++] = 0;
-  }
-
-  // Match with MIB handlers
-  if (!system_mib(pdu) && !arduino_mib(pdu))
-    pdu.error_status = SNMP::NO_SUCH_NAME;
-  
-  // Send the response value
-  if (snmp.send(pdu) < 0) return;
-
-  // Print amount of free memory and the reponse
+  // Print available memory and resulting protocol data unit
   TRACE(free_memory());
   trace << pdu << endl;
 }

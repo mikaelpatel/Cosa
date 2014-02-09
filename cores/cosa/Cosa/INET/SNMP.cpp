@@ -26,6 +26,77 @@
 #include "Cosa/INET/SNMP.hh"
 #include "Cosa/Watchdog.hh"
 
+const uint8_t SNMP::MIB2_SYSTEM::OID[] __PROGMEM = {
+  7,1,3,6,1,2,1,1
+};
+
+const uint8_t SNMP::ARDUINO_MIB_OID[] __PROGMEM = {
+  9,1,3,6,1,4,1,130,157,102
+};
+
+bool
+SNMP::MIB2_SYSTEM::is_request(PDU& pdu)
+{
+  // Match with SNMP MIB-2 System OID root
+  int sys = pdu.oid.match(OID);
+  if (sys < 0) return (false);
+
+  // Get next value or step to next mib
+  if (pdu.type == SNMP::PDU_GET_NEXT) {
+    if (sys < sysServices) {
+      sys += 1;
+      pdu.oid.name[pdu.oid.length - 1] = sys;
+      pdu.type = SNMP::PDU_GET;
+    }
+    else {
+      memcpy_P(&pdu.oid, 
+	       SNMP::ARDUINO_MIB_OID, 
+	       pgm_read_byte(SNMP::ARDUINO_MIB_OID) + 1);
+      pdu.oid.name[pdu.oid.length++] = 0;
+      pdu.oid.name[pdu.oid.length++] = 0;
+      return (false);
+    }
+  }
+
+  // Check request type
+  if (sys < sysDescr || sys > sysServices) return (false);
+
+  // Get system value
+  if (pdu.type == SNMP::PDU_GET) {
+    switch (sys) {
+    case sysDescr:
+      pdu.value.encode_P(SNMP::SYNTAX_OCTETS, m_descr, strlen_P(m_descr));
+      break;
+    case sysObjectID:
+      pdu.value.encode_P(SNMP::SYNTAX_OID, 
+			 (const char*) ARDUINO_MIB_OID + 1, 
+			 pgm_read_byte(ARDUINO_MIB_OID));
+      break;
+    case sysUpTime:
+      pdu.value.encode(SNMP::SYNTAX_UINT32, Watchdog::millis() / 1000L);
+      break;
+    case sysServices:
+      pdu.value.encode(SNMP::SYNTAX_INT, 0x42);
+      break;
+    case sysContact:
+      pdu.value.encode_P(SNMP::SYNTAX_OCTETS, m_contact, strlen_P(m_contact));
+      break;
+    case sysName:
+      pdu.value.encode_P(SNMP::SYNTAX_OCTETS, m_name, strlen_P(m_name));
+      break;
+    case sysLocation:
+      pdu.value.encode_P(SNMP::SYNTAX_OCTETS, m_location, strlen_P(m_location));
+      break;
+    }
+  }
+
+  // Set system value
+  else if (pdu.type == SNMP::PDU_SET) {
+    pdu.error_status = SNMP::READ_ONLY;
+  }
+  return (true);
+}
+
 IOStream& operator<<(IOStream& outs, SNMP::OID& oid)
 {
   for (uint8_t i = 0; i < oid.length; i++) {
@@ -56,14 +127,6 @@ SNMP::OID::match(const uint8_t* coid, bool flag)
   return (length == clen ? 0 : clen);
 }
 
-const uint8_t SNMP::MIB2_SYSTEM[] __PROGMEM = {
-  7,1,3,6,1,2,1,1
-};
-
-const uint8_t SNMP::ARDUINO_MIB[] __PROGMEM = {
-  9,1,3,6,1,4,1,130,157,102
-};
-
 IOStream& operator<<(IOStream& outs, SNMP::PDU& pdu)
 {
   outs << PSTR("dest = "); INET::print_addr(outs, pdu.dest, pdu.port); outs << endl;
@@ -74,7 +137,8 @@ IOStream& operator<<(IOStream& outs, SNMP::PDU& pdu)
   outs << PSTR("error_status = ") << pdu.error_status << endl;
   outs << PSTR("error_index = ") << pdu.error_index << endl;
   outs << PSTR("oid = ") << pdu.oid << endl;
-  outs << PSTR("value = ") << pdu.value.length << endl;
+  outs << PSTR("value(syntax,length) = ");
+  outs << pdu.value.syntax << PSTR(", ") << pdu.value.length << endl;
   outs.print(&pdu.value, pdu.value.length + 2, IOStream::hex);
   return (outs);
 }
@@ -319,10 +383,12 @@ SNMP::encode_value(VALUE& value)
 }
 
 bool 
-SNMP::begin(Socket* sock)
+SNMP::begin(Socket* sock, MIB2_SYSTEM* sys, MIB* mib)
 {
-  if (sock == NULL) return (false);
+  if ((sock == NULL) || (sys == NULL) || (mib == NULL)) return (false);
   m_sock = sock;
+  m_sys = sys;
+  m_mib = mib;
   return (true);
 }
 
@@ -331,7 +397,33 @@ SNMP::end()
 {
   m_sock->close();
   m_sock = NULL;
+  m_sys = NULL;
+  m_mib = NULL;
   return (true);
+}
+
+int
+SNMP::request(PDU& pdu, uint32_t ms)
+{
+  // Attempt to receive a request within given time limit
+  int res = recv(pdu, ms);
+  if (res < 0) return (res);
+  
+  // Check for root getnext request
+  if ((pdu.type == PDU_GET_NEXT) 
+      && (pdu.oid.length == 1) 
+      && (pdu.oid.name[0] == 0)) {
+    const uint8_t* oid = MIB2_SYSTEM::OID;
+    memcpy_P(&pdu.oid, oid, pgm_read_byte(oid) + 1);
+    pdu.oid.name[pdu.oid.length++] = 0;
+  }
+
+  // Match with MIB handlers
+  if (!m_sys->is_request(pdu) && !m_mib->is_request(pdu))
+    pdu.error_status = NO_SUCH_NAME;
+  
+  // Send the response value
+  return (send(pdu));
 }
 
 int 
