@@ -17,10 +17,11 @@
  * 
  * @section Description
  * W5100 Ethernet Controller device driver example code; HTTP server.
- * Waits for requests. Reply with reading of digital pin(0..13), 
- * analog pin(0..3) samples, voltage (bandgap), amount of free memory
- * in loop and at setup, uptime (seconds), number of requests, and
- * the connecting client address (MAC, IP and port).
+ * Demonstrates usage of the Cosa HTTP::Server support class. The
+ * example class WebServer will reply with HTTP page with reading of
+ * digital pin(0..13), analog pin(0..3) samples, voltage (bandgap),
+ * amount of free memory, uptime (seconds), number of requests, and
+ * the connecting client address (MAC, IP and port). 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -30,53 +31,31 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/INET.hh"
+#include "Cosa/INET/HTTP.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
-// Network configuration
-#define IP 192,168,0,100
-#define SUBNET 255,255,255,0
-#define GATEWAY 192,168,0,1
-#define PORT 80
-
-// W5100 Ethernet Controller with MAC-address
-static const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
-W5100 ethernet(mac);
-Socket* sock;
-
 // HTML end of line
 #define CRLF "\r\n"
 
-// Amount of free memory at setup (to compare with loop)
-uint16_t setup_free_memory;
+// Example WebServer that responds with HTTP page with state of pins 
+class WebServer : public HTTP::Server {
+public:
+  // Construct WebServer and initiate sequence counter
+  WebServer() : m_nr(0) {}
 
-void setup()
-{
-  setup_free_memory = free_memory();
+  // Response member function
+  virtual void on_request(char* url);
 
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaWebServer: started"));
-  Watchdog::begin();
-
-  // Initiate ethernet controller with address
-  uint8_t ip[4] = { IP };
-  uint8_t subnet[4] = { SUBNET };
-  ASSERT(ethernet.begin(ip, subnet));
-
-  // Allocate a TCP socket and listen
-  ASSERT((sock = ethernet.socket(Socket::TCP, PORT)) != NULL);
-  ASSERT(!sock->listen());
-}
-
-void loop()
-{
+private:
   // Request sequence number
-  static uint16_t nr = 1;
+  uint16_t m_nr;
+};
 
-  // Wait for incoming connection requests
-  while (sock->accept() != 0) Watchdog::delay(32);
-
+void 
+WebServer::on_request(char* url)
+{
   // Uptime in seconds
   uint32_t uptime =  Watchdog::millis() / 1000;
   uint16_t h = uptime / 3600;
@@ -84,20 +63,11 @@ void loop()
   uint8_t s = uptime % 60;
 
   // Bind the socket to an iostream
-  IOStream page(sock);
+  IOStream page(m_sock);
   INET::addr_t addr;
-  char buf[64];
-  int res;
 
   // Get client connection information; MAC, IP address and port
-  sock->get_src(addr);
-
-  // Wait for the HTTP request
-  while ((res = sock->available()) == 0) Watchdog::delay(32);
-  if (res < 0) goto error;
-
-  // Read request and print contents
-  sock->gets(buf, sizeof(buf));
+  m_sock->get_src(addr);
 
   // Reply page; header and footer are static, contents dynamic
   static const char header[] PROGMEM = 
@@ -122,17 +92,43 @@ void loop()
   for (uint8_t i = 0; i < 4; i++)
     page << PSTR("A") << i << PSTR(": ") << AnalogPin::sample(i) << BR;
   page << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
-  page << PSTR("Memory (byte): ") << free_memory();
-  page << PSTR("(") << setup_free_memory << PSTR(")") << BR;
+  page << PSTR("Memory (byte): ") << free_memory() << BR;
   page << PSTR("Uptime (h:m:s): ") << h << ':' << m << ':' << s << BR;
-  page << PSTR("Request(") << nr++ << PSTR("): ") << buf << BR;
+  page << PSTR("Request(") << ++m_nr << PSTR("): ") << url << BR;
   page << PSTR("MAC: "); INET::print_mac(page, addr.mac); page << BR;
   page << PSTR("IP: "); INET::print_addr(page, addr.ip, addr.port); page << BR;
   page << footer;
-  page << flush;
+}
 
-  // Disconnect the client and allow new connection requests
- error:
-  sock->disconnect();
-  sock->listen();
+// Network configuration
+#define IP 192,168,0,100
+#define SUBNET 255,255,255,0
+#define GATEWAY 192,168,0,1
+#define PORT 80
+
+// W5100 Ethernet Controller with MAC-address
+static const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
+W5100 ethernet(mac);
+WebServer server;
+
+void setup()
+{
+  // Initiate uart and trace output stream. And watchdog
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaWebServer: started"));
+  Watchdog::begin();
+
+  // Initiate ethernet controller with address
+  uint8_t ip[4] = { IP };
+  uint8_t subnet[4] = { SUBNET };
+  ASSERT(ethernet.begin(ip, subnet));
+
+  // Start the server
+  ASSERT(server.begin(ethernet.socket(Socket::TCP, PORT)));
+}
+
+void loop()
+{
+  // Service incoming requests
+  server.request();
 }
