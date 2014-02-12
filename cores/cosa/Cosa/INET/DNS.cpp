@@ -45,14 +45,14 @@ DNS::end()
 }
 
 int 
-DNS::gethostbyname_P(const char* hostname, uint8_t addr[4])
+DNS::gethostbyname(const char* hostname, uint8_t addr[4], bool progmem)
 {
   // Check if we already have a network address (as a string)
-  if (INET::aton_P(hostname, addr) == 0) return (0);
-
+  if (INET::aton(hostname, addr, progmem) == 0) return (0);
+  
   // Convert hostname to a path
   char path[INET::PATH_MAX];
-  int len = INET::nametopath_P(hostname, path);
+  int len = INET::nametopath(hostname, path, progmem);
   if (len <= 0) return (-1);
 
   // Construct request header

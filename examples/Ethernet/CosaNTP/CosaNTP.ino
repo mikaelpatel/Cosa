@@ -37,7 +37,6 @@
 #define ZONE 1
 
 static const uint8_t mac[6] PROGMEM = { MAC };
-static const char hostname[] PROGMEM = "CosaNTP";
 
 // W5100 Ethernet Controller
 W5100 ethernet(mac);
@@ -51,7 +50,7 @@ void setup()
   RTC::begin();
 
   // Initiate the Ethernet Controller using DHCP
-  ASSERT(ethernet.begin(hostname));
+  ASSERT(ethernet.begin_P(PSTR("CosaNTPclient")));
 }
 
 void loop()

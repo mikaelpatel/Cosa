@@ -42,8 +42,8 @@ const uint8_t mac[6] PROGMEM = { MAC };
 W5100 ethernet(mac);
 
 // Query configuration
-#define NAME PSTR("www.arduino.cc")
-// #define NAME PSTR("www.google.com")
+// #define NAME PSTR("www.arduino.cc")
+#define NAME PSTR("www.google.com")
 // #define NAME PSTR("www.github.com")
 
 void setup()

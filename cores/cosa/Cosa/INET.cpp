@@ -44,14 +44,14 @@ INET::is_illegal(uint8_t addr[4], uint16_t port)
 }
 
 int 
-INET::aton_P(const char* addr, uint8_t ip[4])
+INET::aton(const char* addr, uint8_t ip[4], bool progmem)
 {
   const char* ap = addr;
   char buf[32];
   char c;
   for (uint8_t i = 0; i < IP_MAX; i++) {
     uint16_t r = 0;
-    while (isdigit(c = pgm_read_byte(ap++))) 
+    while (isdigit(c = (progmem ? pgm_read_byte(ap++) : *ap++)))
       r = (r * 10) + (c - '0');
     if (c != 0) {
       if (c != '.') return (-1);
@@ -66,7 +66,7 @@ INET::aton_P(const char* addr, uint8_t ip[4])
 }
 
 int
-INET::nametopath_P(const char* hostname, char* path)
+INET::nametopath(const char* hostname, char* path, bool progmem)
 {
   const char* hp = hostname;
   char* sp = path;
@@ -74,7 +74,7 @@ INET::nametopath_P(const char* hostname, char* path)
   uint8_t n = 0;
   int res = 0;
   while (res < PATH_MAX) {
-    char c = pgm_read_byte(hp++);
+    char c = (progmem ? pgm_read_byte(hp++) : *hp++);
     if (c == 0 || c == '.') {
       if (n == 0) return (-1);
       *sp = n;

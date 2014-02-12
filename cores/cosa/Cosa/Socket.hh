@@ -143,6 +143,16 @@ public:
 
   /**
    * @override Socket
+   * Connect the socket to the given hostname and port; client mode.
+   * Returns zero if connection established otherwise negative error code.
+   * @param[in] hostname string.
+   * @param[in] port destination port.
+   * @return zero if successful otherwise negative error code.
+   */
+  virtual int connect(const char* hostname, uint16_t port) = 0;
+
+  /**
+   * @override Socket
    * Returns positive integer if a connection is established, zero is
    * not yet established, otherwise a negative error code.
    * @return positive integer connected, zero if not otherwise

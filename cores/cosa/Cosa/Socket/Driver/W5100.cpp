@@ -28,6 +28,7 @@
 #if !defined(__ARDUINO_TINY__)
 
 #include "Cosa/INET/DHCP.hh"
+#include "Cosa/INET/DNS.hh"
 
 #define NDEBUG
 #ifndef NDEBUG
@@ -330,11 +331,17 @@ W5100::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
   // Check if the socket is already in use
   if (m_proto != 0) return (-2);
 
+
   // Set protocol and port and issue open command
   m_dev->write(uint16_t(&m_sreg->MR), proto | (flag & MR_FLAG_MASK));
   if (proto == IPRAW)
     m_dev->write(uint16_t(&m_sreg->PROTO), &port, sizeof(m_sreg->PROTO));
   else if ((proto == TCP) || (proto == UDP)) {
+    // Check for dynamic local port allocation
+    if (port == 0) {
+      port = m_dev->m_local++;
+      if (m_dev->m_local == 0) m_dev->m_local = Socket::DYNAMIC_PORT;
+    }
     port = swap((int16_t) port);
     m_dev->write(uint16_t(&m_sreg->PORT), &port, sizeof(m_sreg->PORT));
   }
@@ -368,7 +375,6 @@ W5100::Driver::close()
   m_proto = 0;
   return (0);
 }
-
 
 int 
 W5100::Driver::listen()
@@ -415,15 +421,25 @@ W5100::Driver::connect(uint8_t addr[4], uint16_t port)
 }
 
 int 
+W5100::Driver::connect(const char* hostname, uint16_t port)
+{
+  DNS dns;
+  if (!dns.begin(m_dev->socket(Socket::UDP), m_dev->m_dns)) return (-3);
+  uint8_t dest[4];
+  if (dns.gethostbyname(hostname, dest) != 0) return (-4);
+  return (connect(dest, port));
+}
+
+int 
 W5100::Driver::isconnected()
 {
   // Check that the socket is in TCP mode
   if (m_proto != TCP) return (-2);
   uint8_t ir = m_dev->read(uint16_t(&m_sreg->IR));
-  if (ir & IR_CON) return (1);
   if (ir & IR_TIMEOUT) return (-1);
+  if ((ir & IR_CON) == 0) return (0);
   dev_setup();
-  return (0);
+  return (1);
 }
 
 int 
@@ -431,8 +447,8 @@ W5100::Driver::disconnect()
 {
   // Check that the socket is in TCP mode
   if (m_proto != TCP) return (-2);
-  dev_flush();
   m_dev->issue(uint16_t(&m_sreg->CR), CR_DISCON);
+  dev_flush();
   return (0);
 }
 
@@ -461,8 +477,7 @@ W5100::Driver::recv(void* buf, size_t len)
 
   // Check if data has been received
   if ((m_dev->read(uint16_t(&m_sreg->IR)) & IR_RECV) == 0) return (0);
-  int res = dev_read(buf, len);
-  return (res);
+  return(dev_read(buf, len));
 }
 
 int 
@@ -509,10 +524,11 @@ W5100::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
   default :
     break;
   }
-  if (res <= 0) return (res);
-  memset(m_src.mac, 0, sizeof(m_src.mac));
-  memcpy(m_src.ip, src, sizeof(m_src.ip));
-  m_src.port = port;
+  if (res > 0) {
+    memset(m_src.mac, 0, sizeof(m_src.mac));
+    memcpy(m_src.ip, src, sizeof(m_src.ip));
+    m_src.port = port;
+  }
   return (res);
 }
 
@@ -562,7 +578,7 @@ W5100::get_addr(uint8_t ip[4], uint8_t subnet[4])
 }
 
 bool 
-W5100::begin(const char* hostname, uint16_t timeout)
+W5100::begin_P(const char* hostname, uint16_t timeout)
 {
   // Initiate the socket structures and device
   if (!begin(NULL, NULL, timeout)) return (false);
@@ -635,6 +651,7 @@ W5100::bind(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
   if (gateway == NULL) {
     memcpy(ROUTER, ip, sizeof(ROUTER) - 1);
     ROUTER[3] = 1;
+    memcpy(m_dns, ROUTER, sizeof(ROUTER));
     gateway = ROUTER;
   }
 
@@ -665,12 +682,6 @@ W5100::socket(Socket::Protocol proto, uint16_t port, uint8_t flag)
       break;
     }
   if (sock == NULL) return (NULL);
-
-  // Check for dynamic local port allocation
-  if (port == 0) {
-    port = m_local++;
-    if (m_local == 0) m_local = Socket::DYNAMIC_PORT;
-  }
 
   // Open the socket and initiate
   return (sock->open(proto, port, flag) ? NULL : sock);

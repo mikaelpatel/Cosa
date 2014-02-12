@@ -150,15 +150,13 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
 #define IP 192,168,0,100
 #define SUBNET 255,255,255,0
 #define GATEWAY 192,168,0,1
-
-static const char hostname[] PROGMEM = "CosaSNMPAgent";
 static const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 
 // SNMP MIB-2 System configuration
-static const char descr[] PROGMEM = "description";
-static const char contact[] PROGMEM = "contact";
-static const char name[] PROGMEM = "name";
-static const char location[] PROGMEM = "location";
+static const char descr[] PROGMEM = "<service description>";
+static const char contact[] PROGMEM = "<contact information>";
+static const char name[] PROGMEM = "<device name>";
+static const char location[] PROGMEM = "<device location>";
 
 W5100 ethernet(mac);
 SNMP::MIB2_SYSTEM mib2(descr, contact, name, location);
@@ -176,14 +174,13 @@ void setup()
   Watchdog::begin();
 
   // Start ethernet controller and request network address for hostname
-  ASSERT(ethernet.begin(hostname));
+  ASSERT(ethernet.begin_P(PSTR("CosaSNMPAgent")));
 
   // Alternative give network address and subnet mask
   // ASSERT(ethernet.begin(ip, subnet));
 
   // Print the given or default network address
   ethernet.get_addr(ip, subnet);
-  trace << PSTR("HOSTNAME = ") << hostname << endl;
   trace << PSTR("IP = ");
   INET::print_addr(trace, ip);
   trace << endl;
@@ -208,7 +205,9 @@ void loop()
   SNMP::PDU pdu;
   if (snmp.request(pdu) < 0) return;
 
+#if defined(PRINT_PDU)
   // Print available memory and resulting protocol data unit
   TRACE(free_memory());
   trace << pdu << endl;
+#endif
 }

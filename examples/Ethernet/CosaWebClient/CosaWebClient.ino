@@ -17,13 +17,14 @@
  * 
  * @section Description
  * W5100 Ethernet Controller device driver example code; HTTP client.
- * Send a HTTP GET request to server and print result page.
+ * Demonstrate the Cosa HTTP::Client class and support for web access.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/INET/HTTP.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
@@ -31,22 +32,50 @@
 #define IP 192,168,0,100
 #define SUBNET 255,255,255,0
 #define GATEWAY 192,168,0,1
-#define FILESERVER 192,168,0,2
-#define WIFIBRIDGE 192,168,0,30
-#define UNDEFINED 74,125,232,128
-#define WWW_GOOGLE_COM 173,194,71,99
-#define DEST WWW_GOOGLE_COM
-#define DEST WWW_GOOGLE_COM
-#define PORT 80
-
-// HTTP GET request configuration
-#define ROOT ""
-#define SEARCH "search?q=arduino"
-#define URL ROOT
 
 // W5100 Ethernet Controller with MAC-address
 const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
+
+// Simple web client; Prints response with url, number of bytes and time
+class WebClient : public HTTP::Client {
+public:
+  virtual void on_response(const char* hostname, const char* path);
+};
+
+void 
+WebClient::on_response(const char* hostname, const char* path)
+{
+  uint32_t start = Watchdog::millis();
+  uint32_t count = 0L;
+  char buf[65];
+  int res;
+
+  trace << PSTR("URL: http://") << (char*) hostname;
+  if (*path) trace << '/' << (char*) path;
+  trace << endl;
+
+#if defined(PRINT_RESPONSE)
+  while ((res = m_sock->read(buf, sizeof(buf) - 1)) >= 0) {
+    if (res > 0) {
+      buf[res] = 0;
+      trace << buf;
+      count += res;
+    }
+  }
+#else
+  while ((res = m_sock->read(buf, sizeof(buf) - 1)) >= 0) {
+    if (res > 0) {
+      trace << '.';
+      count += res;
+      if ((count & 0xfffL) == 0) trace << endl;
+    }
+  }
+#endif
+  if ((count & 0xfffL) != 0) trace << endl;
+  trace << PSTR("Total (byte): ") << count << endl;
+  trace << PSTR("Time (ms): ") << Watchdog::millis() - start << endl;
+}
 
 void setup()
 {
@@ -59,38 +88,13 @@ void setup()
   uint8_t subnet[4] = { SUBNET };
   ASSERT(ethernet.begin(ip, subnet));
 
-  // Allocate a TCP socket and connect to server
-  uint8_t dest[4] = { DEST };
-  uint16_t port = PORT;
-  Socket* sock;
-  int res;
-  ASSERT((sock = ethernet.socket(Socket::TCP)) != NULL);
-  ASSERT(!sock->connect(dest, port));
-  TRACE(sock->isconnected());
-  while ((res = sock->isconnected()) == 0);
-  ASSERT(sock->isconnected() > 0);
-  
-  // Send a HTTP request
-  static const char request[] PROGMEM = "GET /" URL " HTTP/1.1\r\n\r\n\r\n";
-  size_t len = strlen_P(request);
-  TRACE(sock->room());
-  ASSERT(sock->send_P(request, len) == len);
-  
-  // Wait for the reply
-  while ((res = sock->available()) == 0);
-  ASSERT(res > 0);
-  TRACE(sock->available());
-
-  // Receive the reply and print to output stream. Note buffer size
-  char buf[32];
-  while ((res = sock->recv(buf, sizeof(buf) - 1)) > 0) {
-    buf[res] = 0;
-    trace << buf;
-  }
-
-  // Disconnect and close the socket
-  ASSERT(!sock->disconnect());
-  ASSERT(!sock->close());
+  WebClient client;
+  client.begin(ethernet.socket(Socket::TCP));
+  client.get("www.google.com");
+  client.get("www.arduino.cc");
+  client.get("www.google.com/search?q=arduino");
+  client.get("en.wikipedia.org/wiki/World_Wide_Web");
+  client.end();
 }
 
 void loop()

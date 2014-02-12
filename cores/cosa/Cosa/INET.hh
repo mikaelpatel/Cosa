@@ -56,11 +56,37 @@ public:
   /**
    * Convert an address string in dot notation to binary form.
    * Returns zero if successful otherwise negative error code.
+   * @param[in] addr address string.
+   * @param[in,out] ip network address.
+   * @param[in] progmem address string in program memory flag.
+   * @return zero if successful otherwise negative error code. 
+   */
+  static int aton(const char* addr, uint8_t ip[IP_MAX], bool progmem = false);
+
+  /**
+   * Convert an address string in dot notation to binary form.
+   * Returns zero if successful otherwise negative error code.
    * @param[in] addr address string in program memory.
    * @param[in,out] ip network address.
    * @return zero if successful otherwise negative error code. 
    */
-  static int aton_P(const char* addr, uint8_t ip[IP_MAX]);
+  static int aton_P(const char* addr, uint8_t ip[IP_MAX])
+  {
+    return (aton(addr, ip, true));
+  }
+
+  /**
+   * Convert an address string in dot notation to a request path. 
+   * The given path buffer must be able to hold at least PATH_MAX 
+   * characters. Returns length of path is successful otherwise
+   * negative error code.
+   * @param[in] hostname address string.
+   * @param[in,out] path generated path from hostname.
+   * @param[in] progmem hostname address string in program memory flag.
+   * @return length of path if successful otherwise negative error
+   * code.  
+   */
+  static int nametopath(const char* hostname, char* path, bool progmem = false);
 
   /**
    * Convert an address string in dot notation to a request path. 
@@ -72,7 +98,10 @@ public:
    * @return length of path if successful otherwise negative error
    * code.  
    */
-  static int nametopath_P(const char* hostname, char* path);
+  static int nametopath_P(const char* hostname, char* path)
+  {
+    return (nametopath(hostname, path, true));
+  }
 
   /**
    * Print path in dot notation to given output stream.

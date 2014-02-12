@@ -97,6 +97,16 @@ private:
   uint8_t m_server[4];
   Socket* m_sock;
   
+  /**
+   * Lookup the given hostname and return the network address. Returns
+   * zero if successful otherwise negative error code.
+   * @param[in] hostname to lookup.
+   * @param[in] ip network address.
+   * @param[in] progmem flag if hostname string in program memory.
+   * @return zero if successful otherwise negative error code.
+   */
+  int gethostbyname(const char* hostname, uint8_t ip[4], bool progmem);
+
 public:
   /** DNS standard port number */
   static const uint16_t PORT = 53;
@@ -144,10 +154,25 @@ public:
   /**
    * Lookup the given hostname and return the network address. Returns
    * zero if successful otherwise negative error code.
+   * @param[in] hostname to lookup.
+   * @param[in] ip network address.
+   * @return zero if successful otherwise negative error code.
+   */
+  int gethostbyname(const char* hostname, uint8_t ip[4])
+  {
+    return (gethostbyname(hostname, ip, false));
+  }
+
+  /**
+   * Lookup the given hostname and return the network address. Returns
+   * zero if successful otherwise negative error code.
    * @param[in] hostname to lookup (in program memory).
    * @param[in] ip network address.
    * @return zero if successful otherwise negative error code.
    */
-  int gethostbyname_P(const char* hostname, uint8_t ip[4]);
+  int gethostbyname_P(const char* hostname, uint8_t ip[4])
+  {
+    return (gethostbyname(hostname, ip, true));
+  }
 };
 #endif
