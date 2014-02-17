@@ -141,13 +141,13 @@ union univ32_t {
  * Workaround for gcc program memory data warning in Arduino build
  * with older version of AVR-GCC. 
  */
-#ifdef ARDUINO
-# define __PROGMEM  __attribute__((section(".progmem.data")))
-#else
+#if ((__GNUC__ >= 4) && (__GNUC_MINOR__ >= 8))
 # ifndef PROGMEM
-#   define PROGMEM  __attribute__((section(".progmem.data")))
+#  define PROGMEM  __attribute__((section(".progmem.data")))
 # endif
 # define __PROGMEM PROGMEM
+#else
+# define __PROGMEM  __attribute__((section(".progmem.data")))
 #endif
 
 #undef PSTR
