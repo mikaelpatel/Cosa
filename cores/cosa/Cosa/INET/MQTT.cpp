@@ -200,7 +200,8 @@ MQTT::Client::disconnect()
 
 int 
 MQTT::Client::publish(const char* topic, void* buf, size_t count,
-		      QoS_t qos, bool retain)
+		      QoS_t qos, bool retain,
+		      bool progmem)
 
 {
   uint16_t length = strlen_P(topic) + sizeof(uint16_t);
@@ -218,7 +219,7 @@ MQTT::Client::publish(const char* topic, void* buf, size_t count,
   write(PUBLISH | (qos << MESSAGE_QOS_POS) | (retain & RETAIN), length);
   puts_P(topic);
   if (qos > FIRE_AND_FORGET) write(&id, sizeof(id));
-  write(buf, count);
+  if (progmem) write_P(buf, count); else write(buf, count);
   int res = flush();
   if (res < 0) return (-1);
 
@@ -326,45 +327,81 @@ MQTT::Client::service(uint32_t ms)
   struct {
     uint8_t cmd;
     uint8_t length;
-  } response;
+  } request;
 
-  // Read response (publish). Check for timeout
-  int res = read(&response, sizeof(response), ms);
+  // Read request (publish). Check for timeout
+  int res = read(&request, sizeof(request), ms);
   if (res < 0) return (res);
-  uint16_t length = response.length;
-  if (response.length > 128) {
+  uint16_t length = request.length;
+  if (request.length > 128) {
     uint8_t msb;
     res = read(&msb, sizeof(msb));
     length |= (msb << 7);
   }
 
   // Check that it is a publish
-  if ((response.cmd & MESSAGE_TYPE_MASK) == PUBLISH) {
-    uint16_t count;
-    res = read(&count, sizeof(count));
-    if (res != sizeof(count)) return (-2);
-    count = ntoh((int16_t) count);
-    char topic[count + 1];
-    res = read(topic, count);
-    if (res != count) return (-2);
-    topic[count] = 0;
-    length -= count + sizeof(count);
-    uint16_t id = 0;
-    if ((response.cmd & MESSAGE_QOS_MASK) != 0) {
-      res = read(&id, sizeof(id));
-      if (res != sizeof(id)) return (-2);
-      id = ntoh((int16_t) id);
-      length -= sizeof(id);
-    }
-    uint8_t payload[length + 1];
-    res = read(payload, length);
-    if (res != length) return (-2);
-    payload[length] = 0;
-    // Fix: Acknowledge publish (send PUBACK/PUBREC and wait for PUBCOMP)
-    on_publish(topic, payload, length);
+  if ((request.cmd & MESSAGE_TYPE_MASK) != PUBLISH) return (-1);
+  uint8_t qos = ((request.cmd & MESSAGE_QOS_MASK) >> MESSAGE_QOS_POS);
+
+  // Read topic length and string
+  uint16_t count;
+  res = read(&count, sizeof(count));
+  if (res != sizeof(count)) return (-2);
+  count = ntoh((int16_t) count);
+  char topic[count + 1];
+  res = read(topic, count);
+  if (res != count) return (-2);
+  topic[count] = 0;
+  length -= count + sizeof(count);
+
+  // Read message identity (for higher quality of service)
+  uint16_t id = 0;
+  if (qos != FIRE_AND_FORGET) {
+    res = read(&id, sizeof(id));
+    if (res != sizeof(id)) return (-2);
+    length -= sizeof(id);
+  }
+
+  // Read payload and call on_publish handler
+  uint8_t payload[length + 1];
+  res = read(payload, length);
+  if (res != length) return (-2);
+  payload[length] = 0;
+  on_publish(topic, payload, length);
+
+  // Write response message(s)
+  struct {
+    uint8_t cmd;
+    uint8_t length;
+    uint16_t id;
+  } response;
+  response.length = sizeof(response.id);
+  response.id = id;
+
+  switch (qos) {
+  case FIRE_AND_FORGET: 
+    return (0);
+  case ACKNOWLEDGED_DELIVERY:
+    response.cmd = PUBACK;
+    res = write(&response, sizeof(response));
+    if (res != sizeof(response)) return (-2);
+    return (0);
+  case ASSURED_DELIVERY:
+    response.cmd = PUBREC;
+    write(&response, sizeof(response));
+    res = flush();
+    if (res < 0) return (-3);
+    res = read(&response, sizeof(response));
+    if (res != sizeof(response)) return (-2);
+    if ((response.cmd != PUBREL) 
+	|| (response.length != sizeof(response.id))
+	|| (response.id != id)) return (-4);
+    response.cmd = PUBCOMP;
+    write(&response, sizeof(response));
+    res = flush();
+    if (res < 0) return (-1);
     return (0);
   }
-  // Fix: error handling on illegal message type
   return (-1);
 }
 

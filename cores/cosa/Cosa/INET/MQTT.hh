@@ -30,7 +30,10 @@
 #include "Cosa/Socket.hh"
 
 /**
- * MQTT V3.1 Protocol client implementation for Cosa and Arduino.
+ * MQTT V3.1 Protocol client implementation.
+ * 
+ * @section Reference
+ * 1. MQTT V3.1 Protocol Specification, Copyright (c) 1999-2010, Eurotech, IBM.
  */
 class MQTT {
 protected:
@@ -61,7 +64,7 @@ protected:
   // Bit position for will quality of service
   static const uint8_t WILL_QOS_POS = 3;
 
-  // MQTT magic header
+  // MQTT connect magic header
   static const char PROTOCOL[] PROGMEM;
 
 public:
@@ -93,8 +96,9 @@ public:
 
     /**
      * Start MQTT client with given socket. The socket will be used for 
-     * all access until closed with the member function end() or the
-     * default destructor. Returns true if successful otherwise false.
+     * all access (DNS and MQTT server) until closed with the member
+     * function end() or the default destructor. Returns true if
+     * successful otherwise false. 
      * @param[in] sock connection-less socket (TCP).
      * @return bool.
      */
@@ -117,14 +121,14 @@ public:
     } __attribute__((packed));
 
     /**
-     * Connect using given socket (should be TCP/IP with MQTT port)
-     * and unique client identifier. The given keep alive timeout in
-     * seconds and flags. Returns zero if successful otherwise
-     * negative error code.
+     * Connect using given hostname with client identifier, given
+     * keep alive timeout in seconds, flags and optional
+     * parameters. Returns zero if successful otherwise negative error
+     * code. 
      * @param[in] hostname server name.
      * @param[in] identifier for client (program memory string).
-     * @param[in] keep_alive maximum time limit between messages.     
-     * @param[in] flag connect flags.
+     * @param[in] keep_alive time limit between messages (Default 600).
+     * @param[in] flag connect flags (Default none).
      * @param[in] will topic (Optional program memory string).
      * @param[in] message will (Optional program memory string).
      * @param[in] user name (Optional program memory string).
@@ -149,6 +153,21 @@ public:
      * QoS and retain flag. Returns zero if successful otherwise
      * negative error code.
      * @param[in] topic string (program memory).
+     * @param[in] buf buffer pointer (data or program memory).
+     * @param[in] count number of bytes in buffer.
+     * @param[in] qos quality of service.
+     * @param[in] retain require server to maintain value.
+     * @param[in] progmem flag if payload buffer in program memory.
+     * @return zero if successful otherwise negative error code.
+     */
+    int publish(const char* topic, void* buf, size_t count, 
+		QoS_t qos, bool retain, bool progmem);
+
+    /**
+     * Publish the value in buffer to the given topic with the given
+     * QoS and retain flag. Returns zero if successful otherwise
+     * negative error code.
+     * @param[in] topic string (program memory).
      * @param[in] buf buffer pointer.
      * @param[in] count number of bytes in buffer.
      * @param[in] qos quality of service (Default FIRE_AND_FORGET).
@@ -157,7 +176,28 @@ public:
      */
     int publish(const char* topic, void* buf, size_t count, 
 		QoS_t qos = FIRE_AND_FORGET, 
-		bool retain = false);
+		bool retain = false)
+    {
+      return (publish(topic, buf, count, qos, retain, false));
+    }
+
+    /**
+     * Publish the value in buffer to the given topic with the given
+     * QoS and retain flag. Returns zero if successful otherwise
+     * negative error code.
+     * @param[in] topic string (program memory).
+     * @param[in] buf buffer pointer (program memory).
+     * @param[in] count number of bytes in buffer.
+     * @param[in] qos quality of service (Default FIRE_AND_FORGET).
+     * @param[in] retain require server to maintain value (Default false).
+     * @return zero if successful otherwise negative error code.
+     */
+    int publish_P(const char* topic, const void* buf, size_t count, 
+		  QoS_t qos = FIRE_AND_FORGET, 
+		  bool retain = false)
+    {
+      return (publish(topic, (void*) buf, count, qos, retain, true));
+    }
 
     /**
      * Subscribe to value changes on the given topics and requested
@@ -191,8 +231,7 @@ public:
      * Called by service when received a publish message. 
      * @param[in] topic string.
      * @param[in] buf buffer with topic value.
-     * @param[in] count number of bytes in buf.
-     * @param[in] qos quality of service.
+     * @param[in] count number of bytes in buffer.
      * @return zero if successful otherwise negative error code.
      */
     virtual void on_publish(char* topic, void* buf, size_t count);

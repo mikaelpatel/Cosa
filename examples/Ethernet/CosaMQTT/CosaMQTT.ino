@@ -29,9 +29,12 @@
 
 // Network configuration
 #define MOSQUITTO "test.mosquitto.org"
+#define RABBITMQ "dev.rabbitmq.com"
+#define ECLIPSE "iot.eclipse.org"
 #define QM2M "q.m2m.io"
 #define SERVER QM2M
 
+// Semi-simple MQTT client; trace incoming topic/value and echo back
 class MQTTClient : public MQTT::Client {
 public:
   virtual void on_publish(char* topic, void* buf, size_t count);
@@ -40,15 +43,23 @@ public:
 void 
 MQTTClient::on_publish(char* topic, void* buf, size_t count)
 {
+  // Print the topic and value to trace stream
   trace << PSTR("on_publish::count = ") << count << endl;
   trace << PSTR("  topic = ") << topic << endl;
   trace << PSTR("  payload = ") << (char*) buf << endl;
+
+  // Echo back the value to another topic
+  publish(PSTR("public/cosa/a/e"), buf, count);
 }
+
+// MQTT client name
+const char CLIENT[] PROGMEM = "CosaMQTTclient";
+MQTTClient client;
 
 // W5100 Ethernet Controller with MAC-address
 const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
-MQTTClient client;
+
 
 void setup()
 {
@@ -57,19 +68,23 @@ void setup()
   Watchdog::begin();
 
   // Start ethernet controller and request network address for hostname
-  ASSERT(ethernet.begin_P(PSTR("CosaMQTTclient")));
+  ASSERT(ethernet.begin_P(CLIENT));
 
   // Start MQTT client with socket and connect to server
   ASSERT(client.begin(ethernet.socket(Socket::TCP)));
-  ASSERT(!client.connect(SERVER, PSTR("CosaMQTT")));
+  ASSERT(!client.connect(SERVER, CLIENT));
 
   // Publish data with the different quality of service levels
+  TRACE(client.publish_P(PSTR("public/cosa/client"), CLIENT, sizeof(CLIENT)));
+
   uint8_t buf[16];
   memset(buf, 'a', sizeof(buf));
   TRACE(client.publish(PSTR("public/cosa/a/a"), buf, sizeof(buf)));
+
   memset(buf, 'b', sizeof(buf));
   TRACE(client.publish(PSTR("public/cosa/a/b"), buf, sizeof(buf),
 		       MQTT::ACKNOWLEDGED_DELIVERY, false));
+
   memset(buf, 'c', sizeof(buf));
   TRACE(client.publish(PSTR("public/cosa/a/c"), buf, sizeof(buf),
 		       MQTT::ASSURED_DELIVERY, false));
@@ -77,9 +92,16 @@ void setup()
 
 void loop()
 {
+  // Subscribe to a topic
   TRACE(client.subscribe(PSTR("public/cosa/a/d")));
-  for (uint8_t i = 0; i < 6; i++) client.service(10000L);
+
+  // Service incoming publish messages. Wait max 10 seconds per message
+  for (uint8_t i = 0; i < 6; i++) TRACE(client.service(10000L));
+
+  // Unsubscribe and disconnect
   TRACE(client.unsubscribe(PSTR("public/cosa/a/d")));
-  client.disconnect();
+  TRACE(client.disconnect());
+
+  // And terminate
   ASSERT(true == false);
 }
