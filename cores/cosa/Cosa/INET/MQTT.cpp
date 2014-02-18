@@ -367,7 +367,6 @@ MQTT::Client::service(uint32_t ms)
   res = read(payload, length);
   if (res != length) return (-2);
   payload[length] = 0;
-  on_publish(topic, payload, length);
 
   // Write response message(s)
   struct {
@@ -380,26 +379,30 @@ MQTT::Client::service(uint32_t ms)
 
   switch (qos) {
   case FIRE_AND_FORGET: 
+    on_publish(topic, payload, length);
     return (0);
   case ACKNOWLEDGED_DELIVERY:
     response.cmd = PUBACK;
     res = write(&response, sizeof(response));
-    if (res != sizeof(response)) return (-2);
+    res = flush();
+    if (res < 0) return (-3);
+    on_publish(topic, payload, length);
     return (0);
   case ASSURED_DELIVERY:
     response.cmd = PUBREC;
     write(&response, sizeof(response));
     res = flush();
-    if (res < 0) return (-3);
+    if (res < 0) return (-4);
     res = read(&response, sizeof(response));
     if (res != sizeof(response)) return (-2);
     if ((response.cmd != PUBREL) 
 	|| (response.length != sizeof(response.id))
-	|| (response.id != id)) return (-4);
+	|| (response.id != id)) return (-5);
     response.cmd = PUBCOMP;
     write(&response, sizeof(response));
     res = flush();
-    if (res < 0) return (-1);
+    if (res < 0) return (-6);
+    on_publish(topic, payload, length);
     return (0);
   }
   return (-1);
