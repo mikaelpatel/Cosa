@@ -135,6 +135,7 @@ MQTT::Client::connect(const char* hostname,
     qos = va_arg(args, uint16_t);
     length += strlen_P(topic) + sizeof(uint16_t);
     length += strlen_P(will) + sizeof(uint16_t);
+    flag |= ((qos & QOS_MASK) << WILL_QOS_POS);
   }
   if (flag & USER_NAME_FLAG) {
     const char* user = va_arg(args, const char*);
@@ -145,7 +146,6 @@ MQTT::Client::connect(const char* hostname,
     length += strlen_P(password) + sizeof(uint16_t);
   }
   va_end(args);
-  flag = flag | ((qos & QOS_MASK) << WILL_QOS_POS);
 
   // Write command, length, protocol, flags, keep-alive and identifier
   keep_alive = hton((int16_t) keep_alive);

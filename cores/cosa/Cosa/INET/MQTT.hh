@@ -64,6 +64,9 @@ protected:
   // Bit position for will quality of service
   static const uint8_t WILL_QOS_POS = 3;
 
+  // Bit mask for quality of service value
+  static const uint8_t QOS_MASK = 0x03;
+
   // MQTT connect magic header
   static const char PROTOCOL[] PROGMEM;
 
@@ -74,7 +77,6 @@ public:
     ACKNOWLEDGED_DELIVERY = 0x01, 	// At least once; Acknowledged delivery
     ASSURED_DELIVERY = 0x2,		// Exactly once; Assured delivery
   } __attribute__((packed));
-  static const uint8_t QOS_MASK = 0x06;	// Quality of service (bit mask)
 
   // MQTT Server default TCP/IP port
   static const uint16_t PORT = 1883;
