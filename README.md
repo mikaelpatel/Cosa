@@ -187,10 +187,11 @@ LilyPad, LilyPad USB, Mighty, Mega, etc) are supported.
 News
 ----
 
-2014-02 Support for HTTP Server and Client implementation. Additional
-SNMP agent implementation. RTC::Timer for micro-second level time
+2014-02 Allow build with GCC 4.8.1. Support for MQTT Client, HTTP
+Server and Client implementation. Additional SNMP agent
+implementation. RTC::Timer for micro-second level time
 events. Improved Time handling with integration with RTC and NTP to
-allow sync.         
+allow sync.          
 
 2014-01 Adding support for Arduino IDE 1.5.X. Including a Wireless
 interface implementation for RFM69W/HW. Socket interface and device
