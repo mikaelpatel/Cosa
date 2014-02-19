@@ -32,6 +32,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/Touch.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -75,3 +76,9 @@ void setup()
   Key::set_value(0);
 }
 
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
+}

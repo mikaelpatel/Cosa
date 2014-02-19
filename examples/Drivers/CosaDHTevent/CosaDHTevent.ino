@@ -36,6 +36,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 
 // DHT22 data pin configuration
@@ -68,4 +69,11 @@ void setup()
 
   // The DHT event object is started with default 2 second period
   dht.begin();
+}
+
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
 }

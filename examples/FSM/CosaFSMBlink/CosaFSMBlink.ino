@@ -29,6 +29,7 @@
 
 #include "Cosa/FSM.hh"
 #include "Cosa/Pins.hh"
+#include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 
 // The state machine: Blink RGB LED with six color states
@@ -117,4 +118,10 @@ void setup()
   led2.begin();
 }
 
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
+}
 

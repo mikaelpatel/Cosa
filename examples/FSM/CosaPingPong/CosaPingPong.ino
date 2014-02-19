@@ -126,3 +126,9 @@ void setup()
   ping.send(Event::USER_TYPE);
 }
 
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
+}

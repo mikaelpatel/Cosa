@@ -26,6 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/LCD/Driver/VLCD.hh"
@@ -44,3 +45,9 @@ void setup()
   vlcd.begin();
 }
 
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
+}

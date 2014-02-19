@@ -32,6 +32,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/Menu.hh"
@@ -164,4 +165,11 @@ void setup()
   SLEEP(2);
   walker.begin();
   rotary.begin();
+}
+
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
 }

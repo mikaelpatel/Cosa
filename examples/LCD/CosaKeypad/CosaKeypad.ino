@@ -32,6 +32,7 @@
  */
 
 #include "Cosa/Types.h"
+#include "Cosa/Event.hh"
 #include "Cosa/Keypad.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
@@ -86,3 +87,9 @@ void setup()
    lcd.puts_P(PSTR("CosaKeypad: started"));
 }
 
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
+}

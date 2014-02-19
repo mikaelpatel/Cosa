@@ -34,6 +34,7 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Driver/NEXA.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 
 class LED : public NEXA::Receiver::Device {
@@ -65,4 +66,11 @@ void setup()
   
   // Enable the interrupt driven version of the receiver
   receiver.enable();
+}
+
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
 }

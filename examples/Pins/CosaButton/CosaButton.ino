@@ -82,3 +82,9 @@ void setup()
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
 }
 
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
+}

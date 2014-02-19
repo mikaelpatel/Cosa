@@ -29,6 +29,7 @@
 #include "Cosa/Pins.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Event.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/HCSR04.hh"
@@ -62,3 +63,9 @@ void setup()
   ping.periodic(256);
 }
 
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
+}

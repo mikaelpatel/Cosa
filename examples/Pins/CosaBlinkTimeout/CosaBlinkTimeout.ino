@@ -27,6 +27,7 @@
  */
 
 #include "Cosa/Pins.hh"
+#include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"
 #include "Cosa/Watchdog.hh"
 
@@ -76,4 +77,11 @@ void setup()
   redLedPin.blink(512);
   greenLedPin.blink(1024);
   blueLedPin.blink(1024);
+}
+
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
 }

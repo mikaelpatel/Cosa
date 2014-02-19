@@ -26,6 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Event.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/Pins.hh"
 
@@ -50,4 +52,15 @@ LED greenLedPin(Board::D6, 1024, 1);
 LED blueLedPin(Board::D7, 1024);
 #endif
 
-// Thats all. No setup() or loop() function necessary. Use the default
+void setup()
+{
+  // Start the watchdog ticks and push time events
+  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+}
+
+void loop()
+{
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
+}

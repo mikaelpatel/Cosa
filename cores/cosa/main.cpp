@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -79,6 +79,7 @@ void init()
  * overridden.
  */
 void setup() __attribute__((weak));
+#if defined(COSA_DEFAULT_SETUP)
 void setup()
 {
   // Start the watchdog ticks and push time events
@@ -88,18 +89,21 @@ void setup()
   static LED builtin;
   builtin.alert_mode();
 }
+#endif
 
 /**
  * The default loop function; event dispatcher. This function may be
  * overridden.
  */
 void loop() __attribute__((weak));
+#if defined(COSA_DEFAULT_LOOP)
 void loop()
 {
   Event event;
   Event::queue.await(&event);
   event.dispatch();
 }
+#endif
 
 /**
  * The main function. This function may be overridden.
