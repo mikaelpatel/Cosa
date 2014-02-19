@@ -184,7 +184,7 @@ MQTT::Client::connect(const char* hostname,
     uint8_t code;
   } response;
   res = read(&response, sizeof(response));
-  if (res < 0) return (-2);
+  if (res != sizeof(response)) return (-2);
   if ((response.cmd != CONNACK) || (response.length != 2)) return (-3);
   res = -response.code;
   return (res);
@@ -284,7 +284,7 @@ MQTT::Client::subscribe(const char* topic, QoS_t qos)
     uint8_t qos;
   } response;
   res = read(&response, sizeof(response));
-  if (res < 0) return (-2);
+  if (res != sizeof(response)) return (-2);
   if ((response.cmd != SUBACK) 
       || (response.length != 3)
       || (response.id != id)
@@ -314,7 +314,7 @@ MQTT::Client::unsubscribe(const char* topic)
     uint16_t id;
   } response;
   res = read(&response, sizeof(response));
-  if (res < 0) return (-2);
+  if (res != sizeof(response)) return (-2);
   if ((response.cmd != UNSUBACK) 
       || (response.length != 2)
       || (response.id != id)) return (-3);
@@ -331,7 +331,7 @@ MQTT::Client::service(uint32_t ms)
 
   // Read request (publish). Check for timeout
   int res = read(&request, sizeof(request), ms);
-  if (res < 0) return (res);
+  if (res != sizeof(request)) return (res);
   uint16_t length = request.length;
   if (request.length > 128) {
     uint8_t msb;
@@ -390,7 +390,7 @@ MQTT::Client::service(uint32_t ms)
     return (0);
   case ASSURED_DELIVERY:
     response.cmd = PUBREC;
-    write(&response, sizeof(response));
+    res = write(&response, sizeof(response));
     res = flush();
     if (res < 0) return (-4);
     res = read(&response, sizeof(response));
