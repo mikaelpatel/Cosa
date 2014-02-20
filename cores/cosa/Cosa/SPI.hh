@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -305,6 +305,13 @@ public:
    * @param[in] count number of bytes to write.
    */
   void write_P(const uint8_t* buf, size_t count);
+
+  /**
+   * Write null terminated io buffer vector to the device slave. 
+   * Should only be used  within a SPI transaction; begin()-end() block.  
+   * @param[in] vec null terminated io buffer vector pointer.
+   */
+  void write(const iovec_t* vec);
 };
 
 /**

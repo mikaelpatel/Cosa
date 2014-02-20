@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,8 +55,7 @@ SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
 
   // Set ports
   synchronized {
-    bit_set(DDR, Board::MOSI);
-    bit_set(DDR, Board::SCK);
+    bit_mask_set(DDR, _BV(Board::MOSI) | _BV(Board::SCK));
     bit_clear(DDR, Board::MISO);
     bit_set(PORT, Board::MISO);
     USICR = m_usicr;
@@ -70,8 +69,7 @@ SPI::SPI(uint8_t mode, Order order) :
   // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
   // Do not confuse with SPI chip programming pins
   synchronized {
-    bit_set(DDR, Board::MOSI);
-    bit_set(DDR, Board::SCK);
+    bit_mask_set(DDR, _BV(Board::MOSI) | _BV(Board::SCK));
     bit_clear(DDR, Board::MISO);
     bit_set(PORT, Board::MISO);
     USICR = (_BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC));
@@ -86,8 +84,7 @@ SPI::SPI() :
   // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
   // Do not confuse with SPI chip programming pins
   synchronized {
-    bit_set(DDR, Board::MOSI);
-    bit_set(DDR, Board::SCK);
+    bit_mask_set(DDR, _BV(Board::MOSI) | _BV(Board::SCK));
     bit_clear(DDR, Board::MISO);
     bit_set(PORT, Board::MISO);
   }
@@ -146,9 +143,7 @@ SPI::SPI(uint8_t mode, Order order) :
   // Initiate the SPI port and control for slave mode
   synchronized {
     bit_set(DDRB, Board::MISO);
-    bit_clear(DDRB, Board::MOSI); 
-    bit_clear(DDRB, Board::SCK);
-    bit_clear(DDRB, Board::SS);
+    bit_mask_clear(DDRB, _BV(Board::MOSI) | _BV(Board::SCK) | _BV(Board::SS));
     SPCR = (_BV(SPIE) 			| 
 	    _BV(SPE)			| 
 	    ((order & 0x1) << DORD) 	|
@@ -163,12 +158,9 @@ SPI::SPI() :
   // Initiate the SPI data direction for master mode
   // The SPI/SS pin must be an output pin in master mode
   synchronized {
-    bit_set(DDRB, Board::MOSI);
-    bit_set(DDRB, Board::SCK);
-    bit_set(DDRB, Board::SS);
+    bit_mask_set(DDRB, _BV(Board::MOSI) | _BV(Board::SCK) | _BV(Board::SS));
     bit_clear(DDRB, Board::MISO);
-    bit_clear(PORTB, Board::SCK);
-    bit_clear(PORTB, Board::MOSI);
+    bit_mask_clear(PORTB, _BV(Board::SCK) | _BV(Board::MOSI));
   }
   // Other the SPI setup is done by the SPI::Driver::begin()
 }
@@ -291,4 +283,11 @@ SPI::write_P(const uint8_t* buf, size_t count)
 {
   if (count == 0) return;
   do transfer(pgm_read_byte(buf++)); while (--count);
+}
+
+void 
+SPI::write(const iovec_t* vec)
+{
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
+    write(vp->buf, vp->size);
 }
