@@ -198,9 +198,7 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   if (vec == NULL) return (-1);
 
   // Check that the message is not too large
-  size_t len = 0;
-  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
-    len += vp->size;
+  size_t len = iovec_size(vec);
   if (len > PAYLOAD_MAX) return (-1);
 
   uint8_t *tp = m_buffer + m_codec->PREAMBLE_MAX;

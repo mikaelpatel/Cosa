@@ -162,9 +162,7 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
   if (vec == NULL) return (-1);
-  size_t len = 0;
-  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
-    len += vp->size;
+  size_t len = iovec_size(vec);
   if (len > PAYLOAD_MAX) return (-1);
 
   // Wait for the device to become idle before writing the frame
@@ -190,16 +188,6 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   // Trigger the transmit
   strobe(STX);
   return (len);
-}
-
-int 
-CC1101::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
-{
-  iovec_t vec[2];
-  iovec_t* vp = vec;
-  iovec_arg(vp, buf, len);
-  iovec_end(vp);
-  return (send(dest, port, vec));
 }
 
 int 
