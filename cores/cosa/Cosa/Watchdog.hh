@@ -73,6 +73,13 @@ private:
   static uint8_t s_mode;
   static bool s_initiated;
 
+  /**
+   * Calculate watchdog prescale given timeout period (in milli-seconds).
+   * @param[in] ms timeout period.
+   * @return prescale factor.
+   */
+  static uint8_t as_prescale(uint16_t ms);
+  
 public:
   /**
    * Get initiated state.
@@ -163,27 +170,21 @@ public:
 		    void* env = NULL);
 
   /**
-   * Await condition. Put into sleep mode according to begin()
-   * setup. Execute function for each wakeup to check if a condition
-   * has been valid. If the condition function is null(0) the next
-   * tick is awaited. 
-   * @param[in] fn function.
-   * @param[in] env function environment.
-   * @param[in] ms max sleep period in milli-seconds.
-   */
-  static void await(AwaitCondition fn = NULL, 
-		    void* env = NULL, 
-		    uint16_t ms = 0);
-
-  /**
    * Delay using watchdog timeouts and sleep mode.
    * @param[in] ms sleep period in milli-seconds.
    */
-  static void delay(uint16_t ms) 
-  { 
-    await(0, 0, ms); 
+  static void delay(uint16_t ms);
+
+  /**
+   * Returns number of milli-seconds from given start.
+   * @param[in] start
+   * @return (millis() - start)
+   */
+  static uint32_t since(uint32_t start)
+  {
+    return (millis() - start);
   }
-  
+
   /**
    * Stop watchdog. Turn off timout callback.
    */
