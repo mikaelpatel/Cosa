@@ -22,7 +22,8 @@
  *
  * @section Description
  * Cosa sizeof benchmark; the size of class instances. Static member
- * data is not included. 
+ * data is not included. Note that this is also a list of the classes
+ * available in Cosa. 
  *
  * @section Circuit
  * This example requires no special circuit. Uses serial output.
@@ -95,6 +96,7 @@
 #include "Cosa/SPI/Driver/SD.hh"
 #include "Cosa/Thread.hh"
 #include "Cosa/Time.hh"
+#include "Cosa/Timer.hh"
 #include "Cosa/Touch.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/TWI.hh"
@@ -130,6 +132,9 @@ void setup()
   TRACE(sizeof(ST7735));
   TRACE(sizeof(Textbox));
   TRACE(sizeof(OffScreen<64,128>));
+#if defined(USBCON)
+  TRACE(sizeof(CDC));
+#endif
   TRACE(sizeof(Base64));
   TRACE(sizeof(RC4));
   TRACE(sizeof(Vigenere<8>));
@@ -155,13 +160,12 @@ void setup()
   TRACE(sizeof(SNMP::MIB));
   TRACE(sizeof(SNMP::MIB2_SYSTEM));
   TRACE(sizeof(Interrupt::Handler));
-  TRACE(sizeof(IOBuffer<UART::BUFFER_MAX>));
+  TRACE(sizeof(IOBuffer<64>));
   TRACE(sizeof(IOStream));
-#if defined(USBCON)
-  TRACE(sizeof(CDC));
-#endif
+#if !defined(__ARDUINO_TINY__)
   TRACE(sizeof(RS485));
   TRACE(sizeof(UART));
+#endif
   TRACE(sizeof(WIO));
   TRACE(sizeof(IR::Receiver));
   TRACE(sizeof(Keypad));
@@ -201,17 +205,19 @@ void setup()
   TRACE(sizeof(Rotary::Dial<int>));
   TRACE(sizeof(Rotary::AcceleratedDial<int, 900>));
   TRACE(sizeof(RTC));
-  TRACE(sizeof(RTC::Timer));
   TRACE(sizeof(Servo));
   TRACE(sizeof(Socket));
+#if !defined(__ARDUINO_TINY__)
   TRACE(sizeof(W5100));
   TRACE(sizeof(W5100::Driver));
+#endif
   TRACE(sizeof(SPI::Driver));
   TRACE(sizeof(SPI::Slave));
   TRACE(sizeof(SD));
   TRACE(sizeof(Thread));
   TRACE(sizeof(clock_t));
   TRACE(sizeof(time_t));
+  TRACE(sizeof(Timer));
   TRACE(sizeof(Touch));
   TRACE(sizeof(Trace));
   TRACE(sizeof(TWI::Driver));

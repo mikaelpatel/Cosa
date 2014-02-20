@@ -5,7 +5,7 @@ Measurement of the size of Cosa class instances. Any class static
 member variables are not included. 
 
 	CosaBenchmarkSizeOf: started
-	free_memory() = 1755
+	free_memory() = 1792
 	sizeof(Programmer) = 2
 	sizeof(STK500) = 8
 	sizeof(BitSet<64>) = 8
@@ -39,7 +39,7 @@ member variables are not included.
 	sizeof(SNMP::MIB) = 2
 	sizeof(SNMP::MIB2_SYSTEM) = 10
 	sizeof(Interrupt::Handler) = 2
-	sizeof(IOBuffer<UART::BUFFER_MAX>) = 69
+	sizeof(IOBuffer<64>) = 69
 	sizeof(IOStream) = 3
 	sizeof(RS485) = 157
 	sizeof(UART) = 9
@@ -82,7 +82,6 @@ member variables are not included.
 	sizeof(Rotary::Dial<int>) = 30
 	sizeof(Rotary::AcceleratedDial<int, 900>) = 36
 	sizeof(RTC) = 1
-	sizeof(RTC::Timer) = 10
 	sizeof(Servo) = 11
 	sizeof(Socket) = 16
 	sizeof(W5100) = 143
@@ -93,6 +92,7 @@ member variables are not included.
 	sizeof(Thread) = 9
 	sizeof(clock_t) = 4
 	sizeof(time_t) = 7
+	sizeof(Timer) = 10
 	sizeof(Touch) = 19
 	sizeof(Trace) = 3
 	sizeof(TWI::Driver) = 3
@@ -113,7 +113,6 @@ member variables are not included.
 	sizeof(NRF24L01P) = 42
 	sizeof(RFM69) = 32
 	sizeof(VWI) = 162
-
    
 Circuit
 -------
