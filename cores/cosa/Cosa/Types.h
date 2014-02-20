@@ -261,6 +261,19 @@ struct iovec_t {
 };
 
 /**
+ * Return total size of null terminated io buffer vector.
+ * @return size.
+ */
+inline size_t
+iovec_size(const iovec_t* vec)
+{
+  size_t len = 0;
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
+    len += vp->size;
+  return (len);
+}
+
+/**
  * Set next io-vector buffer.
  * @param[in,out] vp io vector pointer
  * @param[in] buf buffer.
