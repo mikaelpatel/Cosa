@@ -26,14 +26,14 @@
 #ifndef __COSA_RTCMeasure_HH__
 #define __COSA_RTCMeasure_HH__
 
-#include "Cosa/RTC.hh"
+// #include "Cosa/RTC.hh"
+#include "Cosa/Timer.hh"
 
 /**
  * This class is used to gather performance timings of the RTC::Timer class.
  *   See also RTC.CPP and CosaBenchmarkRTCTimer.ino
  */
-class RTCMeasure : public RTC::Timer
-{
+class RTCMeasure : public Timer {
   volatile bool m_dispatched;
 public:
   RTCMeasure() : Timer(), m_dispatched(false) {};

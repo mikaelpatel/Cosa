@@ -50,7 +50,7 @@ RTCMeasure::start()
   setup_cycles           = 0;
   dispatch_cycles        = 0;
   
-  RTC::Timer::start();
+  Timer::start();
 
   if ((enter_on_interrupt_cycle != 0) ||
       ((enter_setup_cycle == 0) && (exit_setup_cycle == 0)))

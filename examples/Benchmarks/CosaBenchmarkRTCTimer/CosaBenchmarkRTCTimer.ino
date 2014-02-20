@@ -29,14 +29,16 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#define RTC_TIMER_MEASURE
-#include "Cosa/RTC.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
+#define RTC_TIMER_MEASURE
+#include "Cosa/RTC.hh"
+#include "Cosa/Timer.hh"
 #include "RTCMeasure.h"
 
-class Simple : public RTC::Timer {
+class Simple : public Timer {
 public:
   volatile static bool flag;
   virtual void on_expired() { flag = !flag; }
@@ -54,10 +56,10 @@ public:
 };
 volatile uint32_t OneShot::time_stamp;
 
-class TimerGroup : public RTC::Timer {
+class TimerGroup : public Timer {
 public:
   volatile static uint8_t started;
-  virtual void start() { started++; RTC::Timer::start(); }
+  virtual void start() { started++; Timer::start(); }
   virtual void on_expired() { started--; }
 };
 volatile uint8_t TimerGroup::started = 0;
@@ -76,7 +78,7 @@ void setup()
 
   // Check amount of free memory
   TRACE(free_memory());
-  TRACE(sizeof(RTC::Timer));
+  TRACE(sizeof(Timer));
   TRACE(sizeof(Simple));
   TRACE(sizeof(OneShot));
   
@@ -85,6 +87,7 @@ void setup()
   TRACE(I_CPU);
 
   RTC::begin();
+  Timer::begin();
 
   // Check timer parameters
   uint32_t us_per_tick = RTC::us_per_tick();
