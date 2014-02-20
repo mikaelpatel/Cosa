@@ -27,29 +27,21 @@
 #include "Cosa/Power.hh"
 #include <ctype.h>
 
-IOStream::Filter::Filter(Device* dev) : 
-  m_dev(dev != NULL ? dev : &Device::null) 
-{}
-
-IOStream::Filter::Filter() : 
-  m_dev(&Device::null) 
-{}
-
 IOStream::IOStream(Device* dev) : 
-  m_dev(dev != NULL ? dev : &Device::null), 
+  m_dev(dev),
   m_base(dec) 
 {}
 
 IOStream::IOStream() : 
-  m_dev(&Device::null), 
+  m_dev(NULL),
   m_base(dec) 
 {}
 
 IOStream::Device* 
 IOStream::set_device(Device* dev) 
 { 
+  if (dev == NULL) return (m_dev);
   Device* previous = m_dev;
-  if (dev == NULL) dev = &Device::null;
   m_dev = dev;
   return (previous);
 }
@@ -238,7 +230,7 @@ IOStream::scan(char *s, size_t count)
   return (res);
 }
 
-IOStream::Device IOStream::Device::null;
+// IOStream::Device IOStream::Device::null;
 
 int 
 IOStream::Device::available()
