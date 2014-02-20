@@ -56,7 +56,10 @@
 #include "Cosa/Interrupt.hh"
 #include "Cosa/INET/DHCP.hh"
 #include "Cosa/INET/DNS.hh"
+#include "Cosa/INET/HTTP.hh"
+#include "Cosa/INET/MQTT.hh"
 #include "Cosa/INET/NTP.hh"
+#include "Cosa/INET/SNMP.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/CDC.hh"
@@ -144,7 +147,13 @@ void setup()
   TRACE(sizeof(FSM));
   TRACE(sizeof(DHCP));
   TRACE(sizeof(DNS));
+  TRACE(sizeof(HTTP::Client));
+  TRACE(sizeof(HTTP::Server));
+  TRACE(sizeof(MQTT::Client));
   TRACE(sizeof(NTP));
+  TRACE(sizeof(SNMP));
+  TRACE(sizeof(SNMP::MIB));
+  TRACE(sizeof(SNMP::MIB2_SYSTEM));
   TRACE(sizeof(Interrupt::Handler));
   TRACE(sizeof(IOBuffer<UART::BUFFER_MAX>));
   TRACE(sizeof(IOStream));
