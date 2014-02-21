@@ -176,12 +176,12 @@ machines.
 Periodic function handler. Syntactic sugar for watchdog timeout
 event handlers (class Periodic). 
 
-@section Thread
+@section ProtoThread
 Cosa implementation of protothreads; A protothread is a
 low-overhead mechanism for concurrent programming. Protothreads
 function as stackless, lightweight threads providing a blocking
-context using minimal memory per protothread. Cosa/Thread supports
-event to thread mapping and timers (class Thread). 
+context using minimal memory per protothread. Cosa/ProtoThread
+supports event to thread mapping and timers (class ProtoThread).
 
 @section Time
 Common date/time structure for real-time clocks.
@@ -235,7 +235,7 @@ board implementation class is selected by the build.
 Cosa Standard board pin symbol definitions for the ATmega328P based
 boards such as Arduino Uno, Mini Pro, Nano, and LilyPad.
 
-@section Standard USB
+@section StandardUSB
 Cosa Standard USB board pin symbol definitions for the ATmega32u4 such
 as Arduino Micro, Leonardo, and LilyPad USB.
 
@@ -280,6 +280,9 @@ sequences of these.
 
 @section Fai
 The Cosa Ciao data stream of Arduino status and commands (Cosa Fai).
+
+@section ProtocolBuffer
+The Cosa implementation of Google ProtocolBuffer data streaming.
 */
 
 /** @page page5 Wired
@@ -321,7 +324,30 @@ The Serial Peripheral Interface (SPI) device driver support class.
 The I2C/TWI device driver support class (Two Wire Interface, TWI).
 */
 
-/** @page page6 Wireless
+/** @page page6 INET
+High-level Internet (IP) protocol implemented with the Socket interface.
+
+@section DHCP
+Dynamic Host Configuration Protocol (DHCP). Request network address for device.
+
+@section DNS
+Domain Name Service access class (DNS). Request network address for other
+device using symbolic (readable) name.
+
+@section HTTP
+HTTP support classes HTTP::Server and HTTP::Client.
+
+@section MQTT
+MQTT V3.1 client support class MQTT::Client.
+
+@section NTP
+Network Time Protocol (NTP) to access clock on internet server.
+
+@section SNMP
+Small Network Management Protocol agent support class (SNMP).
+*/
+
+/** @page page7 Wireless
 Cosa provides an object-oriented version of VirtualWire (VWI) which
 acts as a device driver for RF433/335 modules. Cosa also support the
 NRF24L01+ and TI CC1101 devices.
@@ -351,7 +377,7 @@ configured to use different codecs; VirtualWireCodec, ManchesterCodec,
 Block4B5BCodec, and BitstuffingCodec (InputPin/Timer).
 */
 
-/** @page page7 Sensors
+/** @page page8 Sensors
 @section Button
 Debounded Button; Sampled input pin (with internal pullup
 resistor). Uses a watchdog timeout event (64 ms) for sampling and
@@ -408,12 +434,12 @@ Driver for MPU6050 Motion Processing Unit; Digital thermometer,
 accelerometer and gyroscope (TWI).
 */
 
-/** @page page8 Actuator
+/** @page page9 Actuator
 @section Servo
 Simple Servo motor driver (Timer/OutputPin).
 */
 
-/** @page page9 Displays
+/** @page page10 Displays
 Cosa display abstraction and device drivers. 
 
 @section Canvas
