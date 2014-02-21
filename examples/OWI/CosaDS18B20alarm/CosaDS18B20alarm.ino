@@ -98,17 +98,17 @@ void setup()
   ledPin.toggle();
 
   indoors.connect(0);
-  indoors.set_trigger(28, 18);
+  indoors.set_trigger(18, 28);
   indoors.write_scratchpad();
   trace << (OWI::Driver&) indoors << endl;
 
   outdoors.connect(1);
-  outdoors.set_trigger(35, -10);
+  outdoors.set_trigger(10, -35);
   outdoors.write_scratchpad();
   trace << (OWI::Driver&) outdoors << endl;
 
   basement.connect(2);
-  basement.set_trigger(20, 0);
+  basement.set_trigger(0, 20);
   basement.write_scratchpad();
   trace << (OWI::Driver&) basement << endl;
 

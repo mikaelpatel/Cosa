@@ -540,7 +540,7 @@ public:
   uint16_t m_local;
 
   /** Interrupt pin handler */
-  IRQPin m_irq;
+  // IRQPin m_irq;
 
   /** Hardware address (in program memory) */
   const uint8_t* m_mac;

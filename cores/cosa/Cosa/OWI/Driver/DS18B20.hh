@@ -160,15 +160,15 @@ public:
   void set_resolution(uint8_t bits);
 
   /**
-   * Set alarm trigger values; high and low threshold values.
+   * Set alarm trigger values; low and high threshold values.
    * Use write_scratchpad() and copy_scratchpad() to update device.
-   * @param[in] high threshold. 
    * @param[in] low threshold.
+   * @param[in] high threshold. 
    */
-  void set_trigger(int8_t high, int8_t low)
+  void set_trigger(int8_t low, int8_t high)
   {
-    m_scratchpad.high_trigger = high;
     m_scratchpad.low_trigger = low;
+    m_scratchpad.high_trigger = high;
   }
 
   /**
@@ -196,15 +196,15 @@ public:
   }
 
   /**
-   * Get alarm trigger values; high and low threshold values.
+   * Get alarm trigger values; low and high threshold values.
    * Use connect(), or read_scratchpad() to read values from device.
-   * @param[out] high threshold. 
    * @param[out] low threshold.
+   * @param[out] high threshold. 
    */
-  void get_trigger(int8_t& high, int8_t& low)
+  void get_trigger(int8_t& low, int8_t& high)
   {
-    high = m_scratchpad.high_trigger;
     low = m_scratchpad.low_trigger;
+    high = m_scratchpad.high_trigger;
   }
 
   /**

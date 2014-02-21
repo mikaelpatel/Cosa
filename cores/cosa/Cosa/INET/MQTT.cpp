@@ -51,7 +51,7 @@ MQTT::Client::write(uint8_t cmd, uint16_t length, uint16_t id)
 }
 
 int 
-MQTT::Client::write(void* buf, size_t count)
+MQTT::Client::write(const void* buf, size_t count)
 {
   return (m_sock->write(buf, count));
 }
@@ -199,7 +199,7 @@ MQTT::Client::disconnect()
 }
 
 int 
-MQTT::Client::publish(const char* topic, void* buf, size_t count,
+MQTT::Client::publish(const char* topic, const void* buf, size_t count,
 		      QoS_t qos, bool retain,
 		      bool progmem)
 

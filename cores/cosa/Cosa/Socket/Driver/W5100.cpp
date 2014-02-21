@@ -42,11 +42,12 @@ W5100::IRQPin::on_interrupt(uint16_t arg)
 }
 
 W5100::W5100(const uint8_t* mac, Board::DigitalPin csn, Board::ExternalInterruptPin irq) :
-  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+  // SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, NULL),
   m_local(Socket::DYNAMIC_PORT),
   m_mac(mac),
-  m_creg((CommonRegister*) COMMON_REGISTER_BASE),
-  m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this)
+  m_creg((CommonRegister*) COMMON_REGISTER_BASE)
+  // m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this)
 {
   memset(m_dns, 0, sizeof(m_dns));
 }

@@ -42,7 +42,8 @@ OutputPin ledPin(Board::LED);
 #if defined(__ARDUINO_TINY__)
 OWI owi(Board::D1);
 #else
-OWI owi(Board::D7);
+// OWI owi(Board::D7);
+OWI owi(Board::D14);
 #endif
 
 // Support macro to create name strings in program memory
@@ -79,7 +80,7 @@ void setup()
     DS18B20* t = temp[i];
     if (!t->connect(i)) break;
     t->set_resolution(10);
-    t->set_trigger(30, 20);
+    t->set_trigger(20, 30);
     t->write_scratchpad();
   }
   ledPin.toggle();
@@ -88,7 +89,7 @@ void setup()
     uint8_t resolution;
     DS18B20* t = temp[i];
     t->read_scratchpad();
-    t->get_trigger(high, low);
+    t->get_trigger(low, high);
     resolution = t->get_resolution();
     trace << (OWI::Driver&) *t << endl;
     trace << *t << endl;

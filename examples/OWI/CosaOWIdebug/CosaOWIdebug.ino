@@ -39,7 +39,8 @@ OutputPin ledPin(Board::LED);
 #if defined(__ARDUINO_TINY__)
 OWI owi(Board::D1);
 #else
-OWI owi(Board::D7);
+// OWI owi(Board::D7);
+OWI owi(Board::D14);
 #endif
 
 void setup()
