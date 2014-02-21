@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Thread.hh
+ * @file Cosa/ProtoThread.hh
  * @version 1.0
  *
  * @section License
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_THREAD_HH__
-#define __COSA_THREAD_HH__
+#ifndef __COSA_PROTO_THREAD_HH__
+#define __COSA_PROTO_THREAD_HH__
 
 #include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"
@@ -39,7 +39,7 @@
  * 2 bytes for virtual table pointer). 
  *
  * @section Limitations
- * The thread macro set should only be used within the Thread::run()
+ * The thread macro set should only be used within the ProtoThread::run()
  * function. 
  *
  * @section Acknowledgements
@@ -55,7 +55,7 @@
  * library for GCC, http://code.google.com/p/protothread/<br>
  * [3] http://en.wikipedia.org/wiki/Protothreads<br>
  */
-class Thread : public Link {
+class ProtoThread : public Link {
 protected:
   static Head runq;
   uint8_t m_state;
@@ -88,7 +88,7 @@ public:
    * Construct thread, initiate state and continuation. Does not 
    * schedule the thread. This is done with begin().
    */
-  Thread() : 
+  ProtoThread() : 
     Link(),
     m_state(INITIATED),
     m_ip(0)
@@ -150,20 +150,20 @@ public:
   }
 
   /**
-   * @override Thread
+   * @override ProtoThread
    * Thread activity. Must be overridden. Use the thread macro set in
    * the following format:
    * {
-   *   THREAD_BEGIN();
+   *   PROTO_THREAD_BEGIN();
    *   while (1) {
    *     ...
-   *     THREAD_AWAIT(condition);
+   *     PROTO_THREAD_AWAIT(condition);
    *     ...
    *   }
-   *   THREAD_END();
+   *   PROTO_THREAD_END();
    * }
-   * Additional macros are THREAD_YIELD(), THREAD_SLEEP(), THREAD_WAKE(),
-   * and THREAD_DELAY().
+   * Additional macros are PROTO_THREAD_YIELD(), PROTO_THREAD_SLEEP(), 
+   * PROTO_THREAD_WAKE(), and PROTO_THREAD_DELAY().
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
@@ -184,21 +184,21 @@ public:
    * may be restarted. 
    * @param[in] thread to enqueue.
    */
-  static void schedule(Thread* thread);
+  static void schedule(ProtoThread* thread);
 };
 
 /**
  * First statement in the thread body, run(). Last statement should be
- * THREAD_END();
+ * PROTO_THREAD_END();
  */
-#define THREAD_BEGIN()					\
+#define PROTO_THREAD_BEGIN()				\
   if (m_ip != 0) goto *m_ip
 
 /**
  * Yield execution to other threads ane event handlers. Remains in the
  * run queue. 
  */
-#define THREAD_YIELD() \
+#define PROTO_THREAD_YIELD() 				\
   do {							\
     __label__ next;					\
     m_ip = &&next;					\
@@ -208,20 +208,20 @@ public:
 
 /**
  * Yield execution and detach from the run queue. Must be activated
- * with THREAD_WAkE().
+ * with PROTO_THREAD_WAkE().
  */
-#define THREAD_SLEEP()					\
+#define PROTO_THREAD_SLEEP()				\
   do {							\
     m_state = SLEEPING;					\
     detach();						\
-    THREAD_YIELD();					\
+    PROTO_THREAD_YIELD();				\
   } while (0)
 
 /**
  * Schedule the given thread if SLEEPING.
  * @param[in] thread to wake.
  */
-#define THREAD_WAKE(thread)				\
+#define PROTO_THREAD_WAKE(thread)			\
   do {							\
     if (thread->m_state == SLEEPING)			\
       Thread::schedule(thread);				\
@@ -233,7 +233,7 @@ public:
  * again. 
  * @param[in] condition to evaluate.
  */
-#define THREAD_AWAIT(condition)				\
+#define PROTO_THREAD_AWAIT(condition)			\
   do {							\
     __label__ next;					\
   next:							\
@@ -248,19 +248,19 @@ public:
  * for set_timer() and THREAD_AWAIT(timer_expired());
  * @param[in] ms milli-seconds to delay.
  */
-#define THREAD_DELAY(ms)				\
+#define PROTO_THREAD_DELAY(ms)				\
   do {							\
     set_timer(ms);					\
-    THREAD_AWAIT(timer_expired());			\
+    PROTO_THREAD_AWAIT(timer_expired());		\
   } while (0)
 
 /**
  * Marks the running thread as TERMINATED and detach from any queue. 
  * Should be the last statement in the thread run() function.
  */
-#define THREAD_END()					\
+#define PROTO_THREAD_END()				\
   do {							\
-    Thread::end();					\
+    ProtoThread::end();					\
     return;						\
   } while (0)
 

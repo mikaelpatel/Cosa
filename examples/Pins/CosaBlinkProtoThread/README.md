@@ -1,5 +1,5 @@
-CosaBlinkThread
-=================
+CosaBlinkProtoThread
+====================
 
 The classic LED blink example using a proto-thread function and timer
 events. 

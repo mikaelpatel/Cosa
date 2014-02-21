@@ -94,7 +94,7 @@
 #include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/SPI.hh"
 #include "Cosa/SPI/Driver/SD.hh"
-#include "Cosa/Thread.hh"
+#include "Cosa/ProtoThread.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/Timer.hh"
 #include "Cosa/Touch.hh"
@@ -214,7 +214,7 @@ void setup()
   TRACE(sizeof(SPI::Driver));
   TRACE(sizeof(SPI::Slave));
   TRACE(sizeof(SD));
-  TRACE(sizeof(Thread));
+  TRACE(sizeof(ProtoThread));
   TRACE(sizeof(clock_t));
   TRACE(sizeof(time_t));
   TRACE(sizeof(Timer));

@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Thread.cpp
+ * @file Cosa/ProtoThread.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,13 +23,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Thread.hh"
+#include "Cosa/ProtoThread.hh"
 #include "Cosa/Watchdog.hh"
 
-Head Thread::runq;
+Head ProtoThread::runq;
 
 void 
-Thread::on_event(uint8_t type, uint16_t value)
+ProtoThread::on_event(uint8_t type, uint16_t value)
 {
   if (m_state == WAITING) detach();
   m_state = (type == Event::TIMEOUT_TYPE) ? TIMEOUT : RUNNING; 
@@ -43,14 +43,14 @@ Thread::on_event(uint8_t type, uint16_t value)
 }
 
 void 
-Thread::set_timer(uint16_t ms)
+ProtoThread::set_timer(uint16_t ms)
 {
   m_state = WAITING;
   Watchdog::attach(this, ms);
 }
 
 uint16_t
-Thread::dispatch(bool flag)
+ProtoThread::dispatch(bool flag)
 {
   uint16_t count = 0;
   // Check if events should be processed and the run queue is empty
@@ -64,7 +64,7 @@ Thread::dispatch(bool flag)
   Linkage* link = runq.get_succ(); 
   while (link != &runq) {
     Linkage* succ = link->get_succ();
-    Thread* thread = (Thread*) link;
+    ProtoThread* thread = (ProtoThread*) link;
     thread->m_state = RUNNING; 
     thread->run();
     if (thread->m_state == RUNNING) {
@@ -87,7 +87,7 @@ Thread::dispatch(bool flag)
 }
 
 void 
-Thread::schedule(Thread* thread)
+ProtoThread::schedule(ProtoThread* thread)
 {
   if (thread->m_state == TERMINATED) thread->m_ip = 0;
   thread->m_state = READY;

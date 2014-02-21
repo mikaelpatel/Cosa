@@ -1,9 +1,9 @@
 /**
- * @file CosaBlinkThread.ino
+ * @file CosaBlinkProtoThread.ino
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,35 +21,35 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa LED blink with thread function.
+ * Cosa LED blink with proto-thread function.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Thread.hh"
+#include "Cosa/ProtoThread.hh"
 #include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 
-class LED : public Thread {
+class LED : public ProtoThread {
 private:
   OutputPin m_pin;
   uint16_t m_delay;
 
 public:
   LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) : 
-    Thread(), 
+    ProtoThread(), 
     m_pin(pin, initial),
     m_delay(ms)
   {}
 
   virtual void run(uint8_t type, uint16_t value) 
   { 
-    THREAD_BEGIN();
+    PROTO_THREAD_BEGIN();
     while (1) {
       m_pin.toggle(); 
-      THREAD_DELAY(m_delay);
+      PROTO_THREAD_DELAY(m_delay);
     }
-    THREAD_END();
+    PROTO_THREAD_END();
   }
 };
 
@@ -63,5 +63,5 @@ void setup()
 
 void loop()
 {
-  Thread::dispatch();
+  ProtoThread::dispatch();
 }

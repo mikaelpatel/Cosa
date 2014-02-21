@@ -89,7 +89,7 @@ member variables are not included.
 	sizeof(SPI::Driver) = 11
 	sizeof(SPI::Slave) = 41
 	sizeof(SD) = 13
-	sizeof(Thread) = 9
+	sizeof(ProtoThread) = 9
 	sizeof(clock_t) = 4
 	sizeof(time_t) = 7
 	sizeof(Timer) = 10
