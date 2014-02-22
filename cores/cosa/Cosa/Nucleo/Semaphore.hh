@@ -50,14 +50,15 @@ public:
   Semaphore(uint8_t count = 1) : m_queue(), m_count(count) {}
 
   /**
-   * Wait for required count. Thread is queued until signal.
+   * Wait for required count. Threads are queued until count is
+   * available. 
    * @param[in] count requested count (Default mutex, 1).
    */
   void wait(uint8_t count = 1);
 
   /**
    * Signal release of given count. Waiting thread is resumed
-   * after running has completed.
+   * after running thread has completed/yield.
    * @param[in] count released (Default mutex, 1).
    */
   void signal(uint8_t count = 1);
