@@ -36,12 +36,17 @@ namespace Nucleo {
  * The Cosa Nucleo Thread; run-to-completion thread implementation.
  */
 class Thread : protected Link {
+  friend class Semaphore;
 private:
   /** Size of main thread stack */
   static const size_t MAIN_STACK_MAX = 32;
 
   /** Main thread and thread queue head */
   static Thread s_main;
+
+  /** Running thread */
+  static Thread* s_running;
+
   /** Top of stack allocation */
   static size_t s_top;
 

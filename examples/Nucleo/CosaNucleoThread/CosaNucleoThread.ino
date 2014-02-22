@@ -1,5 +1,5 @@
 /**
- * @file CosaThread.ino
+ * @file CosaNucleoThread.ino
  * @version 1.0
  *
  * @section License
@@ -26,25 +26,33 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Nucleo/Thread.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Nucleo/Thread.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
 class Echo : public Nucleo::Thread {
 private:
   const char* m_name;
+  uint16_t m_ms;
 public:
-  Echo() : Thread(), m_name(NULL) {};
-  void begin(const char* name, size_t size);
+  // Construct echo thread 
+  Echo(uint16_t ms) : Thread(), m_name(NULL), m_ms(ms) {};
+
+  // Allocate stack and initiate name string
+  void begin_P(const char* name, size_t size);
+
+  // Echo thread function
   virtual void run();
-  void fn0(uint8_t& nr) { yield(); nr += 1; }
-  void fn1(uint8_t& nr) { fn0(nr); }
-  void fn2(uint8_t& nr) { fn1(nr); }
+
+  // A function tree to show that the stack is maintained
+  void fn0(uint8_t& nr) { fn1(nr); }
+  void fn1(uint8_t& nr) { fn2(nr); }
+  void fn2(uint8_t& nr) { yield(); nr += 1; }
 };
 
 void
-Echo::begin(const char* name, size_t size)
+Echo::begin_P(const char* name, size_t size)
 { 
   m_name = name; 
   Thread::begin(this, size);
@@ -55,30 +63,38 @@ Echo::run()
 {
   uint8_t nr = 0;
   while (1) {
-    trace << nr << ':' << m_name << endl;
-    delay(1000);
-    fn2(nr);
+    trace << PSTR("Echo:") << m_name << ':' << nr << endl;
+    delay(m_ms);
+    fn0(nr);
   }
 }
 
-Echo foo;
-Echo fie;
+// Two echo threads
+Echo foo(1500);
+Echo fie(1000);
 
 void setup()
 {
+  // Setup trace output stream and start watchdog timer
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaThread: started"));
+  trace.begin(&uart, PSTR("CosaNucleoThread: started"));
   Watchdog::begin();
 
+  // Some information about memory foot print
+  TRACE(sizeof(jmp_buf));
   TRACE(sizeof(Nucleo::Thread));
   TRACE(sizeof(Echo));
 
-  foo.begin(PSTR("foo"), 128);
-  fie.begin(PSTR("fie"), 128);
+  // Initiate the two threads (stack size 128)
+  foo.begin_P(PSTR("foo"), 128);
+  fie.begin_P(PSTR("fie"), 128);
 }
 
 void loop()
 {
+  // Run the threads; start the main thread
   Nucleo::Thread::begin();
+
+  // Sanity check; should never come here
   ASSERT(true == false);
 }

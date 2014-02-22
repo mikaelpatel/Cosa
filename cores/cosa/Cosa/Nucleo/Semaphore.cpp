@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Nucleo/Thread.cpp
+ * @file Cosa/Nucleo/Semaphore.cpp
  * @version 1.0
  *
  * @section License
@@ -23,50 +23,34 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Nucleo/Semaphore.hh"
 #include "Cosa/Nucleo/Thread.hh"
-#include "Cosa/Watchdog.hh"
 
 namespace Nucleo {
 
-Thread Thread::s_main;
-Thread* Thread::s_running = &s_main;
-size_t Thread::s_top = MAIN_STACK_MAX;
-
 void
-Thread::init()
+Semaphore::wait(uint8_t count) 
 {
-  s_main.attach(this);
-  if (setjmp(m_context)) while (1) run();
-}
-
-void 
-Thread::begin(Thread* t, size_t size)
-{
-  if (t == NULL) s_main.run();
-  s_top += size;
-  uint8_t buf[s_top];
-  t->init();
-}
-
-void 
-Thread::run() 
-{ 
-  while (1) yield(); 
+  uint8_t key = lock();
+  while (count > m_count) {
+    Thread* t = (Thread*) Thread::s_running->get_succ();
+    m_queue.attach(Thread::s_running);
+    unlock(key);
+    Thread::s_running->resume(t);
+    key = lock();
+  }
+  m_count -= count;
+  unlock(key);
 }
 
 void
-Thread::resume(Thread* t)
+Semaphore::signal(uint8_t count) 
 {
-  if (setjmp(m_context)) return;
-  s_running = t;
-  longjmp(t->m_context, 1);
-}
-
-void 
-Thread::delay(uint32_t ms)
-{
-  uint32_t start = Watchdog::millis();
-  while (Watchdog::since(start) < ms) yield();
+  synchronized {
+    m_count += count;
+    if (m_queue.is_empty()) return;
+    Thread::s_running->get_succ()->attach(m_queue.get_succ());
+  }
 }
 
 };
