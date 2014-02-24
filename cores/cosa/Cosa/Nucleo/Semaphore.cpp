@@ -48,9 +48,11 @@ Semaphore::signal(uint8_t count)
 {
   synchronized {
     m_count += count;
-    if (m_queue.is_empty()) return;
-    Thread::s_running->get_succ()->attach(m_queue.get_succ());
   }
+  if (m_queue.is_empty()) return;
+  Thread* t = (Thread*) m_queue.get_succ();
+  Thread::s_running->get_succ()->attach(t);
+  Thread::s_running->yield();
 }
 
 };

@@ -25,16 +25,20 @@
 
 #include "Cosa/Nucleo/Thread.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Power.hh"
 
 namespace Nucleo {
 
 Thread Thread::s_main;
 Thread* Thread::s_running = &s_main;
 size_t Thread::s_top = MAIN_STACK_MAX;
+bool Thread::s_go_idle;
+uint8_t Thread::s_mode = SLEEP_MODE_IDLE;
 
 void
 Thread::init()
 {
+  m_state = 1;
   s_main.attach(this);
   if (setjmp(m_context)) while (1) run();
 }
@@ -51,7 +55,12 @@ Thread::begin(Thread* t, size_t size)
 void 
 Thread::run() 
 { 
-  while (1) yield(); 
+  // Main thread
+  while (1) { 
+    s_go_idle = true;
+    yield(); 
+    if (s_go_idle) Power::sleep(s_mode);
+  }
 }
 
 void
@@ -59,14 +68,17 @@ Thread::resume(Thread* t)
 {
   if (setjmp(m_context)) return;
   s_running = t;
+  if (t->m_state) s_go_idle = false;
   longjmp(t->m_context, 1);
 }
 
 void 
 Thread::delay(uint32_t ms)
 {
+  m_state = 0;
   uint32_t start = Watchdog::millis();
   while (Watchdog::since(start) < ms) yield();
+  m_state = 1;
 }
 
 };

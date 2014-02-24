@@ -33,7 +33,7 @@
 namespace Nucleo {
 
 /**
- * The Cosa Nucleo Thread; run-to-completion thread implementation.
+ * The Cosa Nucleo Thread; run-to-completion multi-tasking. 
  */
 class Thread : protected Link {
   friend class Semaphore;
@@ -50,8 +50,17 @@ private:
   /** Top of stack allocation */
   static size_t s_top;
 
+  /** Power down flag */
+  static bool s_go_idle;
+
+  /** Sleep mode */
+  static uint8_t s_mode;
+
   /** Thread context */
   jmp_buf m_context;
+
+  /** Thread state: 0=waiting, 1=runnable */
+  uint8_t m_state;
 
   /**
    * Initiate thread with initial call to member function run(). 
@@ -70,8 +79,11 @@ public:
 
   /**
    * @override Nucleo::Thread
-   * Thread function. Should be overridden. Default implementation
-   * will yield.
+   * The thread main function. The function is called when the thread
+   * is scheduled and becomes running. Normally the function is an end-less
+   * loop. Returning from the function will result in that the function is
+   * called again. The default implementation is the main thread. It is
+   * responsible for power down when there are no other active threads.
    */
   virtual void run();
 
@@ -90,7 +102,9 @@ public:
   }
 
   /**
-   * Delay at least the given time period in milli-seconds.
+   * Delay at least the given time period in milli-seconds. The resolution
+   * is determined by the Watchdog clock and has a minimum resolution of
+   * 16 milli-seconds (per tick).
    * @param[in] ms time period.
    */
   void delay(uint32_t ms);

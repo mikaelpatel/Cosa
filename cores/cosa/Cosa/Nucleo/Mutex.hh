@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Nucleo/Semaphore.hh
+ * @file Cosa/Nucleo/Mutex.hh
  * @version 1.0
  *
  * @section License
@@ -23,45 +23,39 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_NUCLEO_SEMAPHORE_HH__
-#define __COSA_NUCLEO_SEMAPHORE_HH__
+#ifndef __COSA_NUCLEO_MUTEX_HH__
+#define __COSA_NUCLEO_MUTEX_HH__
 
-#include "Cosa/Types.h"
-#include "Cosa/Linkage.hh"
+#include "Cosa/Nucleo/Semaphore.hh"
 
 namespace Nucleo {
 
 /**
- * The Cosa Nucleo Semaphore; counting synchronization primitive.
+ * The Cosa Nucleo Mutex; mutual exclusion block. Used as a local variable 
+ * in a function block to wait and signal a semaphore.
  */
-class Semaphore {
+class Mutex {
 private:
-  /** Queue for waiting threads */
-  Head m_queue;
-
-  /** Current count */
-  volatile uint8_t m_count;
-
+  Semaphore* m_sem;
 public:
   /**
-   * Construct and initiate semaphore with given counter.
-   * @param[in] count initial semaphore value (Default mutex, 1).
+   * Start mutual exclusion block using given semaphore. The semaphore should
+   * be initiated with one (which is also the default value).
+   * @param[in] sem semaphore to wait.
    */
-  Semaphore(uint8_t count = 1) : m_queue(), m_count(count) {}
+  Mutex(Semaphore* sem) :
+    m_sem(sem)
+  {
+    m_sem->wait();
+  }
 
   /**
-   * Wait for required count. Threads are queued until count is
-   * available. 
-   * @param[in] count requested count (Default mutex, 1).
+   * End of mutual exclusion block. Will signal semaphore.
    */
-  void wait(uint8_t count = 1);
-
-  /**
-   * Signal release of given count. Waiting thread is resumed
-   * after running thread has completed/yield.
-   * @param[in] count released (Default mutex, 1).
-   */
-  void signal(uint8_t count = 1);
+  ~Mutex()
+  {
+    m_sem->signal();
+  }
 };
 
 };
