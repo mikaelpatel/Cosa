@@ -130,10 +130,12 @@ CDC_Setup(Setup& setup)
 bool 
 CDC::begin(uint32_t baudrate, uint8_t format)
 {
-  while (_usbLineInfo.lineState == 0);
   if (!Watchdog::is_initiated()) Watchdog::begin();
-  Watchdog::delay(500);
-  return (true);
+  for (uint8_t retry = 0; retry < 30; retry++) {
+    if (_usbLineInfo.lineState > 0) return (true);
+    Watchdog::delay(100);
+  }
+  return (false);
 }
 
 void 
@@ -156,7 +158,8 @@ CDC::flush(void)
 int 
 CDC::putchar(char c)
 {
-  if ((_usbLineInfo.lineState > 0) && (USB_Send(CDC_TX, &c, 1) == 1))
+  if ((_usbLineInfo.lineState > 0) 
+      && (USB_Send(CDC_TX, &c, sizeof(c)) == sizeof(c)))
     return (c);
   return (IOStream::EOF);
 }

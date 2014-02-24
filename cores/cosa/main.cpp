@@ -65,13 +65,13 @@ void init()
   UCSR0B = 0;
 #endif
 
+  // Allow interrupts from here on
+  sei();
+
   // Attach the USB module and possible CDC/HID
 #if defined(USBCON)
   USBDevice.attach();
 #endif
-
-  // Allow interrupts from here on
-  sei();
 }
 
 /**
