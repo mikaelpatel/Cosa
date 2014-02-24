@@ -192,7 +192,8 @@ LilyPad, LilyPad USB, Mighty, Mega, etc) are supported.
 News
 ----
 
-2014-02 Allow build with GCC 4.8.1. Support for MQTT Client, HTTP
+2014-02 Adding support for coroutines (threads), semaphores and
+mutex. Allow build with GCC 4.8.1. Support for MQTT Client, HTTP
 Server and Client implementation. Additional SNMP agent
 implementation. RTC::Timer for micro-second level time
 events. Improved Time handling with integration with RTC and NTP to
