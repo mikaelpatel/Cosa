@@ -1,16 +1,19 @@
 Che Cosa?
 =========
 
-Cosa is an object-oriented platform for Arduino that supports an
-event-driven programming paradigm with simple finite state
-machines. It contains a rich set of classes to support rapid
-prototyping of Internet-of-Things devices. Cosa supports the following
-AVR/ATmega/ATtiny internal hardware modules; all pin modes, Digital,
-and Analog Pins, External and Pin Change Interrupts, Analog
-Comparator, PWM, Watchdog, Timer0 (RTC), Timer1 (Servo), UART, USI,
+
+Cosa is an object-oriented platform for Arduino. It replaces the Arduino
+and Wiring library with a large set of integrated classes that support 
+the full range of AVR/ATmega/ATtiny internal hardware modules; all pin
+modes, Digital, and Analog Pins, External and Pin Change Interrupts,
+Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1 (Servo), UART, USI,
 SPI, TWI and EEPROM.   
 
-Though object-oriented with optional operator overloading syntax
+Cosa is implemented as an Arduino IDE core. The Cosa platform can be
+used with almost all Arduino boards and ATtiny/ATmega processors. All
+classes may be compiled for all variants.
+
+Though object-oriented with optional operator overloading syntax,
 Cosa is between 2-10X faster than Arduino with regard to digital pin
 functions. This comes with a small price-tag; memory, 4 bytes per
 digital pin and 12 bytes per analog pin. Cosa analog pin objects
@@ -27,30 +30,34 @@ format allows user data types to be defined and values exchanged
 without additional encoding. The stream header itself is a pre-defined
 serializable data type. Ciao is used to define an Arduino monitoring
 and control language (Cosa fai) which has much in common with
-Firmata. See
-[CIAO.txt](https://github.com/mikaelpatel/Cosa/blob/master/CIAO.txt) 
-for more details and the example code (examples/Ciao). 
+Firmata. 
 
 The primary programming paradigm is object-oriented and
-state-machine/event driven with proto-threads. There is a large number
-of device drivers available for SPI, TWI/I2C and 1-Wire. A strict
-directory structure is used to organize the Cosa/driver source
-code. Sub-directories are used for each driver type. This allows a
-foundation for scaling and configuration.
+state-machine/event driven with proto-threads or multi-tasking. There
+is a large number of device drivers available for SPI, I2C (TWI) and
+1-Wire (OWI). A strict directory structure is used to organize the
+Cosa/driver source code. Sub-directories are used for each driver
+type. This allows a foundation for scaling and configuration.
 
 Cosa uses the Arduino IDE and build system. Cosa classes are included
 with prefix, e.g. "Cosa/FileName.hh". It is possible to use both
 Arduino and Cosa functions together, though in some cases the Cosa
 objects may become inconsistent. 
 
-To improve debugging and testing there is trace/syslog style support. 
-The IOStream class allows output to both serial communication
-(UART/VWIO) and small TFT displays (such as the ST7735, ST7564,
-HD44780 and PCD8544). The Cosa LCD class extends IOStream::Device with
-additional common LCD functions. The drawing Canvas class supports
-basic drawing operation and scripting to reduce program memory
-footprint. The Canvas class also supports drawing of icons and
-multiple fonts (GLCD and UTFT).  
+To improve debugging and testing there is assert/trace/syslog style
+support. The IOStream class allows output to both serial wire/wireless
+communication (UART/VWIO) and small TFT displays (such as the ST7735,
+ST7565, HD44780, and PCD8544). The Cosa LCD class extends
+IOStream::Device with additional common LCD functions. The Cosa LCD
+Menu class adds a simple framework for creating menu systems with
+program state such as integer ranges, bitsets and enumeration
+variables. All menu data structures are stored in program memory and
+the SRAM requirement is minimum. A macro set hides the details of
+creating the data structures in program memory.
+
+The drawing Canvas class supports basic drawing operation
+and scripting to reduce program memory footprint. The Canvas class
+also supports drawing of icons and multiple fonts (GLCD and UTFT). 
 
 The popular VirtualWire library has been refactored to the
 object-oriented style of Cosa (VWI) and extended with three additional
@@ -59,25 +66,23 @@ cheap wireless nodes with RF315/433 receiver and transmitter. For more
 advanced wireless connections there is also a driver for the Nordic
 Semiconductor NRF24L01+ chip, which allows low-power wireless
 communication of up to 2 Mbps in the 2.4GHz band, and the TI CC1101
-Low-Power Sub-1 GHz RF Transceiver. These are interchangable through
-an abstract Wireless interface.
+Low-Power Sub-1 GHz RF Transceiver. 
 
-The primary goal of this project is to provide an efficient programming
-platform for rapid prototyping of "Internet-of-things"-devices and
-sensor networks. Unfortunately Cosa is not a beginners entry level
-programming platform, though following some of the design patterns in
-Cosa will help beginners build more complex small scale embedded
-systems with richer concurrency and low power consumption.  
+The goal of this project is to provide an efficient programming
+platform for rapid prototyping of "Internet-of-things"-devices. There
+is an Ethernet/Socket with W5100 Ethernet controller device
+driver. This implementation allows streaming direct to the device
+buffers. Cosa also implements a number of IP protocols; DNS, DHCP,
+NTP, HTTP, SNMP and MQTT. 
 
-The projects main principle of evolution is iterative with many
-rewrites and refactoring. With that said this phase of the project
-will require users to align with the interface changes. When
-interfaces become stable the project will switch to a normal release
-style.
+Unfortunately Cosa is not a beginners entry level programming
+platform, though following some of the design patterns in Cosa will
+help beginners build more complex small scale embedded systems with
+richer concurrency and low power consumption.  
 
-Please follow the development of this project on
-[blogspot](http://cosa-arduino.blogspot.se/) and on the [Arduino
-forum](http://arduino.cc/forum/index.php/topic,150299.0.html).  
+Please follow the development of this project on the blog 
+http://cosa-arduino.blogspot.se and on the Arduino forum,
+http://arduino.cc/forum/index.php/topic,150299.0.html.
 
 Install
 -------
