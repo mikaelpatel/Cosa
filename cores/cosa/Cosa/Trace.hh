@@ -100,7 +100,7 @@ extern uint8_t trace_log_mask;
  * string is stored in program memory.
  * @param[in] msg message string to print.
  */
-#define FATAL(msg) trace.fatal_P(PSTR(msg), __LINE__, __func__)
+#define FATAL(msg) trace.fatal_P(__PSTR(msg), __LINE__, __func__)
 
 #ifndef NDEBUG
 
@@ -128,7 +128,7 @@ extern uint8_t trace_log_mask;
  */
 # define TRACE(expr)							\
   do {									\
-    trace.print_P(PSTR(#expr " = "));					\
+    trace.print_P(__PSTR(#expr " = "));					\
     trace.print(expr);							\
     trace.println();							\
   } while (0)
@@ -139,7 +139,7 @@ extern uint8_t trace_log_mask;
  * @param[in] msg log message.
  */
 # define TRACE_LOG(msg, ...)						\
-  trace.printf_P(PSTR("%d:%s:" msg "\n"),				\
+  trace.printf_P(__PSTR("%d:%s:" msg "\n"),				\
 		 __LINE__, __func__, __VA_ARGS__)
 # define IS_LOG_PRIO(prio) (trace_log_mask & LOG_MASK(prio))
 # define EMERG(msg, ...)						\

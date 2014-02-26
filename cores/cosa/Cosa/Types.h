@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -153,17 +153,46 @@ union univ32_t {
 #undef PSTR
 /**
  * Create constant string in program memory. Allow IOStream output 
- * operator.
+ * operator. Allows link time reduction of equal strings or substrings.
  * @param[in] s string literal (at compile time).
  * @return string literal in program memory.
  */
-#define PSTR(s)								\
+#ifndef NSHARE
+#define PSTR(str) __PSTR1(str,__COUNTER__)
+#define __PSTR1(str,num) __PSTR2(str,num)
+#define __PSTR2(str,num)						\
   (__extension__(							\
-  {									\
-    static const char __c[]						\
-      __attribute__((section(".progmem.pstr"))) = (s);			\
-    &__c[0];								\
-  }									\
+    {									\
+       const char* ptr;							\
+       asm volatile (							\
+	 ".pushsection .progmem.data, \"SM\", @progbits, 1" "\n\t" 	\
+	 "PSTR_" #num ": .string " #str                     "\n\t"	\
+	 ".popsection"                                      "\n\t"	\
+       ); 								\
+       asm volatile (							\
+	 "ldi %A0, lo8(PSTR_" #num ")"	        	    "\n\t"	\
+	 "ldi %B0, hi8(PSTR_" #num ")"   	    	    "\n\t"	\
+	 : "=d" (ptr)							\
+       ); 								\
+       ptr;								\
+     }									\
+   ))
+#else
+#define PSTR(str) __PSTR(str)
+#endif
+
+/**
+ * Program string literal that may be used in macro. Is not unique.
+ * @param[in] s string literal (at compile time).
+ * @return string literal in program memory.
+ */
+#define __PSTR(s)							\
+  (__extension__(							\
+    {									\
+      static const char __c[]						\
+        __attribute__((section(".progmem.pstr"))) = (s);		\
+      &__c[0];								\
+    }									\
   ))
 
 /** String in program memory */
@@ -306,9 +335,9 @@ iovec_end(iovec_t* &vp)
 inline int16_t
 swap(int16_t value)
 {
-  asm volatile("mov __tmp_reg__, %A0" "\n\t"
-	       "mov %A0, %B0" "\n\t"
-	       "mov %B0, __tmp_reg__" "\n\t"
+  asm volatile("mov __tmp_reg__, %A0" 	"\n\t"
+	       "mov %A0, %B0" 		"\n\t"
+	       "mov %B0, __tmp_reg__" 	"\n\t"
 	       : "=r" (value)
 	       : "0" (value)
 	       );
@@ -376,12 +405,12 @@ void swap(T* buf)
 inline int32_t
 swap(int32_t value)
 {
-  asm volatile("mov __tmp_reg__, %A0" "\n\t"
-	       "mov %A0, %D0" "\n\t"
-	       "mov %D0, __tmp_reg__" "\n\t"
-	       "mov __tmp_reg__, %B0" "\n\t"
-	       "mov %B0, %C0" "\n\t"
-	       "mov %C0, __tmp_reg__" "\n\t"
+  asm volatile("mov __tmp_reg__, %A0" 	"\n\t"
+	       "mov %A0, %D0" 		"\n\t"
+	       "mov %D0, __tmp_reg__" 	"\n\t"
+	       "mov __tmp_reg__, %B0" 	"\n\t"
+	       "mov %B0, %C0" 		"\n\t"
+	       "mov %C0, __tmp_reg__" 	"\n\t"
 	       : "=r" (value)
 	       : "0" (value)
 	       );
