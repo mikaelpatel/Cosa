@@ -25,6 +25,7 @@
 
 #include "Cosa/Linkage.hh"
 
+#if defined(NON_INLINED)
 void 
 Linkage::attach(Linkage* pred)
 {
@@ -56,6 +57,7 @@ Linkage::detach()
     }
   }
 }
+#endif
 
 void
 Head::on_event(uint8_t type, uint16_t value)
@@ -70,10 +72,10 @@ Head::on_event(uint8_t type, uint16_t value)
   }
 }
 
-uint8_t 
+int
 Head::available()
 {
-  uint8_t res = 0;
+  int res = 0;
   // Iterate through the list and count the length of the queue
   for (Linkage* link = m_succ; link != this; link = link->get_succ()) res++;
   return (res);
