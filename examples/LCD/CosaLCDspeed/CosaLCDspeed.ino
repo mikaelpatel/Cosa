@@ -53,9 +53,9 @@
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
-// HD44780::ERM1602_5 port;
+HD44780::ERM1602_5 port;
 // HD44780::MJKDZ port;
-HD44780::GYIICLCD port;
+// HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 HD44780 lcd(&port);
 
@@ -136,9 +136,9 @@ void write_char(uint16_t nr)
 void write_str(uint16_t nr)
 {
   while (nr--) {
-    lcd.set_cursor(0, 1);
+    lcd.set_cursor(0, 0);
     lcd.puts(NUM_STR);
-    lcd.set_cursor(0, 1);
+    lcd.set_cursor(0, 0);
     lcd.puts(ALPHA_STR);
   }
 }
@@ -146,9 +146,9 @@ void write_str(uint16_t nr)
 void write_pstr(uint16_t nr)
 {
   while (nr--) {
-    lcd.set_cursor(0, 1);
+    lcd.set_cursor(0, 0);
     lcd.puts_P(PSTR(NUM_STR));
-    lcd.set_cursor(0, 1);
+    lcd.set_cursor(0, 0);
     lcd.puts_P(PSTR(ALPHA_STR));
   }
 }
@@ -156,7 +156,7 @@ void write_pstr(uint16_t nr)
 void write_dec_uint16(uint16_t nr)
 {
   while (nr--) {
-    lcd.set_cursor(0, 1);
+    lcd.set_cursor(0, 0);
     trace << nr;
   }
 }
@@ -196,6 +196,7 @@ void measure(const char* name, benchmark_t fn, uint16_t nr)
   lcd.display_off();
   lcd.backlight_off();
 #endif
+  lcd.display_clear();
   uint32_t start = RTC::micros();
   fn(nr);
   uint32_t us = (RTC::micros() - start) / nr;
