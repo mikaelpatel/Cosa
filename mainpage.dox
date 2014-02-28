@@ -328,7 +328,7 @@ The Serial Peripheral Interface (SPI) device driver support class.
 The I2C/TWI device driver support class (Two Wire Interface, TWI).
 */
 
-/** @page page6 INET
+/** @page page6 Internet
 High-level Internet (IP) protocol implemented with the Socket interface.
 
 @section DHCP
@@ -465,10 +465,22 @@ Device driver for PCD8544 48x84 pixels matrix LCD controller/driver
 
 @section HD44780 
 Device driver for HD44780 (aka 1602) 16x2/20x4 character LCD
-controller/driver (Serial OutputPin/Port direct).
+controller/driver (Serial OutputPin/Port direct/SPI).
 */
 
-/** @page page10 Auxiliary
+/** @page page11 Multi-tasking
+@section Thread
+A coroutine based thread class (Nucleo::Thread). 
+
+@section Semaphore
+Counting semaphore for thread synchronization on common resources
+(Nucleo::Semaphore). 
+
+@section Mutex
+Syntactic sugar to semaphore used for mutual exclusion (Nucleo::Mutex).
+*/
+
+/** @page page12 Auxiliary
 @section AT24CXX
 Driver for the AT24CXX 2-Wire Serial EEPROM (TWI). Allows page
 write and block read. Supports device AT24C32 (8K) to AT24C512
