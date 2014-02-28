@@ -8,13 +8,11 @@ designed to run on an ATtiny85 running on the internal 8 MHz clock.
 Circuit
 -------
 
-Diagram
-.......
+### Diagram
 
 ![diagram](./CosaDS18B20_dia.jpg)
 
-Breadboard
-..........
+### Breadboard
 
 ![breadboard](./CosaDS18B20_bb.jpg)
 
