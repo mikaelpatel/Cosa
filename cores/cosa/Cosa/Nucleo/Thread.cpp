@@ -39,7 +39,7 @@ void
 Thread::init()
 {
   m_state = 1;
-  s_main.Linkage::attach(this);
+  s_main.attach(this);
   if (setjmp(m_context)) while (1) run();
 }
 
@@ -55,7 +55,6 @@ Thread::begin(Thread* t, size_t size)
 void 
 Thread::run() 
 { 
-  // Main thread
   while (1) { 
     s_go_idle = true;
     yield(); 
@@ -73,11 +72,20 @@ Thread::resume(Thread* t)
 }
 
 void
-Thread::attach(Head* queue)
+Thread::enqueue(Head* queue)
 {
   Thread* t = (Thread*) get_succ();
   queue->attach(this);
   resume(t);
+}
+
+void
+Thread::dequeue(Head* queue, bool flag)
+{
+  if (queue->is_empty()) return;
+  Thread* t = (Thread*) queue->get_succ();
+  get_succ()->attach(t);
+  if (flag) resume(t);
 }
 
 void 

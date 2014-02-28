@@ -34,7 +34,7 @@ Semaphore::wait(uint8_t count)
   uint8_t key = lock();
   while (count > m_count) {
     unlock(key);
-    Thread::s_running->attach(&m_queue);
+    Thread::s_running->enqueue(&m_queue);
     key = lock();
   }
   m_count -= count;
@@ -47,10 +47,7 @@ Semaphore::signal(uint8_t count)
   synchronized {
     m_count += count;
   }
-  if (m_queue.is_empty()) return;
-  Thread* t = (Thread*) m_queue.get_succ();
-  Thread::s_running->get_succ()->attach(t);
-  Thread::s_running->yield();
+  Thread::s_running->dequeue(&m_queue, true);
 }
 
 };

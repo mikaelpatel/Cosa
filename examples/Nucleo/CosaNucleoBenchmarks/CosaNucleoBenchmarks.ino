@@ -24,7 +24,7 @@
  * Cosa Nucleo benchmarks; 
  * 1) Thread context switches, measured with yield (12 us)
  * 2) Thread context switches, measured with resume(this) (12 us)
- * 3) Semaphore signal-wait (56 us)
+ * 3) Semaphore signal-wait (58 us)
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -99,7 +99,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaNucleoBenchmarks: started"));
   Watchdog::begin();
   RTC::begin();
-  Nucleo::Thread::begin(&waiting, 128);
+  Nucleo::Thread::begin(&waiting, 64);
   Nucleo::Thread::begin(&bench, 128);
 }
 

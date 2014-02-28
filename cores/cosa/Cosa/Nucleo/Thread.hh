@@ -68,6 +68,20 @@ private:
    */
   void init();
 
+  /**
+   * Enqueue running thread to given queue and yield.
+   * @param[in] queue to transfer to.
+   */
+  void enqueue(Head* queue);
+  
+  /**
+   * If given queue is not empty dequeue first thread and resume
+   * direct if flag is true otherwise on yield.
+   * @param[in] queue to transfer from.
+   * @param[in] flag resume direct otherwise on yield.
+   */
+  void dequeue(Head* queue, bool flag = true);
+  
 public:
   /**
    * Schedule static thread with given stack size. Using the default
@@ -104,12 +118,6 @@ public:
     resume((Thread*) get_succ()); 
   }
 
-  /**
-   * Transfer running thread to given queue and yield.
-   * @param[in] queue to transfer to.
-   */
-  void attach(Head* queue);
-  
   /**
    * Delay at least the given time period in milli-seconds. The resolution
    * is determined by the Watchdog clock and has a minimum resolution of
