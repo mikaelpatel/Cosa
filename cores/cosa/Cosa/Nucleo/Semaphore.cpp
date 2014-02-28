@@ -33,10 +33,8 @@ Semaphore::wait(uint8_t count)
 {
   uint8_t key = lock();
   while (count > m_count) {
-    Thread* t = (Thread*) Thread::s_running->get_succ();
-    m_queue.attach(Thread::s_running);
     unlock(key);
-    Thread::s_running->resume(t);
+    Thread::s_running->attach(&m_queue);
     key = lock();
   }
   m_count -= count;

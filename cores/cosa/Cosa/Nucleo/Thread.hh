@@ -80,21 +80,24 @@ public:
   /**
    * @override Nucleo::Thread
    * The thread main function. The function is called when the thread
-   * is scheduled and becomes running. Normally the function is an end-less
-   * loop. Returning from the function will result in that the function is
-   * called again. The default implementation is the main thread. It is
-   * responsible for power down when there are no other active threads.
+   * is scheduled and becomes running. Normally the function is an
+   * end-less loop. Returning from the function will result in that
+   * the function is called again. The default implementation is the
+   * main thread. It is responsible for power down when there are no
+   * other active threads. 
    */
   virtual void run();
 
   /**
-   * Yield control to the given thread.
-   * @param[in] t thread to continue.
+   * Yield control to the given thread. Preserve stack and machine 
+   * state and later continue after this function.
+   * @param[in] t thread to resume.
    */
   void resume(Thread* t);
 
   /**
-   * Yield control to the next thread in the thread queue.
+   * Yield control to the next thread in the thread queue. Preserve
+   * stack and machine state and later continue after this function. 
    */
   void yield() 
   { 
@@ -102,10 +105,17 @@ public:
   }
 
   /**
+   * Transfer running thread to given queue and yield.
+   * @param[in] queue to transfer to.
+   */
+  void attach(Head* queue);
+  
+  /**
    * Delay at least the given time period in milli-seconds. The resolution
    * is determined by the Watchdog clock and has a minimum resolution of
-   * 16 milli-seconds (per tick).
-   * @param[in] ms time period.
+   * 16 milli-seconds (per tick). The actual delay also depends on how
+   * other threads yield control to other threads.
+   * @param[in] ms minimum delay time period.
    */
   void delay(uint32_t ms);
 };

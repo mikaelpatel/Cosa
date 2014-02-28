@@ -39,7 +39,7 @@ void
 Thread::init()
 {
   m_state = 1;
-  s_main.attach(this);
+  s_main.Linkage::attach(this);
   if (setjmp(m_context)) while (1) run();
 }
 
@@ -70,6 +70,14 @@ Thread::resume(Thread* t)
   s_running = t;
   if (t->m_state) s_go_idle = false;
   longjmp(t->m_context, 1);
+}
+
+void
+Thread::attach(Head* queue)
+{
+  Thread* t = (Thread*) get_succ();
+  queue->attach(this);
+  resume(t);
 }
 
 void 
