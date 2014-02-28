@@ -24,7 +24,7 @@
  * Cosa Nucleo benchmarks; 
  * 1) Thread context switches, measured with yield (12 us)
  * 2) Thread context switches, measured with resume(this) (12 us)
- * 3) Semaphore signal-wait (58 us)
+ * 3) Semaphore signal-wait (56 us)
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -50,30 +50,29 @@ Benchmark::run()
   uint32_t start;
   uint32_t us;
 
-  while (1) {
-    // Benchmark 1: measure yield
-    start = RTC::micros();
-    for (uint16_t i = 0; i < 500; i++)
-      for (uint16_t j = 0; j < 1000; j++)
-	yield(); 
-    us = RTC::micros() - start;
-    trace << PSTR("yield: ") << us / 1000000L << PSTR(" us") << endl;
+  INFO("Benchmark 1: measure yield", 0);
+  start = RTC::micros();
+  for (uint16_t i = 0; i < 500; i++)
+    for (uint16_t j = 0; j < 1000; j++)
+      yield(); 
+  us = (RTC::micros() - start)  / 1000000L;
+  INFO("%l us", us);
 
-    // Benchmark 2: measure resume
-    start = RTC::micros();
-    for (uint16_t i = 0; i < 1000; i++)
-      for (uint16_t j = 0; j < 1000; j++)
-	resume(this);
-    us = RTC::micros() - start;
-    trace << PSTR("resume: ") << us / 1000000L << PSTR(" us") << endl;
-    
-    // Benchmark 3: measure signal-wait
-    start = RTC::micros();
-    while (nr != 100000L) sem.signal();
-    us = (RTC::micros() - start) / nr;
-    trace << PSTR("signal-wait: ") << us << PSTR(" us") << endl;
-    nr = 0;
-  }
+  INFO("Benchmark 2: measure resume", 0);
+  start = RTC::micros();
+  for (uint16_t i = 0; i < 1000; i++)
+    for (uint16_t j = 0; j < 1000; j++)
+      resume(this);
+  us = (RTC::micros() - start) / 1000000L;
+  INFO("%l us", us);
+  
+  INFO("Benchmark 3: measure signal-wait", 0);
+  start = RTC::micros();
+  while (nr != 100000L) sem.signal();
+  us = (RTC::micros() - start) / nr;
+  INFO("%l us", us);
+  trace << endl;
+  nr = 0;
 }
 
 class Waiting : public Nucleo::Thread {
@@ -99,7 +98,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaNucleoBenchmarks: started"));
   Watchdog::begin();
   RTC::begin();
-  Nucleo::Thread::begin(&waiting, 64);
+  Nucleo::Thread::begin(&waiting, 32);
   Nucleo::Thread::begin(&bench, 128);
 }
 
