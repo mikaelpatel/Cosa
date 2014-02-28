@@ -1092,8 +1092,8 @@ public:
   class ERM1602_5 : public IO {
   private:
     /** Execution time delay (us) */
-    static const uint16_t SHORT_EXEC_TIME = 12;
-
+    static const uint16_t SHORT_EXEC_TIME = 16;
+    
     OutputPin m_sda;		/**< Serial data output */
     OutputPin m_scl;		/**< Serial clock */
     OutputPin m_en;		/**< Starts data read/write */
