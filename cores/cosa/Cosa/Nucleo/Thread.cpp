@@ -84,8 +84,13 @@ Thread::dequeue(Head* queue, bool flag)
 {
   if (queue->is_empty()) return;
   Thread* t = (Thread*) queue->get_succ();
-  get_succ()->attach(t);
-  if (flag) resume(t);
+  if (flag) {
+    attach(t);
+    resume(t);
+  }
+  else {
+    get_succ()->attach(t);
+  }
 }
 
 void 

@@ -24,7 +24,7 @@
  * Cosa Nucleo benchmarks; 
  * 1) Thread context switches, measured with yield (12 us)
  * 2) Thread context switches, measured with resume(this) (12 us)
- * 3) Semaphore signal-wait (56 us)
+ * 3) Semaphore signal-wait, measured between two threads (42 us)
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -37,60 +37,66 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 Nucleo::Semaphore sem(0);
-uint32_t nr = 0;
 
-class Benchmark : public Nucleo::Thread {
+class Benchmarks : public Nucleo::Thread {
 public:
   virtual void run();
 };
 
 void 
-Benchmark::run() 
+Benchmarks::run() 
 { 
-  uint32_t start;
-  uint32_t us;
+  trace << PSTR("Thread::Benchmarks: started") << endl;  
 
-  INFO("Benchmark 1: measure yield", 0);
-  start = RTC::micros();
-  for (uint16_t i = 0; i < 500; i++)
-    for (uint16_t j = 0; j < 1000; j++)
-      yield(); 
-  us = (RTC::micros() - start)  / 1000000L;
-  INFO("%l us", us);
+  while (1) {
+    uint32_t start, us;
 
-  INFO("Benchmark 2: measure resume", 0);
-  start = RTC::micros();
-  for (uint16_t i = 0; i < 1000; i++)
-    for (uint16_t j = 0; j < 1000; j++)
-      resume(this);
-  us = (RTC::micros() - start) / 1000000L;
-  INFO("%l us", us);
+    // Measure 500,000 yield will give 1,000,000 context switches
+    // as the main (background) thread will be run
+    INFO("Benchmark 1: measure yield", 0);
+    start = RTC::micros();
+    for (uint16_t i = 0; i < 500; i++)
+      for (uint16_t j = 0; j < 1000; j++)
+	yield(); 
+    us = (RTC::micros() - start)  / 1000000L;
+    INFO("%l us", us);
+    
+    // Measure 1,000,000 resume to the current thread
+    INFO("Benchmark 2: measure resume", 0);
+    start = RTC::micros();
+    for (uint16_t i = 0; i < 1000; i++)
+      for (uint16_t j = 0; j < 1000; j++)
+	resume(this);
+    us = (RTC::micros() - start) / 1000000L;
+    INFO("%l us", us);
   
-  INFO("Benchmark 3: measure signal-wait", 0);
-  start = RTC::micros();
-  while (nr != 100000L) sem.signal();
-  us = (RTC::micros() - start) / nr;
-  INFO("%l us", us);
-  trace << endl;
-  nr = 0;
+    // Measure 100,000 signal-wait pairs
+    INFO("Benchmark 3: measure signal-wait", 0);
+    start = RTC::micros();
+    for (uint8_t i = 0; i < 100; i++)
+      for (uint16_t j = 0; j < 1000; j++)
+	sem.signal();
+    us = (RTC::micros() - start) / 100000L;
+    INFO("%l us", us);
+
+    trace << endl;
+  }
 }
 
-class Waiting : public Nucleo::Thread {
+class Consumer : public Nucleo::Thread {
 public:
   virtual void run();
 };
 
 void
-Waiting::run()
+Consumer::run()
 {
-  while (1) {
-    sem.wait();
-    nr += 1;
-  }
+  trace << PSTR("Thread::Consumer: started") << endl;  
+  while (1) sem.wait();
 }
 
-Benchmark bench;
-Waiting waiting;
+Benchmarks bench;
+Consumer consumer;
 
 void setup()
 {
@@ -98,8 +104,8 @@ void setup()
   trace.begin(&uart, PSTR("CosaNucleoBenchmarks: started"));
   Watchdog::begin();
   RTC::begin();
-  Nucleo::Thread::begin(&waiting, 32);
-  Nucleo::Thread::begin(&bench, 128);
+  Nucleo::Thread::begin(&consumer, 32);
+  Nucleo::Thread::begin(&bench, 64);
 }
 
 void loop()
