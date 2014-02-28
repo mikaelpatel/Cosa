@@ -7,10 +7,15 @@ designed to run on an ATtiny85 running on the internal 8 MHz clock.
 
 Circuit
 -------
-Connect RF433/315 Transmitter Data to ATtiny85 D0, connect VCC 
-GND. Connect 1-Wire digital thermometer to D3 with pullup resistor.
-The pullup resistor (4K7) may be connected to D4 to allow active power
-control. This sketch supports parasite powered DS18B20 devices.
-Connect the DS18B20 VCC to GND. 
+
+Diagram
+.......
+
+![diagram](./CosaDS18B20_dia.jpg)
+
+Breadboard
+..........
+
+![breadboard](./CosaDS18B20_bb.jpg)
 
 
