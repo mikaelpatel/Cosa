@@ -17,10 +17,13 @@
  * 
  * @section Description
  * W5100 Ethernet Controller device driver example code; NTP client.
+ * Some NTP server hostnames; se.pool.ntp.org, time.nist.gov, 
+ * ntp.ubuntu.com
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/INET/DNS.hh"
 #include "Cosa/INET/NTP.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/Watchdog.hh"
@@ -28,15 +31,11 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/RTC.hh"
 
-// Network configuration
+// Network configuration and time-zone
 #define MAC 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed
-#define SE_POOL_NTP_ORG 85,8,42,205
-#define TIME_NIST_GOV 64,236,96,53
-#define NTP_UBUNTU_COM 91,189,94,4
-#define SERVER SE_POOL_NTP_ORG
 #define ZONE 1
 
-static const uint8_t mac[6] PROGMEM = { MAC };
+static const uint8_t mac[6] __PROGMEM = { MAC };
 
 // W5100 Ethernet Controller
 W5100 ethernet(mac);
@@ -56,9 +55,15 @@ void setup()
 void loop()
 {
   static bool initiated = false;
+  uint8_t server[4];
+
+  // Use DNS to get the NTP server network address
+  DNS dns;
+  ethernet.get_dns_addr(server);
+  if (!dns.begin(ethernet.socket(Socket::UDP), server)) return;
+  if (dns.gethostbyname_P(PSTR("se.pool.ntp.org"), server) != 0) return;
 
   // Connect to the NTP server using given socket
-  uint8_t server[4] = { SERVER };
   NTP ntp(ethernet.socket(Socket::UDP), server, ZONE);
 
   // Get current time. Allow a number of retries
@@ -67,20 +72,30 @@ void loop()
   for (uint8_t retry = 0; retry < RETRY_MAX; retry++)
     if ((clock = ntp.time()) != 0L) break;
   ASSERT(clock != 0L);
-
+  
   // Check if the RTC should be set
   if (!initiated) {
     RTC::time(clock);
     initiated = true;
   }
+
+  // Get real-time clock and convert to time structure
+  time_t rtc(RTC::seconds());
+  uint16_t ms = RTC::millis() % 1000;
+  
+  // Print server
+  INET::print_addr(trace, server);
+  trace << PSTR(": ");
   
   // Print in stardate notation; dayno.secondno
   trace << (clock / SECONDS_PER_DAY) << '.' << (clock % SECONDS_PER_DAY) << ' ';
 
   // Convert to time structure and print day followed by date and time
-  time_t rtc(RTC::seconds());
   time_t now(clock);
-  trace << now.day << ' ' << now << ' ' << rtc << endl;
+  trace << now.day << ' ' << now << ' ' << rtc << '.';
+  if (ms < 100) trace << '0';
+  if (ms < 10) trace << '0';
+  trace << ms << endl;
 
   // Take a nap for 10 seconds (this is not 10 seconds period)
   SLEEP(10);
