@@ -47,7 +47,6 @@ int
 INET::aton(const char* addr, uint8_t ip[4], bool progmem)
 {
   const char* ap = addr;
-  char buf[32];
   char c;
   for (uint8_t i = 0; i < IP_MAX; i++) {
     uint16_t r = 0;

@@ -93,7 +93,7 @@ private:
   
   static const uint16_t TIMEOUT = 300;
   static const uint8_t RETRY_MAX = 8;
-  static const int16_t ID = 0xC05A;
+  static const uint16_t ID = 0xC05AU;
   uint8_t m_server[4];
   Socket* m_sock;
   

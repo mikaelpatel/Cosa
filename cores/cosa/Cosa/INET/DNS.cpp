@@ -57,7 +57,7 @@ DNS::gethostbyname(const char* hostname, uint8_t addr[4], bool progmem)
 
   // Construct request header
   header_t request;
-  request.ID = hton(ID);
+  request.ID = hton((int16_t) ID);
   request.FC = hton(QUERY_FLAG | OPCODE_STANDARD_QUERY | RECURSION_DESIRED_FLAG);
   request.QC = hton(1);
   request.ANC = 0;

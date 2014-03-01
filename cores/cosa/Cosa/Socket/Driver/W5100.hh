@@ -31,7 +31,6 @@
 #if !defined(__ARDUINO_TINY__)
 #include "Cosa/SPI.hh"
 #include "Cosa/Socket.hh"
-#include "Cosa/ExternalInterrupt.hh"
 
 /**
  * Cosa WIZnet W5100 device driver class. Provides an implementation
@@ -245,31 +244,6 @@ public:
   
   /** Maximum number of DNS request retries */
   static const uint8_t DNS_RETRY_MAX = 4;
-
-  /**
-   * Handler for device interrupt pin.
-   */
-  class IRQPin : public ExternalInterrupt {
-    friend class W5100;
-  private:
-    W5100* m_dev;
-  public:
-    /**
-     * Construct interrupt handler on given external interrupt pin and mode.
-     * @param[in] pin external interrupt pin.
-     * @param[in] mode interrupt mode.
-     * @param[in] dev reference to parent.
-     */
-    IRQPin(Board::ExternalInterruptPin pin, InterruptMode mode, W5100* dev) :
-      ExternalInterrupt(pin, mode, true), m_dev(dev) {}
-
-    /**
-     * @override Interrupt::Handler
-     * Interrupt service callback on external interrupt pin change.
-     * @param[in] arg argument from interrupt service routine.
-     */
-    virtual void on_interrupt(uint16_t arg = 0);
-  };
 
   /**
    * W5100 Single-Chip Internet-enable 10/100 Ethernet Controller Driver.
@@ -539,9 +513,6 @@ public:
   /** Next local port number; DYNAMIC_PORT(49152)-UINT16_MAX(65535) */
   uint16_t m_local;
 
-  /** Interrupt pin handler */
-  // IRQPin m_irq;
-
   /** Hardware address (in program memory) */
   const uint8_t* m_mac;
 
@@ -603,14 +574,12 @@ public:
   
 public:
   /**
-   * Construct W5100 device driver with given hardware address, chip
-   * select and external interrupt pin.
+   * Construct W5100 device driver with given hardware address, and chip
+   * select.
    * @param[in] mac hardware address (in program memory).
    * @param[in] csn chip selection pin (Default D10).
-   * @param[in] irq external interrupt pin (Default EXT0).
    */
-  W5100(const uint8_t* mac, Board::DigitalPin csn = Board::D10, 
-	Board::ExternalInterruptPin irq = Board::EXT0);
+  W5100(const uint8_t* mac, Board::DigitalPin csn = Board::D10);
 
   /**
    * Get the current network address and subnet mask. 

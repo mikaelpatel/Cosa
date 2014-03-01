@@ -436,7 +436,7 @@ SNMP::recv(PDU& pdu, uint32_t ms)
   int err = -1;
 
   // Wait for an incoming request
-  if (ms != 0L) start = Watchdog::millis();
+  start = Watchdog::millis();
   while (((res = m_sock->recv(&tag, sizeof(tag), pdu.dest, pdu.port)) < 0) &&
 	 ((ms == 0L) || ((Watchdog::millis() - start) < ms)))
     Power::sleep(SLEEP_MODE_IDLE);

@@ -157,7 +157,7 @@ union univ32_t {
  * @param[in] s string literal (at compile time).
  * @return string literal in program memory.
  */
-#ifndef NSHARE
+#if defined(COSA_SHARE_PSTR)
 #define PSTR(str) __PSTR1(str,__COUNTER__)
 #define __PSTR1(str,num) __PSTR2(str,num)
 #define __PSTR2(str,num)						\
