@@ -79,8 +79,10 @@ namespace Soft {
        *  2 pulse at end of transaction.
        */
       uint8_t m_pulse;
+      /** Mode for phase and transition */
+      uint8_t m_mode;
       /** Data direction; bit order */
-      Pin::Direction m_direction;
+      Order m_order;
       
     public:
       /**
@@ -100,15 +102,7 @@ namespace Soft {
 	     Clock clock = DEFAULT_CLOCK, 
 	     uint8_t mode = 0, 
 	     Order order = MSB_ORDER,
-	     Interrupt::Handler* irq = 0) :
-	m_irq(irq),
-	m_cs(cs, (pulse == 0)),
-	m_pulse(pulse),
-	m_order(order)
-      {
-	m_next = spi.m_list;
-	spi.m_list = this;
-      }
+	     Interrupt::Handler* irq = NULL);
     };
 
   private:
@@ -116,6 +110,8 @@ namespace Soft {
     Driver* m_list;
     /** Current device using the SPI hardware */
     Driver* m_dev;
+    /** Master Input Slave Output pin */
+    InputPin m_miso;
     /** Master Output Slave Input pin */
     OutputPin m_mosi;
     /** Serial Clock pin */
@@ -125,9 +121,12 @@ namespace Soft {
     /**
      * Construct soft serial peripheral interface master.
      */
-    SPI(Board::DigitalPin mosi, Board::DigitalPin sck) : 
+    SPI(Board::DigitalPin miso, 
+	Board::DigitalPin mosi, 
+	Board::DigitalPin sck) : 
       m_list(0),
       m_dev(0),
+      m_miso(miso),
       m_mosi(mosi, 0),
       m_sck(sck, 0)
     {
@@ -141,41 +140,14 @@ namespace Soft {
      * @param[in] dev device driver context.
      * @return true(1) if successful otherwise false(0)
      */
-    bool begin(Driver* dev)
-    {
-      synchronized {
-	if (m_dev != NULL) synchronized_return (false);
-	// Acquire the driver controller
-	m_dev = dev;
-	// Enable device
-	if (dev->m_pulse < 2) dev->m_cs.toggle();
-	// Disable all interrupt sources on SPI bus
-	for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
-	  if (dev->m_irq) dev->m_irq->disable();
-      }
-      return (true);
-    }
+    bool begin(Driver* dev);
   
     /**
      * End of SPI master interaction block. Deselect device and 
      * enable SPI interrupt sources.
      * @return true(1) if successful otherwise false(0)
      */
-    bool end() 
-    {
-      synchronized {
-	if (m_dev == 0) synchronized_return (false);
-	// Disable the device or give pulse if required
-	m_dev->m_cs.toggle();
-	if (m_dev->m_pulse > 1) m_dev->m_cs.toggle();
-	// Enable the bus devices with interrupts
-	for (Driver* dev = spi.m_list; dev != NULL; dev = dev->m_next)
-	  if (dev->m_irq != NULL) dev->m_irq->enable();
-	// Release the driver controller
-	m_dev = 0;
-      }
-      return (true);
-    }
+    bool end();
 
     /**
      * Exchange data with slave. Slave select must be done before exchange
@@ -183,11 +155,7 @@ namespace Soft {
      * @param[in] data to send.
      * @return zero
      */
-    uint8_t transfer(uint8_t data)
-    {
-      m_mosi.write(data, m_sck, m_direction);
-      return (0);
-    }
+    uint8_t transfer(uint8_t data);
 
     /**
      * Write package to the device slave. Should only be used within a
@@ -213,6 +181,7 @@ namespace Soft {
       if (count == 0) return;
       do transfer(pgm_read_byte(buf++)); while (--count);
     }
-  }
+  };
+  extern SPI spi;
 };
 #endif
