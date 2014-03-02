@@ -56,7 +56,7 @@ public:
    */
   bool end()
   {
-    set_device(0);
+    set_device(NULL);
     return (true);
   }
 
@@ -100,7 +100,10 @@ extern uint8_t trace_log_mask;
  * string is stored in program memory.
  * @param[in] msg message string to print.
  */
-#define FATAL(msg) trace.fatal_P(__PSTR(msg), __LINE__, __func__)
+#define FATAL(msg)							\
+  trace.fatal_P(__PSTR(msg),						\
+		__LINE__,						\
+		__PRETTY_FUNCTION__)
 
 #ifndef NDEBUG
 
@@ -119,7 +122,7 @@ extern uint8_t trace_log_mask;
  * Support macro for trace of a string in program memory.
  * @param[in] str string literal
  */
-# define TRACE_PSTR(str) trace.print_P(PSTR(str))
+# define TRACE_P(str) trace.print_P(PSTR(str))
 
 /**
  * Support macro for trace of an expression. The expression
@@ -140,7 +143,9 @@ extern uint8_t trace_log_mask;
  */
 # define TRACE_LOG(msg, ...)						\
   trace.printf_P(__PSTR("%d:%s:" msg "\n"),				\
-		 __LINE__, __func__, __VA_ARGS__)
+		 __LINE__,						\
+		 __PRETTY_FUNCTION__,					\
+		 __VA_ARGS__)
 # define IS_LOG_PRIO(prio) (trace_log_mask & LOG_MASK(prio))
 # define EMERG(msg, ...)						\
   if (IS_LOG_PRIO(LOG_EMERG)) TRACE_LOG("emerg:" msg, __VA_ARGS__)
@@ -160,7 +165,7 @@ extern uint8_t trace_log_mask;
   if (IS_LOG_PRIO(LOG_DEBUG)) TRACE_LOG("debug:" msg, __VA_ARGS__)
 #else
 # define ASSERT(expr)
-# define TRACE_PSTR(str)
+# define TRACE_P(str)
 # define TRACE(expr)
 # define TRACE_LOG(msg, ...)
 # define EMERG(msg, ...)
