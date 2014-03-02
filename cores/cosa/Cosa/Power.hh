@@ -47,6 +47,13 @@ public:
    */
   static void sleep(uint8_t mode = SLEEP_MODE_IDLE);
 
+  /**
+   * Scale the clock frequency according to the give prescale
+   * factor (0..8 for prescale pow2(factor) 1..256)
+   * @param[in] prescale division factor (0..8).
+   */
+  static void clock_prescale(uint8_t factor);
+
   static void adc_enable() 
   { 
     power_adc_enable(); 

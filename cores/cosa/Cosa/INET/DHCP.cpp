@@ -94,7 +94,7 @@ DHCP::send(uint8_t type)
   }
 
   // Parameter request and end option list
-  static const uint8_t param[] PROGMEM = {
+  static const uint8_t param[] __PROGMEM = {
     PARAM_REQUEST,
     6,
     SUBNET_MASK,

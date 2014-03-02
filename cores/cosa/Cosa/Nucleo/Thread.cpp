@@ -49,6 +49,7 @@ Thread::begin(Thread* t, size_t size)
   if (t == NULL) s_main.run();
   s_top += size;
   uint8_t buf[s_top];
+  UNUSED(buf);
   t->init();
 }
 
@@ -58,7 +59,8 @@ Thread::run()
   while (1) { 
     s_go_idle = true;
     yield(); 
-    if (s_go_idle) Power::sleep(s_mode);
+    if (!s_go_idle) continue;
+    Power::sleep(s_mode);
   }
 }
 

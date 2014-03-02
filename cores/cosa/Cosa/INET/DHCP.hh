@@ -92,7 +92,7 @@ private:
     T2_VALUE = 59,
     CLIENT_IDENTIFIER = 61,
     END_OPTION = 255
-  } __attribute__((packet));
+  } __attribute__((packed));
 
   /** DHCP message type; MESSAGE_TYPE option */
   enum {

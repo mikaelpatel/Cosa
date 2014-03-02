@@ -35,19 +35,11 @@
 #include "Cosa/Trace.hh"
 #endif
 
-void 
-W5100::IRQPin::on_interrupt(uint16_t arg)
-{
-  if (m_dev == 0) return;
-}
-
-W5100::W5100(const uint8_t* mac, Board::DigitalPin csn, Board::ExternalInterruptPin irq) :
-  // SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+W5100::W5100(const uint8_t* mac, Board::DigitalPin csn) : 
   SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, NULL),
+  m_creg((CommonRegister*) COMMON_REGISTER_BASE),
   m_local(Socket::DYNAMIC_PORT),
-  m_mac(mac),
-  m_creg((CommonRegister*) COMMON_REGISTER_BASE)
-  // m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this)
+  m_mac(mac)
 {
   memset(m_dns, 0, sizeof(m_dns));
 }
@@ -178,7 +170,7 @@ W5100::Driver::dev_read(void* buf, size_t len)
   }
   
   // Adjust amount to read to max buffer size
-  if (len > res) len = res;
+  if ((int) len > res) len = res;
 
   // Read receiver buffer pointer
   uint16_t ptr;
@@ -261,7 +253,7 @@ W5100::Driver::dev_flush()
 void 
 W5100::Driver::dev_setup()
 {
-  while (room() < MSG_MAX);
+  while (room() < (int) MSG_MAX);
   uint16_t ptr;
   m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
   ptr = swap((int16_t) ptr);
@@ -292,7 +284,7 @@ W5100::Driver::room()
       m_dev->read(uint16_t(&m_sreg->TX_FSR), &size, sizeof(size));
     } while (res != size);
     res = swap(res);
-  } while (res < 0 || res > BUF_MAX);
+  } while (res < 0 || res > (int) BUF_MAX);
   return (res);
 }
 

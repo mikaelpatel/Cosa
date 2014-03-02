@@ -173,7 +173,7 @@ public:
       sysName = 5,		// DisplayString(0..255), read-write, mandatory
       sysLocation = 6,		// DisplayString(0..255), read-write, mandatory
       sysServices = 7		// Integer(0..127), read-only, mandatory
-    } __attribute__((packet));
+    } __attribute__((packed));
 
   public:
     /**

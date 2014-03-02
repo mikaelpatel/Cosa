@@ -350,7 +350,7 @@ MQTT::Client::service(uint32_t ms)
   count = ntoh((int16_t) count);
   char topic[count + 1];
   res = read(topic, count);
-  if (res != count) return (-2);
+  if (res != (int) count) return (-2);
   topic[count] = 0;
   length -= count + sizeof(count);
 
@@ -365,7 +365,7 @@ MQTT::Client::service(uint32_t ms)
   // Read payload and call on_publish handler
   uint8_t payload[length + 1];
   res = read(payload, length);
-  if (res != length) return (-2);
+  if (res != (int) length) return (-2);
   payload[length] = 0;
 
   // Write response message(s)
