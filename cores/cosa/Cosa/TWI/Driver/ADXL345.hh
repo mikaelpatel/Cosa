@@ -35,7 +35,7 @@
  * Rev. D, 2/13.
  */
 class ADXL345 : private TWI::Driver {
-protected:
+public:
   /**
    * Registers Map (See tab. 19, pp. 23)
    */
@@ -226,7 +226,13 @@ protected:
    */
   void read(Register reg, void* buffer, uint8_t count);
 
-public:
+  /** 3-Axis setting (add or or values) */
+  enum {
+    X = 4,
+    Y = 2,
+    Z = 1
+  } __attribute__((packed));
+
   /**
    * Construct ADXL345 driver with normal or alternative address (pp. 18).  
    * @param[in] use_alt_address.
@@ -237,7 +243,9 @@ public:
 
   /**
    * Start interaction with device. Set full resolution and 16G.
-   * Turn on measurement. 
+   * Single and double tap detection in XYZ-axis. Activity/inactivity
+   * (5 seconds), and free fall detect. Power control with auto-sleep
+   * and wakeup at 2 Hz. Interrupts enabled. Measurement turned on.
    * @return true(1) if successful otherwise false(0)
    */
   bool begin();
@@ -296,6 +304,13 @@ public:
   {
     read(DATA, &s, sizeof(s));
   }
+
+  /**
+   * Check for activity. Returns a bitset with current activity. 
+   * Ignore WATERMARK and OVERRUN.
+   * @return activities
+   */
+  uint8_t is_activity();
 };
 
 /**

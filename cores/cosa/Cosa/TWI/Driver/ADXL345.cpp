@@ -31,8 +31,37 @@ ADXL345::begin()
   // Read device register and santity check
   uint8_t id = read(DEVID);
   if (id != ID) return (false);
+
+  // Data format
   write(DATA_FORMAT, _BV(FULL_RES) | RANGE_16G);
-  write(POWER_CTL, _BV(MEASURE) | _BV(SLEEP) | WAKEUP_8_HZ);
+
+  // Single and double tap detection
+  write(THRESH_TAP, 0x40);
+  write(DUR, 0x30);
+  write(LATENT, 0x40);
+  write(WINDOW, 0xFF);
+  write(TAP_AXES, X | Y | Z);
+
+  // Activity/inactivity detect
+  write(THRESH_ACT, 6);
+  write(THRESH_INACT, 3);
+  write(TIME_INACT, 6);
+  write(ACT_INACT_CTL, 0xff);
+
+  // Free fall detect
+  write(THRESH_FF, 0x05);
+  write(TIME_FF, 0x14);
+
+  // Power control
+  write(POWER_CTL, _BV(AUTO_SLEEP) | _BV(MEASURE) | WAKEUP_2_HZ);
+
+  // Interrupt enable
+  write(INT_MAP, 0);
+  write(INT_ENABLE, _BV(DATA_READY) | 
+	_BV(SINGLE_TAP) | _BV(DOUBLE_TAP) | 
+	_BV(ACT) | _BV(INACT) | 
+	_BV(FREE_FALL));
+
   return (true);
 }
 
@@ -77,15 +106,30 @@ ADXL345::calibrate()
   calibrate(-value.x/4, -value.y/4, -value.z/4);
 }
 
+uint8_t
+ADXL345::is_activity()
+{
+  uint8_t source = read(INT_SOURCE);
+  if (source & _BV(INACT)) {
+    uint8_t rate = read(BW_RATE);
+    write(BW_RATE, rate | _BV(LOW_POWER));
+  }
+  if (source & _BV(ACT)) {
+    uint8_t rate = read(BW_RATE);
+    write(BW_RATE, rate & ~_BV(LOW_POWER));
+  }
+  return (source & 0x7c);
+}
+
 IOStream& 
 operator<<(IOStream& outs, ADXL345& accelerometer)
 {
   ADXL345::sample_t value;
   accelerometer.sample(value);
-  outs << PSTR("ADXL345(x = ") << value.x
-       << PSTR(", y = ") << value.y
-       << PSTR(", z = ") << value.z
-       << PSTR(")");
+  outs << PSTR("ADXL345(x = ") << (value.x << 2)
+       << PSTR(", y = ") << (value.y << 2)
+       << PSTR(", z = ") << (value.z << 2)
+       << PSTR(" mg)");
   return (outs);
 }
 

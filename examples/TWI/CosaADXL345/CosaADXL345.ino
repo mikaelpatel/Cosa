@@ -53,7 +53,16 @@ void setup()
 
 void loop()
 {
-  // Sample and print measurement to output stream
-  trace << accelerometer << endl;
-  SLEEP(2);
+  // Check for activity on the accelerometer. Print value and type
+  uint8_t source = accelerometer.is_activity();
+  if (source != 0) {
+    trace << Watchdog::millis() << ':' << accelerometer;
+    if (source & _BV(ADXL345::FREE_FALL)) trace << PSTR(", free fall");
+    if (source & _BV(ADXL345::INACT)) trace << PSTR(", inactivity");
+    if (source & _BV(ADXL345::ACT)) trace << PSTR(", activity");
+    if (source & _BV(ADXL345::DOUBLE_TAP)) trace << PSTR(", double tap");
+    if (source & _BV(ADXL345::SINGLE_TAP)) trace << PSTR(", single tap");
+    trace << endl;
+  }
+  Watchdog::delay(64);
 }
