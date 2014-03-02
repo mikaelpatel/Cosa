@@ -59,7 +59,8 @@ Thread::run()
   while (1) { 
     s_go_idle = true;
     yield(); 
-    if (s_go_idle) Power::sleep(s_mode);
+    if (!s_go_idle) continue;
+    Power::sleep(s_mode);
   }
 }
 

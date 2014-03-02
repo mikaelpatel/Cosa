@@ -49,35 +49,36 @@ LED::run()
   delay(m_delay);
 }
 
-template <uint16_t LOW, uint16_t HIGH, uint16_t INC>
-class LEDController : public Nucleo::Thread {
+template <uint16_t LOW, uint16_t HIGH, uint16_t INC, uint16_t PERIOD>
+class Controller : public Nucleo::Thread {
 private:
   LED* m_led;
 public:
-  LEDController(LED* led) : Thread(), m_led(led) {}
+  Controller(LED* led) : Thread(), m_led(led) {}
   virtual void run();
 };
 
-template <uint16_t LOW, uint16_t HIGH, uint16_t INC>
+template <uint16_t LOW, uint16_t HIGH, uint16_t INC, uint16_t PERIOD>
 void
-LEDController<LOW, HIGH, INC>::run()
+Controller<LOW, HIGH, INC, PERIOD>::run()
 {
   for (uint16_t ms = LOW; ms < HIGH; ms += INC) {
     m_led->set_delay(ms);
-    delay(1000);
+    delay(PERIOD);
   }
   for (uint16_t ms = HIGH; ms > LOW; ms -= INC) {
     m_led->set_delay(ms);
-    delay(1000);
+    delay(PERIOD);
   }
 }
 
 LED buildin(Board::LED);
-LEDController<20,200,20> controller(&buildin);
+Controller<25,500,5,200> controller(&buildin);
 
 void setup()
 {
-  Watchdog::begin();
+  Watchdog::begin(16, SLEEP_MODE_PWR_DOWN);
+  Nucleo::Thread::set_idle_mode(SLEEP_MODE_PWR_DOWN);
   Nucleo::Thread::begin(&buildin, 32);
   Nucleo::Thread::begin(&controller, 32);
 }

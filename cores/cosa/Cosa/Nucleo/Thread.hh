@@ -84,6 +84,13 @@ private:
   
 public:
   /**
+   * Set the given sleep mode for main thread idle state. 
+   * Default mode is SLEEP_MODE_IDLE (see Power).
+   * @param[in] mode sleep.
+   */
+  static void set_idle_mode(uint8_t mode) { s_mode = mode; }
+
+  /**
    * Schedule static thread with given stack size. Using the default
    * parameters will start the thread dispatcher.
    * @param[in] t thread to initiate and schedule.

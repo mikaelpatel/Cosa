@@ -60,8 +60,9 @@ public:
    * Signal release of given count. Waiting thread is resumed
    * after running thread has completed/yield.
    * @param[in] count released (Default mutex, 1).
+   * @param[in] flag resume waiting thread (Default true).
    */
-  void signal(uint8_t count = 1);
+  void signal(uint8_t count = 1, bool flag = true);
 };
 
 };
