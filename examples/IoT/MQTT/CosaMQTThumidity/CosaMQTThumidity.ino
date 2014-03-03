@@ -26,7 +26,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Driver/DHT.hh"
-#include "Cosa/INET/MQTT.hh"
+#include "Cosa/IoT/MQTT.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
 // DHT11 sensor

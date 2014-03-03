@@ -23,7 +23,7 @@
 
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/INET/MQTT.hh"
+#include "Cosa/IoT/MQTT.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 

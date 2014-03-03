@@ -25,7 +25,7 @@
 #include "Cosa/Board.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"
-#include "Cosa/INET/MQTT.hh"
+#include "Cosa/IoT/MQTT.hh"
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
