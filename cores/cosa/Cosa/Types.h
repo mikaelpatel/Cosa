@@ -229,9 +229,8 @@ typedef const PROGMEM void_P void_vec_P;
 
 /**
  * Macro for sleep for number of seconds. Requires include of the
- * Watchdog and that it has been initiated with
- * Watchdog::begin(). Allowed values are; 1, 2, 4, and 8 seconds. 
- * @param[in] seconds.
+ * Watchdog and that it has been initiated with Watchdog::begin(). 
+ * @param[in] seconds to sleep (Max 65 seconds).
  */
 #define SLEEP(seconds) Watchdog::delay(seconds * 1000)
 
