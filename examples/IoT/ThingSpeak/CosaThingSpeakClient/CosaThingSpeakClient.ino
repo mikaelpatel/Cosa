@@ -25,7 +25,6 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOBuffer.hh"
 #include "Cosa/Driver/DHT.hh"
 #include "Cosa/IoT/ThingSpeak.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -36,9 +35,7 @@ DHT11 sensor(Board::EXT0);
 
 // Ethernet controller
 static const char HOSTNAME[] __PROGMEM = "CosaThingSpeakClient";
-#define MAC 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed 
-static const uint8_t mac[6] __PROGMEM = { MAC };
-W5100 ethernet(mac);
+W5100 ethernet;
 
 // Thingspeak client
 static const char KEY[] __PROGMEM = "I3U14KLWM1R1SDPR";
@@ -57,12 +54,10 @@ void setup()
 void loop()
 {
   ThingSpeak::Channel channel(&client, KEY);
-  IOBuffer<64> buf;
-  IOStream cout(&buf);
+  ThingSpeak::Update update;
   sensor.sample();
-  cout << PSTR("field1=") << sensor.get_temperature() / 10
-       << PSTR("&field2=") << sensor.get_humidity() / 10
-       << ends;
-  ASSERT(!channel.post(buf));
+  update.set_field(1, sensor.get_temperature(), 1);
+  update.set_field(2, sensor.get_humidity(), 1);
+  ASSERT(!channel.post(update));
   SLEEP(20);
 }

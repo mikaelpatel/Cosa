@@ -95,3 +95,49 @@ ThingSpeak::Channel::post(const char* fields)
   sock->open(Socket::TCP, 0, 0);
   return (res);
 }
+
+#include "Cosa/Trace.hh"
+
+void 
+ThingSpeak::Update::set_field(uint8_t id, uint16_t value, uint8_t decimals, 
+			      bool sign)
+{
+  uint16_t scale = 1;
+  for (uint8_t i = 0; i < decimals; i++) scale *= 10;
+  if (!m_buf.is_empty()) m_cout << '&';
+  m_cout << PSTR("field") << id << '=';
+  if (sign) m_cout << '-';
+  m_cout << value / scale;  
+  if (decimals == 0) return;
+  uint16_t rem = value % scale;
+  m_cout << '.';
+  scale /= 10;
+  while (scale != 0 && scale > rem) {
+    m_cout << '0';
+    scale /= 10;
+  }
+  if (rem != 0) m_cout << rem;
+}
+
+void 
+ThingSpeak::Update::set_field(uint8_t id, uint32_t value, uint8_t decimals, 
+			      bool sign)
+{
+  uint16_t scale = 1;
+  for (uint8_t i = 0; i < decimals; i++) scale *= 10;
+  if (!m_buf.is_empty()) m_cout << '&';
+  m_cout << PSTR("field") << id << '=';
+  if (sign) m_cout << '-';
+  m_cout << value / scale;  
+  if (decimals == 0) return;
+  uint16_t rem = value % scale;
+  m_cout << '.';
+  scale /= 10;
+  while (scale != 0 && scale > rem) {
+    m_cout << '0';
+    scale /= 10;
+  }
+  if (rem != 0) m_cout << rem;
+}
+
+
