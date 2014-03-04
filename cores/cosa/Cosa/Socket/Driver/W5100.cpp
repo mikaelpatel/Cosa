@@ -35,6 +35,10 @@
 #include "Cosa/Trace.hh"
 #endif
 
+const uint8_t W5100::MAC[6] __PROGMEM = { 
+  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED 
+};
+
 W5100::W5100(const uint8_t* mac, Board::DigitalPin csn) : 
   SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, NULL),
   m_creg((CommonRegister*) COMMON_REGISTER_BASE),
@@ -42,6 +46,7 @@ W5100::W5100(const uint8_t* mac, Board::DigitalPin csn) :
   m_mac(mac)
 {
   memset(m_dns, 0, sizeof(m_dns));
+  if (mac == NULL) m_mac = MAC;
 }
 
 void

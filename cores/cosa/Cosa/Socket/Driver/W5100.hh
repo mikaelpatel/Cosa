@@ -504,6 +504,9 @@ public:
 		     bool progmem);
   };
 
+  /** Default hardware network address */
+  static const uint8_t MAC[6] PROGMEM;
+
   /** Sockets on device */
   Driver m_sock[SOCK_MAX];
 
@@ -575,11 +578,11 @@ public:
 public:
   /**
    * Construct W5100 device driver with given hardware address, and chip
-   * select.
-   * @param[in] mac hardware address (in program memory).
+   * select. 
+   * @param[in] mac hardware address (in program memory, default NULL).
    * @param[in] csn chip selection pin (Default D10).
    */
-  W5100(const uint8_t* mac, Board::DigitalPin csn = Board::D10);
+  W5100(const uint8_t* mac = NULL, Board::DigitalPin csn = Board::D10);
 
   /**
    * Get the current network address and subnet mask. 
