@@ -67,6 +67,7 @@ public:
      * @return bool
      */
     bool end();
+
   private:
     Socket* m_sock;
   };
@@ -81,14 +82,15 @@ public:
     Channel(Client* client, const char* key);
 
     /**
-     * Post given field update to channel. The update string is in
+     * Post given entry update to channel. The entry string is in
      * the format "field1=value1&...&field8=value8". Number of fields
      * depend on the channel definition in Thingspeak. Returns zero if
      * successful otherwise negative error code.
-     * @param[in] fields string with field-value update.
+     * @param[in] entry string with field-value update.
+     * @param[in] status entry annotation string (in program memory).
      * @return zero if successful otherwise negative error code.
      */
-    int post(const char* fields);
+    int post(const char* entry, const char* status = NULL);
 
   private:
     Client* m_client;
@@ -96,16 +98,16 @@ public:
   };
 
   /**
-   * ThingSpeak channel update support. Construct update command
+   * ThingSpeak channel update support. Construct entry command
    * using field identity and value updates.
    */
-  class Update {
+  class Entry {
   public:
     /**
-     * Construct ThingSpeak channel update. Initiate buffer and
-     * io-stream for creating command string.
+     * Construct ThingSpeak channel update entry. Initiate buffer 
+     * andio-stream for creating command string.
      */
-    Update() : m_buf(), m_cout(&m_buf) {}
+    Entry() : m_buf(), m_cout(&m_buf) {}
 
     /**
      * Set field with given identity and value. The type of the
@@ -130,8 +132,7 @@ public:
      * @param[in] decimals scaling of value.
      * @param[in] sign add sign if true.
      */
-    void set_field(uint8_t id, uint16_t value, uint8_t decimals, 
-		   bool sign = false);
+    void set_field(uint8_t id, uint16_t value, uint8_t decimals, bool sign = false);
 
     /**
      * Set field with given identity, signed 16-bit value and decimals.
@@ -154,8 +155,7 @@ public:
      * @param[in] decimals scaling of value.
      * @param[in] sign add sign if true.
      */
-    void set_field(uint8_t id, uint32_t value, uint8_t decimals, 
-		   bool sign = false);
+    void set_field(uint8_t id, uint32_t value, uint8_t decimals, bool sign = false);
 
     /**
      * Set field with given identity, signed 32-bit value and decimals.

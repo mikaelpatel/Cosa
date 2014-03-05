@@ -62,11 +62,13 @@ ThingSpeak::Channel::Channel(Client* client, const char* key) :
 {}
 
 int 
-ThingSpeak::Channel::post(const char* fields)
+ThingSpeak::Channel::post(const char* entry, const char* status)
 {
   // Use an iostream for the http post request
   Socket* sock = m_client->m_sock;
   IOStream page(sock);
+  size_t length = strlen(entry);
+  if (status != NULL) length += strlen_P(status) + 8;
 
   // Connect to the server
   uint8_t server[4] = { API_THINGSPEAK_COM };
@@ -76,15 +78,16 @@ ThingSpeak::Channel::post(const char* fields)
   if (res == 0) res = -3;
   if (res < 0) goto error;
 
-  // Generate the http post request
+  // Generate the http post request with entry and status
   page << PSTR("POST /update HTTP/1.1") << CRLF
        << PSTR("Host: api.thingspeak.com") << CRLF
        << PSTR("Connection: close") << CRLF
        << PSTR("X-THINGSPEAKAPIKEY: ") << m_key << CRLF
        << PSTR("Content-Type: application/x-www-form-urlencoded") << CRLF
-       << PSTR("Content-Length: ") << strlen(fields) << CRLF
+       << PSTR("Content-Length: ") << strlen(entry) << CRLF
        << CRLF
-       << (char*) fields;
+       << (char*) entry;
+  if (status != NULL) page << PSTR("&status=") << status;
   sock->flush();
   res = 0;
 
@@ -96,10 +99,8 @@ ThingSpeak::Channel::post(const char* fields)
   return (res);
 }
 
-#include "Cosa/Trace.hh"
-
 void 
-ThingSpeak::Update::set_field(uint8_t id, uint16_t value, uint8_t decimals, 
+ThingSpeak::Entry::set_field(uint8_t id, uint16_t value, uint8_t decimals, 
 			      bool sign)
 {
   uint16_t scale = 1;
@@ -120,7 +121,7 @@ ThingSpeak::Update::set_field(uint8_t id, uint16_t value, uint8_t decimals,
 }
 
 void 
-ThingSpeak::Update::set_field(uint8_t id, uint32_t value, uint8_t decimals, 
+ThingSpeak::Entry::set_field(uint8_t id, uint32_t value, uint8_t decimals, 
 			      bool sign)
 {
   uint16_t scale = 1;

@@ -22,13 +22,20 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+// #define NDEBUG
+
 #include "Cosa/RTC.hh"
-#include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/DHT.hh"
 #include "Cosa/IoT/ThingSpeak.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
+
+#ifndef NDEBUG
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+#else
+#define TRACE(x) x
+#endif
 
 // Digital humidity and temperature sensor
 DHT11 sensor(Board::EXT0);
@@ -43,21 +50,23 @@ ThingSpeak::Client client;
 
 void setup()
 {
+#ifndef NDEBUG
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaThingSpeakClient: started"));
+#endif
   Watchdog::begin();
   RTC::begin();
-  ASSERT(ethernet.begin_P(HOSTNAME));
-  ASSERT(client.begin(ethernet.socket(Socket::TCP)));
+  TRACE(ethernet.begin_P(HOSTNAME));
+  TRACE(client.begin(ethernet.socket(Socket::TCP)));
 }
 
 void loop()
 {
   ThingSpeak::Channel channel(&client, KEY);
-  ThingSpeak::Update update;
+  ThingSpeak::Entry update;
   sensor.sample();
   update.set_field(1, sensor.get_temperature(), 1);
   update.set_field(2, sensor.get_humidity(), 1);
-  ASSERT(!channel.post(update));
+  TRACE(channel.post(update));
   SLEEP(20);
 }
