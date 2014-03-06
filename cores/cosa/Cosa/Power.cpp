@@ -45,6 +45,8 @@ void
 Power::clock_prescale(uint8_t factor)
 {
   if (factor > 8) factor = 8;
-  CLKPR = (1 << CLKPCE);
-  CLKPR = factor;
+  synchronized {
+    CLKPR = (1 << CLKPCE);
+    CLKPR = factor;
+  }
 }
