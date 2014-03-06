@@ -424,6 +424,24 @@ swap(int32_t value)
 #define hton swap
 
 /**
+ * Calculate log(2) of the given value. The given template parameter
+ * type should be unsigned.
+ * @param[in] T unsigned integer type (uint8_t, uint16_t,..)
+ * @param[in] value
+ * @return log(2) 
+ */
+template<class T>
+inline uint8_t log2(T value)
+{
+  uint8_t res = 1;
+  while (value != 0) {
+    res += 1;
+    value >>= 1;
+  }
+  return (res);
+}
+
+/**
  * Template map function for given class/data type.
  * @param[in] T class value to map.
  * @param[in] x value to map.

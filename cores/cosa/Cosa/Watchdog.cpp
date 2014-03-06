@@ -37,28 +37,11 @@ uint8_t Watchdog::s_prescale;
 uint8_t Watchdog::s_mode;
 bool Watchdog::s_initiated = false;
 
-/**
- * Calculate log(2) of the given value. Used to map from delay
- * to time queue index.
- * @param[in] value
- * @return log(2) 
- */
-inline uint8_t 
-log2(uint16_t value)
-{
-  uint8_t res = 1;
-  while (value != 0) {
-    res += 1;
-    value >>= 1;
-  }
-  return (res);
-}
-
 uint8_t 
 Watchdog::as_prescale(uint16_t ms)
 {
   // Map milli-seconds to watchdog prescale values
-  uint8_t prescale = log2((ms + 8) >> 5) - 1;
+  uint8_t prescale = log2<uint16_t>((ms + 8) >> 5) - 1;
   if (prescale > 9) prescale = 9;
   return (prescale);
 }
