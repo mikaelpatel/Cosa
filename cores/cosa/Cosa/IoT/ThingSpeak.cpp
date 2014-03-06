@@ -56,6 +56,26 @@ ThingSpeak::Client::end()
   return (true);
 }
 
+int 
+ThingSpeak::Client::connect()
+{
+  uint8_t server[4] = { API_THINGSPEAK_COM };
+  int res = m_sock->connect(server, 80);
+  if (res != 0) return (res);
+  while ((res = m_sock->isconnected()) == 0) Watchdog::delay(16);
+  if (res == 0) res = -3;
+  return (res);
+}
+
+int 
+ThingSpeak::Client::disconnect()
+{
+  m_sock->disconnect();
+  m_sock->close();
+  m_sock->open(Socket::TCP, 0, 0);
+  return (0);
+}
+
 ThingSpeak::Channel::Channel(Client* client, const char* key) :
   m_client(client),
   m_key(key)
@@ -71,11 +91,7 @@ ThingSpeak::Channel::post(const char* entry, const char* status)
   if (status != NULL) length += strlen_P(status) + 8;
 
   // Connect to the server
-  uint8_t server[4] = { API_THINGSPEAK_COM };
-  int res = sock->connect(server, 80);
-  if (res != 0) goto error;
-  while ((res = sock->isconnected()) == 0) Watchdog::delay(16);
-  if (res == 0) res = -3;
+  int res = m_client->connect();
   if (res < 0) goto error;
 
   // Generate the http post request with entry and status
@@ -93,9 +109,7 @@ ThingSpeak::Channel::post(const char* entry, const char* status)
 
  error:
   // Disconnect and close the socket. Reopen for the next post (if any)
-  sock->disconnect();
-  sock->close();
-  sock->open(Socket::TCP, 0, 0);
+  m_client->disconnect();
   return (res);
 }
 
@@ -141,4 +155,72 @@ ThingSpeak::Entry::set_field(uint8_t id, uint32_t value, uint8_t decimals,
   if (rem != 0) m_cout << rem;
 }
 
+ThingSpeak::TalkBack::TalkBack(Client* client, const char* key, uint16_t id) :
+  m_client(client), 
+  m_key(key), 
+  m_id(id),
+  m_first(NULL) 
+{}
 
+int 
+ThingSpeak::TalkBack::execute_next_command()
+{
+  // Use an iostream for the http post request
+  Socket* sock = m_client->m_sock;
+  IOStream page(sock);
+
+  // Connect to the server
+  int res = m_client->connect();
+  if (res < 0) goto error;
+
+  // Generate the http post request with talkback id and key
+  page << PSTR("POST /talkbacks/") << m_id
+       << PSTR("/commands/execute?api_key=") << m_key
+       << PSTR(" HTTP/1.1") << CRLF
+       << PSTR("Host: api.thingspeak.com") << CRLF
+       << PSTR("Connection: close") << CRLF
+       << PSTR("Content-Length: 0") << CRLF
+       << CRLF;
+  sock->flush();
+
+  // Wait for the reply
+  while ((res = sock->available()) == 0) Watchdog::delay(16);
+  if (res < 0) goto error;
+
+  // Parse reply header
+  Command* command;
+  uint8_t length;
+  char line[64];
+  sock->gets(line, sizeof(line));
+  res = -1;
+  if (strcmp_P(line, PSTR("HTTP/1.1 200 OK\r"))) goto error;
+  do {
+    sock->gets(line, sizeof(line));
+  } while ((sock->available() > 0) && (strcmp_P(line, PSTR("\r"))));
+  if (sock->available() <= 0) goto error;
+
+  // Parse reply length and command string
+  sock->gets(line, sizeof(line));
+  length = atoi(line);
+  if (length <= 0) goto error;
+  sock->gets(line, sizeof(line));
+  line[length] = 0;
+
+  // Lookup the command and execute
+  command = lookup(line);
+  if (command == NULL) goto error;
+  command->execute();
+  res = 0;
+  
+ error:
+  m_client->disconnect();
+  return (res);
+}
+  
+ThingSpeak::TalkBack::Command* 
+ThingSpeak::TalkBack::lookup(const char* name)
+{
+  for (Command* c = m_first; c != NULL; c = c->m_next)
+    if (!strcmp_P(name, c->m_string)) return (c);
+  return (NULL);
+}

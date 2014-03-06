@@ -31,7 +31,8 @@
 #include "Cosa/IOBuffer.hh"
 
 /**
- * ThingSpeak client implementation.
+ * ThingSpeak client implementation; Channel update and TalkBack
+ * command handler.
  * 
  * @section Reference
  * 1. ThingSpeak API, http://community.thingspeak.com/documentation/api/
@@ -39,9 +40,11 @@
 class ThingSpeak {
 public:
   class Channel;
-
+  class TalkBack;
+  
   class Client {
     friend class Channel;
+    friend class TalkBack;
   public:
     /**
      * Construct Thingspeak client.
@@ -69,6 +72,20 @@ public:
     bool end();
 
   private:
+    /**
+     * Connect to the server. Return zero if successful otherwise 
+     * negative error code.
+     * @return zero or negative error code.
+     */
+    int connect();
+
+    /**
+     * Disconnect from the server. Return zero if successful otherwise 
+     * negative error code.
+     * @return zero or negative error code.
+     */
+    int disconnect();
+
     Socket* m_sock;
   };
 
@@ -197,6 +214,82 @@ public:
     IOStream m_cout;
   };
   
+  /**
+   * ThingSpeak TalkBack API client. Allow handing of commands
+   * queued on server.
+   */
+  class TalkBack {
+    friend class Command;
+  public:
+
+    /**
+     * TalkBack command handler. Applications should sub-class
+     * to implement application commands. 
+     */
+    class Command {
+      friend class TalkBack;
+    public:
+      /**
+       * Construct a command within the given talkback command
+       * queue and with the given string.
+       * @param[in] talkback handler.
+       * @param[in] string for command.
+       */
+      Command(TalkBack* talkback, const char* string) :
+	m_talkback(talkback),
+	m_string(string)
+      {
+	m_next = talkback->m_first;
+	talkback->m_first = this;
+      }
+
+      /**
+       *@return command string.
+       */
+      const char* get_string() { return (m_string); }
+
+      /**
+       * @override ThingSpeak::TalkBack::Command
+       * The command handler. Called by TalkBack::execute_next_command
+       * when receiving a command string that matches.
+       */
+      virtual void execute() {}
+      
+    private:
+      Command* m_next;
+      TalkBack* m_talkback;
+      const char* m_string;
+    };
+
+    /**
+     * Construct a TalkBack handler connected to the given
+     * ThingSpeak client with the given key and identity.
+     * @param[in] client thingspeak client.
+     * @param[in] key talkback api key.
+     * @param[in] id talkback identity.
+     */
+    TalkBack(Client* client, const char* key, uint16_t id);
+
+    /**
+     * Execute next command in server talkback command queue. Returns
+     * zero if successful otherwise negative error code. 
+     * @return zero or negative error code.
+     */
+    int execute_next_command();
+    
+  private:
+    /**
+     * Lookup command given command string. Returns reference to
+     * Command handler or NULL.
+     * @return Command or NULL.
+     */
+    Command* lookup(const char* name);
+
+    Client* m_client;
+    const char* m_key;
+    uint16_t m_id;
+    Command* m_first;
+  };
 };
 
 #endif
