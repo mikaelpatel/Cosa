@@ -26,10 +26,12 @@
 #include "Cosa/INET/SNMP.hh"
 #include "Cosa/Watchdog.hh"
 
+// SNMP MIB MIB-2 System OID(1.3.6.1.2.1.1.n)
 const uint8_t SNMP::MIB2_SYSTEM::OID[] __PROGMEM = {
   7,1,3,6,1,2,1,1
 };
 
+// Arduino MIB OID(1.3.6.1.4.1.36582)
 const uint8_t SNMP::ARDUINO_MIB_OID[] __PROGMEM = {
   9,1,3,6,1,4,1,130,157,102
 };
@@ -75,9 +77,6 @@ SNMP::MIB2_SYSTEM::is_request(PDU& pdu)
     case sysUpTime:
       pdu.value.encode(SNMP::SYNTAX_UINT32, Watchdog::millis() / 1000L);
       break;
-    case sysServices:
-      pdu.value.encode(SNMP::SYNTAX_INT, 0x42);
-      break;
     case sysContact:
       pdu.value.encode_P(SNMP::SYNTAX_OCTETS, m_contact, strlen_P(m_contact));
       break;
@@ -86,6 +85,9 @@ SNMP::MIB2_SYSTEM::is_request(PDU& pdu)
       break;
     case sysLocation:
       pdu.value.encode_P(SNMP::SYNTAX_OCTETS, m_location, strlen_P(m_location));
+      break;
+    case sysServices:
+      pdu.value.encode(SNMP::SYNTAX_INT, 0x42);
       break;
     }
   }
