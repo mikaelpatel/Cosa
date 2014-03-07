@@ -85,6 +85,26 @@ IOStream::print(unsigned long int n, Base base)
 }
 
 void 
+IOStream::print(unsigned int n, uint8_t digits, Base base) 
+{
+  char buf[sizeof(int) * CHARBITS + 1];
+  utoa(n, buf, base);
+  for (uint8_t length = strlen(buf); length < digits; length++)
+    print('0');
+  print(buf);
+}
+
+void 
+IOStream::print(unsigned long int n, uint8_t digits, Base base)
+{
+  char buf[sizeof(long int) * CHARBITS + 1];
+  ultoa(n, buf, base);
+  for (uint8_t length = strlen(buf); length < digits; length++)
+    print('0');
+  print(buf);
+}
+
+void 
 IOStream::print(IOStream::Device* buffer)
 {
   int c;

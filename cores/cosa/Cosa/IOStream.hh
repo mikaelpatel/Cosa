@@ -258,6 +258,22 @@ public:
   void print(unsigned long int value, Base base = dec);
 
   /**
+   * Print unsigned integer as string with given base to stream.
+   * @param[in] value to print.
+   * @param[in] digits to print.
+   * @param[in] base to represent value in.
+   */
+  void print(unsigned int value, uint8_t digits, Base base);
+
+  /**
+   * Print unsigned long integer 32-bit value in given base to stream.
+   * @param[in] value to print.
+   * @param[in] digits to print.
+   * @param[in] base to represent value in.
+   */
+  void print(unsigned long int value, uint8_t digits, Base base);
+
+  /**
    * Print buffer contents in given base to stream.
    * @param[in] ptr pointer to data memory.
    * @param[in] size number of bytes.

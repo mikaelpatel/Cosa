@@ -139,21 +139,21 @@ void loop()
   start = RTC::micros();
   trace << (int8_t) 0x7f << endl;
   stop = RTC::micros();
-  trace << PSTR("int8_t:");
+  trace << PSTR("max int8_t:");
   trace << stop - start << PSTR(" us") << endl;
   SLEEP(1);
 
   start = RTC::micros();
   trace << (int16_t) 0x7fff << endl;
   stop = RTC::micros();
-  trace << PSTR("int16_t:");
+  trace << PSTR("max int16_t:");
   trace << stop - start << PSTR(" us") << endl;
   SLEEP(1);
 
   start = RTC::micros();
   trace << (int32_t) 0x7fffffffL << endl;
   stop = RTC::micros();
-  trace << PSTR("int32_t:");
+  trace << PSTR("max int32_t:");
   trace << stop - start << PSTR(" us") << endl;
   trace << endl;
   SLEEP(1);
@@ -162,21 +162,40 @@ void loop()
   start = RTC::micros();
   trace << (uint8_t) 0xffU << endl;
   stop = RTC::micros();
-  trace << PSTR("uint8_t:");
+  trace << PSTR("max uint8_t:");
   trace << stop - start << PSTR(" us") << endl;
   SLEEP(1);
 
   start = RTC::micros();
   trace << (uint16_t) 0xffffU << endl;
   stop = RTC::micros();
-  trace << PSTR("uint16_t:");
+  trace << PSTR("max uint16_t:");
   trace << stop - start << PSTR(" us") << endl;
   SLEEP(1);
 
   start = RTC::micros();
   trace << (uint32_t) 0xffffffffUL << endl;
   stop = RTC::micros();
-  trace << PSTR("uint32_t:");
+  trace << PSTR("max uint32_t:");
+  trace << stop - start << PSTR(" us") << endl;
+  trace << endl;
+  SLEEP(1);
+
+  // Measure time to print unsigned integer; 16 and 32 bit.
+  start = RTC::micros();
+  trace.print(100U, 6, IOStream::dec);
+  trace.println();
+  stop = RTC::micros();
+  trace << PSTR("uint16_t(digits=6):");
+  trace << stop - start << PSTR(" us") << endl;
+  trace << endl;
+  SLEEP(1);
+
+  start = RTC::micros();
+  trace.print(100UL, 6, IOStream::dec);
+  trace.println();
+  stop = RTC::micros();
+  trace << PSTR("uint32_t(digits=6):");
   trace << stop - start << PSTR(" us") << endl;
   trace << endl;
   SLEEP(1);

@@ -126,12 +126,7 @@ ThingSpeak::Entry::set_field(uint8_t id, uint16_t value, uint8_t decimals,
   if (decimals == 0) return;
   uint16_t rem = value % scale;
   m_cout << '.';
-  scale /= 10;
-  while (scale != 0 && scale > rem) {
-    m_cout << '0';
-    scale /= 10;
-  }
-  if (rem != 0) m_cout << rem;
+  m_cout.print(rem, decimals, IOStream::dec);
 }
 
 void 
@@ -147,12 +142,7 @@ ThingSpeak::Entry::set_field(uint8_t id, uint32_t value, uint8_t decimals,
   if (decimals == 0) return;
   uint16_t rem = value % scale;
   m_cout << '.';
-  scale /= 10;
-  while (scale != 0 && scale > rem) {
-    m_cout << '0';
-    scale /= 10;
-  }
-  if (rem != 0) m_cout << rem;
+  m_cout.print(rem, decimals, IOStream::dec);
 }
 
 ThingSpeak::TalkBack::TalkBack(Client* client, const char* key, uint16_t id) :
