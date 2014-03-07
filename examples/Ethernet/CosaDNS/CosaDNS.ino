@@ -38,7 +38,7 @@
 // #define SERVER 85,8,31,209
 
 // W5100 Ethernet Controller with MAC-address
-const uint8_t mac[6] PROGMEM = { MAC };
+const uint8_t mac[6] __PROGMEM = { MAC };
 W5100 ethernet(mac);
 
 // Query configuration

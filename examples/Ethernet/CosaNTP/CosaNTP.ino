@@ -31,14 +31,14 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/RTC.hh"
 
-// Network configuration and time-zone
-#define MAC 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed
+// Time-zone; GMT+1, Stockholm
 #define ZONE 1
 
-static const uint8_t mac[6] __PROGMEM = { MAC };
+// W5100 Ethernet Controller with default mac
+W5100 ethernet;
 
-// W5100 Ethernet Controller
-W5100 ethernet(mac);
+// NTP server
+#define NTP_SERVER "se.pool.ntp.org"
 
 void setup()
 {
@@ -61,13 +61,13 @@ void loop()
   DNS dns;
   ethernet.get_dns_addr(server);
   if (!dns.begin(ethernet.socket(Socket::UDP), server)) return;
-  if (dns.gethostbyname_P(PSTR("se.pool.ntp.org"), server) != 0) return;
+  if (dns.gethostbyname_P(PSTR(NTP_SERVER), server) != 0) return;
 
   // Connect to the NTP server using given socket
   NTP ntp(ethernet.socket(Socket::UDP), server, ZONE);
 
   // Get current time. Allow a number of retries
-  const uint8_t RETRY_MAX = 13;
+  const uint8_t RETRY_MAX = 20;
   clock_t clock;
   for (uint8_t retry = 0; retry < RETRY_MAX; retry++)
     if ((clock = ntp.time()) != 0L) break;

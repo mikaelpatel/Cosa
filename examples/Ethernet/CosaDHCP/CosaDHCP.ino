@@ -33,8 +33,8 @@
 #define MAC 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed
 #define IP 0,0,0,0
 #define SUBNET 255,255,255,0
-static const uint8_t mac[6] PROGMEM = { MAC };
-static const char hostname[] PROGMEM = "CosaDHCP";
+static const uint8_t mac[6] __PROGMEM = { MAC };
+static const char hostname[] __PROGMEM = "CosaDHCP";
 
 // W5100 Ethernet Controller and DHCP client
 W5100 ethernet(mac);

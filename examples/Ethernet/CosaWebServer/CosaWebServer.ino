@@ -70,7 +70,7 @@ WebServer::on_request(char* http)
   m_sock->get_src(addr);
 
   // Reply page; header and footer are static, contents dynamic
-  static const char header[] PROGMEM = 
+  static const char header[] __PROGMEM = 
     "HTTP/1.1 200 OK" CRLF
     "Content-Type: text/html" CRLF
     "Connection: close" CRLF 
@@ -79,10 +79,10 @@ WebServer::on_request(char* http)
     "<HTML>" CRLF
     "<HEAD><TITLE>CosaWebServer</TITLE></HEAD>" CRLF 
     "<BODY>" CRLF;
-  static const char footer[] PROGMEM = 
+  static const char footer[] __PROGMEM = 
     "</BODY>" CRLF 
     "</HTML>";
-  static const char BR[] PROGMEM = 
+  static const char BR[] __PROGMEM = 
     "<BR/>" CRLF;
 
   // Construct the page; header-contents-footer
@@ -107,7 +107,7 @@ WebServer::on_request(char* http)
 #define PORT 80
 
 // W5100 Ethernet Controller with MAC-address
-static const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
+static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 WebServer server;
 

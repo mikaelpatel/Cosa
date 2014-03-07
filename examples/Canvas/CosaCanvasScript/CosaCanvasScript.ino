@@ -154,7 +154,7 @@ const int8_t poly[] __PROGMEM = {
 };
 
 // The script table: the order is important as index is used in scripts
-void_P table[] PROGMEM = {
+void_P table[] __PROGMEM = {
   init_script,
   arduino_icon_34x32,
   script,

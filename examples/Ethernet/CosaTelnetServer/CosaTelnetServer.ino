@@ -39,7 +39,7 @@
 #define PORT 23
 
 // W5100 Ethernet Controller with MAC-address
-static const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
+static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 Socket* sock = NULL;
 

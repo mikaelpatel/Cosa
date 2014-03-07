@@ -48,7 +48,7 @@ private:
     ardDigitalPin = 1,	      // Digital pin[0..22](0..1), read-only
     ardAnalogPin = 2,	      // Analog pin[0..7](0..1023), read-only
     ardVcc = 3,		      // Power supply[0](0..VCC), mV, read-only
-  } __attribute__((packet));
+  } __attribute__((packed));
 
 public:
   /**
@@ -150,13 +150,13 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
 #define IP 192,168,0,100
 #define SUBNET 255,255,255,0
 #define GATEWAY 192,168,0,1
-static const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
+static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 
 // SNMP MIB-2 System configuration
-static const char descr[] PROGMEM = "<service description>";
-static const char contact[] PROGMEM = "<contact information>";
-static const char name[] PROGMEM = "<device name>";
-static const char location[] PROGMEM = "<device location>";
+static const char descr[] __PROGMEM = "<service description>";
+static const char contact[] __PROGMEM = "<contact information>";
+static const char name[] __PROGMEM = "<device name>";
+static const char location[] __PROGMEM = "<device location>";
 
 W5100 ethernet(mac);
 SNMP::MIB2_SYSTEM mib2(descr, contact, name, location);
