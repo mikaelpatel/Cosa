@@ -29,18 +29,18 @@
 
 // Binary sketch size:  MEGA/STD*/TINY bytes
 // =========================================
-// Baseline:		 778/ 654/ 556 bytes
-// HD44780::Port4b:	3548/3378/3240 bytes
-// HD44780::SR3W:	3886/3716/3572 bytes
-// HD44780::SR3WSPI:	4436/4266/4020 bytes
-// HD44780::SR4W:	3884/3702/3550 bytes
-// HD44780::MJKDZ:	5150/5056/5570 bytes
-// HD44780::GYIICLCD:	5150/5057/5570 bytes
-// HD44780::DFRobot:	5120/5026/5540 bytes
-// HD44780::ERM1602_5:	4178/4006/3844 bytes
-// PCD8544: 		4302/4166/3848 bytes
-// ST7565:  		4670/4550/4234 bytes
-// VLCD:		4056/3996/4400 bytes
+// Baseline:		 784/ 660/ 562 bytes
+// HD44780::Port4b:	3552/3386/3244 bytes
+// HD44780::SR3W:	3890/3724/3576 bytes
+// HD44780::SR3WSPI:	4422/4254/4018 bytes
+// HD44780::SR4W:	3888/3710/3554 bytes
+// HD44780::MJKDZ:	5234/5152/5656 bytes
+// HD44780::GYIICLCD:	5234/5152/5656 bytes
+// HD44780::DFRobot:	5204/5122/5626 bytes
+// HD44780::ERM1602_5:	4182/4014/3844 bytes
+// PCD8544: 		4378/4246/3924 bytes
+// ST7565:  		4656/4540/4220 bytes
+// VLCD:		4066/4010/4400 bytes
 // =========================================
 // The baseline is the Watchdog and Arduino
 // init code. Move comment prefix to compile 
