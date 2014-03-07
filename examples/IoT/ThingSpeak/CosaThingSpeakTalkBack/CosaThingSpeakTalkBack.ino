@@ -43,7 +43,6 @@ ThingSpeak::Client client;
 ThingSpeak::TalkBack talkback(&client, KEY, ID);
 
 // Thingspeak TalkBack command handler; simple trace
-// Should be a class per command or sub-sets
 class Command : public ThingSpeak::TalkBack::Command {
 public:
   Command(ThingSpeak::TalkBack* talkback, const char* string) : 
@@ -55,17 +54,40 @@ public:
 void 
 Command::execute() 
 { 
-  trace << Watchdog::millis() << ':' << get_string() << endl; 
+  trace << Watchdog::millis() << ':' << m_string << endl; 
 }
 
-const char LED_ON[] PROGMEM = "LED_ON";
-const char LED_OFF[] PROGMEM = "LED_OFF";
-const char REBOOT[] PROGMEM = "REBOOT";
-
-// Talkback command
+const char LED_ON[] __PROGMEM = "LED_ON";
 Command led_on(&talkback, LED_ON);
+
+const char LED_OFF[] __PROGMEM = "LED_OFF";
 Command led_off(&talkback, LED_OFF);
+
+const char REBOOT[] __PROGMEM = "REBOOT";
 Command reboot(&talkback, REBOOT);
+
+const char PONG[] __PROGMEM = "PONG";
+Command pong(&talkback, PONG);
+
+// Thingspeak TalkBack command handler; add command(PONG) back
+// to the command queue; 
+class Ping : public Command {
+public:
+  Ping(ThingSpeak::TalkBack* talkback, const char* string) : 
+    Command(talkback, string)
+  {}
+  virtual void execute();
+};
+
+void 
+Ping::execute() 
+{ 
+  Command::execute();
+  m_talkback->add_command_P(PSTR("PONG"));
+}
+
+const char PING[] __PROGMEM = "PING";
+Ping ping(&talkback, PING);
 
 void setup()
 {

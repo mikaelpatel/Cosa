@@ -206,17 +206,56 @@ ThingSpeak::TalkBack::execute_next_command()
   sock->gets(line, sizeof(line));
   line[length] = 0;
 
-  // Lookup the command and execute
+  // Lookup the command and execute. Disconnect before and the command might
+  // issue an add command request
   command = lookup(line);
   if (command == NULL) goto error;
+  m_client->disconnect();
   command->execute();
-  res = 0;
+  return (0);
   
  error:
   m_client->disconnect();
   return (res);
 }
   
+int 
+ThingSpeak::TalkBack::add_command_P(const char* string, uint8_t position)
+{
+  // Use an iostream for the http post request
+  Socket* sock = m_client->m_sock;
+  IOStream page(sock);
+
+  // Connect to the server
+  int res = m_client->connect();
+  if (res < 0) goto error;
+
+  // Generate the http post request with talkback id, key, command and position
+  page << PSTR("POST /talkbacks/") << m_id
+       << PSTR("/commands?api_key=") << m_key
+       << PSTR("&command_string=") << string;
+  if (position != 0) page << PSTR("&position=") << position;
+  page << PSTR(" HTTP/1.1") << CRLF
+       << PSTR("Host: api.thingspeak.com") << CRLF
+       << PSTR("Connection: close") << CRLF
+       << PSTR("Content-Length: 0") << CRLF
+       << CRLF;
+  sock->flush();
+  
+  // Wait for the reply
+  while ((res = sock->available()) == 0) Watchdog::delay(16);
+  if (res < 0) goto error;
+
+  // Parse reply header
+  char line[64];
+  sock->gets(line, sizeof(line));
+  res = strcmp_P(line, PSTR("HTTP/1.1 200 OK\r")) ? -1 : 0;
+  
+ error:
+  m_client->disconnect();
+  return (res);
+}
+
 ThingSpeak::TalkBack::Command* 
 ThingSpeak::TalkBack::lookup(const char* name)
 {

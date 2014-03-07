@@ -244,21 +244,18 @@ public:
       }
 
       /**
-       *@return command string.
-       */
-      const char* get_string() { return (m_string); }
-
-      /**
        * @override ThingSpeak::TalkBack::Command
        * The command handler. Called by TalkBack::execute_next_command
        * when receiving a command string that matches.
        */
       virtual void execute() {}
       
-    private:
-      Command* m_next;
+    protected:
       TalkBack* m_talkback;
       const char* m_string;
+
+    private:
+      Command* m_next;
     };
 
     /**
@@ -277,6 +274,17 @@ public:
      */
     int execute_next_command();
     
+    /**
+     * Add the given command to the talkback command queue at the
+     * given position. Default position is the end of the queue. The
+     * command string should be in program memory. Returns
+     * zero if successful otherwise negative error code. 
+     * @param[in] string command in program memory.
+     * @param[in] position in queue (first is one(1), last is zero(0)).
+     * @return zero or negative error code.
+     */
+    int add_command_P(const char* string, uint8_t position = 0); 
+
   private:
     /**
      * Lookup command given command string. Returns reference to
