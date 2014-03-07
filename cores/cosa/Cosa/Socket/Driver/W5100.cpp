@@ -40,7 +40,7 @@ const uint8_t W5100::MAC[6] __PROGMEM = {
 };
 
 W5100::W5100(const uint8_t* mac, Board::DigitalPin csn) : 
-  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, NULL),
+  SPI::Driver(csn, 0, SPI::DIV2_2X_CLOCK, 0, SPI::MSB_ORDER, NULL),
   m_creg((CommonRegister*) COMMON_REGISTER_BASE),
   m_local(Socket::DYNAMIC_PORT),
   m_mac(mac)
