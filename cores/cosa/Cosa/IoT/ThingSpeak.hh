@@ -244,6 +244,15 @@ public:
       }
 
       /**
+       * Return command string. It is stored in program memory.
+       * @return string.
+       */
+      const char* get_string() 
+      {
+	return (m_string);
+      }
+
+      /**
        * @override ThingSpeak::TalkBack::Command
        * The command handler. Called by TalkBack::execute_next_command
        * when receiving a command string that matches.

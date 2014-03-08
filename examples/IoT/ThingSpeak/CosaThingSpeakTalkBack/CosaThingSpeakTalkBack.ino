@@ -16,11 +16,18 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * ThingSpeak talkback demonstration.
+ * ThingSpeak talkback demonstration; shows how to create a command
+ * handler class, execute commands from the TalkBack command queue,
+ * and push additional commands to the queue.
+ *
+ * @section Circuit
+ * The sketch uses Board::D15 (A1) as output pin for the LED.
+ * Commands LED_ON/LED_OFF will turn on and off the LED.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Pins.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IoT/ThingSpeak.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
@@ -57,51 +64,78 @@ Command::execute()
   trace << Watchdog::millis() << ':' << m_string << endl; 
 }
 
-const char LED_ON_COMMAND[] __PROGMEM = "LED_ON";
-Command led_on(&talkback, LED_ON_COMMAND);
-
-const char LED_OFF_COMMAND[] __PROGMEM = "LED_OFF";
-Command led_off(&talkback, LED_OFF_COMMAND);
-
 const char REBOOT_COMMAND[] __PROGMEM = "REBOOT";
 Command reboot(&talkback, REBOOT_COMMAND);
 
-const char PONG_COMMAND[] __PROGMEM = "PONG";
-Command pong(&talkback, PONG_COMMAND);
-
-// Thingspeak TalkBack command handler; add command(PONG) back
-// to the command queue; 
-class Ping : public Command {
+// Thingspeak TalkBack command handler; set given pin according
+// to state variable
+class LED : public Command {
 public:
-  Ping(ThingSpeak::TalkBack* talkback, const char* string) : 
-    Command(talkback, string)
+  LED(ThingSpeak::TalkBack* talkback, const char* string, 
+      Board::DigitalPin pin, uint8_t state) : 
+    Command(talkback, string),
+    m_led(pin),
+    m_state(state)
   {}
   virtual void execute();
+private:
+  OutputPin m_led;
+  uint8_t m_state;
+};
+
+void 
+LED::execute()
+{ 
+  Command::execute();
+  m_led.set(m_state);
+}
+
+const char LED_ON_COMMAND[] __PROGMEM = "LED_ON";
+LED led_on(&talkback, LED_ON_COMMAND, Board::D15, 1);
+
+const char LED_OFF_COMMAND[] __PROGMEM = "LED_OFF";
+LED led_off(&talkback, LED_OFF_COMMAND, Board::D15, 0);
+
+// Thingspeak TalkBack command handler; add given command back
+// to the command queue
+class Ping : public Command {
+public:
+  Ping(ThingSpeak::TalkBack* talkback, Command* pong) : 
+    Command(talkback, PSTR("PING")),
+    m_pong(pong)
+  {}
+  virtual void execute();
+private:
+  Command* m_pong;
 };
 
 void 
 Ping::execute() 
 { 
   Command::execute();
-  m_talkback->add_command_P(PSTR("PONG"));
+  m_talkback->add_command_P(m_pong->get_string());
 }
 
-const char PING_COMMAND[] __PROGMEM = "PING";
-Ping ping(&talkback, PING_COMMAND);
+const char PONG_COMMAND[] __PROGMEM = "PONG";
+Command pong(&talkback, PONG_COMMAND);
+Ping ping(&talkback, &pong);
 
 void setup()
 {
 #ifndef NDEBUG
+  // Setup trace iostream to serial port
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaThingSpeakTalkBack: started"));
 #endif
+  // Setup watchdog and ethernet controller
   Watchdog::begin();
   TRACE(ethernet.begin_P(HOSTNAME));
+  // Setup ThingSpeak with given ethernet socket 
   TRACE(client.begin(ethernet.socket(Socket::TCP)));
 }
 
 void loop()
 {
-  // Take a nap if there was nothing to execute
+  // Execture next command or take a nap
   if (talkback.execute_next_command() != 0) SLEEP(30);
 }
