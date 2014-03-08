@@ -57,17 +57,17 @@ Command::execute()
   trace << Watchdog::millis() << ':' << m_string << endl; 
 }
 
-const char LED_ON[] __PROGMEM = "LED_ON";
-Command led_on(&talkback, LED_ON);
+const char LED_ON_COMMAND[] __PROGMEM = "LED_ON";
+Command led_on(&talkback, LED_ON_COMMAND);
 
-const char LED_OFF[] __PROGMEM = "LED_OFF";
-Command led_off(&talkback, LED_OFF);
+const char LED_OFF_COMMAND[] __PROGMEM = "LED_OFF";
+Command led_off(&talkback, LED_OFF_COMMAND);
 
-const char REBOOT[] __PROGMEM = "REBOOT";
-Command reboot(&talkback, REBOOT);
+const char REBOOT_COMMAND[] __PROGMEM = "REBOOT";
+Command reboot(&talkback, REBOOT_COMMAND);
 
-const char PONG[] __PROGMEM = "PONG";
-Command pong(&talkback, PONG);
+const char PONG_COMMAND[] __PROGMEM = "PONG";
+Command pong(&talkback, PONG_COMMAND);
 
 // Thingspeak TalkBack command handler; add command(PONG) back
 // to the command queue; 
@@ -86,8 +86,8 @@ Ping::execute()
   m_talkback->add_command_P(PSTR("PONG"));
 }
 
-const char PING[] __PROGMEM = "PING";
-Ping ping(&talkback, PING);
+const char PING_COMMAND[] __PROGMEM = "PING";
+Ping ping(&talkback, PING_COMMAND);
 
 void setup()
 {
