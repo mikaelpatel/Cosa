@@ -80,7 +80,9 @@ void setup()
   // 0 uA, already done by startup
   ACSR = _BV(ACD);
   ADCSRA = 0;  
+#if !defined(__ARDUINO_STANDARD_USB__)
   UCSR0B = 0;
+#endif
 #endif
 #if defined(USE_DISABLE_PINS)
   // 2 uA, possible uart pin needed disconnecting
