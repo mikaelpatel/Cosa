@@ -181,6 +181,7 @@ Naming
 * "Ciao"; interjection hello!, goodbye!. 
 * "Cosa fai"; what do you do?
 * "Rete"; network
+* "Nucleo"; kernel
 
 Note
 ----
@@ -192,9 +193,10 @@ LilyPad, LilyPad USB, Mighty, Mega, etc) are supported.
 News
 ----
 
-2014-03 Support for ThingSpeak client (channel update). Improving the
-ADXL345 accelerometer device driver and example sketch. Adding a Soft
-SPI implementation (only 0/2 mode).       
+2014-03 New class for Alarm handling. Support for ThingSpeak client
+(channel update and TalkBack API). Improving the ADXL345 accelerometer
+device driver and example sketch. Adding a Soft SPI implementation
+(only 0/2 mode).        
 
 2014-02 Adding support for coroutines (threads), semaphores and
 mutex. Allow build with GCC 4.8.1. Support for MQTT Client, HTTP
