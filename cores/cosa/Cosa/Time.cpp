@@ -38,7 +38,7 @@ IOStream& operator<<(IOStream& outs, time_t& t)
 
 IOStream& operator<<(IOStream& outs, clock_t& c)
 {
-  outs << (c / 86400L) << '.' << (c % 86400L);
+  outs << (c / SECONDS_PER_DAY) << '.' << (c % SECONDS_PER_DAY);
   return (outs);
 }
 

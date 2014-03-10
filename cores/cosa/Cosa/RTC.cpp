@@ -110,8 +110,7 @@ RTC::delay(uint16_t ms, uint8_t mode)
 ISR(TIMER0_OVF_vect)
 {
   // Increment ticks and check for second count update
-  uint16_t ticks = RTC::s_ticks;
-  ticks += 1;
+  uint16_t ticks = RTC::s_ticks + 1;
   if (ticks == TICKS_PER_SEC) {
     ticks = 0;
     RTC::s_sec += 1;
