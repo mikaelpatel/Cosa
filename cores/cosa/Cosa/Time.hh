@@ -82,6 +82,12 @@ struct time_t {			// Range
    * @param[in] zone time (hours adjustment from UTC).
    */
   time_t(clock_t c, uint8_t zone = 0);
+
+  /**
+   * Convert time to clock representation (from bcd).
+   * @return seconds from epoch.
+   */
+  clock_t to_clock();
 };
 
 /**

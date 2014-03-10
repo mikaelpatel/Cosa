@@ -42,6 +42,10 @@ IOStream& operator<<(IOStream& outs, clock_t& c)
   return (outs);
 }
 
+static const uint8_t days_in[] __PROGMEM = {
+  0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+};
+
 static bool 
 is_leap(uint16_t year)
 {
@@ -56,9 +60,6 @@ days_per(uint16_t year)
 
 time_t::time_t(clock_t c, uint8_t zone)
 {
-  static const uint8_t days_in[] __PROGMEM = {
-    0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
-  };
   uint16_t dayno = c / SECONDS_PER_DAY;
   day = (dayno % DAYS_PER_WEEK) + 1;
   year = 0;
@@ -82,4 +83,25 @@ time_t::time_t(clock_t c, uint8_t zone)
   minutes = (c % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE;
   seconds = (c % SECONDS_PER_MINUTE);
   to_bcd();
+}
+
+clock_t
+time_t::to_clock() 
+{
+  clock_t res;
+  to_binary();
+  res = year * (SECONDS_PER_DAY * 365);
+  for (uint8_t y = 0; y < year; y++) 
+    if (is_leap(y)) 
+      res +=  SECONDS_PER_DAY;
+  for (uint8_t m = 1; m < month; m++) {
+    uint8_t days = pgm_read_byte(&days_in[m]);
+    if (is_leap(year) && (m == 2)) days += 1;
+    res += SECONDS_PER_DAY * days;
+  }
+  res += (date - 1) * SECONDS_PER_DAY;
+  res += hours * SECONDS_PER_HOUR;
+  res += minutes * SECONDS_PER_MINUTE;
+  res += seconds;
+  return (res);
 }
