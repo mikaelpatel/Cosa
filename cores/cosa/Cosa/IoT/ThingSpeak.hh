@@ -239,8 +239,6 @@ public:
 	m_talkback(talkback),
 	m_string(string)
       {
-	m_next = talkback->m_first;
-	talkback->m_first = this;
       }
 
       /**
@@ -275,6 +273,16 @@ public:
      * @param[in] id talkback identity.
      */
     TalkBack(Client* client, const char* key, uint16_t id);
+
+    /**
+     * Add given command to the TalkBack handler.
+     * @param[in] command to add.
+     */
+    void add(Command* command)
+    {
+      command->m_next = m_first;
+      m_first = command;
+    }
 
     /**
      * Execute next command in server talkback command queue. Returns

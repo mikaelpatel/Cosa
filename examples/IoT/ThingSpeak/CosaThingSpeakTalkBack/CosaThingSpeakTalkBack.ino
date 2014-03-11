@@ -132,6 +132,12 @@ void setup()
   TRACE(ethernet.begin_P(HOSTNAME));
   // Setup ThingSpeak with given ethernet socket 
   TRACE(client.begin(ethernet.socket(Socket::TCP)));
+  // Add the commands
+  talkback.add(&reboot);
+  talkback.add(&led_on);
+  talkback.add(&led_off);
+  talkback.add(&ping);
+  talkback.add(&pong);
 }
 
 void loop()
