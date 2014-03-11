@@ -221,6 +221,16 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   return (-2);
 }
 
+int 
+NRF24L01P::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
+{
+  iovec_t vec[2];
+  iovec_t* vp = vec;
+  iovec_arg(vp, buf, len);
+  iovec_end(vp);
+  return (send(dest, port, vec));
+}
+
 bool
 NRF24L01P::available()
 {

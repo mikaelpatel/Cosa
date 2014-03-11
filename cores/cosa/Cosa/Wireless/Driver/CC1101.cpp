@@ -191,6 +191,16 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 }
 
 int 
+CC1101::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
+{
+  iovec_t vec[2];
+  iovec_t* vp = vec;
+  iovec_arg(vp, buf, len);
+  iovec_end(vp);
+  return (send(dest, port, vec));
+}
+
+int 
 CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 {
   // Check if we need to wait for a message
