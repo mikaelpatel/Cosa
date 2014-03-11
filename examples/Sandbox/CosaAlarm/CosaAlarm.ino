@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa Alarm.
+ * Demonstrate of Cosa Alarm handling.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -36,38 +36,53 @@
 
 class TraceAlarm : public Alarm {
 public:
-  TraceAlarm(uint8_t id, uint16_t period) : Alarm(period), m_id(id) {}
+  TraceAlarm(uint8_t id, uint16_t period) : Alarm(period), m_id(id), m_tick(0) {}
   virtual void run();
 private:
   uint8_t m_id;
+  uint16_t m_tick;
 };
 
 void 
 TraceAlarm::run()
 {
-  time_t now(RTC::seconds());
-  trace << now << ':' << time() << PSTR(":alarm:id=") << m_id << endl;
+  trace << time() << PSTR(":alarm:id=") << m_id << PSTR(",tick=") << ++m_tick << endl;
 }
 
 Alarm::Scheduler scheduler;
-TraceAlarm every_third_second(1, 3);
-TraceAlarm every_fifth_second(2, 5);
-TraceAlarm every_half_minute(3, 30);
+
+TraceAlarm every_3rd_second(1, 3);
+TraceAlarm every_5th_second(2, 5);
+TraceAlarm every_15th_second(3, 15);
+TraceAlarm every_30th_second(4, 30);
 
 void setup()
 {
+  // Start serial device and use as trace iostream
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAlarm: started"));
+
+  // Print some memory statistics
   TRACE(free_memory());
+  TRACE(sizeof(Alarm::Scheduler));
+  TRACE(sizeof(Alarm));
+  TRACE(sizeof(TraceAlarm));
+
+  // Start the watchdog, real-time clock and the alarm scheduler
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
   RTC::begin();
-  every_third_second.enable();
-  every_fifth_second.enable();
-  every_half_minute.enable();
+  scheduler.begin();
+
+  // Enable the alarm handlers
+  every_3rd_second.enable();
+  every_5th_second.enable();
+  every_15th_second.enable();
+  every_30th_second.enable();
 }
 
 void loop()
 {
+  // The standard event dispatcher
   Event event;
   Event::queue.await(&event);
   event.dispatch();

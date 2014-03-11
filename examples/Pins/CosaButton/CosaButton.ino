@@ -80,6 +80,9 @@ void setup()
 
   // Start the watchdog ticks and push time events
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+
+  // Start the button handler
+  onOff.begin();
 }
 
 void loop()

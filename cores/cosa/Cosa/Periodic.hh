@@ -43,7 +43,49 @@
  * For details on time period handling see Watchdog.hh. This execution
  * pattern is also available in the FSM (Finite State Machine) class.
  */
-class Periodic : public Link {
+class Periodic : protected Link {
+public:
+  /**
+   * Construct a periodic function handler. 
+   * @param[in] ms period of timeout.
+   */
+  Periodic(uint16_t ms) : 
+    Link(), 
+    m_period(ms)
+  {
+  }
+
+  /**
+   * Set timeout period.
+   * @param[in] ms period of timeout.
+   */
+  void set_period(uint16_t ms)
+  {
+    m_period = ms;
+  }
+
+  /**
+   * Start the periodic function.
+   */
+  void begin()
+  {
+    Watchdog::attach(this, m_period);
+  }
+
+  /**
+   * Stop the periodic function.
+   */
+  void end()
+  {
+    detach();
+  }
+
+  /**
+   * @override Periodic
+   * The default null function. 
+   */
+  virtual void run() {}
+
 private:
   /**
    * @override Event::Handler
@@ -58,31 +100,7 @@ private:
     run();
   }
 
-public:
-  /**
-   * Construct a periodic function handler. 
-   * @param[in] ms period of timeout.
-   */
-  Periodic(uint16_t ms) : 
-    Link()
-  {
-    set_period(ms);
-  }
-
-  /**
-   * Set timeout period.
-   * @param[in] ms period of timeout.
-   */
-  void set_period(uint16_t ms)
-  {
-    Watchdog::attach(this, ms);
-  }
-
-  /**
-   * @override Periodic
-   * The default null function. 
-   */
-  virtual void run() {}
+  uint16_t m_period;
 };
 
 #endif

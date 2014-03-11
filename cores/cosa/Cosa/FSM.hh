@@ -39,7 +39,7 @@
  * The design of FSM is inspired by UML-2 State Machines, QP by Miro
  * Samek, and ObjecTime by Brian Selic.
  */
-class FSM : public Link {
+class FSM : protected Link {
 public:
   /**
    * State handler function prototype. Should return true(1) if
@@ -51,27 +51,6 @@ public:
    */
   typedef bool (*StateHandler)(FSM* fsm, uint8_t type);
   
-private:
-  static const uint16_t TIMEOUT_REQUEST = 0xffff;
-  StateHandler m_state;
-  uint16_t m_period;
-  uint16_t m_param;
-
-  /**
-   * @override Event::Handler
-   * The first level event handler. Filters timeout events and
-   * adapt to state handler function prototype.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value)
-  {
-    if (m_period == TIMEOUT_REQUEST) cancel_timer();
-    m_param = value;
-    m_state(this, type);
-  }
-  
-public:
   /**
    * Construct state machine with given initial state.
    * @param[in] init initial state handler.
@@ -180,6 +159,26 @@ public:
     if (m_period == 0) return;
     detach();
     m_period = 0;
+  }
+  
+private:
+  static const uint16_t TIMEOUT_REQUEST = 0xffff;
+  StateHandler m_state;
+  uint16_t m_period;
+  uint16_t m_param;
+
+  /**
+   * @override Event::Handler
+   * The first level event handler. Filters timeout events and
+   * adapt to state handler function prototype.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value)
+  {
+    if (m_period == TIMEOUT_REQUEST) cancel_timer();
+    m_param = value;
+    m_state(this, type);
   }
 };
 

@@ -29,6 +29,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/Pins.hh"
 #include "Cosa/Linkage.hh"
+#include "Cosa/Watchdog.hh"
 
 /**
  * Debounded Button; Sampled input pin (with internal pullup
@@ -58,6 +59,46 @@ public:
     ON_CHANGE_MODE = 2
   } __attribute__((packed));
 
+  /**
+   * Construct a button connected to the given pin and with 
+   * the given change detection mode. 
+   * @param[in] pin number.
+   * @param[in] mode change detection mode.
+   */
+  Button(Board::DigitalPin pin, Mode mode = ON_CHANGE_MODE) :
+    InputPin(pin, InputPin::PULLUP_MODE),
+    Link(),
+    MODE(mode),
+    m_state(is_set())
+  {
+  }
+
+  /**
+   * Start the button handler.
+   */
+  void begin()
+  {
+    Watchdog::attach(this, SAMPLE_MS);
+  }
+
+  /**
+   * Stop the button handler.
+   */
+  void end()
+  {
+    detach();
+  }
+
+  /**
+   * @override Button
+   * The button change event handler. Called when a change
+   * corresponding to the mode has been detected. Event types are;
+   * Event::FALLING_TYPE, Event::RISING_TYPE, and Event::CHANGE_TYPE. 
+   * Sub-class must override this method.
+   * @param[in] type event type.
+   */
+  virtual void on_change(uint8_t type) = 0;
+
 protected:
   /**
    * Sample period, current state and change detection mode.
@@ -74,25 +115,6 @@ protected:
    * @param[in] value the event value.
    */
   virtual void on_event(uint8_t type, uint16_t value);
-
-public:
-  /**
-   * Construct a button connected to the given pin and with 
-   * the given change detection mode. 
-   * @param[in] pin number.
-   * @param[in] mode change detection mode.
-   */
-  Button(Board::DigitalPin pin, Mode mode = ON_CHANGE_MODE);
-
-  /**
-   * @override Button
-   * The button change event handler. Called when a change
-   * corresponding to the mode has been detected. Event types are;
-   * Event::FALLING_TYPE, Event::RISING_TYPE, and Event::CHANGE_TYPE. 
-   * Sub-class must override this method.
-   * @param[in] type event type.
-   */
-  virtual void on_change(uint8_t type) = 0;
 };
 
 #endif

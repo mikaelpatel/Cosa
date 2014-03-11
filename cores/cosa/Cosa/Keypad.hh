@@ -96,7 +96,22 @@ public:
     Link(),
     m_key(pin, this, map)
   {
+  }
+
+  /**
+   * Start the keypad handler.
+   */
+  void begin()
+  {
     Watchdog::attach(this, SAMPLE_MS);
+  }
+
+  /**
+   * Stop the keypad handler
+   */
+  void end()
+  {
+    detach();
   }
 
   /**

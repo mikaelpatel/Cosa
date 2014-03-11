@@ -24,17 +24,6 @@
  */
 
 #include "Cosa/Button.hh"
-#include "Cosa/Watchdog.hh"
-
-Button::Button(Board::DigitalPin pin, Mode mode) : 
-  InputPin(pin, InputPin::PULLUP_MODE),
-  Link(),
-  MODE(mode),
-  m_state(is_set())
-{
-  // Attach to watchdog timeout queue to sample
-  Watchdog::attach(this, SAMPLE_MS);
-}
 
 void 
 Button::on_event(uint8_t type, uint16_t value)

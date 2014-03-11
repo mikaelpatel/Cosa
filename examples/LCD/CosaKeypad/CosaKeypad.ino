@@ -83,6 +83,7 @@ KeypadTrace keypad(&lcd);
 void setup()
 {
    Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+   keypad.begin();
    lcd.begin();
    lcd.puts_P(PSTR("CosaKeypad: started"));
 }

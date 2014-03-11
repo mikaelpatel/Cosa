@@ -163,6 +163,7 @@ void setup()
   lcd.begin();
   lcd.puts_P(PSTR("CosaLCDmenu: started"));
   SLEEP(2);
+  // keypad.begin();
   walker.begin();
   rotary.begin();
 }
