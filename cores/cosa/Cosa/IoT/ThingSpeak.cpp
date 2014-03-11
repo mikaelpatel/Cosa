@@ -63,7 +63,7 @@ ThingSpeak::Client::connect()
   int res = m_sock->connect(server, 80);
   if (res != 0) return (res);
   while ((res = m_sock->isconnected()) == 0) Watchdog::delay(16);
-  if (res == 0) res = -3;
+  if (res != 0) res = -2;
   return (res);
 }
 
@@ -198,6 +198,7 @@ ThingSpeak::TalkBack::execute_next_command()
 
   // Lookup the command and execute. Disconnect before and the command might
   // issue an add command request
+  res = -5;
   command = lookup(line);
   if (command == NULL) goto error;
   m_client->disconnect();
