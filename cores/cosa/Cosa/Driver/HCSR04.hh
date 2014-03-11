@@ -46,23 +46,6 @@
  * from the device. 
  */
 class HCSR04 : private Link {
-private:
-  static const uint16_t TIMEOUT = 0xffffU;
-  static const uint16_t COUNT_PER_DM = (555 * I_CPU) / 16;
-  OutputPin m_trigPin;
-  InputPin m_echoPin;
-  uint16_t m_distance;
-
-  /**
-   * @override Event::Handler
-   * Default device event handler function. Attach to watchdog
-   * timer queue, Watchdog::attach(), to allow perodic reading
-   * and check if the distance has changed.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value);
-
 public:
   /**
    * Construct connection to a DHT11 device on given in/output-pin.
@@ -110,6 +93,23 @@ public:
    * @param[in] distance in milli-meters.
    */
   virtual void on_change(uint16_t distance) {}
+
+private:
+  static const uint16_t TIMEOUT = 0xffffU;
+  static const uint16_t COUNT_PER_DM = (555 * I_CPU) / 16;
+  OutputPin m_trigPin;
+  InputPin m_echoPin;
+  uint16_t m_distance;
+
+  /**
+   * @override Event::Handler
+   * Default device event handler function. Attach to watchdog
+   * timer queue, Watchdog::attach(), to allow perodic reading
+   * and check if the distance has changed.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value);
 };
 
 #endif

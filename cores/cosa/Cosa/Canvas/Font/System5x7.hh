@@ -35,9 +35,6 @@
  * Inspired by graphics library by ladyada/adafruit.
  */
 class System5x7 : public Font {
-private:
-  static const uint8_t bitmap[] PROGMEM;
-
 public:
   /**
    * Construct system font (5x7) singleton.
@@ -58,6 +55,8 @@ public:
     return (m_bitmap + ((c - ' ') * WIDTH));
   }
 #endif
+private:
+  static const uint8_t bitmap[] PROGMEM;
 };
 
 extern System5x7 system5x7;

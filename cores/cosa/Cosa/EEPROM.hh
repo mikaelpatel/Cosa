@@ -80,9 +80,6 @@ public:
     static Device eeprom;
   };
 
-private:
-  Device* m_dev;
-
 public:
   /**
    * Construct access object for EEPROM given device. Default device
@@ -251,6 +248,9 @@ public:
   { 
     return (m_dev->write(dest, &src, sizeof(float))); 
   }
+
+private:
+  Device* m_dev;
 };
 
 #endif

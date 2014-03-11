@@ -36,27 +36,6 @@
  * the pin value changes. 
  */
 class ExternalInterrupt : public IOPin, public Interrupt::Handler {
-  friend void INT0_vect(void);
-#if defined(INT1_vect)
-  friend void INT1_vect(void);
-#endif
-#if defined(INT2_vect)
-  friend void INT2_vect(void);
-#endif
-#if defined(INT3_vect)
-  friend void INT3_vect(void);
-#endif
-#if defined(INT4_vect)
-  friend void INT4_vect(void);
-#endif
-#if defined(INT5_vect)
-  friend void INT5_vect(void);
-#endif
-
-private:
-  static ExternalInterrupt* ext[Board::EXT_MAX];
-  uint8_t m_ix;
-
 public:
   enum InterruptMode {
     ON_LOW_LEVEL_MODE = 0,
@@ -94,6 +73,27 @@ public:
    * @param[in] arg argument from interrupt service routine.
    */
   virtual void on_interrupt(uint16_t arg = 0) {}
+
+private:
+  static ExternalInterrupt* ext[Board::EXT_MAX];
+  uint8_t m_ix;
+
+  friend void INT0_vect(void);
+#if defined(INT1_vect)
+  friend void INT1_vect(void);
+#endif
+#if defined(INT2_vect)
+  friend void INT2_vect(void);
+#endif
+#if defined(INT3_vect)
+  friend void INT3_vect(void);
+#endif
+#if defined(INT4_vect)
+  friend void INT4_vect(void);
+#endif
+#if defined(INT5_vect)
+  friend void INT5_vect(void);
+#endif
 };
 
 #endif

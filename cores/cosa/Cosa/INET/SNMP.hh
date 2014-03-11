@@ -158,23 +158,6 @@ public:
    * Mandatory SNMP MIB MIB-2 System OID(1.3.6.1.2.1.1.n)
    */
   class MIB2_SYSTEM : public MIB {
-    friend class SNMP;
-  private:
-    static const uint8_t OID[] PROGMEM;
-    const char* m_descr;
-    const char* m_contact;
-    const char* m_name;
-    const char* m_location;
-    enum {
-      sysDescr = 1,		// DisplayString(0..255), read-only, mandatory
-      sysObjectID = 2,		// OID, read-only, mandatory
-      sysUpTime = 3,		// TimeTicks, read-only, mandatory
-      sysContact = 4,		// DisplayString(0..255), read-write, mandatory
-      sysName = 5,		// DisplayString(0..255), read-write, mandatory
-      sysLocation = 6,		// DisplayString(0..255), read-write, mandatory
-      sysServices = 7		// Integer(0..127), read-only, mandatory
-    } __attribute__((packed));
-
   public:
     /**
      * Construct mib-2 system mib with given static data.
@@ -211,6 +194,23 @@ public:
      * @return bool
      */
     virtual bool is_request(PDU& pdu);
+
+  private:
+    static const uint8_t OID[] PROGMEM;
+    const char* m_descr;
+    const char* m_contact;
+    const char* m_name;
+    const char* m_location;
+    enum {
+      sysDescr = 1,		// DisplayString(0..255), read-only, mandatory
+      sysObjectID = 2,		// OID, read-only, mandatory
+      sysUpTime = 3,		// TimeTicks, read-only, mandatory
+      sysContact = 4,		// DisplayString(0..255), read-write, mandatory
+      sysName = 5,		// DisplayString(0..255), read-write, mandatory
+      sysLocation = 6,		// DisplayString(0..255), read-write, mandatory
+      sysServices = 7		// Integer(0..127), read-only, mandatory
+    } __attribute__((packed));
+    friend class SNMP;
   };
 
   /** Arduino MIB OID(1.3.6.1.4.1.36582) */

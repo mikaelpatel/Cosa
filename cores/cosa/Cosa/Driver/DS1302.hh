@@ -38,38 +38,6 @@
  * 2. Datasheet, http://datasheets.maximintegrated.com/en/ds/DS1302.pdf
  */
 class DS1302 {
-private:
-  /** Read/write address mask */
-  static const uint8_t ADDR_MASK = 0x3f;
-
-  /** Read/write bit in command byte */
-  enum {
-    WRITE = 0x00,
-    READ = 0x01
-  } __attribute__((packed));
-
-  /** Chip select, asserted high during read and write */
-  OutputPin m_cs;
-  /** Serial data bidirectional data pin */
-  IOPin m_sda;
-  /** Clock for synchroized data movement on the serial interface */
-  OutputPin m_clk;
-
-  /**
-   * Write data to the device. Internal transfer function. Used within
-   * a chip select block.
-   * @param[in] data to write to the device.
-   */
-  void write(uint8_t data);
-
-  /**
-   * Read data from the device. Internal transfer function. Used within
-   * a chip select block. Data direction must be set before calling
-   * this function. 
-   * @return data.
-   */
-  uint8_t read();
-
 public:
   /** Start address of clock/calender internal registers */
   static const uint8_t RTC_START = 0;
@@ -144,6 +112,40 @@ public:
    * @param[in,out] now time structure for return value.
    */
   void get_time(time_t& now);
+
+private:
+  /** Read/write address mask */
+  static const uint8_t ADDR_MASK = 0x3f;
+
+  /** Read/write bit in command byte */
+  enum {
+    WRITE = 0x00,
+    READ = 0x01
+  } __attribute__((packed));
+
+  /** Chip select, asserted high during read and write */
+  OutputPin m_cs;
+
+  /** Serial data bidirectional data pin */
+  IOPin m_sda;
+
+  /** Clock for synchroized data movement on the serial interface */
+  OutputPin m_clk;
+
+  /**
+   * Write data to the device. Internal transfer function. Used within
+   * a chip select block.
+   * @param[in] data to write to the device.
+   */
+  void write(uint8_t data);
+
+  /**
+   * Read data from the device. Internal transfer function. Used within
+   * a chip select block. Data direction must be set before calling
+   * this function. 
+   * @return data.
+   */
+  uint8_t read();
 };
 
 #endif

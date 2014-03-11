@@ -34,9 +34,6 @@
  */
 template <uint8_t POINT>
 class FixedPoint {
-private:
-  int16_t m_integer;
-  uint16_t m_fraction;
 public:
   /** 
    * Construct fixed point integer with given value and binary point.
@@ -73,6 +70,10 @@ public:
    * @return scaled fraction.
    */
   uint16_t get_fraction(uint8_t scale);
+
+private:
+  int16_t m_integer;
+  uint16_t m_fraction;
 };
 
 template<uint8_t POINT>

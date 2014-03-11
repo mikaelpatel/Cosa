@@ -43,8 +43,6 @@ public:
   class TalkBack;
   
   class Client {
-    friend class Channel;
-    friend class TalkBack;
   public:
     /**
      * Construct Thingspeak client.
@@ -87,6 +85,9 @@ public:
     int disconnect();
 
     Socket* m_sock;
+    
+    friend class Channel;
+    friend class TalkBack;
   };
 
   class Channel {

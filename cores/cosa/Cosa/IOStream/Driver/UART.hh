@@ -41,89 +41,6 @@ extern Soft::UART uart;
  * requires an input- and output IOBuffer instance.
  */
 class UART : public IOStream::Device {
-  friend void USART_UDRE_vect(void);
-  friend void USART_RX_vect(void);
-  friend void USART_TX_vect(void);
-#if defined(__ARDUINO_MIGHTY__)
-  friend void USART1_UDRE_vect(void);
-  friend void USART1_RX_vect(void);
-  friend void USART1_TX_vect(void);
-#elif defined(__ARDUINO_MEGA__)
-  friend void USART1_UDRE_vect(void);
-  friend void USART1_RX_vect(void);
-  friend void USART1_TX_vect(void);
-  friend void USART2_UDRE_vect(void);
-  friend void USART2_RX_vect(void);
-  friend void USART2_TX_vect(void);
-  friend void USART3_UDRE_vect(void);
-  friend void USART3_RX_vect(void);
-  friend void USART3_TX_vect(void);
-#endif
-protected:
-  volatile uint8_t* const m_sfr;
-  IOStream::Device* m_ibuf;
-  IOStream::Device* m_obuf;
-
-  /**
-   * Return pointer to UART Control and Status Register A (UCSRnA).
-   * @return UCSRAn register pointer.
-   */
-  volatile uint8_t* UCSRnA() 
-  { 
-    return (m_sfr); 
-  }
-
-  /**
-   * Return pointer to UART Control and Status Register B (UCSRnB).
-   * @return UCSRnB register pointer.
-   */
-  volatile uint8_t* UCSRnB() 
-  { 
-    return (m_sfr + 1); 
-  }
-
-  /**
-   * Return pointer to UART Control and Status Register C (UCSRnC).
-   * @return UCSRnC register pointer.
-   */
-  volatile uint8_t* UCSRnC() 
-  { 
-    return (m_sfr + 2); 
-  }
-
-  /**
-   * Return pointer to UART Baud Rate Register (UBRRn).
-   * @return UBRRn register pointer.
-   */
-  volatile uint16_t* UBRRn() 
-  { 
-    return ((volatile uint16_t*) (m_sfr + 4)); 
-  }
-
-  /**
-   * Return pointer to UART I/O Data Register (UDRn).
-   * @return UDRn register pointer.
-   */
-  volatile uint8_t* UDRn() 
-  { 
-    return (m_sfr + 6); 
-  }
-
-  /**
-   * Common UART data register empty (transmit) interrupt handler.
-   */
-  void on_udre_interrupt();
-
-  /**
-   * Common UART receive interrupt handler.
-   */
-  void on_rx_interrupt();
-
-  /**
-   * Common UART transmit completed interrupt handler.
-   */
-  void on_tx_interrupt();
-
 public:
   // Default buffer size for standard UART0 (at 9600 baud)
   static const uint8_t BUFFER_MAX = 64;
@@ -259,6 +176,89 @@ public:
    * with UART_SETUP().
    */
   static UART* uart[Board::UART_MAX];
+protected:
+  volatile uint8_t* const m_sfr;
+  IOStream::Device* m_ibuf;
+  IOStream::Device* m_obuf;
+
+  /**
+   * Return pointer to UART Control and Status Register A (UCSRnA).
+   * @return UCSRAn register pointer.
+   */
+  volatile uint8_t* UCSRnA() 
+  { 
+    return (m_sfr); 
+  }
+
+  /**
+   * Return pointer to UART Control and Status Register B (UCSRnB).
+   * @return UCSRnB register pointer.
+   */
+  volatile uint8_t* UCSRnB() 
+  { 
+    return (m_sfr + 1); 
+  }
+
+  /**
+   * Return pointer to UART Control and Status Register C (UCSRnC).
+   * @return UCSRnC register pointer.
+   */
+  volatile uint8_t* UCSRnC() 
+  { 
+    return (m_sfr + 2); 
+  }
+
+  /**
+   * Return pointer to UART Baud Rate Register (UBRRn).
+   * @return UBRRn register pointer.
+   */
+  volatile uint16_t* UBRRn() 
+  { 
+    return ((volatile uint16_t*) (m_sfr + 4)); 
+  }
+
+  /**
+   * Return pointer to UART I/O Data Register (UDRn).
+   * @return UDRn register pointer.
+   */
+  volatile uint8_t* UDRn() 
+  { 
+    return (m_sfr + 6); 
+  }
+
+  /**
+   * Common UART data register empty (transmit) interrupt handler.
+   */
+  void on_udre_interrupt();
+
+  /**
+   * Common UART receive interrupt handler.
+   */
+  void on_rx_interrupt();
+
+  /**
+   * Common UART transmit completed interrupt handler.
+   */
+  void on_tx_interrupt();
+
+  friend void USART_UDRE_vect(void);
+  friend void USART_RX_vect(void);
+  friend void USART_TX_vect(void);
+#if defined(__ARDUINO_MIGHTY__)
+  friend void USART1_UDRE_vect(void);
+  friend void USART1_RX_vect(void);
+  friend void USART1_TX_vect(void);
+#elif defined(__ARDUINO_MEGA__)
+  friend void USART1_UDRE_vect(void);
+  friend void USART1_RX_vect(void);
+  friend void USART1_TX_vect(void);
+  friend void USART2_UDRE_vect(void);
+  friend void USART2_RX_vect(void);
+  friend void USART2_TX_vect(void);
+  friend void USART3_UDRE_vect(void);
+  friend void USART3_RX_vect(void);
+  friend void USART3_TX_vect(void);
+#endif
 };
 
 /**

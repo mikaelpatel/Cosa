@@ -57,25 +57,6 @@ public:
   /** Size of frame; SOT, header and crc */
   static const uint8_t FRAME_MAX = sizeof(header_t) + sizeof(uint16_t) + 1;
 
-  /** Send/receive header */
-  header_t m_header;
-
-  /** Input buffer */
-  IOBuffer<UART::BUFFER_MAX> m_ibuf;
-
-  /** Output buffer */
-  IOBuffer<UART::BUFFER_MAX> m_obuf;
-
-  /** Data output enable pin; MAX485/DE and /RE */
-  OutputPin m_de;
-
-  /** Network address; Special cases are MASTER and BROADCAST */
-  uint8_t m_addr;
-
-  /** Receive state; wait for start symbol, header, payload and check-sum */
-  uint8_t m_state;
-
-public:
   /** Max size of payload */
   static const uint8_t PAYLOAD_MAX = BUFFER_MAX - FRAME_MAX - 1;
 
@@ -152,6 +133,25 @@ public:
    * @return number of bytes sent or negative error code.
    */
   int recv(void* buf, size_t len, uint32_t ms = 0L);
+
+protected:
+  /** Send/receive header */
+  header_t m_header;
+
+  /** Input buffer */
+  IOBuffer<UART::BUFFER_MAX> m_ibuf;
+
+  /** Output buffer */
+  IOBuffer<UART::BUFFER_MAX> m_obuf;
+
+  /** Data output enable pin; MAX485/DE and /RE */
+  OutputPin m_de;
+
+  /** Network address; Special cases are MASTER and BROADCAST */
+  uint8_t m_addr;
+
+  /** Receive state; wait for start symbol, header, payload and check-sum */
+  uint8_t m_state;
 };
 #endif
 #endif

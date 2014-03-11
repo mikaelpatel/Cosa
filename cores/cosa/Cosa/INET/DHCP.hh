@@ -36,6 +36,89 @@
  * addresses for DHCP and DNS server. 
  */
 class DHCP {
+public:
+  /** DHCP Client port numbers */
+  static const uint16_t PORT = 68;
+
+  /**
+   * Construct DHCP client access with given hostname and hardware
+   * address. 
+   * @param[in] hostname string in program memory.
+   * @param[in] mac hardware address in program memory.
+   */
+  DHCP(const char* hostname, const uint8_t* mac);
+
+  /**
+   * Start interaction with DHCP server. Provide UDP socket with DHCP
+   * client port. Returns true if successful otherwise false.
+   * @param[in] sock connection-less socket (UDP/DHCP::PORT).
+   * @return bool, true if successful otherwise false.
+   */
+  bool begin(Socket* sock);
+
+  /**
+   * Stop interaction with DHCP server. Closes socket. Maintains state
+   * so that the client network address lease may be renewed. Returns
+   * true if successful otherwise false.
+   */
+  bool end();
+
+  /**
+   * Discover DHCP servers and receive client network address
+   * offer. Return zero if successful otherwise a negative error code;
+   * -1 not initiated, -2 discover failed, -3 no response.
+   * @return zero if successful otherwise a negative error code. 
+   */
+  int discover();
+
+  /**
+   * Accept the offer provided by DHCP server on successful
+   * discover(). Return zero if successful otherwise a negative error
+   * code; -1 not initiated, -2 request failed, -3 no response.
+   * Client network address and subnet mask are returned in
+   * given reference parameters.
+   * @param[in,out] ip granted network address.
+   * @param[in,out] subnet mask.
+   * @param[in,out] gateway network address.
+   * @return zero if successful otherwise a negative error code. 
+   */
+  int request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4]);
+
+  /**
+   * Renew the granted network address lease from successful request().
+   * Returns zero if successful otherwise a negative error code; -1
+   * illegal state, -2 request failed, -3 no response. 
+   * @param[in] sock connection-less socket to use for release.
+   * @return zero if successful otherwise a negative error code. 
+   */
+  int renew(Socket* sock);
+
+  /**
+   * Release the granted network address lease from successful
+   * request(). Returns zero if successful otherwise a negative error
+   * code; -1 illegal state, -2 request failed, -3 no response. 
+   * The given socket is closed and the DHCP client handler is put in
+   * idle state. 
+   * @param[in] sock connection-less socket to use for release.
+   * @return zero if successful otherwise a negative error code. 
+   */
+  int release(Socket* sock);
+
+  /** Return time when lease was obtained */
+  uint32_t get_lease_obtained() { return (m_lease_obtained); }
+
+  /** Return time when lease will expire */
+  uint32_t get_lease_expires() { return (m_lease_expires); }
+
+  /** Return network address of DHCP server */
+  const uint8_t* get_dhcp_addr() { return (m_dhcp); }
+
+  /** Return network address of DNS server */
+  const uint8_t* get_dns_addr() { return (m_dns); }
+
+  /** Return network address of gateway (router) */
+  const uint8_t* get_gateway_addr() { return (m_gateway); }
+
 private:
   /** DHCP message OP code */
   enum {
@@ -156,89 +239,6 @@ private:
    * @return zero if successful otherwise negative error code.
    */
   int recv(uint8_t type, uint16_t ms = 2000);
-
-public:
-  /** DHCP Client port numbers */
-  static const uint16_t PORT = 68;
-
-  /**
-   * Construct DHCP client access with given hostname and hardware
-   * address. 
-   * @param[in] hostname string in program memory.
-   * @param[in] mac hardware address in program memory.
-   */
-  DHCP(const char* hostname, const uint8_t* mac);
-
-  /**
-   * Start interaction with DHCP server. Provide UDP socket with DHCP
-   * client port. Returns true if successful otherwise false.
-   * @param[in] sock connection-less socket (UDP/DHCP::PORT).
-   * @return bool, true if successful otherwise false.
-   */
-  bool begin(Socket* sock);
-
-  /**
-   * Stop interaction with DHCP server. Closes socket. Maintains state
-   * so that the client network address lease may be renewed. Returns
-   * true if successful otherwise false.
-   */
-  bool end();
-
-  /**
-   * Discover DHCP servers and receive client network address
-   * offer. Return zero if successful otherwise a negative error code;
-   * -1 not initiated, -2 discover failed, -3 no response.
-   * @return zero if successful otherwise a negative error code. 
-   */
-  int discover();
-
-  /**
-   * Accept the offer provided by DHCP server on successful
-   * discover(). Return zero if successful otherwise a negative error
-   * code; -1 not initiated, -2 request failed, -3 no response.
-   * Client network address and subnet mask are returned in
-   * given reference parameters.
-   * @param[in,out] ip granted network address.
-   * @param[in,out] subnet mask.
-   * @param[in,out] gateway network address.
-   * @return zero if successful otherwise a negative error code. 
-   */
-  int request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4]);
-
-  /**
-   * Renew the granted network address lease from successful request().
-   * Returns zero if successful otherwise a negative error code; -1
-   * illegal state, -2 request failed, -3 no response. 
-   * @param[in] sock connection-less socket to use for release.
-   * @return zero if successful otherwise a negative error code. 
-   */
-  int renew(Socket* sock);
-
-  /**
-   * Release the granted network address lease from successful
-   * request(). Returns zero if successful otherwise a negative error
-   * code; -1 illegal state, -2 request failed, -3 no response. 
-   * The given socket is closed and the DHCP client handler is put in
-   * idle state. 
-   * @param[in] sock connection-less socket to use for release.
-   * @return zero if successful otherwise a negative error code. 
-   */
-  int release(Socket* sock);
-
-  /** Return time when lease was obtained */
-  uint32_t get_lease_obtained() { return (m_lease_obtained); }
-
-  /** Return time when lease will expire */
-  uint32_t get_lease_expires() { return (m_lease_expires); }
-
-  /** Return network address of DHCP server */
-  const uint8_t* get_dhcp_addr() { return (m_dhcp); }
-
-  /** Return network address of DNS server */
-  const uint8_t* get_dns_addr() { return (m_dns); }
-
-  /** Return network address of gateway (router) */
-  const uint8_t* get_gateway_addr() { return (m_gateway); }
 };
 
 #endif

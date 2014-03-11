@@ -106,11 +106,6 @@ public:
     virtual void on_event(uint8_t type, uint16_t value) {}
   };
 
-private:
-  uint8_t m_type;
-  Handler* m_target;
-  uint16_t m_value;
-
 public:
   /**
    * Construct event with given type, target and value.
@@ -199,6 +194,11 @@ public:
    * Event queue of size QUEUE_MAX.
    */
   static Queue<Event, QUEUE_MAX> queue;
+
+private:
+  uint8_t m_type;
+  Handler* m_target;
+  uint16_t m_value;
 };
 
 #endif

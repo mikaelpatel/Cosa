@@ -41,12 +41,6 @@ public:
    * Device for in/output of characters or strings.
    */
   class Device {
-  protected:
-    static const uint8_t NON_BLOCKING = 255;
-
-    /** Sleep mode if blocking otherwise NON_BLOCKING */
-    uint8_t m_mode;
-
   public:
     /**
      * Default constructor for IOStream devices.
@@ -193,6 +187,12 @@ public:
      * @return zero(0) or negative error code.
      */
     virtual int flush();
+
+  protected:
+    static const uint8_t NON_BLOCKING = 255;
+
+    /** Sleep mode if blocking otherwise NON_BLOCKING */
+    uint8_t m_mode;
   };
 
   /**

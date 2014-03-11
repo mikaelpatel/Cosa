@@ -38,10 +38,6 @@
  */
 template<uint8_t width, uint8_t height>
 class OffScreen : public Canvas {
-private:
-  static const uint16_t COUNT = (width * height) / CHARBITS;
-  uint8_t m_bitmap[COUNT];
-
 public:
   /**
    * Construct off-screen canvas with given width and height. A 
@@ -105,6 +101,10 @@ public:
   {
     return (true);
   }
+
+private:
+  static const uint16_t COUNT = (width * height) / CHARBITS;
+  uint8_t m_bitmap[COUNT];
 };
 
 #endif

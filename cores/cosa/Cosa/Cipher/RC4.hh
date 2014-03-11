@@ -35,11 +35,6 @@
  * 2. http://cypherpunks.venona.com/archive/1994/09/msg00304.html
  */
 class RC4 {
-private:
-  uint8_t m_state[256];
-  uint8_t m_x;
-  uint8_t m_y;
-
 public:
   /**
    * Construct RC4 cipher for given key and length.
@@ -132,6 +127,11 @@ public:
     const char* sp = (const char*) src;
     while (n--) *dp++ = decrypt(*sp++);
   }
+
+private:
+  uint8_t m_state[256];
+  uint8_t m_x;
+  uint8_t m_y;
 };
 
 #endif

@@ -37,9 +37,6 @@
  * Perry. 
  */
 class FixedNums8x16 : public GLCDFont {
-private:
-  static const uint8_t bitmap[] PROGMEM;
-
 public:
   /**
    * Construct fixed number font singleton.
@@ -59,6 +56,9 @@ public:
     if (c > 16) c = 0;
     return (m_bitmap + (c * WIDTH)*((HEIGHT + 1)/CHARBITS));
   }
+
+private:
+  static const uint8_t bitmap[] PROGMEM;
 };
 
 extern FixedNums8x16 fixednums8x16;

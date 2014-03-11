@@ -33,12 +33,6 @@
  * Bitmap font library handler for Cosa Canvas.
  */
 class Font {
-protected:
-  /**
-   * Font bitmap.
-   */
-  const uint8_t* m_bitmap;
-
 public:
   /**
    * Font size; width/height and character spacing.
@@ -54,10 +48,10 @@ public:
    * @param[in] bitmap font storage.
    */
   Font(uint8_t width, uint8_t height, const uint8_t* bitmap) :
-    m_bitmap(bitmap),
     WIDTH(width), 
     HEIGHT(height),
-    SPACING(1)
+    SPACING(1),
+    m_bitmap(bitmap)
   {}
   
   /**
@@ -130,6 +124,10 @@ public:
   {
     canvas->draw_bitmap(x, y, get_bitmap(c), WIDTH, HEIGHT, scale);
   }
+
+protected:
+  /**Font bitmap */
+  const uint8_t* m_bitmap;
 };
 
 #endif

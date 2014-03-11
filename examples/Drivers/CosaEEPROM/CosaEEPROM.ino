@@ -86,7 +86,7 @@ void loop()
   
   // Print sensor samples
   if (i == 0) {
-    for (i = 0; i < membersof(data); i++) {
+    for (i = 0; i < (int) membersof(data); i++) {
       ASSERT(eeprom.read(&x, &data[i]) == sizeof(x));
       trace << PSTR("data[") << i << PSTR("] = ") << x << endl;
     }

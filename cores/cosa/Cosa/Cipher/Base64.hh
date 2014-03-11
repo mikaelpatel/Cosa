@@ -45,49 +45,6 @@
  * 3. http://base64.sourceforge.net
  */
 class Base64 {
-private:
-  /** Padding character for last encoded block */
-  static const char PAD = '=';
-
-  /** Mapping between 3-characters and 4-bitfields(6 bits) */ 
-  union base64_t {
-    uint8_t d[3];
-    struct {
-      uint8_t c0:6;
-      uint8_t c1:6;
-      uint8_t c2:6;
-      uint8_t c3:6;
-    };
-  };
-
-  /** Encoding table in program memory */
-  static const char ENCODE[] PROGMEM;
-  
-  /**
-   * Encode given 6-bit number to a character.
-   * @param[in] bits to encode.
-   * @return character.
-   */
-  static char encode(uint8_t bits)
-  {
-    return (pgm_read_byte(&ENCODE[bits]));
-  }
-
-  /** Decoding table in program memory */
-  static const char DECODE[] PROGMEM;
-
-  /**
-   * Decode given character to 6-bit number.
-   * @param[in] c character to decode.
-   * @return 6-bit representation.
-   */
-  static uint8_t decode(char c)
-  {
-    if (c < 43 || c > 122) return (0);
-    uint8_t bits = pgm_read_byte(&DECODE[c - 43]);
-    return (bits == '$' ? 0 : bits - 62);
-  }
-
 public:
   /**
    * Encode the size number of bytes in the source buffer to a
@@ -144,6 +101,49 @@ public:
    * @return number of decoded bytes or negative error code.
    */
   static int decode(void* dest, const char* src, size_t size);
+
+private:
+  /** Padding character for last encoded block */
+  static const char PAD = '=';
+
+  /** Mapping between 3-characters and 4-bitfields(6 bits) */ 
+  union base64_t {
+    uint8_t d[3];
+    struct {
+      uint8_t c0:6;
+      uint8_t c1:6;
+      uint8_t c2:6;
+      uint8_t c3:6;
+    };
+  };
+
+  /** Encoding table in program memory */
+  static const char ENCODE[] PROGMEM;
+  
+  /**
+   * Encode given 6-bit number to a character.
+   * @param[in] bits to encode.
+   * @return character.
+   */
+  static char encode(uint8_t bits)
+  {
+    return (pgm_read_byte(&ENCODE[bits]));
+  }
+
+  /** Decoding table in program memory */
+  static const char DECODE[] PROGMEM;
+
+  /**
+   * Decode given character to 6-bit number.
+   * @param[in] c character to decode.
+   * @return 6-bit representation.
+   */
+  static uint8_t decode(char c)
+  {
+    if (c < 43 || c > 122) return (0);
+    uint8_t bits = pgm_read_byte(&DECODE[c - 43]);
+    return (bits == '$' ? 0 : bits - 62);
+  }
 };
 
 #endif

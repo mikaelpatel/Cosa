@@ -36,7 +36,6 @@
  */
 class Fai : public Ciao {
 public:
-
   /**
    * Cosa fai: data type descriptors and prototypes.
    */

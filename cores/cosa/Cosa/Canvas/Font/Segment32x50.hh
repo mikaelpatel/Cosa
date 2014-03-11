@@ -37,9 +37,6 @@
  * Henning Karlsen.
  */
 class Segment32x50 : public UTFTFont {
-private:
-  static const uint8_t bitmap[] PROGMEM;
-
 public:
   /** 
    * Construct large segment font (32x50) singleton.
@@ -59,6 +56,9 @@ public:
     if (c > 9) c = 10;
     return (m_bitmap + (c * HEIGHT) * (WIDTH / CHARBITS));
   }
+
+private:
+  static const uint8_t bitmap[] PROGMEM;
 };
 
 extern Segment32x50 segment32x50;

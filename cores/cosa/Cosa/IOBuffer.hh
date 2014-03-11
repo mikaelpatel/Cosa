@@ -39,12 +39,6 @@
  */
 template <uint8_t SIZE>
 class IOBuffer : public IOStream::Device {
-private:
-  static const uint8_t MASK = (SIZE - 1);
-  volatile uint8_t m_head;
-  volatile uint8_t m_tail;
-  char m_buffer[SIZE];
-
 public:
   /**
    * Constuct buffer object for stream operations. 
@@ -156,6 +150,12 @@ public:
   {
     return (&m_buffer[m_tail + 1]);
   }
+
+private:
+  static const uint8_t MASK = (SIZE - 1);
+  volatile uint8_t m_head;
+  volatile uint8_t m_tail;
+  char m_buffer[SIZE];
 };
 
 template <uint8_t SIZE>

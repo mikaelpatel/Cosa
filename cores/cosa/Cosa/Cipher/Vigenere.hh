@@ -36,12 +36,6 @@
  */
 template<uint8_t N> 
 class Vigenere {
-private:
-  char m_key[N];
-  uint8_t m_nr;
-  uint8_t m_max;
-  uint8_t m_pos;
-
 public:
   /**
    * Construct Vigenere crypto with key generated from given seed.
@@ -158,6 +152,12 @@ public:
     const char* sp = (const char*) src;
     while (n--) *dp++ = decrypt(*sp++);
   }
+  
+private:
+  char m_key[N];
+  uint8_t m_nr;
+  uint8_t m_max;
+  uint8_t m_pos;
 };
 
 #endif

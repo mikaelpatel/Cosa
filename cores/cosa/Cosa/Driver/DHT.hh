@@ -36,95 +36,6 @@
  * DHT11/22 Humidity & Temperature Sensor abstract device driver. 
  */
 class DHT : public ExternalInterrupt, public Link {
-protected:
-  // States
-  enum {
-    INIT,			// Initial state
-    IDLE,			// Periodic wait
-    REQUEST,			// Issued a request
-    RESPONSE,			// Waiting for response
-    SAMPLING,			// Collecting samples
-    COMPLETED			// Data transfer completed
-  } __attribute__((packed));
-
-  /** Minimum periodic wait (approx. 2 seconds) */
-  static const uint16_t MIN_PERIOD = 2048;
-
-  /** Sample thresholds */
-  static const uint16_t LOW_THRESHOLD = 50;
-  static const uint16_t BIT_THRESHOLD = 100;
-  static const uint16_t HIGH_THRESHOLD = 200;
-
-  /** Size of data buffer */
-  static const uint8_t DATA_MAX = 5;
-
-  /** Last data elemement index */
-  static const uint8_t DATA_LAST = DATA_MAX - 1;
-
-  /**
-   * Data read from the device. Allow mapping between received byte 
-   * vector and data fields.
-   */
-  union data_t {
-    uint8_t as_byte[DATA_MAX];
-    struct {
-      int16_t humidity;
-      int16_t temperature;
-      uint8_t chksum;
-    };
-  };
-  
-  /** State of device driver */
-  volatile uint8_t m_state;
-
-  /** Number of errors detected; transfer or checksum */
-  volatile uint8_t m_errors;
-
-  /** Micro-seconds since latest rising of data signal; pulse start */
-  volatile uint16_t m_start;
-
-  /** Number of milli-seconds between requests */
-  volatile uint16_t m_period;
-
-  /** Current byte being read from device */
-  volatile uint8_t m_value;
-
-  /** Current number of bits read */
-  volatile uint8_t m_bits;
-
-  /** Current data byte index stream */
-  volatile uint8_t m_ix;
-
-  /** Current data being transfered */
-  data_t m_data;
-
-  /* Latest valid reading */
-  int16_t m_humidity;
-  int16_t m_temperature;
-  
-  /**
-   * @override Interrupt::Handler
-   * The device driver interrupt level state machine.
-   * @param[in] arg argument from interrupt service routine.
-   */
-  virtual void on_interrupt(uint16_t arg = 0);
-
-  /**
-   * @override Event::Handler
-   * The device driver event level state machine.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value);
-
-  /**
-   * @override DHT
-   * Adjust data from the device. Communication protocol is the same
-   * for the DHT device family but data representation is different,
-   * i.e. data resolution and accuracy. Overridden by DHT11 and DHT22.
-   */
-  virtual void adjust_data() = 0;
-
 public:  
   /**
    * Construct DHT device connected to given pin.
@@ -218,6 +129,95 @@ public:
     temperature = m_temperature;
     return (true);
   }
+
+protected:
+  // States
+  enum {
+    INIT,			// Initial state
+    IDLE,			// Periodic wait
+    REQUEST,			// Issued a request
+    RESPONSE,			// Waiting for response
+    SAMPLING,			// Collecting samples
+    COMPLETED			// Data transfer completed
+  } __attribute__((packed));
+
+  /** Minimum periodic wait (approx. 2 seconds) */
+  static const uint16_t MIN_PERIOD = 2048;
+
+  /** Sample thresholds */
+  static const uint16_t LOW_THRESHOLD = 50;
+  static const uint16_t BIT_THRESHOLD = 100;
+  static const uint16_t HIGH_THRESHOLD = 200;
+
+  /** Size of data buffer */
+  static const uint8_t DATA_MAX = 5;
+
+  /** Last data elemement index */
+  static const uint8_t DATA_LAST = DATA_MAX - 1;
+
+  /**
+   * Data read from the device. Allow mapping between received byte 
+   * vector and data fields.
+   */
+  union data_t {
+    uint8_t as_byte[DATA_MAX];
+    struct {
+      int16_t humidity;
+      int16_t temperature;
+      uint8_t chksum;
+    };
+  };
+  
+  /** State of device driver */
+  volatile uint8_t m_state;
+
+  /** Number of errors detected; transfer or checksum */
+  volatile uint8_t m_errors;
+
+  /** Micro-seconds since latest rising of data signal; pulse start */
+  volatile uint16_t m_start;
+
+  /** Number of milli-seconds between requests */
+  volatile uint16_t m_period;
+
+  /** Current byte being read from device */
+  volatile uint8_t m_value;
+
+  /** Current number of bits read */
+  volatile uint8_t m_bits;
+
+  /** Current data byte index stream */
+  volatile uint8_t m_ix;
+
+  /** Current data being transfered */
+  data_t m_data;
+
+  /* Latest valid reading */
+  int16_t m_humidity;
+  int16_t m_temperature;
+  
+  /**
+   * @override Interrupt::Handler
+   * The device driver interrupt level state machine.
+   * @param[in] arg argument from interrupt service routine.
+   */
+  virtual void on_interrupt(uint16_t arg = 0);
+
+  /**
+   * @override Event::Handler
+   * The device driver event level state machine.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value);
+
+  /**
+   * @override DHT
+   * Adjust data from the device. Communication protocol is the same
+   * for the DHT device family but data representation is different,
+   * i.e. data resolution and accuracy. Overridden by DHT11 and DHT22.
+   */
+  virtual void adjust_data() = 0;
 
   /**
    * Print latest humidity and temperature reading to the

@@ -34,6 +34,74 @@
  * human readable names in dot notation to network addresses.
  */
 class DNS {
+public:
+  /** DNS standard port number */
+  static const uint16_t PORT = 53;
+
+  /**
+   * Construct DNS request handler. Use begin() to initiate the
+   * handler and end() to terminate. 
+   */
+  DNS() {}
+
+  /**
+   * Construct DNS request handler and initiate with given UDP socket and
+   * server address. The destructor will automaically close the socket.
+   * @param[in] sock socket.
+   * @param[in] server network address.
+   */
+  DNS(Socket* sock, uint8_t server[4]) 
+  { 
+    begin(sock, server); 
+  }
+
+  /**
+   * Destruct the DNS request handler; close the socket.
+   */
+  ~DNS() 
+  { 
+    end(); 
+  }
+
+  /**
+   * Initiate the DNS request handler with given UDP socket and server
+   * address. The destructor will automaically close the
+   * socket. Returns true if successful otherwise false.
+   * @param[in] sock socket.
+   * @param[in] server network address.
+   */
+  bool begin(Socket* sock, uint8_t server[4]);
+
+  /**
+   * Terminate the DNS request handler and close the socket. Returns
+   * true if successful otherwise false.
+   */
+  bool end();
+
+  /**
+   * Lookup the given hostname and return the network address. Returns
+   * zero if successful otherwise negative error code.
+   * @param[in] hostname to lookup.
+   * @param[in] ip network address.
+   * @return zero if successful otherwise negative error code.
+   */
+  int gethostbyname(const char* hostname, uint8_t ip[4])
+  {
+    return (gethostbyname(hostname, ip, false));
+  }
+
+  /**
+   * Lookup the given hostname and return the network address. Returns
+   * zero if successful otherwise negative error code.
+   * @param[in] hostname to lookup (in program memory).
+   * @param[in] ip network address.
+   * @return zero if successful otherwise negative error code.
+   */
+  int gethostbyname_P(const char* hostname, uint8_t ip[4])
+  {
+    return (gethostbyname(hostname, ip, true));
+  }
+
 private:
   /**
    * Header Flags and Codes (little-endian)
@@ -106,73 +174,5 @@ private:
    * @return zero if successful otherwise negative error code.
    */
   int gethostbyname(const char* hostname, uint8_t ip[4], bool progmem);
-
-public:
-  /** DNS standard port number */
-  static const uint16_t PORT = 53;
-
-  /**
-   * Construct DNS request handler. Use begin() to initiate the
-   * handler and end() to terminate. 
-   */
-  DNS() {}
-
-  /**
-   * Construct DNS request handler and initiate with given UDP socket and
-   * server address. The destructor will automaically close the socket.
-   * @param[in] sock socket.
-   * @param[in] server network address.
-   */
-  DNS(Socket* sock, uint8_t server[4]) 
-  { 
-    begin(sock, server); 
-  }
-
-  /**
-   * Destruct the DNS request handler; close the socket.
-   */
-  ~DNS() 
-  { 
-    end(); 
-  }
-
-  /**
-   * Initiate the DNS request handler with given UDP socket and server
-   * address. The destructor will automaically close the
-   * socket. Returns true if successful otherwise false.
-   * @param[in] sock socket.
-   * @param[in] server network address.
-   */
-  bool begin(Socket* sock, uint8_t server[4]);
-
-  /**
-   * Terminate the DNS request handler and close the socket. Returns
-   * true if successful otherwise false.
-   */
-  bool end();
-
-  /**
-   * Lookup the given hostname and return the network address. Returns
-   * zero if successful otherwise negative error code.
-   * @param[in] hostname to lookup.
-   * @param[in] ip network address.
-   * @return zero if successful otherwise negative error code.
-   */
-  int gethostbyname(const char* hostname, uint8_t ip[4])
-  {
-    return (gethostbyname(hostname, ip, false));
-  }
-
-  /**
-   * Lookup the given hostname and return the network address. Returns
-   * zero if successful otherwise negative error code.
-   * @param[in] hostname to lookup (in program memory).
-   * @param[in] ip network address.
-   * @return zero if successful otherwise negative error code.
-   */
-  int gethostbyname_P(const char* hostname, uint8_t ip[4])
-  {
-    return (gethostbyname(hostname, ip, true));
-  }
 };
 #endif

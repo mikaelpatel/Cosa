@@ -32,17 +32,6 @@
 #if defined(USBCON)
 
 class CDC : public IOStream::Device {
-  friend void USB_GEN_vect(void);
-
-protected:
-  /** Input buffering */
-  IOStream::Device* m_ibuf;
-
-  /**
-   * Common CDC receive interrupt handler.
-   */
-  void accept();
-
 public:
   // Default buffer size
   static const uint8_t BUFFER_MAX = 64;
@@ -151,6 +140,17 @@ public:
   {
     return (true);
   }
+
+protected:
+  /** Input buffering */
+  IOStream::Device* m_ibuf;
+
+  /**
+   * Common CDC receive interrupt handler.
+   */
+  void accept();
+
+  friend void USB_GEN_vect(void);
 };
 
 /**

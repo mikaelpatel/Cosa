@@ -39,14 +39,6 @@
  * and form-feed. 
  */
 class Textbox : public Canvas::Element, public IOStream::Device {
-protected:
-  /**
-   * Textbox port and line spacing. Character spacing is defined
-   * by the font setting.
-   */
-  Canvas::rect8_t m_text_port;
-  uint8_t m_line_spacing;
-
 public:
   /**
    * Construct text box on given canvas. Set textbox port to canvas size.
@@ -118,6 +110,14 @@ public:
    * @return character written or EOF(-1).
    */
   virtual int putchar(char c);
+
+protected:
+  /**
+   * Textbox port and line spacing. Character spacing is defined
+   * by the font setting.
+   */
+  Canvas::rect8_t m_text_port;
+  uint8_t m_line_spacing;
 };
 
 #endif

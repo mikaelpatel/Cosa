@@ -123,14 +123,6 @@ public:
    * Drawing context; canvas, pen and text color. Font and text scale.
    */
   class Context {
-  protected:
-    color16_t m_pen_color;
-    color16_t m_canvas_color;
-    color16_t m_text_color;
-    uint8_t m_text_scale;
-    Font* m_font;
-    pos8_t m_cursor;
-
   public:
     /**
      * Construct a drawing context with default pen color(BLACK),
@@ -287,6 +279,14 @@ public:
       m_cursor.x += dx;
       m_cursor.y += dy;
     }
+
+  protected:
+    color16_t m_pen_color;
+    color16_t m_canvas_color;
+    color16_t m_text_color;
+    uint8_t m_text_scale;
+    Font* m_font;
+    pos8_t m_cursor;
   };
 
   /**
@@ -294,8 +294,6 @@ public:
    * that requires a drawing context. See Textbox() for an example.
    */
   class Element : public Context {
-  protected:
-    Canvas* m_canvas;
   public:
     /**
      * Construct an element with the default context on the given 
@@ -308,20 +306,10 @@ public:
       m_canvas(canvas)
     {
     }
+  protected:
+    Canvas* m_canvas;
   };
   
-protected:
-  /**
-   * Canvas context; default and current. Delegation pattern.
-   */
-  static Context context;
-  Context* m_context;
-
-  /**
-   * Canvas direction (LANDSCAPE/PORTRAIT).
-   */
-  uint8_t m_direction;
-
 public:
   /**
    * Screen size; width/height and orientation
@@ -340,10 +328,10 @@ public:
    * @param[in] context canvas state.
    */
   Canvas(uint8_t width, uint8_t height, Context* context = &Canvas::context) :
-    m_context(context),
-    m_direction(PORTRAIT),
     WIDTH(width),
-    HEIGHT(height)
+    HEIGHT(height),
+    m_context(context),
+    m_direction(PORTRAIT)
   {
   }
 
@@ -942,6 +930,18 @@ public:
    * @param[in] max size of script table.
    */
   void run(uint8_t ix, void_P* tab, uint8_t max);
+
+protected:
+  /**
+   * Canvas context; default and current. Delegation pattern.
+   */
+  static Context context;
+  Context* m_context;
+
+  /**
+   * Canvas direction (LANDSCAPE/PORTRAIT).
+   */
+  uint8_t m_direction;
 };
 
 /**

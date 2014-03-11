@@ -40,6 +40,80 @@
  * Inspired by graphics library by ladyada/adafruit.
  */
 class ST7735 : public Canvas, SPI::Driver {
+public:
+  /**
+   * Construct display object with given control pins.
+   * @param[in] cs slave selection pin (default pin 10).
+   * @param[in] dc data/command selection pin (default pin 9).
+   */
+#if defined(__ARDUINO_TINYX4__)
+  ST7735(Board::DigitalPin cs = Board::D3, 
+	 Board::DigitalPin dc = Board::D7);
+#elif defined(__ARDUINO_TINYX5__)
+  ST7735(Board::DigitalPin cs = Board::D3, 
+	 Board::DigitalPin dc = Board::D4);
+#else
+  ST7735(Board::DigitalPin cs = Board::D10, 
+	 Board::DigitalPin dc = Board::D9);
+#endif
+
+  /**
+   * @override Canvas
+   * Start interaction with device.
+   * @return true(1) if successful otherwise false(0)
+   */
+  virtual bool begin();
+
+  /**
+   * @override Canvas
+   * Set screen orientation
+   * @param[in] direction.
+   */
+  virtual uint8_t set_orientation(uint8_t direction);
+
+  /**
+   * @override Canvas
+   * Set pixel with current color.
+   * @param[in] x.
+   * @param[in] y.
+   */
+  virtual void draw_pixel(uint8_t x, uint8_t y);
+
+  /**
+   * @override Canvas
+   * Draw vertical line with current color.
+   * @param[in] x 
+   * @param[in] y
+   * @param[in] length
+   */
+  virtual void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length);
+
+  /**
+   * @override Canvas
+   * Draw horizontal line with current color.
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] length.
+   */
+  virtual void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length);
+
+  /**
+   * @override Canvas
+   * Fill rectangle with current color.
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] width.
+   * @param[in] height.
+   */
+  virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
+  
+  /**
+   * @override Canvas
+   * Stop sequence of interaction with device.
+   * @return true(1) if successful otherwise false(0)
+   */
+  virtual bool end();
+
 protected:
   /**
    * Data/Command select pin (default is pin 9)
@@ -197,80 +271,6 @@ protected:
     spi.transfer(y >> 8);
     spi.transfer(y);
   }
-
-public:
-  /**
-   * Construct display object with given control pins.
-   * @param[in] cs slave selection pin (default pin 10).
-   * @param[in] dc data/command selection pin (default pin 9).
-   */
-#if defined(__ARDUINO_TINYX4__)
-  ST7735(Board::DigitalPin cs = Board::D3, 
-	 Board::DigitalPin dc = Board::D7);
-#elif defined(__ARDUINO_TINYX5__)
-  ST7735(Board::DigitalPin cs = Board::D3, 
-	 Board::DigitalPin dc = Board::D4);
-#else
-  ST7735(Board::DigitalPin cs = Board::D10, 
-	 Board::DigitalPin dc = Board::D9);
-#endif
-
-  /**
-   * @override Canvas
-   * Start interaction with device.
-   * @return true(1) if successful otherwise false(0)
-   */
-  virtual bool begin();
-
-  /**
-   * @override Canvas
-   * Set screen orientation
-   * @param[in] direction.
-   */
-  virtual uint8_t set_orientation(uint8_t direction);
-
-  /**
-   * @override Canvas
-   * Set pixel with current color.
-   * @param[in] x.
-   * @param[in] y.
-   */
-  virtual void draw_pixel(uint8_t x, uint8_t y);
-
-  /**
-   * @override Canvas
-   * Draw vertical line with current color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] length
-   */
-  virtual void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length);
-
-  /**
-   * @override Canvas
-   * Draw horizontal line with current color.
-   * @param[in] x.
-   * @param[in] y.
-   * @param[in] length.
-   */
-  virtual void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length);
-
-  /**
-   * @override Canvas
-   * Fill rectangle with current color.
-   * @param[in] x.
-   * @param[in] y.
-   * @param[in] width.
-   * @param[in] height.
-   */
-  virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
-  
-  /**
-   * @override Canvas
-   * Stop sequence of interaction with device.
-   * @return true(1) if successful otherwise false(0)
-   */
-  virtual bool end();
 };
 
 #endif

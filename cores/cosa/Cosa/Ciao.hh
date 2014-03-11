@@ -135,22 +135,12 @@ public:
     BIG_ENDIAN = 1
   } __attribute__((packed));
 
-protected:
-  IOStream::Device* m_dev;
-
-  /**
-   * Write data tag to given stream.
-   * @param[in] type data type tag.
-   * @param[in] count number of elements in sequence.
-   */
-  void write(uint8_t type, uint16_t count);
-
 public:
   /**
    * Construct data streaming for given device.
    * @param[in] dev output device.
    */
-  Ciao(IOStream::Device* dev) : m_dev(dev) {}
+  Ciao(IOStream::Device* dev = NULL) : m_dev(dev) {}
 
   /**
    * Set io-stream device.
@@ -309,6 +299,16 @@ public:
    * @param[in] count size of sequence to write.
    */
   void write(const Descriptor::user_t* desc, void* buf, uint16_t count);
+
+protected:
+  /**
+   * Write data tag to given stream.
+   * @param[in] type data type tag.
+   * @param[in] count number of elements in sequence.
+   */
+  void write(uint8_t type, uint16_t count);
+
+  IOStream::Device* m_dev;
 };
 
 #endif
