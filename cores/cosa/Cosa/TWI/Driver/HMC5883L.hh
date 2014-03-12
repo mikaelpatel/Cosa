@@ -120,49 +120,6 @@ public:
     }
   };
 
-protected:
-  /**
-   * Register List (Table 2, pp 11)
-   */
-  enum Register {
-    CONFIG = 0x00,		// Configuration register A, B
-    MODE = 0x02,		// Mode register
-    OUTPUT = 0x03,		// Output data register X, Y, Z
-    STATUS = 0x09,		// Status register
-    IDENTITY = 0x0a		// Identity register(0-2)
-  } __attribute__((packed));
-  
-  /** Gain conversion table */
-  static const uint16_t s_gain[] PROGMEM;
-
-  /** Configuration registers */
-  struct config_t {
-    uint8_t MS:2;		// Measurement configuration bits
-    uint8_t DO:3;		// Data output rate
-    uint8_t MA:2;		// Number of samples to average
-    uint8_t reserved:6;		// Reserved for future use
-    uint8_t GN:3;		// Gain configuration bits
-    config_t()			// Default configuration
-    {
-      MS = NORMAL_BIAS;
-      DO = OUTPUT_RATE_15_HZ;
-      MA = SAMPLES_AVG_1;
-      reserved = 0;
-      GN = RANGE_1_3_GA;
-    }
-  };
-  /** Configuration mirror register */
-  config_t m_config;
-  
-  /** Sleep mode while waiting for data */
-  uint8_t m_mode;
-
-  /** Overflow detected */
-  bool m_overflow;
-
-  /** Output register latest read */
-  data_t m_output;
-
 public:
   /**
    * Construct HMC5883L device with bus address(0x1e) (pp. 11)
@@ -342,6 +299,49 @@ public:
    * setting and the gain table.
    */
   void to_milli_gauss();
+
+protected:
+  /**
+   * Register List (Table 2, pp 11)
+   */
+  enum Register {
+    CONFIG = 0x00,		// Configuration register A, B
+    MODE = 0x02,		// Mode register
+    OUTPUT = 0x03,		// Output data register X, Y, Z
+    STATUS = 0x09,		// Status register
+    IDENTITY = 0x0a		// Identity register(0-2)
+  } __attribute__((packed));
+  
+  /** Gain conversion table */
+  static const uint16_t s_gain[] PROGMEM;
+
+  /** Configuration registers */
+  struct config_t {
+    uint8_t MS:2;		// Measurement configuration bits
+    uint8_t DO:3;		// Data output rate
+    uint8_t MA:2;		// Number of samples to average
+    uint8_t reserved:6;		// Reserved for future use
+    uint8_t GN:3;		// Gain configuration bits
+    config_t()			// Default configuration
+    {
+      MS = NORMAL_BIAS;
+      DO = OUTPUT_RATE_15_HZ;
+      MA = SAMPLES_AVG_1;
+      reserved = 0;
+      GN = RANGE_1_3_GA;
+    }
+  };
+  /** Configuration mirror register */
+  config_t m_config;
+  
+  /** Sleep mode while waiting for data */
+  uint8_t m_mode;
+
+  /** Overflow detected */
+  bool m_overflow;
+
+  /** Output register latest read */
+  data_t m_output;
 };
 
 /**

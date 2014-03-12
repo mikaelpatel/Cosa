@@ -35,10 +35,6 @@
  * Philips Semiconductor product description (Rev. 2003 Jan 27).
  */
 class PCF8591 : private TWI::Driver {
-private:
-  /** Shadow copy of control register */
-  uint8_t m_cntl;
-
 public:
   /**
    * Control byte; selection of input channel and mode of operation
@@ -128,6 +124,10 @@ public:
    * @return bool
    */
   bool convert(uint8_t value);
+
+private:
+  /** Shadow copy of control register */
+  uint8_t m_cntl;
 };
 
 #endif

@@ -28,10 +28,6 @@
  * Interface). 
  */
 class BitstuffingCodec : public VWI::Codec {
-private:
-  /** Message preamble */
-  static const uint8_t preamble[] PROGMEM;
-  
 public:
   /**
    * Construct fixed bitstuffing codec with given bits per symbol,
@@ -70,6 +66,10 @@ public:
   {
     return ((symbol >> 1) & 0xf);
   }
+
+private:
+  /** Message preamble */
+  static const uint8_t preamble[] PROGMEM;
 };
 
 #endif

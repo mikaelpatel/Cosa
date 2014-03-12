@@ -38,6 +38,20 @@
  * to the selected pin.
  */
 class Touch : private IOPin, private Link {
+public:
+  /**
+   * Create a touch capacitive sensor connected to the given pin.
+   * @param[in] pin identity.
+   * @param[in] threshold time between release detect (Default 250 ms).
+   */
+  Touch(Board::DigitalPin pin, uint16_t threshold = 250);
+  
+  /**
+   * @override Touch
+   * Callback virtual member function; Should be implemented by sub-class.
+   */
+  virtual void on_touch() = 0;
+
 protected:
   /** Pin sampling rate; watchdog timeout request */
   static const uint16_t SAMPLE_RATE = 16;
@@ -62,20 +76,6 @@ protected:
    * @param[in] value the event value.
    */
   virtual void on_event(uint8_t type, uint16_t value);
-
-public:
-  /**
-   * Create a touch capacitive sensor connected to the given pin.
-   * @param[in] pin identity.
-   * @param[in] threshold time between release detect (Default 250 ms).
-   */
-  Touch(Board::DigitalPin pin, uint16_t threshold = 250);
-  
-  /**
-   * @override Touch
-   * Callback virtual member function; Should be implemented by sub-class.
-   */
-  virtual void on_touch() = 0;
 };
 
 #endif

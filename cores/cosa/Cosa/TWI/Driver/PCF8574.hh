@@ -36,29 +36,6 @@
  * NXP Semiconductors Product data sheet, Rev. 5, 27 May 2013.
  */
 class PCF8574 : private TWI::Driver {
-protected:
-  // Pin number mask
-  static const uint8_t PIN_MASK = 0x07;
-  
-  // Data Direction Register, 0 = output, 1 = input, default all input
-  uint8_t m_ddr;
-  
-  // Port Register to mask and maintain output pin values
-  uint8_t m_port;
-
-  /**
-   * Construct connection to PCF8574 Remote 8-bit I/O expander with
-   * given address.
-   * @param[in] addr bus address.
-   * @param[in] subaddr device sub address.
-   */
-  PCF8574(uint8_t addr, uint8_t subaddr) :
-    TWI::Driver(addr | (subaddr & 0x7)),
-    m_ddr(0xff),
-    m_port(0)
-  {
-  }
-
 public:
   /**
    * Construct connection to PCF8574 Remote 8-bit I/O expander with
@@ -141,6 +118,29 @@ public:
    * @return bool.
    */
   bool write(void* buf, size_t size);
+
+protected:
+  // Pin number mask
+  static const uint8_t PIN_MASK = 0x07;
+  
+  // Data Direction Register, 0 = output, 1 = input, default all input
+  uint8_t m_ddr;
+  
+  // Port Register to mask and maintain output pin values
+  uint8_t m_port;
+
+  /**
+   * Construct connection to PCF8574 Remote 8-bit I/O expander with
+   * given address.
+   * @param[in] addr bus address.
+   * @param[in] subaddr device sub address.
+   */
+  PCF8574(uint8_t addr, uint8_t subaddr) :
+    TWI::Driver(addr | (subaddr & 0x7)),
+    m_ddr(0xff),
+    m_port(0)
+  {
+  }
 };
 
 class PCF8574A : protected PCF8574 {

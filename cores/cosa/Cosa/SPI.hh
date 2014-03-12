@@ -68,33 +68,6 @@ public:
    * interrupts during SPI transaction.
    */
   class Driver {
-    friend class SPI;
-  protected:
-    /** List of drivers */
-    Driver* m_next;
-    /** Interrupt handler */
-    Interrupt::Handler* m_irq;
-    /** Device chip select pin */
-    OutputPin m_cs;
-    /** Chip select pulse width; 
-     *  0 for active low logic during the transaction,
-     *  1 for active high logic,
-     *  2 pulse on end of transaction.
-     */
-    uint8_t m_pulse;
-    
-#if defined(__ARDUINO_TINY__)
-    /** SPI mode for clock polatity (CPOL) setting */
-    const uint8_t m_cpol;
-    /** USI hardware control register setting */
-    uint8_t m_usicr;
-#else
-    /** SPI hardware control register (SPCR) setting */
-    uint8_t m_spcr;
-    /** SPI hardware control bit in status register (SPSR) setting */
-    uint8_t m_spsr;
-#endif
-
   public:
     /**
      * Construct SPI Device driver with given chip select pin, pulse,
@@ -120,6 +93,33 @@ public:
      * @param[in] clock rate.
      */
     void set_clock(Clock rate);
+
+  protected:
+    /** List of drivers */
+    Driver* m_next;
+    /** Interrupt handler */
+    Interrupt::Handler* m_irq;
+    /** Device chip select pin */
+    OutputPin m_cs;
+    /** Chip select pulse width; 
+     *  0 for active low logic during the transaction,
+     *  1 for active high logic,
+     *  2 pulse on end of transaction.
+     */
+    uint8_t m_pulse;
+    
+#if defined(__ARDUINO_TINY__)
+    /** SPI mode for clock polatity (CPOL) setting */
+    const uint8_t m_cpol;
+    /** USI hardware control register setting */
+    uint8_t m_usicr;
+#else
+    /** SPI hardware control register (SPCR) setting */
+    uint8_t m_spcr;
+    /** SPI hardware control bit in status register (SPSR) setting */
+    uint8_t m_spsr;
+#endif
+    friend class SPI;
   };
 
   /**
@@ -127,16 +127,6 @@ public:
    * device on the SPI bus. 
    */
   class Slave : public Interrupt::Handler, public Event::Handler {
-    friend void SPI_STC_vect(void);
-    friend class SPI;
-  private:
-    static const uint8_t DATA_MAX = 32;
-    uint8_t m_data[DATA_MAX];
-    uint8_t m_cmd;
-    uint8_t* m_buffer;
-    uint8_t m_max;
-    uint8_t m_put;
-    static Slave* s_device;
   public:
     /**
      * Construct serial peripheral interface for slave.
@@ -197,14 +187,19 @@ public:
      * @param[in] data received data.
      */
     virtual void on_interrupt(uint16_t data);
+
+  private:
+    static const uint8_t DATA_MAX = 32;
+    uint8_t m_data[DATA_MAX];
+    uint8_t m_cmd;
+    uint8_t* m_buffer;
+    uint8_t m_max;
+    uint8_t m_put;
+    static Slave* s_device;
+    friend void SPI_STC_vect(void);
+    friend class SPI;
   };
 
-private:
-  /** List of attached devices for interrupt disable/enable */
-  Driver* m_list;
-  /** Current device using the SPI hardware */
-  Driver* m_dev;
-  
 public:
   /**
    * Construct serial peripheral interface for master.
@@ -312,6 +307,13 @@ public:
    * @param[in] vec null terminated io buffer vector pointer.
    */
   void write(const iovec_t* vec);
+
+private:
+  /** List of attached devices for interrupt disable/enable */
+  Driver* m_list;
+
+  /** Current device using the SPI hardware */
+  Driver* m_dev;
 };
 
 /**

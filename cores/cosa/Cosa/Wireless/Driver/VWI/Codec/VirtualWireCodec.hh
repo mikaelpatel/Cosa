@@ -29,13 +29,6 @@
  * Interface). 
  */
 class VirtualWireCodec : public VWI::Codec {
-private:
-  /** Symbol mapping table: 4 to 6 bits */
-  static const uint8_t symbols[] PROGMEM;
-
-  /** Message preamble with start symbol */
-  static const uint8_t preamble[] PROGMEM;
-  
 public:
   /**
    * Construct VirtualWire codec with given bits per symbol, start symbol,
@@ -69,6 +62,13 @@ public:
    * @return 4-bit data.
    */
   virtual uint8_t decode4(uint8_t symbol);
+
+private:
+  /** Symbol mapping table: 4 to 6 bits */
+  static const uint8_t symbols[] PROGMEM;
+
+  /** Message preamble with start symbol */
+  static const uint8_t preamble[] PROGMEM;
 };
 
 #endif

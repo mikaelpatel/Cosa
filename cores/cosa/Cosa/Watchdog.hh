@@ -37,7 +37,6 @@
  * events and delay. 
  */
 class Watchdog {
-  friend void WDT_vect(void);
 public:
   /**
    * Watchdog interrupt handler function prototype.
@@ -53,34 +52,6 @@ public:
    */
   typedef bool (*AwaitCondition)(void* env);
 
-private:
-  /**
-   * Do not allow instances. This is a static singleton.
-   */
-  Watchdog() {}
-
-  // Watchdog interrupt handler and environment.
-  static InterruptHandler s_handler;
-  static void* s_env;
-
-  // Watchdog timeout queues.
-  static const uint8_t TIMEQ_MAX = 10;
-  static Head s_timeq[TIMEQ_MAX];
-
-  // Watchdog ticks, prescale and mode.
-  static volatile uint32_t s_ticks;
-  static uint8_t s_prescale;
-  static uint8_t s_mode;
-  static bool s_initiated;
-
-  /**
-   * Calculate watchdog prescale given timeout period (in milli-seconds).
-   * @param[in] ms timeout period.
-   * @return prescale factor.
-   */
-  static uint8_t as_prescale(uint16_t ms);
-  
-public:
   /**
    * Get initiated state.
    * @return bool.
@@ -209,6 +180,36 @@ public:
   { 
     Event::push(Event::WATCHDOG_TYPE, 0, env);
   }
+
+private:
+  /**
+   * Do not allow instances. This is a static singleton.
+   */
+  Watchdog() {}
+
+  // Watchdog interrupt handler and environment.
+  static InterruptHandler s_handler;
+  static void* s_env;
+
+  // Watchdog timeout queues.
+  static const uint8_t TIMEQ_MAX = 10;
+  static Head s_timeq[TIMEQ_MAX];
+
+  // Watchdog ticks, prescale and mode.
+  static volatile uint32_t s_ticks;
+  static uint8_t s_prescale;
+  static uint8_t s_mode;
+  static bool s_initiated;
+
+  /**
+   * Calculate watchdog prescale given timeout period (in milli-seconds).
+   * @param[in] ms timeout period.
+   * @return prescale factor.
+   */
+  static uint8_t as_prescale(uint16_t ms);
+
+  /** Interrupt Service Routine */
+  friend void WDT_vect(void);
 };
 
 #endif

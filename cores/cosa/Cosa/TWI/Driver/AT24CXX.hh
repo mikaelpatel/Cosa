@@ -36,24 +36,6 @@
  * AT24CXX device is AT24C32.
  */
 class AT24CXX : private TWI::Driver, public EEPROM::Device {
-private:
-  static const uint8_t POLL_MAX = 3;
-  const uint16_t WRITE_MAX;
-  const uint16_t WRITE_MASK;
-
-  /**
-   * Initiate TWI communication with memory device for access of
-   * given memory address. If buffer is not null perform a write
-   * to page. The given size must not exceed the page. Return true(1)
-   * if the device is ready, write cycle is completed, otherwise
-   * false(0). 
-   * @param[in] addr address in rom.
-   * @param[in] buf buffer to write rom (default null(0)).
-   * @param[in] size number to write (default zero(0)).
-   * @return bool
-   */
-  bool poll(const void* addr, const void* buf = NULL, size_t size = 0);
-
 public:
   /**
    * Number of bytes on device.
@@ -77,10 +59,10 @@ public:
 	  const uint16_t page_max = 32) : 
     TWI::Driver(0x50 | (subaddr & 0x07)),
     EEPROM::Device(),
-    WRITE_MAX(page_max),
-    WRITE_MASK(page_max - 1),
     SIZE((size / CHARBITS) * 1024),
-    PAGE_MAX(page_max)
+    PAGE_MAX(page_max),
+    WRITE_MAX(page_max),
+    WRITE_MASK(page_max - 1)
   {}
 
   /**
@@ -112,6 +94,24 @@ public:
    * @return number of bytes or negative error code.
    */
   virtual int write(void* dest, const void* src, size_t size);
+
+private:
+  static const uint8_t POLL_MAX = 3;
+  const uint16_t WRITE_MAX;
+  const uint16_t WRITE_MASK;
+
+  /**
+   * Initiate TWI communication with memory device for access of
+   * given memory address. If buffer is not null perform a write
+   * to page. The given size must not exceed the page. Return true(1)
+   * if the device is ready, write cycle is completed, otherwise
+   * false(0). 
+   * @param[in] addr address in rom.
+   * @param[in] buf buffer to write rom (default null(0)).
+   * @param[in] size number to write (default zero(0)).
+   * @return bool
+   */
+  bool poll(const void* addr, const void* buf = NULL, size_t size = 0);
 };
 
 /**

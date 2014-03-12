@@ -48,6 +48,160 @@ public:
     PAYLOAD_MAX = 30		// Max size of payload (32 - src - port)
   } __attribute__((packed));
 
+  /**
+   * Construct NRF transceiver with given channel and pin numbers 
+   * for SPI slave select, activity enable and interrupt. Default
+   * in parenthesis (Standard/Mega Arduino/TinyX4).
+   * @param[in] net network address.
+   * @param[in] dev device address.
+   * @param[in] csn spi slave select pin number (default D10/D53/D2).
+   * @param[in] ce chip enable activates pin number (default D9/D48/D3).
+   * @param[in] irq interrupt pin number (default EXT0/EXT4/EXT0/EXT0).
+   */
+#if defined(__ARDUINO_MEGA__)
+  NRF24L01P(uint16_t net, uint8_t dev,
+	    Board::DigitalPin csn = Board::D53, 
+	    Board::DigitalPin ce = Board::D48, 
+	    Board::ExternalInterruptPin irq = Board::EXT4) :
+#elif defined(__ARDUINO_TINYX4__)
+  NRF24L01P(uint16_t net, uint8_t dev,
+	    Board::DigitalPin csn = Board::D2, 
+	    Board::DigitalPin ce = Board::D3, 
+	    Board::ExternalInterruptPin irq = Board::EXT0) : 
+#else // __ARDUINO_STANDARD__ || __ARDUINO_MIGHTY__
+  NRF24L01P(uint16_t net, uint8_t dev,
+	    Board::DigitalPin csn = Board::D10, 
+	    Board::DigitalPin ce = Board::D9, 
+	    Board::ExternalInterruptPin irq = Board::EXT0) :
+#endif
+  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+  Wireless::Driver(net, dev),
+  m_ce(ce, 0),
+  m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
+  m_status(0),
+  m_state(POWER_DOWN_STATE),
+  m_trans(0),
+  m_retrans(0),
+  m_drops(0)
+  {
+    set_channel(64);
+  }
+  
+  /**
+   * Set power up mode. Will initiate radio with necessary settings
+   * after power on reset. 
+   */
+  void powerup();
+
+  /**
+   * Set standby mode. 
+   */
+  void standby();
+
+  /**
+   * @override Wireless::Device
+   * Set power down. Turn off radio and go into low power mode. 
+   */
+  virtual void powerdown();
+
+  /**
+   * @override Wireless::Device
+   * Start up the device driver. Return true(1) if successful
+   * otherwise false(0). 
+   * @param[in] config device configuration (default NULL).
+   * @return bool
+   */
+  virtual bool begin(const void* config = NULL);
+
+  /**
+   * @override Wireless::Device
+   * Shut down the device driver. Return true(1) if successful
+   * otherwise false(0).
+   * @return bool
+   */
+  virtual bool end()
+  {
+    standby();
+    return (true);
+  }
+
+  /**
+   * @override Wireless::Device
+   * Return true(1) if the data to receive on the device otherwise
+   * false(0). 
+   * @return bool
+   */
+  virtual bool available();
+
+  /**
+   * @override Wireless::Device
+   * Send message in given null terminated io vector. Returns number
+   * of bytes sent. Returns error code(-1) if number of bytes is
+   * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
+   * transmit mode.
+   * @param[in] dest destination network address.
+   * @param[in] port device port (or message type).
+   * @param[in] vec null termianted io vector.
+   * @return number of bytes send or negative error code.
+   */
+  virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec);
+
+  /**
+   * @override Wireless::Driver
+   * Send message in given buffer, with given number of bytes. Returns
+   * number of bytes sent. Returns error code(-1) if number of bytes
+   * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
+   * set transmit mode. Note that port numbers (128 and higher are
+   * reserved for system protocols).
+   * @param[in] dest destination network address.
+   * @param[in] port device port (or message type).
+   * @param[in] buf buffer to transmit.
+   * @param[in] len number of bytes in buffer.
+   * @return number of bytes send or negative error code.
+   */
+  virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
+
+  /**
+   * @override Wireless::Device
+   * Receive message and store into given buffer with given maximum
+   * size. The source network address is returned in the parameter src.
+   * Returns error code(-2) if no message is available and/or a
+   * timeout occured. Returns error code(-1) if the buffer size if to
+   * small for incoming message or if the receiver fifo has overflowed. 
+   * Otherwise the actual number of received bytes is returned
+   * @param[out] src source network address.
+   * @param[out] port device port (or message type).
+   * @param[in] buf buffer to store incoming message.
+   * @param[in] count maximum number of bytes to receive.
+   * @param[in] ms maximum time out period.
+   * @return number of bytes received or negative error code.
+   */
+  virtual int recv(uint8_t& src, uint8_t& port, 
+		   void* buf, size_t count, 
+		   uint32_t ms = 0L);
+
+  /**
+   * @override Wireless::Driver
+   * Set output power level (-30..10 dBm)
+   * @param[in] dBm.
+   */
+  virtual void set_output_power_level(int8_t dBm);
+
+  /**
+   * Return number of transmitted messages.
+   */
+  uint16_t get_trans() { return (m_trans); }
+
+  /**
+   * Return number of retransmissions.
+   */
+  uint16_t get_retrans() { return (m_retrans); }
+
+  /**
+   * Return number of dropped messages.
+   */
+  uint16_t get_drops() { return (m_drops); }
+
 private:
   /**
    * NRF transceiver states (See chap. 6.1.1, fig. 4, pp. 22)
@@ -465,7 +619,6 @@ private:
   /** Dropped messages */
   uint16_t m_drops;
 
-protected:
   /**
    * Read status. Issue NOP command to read status.
    * @return status.
@@ -502,161 +655,7 @@ protected:
    */
   void set_receiver_mode();
 
-public:
-  /**
-   * Construct NRF transceiver with given channel and pin numbers 
-   * for SPI slave select, activity enable and interrupt. Default
-   * in parenthesis (Standard/Mega Arduino/TinyX4).
-   * @param[in] net network address.
-   * @param[in] dev device address.
-   * @param[in] csn spi slave select pin number (default D10/D53/D2).
-   * @param[in] ce chip enable activates pin number (default D9/D48/D3).
-   * @param[in] irq interrupt pin number (default EXT0/EXT4/EXT0/EXT0).
-   */
-#if defined(__ARDUINO_MEGA__)
-  NRF24L01P(uint16_t net, uint8_t dev,
-	    Board::DigitalPin csn = Board::D53, 
-	    Board::DigitalPin ce = Board::D48, 
-	    Board::ExternalInterruptPin irq = Board::EXT4) :
-#elif defined(__ARDUINO_TINYX4__)
-  NRF24L01P(uint16_t net, uint8_t dev,
-	    Board::DigitalPin csn = Board::D2, 
-	    Board::DigitalPin ce = Board::D3, 
-	    Board::ExternalInterruptPin irq = Board::EXT0) : 
-#else // __ARDUINO_STANDARD__ || __ARDUINO_MIGHTY__
-  NRF24L01P(uint16_t net, uint8_t dev,
-	    Board::DigitalPin csn = Board::D10, 
-	    Board::DigitalPin ce = Board::D9, 
-	    Board::ExternalInterruptPin irq = Board::EXT0) :
-#endif
-  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
-  Wireless::Driver(net, dev),
-  m_ce(ce, 0),
-  m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
-  m_status(0),
-  m_state(POWER_DOWN_STATE),
-  m_trans(0),
-  m_retrans(0),
-  m_drops(0)
-  {
-    set_channel(64);
-  }
-  
-  /**
-   * Set power up mode. Will initiate radio with necessary settings
-   * after power on reset. 
-   */
-  void powerup();
-
-  /**
-   * Set standby mode. 
-   */
-  void standby();
-
-  /**
-   * @override Wireless::Device
-   * Set power down. Turn off radio and go into low power mode. 
-   */
-  virtual void powerdown();
-
-  /**
-   * @override Wireless::Device
-   * Start up the device driver. Return true(1) if successful
-   * otherwise false(0). 
-   * @param[in] config device configuration (default NULL).
-   * @return bool
-   */
-  virtual bool begin(const void* config = NULL);
-
-  /**
-   * @override Wireless::Device
-   * Shut down the device driver. Return true(1) if successful
-   * otherwise false(0).
-   * @return bool
-   */
-  virtual bool end()
-  {
-    standby();
-    return (true);
-  }
-
-  /**
-   * @override Wireless::Device
-   * Return true(1) if the data to receive on the device otherwise
-   * false(0). 
-   * @return bool
-   */
-  virtual bool available();
-
-  /**
-   * @override Wireless::Device
-   * Send message in given null terminated io vector. Returns number
-   * of bytes sent. Returns error code(-1) if number of bytes is
-   * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
-   * transmit mode.
-   * @param[in] dest destination network address.
-   * @param[in] port device port (or message type).
-   * @param[in] vec null termianted io vector.
-   * @return number of bytes send or negative error code.
-   */
-  virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec);
-
-  /**
-   * @override Wireless::Driver
-   * Send message in given buffer, with given number of bytes. Returns
-   * number of bytes sent. Returns error code(-1) if number of bytes
-   * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
-   * set transmit mode. Note that port numbers (128 and higher are
-   * reserved for system protocols).
-   * @param[in] dest destination network address.
-   * @param[in] port device port (or message type).
-   * @param[in] buf buffer to transmit.
-   * @param[in] len number of bytes in buffer.
-   * @return number of bytes send or negative error code.
-   */
-  virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
-
-  /**
-   * @override Wireless::Device
-   * Receive message and store into given buffer with given maximum
-   * size. The source network address is returned in the parameter src.
-   * Returns error code(-2) if no message is available and/or a
-   * timeout occured. Returns error code(-1) if the buffer size if to
-   * small for incoming message or if the receiver fifo has overflowed. 
-   * Otherwise the actual number of received bytes is returned
-   * @param[out] src source network address.
-   * @param[out] port device port (or message type).
-   * @param[in] buf buffer to store incoming message.
-   * @param[in] count maximum number of bytes to receive.
-   * @param[in] ms maximum time out period.
-   * @return number of bytes received or negative error code.
-   */
-  virtual int recv(uint8_t& src, uint8_t& port, 
-		   void* buf, size_t count, 
-		   uint32_t ms = 0L);
-
-  /**
-   * @override Wireless::Driver
-   * Set output power level (-30..10 dBm)
-   * @param[in] dBm.
-   */
-  virtual void set_output_power_level(int8_t dBm);
-
-  /**
-   * Return number of transmitted messages.
-   */
-  uint16_t get_trans() { return (m_trans); }
-
-  /**
-   * Return number of retransmissions.
-   */
-  uint16_t get_retrans() { return (m_retrans); }
-
-  /**
-   * Return number of dropped messages.
-   */
-  uint16_t get_drops() { return (m_drops); }
-
+  // Allow operators to access internals
   friend IOStream& operator<<(IOStream& outs, status_t status);
   friend IOStream& operator<<(IOStream& outs, fifo_status_t status);
   friend IOStream& operator<<(IOStream& outs, observe_tx_t observe);

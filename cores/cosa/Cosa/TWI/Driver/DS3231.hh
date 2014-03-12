@@ -36,29 +36,6 @@
  * description; http://datasheets.maximintegrated.com/en/ds/DS3231.pdf
  */
 class DS3231 : private TWI::Driver {
-private:
-  /**
-   * Read alarm setting, time and mask, from real-time clock. Return
-   * true(1) if successful otherwise false(0).
-   * @param[out] alarm time structure.
-   * @param[in] size of alarm time structure.
-   * @param[in] offset to alarm time structure in timekeeper.
-   * @param[out] mask alarm mask bits.
-   * @return boolean.
-   */
-  bool get(void* alarm, uint8_t size, uint8_t offset, uint8_t& mask);
-
-  /**
-   * Set real-time clock alarm with the given time and mask. Return
-   * true(1) if successful otherwise false(0). 
-   * @param[in] alarm time structure to set.
-   * @param[in] size of alarm time structure.
-   * @param[in] offset to alarm time structure in timekeeper.
-   * @param[out] mask alarm mask bits.
-   * @return boolean.
-   */
-  bool set(void* alarm, uint8_t size, uint8_t offset, uint8_t mask);
-
 public:
   /**
    * Alarm1 register sub-set type and mask bits (Table 2, pp. 12)
@@ -287,6 +264,29 @@ public:
    * @return temperature.
    */
   int16_t get_temperature();
+
+private:
+  /**
+   * Read alarm setting, time and mask, from real-time clock. Return
+   * true(1) if successful otherwise false(0).
+   * @param[out] alarm time structure.
+   * @param[in] size of alarm time structure.
+   * @param[in] offset to alarm time structure in timekeeper.
+   * @param[out] mask alarm mask bits.
+   * @return boolean.
+   */
+  bool get(void* alarm, uint8_t size, uint8_t offset, uint8_t& mask);
+
+  /**
+   * Set real-time clock alarm with the given time and mask. Return
+   * true(1) if successful otherwise false(0). 
+   * @param[in] alarm time structure to set.
+   * @param[in] size of alarm time structure.
+   * @param[in] offset to alarm time structure in timekeeper.
+   * @param[out] mask alarm mask bits.
+   * @return boolean.
+   */
+  bool set(void* alarm, uint8_t size, uint8_t offset, uint8_t mask);
 };
 
 /**

@@ -42,6 +42,136 @@
  * http://www.hoperf.com/rf/fsk_module/RFM69HW.htm
  */
 class RFM69 : private SPI::Driver, public Wireless::Driver {
+public:
+  /**
+   * Maximum size of frame header is dest(1), src(1), and port(1).
+   */
+  static const size_t HEADER_MAX = 3;
+
+  /**
+   * Maximum size of payload. The device allows 66 bytes payload. 
+   * Adjust for frame header.
+   */
+  static const size_t PAYLOAD_MAX = 66 - HEADER_MAX;
+  
+  /**
+   * Construct RFM69 device driver with given network and device
+   * address. Connected to SPI bus and given chip select pin. Default
+   * pins are Arduino Nano IO Shield for RFM69 module are D10 chip
+   * select (RFM69:NSS) and D2/EXT0 external interrupt pin (RFM69:DIO0).
+   * @param[in] net network address.
+   * @param[in] dev device address.
+   * @param[in] csn chip select pin (Default D2/D10/D53).
+   * @param[in] irq interrupt pin (Default EXT0).
+   */
+#if defined(__ARDUINO_TINYX4__)
+  RFM69(uint16_t net, uint8_t dev, 
+	 Board::DigitalPin csn = Board::D2,
+	 Board::ExternalInterruptPin irq = Board::EXT0) :
+#elif defined(__ARDUINO_MEGA__)
+  RFM69(uint16_t net, uint8_t dev, 
+	 Board::DigitalPin csn = Board::D53,
+	 Board::ExternalInterruptPin irq = Board::EXT4) :
+#else
+  RFM69(uint16_t net, uint8_t dev, 
+	 Board::DigitalPin csn = Board::D10,
+	 Board::ExternalInterruptPin irq = Board::EXT0) :
+#endif
+    SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+    Wireless::Driver(net, dev),
+    m_irq(irq, ExternalInterrupt::ON_RISING_MODE, this)
+  {
+  }
+
+  /**
+   * @override Wireless::Driver
+   * Start and configure RFM69 device driver. The configuration must
+   * set DIO0 to assert on received message. This device pin is
+   * assumed to be connected the device driver interrupt pin (EXTn).
+   * Return true(1) if successful othewise false(0).
+   * @param[in] config configuration vector (default NULL)
+   */
+  virtual bool begin(const void* config = NULL);
+
+  /**
+   * @override Wireless::Driver
+   * Shut down the device driver. Return true(1) if successful
+   * otherwise false(0).
+   * @return bool
+   */
+  virtual bool end();
+    
+  /**
+   * @override Wireless::Driver
+   * Send message in given null terminated io vector. Returns number
+   * of bytes sent. Returns error code(-1) if number of bytes is
+   * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
+   * transmit mode and/or packet is available to receive.
+   * @param[in] dest destination network address.
+   * @param[in] port device port (or message type).
+   * @param[in] vec null termianted io vector.
+   * @return number of bytes send or negative error code.
+   */
+  virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec);
+
+  /**
+   * @override Wireless::Driver
+   * Send message in given buffer, with given number of bytes. Returns
+   * number of bytes sent. Returns error code(-1) if number of bytes
+   * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
+   * set transmit mode.  
+   * @param[in] dest destination network address.
+   * @param[in] port device port (or message type).
+   * @param[in] buf buffer to transmit.
+   * @param[in] len number of bytes in buffer.
+   * @return number of bytes send or negative error code.
+   */
+  virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
+
+  /**
+   * @override Wireless::Driver
+   * Receive message and store into given buffer with given maximum
+   * length. The source network address is returned in the parameter src.
+   * Returns error code(-2) if no message is available and/or a
+   * timeout occured. Returns error code(-1) if the buffer size if to
+   * small for incoming message or if the receiver fifo has overflowed. 
+   * Otherwise the actual number of received bytes is returned
+   * @param[out] src source network address.
+   * @param[out] port device port (or message type).
+   * @param[in] buf buffer to store incoming message.
+   * @param[in] len maximum number of bytes to receive.
+   * @param[in] ms maximum time out period.
+   * @return number of bytes received or negative error code.
+   */
+  virtual int recv(uint8_t& src, uint8_t& port, void* buf, size_t len, 
+		   uint32_t ms = 0L);
+
+  /**
+   * @override Wireless::Driver
+   * Set device in power down mode. 
+   */
+  virtual void powerdown();
+
+  /**
+   * @override Wireless::Driver
+   * Set device in wakeup on radio mode. 
+   */
+  virtual void wakeup_on_radio();
+  
+  /**
+   * @override Wireless::Driver
+   * Set output power level [-18..13] dBm.
+   * @param[in] dBm.
+   */
+  virtual void set_output_power_level(int8_t dBm);
+
+  /**
+   * @override Wireless::Driver
+   * Return estimated input power level (dBm) from latest successful
+   * message received. 
+   */
+  virtual int get_input_power_level();
+
 private:
   /**
    * Configuration and Status Registers (Table 23, pp. 60)
@@ -526,7 +656,6 @@ private:
     virtual void on_interrupt(uint16_t arg = 0);
   };
   
-private:
   /** Default configuration */
   static const uint8_t config[] __PROGMEM;
 
@@ -538,136 +667,6 @@ private:
 
   /** Current operation mode */
   Mode m_opmode;
-  
-public:
-  /**
-   * Maximum size of frame header is dest(1), src(1), and port(1).
-   */
-  static const size_t HEADER_MAX = 3;
-
-  /**
-   * Maximum size of payload. The device allows 66 bytes payload. 
-   * Adjust for frame header.
-   */
-  static const size_t PAYLOAD_MAX = 66 - HEADER_MAX;
-  
-  /**
-   * Construct RFM69 device driver with given network and device
-   * address. Connected to SPI bus and given chip select pin. Default
-   * pins are Arduino Nano IO Shield for RFM69 module are D10 chip
-   * select (RFM69:NSS) and D2/EXT0 external interrupt pin (RFM69:DIO0).
-   * @param[in] net network address.
-   * @param[in] dev device address.
-   * @param[in] csn chip select pin (Default D2/D10/D53).
-   * @param[in] irq interrupt pin (Default EXT0).
-   */
-#if defined(__ARDUINO_TINYX4__)
-  RFM69(uint16_t net, uint8_t dev, 
-	 Board::DigitalPin csn = Board::D2,
-	 Board::ExternalInterruptPin irq = Board::EXT0) :
-#elif defined(__ARDUINO_MEGA__)
-  RFM69(uint16_t net, uint8_t dev, 
-	 Board::DigitalPin csn = Board::D53,
-	 Board::ExternalInterruptPin irq = Board::EXT4) :
-#else
-  RFM69(uint16_t net, uint8_t dev, 
-	 Board::DigitalPin csn = Board::D10,
-	 Board::ExternalInterruptPin irq = Board::EXT0) :
-#endif
-    SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
-    Wireless::Driver(net, dev),
-    m_irq(irq, ExternalInterrupt::ON_RISING_MODE, this)
-  {
-  }
-
-  /**
-   * @override Wireless::Driver
-   * Start and configure RFM69 device driver. The configuration must
-   * set DIO0 to assert on received message. This device pin is
-   * assumed to be connected the device driver interrupt pin (EXTn).
-   * Return true(1) if successful othewise false(0).
-   * @param[in] config configuration vector (default NULL)
-   */
-  virtual bool begin(const void* config = NULL);
-
-  /**
-   * @override Wireless::Driver
-   * Shut down the device driver. Return true(1) if successful
-   * otherwise false(0).
-   * @return bool
-   */
-  virtual bool end();
-    
-  /**
-   * @override Wireless::Driver
-   * Send message in given null terminated io vector. Returns number
-   * of bytes sent. Returns error code(-1) if number of bytes is
-   * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
-   * transmit mode and/or packet is available to receive.
-   * @param[in] dest destination network address.
-   * @param[in] port device port (or message type).
-   * @param[in] vec null termianted io vector.
-   * @return number of bytes send or negative error code.
-   */
-  virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec);
-
-  /**
-   * @override Wireless::Driver
-   * Send message in given buffer, with given number of bytes. Returns
-   * number of bytes sent. Returns error code(-1) if number of bytes
-   * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
-   * set transmit mode.  
-   * @param[in] dest destination network address.
-   * @param[in] port device port (or message type).
-   * @param[in] buf buffer to transmit.
-   * @param[in] len number of bytes in buffer.
-   * @return number of bytes send or negative error code.
-   */
-  virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
-
-  /**
-   * @override Wireless::Driver
-   * Receive message and store into given buffer with given maximum
-   * length. The source network address is returned in the parameter src.
-   * Returns error code(-2) if no message is available and/or a
-   * timeout occured. Returns error code(-1) if the buffer size if to
-   * small for incoming message or if the receiver fifo has overflowed. 
-   * Otherwise the actual number of received bytes is returned
-   * @param[out] src source network address.
-   * @param[out] port device port (or message type).
-   * @param[in] buf buffer to store incoming message.
-   * @param[in] len maximum number of bytes to receive.
-   * @param[in] ms maximum time out period.
-   * @return number of bytes received or negative error code.
-   */
-  virtual int recv(uint8_t& src, uint8_t& port, void* buf, size_t len, 
-		   uint32_t ms = 0L);
-
-  /**
-   * @override Wireless::Driver
-   * Set device in power down mode. 
-   */
-  virtual void powerdown();
-
-  /**
-   * @override Wireless::Driver
-   * Set device in wakeup on radio mode. 
-   */
-  virtual void wakeup_on_radio();
-  
-  /**
-   * @override Wireless::Driver
-   * Set output power level [-18..13] dBm.
-   * @param[in] dBm.
-   */
-  virtual void set_output_power_level(int8_t dBm);
-
-  /**
-   * @override Wireless::Driver
-   * Return estimated input power level (dBm) from latest successful
-   * message received. 
-   */
-  virtual int get_input_power_level();
 };
 #endif
 #endif

@@ -40,27 +40,27 @@
  * wires and/or higher loads. 
  */
 class TWI {
-  friend void ::USI_START_vect(void);
-  friend void ::USI_OVF_vect(void);
 public:
   /**
    * Device drivers are friends and may have callback/event handler
    * for completion events. 
    */
   class Driver : public Event::Handler {
-    friend class TWI;
-    friend void ::USI_START_vect(void);
-    friend void ::USI_OVF_vect(void);
-  protected:
-    /** Device bus address */
-    uint8_t m_addr;
-
   public:
     /**
      * Construct TWI driver with given bus address.
      * @param[in] addr bus address (7-bit LSB).
      */
     Driver(uint8_t addr) : Event::Handler(), m_addr(addr << 1) {}
+
+  protected:
+    /** Device bus address */
+    uint8_t m_addr;
+    
+    /** Allow access */
+    friend class TWI;
+    friend void ::USI_START_vect(void);
+    friend void ::USI_OVF_vect(void);
   };
 
   /**
@@ -69,19 +69,6 @@ public:
    * and device callback. 
    */
   class Slave : public TWI::Driver {
-    friend void ::USI_START_vect(void);
-    friend void ::USI_OVF_vect(void);
-  protected:
-    /**
-     * Filter Event::WRITE_COMPLETED_TYPE(size) and calls on_request()
-     * with given write block as argument. The device is marked as
-     * ready when the request has been completed and a possible
-     * result block is available.
-     * @param[in] type the event type.
-     * @param[in] value the event value.
-     */
-    virtual void on_event(uint8_t type, uint16_t value);
-
   public:
     /**
      * Construct slave with given address.
@@ -123,8 +110,88 @@ public:
      * @param[in] size of buffer.
      */
     virtual void on_request(void* buf, size_t size) = 0;
+
+  protected:
+    /**
+     * Filter Event::WRITE_COMPLETED_TYPE(size) and calls on_request()
+     * with given write block as argument. The device is marked as
+     * ready when the request has been completed and a possible
+     * result block is available.
+     * @param[in] type the event type.
+     * @param[in] value the event value.
+     */
+    virtual void on_event(uint8_t type, uint16_t value);
+
+    /** Allow access */
+    friend void ::USI_START_vect(void);
+    friend void ::USI_OVF_vect(void);
   };
 
+  /** 
+   * Construct two-wire instance. This is actually a single-ton on
+   * current supported hardware, i.e. there can only be one unit.
+   */
+  TWI();
+
+  /**
+   * Start TWI logic for a device transaction block. Use given event
+   * handler for completion events. Returns true(1) if successful
+   * otherwise false(0). 
+   * @param[in] dev device.
+   * @param[in] target receiver of events on requests (default NULL).
+   * @return true(1) if successful otherwise false(0).
+   */
+  bool begin(TWI::Driver* dev, Event::Handler* target = NULL);
+
+  /**
+   * Stop usage of the TWI bus logic. 
+   * @return true(1) if successful otherwise false(0).
+   */
+  bool end()
+  {
+    m_dev = NULL;
+    return (true);
+  }
+
+  /**
+   * Write data to the current driver. Returns number of bytes written
+   * or negative error code. 
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes
+   */
+  int write(void* buf, size_t size);
+
+  /**
+   * Write data to the current driver with given byte header. Returns
+   * number of bytes written or negative error code. 
+   * @param[in] header to write before buffer.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes
+   */
+  int write(uint8_t header, void* buf = 0, size_t size = 0);
+
+  /**
+   * Write data to the current driver with given header. Returns
+   * number of bytes written or negative error code.
+   * @param[in] header to write before buffer.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes
+   */
+  int write(uint16_t header, void* buf = 0, size_t size = 0);
+
+  /**
+   * Read data to the current driver. Returns number of bytes read
+   * or negative error code.
+   * @param[in] buf data to write.
+   * @param[in] size number of bytes to read.
+   * @return number of bytes
+   */
+  int read(void* buf, size_t size);
+
+private:
   /**
    * USI TWI slave states
    */
@@ -144,7 +211,6 @@ public:
     SERVICE_REQUEST
   } __attribute__((packed));
 
-private:
   /**
    * Address mask and read/write bit.
    */
@@ -304,70 +370,9 @@ private:
    */
   int request(uint8_t op);
 
-public:
-  /** 
-   * Construct two-wire instance. This is actually a single-ton on
-   * current supported hardware, i.e. there can only be one unit.
-   */
-  TWI();
-
-  /**
-   * Start TWI logic for a device transaction block. Use given event
-   * handler for completion events. Returns true(1) if successful
-   * otherwise false(0). 
-   * @param[in] dev device.
-   * @param[in] target receiver of events on requests (default NULL).
-   * @return true(1) if successful otherwise false(0).
-   */
-  bool begin(TWI::Driver* dev, Event::Handler* target = NULL);
-
-  /**
-   * Stop usage of the TWI bus logic. 
-   * @return true(1) if successful otherwise false(0).
-   */
-  bool end()
-  {
-    m_dev = NULL;
-    return (true);
-  }
-
-  /**
-   * Write data to the current driver. Returns number of bytes written
-   * or negative error code. 
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @return number of bytes
-   */
-  int write(void* buf, size_t size);
-
-  /**
-   * Write data to the current driver with given byte header. Returns
-   * number of bytes written or negative error code. 
-   * @param[in] header to write before buffer.
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @return number of bytes
-   */
-  int write(uint8_t header, void* buf = 0, size_t size = 0);
-
-  /**
-   * Write data to the current driver with given header. Returns
-   * number of bytes written or negative error code.
-   * @param[in] header to write before buffer.
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @return number of bytes
-   */
-  int write(uint16_t header, void* buf = 0, size_t size = 0);
-
-  /**
-   * Read data to the current driver. Returns number of bytes read
-   * or negative error code.
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to read.
-   * @return number of bytes
-   */
-  int read(void* buf, size_t size);
+  /** Allow access */
+  friend void ::USI_START_vect(void);
+  friend void ::USI_OVF_vect(void);
 };
 #endif
 #endif

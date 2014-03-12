@@ -37,33 +37,6 @@
  * Virtual Wire library. 
  */
 class VWI : public Wireless::Driver {
-  friend void TIMER1_COMPA_vect(void);
-private:
-  /**
-   * Frame header; Transmitted in little endian order; network LSB first.
-   */
-  struct header_t {
-    int16_t network;		/**< Network address */
-    uint8_t dest;		/**< Destination device address */
-    uint8_t src;		/**< Source device address */
-    uint8_t port;		/**< Port or message type */
-  };
-  
-  /** 
-   * The maximum payload length; 30 byte application payload and 
-   * 4 byte frame header with network(2)
-   */
-  static const uint8_t PAYLOAD_MAX = 30 + sizeof(header_t);
-  
-  /** Maximum number of bytes in a message (incl. byte count and FCS) */
-  static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
-
-  /** Minimum number of bytes in a message */
-  static const uint8_t MESSAGE_MIN = sizeof(header_t);
-
-  /** Number of samples per bit */
-  static const uint8_t SAMPLES_PER_BIT = 8;
-
 public:
   /**
    * The Virtual Wire Codec; define message preamble and start
@@ -145,271 +118,6 @@ public:
       return ((decode4(symbol) << 4) | (decode4(symbol >> BITS_PER_SYMBOL)));
     }
   };
-
-private:
-  /**
-   * Internal Virtual Wire Receiver.
-   */
-  class Receiver : private InputPin {
-    friend void TIMER1_COMPA_vect(void);
-  private:
-    /** The size of the receiver ramp. Ramp wraps modulo this number */
-    static const uint8_t RAMP_MAX = 160;
-
-    /** Number of samples to integrate before mapping to one(1) */
-    static const uint8_t INTEGRATOR_THRESHOLD = 5;
-
-    /** 
-     * Ramp adjustment parameters. Standard is if a transition occurs
-     * before RAMP_TRANSITION(80) in the ramp, the ramp is retarded
-     * by adding RAMP_INC_RETARD(11) else by adding
-     * RAMP_INC_ADVANCE(29). If there is no transition it is adjusted
-     * by RAMP_INC(20), Internal ramp adjustment parameter 
-     */
-    static const uint8_t RAMP_INC = RAMP_MAX / SAMPLES_PER_BIT;
-
-    /** Internal ramp adjustment parameter */
-    static const uint8_t RAMP_TRANSITION = RAMP_MAX / 2;
-
-    /** Internal ramp adjustment parameter */
-    static const uint8_t RAMP_ADJUST = 9;
-    
-    /** Internal ramp adjustment parameter */
-    static const uint8_t RAMP_INC_RETARD = (RAMP_INC - RAMP_ADJUST);
-    
-    /** Internal ramp adjustment parameter */
-    static const uint8_t RAMP_INC_ADVANCE = (RAMP_INC + RAMP_ADJUST);
-
-    /** Current receiver sample */
-    Codec* m_codec;
-
-    /** Current receiver sample */
-    uint8_t m_sample;
-
-    /** Last receiver sample */
-    uint8_t m_last_sample;
-
-    /** 
-     * PLL ramp, varies between 0 and RAMP_LEN-1(159) over 
-     * SAMPLES_PER_BIT (8) samples per nominal bit time. When the PLL
-     * is synchronised, bit transitions happen at about the 0 mark. 
-     */
-    uint8_t m_pll_ramp;
-
-    /**
-     * This is the integrate and dump integral. If there are <5 0
-     * samples in the PLL cycle the bit is declared a 0, else a 1
-     */
-    uint8_t m_integrator;
-
-    /**
-     * Flag indictate if we have seen the start symbol of a new
-     * message and are in the processes of reading and decoding it 
-     */
-    uint8_t m_active;
-
-    /** Flag to indicate that a new message is available */
-    volatile uint8_t m_done;
-
-    /** Flag to indicate the receiver PLL is to run */
-    uint8_t m_enabled;
-
-    /** Last 12 bits received, so we can look for the start symbol */
-    uint16_t m_bits;
-
-    /** How many bits of message we have received? Ranges from 0 to 12 */
-    uint8_t m_bit_count;
-
-    /** The incoming message buffer */
-    uint8_t m_buffer[MESSAGE_MAX];
-
-    /** The incoming message expected length */
-    uint8_t m_count;
-
-    /** The incoming message buffer length received so far */
-    volatile uint8_t m_length;
-
-    /**
-     * Phase Locked Loop; Synchronizes with the transmitter so that
-     * bit transitions occur at about the time (m_pll_ramp) is 0, then
-     * the average is computed over each bit period to deduce the bit value.
-     */
-    void PLL();
-
-  public:
-    /**
-     * Construct VWI Receiver instance connected to the given pin.
-     * @param[in] rx input pin.
-     * @param[in] codec for the receiver.
-     */
-    Receiver(Board::DigitalPin pin, Codec* codec) :
-      InputPin(pin),
-      m_codec(codec)
-    {
-    }
-    
-    /**
-     * Start the Phase Locked Loop listening for the receiver. Must do
-     * this before receiving any messages, 
-     */
-    void begin()
-    {
-      m_enabled = true;
-      m_active = false;
-    }
-    
-    /**
-     * Stop the Phase Locked Loop listening to the receiver. No
-     * messages will be received until begin() is called again. Saves
-     * interrupt processing cycles. 
-     */
-    void end()
-    {
-      m_enabled = false;
-    }
-
-    /**
-     * Returns true if an unread message is available. May have a
-     * bad check-sum.
-     * @return true(1) if a message is available to read.
-     */
-    bool available()
-    {
-      return (m_done);
-    }
-    
-    /**
-     * If a message is available (good checksum or not), copies up to
-     * len bytes to the given buffer, buf. Returns number of bytes 
-     * received/copied, zero(0) for timeout or negative error code; 
-     * bad checksum(-1), and in enhanced mode did not match address(-2).
-     * @param[out] src source network address.
-     * @param[out] port device port (or message type).
-     * @param[in] buf pointer to location to save the read data.
-     * @param[in] len available space in buf. 
-     * @param[in] ms timeout period (zero for blocking)
-     * @return number of bytes received or negative error code.
-     */
-    int recv(uint8_t& src, uint8_t& port, 
-	     void* buf, size_t len, 
-	     uint32_t ms = 0L);
-  };
-
-  /**
-   * Internal Virtual Wire Transmitter.
-   */
-  class Transmitter : private OutputPin {
-    friend void TIMER1_COMPA_vect(void);
-    friend class Codec;
-  private:
-    /** Max size of preamble and start symbol. Codec provides actual size */
-    static const uint8_t PREAMBLE_MAX = 8;
-    
-    /** Transmission buffer with premable, start symbol, count and payload */
-    uint8_t m_buffer[(MESSAGE_MAX * 2) + PREAMBLE_MAX];
-
-    /** Current transmitter codec */
-    Codec* m_codec;
-
-    /** Number of symbols to be sent */
-    uint8_t m_length;
-
-    /** Index of the next symbol to send. Ranges from 0..length-1 */
-    uint8_t m_index;
-
-    /** Bit number of next bit to send */
-    uint8_t m_bit;
-
-    /** Sample number for the transmitter, 0..7 in one bit interval */
-    uint8_t m_sample;
-
-    /** Flag to indicated the transmitter is active */
-    volatile uint8_t m_enabled;
-
-  public:
-    /**
-     * Construct VWI Transmitter instance connected to the given
-     * pin. Use given codec for encoding data.
-     * @param[in] pin transmitter input pin.
-     * @param[in] codec for transmitter.
-     */
-    Transmitter(Board::DigitalPin pin, Codec* codec) :
-      OutputPin(pin),
-      m_codec(codec)
-    {
-      memcpy_P(m_buffer, codec->get_preamble(), codec->PREAMBLE_MAX);
-    }
-
-    /**
-     * Start transmitter. 
-     */
-    void begin()
-    {
-      TIMSK1 |= _BV(OCIE1A);
-      m_index = 0;
-      m_bit = 0;
-      m_sample = 0;
-      m_enabled = true;
-    }
-    
-    /**
-     * Stop transmitter. 
-     */
-    void end()
-    {
-      clear();
-      m_enabled = false;
-    }
-
-    /**
-     * Returns the state of the transmitter.
-     * @return true if the transmitter is active else false
-     */
-    bool is_active()
-    {
-      return (m_enabled);
-    }
-
-    /**
-     * Send message using a null terminated io vector message. Returns
-     * almost immediately, and message will be sent at the right
-     * timing by interrupts. Message is gathered from elements in io
-     * vector. The total size of the io vector buffers must be less
-     * than PAYLOAD_MAX.
-     * @param[in] dest destination network address.
-     * @param[in] port device port (or message type).
-     * @param[in] vec null terminated io vector.
-     * @return number of bytes transmitted or negative error code.
-     */
-    int send(uint8_t dest, uint8_t port, const iovec_t* vec);
-
-    /**
-     * Send a message with the given length. Returns almost
-     * immediately, and message will be sent at the right timing by
-     * interrupts. A command may be given in enhanced mode with
-     * addressing to allow identification of the message type.
-     * The message length (len) must be less than PAYLOAD_MAX.
-     * @param[in] dest destination network address.
-     * @param[in] port device port (or message type).
-     * @param[in] buf pointer to the data to transmit.
-     * @param[in] len number of bytes to transmit.
-     * @return number of bytes transmitted or negative error code.
-     */
-    int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
-  };
-
-private:
-  /** Self-reference for interrupt handler */
-  static VWI* s_rf;
-
-  /** Receiver member variable */
-  Receiver m_rx;
-
-  /** Transmitter member variable */
-  Transmitter m_tx;
-
-  /** Bit per second */
-  uint16_t m_speed;
 
 public:
   /**
@@ -524,5 +232,304 @@ public:
   {
     return (m_rx.recv(src, port, buf, len, ms));
   }
+
+private:
+  /**
+   * Frame header; Transmitted in little endian order; network LSB first.
+   */
+  struct header_t {
+    int16_t network;		/**< Network address */
+    uint8_t dest;		/**< Destination device address */
+    uint8_t src;		/**< Source device address */
+    uint8_t port;		/**< Port or message type */
+  };
+  
+  /** 
+   * The maximum payload length; 30 byte application payload and 
+   * 4 byte frame header with network(2)
+   */
+  static const uint8_t PAYLOAD_MAX = 30 + sizeof(header_t);
+  
+  /** Maximum number of bytes in a message (incl. byte count and FCS) */
+  static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
+
+  /** Minimum number of bytes in a message */
+  static const uint8_t MESSAGE_MIN = sizeof(header_t);
+
+  /** Number of samples per bit */
+  static const uint8_t SAMPLES_PER_BIT = 8;
+
+  /**
+   * Internal Virtual Wire Receiver.
+   */
+  class Receiver : private InputPin {
+  public:
+    /**
+     * Construct VWI Receiver instance connected to the given pin.
+     * @param[in] rx input pin.
+     * @param[in] codec for the receiver.
+     */
+    Receiver(Board::DigitalPin pin, Codec* codec) :
+      InputPin(pin),
+      m_codec(codec)
+    {
+    }
+    
+    /**
+     * Start the Phase Locked Loop listening for the receiver. Must do
+     * this before receiving any messages, 
+     */
+    void begin()
+    {
+      m_enabled = true;
+      m_active = false;
+    }
+    
+    /**
+     * Stop the Phase Locked Loop listening to the receiver. No
+     * messages will be received until begin() is called again. Saves
+     * interrupt processing cycles. 
+     */
+    void end()
+    {
+      m_enabled = false;
+    }
+
+    /**
+     * Returns true if an unread message is available. May have a
+     * bad check-sum.
+     * @return true(1) if a message is available to read.
+     */
+    bool available()
+    {
+      return (m_done);
+    }
+    
+    /**
+     * If a message is available (good checksum or not), copies up to
+     * len bytes to the given buffer, buf. Returns number of bytes 
+     * received/copied, zero(0) for timeout or negative error code; 
+     * bad checksum(-1), and in enhanced mode did not match address(-2).
+     * @param[out] src source network address.
+     * @param[out] port device port (or message type).
+     * @param[in] buf pointer to location to save the read data.
+     * @param[in] len available space in buf. 
+     * @param[in] ms timeout period (zero for blocking)
+     * @return number of bytes received or negative error code.
+     */
+    int recv(uint8_t& src, uint8_t& port, 
+	     void* buf, size_t len, 
+	     uint32_t ms = 0L);
+
+  private:
+    /** The size of the receiver ramp. Ramp wraps modulo this number */
+    static const uint8_t RAMP_MAX = 160;
+
+    /** Number of samples to integrate before mapping to one(1) */
+    static const uint8_t INTEGRATOR_THRESHOLD = 5;
+
+    /** 
+     * Ramp adjustment parameters. Standard is if a transition occurs
+     * before RAMP_TRANSITION(80) in the ramp, the ramp is retarded
+     * by adding RAMP_INC_RETARD(11) else by adding
+     * RAMP_INC_ADVANCE(29). If there is no transition it is adjusted
+     * by RAMP_INC(20), Internal ramp adjustment parameter 
+     */
+    static const uint8_t RAMP_INC = RAMP_MAX / SAMPLES_PER_BIT;
+
+    /** Internal ramp adjustment parameter */
+    static const uint8_t RAMP_TRANSITION = RAMP_MAX / 2;
+
+    /** Internal ramp adjustment parameter */
+    static const uint8_t RAMP_ADJUST = 9;
+    
+    /** Internal ramp adjustment parameter */
+    static const uint8_t RAMP_INC_RETARD = (RAMP_INC - RAMP_ADJUST);
+    
+    /** Internal ramp adjustment parameter */
+    static const uint8_t RAMP_INC_ADVANCE = (RAMP_INC + RAMP_ADJUST);
+
+    /** Current receiver sample */
+    Codec* m_codec;
+
+    /** Current receiver sample */
+    uint8_t m_sample;
+
+    /** Last receiver sample */
+    uint8_t m_last_sample;
+
+    /** 
+     * PLL ramp, varies between 0 and RAMP_LEN-1(159) over 
+     * SAMPLES_PER_BIT (8) samples per nominal bit time. When the PLL
+     * is synchronised, bit transitions happen at about the 0 mark. 
+     */
+    uint8_t m_pll_ramp;
+
+    /**
+     * This is the integrate and dump integral. If there are <5 0
+     * samples in the PLL cycle the bit is declared a 0, else a 1
+     */
+    uint8_t m_integrator;
+
+    /**
+     * Flag indictate if we have seen the start symbol of a new
+     * message and are in the processes of reading and decoding it 
+     */
+    uint8_t m_active;
+
+    /** Flag to indicate that a new message is available */
+    volatile uint8_t m_done;
+
+    /** Flag to indicate the receiver PLL is to run */
+    uint8_t m_enabled;
+
+    /** Last 12 bits received, so we can look for the start symbol */
+    uint16_t m_bits;
+
+    /** How many bits of message we have received? Ranges from 0 to 12 */
+    uint8_t m_bit_count;
+
+    /** The incoming message buffer */
+    uint8_t m_buffer[MESSAGE_MAX];
+
+    /** The incoming message expected length */
+    uint8_t m_count;
+
+    /** The incoming message buffer length received so far */
+    volatile uint8_t m_length;
+
+    /**
+     * Phase Locked Loop; Synchronizes with the transmitter so that
+     * bit transitions occur at about the time (m_pll_ramp) is 0, then
+     * the average is computed over each bit period to deduce the bit value.
+     */
+    void PLL();
+
+    /** Interrupt Service Routine */
+    friend void TIMER1_COMPA_vect(void);
+  };
+
+  /**
+   * Internal Virtual Wire Transmitter.
+   */
+  class Transmitter : private OutputPin {
+  public:
+    /**
+     * Construct VWI Transmitter instance connected to the given
+     * pin. Use given codec for encoding data.
+     * @param[in] pin transmitter input pin.
+     * @param[in] codec for transmitter.
+     */
+    Transmitter(Board::DigitalPin pin, Codec* codec) :
+      OutputPin(pin),
+      m_codec(codec)
+    {
+      memcpy_P(m_buffer, codec->get_preamble(), codec->PREAMBLE_MAX);
+    }
+
+    /**
+     * Start transmitter. 
+     */
+    void begin()
+    {
+      TIMSK1 |= _BV(OCIE1A);
+      m_index = 0;
+      m_bit = 0;
+      m_sample = 0;
+      m_enabled = true;
+    }
+    
+    /**
+     * Stop transmitter. 
+     */
+    void end()
+    {
+      clear();
+      m_enabled = false;
+    }
+
+    /**
+     * Returns the state of the transmitter.
+     * @return true if the transmitter is active else false
+     */
+    bool is_active()
+    {
+      return (m_enabled);
+    }
+
+    /**
+     * Send message using a null terminated io vector message. Returns
+     * almost immediately, and message will be sent at the right
+     * timing by interrupts. Message is gathered from elements in io
+     * vector. The total size of the io vector buffers must be less
+     * than PAYLOAD_MAX.
+     * @param[in] dest destination network address.
+     * @param[in] port device port (or message type).
+     * @param[in] vec null terminated io vector.
+     * @return number of bytes transmitted or negative error code.
+     */
+    int send(uint8_t dest, uint8_t port, const iovec_t* vec);
+
+    /**
+     * Send a message with the given length. Returns almost
+     * immediately, and message will be sent at the right timing by
+     * interrupts. A command may be given in enhanced mode with
+     * addressing to allow identification of the message type.
+     * The message length (len) must be less than PAYLOAD_MAX.
+     * @param[in] dest destination network address.
+     * @param[in] port device port (or message type).
+     * @param[in] buf pointer to the data to transmit.
+     * @param[in] len number of bytes to transmit.
+     * @return number of bytes transmitted or negative error code.
+     */
+    int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
+
+  private:
+    /** Max size of preamble and start symbol. Codec provides actual size */
+    static const uint8_t PREAMBLE_MAX = 8;
+    
+    /** Transmission buffer with premable, start symbol, count and payload */
+    uint8_t m_buffer[(MESSAGE_MAX * 2) + PREAMBLE_MAX];
+
+    /** Current transmitter codec */
+    Codec* m_codec;
+
+    /** Number of symbols to be sent */
+    uint8_t m_length;
+
+    /** Index of the next symbol to send. Ranges from 0..length-1 */
+    uint8_t m_index;
+
+    /** Bit number of next bit to send */
+    uint8_t m_bit;
+
+    /** Sample number for the transmitter, 0..7 in one bit interval */
+    uint8_t m_sample;
+
+    /** Flag to indicated the transmitter is active */
+    volatile uint8_t m_enabled;
+
+    /** Interrupt Service Routine */
+    friend void TIMER1_COMPA_vect(void);
+
+    /** Allow access of codec */
+    friend class Codec;
+  };
+
+private:
+  /** Self-reference for interrupt handler */
+  static VWI* s_rf;
+
+  /** Receiver member variable */
+  Receiver m_rx;
+
+  /** Transmitter member variable */
+  Transmitter m_tx;
+
+  /** Bit per second */
+  uint16_t m_speed;
+
+  /** Interrupt service routine */
+  friend void TIMER1_COMPA_vect(void);
 };
 #endif

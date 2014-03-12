@@ -39,6 +39,73 @@
  * http://invensense.com/mems/gyro/documents/RM-MPU-6000A-00v4.2.pdf
  */
 class MPU6050 : private TWI::Driver {
+public:
+  /**
+   * Construct MPU6050 digital gyroscope driver with given
+   * sub-address. Default is zero(0).
+   * @param[in] subaddr sub-address (0..1, default 0)
+   */
+  MPU6050(uint8_t subaddr = 0) : TWI::Driver(0x68 | (subaddr != 0)) {}
+
+  /**
+   * Start interaction with device. Turn on measurements. 
+   * @param[in] clksel clock source (default PLL with X axis gyroscope)
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool begin(uint8_t clksel = CLKSEL_PLL_GYRO_X_REF);
+
+  /**
+   * Stop sequence of interaction with device. Turn off measurements
+   * and power down.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool end();
+
+  /**
+   * Read temperature and return value in scale 0.1 Celcius.
+   * @return temperature
+   */
+  int16_t read_temperature();
+  
+  /**
+   * Accelerometer and gyroscope sample data structure (axis x, y, z)
+   */
+  struct sample_t {
+    int16_t x;
+    int16_t y;
+    int16_t z;
+  };
+  
+  /**
+   * Motion Processing Unit sensor data; accelerometer, temperature,
+   * and gyroscope.
+   */
+  struct motion_t {
+    sample_t accel;
+    int16_t temp;
+    sample_t gyro;
+  };
+  
+  /**
+   * Read accelerometer and return values in given sample data
+   * structure.
+   * @param[in,out] m samples storage.
+   */
+  void read_motion(motion_t& m);
+  
+  /**
+   * Read accelerometer and return values in given sample data
+   * structure.
+   * @param[in,out] s sample storage.
+   */
+  void read_accelerometer(sample_t& s);
+
+  /**
+   * Read gyroscope and return values in given data structure
+   * @param[in,out] s sample storage.
+   */
+  void read_gyroscope(sample_t& s);
+
 protected:
   /**
    * Register address map (See chap. 3 Register Map, pp. 6-7)
@@ -373,73 +440,6 @@ protected:
    * @param[in] count number of bytes.
    */
   void read(Register reg, void* buffer, size_t count);
-
-public:
-  /**
-   * Construct MPU6050 digital gyroscope driver with given
-   * sub-address. Default is zero(0).
-   * @param[in] subaddr sub-address (0..1, default 0)
-   */
-  MPU6050(uint8_t subaddr = 0) : TWI::Driver(0x68 | (subaddr != 0)) {}
-
-  /**
-   * Start interaction with device. Turn on measurements. 
-   * @param[in] clksel clock source (default PLL with X axis gyroscope)
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool begin(uint8_t clksel = CLKSEL_PLL_GYRO_X_REF);
-
-  /**
-   * Stop sequence of interaction with device. Turn off measurements
-   * and power down.
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool end();
-
-  /**
-   * Read temperature and return value in scale 0.1 Celcius.
-   * @return temperature
-   */
-  int16_t read_temperature();
-  
-  /**
-   * Accelerometer and gyroscope sample data structure (axis x, y, z)
-   */
-  struct sample_t {
-    int16_t x;
-    int16_t y;
-    int16_t z;
-  };
-  
-  /**
-   * Motion Processing Unit sensor data; accelerometer, temperature,
-   * and gyroscope.
-   */
-  struct motion_t {
-    sample_t accel;
-    int16_t temp;
-    sample_t gyro;
-  };
-  
-  /**
-   * Read accelerometer and return values in given sample data
-   * structure.
-   * @param[in,out] m samples storage.
-   */
-  void read_motion(motion_t& m);
-  
-  /**
-   * Read accelerometer and return values in given sample data
-   * structure.
-   * @param[in,out] s sample storage.
-   */
-  void read_accelerometer(sample_t& s);
-
-  /**
-   * Read gyroscope and return values in given data structure
-   * @param[in,out] s sample storage.
-   */
-  void read_gyroscope(sample_t& s);
 };
 
 /**

@@ -28,16 +28,6 @@
  * Interface). 
  */
 class Block4B5BCodec : public VWI::Codec {
-private:
-  /** Symbol mapping table: 4 to 5 bits */
-  static const uint8_t symbols[] PROGMEM;
-
-  /** Code mapping table: 5 to 4 bits */
-  static const uint8_t codes[] PROGMEM;
-
-  /** Message preamble with start symbol */
-  static const uint8_t preamble[] PROGMEM;
-  
 public:
   /**
    * Construct block 4b5b codec with given bits per symbol,
@@ -76,6 +66,16 @@ public:
   {
     return (pgm_read_byte(&codes[symbol & 0x1f]));
   }
+
+private:
+  /** Symbol mapping table: 4 to 5 bits */
+  static const uint8_t symbols[] PROGMEM;
+
+  /** Code mapping table: 5 to 4 bits */
+  static const uint8_t codes[] PROGMEM;
+
+  /** Message preamble with start symbol */
+  static const uint8_t preamble[] PROGMEM;
 };
 
 #endif

@@ -34,36 +34,6 @@
  * callbacks.
  */
 class Timer : protected Link {
-  friend void TIMER0_COMPA_vect(void);
-  friend void TIMER0_OVF_vect(void);
-private:
-  /** Queue of timers */
-  static Head s_queue;
-  
-  /** Queue tick counter (MSB) */
-  volatile static uint32_t s_queue_ticks;
-  
-  /** Running state of timer handler */
-  volatile static bool s_running;
-  
-  /** Timer expire time in micro-seconds (RTC::micros) */
-  uint32_t m_expires;
-
-  /**
-   * Setup timer counter to trigger in given number of micro-seconds.
-   */
-  static void setup(uint32_t us);
-
-  /**
-   * Execute all expired timers and setup timer for next timeout period.
-   */
-  static void schedule();
-
-  /**
-   * Extend the RTC interrupt handler.
-   */
-  static void on_interrupt(void* env);
-
 public:
   /**
    * Construct timer handler, delayed function.
@@ -153,6 +123,33 @@ public:
   static const uint32_t IMMEDIATE_DISPATCH_TIME = (160 / I_CPU);
 
 private:
+  /** Queue of timers */
+  static Head s_queue;
+  
+  /** Queue tick counter (MSB) */
+  volatile static uint32_t s_queue_ticks;
+  
+  /** Running state of timer handler */
+  volatile static bool s_running;
+  
+  /** Timer expire time in micro-seconds (RTC::micros) */
+  uint32_t m_expires;
+
+  /**
+   * Setup timer counter to trigger in given number of micro-seconds.
+   */
+  static void setup(uint32_t us);
+
+  /**
+   * Execute all expired timers and setup timer for next timeout period.
+   */
+  static void schedule();
+
+  /**
+   * Extend the RTC interrupt handler.
+   */
+  static void on_interrupt(void* env);
+
   static uint8_t enter_setup_cycle;
   static uint8_t exit_setup_cycle;
   static uint8_t enter_start_cycle;
@@ -166,6 +163,10 @@ private:
 #else
   static const bool MEASURE = false;
 #endif
+
+  /** Interrupt Service Routines */
+  friend void TIMER0_COMPA_vect(void);
+  friend void TIMER0_OVF_vect(void);
 };
 #endif
 

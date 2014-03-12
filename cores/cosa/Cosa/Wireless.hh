@@ -51,24 +51,7 @@ public:
 
     /** Broadcast device address */
     static const uint8_t BROADCAST = 0x00;
-    
-  protected:
-    /** Current channel */
-    uint8_t m_channel;
 
-    /** Current network and device address */
-    addr_t m_addr;
-
-    /** Message available */
-    volatile bool m_avail;
-
-    /** Sleep mode on wait */
-    uint8_t m_mode;
-
-    /** Latest message destination device address */
-    uint8_t m_dest;
-
-  public:
     /**
      * Construct Wireless Driver with given network and device address.
      * @param[in] network address.
@@ -318,6 +301,23 @@ public:
     {
       return (0);
     }
+
+    
+  protected:
+    /** Current channel */
+    uint8_t m_channel;
+
+    /** Current network and device address */
+    addr_t m_addr;
+
+    /** Message available */
+    volatile bool m_avail;
+
+    /** Sleep mode on wait */
+    uint8_t m_mode;
+
+    /** Latest message destination device address */
+    uint8_t m_dest;
   };
 };
 #endif

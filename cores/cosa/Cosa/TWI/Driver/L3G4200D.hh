@@ -38,6 +38,45 @@
  * document/datasheet/CD00265057.pdf
  */
 class L3G4200D : private TWI::Driver {
+public:
+  /**
+   * Construct L3G4200D digital gyroscope driver with given
+   * sub-address. Default is zero(0).
+   * @param[in] subaddr sub-address (0..1, default 0)
+   */
+  L3G4200D(uint8_t subaddr = 0) : TWI::Driver(0x68 | (subaddr != 0)) {}
+
+  /**
+   * Start interaction with device. Turn on measurements. 
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool begin();
+
+  /**
+   * Stop sequence of interaction with device. Turn off measurements
+   * and power down.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool end();
+
+  /**
+   * Gyroscope sample data structure (axis x, y, z)
+   */
+  struct sample_t {
+    int x;
+    int y;
+    int z;
+  };
+  
+  /**
+   * Sample gyroscope and return values in given data structure
+   * @param[in] s sample storage.
+   */
+  void sample(sample_t& s)
+  {
+    read(OUT, &s, sizeof(s));
+  }
+
 protected:
   /**
    * Register address map (See tab. 18, pp. 27)
@@ -313,45 +352,6 @@ protected:
    * @param[in] count number of bytes.
    */
   void read(Register reg, void* buffer, uint8_t count);
-
-public:
-  /**
-   * Construct L3G4200D digital gyroscope driver with given
-   * sub-address. Default is zero(0).
-   * @param[in] subaddr sub-address (0..1, default 0)
-   */
-  L3G4200D(uint8_t subaddr = 0) : TWI::Driver(0x68 | (subaddr != 0)) {}
-
-  /**
-   * Start interaction with device. Turn on measurements. 
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool begin();
-
-  /**
-   * Stop sequence of interaction with device. Turn off measurements
-   * and power down.
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool end();
-
-  /**
-   * Gyroscope sample data structure (axis x, y, z)
-   */
-  struct sample_t {
-    int x;
-    int y;
-    int z;
-  };
-  
-  /**
-   * Sample gyroscope and return values in given data structure
-   * @param[in] s sample storage.
-   */
-  void sample(sample_t& s)
-  {
-    read(OUT, &s, sizeof(s));
-  }
 };
 
 extern IOStream& operator<<(IOStream& outs, L3G4200D& gyroscope);

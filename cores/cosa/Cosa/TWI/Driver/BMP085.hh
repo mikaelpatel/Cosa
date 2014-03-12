@@ -47,66 +47,6 @@ public:
     ULTRA_HIGH_RESOLUTION = 3
   } __attribute__((packed));
 
-protected:
-  /**
-   * Temperature conversion time max (ms).
-   */
-  static const uint8_t TEMP_CONV_MS = 5;
-
-  /**
-   * Pressure conversion time max (ms).
-   */
-  static const uint8_t PRESSURE_CONV_MS[] __PROGMEM;
-
-  /**
-   * Calibration coefficients (chap. 3.4, pp. 11). Data from device is
-   * in big-endian order.  
-   */
-  struct param_t {
-    int16_t ac1;
-    int16_t ac2;
-    int16_t ac3;
-    uint16_t ac4;
-    uint16_t ac5;
-    uint16_t ac6;    
-    int16_t b1;
-    int16_t b2;
-    int16_t mb;
-    int16_t mc;
-    int16_t md;
-  };
-
-  /** Calibration coefficients register address */
-  static const uint8_t COEFF_REG = 0xAA;
-  /** Command register address */
-  static const uint8_t CMD_REG = 0xF4;
-  /** Result register address */
-  static const uint8_t RES_REG = 0xF6;
-
-  /** Temperature conversion command */
-  static const uint8_t TEMP_CONV_CMD = 0x2E;
-  /** Pressure conversion command */
-  static const uint8_t PRESSURE_CONV_CMD = 0x34;
-
-  /** Device calibration data */
-  param_t m_param;
-
-  /** Pressure conversion mode */
-  Mode m_mode;
-
-  /** Currrent command */
-  uint8_t m_cmd;
-
-  /** Sample request start time (ms) */
-  uint16_t m_start;
-
-  /** Common intermediate temperature factor */
-  int32_t B5;
-
-  /** Latest calculated pressure */
-  int32_t m_pressure;
-  
-public:
   /**
    * Construct BMP085 driver with I2C address(0x77) and default
    * ULTRA_LOW_POWER mode. 
@@ -204,6 +144,68 @@ public:
   {
     return (m_pressure);
   }
+
+protected:
+  /**
+   * Temperature conversion time max (ms).
+   */
+  static const uint8_t TEMP_CONV_MS = 5;
+
+  /**
+   * Pressure conversion time max (ms).
+   */
+  static const uint8_t PRESSURE_CONV_MS[] __PROGMEM;
+
+  /**
+   * Calibration coefficients (chap. 3.4, pp. 11). Data from device is
+   * in big-endian order.  
+   */
+  struct param_t {
+    int16_t ac1;
+    int16_t ac2;
+    int16_t ac3;
+    uint16_t ac4;
+    uint16_t ac5;
+    uint16_t ac6;    
+    int16_t b1;
+    int16_t b2;
+    int16_t mb;
+    int16_t mc;
+    int16_t md;
+  };
+
+  /** Calibration coefficients register address */
+  static const uint8_t COEFF_REG = 0xAA;
+
+  /** Command register address */
+  static const uint8_t CMD_REG = 0xF4;
+
+  /** Result register address */
+  static const uint8_t RES_REG = 0xF6;
+
+  /** Temperature conversion command */
+  static const uint8_t TEMP_CONV_CMD = 0x2E;
+
+  /** Pressure conversion command */
+  static const uint8_t PRESSURE_CONV_CMD = 0x34;
+
+  /** Device calibration data */
+  param_t m_param;
+
+  /** Pressure conversion mode */
+  Mode m_mode;
+
+  /** Currrent command */
+  uint8_t m_cmd;
+
+  /** Sample request start time (ms) */
+  uint16_t m_start;
+
+  /** Common intermediate temperature factor */
+  int32_t B5;
+
+  /** Latest calculated pressure */
+  int32_t m_pressure;
 };
 
 /**
