@@ -1,5 +1,5 @@
 /**
- * @file CosaNucleoBenchmarks.ino
+ * @file CosaBenchmarkNucleo.ino
  * @version 1.0
  *
  * @section License
@@ -38,15 +38,15 @@
 
 Nucleo::Semaphore sem(0);
 
-class Benchmarks : public Nucleo::Thread {
+class Producer : public Nucleo::Thread {
 public:
   virtual void run();
 };
 
 void 
-Benchmarks::run() 
+Producer::run() 
 { 
-  trace << PSTR("Thread::Benchmarks: started") << endl;  
+  trace << PSTR("Thread::Producer: started") << endl;  
 
   while (1) {
     uint32_t start, us;
@@ -95,17 +95,17 @@ Consumer::run()
   while (1) sem.wait();
 }
 
-Benchmarks bench;
+Producer producer;
 Consumer consumer;
 
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaNucleoBenchmarks: started"));
+  trace.begin(&uart, PSTR("CosaBenchmarkNucleo: started"));
   Watchdog::begin();
   RTC::begin();
   Nucleo::Thread::begin(&consumer, 32);
-  Nucleo::Thread::begin(&bench, 64);
+  Nucleo::Thread::begin(&producer, 64);
 }
 
 void loop()
