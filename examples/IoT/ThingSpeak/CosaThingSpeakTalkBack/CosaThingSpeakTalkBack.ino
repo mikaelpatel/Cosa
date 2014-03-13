@@ -18,8 +18,7 @@
  * @section Description
  * ThingSpeak talkback demonstration; shows how to create a command
  * handler class, execute commands from the TalkBack command queue,
- * and push additional commands to the queue. Uses an Alarm for
- * periodic servicing of commands.
+ * and push additional commands to the queue. 
  *
  * @section Circuit
  * The sketch uses Board::D15 (A1) as output pin for the LED.
@@ -28,10 +27,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
-#include "Cosa/Pins.hh"
-#include "Cosa/Alarm.hh"
-#include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IoT/ThingSpeak.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
@@ -124,27 +119,6 @@ const char PONG_COMMAND[] __PROGMEM = "PONG";
 Command pong(&talkback, PONG_COMMAND);
 Ping ping(&talkback, &pong);
 
-// Run the ThingSpeak TalkBack as a period function using Alarm
-// Executes all pending commands in server queue
-class CommandHandler : public Alarm {
-public:
-  CommandHandler(ThingSpeak::TalkBack* talkback, uint16_t period) : 
-    Alarm(period), m_talkback(talkback)
-  {}
-  virtual void run();
-private:
-  ThingSpeak::TalkBack* m_talkback;
-};
-
-void 
-CommandHandler::run()
-{
-  while (m_talkback->execute_next_command() == 0);
-}
-
-Alarm::Scheduler scheduler;
-CommandHandler handler(&talkback, 15);
-
 void setup()
 {
 #ifndef NDEBUG
@@ -152,10 +126,8 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaThingSpeakTalkBack: started"));
 #endif
-  // Start the watchdog, real-time clock and the alarm scheduler
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
-  RTC::begin();
-  scheduler.begin();
+  // Start the watchdog
+  Watchdog::begin(16);
 
   // Setup Ethernet controller and ThingSpeak with given ethernet socket 
   TRACE(ethernet.begin_P(HOSTNAME));
@@ -167,15 +139,10 @@ void setup()
   talkback.add(&led_off);
   talkback.add(&ping);
   talkback.add(&pong);
-
-  // Enable the command handler
-  handler.enable();
 }
 
 void loop()
 {
-  // The standard event dispatcher
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
+  while (talkback.execute_next_command() == 0);
+  SLEEP(15);
 }
