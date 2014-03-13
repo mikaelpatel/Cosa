@@ -63,8 +63,8 @@ ThingSpeak::Client::connect()
   int res = m_sock->connect(server, 80);
   if (res != 0) return (res);
   while ((res = m_sock->isconnected()) == 0) Watchdog::delay(16);
-  if (res != 0) res = -2;
-  return (res);
+  if (res < 0) return (-2);
+  return (0);
 }
 
 int 
