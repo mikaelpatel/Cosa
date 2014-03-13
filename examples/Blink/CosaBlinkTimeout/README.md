@@ -1,5 +1,5 @@
 CosaBlinkTimeout
-====
+================
 
 The classic LED blink demonstration written for an RGB LED using three
 difference time periods for the different colors. This example shows
