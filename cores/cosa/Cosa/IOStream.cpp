@@ -339,7 +339,7 @@ char*
 IOStream::Device::gets(char *s, size_t count) 
 { 
   char* res = s;
-  while (count--) {
+  while (--count) {
     int c = getchar();
     if (c == EOF && m_mode != NON_BLOCKING) {
       while (c == EOF) {

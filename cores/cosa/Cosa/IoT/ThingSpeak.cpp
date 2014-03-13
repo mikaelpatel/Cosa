@@ -209,7 +209,7 @@ ThingSpeak::TalkBack::execute_next_command()
   m_client->disconnect();
   return (res);
 }
-  
+
 int 
 ThingSpeak::TalkBack::add_command_P(const char* string, uint8_t position)
 {
