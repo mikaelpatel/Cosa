@@ -1,5 +1,5 @@
 /**
- * @file Ping.cpp
+ * @file LEDCommand.h
  * @version 1.0
  *
  * @section License
@@ -18,11 +18,32 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Ping.h"
+#ifndef LED_COMMAND_H
+#define LED_COMMAND_H
 
+#include "CommandHandler.h"
+#include "Cosa/Pins.hh"
+#include "Cosa/IoT/ThingSpeak.hh"
+
+template<uint8_t STATE>
+class LEDCommand : public Command {
+public:
+  LEDCommand(ThingSpeak::TalkBack* talkback, const char* string, Board::DigitalPin pin) : 
+    Command(talkback, string),
+    m_led(pin)
+  {}
+  virtual void execute();
+private:
+  OutputPin m_led;
+};
+
+template<uint8_t STATE>
 void 
-Ping::execute() 
+LEDCommand<STATE>::execute()
 { 
   Command::execute();
-  m_talkback->add_command_P(m_pong->get_string());
+  m_led.set(STATE);
 }
+
+#endif
+

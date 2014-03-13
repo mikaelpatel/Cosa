@@ -191,7 +191,7 @@ ThingSpeak::TalkBack::execute_next_command()
 
   // Parse reply length and command string
   sock->gets(line, sizeof(line));
-  length = atoi(line);
+  length = (uint8_t) strtol(line, NULL, 16);
   if (length <= 0) goto error;
   sock->gets(line, sizeof(line));
   line[length] = 0;

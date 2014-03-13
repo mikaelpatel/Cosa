@@ -40,8 +40,9 @@
 
 #include "CommandHandler.h"
 #include "SensorHandler.h"
-#include "LED.h"
-#include "Ping.h"
+#include "LEDCommand.h"
+#include "PingCommand.h"
+#include "SensorCommand.h"
 
 // Ethernet controller
 static const char HOSTNAME[] __PROGMEM = "CosaThingSpeakClient";
@@ -53,26 +54,35 @@ ThingSpeak::Client client;
 static const char CHANNEL_KEY[] __PROGMEM = "I3U14KLWM1R1SDPR";
 ThingSpeak::Channel channel(&client, CHANNEL_KEY);
 
-static const char TALKBACK_KEY[] __PROGMEM = "72PKOHOK3DKJW2TQ";
 uint16_t TALKBACK_ID = 206;
+static const char TALKBACK_KEY[] __PROGMEM = "72PKOHOK3DKJW2TQ";
 ThingSpeak::TalkBack talkback(&client, TALKBACK_KEY, TALKBACK_ID);
 
 // TalkBack commands
 const char REBOOT_COMMAND[] __PROGMEM = "REBOOT";
 Command reboot(&talkback, REBOOT_COMMAND);
 
-const char LED_ON_COMMAND[] __PROGMEM = "LED_ON";
-LED led_on(&talkback, LED_ON_COMMAND, Board::D15, 1);
-
 const char LED_OFF_COMMAND[] __PROGMEM = "LED_OFF";
-LED led_off(&talkback, LED_OFF_COMMAND, Board::D15, 0);
+LEDCommand<0> led_off(&talkback, LED_OFF_COMMAND, Board::D15);
 
+const char LED_ON_COMMAND[] __PROGMEM = "LED_ON";
+LEDCommand<1> led_on(&talkback, LED_ON_COMMAND, Board::D15);
+
+// Echo back command; receive PING - send PONG
 const char PONG_COMMAND[] __PROGMEM = "PONG";
 Command pong(&talkback, PONG_COMMAND);
-Ping ping(&talkback, &pong);
+PingCommand ping(&talkback, &pong);
 
-// The period alarm handlers; sensor and command handling
+// Sensor handler and commands (on/off)
 SensorHandler sensor_handler(&channel, Board::EXT0, 20);
+
+const char SENSOR_OFF_COMMAND[] __PROGMEM = "SENSOR_OFF";
+SensorCommand<false> sensor_off(&talkback, SENSOR_OFF_COMMAND, &sensor_handler);
+
+const char SENSOR_ON_COMMAND[] __PROGMEM = "SENSOR_ON";
+SensorCommand<true> sensor_on(&talkback, SENSOR_ON_COMMAND, &sensor_handler);
+
+// Command handler
 CommandHandler command_handler(&talkback, 15);
 
 // Use the default alarm scheduler
@@ -99,10 +109,11 @@ void setup()
   talkback.add(&led_off);
   talkback.add(&ping);
   talkback.add(&pong);
+  talkback.add(&sensor_off);
+  talkback.add(&sensor_on);
 
-  // Enable the command and sensor handler
+  // Enable the command
   command_handler.enable();
-  sensor_handler.enable();
 }
 
 void loop()

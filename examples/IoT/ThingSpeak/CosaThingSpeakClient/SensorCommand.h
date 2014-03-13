@@ -1,5 +1,5 @@
 /**
- * @file Ping.h
+ * @file SensorCommand.h
  * @version 1.0
  *
  * @section License
@@ -18,21 +18,37 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef PING_H
-#define PING_H
+#ifndef SENSOR_COMMAND_H
+#define SENSOR_COMMAND_H
 
 #include "CommandHandler.h"
+#include "SensorHandler.h"
 #include "Cosa/IoT/ThingSpeak.hh"
 
-class Ping : public Command {
+template<bool IS_ENABLE>
+class SensorCommand : public Command {
 public:
-  Ping(ThingSpeak::TalkBack* talkback, Command* pong) : 
-    Command(talkback, PSTR("PING")),
-    m_pong(pong)
+  SensorCommand(ThingSpeak::TalkBack* talkback, const char* string, 
+		SensorHandler* handler) : 
+    Command(talkback, string),
+    m_handler(handler)
   {}
   virtual void execute();
 private:
-  Command* m_pong;
+  SensorHandler* m_handler;
 };
 
+template<bool IS_ENABLE>
+void 
+SensorCommand<IS_ENABLE>::execute()
+{ 
+  Command::execute();
+  if (IS_ENABLE) {
+    m_handler->set_alarm(Alarm::time());
+    m_handler->enable();
+  } else
+    m_handler->disable();
+}
+
 #endif
+
