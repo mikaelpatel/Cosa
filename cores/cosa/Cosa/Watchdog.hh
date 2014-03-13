@@ -147,6 +147,14 @@ public:
   static void delay(uint16_t ms);
 
   /**
+   * Wait for the next watchdog timeout.
+   */
+  static void await()
+  {
+    delay(ms_per_tick());
+  }
+
+  /**
    * Returns number of milli-seconds from given start.
    * @param[in] start
    * @return (millis() - start)

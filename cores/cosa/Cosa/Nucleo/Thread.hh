@@ -133,6 +133,13 @@ public:
    * @param[in] ms minimum delay time period.
    */
   void delay(uint32_t ms);
+
+  /**
+   * Wait for a given bit to be set in the variable.
+   * @param[in] ptr pointer to variable.
+   * @param[in] bit bit to that should be set (default bit zero).
+   */
+  void await(volatile uint8_t* ptr, uint8_t bit = 0);
 };
 
 };

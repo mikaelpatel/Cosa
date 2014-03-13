@@ -46,5 +46,5 @@ void setup()
 void loop()
 {
   // Sleep during timeout wait
-  Watchdog::await();
+  SLEEP(10);
 }

@@ -104,4 +104,12 @@ Thread::delay(uint32_t ms)
   m_state = 1;
 }
 
+void 
+Thread::await(volatile uint8_t* ptr, uint8_t bit)
+{
+  m_state = 0;
+  while ((*ptr & _BV(bit)) == 0) yield();
+  m_state = 1;
+}
+
 };

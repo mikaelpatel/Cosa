@@ -56,6 +56,11 @@ void setup()
 {
   // Start the watchdog ticks and push time events
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+
+  // Start the periodic functions
+  redLedPin.begin();
+  greenLedPin.begin();
+  blueLedPin.begin();
 }
 
 void loop()
