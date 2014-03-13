@@ -33,8 +33,6 @@
  * second timing.
  */
 class RTC {
-  friend void TIMER0_OVF_vect(void);
-  friend class Timer;
 public:
   /**
    * RTC interrupt handler function prototype.
@@ -42,20 +40,6 @@ public:
    */
   typedef void (*InterruptHandler)(void* env);
 
-private:
-  static bool s_initiated;
-  static volatile uint32_t s_uticks;
-  static volatile uint16_t s_ticks;
-  static volatile clock_t s_sec;
-  static InterruptHandler s_handler;
-  static void* s_env;
-
-  /**
-   * Do not allow instances. This is a static singleton; name space.
-   */
-  RTC() {}
-
-public:
   /**
    * Start the Real-Time Clock.
    * @return bool true(1) if successful otherwise false(0).
@@ -161,6 +145,25 @@ public:
       s_env = env; 
     }
   }
+
+private:
+  static bool s_initiated;
+  static volatile uint32_t s_uticks;
+  static volatile uint16_t s_ticks;
+  static volatile clock_t s_sec;
+  static InterruptHandler s_handler;
+  static void* s_env;
+
+  /**
+   * Do not allow instances. This is a static singleton; name space.
+   */
+  RTC() {}
+
+  /** Interrupt Service Routine */
+  friend void TIMER0_OVF_vect(void);
+
+  /** Timer access */
+  friend class Timer;
 };
 
 #endif

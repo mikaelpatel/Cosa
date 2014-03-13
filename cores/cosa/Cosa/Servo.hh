@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,23 +34,6 @@
  * registers.
  */
 class Servo : private OutputPin {
-  friend void TIMER1_COMPA_vect(void);
-  friend void TIMER1_COMPB_vect(void);
-private:
-  static const uint16_t PERIOD = 20000;
-  static const uint16_t MIN_WIDTH = 650;
-  static const uint16_t MAX_WIDTH = 2300;
-  static const uint8_t INIT_ANGLE = 90;
-  static Servo* servo[2];
-
-  /**
-   * Servo state; Min/Max/Width of pulse, angle.
-   */
-  uint16_t m_min;
-  uint16_t m_max;
-  uint16_t m_width;
-  uint8_t m_angle;
-
 public:
   /**
    * Construct a servo instance connected to the given pin.
@@ -112,6 +95,28 @@ public:
   {
     return (m_angle);
   }
+
+private:
+  /** Configuration */
+  static const uint16_t PERIOD = 20000;
+  static const uint16_t MIN_WIDTH = 650;
+  static const uint16_t MAX_WIDTH = 2300;
+  static const uint8_t INIT_ANGLE = 90;
+
+  /** Servo map */
+  static Servo* servo[2];
+
+  /**
+   * Servo state; Min/Max/Width of pulse, angle.
+   */
+  uint16_t m_min;
+  uint16_t m_max;
+  uint16_t m_width;
+  uint8_t m_angle;
+
+  /** Interrupt Service Routines */
+  friend void TIMER1_COMPA_vect(void);
+  friend void TIMER1_COMPB_vect(void);
 };
 
 #endif

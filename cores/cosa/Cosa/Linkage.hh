@@ -51,15 +51,14 @@ protected:
    */
   void detach()
   {
+    // Check that the detach is necessary
+    if (m_succ == this) return;
+    // Unlink and initiate to self reference
     synchronized {
-      // Check that the detach is necessary
-      if (m_succ != this) {
-	// Unlink and initiate to self reference
-	m_succ->m_pred = m_pred;
-	m_pred->m_succ = m_succ;
-	m_succ = this;
-	m_pred = this;
-      }
+      m_succ->m_pred = m_pred;
+      m_pred->m_succ = m_succ;
+      m_succ = this;
+      m_pred = this;
     }
   }
 

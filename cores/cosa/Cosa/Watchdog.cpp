@@ -90,7 +90,13 @@ Watchdog::delay(uint16_t ms)
 {
   uint32_t ticks = (ms + (ms_per_tick() / 2)) / ms_per_tick();
   uint32_t stop = s_ticks + (ticks == 0 ? 1 : ticks);
-  while (s_ticks != stop) Power::sleep(s_mode);
+  uint8_t key = lock();
+  while (s_ticks != stop) {
+    unlock(key);
+    Power::sleep(s_mode);
+    key = lock();
+  }
+  unlock(key);
 }
 
 void
