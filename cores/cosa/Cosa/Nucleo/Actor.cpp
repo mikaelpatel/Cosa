@@ -32,18 +32,19 @@ Actor::send(uint8_t port, const void* buf, size_t size)
 {
   // Is not allowed to send to itself
   if (s_running == this) return (-1);
+  if (m_sender != NULL) return (-2);
 
-  // Update receiver message 
+  // Store message in sender actor
+  Actor* sender = (Actor*) s_running;
   synchronized {
-    if (m_sender != NULL) synchronized_return (-2);
-    m_sender = (Actor*) s_running;
-    m_port = port;
-    m_size = size;
-    m_buf = buf;
+    m_sender = sender;
+    sender->m_port = port;
+    sender->m_size = size;
+    sender->m_buf = buf;
   }
   
   // Resume receiving actor if waiting
-  if (m_waiting) {
+  if (m_receiving) {
     ((Linkage*) s_running)->attach(this);
     s_running->resume(this);
   }
@@ -64,7 +65,7 @@ Actor::recv(Actor*& sender, uint8_t& port, void* buf, size_t size)
   // Check if receiver needs to wait for sending actor
   uint8_t key = lock();
   if (m_sender == NULL) {
-    m_waiting = true;
+    m_receiving = true;
     Thread* thread = (Thread*) get_succ();
     detach();
     unlock(key);
@@ -75,18 +76,18 @@ Actor::recv(Actor*& sender, uint8_t& port, void* buf, size_t size)
   // Copy message parameters
   int res;
   sender = (Actor*) m_sender;
-  port = m_port;
-  if (size < m_size) {
+  port = sender->m_port;
+  if (size < sender->m_size) {
     res = -2;
   }
   else {
-    memcpy(buf, m_buf, m_size);
-    res = m_size;
+    memcpy(buf, sender->m_buf, sender->m_size);
+    res = sender->m_size;
   }
   m_sender = NULL;
-  m_buf = NULL;
-  m_size = 0;
-  m_waiting = false;
+  sender->m_buf = NULL;
+  sender->m_size = 0;
+  m_receiving = false;
 
   // Reschedule the sender
   attach(sender);

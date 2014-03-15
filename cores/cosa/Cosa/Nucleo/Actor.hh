@@ -40,7 +40,7 @@ public:
    */
   Actor() :
     Thread(),
-    m_waiting(false),
+    m_receiving(false),
     m_sender(NULL),
     m_port(0),
     m_size(0),
@@ -70,8 +70,8 @@ public:
    */
   int recv(Actor*& sender, uint8_t& port, void* buf = NULL, size_t size = 0);
 
-private:
-  volatile bool m_waiting;
+protected:
+  bool m_receiving;
   volatile Actor* m_sender;
   uint8_t m_port;
   size_t m_size;
