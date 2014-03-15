@@ -5,7 +5,7 @@ Measurement of the size of Cosa class instances. Any class static
 member variables are not included. 
 
 	CosaBenchmarkSizeOf: started
-	free_memory() = 1792
+	free_memory() = 2199
 	sizeof(Programmer) = 2
 	sizeof(STK500) = 8
 	sizeof(BitSet<64>) = 8
@@ -14,6 +14,7 @@ member variables are not included.
 	sizeof(ST7735) = 23
 	sizeof(Textbox) = 21
 	sizeof(OffScreen<64,128>) = 1031
+	sizeof(CDC) = 5
 	sizeof(Base64) = 1
 	sizeof(RC4) = 258
 	sizeof(Vigenere<8>) = 11
@@ -34,6 +35,9 @@ member variables are not included.
 	sizeof(HTTP::Client) = 4
 	sizeof(HTTP::Server) = 4
 	sizeof(MQTT::Client) = 6
+	sizeof(ThingSpeak::Client) = 2
+	sizeof(ThingSpeak::Channel) = 4
+	sizeof(ThingSpeak::TalkBack) = 8
 	sizeof(NTP) = 7
 	sizeof(SNMP) = 6
 	sizeof(SNMP::MIB) = 2
@@ -51,7 +55,7 @@ member variables are not included.
 	sizeof(HD44780) = 16
 	sizeof(PCD8544) = 25
 	sizeof(ST7565) = 26
-	sizeof(VLCD) = 14
+	sizeof(VLCD) = 15
 	sizeof(LED) = 10
 	sizeof(Linkage) = 6
 	sizeof(Link) = 6
@@ -62,11 +66,15 @@ member variables are not included.
 	sizeof(Menu::Walker) = 23
 	sizeof(Menu::KeypadController) = 25
 	sizeof(Menu::RotaryController) = 38
+	sizeof(Nucleo::Thread) = 33
+	sizeof(Nucleo::Semaphore) = 7
+	sizeof(Nucleo::Mutex) = 2
+	sizeof(Nucleo::Actor) = 45
 	sizeof(OWI) = 9
 	sizeof(OWI::Driver) = 18
 	sizeof(OWI::Search) = 20
 	sizeof(DS18B20) = 33
-	sizeof(Periodic) = 6
+	sizeof(Periodic) = 8
 	sizeof(Pin) = 4
 	sizeof(InputPin) = 4
 	sizeof(OutputPin) = 4
@@ -84,7 +92,7 @@ member variables are not included.
 	sizeof(RTC) = 1
 	sizeof(Servo) = 11
 	sizeof(Socket) = 16
-	sizeof(W5100) = 143
+	sizeof(W5100) = 133
 	sizeof(W5100::Driver) = 28
 	sizeof(SPI::Driver) = 11
 	sizeof(SPI::Slave) = 41
@@ -95,18 +103,18 @@ member variables are not included.
 	sizeof(Timer) = 10
 	sizeof(Touch) = 19
 	sizeof(Trace) = 3
-	sizeof(TWI::Driver) = 3
-	sizeof(TWI::Slave) = 3
-	sizeof(ADXL345) = 3
-	sizeof(AT24CXX) = 13
-	sizeof(BMP085) = 37
-	sizeof(DS1307) = 3
-	sizeof(DS3231) = 3
-	sizeof(HMC5883L) = 13
-	sizeof(L3G4200D) = 3
-	sizeof(MPU6050) = 3
-	sizeof(PCF8574) = 5
-	sizeof(PCF8591) = 4
+	sizeof(TWI::Driver) = 4
+	sizeof(TWI::Slave) = 4
+	sizeof(ADXL345) = 4
+	sizeof(AT24CXX) = 14
+	sizeof(BMP085) = 38
+	sizeof(DS1307) = 4
+	sizeof(DS3231) = 4
+	sizeof(HMC5883L) = 14
+	sizeof(L3G4200D) = 4
+	sizeof(MPU6050) = 4
+	sizeof(PCF8574) = 6
+	sizeof(PCF8591) = 5
 	sizeof(Watchdog) = 1
 	sizeof(Wireless::Driver) = 9
 	sizeof(CC1101) = 33
