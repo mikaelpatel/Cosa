@@ -29,11 +29,10 @@
 
 namespace Nucleo {
 
+Head Thread::s_delayed;
 Thread Thread::s_main;
 Thread* Thread::s_running = &s_main;
-Head Thread::s_delayed;
 size_t Thread::s_top = MAIN_STACK_MAX;
-bool Thread::s_go_idle;
 uint8_t Thread::s_mode = SLEEP_MODE_IDLE;
 
 void

@@ -99,21 +99,18 @@ protected:
   /** Size of main thread stack */
   static const size_t MAIN_STACK_MAX = 32;
 
+  /** Queue for delayed threads */
+  static Head s_delayed;
+
   /** Main thread and thread queue head */
   static Thread s_main;
 
   /** Running thread */
   static Thread* s_running;
 
-  /** Queue for delayed threads */
-  static Head s_delayed;
-
   /** Top of stack allocation */
   static size_t s_top;
 
-  /** Power down flag */
-  static bool s_go_idle;
-  
   /** Sleep mode */
   static uint8_t s_mode;
 
