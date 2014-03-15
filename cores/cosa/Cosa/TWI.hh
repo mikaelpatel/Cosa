@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,6 +41,11 @@
 class TWI {
 public:
   /**
+   * Default Two-Wire Interface clock: 100 KHz
+   */
+  static const uint32_t FREQ = 100000L;
+
+  /**
    * Device drivers are friends and may have callback/event handler
    * for completion events. 
    */
@@ -50,11 +55,28 @@ public:
      * Construct TWI driver with given bus address.
      * @param[in] addr bus address (7-bit LSB).
      */
-    Driver(uint8_t addr) : Event::Handler(), m_addr(addr << 1) {}
+   Driver(uint8_t addr) : 
+     Event::Handler(), 
+     m_addr(addr << 1),
+     m_freq(((F_CPU / FREQ) - 16) / 2)
+    {}
+
+    /**
+     * Set bus frequency for device access. Does not adjust for
+     * cpu frequency scaling. Compile-time cpu frequency used.
+     * @param[in] hz bus frequency for device.
+     */
+    void set_freq(uint32_t hz)
+    {
+      m_freq = ((F_CPU / hz) - 16) / 2;
+    }
 
   protected:
     /** Device bus address */
     uint8_t m_addr;
+
+    /** Device bus frequency */
+    uint8_t m_freq;
 
     /** Allow access */
     friend class TWI;
@@ -335,11 +357,6 @@ private:
     READ_OP = 0x01,		// Read operation
     ADDR_MASK = 0xfe		// Address mask
   } __attribute__((packed));
-
-  /**
-   * Default Two-Wire Interface clock: 100 KHz
-   */
-  static const uint32_t FREQ = 100000L;
 
   /** Default argument for start */
   static const uint8_t NEXT_IX = 255;

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,7 +49,7 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
 #endif
     // Set clock prescale and bit rate
     bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
-    TWBR = ((F_CPU / FREQ) - 16) / 2;
+    TWBR = dev->m_freq;
     TWCR = IDLE_CMD;
   }
   return (true);

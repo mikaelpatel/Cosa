@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,7 +37,7 @@
  * public interface should be maintained the same for portability.
  * Note: The internal pullup resistors on the USI pins are
  * active. External pullup resistors (4K7 ohm) are required for longer
- * wires and/or higher loads. 
+ * wires and/or higher loads.
  */
 class TWI {
 public:
@@ -52,6 +52,12 @@ public:
      * @param[in] addr bus address (7-bit LSB).
      */
     Driver(uint8_t addr) : Event::Handler(), m_addr(addr << 1) {}
+
+    /**
+     * Set bus frequency (not implemented for USI).
+     * @param[in] hz bus frequency for device.
+     */
+    void set_freq(uint32_t hz) {}
 
   protected:
     /** Device bus address */
@@ -104,7 +110,7 @@ public:
      * Service request callback when a write has been completed,
      * i.e., an argument block as been written. Must be defined by
      * sub-class. Must handle write-read and write-write
-     * sequences. The device will become ready after the completion
+     * sequences. The device will become ready after the completion 
      * of the function.  
      * @param[in] buf buffer pointer.
      * @param[in] size of buffer.
