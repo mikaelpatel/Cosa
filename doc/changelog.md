@@ -1,13 +1,15 @@
 Cosa's changelog
 ================
 
-2014-03 Support for ThingSpeak client (channel update). Improving the
-ADXL345 accelerometer device driver and example sketch. Adding a Soft
-SPI implementation (only 0/2 mode).       
+2014-03 Adding message passing with Actors and additional benchmarks
+for Nucleo. Support for ThingSpeak client (channel update) and
+TalkBack command handling. Improving the ADXL345 accelerometer device
+driver and example sketch. Adding a Soft SPI implementation (only 0/2
+mode). Refactoring directories for example sketches.       
 
 2014-02 Adding support for coroutines (threads), semaphores and
-mutex. Allow build with GCC 4.8.1. Support for MQTT Client, HTTP
-Server and Client implementation. Additional SNMP agent
+mutex; Nucleo. Allow build with GCC 4.8.1. Support for MQTT Client,
+HTTP Server and Client implementation. Additional SNMP agent
 implementation. RTC::Timer for micro-second level time
 events. Improved Time handling with integration with RTC and NTP to
 allow sync.          
