@@ -49,15 +49,12 @@ void
 Producer::run() 
 { 
   uint16_t count = 0;
-  trace << Watchdog::millis() << PSTR(":Actor::Producer: started") << endl;  
   while (1) {
     trace << Watchdog::millis() 
 	  << PSTR(":Producer:count=") << count 
 	  << endl;  
-    while ((m_consumer->send(m_port, &count, sizeof(count))) < 0) 
-      yield();
+    m_consumer->send(m_port, &count, sizeof(count));
     count += 1;
-    delay(1000);
   }
 }
 
@@ -70,7 +67,6 @@ public:
 void
 Consumer::run()
 {
-  trace << this << PSTR(":Actor::Consumer: started") << endl;  
   while (1) {
     Actor* sender = NULL;
     uint8_t port = 0;
@@ -81,6 +77,7 @@ Consumer::run()
 	  << PSTR(",port=") << port
 	  << PSTR(",count=") << count 
 	  << endl;  
+    delay(500);
   }
 }
 

@@ -30,41 +30,33 @@ namespace Nucleo {
 int 
 Actor::send(uint8_t port, const void* buf, size_t size)
 {
-  // Is not allowed to send to itself
+  // Do not allow send to the running thread
   if (s_running == this) return (-1);
-  if (m_sender != NULL) return (-2);
 
   // Store message in sender actor
+  uint8_t key = lock();
   Actor* sender = (Actor*) s_running;
-  synchronized {
-    m_sender = sender;
-    sender->m_port = port;
-    sender->m_size = size;
-    sender->m_buf = buf;
-  }
+  sender->m_port = port;
+  sender->m_size = size;
+  sender->m_buf = buf;
   
-  // Resume receiving actor if waiting
-  if (m_receiving) {
-    ((Linkage*) s_running)->attach(this);
-    s_running->resume(this);
-  }
-  // Else wait for receiving actor
-  else {
-    Thread* thread = (Thread*) ((Linkage*) s_running)->get_succ();
-    ((Link*) s_running)->detach();
-    s_running->resume(thread);
-  }
+  // And queue in sending. Resume receiver or next thread
+  Thread* thread = (m_receiving ? this : (Thread*) sender->get_succ());
+  m_sending.attach(sender);
+  unlock(key);
+  sender->resume(thread);
   return (size);
 }
 
 int 
 Actor::recv(Actor*& sender, uint8_t& port, void* buf, size_t size)
 {
+  // Do not allow receive of other actor queue
   if (s_running != this) return (-1);
 
   // Check if receiver needs to wait for sending actor
   uint8_t key = lock();
-  if (m_sender == NULL) {
+  if (m_sending.is_empty()) {
     m_receiving = true;
     Thread* thread = (Thread*) get_succ();
     detach();
@@ -73,24 +65,18 @@ Actor::recv(Actor*& sender, uint8_t& port, void* buf, size_t size)
     key = lock();
   }
 
-  // Copy message parameters
-  int res;
-  sender = (Actor*) m_sender;
+  // Copy sender message parameters
+  int res = -2;
+  sender = (Actor*) m_sending.get_succ();
   port = sender->m_port;
-  if (size < sender->m_size) {
-    res = -2;
-  }
-  else {
+  if (size >= sender->m_size) {
     memcpy(buf, sender->m_buf, sender->m_size);
     res = sender->m_size;
   }
-  m_sender = NULL;
-  sender->m_buf = NULL;
-  sender->m_size = 0;
   m_receiving = false;
 
   // Reschedule the sender
-  attach(sender);
+  get_succ()->attach(sender);
   unlock(key);
   return (res);
 }

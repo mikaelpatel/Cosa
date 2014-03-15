@@ -41,7 +41,7 @@ public:
   Actor() :
     Thread(),
     m_receiving(false),
-    m_sender(NULL),
+    m_sending(),
     m_port(0),
     m_size(0),
     m_buf(NULL)
@@ -72,7 +72,7 @@ public:
 
 protected:
   bool m_receiving;
-  volatile Actor* m_sender;
+  Head m_sending;
   uint8_t m_port;
   size_t m_size;
   const void* m_buf;
