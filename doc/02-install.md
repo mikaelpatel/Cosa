@@ -19,14 +19,16 @@ git pull origin master
 
 ### Step 1
 
-* Download the [Cosa zip file](../archive/master.zip)
+* Download the [Cosa zip file](https://github.com/mikaelpatel/Cosa/archive/master.zip)
 * Create the hardware folder if missing (<custom_path>/sketchbook/hardware)
 * Unzip the files to your hardware folder
+* Rename `Cosa-master` to `Cosa`
 
 ### Step 2 (For Arduino 1.5.x only)    
 
-* Rename inner `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa/Cosa) to
-`avr` (<custom_path>/sketchbook/hardware/Cosa/avr)
+* Create an outer `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa).
+* Unzip the files to your `hardware/Cosa` folder
+* Rename inner `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa/Cosa-master) to `avr` (<custom_path>/sketchbook/hardware/Cosa/avr)
 
 ### Step 3 (For Attiny users on Windows version only)
 
