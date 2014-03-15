@@ -35,13 +35,6 @@ namespace Nucleo {
  * The Cosa Nucleo Semaphore; counting synchronization primitive.
  */
 class Semaphore {
-private:
-  /** Queue for waiting threads */
-  Head m_queue;
-
-  /** Current count */
-  volatile uint8_t m_count;
-
 public:
   /**
    * Construct and initiate semaphore with given counter.
@@ -63,6 +56,13 @@ public:
    * @param[in] flag resume waiting thread (Default true).
    */
   void signal(uint8_t count = 1, bool flag = true);
+
+private:
+  /** Queue for waiting threads */
+  Head m_queue;
+
+  /** Current count */
+  volatile uint8_t m_count;
 };
 
 };

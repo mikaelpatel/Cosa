@@ -49,7 +49,7 @@ Thread1::run()
 {
   uint8_t nr = 0;
   while (1) {
-    trace << PSTR("Thread1:") << nr << endl;
+    trace << Watchdog::millis() << PSTR(":Thread1:") << nr << endl;
     if (nr == 10) sem.signal();
     if (nr == 15) sem.signal();
     if (nr == 20) sem.wait();
@@ -65,7 +65,7 @@ Thread2::run()
   uint8_t nr = 0;
   sem.wait(2);
   while (1) {
-    trace << PSTR("Thread2:") << nr << endl;
+    trace << Watchdog::millis() << PSTR(":Thread2:") << nr << endl;
     if (nr == 20) sem.signal();
     if (nr == 40) sem.wait();
     nr += 1;

@@ -1,0 +1,82 @@
+/**
+ * @file Cosa/Nucleo/Actor.hh
+ * @version 1.0
+ *
+ * @section License
+ * Copyright (C) 2014, Mikael Patel
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General
+ * Public License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA  02111-1307  USA
+ *
+ * This file is part of the Arduino Che Cosa project.
+ */
+
+#ifndef __COSA_NUCLEO_ACTOR_HH__
+#define __COSA_NUCLEO_ACTOR_HH__
+
+#include "Cosa/Nucleo/Thread.hh"
+
+namespace Nucleo {
+
+/**
+ * The Cosa Nucleo Actor; message passing supported thread.
+ */
+class Actor : public Thread {
+public:
+  /**
+   * Construct actor and initiate internals.
+   */
+  Actor() :
+    Thread(),
+    m_waiting(false),
+    m_sender(NULL),
+    m_port(0),
+    m_size(0),
+    m_buf(NULL)
+  {}
+
+  /**
+   * Send message in given buffer and with given size to actor. Given port
+   * may be used as message identity. Returns size or negative error code.
+   * Receiving actor is resumed.
+   * @param[in] port or message identity.
+   * @param[in] buf pointer to buffer (default NULL).
+   * @param[in] size of message (default 0).
+   * @return size or negative error code.
+   */
+  int send(uint8_t port, const void* buf = NULL, size_t size = 0);
+
+  /**
+   * Receive message to given buffer and with given max size to
+   * actor. Returns sender, port and size or negative error code.
+   * Sending actor is rescheduled.
+   * @param[in,out] sender actor.
+   * @param[in,out] port or message identity.
+   * @param[in] buf pointer to buffer (default NULL).
+   * @param[in] size of message (default 0)
+   * @return size or negative error code.
+   */
+  int recv(Actor*& sender, uint8_t& port, void* buf = NULL, size_t size = 0);
+
+private:
+  volatile bool m_waiting;
+  volatile Actor* m_sender;
+  uint8_t m_port;
+  size_t m_size;
+  const void* m_buf;
+};
+
+};
+#endif

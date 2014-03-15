@@ -63,7 +63,7 @@ Echo::run()
 {
   uint8_t nr = 0;
   while (1) {
-    trace << PSTR("Echo:") << m_name << ':' << nr << endl;
+    trace << Watchdog::millis() << PSTR(":Echo:") << m_name << ':' << nr << endl;
     delay(m_ms);
     fn0(nr);
   }

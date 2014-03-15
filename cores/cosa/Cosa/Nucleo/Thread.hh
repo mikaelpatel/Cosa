@@ -36,52 +36,6 @@ namespace Nucleo {
  * The Cosa Nucleo Thread; run-to-completion multi-tasking. 
  */
 class Thread : protected Link {
-  friend class Semaphore;
-private:
-  /** Size of main thread stack */
-  static const size_t MAIN_STACK_MAX = 32;
-
-  /** Main thread and thread queue head */
-  static Thread s_main;
-
-  /** Running thread */
-  static Thread* s_running;
-
-  /** Top of stack allocation */
-  static size_t s_top;
-
-  /** Power down flag */
-  static bool s_go_idle;
-
-  /** Sleep mode */
-  static uint8_t s_mode;
-
-  /** Thread context */
-  jmp_buf m_context;
-
-  /** Thread state: 0=waiting, 1=runnable */
-  uint8_t m_state;
-
-  /**
-   * Initiate thread with initial call to member function run(). 
-   * Stack frame is allocated by begin().
-   */
-  void init();
-
-  /**
-   * Enqueue running thread to given queue and yield.
-   * @param[in] queue to transfer to.
-   */
-  void enqueue(Head* queue);
-  
-  /**
-   * If given queue is not empty dequeue first thread and resume
-   * direct if flag is true otherwise on yield.
-   * @param[in] queue to transfer from.
-   * @param[in] flag resume direct otherwise on yield.
-   */
-  void dequeue(Head* queue, bool flag = true);
-  
 public:
   /**
    * Set the given sleep mode for main thread idle state. 
@@ -93,10 +47,10 @@ public:
   /**
    * Schedule static thread with given stack size. Using the default
    * parameters will start the thread dispatcher.
-   * @param[in] t thread to initiate and schedule.
+   * @param[in] thread to initiate and schedule.
    * @param[in] size of stack.
    */
-  static void begin(Thread* t = NULL, size_t size = 0);
+  static void begin(Thread* thread = NULL, size_t size = 0);
 
   /**
    * @override Nucleo::Thread
@@ -114,7 +68,7 @@ public:
    * state and later continue after this function.
    * @param[in] t thread to resume.
    */
-  void resume(Thread* t);
+  void resume(Thread* thread);
 
   /**
    * Yield control to the next thread in the thread queue. Preserve
@@ -140,6 +94,56 @@ public:
    * @param[in] bit bit to that should be set (default bit zero).
    */
   void await(volatile uint8_t* ptr, uint8_t bit = 0);
+
+protected:
+  /** Size of main thread stack */
+  static const size_t MAIN_STACK_MAX = 32;
+
+  /** Main thread and thread queue head */
+  static Thread s_main;
+
+  /** Running thread */
+  static Thread* s_running;
+
+  /** Queue for delayed threads */
+  static Head s_delayed;
+
+  /** Top of stack allocation */
+  static size_t s_top;
+
+  /** Power down flag */
+  static bool s_go_idle;
+  
+  /** Sleep mode */
+  static uint8_t s_mode;
+
+  /** Thread context */
+  jmp_buf m_context;
+
+  /** Delay time expires */
+  uint32_t m_expires;
+
+  /**
+   * Initiate thread with initial call to member function run(). 
+   * Stack frame is allocated by begin().
+   */
+  void init();
+
+  /**
+   * Enqueue running thread to given queue and yield.
+   * @param[in] queue to transfer to.
+   */
+  void enqueue(Head* queue);
+  
+  /**
+   * If given queue is not empty dequeue first thread and resume
+   * direct if flag is true otherwise on yield.
+   * @param[in] queue to transfer from.
+   * @param[in] flag resume direct otherwise on yield.
+   */
+  void dequeue(Head* queue, bool flag = true);
+
+  friend class Semaphore;
 };
 
 };

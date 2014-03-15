@@ -31,6 +31,7 @@ namespace Nucleo {
 
 Thread Thread::s_main;
 Thread* Thread::s_running = &s_main;
+Head Thread::s_delayed;
 size_t Thread::s_top = MAIN_STACK_MAX;
 bool Thread::s_go_idle;
 uint8_t Thread::s_mode = SLEEP_MODE_IDLE;
@@ -38,78 +39,90 @@ uint8_t Thread::s_mode = SLEEP_MODE_IDLE;
 void
 Thread::init()
 {
-  m_state = 1;
   s_main.attach(this);
   if (setjmp(m_context)) while (1) run();
 }
 
 void 
-Thread::begin(Thread* t, size_t size)
+Thread::begin(Thread* thread, size_t size)
 {
-  if (t == NULL) s_main.run();
+  if (thread == NULL) s_main.run();
   s_top += size;
   uint8_t buf[s_top];
   UNUSED(buf);
-  t->init();
+  thread->init();
 }
 
 void 
 Thread::run() 
 { 
   while (1) { 
-    s_go_idle = true;
-    yield(); 
-    if (!s_go_idle) continue;
-    Power::sleep(s_mode);
+    if (!s_delayed.is_empty()) {
+      uint32_t now = Watchdog::millis();
+      Thread* thread = (Thread*) s_delayed.get_succ();
+      while (thread != (Thread*) &s_delayed) {
+	if (thread->m_expires > now) break;
+	Thread* succ = (Thread*) thread->get_succ();
+	this->attach(thread);
+	thread = succ;
+      }
+    }
+    Thread* thread = (Thread*) get_succ();
+    if (thread != this) {
+      resume(thread);
+    }
+    else {
+      Power::sleep(s_mode);
+    }
   }
 }
 
 void
-Thread::resume(Thread* t)
+Thread::resume(Thread* thread)
 {
   if (setjmp(m_context)) return;
-  s_running = t;
-  if (t->m_state) s_go_idle = false;
-  longjmp(t->m_context, 1);
+  s_running = thread;
+  longjmp(thread->m_context, 1);
 }
 
 void
 Thread::enqueue(Head* queue)
 {
-  Thread* t = (Thread*) get_succ();
+  Thread* thread = (Thread*) get_succ();
   queue->attach(this);
-  resume(t);
+  resume(thread);
 }
 
 void
 Thread::dequeue(Head* queue, bool flag)
 {
   if (queue->is_empty()) return;
-  Thread* t = (Thread*) queue->get_succ();
+  Thread* thread = (Thread*) queue->get_succ();
   if (flag) {
-    attach(t);
-    resume(t);
+    attach(thread);
+    resume(thread);
   }
   else {
-    get_succ()->attach(t);
+    get_succ()->attach(thread);
   }
 }
 
 void 
 Thread::delay(uint32_t ms)
 {
-  m_state = 0;
-  uint32_t start = Watchdog::millis();
-  while (Watchdog::since(start) < ms) yield();
-  m_state = 1;
+  m_expires = Watchdog::millis() + ms;
+  Thread* thread = (Thread*) s_delayed.get_succ();
+  while (thread != (Thread*) &s_delayed) {
+    if (thread->m_expires > m_expires) break;
+    thread = (Thread*) thread->get_succ();
+  }
+  enqueue((Head*) thread);
 }
 
 void 
 Thread::await(volatile uint8_t* ptr, uint8_t bit)
 {
-  m_state = 0;
   while ((*ptr & _BV(bit)) == 0) yield();
-  m_state = 1;
 }
 
 };
