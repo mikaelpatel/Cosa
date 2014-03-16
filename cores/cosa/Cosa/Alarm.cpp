@@ -32,10 +32,9 @@ Head Alarm::s_queue;
 void
 Alarm::tick()
 {
-  s_ticks += 1;
   Alarm* alarm = (Alarm*) s_queue.get_succ(); 
   while (alarm != (Alarm*) &s_queue) {
-    if (alarm->m_when > s_ticks) return;
+    if (alarm->m_when > s_ticks) break;
     Alarm* succ = (Alarm*) alarm->get_succ();
     alarm->detach();
     alarm->run();
@@ -45,6 +44,7 @@ Alarm::tick()
     }
     alarm = succ;
   }
+  s_ticks += 1;
 }
 
 void
