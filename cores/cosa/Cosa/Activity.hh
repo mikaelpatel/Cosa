@@ -66,7 +66,7 @@ public:
    * Set run period when during activity start and duration.
    * @param[in] seconds run period.
    */
-  void set_run_period(uint16_t seconds);
+  void set_run_period(uint16_t seconds) { m_run_period = seconds; }
 
   /**
    * Return cycle of run in activity.
@@ -83,12 +83,12 @@ public:
   /**
    * Enable activity handler.
    */
-  void enable();
+  void enable() { m_scheduler.enable(); }
 
   /**
    * Disable activity handler.
    */
-  void disable();
+  void disable() { m_scheduler.disable(); }
 
   /**
    * @override Activity
@@ -109,7 +109,7 @@ private:
   };
 
   /**
-   * Dispatch if activity period is not expired.
+   * Dispatch if activity period has not expired.
    * @param[in] now current time.
    */
   void schedule(clock_t now);

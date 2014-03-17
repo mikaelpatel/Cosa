@@ -35,24 +35,6 @@ Activity::set_time(clock_t time, uint16_t duration, uint16_t period)
   m_scheduler.set_alarm(time);
 }
 
-void
-Activity::set_run_period(uint16_t seconds)
-{
-  m_run_period = seconds;
-}
-
-void 
-Activity::enable() 
-{ 
-  m_scheduler.enable(); 
-}
-
-void 
-Activity::disable() 
-{ 
-  m_scheduler.disable(); 
-}
-
 void 
 Activity::schedule(clock_t now) 
 { 

@@ -109,7 +109,7 @@ public:
    */
   static uint32_t millis()
   {
-    return (micros() / 1000L);
+    return (micros() / 1000);
   }
 
   /**

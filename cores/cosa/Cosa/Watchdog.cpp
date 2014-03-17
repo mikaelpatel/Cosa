@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -89,8 +89,8 @@ void
 Watchdog::delay(uint16_t ms)
 {
   uint32_t ticks = (ms + (ms_per_tick() / 2)) / ms_per_tick();
-  uint32_t stop = s_ticks + (ticks == 0 ? 1 : ticks);
   uint8_t key = lock();
+  uint32_t stop = s_ticks + (ticks == 0 ? 1 : ticks);
   while (s_ticks != stop) {
     unlock(key);
     Power::sleep(s_mode);

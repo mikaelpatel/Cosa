@@ -52,8 +52,10 @@ RTC::begin()
   synchronized {
     // Set prescaling to 64
     TCCR0B = (_BV(CS01) | _BV(CS00));
+
     // And enable interrupt on overflow
     TIMSK0 = _BV(TOIE0);
+
     // Reset the counter and clear interrupts
     TCNT0 = 0;
     TIFR0 = 0;
@@ -89,12 +91,14 @@ RTC::micros()
 {
   uint32_t res;
   uint8_t cnt;
+
   // Read tick count and hardware counter. Adjust if pending interrupt
   synchronized {
     res = s_uticks;
     cnt = TCNT0;
     if ((TIFR0 & _BV(TOV0)) && cnt < COUNT) res += US_PER_TICK;
   }
+
   // Convert ticks to micro-seconds
   res += ((uint32_t) cnt) * US_PER_TIMER_CYCLE;
   return (res);
@@ -103,8 +107,8 @@ RTC::micros()
 void
 RTC::delay(uint16_t ms, uint8_t mode)
 {
-  uint32_t start = RTC::millis();
-  while (RTC::since(start) < ms) Power::sleep(mode);
+  uint32_t expire = RTC::millis() + ms;
+  while (RTC::millis() < expire) Power::sleep(mode);
 }
 
 ISR(TIMER0_OVF_vect)

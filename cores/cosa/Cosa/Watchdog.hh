@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -45,14 +45,6 @@ public:
   typedef void (*InterruptHandler)(void* env);
 
   /**
-   * Callback function prototype for await condition function.
-   * Return true(1) to return from await() otherwise false(0).
-   * @param[in] env condition function environment.
-   * @return bool
-   */
-  typedef bool (*AwaitCondition)(void* env);
-
-  /**
    * Get initiated state.
    * @return bool.
    */
@@ -74,7 +66,7 @@ public:
    * Get Watchdog clock in milli-seconds.
    * @return ms.
    */
-  static uint32_t millis() 
+  static uint32_t millis()
   { 
     return (s_ticks * ms_per_tick()); 
   }
