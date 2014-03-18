@@ -46,9 +46,9 @@ void
 Thread::begin(Thread* thread, size_t size)
 {
   if (thread == NULL) s_main.run();
-  s_top += size;
   uint8_t buf[s_top];
   UNUSED(buf);
+  s_top += size;
   thread->init();
 }
 

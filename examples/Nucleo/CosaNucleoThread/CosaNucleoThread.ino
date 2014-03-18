@@ -46,10 +46,32 @@ public:
   virtual void run();
 
   // A function tree to show that the stack is maintained
-  void fn0(uint8_t& nr) { fn1(nr); }
-  void fn1(uint8_t& nr) { fn2(nr); }
-  void fn2(uint8_t& nr) { yield(); nr += 1; }
+  void fn0(uint16_t& nr)  __attribute__((noinline));
+  void fn1(uint16_t& nr)  __attribute__((noinline));
+  void fn2(uint16_t& nr)  __attribute__((noinline));
 };
+
+void 
+Echo::fn0(uint16_t& nr) 
+{ 
+  INFO("nr=%d", nr); 
+  fn1(nr); 
+}
+
+void 
+Echo::fn1(uint16_t& nr)
+{ 
+  INFO("nr=%d", nr); 
+  fn2(nr); 
+}
+
+void 
+Echo::fn2(uint16_t& nr)
+{ 
+  yield(); 
+  nr += 1; 
+  INFO("nr=%d", nr); 
+}
 
 void
 Echo::begin_P(const char* name, size_t size)
@@ -61,15 +83,17 @@ Echo::begin_P(const char* name, size_t size)
 void
 Echo::run()
 {
-  uint8_t nr = 0;
+  uint16_t nr = 0;
   while (1) {
-    trace << Watchdog::millis() << PSTR(":Echo:") << m_name << ':' << nr << endl;
+    trace << Watchdog::millis() << PSTR(":Echo:") 
+	  << m_name << ':' << nr 
+	  << endl;
     delay(m_ms);
     fn0(nr);
   }
 }
 
-// Two echo threads
+// Two echo threads with different delays
 Echo foo(1500);
 Echo fie(1000);
 

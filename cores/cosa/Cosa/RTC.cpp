@@ -107,8 +107,8 @@ RTC::micros()
 void
 RTC::delay(uint16_t ms, uint8_t mode)
 {
-  uint32_t expire = RTC::millis() + ms;
-  while (RTC::millis() < expire) Power::sleep(mode);
+  uint32_t start = RTC::millis();
+  while (RTC::since(start) < ms) Power::sleep(mode);
 }
 
 ISR(TIMER0_OVF_vect)

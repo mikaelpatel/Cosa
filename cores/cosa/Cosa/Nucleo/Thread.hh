@@ -90,8 +90,8 @@ public:
 
   /**
    * Wait for a given bit to be set in the variable.
-   * @param[in] ptr pointer to variable.
-   * @param[in] bit bit to that should be set (default bit zero).
+   * @param[in] ptr pointer to variable (uint8_t).
+   * @param[in] bit position that should be set (default bit zero).
    */
   void await(volatile uint8_t* ptr, uint8_t bit = 0);
 
@@ -117,7 +117,7 @@ protected:
   /** Thread context */
   jmp_buf m_context;
 
-  /** Delay time expires */
+  /** Delay time expires; should not run for more than 2**32 seconds */
   uint32_t m_expires;
 
   /**
