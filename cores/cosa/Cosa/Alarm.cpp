@@ -52,7 +52,7 @@ Alarm::enable()
 {
   Alarm* alarm = (Alarm*) s_queue.get_succ(); 
   while (alarm != (Alarm*) &s_queue) {
-    if (m_when < alarm->m_when) break;
+    if (m_when <= alarm->m_when) break;
     alarm = (Alarm*) alarm->get_succ();
   }
   alarm->attach(this);

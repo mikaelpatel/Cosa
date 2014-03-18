@@ -46,7 +46,9 @@ private:
 void 
 TraceAlarm::run()
 {
-  trace << time() << PSTR(":alarm:id=") << m_id << PSTR(",tick=") << ++m_tick << endl;
+  trace << time() << ':' << m_tick++ 
+	<< PSTR(":alarm:id=") << m_id 
+	<< endl;
 }
 
 Alarm::Scheduler scheduler;
