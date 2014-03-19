@@ -40,10 +40,7 @@
 /**
  * Monitor power supply for low voltage/battery.
  */
-class VCC : protected Periodic {
-private:
-  uint16_t m_threshold;
-  uint16_t m_vcc;
+class VCC : public Periodic {
 public:
   VCC(uint16_t mv, uint16_t sec = 2) : 
     Periodic(sec * 1024), 
@@ -64,6 +61,9 @@ public:
 	  << m_vcc << PSTR(" mV)\n"); 
   }
   uint16_t get_vcc() { return (m_vcc); }
+private:
+  uint16_t m_threshold;
+  uint16_t m_vcc;
 };
 
 // Monitor low voltage at 4.4 V
@@ -72,24 +72,24 @@ VCC lowPower(4400);
 /**
  * Periodical sampling of analog pin.
  */
-class Sampler : public AnalogPin, private Periodic {
+class Sampler : public AnalogPin, public Periodic {
 public:
   Sampler(Board::AnalogPin pin, uint16_t ms) : AnalogPin(pin), Periodic(ms) {}
   virtual void run() { sample_request(); }
 };
 
 // Sample analog pin A4 four times per second
-Sampler in(Board::A4, 256);
+Sampler sampler(Board::A4, 256);
 
 /**
  * Periodical display the values
  */
-class Display : private Periodic {
+class Display : public Periodic {
 public:
   Display(uint16_t ms) : Periodic(ms) {}
   virtual void run()
   {
-    trace << Watchdog::millis() << PSTR(":A4  = ") << in.get_value() 
+    trace << Watchdog::millis() << PSTR(":A4  = ") << sampler.get_value() 
 	  << PSTR(":Vcc  = ") << lowPower.get_vcc() 
 	  << endl;
   }
@@ -103,6 +103,9 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVCC: started"));
   Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  lowPower.begin();
+  sampler.begin();
+  display.begin();
   lowPower.run();
 }
 

@@ -152,8 +152,10 @@ public:
   enum PWMPin {
     PWM0 = D3,
     PWM1 = D4,
+#if defined(__AVR_ATmega1284P__)
     PWM2 = D6,
     PWM3 = D7,
+#endif
     PWM4 = D12,
     PWM5 = D13,
     PWM6 = D14,
@@ -269,10 +271,12 @@ extern "C" {
   void TIMER2_COMPA_vect(void) __attribute__ ((signal));
   void TIMER2_COMPB_vect(void) __attribute__ ((signal));
   void TIMER2_OVF_vect(void) __attribute__ ((signal));
+#if defined(__AVR_ATmega1284P__)
   void TIMER3_CAPT_vect(void) __attribute__ ((signal));
   void TIMER3_COMPA_vect(void) __attribute__ ((signal));
   void TIMER3_COMPB_vect(void) __attribute__ ((signal));
   void TIMER3_OVF_vect(void) __attribute__ ((signal));
+#endif
   void TWI_vect(void) __attribute__ ((signal));
   void WDT_vect(void) __attribute__ ((signal));
   void USART_RX_vect(void) __attribute__ ((signal));

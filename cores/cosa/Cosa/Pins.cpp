@@ -183,12 +183,14 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     TCCR0B |= _BV(CS01) | _BV(CS00);
     break;
 
+#if defined(__AVR_ATmega1284P__)
   case Board::PWM2:
   case Board::PWM3:
     // PWM2(3A), PWM3(3B) PWM phase correct, 8-bit, prescale 64
     TCCR3A |= _BV(WGM30);
     TCCR3B |= _BV(CS31) | _BV(CS30);
     break;
+#endif
 
   case Board::PWM4:
   case Board::PWM5:
@@ -213,8 +215,10 @@ PWMPin::get_duty()
   switch (m_pin) {
   case Board::PWM0: return (OCR0A);
   case Board::PWM1: return (OCR0B);
+#if defined(__AVR_ATmega1284P__)
   case Board::PWM2: return (OCR3A);
   case Board::PWM3: return (OCR3B);
+#endif
   case Board::PWM4: return (OCR1B);
   case Board::PWM5: return (OCR1A);
   case Board::PWM6: return (OCR2B);
@@ -236,6 +240,7 @@ PWMPin::set(uint8_t duty)
     bit_set(TCCR0B, COM0B1);
     OCR0B = duty;
     return;
+#if defined(__AVR_ATmega1284P__)
   case Board::PWM2:
     bit_set(TCCR3A, COM3A1);
     OCR3A = duty;
@@ -244,6 +249,7 @@ PWMPin::set(uint8_t duty)
     bit_set(TCCR3B, COM3B1);
     OCR3B = duty;
     return;
+#endif
   case Board::PWM4:
     bit_set(TCCR1B, COM1B1);
     OCR1B = duty;

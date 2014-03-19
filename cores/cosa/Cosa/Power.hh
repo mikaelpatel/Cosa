@@ -91,7 +91,7 @@ public:
   static void usart0_enable() { power_usart0_enable(); }
   static void usart0_disable() { power_usart0_disable(); }
 
-#if defined(__ARDUINO_MIGHTY__)
+#if defined(__ARDUINO_MIGHTY__) && defined(__AVR_ATmega1284P__)
 
   static void usart1_enable() { power_usart1_enable(); }
   static void usart1_disable() { power_usart1_disable(); }

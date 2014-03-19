@@ -108,7 +108,7 @@ CDC_Setup(Setup& setup)
 	// We check DTR state to determine if host port is open (bit 0
 	// of lineState). 
 	if ((_usbLineInfo.lineState & 0x01) == 0) {
-	  *(uint16_t *)0x0800 = 0x7777;
+	  *(uint16_t*) 0x0800 = 0x7777;
 	  wdt_enable(WDTO_120MS);
 	} 
 	else {
@@ -156,11 +156,11 @@ CDC::flush(void)
 }
 
 int 
-CDC::putchar(char c)
+CDC::write(const void* buf, size_t size)
 {
-  if ((_usbLineInfo.lineState > 0) 
-      && (USB_Send(CDC_TX, &c, sizeof(c)) == sizeof(c)))
-    return (c);
+  if ((_usbLineInfo.lineState > 0) && (USB_Send(CDC_TX, buf, size) == size))
+    return (size);
   return (IOStream::EOF);
 }
+
 #endif

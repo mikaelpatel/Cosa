@@ -104,7 +104,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaBenchmarkNucleo: started"));
   Watchdog::begin();
   RTC::begin();
-  Nucleo::Thread::begin(&consumer, 32);
+  Nucleo::Thread::begin(&consumer, 64);
   Nucleo::Thread::begin(&producer, 64);
 }
 

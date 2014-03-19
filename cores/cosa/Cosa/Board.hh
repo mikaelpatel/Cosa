@@ -42,8 +42,8 @@
 #include "Cosa/Board/StandardUSB.hh"
 #define __ARDUINO_STANDARD_USB__
 
-#elif defined(__AVR_ATmega1284P__)
-
+#elif defined(__AVR_ATmega1284P__)		\
+  || defined(__AVR_ATmega644P__)
 #include "Cosa/Board/Mighty.hh"
 #define __ARDUINO_MIGHTY__
 

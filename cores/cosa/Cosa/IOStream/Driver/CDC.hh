@@ -73,13 +73,12 @@ public:
 
   /**
    * @override IOStream::Device
-   * Write character to serial port output buffer.
-   * Returns character if successful otherwise on error or buffer full
-   * returns EOF(-1),
-   * @param[in] c character to write.
-   * @return character written or EOF(-1).
+   * Write data from buffer with given size to device.
+   * @param[in] buf buffer to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes written or EOF(-1).
    */
-  virtual int putchar(char c);
+  virtual int write(const void* buf, size_t size);
 
   /**
    * @override IOStream::Device
