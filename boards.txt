@@ -23,6 +23,9 @@
 # The Cosa Arduino core boards definition file. The file supports
 # both Arduino 1.0.X and 1.5.X attributes.
 #
+# @section Additional
+# Microduino boards definitions.
+#
 # @section Fix
 # Allow "Processor" menu for 1.5.X to allow multiple board variants,
 # e.g. processor, clock and fuses.
