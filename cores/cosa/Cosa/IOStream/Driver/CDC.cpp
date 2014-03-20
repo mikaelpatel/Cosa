@@ -158,7 +158,8 @@ CDC::flush(void)
 int 
 CDC::write(const void* buf, size_t size)
 {
-  if ((_usbLineInfo.lineState > 0) && (USB_Send(CDC_TX, buf, size) == size))
+  if ((_usbLineInfo.lineState > 0) 
+      && (USB_Send(CDC_TX, buf, size) == (int) size))
     return (size);
   return (IOStream::EOF);
 }
