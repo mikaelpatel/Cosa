@@ -53,12 +53,6 @@ public:
      */
     Driver(uint8_t addr) : Event::Handler(), m_addr(addr << 1) {}
 
-    /**
-     * Set bus frequency (not implemented for USI).
-     * @param[in] hz bus frequency for device.
-     */
-    void set_freq(uint32_t hz) {}
-
   protected:
     /** Device bus address */
     uint8_t m_addr;
@@ -196,6 +190,12 @@ public:
    * @return number of bytes
    */
   int read(void* buf, size_t size);
+
+  /**
+   * Set bus frequency (not implemented for USI).
+   * @param[in] hz bus frequency.
+   */
+  void set_freq(uint32_t hz) {}
 
 private:
   /**

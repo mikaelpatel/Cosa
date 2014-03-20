@@ -49,7 +49,7 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
 #endif
     // Set clock prescale and bit rate
     bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
-    TWBR = dev->m_freq;
+    TWBR = m_freq;
     TWCR = IDLE_CMD;
   }
   return (true);

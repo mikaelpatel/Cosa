@@ -57,26 +57,12 @@ public:
      */
    Driver(uint8_t addr) : 
      Event::Handler(), 
-     m_addr(addr << 1),
-     m_freq(((F_CPU / FREQ) - 16) / 2)
+     m_addr(addr << 1)
     {}
-
-    /**
-     * Set bus frequency for device access. Does not adjust for
-     * cpu frequency scaling. Compile-time cpu frequency used.
-     * @param[in] hz bus frequency for device.
-     */
-    void set_freq(uint32_t hz)
-    {
-      m_freq = ((F_CPU / hz) - 16) / 2;
-    }
 
   protected:
     /** Device bus address */
     uint8_t m_addr;
-
-    /** Device bus frequency */
-    uint8_t m_freq;
 
     /** Allow access */
     friend class TWI;
@@ -163,7 +149,8 @@ public:
     m_next(NULL),
     m_last(NULL),
     m_count(0),
-    m_dev(NULL)
+    m_dev(NULL),
+    m_freq(((F_CPU / FREQ) - 16) / 2)
   {
     for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
       m_vec[ix].buf = 0;
@@ -285,6 +272,16 @@ public:
    */
   int await_completed(uint8_t mode = SLEEP_MODE_IDLE);
 
+  /**
+   * Set bus frequency for device access. Does not adjust for
+   * cpu frequency scaling. Compile-time cpu frequency used.
+   * @param[in] hz bus frequency.
+   */
+  void set_freq(uint32_t hz)
+  {
+    m_freq = ((F_CPU / hz) - 16) / 2;
+  }
+
 private:
   /**
    * Two Wire state and status codes.
@@ -390,6 +387,7 @@ private:
   volatile int m_count;
   uint8_t m_addr;
   Driver* m_dev;
+  uint8_t m_freq;
   
   /**
    * Start block transfer. Setup internal buffer pointers.
