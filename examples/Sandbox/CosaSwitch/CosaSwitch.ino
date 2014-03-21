@@ -154,7 +154,7 @@ int goto_fn(uint8_t op)
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaGoto: started"));
+  trace.begin(&uart, PSTR("CosaSwitch: started"));
   Watchdog::begin();
   RTC::begin();
 }
