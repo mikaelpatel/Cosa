@@ -307,9 +307,10 @@ USB_Send(uint8_t ep, const void* d, int len)
       continue;
     }
     if (n > len) n = len;
-    len -= n;
     {
       LockEP lock(ep);
+      if (!ReadWriteAllowed()) continue;
+      len -= n;
       if (ep & TRANSFER_ZERO) {
 	while (n--) Send8(0);
       }
