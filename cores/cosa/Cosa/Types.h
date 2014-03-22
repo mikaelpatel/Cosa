@@ -122,8 +122,8 @@ union univ32_t {
 /**
  * Compiler branch prediction hinting.
  */
-#define LIKELY(x) __builtin_expect((x),1)
-#define UNLIKELY(x) __builtin_expect((x),0)
+#define LIKELY(x) __builtin_expect((x), 1)
+#define UNLIKELY(x) __builtin_expect((x), 0)
 
 /**
  * Compiler warning on unused varable.
@@ -215,19 +215,6 @@ typedef const PROGMEM void_P void_vec_P;
 #define DELAY(us) _delay_loop_2(((us) * I_CPU) / 4)
 
 /**
- * Macro for micro-second level delay. See also DELAY().
- * @param[in] us micro-seconds.
- */
-#define USLEEP(us) DELAY(us)
-
-/**
- * Macro for sleep for number of milli-seconds. Requires include of the
- * Watchdog and that it has been initiated with Watchdog::begin().
- * @param[in] ms milli-seconds.
- */
-#define MSLEEP(ms) Watchdog::delay(ms)
-
-/**
  * Macro for sleep for number of seconds. Requires include of the
  * Watchdog and that it has been initiated with Watchdog::begin(). 
  * @param[in] seconds to sleep (Max 65 seconds).
@@ -265,6 +252,7 @@ unlock(uint8_t key)
  *   synchronized_goto(label);
  *   ...
  * }
+ * label:
  * Interrupts are disabled in the block allowing secure update.
  */
 #define synchronized							\
@@ -498,6 +486,13 @@ toHEX(uint8_t value)
     return (value - 10 + 'A');
   return (value + '0');
 }
+
+/**
+ * Multi-tasking (Nucleo) support.
+ */
+extern void (*delay)(uint32_t ms);
+extern void (*sleep)(uint16_t s);
+extern void (*yield)();
 
 #endif
 

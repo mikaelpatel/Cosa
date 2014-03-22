@@ -27,6 +27,22 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 
+
+static void thread_delay(uint32_t ms) 
+{
+  Nucleo::Thread::get_running()->delay(ms);
+}
+
+static void thread_yield() 
+{
+  Nucleo::Thread::get_running()->yield();
+}
+
+static void thread_sleep(uint16_t s)
+{
+  Nucleo::Thread::get_running()->delay(s * 1000L);
+}
+
 namespace Nucleo {
 
 Head Thread::s_delayed;
@@ -45,11 +61,18 @@ Thread::init()
 void 
 Thread::begin(Thread* thread, size_t size)
 {
-  if (thread == NULL) s_main.run();
-  uint8_t buf[s_top];
-  UNUSED(buf);
-  s_top += size;
-  thread->init();
+  if (thread != NULL) {
+    uint8_t buf[s_top];
+    UNUSED(buf);
+    s_top += size;
+    thread->init();
+  }
+  else {
+    ::delay = thread_delay;
+    ::sleep = thread_sleep;
+    ::yield = thread_yield;
+    s_main.run();
+  }
 }
 
 void 
@@ -67,12 +90,10 @@ Thread::run()
       }
     }
     Thread* thread = (Thread*) get_succ();
-    if (thread != this) {
+    if (thread != this) 
       resume(thread);
-    }
-    else {
+    else
       Power::sleep(s_mode);
-    }
   }
 }
 
@@ -125,3 +146,5 @@ Thread::await(volatile uint8_t* ptr, uint8_t bit)
 }
 
 };
+
+

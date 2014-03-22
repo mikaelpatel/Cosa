@@ -34,18 +34,25 @@
  * Power Management and Sleep modes.
  */
 class Power {
-  /**
-   * Do not allow instances. This is a static singleton; name space.
-   */
-  Power() {}
-
 public:
+  /**
+   * Set the default sleep mode.
+   * @param[in] mode sleep mode, see <avr/sleep.h>
+   * @return previous mode.
+   */
+  static uint8_t set(uint8_t mode) 
+  { 
+    uint8_t res = s_mode;
+    s_mode = mode; 
+    return (res);
+  }
+
   /**
    * Put the processor in the given sleep mode and wait for 
    * an interrupt to wake up.
    * @param[in] mode sleep mode, see <avr/sleep.h>
    */
-  static void sleep(uint8_t mode = SLEEP_MODE_IDLE);
+  static void sleep(uint8_t mode = POWER_SLEEP_MODE);
 
   /**
    * Scale the clock frequency according to the give prescale
@@ -132,6 +139,18 @@ public:
     bit_clear(ADCSRA, ADEN);
     power_all_disable(); 
   }
+
+private:
+  /**
+   * Do not allow instances. This is a static singleton; name space.
+   */
+  Power() {}
+
+  /** Use Power sleep mode flag */
+  static const uint8_t POWER_SLEEP_MODE = 0xff;
+
+  /** Sleep mode */
+  static uint8_t s_mode;
 };
 
 #endif

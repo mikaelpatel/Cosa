@@ -38,6 +38,12 @@ namespace Nucleo {
 class Thread : protected Link {
 public:
   /**
+   * Return running thread.
+   * @return thread.
+   */
+  static Thread* get_running() { return (s_running); }
+
+  /**
    * Set the given sleep mode for main thread idle state. 
    * Default mode is SLEEP_MODE_IDLE (see Power).
    * @param[in] mode sleep.
@@ -74,10 +80,7 @@ public:
    * Yield control to the next thread in the thread queue. Preserve
    * stack and machine state and later continue after this function. 
    */
-  void yield() 
-  { 
-    resume((Thread*) get_succ()); 
-  }
+  void yield() { resume((Thread*) get_succ()); }
 
   /**
    * Delay at least the given time period in milli-seconds. The resolution
@@ -136,10 +139,11 @@ protected:
    * If given queue is not empty dequeue first thread and resume
    * direct if flag is true otherwise on yield.
    * @param[in] queue to transfer from.
-   * @param[in] flag resume direct otherwise on yield.
+   * @param[in] flag resume direct otherwise on yield (Default true).
    */
   void dequeue(Head* queue, bool flag = true);
 
+  /** Allow friends to use the queue member functions */
   friend class Semaphore;
 };
 

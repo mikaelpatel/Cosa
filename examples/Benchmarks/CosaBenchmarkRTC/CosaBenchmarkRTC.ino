@@ -86,6 +86,26 @@ void setup()
   stop = RTC::micros();
   INFO("SLEEP(1): %ul us", stop - start);
 
+  start = RTC::micros();
+  delay(10);
+  stop = RTC::micros();
+  INFO("delay(10): %ul us", stop - start);
+
+  start = RTC::micros();
+  delay(100);
+  stop = RTC::micros();
+  INFO("delay(100): %ul us", stop - start);
+
+  start = RTC::micros();
+  sleep(1);
+  stop = RTC::micros();
+  INFO("sleep(1): %ul us", stop - start);
+
+  start = RTC::micros();
+  yield();
+  stop = RTC::micros();
+  INFO("yield(): %ul us", stop - start);
+
   // Start the measurement
   TRACE(RTC::seconds());
   TRACE(RTC::micros());

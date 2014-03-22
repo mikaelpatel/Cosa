@@ -117,6 +117,24 @@ int main(void)
   return (0);
 }
 
+static void default_delay(uint32_t ms) 
+{ 
+}
+
+static void default_sleep(uint16_t s) 
+{ 
+}
+
+static void default_yield() 
+{ 
+  Power::sleep(); 
+}
+
+/** Default setting of multi-tasking functions */
+void (*delay)(uint32_t ms) = default_delay;
+void (*sleep)(uint16_t s) = default_sleep;
+void (*yield)() = default_yield;
+
 /**
  * Support for local static variables
  */
