@@ -46,7 +46,10 @@ private:
 void 
 TraceAlarm::run()
 {
-  trace << time() << ':' << m_tick++ 
+  trace << Watchdog::millis() << ':'
+	<< RTC::millis() << ':'
+	<< RTC::seconds() << ':'
+	<< time() << ':' << ++m_tick
 	<< PSTR(":alarm:id=") << m_id 
 	<< endl;
 }
@@ -76,10 +79,13 @@ void setup()
   scheduler.begin();
 
   // Enable the alarm handlers
-  every_3rd_second.enable();
-  every_5th_second.enable();
-  every_15th_second.enable();
   every_30th_second.enable();
+  every_15th_second.enable();
+  every_5th_second.enable();
+  every_3rd_second.enable();
+
+  // Format
+  trace << PSTR("wtd-millis:rtc-millis:rtc-seconds:alarm:tick") << endl;
 }
 
 void loop()

@@ -66,7 +66,10 @@ public:
 
   /**
    * Set clock (seconds) to real-time (for instance seconds from a
-   * given date).
+   * given date; epoch 1900-01-01 00:00 or 1970-01-01 00:00).
+   * Please note that the seconds level clock is not not
+   * based/calculated from the micro-second level clock. This clock is
+   * always from system power up.
    * @param[in] sec.
    */
   static void time(clock_t sec)

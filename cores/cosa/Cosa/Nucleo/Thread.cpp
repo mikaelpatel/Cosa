@@ -78,18 +78,16 @@ Thread::begin(Thread* thread, size_t size)
 void 
 Thread::run() 
 { 
+  Thread* thread;
   while (1) { 
     if (!s_delayed.is_empty()) {
       uint32_t now = Watchdog::millis();
-      Thread* thread = (Thread*) s_delayed.get_succ();
-      while (thread != (Thread*) &s_delayed) {
+      while ((thread = (Thread*) s_delayed.get_succ()) != (Thread*) &s_delayed) {
 	if (thread->m_expires > now) break;
-	Thread* succ = (Thread*) thread->get_succ();
 	this->attach(thread);
-	thread = succ;
       }
     }
-    Thread* thread = (Thread*) get_succ();
+    thread = (Thread*) get_succ();
     if (thread != this) 
       resume(thread);
     else

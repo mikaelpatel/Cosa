@@ -32,19 +32,17 @@ Head Alarm::s_queue;
 void
 Alarm::tick()
 {
-  Alarm* alarm = (Alarm*) s_queue.get_succ(); 
-  while (alarm != (Alarm*) &s_queue) {
+  Alarm* alarm;
+  s_ticks += 1;
+  while ((alarm = (Alarm*) s_queue.get_succ()) != (Alarm*) &s_queue) {
     if (alarm->m_when > s_ticks) break;
-    Alarm* succ = (Alarm*) alarm->get_succ();
     alarm->detach();
     alarm->run();
     if (alarm->m_period != 0) {
       alarm->m_when += alarm->m_period;
       alarm->enable();
     }
-    alarm = succ;
   }
-  s_ticks += 1;
 }
 
 void
