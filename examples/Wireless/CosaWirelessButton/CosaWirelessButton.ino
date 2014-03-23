@@ -120,7 +120,7 @@ void loop()
 {
   // Wait for events from the button
   Event event;
-  Event::queue.await(&event, SLEEP_MODE_PWR_DOWN);
+  Event::queue.await(&event);
 
   // Wake up the hardware
   Power::all_enable();
