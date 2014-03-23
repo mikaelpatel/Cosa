@@ -81,9 +81,6 @@ void setup()
 
 void loop()
 {
-  // Sample and print measurement to output stream
-  trace << acceleratometer << endl;
-
   // Sample sensor and print temperature and pressure
   bmp.sample();
   trace << bmp << endl;
@@ -92,6 +89,9 @@ void loop()
   compass.read_heading();
   compass.to_milli_gauss();
   trace << compass << endl;
+
+  // Sample and print measurement to output stream
+  trace << acceleratometer << endl;
 
   // Periodically sample the printout the gyroscope reading
   trace << gyroscope << endl;

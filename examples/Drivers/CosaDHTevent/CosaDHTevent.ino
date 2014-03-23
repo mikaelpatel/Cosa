@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,9 +25,9 @@
  * driven mode.
  *
  * @section Circuit
- * Connect Arduino:D2 to DHT11 data pin. Connect D3 to DHT22 data 
- * pin. Pullup resistors (4K7) necessary if long wires. Internal 
- * pullup active. Connect power (VCC) and ground (GND).   
+ * Connect Arduino:D2 to DHT11 data pin. Pullup resistors (4K7)
+ * necessary if long wires. Internal pullup active. Connect power
+ * (VCC) and ground (GND).    
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -39,23 +39,16 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 
-// DHT22 data pin configuration
-#if defined(__ARDUINO_TINY__)
-#define EXT Board::EXT0
-#else
-#define EXT Board::EXT1
-#endif
-
-// Example of DHT22 sub-class and periodic member function;
+// Example of DHT11 sub-class and periodic member function;
 // on_sample_completed() prints current value to the trace stream.
-class DHTevent : public DHT22 {
+class DHTevent : public DHT11 {
 public:
-  DHTevent(Board::ExternalInterruptPin pin) : DHT22(pin) {}
+  DHTevent(Board::ExternalInterruptPin pin = Board::EXT0) : DHT11(pin) {}
   virtual void on_sample_completed() { trace << *this << endl; }
 };
 
 // The DHT event object
-DHTevent dht(EXT);
+DHTevent dht;
 
 void setup()
 {
