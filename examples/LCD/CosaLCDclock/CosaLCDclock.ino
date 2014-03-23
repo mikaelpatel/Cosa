@@ -33,10 +33,10 @@
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
-// HD44780::ERM1602_5 port;
 // HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
 HD44780::DFRobot port;
+// HD44780::ERM1602_5 port;
 
 #if defined(__ARDUINO_MEGA__)
 #include "Cosa/TWI/Driver/ADXL345.hh"
@@ -70,12 +70,12 @@ void setup()
 #ifdef RTC_SET_TIME
   time_t now;
   now.seconds = 0x00;
-  now.minutes = 0x50;
-  now.hours = 0x20;
+  now.minutes = 0x08;
+  now.hours = 0x00;
   now.day = 0x01;
-  now.date = 0x21;
-  now.month = 0x07;
-  now.year = 0x13;
+  now.date = 0x24;
+  now.month = 0x03;
+  now.year = 0x14;
   rtc.set_time(now);
 #endif
 
