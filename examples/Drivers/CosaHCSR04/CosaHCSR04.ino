@@ -57,7 +57,7 @@ void setup()
   TRACE(sizeof(HCSR04));
 
   // Start the watchdog ticks and push time events
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
 
   // Attach the range module to read distance every 1/4 second
   ping.periodic(256);

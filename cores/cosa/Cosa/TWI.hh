@@ -270,7 +270,7 @@ public:
    * Await issued request to complete. Returns number of bytes 
    * or negative error code.
    */
-  int await_completed(uint8_t mode = SLEEP_MODE_IDLE);
+  int await_completed();
 
   /**
    * Set bus frequency for device access. Does not adjust for
@@ -363,11 +363,11 @@ private:
    */
   enum Command {
     NULL_CMD = 0,
-    IDLE_CMD =               _BV(TWEA) |              _BV(TWEN) | _BV(TWIE),
+    IDLE_CMD = _BV(TWEA) | _BV(TWEN) | _BV(TWIE),
     START_CMD = _BV(TWINT) | _BV(TWEA) | _BV(TWSTA) | _BV(TWEN) | _BV(TWIE),
-    DATA_CMD =  _BV(TWINT) |                          _BV(TWEN) | _BV(TWIE),
-    ACK_CMD =   _BV(TWINT) | _BV(TWEA) |              _BV(TWEN) | _BV(TWIE),
-    NACK_CMD =  _BV(TWINT) |                          _BV(TWEN) | _BV(TWIE),
+    DATA_CMD = _BV(TWINT) | _BV(TWEN) | _BV(TWIE),
+    ACK_CMD =  _BV(TWINT) | _BV(TWEA) | _BV(TWEN) | _BV(TWIE),
+    NACK_CMD = _BV(TWINT) | _BV(TWEN) | _BV(TWIE),
     STOP_CMD =  _BV(TWINT) | _BV(TWEA) | _BV(TWSTO) | _BV(TWEN) | _BV(TWIE)
   } __attribute__((packed));
 

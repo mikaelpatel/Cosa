@@ -120,7 +120,7 @@ void setup()
   extPin.enable();
 
   // Start the watchdog ticks counter (1 second pulse)
-  Watchdog::begin(1024, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
+  Watchdog::begin(1024, Watchdog::push_watchdog_event);
 }
 
 void loop()

@@ -102,7 +102,7 @@ void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVCC: started"));
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
   lowPower.begin();
   sampler.begin();
   display.begin();

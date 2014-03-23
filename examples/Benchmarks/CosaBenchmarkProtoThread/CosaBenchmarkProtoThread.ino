@@ -82,7 +82,7 @@ void setup()
   TRACE(I_CPU);
 
   // Start the watchdog (16 ms timeout, push timeout events)
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
   RTC::begin();
 
   // Start the counter threads

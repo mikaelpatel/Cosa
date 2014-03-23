@@ -75,8 +75,9 @@ void measure(const char* name, benchmark_t fn, uint16_t nr);
 
 void setup()
 {
+  Power::set(SLEEP_MODE_PWR_DOWN);
   RTC::begin();
-  Watchdog::begin(16, SLEEP_MODE_PWR_DOWN);
+  Watchdog::begin();
   lcd.begin();
   trace.begin(&lcd, PSTR("CosaLCDspeed:"));
 #if defined(__COSA_VLCD_HH__)

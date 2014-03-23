@@ -111,7 +111,7 @@ BlinkRGB led2(256, Board::D8, Board::D9, Board::D10);
 void setup()
 {
   // Start the watchdog (16 ms timeout, push timeout events)
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
 
   // Start the state machines
   led1.begin();

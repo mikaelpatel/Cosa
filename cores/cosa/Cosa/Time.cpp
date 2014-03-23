@@ -85,8 +85,7 @@ time_t::time_t(clock_t c, uint8_t zone)
   to_bcd();
 }
 
-clock_t
-time_t::to_clock() 
+time_t::operator clock_t()
 {
   clock_t res;
   to_binary();

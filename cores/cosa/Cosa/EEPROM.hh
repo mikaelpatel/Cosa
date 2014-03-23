@@ -102,9 +102,9 @@ public:
    * Wait for write to complete. 
    * @param[in] mode of sleep.
    */
-  void write_await(uint8_t mode = SLEEP_MODE_IDLE)
+  void write_await()
   {
-    while (!is_ready()) Power::sleep(mode);
+    while (!is_ready()) yield();
   }
 
   /**

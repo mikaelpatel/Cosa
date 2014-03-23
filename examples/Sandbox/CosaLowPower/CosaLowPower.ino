@@ -76,6 +76,7 @@ Button wakeup(Board::EXT0, &led);
 
 void setup()
 {
+  Power::set(SLEEP_MODE_PWR_DOWN);
 #if defined(USE_DISABLE_MODULES)
   // 0 uA, already done by startup
   ACSR = _BV(ACD);
@@ -102,15 +103,15 @@ void loop()
 #ifdef USE_EVENT_AWAIT
   // 180 uA - (BOD + PIN disable = 23 uA)
   Event event;
-  Event::queue.await(&event, SLEEP_MODE_PWR_DOWN);
+  Event::queue.await(&event);
 #else
   // 180 uA - (BOD + PIN disable = 23 uA)
-  Power::sleep(SLEEP_MODE_PWR_DOWN);
+  Power::sleep();
 #endif
 
 #ifdef USE_WATCHDOG_DELAY
   // 1,5 mA, 64 ms blink
-  Watchdog::begin(16, SLEEP_MODE_PWR_DOWN);
+  Watchdog::begin();
   while (wakeup.is_low()) {
     led.toggle();
     Watchdog::delay(64);

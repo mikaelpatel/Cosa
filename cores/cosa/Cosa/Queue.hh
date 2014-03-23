@@ -108,10 +108,9 @@ public:
    * Await data to become available from queue. Will perform a system
    * sleep with the given sleep mode. 
    * @param[in,out] data pointer to member data buffer.
-   * @param[in] mode sleep mode.
    * @pre data != 0
    */
-  void await(T* data, uint8_t mode = SLEEP_MODE_IDLE);
+  void await(T* data);
 };
 
 template <class T, uint8_t NMEMB>
@@ -144,8 +143,8 @@ template <class T, uint8_t NMEMB>
 bool
 Queue<T,NMEMB>::dequeue(T* data)
 {
-  if (m_get == m_put) return (false);
   synchronized {
+    if (m_get == m_put) synchronized_return (false);
     uint8_t next = (m_get + 1) & MASK;
     m_get = next;
     *data = m_buffer[next];
@@ -155,9 +154,9 @@ Queue<T,NMEMB>::dequeue(T* data)
 
 template <class T, uint8_t NMEMB>
 void
-Queue<T,NMEMB>::await(T* data, uint8_t mode)
+Queue<T,NMEMB>::await(T* data)
 {
-  while (!dequeue(data)) Power::sleep(mode);
+  while (!dequeue(data)) yield();
 }
 
 #endif

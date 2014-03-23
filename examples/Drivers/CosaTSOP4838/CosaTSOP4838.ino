@@ -116,7 +116,7 @@ void setup()
   RTC::begin();
 
   // Use the watchdog for timeouts
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
 
   // Reset the receiver to start up clean
   receiver.reset();

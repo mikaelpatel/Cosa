@@ -57,7 +57,7 @@ LED builtin(Board::LED, 512);
 
 void setup()
 {
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
   builtin.begin();
 }
 

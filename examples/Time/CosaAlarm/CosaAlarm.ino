@@ -74,7 +74,7 @@ void setup()
   TRACE(sizeof(TraceAlarm));
 
   // Start the watchdog, real-time clock and the alarm scheduler
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
   RTC::begin();
   scheduler.begin();
 

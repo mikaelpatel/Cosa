@@ -54,7 +54,7 @@ uint8_t sec = 00;
 void setup()
 {
   // Start the watchdog for low power sleep
-  Watchdog::begin(1024, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
+  Watchdog::begin(1024, Watchdog::push_watchdog_event);
 
   // Initiate the display and set orientation and color scheme
   tft.begin();

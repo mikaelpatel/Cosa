@@ -125,9 +125,9 @@ TWI::read_request(void* buf, size_t size)
 }
 
 int
-TWI::await_completed(uint8_t mode)
+TWI::await_completed()
 {
-  while (m_state > IDLE_STATE) Power::sleep(mode);
+  while (m_state > IDLE_STATE) yield();
   return (m_count);
 }
 

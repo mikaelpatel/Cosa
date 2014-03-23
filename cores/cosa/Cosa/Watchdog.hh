@@ -102,15 +102,6 @@ public:
   }
 
   /**
-   * Set watchdog sleep mode as defined by set_sleep_mode().
-   * @param[in] mode sleep mode.
-   */
-  static void set(uint8_t mode)
-  { 
-    s_mode = mode; 
-  }
-  
-  /**
    * Attach target to watchdog so that it will receive a timeout
    * event with given period in milli-seconds.
    * @param[in] target timeout target to add.
@@ -123,12 +114,10 @@ public:
    * The timeout period is mapped to 16 milli-seconds and double
    * periods (32, 64, 128, etc to approx 8 seconds).
    * @param[in] ms timeout period in milli-seconds.
-   * @param[in] mode sleep mode.
    * @param[in] handler of interrupts.
    * @param[in] env handler environment.
    */
   static void begin(uint16_t ms = 16, 
-		    uint8_t mode = SLEEP_MODE_IDLE,
 		    InterruptHandler handler = NULL,
 		    void* env = NULL);
 
@@ -198,7 +187,6 @@ private:
   // Watchdog ticks, prescale and mode.
   static volatile uint32_t s_ticks;
   static uint8_t s_prescale;
-  static uint8_t s_mode;
   static bool s_initiated;
 
   /**

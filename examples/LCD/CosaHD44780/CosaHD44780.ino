@@ -118,16 +118,16 @@ void setup()
     for (char c = 0; c < BITMAPS_MAX; c++) {
       lcd.set_cursor(x, y);
       trace << c;
-      MSLEEP(64);
+      delay(64);
     }
   }
   trace << clear;
 
   trace << PSTR("\f\aBACKLIGHT\a\n");
   for (uint8_t i = 0; i < 4; i++) {
-    MSLEEP(100);
+    delay(100);
     lcd.backlight_off();
-    MSLEEP(100);
+    delay(100);
     lcd.backlight_on();
   }
 
@@ -139,7 +139,7 @@ void setup()
     uint8_t len = strlen_P(msg);
     for (uint8_t j = 0; j < len; j++) {
       trace << (char) pgm_read_byte(msg + j);
-      MSLEEP(64);
+      delay(64);
     }
     trace << ' ';
   }
@@ -161,5 +161,5 @@ void loop()
   // Step through the LCD font. Use tab steps between characters
   static char c = 0;
   trace << c++ << '\t';
-  Watchdog::MSLEEP(64);
+  delay(64);
 }

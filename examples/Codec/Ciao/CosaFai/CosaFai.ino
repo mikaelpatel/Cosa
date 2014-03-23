@@ -87,8 +87,7 @@ void setup()
   cout.Ciao::write(&Fai::Descriptor::event_t);
 
   // Start the watchdog and trace events
-  Watchdog::begin(2048, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event, 
-		  &ledPin);
+  Watchdog::begin(2048, Watchdog::push_watchdog_event, &ledPin);
 }
 
 void loop()

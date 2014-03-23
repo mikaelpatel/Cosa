@@ -343,7 +343,7 @@ IOStream::Device::gets(char *s, size_t count)
     int c = getchar();
     if (c == EOF && m_mode != NON_BLOCKING) {
       while (c == EOF) {
-	Power::sleep(m_mode);
+	yield();
 	c = getchar();
       }
     }

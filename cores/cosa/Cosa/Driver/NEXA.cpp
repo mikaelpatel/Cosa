@@ -126,7 +126,7 @@ NEXA::Receiver::recv(code_t& cmd)
 }
 
 void
-NEXA::Transmitter::send_code(code_t cmd, int8_t onoff, uint8_t mode)
+NEXA::Transmitter::send_code(code_t cmd, int8_t onoff)
 {
   // Send the code four times with a pause between each
   for (uint8_t i = 0; i < SEND_CODE_MAX; i++) {
@@ -154,6 +154,6 @@ NEXA::Transmitter::send_code(code_t cmd, int8_t onoff, uint8_t mode)
       }
     }
     send_pulse(0);
-    RTC::delay(PAUSE, mode);
+    RTC::delay(PAUSE);
   }
 }

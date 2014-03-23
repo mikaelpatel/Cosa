@@ -40,7 +40,7 @@ void blink(void* env)
 void setup()
 {
   // Start watchdog with approx. 0.5 s timeout and blink interrupt call
-  Watchdog::begin(512, SLEEP_MODE_IDLE, blink);
+  Watchdog::begin(512, blink);
 }
 
 void loop()

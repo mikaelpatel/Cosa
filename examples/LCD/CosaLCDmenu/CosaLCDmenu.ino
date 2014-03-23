@@ -159,7 +159,7 @@ Menu::RotaryController rotary(&walker);
 
 void setup()
 {
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
   lcd.begin();
   lcd.puts_P(PSTR("CosaLCDmenu: started"));
   SLEEP(2);

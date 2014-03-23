@@ -278,12 +278,11 @@ public:
      * channel(0..3), unit(0..3). Dimmer levels are onoff values -1..-15.
      * @param[in] device (0..15).
      * @param[in] onoff device mode (-15..-1..0..1).
-     * @param[in] mode sleep mode during pause.
      */
-    void send(uint8_t device, int8_t onoff, uint8_t mode = SLEEP_MODE_IDLE)
+    void send(uint8_t device, int8_t onoff)
     {
       code_t cmd(m_house, 0, device, onoff);
-      send_code(cmd, onoff, mode);
+      send_code(cmd, onoff);
     }
     
     /**
@@ -291,12 +290,11 @@ public:
      * or off according to parameter. Group number is (0..3).
      * @param[in] group (0..3).
      * @param[in] onoff device mode (0..1).
-     * @param[in] mode sleep mode during pause.
      */
-    void broadcast(uint8_t group, int8_t onoff, uint8_t mode = SLEEP_MODE_IDLE)
+    void broadcast(uint8_t group, int8_t onoff)
     {
       code_t cmd(m_house, 1, group << 2, onoff);
-      send_code(cmd, onoff != 0, mode);
+      send_code(cmd, onoff != 0);
     }
 
   private:
@@ -343,9 +341,8 @@ public:
      * values -1..-15.
      * @param[in] cmd to transmit.
      * @param[in] onoff device mode (-15..-1..0..1).
-     * @param[in] mode sleep mode during pause.
      */
-    void send_code(code_t cmd, int8_t onoff, uint8_t mode);
+    void send_code(code_t cmd, int8_t onoff);
   };
 };
 

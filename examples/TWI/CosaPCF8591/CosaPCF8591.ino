@@ -53,7 +53,7 @@ void setup()
   TRACE(sizeof(adc));
 
   // Start the watchdog ticks and push time events
-  Watchdog::begin(512, SLEEP_MODE_IDLE, Watchdog::push_watchdog_event);
+  Watchdog::begin(512, Watchdog::push_watchdog_event);
 }
 
 void loop()

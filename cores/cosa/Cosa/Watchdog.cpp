@@ -44,7 +44,6 @@ Head Watchdog::s_timeq[Watchdog::TIMEQ_MAX];
 
 volatile uint32_t Watchdog::s_ticks = 0L;
 uint8_t Watchdog::s_prescale;
-uint8_t Watchdog::s_mode;
 bool Watchdog::s_initiated = false;
 
 uint8_t 
@@ -58,7 +57,6 @@ Watchdog::as_prescale(uint16_t ms)
 
 void 
 Watchdog::begin(uint16_t ms, 
-		uint8_t mode, 
 		InterruptHandler handler, 
 		void* env)
 {
@@ -81,7 +79,6 @@ Watchdog::begin(uint16_t ms,
   s_handler = handler;
   s_env = env;
   s_prescale = prescale;
-  s_mode = mode;
   s_initiated = true;
   ::delay = watchdog_delay;
   ::sleep = watchdog_sleep;
@@ -105,7 +102,7 @@ Watchdog::delay(uint16_t ms)
   uint32_t stop = s_ticks + (ticks == 0 ? 1 : ticks);
   while (s_ticks != stop) {
     unlock(key);
-    Power::sleep(s_mode);
+    yield();
     key = lock();
   }
   unlock(key);

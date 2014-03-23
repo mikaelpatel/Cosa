@@ -30,7 +30,7 @@ int
 ProtocolBuffer::getchar()
 {
   if (m_outs == NULL) return (-1);
-  while (!m_outs->available()) Power::sleep(SLEEP_MODE_IDLE);
+  while (!m_outs->available()) yield();
   return (m_outs->getchar());
 }
 

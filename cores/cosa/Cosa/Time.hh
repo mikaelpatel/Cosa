@@ -36,8 +36,8 @@
 typedef uint32_t clock_t;
 
 const uint32_t SECONDS_PER_DAY = 86400L;
-const uint16_t SECONDS_PER_HOUR = 3600;
-const uint16_t SECONDS_PER_MINUTE = 60;
+const uint32_t SECONDS_PER_HOUR = 3600L;
+const uint32_t SECONDS_PER_MINUTE = 60L;
 const uint8_t DAYS_PER_WEEK = 7;
 
 /**
@@ -87,7 +87,7 @@ struct time_t {			// Range
    * Convert time to clock representation (from bcd).
    * @return seconds from epoch.
    */
-  clock_t to_clock();
+  operator clock_t();
 };
 
 /**

@@ -70,7 +70,7 @@ LED builtinPin(Board::LED);
 void setup()
 {
   // Start the watchdog (16 ms timeout, push timeout events)
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
 
   // Set blink time period for the leds
   builtinPin.blink(1024);

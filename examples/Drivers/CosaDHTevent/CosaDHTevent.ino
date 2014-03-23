@@ -64,7 +64,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaDHTevent: started"));
 
   // Watchdog will issue timeout events
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
   RTC::begin();
 
   // The DHT event object is started with default 2 second period

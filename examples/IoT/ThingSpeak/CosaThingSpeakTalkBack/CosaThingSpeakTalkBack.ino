@@ -127,7 +127,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaThingSpeakTalkBack: started"));
 #endif
   // Start the watchdog
-  Watchdog::begin(16);
+  Watchdog::begin();
 
   // Setup Ethernet controller and ThingSpeak with given ethernet socket 
   TRACE(ethernet.begin_P(HOSTNAME));

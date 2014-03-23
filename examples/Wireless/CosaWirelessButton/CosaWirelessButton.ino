@@ -95,7 +95,8 @@ AnalogPin temperature(Board::A3);
 void setup()
 {
   // Initiate Watchdog with 512 ms period. Start RTC and Wireless device
-  Watchdog::begin(512, SLEEP_MODE_PWR_DOWN);
+  Power::set(SLEEP_MODE_PWR_DOWN);
+  Watchdog::begin(512);
   RTC::begin();
   rf.begin();
   

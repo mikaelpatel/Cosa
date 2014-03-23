@@ -58,7 +58,7 @@ void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaActivity: started"));
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
+  Watchdog::begin(16, Watchdog::push_timeout_events);
   RTC::begin();
   scheduler.begin();
   activity.enable();

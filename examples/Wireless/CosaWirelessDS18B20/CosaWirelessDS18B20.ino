@@ -95,7 +95,8 @@ OutputPin pw(Board::D4);
 void setup()
 {
   // Set up watchdog for power down sleep mode
-  Watchdog::begin(128, SLEEP_MODE_PWR_DOWN);
+  Power::set(SLEEP_MODE_PWR_DOWN);
+  Watchdog::begin(128);
   RTC::begin();
 
   // Start the wireless device and powerdown

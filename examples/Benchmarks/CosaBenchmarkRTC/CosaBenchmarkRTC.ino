@@ -72,6 +72,21 @@ void setup()
   INFO("RTC::millis(): %ul us", stop - start);
 
   start = RTC::micros();
+  uint32_t sec = RTC::seconds();
+  stop = RTC::micros();
+  INFO("RTC::seconds(): %ul us", stop - start);
+
+  start = RTC::micros();
+  RTC::delay(1);
+  stop = RTC::micros();
+  INFO("RTC::delay(1): %ul us", stop - start);
+
+  start = RTC::micros();
+  RTC::delay(10);
+  stop = RTC::micros();
+  INFO("RTC::delay(10): %ul us", stop - start);
+
+  start = RTC::micros();
   DELAY(10);
   stop = RTC::micros();
   INFO("DELAY(10): %ul us", stop - start);

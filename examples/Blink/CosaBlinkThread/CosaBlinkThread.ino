@@ -84,7 +84,8 @@ Controller<25,500,5,200> controller(&buildin);
 void setup()
 {
   // Use power down idle mode for low power
-  Watchdog::begin(16, SLEEP_MODE_PWR_DOWN);
+  Power::set(SLEEP_MODE_PWR_DOWN);
+  Watchdog::begin();
   Nucleo::Thread::set_idle_mode(SLEEP_MODE_PWR_DOWN);
 
   // Allocate the threads with given stack size

@@ -85,7 +85,7 @@ public:
    * @param[in] y
    * @return (x - y)
    */
-  static uint32_t diff(uint32_t x, uint32_t y)
+  static int32_t diff(uint32_t x, uint32_t y)
   {
     return (x - y);
   }
@@ -129,11 +129,19 @@ public:
   }
 
   /**
+   * Return the current clock in seconds.
+   * @return seconds.
+   */
+  static clock_t time()
+  {
+    return (seconds());
+  }
+
+  /**
    * Delay using the real-time clock.
    * @param[in] ms sleep period in milli-seconds.
-   * @param[in] mode during sleep (Default SLEEP_MODE_IDLE).
    */
-  static void delay(uint16_t ms, uint8_t mode = SLEEP_MODE_IDLE);
+  static void delay(uint16_t ms);
 
   /**
    * Set RTC overflow interrupt handler. Allow extension of the interrupt
