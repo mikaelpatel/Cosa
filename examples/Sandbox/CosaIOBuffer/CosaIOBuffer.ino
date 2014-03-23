@@ -125,7 +125,7 @@ void loop()
   ASSERT(strlen(s) == 3);
   ASSERT(!strcmp_P(s, PSTR("123")));
 
-  ASSERT(buffer.gets(s, sizeof(s)) == s);
+  ASSERT(buffer.gets(s, sizeof(s)) == NULL);
   ASSERT(strlen(s) == 0);
 
   // End the test suite
