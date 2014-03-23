@@ -26,10 +26,11 @@
  *
  * The conclusion is that difference should be signed and comparison
  * operators should be avoided. Instead compare with difference to 
- * handle wrap-around correctly.
+ * handle wrap-around and negative interval correctly.
  *   uint32_t t0, t1;
  *   int32_t diff = t1 - t0;
- *   bool wrong = t1 < t0; 
+ *   bool wrong1 = t1 < t0; 
+ *   bool wrong2 = (t1 - t0) < 0; 
  *   bool correct = diff < 0;
  *
  * This file is part of the Arduino Che Cosa project.
@@ -56,13 +57,15 @@ void iter(uint32_t t0, uint32_t t1, uint8_t i0, uint8_t i1)
 {
   for (int i = 0; i < 32; i++) {
     int32_t diff = t1 - t0;
-    bool wrong = t1 < t0;
+    bool wrong1 = t1 < t0;
+    bool wrong2 = (t1 - t0) < 0;
     bool correct = diff < 0;
     trace << i 
 	  << PSTR(":t0=") << t0
 	  << PSTR(",t1=") << t1
 	  << PSTR(",diff=") << diff
-	  << PSTR(",wrong=") << wrong
+	  << PSTR(",wrong1=") << wrong1
+	  << PSTR(",wrong2=") << wrong2
 	  << PSTR(",correct=") << correct
 	  << endl;
     t0 += i0;
