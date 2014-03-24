@@ -86,7 +86,6 @@ void setup()
   // Use power down idle mode for low power
   Power::set(SLEEP_MODE_PWR_DOWN);
   Watchdog::begin();
-  Nucleo::Thread::set_idle_mode(SLEEP_MODE_PWR_DOWN);
 
   // Allocate the threads with given stack size
   Nucleo::Thread::begin(&buildin, 32);

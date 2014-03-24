@@ -49,7 +49,6 @@ Head Thread::s_delayed;
 Thread Thread::s_main;
 Thread* Thread::s_running = &s_main;
 size_t Thread::s_top = MAIN_STACK_MAX;
-uint8_t Thread::s_mode = SLEEP_MODE_IDLE;
 
 void
 Thread::init()
@@ -91,7 +90,7 @@ Thread::run()
     if (thread != this) 
       resume(thread);
     else
-      Power::sleep(s_mode);
+      Power::sleep();
   }
 }
 
