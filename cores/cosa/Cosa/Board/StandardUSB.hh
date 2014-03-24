@@ -132,6 +132,15 @@ public:
   } __attribute__((packed));
 
   /**
+   * Reference voltage; ARef pin, Vcc or internal 2V56
+   */
+  enum Reference {
+    APIN_REFERENCE = 0,
+    AVCC_REFERENCE = _BV(REFS0),
+    A2V56_REFERENCE = (_BV(REFS1) | _BV(REFS0))
+  } __attribute__((packed));
+
+  /**
    * PWM pin symbols; sub-set of digital pins to allow compile 
    * time checking
    */

@@ -40,47 +40,6 @@ class OutputPin;
  * Forces declarative programming of pins in sketches.
  */
 class Pin {
-protected:
-  volatile uint8_t* const m_sfr;
-  const uint8_t m_mask;
-  const uint8_t m_pin;
-
-  /**
-   * Return pointer to PIN register.
-   * @return PIN register pointer.
-   */
-  volatile uint8_t* PIN() 
-  { 
-    return (m_sfr); 
-  }
-
-  /**
-   * Return pointer to Data Direction Register.
-   * @return DDR register pointer.
-   */
-  volatile uint8_t* DDR() 
-  { 
-    return (m_sfr + 1); 
-  }
-
-  /**
-   * Return pointer to data PORT register.
-   * @return PORT register pointer.
-   */
-  volatile uint8_t* PORT() 
-  { 
-    return (m_sfr + 2); 
-  }
-
-  /**
-   * Return pin change interrupt mask register.
-   * @return pin change mask register pointer.
-   */
-  volatile uint8_t* PCIMR() 
-  { 
-    return (Board::PCIMR(m_pin));
-  }
-
 public:
   /**
    * Return bit mask for given Arduino pin number.
@@ -238,6 +197,47 @@ public:
   { 
     var = ((*PIN() & m_mask) != 0); 
     return (*this);
+  }
+
+protected:
+  volatile uint8_t* const m_sfr;
+  const uint8_t m_mask;
+  const uint8_t m_pin;
+
+  /**
+   * Return pointer to PIN register.
+   * @return PIN register pointer.
+   */
+  volatile uint8_t* PIN() 
+  { 
+    return (m_sfr); 
+  }
+
+  /**
+   * Return pointer to Data Direction Register.
+   * @return DDR register pointer.
+   */
+  volatile uint8_t* DDR() 
+  { 
+    return (m_sfr + 1); 
+  }
+
+  /**
+   * Return pointer to data PORT register.
+   * @return PORT register pointer.
+   */
+  volatile uint8_t* PORT() 
+  { 
+    return (m_sfr + 2); 
+  }
+
+  /**
+   * Return pin change interrupt mask register.
+   * @return pin change mask register pointer.
+   */
+  volatile uint8_t* PCIMR() 
+  { 
+    return (Board::PCIMR(m_pin));
   }
 
   /**
@@ -695,75 +695,8 @@ private:
 /**
  * Abstract analog pin. Allows asynchronous sampling.
  */
-class AnalogPin : 
-  public Pin, 
-  public Interrupt::Handler,
-  public Event::Handler 
+class AnalogPin : public Pin, public Interrupt::Handler, public Event::Handler 
 {
-  friend void ADC_vect(void);
-public:
-  /**
-   * Reference voltage; ARef pin, Vcc or internal 1V1.
-   */
-#if defined(__ARDUINO_STANDARD__)
-  enum Reference {
-    APIN_REFERENCE = 0,
-    AVCC_REFERENCE = _BV(REFS0),
-    A1V1_REFERENCE = (_BV(REFS1) | _BV(REFS0))
-  } __attribute__((packed));
-#elif defined(__ARDUINO_STANDARD_USB__)
-  enum Reference {
-    APIN_REFERENCE = 0,
-    AVCC_REFERENCE = _BV(REFS0),
-    A2V56_REFERENCE = (_BV(REFS1) | _BV(REFS0))
-  } __attribute__((packed));
-#elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGHTY__)
-  enum Reference {
-    APIN_REFERENCE = 0,
-    AVCC_REFERENCE = _BV(REFS0),
-    A1V1_REFERENCE = _BV(REFS1),
-    A2V56_REFERENCE = (_BV(REFS1) | _BV(REFS0))
-  } __attribute__((packed));
-#elif defined(__ARDUINO_TINYX4__)
-  enum Reference {
-    AVCC_REFERENCE = 0,
-    APIN_REFERENCE = _BV(REFS0),
-    A1V1_REFERENCE = _BV(REFS1)
-  } __attribute__((packed));
-#elif defined(__ARDUINO_TINYX5__) || defined(__ARDUINO_TINYX61__)
-  enum Reference {
-    AVCC_REFERENCE = 0,
-    APIN_REFERENCE = _BV(REFS0),
-    A1V1_REFERENCE = _BV(REFS1),
-    A2V56_REFERENCE = (_BV(REFS2) | _BV(REFS1))
-  } __attribute__((packed));
-#endif
-
-protected:
-  static AnalogPin* sampling_pin;
-  uint8_t m_reference;
-  uint16_t m_value;
-  uint8_t m_event;
-  
-  /**
-   * Internal request sample of analog pin. Set up sampling of given pin
-   * with given reference voltage.
-   * @param[in] pin number.
-   * @param[in] ref reference voltage.
-   * @return bool.
-   */
-  bool sample_request(uint8_t pin, uint8_t ref);
-
-  /**
-   * @override Event::Handler
-   * Handle analog pin periodic sampling and sample completed event.
-   * Will call virtual method on_change() if the pin value has changed since
-   * latest sample.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value);
-
 public:
   /**
    * Construct abstract analog pin for given Arduino pin with reference and
@@ -771,7 +704,7 @@ public:
    * @param[in] pin number.
    * @param[in] ref reference voltage.
    */
-  AnalogPin(Board::AnalogPin pin, Reference ref = AVCC_REFERENCE) :
+  AnalogPin(Board::AnalogPin pin, Board::Reference ref = Board::AVCC_REFERENCE) :
     Pin((uint8_t) pin),
     m_reference(ref),
     m_value(0),
@@ -783,7 +716,7 @@ public:
    * Set reference voltage for conversion.
    * @param[in] ref reference voltage.
    */
-  void set_reference(Reference ref) 
+  void set_reference(Board::Reference ref) 
   {
     m_reference = ref; 
   }
@@ -810,7 +743,7 @@ public:
    * @param[in] ref reference voltage.
    * @return sample value.
    */
-  static uint16_t sample(uint8_t pin, Reference ref = AVCC_REFERENCE);
+  static uint16_t sample(uint8_t pin, Board::Reference ref = Board::AVCC_REFERENCE);
 
   /**
    * Get power supply voltage in milli-volt. May be used for low battery
@@ -843,7 +776,7 @@ public:
    */
   uint16_t sample()
   {
-    return (m_value = AnalogPin::sample(m_pin, (Reference) m_reference));
+    return (m_value = AnalogPin::sample(m_pin, (Board::Reference) m_reference));
   }
 
   /**
@@ -867,7 +800,7 @@ public:
   bool sample_request(uint8_t event = Event::NULL_TYPE)
   {
     m_event = event;
-    return (sample_request(m_pin, (Reference) m_reference));
+    return (sample_request(m_pin, (Board::Reference) m_reference));
   }
 
   /**
@@ -889,6 +822,34 @@ public:
    * @param[in] value.
    */
   virtual void on_change(uint16_t value) {}
+
+protected:
+  static AnalogPin* sampling_pin;
+  uint8_t m_reference;
+  uint16_t m_value;
+  uint8_t m_event;
+  
+  /**
+   * Internal request sample of analog pin. Set up sampling of given pin
+   * with given reference voltage.
+   * @param[in] pin number.
+   * @param[in] ref reference voltage.
+   * @return bool.
+   */
+  bool sample_request(uint8_t pin, uint8_t ref);
+
+  /**
+   * @override Event::Handler
+   * Handle analog pin periodic sampling and sample completed event.
+   * Will call virtual method on_change() if the pin value has changed since
+   * latest sample.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value);
+
+  /** Interrupt Service Routine */
+  friend void ADC_vect(void);
 };
 
 /**
@@ -896,12 +857,6 @@ public:
  * interrupt or event handler when completed.
  */
 class AnalogPins : private AnalogPin {
-private:
-  const Board::AnalogPin* m_pin_at;
-  uint16_t* m_buffer;
-  uint8_t m_count;
-  uint8_t m_next;
-
 public:
   /**
    * Construct abstract analog pin set given vector and number of pins,
@@ -914,7 +869,7 @@ public:
    */
   AnalogPins(const Board::AnalogPin* pins, 
 	     uint16_t* buffer, uint8_t count,
-	     Reference ref = AVCC_REFERENCE) :
+	     Board::Reference ref = Board::AVCC_REFERENCE) :
     AnalogPin((Board::AnalogPin) 255, ref),
     m_pin_at(pins),
     m_buffer(buffer),
@@ -961,6 +916,12 @@ public:
    * @param[in] value the event value.
    */
   virtual void on_event(uint8_t type, uint16_t value) {}
+
+private:
+  const Board::AnalogPin* m_pin_at;
+  uint16_t* m_buffer;
+  uint8_t m_count;
+  uint8_t m_next;
 };
 
 /**
@@ -969,7 +930,6 @@ public:
  * active/enabled at a time.
  */
 class AnalogComparator : public Interrupt::Handler, public Event::Handler {
-  friend void ANALOG_COMP_vect(void);
 public:
   enum Mode {
     ON_TOGGLE_MODE = 0,
@@ -977,13 +937,6 @@ public:
     ON_RISING_MODE = (_BV(ACIS1) | _BV(ACIS0)),
   } __attribute__((packed));
 
-protected:
-  static AnalogComparator* comparator;
-  static const uint8_t AIN1 = 255;
-  Mode m_mode;
-  uint8_t m_pin;
-
-public:
   /**
    * Construct analog comparator handler. Compare with AIN1.
    * @param[in] mode comparator mode.
@@ -1037,6 +990,15 @@ public:
    * @param[in] arg argument from interrupt service routine.
    */
   virtual void on_interrupt(uint16_t arg = 0);
+
+protected:
+  static AnalogComparator* comparator;
+  static const uint8_t AIN1 = 255;
+  Mode m_mode;
+  uint8_t m_pin;
+
+  /** Interrupt Service Routine */
+  friend void ANALOG_COMP_vect(void);
 };
 
 /**

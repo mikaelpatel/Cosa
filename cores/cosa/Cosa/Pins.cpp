@@ -588,7 +588,7 @@ uint16_t
 AnalogPin::bandgap(uint16_t vref)
 {
   loop_until_bit_is_clear(ADCSRA, ADSC);
-  ADMUX = (AVCC_REFERENCE | Board::VBG);
+  ADMUX = (Board::AVCC_REFERENCE | Board::VBG);
   bit_set(ADCSRA, ADEN);
   DELAY(1000);
   bit_set(ADCSRA, ADSC);
@@ -601,7 +601,7 @@ AnalogPin::bandgap(uint16_t vref)
 }
 
 uint16_t 
-AnalogPin::sample(uint8_t pin, Reference ref)
+AnalogPin::sample(uint8_t pin, Board::Reference ref)
 {
   if (sampling_pin != NULL) return (0xffffU);
 #if defined(__ARDUINO_STANDARD_USB__)
