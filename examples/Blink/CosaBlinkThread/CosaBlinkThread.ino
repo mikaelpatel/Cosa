@@ -53,7 +53,7 @@ LED::run()
 }
 
 // This class is a thread that periodically changes a LED delay
-// from low to high with a given incremment.
+// from low to high with a given increment
 template <uint16_t LOW, uint16_t HIGH, uint16_t INC, uint16_t PERIOD>
 class Controller : public Nucleo::Thread {
 private:
