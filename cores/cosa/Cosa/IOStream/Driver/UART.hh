@@ -176,6 +176,7 @@ public:
    * with UART_SETUP().
    */
   static UART* uart[Board::UART_MAX];
+
 protected:
   volatile uint8_t* const m_sfr;
   IOStream::Device* m_ibuf;
@@ -244,17 +245,17 @@ protected:
   friend void USART_UDRE_vect(void);
   friend void USART_RX_vect(void);
   friend void USART_TX_vect(void);
-#if defined(__ARDUINO_MIGHTY__)
+#if defined(USART1_UDRE_vect) && !defined(USART_UDRE_vect)
   friend void USART1_UDRE_vect(void);
   friend void USART1_RX_vect(void);
   friend void USART1_TX_vect(void);
-#elif defined(__ARDUINO_MEGA__)
-  friend void USART1_UDRE_vect(void);
-  friend void USART1_RX_vect(void);
-  friend void USART1_TX_vect(void);
+#endif
+#if defined(USART2_UDRE_vect)
   friend void USART2_UDRE_vect(void);
   friend void USART2_RX_vect(void);
   friend void USART2_TX_vect(void);
+#endif
+#if defined(USART3_UDRE_vect)
   friend void USART3_UDRE_vect(void);
   friend void USART3_RX_vect(void);
   friend void USART3_TX_vect(void);

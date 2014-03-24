@@ -77,12 +77,15 @@ UART::end()
 int 
 UART::putchar(char c)
 {
+  // Check if the buffer is full
   if (m_obuf->putchar(c) == IOStream::EOF) {
     if (m_mode == NON_BLOCKING) return (IOStream::EOF);
     do {
-      Power::sleep(m_mode);
+      yield();
     } while (m_obuf->putchar(c) == IOStream::EOF);
   }
+
+  // Enable the transmitter
   *UCSRnB() |= _BV(UDRIE0);
   return (c & 0xff);
 }
@@ -137,26 +140,23 @@ UART_ISR_UDRE(USART, 0)
 UART_ISR_RX(USART, 0)
 UART_ISR_TX(USART, 0)
 
-#if defined(__ARDUINO_MIGHTY__)
-
+#if defined(USART1_UDRE_vect) && !defined(USART_UDRE_vect)
 UART_ISR_UDRE(USART1, 1)
 UART_ISR_RX(USART1, 1)
 UART_ISR_TX(USART1, 1)
+#endif
 
-#elif defined(__ARDUINO_MEGA__)
-
-UART_ISR_UDRE(USART1, 1)
-UART_ISR_RX(USART1, 1)
-UART_ISR_TX(USART1, 1)
-
+#if defined(USART2_UDRE_vect)
 UART_ISR_UDRE(USART2, 2)
 UART_ISR_RX(USART2, 2)
 UART_ISR_TX(USART2, 2)
+#endif
 
+#if defined(USART3_UDRE_vect)
 UART_ISR_UDRE(USART3, 3)
 UART_ISR_RX(USART3, 3)
 UART_ISR_TX(USART3, 3)
-
 #endif
+
 #endif
 

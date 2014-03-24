@@ -31,7 +31,7 @@
  */
 
 #include "Cosa/Board.hh"
-#if !defined(__ARDUINO_MEGA__)
+#if !defined(USART1_UDRE_vect)
 #error CosaMegaUARTs: board not supported.
 #endif
 #include "Cosa/Trace.hh"
