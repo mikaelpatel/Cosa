@@ -35,7 +35,8 @@ Alarm::tick()
   Alarm* alarm;
   s_ticks += 1;
   while ((alarm = (Alarm*) s_queue.get_succ()) != (Alarm*) &s_queue) {
-    if (alarm->m_when > s_ticks) break;
+    int32_t diff = alarm->m_when - s_ticks;
+    if (diff > 0) break;
     alarm->detach();
     alarm->run();
     if (alarm->m_period != 0) {
@@ -50,7 +51,8 @@ Alarm::enable()
 {
   Alarm* alarm = (Alarm*) s_queue.get_succ(); 
   while (alarm != (Alarm*) &s_queue) {
-    if (m_when <= alarm->m_when) break;
+    int32_t diff = m_when - alarm->m_when;
+    if (diff <= 0) break;
     alarm = (Alarm*) alarm->get_succ();
   }
   alarm->attach(this);
@@ -59,7 +61,7 @@ Alarm::enable()
 void
 Alarm::Scheduler::run()
 {
-  uint32_t now = RTC::seconds();
-  if (now == Alarm::s_ticks) return;
+  int32_t diff = RTC::seconds() - Alarm::s_ticks;
+  if (diff <= 0) return;
   Alarm::tick();
 }

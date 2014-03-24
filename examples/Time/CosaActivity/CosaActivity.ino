@@ -35,10 +35,13 @@
 
 class TraceActivity : public Activity {
 public:
-  TraceActivity(uint16_t period, uint16_t duration, uint16_t seconds) :
+  TraceActivity(clock_t start, 
+		uint16_t period, 
+		uint16_t duration, 
+		uint16_t seconds) :
     Activity()
   {
-    set_time(0, duration, period);
+    set_time(start, duration, period);
     set_run_period(seconds);
   }
   virtual void run();
@@ -50,8 +53,8 @@ TraceActivity::run()
   trace << time() << PSTR(":cycles=") << get_cycles() << endl;
 }
 
-// Every minute, for five seconds, run every second
-TraceActivity activity(1, 5, 1);
+// Start at 15. Every minute, for five seconds, run every second
+TraceActivity activity(15, 1, 5, 1);
 Alarm::Scheduler scheduler;
 
 void setup()

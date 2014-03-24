@@ -39,7 +39,8 @@ void
 Activity::schedule(clock_t now) 
 { 
   // Check if still in activity duration
-  if (now < m_stop_time) {
+  int32_t diff = now - m_stop_time;
+  if (diff < 0) {
     run();
     if (m_cycles == 0) m_scheduler.set_period(m_run_period);
     m_cycles += 1;
