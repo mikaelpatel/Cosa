@@ -477,5 +477,3 @@ microduino-core-plus.build.mcu=atmega644p
 microduino-core-plus.build.f_cpu=16000000L
 microduino-core-plus.build.board=AVR_MIGHTY
 microduino-core-plus.build.core=cosa
-
-
