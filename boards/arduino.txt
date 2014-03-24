@@ -1,4 +1,4 @@
-# @file boards.txt
+# @file boards/arduino.txt
 # @version 1.0
 #
 # @section License
@@ -23,100 +23,10 @@
 # The Cosa Arduino core boards definition file. The file supports
 # both Arduino 1.0.X and 1.5.X attributes.
 #
-# @section Fix
-# Allow "Processor" menu for 1.5.X to allow multiple board variants,
-# e.g. processor, clock and fuses.
-#
 # This file is part of the Arduino Che Cosa project.
 
 ##
-# ARDUINO TINY
-##
-
-# AVR:ATtiny84
-# Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
-# Brown-out detection disabled. Serial program downloading enabled
-attiny84-8.name=Cosa Tiny (ATtiny84, 8 MHz internal clock)
-attiny84-8.upload.using=arduino:arduinoisp
-attiny84-8.upload.tool=arduino:arduinoisp
-attiny84-8.upload.maximum_size=8192
-attiny84-8.upload.maximum_data_size=512
-
-attiny84-8.bootloader.tool=arduino:arduinoisp
-attiny84-8.bootloader.low_fuses=0xe2
-attiny84-8.bootloader.high_fuses=0xdf
-attiny84-8.bootloader.extended_fuses=0xff
-
-attiny84-8.build.mcu=attiny84
-attiny84-8.build.f_cpu=8000000L
-attiny84-8.build.board=AVR_TINY84
-attiny84-8.build.core=cosa
-
-# AVR:ATtiny85
-# Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
-# Brown-out detection disabled. Serial program downloading enabled
-attiny85-8.name=Cosa Tiny (ATtiny85, 8 MHz internal clock)
-attiny85-8.upload.using=arduino:arduinoisp
-attiny85-8.upload.tool=arduino:arduinoisp
-attiny85-8.upload.maximum_size=8192
-attiny85-8.upload.maximum_data_size=512
-
-attiny85-8.bootloader.tool=arduino:arduinoisp
-attiny85-8.bootloader.low_fuses=0xe2
-attiny85-8.bootloader.high_fuses=0xdf
-attiny85-8.bootloader.extended_fuses=0xff
-
-attiny85-8.build.mcu=attiny85
-attiny85-8.build.f_cpu=8000000L
-attiny85-8.build.board=AVR_TINY85
-attiny85-8.build.core=cosa
-
-# AVR:ATtiny861
-# Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
-# Brown-out detection disabled. Serial program downloading enabled
-attiny861-8.name=Cosa Tiny (ATtiny861, 8 MHz internal clock)
-attiny861-8.upload.using=arduino:arduinoisp
-attiny861-8.upload.tool=arduino:arduinoisp
-attiny861-8.upload.maximum_size=8192
-attiny861-8.upload.maximum_data_size=512
-
-attiny861-8.bootloader.tool=arduino:arduinoisp
-attiny861-8.bootloader.low_fuses=0xe2
-attiny861-8.bootloader.high_fuses=0xdf
-attiny861-8.bootloader.extended_fuses=0x01
-
-attiny861-8.build.mcu=attiny861
-attiny861-8.build.f_cpu=8000000L
-attiny861-8.build.board=AVR_TINY861
-attiny861-8.build.core=cosa
-
-##
-# ARDUINO BREADBOARD
-##
-
-# AVR:ATmega328
-# Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (256 words, 0x3f00). 
-atmega328-8.name=Cosa Arduino Basetta (ATmega328, 8 MHz internal clock)
-atmega328-8.upload.using=arduino:arduinoisp
-atmega328-8.upload.tool=arduino:arduinoisp
-# atmega328-8.upload.protocol=usbasp
-atmega328-8.upload.maximum_size=32256
-atmega328-8.upload.speed=115200
-
-atmega328-8.bootloader.tool=arduino:arduinoisp
-atmega328-8.bootloader.low_fuses=0xE2
-atmega328-8.bootloader.high_fuses=0xDE
-atmega328-8.bootloader.extended_fuses=0xFD
-
-atmega328-8.build.mcu=atmega328p
-atmega328-8.build.f_cpu=8000000L
-atmega328-8.build.board=AVR_ATMEGA328
-atmega328-8.build.core=cosa
-
-##
-# ARDUINO STANDARD
+# ARDUINO STANDARD (ATmega328)
 ##
 
 # AVR:ATmega328
@@ -246,53 +156,7 @@ pro-mini-8.build.board=AVR_PRO_MINI
 pro-mini-8.build.core=cosa
 
 ##
-# ARDUINO MIGHTY
-##
-
-# AVR:ATmega1284
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0xfc00). 
-mighty.name=Cosa Arduino Mighty (ATmega1284/BOOT_1284P)
-mighty.upload.tool=avrdude
-mighty.upload.protocol=stk500v1
-mighty.upload.maximum_size=129024
-mighty.upload.maximum_data_size=16384
-mighty.upload.speed=57600
-
-mighty.bootloader.tool=avrdude
-mighty.bootloader.low_fuses=0xff
-mighty.bootloader.high_fuses=0xdc
-mighty.bootloader.extended_fuses=0xfd
-
-mighty.build.mcu=atmega1284p
-mighty.build.f_cpu=16000000L
-mighty.build.board=AVR_MIGHTY
-mighty.build.core=cosa
-
-# AVR:ATmega1284
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (512 words, 0xfe00). 
-mighty-opt.name=Cosa Arduino Mighty (ATmega1284/Optiboot)
-mighty-opt.upload.tool=avrdude
-mighty-opt.upload.protocol=arduino
-mighty-opt.upload.maximum_size=130048
-mighty-opt.upload.maximum_data_size=16384
-mighty-opt.upload.speed=115200
-
-mighty-opt.bootloader.tool=avrdude
-mighty-opt.bootloader.low_fuses=0xff
-mighty-opt.bootloader.high_fuses=0xde
-mighty-opt.bootloader.extended_fuses=0xfd
-
-mighty-opt.build.mcu=atmega1284p
-mighty-opt.build.f_cpu=16000000L
-mighty-opt.build.board=AVR_MIGHTY
-mighty-opt.build.core=cosa
-
-##
-# ARDUINO MEGA
+# ARDUINO MEGA (ATmega2560)
 ##
 
 # AVR:ATmega2560
@@ -317,7 +181,7 @@ mega.build.board=AVR_MEGA2560
 mega.build.core=cosa
 
 ##
-# ARDUINO STANDARD USB
+# ARDUINO STANDARD USB (ATmega32u4)
 ##
 
 # AVR:ATmega32u4
@@ -403,79 +267,4 @@ lilypad-usb.usb_product="Arduino LilyPad USB"
 lilypad-usb.build.board=AVR_LILYPAD_USB
 lilypad-usb.build.core=cosa
 lilypad-usb.build.extra_flags={build.usb_flags}
-
-##
-# MICRODUINO
-##
-
-# AVR:ATmega328
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (256 words, 0x3f00). 
-microduino-core.name=Cosa Microduino-Core (ATmega328/Optiboot)
-microduino-core.upload.tool=avrdude
-microduino-core.upload.protocol=arduino
-microduino-core.upload.maximum_size=32256
-microduino-core.upload.maximum_data_size=2048
-microduino-core.upload.speed=115200
-
-microduino-core.bootloader.tool=avrdude
-microduino-core.bootloader.low_fuses=0xff
-microduino-core.bootloader.high_fuses=0xde
-microduino-core.bootloader.extended_fuses=0x05
-
-microduino-core.build.mcu=atmega328p
-microduino-core.build.f_cpu=16000000L
-microduino-core.build.board=AVR_UNO
-microduino-core.build.core=cosa
-
-# AVR:ATmega32u4
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
-microduino-core32u4.name=Cosa Microduino-Core32u4 (ATmega32U4/Caterina)
-microduino-core32u4.upload.tool=avrdude
-microduino-core32u4.upload.protocol=avr109
-microduino-core32u4.upload.maximum_size=28672
-microduino-core32u4.upload.maximum_data_size=2560
-microduino-core32u4.upload.speed=57600
-microduino-core32u4.upload.disable_flushing=true
-microduino-core32u4.upload.use_1200bps_touch=true
-microduino-core32u4.upload.wait_for_upload_port=true
-
-microduino-core32u4.bootloader.tool=avrdude
-microduino-core32u4.bootloader.low_fuses=0xff
-microduino-core32u4.bootloader.high_fuses=0xd8
-microduino-core32u4.bootloader.extended_fuses=0xcb
-
-microduino-core32u4.build.mcu=atmega32u4
-microduino-core32u4.build.f_cpu=16000000L
-microduino-core32u4.build.vid=0x2341
-microduino-core32u4.build.pid=0x8036
-microduino-core32u4.build.core=cosa
-microduino-core32u4.build.usb_product="Arduino Leonardo"
-microduino-core32u4.build.board=AVR_LEONARDO
-microduino-core32u4.build.extra_flags={build.usb_flags}
-
-# AVR:ATmega644P
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (512 words, 0xfe00). 
-microduino-core-plus.name=Cosa Microduino-Core+ (ATmega644P/Optiboot)
-microduino-core-plus.upload.tool=avrdude
-microduino-core-plus.upload.protocol=arduino
-microduino-core-plus.upload.maximum_size=64512
-microduino-core-plus.upload.maximum_data_size=4096
-microduino-core-plus.upload.speed=115200
-
-microduino-core-plus.bootloader.tool=avrdude
-microduino-core-plus.bootloader.low_fuses=0xff
-microduino-core-plus.bootloader.high_fuses=0xde
-microduino-core-plus.bootloader.extended_fuses=0xfd
-
-microduino-core-plus.build.mcu=atmega644p
-microduino-core-plus.build.f_cpu=16000000L
-microduino-core-plus.build.board=AVR_MIGHTY
-microduino-core-plus.build.core=cosa
-
 

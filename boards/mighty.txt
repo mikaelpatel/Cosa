@@ -1,0 +1,73 @@
+# @file boards/mighty.txt
+# @version 1.0
+#
+# @section License
+# Copyright (C) 2014, Mikael Patel
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General
+# Public License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+# Boston, MA  02111-1307  USA
+#
+# @section Description
+# The Cosa Mighty core boards definition file. The file supports
+# both Arduino 1.0.X and 1.5.X attributes.
+#
+# This file is part of the Arduino Che Cosa project.
+
+##
+# ARDUINO MIGHTY (ATmega1284)
+##
+
+# AVR:ATmega1284
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (1024 words, 0xfc00). 
+mighty.name=Cosa Arduino Mighty (ATmega1284/BOOT_1284P)
+mighty.upload.tool=avrdude
+mighty.upload.protocol=stk500v1
+mighty.upload.maximum_size=129024
+mighty.upload.maximum_data_size=16384
+mighty.upload.speed=57600
+
+mighty.bootloader.tool=avrdude
+mighty.bootloader.low_fuses=0xff
+mighty.bootloader.high_fuses=0xdc
+mighty.bootloader.extended_fuses=0xfd
+
+mighty.build.mcu=atmega1284p
+mighty.build.f_cpu=16000000L
+mighty.build.board=AVR_MIGHTY
+mighty.build.core=cosa
+
+# AVR:ATmega1284
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (512 words, 0xfe00). 
+mighty-opt.name=Cosa Arduino Mighty (ATmega1284/Optiboot)
+mighty-opt.upload.tool=avrdude
+mighty-opt.upload.protocol=arduino
+mighty-opt.upload.maximum_size=130048
+mighty-opt.upload.maximum_data_size=16384
+mighty-opt.upload.speed=115200
+
+mighty-opt.bootloader.tool=avrdude
+mighty-opt.bootloader.low_fuses=0xff
+mighty-opt.bootloader.high_fuses=0xde
+mighty-opt.bootloader.extended_fuses=0xfd
+
+mighty-opt.build.mcu=atmega1284p
+mighty-opt.build.f_cpu=16000000L
+mighty-opt.build.board=AVR_MIGHTY
+mighty-opt.build.core=cosa
+
