@@ -38,12 +38,6 @@
  */
 template <class T, uint8_t NMEMB>
 class Queue {
-private:
-  static const uint8_t MASK = (NMEMB - 1);
-  volatile uint8_t m_put;
-  volatile uint8_t m_get;
-  T m_buffer[NMEMB];
-
 public:
   /**
    * Construct a ring-buffer queue with given number of members
@@ -111,6 +105,12 @@ public:
    * @pre data != 0
    */
   void await(T* data);
+
+private:
+  static const uint8_t MASK = (NMEMB - 1);
+  volatile uint8_t m_put;
+  volatile uint8_t m_get;
+  T m_buffer[NMEMB];
 };
 
 template <class T, uint8_t NMEMB>

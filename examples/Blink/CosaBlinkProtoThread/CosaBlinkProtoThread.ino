@@ -31,10 +31,6 @@
 #include "Cosa/Watchdog.hh"
 
 class LED : public ProtoThread {
-private:
-  OutputPin m_pin;
-  uint16_t m_delay;
-
 public:
   LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) : 
     ProtoThread(), 
@@ -51,6 +47,10 @@ public:
     }
     PROTO_THREAD_END();
   }
+
+private:
+  OutputPin m_pin;
+  uint16_t m_delay;
 };
 
 LED builtin(Board::LED, 512);

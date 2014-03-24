@@ -48,9 +48,6 @@ const uint32_t EVENTS_MAX = 100000L;
  * Simple echo state machine with a single state. 
  */
 class Echo : public FSM {
-private:
-  FSM* m_port;			//< FSM to send event to
-
 public:
   /**
    * Construct the echo state machine. 
@@ -76,6 +73,9 @@ public:
     echo->m_port->send(Event::USER_TYPE);
     return (true);
   }
+  
+private:
+  FSM* m_port;			//< FSM to send event to
 };
 
 // The ping-pong state machines

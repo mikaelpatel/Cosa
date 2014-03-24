@@ -37,6 +37,51 @@
  * when a key down/up is detected.
  */
 class Keypad : private Link {
+public:
+  /**
+   * Construct keypad handler with given analog pin and mapping.
+   * The mapping should be a decending sequence of thresholds and
+   * should be stored in program memory.
+   * @param[in] pin analog pin.
+   * @param[in] map between analog value and key.
+   */
+  Keypad(Board::AnalogPin pin, const uint16_t* map) :
+    Link(),
+    m_key(pin, this, map)
+  {
+  }
+
+  /**
+   * Start the keypad handler.
+   */
+  void begin()
+  {
+    Watchdog::attach(this, SAMPLE_MS);
+  }
+
+  /**
+   * Stop the keypad handler
+   */
+  void end()
+  {
+    detach();
+  }
+
+  /**
+   * @override Keypad
+   * Callback method when a key down is detected. Must override.
+   * @param[in] nr key number (index in map).
+   */
+  virtual void on_key_down(uint8_t nr) {}
+
+  /**
+   * @override Keypad
+   * Callback method when a key up is detected. Default is null
+   * function.
+   * @param[in] nr key number (index in map).
+   */
+  virtual void on_key_up(uint8_t nr) {}
+
 protected:
   /**
    * Internal analog pin sampler to detect key down. Samples are maps
@@ -83,51 +128,6 @@ protected:
    * @param[in] value the event value.
    */
   virtual void on_event(uint8_t type, uint16_t value);
-
-public:
-  /**
-   * Construct keypad handler with given analog pin and mapping.
-   * The mapping should be a decending sequence of thresholds and
-   * should be stored in program memory.
-   * @param[in] pin analog pin.
-   * @param[in] map between analog value and key.
-   */
-  Keypad(Board::AnalogPin pin, const uint16_t* map) :
-    Link(),
-    m_key(pin, this, map)
-  {
-  }
-
-  /**
-   * Start the keypad handler.
-   */
-  void begin()
-  {
-    Watchdog::attach(this, SAMPLE_MS);
-  }
-
-  /**
-   * Stop the keypad handler
-   */
-  void end()
-  {
-    detach();
-  }
-
-  /**
-   * @override Keypad
-   * Callback method when a key down is detected. Must override.
-   * @param[in] nr key number (index in map).
-   */
-  virtual void on_key_down(uint8_t nr) {}
-
-  /**
-   * @override Keypad
-   * Callback method when a key up is detected. Default is null
-   * function.
-   * @param[in] nr key number (index in map).
-   */
-  virtual void on_key_up(uint8_t nr) {}
 };
 
 /**
@@ -136,10 +136,6 @@ public:
  * mapping vector.
  */
 class LCDKeypad : public Keypad {
-private:
-  // Analog reading to key index map
-  static const uint16_t m_map[] PROGMEM;
-  
 public:
   // Key index
   enum {
@@ -150,7 +146,13 @@ public:
     UP_KEY,
     RIGHT_KEY
   } __attribute__((packed));
+
+  // LCD Keypad constructor with internal key map
   LCDKeypad() : Keypad(Board::A0, m_map) {}
+
+private:
+  // Analog reading to key index map
+  static const uint16_t m_map[] PROGMEM;
 };
 
 #endif

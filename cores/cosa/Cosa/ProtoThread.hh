@@ -56,20 +56,6 @@
  * [3] http://en.wikipedia.org/wiki/Protothreads<br>
  */
 class ProtoThread : public Link {
-protected:
-  static Head runq;
-  uint8_t m_state;
-  void* m_ip;
-
-  /**
-   * @override Event::Handler
-   * The first level event handler. Filters timeout events and
-   * run the thread action function.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value);
-  
 public:
   /**
    * Thread states.
@@ -185,6 +171,20 @@ public:
    * @param[in] thread to enqueue.
    */
   static void schedule(ProtoThread* thread);
+
+protected:
+  static Head runq;
+  uint8_t m_state;
+  void* m_ip;
+
+  /**
+   * @override Event::Handler
+   * The first level event handler. Filters timeout events and
+   * run the thread action function.
+   * @param[in] type the type of event.
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value);
 };
 
 /**

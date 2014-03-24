@@ -36,21 +36,6 @@
  * Support simple application status indicator.
  */
 class LED : private Link {
-private:
-  /** Output pin for LED */
-  OutputPin m_pin;
-
-  /**
-   * @override Event::Handler
-   * LED event handler; Toggle LED on timeout event.
-   * @param[in] type the type of event (timeout).
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value)
-  { 
-    m_pin.toggle(); 
-  }
-
 public:
   /**
    * Construct LED connected to the given pin.
@@ -94,6 +79,21 @@ public:
   void alert_mode()
   {
     Watchdog::attach(this, 128);
+  }
+
+private:
+  /** Output pin for LED */
+  OutputPin m_pin;
+
+  /**
+   * @override Event::Handler
+   * LED event handler; Toggle LED on timeout event.
+   * @param[in] type the type of event (timeout).
+   * @param[in] value the event value.
+   */
+  virtual void on_event(uint8_t type, uint16_t value)
+  { 
+    m_pin.toggle(); 
   }
 };
 

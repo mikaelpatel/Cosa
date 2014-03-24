@@ -181,7 +181,7 @@ RFM69::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   if (m_avail) return (-2);
 
   // Wait for previous packet send if any
-  while (!m_done) Power::sleep(m_mode);
+  while (!m_done) yield();
 
   // Put the device in standby before writing packet
   set(STANDBY_MODE);
@@ -221,12 +221,10 @@ RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   // Check if we need to wait for a message; outgoing or incoming packet
   if (!m_avail) {
     uint32_t start = RTC::millis();
-    while (!m_done && ((ms == 0) || (RTC::since(start) < ms)))
-      Power::sleep(m_mode);
+    while (!m_done && ((ms == 0) || (RTC::since(start) < ms))) yield();
     if (!m_done) return (-2);
     set(RECEIVER_MODE);
-    while (!m_avail && ((ms == 0) || (RTC::since(start) < ms)))
-      Power::sleep(m_mode);
+    while (!m_avail && ((ms == 0) || (RTC::since(start) < ms))) yield();
     if (!m_avail) return (-2);
   }
   

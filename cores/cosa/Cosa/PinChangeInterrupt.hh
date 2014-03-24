@@ -35,31 +35,6 @@
  * the pin value changes. 
  */
 class PinChangeInterrupt : public IOPin, public Interrupt::Handler {
-private:
-  static const uint8_t INSTANCE_MAX = Board::PCINT_MAX * CHARBITS;
-  static PinChangeInterrupt* instance[INSTANCE_MAX];
-  static uint8_t state[Board::PCINT_MAX];
-
-  friend void PCINT0_vect(void);
-#if defined(PCINT1_vect)
-  friend void PCINT1_vect(void);
-#if defined(PCINT2_vect)
-  friend void PCINT2_vect(void);
-#if defined(PCINT3_vect)
-  friend void PCINT3_vect(void);
-#endif
-#endif
-#endif
-  /**
-   * Map interrupt source: Check which pin(s) are the source of the
-   * pin change interrupt and call the corresponding interrupt handler
-   * per pin.
-   * @param[in] ix port index.
-   * @param[in] mask pin mask.
-   * @param[in] base pin number from IDE.
-   */
-  static void on_interrupt(uint8_t ix, uint8_t mask, uint8_t base);
-
 public:
   /**
    * Start handling of pin change interrupt handling.
@@ -99,5 +74,31 @@ public:
    * @param[in] arg argument from interrupt service routine.
    */
   virtual void on_interrupt(uint16_t arg = 0) = 0;
+
+private:
+  static const uint8_t INSTANCE_MAX = Board::PCINT_MAX * CHARBITS;
+  static PinChangeInterrupt* instance[INSTANCE_MAX];
+  static uint8_t state[Board::PCINT_MAX];
+
+  /**
+   * Map interrupt source: Check which pin(s) are the source of the
+   * pin change interrupt and call the corresponding interrupt handler
+   * per pin.
+   * @param[in] ix port index.
+   * @param[in] mask pin mask.
+   * @param[in] base pin number from IDE.
+   */
+  static void on_interrupt(uint8_t ix, uint8_t mask, uint8_t base);
+  
+  friend void PCINT0_vect(void);
+#if defined(PCINT1_vect)
+  friend void PCINT1_vect(void);
+#if defined(PCINT2_vect)
+  friend void PCINT2_vect(void);
+#if defined(PCINT3_vect)
+  friend void PCINT3_vect(void);
+#endif
+#endif
+#endif
 };
 #endif

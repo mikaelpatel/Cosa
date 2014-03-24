@@ -162,8 +162,7 @@ VWI::Receiver::recv(uint8_t& src, uint8_t& port,
   uint32_t start = RTC::millis();
   header_t* hp = (header_t*) (m_buffer + 1);
   do {
-    while (!m_done && (ms == 0 || (RTC::since(start) < ms))) 
-      Power::sleep(s_rf->m_mode);
+    while (!m_done && (ms == 0 || (RTC::since(start) < ms))) yield();
     if (!m_done) return (-2);
   
     // Check the crc and the network and device destination address
@@ -205,7 +204,7 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   uint16_t crc = 0xffff;
   
   // Wait for transmitter to become available. Might be transmitting
-  while (m_enabled) Power::sleep(s_rf->m_mode);
+  while (m_enabled) yield();
 
   // Encode the message total length = length(1)+header(4)+payload(len)+crc(2)
   uint8_t count = 1 + sizeof(header_t) + len + 2;
@@ -336,7 +335,7 @@ VWI::powerup()
 void 
 VWI::powerdown()
 {
-  while (m_tx.is_active()) Power::sleep(m_mode);
+  while (m_tx.is_active()) yield();
   m_tx.end();
   m_rx.end();
   TIMSK1 &= ~_BV(OCIE1A);

@@ -36,14 +36,6 @@
  */
 template<uint16_t N>
 class BitSet {
-private:
-  // Mask bit address and set size
-  static const uint8_t MASK = (CHARBITS - 1);
-  static const size_t SET_MAX = (N + (CHARBITS/2)) / CHARBITS;
- 
- // Bitset storage
-  uint8_t m_set[SET_MAX];
-
 public:
   /**
    * Construct bitset and empty.
@@ -170,5 +162,13 @@ public:
       outs << ((rhs.m_set[i / CHARBITS] & _BV(i & MASK)) != 0);
     return (outs);
   }
+
+private:
+  // Mask bit address and set size
+  static const uint8_t MASK = (CHARBITS - 1);
+  static const size_t SET_MAX = (N + (CHARBITS/2)) / CHARBITS;
+ 
+ // Bitset storage
+  uint8_t m_set[SET_MAX];
 };
 #endif

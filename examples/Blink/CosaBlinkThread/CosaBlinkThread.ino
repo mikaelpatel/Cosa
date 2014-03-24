@@ -36,13 +36,13 @@
 // This class is a thread that turns LED on and off given a
 // delay period. The delay may be changed dynamically.
 class LED : public Nucleo::Thread {
-private:
-  OutputPin m_pin;
-  uint16_t m_delay;
 public:
   LED(Board::DigitalPin pin) : Thread(), m_pin(pin, 1), m_delay(200) {}
   void set_delay(uint16_t ms) { m_delay = ms; }
   virtual void run();
+private:
+  OutputPin m_pin;
+  uint16_t m_delay;
 };
 
 void 
@@ -56,11 +56,11 @@ LED::run()
 // from low to high with a given increment
 template <uint16_t LOW, uint16_t HIGH, uint16_t INC, uint16_t PERIOD>
 class Controller : public Nucleo::Thread {
-private:
-  LED* m_led;
 public:
   Controller(LED* led) : Thread(), m_led(led) {}
   virtual void run();
+private:
+  LED* m_led;
 };
 
 template <uint16_t LOW, uint16_t HIGH, uint16_t INC, uint16_t PERIOD>

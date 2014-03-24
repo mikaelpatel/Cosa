@@ -66,48 +66,6 @@ public:
       FULL_CYCLE
     }  __attribute__((packed));
 
-  protected:
-    /**
-     * Rotary signal pin handler (pin change interrupt). Delegates to
-     * Rotary Encoder to process new state.
-     */
-    class SignalPin : public PinChangeInterrupt {
-    private:
-      Encoder* m_encoder;
-
-      /**
-       * @override Interrupt::Handler
-       * Signal pin interrupt handler. Check possible state change and will
-       * push Event::CHANGE_TYPE with direction (CW or CCW).
-       */
-      virtual void on_interrupt(uint16_t arg);
-      
-    public:
-      SignalPin(Board::InterruptPin pin, Encoder* encoder) : 
-	PinChangeInterrupt(pin), 
-	m_encoder(encoder)
-      {}
-    };
-
-    // State Transition tables.
-    static const uint8_t half_cycle_table[6][4] PROGMEM;
-    static const uint8_t full_cycle_table[7][4] PROGMEM;
-
-    // Signal pins, previous state and cycle mode.
-    SignalPin m_clk;
-    SignalPin m_dt;
-    uint8_t m_state;
-    Mode m_mode;
-    
-    /**
-     * Detect Rotary Encoder state change. Reads current input pin
-     * values and performs a possible state change. Return turn
-     * direction or none. 
-     * @return direction
-     */
-    Direction detect();
-    
-  public:
     /**
      * Create Rotary Encoder with given interrupt pins. Setup must
      * call InterruptPin::begin() to initiate handling of pins.
@@ -160,6 +118,47 @@ public:
       m_clk.disable();
       m_dt.disable();
     }
+
+  protected:
+    /**
+     * Rotary signal pin handler (pin change interrupt). Delegates to
+     * Rotary Encoder to process new state.
+     */
+    class SignalPin : public PinChangeInterrupt {
+    public:
+      SignalPin(Board::InterruptPin pin, Encoder* encoder) : 
+	PinChangeInterrupt(pin), 
+	m_encoder(encoder)
+      {}
+
+    private:
+      Encoder* m_encoder;
+
+      /**
+       * @override Interrupt::Handler
+       * Signal pin interrupt handler. Check possible state change and will
+       * push Event::CHANGE_TYPE with direction (CW or CCW).
+       */
+      virtual void on_interrupt(uint16_t arg);
+    };
+
+    // State Transition tables.
+    static const uint8_t half_cycle_table[6][4] PROGMEM;
+    static const uint8_t full_cycle_table[7][4] PROGMEM;
+
+    // Signal pins, previous state and cycle mode.
+    SignalPin m_clk;
+    SignalPin m_dt;
+    uint8_t m_state;
+    Mode m_mode;
+    
+    /**
+     * Detect Rotary Encoder state change. Reads current input pin
+     * values and performs a possible state change. Return turn
+     * direction or none. 
+     * @return direction
+     */
+    Direction detect();
   };
 
   /**
@@ -170,32 +169,6 @@ public:
    */
   template<typename T>
   class Dial : public Encoder {
-  protected:
-    T m_value;
-    T m_min;
-    T m_max;
-    T m_step;
-
-    /**
-     * @override Event::Handler
-     * Update the dial value on change. The event value is the
-     * direction (CW or CCW).
-     * @param[in] type the event type.
-     * @param[in] value the event value.
-     */
-    virtual void on_event(uint8_t type, uint16_t value)
-    {
-      if (value == CW) {
-	if (m_value == m_max) return;
-	m_value += m_step;
-      }
-      else {
-	if (m_value == m_min) return;
-	m_value -= m_step;
-      }
-      on_change(m_value);
-    }
-    
   public:
     /**
      * Construct Rotary Dial connected to given interrupt pins with given
@@ -251,6 +224,32 @@ public:
      * @param[in] value.
      */
     virtual void on_change(T value) {}
+
+  protected:
+    T m_value;
+    T m_min;
+    T m_max;
+    T m_step;
+
+    /**
+     * @override Event::Handler
+     * Update the dial value on change. The event value is the
+     * direction (CW or CCW).
+     * @param[in] type the event type.
+     * @param[in] value the event value.
+     */
+    virtual void on_event(uint8_t type, uint16_t value)
+    {
+      if (value == CW) {
+	if (m_value == m_max) return;
+	m_value += m_step;
+      }
+      else {
+	if (m_value == m_min) return;
+	m_value -= m_step;
+      }
+      on_change(m_value);
+    }
   };
 
   /**
@@ -261,47 +260,6 @@ public:
    */
   template<typename T, uint32_t THRESHOLD>
   class AcceleratedDial : public Encoder {
-  private:
-    uint32_t m_latest;
-    T m_value;
-    T m_min;
-    T m_max;
-    T m_step;
-    T m_steps;
-
-    /**
-     * @override Event::Handler
-     * Update the accelerated dial value on change. The event value is the
-     * direction (CW or CCW). If the time period between events is
-     * larger than the threshold a slow step is used otherwise the
-     * fast step (steps).
-     * @param[in] type the event type.
-     * @param[in] direction the event value.
-     */
-    virtual void on_event(uint8_t type, uint16_t direction)
-    {
-      uint32_t now = RTC::micros();
-      uint32_t diff = now - m_latest;
-      m_latest = now;
-      if (direction == CW) {
-	if (m_value == m_max) return;
-	if (diff > THRESHOLD)
-	  m_value += m_step;
-	else
-	  m_value += m_steps;
-	if (m_value > m_max) m_value = m_max;
-      }
-      else {
-	if (m_value == m_min) return;
-	if (diff > THRESHOLD)
-	  m_value -= m_step;
-	else
-	  m_value -= m_steps;
-	if (m_value < m_min) m_value = m_min;
-      }
-      on_change(m_value);
-    }
-
   public:
     /**
      * Construct Rotary Dial connected to given interrupt pins with given
@@ -378,6 +336,47 @@ public:
      * @param[in] value.
      */
     virtual void on_change(T value) {}
+
+  private:
+    uint32_t m_latest;
+    T m_value;
+    T m_min;
+    T m_max;
+    T m_step;
+    T m_steps;
+
+    /**
+     * @override Event::Handler
+     * Update the accelerated dial value on change. The event value is the
+     * direction (CW or CCW). If the time period between events is
+     * larger than the threshold a slow step is used otherwise the
+     * fast step (steps).
+     * @param[in] type the event type.
+     * @param[in] direction the event value.
+     */
+    virtual void on_event(uint8_t type, uint16_t direction)
+    {
+      uint32_t now = RTC::micros();
+      uint32_t diff = now - m_latest;
+      m_latest = now;
+      if (direction == CW) {
+	if (m_value == m_max) return;
+	if (diff > THRESHOLD)
+	  m_value += m_step;
+	else
+	  m_value += m_steps;
+	if (m_value > m_max) m_value = m_max;
+      }
+      else {
+	if (m_value == m_min) return;
+	if (diff > THRESHOLD)
+	  m_value -= m_step;
+	else
+	  m_value -= m_steps;
+	if (m_value < m_min) m_value = m_min;
+      }
+      on_change(m_value);
+    }
   };
 };
 #endif

@@ -34,13 +34,7 @@
 
 // The state machine: Blink RGB LED with six color states
 class BlinkRGB : public FSM {
-
 public:
-  // The output pins
-  OutputPin redLedPin;
-  OutputPin greenLedPin;
-  OutputPin blueLedPin;
-
   // Construct the state machine for the RGB led sequencing
   BlinkRGB(uint16_t period = 512,
 	   Board::DigitalPin redLedPinNr = Board::D5, 
@@ -102,6 +96,11 @@ public:
     fsm->set_state(redState);
     return (1);
   }
+
+private:
+  OutputPin redLedPin;
+  OutputPin greenLedPin;
+  OutputPin blueLedPin;
 };
 
 // The state machines for two RGB leds

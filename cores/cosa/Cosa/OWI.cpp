@@ -164,10 +164,10 @@ IOStream& operator<<(IOStream& outs, OWI& owi)
 }
 
 OWI::Driver::Driver(OWI* pin, const uint8_t* rom, const char* name) :
+  NAME(name),
   ROM(rom), 
   m_next(NULL),
-  m_pin(pin),
-  NAME(name)
+  m_pin(pin)
 {
   eeprom_read_block(m_rom, rom, sizeof(m_rom));
   m_pin->m_devices += 1;

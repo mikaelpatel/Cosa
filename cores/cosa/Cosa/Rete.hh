@@ -48,21 +48,6 @@
  * http://en.wikipedia.org/wiki/Simple_Network_Management_Protocol 
  */
 class Rete {
-protected:
-  /**
-   * Message types.
-   */
-  enum {
-    RETE_BASE = 128,		// Base message number
-    PUBLISH = RETE_BASE,	// Publish registry update
-    GET_REQUEST,		// Get registry item value request
-    GET_RESPONSE,		// - response with value
-    PUT_REQUEST,		// Put registry item value request
-    PUT_RESPONSE,		// - response with status
-    APPLY_REQUEST,		// Apply registry action request
-    APPLY_RESPONSE,		// - reponse with result
-  } __attribute__((packed));
-
 public:
   /** 
    * A Rete::Device is the base-class of wireless sensor nodes. The
@@ -70,16 +55,6 @@ public:
    * up and down.
    */
   class Device : public Periodic {
-  protected:
-    /** Wireless device */
-    Wireless::Driver* m_dev;
-
-    /** Registry root **/
-    Registry* m_reg;
-
-    /** Next transaction identity (15b, positive number only) */
-    int16_t m_tid;
-
   public:
     /**
      * Construct device protocol handler.
@@ -124,16 +99,19 @@ public:
      * for a short period before power down.
      */
     virtual void run();
-  };
 
-  class Manager {
   protected:
     /** Wireless device */
     Wireless::Driver* m_dev;
-    
+
+    /** Registry root **/
+    Registry* m_reg;
+
     /** Next transaction identity (15b, positive number only) */
     int16_t m_tid;
+  };
 
+  class Manager {
   public:
     /**
      * Construct manager protocol handler.
@@ -218,7 +196,29 @@ public:
      * @param[in] ms milli-seconds.
      */
     int listen(uint16_t ms);
+
+  protected:
+    /** Wireless device */
+    Wireless::Driver* m_dev;
+    
+    /** Next transaction identity (15b, positive number only) */
+    int16_t m_tid;
   };
+
+protected:
+  /**
+   * Message types.
+   */
+  enum {
+    RETE_BASE = 128,		// Base message number
+    PUBLISH = RETE_BASE,	// Publish registry update
+    GET_REQUEST,		// Get registry item value request
+    GET_RESPONSE,		// - response with value
+    PUT_REQUEST,		// Put registry item value request
+    PUT_RESPONSE,		// - response with status
+    APPLY_REQUEST,		// Apply registry action request
+    APPLY_RESPONSE,		// - reponse with result
+  } __attribute__((packed));
 };
 
 #endif

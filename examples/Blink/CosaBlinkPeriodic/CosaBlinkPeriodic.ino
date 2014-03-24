@@ -33,12 +33,12 @@
 
 // Blinking LED output pin
 class LED : public Periodic {
-private:
-  OutputPin m_pin;
 public:
   LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) : 
     Periodic(ms), m_pin(pin, initial) {}
   virtual void run() { m_pin.toggle(); }
+private:
+  OutputPin m_pin;
 };
 
 // Use an RGB LED connected to pins(5,6,7)/ATtiny(1,2,3)

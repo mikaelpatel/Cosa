@@ -61,7 +61,6 @@ public:
       m_channel(0),
       m_addr(network, device),
       m_avail(false),
-      m_mode(SLEEP_MODE_IDLE),
       m_dest(0)
     {}
 
@@ -87,15 +86,6 @@ public:
     uint8_t get_device_address()
     {
       return (m_addr.device);
-    }
-
-    /**
-     * Set power sleep mode during wait.
-     * @param[in] mode of sleep.
-     */
-    void set_sleep(uint8_t mode)
-    {
-      m_mode = mode;
     }
 
     /**
@@ -312,9 +302,6 @@ public:
 
     /** Message available */
     volatile bool m_avail;
-
-    /** Sleep mode on wait */
-    uint8_t m_mode;
 
     /** Latest message destination device address */
     uint8_t m_dest;

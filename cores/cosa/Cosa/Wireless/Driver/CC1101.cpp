@@ -213,8 +213,7 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
       strobe(SRX);
     }
     do {
-      while (!m_avail && ((ms == 0) || (RTC::since(start) < ms)))
-	Power::sleep(m_mode);
+      while (!m_avail && ((ms == 0) || (RTC::since(start) < ms))) yield();
       if (!m_avail) return (-2);
       spi.begin(this);
       loop_until_bit_is_clear(PIN, Board::MISO);

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,14 +55,6 @@ public:
   /** Max value of tag */
   static const uint8_t TAG_MAX = 31;
 
-protected:
-  /** Input stream */
-  IOStream::Device* m_ins;
-
-  /** Output stream */
-  IOStream::Device* m_outs;
-
-public:
   /**
    * Construct stream with given device. Default is the null device.
    * @param[in] ins input stream device.
@@ -302,6 +294,13 @@ public:
     if (res < 0) return (-1);
     return (res + 1);
   }
+
+protected:
+  /** Input stream */
+  IOStream::Device* m_ins;
+
+  /** Output stream */
+  IOStream::Device* m_outs;
 };
 
 #endif

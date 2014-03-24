@@ -57,30 +57,13 @@ public:
    * Driver for device connected to a one-wire bus.
    */
   class Driver {
-    friend class OWI;
-    friend IOStream& operator<<(IOStream& outs, OWI& owi);
-    friend IOStream& operator<<(IOStream& outs, Driver& dev);
   public:
     enum {
       FIRST = -1,
       ERROR = -1,
       LAST = ROMBITS
     } __attribute__((packed));
-  protected:
-    uint8_t m_rom[ROM_MAX];
-    const uint8_t* ROM;
-    Driver* m_next;
-    OWI* m_pin;
 
-    /**
-     * Search device rom given the last position of discrepancy.
-     * Negative value for start from the beginning.
-     * @param[in] last position of discrepancy.
-     * @return position of difference or negative error code.
-     */
-    int8_t search(int8_t last = FIRST);
-
-  public:
     /** Name of device driver instance */
     const char* NAME;
     
@@ -90,10 +73,10 @@ public:
      * @param[in] name of device driver instance.
      */
     Driver(OWI* pin, const char* name = NULL) : 
+      NAME(name),
       ROM(NULL), 
       m_next(NULL),
-      m_pin(pin),
-      NAME(name)
+      m_pin(pin)
     {
       memset(m_rom, 0, sizeof(m_rom));
     }
@@ -175,16 +158,30 @@ public:
      * Callback on alarm dispatch. Default is empty function.
      */
     virtual void on_alarm() {}
+
+  protected:
+    uint8_t m_rom[ROM_MAX];
+    const uint8_t* ROM;
+    Driver* m_next;
+    OWI* m_pin;
+
+    /**
+     * Search device rom given the last position of discrepancy.
+     * Negative value for start from the beginning.
+     * @param[in] last position of discrepancy.
+     * @return position of difference or negative error code.
+     */
+    int8_t search(int8_t last = FIRST);
+    
+    friend class OWI;
+    friend IOStream& operator<<(IOStream& outs, OWI& owi);
+    friend IOStream& operator<<(IOStream& outs, Driver& dev);
   };
 
   /**
    * Alarm search iterator class.
    */
   class Search : protected Driver {
-  protected:
-    uint8_t m_family;
-    int8_t m_last;
-
   public:
     /**
      * Initiate an alarm search iterator for the given one-wire bus and 
@@ -212,17 +209,11 @@ public:
     {
       m_last = FIRST;
     }
+
+  protected:
+    uint8_t m_family;
+    int8_t m_last;
   };
-
-private:
-  /** Number of devices */
-  uint8_t m_devices;
-
-  /** List of slave devices */
-  Driver* m_device;
-
-  /** Intermediate CRC sum */
-  uint8_t m_crc;
 
 public:
   /**
@@ -301,6 +292,16 @@ public:
    * @return bool.
    */
   bool alarm_dispatch();
+
+private:
+  /** Number of devices */
+  uint8_t m_devices;
+
+  /** List of slave devices */
+  Driver* m_device;
+
+  /** Intermediate CRC sum */
+  uint8_t m_crc;
 };
 
 /**

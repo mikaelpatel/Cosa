@@ -37,60 +37,6 @@
  * Maxim Integrated product description (REV: 042208) 
  */
 class DS18B20 : public OWI::Driver {
-private:
-  /**
-   * DS18B20 Function Commands (Table 3, pp. 12)
-   */
-  enum {
-    FAMILY_CODE = 0x28,
-    CONVERT_T = 0x44,
-    READ_SCRATCHPAD = 0xBE,
-    WRITE_SCRATCHPAD = 0x4E,
-    COPY_SCRATCHPAD = 0x48,
-    RECALL_E = 0xB8,
-    READ_POWER_SUPPLY = 0xB4
-  } __attribute__((packed));
-
-  /**
-   * DS18B20 Memory Map (Figure 7, pp. 7)
-   */
-  struct scratchpad_t {
-    int16_t temperature;
-    int8_t high_trigger;
-    int8_t low_trigger;
-    uint8_t configuration;
-    uint8_t reserved[3];
-    uint8_t crc;
-  };
-  scratchpad_t m_scratchpad;
-
-  /** Size of configuration; high/low trigger and configuration byte */
-  static const uint8_t CONFIG_MAX = 3;
-
-  /** Parasite power mode */
-  uint8_t m_parasite;
-
-  /** Watchdog millis on convert_request() */
-  uint32_t m_start;
-
-  /** Convert request pending */
-  uint8_t m_converting;
-
-  /** Max conversion time for 12-bit conversion in milli-seconds */
-  static const uint16_t MAX_CONVERSION_TIME = 750;
-
-  /** Min copy configuration time in milli-seconds (parasite mode) */
-  static const uint16_t MIN_COPY_PULLUP = 10;
-
-  /**
-   * Turn power off if the device is parasite powered. Call
-   * connect() or read_power_supply() to set the parasite mode for the
-   * device.
-   */
-  void power_off()
-  {
-    if (m_parasite) m_pin->power_off();
-  }
 public:
   /**
    * Alarm search support class.
@@ -278,6 +224,61 @@ public:
    * @param[in] temp temperature fixed point number.
    */
   static void print(IOStream& outs, int16_t temp);
+
+private:
+  /**
+   * DS18B20 Function Commands (Table 3, pp. 12)
+   */
+  enum {
+    FAMILY_CODE = 0x28,
+    CONVERT_T = 0x44,
+    READ_SCRATCHPAD = 0xBE,
+    WRITE_SCRATCHPAD = 0x4E,
+    COPY_SCRATCHPAD = 0x48,
+    RECALL_E = 0xB8,
+    READ_POWER_SUPPLY = 0xB4
+  } __attribute__((packed));
+
+  /**
+   * DS18B20 Memory Map (Figure 7, pp. 7)
+   */
+  struct scratchpad_t {
+    int16_t temperature;
+    int8_t high_trigger;
+    int8_t low_trigger;
+    uint8_t configuration;
+    uint8_t reserved[3];
+    uint8_t crc;
+  };
+  scratchpad_t m_scratchpad;
+
+  /** Size of configuration; high/low trigger and configuration byte */
+  static const uint8_t CONFIG_MAX = 3;
+
+  /** Parasite power mode */
+  uint8_t m_parasite;
+
+  /** Watchdog millis on convert_request() */
+  uint32_t m_start;
+
+  /** Convert request pending */
+  uint8_t m_converting;
+
+  /** Max conversion time for 12-bit conversion in milli-seconds */
+  static const uint16_t MAX_CONVERSION_TIME = 750;
+
+  /** Min copy configuration time in milli-seconds (parasite mode) */
+  static const uint16_t MIN_COPY_PULLUP = 10;
+
+  /**
+   * Turn power off if the device is parasite powered. Call
+   * connect() or read_power_supply() to set the parasite mode for the
+   * device.
+   */
+  void power_off()
+  {
+    if (m_parasite) m_pin->power_off();
+  }
 
   friend IOStream& operator<<(IOStream& outs, DS18B20& thermometer);
 };

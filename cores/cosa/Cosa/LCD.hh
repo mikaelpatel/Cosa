@@ -39,12 +39,6 @@ public:
    * LCD device driver interface. LCD delegates to device driver.
    */
   class Device : public IOStream::Device {
-  protected:
-    uint8_t m_x;		/**< Cursor position x */
-    uint8_t m_y;		/**< Cursor position y */
-    uint8_t m_tab;		/**< Tab step */
-    uint8_t m_mode;		/**< Text mode */
-
   public:
     /** Text display mode */
     enum TextMode {
@@ -176,6 +170,12 @@ public:
       m_mode = mode;
       return (previous);
     }
+
+  protected:
+    uint8_t m_x;		/**< Cursor position x */
+    uint8_t m_y;		/**< Cursor position y */
+    uint8_t m_tab;		/**< Tab step */
+    uint8_t m_mode;		/**< Text mode */
   };
 };
 

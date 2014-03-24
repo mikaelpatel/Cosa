@@ -36,10 +36,6 @@
  */
 template <typename T>
 class Listener : public Link {
-private:
-  /** Listener key */
-  T m_key;
-
 public:
   /**
    * Construct Listener.
@@ -84,6 +80,10 @@ public:
    * @param[in] value for event.
    */
   static void dispatch(Head* head, T key, uint8_t type, uint16_t value);
+
+private:
+  /** Listener key */
+  T m_key;
 };
 
 template <typename T>

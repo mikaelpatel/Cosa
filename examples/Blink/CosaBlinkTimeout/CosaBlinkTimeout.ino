@@ -33,8 +33,6 @@
 
 // LED output pin
 class LED : public Link {
-private:
-  OutputPin m_pin;
 public:
   LED(Board::DigitalPin pin, uint8_t initial = 0) : 
     Link(),
@@ -51,6 +49,9 @@ public:
   {
     Watchdog::attach(this, ms);
   }
+
+private:
+  OutputPin m_pin;
 };
 
 // Use an RGB LED connected to pins(5,6,7)/ATtiny(1,2,3)

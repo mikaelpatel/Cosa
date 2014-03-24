@@ -202,7 +202,7 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 
   // Wait for transmission
   do {
-    Power::sleep(m_mode);
+    yield();
     read_status();
   } while (!m_status.tx_ds && !m_status.max_rt);
   bool data_sent = m_status.tx_ds;
@@ -257,7 +257,7 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
   uint32_t start = RTC::millis();
   while (!available()) {
     if ((ms != 0) && (RTC::since(start) > ms)) return (-2);
-    Power::sleep(m_mode);
+    yield();
   } 
   m_dest = (m_status.rx_p_no == 1 ? m_addr.device : 0);
   write(STATUS, _BV(RX_DR));

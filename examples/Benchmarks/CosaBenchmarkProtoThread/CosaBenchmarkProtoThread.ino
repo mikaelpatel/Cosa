@@ -40,10 +40,6 @@
 // counter to show how the internal "instruction pointer" is
 // changed at each PROTO_THREAD_AWAIT.
 class Counter : public ProtoThread {
-private:
-  uint16_t m_count;
-  uint16_t m_delay;
-
 public:
   Counter(uint16_t delay) : 
     ProtoThread(), 
@@ -62,6 +58,10 @@ public:
     }
     PROTO_THREAD_END();
   }
+
+private:
+  uint16_t m_count;
+  uint16_t m_delay;
 };
 
 // Three counter threads with different delay periods

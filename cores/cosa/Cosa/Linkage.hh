@@ -39,29 +39,6 @@
  * Historical document, http://www.edelweb.fr/Simula/scb-14.pdf
  */
 class Linkage : public Event::Handler {
-protected:
-  /**
-   * Double linked list pointers. 
-   */
-  Linkage* m_succ;
-  Linkage* m_pred;
-
-  /**
-   * Detach this linkage. Unlink from any list.
-   */
-  void detach()
-  {
-    // Check that the detach is necessary
-    if (m_succ == this) return;
-    // Unlink and initiate to self reference
-    synchronized {
-      m_succ->m_pred = m_pred;
-      m_pred->m_succ = m_succ;
-      m_succ = this;
-      m_pred = this;
-    }
-  }
-
 public:
   /**
    * Construct this linkage and initiate to self reference.
@@ -111,6 +88,28 @@ public:
     }
   }
 
+protected:
+  /**
+   * Double linked list pointers. 
+   */
+  Linkage* m_succ;
+  Linkage* m_pred;
+
+  /**
+   * Detach this linkage. Unlink from any list.
+   */
+  void detach()
+  {
+    // Check that the detach is necessary
+    if (m_succ == this) return;
+    // Unlink and initiate to self reference
+    synchronized {
+      m_succ->m_pred = m_pred;
+      m_pred->m_succ = m_succ;
+      m_succ = this;
+      m_pred = this;
+    }
+  }
 };
 
 class Link : public Linkage {
