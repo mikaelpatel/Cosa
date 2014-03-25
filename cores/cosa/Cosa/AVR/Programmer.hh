@@ -57,7 +57,7 @@ public:
    */
   uint8_t transfer(uint8_t data)
   {
-#if defined(__ARDUINO_TINY__)
+#if defined(USIDR)
     USIDR = data;
     USISR = _BV(USIOIF);
     do {

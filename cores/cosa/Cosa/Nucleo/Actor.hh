@@ -71,7 +71,7 @@ public:
   int recv(Actor*& sender, uint8_t& port, void* buf = NULL, size_t size = 0);
 
 protected:
-  bool m_receiving;
+  volatile bool m_receiving;
   Head m_sending;
   uint8_t m_port;
   size_t m_size;

@@ -32,6 +32,12 @@
 
 TWI twi  __attribute__ ((weak));
 
+#if defined(__ARDUINO_STANDARD_USB__)
+#define PORT PORTD
+#else
+#define PORT PORTC
+#endif
+
 bool 
 TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
@@ -42,11 +48,7 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
   m_target = target;
   synchronized {
     // Enable internal pullup
-#if defined(__ARDUINO_STANDARD_USB__)
-    bit_mask_set(PORTD, _BV(Board::SDA) | _BV(Board::SCL));
-#else
-    bit_mask_set(PORTC, _BV(Board::SDA) | _BV(Board::SCL));
-#endif
+    bit_mask_set(PORT, _BV(Board::SDA) | _BV(Board::SCL));
     // Set clock prescale and bit rate
     bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
     TWBR = m_freq;

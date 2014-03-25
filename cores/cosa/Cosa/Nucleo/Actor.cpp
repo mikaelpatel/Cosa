@@ -34,7 +34,6 @@ Actor::send(uint8_t port, const void* buf, size_t size)
   if (s_running == this) return (-1);
 
   // Store message in sender actor
-  uint8_t key = lock();
   Actor* sender = (Actor*) s_running;
   sender->m_port = port;
   sender->m_size = size;
@@ -43,7 +42,6 @@ Actor::send(uint8_t port, const void* buf, size_t size)
   // And queue in sending. Resume receiver or next thread
   Thread* thread = (m_receiving ? this : (Thread*) sender->get_succ());
   m_sending.attach(sender);
-  unlock(key);
   sender->resume(thread);
   return (size);
 }

@@ -81,7 +81,7 @@ UART::putchar(char c)
   if (m_obuf->putchar(c) == IOStream::EOF) {
     if (m_mode == NON_BLOCKING) return (IOStream::EOF);
     do {
-      yield();
+      Power::sleep();
     } while (m_obuf->putchar(c) == IOStream::EOF);
   }
 

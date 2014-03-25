@@ -108,7 +108,7 @@ public:
      */
     uint8_t m_pulse;
     
-#if defined(__ARDUINO_TINY__)
+#if defined(USICR)
     /** SPI mode for clock polatity (CPOL) setting */
     const uint8_t m_cpol;
     /** USI hardware control register setting */
@@ -243,7 +243,7 @@ public:
    */
   uint8_t transfer(uint8_t data)
   {
-#if defined(__ARDUINO_TINY__)
+#if defined(USIDR)
     USIDR = data;
     USISR = _BV(USIOIF);
     register uint8_t cntl = m_dev->m_usicr;

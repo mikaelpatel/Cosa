@@ -25,15 +25,15 @@ bool
 Programmer::begin()
 {
   synchronized {
-#if !defined(__ARDUINO_TINY__)
     // Initiate SPI module; Enable master, mode(0), prescale(128)
+#if defined(SPCR)
     SPCR = _BV(SPE) | _BV(MSTR) | _BV(SPR1) | _BV(SPR0);
     uint8_t status = SPSR;
     uint8_t data = SPDR;
     UNUSED(status);
     UNUSED(data);
 #endif
-
+    
     // Initiate SS/RESET and SCK as output
     bit_set(DDRB, Board::SS);
     bit_set(DDRB, Board::SCK);
