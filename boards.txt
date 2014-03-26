@@ -494,8 +494,7 @@ pinoccio.bootloader.low_fuses=0xff
 pinoccio.bootloader.high_fuses=0xd0
 pinoccio.bootloader.extended_fuses=0xfe
 
-# pinoccio.build.mcu=atmega256rfr2
-pinoccio.build.mcu=atmega2560
+pinoccio.build.mcu=atmega256rfr2
 pinoccio.build.f_cpu=16000000L
 pinoccio.build.board=PINOCCIO
 pinoccio.build.core=cosa
