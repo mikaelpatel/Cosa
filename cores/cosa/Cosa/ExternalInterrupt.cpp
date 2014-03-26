@@ -101,15 +101,16 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
 		  bool pullup) :
   IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
 {
-  if (pin <= Board::EXT7) {
-    m_ix = Board::EXT4;
-    uint8_t ix = ((m_ix - 4) << 1);
-    bit_field_set(EICRB, 0b11 << ix, mode << ix);
-  }
-  else {
+  if (pin <= Board::EXT3) {
     m_ix = pin - Board::EXT0;
     uint8_t ix = (m_ix << 1);
     bit_field_set(EICRA, 0b11 << ix, mode << ix);
+  }
+  else {
+    m_ix = pin - Board::EXT4;
+    uint8_t ix = (m_ix << 1);
+    bit_field_set(EICRB, 0b11 << ix, mode << ix);
+    m_ix += 4;
   } 
   ext[m_ix] = this;
 }

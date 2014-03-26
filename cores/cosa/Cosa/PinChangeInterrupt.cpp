@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,24 +35,9 @@
 #define PCIE (_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
 #elif defined(PCIE1)
 #define PCIE (_BV(PCIE1) | _BV(PCIE0))
-#endif
-
-/*
-#if defined(__ARDUINO_TINYX5__)
-#define PCICR GIMSK
-#elif defined(__ARDUINO_TINYX4__) || defined(__ARDUINO_TINYX61__)
-#define PCICR GIMSK
-#define PCIE ( _BV(PCIE1) | _BV(PCIE0))
-#elif defined(__ARDUINO_STANDARD_USB__)
+#elif defined(PCIE0)
 #define PCIE (_BV(PCIE0))
-#elif defined(__ARDUINO_MIGHTY__)
-#define PCIE (_BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
-#elif defined(__ARDUINO_MEGA__)					\
-  || defined(__ARDUINO_STANDARD__)				\
-  || defined(__PINOCCIO_SCOUT__)
-#define PCIE (_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
 #endif
-*/
 
 PinChangeInterrupt* PinChangeInterrupt::instance[INSTANCE_MAX] = { NULL };
 uint8_t PinChangeInterrupt::state[Board::PCINT_MAX] = { 0 };
@@ -159,7 +144,7 @@ PCINT_ISR(0, 0, 0);
 PCINT_ISR(0, 0, 0);
 PCINT_ISR(1, 1, 8);
 
-#elif defined(__ARDUINO_STANDARD__) || defined(__PINOCCIO_SCOUT__)
+#elif defined(__ARDUINO_STANDARD__)
 
 PCINT_ISR(0, 1, 8);
 PCINT_ISR(1, 2, 14);
@@ -181,5 +166,11 @@ PCINT_ISR(0, 0, 0);
 PCINT_ISR(1, 1, 8);
 PCINT_ISR(2, 2, 16);
 PCINT_ISR(3, 3, 24);
+
+#elif defined(__PINOCCIO_SCOUT__)
+
+PCINT_ISR(0, 0, 0);
+PCINT_ISR(1, 1, 8);
+PCINT_ISR(2, 2, 16);
 
 #endif

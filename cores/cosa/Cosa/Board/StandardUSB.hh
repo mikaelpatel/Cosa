@@ -203,7 +203,7 @@ public:
   enum {
     VBG = (_BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1)),
     UART_MAX = 1,
-    EXT_MAX = 4,
+    EXT_MAX = 7,
     PCINT_MAX = 1,
     PIN_MAX = 38
   } __attribute__((packed));

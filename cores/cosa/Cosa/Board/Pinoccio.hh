@@ -55,10 +55,10 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin) 
   { 
-    return (pin < 8  ? &PINE : 
-	    pin < 16 ? &PINB : 
-	    pin < 24 ? &PIND : 
-	    pin < 32 ? &PINE : &PINF);
+    return (pin < 8  ? &PINB : 
+	    pin < 16 ? &PIND : 
+	    pin < 24 ? &PINE : 
+	    &PINF);
   }
 
   /**
@@ -74,13 +74,12 @@ private:
   
   /**
    * Return Pin Change Mask Register for given Arduino pin number.
-   * Arduino Mega does not allow access to all pins.
    * @param[in] pin number.
    * @return pin change mask register pointer.
    */
   static volatile uint8_t* PCIMR(uint8_t pin) 
   { 
-    return (pin < 24 ? &PCMSK0 : &PCMSK2);
+    return (pin < 8 ? &PCMSK0 : &PCMSK1);
   }
 
   /**
@@ -95,33 +94,41 @@ private:
 
 public:
   /**
-   * Digital pin symbols; mapping from name to port<5>:bit<3>.
+   * Digital pin symbols; mapping from name to port<5>:bit<3> (BDEF0..7)
    */
   enum DigitalPin {
-    D0 = 0,
-    D1 = 1,
-    D2 = 15,
-    D3 = 3,
-    D4 = 4,
-    D5 = 5,
-    D6 = 2,
-    D7 = 6,
-    D8 = 21,
-    D9 = 8,
-    D10 = 10,
-    D11 = 11,
-    D12 = 9,
-    D13 = 18,
-    D14 = 19,
-    D15 = 16,
-    D16 = 17,
-    D17 = 20,
-    D18 = 31,
-    D19 = 22,
-    D20 = 23,
-    D21 = 12,
-    D22 = 13,
-    D23 = 14,
+    D0 = 16,
+    D1 = 17,
+    D2 = 7,
+    D3 = 19,
+    D4 = 20,
+    D5 = 21,
+    D6 = 18,
+    D7 = 22,
+    D8 = 14,
+    D9 = 0,
+    D10 = 2,
+    D11 = 3,
+    D12 = 1,
+    D13 = 11,
+    D14 = 12,
+    D15 = 9,
+    D16 = 10,
+    D17 = 13,
+    D18 = 23,
+    D19 = 14,
+    D20 = 15,
+    D21 = 4,
+    D22 = 5,
+    D23 = 6,
+    D24 = 24,
+    D25 = 25,
+    D26 = 26,
+    D27 = 27,
+    D28 = 28,
+    D29 = 29,
+    D30 = 30,
+    D31 = 31,
     LED = D23,
     LED_BLUE = D21,
     LED_RED = D22,
@@ -132,14 +139,14 @@ public:
    * Analog pin symbols; mapping from name to port<5>:bit<3>.
    */
   enum AnalogPin {
-    A0 = 32,
-    A1 = 33,
-    A2 = 34,
-    A3 = 35,
-    A4 = 36,
-    A5 = 37,
-    A6 = 38,
-    A7 = 39
+    A0 = D24,
+    A1 = D25,
+    A2 = D26,
+    A3 = D27,
+    A4 = D28,
+    A5 = D29,
+    A6 = D30,
+    A7 = D31
   } __attribute__((packed));
 
   /**
@@ -171,29 +178,28 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D4,
-    EXT1 = D5,
-    EXT2 = D7,
-    EXT3 = D13,
-    EXT4 = D14,
-    EXT5 = D15,
-    EXT6 = D16,
+    EXT0 = D15,
+    EXT1 = D16,
+    EXT2 = D13,
+    EXT3 = D14,
+    EXT4 = D4,
+    EXT5 = D5,
+    EXT6 = D7,
     EXT7 = D18
   } __attribute__((packed));
 
   /**
    * Pin change interrupt. Number of port registers.
-   * Arduino Mega does not allow access to all pins (PCI8..15).
    */
   enum InterruptPin {
-    PCI0 = D20,
-    PCI1 = D21,
-    PCI2 = D22,
-    PCI3 = D23,
-    PCI4 = D9,
-    PCI5 = D10,
-    PCI6 = D11,
-    PCI7 = D12
+    PCI0 = D9,
+    PCI1 = D12,
+    PCI2 = D10,
+    PCI3 = D11,
+    PCI4 = D21,
+    PCI5 = D22,
+    PCI6 = D23,
+    PCI7 = D14
   } __attribute__((packed));
 
   /**
@@ -221,7 +227,7 @@ public:
     VBG = (_BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1)),
     UART_MAX = 2,
     EXT_MAX = 8,
-    PCINT_MAX = 3,
+    PCINT_MAX = 2,
     PIN_MAX = A7
   } __attribute__((packed));
 };

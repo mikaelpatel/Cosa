@@ -94,6 +94,12 @@ private:
 #if defined(INT5_vect)
   friend void INT5_vect(void);
 #endif
+#if defined(INT6_vect)
+  friend void INT6_vect(void);
+#endif
+#if defined(INT7_vect)
+  friend void INT7_vect(void);
+#endif
 };
 
 #endif
