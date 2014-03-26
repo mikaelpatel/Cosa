@@ -93,6 +93,27 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
   ext[m_ix] = this;
 }
 
+#elif defined(__PINOCCIO_SCOUT__)
+
+ExternalInterrupt::
+ExternalInterrupt(Board::ExternalInterruptPin pin, 
+		  InterruptMode mode, 
+		  bool pullup) :
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+{
+  if (pin <= Board::EXT7) {
+    m_ix = Board::EXT4;
+    uint8_t ix = ((m_ix - 4) << 1);
+    bit_field_set(EICRB, 0b11 << ix, mode << ix);
+  }
+  else {
+    m_ix = pin - Board::EXT0;
+    uint8_t ix = (m_ix << 1);
+    bit_field_set(EICRA, 0b11 << ix, mode << ix);
+  } 
+  ext[m_ix] = this;
+}
+
 #elif defined(__ARDUINO_TINYX61__)
 
 ExternalInterrupt::
@@ -199,4 +220,10 @@ INT_ISR(4)
 #endif
 #if defined(INT5_vect)
 INT_ISR(5)
+#endif
+#if defined(INT6_vect)
+INT_ISR(6)
+#endif
+#if defined(INT7_vect)
+INT_ISR(7)
 #endif
