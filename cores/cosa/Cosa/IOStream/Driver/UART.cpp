@@ -115,47 +115,34 @@ UART::on_tx_interrupt()
   on_transmit_completed();
 }
 
-#define UART_ISR_UDRE(vec,nr)			\
+#define UART_ISR(vec,nr)			\
 ISR(vec ## _UDRE_vect)				\
 {						\
   if (UART::uart[nr] == NULL) return;		\
   UART::uart[nr]->on_udre_interrupt();		\
+}						\
+						\
+ISR(vec ## _RX_vect)				\
+{						\
+  if (UART::uart[nr] == NULL) return;		\
+  UART::uart[nr]->on_rx_interrupt();		\
+}						\
+						\
+ISR(vec ## _TX_vect)				\
+{						\
+  if (UART::uart[nr] == NULL) return;		\
+  UART::uart[nr]->on_tx_interrupt();		\
 }
 
-#define UART_ISR_RX(vec,nr)			\
-  ISR(vec ## _RX_vect)				\
-  {						\
-    if (UART::uart[nr] == NULL) return;		\
-    UART::uart[nr]->on_rx_interrupt();		\
-  }
-
-#define UART_ISR_TX(vec,nr)			\
-  ISR(vec ## _TX_vect)				\
-  {						\
-    if (UART::uart[nr] == NULL) return;		\
-    UART::uart[nr]->on_tx_interrupt();		\
-  }
-
-UART_ISR_UDRE(USART, 0)
-UART_ISR_RX(USART, 0)
-UART_ISR_TX(USART, 0)
-
+UART_ISR(USART, 0)
 #if defined(USART1_UDRE_vect) && !defined(USART_UDRE_vect)
-UART_ISR_UDRE(USART1, 1)
-UART_ISR_RX(USART1, 1)
-UART_ISR_TX(USART1, 1)
+UART_ISR(USART1, 1)
 #endif
-
 #if defined(USART2_UDRE_vect)
-UART_ISR_UDRE(USART2, 2)
-UART_ISR_RX(USART2, 2)
-UART_ISR_TX(USART2, 2)
+UART_ISR(USART2, 2)
 #endif
-
 #if defined(USART3_UDRE_vect)
-UART_ISR_UDRE(USART3, 3)
-UART_ISR_RX(USART3, 3)
-UART_ISR_TX(USART3, 3)
+UART_ISR(USART3, 3)
 #endif
 
 #endif

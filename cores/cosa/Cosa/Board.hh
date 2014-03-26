@@ -49,9 +49,14 @@
 
 #elif defined(__AVR_ATmega1280__)		\
   || defined(__AVR_ATmega2560__)
-
+  
 #include "Cosa/Board/Mega.hh"
 #define __ARDUINO_MEGA__
+
+#elif defined(__AVR_ATmega256RFR2__)
+
+#include "Cosa/Board/Pinoccio.hh"
+#define __PINOCCIO_SCOUT__
 
 #elif defined(__AVR_ATtiny24__)			\
   || defined(__AVR_ATtiny44__)			\

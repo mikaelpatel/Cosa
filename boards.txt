@@ -477,3 +477,26 @@ microduino-core-plus.build.mcu=atmega644p
 microduino-core-plus.build.f_cpu=16000000L
 microduino-core-plus.build.board=AVR_MIGHTY
 microduino-core-plus.build.core=cosa
+
+# AVR:Pinoccio
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (4096 words, 0x1f000). 
+pinoccio.name=Cosa Pinoccio Scout (ATmega256RFR2/STK500v2)
+pinoccio.upload.tool=avrdude
+pinoccio.upload.protocol=wiring
+pinoccio.upload.maximum_size=253952
+pinoccio.upload.maximum_data_size=32768
+pinoccio.upload.speed=115200
+
+pinoccio.bootloader.tool=avrdude
+pinoccio.bootloader.low_fuses=0xff
+pinoccio.bootloader.high_fuses=0xd0
+pinoccio.bootloader.extended_fuses=0xfe
+
+# pinoccio.build.mcu=atmega256rfr2
+pinoccio.build.mcu=atmega2560
+pinoccio.build.f_cpu=16000000L
+pinoccio.build.board=PINOCCIO
+pinoccio.build.core=cosa
+

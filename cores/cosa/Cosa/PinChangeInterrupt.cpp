@@ -35,7 +35,9 @@
 #define PCIE (_BV(PCIE0))
 #elif defined(__ARDUINO_MIGHTY__)
 #define PCIE (_BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
-#elif defined(__ARDUINO_MEGA__) || defined(__ARDUINO_STANDARD__)
+#elif defined(__ARDUINO_MEGA__)					\
+  || defined(__ARDUINO_STANDARD__)				\
+  || defined(__PINOCCIO_SCOUT__)
 #define PCIE (_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
 #endif
 

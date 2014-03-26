@@ -245,6 +245,7 @@ protected:
   friend void USART_UDRE_vect(void);
   friend void USART_RX_vect(void);
   friend void USART_TX_vect(void);
+
 #if defined(USART1_UDRE_vect) && !defined(USART_UDRE_vect)
   friend void USART1_UDRE_vect(void);
   friend void USART1_RX_vect(void);

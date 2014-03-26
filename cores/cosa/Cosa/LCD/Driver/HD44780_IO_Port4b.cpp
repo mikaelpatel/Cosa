@@ -37,7 +37,8 @@
 # define POS 4
 #elif defined(__ARDUINO_MEGA__)			\
   || defined(__ARDUINO_MIGHTY__)		\
-  || defined(__ARDUINO_STANDARD_USB__)
+  || defined(__ARDUINO_STANDARD_USB__)		\
+  || defined(__PINOCCIO_SCOUT__)
 # define DDR DDRB
 # define PORT PORTB
 # define POS 4
