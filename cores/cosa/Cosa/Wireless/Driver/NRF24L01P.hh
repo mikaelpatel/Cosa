@@ -370,7 +370,7 @@ private:
   enum {
     CONT_WAVE = 7,	    	// Continuous carrier transmit
     RF_DR_LOW = 5,		// Set RF data rate to 250 kbps
-    PLL_LOCK = 4,		// Force PLL lock signal
+    PLL_LOCK_SIGNAL = 4,	// Force PLL lock signal
     RF_DR_HIGH = 3,		// Air data bitrate (2 Mbps)
     RF_PWR = 1			// Set RF output power in TX mode (bits 2)
   } __attribute__((packed));

@@ -59,7 +59,8 @@ NTP::time()
   uint16_t port;
   res = m_sock->recv(packet, sizeof(packet), dest, port);
   if (res != sizeof(packet)) return (0L);
-  return (ntoh(*(int32_t*) &packet[40]) + (m_zone * 3600L));
+  int32_t* tp = (int32_t*) &packet[40];
+  return (ntoh(*tp) + (m_zone * 3600L));
 }
 
 int 

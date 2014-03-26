@@ -359,7 +359,7 @@ SNMP::encode_string(const char* buf)
 bool 
 SNMP::encode_sequence(int32_t count)
 {
-  uint8_t header[] = { SYNTAX_SEQUENCE, count };
+  uint8_t header[] = { SYNTAX_SEQUENCE, (uint8_t) count };
   return (write(header, sizeof(header)) == sizeof(header));
 }
 

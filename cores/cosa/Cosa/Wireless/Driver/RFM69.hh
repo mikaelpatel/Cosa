@@ -241,7 +241,7 @@ private:
     AUTO_MODES = 0x3B,		// Auto modes settings
     FIFO_THRESHOLD = 0x3C,	// Fifo threshold, Tx start condition
     PACKET_CONFIG2 = 0x3D,	// Package mode settings
-    AES_KEY = 0x3E,		// Cypher key (16 bytes)
+    CYPHER_KEY = 0x3E,		// Cypher key (16 bytes)
     TEMP1 = 0x4E,		// Temperature Sensor control
     TEMP2 = 0x4F,		// Temperature readout
     TEST_LNA = 0x58,		// Sensitivity boost
@@ -510,7 +510,7 @@ private:
     MODE_READY = 0x80,		// Operation mode ready
     RX_READY = 0x40,		// Set in RX mode
     TX_READY = 0x20,		// Set in TX mode
-    PLL_LOCK = 0x10,		// Set when the PLL is locked
+    PLL_LOCKED = 0x10,		// Set when the PLL is locked
     RSSI_READY = 0x08,		// Set in RX mode when threhold is exceeded
     TIMEOUT = 0x04,		// Set when a timeout occurs
     AUTO_MODE = 0x02,		// Set when entering intermediate mode

@@ -227,7 +227,7 @@ public:
     VBG = (_BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1)),
     UART_MAX = 2,
     EXT_MAX = 8,
-    PCINT_MAX = 2,
+    PCINT_MAX = 3,
     PIN_MAX = A7
   } __attribute__((packed));
 };
@@ -238,6 +238,9 @@ public:
 #define USART_UDRE_vect USART0_UDRE_vect
 #define USART_RX_vect USART0_RX_vect 
 #define USART_TX_vect USART0_TX_vect
+
+#undef USART2_UDRE_vect
+#undef USART3_UDRE_vect
 
 /**
  * Forward declare interrupt service routines to allow them as friends.
@@ -252,6 +255,7 @@ extern "C" {
   void INT4_vect(void) __attribute__ ((signal));
   void INT5_vect(void) __attribute__ ((signal));
   void INT6_vect(void) __attribute__ ((signal));
+  void INT7_vect(void) __attribute__ ((signal));
   void PCINT0_vect(void) __attribute__ ((signal));
   void PCINT1_vect(void) __attribute__ ((signal));
   void PCINT2_vect(void) __attribute__ ((signal));

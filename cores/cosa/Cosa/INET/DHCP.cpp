@@ -113,7 +113,7 @@ int
 DHCP::recv(uint8_t type, uint16_t ms)
 {
   // Wait for a reply
-  int res;
+  int res = 0;
   for (uint16_t i = 0; i < ms; i += 32) {
     if ((res = m_sock->available()) != 0) break;
     Watchdog::delay(32);
@@ -165,7 +165,8 @@ DHCP::recv(uint8_t type, uint16_t ms)
       break;
     case IP_ADDR_LEASE_TIME:
       m_lease_obtained = Watchdog::millis() / 1000;
-      m_lease_expires = ntoh(*(int32_t*) buf) + m_lease_obtained;
+      int32_t* expire_p = (int32_t*) buf;
+      m_lease_expires = ntoh(*expire_p) + m_lease_obtained;
       break;
     };
   };
