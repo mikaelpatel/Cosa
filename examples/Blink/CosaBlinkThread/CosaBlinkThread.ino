@@ -88,8 +88,8 @@ void setup()
   Watchdog::begin();
 
   // Allocate the threads with given stack size
-  Nucleo::Thread::begin(&buildin, 32);
-  Nucleo::Thread::begin(&controller, 32);
+  Nucleo::Thread::begin(&buildin, 64);
+  Nucleo::Thread::begin(&controller, 64);
 }
 
 void loop()

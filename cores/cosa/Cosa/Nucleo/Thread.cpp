@@ -26,7 +26,7 @@
 #include "Cosa/Nucleo/Thread.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
-
+#include <alloca.h>
 
 static void thread_delay(uint32_t ms) 
 {
@@ -51,7 +51,7 @@ Thread* Thread::s_running = &s_main;
 size_t Thread::s_top = MAIN_STACK_MAX;
 
 void
-Thread::init()
+Thread::init(void* stack)
 {
   s_main.attach(this);
   if (setjmp(m_context)) while (1) run();
@@ -61,10 +61,9 @@ void
 Thread::begin(Thread* thread, size_t size)
 {
   if (thread != NULL) {
-    uint8_t buf[s_top];
-    UNUSED(buf);
+    void* stack = alloca(s_top);
     s_top += size;
-    thread->init();
+    thread->init(stack);
   }
   else {
     ::delay = thread_delay;

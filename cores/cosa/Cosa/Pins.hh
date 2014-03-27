@@ -46,7 +46,7 @@ public:
    * @param[in] pin number.
    * @return pin bit mask.
    */
-  static const uint8_t MASK(uint8_t pin)
+  static const uint8_t MASK(uint8_t pin) __attribute__((always_inline))
   {
     return (_BV(Board::BIT(pin)));
   }
@@ -56,7 +56,7 @@ public:
    * @param[in] pin number.
    * @return PIN register pointer.
    */
-  static volatile uint8_t* PIN(uint8_t pin) 
+  static volatile uint8_t* PIN(uint8_t pin) __attribute__((always_inline))
   { 
     return (Board::SFR(pin));
   }
@@ -66,7 +66,7 @@ public:
    * @param[in] pin number.
    * @return DDR register pointer.
    */
-  static volatile uint8_t* DDR(uint8_t pin) 
+  static volatile uint8_t* DDR(uint8_t pin) __attribute__((always_inline))
   { 
     return (Board::SFR(pin) + 1);
   }
@@ -76,7 +76,7 @@ public:
    * @param[in] pin number.
    * @return PORT register pointer.
    */
-  static volatile uint8_t* PORT(uint8_t pin) 
+  static volatile uint8_t* PORT(uint8_t pin) __attribute__((always_inline))
   { 
     return (Board::SFR(pin) + 2);
   }
@@ -109,7 +109,7 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool is_set() 
+  bool is_set() __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -118,7 +118,7 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool is_high() 
+  bool is_high() __attribute__((always_inline)) 
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -127,7 +127,7 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool is_on()
+  bool is_on() __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -136,7 +136,7 @@ public:
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  bool is_clear() 
+  bool is_clear() __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) == 0); 
   }
@@ -145,7 +145,7 @@ public:
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  bool is_low() 
+  bool is_low() __attribute__((always_inline)) 
   { 
     return ((*PIN() & m_mask) == 0); 
   }
@@ -154,7 +154,7 @@ public:
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  bool is_off() 
+  bool is_off() __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) == 0); 
   }
@@ -163,7 +163,7 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool read()
+  bool read() __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -183,7 +183,7 @@ public:
    * @param[in] pin number.
    * @return boolean.
    */
-  static bool read(uint8_t pin)
+  static bool read(uint8_t pin) __attribute__((always_inline))
   {
     return ((*Board::SFR(pin) & MASK(pin)) != 0); 
   }
@@ -193,7 +193,7 @@ public:
    * @param[out] var to assign.
    * @return pin.
    */
-  Pin& operator>>(uint8_t& var)
+  Pin& operator>>(uint8_t& var) __attribute__((always_inline))
   { 
     var = ((*PIN() & m_mask) != 0); 
     return (*this);
@@ -235,7 +235,7 @@ protected:
    * Return pin change interrupt mask register.
    * @return pin change mask register pointer.
    */
-  volatile uint8_t* PCIMR() 
+  volatile uint8_t* PCIMR() __attribute__((always_inline))
   { 
     return (Board::PCIMR(m_pin));
   }
@@ -279,7 +279,7 @@ public:
    * @param[in] pin number.
    * @param[in] mode pin mode (default NORMAL_MODE).
    */
-  static void set_mode(uint8_t pin, Mode mode = NORMAL_MODE)
+  static void set_mode(uint8_t pin, Mode mode = NORMAL_MODE) 
   {
     if (mode == PULLUP_MODE) {
       synchronized { 
@@ -324,7 +324,7 @@ public:
   /**
    * Set the output pin. Unprotected version.
    */
-  void _set() 
+  void _set() __attribute__((always_inline)) 
   { 
     *PORT() |= m_mask; 
   }
@@ -332,7 +332,7 @@ public:
   /**
    * Set the output pin.
    */
-  void set() 
+  void set() __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() |= m_mask; 
@@ -342,7 +342,7 @@ public:
   /**
    * Set the output pin.
    */
-  void high() 
+  void high() __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() |= m_mask; 
@@ -352,7 +352,7 @@ public:
   /**
    * Set the output pin.
    */
-  void on()   
+  void on() __attribute__((always_inline))   
   { 
     synchronized {
       *PORT() |= m_mask; 
@@ -362,7 +362,7 @@ public:
   /**
    * Clear the output pin. Unprotected version.
    */
-  void _clear() 
+  void _clear() __attribute__((always_inline)) 
   { 
     *PORT() &= ~m_mask; 
   }
@@ -370,7 +370,7 @@ public:
   /**
    * Clear the output pin.
    */
-  void clear() 
+  void clear() __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() &= ~m_mask; 
@@ -380,7 +380,7 @@ public:
   /**
    * Clear the output pin.
    */
-  void low()
+  void low() __attribute__((always_inline))
   { 
     synchronized {
       *PORT() &= ~m_mask; 
@@ -390,7 +390,7 @@ public:
   /**
    * Clear the output pin.
    */
-  void off() 
+  void off() __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() &= ~m_mask; 
@@ -400,7 +400,7 @@ public:
   /**
    * Toggle the output pin. Unprotected version.
    */
-  void _toggle() 
+  void _toggle() __attribute__((always_inline)) 
   { 
     *PIN() = m_mask; 
   }
@@ -408,7 +408,7 @@ public:
   /**
    * Toggle the output pin.
    */
-  void toggle() 
+  void toggle() __attribute__((always_inline)) 
   { 
     synchronized {
       *PIN() = m_mask; 
@@ -419,7 +419,7 @@ public:
    * Toggle the output pin.
    * @param[in] pin number.
    */
-  static void toggle(uint8_t pin) 
+  static void toggle(uint8_t pin) __attribute__((always_inline))
   { 
     synchronized {
       *PIN(pin) = MASK(pin); 
@@ -431,7 +431,7 @@ public:
    * and non-zero to set. Unprotected version.
    * @param[in] value to set.
    */
-  void _set(bool value) 
+  void _set(bool value) __attribute__((always_inline)) 
   { 
     if (value) {
       *PORT() |= m_mask; 
@@ -446,7 +446,7 @@ public:
    * and non-zero to set.
    * @param[in] value to set.
    */
-  void set(bool value) 
+  void set(bool value) __attribute__((always_inline)) 
   { 
     synchronized {
       if (value) {
@@ -463,7 +463,7 @@ public:
    * and non-zero to set. Unprotected version.
    * @param[in] value to set.
    */
-  void _write(bool value) 
+  void _write(bool value) __attribute__((always_inline))
   { 
     if (value) {
       *PORT() |= m_mask; 
@@ -478,7 +478,7 @@ public:
    * and non-zero to set.
    * @param[in] value to write.
    */
-  void write(uint8_t value) 
+  void write(uint8_t value) __attribute__((always_inline))
   { 
     synchronized {
       if (value) {
@@ -516,7 +516,7 @@ public:
    * @param[in] pin number.
    * @param[in] value to write.
    */
-  static void write(uint8_t pin, uint8_t value) 
+  static void write(uint8_t pin, uint8_t value) __attribute__((always_inline))
   { 
     volatile uint8_t* port = PORT(pin);
     const uint8_t mask = MASK(pin);
@@ -536,7 +536,7 @@ public:
    * @param[in] value to write.
    * @return output pin.
    */
-  OutputPin& operator<<(uint8_t value)
+  OutputPin& operator<<(uint8_t value) __attribute__((always_inline))
   {
     set(value);
     return (*this);
@@ -547,7 +547,7 @@ public:
    * micro-seconds.
    * @param[in] us pulse width in micro seconds
    */
-  void pulse(uint16_t us)
+  void pulse(uint16_t us) __attribute__((always_inline))
   {
     toggle();
     DELAY(us);
@@ -577,7 +577,7 @@ public:
    * Set duty cycle for pwm output pin.
    * @param[in] duty cycle (0..255)
    */
-  void write(uint8_t duty) 
+  void write(uint8_t duty) __attribute__((always_inline)) 
   { 
     set(duty); 
   }
@@ -587,7 +587,7 @@ public:
    * @param[in] duty cycle (0..255)
    * @return pwm pin.
    */
-  PWMPin& operator<<(uint8_t duty)
+  PWMPin& operator<<(uint8_t duty) __attribute__((always_inline))
   {
     set(duty);
     return (*this);
@@ -651,7 +651,7 @@ public:
    * Change IO-pin to given mode.
    * @param[in] mode new operation mode.
    */
-  void set_mode(Mode mode)
+  void set_mode(Mode mode) __attribute__((always_inline))
   {
     synchronized {
       if (mode == OUTPUT_MODE)
@@ -676,7 +676,7 @@ public:
    * @param[in] pin number.
    * @param[in] mode new operation mode.
    */
-  static void set_mode(uint8_t pin, Mode mode) 
+  static void set_mode(uint8_t pin, Mode mode) __attribute__((always_inline)) 
   { 
     volatile uint8_t* ddr = DDR(pin);
     const uint8_t mask = MASK(pin);
@@ -756,7 +756,7 @@ public:
   /**
    * Enable analog conversion.
    */
-  static void powerup()
+  static void powerup() __attribute__((always_inline))
   {
     bit_set(ADCSRA, ADEN);
   }
@@ -764,7 +764,7 @@ public:
   /**
    * Disable analog conversion.
    */
-  static void powerdown()
+  static void powerdown() __attribute__((always_inline))
   {
     bit_clear(ADCSRA, ADEN);
   }
@@ -774,7 +774,7 @@ public:
    * returning with sample value.
    * @return sample value.
    */
-  uint16_t sample()
+  uint16_t sample() __attribute__((always_inline))
   {
     return (m_value = AnalogPin::sample(m_pin, (Board::Reference) m_reference));
   }
@@ -785,7 +785,7 @@ public:
    * @param[out] var variable to receive the value.
    * @return analog pin.
    */
-  AnalogPin& operator>>(uint16_t& var)
+  AnalogPin& operator>>(uint16_t& var) __attribute__((always_inline))
   { 
     var = sample();
     return (*this);

@@ -141,46 +141,10 @@ union univ32_t {
  * Workaround for gcc program memory data warning in Arduino build
  * with older version of AVR-GCC. 
  */
-#if ((__GNUC__ >= 4) && (__GNUC_MINOR__ >= 8))
-# ifndef PROGMEM
-#  define PROGMEM  __attribute__((section(".progmem.data")))
-# endif
-# define __PROGMEM PROGMEM
-#else
-# define __PROGMEM  __attribute__((section(".progmem.data")))
-#endif
-
+#if ((__GNUC__ == 4) && (__GNUC_MINOR__ <= 3))
+#define __PROGMEM  __attribute__((section(".progmem.data")))
 #undef PSTR
-/**
- * Create constant string in program memory. Allow IOStream output 
- * operator. Allows link time reduction of equal strings or substrings.
- * @param[in] s string literal (at compile time).
- * @return string literal in program memory.
- */
-#if defined(COSA_SHARE_PSTR)
-#define PSTR(str) __PSTR1(str,__COUNTER__)
-#define __PSTR1(str,num) __PSTR2(str,num)
-#define __PSTR2(str,num)						\
-  (__extension__(							\
-    {									\
-       const char* ptr;							\
-       asm volatile (							\
-	 ".pushsection .progmem.data, \"SM\", @progbits, 1" "\n\t" 	\
-	 "PSTR_" #num ": .string " #str                     "\n\t"	\
-	 ".popsection"                                      "\n\t"	\
-       ); 								\
-       asm volatile (							\
-	 "ldi %A0, lo8(PSTR_" #num ")"	        	    "\n\t"	\
-	 "ldi %B0, hi8(PSTR_" #num ")"   	    	    "\n\t"	\
-	 : "=d" (ptr)							\
-       ); 								\
-       ptr;								\
-     }									\
-   ))
-#else
 #define PSTR(str) __PSTR(str)
-#endif
-
 /**
  * Program string literal that may be used in macro. Is not unique.
  * @param[in] s string literal (at compile time).
@@ -190,10 +154,14 @@ union univ32_t {
   (__extension__(							\
     {									\
       static const char __c[]						\
-        __attribute__((section(".progmem.pstr"))) = (s);		\
+        __attribute__((section(".progmem.data"))) = (s);		\
       &__c[0];								\
     }									\
   ))
+#else
+#define __PSTR(s) PSTR(s)
+#define __PROGMEM PROGMEM
+#endif
 
 /** String in program memory */
 typedef const PROGMEM char* str_P;

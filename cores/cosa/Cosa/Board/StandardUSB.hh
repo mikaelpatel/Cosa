@@ -227,7 +227,6 @@ public:
 #define TXEN0 TXEN1
 #define UDRIE0 UDRIE1
 #define TXCIE0 TXCIE1
-#define ADCW ADC
 
 /**
  * Forward declare interrupt service routines to allow them as friends.

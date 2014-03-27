@@ -93,7 +93,7 @@ public:
 
 protected:
   /** Size of main thread stack */
-  static const size_t MAIN_STACK_MAX = 32;
+  static const size_t MAIN_STACK_MAX = 64;
 
   /** Queue for delayed threads */
   static Head s_delayed;
@@ -116,8 +116,9 @@ protected:
   /**
    * Initiate thread with initial call to member function run(). 
    * Stack frame is allocated by begin().
+   * @param[in] stack top pointer.
    */
-  void init();
+  void init(void* stack);
 
   /**
    * Enqueue running thread to given queue and yield.

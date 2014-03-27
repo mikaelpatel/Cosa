@@ -52,7 +52,7 @@ inline void digitalWrite(uint8_t pin, uint8_t value)
   OutputPin::write(pin, value);
 }
 
-inline int digitalRead(uint8_t pin) 
+inline int digitalRead(uint8_t pin)
 {
   return (InputPin::read(pin));
 }

@@ -65,16 +65,19 @@ void setup()
   uint32_t us = RTC::micros();
   stop = RTC::micros();
   INFO("RTC::micros(): %ul us", stop - start);
+  UNUSED(us);
   
   start = RTC::micros();
   uint32_t ms = RTC::millis();
   stop = RTC::micros();
   INFO("RTC::millis(): %ul us", stop - start);
+  UNUSED(ms);
 
   start = RTC::micros();
   uint32_t sec = RTC::seconds();
   stop = RTC::micros();
   INFO("RTC::seconds(): %ul us", stop - start);
+  UNUSED(sec);
 
   start = RTC::micros();
   RTC::delay(1);
@@ -122,9 +125,9 @@ void setup()
   INFO("yield(): %ul us", stop - start);
 
   // Start the measurement
-  TRACE(RTC::seconds());
   TRACE(RTC::micros());
   TRACE(RTC::millis());
+  TRACE(RTC::seconds());
   for (uint8_t i = 0; i < 5; i++) {
     Watchdog::delay(1000);
     TRACE(RTC::micros());

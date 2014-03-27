@@ -444,7 +444,7 @@ SendInterfaces()
 #ifdef HID_ENABLED
   total += HID_GetInterface(&interfaces);
 #endif
-
+  UNUSED(total);
   return (interfaces);
 }
 
@@ -452,8 +452,8 @@ static bool
 SendConfiguration(int maxlen)
 {
   InitControl(0);	
-  int interfaces = SendInterfaces();
-  ConfigDescriptor config = D_CONFIG(_cmark + sizeof(ConfigDescriptor),interfaces);
+  uint8_t interfaces = SendInterfaces();
+  ConfigDescriptor config = D_CONFIG(_cmark + sizeof(ConfigDescriptor), interfaces);
 
   InitControl(maxlen);
   USB_SendControl(0,&config,sizeof(ConfigDescriptor));
