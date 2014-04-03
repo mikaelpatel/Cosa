@@ -442,7 +442,7 @@ public:
   class Port4b : public IO {
   protected:
     /** Execution time delay (us) */
-    static const uint16_t SHORT_EXEC_TIME = 34;
+    static const uint16_t SHORT_EXEC_TIME = 36;
 
     OutputPin m_rs;		/**< Register select (0/instruction, 1/data) */
     OutputPin m_en;		/**< Starts data read/write */

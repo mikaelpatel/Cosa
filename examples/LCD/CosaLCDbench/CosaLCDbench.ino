@@ -39,13 +39,13 @@
 
 // Select the HD44780 port adapter for the benchmark
 #include "Cosa/LCD/Driver/HD44780.hh"
-// HD44780::Port4b port;
+HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
-HD44780::DFRobot port;
+// HD44780::DFRobot port;
 // HD44780::ERM1602_5 port;
 HD44780 lcd(&port);
 
