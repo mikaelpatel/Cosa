@@ -32,7 +32,7 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Memory.h"
 
-static char msg[] __PROGMEM = 
+static const char msg[] __PROGMEM = 
 "RC4 was designed by Ron Rivest of RSA Security in 1987. While it is\n"
 "officially termed Rivest Cipher 4, the RC acronym is alternatively\n"
 "understood to stand for Ron's Code.\n"
