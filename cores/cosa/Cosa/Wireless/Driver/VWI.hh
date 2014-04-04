@@ -27,7 +27,8 @@
 #ifndef __COSA_WIRELESS_DRIVER_VWI_HH__
 #define __COSA_WIRELESS_DRIVER_VWI_HH__
 
-#include "Cosa/Pins.hh"
+#include "Cosa/InputPin.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Wireless.hh"
 
 /**

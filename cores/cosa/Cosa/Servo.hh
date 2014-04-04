@@ -27,7 +27,7 @@
 #define __COSA_SERVO_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 
 /**
  * Servo motor driver. Uses Timer1 and the two compare output

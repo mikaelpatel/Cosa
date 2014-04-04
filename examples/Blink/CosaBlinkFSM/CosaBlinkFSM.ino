@@ -28,7 +28,7 @@
  */
 
 #include "Cosa/FSM.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 

@@ -27,7 +27,6 @@
 #define __COSA_TWI_DRIVER_HMC5883L_HH__
 
 #include "Cosa/TWI.hh"
-#include "Cosa/Pins.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/IOStream.hh"
 

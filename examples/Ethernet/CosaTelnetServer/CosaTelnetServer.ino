@@ -27,7 +27,8 @@
  */
 
 #include "Cosa/Memory.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/InputPin.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
@@ -73,7 +74,7 @@ void loop()
   if (res < 0) goto error;
   if (res > 0) {
     char buf[32];
-    if (res > sizeof(buf)) res = sizeof(buf);
+    if (res > (int) sizeof(buf)) res = sizeof(buf);
     sock->read(buf, res);
     if (res == 2) {
       state = !state;

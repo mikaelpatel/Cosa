@@ -1,5 +1,5 @@
 /**
- * @file CosaBlinkProtoThread.ino
+ * @file Cosa/OutputPin.cpp
  * @version 1.0
  *
  * @section License
@@ -20,48 +20,43 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Cosa LED blink with proto-thread function.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/ProtoThread.hh"
 #include "Cosa/OutputPin.hh"
-#include "Cosa/Watchdog.hh"
 
-class LED : public ProtoThread {
-public:
-  LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) : 
-    ProtoThread(), 
-    m_pin(pin, initial),
-    m_delay(ms)
-  {}
-
-  virtual void run(uint8_t type, uint16_t value) 
-  { 
-    PROTO_THREAD_BEGIN();
-    while (1) {
-      m_pin.toggle(); 
-      PROTO_THREAD_DELAY(m_delay);
-    }
-    PROTO_THREAD_END();
+void 
+OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
+{
+  uint8_t bits = CHARBITS;
+  if (order == MSB_FIRST) {
+    synchronized do {
+      _write(value & 0x80);
+      clk._toggle();
+      value <<= 1;
+      clk._toggle();
+    } while (--bits);
   }
-
-private:
-  OutputPin m_pin;
-  uint16_t m_delay;
-};
-
-LED builtin(Board::LED, 512);
-
-void setup()
-{
-  Watchdog::begin(16, Watchdog::push_timeout_events);
-  builtin.begin();
+  else {
+    synchronized do {
+      _write(value & 0x01);
+      clk._toggle();
+      value >>= 1;
+      clk._toggle();
+    } while (--bits);
+  }
 }
 
-void loop()
+void 
+OutputPin::write(uint16_t value, uint8_t bits, uint16_t us)
 {
-  ProtoThread::dispatch();
+  if (bits == 0) return;
+  synchronized {
+    do {
+      _write(value & 0x01);
+      DELAY(us);
+      value >>= 1;
+    } while (--bits);
+  }
 }
+

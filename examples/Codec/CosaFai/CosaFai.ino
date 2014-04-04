@@ -31,7 +31,9 @@
  */
 
 #include "Cosa/Fai.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/InputPin.hh"
+#include "Cosa/OutputPin.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"

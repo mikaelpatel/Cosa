@@ -1,5 +1,5 @@
 /**
- * @file CosaBlinkProtoThread.ino
+ * @file Cosa/InputPin.hh
  * @version 1.0
  *
  * @section License
@@ -20,48 +20,52 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Cosa LED blink with proto-thread function.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/ProtoThread.hh"
-#include "Cosa/OutputPin.hh"
-#include "Cosa/Watchdog.hh"
+#ifndef __COSA_INPUT_PIN_HH__
+#define __COSA_INPUT_PIN_HH__
 
-class LED : public ProtoThread {
+#include "Cosa/Pin.hh"
+
+/**
+ * Abstract input pin. Allows pullup mode.
+ */
+class InputPin : public Pin {
 public:
-  LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) : 
-    ProtoThread(), 
-    m_pin(pin, initial),
-    m_delay(ms)
-  {}
+  enum Mode {
+    NORMAL_MODE = 0,
+    PULLUP_MODE = 1
+  } __attribute__((packed));
 
-  virtual void run(uint8_t type, uint16_t value) 
-  { 
-    PROTO_THREAD_BEGIN();
-    while (1) {
-      m_pin.toggle(); 
-      PROTO_THREAD_DELAY(m_delay);
+  /**
+   * Construct abstract input pin given Arduino pin number.
+   * @param[in] pin number (digital pin).
+   * @param[in] mode pin mode (default NORMAL_MODE).
+   */
+  InputPin(Board::DigitalPin pin, Mode mode = NORMAL_MODE) :
+    Pin((uint8_t) pin)
+  {
+    if (mode == PULLUP_MODE) {
+      synchronized {
+	*PORT() |= m_mask; 
+      }
     }
-    PROTO_THREAD_END();
   }
 
-private:
-  OutputPin m_pin;
-  uint16_t m_delay;
+  /**
+   * Set input pin to given mode.
+   * @param[in] pin number.
+   * @param[in] mode pin mode (default NORMAL_MODE).
+   */
+  static void set_mode(uint8_t pin, Mode mode = NORMAL_MODE) 
+  {
+    if (mode == PULLUP_MODE) {
+      synchronized { 
+	*PORT(pin) |= MASK(pin); 
+      }
+    }
+  }
 };
 
-LED builtin(Board::LED, 512);
-
-void setup()
-{
-  Watchdog::begin(16, Watchdog::push_timeout_events);
-  builtin.begin();
-}
-
-void loop()
-{
-  ProtoThread::dispatch();
-}
+#endif

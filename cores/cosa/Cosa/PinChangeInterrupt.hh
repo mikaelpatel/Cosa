@@ -27,7 +27,8 @@
 #define __COSA_PIN_CHANGE_INTERRUPT_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/Event.hh"
+#include "Cosa/IOPin.hh"
 #include "Cosa/Interrupt.hh"
 
 /**

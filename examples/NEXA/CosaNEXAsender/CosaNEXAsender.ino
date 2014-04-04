@@ -32,7 +32,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Driver/NEXA.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"

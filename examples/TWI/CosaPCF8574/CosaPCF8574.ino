@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,7 @@
 #include "Cosa/TWI/Driver/PCF8574.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"

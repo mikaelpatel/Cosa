@@ -27,7 +27,7 @@
 #define __COSA_SOFT_UART_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/IOStream.hh"
 
 /**

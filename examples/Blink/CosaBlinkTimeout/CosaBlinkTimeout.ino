@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"
 #include "Cosa/Watchdog.hh"

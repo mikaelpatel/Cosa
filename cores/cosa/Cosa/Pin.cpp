@@ -1,5 +1,5 @@
 /**
- * @file CosaBlinkProtoThread.ino
+ * @file Cosa/Pin.cpp
  * @version 1.0
  *
  * @section License
@@ -20,48 +20,40 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Cosa LED blink with proto-thread function.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/ProtoThread.hh"
+#include "Cosa/Pin.hh"
 #include "Cosa/OutputPin.hh"
-#include "Cosa/Watchdog.hh"
 
-class LED : public ProtoThread {
-public:
-  LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) : 
-    ProtoThread(), 
-    m_pin(pin, initial),
-    m_delay(ms)
-  {}
-
-  virtual void run(uint8_t type, uint16_t value) 
-  { 
-    PROTO_THREAD_BEGIN();
-    while (1) {
-      m_pin.toggle(); 
-      PROTO_THREAD_DELAY(m_delay);
-    }
-    PROTO_THREAD_END();
-  }
-
-private:
-  OutputPin m_pin;
-  uint16_t m_delay;
-};
-
-LED builtin(Board::LED, 512);
-
-void setup()
+uint8_t 
+Pin::read(OutputPin& clk, Direction order)
 {
-  Watchdog::begin(16, Watchdog::push_timeout_events);
-  builtin.begin();
+  uint8_t value = 0;
+  uint8_t bits = CHARBITS;
+  if (order == MSB_FIRST) {
+    do {
+      clk.set();
+      value <<= 1;
+      if (is_set()) value |= 0x01;
+      clk.clear();
+    } while (--bits);
+  }
+  else {
+    do {
+      clk.set();
+      value >>= 1;
+      if (is_set()) value |= 0x80;
+      clk.clear();
+    } while (--bits);
+  }
+  return (value);
 }
 
-void loop()
+IOStream& operator<<(IOStream& outs, Pin& pin)
 {
-  ProtoThread::dispatch();
+  outs << PSTR("Pin(pin = ") << (uint8_t) pin.m_pin 
+       << PSTR(", sfr = ") << (void*) pin.m_sfr 
+       << PSTR(", mask = ") << bin << (uint8_t) pin.m_mask << ')';
+  return (outs);
 }

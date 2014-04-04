@@ -28,10 +28,12 @@
  */
 
 #include "Cosa/TWI.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/InputPin.hh"
+#include "Cosa/OutputPin.hh"
+#include "Cosa/IOPin.hh"
 #include "Cosa/Watchdog.hh"
 
-class RemotePinSlave : public TWI::Device {
+class RemotePinSlave : public TWI::Slave {
 private:
   static const uint8_t ADDR = 0x5A;
   static const uint8_t READ_OP = 0;
@@ -56,6 +58,7 @@ private:
   uint8_t m_buf[BUF_MAX];
 
 public:
+  RemotePinSlave() : TWI::Slave(ADDR) {}
   virtual void on_request(void* buf, size_t size);
   bool begin();
 };
@@ -65,7 +68,7 @@ RemotePinSlave::begin()
 { 
   set_write_buf(m_buf, sizeof(m_buf));
   set_read_buf(m_buf, sizeof(m_buf));
-  return (twi.begin(this, ADDR)); 
+  return (twi.begin(this)); 
 }
 
 void

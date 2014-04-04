@@ -28,7 +28,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Linkage.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 
 /**

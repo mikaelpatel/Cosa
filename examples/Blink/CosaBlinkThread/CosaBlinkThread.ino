@@ -29,7 +29,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Nucleo/Thread.hh"
 

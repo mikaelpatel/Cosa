@@ -42,7 +42,7 @@
  */
 
 #include "Cosa/Event.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Watchdog.hh"

@@ -27,7 +27,9 @@
 #define __COSA_SOFT_SPI_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/InputPin.hh"
+#include "Cosa/OutputPin.hh"
+#include "Cosa/Interrupt.hh"
 
 /**
  * Software version some of the AVR hardware.

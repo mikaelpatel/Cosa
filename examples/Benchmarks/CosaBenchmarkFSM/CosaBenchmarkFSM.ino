@@ -32,7 +32,6 @@
  */
 
 #include "Cosa/FSM.hh"
-#include "Cosa/Pins.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"

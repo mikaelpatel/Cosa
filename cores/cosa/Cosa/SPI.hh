@@ -28,7 +28,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Interrupt.hh"
 #include "Cosa/Event.hh"
 

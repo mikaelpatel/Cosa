@@ -27,7 +27,7 @@
 #define __COSA_LED_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Linkage.hh"
 #include "Cosa/Watchdog.hh"
 

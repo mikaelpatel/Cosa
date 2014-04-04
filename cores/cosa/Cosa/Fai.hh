@@ -28,7 +28,8 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Ciao.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/Pin.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Event.hh"
 
 /**

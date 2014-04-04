@@ -30,7 +30,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pins.hh"
+#include "Cosa/IOPin.hh"
+#include "Cosa/InputPin.hh"
+#include "Cosa/OutputPin.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"

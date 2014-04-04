@@ -28,7 +28,7 @@
 
 #include "Cosa/Types.h"
 #if defined(__ARDUINO_TINY__)
-#include "Cosa/Pins.hh"
+#include "Cosa/IOPin.hh"
 #include "Cosa/Event.hh"
 
 /**

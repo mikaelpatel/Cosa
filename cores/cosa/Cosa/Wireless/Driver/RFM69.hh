@@ -27,7 +27,7 @@
 #define __COSA_WIRELESS_DRIVER_RFM69_HH__
 
 #include "Cosa/SPI.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Wireless.hh"
 #if !defined(__ARDUINO_TINYX5__)

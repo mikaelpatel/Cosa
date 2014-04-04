@@ -29,7 +29,7 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Periodic.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 
 // Blinking LED output pin
 class LED : public Periodic {

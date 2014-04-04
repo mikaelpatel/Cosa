@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,7 +27,7 @@
  */
 
 #include "Cosa/TWI.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
@@ -36,6 +36,7 @@
 
 // TWI slave address
 static const uint8_t ADDR = 0x5A;
+TWI::Driver dev(ADDR);
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
@@ -65,8 +66,8 @@ void loop()
 
   ledPin.toggle();
   time = RTC::micros();
-  twi.begin();
-  count = twi.write(ADDR, &cmd, sizeof(cmd));
+  twi.begin(&dev);
+  count = twi.write(&cmd, sizeof(cmd));
   twi.end();
   time = RTC::micros() - time;
   trace << PSTR("write(2):") << time << ':' << time/sizeof(cmd) << ':';
@@ -76,19 +77,19 @@ void loop()
   uint8_t buf[8];
 
   time = RTC::micros();
-  twi.begin();
+  twi.begin(&dev);
   do {
-    count = twi.read(ADDR, buf, sizeof(buf));
+    count = twi.read(buf, sizeof(buf));
   } while (count < 0);
   twi.end();
   time = RTC::micros() - time;
   trace << PSTR("read(8):") << time << ':' << time/sizeof(buf) << ':';
   if (count > 0) trace.print(buf, count);
-  twi.begin();
 
   time  = RTC::micros();
+  twi.begin(&dev);
   do {
-    count = twi.read(ADDR, buf, sizeof(buf) - 4);
+    count = twi.read(buf, sizeof(buf) - 4);
   } while (count < 0);
   twi.end();
   time = RTC::micros() - time;

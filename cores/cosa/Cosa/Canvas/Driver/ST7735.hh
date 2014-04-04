@@ -28,7 +28,7 @@
 
 #include "Cosa/Canvas.hh"
 #include "Cosa/SPI.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 
 /**
  * Device driver for ST7735, 262K Color Single-Chip TFT Controller.

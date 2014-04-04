@@ -29,7 +29,7 @@
 #if !defined(__ARDUINO_TINY__)
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/IOBuffer.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 
 /**
  * RS485 link handler; Master-Slave protocol. Master always initiates

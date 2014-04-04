@@ -1,5 +1,5 @@
 /**
- * @file CosaBlinkProtoThread.ino
+ * @file Cosa/AnalogComparator.cpp
  * @version 1.0
  *
  * @section License
@@ -20,48 +20,21 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  *
- * @section Description
- * Cosa LED blink with proto-thread function.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/ProtoThread.hh"
-#include "Cosa/OutputPin.hh"
-#include "Cosa/Watchdog.hh"
+#include "Cosa/AnalogComparator.hh"
 
-class LED : public ProtoThread {
-public:
-  LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) : 
-    ProtoThread(), 
-    m_pin(pin, initial),
-    m_delay(ms)
-  {}
+AnalogComparator* AnalogComparator::comparator = NULL;
 
-  virtual void run(uint8_t type, uint16_t value) 
-  { 
-    PROTO_THREAD_BEGIN();
-    while (1) {
-      m_pin.toggle(); 
-      PROTO_THREAD_DELAY(m_delay);
-    }
-    PROTO_THREAD_END();
-  }
-
-private:
-  OutputPin m_pin;
-  uint16_t m_delay;
-};
-
-LED builtin(Board::LED, 512);
-
-void setup()
-{
-  Watchdog::begin(16, Watchdog::push_timeout_events);
-  builtin.begin();
+void 
+AnalogComparator::on_interrupt(uint16_t arg) 
+{ 
+  Event::push(Event::CHANGE_TYPE, this, arg);
 }
 
-void loop()
-{
-  ProtoThread::dispatch();
+ISR(ANALOG_COMP_vect)
+{ 
+  if (AnalogComparator::comparator != NULL) 
+    AnalogComparator::comparator->on_interrupt();
 }

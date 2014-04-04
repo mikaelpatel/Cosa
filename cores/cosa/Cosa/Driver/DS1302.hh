@@ -26,7 +26,8 @@
 #ifndef __COSA_DRIVER_DS1302_HH__
 #define __COSA_DRIVER_DS1302_HH__
 
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
+#include "Cosa/IOPin.hh"
 #include "Cosa/Time.hh"
 
 /**

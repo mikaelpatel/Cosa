@@ -32,7 +32,8 @@
  */
 
 #include "Cosa/Memory.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/InputPin.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/INET/SNMP.hh"

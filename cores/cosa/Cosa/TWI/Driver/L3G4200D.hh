@@ -27,7 +27,6 @@
 #define __COSA_TWI_DRIVER_L3G4200D_HH__
 
 #include "Cosa/TWI.hh"
-#include "Cosa/Pins.hh"
 #include "Cosa/IOStream.hh"
 
 /**

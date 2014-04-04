@@ -27,7 +27,7 @@
 #define __COSA_OWI_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/IOPin.hh"
 #include "Cosa/IOStream.hh"
 
 /**

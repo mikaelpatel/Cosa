@@ -27,7 +27,7 @@
 #define __COSA_TOUCH_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/IOPin.hh"
 #include "Cosa/Linkage.hh"
 
 /**

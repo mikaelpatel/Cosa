@@ -26,8 +26,8 @@
 #ifndef __COSA_LCD_DRIVER_ST7565_HH__
 #define __COSA_LCD_DRIVER_ST7565_HH__
 
-#include "Cosa/Pins.hh"
 #include "Cosa/Board.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/LCD.hh"
 #include "Cosa/Canvas/Font.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"

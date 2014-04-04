@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,8 @@
  */
 
 #include "Cosa/TWI.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/InputPin.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -36,7 +37,7 @@
 
 OutputPin ledPin(Board::LED);
 
-class RemotePin : public TWI::Driver {
+class RemotePin {
 private:
   static const uint8_t ADDR = 0x5A;
   static const uint8_t READ_OP = 0;
@@ -59,20 +60,23 @@ private:
       m_pin = (uint8_t) pin;
     }
   };
+  static TWI::Driver dev;
 public:
   static bool read(Board::DigitalPin pin, uint8_t& value);
   static bool write(Board::DigitalPin pin, uint8_t value);
 };
+
+TWI::Driver RemotePin::dev(ADDR);
 
 bool
 RemotePin::read(Board::DigitalPin pin, uint8_t& value)
 {
   Command cmd(READ_OP, pin);
   bool res = false;
-  twi.begin();
-  uint8_t count = twi.write(ADDR, &cmd, sizeof(cmd));
+  twi.begin(&dev);
+  uint8_t count = twi.write(&cmd, sizeof(cmd));
   if (count != sizeof(cmd)) goto error;
-  count = twi.read(ADDR, &value, sizeof(value));
+  count = twi.read(&value, sizeof(value));
   res = (count == sizeof(value));
  error:
   twi.end();
@@ -83,7 +87,9 @@ bool
 RemotePin::write(Board::DigitalPin pin, uint8_t value)
 {
   Command cmd(WRITE_OP, pin);
-  uint8_t count = twi.write(ADDR, cmd.as_char, &value, sizeof(value));
+  twi.begin(&dev);
+  uint8_t count = twi.write(cmd.as_char, &value, sizeof(value));
+  twi.end();
   return (count == sizeof(cmd) + sizeof(value));
 }
 
@@ -100,7 +106,6 @@ void setup()
 void loop()
 {
   static uint8_t state = 0;
-  uint32_t time;
   uint8_t button;
   for (uint16_t i = 100; i < 700; i += 100) {
     int j;

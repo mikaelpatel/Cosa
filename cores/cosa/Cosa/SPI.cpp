@@ -29,10 +29,10 @@
 SPI spi  __attribute__ ((weak));
 
 #if defined(__ARDUINO_TINY__)
-#include "Cosa/Pins.hh"
 
 // Create mapping to USI data direction register and port for ATtiny variants
-#if defined(__ARDUINO_TINYX4__) || defined(__ARDUINO_TINYX61__)
+#if defined(__ARDUINO_TINYX4__)			\
+  || defined(__ARDUINO_TINYX61__)
 #define DDR DDRA
 #define PORT PORTA
 #elif defined(__ARDUINO_TINYX5__)

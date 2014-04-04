@@ -29,7 +29,7 @@
 #include "Cosa/TWI/Driver/PCF8574.hh"
 #include "Cosa/SPI.hh"
 #include "Cosa/LCD.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 
 /**
  * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver

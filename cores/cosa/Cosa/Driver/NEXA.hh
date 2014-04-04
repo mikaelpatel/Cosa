@@ -27,7 +27,7 @@
 #define __COSA_DRIVER_NEXA_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/IOStream.hh"

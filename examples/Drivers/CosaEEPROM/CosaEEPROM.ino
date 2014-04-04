@@ -31,7 +31,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/EEPROM.hh"
-#include "Cosa/Pins.hh"
+#include "Cosa/AnalogPin.hh"
 
 // EEPROM access object
 EEPROM eeprom;

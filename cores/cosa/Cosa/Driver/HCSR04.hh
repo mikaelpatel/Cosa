@@ -27,7 +27,8 @@
 #define __COSA_DRIVER_HCSR04_HH__
 
 #include "Cosa/Types.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/InputPin.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Linkage.hh"
 #include "Cosa/Watchdog.hh"
 
