@@ -29,9 +29,9 @@
 #include "Cosa/Socket/Driver/W5100.hh"
 
 // Network configuration
-#define IP 192,168,0,100
+#define IP 192,168,1,100
 #define SUBNET 255,255,255,0
-#define GATEWAY 192,168,0,1
+#define GATEWAY 192,168,1,1
 
 // W5100 Ethernet Controller with MAC-address
 const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
@@ -48,7 +48,7 @@ WebClient::on_response(const char* hostname, const char* path)
 {
   uint32_t start = Watchdog::millis();
   uint32_t count = 0L;
-  char buf[65];
+  char buf[129];
   int res;
 
   trace << PSTR("URL: http://") << (char*) hostname;

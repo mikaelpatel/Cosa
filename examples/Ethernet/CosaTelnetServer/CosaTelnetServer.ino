@@ -34,9 +34,9 @@
 #include "Cosa/Socket/Driver/W5100.hh"
 
 // Network configuration
-#define IP 192,168,0,100
+#define IP 192,168,1,100
 #define SUBNET 255,255,255,0
-#define GATEWAY 192,168,0,1
+#define GATEWAY 192,168,1,1
 #define PORT 23
 
 // W5100 Ethernet Controller with MAC-address

@@ -31,9 +31,9 @@
   
 // Network configuration
 #define MAC 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed
-#define IP 192,168,0,100
+#define IP 192,168,1,100
 #define SUBNET 255,255,255,0
-#define SERVER 192,168,0,1
+#define SERVER 192,168,1,1
 // #define SERVER 79,138,0,180
 // #define SERVER 85,8,31,209
 

@@ -22,11 +22,11 @@
  * @section Testing
  * Test with Linux snmp commands:
  * 1. Access the MIB-2 SYSTEM (sysDescr)
- *   snmpget -v1 -c public 192.168.0.18 0.1.3.6.1.2.1.1.1
+ *   snmpget -v1 -c public 192.168.1.18 0.1.3.6.1.2.1.1.1
  * 2. Access the Arduino MIB (ardDigitalPin.0)
- *   snmpget -v1 -c public 192.168.0.18 0.1.3.6.1.4.1.36582.1.0
+ *   snmpget -v1 -c public 192.168.1.18 0.1.3.6.1.4.1.36582.1.0
  * 3. Walk the OID tree
- *   snmpwalk -v1 -c public 192.168.0.18 0
+ *   snmpwalk -v1 -c public 192.168.1.18 0
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -148,9 +148,9 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
 }
 
 // Network configuration
-#define IP 192,168,0,100
+#define IP 192,168,1,100
 #define SUBNET 255,255,255,0
-#define GATEWAY 192,168,0,1
+#define GATEWAY 192,168,1,1
 static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 
 // SNMP MIB-2 System configuration
