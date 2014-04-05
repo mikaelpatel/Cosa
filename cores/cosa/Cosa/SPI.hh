@@ -241,9 +241,9 @@ public:
    * @param[in] data to send.
    * @return value received.
    */
+#if defined(USIDR)
   uint8_t transfer(uint8_t data)
   {
-#if defined(USIDR)
     USIDR = data;
     USISR = _BV(USIOIF);
     register uint8_t cntl = m_dev->m_usicr;
@@ -251,12 +251,15 @@ public:
       USICR = cntl;
     } while ((USISR & _BV(USIOIF)) == 0);
     return (USIDR);
+  }
 #else
+  uint8_t transfer(uint8_t data) __attribute__((always_inline))
+  {
     SPDR = data;
     loop_until_bit_is_set(SPSR, SPIF);
     return (SPDR);
-#endif
   }
+#endif
 
   /**
    * Exchange package with slave. Received data from slave is stored
