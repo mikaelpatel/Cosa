@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -79,6 +79,9 @@ public:
     return (Board::SFR(pin) + 2);
   }
 
+  /**
+   * Serialization directions; most or least significant bit first.
+   */
   enum Direction {
     MSB_FIRST = 0, 
     LSB_FIRST = 1
@@ -248,8 +251,8 @@ protected:
 };
 
 /**
- * Synatatic sugar for an asserted block. The given pin will be toggled.
- * Initiating the pin to zero(0) will give active low logic.
+ * Syntactic sugar for an asserted block. The given pin will be toggled.
+ * Initiating the pin to zero(0) will give active high logic.
  * @param[in] pin to assert.
  */
 #define asserted(pin)							\

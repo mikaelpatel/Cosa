@@ -33,13 +33,13 @@
 /**
  * Cosa Activity Handler; the activity run function is called when
  * the activity start time is reached. The function is called with a
- * given period through the activity duration. The activity is 
+ * given run period through the activity duration. The activity is 
  * rescheduled with a period. 
  */
 class Activity {
 public:
   /**
-   * Construct activity with default setting; start(0), duration(15 seconds),
+   * Construct activity with default setting; start(now), duration(15 seconds),
    * period(1 minute), and run period(5 seconds)
    */
   Activity() : 

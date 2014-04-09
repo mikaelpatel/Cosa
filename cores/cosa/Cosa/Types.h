@@ -177,7 +177,7 @@ typedef const PROGMEM void_P void_vec_P;
 #define I_CPU (F_CPU / 1000000L)
 
 /**
- * Macro for micro-second level delay. See also USLEEP().
+ * Macro for micro-second level delay.
  * @param[in] us micro-seconds.
  */
 #define DELAY(us) _delay_loop_2(((us) * I_CPU) / 4)
@@ -246,6 +246,7 @@ struct iovec_t {
 
 /**
  * Return total size of null terminated io buffer vector.
+ * @param[in] vp io vector pointer
  * @return size.
  */
 inline size_t
@@ -456,10 +457,22 @@ toHEX(uint8_t value)
 }
 
 /**
- * Multi-tasking (Nucleo) support.
+ * Delay given number of milli-seconds. This function pointer
+ * may be redefined to allow multi-task duing wait.
+ * @param[in] ms milli-seconds delay.
  */
 extern void (*delay)(uint32_t ms);
+
+/**
+ * Sleep given number of seconds. This function pointer may be
+ * redefined to allow multi-task duing wait. 
+ * @param[in] s seconds delay.
+ */
 extern void (*sleep)(uint16_t s);
+
+/**
+ * Allow context switch to other task if available. 
+ */
 extern void (*yield)();
 
 #endif
