@@ -29,9 +29,9 @@
 int 
 ProtocolBuffer::getchar()
 {
-  if (m_outs == NULL) return (-1);
-  while (!m_outs->available()) yield();
-  return (m_outs->getchar());
+  if (m_ins == NULL) return (-1);
+  while (!m_ins->available()) yield();
+  return (m_ins->getchar());
 }
 
 int 
