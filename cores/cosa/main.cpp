@@ -29,11 +29,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-
-#include "Cosa/Event.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/LED.hh"
-
+#include "Cosa/Power.hh"
 #if defined(USBCON)
 #include "Cosa/USB/Platform.h"
 #endif
@@ -75,35 +71,16 @@ void init()
 }
 
 /**
- * The default setup function; initiate the watchdog. This function may be
- * overridden.
+ * Default setup function. This function may be overridden.
  */
 void setup() __attribute__((weak));
-#if defined(COSA_DEFAULT_SETUP)
-void setup()
-{
-  // Start the watchdog ticks and push time events
-  Watchdog::begin(16, SLEEP_MODE_IDLE, Watchdog::push_timeout_events);
-
-  // Start the built-in LED in alert mode
-  static LED builtin;
-  builtin.alert_mode();
-}
-#endif
+void setup() {}
 
 /**
- * The default loop function; event dispatcher. This function may be
- * overridden.
+ * Default loop function. This function may be overridden.
  */
 void loop() __attribute__((weak));
-#if defined(COSA_DEFAULT_LOOP)
-void loop()
-{
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}
-#endif
+void loop() {}
 
 /**
  * The main function. This function may be overridden.
@@ -117,14 +94,27 @@ int main(void)
   return (0);
 }
 
+/**
+ * Default delay function; delay given number of milli-seconds.
+ * @param[in] ms milli-seconds delay.
+ */
 static void default_delay(uint32_t ms) 
 { 
+  while (ms--) DELAY(1000);
 }
 
+/**
+ * Default sleep function; delay given number of seconds.
+ * @param[in] s seconds delay.
+ */
 static void default_sleep(uint16_t s) 
 { 
+  delay(s * 1000L);
 }
 
+/**
+ * Default yield function; enter sleep mode and wait for interrupt.
+ */
 static void default_yield() 
 { 
   Power::sleep(); 
