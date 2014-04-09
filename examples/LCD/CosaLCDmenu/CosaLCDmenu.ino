@@ -40,6 +40,7 @@
 // LCD Device  ---------------------------------------------------------------
 // Select port type to use with the LCD device driver.
 HD44780::Port4b port;
+// HD44780::Port4p port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;

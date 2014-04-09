@@ -28,6 +28,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Power.hh"
