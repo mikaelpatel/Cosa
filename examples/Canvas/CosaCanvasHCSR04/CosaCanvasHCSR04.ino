@@ -25,22 +25,29 @@
  * Display splash screen with Arduino icon and range in milli-meters.
  *
  * @section Circuit
- * Connect Arduino to HC-SR04 sensor/module; D2 => Trig, D3 => Echo. 
- * Connect power (VCC) and ground (GND).  
+ *                           ST7735
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (VCC)---------------2-|VCC         |
+ *                      -|            |
+ * (RST)---------------6-|RESET       |
+ * (D9)----------------7-|A0          |
+ * (MOSI/D11)----------8-|SDA         |
+ * (SCK/D13)-----------9-|SCK         |
+ * (SS/D10)-----------10-|CS          |
+ *                      -|            |
+ * (VCC)--------------15-|LED+        |
+ * (GND)--------------16-|LED-        |
+ *                       +------------+
  *
- * Connect Arduino to ST7735 Module;
- * Arduino    ==> HY-1.8 SPI
- * -------------------------------
- *   GND      ==>   GND(1), 
- *   VCC(5V)  ==>   VCC(2), 
- *   RST      ==>   RESET(6),
- *   D9       ==>   A0(7), 
- *   MOSI/D11 ==>   SDA(8), 
- *   SCK/D13  ==>   SCK(9),
- *   SS/D10   ==>   CS(10), 
- *   VCC(5V)  ==>   LED+(15), 
- *   GND      ==>   LED-(16)    
- * 
+ *                           HC-SR04
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (D2)----------------2-|TRIG        |
+ * (D3) ---------------3-|ECHO        |
+ * (GND)---------------4-|GND         |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -112,3 +119,10 @@ void setup()
   ping.periodic(256);
 }
 
+void loop()
+{
+  // Wait for events (low power mode) and dispatch
+  Event event;
+  Event::queue.await(&event);
+  event.dispatch();
+}

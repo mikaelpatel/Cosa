@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,24 +26,27 @@
  * EKG style.
  *
  * @section Circuit
- * Use the analog pin(0) as the probe pin.
- *
- * Connect Arduino to ST7735 Module;  
- * Arduino    ==> HY-1.8 SPI
- * -------------------------------
- *   GND      ==>   GND(1), 
- *   VCC(5V)  ==>   VCC(2), 
- *   RST      ==>   RESET(6),
- *   D9       ==>   A0(7), 
- *   MOSI/D11 ==>   SDA(8), 
- *   SCK/D13  ==>   SCK(9),
- *   SS/D10   ==>   CS(10), 
- *   VCC(5V)  ==>   LED+(15), 
- *   GND      ==>   LED-(16)    
+ *                           ST7735
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (VCC)---------------2-|VCC         |
+ *                      -|            |
+ * (RST)---------------6-|RESET       |
+ * (D9)----------------7-|A0          |
+ * (MOSI/D11)----------8-|SDA         |
+ * (SCK/D13)-----------9-|SCK         |
+ * (SS/D10)-----------10-|CS          |
+ *                      -|            |
+ * (VCC)--------------15-|LED+        |
+ * (GND)--------------16-|LED-        |
+ *                       +------------+
  * 
+ * (A0)----------------->
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Canvas/Driver/ST7735.hh"
 

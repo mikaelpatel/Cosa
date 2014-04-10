@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,26 +21,30 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of Canvas Segment Font handling and device 
- * driver for ST7735, 262K Color Single-Chip TFT Controller.
+ * A simple count down clock; Cosa demonstration of Canvas Segment
+ * Font handling and device driver for ST7735, 262K Color Single-Chip
+ * TFT Controller. 
  *
  * @section Circuit
- * Connect Arduino to ST7735 Module;
- * Arduino    ==> HY-1.8 SPI
- * -------------------------------
- *   GND      ==>   GND(1), 
- *   VCC(5V)  ==>   VCC(2), 
- *   RST      ==>   RESET(6),
- *   D9       ==>   A0(7), 
- *   MOSI/D11 ==>   SDA(8), 
- *   SCK/D13  ==>   SCK(9),
- *   SS/D10   ==>   CS(10), 
- *   VCC(5V)  ==>   LED+(15), 
- *   GND      ==>   LED-(16)    
+ *                           ST7735
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (VCC)---------------2-|VCC         |
+ *                      -|            |
+ * (RST)---------------6-|RESET       |
+ * (D9)----------------7-|A0          |
+ * (MOSI/D11)----------8-|SDA         |
+ * (SCK/D13)-----------9-|SCK         |
+ * (SS/D10)-----------10-|CS          |
+ *                      -|            |
+ * (VCC)--------------15-|LED+        |
+ * (GND)--------------16-|LED-        |
+ *                       +------------+
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Canvas/Driver/ST7735.hh"
 #include "Cosa/Canvas/Font/Segment32x50.hh"
@@ -54,8 +58,9 @@ uint8_t sec = 00;
 void setup()
 {
   // Start the watchdog for low power sleep
-  Watchdog::begin(1024, Watchdog::push_watchdog_event);
-
+  Power::set(SLEEP_MODE_PWR_DOWN);
+  Watchdog::begin(1024);
+  
   // Initiate the display and set orientation and color scheme
   tft.begin();
   tft.set_canvas_color(Canvas::BLACK);
@@ -84,21 +89,25 @@ void setup()
 
 void draw_digit(uint8_t pos, uint8_t digit)
 {
-  uint8_t x, y;
+  // Set digit position on screen
   uint8_t adjust = (pos < 2 ? 0 : segment32x50.WIDTH - 17);
   tft.set_cursor(8 + (pos * segment32x50.WIDTH) + adjust, 30);
+
+  // Fill the background
   Canvas::color16_t saved = tft.set_pen_color(BACKGROUND);
+  uint8_t x, y;
   tft.get_cursor(x, y);
   tft.fill_rect(x, y, segment32x50.WIDTH, segment32x50.HEIGHT);
   tft.set_pen_color(saved);
+
+  // And draw the digit
   tft.draw_char('0' + digit);
 }
 
 void loop()
 {
-  // Receive a watchdog event every second
-  Event event;
-  Event::queue.await(&event);
+  // Wait for the next watchdog tick; power down while waiting
+  Watchdog::await();
 
   // Decrement counter
   if (sec == 0) {
@@ -110,7 +119,7 @@ void loop()
     sec -= 1;
   }
 
-  // Draw the digits that are updated (to avoid flicker)
+  // Draw only the digits that are updated (to avoid screen flicker)
   draw_digit(3, sec%10);
   if ((sec%10) != 9) return;
   draw_digit(2, sec/10);
