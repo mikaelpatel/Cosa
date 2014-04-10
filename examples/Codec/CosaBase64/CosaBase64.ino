@@ -23,6 +23,12 @@
  * @section Description
  * Demonstration of the Cosa Base64 encoder/decoder.
  *
+ * @section Circuit
+ * No special circuit. Uses UART, RTC/Timer and Watchdog.
+ *
+ * @section References
+ * 1. http://en.wikipedia.org/wiki/Base64
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -49,7 +55,7 @@ static const uint8_t data[] = {
   0x34, 0x56, 0x78 
 };
 
-// Classical test string
+// Classical test string; A quote from Thomas Hobbes' Leviathan
 static const char citation[] __PROGMEM = 
   "Man is distinguished, not only by his reason, but by this singular "
   "passion from other animals, which is a lust of the mind, that by a "
@@ -110,14 +116,93 @@ void loop()
   trace << endl;
   SLEEP(1);
 
-  // Encode a large string directly to the uart iobuffer
+  // Encode a large string directly to the uart iobuffer. This could be
+  // any iostream such as Socket::Driver/Ethernet.
   start = RTC::micros();
   n = Base64::encode_P(&uart, citation, strlen_P(citation));
   stop = RTC::micros();
   trace << endl;
   trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
   trace << endl;
+  // Note: the measurement is bound by the UART buffer size
   SLEEP(1);
 
   ASSERT(true == false);
 }
+
+/**
+ * @section Output
+ *
+ *  CosaBase64: started
+ *  free_memory() = 1586
+ *  16:encode:32 us
+ *  Tmlzc2UgYmFkYXIA
+ *  
+ *  12:decode:52 us
+ *  Nisse badar
+ *  
+ *  1:0x118: 87 
+ *  4:encode:12 us
+ *  hw==
+ *  3:decode:20 us
+ *  0x8da: 87 00 00 
+ *  
+ *  2:0x118: 87 65 
+ *  4:encode:12 us
+ *  h2U=
+ *  3:decode:20 us
+ *  0x8da: 87 65 00 
+ *  
+ *  3:0x118: 87 65 43 
+ *  4:encode:12 us
+ *  h2VD
+ *  3:decode:20 us
+ *  0x8da: 87 65 43 
+ *  
+ *  4:0x118: 87 65 43 21 
+ *  8:encode:16 us
+ *  h2VDIQ==
+ *  6:decode:28 us
+ *  0x8da: 87 65 43 21 00 00 
+ *  
+ *  5:0x118: 87 65 43 21 00 
+ *  8:encode:16 us
+ *  h2VDIQA=
+ *  6:decode:28 us
+ *  0x8da: 87 65 43 21 00 00 
+ *  
+ *  6:0x118: 87 65 43 21 00 12 
+ *  8:encode:20 us
+ *  h2VDIQAS
+ *  6:decode:32 us
+ *  0x8da: 87 65 43 21 00 12 
+ *  
+ *  7:0x118: 87 65 43 21 00 12 34 
+ *  12:encode:24 us
+ *  h2VDIQASNA==
+ *  9:decode:40 us
+ *  0x8da: 87 65 43 21 00 12 34 00 00 
+ *  
+ *  8:0x118: 87 65 43 21 00 12 34 56 
+ *  12:encode:24 us
+ *  h2VDIQASNFY=
+ *  9:decode:40 us
+ *  0x8da: 87 65 43 21 00 12 34 56 00 
+ *  
+ *  9:0x118: 87 65 43 21 00 12 34 56 78 
+ *  12:encode:20 us
+ *  h2VDIQASNFZ4
+ *  9:decode:44 us
+ *  0x8da: 87 65 43 21 00 12 34 56 78 
+ *  
+ *  h2VDIQASNFZ4
+ *  12:encode:116 us
+ *  
+ *  TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1
+ *  dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3
+ *  aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFu
+ *  Y2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxl
+ *  IGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhl
+ *  bWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=
+ *  360:encode:343240 us
+ */

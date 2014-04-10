@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -334,3 +334,21 @@ void loop()
   ASSERT(true == false);
 }
 
+
+/**
+ * @section Output
+ *  CosaProtocolBuffer: started
+ *  free_memory() = 1540
+ *  sizeof(iob) = 37
+ *  sizeof(pb) = 4
+ *  Google Protocol Buffers
+ *  0x895: 08 96 01 
+ *  0x898: 08 01 
+ *  0x89a: 08 03 
+ *  0x89c: 12 07 74 65 73 74 69 6e 67 
+ *  0x88c: 12 07 74 65 73 74 69 6e 67 
+ *  0x88c: 1a 03 08 96 01 
+ *  0x891: 22 06 03 8e 02 9e a7 05 
+ *  free_memory() = 1695
+ *  334:void loop():assert:true == false
+ */

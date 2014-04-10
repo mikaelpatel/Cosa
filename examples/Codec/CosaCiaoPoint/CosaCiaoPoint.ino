@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,8 +21,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Example program for the Ciao streaming format; descriptor and
- * streaming of a data type.
+ * Demonstration of Cosa Ciao data streaming format; type description
+ * and streaming an user defined data type. Open the serial monitor to
+ * see the print out of the serialized data stream. No special host
+ * program is required, the example sketch will print the stream as
+ * hexadecimal numbers and printable characters when possible. 
  *
  * @section Circuit
  * This example requires no special circuit. Uses serial output.
@@ -123,3 +126,111 @@ void setup()
 void loop()
 {
 }
+
+/**
+ * @section Output
+ *  CosaCiaoPoint: started
+ *  109:void setup():info:Write the header to the trace device
+ *  0x61 'a'
+ *  0x0
+ *  0x43 'C'
+ *  0x6f 'o'
+ *  0x73 's'
+ *  0x61 'a'
+ *  0x3a ':'
+ *  0x3a ':'
+ *  0x43 'C'
+ *  0x69 'i'
+ *  0x61 'a'
+ *  0x6f 'o'
+ *  0x0
+ *  0x1
+ *  0x0
+ *  0x0
+ *  112:void setup():info:Stream Ciao header descriptor
+ *  0x40 '@'
+ *  0x0
+ *  0x43 'C'
+ *  0x69 'i'
+ *  0x61 'a'
+ *  0x6f 'o'
+ *  0x3a ':'
+ *  0x3a ':'
+ *  0x68 'h'
+ *  0x65 'e'
+ *  0x61 'a'
+ *  0x64 'd'
+ *  0x65 'e'
+ *  0x72 'r'
+ *  0x5f '_'
+ *  0x74 't'
+ *  0x0
+ *  0x0
+ *  0x6d 'm'
+ *  0x61 'a'
+ *  0x67 'g'
+ *  0x69 'i'
+ *  0x63 'c'
+ *  0x0
+ *  0x1
+ *  0x6d 'm'
+ *  0x61 'a'
+ *  0x6a 'j'
+ *  0x6f 'o'
+ *  0x72 'r'
+ *  0x0
+ *  0x1
+ *  0x6d 'm'
+ *  0x69 'i'
+ *  0x6e 'n'
+ *  0x6f 'o'
+ *  0x72 'r'
+ *  0x0
+ *  0x1
+ *  0x65 'e'
+ *  0x6e 'n'
+ *  0x64 'd'
+ *  0x69 'i'
+ *  0x61 'a'
+ *  0x6e 'n'
+ *  0x0
+ *  0x4f 'O'
+ *  115:void setup():info:Stream Point type descriptor
+ *  0x50 'P'
+ *  0x10
+ *  0x42 'B'
+ *  0x3a ':'
+ *  0x3a ':'
+ *  0x50 'P'
+ *  0x6f 'o'
+ *  0x69 'i'
+ *  0x6e 'n'
+ *  0x74 't'
+ *  0x0
+ *  0x91
+ *  0x78 'x'
+ *  0x0
+ *  0x91
+ *  0x79 'y'
+ *  0x0
+ *  0x5f '_'
+ *  118:void setup():info:Stream Point values with user type prefix
+ *  0x71 'q'
+ *  0x10
+ *  0x42 'B'
+ *  0xff
+ *  0xff
+ *  0x1
+ *  0x0
+ *  0x72 'r'
+ *  0x10
+ *  0x42 'B'
+ *  0x9c
+ *  0xff
+ *  0x9c
+ *  0xff
+ *  0x64 'd'
+ *  0x0
+ *  0x64 'd'
+ *  0x0
+ */
