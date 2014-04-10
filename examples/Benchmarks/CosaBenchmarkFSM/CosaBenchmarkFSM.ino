@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,11 +22,30 @@
  *
  * @section Description
  * Cosa FSM Benchmark; number of micro-seconds for a send/dispatch 
- * cycle.
+ * cycle. The classical finite state machine benchmark with
+ * measurement of event send time. The machine has only one state and
+ * for each received event sends an event to a connected machine.  
+ * The measurement contains the pushing of the event onto the event
+ * queue, pulling and dispatch of the event to the receiving state
+ * machine.  
  *
  * @section Circuit
  * This example requires no special circuit. Uses serial output,
  * internal timer for RTC and watchdog.
+ *
+ * @section Output
+ * CosaBenchmarkFSM: started
+ * free_memory() = 1553
+ * sizeof(Event::Handler) = 2
+ * sizeof(Link) = 6
+ * sizeof(FSM) = 12
+ * sizeof(Echo) = 14
+ * EVENTS_MAX = 100000
+ * F_CPU = 16000000
+ * I_CPU = 16
+ * 138:void loop():info:14 us per event (224 cycles)
+ * 138:void loop():info:14 us per event (224 cycles)
+ * 138:void loop():info:14 us per event (224 cycles)
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -132,3 +151,4 @@ void loop()
   uint32_t us_per_event = us / EVENTS_MAX;
   INFO("%l us per event (%l cycles)", us_per_event, us_per_event * I_CPU);
 }
+

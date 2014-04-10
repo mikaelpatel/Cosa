@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,10 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa RTC (Real-Time Clock) Benchmark. Validate and measurements.
+ * Cosa RTC (Real-Time Clock) Benchmark. Measurement and validation of
+ * the RTC (Real-Time Clock); micro- and milli-second. The benchmark
+ * shows the number of micro-seconds required for access of the RTC
+ * values, how accurate the DELAY macro and Watchdog delay is.
  *
  * @section Circuit
  * This example requires no special circuit. Uses serial output.
@@ -191,3 +194,51 @@ void loop()
 {
   ASSERT(true == false);
 }
+
+/*
+ * @section Output
+ * CosaBenchmarkRTC: started
+ * free_memory() = 1566
+ * F_CPU = 16000000
+ * I_CPU = 16
+ * Watchdog::ms_per_tick() = 16
+ * Watchdog::ticks() = 3
+ * RTC::us_per_tick() = 1024
+ * RTC::seconds() = 0
+ * 72:void setup():info:RTC::micros(): 4 us
+ * 78:void setup():info:RTC::millis(): 44 us
+ * 84:void setup():info:RTC::seconds(): 4 us
+ * 90:void setup():info:RTC::delay(1): 1184 us
+ * 95:void setup():info:RTC::delay(10): 10236 us
+ * 100:void setup():info:DELAY(10): 12 us
+ * 105:void setup():info:DELAY(100): 104 us
+ * 110:void setup():info:SLEEP(1): 1070700 us
+ * 115:void setup():info:delay(10): 16500 us
+ * 120:void setup():info:delay(100): 96396 us
+ * 125:void setup():info:sleep(1): 1073712 us
+ * 130:void setup():info:yield(): 428 us
+ * RTC::micros() = 2748296
+ * RTC::millis() = 2775
+ * RTC::seconds() = 2
+ * RTC::micros() = 3871136
+ * RTC::millis() = 3871
+ * RTC::seconds() = 3
+ * RTC::micros() = 4945244
+ * RTC::millis() = 4945
+ * RTC::seconds() = 4
+ * RTC::micros() = 6019344
+ * RTC::millis() = 6019
+ * RTC::seconds() = 6
+ * RTC::micros() = 7093432
+ * RTC::millis() = 7093
+ * RTC::seconds() = 7
+ * RTC::micros() = 8167532
+ * RTC::millis() = 8167
+ * RTC::seconds() = 8
+ * RTC::seconds() = 19
+ * 158:void setup():info:DELAY(100): 100000 measurement/validation (err = 0)
+ * RTC::seconds() = 29
+ * 175:void setup():info:RTC::delay(100): 100 measurement/validation (err = 0)
+ * RTC::seconds() = 39
+ * 192:void setup():info:Watchdog::delay(100): 100 measurement/validation (err = 0)
+ */

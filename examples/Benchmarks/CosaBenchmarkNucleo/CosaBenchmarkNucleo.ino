@@ -22,9 +22,24 @@
  *
  * @section Description
  * Cosa Nucleo benchmarks; 
- * 1) Thread context switches, measured with yield (11 us)
- * 2) Thread context switches, measured with resume(this) (11 us)
- * 3) Semaphore signal-wait, measured between two threads (41 us)
+ * 1) Thread context switches, measured with yield
+ * 2) Thread context switches, measured with resume(this)
+ * 3) Semaphore signal-wait, measured between two threads
+ *
+ * @section Circuit
+ * This example requires no special circuit. Uses serial output,
+ * internal timer for RTC and watchdog.
+ *
+ * @section Output
+ * CosaBenchmarkNucleo: started
+ * Thread::Consumer: started
+ * Thread::Producer: started
+ * 59:virtual void Producer::run():info:Benchmark 1: measure yield
+ * 65:virtual void Producer::run():info:11 us
+ * 68:virtual void Producer::run():info:Benchmark 2: measure resume
+ * 74:virtual void Producer::run():info:11 us
+ * 77:virtual void Producer::run():info:Benchmark 3: measure signal-wait
+ * 83:virtual void Producer::run():info:40 us
  *
  * This file is part of the Arduino Che Cosa project.
  */

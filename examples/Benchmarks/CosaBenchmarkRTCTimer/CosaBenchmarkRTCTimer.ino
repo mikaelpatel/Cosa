@@ -246,3 +246,97 @@ void loop()
 {
   ASSERT(true == false);
 }
+
+/*
+ * @section Output
+ * CosaBenchmarkRTCTimer: started
+ * free_memory() = 1114
+ * sizeof(Timer) = 10
+ * sizeof(Simple) = 10
+ * sizeof(OneShot) = 10
+ * F_CPU = 16000000
+ * I_CPU = 16
+ * us_per_tick = 1024
+ * RTC::millis() = 40
+ * RTC::seconds() = 0
+ * Expirations < 1024 us will be immediately dispatched
+ * Avg immediate dispatch = 37 us (592 instructions)
+ * For queued expirations,
+ * Avg start = -1 us (-16 instructions)
+ * Avg setup = -1 us (-16 instructions)
+ * Avg dispatch = -1 us (-16 instructions)
+ * expire_after(0 us): actual 12 us
+ * expire_after(7 us): actual 12 us
+ * expire_after(14 us): actual 12 us
+ * expire_after(21 us): actual 12 us
+ * expire_after(28 us): actual 12 us
+ * expire_after(35 us): actual 12 us
+ * expire_after(42 us): actual 12 us
+ * expire_after(49 us): actual 12 us
+ * expire_after(56 us): actual 12 us
+ * expire_after(63 us): actual 64 us
+ * expire_after(70 us): actual 72 us
+ * expire_after(77 us): actual 80 us
+ * expire_after(84 us): actual 84 us
+ * expire_after(91 us): actual 92 us
+ * expire_after(98 us): actual 100 us
+ * expire_after(105 us): actual 108 us
+ * expire_after(118 us): actual 120 us
+ * expire_after(131 us): actual 132 us
+ * expire_after(144 us): actual 144 us
+ * expire_after(157 us): actual 160 us
+ * expire_after(170 us): actual 172 us
+ * expire_after(183 us): actual 184 us
+ * expire_after(196 us): actual 196 us
+ * expire_after(209 us): actual 212 us
+ * expire_after(222 us): actual 224 us
+ * expire_after(235 us): actual 236 us
+ * expire_after(248 us): actual 248 us
+ * expire_after(261 us): actual 264 us
+ * expire_after(302 us): actual 308 us
+ * expire_after(343 us): actual 348 us
+ * expire_after(384 us): actual 388 us
+ * expire_after(425 us): actual 432 us
+ * expire_after(466 us): actual 472 us
+ * expire_after(507 us): actual 512 us
+ * expire_after(548 us): actual 552 us
+ * expire_after(589 us): actual 596 us
+ * expire_after(630 us): actual 636 us
+ * expire_after(671 us): actual 676 us
+ * expire_after(712 us): actual 716 us
+ * expire_after(753 us): actual 760 us
+ * expire_after(794 us): actual 800 us
+ * expire_after(835 us): actual 840 us
+ * expire_after(876 us): actual 880 us
+ * expire_after(917 us): actual 924 us
+ * expire_after(958 us): actual 964 us
+ * expire_after(999 us): actual 1004 us
+ * expire_after(1040 us): actual 1048 us
+ * expire_after(1081 us): actual 1084 us
+ * expire_after(1122 us): actual 1124 us
+ * expire_after(1163 us): actual 1164 us
+ * expire_after(1204 us): actual 1204 us
+ * expire_after(1245 us): actual 1248 us
+ * expire_after(1286 us): actual 1288 us
+ * expire_after(1327 us): actual 1328 us
+ * expire_after(1368 us): actual 1368 us
+ * expire_after(1409 us): actual 1412 us
+ * expire_after(1450 us): actual 1452 us
+ * expire_after(1491 us): actual 1492 us
+ * expire_after(1532 us): actual 1532 us
+ * expire_after(1573 us): actual 1576 us
+ * expire_after(1614 us): actual 1616 us
+ * expire_after(1655 us): actual 1656 us
+ * expire_after(1696 us): actual 1696 us
+ * expire_after(1737 us): actual 1740 us
+ * expire_after(1778 us): actual 1780 us
+ * expire_after(1819 us): actual 1820 us
+ * expire_after(1860 us): actual 1860 us
+ * expire_after(1901 us): actual 1904 us
+ * expire_after(1942 us): actual 1944 us
+ * expire_after(1983 us): actual 1984 us
+ * expire_after(2024 us): actual 2024 us
+ * expire_after(1024 us): actual 1028 us
+ * 1000X expire_at(n * 1024 us): expected 1024000, actual 1028036 us
+ * 50 timers started in 4192us
+ */
