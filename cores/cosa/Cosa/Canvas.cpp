@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -387,10 +387,13 @@ Canvas::fill_screen()
 }
 
 void 
-Canvas::run(uint8_t ix, void_P* tab, uint8_t max)
+Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
 {
   if (ix >= max) return;
   const uint8_t* ip = (const uint8_t*) pgm_read_word(tab + ix);
+  uint8_t x, y, r, g, b, w, h, s;
+  int8_t dx, dy;
+  char c;
   while (1) {
     switch (pgm_read_byte(ip++)) {
     case END_SCRIPT:
@@ -401,19 +404,22 @@ Canvas::run(uint8_t ix, void_P* tab, uint8_t max)
       run(ix, tab, max);
       break;
     case SET_CANVAS_COLOR:
-      set_canvas_color(color(pgm_read_byte(ip++), 
-			     pgm_read_byte(ip++), 
-			     pgm_read_byte(ip++)));
+      r = pgm_read_byte(ip++);
+      g = pgm_read_byte(ip++);
+      b = pgm_read_byte(ip++);
+      set_canvas_color(color(r, b, g));
       break;
     case SET_PEN_COLOR:
-      set_pen_color(color(pgm_read_byte(ip++), 
-			  pgm_read_byte(ip++), 
-			  pgm_read_byte(ip++)));
+      r = pgm_read_byte(ip++);
+      g = pgm_read_byte(ip++);
+      b = pgm_read_byte(ip++);
+      set_pen_color(color(r, g, b));
       break;
     case SET_TEXT_COLOR:
-      set_text_color(color(pgm_read_byte(ip++), 
-			   pgm_read_byte(ip++), 
-			   pgm_read_byte(ip++)));
+      r = pgm_read_byte(ip++);
+      g = pgm_read_byte(ip++);
+      b = pgm_read_byte(ip++);
+      set_text_color(color(r, g, b));
       break;
     case SET_TEXT_SCALE:
       set_text_scale(pgm_read_byte(ip++));
@@ -424,60 +430,82 @@ Canvas::run(uint8_t ix, void_P* tab, uint8_t max)
       set_text_font((Font*) pgm_read_word(tab + ix));
       break;
     case SET_CURSOR:
-      set_cursor(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      x = pgm_read_byte(ip++);
+      y = pgm_read_byte(ip++);
+      set_cursor(x, y);
       break;
     case MOVE_CURSOR:
-      move_cursor(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      dx = pgm_read_byte(ip++);
+      dy = pgm_read_byte(ip++);
+      move_cursor(dx, dy);
       break;
     case DRAW_BITMAP:
       ix = pgm_read_byte(ip++);
       if (ix >= max) return;
-      draw_bitmap((const uint8_t*) pgm_read_word(tab + ix),
-		  pgm_read_byte(ip++), 
-		  pgm_read_byte(ip++),
-		  pgm_read_byte(ip++));
+      w = pgm_read_byte(ip++);
+      h = pgm_read_byte(ip++);
+      s = pgm_read_byte(ip++);
+      draw_bitmap((const uint8_t*) pgm_read_word(tab + ix), w, h, s);
       break;
     case DRAW_ICON:
       ix = pgm_read_byte(ip++);
       if (ix >= max) return;
-      draw_icon((const uint8_t*) pgm_read_word(tab + ix), pgm_read_byte(ip++));
+      s = pgm_read_byte(ip++);
+      draw_icon((const uint8_t*) pgm_read_word(tab + ix), s);
       break;
     case DRAW_PIXEL:
       draw_pixel();
       break;
     case DRAW_LINE:
-      draw_line(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      x = pgm_read_byte(ip++);
+      y = pgm_read_byte(ip++);
+      draw_line(x, y);
       break;
     case DRAW_POLY:
       ix = pgm_read_byte(ip++);
       if (ix >= max) return;
-      draw_poly_P((const int8_t*) pgm_read_word(tab + ix), pgm_read_byte(ip++));
+      s = pgm_read_byte(ip++);
+      draw_poly_P((const int8_t*) pgm_read_word(tab + ix), s);
       break;
     case DRAW_STROKE:
       ix = pgm_read_byte(ip++);
       if (ix >= max) return;
-      draw_stroke_P((const int8_t*) pgm_read_word(tab + ix), pgm_read_byte(ip++));
+      s = pgm_read_byte(ip++);
+      draw_stroke_P((const int8_t*) pgm_read_word(tab + ix), s);
       break;
     case DRAW_RECT:
-      draw_rect(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      w = pgm_read_byte(ip++);
+      h = pgm_read_byte(ip++);
+      draw_rect(w, h);
       break;
     case FILL_RECT:
-      fill_rect(pgm_read_byte(ip++), pgm_read_byte(ip++));
+      w = pgm_read_byte(ip++);
+      h = pgm_read_byte(ip++);
+      fill_rect(w, h);
       break;
     case DRAW_ROUNDRECT:
-      draw_roundrect(pgm_read_byte(ip++), pgm_read_byte(ip++), pgm_read_byte(ip++));
+      w = pgm_read_byte(ip++);
+      h = pgm_read_byte(ip++);
+      r = pgm_read_byte(ip++);
+      draw_roundrect(w, h, r);
       break;
     case FILL_ROUNDRECT:
-      fill_roundrect(pgm_read_byte(ip++), pgm_read_byte(ip++), pgm_read_byte(ip++));
+      w = pgm_read_byte(ip++);
+      h = pgm_read_byte(ip++);
+      r = pgm_read_byte(ip++);
+      fill_roundrect(w, h, r);
       break;
     case DRAW_CIRCLE:
-      draw_circle(pgm_read_byte(ip++));
+      r = pgm_read_byte(ip++);
+      draw_circle(r);
       break;
     case FILL_CIRCLE:
-      fill_circle(pgm_read_byte(ip++));
+      r = pgm_read_byte(ip++);
+      fill_circle(r);
       break;
     case DRAW_CHAR:
-      draw_char(pgm_read_byte(ip++));
+      c = pgm_read_byte(ip++);
+      draw_char(c);
       break;
     case DRAW_STRING:
       ix = pgm_read_byte(ip++);

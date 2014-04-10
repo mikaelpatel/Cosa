@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -929,7 +929,7 @@ public:
    * @param[in] tab script table in program memory.
    * @param[in] max size of script table.
    */
-  void run(uint8_t ix, void_P* tab, uint8_t max);
+  void run(uint8_t ix, const void_P* tab, uint8_t max);
 
 protected:
   /**
@@ -956,7 +956,7 @@ protected:
 #define CANVAS_SET_TEXT_PORT(x, y, w, h) Canvas::SET_TEXT_PORT,	x, y, w, h,
 #define CANVAS_SET_TEXT_FONT(ix) Canvas::SET_TEXT_FONT, ix, 
 #define CANVAS_SET_CURSOR(x, y) Canvas::SET_CURSOR, x, y,
-#define CANVAS_MOVE_CURSOR(dx, dy) Canvas::MOVE_CURSOR,	dx, dy,
+#define CANVAS_MOVE_CURSOR(dx, dy) Canvas::MOVE_CURSOR,	(uint8_t) dx, (uint8_t) dy,
 #define CANVAS_DRAW_BITMAP(ix, w, h, s) Canvas::DRAW_BITMAP, ix, w, h, s,
 #define CANVAS_DRAW_ICON(ix, s) Canvas::DRAW_ICON, ix, s,
 #define CANVAS_DRAW_PIXEL() Canvas::DRAW_PIXEL,	
