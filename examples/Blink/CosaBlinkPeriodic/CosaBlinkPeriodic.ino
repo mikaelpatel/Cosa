@@ -21,7 +21,10 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa RGB LED blink with periodic function.
+ * The classic LED blink example using a periodic function handler.
+ *
+ * @section Circuit
+ * Connect an RGB LED to pins (D5,D6,D7/Arduino, D1,D2,D3/Tiny).
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -41,7 +44,7 @@ private:
   OutputPin m_pin;
 };
 
-// Use an RGB LED connected to pins(5,6,7)/ATtiny(1,2,3)
+// RGB LED connected to Arduino pins
 #if defined(__ARDUINO_TINY__)
 LED redLedPin(Board::D1, 512);
 LED greenLedPin(Board::D2, 1024, 1);
@@ -65,6 +68,7 @@ void setup()
 
 void loop()
 {
+  // Wait for events (low power mode) and dispatch
   Event event;
   Event::queue.await(&event);
   event.dispatch();

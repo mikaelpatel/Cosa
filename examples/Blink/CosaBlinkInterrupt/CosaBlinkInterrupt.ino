@@ -21,7 +21,12 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa LED blink with watchdog timeout interrupt callback.
+ * Cosa LED blink with watchdog timeout interrupt callback and sleep
+ * mode for low power.   
+ *
+ * @section Circuit
+ * This example requires no special circuit. The Arduino Pin 13
+ * (builtin LED) is used.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -32,6 +37,7 @@
 // Use the builtin led
 OutputPin ledPin(Board::LED);
 
+// Interrupt handler; toggle the led for each interrupt
 void blink(void* env)
 {
   ledPin.toggle();
@@ -46,5 +52,5 @@ void setup()
 void loop()
 {
   // Sleep during timeout wait
-  SLEEP(10);
+  sleep(10);
 }

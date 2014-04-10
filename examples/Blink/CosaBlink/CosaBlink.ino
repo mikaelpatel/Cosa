@@ -21,7 +21,13 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa LED blink demonstration.
+ * Cosa LED blink demonstration. The classical LED blink program
+ * written i Cosa using the Arduino builtin LED with a very short
+ * blink period(16:512 ms) and the Watchdog for low power mode during
+ * delay.  
+ *
+ * @section Circuit
+ * Uses built-in LED (D13).
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -35,6 +41,7 @@ OutputPin ledPin(Board::LED);
 void setup()
 {
   // Start the watchdog with the default timeout period (16 ms)
+  // Will install low-power version of the delay() function
   Watchdog::begin();
 }
 
@@ -42,9 +49,9 @@ void loop()
 {
   // Turn on the led for 16 ms
   ledPin.on();
-  Watchdog::delay(16);
+  delay(16);
 
   // Turn off the led and wait 512 ms
   ledPin.off();
-  Watchdog::delay(512);
+  delay(512);
 }

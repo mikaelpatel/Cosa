@@ -22,7 +22,13 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa RGB LED blink demonstration using a Finite State Machine.
+ * Cosa RGB LED blink demonstration using a Finite State Machine; The
+ * classical LEB blink example program with two RGB LEDs controlled by
+ * an FSM for each color state on each LED. The two RGB LEDs will also
+ * blink with two different periods.
+ * 
+ * @section Circuit
+ * Connect two RGB LEDs to pins (D5, D6, D7) and (D8, D9, D10).
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -32,7 +38,19 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 
-// The state machine: Blink RGB LED with six color states
+/**
+ * The state machine: Blink RGB LED with six color states
+ * @dot
+ * digraph CosaBlinkFSM {
+ *   RED -> YELLOW [label="timeout"];
+ *   YELLOW -> GREEN [label="timeout"];
+ *   GREEN -> CYAN [label="timeout"];
+ *   CYAN -> BLUE [label="timeout"];
+ *   BLUE -> MAGENTA [label="timeout"];
+ *   MAGENTA -> RED [label="timeout"];
+ * }
+ * @enddot
+ */
 class BlinkRGB : public FSM {
 public:
   // Construct the state machine for the RGB led sequencing

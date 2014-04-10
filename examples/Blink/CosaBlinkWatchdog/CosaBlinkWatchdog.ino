@@ -21,7 +21,13 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa LED blink with watchdog timeout for low power.
+ * The classical LED blink program written i Cosa using the Arduino
+ * builtin LED, Watchdog wait to allow sleep mode during LED pin
+ * toggle. Show the declarative and object-oriented style of Cosa.   
+ *
+ * @section Circuit
+ * This example requires no special circuit. The Arduino Pin 13
+ * (builtin LED) is used.
  *
  * This file is part of the Arduino Che Cosa project.
  */

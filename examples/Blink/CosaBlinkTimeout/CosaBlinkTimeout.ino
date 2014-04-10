@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,10 @@
  *
  * @section Description
  * Cosa RGB LED blink with timeout events.
+ *
+ * @section Circuit
+ * Connect an RGB LED to pins (D5,D6,D7/Arduino, D1,D2,D3/Tiny).
+ * Uses the built-in LED (D13/Arduino).
  *
  * This file is part of the Arduino Che Cosa project.
  */

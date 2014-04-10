@@ -21,7 +21,11 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa LED blink with proto-thread function.
+ * The classic LED blink example using a proto-thread function and 
+ * timer events. 
+ * 
+ * @section Circuit
+ * No special circuit needed as the built-in LED is used for this example.
  *
  * This file is part of the Arduino Che Cosa project.
  */

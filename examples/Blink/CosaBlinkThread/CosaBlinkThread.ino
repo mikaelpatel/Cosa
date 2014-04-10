@@ -24,7 +24,10 @@
  * Demonstration of Cosa Nucleo Threads; Blink LED with thread
  * delay and use an additional thread to control the LED blink
  * frequency. The main thread will power down while waiting for
- * Watchdog ticks (ATtiny, LED on 2 mA, LED off >10 uA @ 3.7V).
+ * Watchdog ticks (ATtiny, LED on 2 mA, LED off <15 uA @ 3.7V).
+ *
+ * @section Circuit
+ * No special circuit. Uses the built-in LED (Arduino/D13).
  *
  * This file is part of the Arduino Che Cosa project.
  */

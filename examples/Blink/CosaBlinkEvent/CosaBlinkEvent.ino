@@ -22,6 +22,13 @@
  *
  * @section Description
  * Cosa LED blink with watchdog timeout event wait for low power.
+ * The classical LED blink program written i Cosa using the Arduino
+ * builtin LED, Watchdog and Event queue to allow sleep mode during
+ * LED pin toggle. Show the declarative and object-oriented style of
+ * Cosa.  
+ * 
+ * @section Circuit
+ * Uses built-in LED (D13/Arduino).
  *
  * This file is part of the Arduino Che Cosa project.
  */
