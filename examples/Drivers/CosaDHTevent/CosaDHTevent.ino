@@ -25,9 +25,13 @@
  * driven mode.
  *
  * @section Circuit
- * Connect Arduino:D2 to DHT11 data pin. Pullup resistors (4K7)
- * necessary if long wires. Internal pullup active. Connect power
- * (VCC) and ground (GND).    
+ *                           DHT11
+ *                       +-----------+
+ * (VCC)---------------1-|VCC  ===== |
+ * (D2/EXT0)-----------2-|DATA ===== |
+ *                     3-|     ===== |
+ * (GND)---------------4-|GND  ===== |
+ *                       +-----------+
  *
  * This file is part of the Arduino Che Cosa project.
  */

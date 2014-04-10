@@ -1,9 +1,9 @@
 /**
- * @file CosaDHT.ino
+ * @file CosaDHTsample.ino
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,9 +24,20 @@
  * Cosa demonstration of the DHT11/DHT22 device driver.
  *
  * @section Circuit
- * Connect Arduino:D2 to DHT11 data pin. Connect D3 to DHT22 data 
- * pin. Pullup resistors (4K7) necessary if long wires. Internal 
- * pullup active. Connect power (VCC) and ground (GND).   
+ *                           DHT11
+ *                       +-----------+
+ * (VCC)---------------1-|VCC  ===== |
+ * (D2/EXT0)-----------2-|DATA ===== |
+ *                     3-|     ===== |
+ * (GND)---------------4-|GND  ===== |
+ *                       +-----------+
+ *                           DHT22
+ *                       +-----------+
+ * (VCC)---------------1-|VCC  ===== |
+ * (D3/EXT1)-----------2-|DATA ===== |
+ *                     3-|     ===== |
+ * (GND)---------------4-|GND  ===== |
+ *                       +-----------+
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -49,11 +60,13 @@ void setup()
 {
   // Start trace output stream on the serial port
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaDHT: started"));
+  trace.begin(&uart, PSTR("CosaDHTsample: started"));
 
   // Check amount of free memory and size of instance
   TRACE(free_memory());
   TRACE(sizeof(DHT));
+  TRACE(sizeof(DHT11));
+  TRACE(sizeof(DHT22));
 
   // Start the watchdog for low power sleep
   Watchdog::begin();
