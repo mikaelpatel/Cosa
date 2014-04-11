@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,6 +41,10 @@ union color16_t {
   };
 };
 
+// Use bit-field struct 
 uint16_t color16a(uint8_t red, uint8_t green, uint8_t blue);
+
+// Use shift-mask operations
 uint16_t color16b(uint8_t red, uint8_t green, uint8_t blue);
+
 #endif

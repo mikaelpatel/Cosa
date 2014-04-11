@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,20 @@
  * @section Description
  * Demonstration of the Servo control class.
  *
+ * @section Circuit
+ *                       Servo#0/servo
+ *                       +------------+
+ * (D9)----------------1-|PULSE   I   |
+ * (VCC)---------------2-|VCC   ==o== |
+ * (GND)---------------3-|GND     I   |
+ *                       +------------+
+ *                       Servo#1/door
+ *                       +------------+
+ * (D8)----------------1-|PULSE   I   |
+ * (VCC)---------------2-|VCC   ==o== |
+ * (GND)---------------3-|GND     I   |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,8 +48,11 @@ Servo door(1, Board::D8);
 
 void setup()
 {
-  Servo::begin();
+  // Start watchdog for delay timing
   Watchdog::begin();
+
+  // Start servo handling and set initial angle
+  Servo::begin();
   door.set_angle(10);
   servo.set_angle(10);
 }
@@ -44,16 +61,20 @@ void loop()
 {
   static int degree = 10;
   static int inc = 45;
+  
+  // Step servo from 10 to 170 degrees by 45 degrees
   for (; degree < 170; degree += inc) {
     door.set_angle(degree);
     servo.set_angle(degree);
-    Watchdog::delay(512);
+    delay(512);
   }
   if (degree > 170) degree -= inc;
+
+  // Step servo from 170 to 10 degrees by -45 degrees
   for (; degree > 10; degree -= inc) {
     door.set_angle(degree);
     servo.set_angle(degree);
-    Watchdog::delay(512);
+    delay(512);
   }
   if (degree < 10) degree += inc;
 }

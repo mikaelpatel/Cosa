@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,12 @@
  *
  * @section Description
  * Evaluate different methods of bit-field access using macro, enum,
- * shift and mask, and bit-fields struct definitions.
+ * shift and mask, and bit-fields struct definitions. Check assembly
+ * listing.
+ *
+ * @section Circuit
+ * This example does not require any special circuit. Uses UART and
+ * Watchdog.
  *
  * This file is part of the Arduino Che Cosa project.
  */

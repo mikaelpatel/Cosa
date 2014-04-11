@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,18 +22,26 @@
  *
  * @section Description
  * Cosa demonstration of the Ultrasonic range module HC-SR04 driver. 
+ * Periodic event driven object with callback member function.
  * 
+ * @section Circuit
+ *                           HC-SR04
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (D2)----------------2-|TRIG        |
+ * (D3) ---------------3-|ECHO        |
+ * (GND)---------------4-|GND         |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/InputPin.hh"
-#include "Cosa/OutputPin.hh"
+#include "Cosa/Driver/HCSR04.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Driver/HCSR04.hh"
 
 class Ping : public HCSR04 {
 public:
@@ -43,7 +51,6 @@ public:
 };
 
 Ping ping(Board::D2, Board::D3);
-OutputPin ledPin(Board::LED);
 
 void setup()
 {
@@ -53,8 +60,6 @@ void setup()
 
   // Check amount of free memory and size of instances
   TRACE(free_memory());
-  TRACE(sizeof(InputPin));
-  TRACE(sizeof(OutputPin));
   TRACE(sizeof(HCSR04));
 
   // Start the watchdog ticks and push time events
