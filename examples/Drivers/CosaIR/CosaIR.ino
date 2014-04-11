@@ -1,9 +1,9 @@
 /**
- * @file CosaTSOP4838.ino
+ * @file CosaIR.ino
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,8 +25,27 @@
  * IR transmission. Uses the Watchdog to monitor the decoding.
  *
  * @section Circuit
- * Connect data output from IR receiver circuit to pin D2 (EXT0).
- * Don't forget VCC and GND for the IR receiver.
+ * PCD8544 is a low voltage device (3V3) and signals require
+ * level shifter (74HC4050 or 10K resistor).
+ *
+ *                       TSOP4838/ir
+ *                       +------------+
+ * (D2)----------------1-|OUT         |
+ * (GND)---------------2-|GND    ( )  |
+ * (VCC)---------------3-|VCC         |
+ *                       +------------+
+ *
+ *                       PCD8544/lcd
+ *                       +------------+
+ * (3V3)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (D9)----| > |-------3-|SCE         |
+ * (RST)---| > |-------4-|RES         |
+ * (D8)----| > |-------5-|DC          |
+ * (D6)----| > |-------6-|SDIN        |
+ * (D7)----| > |-------7-|SCLK        |
+ * (VCC)---|220|-------8-|LED         |
+ *                       +------------+
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -82,23 +101,20 @@ static const IR::Receiver::keymap_t LG_keymap[] __PROGMEM = {
 uint16_t sample[40];
 #else
 PCD8544 lcd;
-#define sample 0
+#define sample NULL
 #endif
 
 /**
  * IR receiver for LG AKB72913104, 36 samples, threshold (1000 + 1000/2).
  */
-IR::Receiver receiver(Board::EXT0, 
-		      36, 1500, 
-		      LG_keymap, membersof(LG_keymap),
-		      sample);
+IR::Receiver receiver(Board::EXT0, 36, 1500, LG_keymap, membersof(LG_keymap), sample);
 
 void setup()
 {
   // Start trace output stream on the serial port
 #ifdef USE_UART
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaIRreceiver: started"));
+  trace.begin(&uart, PSTR("CosaIR: started"));
 
   // Check amount of free memory
   TRACE(free_memory());

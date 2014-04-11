@@ -45,74 +45,6 @@
  * https://www.sparkfun.com/datasheets/LCD/Monochrome/Nokia5110.pdf 
  */
 class PCD8544 : public LCD::Device {
-protected:
-  /**
-   * Instruction set (table 1, pp. 14)
-   */
-  enum {
-    NOP = 0x00,			// No operation
-    SET_FUNC = 0x20,		// Set function
-      BASIC_INST = 0x00,	// Basic instruction set
-      EXTENDED_INST = 0x01,	// Extended instruction set control
-      HORIZONTAL_ADDR = 0x00,	// Horizontal addressing
-      VERTICAL_ADDR = 0x02,	// Vertical addressing
-      POWER_UP_MODE = 0x00,	// Power up mode
-      POWER_DOWN_MODE = 0x04,	// Power down mode
-    DISPLAY_CNTL = 0x08,	// Display control
-      DISPLAY_OFF = 0x00,	// Turn display off
-      DISPLAY_ON = 0x01,	// Turn display on
-      NORMAL_MODE = 0x04,	// Normal display mode
-      INVERSE_MODE = 0x05,	// Inverse display mode
-    SET_Y_ADDR = 0x40,		// Sets Y-address of RAM (0..5)
-      Y_ADDR_MASK = 0x07,	// Mask Y-address
-    SET_X_ADDR = 0x80,		// Sets X-address of RAM (0..83)
-      X_ADDR_MASK = 0x7f,	// Mask X-addres
-    SET_TEMP_COEFF = 0x04,	// Set temperature coefficient (0..3)
-    SET_BIAS_SYS = 0x10,	// Set Bias System (0..7)
-    SET_VOP = 0x80,		// Write Vop to register
-      VOP_MASK = 0x7f,		// Mask Vop
-    SCRIPT_END = 0xff		// Init script end
-  } __attribute__((packed));
-
-  // Initialization script to reduce memory footprint
-  static const uint8_t script[] PROGMEM;
-
-  // Display pins and state
-  OutputPin m_sdin;		/**< Serial data input */
-  OutputPin m_sclk;		/**< Serial clock input */
-  OutputPin m_dc;		/**< Data/command */
-  OutputPin m_sce;		/**< Chip enable */
-  Font* m_font;			/**< Font */
-
-  /**
-   * Write given data to display according to mode.
-   * @param[in] data to fill write to device.
-   */
-  void write(uint8_t data)
-  {
-    m_sdin.write(data, m_sclk);
-  }
-
-  /**
-   * Set the given command code.
-   * @param[in] cmd command code.
-   */
-  void set(uint8_t cmd);
-  
-  /**
-   * Set display address for next data block.
-   * @param[in] x position 0..WIDTH-1.
-   * @param[in] y position 0..HEIGHT-1.
-   */
-  void set(uint8_t x, uint8_t y);
-  
-  /**
-   * Fill display with given data.
-   * @param[in] data to fill with.
-   * @param[in] count number of bytes to fill.
-   */
-  void fill(uint8_t data, uint16_t count);
-
 public:
   /** Display size */
   static const uint8_t WIDTH = 84;
@@ -261,6 +193,74 @@ public:
    * @return character written or EOF(-1).
    */
   virtual int putchar(char c);
+
+protected:
+  /**
+   * Instruction set (table 1, pp. 14)
+   */
+  enum {
+    NOP = 0x00,			// No operation
+    SET_FUNC = 0x20,		// Set function
+      BASIC_INST = 0x00,	// Basic instruction set
+      EXTENDED_INST = 0x01,	// Extended instruction set control
+      HORIZONTAL_ADDR = 0x00,	// Horizontal addressing
+      VERTICAL_ADDR = 0x02,	// Vertical addressing
+      POWER_UP_MODE = 0x00,	// Power up mode
+      POWER_DOWN_MODE = 0x04,	// Power down mode
+    DISPLAY_CNTL = 0x08,	// Display control
+      DISPLAY_OFF = 0x00,	// Turn display off
+      DISPLAY_ON = 0x01,	// Turn display on
+      NORMAL_MODE = 0x04,	// Normal display mode
+      INVERSE_MODE = 0x05,	// Inverse display mode
+    SET_Y_ADDR = 0x40,		// Sets Y-address of RAM (0..5)
+      Y_ADDR_MASK = 0x07,	// Mask Y-address
+    SET_X_ADDR = 0x80,		// Sets X-address of RAM (0..83)
+      X_ADDR_MASK = 0x7f,	// Mask X-addres
+    SET_TEMP_COEFF = 0x04,	// Set temperature coefficient (0..3)
+    SET_BIAS_SYS = 0x10,	// Set Bias System (0..7)
+    SET_VOP = 0x80,		// Write Vop to register
+      VOP_MASK = 0x7f,		// Mask Vop
+    SCRIPT_END = 0xff		// Init script end
+  } __attribute__((packed));
+
+  // Initialization script to reduce memory footprint
+  static const uint8_t script[] PROGMEM;
+
+  // Display pins and state
+  OutputPin m_sdin;		/**< Serial data input */
+  OutputPin m_sclk;		/**< Serial clock input */
+  OutputPin m_dc;		/**< Data/command */
+  OutputPin m_sce;		/**< Chip enable */
+  Font* m_font;			/**< Font */
+
+  /**
+   * Write given data to display according to mode.
+   * @param[in] data to fill write to device.
+   */
+  void write(uint8_t data)
+  {
+    m_sdin.write(data, m_sclk);
+  }
+
+  /**
+   * Set the given command code.
+   * @param[in] cmd command code.
+   */
+  void set(uint8_t cmd);
+  
+  /**
+   * Set display address for next data block.
+   * @param[in] x position 0..WIDTH-1.
+   * @param[in] y position 0..HEIGHT-1.
+   */
+  void set(uint8_t x, uint8_t y);
+  
+  /**
+   * Fill display with given data.
+   * @param[in] data to fill with.
+   * @param[in] count number of bytes to fill.
+   */
+  void fill(uint8_t data, uint16_t count);
 };
 
 #endif
