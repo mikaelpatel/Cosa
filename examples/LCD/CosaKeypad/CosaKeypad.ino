@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -76,8 +76,7 @@ KeypadTrace::trace(const char* msg, uint8_t nr)
   m_out << PSTR(" (") << m_key.get_value() << ')';
 }
 
-// HD44780::Port4b port;
-HD44780::Port4p port;
+HD44780::Port4b port;
 HD44780 lcd(&port);
 KeypadTrace keypad(&lcd);
 

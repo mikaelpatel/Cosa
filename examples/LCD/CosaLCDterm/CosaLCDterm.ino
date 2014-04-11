@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,9 @@
  * @section Description
  * Cosa LCD demo with UART echo.
  * 
+ * @section Circuit
+ * See HD44780.hh for description of LCD adapter circuits.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -29,13 +32,12 @@
 
 // Select LCD and Port
 // HD44780::Port4b port;
-// HD44780::Port4p port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4 port;
 // HD44780::MJKDZ port;
-HD44780::GYIICLCD port;
-// HD44780::DFRobot port;
+// HD44780::GYIICLCD port;
+HD44780::DFRobot port;
 // HD44780 lcd(&port, 20, 4);
 HD44780 lcd(&port);
 

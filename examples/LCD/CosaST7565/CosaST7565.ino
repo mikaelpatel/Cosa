@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,6 +30,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Canvas/OffScreen.hh"
 #include "Cosa/LCD/Driver/ST7565.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"

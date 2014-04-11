@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,14 +18,9 @@
  * @section Description
  * Demonstration of the HD44780 (aka 1602) device driver with mapping 
  * to IOStream::Device.
- * 
- * @section Circuit
- * Use default pin configuration (Arduino/Standard, Mighty, ATtiny ==> LCD); 
- * D4 ==> D4, D5 ==> D5, D6 ==> D6, D7 ==> D7, D8 ==> RS, and D9 ==> EN.
- * For Arduino/Mega: D8 ==> RS, D9 ==> EN, D10 ==> D4, D11 => D5, 
- * D12 ==> D6, and D13 ==> D7.
  *
- * For MJKDZ connect to the I2C bus (A4/A5).
+ * @section Circuit
+ * See HD44780.hh for description of LCD adapter circuits.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -36,15 +31,14 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 // LCD and communication port
-// HD44780::Port4b port;
-// HD44780::Port4p port;
+HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
-HD44780::ERM1602_5 port;
+// HD44780::ERM1602_5 port;
 // HD44780 lcd(&port, 20, 4);
 HD44780 lcd(&port);
 

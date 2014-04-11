@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,10 @@
  * 
  * @section Description
  * Benchmarking the LCD device drivers.
- * 
+ *
+ * @section Circuit
+ * See HD44780.hh for description of LCD adapter circuits.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -38,8 +41,8 @@
 #endif
 
 // Select the LCD device for the benchmark
-// #include "Cosa/LCD/Driver/PCD8544.hh"
-// PCD8544 lcd;
+#include "Cosa/LCD/Driver/PCD8544.hh"
+PCD8544 lcd;
 
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
@@ -48,9 +51,8 @@
 // VLCD lcd;
 
 // Select the HD44780 port adapter for the benchmark
-#include "Cosa/LCD/Driver/HD44780.hh"
+// #include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port4b port;
-HD44780::Port4p port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
@@ -58,7 +60,7 @@ HD44780::Port4p port;
 // HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
-HD44780 lcd(&port);
+// HD44780 lcd(&port);
 
 // Benchmarks
 typedef void (*benchmark_t)(uint16_t);
@@ -76,7 +78,7 @@ void measure(const char* name, benchmark_t fn, uint16_t nr);
 
 void setup()
 {
-  Power::set(SLEEP_MODE_PWR_DOWN);
+  // Power::set(SLEEP_MODE_PWR_DOWN);
   RTC::begin();
   Watchdog::begin();
   lcd.begin();

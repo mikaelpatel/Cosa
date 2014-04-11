@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,13 +20,20 @@
  * IOStream::Device.
  * 
  * @section Circuit
- * Connect Arduino to PCD8544 (Arduino => PCD8544):
- * D6 ==> SDIN, D7 ==> SCLK, D8 ==> DC, D9 ==> SCE.
- * RST ==> RST.
+ * PCD8544 is a low voltage device (3V3) and signals require level
+ * shifter (74HC4050 or 10K resistor). 
  * 
- * The PCD8544 should be connect using 3.3 V signals and VCC. 
- * Back-light should be max 3.3 V. Reduce voltage with 100-500 ohm 
- * resistor to ground.
+ *                          PCD8544
+ *                       +------------+
+ * (RST)---| > |-------1-|RST         |
+ * (D9/D3)-| > |-------2-|CE          |
+ * (D8/D2)-| > |-------3-|DC          |
+ * (D6/D0)-| > |-------4-|DIN         |
+ * (D7/D1)-| > |-------5-|CLK         |
+ * (3V3)---------------6-|VCC         |
+ * (GND)---|220|-------7-|LED         |
+ * (GND)---------------8-|GND         |
+ *                       +------------+
  * 
  * This file is part of the Arduino Che Cosa project.
  */
@@ -34,6 +41,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Canvas/OffScreen.hh"
 #include "Cosa/LCD/Driver/PCD8544.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"

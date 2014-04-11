@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,16 +18,10 @@
  * @section Description
  * Cosa LCD menu system demo.
  * 
- * @section Footprint
- * Standard Arduino (Uno), LCD Keypad Shield
- *  Baseline        954 
- *  +LCD           3160
- *  +port          3730
- *  +walker        4902
- *  +controller    6493
- *  +demo menu     6824
- * Demo menu system with action code is only 332 bytes program
- * memory (PROGMEM) and 16 bytes data memory (SRAM).
+ * @section Circuit
+ * See HD44780.hh for description of LCD adapter circuits. Designed
+ * for LCD Keypad shield with 16x2 HD44780 LCD and six buttons, or LCD
+ * and a rotary encoder. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -39,11 +33,15 @@
 
 // LCD Device  ---------------------------------------------------------------
 // Select port type to use with the LCD device driver.
-// HD44780::Port4b port;
-HD44780::Port4p port;
+HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
+// HD44780::MJKDZ port;
+// HD44780::GYIICLCD port;
+// HD44780::DFRobot port;
+// HD44780::ERM1602_5 port;
+// HD44780 lcd(&port, 20, 4);
 HD44780 lcd(&port);
 
 // Menu Action ---------------------------------------------------------------

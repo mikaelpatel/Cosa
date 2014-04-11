@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,9 @@
  * @section Description
  * Cosa LCD demo with 1-wire temperature
  * 
+ * @section Circuit
+ * See HD44780.hh for description of LCD adapter circuits.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -25,13 +28,13 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/OWI/Driver/DS18B20.hh"
-#include "Cosa/LCD/Driver/PCD8544.hh"
 
-PCD8544 lcd;
+#include "Cosa/LCD/Driver/HD44780.hh"
+HD44780::Port4b port;
+HD44780 lcd(&port);
 
-// #include "Cosa/LCD/Driver/HD44780.hh"
-// HD44780::Port4b port;
-// HD44780 lcd(&port);
+// #include "Cosa/LCD/Driver/PCD8544.hh"
+// PCD8544 lcd;
 
 IOStream console(&lcd);
 #if defined(__ARDUINO_TINY__)

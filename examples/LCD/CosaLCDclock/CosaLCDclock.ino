@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,9 @@
  * Cosa LCD demo with RTC. For Arduino Mega this sketch will require
  * an 2004 LCD, an ADXL345 Accelerometer and a HMC5883L Digital Compass.
  *
+ * @section Circuit
+ * See HD44780.hh for description of LCD adapter circuits.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,7 +33,6 @@
 
 // Select the access port for the LCD
 // HD44780::Port4b port;
-// HD44780::Port4p port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
