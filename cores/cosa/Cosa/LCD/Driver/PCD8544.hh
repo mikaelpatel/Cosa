@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,14 +34,30 @@
 
 /**
  * PCD8544 48x84 pixels matrix LCD controller/driver, device driver 
- * for IOStream access. Binding to trace, etc. Supports simple text 
- * scroll, cursor, and handling of special characters such as form-feed, 
- * back-space and new-line. Graphics should be performed with OffScreen
- * Canvas and copied to the display with draw_bitmap().
+ * for IOStream access. Binding to trace, etc. Supports simple text  
+ * scroll, cursor, and handling of special characters such as
+ * form-feed, back-space and new-line. Graphics should be performed
+ * with OffScreen Canvas and copied to the display with draw_bitmap().
+ *
+ * @section Circuit
+ * PCD8544 is a low voltage device (3V3) and signals require level
+ * shifter (74HC4050 or 10K resistor). 
+ * 
+ *                          PCD8544
+ *                       +------------+
+ * (RST)---| > |-------1-|RST         |
+ * (D9/D3)-| > |-------2-|CE          |
+ * (D8/D2)-| > |-------3-|DC          |
+ * (D6/D0)-| > |-------4-|DIN         |
+ * (D7/D1)-| > |-------5-|CLK         |
+ * (3V3)---------------6-|VCC         |
+ * (GND)---|220|-------7-|LED         |
+ * (GND)---------------8-|GND         |
+ *                       +------------+
  *
  * @section See Also
  * For furter details see Product Specification, Philips
- * Semiconductors, 1999 Apr 12. 
+ * Semiconductors, 1999 Apr 12.  
  * https://www.sparkfun.com/datasheets/LCD/Monochrome/Nokia5110.pdf 
  */
 class PCD8544 : public LCD::Device {
@@ -71,12 +87,12 @@ public:
 	  Board::DigitalPin sce = Board::D9,
 	  Font* font = &system5x7) :
 #endif
-    LCD::Device(),
-    m_sdin(sdin, 0),
-    m_sclk(sclk, 0),
-    m_dc(dc, 1),
-    m_sce(sce, 1),
-    m_font(font)
+  LCD::Device(),
+  m_sdin(sdin, 0),
+  m_sclk(sclk, 0),
+  m_dc(dc, 1),
+  m_sce(sce, 1),
+  m_font(font)
   {}
 
   /**

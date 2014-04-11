@@ -297,98 +297,35 @@ public:
 #if !defined(__ARDUINO_TINYX5__)
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
-   * IO Port. Arduino pins directly to LCD in 4-bit mode. Data port is 
-   * implicitly defined (D4..D7/Arduino, D10..D13/Mega).
+   * IO Port. Arduino pins directly to LCD in 4-bit mode.
    *
    * @section Circuit
-   *   D4..D7 (Arduino), D0..D3 (Tiny), D10..D13 (Mega) => LCD:D4..D7
-   *   D8 (Arduino) => LCD:RS
-   *   D9 (Arduino) => LCD:EN
-   *   D10 (Arduino) => BT
+   * The default pins are the LCD Keypad Shield.
+   *
+   *                           HD44780
+   *                       +------------+
+   * (GND)---------------1-|VSS         |
+   * (VCC)---------------2-|VDD         |
+   * (D10)--(BT)---------3-|VO          |
+   * (D8)----------------4-|RS          |
+   *                     5-|RW          |
+   * (D9)----------------6-|EN          |
+   *                     7-|D0          |
+   *                     8-|D1          |
+   *                     9-|D2          |
+   *                    10-|D3          |
+   * (D4/D0)------------11-|D4          |
+   * (D5/D1)------------12-|D5          |
+   * (D6/D2)------------13-|D6          |
+   * (D7/D3)------------14-|D7          |
+   * (VCC)--------------15-|A           |
+   * (GND)--------------16-|K           |
+   *                       +------------+
    *
    * @section Limitations
    * Requires too many pins for ATtinyX5.
    */
   class Port4b : public IO {
-  public:
-    /**
-     * Construct HD44780 4-bit parallel port connected to given command,
-     * enable and backlight pin. Data pins are implicit; D4..D7 for Arduino
-     * Standard and Mighty. D10..D13 for Arduino/Mega. D0..D3 for ATtinyX4.
-     * Connect to LCD pins D4..D7.  
-     * @param[in] rs command/data select pin (Default D8).
-     * @param[in] en enable pin (Default D9).
-     * @param[in] bt backlight pin (Default D10).
-     */
-    Port4b(Board::DigitalPin rs = Board::D8, 
-	   Board::DigitalPin en = Board::D9,
-	   Board::DigitalPin bt = Board::D10) :
-      m_rs(rs, 0),
-      m_en(en, 0),
-      m_bt(bt, 1)
-    {
-    }
-
-    /**
-     * @override HD44780::IO
-     * Initiate 4-bit parallel port (D4..D7). Returns false.
-     * @return bool.
-     */
-    virtual bool setup();
-
-    /**
-     * @override HD44780::IO
-     * Write LSB nibble to display using parallel port (D4..D7).
-     * @param[in] data (4b) to write.
-     */
-    virtual void write4b(uint8_t data);
-    
-    /**
-     * @override HD44780::IO
-     * Write byte (8bit) to display.
-     * @param[in] data (8b) to write.
-     */
-    virtual void write8b(uint8_t data);
-
-    /**
-     * @override HD44780::IO
-     * Set instruction/data mode using given rs pin; zero for
-     * instruction, non-zero for data mode.
-     * @param[in] flag.
-     */
-    virtual void set_mode(uint8_t flag);
-
-    /**
-     * @override HD44780::IO
-     * Set backlight on/off using bt pin.
-     * @param[in] flag.
-     */
-    virtual void set_backlight(uint8_t flag);
-
-  protected:
-    /** Execution time delay (us) */
-    static const uint16_t SHORT_EXEC_TIME = 36;
-
-    OutputPin m_rs;		/**< Register select (0/instruction, 1/data) */
-    OutputPin m_en;		/**< Starts data read/write */
-    OutputPin m_bt;		/**< Back-light control (0/on, 1/off) */
-  };
-
-  /**
-   * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
-   * IO Port. Arduino pins directly to LCD in 4-bit mode. Data port is 
-   * explicitly defined (Default D4..D7/Arduino).
-   *
-   * @section Circuit
-   *   D4..D7 (Arduino), D0..D3 (Tiny) => LCD:D4..D7
-   *   D8 (Arduino) => LCD:RS
-   *   D9 (Arduino) => LCD:EN
-   *   D10 (Arduino) => BT
-   *
-   * @section Limitations
-   * Requires too many pins for ATtinyX5.
-   */
-  class Port4p : public IO {
   public:
     /**
      * Construct HD44780 4-bit parallel port connected to given command,
@@ -402,7 +339,7 @@ public:
      * @param[in] en enable pin (Default D9).
      * @param[in] bt backlight pin (Default D10).
      */
-    Port4p(Board::DigitalPin d0 = Board::D4, 
+    Port4b(Board::DigitalPin d0 = Board::D4, 
 	   Board::DigitalPin d1 = Board::D5, 
 	   Board::DigitalPin d2 = Board::D6, 
 	   Board::DigitalPin d3 = Board::D7, 

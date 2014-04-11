@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,40 +27,9 @@
 #if !defined(__ARDUINO_TINYX5__)
 #include "Cosa/LCD/Driver/HD44780.hh"
 
-/**
- * Data direction and port register for data transfer (D4..D7 for
- * Arduino Standard/USB/Mighty/Mega and D0..D3 for TinyX4).
- */
-#if defined(__ARDUINO_STANDARD__)
-# define DDR DDRD
-# define PORT PORTD
-# define POS 4
-#elif defined(__ARDUINO_MEGA__)			\
-  || defined(__ARDUINO_MIGHTY__)		\
-  || defined(__ARDUINO_STANDARD_USB__)		\
-  || defined(__PINOCCIO_SCOUT__)
-# define DDR DDRB
-# define PORT PORTB
-# define POS 4
-#elif defined(__ARDUINO_TINYX4__)
-# define DDR DDRA
-# define PORT PORTA
-# define POS 0
-#elif defined(__ARDUINO_TINYX61__)
-# define DDR DDRA
-# define PORT PORTA
-# define POS 4
-#endif
-
-#define MASK (0x0f << POS)
-#define WRITE4B(data) PORT = ((((data) & 0x0f) << POS) | (PORT & ~MASK))
-
 bool
 HD44780::Port4b::setup()
 {
-  synchronized {
-    DDR |= MASK;
-  }
   return (false);
 }
 
@@ -68,7 +37,10 @@ void
 HD44780::Port4b::write4b(uint8_t data)
 {
   synchronized {
-    WRITE4B(data);
+    m_d0._set(data & 0x01);
+    m_d1._set(data & 0x02);
+    m_d2._set(data & 0x04);
+    m_d3._set(data & 0x08);
     m_en._toggle();
     m_en._toggle();
   }
@@ -78,10 +50,16 @@ void
 HD44780::Port4b::write8b(uint8_t data)
 {
   synchronized {
-    WRITE4B(data >> 4);
+    m_d0._set(data & 0x10);
+    m_d1._set(data & 0x20);
+    m_d2._set(data & 0x40);
+    m_d3._set(data & 0x80);
     m_en._toggle();
     m_en._toggle();
-    WRITE4B(data);
+    m_d0._set(data & 0x01);
+    m_d1._set(data & 0x02);
+    m_d2._set(data & 0x04);
+    m_d3._set(data & 0x08);
     m_en._toggle();
     m_en._toggle();
   }
