@@ -18,6 +18,18 @@
  * @section Description
  * W5100 Ethernet Controller device driver example code; MQTT client.
  *
+ * @section Circuit
+ * This sketch is designed for the Ethernet Shield.
+ * 
+ *                       W5100/ethernet
+ *                       +------------+
+ * (D10)--------------29-|CSN         |
+ * (D11)--------------28-|MOSI        |
+ * (D12)--------------27-|MISO        |
+ * (D13)--------------30-|SCK         |
+ * (D2)-----[ ]-------56-|IRQ         |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

@@ -19,6 +19,26 @@
  * ThingSpeak channel demonstration; post temperature and humidity
  * reading from DHT11 sensor to ThingSpeak server.
  *
+ * @section Circuit
+ * This sketch is designed for the Ethernet Shield.
+ * 
+ *                       W5100/ethernet
+ *                       +------------+
+ * (D10)--------------29-|CSN         |
+ * (D11)--------------28-|MOSI        |
+ * (D12)--------------27-|MISO        |
+ * (D13)--------------30-|SCK         |
+ * (D2)-----[ ]-------56-|IRQ         |
+ *                       +------------+
+ *
+ *                       DHT11/sensor
+ *                       +------------+
+ * (VCC)---------------1-|VCC  ====== |
+ * (D2/EXT0)-----------2-|DATA ====== |
+ *                     3-|     ====== |
+ * (GND)---------------4-|GND  ====== |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

@@ -27,6 +27,30 @@
  * Commands LED_ON/LED_OFF will turn on and off the LED.
  * The sketch also uses Board::EXT0 (D2) for DHT11 data.
  *
+ * @section Circuit
+ * This sketch is designed for the Ethernet Shield.
+ * 
+ *                           W5100
+ *                       +------------+
+ * (D10)--------------29-|CSN         |
+ * (D11)--------------28-|MOSI        |
+ * (D12)--------------27-|MISO        |
+ * (D13)--------------30-|SCK         |
+ * (D2)-----[ ]-------56-|IRQ         |
+ *                       +------------+
+ *
+ *                           DHT11
+ *                       +------------+
+ * (VCC)---------------1-|VCC  ====== |
+ * (D2/EXT0)-----------2-|DATA ====== |
+ *                     3-|     ====== |
+ * (GND)---------------4-|GND  ====== |
+ *                       +------------+
+ *
+ * (D15)----|330|-----------(>|LED)---+
+ *                                    |
+ * (GND)------------------------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

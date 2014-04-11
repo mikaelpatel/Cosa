@@ -24,6 +24,22 @@
  * The sketch uses Board::D15 (A1) as output pin for the LED.
  * Commands LED_ON/LED_OFF will turn on and off the LED.
  *
+ * @section Circuit
+ * This sketch is designed for the Ethernet Shield.
+ * 
+ *                       W5100/ethernet
+ *                       +------------+
+ * (D10)--------------29-|CSN         |
+ * (D11)--------------28-|MOSI        |
+ * (D12)--------------27-|MISO        |
+ * (D13)--------------30-|SCK         |
+ * (D2)-----[ ]-------56-|IRQ         |
+ *                       +------------+
+ *
+ * (D15)----|330|-----------(>|LED)---+
+ *                                    |
+ * (GND)------------------------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

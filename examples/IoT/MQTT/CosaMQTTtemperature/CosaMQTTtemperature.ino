@@ -19,6 +19,27 @@
  * MQTT client; Publish 1-Wire digital thermometer, DS18B20, 
  * temperature reading on MQTT server.
  *
+ * @section Circuit
+ * This sketch is designed for the Ethernet Shield.
+ * 
+ *                       W5100/ethernet
+ *                       +------------+
+ * (D10)--------------29-|CSN         |
+ * (D11)--------------28-|MOSI        |
+ * (D12)--------------27-|MISO        |
+ * (D13)--------------30-|SCK         |
+ * (D2)-----[ ]-------56-|IRQ         |
+ *                       +------------+
+ *
+ *                       DS18B20/sensor
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (D14)-----+---------2-|DQ          |
+ *           |       +-3-|VDD         |
+ *          4K7      |   +------------+
+ *           |       | 
+ * (VCC)-----+-------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,7 +51,6 @@
 #include "Cosa/Socket/Driver/W5100.hh"
 
 // One-wire pin and connected DS18B20 device
-// OWI owi(Board::D7);
 OWI owi(Board::D14);
 DS18B20 sensor(&owi);
 
