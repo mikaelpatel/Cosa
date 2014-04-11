@@ -19,6 +19,18 @@
  * W5100 Ethernet Controller device driver example code; SNMP agent
  * with support for GET/GETNEXT/SET for MIB-2 SYSTEM and Arduino MIB. 
  *
+ * @section Circuit
+ * This sketch is designed for the Ethernet Shield.
+ * 
+ *                       W5100/ethernet
+ *                       +------------+
+ * (D10)--------------29-|CSN         |
+ * (D11)--------------28-|MOSI        |
+ * (D12)--------------27-|MISO        |
+ * (D13)--------------30-|SCK         |
+ * (D2)-----[ ]-------56-|IRQ         |
+ *                       +------------+
+ *
  * @section Testing
  * Test with Linux snmp commands:
  * 1. Access the MIB-2 SYSTEM (sysDescr)
