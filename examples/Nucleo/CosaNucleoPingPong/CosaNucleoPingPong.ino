@@ -48,7 +48,6 @@ public:
 void
 Ping::run()
 {
-  uint32_t start = RTC::micros();
   trace << PSTR("Ping: started") << endl;
   while (1) {
     sem.signal();

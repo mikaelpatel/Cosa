@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,6 +27,24 @@
  * The built-in LED is set on/off according to the command when the
  * address of the command matches.. See Also CosaNEXAsender if you 
  * wish to run the sketch without a NEXA remote control.
+ *
+ * @section Circuit
+ *                          RF433/RX
+ *                       +------------+
+ *                       |0-----------|------<|
+ *                       |ANT         |
+ *                       |            |
+ *                       |            |
+ *                       |            |
+ *                       |            |
+ * (VCC)---------------1-|VCC         |
+ *                     2-|DATA        |
+ * (EXT0/D2)-----------3-|DATA        |
+ * (GND)---------------4-|GND         |
+ *                       +------------+
+ *
+ * On an ATtinyX5 please connect a LED to pin D4 in serie with a
+ * resistor (approx 300-500 ohm) to ground.
  *
  * This file is part of the Arduino Che Cosa project.
  */

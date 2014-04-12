@@ -34,6 +34,18 @@
  * Driver for the AT24CXX 2-Wire Serial EEPROM. Allows page write and
  * block read. Supports device AT24C32 (8K) to AT24C512 (64K). Default
  * AT24CXX device is AT24C32.
+ *
+ * @section Circuit
+ *                       TinyRTC(24C32)
+ *                       +------------+
+ *                     1-|SQ          |
+ *                     2-|DS        DS|-1
+ * (A5/SCL)------------3-|SCL      SCL|-2
+ * (A4/SDA)------------4-|SDA      SDA|-3
+ * (VCC)---------------5-|VCC      VCC|-4
+ * (GND)---------------6-|GND      GND|-5
+ *                     7-|BAT         |
+ *                       +------------+
  */
 class AT24CXX : private TWI::Driver, public EEPROM::Device {
 public:

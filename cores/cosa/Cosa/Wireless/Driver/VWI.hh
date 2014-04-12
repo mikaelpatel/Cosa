@@ -45,6 +45,29 @@ public:
    * symbols. Cosa support several transmission codecs. They may be
    * used to optimize performance in a given scenario; speed, noise,
    * message length, etc.
+   *
+   * @section Circuit
+   *                         RF433/RX
+   *                       +------------+
+   *                       |0-----------|------<|
+   *                       |ANT         |
+   *                       |            |
+   *                       |            |
+   *                       |            |
+   *                       |            |
+   * (VCC)---------------1-|VCC         |
+   *                     2-|DATA        |
+   * (RX)----------------3-|DATA        |
+   * (GND)---------------4-|GND         |
+   *                       +------------+
+   *
+   *                         RF433/TX
+   *                       +------------+
+   * (TX)----------------1-|DATA        |
+   * (VCC)---------------2-|VCC         |
+   * (GND)---------------3-|GND         |
+   *                       |ANT       0-|-------<|
+   *                       +------------+
    */
   class Codec {
   public:

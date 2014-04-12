@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,21 @@
  * three thermometers are connected to 1-Wire bus on pin(D7). They may
  * be in parasite power mode.
  *
+ * See LCD driver header files for circuit descriptions.
+ *
+ * @section Circuit
+ *                           DS18B20/3
+ *                       +------------+++
+ * (GND)---------------1-|GND         |||
+ * (D7)------+---------2-|DQ          |||
+ *           |       +-3-|VDD         |||
+ *          4K7      |   +------------+++
+ *           |       | 
+ * (VCC)-----+       +---(VCC/GND)
+ *
+ * Connect Arduino to DS18B20 in D7 and GND. May use parasite 
+ * powering (connect DS18B20 VCC to GND) otherwise to VCC.
+ * 
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -42,8 +57,7 @@ OutputPin ledPin(Board::LED);
 #if defined(__ARDUINO_TINY__)
 OWI owi(Board::D1);
 #else
-// OWI owi(Board::D7);
-OWI owi(Board::D14);
+OWI owi(Board::D7);
 #endif
 
 // Support macro to create name strings in program memory

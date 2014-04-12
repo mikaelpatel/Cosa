@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,10 +26,31 @@
  * pin(D7). They may be in parasite power mode.
  *
  * Note that temperature is only read on an alarm. A conversion
- * request is issued every 2 seconds. The request is boardcasted to all
+ * request is issued every 5 seconds. The request is boardcasted to all
  * connected devices (i.e. a single command is sent without rom
  * address).
-  *
+ *
+ * @section Circuit
+ *                           DS18B20/3
+ *                       +------------+++
+ * (GND)---------------1-|GND         |||
+ * (D7)------+---------2-|DQ          |||
+ *           |       +-3-|VDD         |||
+ *          4K7      |   +------------+++
+ *           |       | 
+ * (VCC)-----+       +---(VCC/GND)
+ *
+ *                       TinyRTC(DS1307)
+ *                       +------------+
+ *                     1-|SQ          |
+ *                     2-|DS        DS|-1
+ * (A5/SCL)------------3-|SCL      SCL|-2
+ * (A4/SDA)------------4-|SDA      SDA|-3
+ * (VCC)---------------5-|VCC      VCC|-4
+ * (GND)---------------6-|GND      GND|-5
+ *                     7-|BAT         |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -72,7 +93,7 @@ Thermometer::on_alarm()
 
   // Read and print temperature. Do not need reset and presence pulse
   read_scratchpad(false);
-  trace << now << PSTR(" alarm ") << *this << endl; 
+  trace << now << PSTR(" alarm ") << *this << PSTR(" C") << endl; 
 }
 
 // Support macro to create name strings in program memory for devices
@@ -95,24 +116,20 @@ void setup()
   Watchdog::begin();
 
   // Connect to the devices and set trigger thresholds
-  ledPin.toggle();
-
   indoors.connect(0);
-  indoors.set_trigger(18, 28);
+  indoors.set_trigger(18, 20);
   indoors.write_scratchpad();
   trace << (OWI::Driver&) indoors << endl;
 
   outdoors.connect(1);
-  outdoors.set_trigger(10, -35);
+  outdoors.set_trigger(-10, 30);
   outdoors.write_scratchpad();
   trace << (OWI::Driver&) outdoors << endl;
 
   basement.connect(2);
-  basement.set_trigger(0, 20);
+  basement.set_trigger(4, 20);
   basement.write_scratchpad();
   trace << (OWI::Driver&) basement << endl;
-
-  ledPin.toggle();
 }
 
 void loop()
@@ -131,5 +148,5 @@ void loop()
 
   // Turn the builtin led off and sleep
   ledPin.toggle();
-  SLEEP(2);
+  SLEEP(5);
 }

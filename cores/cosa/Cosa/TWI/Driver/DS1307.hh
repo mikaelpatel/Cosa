@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,18 @@
  *
  * For further details see Maxim Integrated product description; 
  * http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
+ *
+ * @section Circuit
+ *                       TinyRTC(DS1307)
+ *                       +------------+
+ *                     1-|SQ          |
+ *                     2-|DS        DS|-1
+ * (A5/SCL)------------3-|SCL      SCL|-2
+ * (A4/SDA)------------4-|SDA      SDA|-3
+ * (VCC)---------------5-|VCC      VCC|-4
+ * (GND)---------------6-|GND      GND|-5
+ *                     7-|BAT         |
+ *                       +------------+
  */
 class DS1307 : private TWI::Driver {
 public:
