@@ -1,5 +1,5 @@
 /**
- * @file CosaTemperature.ino
+ * @file CosaPCD8544temperature.ino
  * @version 1.0
  *
  * @section License
@@ -26,16 +26,32 @@
  * sensor, DS18B20.
  *
  * @section Circuit
+ * PCD8544 is a low voltage device (3V3) and signals require level
+ * shifter (74HC4050 or 10K resistor). 
+ * 
+ *                          PCD8544
+ *                       +------------+
+ * (RST)---| > |-------1-|RST         |
+ * (D9/D3)-| > |-------2-|CE          |
+ * (D8/D2)-| > |-------3-|DC          |
+ * (D6/D0)-| > |-------4-|DIN         |
+ * (D7/D1)-| > |-------5-|CLK         |
+ * (3V3)---------------6-|VCC         |
+ * (GND)---|220|-------7-|LED         |
+ * (GND)---------------8-|GND         |
+ *                       +------------+
+ *
+ *                       DS18B20/sensor
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (D5)------+---------2-|DQ          |
+ *           |       +-3-|VDD         |
+ *          4K7      |   +------------+
+ *           |       | 
+ * (VCC)-----+       +---(VCC/GND)
+ *
  * Connect Arduino to DS18B20 in D5 and GND. May use parasite 
  * powering (connect DS18B20 VCC to GND) otherwise to VCC.
- *
- * Connect Arduino to PCD8544 (Arduino => PCD8544):
- * D6 ==> SDIN, D7 ==> SCLK, D8 ==> DC, D9 ==> SCE.
- * RST ==> RST.
- * 
- * The PCD8544 should be connect using 3.3 V signals and VCC. 
- * Back-light should be max 3.3 V. Reduce voltage with 100-500 ohm 
- * resistor to ground or use a 3.3 V Arduino.
  * 
  * This file is part of the Arduino Che Cosa project.
  */
@@ -67,11 +83,14 @@ void setup()
 
   // Use LCD bind to trace; print some startup information
   trace.begin(&lcd);
-  trace << PSTR("\fCosaTemperature: started\n");
+  trace << PSTR("\fCosaPCD8544temperature: started\n");
   SLEEP(2);
   trace << clear;
   TRACE(sensor.connect(0));
   TRACE(sensor.read_power_supply());
+  SLEEP(2);
+  trace << clear;
+  trace << (OWI::Driver&) sensor; 
   SLEEP(2);
  }
 

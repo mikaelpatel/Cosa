@@ -164,18 +164,12 @@ public:
   /**
    * Set display scrolling left.
    */
-  void display_scroll_left() 
-  { 
-    write(SHIFT_SET | DISPLAY_MOVE | MOVE_LEFT); 
-  }
+  void display_scroll_left() { write(SHIFT_SET | DISPLAY_MOVE | MOVE_LEFT); }
 
   /**
    * Set display scrolling right.
    */
-  void display_scroll_right() 
-  { 
-    write(SHIFT_SET | DISPLAY_MOVE |  MOVE_RIGHT); 
-  }
+  void display_scroll_right() { write(SHIFT_SET | DISPLAY_MOVE |  MOVE_RIGHT); }
   
   /**
    * @override LCD::Device
@@ -191,34 +185,22 @@ public:
   /**
    * Turn underline cursor on.
    */
-  void cursor_underline_on() 
-  { 
-    set(m_cntl, CURSOR_ON);  
-  }
+  void cursor_underline_on() { set(m_cntl, CURSOR_ON); }
 
   /**
    * Turn underline cursor off.
    */
-  void cursor_underline_off() 
-  { 
-    clear(m_cntl, CURSOR_ON);  
-  }
+  void cursor_underline_off() { clear(m_cntl, CURSOR_ON); }
 
   /**
    * Turn cursor blink on.
    */
-  void cursor_blink_on() 
-  { 
-    set(m_cntl, BLINK_ON); 
-  }
+  void cursor_blink_on() { set(m_cntl, BLINK_ON); }
 
   /**
    * Turn cursor blink off.
    */
-  void cursor_blink_off() 
-  { 
-    clear(m_cntl, BLINK_ON); 
-  }
+  void cursor_blink_off() { clear(m_cntl, BLINK_ON); }
 
   /**
    * @override LCD::Device
@@ -231,34 +213,22 @@ public:
   /**
    * Set text flow left-to-right.
    */
-  void text_flow_left_to_right() 
-  { 
-    set(m_mode, INCREMENT);
-  }
+  void text_flow_left_to_right() { set(m_mode, INCREMENT); }
 
   /**
    * Set text flow right-to-left.
    */
-  void text_flow_right_to_left() 
-  { 
-    clear(m_mode, INCREMENT); 
-  }
+  void text_flow_right_to_left() { clear(m_mode, INCREMENT); }
 
   /**
    * Set text scroll left adjust.
    */
-  void text_scroll_left_adjust() 
-  { 
-    set(m_mode, DISPLAY_SHIFT); 
-  }
+  void text_scroll_left_adjust() { set(m_mode, DISPLAY_SHIFT); }
 
   /**
    * Set text scroll right adjust.
    */
-  void text_scroll_right_adjust() 
-  { 
-    clear(m_mode, DISPLAY_SHIFT); 
-  }
+  void text_scroll_right_adjust() { clear(m_mode, DISPLAY_SHIFT); }
 
   /**
    * Set custom character bitmap for given identity (0..7). 
@@ -643,14 +613,8 @@ public:
 	uint8_t app2:1;		/**< Application bit#2 (Q6) */
 	uint8_t app1:1;		/**< Application bit#1 (Q7) */
       };
-      operator uint8_t()
-      {
-	return (as_uint8);
-      }
-      port_t()
-      {
-	as_uint8 = 0;
-      }
+      operator uint8_t() { return (as_uint8); }
+      port_t() { as_uint8 = 0; }
     };
     port_t m_port;		/**< Port setting */
   };
@@ -867,14 +831,8 @@ public:
 	uint8_t rs:1;		/**< Command/Data select (P6) */
 	uint8_t bt:1;		/**< Back-light (P7) */
       };
-      operator uint8_t()
-      {
-	return (as_uint8);
-      }
-      port_t()
-      {
-	as_uint8 = 0;
-      }
+      operator uint8_t() { return (as_uint8); }
+      port_t() { as_uint8 = 0; }
     };
     port_t m_port;		/**< Port setting */
   };
@@ -968,14 +926,8 @@ public:
 	uint8_t bt:1;		/**< Back-light (P3) */
 	uint8_t data:4;		/**< Data port (P4..P7) */
       };
-      operator uint8_t()
-      {
-	return (as_uint8);
-      }
-      port_t()
-      {
-	as_uint8 = 0;
-      }
+      operator uint8_t() { return (as_uint8); }
+      port_t() { as_uint8 = 0; }
     };
     port_t m_port;		/**< Port setting */
   };
@@ -1172,45 +1124,30 @@ public:
    * Write data or command to display.
    * @param[in] data to write.
    */
-  void write(uint8_t data)
-  {
-    m_io->write8b(data);
-  }
+  void write(uint8_t data) { m_io->write8b(data); }
 
   /**
    * Set display attribute and update driver mirror variable.
    * @param[in,out] cmd command variable.
    * @param[in] mask function.
    */
-  void set(uint8_t& cmd, uint8_t mask) 
-  { 
-    m_io->write8b(cmd |= mask); 
-  }
+  void set(uint8_t& cmd, uint8_t mask) { m_io->write8b(cmd |= mask); }
 
   /**
    * Clear display attribute and update driver mirror variable.
    * @param[in,out] cmd command variable.
    * @param[in] mask function.
    */
-  void clear(uint8_t& cmd, uint8_t mask) 
-  { 
-    m_io->write8b(cmd &= ~mask); 
-  }
+  void clear(uint8_t& cmd, uint8_t mask) { m_io->write8b(cmd &= ~mask); }
 
   /**
    * Set communication in data stream mode.
    */
-  void set_data_mode()
-  {
-    m_io->set_mode(1);
-  }
+  void set_data_mode() { m_io->set_mode(1); }
 
   /**
    * Set communication in instruction stream mode.
    */
-  void set_instruction_mode()
-  {
-    m_io->set_mode(0);
-  }
+  void set_instruction_mode() { m_io->set_mode(0); }
 };
 #endif

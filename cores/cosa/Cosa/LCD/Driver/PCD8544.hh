@@ -158,10 +158,7 @@ public:
    * Get current text font. 
    * @return font setting.
    */
-  Font* get_text_font()
-  {
-    return (m_font);
-  }
+  Font* get_text_font() { return (m_font); }
 
   /**
    * Set text font. Returns previous setting.
@@ -253,10 +250,7 @@ protected:
    * Write given data to display according to mode.
    * @param[in] data to fill write to device.
    */
-  void write(uint8_t data)
-  {
-    m_sdin.write(data, m_sclk);
-  }
+  void write(uint8_t data) { m_sdin.write(data, m_sclk); }
 
   /**
    * Set the given command code.

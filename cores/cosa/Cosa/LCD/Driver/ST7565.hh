@@ -40,97 +40,32 @@
  * new-line. Graphics should be performed with OffScreen Canvas and
  * copied to the display with draw_bitmap(). 
  *
+ * @section Circuit
+ *                           ST7565
+ *                       +------------+
+ *                     1-|DB0         |
+ *                     2-|DB1         |
+ *                     3-|DB2         |
+ *                     4-|DB3         |
+ *                     5-|DB4         |
+ *                     6-|DB5         |
+ * (D7/D1)-------------7-|DB6(SCL)    |
+ * (D6/D0)-------------8-|DB7(SI)     |
+ * (VCC)---------------9-|VDD         |
+ * (GND)--------------10-|VSS         |
+ * (VCC)---|220|------11-|A           |
+ * (D9/D3)------------12-|CS          |
+ * (RST)--------------13-|RST         |
+ * (D8/D2)------------14-|DC          |
+ *                    15-|WR(R/W)     |
+ *                    16-|RD(E)       |
+ *                       +------------+
+ *
  * @section See Also
  * For further details see Sitronix 65x132 Dot Matrix LCD Controller/
  * Driver, Ver 1.3, 2004 May 18.
  */
 class ST7565 : public LCD::Device {
-protected:
-  /**
-   * Instruction set (table 16, pp. 52)
-   */
-  enum {
-    DISPLAY_OFF = 0xAE,		  // Turn display off
-    DISPLAY_ON = 0xAF,		  // Turn display on
-    SET_DISPLAY_START = 0x40,	  // Set start line address
-    DISPLAY_START_MASK = 0x3f,	  // - line address mask
-    SET_Y_ADDR = 0xB0,		  // Set page address
-    Y_ADDR_MASK = 0x0f,		  // - page address mask
-    SET_X_ADDR = 0x10,		  // Set column address (2x4 bits) 
-    X_ADDR_MASK = 0x0f,		  // - colum address mask
-    ADC_NORMAL = 0xA0,		  // Set normal address correspondence
-    ADC_REVERSE = 0xA1,		  // Set reverse address correspondence
-    DISPLAY_NORMAL = 0xA6,	  // Normal display mode
-    DISPLAY_REVERSE = 0xA7,	  // Reverse display mode
-    DISPLAY_64X128_POINTS = 0xA4, // Display normal
-    DISPLAY_65X132_POINTS = 0xA5, // Display all points
-    LCD_BIAS_9 = 0xA2,		  // Voltage ratio 1/9 bias
-    LCD_BIAS_7 = 0xA3,		  // Voltage ratio 1/7 bias
-    X_ADDR_INC = 0xE0,		  // Column address increment
-    X_ADDR_CLEAR = 0xEE,	  // Clear read/modify/write
-    INTERNAL_RESET = 0xE2,	  // Internal reset
-    COM_OUTPUT_NORMAL = 0xC0,	  // Normal output scan direction
-    COM_OUTPUT_REVERSE = 0xC8,	  // - reverse direction
-    SET_POWER_CONTROL = 0x28,	  // Select internal power supply mode
-    POWER_MASK = 0x07,		  // - operation mode mask
-    SET_RESISTOR_RATIO = 0x20,	  // Select internal resistor ratio
-    RESISTOR_MASK = 0x07,	  // - resistor ratio mask
-    SET_CONSTRAST = 0x81,	  // Set output voltage volume register
-    CONSTRAST_MASK = 0x3f,	  // - electronic volume mask
-    INDICATOR_OFF = 0xAC,	  // Static indicator off
-    INDICATOR_ON = 0xAD,	  // - on
-    FLASHING_OFF = 0x00,	  // Set indicator flashing mode off
-    FLASHING_ON = 0x01,		  // - on
-    SET_BOOSTER_RATIO = 0xF8,	  // Set booster ratio
-    BOOSTER_RATIO_234X = 0,	  // - 2x, 3x, 4x
-    BOOSTER_RATIO_5X = 1,	  // - 5x
-    BOOSTER_RATIO_6X = 3,	  // - 6x
-    NOP = 0xE3,			  // Non-operation
-    SCRIPT_PAUSE = 0xF0,	  // Init script pause (ms)
-    SCRIPT_END = 0xFF		  // Init script end
-  } __attribute__((packed));
-
-  // Initialization script to reduce memory footprint
-  static const uint8_t script[] PROGMEM;
-
-  // Display pins and state
-  OutputPin m_si;		  /**< Serial input */
-  OutputPin m_scl;		  /**< Serial clock input */
-  OutputPin m_dc;		  /**< Data(1) or command(0) */
-  OutputPin m_cs;		  /**< Chip select (active low) */
-  uint8_t m_line;		  /**< Display start line */
-  Font* m_font;			  /**< Font */
-
-  /**
-   * Write given data to display according to mode.
-   * Chip select and/or Command/Data pin asserted.
-   * @param[in] data to fill write to device.
-   */
-  void write(uint8_t data)
-  {
-    m_si.write(data, m_scl);
-  }
-
-  /**
-   * Set the given command code.
-   * @param[in] cmd command code.
-   */
-  void set(uint8_t cmd);
-  
-  /**
-   * Set display address for next data block.
-   * @param[in] x position (0..WIDTH-1).
-   * @param[in] y position (0..LINES-1).
-   */
-  void set(uint8_t x, uint8_t y);
-  
-  /**
-   * Fill display with given data.
-   * @param[in] data to fill with.
-   * @param[in] count number of bytes to fill.
-   */
-  void fill(uint8_t data, uint16_t count);
-
 public:
   // Display width and height (in pixels)
   static const uint8_t WIDTH = 128;
@@ -230,10 +165,7 @@ public:
    * Get current text font. 
    * @return font setting.
    */
-  Font* get_text_font()
-  {
-    return (m_font);
-  }
+  Font* get_text_font() { return (m_font); }
 
   /**
    * Set text font. Returns previous setting.
@@ -281,6 +213,92 @@ public:
    * @return character written or EOF(-1).
    */
   virtual int putchar(char c);
+
+protected:
+  /**
+   * Instruction set (table 16, pp. 52)
+   */
+  enum {
+    DISPLAY_OFF = 0xAE,		  // Turn display off
+    DISPLAY_ON = 0xAF,		  // Turn display on
+    SET_DISPLAY_START = 0x40,	  // Set start line address
+    DISPLAY_START_MASK = 0x3f,	  // - line address mask
+    SET_Y_ADDR = 0xB0,		  // Set page address
+    Y_ADDR_MASK = 0x0f,		  // - page address mask
+    SET_X_ADDR = 0x10,		  // Set column address (2x4 bits) 
+    X_ADDR_MASK = 0x0f,		  // - colum address mask
+    ADC_NORMAL = 0xA0,		  // Set normal address correspondence
+    ADC_REVERSE = 0xA1,		  // Set reverse address correspondence
+    DISPLAY_NORMAL = 0xA6,	  // Normal display mode
+    DISPLAY_REVERSE = 0xA7,	  // Reverse display mode
+    DISPLAY_64X128_POINTS = 0xA4, // Display normal
+    DISPLAY_65X132_POINTS = 0xA5, // Display all points
+    LCD_BIAS_9 = 0xA2,		  // Voltage ratio 1/9 bias
+    LCD_BIAS_7 = 0xA3,		  // Voltage ratio 1/7 bias
+    X_ADDR_INC = 0xE0,		  // Column address increment
+    X_ADDR_CLEAR = 0xEE,	  // Clear read/modify/write
+    INTERNAL_RESET = 0xE2,	  // Internal reset
+    COM_OUTPUT_NORMAL = 0xC0,	  // Normal output scan direction
+    COM_OUTPUT_REVERSE = 0xC8,	  // - reverse direction
+    SET_POWER_CONTROL = 0x28,	  // Select internal power supply mode
+    POWER_MASK = 0x07,		  // - operation mode mask
+    SET_RESISTOR_RATIO = 0x20,	  // Select internal resistor ratio
+    RESISTOR_MASK = 0x07,	  // - resistor ratio mask
+    SET_CONSTRAST = 0x81,	  // Set output voltage volume register
+    CONSTRAST_MASK = 0x3f,	  // - electronic volume mask
+    INDICATOR_OFF = 0xAC,	  // Static indicator off
+    INDICATOR_ON = 0xAD,	  // - on
+    FLASHING_OFF = 0x00,	  // Set indicator flashing mode off
+    FLASHING_ON = 0x01,		  // - on
+    SET_BOOSTER_RATIO = 0xF8,	  // Set booster ratio
+    BOOSTER_RATIO_234X = 0,	  // - 2x, 3x, 4x
+    BOOSTER_RATIO_5X = 1,	  // - 5x
+    BOOSTER_RATIO_6X = 3,	  // - 6x
+    NOP = 0xE3,			  // Non-operation
+    SCRIPT_PAUSE = 0xF0,	  // Init script pause (ms)
+    SCRIPT_END = 0xFF		  // Init script end
+  } __attribute__((packed));
+
+  // Initialization script to reduce memory footprint
+  static const uint8_t script[] PROGMEM;
+
+  // Display pins and state
+  OutputPin m_si;		  /**< Serial input */
+  OutputPin m_scl;		  /**< Serial clock input */
+  OutputPin m_dc;		  /**< Data(1) or command(0) */
+  OutputPin m_cs;		  /**< Chip select (active low) */
+  uint8_t m_line;		  /**< Display start line */
+  Font* m_font;			  /**< Font */
+
+  /**
+   * Write given data to display according to mode.
+   * Chip select and/or Command/Data pin asserted.
+   * @param[in] data to fill write to device.
+   */
+  void write(uint8_t data)
+  {
+    m_si.write(data, m_scl);
+  }
+
+  /**
+   * Set the given command code.
+   * @param[in] cmd command code.
+   */
+  void set(uint8_t cmd);
+  
+  /**
+   * Set display address for next data block.
+   * @param[in] x position (0..WIDTH-1).
+   * @param[in] y position (0..LINES-1).
+   */
+  void set(uint8_t x, uint8_t y);
+  
+  /**
+   * Fill display with given data.
+   * @param[in] data to fill with.
+   * @param[in] count number of bytes to fill.
+   */
+  void fill(uint8_t data, uint16_t count);
 };
 
 #endif

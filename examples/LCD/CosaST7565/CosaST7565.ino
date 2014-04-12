@@ -20,9 +20,25 @@
  * IOStream::Device.
  * 
  * @section Circuit
- * Connect Arduino to ST7565 (Arduino => ST7565):
- * D6 ==> SI, D7 ==> SCL, D8 ==> DC, D9 ==> CS.
- * RST ==> RST.
+ *                           ST7565
+ *                       +------------+
+ *                     1-|DB0         |
+ *                     2-|DB1         |
+ *                     3-|DB2         |
+ *                     4-|DB3         |
+ *                     5-|DB4         |
+ *                     6-|DB5         |
+ * (D7/D1)-------------7-|DB6(SCL)    |
+ * (D6/D0)-------------8-|DB7(SI)     |
+ * (VCC)---------------9-|VDD         |
+ * (GND)--------------10-|VSS         |
+ * (VCC)---|220|------11-|A           |
+ * (D9/D3)------------12-|CS          |
+ * (RST)--------------13-|RST         |
+ * (D8/D2)------------14-|DC          |
+ *                    15-|WR(R/W)     |
+ *                    16-|RD(E)       |
+ *                       +------------+
  * 
  * This file is part of the Arduino Che Cosa project.
  */
