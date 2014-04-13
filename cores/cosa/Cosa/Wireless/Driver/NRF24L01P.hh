@@ -35,8 +35,24 @@
 /**
  * Nordic Semiconductor nRF24L01+ Single Chip 2.4GHz Transceiver
  * device driver.
- * @See Also
- * nRF24L01+ Product Specification (Rev. 1.0)
+ *
+ * @section Circuit
+ * This is the pin-out for the NRF24L01+ module.
+ *
+ *                          NRF24L01P
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (VCC)---------------2-|VCC         |
+ * (D9)----------------3-|CE          |
+ * (D10)---------------4-|CSN         |
+ * (D13/SCK)-----------5-|SCK         |
+ * (D11/MOSI)----------6-|MOSI        |
+ * (D12/MISO)----------7-|MISO        |
+ * (D2/EXT0)-----------8-|IRQ         |
+ *                       +------------+
+ *
+ * @section References
+ * 1. nRF24L01+ Product Specification (Rev. 1.0)
  * http://www.nordicsemi.com/kor/nordic/download_resource/8765/2/17776224
  */
 class NRF24L01P : private SPI::Driver, public Wireless::Driver {
@@ -56,7 +72,7 @@ public:
    * @param[in] dev device address.
    * @param[in] csn spi slave select pin number (default D10/D53/D2).
    * @param[in] ce chip enable activates pin number (default D9/D48/D3).
-   * @param[in] irq interrupt pin number (default EXT0/EXT4/EXT0/EXT0).
+   * @param[in] irq interrupt pin number (default EXT0/EXT4/EXT0).
    */
 #if defined(__ARDUINO_MEGA__)
   NRF24L01P(uint16_t net, uint8_t dev,

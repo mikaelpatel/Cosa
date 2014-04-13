@@ -31,7 +31,8 @@
 /**
  * Vigenere auto-key cipher.
  * @param[in] N number of bytes in key.
- * @section See Also
+ *
+ * @section References
  * http://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
  */
 template<uint8_t N> 

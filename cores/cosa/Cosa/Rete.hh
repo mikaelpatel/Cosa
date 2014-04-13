@@ -42,7 +42,7 @@
  * version of DDS with only a publish message to broadcast registry
  * updates. 
  *
- * @See Also
+ * @section References
  * 1. OMG Data Distribution Service Portal, http://portals.omg.org/dds/
  * 2. Simple Network Management Protocol,
  * http://en.wikipedia.org/wiki/Simple_Network_Management_Protocol 

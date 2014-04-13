@@ -33,10 +33,9 @@
  * Cosa SD low-level device driver class. Implements disk driver 
  * connect/disconnect, erase, read and write block.
  * 
- * @See Also
+ * @section References
  * 1. SD Specification, Part 1: Physical Layer, Simplified Specification,
- * Version 4.10, January 22, 2013.
- * https://www.sdcard.org/downloads/pls/simplified_specs/part1_410.pdf
+ * Version 4.10, January 22, 2013. https://www.sdcard.org/downloads/pls/simplified_specs/part1_410.pdf
  */
 class SD : private SPI::Driver {
 public:

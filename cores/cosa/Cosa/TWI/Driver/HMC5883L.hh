@@ -34,8 +34,8 @@
  * Driver for the HMC5883L 3-Axis Digital Compass IC, 
  * a vector magnetometer. 
  *
- * @section See Also
- * See Honeywell product description (Rev. E, February 2013).
+ * @section References
+ * 1. Honeywell product description (Rev. E, February 2013).
  * http://www51.honeywell.com/aero/common/documents/
  * myaerospacecatalog-documents/Defense_Brochures-documents/
  * HMC5883L_3-Axis_Digital_Compass_IC.pdf

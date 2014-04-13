@@ -35,7 +35,23 @@
 /**
  * Cosa Device Driver for RFM69W/HW, Low-Power Sub-1 GHz RF Transceiver. 
  * Note that this device requires data in big endian order. 
- * @See Also
+ *
+ * @section Circuit
+ * This is the pin-out for the RFM69W/HW module.
+ *
+ *                         RFM69W/HW
+ *                       +------------+
+ * (RST)---------------1-|RESET     NC|-16
+ * (D2/EXT0)-----------2-|DIO0     NSS|-15---------------(D10)
+ *                     3-|DIO1    MOSI|-14---------------(D11/MOSI)
+ *                     4-|DIO2    MISO|-13---------------(D12/MISO)
+ *                     5-|DIO3     SCK|-12---------------(D13/SCK)     V
+ *                     6-|DIO4     GND|-11---------------(GND)         |
+ *                     7-|DIO4     ANT|-10-----------------------------+
+ * (3V3)---------------8-|VCC      GND|-9----------------(GND)
+ *                       +------------+
+ *
+ * @section References
  * 1. Product datasheet, RFM69W ISM Transceiver Module V1.3, 
  * http://www.hoperf.com/rf/fsk_module/RFM69W.htm
  * 2. Product datasheet, RFM69HW ISM Transceiver Module V1.3, 

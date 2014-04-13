@@ -40,8 +40,8 @@
  * (GND)---------------2-|GND    ( )  |
  * (VCC)---------------3-|VCC         |
  *                       +------------+
- * @section See Also
- * http://www.vishay.com/docs/82459/tsop48.pdf
+ * @section References
+ * 1. http://www.vishay.com/docs/82459/tsop48.pdf
  */
 class IR {
 public:

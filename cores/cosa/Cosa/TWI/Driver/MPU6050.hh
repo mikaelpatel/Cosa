@@ -34,8 +34,8 @@
  * 6-axis motion processor solution with gyroscope, accelerator and
  * extended I2C slave bus.
  *
- * @See Also
- * MPU-6000 and MPU-6050 Register Map and Description, Rev. 4.2.
+ * @section References
+ * 1. MPU-6000 and MPU-6050 Register Map and Description, Rev. 4.2.
  * http://invensense.com/mems/gyro/documents/RM-MPU-6000A-00v4.2.pdf
  */
 class MPU6050 : private TWI::Driver {

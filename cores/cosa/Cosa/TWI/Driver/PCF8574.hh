@@ -32,8 +32,8 @@
  * Driver for the PCF8574/PCF8574A Remote 8-bit I/O expander for
  * I2C-bus with interrupt. 
  *
- * @section See Also
- * NXP Semiconductors Product data sheet, Rev. 5, 27 May 2013.
+ * @section References
+ * 1. NXP Semiconductors Product data sheet, Rev. 5, 27 May 2013.
  */
 class PCF8574 : private TWI::Driver {
 public:

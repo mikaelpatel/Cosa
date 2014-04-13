@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel (Cosa C++ port and refactoring)
+ * Copyright (C) 2013-2014, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,7 +33,10 @@ public:
    * Construct block 4b5b codec with given bits per symbol,
    * start symbol, and preamble size.
    */
-  Block4B5BCodec() : VWI::Codec(5, 0x238, 8) {}
+  Block4B5BCodec() : 
+    VWI::Codec(5, 0x238, 8) 
+  {
+  }
   
   /**
    * @override VWI::Codec

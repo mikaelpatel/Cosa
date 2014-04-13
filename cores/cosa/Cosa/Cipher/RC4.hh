@@ -30,7 +30,7 @@
 
 /**
  * RC4 cipher.
- * @section See Also
+ * @section References
  * 1. http://en.wikipedia.org/wiki/RC4
  * 2. http://cypherpunks.venona.com/archive/1994/09/msg00304.html
  */

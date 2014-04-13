@@ -45,8 +45,8 @@
  *
  * May use parasite powering (connect DS18B20 VCC to GND) otherwise to VCC.
  * 
- * @section See Also
- * Maxim Integrated product description (REV: 042208) 
+ * @section References
+ * 1. Maxim Integrated product description (REV: 042208) 
  */
 class DS18B20 : public OWI::Driver {
 public:

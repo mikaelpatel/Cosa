@@ -29,10 +29,10 @@
  * wish to run the sketch without a NEXA remote control.
  *
  * @section Circuit
- *                          RF433/RX
- *                       +------------+
- *                       |0-----------|------<|
- *                       |ANT         |
+ *                         RF433/RX                       V
+ *                       +------------+                   |
+ *                       |0-----------|-------------------+
+ *                       |ANT         |       17.3 cm
  *                       |            |
  *                       |            |
  *                       |            |

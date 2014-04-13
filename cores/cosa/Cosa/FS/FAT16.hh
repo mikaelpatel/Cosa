@@ -61,7 +61,7 @@ enum {
  * @section Acknowledgement
  * Refactoring of Arduino Fat16 Library, Copyright (C) 2009 by William Greiman
  *
- * @section See Also
+ * @section References
  * 1. http://www.microsoft.com/whdc/system/platform/firmware/fatgen.mspx
  * 2. http://code.google.com/p/fat16lib/
  */

@@ -33,11 +33,11 @@
 /**
  * Device driver for ST7735, 262K Color Single-Chip TFT Controller.
  * 
- * @section See Also
- * Sitronix Technology Corp. ST7735 documentation, V2.1, 2010-02-01.
- *
  * @section Acknowledgements
  * Inspired by graphics library by ladyada/adafruit.
+ *
+ * @section References
+ * 1. Sitronix Technology Corp. ST7735 documentation, V2.1, 2010-02-01.
  */
 class ST7735 : public Canvas, SPI::Driver {
 public:

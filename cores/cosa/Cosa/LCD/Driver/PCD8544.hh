@@ -55,9 +55,8 @@
  * (GND)---------------8-|GND         |
  *                       +------------+
  *
- * @section See Also
- * For furter details see Product Specification, Philips
- * Semiconductors, 1999 Apr 12.  
+ * @section References
+ * 1. Product Specification, Philips Semiconductors, 1999 Apr 12.  
  * https://www.sparkfun.com/datasheets/LCD/Monochrome/Nokia5110.pdf 
  */
 class PCD8544 : public LCD::Device {

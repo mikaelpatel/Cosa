@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,8 +21,7 @@
 #include "Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.hh"
 
 // Manchester encoder table 4 to 8 bits. In binary to show how it works
-const uint8_t 
-ManchesterCodec::symbols[] __PROGMEM = {
+const uint8_t ManchesterCodec::symbols[] __PROGMEM = {
   0b10101010,
   0b10101001,
   0b10100110,
@@ -53,8 +52,7 @@ ManchesterCodec::decode4(uint8_t symbol)
 }
 
 // Ethernet frame preamble and delimiter/start symbol
-const uint8_t 
-ManchesterCodec::preamble[] __PROGMEM = {
+const uint8_t ManchesterCodec::preamble[] __PROGMEM = {
   0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x5d
 };
 

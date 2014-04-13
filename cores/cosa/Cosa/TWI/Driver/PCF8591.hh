@@ -31,8 +31,8 @@
 /**
  * Driver for the PCF8591 2-Wire 8-bit A/D and D/A converter.
  *
- * @section See Also
- * Philips Semiconductor product description (Rev. 2003 Jan 27).
+ * @section References
+ * 1. Philips Semiconductor product description (Rev. 2003 Jan 27).
  */
 class PCF8591 : private TWI::Driver {
 public:

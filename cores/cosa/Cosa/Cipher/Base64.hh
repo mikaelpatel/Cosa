@@ -35,11 +35,11 @@
  * IOStream::Device such as the UART. Long string to an device is
  * broken into multiple lines with a max length of 64 characters.
  *
- * @Acknowledgements
+ * @section Acknowledgements
  * Inspired by implementation method by Bob Trower and Arduino Forum
  * discussions.
  *
- * @See Also
+ * @section References
  * 1. http://en.wikipedia.org/wiki/Base64
  * 2. https://tools.ietf.org/html/rfc4648
  * 3. http://base64.sourceforge.net

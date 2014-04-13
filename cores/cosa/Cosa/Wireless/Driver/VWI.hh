@@ -36,6 +36,29 @@
  * messages using inexpensive radio transmitters and receivers (VWI). 
  * This library is an object-oriented refactoring and extension of the
  * Virtual Wire library. 
+ *
+ * @section Circuit
+ *                         RF433/RX                       V
+ *                       +------------+                   |
+ *                       |0-----------|-------------------+
+ *                       |ANT         |       17.3 cm
+ *                       |            |
+ *                       |            |
+ *                       |            |
+ *                       |            |
+ * (VCC)---------------1-|VCC         |
+ *                     2-|DATA        |
+ * (RX)----------------3-|DATA        |
+ * (GND)---------------4-|GND         |
+ *                       +------------+
+ *
+ *                         RF433/TX
+ *                       +------------+
+ * (TX)----------------1-|DATA        |
+ * (VCC)---------------2-|VCC         |                    V
+ * (GND)---------------3-|GND         |                    |
+ *                       |ANT       0-|--------------------+
+ *                       +------------+       17.3 cm
  */
 class VWI : public Wireless::Driver {
 public:
@@ -45,29 +68,6 @@ public:
    * symbols. Cosa support several transmission codecs. They may be
    * used to optimize performance in a given scenario; speed, noise,
    * message length, etc.
-   *
-   * @section Circuit
-   *                         RF433/RX
-   *                       +------------+
-   *                       |0-----------|------<|
-   *                       |ANT         |
-   *                       |            |
-   *                       |            |
-   *                       |            |
-   *                       |            |
-   * (VCC)---------------1-|VCC         |
-   *                     2-|DATA        |
-   * (RX)----------------3-|DATA        |
-   * (GND)---------------4-|GND         |
-   *                       +------------+
-   *
-   *                         RF433/TX
-   *                       +------------+
-   * (TX)----------------1-|DATA        |
-   * (VCC)---------------2-|VCC         |
-   * (GND)---------------3-|GND         |
-   *                       |ANT       0-|-------<|
-   *                       +------------+
    */
   class Codec {
   public:

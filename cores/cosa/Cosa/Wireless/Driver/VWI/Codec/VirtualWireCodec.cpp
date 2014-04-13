@@ -4,7 +4,7 @@
  *
  * @section License
  * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire)
- * Copyright (C) 2013, Mikael Patel (Cosa C++ port and refactoring)
+ * Copyright (C) 2013-2014, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,14 +21,12 @@
 
 #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
 
-const uint8_t 
-VirtualWireCodec::symbols[] __PROGMEM = {
+const uint8_t VirtualWireCodec::symbols[] __PROGMEM = {
   0xd,  0xe,  0x13, 0x15, 0x16, 0x19, 0x1a, 0x1c, 
   0x23, 0x25, 0x26, 0x29, 0x2a, 0x2c, 0x32, 0x34
 };
 
-const uint8_t 
-VirtualWireCodec::preamble[] __PROGMEM = {
+const uint8_t VirtualWireCodec::preamble[] __PROGMEM = {
   0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x38, 0x2c
 };
 

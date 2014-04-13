@@ -41,13 +41,21 @@
  * controll may obtain a network address and information from a DHCP
  * server. 
  * 
- * @See Also
+ * @section Circuit
+ *                           W5100
+ *                       +------------+
+ * (D10)--------------29-|CSN         |
+ * (D11)--------------28-|MOSI        |
+ * (D12)--------------27-|MISO        |
+ * (D13)--------------30-|SCK         |
+ * (D2)-----[ ]-------56-|IRQ         |
+ *                       +------------+
+ *
+ * @section References
  * 1. W5100 Datasheet Version 1.2.4, Sep. 20, 2011,
- * http://www.wiznet.co.kr/UpLoad_Files/ReferenceFiles/
- *   W5100_Datasheet_v1.2.4.pdf
+ * http://www.wiznet.co.kr/UpLoad_Files/ReferenceFiles/W5100_Datasheet_v1.2.4.pdf
  * 2. W3150A+/W5100 Errata Sheet 2.4, Oct. 28, 2013,
- * http://www.wiznet.co.kr/Admin_Root/UpLoad_Files/BoardFiles/
- *   3150Aplus_5100_errata_en_v2.4.pdf
+ * http://www.wiznet.co.kr/Admin_Root/UpLoad_Files/BoardFiles/3150Aplus_5100_errata_en_v2.4.pdf
  */
 class W5100 : private SPI::Driver {
 public:

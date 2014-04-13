@@ -237,10 +237,10 @@ protected:
  * the pin to VCC should be used. Most DHT11 modules have a built-in 
  * pullup resistor.
  *
- * @section See Also
- * [1] DHT11 Humidity & Temperature Sensor, Robotics UK,
+ * @section References
+ * 1. DHT11 Humidity & Temperature Sensor, Robotics UK,
  * www.droboticsonline.com, http://www.micro4you.com/files/sensor/DHT11.pdf<br>
- * [2] DHTxx Sensor Tutorial, http://learn.adafruit.com/dht<br>
+ * 2. DHTxx Sensor Tutorial, http://learn.adafruit.com/dht<br>
  */
 class DHT11 : public DHT {
 public:
@@ -273,8 +273,8 @@ private:
  * the pin to VCC should be used. Most DHT22 modules have a built-in 
  * pullup resistor.
  *
- * @section See Also
- * [1] http://www.humiditycn.com/pic/20135318405067570.pdf
+ * @section References
+ * 1. http://www.humiditycn.com/pic/20135318405067570.pdf
  */
 class DHT22 : public DHT {
 public:

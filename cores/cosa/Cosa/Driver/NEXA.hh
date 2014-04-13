@@ -125,10 +125,12 @@ public:
    * interrupt sampling mode. 
    *
    * @section Circuit
-   *                          RF433/RX
-   *                       +------------+
-   *                       |0-----------|------<|
-   *                       |ANT         |
+   *
+   * @section Circuit
+   *                         RF433/RX                       V
+   *                       +------------+                   |
+   *                       |0-----------|-------------------+
+   *                       |ANT         |       17.3 cm
    *                       |            |
    *                       |            |
    *                       |            |
@@ -263,13 +265,14 @@ public:
    * implementation; transmission will return when completed.
    *
    * @section Circuit
+   *
    *                         RF433/TX
    *                       +------------+
    * (Dn)----------------1-|DATA        |
-   * (VCC)---------------2-|VCC         |
-   * (GND)---------------3-|GND         |
-   *                       |ANT       0-|-------<|
-   *                       +------------+
+   * (VCC)---------------2-|VCC         |                    V
+   * (GND)---------------3-|GND         |                    |
+   *                       |ANT       0-|--------------------+
+   *                       +------------+       17.3 cm
    */
   class Transmitter : private OutputPin {
   public:

@@ -4,7 +4,7 @@
  *
  * @section License
  * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire rev. 1.19)
- * Copyright (C) 2013, Mikael Patel (Cosa C++ port and refactoring)
+ * Copyright (C) 2013-2014, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

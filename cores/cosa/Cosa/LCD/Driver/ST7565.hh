@@ -61,9 +61,8 @@
  *                    16-|RD(E)       |
  *                       +------------+
  *
- * @section See Also
- * For further details see Sitronix 65x132 Dot Matrix LCD Controller/
- * Driver, Ver 1.3, 2004 May 18.
+ * @section References
+ * 1. Sitronix 65x132 Dot Matrix LCD Controller/Driver, Ver 1.3, 2004 May 18.
  */
 class ST7565 : public LCD::Device {
 public:

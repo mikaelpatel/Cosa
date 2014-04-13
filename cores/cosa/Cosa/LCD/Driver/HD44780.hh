@@ -37,9 +37,8 @@
  * scroll, cursor, and handling of special characters such as carriage-
  * return, form-feed, back-space, horizontal tab and new-line. 
  *
- * @section See Also
- * For furter details see Product Specification, Hitachi, HD4478U,
- * ADE-207-272(Z), '99.9, Rev. 0.0.
+ * @section References
+ * 1. Product Specification, Hitachi, HD4478U, ADE-207-272(Z), '99.9, Rev. 0.0.
  */
 class HD44780 : public LCD::Device {
 public:

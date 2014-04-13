@@ -35,8 +35,8 @@
  * @section Acknowledgements
  * These classes are inspired by the Simula-67 SIMSET Linkage classes. 
  *
- * @section See Also
- * Historical document, http://www.edelweb.fr/Simula/scb-14.pdf
+ * @section References
+ * 1. Historical document, http://www.edelweb.fr/Simula/scb-14.pdf
  */
 class Linkage : public Event::Handler {
 public:

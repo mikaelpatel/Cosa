@@ -36,8 +36,25 @@
  * Cosa Device Driver for Texas Instruments CC1101, Low-Power Sub-1
  * GHz RF Transceiver. Note that this device requires data in big
  * endian order. 
- * @See Also
- * Product Description, SWRS061H, Rev. H, 2012-10-09
+ *
+ * @section Circuit
+ * This is the pin-out for the CC1101 module which is compatible 
+ * with the NRF24L01 module.
+ *
+ *                           CC1101
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (VCC)---------------2-|VCC         |
+ *                     3-|CDO0        |
+ * (D10)---------------4-|CSN         |
+ * (D13/SCK)-----------5-|SCK         |
+ * (D11/MOSI)----------6-|MOSI        |
+ * (D12/MISO)----------7-|MISO/GDO1   |
+ * (D2/EXT0)-----------8-|GDO2        |
+ *                       +------------+
+ *
+ * @section References
+ * 1. Product Description, SWRS061H, Rev. H, 2012-10-09
  * http://www.ti.com/lit/ds/symlink/cc1101.pdf
  */
 class CC1101 : private SPI::Driver, public Wireless::Driver {
@@ -64,21 +81,33 @@ public:
   CC1101(uint16_t net, uint8_t dev, 
 	 Board::DigitalPin csn = Board::D2,
 	 Board::ExternalInterruptPin irq = Board::EXT0) :
-#elif defined(__ARDUINO_MEGA__)
-  CC1101(uint16_t net, uint8_t dev, 
-	 Board::DigitalPin csn = Board::D53,
-	 Board::ExternalInterruptPin irq = Board::EXT4) :
-#else
-  CC1101(uint16_t net, uint8_t dev, 
-	 Board::DigitalPin csn = Board::D10,
-	 Board::ExternalInterruptPin irq = Board::EXT0) :
-#endif
     SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
     Wireless::Driver(net, dev),
     m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
     m_status(0)
   {
   }
+#elif defined(__ARDUINO_MEGA__)
+  CC1101(uint16_t net, uint8_t dev, 
+	 Board::DigitalPin csn = Board::D53,
+	 Board::ExternalInterruptPin irq = Board::EXT4) :
+    SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+    Wireless::Driver(net, dev),
+    m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
+    m_status(0)
+  {
+  }
+#else
+  CC1101(uint16_t net, uint8_t dev, 
+	 Board::DigitalPin csn = Board::D10,
+	 Board::ExternalInterruptPin irq = Board::EXT0) :
+    SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+    Wireless::Driver(net, dev),
+    m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
+    m_status(0)
+  {
+  }
+#endif
 
   /**
    * @override Wireless::Driver
