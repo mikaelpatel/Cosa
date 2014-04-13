@@ -37,7 +37,7 @@
  *		INSYNC NODEVICE
  *		NOSYNC
  *
- * @References
+ * @section References
  * 1. AVR061: STK500 Communication Protocol, Application Note, 
  * Rev. 2525B-AVR-04/03, http://www.atmel.com/Images/doc2525.pdf
  */
