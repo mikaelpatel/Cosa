@@ -190,12 +190,12 @@ public:
   /**
    * Draw a bar at the current position with the given width.
    * The bar is filled from left to right proportional to the
-   * given procent (0..100).
-   * @param[in] procent filled from left to right.
+   * given precent (0..100).
+   * @param[in] precent filled from left to right.
    * @param[in] width of bar.
    * @param[in] pattern of filled section of bar.
    */
-  void draw_bar(uint8_t procent, uint8_t width, uint8_t pattern = 0x55);
+  void draw_bar(uint8_t percent, uint8_t width, uint8_t pattern = 0x55);
 
   /**
    * @override IOStream::Device

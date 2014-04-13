@@ -192,10 +192,10 @@ ST7565::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 }
 
 void 
-ST7565::draw_bar(uint8_t procent, uint8_t width, uint8_t pattern)
+ST7565::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
 {
-  if (procent > 100) procent = 100;
-  uint8_t filled = (procent * (width - 2U)) / 100;
+  if (percent > 100) percent = 100;
+  uint8_t filled = (percent * (width - 2U)) / 100;
   uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
   width -= (filled + 1);
   asserted(m_cs) {
