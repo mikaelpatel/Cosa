@@ -80,20 +80,29 @@ public:
 	  Board::DigitalPin dc = Board::D2, 
 	  Board::DigitalPin sce = Board::D3,
 	  Font* font = &system5x7) :
+    LCD::Device(),
+    m_sdin(sdin, 0),
+    m_sclk(sclk, 0),
+    m_dc(dc, 1),
+    m_sce(sce, 1),
+    m_font(font)
+  {
+  }
 #else
   PCD8544(Board::DigitalPin sdin = Board::D6, 
 	  Board::DigitalPin sclk = Board::D7, 
 	  Board::DigitalPin dc = Board::D8, 
 	  Board::DigitalPin sce = Board::D9,
 	  Font* font = &system5x7) :
+    LCD::Device(),
+    m_sdin(sdin, 0),
+    m_sclk(sclk, 0),
+    m_dc(dc, 1),
+    m_sce(sce, 1),
+    m_font(font)
+  {
+  }
 #endif
-  LCD::Device(),
-  m_sdin(sdin, 0),
-  m_sclk(sclk, 0),
-  m_dc(dc, 1),
-  m_sce(sce, 1),
-  m_font(font)
-  {}
 
   /**
    * @override LCD::Device
@@ -250,7 +259,10 @@ protected:
    * Write given data to display according to mode.
    * @param[in] data to fill write to device.
    */
-  void write(uint8_t data) { m_sdin.write(data, m_sclk); }
+  void write(uint8_t data) 
+  { 
+    m_sdin.write(data, m_sclk); 
+  }
 
   /**
    * Set the given command code.

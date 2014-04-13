@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -123,6 +123,21 @@ public:
   /**
    * NEXA Wireless Remote Receiver. May be used in polling or
    * interrupt sampling mode. 
+   *
+   * @section Circuit
+   *                          RF433/RX
+   *                       +------------+
+   *                       |0-----------|------<|
+   *                       |ANT         |
+   *                       |            |
+   *                       |            |
+   *                       |            |
+   *                       |            |
+   * (VCC)---------------1-|VCC         |
+   *                     2-|DATA        |
+   * (EXTn)--------------3-|DATA        |
+   * (GND)---------------4-|GND         |
+   *                       +------------+
    */
   class Receiver : private ExternalInterrupt, public Event::Handler {
   public:
@@ -192,7 +207,6 @@ public:
       ExternalInterrupt::disable();
     }
 
-
   private:
     Head m_listeners;
     static const uint8_t SAMPLE_MAX = 4;
@@ -247,6 +261,15 @@ public:
    * NEXA Wireless Command Code Transmitter. Sends command codes to 
    * NEXA lighting control equipment or NEXA::Receiver. Delay based 
    * implementation; transmission will return when completed.
+   *
+   * @section Circuit
+   *                         RF433/TX
+   *                       +------------+
+   * (Dn)----------------1-|DATA        |
+   * (VCC)---------------2-|VCC         |
+   * (GND)---------------3-|GND         |
+   *                       |ANT       0-|-------<|
+   *                       +------------+
    */
   class Transmitter : private OutputPin {
   public:

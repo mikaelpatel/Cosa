@@ -73,65 +73,156 @@ public:
     power_adc_disable(); 
   }
 
-  static void timer0_enable() { power_timer0_enable(); }
-  static void timer0_disable() { power_timer0_disable(); }
+  static void timer0_enable() 
+  { 
+    power_timer0_enable(); 
+  }
 
-  static void timer1_enable() { power_timer1_enable(); }
-  static void timer1_disable() { power_timer1_disable(); }
+  static void timer0_disable() 
+  { 
+    power_timer0_disable(); 
+  }
+
+  static void timer1_enable() 
+  { 
+    power_timer1_enable(); 
+  }
+
+  static void timer1_disable() 
+  { 
+    power_timer1_disable(); 
+  }
 
 #if defined(power_timer2_enable)
-  static void timer2_enable() { power_timer2_enable(); }
-  static void timer2_disable() { power_timer2_disable(); }
+  static void timer2_enable() 
+  { 
+    power_timer2_enable(); 
+  }
+
+  static void timer2_disable() 
+  { 
+    power_timer2_disable(); 
+  }
 #endif
 
 #if defined(power_timer3_enable)
-  static void timer3_enable() { power_timer3_enable(); }
-  static void timer3_disable() { power_timer3_disable(); }
+  static void timer3_enable() 
+  { 
+    power_timer3_enable(); 
+  }
+
+  static void timer3_disable() 
+  { 
+    power_timer3_disable(); 
+  }
 #endif
 
 #if defined(power_timer4_enable)
-  static void timer4_enable() { power_timer4_enable(); }
-  static void timer4_disable() { power_timer4_disable(); }
+  static void timer4_enable() 
+  {
+    power_timer4_enable(); 
+  }
+
+  static void timer4_disable() 
+  { 
+    power_timer4_disable(); 
+  }
 #endif
 
 #if defined(power_timer5_enable)
-  static void timer5_enable() { power_timer5_enable(); }
-  static void timer5_disable() { power_timer5_disable(); }
+  static void timer5_enable() 
+  { 
+    power_timer5_enable(); 
+  }
+
+  static void timer5_disable() 
+  { 
+    power_timer5_disable(); 
+  }
 #endif
 
 #if defined(power_usart0_enable)
-  static void usart0_enable() { power_usart0_enable(); }
-  static void usart0_disable() { power_usart0_disable(); }
+  static void usart0_enable() 
+  { 
+    power_usart0_enable(); 
+  }
+
+  static void usart0_disable() 
+  { 
+    power_usart0_disable(); 
+  }
 #endif
 
 #if defined(power_usart1_enable)
-  static void usart1_enable() { power_usart1_enable(); }
-  static void usart1_disable() { power_usart1_disable(); }
+  static void usart1_enable() 
+  { 
+    power_usart1_enable(); 
+  }
+
+  static void usart1_disable() 
+  { 
+    power_usart1_disable(); 
+  }
 #endif
 
 #if defined(power_usart2_enable)
-  static void usart2_enable() { power_usart2_enable(); }
-  static void usart2_disable() { power_usart2_disable(); }
+  static void usart2_enable() 
+  { 
+    power_usart2_enable(); 
+  }
+
+  static void usart2_disable() 
+  { 
+    power_usart2_disable(); 
+  }
 #endif
 
 #if defined(power_usart3_enable)
-  static void usart3_enable() { power_usart3_enable(); }
-  static void usart3_disable() { power_usart3_disable(); }
+  static void usart3_enable() 
+  { 
+    power_usart3_enable(); 
+  }
+
+  static void usart3_disable() 
+  { 
+    power_usart3_disable(); 
+  }
 #endif
 
 #if defined(power_usi_enable)
-  static void usi_enable() { power_usi_enable(); }
-  static void usi_disable() { power_usi_disable(); }
+  static void usi_enable() 
+  { 
+    power_usi_enable(); 
+  }
+
+  static void usi_disable() 
+  { 
+    power_usi_disable(); 
+  }
 #endif
 
 #if defined(power_spi_enable)
-  static void spi_enable() { power_spi_enable(); }
-  static void spi_disable() { power_spi_disable(); }
+  static void spi_enable() 
+  { 
+    power_spi_enable(); 
+  }
+
+  static void spi_disable() 
+  { 
+    power_spi_disable(); 
+  }
 #endif
 
 #if defined(power_twi_enable)
-  static void twi_enable() { power_twi_enable(); }
-  static void twi_disable() { power_twi_disable(); }
+  static void twi_enable() 
+  { 
+    power_twi_enable(); 
+  }
+
+  static void twi_disable() 
+  { 
+    power_twi_disable(); 
+  }
 #endif
 
   static void all_enable() 

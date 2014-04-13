@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -52,7 +52,8 @@ public:
     HEIGHT(height),
     SPACING(1),
     m_bitmap(bitmap)
-  {}
+  {
+  }
   
   /**
    * @override Font
@@ -118,8 +119,7 @@ public:
    * @param[in] y position.
    * @param[in] scale.
    */
-  virtual void draw(Canvas* canvas, char c, 
-		    uint8_t x, uint8_t y, 
+  virtual void draw(Canvas* canvas, char c, uint8_t x, uint8_t y, 
 		    uint8_t scale)
   {
     canvas->draw_bitmap(x, y, get_bitmap(c), WIDTH, HEIGHT, scale);

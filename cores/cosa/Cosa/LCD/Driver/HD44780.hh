@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -164,12 +164,18 @@ public:
   /**
    * Set display scrolling left.
    */
-  void display_scroll_left() { write(SHIFT_SET | DISPLAY_MOVE | MOVE_LEFT); }
+  void display_scroll_left() 
+  { 
+    write(SHIFT_SET | DISPLAY_MOVE | MOVE_LEFT); 
+  }
 
   /**
    * Set display scrolling right.
    */
-  void display_scroll_right() { write(SHIFT_SET | DISPLAY_MOVE |  MOVE_RIGHT); }
+  void display_scroll_right() 
+  { 
+    write(SHIFT_SET | DISPLAY_MOVE |  MOVE_RIGHT); 
+  }
   
   /**
    * @override LCD::Device
@@ -185,22 +191,34 @@ public:
   /**
    * Turn underline cursor on.
    */
-  void cursor_underline_on() { set(m_cntl, CURSOR_ON); }
+  void cursor_underline_on() 
+  { 
+    set(m_cntl, CURSOR_ON); 
+  }
 
   /**
    * Turn underline cursor off.
    */
-  void cursor_underline_off() { clear(m_cntl, CURSOR_ON); }
+  void cursor_underline_off() 
+  { 
+    clear(m_cntl, CURSOR_ON); 
+  }
 
   /**
    * Turn cursor blink on.
    */
-  void cursor_blink_on() { set(m_cntl, BLINK_ON); }
+  void cursor_blink_on() 
+  { 
+    set(m_cntl, BLINK_ON); 
+  }
 
   /**
    * Turn cursor blink off.
    */
-  void cursor_blink_off() { clear(m_cntl, BLINK_ON); }
+  void cursor_blink_off() 
+  { 
+    clear(m_cntl, BLINK_ON); 
+  }
 
   /**
    * @override LCD::Device
@@ -213,22 +231,34 @@ public:
   /**
    * Set text flow left-to-right.
    */
-  void text_flow_left_to_right() { set(m_mode, INCREMENT); }
+  void text_flow_left_to_right() 
+  { 
+    set(m_mode, INCREMENT); 
+  }
 
   /**
    * Set text flow right-to-left.
    */
-  void text_flow_right_to_left() { clear(m_mode, INCREMENT); }
+  void text_flow_right_to_left() 
+  { 
+    clear(m_mode, INCREMENT); 
+  }
 
   /**
    * Set text scroll left adjust.
    */
-  void text_scroll_left_adjust() { set(m_mode, DISPLAY_SHIFT); }
+  void text_scroll_left_adjust() 
+  {
+    set(m_mode, DISPLAY_SHIFT); 
+  }
 
   /**
    * Set text scroll right adjust.
    */
-  void text_scroll_right_adjust() { clear(m_mode, DISPLAY_SHIFT); }
+  void text_scroll_right_adjust() 
+  { 
+    clear(m_mode, DISPLAY_SHIFT); 
+  }
 
   /**
    * Set custom character bitmap for given identity (0..7). 
@@ -398,17 +428,17 @@ public:
    * (LCD EN)---------------------------------------(EN)
    * (LCD RW)---------------------------------------(GND)
    *
-   *   SDA (Arduino:D7/Tiny:D1) => SR:SER[14]
-   *   SCL (Arduino:D6/Tiny:D2) => SR:SCLK[11]
-   *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
-   *   VCC => SR:/MR[10]
-   *   GND => SR:/OE[13]
+   * SDA (Arduino:D7/Tiny:D1) => SR:SER[14]
+   * SCL (Arduino:D6/Tiny:D2) => SR:SCLK[11]
+   * EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
+   * VCC => SR:/MR[10]
+   * GND => SR:/OE[13]
    *
-   *   SR:Q0..Q3[15,1..3] => LCD:D4..D7
-   *   SR:Q4[4] => LCD:RS
-   *   SR:Q5[5] => LCD:BT (Backlight)
-   *   EN (Arduino:D5/Tiny:D3) => LCD:EN
-   *   GND => LCD:RW
+   * SR:Q0..Q3[15,1..3] => LCD:D4..D7
+   * SR:Q4[4] => LCD:RS
+   * SR:Q5[5] => LCD:BT (Backlight)
+   * EN (Arduino:D5/Tiny:D3) => LCD:EN
+   * GND => LCD:RW
    *
    * @section Performance
    * The LSB of the shift register is used to allow reduction
@@ -532,16 +562,16 @@ public:
    * (LCD EN)---------------------------------------(EN)
    * (LCD RW)---------------------------------------(GND)
    *
-   *   MOSI (Arduino:D11/TinyX4:D5/TinyX5:D0) => SR:SER[14]
-   *   SCK (Arduino:D13/TinyX4:D5/TinyX5:D2) => SR:SCLK[11]
-   *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
-   *   VCC => SR:/MR[10]
+   * MOSI (Arduino:D11/TinyX4:D5/TinyX5:D0) => SR:SER[14]
+   * SCK (Arduino:D13/TinyX4:D5/TinyX5:D2) => SR:SCLK[11]
+   * EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
+   * VCC => SR:/MR[10]
    *
-   *   SR:Q0..Q3[15,1..3] => LCD:D4..D7
-   *   SR:Q4[4] => LCD:RS
-   *   SR:Q5[5] => LCD:BT (Backlight)
-   *   EN (Arduino:D5/Tiny:D3) => LCD:EN
-   *   GND => LCD:RW
+   * SR:Q0..Q3[15,1..3] => LCD:D4..D7
+   * SR:Q4[4] => LCD:RS
+   * SR:Q5[5] => LCD:BT (Backlight)
+   * EN (Arduino:D5/Tiny:D3) => LCD:EN
+   * GND => LCD:RW
    *
    * @section Performance
    * The SPI transfer is so fast that a longer delay is required.
@@ -555,13 +585,17 @@ public:
      */
 #if !defined(__ARDUINO_TINY__)
     SR3WSPI(Board::DigitalPin en = Board::D5) : 
-#else
-    SR3WSPI(Board::DigitalPin en = Board::D3) : 
-#endif
       SPI::Driver(en, 2),
       m_port()
     {
     }
+#else
+    SR3WSPI(Board::DigitalPin en = Board::D3) : 
+      SPI::Driver(en, 2),
+      m_port()
+    {
+    }
+#endif
 
     /**
      * @override HD44780::IO
@@ -613,8 +647,14 @@ public:
 	uint8_t app2:1;		/**< Application bit#2 (Q6) */
 	uint8_t app1:1;		/**< Application bit#1 (Q7) */
       };
-      operator uint8_t() { return (as_uint8); }
-      port_t() { as_uint8 = 0; }
+      operator uint8_t() 
+      { 
+	return (as_uint8); 
+      }
+      port_t() 
+      { 
+	as_uint8 = 0; 
+      }
     };
     port_t m_port;		/**< Port setting */
   };
@@ -643,17 +683,17 @@ public:
    * (LCD BT)---------------------------------------(BT)
    * (LCD RW)---------------------------------------(GND)
    *
-   *   SDA (Arduino:D7/Tiny:D1) => SR:SER[14]
-   *   SCL (Arduino:D6/Tiny:D2) => SR:SCLK[11]
-   *   EN (Arduino:D5/Tiny:D3) => SR:RCLK[12] 
-   *   VCC => SR:/MR[10]
-   *   GND => SR:/OE[13]
+   * SDA (Arduino:D7/Tiny:D1) => SR:SER[14]
+   * SCL (Arduino:D6/Tiny:D2) => SR:SCLK[11]
+   * EN (Arduino:D5/Tiny:D3) => SR:RCLK[12] 
+   * VCC => SR:/MR[10]
+   * GND => SR:/OE[13]
    *
-   *   SR:Q0..Q7[15,1..7] => LCD:D0..D7
-   *   SDA (Arduino:D7) => LCD::RS
-   *   EN (Arduino:D5/Tiny:D3) => LCD:EN
-   *   BT (Arduino:D4) => LCD:BT (Backlight)
-   *   GND => LCD:RW
+   * SR:Q0..Q7[15,1..7] => LCD:D0..D7
+   * SDA (Arduino:D7) => LCD::RS
+   * EN (Arduino:D5/Tiny:D3) => LCD:EN
+   * BT (Arduino:D4) => LCD:BT (Backlight)
+   * GND => LCD:RW
    *
    * @section Performance
    * Delay required even when using Cosa serial write. No
@@ -771,7 +811,10 @@ public:
      * I/O expander with given sub-address (A0..A2).
      * @param[in] subaddr sub-address (0..7, default 7).
      */
-    MJKDZ(uint8_t subaddr = 7) : PCF8574(subaddr), m_port() {}
+    MJKDZ(uint8_t subaddr = 7) : 
+      PCF8574(subaddr), m_port() 
+    {
+    }
     
     /**
      * @override HD44780::IO
@@ -831,8 +874,14 @@ public:
 	uint8_t rs:1;		/**< Command/Data select (P6) */
 	uint8_t bt:1;		/**< Back-light (P7) */
       };
-      operator uint8_t() { return (as_uint8); }
-      port_t() { as_uint8 = 0; }
+      operator uint8_t() 
+      { 
+	return (as_uint8); 
+      }
+      port_t() 
+      { 
+	as_uint8 = 0; 
+      }
     };
     port_t m_port;		/**< Port setting */
   };
@@ -851,7 +900,10 @@ public:
      * I/O expander with given sub-address (A0..A2). 
      * @param[in] subaddr sub-address (0..7, default 0).
      */
-    GYIICLCD(uint8_t subaddr = 0) : MJKDZ(subaddr) {}
+    GYIICLCD(uint8_t subaddr = 0) : 
+      MJKDZ(subaddr) 
+    {
+    }
   };
 
   /**
@@ -866,7 +918,10 @@ public:
      * I/O expander with given sub-address (A0..A2).
      * @param[in] subaddr sub-address (0..7, default 7).
      */
-    DFRobot(uint8_t subaddr = 7) : PCF8574(subaddr), m_port() {}
+    DFRobot(uint8_t subaddr = 7) : 
+      PCF8574(subaddr), m_port() 
+    {
+    }
     
     /**
      * @override HD44780::IO
@@ -926,8 +981,14 @@ public:
 	uint8_t bt:1;		/**< Back-light (P3) */
 	uint8_t data:4;		/**< Data port (P4..P7) */
       };
-      operator uint8_t() { return (as_uint8); }
-      port_t() { as_uint8 = 0; }
+      operator uint8_t() 
+      { 
+	return (as_uint8); 
+      }
+      port_t() 
+      { 
+	as_uint8 = 0; 
+      }
     };
     port_t m_port;		/**< Port setting */
   };
@@ -937,10 +998,10 @@ public:
    * output pins.
    *
    * @section Circuit
-   *   SDA (Arduino:D7/Tiny:D1) => J2:DI[6]
-   *   SCL (Arduino:D6/Tiny:D2) => J2:SCL[5]
-   *   EN (Arduino:D5/Tiny:D3) => J2:CS[4]
-   *   BT (Arduino:D4/Tiny:D4) => BT
+   * SDA (Arduino:D7/Tiny:D1) => J2:DI[6]
+   * SCL (Arduino:D6/Tiny:D2) => J2:SCL[5]
+   * EN (Arduino:D5/Tiny:D3) => J2:CS[4]
+   * BT (Arduino:D4/Tiny:D4) => BT
    */
   class ERM1602_5 : public IO {
   public:
@@ -1124,30 +1185,45 @@ public:
    * Write data or command to display.
    * @param[in] data to write.
    */
-  void write(uint8_t data) { m_io->write8b(data); }
+  void write(uint8_t data) 
+  {
+    m_io->write8b(data); 
+  }
 
   /**
    * Set display attribute and update driver mirror variable.
    * @param[in,out] cmd command variable.
    * @param[in] mask function.
    */
-  void set(uint8_t& cmd, uint8_t mask) { m_io->write8b(cmd |= mask); }
+  void set(uint8_t& cmd, uint8_t mask) 
+  { 
+    m_io->write8b(cmd |= mask); 
+  }
 
   /**
    * Clear display attribute and update driver mirror variable.
    * @param[in,out] cmd command variable.
    * @param[in] mask function.
    */
-  void clear(uint8_t& cmd, uint8_t mask) { m_io->write8b(cmd &= ~mask); }
+  void clear(uint8_t& cmd, uint8_t mask) 
+  { 
+    m_io->write8b(cmd &= ~mask); 
+  }
 
   /**
    * Set communication in data stream mode.
    */
-  void set_data_mode() { m_io->set_mode(1); }
+  void set_data_mode() 
+  { 
+    m_io->set_mode(1); 
+  }
 
   /**
    * Set communication in instruction stream mode.
    */
-  void set_instruction_mode() { m_io->set_mode(0); }
+  void set_instruction_mode() 
+  { 
+    m_io->set_mode(0); 
+  }
 };
 #endif

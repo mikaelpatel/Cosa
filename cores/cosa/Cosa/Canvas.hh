@@ -635,8 +635,8 @@ public:
   /**
    * Draw line to given position with current color. Update cursor to
    * new position.
-   * @param[in] x1
-   * @param[in] y1
+   * @param[in] x1.
+   * @param[in] y1.
    */
   void draw_line(uint8_t x1, uint8_t y1)
   {
@@ -658,7 +658,7 @@ public:
   /**
    * Draw vertical line with given length and current pen color. Update
    * cursor to new position.
-   * @param[in] length
+   * @param[in] length.
    */
   void draw_vertical_line(uint8_t length)
   {
@@ -679,7 +679,7 @@ public:
   /**
    * Draw horizontal line with given length and current pen color. Update
    * cursor to new position.
-   * @param[in] length
+   * @param[in] length.
    */
   void draw_horizontal_line(uint8_t length)
   {
@@ -815,7 +815,7 @@ public:
 
   /**
    * Draw circle at cursor position with current pen color.
-   * @param[in] radius
+   * @param[in] radius.
    */
   void draw_circle(uint8_t radius)
   {
@@ -932,15 +932,11 @@ public:
   void run(uint8_t ix, const void_P* tab, uint8_t max);
 
 protected:
-  /**
-   * Canvas context; default and current. Delegation pattern.
-   */
+  /** Canvas context; default and current. Delegation pattern */
   static Context context;
   Context* m_context;
 
-  /**
-   * Canvas direction (LANDSCAPE/PORTRAIT).
-   */
+  /** Canvas direction (LANDSCAPE/PORTRAIT) */
   uint8_t m_direction;
 };
 

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,6 +39,14 @@
  * of change.
  *
  * @section Circuit
+ *                           HC-SR04
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (D2)----------------2-|TRIG        |
+ * (D3) ---------------3-|ECHO        |
+ * (GND)---------------4-|GND         |
+ *                       +------------+
+ *
  * Connect HC-SR04 module to echo and trigger pin, and VCC and
  * ground. 
  *
@@ -58,7 +66,8 @@ public:
     m_trigPin(trig_pin),
     m_echoPin(echo_pin),
     m_distance(0)
-  {}
+  {
+  }
   
   /**
    * Latest distance reading.

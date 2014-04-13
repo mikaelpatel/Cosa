@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,7 +58,8 @@ public:
     m_start(0),
     B5(0),
     m_pressure(0)
-  {}
+  {
+  }
 
   /**
    * Initiate device driver. Load calibration coefficients from device.
@@ -146,14 +147,10 @@ public:
   }
 
 protected:
-  /**
-   * Temperature conversion time max (ms).
-   */
+  /** Temperature conversion time max (ms) */
   static const uint8_t TEMP_CONV_MS = 5;
 
-  /**
-   * Pressure conversion time max (ms).
-   */
+  /** Pressure conversion time max (ms) */
   static const uint8_t PRESSURE_CONV_MS[] __PROGMEM;
 
   /**

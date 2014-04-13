@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -86,21 +86,31 @@ public:
 	 Board::DigitalPin dc = Board::D2, 
 	 Board::DigitalPin cs = Board::D3,
 	 Font* font = &system5x7) :
+    LCD::Device(),
+    m_si(si, 0),
+    m_scl(scl, 0),
+    m_dc(dc, 1),
+    m_cs(cs, 1),
+    m_line(0),
+    m_font(font)
+  {
+  }
 #else
   ST7565(Board::DigitalPin si = Board::D6, 
 	 Board::DigitalPin scl = Board::D7, 
 	 Board::DigitalPin dc = Board::D8, 
 	 Board::DigitalPin cs = Board::D9,
 	 Font* font = &system5x7) :
+    LCD::Device(),
+    m_si(si, 0),
+    m_scl(scl, 0),
+    m_dc(dc, 1),
+    m_cs(cs, 1),
+    m_line(0),
+    m_font(font)
+  {
+  }
 #endif
-  LCD::Device(),
-  m_si(si, 0),
-  m_scl(scl, 0),
-  m_dc(dc, 1),
-  m_cs(cs, 1),
-  m_line(0),
-  m_font(font)
-  {}
 
   /**
    * @override LCD::Device

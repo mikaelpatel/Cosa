@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -68,24 +68,6 @@ namespace Soft {
      */
     class Driver {
       friend class SPI;
-    protected:
-      /** List of drivers */
-      Driver* m_next;
-      /** Interrupt handler */
-      Interrupt::Handler* m_irq;
-      /** Device chip select pin */
-      OutputPin m_cs;
-      /** Chip select pulse mode; 
-       *  0 for active low logic during the transaction,
-       *  1 for active high logic,
-       *  2 pulse at end of transaction.
-       */
-      uint8_t m_pulse;
-      /** Mode for phase and transition */
-      uint8_t m_mode;
-      /** Data direction; bit order */
-      Order m_order;
-      
     public:
       /**
        * Construct SPI Device driver with given chip select pin, pulse,
@@ -105,19 +87,25 @@ namespace Soft {
 	     uint8_t mode = 0, 
 	     Order order = MSB_ORDER,
 	     Interrupt::Handler* irq = NULL);
-    };
 
-  private:
-    /** List of attached devices for interrupt disable/enable */
-    Driver* m_list;
-    /** Current device using the SPI hardware */
-    Driver* m_dev;
-    /** Master Input Slave Output pin */
-    InputPin m_miso;
-    /** Master Output Slave Input pin */
-    OutputPin m_mosi;
-    /** Serial Clock pin */
-    OutputPin m_sck;
+    protected:
+      /** List of drivers */
+      Driver* m_next;
+      /** Interrupt handler */
+      Interrupt::Handler* m_irq;
+      /** Device chip select pin */
+      OutputPin m_cs;
+      /** Chip select pulse mode; 
+       *  0 for active low logic during the transaction,
+       *  1 for active high logic,
+       *  2 pulse at end of transaction.
+       */
+      uint8_t m_pulse;
+      /** Mode for phase and transition */
+      uint8_t m_mode;
+      /** Data direction; bit order */
+      Order m_order;
+    };
   
   public:
     /**
@@ -183,6 +171,18 @@ namespace Soft {
       if (count == 0) return;
       do transfer(pgm_read_byte(buf++)); while (--count);
     }
+
+  private:
+    /** List of attached devices for interrupt disable/enable */
+    Driver* m_list;
+    /** Current device using the SPI hardware */
+    Driver* m_dev;
+    /** Master Input Slave Output pin */
+    InputPin m_miso;
+    /** Master Output Slave Input pin */
+    OutputPin m_mosi;
+    /** Serial Clock pin */
+    OutputPin m_sck;
   };
   extern SPI spi;
 };

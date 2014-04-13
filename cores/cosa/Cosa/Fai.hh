@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -101,7 +101,10 @@ public:
    * Construct data streaming for given device.
    * @param[in] dev output device.
    */
-  Fai(IOStream::Device* dev = NULL) : Ciao(dev) {}
+  Fai(IOStream::Device* dev = NULL) : 
+    Ciao(dev) 
+  {
+  }
 
   /**
    * Start the data stream with a version string and endian information.

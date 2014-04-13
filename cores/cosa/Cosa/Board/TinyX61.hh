@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -69,7 +69,8 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin) 
   { 
-    return (pin < 8 ? &PINA : &PINB);
+    return (pin < 8 ? &PINA : 
+	              &PINB);
   }
 
   /**
@@ -79,7 +80,8 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin) 
   { 
-    return (pin < 8  ? &PCMSK0 : &PCMSK1);
+    return (pin < 8  ? &PCMSK0 : 
+	               &PCMSK1);
   }
 
   /**
@@ -90,7 +92,8 @@ private:
    */
   static const uint8_t BIT(uint8_t pin)
   {
-    return (pin < 8 ? pin : pin - 8);
+    return (pin < 8 ? pin : 
+	              pin - 8);
   }
   
 public:

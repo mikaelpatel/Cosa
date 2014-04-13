@@ -4,7 +4,7 @@
  *
  * @section License
  * Copyright (c) 2011, Peter Barrett (original author)
- * Copyright (C) 2013, Mikael Patel (refactoring and extension)
+ * Copyright (C) 2013-2014, Mikael Patel (refactoring and extension)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

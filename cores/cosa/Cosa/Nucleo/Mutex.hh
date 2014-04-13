@@ -35,8 +35,6 @@ namespace Nucleo {
  * in a function block to wait and signal a semaphore.
  */
 class Mutex {
-private:
-  Semaphore* m_sem;
 public:
   /**
    * Start mutual exclusion block using given semaphore. The semaphore should
@@ -56,6 +54,9 @@ public:
   {
     m_sem->signal();
   }
+
+private:
+  Semaphore* m_sem;
 };
 
 };

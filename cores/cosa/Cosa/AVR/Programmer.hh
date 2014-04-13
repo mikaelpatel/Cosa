@@ -32,13 +32,6 @@
  * additional support functions for block read and write.
  */
 class Programmer {
-private:
-  /** Number of words (16-bits) per page */
-  uint8_t m_flash_pagesize;
-
-  /** Number of bytes (8-bits) per page */
-  uint8_t m_eeprom_pagesize;
-
 public:
   /**
    * Construct programmer with given page size for read/write of 
@@ -48,28 +41,32 @@ public:
   Programmer(uint8_t pagesize = 32) : 
     m_flash_pagesize(pagesize),
     m_eeprom_pagesize(4)
-  {}
+  {
+  }
   
   /**
    * Transfer data to and from the device.
    * @param[in] data to transfer.
    * @return data received.
    */
+#if defined(USIDR)
   uint8_t transfer(uint8_t data)
   {
-#if defined(USIDR)
     USIDR = data;
     USISR = _BV(USIOIF);
     do {
       USICR = (_BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC));
     } while ((USISR & _BV(USIOIF)) == 0);
     return (USIDR);
+  }
 #else
+  uint8_t transfer(uint8_t data) __attribute__((always_inline))
+  {
     SPDR = data;
     loop_until_bit_is_set(SPSR, SPIF);
     return (SPDR);
-#endif
   }
+#endif
 
   /**
    * Transfer instruction to the device and receive possible value.
@@ -450,6 +447,13 @@ public:
    * @param[in] size number of bytes to write.
    */
   int write_eeprom_memory(uint16_t dest, uint8_t* src, size_t size);
+
+private:
+  /** Number of words (16-bits) per page */
+  uint8_t m_flash_pagesize;
+
+  /** Number of bytes (8-bits) per page */
+  uint8_t m_eeprom_pagesize;
 };
 
 #endif

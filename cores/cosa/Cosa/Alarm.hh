@@ -47,7 +47,8 @@ public:
     Link(),
     m_when(0L),
     m_period(period)
-  {}
+  {
+  }
 
   /**
    * Returns current time in seconds. The current time is from startup
@@ -157,7 +158,11 @@ public:
    */
   class Scheduler : public Periodic {
   public:
-    Scheduler() : Periodic(128), m_seconds(0L) {}
+    Scheduler() : 
+      Periodic(128), 
+      m_seconds(0L) 
+    {
+    }
     virtual void run();
   private:
     uint32_t m_seconds;

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,6 +42,27 @@
  *    Rev. 2525B-AVR-04/03, http://www.atmel.com/Images/doc2525.pdf
  */
 class STK500 {
+public:
+  /** 
+   * Construct command parser with given io-stream device and
+   * programmer.
+   * @param[in] dev iostream device for commands.
+   * @param[in] prog programmer.
+   */
+  STK500(IOStream::Device* dev, Programmer* prog) : 
+    m_dev(dev), 
+    m_prog(prog),
+    m_state(IDLE_STATE),
+    m_addr(0)
+  {
+  }
+
+  /** 
+   * Run the command parser. Returns after parsing and executing 
+   * a single command  
+   */  
+  void run();
+
 protected:
   /** Response definitions */
   enum Resp {
@@ -207,18 +228,6 @@ private:
 
   /** Current address; program memory or eeprom word address */
   uint16_t m_addr;
-
-public:
-  /** Construct command parser with given io-stream device and programmer */
-  STK500(IOStream::Device* dev, Programmer* prog) : 
-    m_dev(dev), 
-    m_prog(prog),
-    m_state(IDLE_STATE),
-    m_addr(0)
-  {}
-
-  /** Run the command parser. Returns after parsing and executing a single command */
-  void run();
 };
 
 #endif

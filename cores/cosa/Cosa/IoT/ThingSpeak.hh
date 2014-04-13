@@ -125,7 +125,11 @@ public:
      * Construct ThingSpeak channel update entry. Initiate buffer 
      * andio-stream for creating command string.
      */
-    Entry() : m_buf(), m_cout(&m_buf) {}
+    Entry() : 
+      m_buf(), 
+      m_cout(&m_buf) 
+    {
+    }
 
     /**
      * Set field with given identity and value. The type of the

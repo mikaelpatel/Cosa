@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,8 +39,10 @@ public:
   /**
    * Construct system font (5x7) singleton.
    */
-  System5x7() : Font(5, 8, bitmap) {}
-
+  System5x7() : 
+    Font(5, 8, bitmap) 
+  {
+  }
 
   /**
    * @override Font

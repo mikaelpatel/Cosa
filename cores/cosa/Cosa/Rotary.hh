@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -129,7 +129,8 @@ public:
       SignalPin(Board::InterruptPin pin, Encoder* encoder) : 
 	PinChangeInterrupt(pin), 
 	m_encoder(encoder)
-      {}
+      {
+      }
 
     private:
       Encoder* m_encoder;
@@ -189,7 +190,8 @@ public:
       m_min(min),
       m_max(max),
       m_step(step)
-    {}
+    {
+    }
     
     /**
      * Return current dial value.
@@ -283,7 +285,8 @@ public:
       m_max(max),
       m_step(step),
       m_steps(steps)
-    {}
+    {
+    }
     
     /**
      * Return current dial value.

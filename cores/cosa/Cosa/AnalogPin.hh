@@ -42,7 +42,8 @@ public:
    * @param[in] pin number.
    * @param[in] ref reference voltage.
    */
-  AnalogPin(Board::AnalogPin pin, Board::Reference ref = Board::AVCC_REFERENCE) :
+  AnalogPin(Board::AnalogPin pin, 
+	    Board::Reference ref = Board::AVCC_REFERENCE) :
     Pin((uint8_t) pin),
     m_reference(ref),
     m_value(0),
@@ -81,7 +82,8 @@ public:
    * @param[in] ref reference voltage.
    * @return sample value.
    */
-  static uint16_t sample(uint8_t pin, Board::Reference ref = Board::AVCC_REFERENCE);
+  static uint16_t sample(uint8_t pin, 
+			 Board::Reference ref = Board::AVCC_REFERENCE);
 
   /**
    * Get power supply voltage in milli-volt. May be used for low battery

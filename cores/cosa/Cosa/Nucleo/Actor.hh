@@ -45,7 +45,8 @@ public:
     m_port(0),
     m_size(0),
     m_buf(NULL)
-  {}
+  {
+  }
 
   /**
    * Send message in given buffer and with given size to actor. Given port

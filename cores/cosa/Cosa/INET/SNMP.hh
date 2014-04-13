@@ -285,10 +285,25 @@ protected:
   bool encode_pdu(uint8_t type, uint8_t size);
   bool encode_value(VALUE& value);
 
-  int available() { return (m_sock->available()); }
-  int read(void* buf, size_t size) { return (m_sock->read(buf, size)); }
-  int write(const void* buf, size_t size) { return (m_sock->write(buf, size)); }
-  int write_P(const void* buf, size_t size) { return (m_sock->write_P(buf, size)); }
+  int available() 
+  { 
+    return (m_sock->available()); 
+  }
+
+  int read(void* buf, size_t size) 
+  { 
+    return (m_sock->read(buf, size)); 
+  }
+
+  int write(const void* buf, size_t size) 
+  { 
+    return (m_sock->write(buf, size)); 
+  }
+  
+  int write_P(const void* buf, size_t size) 
+  { 
+    return (m_sock->write_P(buf, size)); 
+  }
 
   // Connection-less socket for incoming requests
   Socket* m_sock;

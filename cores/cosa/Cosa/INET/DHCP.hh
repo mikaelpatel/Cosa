@@ -105,19 +105,34 @@ public:
   int release(Socket* sock);
 
   /** Return time when lease was obtained */
-  uint32_t get_lease_obtained() { return (m_lease_obtained); }
+  uint32_t get_lease_obtained() 
+  { 
+    return (m_lease_obtained); 
+  }
 
   /** Return time when lease will expire */
-  uint32_t get_lease_expires() { return (m_lease_expires); }
+  uint32_t get_lease_expires() 
+  { 
+    return (m_lease_expires); 
+  }
 
   /** Return network address of DHCP server */
-  const uint8_t* get_dhcp_addr() { return (m_dhcp); }
+  const uint8_t* get_dhcp_addr() 
+  { 
+    return (m_dhcp); 
+  }
 
   /** Return network address of DNS server */
-  const uint8_t* get_dns_addr() { return (m_dns); }
+  const uint8_t* get_dns_addr() 
+  { 
+    return (m_dns); 
+  }
 
   /** Return network address of gateway (router) */
-  const uint8_t* get_gateway_addr() { return (m_gateway); }
+  const uint8_t* get_gateway_addr() 
+  { 
+    return (m_gateway); 
+  }
 
 private:
   /** DHCP message OP code */

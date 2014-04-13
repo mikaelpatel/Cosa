@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,76 +34,7 @@
  * for LCD/IOStream access. Acts as a proxy for an LCD slave.
  */
 class VLCD : public LCD::Device, private TWI::Driver {
-private:
-  // Version information
-  struct info_t {
-    uint8_t major;
-    uint8_t minor;
-    uint8_t width;
-    uint8_t height;
-  };
-
-  // Max size of buffer
-  static const uint8_t BUF_MAX = 40;
-
-  /**
-   * Write given command to slave device.
-   * @param[in] cmd command.
-   */
-  void write(uint8_t cmd);
-
 public:
-  /**
-   * Virtual LCD Slave device
-   */
-  class Slave : public TWI::Slave {
-    friend class VLCD;
-  private:
-    // Version code
-    static const uint8_t MAJOR = 1;
-    static const uint8_t MINOR = 0;
-
-    // Command prefix byte
-    static const uint8_t COMMAND = 255;
-
-    // Command codes
-    enum {
-      BACKLIGHT_OFF_CMD = 0,
-      BACKLIGHT_ON_CMD,
-      DISPLAY_OFF_CMD,
-      DISPLAY_ON_CMD,
-      INIT_CMD = 0xff
-    } __attribute__((packed));
-
-    // Buffer for transactions (max string write)
-    uint8_t m_buf[BUF_MAX];
-
-    // The actual LCD implementation
-    LCD::Device* m_lcd;
-    
-  public:
-    /**
-     * Construct Virtual LCD Slave with given LCD and TWI address.
-     * @param[in] lcd implementation.
-     * @param[in] addr TWI address (default 0x5a).
-     */
-    Slave(LCD::Device* lcd, uint8_t addr = 0x5a) : 
-      TWI::Slave(addr), 
-      m_lcd(lcd)
-    {
-      set_write_buf(m_buf, sizeof(m_buf));
-      set_read_buf(m_buf, sizeof(m_buf));
-    }
-
-    /**
-     * @override TWI::Slave
-     * Slave request handler; parse and dispatch LCD functions.
-     * @param[in] buf buffer pointer.
-     * @param[in] size of buffer.
-     */
-    virtual void on_request(void* buf, size_t size);
-  };
-
   // Display protocol version (valid after initialization, begin())
   uint8_t MAJOR;
   uint8_t MINOR;
@@ -198,6 +129,75 @@ public:
    * @return number of bytes written or EOF(-1).
    */
   virtual int write(void* buf, size_t size);
+
+private:
+  // Max size of buffer
+  static const uint8_t BUF_MAX = 40;
+
+  /**
+   * Virtual LCD Slave device
+   */
+  class Slave : public TWI::Slave {
+    friend class VLCD;
+  public:
+    /**
+     * Construct Virtual LCD Slave with given LCD and TWI address.
+     * @param[in] lcd implementation.
+     * @param[in] addr TWI address (default 0x5a).
+     */
+    Slave(LCD::Device* lcd, uint8_t addr = 0x5a) : 
+      TWI::Slave(addr), 
+      m_lcd(lcd)
+    {
+      set_write_buf(m_buf, sizeof(m_buf));
+      set_read_buf(m_buf, sizeof(m_buf));
+    }
+
+    /**
+     * @override TWI::Slave
+     * Slave request handler; parse and dispatch LCD functions.
+     * @param[in] buf buffer pointer.
+     * @param[in] size of buffer.
+     */
+    virtual void on_request(void* buf, size_t size);
+
+  private:
+    // Version code
+    static const uint8_t MAJOR = 1;
+    static const uint8_t MINOR = 0;
+
+    // Command prefix byte
+    static const uint8_t COMMAND = 255;
+
+    // Command codes
+    enum {
+      BACKLIGHT_OFF_CMD = 0,
+      BACKLIGHT_ON_CMD,
+      DISPLAY_OFF_CMD,
+      DISPLAY_ON_CMD,
+      INIT_CMD = 0xff
+    } __attribute__((packed));
+
+    // Buffer for transactions (max string write)
+    uint8_t m_buf[BUF_MAX];
+
+    // The actual LCD implementation
+    LCD::Device* m_lcd;
+  };
+
+  // Version information
+  struct info_t {
+    uint8_t major;
+    uint8_t minor;
+    uint8_t width;
+    uint8_t height;
+  };
+
+  /**
+   * Write given command to slave device.
+   * @param[in] cmd command.
+   */
+  void write(uint8_t cmd);
 };
 
 #endif

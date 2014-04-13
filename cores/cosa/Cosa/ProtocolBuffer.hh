@@ -63,7 +63,8 @@ public:
   ProtocolBuffer(IOStream::Device* ins, IOStream::Device* outs) : 
     m_ins(ins),
     m_outs(outs)
-  {}
+  {
+  }
   
   /**
    * Read next byte from the input stream.
@@ -217,10 +218,12 @@ public:
     if (res < 0) return (-1);
     return (res + 1);
   }
+
   int write(uint8_t tag, int16_t value) 
   { 
     return (write(tag, (int32_t) value)); 
   }
+
   int write(uint8_t tag, int8_t value) 
   { 
     return (write(tag, (int32_t) value)); 
@@ -240,10 +243,12 @@ public:
     if (res < 0) return (-1);
     return (res + 1);
   }
+
   int write(uint8_t tag, uint16_t value) 
   { 
     return (write(tag, (uint32_t) value)); 
   }
+
   int write(uint8_t tag, uint8_t value) 
   { 
     return (write(tag, (uint32_t) value)); 
@@ -266,10 +271,12 @@ public:
     if (res != count) return (-1);
     return (count + 2);
   }
+
   int write(uint8_t tag, const char* str)
   {
     return (write(tag, str, strlen(str)));
   }
+
   int write_P(uint8_t tag, const char* str)
   {
     if (write(tag, LENGTH_DELIMITED) < 0) return (-1);

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,6 +33,13 @@
 /**
  * Cosa IR receiver/TSOP4838 driver.
  * 
+ * @section Circuit
+ *                          TSOP4838
+ *                       +------------+
+ * (EXTn)--------------1-|OUT         |
+ * (GND)---------------2-|GND    ( )  |
+ * (VCC)---------------3-|VCC         |
+ *                       +------------+
  * @section See Also
  * http://www.vishay.com/docs/82459/tsop48.pdf
  */
@@ -100,7 +107,8 @@ public:
       m_max(max),
       m_keymap(keymap),
       m_keys(keys)
-    {}
+    {
+    }
 
     /**
      * Reset the receiver for the next code sequence.

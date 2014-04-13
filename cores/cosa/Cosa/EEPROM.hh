@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -86,7 +86,10 @@ public:
    * is the internal EEPROM memory. 
    * @param[in] dev device.
    */
-  EEPROM(Device* dev = &Device::eeprom) : m_dev(dev) {}
+  EEPROM(Device* dev = &Device::eeprom) : 
+    m_dev(dev) 
+  {
+  }
 
   /**
    * Return true(1) if the device is ready, write cycle is completed,

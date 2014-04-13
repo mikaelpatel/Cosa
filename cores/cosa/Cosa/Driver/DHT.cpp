@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,13 +27,15 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
-// The interrupt handler, enabled after the request pulse, and
-// on falling (low to high) transition. This allows lower interrupt
-// frequency than on change mode (which would be required for
-// pin change interrupts. First pulse is the device response and
-// is a one(1) bit is encoded as a long pulse (54 + 80 = 134 us), 
-// a zero(0) bit as a short pulse (54 + 24 = 78 us). Sequence ends
-// with a low pulse (54 us) which allows falling/rising detection.
+/*
+ * The interrupt handler, enabled after the request pulse, and on
+ * falling (low to high) transition. This allows lower interrupt
+ * frequency than on change mode (which would be required for pin
+ * change interrupts. First pulse is the device response and is a
+ * one(1) bit is encoded as a long pulse (54 + 80 = 134 us), a zero(0)
+ * bit as a short pulse (54 + 24 = 78 us). Sequence ends with a low
+ * pulse (54 us) which allows falling/rising detection. 
+ */
 void 
 DHT::on_interrupt(uint16_t arg) 
 { 
@@ -169,12 +171,12 @@ DHT::sample_request()
 }
 
 bool
-DHT::sample_await(uint8_t mode)
+DHT::sample_await()
 {
   if (m_period != 0) return (true);
   uint32_t start = RTC::millis();
   while (m_state != COMPLETED && RTC::since(start) < MIN_PERIOD) 
-    Power::sleep(mode);
+    yield();
   if (m_state != COMPLETED) return (false);
 
   // Data reading was completed; validate data and check sum

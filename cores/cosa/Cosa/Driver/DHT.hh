@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,7 +58,7 @@ public:
   
   /**
    * Start the DHT device driver with the given sampling period.
-   * @param[in] ms sampling period (Default 2048 ms).
+   * @param[in] ms sampling period (Default MIN_PERIOD/2048 ms).
    */
   void begin(uint16_t ms = MIN_PERIOD);
 
@@ -103,7 +103,7 @@ public:
    * values if successful otherwise false(0).  
    * @return bool.
    */
-  bool sample_await(uint8_t mode = SLEEP_MODE_IDLE);
+  bool sample_await();
 
   /**
    * Read temperature and humidity from the device. Return true(1) and
@@ -245,18 +245,22 @@ protected:
 class DHT11 : public DHT {
 public:
   /**
+   * Construct connection to a DHT11 device on given in/output-pin.
+   * Set humidity and temperature calibration offsets to zero.
+   * @param[in] pin data (Default EXT0).
+   */
+  DHT11(Board::ExternalInterruptPin pin = Board::EXT0) : 
+    DHT(pin) 
+  {
+  }
+
+private:
+  /**
    * @override DHT
    * Adjust data from the DHT11 device; scale by 10 for uniform 
    * number range as DHT22.
    */
   virtual void adjust_data();
-
-  /**
-   * Construct connection to a DHT11 device on given in/output-pin.
-   * Set humidity and temperature calibration offsets to zero.
-   * @param[in] pin data.
-   */
-  DHT11(Board::ExternalInterruptPin pin = Board::EXT0) : DHT(pin) {}
 };
 
 /**
@@ -273,6 +277,17 @@ public:
  * [1] http://www.humiditycn.com/pic/20135318405067570.pdf
  */
 class DHT22 : public DHT {
+public:
+  /**
+   * Construct connection to a DHT22 device on given in/output-pin.
+   * Set humidity and temperature calibration offsets to zero.
+   * @param[in] pin data (Default EXT0).
+   */
+  DHT22(Board::ExternalInterruptPin pin = Board::EXT0) : 
+    DHT(pin) 
+  {
+  }
+
 private:
   /**
    * @override DHT
@@ -280,13 +295,5 @@ private:
    * negative temperature values.
    */
   virtual void adjust_data();
-
-public:
-  /**
-   * Construct connection to a DHT22 device on given in/output-pin.
-   * Set humidity and temperature calibration offsets to zero.
-   * @param[in] pin data.
-   */
-  DHT22(Board::ExternalInterruptPin pin = Board::EXT0) : DHT(pin) {}
 };
 #endif

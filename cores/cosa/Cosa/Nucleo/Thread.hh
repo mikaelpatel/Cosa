@@ -41,7 +41,10 @@ public:
    * Return running thread.
    * @return thread.
    */
-  static Thread* get_running() { return (s_running); }
+  static Thread* get_running() 
+  { 
+    return (s_running); 
+  }
 
   /**
    * Schedule static thread with given stack size. Using the default
@@ -73,7 +76,10 @@ public:
    * Yield control to the next thread in the thread queue. Preserve
    * stack and machine state and later continue after this function. 
    */
-  void yield() { resume((Thread*) get_succ()); }
+  void yield() 
+  { 
+    resume((Thread*) get_succ()); 
+  }
 
   /**
    * Delay at least the given time period in milli-seconds. The resolution

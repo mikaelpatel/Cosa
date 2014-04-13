@@ -33,43 +33,10 @@
  * MQTT V3.1 Protocol client implementation.
  * 
  * @section Reference
- * 1. MQTT V3.1 Protocol Specification, Copyright (c) 1999-2010, Eurotech, IBM.
+ * 1. MQTT V3.1 Protocol Specification, 
+ *    Copyright (c) 1999-2010, Eurotech, IBM.
  */
 class MQTT {
-protected:
-  // Message format: Fixed header message type and flags (pp. 4-7)
-  enum {
-    CONNECT = 0x10,		// Client request to connect to Server
-      CONNACK = 0x20,		// Connect acknowledgement
-    PUBLISH = 0x30,		// Publish message
-      PUBACK = 0x40,		// Publish acknowledgement
-      PUBREC = 0x50,		// Publish received (assured delivery part 1)
-      PUBREL = 0x62,		// Publish release (assured delivery part 2)
-      PUBCOMP = 0x70,		// Publish complete (assured delivery part 3)
-    SUBSCRIBE = 0x82,		// Client subscribe request (acknowledge delivery)
-      SUBACK = 0x90,		// Subscribe acknowledgement
-    UNSUBSCRIBE = 0xa2,		// Client unsubscribe request (acknowledge delivery)
-      UNSUBACK = 0xb0,		// Unsubscribe acknowledgement
-    PINGREQ = 0xc0,		// PING request
-      PINGRESP = 0xd0,		// PING response
-    DISCONNECT = 0xe0,		// Client is disconnecting
-    DUP = 0x08,			// Attempt to redeliver message
-    RETAIN = 0x01,		// Server should hold on to the message
-    MESSAGE_QOS_POS = 1,	// Quality of service (bit position)
-    MESSAGE_QOS_MASK = 0x06,	// Quality of service (bit mask)
-    MESSAGE_TYPE_MASK = 0xf0,	// Mask message type
-    MESSAGE_FLAG_MASK = 0x0f	// Mask message flags
-  } __attribute__((packed));
-
-  // Bit position for will quality of service
-  static const uint8_t WILL_QOS_POS = 3;
-
-  // Bit mask for quality of service value
-  static const uint8_t QOS_MASK = 0x03;
-
-  // MQTT connect magic header
-  static const char PROTOCOL[] PROGMEM;
-
 public:
   // Quality of service levels on publish (pp. 5-6)
   enum QoS_t {
@@ -89,12 +56,19 @@ public:
     /**
      * Default constructor; initiate client state.
      */
-    Client() : m_sock(NULL), m_mid(1) {}
+    Client() : 
+      m_sock(NULL), 
+      m_mid(1) 
+    {
+    }
 
     /**
      * Default destructor.
      */
-    ~Client() { end(); }
+    ~Client() 
+    { 
+      end(); 
+    }
 
     /**
      * Start MQTT client with given socket. The socket will be used for 
@@ -253,6 +227,39 @@ public:
     int read(void* buf, size_t count, uint32_t ms = 3000L);
     int flush();
   };
+protected:
+  // Message format: Fixed header message type and flags (pp. 4-7)
+  enum {
+    CONNECT = 0x10,		// Client request to connect to Server
+      CONNACK = 0x20,		// Connect acknowledgement
+    PUBLISH = 0x30,		// Publish message
+      PUBACK = 0x40,		// Publish acknowledgement
+      PUBREC = 0x50,		// Publish received (assured delivery part 1)
+      PUBREL = 0x62,		// Publish release (assured delivery part 2)
+      PUBCOMP = 0x70,		// Publish complete (assured delivery part 3)
+    SUBSCRIBE = 0x82,		// Client subscribe request (acknowledge delivery)
+      SUBACK = 0x90,		// Subscribe acknowledgement
+    UNSUBSCRIBE = 0xa2,		// Client unsubscribe request (acknowledge delivery)
+      UNSUBACK = 0xb0,		// Unsubscribe acknowledgement
+    PINGREQ = 0xc0,		// PING request
+      PINGRESP = 0xd0,		// PING response
+    DISCONNECT = 0xe0,		// Client is disconnecting
+    DUP = 0x08,			// Attempt to redeliver message
+    RETAIN = 0x01,		// Server should hold on to the message
+    MESSAGE_QOS_POS = 1,	// Quality of service (bit position)
+    MESSAGE_QOS_MASK = 0x06,	// Quality of service (bit mask)
+    MESSAGE_TYPE_MASK = 0xf0,	// Mask message type
+    MESSAGE_FLAG_MASK = 0x0f	// Mask message flags
+  } __attribute__((packed));
+
+  // Bit position for will quality of service
+  static const uint8_t WILL_QOS_POS = 3;
+
+  // Bit mask for quality of service value
+  static const uint8_t QOS_MASK = 0x03;
+
+  // MQTT connect magic header
+  static const char PROTOCOL[] PROGMEM;
 };
 
 #endif

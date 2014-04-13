@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,7 +44,10 @@ public:
    * buffer may be given but must be able to hold the bitmap size.
    * If the buffer pointer is null a buffer is allocated.
    */
-  OffScreen() : Canvas(width, height) {}
+  OffScreen() : 
+    Canvas(width, height) 
+  {
+  }
 
   /**
    * Get bitmap for the off-screen canvas.

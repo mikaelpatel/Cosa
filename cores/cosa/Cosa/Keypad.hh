@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -112,7 +112,8 @@ protected:
       m_keypad(keypad),
       m_map(map),
       m_latest(0)
-    {}
+    {
+    }
   };
 
   // Keypad sample rate
@@ -148,7 +149,10 @@ public:
   } __attribute__((packed));
 
   // LCD Keypad constructor with internal key map
-  LCDKeypad() : Keypad(Board::A0, m_map) {}
+  LCDKeypad() : 
+    Keypad(Board::A0, m_map) 
+  {
+  }
 
 private:
   // Analog reading to key index map

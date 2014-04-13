@@ -4,7 +4,7 @@
  *
  * @section License
  * Copyright (C) 2011, Ben Buxton (Rotary encoder state machine)
- * Copyright (C) 2013, Mikael Patel (Cosa port and extension)
+ * Copyright (C) 2013-2014, Mikael Patel (Cosa port and extension)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

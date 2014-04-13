@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -338,7 +338,8 @@ public:
   Registry(item_list_P root, EEPROM::Device* eeprom = NULL) : 
     m_root(root),
     m_eeprom(eeprom == NULL ? &EEPROM::Device::eeprom : eeprom)
-  {}
+  {
+  }
   
   /**
    * Lookup registry item for given path. Returns pointer to item if

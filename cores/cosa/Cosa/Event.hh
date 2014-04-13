@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -117,7 +117,8 @@ public:
     m_type(type),
     m_target(target),
     m_value(value)
-  {}
+  {
+  }
 
   /**
    * Return event type.

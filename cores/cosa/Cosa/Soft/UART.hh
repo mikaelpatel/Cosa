@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,13 +41,6 @@ namespace Soft {
    * devices. See Cosa/IOStream/Device/UART.hh.
    */
   class UART : public IOStream::Device {
-  private:
-    static const uint8_t DATA_MASK = 7;
-    OutputPin m_pin;
-    uint8_t m_stops;
-    uint8_t m_bits;
-    uint16_t m_us;
-
   public:
     enum {
       DATA5 = 0,
@@ -112,6 +105,13 @@ namespace Soft {
     {
       return (true);
     }
+
+  private:
+    static const uint8_t DATA_MASK = 7;
+    OutputPin m_pin;
+    uint8_t m_stops;
+    uint8_t m_bits;
+    uint16_t m_us;
   };
 };
 

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,6 +33,7 @@
  * Cosa TWI driver for InvenSense, MPU6050, Motion Processing Unit,
  * 6-axis motion processor solution with gyroscope, accelerator and
  * extended I2C slave bus.
+ *
  * @See Also
  * MPU-6000 and MPU-6050 Register Map and Description, Rev. 4.2.
  * http://invensense.com/mems/gyro/documents/RM-MPU-6000A-00v4.2.pdf
@@ -44,7 +45,10 @@ public:
    * sub-address. Default is zero(0).
    * @param[in] subaddr sub-address (0..1, default 0)
    */
-  MPU6050(uint8_t subaddr = 0) : TWI::Driver(0x68 | (subaddr != 0)) {}
+  MPU6050(uint8_t subaddr = 0) : 
+    TWI::Driver(0x68 | (subaddr != 0)) 
+  {
+  }
 
   /**
    * Start interaction with device. Turn on measurements. 
@@ -191,8 +195,14 @@ protected:
       uint8_t EXT_SYNC_SET:3;	// Frame Synchronization setting
       uint8_t reserved:2;	// Reserved
     };
-    config_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    config_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**
@@ -207,8 +217,14 @@ protected:
       uint8_t YG_ST:1;		// Y axis gyroscope selftest
       uint8_t XG_ST:1;		// X axis gyroscope selftest
     };
-    gyro_config_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    gyro_config_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**
@@ -233,8 +249,14 @@ protected:
       uint8_t YA_ST:1;		// Y axis accelerometer selftest
       uint8_t XA_ST:1;		// X axis accelerometer selftest
     };
-    accel_config_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    accel_config_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**
@@ -262,8 +284,14 @@ protected:
       uint8_t XG_FIFO_EN:1;	// Enable Gyroscope X
       uint8_t TEMP_FIFO_EN:1;	// Enable Temperature
     };
-    fifo_en_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    fifo_en_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**
@@ -281,8 +309,14 @@ protected:
       uint8_t INT_OPEN:1;	// Open drain
       uint8_t INT_LEVEL:1;	// Active high(0) or low(1)
     };
-    int_pin_cfg_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    int_pin_cfg_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**
@@ -297,8 +331,14 @@ protected:
       uint8_t FIFO_OFLOW_EN:1;	// Enable FIFO buffer overflow
       uint8_t reserved2:3;	// Reserved-2
     };
-    int_enable_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    int_enable_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**
@@ -313,8 +353,14 @@ protected:
       uint8_t FIFO_OFLOW_INT:1;	// FIFO buffer overflow
       uint8_t reserved2:3;	// Reserved-2
     };
-    int_status_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    int_status_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**
@@ -328,8 +374,14 @@ protected:
       uint8_t GYRO_RESET:1;	// Reset gyroscope
       uint8_t reserved:5;	// Reserved
     };
-    signal_path_reset_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    signal_path_reset_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**
@@ -347,8 +399,14 @@ protected:
       uint8_t FIFO_EN:1;	// Enable FIFO
       uint8_t reserved2:1;
     };
-    user_ctrl_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    user_ctrl_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**
@@ -364,8 +422,14 @@ protected:
       uint8_t SLP:1;		// Sleep
       uint8_t DEVICE_RESET:1;	// Reset
     };
-    pwr_mgmt_1_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    pwr_mgmt_1_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**
@@ -396,8 +460,14 @@ protected:
       uint8_t STBY_XA:1;	// Standby mode
       uint8_t LP_WAKE_CTRL:2;	// Low Power wake-up frequency
     };
-    pwr_mgmt_2_t(uint8_t value = 0) { as_uint8 = value; }
-    operator uint8_t() { return (as_uint8); }
+    pwr_mgmt_2_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
+    operator uint8_t() 
+    { 
+      return (as_uint8); 
+    }
   };
 
   /**

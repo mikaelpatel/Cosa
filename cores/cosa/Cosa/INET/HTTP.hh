@@ -47,7 +47,10 @@ public:
     /** 
      * Default constructor.
      */
-    Server() : m_sock(NULL) {}
+    Server() : 
+      m_sock(NULL) 
+    {
+    }
 
     /**
      * Start server with given socket. Initiates socket for incoming
@@ -99,12 +102,18 @@ public:
     /**
      * Default constructor.
      */
-    Client() : m_sock(NULL) {}
+    Client() : 
+      m_sock(NULL) 
+    {
+    }
     
     /**
      * Default destructor. Closes and releases given socket.
      */
-    ~Client() { end(); }
+    ~Client() 
+    { 
+      end(); 
+    }
     
     /**
      * Start web client with given socket. The socket will be used for 

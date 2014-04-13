@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,7 +41,10 @@ public:
   /**
    * Construct fixed number font singleton.
    */
-  FixedNums8x16() : GLCDFont(8, 15, bitmap) {}
+  FixedNums8x16() : 
+    GLCDFont(8, 15, bitmap) 
+  {
+  }
 
   /**
    * @overriden Font

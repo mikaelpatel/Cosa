@@ -66,29 +66,44 @@ public:
    * Set run period when during activity start and duration.
    * @param[in] seconds run period.
    */
-  void set_run_period(uint16_t seconds) { m_run_period = seconds; }
+  void set_run_period(uint16_t seconds) 
+  {
+    m_run_period = seconds; 
+  }
 
   /**
    * Return cycle of run in activity.
    * @return cycles
    */
-  uint16_t get_cycles() { return (m_cycles); }
+  uint16_t get_cycles() 
+  { 
+    return (m_cycles); 
+  }
 
   /**
    * Return time in seconds from scheduler.
    * @return time.
    */
-  clock_t time() { return (Alarm::time()); }
+  clock_t time() 
+  { 
+    return (Alarm::time()); 
+  }
 
   /**
    * Enable activity handler.
    */
-  void enable() { m_scheduler.enable(); }
+  void enable() 
+  { 
+    m_scheduler.enable(); 
+  }
 
   /**
    * Disable activity handler.
    */
-  void disable() { m_scheduler.disable(); }
+  void disable() 
+  { 
+    m_scheduler.disable(); 
+  }
 
   /**
    * @override Activity
@@ -102,8 +117,15 @@ private:
   /** Activity scheduler */
   class Scheduler : public Alarm {
   public:
-    Scheduler(Activity* activity) : Alarm(), m_activity(activity) {}
-    virtual void run() { m_activity->schedule(time()); }
+    Scheduler(Activity* activity) : 
+      Alarm(), 
+      m_activity(activity) 
+    {
+    }
+    virtual void run() 
+    { 
+      m_activity->schedule(time()); 
+    }
   private:
     Activity* m_activity;
   };

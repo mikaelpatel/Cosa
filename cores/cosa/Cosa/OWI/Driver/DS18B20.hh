@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2013, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,6 +33,18 @@
  * Driver for the DS18B20 Programmable Resolution 1-Write Digital
  * Thermometer.  
  * 
+ * @section Circuit
+ *                           DS18B20
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (Dn)------+---------2-|DQ          |
+ *           |       +-3-|VDD         |
+ *          4K7      |   +------------+
+ *           |       | 
+ * (VCC)-----+       +---(VCC/GND)
+ *
+ * May use parasite powering (connect DS18B20 VCC to GND) otherwise to VCC.
+ * 
  * @section See Also
  * Maxim Integrated product description (REV: 042208) 
  */
@@ -48,7 +60,10 @@ public:
      * device family.
      * @param[in] owi one-wire pin to search.
      */
-    Search(OWI* owi) : OWI::Search(owi, FAMILY_CODE) {}
+    Search(OWI* owi) : 
+      OWI::Search(owi, FAMILY_CODE) 
+    {
+    }
     
     /**
      * Get the next thermometer with active alarm since latest
@@ -72,7 +87,8 @@ public:
     m_parasite(0),
     m_start(0L),
     m_converting(false)
-  {}
+  {
+  }
 
   /**
    * Construct a DS18B20 device connected to the given 1-Wire bus
@@ -88,7 +104,8 @@ public:
     m_parasite(0),
     m_start(0L),
     m_converting(false)
-  {}
+  {
+  }
 
   /**
    * Connect to DS18B20 device with given index. Reads configuration,

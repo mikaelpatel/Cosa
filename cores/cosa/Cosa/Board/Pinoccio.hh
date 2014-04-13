@@ -58,7 +58,7 @@ private:
     return (pin < 8  ? &PINB : 
 	    pin < 16 ? &PIND : 
 	    pin < 24 ? &PINE : 
-	    &PINF);
+	               &PINF);
   }
 
   /**
@@ -79,7 +79,8 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin) 
   { 
-    return (pin < 8 ? &PCMSK0 : &PCMSK1);
+    return (pin < 8 ? &PCMSK0 : 
+	              &PCMSK1);
   }
 
   /**
@@ -89,7 +90,8 @@ private:
    */
   static volatile uint8_t* UART(uint8_t port) 
   { 
-    return (port == 1 ? &UCSR1A : &UCSR0A);
+    return (port == 1 ? &UCSR1A : 
+	                &UCSR0A);
   }
 
 public:

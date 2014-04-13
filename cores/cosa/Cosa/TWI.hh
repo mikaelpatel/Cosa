@@ -58,7 +58,8 @@ public:
    Driver(uint8_t addr) : 
      Event::Handler(), 
      m_addr(addr << 1)
-    {}
+    {
+    }
 
   protected:
     /** Device bus address */
@@ -80,7 +81,10 @@ public:
      * Construct slave with given address.
      * @param[in] addr slave address.
      */
-    Slave(uint8_t addr) : Driver(addr) {}
+    Slave(uint8_t addr) : 
+      Driver(addr) 
+    {
+    }
 
     /**
      * Set read (result) buffer. Must be called before starting TWI.

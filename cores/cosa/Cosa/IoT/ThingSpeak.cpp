@@ -32,7 +32,8 @@ static const char CRLF[] __PROGMEM = "\r\n";
 
 ThingSpeak::Client::Client() :
   m_sock(NULL)
-{}
+{
+}
   
 ThingSpeak::Client::~Client()
 {
@@ -79,7 +80,8 @@ ThingSpeak::Client::disconnect()
 ThingSpeak::Channel::Channel(Client* client, const char* key) :
   m_client(client),
   m_key(key)
-{}
+{
+}
 
 int 
 ThingSpeak::Channel::post(const char* entry, const char* status)
