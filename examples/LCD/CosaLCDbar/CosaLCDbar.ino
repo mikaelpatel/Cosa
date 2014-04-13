@@ -22,6 +22,26 @@
  * @section Circuit
  * Designed for a LCD Keypad shield with 16x2 HD44780 LCD and six 
  * buttons. Alternatively connect potentiometer to Analog pin 0.
+ *
+ *                           HD44780
+ *                       +------------+
+ * (GND)---------------1-|VSS         |
+ * (VCC)---------------2-|VDD         |
+ * (D10)--(BT)---------3-|VO          |
+ * (D8)----------------4-|RS          |
+ *                     5-|RW          |
+ * (D9)----------------6-|EN          |
+ *                     7-|D0          |
+ *                     8-|D1          |
+ *                     9-|D2          |
+ *                    10-|D3          |
+ * (D4/D0)------------11-|D4          |
+ * (D5/D1)------------12-|D5          |
+ * (D6/D2)------------13-|D6          |
+ * (D7/D3)------------14-|D7          |
+ * (VCC)--------------15-|A           |
+ * (GND)--------------16-|K           |
+ *                       +------------+
  * 
  * This file is part of the Arduino Che Cosa project.
  */
@@ -29,7 +49,6 @@
 #include "Cosa/Types.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/AnalogPin.hh"
-#include "Cosa/IOStream.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 // LCD and communication port
@@ -99,7 +118,7 @@ void loop()
   draw_spaces(cout, percent, 100);
   cout << percent << PSTR("% ");
   draw_bar(percent, lcd.WIDTH - 5);
-  percent += 5;
+  percent += 2;
   if (percent > 100) percent = 0;
 
   // Analog sample (keypad) horizontal bar
@@ -108,6 +127,6 @@ void loop()
   cout << value << ' ';
   draw_bar(((value * 100L) + 100) >> 10, lcd.WIDTH - 5);
 
-  delay(500);
+  delay(300);
 }
 
