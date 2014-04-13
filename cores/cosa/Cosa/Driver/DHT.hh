@@ -233,6 +233,15 @@ protected:
  * DHT11 Humidity & Temperature Sensor device driver. 
  *
  * @section Circuit
+ * @code
+ *                           DHT11
+ *                       +------------+
+ * (VCC)---------------1-|VCC  ====== |
+ * (D2/EXT0)-----------2-|DATA ====== |
+ *                     3-|     ====== |
+ * (GND)---------------4-|GND  ====== |
+ *                       +------------+
+ * @endcode
  * Connect DHT11 to pin, VCC and ground. A pullup resistor from
  * the pin to VCC should be used. Most DHT11 modules have a built-in 
  * pullup resistor.
@@ -269,6 +278,15 @@ private:
  * decimal accurracy. 
  *
  * @section Circuit
+ * @code
+ *                           DHT22
+ *                       +------------+
+ * (VCC)---------------1-|VCC  ====== |
+ * (D2/EXT0)-----------2-|DATA ====== |
+ *                     3-|     ====== |
+ * (GND)---------------4-|GND  ====== |
+ *                       +------------+
+ * @endcode
  * Connect DHT22 to pin, VCC and ground. A pullup resistor from
  * the pin to VCC should be used. Most DHT22 modules have a built-in 
  * pullup resistor.

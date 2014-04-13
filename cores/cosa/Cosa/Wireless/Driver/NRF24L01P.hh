@@ -38,7 +38,7 @@
  *
  * @section Circuit
  * This is the pin-out for the NRF24L01+ module.
- *
+ * @code
  *                          NRF24L01P
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -50,7 +50,7 @@
  * (D12/MISO)----------7-|MISO        |
  * (D2/EXT0)-----------8-|IRQ         |
  *                       +------------+
- *
+ * @endcode
  * @section References
  * 1. nRF24L01+ Product Specification (Rev. 1.0)
  * http://www.nordicsemi.com/kor/nordic/download_resource/8765/2/17776224

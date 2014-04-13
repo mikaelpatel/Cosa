@@ -39,6 +39,7 @@
  * optimizations to be reduced. 
  *
  * @section Circuit
+ * @code
  *                       ATinyX4   
  *                     +----U----+
  * (VCC)-------------1-|VCC   GND|-14------------(GND)
@@ -49,7 +50,7 @@
  * (LED/D7/A7)-------6-|PA7   PA4|-9---(D4/A4/SCL/SCK)
  * (MISO/SDA/D6/A6)--7-|PA6   PA5|-8------(D5/A5/MOSI)
  *                     +---------+
- *
+ * @endcode
  */
 class Board {
   friend class Pin;

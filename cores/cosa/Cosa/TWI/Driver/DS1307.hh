@@ -39,6 +39,7 @@
  * http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
  * @section Circuit
+ * @code
  *                       TinyRTC(DS1307)
  *                       +------------+
  *                     1-|SQ          |
@@ -49,6 +50,7 @@
  * (GND)---------------6-|GND      GND|-5
  *                     7-|BAT         |
  *                       +------------+
+ * @endcode
  */
 class DS1307 : private TWI::Driver {
 public:

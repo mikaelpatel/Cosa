@@ -36,6 +36,7 @@
  * AT24CXX device is AT24C32.
  *
  * @section Circuit
+ * @code
  *                       TinyRTC(24C32)
  *                       +------------+
  *                     1-|SQ          |
@@ -46,6 +47,7 @@
  * (GND)---------------6-|GND      GND|-5
  *                     7-|BAT         |
  *                       +------------+
+ * @endcode
  */
 class AT24CXX : private TWI::Driver, public EEPROM::Device {
 public:

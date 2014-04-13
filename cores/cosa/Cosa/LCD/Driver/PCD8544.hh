@@ -42,7 +42,7 @@
  * @section Circuit
  * PCD8544 is a low voltage device (3V3) and signals require level
  * shifter (74HC4050 or 10K resistor). 
- * 
+ * @code
  *                          PCD8544
  *                       +------------+
  * (RST)---| > |-------1-|RST         |
@@ -54,7 +54,7 @@
  * (GND)---|220|-------7-|LED         |
  * (GND)---------------8-|GND         |
  *                       +------------+
- *
+ * @endcode
  * @section References
  * 1. Product Specification, Philips Semiconductors, 1999 Apr 12.  
  * https://www.sparkfun.com/datasheets/LCD/Monochrome/Nokia5110.pdf 

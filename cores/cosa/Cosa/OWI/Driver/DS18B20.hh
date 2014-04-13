@@ -34,6 +34,7 @@
  * Thermometer.  
  * 
  * @section Circuit
+ * @code
  *                           DS18B20
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -42,7 +43,7 @@
  *          4K7      |   +------------+
  *           |       | 
  * (VCC)-----+       +---(VCC/GND)
- *
+ * @endcode
  * May use parasite powering (connect DS18B20 VCC to GND) otherwise to VCC.
  * 
  * @section References

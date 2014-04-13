@@ -125,8 +125,7 @@ public:
    * interrupt sampling mode. 
    *
    * @section Circuit
-   *
-   * @section Circuit
+   * @code
    *                         RF433/RX                       V
    *                       +------------+                   |
    *                       |0-----------|-------------------+
@@ -140,6 +139,7 @@ public:
    * (EXTn)--------------3-|DATA        |
    * (GND)---------------4-|GND         |
    *                       +------------+
+   * @endcode
    */
   class Receiver : private ExternalInterrupt, public Event::Handler {
   public:
@@ -265,7 +265,7 @@ public:
    * implementation; transmission will return when completed.
    *
    * @section Circuit
-   *
+   * @code
    *                         RF433/TX
    *                       +------------+
    * (Dn)----------------1-|DATA        |
@@ -273,6 +273,7 @@ public:
    * (GND)---------------3-|GND         |                    |
    *                       |ANT       0-|--------------------+
    *                       +------------+       17.3 cm
+   * @endcode
    */
   class Transmitter : private OutputPin {
   public:

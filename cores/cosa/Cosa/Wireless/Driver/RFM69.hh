@@ -38,7 +38,7 @@
  *
  * @section Circuit
  * This is the pin-out for the RFM69W/HW module.
- *
+ * @code
  *                         RFM69W/HW
  *                       +------------+
  * (RST)---------------1-|RESET     NC|-16
@@ -50,7 +50,7 @@
  *                     7-|DIO4     ANT|-10-----------------------------+
  * (3V3)---------------8-|VCC      GND|-9----------------(GND)
  *                       +------------+
- *
+ * @endcode
  * @section References
  * 1. Product datasheet, RFM69W ISM Transceiver Module V1.3, 
  * http://www.hoperf.com/rf/fsk_module/RFM69W.htm

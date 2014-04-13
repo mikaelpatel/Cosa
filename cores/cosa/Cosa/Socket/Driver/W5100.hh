@@ -37,11 +37,12 @@
  * of the Cosa Socket and Cosa IOStream::Device classes. A socket may
  * be bound directly to a Cosa IOStream. The device internal
  * transmitter buffer is used. The buffer is sent on flush (TCP/UDP)
- * or when full (TCP). Integrated with Cosa INET/DHCP so that ethernet
- * controll may obtain a network address and information from a DHCP
+ * or when full (TCP). Integrated with Cosa INET/DHCP so that the ethernet
+ * controller may obtain a network address and information from a DHCP
  * server. 
  * 
  * @section Circuit
+ * @code
  *                           W5100
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -50,7 +51,7 @@
  * (D13)--------------30-|SCK         |
  * (D2)-----[ ]-------56-|IRQ         |
  *                       +------------+
- *
+ * @endcode
  * @section References
  * 1. W5100 Datasheet Version 1.2.4, Sep. 20, 2011,
  * http://www.wiznet.co.kr/UpLoad_Files/ReferenceFiles/W5100_Datasheet_v1.2.4.pdf

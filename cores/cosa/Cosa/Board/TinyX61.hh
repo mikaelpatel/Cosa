@@ -39,6 +39,7 @@
  * optimizations to be reduced. 
  *
  * @section Circuit
+ * @code
  *                    ATinyX61
  *                  +----U----+
  * (D8/SDA)-------1-|PB0   PA0|-20------(D0/A0/MISO)
@@ -52,7 +53,7 @@
  * (D14/A9/EXT0)--9-|PB6   PA6|-12-----------(D6/A5)
  * (/RESET)------10-|PB7   PA7|-11-----------(D7/A6)
  *                  +---------+
- *
+ * @endcode
  */
 class Board {
   friend class Pin;

@@ -34,12 +34,15 @@
  * Cosa IR receiver/TSOP4838 driver.
  * 
  * @section Circuit
+ * @code
  *                          TSOP4838
  *                       +------------+
  * (EXTn)--------------1-|OUT         |
  * (GND)---------------2-|GND    ( )  |
  * (VCC)---------------3-|VCC         |
  *                       +------------+
+ * @endcode
+ *
  * @section References
  * 1. http://www.vishay.com/docs/82459/tsop48.pdf
  */

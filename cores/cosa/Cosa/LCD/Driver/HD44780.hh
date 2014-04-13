@@ -299,8 +299,7 @@ public:
    * IO Port. Arduino pins directly to LCD in 4-bit mode.
    *
    * @section Circuit
-   * The default pins are the LCD Keypad Shield.
-   *
+   * @code
    *                           HD44780
    *                       +------------+
    * (GND)---------------1-|VSS         |
@@ -320,6 +319,8 @@ public:
    * (VCC)--------------15-|A           |
    * (GND)--------------16-|K           |
    *                       +------------+
+   * @endcode
+   * The default pins are the LCD Keypad Shield.
    *
    * @section Limitations
    * Requires too many pins for ATtinyX5.
@@ -411,6 +412,7 @@ public:
    * output pins.
    *
    * @section Circuit
+   * @code
    *                         74HC595    (VCC)
    *                       +----U----+    |
    * (LCD D5)------------1-|Q1    VCC|-16-+
@@ -426,19 +428,7 @@ public:
    *                 (GND)-----||----(VCC)
    * (LCD EN)---------------------------------------(EN)
    * (LCD RW)---------------------------------------(GND)
-   *
-   * SDA (Arduino:D7/Tiny:D1) => SR:SER[14]
-   * SCL (Arduino:D6/Tiny:D2) => SR:SCLK[11]
-   * EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
-   * VCC => SR:/MR[10]
-   * GND => SR:/OE[13]
-   *
-   * SR:Q0..Q3[15,1..3] => LCD:D4..D7
-   * SR:Q4[4] => LCD:RS
-   * SR:Q5[5] => LCD:BT (Backlight)
-   * EN (Arduino:D5/Tiny:D3) => LCD:EN
-   * GND => LCD:RW
-   *
+   * @endcode
    * @section Performance
    * The LSB of the shift register is used to allow reduction
    * of number of shift operations (i.e. 6-bit shift). 
@@ -545,6 +535,7 @@ public:
    * The enable pulse pin acts as the SPI chip select.
    *
    * @section Circuit
+   * @code
    *                         74HC595    (VCC)
    *                       +----U----+    |
    * (LCD D5)------------1-|Q1    VCC|-16-+
@@ -560,18 +551,7 @@ public:
    *                 (GND)-----||----(VCC)
    * (LCD EN)---------------------------------------(EN)
    * (LCD RW)---------------------------------------(GND)
-   *
-   * MOSI (Arduino:D11/TinyX4:D5/TinyX5:D0) => SR:SER[14]
-   * SCK (Arduino:D13/TinyX4:D5/TinyX5:D2) => SR:SCLK[11]
-   * EN (Arduino:D5/Tiny:D3) => SR:RCLK[12]
-   * VCC => SR:/MR[10]
-   *
-   * SR:Q0..Q3[15,1..3] => LCD:D4..D7
-   * SR:Q4[4] => LCD:RS
-   * SR:Q5[5] => LCD:BT (Backlight)
-   * EN (Arduino:D5/Tiny:D3) => LCD:EN
-   * GND => LCD:RW
-   *
+   * @endcode
    * @section Performance
    * The SPI transfer is so fast that a longer delay is required.
    */
@@ -664,6 +644,7 @@ public:
    * output pins.
    *
    * @section Circuit
+   * @code
    *                         74HC595    (VCC)
    *                       +----U----+    |
    * (LCD D1)------------1-|Q1    VCC|-16-+
@@ -681,19 +662,7 @@ public:
    * (LCD EN)---------------------------------------(EN)
    * (LCD BT)---------------------------------------(BT)
    * (LCD RW)---------------------------------------(GND)
-   *
-   * SDA (Arduino:D7/Tiny:D1) => SR:SER[14]
-   * SCL (Arduino:D6/Tiny:D2) => SR:SCLK[11]
-   * EN (Arduino:D5/Tiny:D3) => SR:RCLK[12] 
-   * VCC => SR:/MR[10]
-   * GND => SR:/OE[13]
-   *
-   * SR:Q0..Q7[15,1..7] => LCD:D0..D7
-   * SDA (Arduino:D7) => LCD::RS
-   * EN (Arduino:D5/Tiny:D3) => LCD:EN
-   * BT (Arduino:D4) => LCD:BT (Backlight)
-   * GND => LCD:RW
-   *
+   * @endcode
    * @section Performance
    * Delay required even when using Cosa serial write. No
    * need for SPI. SCL/SDA can still be connected to other
@@ -997,10 +966,12 @@ public:
    * output pins.
    *
    * @section Circuit
+   * @code
    * SDA (Arduino:D7/Tiny:D1) => J2:DI[6]
    * SCL (Arduino:D6/Tiny:D2) => J2:SCL[5]
    * EN (Arduino:D5/Tiny:D3) => J2:CS[4]
    * BT (Arduino:D4/Tiny:D4) => BT
+   * @endcode
    */
   class ERM1602_5 : public IO {
   public:

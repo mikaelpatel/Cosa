@@ -40,7 +40,7 @@
  * @section Circuit
  * This is the pin-out for the CC1101 module which is compatible 
  * with the NRF24L01 module.
- *
+ * @code
  *                           CC1101
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -52,7 +52,7 @@
  * (D12/MISO)----------7-|MISO/GDO1   |
  * (D2/EXT0)-----------8-|GDO2        |
  *                       +------------+
- *
+ * @endcode
  * @section References
  * 1. Product Description, SWRS061H, Rev. H, 2012-10-09
  * http://www.ti.com/lit/ds/symlink/cc1101.pdf

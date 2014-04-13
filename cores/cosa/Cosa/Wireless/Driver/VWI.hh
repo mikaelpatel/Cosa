@@ -38,6 +38,7 @@
  * Virtual Wire library. 
  *
  * @section Circuit
+ * @code
  *                         RF433/RX                       V
  *                       +------------+                   |
  *                       |0-----------|-------------------+
@@ -59,6 +60,7 @@
  * (GND)---------------3-|GND         |                    |
  *                       |ANT       0-|--------------------+
  *                       +------------+       17.3 cm
+ * @endcode
  */
 class VWI : public Wireless::Driver {
 public:

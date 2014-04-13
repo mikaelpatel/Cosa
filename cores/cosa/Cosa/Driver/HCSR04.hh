@@ -39,6 +39,7 @@
  * of change.
  *
  * @section Circuit
+ * @code
  *                           HC-SR04
  *                       +------------+
  * (VCC)---------------1-|VCC         |
@@ -46,7 +47,7 @@
  * (D3) ---------------3-|ECHO        |
  * (GND)---------------4-|GND         |
  *                       +------------+
- *
+ * @endcode
  * Connect HC-SR04 module to echo and trigger pin, and VCC and
  * ground. 
  *
