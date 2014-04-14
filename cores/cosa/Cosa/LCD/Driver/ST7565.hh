@@ -62,6 +62,7 @@
  *                    16-|RD(E)       |
  *                       +------------+
  * @endcode
+ *
  * @section References
  * 1. Sitronix 65x132 Dot Matrix LCD Controller/Driver, Ver 1.3, 2004 May 18.
  */

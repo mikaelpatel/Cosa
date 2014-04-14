@@ -38,6 +38,23 @@
  * functions. The SPI::Driver class supports multiple SPI devices with
  * possible different configuration (clock, bit order, mode) and
  * integrates with both device chip select and possible interrupt pins.
+ *
+ * @section Circuit
+ * SPI slave circuit with chip select and interrupt pin. Note that Tiny
+ * uses USI but the software interface is the same but MOSI/MISO pins 
+ * are DI/DO. Do not confuse with SPI chip programming pins on Tiny.
+ * @code
+ *                          SPI Slave
+ *                       +------------+
+ * (Dn)----------------1-|CSN         |
+ * (D11/MOSI)----------2-|MOSI        |
+ * (D12/MISO)----------3-|MISO        |
+ * (D13/SCK)-----------4-|SCK         |
+ * (EXTn)--------------5-|IRQ(opt)    |
+ * (VCC)---------------6-|VCC         |
+ * (GND)---------------7-|GND         |
+ *                       +------------+
+ * @endcode
  */
 class SPI {
 public:
@@ -97,10 +114,13 @@ public:
   protected:
     /** List of drivers */
     Driver* m_next;
+
     /** Interrupt handler */
     Interrupt::Handler* m_irq;
+
     /** Device chip select pin */
     OutputPin m_cs;
+
     /** Chip select pulse width; 
      *  0 for active low logic during the transaction,
      *  1 for active high logic,
@@ -111,11 +131,13 @@ public:
 #if defined(USICR)
     /** SPI mode for clock polatity (CPOL) setting */
     const uint8_t m_cpol;
+
     /** USI hardware control register setting */
     uint8_t m_usicr;
 #else
     /** SPI hardware control register (SPCR) setting */
     uint8_t m_spcr;
+
     /** SPI hardware control bit in status register (SPSR) setting */
     uint8_t m_spsr;
 #endif

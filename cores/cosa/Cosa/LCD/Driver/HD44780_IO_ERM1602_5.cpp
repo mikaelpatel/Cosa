@@ -25,6 +25,19 @@
 
 #include "Cosa/LCD/Driver/HD44780.hh"
 
+HD44780::ERM1602_5::ERM1602_5(Board::DigitalPin sda, 
+			      Board::DigitalPin scl,
+			      Board::DigitalPin en,
+			      Board::DigitalPin bt) :
+  m_sda(sda),
+  m_scl(scl, 1),
+  m_en(en, 1),
+  m_bt(bt, 1),
+  m_rs(0),
+  m_dirty(false)
+{
+}
+
 bool
 HD44780::ERM1602_5::setup()
 {

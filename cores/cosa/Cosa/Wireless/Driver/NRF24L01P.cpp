@@ -31,6 +31,23 @@
 #include "Cosa/RTC.hh"
 #include <util/delay.h>
 
+NRF24L01P::NRF24L01P(uint16_t net, uint8_t dev,
+		     Board::DigitalPin csn, 
+		     Board::DigitalPin ce, 
+		     Board::ExternalInterruptPin irq) :
+  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+  Wireless::Driver(net, dev),
+  m_ce(ce, 0),
+  m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
+  m_status(0),
+  m_state(POWER_DOWN_STATE),
+  m_trans(0),
+  m_retrans(0),
+  m_drops(0)
+{
+  set_channel(64);
+}
+
 uint8_t 
 NRF24L01P::read(Command cmd)
 {

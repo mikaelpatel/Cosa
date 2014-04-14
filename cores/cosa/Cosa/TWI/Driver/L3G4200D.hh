@@ -31,9 +31,30 @@
 
 /**
  * Cosa TWI driver for STMicroelectronics, L3G4200D, MEMS motion
- * sensor: ultra-stable three-axis digital output gyroscope.
+ * sensor: ultra-stable three-axis digital output gyroscope. 
  * Doc ID 17116 Rev 3.
- * http://www.st.com/st-web-ui/static/active/en/resource/technical/
+ *
+ * @section Circuit
+ * The GY-80 10DOF module with pull-up resistors (4K7) for TWI signals and
+ * 3V3 internal voltage converter. 
+ * @code
+ *                           GY-80
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ *                     2-|3V3         |
+ * (GND)---------------3-|GND         |
+ * (A5/SCL)------------4-|SCL         |
+ * (A4/SDA)------------5-|SDA         |
+ *                     6-|M-DRDY      |
+ *                     7-|A-INT1      |
+ * (Dn/EXTn)-----------8-|T-INT1      |
+ *                     9-|P-XCLR      |
+ *                    10-|P-EOC       |
+ *                       +------------+
+ * @endcode
+ *
+ * @section References
+ * 1. http://www.st.com/st-web-ui/static/active/en/resource/technical/
  * document/datasheet/CD00265057.pdf
  */
 class L3G4200D : private TWI::Driver {

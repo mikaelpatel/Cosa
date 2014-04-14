@@ -25,6 +25,18 @@
 
 #include "Cosa/LCD/Driver/HD44780.hh"
 
+HD44780::SR4W::SR4W(Board::DigitalPin sda, 
+		    Board::DigitalPin scl,
+		    Board::DigitalPin en,
+		    Board::DigitalPin bt) :
+  m_sda(sda),
+  m_scl(scl),
+  m_en(en),
+  m_bt(bt, 1),
+  m_rs(0)
+{
+}
+
 bool
 HD44780::SR4W::setup()
 {

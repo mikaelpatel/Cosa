@@ -37,7 +37,16 @@
  * on change calls an event action. Subclass Button and implement the
  * virtual on_change() method. Use the subclass for any state needed
  * for the action function. Connect button/switch from pin to
- * ground. Internal pull-up resistor is activated. 
+ * ground. Internal pull-up resistor is activated.  
+ *
+ * @section Circuit
+ * @code
+ * (Dn)-----------------+
+ *                      |
+ *                     (\)
+ *                      |
+ * (GND)----------------+
+ * @endcode
  *
  * @section Limitations
  * Button toggle faster than sample period may be missed. This is the

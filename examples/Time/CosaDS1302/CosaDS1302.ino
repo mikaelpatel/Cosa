@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,16 @@
  * Demonstration of Cosa DS1302 Trickle-Charge Timekeeping Chip,
  * device driver.
  * 
+ * @section Circuit
+ *                         DS1302/rtc 
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (D2)----------------3-|CLK         |
+ * (D3)----------------4-|DAT         |
+ * (D4)----------------5-|RST         |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

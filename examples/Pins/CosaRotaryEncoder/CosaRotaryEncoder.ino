@@ -23,6 +23,18 @@
  * @section Description
  * Cosa demonstration of Rotary Encoder and Dial.
  *
+ * @section Circuit
+ * KY-040 Rotary Encoder Module.
+ *
+ *                          Dial/dail
+ *                       +------------+
+ * (PCI6)--------------1-|CLK         |
+ * (PCI7)--------------2-|DT          |
+ *                     3-|SW   (/)    |
+ * (VCC)---------------4-|VCC         |
+ * (GND)---------------5-|GND         |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

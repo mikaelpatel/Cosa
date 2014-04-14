@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,7 +46,7 @@
  * - Received(64): length(1), dest(1), src(1), payload(max 59), status(2)
  * Digital Output Pins:
  * - GDO2: valid frame received, active low
- * - GDO1: high impedance, not used
+ * - GDO1: high impedance when CSN is high otherwise serial data output
  * - GDO0: high impedance, not used
  */
 const uint8_t CC1101::config[CC1101::CONFIG_MAX] __PROGMEM = {
@@ -98,6 +98,16 @@ CC1101::IRQPin::on_interrupt(uint16_t arg)
 {
   if (m_rf == 0) return;
   m_rf->m_avail = true;
+}
+
+CC1101::CC1101(uint16_t net, uint8_t dev, 
+	       Board::DigitalPin csn,
+	       Board::ExternalInterruptPin irq) :
+  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+  Wireless::Driver(net, dev),
+  m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
+  m_status(0)
+{
 }
 
 void

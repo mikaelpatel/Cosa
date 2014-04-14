@@ -32,7 +32,28 @@
 
 /**
  * Cosa TWI driver for Bosch BMP085 Digital pressure sensor
- * http://media.digikey.com/pdf/Data%20Sheets/Bosch/BMP085.pdf
+ *
+ * @section Circuit
+ * The GY-80 10DOF module with pull-up resistors (4K7) for TWI signals and
+ * 3V3 internal voltage converter.
+ * @code
+ *                           GY-80
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ *                     2-|3V3         |
+ * (GND)---------------3-|GND         |
+ * (A5/SCL)------------4-|SCL         |
+ * (A4/SDA)------------5-|SDA         |
+ *                     6-|M-DRDY      |
+ *                     7-|A-INT1      |
+ *                     8-|T-INT1      |
+ *                     9-|P-XCLR      |
+ * (Dn/EXTn)----------10-|P-EOC       |
+ *                       +------------+
+ * @endcode
+ *
+ * @section References
+ * 1. http://media.digikey.com/pdf/Data%20Sheets/Bosch/BMP085.pdf
  * BST-BMP085-DS000-03, Rev. 1.0, 01 July 2008.
  */
 class BMP085 : private TWI::Driver {

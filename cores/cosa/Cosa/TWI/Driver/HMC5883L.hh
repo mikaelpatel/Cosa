@@ -34,6 +34,25 @@
  * Driver for the HMC5883L 3-Axis Digital Compass IC, 
  * a vector magnetometer. 
  *
+ * @section Circuit
+ * The GY-80 10DOF module with pull-up resistors (4K7) for TWI signals and
+ * 3V3 internal voltage converter.
+ * @code
+ *                           GY-80
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ *                     2-|3V3         |
+ * (GND)---------------3-|GND         |
+ * (A5/SCL)------------4-|SCL         |
+ * (A4/SDA)------------5-|SDA         |
+ *                     6-|M-DRDY      |
+ *                     7-|A-INT1      |
+ *                     8-|T-INT1      |
+ *                     9-|P-XCLR      |
+ *                    10-|P-EOC       |
+ *                       +------------+
+ * @endcode
+ *
  * @section References
  * 1. Honeywell product description (Rev. E, February 2013).
  * http://www51.honeywell.com/aero/common/documents/

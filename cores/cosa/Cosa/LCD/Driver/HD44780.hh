@@ -429,6 +429,7 @@ public:
    * (LCD EN)---------------------------------------(EN)
    * (LCD RW)---------------------------------------(GND)
    * @endcode
+   *
    * @section Performance
    * The LSB of the shift register is used to allow reduction
    * of number of shift operations (i.e. 6-bit shift). 
@@ -445,23 +446,11 @@ public:
 #if !defined(__ARDUINO_TINY__)
     SR3W(Board::DigitalPin sda = Board::D7, 
 	 Board::DigitalPin scl = Board::D6,
-	 Board::DigitalPin en = Board::D5) :
-      m_port(),
-      m_sda(sda),
-      m_scl(scl),
-      m_en(en)
-    {
-    }
+	 Board::DigitalPin en = Board::D5);
 #else
     SR3W(Board::DigitalPin sda = Board::D1, 
 	 Board::DigitalPin scl = Board::D2,
-	 Board::DigitalPin en = Board::D3) :
-      m_port(),
-      m_sda(sda),
-      m_scl(scl),
-      m_en(en)
-    {
-    }
+	 Board::DigitalPin en = Board::D3);
 #endif
 
     /**
@@ -552,6 +541,7 @@ public:
    * (LCD EN)---------------------------------------(EN)
    * (LCD RW)---------------------------------------(GND)
    * @endcode
+   *
    * @section Performance
    * The SPI transfer is so fast that a longer delay is required.
    */
@@ -563,17 +553,9 @@ public:
      * @param[in] en enable pulse (Default D5, Tiny/D3)
      */
 #if !defined(__ARDUINO_TINY__)
-    SR3WSPI(Board::DigitalPin en = Board::D5) : 
-      SPI::Driver(en, 2),
-      m_port()
-    {
-    }
+    SR3WSPI(Board::DigitalPin en = Board::D5);
 #else
-    SR3WSPI(Board::DigitalPin en = Board::D3) : 
-      SPI::Driver(en, 2),
-      m_port()
-    {
-    }
+    SR3WSPI(Board::DigitalPin en = Board::D3);
 #endif
 
     /**
@@ -663,6 +645,7 @@ public:
    * (LCD BT)---------------------------------------(BT)
    * (LCD RW)---------------------------------------(GND)
    * @endcode
+   *
    * @section Performance
    * Delay required even when using Cosa serial write. No
    * need for SPI. SCL/SDA can still be connected to other
@@ -690,26 +673,12 @@ public:
     SR4W(Board::DigitalPin sda = Board::D7, 
 	 Board::DigitalPin scl = Board::D6,
 	 Board::DigitalPin en = Board::D5,
-	 Board::DigitalPin bt = Board::D4) :
-      m_sda(sda),
-      m_scl(scl),
-      m_en(en),
-      m_bt(bt, 1),
-      m_rs(0)
-    {
-    }
+	 Board::DigitalPin bt = Board::D4);
 #else
     SR4W(Board::DigitalPin sda = Board::D1, 
 	 Board::DigitalPin scl = Board::D2,
 	 Board::DigitalPin en = Board::D3,
-	 Board::DigitalPin bt = Board::D4) :
-      m_sda(sda),
-      m_scl(scl),
-      m_en(en),
-      m_bt(bt, 1),
-      m_rs(0)
-    {
-    }
+	 Board::DigitalPin bt = Board::D4);
 #endif
 
     /**
@@ -771,6 +740,21 @@ public:
    * IO handler for HD44780 (LCD-II) Dot Matix Liquid Crystal Display
    * Controller/Driver when using the MJKDZ IO expander board based on
    * PCF8574 I2C IO expander device driver. 
+   *
+   * @section Circuit
+   * @code
+   *                       PCF8574/MJKDZ
+   *                       +-----U------+
+   * (GND)---[ ]---------1-|A0       VCC|-16--------------(VCC)
+   * (GND)---[ ]---------2-|A1       SDA|-15-----------(SDA/A4)
+   * (GND)---[ ]---------3-|A2       SCL|-14-----------(SCL/A5)
+   * (LCD D4)------------4-|P0       INT|-13
+   * (LCD D5)------------5-|P1        P7|-12-----------(LCD BT)
+   * (LCD D6)------------6-|P2        P6|-11-----------(LCD RS)
+   * (LCD D7)------------7-|P3        P5|-10-----------(LCD RW)
+   * (GND)---------------8-|GND       P4|-9------------(LCD EN)
+   *                       +------------+
+   * @endcode
    */
   class MJKDZ : public IO, private PCF8574 {
   public:
@@ -860,6 +844,21 @@ public:
    * on PCF8574 I2C IO expander device driver. Has the same port
    * connection as MJKDZ. The difference is the default TWI
    * sub-address. 
+   *
+   * @section Circuit
+   * @code
+   *                      PCF8574/GY-IICLCD
+   *                       +-----U------+
+   * (GND)---[X]---------1-|A0       VCC|-16--------------(VCC)
+   * (GND)---[X]---------2-|A1       SDA|-15-----------(SDA/A4)
+   * (GND)---[X]---------3-|A2       SCL|-14-----------(SCL/A5)
+   * (LCD/D4)------------4-|P0       INT|-13
+   * (LCD/D5)------------5-|P1        P7|-12-----------(LCD/BT)
+   * (LCD/D6)------------6-|P2        P6|-11-----------(LCD/RS)
+   * (LCD/D7)------------7-|P3        P5|-10-----------(LCD/RW)
+   * (GND)---------------8-|GND       P4|-9------------(LCD/EN)
+   *                       +------------+
+   * @endcode
    */
   class GYIICLCD : public MJKDZ {
   public:
@@ -878,6 +877,21 @@ public:
    * IO handler for HD44780 (LCD-II) Dot Matix Liquid Crystal Display
    * Controller/Driver when using the DFRobot IO expander board based 
    * on PCF8574 I2C IO expander device driver. 
+   *
+   * @section Circuit
+   * @code
+   *                       PCF8574/DFRobot
+   *                       +------U-----+
+   * (GND)---[ ]---------1-|A0       VCC|-16--------------(VCC)
+   * (GND)---[ ]---------2-|A1       SDA|-15-----------(SDA/A4)
+   * (GND)---[ ]---------3-|A2       SCL|-14-----------(SCL/A5)
+   * (LCD/RS)------------4-|P0       INT|-13
+   * (LCD/RW)------------5-|P1        P7|-12-----------(LCD/D7)
+   * (LCD/EN)------------6-|P2        P6|-11-----------(LCD/D6)
+   * (LCD/BT)------------7-|P3        P5|-10-----------(LCD/D5)
+   * (GND)---------------8-|GND       P4|-9------------(LCD/D4)
+   *                       +------------+
+   * @endcode
    */
   class DFRobot : public IO, private PCF8574 {
   public:
@@ -966,11 +980,21 @@ public:
    * output pins.
    *
    * @section Circuit
+   * The serial 3-line SPI circuit for ERM1602-5.
    * @code
-   * SDA (Arduino:D7/Tiny:D1) => J2:DI[6]
-   * SCL (Arduino:D6/Tiny:D2) => J2:SCL[5]
-   * EN (Arduino:D5/Tiny:D3) => J2:CS[4]
-   * BT (Arduino:D4/Tiny:D4) => BT
+   *                          ERM1602-5
+   *                       +------------+
+   * (GND)---------------1-|VSS         |
+   * (VCC)---------------2-|VDD         |
+   *                     3-|VO          |
+   * (D5)----------------4-|CS          |
+   * (D6)----------------5-|SCL         |
+   * (D7)----------------6-|DI          |
+   *                     7-|PS          |
+   *                     8-|RST         |
+   * (VCC)---------------9-|LED+        |
+   * (GND)--------------10-|LED-        |
+   *                       +------------+
    * @endcode
    */
   class ERM1602_5 : public IO {
@@ -987,28 +1011,12 @@ public:
     ERM1602_5(Board::DigitalPin sda = Board::D7, 
 	      Board::DigitalPin scl = Board::D6,
 	      Board::DigitalPin en = Board::D5,
-	      Board::DigitalPin bt = Board::D4) :
-      m_sda(sda),
-      m_scl(scl, 1),
-      m_en(en, 1),
-      m_bt(bt, 1),
-      m_rs(0),
-      m_dirty(false)
-    {
-    }
+	      Board::DigitalPin bt = Board::D4);
 #else
     ERM1602_5(Board::DigitalPin sda = Board::D1, 
 	      Board::DigitalPin scl = Board::D2,
 	      Board::DigitalPin en = Board::D3,
-	      Board::DigitalPin bt = Board::D4) :
-      m_sda(sda),
-      m_scl(scl, 1),
-      m_en(en, 1),
-      m_bt(bt, 1),
-      m_rs(0),
-      m_dirty(false)
-    {
-    }
+	      Board::DigitalPin bt = Board::D4);
 #endif
 
     /**

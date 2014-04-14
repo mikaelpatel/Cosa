@@ -37,6 +37,20 @@
  * device drivers. Single-ton, twi, holds bus interaction state.
  * Supporting classes TWI::Driver for device drivers, TWI::Slave
  * for slave devices. 
+ *
+ * @section Circuit
+ * TWI slave circuit with internal pullup resistors (4K7). Note that
+ * Tiny uses USI but the software interface is the same.
+ * @code
+ *                         TWI Slave
+ *                       +------------+
+ * (A4/SDA)------------1-|SDA         |
+ * (A5/SCL)------------2-|SCL         |
+ * (EXTn)--------------3-|IRQ(opt)    |
+ * (VCC)---------------4-|VCC         |
+ * (GND)---------------5-|GND         |
+ *                       +------------+
+ * @endcode
  */
 class TWI {
 public:

@@ -52,6 +52,7 @@
  * (D2)-----[ ]-------56-|IRQ         |
  *                       +------------+
  * @endcode
+ *
  * @section References
  * 1. W5100 Datasheet Version 1.2.4, Sep. 20, 2011,
  * http://www.wiznet.co.kr/UpLoad_Files/ReferenceFiles/W5100_Datasheet_v1.2.4.pdf

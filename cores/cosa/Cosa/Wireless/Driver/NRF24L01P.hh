@@ -37,12 +37,14 @@
  * device driver.
  *
  * @section Circuit
- * This is the pin-out for the NRF24L01+ module.
+ * This is the pin-out for the NRF24L01+ module. NRF24L01+ is a low
+ * voltage device (3V3) and input signals are 5V tolerant.
+ * 
  * @code
  *                          NRF24L01P
  *                       +------------+
  * (GND)---------------1-|GND         |
- * (VCC)---------------2-|VCC         |
+ * (3V3)---------------2-|VCC         |
  * (D9)----------------3-|CE          |
  * (D10)---------------4-|CSN         |
  * (D13/SCK)-----------5-|SCK         |
@@ -51,6 +53,7 @@
  * (D2/EXT0)-----------8-|IRQ         |
  *                       +------------+
  * @endcode
+ *
  * @section References
  * 1. nRF24L01+ Product Specification (Rev. 1.0)
  * http://www.nordicsemi.com/kor/nordic/download_resource/8765/2/17776224
@@ -74,34 +77,22 @@ public:
    * @param[in] ce chip enable activates pin number (default D9/D48/D3).
    * @param[in] irq interrupt pin number (default EXT0/EXT4/EXT0).
    */
-#if defined(__ARDUINO_MEGA__)
-  NRF24L01P(uint16_t net, uint8_t dev,
-	    Board::DigitalPin csn = Board::D53, 
-	    Board::DigitalPin ce = Board::D48, 
-	    Board::ExternalInterruptPin irq = Board::EXT4) :
-#elif defined(__ARDUINO_TINYX4__)
+#if defined(__ARDUINO_TINYX4__)
   NRF24L01P(uint16_t net, uint8_t dev,
 	    Board::DigitalPin csn = Board::D2, 
 	    Board::DigitalPin ce = Board::D3, 
-	    Board::ExternalInterruptPin irq = Board::EXT0) : 
+	    Board::ExternalInterruptPin irq = Board::EXT0);
+#elif defined(__ARDUINO_MEGA__)
+  NRF24L01P(uint16_t net, uint8_t dev,
+	    Board::DigitalPin csn = Board::D53, 
+	    Board::DigitalPin ce = Board::D48, 
+	    Board::ExternalInterruptPin irq = Board::EXT4);
 #else // __ARDUINO_STANDARD__ || __ARDUINO_MIGHTY__
   NRF24L01P(uint16_t net, uint8_t dev,
 	    Board::DigitalPin csn = Board::D10, 
 	    Board::DigitalPin ce = Board::D9, 
-	    Board::ExternalInterruptPin irq = Board::EXT0) :
+	    Board::ExternalInterruptPin irq = Board::EXT0);
 #endif
-  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
-  Wireless::Driver(net, dev),
-  m_ce(ce, 0),
-  m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
-  m_status(0),
-  m_state(POWER_DOWN_STATE),
-  m_trans(0),
-  m_retrans(0),
-  m_drops(0)
-  {
-    set_channel(64);
-  }
   
   /**
    * Set power up mode. Will initiate radio with necessary settings

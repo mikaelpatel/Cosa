@@ -33,6 +33,18 @@
 /**
  * Cosa Device Driver for DS1302, Trickle-Charge Timekeeping Chip.
  *
+ * @section Circuit
+ * @code
+ *                         DS1302/RTC 
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (D2)----------------3-|CLK         |
+ * (D3)----------------4-|DAT         |
+ * (D4)----------------5-|RST         |
+ *                       +------------+
+ * @endcode
+ *
  * @section References
  * 1. On-line product description, 
  * http://www.maximintegrated.com/datasheet/index.mvp/id/2685

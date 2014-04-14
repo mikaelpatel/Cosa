@@ -34,8 +34,17 @@
  * Touch Capacitive Sensor using periodic discharging to detect a 
  * sensor touch. Uses the Cosa IOPin to allow changing of data direction
  * and the watchdog for periodic reading. A callback, virtual member
- * function is called on detection. Connect a 1-10 M ohm pullup resistor
- * to the selected pin.
+ * function is called on detection. 
+ *
+ * @section Circuit
+ * Connect a 1-10 M ohm pullup resistor to the selected pin. 
+ * @code
+ * (VCC)----------+
+ *                |
+ *               1M
+ *                |
+ * (Dn)-----------+-----[]
+ * @endcode
  */
 class Touch : private IOPin, private Link {
 public:

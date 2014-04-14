@@ -25,6 +25,16 @@
 
 #include "Cosa/LCD/Driver/HD44780.hh"
 
+HD44780::SR3W::SR3W(Board::DigitalPin sda, 
+		    Board::DigitalPin scl,
+		    Board::DigitalPin en) :
+  m_port(),
+  m_sda(sda),
+  m_scl(scl),
+  m_en(en)
+{
+}
+
 bool
 HD44780::SR3W::setup()
 {

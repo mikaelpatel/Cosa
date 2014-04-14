@@ -33,6 +33,23 @@
  * Cosa TWI driver for Analog Devices ADXL345 Digital Accelerometer.
  * http://www.analog.com/static/imported-files/data_sheets/ADXL345.pdf
  * Rev. D, 2/13.
+ *
+ * @section Circuit
+ * The GY-291 module with pull-up resistors (4K7) for TWI signals and
+ * 3V3 internal voltage converter.
+ * @code
+ *                           GY-291
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (VCC)---------------2-|VCC         |
+ *                     3-|CS          |
+ *                     4-|A-INT1      |
+ *                     5-|A-INT2      |
+ *                     6-|SDO         |
+ * (A4/SDA)------------7-|SDA         |
+ * (A5/SCL)------------8-|SCL         |
+ *                       +------------+
+ * @endcode
  */
 class ADXL345 : private TWI::Driver {
 public:

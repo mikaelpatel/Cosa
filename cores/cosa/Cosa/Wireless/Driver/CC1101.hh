@@ -38,21 +38,23 @@
  * endian order. 
  *
  * @section Circuit
- * This is the pin-out for the CC1101 module which is compatible 
- * with the NRF24L01 module.
+ * This is the pin-out for the CC1101 module which is compatible with
+ * the NRF24L01 module. CC1101 is a low voltage device (3V3) and
+ * signals require level shifter (74HC4050 or 10K resistor).
  * @code
  *                           CC1101
  *                       +------------+
  * (GND)---------------1-|GND         |
- * (VCC)---------------2-|VCC         |
+ * (3V3)---------------2-|VCC         |
  *                     3-|CDO0        |
- * (D10)---------------4-|CSN         |
- * (D13/SCK)-----------5-|SCK         |
- * (D11/MOSI)----------6-|MOSI        |
- * (D12/MISO)----------7-|MISO/GDO1   |
- * (D2/EXT0)-----------8-|GDO2        |
+ * (D10)------|>|------4-|CSN         |
+ * (D13/SCK)--|>|------5-|SCK         |
+ * (D11/MOSI)-|>|------6-|MOSI        |
+ * (D12/MISO)-|<|------7-|MISO/GDO1   |
+ * (D2/EXT0)--|<|------8-|GDO2        |
  *                       +------------+
  * @endcode
+ *
  * @section References
  * 1. Product Description, SWRS061H, Rev. H, 2012-10-09
  * http://www.ti.com/lit/ds/symlink/cc1101.pdf
@@ -71,42 +73,24 @@ public:
    * Construct C1101 device driver with given network and device
    * address. Connected to SPI bus and given chip select pin. Default
    * pins are Arduino Nano IO Shield for CC1101 module are D10 chip
-   * select and D2/EXT0 external interrupt pin.
+   * select and D2/EXT0 external interrupt pin (TinyX4/Mega/Standard).
    * @param[in] net network address.
    * @param[in] dev device address.
    * @param[in] csn chip select pin (Default D2/D10/D53).
-   * @param[in] irq interrupt pin (Default EXT0).
+   * @param[in] irq interrupt pin (Default EXT0/EXT0/EXT4).
    */
 #if defined(__ARDUINO_TINYX4__)
   CC1101(uint16_t net, uint8_t dev, 
 	 Board::DigitalPin csn = Board::D2,
-	 Board::ExternalInterruptPin irq = Board::EXT0) :
-    SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
-    Wireless::Driver(net, dev),
-    m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
-    m_status(0)
-  {
-  }
+	 Board::ExternalInterruptPin irq = Board::EXT0);
 #elif defined(__ARDUINO_MEGA__)
   CC1101(uint16_t net, uint8_t dev, 
 	 Board::DigitalPin csn = Board::D53,
-	 Board::ExternalInterruptPin irq = Board::EXT4) :
-    SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
-    Wireless::Driver(net, dev),
-    m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
-    m_status(0)
-  {
-  }
+	 Board::ExternalInterruptPin irq = Board::EXT4);
 #else
   CC1101(uint16_t net, uint8_t dev, 
 	 Board::DigitalPin csn = Board::D10,
-	 Board::ExternalInterruptPin irq = Board::EXT0) :
-    SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
-    Wireless::Driver(net, dev),
-    m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
-    m_status(0)
-  {
-  }
+	 Board::ExternalInterruptPin irq = Board::EXT0);
 #endif
 
   /**
@@ -116,6 +100,7 @@ public:
    * assumed to be connected the device driver interrupt pin (EXTn).
    * Return true(1) if successful othewise false(0).
    * @param[in] config configuration vector (default NULL)
+   * @return bool.
    */
   virtual bool begin(const void* config = NULL);
 
@@ -123,7 +108,7 @@ public:
    * @override Wireless::Driver
    * Shut down the device driver. Return true(1) if successful
    * otherwise false(0).
-   * @return bool
+   * @return bool.
    */
   virtual bool end();
     
@@ -167,7 +152,7 @@ public:
    * @param[out] port device port (or message type).
    * @param[in] buf buffer to store incoming message.
    * @param[in] len maximum number of bytes to receive.
-   * @param[in] ms maximum time out period.
+   * @param[in] ms maximum time out period (Default blocking(0L)).
    * @return number of bytes received or negative error code.
    */
   virtual int recv(uint8_t& src, uint8_t& port, 
@@ -652,7 +637,6 @@ private:
       uint8_t crc:1;		/**< CRC status */
     };
   };
-  
 
   /**
    * Handler for interrupt pin. Service interrupt on incoming message

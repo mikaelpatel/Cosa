@@ -38,7 +38,9 @@
  * The Rotary Encoder algorithm is based on an implementation by Ben
  * Buxton. See comment block in Cosa/Rotary.cpp for more details and
  * the blog; 
- * http://www.buxtronix.net/2011/10/rotary-encoders-done-properly.html
+ * 
+ * @section References
+ * 1. http://www.buxtronix.net/2011/10/rotary-encoders-done-properly.html
  */
 class Rotary {
 public:
@@ -46,6 +48,19 @@ public:
    * Rotary Encoder using pin change interrupts. Handles half and full
    * cycle detection. Will push an Event::CHANGE_TYPE with the
    * direction of the change.
+   *
+   * @section Circuit
+   * KY-040 Rotary Encoder Module.
+   * @code
+   *                       Rotary Encoder
+   *                       +------------+
+   * (PCIc)--------------1-|CLK         |
+   * (PCId)--------------2-|DT          |
+   *                     3-|SW   (/)    |
+   * (VCC)---------------4-|VCC         |
+   * (GND)---------------5-|GND         |
+   *                       +------------+
+   * @endcode
    */
   class Encoder : public Event::Handler {
   public:
@@ -167,6 +182,18 @@ public:
    * dial within a given number(T) range (min, max) and a given
    * initial value. 
    * @param[in] T value type.
+   *
+   * @section Circuit
+   * @code
+   *                            Dial
+   *                       +------------+
+   * (PCIc)--------------1-|CLK         |
+   * (PCId)--------------2-|DT          |
+   *                     3-|SW   (/)    |
+   * (VCC)---------------4-|VCC         |
+   * (GND)---------------5-|GND         |
+   *                       +------------+
+   * @endcode
    */
   template<typename T>
   class Dial : public Encoder {
@@ -259,6 +286,18 @@ public:
    * dial within a given number(T) range (min, max) and a given
    * initial value. Two levels of step (increment/decrement) are
    * allowed and selected depending on timing.
+   *
+   * @section Circuit
+   * @code
+   *                      Accelerated Dial
+   *                       +------------+
+   * (PCIc)--------------1-|CLK         |
+   * (PCId)--------------2-|DT          |
+   *                     3-|SW   (/)    |
+   * (VCC)---------------4-|VCC         |
+   * (GND)---------------5-|GND         |
+   *                       +------------+
+   * @endcode
    */
   template<typename T, uint32_t THRESHOLD>
   class AcceleratedDial : public Encoder {

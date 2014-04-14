@@ -34,6 +34,23 @@
  * 6-axis motion processor solution with gyroscope, accelerator and
  * extended I2C slave bus.
  *
+ * @section Circuit
+ * The MPU6050 module ITG/MPU with pull-up resistors (4K7) for TWI 
+ * signals and 3V3 internal voltage converter.
+ * @code
+ *                           ITG/MPU
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (A5/SCL)------------3-|SCL         |
+ * (A4/SDA)------------4-|SDA         |
+ *                     6-|XDA         |
+ *                     7-|XCL         |
+ *                     8-|AD0         |
+ *                     9-|INT         |
+ *                       +------------+
+ * @endcode
+ *
  * @section References
  * 1. MPU-6000 and MPU-6050 Register Map and Description, Rev. 4.2.
  * http://invensense.com/mems/gyro/documents/RM-MPU-6000A-00v4.2.pdf

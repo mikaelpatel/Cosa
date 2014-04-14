@@ -32,8 +32,25 @@
 
 /**
  * Driver for the DS3231, Extremely Accurate I2C-Integrated
- * RTC/TCXO/Crystal. For further details see Maxim Integrated product
- * description; http://datasheets.maximintegrated.com/en/ds/DS3231.pdf
+ * RTC/TCXO/Crystal. 
+ *
+ * @section Circuit
+ * The Mini RTC pro module with pull-up resistors (4K7) for TWI signals.
+ * @code
+ *                        Mini RTC pro
+ *                       +------------+
+ *                     1-|32KHz       |
+ *                     2-|SQW         |
+ * (A5/SCL)------------3-|SCL         |
+ * (A4/SDA)------------4-|SDA         |
+ * (GND)---------------5-|GND         |
+ * (GND)---------------6-|VCC         |
+ *                       +------------+
+ * @endcode
+ *
+ * @section References
+ * 1. Maxim Integrated product description; 
+ * http://datasheets.maximintegrated.com/en/ds/DS3231.pdf
  */
 class DS3231 : private TWI::Driver {
 public:

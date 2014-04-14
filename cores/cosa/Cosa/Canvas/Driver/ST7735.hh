@@ -36,6 +36,24 @@
  * @section Acknowledgements
  * Inspired by graphics library by ladyada/adafruit.
  *
+ * @section Circuit
+ * @code
+ *                           ST7735
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (VCC)---------------2-|VCC         |
+ *                      -|            |
+ * (RST)---------------6-|RESET       |
+ * (D9)----------------7-|A0          |
+ * (MOSI/D11)----------8-|SDA         |
+ * (SCK/D13)-----------9-|SCK         |
+ * (SS/D10)-----------10-|CS          |
+ *                      -|            |
+ * (VCC)--------------15-|LED+        |
+ * (GND)--------------16-|LED-        |
+ *                       +------------+
+ * @endcode
+ *
  * @section References
  * 1. Sitronix Technology Corp. ST7735 documentation, V2.1, 2010-02-01.
  */
