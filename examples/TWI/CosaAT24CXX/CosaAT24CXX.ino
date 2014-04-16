@@ -24,6 +24,20 @@
  * Cosa demonstration of the AT24CXX 2-Wire (TWI) Serial EEPROM 
  * driver.
  *
+ * @section Circuit
+ * The TinyRTC with DS1307 also contains a 24C32 EEPROM.
+ *
+ *                       TinyRTC(24C32)
+ *                       +------------+
+ *                     1-|SQ          |
+ *                     2-|DS        DS|-1
+ * (A5/SCL)------------3-|SCL      SCL|-2
+ * (A4/SDA)------------4-|SDA      SDA|-3
+ * (VCC)---------------5-|VCC      VCC|-4
+ * (GND)---------------6-|GND      GND|-5
+ *                     7-|BAT         |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

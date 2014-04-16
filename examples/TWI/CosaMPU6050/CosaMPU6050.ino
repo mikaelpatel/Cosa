@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,22 @@
  *
  * @section Description
  * Cosa demonstration of MPU6050 driver.
+ *
+ * @section Circuit
+ * The MPU6050 module ITG/MPU with pull-up resistors (4K7) for TWI 
+ * signals and 3V3 internal voltage converter.
+ *
+ *                           ITG/MPU
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (A5/SCL)------------3-|SCL         |
+ * (A4/SDA)------------4-|SDA         |
+ *                     6-|XDA         |
+ *                     7-|XCL         |
+ *                     8-|AD0         |
+ *                     9-|INT         |
+ *                       +------------+
  *
  * This file is part of the Arduino Che Cosa project.
  */

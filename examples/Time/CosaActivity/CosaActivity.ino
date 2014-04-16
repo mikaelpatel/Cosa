@@ -35,17 +35,19 @@
 
 class TraceActivity : public Activity {
 public:
-  TraceActivity(clock_t start, 
-		uint16_t period, 
-		uint16_t duration, 
-		uint16_t seconds) :
-    Activity()
-  {
-    set_time(start, duration, period);
-    set_run_period(seconds);
-  }
+  TraceActivity(clock_t start, uint16_t period, uint16_t duration, uint16_t seconds);
   virtual void run();
 };
+
+TraceActivity::TraceActivity(clock_t start, 
+			     uint16_t period, 
+			     uint16_t duration, 
+			     uint16_t seconds) :
+  Activity()
+{
+  set_time(start, duration, period);
+  set_run_period(seconds);
+}
 
 void 
 TraceActivity::run()

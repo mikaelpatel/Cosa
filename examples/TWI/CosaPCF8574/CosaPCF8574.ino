@@ -23,6 +23,19 @@
  * @section Description
  * Cosa PCF8574 Remote 8-bit I/O expander driver example.
  *
+ * @section Circuit
+ *                          PCF8574A
+ *                       +------------+
+ * (GND)---[ ]---------1-|A0       VCC|-16--------------(VCC)
+ * (GND)---[ ]---------2-|A1       SDA|-15-----------(SDA/A4)
+ * (GND)---[ ]---------3-|A2       SCL|-14-----------(SCL/A5)
+ * (P0)----------------4-|P0       INT|-13
+ * (P1)----------------5-|P1        P7|-12---------------(P7)
+ * (P2)----------------6-|P2        P6|-11---------------(P6)
+ * (P3)----------------7-|P3        P5|-10---------------(P5)
+ * (GND)---------------8-|GND       P4|-9----------------(P4)
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,8 +47,6 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
-// PCF8574 Remote 8-bit I/O expander with default sub-address (0x27/0x4e)
-// PCF8574 port;
 // PCF8574 Remote 8-bit I/O expander with sub-address (0x27/0x4e)
 PCF8574 port(0);
 

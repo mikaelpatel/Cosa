@@ -24,6 +24,19 @@
  * Cosa demonstration of the DS3231, Extremely Accurate I2C-Integrated
  * RTC/TCXO/Crystal device driver.
  *
+ * @section Circuit
+ * The Mini RTC pro module with pull-up resistors (4K7) for TWI signals.
+ *
+ *                        Mini RTC pro
+ *                       +------------+
+ *                     1-|32KHz       |
+ *                     2-|SQW         |
+ * (A5/SCL)------------3-|SCL         |
+ * (A4/SDA)------------4-|SDA         |
+ * (GND)---------------5-|GND         |
+ * (GND)---------------6-|VCC         |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

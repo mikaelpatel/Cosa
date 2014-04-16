@@ -27,6 +27,9 @@
  * printable otherwise printed as a hex dump. The sketch will receive
  * any broadcast or addressed message to the node(0x01) on all ports.
  *
+ * @section Circuit
+ * See Wireless drivers for circuit connections.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

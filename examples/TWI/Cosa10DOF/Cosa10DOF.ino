@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,6 +24,24 @@
  * Cosa demonstration of 10 DOF module (GY-80) with ADXL345, BMP085,
  * HMC5883L, and L3G4200D; 3-axis acceleratometer, thermometer, barometer,
  * 3-axis compass and 3-axis gyroscope. 
+ *
+ * @section Circuit
+ * The GY-80 10DOF module with pull-up resistors (4K7) for TWI signals and
+ * 3V3 internal voltage converter.
+ *
+ *                           GY-80
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ *                     2-|3V3         |
+ * (GND)---------------3-|GND         |
+ * (A5/SCL)------------4-|SCL         |
+ * (A4/SDA)------------5-|SDA         |
+ *                     6-|M-DRDY      |
+ *                     7-|A-INT1      |
+ *                     8-|T-INT1      |
+ *                     9-|P-XCLR      |
+ *                    10-|P-EOC       |
+ *                       +------------+
  *
  * This file is part of the Arduino Che Cosa project.
  */

@@ -24,6 +24,10 @@
  * Cosa demonstration of a TWI master-slave; Remote Pin handling.
  * Read/Write pins on slave (typically ATtiny84/85).
  *
+ * @section Circuit
+ * The Arduino analog pins 4 (SDA) and 5 (SCL) are used for I2C/TWI
+ * connection. 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

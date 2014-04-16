@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,10 @@
  *
  * @section Description
  * Cosa demonstration of a TWI slave. Please see CosaTWImaster.
+ *
+ * @section Circuit
+ * The Arduino analog pins 4 (SDA) and 5 (SCL) are used for I2C/TWI
+ * connection. 
  *
  * This file is part of the Arduino Che Cosa project.
  */

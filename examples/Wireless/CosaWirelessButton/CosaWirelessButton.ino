@@ -25,6 +25,9 @@
  * for wakeup after power down. An ATtiny85-20PU running this example
  * sketch will require 5 uA in power down mode (VWI transmitter).
  *
+ * @section Circuit
+ * See Wireless drivers for circuit connections.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

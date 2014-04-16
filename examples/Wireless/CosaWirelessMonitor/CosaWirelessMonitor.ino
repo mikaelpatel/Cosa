@@ -25,6 +25,9 @@
  * messages as a character stream. Select 1) wireless device driver,
  * and 2) LCD or UART. For LCD select 3) port realization. 
  *
+ * @section Circuit
+ * See Wireless drivers for circuit connections.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

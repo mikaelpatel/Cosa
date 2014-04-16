@@ -23,6 +23,10 @@
  * @section Description
  * Cosa demonstration of a TWI master (see also CosaTWIslave).
  *
+ * @section Circuit
+ * The Arduino analog pins 4 (SDA) and 5 (SCL) are used for I2C/TWI
+ * connection. 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

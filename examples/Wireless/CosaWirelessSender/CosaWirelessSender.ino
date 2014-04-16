@@ -24,6 +24,9 @@
  * Cosa Wireless interface demo; send messages; broadcast and
  * to nodes 1 to 3 (CosaWirelessReceiver).
  *
+ * @section Circuit
+ * See Wireless drivers for circuit connections.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

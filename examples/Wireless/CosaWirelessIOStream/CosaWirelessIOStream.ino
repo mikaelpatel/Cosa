@@ -23,6 +23,9 @@
  * @section Description
  * Wireless IOStream demo.
  *
+ * @section Circuit
+ * See Wireless drivers for circuit connections.
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,22 @@
  *
  * @section Description
  * Cosa demonstration of ADXL345 driver.
+ *
+ * @section Circuit
+ * The GY-291 module with pull-up resistors (4K7) for TWI signals and
+ * 3V3 internal voltage converter.
+ *
+ *                           GY-291
+ *                       +------------+
+ * (GND)---------------1-|GND         |
+ * (VCC)---------------2-|VCC         |
+ *                     3-|CS          |
+ *                     4-|A-INT1      |
+ *                     5-|A-INT2      |
+ *                     6-|SDO         |
+ * (A4/SDA)------------7-|SDA         |
+ * (A5/SCL)------------8-|SCL         |
+ *                       +------------+
  *
  * This file is part of the Arduino Che Cosa project.
  */

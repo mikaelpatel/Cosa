@@ -36,12 +36,18 @@
 
 class TraceAlarm : public Alarm {
 public:
-  TraceAlarm(uint8_t id, uint16_t period) : Alarm(period), m_id(id), m_tick(0) {}
+  TraceAlarm(uint8_t id, uint16_t period);
   virtual void run();
 private:
   uint8_t m_id;
   uint16_t m_tick;
 };
+
+TraceAlarm::TraceAlarm(uint8_t id, uint16_t period) : 
+  Alarm(period), 
+  m_id(id), 
+  m_tick(0) 
+{}
 
 void 
 TraceAlarm::run()

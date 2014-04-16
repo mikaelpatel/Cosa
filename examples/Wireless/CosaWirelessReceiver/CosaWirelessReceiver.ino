@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,9 @@
  *
  * @section Description
  * Cosa Wireless interface demo; receiver messages from CosaWirelessSender.
+ *
+ * @section Circuit
+ * See Wireless drivers for circuit connections.
  *
  * This file is part of the Arduino Che Cosa project.
  */

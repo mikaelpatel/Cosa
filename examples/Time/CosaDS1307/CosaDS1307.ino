@@ -23,6 +23,18 @@
  * @section Description
  * Cosa demonstration of the DS1307 I2C/Two-Wire Realtime clock device.
  *
+ * @section Circuit
+ *                       TinyRTC(DS1307)
+ *                       +------------+
+ *                     1-|SQ          |
+ *                     2-|DS        DS|-1
+ * (A5/SCL)------------3-|SCL      SCL|-2
+ * (A4/SDA)------------4-|SDA      SDA|-3
+ * (VCC)---------------5-|VCC      VCC|-4
+ * (GND)---------------6-|GND      GND|-5
+ *                     7-|BAT         |
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

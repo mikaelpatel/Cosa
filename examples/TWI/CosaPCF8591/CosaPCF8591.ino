@@ -23,6 +23,21 @@
  * @section Description
  * Cosa PCF8591 A/D, D/A conversion TWI driver example.
  *
+ * @section Circuit
+ * PCF8591 module with potentiometer(AIN0), photoresistor(AIN1)
+ * and thermistor(AIN2).
+ *                          PCF8591
+ *                       +------------+
+ * (POT)---[ ]---------1-|AIN0     VCC|-16--------------(VCC)
+ * (PHR)---[ ]---------2-|AIN1    AOUT|-15-------------(AOUT)
+ * (THM)---[ ]---------3-|AIN2    VREF|-14--------------(VCC)
+ * (AIN3)--------------4-|AIN3    AGND|-13--------------(GND)
+ * (GND)---------------5-|A0       EXT|-12--------------(GND)
+ * (GND)---------------6-|A1       OSC|-11
+ * (GND)---------------7-|A2       SCL|-10-----------(SCL/A5)
+ * (GND)---------------8-|GND      SDA|-9------------(SDA/A4)
+ *                       +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
