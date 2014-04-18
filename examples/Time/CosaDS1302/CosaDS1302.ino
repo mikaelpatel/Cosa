@@ -63,15 +63,17 @@ void setup()
   ASSERT(key == 0x12345678UL);
 
   // Set the clock and calender
+#if defined(SET_RTC)
   time_t now;
   now.seconds = 0x00;
-  now.minutes = 0x15;
-  now.hours = 0x01;
-  now.date = 0x07;
-  now.month = 0x12;
+  now.minutes = 0x00;
+  now.hours = 0x21;
+  now.date = 0x18;
+  now.month = 0x04;
   now.day = 0x05;
-  now.year = 0x13;
+  now.year = 0x14;
   rtc.set_time(now);
+#endif
 }
 
 void loop()

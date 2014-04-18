@@ -33,12 +33,12 @@
 
 // LCD Device  ---------------------------------------------------------------
 // Select port type to use with the LCD device driver.
-HD44780::Port4b port;
+// HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
-// HD44780::GYIICLCD port;
+HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 // HD44780::ERM1602_5 port;
 // HD44780 lcd(&port, 20, 4);
@@ -153,8 +153,8 @@ MENU_END(root_menu)
 // Control the menu walker with keypad (analog pin) or rotary encoder with
 // push button.
 Menu::Walker walker(&lcd, &root_menu);
-Menu::KeypadController keypad(&walker);
-// Menu::RotaryController rotary(&walker);
+// Menu::KeypadController keypad(&walker);
+Menu::RotaryController rotary(&walker, Board::PCI6, Board::PCI5, Board::D3);
 
 void setup()
 {
@@ -162,9 +162,9 @@ void setup()
   lcd.begin();
   lcd.puts_P(PSTR("CosaLCDmenu: started"));
   SLEEP(2);
-  keypad.begin();
   walker.begin();
-  // rotary.begin();
+  // keypad.begin();
+  rotary.begin();
 }
 
 void loop()
