@@ -417,10 +417,10 @@ public:
    *                       +----U----+    |
    * (LCD D5)------------1-|Q1    VCC|-16-+
    * (LCD D6)------------2-|Q2     Q0|-15-----------(LCD D4)
-   * (LCD D7)------------3-|Q3    SER|-14-----------(SDA)
+   * (LCD D7)------------3-|Q3    SER|-14-----------(SDA/D7)
    * (LCD RS)------------4-|Q4    /OE|-13-----------(GND)
-   * (LCD BT)------------5-|Q5   RCLK|-12-----------(EN)
-   *                     6-|Q6   SCLK|-11-----------(SCL)
+   * (LCD BT)------------5-|Q5   RCLK|-12-----------(EN/D5)
+   *                     6-|Q6   SCLK|-11-----------(SCL/D6)
    *                     7-|Q7    /MR|-10-----------(VCC)
    *                   +-8-|GND   Q6'|--9
    *                   |   +---------+
@@ -491,7 +491,7 @@ public:
 
   protected:
     /** Execution time delay (us) */
-    static const uint16_t SHORT_EXEC_TIME = 8;
+    static const uint16_t SHORT_EXEC_TIME = 16;
 
     /** Shift register port bit fields; little endian */
     union port_t {
@@ -529,10 +529,10 @@ public:
    *                       +----U----+    |
    * (LCD D5)------------1-|Q1    VCC|-16-+
    * (LCD D6)------------2-|Q2     Q0|-15-----------(LCD D4)
-   * (LCD D7)------------3-|Q3    SER|-14-----------(MISO)
+   * (LCD D7)------------3-|Q3    SER|-14-----------(MOSI/D11)
    * (LCD RS)------------4-|Q4    /OE|-13-----------(GND)
-   * (LCD BT)------------5-|Q5   RCLK|-12-----------(EN)
-   *                     6-|Q6   SCLK|-11-----------(SCK)
+   * (LCD BT)------------5-|Q5   RCLK|-12-----------(EN/D5)
+   *                     6-|Q6   SCLK|-11-----------(SCK/D13)
    *                     7-|Q7    /MR|-10-----------(VCC)
    *                   +-8-|GND   Q6'|--9
    *                   |   +---------+
@@ -596,7 +596,7 @@ public:
 
   protected:
     /** Execution time delay (us) */
-    static const uint16_t SHORT_EXEC_TIME = 20;
+    static const uint16_t SHORT_EXEC_TIME = 24;
 
     /** Shift register port bit fields; little endian */
     union port_t {
@@ -632,17 +632,17 @@ public:
    * (LCD D1)------------1-|Q1    VCC|-16-+
    * (LCD D2)------------2-|Q2     Q0|-15-----------(LCD D0)
    * (LCD D3)------------3-|Q3    /OE|-13-----------(GND)  
-   * (LCD D4)------------4-|Q4    SER|-14-----------(SDA)
-   * (LCD D5)------------5-|Q5   RCLK|-12-----------(EN)
-   * (LCD D6)------------6-|Q6   SCLK|-11-----------(SCL)
+   * (LCD D4)------------4-|Q4    SER|-14-----------(SDA/D7)
+   * (LCD D5)------------5-|Q5   RCLK|-12-----------(EN/D5)
+   * (LCD D6)------------6-|Q6   SCLK|-11-----------(SCL/D6)
    * (LCD D7)------------7-|Q7    /MR|-10-----------(VCC)
    *                   +-8-|GND   Q6'|-9
    *                   |   +---------+
    *                   |      0.1uF
    *                 (GND)-----||----(VCC)
-   * (LCD RS)---------------------------------------(SDA)
-   * (LCD EN)---------------------------------------(EN)
-   * (LCD BT)---------------------------------------(BT)
+   * (LCD RS)---------------------------------------(SDA/D7)
+   * (LCD EN)---------------------------------------(EN/D5)
+   * (LCD BT)---------------------------------------(BT/D4)
    * (LCD RW)---------------------------------------(GND)
    * @endcode
    *
@@ -727,7 +727,7 @@ public:
 
   protected:
     /** Execution time delay (us) */
-    static const uint16_t SHORT_EXEC_TIME = 8;
+    static const uint16_t SHORT_EXEC_TIME = 16;
 
     OutputPin m_sda;		/**< Serial data output */
     OutputPin m_scl;		/**< Serial clock */
