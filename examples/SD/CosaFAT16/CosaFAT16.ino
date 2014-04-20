@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,6 +36,10 @@ SD sd(Board::D4);
 SD sd;
 #endif
 
+#define SLOW_CLOCK SPI::DIV4_CLOCK
+#define FAST_CLOCK SPI::DIV2_2X_CLOCK
+#define CLOCK SLOW_CLOCK
+
 void setup()
 {
   Watchdog::begin();
@@ -44,7 +48,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaFAT16: started"));
   TRACE(free_memory());
   TRACE(sizeof(FAT16::File));
-  ASSERT(sd.begin(SPI::DIV4_CLOCK));
+  ASSERT(sd.begin(CLOCK));
   ASSERT(FAT16::begin(&sd));
 }
 
@@ -132,3 +136,62 @@ void loop()
   ASSERT(sd.end());
   ASSERT(true == false);
 }
+
+/*
+---------------------------------------------------------
+CLOCK = SLOW_CLOCK
+---------------------------------------------------------
+CosaFAT16: started
+free_memory() = 7080
+sizeof(FAT16::File) = 18
+NISSE.TXT     2013-12-13 10:32:48 13
+
+Open file:7 ms
+NISSE.TXT     2013-12-13 10:32:48 13
+TMP.TXT       2000-01-01 01:00:00 0
+
+Write file (8 KByte):138 ms
+
+Close file:27 ms
+NISSE.TXT     2013-12-13 10:32:48 13
+TMP.TXT       2000-01-01 01:00:00 8192
+
+Read file (8 KByte):62 ms
+
+Remove file:33 ms
+NISSE.TXT     2013-12-13 10:32:48 13
+
+Open/Write/Close file:73 ms
+Nisse badar.
+Open/Read/Close file:4 ms
+
+137:void loop():assert:true == false
+---------------------------------------------------------
+CLOCK = FAST_CLOCK
+---------------------------------------------------------
+CosaFAT16: started
+free_memory() = 7080
+sizeof(FAT16::File) = 18
+NISSE.TXT     2013-12-13 10:32:48 13
+
+Open file:6 ms
+NISSE.TXT     2013-12-13 10:32:48 13
+TMP.TXT       2000-01-01 01:00:00 0
+
+Write file (8 KByte):128 ms
+
+Close file:16 ms
+NISSE.TXT     2013-12-13 10:32:48 13
+TMP.TXT       2000-01-01 01:00:00 8192
+
+Read file (8 KByte):53 ms
+
+Remove file:30 ms
+NISSE.TXT     2013-12-13 10:32:48 13
+
+Open/Write/Close file:62 ms
+Nisse badar.
+Open/Read/Close file:4 ms
+
+137:void loop():assert:true == false
+*/

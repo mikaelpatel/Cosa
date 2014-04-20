@@ -93,7 +93,8 @@ public:
   }
   
 private:
-  FSM* m_port;			//< FSM to send event to
+  /** Port (pointer) to receiving state-machine */
+  FSM* m_port;
 };
 
 // The ping-pong state machines

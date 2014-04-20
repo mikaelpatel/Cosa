@@ -28,7 +28,8 @@
  * 
  * Reading a digital pin in Cosa is 6-7X faster than Arduino. Writing
  * is 2-10X faster. Serial output with data and clock pin is 4X
- * faster. Reading an analog pin in Cosa is equal to Arduino.
+ * faster. Reading an analog pin in Cosa is equal to Arduino though 
+ * Cosa allows the ADC to be performed asynchroniously. 
  * 
  * The speedup can be explained by the caching of port register
  * pointer and pin mask in Cosa compared to Arduino. Also most access

@@ -26,7 +26,7 @@
  *
  * @section Circuit
  * This example requires no special circuit. The Arduino Pin 13
- * (builtin LED) is used.
+ * (built-in LED) is used.
  *
  * This file is part of the Arduino Che Cosa project.
  */

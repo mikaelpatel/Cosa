@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,8 +22,8 @@
  *
  * @section Description
  * Benchmarking IOStream and UART functions; measure time to print
- * characters and numbers through the IOStream interface and IOBuffer
- * to the UART.
+ * characters, strings and numbers through the IOStream interface and
+ * IOBuffer to the UART.
  * 
  * This file is part of the Arduino Che Cosa project.
  */

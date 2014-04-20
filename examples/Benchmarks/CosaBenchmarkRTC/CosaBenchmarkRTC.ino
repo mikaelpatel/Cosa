@@ -21,10 +21,10 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa RTC (Real-Time Clock) Benchmark. Measurement and validation of
- * the RTC (Real-Time Clock); micro- and milli-second. The benchmark
- * shows the number of micro-seconds required for access of the RTC
- * values, how accurate the DELAY macro and Watchdog delay is.
+ * Cosa RTC (Real-Time Clock) Benchmark. Measurement and validate RTC
+ * operations; micro- and milli-second. The benchmark shows the number
+ * of micro-seconds required for access of the RTC values, how
+ * accurate the DELAY macro and Watchdog delay is. 
  *
  * @section Circuit
  * This example requires no special circuit. Uses serial output.

@@ -22,8 +22,8 @@
  *
  * @section Description
  * Cosa sizeof benchmark; the size of class instances. Static member
- * data is not included. Note that this is also a list of the classes
- * available in Cosa. 
+ * data are not included. Note that this is also a list of the classes
+ * available in Cosa.
  *
  * @section Circuit
  * This example requires no special circuit. Uses serial output.

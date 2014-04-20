@@ -36,7 +36,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Nucleo/Thread.hh"
 
-// This class is a thread that turns LED on and off given a
+// This class is a thread that turns a LED on and off given a
 // delay period. The delay may be changed dynamically.
 class LED : public Nucleo::Thread {
 public:

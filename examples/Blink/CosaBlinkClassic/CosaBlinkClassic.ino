@@ -21,8 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa LED blink demonstration. The classical LED blink program
- * written i Cosa using the Arduino builtin LED. No setup is necessary
+ * Cosa LED blink demonstration. The classical Arduino LED blink program
+ * written in Cosa using the Arduino built-in LED. No setup is necessary
  * as mode is handled by the OutputPin class. The delay is busy-wait
  * (not low power mode).
  *

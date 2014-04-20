@@ -22,12 +22,12 @@
  *
  * @section Description
  * The classical LED blink program written i Cosa using the Arduino
- * builtin LED, Watchdog wait to allow sleep mode during LED pin
+ * built-in LED, Watchdog wait to allow sleep mode during LED pin
  * toggle. Show the declarative and object-oriented style of Cosa.   
  *
  * @section Circuit
  * This example requires no special circuit. The Arduino Pin 13
- * (builtin LED) is used.
+ * (built-in LED) is used.
  *
  * This file is part of the Arduino Che Cosa project.
  */

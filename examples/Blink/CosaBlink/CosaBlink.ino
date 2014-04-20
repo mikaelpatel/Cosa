@@ -22,12 +22,12 @@
  *
  * @section Description
  * Cosa LED blink demonstration. The classical LED blink program
- * written i Cosa using the Arduino builtin LED with a very short
+ * written in Cosa using the Arduino built-in LED with a very short
  * blink period(16:512 ms) and the Watchdog for low power mode during
  * delay.  
  *
  * @section Circuit
- * Uses built-in LED (D13).
+ * Uses built-in LED (D13/Arduino).
  *
  * This file is part of the Arduino Che Cosa project.
  */

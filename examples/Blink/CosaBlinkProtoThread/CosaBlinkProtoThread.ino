@@ -36,9 +36,9 @@
 
 class LED : public ProtoThread {
 public:
-  LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) : 
+  LED(Board::DigitalPin pin, uint16_t ms) : 
     ProtoThread(), 
-    m_pin(pin, initial),
+    m_pin(pin),
     m_delay(ms)
   {}
 

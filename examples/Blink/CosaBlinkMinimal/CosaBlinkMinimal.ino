@@ -22,13 +22,13 @@
  *
  * @section Description
  * Cosa LED blink demonstration. The classical LED blink program
- * written i Cosa using the Arduino builtin LED and minimal number of 
+ * written in Cosa using the Arduino built-in LED and minimal number of 
  * lines of code. Uses the OutputPin static member function toggle to
  * turn on and off the built-in LED. And the default delay function
- * which is busy-wait loop. No setup function is necessary.
+ * which is a busy-wait loop. No setup function is necessary.
  *
  * @section Circuit
- * Uses built-in LED (D13).
+ * Uses built-in LED (D13/Arduino).
  *
  * This file is part of the Arduino Che Cosa project.
  */

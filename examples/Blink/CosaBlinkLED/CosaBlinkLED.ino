@@ -21,7 +21,7 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of LED class and static instance.
+ * Demonstration of the Cosa LED class and creating a static instance.
  *
  * This file is part of the Arduino Che Cosa project.
  */
