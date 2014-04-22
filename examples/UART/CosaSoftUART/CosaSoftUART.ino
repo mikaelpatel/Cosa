@@ -1,5 +1,5 @@
 /**
- * @file CosaSUART.ino
+ * @file CosaSoftUART.ino
  * @version 1.0
  *
  * @section License
@@ -21,9 +21,8 @@
  * Boston, MA  02111-1307  USA
  *
  * @section Description
- * Cosa demonstration of Softwar UART for the ATtiny and using the
- * raw IOStream::Device interface. Will use Hardware UART for other
- * Arduino variants.
+ * Cosa demonstration of Software UART and using the raw 
+ * IOStream::Device interface. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -32,19 +31,28 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Soft/UART.hh"
 
-Soft::UART uart(Board::D0);
+IOBuffer<Soft::UART::BUFFER_MAX> ibuf;
+#if defined(__ARDUINO_TINY__)
+Soft::UART uart(Board::D2, Board::PCI1, &ibuf);
+#define BAUDRATE 19200
+#else
+Soft::UART uart(Board::D5, Board::PCI4, &ibuf);
+#define BAUDRATE 57600
+#endif
 OutputPin led(Board::LED);
 
 void setup()
 {
   Watchdog::begin();
-  uart.begin(9600);
+  uart.begin(BAUDRATE);
   uart.puts_P(PSTR("Hello World\n"));
 }
 
 void loop()
 {
   static uint8_t pin = 0;
+
+  // Write pin status to soft uart
   led.toggle();
   uart.putchar('D');
   if (pin < 10) {
@@ -58,6 +66,9 @@ void loop()
     uart.puts_P(PSTR(" = on\n"));
   else uart.puts_P(PSTR(" = off\n"));
   led.toggle();
-  SLEEP(1);
   if (pin == Board::PIN_MAX) pin = 0; else pin += 1;
+
+  // Echo characters received on soft uart
+  while (uart.available()) uart.putchar(uart.getchar());
+  SLEEP(1);
 }

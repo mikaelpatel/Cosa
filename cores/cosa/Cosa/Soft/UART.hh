@@ -28,91 +28,154 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/OutputPin.hh"
+#include "Cosa/PinChangeInterrupt.hh"
 #include "Cosa/IOStream.hh"
+#include "Cosa/IOBuffer.hh"
 
-/**
- * Software version some of the AVR hardware.
- */
 namespace Soft {
 
+/**
+ * Soft UART for transmission only (UAT) using the OutputPin serial 
+ * write method. May be used for trace output from ATtiny devices. 
+ * Has a very small footprint and requires only one pin. No timers.
+ */
+class UAT : public IOStream::Device {
+public:
+  // Serial formats; DATA + PARITY + STOP
+  enum {
+    DATA5 = 0,
+    DATA6 = 1,
+    DATA7 = 2,
+    DATA8 = 3,
+    DATA9 = 4,
+    NO_PARITY = 0,
+    EVEN_PARITY = 8,
+    ODD_PARITY = 16,
+    STOP1 = 0,
+    STOP2 = 32
+  } __attribute__((packed));
+
   /**
-   * Soft UART for transmission only using the OutputPin serial 
-   * write method. May be used for trace output from ATtiny
-   * devices. See Cosa/IOStream/Device/UART.hh.
+   * Construct Soft UART with transmitter (only) on given output pin.
+   * @param[in] tx transmitter pin.
    */
-  class UART : public IOStream::Device {
+  UAT(Board::DigitalPin tx);
+  
+  /**
+   * @override IOStream::Device
+   * Write character to serial port output buffer. Returns character
+   * if successful otherwise on error or buffer full returns EOF(-1),
+   * @param[in] c character to write.
+   * @return character written or EOF(-1).
+   */
+  virtual int putchar(char c);
+
+  /**
+   * Start Soft UART device driver (transmitter only).
+   * @param[in] baudrate serial bitrate (default 9600).
+   * @param[in] format serial frame format (default 8 data, 2 stop bits)
+   * @return true(1) if successful otherwise false(0).
+   */
+  bool begin(uint32_t baudrate = 9600UL, uint8_t format = DATA8 + STOP2);
+
+  /**
+   * Stop Soft UART device driver. 
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool end();
+  
+protected:
+  static const uint8_t DATA_MASK = 7;
+  OutputPin m_tx;
+  uint8_t m_stops;
+  uint8_t m_bits;
+  uint16_t m_us;
+};
+
+/**
+ * Soft UART using serial write and input sampling. The Output serial
+ * write method is used for transmission and a pin change interrupt for 
+ * detecting start condition and receiving data.
+ */
+class UART : public UAT {
+public:
+  // Default buffer size
+  static const uint8_t BUFFER_MAX = 64;
+
+  /**
+   * Construct Soft UART with transmitter on given output pin and
+   * receiver on given pin change interrupt pin. Received data is
+   * captured by an interrupt service routine and put into given
+   * buffer (i.e. io-stream).
+   * @param[in] tx transmitter pin.
+   * @param[in] rx receiver pin.
+   * @param[in] ibuf input buffer.
+   */
+  UART(Board::DigitalPin tx, Board::InterruptPin rx, IOStream::Device* ibuf);
+  
+  /**
+   * @override IOStream::Device
+   * Number of bytes available in input buffer.
+   * @return bytes.
+   */
+  virtual int available();
+
+  /**
+   * @override IOStream::Device
+   * Peek next character from serial port input buffer.
+   * Returns character if successful otherwise on error or buffer empty
+   * returns EOF(-1),
+   * @return character or EOF(-1).
+   */
+  virtual int peekchar();
+
+  /**
+   * @override IOStream::Device
+   * Peek for given character from serial port input buffer.
+   * @param[in] c character to peek for.
+   * @return available or EOF(-1).
+   */
+  virtual int peekchar(char c);
+    
+  /**
+   * @override IOStream::Device
+   * Read character from serial port input buffer.
+   * Returns character if successful otherwise on error or buffer empty
+   * returns EOF(-1),
+   * @return character or EOF(-1).
+   */
+  virtual int getchar();
+
+  /**
+   * Start Soft UART device driver.
+   * @param[in] baudrate serial bitrate (default 9600).
+   * @param[in] format serial frame format (default 8 data, 2 stop bits)
+   * @return true(1) if successful otherwise false(0).
+   */
+  bool begin(uint32_t baudrate = 9600UL, uint8_t format = DATA8 + STOP2);
+
+  /**
+   * Stop Soft UART device driver. 
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool end();
+  
+protected:
+  /** Handling start condition and receive data */
+  class RXPinChangeInterrupt : public PinChangeInterrupt {
   public:
-    enum {
-      DATA5 = 0,
-      DATA6 = 1,
-      DATA7 = 2,
-      DATA8 = 3,
-      DATA9 = 4,
-      NO_PARITY = 0,
-      EVEN_PARITY = 8,
-      ODD_PARITY = 16,
-      STOP1 = 0,
-      STOP2 = 32
-    } __attribute__((packed));
-
-    /**
-     * Construct Soft UART with transmitter on given output pin.
-     * @param[in] pin transmitter (default D1).
-     */
-    UART(Board::DigitalPin pin = Board::D1) :
-      IOStream::Device(),
-      m_pin(pin),
-      m_stops(2),
-      m_bits(8),
-      m_us(1000000UL / 9600)
-    {
-      m_pin.set();
-    }
-
-    /**
-     * @override IOStream::Device
-     * Write character to Soft UART output pin. Returns character.
-     * @param[in] c character to write.
-     * @return character.
-     */
-    virtual int putchar(char c)
-    {
-      uint16_t d = ((0xff00 | c) << 1);
-      m_pin.write(d, m_bits + m_stops + 1, m_us);
-      return (c);
-    }
-
-    /**
-     * Start Soft UART device driver.
-     * @param[in] baudrate serial bitrate (default 9600).
-     * @param[in] format serial frame format (default async, 8data, 2stop bit)
-     * @return true(1) if successful otherwise false(0).
-     */
-    bool begin(uint32_t baudrate = 9600UL, 
-	       uint8_t format = DATA8 + NO_PARITY + STOP2)
-    {
-      m_stops = ((format & STOP2) != 0) + 1;
-      m_bits = (5 + (format & DATA_MASK));
-      m_us = 1000000UL / baudrate;
-      return (true);
-    }
-
-    /**
-     * Stop Soft UART device driver. 
-     * @return true(1) if successful otherwise false(0)
-     */
-    bool end()
-    {
-      return (true);
-    }
-
-  private:
-    static const uint8_t DATA_MASK = 7;
-    OutputPin m_pin;
-    uint8_t m_stops;
-    uint8_t m_bits;
-    uint16_t m_us;
+    RXPinChangeInterrupt(Board::InterruptPin pin, UART* uart);
+    virtual void on_interrupt(uint16_t arg = 0);
+    void set_baudrate(uint32_t baudrate);
+  protected:
+    UART* m_uart;
   };
+  RXPinChangeInterrupt m_rx;
+  IOStream::Device* m_ibuf;
+  uint16_t m_count;
+  friend class RXPinChangeInterrupt;
+};
+
 };
 
 #endif
