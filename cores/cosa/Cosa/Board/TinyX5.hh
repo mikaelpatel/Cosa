@@ -42,7 +42,7 @@
  * @code
  *                  ATinyX5   
  *                +----U----+
- * (/RESET)-----1-|PB5   VCC|-8-----------------(VCC)
+ * (D5/RESET)---1-|PB5   VCC|-8-----------------(VCC)
  * (D3/A3)------2-|PB3   PB2|-7--(D2/A1/EXT0/SCL/SCK)
  * (LED/D4/A2)--3-|PB4   PB1|-6-------------(D1/MOSI)
  * (GND)--------4-|GND   PB0|-5---------(D0/SDA/MISO)
@@ -185,7 +185,8 @@ public:
   enum {
     VBG = (_BV(MUX3) | _BV(MUX2)),
     EXT_MAX = 1,
-    PCINT_MAX = 1,
+    PCMSK_MAX = 1,
+    PCINT_MAX = 6,
     PIN_MAX = D5
   } __attribute__((packed));
 };

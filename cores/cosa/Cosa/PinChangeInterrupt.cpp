@@ -39,8 +39,8 @@
 #define PCIE (_BV(PCIE0))
 #endif
 
-PinChangeInterrupt* PinChangeInterrupt::instance[INSTANCE_MAX] = { NULL };
-uint8_t PinChangeInterrupt::state[Board::PCINT_MAX] = { 0 };
+PinChangeInterrupt* PinChangeInterrupt::s_pin[Board::PCINT_MAX] = { NULL };
+uint8_t PinChangeInterrupt::s_state[Board::PCMSK_MAX] = { 0 };
 
 void 
 PinChangeInterrupt::enable() 
@@ -49,9 +49,9 @@ PinChangeInterrupt::enable()
     *PCIMR() |= m_mask;
 #if defined(__ARDUINO_MEGA__)
     uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
-    instance[ix] = this;
+    s_pin[ix] = this;
 #else
-    instance[m_pin] = this;
+    s_pin[m_pin] = this;
 #endif
   }
 }
@@ -63,9 +63,9 @@ PinChangeInterrupt::disable()
     *PCIMR() &= ~m_mask;
 #if defined(__ARDUINO_MEGA__)
     uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
-    instance[ix] = NULL;
+    s_pin[ix] = NULL;
 #else
-    instance[m_pin] = NULL;
+    s_pin[m_pin] = NULL;
 #endif
   }
 }
@@ -74,12 +74,12 @@ void
 PinChangeInterrupt::begin()
 {
 #if defined(__ARDUINO_MEGA__)
-  state[0] = *Pin::PIN(16);
-  state[1] = 0;
-  state[2] = *Pin::PIN(64);
+  s_state[0] = *Pin::PIN(16);
+  s_state[1] = 0;
+  s_state[2] = *Pin::PIN(64);
 #else
-  for (uint8_t i = 0; i < Board::PCINT_MAX; i++)
-    state[i] = *Pin::PIN(i << 3);
+  for (uint8_t i = 0; i < Board::PCMSK_MAX; i++)
+    s_state[i] = *Pin::PIN(i << 3);
 #endif
 
   synchronized {
@@ -99,17 +99,17 @@ void
 PinChangeInterrupt::on_interrupt(uint8_t pcint, uint8_t mask, uint8_t base)
 {
   uint8_t new_state = *Pin::PIN(base);
-  uint8_t changed = (new_state ^ state[pcint]) & mask;
+  uint8_t changed = (new_state ^ s_state[pcint]) & mask;
   base = (pcint << 3);
   
   for (uint8_t i = 0; changed && (i < CHARBITS); i++) {
-    if ((changed & 1) && (instance[base + i] != NULL)) {
-      instance[base + i]->on_interrupt();
+    if ((changed & 1) && (s_pin[base + i] != NULL)) {
+      s_pin[base + i]->on_interrupt();
     }
     changed >>= 1;
   }
 
-  state[pcint] = new_state;
+  s_state[pcint] = new_state;
 }
 
 #define PCINT_ISR(vec,pcint,base)				\

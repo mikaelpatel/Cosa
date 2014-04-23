@@ -77,9 +77,8 @@ public:
   virtual void on_interrupt(uint16_t arg = 0) = 0;
 
 private:
-  static const uint8_t INSTANCE_MAX = Board::PCINT_MAX * CHARBITS;
-  static PinChangeInterrupt* instance[INSTANCE_MAX];
-  static uint8_t state[Board::PCINT_MAX];
+  static PinChangeInterrupt* s_pin[Board::PCINT_MAX];
+  static uint8_t s_state[Board::PCMSK_MAX];
 
   /**
    * Map interrupt source: Check which pin(s) are the source of the

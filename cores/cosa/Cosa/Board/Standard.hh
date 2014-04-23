@@ -221,7 +221,8 @@ public:
     VBG = (_BV(MUX3) | _BV(MUX2) | _BV(MUX1)),
     UART_MAX = 1,
     EXT_MAX = 2,
-    PCINT_MAX = 3,
+    PCMSK_MAX = 3,
+    PCINT_MAX = 24,
     PIN_MAX = A7
   } __attribute__((packed));
 };
