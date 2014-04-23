@@ -33,7 +33,7 @@
 #include "Cosa/Linkage.hh"
 
 /**
- * The Atmega Watchdog is used as a low power timer for period
+ * The Atmega Watchdog is used as a low power timer for periodical
  * events and delay. 
  */
 class Watchdog {
@@ -151,6 +151,7 @@ public:
   static void end() 
   { 
     wdt_disable(); 
+    s_initiated = false;
   }
 
   /**
