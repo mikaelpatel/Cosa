@@ -39,8 +39,8 @@ UAT::UAT(Board::DigitalPin tx) :
 int 
 UAT::putchar(char c)
 {
-  uint16_t d = ((0xff00 | c) << 1);
-  m_tx.write(d, m_bits + m_stops + 1, m_us);
+  uint16_t data = ((0xff00 | c) << 1);
+  m_tx.write(data, m_bits + m_stops + 1, m_us);
   return (c);
 }
 
@@ -122,11 +122,9 @@ UART::RXPinChangeInterrupt::on_interrupt(uint16_t arg)
   uint8_t bits = m_uart->m_bits;
   uint8_t mask = 1;
   uint8_t data = 0;
-  uint8_t bit;
   do {
     _delay_loop_2(count);
-    if (is_set()) bit = mask; else bit = data;
-    data |= bit;
+    data |= mask & (uint8_t) -is_set();
     mask <<= 1;
   } while (--bits);
   m_uart->m_ibuf->putchar(data);
