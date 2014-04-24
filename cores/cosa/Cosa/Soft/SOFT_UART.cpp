@@ -32,7 +32,7 @@ UAT::UAT(Board::DigitalPin tx) :
   m_tx(tx, 1),
   m_stops(2),
   m_bits(8),
-  m_us(1000000UL / 9600)
+  m_count((F_CPU / 9600) / 4)
 {
 }
 
@@ -40,7 +40,15 @@ int
 UAT::putchar(char c)
 {
   uint16_t data = ((0xff00 | c) << 1);
-  m_tx.write(data, m_bits + m_stops + 1, m_us);
+  uint8_t bits = m_bits + m_stops + 1;
+  uint16_t count = m_count;
+  synchronized {
+    do {
+      m_tx._write(data & 0x01);
+      _delay_loop_2(count);
+      data >>= 1;
+    } while (--bits);
+  }
   return (c);
 }
 
@@ -49,13 +57,7 @@ UAT::begin(uint32_t baudrate, uint8_t format)
 {
   m_stops = ((format & STOP2) != 0) + 1;
   m_bits = (5 + (format & DATA_MASK));
-  m_us = 1000000UL / baudrate;
-  return (true);
-}
-
-bool 
-UAT::end()
-{
+  m_count = ((F_CPU / baudrate) - I_CPU) / 4;
   return (true);
 }
 
@@ -66,44 +68,12 @@ UART::UART(Board::DigitalPin tx, Board::InterruptPin rx, IOStream::Device* ibuf)
 {
 }
 
-int 
-UART::available()
-{
-  return (m_ibuf->available());
-}
-
-int 
-UART::peekchar()
-{
-  return (m_ibuf->peekchar());
-}
-
-int 
-UART::peekchar(char c)
-{
-  return (m_ibuf->peekchar(c));
-}
-
-int 
-UART::getchar()
-{
-  return (m_ibuf->getchar());
-}
-
 bool 
 UART::begin(uint32_t baudrate, uint8_t format)
 {
   if (!UAT::begin(baudrate, format)) return (false);
   PinChangeInterrupt::begin();
-  m_count = m_us * (I_CPU / 4);
   m_rx.enable();
-  return (true);
-}
-
-bool 
-UART::end()
-{
-  m_rx.disable();
   return (true);
 }
 
@@ -118,13 +88,13 @@ void
 UART::RXPinChangeInterrupt::on_interrupt(uint16_t arg)
 {
   if (is_set()) return;
-  const uint16_t count = m_uart->m_count;
+  uint16_t count = m_uart->m_count;
   uint8_t bits = m_uart->m_bits;
   uint8_t mask = 1;
   uint8_t data = 0;
   do {
     _delay_loop_2(count);
-    data |= mask & (uint8_t) -is_set();
+    if (is_set()) data |= mask;
     mask <<= 1;
   } while (--bits);
   m_uart->m_ibuf->putchar(data);

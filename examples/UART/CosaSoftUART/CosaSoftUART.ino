@@ -34,7 +34,7 @@
 IOBuffer<Soft::UART::BUFFER_MAX> ibuf;
 #if defined(__ARDUINO_TINY__)
 Soft::UART uart(Board::D2, Board::PCI1, &ibuf);
-#define BAUDRATE 19200
+#define BAUDRATE 38400
 #else
 Soft::UART uart(Board::D5, Board::PCI4, &ibuf);
 #define BAUDRATE 57600

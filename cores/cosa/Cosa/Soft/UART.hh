@@ -82,14 +82,17 @@ public:
    * Stop Soft UART device driver. 
    * @return true(1) if successful otherwise false(0)
    */
-  bool end();
+  bool end()
+  {
+    return (true);
+  }
   
 protected:
   static const uint8_t DATA_MASK = 7;
   OutputPin m_tx;
   uint8_t m_stops;
   uint8_t m_bits;
-  uint16_t m_us;
+  uint16_t m_count;
 };
 
 /**
@@ -100,7 +103,11 @@ protected:
 class UART : public UAT {
 public:
   // Default buffer size
+#if defined(__ARDUINO_TINY__)
+  static const uint8_t BUFFER_MAX = 32;
+#else
   static const uint8_t BUFFER_MAX = 64;
+#endif
 
   /**
    * Construct Soft UART with transmitter on given output pin and
@@ -118,7 +125,10 @@ public:
    * Number of bytes available in input buffer.
    * @return bytes.
    */
-  virtual int available();
+  virtual int available()
+  {
+    return (m_ibuf->available());
+  }
 
   /**
    * @override IOStream::Device
@@ -127,7 +137,10 @@ public:
    * returns EOF(-1),
    * @return character or EOF(-1).
    */
-  virtual int peekchar();
+  virtual int peekchar()
+  {
+    return (m_ibuf->peekchar());
+  }
 
   /**
    * @override IOStream::Device
@@ -135,7 +148,10 @@ public:
    * @param[in] c character to peek for.
    * @return available or EOF(-1).
    */
-  virtual int peekchar(char c);
+  virtual int peekchar(char c)
+  {
+    return (m_ibuf->peekchar(c));
+  }
     
   /**
    * @override IOStream::Device
@@ -144,7 +160,10 @@ public:
    * returns EOF(-1),
    * @return character or EOF(-1).
    */
-  virtual int getchar();
+  virtual int getchar()
+  {
+    return (m_ibuf->getchar());
+  }
 
   /**
    * Start Soft UART device driver.
@@ -158,7 +177,11 @@ public:
    * Stop Soft UART device driver. 
    * @return true(1) if successful otherwise false(0)
    */
-  bool end();
+  bool end()
+  {
+    m_rx.disable();
+    return (true);
+  }
   
 protected:
   /** Handling start condition and receive data */
@@ -172,7 +195,6 @@ protected:
   };
   RXPinChangeInterrupt m_rx;
   IOStream::Device* m_ibuf;
-  uint16_t m_count;
   friend class RXPinChangeInterrupt;
 };
 
