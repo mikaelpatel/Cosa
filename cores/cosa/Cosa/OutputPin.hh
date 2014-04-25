@@ -149,9 +149,7 @@ public:
    */
   void toggle() __attribute__((always_inline)) 
   { 
-    synchronized {
-      *PIN() = m_mask; 
-    }
+    *PIN() = m_mask; 
   }
 
   /**
@@ -160,9 +158,7 @@ public:
    */
   static void toggle(uint8_t pin) __attribute__((always_inline))
   { 
-    synchronized {
-      *PIN(pin) = MASK(pin); 
-    }
+    *PIN(pin) = MASK(pin); 
   }
 
   /**
