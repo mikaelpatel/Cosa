@@ -91,7 +91,7 @@ private:
    * @param[in] pin number.
    * @return pin bit position.
    */
-  static const uint8_t BIT(uint8_t pin)
+  static uint8_t BIT(uint8_t pin)
   {
     return (pin < 8 ? pin : 
 	              pin - 8);

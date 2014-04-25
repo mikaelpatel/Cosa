@@ -44,7 +44,7 @@ public:
    * @param[in] pin number.
    * @return pin bit mask.
    */
-  static const uint8_t MASK(uint8_t pin) __attribute__((always_inline))
+  static uint8_t MASK(uint8_t pin) __attribute__((always_inline))
   {
     return (_BV(Board::BIT(pin)));
   }
