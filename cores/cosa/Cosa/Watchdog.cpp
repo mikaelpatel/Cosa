@@ -40,8 +40,6 @@ static void watchdog_sleep(uint16_t s)
 Watchdog::InterruptHandler Watchdog::s_handler = NULL;
 void* Watchdog::s_env = NULL;
 
-Head Watchdog::s_timeq[Watchdog::TIMEQ_MAX];
-
 volatile uint32_t Watchdog::s_ticks = 0L;
 uint8_t Watchdog::s_prescale;
 bool Watchdog::s_initiated = false;
@@ -84,16 +82,6 @@ Watchdog::begin(uint16_t ms,
   ::sleep = watchdog_sleep;
 }
 
-void 
-Watchdog::attach(Link* target, uint16_t ms)
-{
-  // Map milli-seconds to watchdog time queue index
-  uint8_t level = as_prescale(ms);
-
-  // Attach the target to the selected time queue
-  s_timeq[level].attach(target);
-}
-
 void
 Watchdog::delay(uint16_t ms)
 {
@@ -106,15 +94,6 @@ Watchdog::delay(uint16_t ms)
     key = lock();
   }
   unlock(key);
-}
-
-void
-Watchdog::push_timeout_events(void* env)
-{ 
-  uint32_t changed = (s_ticks ^ (s_ticks + 1));
-  for (uint8_t i = s_prescale; i < TIMEQ_MAX; i++, changed >>= 1)
-    if ((changed & 1) && !s_timeq[i].is_empty())
-      Event::push(Event::TIMEOUT_TYPE, &s_timeq[i], i);
 }
 
 ISR(WDT_vect)
