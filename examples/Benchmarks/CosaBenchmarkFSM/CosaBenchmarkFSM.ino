@@ -33,20 +33,6 @@
  * This example requires no special circuit. Uses serial output,
  * internal timer for RTC and watchdog.
  *
- * @section Output
- * CosaBenchmarkFSM: started
- * free_memory() = 1553
- * sizeof(Event::Handler) = 2
- * sizeof(Link) = 6
- * sizeof(FSM) = 12
- * sizeof(Echo) = 14
- * EVENTS_MAX = 100000
- * F_CPU = 16000000
- * I_CPU = 16
- * 138:void loop():info:14 us per event (224 cycles)
- * 138:void loop():info:14 us per event (224 cycles)
- * 138:void loop():info:14 us per event (224 cycles)
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -153,3 +139,16 @@ void loop()
   INFO("%l us per event (%l cycles)", us_per_event, us_per_event * I_CPU);
 }
 
+/**
+@section Output
+CosaBenchmarkFSM: started
+free_memory() = 1576
+sizeof(Event::Handler) = 2
+sizeof(Link) = 6
+sizeof(FSM) = 12
+sizeof(Echo) = 14
+EVENTS_MAX = 100000
+F_CPU = 16000000
+I_CPU = 16
+139:void loop():info:13 us per event (208 cycles)
+*/

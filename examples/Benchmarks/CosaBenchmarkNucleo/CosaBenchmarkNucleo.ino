@@ -30,17 +30,6 @@
  * This example requires no special circuit. Uses serial output,
  * internal timer for RTC and watchdog.
  *
- * @section Output
- * CosaBenchmarkNucleo: started
- * Thread::Consumer: started
- * Thread::Producer: started
- * 59:virtual void Producer::run():info:Benchmark 1: measure yield
- * 65:virtual void Producer::run():info:11 us
- * 68:virtual void Producer::run():info:Benchmark 2: measure resume
- * 74:virtual void Producer::run():info:11 us
- * 77:virtual void Producer::run():info:Benchmark 3: measure signal-wait
- * 83:virtual void Producer::run():info:40 us
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -128,3 +117,16 @@ void loop()
   Nucleo::Thread::begin();
   ASSERT(true == false);
 }
+
+/**
+@section Output
+CosaBenchmarkNucleo: started
+Thread::Consumer: started
+Thread::Producer: started
+60:virtual void Producer::run():info:Benchmark 1: measure yield
+66:virtual void Producer::run():info:11 us
+69:virtual void Producer::run():info:Benchmark 2: measure resume
+75:virtual void Producer::run():info:11 us
+78:virtual void Producer::run():info:Benchmark 3: measure signal-wait
+84:virtual void Producer::run():info:36 us
+*/

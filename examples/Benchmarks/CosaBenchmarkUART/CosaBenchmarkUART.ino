@@ -204,54 +204,55 @@ void loop()
 }
 
 /**
- * @section Output
- *
- *  CosaBenchmarkUART: started
- *  free_memory() = 1596
- *  1
- *  one character:16 us
- *  1
- *  one character string:56 us
- *  1
- *  integer:68 us
- *  1
- *  long integer:60 us
- *  
- *  10
- *  two characters:48 us
- *  10
- *  two character string:60 us
- *  10
- *  integer:84 us
- *  10
- *  long integer:92 us
- *  
- *  100
- *  three characters:60 us
- *  100
- *  three character string:68 us
- *  100
- *  integer:104 us
- *  100
- *  long integer:120 us
- *  
- *  127
- *  max int8_t:108 us
- *  32767
- *  max int16_t:136 us
- *  2147483647
- *  max int32_t:340 us
- *  
- *  255
- *  max uint8_t:100 us
- *  65535
- *  max uint16_t:136 us
- *  4294967295
- *  max uint32_t:340 us
- *  
- *  000100
- *  uint16_t(digits=6):124 us
- *  
- *  000100
- *  uint32_t(digits=6):140 us
- */
+@section Output
+CosaBenchmarkUART: started
+free_memory() = 1692
+1
+one character:16 us
+1
+one character string:52 us
+1
+integer:64 us
+1
+long integer:60 us
+
+10
+two characters:48 us
+10
+two character string:60 us
+10
+integer:84 us
+10
+long integer:88 us
+
+100
+three characters:56 us
+100
+three character string:72 us
+100
+integer:100 us
+100
+long integer:120 us
+
+127
+max int8_t:100 us
+32767
+max int16_t:136 us
+2147483647
+max int32_t:336 us
+
+255
+max uint8_t:100 us
+65535
+max uint16_t:136 us
+4294967295
+max uint32_t:336 us
+
+000100
+uint16_t(digits=6):124 us
+
+000100
+uint32_t(digits=6):140 us
+
+203:void loop():assert:true == false
+*/

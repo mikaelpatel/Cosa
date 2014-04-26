@@ -27,16 +27,6 @@
  * @section Circuit
  * This example requires no special circuit. Uses serial output.
  *
- * @section Output
- * CosaBenchmarkProtoThread: started
- * sizeof(ProtoThread) = 9
- * sizeof(Counter) = 13
- * F_CPU = 16000000
- * I_CPU = 16
- * 115:void loop():info:27 us per dispatch (432 cycles)
- * 115:void loop():info:27 us per dispatch (432 cycles)
- * 115:void loop():info:26 us per dispatch (416 cycles)
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -122,3 +112,13 @@ void loop()
   uint32_t us_per_dispatch = us / EVENTS_MAX;
   INFO("%l us per dispatch (%l cycles)", us_per_dispatch, us_per_dispatch * I_CPU);
 }
+
+/**
+@section Output
+CosaBenchmarkProtoThread: started
+sizeof(ProtoThread) = 9
+sizeof(Counter) = 13
+F_CPU = 16000000
+I_CPU = 16
+113:void loop():info:27 us per dispatch (432 cycles)
+*/
