@@ -57,6 +57,16 @@ public:
 
   /**
    * @override Interrupt::Handler
+   * Interrupt service callback on external interrupt pin change.
+   * @param[in] arg argument from interrupt service routine.
+   */
+  virtual void on_interrupt(uint16_t arg = 0) 
+  {
+    UNUSED(arg);
+  }
+
+  /**
+   * @override Interrupt::Handler
    * Enable interrupt pin change detection and interrupt handler.
    */
   virtual void enable();
@@ -66,13 +76,6 @@ public:
    * Disable interrupt pin change detection.
    */
   virtual void disable();
-
-  /**
-   * @override Interrupt::Handler
-   * Interrupt service callback on external interrupt pin change.
-   * @param[in] arg argument from interrupt service routine.
-   */
-  virtual void on_interrupt(uint16_t arg = 0) {}
 
 private:
   static ExternalInterrupt* ext[Board::EXT_MAX];

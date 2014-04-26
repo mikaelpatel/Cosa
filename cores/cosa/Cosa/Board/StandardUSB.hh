@@ -27,6 +27,13 @@
 #define __COSA_BOARD_STANDARD_USB_HH__
 
 /**
+ * Compiler warning on unused varable.
+ */
+#if !defined(UNUSED)
+#define UNUSED(x) (void) (x)
+#endif
+
+/**
  * Cosa STANDARD USB Board pin symbol definitions for the ATmega32u4
  * based boards such as Arduino Leonardo, Micro and LilyPad USB. Cosa
  * does not use pin numbers as Arduino/Wiring, instead strong data
@@ -67,6 +74,7 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin) 
   { 
+    UNUSED(pin);
     return (&PCMSK0);
   }
 
@@ -88,6 +96,7 @@ private:
    */
   static volatile uint8_t* UART(uint8_t port) 
   { 
+    UNUSED(port);
     return (&UCSR1A);
   }
 

@@ -38,6 +38,8 @@ IOStream& operator<<(IOStream& outs, NEXA::code_t code)
 void 
 NEXA::Receiver::on_interrupt(uint16_t arg) 
 { 
+  UNUSED(arg);
+
   // Check start condition
   if (m_start == 0L) {
     if (is_clear()) return;

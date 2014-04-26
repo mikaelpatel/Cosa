@@ -48,6 +48,9 @@ SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
   m_pulse(pulse),
   m_cpol(mode)
 {
+  UNUSED(rate);
+  UNUSED(order);
+
   // USI command for hardware supported bit banging 
   m_usicr = (_BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC));
   if (mode == 1 || mode == 2) m_usicr |= _BV(USICS0);
@@ -65,6 +68,8 @@ SPI::SPI(uint8_t mode, Order order) :
   m_list(NULL),
   m_dev(NULL)
 {
+  UNUSED(order);
+
   // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
   // Do not confuse with SPI chip programming pins
   synchronized {
@@ -113,6 +118,7 @@ SPI::begin(Driver* dev)
 void
 SPI::Driver::set_clock(Clock rate)
 {
+  UNUSED(rate);
 }
 
 #else

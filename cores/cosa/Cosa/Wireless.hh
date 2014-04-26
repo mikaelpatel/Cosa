@@ -272,7 +272,10 @@ public:
      * Set output power level in dBm. Default no-operation.
      * @param[in] dBm.
      */
-    virtual void set_output_power_level(int8_t dBm) {}
+    virtual void set_output_power_level(int8_t dBm) 
+    {
+      UNUSED(dBm);
+    }
 
     /**
      * @override Wireless::Driver

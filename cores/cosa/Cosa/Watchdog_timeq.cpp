@@ -40,6 +40,7 @@ Watchdog::attach(Link* target, uint16_t ms)
 void
 Watchdog::push_timeout_events(void* env)
 { 
+  UNUSED(env);
   uint32_t changed = (s_ticks ^ (s_ticks + 1));
   for (uint8_t i = s_prescale; i < TIMEQ_MAX; i++, changed >>= 1)
     if ((changed & 1) && !s_timeq[i].is_empty())

@@ -30,9 +30,11 @@
 void
 VLCD::Slave::on_request(void* buf, size_t size)
 {
+  UNUSED(buf);
+  
   // Check for non command prefix
   char c = (char) m_buf[0];
-  if (c != COMMAND) {
+  if (c != (char) COMMAND) {
     m_lcd->putchar(c);
     for (uint8_t i = 1; i < size; i++)
       m_lcd->putchar(m_buf[i]);

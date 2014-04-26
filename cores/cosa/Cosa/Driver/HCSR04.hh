@@ -103,7 +103,10 @@ public:
    * distance has changed.
    * @param[in] distance in milli-meters.
    */
-  virtual void on_change(uint16_t distance) {}
+  virtual void on_change(uint16_t distance) 
+  {
+    UNUSED(distance);
+  }
 
 private:
   static const uint16_t TIMEOUT = 0xffffU;

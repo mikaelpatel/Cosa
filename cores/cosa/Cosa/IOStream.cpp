@@ -326,6 +326,7 @@ IOStream::Device::peekchar()
 int 
 IOStream::Device::peekchar(char c) 
 { 
+  UNUSED(c);
   return (EOF); 
 }
 

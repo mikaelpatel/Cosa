@@ -131,8 +131,20 @@ void (*yield)() = default_yield;
 namespace __cxxabiv1 
 {
   typedef int __guard;
-  extern "C" int __cxa_guard_acquire (__guard *g) { return (1); }
-  extern "C" void __cxa_guard_release (__guard *g) {}
-  extern "C" void __cxa_guard_abort (__guard *) {}
-  extern "C" void __cxa_pure_virtual(void) {}; 
+  extern "C" int __cxa_guard_acquire (__guard *g) 
+  { 
+    UNUSED(g);
+    return (1); 
+  }
+  extern "C" void __cxa_guard_release (__guard *g) 
+  {
+    UNUSED(g);
+  }
+  extern "C" void __cxa_guard_abort (__guard *g) 
+  {
+    UNUSED(g);
+  }
+  extern "C" void __cxa_pure_virtual(void) 
+  {
+  }
 }

@@ -103,7 +103,11 @@ public:
      * @param[in] type the event type.
      * @param[in] value the event value.
      */
-    virtual void on_event(uint8_t type, uint16_t value) {}
+    virtual void on_event(uint8_t type, uint16_t value) 
+    { 
+      UNUSED(type);
+      UNUSED(value);
+    }
   };
 
 public:

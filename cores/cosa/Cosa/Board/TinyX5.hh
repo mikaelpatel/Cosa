@@ -27,6 +27,13 @@
 #define __COSA_BOARD_TINYX5_HH__
 
 /**
+ * Compiler warning on unused varable.
+ */
+#if !defined(UNUSED)
+#define UNUSED(x) (void) (x)
+#endif
+
+/**
  * Cosa TINYX5 Board pin symbol definitions for the ATtinyX5
  * processors. Cosa does not use pin numbers as Arduino/Wiring,
  * instead strong data type is used (enum types) for the specific pin
@@ -65,6 +72,7 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin) 
   { 
+    UNUSED(pin);
     return (&PINB);
   }
 
@@ -75,6 +83,7 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin) 
   { 
+    UNUSED(pin);
     return (&PCMSK);
   }
 
@@ -95,6 +104,7 @@ private:
    */
   static uint8_t BIT(uint8_t pin)
   {
+    UNUSED(pin);
     return (pin);
   }
   

@@ -27,6 +27,13 @@
 #define __COSA_BOARD_STANDARD_HH__
 
 /**
+ * Compiler warning on unused varable.
+ */
+#if !defined(UNUSED)
+#define UNUSED(x) (void) (x)
+#endif
+
+/**
  * Cosa STANDARD Board pin symbol definitions for the ATmega328P based
  * boards such as Arduino Uno, Mini Pro, Nano, and LilyPad. Cosa does
  * not use pin numbers as Arduino/Wiring, instead strong data type is
@@ -90,6 +97,7 @@ private:
    */
   static volatile uint8_t* UART(uint8_t port) 
   { 
+    UNUSED(port);
     return (&UCSR0A);
   }
 

@@ -247,6 +247,8 @@ public:
      */
     virtual void on_event(uint8_t type, uint16_t value)
     {
+      UNUSED(type);
+      UNUSED(value);
       code_t cmd(m_code);
       Device::dispatch(&m_listeners, cmd, Event::CHANGE_TYPE, cmd.onoff);
     }

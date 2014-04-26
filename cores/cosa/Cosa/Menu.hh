@@ -267,6 +267,7 @@ public:
        */
       virtual void on_change(uint8_t type)
       {
+	UNUSED(type);
 	m_walker->on_key_down(Menu::Walker::SELECT_KEY);
       }
     };

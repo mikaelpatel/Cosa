@@ -96,6 +96,7 @@ const uint8_t CC1101::config[CC1101::CONFIG_MAX] __PROGMEM = {
 void 
 CC1101::IRQPin::on_interrupt(uint16_t arg)
 {
+  UNUSED(arg);
   if (m_rf == 0) return;
   m_rf->m_avail = true;
 }

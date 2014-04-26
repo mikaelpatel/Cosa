@@ -53,6 +53,7 @@ size_t Thread::s_top = MAIN_STACK_MAX;
 void
 Thread::init(void* stack)
 {
+  UNUSED(stack);
   s_main.attach(this);
   if (setjmp(m_context)) while (1) run();
 }

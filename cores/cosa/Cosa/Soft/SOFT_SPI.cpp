@@ -39,6 +39,7 @@ SPI::Driver::Driver(Board::DigitalPin cs,
   m_mode(mode),
   m_order(order)
 {
+  UNUSED(clock);
   m_next = spi.m_list;
   spi.m_list = this;
 }

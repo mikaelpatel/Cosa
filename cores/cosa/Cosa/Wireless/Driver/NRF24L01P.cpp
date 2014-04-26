@@ -172,6 +172,8 @@ NRF24L01P::powerdown()
 bool 
 NRF24L01P::begin(const void* config)
 {
+  UNUSED(config);
+
   // Setup hardware features, channel, bitrate, retransmission, dynamic payload
   write(FEATURE, (_BV(EN_DPL) | _BV(EN_ACK_PAY) | _BV(EN_DYN_ACK)));
   write(RF_CH, m_channel);

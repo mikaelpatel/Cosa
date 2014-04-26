@@ -53,6 +53,7 @@ UART::RXPinChangeInterrupt::RXPinChangeInterrupt(Board::InterruptPin pin,
 void 
 UART::RXPinChangeInterrupt::on_interrupt(uint16_t arg)
 {
+  UNUSED(arg);
   if (is_set()) return;
   uint16_t count = m_uart->m_count;
   uint8_t bits = m_uart->m_bits;

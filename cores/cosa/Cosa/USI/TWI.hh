@@ -195,7 +195,10 @@ public:
    * Set bus frequency (not implemented for USI).
    * @param[in] hz bus frequency.
    */
-  void set_freq(uint32_t hz) {}
+  void set_freq(uint32_t hz) 
+  {
+    UNUSED(hz);
+  }
 
 private:
   /**

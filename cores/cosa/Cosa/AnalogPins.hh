@@ -91,7 +91,11 @@ public:
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
-  virtual void on_event(uint8_t type, uint16_t value) {}
+  virtual void on_event(uint8_t type, uint16_t value) 
+  {
+    UNUSED(type);
+    UNUSED(value);
+  }
 
 private:
   const Board::AnalogPin* m_pin_at;

@@ -218,6 +218,7 @@ const uint8_t Rotary::Encoder::full_cycle_table[7][4] __PROGMEM = {
 void
 Rotary::Encoder::SignalPin::on_interrupt(uint16_t arg)
 {
+  UNUSED(arg);
   Rotary::Encoder::Direction change = m_encoder->detect();
   if (change) Event::push(Event::CHANGE_TYPE, m_encoder, change);
 }

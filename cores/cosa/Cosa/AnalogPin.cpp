@@ -38,7 +38,9 @@ bool
 AnalogPin::sample_request(uint8_t pin, uint8_t ref)
 {
   if (sampling_pin != NULL) return (false);
-#if defined(__ARDUINO_STANDARD_USB__)
+#if defined(__ARDUINO_STANDARD_USB__)		\
+  || defined(__ARDUINO_TINYX4__)		\
+  || defined(__ARDUINO_TINYX61__)
   pin = pin & 0x07;
 #else
   if (pin >= Board::A0) pin -= Board::A0;
@@ -70,7 +72,9 @@ uint16_t
 AnalogPin::sample(uint8_t pin, Board::Reference ref)
 {
   if (sampling_pin != NULL) return (0xffffU);
-#if defined(__ARDUINO_STANDARD_USB__)
+#if defined(__ARDUINO_STANDARD_USB__)		\
+  || defined(__ARDUINO_TINYX4__)		\
+  || defined(__ARDUINO_TINYX61__)
   pin = pin & 0x07;
 #else
   if (pin >= Board::A0) pin -= Board::A0;

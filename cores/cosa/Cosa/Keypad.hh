@@ -72,7 +72,10 @@ public:
    * Callback method when a key down is detected. Must override.
    * @param[in] nr key number (index in map).
    */
-  virtual void on_key_down(uint8_t nr) {}
+  virtual void on_key_down(uint8_t nr) 
+  {
+    UNUSED(nr);
+  }
 
   /**
    * @override Keypad
@@ -80,7 +83,10 @@ public:
    * function.
    * @param[in] nr key number (index in map).
    */
-  virtual void on_key_up(uint8_t nr) {}
+  virtual void on_key_up(uint8_t nr) 
+  {
+    UNUSED(nr);
+  }
 
 protected:
   /**

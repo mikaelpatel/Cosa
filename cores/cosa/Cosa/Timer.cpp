@@ -33,10 +33,10 @@
 #define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
 #define TICKS_PER_SEC (1000000L / US_PER_TICK)
 
-// ISR(TIMER0_OVF_vect)
 void
 Timer::on_interrupt(void* env)
 {
+  UNUSED(env);
   if (Timer::s_queue_ticks > 0) {
     if (Timer::MEASURE) Timer::enter_ISR_cycle = TCNT0;
     // Decrement the most significant part of the Timer that's

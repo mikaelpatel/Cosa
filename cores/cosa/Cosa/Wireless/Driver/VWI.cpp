@@ -272,6 +272,8 @@ VWI* VWI::s_rf = 0;
 bool 
 VWI::begin(const void* config)
 {
+  UNUSED(config);
+
   // Number of prescaled ticks needed
   uint16_t nticks = 0;
 

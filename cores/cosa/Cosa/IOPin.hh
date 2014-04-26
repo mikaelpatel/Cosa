@@ -71,7 +71,7 @@ public:
    * Get current IO-pin mode.
    * @return mode.
    */
-  Mode get_mode()
+  Mode get_mode() const
   {
     return (m_mode);
   }

@@ -39,6 +39,8 @@
 void 
 DHT::on_interrupt(uint16_t arg) 
 { 
+  UNUSED(arg);
+
   // Check start condition
   if (m_start == 0) {
     m_start = RTC::micros();
@@ -87,6 +89,8 @@ DHT::on_interrupt(uint16_t arg)
 void 
 DHT::on_event(uint8_t type, uint16_t value)
 {
+  UNUSED(type);
+  UNUSED(value);
   switch (m_state) {
 
   case IDLE: 

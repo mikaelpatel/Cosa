@@ -38,7 +38,10 @@ public:
      * Default interrupt handler. Should override.
      * @param[in] arg argument from interrupt service routine.
      */
-    virtual void on_interrupt(uint16_t arg = 0) {}
+    virtual void on_interrupt(uint16_t arg = 0) 
+    {
+      UNUSED(arg);
+    }
 
     /**
      * @override Interrupt::Handler

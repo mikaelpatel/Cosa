@@ -42,6 +42,9 @@ Touch::Touch(Board::DigitalPin pin, uint16_t threshold) :
 void 
 Touch::on_event(uint8_t type, uint16_t value)
 {
+  UNUSED(type);
+  UNUSED(value);
+  
   // Check if sampling should be initiated
   if (!m_sampling) {
     set_mode(INPUT_MODE);

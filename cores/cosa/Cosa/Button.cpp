@@ -28,6 +28,8 @@
 void 
 Button::on_event(uint8_t type, uint16_t value)
 {
+  UNUSED(value);
+
   // Skip all but timeout events
   if (type != Event::TIMEOUT_TYPE) return;
   

@@ -161,7 +161,10 @@ public:
    * Default on change function. 
    * @param[in] value.
    */
-  virtual void on_change(uint16_t value) {}
+  virtual void on_change(uint16_t value) 
+  {
+    UNUSED(value);
+  }
 
 protected:
   static AnalogPin* sampling_pin;

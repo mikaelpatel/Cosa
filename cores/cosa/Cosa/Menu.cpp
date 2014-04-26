@@ -286,6 +286,7 @@ Menu::Walker::get_type()
 void 
 Menu::RotaryController::on_event(uint8_t type, uint16_t direction)
 {
+  UNUSED(type);
   if (m_walker->get_type() == Menu::INT_RANGE)
     m_walker->on_key_down(direction == CW ? 
 			  Menu::Walker::UP_KEY : 

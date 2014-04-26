@@ -111,6 +111,8 @@ const uint8_t RFM69::config[] __PROGMEM = {
 void 
 RFM69::IRQPin::on_interrupt(uint16_t arg)
 {
+  UNUSED(arg);
+
   // The interrupt handler is called on rising signal (RFM69:DIO0). 
   // This occures on TX: PACKET_SENT and RX: CRC_OK
   if (m_rf == 0) return;

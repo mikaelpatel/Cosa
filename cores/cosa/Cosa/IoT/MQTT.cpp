@@ -411,4 +411,7 @@ MQTT::Client::service(uint32_t ms)
 void 
 MQTT::Client::on_publish(char* topic, void* buf, size_t count)
 {
+  UNUSED(topic);
+  UNUSED(buf);
+  UNUSED(count);
 }

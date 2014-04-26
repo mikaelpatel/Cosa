@@ -74,6 +74,7 @@ public:
    */
   virtual uint8_t get_width(char c)
   {
+    UNUSED(c);
     return (WIDTH + SPACING);
   }
   
@@ -107,6 +108,7 @@ public:
    */
   virtual uint8_t get_height(char c)
   {
+    UNUSED(c);
     return (HEIGHT);
   }
 

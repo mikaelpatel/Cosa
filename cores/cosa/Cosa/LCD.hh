@@ -90,7 +90,10 @@ public:
      * Set display contrast level.
      * @param[in] level to set.
      */
-    virtual void display_contrast(uint8_t level) {}
+    virtual void display_contrast(uint8_t level) 
+    {
+      UNUSED(level);
+    }
 
     /**
      * @override LCD::Device
@@ -127,7 +130,7 @@ public:
      * @param[out] x.
      * @param[out] y.
      */
-    void get_cursor(uint8_t& x, uint8_t& y)
+    void get_cursor(uint8_t& x, uint8_t& y) const
     {
       x = m_x;
       y = m_y;
@@ -145,7 +148,7 @@ public:
      * Get tab step.
      * @return tab step.
      */
-    uint8_t get_tab_step()
+    uint8_t get_tab_step() const
     {
       return (m_tab);
     }

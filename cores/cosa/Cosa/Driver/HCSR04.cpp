@@ -53,6 +53,8 @@ HCSR04::read(uint16_t& distance)
 void 
 HCSR04::on_event(uint8_t type, uint16_t value)
 {
+  UNUSED(type);
+  UNUSED(value);
   uint16_t distance;
 
   // Read the distance and check if there was a change
