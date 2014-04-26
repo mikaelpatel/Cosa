@@ -63,7 +63,7 @@ public:
   /**
    * Set the output pin. Unprotected version.
    */
-  void _set() __attribute__((always_inline)) 
+  void _set() const __attribute__((always_inline)) 
   { 
     *PORT() |= m_mask; 
   }
@@ -71,7 +71,7 @@ public:
   /**
    * Set the output pin.
    */
-  void set() __attribute__((always_inline)) 
+  void set() const __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() |= m_mask; 
@@ -81,7 +81,7 @@ public:
   /**
    * Set the output pin.
    */
-  void high() __attribute__((always_inline)) 
+  void high() const __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() |= m_mask; 
@@ -91,7 +91,7 @@ public:
   /**
    * Set the output pin.
    */
-  void on() __attribute__((always_inline))   
+  void on() const __attribute__((always_inline))   
   { 
     synchronized {
       *PORT() |= m_mask; 
@@ -101,7 +101,7 @@ public:
   /**
    * Clear the output pin. Unprotected version.
    */
-  void _clear() __attribute__((always_inline)) 
+  void _clear() const __attribute__((always_inline)) 
   { 
     *PORT() &= ~m_mask; 
   }
@@ -109,7 +109,7 @@ public:
   /**
    * Clear the output pin.
    */
-  void clear() __attribute__((always_inline)) 
+  void clear() const __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() &= ~m_mask; 
@@ -119,7 +119,7 @@ public:
   /**
    * Clear the output pin.
    */
-  void low() __attribute__((always_inline))
+  void low() const __attribute__((always_inline))
   { 
     synchronized {
       *PORT() &= ~m_mask; 
@@ -129,7 +129,7 @@ public:
   /**
    * Clear the output pin.
    */
-  void off() __attribute__((always_inline)) 
+  void off() const __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() &= ~m_mask; 
@@ -137,23 +137,24 @@ public:
   }
 
   /**
-   * Toggle the output pin. Unprotected version.
+   * Toggle the output pin. Actually atomic but defined for
+   * consistent naming convension.
    */
-  void _toggle() __attribute__((always_inline)) 
+  void _toggle() const __attribute__((always_inline)) 
   { 
     *PIN() = m_mask; 
   }
 
   /**
-   * Toggle the output pin.
+   * Toggle the output pin. Atomic per definition.
    */
-  void toggle() __attribute__((always_inline)) 
+  void toggle() const __attribute__((always_inline)) 
   { 
     *PIN() = m_mask; 
   }
 
   /**
-   * Toggle the output pin.
+   * Toggle the output pin. Atomic per definition
    * @param[in] pin number.
    */
   static void toggle(uint8_t pin) __attribute__((always_inline))
@@ -166,7 +167,7 @@ public:
    * and non-zero to set. Unprotected version.
    * @param[in] value to set.
    */
-  void _set(bool value) __attribute__((always_inline)) 
+  void _set(bool value) const __attribute__((always_inline)) 
   { 
     if (value) {
       *PORT() |= m_mask; 
@@ -181,7 +182,7 @@ public:
    * and non-zero to set.
    * @param[in] value to set.
    */
-  void set(bool value) __attribute__((always_inline)) 
+  void set(bool value) const __attribute__((always_inline)) 
   { 
     synchronized {
       if (value) {
@@ -198,7 +199,7 @@ public:
    * and non-zero to set. Unprotected version.
    * @param[in] value to set.
    */
-  void _write(bool value) __attribute__((always_inline))
+  void _write(bool value) const __attribute__((always_inline))
   { 
     if (value) {
       *PORT() |= m_mask; 
@@ -213,7 +214,7 @@ public:
    * and non-zero to set.
    * @param[in] value to write.
    */
-  void write(uint8_t value) __attribute__((always_inline))
+  void write(uint8_t value) const __attribute__((always_inline))
   { 
     synchronized {
       if (value) {
@@ -232,7 +233,7 @@ public:
    * @param[in] clk output pin.
    * @param[in] order bit first.
    */
-  void write(uint8_t value, OutputPin& clk, Direction order = MSB_FIRST);
+  void write(uint8_t value, OutputPin& clk, Direction order = MSB_FIRST) const;
 
   /**
    * Shift out given value and number of bits to the output pin using
@@ -243,7 +244,7 @@ public:
    * @param[in] bits to write.
    * @param[in] us micro-second bit period.
    */
-  void write(uint16_t value, uint8_t bits, uint16_t us);
+  void write(uint16_t value, uint8_t bits, uint16_t us) const;
 
   /**
    * Set the given output pin with the given value. Zero(0) to 
@@ -278,11 +279,11 @@ public:
   }
 
   /**
-   * Toggle the output pin to form a pulse with given length in
+   * Toggle the output pin to form a pulse with given width in
    * micro-seconds.
    * @param[in] us pulse width in micro seconds
    */
-  void pulse(uint16_t us) __attribute__((always_inline))
+  void pulse(uint16_t us) const __attribute__((always_inline))
   {
     toggle();
     DELAY(us);

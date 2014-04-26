@@ -27,7 +27,7 @@
 #include "Cosa/OutputPin.hh"
 
 uint8_t 
-Pin::read(OutputPin& clk, Direction order)
+Pin::read(OutputPin& clk, Direction order) const
 {
   uint8_t value = 0;
   uint8_t bits = CHARBITS;

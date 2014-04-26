@@ -26,7 +26,7 @@
 #include "Cosa/OutputPin.hh"
 
 void 
-OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
+OutputPin::write(uint8_t value, OutputPin& clk, Direction order) const
 {
   uint8_t bits = CHARBITS;
   if (order == MSB_FIRST) {
@@ -48,7 +48,7 @@ OutputPin::write(uint8_t value, OutputPin& clk, Direction order)
 }
 
 void 
-OutputPin::write(uint16_t value, uint8_t bits, uint16_t us)
+OutputPin::write(uint16_t value, uint8_t bits, uint16_t us) const
 {
   if (bits == 0) return;
   synchronized {

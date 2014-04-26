@@ -93,7 +93,7 @@ public:
    */
   Pin(uint8_t pin) : 
     m_sfr(Board::SFR(pin)), 
-    m_mask(MASK(pin)), 
+    m_mask(MASK(pin)),
     m_pin(pin) 
   {
   }
@@ -102,7 +102,7 @@ public:
    * Return Arduino pin number of abstract pin.
    * @return pin number.
    */
-  uint8_t get_pin() 
+  uint8_t get_pin() const
   { 
     return (m_pin); 
   }
@@ -111,7 +111,7 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool is_set() __attribute__((always_inline))
+  bool is_set() const __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -120,7 +120,7 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool is_high() __attribute__((always_inline)) 
+  bool is_high() const __attribute__((always_inline)) 
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -129,7 +129,7 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool is_on() __attribute__((always_inline))
+  bool is_on() const __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -138,7 +138,7 @@ public:
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  bool is_clear() __attribute__((always_inline))
+  bool is_clear() const __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) == 0); 
   }
@@ -147,7 +147,7 @@ public:
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  bool is_low() __attribute__((always_inline)) 
+  bool is_low() const __attribute__((always_inline)) 
   { 
     return ((*PIN() & m_mask) == 0); 
   }
@@ -156,7 +156,7 @@ public:
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  bool is_off() __attribute__((always_inline))
+  bool is_off() const __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) == 0); 
   }
@@ -165,7 +165,7 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool read() __attribute__((always_inline))
+  bool read() const __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -177,7 +177,7 @@ public:
    * @param[in] order bit first.
    * @return value.
    */
-  uint8_t read(OutputPin& clk, Direction order = MSB_FIRST);
+  uint8_t read(OutputPin& clk, Direction order = MSB_FIRST) const;
 
   /**
    * Use pin number directly to read value. Does not require an instance.
@@ -210,7 +210,7 @@ protected:
    * Return pointer to PIN register.
    * @return PIN register pointer.
    */
-  volatile uint8_t* PIN() 
+  volatile uint8_t* PIN() const
   { 
     return (m_sfr); 
   }
@@ -219,7 +219,7 @@ protected:
    * Return pointer to Data Direction Register.
    * @return DDR register pointer.
    */
-  volatile uint8_t* DDR() 
+  volatile uint8_t* DDR() const
   { 
     return (m_sfr + 1); 
   }
@@ -228,7 +228,7 @@ protected:
    * Return pointer to data PORT register.
    * @return PORT register pointer.
    */
-  volatile uint8_t* PORT() 
+  volatile uint8_t* PORT() const
   { 
     return (m_sfr + 2); 
   }
@@ -237,7 +237,7 @@ protected:
    * Return pin change interrupt mask register.
    * @return pin change mask register pointer.
    */
-  volatile uint8_t* PCIMR() __attribute__((always_inline))
+  volatile uint8_t* PCIMR() const __attribute__((always_inline))
   { 
     return (Board::PCIMR(m_pin));
   }
