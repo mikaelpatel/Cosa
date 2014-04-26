@@ -59,10 +59,10 @@ compiler.size.cmd=avr-size
 build.extra_flags=
 
 # These can be overridden in platform.local.txt
-compiler.c.extra_flags=
-compiler.c.elf.extra_flags=
+compiler.c.extra_flags=-Wextra -flto
+compiler.c.elf.extra_flags=-w -flto
 compiler.S.extra_flags=
-compiler.cpp.extra_flags=
+compiler.cpp.extra_flags=-Wextra -flto
 compiler.ar.extra_flags=
 compiler.objcopy.eep.extra_flags=
 compiler.elf2hex.extra_flags=
