@@ -1,5 +1,5 @@
 /**
- * @file CosaPCD8544temperature.ino
+ * @file CosaPCD8544temp.ino
  * @version 1.0
  *
  * @section License
@@ -83,7 +83,7 @@ void setup()
 
   // Use LCD bind to trace; print some startup information
   trace.begin(&lcd);
-  trace << PSTR("\fCosaPCD8544temperature: started\n");
+  trace << PSTR("\fCosaPCD8544temp: started\n");
   SLEEP(2);
   trace << clear;
   TRACE(sensor.connect(0));

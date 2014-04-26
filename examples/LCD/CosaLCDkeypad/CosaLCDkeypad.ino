@@ -1,5 +1,5 @@
 /**
- * @file CosaKeypad.ino
+ * @file CosaLCDkeypad.ino
  * @version 1.0
  *
  * @section License
@@ -76,6 +76,7 @@ KeypadTrace::trace(const char* msg, uint8_t nr)
   m_out << PSTR(" (") << m_key.get_value() << ')';
 }
 
+// The LCD Keypad is a 4-bit parallel device (default pins used)
 HD44780::Port4b port;
 HD44780 lcd(&port);
 KeypadTrace keypad(&lcd);
@@ -85,7 +86,7 @@ void setup()
    Watchdog::begin(16, Watchdog::push_timeout_events);
    keypad.begin();
    lcd.begin();
-   lcd.puts_P(PSTR("CosaKeypad: started"));
+   lcd.puts_P(PSTR("CosaLCDkeypad: started"));
 }
 
 void loop()

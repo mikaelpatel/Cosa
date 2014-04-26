@@ -1,5 +1,5 @@
 /**
- * @file CosaLCDtermperature.ino
+ * @file CosaLCDtemp.ino
  * @version 1.0
  *
  * @section License
@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Cosa LCD demo with 1-wire temperature
+ * Cosa LCD demo with 1-wire digital thermometer (DS18B20).
  * 
  * @section Circuit
  * See LCD driver header files for circuit descriptions.
@@ -36,18 +36,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/OWI/Driver/DS18B20.hh"
 
 // Select the LCD device for the sketch
-#include "Cosa/LCD/Driver/PCD8544.hh"
-PCD8544 lcd;
-// #include "Cosa/LCD/Driver/ST7565.hh"
-// ST7565 lcd;
-// #include "Cosa/LCD/Driver/VLCD.hh"
-// VLCD lcd;
 // #include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port4b port;
 // HD44780::SR3W port;
@@ -58,8 +51,17 @@ PCD8544 lcd;
 // HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 // HD44780 lcd(&port);
+#include "Cosa/LCD/Driver/PCD8544.hh"
+PCD8544 lcd;
+// #include "Cosa/LCD/Driver/ST7565.hh"
+// ST7565 lcd;
+// #include "Cosa/LCD/Driver/VLCD.hh"
+// VLCD lcd;
 
+// Use the LCD as an IOStream device for the console
 IOStream console(&lcd);
+
+// The 1-Wire bus and the connected digital thermometer
 OWI owi(Board::D5);
 DS18B20 sensor(&owi);
 
