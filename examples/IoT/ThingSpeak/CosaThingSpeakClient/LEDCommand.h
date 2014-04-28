@@ -22,7 +22,7 @@
 #define LED_COMMAND_H
 
 #include "CommandHandler.h"
-#include "Cosa/Pins.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/IoT/ThingSpeak.hh"
 
 template<uint8_t STATE>
