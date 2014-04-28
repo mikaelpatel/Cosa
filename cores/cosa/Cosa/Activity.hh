@@ -75,7 +75,7 @@ public:
    * Return cycle of run in activity.
    * @return cycles
    */
-  uint16_t get_cycles() 
+  uint16_t get_cycles() const
   { 
     return (m_cycles); 
   }
@@ -84,7 +84,7 @@ public:
    * Return time in seconds from scheduler.
    * @return time.
    */
-  clock_t time() 
+  clock_t time() const
   { 
     return (Alarm::time()); 
   }

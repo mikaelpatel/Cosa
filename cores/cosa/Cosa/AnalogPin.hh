@@ -64,7 +64,7 @@ public:
    * Get latest sample. 
    * @return sample value.
    */
-  uint16_t get_value() 
+  uint16_t get_value() const
   { 
     return (m_value); 
   }

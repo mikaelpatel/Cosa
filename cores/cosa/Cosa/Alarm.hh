@@ -107,7 +107,7 @@ public:
    * Return alarm handler periodic timeout.
    * @return seconds.
    */
-  uint16_t period()
+  uint16_t period() const
   {
     return (m_period);
   }

@@ -48,7 +48,7 @@ public:
   /**
    * Return max number of elements in the bitset.
    */
-  uint16_t members() 
+  uint16_t members() const
   {
     return (N);
   }
@@ -57,7 +57,7 @@ public:
    * Return bit vector.
    * @return bit vector.
    */
-  const uint8_t* bits()
+  const uint8_t* bits() const
   {
     return (m_set);
   }
@@ -73,7 +73,7 @@ public:
   /**
    * Return true if the bitset is empty.
    */
-  bool isempty()
+  bool isempty() const
   {
     for (uint16_t i = 0; i < sizeof(m_set); i++) 
       if (m_set[i] != 0) return (false);
@@ -84,7 +84,7 @@ public:
    * Check if the given element index is a member of the bitset.
    * @return bool
    */
-  bool operator[](uint16_t ix) 
+  bool operator[](uint16_t ix) const
   {
     if (ix < N) 
       return ((m_set[ix / CHARBITS] & _BV(ix & MASK)) != 0);

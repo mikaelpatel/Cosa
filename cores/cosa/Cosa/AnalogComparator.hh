@@ -71,7 +71,7 @@ public:
   virtual void enable()
   {
     synchronized {
-      comparator = this;
+      s_comparator = this;
       ADCSRB = _BV(ACME) | (m_pin == AIN1 ? _BV(ADEN) : m_pin);
       ACSR = _BV(ACIE) | m_mode;
     }
@@ -85,7 +85,7 @@ public:
   {
     synchronized {
       ACSR = _BV(ACD);
-      comparator = 0;
+      s_comparator = NULL;
     }
   }
 
@@ -97,7 +97,7 @@ public:
   virtual void on_interrupt(uint16_t arg = 0);
 
 protected:
-  static AnalogComparator* comparator;
+  static AnalogComparator* s_comparator;
   static const uint8_t AIN1 = 255;
   Mode m_mode;
   uint8_t m_pin;

@@ -58,7 +58,7 @@ public:
    * Get number of analog pins in set.
    * @return set size.
    */
-  uint8_t get_count() 
+  uint8_t get_count() const
   { 
     return (m_count); 
   }
@@ -68,7 +68,7 @@ public:
    * @param[in] ix index.
    * @return pin number.
    */
-  uint8_t get_pin_at(uint8_t ix) 
+  uint8_t get_pin_at(uint8_t ix) const
   { 
     return (ix < m_count ? pgm_read_byte(&m_pin_at[ix]) : 0);
   }

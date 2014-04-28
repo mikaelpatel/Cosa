@@ -132,7 +132,7 @@ public:
    * Get the current program memory page size (number of words, 16-bits).
    * @return words page size.
    */
-  uint16_t get_flash_page(uint16_t addr)
+  uint16_t get_flash_page(uint16_t addr) const
   {
     return (addr & ~(m_flash_pagesize - 1));
   }
@@ -141,7 +141,7 @@ public:
    * Get the eeprom memory page size (number of bytes, 8-bits).
    * @return bytes page size.
    */
-  uint16_t get_eeprom_page(uint16_t addr)
+  uint16_t get_eeprom_page(uint16_t addr) const
   {
     return (addr & ~(m_eeprom_pagesize - 1));
   }

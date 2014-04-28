@@ -25,7 +25,7 @@
 
 #include "Cosa/AnalogComparator.hh"
 
-AnalogComparator* AnalogComparator::comparator = NULL;
+AnalogComparator* AnalogComparator::s_comparator = NULL;
 
 void 
 AnalogComparator::on_interrupt(uint16_t arg) 
@@ -35,6 +35,6 @@ AnalogComparator::on_interrupt(uint16_t arg)
 
 ISR(ANALOG_COMP_vect)
 { 
-  if (AnalogComparator::comparator != NULL) 
-    AnalogComparator::comparator->on_interrupt();
+  if (AnalogComparator::s_comparator == NULL) return;
+  AnalogComparator::s_comparator->on_interrupt();
 }
