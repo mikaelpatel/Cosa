@@ -1,5 +1,5 @@
-Cosa's changelog
-================
+Changes log
+===========
 
 2014-04 Adding support some additional boards; Microduino and
 Pinnocio. Introducing Arduino 1.5.6-r2 and GCC 4.8.1, and link time

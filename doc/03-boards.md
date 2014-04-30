@@ -1,4 +1,4 @@
-# Cosa's supported boards & chips
+# Supported Boards & Micro Controller Units
 
 ## Arduino Boards
 
@@ -24,7 +24,7 @@
 
 * [Scouts](https://pinocc.io/tech-specs)
 
-## Chips
+## Micro Controller Units 
 
 * [ATmega 328P](http://www.atmel.com/Images/Atmel-8271-8-bit-AVR-Microcontroller-ATmega48A-48PA-88A-88PA-168A-168PA-328-328P_datasheet.pdf)
 * [ATmega 1284P](http://www.atmel.com/Images/Atmel-8272-8-bit-AVR-microcontroller-ATmega164A_PA-324A_PA-644A_PA-1284_P_datasheet.pdf)

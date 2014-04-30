@@ -1,4 +1,4 @@
-# Cosa's built-in drivers
+# Built-in drivers
 
 1. [DS18B20](http://datasheets.maximintegrated.com/en/ds/DS18B20.pdf) Programmable
 Resolution [1-Wire](http://en.wikipedia.org/wiki/1-Wire) Digital Thermometer.
