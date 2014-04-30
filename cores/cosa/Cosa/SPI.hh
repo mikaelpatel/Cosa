@@ -278,7 +278,7 @@ public:
    */
   uint8_t transfer_await() __attribute__((always_inline))
   {
-    return (tranfer(m_dev->m_data));
+    return (transfer(m_dev->m_data));
   }
 
 #else
