@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_WIRELESS_DRIVER_NRF24L01P_HH__
-#define __COSA_WIRELESS_DRIVER_NRF24L01P_HH__
+#ifndef COSA_WIRELESS_DRIVER_NRF24L01P_HH
+#define COSA_WIRELESS_DRIVER_NRF24L01P_HH
 
 #include "Cosa/SPI.hh"
 #include "Cosa/OutputPin.hh"
@@ -183,8 +183,7 @@ public:
    * @param[in] ms maximum time out period.
    * @return number of bytes received or negative error code.
    */
-  virtual int recv(uint8_t& src, uint8_t& port, 
-		   void* buf, size_t count, 
+  virtual int recv(uint8_t& src, uint8_t& port, void* buf, size_t count, 
 		   uint32_t ms = 0L);
 
   /**
@@ -196,18 +195,30 @@ public:
 
   /**
    * Return number of transmitted messages.
+   * @return transmitt count.
    */
-  uint16_t get_trans() { return (m_trans); }
+  uint16_t get_trans() const
+  { 
+    return (m_trans); 
+  }
 
   /**
    * Return number of retransmissions.
+   * @return retransmitt count.
    */
-  uint16_t get_retrans() { return (m_retrans); }
+  uint16_t get_retrans() const
+  { 
+    return (m_retrans); 
+  }
 
   /**
    * Return number of dropped messages.
+   * @return drop count.
    */
-  uint16_t get_drops() { return (m_drops); }
+  uint16_t get_drops() const
+  { 
+    return (m_drops); 
+  }
 
 private:
   /**
@@ -418,7 +429,7 @@ private:
    * Register STATUS data type
    */
   union status_t {
-    uint8_t as_byte;
+    uint8_t as_byte;		//<! Byte representation of status
     struct {
       uint8_t tx_full:1;	//<! TX FIFO full
       uint8_t rx_p_no:3;	//<! Data pipe number for available payload
@@ -450,7 +461,7 @@ private:
    * Register OBSERVE_TX data type, performance statistics
    */
   union observe_tx_t {
-    uint8_t as_byte;
+    uint8_t as_byte;		//<! Byte representation of performance statistics
     struct {
       uint8_t arc_cnt:4;	//<! Count retransmitted packets
       uint8_t plos_cnt:4;	//<! Count lost packets
@@ -482,7 +493,7 @@ private:
    * Register FIFO_STATUS data type, transmission queue status
    */
   union fifo_status_t {
-    uint8_t as_byte;
+    uint8_t as_byte;		//<! Byte representation of fifo status
     struct {
       uint8_t rx_empty:1;	//<! RX FIFO empty flag
       uint8_t rx_full:1;	//<! RX FIFO full flag
@@ -593,9 +604,6 @@ private:
    * Handler for interrupt pin.
    */
   class IRQPin : public ExternalInterrupt {
-    friend class NRF24L01P;
-  private:
-    NRF24L01P* m_nrf;
   public:
     IRQPin(Board::ExternalInterruptPin pin, 
 	   InterruptMode mode, 
@@ -603,28 +611,19 @@ private:
       ExternalInterrupt(pin, mode),
       m_nrf(nrf)
     {}
+    friend class NRF24L01P;
+  private:
+    NRF24L01P* m_nrf;		//<! Device driver
   };
   
-  /** Chip enable activity RX/TX select pin */
-  OutputPin m_ce;
+  OutputPin m_ce;		//<! Chip enable activity RX/TX select pin
+  IRQPin m_irq;			//<! Chip interrupt pin and handler
+  status_t m_status;		//<! Latest status
+  State m_state;		//<! Transceiver state
 
-  /** Chip interrupt pin */
-  IRQPin m_irq;
-  
-  /** Latest status */
-  status_t m_status;
-
-  /** Transceiver state */
-  State m_state;
-
-  /** Send count */
-  uint16_t m_trans;
-
-  /** Retransmittion count */
-  uint16_t m_retrans;
-
-  /** Dropped messages */
-  uint16_t m_drops;
+  uint16_t m_trans;		//<! Send count
+  uint16_t m_retrans;		//<! Retransmittion count
+  uint16_t m_drops;		//<! Dropped messages
 
   /**
    * Read status. Issue NOP command to read status.

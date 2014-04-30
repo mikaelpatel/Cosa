@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_OWI_HH__
-#define __COSA_OWI_HH__
+#ifndef COSA_OWI_HH
+#define COSA_OWI_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOPin.hh"

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_WIRELESS_DRIVER_CC1101_HH__
-#define __COSA_WIRELESS_DRIVER_CC1101_HH__
+#ifndef COSA_WIRELESS_DRIVER_CC1101_HH
+#define COSA_WIRELESS_DRIVER_CC1101_HH
 
 #include "Cosa/SPI.hh"
 #include "Cosa/OutputPin.hh"
@@ -40,7 +40,8 @@
  * @section Circuit
  * This is the pin-out for the CC1101 module which is compatible with
  * the NRF24L01 module. CC1101 is a low voltage device (3V3) and
- * signals require level shifter (74HC4050 or 10K resistor).
+ * signals require level shifter (74HC4050 or 10K resistor). Special
+ * care for MISO as this signal is multi-drop.
  * @code
  *                           CC1101
  *                       +------------+
@@ -97,7 +98,7 @@ public:
    * @override Wireless::Driver
    * Start and configure C1101 device driver. The configuration must
    * set GDO2 to assert on received message. This device pin is
-   * assumed to be connected the device driver interrupt pin (EXTn).
+   * assumed to be connected the device driver interrupt pin (EXTn). 
    * Return true(1) if successful othewise false(0).
    * @param[in] config configuration vector (default NULL)
    * @return bool.
@@ -106,8 +107,8 @@ public:
 
   /**
    * @override Wireless::Driver
-   * Shut down the device driver. Return true(1) if successful
-   * otherwise false(0).
+   * Shutdown the device driver. Return true(1) if successful
+   * otherwise false(0). 
    * @return bool.
    */
   virtual bool end();
@@ -155,8 +156,7 @@ public:
    * @param[in] ms maximum time out period (Default blocking(0L)).
    * @return number of bytes received or negative error code.
    */
-  virtual int recv(uint8_t& src, uint8_t& port, 
-		   void* buf, size_t len, 
+  virtual int recv(uint8_t& src, uint8_t& port, void* buf, size_t len, 
 		   uint32_t ms = 0L);
 
   /**
@@ -224,6 +224,7 @@ private:
 
     /**
      * Cast header bit-field to byte.
+     * @return byte representation.
      */
     operator uint8_t() 
     {
@@ -235,7 +236,7 @@ private:
    * Read single register value and status. Access status with
    * get_status(). Returns register value. 
    * @param[in] reg register address.
-   * @return value
+   * @return value.
    */
   uint8_t read(uint8_t reg)
   {
@@ -564,7 +565,7 @@ private:
    * Get latest transaction status.
    * @return status
    */
-  status_t get_status()
+  status_t get_status() const
   {
     return (m_status);
   }
@@ -644,10 +645,6 @@ private:
    */
   class IRQPin : public ExternalInterrupt {
     friend class CC1101;
-  private:
-    /** Device reference */
-    CC1101* m_rf;
-
   public:
     /**
      * Construct interrupt pin handler for CC1101 on message receive
@@ -667,20 +664,18 @@ private:
      * @param[in] arg (not used).
      */
     virtual void on_interrupt(uint16_t arg = 0);
+
+  private:
+    CC1101* m_rf;		//<! Device reference
   };
 
 private:
   /** Default configuration */
   static const uint8_t config[] __PROGMEM;
 
-  /** Interrupt Handler */
-  IRQPin m_irq;
-  
-  /** Latest transaction status */
-  status_t m_status;
-
-  /** Latest receive status */
-  recv_status_t m_recv_status;
+  IRQPin m_irq;			//<! Interrupt pin and handler
+  status_t m_status;		//<! Status from latest transaction
+  recv_status_t m_recv_status;	//<! Status frm latest message receive
 };
 #endif
 #endif

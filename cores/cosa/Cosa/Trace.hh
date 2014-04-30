@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TRACE_HH__
-#define __COSA_TRACE_HH__
+#ifndef COSA_TRACE_HH
+#define COSA_TRACE_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"

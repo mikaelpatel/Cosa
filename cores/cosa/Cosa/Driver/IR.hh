@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IR.hh
+ * @file Cosa/Driver/IR.hh
  * @version 1.0
  *
  * @section License
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IR_HH__
-#define __COSA_IR_HH__
+#ifndef COSA_IR_HH
+#define COSA_IR_HH
 
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Linkage.hh"
@@ -60,17 +60,6 @@ public:
       char key;
     };
     typedef const keymap_t* keymap_P;
-
-  private:
-    static const uint16_t TIMEOUT = 512;
-    volatile uint32_t m_threshold;
-    volatile uint16_t* m_sample;
-    volatile uint32_t m_start;
-    volatile uint32_t m_code;
-    volatile uint8_t m_ix;
-    const uint8_t m_max;
-    const keymap_P m_keymap;
-    const uint8_t m_keys;
 
     /**
      * @override Interrupt::Handler
@@ -124,6 +113,17 @@ public:
      * @return key or EOF(-1).
      */
     int lookup(uint16_t code);
+
+  private:
+    static const uint16_t TIMEOUT = 512;
+    volatile uint32_t m_threshold;
+    volatile uint16_t* m_sample;
+    volatile uint32_t m_start;
+    volatile uint32_t m_code;
+    volatile uint8_t m_ix;
+    const uint8_t m_max;
+    const keymap_P m_keymap;
+    const uint8_t m_keys;
 
     /**
      * Print the captured samples to the given output stream.

@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_LED_HH__
-#define __COSA_LED_HH__
+#ifndef COSA_LED_HH
+#define COSA_LED_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/OutputPin.hh"

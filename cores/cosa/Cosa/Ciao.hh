@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CIAO_HH__
-#define __COSA_CIAO_HH__
+#ifndef COSA_CIAO_HH
+#define COSA_CIAO_HH
 
 #include "Cosa/IOStream.hh"
 

@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOBUFFER_HH__
-#define __COSA_IOBUFFER_HH__
+#ifndef COSA_IOBUFFER_HH
+#define COSA_IOBUFFER_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"

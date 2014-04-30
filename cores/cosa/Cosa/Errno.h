@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ERRNO_H__
-#define __COSA_ERRNO_H__
+#ifndef COSA_ERRNO_H
+#define COSA_ERRNO_H
 
 #define	EPERM		 1	/* Operation not permitted */
 #define	ENOENT		 2	/* No such file or directory */

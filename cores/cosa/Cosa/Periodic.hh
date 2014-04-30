@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_PERIODIC_HH__
-#define __COSA_PERIODIC_HH__
+#ifndef COSA_PERIODIC_HH
+#define COSA_PERIODIC_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Linkage.hh"

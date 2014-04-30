@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_DRIVER_ADXL345_HH__
-#define __COSA_TWI_DRIVER_ADXL345_HH__
+#ifndef COSA_TWI_DRIVER_ADXL345_HH
+#define COSA_TWI_DRIVER_ADXL345_HH
 
 #include "Cosa/TWI.hh"
 #include "Cosa/IOStream.hh"

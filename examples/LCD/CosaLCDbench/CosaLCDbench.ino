@@ -56,7 +56,7 @@ HD44780 lcd(&port);
 IOStream cout(&lcd);
 
 // Display configuration
-#ifdef __COSA_LCD_DRIVER_PCD8544_HH__
+#if defined(COSA_LCD_DRIVER_PCD8544_HH)
 const uint16_t WIDTH = 14;
 const uint16_t HEIGHT = 2;
 #else

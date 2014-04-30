@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_AVR_STK500_HH__
-#define __COSA_AVR_STK500_HH__
+#ifndef COSA_AVR_STK500_HH
+#define COSA_AVR_STK500_HH
 
 #include "Cosa/AVR/Programmer.hh"
 #include "Cosa/IOStream.hh"

@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BITS_H__
-#define __COSA_BITS_H__
+#ifndef COSA_BITS_H
+#define COSA_BITS_H
 
 #define bit_mask(b) (1 << (b))
 #define bit_mask_get(p,m) ((p) & (m))

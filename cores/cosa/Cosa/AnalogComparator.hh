@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ANALOG_COMPARATOR_HH__
-#define __COSA_ANALOG_COMPARATOR_HH__
+#ifndef COSA_ANALOG_COMPARATOR_HH
+#define COSA_ANALOG_COMPARATOR_HH
 
 #include "Cosa/Event.hh"
 #include "Cosa/Interrupt.hh"

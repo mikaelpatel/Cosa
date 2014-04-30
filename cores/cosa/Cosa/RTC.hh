@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_RTC_HH__
-#define __COSA_RTC_HH__
+#ifndef COSA_RTC_HH
+#define COSA_RTC_HH
 
 #include "Cosa/Time.hh"
 

@@ -27,8 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COLOR16_H__
-#define __COLOR16_H__
+#ifndef COLOR16_H
+#define COLOR16_H
 
 #include "Cosa/Types.h"
 

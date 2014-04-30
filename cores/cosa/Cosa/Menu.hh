@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_MENU_HH__
-#define __COSA_MENU_HH__
+#ifndef COSA_MENU_HH
+#define COSA_MENU_HH
 
 #include "Cosa/IOStream.hh"
 #include "Cosa/LCD.hh"

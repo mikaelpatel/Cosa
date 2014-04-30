@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_HH__
-#define __COSA_TWI_HH__
+#ifndef COSA_TWI_HH
+#define COSA_TWI_HH
 
 #include "Cosa/Types.h"
 #if defined(__ARDUINO_TINY__)

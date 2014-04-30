@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FAI_HH__
-#define __COSA_FAI_HH__
+#ifndef COSA_FAI_HH
+#define COSA_FAI_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Ciao.hh"

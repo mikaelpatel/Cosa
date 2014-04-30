@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_WATCHDOG_HH__
-#define __COSA_WATCHDOG_HH__
+#ifndef COSA_WATCHDOG_HH
+#define COSA_WATCHDOG_HH
 
 #include <avr/wdt.h>
 
@@ -146,7 +146,7 @@ public:
   }
 
   /**
-   * Stop watchdog. Turn off timout callback.
+   * Stop watchdog. Turn off timout callback. May be restarted with begin(). 
    */
   static void end() 
   { 
@@ -181,7 +181,7 @@ private:
   static InterruptHandler s_handler;
   static void* s_env;
 
-  // Watchdog timeout queues.
+  // Watchdog timeout queues (16, 32, ..., 8192 ms)
   static const uint8_t TIMEQ_MAX = 10;
   static Head s_timeq[TIMEQ_MAX];
 

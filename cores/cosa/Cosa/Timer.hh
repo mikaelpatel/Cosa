@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TIMER_HH__
-#define __COSA_TIMER_HH__
+#ifndef COSA_TIMER_HH
+#define COSA_TIMER_HH
 
 #include "Cosa/Linkage.hh"
 #include "Cosa/RTC.hh"

@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_LINKAGE_HH__
-#define __COSA_LINKAGE_HH__
+#ifndef COSA_LINKAGE_HH
+#define COSA_LINKAGE_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Event.hh"

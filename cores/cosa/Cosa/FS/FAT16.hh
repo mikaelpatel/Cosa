@@ -19,8 +19,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FS_FAT16_HH__
-#define __COSA_FS_FAT16_HH__
+#ifndef COSA_FS_FAT16_HH
+#define COSA_FS_FAT16_HH
 
 #include "Cosa/SPI/Driver/SD.hh"
 #include "Cosa/IOStream.hh"

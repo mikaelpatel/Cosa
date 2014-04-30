@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_DRIVER_DS1307_HH__
-#define __COSA_TWI_DRIVER_DS1307_HH__
+#ifndef COSA_TWI_DRIVER_DS1307_HH
+#define COSA_TWI_DRIVER_DS1307_HH
 
 #include "Cosa/TWI.hh"
 #include "Cosa/IOStream.hh"

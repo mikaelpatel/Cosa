@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BOARD_PINOCCIO_HH__
-#define __COSA_BOARD_PINOCCIO_HH__
+#ifndef COSA_BOARD_PINOCCIO_HH
+#define COSA_BOARD_PINOCCIO_HH
 
 /**
  * Cosa Pinoccio Board pin symbol definitions for the ATmega256rfr

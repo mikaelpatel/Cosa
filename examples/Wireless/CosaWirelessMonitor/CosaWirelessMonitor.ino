@@ -135,10 +135,10 @@ void setup()
 {
   Watchdog::begin();
   RTC::begin();
-#if defined(__COSA_IOSTREAM_DRIVER_UART_HH__)
+#if defined(COSA_IOSTREAM_DRIVER_UART_HH)
   uart.begin(9600);
   trace.begin(&uart, PSTR("Monitor: started"));
-#elif defined(__COSA_LCD_DRIVER_HD44780_HH__)
+#elif defined(COSA_LCD_DRIVER_HD44780_HH)
   lcd.begin();
   lcd.set_tab_step(2);
   lcd.cursor_underline_off();

@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_INET_DNS_HH__
-#define __COSA_INET_DNS_HH__
+#ifndef COSA_INET_DNS_HH
+#define COSA_INET_DNS_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Socket.hh"

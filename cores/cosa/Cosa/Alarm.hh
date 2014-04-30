@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ALARM_HH__
-#define __COSA_ALARM_HH__
+#ifndef COSA_ALARM_HH
+#define COSA_ALARM_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Time.hh"

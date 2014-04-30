@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ROTARY_HH__
-#define __COSA_ROTARY_HH__
+#ifndef COSA_ROTARY_HH
+#define COSA_ROTARY_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/PinChangeInterrupt.hh"

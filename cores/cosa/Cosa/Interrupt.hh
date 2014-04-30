@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_INTERRUPT_HH__
-#define __COSA_INTERRUPT_HH__
+#ifndef COSA_INTERRUPT_HH
+#define COSA_INTERRUPT_HH
 
 /**
  * Interface for Interrupt Handlers.

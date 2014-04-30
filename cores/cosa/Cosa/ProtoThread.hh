@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_PROTO_THREAD_HH__
-#define __COSA_PROTO_THREAD_HH__
+#ifndef COSA_PROTO_THREAD_HH
+#define COSA_PROTO_THREAD_HH
 
 #include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"

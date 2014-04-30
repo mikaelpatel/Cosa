@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CIPHER_RC4_HH__
-#define __COSA_CIPHER_RC4_HH__
+#ifndef COSA_CIPHER_RC4_HH
+#define COSA_CIPHER_RC4_HH
 
 #include "Cosa/Types.h"
 

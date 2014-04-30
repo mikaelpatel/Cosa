@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ANALOG_PINS_HH__
-#define __COSA_ANALOG_PINS_HH__
+#ifndef COSA_ANALOG_PINS_HH
+#define COSA_ANALOG_PINS_HH
 
 #include "Cosa/AnalogPin.hh"
 

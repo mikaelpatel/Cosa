@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BOARD_TINYX61_HH__
-#define __COSA_BOARD_TINYX61_HH__
+#ifndef COSA_BOARD_TINYX61_HH
+#define COSA_BOARD_TINYX61_HH
 
 /**
  * Cosa TINYX61 Board pin symbol definitions for the ATtinyX61

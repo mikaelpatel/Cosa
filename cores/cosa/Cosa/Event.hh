@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_EVENT_HH__
-#define __COSA_EVENT_HH__
+#ifndef COSA_EVENT_HH
+#define COSA_EVENT_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Queue.hh"

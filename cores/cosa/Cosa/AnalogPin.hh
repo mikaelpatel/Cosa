@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ANALOG_PIN_HH__
-#define __COSA_ANALOG_PIN_HH__
+#ifndef COSA_ANALOG_PIN_HH
+#define COSA_ANALOG_PIN_HH
 
 #include "Cosa/Pin.hh"
 #include "Cosa/Interrupt.hh"

@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_LCD_HH__
-#define __COSA_LCD_HH__
+#ifndef COSA_LCD_HH
+#define COSA_LCD_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"

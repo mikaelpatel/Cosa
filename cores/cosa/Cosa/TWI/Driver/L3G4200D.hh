@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_DRIVER_L3G4200D_HH__
-#define __COSA_TWI_DRIVER_L3G4200D_HH__
+#ifndef COSA_TWI_DRIVER_L3G4200D_HH
+#define COSA_TWI_DRIVER_L3G4200D_HH
 
 #include "Cosa/TWI.hh"
 #include "Cosa/IOStream.hh"

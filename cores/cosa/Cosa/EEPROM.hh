@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_EEPROM_HH__
-#define __COSA_EEPROM_HH__
+#ifndef COSA_EEPROM_HH
+#define COSA_EEPROM_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Power.hh"

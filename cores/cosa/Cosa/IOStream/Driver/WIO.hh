@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOSTREAM_DRIVER_WIO_HH__
-#define __COSA_IOSTREAM_DRIVER_WIO_HH__
+#ifndef COSA_IOSTREAM_DRIVER_WIO_HH
+#define COSA_IOSTREAM_DRIVER_WIO_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"

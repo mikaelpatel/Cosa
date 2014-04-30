@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CANVAS_DRIVER_ST7735_HH__
-#define __COSA_CANVAS_DRIVER_ST7735_HH__
+#ifndef COSA_CANVAS_DRIVER_ST7735_HH
+#define COSA_CANVAS_DRIVER_ST7735_HH
 
 #include "Cosa/Canvas.hh"
 #include "Cosa/SPI.hh"

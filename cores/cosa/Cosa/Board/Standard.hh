@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BOARD_STANDARD_HH__
-#define __COSA_BOARD_STANDARD_HH__
+#ifndef COSA_BOARD_STANDARD_HH
+#define COSA_BOARD_STANDARD_HH
 
 /**
  * Compiler warning on unused varable.

@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_USI_TWI_HH__
-#define __COSA_USI_TWI_HH__
+#ifndef COSA_USI_TWI_HH
+#define COSA_USI_TWI_HH
 
 #include "Cosa/Types.h"
 #if defined(__ARDUINO_TINY__)
@@ -247,7 +247,7 @@ private:
     CR_START_MODE = _BV(USISIE) | _BV(USIWM1) |  _BV(USICS1),
     // Enable start and overflow. Set USI TWI mode(1). External clock
     CR_TRANSFER_MODE = _BV(USISIE) |  _BV(USIOIE) | _BV(USIWM1) | _BV(USIWM0) 
-    | _BV(USICS1),
+                     | _BV(USICS1),
     // Master initialization. Software clock strobe
     CR_INIT_MODE =  _BV(USIWM1) | _BV(USICS1) | _BV(USICLK),
     // Master data transfer. Software clock strobe
@@ -276,7 +276,7 @@ private:
    * Get current driver state.
    * @return state
    */
-  State get_state()
+  State get_state() const
   {
     return (m_state);
   }

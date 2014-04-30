@@ -23,20 +23,20 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_DRIVER_HMC5883L_HH__
-#define __COSA_TWI_DRIVER_HMC5883L_HH__
+#ifndef COSA_TWI_DRIVER_HMC5883L_HH
+#define COSA_TWI_DRIVER_HMC5883L_HH
 
 #include "Cosa/TWI.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/IOStream.hh"
 
 /**
- * Driver for the HMC5883L 3-Axis Digital Compass IC, 
- * a vector magnetometer. 
+ * Driver for the HMC5883L 3-Axis Digital Compass IC, a vector
+ * magnetometer.
  *
  * @section Circuit
- * The GY-80 10DOF module with pull-up resistors (4K7) for TWI signals and
- * 3V3 internal voltage converter.
+ * The GY-80 10DOF module with pull-up resistors (4K7) for TWI signals
+ * and 3V3 internal voltage converter.
  * @code
  *                           GY-80
  *                       +------------+

@@ -83,7 +83,7 @@ void setup()
   Watchdog::begin();
   lcd.begin();
   trace.begin(&lcd, PSTR("CosaLCDspeed:"));
-#if defined(__COSA_VLCD_HH__)
+#if defined(COSA_VLCD_HH)
   trace << PSTR("REV = ") << lcd.MAJOR << '.' << lcd.MINOR;
   SLEEP(2);
   trace << clear;
@@ -112,7 +112,7 @@ void clear_display(uint16_t nr)
 
 void write_char(uint16_t nr)
 {
-#if defined(__COSA_LCD_DRIVER_HD44780_HH__) || defined(__COSA_VLCD_HH__) 
+#if defined(COSA_LCD_DRIVER_HD44780_HH) || defined(COSA_VLCD_HH) 
   const uint8_t WIDTH = 16;
   const uint8_t HEIGHT = 2;
 #else
@@ -129,7 +129,7 @@ void write_char(uint16_t nr)
   }
 }
 
-#ifdef __COSA_LCD_DRIVER_PCD8544_HH__
+#if definded(COSA_LCD_DRIVER_PCD8544_HH)
 # define NUM_STR   "12345678901234"
 # define ALPHA_STR "ABCDEFGHIJKLMN"
 #else
@@ -175,7 +175,7 @@ void write_bin_uint16(uint16_t nr)
 
 void write_pos(uint16_t nr)
 {
-#if defined(__COSA_LCD_DRIVER_HD44780_HH__) || defined(__COSA_VLCD_HH__) 
+#if defined(COSA_LCD_DRIVER_HD44780_HH) || defined(COSA_VLCD_HH) 
   const uint8_t WIDTH = 16;
   const uint8_t HEIGHT = 2;
 #else

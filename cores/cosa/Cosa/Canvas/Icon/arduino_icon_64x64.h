@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CANVAS_ICON_ARDUINO_64X64_H__
-#define __COSA_CANVAS_ICON_ARDUINO_64X64_H__
+#ifndef COSA_CANVAS_ICON_ARDUINO_64X64_H
+#define COSA_CANVAS_ICON_ARDUINO_64X64_H
 
 /**
  * Arduino icon 64x64.

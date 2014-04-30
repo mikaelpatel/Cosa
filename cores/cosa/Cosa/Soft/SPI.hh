@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SOFT_SPI_HH__
-#define __COSA_SOFT_SPI_HH__
+#ifndef COSA_SOFT_SPI_HH
+#define COSA_SOFT_SPI_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/InputPin.hh"

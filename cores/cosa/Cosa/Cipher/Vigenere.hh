@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CIPHER_VIGENERE_HH__
-#define __COSA_CIPHER_VIGENERE_HH__
+#ifndef COSA_CIPHER_VIGENERE_HH
+#define COSA_CIPHER_VIGENERE_HH
 
 #include "Cosa/Types.h"
 

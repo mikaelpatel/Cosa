@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SOCKET_DRIVER_W5100_HH__
-#define __COSA_SOCKET_DRIVER_W5100_HH__
+#ifndef COSA_SOCKET_DRIVER_W5100_HH
+#define COSA_SOCKET_DRIVER_W5100_HH
 
 #include "Cosa/Types.h"
 

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,17 +23,20 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_WIRELESS_HH__
-#define __COSA_WIRELESS_HH__
+#ifndef COSA_WIRELESS_HH
+#define COSA_WIRELESS_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Power.hh"
 
 /**
- * Cosa Common Wireless device driver interface.
+ * Cosa Common Wireless device interface.
  */
 class Wireless {
 public:
+  /**
+   * Cosa Common Wireless device driver interface.
+   */
   class Driver {
   public:
     /** 
@@ -42,6 +45,13 @@ public:
     struct addr_t {
       uint8_t device;		//<! Device address (LSB)
       int16_t network;		//<! Network address
+
+      /**
+       * Construct node address from given device and network
+       * address. 
+       * @param[in] net network address.
+       * @param[in] dev device address.
+       */
       addr_t(int16_t net, uint8_t dev) 
       {
 	network = net;
@@ -53,7 +63,8 @@ public:
     static const uint8_t BROADCAST = 0x00;
 
     /**
-     * Construct Wireless Driver with given network and device address.
+     * Construct Wireless device driver with given network and device
+     * address. 
      * @param[in] network address.
      * @param[in] device address.
      */
@@ -65,25 +76,28 @@ public:
     {}
 
     /** 
-     * Get channel.
+     * Get driver channel.
+     * @return channel.
      */
-    uint8_t get_channel()
+    uint8_t get_channel() const
     {
       return (m_channel);
     }
 
     /**
-     * Get network address. 
+     * Get driver network address. 
+     * @return network address. 
      */
-    int16_t get_network_address()
+    int16_t get_network_address() const
     {
       return (m_addr.network);
     }
 
     /**
-     * Get device address. 
+     * Get driver device address. 
+     * @return device address.
      */
-    uint8_t get_device_address()
+    uint8_t get_device_address() const
     {
       return (m_addr.device);
     }
@@ -138,7 +152,7 @@ public:
 
     /**
      * @override Wireless::Driver
-     * Set device in power down mode. 
+     * Set device in power down mode.
      */
     virtual void powerdown() {}
 
@@ -151,7 +165,7 @@ public:
     /**
      * @override Wireless::Driver
      * Return true(1) if a message is available otherwise false(0).
-     * @return bool
+     * @return bool.
      */
     virtual bool available()
     {
@@ -160,9 +174,9 @@ public:
 
     /**
      * @override Wireless::Driver
-     * Return true(1) if there is room to send on the device otherwise
-     * false(0).  
-     * @return bool
+     * Return true(1) if there is room to send on the device
+     * otherwise false(0).  
+     * @return bool.
      */
     virtual bool room()
     {
@@ -241,11 +255,12 @@ public:
     /**
      * @override Wireless::Driver
      * Receive message and store into given buffer with given maximum
-     * length. The source network address is returned in the parameter src.
-     * Returns error code(-2) if no message is available and/or a
-     * timeout occured. Returns error code(-1) if the buffer size if to
-     * small for incoming message or if the receiver fifo has overflowed. 
-     * Otherwise the actual number of received bytes is returned
+     * length. The source network address is returned in the parameter
+     * src. Returns error code(-2) if no message is available and/or a
+     * timeout occured. Returns error code(-1) if the buffer size if
+     * to small for incoming message or if the receiver fifo has 
+     * overflowed. Otherwise the actual number of received bytes is
+     * returned 
      * @param[out] src source network address.
      * @param[out] port device port (or message type).
      * @param[in] buf buffer to store incoming message.
@@ -294,20 +309,12 @@ public:
     {
       return (0);
     }
-
     
   protected:
-    /** Current channel */
-    uint8_t m_channel;
-
-    /** Current network and device address */
-    addr_t m_addr;
-
-    /** Message available */
-    volatile bool m_avail;
-
-    /** Latest message destination device address */
-    uint8_t m_dest;
+    uint8_t m_channel;		//<! Current channel (device dependent
+    addr_t m_addr;		//<! Current network and device address
+    volatile bool m_avail;	//<! Message available. May be set by ISR
+    uint8_t m_dest;		//<! Latest message destination device address
   };
 };
 #endif

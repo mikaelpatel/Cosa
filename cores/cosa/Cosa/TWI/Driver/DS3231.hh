@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_DRIVER_DS3231_HH__
-#define __COSA_TWI_DRIVER_DS3231_HH__
+#ifndef COSA_TWI_DRIVER_DS3231_HH
+#define COSA_TWI_DRIVER_DS3231_HH
 
 #include "Cosa/TWI.hh"
 #include "Cosa/Time.hh"
@@ -169,13 +169,13 @@ public:
    * The Timekeeper Registers (Figure 1. pp. 11)
    */
   struct timekeeper_t {
-    time_t clock;
-    alarm1_t alarm1;
-    alarm2_t alarm2;
-    control_t control;
-    status_t status;
-    int8_t aging;
-    int16_t temp;
+    time_t clock;		//<! Current time
+    alarm1_t alarm1;		//<! Alarm 1 setting
+    alarm2_t alarm2;		//<! Alarm 2 setting
+    control_t control;		//<! Device control register
+    status_t status;		//<! Device status register
+    int8_t aging;		//<! Crystal adjustment
+    int16_t temp;		//<! Device temperature
   };
   static const uint8_t ALARM1_OFFSET = sizeof(time_t);
   static const uint8_t ALARM2_OFFSET = ALARM1_OFFSET + sizeof(alarm1_t);

@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_MEMORY_H__
-#define __COSA_MEMORY_H__
+#ifndef COSA_MEMORY_H
+#define COSA_MEMORY_H
 
 /**
  * Return amount of free memory.

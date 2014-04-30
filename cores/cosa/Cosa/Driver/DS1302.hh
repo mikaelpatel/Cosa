@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_DRIVER_DS1302_HH__
-#define __COSA_DRIVER_DS1302_HH__
+#ifndef COSA_DRIVER_DS1302_HH
+#define COSA_DRIVER_DS1302_HH
 
 #include "Cosa/OutputPin.hh"
 #include "Cosa/IOPin.hh"

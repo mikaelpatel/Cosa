@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_LCD_DRIVER_HD44780_HH__
-#define __COSA_LCD_DRIVER_HD44780_HH__
+#ifndef COSA_LCD_DRIVER_HD44780_HH
+#define COSA_LCD_DRIVER_HD44780_HH
 
 #include "Cosa/TWI/Driver/PCF8574.hh"
 #include "Cosa/SPI.hh"

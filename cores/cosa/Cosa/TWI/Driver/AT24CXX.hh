@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_DRIVER_AT24CXX_HH__
-#define __COSA_TWI_DRIVER_AT24CXX_HH__
+#ifndef COSA_TWI_DRIVER_AT24CXX_HH
+#define COSA_TWI_DRIVER_AT24CXX_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/TWI.hh"

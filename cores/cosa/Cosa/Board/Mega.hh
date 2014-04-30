@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BOARD_MEGA_HH__
-#define __COSA_BOARD_MEGA_HH__
+#ifndef COSA_BOARD_MEGA_HH
+#define COSA_BOARD_MEGA_HH
 
 /**
  * Cosa MEGA Board pin symbol definitions for the ATmega1280 and

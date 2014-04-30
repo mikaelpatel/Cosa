@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TOUCH_HH__
-#define __COSA_TOUCH_HH__
+#ifndef COSA_TOUCH_HH
+#define COSA_TOUCH_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOPin.hh"

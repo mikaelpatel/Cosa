@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_REGISTRY_HH__
-#define __COSA_REGISTRY_HH__
+#ifndef COSA_REGISTRY_HH
+#define COSA_REGISTRY_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/EEPROM.hh"

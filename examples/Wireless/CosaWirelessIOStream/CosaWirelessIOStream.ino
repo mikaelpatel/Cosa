@@ -123,7 +123,7 @@ void loop()
   SLEEP(2);
 
   // Print statistics
-#if defined(__COSA_WIRELESS_DRIVER_NRF24L01P_HH__)
+#if defined(COSA_WIRELESS_DRIVER_NRF24L01P_HH)
   trace << clear;
   trace << PSTR("TN: ") << rf.get_trans() << endl;
   trace << PSTR("ER: ") << rf.get_retrans();

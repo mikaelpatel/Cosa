@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SERVO_HH__
-#define __COSA_SERVO_HH__
+#ifndef COSA_SERVO_HH
+#define COSA_SERVO_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/OutputPin.hh"

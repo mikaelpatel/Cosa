@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_LCD_DRIVER_VLCD_HH__
-#define __COSA_LCD_DRIVER_VLCD_HH__
+#ifndef COSA_LCD_DRIVER_VLCD_HH
+#define COSA_LCD_DRIVER_VLCD_HH
 
 #include "Cosa/LCD.hh"
 #include "Cosa/TWI.hh"

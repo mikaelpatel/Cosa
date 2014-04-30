@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SPI_DRIVER_SD_HH__
-#define __COSA_SPI_DRIVER_SD_HH__
+#ifndef COSA_SPI_DRIVER_SD_HH
+#define COSA_SPI_DRIVER_SD_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/SPI.hh"

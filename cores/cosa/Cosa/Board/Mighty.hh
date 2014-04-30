@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BOARD_MIGHTY_HH__
-#define __COSA_BOARD_MIGHTY_HH__
+#ifndef COSA_BOARD_MIGHTY_HH
+#define COSA_BOARD_MIGHTY_HH
 
 /**
  * Cosa MIGHTY Board pin symbol definitions for ATmega1284P based

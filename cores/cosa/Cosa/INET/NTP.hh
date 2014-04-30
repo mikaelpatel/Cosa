@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_INET_NTP_HH__
-#define __COSA_INET_NTP_HH__
+#ifndef COSA_INET_NTP_HH
+#define COSA_INET_NTP_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Socket.hh"

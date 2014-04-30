@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_ACTIVITY_HH__
-#define __COSA_ACTIVITY_HH__
+#ifndef COSA_ACTIVITY_HH
+#define COSA_ACTIVITY_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Time.hh"

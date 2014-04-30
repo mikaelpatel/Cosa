@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BUTTON_HH__
-#define __COSA_BUTTON_HH__
+#ifndef COSA_BUTTON_HH
+#define COSA_BUTTON_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/InputPin.hh"

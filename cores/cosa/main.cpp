@@ -45,9 +45,9 @@ void init()
 #if F_CPU >= 16000000L
   ADCSRA |= (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0));
 #elif F_CPU >= 8000000L
-  ADCSRA |= (_BV(ADPS2) | _BV(ADPS1)             );
+  ADCSRA |= (_BV(ADPS2) | _BV(ADPS1));
 #else
-  ADCSRA |= (             _BV(ADPS1) | _BV(ADPS0));
+  ADCSRA |= (_BV(ADPS1) | _BV(ADPS0));
 #endif
   
   // Disable analog comparator 

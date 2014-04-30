@@ -27,8 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __CONFIG_H__
-#define __CONGIG_H__
+#ifndef CONFIG_H
+#define CONGIG_H
 
 #include "Cosa/Types.h"
 

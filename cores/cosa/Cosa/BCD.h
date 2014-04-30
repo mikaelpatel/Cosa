@@ -32,8 +32,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BCD_H__
-#define __COSA_BCD_H__
+#ifndef COSA_BCD_H
+#define COSA_BCD_H
 
 #include "Cosa/Types.h"
 

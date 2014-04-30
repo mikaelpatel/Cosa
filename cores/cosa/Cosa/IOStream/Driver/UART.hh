@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOSTREAM_DRIVER_UART_HH__
-#define __COSA_IOSTREAM_DRIVER_UART_HH__
+#ifndef COSA_IOSTREAM_DRIVER_UART_HH
+#define COSA_IOSTREAM_DRIVER_UART_HH
 
 #if defined(__ARDUINO_TINY__)
 #include "Cosa/Soft/UART.hh"

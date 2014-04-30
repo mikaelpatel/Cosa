@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_LCD_DRIVER_ST7565_HH__
-#define __COSA_LCD_DRIVER_ST7565_HH__
+#ifndef COSA_LCD_DRIVER_ST7565_HH
+#define COSA_LCD_DRIVER_ST7565_HH
 
 #include "Cosa/Board.hh"
 #include "Cosa/OutputPin.hh"

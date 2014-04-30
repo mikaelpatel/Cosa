@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_NUCLEO_MUTEX_HH__
-#define __COSA_NUCLEO_MUTEX_HH__
+#ifndef COSA_NUCLEO_MUTEX_HH
+#define COSA_NUCLEO_MUTEX_HH
 
 #include "Cosa/Nucleo/Semaphore.hh"
 

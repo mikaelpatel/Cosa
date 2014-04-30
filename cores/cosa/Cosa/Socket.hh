@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_SOCKET_HH__
-#define __COSA_SOCKET_HH__
+#ifndef COSA_SOCKET_HH
+#define COSA_SOCKET_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/INET.hh"

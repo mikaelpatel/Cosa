@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_BITSET_HH__
-#define __COSA_BITSET_HH__
+#ifndef COSA_BITSET_HH
+#define COSA_BITSET_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"

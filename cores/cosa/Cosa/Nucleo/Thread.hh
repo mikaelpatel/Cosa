@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_NUCLEO_THREAD_HH__
-#define __COSA_NUCLEO_THREAD_HH__
+#ifndef COSA_NUCLEO_THREAD_HH
+#define COSA_NUCLEO_THREAD_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Linkage.hh"

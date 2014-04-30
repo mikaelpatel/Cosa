@@ -24,8 +24,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_USB_API_H__
-#define __COSA_USB_API_H__
+#ifndef COSA_USB_API_H
+#define COSA_USB_API_H
 
 #include "Cosa/Types.h"
 

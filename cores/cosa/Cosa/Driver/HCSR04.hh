@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_DRIVER_HCSR04_HH__
-#define __COSA_DRIVER_HCSR04_HH__
+#ifndef COSA_DRIVER_HCSR04_HH
+#define COSA_DRIVER_HCSR04_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/InputPin.hh"

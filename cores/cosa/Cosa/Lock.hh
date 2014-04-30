@@ -23,18 +23,23 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_LOCK_HH__
-#define __COSA_LOCK_HH__
+#ifndef COSA_LOCK_HH
+#define COSA_LOCK_HH
 
 #include "Cosa/Types.h"
 
 /**
  * Lock/Unlock class. Alternative to synchronized block and 
  * lock/unlock functions. Used in the form:
+ * @code
  * { 
  *   Lock key;
  *   ...
+ *   if (...) return;
+ *   if (...) goto label;
  * }
+ * label:
+ * @endcode
  * Interrupts are disabled in the block allowing secure update.
  */
 class Lock {

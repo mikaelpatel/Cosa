@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_IOSTREAM_DRIVER_RS485_HH__
-#define __COSA_IOSTREAM_DRIVER_RS485_HH__
+#ifndef COSA_IOSTREAM_DRIVER_RS485_HH
+#define COSA_IOSTREAM_DRIVER_RS485_HH
 
 #if !defined(__ARDUINO_TINY__)
 #include "Cosa/IOStream/Driver/UART.hh"

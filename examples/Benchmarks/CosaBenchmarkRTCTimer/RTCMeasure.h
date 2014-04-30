@@ -1,5 +1,5 @@
 /**
- * @file Cosa/RTCMeasure.hh
+ * @file RTCMeasure.h
  * @version 1.0
  *
  * @section License
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_RTCMeasure_HH__
-#define __COSA_RTCMeasure_HH__
+#ifndef RTCMeasure_H
+#define RTCMeasure_H
 
 #include "Cosa/Timer.hh"
 

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IR.cpp
+ * @file Cosa/Driver/IR.cpp
  * @version 1.0
  *
  * @section License
@@ -23,7 +23,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IR.hh"
+#include "Cosa/Driver/IR.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 

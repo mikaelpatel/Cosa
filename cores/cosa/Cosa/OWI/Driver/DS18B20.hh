@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_OWI_DRIVER_DS18B20_HH__
-#define __COSA_OWI_DRIVER_DS18B20_HH__
+#ifndef COSA_OWI_DRIVER_DS18B20_HH
+#define COSA_OWI_DRIVER_DS18B20_HH
 
 #include "Cosa/OWI.hh"
 #include "Cosa/IOStream.hh"

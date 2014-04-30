@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_AVR_PROGRAMMER_HH__
-#define __COSA_AVR_PROGRAMMER_HH__
+#ifndef COSA_AVR_PROGRAMMER_HH
+#define COSA_AVR_PROGRAMMER_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"

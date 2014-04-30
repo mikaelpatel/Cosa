@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FIXEDPOINT_HH__
-#define __COSA_FIXEDPOINT_HH__
+#ifndef COSA_FIXEDPOINT_HH
+#define COSA_FIXEDPOINT_HH
 
 #include "Cosa/Types.h"
 

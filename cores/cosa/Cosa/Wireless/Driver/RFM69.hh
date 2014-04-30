@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_WIRELESS_DRIVER_RFM69_HH__
-#define __COSA_WIRELESS_DRIVER_RFM69_HH__
+#ifndef COSA_WIRELESS_DRIVER_RFM69_HH
+#define COSA_WIRELESS_DRIVER_RFM69_HH
 
 #include "Cosa/SPI.hh"
 #include "Cosa/OutputPin.hh"
@@ -285,10 +285,9 @@ private:
    */
   uint8_t read(Reg reg)
   {
-    uint8_t res;
     spi.begin(this);
     spi.transfer(REG_READ | reg);
-    res = spi.transfer(0);
+    uint8_t res = spi.transfer(0);
     spi.end();
     return (res);
   }
@@ -646,11 +645,6 @@ private:
    * with valid checksum. 
    */
   class IRQPin : public ExternalInterrupt {
-    friend class RFM69;
-  private:
-    /** Device reference */
-    RFM69* m_rf;
-
   public:
     /**
      * Construct interrupt pin handler for RFM69 on payload receive
@@ -671,19 +665,18 @@ private:
      * @param[in] arg (not used).
      */
     virtual void on_interrupt(uint16_t arg = 0);
+
+    friend class RFM69;
+  private:
+    RFM69* m_rf;		//<! Device reference
   };
   
   /** Default configuration */
   static const uint8_t config[] __PROGMEM;
 
-  /** Interrupt Handler */
-  IRQPin m_irq;
-  
-  /** Packet sent flag */
-  volatile bool m_done;
-
-  /** Current operation mode */
-  Mode m_opmode;
+  IRQPin m_irq;			//<! Interrupt pin and handler
+  volatile bool m_done;		//<! Packet sent flag (may be set by ISR)
+  Mode m_opmode;		//<! Current operation mode
 };
 #endif
 #endif

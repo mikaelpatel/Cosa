@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_FSM_HH__
-#define __COSA_FSM_HH__
+#ifndef COSA_FSM_HH
+#define COSA_FSM_HH
 
 #include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"

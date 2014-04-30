@@ -26,8 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TYPES_H__
-#define __COSA_TYPES_H__
+#ifndef COSA_TYPES_H
+#define COSA_TYPES_H
 
 #include <avr/io.h>
 #include <avr/sleep.h>
@@ -213,6 +213,7 @@ unlock(uint8_t key)
 
 /**
  * Syntactic sugar for synchronized block. Used in the form:
+ * @code
  * synchronized {
  *   ...
  *   synchronized_return(expr);
@@ -221,6 +222,7 @@ unlock(uint8_t key)
  *   ...
  * }
  * label:
+ * @endcode
  * Interrupts are disabled in the block allowing secure update.
  */
 #define synchronized							\
@@ -240,8 +242,8 @@ unlock(uint8_t key)
  * Buffer structure for scatter/gather.
  */
 struct iovec_t {
-  void* buf;
-  size_t size;
+  void* buf;			/** Buffer pointer  */
+  size_t size;			/** Size of buffer in bytes */
 };
 
 /**
@@ -259,7 +261,14 @@ iovec_size(const iovec_t* vec)
 }
 
 /**
- * Set next io-vector buffer.
+ * Set next io-vector buffer. Used in to form:
+ * @code
+ * iovec_t vec[N];
+ * iovec_t* vp = vec;
+ * iovec_arg(vp, buf, size);
+ * ..
+ * iovec_end(vp);
+ * @endcode
  * @param[in,out] vp io vector pointer
  * @param[in] buf buffer.
  * @param[in] size number of bytes.
@@ -273,7 +282,14 @@ iovec_arg(iovec_t* &vp, const void* buf, size_t size)
 }
 
 /**
- * Mark end of io-vector buffer at given index.
+ * Mark end of io-vector buffer at given index. Used in the form:
+ * @code
+ * iovec_t vec[N];
+ * iovec_t* vp = vec;
+ * iovec_arg(vp, buf, size);
+ * ..
+ * iovec_end(vp);
+ * @endcode
  * @param[in,out] vp io vector.
  */
 inline void
@@ -458,20 +474,21 @@ toHEX(uint8_t value)
 
 /**
  * Delay given number of milli-seconds. This function pointer
- * may be redefined to allow multi-task duing wait.
+ * may be redefined to allow low-power and/or multi-task duing wait.
  * @param[in] ms milli-seconds delay.
  */
 extern void (*delay)(uint32_t ms);
 
 /**
  * Sleep given number of seconds. This function pointer may be
- * redefined to allow multi-task duing wait. 
+ * redefined to allow low-power and/or multi-task duing wait.
  * @param[in] s seconds delay.
  */
 extern void (*sleep)(uint16_t s);
 
 /**
- * Allow context switch to other task if available. 
+ * Allow context switch to other task if available. The default
+ * implementation is a low-power state and wait for interrupt.
  */
 extern void (*yield)();
 

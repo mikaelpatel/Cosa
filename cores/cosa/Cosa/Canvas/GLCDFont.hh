@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CANVAS_GLCDFONT_HH__
-#define __COSA_CANVAS_GLCDFONT_HH__
+#ifndef COSA_CANVAS_GLCDFONT_HH
+#define COSA_CANVAS_GLCDFONT_HH
 
 #include "Cosa/Canvas/Font.hh"
 

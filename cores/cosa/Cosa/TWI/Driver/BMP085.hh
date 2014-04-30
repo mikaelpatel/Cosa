@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_TWI_DRIVER_BMP085_HH__
-#define __COSA_TWI_DRIVER_BMP085_HH__
+#ifndef COSA_TWI_DRIVER_BMP085_HH
+#define COSA_TWI_DRIVER_BMP085_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/TWI.hh"
@@ -162,7 +162,7 @@ public:
    * raw sensor data.
    * @return calculated pressure in steps of 1 Pa (0,01 hPa).
    */
-  int32_t get_pressure()
+  int32_t get_pressure() const
   {
     return (m_pressure);
   }
@@ -171,7 +171,7 @@ protected:
   /** Temperature conversion time max (ms) */
   static const uint8_t TEMP_CONV_MS = 5;
 
-  /** Pressure conversion time max (ms) */
+  /** Pressure conversion time max table (ms), index with mode */
   static const uint8_t PRESSURE_CONV_MS[] __PROGMEM;
 
   /**

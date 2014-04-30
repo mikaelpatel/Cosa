@@ -4,7 +4,7 @@
  *
  * @section License
  * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire rev. 1.19)
- * Copyright (C) 2013, Mikael Patel (Cosa C++ port and refactoring)
+ * Copyright (C) 2013-2014, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,8 +24,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_WIRELESS_DRIVER_VWI_HH__
-#define __COSA_WIRELESS_DRIVER_VWI_HH__
+#ifndef COSA_WIRELESS_DRIVER_VWI_HH
+#define COSA_WIRELESS_DRIVER_VWI_HH
 
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
@@ -33,9 +33,9 @@
 
 /**
  * VWI is an Cosa library that provides features to send short
- * messages using inexpensive radio transmitters and receivers (VWI). 
- * This library is an object-oriented refactoring and extension of the
- * Virtual Wire library. 
+ * messages using inexpensive radio transmitters and receivers
+ * (VWI). This library is an object-oriented refactoring and extension
+ * of the Virtual Wire library (vers. 1.19).
  *
  * @section Circuit
  * @code
@@ -326,7 +326,7 @@ private:
      * bad check-sum.
      * @return true(1) if a message is available to read.
      */
-    bool available()
+    bool available() const
     {
       return (m_done);
     }
@@ -343,8 +343,7 @@ private:
      * @param[in] ms timeout period (zero for blocking)
      * @return number of bytes received or negative error code.
      */
-    int recv(uint8_t& src, uint8_t& port, 
-	     void* buf, size_t len, 
+    int recv(uint8_t& src, uint8_t& port, void* buf, size_t len, 
 	     uint32_t ms = 0L);
 
   private:
@@ -478,7 +477,7 @@ private:
      * Returns the state of the transmitter.
      * @return true if the transmitter is active else false
      */
-    bool is_active()
+    bool is_active() const
     {
       return (m_enabled);
     }

@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_QUEUE_HH__
-#define __COSA_QUEUE_HH__
+#ifndef COSA_QUEUE_HH
+#define COSA_QUEUE_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Power.hh"

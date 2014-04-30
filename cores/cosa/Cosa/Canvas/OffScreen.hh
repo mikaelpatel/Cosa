@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSA_CANVAS_OFFSCREEN_HH__
-#define __COSA_CANVAS_OFFSCREEN_HH__
+#ifndef COSA_CANVAS_OFFSCREEN_HH
+#define COSA_CANVAS_OFFSCREEN_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Canvas.hh"
