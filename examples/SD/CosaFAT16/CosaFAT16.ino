@@ -37,7 +37,7 @@ SD sd;
 #endif
 
 #define SLOW_CLOCK SPI::DIV4_CLOCK
-#define FAST_CLOCK SPI::DIV2_2X_CLOCK
+#define FAST_CLOCK SPI::DIV2_CLOCK
 #define CLOCK SLOW_CLOCK
 
 void setup()

@@ -30,7 +30,7 @@ SPI spi  __attribute__ ((weak));
 
 #if defined(SPDR)
 
-SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
+SPI::Driver::Driver(Board::DigitalPin cs, Pulse pulse,
 		    Clock rate, uint8_t mode, Order order,
 		    Interrupt::Handler* irq) :
   m_next(NULL),
@@ -87,7 +87,7 @@ SPI::begin(Driver* dev)
     SPCR = dev->m_spcr;
     SPSR = dev->m_spsr;
     // Enable device
-    if (dev->m_pulse < 2) dev->m_cs.toggle();
+    if (dev->m_pulse < PULSE_LOW) dev->m_cs.toggle();
     // Disable all interrupt sources on SPI bus
     for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
       if (dev->m_irq) dev->m_irq->disable();
@@ -217,7 +217,7 @@ ISR(SPI_STC_vect)
 #define PORT PORTB
 #endif
 
-SPI::Driver::Driver(Board::DigitalPin cs, uint8_t pulse,
+SPI::Driver::Driver(Board::DigitalPin cs, Pulse pulse,
 		    Clock rate, uint8_t mode, Order order,
 		    Interrupt::Handler* irq) :
   m_next(NULL),
@@ -285,7 +285,7 @@ SPI::begin(Driver* dev)
     else
       bit_clear(PORT, Board::SCK);
     // Enable device
-    if (dev->m_pulse < 2) dev->m_cs.toggle();
+    if (dev->m_pulse < PULSE_LOW) dev->m_cs.toggle();
     // Disable all interrupt sources on SPI bus
     for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
       if (dev->m_irq) dev->m_irq->disable();
@@ -367,7 +367,7 @@ SPI::end()
     if (m_dev == NULL) synchronized_return (false);
     // Disable the device or give pulse if required
     m_dev->m_cs.toggle();
-    if (m_dev->m_pulse > 1) m_dev->m_cs.toggle();
+    if (m_dev->m_pulse > ACTIVE_HIGH) m_dev->m_cs.toggle();
     // Enable the bus devices with interrupts
     for (Driver* dev = spi.m_list; dev != NULL; dev = dev->m_next)
       if (dev->m_irq != NULL) dev->m_irq->enable();

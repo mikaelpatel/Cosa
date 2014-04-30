@@ -35,7 +35,7 @@ NRF24L01P::NRF24L01P(uint16_t net, uint8_t dev,
 		     Board::DigitalPin csn, 
 		     Board::DigitalPin ce, 
 		     Board::ExternalInterruptPin irq) :
-  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+  SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
   Wireless::Driver(net, dev),
   m_ce(ce, 0),
   m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),

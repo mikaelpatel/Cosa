@@ -83,22 +83,17 @@ public:
    */
 #if defined(__ARDUINO_TINYX4__)
   RFM69(uint16_t net, uint8_t dev, 
-	 Board::DigitalPin csn = Board::D2,
-	 Board::ExternalInterruptPin irq = Board::EXT0) :
+	Board::DigitalPin csn = Board::D2,
+	Board::ExternalInterruptPin irq = Board::EXT0);
 #elif defined(__ARDUINO_MEGA__)
   RFM69(uint16_t net, uint8_t dev, 
-	 Board::DigitalPin csn = Board::D53,
-	 Board::ExternalInterruptPin irq = Board::EXT4) :
+	Board::DigitalPin csn = Board::D53,
+	Board::ExternalInterruptPin irq = Board::EXT4);
 #else
   RFM69(uint16_t net, uint8_t dev, 
-	 Board::DigitalPin csn = Board::D10,
-	 Board::ExternalInterruptPin irq = Board::EXT0) :
+	Board::DigitalPin csn = Board::D10,
+	Board::ExternalInterruptPin irq = Board::EXT0);
 #endif
-    SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
-    Wireless::Driver(net, dev),
-    m_irq(irq, ExternalInterrupt::ON_RISING_MODE, this)
-  {
-  }
 
   /**
    * @override Wireless::Driver

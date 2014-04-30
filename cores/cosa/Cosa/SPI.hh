@@ -60,24 +60,32 @@ class SPI {
 public:
   /** Clock selectors */
   enum Clock {
+    DIV2_CLOCK = 0x04,
     DIV4_CLOCK = 0x00,
+    DIV8_CLOCK = 0x05,
     DIV16_CLOCK = 0x01,
+    DIV32_CLOCK = 0x06,
     DIV64_CLOCK = 0x02,
     DIV128_CLOCK = 0x03,
-    DIV2_2X_CLOCK = 0x04,
-    DIV8_2X_CLOCK = 0x05,
-    DIV32_2X_CLOCK = 0x06,
-    DIV64_2X_CLOCK = 0x07,
     DEFAULT_CLOCK = DIV4_CLOCK
   } __attribute__((packed));
 
   /** Bit order selectors */
   enum Order {
-    MSB_ORDER = 0, 
-    LSB_ORDER = 1,
-    DEFAULT_ORDER = MSB_ORDER
+    MSB_ORDER = 0, 		//<! Most significant bit first
+    LSB_ORDER = 1,		//<! Least significant bit first
+    DEFAULT_ORDER = MSB_ORDER	//<! Default is MSB
   } __attribute__((packed));
   
+  /** Chip select mode */
+  enum Pulse {
+    ACTIVE_LOW = 0,	   	//<! Active low logic during transaction
+    ACTIVE_HIGH = 1,	   	//<! Active high logic
+    PULSE_LOW = 2, 	   	//<! Pulse low on end of transaction
+    PULSE_HIGH = 3,	   	//<! Pulse high
+    DEFAULT_PULSE = ACTIVE_LOW	//<! Default is low logic 
+  } __attribute__((packed));
+
   /**
    * SPI device driver abstract class. Holds SPI/USI hardware settings 
    * to allow handling of several SPI devices with different clock, mode 
@@ -88,18 +96,16 @@ public:
   public:
     /**
      * Construct SPI Device driver with given chip select pin, pulse,
-     * clock, mode, and bit order. Zero(0) pulse will give active low
-     * chip select during transaction, One(1) acive high, otherwise
-     * pulse on end(). 
+     * clock, mode, and bit order. 
      * @param[in] cs chip select pin.
-     * @param[in] pulse chip select pulse mode (default active low, 0).
+     * @param[in] pulse chip select pulse mode (default ACTIVE_LOW).
      * @param[in] clock SPI hardware setting (default DIV4_CLOCK).
      * @param[in] mode SPI mode for phase and transition (0..3, default 0).
      * @param[in] order bit order (default MSB_ORDER).
      * @param[in] irq interrupt handler (default null).
      */
     Driver(Board::DigitalPin cs, 
-	   uint8_t pulse = 0,
+	   Pulse pulse = DEFAULT_PULSE,
 	   Clock rate = DEFAULT_CLOCK, 
 	   uint8_t mode = 0, 
 	   Order order = MSB_ORDER,
@@ -115,10 +121,7 @@ public:
     Driver* m_next;		//<! List of drivers
     Interrupt::Handler* m_irq;	//<! Interrupt handler
     OutputPin m_cs;		//<! Device chip select pin
-    uint8_t m_pulse;		//<! Chip select pulse width:
-				//<!  0 active low logic during transaction
-				//<!  1 active high logic,
-				//<!  2 pulse on end of transaction
+    Pulse m_pulse;		//<! Chip select pulse width:
 #if defined(USICR)
     const uint8_t m_cpol;	//<! Clock polatity (CPOL) setting
     uint8_t m_usicr;		//<! USI hardware control register setting
@@ -127,84 +130,6 @@ public:
     uint8_t m_spcr;		//<! SPI/SPCR hardware control register setting
     uint8_t m_spsr;		//<! SPI/SPSR hardware status register
 #endif
-    friend class SPI;
-  };
-
-  /**
-   * SPI slave device support. Allows Arduino/AVR to act as a hardware
-   * device on the SPI bus. 
-   */
-  class Slave : public Interrupt::Handler, public Event::Handler {
-  public:
-    /**
-     * Construct serial peripheral interface for slave.
-     * @param[in] buf with data to received data.
-     * @param[in] max size of buffer.
-     */
-    Slave(void* buf = NULL, uint8_t max = 0) : 
-      m_cmd(0),
-      m_buf((uint8_t*) buf),
-      m_max(max),
-      m_put(0)
-    {
-      if (buf == NULL) {
-	m_buf = m_data;
-	m_max = DATA_MAX;
-      }
-      s_device = this;
-    }
-
-    /**
-     * Set data receive buffer for package receive mode.
-     * @param[in] buf pointer to buffer.
-     * @param[in] max max size of data package.
-     */
-    void set_buf(void* buf, uint8_t max) 
-    { 
-      if (buf == NULL) {
-	m_buf = m_data;
-	m_max = DATA_MAX;
-      }
-      else {
-	m_buf = (uint8_t*) buf; 
-	m_max = max; 
-      }
-    }
-
-    /**
-     * Get data receive buffer for package receive mode.
-     * @return buf pointer to buffer.
-     */
-    void* get_buf() const
-    { 
-      return (m_buf);
-    }
-    
-    /**
-     * Get number of bytes available in receive buffer.
-     * @return number of bytes.
-     */
-    uint8_t available() const
-    { 
-      return (m_put);
-    }
-
-    /**
-     * @override Interrupt::Handler
-     * Interrupt service on data receive in slave mode.
-     * @param[in] data received data.
-     */
-    virtual void on_interrupt(uint16_t data);
-
-  private:
-    static const uint8_t DATA_MAX = 32;
-    uint8_t m_data[DATA_MAX];
-    uint8_t m_cmd;
-    uint8_t* m_buf;
-    uint8_t m_max;
-    uint8_t m_put;
-    static Slave* s_device;
-    friend void SPI_STC_vect(void);
     friend class SPI;
   };
 
@@ -366,6 +291,84 @@ public:
    * @param[in] vec null terminated io buffer vector pointer.
    */
   void write(const iovec_t* vec);
+
+  /**
+   * SPI slave device support. Allows Arduino/AVR to act as a hardware
+   * device on the SPI bus. 
+   */
+  class Slave : public Interrupt::Handler, public Event::Handler {
+  public:
+    /**
+     * Construct serial peripheral interface for slave.
+     * @param[in] buf with data to received data.
+     * @param[in] max size of buffer.
+     */
+    Slave(void* buf = NULL, uint8_t max = 0) : 
+      m_cmd(0),
+      m_buf((uint8_t*) buf),
+      m_max(max),
+      m_put(0)
+    {
+      if (buf == NULL) {
+	m_buf = m_data;
+	m_max = DATA_MAX;
+      }
+      s_device = this;
+    }
+
+    /**
+     * Set data receive buffer for package receive mode.
+     * @param[in] buf pointer to buffer.
+     * @param[in] max max size of data package.
+     */
+    void set_buf(void* buf, uint8_t max) 
+    { 
+      if (buf == NULL) {
+	m_buf = m_data;
+	m_max = DATA_MAX;
+      }
+      else {
+	m_buf = (uint8_t*) buf; 
+	m_max = max; 
+      }
+    }
+
+    /**
+     * Get data receive buffer for package receive mode.
+     * @return buf pointer to buffer.
+     */
+    void* get_buf() const
+    { 
+      return (m_buf);
+    }
+    
+    /**
+     * Get number of bytes available in receive buffer.
+     * @return number of bytes.
+     */
+    uint8_t available() const
+    { 
+      return (m_put);
+    }
+
+    /**
+     * @override Interrupt::Handler
+     * Interrupt service on data receive in slave mode.
+     * @param[in] data received data.
+     */
+    virtual void on_interrupt(uint16_t data);
+
+  protected:
+    static const uint8_t DATA_MAX = 32;
+    uint8_t m_data[DATA_MAX];
+    uint8_t m_cmd;
+    uint8_t* m_buf;
+    uint8_t m_max;
+    uint8_t m_put;
+    static Slave* s_device;
+    friend void SPI_STC_vect(void);
+    friend class SPI;
+  };
 
 private:
   Driver* m_list;		//<! List of attached device drivers

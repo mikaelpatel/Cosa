@@ -99,14 +99,9 @@ public:
      * @param[in] start_symbol.
      * @param[in] preamble_max.
      */
-    Codec(uint8_t bits_per_symbol, uint16_t start_symbol, 
-	  uint8_t preamble_max = VWI::Transmitter::PREAMBLE_MAX) :
-      BITS_PER_SYMBOL(bits_per_symbol),
-      START_SYMBOL(start_symbol),
-      PREAMBLE_MAX(preamble_max),
-      SYMBOL_MASK((1 << bits_per_symbol) - 1),
-      BITS_MSB(1 << (bits_per_symbol*2 - 1))
-    {}
+    Codec(uint8_t bits_per_symbol, 
+	  uint16_t start_symbol, 
+	  uint8_t preamble_max = VWI::Transmitter::PREAMBLE_MAX);
 
     /**
      * @override VWI::Codec

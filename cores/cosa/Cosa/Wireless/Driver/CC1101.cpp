@@ -104,7 +104,7 @@ CC1101::IRQPin::on_interrupt(uint16_t arg)
 CC1101::CC1101(uint16_t net, uint8_t dev, 
 	       Board::DigitalPin csn,
 	       Board::ExternalInterruptPin irq) :
-  SPI::Driver(csn, 0, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+  SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
   Wireless::Driver(net, dev),
   m_irq(irq, ExternalInterrupt::ON_FALLING_MODE, this),
   m_status(0)

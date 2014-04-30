@@ -86,6 +86,14 @@ const uint8_t ST7735::script[] __PROGMEM = {
   SCRIPTEND
 };
 
+ST7735::ST7735(Board::DigitalPin cs, Board::DigitalPin dc) :
+  Canvas(SCREEN_WIDTH, SCREEN_HEIGHT),
+  SPI::Driver(cs, SPI::ACTIVE_LOW, SPI::DEFAULT_CLOCK, 3, SPI::MSB_ORDER, NULL),
+  m_dc(dc, 1),
+  m_initiated(0)
+{
+}
+
 bool 
 ST7735::begin()
 {
@@ -109,14 +117,6 @@ ST7735::begin()
   spi.end();
   m_initiated = 1;
   return (true);
-}
-
-ST7735::ST7735(Board::DigitalPin cs, Board::DigitalPin dc) :
-  Canvas(SCREEN_WIDTH, SCREEN_HEIGHT),
-  SPI::Driver(cs, 0, SPI::DEFAULT_CLOCK, 3, SPI::MSB_ORDER, NULL),
-  m_dc(dc, 1),
-  m_initiated(0)
-{
 }
 
 uint8_t

@@ -26,7 +26,7 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 HD44780::SR3WSPI::SR3WSPI(Board::DigitalPin en) : 
-  SPI::Driver(en, 2),
+  SPI::Driver(en, SPI::PULSE_HIGH),
   m_port()
 {
 }

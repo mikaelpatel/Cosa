@@ -108,6 +108,15 @@ const uint8_t RFM69::config[] __PROGMEM = {
   0
 };
 
+RFM69::RFM69(uint16_t net, uint8_t dev, 
+	     Board::DigitalPin csn,
+	     Board::ExternalInterruptPin irq) :
+  SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
+  Wireless::Driver(net, dev),
+  m_irq(irq, ExternalInterrupt::ON_RISING_MODE, this)
+{
+}
+
 void 
 RFM69::IRQPin::on_interrupt(uint16_t arg)
 {

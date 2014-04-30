@@ -87,7 +87,7 @@ public:
 	    Board::DigitalPin csn = Board::D53, 
 	    Board::DigitalPin ce = Board::D48, 
 	    Board::ExternalInterruptPin irq = Board::EXT4);
-#else // __ARDUINO_STANDARD__ || __ARDUINO_MIGHTY__
+#else
   NRF24L01P(uint16_t net, uint8_t dev,
 	    Board::DigitalPin csn = Board::D10, 
 	    Board::DigitalPin ce = Board::D9, 
