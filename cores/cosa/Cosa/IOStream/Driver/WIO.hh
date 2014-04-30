@@ -51,7 +51,8 @@ public:
     IOStream::Device(),
     m_ix(0),
     m_dev(dev),
-    m_dest(dest)
+    m_dest(dest),
+    m_port(port)
   {
   }
 
