@@ -25,12 +25,29 @@
  * devices over the Wireless Interface and devices. 
  *
  * @section Circuit
+ *                         RF433/TX
+ *                       +------------+
+ * (D0)----------------1-|DATA        |
+ * (VCC)---------------2-|VCC         |                    V
+ * (GND)---------------3-|GND         |                    |
+ *                       |ANT       0-|--------------------+
+ *                       +------------+       17.3 cm
+ *
+ *                           DS18B20
+ *                       +------------+
+ * (GND)---------------1-|GND         |\
+ * (D3)------+---------2-|DQ          | |
+ *           |       +-3-|VDD         |/
+ *          4K7      |   +------------+
+ *           |       | 
+ * (D4)------+       +---(VCC/GND)
+ *
  * Connect RF433/315 Transmitter Data to ATtiny85 D0, connect VCC 
  * GND. Connect 1-Wire digital thermometer to D3 with pullup resistor.
  * The pullup resistor (4K7) may be connected to D4 to allow active power
  * control. This sketch supports parasite powered DS18B20 devices.
  * Connect the DS18B20 VCC to GND. 
- *
+ * 
  * @section Measurements
  * Arduino Mini Pro 16 Mhz (Power LED removed).
  * Power	Idle	Sampling	Transmitting	
