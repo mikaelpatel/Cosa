@@ -286,10 +286,10 @@ IOStream::Device::puts_P(const char* s)
 int 
 IOStream::Device::write(const void* buf, size_t size) 
 { 
-  char* ptr = (char*) buf;
+  char* bp = (char*) buf;
   size_t n = 0;
   for(; n < size; n++)
-    if (putchar(*ptr++) < 0)
+    if (putchar(*bp++) < 0)
       break;
   return (n);
 }
@@ -297,10 +297,10 @@ IOStream::Device::write(const void* buf, size_t size)
 int 
 IOStream::Device::write_P(const void* buf, size_t size) 
 { 
-  char* ptr = (char*) buf;
+  char* bp = (char*) buf;
   size_t n = 0;
   for(; n < size; n++)
-    if (putchar(pgm_read_byte(ptr++)) < 0)
+    if (putchar(pgm_read_byte(bp++)) < 0)
       break;
   return (n);
 }
@@ -358,12 +358,12 @@ IOStream::Device::gets(char *s, size_t count)
 int 
 IOStream::Device::read(void* buf, size_t size) 
 { 
-  char* ptr = (char*) buf;
+  char* bp = (char*) buf;
   size_t n = 0; 
   for (; n < size; n++) {
     int c = getchar();
     if (c < 0) break;
-    *ptr++ = c;
+    *bp++ = c;
   }
   return (n);
 }

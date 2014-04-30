@@ -70,7 +70,6 @@ static OneShot one_shot;
 void setup()
 {
   uint32_t start, stop, expected, actual;
-  bool err = false;
 
   // Start the trace output stream on the serial port
   uart.begin(9600);
@@ -226,7 +225,6 @@ void setup()
         bunch[i].stop();
       }
       trace << endl;
-      err = true;
       break;
     }
   }

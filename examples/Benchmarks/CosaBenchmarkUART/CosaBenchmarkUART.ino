@@ -36,7 +36,7 @@
 
 void setup()
 {
-  uart.begin(9600);
+  uart.begin(115200);
   trace.begin(&uart, PSTR("CosaBenchmarkUART: started"));
   TRACE(free_memory());
   Watchdog::begin();

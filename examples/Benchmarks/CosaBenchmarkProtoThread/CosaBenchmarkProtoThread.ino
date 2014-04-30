@@ -49,6 +49,8 @@ public:
   
   virtual void run(uint8_t type, uint16_t value)
   {
+    UNUSED(type);
+    UNUSED(value);
     DEBUG("thread#%p: ip = %p, count = %d", this, m_ip, m_count);
     PROTO_THREAD_BEGIN();
     PROTO_THREAD_YIELD();
