@@ -9,7 +9,8 @@ SPI, TWI and EEPROM.
 
 Cosa is implemented as an Arduino IDE core. The Cosa platform can be
 used with almost all Arduino boards and ATtiny/ATmega processors. All
-classes may be compiled for all variants.
+classes may be compiled for all variants. The limitations are hardware
+resources.
 
 Though object-oriented with optional operator overloading syntax,
 Cosa is between 2-10X faster than Arduino with regard to digital pin
@@ -25,17 +26,14 @@ such as strings, integer and floating pointer numbers into a binary
 format. It may be used for a number of applications; tracing, remote
 procedure calls, data exchange between Arduino devices, etc. The
 format allows user data types to be defined and values exchanged
-without additional encoding. The stream header itself is a pre-defined
-serializable data type. Ciao is used to define an Arduino monitoring
-and control language (Cosa fai) which has much in common with
-Firmata. 
+without additional encoding.
 
-The primary programming paradigm is object-oriented and
-state-machine/event driven with proto-threads or multi-tasking. There
-is a large number of device drivers available for SPI, I2C (TWI) and
-1-Wire (OWI). A strict directory structure is used to organize the
+The primary programming paradigm is object-oriented and state-machine,
+event driven, with proto-threads or multi-tasking. There is a large
+number of device drivers available for SPI, I2C (TWI) and 1-Wire
+(OWI). A strict directory structure is used to organize the
 Cosa/driver source code. Sub-directories are used for each driver
-type. This allows a foundation for scaling and configuration.
+type. This allows a foundation for scaling and configuration. 
 
 Cosa uses the Arduino IDE and build system. Cosa classes are included
 with prefix, e.g. "Cosa/FileName.hh". It is possible to use both
@@ -71,7 +69,8 @@ platform for rapid prototyping of "Internet-of-things"-devices. There
 is an Ethernet/Socket with W5100 Ethernet controller device
 driver. This implementation allows streaming direct to the device
 buffers. Cosa also implements a number of IP protocols; DNS, DHCP,
-NTP, HTTP, SNMP and MQTT. 
+NTP, HTTP, and SNMP, and high level messaging such as MQTT and
+ThingSpeak.
 
 Unfortunately Cosa is not a beginners entry level programming
 platform, though following some of the design patterns in Cosa will

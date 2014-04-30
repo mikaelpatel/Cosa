@@ -1,4 +1,4 @@
-# Cosa's Documentation
+# Documentation
 
 * [Che Cosa?](./01-cosa.md)
 * [Install](./02-install.md)

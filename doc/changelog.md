@@ -1,6 +1,13 @@
 Cosa's changelog
 ================
 
+2014-04 Adding support some additional boards; Microduino and
+Pinnocio. Introducing Arduino 1.5.6-r2 and GCC 4.8.1, and link time
+optimization. Improving Port4b LCD adapter; removing binding to
+continuous pins. Refactoring Pins into separate files. Adding support
+for embedXcode. Several performance improvements. Major cleanup of
+code structure and documentation; circuit drawings.     
+
 2014-03 Adding message passing with Actors and additional benchmarks
 for Nucleo. Support for ThingSpeak client (channel update) and
 TalkBack command handling. Improving the ADXL345 accelerometer device
@@ -106,4 +113,3 @@ IOStream::Device. Adding support for ATtinyX5. Simple ATtiny monitor
 included. Adding support for RC Servo. Adding support for
 ATmega1284P/Mighty boards. Refactoring and porting VirtualWire to
 Cosa.    
-=======
