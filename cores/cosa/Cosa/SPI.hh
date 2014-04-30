@@ -112,34 +112,20 @@ public:
     void set_clock(Clock rate);
 
   protected:
-    /** List of drivers */
-    Driver* m_next;
-
-    /** Interrupt handler */
-    Interrupt::Handler* m_irq;
-
-    /** Device chip select pin */
-    OutputPin m_cs;
-
-    /** Chip select pulse width; 
-     *  0 for active low logic during the transaction,
-     *  1 for active high logic,
-     *  2 pulse on end of transaction.
-     */
-    uint8_t m_pulse;
-    
+    Driver* m_next;		//<! List of drivers
+    Interrupt::Handler* m_irq;	//<! Interrupt handler
+    OutputPin m_cs;		//<! Device chip select pin
+    uint8_t m_pulse;		//<! Chip select pulse width:
+				//<!  0 active low logic during transaction
+				//<!  1 active high logic,
+				//<!  2 pulse on end of transaction
 #if defined(USICR)
-    /** SPI mode for clock polatity (CPOL) setting */
-    const uint8_t m_cpol;
-
-    /** USI hardware control register setting */
-    uint8_t m_usicr;
+    const uint8_t m_cpol;	//<! Clock polatity (CPOL) setting
+    uint8_t m_usicr;		//<! USI hardware control register setting
+    uint8_t m_data;		//<! Data register for asynchron transfer
 #else
-    /** SPI hardware control register (SPCR) setting */
-    uint8_t m_spcr;
-
-    /** SPI hardware control bit in status register (SPSR) setting */
-    uint8_t m_spsr;
+    uint8_t m_spcr;		//<! SPI/SPCR hardware control register setting
+    uint8_t m_spsr;		//<! SPI/SPSR hardware status register
 #endif
     friend class SPI;
   };
@@ -152,17 +138,17 @@ public:
   public:
     /**
      * Construct serial peripheral interface for slave.
-     * @param[in] buffer with data to received data.
+     * @param[in] buf with data to received data.
      * @param[in] max size of buffer.
      */
-    Slave(void* buffer = NULL, uint8_t max = 0) : 
+    Slave(void* buf = NULL, uint8_t max = 0) : 
       m_cmd(0),
-      m_buffer((uint8_t*) buffer),
+      m_buf((uint8_t*) buf),
       m_max(max),
       m_put(0)
     {
-      if (buffer == 0) {
-	m_buffer = m_data;
+      if (buf == NULL) {
+	m_buf = m_data;
 	m_max = DATA_MAX;
       }
       s_device = this;
@@ -170,35 +156,35 @@ public:
 
     /**
      * Set data receive buffer for package receive mode.
-     * @param[in] buffer pointer to buffer.
+     * @param[in] buf pointer to buffer.
      * @param[in] max max size of data package.
      */
-    void set_buf(void* buffer, uint8_t max) 
+    void set_buf(void* buf, uint8_t max) 
     { 
-      if (buffer == 0) {
-	m_buffer = m_data;
+      if (buf == NULL) {
+	m_buf = m_data;
 	m_max = DATA_MAX;
       }
       else {
-	m_buffer = (uint8_t*) buffer; 
+	m_buf = (uint8_t*) buf; 
 	m_max = max; 
       }
     }
 
     /**
      * Get data receive buffer for package receive mode.
-     * @return buffer pointer to buffer.
+     * @return buf pointer to buffer.
      */
-    void* get_buf()
+    void* get_buf() const
     { 
-      return (m_buffer);
+      return (m_buf);
     }
     
     /**
      * Get number of bytes available in receive buffer.
      * @return number of bytes.
      */
-    uint8_t available()
+    uint8_t available() const
     { 
       return (m_put);
     }
@@ -214,7 +200,7 @@ public:
     static const uint8_t DATA_MAX = 32;
     uint8_t m_data[DATA_MAX];
     uint8_t m_cmd;
-    uint8_t* m_buffer;
+    uint8_t* m_buf;
     uint8_t m_max;
     uint8_t m_put;
     static Slave* s_device;
@@ -257,13 +243,13 @@ public:
    */
   bool end();
 
+#if defined(USIDR)
   /**
    * Exchange data with slave. Should only be used within a SPI
    * transaction; begin()-end() block. Return received value.
    * @param[in] data to send.
    * @return value received.
    */
-#if defined(USIDR)
   uint8_t transfer(uint8_t data)
   {
     USIDR = data;
@@ -274,10 +260,58 @@ public:
     } while ((USISR & _BV(USIOIF)) == 0);
     return (USIDR);
   }
+
+  /**
+   * Start exchange data with slave. Should only be used within a SPI
+   * transaction; begin()-end() block. 
+   * @param[in] data to send.
+   */
+  void transfer_start(uint8_t data) __attribute__((always_inline))
+  {
+    m_dev->m_data = data;
+  }
+
+  /**
+   * Wait for exchange with slave. Should only be used within a SPI
+   * transaction; begin()-end() block. Return received value.
+   * @return value received.
+   */
+  uint8_t transfer_await() __attribute__((always_inline))
+  {
+    return (tranfer(m_dev->m_data));
+  }
+
 #else
+  /**
+   * Exchange data with slave. Should only be used within a SPI
+   * transaction; begin()-end() block. Return received value.
+   * @param[in] data to send.
+   * @return value received.
+   */
   uint8_t transfer(uint8_t data) __attribute__((always_inline))
   {
     SPDR = data;
+    loop_until_bit_is_set(SPSR, SPIF);
+    return (SPDR);
+  }
+
+  /**
+   * Start exchange data with slave. Should only be used within a SPI
+   * transaction; begin()-end() block. 
+   * @param[in] data to send.
+   */
+  void transfer_start(uint8_t data) __attribute__((always_inline))
+  {
+    SPDR = data;
+  }
+
+  /**
+   * Wait for exchange with slave. Should only be used within a SPI
+   * transaction; begin()-end() block. Return received value.
+   * @return value received.
+   */
+  uint8_t transfer_await() __attribute__((always_inline))
+  {
     loop_until_bit_is_set(SPSR, SPIF);
     return (SPDR);
   }
@@ -287,10 +321,10 @@ public:
    * Exchange package with slave. Received data from slave is stored
    * in given buffer. Should only be used within a SPI transaction;
    * begin()-end() block.  
-   * @param[in] buffer with data to transfer (send/receive).
+   * @param[in] buf with data to transfer (send/receive).
    * @param[in] count size of buffer.
    */
-  void transfer(void* buffer, size_t count);
+  void transfer(void* buf, size_t count);
 
   /**
    * Exchange package with slave. Received data from slave is stored
@@ -334,11 +368,8 @@ public:
   void write(const iovec_t* vec);
 
 private:
-  /** List of attached devices for interrupt disable/enable */
-  Driver* m_list;
-
-  /** Current device using the SPI hardware */
-  Driver* m_dev;
+  Driver* m_list;		//<! List of attached device drivers
+  Driver* m_dev;		//<! Current device driver
 };
 
 /**

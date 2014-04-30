@@ -264,10 +264,10 @@ private:
    * Frame header; Transmitted in little endian order; network LSB first.
    */
   struct header_t {
-    int16_t network;		/**< Network address */
-    uint8_t dest;		/**< Destination device address */
-    uint8_t src;		/**< Source device address */
-    uint8_t port;		/**< Port or message type */
+    int16_t network;		//<! Network address
+    uint8_t dest;		//<! Destination device address
+    uint8_t src;		//<! Source device address
+    uint8_t port;		//<! Port or message type
   };
   
   /** 

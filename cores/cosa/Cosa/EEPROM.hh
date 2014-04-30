@@ -136,47 +136,47 @@ public:
     return (m_dev->read(dest, src, sizeof(T)) == sizeof(T));
   }
 
-  int read(unsigned char* dest, unsigned char* src) 
+  int read(unsigned char* dest, const unsigned char* src) 
   { 
     return (m_dev->read(dest, src, sizeof(unsigned char))); 
   }
 
-  int read(unsigned short* dest, unsigned short* src) 
+  int read(unsigned short* dest, const unsigned short* src) 
   { 
     return (m_dev->read(dest, src, sizeof(unsigned short))); 
   }
   
-  int read(unsigned int* dest, unsigned int* src) 
+  int read(unsigned int* dest, const unsigned int* src) 
   { 
     return (m_dev->read(dest, src, sizeof(unsigned int))); 
   }
 
-  int read(unsigned long* dest, unsigned long* src)
+  int read(unsigned long* dest, const unsigned long* src)
   { 
     return (m_dev->read(dest, src, sizeof(unsigned long))); 
   }
   
-  int read(char* dest, char* src) 
+  int read(char* dest, const char* src) 
   { 
     return (m_dev->read(dest, src, sizeof(char))); 
   }
 
-  int read(short* dest, short* src) 
+  int read(short* dest, const short* src) 
   { 
     return (m_dev->read(dest, src, sizeof(short))); 
   }
 
-  int read(int* dest, int* src)
+  int read(int* dest, const int* src)
   { 
     return (m_dev->read(dest, src, sizeof(int))); 
   }
 
-  int read(long* dest, long* src)
+  int read(long* dest, const long* src)
   { 
     return (m_dev->read(dest, src, sizeof(long))); 
   }
 
-  int read(float* dest, float* src)
+  int read(float* dest, const float* src)
   { 
     return (m_dev->read(dest, src, sizeof(float))); 
   }
@@ -253,7 +253,7 @@ public:
   }
 
 private:
-  Device* m_dev;
+  Device* m_dev;		//<! Delegated device
 };
 
 #endif

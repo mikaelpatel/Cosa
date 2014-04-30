@@ -136,14 +136,9 @@ private:
     READ = 0x01
   } __attribute__((packed));
 
-  /** Chip select, asserted high during read and write */
-  OutputPin m_cs;
-
-  /** Serial data bidirectional data pin */
-  IOPin m_sda;
-
-  /** Clock for synchroized data movement on the serial interface */
-  OutputPin m_clk;
+  OutputPin m_cs;		//<! Chip select, asserted high
+  IOPin m_sda;			//<! Serial data, bidirectional 
+  OutputPin m_clk;		//<! Clock for synchronized data 
 
   /**
    * Write data to the device. Internal transfer function. Used within

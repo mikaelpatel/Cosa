@@ -175,10 +175,10 @@ public:
     }
 
   protected:
-    uint8_t m_x;		/**< Cursor position x */
-    uint8_t m_y;		/**< Cursor position y */
-    uint8_t m_tab;		/**< Tab step */
-    uint8_t m_mode;		/**< Text mode */
+    uint8_t m_x;		//<! Cursor position x
+    uint8_t m_y;		//<! Cursor position y
+    uint8_t m_tab;		//<! Tab step
+    uint8_t m_mode;		//<! Text mode
   };
 };
 

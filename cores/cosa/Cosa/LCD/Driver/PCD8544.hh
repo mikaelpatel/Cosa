@@ -249,11 +249,11 @@ protected:
   static const uint8_t script[] PROGMEM;
 
   // Display pins and state
-  OutputPin m_sdin;		/**< Serial data input */
-  OutputPin m_sclk;		/**< Serial clock input */
-  OutputPin m_dc;		/**< Data/command */
-  OutputPin m_sce;		/**< Chip enable */
-  Font* m_font;			/**< Font */
+  OutputPin m_sdin;		//<! Serial data input
+  OutputPin m_sclk;		//<! Serial clock input
+  OutputPin m_dc;		//<! Data/command
+  OutputPin m_sce;		//<! Chip enable
+  Font* m_font;			//<! Font
 
   /**
    * Write given data to display according to mode.

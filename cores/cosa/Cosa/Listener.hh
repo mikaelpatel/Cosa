@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSE_LISTENER_HH__
-#define __COSE_LISTENER_HH__
+#ifndef __COSA_LISTENER_HH__
+#define __COSA_LISTENER_HH__
 
 #include "Cosa/Linkage.hh"
 

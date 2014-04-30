@@ -87,7 +87,7 @@ public:
    * Get event parameter.
    * @param[out] param event parameter
    */
-  void get(uint16_t& param)
+  void get(uint16_t& param) const
   {
     param = m_param;
   }
@@ -96,7 +96,7 @@ public:
    * Get event parameter.
    * @param[out] param event parameter
    */
-  void get(void*& param)
+  void get(void*& param) const
   {
     param = (void*) m_param;
   }

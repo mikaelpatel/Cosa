@@ -40,8 +40,8 @@ public:
      * Network address together with port.
      */
     struct addr_t {
-      uint8_t device;		/**< device address (LSB) */
-      int16_t network;		/**< network address */
+      uint8_t device;		//<! Device address (LSB)
+      int16_t network;		//<! Network address
       addr_t(int16_t net, uint8_t dev) 
       {
 	network = net;

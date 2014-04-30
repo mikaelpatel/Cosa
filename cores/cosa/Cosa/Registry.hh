@@ -162,9 +162,9 @@ public:
    */
   class Iterator {
   private:
-    item_vec_P m_vec;		/**< item vector from item list */
-    uint8_t m_length;		/**< length of vector */ 
-    uint8_t m_next;		/**< current index in vector */
+    item_vec_P m_vec;		//<! Item vector from item list
+    uint8_t m_length;		//<! Length of vector
+    uint8_t m_next;		//<! Current index in vector
   public:
     /**
      * Construct iterator on given item list in program memory.

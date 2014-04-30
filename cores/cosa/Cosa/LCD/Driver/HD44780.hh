@@ -396,13 +396,13 @@ public:
     /** Execution time delay (us) */
     static const uint16_t SHORT_EXEC_TIME = 32;
 
-    OutputPin m_d0;		/**< Data pin; d0 */
-    OutputPin m_d1;		/**< Data pin; d1 */
-    OutputPin m_d2;		/**< Data pin; d2 */
-    OutputPin m_d3;		/**< Data pin; d3 */
-    OutputPin m_rs;		/**< Register select (0/instruction, 1/data) */
-    OutputPin m_en;		/**< Starts data read/write */
-    OutputPin m_bt;		/**< Back-light control (0/on, 1/off) */
+    OutputPin m_d0;		//<! Data pin; d0
+    OutputPin m_d1;		//<! Data pin; d1
+    OutputPin m_d2;		//<! Data pin; d2
+    OutputPin m_d3;		//<! Data pin; d3
+    OutputPin m_rs;		//<! Register select (0/instruction, 1/data)
+    OutputPin m_en;		//<! Starts data read/write
+    OutputPin m_bt;		//<! Back-light control (0/on, 1/off)
   };
 #endif
 
@@ -495,13 +495,13 @@ public:
 
     /** Shift register port bit fields; little endian */
     union port_t {
-      uint8_t as_uint8;		/**< Unsigned byte access */
+      uint8_t as_uint8;		//<! Unsigned byte access
       struct {
-	uint8_t data:4;		/**< Data port (Q0..Q3) */
-	uint8_t rs:1;		/**< Command/Data select (Q4) */
-	uint8_t bt:1;		/**< Back-light control (Q5) */
-	uint8_t app2:1;		/**< Application bit#2 (Q6) */
-	uint8_t app1:1;		/**< Application bit#1 (Q7) */
+	uint8_t data:4;		//<! Data port (Q0..Q3)
+	uint8_t rs:1;		//<! Command/Data select (Q4)
+	uint8_t bt:1;		//<! Back-light control (Q5)
+	uint8_t app2:1;		//<! Application bit#2 (Q6)
+	uint8_t app1:1;		//<! Application bit#1 (Q7)
       };
       operator uint8_t()
       {
@@ -512,10 +512,10 @@ public:
 	as_uint8 = 0;
       }
     };
-    port_t m_port;		/**< Port setting */
-    OutputPin m_sda;		/**< Serial data output */
-    OutputPin m_scl;		/**< Serial clock */
-    OutputPin m_en;		/**< Starts data read/write */
+    port_t m_port;		//<! Port setting
+    OutputPin m_sda;		//<! Serial data output
+    OutputPin m_scl;		//<! Serial clock
+    OutputPin m_en;		//<! Starts data read/write
   };
 
   /**
@@ -600,13 +600,13 @@ public:
 
     /** Shift register port bit fields; little endian */
     union port_t {
-      uint8_t as_uint8;		/**< Unsigned byte access */
+      uint8_t as_uint8;		//<! Unsigned byte access
       struct {
-	uint8_t data:4;		/**< Data port (Q0..Q3) */
-	uint8_t rs:1;		/**< Command/Data select (Q4) */
-	uint8_t bt:1;		/**< Back-light control (Q5) */
-	uint8_t app2:1;		/**< Application bit#2 (Q6) */
-	uint8_t app1:1;		/**< Application bit#1 (Q7) */
+	uint8_t data:4;		//<! Data port (Q0..Q3)
+	uint8_t rs:1;		//<! Command/Data select (Q4)
+	uint8_t bt:1;		//<! Back-light control (Q5)
+	uint8_t app2:1;		//<! Application bit#2 (Q6)
+	uint8_t app1:1;		//<! Application bit#1 (Q7)
       };
       operator uint8_t() 
       { 
@@ -617,7 +617,7 @@ public:
 	as_uint8 = 0; 
       }
     };
-    port_t m_port;		/**< Port setting */
+    port_t m_port;		//<! Port setting
   };
 
   /**
@@ -729,11 +729,11 @@ public:
     /** Execution time delay (us) */
     static const uint16_t SHORT_EXEC_TIME = 16;
 
-    OutputPin m_sda;		/**< Serial data output */
-    OutputPin m_scl;		/**< Serial clock */
-    OutputPin m_en;		/**< Starts data read/write */
-    OutputPin m_bt;		/**< Backlight control */
-    uint8_t m_rs;		/**< Command/Data select */
+    OutputPin m_sda;		//<! Serial data output
+    OutputPin m_scl;		//<! Serial clock
+    OutputPin m_en;		//<! Starts data read/write
+    OutputPin m_bt;		//<! Backlight control
+    uint8_t m_rs;		//<! Command/Data select
   };
 
   /**
@@ -818,13 +818,13 @@ public:
     
     /** Expander port bit fields; little endian */
     union port_t {
-      uint8_t as_uint8;		/**< Unsigned byte access */
+      uint8_t as_uint8;		//<! Unsigned byte access
       struct {
-	uint8_t data:4;		/**< Data port (P0..P3) */
-	uint8_t en:1;		/**< Enable pulse (P4) */
-	uint8_t rw:1;		/**< Read/Write (P5) */
-	uint8_t rs:1;		/**< Command/Data select (P6) */
-	uint8_t bt:1;		/**< Back-light (P7) */
+	uint8_t data:4;		//<! Data port (P0..P3)
+	uint8_t en:1;		//<! Enable pulse (P4)
+	uint8_t rw:1;		//<! Read/Write (P5)
+	uint8_t rs:1;		//<! Command/Data select (P6)
+	uint8_t bt:1;		//<! Back-light (P7)
       };
       operator uint8_t() 
       { 
@@ -835,7 +835,7 @@ public:
 	as_uint8 = 0; 
       }
     };
-    port_t m_port;		/**< Port setting */
+    port_t m_port;		//<! Port setting
   };
 
   /**
@@ -955,13 +955,13 @@ public:
     
     /** Expander port bit fields; little endian */
     union port_t {
-      uint8_t as_uint8;		/**< Unsigned byte access */
+      uint8_t as_uint8;		//<! Unsigned byte access
       struct {
-	uint8_t rs:1;		/**< Command/Data select (P0) */
-	uint8_t rw:1;		/**< Read/Write (P1) */
-	uint8_t en:1;		/**< Enable pulse (P2) */
-	uint8_t bt:1;		/**< Back-light (P3) */
-	uint8_t data:4;		/**< Data port (P4..P7) */
+	uint8_t rs:1;		//<! Command/Data select (P0)
+	uint8_t rw:1;		//<! Read/Write (P1)
+	uint8_t en:1;		//<! Enable pulse (P2)
+	uint8_t bt:1;		//<! Back-light (P3)
+	uint8_t data:4;		//<! Data port (P4..P7)
       };
       operator uint8_t() 
       { 
@@ -972,7 +972,7 @@ public:
 	as_uint8 = 0; 
       }
     };
-    port_t m_port;		/**< Port setting */
+    port_t m_port;		//<! Port setting
   };
 
   /**
@@ -1067,12 +1067,12 @@ public:
     /** Execution time delay (us) */
     static const uint16_t SHORT_EXEC_TIME = 20;
     
-    OutputPin m_sda;		/**< Serial data output */
-    OutputPin m_scl;		/**< Serial clock */
-    OutputPin m_en;		/**< Starts data read/write */
-    OutputPin m_bt;		/**< Back-light control (0/on, 1/off) */
-    uint8_t m_rs;		/**< Register select (0/instruction, 1/data) */
-    uint8_t m_dirty;		/**< Mark register select change required */
+    OutputPin m_sda;		//<! Serial data output
+    OutputPin m_scl;		//<! Serial clock
+    OutputPin m_en;		//<! Starts data read/write
+    OutputPin m_bt;		//<! Back-light control (0/on, 1/off)
+    uint8_t m_rs;		//<! Register select (0/instruction, 1/data)
+    uint8_t m_dirty;		//<! Mark register select change required
   };
 
   /**

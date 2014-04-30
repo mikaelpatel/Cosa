@@ -285,7 +285,7 @@ TWI::Slave::begin()
   synchronized {
     TWAR = m_addr;
     bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
-    TWBR = ((F_CPU / TWI::FREQ) - 16) / 2;
+    TWBR = ((F_CPU / TWI::DEFAULT_FREQ) - 16) / 2;
     TWCR = TWI::IDLE_CMD;
   }
   return (true);

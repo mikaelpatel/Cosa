@@ -521,8 +521,8 @@ public:
   friend IOStream& flush(IOStream& outs);
 
  private:
-  Device* m_dev;		/**< IOStream Device */
-  Base m_base;			/**< Base for next output operator */
+  Device* m_dev;		//<! Delegated device
+  Base m_base;			//<! Base for next output operator
 
   /**
    * Print number prefix for non decimal base.

@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef __COSE_QUEUE_HH__
-#define __COSE_QUEUE_HH__
+#ifndef __COSA_QUEUE_HH__
+#define __COSA_QUEUE_HH__
 
 #include "Cosa/Types.h"
 #include "Cosa/Power.hh"
@@ -53,7 +53,7 @@ public:
    * Return number of elements in queue.
    * @return available elements.
    */
-  uint8_t available() 
+  uint8_t available() const
   { 
     return ((NMEMB + m_put - m_get) & MASK);
   }
@@ -62,7 +62,7 @@ public:
    * Number of elements room in queue.
    * @return room for elements.
    */
-  uint8_t room()
+  uint8_t room() const
   {
     return (NMEMB - m_put + m_get - 1) & MASK;
   }

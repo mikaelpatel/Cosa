@@ -58,13 +58,13 @@ public:
    * The Timekeeper Control Register bitfields (pp. 9)
    */
   union control_t {
-    uint8_t as_uint8;		/**< Unsigned byte access */
+    uint8_t as_uint8;		//<! Unsigned byte access
     struct {
-      uint8_t rs:2;		/**< Rate Select */
-      uint8_t reserved1:2;	/**< Reserved/1 */
-      uint8_t sqwe:1;		/**< Square-Ware Enable */
-      uint8_t reserved2:2;	/**< Reserved/2 */
-      uint8_t out:1;		/**< Output Control */
+      uint8_t rs:2;		//<! Rate Select
+      uint8_t reserved1:2;	//<! Reserved/1
+      uint8_t sqwe:1;		//<! Square-Ware Enable
+      uint8_t reserved2:2;	//<! Reserved/2
+      uint8_t out:1;		//<! Output Control
     };
   };
 
@@ -82,8 +82,8 @@ public:
    * The Timekeeper Registers (Table 2, pp. 8)
    */
   struct timekeeper_t {
-    time_t clock;		/**< Time/Date in BCD */
-    control_t control;		/**< Timekeeper control register */
+    time_t clock;		//<! Time/Date in BCD
+    control_t control;		//<! Timekeeper control register
   };
 
   /** Start of application RAM */

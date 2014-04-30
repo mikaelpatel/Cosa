@@ -57,7 +57,7 @@ public:
   /**
    * Default Two-Wire Interface clock: 100 KHz
    */
-  static const uint32_t FREQ = 100000L;
+  static const uint32_t DEFAULT_FREQ = 100000L;
 
   /**
    * Device drivers are friends and may have callback/event handler
@@ -77,7 +77,7 @@ public:
 
   protected:
     /** Device bus address */
-    uint8_t m_addr;
+    int8_t m_addr;
 
     /** Allow access */
     friend class TWI;
@@ -168,7 +168,7 @@ public:
     m_last(NULL),
     m_count(0),
     m_dev(NULL),
-    m_freq(((F_CPU / FREQ) - 16) / 2)
+    m_freq(((F_CPU / DEFAULT_FREQ) - 16) / 2)
   {
     for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
       m_vec[ix].buf = 0;

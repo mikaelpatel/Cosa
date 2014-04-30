@@ -145,7 +145,7 @@ public:
      * Get context canvas color.
      * @return color.
      */
-    color16_t get_canvas_color()
+    color16_t get_canvas_color() const
     {
       return (m_canvas_color);
     }
@@ -166,7 +166,7 @@ public:
      * Get context drawing color.
      * @return color.
      */
-    color16_t get_pen_color()
+    color16_t get_pen_color() const
     {
       return (m_pen_color);
     }
@@ -187,7 +187,7 @@ public:
      * Get context text color.
      * @return color.
      */
-    color16_t get_text_color()
+    color16_t get_text_color() const
     {
       return (m_text_color);
     }
@@ -207,7 +207,7 @@ public:
     /**
      * Get context text font.
      */
-    Font* get_text_font()
+    Font* get_text_font() const
     {
       return (m_font);
     }
@@ -229,7 +229,7 @@ public:
      * Get context text scale.
      * @return text scale.
      */
-    uint8_t get_text_scale()
+    uint8_t get_text_scale() const
     {
       return (m_text_scale);
     }
@@ -252,7 +252,7 @@ public:
      * @param[out] x
      * @param[out] y
      */
-    void get_cursor(uint8_t& x, uint8_t& y)
+    void get_cursor(uint8_t& x, uint8_t& y) const
     {
       x = m_cursor.x;
       y = m_cursor.y;
@@ -346,7 +346,7 @@ public:
    * Get current canvas context.
    * @return context.
    */
-  Context* get_context()
+  Context* get_context() const
   {
     return (m_context);
   }
@@ -367,7 +367,7 @@ public:
    * Get current canvas color.
    * @return color.
    */
-  color16_t get_canvas_color()
+  color16_t get_canvas_color() const
   {
     return (m_context->get_canvas_color());
   }
@@ -386,7 +386,7 @@ public:
    * Get current drawing color.
    * @return color.
    */
-  color16_t get_pen_color()
+  color16_t get_pen_color() const
   {
     return (m_context->get_pen_color());
   }
@@ -405,7 +405,7 @@ public:
    * Get current text color.
    * @return color.
    */
-  color16_t get_text_color()
+  color16_t get_text_color() const
   {
     return (m_context->get_text_color());
   }
@@ -423,7 +423,7 @@ public:
   /**
    * Get current text font.
    */
-  Font* get_text_font()
+  Font* get_text_font() const
   {
     return (m_context->get_text_font());;
   }
@@ -442,7 +442,7 @@ public:
    * Get current text scale.
    * @return text scale.
    */
-  uint8_t get_text_scale()
+  uint8_t get_text_scale() const
   {
     return (m_context->get_text_scale());
   }
@@ -462,7 +462,7 @@ public:
    * @param[out] x
    * @param[out] y
    */
-  void get_cursor(uint8_t& x, uint8_t& y)
+  void get_cursor(uint8_t& x, uint8_t& y) const
   {
     m_context->get_cursor(x, y);
   }
@@ -505,7 +505,7 @@ public:
    * @param[in] scale
    * @return color shade.
    */
-  color16_t shade(color16_t color, uint8_t scale);
+  static color16_t shade(color16_t color, uint8_t scale);
 
   /**
    * Blend the two colors.
@@ -513,7 +513,7 @@ public:
    * @param[in] c2
    * @return color blend.
    */
-  color16_t blend(color16_t c1, color16_t c2);
+  static color16_t blend(color16_t c1, color16_t c2);
 
   /**
    * @override Canvas

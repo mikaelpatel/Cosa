@@ -201,11 +201,11 @@ private:
    * read/written in big endian order (MSB first) and require swapping.
    */
   union header_t {
-    uint8_t as_uint8;		/**< 8-bit representation */
-    struct {			/**< Bit-field representation (little endian) */
-      uint8_t reg:6;		/**< Register address */
-      uint8_t burst:1;		/**< Burst(1) or Single(0) byte mode */
-      uint8_t rw:1;		/**< Read(1) or Write(0) */
+    uint8_t as_uint8;		//<! 8-bit representation
+    struct {			//<! Bit-field representation (little endian)
+      uint8_t reg:6;		//<! Register address
+      uint8_t burst:1;		//<! Burst(1) or Single(0) byte mode
+      uint8_t rw:1;		//<! Read(1) or Write(0)
     };
     
     /**
@@ -547,11 +547,11 @@ private:
   } __attribute__((packed));
 
   union status_t {
-    uint8_t as_uint8;		/**< 8-bit representation */
-    struct {			/**< Bit-field representation (little endian) */
-      uint8_t avail:4;		/**< Number of bytes in RX or TX FIFO */
-      uint8_t mode:3;		/**< Current main state machine mode */
-      uint8_t ready:1;		/**< Chip ready */
+    uint8_t as_uint8;		//<! 8-bit representation
+    struct {			//<! Bit-field representation (little endian)
+      uint8_t avail:4;		//<! Number of bytes in RX or TX FIFO
+      uint8_t mode:3;		//<! Current main state machine mode
+      uint8_t ready:1;		//<! Chip ready
     };
     
     status_t(uint8_t value)
@@ -630,11 +630,11 @@ private:
    * Received Message Status Bytes (Table. 27/28, pp. 37)
    */
   union recv_status_t {
-    uint8_t status[2];		/**< Two status bytes last in frame */
-    struct {			/**< Bit-field representation (little endian) */
-      uint8_t rssi;		/**< RSSI value */
-      uint8_t lqi:7;		/**< Link Quality Indication */
-      uint8_t crc:1;		/**< CRC status */
+    uint8_t status[2];		//<! Two status bytes last in frame 
+    struct {			//<! Bit-field representation (little endian)
+      uint8_t rssi;		//<! RSSI value
+      uint8_t lqi:7;		//<! Link Quality Indication
+      uint8_t crc:1;		//<! CRC status
     };
   };
 

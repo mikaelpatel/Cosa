@@ -128,7 +128,7 @@ public:
    * Return event type.
    * @return type.
    */
-  uint8_t get_type() 
+  uint8_t get_type() const
   { 
     return (m_type); 
   }
@@ -137,7 +137,7 @@ public:
    * Return event target.
    * @return pointer.
    */
-  Handler* get_target() 
+  Handler* get_target() const
   { 
     return (m_target); 
   } 
@@ -146,7 +146,7 @@ public:
    * Return event value.
    * @return value.
    */
-  uint16_t get_value() 
+  uint16_t get_value() const
   { 
     return (m_value); 
   }
@@ -155,7 +155,7 @@ public:
    * Return event environment pointer.
    * @return pointer
    */
-  void* get_env() 
+  void* get_env() const
   { 
     return ((void*) m_value); 
   }
