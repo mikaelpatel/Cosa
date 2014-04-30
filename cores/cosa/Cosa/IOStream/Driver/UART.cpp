@@ -135,8 +135,10 @@ ISR(vec ## _TX_vect)				\
   UART::uart[nr]->on_tx_interrupt();		\
 }
 
+#if defined(USART_UDRE_vect)
 UART_ISR(USART, 0)
-#if defined(USART1_UDRE_vect) && !defined(USART_UDRE_vect)
+#endif
+#if defined(USART1_UDRE_vect)
 UART_ISR(USART1, 1)
 #endif
 #if defined(USART2_UDRE_vect)

@@ -42,6 +42,9 @@ extern Soft::UART uart;
  */
 class UART : public IOStream::Device {
 public:
+  // Default baudrate
+  static const uint32_t DEFAULT_BAUDRATE = 9600;
+
   // Default buffer size for standard UART0 (at 9600 baud)
   static const uint8_t BUFFER_MAX = 64;
 
@@ -56,8 +59,11 @@ public:
     EVEN_PARITY = _BV(UPM01),
     ODD_PARITY = _BV(UPM01) | _BV(UPM00),
     STOP1 = 0,
-    STOP2 = _BV(USBS0)
+    STOP2 = _BV(USBS0),
   } __attribute__((packed));
+    
+  // Default serial format 
+  static const uint8_t DEFAULT_FORMAT = DATA8 + STOP2 + NO_PARITY;
 
   /**
    * Construct serial port handler for given UART. 
@@ -155,20 +161,14 @@ public:
    * @param[in] format serial frame format (default async, 8data, 2stop bit)
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint32_t baudrate = 9600, uint8_t format = DATA8 + STOP2 + NO_PARITY);
-
+  bool begin(uint32_t baudrate = DEFAULT_BAUDRATE, 
+	     uint8_t format = DEFAULT_FORMAT);
+  
   /**
    * Stop UART device driver.
    * @return true(1) if successful otherwise false(0)
    */
   bool end();
-
-  /**
-   * @override UART
-   * Transmit completed callback. This virtual member function is
-   * called when the last byte in the output buffer is transmitted.
-   */
-  virtual void on_transmit_completed() {}
 
   /**
    * Serial port references. Only uart0 is predefined (reference to global
@@ -186,7 +186,7 @@ protected:
    * Return pointer to UART Control and Status Register A (UCSRnA).
    * @return UCSRAn register pointer.
    */
-  volatile uint8_t* UCSRnA() 
+  volatile uint8_t* UCSRnA() const
   { 
     return (m_sfr); 
   }
@@ -195,7 +195,7 @@ protected:
    * Return pointer to UART Control and Status Register B (UCSRnB).
    * @return UCSRnB register pointer.
    */
-  volatile uint8_t* UCSRnB() 
+  volatile uint8_t* UCSRnB() const
   { 
     return (m_sfr + 1); 
   }
@@ -204,7 +204,7 @@ protected:
    * Return pointer to UART Control and Status Register C (UCSRnC).
    * @return UCSRnC register pointer.
    */
-  volatile uint8_t* UCSRnC() 
+  volatile uint8_t* UCSRnC() const
   { 
     return (m_sfr + 2); 
   }
@@ -213,7 +213,7 @@ protected:
    * Return pointer to UART Baud Rate Register (UBRRn).
    * @return UBRRn register pointer.
    */
-  volatile uint16_t* UBRRn() 
+  volatile uint16_t* UBRRn() const
   { 
     return ((volatile uint16_t*) (m_sfr + 4)); 
   }
@@ -222,7 +222,7 @@ protected:
    * Return pointer to UART I/O Data Register (UDRn).
    * @return UDRn register pointer.
    */
-  volatile uint8_t* UDRn() 
+  volatile uint8_t* UDRn() const
   { 
     return (m_sfr + 6); 
   }
@@ -242,11 +242,19 @@ protected:
    */
   void on_tx_interrupt();
 
+  /**
+   * @override UART
+   * Transmit completed callback. This virtual member function is
+   * called when the last byte in the output buffer is transmitted.
+   */
+  virtual void on_transmit_completed() {}
+
+#if defined(USART_UDRE_vect)
   friend void USART_UDRE_vect(void);
   friend void USART_RX_vect(void);
   friend void USART_TX_vect(void);
-
-#if defined(USART1_UDRE_vect) && !defined(USART_UDRE_vect)
+#endif
+#if defined(USART1_UDRE_vect)
   friend void USART1_UDRE_vect(void);
   friend void USART1_RX_vect(void);
   friend void USART1_TX_vect(void);

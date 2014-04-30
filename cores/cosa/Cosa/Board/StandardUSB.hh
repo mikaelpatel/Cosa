@@ -211,7 +211,7 @@ public:
    */
   enum {
     VBG = (_BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1)),
-    UART_MAX = 1,
+    UART_MAX = 2,
     EXT_MAX = 7,
     PCMSK_MAX = 1,
     PCINT_MAX = 8,
@@ -222,9 +222,6 @@ public:
 /**
  * Redefined symbols to allow generic code.
  */
-#define USART_UDRE_vect USART1_UDRE_vect
-#define USART_RX_vect USART1_RX_vect 
-#define USART_TX_vect USART1_TX_vect
 #define UCSZ00 UCSZ10 
 #define UCSZ01 UCSZ11 
 #define UCSZ02 UCSZ12 
@@ -274,9 +271,9 @@ extern "C" {
   void TIMER4_OVF_vect(void) __attribute__ ((signal));
   void TWI_vect(void) __attribute__ ((signal));
   void WDT_vect(void) __attribute__ ((signal));
-  void USART_RX_vect(void) __attribute__ ((signal));
-  void USART_TX_vect(void) __attribute__ ((signal));
-  void USART_UDRE_vect(void) __attribute__ ((signal));
+  void USART1_RX_vect(void) __attribute__ ((signal));
+  void USART1_TX_vect(void) __attribute__ ((signal));
+  void USART1_UDRE_vect(void) __attribute__ ((signal));
   void USB_COM_vect(void) __attribute__ ((signal));
   void USB_GEN_vect(void) __attribute__ ((signal));
 }
