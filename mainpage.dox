@@ -414,7 +414,7 @@ and implement the change event handler, on_change(). Attach
 to watchdog timeout queue to perform periodic read and check 
 of change (InputPin).
 
-@section BS18B20
+@section DS18B20
 Driver for the DS18B20 Programmable Resolution 1-Write Digital
 Thermometer (OWI).  
 
