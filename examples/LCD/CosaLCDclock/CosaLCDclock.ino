@@ -31,17 +31,21 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/TWI/Driver/DS3231.hh"
 
+// Configurations
+// #define USE_LARGE_LCD
+// #define SET_RTC_TIME
+
 // Select the access port for the LCD
-// HD44780::Port4b port;
+HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
-HD44780::DFRobot port;
+// HD44780::DFRobot port;
 // HD44780::ERM1602_5 port;
 
-#if defined(BOARD_ATMEGA2560)
+#if defined(USE_LARGE_LCD)
 #include "Cosa/TWI/Driver/ADXL345.hh"
 #include "Cosa/TWI/Driver/HMC5883L.hh"
 
@@ -57,8 +61,7 @@ HD44780 lcd(&port, 20, 4);
 HD44780 lcd(&port);
 #endif
 
-// Remove comment to set real-time clock (update below)
-// #define RTC_SET_TIME
+// Use Real-time clock with temperature sensor
 DS3231 rtc;
 
 // Bind the lcd to an io-stream
@@ -70,7 +73,7 @@ void setup()
   lcd.begin();
   cout << PSTR("CosaLCDclock: started");
 
-#ifdef RTC_SET_TIME
+#if defined(SET_RTC_TIME)
   time_t now;
   now.seconds = 0x00;
   now.minutes = 0x08;
@@ -82,7 +85,7 @@ void setup()
   rtc.set_time(now);
 #endif
 
-#if defined(BOARD_ATMEGA2560)
+#if defined(USE_LARGE_LCD)
   // Start the accelerometer with the default settings
   accelerometer.begin();
 
@@ -123,7 +126,7 @@ void loop()
        << bcd << now.seconds << ' '
        << AnalogPin::bandgap(1100) << PSTR(" mV");
 
-#if defined(BOARD_ATMEGA2560)
+#if defined(USE_LARGE_LCD)
   // Read the heading, scale to milli gauss and print the data
   compass.read_heading();
   compass.to_milli_gauss();
