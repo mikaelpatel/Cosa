@@ -27,6 +27,9 @@
 #include "Cosa/RTC.hh"
 #include <util/crc16.h>
 
+// Configuration: Allow SPI transfer interleaving
+#define USE_SPI_PREFETCH
+
 static uint8_t
 crc7(const void* buf, size_t size)
 {
@@ -112,10 +115,25 @@ uint32_t
 SD::receive()
 {
   univ32_t res;
+#if defined(USE_SPI_PREFETCH)
+  uint8_t data;
+  data = spi.transfer(0xff);
+  spi.transfer_start(0xff);
+  res.as_uint8[3] = data;
+  data = spi.transfer_await();
+  spi.transfer_start(0xff);
+  res.as_uint8[2] = data;
+  data = spi.transfer_await();
+  spi.transfer_start(0xff);
+  res.as_uint8[1] = data;
+  data = spi.transfer_await();
+  res.as_uint8[0] = data;
+#else
   res.as_uint8[3] = spi.transfer(0xff);
   res.as_uint8[2] = spi.transfer(0xff);
   res.as_uint8[1] = spi.transfer(0xff);
   res.as_uint8[0] = spi.transfer(0xff);
+#endif
   return (res.as_uint32);
 }
 
@@ -125,17 +143,32 @@ SD::read(CMD command, uint32_t arg, void* buf, size_t count)
   uint8_t* dst = (uint8_t*) buf;
   uint16_t crc = 0;
   bool res = false;
+  uint8_t data;
 
   // Issue read command and receive data into buffer
   spi.begin(this);
   if (send(command, arg)) goto error;
   if (!await(READ_TIMEOUT, DATA_START_BLOCK)) goto error;
+
+#if defined(USE_SPI_PREFETCH)
+  spi.transfer_start(0xff);
+  while (--count) {
+    data = spi.transfer_await();
+    spi.transfer_start(0xff);
+    *dst++ = data;
+    crc = _crc_xmodem_update(crc, data);
+  }
+  data = spi.transfer_await();
+  *dst = data;
+  crc = _crc_xmodem_update(crc, data);
+#else
   do {
     uint8_t data = spi.transfer(0xff); 
     *dst++ = data;
     crc = _crc_xmodem_update(crc, data);
   } while (--count);
-  
+#endif
+
   // Receive the check sum and check
   crc = _crc_xmodem_update(crc, spi.transfer(0xff));
   crc = _crc_xmodem_update(crc, spi.transfer(0xff));
@@ -232,6 +265,7 @@ SD::write(uint32_t block, const uint8_t* src)
   uint16_t crc = 0;
   uint16_t count = BLOCK_MAX;
   uint8_t status;
+  uint8_t data;
   bool res = false;
 
   // Check for byte address adjustment
@@ -241,11 +275,25 @@ SD::write(uint32_t block, const uint8_t* src)
   spi.begin(this);
   if (send(WRITE_BLOCK, block)) goto error;
   spi.transfer(DATA_START_BLOCK);
+
+#if defined(USE_SPI_PREFETCH)
+  data = *src++;
+  spi.transfer_start(data);
+  while (--count) {
+    crc = _crc_xmodem_update(crc, data);
+    data = *src++;
+    spi.transfer_await();
+    spi.transfer_start(data);
+  }
+  crc = _crc_xmodem_update(crc, data);
+  spi.transfer_await();
+#else
   do {
-    uint8_t data = *src++;
+    data = *src++;
     spi.transfer(data);
     crc = _crc_xmodem_update(crc, data);
   } while (--count);
+#endif
 
   // Transfer the check sum and receive data response token and check status
   spi.transfer(crc >> 8);

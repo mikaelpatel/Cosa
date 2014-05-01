@@ -26,6 +26,9 @@
 #include "Cosa/SPI.hh"
 #include "Cosa/Power.hh"
 
+// Configuration: Allow SPI transfer interleaving
+#define USE_SPI_PREFETCH
+
 SPI spi  __attribute__ ((weak));
 
 #if defined(SPDR)
@@ -81,13 +84,17 @@ SPI::begin(Driver* dev)
 {
   synchronized {
     if (m_dev != NULL) synchronized_return (false);
+
     // Acquire the driver controller
     m_dev = dev;
+
     // Initiate SPI hardware with device settings
     SPCR = dev->m_spcr;
     SPSR = dev->m_spsr;
+
     // Enable device
     if (dev->m_pulse < PULSE_LOW) dev->m_cs.toggle();
+
     // Disable all interrupt sources on SPI bus
     for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
       if (dev->m_irq) dev->m_irq->disable();
@@ -100,86 +107,6 @@ SPI::Driver::set_clock(Clock rate)
 {
   m_spcr = (m_spcr & ~(0x3 << SPR0)) | ((rate & 0x3) << SPR0);
   m_spsr = (m_spsr & ~(1 << SPI2X)) | (((rate & 0x04) != 0) << SPI2X);
-}
-
-void 
-SPI::transfer(void* buf, size_t count)
-{
-  if (count == 0) return;
-  uint8_t* dp = (uint8_t*) buf;
-  uint8_t data = *dp;
-  while (1) {
-    transfer_start(data);
-    if (--count) break;
-    uint8_t* tp = dp + 1;
-    data = *tp;
-    *dp = transfer_await();
-    dp = tp;
-  }
-  *dp = transfer_await();
-}
-
-void 
-SPI::transfer(void* dst, const void* src, size_t count)
-{
-  if (count == 0) return;
-  uint8_t* dp = (uint8_t*) dst;
-  const uint8_t* sp = (const uint8_t*) src;
-  uint8_t data = *sp++;
-  while (1) {
-    transfer_start(data);
-    if (--count) break;
-    data = *sp++;
-    uint8_t* tp = dp + 1;
-    *dp = transfer_await();
-    dp = tp;
-  }
-  *dp = transfer_await();
-}
-
-void 
-SPI::read(void* buf, size_t count)
-{
-  if (count == 0) return;
-  uint8_t* dp = (uint8_t*) buf;
-  while (1) {
-    transfer_start(0);
-    if (--count) break;
-    uint8_t* tp = dp + 1;
-    *dp = transfer_await();
-    dp = tp;
-  }
-  *dp = transfer_await();
-}
-
-void 
-SPI::write(const void* buf, size_t count)
-{
-  if (count == 0) return;
-  const uint8_t* sp = (const uint8_t*) buf;
-  uint8_t data = *sp++;
-  while (1) {
-    transfer_start(data);
-    if (--count) break;
-    data = *sp++;
-    transfer_await();
-  }
-  transfer_await();
-}
-
-void 
-SPI::write_P(const uint8_t* buf, size_t count)
-{
-  if (count == 0) return;
-  const uint8_t* sp = buf;
-  uint8_t data = pgm_read_byte(sp++);
-  while (1) {
-    transfer_start(data);
-    if (--count) break;
-    data = pgm_read_byte(sp++);
-    transfer_await();
-  }
-  transfer_await();
 }
 
 void 
@@ -277,15 +204,19 @@ SPI::begin(Driver* dev)
 {
   synchronized {
     if (m_dev != NULL) synchronized_return (false);
+
     // Acquire the driver controller
     m_dev = dev;
+
     // Set clock polarity
     if (dev->m_cpol & 0x02) 
       bit_set(PORT, Board::SCK);
     else
       bit_clear(PORT, Board::SCK);
+
     // Enable device
     if (dev->m_pulse < PULSE_LOW) dev->m_cs.toggle();
+
     // Disable all interrupt sources on SPI bus
     for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
       if (dev->m_irq) dev->m_irq->disable();
@@ -298,6 +229,90 @@ SPI::Driver::set_clock(Clock rate)
 {
   UNUSED(rate);
 }
+#endif
+
+#if defined(USE_SPI_PREFETCH)
+void 
+SPI::transfer(void* buf, size_t count)
+{
+  if (count == 0) return;
+  uint8_t* dp = (uint8_t*) buf;
+  uint8_t data = *dp;
+  transfer_start(data);
+  while (--count) {
+    uint8_t* tp = dp + 1;
+    data = *tp;
+    *dp = transfer_await();
+    transfer_start(data);
+    dp = tp;
+  }
+  *dp = transfer_await();
+}
+
+void 
+SPI::transfer(void* dst, const void* src, size_t count)
+{
+  if (count == 0) return;
+  uint8_t* dp = (uint8_t*) dst;
+  const uint8_t* sp = (const uint8_t*) src;
+  uint8_t data = *sp++;
+  transfer_start(data);
+  while (--count) {
+    uint8_t* tp = dp + 1;
+    data = *sp++;
+    *dp = transfer_await();
+    transfer_start(data);
+    dp = tp;
+  }
+  *dp = transfer_await();
+}
+
+void 
+SPI::read(void* buf, size_t count)
+{
+  if (count == 0) return;
+  uint8_t* dp = (uint8_t*) buf;
+  transfer_start(0xff);
+  while (--count) {
+    uint8_t* tp = dp + 1;
+    *dp = transfer_await();
+    transfer_start(0xff);
+    dp = tp;
+  }
+  *dp = transfer_await();
+}
+
+void 
+SPI::write(const void* buf, size_t count)
+{
+  if (count == 0) return;
+  const uint8_t* sp = (const uint8_t*) buf;
+  uint8_t data = *sp++;
+  transfer_start(data);
+  while (--count) {
+    data = *sp++;
+    transfer_await();
+    transfer_start(data);
+  }
+  transfer_await();
+}
+
+void 
+SPI::write_P(const uint8_t* buf, size_t count)
+{
+  if (count == 0) return;
+  const uint8_t* sp = buf;
+  uint8_t data = pgm_read_byte(sp++);
+  transfer_start(data);
+  while (--count) {
+    data = pgm_read_byte(sp++);
+    transfer_await();
+    transfer_start(data);
+  }
+  transfer_await();
+}
+
+#else
 
 void 
 SPI::transfer(void* buf, size_t count)
@@ -365,12 +380,15 @@ SPI::end()
 { 
   synchronized {
     if (m_dev == NULL) synchronized_return (false);
+
     // Disable the device or give pulse if required
     m_dev->m_cs.toggle();
     if (m_dev->m_pulse > ACTIVE_HIGH) m_dev->m_cs.toggle();
+
     // Enable the bus devices with interrupts
     for (Driver* dev = spi.m_list; dev != NULL; dev = dev->m_next)
       if (dev->m_irq != NULL) dev->m_irq->enable();
+
     // Release the driver controller
     m_dev = NULL;
   }

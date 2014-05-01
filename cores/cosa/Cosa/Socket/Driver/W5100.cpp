@@ -30,11 +30,6 @@
 #include "Cosa/INET/DHCP.hh"
 #include "Cosa/INET/DNS.hh"
 
-#define NDEBUG
-#ifndef NDEBUG
-#include "Cosa/Trace.hh"
-#endif
-
 const uint8_t W5100::MAC[6] __PROGMEM = { 
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED 
 };
@@ -58,11 +53,6 @@ W5100::write(uint16_t addr, uint8_t data)
   spi.transfer(addr);
   spi.transfer(data);
   spi.end();
-#ifndef NDEBUG
-  trace << PSTR("write::addr = ") << hex << addr 
-	<< PSTR(", data = ") << hex << data 
-	<< endl;
-#endif
 }
 
 void
@@ -79,13 +69,6 @@ W5100::write(uint16_t addr, const void* buf, size_t len)
     if (addr < last - 1) m_cs.set();
   }
   spi.end();
-#ifndef NDEBUG
-  addr = addr - len;
-  trace << PSTR("write::addr = ") << hex << addr
-	<< PSTR(", len = ") << len 
-	<< PSTR(", buf = ");
-  trace.print(buf, len, IOStream::hex);
-#endif
 }
 
 void
@@ -102,13 +85,6 @@ W5100::write_P(uint16_t addr, const void* buf, size_t len)
     if (addr < last - 1) m_cs.set();
   }
   spi.end();
-#ifndef NDEBUG
-  addr = addr - len;
-  trace << PSTR("write_P::addr = ") << hex << addr
-	<< PSTR(", len = ") << len 
-	<< PSTR(", buf = ");
-  trace.print(buf, len, IOStream::hex);
-#endif
 }
 
 uint8_t
@@ -120,10 +96,6 @@ W5100::read(uint16_t addr)
   spi.transfer(addr);
   uint8_t res = spi.transfer(0);
   spi.end();
-#ifndef NDEBUG
-  trace << PSTR("read::addr = ") << hex << addr 
-	<< PSTR(", res = ") << hex << res << endl;
-#endif
   return (res);
 }
 
@@ -141,13 +113,6 @@ W5100::read(uint16_t addr, void* buf, size_t len)
     if (addr < last - 1) m_cs.set();
   }
   spi.end();
-#ifndef NDEBUG
-  addr = addr - len;
-  trace << PSTR("read::addr = ") << hex << addr
-	<< PSTR(", len = ") << len
-	<< PSTR(", buf = ");
-  trace.print(buf, len, IOStream::hex);
-#endif
 }
 
 void
@@ -636,7 +601,7 @@ W5100::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
   bind(ip, subnet);
 
   // Attach interrupt handler 
-  spi.attach(this);
+  // spi.attach(this);
 
   return (true);
 }
