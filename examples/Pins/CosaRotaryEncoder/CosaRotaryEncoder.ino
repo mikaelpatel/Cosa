@@ -57,7 +57,7 @@ void setup()
 
 // Rotary Dial is connected to D6/D1 and D7/D2 (as interrupt pins)
 // Mode: full cycle, Initial: -100, Min: -100, Max: 10, Step: 1
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 #define CLK Board::PCI1
 #define DT Board::PCI2
 #else

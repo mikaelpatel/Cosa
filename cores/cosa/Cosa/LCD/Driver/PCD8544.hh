@@ -74,7 +74,7 @@ public:
    * @param[in] dc data/command control pin (default D8).
    * @param[in] sce screen chip enable pin (default D9).
    */
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
   PCD8544(Board::DigitalPin sdin = Board::D0, 
 	  Board::DigitalPin sclk = Board::D1, 
 	  Board::DigitalPin dc = Board::D2, 

@@ -44,7 +44,7 @@ uint8_t KEY[] __PROGMEM = {
 };
 
 // One-wire pin (D1 on ATtiny, D7 on others)
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 OWI owi(Board::D1);
 OutputPin redLed(Board::D2);
 OutputPin greenLed(Board::D4);

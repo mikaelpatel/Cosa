@@ -41,7 +41,7 @@
 HD44780::DFRobot port;
 // HD44780::ERM1602_5 port;
 
-#if defined(__ARDUINO_MEGA__)
+#if defined(BOARD_ATMEGA2560)
 #include "Cosa/TWI/Driver/ADXL345.hh"
 #include "Cosa/TWI/Driver/HMC5883L.hh"
 
@@ -82,7 +82,7 @@ void setup()
   rtc.set_time(now);
 #endif
 
-#if defined(__ARDUINO_MEGA__)
+#if defined(BOARD_ATMEGA2560)
   // Start the accelerometer with the default settings
   accelerometer.begin();
 
@@ -123,7 +123,7 @@ void loop()
        << bcd << now.seconds << ' '
        << AnalogPin::bandgap(1100) << PSTR(" mV");
 
-#if defined(__ARDUINO_MEGA__)
+#if defined(BOARD_ATMEGA2560)
   // Read the heading, scale to milli gauss and print the data
   compass.read_heading();
   compass.to_milli_gauss();

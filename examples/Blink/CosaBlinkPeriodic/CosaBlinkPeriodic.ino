@@ -45,7 +45,7 @@ private:
 };
 
 // RGB LED connected to Arduino pins
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 LED redLedPin(Board::D1, 512);
 LED greenLedPin(Board::D2, 1024, 1);
 LED blueLedPin(Board::D3, 1024);

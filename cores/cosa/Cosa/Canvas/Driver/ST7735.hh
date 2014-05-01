@@ -64,10 +64,10 @@ public:
    * @param[in] cs slave selection pin (default pin 10).
    * @param[in] dc data/command selection pin (default pin 9).
    */
-#if defined(__ARDUINO_TINYX4__)
+#if defined(BOARD_ATTINYX4)
   ST7735(Board::DigitalPin cs = Board::D3, 
 	 Board::DigitalPin dc = Board::D7);
-#elif defined(__ARDUINO_TINYX5__)
+#elif defined(BOARD_ATTINYX5)
   ST7735(Board::DigitalPin cs = Board::D3, 
 	 Board::DigitalPin dc = Board::D4);
 #else

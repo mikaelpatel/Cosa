@@ -20,13 +20,16 @@
 # Boston, MA  02111-1307  USA
 #
 # @section Description
-# The Cosa Microduino core boards definition file. The file supports
-# both Arduino 1.0.X and 1.5.X attributes.
+# The Cosa Microduino core boards definition file. 
+#
+# @section Usage
+# Copy to top directory and rename boards.txt, alternatively
+# append to boards.txt file to extend current list of boards.
 #
 # This file is part of the Arduino Che Cosa project.
 
 ##
-# MICRODUINO
+# MICRODUINO CORE MODULES
 ##
 
 # AVR:ATmega328
@@ -47,10 +50,10 @@ microduino-core.bootloader.extended_fuses=0x05
 
 microduino-core.build.mcu=atmega328p
 microduino-core.build.f_cpu=16000000L
-microduino-core.build.board=AVR_UNO
+microduino-core.build.board=MICRODUINO_CORE
 microduino-core.build.core=cosa
 
-# AVR:ATmega32u4
+# AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
 # Boot Reset vector enable (2048 words, 0x3800). 
@@ -74,8 +77,8 @@ microduino-core32u4.build.f_cpu=16000000L
 microduino-core32u4.build.vid=0x2341
 microduino-core32u4.build.pid=0x8036
 microduino-core32u4.build.core=cosa
-microduino-core32u4.build.usb_product="Arduino Leonardo"
-microduino-core32u4.build.board=AVR_LEONARDO
+microduino-core32u4.build.usb_product="Microduino Core32u4"
+microduino-core32u4.build.board=MICRODUINO_CORE32U4
 microduino-core32u4.build.extra_flags={build.usb_flags}
 
 # AVR:ATmega644P
@@ -96,7 +99,6 @@ microduino-core-plus.bootloader.extended_fuses=0xfd
 
 microduino-core-plus.build.mcu=atmega644p
 microduino-core-plus.build.f_cpu=16000000L
-microduino-core-plus.build.board=AVR_MIGHTY
+microduino-core-plus.build.board=MICRODUINO_CORE_PLUS
 microduino-core-plus.build.core=cosa
-
 

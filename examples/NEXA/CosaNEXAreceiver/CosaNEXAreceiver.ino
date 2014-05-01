@@ -62,13 +62,13 @@ public:
   LED(Board::DigitalPin pin) : NEXA::Receiver::Device(0L), m_pin(pin) {}
   virtual void on_event(uint8_t type, uint16_t value) { m_pin << value; }
 };
+LED device(Board::LED);
 
-#if defined(__ARDUINO_MEGA__)
+#if defined(BOARD_ATMEGA2560)
 NEXA::Receiver receiver(Board::EXT5);
 #else
 NEXA::Receiver receiver(Board::EXT0);
 #endif
-LED device(Board::LED);
 
 void setup()
 {

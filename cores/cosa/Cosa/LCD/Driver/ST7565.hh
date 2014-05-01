@@ -81,7 +81,7 @@ public:
    * @param[in] dc data/command control pin (default D2/D8).
    * @param[in] cs screen chip enable pin (default D3/D9).
    */
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
   ST7565(Board::DigitalPin si = Board::D0, 
 	 Board::DigitalPin scl = Board::D1, 
 	 Board::DigitalPin dc = Board::D2, 

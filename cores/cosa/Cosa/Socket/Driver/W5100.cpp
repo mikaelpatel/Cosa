@@ -25,7 +25,7 @@
 
 #include "Cosa/Socket/Driver/W5100.hh"
 
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
 
 #include "Cosa/INET/DHCP.hh"
 #include "Cosa/INET/DNS.hh"

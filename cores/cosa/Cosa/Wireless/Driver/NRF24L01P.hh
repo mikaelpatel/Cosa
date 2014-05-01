@@ -30,7 +30,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Wireless.hh"
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(BOARD_ATTINYX5)
 
 /**
  * Nordic Semiconductor nRF24L01+ Single Chip 2.4GHz Transceiver
@@ -77,12 +77,12 @@ public:
    * @param[in] ce chip enable activates pin number (default D9/D48/D3).
    * @param[in] irq interrupt pin number (default EXT0/EXT4/EXT0).
    */
-#if defined(__ARDUINO_TINYX4__)
+#if defined(BOARD_ATTINYX4)
   NRF24L01P(uint16_t net, uint8_t dev,
 	    Board::DigitalPin csn = Board::D2, 
 	    Board::DigitalPin ce = Board::D3, 
 	    Board::ExternalInterruptPin irq = Board::EXT0);
-#elif defined(__ARDUINO_MEGA__)
+#elif defined(BOARD_ATMEGA2560)
   NRF24L01P(uint16_t net, uint8_t dev,
 	    Board::DigitalPin csn = Board::D53, 
 	    Board::DigitalPin ce = Board::D48, 

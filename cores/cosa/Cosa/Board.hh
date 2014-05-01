@@ -33,59 +33,43 @@
 #include "Cosa/Types.h"
 
 #if defined(__AVR_ATmega328P__)
-
-#include "Cosa/Board/Standard.hh"
-#define __ARDUINO_STANDARD__
-
+#include "Cosa/Board/ATmega328P.hh"
+#define BOARD_ATMEGA328P
 #elif defined(__AVR_ATmega32U4__)
-
-#include "Cosa/Board/StandardUSB.hh"
-#define __ARDUINO_STANDARD_USB__
-
+#include "Cosa/Board/ATmega32U4.hh"
+#define BOARD_ATMEGA32U4
 #elif defined(__AVR_ATmega1284P__)		\
   || defined(__AVR_ATmega644P__)
-#include "Cosa/Board/Mighty.hh"
-#define __ARDUINO_MIGHTY__
-
+#include "Cosa/Board/ATmega1284P.hh"
+#define BOARD_ATMEGA1248P
 #elif defined(__AVR_ATmega1280__)		\
   || defined(__AVR_ATmega2560__)
-  
-#include "Cosa/Board/Mega.hh"
-#define __ARDUINO_MEGA__
-
+#include "Cosa/Board/ATmega2560.hh"
+#define BOARD_ATMEGA2560
 #elif defined(__AVR_ATmega256RFR2__)
-
-#include "Cosa/Board/Pinoccio.hh"
-#define __PINOCCIO_SCOUT__
-
+#include "Cosa/Board/ATmega256RFR2.hh"
+#define BOARD_ATMEGA256RFR2
 #elif defined(__AVR_ATtiny24__)			\
   || defined(__AVR_ATtiny44__)			\
   || defined(__AVR_ATtiny84__)
-
-#include "Cosa/Board/TinyX4.hh"
-#define __ARDUINO_TINY__ 
-#define __ARDUINO_TINYX4__
-
+#include "Cosa/Board/ATtinyX4.hh"
+#define BOARD_ATTINYX4
+#define BOARD_ATTINY
 #elif defined(__AVR_ATtiny25__)			\
   || defined(__AVR_ATtiny45__)			\
   || defined(__AVR_ATtiny85__)
-
-#include "Cosa/Board/TinyX5.hh"
-#define __ARDUINO_TINY__ 
-#define __ARDUINO_TINYX5__
-
+#include "Cosa/Board/ATtinyX5.hh"
+#define BOARD_ATTINYX5
+#define BOARD_ATTINY
 #elif defined(__AVR_ATtiny261__)		\
   || defined(__AVR_ATtiny461__)			\
   || defined(__AVR_ATtiny861__)
-
-#include "Cosa/Board/TinyX61.hh"
-#define __ARDUINO_TINY__ 
-#define __ARDUINO_TINYX61__
-
+#include "Cosa/Board/ATtinyX61.hh"
+#define BOARD_ATTINYX61
+#define BOARD_ATTINY
 #else
-
 #error "Cosa/Board.hh: board not supported"
-
 #endif
+
 #endif
 

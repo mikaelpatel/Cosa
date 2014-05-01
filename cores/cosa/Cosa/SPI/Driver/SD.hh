@@ -381,7 +381,7 @@ public:
    * select pin. 
    * @param[in] csn chip select pin.
    */
-#if defined(__ARDUINO_TINYX5__)
+#if defined(BOARD_ATTINYX5)
   SD(Board::DigitalPin csn = Board::D3) :
     SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV128_CLOCK, 0, SPI::MSB_ORDER, NULL),
     m_type(TYPE_UNKNOWN)

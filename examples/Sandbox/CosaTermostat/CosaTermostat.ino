@@ -46,7 +46,7 @@
 // Sensor and relay control pins
 OutputPin led(Board::LED);
 DHT11 sensor(Board::EXT0);
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 OutputPin heater(Board::D1, 1);
 OutputPin fan(Board::D3, 1);
 #else

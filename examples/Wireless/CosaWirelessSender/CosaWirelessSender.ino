@@ -37,9 +37,9 @@
 
 // Configuration; network and device addresses. Allow multiple senders
 #define NETWORK 0xC05A
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 #define DEVICE 0x10
-#elif defined(__ARDUINO_MEGA__)
+#elif defined(BOARD_ATMEGA2560)
 #define DEVICE 0x12
 #else
 #define DEVICE 0x11
@@ -68,7 +68,7 @@ RFM69 rf(NETWORK, DEVICE);
 #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
 VirtualWireCodec codec;
 #define SPEED 4000
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
 #else
 VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);

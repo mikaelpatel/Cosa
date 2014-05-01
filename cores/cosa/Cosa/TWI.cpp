@@ -25,14 +25,14 @@
 
 #include "Cosa/TWI.hh"
 
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
 
 #include "Cosa/Bits.h"
 #include "Cosa/Power.hh"
 
 TWI twi  __attribute__ ((weak));
 
-#if defined(__ARDUINO_STANDARD_USB__)
+#if defined(BOARD_ATMEGA32U4)
 #define PORT PORTD
 #else
 #define PORT PORTC

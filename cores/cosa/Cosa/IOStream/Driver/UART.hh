@@ -26,7 +26,7 @@
 #ifndef COSA_IOSTREAM_DRIVER_UART_HH
 #define COSA_IOSTREAM_DRIVER_UART_HH
 
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 #include "Cosa/Soft/UART.hh"
 extern Soft::UART uart;
 #else
@@ -275,7 +275,7 @@ protected:
  * Default serial port(0). Weakly defined (See UART.cpp). On Leonardo
  * and other ATmega32u4 based boards the standard serial is CDC.
  */
-#if defined(__ARDUINO_STANDARD_USB__)
+#if defined(BOARD_ATMEGA32U4)
 #include "Cosa/IOStream/Driver/CDC.hh"
 #define uart cdc
 #else

@@ -24,7 +24,7 @@
  */
 
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(BOARD_ATTINYX5)
 
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"

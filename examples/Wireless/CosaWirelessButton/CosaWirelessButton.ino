@@ -42,10 +42,10 @@
 // Mega EXT2/D29 and others to Arduino EXT1 which is Standard/D3 and 
 // Mighty/D11.
 #define NETWORK 0xC05A
-#if defined(__ARDUINO_MEGA__)
+#if defined(BOARD_ATMEGA2560)
 #define DEVICE 0x52
 #define EXT Board::EXT2
-#elif defined(__ARDUINO_TINY__)
+#elif defined(BOARD_ATTINY)
 #define DEVICE 0x50
 #define EXT Board::EXT0
 #else
@@ -71,7 +71,7 @@ NRF24L01P rf(NETWORK, DEVICE);
 #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
 VirtualWireCodec codec;
 #define SPEED 4000
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
 #else
 VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);

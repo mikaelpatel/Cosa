@@ -26,7 +26,7 @@
 #ifndef COSA_IOSTREAM_DRIVER_RS485_HH
 #define COSA_IOSTREAM_DRIVER_RS485_HH
 
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/OutputPin.hh"

@@ -55,10 +55,11 @@ OutputPin ledPin(Board::LED);
 
 // One-wire pin and connected DS18B20 devices
 #if defined(__ARDUINO_TINY__)
-OWI owi(Board::D1);
+#define OWI_PIN Board::D1
 #else
-OWI owi(Board::D7);
+#define OWI_PIN Board::D7
 #endif
+OWI owi(OWI_PIN);
 
 // Support macro to create name strings in program memory
 #define THERMOMETER(name)			\

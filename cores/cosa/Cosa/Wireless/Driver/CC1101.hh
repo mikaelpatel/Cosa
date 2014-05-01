@@ -30,7 +30,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Wireless.hh"
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(BOARD_ATTINYX5)
 
 /**
  * Cosa Device Driver for Texas Instruments CC1101, Low-Power Sub-1
@@ -80,11 +80,11 @@ public:
    * @param[in] csn chip select pin (Default D2/D10/D53).
    * @param[in] irq interrupt pin (Default EXT0/EXT0/EXT4).
    */
-#if defined(__ARDUINO_TINYX4__)
+#if defined(BOARD_ATTINYX4)
   CC1101(uint16_t net, uint8_t dev, 
 	 Board::DigitalPin csn = Board::D2,
 	 Board::ExternalInterruptPin irq = Board::EXT0);
-#elif defined(__ARDUINO_MEGA__)
+#elif defined(BOARD_ATMEGA2560)
   CC1101(uint16_t net, uint8_t dev, 
 	 Board::DigitalPin csn = Board::D53,
 	 Board::ExternalInterruptPin irq = Board::EXT4);

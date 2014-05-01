@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/TinyX61.hh
+ * @file Cosa/Board/ATtinyX61.hh
  * @version 1.0
  *
  * @section License
@@ -23,11 +23,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_TINYX61_HH
-#define COSA_BOARD_TINYX61_HH
+#ifndef COSA_BOARD_ATTINYX61_HH
+#define COSA_BOARD_ATTINYX61_HH
 
 /**
- * Cosa TINYX61 Board pin symbol definitions for the ATtinyX61
+ * Cosa ATTINYX61 Board pin symbol definitions for the ATtinyX61
  * processors. Cosa does not use pin numbers as Arduino/Wiring,
  * instead strong data type is used (enum types) for the specific pin
  * classes; DigitalPin, AnalogPin, PWMPin, etc.

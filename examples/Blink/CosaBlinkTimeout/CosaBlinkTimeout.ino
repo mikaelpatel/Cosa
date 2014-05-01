@@ -59,7 +59,7 @@ private:
 };
 
 // Use an RGB LED connected to pins(5,6,7)/ATtiny(1,2,3)
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 LED redLedPin(Board::D1);
 LED greenLedPin(Board::D2, 1);
 LED blueLedPin(Board::D3);

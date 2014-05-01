@@ -55,7 +55,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 #define USE_UART
 #endif
 

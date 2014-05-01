@@ -24,7 +24,7 @@
  */
 
 #include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(BOARD_ATTINYX5)
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 bool

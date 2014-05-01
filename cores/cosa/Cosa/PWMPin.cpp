@@ -25,7 +25,7 @@
 
 #include "Cosa/PWMPin.hh"
 
-#if defined(__ARDUINO_STANDARD__)
+#if defined(BOARD_ATMEGA328P)
 
 PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
   OutputPin((Board::DigitalPin) pin) 
@@ -204,7 +204,7 @@ PWMPin::set(uint8_t duty)
   }
 }
 
-#elif defined(__ARDUINO_MEGA__)
+#elif defined(BOARD_ATMEGA2560)
 
 PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
   OutputPin((Board::DigitalPin) pin) 
@@ -328,7 +328,7 @@ PWMPin::set(uint8_t duty)
   }
 }
 
-#elif defined(__ARDUINO_TINYX4__)
+#elif defined(BOARD_ATTINYX4)
 
 PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
   OutputPin((Board::DigitalPin) pin) 
@@ -386,7 +386,7 @@ PWMPin::set(uint8_t duty)
   }
 }
 
-#elif defined(__ARDUINO_TINYX5__)
+#elif defined(BOARD_ATTINYX5)
 
 PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
   OutputPin((Board::DigitalPin) pin) 
@@ -424,7 +424,7 @@ PWMPin::set(uint8_t duty)
   }
 }
 
-#elif defined(__ARDUINO_TINYX61__)
+#elif defined(BOARD_ATTINYX61)
 
 PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
   OutputPin((Board::DigitalPin) pin) 

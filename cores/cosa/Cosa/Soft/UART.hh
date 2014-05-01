@@ -103,7 +103,7 @@ protected:
 class UART : public UAT {
 public:
   // Default buffer size
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
   static const uint8_t BUFFER_MAX = 32;
 #else
   static const uint8_t BUFFER_MAX = 64;

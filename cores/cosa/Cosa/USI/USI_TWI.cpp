@@ -24,7 +24,7 @@
  */
 
 #include "Cosa/Board.hh"
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 #include "Cosa/USI/TWI.hh"
 
 #if defined(USE_FAST_MODE)

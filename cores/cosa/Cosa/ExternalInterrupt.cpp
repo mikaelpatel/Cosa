@@ -25,7 +25,7 @@
 
 #include "Cosa/ExternalInterrupt.hh"
 
-#if defined(__ARDUINO_STANDARD__)
+#if defined(BOARD_ATMEGA328P)
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, 
@@ -39,7 +39,7 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
   bit_field_set(EICRA, 0b11 << ix, mode << ix);
 }
 
-#elif defined(__ARDUINO_STANDARD_USB__)
+#elif defined(BOARD_ATMEGA32U4)
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, 
@@ -53,7 +53,7 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
   bit_field_set(EICRA, 0b11 << ix, mode << ix);
 }
 
-#elif defined(__ARDUINO_MEGA__)
+#elif defined(BOARD_ATMEGA2560)
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, 
@@ -75,7 +75,7 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
   ext[m_ix] = this;
 }
 
-#elif defined(__ARDUINO_MIGHTY__)
+#elif defined(BOARD_ATMEGA1248P)
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, 
@@ -93,7 +93,7 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
   ext[m_ix] = this;
 }
 
-#elif defined(__PINOCCIO_SCOUT__)
+#elif defined(BOARD_ATMEGA256RFR2)
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, 
@@ -115,7 +115,7 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
   ext[m_ix] = this;
 }
 
-#elif defined(__ARDUINO_TINYX61__)
+#elif defined(BOARD_ATTINYX61)
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, 
@@ -145,7 +145,7 @@ ExternalInterrupt::disable()
   }
 }
 
-#elif defined(__ARDUINO_TINY__)
+#elif defined(BOARD_ATTINY)
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, 
@@ -177,7 +177,7 @@ ExternalInterrupt::disable()
 
 #endif
 
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
 
 void 
 ExternalInterrupt::enable() 

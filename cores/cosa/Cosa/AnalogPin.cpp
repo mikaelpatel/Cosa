@@ -38,9 +38,9 @@ bool
 AnalogPin::sample_request(uint8_t pin, uint8_t ref)
 {
   if (sampling_pin != NULL) return (false);
-#if defined(__ARDUINO_STANDARD_USB__)		\
-  || defined(__ARDUINO_TINYX4__)		\
-  || defined(__ARDUINO_TINYX61__)
+#if defined(BOARD_ATMEGA32U4)			\
+  || defined(BOARD_ATTINYX4)			\
+  || defined(BOARD_ATTINYX61)
   pin = pin & 0x07;
 #else
   if (pin >= Board::A0) pin -= Board::A0;
@@ -72,9 +72,9 @@ uint16_t
 AnalogPin::sample(uint8_t pin, Board::Reference ref)
 {
   if (sampling_pin != NULL) return (0xffffU);
-#if defined(__ARDUINO_STANDARD_USB__)		\
-  || defined(__ARDUINO_TINYX4__)		\
-  || defined(__ARDUINO_TINYX61__)
+#if defined(BOARD_ATMEGA32U4)				\
+  || defined(BOARD_ATTINYX4)				\
+  || defined(BOARD_ATTINYX61)
   pin = pin & 0x07;
 #else
   if (pin >= Board::A0) pin -= Board::A0;
@@ -129,7 +129,7 @@ AnalogPin::on_interrupt(uint16_t value)
 ISR(ADC_vect) 
 { 
   bit_clear(ADCSRA, ADIE);
-  if (AnalogPin::sampling_pin != NULL) 
-    AnalogPin::sampling_pin->on_interrupt(ADCW);
+  if (AnalogPin::sampling_pin == NULL) return;
+  AnalogPin::sampling_pin->on_interrupt(ADCW);
 }
 

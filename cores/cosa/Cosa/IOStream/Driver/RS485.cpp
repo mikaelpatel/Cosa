@@ -24,7 +24,7 @@
  */
 
 #include "Cosa/Types.h"
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
 #include "Cosa/IOStream/Driver/RS485.hh"
 #include "Cosa/RTC.hh"
 #include <util/crc16.h>

@@ -293,7 +293,7 @@ public:
    */
   virtual int write(void* buf, size_t size);
 
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(BOARD_ATTINYX5)
   /**
    * HD44780 (LCD-II) Dot Matix Liquid Crystal Display Controller/Driver
    * IO Port. Arduino pins directly to LCD in 4-bit mode.
@@ -443,7 +443,7 @@ public:
      * @param[in] scl serial clock pin (Default D6, Tiny/D2)
      * @param[in] en enable pulse (Default D5, Tiny/D3)
      */
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
     SR3W(Board::DigitalPin sda = Board::D7, 
 	 Board::DigitalPin scl = Board::D6,
 	 Board::DigitalPin en = Board::D5);
@@ -552,7 +552,7 @@ public:
      * and chip select pin. Uses the SPI::MOSI(D11) and SPI:SCK(D13) pins.
      * @param[in] en enable pulse (Default D5, Tiny/D3)
      */
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
     SR3WSPI(Board::DigitalPin en = Board::D5);
 #else
     SR3WSPI(Board::DigitalPin en = Board::D3);
@@ -669,7 +669,7 @@ public:
      * @param[in] en enable pulse (Default D5, Tiny/D3)
      * @param[in] bt backlight control (Default D4, Tiny/D4)
      */
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
     SR4W(Board::DigitalPin sda = Board::D7, 
 	 Board::DigitalPin scl = Board::D6,
 	 Board::DigitalPin en = Board::D5,
@@ -1007,7 +1007,7 @@ public:
      * @param[in] en enable pulse (Default D5)
      * @param[in] bt backlight control (Default D4)
      */
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
     ERM1602_5(Board::DigitalPin sda = Board::D7, 
 	      Board::DigitalPin scl = Board::D6,
 	      Board::DigitalPin en = Board::D5,

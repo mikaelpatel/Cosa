@@ -209,10 +209,10 @@ ISR(SPI_STC_vect)
 #elif defined(USIDR)
 
 // Create mapping to USI data direction register and port for ATtiny variants
-#if defined(__ARDUINO_TINYX4__) || defined(__ARDUINO_TINYX61__)
+#if defined(BOARD_ATTINYX4) || defined(BOARD_ATTINYX61)
 #define DDR DDRA
 #define PORT PORTA
-#elif defined(__ARDUINO_TINYX5__)
+#elif defined(BOARD_ATTINYX5)
 #define DDR DDRB
 #define PORT PORTB
 #endif

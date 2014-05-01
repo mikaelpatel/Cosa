@@ -177,7 +177,7 @@ void setup()
   TRACE(sizeof(Interrupt::Handler));
   TRACE(sizeof(IOBuffer<64>));
   TRACE(sizeof(IOStream));
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
   TRACE(sizeof(RS485));
   TRACE(sizeof(UART));
 #endif
@@ -226,7 +226,7 @@ void setup()
   TRACE(sizeof(RTC));
   TRACE(sizeof(Servo));
   TRACE(sizeof(Socket));
-#if !defined(__ARDUINO_TINY__)
+#if !defined(ARDUINO_TINY)
   TRACE(sizeof(W5100));
   TRACE(sizeof(W5100::Driver));
 #endif

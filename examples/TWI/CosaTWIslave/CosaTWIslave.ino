@@ -67,7 +67,7 @@ Echo::on_request(void* buf, size_t size)
 // The TWI echo device
 Echo echo;
 
-#if defined(__ARDUINO_TINYX5__)
+#if defined(BOARD_ATTINYX5)
 Soft::UART uart(Board::D1);
 #endif
 

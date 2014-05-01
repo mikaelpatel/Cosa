@@ -24,7 +24,7 @@
  */
 
 #include "Cosa/Board.hh"
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(BOARD_ATTINYX5)
 #include "Cosa/Servo.hh"
 
 Servo* Servo::servo[2] = { 0, 0 };

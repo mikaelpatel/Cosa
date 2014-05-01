@@ -40,7 +40,7 @@ Fai::begin()
   Ciao::write(&Ciao::Descriptor::header_t, &header, 1);
 }
 
-#if defined(__ARDUINO_TINYX5__)
+#if defined(BOARD_ATTINYX5)
 
 void 
 Fai::write(uint32_t mask)
@@ -50,7 +50,7 @@ Fai::write(uint32_t mask)
   Ciao::write(&Descriptor::digital_pins_t, &dgl, 1);
 }
 
-#elif defined(__ARDUINO_TINYX4__) || defined(__ARDUINO_TINYX61__)
+#elif defined(BOARD_ATTINYX4) || defined(BOARD_ATTINYX61)
 
 void 
 Fai::write(uint32_t mask)

@@ -41,7 +41,7 @@
 
 // Configuration; network and device addresses, and sensor pin
 #define NETWORK 0xC05A
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 #define DEVICE 0x20
 #define EXT Board::EXT0
 #else
@@ -67,7 +67,7 @@ NRF24L01P rf(NETWORK, DEVICE);
 #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
 VirtualWireCodec codec;
 #define SPEED 4000
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
 #else
 VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);

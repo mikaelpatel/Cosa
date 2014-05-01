@@ -25,7 +25,7 @@
 
 #include "Cosa/Wireless/Driver/RFM69.hh"
 
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(BOARD_ATTINYX5)
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"

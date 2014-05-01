@@ -26,7 +26,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
-#if defined(__ARDUINO_MEGA__) || defined(__ARDUINO_MIGTHY__)
+#if defined(BOARD_ATMEGA2560)
 #include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
 static const uint8_t SLAVE = 0x01;

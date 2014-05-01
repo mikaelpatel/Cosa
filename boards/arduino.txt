@@ -20,13 +20,16 @@
 # Boston, MA  02111-1307  USA
 #
 # @section Description
-# The Cosa Arduino core boards definition file. The file supports
-# both Arduino 1.0.X and 1.5.X attributes.
+# The Cosa Arduino core boards definition file. 
+#
+# @section Usage
+# Copy to top directory and rename boards.txt, alternatively
+# append to boards.txt file to extend current list of boards.
 #
 # This file is part of the Arduino Che Cosa project.
 
 ##
-# ARDUINO STANDARD (ATmega328)
+# ARDUINO BOARDS
 ##
 
 # AVR:ATmega328
@@ -47,7 +50,7 @@ uno.bootloader.extended_fuses=0x05
 
 uno.build.mcu=atmega328p
 uno.build.f_cpu=16000000L
-uno.build.board=AVR_UNO
+uno.build.board=ARDUINO_UNO
 uno.build.core=cosa
 
 # AVR:ATmega328
@@ -68,7 +71,7 @@ duemilanove.bootloader.extended_fuses=0x05
 
 duemilanove.build.mcu=atmega328p
 duemilanove.build.f_cpu=16000000L
-duemilanove.build.board=AVR_DUEMILANOVE
+duemilanove.build.board=ARDUINO_DUEMILANOVE
 duemilanove.build.core=cosa
 
 # AVR:ATmega328
@@ -90,7 +93,7 @@ nano.bootloader.extended_fuses=0x05
 nano.build.mcu=atmega328p
 nano.build.f_cpu=16000000L
 nano.build.core=cosa
-nano.build.board=AVR_NANO
+nano.build.board=ARDUINO_NANO
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -110,7 +113,7 @@ lilypad.bootloader.extended_fuses=0x05
 
 lilypad.build.mcu=atmega328p
 lilypad.build.f_cpu=8000000L
-lilypad.build.board=AVR_LILYPAD
+lilypad.build.board=LILYPAD_ARDUINO
 lilypad.build.core=cosa
 
 # AVR:ATmega328
@@ -131,7 +134,7 @@ pro-mini.bootloader.extended_fuses=0x05
 
 pro-mini.build.mcu=atmega328p
 pro-mini.build.f_cpu=16000000L
-pro-mini.build.board=AVR_PRO_MINI
+pro-mini.build.board=ARDUINO_PRO_MINI
 pro-mini.build.core=cosa
 
 # AVR:ATmega328
@@ -152,12 +155,8 @@ pro-mini-8.bootloader.extended_fuses=0x05
 
 pro-mini-8.build.mcu=atmega328p
 pro-mini-8.build.f_cpu=8000000L
-pro-mini-8.build.board=AVR_PRO_MINI
+pro-mini-8.build.board=ARDUINO_PRO_MINI
 pro-mini-8.build.core=cosa
-
-##
-# ARDUINO MEGA (ATmega2560)
-##
 
 # AVR:ATmega2560
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -177,14 +176,10 @@ mega.bootloader.extended_fuses=0xfd
 
 mega.build.mcu=atmega2560
 mega.build.f_cpu=16000000L
-mega.build.board=AVR_MEGA2560
+mega.build.board=ARDUINO_MEGA2560
 mega.build.core=cosa
 
-##
-# ARDUINO STANDARD USB (ATmega32u4)
-##
-
-# AVR:ATmega32u4
+# AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
 # Boot Reset vector enable (2048 words, 0x3800). 
@@ -209,10 +204,10 @@ leonardo.build.vid=0x2341
 leonardo.build.pid=0x8036
 leonardo.build.core=cosa
 leonardo.build.usb_product="Arduino Leonardo"
-leonardo.build.board=AVR_LEONARDO
+leonardo.build.board=ARDUINO_LEONARDO
 leonardo.build.extra_flags={build.usb_flags}
 
-# AVR:ATmega32u4
+# AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
 # Boot Reset vector enable (2048 words, 0x3800). 
@@ -236,11 +231,11 @@ micro.build.f_cpu=16000000L
 micro.build.vid=0x2341
 micro.build.pid=0x8037
 micro.build.usb_product="Arduino Micro"
-micro.build.board=AVR_MICRO
+micro.build.board=ARDUINO_MICRO
 micro.build.core=cosa
 micro.build.extra_flags={build.usb_flags}
 
-# AVR:ATmega32u4
+# AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.0 V. Serial program downloading enabled
 # Boot Reset vector enable (2048 words, 0x3800). 
@@ -264,7 +259,6 @@ lilypad-usb.build.f_cpu=8000000L
 lilypad-usb.build.vid=0x1B4F
 lilypad-usb.build.pid=0x9208
 lilypad-usb.usb_product="Arduino LilyPad USB"
-lilypad-usb.build.board=AVR_LILYPAD_USB
+lilypad-usb.build.board=LILYPAD_ARDUINO_USB
 lilypad-usb.build.core=cosa
 lilypad-usb.build.extra_flags={build.usb_flags}
-

@@ -20,13 +20,16 @@
 # Boston, MA  02111-1307  USA
 #
 # @section Description
-# The Cosa Pinoccio Scout core boards definition file. The file supports
-# both Arduino 1.0.X and 1.5.X attributes.
+# The Cosa Pinoccio Scout core boards definition file. 
+#
+# @section Usage
+# Copy to top directory and rename boards.txt, alternatively
+# append to boards.txt file to extend current list of boards.
 #
 # This file is part of the Arduino Che Cosa project.
 
 ##
-# PINOCCIO SCOUT (Atmega256rfr2)
+# PINOCCIO BOARDS
 ##
 
 # AVR:Pinoccio
@@ -47,6 +50,6 @@ pinoccio.bootloader.extended_fuses=0xfe
 
 pinoccio.build.mcu=atmega256rfr2
 pinoccio.build.f_cpu=16000000L
-pinoccio.build.board=PINOCCIO
+pinoccio.build.board=PINOCCIO_SCOUT
 pinoccio.build.core=cosa
 

@@ -35,7 +35,7 @@
 // Selectable test suites
 #define TEST_RANGE
 #define TEST_STRUCT
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
 #define TEST_LIMITS
 #define TEST_EXAMPLES
 #endif

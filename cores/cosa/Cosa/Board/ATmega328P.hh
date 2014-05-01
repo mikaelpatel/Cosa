@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/Standard.hh
+ * @file Cosa/Board/ATmega328P.hh
  * @version 1.0
  *
  * @section License
@@ -23,8 +23,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_STANDARD_HH
-#define COSA_BOARD_STANDARD_HH
+#ifndef COSA_BOARD_ATMEGA328P_HH
+#define COSA_BOARD_ATMEGA328P_HH
 
 /**
  * Compiler warning on unused varable.
@@ -34,7 +34,7 @@
 #endif
 
 /**
- * Cosa STANDARD Board pin symbol definitions for the ATmega328P based
+ * Cosa Standard Board pin symbol definitions for the ATmega328P based
  * boards such as Arduino Uno, Mini Pro, Nano, and LilyPad. Cosa does
  * not use pin numbers as Arduino/Wiring, instead strong data type is
  * used (enum types) for the specific pin classes; DigitalPin,

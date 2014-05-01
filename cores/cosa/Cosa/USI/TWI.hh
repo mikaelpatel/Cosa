@@ -27,7 +27,7 @@
 #define COSA_USI_TWI_HH
 
 #include "Cosa/Types.h"
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 #include "Cosa/IOPin.hh"
 #include "Cosa/Event.hh"
 

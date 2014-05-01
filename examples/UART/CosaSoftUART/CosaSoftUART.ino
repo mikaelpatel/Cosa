@@ -32,7 +32,7 @@
 #include "Cosa/Soft/UART.hh"
 
 IOBuffer<Soft::UART::BUFFER_MAX> ibuf;
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 Soft::UART uart(Board::D2, Board::PCI1, &ibuf);
 #define BAUDRATE 38400
 #else

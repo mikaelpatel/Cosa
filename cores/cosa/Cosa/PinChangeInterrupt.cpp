@@ -47,7 +47,7 @@ PinChangeInterrupt::enable()
 { 
   synchronized {
     *PCIMR() |= m_mask;
-#if defined(__ARDUINO_MEGA__)
+#if defined(BOARD_ATMEGA2560)
     uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
     s_pin[ix] = this;
 #else
@@ -61,7 +61,7 @@ PinChangeInterrupt::disable()
 { 
   synchronized {
     *PCIMR() &= ~m_mask;
-#if defined(__ARDUINO_MEGA__)
+#if defined(BOARD_ATMEGA2560)
     uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
     s_pin[ix] = NULL;
 #else
@@ -73,7 +73,7 @@ PinChangeInterrupt::disable()
 void 
 PinChangeInterrupt::begin()
 {
-#if defined(__ARDUINO_MEGA__)
+#if defined(BOARD_ATMEGA2560)
   s_state[0] = *Pin::PIN(16);
   s_state[1] = 0;
   s_state[2] = *Pin::PIN(64);
@@ -118,7 +118,7 @@ ISR(PCINT ## vec ## _vect)					\
   PinChangeInterrupt::on_interrupt(pcint, PCMSK ## vec, base);	\
 }
 
-#if defined(__ARDUINO_TINYX61__)
+#if defined(BOARD_ATTINYX61)
 
 ISR(PCINT0_vect)
 {
@@ -135,39 +135,39 @@ ISR(PCINT0_vect)
   PinChangeInterrupt::on_interrupt(ix, mask, (ix << 3));
 }
 
-#elif defined(__ARDUINO_TINYX5__)
+#elif defined(BOARD_ATTINYX5)
 
 PCINT_ISR(0, 0, 0);
 
-#elif defined(__ARDUINO_TINYX4__)
+#elif defined(BOARD_ATTINYX4)
 
 PCINT_ISR(0, 0, 0);
 PCINT_ISR(1, 1, 8);
 
-#elif defined(__ARDUINO_STANDARD__)
+#elif defined(BOARD_ATMEGA328P)
 
 PCINT_ISR(0, 1, 8);
 PCINT_ISR(1, 2, 14);
 PCINT_ISR(2, 0, 0);
 
-#elif defined(__ARDUINO_STANDARD_USB__)
+#elif defined(BOARD_ATMEGA32U4)
 
 PCINT_ISR(0, 0, 0);
 
-#elif defined(__ARDUINO_MEGA__)
+#elif defined(BOARD_ATMEGA2560)
 
 PCINT_ISR(0, 0, 16);
 ISR(PCINT1_vect) {}
 PCINT_ISR(2, 2, 64);
 
-#elif defined(__ARDUINO_MIGHTY__)
+#elif defined(BOARD_ATMEGA1248P)
 
 PCINT_ISR(0, 0, 0);
 PCINT_ISR(1, 1, 8);
 PCINT_ISR(2, 2, 16);
 PCINT_ISR(3, 3, 24);
 
-#elif defined(__PINOCCIO_SCOUT__)
+#elif defined(BOARD_ATMEGA256RFR2)
 
 PCINT_ISR(0, 0, 0);
 PCINT_ISR(1, 1, 8);

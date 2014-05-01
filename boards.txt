@@ -20,17 +20,12 @@
 # Boston, MA  02111-1307  USA
 #
 # @section Description
-# The Cosa Arduino core boards definition file. The file supports
-# both Arduino 1.0.X and 1.5.X attributes.
-#
-# @section Fix
-# Allow "Processor" menu for 1.5.X to allow multiple board variants,
-# e.g. processor, clock and fuses.
+# The Cosa Arduino core boards definition file. 
 #
 # This file is part of the Arduino Che Cosa project.
 
 ##
-# ARDUINO TINY
+# BREADBOARDS
 ##
 
 # AVR:ATtiny84
@@ -49,7 +44,7 @@ attiny84-8.bootloader.extended_fuses=0xff
 
 attiny84-8.build.mcu=attiny84
 attiny84-8.build.f_cpu=8000000L
-attiny84-8.build.board=AVR_TINY84
+attiny84-8.build.board=BREADBOARD_ATTINYX4
 attiny84-8.build.core=cosa
 
 # AVR:ATtiny85
@@ -68,7 +63,7 @@ attiny85-8.bootloader.extended_fuses=0xff
 
 attiny85-8.build.mcu=attiny85
 attiny85-8.build.f_cpu=8000000L
-attiny85-8.build.board=AVR_TINY85
+attiny85-8.build.board=BREADBOARD_ATTINYX5
 attiny85-8.build.core=cosa
 
 # AVR:ATtiny861
@@ -87,12 +82,8 @@ attiny861-8.bootloader.extended_fuses=0x01
 
 attiny861-8.build.mcu=attiny861
 attiny861-8.build.f_cpu=8000000L
-attiny861-8.build.board=AVR_TINY861
+attiny861-8.build.board=BREADBOARD_ATTINYX61
 attiny861-8.build.core=cosa
-
-##
-# ARDUINO BREADBOARD
-##
 
 # AVR:ATmega328
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 65 ms
@@ -112,11 +103,53 @@ atmega328-8.bootloader.extended_fuses=0xFD
 
 atmega328-8.build.mcu=atmega328p
 atmega328-8.build.f_cpu=8000000L
-atmega328-8.build.board=AVR_ATMEGA328
+atmega328-8.build.board=BREADBOARD_ATMEGA328P
 atmega328-8.build.core=cosa
 
+# AVR:ATmega1284
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (1024 words, 0xfc00). 
+mighty.name=Cosa Arduino Mighty (ATmega1284/BOOT_1284P)
+mighty.upload.tool=avrdude
+mighty.upload.protocol=stk500v1
+mighty.upload.maximum_size=129024
+mighty.upload.maximum_data_size=16384
+mighty.upload.speed=57600
+
+mighty.bootloader.tool=avrdude
+mighty.bootloader.low_fuses=0xff
+mighty.bootloader.high_fuses=0xdc
+mighty.bootloader.extended_fuses=0xfd
+
+mighty.build.mcu=atmega1284p
+mighty.build.f_cpu=16000000L
+mighty.build.board=BREADBOARD_ATMEGA1284
+mighty.build.core=cosa
+
+# AVR:ATmega1284
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (512 words, 0xfe00). 
+mighty-opt.name=Cosa Arduino Mighty (ATmega1284/Optiboot)
+mighty-opt.upload.tool=avrdude
+mighty-opt.upload.protocol=arduino
+mighty-opt.upload.maximum_size=130048
+mighty-opt.upload.maximum_data_size=16384
+mighty-opt.upload.speed=115200
+
+mighty-opt.bootloader.tool=avrdude
+mighty-opt.bootloader.low_fuses=0xff
+mighty-opt.bootloader.high_fuses=0xde
+mighty-opt.bootloader.extended_fuses=0xfd
+
+mighty-opt.build.mcu=atmega1284p
+mighty-opt.build.f_cpu=16000000L
+mighty-opt.build.board=BREADBOARD_ATMEGA1284
+mighty-opt.build.core=cosa
+
 ##
-# ARDUINO STANDARD
+# ARDUINO BOARDS
 ##
 
 # AVR:ATmega328
@@ -137,7 +170,7 @@ uno.bootloader.extended_fuses=0x05
 
 uno.build.mcu=atmega328p
 uno.build.f_cpu=16000000L
-uno.build.board=AVR_UNO
+uno.build.board=ARDUINO_UNO
 uno.build.core=cosa
 
 # AVR:ATmega328
@@ -158,7 +191,7 @@ duemilanove.bootloader.extended_fuses=0x05
 
 duemilanove.build.mcu=atmega328p
 duemilanove.build.f_cpu=16000000L
-duemilanove.build.board=AVR_DUEMILANOVE
+duemilanove.build.board=ARDUINO_DUEMILANOVE
 duemilanove.build.core=cosa
 
 # AVR:ATmega328
@@ -180,7 +213,7 @@ nano.bootloader.extended_fuses=0x05
 nano.build.mcu=atmega328p
 nano.build.f_cpu=16000000L
 nano.build.core=cosa
-nano.build.board=AVR_NANO
+nano.build.board=ARDUINO_NANO
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -200,7 +233,7 @@ lilypad.bootloader.extended_fuses=0x05
 
 lilypad.build.mcu=atmega328p
 lilypad.build.f_cpu=8000000L
-lilypad.build.board=AVR_LILYPAD
+lilypad.build.board=LILYPAD_ARDUINO
 lilypad.build.core=cosa
 
 # AVR:ATmega328
@@ -221,7 +254,7 @@ pro-mini.bootloader.extended_fuses=0x05
 
 pro-mini.build.mcu=atmega328p
 pro-mini.build.f_cpu=16000000L
-pro-mini.build.board=AVR_PRO_MINI
+pro-mini.build.board=ARDUINO_PRO_MINI
 pro-mini.build.core=cosa
 
 # AVR:ATmega328
@@ -242,58 +275,8 @@ pro-mini-8.bootloader.extended_fuses=0x05
 
 pro-mini-8.build.mcu=atmega328p
 pro-mini-8.build.f_cpu=8000000L
-pro-mini-8.build.board=AVR_PRO_MINI
+pro-mini-8.build.board=ARDUINO_PRO_MINI
 pro-mini-8.build.core=cosa
-
-##
-# ARDUINO MIGHTY
-##
-
-# AVR:ATmega1284
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0xfc00). 
-mighty.name=Cosa Arduino Mighty (ATmega1284/BOOT_1284P)
-mighty.upload.tool=avrdude
-mighty.upload.protocol=stk500v1
-mighty.upload.maximum_size=129024
-mighty.upload.maximum_data_size=16384
-mighty.upload.speed=57600
-
-mighty.bootloader.tool=avrdude
-mighty.bootloader.low_fuses=0xff
-mighty.bootloader.high_fuses=0xdc
-mighty.bootloader.extended_fuses=0xfd
-
-mighty.build.mcu=atmega1284p
-mighty.build.f_cpu=16000000L
-mighty.build.board=AVR_MIGHTY
-mighty.build.core=cosa
-
-# AVR:ATmega1284
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (512 words, 0xfe00). 
-mighty-opt.name=Cosa Arduino Mighty (ATmega1284/Optiboot)
-mighty-opt.upload.tool=avrdude
-mighty-opt.upload.protocol=arduino
-mighty-opt.upload.maximum_size=130048
-mighty-opt.upload.maximum_data_size=16384
-mighty-opt.upload.speed=115200
-
-mighty-opt.bootloader.tool=avrdude
-mighty-opt.bootloader.low_fuses=0xff
-mighty-opt.bootloader.high_fuses=0xde
-mighty-opt.bootloader.extended_fuses=0xfd
-
-mighty-opt.build.mcu=atmega1284p
-mighty-opt.build.f_cpu=16000000L
-mighty-opt.build.board=AVR_MIGHTY
-mighty-opt.build.core=cosa
-
-##
-# ARDUINO MEGA
-##
 
 # AVR:ATmega2560
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -313,14 +296,10 @@ mega.bootloader.extended_fuses=0xfd
 
 mega.build.mcu=atmega2560
 mega.build.f_cpu=16000000L
-mega.build.board=AVR_MEGA2560
+mega.build.board=ARDUINO_MEGA2560
 mega.build.core=cosa
 
-##
-# ARDUINO STANDARD USB
-##
-
-# AVR:ATmega32u4
+# AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
 # Boot Reset vector enable (2048 words, 0x3800). 
@@ -345,10 +324,10 @@ leonardo.build.vid=0x2341
 leonardo.build.pid=0x8036
 leonardo.build.core=cosa
 leonardo.build.usb_product="Arduino Leonardo"
-leonardo.build.board=AVR_LEONARDO
+leonardo.build.board=ARDUINO_LEONARDO
 leonardo.build.extra_flags={build.usb_flags}
 
-# AVR:ATmega32u4
+# AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
 # Boot Reset vector enable (2048 words, 0x3800). 
@@ -372,11 +351,11 @@ micro.build.f_cpu=16000000L
 micro.build.vid=0x2341
 micro.build.pid=0x8037
 micro.build.usb_product="Arduino Micro"
-micro.build.board=AVR_MICRO
+micro.build.board=ARDUINO_MICRO
 micro.build.core=cosa
 micro.build.extra_flags={build.usb_flags}
 
-# AVR:ATmega32u4
+# AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.0 V. Serial program downloading enabled
 # Boot Reset vector enable (2048 words, 0x3800). 
@@ -400,12 +379,12 @@ lilypad-usb.build.f_cpu=8000000L
 lilypad-usb.build.vid=0x1B4F
 lilypad-usb.build.pid=0x9208
 lilypad-usb.usb_product="Arduino LilyPad USB"
-lilypad-usb.build.board=AVR_LILYPAD_USB
+lilypad-usb.build.board=LILYPAD_ARDUINO_USB
 lilypad-usb.build.core=cosa
 lilypad-usb.build.extra_flags={build.usb_flags}
 
 ##
-# MICRODUINO
+# MICRODUINO CORE MODULES
 ##
 
 # AVR:ATmega328
@@ -426,10 +405,10 @@ microduino-core.bootloader.extended_fuses=0x05
 
 microduino-core.build.mcu=atmega328p
 microduino-core.build.f_cpu=16000000L
-microduino-core.build.board=AVR_UNO
+microduino-core.build.board=MICRODUINO_CORE
 microduino-core.build.core=cosa
 
-# AVR:ATmega32u4
+# AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
 # Boot Reset vector enable (2048 words, 0x3800). 
@@ -453,8 +432,8 @@ microduino-core32u4.build.f_cpu=16000000L
 microduino-core32u4.build.vid=0x2341
 microduino-core32u4.build.pid=0x8036
 microduino-core32u4.build.core=cosa
-microduino-core32u4.build.usb_product="Arduino Leonardo"
-microduino-core32u4.build.board=AVR_LEONARDO
+microduino-core32u4.build.usb_product="Microduino Core32u4"
+microduino-core32u4.build.board=MICRODUINO_CORE32U4
 microduino-core32u4.build.extra_flags={build.usb_flags}
 
 # AVR:ATmega644P
@@ -475,8 +454,12 @@ microduino-core-plus.bootloader.extended_fuses=0xfd
 
 microduino-core-plus.build.mcu=atmega644p
 microduino-core-plus.build.f_cpu=16000000L
-microduino-core-plus.build.board=AVR_MIGHTY
+microduino-core-plus.build.board=MICRODUINO_CORE_PLUS
 microduino-core-plus.build.core=cosa
+
+##
+# PINOCCIO BOARDS
+##
 
 # AVR:Pinoccio
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -496,6 +479,6 @@ pinoccio.bootloader.extended_fuses=0xfe
 
 pinoccio.build.mcu=atmega256rfr2
 pinoccio.build.f_cpu=16000000L
-pinoccio.build.board=PINOCCIO
+pinoccio.build.board=PINOCCIO_SCOUT
 pinoccio.build.core=cosa
 

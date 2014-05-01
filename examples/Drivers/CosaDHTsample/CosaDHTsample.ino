@@ -53,7 +53,7 @@
 // Use DHT11 for outdoors measurement and DHT22 for indoors
 DHT11 outdoors(Board::EXT0);
 // ATtiny has only one external interrupt pin
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
 DHT22 indoors(Board::EXT1);
 #endif
 
@@ -80,7 +80,7 @@ void loop()
   SLEEP(2);
 
   // Read and print humidity and temperature
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
   indoors.sample();
   trace << PSTR("indoors: ") << indoors << endl;
 #endif

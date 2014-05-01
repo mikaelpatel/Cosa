@@ -81,7 +81,7 @@ void setup()
   // 0 uA, already done by startup
   ACSR = _BV(ACD);
   ADCSRA = 0;  
-#if !defined(__ARDUINO_STANDARD_USB__)
+#if !defined(BOARD_ATMEGA32U4)
   UCSR0B = 0;
 #endif
 #endif

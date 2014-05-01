@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Board/TinyX4.hh
+ * @file Cosa/Board/ATtinyX5.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2012-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,11 +23,18 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_TINYX4_HH
-#define COSA_BOARD_TINYX4_HH
+#ifndef COSA_BOARD_ATTINYX5_HH
+#define COSA_BOARD_ATTINYX5_HH
 
 /**
- * Cosa TINYX4 Board pin symbol definitions for the ATtinyX4
+ * Compiler warning on unused varable.
+ */
+#if !defined(UNUSED)
+#define UNUSED(x) (void) (x)
+#endif
+
+/**
+ * Cosa ATTINYX5 Board pin symbol definitions for the ATtinyX5
  * processors. Cosa does not use pin numbers as Arduino/Wiring,
  * instead strong data type is used (enum types) for the specific pin
  * classes; DigitalPin, AnalogPin, PWMPin, etc.
@@ -40,20 +47,18 @@
  *
  * @section Circuit
  * @code
- *                       ATinyX4   
- *                     +----U----+
- * (VCC)-------------1-|VCC   GND|-14------------(GND)
- * (D8)--------------2-|PB0   PA0|-13----------(D0/A0)
- * (D9)--------------3-|PB1   PA1|-12----------(D1/A1)
- * (/RESET)----------4-|PB3   PA2|-11----------(D2/A2)
- * (EXT0/D10)--------5-|PB2   PA3|-10-------(D3/A3/SS)
- * (LED/D7/A7)-------6-|PA7   PA4|-9---(D4/A4/SCL/SCK)
- * (MISO/SDA/D6/A6)--7-|PA6   PA5|-8------(D5/A5/MOSI)
- *                     +---------+
+ *                  ATinyX5   
+ *                +----U----+
+ * (D5/RESET)---1-|PB5   VCC|-8-----------------(VCC)
+ * (D3/A3)------2-|PB3   PB2|-7--(D2/A1/EXT0/SCL/SCK)
+ * (LED/D4/A2)--3-|PB4   PB1|-6-------------(D1/MOSI)
+ * (GND)--------4-|GND   PB0|-5---------(D0/SDA/MISO)
+ *                +---------+
  * @endcode
  */
 class Board {
   friend class Pin;
+  friend class UART;
 private:
   /**
    * Do not allow instances. This is a static singleton; name space.
@@ -67,8 +72,8 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin) 
   { 
-    return (pin < 8 ? &PINA : 
-	              &PINB);
+    UNUSED(pin);
+    return (&PINB);
   }
 
   /**
@@ -78,8 +83,17 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin) 
   { 
-    return (pin < 8 ? &PCMSK0 : 
-	              &PCMSK1);
+    UNUSED(pin);
+    return (&PCMSK);
+  }
+
+  /**
+   * Return Universal Serial Interface SFR register.
+   * @return special register pointer.
+   */
+  static volatile uint8_t* USI() 
+  { 
+    return (&PINB);
   }
 
   /**
@@ -90,8 +104,8 @@ private:
    */
   static uint8_t BIT(uint8_t pin)
   {
-    return (pin < 8 ? pin : 
-	              pin - 8);
+    UNUSED(pin);
+    return (pin);
   }
   
 public:
@@ -105,35 +119,27 @@ public:
     D3,
     D4,
     D5,
-    D6,
-    D7,
-    D8,
-    D9,
-    D10,
-    LED = D7
+    LED = D4
   } __attribute__((packed));
 
   /**
    * Analog pin symbols
    */
   enum AnalogPin {
-    A0,
-    A1,
-    A2,
-    A3,
-    A4,
-    A5, 
-    A6,
-    A7
+    A0 = 5,
+    A1 = 2,
+    A2 = 3,
+    A3 = 4
   } __attribute__((packed));
 
   /**
-   * Reference voltage; ARef pin, Vcc or internal 1V1.
+   * Reference voltage; ARef pin, Vcc or internal 2V56.
    */
   enum Reference {
     AVCC_REFERENCE = 0,
     APIN_REFERENCE = _BV(REFS0),
-    A1V1_REFERENCE = _BV(REFS1)
+    A1V1_REFERENCE = _BV(REFS1),
+    A2V56_REFERENCE = (_BV(REFS2) | _BV(REFS1))
   } __attribute__((packed));
 
   /**
@@ -141,10 +147,8 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D10,
-    PWM1 = D7,
-    PWM2 = D6,
-    PWM3 = D5
+    PWM0 = D0,
+    PWM1 = D1
   } __attribute__((packed));
 
   /**
@@ -152,7 +156,7 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D10
+    EXT0 = D2
   } __attribute__((packed));
 
   /**
@@ -164,29 +168,24 @@ public:
     PCI2 = D2,
     PCI3 = D3,
     PCI4 = D4,
-    PCI5 = D5,
-    PCI6 = D6,
-    PCI7 = D7,
-    PCI8 = D8,
-    PCI9 = D9,
-    PCI10 = D10
+    PCI5 = D5
   } __attribute__((packed));
 
   /**
    * Pins used for TWI interface.
    */
   enum TWIPin {
-    SDA = D6,
-    SCL = D4
+    SDA = D0,
+    SCL = D2
   } __attribute__((packed));
-  
+
   /**
-   * Pins used for SPI interface (in Port A)
+   * Pins used for SPI interface (in Port B)
    */
   enum SPIPin {
-    MOSI = 5,
-    MISO = 6,
-    SCK = 4,
+    MOSI = 1,
+    MISO = 0,
+    SCK = 2,
     SS = 3
   } __attribute__((packed));
 
@@ -194,11 +193,11 @@ public:
    * Auxiliary
    */
   enum {
-    VBG = (_BV(MUX5) | _BV(MUX0)),
+    VBG = (_BV(MUX3) | _BV(MUX2)),
     EXT_MAX = 1,
-    PCMSK_MAX = 2,
-    PCINT_MAX = 11,
-    PIN_MAX = D10
+    PCMSK_MAX = 1,
+    PCINT_MAX = 6,
+    PIN_MAX = D5
   } __attribute__((packed));
 };
 
@@ -206,12 +205,11 @@ public:
  * Redefinition of symbols to allow generic code.
  */
 #define ANALOG_COMP_vect ANA_COMP_vect
-#define TIMER0_OVF_vect TIM0_OVF_vect
-#define TIMER0_COMPA_vect TIM0_COMPA_vect
-#define TIMER0_COMPB_vect TIM0_COMPB_vect
-#define TIMER1_OVF_vect TIM1_OVF_vect
-#define TIMER1_COMPA_vect TIM1_COMPA_vect
-#define TIMER1_COMPB_vect TIM1_COMPB_vect
+#define PCMSK0 PCMSK
+#define TIMSK0 TIMSK
+#define TIMSK1 TIMSK
+#define TIFR0 TIFR
+#define WDTCSR WDTCR
 
 /**
  * Forward declare interrupt service routines to allow them as friends.
@@ -221,7 +219,6 @@ extern "C" {
   void ANALOG_COMP_vect(void) __attribute__ ((signal));
   void INT0_vect(void) __attribute__ ((signal));
   void PCINT0_vect(void) __attribute__ ((signal));
-  void PCINT1_vect(void) __attribute__ ((signal));
   void TIMER0_COMPA_vect(void) __attribute__ ((signal));
   void TIMER0_COMPB_vect(void) __attribute__ ((signal));
   void TIMER0_OVF_vect(void) __attribute__ ((signal));
@@ -233,3 +230,4 @@ extern "C" {
   void USI_OVF_vect(void) __attribute__ ((signal));
 }
 #endif
+

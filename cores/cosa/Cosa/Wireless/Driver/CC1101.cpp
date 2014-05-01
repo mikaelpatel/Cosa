@@ -25,12 +25,12 @@
 
 #include "Cosa/Wireless/Driver/CC1101.hh"
 
-#if !defined(__ARDUINO_TINYX5__)
+#if !defined(BOARD_ATTINYX5)
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
 
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 #define PIN PINA
 #else
 #define PIN PINB

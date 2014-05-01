@@ -20,14 +20,74 @@
 # Boston, MA  02111-1307  USA
 #
 # @section Description
-# The Cosa Arduino core breadboards definition file. The file supports
-# both Arduino 1.0.X and 1.5.X attributes.
+# The Cosa MPU core breadboards definition file. 
+#
+# @section Usage
+# Copy to top directory and rename boards.txt, alternatively
+# append to boards.txt file to extend current list of boards.
 #
 # This file is part of the Arduino Che Cosa project.
 
 ##
-# ARDUINO BREADBOARD
+# BREADBOARDS
 ##
+
+# AVR:ATtiny84
+# Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
+# Brown-out detection disabled. Serial program downloading enabled
+attiny84-8.name=Cosa Tiny (ATtiny84, 8 MHz internal clock)
+attiny84-8.upload.using=arduino:arduinoisp
+attiny84-8.upload.tool=arduino:arduinoisp
+attiny84-8.upload.maximum_size=8192
+attiny84-8.upload.maximum_data_size=512
+
+attiny84-8.bootloader.tool=arduino:arduinoisp
+attiny84-8.bootloader.low_fuses=0xe2
+attiny84-8.bootloader.high_fuses=0xdf
+attiny84-8.bootloader.extended_fuses=0xff
+
+attiny84-8.build.mcu=attiny84
+attiny84-8.build.f_cpu=8000000L
+attiny84-8.build.board=BREADBOARD_ATTINYX4
+attiny84-8.build.core=cosa
+
+# AVR:ATtiny85
+# Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
+# Brown-out detection disabled. Serial program downloading enabled
+attiny85-8.name=Cosa Tiny (ATtiny85, 8 MHz internal clock)
+attiny85-8.upload.using=arduino:arduinoisp
+attiny85-8.upload.tool=arduino:arduinoisp
+attiny85-8.upload.maximum_size=8192
+attiny85-8.upload.maximum_data_size=512
+
+attiny85-8.bootloader.tool=arduino:arduinoisp
+attiny85-8.bootloader.low_fuses=0xe2
+attiny85-8.bootloader.high_fuses=0xdf
+attiny85-8.bootloader.extended_fuses=0xff
+
+attiny85-8.build.mcu=attiny85
+attiny85-8.build.f_cpu=8000000L
+attiny85-8.build.board=BREADBOARD_ATTINYX5
+attiny85-8.build.core=cosa
+
+# AVR:ATtiny861
+# Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
+# Brown-out detection disabled. Serial program downloading enabled
+attiny861-8.name=Cosa Tiny (ATtiny861, 8 MHz internal clock)
+attiny861-8.upload.using=arduino:arduinoisp
+attiny861-8.upload.tool=arduino:arduinoisp
+attiny861-8.upload.maximum_size=8192
+attiny861-8.upload.maximum_data_size=512
+
+attiny861-8.bootloader.tool=arduino:arduinoisp
+attiny861-8.bootloader.low_fuses=0xe2
+attiny861-8.bootloader.high_fuses=0xdf
+attiny861-8.bootloader.extended_fuses=0x01
+
+attiny861-8.build.mcu=attiny861
+attiny861-8.build.f_cpu=8000000L
+attiny861-8.build.board=BREADBOARD_ATTINYX61
+attiny861-8.build.core=cosa
 
 # AVR:ATmega328
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 65 ms
@@ -47,6 +107,48 @@ atmega328-8.bootloader.extended_fuses=0xFD
 
 atmega328-8.build.mcu=atmega328p
 atmega328-8.build.f_cpu=8000000L
-atmega328-8.build.board=AVR_ATMEGA328
+atmega328-8.build.board=BREADBOARD_ATMEGA328P
 atmega328-8.build.core=cosa
+
+# AVR:ATmega1284
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (1024 words, 0xfc00). 
+mighty.name=Cosa Arduino Mighty (ATmega1284/BOOT_1284P)
+mighty.upload.tool=avrdude
+mighty.upload.protocol=stk500v1
+mighty.upload.maximum_size=129024
+mighty.upload.maximum_data_size=16384
+mighty.upload.speed=57600
+
+mighty.bootloader.tool=avrdude
+mighty.bootloader.low_fuses=0xff
+mighty.bootloader.high_fuses=0xdc
+mighty.bootloader.extended_fuses=0xfd
+
+mighty.build.mcu=atmega1284p
+mighty.build.f_cpu=16000000L
+mighty.build.board=BREADBOARD_ATMEGA1284
+mighty.build.core=cosa
+
+# AVR:ATmega1284
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (512 words, 0xfe00). 
+mighty-opt.name=Cosa Arduino Mighty (ATmega1284/Optiboot)
+mighty-opt.upload.tool=avrdude
+mighty-opt.upload.protocol=arduino
+mighty-opt.upload.maximum_size=130048
+mighty-opt.upload.maximum_data_size=16384
+mighty-opt.upload.speed=115200
+
+mighty-opt.bootloader.tool=avrdude
+mighty-opt.bootloader.low_fuses=0xff
+mighty-opt.bootloader.high_fuses=0xde
+mighty-opt.bootloader.extended_fuses=0xfd
+
+mighty-opt.build.mcu=atmega1284p
+mighty-opt.build.f_cpu=16000000L
+mighty-opt.build.board=BREADBOARD_ATMEGA1284
+mighty-opt.build.core=cosa
 

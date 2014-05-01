@@ -26,7 +26,7 @@
 #include "Cosa/Board.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 static IOBuffer<Soft::UART::BUFFER_MAX> ibuf;
 Soft::UART  __attribute__ ((weak)) uart(Board::D2, Board::PCI1, &ibuf);
 #else
@@ -34,7 +34,7 @@ Soft::UART  __attribute__ ((weak)) uart(Board::D2, Board::PCI1, &ibuf);
 #include "Cosa/Bits.h"
 #include "Cosa/Power.hh"
 
-#if defined(__ARDUINO_STANDARD_USB__)
+#if defined(BOARD_ATMEGA32U4)
 #undef uart
 #else
 #include "Cosa/IOBuffer.hh"

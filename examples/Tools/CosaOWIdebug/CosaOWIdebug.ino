@@ -36,7 +36,7 @@
 OutputPin ledPin(Board::LED);
 
 // One-wire pin
-#if defined(__ARDUINO_TINY__)
+#if defined(BOARD_ATTINY)
 OWI owi(Board::D1);
 #else
 // OWI owi(Board::D7);

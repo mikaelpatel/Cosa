@@ -57,7 +57,7 @@ void setup()
 
   // Initiate the LCD screen and show arduino icon
   lcd.begin();
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
   lcd.putchar('\f');
   lcd.set_cursor((lcd.WIDTH - 64)/2, 0);
   lcd.draw_icon(arduino_icon_64x32);
@@ -118,7 +118,7 @@ void setup()
   SLEEP(2);
 
   // Play around with the offscreen canvas
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
   OffScreen<PCD8544::WIDTH, PCD8544::HEIGHT> offscreen;
   offscreen.begin();
   offscreen.draw_rect(0, 0, 10, 10);
@@ -153,7 +153,7 @@ void loop()
   SLEEP(1);
 
   // Every 4 seconds display the arduino icon and count down time
-#if !defined(__ARDUINO_TINY__)
+#if !defined(BOARD_ATTINY)
   static const uint8_t SHOW_BANNER = 4;
   static uint8_t banner = 0;
   if (++banner == SHOW_BANNER) {
