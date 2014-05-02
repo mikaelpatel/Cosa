@@ -54,12 +54,13 @@ void setup()
 
 void loop()
 {
-  static const size_t BUF_MAX = 256;
-  static const uint8_t K_BYTE = 8;
+  static const size_t BUF_MAX = 512;
+  static const uint8_t K_BYTE = 100;
   uint8_t buf[BUF_MAX];
   uint32_t start, stop;
   FAT16::File file;
-  int size, count;
+  uint32_t size;
+  int count;
 
   // List the files
   ASSERT(!file.is_open());
