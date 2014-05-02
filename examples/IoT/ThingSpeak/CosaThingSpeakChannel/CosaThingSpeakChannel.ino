@@ -59,7 +59,11 @@
 #endif
 
 // Digital humidity and temperature sensor
+#if defined(BOARD_ATMEGA2560)
+DHT11 sensor(Board::EXT4);
+#else
 DHT11 sensor(Board::EXT0);
+#endif
 
 // Ethernet controller
 static const char HOSTNAME[] __PROGMEM = "CosaThingSpeakChannel";

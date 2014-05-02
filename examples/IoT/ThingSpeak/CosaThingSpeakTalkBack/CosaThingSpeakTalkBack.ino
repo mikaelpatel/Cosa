@@ -21,8 +21,7 @@
  * and push additional commands to the queue. 
  *
  * @section Circuit
- * The sketch uses Board::D15 (A1) as output pin for the LED.
- * Commands LED_ON/LED_OFF will turn on and off the LED.
+ * Commands LED_ON/LED_OFF will turn on and off the built-in LED.
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
@@ -35,10 +34,6 @@
  * (D13)--------------30-|SCK         |
  * (D2)-----[ ]-------56-|IRQ         |
  *                       +------------+
- *
- * (D15)----|330|-----------(>|LED)---+
- *                                    |
- * (GND)------------------------------+
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -106,10 +101,10 @@ LED::execute()
 }
 
 const char LED_ON_COMMAND[] __PROGMEM = "LED_ON";
-LED led_on(&talkback, LED_ON_COMMAND, Board::D15, 1);
+LED led_on(&talkback, LED_ON_COMMAND, Board::LED, 1);
 
 const char LED_OFF_COMMAND[] __PROGMEM = "LED_OFF";
-LED led_off(&talkback, LED_OFF_COMMAND, Board::D15, 0);
+LED led_off(&talkback, LED_OFF_COMMAND, Board::LED, 0);
 
 // Thingspeak TalkBack command handler; add given command back
 // to the command queue
