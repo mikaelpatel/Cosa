@@ -242,8 +242,9 @@ SPI::transfer(void* buf, size_t count)
   while (--count) {
     uint8_t* tp = dp + 1;
     data = *tp;
-    *dp = transfer_await();
+    uint8_t res = transfer_await();
     transfer_start(data);
+    *dp = res;
     dp = tp;
   }
   *dp = transfer_await();
@@ -260,8 +261,9 @@ SPI::transfer(void* dst, const void* src, size_t count)
   while (--count) {
     uint8_t* tp = dp + 1;
     data = *sp++;
-    *dp = transfer_await();
+    uint8_t res = transfer_await();
     transfer_start(data);
+    *dp = res; 
     dp = tp;
   }
   *dp = transfer_await();
@@ -274,10 +276,9 @@ SPI::read(void* buf, size_t count)
   uint8_t* dp = (uint8_t*) buf;
   transfer_start(0xff);
   while (--count) {
-    uint8_t* tp = dp + 1;
-    *dp = transfer_await();
+    uint8_t res = transfer_await();
     transfer_start(0xff);
-    dp = tp;
+    *dp++ = res;
   }
   *dp = transfer_await();
 }
