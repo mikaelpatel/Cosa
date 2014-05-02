@@ -128,8 +128,8 @@ public:
   enum AnalogPin {
     A0 = 5,
     A1 = 2,
-    A2 = 3,
-    A3 = 4
+    A2 = 4,
+    A3 = 3
   } __attribute__((packed));
 
   /**
