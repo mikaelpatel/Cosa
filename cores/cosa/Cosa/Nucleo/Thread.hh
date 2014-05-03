@@ -71,7 +71,7 @@ public:
    * Yield control to the next thread in the thread queue. Preserve
    * stack and machine state and later continue after this function. 
    */
-  void yield() 
+  void yield() __attribute__((always_inline))
   { 
     resume((Thread*) get_succ()); 
   }

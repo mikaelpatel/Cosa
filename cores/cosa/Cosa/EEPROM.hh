@@ -91,7 +91,7 @@ public:
    * otherwise false(0).
    * @return bool
    */
-  bool is_ready() 
+  bool is_ready() __attribute__((always_inline))
   {
     return (m_dev->is_ready());
   }
@@ -100,7 +100,7 @@ public:
    * Wait for write to complete. 
    * @param[in] mode of sleep.
    */
-  void write_await()
+  void write_await() __attribute__((always_inline))
   {
     while (!is_ready()) yield();
   }
@@ -114,6 +114,7 @@ public:
    * @return number of bytes or negative error code.
    */
   int read(void* dest, const void* src, size_t size) 
+    __attribute__((always_inline)) 
   { 
     return (m_dev->read(dest, src, size)); 
   }
@@ -132,46 +133,55 @@ public:
   }
 
   int read(unsigned char* dest, const unsigned char* src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->read(dest, src, sizeof(unsigned char))); 
   }
 
   int read(unsigned short* dest, const unsigned short* src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->read(dest, src, sizeof(unsigned short))); 
   }
   
   int read(unsigned int* dest, const unsigned int* src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->read(dest, src, sizeof(unsigned int))); 
   }
 
   int read(unsigned long* dest, const unsigned long* src)
+    __attribute__((always_inline))
   { 
     return (m_dev->read(dest, src, sizeof(unsigned long))); 
   }
   
   int read(char* dest, const char* src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->read(dest, src, sizeof(char))); 
   }
 
   int read(short* dest, const short* src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->read(dest, src, sizeof(short))); 
   }
 
   int read(int* dest, const int* src)
+    __attribute__((always_inline))
   { 
     return (m_dev->read(dest, src, sizeof(int))); 
   }
 
   int read(long* dest, const long* src)
+    __attribute__((always_inline))
   { 
     return (m_dev->read(dest, src, sizeof(long))); 
   }
 
   int read(float* dest, const float* src)
+    __attribute__((always_inline))
   { 
     return (m_dev->read(dest, src, sizeof(float))); 
   }
@@ -185,6 +195,7 @@ public:
    * @return number of bytes or negative error code.
    */
   int write(void* dest, const void* src, size_t size) 
+    __attribute__((always_inline))
   { 
     return (m_dev->write(dest, src, size)); 
   }
@@ -203,46 +214,55 @@ public:
   }
 
   int write(unsigned char* dest, unsigned char src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->write(dest, &src, sizeof(unsigned char))); 
   }
 
   int write(unsigned short* dest, unsigned short src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->write(dest, &src, sizeof(unsigned short)));
   }
 
   int write(unsigned int* dest, unsigned int src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->write(dest, &src, sizeof(unsigned int))); 
   }
 
   int write(unsigned long* dest, unsigned long src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->write(dest, &src, sizeof(unsigned long))); 
   }
 
   int write(char* dest, char src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->write(dest, &src, sizeof(char))); 
   }
 
   int write(short* dest, short src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->write(dest, &src, sizeof(short)));
   }
 
   int write(int* dest, int src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->write(dest, &src, sizeof(int))); 
   }
 
   int write(long* dest, long src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->write(dest, &src, sizeof(long))); 
   }
 
   int write(float* dest, float src) 
+    __attribute__((always_inline))
   { 
     return (m_dev->write(dest, &src, sizeof(float))); 
   }

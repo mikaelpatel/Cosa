@@ -132,7 +132,7 @@ public:
    * @param[in] event to push on completion.
    * @return bool.
    */
-  bool sample_request(uint8_t event = Event::NULL_TYPE)
+  bool sample_request(uint8_t event = Event::NULL_TYPE) 
   {
     m_event = event;
     return (sample_request(m_pin, (Board::Reference) m_reference));

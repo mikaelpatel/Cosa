@@ -49,7 +49,7 @@ public:
    * Return successor in sequence.
    * @return successor linkage.
    */
-  Linkage* get_succ() 
+  Linkage* get_succ() const
   {
     return (m_succ);
   }
@@ -58,7 +58,7 @@ public:
    * Return predecessor in sequence.
    * @return predecessor linkage.
    */
-  Linkage* get_pred() 
+  Linkage* get_pred() const
   {
     return (m_pred);
   }
@@ -121,7 +121,7 @@ public:
   /**
    * Detach this link. Unlink from any list.
    */
-  void detach()
+  void detach() __attribute__((always_inline))
   {
     Linkage::detach();
   }

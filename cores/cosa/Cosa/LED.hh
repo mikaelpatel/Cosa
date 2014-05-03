@@ -45,7 +45,7 @@ public:
   /**
    * Turn LED on.
    */
-  void on()
+  void on() __attribute__((always_inline))
   {
     detach();
     m_pin.on();
@@ -54,7 +54,7 @@ public:
   /**
    * Turn LED off.
    */
-  void off()
+  void off() __attribute__((always_inline))
   {
     detach();
     m_pin.off();
@@ -63,7 +63,7 @@ public:
   /**
    * Blink LED with normal period.
    */
-  void normal_mode()
+  void normal_mode() __attribute__((always_inline))
   {
     Watchdog::attach(this, 512);
   }
@@ -71,7 +71,7 @@ public:
   /**
    * Blink LED with alert period.
    */
-  void alert_mode()
+  void alert_mode() __attribute__((always_inline))
   {
     Watchdog::attach(this, 128);
   }

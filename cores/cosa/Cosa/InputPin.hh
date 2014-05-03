@@ -54,6 +54,7 @@ public:
    * @param[in] mode pin mode (default NORMAL_MODE).
    */
   static void set_mode(uint8_t pin, Mode mode = NORMAL_MODE) 
+    __attribute__((always_inline))
   {
     if (mode == PULLUP_MODE) {
       synchronized { 

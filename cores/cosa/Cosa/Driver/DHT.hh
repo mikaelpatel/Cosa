@@ -72,7 +72,7 @@ public:
    * Return humidity from latest read.
    * @return humidity.
    */
-  int16_t get_humidity()
+  int16_t get_humidity() const
   {
     return (m_humidity);
   }
@@ -81,7 +81,7 @@ public:
    * Return temperature from latest read.
    * @return temperature.
    */
-  int16_t get_temperature()
+  int16_t get_temperature() const
   {
     return (m_temperature);
   }
@@ -105,7 +105,7 @@ public:
    * values if successful otherwise false(0).  
    * @return bool.
    */
-  bool sample()
+  bool sample() __attribute__((always_inline))
   {
     return (sample_request() && sample_await());
   }
@@ -118,6 +118,7 @@ public:
    * @return bool.
    */
   bool sample(int16_t& humidity, int16_t& temperature)
+    __attribute__((always_inline))
   {
     if (!sample()) return (false);
     humidity = m_humidity;

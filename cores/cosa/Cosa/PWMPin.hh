@@ -80,6 +80,7 @@ public:
    * @param[in] max value.
    */
   void write(uint16_t value, uint16_t min, uint16_t max)
+    __attribute__((always_inline))
   {
     set(value, min, max);
   }

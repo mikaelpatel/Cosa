@@ -78,7 +78,7 @@ public:
    * @param[in] pin one wire bus pin.
    * @param[in] name of device.
    */
-  DS18B20(OWI* pin, const char* name = 0) : 
+  DS18B20(OWI* pin, const char* name = NULL) : 
     OWI::Driver(pin, name),
     m_parasite(0),
     m_start(0L),

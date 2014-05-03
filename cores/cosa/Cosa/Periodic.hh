@@ -62,7 +62,7 @@ public:
   /**
    * Start the periodic function.
    */
-  void begin()
+  void begin() __attribute__((always_inline))
   {
     Watchdog::attach(this, m_period);
   }
@@ -70,7 +70,7 @@ public:
   /**
    * Stop the periodic function.
    */
-  void end()
+  void end() __attribute__((always_inline))
   {
     detach();
   }

@@ -69,7 +69,7 @@ public:
    * Set timer expire time (relative time, RTC::micro based).
    * @param[in] us expire time.
    */
-  void expire_after(uint32_t us)
+  void expire_after(uint32_t us) __attribute__((always_inline))
   {
     m_expires = RTC::micros() + us;
   }
@@ -77,7 +77,7 @@ public:
   /**
    * Get timer expire time (relative time, RTC::micro based).
    */
-  uint32_t expire_after() const
+  uint32_t expire_after() const __attribute__((always_inline))
   {
     return RTC::micros() - m_expires;
   }
@@ -86,7 +86,7 @@ public:
    * Return true if the timer is queued.
    * @return bool.
    */
-  bool is_started()
+  bool is_started() __attribute__((always_inline))
   {
     return (get_pred() != this);
   }

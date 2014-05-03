@@ -120,7 +120,7 @@ private:
    * @param[in] bits to encode.
    * @return character.
    */
-  static char encode(uint8_t bits)
+  static char encode(uint8_t bits) __attribute__((always_inline))
   {
     return (pgm_read_byte(&ENCODE[bits]));
   }
@@ -133,7 +133,7 @@ private:
    * @param[in] c character to decode.
    * @return 6-bit representation.
    */
-  static uint8_t decode(char c)
+  static uint8_t decode(char c) __attribute__((always_inline))
   {
     if (c < 43 || c > 122) return (0);
     uint8_t bits = pgm_read_byte(&DECODE[c - 43]);

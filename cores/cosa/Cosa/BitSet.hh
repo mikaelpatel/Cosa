@@ -60,7 +60,7 @@ public:
   /**
    * Empty bitset.
    */
-  void empty()
+  void empty()  __attribute__((always_inline))
   {
     memset(m_set, 0, sizeof(m_set));
   }

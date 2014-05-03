@@ -87,7 +87,7 @@ public:
   /**
    * Enable activity handler.
    */
-  void enable() 
+  void enable() __attribute__((always_inline))
   { 
     m_scheduler.enable(); 
   }
@@ -95,7 +95,7 @@ public:
   /**
    * Disable activity handler.
    */
-  void disable() 
+  void disable() __attribute__((always_inline))
   { 
     m_scheduler.disable(); 
   }

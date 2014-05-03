@@ -56,13 +56,13 @@ public:
    */
   static void clock_prescale(uint8_t factor);
 
-  static void adc_enable() 
+  static void adc_enable() __attribute__((always_inline))
   { 
     power_adc_enable(); 
     bit_set(ADCSRA, ADEN);
   }
 
-  static void adc_disable() 
+  static void adc_disable() __attribute__((always_inline))
   { 
     bit_clear(ADCSRA, ADEN);
     power_adc_disable(); 

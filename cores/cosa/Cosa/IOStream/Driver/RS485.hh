@@ -113,6 +113,7 @@ public:
    * @return number of bytes sent or negative error code.
    */
   int broadcast(const void* buf, size_t len) 
+    __attribute__((always_inline))
   { 
     return (send(buf, len, BROADCAST)); 
   }

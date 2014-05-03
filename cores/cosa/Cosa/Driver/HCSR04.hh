@@ -69,7 +69,7 @@ public:
    * Latest distance reading.
    * @return distance in millimeters.
    */
-  uint16_t get_distance()
+  uint16_t get_distance() const
   {
     return (m_distance);
   }
@@ -87,7 +87,7 @@ public:
    * seconds.
    * @param[in] ms milli-second sample period.
    */
-  void periodic(uint16_t ms)
+  void periodic(uint16_t ms) __attribute__((always_inline))
   {
     Watchdog::attach(this, ms);
   }

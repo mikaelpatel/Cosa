@@ -52,7 +52,7 @@ struct time_t {			// Range
    * Convert time to binary representation (from BCD). 
    * Apply after reading from device and before any calculation.
    */
-  void to_binary()
+  void to_binary() __attribute__((always_inline))
   {
     ::to_binary(&seconds, sizeof(time_t));
   }
@@ -61,7 +61,7 @@ struct time_t {			// Range
    * Convert time to BCD representation (from binary).
    * Apply after setting new value and writing to the device.
    */
-  void to_bcd()
+  void to_bcd() __attribute__((always_inline))
   {
     ::to_bcd(&seconds, sizeof(time_t));
   }

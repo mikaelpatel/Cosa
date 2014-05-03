@@ -49,7 +49,7 @@ public:
    * Return true(1) if the buffer is empty, otherwise false(0).
    * @return bool
    */
-  bool is_empty()
+  bool is_empty() __attribute__((always_inline))
   {
     return (m_head == m_tail);
   }
@@ -58,7 +58,7 @@ public:
    * Return true(1) if the buffer is full, otherwise false(0).
    * @return bool
    */
-  bool is_full()
+  bool is_full() __attribute__((always_inline))
   {
     return (((m_head + 1) & MASK) == m_tail);
   }
@@ -68,7 +68,7 @@ public:
    * Number of bytes available in buffer before empty.
    * @return bytes.
    */
-  virtual int available()
+  virtual int available() __attribute__((always_inline))
   {
     return (SIZE + m_head - m_tail) & MASK;
   }
@@ -78,7 +78,7 @@ public:
    * Number of bytes room in buffer before full.
    * @return bytes.
    */
-  virtual int room()
+  virtual int room() __attribute__((always_inline))
   {
     return (SIZE - m_head + m_tail - 1) & MASK;
   }
@@ -133,7 +133,7 @@ public:
   /**
    * Empty the buffer.
    */
-  void empty()
+  void empty() __attribute__((always_inline))
   {
     m_head = m_tail = 0;
   }
@@ -141,7 +141,7 @@ public:
   /**
    * Cast iobuffer to a character pointer.
    */
-  operator const char*()
+  operator const char*() __attribute__((always_inline))
   {
     return (&m_buffer[m_tail + 1]);
   }

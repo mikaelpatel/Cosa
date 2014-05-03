@@ -102,7 +102,7 @@ public:
    * Get current thread state.
    * @return state.
    */
-  uint8_t get_state()
+  uint8_t get_state() const
   {
     return (m_state);
   }
@@ -117,7 +117,7 @@ public:
   /**
    * Cancel timer and dequeue thread from timer queue.
    */
-  void cancel_timer()
+  void cancel_timer() __attribute__((always_inline))
   {
     detach();
   }
@@ -126,7 +126,7 @@ public:
    * Check if the timer expired; i.e., the thread is in TIMEOUT
    * state. 
    */
-  bool timer_expired()
+  bool timer_expired() const
   {
     return (m_state == TIMEOUT);
   }

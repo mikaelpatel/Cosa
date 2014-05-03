@@ -80,7 +80,7 @@ public:
   /**
    * Start the button handler.
    */
-  void begin()
+  void begin() __attribute__((always_inline))
   {
     Watchdog::attach(this, SAMPLE_MS);
   }
@@ -88,7 +88,7 @@ public:
   /**
    * Stop the button handler.
    */
-  void end()
+  void end() __attribute__((always_inline))
   {
     detach();
   }

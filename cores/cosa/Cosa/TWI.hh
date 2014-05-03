@@ -232,7 +232,7 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(void* buf, size_t size)
+  int write(void* buf, size_t size) __attribute__((always_inline))
   {
     if (!write_request(buf, size)) return (-1);
     return (await_completed());
@@ -247,6 +247,7 @@ public:
    * @return number of bytes
    */
   int write(uint8_t header, void* buf = 0, size_t size = 0)
+    __attribute__((always_inline))
   {
     if (!write_request(header, buf, size)) return (-1);
     return (await_completed());
@@ -261,6 +262,7 @@ public:
    * @return number of bytes
    */
   int write(uint16_t header, void* buf = 0, size_t size = 0)
+    __attribute__((always_inline))
   {
     if (!write_request(header, buf, size)) return (-1);
     return (await_completed());
@@ -274,6 +276,7 @@ public:
    * @return number of bytes
    */
   int read(void* buf, size_t size)
+    __attribute__((always_inline))
   {
     if (!read_request(buf, size)) return (-1);
     return (await_completed());
@@ -290,7 +293,7 @@ public:
    * cpu frequency scaling. Compile-time cpu frequency used.
    * @param[in] hz bus frequency.
    */
-  void set_freq(uint32_t hz)
+  void set_freq(uint32_t hz) __attribute__((always_inline))
   {
     m_freq = ((F_CPU / hz) - 16) / 2;
   }

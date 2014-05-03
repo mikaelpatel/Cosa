@@ -90,7 +90,7 @@ public:
    * @param[in] start
    * @return (millis() - start)
    */
-  static uint32_t since(uint32_t start)
+  static uint32_t since(uint32_t start) __attribute__((always_inline))
   {
     return (millis() - start);
   }
@@ -105,7 +105,7 @@ public:
    * Return the current clock in milli-seconds.
    * @return milli-seconds.
    */
-  static uint32_t millis()
+  static uint32_t millis() __attribute__((always_inline))
   {
     return (micros() / 1000);
   }
