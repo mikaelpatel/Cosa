@@ -37,6 +37,7 @@
  */
 
 #include "Cosa/Watchdog.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/OWI/Driver/DS18B20.hh"
 
@@ -62,7 +63,7 @@ PCD8544 lcd;
 IOStream console(&lcd);
 
 // The 1-Wire bus and the connected digital thermometer
-OWI owi(Board::D5);
+OWI owi(Board::D4);
 DS18B20 sensor(&owi);
 
 void setup()

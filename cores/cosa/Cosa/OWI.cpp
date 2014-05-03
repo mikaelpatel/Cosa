@@ -15,17 +15,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- *
- * This file is part of the Arduino Che Cosa project.
- *
  * @section References
  * The timing of 1-Wire read/write operations are according to
  * AVR318: Dallas 1-Wire(R) master, Rev. 2579A-AVR-09/04, 
  * Table 3. Bit transfer layer delays.
+ *
+ * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/OWI.hh"

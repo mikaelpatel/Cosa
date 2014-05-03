@@ -15,11 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- *
  * @section Description
  * Demonstration of the PCD8544 device driver with mapping to
  * IOStream::Device, and off-screen canvas. Uses 1-wire temperature 

@@ -52,17 +52,21 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 // LCD and communication port
-HD44780::Port4b port;
+// HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
-// HD44780::DFRobot port;
+HD44780::DFRobot port;
 // HD44780::ERM1602_5 port;
 HD44780 lcd(&port);
 IOStream cout(&lcd);
+#if defined(BOARD_ATTINY)
+AnalogPin keypad(Board::A3);
+#else
 AnalogPin keypad(Board::A0);
+#endif
 
 // Initiate horizontal bar (left to right, 1..5)
 void init_bar()

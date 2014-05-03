@@ -15,11 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- *
  * @section Description
  * Cosa demonstration of the DS1307 I2C/Two-Wire Realtime clock device.
  *
@@ -46,7 +41,7 @@
 #include "Cosa/Memory.h"
 
 // Set the real-time clock
-#define SET_TIME
+// #define SET_TIME
 
 // The real-time device, latest start and sample time in ram
 DS1307 rtc;

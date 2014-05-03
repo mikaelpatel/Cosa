@@ -15,11 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -36,6 +31,20 @@ const uint8_t PCD8544::script[] __PROGMEM = {
   SET_Y_ADDR     | 0,
   SCRIPT_END
 };
+
+PCD8544::PCD8544(Board::DigitalPin sdin,
+		 Board::DigitalPin sclk,
+		 Board::DigitalPin dc,
+		 Board::DigitalPin sce,
+		 Font* font) :
+  LCD::Device(),
+  m_sdin(sdin, 0),
+  m_sclk(sclk, 0),
+  m_dc(dc, 1),
+  m_sce(sce, 1),
+  m_font(font)
+{
+}
 
 void 
 PCD8544::set(uint8_t cmd)

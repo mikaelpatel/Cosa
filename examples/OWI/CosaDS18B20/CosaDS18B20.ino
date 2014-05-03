@@ -15,11 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- *
  * @section Description
  * Cosa demonstration of the DS18B20 1-Wire device driver. Assumes
  * three thermometers are connected to 1-Wire bus on pin(D7). They may
@@ -54,12 +49,11 @@
 OutputPin ledPin(Board::LED);
 
 // One-wire pin and connected DS18B20 devices
-#if defined(__ARDUINO_TINY__)
-#define OWI_PIN Board::D1
+#if defined(BOARD_TINY)
+OWI owi(Board::D1);
 #else
-#define OWI_PIN Board::D7
+OWI owi(Board::D7);
 #endif
-OWI owi(OWI_PIN);
 
 // Support macro to create name strings in program memory
 #define THERMOMETER(name)			\

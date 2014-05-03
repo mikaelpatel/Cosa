@@ -36,13 +36,13 @@
 // #define SET_RTC_TIME
 
 // Select the access port for the LCD
-HD44780::Port4b port;
+// HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
-// HD44780::DFRobot port;
+HD44780::DFRobot port;
 // HD44780::ERM1602_5 port;
 
 #if defined(USE_LARGE_LCD)

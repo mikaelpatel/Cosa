@@ -15,11 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -79,29 +74,13 @@ public:
 	  Board::DigitalPin sclk = Board::D1, 
 	  Board::DigitalPin dc = Board::D2, 
 	  Board::DigitalPin sce = Board::D3,
-	  Font* font = &system5x7) :
-    LCD::Device(),
-    m_sdin(sdin, 0),
-    m_sclk(sclk, 0),
-    m_dc(dc, 1),
-    m_sce(sce, 1),
-    m_font(font)
-  {
-  }
+	  Font* font = &system5x7);
 #else
   PCD8544(Board::DigitalPin sdin = Board::D6, 
 	  Board::DigitalPin sclk = Board::D7, 
 	  Board::DigitalPin dc = Board::D8, 
 	  Board::DigitalPin sce = Board::D9,
-	  Font* font = &system5x7) :
-    LCD::Device(),
-    m_sdin(sdin, 0),
-    m_sclk(sclk, 0),
-    m_dc(dc, 1),
-    m_sce(sce, 1),
-    m_font(font)
-  {
-  }
+	  Font* font = &system5x7);
 #endif
 
   /**
@@ -167,7 +146,10 @@ public:
    * Get current text font. 
    * @return font setting.
    */
-  Font* get_text_font() { return (m_font); }
+  Font* get_text_font() const
+  { 
+    return (m_font); 
+  }
 
   /**
    * Set text font. Returns previous setting.
@@ -259,7 +241,7 @@ protected:
    * Write given data to display according to mode.
    * @param[in] data to fill write to device.
    */
-  void write(uint8_t data) 
+  void write(uint8_t data) __attribute__((always_inline))
   { 
     m_sdin.write(data, m_sclk); 
   }

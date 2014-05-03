@@ -15,11 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- *
  * @section Description
  * Common literals, data types and syntax abstractions.
  *
@@ -252,6 +247,8 @@ struct iovec_t {
  * @return size.
  */
 inline size_t
+iovec_size(const iovec_t* vec) __attribute__((always_inline));
+inline size_t
 iovec_size(const iovec_t* vec)
 {
   size_t len = 0;
@@ -274,6 +271,8 @@ iovec_size(const iovec_t* vec)
  * @param[in] size number of bytes.
  */
 inline void
+iovec_arg(iovec_t* &vp, const void* buf, size_t size) __attribute__((always_inline));
+inline void
 iovec_arg(iovec_t* &vp, const void* buf, size_t size)
 {
   vp->buf = (void*) buf;
@@ -293,6 +292,8 @@ iovec_arg(iovec_t* &vp, const void* buf, size_t size)
  * @param[in,out] vp io vector.
  */
 inline void
+iovec_end(iovec_t* &vp) __attribute__((always_inline));
+inline void
 iovec_end(iovec_t* &vp)
 {
   vp->buf = 0;
@@ -305,7 +306,9 @@ iovec_end(iovec_t* &vp)
  * @return new value.
  */
 inline int16_t
-swap(int16_t value)
+swap(int16_t value) __attribute__((always_inline));
+inline int16_t
+swap(int16_t value) 
 {
   asm volatile("mov __tmp_reg__, %A0" 	"\n\t"
 	       "mov %A0, %B0" 		"\n\t"
@@ -374,6 +377,9 @@ void swap(T* buf)
  * @param[in] value to byte swap.
  * @return new value.
  */
+inline int32_t
+swap(int32_t value)
+ __attribute__((always_inline));
 inline int32_t
 swap(int32_t value)
 {
