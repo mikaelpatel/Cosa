@@ -83,14 +83,38 @@ public:
     update();
   }
 #else
-  SR3W(Board::DigitalPin en = Board::D3,
-       SPI::Clock rate = SPI::DEFAULT_RATE) : 
+  SR3W(Board::DigitalPin cs = Board::D3,
+       SPI::Clock rate = SPI::DEFAULT_CLOCK) : 
     SPI::Driver(cs, SPI::PULSE_HIGH, rate)
   {
     clear();
     update();
   }
 #endif
+
+  /**
+   * Return true(1) if the given pin in shadow register is set,
+   * otherwise false(0). 
+   * @param[in] pin pin number.
+   * @return bool.
+   */
+  bool is_set(uint8_t pin) __attribute__((always_inline))
+  {
+    uint8_t ix = (pin >> 3);
+    return ((m_port[ix] & _BV(pin & 0x7)) != 0);
+  }
+
+  /**
+   * Return true(1) if the given pin in shadow register is set,
+   * otherwise false(0). 
+   * @param[in] pin pin number.
+   * @return bool.
+   */
+  void is_clear(uint8_t pin) __attribute__((always_inline))
+  {
+    uint8_t ix = (pin >> 3);
+    return ((m_port[ix] & _BV(pin & 0x7)) == 0);
+  }
 
   /**
    * Set given pin in shadow register. Call update() to write to shift
@@ -112,6 +136,19 @@ public:
   {
     uint8_t ix = (pin >> 3);
     m_port[ix] &= ~_BV(pin & 0x7);
+  }
+
+  /**
+   * Toggle given pin in shadow register. Call update() to write to shift
+   * register. 
+   * @param[in] pin pin number.
+   */
+  void toggle(uint8_t pin) __attribute__((always_inline))
+  {
+    if (is_set(pin))
+      clear(pin);
+    else
+      set(pin);
   }
 
   /**
