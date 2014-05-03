@@ -22,7 +22,7 @@
  */
 
 #include "Cosa/IOBuffer.hh"
-#include "Cosa/ProtocolBuffer.hh"
+#include "Cosa/Serializer/ProtocolBuffer.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Ciao.cpp
+ * @file Cosa/Serializer/Ciao.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Ciao.hh"
+#include "Cosa/Serializer/Ciao.hh"
 
 // Ciao configuration
 static char MAGIC[] = "Cosa::Ciao";

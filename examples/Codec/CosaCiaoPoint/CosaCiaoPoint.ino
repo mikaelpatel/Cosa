@@ -29,7 +29,7 @@
  */
 
 #include "Cosa/Board.hh"
-#include "Cosa/Ciao.hh"
+#include "Cosa/Serializer/Ciao.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"

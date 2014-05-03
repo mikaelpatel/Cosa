@@ -1,5 +1,5 @@
 /**
- * @file Cosa/ProtocolBuffer.hh
+ * @file Cosa/Serializer/ProtocolBuffer.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_PROTOCOLBUFFER_HH
-#define COSA_PROTOCOLBUFFER_HH
+#ifndef COSA_SERIALIZER_PROTOCOLBUFFER_HH
+#define COSA_SERIALIZER_PROTOCOLBUFFER_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"

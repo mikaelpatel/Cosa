@@ -32,7 +32,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Fai.hh"
+#include "Cosa/Serializer/Fai.hh"
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/AnalogPin.hh"

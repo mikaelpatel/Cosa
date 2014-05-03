@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Fai/set_mode_t.cpp
+ * @file Cosa/Serializer/Fai/set_mode_t.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Fai.hh"
+#include "Cosa/Serializer/Fai.hh"
 
 #if defined(NREFLECTION)
 #define descr_name 0
