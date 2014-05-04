@@ -81,12 +81,12 @@ void setup()
   // Set the time. Adjust below to your current time
   time_t now;
 #if defined(SET_TIME)
-  now.year = 0x13;
-  now.month = 0x12;
-  now.date = 0x31;
-  now.day = 0x02;
-  now.hours = 0x23;
-  now.minutes = 0x55;
+  now.year = 0x14;
+  now.month = 0x05;
+  now.date = 0x05;
+  now.day = 0x00;
+  now.hours = 0x00;
+  now.minutes = 0x01;
   now.seconds = 0x00;
   rtc.set_time(now);
   latest.set = now;
