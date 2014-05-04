@@ -55,7 +55,7 @@ days_per(uint16_t year)
 
 time_t::time_t(clock_t c, uint8_t zone)
 {
-  UNUSED(zone);
+  c += SECONDS_PER_HOUR * zone;
   uint16_t dayno = c / SECONDS_PER_DAY;
   day = (dayno % DAYS_PER_WEEK) + 1;
   year = 0;

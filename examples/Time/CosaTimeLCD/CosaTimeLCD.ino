@@ -23,6 +23,7 @@
 
 #include "Cosa/Time.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
