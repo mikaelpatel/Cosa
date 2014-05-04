@@ -111,6 +111,7 @@ void setup()
 #if defined(TEST_RANGE)
   // Test signed integer range
   for (int32_t value = -100; value <= 100; value += 10) {
+    v = 0;
     ASSERT(pb.write(1, value) > 0);
     ASSERT(pb.read(tag, type) == 1);
     ASSERT(tag == 1 && type == ProtocolBuffer::VARINT);
