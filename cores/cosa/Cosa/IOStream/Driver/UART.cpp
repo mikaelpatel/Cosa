@@ -22,8 +22,10 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 #if defined(BOARD_ATTINY)
-static IOBuffer<Soft::UART::BUFFER_MAX> ibuf;
-Soft::UART  __attribute__ ((weak)) uart(Board::D2, Board::PCI1, &ibuf);
+// Default is serial output only
+// static IOBuffer<Soft::UART::BUFFER_MAX> ibuf;
+// Soft::UART  __attribute__ ((weak)) uart(Board::D2, Board::PCI1, &ibuf);
+Soft::UAT  __attribute__ ((weak)) uart(Board::D2);
 #else
 
 #include "Cosa/Bits.h"

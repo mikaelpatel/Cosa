@@ -23,7 +23,9 @@
 
 #if defined(BOARD_ATTINY)
 #include "Cosa/Soft/UART.hh"
-extern Soft::UART uart;
+// Default is serial output only
+// extern Soft::UART uart;
+extern Soft::UAT uart;
 #else
 
 #include "Cosa/Types.h"

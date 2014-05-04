@@ -23,15 +23,16 @@
 // Define symbols for enable/disable pin change interrupts
 #if defined(GIMSK)
 #define PCICR GIMSK
+#define PCIE0 PCIE
 #endif
 #if defined(PCIE3)
-#define PCIE (_BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
+#define PCIEN (_BV(PCIE3) | _BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
 #elif defined(PCIE2)
-#define PCIE (_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
+#define PCIEN (_BV(PCIE2) | _BV(PCIE1) | _BV(PCIE0))
 #elif defined(PCIE1)
-#define PCIE (_BV(PCIE1) | _BV(PCIE0))
+#define PCIEN (_BV(PCIE1) | _BV(PCIE0))
 #elif defined(PCIE0)
-#define PCIE (_BV(PCIE0))
+#define PCIEN (_BV(PCIE0))
 #endif
 
 PinChangeInterrupt* PinChangeInterrupt::s_pin[Board::PCINT_MAX] = { NULL };
@@ -76,9 +77,8 @@ PinChangeInterrupt::begin()
   for (uint8_t i = 0; i < Board::PCMSK_MAX; i++)
     s_state[i] = *Pin::PIN(i << 3);
 #endif
-
   synchronized {
-    bit_mask_set(PCICR, PCIE);
+    bit_mask_set(PCICR, PCIEN);
   }
 }
 
@@ -86,7 +86,7 @@ void
 PinChangeInterrupt::end()
 {
   synchronized {
-    bit_mask_clear(PCICR, PCIE);
+    bit_mask_clear(PCICR, PCIEN);
   }
 }
 
