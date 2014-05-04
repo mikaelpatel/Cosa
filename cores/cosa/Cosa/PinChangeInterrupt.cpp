@@ -23,6 +23,8 @@
 // Define symbols for enable/disable pin change interrupts
 #if defined(GIMSK)
 #define PCICR GIMSK
+#endif
+#if !defined(PCIE0)
 #define PCIE0 PCIE
 #endif
 #if defined(PCIE3)
