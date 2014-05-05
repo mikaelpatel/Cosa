@@ -40,34 +40,69 @@
  * speaker wires to Arduino pins. The pins you connect to are
  * specific, as the class lets the ATmega microcontroller do all the
  * pin timing and switching. This is important due to the high
- * switching speed possible with toneAC and to make sure the pins are
- * alyways perfectly out of phase with each other (push/pull). See the
- * below section for which pins to use for different Arduino
- * boards. Just as usual when connecting a speaker, make sure you add
- * an inline 100 ohm resistor between one of the pins and the speaker
- * wire. 
+ * switching speed possible and to make sure the pins are alyways
+ * perfectly out of phase with each other (push/pull). See the below
+ * section for which pins to use for different Arduino boards. Just as
+ * usual when connecting a speaker, make sure you add an inline 100
+ * ohm resistor between one of the pins and the speaker wire. 
  *
- * Pins  9 & 10 - ATmega328, ATmega128, ATmega640, ATmega8, Uno, Leonardo, etc.
+ * Pins  9 & 10 - ATmega328, ATmega128, ATmega640, Uno, Leonardo, etc.
  * Pins 11 & 12 - ATmega2560/2561, ATmega1280/1281, Mega
- * Pins 12 & 13 - ATmega1284P, ATmega644
+ * Pins 12 & 13 - ATmega1284P, ATmega644, Mighty
  *
  * @section Acknowledgement
- * The original code is created by created by Tim Eckel - teckel@leethost.com.
+ * The original code was created by Tim Eckel - teckel@leethost.com.
  * Copyright 2013 License: GNU GPL v3 http://www.gnu.org/licenses/gpl-3.0.html
  * 
  * @section References
- * 1, toneAC Arduino Library, https://code.google.com/p/arduino-tone-ac/
- * 2. Frequencies for equal-tempered scale, http://www.phy.mtu.edu/~suits/notefreqs.html
+ * 1, toneAC Arduino Library, 
+ *    https://code.google.com/p/arduino-tone-ac/
+ * 2. Frequencies for equal-tempered scale, 
+ *    http://www.phy.mtu.edu/~suits/notefreqs.html
  * 3. Wiki, Note, http://en.wikipedia.org/wiki/Note
  */
 class Tone {
 public:
-  /** 
-   * C3/C4 scale, suffix -s/is of sharp, and -s/es for flat,
-   * Scandinavian/Dutch Naming convention. 
+  /** Maximum volume */
+  static const uint8_t VOLUME_MAX = 10;
+
+  /**
+   * Initiate the tone player.
    */
-  enum Scale {
-    			C3 = 131,	Cis3 = 139, 
+  static void begin();
+
+  /**
+   * Play given frequency with given volume for given duration (in
+   * milli-seconds). 
+   * @param[in] freq frequency in hz.
+   * @param[in] volume output volume, range 0..10 (Default 5).
+   * @param[in] duration milli-seconds (Default 0)
+   * @param[in] background.
+   */
+  static void play(uint16_t freq, 
+		   uint8_t volume = VOLUME_MAX / 2, 
+		   uint16_t duration = 0, 
+		   bool background = false);
+  
+  /**
+   * Stop playing the tone (if background)
+   */
+  static void silent();
+
+private:
+  Tone();
+  static uint32_t s_expires;
+  static const uint8_t s_map[] PROGMEM;
+  friend void TIMER1_COMPA_vect(void);
+};
+
+/** 
+ * C3/C4 scale, suffix -s/is of sharp, and -s/es for flat,
+ * Scandinavian/Dutch naming convention. Usage: Note::C4.
+ */
+namespace Note {
+  enum {
+                        C3 = 131,	Cis3 = 139, 
     Des3 = 139,		D3 = 147,	Dis3 = 156, 
     Es3 = 156,		E3 = 165,       
 			F3 = 175,       Fis3 = 185, 
@@ -83,38 +118,6 @@ public:
     As4 = 415,		A4 = 440,	Ais4 = 466,
     Bes4 = 466,		B4 = 494
   };
-  
-  /** Maximum volume */
-  static const uint8_t VOLUME_MAX = 10;
-
-  /**
-   * Initiate the tone player.
-   */
-  static void begin();
-
-  /**
-   * Play given frequency with given volume for given duration (in
-   * milli-seconds). 
-   * @param[in] freq frequency in hz.
-   * @param[in] volume output volume, range 0..10 (Default 10).
-   * @param[in] duration milli-seconds (Default 0)
-   * @param[in] background.
-   */
-  static void play(uint16_t freq, 
-		   uint8_t volume = VOLUME_MAX, 
-		   uint16_t duration = 0, 
-		   bool background = false);
-  
-  /**
-   * Stop playing the tone.
-   */
-  static void silent();
-
-private:
-  static uint32_t s_time;
-  static const uint8_t s_map[] PROGMEM;
-  friend void TIMER1_COMPA_vect(void);
 };
-
 #endif
 
