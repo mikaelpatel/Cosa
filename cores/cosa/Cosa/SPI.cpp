@@ -22,7 +22,9 @@
 #include "Cosa/Power.hh"
 
 // Configuration: Allow SPI transfer interleaving
+#if !defined(BOARD_ATTINY)
 #define USE_SPI_PREFETCH
+#endif
 
 SPI spi  __attribute__ ((weak));
 
