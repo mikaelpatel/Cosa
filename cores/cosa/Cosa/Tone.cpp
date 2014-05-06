@@ -28,20 +28,25 @@
   || defined(__AVR_ATmega1281__)		\
   || defined(__AVR_ATmega2560__)		\
   || defined(__AVR_ATmega2561__)
-#define PIN1 DDB5
-#define PIN2 DDB6
+#define PWM1 DDB5
+#define PWM2 DDB6
 #define DDR DDRB
 #define PORT PORTB
 #elif defined(__AVR_ATmega1284P__)		\
   || defined(__AVR_ATmega644__)			\
   || defined(__AVR_ATmega644P__)
-#define PIN1 DDD4
-#define PIN2 DDD5
+#define PWM1 DDD4
+#define PWM2 DDD5
 #define DDR DDRD
 #define PORT PORTD
+#elif defined(__AVR_ATmega256RFR2__)
+#define PWM1 DDRB5
+#define PWM2 DDRB6
+#define DDR DDRB
+#define PORT PORTB
 #else
-#define PIN1 DDB1
-#define PIN2 DDB2
+#define PWM1 DDB1
+#define PWM2 DDB2
 #define DDR DDRB
 #define PORT PORTB
 #endif
@@ -55,7 +60,7 @@ void
 Tone::begin()
 {
   // Initiate PWM pins as output
-  DDR |= (_BV(PIN1) | _BV(PIN2));
+  DDR |= (_BV(PWM1) | _BV(PWM2));
 }
 
 void 

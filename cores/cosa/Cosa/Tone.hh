@@ -49,6 +49,7 @@
  * Pins  9 & 10 - ATmega328, ATmega128, ATmega640, Uno, Leonardo, etc.
  * Pins 11 & 12 - ATmega2560/2561, ATmega1280/1281, Mega
  * Pins 12 & 13 - ATmega1284P, ATmega644, Mighty
+ * Pins 14 & 15 - ATmega32U4, Teensy 2.0
  *
  * @section Acknowledgement
  * The original code was created by Tim Eckel - teckel@leethost.com.
