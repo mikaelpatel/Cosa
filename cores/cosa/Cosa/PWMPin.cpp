@@ -98,7 +98,7 @@ PWMPin::set(uint8_t duty)
   }
 }
 
-#elif defined(__ARDUINO_MIGHTY__)
+#elif defined(BOARD_ATMEGA1248P)
 
 PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
   OutputPin((Board::DigitalPin) pin) 
