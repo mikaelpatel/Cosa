@@ -30,7 +30,7 @@
 # AVR:ATtiny84
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
 # Brown-out detection disabled. Serial program downloading enabled
-attiny84-8.name=Cosa Tiny (ATtiny84, 8 MHz internal clock)
+attiny84-8.name=Cosa Breadboard (ATtiny84, 8 MHz internal clock)
 attiny84-8.upload.using=arduino:arduinoisp
 attiny84-8.upload.tool=arduino:arduinoisp
 attiny84-8.upload.maximum_size=8192
@@ -49,7 +49,7 @@ attiny84-8.build.core=cosa
 # AVR:ATtiny85
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
 # Brown-out detection disabled. Serial program downloading enabled
-attiny85-8.name=Cosa Tiny (ATtiny85, 8 MHz internal clock)
+attiny85-8.name=Cosa Breadboard (ATtiny85, 8 MHz internal clock)
 attiny85-8.upload.using=arduino:arduinoisp
 attiny85-8.upload.tool=arduino:arduinoisp
 attiny85-8.upload.maximum_size=8192
@@ -68,7 +68,7 @@ attiny85-8.build.core=cosa
 # AVR:ATtiny861
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
 # Brown-out detection disabled. Serial program downloading enabled
-attiny861-8.name=Cosa Tiny (ATtiny861, 8 MHz internal clock)
+attiny861-8.name=Cosa Breadboard (ATtiny861, 8 MHz internal clock)
 attiny861-8.upload.using=arduino:arduinoisp
 attiny861-8.upload.tool=arduino:arduinoisp
 attiny861-8.upload.maximum_size=8192
@@ -88,7 +88,7 @@ attiny861-8.build.core=cosa
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (256 words, 0x3f00). 
-atmega328-8.name=Cosa Arduino Basetta (ATmega328, 8 MHz internal clock)
+atmega328-8.name=Cosa Breadboard (ATmega328, 8 MHz internal clock)
 atmega328-8.upload.using=arduino:arduinoisp
 atmega328-8.upload.tool=arduino:arduinoisp
 # atmega328-8.upload.protocol=usbasp
@@ -109,7 +109,7 @@ atmega328-8.build.core=cosa
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (1024 words, 0xfc00). 
-mighty.name=Cosa Arduino Mighty (ATmega1284/BOOT_1284P)
+mighty.name=Cosa Breadboard (ATmega1284/BOOT_1284P)
 mighty.upload.tool=avrdude
 mighty.upload.protocol=stk500v1
 mighty.upload.maximum_size=129024
@@ -130,7 +130,7 @@ mighty.build.core=cosa
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (512 words, 0xfe00). 
-mighty-opt.name=Cosa Arduino Mighty (ATmega1284/Optiboot)
+mighty-opt.name=Cosa Breadboard (ATmega1284/Optiboot)
 mighty-opt.upload.tool=avrdude
 mighty-opt.upload.protocol=arduino
 mighty-opt.upload.maximum_size=130048
@@ -146,4 +146,3 @@ mighty-opt.build.mcu=atmega1284p
 mighty-opt.build.f_cpu=16000000L
 mighty-opt.build.board=BREADBOARD_ATMEGA1284
 mighty-opt.build.core=cosa
-

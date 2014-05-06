@@ -46,7 +46,7 @@ Power::clock_prescale(uint8_t factor)
 
   // Fix: RTC and other timer scaling
   synchronized {
-    CLKPR = (1 << CLKPCE);
+    CLKPR = _BV(CLKPCE);
     CLKPR = factor;
   }
 }

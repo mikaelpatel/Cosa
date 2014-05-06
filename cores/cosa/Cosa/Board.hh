@@ -17,7 +17,9 @@
  * 
  * @section Description
  * Cosa Board pin symbol definitions mapping to difference 
- * board/processor types.
+ * board/processor types. Board symbols are set by the build,
+ * e.g. -DARDUINO_UNO, and defined in the boards.txt configuration
+ * file. 
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -27,41 +29,56 @@
 
 #include "Cosa/Types.h"
 
-#if defined(__AVR_ATmega328P__)
-#include "Cosa/Board/ATmega328P.hh"
+#if defined(ARDUINO_UNO)			\
+  || defined(ARDUINO_DUEMILANOVE)		\
+  || defined(ARDUINO_NANO)			\
+  || defined(ARDUINO_PRO_MINI)			\
+  || defined(BREADBOARD_ATMEGA328P)		\
+  || defined(LILYPAD_ARDUINO)			\
+  || defined(MICRODUINO_CORE)
+#include "Cosa/Board/Arduino/ATmega328P.hh"
 #define BOARD_ATMEGA328P
-#elif defined(__AVR_ATmega32U4__)
-#include "Cosa/Board/ATmega32U4.hh"
+
+#elif defined(ARDUINO_LEONARDO)			\
+  || defined(ARDUINO_MICRO)			\
+  || defined(ARDUINO_PRO_MICRO)			\
+  || defined(LILYPAD_ARDUINO_USB)		\
+  || defined(MICRODUINO_CORE32U4)
+#include "Cosa/Board/Arduino/ATmega32U4.hh"
 #define BOARD_ATMEGA32U4
-#elif defined(__AVR_ATmega1284P__)		\
-  || defined(__AVR_ATmega644P__)
-#include "Cosa/Board/ATmega1284P.hh"
-#define BOARD_ATMEGA1248P
-#elif defined(__AVR_ATmega1280__)		\
-  || defined(__AVR_ATmega2560__)
-#include "Cosa/Board/ATmega2560.hh"
+
+#elif defined(ARDUINO_MEGA2560)
+#include "Cosa/Board/Arduino/ATmega2560.hh"
 #define BOARD_ATMEGA2560
-#elif defined(__AVR_ATmega256RFR2__)
-#include "Cosa/Board/ATmega256RFR2.hh"
-#define BOARD_ATMEGA256RFR2
-#elif defined(__AVR_ATtiny24__)			\
-  || defined(__AVR_ATtiny44__)			\
-  || defined(__AVR_ATtiny84__)
-#include "Cosa/Board/ATtinyX4.hh"
+
+#elif defined(BREADBOARD_ATTINYX4)
+#include "Cosa/Board/Arduino/ATtinyX4.hh"
 #define BOARD_ATTINYX4
 #define BOARD_ATTINY
-#elif defined(__AVR_ATtiny25__)			\
-  || defined(__AVR_ATtiny45__)			\
-  || defined(__AVR_ATtiny85__)
-#include "Cosa/Board/ATtinyX5.hh"
+
+#elif defined(BREADBOARD_ATTINYX5)
+#include "Cosa/Board/Arduino/ATtinyX5.hh"
 #define BOARD_ATTINYX5
 #define BOARD_ATTINY
-#elif defined(__AVR_ATtiny261__)		\
-  || defined(__AVR_ATtiny461__)			\
-  || defined(__AVR_ATtiny861__)
-#include "Cosa/Board/ATtinyX61.hh"
+
+#elif defined(BREADBOARD_ATTINYX61)
+#include "Cosa/Board/Arduino/ATtinyX61.hh"
 #define BOARD_ATTINYX61
 #define BOARD_ATTINY
+
+#elif defined(BREADBOARD_ATMEGA1284)		\
+  ||  defined(MICRODUINO_CORE_PLUS)
+#include "Cosa/Board/Arduino/ATmega1284P.hh"
+#define BOARD_ATMEGA1248P
+
+#elif defined(PINOCCIO_SCOUT)
+#include "Cosa/Board/Pinoccio/ATmega256RFR2.hh"
+#define BOARD_ATMEGA256RFR2
+
+#elif defined(TEENSY_2_0)
+#include "Cosa/Board/Teensy/ATmega32U4.hh"
+#define BOARD_ATMEGA32U4
+
 #else
 #error "Cosa/Board.hh: board not supported"
 #endif

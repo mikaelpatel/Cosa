@@ -1,0 +1,56 @@
+# @file boards/teensy.txt
+# @version 1.0
+#
+# @section License
+# Copyright (C) 2014, Mikael Patel
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# @section Description
+# The Cosa Teensy boards definition file. 
+#
+# @section Usage
+# Copy to top directory and rename boards.txt, alternatively
+# append to boards.txt file to extend current list of boards.
+#
+# This file is part of the Arduino Che Cosa project.
+
+##
+# TEENSY BOARDS
+##
+
+# AVR:ATmega32U4
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.6 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
+teensy-2_0.name=Cosa Teensy 2.0 (ATmega32U4/Caterina)
+teensy-2_0.upload.tool=avrdude
+teensy-2_0.upload.protocol=avr109
+teensy-2_0.upload.maximum_size=28672
+teensy-2_0.upload.maximum_data_size=2560
+teensy-2_0.upload.speed=57600
+teensy-2_0.upload.disable_flushing=true
+teensy-2_0.upload.use_1200bps_touch=true
+teensy-2_0.upload.wait_for_upload_port=true
+
+teensy-2_0.bootloader.tool=avrdude
+teensy-2_0.bootloader.low_fuses=0xff
+teensy-2_0.bootloader.high_fuses=0xd8
+teensy-2_0.bootloader.extended_fuses=0xcb
+
+teensy-2_0.build.mcu=atmega32u4
+teensy-2_0.build.f_cpu=16000000L
+teensy-2_0.build.vid=0x2341
+teensy-2_0.build.pid=0x8037
+teensy-2_0.build.usb_product="Teensy 2.0"
+teensy-2_0.build.board=TEENSY_2_0
+teensy-2_0.build.core=cosa
+teensy-2_0.build.extra_flags={build.usb_flags}

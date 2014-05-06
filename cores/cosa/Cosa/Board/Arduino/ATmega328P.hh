@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/ATmega328P.hh
+ * @file Cosa/Board/Arduino/ATmega328P.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_ATMEGA328P_HH
-#define COSA_BOARD_ATMEGA328P_HH
+#ifndef COSA_BOARD_ARDUINO_ATMEGA328P_HH
+#define COSA_BOARD_ARDUINO_ATMEGA328P_HH
 
 /**
  * Compiler warning on unused varable.
@@ -200,7 +200,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port C, analog pins 18-19).
+   * Pins used for TWI interface (in port C, analog pins 4-5).
    */
   enum TWIPin {
     SDA = 4,

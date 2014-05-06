@@ -36,6 +36,10 @@
 void init() __attribute__((weak));
 void init()
 {
+#if defined(TEENSY_2_0)
+  Power::clock_prescale(0);
+#endif
+
   // Set analog converter prescale factor and but do not enable conversion
 #if F_CPU >= 16000000L
   ADCSRA |= (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0));

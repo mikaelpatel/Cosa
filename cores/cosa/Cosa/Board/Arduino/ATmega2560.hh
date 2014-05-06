@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/ATmega2560.hh
+ * @file Cosa/Board/Arduino/ATmega2560.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_ATMEGA2560_HH
-#define COSA_BOARD_ATMEGA2560_HH
+#ifndef COSA_BOARD_ARDUINO_ATMEGA2560_HH
+#define COSA_BOARD_ARDUINO_ATMEGA2560_HH
 
 /**
  * Cosa MEGA Board pin symbol definitions for the ATmega1280 and
