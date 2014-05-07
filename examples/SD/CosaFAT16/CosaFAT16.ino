@@ -48,6 +48,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaFAT16: started"));
   TRACE(free_memory());
   TRACE(sizeof(FAT16::File));
+  TRACE(CLOCK);
   ASSERT(sd.begin(CLOCK));
   ASSERT(FAT16::begin(&sd));
 }
@@ -55,7 +56,7 @@ void setup()
 void loop()
 {
   static const size_t BUF_MAX = 512;
-  static const uint8_t K_BYTE = 100;
+  static const uint8_t K_BYTE = 8;
   uint8_t buf[BUF_MAX];
   uint32_t start, stop;
   FAT16::File file;
@@ -116,7 +117,7 @@ void loop()
   ASSERT(file.is_open());
   char msg[] = "Nisse badar.\n";
   size = strlen(msg);
-  ASSERT(file.write(msg, strlen(msg)) == size);
+  ASSERT(file.write(msg, strlen(msg)) == (int) size);
   ASSERT(file.close());
   stop = RTC::millis();
   trace << PSTR("Open/Write/Close file:");
@@ -138,61 +139,3 @@ void loop()
   ASSERT(true == false);
 }
 
-/*
----------------------------------------------------------
-CLOCK = SLOW_CLOCK
----------------------------------------------------------
-CosaFAT16: started
-free_memory() = 7080
-sizeof(FAT16::File) = 18
-NISSE.TXT     2013-12-13 10:32:48 13
-
-Open file:7 ms
-NISSE.TXT     2013-12-13 10:32:48 13
-TMP.TXT       2000-01-01 01:00:00 0
-
-Write file (8 KByte):138 ms
-
-Close file:27 ms
-NISSE.TXT     2013-12-13 10:32:48 13
-TMP.TXT       2000-01-01 01:00:00 8192
-
-Read file (8 KByte):62 ms
-
-Remove file:33 ms
-NISSE.TXT     2013-12-13 10:32:48 13
-
-Open/Write/Close file:73 ms
-Nisse badar.
-Open/Read/Close file:4 ms
-
-137:void loop():assert:true == false
----------------------------------------------------------
-CLOCK = FAST_CLOCK
----------------------------------------------------------
-CosaFAT16: started
-free_memory() = 7080
-sizeof(FAT16::File) = 18
-NISSE.TXT     2013-12-13 10:32:48 13
-
-Open file:6 ms
-NISSE.TXT     2013-12-13 10:32:48 13
-TMP.TXT       2000-01-01 01:00:00 0
-
-Write file (8 KByte):128 ms
-
-Close file:16 ms
-NISSE.TXT     2013-12-13 10:32:48 13
-TMP.TXT       2000-01-01 01:00:00 8192
-
-Read file (8 KByte):53 ms
-
-Remove file:30 ms
-NISSE.TXT     2013-12-13 10:32:48 13
-
-Open/Write/Close file:62 ms
-Nisse badar.
-Open/Read/Close file:4 ms
-
-137:void loop():assert:true == false
-*/
