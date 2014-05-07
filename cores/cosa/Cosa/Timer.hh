@@ -27,6 +27,9 @@
 /**
  * Real-time clock Timer class for scheduling of micro/milli-second 
  * callbacks.
+ *
+ * @section Limitations
+ * Requires RTC class running, i.e., started with RTC::begin().
  */
 class Timer : protected Link {
 public:
