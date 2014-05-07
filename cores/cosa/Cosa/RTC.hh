@@ -26,6 +26,9 @@
 /**
  * Real-time clock; Arduino/ATmega328P Timer0 for micro/milli-
  * second timing.
+ *
+ * @section Limitations
+ * Cannot be used together with other classes that use Timer#0.
  */
 class RTC {
 public:

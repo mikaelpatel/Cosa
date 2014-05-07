@@ -56,6 +56,9 @@
  *                       |ANT       0-|--------------------+
  *                       +------------+       17.3 cm
  * @endcode
+ *
+ * @section Limitations
+ * Cannot be used together with other classes that use Timer#1.
  */
 class VWI : public Wireless::Driver {
 public:

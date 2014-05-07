@@ -25,8 +25,11 @@
 #include "Cosa/OutputPin.hh"
 
 /**
- * Servo motor driver. Uses Timer1 and the two compare output
+ * Servo motor driver. Uses Timer#1 and the two compare output
  * registers.
+ *
+ * @section Limitations
+ * Cannot be used together with other classes that use Timer#1.
  */
 class Servo : private OutputPin {
 public:

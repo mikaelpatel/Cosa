@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel (C++ refactoring and extensions)
+ * Copyright (C) 2014, Mikael Patel (Cosa C++ port and extensions)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@
 #include "Cosa/Types.h"
 
 /**
- * Cosa tone library with the advantage of nearly twice the volume,
+ * Cosa tone/toneAC library with the advantage of nearly twice the volume,
  * higher frequencies (even if running at a lower clock speed), higher
  * quality (less clicking), nearly 1.5k smaller compiled code and less
  * stress on the speaker. Disadvantages are that it must use certain
@@ -61,6 +61,10 @@
  * 2. Frequencies for equal-tempered scale, 
  *    http://www.phy.mtu.edu/~suits/notefreqs.html
  * 3. Wiki, Note, http://en.wikipedia.org/wiki/Note
+ *
+ * @section Limitations
+ * The Tone class uses Timer#1 and cannot be used together with
+ * other classes that use the same timer (e.g. VWI).
  */
 class Tone {
 public:
@@ -91,7 +95,11 @@ public:
   static void silent();
 
 private:
+  /**
+   * Do not allow instances; Static Class Single-ton.
+   */
   Tone();
+
   static uint32_t s_expires;
   static const uint8_t s_map[] PROGMEM;
   friend void TIMER1_COMPA_vect(void);
