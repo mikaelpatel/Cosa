@@ -90,7 +90,7 @@ static const uint8_t PAYLOAD_TYPE = 0x01;
 
 void loop()
 {
-  static msg_t msg = { 0 };
+  static msg_t msg = { 0 , { 0 } };
   
   // Send to nodes 0x01 to 0x03
   for (uint8_t dest = 0x01; dest < 0x04; dest++) {

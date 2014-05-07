@@ -49,8 +49,8 @@
 #endif
 
 // Select Wireless device driver
-#define USE_CC1101
-// #define USE_NRF24L01P
+// #define USE_CC1101
+#define USE_NRF24L01P
 // #define USE_VWI
 
 #if defined(USE_CC1101)
