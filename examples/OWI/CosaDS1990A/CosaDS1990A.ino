@@ -32,7 +32,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // Table with valid keys (64 bit 1-Wire identity, 8 bytes per entry)
-uint8_t KEY[] __PROGMEM = {
+const uint8_t KEY[] PROGMEM = {
   0x01, 0x23, 0x81, 0xa3, 0x09, 0x00, 0x00, 0x7b,
   0x01, 0x29, 0x01, 0x27, 0x09, 0x00, 0x00, 0xa8,
   0x01, 0x26, 0xd9, 0x3e, 0x09, 0x00, 0x00, 0x47
@@ -41,7 +41,7 @@ uint8_t KEY[] __PROGMEM = {
 // One-wire pin (D1 on ATtiny, D7 on others)
 #if defined(BOARD_ATTINY)
 OWI owi(Board::D1);
-OutputPin redLed(Board::D2);
+OutputPin redLed(Board::D0);
 OutputPin greenLed(Board::D4);
 #else
 OWI owi(Board::D7);
@@ -75,7 +75,7 @@ void loop()
     if (!memcmp_P(rom, &KEY[i], OWI::ROM_MAX)) {
       trace << dev << PSTR(":AUTHORIZED KEY") << endl;
       greenLed.on();
-      SLEEP(5);
+      sleep(5);
       greenLed.off();
       return;
     }
@@ -85,9 +85,9 @@ void loop()
   trace << dev << PSTR(":ILLEGAL KEY") << endl;
   for (uint8_t i = 0; i < 10; i++) {
     redLed.on();
-    MSLEEP(250);
+    delay(250);
     redLed.off();
-    MSLEEP(250);
+    delay(250);
   }
 }
 

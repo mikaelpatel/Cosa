@@ -87,9 +87,9 @@ void setup()
   DS18B20* temp[] = { &indoors, &outdoors, &basement };
   for (uint8_t i = 0; i < membersof(temp); i++) {
     DS18B20* t = temp[i];
-    if (!t->connect(i)) break;
+    TRACE(t->connect(i));
     t->set_resolution(10);
-    t->set_trigger(20, 30);
+    t->set_trigger(18, 22);
     t->write_scratchpad();
   }
   ledPin.toggle();
