@@ -58,8 +58,8 @@
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
-HD44780::DFRobot port;
-// HD44780::ERM1602_5 port;
+// HD44780::DFRobot port;
+HD44780::ERM1602_5 port;
 HD44780 lcd(&port);
 IOStream cout(&lcd);
 #if defined(BOARD_ATTINY)
