@@ -23,7 +23,7 @@
  *                       DHT11/dht
  *                       +------------+
  * (VCC)---------------1-|VCC  ====== |
- * (D2/EXT0)-----------2-|DATA ====== |
+ * (D2/EXT0/EXT4)------2-|DATA ====== |
  *                     3-|     ====== |
  * (GND)---------------4-|GND  ====== |
  *                       +------------+
@@ -42,7 +42,11 @@
 // on_sample_completed() prints current value to the trace stream.
 class DHTevent : public DHT11 {
 public:
+#if defined(ARDUINO_MEGA_2560)
+  DHTevent(Board::ExternalInterruptPin pin = Board::EXT4) : DHT11(pin) {}
+#else
   DHTevent(Board::ExternalInterruptPin pin = Board::EXT0) : DHT11(pin) {}
+#endif
   virtual void on_sample_completed() { trace << *this << endl; }
 };
 
