@@ -100,12 +100,12 @@ void loop()
   if (!state) return;
 
   // Trace state of device pins, power supply and free memory
-  trace << Watchdog::millis() << PSTR(":D:");
+  trace << Watchdog::millis() << PSTR(":D=");
   for (uint8_t i = 0; i < 14; i++) trace << InputPin::read(i);
-  trace << PSTR(":A:") << AnalogPin::sample(0);
-  for (uint8_t i = 1; i < 4; i++) trace << ':' << AnalogPin::sample(i);
-  trace << PSTR(":VCC:") << AnalogPin::bandgap();
-  trace << PSTR(":MEM:") << free_memory();
+  trace << PSTR(";A=") << AnalogPin::sample(0);
+  for (uint8_t i = 1; i < 4; i++) trace << ',' << AnalogPin::sample(i);
+  trace << PSTR(";Vcc=") << AnalogPin::bandgap();
+  trace << PSTR(";mem=") << free_memory();
   trace << endl << flush;
   SLEEP(5);
 
