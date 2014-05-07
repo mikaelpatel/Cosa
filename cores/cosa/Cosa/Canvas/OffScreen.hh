@@ -48,7 +48,7 @@ public:
    * Get bitmap for the off-screen canvas.
    * @return bitmap pointer.
    */
-  uint8_t* get_bitmap() const
+  uint8_t* get_bitmap()
   {
     return (m_bitmap);
   }
