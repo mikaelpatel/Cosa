@@ -26,27 +26,6 @@
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (256 words, 0x3f00). 
-uno.name=Cosa Arduino Uno (ATmega328/Optiboot)
-uno.upload.tool=avrdude
-uno.upload.protocol=arduino
-uno.upload.maximum_size=32256
-uno.upload.maximum_data_size=2048
-uno.upload.speed=115200
-
-uno.bootloader.tool=avrdude
-uno.bootloader.low_fuses=0xff
-uno.bootloader.high_fuses=0xde
-uno.bootloader.extended_fuses=0x05
-
-uno.build.mcu=atmega328p
-uno.build.f_cpu=16000000L
-uno.build.board=ARDUINO_UNO
-uno.build.core=cosa
-
-# AVR:ATmega328
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (1024 words, 0x3c00). 
 duemilanove.name=Cosa Arduino Duemilanove (ATmega328/BOOT_168)
 duemilanove.upload.tool=avrdude
@@ -64,6 +43,83 @@ duemilanove.build.mcu=atmega328p
 duemilanove.build.f_cpu=16000000L
 duemilanove.build.board=ARDUINO_DUEMILANOVE
 duemilanove.build.core=cosa
+
+# AVR:ATmega32U4
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.6 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
+leonardo.name=Cosa Arduino Leonardo (ATmega32U4/Caterina)
+leonardo.upload.tool=avrdude
+leonardo.upload.protocol=avr109
+leonardo.upload.maximum_size=28672
+leonardo.upload.maximum_data_size=2560
+leonardo.upload.speed=57600
+leonardo.upload.disable_flushing=true
+leonardo.upload.use_1200bps_touch=true
+leonardo.upload.wait_for_upload_port=true
+
+leonardo.bootloader.tool=avrdude
+leonardo.bootloader.low_fuses=0xff
+leonardo.bootloader.high_fuses=0xd8
+leonardo.bootloader.extended_fuses=0xcb
+
+leonardo.build.mcu=atmega32u4
+leonardo.build.f_cpu=16000000L
+leonardo.build.vid=0x2341
+leonardo.build.pid=0x8036
+leonardo.build.core=cosa
+leonardo.build.usb_product="Arduino Leonardo"
+leonardo.build.board=ARDUINO_LEONARDO
+leonardo.build.extra_flags={build.usb_flags}
+
+# AVR:ATmega2560
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (4096 words, 0x1f000). 
+mega.name=Cosa Arduino Mega (ATmega2560/STK500v2)
+mega.upload.tool=avrdude
+mega.upload.protocol=wiring
+mega.upload.maximum_size=258048
+mega.upload.maximum_data_size=8192
+mega.upload.speed=115200
+
+mega.bootloader.tool=avrdude
+mega.bootloader.low_fuses=0xff
+mega.bootloader.high_fuses=0xd8
+mega.bootloader.extended_fuses=0xfd
+
+mega.build.mcu=atmega2560
+mega.build.f_cpu=16000000L
+mega.build.board=ARDUINO_MEGA2560
+mega.build.core=cosa
+
+# AVR:ATmega32U4
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.6 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
+micro.name=Cosa Arduino Micro (ATmega32U4/Caterina)
+micro.upload.tool=avrdude
+micro.upload.protocol=avr109
+micro.upload.maximum_size=28672
+micro.upload.maximum_data_size=2560
+micro.upload.speed=57600
+micro.upload.disable_flushing=true
+micro.upload.use_1200bps_touch=true
+micro.upload.wait_for_upload_port=true
+
+micro.bootloader.tool=avrdude
+micro.bootloader.low_fuses=0xff
+micro.bootloader.high_fuses=0xd8
+micro.bootloader.extended_fuses=0xcb
+
+micro.build.mcu=atmega32u4
+micro.build.f_cpu=16000000L
+micro.build.vid=0x2341
+micro.build.pid=0x8037
+micro.build.usb_product="Arduino Micro"
+micro.build.board=ARDUINO_MICRO
+micro.build.core=cosa
+micro.build.extra_flags={build.usb_flags}
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -85,6 +141,34 @@ nano.build.mcu=atmega328p
 nano.build.f_cpu=16000000L
 nano.build.core=cosa
 nano.build.board=ARDUINO_NANO
+
+# AVR:ATmega32U4
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.6 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
+pro-micro.name=Cosa Arduino Pro Micro (ATmega32U4/Caterina)
+pro-micro.upload.tool=avrdude
+pro-micro.upload.protocol=avr109
+pro-micro.upload.maximum_size=28672
+pro-micro.upload.maximum_data_size=2560
+pro-micro.upload.speed=57600
+pro-micro.upload.disable_flushing=true
+pro-micro.upload.use_1200bps_touch=true
+pro-micro.upload.wait_for_upload_port=true
+
+pro-micro.bootloader.tool=avrdude
+pro-micro.bootloader.low_fuses=0xff
+pro-micro.bootloader.high_fuses=0xd8
+pro-micro.bootloader.extended_fuses=0xcb
+
+pro-micro.build.mcu=atmega32u4
+pro-micro.build.f_cpu=16000000L
+pro-micro.build.vid=0x2341
+pro-micro.build.pid=0x8037
+pro-micro.build.usb_product="Arduino Pro Micro"
+pro-micro.build.board=ARDUINO_PRO_MICRO
+pro-micro.build.core=cosa
+pro-micro.build.extra_flags={build.usb_flags}
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -128,110 +212,26 @@ pro-mini-8.build.f_cpu=8000000L
 pro-mini-8.build.board=ARDUINO_PRO_MINI
 pro-mini-8.build.core=cosa
 
-# AVR:ATmega2560
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# AVR:ATmega328
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (4096 words, 0x1f000). 
-mega.name=Cosa Arduino Mega (ATmega2560/STK500v2)
-mega.upload.tool=avrdude
-mega.upload.protocol=wiring
-mega.upload.maximum_size=258048
-mega.upload.maximum_data_size=8192
-mega.upload.speed=115200
+# Boot Reset vector enable (256 words, 0x3f00). 
+uno.name=Cosa Arduino Uno (ATmega328/Optiboot)
+uno.upload.tool=avrdude
+uno.upload.protocol=arduino
+uno.upload.maximum_size=32256
+uno.upload.maximum_data_size=2048
+uno.upload.speed=115200
 
-mega.bootloader.tool=avrdude
-mega.bootloader.low_fuses=0xff
-mega.bootloader.high_fuses=0xd8
-mega.bootloader.extended_fuses=0xfd
+uno.bootloader.tool=avrdude
+uno.bootloader.low_fuses=0xff
+uno.bootloader.high_fuses=0xde
+uno.bootloader.extended_fuses=0x05
 
-mega.build.mcu=atmega2560
-mega.build.f_cpu=16000000L
-mega.build.board=ARDUINO_MEGA2560
-mega.build.core=cosa
-
-# AVR:ATmega32U4
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
-leonardo.name=Cosa Arduino Leonardo (ATmega32U4/Caterina)
-leonardo.upload.tool=avrdude
-leonardo.upload.protocol=avr109
-leonardo.upload.maximum_size=28672
-leonardo.upload.maximum_data_size=2560
-leonardo.upload.speed=57600
-leonardo.upload.disable_flushing=true
-leonardo.upload.use_1200bps_touch=true
-leonardo.upload.wait_for_upload_port=true
-
-leonardo.bootloader.tool=avrdude
-leonardo.bootloader.low_fuses=0xff
-leonardo.bootloader.high_fuses=0xd8
-leonardo.bootloader.extended_fuses=0xcb
-
-leonardo.build.mcu=atmega32u4
-leonardo.build.f_cpu=16000000L
-leonardo.build.vid=0x2341
-leonardo.build.pid=0x8036
-leonardo.build.core=cosa
-leonardo.build.usb_product="Arduino Leonardo"
-leonardo.build.board=ARDUINO_LEONARDO
-leonardo.build.extra_flags={build.usb_flags}
-
-# AVR:ATmega32U4
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
-micro.name=Cosa Arduino Micro (ATmega32U4/Caterina)
-micro.upload.tool=avrdude
-micro.upload.protocol=avr109
-micro.upload.maximum_size=28672
-micro.upload.maximum_data_size=2560
-micro.upload.speed=57600
-micro.upload.disable_flushing=true
-micro.upload.use_1200bps_touch=true
-micro.upload.wait_for_upload_port=true
-
-micro.bootloader.tool=avrdude
-micro.bootloader.low_fuses=0xff
-micro.bootloader.high_fuses=0xd8
-micro.bootloader.extended_fuses=0xcb
-
-micro.build.mcu=atmega32u4
-micro.build.f_cpu=16000000L
-micro.build.vid=0x2341
-micro.build.pid=0x8037
-micro.build.usb_product="Arduino Micro"
-micro.build.board=ARDUINO_MICRO
-micro.build.core=cosa
-micro.build.extra_flags={build.usb_flags}
-
-# AVR:ATmega32U4
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
-pro-micro.name=Cosa Arduino Pro Micro (ATmega32U4/Caterina)
-pro-micro.upload.tool=avrdude
-pro-micro.upload.protocol=avr109
-pro-micro.upload.maximum_size=28672
-pro-micro.upload.maximum_data_size=2560
-pro-micro.upload.speed=57600
-pro-micro.upload.disable_flushing=true
-pro-micro.upload.use_1200bps_touch=true
-pro-micro.upload.wait_for_upload_port=true
-
-pro-micro.bootloader.tool=avrdude
-pro-micro.bootloader.low_fuses=0xff
-pro-micro.bootloader.high_fuses=0xd8
-pro-micro.bootloader.extended_fuses=0xcb
-
-pro-micro.build.mcu=atmega32u4
-pro-micro.build.f_cpu=16000000L
-pro-micro.build.vid=0x2341
-pro-micro.build.pid=0x8037
-pro-micro.build.usb_product="Arduino Pro Micro"
-pro-micro.build.board=SPARKFUN_PRO_MICRO
-pro-micro.build.core=cosa
-pro-micro.build.extra_flags={build.usb_flags}
+uno.build.mcu=atmega328p
+uno.build.f_cpu=16000000L
+uno.build.board=ARDUINO_UNO
+uno.build.core=cosa
 
 ##
 # BREADBOARDS
