@@ -34,6 +34,11 @@
  * data type is used (enum types) for the specific pin classes;
  * DigitalPin, AnalogPin, PWMPin, etc. 
  *
+ * The pin numbers for ATmega32U4 are only symbolically mapped,
+ * i.e. a pin number/digit will not work, symbols must be used, 
+ * e.g., Board::D12. Avoid iterations assuming that the symbols 
+ * are in order. 
+ *
  * The static inline functions, SFR, BIT and UART, rely on compiler
  * optimizations to be reduced.  
  */
@@ -61,7 +66,7 @@ private:
   }
 
   /**
-   * Return Pin Change Mask Register for given Arduino pin number.
+   * Return Pin Change Mask Register for given Teensy pin number.
    * @param[in] pin number.
    * @return pin change mask register pointer.
    */
@@ -72,7 +77,7 @@ private:
   }
 
   /**
-   * Return bit position for given Arduino pin number in Special
+   * Return bit position for given Teensy pin number in Special
    * Function Register. 
    * @param[in] pin number.
    * @return pin bit position.
@@ -83,7 +88,7 @@ private:
   }
   
   /**
-   * Return UART Register for given Arduino serial port.
+   * Return UART Register for given Teensy serial port.
    * @param[in] port number.
    * @return UART register pointer.
    */

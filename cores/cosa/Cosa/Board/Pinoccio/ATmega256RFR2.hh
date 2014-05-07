@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/ATmega256RFR.hh
+ * @file Cosa/Board/Pinoccio/ATmega256RFR.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_ATMEGA256RFR2_HH
-#define COSA_BOARD_ATMEGA256RFR2_HH
+#ifndef COSA_BOARD_PINOCCIO_ATMEGA256RFR2_HH
+#define COSA_BOARD_PINOCCIO_ATMEGA256RFR2_HH
 
 /**
  * Cosa Pinoccio Board pin symbol definitions for the ATmega256rfr
@@ -44,7 +44,7 @@ private:
   Board() {}
 
   /**
-   * Return Special Function Register for given Arduino pin number.
+   * Return Special Function Register for given Pinoccio Scount pin number.
    * @param[in] pin number.
    * @return special register pointer.
    */
@@ -57,7 +57,7 @@ private:
   }
 
   /**
-   * Return bit position for given Arduino pin number in Special
+   * Return bit position for given Pinoccio Scount pin number in Special
    * Function Register.
    * @param[in] pin number.
    * @return pin bit position.
@@ -68,7 +68,7 @@ private:
   }
   
   /**
-   * Return Pin Change Mask Register for given Arduino pin number.
+   * Return Pin Change Mask Register for given Pinoccio Scount pin number.
    * @param[in] pin number.
    * @return pin change mask register pointer.
    */
@@ -79,7 +79,7 @@ private:
   }
 
   /**
-   * Return UART Register for given Arduino serial port.
+   * Return UART Register for given Pinoccio Scount serial port.
    * @param[in] port number.
    * @return UART register pointer.
    */
