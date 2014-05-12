@@ -20,53 +20,51 @@
 
 #include "Cosa/INET/HTTP.hh"
 #include "Cosa/Watchdog.hh"
+#include <alloca.h>
 #include <ctype.h>
 
 #define CRLF "\r\n"
-
-bool
-HTTP::Server::begin(Socket* sock)
-{
-  if (sock == NULL) return (false);
-  m_sock = sock;
-  return (!sock->listen());
-}
 
 int
 HTTP::Server::request(uint32_t ms)
 {
   // Wait for incoming connection requests
-  uint32_t start = Watchdog::millis();
+  // NOTE: LTO error; need rewrite to stack allocation
+  // char line[REQUEST_MAX];
+  char* line = (char*) alloca(REQUEST_MAX);
+  char* method;
+  char* url;
+  char* sp;
   int res;
+  
+  uint32_t start = Watchdog::millis();
   while (((res = m_sock->accept()) != 0) &&
-	 ((ms == 0L) || (Watchdog::millis() - start < ms)))
-    Watchdog::delay(16);
+	 ((ms == 0L) || (Watchdog::millis() - start < ms))) 
+    yield();
   if (res != 0) return (-2);
 
   // Wait for the HTTP request
-  while ((res = m_sock->available()) == 0) Watchdog::delay(16);
-  if (res < 0) goto error;
+  while ((res = m_sock->available()) == 0) yield();
 
-  // Read request, call handler and flush/send any buffered response
-  char line[REQUEST_MAX];
-  m_sock->gets(line, sizeof(line));
-  on_request(line);
+  // Parse request (method and url), call handler and flush buffered response
+  if (res < 0) goto error;
+  m_sock->gets(line, REQUEST_MAX);
+  method = line;
+  sp = strpbrk(line, " ");
+  if (sp == NULL) goto error;
+  url = sp + 1;
+  *sp = 0;
+  sp = strpbrk(url, " ");
+  if (sp == NULL) goto error;
+  *sp = 0;
+  on_request(method, url);
   m_sock->flush();
-  
+
   // Disconnect the client and allow new connection requests
  error:
   m_sock->disconnect();
   m_sock->listen();
   return (res);
-}
-
-bool
-HTTP::Server::end()
-{
-  if (m_sock == NULL) return (false);
-  m_sock->close();
-  m_sock = NULL;
-  return (true);
 }
 
 bool 

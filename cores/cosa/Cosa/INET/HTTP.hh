@@ -27,10 +27,10 @@
 class HTTP {
 public:
   /** Max length of hostname */
-  static const uint8_t HOSTNAME_MAX = 32;
+  static const size_t HOSTNAME_MAX = 32;
 
   /** Max length of HTTP request */
-  static const uint8_t REQUEST_MAX = 64;
+  static const size_t REQUEST_MAX = 64;
 
   /**
    * HTTP server request handler. Should be sub-classed and the
@@ -54,7 +54,12 @@ public:
      * @param[in] sock server socket.
      * @return bool.
      */
-    bool begin(Socket* sock);
+    bool begin(Socket* sock)
+    {
+      if (sock == NULL) return (false);
+      m_sock = sock;
+      return (sock->listen() == 0);
+    }
 
     /**
      * Server loop function; wait for a request for the given time
@@ -73,7 +78,13 @@ public:
      * otherwise false.
      * @return bool.
      */
-    bool end();
+    bool end()
+    {
+      if (m_sock == NULL) return (false);
+      m_sock->close();
+      m_sock = NULL;
+      return (true);
+    }
 
     /**
      * @override
@@ -81,7 +92,7 @@ public:
      * given request (http).
      * @param[in] http request string (REQUEST_MAX). 
      */
-    virtual void on_request(char* http) = 0;
+    virtual void on_request(char* method, char* url) = 0;
 
   protected:
     Socket* m_sock;

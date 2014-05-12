@@ -59,7 +59,7 @@ public:
   WebServer() : m_nr(0) {}
 
   // Response member function
-  virtual void on_request(char* http);
+  virtual void on_request(char* method, char* url);
 
 private:
   // Request sequence number
@@ -67,7 +67,7 @@ private:
 };
 
 void 
-WebServer::on_request(char* http)
+WebServer::on_request(char* method, char* url)
 {
   // Uptime in seconds
   uint32_t uptime =  Watchdog::millis() / 1000;
@@ -107,7 +107,9 @@ WebServer::on_request(char* http)
   page << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
   page << PSTR("Memory (byte): ") << free_memory() << BR;
   page << PSTR("Uptime (h:m:s): ") << h << ':' << m << ':' << s << BR;
-  page << PSTR("Request(") << ++m_nr << PSTR("): ") << http << BR;
+  page << PSTR("Request: ") << ++m_nr << BR;
+  page << PSTR("Method: ") << method << BR;
+  page << PSTR("URL: ") << url << BR;
   page << PSTR("MAC: "); INET::print_mac(page, addr.mac); page << BR;
   page << PSTR("IP: "); INET::print_addr(page, addr.ip, addr.port); page << BR;
   page << footer;

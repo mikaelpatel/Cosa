@@ -604,7 +604,7 @@ W5100::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
 int
 W5100::bind(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
 {
-  // Check for default gateware. Assume router is first addres on network
+  // Check for default gateware. Assume router is first address on network
   uint8_t ROUTER[4];
   if (gateway == NULL) {
     memcpy(ROUTER, ip, sizeof(ROUTER) - 1);
