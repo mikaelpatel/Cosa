@@ -33,7 +33,8 @@ HTTP::Server::request(uint32_t ms)
   // char line[REQUEST_MAX];
   char* line = (char*) alloca(REQUEST_MAX);
   char* method;
-  char* url;
+  char* path;
+  char* query;
   char* sp;
   int res;
   
@@ -52,12 +53,20 @@ HTTP::Server::request(uint32_t ms)
   method = line;
   sp = strpbrk(line, " ");
   if (sp == NULL) goto error;
-  url = sp + 1;
+  path = sp + 1;
   *sp = 0;
-  sp = strpbrk(url, " ");
+  sp = strpbrk(path, " ?");
   if (sp == NULL) goto error;
+  if (*sp != '?') 
+    query = NULL;
+  else {
+    query = sp + 1;
+    *sp = 0;
+    sp =  strpbrk(query, " ");
+    if (sp == NULL) goto error;
+  }
   *sp = 0;
-  on_request(method, url);
+  on_request(method, path, query);
   m_sock->flush();
 
   // Disconnect the client and allow new connection requests

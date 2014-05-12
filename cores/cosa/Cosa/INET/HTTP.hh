@@ -90,9 +90,11 @@ public:
      * @override
      * Application extension; Should implement the response to the
      * given request (http).
-     * @param[in] http request string (REQUEST_MAX). 
+     * @param[in] method http request method string.
+     * @param[in] path resource path string.
+     * @param[in] query possible query string.
      */
-    virtual void on_request(char* method, char* url) = 0;
+    virtual void on_request(char* method, char* path, char* query) = 0;
 
   protected:
     Socket* m_sock;
