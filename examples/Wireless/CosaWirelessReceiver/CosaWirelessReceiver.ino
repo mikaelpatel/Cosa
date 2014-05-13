@@ -35,8 +35,8 @@
 #define DEVICE 0x01
 
 // Select Wireless device driver
-// #define USE_CC1101
-#define USE_NRF24L01P
+#define USE_CC1101
+// #define USE_NRF24L01P
 // #define USE_RFM69
 // #define USE_VWI
 
@@ -75,7 +75,7 @@ void setup()
 
 static const uint8_t IOSTREAM_TYPE = 0x00;
 
-static const uint8_t PAYLOAD_MAX = 14;
+static const uint8_t PAYLOAD_MAX = 31;
 struct payload_msg_t {
   uint8_t nr;
   uint8_t payload[PAYLOAD_MAX];

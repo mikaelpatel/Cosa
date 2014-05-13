@@ -21,7 +21,6 @@
 #include "Cosa/Wireless/Driver/CC1101.hh"
 
 #if !defined(BOARD_ATTINYX5)
-#include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
 
@@ -118,7 +117,7 @@ CC1101::strobe(Command cmd)
 void 
 CC1101::await(Mode mode)
 {
-  while (read_status().mode != mode) Watchdog::delay(24);
+  while (read_status().mode != mode) delay(24);
 }
 
 bool
@@ -149,6 +148,7 @@ CC1101::begin(const void* config)
   spi.end();
 
   // Initiate device driver state and enable interrupt handler
+  strobe(SCAL);
   m_avail = false;
   spi.attach(this);
   m_irq.enable();

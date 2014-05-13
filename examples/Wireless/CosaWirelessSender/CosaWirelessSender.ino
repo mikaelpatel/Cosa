@@ -41,8 +41,8 @@
 #endif
 
 // Select Wireless device driver
-// #define USE_CC1101
-#define USE_NRF24L01P
+#define USE_CC1101
+// #define USE_NRF24L01P
 // #define USE_RFM69
 // #define USE_VWI
 
@@ -81,7 +81,7 @@ void setup()
 }
 
 // Message from the device; message string
-static const uint8_t PAYLOAD_MAX = 15;
+static const uint8_t PAYLOAD_MAX = 31;
 struct msg_t {
   uint8_t nr;
   uint8_t payload[PAYLOAD_MAX];
