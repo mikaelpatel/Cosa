@@ -21,6 +21,7 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 #include "Cosa/Watchdog.hh"
 
+// DDR
 const uint8_t HD44780::offset0[] __PROGMEM = { 0x00, 0x40, 0x14, 0x54 };
 const uint8_t HD44780::offset1[] __PROGMEM = { 0x00, 0x40, 0x10, 0x50 };
 
@@ -47,7 +48,7 @@ HD44780::begin()
   const uint8_t FS0 = (FUNCTION_SET | DATA_LENGTH_8BITS);
   const uint8_t FS1 = (FUNCTION_SET | DATA_LENGTH_4BITS);
   bool mode = m_io->setup();
-  Watchdog::delay(POWER_ON_TIME);
+  delay(POWER_ON_TIME);
   if (!mode) {
     m_io->write4b(FS0 >> 4);
     DELAY(INIT0_TIME);
@@ -166,25 +167,27 @@ HD44780::putchar(char c)
   // Check for special characters
   if (c < ' ') {
 
-    // Alert
+    // Alert: blink the backlight
     if (c == '\a') {
-      // Fix: Should have some indication
+      backlight_off();
+      delay(32);
+      backlight_on();
       return (c);
     }
 
-    // Back-space
+    // Back-space: move cursor back one step (if possible)
     if (c == '\b') {
       set_cursor(m_x - 1, m_y);
       return (c);
     }
 
-    // Form-feed
+    // Form-feed: clear the display
     if (c == '\f') {
       display_clear();
       return (c);
     }
     
-    // Carriage-return-line-feed
+    // Carriage-return-line-feed: clear line
     if (c == '\n') {
       uint8_t x, y;
       set_cursor(0, m_y + 1);

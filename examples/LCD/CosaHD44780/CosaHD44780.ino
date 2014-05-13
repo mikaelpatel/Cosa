@@ -31,12 +31,12 @@
 #include "Cosa/LCD/Driver/HD44780.hh"
 
 // LCD and communication port
-HD44780::Port4b port;
+// HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
-// HD44780::GYIICLCD port;
+HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 // HD44780::ERM1602_5 port;
 // HD44780 lcd(&port, 20, 4);
@@ -106,7 +106,7 @@ void setup()
     lcd.set_custom_char_P(c, &bitmaps[c*SIZEOF_BITMAP]);
 
   // Bind LCD to trace output and print the custom characters
-  trace.begin(&lcd, PSTR("\fCosaHD44780"));
+  trace.begin(&lcd, PSTR("\f\aCosaHD44780\a"));
   for (uint8_t i = 0; i < lcd.WIDTH; i++) {
     uint8_t x, y;
     lcd.get_cursor(x, y);
