@@ -19,7 +19,6 @@
  */
 
 #include "Cosa/INET/NTP.hh"
-#include "Cosa/Watchdog.hh"
 
 NTP::NTP(Socket* sock, uint8_t server[4], int8_t zone) : 
   m_sock(sock), 
@@ -49,7 +48,7 @@ NTP::time()
   packet[14] = 49;
   packet[15] = 52;		   
   res = m_sock->send(packet, sizeof(packet), m_server, PORT);
-  Watchdog::delay(TIMEOUT);
+  delay(TIMEOUT);
   uint8_t dest[4];
   uint16_t port;
   res = m_sock->recv(packet, sizeof(packet), dest, port);

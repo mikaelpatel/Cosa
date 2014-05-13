@@ -111,7 +111,7 @@ DHCP::recv(uint8_t type, uint16_t ms)
   int res = 0;
   for (uint16_t i = 0; i < ms; i += 32) {
     if ((res = m_sock->available()) != 0) break;
-    Watchdog::delay(32);
+    delay(32);
   }
   if (res == 0) return (-2);
 

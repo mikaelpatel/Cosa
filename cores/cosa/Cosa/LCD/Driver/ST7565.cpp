@@ -19,7 +19,6 @@
  */
 
 #include "Cosa/LCD/Driver/ST7565.hh"
-#include "Cosa/Watchdog.hh"
 
 // Initialization script
 const uint8_t ST7565::script[] __PROGMEM = {
@@ -81,7 +80,7 @@ ST7565::begin()
       while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END) {
 	if (cmd == SCRIPT_PAUSE) {
 	  uint8_t ms = pgm_read_byte(bp++);
-	  Watchdog::delay(ms);
+	  delay(ms);
 	}
 	else write(cmd);
       }

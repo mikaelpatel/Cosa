@@ -19,7 +19,6 @@
  */
 
 #include "Cosa/LCD/Driver/HD44780.hh"
-#include "Cosa/Watchdog.hh"
 
 // DDR
 const uint8_t HD44780::offset0[] __PROGMEM = { 0x00, 0x40, 0x14, 0x54 };

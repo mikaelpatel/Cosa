@@ -137,7 +137,7 @@ HTTP::Client::get(const char* url, uint32_t ms)
   // Connect to the server
   res = m_sock->connect((const char*) hostname, port);
   if (res != 0) goto error;
-  while ((res = m_sock->isconnected()) == 0) Watchdog::delay(16);
+  while ((res = m_sock->isconnected()) == 0) delay(16);
   if (res == 0) res = -3;
   if (res < 0) goto error;
   
@@ -153,7 +153,7 @@ HTTP::Client::get(const char* url, uint32_t ms)
   start = Watchdog::millis();
   while (((res = m_sock->available()) == 0) &&
 	 ((ms == 0L) || (Watchdog::millis() - start < ms)))
-    Watchdog::delay(16);
+    delay(16);
   if (res == 0) res = -4;
   if (res < 0) goto error;
   on_response(hostname, url);

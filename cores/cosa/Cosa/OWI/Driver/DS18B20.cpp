@@ -66,7 +66,7 @@ DS18B20::convert_request(OWI* owi, uint8_t resolution, bool parasite)
   if (resolution < 9) resolution = 9;
   else if (resolution > 12) resolution = 12;
   uint16_t ms = (MAX_CONVERSION_TIME >> (12 - resolution));
-  Watchdog::delay(ms);
+  delay(ms);
   if (parasite) owi->power_off();
   return (true);
 }
@@ -79,7 +79,7 @@ DS18B20::read_scratchpad(bool flag)
     uint16_t conv_time = (MAX_CONVERSION_TIME >> (12 - get_resolution()));
     if (ms < conv_time) {
       ms = conv_time - ms;
-      Watchdog::delay(ms);
+      delay(ms);
     }
     m_converting = false;
     power_off();
@@ -102,7 +102,7 @@ DS18B20::copy_scratchpad()
 {
   if (!match_rom()) return (false);
   m_pin->write(COPY_SCRATCHPAD, CHARBITS, m_parasite);
-  Watchdog::delay(MIN_COPY_PULLUP);
+  delay(MIN_COPY_PULLUP);
   power_off();
   return (true);
 }

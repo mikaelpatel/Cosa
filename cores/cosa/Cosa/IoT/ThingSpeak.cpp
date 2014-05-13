@@ -19,7 +19,6 @@
  */
 
 #include "Cosa/IoT/ThingSpeak.hh"
-#include "Cosa/Watchdog.hh"
 
 // ThingSpeak server network address
 #define API_THINGSPEAK_COM 184,106,153,149
@@ -58,7 +57,7 @@ ThingSpeak::Client::connect()
   uint8_t server[4] = { API_THINGSPEAK_COM };
   int res = m_sock->connect(server, 80);
   if (res != 0) return (res);
-  while ((res = m_sock->isconnected()) == 0) Watchdog::delay(16);
+  while ((res = m_sock->isconnected()) == 0) delay(16);
   if (res < 0) return (-2);
   return (0);
 }
@@ -171,7 +170,7 @@ ThingSpeak::TalkBack::execute_next_command()
   sock->flush();
 
   // Wait for the reply
-  while ((res = sock->available()) == 0) Watchdog::delay(16);
+  while ((res = sock->available()) == 0) delay(16);
   if (res < 0) goto error;
 
   // Parse reply header
@@ -231,7 +230,7 @@ ThingSpeak::TalkBack::add_command_P(const char* string, uint8_t position)
   sock->flush();
   
   // Wait for the reply
-  while ((res = sock->available()) == 0) Watchdog::delay(16);
+  while ((res = sock->available()) == 0) delay(16);
   if (res < 0) goto error;
 
   // Parse reply header

@@ -172,9 +172,9 @@ VWI::Receiver::recv(uint8_t& src, uint8_t& port,
     if (!m_done) return (-2);
   
     // Check the crc and the network and device destination address
-    if (!is_valid_crc(m_buffer, m_length) ||
-	(hp->network != s_rf->m_addr.network)  || 
-	((hp->dest != BROADCAST) && (hp->dest != s_rf->m_addr.device))) {
+    if (!is_valid_crc(m_buffer, m_length) 
+	|| (hp->network != s_rf->m_addr.network)  
+	|| ((hp->dest != BROADCAST) && (hp->dest != s_rf->m_addr.device))) {
       m_done = false;
     }
   } while (!m_done);

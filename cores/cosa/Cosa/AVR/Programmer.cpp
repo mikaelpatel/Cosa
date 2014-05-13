@@ -19,7 +19,6 @@
  */
 
 #include "Cosa/AVR/Programmer.hh"
-#include "Cosa/Watchdog.hh"
 
 bool
 Programmer::begin()
@@ -51,7 +50,7 @@ Programmer::begin()
   }
 
   // Wait for the device, at least 20 ms, before Programming Enable instruction 
-  Watchdog::delay(32);
+  delay(32);
   return (programming_enable());
 }
 

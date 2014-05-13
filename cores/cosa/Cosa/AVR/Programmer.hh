@@ -23,7 +23,6 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Bits.h"
-#include "Cosa/Watchdog.hh"
 
 /**
  * Serial programming using the SPI interface and RESET pin. Connect the 

@@ -19,7 +19,6 @@
  */
 
 #include "Cosa/INET/DNS.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/INET.hh"
 
 bool 
@@ -76,7 +75,7 @@ DNS::gethostbyname(const char* hostname, uint8_t addr[4], bool progmem)
     int res;
     for (uint16_t i = 0; i < TIMEOUT; i += 32) {
       if ((res = m_sock->available()) != 0) break;
-      Watchdog::delay(32);
+      delay(32);
     }
     if (res == 0) continue;
 

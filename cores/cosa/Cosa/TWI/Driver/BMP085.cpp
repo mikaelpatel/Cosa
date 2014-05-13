@@ -73,7 +73,7 @@ BMP085::read_temperature()
   
   // Check if we need to wait for the conversion to complete
   int16_t ms = Watchdog::millis() - m_start + TEMP_CONV_MS;
-  if (ms > 0) Watchdog::delay(ms);
+  if (ms > 0) delay(ms);
 
   // Read the raw temperature sensor data
   int16_t UT;
@@ -119,7 +119,7 @@ BMP085::read_pressure()
   // Check if we need to wait for the conversion to complete
   int16_t ms = Watchdog::millis() - m_start;
   ms += pgm_read_byte(&PRESSURE_CONV_MS[m_mode]);
-  if (ms) Watchdog::delay(ms);
+  if (ms > 0) delay(ms);
   
   // Read the raw pressure sensor data
   univ32_t res;

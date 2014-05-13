@@ -19,7 +19,6 @@
  */
 
 #include "Cosa/TWI/Driver/AT24CXX.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 
 bool 
@@ -39,7 +38,7 @@ AT24CXX::poll(const void* addr, const void* buf, size_t size)
       twi.end();
       if (m > 0) return (true);
     }
-    Watchdog::delay(16);
+    delay(16);
   } while (--i); 
   return (false);
 }

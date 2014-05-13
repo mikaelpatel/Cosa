@@ -75,7 +75,7 @@ MQTT::Client::read(void* buf, size_t count, uint32_t ms)
   int res;
   while (((res = m_sock->available()) == 0) &&
 	 ((ms == 0L) || (Watchdog::millis() - start < ms)))
-    Watchdog::delay(16);
+    delay(16);
   if (res == 0) return (-2);
   return (m_sock->read(buf, count));
 }
@@ -116,7 +116,7 @@ MQTT::Client::connect(const char* hostname,
   // Connect to the server. Check for timeout
   int res = m_sock->connect(hostname, PORT);
   if (res != 0) return (-1);
-  while ((res = m_sock->isconnected()) == 0) Watchdog::delay(16);
+  while ((res = m_sock->isconnected()) == 0) delay(16);
   if (res == 0) res = -2;
   if (res < 0) return (res);
 

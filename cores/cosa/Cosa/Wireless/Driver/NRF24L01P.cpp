@@ -21,7 +21,6 @@
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
 #if !defined(BOARD_ATTINYX5)
 
-#include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
 #include <util/delay.h>
@@ -158,7 +157,7 @@ NRF24L01P::standby()
 void
 NRF24L01P::powerdown()
 {
-  Watchdog::delay(32);
+  delay(32);
   m_ce.clear();
   write(CONFIG, (_BV(EN_CRC) | _BV(CRCO)));
   m_state = POWER_DOWN_STATE;
