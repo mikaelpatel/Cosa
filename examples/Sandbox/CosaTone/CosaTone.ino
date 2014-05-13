@@ -22,6 +22,7 @@
  */
 
 #include "Cosa/Tone.hh"
+#include "Cosa/Note.hh"
 #include "Cosa/Watchdog.hh"
 
 #if defined(BOARD_ATTINY)
@@ -32,23 +33,34 @@ void setup()
 {
   Watchdog::begin();
   Tone::begin();
+
+  // Classical telephone signal
   for (uint8_t i = 0; i < 10; i++) {
     Tone::play(Note::A4, 5, 200);
     delay(200);
   }
-  sleep(5);
+  sleep(3);
+
+  // MIDI nodes (49..69..89)
+  for (uint8_t i = 39; i < 100; i++) {
+    Tone::play(Note::MIDI(i), 5, 200);
+    delay(200);
+  }
+  sleep(3);
 }
 
-void play(const uint16_t* freq, uint8_t volume)
+void play(const uint16_t* freq, uint8_t volume, uint16_t duration)
 {
   uint16_t f;
-  while ((f = *freq++) != 0) Tone::play(f, volume, 1000);
+  while ((f = *freq++) != Note::END) 
+    Tone::play(f, volume, duration);
 }
 
-void play_P(const uint16_t* freq, uint8_t volume)
+void play_P(const uint16_t* freq, uint8_t volume, uint16_t duration)
 {
   uint16_t f;
-  while ((f = pgm_read_word(freq++)) != 0) Tone::play(f, volume, 1000);
+  while ((f = pgm_read_word(freq++)) != Note::END) 
+    Tone::play(f, volume, duration);
 }
 
 void loop()
@@ -56,18 +68,18 @@ void loop()
   // To get the spaceships' attention prior to their arrival at
   // Devil's Tower, the five notes the scientists play are G, A, F,
   // (octave lower) F, C.
-  uint16_t ping[] = {
-    Note::G4, Note::A4, Note::F4, Note::F3, Note::C4, 0
+  uint16_t attention[] = {
+    Note::G4, Note::A4, Note::F4, Note::F3, Note::C4, Note::END
   };
-  play(ping, 5);
+  play(attention, 5, 1000);
   sleep(5);
 
   // When they arrive at the tower and are attempting communication,
   // the notes they play are B flat, C, A flat, (octave lower) A flat,
   // E flat.
-  static const uint16_t pong[] PROGMEM = {
-    Note::Bes4, Note::C4, Note::As4, Note::As3, Note::Es4, 0
+  static const uint16_t greating[] PROGMEM = {
+    Note::Bes3, Note::C3, Note::As3, Note::As2, Note::Es3, Note::END
   };
-  play_P(pong, 5);
+  play_P(greating, 5, 1000);
   sleep(5);
 }

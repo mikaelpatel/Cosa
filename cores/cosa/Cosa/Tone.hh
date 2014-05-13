@@ -104,29 +104,5 @@ private:
   static const uint8_t s_map[] PROGMEM;
   friend void TIMER1_COMPA_vect(void);
 };
-
-/** 
- * C3/C4 scale, suffix -s/is of sharp, and -s/es for flat,
- * Scandinavian/Dutch naming convention. Usage: Note::C4.
- */
-namespace Note {
-  enum {
-                        C3 = 131,	Cis3 = 139, 
-    Des3 = 139,		D3 = 147,	Dis3 = 156, 
-    Es3 = 156,		E3 = 165,       
-			F3 = 175,       Fis3 = 185, 
-    Ges3 = 185,		G3 = 196, 	Gis3 = 208,
-    As3 = 208,		A3 = 220,	Ais3 = 233,
-    Bes3 = 233,		B3 = 247,
-
-    			C4 = 262,	Cis4 = 277, 
-    Des4 = 277,		D4 = 294,	Dis4 = 311, 
-    Es4 = 311,		E4 = 330,       
-			F4 = 349,       Fis4 = 370, 
-    Ges4 = 370,		G4 = 392, 	Gis4 = 415,
-    As4 = 415,		A4 = 440,	Ais4 = 466,
-    Bes4 = 466,		B4 = 494
-  };
-};
 #endif
 
