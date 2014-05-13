@@ -40,3 +40,14 @@ set the fuse bits, before using the device for the first time.
 ### Step 4
 
 * Restart the Arduino IDE and Cosa will show up as a number of boards and example sketches.  
+
+## Latest AVR Toolchain
+
+The new AVR toolchain with gcc 4.8.1 is supported. There is also a
+platform definition file with link-time optimization enabled. This may
+be used to reduce memory foot-print (program size) and increase
+performance. 
+
+* Download and install [Arduino IDE](https://groups.google.com/a/arduino.cc/forum/#!msg/developers/21G5w2HbUOg/bJtG94vEEhkJ) with the new AVR toolchain.
+* Copy platform.txt-gcc-4.8.1 to platform.txt. 
+* To restore simply copy platform.txt-1.5.6-r2 to platform.txt.
