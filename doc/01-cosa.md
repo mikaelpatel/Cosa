@@ -15,7 +15,7 @@ resources.
 Though object-oriented with optional operator overloading syntax,
 Cosa is between 2-10X faster than Arduino with regard to digital pin
 functions. This comes with a small price-tag; memory, 4 bytes per
-digital pin and 12 bytes per analog pin. Cosa analog pin objects
+digital pin and 9 bytes per analog pin. Cosa analog pin objects
 holds the latest sample and allows an event handler. See the
 benchmarks in the examples directory for further details.
 
