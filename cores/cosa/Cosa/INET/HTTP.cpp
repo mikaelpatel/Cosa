@@ -26,7 +26,7 @@
 #define CRLF "\r\n"
 
 int
-HTTP::Server::request(uint32_t ms)
+HTTP::Server::run(uint32_t ms)
 {
   // Wait for incoming connection requests
   // NOTE: LTO error; need rewrite to stack allocation

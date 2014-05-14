@@ -71,7 +71,7 @@ public:
      * @param[in] ms timeout period (milli-seconds, default BLOCK).
      * @return zero or negative error code.
      */
-    int request(uint32_t ms = 0L);
+    int run(uint32_t ms = 0L);
 
     /**
      * Stop server and close socket. Returns true if successful
@@ -97,6 +97,10 @@ public:
     virtual void on_request(char* method, char* path, char* query) = 0;
 
   protected:
+    /** 
+     * Socket connection to server; may be used for attributes parse
+     * and for response output stream. 
+     */
     Socket* m_sock;
   };
 
@@ -160,6 +164,9 @@ public:
     virtual void on_response(const char* hostname, const char* path) = 0;
 
   protected:
+    /** 
+     * Socket connection to client; may be used for response parsing.
+     */
     Socket* m_sock;
   };
 };
