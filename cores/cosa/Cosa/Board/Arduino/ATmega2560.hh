@@ -164,25 +164,25 @@ public:
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols; mapping from name to port<5>:bit<3>.
+   * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 56,
-    A1 = 57,
-    A2 = 58,
-    A3 = 59,
-    A4 = 60,
-    A5 = 61,
-    A6 = 62,
-    A7 = 63,
-    A8 = 64,
-    A9 = 65,
-    A10 = 66,
-    A11 = 67,
-    A12 = 68,
-    A13 = 69,
-    A14 = 70,
-    A15 = 71
+    A0 = 0,
+    A1 = 1,
+    A2 = 2,
+    A3 = 3,
+    A4 = 4,
+    A5 = 5,
+    A6 = 6,
+    A7 = 7,
+    A8 = 32,
+    A9 = 33,
+    A10 = 34,
+    A11 = 35,
+    A12 = 36,
+    A13 = 37,
+    A14 = 38,
+    A15 = 39
   } __attribute__((packed));
 
   /**

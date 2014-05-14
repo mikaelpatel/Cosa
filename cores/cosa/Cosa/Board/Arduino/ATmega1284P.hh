@@ -130,7 +130,7 @@ public:
    * Analog pin symbols
    */
   enum AnalogPin {
-    A0 = D24,
+    A0 = 0,
     A1,
     A2,
     A3,

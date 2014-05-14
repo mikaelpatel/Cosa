@@ -21,14 +21,14 @@
 #ifndef COSA_ANALOG_PIN_HH
 #define COSA_ANALOG_PIN_HH
 
-#include "Cosa/Pin.hh"
 #include "Cosa/Interrupt.hh"
 #include "Cosa/Event.hh"
+#include "Cosa/Types.h"
 
 /**
  * Abstract analog pin. Allows asynchronous sampling.
  */
-class AnalogPin : public Pin, public Interrupt::Handler, public Event::Handler 
+class AnalogPin : public Interrupt::Handler, public Event::Handler 
 {
 public:
   /**
@@ -39,7 +39,7 @@ public:
    */
   AnalogPin(Board::AnalogPin pin, 
 	    Board::Reference ref = Board::AVCC_REFERENCE) :
-    Pin((uint8_t) pin),
+    m_pin(pin),
     m_reference(ref),
     m_value(0),
     m_event(Event::NULL_TYPE)
@@ -53,6 +53,15 @@ public:
   void set_reference(Board::Reference ref) 
   {
     m_reference = ref; 
+  }
+
+  /**
+   * Get analog pin.
+   * @return pin identity.
+   */
+  Board::AnalogPin get_pin() const
+  { 
+    return (m_pin); 
   }
 
   /**
@@ -163,6 +172,7 @@ public:
 
 protected:
   static AnalogPin* sampling_pin;
+  const Board::AnalogPin m_pin;
   uint8_t m_reference;
   uint16_t m_value;
   uint8_t m_event;

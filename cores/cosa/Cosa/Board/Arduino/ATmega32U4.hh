@@ -127,12 +127,19 @@ public:
    * Analog pin symbols
    */
   enum AnalogPin {
-    A0 = 39,
-    A1 = 38,
-    A2 = 37,
-    A3 = 34,
-    A4 = 33,
-    A5 = 32
+    A0 = 7,
+    A1 = 6,
+    A2 = 5,
+    A3 = 4,
+    A4 = 1,
+    A5 = 0,			// Extended Analog Pins
+    A6 = 32,			// D4
+    A7 = 33,			// D12
+    A8 = 34,			// D6
+    A9 = 35,			// D8
+    A10 = 36,			// D9
+    A11 = 37			// D10
+    
   } __attribute__((packed));
 
   /**

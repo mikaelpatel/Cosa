@@ -133,17 +133,17 @@ public:
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols; mapping from name to port<5>:bit<3>.
+   * Analog pin symbols; analog channel numbers
    */
   enum AnalogPin {
-    A0 = D24,
-    A1 = D25,
-    A2 = D26,
-    A3 = D27,
-    A4 = D28,
-    A5 = D29,
-    A6 = D30,
-    A7 = D31
+    A0 = 0,
+    A1,
+    A2,
+    A3,
+    A4,
+    A5,
+    A6,
+    A7
   } __attribute__((packed));
 
   /**

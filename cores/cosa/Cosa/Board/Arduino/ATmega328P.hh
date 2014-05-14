@@ -130,7 +130,7 @@ public:
    * Analog pin symbols
    */
   enum AnalogPin {
-    A0 = 14,
+    A0 = 0,
     A1,
     A2,
     A3,
@@ -189,14 +189,14 @@ public:
     PCI11 = D11,
     PCI12 = D12,
     PCI13 = D13,
-    PCI14 = A0,
-    PCI15 = A1,
-    PCI16 = A2,
-    PCI17 = A3,
-    PCI18 = A4,
-    PCI19 = A5,
-    PCI20 = A6,
-    PCI21 = A7
+    PCI14 = D14,
+    PCI15 = D15,
+    PCI16 = D16,
+    PCI17 = D17,
+    PCI18 = D18,
+    PCI19 = D19,
+    PCI20 = D20,
+    PCI21 = D21
   } __attribute__((packed));
 
   /**

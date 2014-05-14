@@ -132,20 +132,21 @@ public:
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols
+   * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 32,
-    A1 = 33,
-    A2 = 36,
-    A3 = 37,
-    A4 = 38,
-    A5 = 39,
-    A6 = 6,
-    A7 = 5,
-    A8 = 4,
-    A9 = 23,
-    A10 = 22
+    A0 = 0,
+    A1 = 1,
+    A2 = 4,
+    A3 = 5,
+    A4 = 6,
+    A5 = 7,
+    A6 = 37,
+    A7 = 36,
+    A8 = 35,
+    A9 = 34,
+    A10 = 33,
+    A11 = 32
   } __attribute__((packed));
 
   /**
@@ -197,15 +198,15 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, digital pin 0-1)
+   * Pins used for TWI interface (in port D, bit 0-1, digital pin 5-6)
    */
   enum TWIPin {
     SDA = 1,
     SCL = 0
   } __attribute__((packed));
 
- /**
-   * Pins used for SPI interface (in port B, bit 1-3)
+  /**
+   * Pins used for SPI interface (in port B, bit 0-3, digital pin 0-3)
    */
   enum SPIPin {
     SS = 0,

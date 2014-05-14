@@ -57,9 +57,9 @@
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
-// HD44780::GYIICLCD port;
+HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
-HD44780::ERM1602_5 port;
+// HD44780::ERM1602_5 port;
 HD44780 lcd(&port);
 IOStream cout(&lcd);
 
@@ -111,9 +111,12 @@ void setup()
 
 void loop()
 {
-  // Mapping vector for pin symbols (needed for some boards such as Mega)
+  // Mapping vector for pin symbols
   const uint8_t pin[] = { 
-    Board::A0, Board::A1, Board::A2, Board::A3, Board::A4, Board::A5
+    Board::A0, Board::A1, Board::A2, Board::A3, 
+#if !defined(BOARD_ATTINYX5)
+    Board::A4, Board::A5, Board::A6, Board::A7
+#endif
   };
 
   // Sample analog pins and draw vertical bar

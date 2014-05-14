@@ -33,16 +33,12 @@ bool
 AnalogPin::sample_request(uint8_t pin, uint8_t ref)
 {
   if (sampling_pin != NULL) return (false);
-#if defined(BOARD_ATMEGA32U4)			\
-  || defined(BOARD_ATTINYX4)			\
-  || defined(BOARD_ATTINYX61)
-  pin = pin & 0x07;
-#else
-  if (pin >= Board::A0) pin -= Board::A0;
-#endif
   loop_until_bit_is_clear(ADCSRA, ADSC);
   sampling_pin = this;
-  ADMUX = (ref | pin);
+  ADMUX = (ref | (pin & 0x1f));
+#if defined(MUX5)
+  bit_write(pin & 0x20, ADCSRB, MUX5);
+#endif
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC) | _BV(ADIE));
   return (true);
 }
@@ -67,15 +63,11 @@ uint16_t
 AnalogPin::sample(uint8_t pin, Board::Reference ref)
 {
   if (sampling_pin != NULL) return (0xffffU);
-#if defined(BOARD_ATMEGA32U4)				\
-  || defined(BOARD_ATTINYX4)				\
-  || defined(BOARD_ATTINYX61)
-  pin = pin & 0x07;
-#else
-  if (pin >= Board::A0) pin -= Board::A0;
-#endif
   loop_until_bit_is_clear(ADCSRA, ADSC);
-  ADMUX = (ref | pin);
+  ADMUX = (ref | (pin & 0x1f));
+#if defined(MUX5)
+  bit_write(pin & 0x20, ADCSRB, MUX5);
+#endif
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
   loop_until_bit_is_clear(ADCSRA, ADSC);
   return (ADCW);
