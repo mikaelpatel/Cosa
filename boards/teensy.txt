@@ -31,7 +31,7 @@
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
 # Boot Reset vector enable (2048 words, 0x3800). 
-teensy-2_0.name=Cosa Teensy 2.0 (ATmega32U4/Caterina)
+teensy-2_0.name=Cosa Teensy 2.0 (ATmega32U4/halfkay)
 teensy-2_0.upload.tool=avrdude
 teensy-2_0.upload.protocol=avr109
 teensy-2_0.upload.maximum_size=28672

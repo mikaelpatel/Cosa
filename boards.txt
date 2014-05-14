@@ -517,12 +517,12 @@ microduino-core-plus.build.core=cosa
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
 # Boot Reset vector enable (2048 words, 0x3800). 
-teensy-2_0.name=Cosa Teensy 2.0 (ATmega32U4/Caterina)
+teensy-2_0.name=Cosa Teensy 2.0 (ATmega32U4/halfkay)
 teensy-2_0.upload.tool=avrdude
 teensy-2_0.upload.protocol=avr109
-teensy-2_0.upload.maximum_size=28672
+teensy-2_0.upload.maximum_size=32256
 teensy-2_0.upload.maximum_data_size=2560
-teensy-2_0.upload.speed=57600
+teensy-2_0.upload.speed=1200000
 teensy-2_0.upload.disable_flushing=true
 teensy-2_0.upload.use_1200bps_touch=true
 teensy-2_0.upload.wait_for_upload_port=true
