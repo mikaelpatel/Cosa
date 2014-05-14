@@ -21,6 +21,8 @@
 #ifndef COSA_INTERRUPT_HH
 #define COSA_INTERRUPT_HH
 
+#include "Cosa/Types.h"
+
 /**
  * Interface for Interrupt Handlers.
  */
