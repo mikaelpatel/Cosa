@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/Teensy/ATmege32U4.hh
+ * @file Cosa/Board/Microduino/Core32U4.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_TEENSY_ATMEGA32U4_HH
-#define COSA_BOARD_TEENSY_ATMEGA32U4_HH
+#ifndef COSA_BOARD_ARDUINO_CORE32U4_HH
+#define COSA_BOARD_ARDUINO_CORE32U4_HH
+
+
+/* This board is based on ATmega32U4 */
+#define BOARD_ATMEGA32U4
 
 /**
  * Compiler warning on unused varable.
@@ -29,18 +33,38 @@
 #endif
 
 /**
- * Cosa Teensy 2.0 board pin symbol definitions for the ATmega32U4.
- * Cosa does not use pin numbers as Arduino/Wiring, instead strong
- * data type is used (enum types) for the specific pin classes;
- * DigitalPin, AnalogPin, PWMPin, etc. 
+ * Cosa pin symbol and hardware definitions for the ATmega32U4 based
+ * Microduino Core32u4 board. Cosa does not use pin numbers as
+ * Arduino/Wiring, instead strong data type is used (enum types) for
+ * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
- * The pin numbers for ATmega32U4 are only symbolically mapped,
- * i.e. a pin number/digit will not work, symbols must be used, 
- * e.g., Board::D12. Avoid iterations assuming that the symbols 
- * are in order. 
+ * The pin numbers for ATmega32u4 are mapped as in Arduino. The static
+ * inline functions, SFR, BIT and UART, rely on compiler optimizations
+ * to be reduced.  
  *
- * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced.  
+ * @section Board
+ * @code
+ *                    Microduino Core32U4
+ *                +--------------------------+
+ *                |                          |
+ *            GND |[]                      []| 5V
+ *          RESET |[]                      []| 3V3
+ *        PWM5/D6 |[]                      []| D7/PWM0
+ *        PWM4/D5 |[]                      []| D8/PWM3
+ *        PWM6&D4 |[]                      []| D9/PWM2
+ *             D3 |[]                      []| D10/SS
+ *             D2 |[]                      []| D11/MOSI
+ *          TX/D1 |[]                      []| D12/MISO
+ *          RX/D0 |[]                      []| D13/SCK
+ *                |[] [] [] [] [] [] [] [] []|
+ *                +--------------------------+
+ *                 A5 A4 |   | A3 A2 A1 A0 VREF
+ *                      SCL SDA
+ *                      PWM1
+ * @endcode
+ *
+ * @section References
+ * 1. http://www.microduino.cc/wiki/images/9/93/Microduino-Core32U4-Pinout3.jpg
  */
 class Board {
   friend class Pin;
@@ -52,7 +76,7 @@ private:
   Board() {}
 
   /**
-   * Return Special Function Register for given Teensy pin number.
+   * Return Special Function Register for given Arduino pin number.
    * @param[in] pin number.
    * @return special register pointer.
    */
@@ -62,11 +86,11 @@ private:
 	    pin < 16 ? &PINC : 
 	    pin < 24 ? &PIND : 
 	    pin < 32 ? &PINE : 
-	    &PINF);
+	               &PINF);
   }
 
   /**
-   * Return Pin Change Mask Register for given Teensy pin number.
+   * Return Pin Change Mask Register for given Arduino pin number.
    * @param[in] pin number.
    * @return pin change mask register pointer.
    */
@@ -77,7 +101,7 @@ private:
   }
 
   /**
-   * Return bit position for given Teensy pin number in Special
+   * Return bit position for given Arduino pin number in Special
    * Function Register. 
    * @param[in] pin number.
    * @return pin bit position.
@@ -88,7 +112,7 @@ private:
   }
   
   /**
-   * Return UART Register for given Teensy serial port.
+   * Return UART Register for given Arduino serial port.
    * @param[in] port number.
    * @return UART register pointer.
    */
@@ -103,50 +127,41 @@ public:
    * Digital pin symbols
    */
   enum DigitalPin {
-    D0 = 0,
-    D1 = 1,
-    D2 = 2,
-    D3 = 3,
-    D4 = 7,
-    D5 = 16,
-    D6 = 17,
-    D7 = 18,
-    D8 = 19,
-    D9 = 14,
-    D10 = 15,
-    D11 = 22,
-    D12 = 23,
-    D13 = 4,
-    D14 = 5,
-    D15 = 6,
-    D16 = 39,
-    D17 = 38,
-    D18 = 37,
-    D19 = 36,
-    D20 = 33,
-    D21 = 32,
-    D22 = 20,
-    D23 = 21,
-    D24 = 30,
-    LED = D11
+    D0 = 18,			// PD2/EXT2
+    D1 = 19,			// PD3/EXT3
+    D2 = 30,			// PE6
+    D3 = 22,			// PD6
+    D4 = 23,			// PD7
+    D5 = 14,			// PC6
+    D6 = 15,			// PC7
+    D7 = 7,			// PB7
+    D8 = 6,			// PB6
+    D9 = 5,			// PB5
+    D10 = 0,			// PB0/SS
+    D11 = 2,			// PB2/MOSI
+    D12 = 3,			// PB3/MISO
+    D13 = 1,			// PB1/SCK
+    D14 = 39,			// PF7
+    D15 = 38,			// PF6
+    D16 = 37,			// PF5
+    D17 = 36,			// PF4
+    D18 = 17,			// PD1/EXT1
+    D19 = 16,			// PD0/EXT0
+    D20 = 33,			// PF1
+    D21 = 32,			// PF0
+    LED = D13
   } __attribute__((packed));
 
   /**
    * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 0,
-    A1 = 1,
-    A2 = 4,
-    A3 = 5,
-    A4 = 6,
-    A5 = 7,
-    A6 = 37,
-    A7 = 36,
-    A8 = 35,
-    A9 = 34,
-    A10 = 33,
-    A11 = 32
+    A0 = 7,
+    A1 = 6,
+    A2 = 5,
+    A3 = 4,
+    A4 = 1,
+    A5 = 0
   } __attribute__((packed));
 
   /**
@@ -163,13 +178,13 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D4,
-    PWM1 = D5,
-    PWM2 = D14,
-    PWM3 = D15,
-    PWM4 = D9,
-    PWM5 = D10,
-    PWM6 = D12
+    PWM0 = D7,
+    PWM1 = D19,
+    PWM2 = D9,
+    PWM3 = D8,
+    PWM4 = D5,
+    PWM5 = D6,
+    PWM6 = D4
   } __attribute__((packed));
 
   /**
@@ -177,36 +192,36 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D5,
-    EXT1 = D6,
-    EXT2 = D7,
-    EXT3 = D8
+    EXT0 = D19,
+    EXT1 = D18,
+    EXT2 = D0,
+    EXT3 = D1
   } __attribute__((packed));
 
   /**
    * Pin change interrupt (PCI) pins. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = 0,
-    PCI1 = 1,
-    PCI2 = 2,
-    PCI3 = 3,
+    PCI0 = D10,
+    PCI1 = D13,
+    PCI2 = D11,
+    PCI3 = D12,
     PCI4 = 4,
-    PCI5 = 5,
-    PCI6 = 6,
-    PCI7 = 7
+    PCI5 = D9,
+    PCI6 = D8,
+    PCI7 = D7
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, bit 0-1, digital pin 5-6)
+   * Pins used for TWI interface (in port D, digital pin D0-D1, TWI pins)
    */
   enum TWIPin {
     SDA = 1,
     SCL = 0
   } __attribute__((packed));
-
+  
   /**
-   * Pins used for SPI interface (in port B, bit 0-3, digital pin 0-3)
+   * Pins used for SPI interface (in port B, bit 0-3, SPI pins)
    */
   enum SPIPin {
     SS = 0,
@@ -223,8 +238,7 @@ public:
     UART_MAX = 2,
     EXT_MAX = 7,
     PCMSK_MAX = 1,
-    PCINT_MAX = 8,
-    PIN_MAX = 38
+    PCINT_MAX = 8
   } __attribute__((packed));
 };
 
@@ -287,4 +301,3 @@ extern "C" {
   void USB_GEN_vect(void) __attribute__ ((signal));
 }
 #endif
-

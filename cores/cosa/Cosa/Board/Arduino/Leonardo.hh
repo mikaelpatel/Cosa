@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Board/Arduino/ATmege32U4.hh
+ * @file Cosa/Board/Arduino/Leonardo.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_ARDUINO_ATMEGA32U4_HH
-#define COSA_BOARD_ARDUINO_ATMEGA32U4_HH
+#ifndef COSA_BOARD_ARDUINO_LEONARDO_HH
+#define COSA_BOARD_ARDUINO_LEONARDO_HH
+
 
 /* This board is based on ATmega32U4 */
 #define BOARD_ATMEGA32U4
@@ -32,15 +33,48 @@
 #endif
 
 /**
- * Cosa Standard USB Board pin symbol definitions for the ATmega32U4
- * based boards such as Arduino Leonardo, Micro and LilyPad USB. Cosa
- * does not use pin numbers as Arduino/Wiring, instead strong data
- * type is used (enum types) for the specific pin classes; DigitalPin,
- * AnalogPin, PWMPin, etc. 
+ * Cosa pin symbol and hardware definitions for the ATmega32U4 based
+ * Arduino Leonardo board. Cosa does not use pin numbers as
+ * Arduino/Wiring, instead strong data type is used (enum types) for
+ * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
  * The pin numbers for ATmega32u4 are mapped as in Arduino. The static
  * inline functions, SFR, BIT and UART, rely on compiler optimizations
  * to be reduced.  
+ *
+ * @section Board
+ * @code
+ *                       Arduino Leonardo
+ *                  -----               -----
+ *                +-|(o)|---------------|USB|----+
+ *                | |   |               |   |    |
+ *                | -----               ----|    |
+ *                |                              |
+ *                |                              |
+ *                |                            []| SCL
+ *                |                            []| SDA
+ *                |                            []| AREF
+ *                |                            []| GND
+ *             NC |[]                          []| D13/PWM5/LED
+ *          IOREF |[]                          []| D12/A7
+ *          RESET |[]                          []| D11/PWM0
+ *            3V3 |[]                          []| D10/PWM3/A11
+ *             5V |[]                          []| D9/PWM2/A10
+ *            GND |[]                          []| D8/A9
+ *            GND |[]                            | 
+ *            Vin |[]                          []| D7
+ *                |                            []| D6/PWM6/A8
+ *         A0/D14 |[]                          []| D5/PWM4
+ *         A1/D15 |[]                          []| D4/A6
+ *         A2/D16 |[]                          []| D3/EXT0/PWM1
+ *         A3/D17 |[]                          []| D2/EXT1
+ *         A4/D18 |[]            ICSP          []| D1/TX1/SDA/EXT3
+ *         A5/D19 |[]           o-o-o*         []| D0/RX1/SCL/EXT2
+ *                 \            o-o-o           /
+ *                  +--------------------------+
+ * @endcode
+ * 
+ * Note: The SPI pins (on ICSP) are also numbered as digital pins.
  */
 class Board {
   friend class Pin;
@@ -120,17 +154,23 @@ public:
     D14 = 39,
     D15 = 38,
     D16 = 37,
-    D17 = 34,
+    D17 = 36,
     D18 = 33,
     D19 = 32,
-    LED = D13
+    D20 = 0,			// SS
+    D21 = 1,			// SCK
+    D22 = 2,			// MOSI
+    D23 = 3,			// MISO
+    LED = D13,
+    RXLED = 0,			// Green
+    TXLED = 21			// Yellow
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols
+   * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 7,
+    A0 = 7,			// Standard Analog Pins
     A1 = 6,
     A2 = 5,
     A3 = 4,
@@ -183,18 +223,18 @@ public:
    * Pin change interrupt (PCI) pins. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = D0,
-    PCI1 = D1,
-    PCI2 = D2,
-    PCI3 = D3,
-    PCI4 = D13,
-    PCI5 = D14,
-    PCI6 = D15,
-    PCI7 = D7
+    PCI0 = 0,			// RXLED
+    PCI1 = 1,			// SCK
+    PCI2 = 2,			// MOSI
+    PCI3 = 3,			// MISO
+    PCI4 = D8,
+    PCI5 = D9,
+    PCI6 = D10,
+    PCI7 = D11
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, digital pin 0-1)
+   * Pins used for TWI interface (in port D, digital pin D0-D1, TWI pins)
    */
   enum TWIPin {
     SDA = 1,
@@ -202,7 +242,7 @@ public:
   } __attribute__((packed));
   
   /**
-   * Pins used for SPI interface (in port B, bit 0-3)
+   * Pins used for SPI interface (in port B, bit 0-3, SPI pins)
    */
   enum SPIPin {
     SS = 0,
@@ -282,4 +322,3 @@ extern "C" {
   void USB_GEN_vect(void) __attribute__ ((signal));
 }
 #endif
-

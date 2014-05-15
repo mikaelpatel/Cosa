@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Board/Arduino/ATmege32U4.hh
+ * @file Cosa/Board/Arduino/Pro_Micro.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_ARDUINO_ATMEGA32U4_HH
-#define COSA_BOARD_ARDUINO_ATMEGA32U4_HH
+#ifndef COSA_BOARD_ARDUINO_PRO_MICRO_HH
+#define COSA_BOARD_ARDUINO_PRO_MICRO_HH
 
 /* This board is based on ATmega32U4 */
 #define BOARD_ATMEGA32U4
@@ -32,15 +32,38 @@
 #endif
 
 /**
- * Cosa Standard USB Board pin symbol definitions for the ATmega32U4
- * based boards such as Arduino Leonardo, Micro and LilyPad USB. Cosa
- * does not use pin numbers as Arduino/Wiring, instead strong data
- * type is used (enum types) for the specific pin classes; DigitalPin,
- * AnalogPin, PWMPin, etc. 
+ * Cosa pin symbol and hardware definitions for the ATmega32U4 based
+ * SparkFun Pro Micro board. Cosa does not use pin numbers as
+ * Arduino/Wiring, instead strong data type is used (enum types) for
+ * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
  * The pin numbers for ATmega32u4 are mapped as in Arduino. The static
  * inline functions, SFR, BIT and UART, rely on compiler optimizations
  * to be reduced.  
+ *
+ * @section Board
+ * @code
+ *               Arduino Pro Micro
+ *                     -----
+ *                +----| V |----+
+ *     EXT3/TX/D1 |o<  |   |   o| RAW
+ *     EXT2/RX/D0 |o>  -----   o| GND
+ *            GND |o           o| RESET
+ *            GND |o           o| VCC
+ *        EXT1/D2 |o           o| D17/A3
+ *   PWM1/EXT0/D3 |o           o| D16/A2
+ *             D4 |o           o| D15/A1
+ *        PWM4/D5 |o           o| D14/A0
+ *        PWM6/D6 |o           o| D21/SCK
+ *             D7 |o           o| D23/MISO
+ *             D8 |o           o| D22/MOSI
+ *        PWM2/D9 |o           o| D10/PWM3
+ *                +-------------+
+ * @endcode
+ *
+ * Note: SPI pins are not numbered as on board as the numbers are 
+ * reserved in Cosa for analog pins (which also may act as digital 
+ * pins). 
  */
 class Board {
   friend class Pin;
@@ -114,16 +137,17 @@ public:
     D8 = 4,
     D9 = 5,
     D10 = 6,
-    D11 = 7,
-    D12 = 22,
-    D13 = 15,
     D14 = 39,
     D15 = 38,
     D16 = 37,
-    D17 = 34,
-    D18 = 33,
-    D19 = 32,
-    LED = D13
+    D17 = 36,
+    D20 = 0,			// SS
+    D21 = 1,			// SCK
+    D22 = 2,			// MOSI
+    D23 = 3,			// MISO
+    LED = 15,			// Not used
+    RXLED = 0,			// Green
+    TXLED = 21			// Yellow
   } __attribute__((packed));
 
   /**
@@ -183,18 +207,18 @@ public:
    * Pin change interrupt (PCI) pins. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = D0,
-    PCI1 = D1,
-    PCI2 = D2,
-    PCI3 = D3,
-    PCI4 = D13,
-    PCI5 = D14,
-    PCI6 = D15,
-    PCI7 = D7
+    PCI0 = 0,			// RXLED
+    PCI1 = 1,			// SCK
+    PCI2 = 2,			// MOSI
+    PCI3 = 3,			// MISO
+    PCI4 = D8,
+    PCI5 = D9,
+    PCI6 = D10,
+    PCI7 = D11
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, digital pin 0-1)
+   * Pins used for TWI interface (in port D, digital pin D0-D1, TWI pins)
    */
   enum TWIPin {
     SDA = 1,
@@ -202,7 +226,7 @@ public:
   } __attribute__((packed));
   
   /**
-   * Pins used for SPI interface (in port B, bit 0-3)
+   * Pins used for SPI interface (in port B, bit 0-3, SPI pins)
    */
   enum SPIPin {
     SS = 0,
@@ -281,5 +305,10 @@ extern "C" {
   void USB_COM_vect(void) __attribute__ ((signal));
   void USB_GEN_vect(void) __attribute__ ((signal));
 }
+#endif
+
+
+
+
 #endif
 

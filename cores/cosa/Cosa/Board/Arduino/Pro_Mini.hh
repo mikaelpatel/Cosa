@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Board/Arduino/ATmega1248P.hh
+ * @file Cosa/Board/Arduino/Pro_Mini.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,20 +18,50 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_ARDUINO_ATMEGA1248P_HH
-#define COSA_BOARD_ARDUINO_ATMEGA1248P_HH
+#ifndef COSA_BOARD_ARDUINO_PRO_MINI_HH
+#define COSA_BOARD_ARDUINO_PRO_MINI_HH
 
-/* This board is based on ATmega1248P */
-#define BOARD_ATMEGA1248P
+/* This board is based on ATmega328P */
+#define BOARD_ATMEGA328P
 
 /**
- * Cosa MIGHTY Board pin symbol definitions for ATmega1284P based
- * Arduino boards; Mighty. Cosa does not use pin numbers as
- * Arduino/Wiring. Instead strong data type is used (enum types) for
- * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc.
+ * Compiler warning on unused varable.
+ */
+#if !defined(UNUSED)
+#define UNUSED(x) (void) (x)
+#endif
+
+/**
+ * Cosa pin symbol and hardware definitions for the ATmega328P based
+ * board Arduino Pro Mini. Cosa does not use pin numbers as
+ * Arduino/Wiring, instead strong data type is used (enum types) for
+ * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
- * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced. 
+ * The pin numbers for ATmega328P are mapped as in Arduino. The static
+ * inline functions, SFR, BIT and UART, rely on compiler optimizations
+ * to be reduced.  
+ *
+ * @section Board
+ * @code
+ *                Arduino Pro_Mini
+ *
+ *             DTR TX RX VCC GND GND
+ *                +-------------+
+ *                | o o o o o o |
+ *          TX/D1 |o*          o| RAW
+ *          RX/D0 |o           o| GND
+ *          RESET |o           o| RESET
+ *            GND |o  SCL/A5 o o| VCC
+ *        EXT0/D2 |o  SDA/A4 o o| D17/A3
+ *   PWM0/EXT1/D3 |o           o| D16/A2
+ *             D4 |o           o| D15/A1
+ *        PWM1/D5 |o           o| D14/A0
+ *        PWM2/D6 |o      A7 o o| D13/SCK
+ *             D7 |o      A6 o o| D12/MISO
+ *             D8 |o           o| D11/MOSI/PWM5
+ *        PWM3/D9 |o           o| D10/PWM4
+ *                +-------------+
+ * @endcode
  */
 class Board {
   friend class Pin;
@@ -49,10 +79,21 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin) 
   { 
-    return (pin < 8  ? &PINB : 
-	    pin < 14 ? &PIND : 
-	    pin < 24 ? &PINC :
-	               &PINA);
+    return (pin < 8  ? &PIND : 
+	    pin < 14 ? &PINB : 
+	               &PINC);
+  }
+
+  /**
+   * Return Pin Change Mask Register for given Arduino pin number.
+   * @param[in] pin number.
+   * @return pin change mask register pointer.
+   */
+  static volatile uint8_t* PCIMR(uint8_t pin) 
+  { 
+    return (pin < 8  ? &PCMSK2 : 
+	    pin < 14 ? &PCMSK0 : 
+	               &PCMSK1);
   }
 
   /**
@@ -63,22 +104,11 @@ private:
    */
   static uint8_t BIT(uint8_t pin)
   {
-    return (pin & 0x7);
+    return (pin < 8  ? pin : 
+	    pin < 14 ? pin - 8 : 
+ 	               pin - 14);
   }
   
-  /**
-   * Return Pin Change Mask Register for given Arduino pin number.
-   * @param[in] pin number.
-   * @return pin change mask register pointer.
-   */
-  static volatile uint8_t* PCIMR(uint8_t pin) 
-  { 
-    return (pin < 8  ? &PCMSK1 : 
-	    pin < 14 ? &PCMSK3 : 
-	    pin < 24 ? &PCMSK2 :
-	               &PCMSK0);
-  }
-
   /**
    * Return UART Register for given Arduino serial port.
    * @param[in] port number.
@@ -86,7 +116,8 @@ private:
    */
   static volatile uint8_t* UART(uint8_t port) 
   { 
-    return (port == 1 ? &UCSR1A : &UCSR0A);
+    UNUSED(port);
+    return (&UCSR0A);
   }
 
 public:
@@ -114,18 +145,6 @@ public:
     D17,
     D18,
     D19,
-    D20,
-    D21,
-    D22,
-    D23,
-    D24,
-    D25,
-    D26,
-    D27,
-    D28,
-    D29,
-    D30,
-    D31,
     LED = D13
   } __attribute__((packed));
 
@@ -149,8 +168,7 @@ public:
   enum Reference {
     APIN_REFERENCE = 0,
     AVCC_REFERENCE = _BV(REFS0),
-    A1V1_REFERENCE = _BV(REFS1),
-    A2V56_REFERENCE = (_BV(REFS1) | _BV(REFS0))
+    A1V1_REFERENCE = (_BV(REFS1) | _BV(REFS0))
   } __attribute__((packed));
 
   /**
@@ -159,15 +177,11 @@ public:
    */
   enum PWMPin {
     PWM0 = D3,
-    PWM1 = D4,
-#if defined(__AVR_ATmega1284P__)
+    PWM1 = D5,
     PWM2 = D6,
-    PWM3 = D7,
-#endif
-    PWM4 = D12,
-    PWM5 = D13,
-    PWM6 = D14,
-    PWM7 = D15
+    PWM3 = D9,
+    PWM4 = D10,
+    PWM5 = D11
   } __attribute__((packed));
 
   /**
@@ -175,85 +189,65 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D10,
-    EXT1 = D11,
-    EXT2 = D2
+    EXT0 = D2,
+    EXT1 = D3
   } __attribute__((packed));
 
   /**
-   * Pin change interrupt. Number of port registers.
+   * Pin change interrupt (PCI) pins. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = A0,
-    PCI1 = A1,
-    PCI2 = A2,
-    PCI3 = A3,
-    PCI4 = A4,
-    PCI5 = A5,
-    PCI6 = A6,
-    PCI7 = A7,
-    PCI8 = D0,
-    PCI9 = D1,
-    PCI10 = D2,
-    PCI11 = D3,
-    PCI12 = D4,
-    PCI13 = D5,
-    PCI14 = D6,
-    PCI15 = D7,
+    PCI0 = D0,
+    PCI1 = D1,
+    PCI2 = D2,
+    PCI3 = D3,
+    PCI4 = D4,
+    PCI5 = D5,
+    PCI6 = D6,
+    PCI7 = D7,
+    PCI8 = D8,
+    PCI9 = D9,
+    PCI10 = D10,
+    PCI11 = D11,
+    PCI12 = D12,
+    PCI13 = D13,
+    PCI14 = D14,
+    PCI15 = D15,
     PCI16 = D16,
     PCI17 = D17,
     PCI18 = D18,
-    PCI19 = D19,
-    PCI20 = D20,
-    PCI21 = D21,
-    PCI22 = D22,
-    PCI23 = D23,
-    PCI24 = D8,
-    PCI25 = D9,
-    PCI26 = D10,
-    PCI27 = D11,
-    PCI28 = D12,
-    PCI29 = D13,
-    PCI30 = D14,
-    PCI31 = D15
+    PCI19 = D19
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port C, digital pin 16, 17).
+   * Pins used for TWI interface (in port C, analog pins A4-A5).
    */
   enum TWIPin {
-    SDA = 1,
-    SCL = 0
+    SDA = 4,
+    SCL = 5
   } __attribute__((packed));
 
- /**
-   * Pins used for SPI interface (in port B, digital pins 4-7).
+  /**
+   * Pins used for SPI interface (in port B, digital pins D10-D13).
    */
   enum SPIPin {
-    SS = 4,
-    MOSI = 5,
-    MISO = 6,
-    SCK = 7
+    SS = 2,
+    MOSI = 3,
+    MISO = 4,
+    SCK = 5
   } __attribute__((packed));
 
   /**
    * Auxiliary
    */
   enum {
-    VBG = (_BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1)),
-    UART_MAX = 2,
-    EXT_MAX = 3,
-    PCMSK_MAX = 4,
-    PCINT_MAX = 32
+    VBG = (_BV(MUX3) | _BV(MUX2) | _BV(MUX1)),
+    UART_MAX = 1,
+    EXT_MAX = 2,
+    PCMSK_MAX = 3,
+    PCINT_MAX = 24
   } __attribute__((packed));
 };
-
-/**
- * Redefinition of symbols to allow generic code.
- */
-#define USART_UDRE_vect USART0_UDRE_vect
-#define USART_RX_vect USART0_RX_vect 
-#define USART_TX_vect USART0_TX_vect
 
 /**
  * Forward declare interrupt service routines to allow them as friends.
@@ -263,36 +257,24 @@ extern "C" {
   void ANALOG_COMP_vect(void) __attribute__ ((signal));
   void INT0_vect(void) __attribute__ ((signal));
   void INT1_vect(void) __attribute__ ((signal));
-  void INT2_vect(void) __attribute__ ((signal));
   void PCINT0_vect(void) __attribute__ ((signal));
   void PCINT1_vect(void) __attribute__ ((signal));
   void PCINT2_vect(void) __attribute__ ((signal));
-  void PCINT3_vect(void) __attribute__ ((signal));
   void SPI_STC_vect(void) __attribute__ ((signal));
   void TIMER0_COMPA_vect(void) __attribute__ ((signal));
   void TIMER0_COMPB_vect(void) __attribute__ ((signal));
   void TIMER0_OVF_vect(void) __attribute__ ((signal));
-  void TIMER1_CAPT_vect(void) __attribute__ ((signal));
+  void TIMER1_CAPT_vect(void)  __attribute__ ((signal));
   void TIMER1_COMPA_vect(void) __attribute__ ((signal));
   void TIMER1_COMPB_vect(void) __attribute__ ((signal));
   void TIMER1_OVF_vect(void) __attribute__ ((signal));
   void TIMER2_COMPA_vect(void) __attribute__ ((signal));
   void TIMER2_COMPB_vect(void) __attribute__ ((signal));
   void TIMER2_OVF_vect(void) __attribute__ ((signal));
-#if defined(__AVR_ATmega1284P__)
-  void TIMER3_CAPT_vect(void) __attribute__ ((signal));
-  void TIMER3_COMPA_vect(void) __attribute__ ((signal));
-  void TIMER3_COMPB_vect(void) __attribute__ ((signal));
-  void TIMER3_OVF_vect(void) __attribute__ ((signal));
-#endif
   void TWI_vect(void) __attribute__ ((signal));
   void WDT_vect(void) __attribute__ ((signal));
   void USART_RX_vect(void) __attribute__ ((signal));
   void USART_TX_vect(void) __attribute__ ((signal));
   void USART_UDRE_vect(void) __attribute__ ((signal));
-  void USART1_RX_vect(void) __attribute__ ((signal));
-  void USART1_UDRE_vect(void) __attribute__ ((signal));
-  void USART1_TX_vect(void) __attribute__ ((signal));
 }
 #endif
-

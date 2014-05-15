@@ -29,55 +29,55 @@
 
 #include "Cosa/Types.h"
 
-#if defined(ARDUINO_UNO)			\
-  || defined(ARDUINO_DUEMILANOVE)		\
-  || defined(ARDUINO_NANO)			\
-  || defined(ARDUINO_PRO_MINI)			\
-  || defined(BREADBOARD_ATMEGA328P)		\
-  || defined(LILYPAD_ARDUINO)			\
-  || defined(MICRODUINO_CORE)
-#include "Cosa/Board/Arduino/ATmega328P.hh"
-#define BOARD_ATMEGA328P
-
-#elif defined(ARDUINO_LEONARDO)			\
-  || defined(ARDUINO_MICRO)			\
-  || defined(ARDUINO_PRO_MICRO)			\
-  || defined(LILYPAD_ARDUINO_USB)		\
-  || defined(MICRODUINO_CORE32U4)
-#include "Cosa/Board/Arduino/ATmega32U4.hh"
-#define BOARD_ATMEGA32U4
-
+// Arduino Boards
+#if defined(ARDUINO_DUEMILANOVE)
+#include "Cosa/Board/Arduino/Duemilanove.hh"
+#elif defined(ARDUINO_LEONARDO)
+#include "Cosa/Board/Arduino/Leonardo.hh"
 #elif defined(ARDUINO_MEGA2560)
-#include "Cosa/Board/Arduino/ATmega2560.hh"
-#define BOARD_ATMEGA2560
+#include "Cosa/Board/Arduino/Mega2560.hh"
+#elif defined(ARDUINO_NANO)
+#include "Cosa/Board/Arduino/Nano.hh"
+#elif defined(ARDUINO_PRO_MICRO)
+#include "Cosa/Board/Arduino/Pro_Micro.hh"
+#elif defined(ARDUINO_PRO_MINI)
+#include "Cosa/Board/Arduino/Pro_Mini.hh"
+#elif defined(ARDUINO_UNO)
+#include "Cosa/Board/Arduino/Uno.hh"
 
+// LilyPad Arduino Boards
+#elif defined(LILYPAD_ARDUINO)
+#include "Cosa/Board/Arduino/LilyPad.hh"
+#elif defined(LILYPAD_ARDUINO_USB)		
+#include "Cosa/Board/Arduino/LilyPad_USB.hh"
+
+// Microduino Boards
+#elif defined(MICRODUINO_CORE)
+#include "Cosa/Board/Microduino/Core.hh"
+#elif defined(MICRODUINO_CORE32U4)
+#include "Cosa/Board/Microduino/Core32U4.hh"
+#elif defined(MICRODUINO_CORE_PLUS)
+#include "Cosa/Board/Microduino/Core_Plus.hh"
+
+// Pinoccio Boards
+#elif defined(PINOCCIO_SCOUT)
+#include "Cosa/Board/Pinoccio/Scout.hh"
+
+// Teensy Boards
+#elif defined(PJRC_TEENSY_2_0)
+#include "Cosa/Board/PJRC/Teensy_2_0.hh"
+
+// Breadboards
 #elif defined(BREADBOARD_ATTINYX4)
 #include "Cosa/Board/Arduino/ATtinyX4.hh"
-#define BOARD_ATTINYX4
-#define BOARD_ATTINY
-
 #elif defined(BREADBOARD_ATTINYX5)
 #include "Cosa/Board/Arduino/ATtinyX5.hh"
-#define BOARD_ATTINYX5
-#define BOARD_ATTINY
-
 #elif defined(BREADBOARD_ATTINYX61)
 #include "Cosa/Board/Arduino/ATtinyX61.hh"
-#define BOARD_ATTINYX61
-#define BOARD_ATTINY
-
-#elif defined(BREADBOARD_ATMEGA1284)		\
-  ||  defined(MICRODUINO_CORE_PLUS)
+#elif defined(BREADBOARD_ATMEGA328P)
+#include "Cosa/Board/Arduino/ATmega328P.hh"
+#elif defined(BREADBOARD_ATMEGA1284)
 #include "Cosa/Board/Arduino/ATmega1284P.hh"
-#define BOARD_ATMEGA1248P
-
-#elif defined(PINOCCIO_SCOUT)
-#include "Cosa/Board/Pinoccio/ATmega256RFR2.hh"
-#define BOARD_ATMEGA256RFR2
-
-#elif defined(TEENSY_2_0)
-#include "Cosa/Board/Teensy/ATmega32U4.hh"
-#define BOARD_ATMEGA32U4
 
 #else
 #error "Cosa/Board.hh: board not supported"

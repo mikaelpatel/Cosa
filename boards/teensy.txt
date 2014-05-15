@@ -51,6 +51,6 @@ teensy-2_0.build.f_cpu=16000000L
 teensy-2_0.build.vid=0x2341
 teensy-2_0.build.pid=0x8037
 teensy-2_0.build.usb_product="Teensy 2.0"
-teensy-2_0.build.board=TEENSY_2_0
+teensy-2_0.build.board=PJRC_TEENSY_2_0
 teensy-2_0.build.core=cosa
 teensy-2_0.build.extra_flags={build.usb_flags}

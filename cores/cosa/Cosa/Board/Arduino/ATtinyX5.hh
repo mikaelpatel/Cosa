@@ -21,6 +21,10 @@
 #ifndef COSA_BOARD_ATTINYX5_HH
 #define COSA_BOARD_ATTINYX5_HH
 
+/* This board is based on ATtinyX5/ATtiny */
+#define BOARD_ATTINYX5
+#define BOARD_ATTINY
+
 /**
  * Compiler warning on unused varable.
  */
@@ -191,8 +195,7 @@ public:
     VBG = (_BV(MUX3) | _BV(MUX2)),
     EXT_MAX = 1,
     PCMSK_MAX = 1,
-    PCINT_MAX = 6,
-    PIN_MAX = D5
+    PCINT_MAX = 6
   } __attribute__((packed));
 };
 

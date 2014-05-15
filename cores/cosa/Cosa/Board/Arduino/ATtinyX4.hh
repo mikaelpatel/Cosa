@@ -21,6 +21,10 @@
 #ifndef COSA_BOARD_ATTINYX4_HH
 #define COSA_BOARD_ATTINYX4_HH
 
+/* This board is based on ATtinyX4/ATtiny */
+#define BOARD_ATTINYX4
+#define BOARD_ATTINY
+
 /**
  * Cosa ATTINYX4 Board pin symbol definitions for the ATtinyX4
  * processors. Cosa does not use pin numbers as Arduino/Wiring,
@@ -192,8 +196,7 @@ public:
     VBG = (_BV(MUX5) | _BV(MUX0)),
     EXT_MAX = 1,
     PCMSK_MAX = 2,
-    PCINT_MAX = 11,
-    PIN_MAX = D10
+    PCINT_MAX = 11
   } __attribute__((packed));
 };
 

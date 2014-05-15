@@ -68,6 +68,7 @@ public:
    */
   static bool echoState(FSM* fsm, uint8_t type)
   {
+    UNUSED(type);
     Echo* echo = (Echo*) fsm;
     echo->m_port->send(Event::USER_TYPE);
     return (true);

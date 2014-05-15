@@ -21,6 +21,9 @@
 #ifndef COSA_BOARD_ARDUINO_ATMEGA328P_HH
 #define COSA_BOARD_ARDUINO_ATMEGA328P_HH
 
+/* This board is based on ATmega328P */
+#define BOARD_ATMEGA328P
+
 /**
  * Compiler warning on unused varable.
  */
@@ -225,8 +228,7 @@ public:
     UART_MAX = 1,
     EXT_MAX = 2,
     PCMSK_MAX = 3,
-    PCINT_MAX = 24,
-    PIN_MAX = A7
+    PCINT_MAX = 24
   } __attribute__((packed));
 };
 
