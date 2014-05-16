@@ -126,47 +126,51 @@ public:
    * Digital pin symbols
    */
   enum DigitalPin {
-    D0 = 18,
-    D1 = 19,
-    D2 = 17,
-    D3 = 16,
-    D4 = 20,
-    D5 = 14,
-    D6 = 23,
-    D7 = 30,
-    D8 = 4,
-    D9 = 5,
-    D10 = 6,
-    D14 = 39,
-    D15 = 38,
-    D16 = 37,
-    D17 = 36,
-    D20 = 0,			// SS
-    D21 = 1,			// SCK
-    D22 = 2,			// MOSI
-    D23 = 3,			// MISO
-    LED = 15,			// Not used
-    RXLED = 0,			// Green
-    TXLED = 21			// Yellow
+    D0 = 18,			// PD2
+    D1 = 19,			// PD3
+    D2 = 17,			// PD1
+    D3 = 16,			// PD0
+    D4 = 20,			// PD4
+    D5 = 14,			// PC6
+    D6 = 23,			// PD7
+    D7 = 30,			// PE6
+    D8 = 4,			// PB4
+    D9 = 5,			// PB5
+    D10 = 6,			// PB6
+    D11 = 7,			// PB7/Not used
+    D12 = 22,			// PD6/Not used
+    D13 = 15,			// PC7/Not used
+    D14 = 39,			// PF7
+    D15 = 38,			// PF6
+    D16 = 37,			// PF5
+    D17 = 36,			// PF4
+    D18 = 33,			// PF1
+    D19 = 32,			// PF0
+    D20 = 0,			// PB0/SS/RXLED
+    D21 = 1,			// PB1/SCK
+    D22 = 2,			// PB2/MOSI
+    D23 = 3,			// PB3/MISO
+    LED = 15,			// PC7/Not used
+    RXLED = 0,			// PB0/Green
+    TXLED = 21			// PD5/Yellow
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols
+   * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 7,
-    A1 = 6,
-    A2 = 5,
-    A3 = 4,
-    A4 = 1,
-    A5 = 0,			// Extended Analog Pins
-    A6 = 32,			// D4
-    A7 = 33,			// D12
-    A8 = 34,			// D6
-    A9 = 35,			// D8
-    A10 = 36,			// D9
-    A11 = 37			// D10
-    
+    A0 = 7,			// PF7/D14
+    A1 = 6,			// PF6/D15
+    A2 = 5,			// PF5/D16
+    A3 = 4,			// PF4/D17
+    A4 = 1,			// PF1/D18/Not used
+    A5 = 0,			// PF0/D19/Not used
+    A6 = 32,			// PD4/D4
+    A7 = 33,			// PD6/D12/Not used
+    A8 = 34,			// PD7/D6
+    A9 = 35,			// PB4/D8
+    A10 = 36,			// PB5/D9
+    A11 = 37			// PB6/D10
   } __attribute__((packed));
 
   /**
@@ -183,13 +187,13 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D11,
-    PWM1 = D3,
-    PWM2 = D9,
-    PWM3 = D10,
-    PWM4 = D5,
-    PWM5 = D13,
-    PWM6 = D6
+    PWM0 = D11,	  		// PB7 => OCR0A/Not used
+    PWM1 = D3,			// PD0 => OCR0B
+    PWM2 = D9,			// PB5 => OCR1A
+    PWM3 = D10,			// PB6 => OCR1B
+    PWM4 = D5,			// PC6 => OCR3A
+    PWM5 = D13,			// PC7 => OCR4A/Not used
+    PWM6 = D6			// PD7 => OCR4D
   } __attribute__((packed));
 
   /**
@@ -197,42 +201,42 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D3,
-    EXT1 = D2,
-    EXT2 = D0,
-    EXT3 = D1
+    EXT0 = D3,			// PD0
+    EXT1 = D2,			// PD1
+    EXT2 = D0,			// PD2
+    EXT3 = D1			// PD3
   } __attribute__((packed));
 
   /**
    * Pin change interrupt (PCI) pins. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = 0,			// RXLED
-    PCI1 = 1,			// SCK
-    PCI2 = 2,			// MOSI
-    PCI3 = 3,			// MISO
-    PCI4 = D8,
-    PCI5 = D9,
-    PCI6 = D10,
-    PCI7 = D11
+    PCI0 = D20,			// PB0/RXLED
+    PCI1 = D21,			// PB1/SCK
+    PCI2 = D22,			// PB2/MOSI
+    PCI3 = D23,			// PB3/MISO
+    PCI4 = D8,			// PB4
+    PCI5 = D9,			// PB5
+    PCI6 = D10,			// PB6
+    PCI7 = D11			// PB7/Not used
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, digital pin D0-D1, TWI pins)
+   * Pins used for TWI interface (in port D, bit 0-1, digital pin D2-D3)
    */
   enum TWIPin {
-    SDA = 1,
-    SCL = 0
+    SDA = 1,			// PD1/D2
+    SCL = 0			// PD0/D3
   } __attribute__((packed));
   
   /**
    * Pins used for SPI interface (in port B, bit 0-3, SPI pins)
    */
   enum SPIPin {
-    SS = 0,
-    MOSI = 2,
-    MISO = 3,
-    SCK = 1
+    SS = 0,			// PB0/D20
+    MOSI = 2,			// PB2/D22
+    MISO = 3,			// PB3/D23
+    SCK = 1			// PB1/D21
   } __attribute__((packed));
 
   /**
@@ -306,9 +310,3 @@ extern "C" {
   void USB_GEN_vect(void) __attribute__ ((signal));
 }
 #endif
-
-
-
-
-#endif
-

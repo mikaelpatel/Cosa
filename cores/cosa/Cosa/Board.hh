@@ -45,6 +45,18 @@
 #elif defined(ARDUINO_UNO)
 #include "Cosa/Board/Arduino/Uno.hh"
 
+// Breadboards
+#elif defined(BREADBOARD_ATTINYX4)
+#include "Cosa/Board/Arduino/ATtinyX4.hh"
+#elif defined(BREADBOARD_ATTINYX5)
+#include "Cosa/Board/Arduino/ATtinyX5.hh"
+#elif defined(BREADBOARD_ATTINYX61)
+#include "Cosa/Board/Arduino/ATtinyX61.hh"
+#elif defined(BREADBOARD_ATMEGA328P)
+#include "Cosa/Board/Arduino/ATmega328P.hh"
+#elif defined(BREADBOARD_ATMEGA1284)
+#include "Cosa/Board/Arduino/ATmega1284P.hh"
+
 // LilyPad Arduino Boards
 #elif defined(LILYPAD_ARDUINO)
 #include "Cosa/Board/Arduino/LilyPad.hh"
@@ -63,21 +75,9 @@
 #elif defined(PINOCCIO_SCOUT)
 #include "Cosa/Board/Pinoccio/Scout.hh"
 
-// Teensy Boards
+// PJRC Teensy Boards
 #elif defined(PJRC_TEENSY_2_0)
 #include "Cosa/Board/PJRC/Teensy_2_0.hh"
-
-// Breadboards
-#elif defined(BREADBOARD_ATTINYX4)
-#include "Cosa/Board/Arduino/ATtinyX4.hh"
-#elif defined(BREADBOARD_ATTINYX5)
-#include "Cosa/Board/Arduino/ATtinyX5.hh"
-#elif defined(BREADBOARD_ATTINYX61)
-#include "Cosa/Board/Arduino/ATtinyX61.hh"
-#elif defined(BREADBOARD_ATMEGA328P)
-#include "Cosa/Board/Arduino/ATmega328P.hh"
-#elif defined(BREADBOARD_ATMEGA1284)
-#include "Cosa/Board/Arduino/ATmega1284P.hh"
 
 #else
 #error "Cosa/Board.hh: board not supported"

@@ -32,15 +32,33 @@
 #endif
 
 /**
- * Cosa Standard USB Board pin symbol definitions for the ATmega32U4
- * based boards such as Arduino Leonardo, Micro and LilyPad USB. Cosa
- * does not use pin numbers as Arduino/Wiring, instead strong data
- * type is used (enum types) for the specific pin classes; DigitalPin,
- * AnalogPin, PWMPin, etc. 
+ * Cosa pin symbol and hardware definitions for the ATmega32U4 based
+ * SparkFun LilyPad USB board. Cosa does not use pin numbers as
+ * Arduino/Wiring, instead strong data type is used (enum types) for
+ * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
  * The pin numbers for ATmega32u4 are mapped as in Arduino. The static
  * inline functions, SFR, BIT and UART, rely on compiler optimizations
  * to be reduced.  
+ *
+ * @section Board
+ * @code
+ *             LilyPad Arduino USB
+ *                    -----
+ *                 +--|   |--+
+ *             A2 /o  |   |  o\ D11
+ *            A3 /o   -----   o\ D10
+ *              +               +
+ *           A4 |o             o| D9
+ *              +               +
+ *            A5 \o           o/ D3
+ *            GND \o    o    o/ D2
+ *                 +---------+
+ *                     VCC
+ * @endcode
+ *
+ * WARNING: The pin binding is not complete. This board does not have 
+ * all the defined pins. They remain to allow default parameters.
  */
 class Board {
   friend class Pin;
@@ -100,49 +118,54 @@ private:
 
 public:
   /**
-   * Digital pin symbols
+   * Digital pin symbols.
    */
   enum DigitalPin {
-    D0 = 18,
-    D1 = 19,
-    D2 = 17,
-    D3 = 16,
-    D4 = 20,
-    D5 = 14,
-    D6 = 23,
-    D7 = 30,
-    D8 = 4,
-    D9 = 5,
-    D10 = 6,
-    D11 = 7,
-    D12 = 22,
-    D13 = 15,
-    D14 = 39,
-    D15 = 38,
-    D16 = 37,
-    D17 = 34,
-    D18 = 33,
-    D19 = 32,
-    LED = D13
+    D0 = 18,			// PD2/Not used
+    D1 = 19,			// PD3/Not used
+    D2 = 17,			// PD1
+    D3 = 16,			// PD0
+    D4 = 20,			// PD4/Not used
+    D5 = 14,			// PC6/Not used
+    D6 = 23,			// PD7/Not used
+    D7 = 30,			// PE6/Not used
+    D8 = 4,			// PB4/Not used
+    D9 = 5,			// PB5
+    D10 = 6,			// PB6
+    D11 = 7,			// PB7
+    D12 = 22,			// PD6/Not used
+    D13 = 15,			// PC7/Not used
+    D14 = 39,			// PF7/Not used
+    D15 = 38,			// PF6/Not used
+    D16 = 37,			// PF5
+    D17 = 36,			// PF4
+    D18 = 33,			// PF1
+    D19 = 32,			// PF0
+    D20 = 0,			// PB0/SS/TXLED
+    D21 = 1,			// PB1/SCK/ICSP
+    D22 = 2,			// PB2/MOSI/ICSP
+    D23 = 3,			// PB3/MISO/ICSP
+    LED = 15,			// PC7
+    TXLED = 0,			// Green
+    RXLED = 21			// Yellow
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols
+   * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 7,
-    A1 = 6,
-    A2 = 5,
-    A3 = 4,
-    A4 = 1,
-    A5 = 0,			// Extended Analog Pins
-    A6 = 32,			// D4
-    A7 = 33,			// D12
-    A8 = 34,			// D6
-    A9 = 35,			// D8
-    A10 = 36,			// D9
-    A11 = 37			// D10
-    
+    A0 = 7,			// PF7/D14/Not used
+    A1 = 6,			// PF6/D15/Not used
+    A2 = 5,			// PF5/D16
+    A3 = 4,			// PF4/D17
+    A4 = 1,			// PF1/D18
+    A5 = 0,			// PF0/D19
+    A6 = 32,			// PD4/D4/Not used
+    A7 = 33,			// PD6/D12/Not used
+    A8 = 34,			// PD7/D6/Not used
+    A9 = 35,			// PB4/D8/Not used
+    A10 = 36,			// PB5/D9
+    A11 = 37			// PB6/D10
   } __attribute__((packed));
 
   /**
@@ -159,13 +182,13 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D11,
-    PWM1 = D3,
-    PWM2 = D9,
-    PWM3 = D10,
-    PWM4 = D5,
-    PWM5 = D13,
-    PWM6 = D6
+    PWM0 = D11,			// PB7 => OCR0A
+    PWM1 = D3,			// PD0 => OCR0B
+    PWM2 = D9,			// PB5 => OCR1A
+    PWM3 = D10,			// PB6 => OCR1B
+    PWM4 = D5,			// PC6 => OCR3A/Not used
+    PWM5 = D13,			// PC7 => OCR4A
+    PWM6 = D6			// PD7 => OCR4D/Not used
   } __attribute__((packed));
 
   /**
@@ -173,42 +196,42 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D3,
-    EXT1 = D2,
-    EXT2 = D0,
-    EXT3 = D1
+    EXT0 = D3,			// PD0
+    EXT1 = D2,			// PD1
+    EXT2 = D0,			// PD2/Not used
+    EXT3 = D1			// PD3/Not used
   } __attribute__((packed));
 
   /**
    * Pin change interrupt (PCI) pins. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = D0,
-    PCI1 = D1,
-    PCI2 = D2,
-    PCI3 = D3,
-    PCI4 = D13,
-    PCI5 = D14,
-    PCI6 = D15,
-    PCI7 = D7
+    PCI0 = 0,			// RXLED/Not used
+    PCI1 = 1,			// SCK/ICSP
+    PCI2 = 2,			// MOSI/ICSP
+    PCI3 = 3,			// MISO/ICP
+    PCI4 = D8,			// Not used
+    PCI5 = D9,
+    PCI6 = D10,
+    PCI7 = D11
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, digital pin 0-1)
+   * Pins used for TWI interface (in port D, bit 0-1, digital pin 2-3)
    */
   enum TWIPin {
-    SDA = 1,
-    SCL = 0
+    SDA = 1,			// PD1/D2
+    SCL = 0			// PD0/D3
   } __attribute__((packed));
   
   /**
    * Pins used for SPI interface (in port B, bit 0-3)
    */
   enum SPIPin {
-    SS = 0,
-    MOSI = 2,
-    MISO = 3,
-    SCK = 1
+    SS = 0,			// PB0/D20
+    MOSI = 2,			// PB2/D22/ICSP
+    MISO = 3,			// PB3/D23/ICSP
+    SCK = 1			// PB1/D21/ICSP
   } __attribute__((packed));
 
   /**

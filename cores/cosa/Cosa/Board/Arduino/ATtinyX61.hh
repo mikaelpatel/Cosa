@@ -101,40 +101,40 @@ public:
    * Digital pin symbols
    */
   enum DigitalPin {
-    D0 = 0,
-    D1,
-    D2,
-    D3,
-    D4,
-    D5,
-    D6,
-    D7,
-    D8,
-    D9,
-    D10,
-    D11,
-    D12,
-    D13,
-    D14,
-    D15,
+    D0 = 0,			// PA0
+    D1,				// PA1
+    D2,				// PA2
+    D3,				// PA3
+    D4,				// PA4
+    D5,				// PA5
+    D6,				// PA6
+    D7,				// PA7
+    D8,				// PB0
+    D9,				// PB1
+    D10,			// PB2
+    D11,			// PB3
+    D12,			// PB4
+    D13,			// PB5
+    D14,			// PB6
+    D15,			// PB7
     LED = D5
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols
+   * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 0,
-    A1,
-    A2,
-    A3,
-    A4,
-    A5, 
-    A6,
-    A7,
-    A8,
-    A9,
-    A10
+    A0 = 0,			// PA0/D0
+    A1,				// PA1/D1
+    A2,				// PA2/D2
+    A3,				// PA3/D3
+    A4,				// PA4/D4
+    A5, 			// PA5/D5
+    A6,				// PA6/D6
+    A7,				// PA7/D7
+    A8,				// PB5/D13
+    A9,				// PB6/D14
+    A10				// PB7/D15
   } __attribute__((packed));
 
   /**
@@ -152,9 +152,9 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D9,
-    PWM1 = D11,
-    PWM2 = D13
+    PWM0 = D9,			// PB1 => OCR1A
+    PWM1 = D11,			// PB3 => OCR1B
+    PWM2 = D13			// PB5 => OCR1C
   } __attribute__((packed));
 
   /**
@@ -162,8 +162,8 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D14,
-    EXT1 = D2
+    EXT0 = D14,			// PB6
+    EXT1 = D2			// PA2
   } __attribute__((packed));
 
   /**

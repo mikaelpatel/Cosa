@@ -125,39 +125,39 @@ public:
    * Digital pin symbols
    */
   enum DigitalPin {
-    D0 = 0,
-    D1,
-    D2,
-    D3,
-    D4,
-    D5,
-    D6,
-    D7,
-    D8,
-    D9,
-    D10,
-    D11,
-    D12,
-    D13,
-    D14,
-    D15,
-    D16,
-    D17,
-    D18,
-    D19,
+    D0 = 0,			// PD0
+    D1,				// PD1
+    D2,				// PD2
+    D3,				// PD3
+    D4,				// PD4
+    D5,				// PD5
+    D6,				// PD6
+    D7,				// PD7
+    D8,				// PB0
+    D9,				// PB1
+    D10,			// PB2
+    D11,			// PB3
+    D12,			// PB4
+    D13,			// PB5
+    D14,			// PC0
+    D15,			// PC1
+    D16,			// PC2
+    D17,			// PC3
+    D18,			// PC4
+    D19,			// PC5
     LED = D13
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols
+   * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 0,
-    A1,
-    A2,
-    A3,
-    A4,
-    A5,
+    A0 = 0,			// PC0/D14
+    A1,				// PC1/D15
+    A2,				// PC2/D16
+    A3,				// PC3/D17
+    A4,				// PC4/D18
+    A5,				// PC5/D19
     A6,
     A7
   } __attribute__((packed));
@@ -176,12 +176,12 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D3,
-    PWM1 = D5,
-    PWM2 = D6,
-    PWM3 = D9,
-    PWM4 = D10,
-    PWM5 = D11
+    PWM0 = D3,			// PD3 => OCR2B
+    PWM1 = D5,			// PD5 => OCR0B
+    PWM2 = D6,			// PD6 => OCR0A
+    PWM3 = D9,			// PB1 => OCR1A
+    PWM4 = D10,			// PB2 => OCR1B
+    PWM5 = D11			// PB3 => OCR2A
   } __attribute__((packed));
 
   /**
@@ -189,8 +189,8 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D2,
-    EXT1 = D3
+    EXT0 = D2,			// PD2
+    EXT1 = D3			// PD3
   } __attribute__((packed));
 
   /**
@@ -223,18 +223,18 @@ public:
    * Pins used for TWI interface (in port C, analog pins A4-A5).
    */
   enum TWIPin {
-    SDA = 4,
-    SCL = 5
+    SDA = 4,			// PC4/A4
+    SCL = 5			// PC5/A5
   } __attribute__((packed));
 
   /**
    * Pins used for SPI interface (in port B, digital pins D10-D13).
    */
   enum SPIPin {
-    SS = 2,
-    MOSI = 3,
-    MISO = 4,
-    SCK = 5
+    SS = 2,			// PB2/D10
+    MOSI = 3,			// PB3/D11/ICSP
+    MISO = 4,			// PB4/D12/ICSP
+    SCK = 5			// PB5/D13/ICSP
   } __attribute__((packed));
 
   /**

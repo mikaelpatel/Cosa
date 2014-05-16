@@ -26,7 +26,7 @@
 
 /**
  * Cosa pin symbol and hardware definitions for the ATmega1284P based
- * board Microduino Core. Cosa does not use pin numbers as Arduino/Wiring,
+ * board Microduino Core+. Cosa does not use pin numbers as Arduino/Wiring,
  * instead strong data type is used (enum types) for the specific pin
  * classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
@@ -38,19 +38,19 @@
  * @code
  *                       Microduino Core+
  *                +--------------------------+
- *                |                          |
- *            GND |[]                      []| 5V
- *          RESET |[]                      []| 3V3
- *        PWM2/D6 |[]                      []| D7
- *        PWM1/D5 |[]                      []| D8
- *             D4 |[]                      []| D9/PWM3
- *   PWM0/EXT1/D3 |[]                      []| D10/SS/PWM4
- *        EXT0/D2 |[]                      []| D11/MOSI/PWM5
+ *                |    D23 A5 D19 D17 D15    |
+ *            GND |[]    [] [] [] [] []    []| 5V
+ *          RESET |[]    [] [] [] [] []    []| 3V3
+ *             D6 |[]  D22 A4 D18 D16 D14  []| D7
+ *             D5 |[]                      []| D8
+ *             D4 |[]                      []| D9
+ *             D3 |[]                      []| D10/SS/
+ *             D2 |[]                      []| D11/MOSI
  *          TX/D1 |[]                      []| D12/MISO
  *          RX/D0 |[]                      []| D13/SCK
  *                |[] [] [] [] [] [] [] [] []|
  *                +--------------------------+
- *                 A7 A6 A5 A4 A3 A2 A1 A0 VREF
+ *                A7 A6 D21 D20 A3 A2 A1 A0 VREF
  *                      SCL SDA
  * @endcode
  *
@@ -74,7 +74,7 @@ private:
   static volatile uint8_t* SFR(uint8_t pin) 
   { 
     return (pin < 8  ? &PINB : 
-	    pin < 14 ? &PIND : 
+	    pin < 16 ? &PIND : 
 	    pin < 24 ? &PINC :
 	               &PINA);
   }
@@ -110,7 +110,8 @@ private:
    */
   static volatile uint8_t* UART(uint8_t port) 
   { 
-    return (port == 1 ? &UCSR1A : &UCSR0A);
+    return (port == 1 ? &UCSR1A : 
+	                &UCSR0A);
   }
 
 public:
@@ -118,43 +119,43 @@ public:
    * Digital pin symbols
    */
   enum DigitalPin {
-    D0 = 0,
-    D1,
-    D2,
-    D3,
-    D4,
-    D5,
-    D6,
-    D7,
-    D8,
-    D9,
-    D10,
-    D11,
-    D12,
-    D13,
-    D14,
-    D15,
-    D16,
-    D17,
-    D18,
-    D19,
-    D20,
-    D21,
-    D22,
-    D23,
-    D24,
-    D25,
-    D26,
-    D27,
-    D28,
-    D29,
-    D30,
-    D31,
+    D0 = 8,			// PD0
+    D1 = 9,			// PD1
+    D2 = 10,			// PD2
+    D3 = 11,			// PD3
+    D4 = 0,			// PB0
+    D5 = 1,			// PB1
+    D6 = 2,			// PB2
+    D7 = 3,			// PB3
+    D8 = 14,			// PD6
+    D9 = 13,			// PD5
+    D10 = 4,			// PB4
+    D11 = 5,			// PB5
+    D12 = 6,			// PB6
+    D13 = 7,			// PB7
+    D14 = 23,			// PC7
+    D15 = 22,			// PC6
+    D16 = 21,			// PC5
+    D17 = 20,			// PC4
+    D18 = 19,			// PC3
+    D19 = 18,			// PC2
+    D20 = 17,			// PC1
+    D21 = 16,			// PC0
+    D22 = 12,			// PD4
+    D23 = 15,			// PD7
+    D24 = 31,			// PA7
+    D25 = 30,			// PA6
+    D26 = 29,			// PA5
+    D27 = 28,			// PA4
+    D28 = 27,			// PA3
+    D29 = 26,			// PA2
+    D30 = 25,			// PA1
+    D31 = 24,			// PA0
     LED = D13
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols
+   * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
     A0 = 0,
@@ -182,16 +183,16 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D3,
-    PWM1 = D4,
+    PWM0 = 3,			// PB3 => D7
+    PWM1 = 4,			// PB4 => D10
 #if defined(__AVR_ATmega1284P__)
-    PWM2 = D6,
-    PWM3 = D7,
+    PWM2 = 6,			// PB6 => D12
+    PWM3 = 7,			// PB7 => D13
 #endif
-    PWM4 = D12,
-    PWM5 = D13,
-    PWM6 = D14,
-    PWM7 = D15
+    PWM4 = 12,			// PD4 => D22
+    PWM5 = 13,			// PD5 => D9
+    PWM6 = 14,			// PD6 => D8
+    PWM7 = 15			// PD7 => D23
   } __attribute__((packed));
 
   /**
@@ -199,65 +200,65 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D10,
-    EXT1 = D11,
-    EXT2 = D2
+    EXT0 = 8,			// PD0 => D0
+    EXT1 = 9,			// PD1 => D1
+    EXT2 = 2			// PB2 => D6
   } __attribute__((packed));
 
   /**
    * Pin change interrupt. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = A0,
-    PCI1 = A1,
-    PCI2 = A2,
-    PCI3 = A3,
-    PCI4 = A4,
-    PCI5 = A5,
-    PCI6 = A6,
-    PCI7 = A7,
-    PCI8 = D0,
-    PCI9 = D1,
-    PCI10 = D2,
-    PCI11 = D3,
-    PCI12 = D4,
-    PCI13 = D5,
-    PCI14 = D6,
-    PCI15 = D7,
-    PCI16 = D16,
-    PCI17 = D17,
-    PCI18 = D18,
-    PCI19 = D19,
-    PCI20 = D20,
-    PCI21 = D21,
-    PCI22 = D22,
-    PCI23 = D23,
-    PCI24 = D8,
-    PCI25 = D9,
-    PCI26 = D10,
-    PCI27 = D11,
-    PCI28 = D12,
-    PCI29 = D13,
-    PCI30 = D14,
-    PCI31 = D15
+    PCI0 = 24,			// PA0 
+    PCI1 = 25,			// PA1
+    PCI2 = 26,			// PA2
+    PCI3 = 27,			// PA3
+    PCI4 = 28,			// PA4
+    PCI5 = 29,			// PA5
+    PCI6 = 30,			// PA6
+    PCI7 = 31,			// PA7
+    PCI8 = 0,			// PB0
+    PCI9 = 1,			// PB1
+    PCI10 = 2,			// PB2
+    PCI11 = 3,			// PB3
+    PCI12 = 4,			// PB4
+    PCI13 = 5,			// PB5
+    PCI14 = 6,			// PB6
+    PCI15 = 7,			// PB7
+    PCI16 = 16,			// PC0
+    PCI17 = 17,			// PC1
+    PCI18 = 18,			// PC2
+    PCI19 = 19,			// PC3
+    PCI20 = 20,			// PC4
+    PCI21 = 21,			// PC5
+    PCI22 = 22,			// PC6
+    PCI23 = 23,			// PC7
+    PCI24 = 8,			// PD0
+    PCI25 = 9,			// PD1
+    PCI26 = 10,			// PD2
+    PCI27 = 11,			// PD3
+    PCI28 = 12,			// PD4
+    PCI29 = 13,			// PD5
+    PCI30 = 14,			// PD6
+    PCI31 = 15			// PD7
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port C, digital pin 16, 17).
+   * Pins used for TWI interface (in port C, digital pin D21-D20).
    */
   enum TWIPin {
-    SDA = 1,
-    SCL = 0
+    SDA = 1,			// PC1/D20
+    SCL = 0			// PC0/D21
   } __attribute__((packed));
 
- /**
-   * Pins used for SPI interface (in port B, digital pins 4-7).
+  /**
+   * Pins used for SPI interface (in port B, digital pins D4-D7).
    */
   enum SPIPin {
-    SS = 4,
-    MOSI = 5,
-    MISO = 6,
-    SCK = 7
+    SS = 4,			// PB4/D10
+    MOSI = 5,			// PB5/D11
+    MISO = 6,			// PB6/D12
+    SCK = 7			// PB7/D13
   } __attribute__((packed));
 
   /**

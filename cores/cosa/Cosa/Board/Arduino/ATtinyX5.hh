@@ -112,23 +112,23 @@ public:
    * Digital pin symbols
    */
   enum DigitalPin {
-    D0 = 0,
-    D1,
-    D2,
-    D3,
-    D4,
-    D5,
+    D0 = 0,			// PB0
+    D1,				// PB1
+    D2,				// PB2
+    D3,				// PB3
+    D4,				// PB4
+    D5,				// PB5
     LED = D4
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols
+   * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 0,
-    A1,
-    A2,
-    A3
+    A0 = 0,			// PB5/D5
+    A1,				// PB2/D2
+    A2,				// PB4/D4
+    A3				// PB3/D3
   } __attribute__((packed));
 
   /**
@@ -146,8 +146,8 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D0,
-    PWM1 = D1
+    PWM0 = D0,			// PB0 => OCR0A
+    PWM1 = D1			// PB1 => OCR0B
   } __attribute__((packed));
 
   /**
@@ -155,7 +155,7 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D2
+    EXT0 = D2			// PB2
   } __attribute__((packed));
 
   /**
@@ -174,18 +174,18 @@ public:
    * Pins used for TWI interface.
    */
   enum TWIPin {
-    SDA = D0,
-    SCL = D2
+    SDA = D0,			// PB0
+    SCL = D2			// PB2
   } __attribute__((packed));
 
   /**
    * Pins used for SPI interface (in Port B)
    */
   enum SPIPin {
-    MOSI = 1,
-    MISO = 0,
-    SCK = 2,
-    SS = 3
+    MOSI = 1,			// PB1
+    MISO = 0,			// PB0
+    SCK = 2,			// PB2
+    SS = 3			// PB3
   } __attribute__((packed));
 
   /**

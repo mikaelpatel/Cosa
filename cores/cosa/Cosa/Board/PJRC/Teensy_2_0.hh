@@ -87,7 +87,7 @@ private:
 	    pin < 16 ? &PINC : 
 	    pin < 24 ? &PIND : 
 	    pin < 32 ? &PINE : 
-	    &PINF);
+	               &PINF);
   }
 
   /**
@@ -128,31 +128,31 @@ public:
    * Digital pin symbols
    */
   enum DigitalPin {
-    D0 = 0,
-    D1 = 1,
-    D2 = 2,
-    D3 = 3,
-    D4 = 7,
-    D5 = 16,
-    D6 = 17,
-    D7 = 18,
-    D8 = 19,
-    D9 = 14,
-    D10 = 15,
-    D11 = 22,
-    D12 = 23,
-    D13 = 4,
-    D14 = 5,
-    D15 = 6,
-    D16 = 39,
-    D17 = 38,
-    D18 = 37,
-    D19 = 36,
-    D20 = 33,
-    D21 = 32,
-    D22 = 20,
-    D23 = 21,
-    D24 = 30,
+    D0 = 0,			// PB0
+    D1 = 1,			// PB1
+    D2 = 2,			// PB2
+    D3 = 3,			// PB3
+    D4 = 7,			// PB7
+    D5 = 16,			// PD0
+    D6 = 17,			// PD1
+    D7 = 18,			// PD2
+    D8 = 19,			// PD3
+    D9 = 14,			// PC6
+    D10 = 15,			// PC7
+    D11 = 22,			// PD6
+    D12 = 23,			// PD7
+    D13 = 4,			// PB4
+    D14 = 5,			// PB5
+    D15 = 6,			// PB6
+    D16 = 39,			// PF7
+    D17 = 38,			// PF6
+    D18 = 37,			// PF5
+    D19 = 36,			// PF4
+    D20 = 33,			// PF1
+    D21 = 32,			// PF0
+    D22 = 20,			// PD4
+    D23 = 21,			// PD5
+    D24 = 30,			// PE6
     LED = D11
   } __attribute__((packed));
 
@@ -188,13 +188,13 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D4,
-    PWM1 = D5,
-    PWM2 = D14,
-    PWM3 = D15,
-    PWM4 = D9,
-    PWM5 = D10,
-    PWM6 = D12
+    PWM0 = D4,			// PB7 => OCR0A
+    PWM1 = D5,			// PD0 => OCR0B
+    PWM2 = D14,			// PB5 => OCR1A
+    PWM3 = D15,			// PB6 => OCR1B
+    PWM4 = D9,			// PC6 => OCR3A
+    PWM5 = D10,			// PC7 => OCR4A
+    PWM6 = D12			// PD7 => OCR4D
   } __attribute__((packed));
 
   /**
