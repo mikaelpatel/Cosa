@@ -22,7 +22,7 @@
  * @section Circuit
  *                         RF433/TX
  *                       +------------+
- * (D0)----------------1-|DATA        |
+ * (D8/D0)-------------1-|DATA        |
  * (VCC)---------------2-|VCC         |                    V
  * (GND)---------------3-|GND         |                    |
  *                       |ANT       0-|--------------------+
@@ -73,9 +73,9 @@
 #endif
 
 // Select Wireless device driver
-#define USE_CC1101
+// #define USE_CC1101
 // #define USE_NRF24L01P
-// #define USE_VWI
+#define USE_VWI
 
 #if defined(USE_CC1101)
 #include "Cosa/Wireless/Driver/CC1101.hh"
@@ -105,28 +105,33 @@ DS18B20 outdoors(&owi);
 // Active pullup (pullup resistor connected to this pin)
 OutputPin pw(Board::D4);
 
+// Power-down sleep
+#define DEEP_SLEEP(s)					\
+  do {							\
+    uint8_t mode = Power::set(SLEEP_MODE_PWR_DOWN);	\
+    SLEEP(s);						\
+    Power::set(mode);					\
+  } while (0)
+
+
+
 void setup()
 {
-  // Set up watchdog for power down sleep mode
-  Power::set(SLEEP_MODE_PWR_DOWN);
+  // Start watchdog, real-time clock and wireless device
   Watchdog::begin(128);
   RTC::begin();
-
-  // Start the wireless device and powerdown
   rf.begin();
-  rf.powerdown();
-
-  // Connect to the temperature sensors
-  pw.on();
-  indoors.connect(0);
-  outdoors.connect(1);
-  pw.off();
   
-  // Put the hardware in power down
-  Power::all_disable();
+  // Connect to the temperature sensors; use active pullup
+  pw.on();
+  {
+    indoors.connect(0);
+    outdoors.connect(1);
+  }
+  pw.off();
 }
 
-// Message from the device; temperature and voltage reading
+// Message from the device; temperatures and voltage reading
 struct dt_msg_t {
   uint8_t nr;
   int16_t indoors;
@@ -142,9 +147,11 @@ void loop()
 
   // Make a conversion request and read the temperature (scratchpad)
   pw.on();
-  DS18B20::convert_request(&owi, 12, true);
-  indoors.read_scratchpad();
-  outdoors.read_scratchpad();
+  {
+    DS18B20::convert_request(&owi, 12, true);
+    indoors.read_scratchpad();
+    outdoors.read_scratchpad();
+  }
   pw.off();
   
   // Turn on necessary hardware modules
@@ -163,6 +170,6 @@ void loop()
 
   // Turn off hardware and deep sleep until next sample (period 5 s)
   Power::all_disable();
-  SLEEP(5);
+  DEEP_SLEEP(5);
 }
 
