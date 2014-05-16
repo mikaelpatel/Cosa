@@ -117,11 +117,14 @@ OutputPin pw(Board::D4);
 
 void setup()
 {
-  // Start watchdog, real-time clock and wireless device
+  // Start watchdog and real-time clock
   Watchdog::begin(128);
   RTC::begin();
+
+  // Start the wireless device
   rf.begin();
-  
+  rf.powerdown();
+
   // Connect to the temperature sensors; use active pullup
   pw.on();
   {
