@@ -33,21 +33,21 @@ Cosa has built-in support for a large number of boards and
 clones/vendors. It also supports breadboards and custom-design
 boards. 
 
-* Arduino Duemilanove (ATmega328P)
-* Arduino Leonardo (ATmega32U4)
-* Arduino Mega (ATmega2560)
-* Arduino Nano (ATmega328P)
-* Arduino Pro Micro (ATmega32U4)
-* Arduino Pro Mini (ATmega328P)
-* Arduino Uno (ATmega328P)
+* [Arduino Duemilanove] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Duemilanove.hh)
+* [Arduino Leonardo] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Leonardo.hh)
+* [Arduino Mega2560] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Mega2560.hh
+* [Arduino Nano] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Nano.hh)
+* [Arduino Pro Micro] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Pro_Micro.hh)
+* [Arduino Pro Mini] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Pro_Micro.hh)
+* [Arduino Uno] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Uno.hh)
 * Breadboard (ATtinyX4, ATtinyX5, ATtinyX61, ATmega328, ATmega1284)
-* LilyPad Arduino (ATmega328P)
-* LilyPad Arduino USB (ATmega32U4)
-* Pinoccio Scout (ATmega256RFR2)
-* Microduino-Core (ATmega328P)
-* Microduino-Core32u4 (ATmega32U4)
-* Microduino-Core+ (ATmega644P)
-* Teensy 2.0 (ATmega32U4)
+* [LilyPad Arduino] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/LilyPad.hh)
+* [LilyPad Arduino USB] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/LilyPad_USB.hh)
+* [Pinoccio Scout] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Pinoccio/Scout.hh)
+* [Microduino-Core] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Microduino/Core.hh)
+* [Microduino-Core32u4] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Microduino/Core32U4.hh)
+* [Microduino-Core32+] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Microduino/Core_Plus.hh)
+* [PJRC Teensy 2.0] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/PJRC/Teensy_2_0.hh)
 
 References
 ----------
