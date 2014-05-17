@@ -26,6 +26,37 @@ The provided documentation is generated with doxygen and may also be
 generated for users source code if the Cosa documentation style is
 adapted. See the Doxyfile for configuration of doxygen. 
 
+Supported Boards and MCUs
+-------------------------
+
+Cosa has built-in support for a large number of boards and
+clones/vendors. It also supports breadboards and custom-design
+boards. 
+
+* Arduino Duemilanove (ATmega328P)
+* Arduino Leonardo (ATmega32U4)
+* Arduino Mega (ATmega2560)
+* Arduino Nano (ATmega328P)
+* Arduino Pro Micro (ATmega32U4)
+* Arduino Pro Mini (ATmega328P)
+* Arduino Uno (ATmega328P)
+* LilyPad Arduino (ATmega328P)
+* LilyPad Arduino USB (ATmega32U4)
+
+* Breadboard ATtiny84, 8 MHz, internal clock
+* Breadboard ATtiny85, 8 MHz, internal clock
+* Breadboard ATtiny861, 8 MHz, internal clock
+* Breadboard ATmega328, 8 MHz, internal clock
+* Breadboard ATmega1284, 16 MHz
+
+* Pinoccio Scout (ATmega256RFR2)
+
+* Microduino-Core (ATmega328P)
+* Microduino-Core32u4 (ATmega32U4)
+* Microduino-Core+ (ATmega644P)
+
+* Teensy 2.0 (ATmega32U4)
+
 References
 ----------
 
