@@ -24,6 +24,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/TWI.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
@@ -106,12 +107,18 @@ lookup(uint8_t addr, TWI::Driver* dev)
   return (NULL);
 }
 
+IOStream cout(&uart);
+
 void setup()
 {
   // Bind the UART to en output stream for print out
-  IOStream cout(&uart);
   uart.begin(9600);
+  Watchdog::begin();
   cout << PSTR("CosaTWIscanner: started") << endl;
+}
+
+void loop()
+{
   // Iterate through all bus addresses
   for (uint8_t addr = 3; addr < 128; addr++) {
     // Attempt to read from the device
@@ -129,5 +136,6 @@ void setup()
     if (name != NULL) cout << ':' << name;
     cout << endl;
   }
+  cout << endl;
+  SLEEP(5);
 }
-
