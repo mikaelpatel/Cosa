@@ -40,13 +40,13 @@ boards.
 * Arduino Pro Micro (ATmega32U4)
 * Arduino Pro Mini (ATmega328P)
 * Arduino Uno (ATmega328P)
+* Breadboard ATtiny84
+* Breadboard ATtiny85
+* Breadboard ATtiny861
+* Breadboard ATmega328
+* Breadboard ATmega1284
 * LilyPad Arduino (ATmega328P)
 * LilyPad Arduino USB (ATmega32U4)
-* Breadboard ATtiny84, 8 MHz, internal clock
-* Breadboard ATtiny85, 8 MHz, internal clock
-* Breadboard ATtiny861, 8 MHz, internal clock
-* Breadboard ATmega328, 8 MHz, internal clock
-* Breadboard ATmega1284, 16 MHz
 * Pinoccio Scout (ATmega256RFR2)
 * Microduino-Core (ATmega328P)
 * Microduino-Core32u4 (ATmega32U4)
