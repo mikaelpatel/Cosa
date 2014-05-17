@@ -33,7 +33,7 @@
 
 /**
  * Cosa pin symbol and hardware definitions for the ATmega328P based
- * board LilyPad Arduino. Cosa does not use pin numbers as Arduino/Wiring,
+ * LilyPad Arduino board. Cosa does not use pin numbers as Arduino/Wiring,
  * instead strong data type is used (enum types) for the specific pin
  * classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *

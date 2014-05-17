@@ -38,7 +38,7 @@ boards.
 * [Arduino Mega2560] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Mega2560.hh)
 * [Arduino Nano] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Nano.hh)
 * [Arduino Pro Micro] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Pro_Micro.hh)
-* [Arduino Pro Mini] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Pro_Micro.hh)
+* [Arduino Pro Mini] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Pro_Mini.hh)
 * [Arduino Uno] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Uno.hh)
 * Breadboard ([ATtinyX4] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/ATtinyX4.hh), [ATtinyX5] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/ATtinyX5.hh), [ATtinyX61] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/ATtinyXX61.hh), [ATmega328] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/ATmega328P.hh), [ATmega1284] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/ATmega1284P.hh))
 * [LilyPad Arduino] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/LilyPad.hh)
