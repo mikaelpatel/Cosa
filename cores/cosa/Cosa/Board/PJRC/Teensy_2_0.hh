@@ -212,32 +212,32 @@ public:
    * Pin change interrupt (PCI) pins. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = 0,
-    PCI1 = 1,
-    PCI2 = 2,
-    PCI3 = 3,
-    PCI4 = 4,
-    PCI5 = 5,
-    PCI6 = 6,
-    PCI7 = 7
+    PCI0 = D0,			// PB0
+    PCI1 = D1,			// PB1
+    PCI2 = D2,			// PB2
+    PCI3 = D3,			// PB3
+    PCI4 = D13,			// PB4
+    PCI5 = D14,			// PB5
+    PCI6 = D15,			// PB6
+    PCI7 = D4			// PB7
   } __attribute__((packed));
 
   /**
    * Pins used for TWI interface (in port D, bit 0-1, digital pin 5-6)
    */
   enum TWIPin {
-    SDA = 1,
-    SCL = 0
+    SDA = 1,			// PD1/D6
+    SCL = 0			// PD0/D5
   } __attribute__((packed));
 
   /**
    * Pins used for SPI interface (in port B, bit 0-3, digital pin 0-3)
    */
   enum SPIPin {
-    SS = 0,
-    MOSI = 2,
-    MISO = 3,
-    SCK = 1
+    SS = 0,			// PB0/D0
+    MOSI = 2,			// PB2/D2
+    MISO = 3,			// PB3/D3
+    SCK = 1			// PB1/D1
   } __attribute__((packed));
 
   /**

@@ -36,7 +36,8 @@
 void init() __attribute__((weak));
 void init()
 {
-#if defined(TEENSY_2_0)
+  // Adjust frequency scaling on Teensy; default is no scaling on Cosa
+#if defined(PJRC_TEENSY_2_0)
   Power::clock_prescale(0);
 #endif
 
