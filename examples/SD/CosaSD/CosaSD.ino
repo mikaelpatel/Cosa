@@ -57,6 +57,7 @@ static const uint8_t WIDTH = 32;
 #define USE_ETHERNET_SHIELD
 #if defined(USE_ETHERNET_SHIELD)
 SD sd(Board::D4);
+OutputPin en(Board::D10);
 #else
 SD sd;
 #endif
@@ -78,6 +79,9 @@ void setup()
 
   Watchdog::begin();
   RTC::begin();
+#if defined(USE_ETHERNET_SHIELD)
+  en.set();
+#endif
   trace.begin(dev, PSTR("CosaDS: started"));
   TRACE(free_memory());
   TRACE(sizeof(SD));
