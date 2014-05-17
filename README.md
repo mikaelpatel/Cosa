@@ -40,11 +40,7 @@ boards.
 * Arduino Pro Micro (ATmega32U4)
 * Arduino Pro Mini (ATmega328P)
 * Arduino Uno (ATmega328P)
-* Breadboard ATtiny84
-* Breadboard ATtiny85
-* Breadboard ATtiny861
-* Breadboard ATmega328
-* Breadboard ATmega1284
+* Breadboard (ATtinyX4, ATtinyX5, ATtinyX61, ATmega328, ATmega1284)
 * LilyPad Arduino (ATmega328P)
 * LilyPad Arduino USB (ATmega32U4)
 * Pinoccio Scout (ATmega256RFR2)
