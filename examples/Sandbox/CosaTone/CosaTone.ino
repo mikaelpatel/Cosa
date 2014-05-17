@@ -42,7 +42,7 @@ void setup()
   sleep(3);
 
   // MIDI nodes (49..69..89)
-  for (uint8_t i = 39; i < 100; i++) {
+  for (uint8_t i = 49; i < 90; i++) {
     Tone::play(Note::MIDI(i), 5, 200);
     delay(200);
   }
