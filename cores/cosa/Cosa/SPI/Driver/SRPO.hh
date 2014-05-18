@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/Driver/SR3W.hh
+ * @file Cosa/SPI/Driver/SRPO.hh
  * @version 1.0
  *
  * @section License
@@ -18,17 +18,17 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_SPI_DRIVER_SR3W_HH
-#define COSA_SPI_DRIVER_SR3W_HH
+#ifndef COSA_SPI_DRIVER_SRPO_HH
+#define COSA_SPI_DRIVER_SRPO_HH
 
-#include "Cosa/OutputPin.hh"
 #include "Cosa/SPI.hh"
 
 /**
- * N-Shift Register 3-Wire SPI device driver. The shift registers
- * (74HC595) should be cascaded (see circuit below). The pins are
- * numbered from the first connect shift register (Q0..Q7) and
- * updwards in the chain (Q8..Q15) and so on. 
+ * N-Shift Register Parallel Output, 3-Wire SPI device driver. The
+ * shift registers (74HC595) may be cascaded for N*8-bit parallel
+ * output port (see circuit below). The pins are numbered from the
+ * first connect shift register (Q0..Q7) and updwards in the chain
+ * (Q8..Q15) and so on.
  *
  * @section Circuit
  * @code
@@ -62,11 +62,16 @@
  *                                      |                | | |
  *                                      V                V V V
  * @endcode
+ *
+ * @section Note
+ * The shift registers will clock data for presented on the SPI bus
+ * (MOSI/SCK) but will not transfer to output register until the
+ * enable pulse is given (i.e. when addressed).
  * 
  * @param[in] N number of shift registers (N * 8 output pins).
  */
 template<uint8_t N>
-class SR3W : public SPI::Driver {
+class SRPO : public SPI::Driver {
 public:
   /**
    * Construct N-shift register connected to SPI (MOSI, SCL) and given
@@ -75,7 +80,7 @@ public:
    * @param[in] clock SPI hardware setting (default DIV4_CLOCK).
    */
 #if !defined(BOARD_ATTINY)
-  SR3W(Board::DigitalPin cs = Board::D10, 
+  SRPO(Board::DigitalPin cs = Board::D10, 
        SPI::Clock rate = SPI::DEFAULT_CLOCK) : 
     SPI::Driver(cs, SPI::PULSE_HIGH, rate)
   {
@@ -83,7 +88,7 @@ public:
     update();
   }
 #else
-  SR3W(Board::DigitalPin cs = Board::D3,
+  SRPO(Board::DigitalPin cs = Board::D3,
        SPI::Clock rate = SPI::DEFAULT_CLOCK) : 
     SPI::Driver(cs, SPI::PULSE_HIGH, rate)
   {
@@ -185,9 +190,9 @@ public:
     spi.transfer_await();
     spi.end();
   }
-  
+
 protected:
+  /** Shadow port register */
   uint8_t m_port[N];
 };
-
 #endif

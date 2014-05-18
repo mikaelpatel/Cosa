@@ -1,5 +1,5 @@
 /**
- * @file CosaSR3W.ino
+ * @file CosaSRPO.ino
  * @version 1.0
  *
  * @section License
@@ -16,19 +16,19 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Demonstrate Cosa N-Shift Register (SR3W) SPI class. Cascade two
- * shift register (74HC595) and connect LEDs. See SR3W.hh for more
+ * Demonstrate Cosa N-Shift Register (SRPO) SPI class. Cascade two
+ * shift register (74HC595) and connect LEDs. See SRPO.hh for more
  * details on the circuit.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/Driver/SR3W.hh"
+#include "Cosa/SPI/Driver/SRPO.hh"
 #include "Cosa/Watchdog.hh"
 
 // Two cascaded shift registers; use D10/D3 as chip select pin, 
 // MOSI for serial data and SCK for clock. 
-SR3W<2> port;
+SRPO<2> port;
 
 void setup()
 {
