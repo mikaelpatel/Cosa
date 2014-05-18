@@ -51,7 +51,7 @@
  *          RESET |[]                      []| 3V3
  *        PWM5/D6 |[]                      []| D7/PWM0
  *        PWM4/D5 |[]                      []| D8/PWM3
- *        PWM6&D4 |[]                      []| D9/PWM2
+ *        PWM6/D4 |[]                      []| D9/PWM2
  *             D3 |[]                      []| D10/SS
  *             D2 |[]                      []| D11/MOSI
  *          TX/D1 |[]                      []| D12/MISO
