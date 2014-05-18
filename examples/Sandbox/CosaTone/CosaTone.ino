@@ -36,7 +36,7 @@ void setup()
 
   // Classical telephone signal
   for (uint8_t i = 0; i < 10; i++) {
-    Tone::play(Note::A4, 5, 200);
+    Tone::play(Note::A4, i, 200);
     delay(200);
   }
   sleep(3);
@@ -52,15 +52,19 @@ void setup()
 void play(const uint16_t* freq, uint8_t volume, uint16_t duration)
 {
   uint16_t f;
-  while ((f = *freq++) != Note::END) 
-    Tone::play(f, volume, duration);
+  while ((f = *freq++) != Note::END) {
+    if (f == Note::PAUSE) delay(100);
+    else Tone::play(f, volume, duration);
+  }
 }
 
 void play_P(const uint16_t* freq, uint8_t volume, uint16_t duration)
 {
   uint16_t f;
-  while ((f = pgm_read_word(freq++)) != Note::END) 
-    Tone::play(f, volume, duration);
+  while ((f = pgm_read_word(freq++)) != Note::END) {
+    if (f == Note::PAUSE) delay(100);
+    else Tone::play(f, volume, duration);
+  }
 }
 
 void loop()
