@@ -35,21 +35,21 @@
  *                         74HC595    (VCC)
  *                       +----U----+    |
  * (Q1)----------------1-|Q1    VCC|-16-+
- * (Q2)----------------2-|Q2     Q0|-15-----------(Q0)
- * (Q3)----------------3-|Q3    SER|-14-----------(MOSI/D11)
+ * (Q2)----------------2-|Q2     Q0|-15------------(Q0)
+ * (Q3)----------------3-|Q3    SER|-1-------(MOSI/D11)
  * (Q4)----------------4-|Q4    /OE|-13-----------(GND)
- * (Q5)----------------5-|Q5   RCLK|-12-----------(EN/D10)---+
- * (Q6)----------------6-|Q6   SCLK|-11-----------(SCK/D13)+ |
+ * (Q5)----------------5-|Q5   RCLK|-12--------(EN/D10)------+
+ * (Q6)----------------6-|Q6   SCLK|-11-------(SCK/D13)----+ |
  * (Q7)----------------7-|Q7    /MR|-10-----------(VCC)    | |
  *                   +-8-|GND   Q7S|--9------------------+ | |
  *                   |   +---------+                     | | |
  *                   |      0.1uF                        | | |
- *                 (GND)---- ||-------(VCC)              | | |
+ *                 (GND)-----||-------(VCC)              | | |
  *                                      |                | | |
  *                         74HC595      |                | | |
  *                       +----U----+    |                | | |
  * (Q9)----------------1-|Q1    VCC|-16-+                | | |
- * (Q10)---------------2-|Q2     Q0|-15-----------(Q8)   | | |
+ * (Q10)---------------2-|Q2     Q0|-15------------(Q8)  | | |
  * (Q11)---------------3-|Q3    SER|-14------------------+ | |
  * (Q12)---------------4-|Q4    /OE|-13-----------(GND)    | |
  * (Q13)---------------5-|Q5   RCLK|-12--------------------(-+
@@ -58,7 +58,7 @@
  *                   +-8-|GND   Q7S|--9------------------+ | |
  *                   |   +---------+                     | | |
  *                   |      0.1uF                        | | |
- *                 (GND)---- ||-------(VCC)              | | |
+ *                 (GND)-----||-------(VCC)              | | |
  *                                      |                | | |
  *                                      V                V V V
  * @endcode
@@ -190,6 +190,49 @@ public:
     spi.transfer_await();
     spi.end();
   }
+
+  /**
+   * Output pin in shift-register parallel output port.
+   */
+  class OutputPin {
+  public:
+    OutputPin(SRPO<N>* srpo, uint8_t pin) :
+      m_srpo(srpo),
+      m_pin(pin)
+    {
+    }
+    
+    /**
+     * Set pin in shadow register. Call update() to write to shift
+     * register. 
+     */
+    void set() __attribute__((always_inline))
+    {
+      m_srpo->set(m_pin);
+    }
+
+  /**
+   * Clear pin in shadow register. Call update() to write to shift
+   * register. 
+   */
+  void clear() __attribute__((always_inline))
+  {
+    m_srpo->clear(m_pin);
+  }
+
+  /**
+   * Toggle pin in shadow register. Call update() to write to shift
+   * register. 
+   */
+  void toggle() __attribute__((always_inline))
+  {
+    m_srpo->toggle(m_pin);
+  }
+
+  protected:
+    SRPO<N>* m_srpo;
+    const uint8_t m_pin;
+  };
 
 protected:
   /** Shadow port register */
