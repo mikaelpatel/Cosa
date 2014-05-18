@@ -30,7 +30,80 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaPinScanner: started"));
   Watchdog::begin();
-  SLEEP(5);
+#if defined(PORTA)
+  trace << PSTR("PORTA     ");
+#endif
+#if defined(PORTB)
+  trace << PSTR("PORTB    ");
+#endif
+#if defined(PORTC)
+  trace << PSTR("PORTC    ");
+#endif
+#if defined(PORTD)
+  trace << PSTR("PORTD    ");
+#endif
+#if defined(PORTE)
+  trace << PSTR("PORTE    ");
+#endif
+#if defined(PORTF)
+  trace << PSTR("PORTF    ");
+#endif
+#if defined(PORTG)
+  trace << PSTR("PORTG    ");
+#endif
+#if defined(PORTH)
+  trace << PSTR("PORTH    ");
+#endif
+#if defined(PORTI)
+  trace << PSTR("PORTI    ");
+#endif
+#if defined(PORTJ)
+  trace << PSTR("PORTJ    ");
+#endif
+#if defined(PORTJ)
+  trace << PSTR("PORTK    ");
+#endif
+#if defined(PORTJ)
+  trace << PSTR("PORTL    ");
+#endif
+  trace << endl;
+#if defined(PORTA)
+  print(trace, PORTA);
+#endif
+#if defined(PORTB)
+  print(trace, PORTB);
+#endif
+#if defined(PORTC)
+  print(trace, PORTC);
+#endif
+#if defined(PORTD)
+  print(trace, PORTD);
+#endif
+#if defined(PORTE)
+  print(trace, PORTE);
+#endif
+#if defined(PORTF)
+  print(trace, PORTF);
+#endif
+#if defined(PORTG)
+  print(trace, PORTG);
+#endif
+#if defined(PORTH)
+  print(trace, PORTH);
+#endif
+#if defined(PORTI)
+  print(trace, PORTI);
+#endif
+#if defined(PORTJ)
+  print(trace, PORTJ);
+#endif
+#if defined(PORTK)
+  print(trace, PORTK);
+#endif
+#if defined(PORTL)
+  print(trace, PORTL);
+#endif
+  trace << endl;
 }
 
 void print(IOStream& outs, uint8_t value)
@@ -69,6 +142,18 @@ void loop()
 #if defined(PINH)
   trace << PSTR("PINH     ");
 #endif
+#if defined(PINI)
+  trace << PSTR("PINI     ");
+#endif
+#if defined(PINJ)
+  trace << PSTR("PINJ     ");
+#endif
+#if defined(PINK)
+  trace << PSTR("PINK     ");
+#endif
+#if defined(PINL)
+  trace << PSTR("PINL     ");
+#endif
   trace << endl;
 #if defined(PINA)
   print(trace, PINA);
@@ -93,6 +178,18 @@ void loop()
 #endif
 #if defined(PINH)
   print(trace, PINH);
+#endif
+#if defined(PINI)
+  print(trace, PINI);
+#endif
+#if defined(PINJ)
+  print(trace, PINJ);
+#endif
+#if defined(PINK)
+  print(trace, PINK);
+#endif
+#if defined(PINL)
+  print(trace, PINL);
 #endif
   trace << endl;
   SLEEP(2);
