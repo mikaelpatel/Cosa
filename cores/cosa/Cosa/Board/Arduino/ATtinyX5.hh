@@ -162,16 +162,16 @@ public:
    * Pin change interrupt. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = D0,
-    PCI1 = D1,
-    PCI2 = D2,
-    PCI3 = D3,
-    PCI4 = D4,
-    PCI5 = D5
+    PCI0 = D0,			// PB0
+    PCI1 = D1,			// PB1
+    PCI2 = D2,			// PB2
+    PCI3 = D3,			// PB3
+    PCI4 = D4,			// PB4
+    PCI5 = D5			// PB5
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface.
+   * Pins used for TWI interface (in Port B, bit 0/2, D0/D2)
    */
   enum TWIPin {
     SDA = D0,			// PB0
@@ -179,13 +179,13 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pins used for SPI interface (in Port B)
+   * Pins used for SPI interface (in Port B, bit 0-3, D0-D3)
    */
   enum SPIPin {
-    MOSI = 1,			// PB1
-    MISO = 0,			// PB0
-    SCK = 2,			// PB2
-    SS = 3			// PB3
+    MISO = 0,			// PB0/D0
+    MOSI = 1,			// PB1/D1
+    SCK = 2,			// PB2/D2
+    SS = 3			// PB3/D3
   } __attribute__((packed));
 
   /**

@@ -192,28 +192,28 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D19,
-    EXT1 = D18,
-    EXT2 = D0,
-    EXT3 = D1
+    EXT0 = D19,			// PD0
+    EXT1 = D18,			// PD1
+    EXT2 = D0,			// PD2
+    EXT3 = D1			// PD3
   } __attribute__((packed));
 
   /**
-   * Pin change interrupt (PCI) pins. Number of port registers.
+   * Pin change interrupt (PCI) pins.
    */
   enum InterruptPin {
-    PCI0 = D10,
-    PCI1 = D13,
-    PCI2 = D11,
-    PCI3 = D12,
-    PCI4 = 4,
-    PCI5 = D9,
-    PCI6 = D8,
-    PCI7 = D7
+    PCI0 = D10,			// PB0
+    PCI1 = D13,			// PB1
+    PCI2 = D11,			// PB2
+    PCI3 = D12,			// PB3
+    PCI4 = 4,			// PB4/Not used
+    PCI5 = D9,			// PB5
+    PCI6 = D8,			// PB6
+    PCI7 = D7			// PB7
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, digital pin D0-D1, TWI pins)
+   * Pins used for TWI interface (port D, bit 0-1, D0-D1)
    */
   enum TWIPin {
     SDA = 1,			// PD1/D18
@@ -221,13 +221,13 @@ public:
   } __attribute__((packed));
   
   /**
-   * Pins used for SPI interface (in port B, bit 0-3, SPI pins)
+   * Pins used for SPI interface (port B, bit 0-3, D10-D12)
    */
   enum SPIPin {
-    SS = 0,			// PB0
-    MOSI = 2,			// PB2
-    MISO = 3,			// PB3
-    SCK = 1			// PB1
+    SS = 0,			// PB0/D10
+    SCK = 1,			// PB1/D13
+    MOSI = 2,			// PB2/D11
+    MISO = 3			// PB3/D12
   } __attribute__((packed));
 
   /**

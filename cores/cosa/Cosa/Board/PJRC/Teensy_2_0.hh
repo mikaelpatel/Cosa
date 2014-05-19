@@ -160,18 +160,18 @@ public:
    * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 0,
-    A1 = 1,
-    A2 = 4,
-    A3 = 5,
-    A4 = 6,
-    A5 = 7,
-    A6 = 37,
-    A7 = 36,
-    A8 = 35,
-    A9 = 34,
-    A10 = 33,
-    A11 = 32
+    A0 = 0,			// PF0/ADC0
+    A1 = 1,			// PF1/ADC1
+    A2 = 4,			// PF4/ADC4
+    A3 = 5,			// PF5/ADC5
+    A4 = 6,			// PF6/ADC6
+    A5 = 7,			// PF7/ADC7
+    A6 = 37,			// PB6/ADC13
+    A7 = 36,			// PB5/ADC12
+    A8 = 35,			// PB4/ADC11
+    A9 = 34,			// PD7/ADC10
+    A10 = 33,			// PD6/ADC9
+    A11 = 32			// PD4/ADC8
   } __attribute__((packed));
 
   /**
@@ -202,10 +202,10 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D5,
-    EXT1 = D6,
-    EXT2 = D7,
-    EXT3 = D8
+    EXT0 = D5,			// PD0
+    EXT1 = D6,			// PD1
+    EXT2 = D7,			// PD2
+    EXT3 = D8			// PD3
   } __attribute__((packed));
 
   /**
@@ -223,7 +223,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, bit 0-1, digital pin 5-6)
+   * Pins used for TWI interface (port D, bit 0-1, D5-D6)
    */
   enum TWIPin {
     SDA = 1,			// PD1/D6
@@ -231,13 +231,13 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pins used for SPI interface (in port B, bit 0-3, digital pin 0-3)
+   * Pins used for SPI interface (port B, bit 0-3, D0-D3)
    */
   enum SPIPin {
     SS = 0,			// PB0/D0
+    SCK = 1,			// PB1/D1
     MOSI = 2,			// PB2/D2
-    MISO = 3,			// PB3/D3
-    SCK = 1			// PB1/D1
+    MISO = 3			// PB3/D3
   } __attribute__((packed));
 
   /**
@@ -248,8 +248,7 @@ public:
     UART_MAX = 2,
     EXT_MAX = 7,
     PCMSK_MAX = 1,
-    PCINT_MAX = 8,
-    PIN_MAX = 38
+    PCINT_MAX = 8
   } __attribute__((packed));
 };
 

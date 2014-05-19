@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Board/Arduino/ATmege32U4.hh
+ * @file Cosa/Board/PJRC/Teensypp_2_0.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,11 +18,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_ARDUINO_ATMEGA32U4_HH
-#define COSA_BOARD_ARDUINO_ATMEGA32U4_HH
+#ifndef COSA_BOARD_PJRC_TEENSYPP_2_0_HH
+#define COSA_BOARD_PJRC_TEENSYPP_2_0_HH
 
-/* This board is based on ATmega32U4 */
-#define BOARD_ATMEGA32U4
+/* This board is based on AT90USB1286 */
+#define BOARD_AT90USB1286
 
 /**
  * Compiler warning on unused varable.
@@ -32,15 +32,47 @@
 #endif
 
 /**
- * Cosa Standard USB Board pin symbol definitions for the ATmega32U4
- * based boards such as Arduino Leonardo, Micro and LilyPad USB. Cosa
- * does not use pin numbers as Arduino/Wiring, instead strong data
- * type is used (enum types) for the specific pin classes; DigitalPin,
- * AnalogPin, PWMPin, etc. 
+ * Cosa pin symbol definitions for the PJRC Teensy++ 2.0, AT90USB1286 
+ * based board. Cosa does not use pin numbers as Arduino/Wiring,
+ * instead strong data type is used (enum types) for the specific pin
+ * classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
- * The pin numbers for ATmega32u4 are mapped as in Arduino. The static
- * inline functions, SFR, BIT and UART, rely on compiler optimizations
- * to be reduced.  
+ * The pin numbers for Teensy++ 2.0 are only symbolically mapped,
+ * i.e. a pin number/digit will not work, symbols must be used, 
+ * e.g., Board::D12. Avoid iterations assuming that the symbols 
+ * are in order.
+ *
+ * The static inline functions, SFR, BIT and UART, rely on compiler
+ * optimizations to be reduced.  
+ *
+ * @section Board
+ * @code
+ *                  Teensy++ 2.0
+ *                     -----
+ *                +----| V |----+
+ *            GND |o   |   |   o| VCC
+ *            D27 |o   -----   o| D26
+ *             D0 |o   -----   o| D25
+ *             D1 |o           o| D24
+ *             D2 |o           o| D23
+ *             D3 |o 36 o-o 37 o| D22
+ *             D4 |o           o| D21
+ *             D5 |o           o| D20
+ *             D6 |o           o| D19
+ *             D7 |o           o| D18
+ *             D8 |o           o| GND
+ *             D9 |o           o| AREF
+ *            D10 |o           o| D38/A0
+ *            D11 |o 32 o-o 28 o| D39/A1
+ *            D12 |o 33 o-o 29 o| D40/A2
+ *            D13 |o 34 o-o 30 o| D41/A3
+ *            D14 |o 35 o-o 31 o| D42/A4
+ *            D15 |o           o| D43/A5
+ *            D16 |o    ( )    o| D44/A6
+ *            D17 |o   o o o   o| D45/A7
+ *                +-------------+
+ *                  RST GND VCC
+ * @endcode
  */
 class Board {
   friend class Pin;
@@ -52,21 +84,22 @@ private:
   Board() {}
 
   /**
-   * Return Special Function Register for given Arduino pin number.
+   * Return Special Function Register for given Teensy pin number.
    * @param[in] pin number.
    * @return special register pointer.
    */
   static volatile uint8_t* SFR(uint8_t pin) 
   { 
-    return (pin < 8  ? &PINB : 
+    return (pin < 8  ? &PIND : 
 	    pin < 16 ? &PINC : 
-	    pin < 24 ? &PIND : 
-	    pin < 32 ? &PINE : 
+	    pin < 24 ? &PINB : 
+	    pin < 32 ? &PINA : 
+	    pin < 40 ? &PINE : 
 	               &PINF);
   }
 
   /**
-   * Return Pin Change Mask Register for given Arduino pin number.
+   * Return Pin Change Mask Register for given Teensy pin number.
    * @param[in] pin number.
    * @return pin change mask register pointer.
    */
@@ -77,7 +110,7 @@ private:
   }
 
   /**
-   * Return bit position for given Arduino pin number in Special
+   * Return bit position for given Teensy pin number in Special
    * Function Register. 
    * @param[in] pin number.
    * @return pin bit position.
@@ -88,7 +121,7 @@ private:
   }
   
   /**
-   * Return UART Register for given Arduino serial port.
+   * Return UART Register for given Teensy serial port.
    * @param[in] port number.
    * @return UART register pointer.
    */
@@ -103,46 +136,67 @@ public:
    * Digital pin symbols
    */
   enum DigitalPin {
-    D0 = 18,
-    D1 = 19,
-    D2 = 17,
-    D3 = 16,
-    D4 = 20,
-    D5 = 14,
-    D6 = 23,
-    D7 = 30,
-    D8 = 4,
-    D9 = 5,
-    D10 = 6,
-    D11 = 7,
-    D12 = 22,
-    D13 = 15,
-    D14 = 39,
-    D15 = 38,
-    D16 = 37,
-    D17 = 34,
-    D18 = 33,
-    D19 = 32,
-    LED = D13
+    D0 = 0,			// PD0
+    D1 = 1,			// PD1
+    D2 = 2,			// PD2
+    D3 = 3,			// PD3
+    D4 = 4,			// PD4
+    D5 = 5,			// PD5
+    D6 = 6,			// PD6
+    D7 = 7,			// PD7
+    D8 = 32,			// PE0
+    D9 = 33,			// PE1
+    D10 = 8,			// PC0
+    D11 = 9,			// PC1
+    D12 = 10,			// PC2
+    D13 = 11,			// PC3
+    D14 = 12,			// PC4
+    D15 = 13,			// PC5
+    D16 = 14,			// PC6
+    D17 = 15,			// PC7
+    D18 = 39,			// PE7
+    D19 = 38,			// PE6
+    D20 = 16,			// PB0
+    D21 = 17,			// PB1
+    D22 = 18,			// PB2
+    D23 = 19,			// PB3
+    D24 = 20,			// PB4
+    D25 = 21,			// PB5
+    D26 = 22,			// PB6
+    D27 = 23,			// PB7
+    D28 = 24,			// PA0
+    D29 = 25,			// PA1
+    D30 = 26,			// PA2
+    D31 = 27,			// PA3
+    D32 = 28,			// PA4
+    D33 = 29,			// PA5
+    D34 = 30,			// PA6
+    D35 = 31,			// PA7
+    D36 = 36,			// PE4
+    D37 = 37,			// PE5
+    D38 = 40,			// PF0
+    D39 = 41,			// PF1
+    D40 = 42,			// PF2
+    D41 = 43,			// PF3
+    D42 = 44,			// PF4
+    D43 = 45,			// PF5
+    D44 = 46,			// PF6
+    D45 = 47,			// PF7
+    LED = D6
   } __attribute__((packed));
 
   /**
-   * Analog pin symbols
+   * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = 7,
-    A1 = 6,
-    A2 = 5,
-    A3 = 4,
-    A4 = 1,
-    A5 = 0,
-    A6 = 32,
-    A7 = 33,
-    A8 = 34,
-    A9 = 35,
-    A10 = 36,
-    A11 = 37
-    
+    A0 = 0,			// PF0
+    A1 = 1,			// PF1
+    A2 = 2,			// PF2
+    A3 = 3,			// PF3
+    A4 = 5,			// PF4
+    A5 = 5,			// PF5
+    A6 = 6,			// PF6
+    A7 = 7			// PF7
   } __attribute__((packed));
 
   /**
@@ -159,13 +213,13 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D11,
-    PWM1 = D3,
-    PWM2 = D9,
-    PWM3 = D10,
-    PWM4 = D5,
-    PWM5 = D13,
-    PWM6 = D6
+    PWM0 = D27,			// PB7 => OCR0A
+    PWM1 = D0,			// PD0 => OCR0B
+    PWM2 = D25,			// PB5 => OCR1A
+    PWM3 = D26,			// PB6 => OCR1B
+    PWM4 = D16,			// PC6 => OCR3A
+    PWM5 = D15,			// PC5 => OCR3B
+    PWM6 = D14			// PD4 => OCR3C
   } __attribute__((packed));
 
   /**
@@ -173,42 +227,46 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D3,
-    EXT1 = D2,
-    EXT2 = D0,
-    EXT3 = D1
+    EXT0 = D0,			// PD0
+    EXT1 = D1,			// PD1
+    EXT2 = D2,			// PD2
+    EXT3 = D3,			// PD3
+    EXT4 = D36,			// PE4
+    EXT5 = D37,			// PE5
+    EXT6 = D18,			// PE6
+    EXT7 = D19			// PE7
   } __attribute__((packed));
 
   /**
    * Pin change interrupt (PCI) pins. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = D0,
-    PCI1 = D1,
-    PCI2 = D2,
-    PCI3 = D3,
-    PCI4 = D13,
-    PCI5 = D14,
-    PCI6 = D15,
-    PCI7 = D7
+    PCI0 = D20,			// PB0
+    PCI1 = D21,			// PB1
+    PCI2 = D22,			// PB2
+    PCI3 = D23,			// PB3
+    PCI4 = D24,			// PB4
+    PCI5 = D25,			// PB5
+    PCI6 = D26,			// PB6
+    PCI7 = D27			// PB7
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, digital pin 0-1)
+   * Pins used for TWI interface (in port D, bit 0-1, D0-D1)
    */
   enum TWIPin {
-    SDA = 1,
-    SCL = 0
+    SDA = 1,			// PD1/D1
+    SCL = 0			// PD0/D0
   } __attribute__((packed));
-  
+
   /**
-   * Pins used for SPI interface (in port B, bit 0-3)
+   * Pins used for SPI interface (in port B, bit 0-3, D20-D23)
    */
   enum SPIPin {
-    SS = 0,
-    MOSI = 2,
-    MISO = 3,
-    SCK = 1
+    SS = 0,			// PB0/D20
+    MOSI = 2,			// PB2/D22
+    MISO = 3,			// PB3/D23
+    SCK = 1			// PB1/D21
   } __attribute__((packed));
 
   /**
@@ -217,7 +275,7 @@ public:
   enum {
     VBG = (_BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1)),
     UART_MAX = 2,
-    EXT_MAX = 7,
+    EXT_MAX = 8,
     PCMSK_MAX = 1,
     PCINT_MAX = 8
   } __attribute__((packed));
@@ -241,6 +299,7 @@ public:
 #if !defined(ADCW)
 #define ADCW ADC
 #endif
+#undef ID
 
 /**
  * Forward declare interrupt service routines to allow them as friends.
@@ -252,7 +311,10 @@ extern "C" {
   void INT1_vect(void) __attribute__ ((signal));
   void INT2_vect(void) __attribute__ ((signal));
   void INT3_vect(void) __attribute__ ((signal));
+  void INT4_vect(void) __attribute__ ((signal));
+  void INT5_vect(void) __attribute__ ((signal));
   void INT6_vect(void) __attribute__ ((signal));
+  void INT7_vect(void) __attribute__ ((signal));
   void PCINT0_vect(void) __attribute__ ((signal));
   void SPI_STC_vect(void) __attribute__ ((signal));
   void TIMER0_COMPA_vect(void) __attribute__ ((signal));
@@ -263,16 +325,14 @@ extern "C" {
   void TIMER1_COMPB_vect(void) __attribute__ ((signal));
   void TIMER1_COMPC_vect(void) __attribute__ ((signal));
   void TIMER1_OVF_vect(void) __attribute__ ((signal));
+  void TIMER2_COMPA_vect(void) __attribute__ ((signal));
+  void TIMER2_COMPB_vect(void) __attribute__ ((signal));
+  void TIMER2_OVF_vect(void) __attribute__ ((signal));
   void TIMER3_CAPT_vect(void)  __attribute__ ((signal));
   void TIMER3_COMPA_vect(void) __attribute__ ((signal));
   void TIMER3_COMPB_vect(void) __attribute__ ((signal));
   void TIMER3_COMPC_vect(void) __attribute__ ((signal));
   void TIMER3_OVF_vect(void) __attribute__ ((signal));
-  void TIMER4_COMPA_vect(void) __attribute__ ((signal));
-  void TIMER4_COMPB_vect(void) __attribute__ ((signal));
-  void TIMER4_COMPD_vect(void) __attribute__ ((signal));
-  void TIMER4_FPF_vect(void) __attribute__ ((signal));
-  void TIMER4_OVF_vect(void) __attribute__ ((signal));
   void TWI_vect(void) __attribute__ ((signal));
   void WDT_vect(void) __attribute__ ((signal));
   void USART1_RX_vect(void) __attribute__ ((signal));

@@ -32,11 +32,10 @@
 #endif
 
 /**
- * Cosa Standard Board pin symbol definitions for the ATmega328P based
- * boards such as Arduino Uno, Mini Pro, Nano, and LilyPad. Cosa does
- * not use pin numbers as Arduino/Wiring, instead strong data type is
- * used (enum types) for the specific pin classes; DigitalPin,
- * AnalogPin, PWMPin, etc. 
+ * Cosa pin symbol definitions for the ATmega328P based
+ * breadboards. Cosa does not use pin numbers as Arduino/Wiring,
+ * instead strong data type is used (enum types) for the specific pin
+ * classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
  * The pin numbers for ATmega328P are mapped as in Arduino. The static
  * inline functions, SFR, BIT and UART, rely on compiler optimizations
@@ -104,28 +103,26 @@ public:
    * Digital pin symbols
    */
   enum DigitalPin {
-    D0 = 0,
-    D1,
-    D2,
-    D3,
-    D4,
-    D5,
-    D6,
-    D7,
-    D8,
-    D9,
-    D10,
-    D11,
-    D12,
-    D13,
-    D14,
-    D15,
-    D16,
-    D17,
-    D18,
-    D19,
-    D20,
-    D21,
+    D0 = 0,			// PD0
+    D1,				// PD1
+    D2,				// PD2
+    D3,				// PD3
+    D4,				// PD4
+    D5,				// PD5
+    D6,				// PD6
+    D7,				// PD7
+    D8,				// PB0
+    D9,				// PB1
+    D10,			// PB2
+    D11,			// PB3
+    D12,			// PB4
+    D13,			// PB5
+    D14,			// PC0
+    D15,			// PC1
+    D16,			// PC2
+    D17,			// PC3
+    D18,			// PC4
+    D19,			// PC5
     LED = D13
   } __attribute__((packed));
 
@@ -133,14 +130,14 @@ public:
    * Analog pin symbols
    */
   enum AnalogPin {
-    A0 = 0,
-    A1,
-    A2,
-    A3,
-    A4,
-    A5,
-    A6,
-    A7
+    A0 = 0,			// PC0/ADC0
+    A1,				// PC1/ADC1
+    A2,				// PC2/ADC2
+    A3,				// PC3/ACD3
+    A4,				// PC4/ACD4
+    A5,				// PC5/ACD5
+    A6,				// PC6/ACD6
+    A7				// PC7/ACD7
   } __attribute__((packed));
 
   /**
@@ -157,12 +154,12 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D3,
-    PWM1 = D5,
-    PWM2 = D6,
-    PWM3 = D9,
-    PWM4 = D10,
-    PWM5 = D11
+    PWM0 = D3,			// PD3 => OCR2B
+    PWM1 = D5,			// PD5 => OCR0B
+    PWM2 = D6,			// PD6 => OCR0A
+    PWM3 = D9,			// PB1 => OCR1A
+    PWM4 = D10,			// PB2 => OCR1B
+    PWM5 = D11			// PB3 => OCR2A
   } __attribute__((packed));
 
   /**
@@ -170,54 +167,52 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D2,
-    EXT1 = D3
+    EXT0 = D2,			// PD2
+    EXT1 = D3			// PD3
   } __attribute__((packed));
 
   /**
-   * Pin change interrupt (PCI) pins. Number of port registers.
+   * Pin change interrupt (PCI) pins.
    */
   enum InterruptPin {
-    PCI0 = D0,
-    PCI1 = D1,
-    PCI2 = D2,
-    PCI3 = D3,
-    PCI4 = D4,
-    PCI5 = D5,
-    PCI6 = D6,
-    PCI7 = D7,
-    PCI8 = D8,
-    PCI9 = D9,
-    PCI10 = D10,
-    PCI11 = D11,
-    PCI12 = D12,
-    PCI13 = D13,
-    PCI14 = D14,
-    PCI15 = D15,
-    PCI16 = D16,
-    PCI17 = D17,
-    PCI18 = D18,
-    PCI19 = D19,
-    PCI20 = D20,
-    PCI21 = D21
+    PCI0 = D0,			// PD0
+    PCI1 = D1,			// PD1
+    PCI2 = D2,			// PD2
+    PCI3 = D3,			// PD3
+    PCI4 = D4,			// PD4
+    PCI5 = D5,			// PD5
+    PCI6 = D6,			// PD6
+    PCI7 = D7,			// PD7
+    PCI8 = D8,			// PB0
+    PCI9 = D9,			// PB1
+    PCI10 = D10,		// PB2
+    PCI11 = D11,		// PB3
+    PCI12 = D12,		// PB4
+    PCI13 = D13,		// PB5
+    PCI14 = D14,		// PC0
+    PCI15 = D15,		// PC1
+    PCI16 = D16,		// PC2
+    PCI17 = D17,		// PC3
+    PCI18 = D18,		// PC4
+    PCI19 = D19			// PC5
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port C, analog pins 4-5).
+   * Pins used for TWI interface (port C, bit 4-6, A4-A5)
    */
   enum TWIPin {
-    SDA = 4,
-    SCL = 5
+    SDA = 4,			// PC4/D18/A4
+    SCL = 5			// PC6/D19/A5
   } __attribute__((packed));
 
  /**
-   * Pins used for SPI interface (in port B, digital pins 10-13).
+   * Pins used for SPI interface (port B, bit 2-5, D10-D13)
    */
   enum SPIPin {
-    SS = 2,
-    MOSI = 3,
-    MISO = 4,
-    SCK = 5
+    SS = 2,			// PB2/D10
+    MOSI = 3,			// PB3/D11
+    MISO = 4,			// PB4/D12
+    SCK = 5			// PB5/D13
   } __attribute__((packed));
 
   /**

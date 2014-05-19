@@ -147,7 +147,11 @@ PCINT_ISR(0, 1, 8);
 PCINT_ISR(1, 2, 14);
 PCINT_ISR(2, 0, 0);
 
-#elif defined(BOARD_ATMEGA32U4)
+#elif defined(BOARD_ATMEGA32U4) 
+
+PCINT_ISR(0, 0, 0);
+
+#elif defined(BOARD_AT90USB1286) 
 
 PCINT_ISR(0, 0, 0);
 

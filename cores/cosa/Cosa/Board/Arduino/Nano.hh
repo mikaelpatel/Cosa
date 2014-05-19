@@ -159,8 +159,8 @@ public:
     A3,				// PC3/D17
     A4,				// PC4/D18
     A5,				// PC5/D19
-    A6,				// 
-    A7				// 
+    A6,				// Pin only
+    A7				// Pin only
   } __attribute__((packed));
 
   /**
@@ -195,33 +195,33 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pin change interrupt (PCI) pins. Number of port registers.
+   * Pin change interrupt (PCI) pins.
    */
   enum InterruptPin {
-    PCI0 = D0,
-    PCI1 = D1,
-    PCI2 = D2,
-    PCI3 = D3,
-    PCI4 = D4,
-    PCI5 = D5,
-    PCI6 = D6,
-    PCI7 = D7,
-    PCI8 = D8,
-    PCI9 = D9,
-    PCI10 = D10,
-    PCI11 = D11,
-    PCI12 = D12,
-    PCI13 = D13,
-    PCI14 = D14,
-    PCI15 = D15,
-    PCI16 = D16,
-    PCI17 = D17,
-    PCI18 = D18,
-    PCI19 = D19
+    PCI0 = D0,			// PD0
+    PCI1 = D1,			// PD1
+    PCI2 = D2,			// PD2
+    PCI3 = D3,			// PD3
+    PCI4 = D4,			// PD4
+    PCI5 = D5,			// PD5
+    PCI6 = D6,			// PD6
+    PCI7 = D7,			// PD7
+    PCI8 = D8,			// PB0
+    PCI9 = D9,			// PB1
+    PCI10 = D10,		// PB2
+    PCI11 = D11,		// PB3
+    PCI12 = D12,		// PB4
+    PCI13 = D13,		// PB5
+    PCI14 = D14,		// PC0
+    PCI15 = D15,		// PC1
+    PCI16 = D16,		// PC2
+    PCI17 = D17,		// PC3
+    PCI18 = D18,		// PC4
+    PCI19 = D19			// PC5
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port C, analog pins A4-A5).
+   * Pins used for TWI interface (port C, bit 4-5, A4-A5).
    */
   enum TWIPin {
     SDA = 4,			// PC4/A4
@@ -229,7 +229,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pins used for SPI interface (in port B, digital pins D10-D13).
+   * Pins used for SPI interface (port B, bit 2-5, D10-D13).
    */
   enum SPIPin {
     SS = 2,			// PB2/D10

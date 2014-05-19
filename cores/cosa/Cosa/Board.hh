@@ -78,6 +78,8 @@
 // PJRC Teensy Boards
 #elif defined(PJRC_TEENSY_2_0)
 #include "Cosa/Board/PJRC/Teensy_2_0.hh"
+#elif defined(PJRC_TEENSYPP_2_0)
+#include "Cosa/Board/PJRC/Teensypp_2_0.hh"
 
 #else
 #error "Cosa/Board.hh: board not supported"

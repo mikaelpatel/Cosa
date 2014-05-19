@@ -49,19 +49,19 @@
  *           VUSB |o               o| VCC (3V)
  *           BKPK |o               o| GND
  *            RST |o               o| VBAT
- *            SCK |o               o| RX1
- *           MISO |o               o| TX1
- *           MOSI |o               o| SCL
- *            SSN |o               o| SDA
- *            RX0 |o               o| AREF
- *            TX0 |o               o| A0
- *             D2 |o               o| A1
- *             D3 |o               o| A2
- *             D4 |o               o| A3
- *             D5 |o               o| A4
- *             D6 |o               o| A5
- *             D7 |o               o| A6
- *             D8 |o               o| A7
+ *        SCK/D13 |o               o| D22/RX1
+ *       MISO/D12 |o               o| D23/TX1
+ *       MOSI/D11 |o               o| D24/SCL
+ *        SSN/D10 |o               o| D25/SDA
+ *         RX0/D0 |o               o| AREF
+ *         TX0/D1 |o               o| A0/D14
+ *             D2 |o               o| A1/D15
+ *             D3 |o               o| A2/D16
+ *             D4 |o               o| A3/D17
+ *             D5 |o               o| A4/D18
+ *             D6 |o               o| A5/D19
+ *             D7 |o               o| A6/D20
+ *             D8 |o               o| A7/D21
  *                 \    [=====]    /
  *                  \-------------/
 
@@ -127,56 +127,53 @@ public:
    * Digital pin symbols; mapping from name to port<5>:bit<3> (BDEF0..7)
    */
   enum DigitalPin {
-    D0 = 16,
-    D1 = 17,
-    D2 = 7,
-    D3 = 19,
-    D4 = 20,
-    D5 = 21,
-    D6 = 18,
-    D7 = 22,
-    D8 = 14,
-    D9 = 0,
-    D10 = 2,
-    D11 = 3,
-    D12 = 1,
-    D13 = 11,
-    D14 = 12,
-    D15 = 9,
-    D16 = 10,
-    D17 = 13,
-    D18 = 23,
-    D19 = 14,
-    D20 = 15,
-    D21 = 4,
-    D22 = 5,
-    D23 = 6,
-    D24 = 24,
-    D25 = 25,
-    D26 = 26,
-    D27 = 27,
-    D28 = 28,
-    D29 = 29,
-    D30 = 30,
-    D31 = 31,
-    LED = D23,
-    LED_BLUE = D21,
-    LED_RED = D22,
-    LED_GREEN = D23
+    D0 = 16,			// PE0/RX0
+    D1 = 17,			// PE1/TX0
+    D2 = 7,			// PB7
+    D3 = 19,			// PE3
+    D4 = 20,			// PE4
+    D5 = 21,			// PE5
+    D6 = 18,			// PE2
+    D7 = 22,			// PE6
+    D8 = 13,			// PD5
+
+    D10 = 0,			// PB0/SSN
+    D11 = 2,			// PB2/MOSI
+    D12 = 3,			// PB3/MISO
+    D13 = 1,			// PB1/SCK
+    
+    D22 = 10,			// PD2/RX1
+    D23 = 11,			// PD3/TX1
+
+    D24 = 8,			// PD0/SCL
+    D25 = 9,			// PD1/SDA
+
+    D14 = 24,			// PF0
+    D15 = 25,			// PF1
+    D16 = 26,			// PF2
+    D17 = 27,			// PF3
+    D18 = 28,			// PF4
+    D19 = 29,			// PF5
+    D20 = 30,			// PF6
+    D21 = 31,			// PF6
+    
+    LED_BLUE = 4,		// PB4
+    LED_RED = 5,		// PB5
+    LED_GREEN = 6		// PB6
   } __attribute__((packed));
 
   /**
    * Analog pin symbols; analog channel numbers
    */
   enum AnalogPin {
-    A0 = 0,
-    A1,
-    A2,
-    A3,
-    A4,
-    A5,
-    A6,
-    A7
+    A0 = 0,			// PF0
+    A1,				// PF1
+    A2,				// PF2
+    A3,				// PF3
+    A4,				// PF4
+    A5,				// PF5
+    A6,				// PF6
+    A7				// PF7
   } __attribute__((packed));
 
   /**
@@ -198,9 +195,9 @@ public:
     PWM1 = D3,
     PWM2 = D4,
     PWM3 = D5,
-    PWM4 = D21,
-    PWM5 = D22,
-    PWM6 = D23
+    PWM4 = LED_BLUE,
+    PWM5 = LED_RED,
+    PWM6 = LED_GREEN
   } __attribute__((packed));
 
   /**
@@ -208,46 +205,46 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D15,
-    EXT1 = D16,
-    EXT2 = D13,
-    EXT3 = D14,
-    EXT4 = D4,
-    EXT5 = D5,
-    EXT6 = D7,
-    EXT7 = D18
+    EXT0 = D24,			// PD0/D24/SCL
+    EXT1 = D25,			// PD1/D25/SDA
+    EXT2 = D22,			// PD2/D22/RX1
+    EXT3 = D23,			// PD3/D23/TX1
+    EXT4 = D4,			// PE4/D4
+    EXT5 = D5,			// PE5/D5
+    EXT6 = D7			// PE6/D6
   } __attribute__((packed));
 
   /**
    * Pin change interrupt. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = D9,
-    PCI1 = D12,
-    PCI2 = D10,
-    PCI3 = D11,
-    PCI4 = D21,
-    PCI5 = D22,
-    PCI6 = D23,
-    PCI7 = D14
+    PCI0 = 0,			// PB0/D10
+    PCI1 = 1,			// PB1/D13
+    PCI2 = 2,			// PB2/D11
+    PCI3 = 3,			// PB3/D12
+    PCI4 = 4,			// PB4/D2
+    PCI5 = 5,			// PB5/Not used
+    PCI6 = 6,			// PB6/Not used
+    PCI7 = 7,			// PB7/D2
+    PCI8 = 16			// PE0/D0
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, digital pins 15-16).
+   * Pins used for TWI interface (port D, D24-D25)
    */
   enum TWIPin {
-    SCL = 0,
-    SDA = 1
+    SCL = 0,			// PD0
+    SDA = 1			// PD1
   } __attribute__((packed));
 
   /**
-   * Pins used for SPI interface (in port B, digital pins 9-12).
+   * Pins used for SPI interface (port B, D10-D13)
    */
   enum SPIPin {
-    SS = 0,
-    SCK = 1,
-    MOSI = 2,
-    MISO = 3
+    SS = 0,			// PB0/D10
+    SCK = 1,			// PB1/D13
+    MOSI = 2,			// PB2/D11
+    MISO = 3			// PB3/D12
   } __attribute__((packed));
 
   /**
@@ -258,8 +255,7 @@ public:
     UART_MAX = 2,
     EXT_MAX = 8,
     PCMSK_MAX = 3,
-    PCINT_MAX = 24,
-    PIN_MAX = A7
+    PCINT_MAX = 24
   } __attribute__((packed));
 };
 

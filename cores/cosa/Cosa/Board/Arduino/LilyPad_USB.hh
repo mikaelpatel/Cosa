@@ -51,8 +51,8 @@
  *              +               +
  *           A4 |o             o| D9
  *              +               +
- *            A5 \o           o/ D3
- *            GND \o    o    o/ D2
+ *            A5 \o           o/ D3/SCL
+ *            GND \o    o    o/ D2/SDA
  *                 +---------+
  *                     VCC
  * @endcode
@@ -141,10 +141,10 @@ public:
     D17 = 36,			// PF4
     D18 = 33,			// PF1
     D19 = 32,			// PF0
-    D20 = 0,			// PB0/SS/TXLED
-    D21 = 1,			// PB1/SCK/ICSP
-    D22 = 2,			// PB2/MOSI/ICSP
-    D23 = 3,			// PB3/MISO/ICSP
+    D20 = 0,			// PB0/Not used
+    D21 = 1,			// PB1/ISCP
+    D22 = 2,			// PB2/ISCP
+    D23 = 3,			// PB3/ISCP
     LED = 15,			// PC7
     TXLED = 0,			// Green
     RXLED = 21			// Yellow
@@ -187,7 +187,7 @@ public:
     PWM2 = D9,			// PB5 => OCR1A
     PWM3 = D10,			// PB6 => OCR1B
     PWM4 = D5,			// PC6 => OCR3A/Not used
-    PWM5 = D13,			// PC7 => OCR4A
+    PWM5 = D13,			// PC7 => OCR4A/LED
     PWM6 = D6			// PD7 => OCR4D/Not used
   } __attribute__((packed));
 
@@ -203,21 +203,21 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pin change interrupt (PCI) pins. Number of port registers.
+   * Pin change interrupt (PCI) pins.
    */
   enum InterruptPin {
-    PCI0 = 0,			// RXLED/Not used
-    PCI1 = 1,			// SCK/ICSP
-    PCI2 = 2,			// MOSI/ICSP
-    PCI3 = 3,			// MISO/ICP
-    PCI4 = D8,			// Not used
-    PCI5 = D9,
-    PCI6 = D10,
-    PCI7 = D11
+    PCI0 = D20,			// PB0/Not used
+    PCI1 = D21,			// PB1/Not used
+    PCI2 = D22,			// PB2/Not used
+    PCI3 = D23,			// PB3/Not used
+    PCI4 = D8,			// PB4/Not used
+    PCI5 = D9,			// PB5
+    PCI6 = D10,			// PB6
+    PCI7 = D11			// PB7
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, bit 0-1, digital pin 2-3)
+   * Pins used for TWI interface (port D, bit 0-1, D2-D3)
    */
   enum TWIPin {
     SDA = 1,			// PD1/D2
@@ -225,13 +225,13 @@ public:
   } __attribute__((packed));
   
   /**
-   * Pins used for SPI interface (in port B, bit 0-3)
+   * Pins used for SPI interface (port B, bit 0-3, ICSP)
    */
   enum SPIPin {
-    SS = 0,			// PB0/D20
+    SS = 0,			// PB0/D20/Not used
+    SCK = 1,			// PB1/D21/ICSP
     MOSI = 2,			// PB2/D22/ICSP
-    MISO = 3,			// PB3/D23/ICSP
-    SCK = 1			// PB1/D21/ICSP
+    MISO = 3			// PB3/D23/ICSP
   } __attribute__((packed));
 
   /**

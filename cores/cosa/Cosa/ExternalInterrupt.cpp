@@ -34,7 +34,7 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
   bit_field_set(EICRA, 0b11 << ix, mode << ix);
 }
 
-#elif defined(BOARD_ATMEGA32U4)
+#elif defined(BOARD_ATMEGA32U4) || defined(BOARD_AT90USB1286)
 
 ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin, 

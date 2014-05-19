@@ -244,15 +244,15 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port C, digital pin D21-D20).
+   * Pins used for TWI interface (port C, bit 0-1, D20-D21)
    */
   enum TWIPin {
-    SDA = 1,			// PC1/D20
     SCL = 0			// PC0/D21
+    SDA = 1,			// PC1/D20
   } __attribute__((packed));
 
   /**
-   * Pins used for SPI interface (in port B, digital pins D4-D7).
+   * Pins used for SPI interface (port B, bit 4-7, D4-D7).
    */
   enum SPIPin {
     SS = 4,			// PB4/D10

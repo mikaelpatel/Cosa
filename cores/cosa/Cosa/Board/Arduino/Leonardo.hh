@@ -157,7 +157,7 @@ public:
     D17 = 36,			// PF4
     D18 = 33,			// PF1
     D19 = 32,			// PF0
-    D20 = 0,			// PB0/SS/TXLED
+    D20 = 0,			// PB0
     D21 = 1,			// PB1
     D22 = 2,			// PB2
     D23 = 3,			// PB3
@@ -222,10 +222,10 @@ public:
    * Pin change interrupt (PCI) pins. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = D20,			// PB0/RXLED
-    PCI1 = D21,			// PB1/SCK
-    PCI2 = D22,			// PB2/MOSI
-    PCI3 = D23,			// PB3/MISO
+    PCI0 = D20,			// PB0
+    PCI1 = D21,			// PB1
+    PCI2 = D22,			// PB2
+    PCI3 = D23,			// PB3
     PCI4 = D8,			// PB4
     PCI5 = D9,			// PB5
     PCI6 = D10,			// PB6
@@ -233,7 +233,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * Pins used for TWI interface (in port D, digital pin D0-D1, TWI pins)
+   * Pins used for TWI interface (port D, bit 0-1, D0-D1)
    */
   enum TWIPin {
     SDA = 1,			// PD1/D2
@@ -241,13 +241,13 @@ public:
   } __attribute__((packed));
   
   /**
-   * Pins used for SPI interface (in port B, bit 0-3, SPI pins)
+   * Pins used for SPI interface (port B, bit 0-3)
    */
   enum SPIPin {
     SS = 0,			// PB0
+    SCK = 1,			// PB1/ICSP
     MOSI = 2,			// PB2/ICSP
-    MISO = 3,			// PB3/ICSP
-    SCK = 1			// PB1/ICSP
+    MISO = 3			// PB3/ICSP
   } __attribute__((packed));
 
   /**
