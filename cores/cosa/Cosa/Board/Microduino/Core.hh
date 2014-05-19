@@ -217,9 +217,7 @@ public:
     PCI16 = D16,		// PC2
     PCI17 = D17,		// PC3
     PCI18 = D18,		// PC4
-    PCI19 = D19,		// PC5
-    PCI20 = D20,		// PC6
-    PCI21 = D21			// PC7
+    PCI19 = D19			// PC5
   } __attribute__((packed));
 
   /**

@@ -247,8 +247,8 @@ public:
    * Pins used for TWI interface (port C, bit 0-1, D20-D21)
    */
   enum TWIPin {
-    SCL = 0			// PC0/D21
-    SDA = 1,			// PC1/D20
+    SCL = 0,			// PC0/D21
+    SDA = 1			// PC1/D20
   } __attribute__((packed));
 
   /**

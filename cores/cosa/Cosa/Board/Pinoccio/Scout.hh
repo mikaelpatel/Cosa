@@ -136,18 +136,11 @@ public:
     D6 = 18,			// PE2
     D7 = 22,			// PE6
     D8 = 13,			// PD5
-
+    D9 = 14,			// PD6
     D10 = 0,			// PB0/SSN
     D11 = 2,			// PB2/MOSI
     D12 = 3,			// PB3/MISO
     D13 = 1,			// PB1/SCK
-    
-    D22 = 10,			// PD2/RX1
-    D23 = 11,			// PD3/TX1
-
-    D24 = 8,			// PD0/SCL
-    D25 = 9,			// PD1/SDA
-
     D14 = 24,			// PF0
     D15 = 25,			// PF1
     D16 = 26,			// PF2
@@ -156,10 +149,14 @@ public:
     D19 = 29,			// PF5
     D20 = 30,			// PF6
     D21 = 31,			// PF6
-    
+    D22 = 10,			// PD2/RX1
+    D23 = 11,			// PD3/TX1
+    D24 = 8,			// PD0/SCL
+    D25 = 9,			// PD1/SDA
     LED_BLUE = 4,		// PB4
     LED_RED = 5,		// PB5
-    LED_GREEN = 6		// PB6
+    LED_GREEN = 6,		// PB6
+    LED = LED_GREEN
   } __attribute__((packed));
 
   /**
