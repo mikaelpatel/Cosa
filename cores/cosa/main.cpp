@@ -25,9 +25,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "Cosa/Power.hh"
-#if defined(USBCON)
-#include "Cosa/USB/Platform.h"
-#endif
 
 /**
  * The init function; minimum setup of hardware after the bootloader.
@@ -63,11 +60,6 @@ void init()
 
   // Allow interrupts from here on
   sei();
-
-  // Attach the USB module and possible CDC/HID
-#if defined(USBCON)
-  USBDevice.attach();
-#endif
 }
 
 /**
