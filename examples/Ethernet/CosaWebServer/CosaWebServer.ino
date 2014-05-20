@@ -127,6 +127,12 @@ static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 WebServer server;
 
+// Ethernet Shield SD device must be disabled
+#define USE_ETHERNET_SHIELD
+#if defined(USE_ETHERNET_SHIELD)
+OutputPin sd(Board::D4, 1);
+#endif
+
 void setup()
 {
   // Initiate uart and trace output stream. And watchdog
