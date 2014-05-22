@@ -32,7 +32,7 @@
 #define USE_ETHERNET_SHIELD
 #if defined(USE_ETHERNET_SHIELD)
 SD sd(Board::D4);
-OutputPin en(Board::D10);
+OutputPin eth(Board::D10, 1);
 #else
 SD sd;
 #endif
@@ -45,9 +45,6 @@ void setup()
 {
   Watchdog::begin();
   RTC::begin();
-#if defined(USE_ETHERNET_SHIELD)
-  en.set();
-#endif
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaFAT16: started"));
   TRACE(free_memory());
@@ -60,7 +57,7 @@ void setup()
 void loop()
 {
   static const size_t BUF_MAX = 512;
-  static const uint8_t K_BYTE = 8;
+  static const uint8_t K_BYTE = 100;
   uint8_t buf[BUF_MAX];
   uint32_t start, stop;
   FAT16::File file;
@@ -81,10 +78,10 @@ void loop()
   trace << endl;
 
   // Measure time to write a large block (1 K)
-  IOStream cout(&file);
   start = RTC::millis();
-  // for (uint8_t i = 0; i < K_BYTE; i++) file.write(NULL, 1024);
-  cout.print((void*) NULL, 1024, IOStream::hex);
+  for (uint8_t i = 0; i < K_BYTE; i++) file.write(NULL, 1024);
+  // IOStream cout(&file);
+  // cout.print((void*) NULL, 1024, IOStream::hex);
   stop = RTC::millis();
   trace << PSTR("Write file (") << K_BYTE << PSTR(" KByte):");
   trace << stop - start << PSTR(" ms") << endl;
@@ -102,15 +99,9 @@ void loop()
   ASSERT(file.open("TMP.TXT", O_READ));
   size = 0;
   start = RTC::millis();
-#if 0
-  while ((count = file.read(buf, sizeof(buf))) > 0) {
-    size += count;
-  }
-#endif
-  {
-  int c;
-  while ((c = file.getchar()) != -1) trace << (char) c; 
-  }
+  while ((count = file.read(buf, sizeof(buf))) > 0) size += count;
+  // int c;
+  // while ((c = file.getchar()) != -1) trace << (char) c; 
   stop = RTC::millis();
   ASSERT(file.close());
   trace << PSTR("Read file (") << size / 1024 << PSTR(" KByte):");

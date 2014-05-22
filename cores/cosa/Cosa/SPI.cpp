@@ -72,6 +72,7 @@ SPI::SPI() :
     bit_mask_set(DDRB, _BV(Board::MOSI) | _BV(Board::SCK) | _BV(Board::SS));
     bit_clear(DDRB, Board::MISO);
     bit_mask_clear(PORTB, _BV(Board::SCK) | _BV(Board::MOSI));
+    bit_set(PORTB, Board::MISO);
   }
   // Other the SPI setup is done by the SPI::Driver::begin()
 }
@@ -94,7 +95,7 @@ SPI::begin(Driver* dev)
 
     // Disable all interrupt sources on SPI bus
     for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
-      if (dev->m_irq) dev->m_irq->disable();
+      if (dev->m_irq != NULL) dev->m_irq->disable();
   }
   return (true);
 }
@@ -216,7 +217,7 @@ SPI::begin(Driver* dev)
 
     // Disable all interrupt sources on SPI bus
     for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
-      if (dev->m_irq) dev->m_irq->disable();
+      if (dev->m_irq != NULL) dev->m_irq->disable();
   }
   return (true);
 }
@@ -228,6 +229,13 @@ SPI::Driver::set_clock(Clock rate)
 }
 #endif
 
+/*
+ * Prefetch optimized variants of the block transfer member functions.
+ * These implementation allow higher transfer speed for block by using
+ * the available cycles while a byte transfer is in progress for data
+ * prefetch and store. There are at least 16 instruction cycles available
+ * (CLOCK_DIV_2). 
+ */
 #if defined(USE_SPI_PREFETCH)
 void 
 SPI::transfer(void* buf, size_t count)
