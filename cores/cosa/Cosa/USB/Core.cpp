@@ -25,15 +25,22 @@
 
 #include "Cosa/IOStream/Driver/CDC.hh"
 
-#define delay(x) 			DELAY((x) * 1000)
 #define min(a,b) 			((a)<(b)?(a):(b))
 #define max(a,b) 			((a)>(b)?(a):(b))
 
+#if defined(ARDUINO_LEONARDO) || defined(ARDUINO_PRO_MICRO)
 #define TX_RX_LED_INIT			DDRD |= (1<<5), DDRB |= (1<<0)
 #define TX_LED_OFF			PORTD |= (1<<5)
 #define TX_LED_ON			PORTD &= ~(1<<5)
 #define RX_LED_OFF			PORTB |= (1<<0)
 #define RX_LED_ON			PORTB &= ~(1<<0)
+#else
+#define TX_RX_LED_INIT			{}
+#define TX_LED_OFF			{}
+#define TX_LED_ON			{}
+#define RX_LED_OFF			{}
+#define RX_LED_ON			{}
+#endif
 
 #define EP_TYPE_CONTROL			0x00
 #define EP_TYPE_BULK_IN			0x81
@@ -72,6 +79,8 @@ const uint16_t STRING_IPRODUCT[17] = {
   'A','r','d','u','i','n','o',' ','E','s','p','l','o','r','a',' '
 #elif USB_PID == 0x9208
   'L','i','l','y','P','a','d','U','S','B',' ',' ',' ',' ',' ',' '
+#elif USB_PID == 0x0483
+  'U','S','B',' ','S','e','r','i','a','l',' ',' ',' ',' ',' ',' '
 #else
   'U','S','B',' ','I','O',' ','B','o','a','r','d',' ',' ',' ',' '
 #endif
@@ -83,6 +92,8 @@ const uint16_t STRING_IMANUFACTURER[12] = {
   'A','r','d','u','i','n','o',' ','L','L','C'
 #elif USB_VID == 0x1b4f
   'S','p','a','r','k','F','u','n',' ',' ',' '
+#elif USB_VID == 0x16C0
+  'T','e','e','n','s','y','d','u','i','n','o'
 #else
   'U','n','k','n','o','w','n',' ',' ',' ',' '
 #endif
@@ -609,29 +620,52 @@ USBDevice_::USBDevice_()
 {
 }
 
+#if defined(__AVR_AT90USB162__)
+#define HW_CONFIG() 
+#define PLL_CONFIG() (PLLCSR = ((1<<PLLE)|(1<<PLLP0)))
+#define USB_CONFIG() (USBCON = (1<<USBE))
+#define USB_FREEZE() (USBCON = ((1<<USBE)|(1<<FRZCLK)))
+#elif defined(__AVR_ATmega32U4__)
+#define HW_CONFIG() (UHWCON = 0x01)
+#define PLL_CONFIG() (PLLCSR = 0x12)
+#define USB_CONFIG() (USBCON = ((1<<USBE)|(1<<OTGPADE)))
+#define USB_FREEZE() (USBCON = ((1<<USBE)|(1<<FRZCLK)))
+#elif defined(__AVR_AT90USB646__)
+#define HW_CONFIG() (UHWCON = 0x81)
+#define PLL_CONFIG() (PLLCSR = 0x1A)
+#define USB_CONFIG() (USBCON = ((1<<USBE)|(1<<OTGPADE)))
+#define USB_FREEZE() (USBCON = ((1<<USBE)|(1<<FRZCLK)))
+#elif defined(__AVR_AT90USB1286__)
+#define HW_CONFIG() (UHWCON = 0x81)
+#define PLL_CONFIG() (PLLCSR = 0x16)
+#define USB_CONFIG() (USBCON = ((1<<USBE)|(1<<OTGPADE)))
+#define USB_FREEZE() (USBCON = ((1<<USBE)|(1<<FRZCLK)))
+#endif
+
 void 
 USBDevice_::attach()
 {
+  // Configure hardware and phase-locked-loop and enable 
   _usbConfiguration = 0;
-  UHWCON = 0x01;		  // power internal reg
-  USBCON = (1<<USBE)|(1<<FRZCLK); // clock frozen, usb enabled
-#if F_CPU == 16000000UL
-  PLLCSR = 0x12;		  // Need 16 MHz xtal
-#elif F_CPU == 8000000UL
-  PLLCSR = 0x02;		  // Need 8 MHz xtal
-#endif
-  while (!(PLLCSR & (1<<PLOCK))) // wait for lock pll
-    ;
-  // Some tests on specific versions of macosx (10.7.3), reported some
-  // strange behaviuors when the board is reset using the serial
-  // port touch at 1200 bps. This delay fixes this behaviour.
+  HW_CONFIG();
+  USB_FREEZE();
+  PLL_CONFIG();
+
+  // Wait for the phase-locked-loop to lock on
+  loop_until_bit_is_set(PLLCSR, PLOCK);
+
+  // Give the host some extra time
   delay(1);
 
-  USBCON = ((1<<USBE)|(1<<OTGPADE)); // Start USB clock
-  UDIEN = (1<<EORSTE)|(1<<SOFE); // Enable interrupts for EOR (End of
-				 // Reset) and SOF (start of frame) 
-  UDCON = 0;			 // enable attach resistor
+  // Start the usb clock and enable interrupt service
+  USB_CONFIG();
+  UDCON = 0;
+  UDINT = 0;
+  UDIEN = _BV(EORSTE) | _BV(SOFE) | _BV(SUSPE);
+
+  // Wait for usb device to connect to host
   TX_RX_LED_INIT;
+  while (!_usbConfiguration) delay(200);
 }
 
 void 
@@ -649,5 +683,4 @@ void
 USBDevice_::poll()
 {
 }
-
 #endif

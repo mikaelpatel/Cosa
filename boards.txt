@@ -499,8 +499,8 @@ teensy-2_0.upload.disable_flushing=true
 
 teensy-2_0.build.mcu=atmega32u4
 teensy-2_0.build.f_cpu=16000000L
-teensy-2_0.build.vid=0x2341
-teensy-2_0.build.pid=0x8037
+teensy-2_0.build.vid=0x16C0
+teensy-2_0.build.pid=0x0483
 teensy-2_0.build.usb_product="Teensy 2.0"
 teensy-2_0.build.board=PJRC_TEENSY_2_0
 teensy-2_0.build.core=cosa
@@ -520,8 +520,8 @@ teensypp-2_0.upload.disable_flushing=true
 
 teensypp-2_0.build.mcu=at90usb1286
 teensypp-2_0.build.f_cpu=16000000L
-teensypp-2_0.build.vid=0x2341
-teensypp-2_0.build.pid=0x8037
+teensypp-2_0.build.vid=0x16C0
+teensypp-2_0.build.pid=0x0483
 teensypp-2_0.build.usb_product="Teensy++ 2.0"
 teensypp-2_0.build.board=PJRC_TEENSYPP_2_0
 teensypp-2_0.build.core=cosa

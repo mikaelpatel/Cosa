@@ -31,7 +31,7 @@ Soft::UAT  __attribute__ ((weak)) uart(Board::D2);
 #include "Cosa/Bits.h"
 #include "Cosa/Power.hh"
 
-#if defined(BOARD_ATMEGA32U4)
+#if defined(USBCON)
 #undef uart
 #else
 #include "Cosa/IOBuffer.hh"
