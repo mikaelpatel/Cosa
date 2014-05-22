@@ -31,7 +31,7 @@ Supported Boards and MCUs
 
 Cosa has built-in support for a large number of boards and
 clones/vendors. It also supports breadboards and custom-design
-boards. 
+boards with AVR MCUs.
 
 * [Arduino Duemilanove] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Duemilanove.hh)
 * [Arduino Leonardo] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Arduino/Leonardo.hh)
@@ -48,6 +48,7 @@ boards.
 * [Microduino-Core32u4] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Microduino/Core32U4.hh)
 * [Microduino-Core32+] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Microduino/Core_Plus.hh)
 * [PJRC Teensy 2.0] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/PJRC/Teensy_2_0.hh)
+* [PJRC Teensy++ 2.0] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/PJRC/Teensypp_2_0.hh)
 
 References
 ----------
@@ -65,6 +66,10 @@ References
 11. Arduino ATtiny, http://hlt.media.mit.edu/?p=1695
 12. Arduino Low Power, http://gammon.com.au/power
 13. Virtual Wire, http://www.open.com.au/mikem/arduino/VirtualWire/
+14. Microduino, http://www.microduino.cc/
+15. Teensy, https://www.pjrc.com/
+16. MQTT, http://mqtt.org/
+17. ThingSpeak, https://thingspeak.com/
 
 Naming
 ------

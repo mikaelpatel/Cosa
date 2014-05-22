@@ -4,8 +4,8 @@ Cosa is an object-oriented platform for Arduino. It replaces the Arduino
 and Wiring library with a large set of integrated classes that support 
 the full range of AVR/ATmega/ATtiny internal hardware modules; all pin
 modes, Digital, and Analog Pins, External and Pin Change Interrupts,
-Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1 (Servo), UART, USI,
-SPI, TWI and EEPROM.   
+Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1 (Servo/Tone),
+UART, USI, SPI, TWI and EEPROM.   
 
 Cosa is implemented as an Arduino IDE core. The Cosa platform can be
 used with almost all Arduino boards and ATtiny/ATmega processors. All
@@ -14,9 +14,10 @@ classes may be compiled for all variants.
 Though object-oriented with optional operator overloading syntax,
 Cosa is between 2-10X faster than Arduino with regard to digital pin
 functions. This comes with a small price-tag; memory, 4 bytes per
-digital pin and 12 bytes per analog pin. Cosa analog pin objects
-holds the latest sample and allows an event handler. See the
-benchmarks in the examples directory for further details.
+digital pin and 9 bytes per analog pin. Cosa analog pin objects
+holds the latest sample, and allows an event and interrupt
+handler. See the benchmarks in the examples directory for further
+details. 
 
 Cosa contains several data streaming formats for message passing and
 data streaming. Google Protocol Buffers are supported together with a
@@ -97,6 +98,10 @@ http://arduino.cc/forum/index.php/topic,150299.0.html.
 11. Arduino ATtiny, http://hlt.media.mit.edu/?p=1695<br>
 12. Arduino Low Power, http://gammon.com.au/power<br>
 13. Virtual Wire, http://www.open.com.au/mikem/arduino/VirtualWire/<br>
+14. Microduino, http://www.microduino.cc/<br>
+15. Teensy, https://www.pjrc.com/<br>
+16. MQTT, http://mqtt.org/<br>
+17. ThingSpeak, https://thingspeak.com/<br>
 
 @section Naming
 
@@ -112,6 +117,7 @@ based Arduino boards (Uno, Mini, Mini Pro, Micro, Nano, Leonardo,
 LilyPad, LilyPad USB, Mighty, Mega, etc) are all supported. 
 
 @section License
+
 Copyright (C) 2012-2014, Mikael Patel
 
 This library is free software; you can redistribute it and/or
@@ -148,9 +154,6 @@ Memory utility.
 @section FixedPoint
 Simple class for fixed point number representation (class FixedPoint)
 
-@section RTC
-Timer-based Real-Time Clock (micro/milli-second).
-
 @section EEPROM
 Driver for the ATmega/ATtiny internal EEPROM and abstraction of EEPROM
 devices.
@@ -167,18 +170,30 @@ Interface for Interrupt Handlers.
 @section Event
 Event data structure with type, source and value (class Event).
 
+@section Time
+Common date/time structure for real-time clocks.
+
 @section Watchdog
 The Atmega Watchdog is used as a low power timer for period events and
 delay.
+
+@section RTC
+Timer-based Real-Time Clock (micro/milli-second).
+
+@section Periodic
+Periodic function handler. Syntactic sugar for watchdog timeout
+event handlers (class Periodic). 
+
+@section Alarm
+Issue a function at a specific time. The alarm may be reissued.
+
+@section Activity
+Issue a function periodically within a given time frame. 
 
 @section FSM
 Finite State Machine support class. States are represented as an
 Event handler. Supports timeout events and period timed state 
 machines.
-
-@section Periodic
-Periodic function handler. Syntactic sugar for watchdog timeout
-event handlers (class Periodic). 
 
 @section ProtoThread
 Cosa implementation of protothreads; A protothread is a
@@ -187,8 +202,6 @@ function as stackless, lightweight threads providing a blocking
 context using minimal memory per protothread. Cosa/ProtoThread
 supports event to thread mapping and timers (class ProtoThread).
 
-@section Time
-Common date/time structure for real-time clocks.
 */
 
 /** @page page2 Pins
