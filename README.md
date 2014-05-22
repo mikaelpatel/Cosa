@@ -46,7 +46,7 @@ boards with AVR MCUs.
 * [Pinoccio Scout] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Pinoccio/Scout.hh)
 * [Microduino-Core] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Microduino/Core.hh)
 * [Microduino-Core32u4] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Microduino/Core32U4.hh)
-* [Microduino-Core32+] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Microduino/Core_Plus.hh)
+* [Microduino-Core+] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/Microduino/Core_Plus.hh)
 * [PJRC Teensy 2.0] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/PJRC/Teensy_2_0.hh)
 * [PJRC Teensy++ 2.0] (https://github.com/mikaelpatel/Cosa/blob/master/cores/cosa/Cosa/Board/PJRC/Teensypp_2_0.hh)
 
