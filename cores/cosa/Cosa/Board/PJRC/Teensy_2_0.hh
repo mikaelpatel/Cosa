@@ -63,8 +63,8 @@
  *        PWM4/D9 |o    ( )    o| D12/A9/PWM6
  *       PWM5/D10 |o o o o o o o| D11/A10/LED
  *                +-------------+
- *                 D23  GND  D22/A11
- *                    VCC RST
+ *                 /  /  |  \  \
+ *              D23 VCC GND RST D22/A11
  * @endcode
  */
 class Board {

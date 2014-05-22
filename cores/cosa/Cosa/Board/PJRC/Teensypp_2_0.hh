@@ -52,13 +52,13 @@
  *                +----| V |----+
  *            GND |o   |   |   o| VCC
  *            D27 |o   -----   o| D26
- *             D0 |o   -----   o| D25
+ *             D0 |o           o| D25
  *             D1 |o           o| D24
  *             D2 |o           o| D23
  *             D3 |o 36 o-o 37 o| D22
  *             D4 |o           o| D21
  *             D5 |o           o| D20
- *             D6 |o           o| D19
+ *         LED/D6 |o           o| D19
  *             D7 |o           o| D18
  *             D8 |o           o| GND
  *             D9 |o           o| AREF
@@ -71,7 +71,8 @@
  *            D16 |o    ( )    o| D44/A6
  *            D17 |o   o o o   o| D45/A7
  *                +-------------+
- *                  RST GND VCC
+ *                    /  |  \
+ *                 RST  GND  VCC
  * @endcode
  */
 class Board {
