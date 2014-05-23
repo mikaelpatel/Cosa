@@ -86,7 +86,7 @@ public:
    * @param[in] ref reference voltage.
    * @return sample value.
    */
-  static uint16_t sample(uint8_t pin, 
+  static uint16_t sample(Board::AnalogPin pin, 
 			 Board::Reference ref = Board::AVCC_REFERENCE);
 
   /**
@@ -184,7 +184,7 @@ protected:
    * @param[in] ref reference voltage.
    * @return bool.
    */
-  bool sample_request(uint8_t pin, uint8_t ref);
+  bool sample_request(Board::AnalogPin pin, uint8_t ref);
 
   /**
    * @override Event::Handler

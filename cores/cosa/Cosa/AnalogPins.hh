@@ -63,9 +63,11 @@ public:
    * @param[in] ix index.
    * @return pin number.
    */
-  uint8_t get_pin_at(uint8_t ix) const
+  Board::AnalogPin get_pin_at(uint8_t ix) const
   { 
-    return (ix < m_count ? pgm_read_byte(&m_pin_at[ix]) : 0);
+    return ((Board::AnalogPin) (ix < m_count ? 
+				pgm_read_byte(&m_pin_at[ix]) : 
+				0));
   }
   
   /**

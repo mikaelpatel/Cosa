@@ -47,7 +47,7 @@ public:
    * @param[in] pin number.
    * @param[in] initial value.
    */
-  static void set_mode(uint8_t pin, uint8_t initial = 0)
+  static void set_mode(Board::DigitalPin pin, uint8_t initial = 0)
   {
     synchronized {
       *DDR(pin) |= MASK(pin); 
@@ -152,7 +152,7 @@ public:
    * Toggle the output pin. Atomic per definition
    * @param[in] pin number.
    */
-  static void toggle(uint8_t pin) __attribute__((always_inline))
+  static void toggle(Board::DigitalPin pin) __attribute__((always_inline))
   { 
     *PIN(pin) = MASK(pin); 
   }
@@ -247,7 +247,7 @@ public:
    * @param[in] pin number.
    * @param[in] value to write.
    */
-  static void write(uint8_t pin, uint8_t value) __attribute__((always_inline))
+  static void write(Board::DigitalPin pin, uint8_t value) __attribute__((always_inline))
   { 
     volatile uint8_t* port = PORT(pin);
     const uint8_t mask = MASK(pin);
@@ -258,6 +258,25 @@ public:
       else {
 	*port &= ~mask;
       }
+    }
+  }
+
+  /**
+   * Set the given output pin with the given value. Zero(0) to 
+   * clear and non-zero to set. Unprotected version when pin and value 
+   * are constants.
+   * @param[in] pin number (must be constant).
+   * @param[in] value to write (must be constant).
+   */
+  static void _write(Board::DigitalPin pin, uint8_t value) __attribute__((always_inline))
+  { 
+    volatile uint8_t* port = PORT(pin);
+    const uint8_t mask = MASK(pin);
+    if (value) {
+      *port |= mask;
+    }
+    else {
+      *port &= ~mask;
     }
   }
 

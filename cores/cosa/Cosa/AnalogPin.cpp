@@ -30,7 +30,7 @@ AnalogPin::prescale(uint8_t factor)
 }
 
 bool
-AnalogPin::sample_request(uint8_t pin, uint8_t ref)
+AnalogPin::sample_request(Board::AnalogPin pin, uint8_t ref)
 {
   if (sampling_pin != NULL) return (false);
   loop_until_bit_is_clear(ADCSRA, ADSC);
@@ -60,7 +60,7 @@ AnalogPin::bandgap(uint16_t vref)
 }
 
 uint16_t 
-AnalogPin::sample(uint8_t pin, Board::Reference ref)
+AnalogPin::sample(Board::AnalogPin pin, Board::Reference ref)
 {
   if (sampling_pin != NULL) return (0xffffU);
   loop_until_bit_is_clear(ADCSRA, ADSC);

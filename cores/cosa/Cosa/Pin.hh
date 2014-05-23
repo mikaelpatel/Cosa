@@ -180,7 +180,7 @@ public:
    * @param[in] pin number.
    * @return boolean.
    */
-  static bool read(uint8_t pin) __attribute__((always_inline))
+  static bool read(Board::DigitalPin pin) __attribute__((always_inline))
   {
     return ((*Board::SFR(pin) & MASK(pin)) != 0); 
   }

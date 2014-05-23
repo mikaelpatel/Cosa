@@ -76,7 +76,7 @@ public:
    * @param[in] pin number.
    * @param[in] mode new operation mode.
    */
-  static void set_mode(uint8_t pin, Mode mode) __attribute__((always_inline)) 
+  static void set_mode(Board::DigitalPin pin, Mode mode) __attribute__((always_inline)) 
   { 
     volatile uint8_t* ddr = DDR(pin);
     const uint8_t mask = MASK(pin);
