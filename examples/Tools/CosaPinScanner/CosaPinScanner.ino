@@ -30,8 +30,82 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaPinScanner: started"));
   Watchdog::begin();
+#if defined(DDRA)
+  trace << PSTR("DDRA     ");
+#endif
+#if defined(DDRB)
+  trace << PSTR("DDRB     ");
+#endif
+#if defined(DDRC)
+  trace << PSTR("DDRC     ");
+#endif
+#if defined(DDRD)
+  trace << PSTR("DDRD     ");
+#endif
+#if defined(DDRE)
+  trace << PSTR("DDRE     ");
+#endif
+#if defined(DDRF)
+  trace << PSTR("DDRF     ");
+#endif
+#if defined(DDRG)
+  trace << PSTR("DDRG     ");
+#endif
+#if defined(DDRH)
+  trace << PSTR("DDRH     ");
+#endif
+#if defined(DDRI)
+  trace << PSTR("DDRI     ");
+#endif
+#if defined(DDRJ)
+  trace << PSTR("DDRJ     ");
+#endif
+#if defined(DDRJ)
+  trace << PSTR("DDRK     ");
+#endif
+#if defined(DDRJ)
+  trace << PSTR("DDRL     ");
+#endif
+  trace << endl;
+#if defined(DDRA)
+  print(trace, DDRA);
+#endif
+#if defined(DDRB)
+  print(trace, DDRB);
+#endif
+#if defined(DDRC)
+  print(trace, DDRC);
+#endif
+#if defined(DDRD)
+  print(trace, DDRD);
+#endif
+#if defined(DDRE)
+  print(trace, DDRE);
+#endif
+#if defined(DDRF)
+  print(trace, DDRF);
+#endif
+#if defined(DDRG)
+  print(trace, DDRG);
+#endif
+#if defined(DDRH)
+  print(trace, DDRH);
+#endif
+#if defined(DDRI)
+  print(trace, DDRI);
+#endif
+#if defined(DDRJ)
+  print(trace, DDRJ);
+#endif
+#if defined(DDRK)
+  print(trace, DDRK);
+#endif
+#if defined(DDRL)
+  print(trace, DDRL);
+#endif
+  trace << endl;
 #if defined(PORTA)
-  trace << PSTR("PORTA     ");
+  trace << PSTR("PORTA    ");
 #endif
 #if defined(PORTB)
   trace << PSTR("PORTB    ");
