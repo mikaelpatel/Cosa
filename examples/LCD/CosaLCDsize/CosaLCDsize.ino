@@ -59,6 +59,8 @@
 // HD44780 lcd(&port);
 
 // #include "Cosa/LCD/Driver/PCD8544.hh"
+// PCD8544::Serial3W port;
+// PCD8544::SPI3W port;
 // PCD8544 lcd;
 
 // #include "Cosa/LCD/Driver/ST7565.hh"

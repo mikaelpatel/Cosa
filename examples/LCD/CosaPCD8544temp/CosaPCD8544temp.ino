@@ -63,7 +63,10 @@
 
 OWI owi(Board::D5);
 DS18B20 sensor(&owi);
-PCD8544 lcd;
+
+// PCD8544::Serial3W port;
+PCD8544::SPI3W port;
+PCD8544 lcd(&port);
 
 void setup()
 {

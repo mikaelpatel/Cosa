@@ -53,7 +53,9 @@
 // HD44780::DFRobot port;
 // HD44780 lcd(&port);
 #include "Cosa/LCD/Driver/PCD8544.hh"
-PCD8544 lcd;
+// PCD8544::Serial3W port;
+PCD8544::SPI3W port;
+PCD8544 lcd(&port);
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
 // #include "Cosa/LCD/Driver/VLCD.hh"
@@ -63,7 +65,7 @@ PCD8544 lcd;
 IOStream console(&lcd);
 
 // The 1-Wire bus and the connected digital thermometer
-OWI owi(Board::D4);
+OWI owi(Board::D5);
 DS18B20 sensor(&owi);
 
 void setup()
