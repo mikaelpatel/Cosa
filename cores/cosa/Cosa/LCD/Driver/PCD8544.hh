@@ -24,6 +24,7 @@
 #include "Cosa/Board.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/LCD.hh"
+#include "Cosa/SPI.hh"
 #include "Cosa/Canvas/Font.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"
 
@@ -31,25 +32,8 @@
  * PCD8544 48x84 pixels matrix LCD controller/driver, device driver 
  * for IOStream access. Binding to trace, etc. Supports simple text  
  * scroll, cursor, and handling of special characters such as
- * form-feed, back-space and new-line. Graphics should be performed
+ * form-feed, back-space and new-line. Graphics may be performed
  * with OffScreen Canvas and copied to the display with draw_bitmap().
- *
- * @section Circuit
- * PCD8544 is a low voltage device (3V3) and signals require level
- * shifter (74HC4050 or 10K resistor). 
- * @code
- *                          PCD8544
- *                       +------------+
- * (RST)---| > |-------1-|RST         |
- * (D9/D3)-| > |-------2-|CE          |
- * (D8/D2)-| > |-------3-|DC          |
- * (D6/D0)-| > |-------4-|DIN         |
- * (D7/D1)-| > |-------5-|CLK         |
- * (3V3)---------------6-|VCC         |
- * (GND)---|220|-------7-|LED         |
- * (GND)---------------8-|GND         |
- *                       +------------+
- * @endcode
  *
  * @section References
  * 1. Product Specification, Philips Semiconductors, 1999 Apr 12.  
@@ -57,29 +41,235 @@
  */
 class PCD8544 : public LCD::Device {
 public:
+  /**
+   * Abstract PCD8544 LCD IO adapter to isolate communication specific
+   * functions and allow access over software serial or hardware SPI.
+   */
+  class IO {
+  public:
+    /**
+     * @override PCD8544::IO
+     * Initiate IO port. Called by PCD8544::begin(). 
+     */
+    virtual void setup() {}
+
+    /**
+     * @override PCD8544::IO
+     * Start of data/command transfer block.
+     */
+    virtual void begin() = 0;
+
+    /**
+     * @override PCD8544::IO
+     * End of data/command transfer block.
+     */
+    virtual void end() = 0;
+
+    /**
+     * @override PCD8544::IO
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write(uint8_t data) = 0;
+
+    /**
+     * @override PCD8544::IO
+     * Write character buffer to display.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write(void* buf, size_t size) = 0;
+  };
+
+  /**
+   * PCD8544 IO adapter for serial 3 wire, output pins.
+   *
+   * @section Circuit
+   * PCD8544 is a low voltage device (3V3) and signals require level
+   * shifter (74HC4050 or 10K resistor). 
+   * @code
+   *                          PCD8544
+   *                       +------------+
+   * (RST)---| > |-------1-|RST         |
+   * (D9/D3)-| > |-------2-|CE          |
+   * (D8/D2)-| > |-------3-|DC          |
+   * (D6/D0)-| > |-------4-|DIN         |
+   * (D7/D1)-| > |-------5-|CLK         |
+   * (3V3)---------------6-|VCC         |
+   * (GND)---|220|-------7-|LED         |
+   * (GND)---------------8-|GND         |
+   *                       +------------+
+   * @endcode
+   */
+  class Serial3W : public IO {
+  public:
+    /**
+     * Construct display device driver adapter with given pins.
+     * @param[in] sdin screen data pin (default D6/D0).
+     * @param[in] sclk screen clock pin (default D7/D1). 
+     * @param[in] sce screen chip enable pin (default D9/D3).
+     */
+#if defined(BOARD_ATTINY)
+    Serial3W(Board::DigitalPin sdin = Board::D0, 
+	     Board::DigitalPin sclk = Board::D1, 
+	     Board::DigitalPin sce = Board::D3) :
+      m_sdin(sdin, 0),
+      m_sclk(sclk, 0),
+      m_sce(sce, 1)
+    {
+    }
+#else
+    Serial3W(Board::DigitalPin sdin = Board::D6, 
+	     Board::DigitalPin sclk = Board::D7, 
+	     Board::DigitalPin sce = Board::D9) :
+      m_sdin(sdin, 0),
+      m_sclk(sclk, 0),
+      m_sce(sce, 1)
+    {
+    }
+#endif
+
+    /**
+     * @override PCD8544::IO
+     * Start of data/command transfer block.
+     */
+    virtual void begin()
+    { 
+      m_sce.clear();
+    }
+
+    /**
+     * @override PCD8544::IO
+     * End of data/command transfer block.
+     */
+    virtual void end()
+    { 
+      m_sce.set();
+    }
+
+    /**
+     * @override PCD8544::IO
+     * Write byte (8bit) to display. Must be in data/command transfer
+     * block.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write(uint8_t data)
+    { 
+      m_sdin.write(data, m_sclk); 
+    }
+
+    /**
+     * @override PCD8544::IO
+     * Write character buffer to display. Must be in data/command transfer
+     * block.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write(void* buf, size_t size)
+    {
+      uint8_t* dp = (uint8_t*) buf;
+      while (size--) m_sdin.write(*dp++, m_sclk); 
+    }
+    
+  protected:
+    // Display pins and state
+    OutputPin m_sdin;		//<! Serial data input
+    OutputPin m_sclk;		//<! Serial clock input
+    OutputPin m_sce;		//<! Chip enable
+  };
+
+  /**
+   * PCD8544 IO adapter for 3 wire SPI; MOSI, SCK and SCE.
+   *
+   * @section Circuit
+   * PCD8544 is a low voltage device (3V3) and signals require level
+   * shifter (74HC4050 or 10K resistor). 
+   * @code
+   *                           PCD8544
+   *                        +------------+
+   * (RST)---------| > |--1-|RST         |
+   * (D9/D3)-------| > |--2-|CE          |
+   * (D8/D2)-------| > |--3-|DC          |
+   * (MOSI/D11/D5)-| > |--4-|DIN         |
+   * (SCK/D13/D4)--| > |--5-|CLK         |
+   * (3V3)----------------6-|VCC         |
+   * (GND)---|220|--------7-|LED         |
+   * (GND)----------------8-|GND         |
+   *                        +------------+
+   * @endcode
+   */
+  class SPI3W : public IO, public SPI::Driver {
+  public:
+    /**
+     * Construct display device driver adapter with given pins.
+     * Implicit usage of SPI SCK(D13/D4) and MOSI(D11/D5).
+     * @param[in] sce screen chip enable pin (default D9/D3).
+     */
+#if defined(BOARD_ATTINY)
+    SPI3W(Board::DigitalPin sce = Board::D3) : IO(), SPI::Driver(sce) {}
+#else
+    SPI3W(Board::DigitalPin sce = Board::D9) : IO(), SPI::Driver(sce) {}
+#endif
+
+    /**
+     * @override PCD8544::IO
+     * Start of data/command transfer block.
+     */
+    virtual void begin()
+    { 
+      spi.begin(this);
+    }
+
+    /**
+     * @override PCD8544::IO
+     * End of data/command transfer block.
+     */
+    virtual void end()
+    { 
+      spi.end();
+    }
+
+    /**
+     * @override PCD8544::IO
+     * Write byte (8bit) to display. Must be in data/command transfer
+     * block.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write(uint8_t data)
+    { 
+      spi.transfer(data);
+    }
+
+    /**
+     * @override PCD8544::IO
+     * Write character buffer to display. Must be in data/command transfer
+     * block.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write(void* buf, size_t size)
+    {
+      spi.write(buf, size);
+    }
+  };
+
   /** Display size */
   static const uint8_t WIDTH = 84;
   static const uint8_t HEIGHT = 48;
   static const uint8_t LINES = HEIGHT / CHARBITS;
 
   /**
-   * Construct display device driver with given pins and font.
-   * @param[in] sdin screen data pin (default D6).
-   * @param[in] sclk screen clock pin (default D7). 
-   * @param[in] dc data/command control pin (default D8).
-   * @param[in] sce screen chip enable pin (default D9).
+   * Construct display device driver with given io adapter, chip
+   * select pin and font.
+   * @param[in] io adapter;
+   * @param[in] dc data/command control pin (default D8/D2).
+   * @param[in] font bitmap (default System 5X7).
    */
 #if defined(BOARD_ATTINY)
-  PCD8544(Board::DigitalPin sdin = Board::D0, 
-	  Board::DigitalPin sclk = Board::D1, 
-	  Board::DigitalPin dc = Board::D2, 
-	  Board::DigitalPin sce = Board::D3,
+  PCD8544(IO* io, Board::DigitalPin sce = Board::D2,
 	  Font* font = &system5x7);
 #else
-  PCD8544(Board::DigitalPin sdin = Board::D6, 
-	  Board::DigitalPin sclk = Board::D7, 
-	  Board::DigitalPin dc = Board::D8, 
-	  Board::DigitalPin sce = Board::D9,
+  PCD8544(IO* io, Board::DigitalPin sce = Board::D8,
 	  Font* font = &system5x7);
 #endif
 
@@ -231,20 +421,9 @@ protected:
   static const uint8_t script[] PROGMEM;
 
   // Display pins and state
-  OutputPin m_sdin;		//<! Serial data input
-  OutputPin m_sclk;		//<! Serial clock input
-  OutputPin m_dc;		//<! Data/command
-  OutputPin m_sce;		//<! Chip enable
+  IO* m_io;			//<! Display adapter
+  OutputPin m_dc;		//<! Data/command output pin
   Font* m_font;			//<! Font
-
-  /**
-   * Write given data to display according to mode.
-   * @param[in] data to fill write to device.
-   */
-  void write(uint8_t data) __attribute__((always_inline))
-  { 
-    m_sdin.write(data, m_sclk); 
-  }
 
   /**
    * Set the given command code.

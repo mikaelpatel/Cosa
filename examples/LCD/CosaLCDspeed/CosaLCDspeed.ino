@@ -41,8 +41,10 @@
 #endif
 
 // Select the LCD device for the benchmark
-// #include "Cosa/LCD/Driver/PCD8544.hh"
-// PCD8544 lcd;
+#include "Cosa/LCD/Driver/PCD8544.hh"
+// PCD8544::Serial3W port;
+PCD8544::SPI3W port;
+PCD8544 lcd(&port);
 
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
@@ -51,16 +53,16 @@
 // VLCD lcd;
 
 // Select the HD44780 port adapter for the benchmark
-#include "Cosa/LCD/Driver/HD44780.hh"
+// #include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
-HD44780::DFRobot port;
+// HD44780::DFRobot port;
 // HD44780::ERM1602_5 port;
-HD44780 lcd(&port);
+// HD44780 lcd(&port);
 
 // Benchmarks
 typedef void (*benchmark_t)(uint16_t);

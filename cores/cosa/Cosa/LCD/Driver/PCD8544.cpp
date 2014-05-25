@@ -20,6 +20,7 @@
 
 #include "Cosa/LCD/Driver/PCD8544.hh"
 
+// Startup script
 const uint8_t PCD8544::script[] __PROGMEM = {
   SET_FUNC       | EXTENDED_INST,
   SET_VOP 	 | 0x38,
@@ -32,16 +33,12 @@ const uint8_t PCD8544::script[] __PROGMEM = {
   SCRIPT_END
 };
 
-PCD8544::PCD8544(Board::DigitalPin sdin,
-		 Board::DigitalPin sclk,
+PCD8544::PCD8544(IO* io,
 		 Board::DigitalPin dc,
-		 Board::DigitalPin sce,
 		 Font* font) :
   LCD::Device(),
-  m_sdin(sdin, 0),
-  m_sclk(sclk, 0),
+  m_io(io),
   m_dc(dc, 1),
-  m_sce(sce, 1),
   m_font(font)
 {
 }
@@ -49,30 +46,30 @@ PCD8544::PCD8544(Board::DigitalPin sdin,
 void 
 PCD8544::set(uint8_t cmd)
 {
-  asserted(m_sce) {
-    asserted(m_dc) {
-      write(cmd);
-    }
+  m_io->begin();
+  asserted(m_dc) {
+    m_io->write(cmd);
   }
+  m_io->end();
 }
 
 void 
 PCD8544::set(uint8_t x, uint8_t y)
 {
-  asserted(m_sce) {
-    asserted(m_dc) {
-      write(SET_X_ADDR | (x & X_ADDR_MASK));
-      write(SET_Y_ADDR | (y & Y_ADDR_MASK));
-    }
+  m_io->begin();
+  asserted(m_dc) {
+    m_io->write(SET_X_ADDR | (x & X_ADDR_MASK));
+    m_io->write(SET_Y_ADDR | (y & Y_ADDR_MASK));
   }
+  m_io->end();
 }
 
 void 
 PCD8544::fill(uint8_t data, uint16_t count)
 {
-  asserted(m_sce) {
-    while (count--) write(data);
-  }
+  m_io->begin();
+  while (count--) m_io->write(data);
+  m_io->end();
 }
 
 bool 
@@ -80,12 +77,12 @@ PCD8544::begin()
 {
   const uint8_t* bp = script;
   uint8_t cmd;
-  asserted(m_sce) {
-    asserted(m_dc) {
-      while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END)
-	write(cmd);
-    }
+  m_io->begin();
+  asserted(m_dc) {
+    while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END)
+      m_io->write(cmd);
   }
+  m_io->end();
   display_clear();
   return (true);
 }
@@ -132,18 +129,19 @@ PCD8544::display_clear()
 void 
 PCD8544::display_contrast(uint8_t level)
 {
-  asserted(m_sce) {
-    asserted(m_dc) {
-      write(SET_FUNC | EXTENDED_INST);
-      write(SET_VOP  | (level & VOP_MASK));
-      write(SET_FUNC | BASIC_INST | HORIZONTAL_ADDR);
-    }
+  m_io->begin();
+  asserted(m_dc) {
+    m_io->write(SET_FUNC | EXTENDED_INST);
+    m_io->write(SET_VOP  | (level & VOP_MASK));
+    m_io->write(SET_FUNC | BASIC_INST | HORIZONTAL_ADDR);
   }
+  m_io->end();
 }
 
 void 
 PCD8544::set_cursor(uint8_t x, uint8_t y)
 {
+  // For x on character boundary (and not pixel)
   // x *= m_font->get_width(' ');
   set(x, y);
   m_x = x;
@@ -157,11 +155,11 @@ PCD8544::draw_icon(const uint8_t* bp)
   uint8_t height = pgm_read_byte(bp++);
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    asserted(m_sce) {
-      for (uint8_t x = 0; x < width; x++) {
-	write(m_mode ^ pgm_read_byte(bp++));
-      }
+    m_io->begin();
+    for (uint8_t x = 0; x < width; x++) {
+      m_io->write(m_mode ^ pgm_read_byte(bp++));
     }
+    m_io->end();
     set_cursor(m_x, m_y + 1);
   }
   set_cursor(m_x, m_y + 1);
@@ -172,10 +170,9 @@ PCD8544::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 {
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    asserted(m_sce) {
-      for (uint8_t x = 0; x < width; x++) {
-	write(m_mode ^ (*bp++));
-      }
+    m_io->begin();
+    for (uint8_t x = 0; x < width; x++) {
+      m_io->write(m_mode ^ (*bp++));
     }
     set_cursor(m_x, m_y + 1);
   }
@@ -190,20 +187,20 @@ PCD8544::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
   uint8_t filled = (percent * (width - 2U)) / 100;
   uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
   width -= (filled + 1);
-  asserted(m_sce) {
-    write(m_mode ^ 0xff);
-    while (filled--) {
-      write(m_mode ^ (pattern | boarder));
-      pattern = ~pattern;
-    }
-    write(m_mode ^ 0xff);
-    width -= 1;
-    if (width > 0) {
-      while (width--)
-	write(m_mode ^ boarder);
-    }
-    write(m_mode ^ 0xff);
+  m_io->begin();
+  m_io->write(m_mode ^ 0xff);
+  while (filled--) {
+    m_io->write(m_mode ^ (pattern | boarder));
+    pattern = ~pattern;
   }
+  m_io->write(m_mode ^ 0xff);
+  width -= 1;
+  if (width > 0) {
+    while (width--)
+      m_io->write(m_mode ^ boarder);
+  }
+  m_io->write(m_mode ^ 0xff);
+  m_io->end();
 }
 
 int 
@@ -259,11 +256,11 @@ PCD8544::putchar(char c)
   }
 
   // Write character to the display memory and an extra byte
-  asserted(m_sce) {
-    while (--width) 
-      write(m_mode ^ pgm_read_byte(bp++));
-    write(m_mode);
-  }
+  m_io->begin();
+  while (--width) 
+    m_io->write(m_mode ^ pgm_read_byte(bp++));
+  m_io->write(m_mode);
+  m_io->end();
 
   return (c);
 }

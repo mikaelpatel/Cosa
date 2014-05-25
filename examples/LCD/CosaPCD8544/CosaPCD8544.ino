@@ -48,7 +48,9 @@
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
-PCD8544 lcd;
+// PCD8544::Serial3W port;
+PCD8544::SPI3W port;
+PCD8544 lcd(&port);
 
 void setup()
 {
@@ -146,7 +148,7 @@ void loop()
   lcd.putchar('\f');
   for (uint8_t i = 0; i < lcd.LINES; i++) {
     trace.printf_P(PSTR("A%d:"), i);
-    uint8_t procent = (AnalogPin::sample(i) * 100L) / 1023;
+    uint8_t procent = (AnalogPin::sample((Board::AnalogPin) i) * 100L) / 1023;
     lcd.draw_bar(procent, lcd.WIDTH - 20);
     if (i != lcd.LINES - 1) trace << endl;
   }
