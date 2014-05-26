@@ -165,7 +165,7 @@ void loop()
     }
   stop = RTC::micros();
   ns = (stop - start) / 1000L;
-  INFO("read digitalRead(D7):%ul ns\n", ns - baseline);
+  INFO("digitalRead(D7):%ul ns\n", ns - baseline);
   
   INFO("Measure the time to perform an output pin write", 0);
   start = RTC::micros();
@@ -525,67 +525,3 @@ void loop()
   ASSERT(true == false);
 }
 
-/*
-CosaBenchmarkPins: started
-free_memory() = 1579
-sizeof(Event::Handler) = 2
-sizeof(InputPin) = 4
-sizeof(OutputPin) = 4
-sizeof(AnalogPin) = 9
-F_CPU = 16000000
-I_CPU = 16
-
-117:void loop():info:Measure the time to perform an empty loop block
-125:void loop():info:nop:315 ns
-
-127:void loop():info:Measure the time to perform an input pin read
-136:void loop():info:inPin.is_set():125 ns
-148:void loop():info:inPin >> var:125 ns
-158:void loop():info:InputPin::read(7):62 ns
-168:void loop():info:read digitalRead(D7):62 ns
-
-170:void loop():info:Measure the time to perform an output pin write
-180:void loop():info:outPin.write():910 ns
-193:void loop():info:outPin._write():690 ns
-204:void loop():info:outPin.set/clear():910 ns
-217:void loop():info:outPin._set/_clear():691 ns
-228:void loop():info:outPin << val:910 ns
-239:void loop():info:OutputPin::write(D8, val):314 ns
-250:void loop():info:digitalWrite(D8, val):125 ns
-261:void loop():info:outPin.toggle():502 ns
-274:void loop():info:outPin._toggle():596 ns
-285:void loop():info:OutputPin::toggle(D8):62 ns
-
-287:void loop():info:Measure the time to perform input pin read/output pin write
-296:void loop():info:outPin.write(!inPin.read()):1740 ns
-306:void loop():info:inPin.is_set();outPin.clear/set():1699 ns
-318:void loop():info:inPin >> var; outPin << !var:1727 ns
-328:void loop():info:outPin.set(inPin.is_clear()):1725 ns
-338:void loop():info:OutputPin::write(D8, !InputPin::read(D7)):593 ns
-351:void loop():info:OutputPin::read(D7)/write(D8,0/1):849 ns
-
-353:void loop():info:Measure the time to perform 8-bit serial data transfer
-361:void loop():info:pin.write(data,clk):18 us
-374:void loop():info:pin.write();clock.write(1/0):27 us
-389:void loop():info:pin._write();clock._write(1/0):22 us
-402:void loop():info:pin.write/toggle():20 us
-417:void loop():info:pin._write/_toggle():20 us
-430:void loop():info:OutputPin::write():12 us
-443:void loop():info:OutputPin::write/toggle():8 us
-475:void loop():info:pin.write/toggle() unrolled:15 us
-
-477:void loop():info:Measure the time to read analog pin
-483:void loop():info:analogPin.sample():112 us
-492:void loop():info:analogPin.sample_request/await():112 us
-501:void loop():info:analogPin >> var:112 us
-508:void loop():info:AnalogPin::sample(A0):112 us
-
-510:void loop():info:Measure the time to read analog pin with varying prescale
-519:void loop():info:prescale(128):bits(10):analogPin.sample():112 us
-519:void loop():info:prescale(64):bits(9):analogPin.sample():56 us
-519:void loop():info:prescale(32):bits(8):analogPin.sample():30 us
-519:void loop():info:prescale(16):bits(7):analogPin.sample():17 us
-519:void loop():info:prescale(8):bits(6):analogPin.sample():10 us
-519:void loop():info:prescale(4):bits(5):analogPin.sample():6 us
-519:void loop():info:prescale(2):bits(4):analogPin.sample():4 us
-*/
