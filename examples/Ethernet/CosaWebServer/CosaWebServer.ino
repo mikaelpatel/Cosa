@@ -49,6 +49,33 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
+// Digital and Analog Pin map
+static const Board::DigitalPin digital_pin_map[] PROGMEM = {
+  Board::D0, 
+  Board::D1, 
+  Board::D2, 
+  Board::D3, 
+  Board::D4, 
+  Board::D5, 
+  Board::D6, 
+  Board::D7, 
+  Board::D8, 
+  Board::D9, 
+  Board::D10, 
+  Board::D11, 
+  Board::D12, 
+  Board::D13
+};
+
+static const Board::AnalogPin analog_pin_map[] PROGMEM = {
+  Board::A0, 
+  Board::A1, 
+  Board::A2, 
+  Board::A3, 
+  Board::A4, 
+  Board::A5
+};
+
 // HTML end of line
 #define CRLF "\r\n"
 
@@ -97,10 +124,16 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
 
   // Construct the page; header-contents-footer
   page << header;
-  for (uint8_t i = 0; i < 14; i++)
-    page << PSTR("D") << i << PSTR(": ") << InputPin::read(i) << BR;
-  for (uint8_t i = 0; i < 4; i++)
-    page << PSTR("A") << i << PSTR(": ") << AnalogPin::sample(i) << BR;
+  for (uint8_t i = 0; i < membersof(digital_pin_map); i++) {
+    Board::DigitalPin pin;
+    pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + i);
+    page << PSTR("D") << i << PSTR(": ") << InputPin::read(pin) << BR;
+  }
+  for (uint8_t i = 0; i < membersof(analog_pin_map); i++) {
+    Board::AnalogPin pin;
+    pin = (Board::AnalogPin) pgm_read_byte(analog_pin_map + i);
+    page << PSTR("A") << i << PSTR(": ") << AnalogPin::sample(pin) << BR;
+  }
   page << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
   page << PSTR("Memory (byte): ") << free_memory() << BR;
   page << PSTR("Uptime (h:m:s): ") << h << ':' << m << ':' << s << BR;
@@ -124,9 +157,10 @@ static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 WebServer server;
 
-// Ethernet Shield SD device must be disabled
+// Disable SD on Ethernet Shield
 #define USE_ETHERNET_SHIELD
 #if defined(USE_ETHERNET_SHIELD)
+#include "Cosa/OutputPin.hh"
 OutputPin sd(Board::D4, 1);
 #endif
 

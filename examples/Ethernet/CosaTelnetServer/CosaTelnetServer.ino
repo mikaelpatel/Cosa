@@ -45,6 +45,13 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
+// Disable SD on Ethernet Shield
+#define USE_ETHERNET_SHIELD
+#if defined(USE_ETHERNET_SHIELD)
+#include "Cosa/OutputPin.hh"
+OutputPin sd(Board::D4, 1);
+#endif
+
 // Network configuration
 #define IP 192,168,1,100
 #define SUBNET 255,255,255,0
@@ -55,6 +62,33 @@
 static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 Socket* sock = NULL;
+
+// Digital and Analog Pin map
+static const Board::DigitalPin digital_pin_map[] PROGMEM = {
+  Board::D0, 
+  Board::D1, 
+  Board::D2, 
+  Board::D3, 
+  Board::D4, 
+  Board::D5, 
+  Board::D6, 
+  Board::D7, 
+  Board::D8, 
+  Board::D9, 
+  Board::D10, 
+  Board::D11, 
+  Board::D12, 
+  Board::D13
+};
+
+static const Board::AnalogPin analog_pin_map[] PROGMEM = {
+  Board::A0, 
+  Board::A1, 
+  Board::A2, 
+  Board::A3, 
+  Board::A4, 
+  Board::A5
+};
 
 void setup()
 {
@@ -101,9 +135,18 @@ void loop()
 
   // Trace state of device pins, power supply and free memory
   trace << Watchdog::millis() << PSTR(":D=");
-  for (uint8_t i = 0; i < 14; i++) trace << InputPin::read(i);
-  trace << PSTR(";A=") << AnalogPin::sample(0);
-  for (uint8_t i = 1; i < 4; i++) trace << ',' << AnalogPin::sample(i);
+  for (uint8_t i = 0; i < membersof(digital_pin_map); i++) {
+    Board::DigitalPin pin;
+    pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + i);
+    trace << InputPin::read(pin);
+  }
+  trace << PSTR(";A=");
+  trace << AnalogPin::sample((Board::AnalogPin) pgm_read_byte(analog_pin_map));
+  for (uint8_t i = 1; i < membersof(analog_pin_map); i++) {
+    Board::AnalogPin pin;
+    pin = (Board::AnalogPin) pgm_read_byte(analog_pin_map + i);
+    trace << ',' << AnalogPin::sample(pin);
+  }
   trace << PSTR(";Vcc=") << AnalogPin::bandgap();
   trace << PSTR(";mem=") << free_memory();
   trace << endl << flush;

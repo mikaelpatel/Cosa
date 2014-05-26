@@ -40,6 +40,13 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
+// Disable SD on Ethernet Shield
+#define USE_ETHERNET_SHIELD
+#if defined(USE_ETHERNET_SHIELD)
+#include "Cosa/OutputPin.hh"
+OutputPin sd(Board::D4, 1);
+#endif
+
 // Network configuration
 #define IP 192,168,1,100
 #define SUBNET 255,255,255,0

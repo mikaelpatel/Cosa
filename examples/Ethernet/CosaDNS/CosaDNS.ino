@@ -41,6 +41,13 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
   
+// Disable SD on Ethernet Shield
+#define USE_ETHERNET_SHIELD
+#if defined(USE_ETHERNET_SHIELD)
+#include "Cosa/OutputPin.hh"
+OutputPin sd(Board::D4, 1);
+#endif
+
 // Network configuration
 #define MAC 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed
 #define IP 192,168,1,100

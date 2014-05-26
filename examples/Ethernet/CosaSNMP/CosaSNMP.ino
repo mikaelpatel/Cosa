@@ -135,13 +135,15 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
       if (pin > 22)
 	pdu.error_status = SNMP::NO_SUCH_NAME;
       else
-	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) InputPin::read(pin));
+	pdu.value.encode(SNMP::SYNTAX_INT, 
+			 (int16_t) InputPin::read((Board::DigitalPin) pin));
       break;
     case ardAnalogPin:
       if (pin > 7)
 	pdu.error_status = SNMP::NO_SUCH_NAME;
       else
-	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::sample(pin));
+	pdu.value.encode(SNMP::SYNTAX_INT, 
+			 (int16_t) AnalogPin::sample((Board::AnalogPin) pin));
       break;
     case ardVcc:
       if (pin > 0)
@@ -158,6 +160,13 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
   }
   return (true);
 }
+
+// Disable SD on Ethernet Shield
+#define USE_ETHERNET_SHIELD
+#if defined(USE_ETHERNET_SHIELD)
+#include "Cosa/OutputPin.hh"
+OutputPin sd(Board::D4, 1);
+#endif
 
 // Network configuration
 #define IP 192,168,1,100
