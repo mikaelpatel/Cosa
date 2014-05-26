@@ -48,6 +48,15 @@ public:
   Socket();
 
   /**
+   * Get source machine address, network address and port. 
+   * @param[out] addr network address.
+   */
+  void get_src(INET::addr_t& addr)
+  {
+    addr = m_src;
+  }  
+
+  /**
    * @override IOStream::Device
    * Write data from buffer with given size to device.
    * @param[in] buf buffer to write.
@@ -80,19 +89,6 @@ public:
    * @return number of bytes read or EOF(-1).
    */
   virtual int read(void* buf, size_t size);
-
-  /**
-   * @override Socket
-   * Get source machine address, network address and port. Returns
-   * zero if successful otherwise negative error code. 
-   * @param[in] mac hardware address.
-   * @param[in] addr network address.
-   * @param[in] port port number.
-   */
-  void get_src(INET::addr_t& addr)
-  {
-    addr = m_src;
-  }  
 
   /**
    * @override Socket
