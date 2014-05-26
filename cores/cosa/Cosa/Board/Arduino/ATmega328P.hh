@@ -55,23 +55,11 @@ private:
    * @param[in] pin number.
    * @return special register pointer.
    */
-  static volatile uint8_t* SFR(uint8_t pin) 
+  static volatile uint8_t* SFR(uint8_t pin) __attribute__((always_inline))
   { 
     return (pin < 8  ? &PIND : 
 	    pin < 14 ? &PINB : 
 	               &PINC);
-  }
-
-  /**
-   * Return Pin Change Mask Register for given Arduino pin number.
-   * @param[in] pin number.
-   * @return pin change mask register pointer.
-   */
-  static volatile uint8_t* PCIMR(uint8_t pin) 
-  { 
-    return (pin < 8  ? &PCMSK2 : 
-	    pin < 14 ? &PCMSK0 : 
-	               &PCMSK1);
   }
 
   /**
@@ -80,7 +68,7 @@ private:
    * @param[in] pin number.
    * @return pin bit position.
    */
-  static uint8_t BIT(uint8_t pin)
+  static uint8_t BIT(uint8_t pin) __attribute__((always_inline))
   {
     return (pin < 8  ? pin : 
 	    pin < 14 ? pin - 8 : 
@@ -88,11 +76,23 @@ private:
   }
   
   /**
+   * Return Pin Change Mask Register for given Arduino pin number.
+   * @param[in] pin number.
+   * @return pin change mask register pointer.
+   */
+  static volatile uint8_t* PCIMR(uint8_t pin) __attribute__((always_inline))
+  { 
+    return (pin < 8  ? &PCMSK2 : 
+	    pin < 14 ? &PCMSK0 : 
+	               &PCMSK1);
+  }
+
+  /**
    * Return UART Register for given Arduino serial port.
    * @param[in] port number.
    * @return UART register pointer.
    */
-  static volatile uint8_t* UART(uint8_t port) 
+  static volatile uint8_t* UART(uint8_t port) __attribute__((always_inline))
   { 
     UNUSED(port);
     return (&UCSR0A);
