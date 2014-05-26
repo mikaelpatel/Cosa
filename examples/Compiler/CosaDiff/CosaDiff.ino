@@ -53,7 +53,7 @@ void iter(uint32_t t0, uint32_t t1, uint8_t i0, uint8_t i1)
   for (int i = 0; i < 32; i++) {
     int32_t diff = t1 - t0;
     bool wrong1 = t1 < t0;
-    bool wrong2 = (t1 - t0) < 0;
+    bool wrong2 = (int32_t) (t1 - t0) < 0;
     bool correct = diff < 0;
     trace << i 
 	  << PSTR(":t0=") << t0

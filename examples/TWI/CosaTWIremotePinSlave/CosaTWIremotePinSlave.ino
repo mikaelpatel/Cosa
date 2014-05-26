@@ -73,13 +73,15 @@ RemotePinSlave::begin()
 void
 RemotePinSlave::on_request(void* buf, size_t size)
 {
+  UNUSED(buf);
+  UNUSED(size);
   Command cmd(m_buf[0]);
   if (cmd.m_type == DIGITAL_TYPE) {
     if (cmd.m_op == READ_OP)
-      m_buf[0] = Pin::read(cmd.m_pin);
+      m_buf[0] = Pin::read((Board::DigitalPin) cmd.m_pin);
     else if (cmd.m_op == WRITE_OP) {
-      IOPin::set_mode(cmd.m_pin, IOPin::OUTPUT_MODE);
-      OutputPin::write(cmd.m_pin, m_buf[1]);
+      IOPin::set_mode((Board::DigitalPin) cmd.m_pin, IOPin::OUTPUT_MODE);
+      OutputPin::write((Board::DigitalPin) cmd.m_pin, m_buf[1]);
     }
   }
 }

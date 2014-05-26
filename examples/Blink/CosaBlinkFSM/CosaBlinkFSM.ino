@@ -63,6 +63,7 @@ public:
   // leds with toggle and steps to the next state. 
   static bool redState(FSM* fsm, uint8_t type)
   {
+    UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->blueLedPin.toggle();
     fsm->set_state(yellowState);
@@ -71,6 +72,7 @@ public:
 
   static bool yellowState(FSM* fsm, uint8_t type)
   {
+    UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->greenLedPin.toggle();
     fsm->set_state(greenState);
@@ -79,6 +81,7 @@ public:
   
   static bool greenState(FSM* fsm, uint8_t type)
   {
+    UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->redLedPin.toggle();
     fsm->set_state(cyanState);
@@ -87,6 +90,7 @@ public:
   
   static bool cyanState(FSM* fsm, uint8_t type)
   {
+    UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->blueLedPin.toggle();
     fsm->set_state(blueState);
@@ -95,6 +99,7 @@ public:
 
   static bool blueState(FSM* fsm, uint8_t type)
   {
+    UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->greenLedPin.toggle();
     fsm->set_state(magentaState);
@@ -103,6 +108,7 @@ public:
 
   static bool magentaState(FSM* fsm, uint8_t type)
   {
+    UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->redLedPin.toggle();
     fsm->set_state(redState);

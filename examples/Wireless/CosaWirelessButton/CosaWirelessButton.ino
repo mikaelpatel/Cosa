@@ -79,6 +79,7 @@ public:
 
   virtual void on_interrupt(uint16_t arg) 
   {
+    UNUSED(arg);
     Event::push(Event::NULL_TYPE, NULL);
     disable();
   }

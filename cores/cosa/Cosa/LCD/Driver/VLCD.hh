@@ -125,16 +125,15 @@ public:
    */
   virtual int write(void* buf, size_t size);
 
-private:
-  // Max size of buffer
-  static const uint8_t BUF_MAX = 40;
-
   /**
    * Virtual LCD Slave device
    */
   class Slave : public TWI::Slave {
     friend class VLCD;
   public:
+    // Max size of buffer
+    static const uint8_t BUF_MAX = 40;
+
     /**
      * Construct Virtual LCD Slave with given LCD and TWI address.
      * @param[in] lcd implementation.
@@ -180,6 +179,7 @@ private:
     LCD::Device* m_lcd;
   };
 
+private:
   // Version information
   struct info_t {
     uint8_t major;

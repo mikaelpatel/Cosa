@@ -148,13 +148,24 @@ void setup()
   SLEEP(4);
 }
 
+static const Board::AnalogPin pin_map[] PROGMEM = {
+  Board::A0, 
+  Board::A1, 
+  Board::A2, 
+  Board::A3, 
+  Board::A4, 
+  Board::A5
+};
+
 void loop()
 {
   // Draw bars with analog sample values (A0..A5)
   lcd.putchar('\f');
-  for (uint8_t i = 0; i < ST7565::LINES; i++) {
+  for (uint8_t i = 0; i < membersof(pin_map); i++) {
     trace.printf_P(PSTR("A%d:"), i);
-    uint8_t procent = (AnalogPin::sample(i) * 100L) / 1023;
+    Board::AnalogPin pin;
+    pin = (Board::AnalogPin) pgm_read_byte(pin_map + i);
+    uint8_t procent = (AnalogPin::sample(pin) * 100L) / 1023;
     lcd.draw_bar(procent, ST7565::WIDTH - 20);
     if (i != ST7565::LINES - 1) trace << endl;
   }

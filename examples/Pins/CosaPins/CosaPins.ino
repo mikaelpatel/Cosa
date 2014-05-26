@@ -38,16 +38,31 @@ class Counter {
 private:
   volatile uint16_t m_counter;
 public:
-  Counter(uint16_t init = 0) : m_counter(init) {}
-  uint16_t get_counter() { return (m_counter); }
-  void set_counter(uint16_t value) { m_counter = value; }
-  void increment(uint16_t value) { m_counter += value; }
+  Counter(uint16_t init = 0) : 
+    m_counter(init) 
+  {}
+  uint16_t get_counter() 
+  { 
+    return (m_counter); 
+  }
+  void set_counter(uint16_t value) 
+  { 
+    m_counter = value; 
+  }
+  void increment(uint16_t value) 
+  { 
+    m_counter += value; 
+  }
 };
 
 // External Interrupt Pin Handler; count interrupts
 class ExtPin : public ExternalInterrupt, public Counter {
 private:
-  virtual void on_interrupt(uint16_t arg) { increment(1); }
+  virtual void on_interrupt(uint16_t arg) 
+  { 
+    UNUSED(arg); 
+    increment(1); 
+  }
 public:
   ExtPin(Board::ExternalInterruptPin pin) :
     ExternalInterrupt(pin, ExternalInterrupt::ON_RISING_MODE),
@@ -58,7 +73,11 @@ public:
 // Pin Change Interrupt Handler; count interrupts
 class IntPin : public PinChangeInterrupt, public Counter {
 private:
-  virtual void on_interrupt(uint16_t arg) { increment(1); }
+  virtual void on_interrupt(uint16_t arg) 
+  { 
+    UNUSED(arg); 
+    increment(1); 
+  }
 public:
   IntPin(Board::InterruptPin pin) : 
     PinChangeInterrupt(pin), 
@@ -98,15 +117,6 @@ void setup()
   TRACE(sizeof(PWMPin));
   TRACE(sizeof(Watchdog));
 
-  // Print debug information about the sketch pins
-  trace << extPin << endl;
-  trace << int0Pin << endl;
-  trace << int1Pin << endl;
-  trace << int2Pin << endl;
-  trace << ledPin << endl;
-  trace << onoffPin << endl;
-  trace << levelPin << endl;
-  
   // Check interrupt pin; enable and print interrupt counter
   PinChangeInterrupt::begin();
   TRACE(int0Pin.get_counter());

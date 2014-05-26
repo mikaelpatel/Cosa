@@ -247,7 +247,10 @@ public:
      * Default on change function. 
      * @param[in] value.
      */
-    virtual void on_change(T value) {}
+    virtual void on_change(T value) 
+    {
+      UNUSED(value);
+    }
 
   protected:
     T m_value;
@@ -264,6 +267,7 @@ public:
      */
     virtual void on_event(uint8_t type, uint16_t value)
     {
+      UNUSED(type);
       if (value == CW) {
 	if (m_value == m_max) return;
 	m_value += m_step;
@@ -372,7 +376,10 @@ public:
      * Default on change function. 
      * @param[in] value.
      */
-    virtual void on_change(T value) {}
+    virtual void on_change(T value) 
+    {
+      UNUSED(value);
+    }
 
   private:
     uint32_t m_latest;

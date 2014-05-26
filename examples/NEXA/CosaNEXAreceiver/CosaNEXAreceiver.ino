@@ -54,8 +54,16 @@ class LED : public NEXA::Receiver::Device {
 private:
   OutputPin m_pin;
 public:
-  LED(Board::DigitalPin pin) : NEXA::Receiver::Device(0L), m_pin(pin) {}
-  virtual void on_event(uint8_t type, uint16_t value) { m_pin << value; }
+  LED(Board::DigitalPin pin) : 
+    NEXA::Receiver::Device(0L), 
+    m_pin(pin) 
+  {
+  }
+  virtual void on_event(uint8_t type, uint16_t value) 
+  { 
+    UNUSED(type);
+    m_pin << value; 
+  }
 };
 LED device(Board::LED);
 

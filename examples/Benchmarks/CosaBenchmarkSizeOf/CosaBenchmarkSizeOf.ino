@@ -91,7 +91,7 @@
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/AnalogPins.hh"
 #include "Cosa/AnalogComparator.hh"
-#include "Cosa/ProtocolBuffer.hh"
+#include "Cosa/Serializer/ProtocolBuffer.hh"
 #include "Cosa/Queue.hh"
 #include "Cosa/Registry.hh"
 #include "Cosa/Rotary.hh"

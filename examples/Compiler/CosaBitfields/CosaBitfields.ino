@@ -62,7 +62,7 @@ void loop()
 
   config_t config;
   config.bias = POSITIVE_BIAS;
-  config.rate = rate;
+  config.rate = (rate_t) rate;
   config.avg = SAMPLES_AVG_4;
   trace << PSTR("config = ") << bin << config.reg << endl;
   trace << PSTR("bias = ") << bin << config.bias << endl;

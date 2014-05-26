@@ -66,6 +66,7 @@ public:
    */
   static bool initState(FSM* fsm, uint8_t type)
   {
+    UNUSED(type);
     Echo* echo = (Echo*) fsm;
     trace.print_P(PSTR("init "));
     trace.print_P(echo->m_name);
@@ -76,6 +77,7 @@ public:
 
   static bool listenState(FSM* fsm, uint8_t type)
   {
+    UNUSED(type);
     Echo* echo = (Echo*) fsm;
     trace.print_P(echo->m_name);
     trace.printf_P(PSTR("(count = %d)\n"), echo->m_count++);
@@ -86,6 +88,7 @@ public:
 
   static bool echoState(FSM* fsm, uint8_t type)
   {
+    UNUSED(type);
     Echo* echo = (Echo*) fsm;
     echo->m_port->send(Event::USER_TYPE);
     fsm->set_state(listenState);

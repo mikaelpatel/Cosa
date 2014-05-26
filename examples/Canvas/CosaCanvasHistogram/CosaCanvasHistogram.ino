@@ -60,6 +60,16 @@ Textbox textbox(&tft);
 IOStream cout(&textbox);
 Canvas::color16_t CANVAS, PEN;
 
+// Map with analog pins
+static const Board::AnalogPin analog_pin_map[] PROGMEM = {
+  Board::A0, 
+  Board::A1, 
+  Board::A2, 
+  Board::A3, 
+  Board::A4, 
+  Board::A5
+};
+
 void setup()
 {
   // Start the watchdogy for delay between sample suite
@@ -80,29 +90,30 @@ void setup()
 
 void loop()
 {
-  static const uint8_t PIN_MAX = 6;
-  for (uint8_t pin = 0; pin < PIN_MAX; pin++) {
-    static uint16_t sample[PIN_MAX];
-    if (sample[pin] < 20) sample[pin] = 20;
-    uint8_t x = 6 + (25*pin);
-    uint8_t y = tft.HEIGHT - sample[pin];
+  for (uint8_t ix = 0; ix < membersof(analog_pin_map); ix++) {
+    static uint16_t sample[membersof(analog_pin_map)];
+    if (sample[ix] < 20) sample[ix] = 20;
+    uint8_t x = 6 + (25*ix);
+    uint8_t y = tft.HEIGHT - sample[ix];
     uint8_t width = 20;
-    uint8_t height = sample[pin];
+    uint8_t height = sample[ix];
 
     // Erase the old bar and text
     tft.set_pen_color(CANVAS);
     tft.fill_rect(x, y, width + 1, height - 1);
 
     // Sample a new value
-    sample[pin] = (AnalogPin::sample(pin) >> 3);
+    Board::AnalogPin pin;
+    pin = (Board::AnalogPin) pgm_read_byte(analog_pin_map + ix);
+    sample[ix] = (AnalogPin::sample(pin) >> 3);
 
     // Draw the new bar
-    y = tft.HEIGHT - sample[pin];
-    height = sample[pin];
+    y = tft.HEIGHT - sample[ix];
+    height = sample[ix];
     tft.set_pen_color(PEN);
     tft.draw_rect(x, y, width, height);
     textbox.set_cursor(x + 2, tft.HEIGHT - 10);
-    cout.print((sample[pin]*500)/tft.HEIGHT);
+    cout.print((sample[ix]*500)/tft.HEIGHT);
   }
   Watchdog::delay(128);
 }

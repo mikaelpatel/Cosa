@@ -78,6 +78,7 @@ IOStream& operator<<(IOStream& outs, Probe& probe)
 void 
 Probe::on_interrupt(uint16_t arg) 
 { 
+  UNUSED(arg);
   if (m_start == 0) {
     m_start = RTC::micros();
     m_ix = 0;

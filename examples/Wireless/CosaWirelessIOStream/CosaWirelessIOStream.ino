@@ -88,12 +88,40 @@ void bar(uint16_t value, uint8_t pos, uint16_t max)
   if (rem != 0) trace << (char) (rem - 1);
 }
 
+static const Board::DigitalPin digital_pin_map[] PROGMEM = {
+  Board::D0, 
+  Board::D1, 
+  Board::D2, 
+  Board::D3, 
+  Board::D4, 
+  Board::D5, 
+  Board::D6, 
+  Board::D7, 
+  Board::D8, 
+  Board::D9, 
+  Board::D10, 
+  Board::D11, 
+  Board::D12, 
+  Board::D13
+};
+
+static const Board::AnalogPin analog_pin_map[] PROGMEM = {
+  Board::A0, 
+  Board::A1, 
+  Board::A2, 
+  Board::A3, 
+  Board::A4, 
+  Board::A5
+};
+
 void loop()
 {
   // Print analog pins
-  for (uint8_t pin = 0; pin < 8; pin++) {
+  for (uint8_t ix = 0; ix < membersof(analog_pin_map); ix++) {
+    Board::AnalogPin pin;
+    pin = (Board::AnalogPin) pgm_read_byte(analog_pin_map + ix);
     uint16_t sample = AnalogPin::sample(pin);
-    trace << clear << 'A' << pin << PSTR(": ") << sample << endl;
+    trace << clear << 'A' << ix << PSTR(": ") << sample << endl;
     bar(sample, 16, 1023);
     trace << flush;
     SLEEP(1);
@@ -108,12 +136,18 @@ void loop()
 
   // Print digital pins
   trace << clear << PSTR("D0-7:  "); 
-  for (uint8_t pin = 0; pin < 8; pin++) 
+  for (uint8_t ix = 0; ix < 8; ix++) {
+    Board::DigitalPin pin;
+    pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + ix);
     trace << InputPin::read(pin);
+  }
   trace << endl;
   trace << PSTR("D8-16: "); 
-  for (uint8_t pin = 8; pin < 16; pin++) 
+  for (uint8_t ix = 8; ix < 16; ix++) {
+    Board::DigitalPin pin;
+    pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + ix);
     trace << InputPin::read(pin);
+  }
   trace << flush;
   SLEEP(2);
 

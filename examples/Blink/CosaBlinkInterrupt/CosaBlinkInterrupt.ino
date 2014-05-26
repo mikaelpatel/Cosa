@@ -35,6 +35,7 @@ OutputPin ledPin(Board::LED);
 // Interrupt handler; toggle the led for each interrupt
 void blink(void* env)
 {
+  UNUSED(env);
   ledPin.toggle();
 }
 

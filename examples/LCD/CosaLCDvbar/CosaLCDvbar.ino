@@ -112,7 +112,7 @@ void setup()
 void loop()
 {
   // Mapping vector for pin symbols
-  const uint8_t pin[] = { 
+  static const Board::AnalogPin pin_map[] PROGMEM = { 
     Board::A0, Board::A1, Board::A2, Board::A3, 
 #if !defined(BOARD_ATTINYX5)
     Board::A4, Board::A5, Board::A6, Board::A7
@@ -122,8 +122,10 @@ void loop()
   // Sample analog pins and draw vertical bar
   cout << PSTR("\fSample: ") << endl;
   cout << AnalogPin::sample(Board::A0);
-  for (uint8_t i = 0; i < membersof(pin); i++) {
-    uint16_t value = AnalogPin::sample(pin[i]);
+  for (uint8_t i = 0; i < membersof(pin_map); i++) {
+    Board::AnalogPin pin;
+    pin = (Board::AnalogPin) pgm_read_byte(pin_map + i);
+    uint16_t value = AnalogPin::sample(pin);
     uint8_t x = i + 8;
     draw_vertical_bar(x, map<uint32_t>(value, 0, 1023, 0, 100));
   }

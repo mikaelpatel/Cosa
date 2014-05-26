@@ -22,6 +22,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Soft/UART.hh"
@@ -36,6 +37,23 @@ Soft::UART uart(Board::D5, Board::PCI4, &ibuf);
 #endif
 OutputPin led(Board::LED);
 
+static const Board::DigitalPin pin_map[] PROGMEM = {
+  Board::D0, 
+  Board::D1, 
+  Board::D2, 
+  Board::D3, 
+  Board::D4, 
+  Board::D5, 
+  Board::D6, 
+  Board::D7, 
+  Board::D8, 
+  Board::D9, 
+  Board::D10, 
+  Board::D11, 
+  Board::D12, 
+  Board::D13
+};
+
 void setup()
 {
   Watchdog::begin();
@@ -45,23 +63,25 @@ void setup()
 
 void loop()
 {
-  static uint8_t pin = 0;
+  static uint8_t ix = 0;
 
   // Write pin status to soft uart
   led.toggle();
   uart.putchar('D');
-  if (pin < 10) {
-    uart.putchar(pin + '0');
+  if (ix < 10) {
+    uart.putchar(ix + '0');
   }
   else {
-    uart.putchar(pin/10 + '0');
-    uart.putchar(pin%10 + '0');
+    uart.putchar(ix/10 + '0');
+    uart.putchar(ix%10 + '0');
   }
+  Board::DigitalPin pin;
+  pin = (Board::DigitalPin) pgm_read_byte(pin_map + ix);
   if (Pin::read(pin))
     uart.puts_P(PSTR(" = on\n"));
   else uart.puts_P(PSTR(" = off\n"));
   led.toggle();
-  if (pin == Board::PIN_MAX) pin = 0; else pin += 1;
+  if (ix == membersof(pin_map)) ix = 0; else ix += 1;
 
   // Echo characters received on soft uart
   while (uart.available()) uart.putchar(uart.getchar());

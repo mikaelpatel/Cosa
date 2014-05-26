@@ -52,6 +52,7 @@ class FileOpenAction : public Menu::Action {
 public:
   virtual bool run(Menu::item_P item) 
   {
+    UNUSED(item);
     lcd.display_clear();
     lcd.puts_P(PSTR("Opening File..."));
     SLEEP(2);

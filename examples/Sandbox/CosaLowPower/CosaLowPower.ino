@@ -59,6 +59,7 @@ public:
 
   virtual void on_interrupt(uint16_t arg = 0) 
   {
+    UNUSED(arg);
     if (m_led != NULL) m_led->on();
 #ifdef USE_EVENT_AWAIT
     Event::push(Event::NULL_TYPE, NULL);

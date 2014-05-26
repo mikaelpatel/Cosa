@@ -23,6 +23,7 @@
  */
 
 #include "Cosa/IOStream/Driver/RS485.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 

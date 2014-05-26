@@ -54,6 +54,8 @@ public:
 void
 Echo::on_request(void* buf, size_t size)
 {
+  UNUSED(buf);
+  UNUSED(size);
   m_buf[0] += 1;
   for (uint8_t i = 1; i < sizeof(m_buf); i++)
     m_buf[i] = m_buf[0] + i;

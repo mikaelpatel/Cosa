@@ -56,11 +56,11 @@ RFM69 rf(NETWORK, DEVICE);
 #include "Cosa/Wireless/Driver/VWI.hh"
 #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
 VirtualWireCodec codec;
-#define SPEED 4000
+#define BPS 4000
 #if defined(BAORD_TINY)
-VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
+VWI rf(NETWORK, DEVICE, BPS, Board::D1, Board::D0, &codec);
 #else
-VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
+VWI rf(NETWORK, DEVICE, BPS, Board::D7, Board::D8, &codec);
 #endif
 #endif
 

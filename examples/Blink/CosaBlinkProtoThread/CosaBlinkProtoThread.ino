@@ -39,6 +39,8 @@ public:
 
   virtual void run(uint8_t type, uint16_t value) 
   { 
+    UNUSED(type);
+    UNUSED(value);
     PROTO_THREAD_BEGIN();
     while (1) {
       m_pin.toggle(); 

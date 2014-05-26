@@ -41,6 +41,8 @@ public:
 
   virtual void on_event(uint8_t type, uint16_t value)
   {
+    UNUSED(type);
+    UNUSED(value);
     m_pin.toggle();
   }
 

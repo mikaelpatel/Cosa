@@ -62,6 +62,7 @@ public:
 
   virtual void on_change(uint8_t type)
   {
+    UNUSED(type);
     ledPin.toggle();
     m_count += 1;
     if (ledPin.is_set()) {

@@ -89,6 +89,7 @@ class Restart : public Registry::Action {
 public:
   virtual int run(void* buf, size_t size) 
   {
+    UNUSED(size);
     trace << PSTR("Action::Restart:") << (const char*) buf << endl;
     return (strlen_P((const char*) buf));
   }
@@ -135,7 +136,6 @@ void setup()
 void loop()
 {
   Registry::item_list_P list;
-  Registry::action_P action;
   Registry::item_P item;
   Registry::blob_P blob;
   uint8_t path[2];
