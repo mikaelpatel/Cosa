@@ -19,7 +19,9 @@
  */
 
 #include "Cosa/INET/HTTP.hh"
+#include "Cosa/IOStream.hh"
 #include "Cosa/Watchdog.hh"
+
 #include <alloca.h>
 #include <ctype.h>
 
@@ -31,6 +33,7 @@ HTTP::Server::run(uint32_t ms)
   // Wait for incoming connection requests
   // NOTE: LTO error; need rewrite to stack allocation
   // char line[REQUEST_MAX];
+  IOStream page(m_sock);
   char* line = (char*) alloca(REQUEST_MAX);
   char* method;
   char* path;
@@ -66,7 +69,9 @@ HTTP::Server::run(uint32_t ms)
     if (sp == NULL) goto error;
   }
   *sp = 0;
-  on_request(method, path, query);
+
+  // Bind the socket to an iostream, handle the request and flush response
+  on_request(page, method, path, query);
   m_sock->flush();
 
   // Disconnect the client and allow new connection requests

@@ -59,7 +59,7 @@ public:
   WebServer() : m_nr(0) {}
 
   // Response member function
-  virtual void on_request(char* method, char* path, char* query);
+  virtual void on_request(IOStream& page, char* method, char* path, char* query);
 
 private:
   // Request sequence number
@@ -67,7 +67,7 @@ private:
 };
 
 void 
-WebServer::on_request(char* method, char* path, char* query)
+WebServer::on_request(IOStream& page, char* method, char* path, char* query)
 {
   // Uptime in seconds
   uint32_t uptime =  Watchdog::millis() / 1000;
@@ -75,12 +75,9 @@ WebServer::on_request(char* method, char* path, char* query)
   uint8_t m = (uptime / 60) % 60;
   uint8_t s = uptime % 60;
 
-  // Bind the socket to an iostream
-  IOStream page(m_sock);
-  INET::addr_t addr;
-
   // Get client connection information; MAC, IP address and port
-  m_sock->get_src(addr);
+  INET::addr_t addr;
+  get_client(addr);
 
   // Reply page; header and footer are static, contents dynamic
   static const char header[] __PROGMEM = 

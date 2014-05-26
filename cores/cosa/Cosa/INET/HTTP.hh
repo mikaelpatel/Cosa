@@ -87,14 +87,24 @@ public:
     }
 
     /**
+     * Get client address, network address and port.
+     * @param[out] addr network address.
+     */
+    void get_client(INET::addr_t& addr)
+    {
+      m_sock->get_src(addr);
+    }  
+
+    /**
      * @override
      * Application extension; Should implement the response to the
      * given request (http).
+     * @param[in] page iostream for response.
      * @param[in] method http request method string.
      * @param[in] path resource path string.
      * @param[in] query possible query string.
      */
-    virtual void on_request(char* method, char* path, char* query) = 0;
+    virtual void on_request(IOStream& page, char* method, char* path, char* query) = 0;
 
   protected:
     /** 
