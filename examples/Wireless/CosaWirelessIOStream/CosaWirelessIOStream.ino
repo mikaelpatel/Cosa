@@ -88,7 +88,7 @@ void bar(uint16_t value, uint8_t pos, uint16_t max)
   if (rem != 0) trace << (char) (rem - 1);
 }
 
-static const Board::DigitalPin digital_pin_map[] PROGMEM = {
+static const Board::DigitalPin digital_pin_map[] __PROGMEM = {
   Board::D0, 
   Board::D1, 
   Board::D2, 
@@ -105,7 +105,7 @@ static const Board::DigitalPin digital_pin_map[] PROGMEM = {
   Board::D13
 };
 
-static const Board::AnalogPin analog_pin_map[] PROGMEM = {
+static const Board::AnalogPin analog_pin_map[] __PROGMEM = {
   Board::A0, 
   Board::A1, 
   Board::A2, 

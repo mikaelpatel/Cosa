@@ -61,11 +61,11 @@ DS18B20 sensor(&owi);
 #define QM2M "q.m2m.io"
 #define SERVER QM2M
 
-static const char CLIENT[] PROGMEM = "CosaMQTTtemperature";
+static const char CLIENT[] __PROGMEM = "CosaMQTTtemperature";
 MQTT::Client client;
 
 // W5100 Ethernet Controller with MAC-address
-const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
+const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 
 void setup()

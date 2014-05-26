@@ -37,7 +37,7 @@ Soft::UART uart(Board::D5, Board::PCI4, &ibuf);
 #endif
 OutputPin led(Board::LED);
 
-static const Board::DigitalPin pin_map[] PROGMEM = {
+static const Board::DigitalPin pin_map[] __PROGMEM = {
   Board::D0, 
   Board::D1, 
   Board::D2, 

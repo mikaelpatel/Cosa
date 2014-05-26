@@ -148,7 +148,7 @@ void setup()
   SLEEP(4);
 }
 
-static const Board::AnalogPin pin_map[] PROGMEM = {
+static const Board::AnalogPin pin_map[] __PROGMEM = {
   Board::A0, 
   Board::A1, 
   Board::A2, 

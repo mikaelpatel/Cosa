@@ -92,7 +92,7 @@ int switch_fn(uint8_t op)
 int goto_fn(uint8_t op)
 {
   // Label address table
-  static void* const tab[] PROGMEM = {
+  static void* const tab[] __PROGMEM = {
     &&DO_ADD,
     &&DO_SUB,
     &&DO_MUL,

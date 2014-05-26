@@ -65,11 +65,11 @@ MQTTClient::on_publish(char* topic, void* buf, size_t count)
 }
 
 // MQTT client name
-const char CLIENT[] PROGMEM = "CosaMQTTclient";
+const char CLIENT[] __PROGMEM = "CosaMQTTclient";
 MQTTClient client;
 
 // W5100 Ethernet Controller with MAC-address
-const uint8_t mac[6] PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
+const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 
 

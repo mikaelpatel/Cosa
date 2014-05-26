@@ -61,7 +61,7 @@ IOStream cout(&textbox);
 Canvas::color16_t CANVAS, PEN;
 
 // Map with analog pins
-static const Board::AnalogPin analog_pin_map[] PROGMEM = {
+static const Board::AnalogPin analog_pin_map[] __PROGMEM = {
   Board::A0, 
   Board::A1, 
   Board::A2, 

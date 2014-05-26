@@ -81,7 +81,7 @@ void loop()
   // When they arrive at the tower and are attempting communication,
   // the notes they play are B flat, C, A flat, (octave lower) A flat,
   // E flat.
-  static const uint16_t greating[] PROGMEM = {
+  static const uint16_t greating[] __PROGMEM = {
     Note::Bes3, Note::C3, Note::As3, Note::As2, Note::Es3, Note::END
   };
   play_P(greating, 5, 1000);

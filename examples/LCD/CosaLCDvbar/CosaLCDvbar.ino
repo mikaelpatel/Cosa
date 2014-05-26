@@ -112,7 +112,7 @@ void setup()
 void loop()
 {
   // Mapping vector for pin symbols
-  static const Board::AnalogPin pin_map[] PROGMEM = { 
+  static const Board::AnalogPin pin_map[] __PROGMEM = { 
     Board::A0, Board::A1, Board::A2, Board::A3, 
 #if !defined(BOARD_ATTINYX5)
     Board::A4, Board::A5, Board::A6, Board::A7
