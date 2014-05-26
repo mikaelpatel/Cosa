@@ -46,6 +46,7 @@ duemilanove.bootloader.extended_fuses=0x05
 duemilanove.build.mcu=atmega328p
 duemilanove.build.f_cpu=16000000L
 duemilanove.build.board=ARDUINO_DUEMILANOVE
+duemilanove.build.variant=arduino/duemilanove
 duemilanove.build.core=cosa
 
 # AVR:ATmega32U4
@@ -71,10 +72,11 @@ leonardo.build.mcu=atmega32u4
 leonardo.build.f_cpu=16000000L
 leonardo.build.vid=0x2341
 leonardo.build.pid=0x8036
-leonardo.build.core=cosa
 leonardo.build.usb_product="Arduino Leonardo"
 leonardo.build.board=ARDUINO_LEONARDO
+leonardo.build.variant=arduino/leonardo
 leonardo.build.extra_flags={build.usb_flags}
+leonardo.build.core=cosa
 
 # AVR:ATmega2560
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -95,6 +97,7 @@ mega.bootloader.extended_fuses=0xfd
 mega.build.mcu=atmega2560
 mega.build.f_cpu=16000000L
 mega.build.board=ARDUINO_MEGA2560
+mega.build.variant=arduino/mega
 mega.build.core=cosa
 
 # AVR:ATmega328
@@ -115,8 +118,9 @@ nano.bootloader.extended_fuses=0x05
 
 nano.build.mcu=atmega328p
 nano.build.f_cpu=16000000L
-nano.build.core=cosa
 nano.build.board=ARDUINO_NANO
+nano.build.variant=arduino/nano
+nano.build.core=cosa
 
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -143,8 +147,9 @@ pro-micro.build.vid=0x2341
 pro-micro.build.pid=0x8037
 pro-micro.build.usb_product="Arduino Pro Micro"
 pro-micro.build.board=ARDUINO_PRO_MICRO
-pro-micro.build.core=cosa
+pro-micro.build.variant=arduino/pro-micro
 pro-micro.build.extra_flags={build.usb_flags}
+pro-micro.build.core=cosa
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -165,6 +170,7 @@ pro-mini.bootloader.extended_fuses=0x05
 pro-mini.build.mcu=atmega328p
 pro-mini.build.f_cpu=16000000L
 pro-mini.build.board=ARDUINO_PRO_MINI
+pro-mini.build.variant=arduino/pro-mini
 pro-mini.build.core=cosa
 
 # AVR:ATmega328
@@ -186,6 +192,7 @@ pro-mini-8.bootloader.extended_fuses=0x05
 pro-mini-8.build.mcu=atmega328p
 pro-mini-8.build.f_cpu=8000000L
 pro-mini-8.build.board=ARDUINO_PRO_MINI
+pro-mini-8.build.variant=arduino/pro-mini
 pro-mini-8.build.core=cosa
 
 # AVR:ATmega328
@@ -207,5 +214,6 @@ uno.bootloader.extended_fuses=0x05
 uno.build.mcu=atmega328p
 uno.build.f_cpu=16000000L
 uno.build.board=ARDUINO_UNO
+uno.build.variant=arduino/uno
 uno.build.core=cosa
 

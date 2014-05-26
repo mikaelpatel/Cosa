@@ -46,6 +46,7 @@ lilypad.bootloader.extended_fuses=0x05
 lilypad.build.mcu=atmega328p
 lilypad.build.f_cpu=8000000L
 lilypad.build.board=LILYPAD_ARDUINO
+lilypad.build.variant=arduino/lilypad
 lilypad.build.core=cosa
 
 # AVR:ATmega32U4
@@ -73,6 +74,7 @@ lilypad-usb.build.vid=0x1B4F
 lilypad-usb.build.pid=0x9208
 lilypad-usb.usb_product="Arduino LilyPad USB"
 lilypad-usb.build.board=LILYPAD_ARDUINO_USB
-lilypad-usb.build.core=cosa
+lilypad-usb.build.variant=arduino/lilypad-usb
 lilypad-usb.build.extra_flags={build.usb_flags}
+lilypad-usb.build.core=cosa
 

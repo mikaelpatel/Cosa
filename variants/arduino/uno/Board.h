@@ -1,0 +1,2 @@
+#define ARDUINO_UNO
+

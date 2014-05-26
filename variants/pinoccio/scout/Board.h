@@ -1,0 +1,2 @@
+#define PINOCCIO_SCOUT
+

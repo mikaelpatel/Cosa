@@ -46,5 +46,6 @@ pinoccio.bootloader.extended_fuses=0xfe
 pinoccio.build.mcu=atmega256rfr2
 pinoccio.build.f_cpu=16000000L
 pinoccio.build.board=PINOCCIO_SCOUT
+pinoccio.build.variant=pinoccio/scout
 pinoccio.build.core=cosa
 

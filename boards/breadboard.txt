@@ -44,6 +44,7 @@ attiny84-8.bootloader.extended_fuses=0xff
 attiny84-8.build.mcu=attiny84
 attiny84-8.build.f_cpu=8000000L
 attiny84-8.build.board=BREADBOARD_ATTINYX4
+attiny84-8.build.variant=arduino/attinyx4
 attiny84-8.build.core=cosa
 
 # AVR:ATtiny85
@@ -63,6 +64,7 @@ attiny85-8.bootloader.extended_fuses=0xff
 attiny85-8.build.mcu=attiny85
 attiny85-8.build.f_cpu=8000000L
 attiny85-8.build.board=BREADBOARD_ATTINYX5
+attiny85-8.build.variant=arduino/attinyx5
 attiny85-8.build.core=cosa
 
 # AVR:ATtiny861
@@ -82,6 +84,7 @@ attiny861-8.bootloader.extended_fuses=0x01
 attiny861-8.build.mcu=attiny861
 attiny861-8.build.f_cpu=8000000L
 attiny861-8.build.board=BREADBOARD_ATTINYX61
+attiny861-8.build.variant=arduino/attinyx61
 attiny861-8.build.core=cosa
 
 # AVR:ATmega328
@@ -103,6 +106,7 @@ atmega328-8.bootloader.extended_fuses=0xFD
 atmega328-8.build.mcu=atmega328p
 atmega328-8.build.f_cpu=8000000L
 atmega328-8.build.board=BREADBOARD_ATMEGA328P
+atmega328-8.build.variant=arduino/atmega328p
 atmega328-8.build.core=cosa
 
 # AVR:ATmega1284
@@ -145,4 +149,6 @@ mighty-opt.bootloader.extended_fuses=0xfd
 mighty-opt.build.mcu=atmega1284p
 mighty-opt.build.f_cpu=16000000L
 mighty-opt.build.board=BREADBOARD_ATMEGA1284
+mighty-opt.build.variant=arduino/atmega1284
 mighty-opt.build.core=cosa
+

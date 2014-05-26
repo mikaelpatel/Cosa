@@ -46,6 +46,7 @@ microduino-core.bootloader.extended_fuses=0x05
 microduino-core.build.mcu=atmega328p
 microduino-core.build.f_cpu=16000000L
 microduino-core.build.board=MICRODUINO_CORE
+microduino-core.build.variant=microduino/core
 microduino-core.build.core=cosa
 
 # AVR:ATmega32U4
@@ -71,10 +72,11 @@ microduino-core32u4.build.mcu=atmega32u4
 microduino-core32u4.build.f_cpu=16000000L
 microduino-core32u4.build.vid=0x2341
 microduino-core32u4.build.pid=0x8036
-microduino-core32u4.build.core=cosa
 microduino-core32u4.build.usb_product="Microduino Core32u4"
 microduino-core32u4.build.board=MICRODUINO_CORE32U4
+microduino-core32u4.build.variant=microduino/core32u4
 microduino-core32u4.build.extra_flags={build.usb_flags}
+microduino-core32u4.build.core=cosa
 
 # AVR:ATmega644P
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -95,5 +97,6 @@ microduino-core-plus.bootloader.extended_fuses=0xfd
 microduino-core-plus.build.mcu=atmega644p
 microduino-core-plus.build.f_cpu=16000000L
 microduino-core-plus.build.board=MICRODUINO_CORE_PLUS
+microduino-core-plus.build.variant=microduino/core-plus
 microduino-core-plus.build.core=cosa
 

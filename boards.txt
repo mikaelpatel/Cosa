@@ -42,6 +42,7 @@ duemilanove.bootloader.extended_fuses=0x05
 duemilanove.build.mcu=atmega328p
 duemilanove.build.f_cpu=16000000L
 duemilanove.build.board=ARDUINO_DUEMILANOVE
+duemilanove.build.variant=arduino/duemilanove
 duemilanove.build.core=cosa
 
 # AVR:ATmega32U4
@@ -67,10 +68,11 @@ leonardo.build.mcu=atmega32u4
 leonardo.build.f_cpu=16000000L
 leonardo.build.vid=0x2341
 leonardo.build.pid=0x8036
-leonardo.build.core=cosa
 leonardo.build.usb_product="Arduino Leonardo"
 leonardo.build.board=ARDUINO_LEONARDO
+leonardo.build.variant=arduino/leonardo
 leonardo.build.extra_flags={build.usb_flags}
+leonardo.build.core=cosa
 
 # AVR:ATmega2560
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -91,6 +93,7 @@ mega.bootloader.extended_fuses=0xfd
 mega.build.mcu=atmega2560
 mega.build.f_cpu=16000000L
 mega.build.board=ARDUINO_MEGA2560
+mega.build.variant=arduino/mega
 mega.build.core=cosa
 
 # AVR:ATmega328
@@ -111,8 +114,9 @@ nano.bootloader.extended_fuses=0x05
 
 nano.build.mcu=atmega328p
 nano.build.f_cpu=16000000L
-nano.build.core=cosa
 nano.build.board=ARDUINO_NANO
+nano.build.variant=arduino/nano
+nano.build.core=cosa
 
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -139,8 +143,9 @@ pro-micro.build.vid=0x2341
 pro-micro.build.pid=0x8037
 pro-micro.build.usb_product="Arduino Pro Micro"
 pro-micro.build.board=ARDUINO_PRO_MICRO
-pro-micro.build.core=cosa
+pro-micro.build.variant=arduino/pro-micro
 pro-micro.build.extra_flags={build.usb_flags}
+pro-micro.build.core=cosa
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -161,6 +166,7 @@ pro-mini.bootloader.extended_fuses=0x05
 pro-mini.build.mcu=atmega328p
 pro-mini.build.f_cpu=16000000L
 pro-mini.build.board=ARDUINO_PRO_MINI
+pro-mini.build.variant=arduino/pro-mini
 pro-mini.build.core=cosa
 
 # AVR:ATmega328
@@ -182,6 +188,7 @@ pro-mini-8.bootloader.extended_fuses=0x05
 pro-mini-8.build.mcu=atmega328p
 pro-mini-8.build.f_cpu=8000000L
 pro-mini-8.build.board=ARDUINO_PRO_MINI
+pro-mini-8.build.variant=arduino/pro-mini
 pro-mini-8.build.core=cosa
 
 # AVR:ATmega328
@@ -203,6 +210,7 @@ uno.bootloader.extended_fuses=0x05
 uno.build.mcu=atmega328p
 uno.build.f_cpu=16000000L
 uno.build.board=ARDUINO_UNO
+uno.build.variant=arduino/uno
 uno.build.core=cosa
 
 ##
@@ -226,6 +234,7 @@ attiny84-8.bootloader.extended_fuses=0xff
 attiny84-8.build.mcu=attiny84
 attiny84-8.build.f_cpu=8000000L
 attiny84-8.build.board=BREADBOARD_ATTINYX4
+attiny84-8.build.variant=arduino/attinyx4
 attiny84-8.build.core=cosa
 
 # AVR:ATtiny85
@@ -245,6 +254,7 @@ attiny85-8.bootloader.extended_fuses=0xff
 attiny85-8.build.mcu=attiny85
 attiny85-8.build.f_cpu=8000000L
 attiny85-8.build.board=BREADBOARD_ATTINYX5
+attiny85-8.build.variant=arduino/attinyx5
 attiny85-8.build.core=cosa
 
 # AVR:ATtiny861
@@ -264,6 +274,7 @@ attiny861-8.bootloader.extended_fuses=0x01
 attiny861-8.build.mcu=attiny861
 attiny861-8.build.f_cpu=8000000L
 attiny861-8.build.board=BREADBOARD_ATTINYX61
+attiny861-8.build.variant=arduino/attinyx61
 attiny861-8.build.core=cosa
 
 # AVR:ATmega328
@@ -285,6 +296,7 @@ atmega328-8.bootloader.extended_fuses=0xFD
 atmega328-8.build.mcu=atmega328p
 atmega328-8.build.f_cpu=8000000L
 atmega328-8.build.board=BREADBOARD_ATMEGA328P
+atmega328-8.build.variant=arduino/atmega328p
 atmega328-8.build.core=cosa
 
 # AVR:ATmega1284
@@ -327,6 +339,7 @@ mighty-opt.bootloader.extended_fuses=0xfd
 mighty-opt.build.mcu=atmega1284p
 mighty-opt.build.f_cpu=16000000L
 mighty-opt.build.board=BREADBOARD_ATMEGA1284
+mighty-opt.build.variant=arduino/atmega1284
 mighty-opt.build.core=cosa
 
 ##
@@ -352,6 +365,7 @@ lilypad.bootloader.extended_fuses=0x05
 lilypad.build.mcu=atmega328p
 lilypad.build.f_cpu=8000000L
 lilypad.build.board=LILYPAD_ARDUINO
+lilypad.build.variant=arduino/lilypad
 lilypad.build.core=cosa
 
 # AVR:ATmega32U4
@@ -379,33 +393,9 @@ lilypad-usb.build.vid=0x1B4F
 lilypad-usb.build.pid=0x9208
 lilypad-usb.usb_product="Arduino LilyPad USB"
 lilypad-usb.build.board=LILYPAD_ARDUINO_USB
-lilypad-usb.build.core=cosa
+lilypad-usb.build.variant=arduino/lilypad-usb
 lilypad-usb.build.extra_flags={build.usb_flags}
-
-##
-# PINOCCIO BOARDS
-##
-
-# AVR:Pinoccio
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (4096 words, 0x1f000). 
-pinoccio.name=Cosa Pinoccio Scout (ATmega256RFR2/STK500v2)
-pinoccio.upload.tool=avrdude
-pinoccio.upload.protocol=wiring
-pinoccio.upload.maximum_size=253952
-pinoccio.upload.maximum_data_size=32768
-pinoccio.upload.speed=115200
-
-pinoccio.bootloader.tool=avrdude
-pinoccio.bootloader.low_fuses=0xff
-pinoccio.bootloader.high_fuses=0xd0
-pinoccio.bootloader.extended_fuses=0xfe
-
-pinoccio.build.mcu=atmega256rfr2
-pinoccio.build.f_cpu=16000000L
-pinoccio.build.board=PINOCCIO_SCOUT
-pinoccio.build.core=cosa
+lilypad-usb.build.core=cosa
 
 ##
 # MICRODUINO CORE MODULES
@@ -430,6 +420,7 @@ microduino-core.bootloader.extended_fuses=0x05
 microduino-core.build.mcu=atmega328p
 microduino-core.build.f_cpu=16000000L
 microduino-core.build.board=MICRODUINO_CORE
+microduino-core.build.variant=microduino/core
 microduino-core.build.core=cosa
 
 # AVR:ATmega32U4
@@ -455,10 +446,11 @@ microduino-core32u4.build.mcu=atmega32u4
 microduino-core32u4.build.f_cpu=16000000L
 microduino-core32u4.build.vid=0x2341
 microduino-core32u4.build.pid=0x8036
-microduino-core32u4.build.core=cosa
 microduino-core32u4.build.usb_product="Microduino Core32u4"
 microduino-core32u4.build.board=MICRODUINO_CORE32U4
+microduino-core32u4.build.variant=microduino/core32u4
 microduino-core32u4.build.extra_flags={build.usb_flags}
+microduino-core32u4.build.core=cosa
 
 # AVR:ATmega644P
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -479,7 +471,34 @@ microduino-core-plus.bootloader.extended_fuses=0xfd
 microduino-core-plus.build.mcu=atmega644p
 microduino-core-plus.build.f_cpu=16000000L
 microduino-core-plus.build.board=MICRODUINO_CORE_PLUS
+microduino-core-plus.build.variant=microduino/core-plus
 microduino-core-plus.build.core=cosa
+
+##
+# PINOCCIO BOARDS
+##
+
+# AVR:Pinoccio
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (4096 words, 0x1f000). 
+pinoccio.name=Cosa Pinoccio Scout (ATmega256RFR2/STK500v2)
+pinoccio.upload.tool=avrdude
+pinoccio.upload.protocol=wiring
+pinoccio.upload.maximum_size=253952
+pinoccio.upload.maximum_data_size=32768
+pinoccio.upload.speed=115200
+
+pinoccio.bootloader.tool=avrdude
+pinoccio.bootloader.low_fuses=0xff
+pinoccio.bootloader.high_fuses=0xd0
+pinoccio.bootloader.extended_fuses=0xfe
+
+pinoccio.build.mcu=atmega256rfr2
+pinoccio.build.f_cpu=16000000L
+pinoccio.build.board=PINOCCIO_SCOUT
+pinoccio.build.variant=pinoccio/scout
+pinoccio.build.core=cosa
 
 ##
 # TEENSY BOARDS
@@ -503,8 +522,9 @@ teensy-2_0.build.vid=0x16C0
 teensy-2_0.build.pid=0x0483
 teensy-2_0.build.usb_product="Teensy 2.0"
 teensy-2_0.build.board=PJRC_TEENSY_2_0
-teensy-2_0.build.core=cosa
+teensy-2_0.build.variant=pjrc/teensy-2.0
 teensy-2_0.build.extra_flags={build.usb_flags}
+teensy-2_0.build.core=cosa
 
 # AVR:AT90USB1286
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -524,5 +544,6 @@ teensypp-2_0.build.vid=0x16C0
 teensypp-2_0.build.pid=0x0483
 teensypp-2_0.build.usb_product="Teensy++ 2.0"
 teensypp-2_0.build.board=PJRC_TEENSYPP_2_0
-teensypp-2_0.build.core=cosa
+teensypp-2_0.build.variant=pjrc/teensypp-2.0
 teensypp-2_0.build.extra_flags={build.usb_flags}
+teensypp-2_0.build.core=cosa

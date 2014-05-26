@@ -1,0 +1,2 @@
+#define MICRODUINO_CORE
+
