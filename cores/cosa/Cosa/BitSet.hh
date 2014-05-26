@@ -35,7 +35,7 @@ public:
   /**
    * Construct bitset and empty.
    */
-  BitSet() 
+  BitSet() __attribute__((always_inline))
   {
     empty();
   }

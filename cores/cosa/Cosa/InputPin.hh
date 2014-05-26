@@ -38,7 +38,8 @@ public:
    * @param[in] pin number (digital pin).
    * @param[in] mode pin mode (default NORMAL_MODE).
    */
-  InputPin(Board::DigitalPin pin, Mode mode = NORMAL_MODE) :
+  InputPin(Board::DigitalPin pin, Mode mode = NORMAL_MODE)
+  __attribute__((always_inline)) :
     Pin((uint8_t) pin)
   {
     if (mode == PULLUP_MODE) {

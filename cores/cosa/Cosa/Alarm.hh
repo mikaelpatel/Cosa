@@ -38,7 +38,8 @@ public:
    * The alarm must be enabled to become active. 
    * @param[in] period seconds (max 65535 s, approx. 18 h).
    */
-  Alarm(uint16_t period = 0) : 
+  Alarm(uint16_t period = 0) 
+  __attribute__((always_inline)) : 
     Link(),
     m_when(0L),
     m_period(period)

@@ -41,7 +41,8 @@ public:
    * Construct analog comparator handler. Compare with AIN1.
    * @param[in] mode comparator mode.
    */
-  AnalogComparator(Mode mode = ON_TOGGLE_MODE) :
+  AnalogComparator(Mode mode = ON_TOGGLE_MODE) 
+  __attribute__((always_inline)) :
     m_mode(mode),
     m_pin(AIN1)
   {
@@ -53,7 +54,8 @@ public:
    * @param[in] pin analog pin to compare with.
    * @param[in] mode comparator mode.
    */
-  AnalogComparator(Board::AnalogPin pin, Mode mode = ON_TOGGLE_MODE) :
+  AnalogComparator(Board::AnalogPin pin, Mode mode = ON_TOGGLE_MODE) 
+  __attribute__((always_inline)) :
     m_mode(mode),
     m_pin((uint8_t) (pin - Board::A0))
   {

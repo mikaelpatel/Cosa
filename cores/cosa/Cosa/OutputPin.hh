@@ -33,7 +33,8 @@ public:
    * @param[in] pin number.
    * @param[in] initial value.
    */
-  OutputPin(Board::DigitalPin pin, uint8_t initial = 0) : 
+  OutputPin(Board::DigitalPin pin, uint8_t initial = 0)
+  __attribute__((always_inline)) : 
     Pin((uint8_t) pin) 
   { 
     synchronized {

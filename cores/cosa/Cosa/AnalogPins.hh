@@ -40,7 +40,8 @@ public:
    */
   AnalogPins(const Board::AnalogPin* pins, 
 	     uint16_t* buffer, uint8_t count,
-	     Board::Reference ref = Board::AVCC_REFERENCE) :
+	     Board::Reference ref = Board::AVCC_REFERENCE) 
+  __attribute__((always_inline)) :
     AnalogPin((Board::AnalogPin) 255, ref),
     m_pin_at(pins),
     m_buffer(buffer),

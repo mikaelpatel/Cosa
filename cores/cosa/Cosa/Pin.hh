@@ -86,7 +86,8 @@ public:
    * Construct abstract pin given Arduino pin number.
    * @param[in] pin number.
    */
-  Pin(uint8_t pin) : 
+  Pin(uint8_t pin)
+  __attribute__((always_inline)) : 
     m_sfr(Board::SFR(pin)), 
     m_mask(MASK(pin)),
     m_pin(pin) 

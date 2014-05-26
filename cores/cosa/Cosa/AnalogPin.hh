@@ -38,7 +38,8 @@ public:
    * @param[in] ref reference voltage.
    */
   AnalogPin(Board::AnalogPin pin, 
-	    Board::Reference ref = Board::AVCC_REFERENCE) :
+	    Board::Reference ref = Board::AVCC_REFERENCE) 
+  __attribute__((always_inline)) :
     m_pin(pin),
     m_reference(ref),
     m_value(0),
