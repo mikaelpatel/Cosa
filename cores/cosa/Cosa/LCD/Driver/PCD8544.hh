@@ -265,11 +265,11 @@ public:
    * @param[in] dc data/command control pin (default D8/D2).
    * @param[in] font bitmap (default System 5X7).
    */
-#if defined(BOARD_ATTINY)
-  PCD8544(IO* io, Board::DigitalPin sce = Board::D2,
+#if !defined(BOARD_ATTINY)
+  PCD8544(IO* io, Board::DigitalPin dc = Board::D8,
 	  Font* font = &system5x7);
 #else
-  PCD8544(IO* io, Board::DigitalPin sce = Board::D8,
+  PCD8544(IO* io, Board::DigitalPin dc = Board::D2,
 	  Font* font = &system5x7);
 #endif
 

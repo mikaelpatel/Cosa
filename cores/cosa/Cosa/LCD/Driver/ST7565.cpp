@@ -40,34 +40,44 @@ const uint8_t ST7565::script[] __PROGMEM = {
   SCRIPT_END
 };
 
+ST7565::ST7565(IO* io,
+	       Board::DigitalPin dc,
+	       Font* font) :
+  LCD::Device(),
+  m_io(io),
+  m_dc(dc, 1),
+  m_font(font)
+{
+}
+
 void 
 ST7565::set(uint8_t cmd)
 {
-  asserted(m_cs) {
-    asserted(m_dc) {
-      write(cmd);
-    }
+  m_io->begin();
+  asserted(m_dc) {
+    m_io->write(cmd);
   }
+  m_io->end();
 }
 
 void 
 ST7565::set(uint8_t x, uint8_t y)
 {
-  asserted(m_cs) {
-    asserted(m_dc) {
-      write(SET_X_ADDR | ((x >> 4) & X_ADDR_MASK));
-      write(x & X_ADDR_MASK);
-      write(SET_Y_ADDR | (y & Y_ADDR_MASK));
-    }
+  m_io->begin();
+  asserted(m_dc) {
+    m_io->write(SET_X_ADDR | ((x >> 4) & X_ADDR_MASK));
+    m_io->write(x & X_ADDR_MASK);
+    m_io->write(SET_Y_ADDR | (y & Y_ADDR_MASK));
   }
+  m_io->end();
 }
 
 void 
 ST7565::fill(uint8_t data, uint16_t count) 
 {
-  asserted(m_cs) {
-    while (count--) write(data);
-  }
+  m_io->begin();
+  while (count--) m_io->write(data);
+  m_io->end();
 }
 
 bool 
@@ -75,17 +85,17 @@ ST7565::begin()
 {
   const uint8_t* bp = script;
   uint8_t cmd;
-  asserted(m_cs) {
-    asserted(m_dc) {
-      while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END) {
-	if (cmd == SCRIPT_PAUSE) {
-	  uint8_t ms = pgm_read_byte(bp++);
-	  delay(ms);
-	}
-	else write(cmd);
+  m_io->begin();
+  asserted(m_dc) {
+    while ((cmd = pgm_read_byte(bp++)) != SCRIPT_END) {
+      if (cmd == SCRIPT_PAUSE) {
+	uint8_t ms = pgm_read_byte(bp++);
+	delay(ms);
       }
+      else m_io->write(cmd);
     }
   }
+  m_io->end();
   display_clear();
   return (true);
 }
@@ -100,12 +110,12 @@ ST7565::end()
 void 
 ST7565::display_contrast(uint8_t level)
 {
-  asserted(m_cs) {
-    asserted(m_dc) {
-      write(SET_CONSTRAST);
-      write(CONSTRAST_MASK & level);
-    }
+  m_io->begin();
+  asserted(m_dc) {
+    m_io->write(SET_CONSTRAST);
+    m_io->write(CONSTRAST_MASK & level);
   }
+  m_io->end();
 }
 
 void 
@@ -160,11 +170,11 @@ ST7565::draw_icon(const uint8_t* bp)
   uint8_t height = pgm_read_byte(bp++);
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    asserted(m_cs) {
-      for (uint8_t x = 0; x < width; x++) {
-	write(m_mode ^ pgm_read_byte(bp++));
-      }
+    m_io->begin();
+    for (uint8_t x = 0; x < width; x++) {
+      m_io->write(m_mode ^ pgm_read_byte(bp++));
     }
+    m_io->end();
     set_cursor(m_x, m_y + 1);
   }
   set_cursor(m_x, m_y + 1);
@@ -175,11 +185,11 @@ ST7565::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 {
   uint8_t lines = (height >> 3);
   for (uint8_t y = 0; y < lines; y++) {
-    asserted(m_cs) {
-      for (uint8_t x = 0; x < width; x++) {
-	write(m_mode ^ (*bp++));
-      }
+    m_io->begin();
+    for (uint8_t x = 0; x < width; x++) {
+      m_io->write(m_mode ^ (*bp++));
     }
+    m_io->end();
     set_cursor(m_x, m_y + 1);
   }
   set_cursor(m_x, m_y + 1);
@@ -192,20 +202,20 @@ ST7565::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
   uint8_t filled = (percent * (width - 2U)) / 100;
   uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
   width -= (filled + 1);
-  asserted(m_cs) {
-    write(m_mode ^ 0xff);
-    while (filled--) {
-      write(m_mode ^ (pattern | boarder));
-      pattern = ~pattern;
-    }
-    write(m_mode ^ 0xff);
-    width -= 1;
-    if (width > 0) {
-      while (width--)
-	write(m_mode ^ boarder);
-    }
-    write(m_mode ^ 0xff);
+  m_io->begin();
+  m_io->write(m_mode ^ 0xff);
+  while (filled--) {
+    m_io->write(m_mode ^ (pattern | boarder));
+    pattern = ~pattern;
   }
+  m_io->write(m_mode ^ 0xff);
+  width -= 1;
+  if (width > 0) {
+    while (width--)
+      m_io->write(m_mode ^ boarder);
+  }
+  m_io->write(m_mode ^ 0xff);
+  m_io->end();
 }
 
 int 
@@ -269,11 +279,11 @@ ST7565::putchar(char c)
     putchar('\n');
     m_x = width;
   }
-  asserted(m_cs) {
-    while (--width) 
-      write(m_mode ^ pgm_read_byte(bp++));
-    write(m_mode);
-  }
+  m_io->begin();
+  while (--width) 
+    m_io->write(m_mode ^ pgm_read_byte(bp++));
+  m_io->write(m_mode);
+  m_io->end();
 
   return (c & 0xff);
 }

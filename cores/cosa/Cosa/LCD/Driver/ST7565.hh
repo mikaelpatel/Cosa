@@ -24,6 +24,7 @@
 #include "Cosa/Board.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/LCD.hh"
+#include "Cosa/SPI.hh"
 #include "Cosa/Canvas/Font.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"
 
@@ -35,77 +36,253 @@
  * new-line. Graphics should be performed with OffScreen Canvas and
  * copied to the display with draw_bitmap(). 
  *
- * @section Circuit
- * @code
- *                           ST7565
- *                       +------------+
- *                     1-|DB0         |
- *                     2-|DB1         |
- *                     3-|DB2         |
- *                     4-|DB3         |
- *                     5-|DB4         |
- *                     6-|DB5         |
- * (D7/D1)-------------7-|DB6(SCL)    |
- * (D6/D0)-------------8-|DB7(SI)     |
- * (VCC)---------------9-|VDD         |
- * (GND)--------------10-|VSS         |
- * (VCC)---|220|------11-|A           |
- * (D9/D3)------------12-|CS          |
- * (RST)--------------13-|RST         |
- * (D8/D2)------------14-|DC          |
- *                    15-|WR(R/W)     |
- *                    16-|RD(E)       |
- *                       +------------+
- * @endcode
- *
  * @section References
  * 1. Sitronix 65x132 Dot Matrix LCD Controller/Driver, Ver 1.3, 2004 May 18.
  */
 class ST7565 : public LCD::Device {
 public:
+  /**
+   * Abstract ST7565 LCD IO adapter to isolate communication specific
+   * functions and allow access over software serial or hardware SPI.
+   */
+  class IO {
+  public:
+    /**
+     * @override ST7565::IO
+     * Initiate IO port. Called by ST7565::begin(). 
+     */
+    virtual void setup() {}
+
+    /**
+     * @override ST7565::IO
+     * Start of data/command transfer block.
+     */
+    virtual void begin() = 0;
+
+    /**
+     * @override ST7565::IO
+     * End of data/command transfer block.
+     */
+    virtual void end() = 0;
+
+    /**
+     * @override ST7565::IO
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write(uint8_t data) = 0;
+
+    /**
+     * @override ST7565::IO
+     * Write character buffer to display.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write(void* buf, size_t size) = 0;
+  };
+
+  /**
+   * ST7565 IO adapter for serial 3 wire, output pins.
+   *
+   * @section Circuit
+   * @code
+   *                       ST7565/Serial3W
+   *                       +------------+
+   *                     1-|DB0         |
+   *                     2-|DB1         |
+   *                     3-|DB2         |
+   *                     4-|DB3         |
+   *                     5-|DB4         |
+   *                     6-|DB5         |
+   * (D7/D1)-------------7-|DB6(SCL)    |
+   * (D6/D0)-------------8-|DB7(SI)     |
+   * (VCC)---------------9-|VDD         |
+   * (GND)--------------10-|VSS         |
+   * (VCC)---|220|------11-|A           |
+   * (D9/D3)------------12-|CS          |
+   * (RST)--------------13-|RST         |
+   * (D8/D2)------------14-|DC          |
+   *                    15-|WR(R/W)     |
+   *                    16-|RD(E)       |
+   *                       +------------+
+   * @endcode
+   */
+  class Serial3W : public IO {
+  public:
+    /**
+     * Construct display device driver adapter with given pins.
+     * @param[in] sdin screen data pin (default D6/D0).
+     * @param[in] sclk screen clock pin (default D7/D1). 
+     * @param[in] sce screen chip enable pin (default D9/D3).
+     */
+#if defined(BOARD_ATTINY)
+    Serial3W(Board::DigitalPin sdin = Board::D0, 
+	     Board::DigitalPin sclk = Board::D1, 
+	     Board::DigitalPin sce = Board::D3) :
+      m_sdin(sdin, 0),
+      m_sclk(sclk, 0),
+      m_sce(sce, 1)
+    {
+    }
+#else
+    Serial3W(Board::DigitalPin sdin = Board::D6, 
+	     Board::DigitalPin sclk = Board::D7, 
+	     Board::DigitalPin sce = Board::D9) :
+      m_sdin(sdin, 0),
+      m_sclk(sclk, 0),
+      m_sce(sce, 1)
+    {
+    }
+#endif
+
+    /**
+     * @override ST7565::IO
+     * Start of data/command transfer block.
+     */
+    virtual void begin()
+    { 
+      m_sce.clear();
+    }
+
+    /**
+     * @override ST7565::IO
+     * End of data/command transfer block.
+     */
+    virtual void end()
+    { 
+      m_sce.set();
+    }
+
+    /**
+     * @override ST7565::IO
+     * Write byte (8bit) to display. Must be in data/command transfer
+     * block.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write(uint8_t data)
+    { 
+      m_sdin.write(data, m_sclk); 
+    }
+
+    /**
+     * @override ST7565::IO
+     * Write character buffer to display. Must be in data/command transfer
+     * block.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write(void* buf, size_t size)
+    {
+      uint8_t* dp = (uint8_t*) buf;
+      while (size--) m_sdin.write(*dp++, m_sclk); 
+    }
+    
+  protected:
+    // Display pins and state
+    OutputPin m_sdin;		//<! Serial data input
+    OutputPin m_sclk;		//<! Serial clock input
+    OutputPin m_sce;		//<! Chip enable
+  };
+
+  /**
+   * ST7565 IO adapter for 3 wire SPI; MOSI, SCK and SCE.
+   *
+   * @section Circuit
+   * @code
+   *                        ST7565/SPI3W
+   *                       +------------+
+   *                     1-|DB0         |
+   *                     2-|DB1         |
+   *                     3-|DB2         |
+   *                     4-|DB3         |
+   *                     5-|DB4         |
+   *                     6-|DB5         |
+   * (SCK/D13/D4)--------7-|DB6(SCL)    |
+   * (MOSI/D11/D5)-------8-|DB7(SI)     |
+   * (VCC)---------------9-|VDD         |
+   * (GND)--------------10-|VSS         |
+   * (VCC)---|220|------11-|A           |
+   * (D9/D3)------------12-|CS          |
+   * (RST)--------------13-|RST         |
+   * (D8/D2)------------14-|DC          |
+   *                    15-|WR(R/W)     |
+   *                    16-|RD(E)       |
+   *                       +------------+
+   * @endcode
+   */
+  class SPI3W : public IO, public SPI::Driver {
+  public:
+    /**
+     * Construct display device driver adapter with given pins.
+     * Implicit usage of SPI SCK(D13/D4) and MOSI(D11/D5).
+     * @param[in] sce screen chip enable pin (default D9/D3).
+     */
+#if defined(BOARD_ATTINY)
+    SPI3W(Board::DigitalPin sce = Board::D3) : IO(), SPI::Driver(sce) {}
+#else
+    SPI3W(Board::DigitalPin sce = Board::D9) : IO(), SPI::Driver(sce) {}
+#endif
+
+    /**
+     * @override ST7565::IO
+     * Start of data/command transfer block.
+     */
+    virtual void begin()
+    { 
+      spi.begin(this);
+    }
+
+    /**
+     * @override ST7565::IO
+     * End of data/command transfer block.
+     */
+    virtual void end()
+    { 
+      spi.end();
+    }
+
+    /**
+     * @override ST7565::IO
+     * Write byte (8bit) to display. Must be in data/command transfer
+     * block.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write(uint8_t data)
+    { 
+      spi.transfer(data);
+    }
+
+    /**
+     * @override ST7565::IO
+     * Write character buffer to display. Must be in data/command transfer
+     * block.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write(void* buf, size_t size)
+    {
+      spi.write(buf, size);
+    }
+  };
+
   // Display width and height (in pixels)
   static const uint8_t WIDTH = 128;
   static const uint8_t HEIGHT = 64;
   static const uint8_t LINES = 8;
 
   /**
-   * Construct display device driver with given pins and font.
-   * Defaults are digital pin for Arduino/Tiny.
-   * @param[in] si screen data pin (default D0/D6).
-   * @param[in] scl screen clock pin (default D1/D7). 
-   * @param[in] dc data/command control pin (default D2/D8).
-   * @param[in] cs screen chip enable pin (default D3/D9).
+   * Construct display device driver with given io adapter, chip
+   * select pin and font.
+   * @param[in] io adapter;
+   * @param[in] dc data/command control pin (default D8/D2).
+   * @param[in] font bitmap (default System 5X7).
    */
-#if defined(BOARD_ATTINY)
-  ST7565(Board::DigitalPin si = Board::D0, 
-	 Board::DigitalPin scl = Board::D1, 
-	 Board::DigitalPin dc = Board::D2, 
-	 Board::DigitalPin cs = Board::D3,
-	 Font* font = &system5x7) :
-    LCD::Device(),
-    m_si(si, 0),
-    m_scl(scl, 0),
-    m_dc(dc, 1),
-    m_cs(cs, 1),
-    m_line(0),
-    m_font(font)
-  {
-  }
+#if !defined(BOARD_ATTINY)
+  ST7565(IO* io, Board::DigitalPin dc = Board::D8,
+	 Font* font = &system5x7);
 #else
-  ST7565(Board::DigitalPin si = Board::D6, 
-	 Board::DigitalPin scl = Board::D7, 
-	 Board::DigitalPin dc = Board::D8, 
-	 Board::DigitalPin cs = Board::D9,
-	 Font* font = &system5x7) :
-    LCD::Device(),
-    m_si(si, 0),
-    m_scl(scl, 0),
-    m_dc(dc, 1),
-    m_cs(cs, 1),
-    m_line(0),
-    m_font(font)
-  {
-  }
+  ST7565(IO* io, Board::DigitalPin dc = Board::D2,
+	 Font* font = &system5x7);
 #endif
 
   /**
@@ -269,22 +446,10 @@ protected:
   static const uint8_t script[] PROGMEM;
 
   // Display pins and state
-  OutputPin m_si;		  //<! Serial input
-  OutputPin m_scl;		  //<! Serial clock input
+  IO* m_io;			  //<! Display adapter
   OutputPin m_dc;		  //<! Data(1) or command(0)
-  OutputPin m_cs;		  //<! Chip select (active low)
   uint8_t m_line;		  //<! Display start line
   Font* m_font;			  //<! Font
-
-  /**
-   * Write given data to display according to mode.
-   * Chip select and/or Command/Data pin asserted.
-   * @param[in] data to fill write to device.
-   */
-  void write(uint8_t data)
-  {
-    m_si.write(data, m_scl);
-  }
 
   /**
    * Set the given command code.

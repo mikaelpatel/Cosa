@@ -23,18 +23,30 @@
  * PCD8544 is a low voltage device (3V3) and signals require level
  * shifter (74HC4050 or 10K resistor). 
  * 
- *                          PCD8544
- *                       +------------+
- * (RST)---| > |-------1-|RST         |
- * (D9/D3)-| > |-------2-|CE          |
- * (D8/D2)-| > |-------3-|DC          |
- * (D6/D0)-| > |-------4-|DIN         |
- * (D7/D1)-| > |-------5-|CLK         |
- * (3V3)---------------6-|VCC         |
- * (GND)---|220|-------7-|LED         |
- * (GND)---------------8-|GND         |
- *                       +------------+
+ *                        PCD8544/Serial3W
+ *                        +------------+
+ * (RST)----| > |-------1-|RST         |
+ * (D9/D3)--| > |-------2-|CE          |
+ * (D8/D2)--| > |-------3-|DC          |
+ * (D6/D0)--| > |-------4-|DIN         |
+ * (D7/D1)--| > |-------5-|CLK         |
+ * (3V3)----------------6-|VCC         |
+ * (GND)----|220|-------7-|LED         |
+ * (GND)----------------8-|GND         |
+ *                        +------------+
  * 
+ *                        PCD8544/SPI3W
+ *                        +------------+
+ * (RST)---------| > |--1-|RST         |
+ * (D9/D3)-------| > |--2-|CE          |
+ * (D8/D2)-------| > |--3-|DC          |
+ * (MOSI/D11/D5)-| > |--4-|DIN         |
+ * (SCK/D13/D4)--| > |--5-|CLK         |
+ * (3V3)----------------6-|VCC         |
+ * (GND)---|220|--------7-|LED         |
+ * (GND)----------------8-|GND         |
+ *                        +------------+
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -48,6 +60,7 @@
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
+// Select PCD8544 IO Adapter; Serial Output Pins or SPI
 // PCD8544::Serial3W port;
 PCD8544::SPI3W port;
 PCD8544 lcd(&port);
@@ -148,8 +161,8 @@ void loop()
   lcd.putchar('\f');
   for (uint8_t i = 0; i < lcd.LINES; i++) {
     trace.printf_P(PSTR("A%d:"), i);
-    uint8_t procent = (AnalogPin::sample((Board::AnalogPin) i) * 100L) / 1023;
-    lcd.draw_bar(procent, lcd.WIDTH - 20);
+    uint8_t percent = (AnalogPin::sample((Board::AnalogPin) i) * 100L) / 1023;
+    lcd.draw_bar(percent, lcd.WIDTH - 20);
     if (i != lcd.LINES - 1) trace << endl;
   }
   SLEEP(1);

@@ -20,7 +20,7 @@
  * IOStream::Device.
  * 
  * @section Circuit
- *                           ST7565
+ *                       ST7565/Serial3W
  *                       +------------+
  *                     1-|DB0         |
  *                     2-|DB1         |
@@ -40,6 +40,25 @@
  *                    16-|RD(E)       |
  *                       +------------+
  * 
+ *                        ST7565/SPI3W
+ *                       +------------+
+ *                     1-|DB0         |
+ *                     2-|DB1         |
+ *                     3-|DB2         |
+ *                     4-|DB3         |
+ *                     5-|DB4         |
+ *                     6-|DB5         |
+ * (SCK/D13/D4)--------7-|DB6(SCL)    |
+ * (MOSI/D11/D5)-------8-|DB7(SI)     |
+ * (VCC)---------------9-|VDD         |
+ * (GND)--------------10-|VSS         |
+ * (VCC)---|220|------11-|A           |
+ * (D9/D3)------------12-|CS          |
+ * (RST)--------------13-|RST         |
+ * (D8/D2)------------14-|DC          |
+ *                    15-|WR(R/W)     |
+ *                    16-|RD(E)       |
+ *                       +------------+
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -53,7 +72,10 @@
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
-ST7565 lcd;
+// Select ST7565 IO Adapter; Serial Output Pins or SPI
+// ST7565::Serial3W port;
+ST7565::SPI3W port;
+ST7565 lcd(&port);
 
 void setup()
 {
@@ -165,8 +187,8 @@ void loop()
     trace.printf_P(PSTR("A%d:"), i);
     Board::AnalogPin pin;
     pin = (Board::AnalogPin) pgm_read_byte(pin_map + i);
-    uint8_t procent = (AnalogPin::sample(pin) * 100L) / 1023;
-    lcd.draw_bar(procent, ST7565::WIDTH - 20);
+    uint8_t percent = (AnalogPin::sample(pin) * 100L) / 1023;
+    lcd.draw_bar(percent, ST7565::WIDTH - 20);
     if (i != ST7565::LINES - 1) trace << endl;
   }
   SLEEP(1);
