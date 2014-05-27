@@ -26,7 +26,7 @@
 #include "Cosa/IOStream.hh"
 
 /**
- * Common interface for LCD handle; class LCD::Device as base
+ * Common interface for LCD handlers; class LCD::Device as base
  * for device drivers and class LCD::IO for device port abstraction 
  * with two predefined implementation classes; Serial3W and SPI3W.
  * Serial3W uses OutputPins and SPI3W uses the SPI driver.
