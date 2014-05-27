@@ -40,9 +40,7 @@ const uint8_t ST7565::script[] __PROGMEM = {
   SCRIPT_END
 };
 
-ST7565::ST7565(IO* io,
-	       Board::DigitalPin dc,
-	       Font* font) :
+ST7565::ST7565(LCD::IO* io, Board::DigitalPin dc, Font* font) :
   LCD::Device(),
   m_io(io),
   m_dc(dc, 1),

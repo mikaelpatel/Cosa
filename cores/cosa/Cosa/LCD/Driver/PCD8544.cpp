@@ -33,9 +33,7 @@ const uint8_t PCD8544::script[] __PROGMEM = {
   SCRIPT_END
 };
 
-PCD8544::PCD8544(IO* io,
-		 Board::DigitalPin dc,
-		 Font* font) :
+PCD8544::PCD8544(LCD::IO* io, Board::DigitalPin dc, Font* font) :
   LCD::Device(),
   m_io(io),
   m_dc(dc, 1),

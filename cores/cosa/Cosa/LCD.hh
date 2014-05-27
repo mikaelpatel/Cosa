@@ -22,6 +22,7 @@
 #define COSA_LCD_HH
 
 #include "Cosa/Types.h"
+#include "Cosa/SPI.hh"
 #include "Cosa/IOStream.hh"
 
 /**
@@ -174,6 +175,178 @@ public:
     uint8_t m_y;		//<! Cursor position y
     uint8_t m_tab;		//<! Tab step
     uint8_t m_mode;		//<! Text mode
+  };
+
+  /**
+   * Abstract LCD IO adapter to isolate communication specific
+   * functions and allow access over software serial or hardware SPI.
+   */
+  class IO {
+  public:
+    /**
+     * @override LCD::IO
+     * Start of data/command transfer block.
+     */
+    virtual void begin() = 0;
+
+    /**
+     * @override LCD::IO
+     * End of data/command transfer block.
+     */
+    virtual void end() = 0;
+
+    /**
+     * @override LCD::IO
+     * Write byte (8bit) to display.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write(uint8_t data) = 0;
+
+    /**
+     * @override LCD::IO
+     * Write character buffer to display.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write(void* buf, size_t size) = 0;
+  };
+
+  /**
+   * LCD IO adapter for serial 3 wire (OutputPin).
+   */
+  class Serial3W : public IO {
+  public:
+    /**
+     * Construct display device driver adapter with given pins.
+     * @param[in] sdin screen data pin (default D6/D0).
+     * @param[in] sclk screen clock pin (default D7/D1). 
+     * @param[in] sce screen chip enable pin (default D9/D3).
+     */
+#if !defined(BOARD_ATTINY)
+    Serial3W(Board::DigitalPin sdin = Board::D6, 
+	     Board::DigitalPin sclk = Board::D7, 
+	     Board::DigitalPin sce = Board::D9) :
+      m_sdin(sdin, 0),
+      m_sclk(sclk, 0),
+      m_sce(sce, 1)
+    {
+    }
+#else
+    Serial3W(Board::DigitalPin sdin = Board::D0, 
+	     Board::DigitalPin sclk = Board::D1, 
+	     Board::DigitalPin sce = Board::D3) :
+      m_sdin(sdin, 0),
+      m_sclk(sclk, 0),
+      m_sce(sce, 1)
+    {
+    }
+#endif
+
+    /**
+     * @override LCD::IO
+     * Start of data/command transfer block.
+     */
+    virtual void begin()
+    { 
+      m_sce.clear();
+    }
+
+    /**
+     * @override LCD::IO
+     * End of data/command transfer block.
+     */
+    virtual void end()
+    { 
+      m_sce.set();
+    }
+
+    /**
+     * @override LCD::IO
+     * Write byte (8bit) to display. Must be in data/command transfer
+     * block. 
+     * @param[in] data (8b) to write.
+     */
+    virtual void write(uint8_t data)
+    { 
+      m_sdin.write(data, m_sclk); 
+    }
+
+    /**
+     * @override LCD::IO
+     * Write character buffer to display. Must be in data/command transfer
+     * block.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write(void* buf, size_t size)
+    {
+      uint8_t* dp = (uint8_t*) buf;
+      while (size--) m_sdin.write(*dp++, m_sclk); 
+    }
+    
+  protected:
+    // Display pins and state
+    OutputPin m_sdin;		//<! Serial data input
+    OutputPin m_sclk;		//<! Serial clock input
+    OutputPin m_sce;		//<! Chip enable
+  };
+
+  /**
+   * LCD IO adapter for 3 wire SPI (MOSI, SCK and SCE).
+   */
+  class SPI3W : public IO, public SPI::Driver {
+  public:
+    /**
+     * Construct display device driver adapter with given pins.
+     * Implicit usage of SPI SCK(D13/D4) and MOSI(D11/D5).
+     * @param[in] sce screen chip enable pin (default D9/D3).
+     */
+#if !defined(BOARD_ATTINY)
+    SPI3W(Board::DigitalPin sce = Board::D9) : IO(), SPI::Driver(sce) {}
+#else
+    SPI3W(Board::DigitalPin sce = Board::D3) : IO(), SPI::Driver(sce) {}
+#endif
+
+    /**
+     * @override LCD::IO
+     * Start of data/command transfer block.
+     */
+    virtual void begin()
+    { 
+      spi.begin(this);
+    }
+
+    /**
+     * @override LCD::IO
+     * End of data/command transfer block.
+     */
+    virtual void end()
+    { 
+      spi.end();
+    }
+
+    /**
+     * @override LCD::IO
+     * Write byte (8bit) to display. Must be in data/command transfer
+     * block.
+     * @param[in] data (8b) to write.
+     */
+    virtual void write(uint8_t data)
+    { 
+      spi.transfer(data);
+    }
+
+    /**
+     * @override LCD::IO
+     * Write character buffer to display. Must be in data/command transfer
+     * block.
+     * @param[in] buf pointer to buffer.
+     * @param[in] size number of bytes in buffer.
+     */
+    virtual void write(void* buf, size_t size)
+    {
+      spi.write(buf, size);
+    }
   };
 };
 
