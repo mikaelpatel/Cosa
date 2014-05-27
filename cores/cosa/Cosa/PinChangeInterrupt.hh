@@ -47,8 +47,7 @@ public:
    * @param[in] pin.
    * @param[in] mode.
    */
-  PinChangeInterrupt(Board::InterruptPin pin, bool pullup = false) 
-  __attribute__((always_inline)) :
+  PinChangeInterrupt(Board::InterruptPin pin, bool pullup = false) :
     IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
   {
   }

@@ -69,8 +69,7 @@ public:
    * @param[in] pin number.
    * @param[in] mode change detection mode.
    */
-  Button(Board::DigitalPin pin, Mode mode = ON_CHANGE_MODE) 
-  __attribute__((always_inline)) :
+  Button(Board::DigitalPin pin, Mode mode = ON_CHANGE_MODE) :
     InputPin(pin, InputPin::PULLUP_MODE),
     Link(),
     MODE(mode),

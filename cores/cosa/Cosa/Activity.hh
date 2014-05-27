@@ -37,8 +37,7 @@ public:
    * Construct activity with default setting; start(now), duration(15 seconds),
    * period(1 minute), and run period(5 seconds)
    */
-  Activity() 
-  __attribute__((always_inline)) : 
+  Activity() :
     m_scheduler(this),		// Alarm used as scheduler
     m_start_time(0L),		// Start time (now)
     m_stop_time(15L),		// Stop time (15 seconds)

@@ -38,8 +38,7 @@ public:
    * @param[in] pin number.
    * @param[in] mode pin mode (normal or pullup).
    */
-  IOPin(Board::DigitalPin pin, Mode mode = INPUT_MODE, bool pullup = false) 
-  __attribute__((always_inline)) : 
+  IOPin(Board::DigitalPin pin, Mode mode = INPUT_MODE, bool pullup = false) :
     OutputPin(pin),
     m_mode(mode)
   {
