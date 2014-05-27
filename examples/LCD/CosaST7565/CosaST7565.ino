@@ -73,8 +73,8 @@
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
 // Select ST7565 IO Adapter; Serial Output Pins or SPI
-// ST7565::Serial3W port;
-ST7565::SPI3W port;
+// LCD::Serial3W port;
+LCD::SPI3W port;
 ST7565 lcd(&port);
 
 void setup()

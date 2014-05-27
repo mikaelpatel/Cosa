@@ -31,13 +31,15 @@
 #include "Cosa/IOStream.hh"
 
 // Select the LCD device for the benchmark
-#include "Cosa/LCD/Driver/PCD8544.hh"
-PCD8544::Serial3W port;
-// PCD8544::SPI3W port;
-PCD8544 lcd(&port);
+// #include "Cosa/LCD/Driver/PCD8544.hh"
+// LCD::Serial3W port;
+// LCD::SPI3W port;
+// PCD8544 lcd(&port);
 
-// #include "Cosa/LCD/Driver/ST7565.hh"
-// ST7565 lcd;
+#include "Cosa/LCD/Driver/ST7565.hh"
+// LCD::Serial3W port;
+LCD::SPI3W port;
+ST7565 lcd(&port);
 
 // #include "Cosa/LCD/Driver/VLCD.hh"
 // VLCD lcd;

@@ -24,26 +24,38 @@
  * PCD8544 is a low voltage device (3V3) and signals require level
  * shifter (74HC4050 or 10K resistor). 
  * 
- *                          PCD8544
- *                       +------------+
- * (RST)---| > |-------1-|RST         |
- * (D9/D3)-| > |-------2-|CE          |
- * (D8/D2)-| > |-------3-|DC          |
- * (D6/D0)-| > |-------4-|DIN         |
- * (D7/D1)-| > |-------5-|CLK         |
- * (3V3)---------------6-|VCC         |
- * (GND)---|220|-------7-|LED         |
- * (GND)---------------8-|GND         |
- *                       +------------+
+ *                    (1) PCD8544/LCD::Serial3W
+ *                        +------------+
+ * (RST)----| > |-------1-|RST         |
+ * (D9/D3)--| > |-------2-|CE          |
+ * (D8/D2)--| > |-------3-|DC          |
+ * (D6/D0)--| > |-------4-|DIN         |
+ * (D7/D1)--| > |-------5-|CLK         |
+ * (3V3)----------------6-|VCC         |
+ * (GND)----|220|-------7-|LED         |
+ * (GND)----------------8-|GND         |
+ *                        +------------+
+ * 
+ *                    (2) PCD8544/LCD::SPI3W
+ *                        +------------+
+ * (RST)---------| > |--1-|RST         |
+ * (D9/D3)-------| > |--2-|CE          |
+ * (D8/D2)-------| > |--3-|DC          |
+ * (MOSI/D11/D5)-| > |--4-|DIN         |
+ * (SCK/D13/D4)--| > |--5-|CLK         |
+ * (3V3)----------------6-|VCC         |
+ * (GND)---|220|--------7-|LED         |
+ * (GND)----------------8-|GND         |
+ *                        +------------+
  *
- *                       DS18B20/sensor
- *                       +------------+
- * (GND)---------------1-|GND         |\
- * (D5)------+---------2-|DQ          | |
- *           |       +-3-|VDD         |/
- *          4K7      |   +------------+
- *           |       | 
- * (VCC)-----+       +---(VCC/GND)
+ *                        DS18B20/sensor
+ *                        +------------+
+ * (GND)----------------1-|GND         |\
+ * (D5)------+----------2-|DQ          | |
+ *           |        +-3-|VDD         |/
+ *          4K7       |   +------------+
+ *           |        | 
+ * (VCC)-----+        +---(VCC/GND)
  *
  * Connect Arduino to DS18B20 in D5 and GND. May use parasite 
  * powering (connect DS18B20 VCC to GND) otherwise to VCC.
@@ -61,11 +73,13 @@
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Element/Textbox.hh"
 
+// One-Wire and digital thermometer
 OWI owi(Board::D5);
 DS18B20 sensor(&owi);
 
-// PCD8544::Serial3W port;
-PCD8544::SPI3W port;
+// Select PCD8544 IO Adapter; Serial Output Pins or SPI
+// LCD::Serial3W port;
+LCD::SPI3W port;
 PCD8544 lcd(&port);
 
 void setup()

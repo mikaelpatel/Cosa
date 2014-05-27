@@ -23,7 +23,7 @@
  * PCD8544 is a low voltage device (3V3) and signals require level
  * shifter (74HC4050 or 10K resistor). 
  * 
- *                        PCD8544/Serial3W
+ *                    (1) PCD8544/LCD::Serial3W
  *                        +------------+
  * (RST)----| > |-------1-|RST         |
  * (D9/D3)--| > |-------2-|CE          |
@@ -35,7 +35,7 @@
  * (GND)----------------8-|GND         |
  *                        +------------+
  * 
- *                        PCD8544/SPI3W
+ *                    (2) PCD8544/LCD::SPI3W
  *                        +------------+
  * (RST)---------| > |--1-|RST         |
  * (D9/D3)-------| > |--2-|CE          |
@@ -61,8 +61,8 @@
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
 // Select PCD8544 IO Adapter; Serial Output Pins or SPI
-// PCD8544::Serial3W port;
-PCD8544::SPI3W port;
+// LCD::Serial3W port;
+LCD::SPI3W port;
 PCD8544 lcd(&port);
 
 void setup()
