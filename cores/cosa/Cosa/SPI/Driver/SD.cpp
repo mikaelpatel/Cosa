@@ -50,7 +50,7 @@ SD::send(CMD command, uint32_t arg)
   request.crc = crc7(&request, sizeof(request) - 1);
 
   // Issue the command; wait while busy
-  while (spi.transfer(0xff) != 0xff);
+  while (spi.transfer(0xff) != 0xff) DELAY(1);
   spi.transfer(&request, sizeof(request));
   if (command == STOP_TRANSMISSION) spi.transfer(0xff);
 

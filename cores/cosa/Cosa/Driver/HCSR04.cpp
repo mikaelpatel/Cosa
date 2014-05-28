@@ -30,7 +30,7 @@ HCSR04::read(uint16_t& distance)
   uint16_t timeout = TIMEOUT;
 
   // Wait for the response
-  while (m_echoPin.is_clear() && timeout--);
+  while (m_echoPin.is_clear() && timeout--) DELAY(1);
   if (timeout == 0) return (false);
 
   // Measure the lenght of the return pulse

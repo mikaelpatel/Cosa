@@ -130,7 +130,7 @@ void
 RFM69::set(Mode mode)
 {
   write(OP_MODE, (read(OP_MODE) & ~MODE_MASK) | mode);
-  while ((read(IRQ_FLAGS1) & MODE_READY) == 0x00);
+  while ((read(IRQ_FLAGS1) & MODE_READY) == 0x00) DELAY(1);
   m_opmode = mode;
 }
 
@@ -155,7 +155,7 @@ RFM69::begin(const void* config)
   // Set standby mode and calibrate RC oscillator
   set(STANDBY_MODE);
   write(OSC1, RC_CAL_START);
-  while ((read(OSC1) & RC_CAL_DONE) == 0x00);
+  while ((read(OSC1) & RC_CAL_DONE) == 0x00) DELAY(1);
 
   // Initiate device driver state and enable interrupt handler
   m_avail = false;
@@ -286,7 +286,7 @@ RFM69::get_input_power_level()
 {
   // Fix: Should be performed with detecting preamble?
   write(RSSI_CONFIG, RSSI_START);
-  while ((read(RSSI_CONFIG) & RSSI_DONE) == 0x00);
+  while ((read(RSSI_CONFIG) & RSSI_DONE) == 0x00) DELAY(1);
   return ((-read(RSSI_VALUE)) >> 1);
 }
 

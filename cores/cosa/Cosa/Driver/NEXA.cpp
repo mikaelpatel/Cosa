@@ -88,15 +88,15 @@ NEXA::Receiver::recv(code_t& cmd)
   uint16_t us;
   uint16_t ix;
   do {
-    // Wait for the start condition
-    while (is_low());
+    // Wait for the start condition (triggered by low)
+    while (is_low()) DELAY(1);
     stop = RTC::micros();
     // Collect the samples; high followed by low pulse
     ix = 0;
     while (ix < IX_MAX) {
       // Capture length of high period
       start = stop;
-      while (is_high());
+      while (is_high()) DELAY(1);
       stop = RTC::micros();
       us = stop - start;
       if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) break;
@@ -104,7 +104,7 @@ NEXA::Receiver::recv(code_t& cmd)
       ix += 1;
       // Capture length of low period
       start = stop;
-      while (is_low());
+      while (is_low()) DELAY(1);
       stop = RTC::micros();
       us = stop - start;
       if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) break;

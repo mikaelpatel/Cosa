@@ -114,7 +114,7 @@ void
 W5100::issue(uint16_t addr, uint8_t cmd)
 {
   write(addr, cmd);
-  while (read(addr));
+  while (read(addr)) DELAY(1);
 }
 
 int
@@ -218,7 +218,7 @@ W5100::Driver::dev_flush()
 void 
 W5100::Driver::dev_setup()
 {
-  while (room() < (int) MSG_MAX);
+  while (room() < (int) MSG_MAX) yield();
   uint16_t ptr;
   m_dev->read(uint16_t(&m_sreg->TX_WR), &ptr, sizeof(ptr));
   ptr = swap((int16_t) ptr);
