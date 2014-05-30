@@ -1,4 +1,4 @@
-# How to install Cosa ?
+# How to install Cosa?
 
 ## Via GIT
 
@@ -19,16 +19,16 @@ git pull origin master
 
 ### Step 1
 
-* Download the [Cosa zip file](https://github.com/mikaelpatel/Cosa/archive/master.zip)
-* Create the hardware folder if missing (<custom_path>/sketchbook/hardware)
-* Unzip the files to your hardware folder
-* Rename `Cosa-master` to `Cosa`
+* Download the [Cosa zip file](https://github.com/mikaelpatel/Cosa/archive/master.zip).
+* Create the hardware folder if missing (<custom_path>/sketchbook/hardware).
+* Unzip the files to your hardware folder.
+* Rename `Cosa-master` to `Cosa`.
 
 ### Step 2 (For Arduino 1.5.x only)    
 
 * Create an outer `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa).
-* Unzip the files to your `hardware/Cosa` folder
-* Rename inner `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa/Cosa-master) to `avr` (<custom_path>/sketchbook/hardware/Cosa/avr)
+* Unzip the files to your `hardware/Cosa` folder.
+* Rename inner `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa/Cosa-master) to `avr` (<custom_path>/sketchbook/hardware/Cosa/avr).
 
 ### Step 3 (For Attiny users on Windows version only)
 
@@ -51,3 +51,11 @@ performance.
 * Download and install [Arduino IDE](https://groups.google.com/a/arduino.cc/forum/#!msg/developers/21G5w2HbUOg/bJtG94vEEhkJ) with the new AVR toolchain.
 * Copy platform.txt-gcc-4.8.1 to platform.txt. 
 * To restore simply copy platform.txt-1.5.6-r2 to platform.txt.
+
+### Step 5
+
+Run your first sketch.
+
+* Open the CosaBlink example sketch in the Sketchbook>hardware>Cosa>avr>Blink menu.
+* Select your board in the Tools>Board menu.
+* Compile and download.
