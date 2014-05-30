@@ -30,10 +30,12 @@
  * pointer and pin mask in Cosa compared to Arduino. Also most access
  * functions in Cosa are inlined. Though object-oriented and in/output
  * operator syntax Cosa is between 2-10X faster allowing high speed
- * protocols. This comes with a small price-tag; memory, 4 bytes per
- * digital pin and 12 bytes per analog pin. The analog pin object
- * holds the latest sample, reference voltage, and allows an event
- * handler. This accounts for the extra 8 bytes. 
+ * protocols. 
+ *
+ * The digital pin object holds reference to special function register
+ * (port), pin mask and pin number (total of 4 bytes). The analog pin
+ * object holds the ADC channel number, latest sample, reference
+ * voltage, and allows an interrupt and event handler (total 9 bytes).
  *
  * @section Circuit
  * This example requires no special circuit. Uses serial output,
@@ -64,10 +66,14 @@ AnalogPin analogPin(Board::A0);
 // data typed pins
 inline void digitalWrite(Board::DigitalPin pin, uint8_t value)
 {
+#if ARDUINO < 150
+  OutputPin::write(pin, value);
+#else
   if (__builtin_constant_p(pin) && __builtin_constant_p(value))
     OutputPin::_write(pin, value);
   else
     OutputPin::write(pin, value);
+#endif
 }
 
 inline int digitalRead(Board::DigitalPin pin)
