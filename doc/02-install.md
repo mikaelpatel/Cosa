@@ -52,9 +52,7 @@ performance.
 * Copy platform.txt-gcc-4.8.1 to platform.txt. 
 * To restore simply copy platform.txt-1.5.6-r2 to platform.txt.
 
-### Step 5
-
-Run your first sketch.
+## Run your first sketch.
 
 * Open the CosaBlink example sketch in the Sketchbook>hardware>Cosa>avr>Blink menu.
 * Select your board in the Tools>Board menu.
