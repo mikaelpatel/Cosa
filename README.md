@@ -8,7 +8,7 @@ modes, Digital, and Analog Pins, External and Pin Change Interrupts,
 Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1
 (Servo/Tone/VWI), UART, USI, SPI, TWI and EEPROM.
 
-More informations are available in [doc](./doc) and [install](./doc/02-install.md).
+More details are available in [doc](./doc) and [install](./doc/02-install.md).
 
 Cosa API
 --------
