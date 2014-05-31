@@ -34,24 +34,18 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Memory.h"
-#include "Cosa/InputPin.hh"
-#include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/INET.hh"
-#include "Cosa/INET/HTTP.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Trace.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
+#include "Cosa/INET/HTTP.hh"
 #include "Cosa/SPI/Driver/SD.hh"
 #include "Cosa/FS/FAT16.hh"
-
-#define USE_ETHERNET_SHIELD
 
 // HTML end of line
 #define CRLF "\r\n"
 
-// Example WebServer that responds with file from SD/FAT16
+// Example WebServer that responds by reading SD/FAT16 file
 class WebServer : public HTTP::Server {
 public:
   virtual void on_request(IOStream& page, char* method, char* path, char* query);
