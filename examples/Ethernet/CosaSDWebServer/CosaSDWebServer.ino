@@ -1,0 +1,138 @@
+/**
+ * @file CosaSDWebServer.ino
+ * @version 1.0
+ *
+ * @section License
+ * Copyright (C) 2014, Mikael Patel
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * @section Description
+ * W5100 Ethernet Controller device driver example code; HTTP server
+ * with GET request from file on SD/FAT16.
+ *
+ * @section Circuit
+ * This sketch is designed for the Ethernet Shield.
+ * 
+ *                       W5100/ethernet
+ *                       +------------+
+ * (D10)--------------29-|CSN         |
+ * (D11)--------------28-|MOSI        |
+ * (D12)--------------27-|MISO        |
+ * (D13)--------------30-|SCK         |
+ * (D2)-----[ ]-------56-|IRQ         |
+ *                       +------------+
+ *
+ * This file is part of the Arduino Che Cosa project.
+ */
+
+#include "Cosa/Memory.h"
+#include "Cosa/InputPin.hh"
+#include "Cosa/AnalogPin.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/INET.hh"
+#include "Cosa/INET/HTTP.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Socket/Driver/W5100.hh"
+#include "Cosa/SPI/Driver/SD.hh"
+#include "Cosa/FS/FAT16.hh"
+
+#define USE_ETHERNET_SHIELD
+
+// HTML end of line
+#define CRLF "\r\n"
+
+// Example WebServer that responds with file from SD/FAT16
+class WebServer : public HTTP::Server {
+public:
+  virtual void on_request(IOStream& page, char* method, char* path, char* query);
+};
+
+void 
+WebServer::on_request(IOStream& page, char* method, char* path, char* query)
+{
+  // Filter path for root
+  if (!strcmp_P(path, PSTR("/")))
+    path = (char*) "index.htm";
+  else
+    path += 1;
+
+  // Trace request to trace iostream
+  trace << method << ' ' << path;
+  if (query != NULL) trace << query;
+
+  // Attempt to open the file. Report back if not found
+  FAT16::File file;
+  if (!file.open(path, O_READ)) {
+    path[strlen(path) - 1] = 0;
+    if (!file.open(path, O_READ)) {
+      trace << PSTR(" Not Found") << endl;
+      page << PSTR("HTTP/1.1 404 Not Found" CRLF CRLF);
+      return;
+    }
+  }
+
+  // Create response header and read the file
+  trace << PSTR(" OK") << endl;
+  page << PSTR("HTTP/1.1 200 OK" CRLF
+	       "Content-Type: text/html" CRLF
+	       "Connection: close" CRLF CRLF);
+  int c;
+  while ((c = file.getchar()) != IOStream::EOF) {
+    page << (char) c; 
+  }
+  file.close();
+}
+
+// Network configuration
+#define IP 192,168,1,100
+#define SUBNET 255,255,255,0
+#define GATEWAY 192,168,1,1
+#define PORT 80
+
+// W5100 Ethernet Controller with MAC-address
+static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
+W5100 ethernet(mac);
+WebServer server;
+
+// SD driver and clock configuration
+SD sd(Board::D4);
+#define SLOW_CLOCK SPI::DIV4_CLOCK
+#define FAST_CLOCK SPI::DIV2_CLOCK
+#define CLOCK FAST_CLOCK
+
+void setup()
+{
+  // Initiate uart and trace output stream. And watchdog
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaSDWebServer: started"));
+  Watchdog::begin();
+
+  // Initiate ethernet controller with address
+  uint8_t ip[4] = { IP };
+  uint8_t subnet[4] = { SUBNET };
+  ASSERT(ethernet.begin(ip, subnet));
+
+  // Start the server
+  ASSERT(server.begin(ethernet.socket(Socket::TCP, PORT)));
+
+  // Start the SD/FAT16 driver
+  ASSERT(sd.begin(CLOCK));
+  ASSERT(FAT16::begin(&sd));
+}
+
+void loop()
+{
+  // Service incoming requests
+  server.run();
+}
+
