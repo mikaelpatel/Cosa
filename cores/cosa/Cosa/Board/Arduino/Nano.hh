@@ -53,8 +53,8 @@
  *   PWM0/EXT1/D3 |o           o| D15/A1
  *             D4 |o           o| D16/A2
  *        PWM1/D5 |o           o| D17/A3
- *        PWM2/D6 |o           o| D18/A4
- *             D7 |o           o| D19/A5
+ *        PWM2/D6 |o           o| D18/A4/SDA
+ *             D7 |o           o| D19/A5/SCL
  *             D8 |o           o| A6
  *        PWM3/D9 |o           o| A7
  *       PWM4/D10 |o           o| AREF

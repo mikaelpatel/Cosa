@@ -66,10 +66,10 @@
  *                |                            []| D6/PWM6/A8
  *         A0/D14 |[]                          []| D5/PWM4
  *         A1/D15 |[]                          []| D4/A6
- *         A2/D16 |[]                          []| D3/EXT0/PWM1
- *         A3/D17 |[]                          []| D2/EXT1
- *         A4/D18 |[]            ICSP          []| D1/TX1/SDA/EXT3
- *         A5/D19 |[]           o-o-o*         []| D0/RX1/SCL/EXT2
+ *         A2/D16 |[]                          []| D3/SCL/EXT0/PWM1
+ *         A3/D17 |[]                          []| D2/SDA/EXT1
+ *         A4/D18 |[]            ICSP          []| D1/TX1/EXT3
+ *         A5/D19 |[]           o-o-o*         []| D0/RX1/EXT2
  *                 \            o-o-o           /
  *                  +--------------------------+
  * @endcode

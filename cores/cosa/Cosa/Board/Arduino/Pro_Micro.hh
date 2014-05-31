@@ -43,22 +43,22 @@
  *
  * @section Board
  * @code
- *               Arduino Pro Micro
- *                     -----
- *                +----| V |----+
- *     EXT3/TX/D1 |o<  |   |   o| RAW
- *     EXT2/RX/D0 |o>  -----   o| GND
- *            GND |o           o| RESET
- *            GND |o           o| VCC
- *        EXT1/D2 |o           o| D17/A3
- *   PWM1/EXT0/D3 |o           o| D16/A2
- *             D4 |o           o| D15/A1
- *        PWM4/D5 |o           o| D14/A0
- *        PWM6/D6 |o           o| D21/SCK
- *             D7 |o           o| D23/MISO
- *             D8 |o           o| D22/MOSI
- *        PWM2/D9 |o           o| D10/PWM3
- *                +-------------+
+ *                 Arduino Pro Micro
+ *                       -----
+ *                  +----| V |----+
+ *       EXT3/TX/D1 |o<  |   |   o| RAW
+ *       EXT2/RX/D0 |o>  -----   o| GND
+ *              GND |o           o| RESET
+ *              GND |o           o| VCC
+ *      SDA/EXT1/D2 |o           o| D17/A3
+ * SCL/PWM1/EXT0/D3 |o           o| D16/A2
+ *               D4 |o           o| D15/A1
+ *          PWM4/D5 |o           o| D14/A0
+ *          PWM6/D6 |o           o| D21/SCK
+ *               D7 |o           o| D23/MISO
+ *               D8 |o           o| D22/MOSI
+ *          PWM2/D9 |o           o| D10/PWM3
+ *                  +-------------+
  * @endcode
  *
  * Note: SPI pins are not numbered as on board as the numbers are 
