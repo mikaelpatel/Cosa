@@ -125,6 +125,7 @@ void loop()
   trace << acc.x << PSTR(", ")
 	<< acc.y << PSTR(", ")
 	<< acc.z;
+  SLEEP(2);
 
   // Read gyroscope
   trace << clear;
