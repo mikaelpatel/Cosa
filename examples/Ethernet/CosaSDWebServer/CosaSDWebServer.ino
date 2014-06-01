@@ -67,6 +67,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
   // Attempt to open the file. Report back if not found
   FAT16::File file;
   if (!file.open(path, O_READ)) {
+    // Strip possible extra extension character and try again
     path[strlen(path) - 1] = 0;
     if (!file.open(path, O_READ)) {
       trace << PSTR(" Not Found") << endl;
@@ -80,9 +81,13 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
   page << PSTR("HTTP/1.1 200 OK" CRLF
 	       "Content-Type: text/html" CRLF
 	       "Connection: close" CRLF CRLF);
-  int c;
-  while ((c = file.getchar()) != IOStream::EOF) {
-    page << (char) c; 
+
+  // Use block read/write to improve performance
+  static const size_t BUF_MAX = 128;
+  uint8_t buf[BUF_MAX];
+  int count;
+  while ((count = file.read(buf, sizeof(buf))) > 0) {
+    page.get_device()->write(buf, count);
   }
   file.close();
 }
