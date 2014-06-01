@@ -32,7 +32,7 @@
  */
 class DHCP {
 public:
-  /** DHCP Client port numbers */
+  /** DHCP Client port numbers. */
   static const uint16_t PORT = 68;
 
   /**
@@ -99,44 +99,44 @@ public:
    */
   int release(Socket* sock);
 
-  /** Return time when lease was obtained */
+  /** Return time when lease was obtained. */
   uint32_t get_lease_obtained() 
   { 
     return (m_lease_obtained); 
   }
 
-  /** Return time when lease will expire */
+  /** Return time when lease will expire. */
   uint32_t get_lease_expires() 
   { 
     return (m_lease_expires); 
   }
 
-  /** Return network address of DHCP server */
+  /** Return network address of DHCP server. */
   const uint8_t* get_dhcp_addr() 
   { 
     return (m_dhcp); 
   }
 
-  /** Return network address of DNS server */
+  /** Return network address of DNS server. */
   const uint8_t* get_dns_addr() 
   { 
     return (m_dns); 
   }
 
-  /** Return network address of gateway (router) */
+  /** Return network address of gateway (router). */
   const uint8_t* get_gateway_addr() 
   { 
     return (m_gateway); 
   }
 
 private:
-  /** DHCP message OP code */
+  /** DHCP message OP code. */
   enum {
     REQUEST = 1,
     REPLY = 2
   } __attribute__((packed));
 
-  /** DHCP hardware type and address length */
+  /** DHCP hardware type and address length. */
   enum {
     HTYPE_10MB = 1,
     HTYPE_100MB = 2,
@@ -144,30 +144,30 @@ private:
     FLAGS_BROADCAST = 0x8000
   };
 
-  /** DHCP request/response header */
+  /** DHCP request/response header. */
   struct header_t {
-    uint8_t OP;			// Message type
-    uint8_t HTYPE; 		// Hardware type
-    uint8_t HLEN;		// Hardware address length
-    uint8_t HOPS;		// Max. number of relay agents
-    uint32_t XID;		// Transaction identity (client)
-    uint16_t SECS;		// Number of seconds elapsed since start
-    uint16_t FLAGS;		// Flags/Broadcast
-    uint8_t CIADDR[4];		// Client IP address (requested)
-    uint8_t YIADDR[4];		// Your IP address (response)
-    uint8_t SIADDR[4];		// Server IP address
-    uint8_t GIADDR[4];		// First relay agent IP address
-    uint8_t CHADDRB[16];	// Client hardware address
-#ifdef BOOTP_SECTION		// Legacy BOOTP section
-    uint8_t SNAME[64]; 		// Server host name
-    uint8_t FILE[128];		//  Bootfile name
+    uint8_t OP;			//!< Message type.
+    uint8_t HTYPE; 		//!< Hardware type.
+    uint8_t HLEN;		//!< Hardware address length.
+    uint8_t HOPS;		//!< Max. number of relay agents.
+    uint32_t XID;		//!< Transaction identity (client).
+    uint16_t SECS;		//!< Number of seconds elapsed since start.
+    uint16_t FLAGS;		//!< Flags/Broadcast.
+    uint8_t CIADDR[4];		//!< Client IP address (requested).
+    uint8_t YIADDR[4];		//!< Your IP address (response).
+    uint8_t SIADDR[4];		//!< Server IP address.
+    uint8_t GIADDR[4];		//!< First relay agent IP address.
+    uint8_t CHADDRB[16];	//!< Client hardware address.
+#ifdef BOOTP_SECTION		//!< Legacy BOOTP section.
+    uint8_t SNAME[64]; 		//!< Server host name.
+    uint8_t FILE[128];		//!< Bootfile name.
 #endif
   };
 
-  /** DHCP option block start magic cookie */
+  /** DHCP option block start magic cookie. */
   static const uint32_t MAGIC_COOKIE = 0x63825363;
 
-  /** DHCP options; subset */
+  /** DHCP options; subset. */
   enum {
     PAD_OPTION = 0,
     SUBNET_MASK = 1,
@@ -187,7 +187,7 @@ private:
     END_OPTION = 255
   } __attribute__((packed));
 
-  /** DHCP message type; MESSAGE_TYPE option */
+  /** DHCP message type; MESSAGE_TYPE option. */
   enum {
     DHCP_DISCOVER = 1,
     DHCP_OFFER = 2,
@@ -199,37 +199,37 @@ private:
     DHCP_INFORM = 8
   } __attribute__((packed));
 
-  /** DHCP server address */
+  /** DHCP server address. */
   uint8_t m_dhcp[4];
 
-  /** Router in network (DHCP option) */
+  /** Router in network (DHCP option). */
   uint8_t m_gateway[4];
 
-  /** DNS server address (DHCP option) */
+  /** DNS server address (DHCP option). */
   uint8_t m_dns[4];
 
-  /** Network address (DHCP offer) */
+  /** Network address (DHCP offer). */
   uint8_t m_ip[4];
 
-  /** Subnet mask (DHCP option) */
+  /** Subnet mask (DHCP option). */
   uint8_t m_subnet[4];
   
-  /** Hostname */
+  /** Hostname. */
   const char* m_hostname;
 
-  /** Hardware address */
+  /** Hardware address. */
   const uint8_t* m_mac;
 
-  /** UDP socket */
+  /** UDP socket. */
   Socket* m_sock;
 
-  /** Lease obtained */
+  /** Lease obtained. */
   uint32_t m_lease_obtained;
 
-  /** Lease expires */
+  /** Lease expires. */
   uint32_t m_lease_expires;
 
-  /** DHCP Server port numbers */
+  /** DHCP Server port numbers. */
   static const uint16_t SERVER_PORT = 67;
 
   /** 

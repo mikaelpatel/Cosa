@@ -93,25 +93,25 @@ public:
   void await(volatile uint8_t* ptr, uint8_t bit = 0);
 
 protected:
-  /** Size of main thread stack */
+  /** Size of main thread stack. */
   static const size_t MAIN_STACK_MAX = 64;
 
-  /** Queue for delayed threads */
+  /** Queue for delayed threads. */
   static Head s_delayed;
 
-  /** Main thread and thread queue head */
+  /** Main thread and thread queue head. */
   static Thread s_main;
 
-  /** Running thread */
+  /** Running thread. */
   static Thread* s_running;
 
-  /** Top of stack allocation */
+  /** Top of stack allocation. */
   static size_t s_top;
 
-  /** Thread context */
+  /** Thread context. */
   jmp_buf m_context;
 
-  /** Delay time expires; should not run for more than 2**32 seconds */
+  /** Delay time expires; should not run for more than 2**32 seconds. */
   uint32_t m_expires;
 
   /**
@@ -135,7 +135,7 @@ protected:
    */
   void dequeue(Head* queue, bool flag = true);
 
-  /** Allow friends to use the queue member functions */
+  /** Allow friends to use the queue member functions. */
   friend class Semaphore;
 };
 

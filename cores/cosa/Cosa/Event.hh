@@ -196,9 +196,9 @@ public:
   static Queue<Event, QUEUE_MAX> queue;
 
 private:
-  uint8_t m_type;
-  Handler* m_target;
-  uint16_t m_value;
+  uint8_t m_type;		//!< Event type.
+  Handler* m_target;		//!< Event target object (receiver).
+  uint16_t m_value;		//!< Event parameter and/or value.
 };
 
 #endif

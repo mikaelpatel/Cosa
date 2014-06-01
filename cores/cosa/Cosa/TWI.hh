@@ -50,7 +50,7 @@
 class TWI {
 public:
   /**
-   * Default Two-Wire Interface clock: 100 KHz
+   * Default Two-Wire Interface clock: 100 KHz.
    */
   static const uint32_t DEFAULT_FREQ = 100000L;
 
@@ -71,10 +71,10 @@ public:
     }
 
   protected:
-    /** Device bus address */
+    /** Device bus address. */
     int8_t m_addr;
 
-    /** Allow access */
+    /** Allow access. */
     friend class TWI;
     friend void TWI_vect(void);
   };
@@ -145,7 +145,7 @@ public:
      */
     virtual void on_event(uint8_t type, uint16_t value);
 
-    /** Allow access */
+    /** Allow access. */
     friend class TWI;
     friend void TWI_vect(void);
   };
@@ -303,12 +303,12 @@ private:
    * Two Wire state and status codes.
    */
   enum State {
-    ERROR_STATE,		// Error state
-    IDLE_STATE,			// Idle state
-    MT_STATE,			// Master transmit state
-    MR_STATE,			// Master receive state
-    ST_STATE,			// Slave transmit state
-    SR_STATE			// Slave receive state
+    ERROR_STATE,		//!< Error state.
+    IDLE_STATE,			//!< Idle state.
+    MT_STATE,			//!< Master transmit state.
+    MR_STATE,			//!< Master receive state.
+    ST_STATE,			//!< Slave transmit state.
+    SR_STATE			//!< Slave receive state.
   } __attribute__((packed));
 
   /**
@@ -322,31 +322,31 @@ private:
    * service routine.
    */
   enum {
-    /** General Status Codes */
+    /** General Status Codes. */
     START = TWI_STATUS(0x08),
     REP_START = TWI_STATUS(0x10),
     ARB_LOST = TWI_STATUS(0x38),
 
-    /** Master Tranmitter Mode*/
+    /** Master Tranmitter Mode. */
     MT_SLA_ACK = TWI_STATUS(0x18),
     MT_SLA_NACK = TWI_STATUS(0x20),
     MT_DATA_ACK = TWI_STATUS(0x28),
     MT_DATA_NACK = TWI_STATUS(0x30),
 
-    /** Master Receiver Mode */
+    /** Master Receiver Mode. */
     MR_SLA_ACK = TWI_STATUS(0x40),
     MR_SLA_NACK = TWI_STATUS(0x48),
     MR_DATA_ACK = TWI_STATUS(0x50),
     MR_DATA_NACK = TWI_STATUS(0x58),
 
-    /** Slave Transmitter Mode */
+    /** Slave Transmitter Mode. */
     ST_SLA_ACK = TWI_STATUS(0xA8),
     ST_ARB_LOST_SLA_ACK = TWI_STATUS(0xB0),
     ST_DATA_ACK = TWI_STATUS(0xB8),
     ST_DATA_NACK = TWI_STATUS(0xC0),
     ST_LAST_DATA = TWI_STATUS(0xC8),
 
-    /** Slave Receiver Mode */
+    /** Slave Receiver Mode. */
     SR_SLA_ACK = TWI_STATUS(0x60),
     SR_ARB_LOST_SLA_ACK = TWI_STATUS(0x68),
     SR_GCALL_ACK = TWI_STATUS(0x70),
@@ -357,7 +357,7 @@ private:
     SR_GCALL_DATA_NACK = TWI_STATUS(0x98),
     SR_STOP = TWI_STATUS(0xA0),
 
-    /** Misc */
+    /** Misc. */
     NO_INFO = TWI_STATUS(0xF8),
     BUS_ERROR = TWI_STATUS(0x00)
   } __attribute__((packed));
@@ -366,12 +366,12 @@ private:
    * Address mask and read/write bit.
    */
   enum {
-    WRITE_OP = 0x00,		// Write operation
-    READ_OP = 0x01,		// Read operation
-    ADDR_MASK = 0xfe		// Address mask
+    WRITE_OP = 0x00,		//!< Write operation.
+    READ_OP = 0x01,		//!< Read operation.
+    ADDR_MASK = 0xfe		//!< Address mask.
   } __attribute__((packed));
 
-  /** Default argument for start */
+  /** Default argument for start. */
   static const uint8_t NEXT_IX = 255;
 
   /**
@@ -446,7 +446,7 @@ private:
    */
   bool request(uint8_t op);
 
-  /** Interrupt Sevice Routine */
+  /** Interrupt Sevice Routine. */
   friend void TWI_vect(void);
 };
 #endif

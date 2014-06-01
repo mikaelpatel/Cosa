@@ -33,7 +33,7 @@
  */
 class WIO : public IOStream::Device {
 public:
-  // Max size of payload
+  /** Max size of payload. */
   static const uint8_t PAYLOAD_MAX = 30;
 
   /**
@@ -89,13 +89,19 @@ public:
   }
 
 private:
-  // Buffered output 
+  /** Buffered output. */
   uint8_t m_buffer[PAYLOAD_MAX];
+
+  /** Next position in output buffer. */
   uint8_t m_ix;
 
-  // Current wireless device driver, destination and port
+  /** Current wireless device driver */
   Wireless::Driver* m_dev;
+
+  /** Current wireless device destination address. */
   uint8_t m_dest;
+
+  /** Current wireless device destination port. */
   uint8_t m_port;
 };
 

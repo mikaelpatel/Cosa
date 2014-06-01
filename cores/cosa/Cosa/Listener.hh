@@ -81,7 +81,7 @@ public:
   static void dispatch(Head* head, T key, uint8_t type, uint16_t value);
 
 private:
-  /** Listener key */
+  /** Listener key. */
   T m_key;
 };
 

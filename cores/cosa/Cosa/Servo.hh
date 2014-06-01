@@ -95,13 +95,13 @@ public:
   }
 
 private:
-  /** Configuration */
+  /** Configuration. */
   static const uint16_t PERIOD = 20000;
   static const uint16_t MIN_WIDTH = 650;
   static const uint16_t MAX_WIDTH = 2300;
   static const uint8_t INIT_ANGLE = 90;
 
-  /** Servo map */
+  /** Servo map. */
   static Servo* servo[2];
 
   /**
@@ -112,7 +112,7 @@ private:
   uint16_t m_width;
   uint8_t m_angle;
 
-  /** Interrupt Service Routines */
+  /** Interrupt Service Routines. */
   friend void TIMER1_COMPA_vect(void);
   friend void TIMER1_COMPB_vect(void);
 };

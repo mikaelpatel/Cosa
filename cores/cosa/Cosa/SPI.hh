@@ -53,7 +53,7 @@
  */
 class SPI {
 public:
-  /** Clock selectors */
+  /** Clock selectors. */
   enum Clock {
     DIV2_CLOCK = 0x04,
     DIV4_CLOCK = 0x00,
@@ -65,20 +65,20 @@ public:
     DEFAULT_CLOCK = DIV4_CLOCK
   } __attribute__((packed));
 
-  /** Bit order selectors */
+  /** Bit order selectors. */
   enum Order {
-    MSB_ORDER = 0, 		//<! Most significant bit first
-    LSB_ORDER = 1,		//<! Least significant bit first
-    DEFAULT_ORDER = MSB_ORDER	//<! Default is MSB
+    MSB_ORDER = 0, 		//!< Most significant bit first.
+    LSB_ORDER = 1,		//!< Least significant bit first.
+    DEFAULT_ORDER = MSB_ORDER	//!< Default is MSB.
   } __attribute__((packed));
   
-  /** Chip select mode */
+  /** Chip select mode. */
   enum Pulse {
-    ACTIVE_LOW = 0,	   	//<! Active low logic during transaction
-    ACTIVE_HIGH = 1,	   	//<! Active high logic
-    PULSE_LOW = 2, 	   	//<! Pulse low on end of transaction
-    PULSE_HIGH = 3,	   	//<! Pulse high
-    DEFAULT_PULSE = ACTIVE_LOW	//<! Default is low logic 
+    ACTIVE_LOW = 0,	   	//!< Active low logic during transaction.
+    ACTIVE_HIGH = 1,	   	//!< Active high logic.
+    PULSE_LOW = 2, 	   	//!< Pulse low on end of transaction.
+    PULSE_HIGH = 3,	   	//!< Pulse high.
+    DEFAULT_PULSE = ACTIVE_LOW	//!< Default is low logic.
   } __attribute__((packed));
 
   /**
@@ -113,17 +113,17 @@ public:
     void set_clock(Clock rate);
 
   protected:
-    Driver* m_next;		//<! List of drivers
-    Interrupt::Handler* m_irq;	//<! Interrupt handler
-    OutputPin m_cs;		//<! Device chip select pin
-    Pulse m_pulse;		//<! Chip select pulse width:
+    Driver* m_next;		//!< List of drivers.
+    Interrupt::Handler* m_irq;	//!< Interrupt handler.
+    OutputPin m_cs;		//!< Device chip select pin.
+    Pulse m_pulse;		//!< Chip select pulse width.
 #if defined(USICR)
-    const uint8_t m_cpol;	//<! Clock polatity (CPOL) setting
-    uint8_t m_usicr;		//<! USI hardware control register setting
-    uint8_t m_data;		//<! Data register for asynchron transfer
+    const uint8_t m_cpol;	//!< Clock polatity (CPOL) setting.
+    uint8_t m_usicr;		//!< USI hardware control register setting.
+    uint8_t m_data;		//!< Data register for asynchron transfer.
 #else
-    uint8_t m_spcr;		//<! SPI/SPCR hardware control register setting
-    uint8_t m_spsr;		//<! SPI/SPSR hardware status register
+    uint8_t m_spcr;		//!< SPI/SPCR hardware control register setting.
+    uint8_t m_spsr;		//!< SPI/SPSR hardware status register.
 #endif
     friend class SPI;
   };
@@ -366,12 +366,12 @@ public:
   };
 
 private:
-  Driver* m_list;		//<! List of attached device drivers
-  Driver* m_dev;		//<! Current device driver
+  Driver* m_list;		//!< List of attached device drivers.
+  Driver* m_dev;		//!< Current device driver.
 };
 
 /**
- * Singleton instance of the hardware SPI module
+ * Singleton instance of the hardware SPI module.
  */
 extern SPI spi;
 

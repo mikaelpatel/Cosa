@@ -57,152 +57,152 @@
 class W5100 : private SPI::Driver {
 public:
   /**
-   * Common Registers (chap. 3.1, pp. 14), big-endian 16-bit values
+   * Common Registers (chap. 3.1, pp. 14), big-endian 16-bit values.
    */
   struct CommonRegister {
-    uint8_t MR;			// Mode Register
-    uint8_t GAR[4];		// Gateway Address Register
-    uint8_t SUBR[4];		// Subnet mask Address Register
-    uint8_t SHAR[6];		// Source Hardware Address Register
-    uint8_t SIPR[4];		// Source IP Address Register
-    uint8_t reserved1[2];	// Reserved
-    uint8_t IR;			// Interrupt Register
-    uint8_t IMR;		// Interrupt Mask Register
-    uint16_t RTR;		// Retry Time Register
-    uint8_t RCR;		// Retry Count Register
-    uint8_t RMSR;		// RX Memory Size Register
-    uint8_t TMSR;		// TX Memory Size Register
-    uint8_t PATR[2];		// Authentication Type in PPPoE
-    uint8_t reserved2[10];	// Reserved
-    uint8_t PTIMER;		// PPP LCP Request Timer Register
-    uint8_t PMAGIC;		// PPP LCP Magic number
-    uint8_t UIPR[4];		// Unreachable IP Address Register
-    uint16_t UPORT;		// Unreachable Port Register
+    uint8_t MR;			//!< Mode Register.
+    uint8_t GAR[4];		//!< Gateway Address Register.
+    uint8_t SUBR[4];		//!< Subnet mask Address Register.
+    uint8_t SHAR[6];		//!< Source Hardware Address Register.
+    uint8_t SIPR[4];		//!< Source IP Address Register.
+    uint8_t reserved1[2];	//!< Reserved.
+    uint8_t IR;			//!< Interrupt Register.
+    uint8_t IMR;		//!< Interrupt Mask Register.
+    uint16_t RTR;		//!< Retry Time Register.
+    uint8_t RCR;		//!< Retry Count Register.
+    uint8_t RMSR;		//!< RX Memory Size Register.
+    uint8_t TMSR;		//!< TX Memory Size Register.
+    uint8_t PATR[2];		//!< Authentication Type in PPPoE.
+    uint8_t reserved2[10];	//!< Reserved.
+    uint8_t PTIMER;		//!< PPP LCP Request Timer Register.
+    uint8_t PMAGIC;		//!< PPP LCP Magic number.
+    uint8_t UIPR[4];		//!< Unreachable IP Address Register.
+    uint16_t UPORT;		//!< Unreachable Port Register.
   };
 
   /**
-   * Mode Register bitfields, pp. 19
+   * Mode Register bitfields, pp. 19.
    */
   enum {
-    MR_RST = 0x80,		// S/W Reset
-    MR_PB = 0x10,		// Ping Block Mode
-    MR_PPPoE = 0x08,		// PPPoE Mode
-    MR_AI = 0x02,		// Address Auto-Increment
-    MR_IND = 0x01		// Indirect Bus I/F mode
+    MR_RST = 0x80,		//!< S/W Reset.
+    MR_PB = 0x10,		//!< Ping Block Mode.
+    MR_PPPoE = 0x08,		//!< PPPoE Mode.
+    MR_AI = 0x02,		//!< Address Auto-Increment.
+    MR_IND = 0x01		//!< Indirect Bus I/F mode.
   } __attribute__((packed));
   
   /**
-   * Interrupt Register bitfields, pp. 21
+   * Interrupt Register bitfields, pp. 21.
    */
   enum {
-    IR_CONFLICT = 0x80,		// IP Conflict
-    IR_UNREACH = 0x40,		// Destination unreachable
-    IR_PPPoE = 0x20,		// PPPoE Connection Close
-    IR_S3_INT = 0x08,		// Occurrence of Socket 3 Socket Interrupt
-    IR_S2_INT = 0x04,		// Occurrence of Socket 2 Socket Interrupt
-    IR_S1_INT = 0x02,		// Occurrence of Socket 1 Socket Interrupt
-    IR_S0_INT = 0x01		// Occurrence of Socket 0 Socket Interrupt
+    IR_CONFLICT = 0x80,		//!< IP Conflict.
+    IR_UNREACH = 0x40,		//!< Destination unreachable.
+    IR_PPPoE = 0x20,		//!< PPPoE Connection Close.
+    IR_S3_INT = 0x08,		//!< Occurrence of Socket 3 Socket Interrupt.
+    IR_S2_INT = 0x04,		//!< Occurrence of Socket 2 Socket Interrupt.
+    IR_S1_INT = 0x02,		//!< Occurrence of Socket 1 Socket Interrupt.
+    IR_S0_INT = 0x01		//!< Occurrence of Socket 0 Socket Interrupt.
   } __attribute__((packed));
 
   /**
-   * Interrupt Mask Register bitfields, pp. 22
+   * Interrupt Mask Register bitfields, pp. 22.
    */
   enum {
-    IMR_CONFLICT = 0x80,    	// IP Conflict
-    IMR_UNREACH = 0x40,		// Destination unreachable
-    IMR_PPPoE = 0x20,		// PPPoE Connection Close
-    IMR_S3_INT = 0x08,		// Occurrence of Socket 3 Socket Interrupt
-    IMR_S2_INT = 0x04,		// Occurrence of Socket 2 Socket Interrupt
-    IMR_S1_INT = 0x02,		// Occurrence of Socket 1 Socket Interrupt
-    IMR_S0_INT = 0x01		// Occurrence of Socket 0 Socket Interrupt
+    IMR_CONFLICT = 0x80,    	//!< Mask IP Conflict.
+    IMR_UNREACH = 0x40,		//!< Mask Destination unreachable.
+    IMR_PPPoE = 0x20,		//!< Mask PPPoE Connection Close.
+    IMR_S3_INT = 0x08,		//!< Mask occurrence of Socket 3 Socket Interrupt.
+    IMR_S2_INT = 0x04,		//!< Mask occurrence of Socket 2 Socket Interrupt.
+    IMR_S1_INT = 0x02,		//!< Mask occurrence of Socket 1 Socket Interrupt.
+    IMR_S0_INT = 0x01		//!< Mask occurrence of Socket 0 Socket Interrupt.
   } __attribute__((packed));
 
   /**
-   * RX Memory Size Register value, pp. 23
+   * RX Memory Size Register value, pp. 23.
    */
   enum {
-    RMSR_S3_POS = 6,		// Socket 3 memory size position
-    RMSR_S2_POS = 4,		// .
-    RMSR_S1_POS = 2,		// .
-    RMSR_S0_POS = 0,		// Socket 0 memory size position
+    RMSR_S3_POS = 6,		//!< Socket 3 memory size position.
+    RMSR_S2_POS = 4,		//!< .
+    RMSR_S1_POS = 2,		//!< .
+    RMSR_S0_POS = 0,		//!< Socket 0 memory size position.
   } __attribute__((packed));
 
-  /** Common Register Base Address */
+  /** Common Register Base Address. */
   static const uint16_t COMMON_REGISTER_BASE = 0x0000;
   static const uint16_t COMMON_REGISTER_SIZE = sizeof(CommonRegister);
 
   /**
-   * Socket Registers (chap. 3.2, pp. 15)
+   * Socket Registers (chap. 3.2, pp. 15).
    */
   struct SocketRegister {
-    uint8_t MR;			// Mode Register
-    uint8_t CR;			// Command Register 
-    uint8_t IR;			// Interrupt Register
-    uint8_t SR;			// Status Register
-    uint16_t PORT;		// Source Port Register
-    uint8_t DHAR[6];		// Destination Hardware Address Register
-    uint8_t DIPR[4];		// Destination IP Address Register
-    uint16_t DPORT;		// Destination Port Register
-    uint16_t MSSR;		// Maximum Segment Size Register
-    uint8_t PROTO;		// Protocol in IP Raw mode
-    uint8_t TOS;		// IP TOS
-    uint8_t TTL;		// IP TTL
-    uint8_t reserved1[9];	// Reserved
-    uint16_t TX_FSR;		// TX Free Size Register
-    uint16_t TX_RD;		// TX Read Pointer Register
-    uint16_t TX_WR;		// TX Write Pointer Register
-    uint16_t RX_RSR;		// RX Received Size Register
-    uint16_t RX_RD;		// RX Read Pointer Register
-    uint8_t reserved2[2];	// Reserved
-    uint8_t reserved3[212];	// Reserved
+    uint8_t MR;			//!< Mode Register.
+    uint8_t CR;			//!< Command Register.
+    uint8_t IR;			//!< Interrupt Register.
+    uint8_t SR;			//!< Status Register.
+    uint16_t PORT;		//!< Source Port Register.
+    uint8_t DHAR[6];		//!< Destination Hardware Address Register.
+    uint8_t DIPR[4];		//!< Destination IP Address Register.
+    uint16_t DPORT;		//!< Destination Port Register.
+    uint16_t MSSR;		//!< Maximum Segment Size Register.
+    uint8_t PROTO;		//!< Protocol in IP Raw mode.
+    uint8_t TOS;		//!< IP TOS.
+    uint8_t TTL;		//!< IP TTL.
+    uint8_t reserved1[9];	//!< Reserved.
+    uint16_t TX_FSR;		//!< TX Free Size Register.
+    uint16_t TX_RD;		//!< TX Read Pointer Register.
+    uint16_t TX_WR;		//!< TX Write Pointer Register.
+    uint16_t RX_RSR;		//!< RX Received Size Register.
+    uint16_t RX_RD;		//!< RX Read Pointer Register.
+    uint8_t reserved2[2];	//!< Reserved.
+    uint8_t reserved3[212];	//!< Reserved.
   };
 
   /**
-   * Socket Mode Register bitfields, pp. 25
+   * Socket Mode Register bitfields, pp. 25.
    */
   enum {
-    MR_FLAG_MASK = 0xe0,	// Flag mask
-    MR_MULTI = 0x80,		// Multicasting
-    MR_MF = 0x40,		// MAC Filter
-    MR_ND = 0x20,		// Use No Delay ACK
-    MR_MC = 0x20,		// Multicast version
-    MR_PROTO_MASK = 0x0f,	// Protocol
-    MR_PROTO_CLOSED = 0x00,	// Closed
-    MR_PROTO_TCP = 0x01,	// TCP
-    MR_PROTO_UDP = 0x02,	// UDP
-    MR_PROTO_IPRAW = 0x03,	// RAW IP
-    MR_PROTO_MACRAW = 0x04,	// RAW MAC
-    MR_PROTO_PPPoE = 0x05	// PPPoE
+    MR_FLAG_MASK = 0xe0,	//!< Flag mask.
+    MR_MULTI = 0x80,		//!< Multicasting.
+    MR_MF = 0x40,		//!< MAC Filter.
+    MR_ND = 0x20,		//!< Use No Delay ACK.
+    MR_MC = 0x20,		//!< Multicast version.
+    MR_PROTO_MASK = 0x0f,	//!< Protocol.
+    MR_PROTO_CLOSED = 0x00,	//!< Closed.
+    MR_PROTO_TCP = 0x01,	//!< TCP.
+    MR_PROTO_UDP = 0x02,	//!< UDP.
+    MR_PROTO_IPRAW = 0x03,	//!< RAW IP.
+    MR_PROTO_MACRAW = 0x04,	//!< RAW MAC.
+    MR_PROTO_PPPoE = 0x05	//!< PPPoE.
   } __attribute__((packed));
 
   /**
-   * Socket Command Register values, pp. 26-26
+   * Socket Command Register values, pp. 26-26.
    */
   enum {
-    CR_OPEN = 0x01,		// Initiate socket according to MR
-    CR_LISTEN = 0x02,		// TCP: Initiate server mode
-    CR_CONNECT = 0x04,		// TCP: Initiate client mode
-    CR_DISCON = 0x08,		// TCP: Disconnect server/client
-    CR_CLOSE = 0x10,		// Close socket
-    CR_SEND = 0x20,		// Transmit data according to TX_WR
-    CR_SEND_MAC = 0x21,		// UDP: Transmit data
-    CR_SEND_KEEP = 0x22,	// TCP: Check connection status
-    CR_RECV = 0x40		// Receivering packet to RX_RD
+    CR_OPEN = 0x01,		//!< Initiate socket according to MR.
+    CR_LISTEN = 0x02,		//!< TCP: Initiate server mode.
+    CR_CONNECT = 0x04,		//!< TCP: Initiate client mode.
+    CR_DISCON = 0x08,		//!< TCP: Disconnect server/client.
+    CR_CLOSE = 0x10,		//!< Close socket.
+    CR_SEND = 0x20,		//!< Transmit data according to TX_WR.
+    CR_SEND_MAC = 0x21,		//!< UDP: Transmit data.
+    CR_SEND_KEEP = 0x22,	//!< TCP: Check connection status.
+    CR_RECV = 0x40		//!< Receivering packet to RX_RD.
   } __attribute__((packed));
 
   /**
-   * Socket Interrupt Register bitfields, pp. 27
+   * Socket Interrupt Register bitfields, pp. 27.
    */
   enum {
-    IR_SEND_OK = 0x10,		// Send operation is completed
-    IR_TIMEOUT = 0x08,		// Timeout occured
-    IR_RECV = 0x04,		// Received data
-    IR_DISCON = 0x02,		// Connection termination
-    IR_CON = 0x01		// Connection established
+    IR_SEND_OK = 0x10,		//!< Send operation is completed.
+    IR_TIMEOUT = 0x08,		//!< Timeout occured.
+    IR_RECV = 0x04,		//!< Received data.
+    IR_DISCON = 0x02,		//!< Connection termination.
+    IR_CON = 0x01		//!< Connection established.
   } __attribute__((packed));
 
   /**
-   * Socket Status Register values, pp. 27
+   * Socket Status Register values, pp. 27.
    */
   enum {
     SR_CLOSED = 0x00,
@@ -223,31 +223,31 @@ public:
     SR_PPPoE = 0x5F
   } __attribute__((packed));
 
-  /** Socket Registers Base Address */
+  /** Socket Registers Base Address. */
   static const uint16_t SOCKET_REGISTER_BASE = 0x0400;
   static const uint16_t SOCKET_REGISTER_SIZE = sizeof(SocketRegister);
 
-  /** TX Memory Address */
+  /** TX Memory Address. */
   static const uint16_t TX_MEMORY_BASE = 0x4000;
   static const uint16_t TX_MEMORY_MAX = 0x2000;
 
-  /** RX Memory Address */
+  /** RX Memory Address. */
   static const uint16_t RX_MEMORY_BASE = 0x6000;
   static const uint16_t RX_MEMORY_MAX = 0x2000;
   
-  /** Socket Buffer Size; 2 Kbyte TX/RX per socket */
+  /** Socket Buffer Size; 2 Kbyte TX/RX per socket. */
   static const size_t BUF_MAX = 2048;
   static const uint16_t BUF_MASK = 0x07ff;
   static const uint8_t TX_MEMORY_SIZE = 0x55;
   static const uint8_t RX_MEMORY_SIZE = 0x55;
 
-  /** TX Message Size; internal buffer size for flush threshold */
+  /** TX Message Size; internal buffer size for flush threshold. */
   static const size_t MSG_MAX = BUF_MAX / 2;
 
-  /** Maximum number of sockets on device */
+  /** Maximum number of sockets on device. */
   static const uint8_t SOCK_MAX = 4;
   
-  /** Maximum number of DNS request retries */
+  /** Maximum number of DNS request retries. */
   static const uint8_t DNS_RETRY_MAX = 4;
 
   /**
@@ -290,26 +290,26 @@ public:
      */
     void dev_setup();
 
-    /** Pointer to socket registers; symbolic address calculation */
+    /** Pointer to socket registers; symbolic address calculation. */
     SocketRegister* m_sreg;
 
-    /** Pointer to device context */
+    /** Pointer to device context. */
     W5100* m_dev;
 
-    /** Pointer to socket transmitter buffer */
+    /** Pointer to socket transmitter buffer. */
     uint16_t m_tx_buf;
 
-    /** Offset in socket transmitter buffer */
+    /** Offset in socket transmitter buffer. */
     uint16_t m_tx_offset;
 
-    /** Length of message in socket transmitter buffer */
+    /** Length of message in socket transmitter buffer. */
     uint16_t m_tx_len;
     
-    /** Pointer to socket receiver buffer */
+    /** Pointer to socket receiver buffer. */
     uint16_t m_rx_buf;
 
   public:
-    /** Default constructor */
+    /** Default constructor. */
     Driver() : Socket() {}
 
     /**
@@ -509,25 +509,25 @@ public:
 		     bool progmem);
   };
 
-  /** Default hardware network address */
+  /** Default hardware network address. */
   static const uint8_t MAC[6] PROGMEM;
 
-  /** Sockets on device */
+  /** Sockets on device. */
   Driver m_sock[SOCK_MAX];
 
-  /** Pointer to common registers; symbolic field calculation */
+  /** Pointer to common registers; symbolic field calculation. */
   CommonRegister* m_creg;
 
-  /** Next local port number; DYNAMIC_PORT(49152)-UINT16_MAX(65535) */
+  /** Next local port number; DYNAMIC_PORT(49152)-UINT16_MAX(65535). */
   uint16_t m_local;
 
-  /** Hardware address (in program memory) */
+  /** Hardware address (in program memory). */
   const uint8_t* m_mac;
 
-  /** DNS server network address (provided by DHCP) */
+  /** DNS server network address (provided by DHCP). */
   uint8_t m_dns[4];
 
-  /** SPI Command codes. Format: [Command 8b] [Address 16b] [data 8b] */
+  /** SPI Command codes. Format: [Command 8b] [Address 16b] [data 8b]. */
   enum {
     OP_WRITE = 0xf0,
     OP_READ = 0x0f

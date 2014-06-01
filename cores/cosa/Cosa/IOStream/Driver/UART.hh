@@ -39,13 +39,13 @@ extern Soft::UAT uart;
  */
 class UART : public IOStream::Device {
 public:
-  // Default baudrate
+  /** Default baudrate. */
   static const uint32_t DEFAULT_BAUDRATE = 9600;
 
-  // Default buffer size for standard UART0 (at 9600 baud)
+  /** Default buffer size for standard UART0 (at 9600 baud). */
   static const uint8_t BUFFER_MAX = 64;
 
-  // Serial formats; DATA + PARITY + STOP
+  /** Serial formats; DATA + PARITY + STOP. */
   enum {
     DATA5 = 0,
     DATA6 = _BV(UCSZ00),
@@ -59,7 +59,7 @@ public:
     STOP2 = _BV(USBS0),
   } __attribute__((packed));
     
-  // Default serial format 
+  /** Default serial format. */
   static const uint8_t DEFAULT_FORMAT = DATA8 + STOP2 + NO_PARITY;
 
   /**

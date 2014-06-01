@@ -168,10 +168,10 @@ private:
    */
   RTC() {}
 
-  /** Interrupt Service Routine */
+  /** Interrupt Service Routine. */
   friend void TIMER0_OVF_vect(void);
 
-  /** Timer access */
+  /** Timer access. */
   friend class Timer;
 };
 

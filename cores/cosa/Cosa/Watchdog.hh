@@ -192,7 +192,7 @@ private:
    */
   static uint8_t as_prescale(uint16_t ms);
 
-  /** Interrupt Service Routine */
+  /** Interrupt Service Routine. */
   friend void WDT_vect(void);
 };
 

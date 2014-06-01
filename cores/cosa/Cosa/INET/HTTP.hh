@@ -26,10 +26,10 @@
 
 class HTTP {
 public:
-  /** Max length of hostname */
+  /** Max length of hostname. */
   static const size_t HOSTNAME_MAX = 32;
 
-  /** Max length of HTTP request */
+  /** Max length of HTTP request. */
   static const size_t REQUEST_MAX = 64;
 
   /**

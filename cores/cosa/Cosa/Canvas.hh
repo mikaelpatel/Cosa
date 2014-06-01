@@ -276,12 +276,12 @@ public:
     }
 
   protected:
-    color16_t m_pen_color;
-    color16_t m_canvas_color;
-    color16_t m_text_color;
-    uint8_t m_text_scale;
-    Font* m_font;
-    pos8_t m_cursor;
+    color16_t m_pen_color;	//!< Current foreground color.
+    color16_t m_canvas_color;	//!< Current background color.
+    color16_t m_text_color;	//!< Current text color.
+    uint8_t m_text_scale;	//!< Current text scale.
+    Font* m_font;		//!< Current font.
+    pos8_t m_cursor;		//!< Current cursor position.
   };
 
   /**
@@ -927,11 +927,13 @@ public:
   void run(uint8_t ix, const void_P* tab, uint8_t max);
 
 protected:
-  /** Canvas context; default and current. Delegation pattern */
+  /** Default Canvas context (Factory pattern). */
   static Context context;
+
+  /** Current Canvas context (Delegation pattern). */
   Context* m_context;
 
-  /** Canvas direction (LANDSCAPE/PORTRAIT) */
+  /** Canvas direction (LANDSCAPE/PORTRAIT). */
   uint8_t m_direction;
 };
 

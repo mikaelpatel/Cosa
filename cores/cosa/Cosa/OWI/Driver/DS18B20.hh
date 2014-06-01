@@ -240,7 +240,7 @@ public:
 
 private:
   /**
-   * DS18B20 Function Commands (Table 3, pp. 12)
+   * DS18B20 Function Commands (Table 3, pp. 12).
    */
   enum {
     FAMILY_CODE = 0x28,
@@ -253,7 +253,7 @@ private:
   } __attribute__((packed));
 
   /**
-   * DS18B20 Memory Map (Figure 7, pp. 7)
+   * DS18B20 Memory Map (Figure 7, pp. 7).
    */
   struct scratchpad_t {
     int16_t temperature;
@@ -265,22 +265,22 @@ private:
   };
   scratchpad_t m_scratchpad;
 
-  /** Size of configuration; high/low trigger and configuration byte */
+  /** Size of configuration; high/low trigger and configuration byte. */
   static const uint8_t CONFIG_MAX = 3;
 
-  /** Parasite power mode */
+  /** Parasite power mode. */
   uint8_t m_parasite;
 
-  /** Watchdog millis on convert_request() */
+  /** Watchdog millis on convert_request(). */
   uint32_t m_start;
 
-  /** Convert request pending */
+  /** Convert request pending. */
   uint8_t m_converting;
 
-  /** Max conversion time for 12-bit conversion in milli-seconds */
+  /** Max conversion time for 12-bit conversion in milli-seconds. */
   static const uint16_t MAX_CONVERSION_TIME = 750;
 
-  /** Min copy configuration time in milli-seconds (parasite mode) */
+  /** Min copy configuration time in milli-seconds (parasite mode). */
   static const uint16_t MIN_COPY_PULLUP = 10;
 
   /**

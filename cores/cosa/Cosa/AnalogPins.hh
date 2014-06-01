@@ -95,10 +95,10 @@ public:
   }
 
 private:
-  const Board::AnalogPin* m_pin_at;
-  uint16_t* m_buffer;
-  uint8_t m_count;
-  uint8_t m_next;
+  const Board::AnalogPin* m_pin_at; //!< Current analog channel
+  uint16_t* m_buffer;		    //!< Sample vector.
+  uint8_t m_count;		    //!< Number of samples.
+  uint8_t m_next;		    //!< Next analog channel (index).
 };
 
 #endif

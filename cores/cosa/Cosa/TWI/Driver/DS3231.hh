@@ -50,7 +50,7 @@
 class DS3231 : private TWI::Driver {
 public:
   /**
-   * Alarm1 register sub-set type and mask bits (Table 2, pp. 12)
+   * Alarm1 register sub-set type and mask bits (Table 2, pp. 12).
    */
   struct alarm1_t {
     enum {
@@ -91,7 +91,7 @@ public:
   };
   
   /**
-   * Alarm2 register sub-set type and mask bits (Table 2, pp. 12)
+   * Alarm2 register sub-set type and mask bits (Table 2, pp. 12).
    */
   struct alarm2_t {
     enum {
@@ -130,47 +130,47 @@ public:
   };
   
   /**
-   * Special-Purpose Register: Control Register (pp. 13)
+   * Special-Purpose Register: Control Register (pp. 13).
    */
   union control_t {
     uint8_t as_uint8;
     struct {
-      uint8_t a1ie:1;		//<! Alarm 1 Interrupt Enable
-      uint8_t a2ie:1;		//<! Alarm 2 Interrupt Enable
-      uint8_t intcn:1;		//<! Interrupt Control
-      uint8_t rs:2;		//<! Rate Select
-      uint8_t conv:1;		//<! Convert Temperature
-      uint8_t bbsqw:1;		//<! Battery-Backup Square-Wave Enable
-      uint8_t eosc:1;		//<! Enable Oscillator
+      uint8_t a1ie:1;		//!< Alarm 1 Interrupt Enable.
+      uint8_t a2ie:1;		//!< Alarm 2 Interrupt Enable.
+      uint8_t intcn:1;		//!< Interrupt Control.
+      uint8_t rs:2;		//!< Rate Select.
+      uint8_t conv:1;		//!< Convert Temperature.
+      uint8_t bbsqw:1;		//!< Battery-Backup Square-Wave Enable.
+      uint8_t eosc:1;		//!< Enable Oscillator.
     };
   };
 
   /**
-   * Special-Purpose Register: Status Register (pp. 14)
+   * Special-Purpose Register: Status Register (pp. 14).
    */
   union status_t {
     uint8_t as_uint8;
     struct {
-      uint8_t a1f:1;		//<! Alarm 1 Flag
-      uint8_t a2f:1;		//<! Alarm 2 Flag
-      uint8_t bsy:1;		//<! Busy
-      uint8_t en32khz:1;	//<! Enable 32kHz Output
-      uint8_t reserved:3;	//<! Reserved(0)
-      uint8_t osf:1;		//<! Oscillator Stop Flag
+      uint8_t a1f:1;		//!< Alarm 1 Flag.
+      uint8_t a2f:1;		//!< Alarm 2 Flag.
+      uint8_t bsy:1;		//!< Busy.
+      uint8_t en32khz:1;	//!< Enable 32kHz Output.
+      uint8_t reserved:3;	//!< Reserved(0).
+      uint8_t osf:1;		//!< Oscillator Stop Flag.
     };
   };
 
   /**
-   * The Timekeeper Registers (Figure 1. pp. 11)
+   * The Timekeeper Registers (Figure 1. pp. 11).
    */
   struct timekeeper_t {
-    time_t clock;		//<! Current time
-    alarm1_t alarm1;		//<! Alarm 1 setting
-    alarm2_t alarm2;		//<! Alarm 2 setting
-    control_t control;		//<! Device control register
-    status_t status;		//<! Device status register
-    int8_t aging;		//<! Crystal adjustment
-    int16_t temp;		//<! Device temperature
+    time_t clock;		//!< Current time.
+    alarm1_t alarm1;		//!< Alarm 1 setting.
+    alarm2_t alarm2;		//!< Alarm 2 setting.
+    control_t control;		//!< Device control register.
+    status_t status;		//!< Device status register.
+    int8_t aging;		//!< Crystal adjustment.
+    int16_t temp;		//!< Device temperature.
   };
   static const uint8_t ALARM1_OFFSET = sizeof(time_t);
   static const uint8_t ALARM2_OFFSET = ALARM1_OFFSET + sizeof(alarm1_t);

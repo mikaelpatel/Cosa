@@ -57,15 +57,15 @@
 class HMC5883L : public TWI::Driver {
 public:
   /**
-   * Configuration Register A (pp. 12)
+   * Configuration Register A (pp. 12).
    */
-  enum Bias {			// Table 6: Measurement Modes
+  enum Bias {			//!< Table 6: Measurement Modes.
     NORMAL_BIAS = 0x00,
     POSITIVE_BIAS = 0x01,
     NEGATIVE_BIAS = 0x02
   } __attribute__((packed));
 
-  enum Rate {			// Table 5: Data Output Rates
+  enum Rate {			//!< Table 5: Data Output Rates.
     OUTPUT_RATE_0_75_HZ,
     OUTPUT_RATE_1_5_HZ,
     OUTPUT_RATE_3_HZ,
@@ -75,7 +75,7 @@ public:
     OUTPUT_RATE_75_HZ
   } __attribute__((packed));
 
-  enum Avg {			// Number of averaged samples per output
+  enum Avg {			//!< Number of averaged samples per output.
     SAMPLES_AVG_1,
     SAMPLES_AVG_2,
     SAMPLES_AVG_4,
@@ -85,7 +85,7 @@ public:
   /**
    * Configuration Register B (pp. 13)
    */
-  enum Range {			// Table 9: Gain Setting
+  enum Range {			//!< Table 9: Gain Setting.
     RANGE_0_88_GA,
     RANGE_1_3_GA,
     RANGE_1_9_GA,
@@ -97,7 +97,7 @@ public:
   } __attribute__((packed));
   
   /**
-   * Mode Register (pp. 14)
+   * Mode Register (pp. 14).
    */
   enum Mode {
     CONTINOUS_MEASUREMENT_MODE,
@@ -106,7 +106,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * Status Register (pp. 16)
+   * Status Register (pp. 16).
    */
   struct status_t {
     uint8_t ready:1;
@@ -121,7 +121,7 @@ public:
   };
 
   /**
-   * Data output structure 
+   * Data output structure.
    */
   struct data_t {
     int16_t x;
@@ -135,7 +135,7 @@ public:
 
 public:
   /**
-   * Construct HMC5883L device with bus address(0x1e) (pp. 11)
+   * Construct HMC5883L device with bus address(0x1e) (pp. 11).
    */
   HMC5883L(uint8_t mode = SLEEP_MODE_IDLE) : 
     TWI::Driver(0x1e), 
@@ -316,27 +316,27 @@ public:
 
 protected:
   /**
-   * Register List (Table 2, pp 11)
+   * Register List (Table 2, pp 11).
    */
   enum Register {
-    CONFIG = 0x00,		// Configuration register A, B
-    MODE = 0x02,		// Mode register
-    OUTPUT = 0x03,		// Output data register X, Y, Z
-    STATUS = 0x09,		// Status register
-    IDENTITY = 0x0a		// Identity register(0-2)
+    CONFIG = 0x00,		//!< Configuration register A, B.
+    MODE = 0x02,		//!< Mode register.
+    OUTPUT = 0x03,		//!< Output data register X, Y, Z.
+    STATUS = 0x09,		//!< Status register.
+    IDENTITY = 0x0a		//!< Identity register(0-2).
   } __attribute__((packed));
   
-  /** Gain conversion table */
+  /** Gain conversion table. */
   static const uint16_t s_gain[] PROGMEM;
 
   /** Configuration registers */
   struct config_t {
-    uint8_t MS:2;		// Measurement configuration bits
-    uint8_t DO:3;		// Data output rate
-    uint8_t MA:2;		// Number of samples to average
-    uint8_t reserved:6;		// Reserved for future use
-    uint8_t GN:3;		// Gain configuration bits
-    config_t()			// Default configuration
+    uint8_t MS:2;		//!< Measurement configuration bits.
+    uint8_t DO:3;		//!< Data output rate.
+    uint8_t MA:2;		//!< Number of samples to average.
+    uint8_t reserved:6;		//!< Reserved for future use.
+    uint8_t GN:3;		//!< Gain configuration bits.
+    config_t()			//!< Default configuration.
     {
       MS = NORMAL_BIAS;
       DO = OUTPUT_RATE_15_HZ;
@@ -345,16 +345,16 @@ protected:
       GN = RANGE_1_3_GA;
     }
   };
-  /** Configuration mirror register */
+  /** Configuration mirror register. */
   config_t m_config;
   
-  /** Sleep mode while waiting for data */
+  /** Sleep mode while waiting for data. */
   uint8_t m_mode;
 
-  /** Overflow detected */
+  /** Overflow detected. */
   bool m_overflow;
 
-  /** Output register latest read */
+  /** Output register latest read. */
   data_t m_output;
 };
 

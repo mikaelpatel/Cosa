@@ -55,7 +55,7 @@ public:
   }
 
   /**
-   * Stop the keypad handler
+   * Stop the keypad handler.
    */
   void end()
   {
@@ -117,10 +117,10 @@ protected:
     }
   };
 
-  // Keypad sample rate
+  /** Keypad sample rate. */
   static const uint16_t SAMPLE_MS = 64;
   
-  // The key sampler and mapper
+  /** The key sampler and mapper. */
   Key m_key;
 
   /**
@@ -149,14 +149,14 @@ public:
     RIGHT_KEY
   } __attribute__((packed));
 
-  // LCD Keypad constructor with internal key map
+  /** LCD Keypad constructor with internal key map. */
   LCDKeypad() : 
     Keypad(Board::A0, m_map) 
   {
   }
 
 private:
-  // Analog reading to key index map
+  /** Analog reading to key index map. */
   static const uint16_t m_map[] PROGMEM;
 };
 

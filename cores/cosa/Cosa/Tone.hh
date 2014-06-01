@@ -68,7 +68,7 @@
  */
 class Tone {
 public:
-  /** Maximum volume */
+  /** Maximum volume. */
   static const uint8_t VOLUME_MAX = 10;
 
   /**
@@ -90,7 +90,7 @@ public:
 		   bool background = false);
   
   /**
-   * Stop playing the tone (if background)
+   * Stop playing the tone (if background).
    */
   static void silent();
 

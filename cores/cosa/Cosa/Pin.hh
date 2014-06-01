@@ -197,8 +197,13 @@ public:
   }
 
 protected:
+  /** Special function register pointer. */
   volatile uint8_t* const m_sfr;
+
+  /** Pin mask in port. */
   const uint8_t m_mask;
+
+  /** Pin identity. */
   const uint8_t m_pin;
 
   /**

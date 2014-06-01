@@ -164,15 +164,10 @@ public:
   };
   
 private:
-  // Current time in seconds
-  static clock_t s_ticks;
-
-  // Alarm handler queue
-  static Head s_queue;
-
-  // Alarm timeout and period in seconds
-  uint32_t m_when;
-  uint16_t m_period;
+  static clock_t s_ticks;	//!< Current time in seconds.
+  static Head s_queue;		//!< Alarm handler queue.
+  uint32_t m_when;		//!< Alarm timeout in seconds.
+  uint16_t m_period;		//!< Period in seconds.
 };
 #endif
 

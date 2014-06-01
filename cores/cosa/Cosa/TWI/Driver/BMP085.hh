@@ -54,7 +54,7 @@
 class BMP085 : private TWI::Driver {
 public:
   /**
-   * Oversampling modes (table, pp. 10)
+   * Oversampling modes (table, pp. 10).
    */
   enum Mode {
     ULTRA_LOW_POWER = 0,
@@ -163,10 +163,10 @@ public:
   }
 
 protected:
-  /** Temperature conversion time max (ms) */
+  /** Temperature conversion time max (ms). */
   static const uint8_t TEMP_CONV_MS = 5;
 
-  /** Pressure conversion time max table (ms), index with mode */
+  /** Pressure conversion time max table (ms), index with mode. */
   static const uint8_t PRESSURE_CONV_MS[] __PROGMEM;
 
   /**
@@ -187,37 +187,37 @@ protected:
     int16_t md;
   };
 
-  /** Calibration coefficients register address */
+  /** Calibration coefficients register address. */
   static const uint8_t COEFF_REG = 0xAA;
 
-  /** Command register address */
+  /** Command register address. */
   static const uint8_t CMD_REG = 0xF4;
 
-  /** Result register address */
+  /** Result register address. */
   static const uint8_t RES_REG = 0xF6;
 
-  /** Temperature conversion command */
+  /** Temperature conversion command. */
   static const uint8_t TEMP_CONV_CMD = 0x2E;
 
-  /** Pressure conversion command */
+  /** Pressure conversion command. */
   static const uint8_t PRESSURE_CONV_CMD = 0x34;
 
-  /** Device calibration data */
+  /** Device calibration data. */
   param_t m_param;
 
-  /** Pressure conversion mode */
+  /** Pressure conversion mode. */
   Mode m_mode;
 
-  /** Currrent command */
+  /** Currrent command. */
   uint8_t m_cmd;
 
-  /** Sample request start time (ms) */
+  /** Sample request start time (ms). */
   uint16_t m_start;
 
-  /** Common intermediate temperature factor */
+  /** Common intermediate temperature factor. */
   int32_t B5;
 
-  /** Latest calculated pressure */
+  /** Latest calculated pressure. */
   int32_t m_pressure;
 };
 

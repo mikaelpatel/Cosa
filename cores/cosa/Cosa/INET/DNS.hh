@@ -30,7 +30,7 @@
  */
 class DNS {
 public:
-  /** DNS standard port number */
+  /** DNS standard port number. */
   static const uint16_t PORT = 53;
 
   /**
@@ -99,7 +99,7 @@ public:
 
 private:
   /**
-   * Header Flags and Codes (little-endian)
+   * Header Flags and Codes (little-endian).
    */
   enum {
     QUERY_FLAG = (0),
@@ -125,33 +125,33 @@ private:
     LABEL_COMPRESSION_MASK = (0xC0)
   };
 
-  /** Request/Response header */
+  /** Request/Response header. */
   struct header_t {
-    uint16_t ID;		// Identifier
-    uint16_t FC;		// Flags and Codes
-    uint16_t QC;		// Question Count
-    uint16_t ANC;		// Answer Record Count
-    uint16_t NSC;		// Name Server Count
-    uint16_t ARC;		// Additional Record Count
+    uint16_t ID;		//!< Identifier.
+    uint16_t FC;		//!< Flags and Codes.
+    uint16_t QC;		//!< Question Count.
+    uint16_t ANC;		//!< Answer Record Count.
+    uint16_t NSC;		//!< Name Server Count.
+    uint16_t ARC;		//!< Additional Record Count.
   };
 
   /**
-   * Question attributes
+   * Question attributes.
    */
   struct attr_t {
-    uint16_t TYPE;		// Type of data in record
-    uint16_t CLASS;		// Data class
+    uint16_t TYPE;		//!< Type of data in record.
+    uint16_t CLASS;		//!< Data class.
   };
   
   /**
-   * Answer record
+   * Answer record.
    */
   struct rec_t {
-    uint16_t TYPE;		// Type of data in record
-    uint16_t CLASS;		// Data class
-    uint32_t TTL;		// Time To Live; seconds cached
-    uint16_t RDL;		// Resource Data Length
-    uint8_t RD[];		// Resource Data
+    uint16_t TYPE;		//!< Type of data in record.
+    uint16_t CLASS;		//!< Data class.
+    uint32_t TTL;		//!< Time To Live; seconds cached.
+    uint16_t RDL;		//!< Resource Data Length.
+    uint8_t RD[];		//!< Resource Data.
   };
   
   static const uint16_t TIMEOUT = 300;

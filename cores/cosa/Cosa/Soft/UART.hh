@@ -36,7 +36,7 @@ namespace Soft {
  */
 class UAT : public IOStream::Device {
 public:
-  // Serial formats; DATA + PARITY + STOP
+  /** Serial formats; DATA + PARITY + STOP. */
   enum {
     DATA5 = 0,
     DATA6 = 1,
@@ -97,7 +97,7 @@ protected:
  */
 class UART : public UAT {
 public:
-  // Default buffer size
+  /** Default buffer size. */
 #if defined(BOARD_ATTINY)
   static const uint8_t BUFFER_MAX = 32;
 #else
@@ -179,7 +179,7 @@ public:
   }
   
 protected:
-  /** Handling start condition and receive data */
+  /** Handling start condition and receive data. */
   class RXPinChangeInterrupt : public PinChangeInterrupt {
   public:
     RXPinChangeInterrupt(Board::InterruptPin pin, UART* uart);

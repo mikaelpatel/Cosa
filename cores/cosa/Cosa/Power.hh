@@ -238,10 +238,10 @@ private:
    */
   Power() {}
 
-  /** Use Power sleep mode flag */
+  /** Use Power sleep mode flag. */
   static const uint8_t POWER_SLEEP_MODE = 0xff;
 
-  /** Sleep mode */
+  /** Current sleep mode. */
   static uint8_t s_mode;
 };
 

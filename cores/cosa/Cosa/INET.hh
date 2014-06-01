@@ -34,16 +34,16 @@ public:
   static const uint8_t IP_MAX = 4;
 
   /**
-   * Full Internet address; MAC, IP and port
+   * Full Internet address; MAC, IP and port.
    */
   struct addr_t {
-    uint8_t mac[MAC_MAX];	//!< hardware address
-    uint8_t ip[IP_MAX];		//!< network address
-    uint16_t port;		//!< service port
+    uint8_t mac[MAC_MAX];	//!< Hardware address.
+    uint8_t ip[IP_MAX];		//!< Network address.
+    uint16_t port;		//!< Service port.
   };
 
   /**
-   * Check if the given address is illegal (0.0.0.0/255.255.255.255:0)
+   * Check if the given address is illegal (0.0.0.0/255.255.255.255:0).
    * @return true if illegal otherwise false.
    */
   static bool is_illegal(uint8_t addr[IP_MAX], uint16_t port);

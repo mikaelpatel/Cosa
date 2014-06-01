@@ -34,10 +34,10 @@
  */
 class SD : private SPI::Driver {
 public:
-  /** Max size of block */
+  /** Max size of block. */
   static const size_t BLOCK_MAX = 512;
 
-  /** Supported card types */
+  /** Supported card types. */
   enum CARD {
     TYPE_UNKNOWN = 0,
     TYPE_SD1 = 1,
@@ -45,18 +45,18 @@ public:
     TYPE_SDHC = 3
   } __attribute__((packed));
 
-  /** CID, Card Identification register, table 5-2 */
+  /** CID, Card Identification register, table 5-2. */
   struct cid_t {
-    uint8_t mid;		// Manufacturer ID
-    char oid[2];		// OEM/Application ID
-    char pnm[5];		// Product name
-    uint8_t prv; 		// Product revision
-    uint32_t psn;		// Product serial number
-    uint16_t mdt;		// Manufacturing date
-    uint8_t crc;		// CRC7 checksum
+    uint8_t mid;		//!< Manufacturer ID.
+    char oid[2];		//!< OEM/Application ID.
+    char pnm[5];		//!< Product name.
+    uint8_t prv; 		//!< Product revision.
+    uint32_t psn;		//!< Product serial number.
+    uint16_t mdt;		//!< Manufacturing date.
+    uint8_t crc;		//!< CRC7 checksum.
   };
 
-  /** CSD, Card-Specific Data register, version 1.00 */
+  /** CSD, Card-Specific Data register, version 1.00. */
   struct csd_v1_t {
     uint8_t reserved1:6;
     uint8_t csd_ver:2;
@@ -100,7 +100,7 @@ public:
     uint8_t crc;
   };
 
-  /** CSD, Card-Specific Data register, version 2.00 */
+  /** CSD, Card-Specific Data register, version 2.00. */
   struct csd_v2_t {
     uint8_t reserved1:6;
     uint8_t csd_ver:2;
@@ -140,62 +140,62 @@ public:
     uint8_t crc;
   };
 
-  /** CSD, Card-Specific Data register */
+  /** CSD, Card-Specific Data register. */
   union csd_t {
     csd_v1_t v1;
     csd_v2_t v2;
   };
   
 protected:
-  /** Command Abbreviations */
+  /** Command Abbreviations. */
   enum CMD {
-    GO_IDLE_STATE = 0,		// Reset the SD Memory Card
-    ALL_SEND_CID = 2,		// Sends host capacity support information
-    SEND_RELATIVE_ADDR = 3,	// Checks switchable function
-    SET_DSR = 4,		// Programs the DSR of all cards
-    SWITCH_FUNC = 6,		// Checks switchable function
-    SELECT_DESELECT_CARD = 7,	// Toggles card state (stdby/prog and disc)
-    SEND_IF_COND = 8,		// Sends SD Memory Card interface condition
-    SEND_CSD = 9,		// Asks the selected card to send CSD
-    SEND_CID = 10,		// Asks the selected card to send CID
-    VOLTAGE_SWITCH = 11,	// Switch to 1V8 bus signaling level
-    STOP_TRANSMISSION = 12, 	// Stop Multiple Block Read
-    SEND_STATUS = 13,		// Asks the selected card status register
-    GO_INACTIVE_STATE = 15,	// Addressed card into inactive state
-    SET_BLOCKLEN = 16,		// Set block length (in bytes)
-    READ_SINGLE_BLOCK = 17,	// Read block length bytes
-    READ_MULTIPLE_BLOCK = 18,	// Read blocks until STOP_TRANSMISSION
-    SEND_TUNING_BLOCK = 19,	// Send 64 byte tuning pattern to card
-    SPEED_CLASS_CONTROL = 20,	// Check speed class
-    SET_BLOCK_COUNT = 23,	// Specify block count for multiple block
-    WRITE_BLOCK = 24,		// Write block length bytes
-    WRITE_MULTIPLE_BLOCK = 25,	// Write block until STOP_TRANSMISSION
-    PROGRAM_CSD = 27,		// Set programmable bits in CSD
-    SET_WRITE_PROT = 28,	// Set write protect bit
-    CLR_WRITE_PROT = 29,	// Clears write protect bit
-    SEND_WRITE_PROT = 30,	// Read write protect bit
-    ERASE_WR_BLK_START = 32,	// Set first write block to be erased
-    ERASE_WR_BLK_END = 33,	// Set last write block to be erased
-    ERASE = 38,			// Erases selected write blocks
-    LOCK_UNLOCK = 40,		// Set/reset password or unlock/lock card
-    APP_CMD = 55,		// Next command is application specific command
-    GEN_CMD = 56,		// Data block for application specific command
-    READ_OCR = 58,		// Read OCR register of a card
-    CRC_ON_OFF = 59		// Turns the CRC on/off
+    GO_IDLE_STATE = 0,		//!< Reset the SD Memory Card.
+    ALL_SEND_CID = 2,		//!< Sends host capacity support information.
+    SEND_RELATIVE_ADDR = 3,	//!< Checks switchable function.
+    SET_DSR = 4,		//!< Programs the DSR of all cards.
+    SWITCH_FUNC = 6,		//!< Checks switchable function.
+    SELECT_DESELECT_CARD = 7,	//!< Toggles card state (stdby/prog and disc).
+    SEND_IF_COND = 8,		//!< Sends SD Memory Card interface condition.
+    SEND_CSD = 9,		//!< Asks the selected card to send CSD.
+    SEND_CID = 10,		//!< Asks the selected card to send CID.
+    VOLTAGE_SWITCH = 11,	//!< Switch to 1V8 bus signaling level.
+    STOP_TRANSMISSION = 12, 	//!< Stop Multiple Block Read.
+    SEND_STATUS = 13,		//!< Asks the selected card status register.
+    GO_INACTIVE_STATE = 15,	//!< Addressed card into inactive state.
+    SET_BLOCKLEN = 16,		//!< Set block length (in bytes).
+    READ_SINGLE_BLOCK = 17,	//!< Read block length bytes.
+    READ_MULTIPLE_BLOCK = 18,	//!< Read blocks until STOP_TRANSMISSION.
+    SEND_TUNING_BLOCK = 19,	//!< Send 64 byte tuning pattern to card.
+    SPEED_CLASS_CONTROL = 20,	//!< Check speed class.
+    SET_BLOCK_COUNT = 23,	//!< Specify block count for multiple block.
+    WRITE_BLOCK = 24,		//!< Write block length bytes.
+    WRITE_MULTIPLE_BLOCK = 25,	//!< Write block until STOP_TRANSMISSION.
+    PROGRAM_CSD = 27,		//!< Set programmable bits in CSD.
+    SET_WRITE_PROT = 28,	//!< Set write protect bit.
+    CLR_WRITE_PROT = 29,	//!< Clears write protect bit.
+    SEND_WRITE_PROT = 30,	//!< Read write protect bit.
+    ERASE_WR_BLK_START = 32,	//!< Set first write block to be erased.
+    ERASE_WR_BLK_END = 33,	//!< Set last write block to be erased.
+    ERASE = 38,			//!< Erases selected write blocks.
+    LOCK_UNLOCK = 40,		//!< Set/reset password or unlock/lock card.
+    APP_CMD = 55,		//!< Next command is application specific command.
+    GEN_CMD = 56,		//!< Data block for application specific command.
+    READ_OCR = 58,		//!< Read OCR register of a card.
+    CRC_ON_OFF = 59		//!< Turns the CRC on/off.
   } __attribute__((packed));
 
-  /** Table 4-28: Application-Specific Commands */
+  /** Table 4-28: Application-Specific Commands. */
   enum ACMD {
-    SET_BUS_WIDTH = 6,		// Defines the data bus width
-    SD_STATUS = 13,		// Card status
-    SEND_NUM_WR_BLOCKS = 22,	// Number of write blocks
-    SET_WR_BLK_ERASE_COUNT = 23, // Number of pre-erased write blocks
-    SD_SEND_OP_COND = 41,	 // Host capacity support information
-    SET_CLR_CARD_DETECT = 42,	 // Enable pull-up resistor on CD/DAT3 (pin 1)
-    SEND_SCR = 51		 // Reads the Configuration Register
+    SET_BUS_WIDTH = 6,		//!< Defines the data bus width.
+    SD_STATUS = 13,		//!< Card status.
+    SEND_NUM_WR_BLOCKS = 22,	//!< Number of write blocks.
+    SET_WR_BLK_ERASE_COUNT = 23, //!< Number of pre-erased write blocks.
+    SD_SEND_OP_COND = 41,	 //!< Host capacity support information.
+    SET_CLR_CARD_DETECT = 42,	 //!< Enable pull-up resistor on CD/DAT3 (pin 1).
+    SEND_SCR = 51		 //!< Reads the Configuration Register.
   } __attribute__((packed));
 
-  /** Card States */
+  /** Card States. */
   enum STATE {
     IDLE_STATE = 0,
     READY_STATE = 1,
@@ -208,7 +208,7 @@ protected:
     DIS_STATE = 8
   } __attribute__((packed));;
 
-  /** R1 (Status) */
+  /** R1 (Status). */
   union R1 {
     uint8_t as_uint8;
     struct {
@@ -224,7 +224,7 @@ protected:
     R1(uint8_t value = 0) { as_uint8 = value; }
   };
 
-  /** R2 (Extended status) */
+  /** R2 (Extended status). */
   union R2 {
     uint8_t as_uint8;
     struct {
@@ -240,7 +240,7 @@ protected:
     R2(uint8_t value = 0) { as_uint8 = value; }
   };
 
-  /** R3 (OCR register) */
+  /** R3 (OCR register). */
   struct R3 {
     uint32_t vdd_voltage_window:24;
     uint8_t switch_to_1V8_accepted:1;
@@ -250,7 +250,7 @@ protected:
     uint8_t card_power_up:1;
   };
 
-  /** R6 (Published RCA response) */
+  /** R6 (Published RCA response). */
   union R6 {
     uint32_t as_uint32;
     struct {
@@ -260,7 +260,7 @@ protected:
     R6(uint32_t value = 0L) { as_uint32 = value; }
   };
   
-  /** R7 (Card interface condition) */
+  /** R7 (Card interface condition). */
   union R7 {
     uint32_t as_uint32;
     struct {
@@ -272,7 +272,7 @@ protected:
     R7(uint32_t value = 0L) { as_uint32 = value; }
   };
 
-  /** SD initialization check pattern */
+  /** SD initialization check pattern. */
   static const uint8_t CHECK_PATTERN = 0xAA;
 
   enum TOKEN {
@@ -285,23 +285,23 @@ protected:
     DATA_RES_WR_ERR = 0X0E
   } __attribute__((packed));
 
-  /** SD request block with command, arugment and check sum (CRC7) */
+  /** SD request block with command, arugment and check sum (CRC7). */
   struct request_t {
     uint8_t command;
     uint32_t arg;
     uint8_t crc;
   };
 
-  // Internal timeout
+  /** Internal timeout periods. */
   static const uint16_t INIT_TIMEOUT = 2000;
   static const uint16_t ERASE_TIMEOUT = 10000;
   static const uint16_t READ_TIMEOUT = 300;
   static const uint16_t WRITE_TIMEOUT = 600;
 
-  // Response from latest command
+  /** Response from latest command. */
   uint8_t m_response;
 
-  // Detected card type
+  /** Detected card type. */
   CARD m_type;
   
   /**

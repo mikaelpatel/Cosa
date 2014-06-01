@@ -96,13 +96,13 @@ public:
     virtual void run();
 
   protected:
-    /** Wireless device */
+    /** Wireless device. */
     Wireless::Driver* m_dev;
 
-    /** Registry root **/
+    /** Registry root. **/
     Registry* m_reg;
 
-    /** Next transaction identity (15b, positive number only) */
+    /** Next transaction identity (15b, positive number only). */
     int16_t m_tid;
   };
 
@@ -193,10 +193,10 @@ public:
     int listen(uint16_t ms);
 
   protected:
-    /** Wireless device */
+    /** Wireless device. */
     Wireless::Driver* m_dev;
     
-    /** Next transaction identity (15b, positive number only) */
+    /** Next transaction identity (15b, positive number only). */
     int16_t m_tid;
   };
 
@@ -205,14 +205,14 @@ protected:
    * Message types.
    */
   enum {
-    RETE_BASE = 128,		// Base message number
-    PUBLISH = RETE_BASE,	// Publish registry update
-    GET_REQUEST,		// Get registry item value request
-    GET_RESPONSE,		// - response with value
-    PUT_REQUEST,		// Put registry item value request
-    PUT_RESPONSE,		// - response with status
-    APPLY_REQUEST,		// Apply registry action request
-    APPLY_RESPONSE,		// - reponse with result
+    RETE_BASE = 128,		//!< Base message number.
+    PUBLISH = RETE_BASE,	//!< Publish registry update.
+    GET_REQUEST,		//!< Get registry item value request.
+    GET_RESPONSE,		//!< - response with value.
+    PUT_REQUEST,		//!< Put registry item value request.
+    PUT_RESPONSE,		//!< - response with status.
+    APPLY_REQUEST,		//!< Apply registry action request.
+    APPLY_RESPONSE,		//!< - reponse with result.
   } __attribute__((packed));
 };
 

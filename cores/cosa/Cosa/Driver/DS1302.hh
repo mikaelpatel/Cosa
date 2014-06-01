@@ -47,13 +47,13 @@
  */
 class DS1302 {
 public:
-  /** Start address of clock/calender internal registers */
+  /** Start address of clock/calender internal registers. */
   static const uint8_t RTC_START = 0;
 
-  /** Start address of static memory */
+  /** Start address of static memory. */
   static const uint8_t RAM_START = 32;
 
-  /** Static memory size */
+  /** Static memory size. */
   static const size_t RAM_MAX = 31;
 
   /**
@@ -122,18 +122,18 @@ public:
   void get_time(time_t& now);
 
 private:
-  /** Read/write address mask */
+  /** Read/write address mask. */
   static const uint8_t ADDR_MASK = 0x3f;
 
-  /** Read/write bit in command byte */
+  /** Read/write bit in command byte. */
   enum {
     WRITE = 0x00,
     READ = 0x01
   } __attribute__((packed));
 
-  OutputPin m_cs;		//<! Chip select, asserted high
-  IOPin m_sda;			//<! Serial data, bidirectional 
-  OutputPin m_clk;		//<! Clock for synchronized data 
+  OutputPin m_cs;		//!< Chip select, asserted high.
+  IOPin m_sda;			//!< Serial data, bidirectional.
+  OutputPin m_clk;		//!< Clock for synchronized data. 
 
   /**
    * Write data to the device. Internal transfer function. Used within

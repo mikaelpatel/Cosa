@@ -58,7 +58,7 @@ public:
   }
 
 private:
-  /** Processor state to restore */
+  /** Processor state to restore. */
   uint8_t m_key;
 };
 #endif

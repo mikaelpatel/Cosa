@@ -39,14 +39,14 @@ const uint8_t DAYS_PER_WEEK = 7;
  * Common date/time structure for real-time clocks. Data on devices
  * is stored in BCD (DS1307/DS3231).
  */
-struct time_t {			// Range
-  uint8_t seconds;		// 00-59 Seconds
-  uint8_t minutes;		// 00-59 Minutes
-  uint8_t hours;		// 00-23 Hours
-  uint8_t day;			// 01-07 Day
-  uint8_t date;			// 01-31 Date
-  uint8_t month;		// 01-12 Month
-  uint8_t year;			// 00-99 Year
+struct time_t {
+  uint8_t seconds;		//!< 00-59 Seconds.
+  uint8_t minutes;		//!< 00-59 Minutes.
+  uint8_t hours;		//!< 00-23 Hours.
+  uint8_t day;			//!< 01-07 Day.
+  uint8_t date;			//!< 01-31 Date.
+  uint8_t month;		//!< 01-12 Month.
+  uint8_t year;			//!< 00-99 Year.
 
   /**
    * Convert time to binary representation (from BCD). 

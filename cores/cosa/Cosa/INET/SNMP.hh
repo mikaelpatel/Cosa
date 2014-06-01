@@ -27,7 +27,7 @@
 
 class SNMP {
 public:
-  // ASN.1 Basic Encoding Rules (BER) Tags
+  /** ASN.1 Basic Encoding Rules (BER) Tags. */
   enum {
     ASN_BER_BASE_UNIVERSAL = 0x0,
     ASN_BER_BASE_APPLICATION = 0x40,
@@ -37,7 +37,7 @@ public:
     ASN_BER_BASE_CONSTRUCTOR = 0x20
   } __attribute__((packed));
 
-  // SNMP Protocol Data Unit Operation Tags
+  /** SNMP Protocol Data Unit Operation Tags. */
   enum {
     PDU_GET = ASN_BER_BASE_CONTEXT | ASN_BER_BASE_CONSTRUCTOR | 0,
     PDU_GET_NEXT = ASN_BER_BASE_CONTEXT | ASN_BER_BASE_CONSTRUCTOR | 1,
@@ -46,7 +46,7 @@ public:
     PDU_TRAP = ASN_BER_BASE_CONTEXT | ASN_BER_BASE_CONSTRUCTOR | 4
   } __attribute__((packed));
 
-  // SNMP Trap Tags
+  /** SNMP Trap Tags. */
   enum {
     TRAP_COLD_START = 0,
     TRAP_WARM_START = 1,
@@ -57,7 +57,7 @@ public:
     TRAP_ENTERPRISE_SPECIFIC = 6
   } __attribute__((packed));
 
-  // SNMP Value Tags (VALUE::syntax)
+  /** SNMP Value Tags (VALUE::syntax). */
   enum SYNTAX {
     SYNTAX_SEQUENCE = ASN_BER_BASE_UNIVERSAL | ASN_BER_BASE_CONSTRUCTOR | 0x10,
     SYNTAX_BOOL = ASN_BER_BASE_UNIVERSAL | ASN_BER_BASE_PRIMITIVE | 1,
@@ -77,7 +77,7 @@ public:
     SYNTAX_UINT32 = ASN_BER_BASE_APPLICATION | ASN_BER_BASE_PRIMITIVE | 7,
   } __attribute__((packed));
 
-  // Error codes (PDU::error_status)
+  /** Error codes (PDU::error_status). */
   enum {
     NO_ERROR = 0,
     TOO_BIG = 1,
@@ -87,7 +87,7 @@ public:
     GEN_ERR = 5
   };
 
-  // Object Identity (PDU::oid)
+  /** Object Identity (PDU::oid). */
   struct OID {
     static const size_t NAME_MAX = 32;
     uint8_t length;
@@ -95,7 +95,7 @@ public:
     int match(const uint8_t* coid, bool flag = true);
   };
 
-  // Object Value in Basic Encoding Rule (ASN.1 BER)
+  /** Object Value in Basic Encoding Rule (ASN.1 BER). */
   struct VALUE {
     static const uint8_t DATA_MAX = 64;
     uint8_t syntax;
@@ -111,7 +111,7 @@ public:
     bool encode(SYNTAX syn);
   };
 
-  // SNMP Protocol Data Unit (PDU)
+  /** SNMP Protocol Data Unit (PDU). */
   struct PDU {
     static const uint8_t COMMUNITY_MAX = 16;
     uint8_t dest[INET::IP_MAX];
@@ -150,7 +150,7 @@ public:
   };
 
   /**
-   * Mandatory SNMP MIB MIB-2 System OID(1.3.6.1.2.1.1.n)
+   * Mandatory SNMP MIB MIB-2 System OID(1.3.6.1.2.1.1.n).
    */
   class MIB2_SYSTEM : public MIB {
   public:
@@ -197,23 +197,21 @@ public:
     const char* m_name;
     const char* m_location;
     enum {
-      sysDescr = 1,		// DisplayString(0..255), read-only, mandatory
-      sysObjectID = 2,		// OID, read-only, mandatory
-      sysUpTime = 3,		// TimeTicks, read-only, mandatory
-      sysContact = 4,		// DisplayString(0..255), read-write, mandatory
-      sysName = 5,		// DisplayString(0..255), read-write, mandatory
-      sysLocation = 6,		// DisplayString(0..255), read-write, mandatory
-      sysServices = 7		// Integer(0..127), read-only, mandatory
+      sysDescr = 1,		//!< DisplayString(0..255), read-only, mandatory.
+      sysObjectID = 2,		//!< OID, read-only, mandatory.
+      sysUpTime = 3,		//!< TimeTicks, read-only, mandatory.
+      sysContact = 4,		//!< DisplayString(0..255), read-write, mandatory.
+      sysName = 5,		//!< DisplayString(0..255), read-write, mandatory.
+      sysLocation = 6,		//!< DisplayString(0..255), read-write, mandatory.
+      sysServices = 7		//!< Integer(0..127), read-only, mandatory.
     } __attribute__((packed));
     friend class SNMP;
   };
 
-  /** Arduino MIB OID(1.3.6.1.4.1.36582) */
+  /** Arduino MIB OID(1.3.6.1.4.1.36582). */
   static const uint8_t ARDUINO_MIB_OID[] PROGMEM;
 
-  /**
-   * The SNMP Agent standard port.
-   */
+  /** The SNMP Agent standard port. */
   static const uint16_t PORT = 161;
   
   /**
@@ -300,10 +298,10 @@ protected:
     return (m_sock->write_P(buf, size)); 
   }
 
-  // Connection-less socket for incoming requests
+  /** Connection-less socket for incoming requests. */
   Socket* m_sock;
 
-  // Attached MIB to service
+  /** Attached MIB to service. */
   MIB2_SYSTEM* m_sys;
   MIB* m_mib;
 };

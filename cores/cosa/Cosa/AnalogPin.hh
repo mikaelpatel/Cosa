@@ -171,11 +171,11 @@ public:
   }
 
 protected:
-  static AnalogPin* sampling_pin;
-  const Board::AnalogPin m_pin;
-  uint8_t m_reference;
-  uint16_t m_value;
-  uint8_t m_event;
+  static AnalogPin* sampling_pin; //!< Current sampling pin if any.
+  const Board::AnalogPin m_pin;	  //!< Analog channel number.
+  uint8_t m_reference;		  //!< ADC reference voltage type.
+  uint16_t m_value;		  //!< Latest sample value.
+  uint8_t m_event;		  //!< Event to push on completion.
   
   /**
    * Internal request sample of analog pin. Set up sampling of given pin

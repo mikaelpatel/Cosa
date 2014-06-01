@@ -129,18 +129,18 @@ public:
 protected:
   // States
   enum {
-    INIT,			// Initial state
-    IDLE,			// Periodic wait
-    REQUEST,			// Issued a request
-    RESPONSE,			// Waiting for response
-    SAMPLING,			// Collecting samples
-    COMPLETED			// Data transfer completed
+    INIT,			//!< Initial state.
+    IDLE,			//!< Periodic wait.
+    REQUEST,			//!< Issued a request.
+    RESPONSE,			//!< Waiting for response.
+    SAMPLING,			//!< Collecting samples.
+    COMPLETED			//!< Data transfer completed.
   } __attribute__((packed));
 
-  /** Minimum periodic wait (approx. 2 seconds) */
+  /** Minimum periodic wait (approx. 2 seconds). */
   static const uint16_t MIN_PERIOD = 2048;
 
-  /** Sample thresholds */
+  /** Sample thresholds. */
   static const uint16_t LOW_THRESHOLD = 50;
   static const uint16_t BIT_THRESHOLD = 100;
   static const uint16_t HIGH_THRESHOLD = 200;
@@ -164,32 +164,34 @@ protected:
     };
   };
   
-  /** State of device driver */
+  /** State of device driver. */
   volatile uint8_t m_state;
 
-  /** Number of errors detected; transfer or checksum */
+  /** Number of errors detected; transfer or checksum. */
   volatile uint8_t m_errors;
 
-  /** Micro-seconds since latest rising of data signal; pulse start */
+  /** Micro-seconds since latest rising of data signal; pulse start. */
   volatile uint16_t m_start;
 
-  /** Number of milli-seconds between requests */
+  /** Number of milli-seconds between requests. */
   volatile uint16_t m_period;
 
-  /** Current byte being read from device */
+  /** Current byte being read from device. */
   volatile uint8_t m_value;
 
-  /** Current number of bits read */
+  /** Current number of bits read. */
   volatile uint8_t m_bits;
 
-  /** Current data byte index stream */
+  /** Current data byte index stream. */
   volatile uint8_t m_ix;
 
-  /** Current data being transfered */
+  /** Current data being transfered. */
   data_t m_data;
 
-  /* Latest valid reading */
+  /* Latest valid humidity reading. */
   int16_t m_humidity;
+
+  /* Latest valid temperature reading. */
   int16_t m_temperature;
   
   /**

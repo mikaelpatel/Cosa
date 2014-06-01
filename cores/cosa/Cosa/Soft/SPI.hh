@@ -36,7 +36,7 @@ namespace Soft {
    */
   class SPI {
   public:
-    /** Clock selectors */
+    /** Clock selectors. */
     enum Clock {
       DIV4_CLOCK = 0x00,
       DIV16_CLOCK = 0x01,
@@ -49,7 +49,7 @@ namespace Soft {
       DEFAULT_CLOCK = DIV4_CLOCK
     } __attribute__((packed));
 
-    /** Bit order selectors */
+    /** Bit order selectors. */
     enum Order {
       MSB_ORDER = 0, 
       LSB_ORDER = 1,
@@ -84,21 +84,26 @@ namespace Soft {
 	     Interrupt::Handler* irq = NULL);
 
     protected:
-      /** List of drivers */
+      /** List of drivers. */
       Driver* m_next;
-      /** Interrupt handler */
+
+      /** Interrupt handler. */
       Interrupt::Handler* m_irq;
-      /** Device chip select pin */
+
+      /** Device chip select pin. */
       OutputPin m_cs;
+
       /** Chip select pulse mode; 
        *  0 for active low logic during the transaction,
        *  1 for active high logic,
        *  2 pulse at end of transaction.
        */
       uint8_t m_pulse;
-      /** Mode for phase and transition */
+
+      /** Mode for phase and transition. */
       uint8_t m_mode;
-      /** Data direction; bit order */
+
+      /** Data direction; bit order. */
       Order m_order;
     };
   
@@ -168,17 +173,22 @@ namespace Soft {
     }
 
   private:
-    /** List of attached devices for interrupt disable/enable */
+    /** List of attached devices for interrupt disable/enable. */
     Driver* m_list;
-    /** Current device using the SPI hardware */
+
+    /** Current device using the SPI hardware. */
     Driver* m_dev;
-    /** Master Input Slave Output pin */
+
+    /** Master Input Slave Output pin. */
     InputPin m_miso;
-    /** Master Output Slave Input pin */
+
+    /** Master Output Slave Input pin. */
     OutputPin m_mosi;
-    /** Serial Clock pin */
+
+    /** Serial Clock pin. */
     OutputPin m_sck;
   };
+
   extern SPI spi;
 };
 #endif

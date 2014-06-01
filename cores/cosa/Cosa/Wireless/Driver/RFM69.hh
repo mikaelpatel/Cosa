@@ -181,81 +181,81 @@ public:
 
 private:
   /**
-   * Configuration and Status Registers (Table 23, pp. 60)
+   * Configuration and Status Registers (Table 23, pp. 60).
    */
   enum Reg {
-    FIFO = 0x00,		// FIFO read/write access (66 byte)
-    OP_MODE = 0x01,		// Operating modes of the transceiver
-    DATA_MODUL = 0x02,		// Data operation mode and modulation
-    BITRATE = 0x03,		// Bit Rate setting (16-bit)
-    BITRATE_MSB = 0x03,		// Bit Rate setting (MSB)
-    BITRATE_LSB = 0x04,		// Bit Rate setting (LSB)
-    FDEV = 0x05,	        // Frequency Deviation setting (16-bit)
-    FDEV_MSB = 0x05,	        // Frequency Deviation setting (MSB)
-    FDEV_LSB = 0x06,	        // Frequency Deviation setting (LSB)
-    FRF = 0x07,			// RF Carrier Frequency (24-bit)
-    FRF_MSB = 0x07,		// RF Carrier Frequency (MSB)
-    FRF_MID = 0x08,		// RF Carrier Frequency (MID)
-    FRF_LSB = 0x09,		// RF Carrier Frequency (LSB)
-    OSC1 = 0x0A,	        // RC Oscillators Settings
-    AFC_CTRL = 0x0B,		// AFC control in low modulation
-    LISTEN1 = 0x0D,		// Listen Mode settings
-    LISTEN2 = 0x0E,		// Listen Mode Idle duration
-    LISTEN3 = 0x0F,		// Listen Mode Rx duration
-    VERSION = 0x10,		// Version
-    PA_LEVEL = 0x11,	        // PA selection and Output Power control
-    PA_RAMP = 0x12,	        // Control of the PA ramp time in FSK mode
-    OCP = 0x13,			// Over Current Protection control
-    LNA = 0x18,			// LNA settings
-    RX_BW = 0x19,		// Channel Filter BW Control
-    AFC_BW = 0x1A,		// Channel Filter BW Control durint AFC
-    OOK_PEAK = 0x1B,            // OOK demodulator control in peak mode
-    OOK_AVG = 0x1C,             // OOK demodulator average threshold control
-    OOK_FIXED = 0x1D,  		// OOK demodulator fixed threshold control
-    AFC_FEI = 0x1E,		// AFC and FEI control and status 
-    AFC = 0x1F,			// Frequency correction of the AFC (16-bit)
-    AFC_MSB = 0x1F,	   	// Frequency correction of the AFC (MSB)
-    AFC_LSB = 0x20,	   	// Frequency correction of the AFC (LSB)
-    FEI = 0x21,			// Calculated frequency error (16-bit)
-    FEI_MSB = 0x21,		// Calculated frequency error (MSB)
-    FEI_LSB = 0x22,		// Calculated frequency error (LSB)
-    RSSI_CONFIG = 0x23,		// RSSI-related settings
-    RSSI_VALUE = 0x24,		// RSSI value in dBm
-    DIO_MAPPING1 = 0x25,	// Mapping of pins DIO0 to DIO3
-    DIO_MAPPING2 = 0x26, 	// Mapping of pins DIO4 to DIO5, CLKOUT frequency
-    IRQ_FLAGS1 = 0x27, 		// PLL Lock state, Timeout, RSSI Threshold...
-    IRQ_FLAGS2 = 0x28,	    	// FIFO handling flags...
-    RSSI_THRESH = 0x29,		// RSSI Threshold control
-    RX_TIMEOUT1 = 0x2A,		// Time from Rx request to RSSI detection 
-    RX_TIMEOUT2 = 0x2B,		// Time from RSSI detection and PayloadReady 
-    PREAMBLE = 0x2C,		// Preamble length (16-bit)
-    PREAMBLE_MSB = 0x2C,	// Preamble length (MSB)
-    PREAMBLE_LSB = 0x2D,	// Preamble length (LSB)
-    SYNC_CONFIG = 0x2E,		// Sync Word Recognition control
-    SYNC_VALUE = 0x2F,		// Sync Word bytes (up to 8 bytes)
-    SYNC_VALUE1 = 0x2F,		// Byte 1 of Sync Word
-    SYNC_VALUE2 = 0x30,		// Byte 2 of Sync Word
-    SYNC_VALUE3 = 0x31,		// Byte 3 of Sync Word
-    SYNC_VALUE4 = 0x32,		// Byte 4 of Sync Word
-    SYNC_VALUE5 = 0x33,		// Byte 5 of Sync Word
-    SYNC_VALUE6 = 0x34,		// Byte 6 of Sync Word
-    SYNC_VALUE7 = 0x35,		// Byte 7 of Sync Word
-    SYNC_VALUE8 = 0x36,		// Byte 8 of Sync Word
-    PACKET_CONFIG1 = 0x37,	// Packet mode settings
-    PAYLOAD_LENGTH = 0x38,	// Payload length setting
-    NODE_ADDR = 0x39,		// Node address
-    BROADCAST_ADDR = 0x3A,	// Broadcast address
-    AUTO_MODES = 0x3B,		// Auto modes settings
-    FIFO_THRESHOLD = 0x3C,	// Fifo threshold, Tx start condition
-    PACKET_CONFIG2 = 0x3D,	// Package mode settings
-    CYPHER_KEY = 0x3E,		// Cypher key (16 bytes)
-    TEMP1 = 0x4E,		// Temperature Sensor control
-    TEMP2 = 0x4F,		// Temperature readout
-    TEST_LNA = 0x58,		// Sensitivity boost
-    TEST_PA1 = 0x5A,		// High Power PA settings
-    TEST_PA2 = 0x5C,		// High Power PA settings
-    TEST_DAGC = 0x6F,		// Fading Margin Improvement
-    TEST_AFC = 0x71,		// AFC offset for low modulation index AFC
+    FIFO = 0x00,		//!< FIFO read/write access (66 byte).
+    OP_MODE = 0x01,		//!< Operating modes of the transceiver.
+    DATA_MODUL = 0x02,		//!< Data operation mode and modulation.
+    BITRATE = 0x03,		//!< Bit Rate setting (16-bit).
+    BITRATE_MSB = 0x03,		//!< Bit Rate setting (MSB).
+    BITRATE_LSB = 0x04,		//!< Bit Rate setting (LSB).
+    FDEV = 0x05,	        //!< Frequency Deviation setting (16-bit).
+    FDEV_MSB = 0x05,	        //!< Frequency Deviation setting (MSB).
+    FDEV_LSB = 0x06,	        //!< Frequency Deviation setting (LSB).
+    FRF = 0x07,			//!< RF Carrier Frequency (24-bit).
+    FRF_MSB = 0x07,		//!< RF Carrier Frequency (MSB).
+    FRF_MID = 0x08,		//!< RF Carrier Frequency (MID).
+    FRF_LSB = 0x09,		//!< RF Carrier Frequency (LSB).
+    OSC1 = 0x0A,	        //!< RC Oscillators Settings.
+    AFC_CTRL = 0x0B,		//!< AFC control in low modulation.
+    LISTEN1 = 0x0D,		//!< Listen Mode settings.
+    LISTEN2 = 0x0E,		//!< Listen Mode Idle duration.
+    LISTEN3 = 0x0F,		//!< Listen Mode Rx duration.
+    VERSION = 0x10,		//!< Version.
+    PA_LEVEL = 0x11,	        //!< PA selection and Output Power control.
+    PA_RAMP = 0x12,	        //!< Control of the PA ramp time in FSK mode.
+    OCP = 0x13,			//!< Over Current Protection control.
+    LNA = 0x18,			//!< LNA settings.
+    RX_BW = 0x19,		//!< Channel Filter BW Control.
+    AFC_BW = 0x1A,		//!< Channel Filter BW Control durint AFC.
+    OOK_PEAK = 0x1B,            //!< OOK demodulator control in peak mode.
+    OOK_AVG = 0x1C,             //!< OOK demodulator average threshold control.
+    OOK_FIXED = 0x1D,  		//!< OOK demodulator fixed threshold control.
+    AFC_FEI = 0x1E,		//!< AFC and FEI control and status.
+    AFC = 0x1F,			//!< Frequency correction of the AFC (16-bit).
+    AFC_MSB = 0x1F,	   	//!< Frequency correction of the AFC (MSB).
+    AFC_LSB = 0x20,	   	//!< Frequency correction of the AFC (LSB).
+    FEI = 0x21,			//!< Calculated frequency error (16-bit).
+    FEI_MSB = 0x21,		//!< Calculated frequency error (MSB).
+    FEI_LSB = 0x22,		//!< Calculated frequency error (LSB).
+    RSSI_CONFIG = 0x23,		//!< RSSI-related settings.
+    RSSI_VALUE = 0x24,		//!< RSSI value in dBm.
+    DIO_MAPPING1 = 0x25,	//!< Mapping of pins DIO0 to DIO3.
+    DIO_MAPPING2 = 0x26, 	//!< Mapping of pins DIO4 to DIO5, CLKOUT frequency.
+    IRQ_FLAGS1 = 0x27, 		//!< PLL Lock state, Timeout, RSSI Threshold...
+    IRQ_FLAGS2 = 0x28,	    	//!< FIFO handling flags...
+    RSSI_THRESH = 0x29,		//!< RSSI Threshold control.
+    RX_TIMEOUT1 = 0x2A,		//!< Time from Rx request to RSSI detection.
+    RX_TIMEOUT2 = 0x2B,		//!< Time from RSSI detection and PayloadReady.
+    PREAMBLE = 0x2C,		//!< Preamble length (16-bit).
+    PREAMBLE_MSB = 0x2C,	//!< Preamble length (MSB).
+    PREAMBLE_LSB = 0x2D,	//!< Preamble length (LSB).
+    SYNC_CONFIG = 0x2E,		//!< Sync Word Recognition control.
+    SYNC_VALUE = 0x2F,		//!< Sync Word bytes (up to 8 bytes).
+    SYNC_VALUE1 = 0x2F,		//!< Byte 1 of Sync Word.
+    SYNC_VALUE2 = 0x30,		//!< Byte 2 of Sync Word.
+    SYNC_VALUE3 = 0x31,		//!< Byte 3 of Sync Word.
+    SYNC_VALUE4 = 0x32,		//!< Byte 4 of Sync Word.
+    SYNC_VALUE5 = 0x33,		//!< Byte 5 of Sync Word.
+    SYNC_VALUE6 = 0x34,		//!< Byte 6 of Sync Word.
+    SYNC_VALUE7 = 0x35,		//!< Byte 7 of Sync Word.
+    SYNC_VALUE8 = 0x36,		//!< Byte 8 of Sync Word.
+    PACKET_CONFIG1 = 0x37,	//!< Packet mode settings.
+    PAYLOAD_LENGTH = 0x38,	//!< Payload length setting.
+    NODE_ADDR = 0x39,		//!< Node address.
+    BROADCAST_ADDR = 0x3A,	//!< Broadcast address.
+    AUTO_MODES = 0x3B,		//!< Auto modes settings.
+    FIFO_THRESHOLD = 0x3C,	//!< Fifo threshold, Tx start condition.
+    PACKET_CONFIG2 = 0x3D,	//!< Package mode settings.
+    CYPHER_KEY = 0x3E,		//!< Cypher key (16 bytes).
+    TEMP1 = 0x4E,		//!< Temperature Sensor control.
+    TEMP2 = 0x4F,		//!< Temperature readout.
+    TEST_LNA = 0x58,		//!< Sensitivity boost.
+    TEST_PA1 = 0x5A,		//!< High Power PA settings.
+    TEST_PA2 = 0x5C,		//!< High Power PA settings.
+    TEST_DAGC = 0x6F,		//!< Fading Margin Improvement.
+    TEST_AFC = 0x71,		//!< AFC offset for low modulation index AFC.
   } __attribute__((packed));
   
   /**
@@ -263,9 +263,9 @@ private:
    * read/write flag in most significant bit.
    */
   enum {
-    REG_READ = 0x00,		// Read register
-    REG_WRITE = 0x80,		// Write register
-    REG_MASK = 0x7F		// Mask register
+    REG_READ = 0x00,		//!< Read register.
+    REG_WRITE = 0x80,		//!< Write register.
+    REG_MASK = 0x7F		//!< Mask register.
   } __attribute__((packed));
   
   /**
@@ -338,268 +338,268 @@ private:
   }
 
   /**
-   * Register OP_MODE bitfields (Table 24, pp. 63)
+   * Register OP_MODE bitfields (Table 24, pp. 63).
    */
   enum {
-    SEQUENCER_OFF = 0x80,		// Controls the automatic sequencer
-    SEQUENCER_ON = 0x00,		// 
-    LISTEN_OFF = 0x00,			// Enables listen mode
-    LISTEN_ON = 0x40,			// 
-    LISTEN_ABORT = 0x20,		// Aborts listen mode with LISTEN_OFF
-    MODE_MASK = 0x1C			// Tranceiver operation modes
+    SEQUENCER_OFF = 0x80,		//!< Controls the automatic sequencer.
+    SEQUENCER_ON = 0x00,		//!< 
+    LISTEN_OFF = 0x00,			//!< Enables listen mode.
+    LISTEN_ON = 0x40,			//!< 
+    LISTEN_ABORT = 0x20,		//!< Aborts listen mode with LISTEN_OFF.
+    MODE_MASK = 0x1C			//!< Tranceiver operation modes.
   } __attribute__((packed));
 
   /**
-   * Register DATA_MODUL bitfields (Table 24, pp. 63)
+   * Register DATA_MODUL bitfields (Table 24, pp. 63).
    */
   enum {
-    PACKET_MODE = 0x00,				// Data processing mode
-    CONTINUOUS_MODE_WITH_BIT_SYNC = 0x40,	// 
-    CONTINUOUS_MODE_WITHOUT_BIT_SYNC = 0x60,	// 
-    FSK_MODULATION = 0x00,			// Modulation scheme
-    OOK_MODULATION = 0x80,			// 
-    FSK_NO_SHAPING = 0x00,			// Modulation shaping (FSK)
-    FSK_BT_1_0 = 0x01,				// Gaussian filter, BT = 1.0
-    FSK_BT_0_5 = 0x02,				// BT = 0.5
-    FSK_BT_0_3 = 0x03,				// BT = 0.3
-    OOK_NO_SHAPING = 0x00,			// Modulation shaping (OOK)
-    OOK_BS_1 = 0x01,				// f(cutoff) = BR
-    OOK_BS_2 = 0x02,				// f(cutoff) = 2*BR
+    PACKET_MODE = 0x00,				//!< Data processing mode.
+    CONTINUOUS_MODE_WITH_BIT_SYNC = 0x40,	//!< 
+    CONTINUOUS_MODE_WITHOUT_BIT_SYNC = 0x60,	//!< 
+    FSK_MODULATION = 0x00,			//!< Modulation scheme.
+    OOK_MODULATION = 0x80,			//!< 
+    FSK_NO_SHAPING = 0x00,			//!< Modulation shaping (FSK).
+    FSK_BT_1_0 = 0x01,				//!< Gaussian filter, BT = 1.0.
+    FSK_BT_0_5 = 0x02,				//!< BT = 0.5.
+    FSK_BT_0_3 = 0x03,				//!< BT = 0.3.
+    OOK_NO_SHAPING = 0x00,			//!< Modulation shaping (OOK).
+    OOK_BS_1 = 0x01,				//!< f(cutoff) = BR.
+    OOK_BS_2 = 0x02,				//!< f(cutoff) = 2*BR.
   } __attribute__((packed));
 
   /**
-   * Register OSC1 bitfields (Table 24, pp. 64)
+   * Register OSC1 bitfields (Table 24, pp. 64).
    */
   enum {
-    RC_CAL_START = 0x80,	// Trigger RC oscillator calibration
-    RC_CAL_DONE = 0x40		// Calibration completed flag
+    RC_CAL_START = 0x80,	//!< Trigger RC oscillator calibration.
+    RC_CAL_DONE = 0x40		//!< Calibration completed flag.
   } __attribute__((packed));
 
   /**
-   * Register AFC_CTRL bitfields (Table 24, pp. 64)
+   * Register AFC_CTRL bitfields (Table 24, pp. 64).
    */
   enum {
-    AFC_LOW_BETA_OFF = 0x00,	// Standard AFC routine
-    AFC_LOW_BETA_ON = 0x20,	// Improved AFC routine
+    AFC_LOW_BETA_OFF = 0x00,	//!< Standard AFC routine.
+    AFC_LOW_BETA_ON = 0x20,	//!< Improved AFC routine.
   } __attribute__((packed));
 
   /**
-   * Register LISTEN1 bitfields (Table 24, pp. 65)
+   * Register LISTEN1 bitfields (Table 24, pp. 65).
    */
   enum {
-    RESOL_IDLE_64_US = 0x40,		// Resolution of Listen mode idle time
-    RESOL_IDLE_410_US = 0x80,		// Calibrated RC oscillator
-    RESOL_IDLE_262000_US = 0xC0,	// 
-    RESOL_RX_64_US = 0x10,		// Resolution of Listen mode Rx time
-    RESOL_RX_410_US = 0x20,		// Calibrated RC oscillator
-    RESOL_RX_262000_US = 0x30,		// 
-    CRITERIA_RSSI_THRESHOLD = 0x00, 	// Packet acceptance criteria
-    CRITERIA_RSSI_SYNC_THRESHOLD = 0x08,// RSSI, RSSI & SYNC_ADDR
-    END_MODE0 = 0x00,			// Action after acceptance
-    END_MODE1 = 0x02,			// 
-    END_MODE2 = 0x04			// 
+    RESOL_IDLE_64_US = 0x40,		//!< Resolution of Listen mode idle time.
+    RESOL_IDLE_410_US = 0x80,		//!< Calibrated RC oscillator.
+    RESOL_IDLE_262000_US = 0xC0,	//!< 
+    RESOL_RX_64_US = 0x10,		//!< Resolution of Listen mode Rx time.
+    RESOL_RX_410_US = 0x20,		//!< Calibrated RC oscillator.
+    RESOL_RX_262000_US = 0x30,		//!< 
+    CRITERIA_RSSI_THRESHOLD = 0x00, 	//!< Packet acceptance criteria.
+    CRITERIA_RSSI_SYNC_THRESHOLD = 0x08,//!< RSSI, RSSI & SYNC_ADDR.
+    END_MODE0 = 0x00,			//!< Action after acceptance.
+    END_MODE1 = 0x02,			//!< 
+    END_MODE2 = 0x04			//!< 
   } __attribute__((packed));
 
   /**
-   * Register PA_LEVEL bitfields (Table 25, pp. 66)
+   * Register PA_LEVEL bitfields (Table 25, pp. 66).
    */
   enum {
-    PA0_ON = 0x80,		// Enables PA0, connected to RFIO and LNA
-    PA0_OFF = 0x00,		// 
-    PA1_ON = 0x40,		// Enables PA1, on PA_BOOST pin
-    PA1_OFF = 0x00,		// 
-    PA2_ON = 0x20,		// Enables PA2, on PA_BOOST pin
-    PA2_OFF = 0x00,		// 
-    OUTPUT_POWER = 0,		// Output power setting, in 1 dB steps
-    OUTPUT_POWER_MASK = 0x1F,	// Bitfield position and mask (5-bits)
-    FULL_OUTPUT_POWER = 0x1F	// 
+    PA0_ON = 0x80,		//!< Enables PA0, connected to RFIO and LNA.
+    PA0_OFF = 0x00,		//!< 
+    PA1_ON = 0x40,		//!< Enables PA1, on PA_BOOST pin.
+    PA1_OFF = 0x00,		//!< 
+    PA2_ON = 0x20,		//!< Enables PA2, on PA_BOOST pin.
+    PA2_OFF = 0x00,		//!< 
+    OUTPUT_POWER = 0,		//!< Output power setting, in 1 dB steps.
+    OUTPUT_POWER_MASK = 0x1F,	//!< Bitfield position and mask (5-bits).
+    FULL_OUTPUT_POWER = 0x1F	//!< 
   } __attribute__((packed));
 
   /**
-   * Register OCP bitfields (Table 25, pp. 66)
+   * Register OCP bitfields (Table 25, pp. 66).
    */
   enum {
-    OCP_ON = 0x10,		// Enables overload current protection
-    OCP_OFF = 0x00,		// 
-    OCP_TRIM = 0,		// Trimming of OCP current
-    OCP_TRIM_MASK = 0x0F	// Bitfield position and mask (4-bit)
+    OCP_ON = 0x10,		//!< Enables overload current protection.
+    OCP_OFF = 0x00,		//!< 
+    OCP_TRIM = 0,		//!< Trimming of OCP current.
+    OCP_TRIM_MASK = 0x0F	//!< Bitfield position and mask (4-bit).
   } __attribute__((packed));
 
   /**
-   * Register LNA bitfields (Table 26, pp. 67)
+   * Register LNA bitfields (Table 26, pp. 67).
    */
   enum {
-    ZIN_50_OHM = 0x00, 		// Input impedance
-    ZIN_200_OHM = 0x80,		// 50 or 200 ohm
-    CURRENT_GAIN = 3,		// Current gain 
-    CURRENT_GAIN_MASK = 0x07,	// Bitfield position and mask (3-bit)
-    SELECT_GAIN = 0,		// Gain setting
-    SELECT_GAIN_MASK = 0x07	// Bitfield position and mask (3-bit)
+    ZIN_50_OHM = 0x00, 		//!< Input impedance.
+    ZIN_200_OHM = 0x80,		//!< 50 or 200 ohm.
+    CURRENT_GAIN = 3,		//!< Current gain.
+    CURRENT_GAIN_MASK = 0x07,	//!< Bitfield position and mask (3-bit).
+    SELECT_GAIN = 0,		//!< Gain setting.
+    SELECT_GAIN_MASK = 0x07	//!< Bitfield position and mask (3-bit).
   } __attribute__((packed));
 
   /**
-   * Register RX_BW bitfields (Table 26, pp. 67)
+   * Register RX_BW bitfields (Table 26, pp. 67).
    */
   enum {
-    DCC_FREQ = 5,		// Cut-off frequency of the DC offset canceller
-    DCC_FREQ_MASK = 0x07,	// Bitfield position and mask (3-bit)
-    BW_MANT_16 = 0x00,		// Channel filter bandwidth control
-    BW_MANT_20 = 0x08,		// 
-    BW_MANT_24 = 0x10,		// 
-    BW_EXP = 0,			// 
-    BW_EXP_MASK = 0x07,		// Bitfield position and mask (3-bit)
+    DCC_FREQ = 5,		//!< Cut-off frequency of the DC offset canceller.
+    DCC_FREQ_MASK = 0x07,	//!< Bitfield position and mask (3-bit).
+    BW_MANT_16 = 0x00,		//!< Channel filter bandwidth control.
+    BW_MANT_20 = 0x08,		//!< 
+    BW_MANT_24 = 0x10,		//!< 
+    BW_EXP = 0,			//!< 
+    BW_EXP_MASK = 0x07,		//!< Bitfield position and mask (3-bit).
   } __attribute__((packed));
 
   /**
-   * Register OOK_PEAK bitfields (Table 26, pp. 68)
+   * Register OOK_PEAK bitfields (Table 26, pp. 68).
    */
   enum {
-    OOK_THRESHOLD_FIXED = 0x00,	 	// Select type of threshold; fixed
-    OOK_THRESHOLD_PEAK = 0x40,		// type = peak
-    OOK_THRESHOLD_AVG = 0x80,		// type = average
-    OOK_PEAK_THRESHOLD_STEP = 3, 	// Size of decrement (dB)
-    OOK_PEAK_THRESHOLD_STEP_MASK = 0x7, // Bitfield position and mask (3-bit)
-    OOK_PEAK_THRESHOLD_DECR = 0, 	// Period of decrement (chips)
-    OOK_PEAK_THRESHOLD_DECR_MASK = 0x7  // Bitfield position and mask (3-bit)
+    OOK_THRESHOLD_FIXED = 0x00,	 	//!< Select type of threshold; fixed.
+    OOK_THRESHOLD_PEAK = 0x40,		//!< type = peak.
+    OOK_THRESHOLD_AVG = 0x80,		//!< type = average.
+    OOK_PEAK_THRESHOLD_STEP = 3, 	//!< Size of decrement (dB).
+    OOK_PEAK_THRESHOLD_STEP_MASK = 0x7, //!< Bitfield position and mask (3-bit).
+    OOK_PEAK_THRESHOLD_DECR = 0, 	//!< Period of decrement (chips).
+    OOK_PEAK_THRESHOLD_DECR_MASK = 0x7  //!< Bitfield position and mask (3-bit).
   } __attribute__((packed));
 
   /**
-   * Register OOK_AVG bitfields (Table 26, pp. 68)
+   * Register OOK_AVG bitfields (Table 26, pp. 68).
    */
   enum {
-    OOK_AVG_THRESHOLD_FILTER_32_PI = 0x00, // Filter coefficients
-    OOK_AVG_THRESHOLD_FILTER_8_PI = 0x40,  // 32,8,4,2 PI
-    OOK_AVG_THRESHOLD_FILTER_4_PI = 0x80,  // 
-    OOK_AVG_THRESHOLD_FILTER_2_PI = 0xC0   // 
+    OOK_AVG_THRESHOLD_FILTER_32_PI = 0x00, //!< Filter coefficients.
+    OOK_AVG_THRESHOLD_FILTER_8_PI = 0x40,  //!< 32,8,4,2 PI.
+    OOK_AVG_THRESHOLD_FILTER_4_PI = 0x80,  //!< 
+    OOK_AVG_THRESHOLD_FILTER_2_PI = 0xC0   //!< 
   } __attribute__((packed));
 
   /**
-   * Register AFC_FEI bitfields (Table 26, pp. 68)
+   * Register AFC_FEI bitfields (Table 26, pp. 68).
    */
   enum {
-    FEI_DONE = 0x40,		// FEI has finished
-    FEI_START = 0x20,		// Trigger a FEI measurement
-    AFC_DONE = 0x10,		// AFC has finished
-    AFC_AUTO_CLEAR_ON = 0x08,	// Clear before a new AFC phase
-    AFC_AUTO_ON = 0x04,		// AFC each time Rx mode is entered
-    AFC_CLEAR = 0x02,		// Clears the AFC value
-    AFC_START = 0x01		// Trigger an AFC
+    FEI_DONE = 0x40,		//!< FEI has finished.
+    FEI_START = 0x20,		//!< Trigger a FEI measurement.
+    AFC_DONE = 0x10,		//!< AFC has finished.
+    AFC_AUTO_CLEAR_ON = 0x08,	//!< Clear before a new AFC phase.
+    AFC_AUTO_ON = 0x04,		//!< AFC each time Rx mode is entered.
+    AFC_CLEAR = 0x02,		//!< Clears the AFC value.
+    AFC_START = 0x01		//!< Trigger an AFC.
   } __attribute__((packed));
 
   /**
-   * Register RSSI_CONFIG bitfields (Table 26, pp. 68)
+   * Register RSSI_CONFIG bitfields (Table 26, pp. 68).
    */
   enum {
-    RSSI_DONE = 0x02,		// RSSI sampling has finished
-    RSSI_START = 0x01		// Trigger a RSSI measurement
+    RSSI_DONE = 0x02,		//!< RSSI sampling has finished.
+    RSSI_START = 0x01		//!< Trigger a RSSI measurement.
   } __attribute__((packed));
 
   /**
-   * Register DIO_MAPPING1/2 bitfields (Table 27, pp. 69)
+   * Register DIO_MAPPING1/2 bitfields (Table 27, pp. 69).
    */
   enum {
-    DIO0_MAPPING1 = 6,		// Mapping pins DIO0..3
-    DIO1_MAPPING1 = 4,		// Bitfield positions and mask
-    DIO2_MAPPING1 = 2,		// 
-    DIO3_MAPPING1 = 0,		// 
-    DIO4_MAPPING2 = 6,		// Mapping pins DIO4..5
-    DIO5_MAPPING2 = 4,		// 
-    DIO_MAPPING_MASK = 0x3,	// 
-    CLK_OUT = 0,		// CLKOUT frequency
-    CLK_OUT_MASK = 0x7		// Bitfield position and mask
+    DIO0_MAPPING1 = 6,		//!< Mapping pins DIO0..3.
+    DIO1_MAPPING1 = 4,		//!< Bitfield positions and mask.
+    DIO2_MAPPING1 = 2,		//!< 
+    DIO3_MAPPING1 = 0,		//!< 
+    DIO4_MAPPING2 = 6,		//!< Mapping pins DIO4..5.
+    DIO5_MAPPING2 = 4,		//!< 
+    DIO_MAPPING_MASK = 0x3,	//!< 
+    CLK_OUT = 0,		//!< CLKOUT frequency.
+    CLK_OUT_MASK = 0x7		//!< Bitfield position and mask.
   } __attribute__((packed));
 
   /**
-   * Register IRQ_FLAGS1 bitfields (Table 27, pp. 69)
+   * Register IRQ_FLAGS1 bitfields (Table 27, pp. 69).
    */
   enum {
-    MODE_READY = 0x80,		// Operation mode ready
-    RX_READY = 0x40,		// Set in RX mode
-    TX_READY = 0x20,		// Set in TX mode
-    PLL_LOCKED = 0x10,		// Set when the PLL is locked
-    RSSI_READY = 0x08,		// Set in RX mode when threhold is exceeded
-    TIMEOUT = 0x04,		// Set when a timeout occurs
-    AUTO_MODE = 0x02,		// Set when entering intermediate mode
-    SYNC_ADDR_MATCH = 0x01,	// Set when sync word and node addres matched
+    MODE_READY = 0x80,		//!< Operation mode ready.
+    RX_READY = 0x40,		//!< Set in RX mode.
+    TX_READY = 0x20,		//!< Set in TX mode.
+    PLL_LOCKED = 0x10,		//!< Set when the PLL is locked.
+    RSSI_READY = 0x08,		//!< Set in RX mode when threhold is exceeded.
+    TIMEOUT = 0x04,		//!< Set when a timeout occurs.
+    AUTO_MODE = 0x02,		//!< Set when entering intermediate mode.
+    SYNC_ADDR_MATCH = 0x01,	//!< Set when sync word and node addres matched.
   } __attribute__((packed));
 
   /**
-   * Register IRQ_FLAGS2 bitfields (Table 27, pp. 70)
+   * Register IRQ_FLAGS2 bitfields (Table 27, pp. 70).
    */
   enum {
-    FIFO_FULL = 0x80,		// Set when FIFO is full
-    FIFO_NOT_EMPTY = 0x40,	// Set when FIFO contains at least one byte
-    FIFO_LEVEL = 0x20, 		// Set when the FIFO threshold is exceeded
-    FIFO_OVERRUN = 0x10,	// Set when FIFO overrun occurs
-    PACKET_SENT = 0x08,		// Set in TX when complete packet is sent
-    PAYLOAD_READY = 0x04,	// Set in RX when the payload is ready
-    CRC_OK = 0x02,		// Set in RX when the CRC is valid
+    FIFO_FULL = 0x80,		//!< Set when FIFO is full.
+    FIFO_NOT_EMPTY = 0x40,	//!< Set when FIFO contains at least one byte.
+    FIFO_LEVEL = 0x20, 		//!< Set when the FIFO threshold is exceeded.
+    FIFO_OVERRUN = 0x10,	//!< Set when FIFO overrun occurs.
+    PACKET_SENT = 0x08,		//!< Set in TX when complete packet is sent.
+    PAYLOAD_READY = 0x04,	//!< Set in RX when the payload is ready.
+    CRC_OK = 0x02,		//!< Set in RX when the CRC is valid.
   } __attribute__((packed));
 
   /**
-   * Register SYNC_CONFIG bitfields (Table 28, pp. 71)
+   * Register SYNC_CONFIG bitfields (Table 28, pp. 71).
    */
   enum {
-    SYNC_ON = 0x80,		// Sync word generation
-    SYNC_OFF = 0x00,		// 
-    FIFO_FILL_AUTO = 0x00,	// FIFO filling condition
-    FIFO_FILL_MANUAL = 0x40,	// 
-    SYNC_SIZE = 3,		// Number of bytes in sync word plus one
-    SYNC_SIZE_MASK = 0x7,	// Bitfield and position (3-bits)
-    SYNC_TOL = 0,		// Number of tolerated bit errors in sync word
-    SYNC_TOL_MASK = 0x7		// Bitfield and position (3-bits)
+    SYNC_ON = 0x80,		//!< Sync word generation.
+    SYNC_OFF = 0x00,		//!< 
+    FIFO_FILL_AUTO = 0x00,	//!< FIFO filling condition.
+    FIFO_FILL_MANUAL = 0x40,	//!< 
+    SYNC_SIZE = 3,		//!< Number of bytes in sync word plus one.
+    SYNC_SIZE_MASK = 0x7,	//!< Bitfield and position (3-bits).
+    SYNC_TOL = 0,		//!< Number of tolerated bit errors in sync word.
+    SYNC_TOL_MASK = 0x7		//!< Bitfield and position (3-bits).
   } __attribute__((packed));
 
   /**
-   * Register PACKET_CONFIG1 bitfields (Table 28, pp. 72)
+   * Register PACKET_CONFIG1 bitfields (Table 28, pp. 72).
    */
   enum {
-    FIXED_LENGTH = 0x00,	// Packet formats; fixed
-    VARIABLE_LENGTH = 0x80,	// variable length
-    DC_FREE_OFF = 0x00,		// DC free encoding
-    MANCHESTER = 0x20,		// 
-    WHITENING = 0x40,		// 
-    CRC_OFF = 0x00,		// CRC calculation/check
-    CRC_ON = 0x10,		// 
+    FIXED_LENGTH = 0x00,	//!< Packet formats; fixed.
+    VARIABLE_LENGTH = 0x80,	//!< variable length.
+    DC_FREE_OFF = 0x00,		//!< DC free encoding.
+    MANCHESTER = 0x20,		//!< 
+    WHITENING = 0x40,		//!< 
+    CRC_OFF = 0x00,		//!< CRC calculation/check.
+    CRC_ON = 0x10,		//!< 
   } __attribute__((packed));
 
   /**
-   * Register PACKET_CONFIG2 bitfields (Table 28, pp. 73)
+   * Register PACKET_CONFIG2 bitfields (Table 28, pp. 73).
    */
   enum {
-    CRC_AUTO_CLEAR_OFF = 0x08,	// Do not clear FIFO. PAYLOAD_READY issued
-    CRC_AUTO_CLEAR_ON = 0x00,	// Clear FIFO and restart new packet reception
-    ADDR_FILTER_OFF = 0x00,	// Address filtering based on node/boardcast
-    ADDR_FILTER_ON = 0x04,	// Node and broadcast address
-    ADDR_FILTER_NODE = 0x02,	// Node address only
-    INTER_PACKET_RX_DELAY = 4,	// Delay between FIFO empty and RSSI measurement
+    CRC_AUTO_CLEAR_OFF = 0x08,	//!< Do not clear FIFO. PAYLOAD_READY issued.
+    CRC_AUTO_CLEAR_ON = 0x00,	//!< Clear FIFO and restart new packet reception.
+    ADDR_FILTER_OFF = 0x00,	//!< Address filtering based on node/boardcast.
+    ADDR_FILTER_ON = 0x04,	//!< Node and broadcast address.
+    ADDR_FILTER_NODE = 0x02,	//!< Node address only.
+    INTER_PACKET_RX_DELAY = 4,	//!< Delay between FIFO empty and RSSI measurement.
     INTER_PACKET_RX_DELAY_MASK = 0xF,
-    RESTART_RX = 0x04,		// Forces the Receiver in WAIT mode/continuous
-    AUTO_RX_RESTART_ON = 0x02,	// Use RX delay
-    AUTO_RX_RESTART_OFF = 0x00,	// Allow RESTART_RX
-    AES_ON = 0x01,		// Use AES encryption/decryption
-    AES_OFF = 0x00		// Do not use AES
+    RESTART_RX = 0x04,		//!< Forces the Receiver in WAIT mode/continuous.
+    AUTO_RX_RESTART_ON = 0x02,	//!< Use RX delay.
+    AUTO_RX_RESTART_OFF = 0x00,	//!< Allow RESTART_RX.
+    AES_ON = 0x01,		//!< Use AES encryption/decryption.
+    AES_OFF = 0x00		//!< Do not use AES.
   } __attribute__((packed));
 
   /**
-   * Register FIFO_THRESHOLD bitfields (Table 28, pp. 73)
+   * Register FIFO_THRESHOLD bitfields (Table 28, pp. 73).
    */
   enum {
-    TX_START_THRESHOLD = 0x00,	// Start packet transmission on threshold
-    TX_START_NOT_EMPTY = 0x80,	// Dito when data in FIFO
-    FIFO_THRESHOLD_MASK = 0x7F	// Threshold value mask
+    TX_START_THRESHOLD = 0x00,	//!< Start packet transmission on threshold.
+    TX_START_NOT_EMPTY = 0x80,	//!< Dito when data in FIFO.
+    FIFO_THRESHOLD_MASK = 0x7F	//!< Threshold value mask.
   } __attribute__((packed));
 
   /**
-   * Register TEMP1 bitfields (Table 29, pp. 74)
+   * Register TEMP1 bitfields (Table 29, pp. 74).
    */
   enum {
-    TEMP_MEAS_START = 0x08,	// Trigger the temperture measurement
-    TEMP_MEAS_RUNNING = 0x04	// Temperature measurement in progress
+    TEMP_MEAS_START = 0x08,	//!< Trigger the temperture measurement.
+    TEMP_MEAS_RUNNING = 0x04	//!< Temperature measurement in progress.
   } __attribute__((packed));
 
   /**
-   * Register TEST_LNA/PA1/PA2/DAGC/AFC values (Table 30, pp. 74)
+   * Register TEST_LNA/PA1/PA2/DAGC/AFC values (Table 30, pp. 74).
    */
   enum {
     TEST_LNA_NORMAL_SENSITIVITY = 0x1B,
@@ -614,7 +614,7 @@ private:
   } __attribute__((packed));
 
   /**
-   * Register OP_MODE bitfields (Table 24, pp. 63)
+   * Register OP_MODE bitfields (Table 24, pp. 63).
    */
   enum Mode {
     SLEEP_MODE = 0x00,
@@ -658,15 +658,15 @@ private:
 
     friend class RFM69;
   private:
-    RFM69* m_rf;		//<! Device reference
+    RFM69* m_rf;		//!< Device reference.
   };
   
-  /** Default configuration */
+  /** Default configuration. */
   static const uint8_t config[] __PROGMEM;
 
-  IRQPin m_irq;			//<! Interrupt pin and handler
-  volatile bool m_done;		//<! Packet sent flag (may be set by ISR)
-  Mode m_opmode;		//<! Current operation mode
+  IRQPin m_irq;			//!< Interrupt pin and handler.
+  volatile bool m_done;		//!< Packet sent flag (may be set by ISR).
+  Mode m_opmode;		//!< Current operation mode.
 };
 #endif
 #endif

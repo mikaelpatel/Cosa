@@ -196,11 +196,11 @@ private:
    * read/written in big endian order (MSB first) and require swapping.
    */
   union header_t {
-    uint8_t as_uint8;		//<! 8-bit representation
-    struct {			//<! Bit-field representation (little endian)
-      uint8_t reg:6;		//<! Register address
-      uint8_t burst:1;		//<! Burst(1) or Single(0) byte mode
-      uint8_t rw:1;		//<! Read(1) or Write(0)
+    uint8_t as_uint8;		//!< 8-bit representation.
+    struct {			//!< Bit-field representation (little endian).
+      uint8_t reg:6;		//!< Register address.
+      uint8_t burst:1;		//!< Burst(1) or Single(0) byte mode.
+      uint8_t rw:1;		//!< Read(1) or Write(0).
     };
     
     /**
@@ -291,57 +291,57 @@ private:
   }
   
   /**
-   * Configuration Registers (Table 43, pp. 68)
+   * Configuration Registers (Table 43, pp. 68).
    */
   enum Config {
-    IOCFG2 = 0x00,		// GDO2 output pin configuration
-    IOCFG1 = 0x01,		// GDO1 output pin configuration
-    IOCFG0 = 0x02,		// GDO0 output pin configuration
-    FIFOTH = 0x03,		// RX FIFO and TX FIFO thresholds
-    SYNC1  = 0x04,		// Sync word, high byte
-    SYNC0  = 0x05,		// Sync word, low byte
-    PKTLEN = 0x06,		// Packet length
-    PKTCTR = 0x07,		// Packet automation control
-    PKTCTRL0 = 0x08,		// Packet automation control
-    ADDR = 0x09,		// Device address
-    CHANNR = 0x0A,		// Channel number
-    FSCTRL1 = 0x0B,		// Frequency synthesizer control
-    FSCTRL0 = 0x0C,		// Frequency synthesizer control
-    FREQ2 = 0x0D,		// Frequency control word, high byte
-    FREQ1 = 0x0E,		// Frequency control word, middle byte
-    FREQ0 = 0x0F,		// Frequency control word, low byte
-    MDMCFG4 = 0x10,		// Modem configuration
-    MDMCFG3 = 0x11,		// Modem configuration
-    MDMCFG2 = 0x12,		// Modem configuration
-    MDMCFG1 = 0x13,		// Modem configuration
-    MDMCFG0 = 0x14,		// Modem configuration
-    DEVIATN = 0x15,		// Modem deviation setting
-    MCSM2 = 0x16,	        // Main Radio Cntrl State Machine config
-    MCSM1 = 0x17,	        // Main Radio Cntrl State Machine config
-    MCSM0 = 0x18,	        // Main Radio Cntrl State Machine config
-    FOCCFG = 0x19,	        // Frequency Offset Compensation config
-    BSCFG = 0x1A,		// Bit Synchronization configuration
-    AGCCTRL2 = 0x1B,		// AGC control
-    AGCCTRL1 = 0x1C,		// AGC control
-    AGCCTRL0 = 0x1D,		// AGC control
-    WOREVT1 = 0x1E,		// High byte Event 0 timeout
-    WOREVT0 = 0x1F,		// Low byte Event 0 timeout
-    WORCTRL = 0x20,		// Wake On Radio control
-    FREND1 = 0x21,		// Front end RX configuration
-    FREND0 = 0x22,		// Front end TX configuration
-    FSCAL3 = 0x23,		// Frequency synthesizer calibration
-    FSCAL2 = 0x24,		// Frequency synthesizer calibration
-    FSCAL1 = 0x25,		// Frequency synthesizer calibration
-    FSCAL0 = 0x26,		// Frequency synthesizer calibration
-    RCCTRL1 = 0x27,		// RC oscillator configuration
-    RCCTRL0 = 0x28,		// RC oscillator configuration
-    FSTEST = 0x29,		// Frequency synthesizer cal control
-    PTEST = 0x2A,		// Production test
-    AGCTEST = 0x2B,		// AGC test
-    TEST2 = 0x2C,		// Various test settings
-    TEST1 = 0x2D,		// Various test settings
-    TEST0 = 0x2E,		// Various test settings
-    CONFIG_MAX = 0x29		// Number of configuration registers
+    IOCFG2 = 0x00,		//!< GDO2 output pin configuration.
+    IOCFG1 = 0x01,		//!< GDO1 output pin configuration.
+    IOCFG0 = 0x02,		//!< GDO0 output pin configuration.
+    FIFOTH = 0x03,		//!< RX FIFO and TX FIFO thresholds.
+    SYNC1  = 0x04,		//!< Sync word, high byte.
+    SYNC0  = 0x05,		//!< Sync word, low byte.
+    PKTLEN = 0x06,		//!< Packet length.
+    PKTCTR = 0x07,		//!< Packet automation control.
+    PKTCTRL0 = 0x08,		//!< Packet automation control.
+    ADDR = 0x09,		//!< Device address.
+    CHANNR = 0x0A,		//!< Channel number.
+    FSCTRL1 = 0x0B,		//!< Frequency synthesizer control.
+    FSCTRL0 = 0x0C,		//!< Frequency synthesizer control.
+    FREQ2 = 0x0D,		//!< Frequency control word, high byte.
+    FREQ1 = 0x0E,		//!< Frequency control word, middle byte.
+    FREQ0 = 0x0F,		//!< Frequency control word, low byte.
+    MDMCFG4 = 0x10,		//!< Modem configuration.
+    MDMCFG3 = 0x11,		//!< Modem configuration.
+    MDMCFG2 = 0x12,		//!< Modem configuration.
+    MDMCFG1 = 0x13,		//!< Modem configuration.
+    MDMCFG0 = 0x14,		//!< Modem configuration.
+    DEVIATN = 0x15,		//!< Modem deviation setting.
+    MCSM2 = 0x16,	        //!< Main Radio Cntrl State Machine config.
+    MCSM1 = 0x17,	        //!< Main Radio Cntrl State Machine config.
+    MCSM0 = 0x18,	        //!< Main Radio Cntrl State Machine config.
+    FOCCFG = 0x19,	        //!< Frequency Offset Compensation config.
+    BSCFG = 0x1A,		//!< Bit Synchronization configuration.
+    AGCCTRL2 = 0x1B,		//!< AGC control.
+    AGCCTRL1 = 0x1C,		//!< AGC control.
+    AGCCTRL0 = 0x1D,		//!< AGC control.
+    WOREVT1 = 0x1E,		//!< High byte Event 0 timeout.
+    WOREVT0 = 0x1F,		//!< Low byte Event 0 timeout.
+    WORCTRL = 0x20,		//!< Wake On Radio control.
+    FREND1 = 0x21,		//!< Front end RX configuration.
+    FREND0 = 0x22,		//!< Front end TX configuration.
+    FSCAL3 = 0x23,		//!< Frequency synthesizer calibration.
+    FSCAL2 = 0x24,		//!< Frequency synthesizer calibration.
+    FSCAL1 = 0x25,		//!< Frequency synthesizer calibration.
+    FSCAL0 = 0x26,		//!< Frequency synthesizer calibration.
+    RCCTRL1 = 0x27,		//!< RC oscillator configuration.
+    RCCTRL0 = 0x28,		//!< RC oscillator configuration.
+    FSTEST = 0x29,		//!< Frequency synthesizer cal control.
+    PTEST = 0x2A,		//!< Production test.
+    AGCTEST = 0x2B,		//!< AGC test.
+    TEST2 = 0x2C,		//!< Various test settings.
+    TEST1 = 0x2D,		//!< Various test settings.
+    TEST0 = 0x2E,		//!< Various test settings.
+    CONFIG_MAX = 0x29		//!< Number of configuration registers.
   } __attribute__((packed));
   
   /**
@@ -403,9 +403,9 @@ private:
    * Data access registers (chap. FIFO and PATABLE Access, pp. 32-33).
    */
   enum Data {
-    PATABLE = 0x3E,		// PA control table
-    TXFIFO = 0x3F,		// Transmitter FIFO
-    RXFIFO = 0x3F,		// Receiver FIFO
+    PATABLE = 0x3E,		//!< PA control table.
+    TXFIFO = 0x3F,		//!< Transmitter FIFO.
+    RXFIFO = 0x3F,		//!< Receiver FIFO.
   } __attribute__((packed));
 
   /**
@@ -467,26 +467,26 @@ private:
   }
 
   /**
-   * Status Registers (Table 44, pp. 69)
+   * Status Registers (Table 44, pp. 69).
    */
   enum Status {
-    PARTNUM = 0x30,		// Part number
-    VERSION = 0x31,		// Current version number
-    FREQEST = 0x32,		// Frequency offset estimate
-    LQI = 0x33,		        // Demodulator estimate for link quality
-    RSSI = 0x34,	        // Received signal strength indication
-    MARCSTATE = 0x35,	        // Control state machine state
-    WORTIME1 = 0x36,		// High byte of WOR timer
-    WORTIME0 = 0x37,		// Low byte of WOR timer
-    PKTSTATUS = 0x38,	        // Current GDOx status and packet status
-    VCO = 0x39,		        // Current setting from PLL cal module
-    TXBYTES = 0x3A,	        // Underflow and # of bytes in TXFIFO
-    RXBYTES = 0x3B,	        // Overflow and # of bytes in RXFIFO
-    BYTES_MASK = 0x7f,		// Mask # bytes
-    FIFO_MASK = 0x80,		// Mask fifo state
-    RCCTRL1_STATUS = 0x3C,	// Last RC oscillator calibration result
-    RCCTRL0_STATUS = 0x3D,	// Last RC oscillator calibration result
-    STATUS_MAX = 0x0E,		// Number of status registers
+    PARTNUM = 0x30,		//!< Part number.
+    VERSION = 0x31,		//!< Current version number.
+    FREQEST = 0x32,		//!< Frequency offset estimate.
+    LQI = 0x33,		        //!< Demodulator estimate for link quality.
+    RSSI = 0x34,	        //!< Received signal strength indication.
+    MARCSTATE = 0x35,	        //!< Control state machine state.
+    WORTIME1 = 0x36,		//!< High byte of WOR timer.
+    WORTIME0 = 0x37,		//!< Low byte of WOR timer.
+    PKTSTATUS = 0x38,	        //!< Current GDOx status and packet status.
+    VCO = 0x39,		        //!< Current setting from PLL cal module.
+    TXBYTES = 0x3A,	        //!< Underflow and # of bytes in TXFIFO.
+    RXBYTES = 0x3B,	        //!< Overflow and # of bytes in RXFIFO.
+    BYTES_MASK = 0x7f,		//!< Mask # bytes.
+    FIFO_MASK = 0x80,		//!< Mask fifo state.
+    RCCTRL1_STATUS = 0x3C,	//!< Last RC oscillator calibration result.
+    RCCTRL0_STATUS = 0x3D,	//!< Last RC oscillator calibration result.
+    STATUS_MAX = 0x0E,		//!< Number of status registers.
   } __attribute__((packed));
 
   /**
@@ -502,23 +502,23 @@ private:
   }
 
   /**
-   * Command Strobes (Table 42, pp. 67)
+   * Command Strobes (Table 42, pp. 67).
    */
   enum Command {
-    SRES = 0x30,		// Reset chip.
-    SFSTXON = 0x31,             // Enable and calibrate frequency synthesizer 
-    SXOFF = 0x32,		// Turn off crystal oscillator.
-    SCAL = 0x33,		// Calibrate frequency synthesizer
-    SRX = 0x34,			// Enable RX
-    STX = 0x35,	                // Enable TX
-    SIDLE = 0x36,               // Exit RX/TX
-    SAFC = 0x37,                // AFC adjustment of the frequency synthesizer
-    SWOR = 0x38,                // Start automatic Wake-on-Radio
-    SPWD = 0x39,	        // Power down mode when CSn goes high.
-    SFRX = 0x3A,		// Flush the RX FIFO buffer.
-    SFTX = 0x3B,		// Flush the TX FIFO buffer.
-    SWORRST = 0x3C,		// Reset real time clock.
-    SNOP = 0x3D			// No operation
+    SRES = 0x30,		//!< Reset chip.
+    SFSTXON = 0x31,             //!< Enable and calibrate frequency synthesizer.
+    SXOFF = 0x32,		//!< Turn off crystal oscillator.
+    SCAL = 0x33,		//!< Calibrate frequency synthesizer.
+    SRX = 0x34,			//!< Enable RX.
+    STX = 0x35,	                //!< Enable TX.
+    SIDLE = 0x36,               //!< Exit RX/TX.
+    SAFC = 0x37,                //!< AFC adjustment of the frequency synthesizer.
+    SWOR = 0x38,                //!< Start automatic Wake-on-Radio.
+    SPWD = 0x39,	        //!< Power down mode when CSn goes high.
+    SFRX = 0x3A,		//!< Flush the RX FIFO buffer.
+    SFTX = 0x3B,		//!< Flush the TX FIFO buffer.
+    SWORRST = 0x3C,		//!< Reset real time clock.
+    SNOP = 0x3D			//!< No operation.
   } __attribute__((packed));
 
   /**
@@ -529,25 +529,25 @@ private:
   void strobe(Command cmd);
   
   /**
-   * Status Byte Summary (Table 23, pp. 31)
+   * Status Byte Summary (Table 23, pp. 31).
    */
-  enum Mode {		  	// Main State Machine Mode
-    IDLE_MODE = 0,		// Idle state
-    RX_MODE,			// Receiver mode
-    TX_MODE,			// Transmit mode
-    FSTXON_MODE,		// Fast Transmit ready
-    CALIBRATION_MODE,		// Frequency synthesizer calibration running
-    SETTLING_MODE,		// PLL is settling
-    RXFIFO_OVERFLOW_MODE,	// RX FIFO has overflowed
-    TXFIFO_UNDERFLOW_MODE	// TX FIFO har underflowed
+  enum Mode {		  	//!< Main State Machine Mode.
+    IDLE_MODE = 0,		//!< Idle state.
+    RX_MODE,			//!< Receiver mode.
+    TX_MODE,			//!< Transmit mode.
+    FSTXON_MODE,		//!< Fast Transmit ready.
+    CALIBRATION_MODE,		//!< Frequency synthesizer calibration running.
+    SETTLING_MODE,		//!< PLL is settling.
+    RXFIFO_OVERFLOW_MODE,	//!< RX FIFO has overflowed.
+    TXFIFO_UNDERFLOW_MODE	//!< TX FIFO har underflowed.
   } __attribute__((packed));
 
   union status_t {
-    uint8_t as_uint8;		//<! 8-bit representation
-    struct {			//<! Bit-field representation (little endian)
-      uint8_t avail:4;		//<! Number of bytes in RX or TX FIFO
-      uint8_t mode:3;		//<! Current main state machine mode
-      uint8_t ready:1;		//<! Chip ready
+    uint8_t as_uint8;		//!< 8-bit representation.
+    struct {			//!< Bit-field representation (little endian).
+      uint8_t avail:4;		//!< Number of bytes in RX or TX FIFO.
+      uint8_t mode:3;		//!< Current main state machine mode.
+      uint8_t ready:1;		//!< Chip ready.
     };
     
     status_t(uint8_t value)
@@ -585,32 +585,32 @@ private:
   void await(Mode mode);
 
   /**
-   * Main Radio Control State Machine State (pp. 93)
+   * Main Radio Control State Machine State (pp. 93).
    */
-  enum State {			  	// State (Figure 24, pp 50)
-    SLEEP_STATE = 0x00,			// SLEEP
-    IDLE_STATE = 0x01,			// IDLE
-    XOFF_STATE = 0x02,			// XOFF
-    VCOON_MC_STATE = 0x03,		// MANCAL
-    REGON_MC_STATE = 0x04,		// MANCAL
-    MANCAL_STATE = 0x05,		// MANCAL
-    VCOON_STATE = 0x06,			// FS_WAKEUP
-    REGON_STATE = 0x07,			// FS_WAKEUP
-    STARTCAL_STATE = 0x08,		// CALIBRATE
-    BWBOOST_STATE = 0x09,		// SETTLING
-    FS_LOCK_STATE = 0x0A,		// SETTLING
-    IFADCON_STATE = 0x0B,		// SETTLING
-    ENDCAL_STATE = 0x0C,		// CALIBRATE
-    RX_STATE = 0x0D,			// RX
-    RX_END_STATE = 0x0E,		// RX
-    RX_RST_STATE = 0x0F,		// RX
-    TXRX_SWITCH_STATE = 0x10,		// TXRX_SETTLING
-    RXFIFO_OVERFLOW_STATE = 0x11,	// RXFIFO_OVERFLOW
-    FSTXON_STATE = 0x12,		// FSTXON
-    TX_STATE = 0x13,			// TX
-    TX_END_STATE = 0x14,		// TX
-    RXTX_SWITCH_STATE = 0x15,		// RXTX_SETTLING
-    TXFIFO_UNDERFLOW_STATE = 0x16	// TXFIFO_UNDERFLOW
+  enum State {			  	//!< State (Figure 24, pp 50).
+    SLEEP_STATE = 0x00,			//!< SLEEP.
+    IDLE_STATE = 0x01,			//!< IDLE.
+    XOFF_STATE = 0x02,			//!< XOFF.
+    VCOON_MC_STATE = 0x03,		//!< MANCAL.
+    REGON_MC_STATE = 0x04,		//!< MANCAL.
+    MANCAL_STATE = 0x05,		//!< MANCAL.
+    VCOON_STATE = 0x06,			//!< FS_WAKEUP.
+    REGON_STATE = 0x07,			//!< FS_WAKEUP.
+    STARTCAL_STATE = 0x08,		//!< CALIBRATE.
+    BWBOOST_STATE = 0x09,		//!< SETTLING.
+    FS_LOCK_STATE = 0x0A,		//!< SETTLING.
+    IFADCON_STATE = 0x0B,		//!< SETTLING.
+    ENDCAL_STATE = 0x0C,		//!< CALIBRATE.
+    RX_STATE = 0x0D,			//!< RX.
+    RX_END_STATE = 0x0E,		//!< RX.
+    RX_RST_STATE = 0x0F,		//!< RX.
+    TXRX_SWITCH_STATE = 0x10,		//!< TXRX_SETTLING.
+    RXFIFO_OVERFLOW_STATE = 0x11,	//!< RXFIFO_OVERFLOW.
+    FSTXON_STATE = 0x12,		//!< FSTXON.
+    TX_STATE = 0x13,			//!< TX.
+    TX_END_STATE = 0x14,		//!< TX.
+    RXTX_SWITCH_STATE = 0x15,		//!< RXTX_SETTLING.
+    TXFIFO_UNDERFLOW_STATE = 0x16	//!< TXFIFO_UNDERFLOW.
   } __attribute__((packed));
 
   /**
@@ -623,14 +623,14 @@ private:
   }
 
   /**
-   * Received Message Status Bytes (Table. 27/28, pp. 37)
+   * Received Message Status Bytes (Table. 27/28, pp. 37).
    */
   union recv_status_t {
-    uint8_t status[2];		//<! Two status bytes last in frame 
-    struct {			//<! Bit-field representation (little endian)
-      uint8_t rssi;		//<! RSSI value
-      uint8_t lqi:7;		//<! Link Quality Indication
-      uint8_t crc:1;		//<! CRC status
+    uint8_t status[2];		//!< Two status bytes last in frame.
+    struct {			//!< Bit-field representation (little endian).
+      uint8_t rssi;		//!< RSSI value.
+      uint8_t lqi:7;		//!< Link Quality Indication.
+      uint8_t crc:1;		//!< CRC status.
     };
   };
 
@@ -661,16 +661,16 @@ private:
     virtual void on_interrupt(uint16_t arg = 0);
 
   private:
-    CC1101* m_rf;		//<! Device reference
+    CC1101* m_rf;		//!< Device reference.
   };
 
 private:
-  /** Default configuration */
+  /** Default configuration. */
   static const uint8_t config[] __PROGMEM;
 
-  IRQPin m_irq;			//<! Interrupt pin and handler
-  status_t m_status;		//<! Status from latest transaction
-  recv_status_t m_recv_status;	//<! Status frm latest message receive
+  IRQPin m_irq;			//!< Interrupt pin and handler.
+  status_t m_status;		//!< Status from latest transaction.
+  recv_status_t m_recv_status;	//!< Status frm latest message receive.
 };
 #endif
 #endif

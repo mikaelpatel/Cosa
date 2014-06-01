@@ -39,10 +39,10 @@ public:
   union code_t {
     int32_t as_long;
     struct {
-      uint8_t device:4;		/** device number, group:unit<2,2> */
-      uint8_t onoff:1;		/** device mode, off(0), on(1) */
-      uint8_t group:1;		/** group command */
-      uint32_t house:26;	/** house code number */
+      uint8_t device:4;		/** Device number, group:unit<2,2>. */
+      uint8_t onoff:1;		/** Device mode, off(0), on(1). */
+      uint8_t group:1;		/** Group command. */
+      uint32_t house:26;	/** House code number. */
     };
 
     /**
@@ -322,18 +322,18 @@ public:
     }
 
   private:
-    /** Number of code transmissions */
+    /** Number of code transmissions. */
     static const uint8_t SEND_CODE_MAX = 4;
 
-    /** Pause between code transmissions (milli-second delay) */
+    /** Pause between code transmissions (milli-second delay). */
     static const uint32_t PAUSE = 10L;
 
-    /** Transmission pulse timing (micro-second delay) */
+    /** Transmission pulse timing (micro-second delay). */
     static const uint16_t SHORT_PULSE = 275;
     static const uint16_t LONG_PULSE = 1225;
     static const uint16_t START_PULSE = 2675 - SHORT_PULSE;
 
-    /** Transmission house address: 26 bits */
+    /** Transmission house address: 26 bits. */
     uint32_t m_house;
 
     /**

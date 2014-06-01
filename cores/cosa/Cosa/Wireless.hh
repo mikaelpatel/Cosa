@@ -38,8 +38,8 @@ public:
      * Network address together with port.
      */
     struct addr_t {
-      uint8_t device;		//<! Device address (LSB)
-      int16_t network;		//<! Network address
+      uint8_t device;		//!< Device address (LSB).
+      int16_t network;		//!< Network address.
 
       /**
        * Construct node address from given device and network
@@ -54,7 +54,7 @@ public:
       }
     };
 
-    /** Broadcast device address */
+    /** Broadcast device address. */
     static const uint8_t BROADCAST = 0x00;
 
     /**
@@ -306,10 +306,10 @@ public:
     }
     
   protected:
-    uint8_t m_channel;		//<! Current channel (device dependent
-    addr_t m_addr;		//<! Current network and device address
-    volatile bool m_avail;	//<! Message available. May be set by ISR
-    uint8_t m_dest;		//<! Latest message destination device address
+    uint8_t m_channel;		//!< Current channel (device dependent.
+    addr_t m_addr;		//!< Current network and device address.
+    volatile bool m_avail;	//!< Message available. May be set by ISR.
+    uint8_t m_dest;		//!< Latest message destination device address.
   };
 };
 #endif

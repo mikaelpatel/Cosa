@@ -36,7 +36,7 @@
 class OWI : private IOPin {
 public:
   /**
-   * ROM Commands and Size
+   * Standard ROM Commands.
    */
   enum {
     SEARCH_ROM = 0xF0,
@@ -45,7 +45,11 @@ public:
     SKIP_ROM = 0xCC,
     ALARM_SEARCH = 0xEC
   } __attribute__((packed));
+
+  /** ROM size in bytes. */
   static const uint8_t ROM_MAX = 8;
+
+  /** ROM size in bits. */
   static const uint8_t ROMBITS = ROM_MAX * CHARBITS;
 
   /**
@@ -59,7 +63,7 @@ public:
       LAST = ROMBITS
     } __attribute__((packed));
 
-    /** Name of device driver instance */
+    /** Name of device driver instance. */
     const char* NAME;
     
     /**
@@ -289,13 +293,13 @@ public:
   bool alarm_dispatch();
 
 private:
-  /** Number of devices */
+  /** Number of devices. */
   uint8_t m_devices;
 
-  /** List of slave devices */
+  /** List of slave devices. */
   Driver* m_device;
 
-  /** Intermediate CRC sum */
+  /** Intermediate CRC sum. */
   uint8_t m_crc;
 };
 

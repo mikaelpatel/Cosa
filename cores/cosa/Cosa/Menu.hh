@@ -33,64 +33,64 @@
  */
 class Menu {
 public:
-  // Menu type tag code
+  /** Menu type tag code. */
   enum type_t {
-    ITEM,			// Menu item/symbol
-    ITEM_LIST,			// Menu item/enum list
-    ONE_OF,			// Menu enumeration variable (one-of)
-    ZERO_OR_MANY,		// Menu bitset variable (zero-or-many)
-    BCD_RANGE,			// Menu bcd(2) range variable
-    INT_RANGE,			// Menu integer range variable
-    ACTION			// Menu action
+    ITEM,			//!< Menu item/symbol.
+    ITEM_LIST,			//!< Menu item/enum list.
+    ONE_OF,			//!< Menu enumeration variable (one-of).
+    ZERO_OR_MANY,		//!< Menu bitset variable (zero-or-many).
+    BCD_RANGE,			//!< Menu bcd(2) range variable.
+    INT_RANGE,			//!< Menu integer range variable.
+    ACTION			//!< Menu action.
   } __attribute__((packed));
 
-  // Pointer type for character string in program memory
+  /** Pointer type for character string in program memory. */
   typedef const PROGMEM char* str_P;
 
-  // Menu item header. Also used for enumeration symbols
+  /** Menu item header. Also used for enumeration symbols. */
   struct item_t {
-    type_t type;		// Item type tag(ITEM)
-    str_P name;			// Item string in program memory
+    type_t type;		//!< Item type tag(ITEM).
+    str_P name;			//!< Item string in program memory.
   };
   typedef const PROGMEM item_t* item_P;
   typedef const PROGMEM item_P* item_vec_P;
 
-  // Menu item lists
+  /** Menu item lists. */
   struct item_list_t {
-    item_t item;		// Item header(ITEM_LIST)
-    item_vec_P list;		// Item list in program memory
+    item_t item;		//!< Item header(ITEM_LIST).
+    item_vec_P list;		//!< Item list in program memory.
   };
   typedef const PROGMEM item_list_t* item_list_P;
 
-  // Enumeration variable symbols list (one-of)
+  /** Enumeration variable symbols list (one-of). */
   struct one_of_t {
-    item_t item;		// Item header(ONE_OF)
-    item_vec_P list;		// Item list in program memory
-    uint16_t* value;		// Pointer to value
+    item_t item;		//!< Item header(ONE_OF).
+    item_vec_P list;		//!< Item list in program memory.
+    uint16_t* value;		//!< Pointer to value.
   };
   typedef const PROGMEM one_of_t* one_of_P;
   static void print(IOStream& outs, one_of_P var);
 
-  // Zero-or-many variable symbols list, Item header(ZERO_OR_MANY)
+  /** Zero-or-many variable symbols list, Item header(ZERO_OR_MANY). */
   typedef one_of_t zero_or_many_t;
   typedef const PROGMEM zero_or_many_t* zero_or_many_P;
   static void print(IOStream& outs, zero_or_many_P var, bool selected, uint8_t bv);
 
-  // Bcd(2) range variable 
+  /** Bcd(2) range variable. */
   struct bcd_range_t {
-    item_t item;		// Item header(BCD_RANGE)
-    uint8_t low;		// Range low value
-    uint8_t high;		// Range high value
-    uint8_t* value;		// Pointer to value
+    item_t item;		//!< Item header(BCD_RANGE).
+    uint8_t low;		//!< Range low value.
+    uint8_t high;		//!< Range high value.
+    uint8_t* value;		//!< Pointer to value.
   };
   typedef const PROGMEM bcd_range_t* bcd_range_P;
 
-  // Integer range variable 
+  /** Integer range variable. */
   struct int_range_t {
-    item_t item;		// Item header(INT_RANGE)
-    int16_t low;		// Range low value
-    int16_t high;		// Range high value
-    int16_t* value;		// Pointer to value
+    item_t item;		//!< Item header(INT_RANGE).
+    int16_t low;		//!< Range low value.
+    int16_t high;		//!< Range high value.
+    int16_t* value;		//!< Pointer to value.
   };
   typedef const PROGMEM int_range_t* int_range_P;
   static void print(IOStream& outs, int_range_P var, bool selected);
@@ -112,10 +112,10 @@ public:
     virtual bool run(Menu::item_P item) = 0;
   };
 
-  // Menu action item
+  /** Menu action item. */
   struct action_t {
-    item_t item;		// Item header(ACTION)
-    Action* obj;		// Pointer to action handler
+    item_t item;		//!< Item header(ACTION).
+    Action* obj;		//!< Pointer to action handler.
   };
   typedef const PROGMEM action_t* action_P;
 
@@ -125,27 +125,27 @@ public:
    */
   class Walker {
   private:
-    // Stack for menu walker path
+    /** Stack for menu walker path. */
     static const uint8_t STACK_MAX = 8;
     Menu::item_list_P m_stack[STACK_MAX];
     uint8_t m_top;
 
-    // Current menu list item index
+    /** Current menu list item index. */
     uint8_t m_ix;
 
-    // Current menu bitset index
+    /** Current menu bitset index. */
     uint8_t m_bv;
 
-    // Item selection state
+    /** Item selection state. */
     bool m_selected;
 
-    // Output stream for menu printout
+    /** Output stream for menu printout. */
     IOStream m_out;
 
     void on_key_down(uint8_t nr, zero_or_many_P var);
 
   public:
-    // Menu walker key index (same as LCDkeypad map for simplicity)
+    /** Menu walker key index (same as LCDkeypad map for simplicity). */
     enum {
       NO_KEY = 0,
       SELECT_KEY,
@@ -267,10 +267,10 @@ public:
       }
     };
 
-    // The menu walker to control
+    /** The menu walker to control. */
     Menu::Walker* m_walker;
 
-    // The rotary encoder push button handler
+    /** The rotary encoder push button handler. */
     RotaryButton m_sw;
   
   public:

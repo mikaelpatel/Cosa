@@ -61,19 +61,19 @@ public:
   int gettimeofday(time_t& time);
 
 private:
-  /** NTP server port */
+  /** NTP server port. */
   static const uint16_t PORT = 123;
 
-  /** Timeout period for response from time server (milli-seconds) */
+  /** Timeout period for response from time server (milli-seconds). */
   static const uint16_t TIMEOUT = 32;
 
-  /** Network address of server */
+  /** Network address of server. */
   uint8_t m_server[4];
 
-  /** Socket for communication with server */
+  /** Socket for communication with server. */
   Socket* m_sock;
 
-  /** Time zone adjustment (hours) */
+  /** Time zone adjustment (hours). */
   int8_t m_zone;
 };
 

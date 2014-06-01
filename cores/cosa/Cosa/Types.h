@@ -237,8 +237,8 @@ unlock(uint8_t key)
  * Buffer structure for scatter/gather.
  */
 struct iovec_t {
-  void* buf;			/** Buffer pointer  */
-  size_t size;			/** Size of buffer in bytes */
+  void* buf;			//!< Buffer pointer.
+  size_t size;			//!< Size of buffer in bytes.
 };
 
 /**

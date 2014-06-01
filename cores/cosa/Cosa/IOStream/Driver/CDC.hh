@@ -28,11 +28,13 @@
 
 class CDC : public IOStream::Device {
 public:
-  // Default buffer size
+  /** Default buffer size. */
   static const uint8_t BUFFER_MAX = 64;
 
-  // Note: this is to maintain the same interface as UART
-  // Serial formats; DATA + PARITY + STOP
+  /** 
+   * Serial formats; DATA + PARITY + STOP. Note: this is to maintain
+   * the same interface as UART.
+   */
   enum {
     DATA5 = 0,
     DATA6 = _BV(UCSZ00),
@@ -136,10 +138,10 @@ public:
   }
 
 protected:
-  /** Input buffering */
+  /** Input buffering. */
   IOStream::Device* m_ibuf;
 
-  /**
+  /** 
    * Common CDC receive interrupt handler.
    */
   void accept();

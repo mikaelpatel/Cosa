@@ -29,7 +29,7 @@
  */
 class IOStream {
 public:
-  /** End Of File, returned when device operations fails (empty or full) */
+  /** End Of File, returned when device operations fails (empty or full). */
   static const int EOF = -1;
 
   /**
@@ -184,9 +184,10 @@ public:
     virtual int flush();
 
   protected:
+    /** Non blocking mode. */
     static const uint8_t NON_BLOCKING = 255;
 
-    /** Sleep mode if blocking otherwise NON_BLOCKING */
+    /** Sleep mode if blocking otherwise NON_BLOCKING. */
     uint8_t m_mode;
   };
 
@@ -516,8 +517,8 @@ public:
   friend IOStream& flush(IOStream& outs);
 
  private:
-  Device* m_dev;		//<! Delegated device
-  Base m_base;			//<! Base for next output operator
+  Device* m_dev;		//!< Delegated device.
+  Base m_base;			//!< Base for next output operator.
 
   /**
    * Print number prefix for non decimal base.

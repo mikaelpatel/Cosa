@@ -70,7 +70,7 @@ public:
     virtual int write(void* dest, const void* src, size_t size);
     
     /**
-     * Default EEPROM device; handling of internal EEPROM Data Memory
+     * Default EEPROM device; handling of internal EEPROM Data Memory.
      */
     static Device eeprom;
   };
@@ -268,7 +268,7 @@ public:
   }
 
 private:
-  Device* m_dev;		//<! Delegated device
+  Device* m_dev;		//!< Delegated device.
 };
 
 #endif

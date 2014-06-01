@@ -60,16 +60,16 @@ public:
   class Encoder : public Event::Handler {
   public:
     /**
-     * Rotary Encoder turn direction
+     * Rotary Encoder turn direction.
      */
     enum Direction {
-      NONE = 0x00,		// No direction change
-      CW = 0x10,		// Clock-wise direction
-      CCW = 0x20		// Anti-clock-wise direction
+      NONE = 0x00,		//!< No direction change.
+      CW = 0x10,		//!< Clock-wise direction.
+      CCW = 0x20		//!< Anti-clock-wise direction.
     } __attribute__((packed));
     
     /**
-     * Rotary Encoder cycle mode
+     * Rotary Encoder cycle mode.
      */
     enum Mode {
       HALF_CYCLE,
@@ -153,11 +153,13 @@ public:
       virtual void on_interrupt(uint16_t arg);
     };
 
-    // State Transition tables.
+    /** Half-cycle state transition tables. */
     static const uint8_t half_cycle_table[6][4] PROGMEM;
+
+    /** Full-cycle state transition tables. */
     static const uint8_t full_cycle_table[7][4] PROGMEM;
 
-    // Signal pins, previous state and cycle mode.
+    /** Signal pins, previous state and cycle mode. */
     SignalPin m_clk;
     SignalPin m_dt;
     uint8_t m_state;

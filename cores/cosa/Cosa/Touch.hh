@@ -57,19 +57,19 @@ public:
   virtual void on_touch() = 0;
 
 protected:
-  /** Pin sampling rate; watchdog timeout request */
+  /** Pin sampling rate; watchdog timeout request. */
   static const uint16_t SAMPLE_RATE = 16;
 
-  /** Minimum delay between release detect */
+  /** Minimum delay between release detect. */
   const uint16_t THRESHOLD;
 
-  /** Start release detect */
+  /** Start release detect. */
   uint32_t m_start;
 
-  /** Discharging of sampling mode */
+  /** Discharging of sampling mode. */
   uint8_t m_sampling;
 
-  /** Current state */
+  /** Current state. */
   uint8_t m_touched;
 
   /**

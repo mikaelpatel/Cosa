@@ -70,7 +70,7 @@
  */
 class PCD8544 : public LCD::Device {
 public:
-  /** Display size */
+  /** Display size. */
   static const uint8_t WIDTH = 84;
   static const uint8_t HEIGHT = 48;
   static const uint8_t LINES = HEIGHT / CHARBITS;
@@ -207,40 +207,40 @@ public:
 
 protected:
   /**
-   * Instruction set (table 1, pp. 14)
+   * Instruction set (table 1, pp. 14).
    */
   enum {
-    NOP = 0x00,			// No operation
-    SET_FUNC = 0x20,		// Set function
-      BASIC_INST = 0x00,	// Basic instruction set
-      EXTENDED_INST = 0x01,	// Extended instruction set control
-      HORIZONTAL_ADDR = 0x00,	// Horizontal addressing
-      VERTICAL_ADDR = 0x02,	// Vertical addressing
-      POWER_UP_MODE = 0x00,	// Power up mode
-      POWER_DOWN_MODE = 0x04,	// Power down mode
-    DISPLAY_CNTL = 0x08,	// Display control
-      DISPLAY_OFF = 0x00,	// Turn display off
-      DISPLAY_ON = 0x01,	// Turn display on
-      NORMAL_MODE = 0x04,	// Normal display mode
-      INVERSE_MODE = 0x05,	// Inverse display mode
-    SET_Y_ADDR = 0x40,		// Sets Y-address of RAM (0..5)
-      Y_ADDR_MASK = 0x07,	// Mask Y-address
-    SET_X_ADDR = 0x80,		// Sets X-address of RAM (0..83)
-      X_ADDR_MASK = 0x7f,	// Mask X-addres
-    SET_TEMP_COEFF = 0x04,	// Set temperature coefficient (0..3)
-    SET_BIAS_SYS = 0x10,	// Set Bias System (0..7)
-    SET_VOP = 0x80,		// Write Vop to register
-      VOP_MASK = 0x7f,		// Mask Vop
-    SCRIPT_END = 0xff		// Init script end
+    NOP = 0x00,			//!< No operation.
+    SET_FUNC = 0x20,		//!< Set function.
+      BASIC_INST = 0x00,	//!< Basic instruction set.
+      EXTENDED_INST = 0x01,	//!< Extended instruction set control.
+      HORIZONTAL_ADDR = 0x00,	//!< Horizontal addressing.
+      VERTICAL_ADDR = 0x02,	//!< Vertical addressing.
+      POWER_UP_MODE = 0x00,	//!< Power up mode.
+      POWER_DOWN_MODE = 0x04,	//!< Power down mode.
+    DISPLAY_CNTL = 0x08,	//!< Display control.
+      DISPLAY_OFF = 0x00,	//!< Turn display off.
+      DISPLAY_ON = 0x01,	//!< Turn display on.
+      NORMAL_MODE = 0x04,	//!< Normal display mode.
+      INVERSE_MODE = 0x05,	//!< Inverse display mode.
+    SET_Y_ADDR = 0x40,		//!< Sets Y-address of RAM (0..5).
+      Y_ADDR_MASK = 0x07,	//!< Mask Y-address.
+    SET_X_ADDR = 0x80,		//!< Sets X-address of RAM (0..83).
+      X_ADDR_MASK = 0x7f,	//!< Mask X-addres.
+    SET_TEMP_COEFF = 0x04,	//!< Set temperature coefficient (0..3).
+    SET_BIAS_SYS = 0x10,	//!< Set Bias System (0..7).
+    SET_VOP = 0x80,		//!< Write Vop to register.
+      VOP_MASK = 0x7f,		//!< Mask Vop.
+    SCRIPT_END = 0xff		//!< Init script end.
   } __attribute__((packed));
 
-  // Initialization script to reduce memory footprint
+  /** Initialization script to reduce memory footprint. */
   static const uint8_t script[] PROGMEM;
 
-  // Display pins and state
-  LCD::IO* m_io;		//<! Display adapter
-  OutputPin m_dc;		//<! Data/command output pin
-  Font* m_font;			//<! Font
+  /** Display pins and state. */
+  LCD::IO* m_io;		//!< Display adapter.
+  OutputPin m_dc;		//!< Data/command output pin.
+  Font* m_font;			//!< Font.
 
   /**
    * Set the given command code.

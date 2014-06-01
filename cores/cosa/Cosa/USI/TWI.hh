@@ -49,10 +49,10 @@ public:
     Driver(uint8_t addr) : Event::Handler(), m_addr(addr << 1) {}
 
   protected:
-    /** Device bus address */
+    /** Device bus address. */
     uint8_t m_addr;
     
-    /** Allow access */
+    /** Allow access. */
     friend class TWI;
     friend void ::USI_START_vect(void);
     friend void ::USI_OVF_vect(void);
@@ -117,7 +117,7 @@ public:
      */
     virtual void on_event(uint8_t type, uint16_t value);
 
-    /** Allow access */
+    /** Allow access. */
     friend void ::USI_START_vect(void);
     friend void ::USI_OVF_vect(void);
   };
@@ -197,7 +197,7 @@ public:
 
 private:
   /**
-   * USI TWI slave states
+   * USI TWI slave states.
    */
   enum State {
     // Idle, waiting for start condition
@@ -219,9 +219,9 @@ private:
    * Address mask and read/write bit.
    */
   enum {
-    WRITE_OP = 0x00,		// Write operation
-    READ_OP = 0x01,		// Read operation
-    ADDR_MASK = 0xfe		// Address mask
+    WRITE_OP = 0x00,		//!< Write operation.
+    READ_OP = 0x01,		//!< Read operation.
+    ADDR_MASK = 0xfe		//!< Address mask.
   } __attribute__((packed));
 
   /**
@@ -374,7 +374,7 @@ private:
    */
   int request(uint8_t op);
 
-  /** Allow access */
+  /** Allow access. */
   friend void ::USI_START_vect(void);
   friend void ::USI_OVF_vect(void);
 };

@@ -71,10 +71,10 @@ public:
    */
   class Codec {
   public:
-    /** Bits per symbol */
+    /** Bits per symbol. */
     const uint8_t BITS_PER_SYMBOL;
   
-    /** Start symbol */
+    /** Start symbol. */
     const uint16_t START_SYMBOL;
 
     /** 
@@ -83,10 +83,10 @@ public:
      */
     const uint8_t PREAMBLE_MAX;
 
-    /** Symbol mask */
+    /** Symbol mask. */
     const uint8_t SYMBOL_MASK;
 
-    /** Symbol MSB */
+    /** Symbol MSB. */
     const uint16_t BITS_MSB;
 
     /**
@@ -257,25 +257,25 @@ private:
    * Frame header; Transmitted in little endian order; network LSB first.
    */
   struct header_t {
-    int16_t network;		//<! Network address
-    uint8_t dest;		//<! Destination device address
-    uint8_t src;		//<! Source device address
-    uint8_t port;		//<! Port or message type
+    int16_t network;		//!< Network address.
+    uint8_t dest;		//!< Destination device address.
+    uint8_t src;		//!< Source device address.
+    uint8_t port;		//!< Port or message type.
   };
   
   /** 
    * The maximum payload length; 30 byte application payload and 
-   * 4 byte frame header with network(2)
+   * 4 byte frame header with network(2).
    */
   static const uint8_t PAYLOAD_MAX = 30 + sizeof(header_t);
   
-  /** Maximum number of bytes in a message (incl. byte count and FCS) */
+  /** Maximum number of bytes in a message (incl. byte count and FCS). */
   static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
 
-  /** Minimum number of bytes in a message */
+  /** Minimum number of bytes in a message. */
   static const uint8_t MESSAGE_MIN = sizeof(header_t);
 
-  /** Number of samples per bit */
+  /** Number of samples per bit. */
   static const uint8_t SAMPLES_PER_BIT = 8;
 
   /**
@@ -340,10 +340,10 @@ private:
 	     uint32_t ms = 0L);
 
   private:
-    /** The size of the receiver ramp. Ramp wraps modulo this number */
+    /** The size of the receiver ramp. Ramp wraps modulo this number. */
     static const uint8_t RAMP_MAX = 160;
 
-    /** Number of samples to integrate before mapping to one(1) */
+    /** Number of samples to integrate before mapping to one(1). */
     static const uint8_t INTEGRATOR_THRESHOLD = 5;
 
     /** 
@@ -355,65 +355,65 @@ private:
      */
     static const uint8_t RAMP_INC = RAMP_MAX / SAMPLES_PER_BIT;
 
-    /** Internal ramp adjustment parameter */
+    /** Internal ramp adjustment parameter. */
     static const uint8_t RAMP_TRANSITION = RAMP_MAX / 2;
 
-    /** Internal ramp adjustment parameter */
+    /** Internal ramp adjustment parameter. */
     static const uint8_t RAMP_ADJUST = 9;
     
-    /** Internal ramp adjustment parameter */
+    /** Internal ramp adjustment parameter. */
     static const uint8_t RAMP_INC_RETARD = (RAMP_INC - RAMP_ADJUST);
     
-    /** Internal ramp adjustment parameter */
+    /** Internal ramp adjustment parameter. */
     static const uint8_t RAMP_INC_ADVANCE = (RAMP_INC + RAMP_ADJUST);
 
-    /** Current receiver sample */
+    /** Current receiver sample. */
     Codec* m_codec;
 
-    /** Current receiver sample */
+    /** Current receiver sample. */
     uint8_t m_sample;
 
-    /** Last receiver sample */
+    /** Last receiver sample. */
     uint8_t m_last_sample;
 
     /** 
      * PLL ramp, varies between 0 and RAMP_LEN-1(159) over 
      * SAMPLES_PER_BIT (8) samples per nominal bit time. When the PLL
-     * is synchronised, bit transitions happen at about the 0 mark. 
+     * is synchronised, bit transitions happen at about the 0 mark.
      */
     uint8_t m_pll_ramp;
 
     /**
      * This is the integrate and dump integral. If there are <5 0
-     * samples in the PLL cycle the bit is declared a 0, else a 1
+     * samples in the PLL cycle the bit is declared a 0, else a 1.
      */
     uint8_t m_integrator;
 
     /**
      * Flag indictate if we have seen the start symbol of a new
-     * message and are in the processes of reading and decoding it 
+     * message and are in the processes of reading and decoding it.
      */
     uint8_t m_active;
 
-    /** Flag to indicate that a new message is available */
+    /** Flag to indicate that a new message is available. */
     volatile uint8_t m_done;
 
-    /** Flag to indicate the receiver PLL is to run */
+    /** Flag to indicate the receiver PLL is to run. */
     uint8_t m_enabled;
 
-    /** Last 12 bits received, so we can look for the start symbol */
+    /** Last 12 bits received, so we can look for the start symbol. */
     uint16_t m_bits;
 
-    /** How many bits of message we have received? Ranges from 0 to 12 */
+    /** How many bits of message we have received? Ranges from 0 to 12. */
     uint8_t m_bit_count;
 
-    /** The incoming message buffer */
+    /** The incoming message buffer. */
     uint8_t m_buffer[MESSAGE_MAX];
 
-    /** The incoming message expected length */
+    /** The incoming message expected length. */
     uint8_t m_count;
 
-    /** The incoming message buffer length received so far */
+    /** The incoming message buffer length received so far. */
     volatile uint8_t m_length;
 
     /**
@@ -423,7 +423,7 @@ private:
      */
     void PLL();
 
-    /** Interrupt Service Routine */
+    /** Interrupt Service Routine. */
     friend void TIMER1_COMPA_vect(void);
   };
 
@@ -503,51 +503,51 @@ private:
     int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
 
   private:
-    /** Max size of preamble and start symbol. Codec provides actual size */
+    /** Max size of preamble and start symbol. Codec provides actual size. */
     static const uint8_t PREAMBLE_MAX = 8;
     
-    /** Transmission buffer with premable, start symbol, count and payload */
+    /** Transmission buffer with premable, start symbol, count and payload. */
     uint8_t m_buffer[(MESSAGE_MAX * 2) + PREAMBLE_MAX];
 
-    /** Current transmitter codec */
+    /** Current transmitter codec. */
     Codec* m_codec;
 
-    /** Number of symbols to be sent */
+    /** Number of symbols to be sent. */
     uint8_t m_length;
 
-    /** Index of the next symbol to send. Ranges from 0..length-1 */
+    /** Index of the next symbol to send. Ranges from 0..length-1. */
     uint8_t m_index;
 
-    /** Bit number of next bit to send */
+    /** Bit number of next bit to send. */
     uint8_t m_bit;
 
-    /** Sample number for the transmitter, 0..7 in one bit interval */
+    /** Sample number for the transmitter, 0..7 in one bit interval. */
     uint8_t m_sample;
 
-    /** Flag to indicated the transmitter is active */
+    /** Flag to indicated the transmitter is active. */
     volatile uint8_t m_enabled;
 
-    /** Interrupt Service Routine */
+    /** Interrupt Service Routine. */
     friend void TIMER1_COMPA_vect(void);
 
-    /** Allow access of codec */
+    /** Allow access of codec. */
     friend class Codec;
   };
 
 private:
-  /** Self-reference for interrupt handler */
+  /** Self-reference for interrupt handler. */
   static VWI* s_rf;
 
-  /** Receiver member variable */
+  /** Receiver member variable. */
   Receiver m_rx;
 
-  /** Transmitter member variable */
+  /** Transmitter member variable. */
   Transmitter m_tx;
 
-  /** Bit per second */
+  /** Bit per second. */
   uint16_t m_speed;
 
-  /** Interrupt service routine */
+  /** Interrupt service routine. */
   friend void TIMER1_COMPA_vect(void);
 };
 #endif

@@ -121,20 +121,20 @@ public:
    */
   static const uint32_t QUEUED_DISPATCH_TIME;
 
-  /** Actual elapsed time for an immediate dispatch */
+  /** Actual elapsed time for an immediate dispatch. */
   static const uint32_t IMMEDIATE_DISPATCH_TIME = (160 / I_CPU);
 
 private:
-  /** Queue of timers */
+  /** Queue of timers. */
   static Head s_queue;
   
-  /** Queue tick counter (MSB) */
+  /** Queue tick counter (MSB). */
   volatile static uint32_t s_queue_ticks;
   
-  /** Running state of timer handler */
+  /** Running state of timer handler. */
   volatile static bool s_running;
   
-  /** Timer expire time in micro-seconds (RTC::micros) */
+  /** Timer expire time in micro-seconds (RTC::micros). */
   uint32_t m_expires;
 
   /**
@@ -166,7 +166,7 @@ private:
   static const bool MEASURE = false;
 #endif
 
-  /** Interrupt Service Routines */
+  /** Interrupt Service Routines. */
   friend void TIMER0_COMPA_vect(void);
   friend void TIMER0_OVF_vect(void);
 };

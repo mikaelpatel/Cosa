@@ -58,7 +58,7 @@ void init()
   UCSR0B = 0;
 #endif
 
-  // Initiate USB when needed (e.g. when CDC is attached)
+  // Initiate USB when needed (when CDC is attached)
 #if defined(USBCON)
   USBCON = 0;
   UDCON = 0;

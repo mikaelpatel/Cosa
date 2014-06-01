@@ -235,7 +235,7 @@ public:
   };
 
 protected:
-  /** Shadow port register */
+  /** Shadow port register. */
   uint8_t m_port[N];
 };
 #endif

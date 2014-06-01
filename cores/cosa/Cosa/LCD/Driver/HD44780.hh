@@ -90,11 +90,13 @@ public:
     virtual void set_backlight(uint8_t flag) = 0;
   };
 
-  // Max size of custom character font bitmap
+  /** Max size of custom character font bitmap. */
   static const uint8_t BITMAP_MAX = 8;
   
-  // Display width (characters per line) and height (lines)
+  /** Display width (characters per line). */
   const uint8_t WIDTH;
+
+  /** Display height (lines). */
   const uint8_t HEIGHT;
 
   /**
@@ -388,16 +390,16 @@ public:
     virtual void set_backlight(uint8_t flag);
 
   protected:
-    /** Execution time delay (us) */
+    /** Execution time delay (us). */
     static const uint16_t SHORT_EXEC_TIME = 32;
 
-    OutputPin m_d0;		//<! Data pin; d0
-    OutputPin m_d1;		//<! Data pin; d1
-    OutputPin m_d2;		//<! Data pin; d2
-    OutputPin m_d3;		//<! Data pin; d3
-    OutputPin m_rs;		//<! Register select (0/instruction, 1/data)
-    OutputPin m_en;		//<! Starts data read/write
-    OutputPin m_bt;		//<! Back-light control (0/on, 1/off)
+    OutputPin m_d0;		//!< Data pin; d0.
+    OutputPin m_d1;		//!< Data pin; d1.
+    OutputPin m_d2;		//!< Data pin; d2.
+    OutputPin m_d3;		//!< Data pin; d3.
+    OutputPin m_rs;		//!< Register select (0/instruction, 1/data).
+    OutputPin m_en;		//!< Starts data read/write.
+    OutputPin m_bt;		//!< Back-light control (0/on, 1/off).
   };
 #endif
 
@@ -485,18 +487,18 @@ public:
     virtual void set_backlight(uint8_t flag);
 
   protected:
-    /** Execution time delay (us) */
+    /** Execution time delay (us). */
     static const uint16_t SHORT_EXEC_TIME = 16;
 
-    /** Shift register port bit fields; little endian */
+    /** Shift register port bit fields; little endian. */
     union port_t {
-      uint8_t as_uint8;		//<! Unsigned byte access
+      uint8_t as_uint8;		//!< Unsigned byte access.
       struct {
-	uint8_t data:4;		//<! Data port (Q0..Q3)
-	uint8_t rs:1;		//<! Command/Data select (Q4)
-	uint8_t bt:1;		//<! Back-light control (Q5)
-	uint8_t app2:1;		//<! Application bit#2 (Q6)
-	uint8_t app1:1;		//<! Application bit#1 (Q7)
+	uint8_t data:4;		//!< Data port (Q0..Q3).
+	uint8_t rs:1;		//!< Command/Data select (Q4).
+	uint8_t bt:1;		//!< Back-light control (Q5).
+	uint8_t app2:1;		//!< Application bit#2 (Q6).
+	uint8_t app1:1;		//!< Application bit#1 (Q7).
       };
       operator uint8_t()
       {
@@ -507,10 +509,10 @@ public:
 	as_uint8 = 0;
       }
     };
-    port_t m_port;		//<! Port setting
-    OutputPin m_sda;		//<! Serial data output
-    OutputPin m_scl;		//<! Serial clock
-    OutputPin m_en;		//<! Starts data read/write
+    port_t m_port;		//!< Port setting.
+    OutputPin m_sda;		//!< Serial data output.
+    OutputPin m_scl;		//!< Serial clock.
+    OutputPin m_en;		//!< Starts data read/write.
   };
 
   /**
@@ -590,18 +592,18 @@ public:
     virtual void set_backlight(uint8_t flag);
 
   protected:
-    /** Execution time delay (us) */
+    /** Execution time delay (us). */
     static const uint16_t SHORT_EXEC_TIME = 24;
 
-    /** Shift register port bit fields; little endian */
+    /** Shift register port bit fields; little endian. */
     union port_t {
-      uint8_t as_uint8;		//<! Unsigned byte access
+      uint8_t as_uint8;		//!< Unsigned byte access.
       struct {
-	uint8_t data:4;		//<! Data port (Q0..Q3)
-	uint8_t rs:1;		//<! Command/Data select (Q4)
-	uint8_t bt:1;		//<! Back-light control (Q5)
-	uint8_t app2:1;		//<! Application bit#2 (Q6)
-	uint8_t app1:1;		//<! Application bit#1 (Q7)
+	uint8_t data:4;		//!< Data port (Q0..Q3).
+	uint8_t rs:1;		//!< Command/Data select (Q4).
+	uint8_t bt:1;		//!< Back-light control (Q5).
+	uint8_t app2:1;		//!< Application bit#2 (Q6).
+	uint8_t app1:1;		//!< Application bit#1 (Q7).
       };
       operator uint8_t() 
       { 
@@ -612,7 +614,7 @@ public:
 	as_uint8 = 0; 
       }
     };
-    port_t m_port;		//<! Port setting
+    port_t m_port;		//!< Port setting.
   };
 
   /**
@@ -721,14 +723,14 @@ public:
     virtual void set_backlight(uint8_t flag);
 
   protected:
-    /** Execution time delay (us) */
+    /** Execution time delay (us). */
     static const uint16_t SHORT_EXEC_TIME = 16;
 
-    OutputPin m_sda;		//<! Serial data output
-    OutputPin m_scl;		//<! Serial clock
-    OutputPin m_en;		//<! Starts data read/write
-    OutputPin m_bt;		//<! Backlight control
-    uint8_t m_rs;		//<! Command/Data select
+    OutputPin m_sda;		//!< Serial data output.
+    OutputPin m_scl;		//!< Serial clock.
+    OutputPin m_en;		//!< Starts data read/write.
+    OutputPin m_bt;		//!< Backlight control.
+    uint8_t m_rs;		//!< Command/Data select.
   };
 
   /**
@@ -813,13 +815,13 @@ public:
     
     /** Expander port bit fields; little endian */
     union port_t {
-      uint8_t as_uint8;		//<! Unsigned byte access
+      uint8_t as_uint8;		//!< Unsigned byte access.
       struct {
-	uint8_t data:4;		//<! Data port (P0..P3)
-	uint8_t en:1;		//<! Enable pulse (P4)
-	uint8_t rw:1;		//<! Read/Write (P5)
-	uint8_t rs:1;		//<! Command/Data select (P6)
-	uint8_t bt:1;		//<! Back-light (P7)
+	uint8_t data:4;		//!< Data port (P0..P3).
+	uint8_t en:1;		//!< Enable pulse (P4).
+	uint8_t rw:1;		//!< Read/Write (P5).
+	uint8_t rs:1;		//!< Command/Data select (P6).
+	uint8_t bt:1;		//!< Back-light (P7).
       };
       operator uint8_t() 
       { 
@@ -830,7 +832,7 @@ public:
 	as_uint8 = 0; 
       }
     };
-    port_t m_port;		//<! Port setting
+    port_t m_port;		//!< Port setting.
   };
 
   /**
@@ -945,18 +947,18 @@ public:
     virtual void set_backlight(uint8_t flag);
 
   protected:
-    // Max size of temporary buffer for TWI message
+    /** Max size of temporary buffer for TWI message. */
     static const uint8_t TMP_MAX = 32;
     
-    /** Expander port bit fields; little endian */
+    /** Expander port bit fields; little endian. */
     union port_t {
-      uint8_t as_uint8;		//<! Unsigned byte access
+      uint8_t as_uint8;		//!< Unsigned byte access.
       struct {
-	uint8_t rs:1;		//<! Command/Data select (P0)
-	uint8_t rw:1;		//<! Read/Write (P1)
-	uint8_t en:1;		//<! Enable pulse (P2)
-	uint8_t bt:1;		//<! Back-light (P3)
-	uint8_t data:4;		//<! Data port (P4..P7)
+	uint8_t rs:1;		//!< Command/Data select (P0).
+	uint8_t rw:1;		//!< Read/Write (P1).
+	uint8_t en:1;		//!< Enable pulse (P2).
+	uint8_t bt:1;		//!< Back-light (P3).
+	uint8_t data:4;		//!< Data port (P4..P7).
       };
       operator uint8_t() 
       { 
@@ -967,7 +969,7 @@ public:
 	as_uint8 = 0; 
       }
     };
-    port_t m_port;		//<! Port setting
+    port_t m_port;		//!< Port setting.
   };
 
   /**
@@ -1059,19 +1061,19 @@ public:
     virtual void set_backlight(uint8_t flag);
 
   protected:
-    /** Execution time delay (us) */
+    /** Execution time delay (us). */
     static const uint16_t SHORT_EXEC_TIME = 20;
     
-    OutputPin m_sda;		//<! Serial data output
-    OutputPin m_scl;		//<! Serial clock
-    OutputPin m_en;		//<! Starts data read/write
-    OutputPin m_bt;		//<! Back-light control (0/on, 1/off)
-    uint8_t m_rs;		//<! Register select (0/instruction, 1/data)
-    uint8_t m_dirty;		//<! Mark register select change required
+    OutputPin m_sda;		//!< Serial data output.
+    OutputPin m_scl;		//!< Serial clock.
+    OutputPin m_en;		//!< Starts data read/write.
+    OutputPin m_bt;		//!< Back-light control (0/on, 1/off).
+    uint8_t m_rs;		//!< Register select (0/instruction, 1/data).
+    uint8_t m_dirty;		//!< Mark register select change required.
   };
 
   /**
-   * Bus Timing Characteristics (in micro-seconds), fig. 25, pp. 50
+   * Bus Timing Characteristics (in micro-seconds), fig. 25, pp. 50.
    */
   static const uint16_t LONG_EXEC_TIME = 1600;
   static const uint16_t POWER_ON_TIME = 48;
@@ -1079,79 +1081,79 @@ public:
   static const uint16_t INIT1_TIME = 150;
 
   /**
-   * Instructions (Table 6, pp. 24), RS(0), RW(0)
+   * Instructions (Table 6, pp. 24), RS(0), RW(0).
    */
   enum {
-    CLEAR_DISPLAY = 0x01,    	// Clears entrire display and return home
-    RETURN_HOME = 0x02,	     	// Sets DDRAM 0 in address counter
-    ENTRY_MODE_SET = 0x04,	// Sets cursor move direction and display shift
-    CONTROL_SET = 0x08,	 	// Set display, cursor and blinking controls
-    SHIFT_SET = 0x10,		// Set cursor and shifts display 
-    FUNCTION_SET = 0x20,	// Sets interface data length, line and font.
-    SET_CGRAM_ADDR = 0x40,	// Sets CGRAM address
-    SET_CGRAM_MASK = 0x3f,	// - Mask (6-bit)
-    SET_DDRAM_ADDR = 0x80,	// Sets DDRAM address
-    SET_DDRAM_MASK = 0x7f,	// - Mask (7-bit)
-    BIAS_RESISTOR_SET = 0x04,	// Bias resistor select
-    BIAS_RESISTOR_MASK = 0x03,	// - Mask (2-bit)
-    COM_SEG_SET = 0x40,		// COM SEG direction select
-    COM_SET_MASK = 0x0f,	// - mask (4 bit)
-    SET_DDATA_LENGTH = 0x80,	// Set display data length
-    SET_DDATA_MASK = 0x7f	// - mask (7 bit, 0..79 => 1..80)
+    CLEAR_DISPLAY = 0x01,    	//!< Clears entrire display and return home.
+    RETURN_HOME = 0x02,	     	//!< Sets DDRAM 0 in address counter.
+    ENTRY_MODE_SET = 0x04,	//!< Sets cursor move direction and display shift.
+    CONTROL_SET = 0x08,	 	//!< Set display, cursor and blinking controls.
+    SHIFT_SET = 0x10,		//!< Set cursor and shifts display.
+    FUNCTION_SET = 0x20,	//!< Sets interface data length, line and font.
+    SET_CGRAM_ADDR = 0x40,	//!< Sets CGRAM address.
+    SET_CGRAM_MASK = 0x3f,	//!< - Mask (6-bit).
+    SET_DDRAM_ADDR = 0x80,	//!< Sets DDRAM address.
+    SET_DDRAM_MASK = 0x7f,	//!< - Mask (7-bit).
+    BIAS_RESISTOR_SET = 0x04,	//!< Bias resistor select.
+    BIAS_RESISTOR_MASK = 0x03,	//!< - Mask (2-bit).
+    COM_SEG_SET = 0x40,		//!< COM SEG direction select.
+    COM_SET_MASK = 0x0f,	//!< - mask (4 bit).
+    SET_DDATA_LENGTH = 0x80,	//!< Set display data length.
+    SET_DDATA_MASK = 0x7f	//!< - mask (7 bit, 0..79 => 1..80).
   } __attribute__((packed));
 
   /**
-   * ENTRY_MODE_SET attributes
+   * ENTRY_MODE_SET attributes.
    */
   enum { 
-    DISPLAY_SHIFT = 0x01,	// Shift the entire display not cursor
-    INCREMENT = 0x02,		// Increment (right) on write
-    DECREMENT = 0x00		// Decrement (left) on write
+    DISPLAY_SHIFT = 0x01,	//!< Shift the entire display not cursor.
+    INCREMENT = 0x02,		//!< Increment (right) on write.
+    DECREMENT = 0x00		//!< Decrement (left) on write.
   } __attribute__((packed));
 
   /**
-   * CONTROL_SET attributes
+   * CONTROL_SET attributes.
    */
   enum {
-    BLINK_ON = 0x01,		// The character indicated by cursor blinks
-    CURSOR_ON = 0x02,		// The cursor is displayed
-    DISPLAY_ON = 0x04,		// The display is on
+    BLINK_ON = 0x01,		//!< The character indicated by cursor blinks.
+    CURSOR_ON = 0x02,		//!< The cursor is displayed.
+    DISPLAY_ON = 0x04,		//!< The display is on.
   } __attribute__((packed));
 
   /**
-   * SHIFT_SET attributes
+   * SHIFT_SET attributes.
    */
   enum {
-    MOVE_LEFT = 0x00,		// Moves cursor and shifts display
-    MOVE_RIGHT = 0x04,		// without changing DDRAM contents
+    MOVE_LEFT = 0x00,		//!< Moves cursor and shifts display.
+    MOVE_RIGHT = 0x04,		//!< without changing DDRAM contents.
     CURSOR_MODE = 0x00,
     DISPLAY_MOVE = 0x08
   } __attribute__((packed));
 
   /**
-   * FUNCTION_SET attributes
+   * FUNCTION_SET attributes.
    */
   enum {
-    DATA_LENGTH_4BITS = 0x00,	// Sets the interface data length, 4-bit or
-    DATA_LENGTH_8BITS = 0x10,	// - 8-bit
-    NR_LINES_1 = 0x00,		// Sets the number of display lines, 1 or
-    NR_LINES_2 = 0x08,		// - 2.
-    FONT_5X8DOTS = 0x00,	// Sets the character font, 5X8 dots or
-    FONT_5X10DOTS = 0x04,	// - 5X10 dots
-    BASIC_SET = 0x00,		// Sets basic instruction set
-    EXTENDED_SET = 0x04		// - extended instruction set
+    DATA_LENGTH_4BITS = 0x00,	//!< Sets the interface data length, 4-bit or.
+    DATA_LENGTH_8BITS = 0x10,	//!< - 8-bit.
+    NR_LINES_1 = 0x00,		//!< Sets the number of display lines, 1 or.
+    NR_LINES_2 = 0x08,		//!< - 2.
+    FONT_5X8DOTS = 0x00,	//!< Sets the character font, 5X8 dots or.
+    FONT_5X10DOTS = 0x04,	//!< - 5X10 dots.
+    BASIC_SET = 0x00,		//!< Sets basic instruction set.
+    EXTENDED_SET = 0x04		//!< - extended instruction set.
   } __attribute__((packed));
 
-  // Row offset tables for display dimensions (16X1, 16X2, 16X4, 20X4)
+  /** Row offset tables for display dimensions (16X1, 16X2, 16X4, 20X4). */
   static const uint8_t offset0[] PROGMEM;
   static const uint8_t offset1[] PROGMEM;
 
-  // Display pins and state (mirror of device registers)
-  IO* m_io;			// IO port handler
-  uint8_t m_mode;		// Entry mode
-  uint8_t m_cntl;		// Control
-  uint8_t m_func;		// Function set
-  const uint8_t* m_offset;	// Row offset table
+  /** Display pins and state (mirror of device registers). */
+  IO* m_io;			//!< IO port handler.
+  uint8_t m_mode;		//!< Entry mode.
+  uint8_t m_cntl;		//!< Control.
+  uint8_t m_func;		//!< Function set.
+  const uint8_t* m_offset;	//!< Row offset table.
   
   /**
    * @override

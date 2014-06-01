@@ -131,13 +131,13 @@ public:
   bool write(void* buf, size_t size);
 
 protected:
-  // Pin number mask
+  /** Pin number mask. */
   static const uint8_t PIN_MASK = 0x07;
   
-  // Data Direction Register, 0 = output, 1 = input, default all input
+  /** Data Direction Register, 0 = output, 1 = input, default all input. */
   uint8_t m_ddr;
   
-  // Port Register to mask and maintain output pin values
+  /** Port Register to mask and maintain output pin values. */
   uint8_t m_port;
 
   /**

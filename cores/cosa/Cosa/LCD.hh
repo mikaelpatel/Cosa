@@ -39,7 +39,7 @@ public:
    */
   class Device : public IOStream::Device {
   public:
-    /** Text display mode */
+    /** Text display mode. */
     enum TextMode {
       NORMAL_TEXT_MODE = 0x00,
       INVERTED_TEXT_MODE = 0xff
@@ -174,10 +174,10 @@ public:
     }
 
   protected:
-    uint8_t m_x;		//<! Cursor position x
-    uint8_t m_y;		//<! Cursor position y
-    uint8_t m_tab;		//<! Tab step
-    uint8_t m_mode;		//<! Text mode
+    uint8_t m_x;		//!< Cursor position x.
+    uint8_t m_y;		//!< Cursor position y.
+    uint8_t m_tab;		//!< Tab step.
+    uint8_t m_mode;		//!< Text mode.
   };
 
   /**
@@ -288,10 +288,9 @@ public:
     }
     
   protected:
-    // Display pins and state
-    OutputPin m_sdin;		//<! Serial data input
-    OutputPin m_sclk;		//<! Serial clock input
-    OutputPin m_sce;		//<! Chip enable
+    OutputPin m_sdin;		//!< Serial data input.
+    OutputPin m_sclk;		//!< Serial clock input.
+    OutputPin m_sce;		//!< Chip enable.
   };
 
   /**

@@ -160,11 +160,13 @@ public:
   }
 
 private:
-  // Mask bit address and set size
+  /** Mask bit address. */
   static const uint8_t MASK = (CHARBITS - 1);
+
+  /** Bitset size in bytes. */
   static const size_t SET_MAX = (N + (CHARBITS/2)) / CHARBITS;
  
- // Bitset storage
+  /** Bitset storage. */
   uint8_t m_set[SET_MAX];
 };
 #endif

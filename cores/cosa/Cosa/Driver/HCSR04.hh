@@ -104,10 +104,19 @@ public:
   }
 
 private:
+  /** Timeout on failed to detect echo. */
   static const uint16_t TIMEOUT = 0xffffU;
+
+  /** Count per decimeter. */
   static const uint16_t COUNT_PER_DM = (555 * I_CPU) / 16;
+
+  /** Trigger output pin. */
   OutputPin m_trigPin;
+
+  /** Echo input pin. */
   InputPin m_echoPin;
+
+  /** Latest valid distance. */
   uint16_t m_distance;
 
   /**

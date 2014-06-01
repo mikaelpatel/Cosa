@@ -77,7 +77,7 @@ public:
   }
 
 private:
-  /** Output pin for LED */
+  /** Output pin for LED. */
   OutputPin m_pin;
 
   /**

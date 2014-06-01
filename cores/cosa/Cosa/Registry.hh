@@ -36,44 +36,44 @@
 class Registry {
 public:
   /**
-   * Registry item type tags
+   * Registry item type tags.
    */
-  enum type_t {			// Item types
-    ITEM = 0,			// Item descriptor
-    ITEM_LIST = 1,		// List of items
-    ACTION = 2,			// Action function
-    BLOB = 3,			// General binary object
-    APPL = 4			// Application binary object
+  enum type_t {
+    ITEM = 0,			//!< Item descriptor.
+    ITEM_LIST = 1,		//!< List of items.
+    ACTION = 2,			//!< Action function.
+    BLOB = 3,			//!< General binary object.
+    APPL = 4			//!< Application binary object.
   } __attribute__((packed));
   
   /**
-   * Storage type tags
+   * Storage type tags.
    */
-  enum storage_t {		// Storage type tag values
-    IN_PROGMEM = 0,		// In program memory
-    IN_SRAM = 1,		// In data memory
-    IN_EEMEM = 2,		// In eeprom 
+  enum storage_t {
+    IN_PROGMEM = 0,		//!< In program memory.
+    IN_SRAM = 1,		//!< In data memory.
+    IN_EEMEM = 2,		//!< In eeprom.
   } __attribute__((packed));
 
-  /** Mask storage bits of item attributes */
+  /** Mask storage bits of item attributes. */
   static const uint8_t STORAGE_MASK = 0x7f;
 
-  /** Mask readonly bit of item attributes */
+  /** Mask readonly bit of item attributes. */
   static const uint8_t READONLY = 0x80;
 
   /**
    * Registry item structure.
    */
   struct item_t {
-    type_t type;		// Item type tag(ITEM)
-    str_P name;			// Name string in program memory
-    uint8_t attr;		// Attributes
+    type_t type;		//!< Item type tag(ITEM).
+    str_P name;			//!< Name string in program memory.
+    uint8_t attr;		//!< Attributes.
   };
 
-  /** Pointer to item in program memory */
+  /** Pointer to item in program memory. */
   typedef const PROGMEM item_t* item_P;
 
-  /** Pointer to vector of item pointers in program memory */
+  /** Pointer to vector of item pointers in program memory. */
   typedef const PROGMEM item_P* item_vec_P;
   
   /**
@@ -121,12 +121,12 @@ public:
    * Registry item list structure.
    */
   struct item_list_t {
-    item_t item;		// Item header(ITEM_LIST)
-    uint8_t length;		// Item vector length (for boundary checking)
-    item_vec_P list;		// Item vector in program memory
+    item_t item;		//!< Item header(ITEM_LIST).
+    uint8_t length;		//!< Item vector length (for boundary checking).
+    item_vec_P list;		//!< Item vector in program memory.
   };
 
-  /** Pointer to item list in program memory */
+  /** Pointer to item list in program memory. */
   typedef const PROGMEM item_list_t* item_list_P;
 
   /**
@@ -157,9 +157,9 @@ public:
    */
   class Iterator {
   private:
-    item_vec_P m_vec;		//<! Item vector from item list
-    uint8_t m_length;		//<! Length of vector
-    uint8_t m_next;		//<! Current index in vector
+    item_vec_P m_vec;		//!< Item vector from item list.
+    uint8_t m_length;		//!< Length of vector.
+    uint8_t m_next;		//!< Current index in vector.
   public:
     /**
      * Construct iterator on given item list in program memory.
@@ -212,11 +212,11 @@ public:
    * Registry action item.
    */
   struct action_t {
-    item_t item;		// Item header(ACTION)
-    Action* obj;		// Pointer to action handler instance.
+    item_t item;		//!< Item header(ACTION).
+    Action* obj;		//!< Pointer to action handler instance.
   };
 
-  /** Pointer to action item in program memory */
+  /** Pointer to action item in program memory. */
   typedef const PROGMEM action_t* action_P;
 
   /**
@@ -248,12 +248,12 @@ public:
    * application data.
    */
   struct blob_t {
-    item_t item;		// Item header(>= BLOB)
-    void* value;		// Pointer to value
-    size_t size;		// Size of object
+    item_t item;		//!< Item header(>= BLOB).
+    void* value;		//!< Pointer to value.
+    size_t size;		//!< Size of object.
   };
 
-  /** Pointer to blob registry item in program memory */
+  /** Pointer to blob registry item in program memory. */
   typedef const PROGMEM blob_t* blob_P;
 
   /**
@@ -322,7 +322,7 @@ public:
     return (set_value(blob, value, sizeof(T)) == sizeof(T));
   }
   
-  /** Max length of a path */
+  /** Max length of a path. */
   static const size_t PATH_MAX = 8;
   
   /**
@@ -362,10 +362,10 @@ public:
   }
 
 private:
-  // Root item list
+  /** Root item list. */
   item_list_P m_root;
 
-  // EEPROM device driver
+  /** EEPROM device driver. */
   EEPROM::Device* m_eeprom;
 };
 

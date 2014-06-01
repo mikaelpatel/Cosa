@@ -35,19 +35,19 @@
 class ProtocolBuffer {
 public:
   /**
-   * Encoding type
+   * Encoding type.
    */
   enum Type {
-    VARINT,		       //<! int8..32, uint8..32, bool, enum
-    FIXED64,		       //<! not supported
-    LENGTH_DELIMITED,	       //<! string, bytes, embedded messages, 
-			       //<! and packed repeated fields	
-    START_GROUP,	       //<! not supported, deprecated
-    END_GROUP,		       //<! not supported, deprecated
-    FIXED32		       //<! float
+    VARINT,		       //!< int8..32, uint8..32, bool, enum.
+    FIXED64,		       //!< not supported.
+    LENGTH_DELIMITED,	       //!< string, bytes, embedded messages,
+			       //!< and packed repeated fields.
+    START_GROUP,	       //!< not supported, deprecated.
+    END_GROUP,		       //!< not supported, deprecated.
+    FIXED32		       //!< float.
   } __attribute__((packed));
 
-  /** Max value of tag */
+  /** Max value of tag. */
   static const uint8_t TAG_MAX = 31;
 
   /**
@@ -298,10 +298,10 @@ public:
   }
 
 protected:
-  /** Input stream */
+  /** Input stream. */
   IOStream::Device* m_ins;
 
-  /** Output stream */
+  /** Output stream. */
   IOStream::Device* m_outs;
 };
 

@@ -104,11 +104,13 @@ public:
   virtual void on_change(uint8_t type) = 0;
 
 protected:
-  /**
-   * Sample period, current state and change detection mode.
-   */
+  /** Button sampling period in milli-seconds. */
   static const uint16_t SAMPLE_MS = 64;
+
+  /** Change detection mode. */
   const Mode MODE;
+
+  /** Current state. */
   uint8_t m_state;
 
   /**

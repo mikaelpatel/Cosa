@@ -138,7 +138,7 @@ public:
   bool convert(uint8_t value);
 
 private:
-  /** Shadow copy of control register */
+  /** Shadow copy of control register. */
   uint8_t m_cntl;
 };
 

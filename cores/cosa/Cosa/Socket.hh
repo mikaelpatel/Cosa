@@ -30,10 +30,10 @@
  */
 class Socket : public IOStream::Device {
 public:
-  /** Dynamic, private or ephemeral start ports number */
+  /** Dynamic, private or ephemeral start ports number. */
   static const uint16_t DYNAMIC_PORT = 49152;
 
-  /** Protocol */
+  /** Protocol. */
   enum Protocol {
     TCP = 0x01,
     UDP = 0x02,
@@ -254,10 +254,10 @@ public:
   virtual int recv(void* buf, size_t len, uint8_t src[4], uint16_t& port) = 0;
 
 protected:
-  /** Source address; MAC, IP and port */
+  /** Source address; MAC, IP and port. */
   INET::addr_t m_src;
 
-  /** Socket protocol if open otherwise zero(0) */
+  /** Socket protocol if open otherwise zero(0). */
   uint8_t m_proto;
 
   /**

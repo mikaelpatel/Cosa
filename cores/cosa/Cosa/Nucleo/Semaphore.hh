@@ -53,10 +53,10 @@ public:
   void signal(uint8_t count = 1, bool flag = true);
 
 private:
-  /** Queue for waiting threads */
+  /** Queue for waiting threads. */
   Head m_queue;
 
-  /** Current count */
+  /** Current count. */
   volatile uint8_t m_count;
 };
 
