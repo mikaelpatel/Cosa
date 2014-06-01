@@ -1,5 +1,5 @@
 /**
- * @file CosaWebServer.ino
+ * @file CosaPinWebServer.ino
  * @version 1.0
  *
  * @section License
@@ -49,7 +49,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
-// Digital and Analog Pin map
+// Digital and Analog Pin map (index => pin identity)
 static const Board::DigitalPin digital_pin_map[] __PROGMEM = {
   Board::D0, 
   Board::D1, 
@@ -114,7 +114,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
     "Refresh: 5" CRLF CRLF
     "<!DOCTYPE HTML>" CRLF
     "<HTML>" CRLF
-    "<HEAD><TITLE>CosaWebServer</TITLE></HEAD>" CRLF 
+    "<HEAD><TITLE>CosaPinWebServer</TITLE></HEAD>" CRLF 
     "<BODY>" CRLF;
   static const char footer[] __PROGMEM = 
     "</BODY>" CRLF 
@@ -124,23 +124,69 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
 
   // Construct the page; header-contents-footer
   page << header;
+
+  // Digital pin status; table with green/red blocks and pin number
+  page << PSTR("Digital Pin:") << BR;
+  page << PSTR("<TABLE>") << endl;
+  page << PSTR("<TR>") << endl;
   for (uint8_t i = 0; i < membersof(digital_pin_map); i++) {
     Board::DigitalPin pin;
     pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + i);
-    page << PSTR("D") << i << PSTR(": ") << InputPin::read(pin) << BR;
+    page << PSTR("<TD style=\"text-align: center; background-color: ");
+    if (InputPin::read(pin)) 
+      page << PSTR("red\">1"); 
+    else 
+      page << PSTR("green\">0"); 
+    page << PSTR("</TD>") << endl;
   }
+  page << PSTR("</TR>") << endl;
+  page << PSTR("<TR>") << endl;
+  for (uint8_t i = 0; i < membersof(digital_pin_map); i++) {
+    page << PSTR("<TD>D") << i << PSTR("</TD>") << endl;
+  }
+  page << PSTR("</TR>") << endl;
+  page << PSTR("</TABLE>") << BR;
+
+  // Analog pin reading: bar chart with percent of 1024 and pin number
+  page << PSTR("Analog Pin:") << BR;
+  page << PSTR("<TABLE class=\"noborders\">") << endl;
+  page << PSTR("<TR>") << endl;
   for (uint8_t i = 0; i < membersof(analog_pin_map); i++) {
     Board::AnalogPin pin;
     pin = (Board::AnalogPin) pgm_read_byte(analog_pin_map + i);
-    page << PSTR("A") << i << PSTR(": ") << AnalogPin::sample(pin) << BR;
+    uint16_t value = (AnalogPin::sample(pin) * 100L) / 1024;
+    page << PSTR("<TD style=\"text-align: center; vertical-align: bottom\">");
+    page << value;
+    page << PSTR("<DIV style=\"display: block;");
+    page << PSTR(" background-color: red;");
+    page << PSTR(" width: 20px;");
+    page << PSTR(" height: ") << value << PSTR("px\">");
+    page << PSTR("</DIV>");
+    page << PSTR("</TD>") << endl;
   }
+  page << PSTR("</TR>") << endl;
+  page << PSTR("<TR>") << endl;
+  for (uint8_t i = 0; i < membersof(analog_pin_map); i++) {
+    page << PSTR("<TD>A") << i << PSTR("</TD>") << endl;
+  }
+  page << PSTR("</TR>") << endl;
+  page << PSTR("</TABLE>") << endl;
+  page << BR;
+  
+  // Battery and memory status
   page << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
   page << PSTR("Memory (byte): ") << free_memory() << BR;
+  page << BR;
+
+  // Webserver status; uptime, request, mehod, path and query
   page << PSTR("Uptime (h:m:s): ") << h << ':' << m << ':' << s << BR;
   page << PSTR("Request: ") << ++m_nr << BR;
   page << PSTR("Method: ") << method << BR;
   page << PSTR("Path: ") << path << BR;
   page << PSTR("Query: "); if (query != NULL) page << query; page << BR;
+  page << BR;
+
+  // Webclient information
   page << PSTR("MAC: "); INET::print_mac(page, addr.mac); page << BR;
   page << PSTR("IP: "); INET::print_addr(page, addr.ip, addr.port); page << BR;
   page << footer;
