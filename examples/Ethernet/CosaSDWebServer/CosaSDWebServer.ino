@@ -54,6 +54,18 @@ public:
 void 
 WebServer::on_request(IOStream& page, char* method, char* path, char* query)
 {
+  // Trace uptime in hour:minutes:seconds
+  uint32_t uptime =  Watchdog::millis() / 1000;
+  uint16_t h = uptime / 3600;
+  uint8_t m = (uptime / 60) % 60;
+  uint8_t s = uptime % 60;
+  trace << h << ':' << m << ':' << s << ':';
+  
+  // Trace client address and port
+  INET::addr_t addr;
+  get_client(addr);
+  INET::print_addr(trace, addr.ip, addr.port); 
+
   // Filter path for root
   if (!strcmp_P(path, PSTR("/")))
     path = (char*) "index.htm";
@@ -61,7 +73,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
     path += 1;
 
   // Trace request to trace iostream
-  trace << method << ' ' << path;
+  trace << ':' << method << ' ' << path;
   if (query != NULL) trace << query;
 
   // Attempt to open the file. Report back if not found
@@ -71,7 +83,8 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
     path[strlen(path) - 1] = 0;
     if (!file.open(path, O_READ)) {
       trace << PSTR(" Not Found") << endl;
-      page << PSTR("HTTP/1.1 404 Not Found" CRLF CRLF);
+      page << PSTR("HTTP/1.1 404 Not Found" CRLF);
+      file.close();
       return;
     }
   }
@@ -83,7 +96,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
 	       "Connection: close" CRLF CRLF);
 
   // Use block read/write to improve performance
-  static const size_t BUF_MAX = 128;
+  static const size_t BUF_MAX = 64;
   uint8_t buf[BUF_MAX];
   int count;
   while ((count = file.read(buf, sizeof(buf))) > 0) {
@@ -107,7 +120,7 @@ WebServer server;
 SD sd(Board::D4);
 #define SLOW_CLOCK SPI::DIV4_CLOCK
 #define FAST_CLOCK SPI::DIV2_CLOCK
-#define CLOCK FAST_CLOCK
+#define CLOCK SLOW_CLOCK
 
 void setup()
 {
@@ -116,15 +129,13 @@ void setup()
   trace.begin(&uart, PSTR("CosaSDWebServer: started"));
   Watchdog::begin();
 
-  // Initiate ethernet controller with address
+  // Initiate ethernet controller with address and start server
   uint8_t ip[4] = { IP };
   uint8_t subnet[4] = { SUBNET };
   ASSERT(ethernet.begin(ip, subnet));
-
-  // Start the server
   ASSERT(server.begin(ethernet.socket(Socket::TCP, PORT)));
 
-  // Start the SD/FAT16 driver
+  // Initiate the SD/FAT16 driver
   ASSERT(sd.begin(CLOCK));
   ASSERT(FAT16::begin(&sd));
 }

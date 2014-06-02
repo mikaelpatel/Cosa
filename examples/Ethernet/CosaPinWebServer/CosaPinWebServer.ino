@@ -214,7 +214,7 @@ void setup()
 {
   // Initiate uart and trace output stream. And watchdog
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaWebServer: started"));
+  trace.begin(&uart, PSTR("CosaPinWebServer: started"));
   Watchdog::begin();
 
   // Initiate ethernet controller with address
