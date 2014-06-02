@@ -29,7 +29,7 @@
 #define bit_mask_set(p,m) ((p) |= (m))
 #define bit_mask_clear(p,m) ((p) &= ~(m))
 #define bit_mask_toggle(p,m) ((p) ^= (m))
-#define bit_mask_write(c,p,m) (c ? bitmask_set(p,m) : bitmask_clear(p,m)) 
+#define bit_mask_write(c,p,m) (c ? bit_mask_set(p,m) : bit_mask_clear(p,m)) 
 
 #define bit_get(p,b) ((p) & bit_mask(b))
 #define bit_set(p,b) ((p) |= bit_mask(b))
