@@ -289,17 +289,19 @@ W5100::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
   // Check if the socket is already in use
   if (m_proto != 0) return (-2);
 
-
   // Set protocol and port and issue open command
   m_dev->write(uint16_t(&m_sreg->MR), proto | (flag & MR_FLAG_MASK));
-  if (proto == IPRAW)
+  if (proto == IPRAW) {
+    m_port = port;
     m_dev->write(uint16_t(&m_sreg->PROTO), &port, sizeof(m_sreg->PROTO));
+  }
   else if ((proto == TCP) || (proto == UDP)) {
     // Check for dynamic local port allocation
     if (port == 0) {
       port = m_dev->m_local++;
       if (m_dev->m_local == 0) m_dev->m_local = Socket::DYNAMIC_PORT;
     }
+    m_port = port;
     port = swap((int16_t) port);
     m_dev->write(uint16_t(&m_sreg->PORT), &port, sizeof(m_sreg->PORT));
   }

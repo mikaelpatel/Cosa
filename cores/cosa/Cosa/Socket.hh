@@ -57,6 +57,24 @@ public:
   }  
 
   /**
+   * Get socket protocol.
+   * @return protocol.
+   */
+  Protocol get_proto()
+  {
+    return ((Protocol) m_proto);
+  }  
+
+  /**
+   * Get socket port.
+   * @return port.
+   */
+  uint16_t get_port()
+  {
+    return (m_port);
+  }  
+
+  /**
    * @override IOStream::Device
    * Write data from buffer with given size to device.
    * @param[in] buf buffer to write.
@@ -259,6 +277,9 @@ protected:
 
   /** Socket protocol if open otherwise zero(0). */
   uint8_t m_proto;
+
+  /** Socket port */
+  uint16_t m_port;
 
   /**
    * @override Socket
