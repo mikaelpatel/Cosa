@@ -117,7 +117,8 @@ volatile uint8_t _usbConfiguration = 0;
 static inline void 
 WaitIN(void)
 {
-  while (!(UEINTX & (1<<TXINI)));
+  while (!(UEINTX & (1<<TXINI)))
+    DELAY(1);
 }
 
 static inline void 
@@ -129,13 +130,15 @@ ClearIN(void)
 static inline void 
 WaitOUT(void)
 {
-  while (!(UEINTX & (1<<RXOUTI)));
+  while (!(UEINTX & (1<<RXOUTI)))
+    DELAY(1);
 }
 
 static inline uint8_t 
 WaitForINOrOUT()
 {
-  while (!(UEINTX & ((1<<TXINI)|(1<<RXOUTI))));
+  while (!(UEINTX & ((1<<TXINI)|(1<<RXOUTI))))
+    DELAY(1);
   return (UEINTX & (1<<RXOUTI)) == 0;
 }
 
