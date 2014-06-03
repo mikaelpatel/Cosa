@@ -56,11 +56,15 @@
 class NRF24L01P : private SPI::Driver, public Wireless::Driver {
 public:
   /**
-   * Configuration max values
+   * Maximum size of payload on device.
    */
-  enum {
-    PAYLOAD_MAX = 30		//!< Max size of payload (32 - src - port).
-  } __attribute__((packed));
+  static const size_t DEVICE_PAYLOAD_MAX = 32;
+
+  /** 
+   * Maximum size of payload. The device allows 32 bytes payload.
+   * The source address one byte and port one byte as header.
+   */
+  static const size_t PAYLOAD_MAX = DEVICE_PAYLOAD_MAX - 2;
 
   /**
    * Construct NRF transceiver with given channel and pin numbers 
@@ -373,8 +377,10 @@ private:
   enum {
     ARD = 4,			//!< Auto retransmit delay (bits 4).
     				//!< - delay * 250 us (250..4000 us).
-    ARC = 0			//!< Auto retransmit count (bits 4).
+    DEFAULT_ARD = 2,		//!< Default auto retransmit delay (500 us)
+    ARC = 0,			//!< Auto retransmit count (bits 4).
     				//!< - retransmit count (0..15).
+    DEFAULT_ARC = 15		//!< Default auto retransmit count (15)
   } __attribute__((packed));
 
   /**

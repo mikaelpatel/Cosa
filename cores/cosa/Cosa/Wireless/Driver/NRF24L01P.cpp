@@ -132,7 +132,6 @@ NRF24L01P::set_transmit_mode(uint8_t dest)
   // Setup primary transmit address
   addr_t tx_addr(m_addr.network, dest);
   write(TX_ADDR, &tx_addr, sizeof(tx_addr));
-  write(RX_ADDR_P0, &tx_addr, sizeof(tx_addr));  
 
   // Trigger the transmitter mode
   if (m_state != TX_STATE) {
@@ -172,19 +171,20 @@ NRF24L01P::begin(const void* config)
   write(FEATURE, (_BV(EN_DPL) | _BV(EN_ACK_PAY) | _BV(EN_DYN_ACK)));
   write(RF_CH, m_channel);
   write(RF_SETUP, (RF_DR_2MBPS | RF_PWR_0DBM));
-  write(SETUP_RETR, ((2 << ARD) | (15 << ARC)));
+  write(SETUP_RETR, ((DEFAULT_ARD << ARD) | (DEFAULT_ARC << ARC)));
   write(DYNPD, DPL_PA);
-  write(SETUP_AW, AW_3BYTES);
 
-  // Setup hardware receive pipes (0:ack, 1:device, 2:broadcast)
+  // Setup hardware receive pipes address; network (16-bit), device (8-bit)
+  // P0: auto-acknowledge (see set_transmit_mode)
+  // P1: node address<network:device> with auto-acknowledge
+  // P2: broadcast<network:0>
   addr_t rx_addr = m_addr;
+  write(SETUP_AW, AW_3BYTES);
   write(RX_ADDR_P1, &rx_addr, sizeof(rx_addr));
-  write(RX_ADDR_P2, 0);
-  write(EN_RXADDR, (_BV(ERX_P2) | _BV(ERX_P1) | _BV(ERX_P0)));
+  write(RX_ADDR_P2, BROADCAST);
+  write(EN_RXADDR, (_BV(ERX_P2) | _BV(ERX_P1)));
+  write(EN_AA, (_BV(ENAA_P1)));
   
-  // Auto-acknowledgement on device pipe
-  write(EN_AA, (_BV(ENAA_P2) | _BV(ENAA_P1) | _BV(ENAA_P0)));
-
   // Ready to go
   powerup();
   spi.attach(this);
@@ -206,12 +206,20 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   // Write source address and payload to the transmit fifo
   // Fix: Allow larger payload(30*3) with fragmentation
   spi.begin(this);
-  m_status = spi.transfer(dest ? W_TX_PAYLOAD : W_TX_PAYLOAD_NO_ACK);
+  uint8_t command = ((dest != BROADCAST) ? W_TX_PAYLOAD : W_TX_PAYLOAD_NO_ACK);
+  m_status = spi.transfer(command);
   spi.transfer(m_addr.device);
   spi.transfer(port);
   spi.write(vec);
   spi.end();
   m_trans += 1;
+
+  // Check for auto-acknowledge pipe(0), and address setup and enable
+  if (dest != BROADCAST) {
+    addr_t tx_addr(m_addr.network, dest);
+    write(RX_ADDR_P0, &tx_addr, sizeof(tx_addr));  
+    write(EN_RXADDR, (_BV(ERX_P2) | _BV(ERX_P1) | _BV(ERX_P0)));
+  }
 
   // Wait for transmission
   do {
@@ -219,6 +227,11 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
     read_status();
   } while (!m_status.tx_ds && !m_status.max_rt);
   bool data_sent = m_status.tx_ds;
+
+  // Check for auto-acknowledge pipe(0) disable
+  if (dest != BROADCAST) {
+    write(EN_RXADDR, (_BV(ERX_P2) | _BV(ERX_P1)));
+  }
 
   // Reset status bits and read retransmission counter and update
   write(STATUS, _BV(MAX_RT) | _BV(TX_DS));
