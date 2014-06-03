@@ -31,11 +31,11 @@
  *                         DS18B20/2
  *                       +------------++
  * (GND)---------------1-|GND         |\\
- * (D3)------+---------2-|DQ          | ||
+ * (OWI/D3)--+---------2-|DQ          | ||
  *           |       +-3-|VDD         |//
  *          4K7      |   +------------++
  *           |       | 
- * (D4)------+       +---(VCC/GND)
+ * (PW/D4)---+       +---(VCC/GND)
  *
  * Connect RF433/315 Transmitter Data to ATtiny85 D0, connect VCC 
  * GND. Connect 1-Wire digital thermometer to D3 with pullup resistor.
@@ -74,8 +74,8 @@
 
 // Select Wireless device driver
 // #define USE_CC1101
-// #define USE_NRF24L01P
-#define USE_VWI
+#define USE_NRF24L01P
+// #define USE_VWI
 
 #if defined(USE_CC1101)
 #include "Cosa/Wireless/Driver/CC1101.hh"
@@ -102,7 +102,8 @@ OWI owi(Board::D3);
 DS18B20 indoors(&owi);
 DS18B20 outdoors(&owi);
 
-// Active pullup (pullup resistor connected to this pin)
+// Active pullup (pullup resistor 4K7 connected between this pin 
+// and OWI pin)
 OutputPin pw(Board::D4);
 
 // Power-down sleep
@@ -124,12 +125,10 @@ void setup()
   rf.powerdown();
 
   // Connect to the temperature sensors; use active pullup
-  pw.on();
-  {
+  asserted(pw) {
     indoors.connect(0);
     outdoors.connect(1);
   }
-  pw.off();
 }
 
 // Message from the device; temperatures and voltage reading
@@ -147,13 +146,11 @@ void loop()
   static uint8_t nr = 0;
 
   // Make a conversion request and read the temperature (scratchpad)
-  pw.on();
-  {
+  asserted(pw) {
     DS18B20::convert_request(&owi, 12, true);
     indoors.read_scratchpad();
     outdoors.read_scratchpad();
   }
-  pw.off();
   
   // Turn on necessary hardware modules
   Power::all_enable();
