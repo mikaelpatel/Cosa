@@ -58,12 +58,17 @@
 class CC1101 : private SPI::Driver, public Wireless::Driver {
 public:
   /**
+   * Maximum size of payload on device.
+   */
+  static const size_t DEVICE_PAYLOAD_MAX = 64;
+
+  /**
    * Maximum size of payload. The device allows 64 bytes payload.
    * The length and destination addressing will require two bytes,
    * source address one byte, port one byte and radio status an
    * additional two bytes. This gives a payload max of 64 - 6 = 58.
    */
-  static const size_t PAYLOAD_MAX = 58;
+  static const size_t PAYLOAD_MAX = DEVICE_PAYLOAD_MAX - 6;
   
   /**
    * Construct C1101 device driver with given network and device
