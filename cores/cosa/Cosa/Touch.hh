@@ -34,9 +34,8 @@
  * @section Circuit
  * Connect a 1-10 M ohm pullup resistor to the selected pin. 
  * @code
- * (VCC)----------+
+ * (VCC)---[1M]---+
  *                |
- *               1M
  *                |
  * (Dn)-----------+-----[]
  * @endcode

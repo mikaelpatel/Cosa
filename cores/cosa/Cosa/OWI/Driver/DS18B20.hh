@@ -33,11 +33,12 @@
  *                           DS18B20
  *                       +------------+
  * (GND)---------------1-|GND         |\
- * (Dn)------+---------2-|DQ          | |
- *           |       +-3-|VDD         |/
- *          4K7      |   +------------+
- *           |       | 
- * (VCC)-----+       +---(VCC/GND)
+ * (Dn)----------+-----2-|DQ          | |
+ *               |   +-3-|VDD         |/
+ *               |   |   +------------+
+ *               |   | 
+ * (VCC)--[4K7]--+   +---(VCC/GND)
+ *
  * @endcode
  * May use parasite powering (connect DS18B20 VCC to GND) otherwise to VCC.
  * 

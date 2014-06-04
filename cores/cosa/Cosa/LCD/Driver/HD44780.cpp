@@ -20,7 +20,9 @@
 
 #include "Cosa/LCD/Driver/HD44780.hh"
 
-// DDR
+// DDR offset table
+// 0: 40X2, 20X4, 20X2, 16X2, 16X1
+// 1: 16X4
 const uint8_t HD44780::offset0[] __PROGMEM = { 0x00, 0x40, 0x14, 0x54 };
 const uint8_t HD44780::offset1[] __PROGMEM = { 0x00, 0x40, 0x10, 0x50 };
 
