@@ -22,21 +22,18 @@
  * less than 10 uA while idle (and no LED on).
  * 
  *                       DS18B20/sensor
- * (VCC)--[4K7]--+       +------------+
+ * (D3)---[4K7]--+       +------------+
  * (GND)---------)-----1-|GND         |\
  * (D4)----------+-----2-|DQ          | |
  * (VCC/GND)-----------3-|VDD         |/
  *                       +------------+
  *
- * (D0)---------RED->|---+
+ * (D5/D0)------RED->|---+
  *                       |
- * (D1)-------GREEN->|---+----[330]---(GND)
+ * (D6/D1)----GREEN->|---+----[330]---(GND)
  *                       |
- * (D2)--------BLUE->|---+
+ * (D7/D2)-----BLUE->|---+
  *
- * Connect Arduino to DS18B20 in D4 and GND. May use parasite 
- * powering (connect DS18B20 VCC to GND) otherwise to VCC.
- * 
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -45,9 +42,15 @@
 #include "Cosa/OWI/Driver/DS18B20.hh"
 
 // RGB LED pins
+#if !defined(BOARD_ATTINY)
+OutputPin red(Board::D5);
+OutputPin green(Board::D6);
+OutputPin blue(Board::D7);
+#else
 OutputPin red(Board::D0);
 OutputPin green(Board::D1);
 OutputPin blue(Board::D2);
+#endif
 
 // 1-wire bus and digital thermometer
 OutputPin pw(Board::D3);
