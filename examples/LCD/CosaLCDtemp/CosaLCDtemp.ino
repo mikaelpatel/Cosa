@@ -22,15 +22,13 @@
  * See LCD driver header files for circuit descriptions.
  *
  *                       DS18B20/sensor
+ * (VCC)--[4K7]--+       +------------+
+ * (GND)---------)-----1-|GND         |\
+ * (D4)----------+-----2-|DQ          | |
+ * (VCC/GND)-----------3-|VDD         |/
  *                       +------------+
- * (GND)---------------1-|GND         |\
- * (D5)------+---------2-|DQ          | |
- *           |       +-3-|VDD         |/
- *          4K7      |   +------------+
- *           |       | 
- * (VCC)-----+       +---(VCC/GND)
  *
- * Connect Arduino to DS18B20 in D5 and GND. May use parasite 
+ * Connect Arduino to DS18B20 in D4 and GND. May use parasite 
  * powering (connect DS18B20 VCC to GND) otherwise to VCC.
  * 
  * This file is part of the Arduino Che Cosa project.
@@ -52,12 +50,15 @@
 // HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 // HD44780 lcd(&port);
+
 #include "Cosa/LCD/Driver/PCD8544.hh"
-// PCD8544::Serial3W port;
-PCD8544::SPI3W port;
+LCD::Serial3W port;
+// LCD::SPI3W port;
 PCD8544 lcd(&port);
+
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
+
 // #include "Cosa/LCD/Driver/VLCD.hh"
 // VLCD lcd;
 
@@ -65,21 +66,31 @@ PCD8544 lcd(&port);
 IOStream console(&lcd);
 
 // The 1-Wire bus and the connected digital thermometer
-OWI owi(Board::D5);
+OWI owi(Board::D4);
 DS18B20 sensor(&owi);
 
 void setup()
 {
   Watchdog::begin();
   lcd.begin();
+  console << PSTR("CosaLCDtemp: started");
   sensor.connect(0);
+  SLEEP(2);
 }
 
 void loop()
 {
+  // Request temperature conversion and read result
+  int8_t low, high;
   sensor.convert_request();
   sensor.read_scratchpad();
-  console << clear << sensor << PSTR(" C") << endl;
-  console << AnalogPin::bandgap() << PSTR(" mV");
+  sensor.get_trigger(low, high);
+
+  // Display current temperature, alarm trigger and battery status
+  console << clear;
+  console << sensor 
+	  << PSTR(" [") << low << PSTR("..") << high << PSTR("]") 
+	  << endl;
+  console << AnalogPin::bandgap() << PSTR(" mV") << endl;
   SLEEP(2);
 }

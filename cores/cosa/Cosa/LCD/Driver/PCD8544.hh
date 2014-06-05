@@ -24,7 +24,6 @@
 #include "Cosa/Board.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/LCD.hh"
-#include "Cosa/SPI.hh"
 #include "Cosa/Canvas/Font.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"
 
@@ -42,13 +41,13 @@
  * @code
  *                    PCD8544/LCD::Serial3W
  *                       +------------+
- * (RST)---[ > ]-------1-|RST         |
- * (D9/D3)-[ > ]-------2-|CE          |
- * (D8/D2)-[ > ]-------3-|DC          |
- * (D6/D0)-[ > ]-------4-|DIN         |
- * (D7/D1)-[ > ]-------5-|CLK         |
+ * (RST)--------[ > ]--1-|RST         |
+ * (D9/D3)------[ > ]--2-|CE          |
+ * (D8/D2)------[ > ]--3-|DC          |
+ * (D6/D0)------[ > ]--4-|DIN         |
+ * (D7/D1)------[ > ]--5-|CLK         |
  * (3V3)---------------6-|VCC         |
- * (GND)---|220|-------7-|LED         |
+ * (GND)--------[220]--7-|LED         |
  * (GND)---------------8-|GND         |
  *                       +------------+
  *
@@ -60,7 +59,7 @@
  * (MOSI/D11/D5)-[ > ]--4-|DIN         |
  * (SCK/D13/D4)--[ > ]--5-|CLK         |
  * (3V3)----------------6-|VCC         |
- * (GND)---|220|--------7-|LED         |
+ * (GND)---------[220]--7-|LED         |
  * (GND)----------------8-|GND         |
  *                        +------------+
  * @endcode

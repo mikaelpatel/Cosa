@@ -642,7 +642,11 @@ public:
 
   protected:
     /** Execution time delay (us). */
+#if !defined(BOARD_ATTINY)
     static const uint16_t SHORT_EXEC_TIME = 24;
+#else
+    static const uint16_t SHORT_EXEC_TIME = 8;
+#endif
 
     /** Shift register port bit fields; little endian. */
     union port_t {

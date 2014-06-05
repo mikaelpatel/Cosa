@@ -21,6 +21,7 @@
 #ifndef COSA_OWI_DRIVER_DS18B20_HH
 #define COSA_OWI_DRIVER_DS18B20_HH
 
+#include "Cosa/Types.h"
 #include "Cosa/OWI.hh"
 #include "Cosa/IOStream.hh"
 
@@ -31,16 +32,15 @@
  * @section Circuit
  * @code
  *                           DS18B20
- *                       +------------+
- * (GND)---------------1-|GND         |\
+ * (VCC)--[4K7]--+       +------------+
+ * (GND)---------)-----1-|GND         |\
  * (Dn)----------+-----2-|DQ          | |
- *               |   +-3-|VDD         |/
- *               |   |   +------------+
- *               |   | 
- * (VCC)--[4K7]--+   +---(VCC/GND)
+ * (VCC/GND)-----------3-|VDD         |/
+ *                       +------------+
  *
  * @endcode
- * May use parasite powering (connect DS18B20 VCC to GND) otherwise to VCC.
+ * May use parasite powering (connect DS18B20 VCC to GND) otherwise 
+ * to VCC.
  * 
  * @section References
  * 1. Maxim Integrated product description (REV: 042208) 
@@ -106,7 +106,8 @@ public:
 
   /**
    * Connect to DS18B20 device with given index. Reads configuration,
-   * scratchpad, and power supply setting.
+   * scratchpad, and power supply setting. Returns true(1) if connected, 
+   * otherwise false(0).
    * @param[in] index device order.
    * @return true(1) if successful otherwise false(0).
    */
@@ -257,12 +258,12 @@ private:
    * DS18B20 Memory Map (Figure 7, pp. 7).
    */
   struct scratchpad_t {
-    int16_t temperature;
-    int8_t high_trigger;
-    int8_t low_trigger;
-    uint8_t configuration;
-    uint8_t reserved[3];
-    uint8_t crc;
+    int16_t temperature;	//!< Temperature reading (9-12 bits).
+    int8_t high_trigger;	//!< High temperature trigger.
+    int8_t low_trigger;		//!< Low temperature trigger.
+    uint8_t configuration;	//!< Configuration; resolution, alarm.
+    uint8_t reserved[3];	//!< Reserved.
+    uint8_t crc;		//!< Check sum.
   };
   scratchpad_t m_scratchpad;
 
