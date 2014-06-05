@@ -36,7 +36,7 @@
  *                       +----U----+    |
  * (Q1)----------------1-|Q1    VCC|-16-+
  * (Q2)----------------2-|Q2     Q0|-15------------(Q0)
- * (Q3)----------------3-|Q3    SER|-1-------(MOSI/D11)
+ * (Q3)----------------3-|Q3    SER|-14------(MOSI/D11)
  * (Q4)----------------4-|Q4    /OE|-13-----------(GND)
  * (Q5)----------------5-|Q5   RCLK|-12--------(EN/D10)------+
  * (Q6)----------------6-|Q6   SCLK|-11-------(SCK/D13)----+ |
@@ -73,6 +73,9 @@
 template<uint8_t N>
 class SRPO : public SPI::Driver {
 public:
+  /** Number of pins for N ports */
+  static const uint8_t PINS = N * CHARBITS;
+
   /**
    * Construct N-shift register connected to SPI (MOSI, SCL) and given
    * chip select pin.
@@ -211,23 +214,23 @@ public:
       m_srpo->set(m_pin);
     }
 
-  /**
-   * Clear pin in shadow register. Call update() to write to shift
-   * register. 
-   */
-  void clear() __attribute__((always_inline))
-  {
-    m_srpo->clear(m_pin);
-  }
+    /**
+     * Clear pin in shadow register. Call update() to write to shift
+     * register. 
+     */
+    void clear() __attribute__((always_inline))
+    {
+      m_srpo->clear(m_pin);
+    }
 
-  /**
-   * Toggle pin in shadow register. Call update() to write to shift
-   * register. 
-   */
-  void toggle() __attribute__((always_inline))
-  {
-    m_srpo->toggle(m_pin);
-  }
+    /**
+     * Toggle pin in shadow register. Call update() to write to shift
+     * register. 
+     */
+    void toggle() __attribute__((always_inline))
+    {
+      m_srpo->toggle(m_pin);
+    }
 
   protected:
     SRPO<N>* m_srpo;

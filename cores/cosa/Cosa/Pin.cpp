@@ -28,18 +28,18 @@ Pin::read(OutputPin& clk, Direction order) const
   uint8_t bits = CHARBITS;
   if (order == MSB_FIRST) {
     do {
-      clk.set();
       value <<= 1;
       if (is_set()) value |= 0x01;
-      clk.clear();
+      clk.toggle();
+      clk.toggle();
     } while (--bits);
   }
   else {
     do {
-      clk.set();
       value >>= 1;
       if (is_set()) value |= 0x80;
-      clk.clear();
+      clk.toggle();
+      clk.toggle();
     } while (--bits);
   }
   return (value);

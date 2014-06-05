@@ -68,6 +68,9 @@ namespace Soft {
 template<uint8_t N>
 class SRPO {
 public:
+  /** Number of pins for N ports */
+  static const uint8_t PINS = N * CHARBITS;
+
   /**
    * Construct N-shift register connected to given pins.
    * @param[in] sda serial output data (Default D3).
