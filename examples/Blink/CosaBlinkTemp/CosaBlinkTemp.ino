@@ -95,13 +95,13 @@ void loop()
   // Set LED according to temperature
   if (temp < low) {
     blue.on();
-    powerdown(32);
+    powerdown(16);
     blue.off();
-    powerdown(1024);
+    powerdown(1000);
   }
   else if (temp > high) {
     red.on();
-    powerdown(32);
+    powerdown(16);
     red.off();
     powerdown(1000);
   }
