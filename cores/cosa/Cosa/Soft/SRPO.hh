@@ -23,6 +23,8 @@
 
 #include "Cosa/OutputPin.hh"
 
+namespace Soft {
+
 /**
  * Soft N-Shift Register Parallel Output, 2-pin. The shift registers
  * (74HC164/74HC595) may be cascaded for N*8-bit parallel output port
@@ -59,12 +61,10 @@
  *                   |   +---------+                     | |
  *                   |      0.1uF                        | |
  *                 (GND)-----||-------(VCC)              v v
- *
  * @endcode
  *
  * @param[in] N number of shift registers (N * 8 output pins).
  */
-namespace Soft {
 template<uint8_t N>
 class SRPO {
 public:

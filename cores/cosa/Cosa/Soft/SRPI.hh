@@ -24,6 +24,8 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/InputPin.hh"
 
+namespace Soft {
+
 /**
  * Soft N-Shift Register Parallel Input. The shift registers (74HC165)
  * may be cascaded for N*8-bit parallel input port (see circuit
@@ -63,7 +65,6 @@
  *
  * @param[in] N number of shift registers (N * 8 input pins).
  */
-namespace Soft {
 template<uint8_t N>
 class SRPI {
 public:
