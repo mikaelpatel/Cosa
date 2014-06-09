@@ -1,0 +1,2 @@
+#define LOWPOWERLAB_MOTEINO
+
