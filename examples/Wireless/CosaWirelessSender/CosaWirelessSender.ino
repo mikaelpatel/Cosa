@@ -35,15 +35,15 @@
 #if defined(BOARD_ATTINY)
 #define DEVICE 0x10
 #elif defined(BOARD_ATMEGA2560)
-#define DEVICE 0x12
-#else
 #define DEVICE 0x11
+#else
+#define DEVICE 0x12
 #endif
 
 // Select Wireless device driver
 // #define USE_CC1101
-#define USE_NRF24L01P
-// #define USE_RFM69
+// #define USE_NRF24L01P
+#define USE_RFM69
 // #define USE_VWI
 
 #if defined(USE_CC1101)
@@ -76,7 +76,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaWirelessSender: started"));
   Watchdog::begin();
   RTC::begin();
-  rf.begin();
+  ASSERT(rf.begin());
   rf.set_output_power_level(-10);
 }
 
@@ -94,14 +94,14 @@ void loop()
   
   // Send to nodes 0x01 to 0x03
   for (uint8_t dest = 0x01; dest < 0x04; dest++) {
+    trace << PSTR("dest=") << dest
+	  << PSTR(",nr=") << msg.nr;
     int res = rf.send(dest, PAYLOAD_TYPE, &msg, sizeof(msg));
+    trace << PSTR(",res=") << res;
     if (res != sizeof(msg)) {
-      trace << PSTR("dest=") << dest
-	    << PSTR(",nr=") << msg.nr 
-	    << PSTR(",res=") << res
-	    << PSTR(":failed to send") 
-	    << endl;
+      trace << PSTR(":failed to send");
     }
+    trace << endl;
     msg.nr += 1;
   }
 

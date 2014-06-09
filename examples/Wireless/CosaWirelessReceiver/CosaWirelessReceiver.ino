@@ -36,8 +36,8 @@
 
 // Select Wireless device driver
 // #define USE_CC1101
-#define USE_NRF24L01P
-// #define USE_RFM69
+// #define USE_NRF24L01P
+#define USE_RFM69
 // #define USE_VWI
 
 #if defined(USE_CC1101)
@@ -70,7 +70,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaWirelessReceiver: started"));
   Watchdog::begin();
   RTC::begin();
-  rf.begin();
+  ASSERT(rf.begin());
 }
 
 static const uint8_t IOSTREAM_TYPE = 0x00;

@@ -68,6 +68,10 @@
 #elif defined(LILYPAD_ARDUINO_USB)		
 #include "Cosa/Board/Arduino/LilyPad_USB.hh"
 
+// LowPowerLab Boards
+#elif defined(LOWPOWERLAB_MOTEINO)
+#include "Cosa/Board/LowPowerLab/Moteino.hh"
+
 // Microduino Boards
 #elif defined(MICRODUINO_CORE)
 #include "Cosa/Board/Microduino/Core.hh"

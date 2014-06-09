@@ -50,8 +50,9 @@
 
 // Select Wireless device driver
 // #define USE_CC1101
-#define USE_NRF24L01P
+// #define USE_NRF24L01P
 // #define USE_VWI
+#define USE_RFM69
 
 #if defined(USE_CC1101)
 #include "Cosa/Wireless/Driver/CC1101.hh"
@@ -60,6 +61,10 @@ CC1101 rf(NETWORK, DEVICE);
 #elif defined(USE_NRF24L01P)
 #include "Cosa/Wireless/Driver/NRF24L01P.hh"
 NRF24L01P rf(NETWORK, DEVICE);
+
+#elif defined(USE_RFM69)
+#include "Cosa/Wireless/Driver/RFM69.hh"
+RFM69 rf(NETWORK, DEVICE);
 
 #elif defined(USE_VWI)
 #include "Cosa/Wireless/Driver/VWI.hh"

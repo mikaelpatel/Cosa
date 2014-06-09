@@ -91,7 +91,7 @@ const uint8_t RFM69::config[] __PROGMEM = {
   REG_VALUE16(PREAMBLE, 3),
   REG_VALUE8(SYNC_CONFIG, SYNC_ON | FIFO_FILL_AUTO  | (1 << SYNC_SIZE)),
   REG_VALUE8(PACKET_CONFIG1, VARIABLE_LENGTH | WHITENING 
-	     | CRC_ON | CRC_AUTO_CLEAR_ON 
+	     | CRC_ON | CRC_AUTO_CLEAR_ON
 	     | ADDR_FILTER_ON),
   REG_VALUE8(PAYLOAD_LENGTH, 66),
   REG_VALUE8(BROADCAST_ADDR, BROADCAST),
@@ -143,9 +143,10 @@ RFM69::begin(const void* config)
 
   // Upload the configuration. Check for default configuration
   const uint8_t* cp = RFM69::config;
+  Reg reg; 
   if (config != NULL) cp = (const uint8_t*) config;
-  for (Reg reg; (reg = (Reg) pgm_read_byte(cp++)) != 0; cp++)
-    write(reg, pgm_read_byte(cp));
+  while ((reg = (Reg) pgm_read_byte(cp++)) != 0)
+    write(reg, pgm_read_byte(cp++));
 
   // Adjust configuration with instance specific state
   uint16_t sync = hton(m_addr.network);
@@ -178,17 +179,12 @@ RFM69::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
   if (vec == NULL) return (-1);
-  size_t len = 0;
-  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
-    len += vp->size;
+  size_t len = iovec_size(vec);
   if (len > PAYLOAD_MAX) return (-1);
 
   // Check if a packet available. Should receive before send
   if (m_avail) return (-2);
-
-  // Wait for previous packet send if any
-  while (!m_done) yield();
-
+  
   // Put the device in standby before writing packet
   set(STANDBY_MODE);
 
@@ -200,12 +196,14 @@ RFM69::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   spi.transfer(m_addr.device);
   spi.transfer(port);
   for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
-    spi.transfer(vp->buf, vp->size);
+    spi.write(vp->buf, vp->size);
   spi.end();
 
-  // Trigger the transmit
+  // Trigger the transmit and await completion. Set standby mode
   m_done = false;
   set(TRANSMITTER_MODE);
+  while (!m_done) yield();
+  set(STANDBY_MODE);
 
   // Return total length of payload
   return (len);
@@ -233,13 +231,15 @@ RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
     while (!m_avail && ((ms == 0) || (RTC::since(start) < ms))) yield();
     if (!m_avail) return (-2);
   }
-  
+
   // Set standby while retrieving the paket
   set(STANDBY_MODE);
 
   // Read the payload size and check size
   spi.begin(this);
-  uint8_t size = spi.transfer(REG_READ | FIFO) - HEADER_MAX;
+  spi.transfer(REG_READ | FIFO);
+  uint8_t size = spi.transfer(0);
+  size = size - HEADER_MAX;
   if (size > len) {
     spi.end();
     set(RECEIVER_MODE);
@@ -254,6 +254,7 @@ RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   spi.end();
 
   // Turn on receive mode again and return size of payload
+  m_avail = false;
   set(RECEIVER_MODE);
   return (size);
 }

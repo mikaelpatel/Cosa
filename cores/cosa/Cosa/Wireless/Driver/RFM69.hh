@@ -644,7 +644,7 @@ private:
      * @param[in] rf device.
      */
     IRQPin(Board::ExternalInterruptPin pin, InterruptMode mode, RFM69* rf) : 
-      ExternalInterrupt(pin, mode, true),
+      ExternalInterrupt(pin, mode),
       m_rf(rf)
     {}
     
