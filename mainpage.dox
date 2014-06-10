@@ -62,10 +62,9 @@ The popular VirtualWire library has been refactored to the
 object-oriented style of Cosa (VWI) and extended with three additional
 codecs; Manchester, 4B5B and Bitstuffing. This allows basic ultra
 cheap wireless nodes with RF315/433 receiver and transmitter. For more
-advanced wireless connections there is also a driver for the Nordic
-Semiconductor NRF24L01+ chip, which allows low-power wireless
-communication of up to 2 Mbps in the 2.4GHz band, and the TI CC1101
-Low-Power Sub-1 GHz RF Transceiver. 
+advanced wireless connections there is also drivers for the Nordic
+Semiconductor NRF24L01+ chip, the TI CC1101 Low-Power Sub-1 GHz RF
+Transceiver, and RFM69.  
 
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. There
@@ -92,16 +91,17 @@ http://arduino.cc/forum/index.php/topic,150299.0.html.
 5. Firmata, http://www.firmata.org/wiki/Main_Page<br>
 6. LilyPad, http://web.media.mit.edu/~leah/LilyPad/<br>
 7. Jeelabs, http://jeelabs.org/<br>
-8. Quantum Leaps, http://www.state-machine.com/<br>
-9. Concurrency.cc, http://concurrency.cc/<br>
-10. Protothreads, http://dunkels.com/adam/pt/<br>
-11. Arduino ATtiny, http://hlt.media.mit.edu/?p=1695<br>
-12. Arduino Low Power, http://gammon.com.au/power<br>
-13. Virtual Wire, http://www.open.com.au/mikem/arduino/VirtualWire/<br>
-14. Microduino, http://www.microduino.cc/<br>
-15. Teensy, https://www.pjrc.com/<br>
-16. MQTT, http://mqtt.org/<br>
-17. ThingSpeak, https://thingspeak.com/<br>
+8. Microduino, http://www.microduino.cc/<br>
+9. Teensy, https://www.pjrc.com/<br>
+10. Pinoccio, https://pinocc.io/<br>
+11. LowPowerLab, http://lowpowerlab.com/<br>
+12. Quantum Leaps, http://www.state-machine.com/<br>
+13. Concurrency.cc, http://concurrency.cc/<br>
+14. Protothreads, http://dunkels.com/adam/pt/<br>
+15. Arduino Low Power, http://gammon.com.au/power<br>
+16. Virtual Wire, http://www.open.com.au/mikem/arduino/VirtualWire/<br>
+17. MQTT, http://mqtt.org/<br>
+18. ThingSpeak, https://thingspeak.com/<br>
 
 @section Naming
 

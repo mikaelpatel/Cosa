@@ -43,6 +43,7 @@ boards with AVR MCUs.
 * Breadboard ([ATtinyX4] (./cores/cosa/Cosa/Board/Arduino/ATtinyX4.hh), [ATtinyX5] (./cores/cosa/Cosa/Board/Arduino/ATtinyX5.hh), [ATtinyX61] (./cores/cosa/Cosa/Board/Arduino/ATtinyX61.hh), [ATmega328] (./cores/cosa/Cosa/Board/Arduino/ATmega328P.hh), [ATmega1284] (./cores/cosa/Cosa/Board/Arduino/ATmega1284P.hh))
 * [LilyPad Arduino] (./cores/cosa/Cosa/Board/Arduino/LilyPad.hh)
 * [LilyPad Arduino USB] (./cores/cosa/Cosa/Board/Arduino/LilyPad_USB.hh)
+* [LowPowerLab Moteino] (./cores/cosa/Cosa/Board/LowPowerLab/Moteino.hh)
 * [Pinoccio Scout] (./cores/cosa/Cosa/Board/Pinoccio/Scout.hh)
 * [Microduino-Core] (./cores/cosa/Cosa/Board/Microduino/Core.hh)
 * [Microduino-Core32u4] (./cores/cosa/Cosa/Board/Microduino/Core32U4.hh)
@@ -60,16 +61,17 @@ References
 5. Firmata, http://www.firmata.org/wiki/Main_Page
 6. LilyPad, http://web.media.mit.edu/~leah/LilyPad/
 7. Jeelabs, http://jeelabs.org/
-8. Quantum Leaps, http://www.state-machine.com/
-9. Concurrency.cc, http://concurrency.cc/
-10. Protothreads, http://dunkels.com/adam/pt/
-11. Arduino ATtiny, http://hlt.media.mit.edu/?p=1695
-12. Arduino Low Power, http://gammon.com.au/power
-13. Virtual Wire, http://www.open.com.au/mikem/arduino/VirtualWire/
-14. Microduino, http://www.microduino.cc/
-15. Teensy, https://www.pjrc.com/
-16. MQTT, http://mqtt.org/
-17. ThingSpeak, https://thingspeak.com/
+8. Microduino, http://www.microduino.cc/
+9. Teensy, https://www.pjrc.com/
+10. Pinoccio, https://pinocc.io/
+11. LowPowerLab, http://lowpowerlab.com/
+12. Quantum Leaps, http://www.state-machine.com/
+13. Concurrency.cc, http://concurrency.cc/
+14. Protothreads, http://dunkels.com/adam/pt/
+15. Arduino Low Power, http://gammon.com.au/power
+16. Virtual Wire, http://www.open.com.au/mikem/arduino/VirtualWire/
+17. MQTT, http://mqtt.org/
+18. ThingSpeak, https://thingspeak.com/
 
 Naming
 ------
