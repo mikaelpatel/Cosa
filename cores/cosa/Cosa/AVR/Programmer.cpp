@@ -38,8 +38,8 @@ Programmer::begin()
     bit_set(DDRB, Board::SCK);
     
     // And pulse a reset signal with clock low
-    bit_set(PORTB, Board::SS);
     bit_clear(PORTB, Board::SCK);
+    bit_set(PORTB, Board::SS);
     DELAY(50);
     bit_clear(PORTB, Board::SS);
     DELAY(50);

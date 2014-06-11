@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -414,6 +414,7 @@ public:
    * @param[in] dest destination buffer pointer.
    * @param[in] src source program word address.
    * @param[in] size number of bytes to read.
+   * @return byte read or negative error code.
    */
   int read_program_memory(uint8_t* dest, uint16_t src, size_t size);
 
@@ -424,6 +425,7 @@ public:
    * @param[in] dest destination program word address.
    * @param[in] src source buffer pointer.
    * @param[in] size number of bytes to write.
+   * @return byte read or negative error code.
    */
   int write_program_memory(uint16_t dest, uint8_t* src, size_t size);
 
@@ -434,6 +436,7 @@ public:
    * @param[in] dest destination buffer pointer.
    * @param[in] src source eeprom memory byte address.
    * @param[in] size number of bytes to read.
+   * @return byte read or negative error code.
    */
   int read_eeprom_memory(uint8_t* dest, uint16_t src, size_t size);
 
@@ -444,14 +447,15 @@ public:
    * @param[in] dest destination eeprom memory byte address.
    * @param[in] src source buffer pointer.
    * @param[in] size number of bytes to write.
+   * @return byte read or negative error code.
    */
   int write_eeprom_memory(uint16_t dest, uint8_t* src, size_t size);
 
 private:
-  /** Number of words (16-bits) per page */
+  /** Number of words (16-bits) per page. */
   uint8_t m_flash_pagesize;
 
-  /** Number of bytes (8-bits) per page */
+  /** Number of bytes (8-bits) per page. */
   uint8_t m_eeprom_pagesize;
 };
 
