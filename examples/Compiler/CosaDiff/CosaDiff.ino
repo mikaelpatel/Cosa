@@ -70,19 +70,23 @@ void iter(uint32_t t0, uint32_t t1, uint8_t i0, uint8_t i1)
     uint16_t s1 = t1;
     int16_t diff16 = s1 - s0;
     int32_t diff32 = t1 - t0;
-    bool wrong16 = s1 < s0;
-    bool wrong32 = t1 < t0;
-    bool correct16 = diff16 < 0;
-    bool correct32 = diff32 < 0;
+    bool lessthan16 = s1 < s0;
+    bool lessthan32 = t1 < t0;
+    bool diffzeroless16 = diff16 < 0;
+    bool diffzeroless32 = diff32 < 0;
     trace << i 
 	  << PSTR(":v0=") << t0 << ',' << s0
 	  << PSTR(",v1=") << t1 << ',' << s1
 	  << PSTR(",diff=") << diff32 << ',' << diff16
-	  << PSTR(",since=") << since32(t0, t1) << ',' << since16(s0, s1)
-	  << PSTR(",wrong=") << wrong32 << ',' << wrong16
-	  << PSTR(",correct=") << correct32 << ',' << correct16;
-    if (wrong16 != correct16) trace << PSTR(":error16");
-    if (wrong32 != correct32) trace << PSTR(":error32");
+	  << PSTR(",since=") << since32(t0, t1) << ',' << since16(s0, s1);
+    if ((lessthan16 != diffzeroless16) || (lessthan32 != diffzeroless32)) {
+      trace << PSTR(",(v1 < v0)=") 
+	    << lessthan32 << ',' << lessthan16
+	    << PSTR(",((v1-v0) < 0)=") 
+	    << diffzeroless32 
+	    << ',' << diffzeroless16
+	    << PSTR(":error");
+    }
     trace << endl;
     t0 += i0;
     t1 += i1;
