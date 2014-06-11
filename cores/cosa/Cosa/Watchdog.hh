@@ -28,7 +28,7 @@
 #include "Cosa/Linkage.hh"
 
 /**
- * The Atmega Watchdog is used as a low power timer for periodical
+ * The AVR Watchdog is used as a low power timer for periodical
  * events and delay. 
  */
 class Watchdog {
@@ -137,7 +137,10 @@ public:
    */
   static uint32_t since(uint32_t start) __attribute__((always_inline))
   {
-    return (millis() - start);
+    uint32_t now = millis();
+    if (now >= start) 
+      return (now - start);
+    return (UINT32_MAX - start + now + 1);
   }
 
   /**

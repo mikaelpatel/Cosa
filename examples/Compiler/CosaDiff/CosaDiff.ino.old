@@ -17,42 +17,27 @@
  * 
  * @section Description
  * Testing code generation of arithmetric and comparison of unsigned 
- * numbers. Force wrap-around uint32_t and show how this works. 
- * Validate RTC/Watchdog::since(start) and 32->16 bit truncation 
- * of counters.
+ * numbers. Force wrap-around uint32_t and show how this workds.
  *
  * The conclusion is that difference should be signed and comparison
  * operators should be avoided. Instead compare with difference to 
  * handle wrap-around and negative interval correctly.
+ *   uint32_t t0, t1;
+ *   int32_t diff = t1 - t0;
+ *   bool wrong1 = t1 < t0; 
+ *   bool wrong2 = (t1 - t0) < 0; 
+ *   bool correct = diff < 0;
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Trace.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
 void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaDiff: started"));
-  Watchdog::begin();
-}
-
-uint32_t 
-since32(uint32_t start, uint32_t now)
-{
-  if (now >= start) 
-    return (now - start);
-  return (UINT32_MAX - start + now + 1);
-}
-
-uint32_t 
-since16(uint16_t start, uint16_t now)
-{
-  if (now >= start) 
-    return (now - start);
-  return (UINT16_MAX - start + now + 1);
 }
 
 void loop()
@@ -66,23 +51,25 @@ void loop()
 void iter(uint32_t t0, uint32_t t1, uint8_t i0, uint8_t i1)
 {
   for (int i = 0; i < 32; i++) {
-    uint16_t s0 = t0;
-    uint16_t s1 = t1;
-    int16_t diff16 = s1 - s0;
-    int32_t diff32 = t1 - t0;
-    bool wrong16 = s1 < s0;
-    bool wrong32 = t1 < t0;
-    bool correct16 = diff16 < 0;
-    bool correct32 = diff32 < 0;
+    int32_t diff1 = t1 - t0;
+    int32_t diff2 = diff(t1, t0);
+    bool wrong1 = t1 < t0;
+    bool wrong2 = (int32_t) (t1 - t0) < 0;
+    bool correct1 = diff1 < 0;
+    bool correct2 = isless(t1, t0);
+    if (diff1 != diff2) trace << PSTR("diff:error") << endl;
+    if (correct1 != correct2) trace << PSTR("isless:error") << endl;
     trace << i 
-	  << PSTR(":v0=") << t0 << ',' << s0
-	  << PSTR(",v1=") << t1 << ',' << s1
-	  << PSTR(",diff=") << diff32 << ',' << diff16
-	  << PSTR(",since=") << since32(t0, t1) << ',' << since16(s0, s1)
-	  << PSTR(",wrong=") << wrong32 << ',' << wrong16
-	  << PSTR(",correct=") << correct32 << ',' << correct16;
-    if (wrong16 != correct16) trace << PSTR(":error16");
-    if (wrong32 != correct32) trace << PSTR(":error32");
+	  << PSTR(":t0=") << t0
+	  << PSTR(",t1=") << t1
+	  << PSTR(",diff1=") << diff1
+	  << PSTR(",diff2=") << diff2
+	  << PSTR(",wrong1=") << wrong1
+	  << PSTR(",wrong2=") << wrong2
+	  << PSTR(",correct1=") << correct1
+	  << PSTR(",correct2=") << correct2;
+    if (wrong1 != correct1) trace << PSTR(",error1");
+    if (wrong2 != correct1) trace << PSTR(",error2");
     trace << endl;
     t0 += i0;
     t1 += i1;

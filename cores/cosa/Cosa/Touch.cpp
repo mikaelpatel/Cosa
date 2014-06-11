@@ -64,7 +64,7 @@ Touch::on_event(uint8_t type, uint16_t value)
   }
 
   // The pin was discharge; low-pass filter pin change
-  if (m_touched && RTC::since(m_start) > THRESHOLD) {
+  if (m_touched && (RTC::since(m_start) > THRESHOLD)) {
     m_touched = false;
   }
 }

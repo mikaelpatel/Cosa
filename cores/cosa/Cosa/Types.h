@@ -48,6 +48,19 @@
 /**
  * Standard integer range
  */
+#ifndef UINT8_MAX
+# define UINT8_MAX 0xffU
+#endif
+#ifndef UINT16_MAX
+# define UINT16_MAX 0xffffU
+#endif
+#ifndef UINT32_MAX
+# define UINT32_MAX 0xffffffffUL
+#endif
+#ifndef INT_MAX
+# define INT_MIN INT16_MIN
+# define INT_MAX INT16_MAX
+#endif
 #ifndef INT8_MAX
 # define INT8_MIN 0x80
 # define INT8_MAX 0x7f

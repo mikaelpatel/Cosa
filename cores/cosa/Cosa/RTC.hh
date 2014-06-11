@@ -24,8 +24,7 @@
 #include "Cosa/Time.hh"
 
 /**
- * Real-time clock; Arduino/ATmega328P Timer0 for micro/milli-
- * second timing.
+ * Real-time clock; AVR Timer0 for micro/milli-second timing.
  *
  * @section Limitations
  * Cannot be used together with other classes that use Timer#0.
@@ -78,24 +77,16 @@ public:
   }
 
   /**
-   * Returns difference between given time stamps.
-   * @param[in] x
-   * @param[in] y
-   * @return (x - y)
-   */
-  static int32_t diff(uint32_t x, uint32_t y)
-  {
-    return (x - y);
-  }
-
-  /**
    * Returns number of milli-seconds from given start.
    * @param[in] start
    * @return (millis() - start)
    */
   static uint32_t since(uint32_t start) __attribute__((always_inline))
   {
-    return (millis() - start);
+    uint32_t now = millis();
+    if (now >= start) 
+      return (now - start);
+    return (UINT32_MAX - start + now + 1);
   }
 
   /**

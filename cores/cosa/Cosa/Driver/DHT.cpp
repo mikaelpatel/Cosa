@@ -174,7 +174,7 @@ DHT::sample_await()
 {
   if (m_period != 0) return (true);
   uint32_t start = RTC::millis();
-  while (m_state != COMPLETED && RTC::since(start) < MIN_PERIOD) 
+  while (m_state != COMPLETED && (RTC::since(start) < MIN_PERIOD)) 
     yield();
   if (m_state != COMPLETED) return (false);
 

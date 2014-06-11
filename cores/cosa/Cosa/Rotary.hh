@@ -403,7 +403,7 @@ public:
     virtual void on_event(uint8_t type, uint16_t direction)
     {
       uint32_t now = RTC::micros();
-      uint32_t diff = now - m_latest;
+      int32_t diff = now - m_latest;
       m_latest = now;
       if (direction == CW) {
 	if (m_value == m_max) return;
