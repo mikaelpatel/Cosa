@@ -84,9 +84,7 @@ public:
   static uint32_t since(uint32_t start) __attribute__((always_inline))
   {
     uint32_t now = millis();
-    if (now >= start) 
-      return (now - start);
-    return (UINT32_MAX - start + now + 1);
+    return (now - start);
   }
 
   /**
