@@ -81,6 +81,7 @@ const uint8_t RFM69::config[] __PROGMEM = {
   REG_VALUE8(PA_LEVEL, PA0_ON | PA1_OFF | PA2_OFF | FULL_OUTPUT_POWER),
   REG_VALUE8(PA_RAMP, 9),
   REG_VALUE8(OCP, OCP_ON | 10),
+  REG_VALUE8(LNA, ZIN_200_OHM | (1 << CURRENT_GAIN)),
   // Receiver Registers
   REG_VALUE8(RX_BW, (2 << DCC_FREQ) | BW_MANT_24 | (5 << BW_EXP)),
   // IRQ and Pin Mapping Registers
