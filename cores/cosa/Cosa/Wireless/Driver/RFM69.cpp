@@ -84,12 +84,13 @@ const uint8_t RFM69::config[] __PROGMEM = {
   // Receiver Registers
   REG_VALUE8(RX_BW, (2 << DCC_FREQ) | BW_MANT_24 | (5 << BW_EXP)),
   // IRQ and Pin Mapping Registers
-  REG_VALUE8(DIO_MAPPING1, 0),
+  REG_VALUE8(DIO_MAPPING1, 0x0),
   REG_VALUE8(DIO_MAPPING2, 0x7),
   REG_VALUE8(RSSI_THRESH, 220),
   // Packet Engine Registers
   REG_VALUE16(PREAMBLE, 3),
-  REG_VALUE8(SYNC_CONFIG, SYNC_ON | FIFO_FILL_AUTO  | (1 << SYNC_SIZE)),
+  REG_VALUE8(SYNC_CONFIG, SYNC_ON | FIFO_FILL_AUTO  
+	     | ((sizeof(int16_t) - 1) << SYNC_SIZE)),
   REG_VALUE8(PACKET_CONFIG1, VARIABLE_LENGTH | WHITENING 
 	     | CRC_ON | CRC_AUTO_CLEAR_ON
 	     | ADDR_FILTER_ON),
@@ -99,6 +100,8 @@ const uint8_t RFM69::config[] __PROGMEM = {
   REG_VALUE8(PACKET_CONFIG2, (1 << INTER_PACKET_RX_DELAY) 
 	     | AUTO_RX_RESTART_ON 
 	     | AES_OFF),
+  REG_VALUE8(TEST_PA1, TEST_PA1_NORMAL_MODE),
+  REG_VALUE8(TEST_PA2, TEST_PA2_NORMAL_MODE),
   REG_VALUE8(TEST_DAGC, TEST_DAGC_IMPROVED_MARGIN_AFC_LOG_BETA_OFF),
   0
 };
@@ -130,7 +133,7 @@ void
 RFM69::set(Mode mode)
 {
   write(OP_MODE, (read(OP_MODE) & ~MODE_MASK) | mode);
-  while ((read(IRQ_FLAGS1) & MODE_READY) == 0x00) DELAY(1);
+  while ((read(IRQ_FLAGS1) & MODE_READY) == 0x00) DELAY(10);
   m_opmode = mode;
 }
 
@@ -156,7 +159,7 @@ RFM69::begin(const void* config)
   // Set standby mode and calibrate RC oscillator
   set(STANDBY_MODE);
   write(OSC1, RC_CAL_START);
-  while ((read(OSC1) & RC_CAL_DONE) == 0x00) DELAY(1);
+  while ((read(OSC1) & RC_CAL_DONE) == 0x00) DELAY(10);
 
   // Initiate device driver state and enable interrupt handler
   m_avail = false;
@@ -184,9 +187,6 @@ RFM69::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 
   // Check if a packet available. Should receive before send
   if (m_avail) return (-2);
-  
-  // Put the device in standby before writing packet
-  set(STANDBY_MODE);
 
   // Write frame header(length, dest, src, port) and payload
   spi.begin(this);
@@ -222,18 +222,15 @@ RFM69::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 int 
 RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 {
-  // Check if we need to wait for a message; outgoing or incoming packet
-  if (!m_avail) {
-    uint32_t start = RTC::millis();
-    while (!m_done && ((ms == 0) || (RTC::since(start) < ms))) yield();
-    if (!m_done) return (-2);
-    set(RECEIVER_MODE);
-    while (!m_avail && ((ms == 0) || (RTC::since(start) < ms))) yield();
-    if (!m_avail) return (-2);
-  }
+  // Set receive mode and wait for a message
+  set(RECEIVER_MODE);
+  uint32_t start = RTC::millis();
+  while (!m_avail && ((ms == 0) || (RTC::since(start) < ms))) yield();
 
-  // Set standby while retrieving the paket
+  // Set standby and check if a message was received
   set(STANDBY_MODE);
+  if (!m_avail) return (-2);
+  m_avail = false;
 
   // Read the payload size and check size
   spi.begin(this);
@@ -242,7 +239,6 @@ RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   size = size - HEADER_MAX;
   if (size > len) {
     spi.end();
-    set(RECEIVER_MODE);
     return (-1);
   } 
 
@@ -253,9 +249,6 @@ RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   spi.read(buf, size);
   spi.end();
 
-  // Turn on receive mode again and return size of payload
-  m_avail = false;
-  set(RECEIVER_MODE);
   return (size);
 }
 
@@ -288,7 +281,8 @@ RFM69::get_input_power_level()
   // Fix: Should be performed with detecting preamble?
   write(RSSI_CONFIG, RSSI_START);
   while ((read(RSSI_CONFIG) & RSSI_DONE) == 0x00) DELAY(1);
-  return ((-read(RSSI_VALUE)) >> 1);
+  int db = ((-read(RSSI_VALUE)) >> 1);
+  return (db);
 }
 
 #endif

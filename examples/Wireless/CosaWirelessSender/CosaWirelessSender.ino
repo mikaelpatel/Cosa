@@ -77,7 +77,7 @@ void setup()
   Watchdog::begin();
   RTC::begin();
   ASSERT(rf.begin());
-  rf.set_output_power_level(-10);
+  rf.set_output_power_level(-18);
 }
 
 // Message from the device; message string
@@ -91,12 +91,12 @@ static const uint8_t PAYLOAD_TYPE = 0x01;
 void loop()
 {
   static msg_t msg = { 0 , { 0 } };
-  
+  int res;
+
   // Send to nodes 0x01 to 0x03
   for (uint8_t dest = 0x01; dest < 0x04; dest++) {
-    trace << PSTR("dest=") << dest
-	  << PSTR(",nr=") << msg.nr;
-    int res = rf.send(dest, PAYLOAD_TYPE, &msg, sizeof(msg));
+    trace << PSTR("dest=") << dest << PSTR(",nr=") << msg.nr;
+    res = rf.send(dest, PAYLOAD_TYPE, &msg, sizeof(msg));
     trace << PSTR(",res=") << res;
     if (res != sizeof(msg)) {
       trace << PSTR(":failed to send");
@@ -106,7 +106,13 @@ void loop()
   }
 
   // Broadcast message
-  rf.broadcast(PAYLOAD_TYPE, &msg, sizeof(msg));
+  trace << PSTR("dest=0,nr=") << msg.nr;
+  res = rf.broadcast(PAYLOAD_TYPE, &msg, sizeof(msg));
+  trace << PSTR(",res=") << res;
+  if (res != sizeof(msg)) {
+    trace << PSTR(":failed to send");
+  }
+  trace << endl << endl;
   msg.nr += 1;
 
   // Update message; increment bytes

@@ -561,17 +561,17 @@ private:
     WHITENING = 0x40,		//!< 
     CRC_OFF = 0x00,		//!< CRC calculation/check.
     CRC_ON = 0x10,		//!< 
+    CRC_AUTO_CLEAR_OFF = 0x08,	//!< Do not clear FIFO. PAYLOAD_READY issued.
+    CRC_AUTO_CLEAR_ON = 0x00,	//!< Clear FIFO and restart new packet reception.
+    ADDR_FILTER_OFF = 0x00,	//!< Address filtering based on node/boardcast.
+    ADDR_FILTER_ON = 0x04,	//!< Node and broadcast address.
+    ADDR_FILTER_NODE = 0x02	//!< Node address only.
   } __attribute__((packed));
 
   /**
    * Register PACKET_CONFIG2 bitfields (Table 28, pp. 73).
    */
   enum {
-    CRC_AUTO_CLEAR_OFF = 0x08,	//!< Do not clear FIFO. PAYLOAD_READY issued.
-    CRC_AUTO_CLEAR_ON = 0x00,	//!< Clear FIFO and restart new packet reception.
-    ADDR_FILTER_OFF = 0x00,	//!< Address filtering based on node/boardcast.
-    ADDR_FILTER_ON = 0x04,	//!< Node and broadcast address.
-    ADDR_FILTER_NODE = 0x02,	//!< Node address only.
     INTER_PACKET_RX_DELAY = 4,	//!< Delay between FIFO empty and RSSI measurement.
     INTER_PACKET_RX_DELAY_MASK = 0xF,
     RESTART_RX = 0x04,		//!< Forces the Receiver in WAIT mode/continuous.
@@ -631,8 +631,8 @@ private:
   void set(Mode mode);
 
   /**
-   * Handler for interrupt pin. Service interrupt on incoming message
-   * with valid checksum. 
+   * Handler for interrupt pin. Service interrupt on incoming messages
+   * with valid checksum or message transmission completed.
    */
   class IRQPin : public ExternalInterrupt {
   public:
