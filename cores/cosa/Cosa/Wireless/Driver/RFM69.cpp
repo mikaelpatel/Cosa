@@ -279,8 +279,8 @@ int
 RFM69::get_input_power_level()
 {
   // Fix: Should be performed with detecting preamble?
-  write(RSSI_CONFIG, RSSI_START);
-  while ((read(RSSI_CONFIG) & RSSI_DONE) == 0x00) DELAY(1);
+  // write(RSSI_CONFIG, RSSI_START);
+  // while ((read(RSSI_CONFIG) & RSSI_DONE) == 0x00) DELAY(1);
   int db = ((-read(RSSI_VALUE)) >> 1);
   return (db);
 }

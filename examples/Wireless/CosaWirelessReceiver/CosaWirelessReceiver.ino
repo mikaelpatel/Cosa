@@ -162,8 +162,11 @@ void loop()
 	  << PSTR(",dest=") 
 	  << hex << (rf.is_broadcast() ? 0 : rf.get_device_address())
 	  << PSTR(",len=") << count
-#if defined(COSA_WIRELESS_DRIVER_CC1101_HH)
+#if defined(COSA_WIRELESS_DRIVER_CC1101_HH) \
+  || defined(COSA_WIRELESS_DRIVER_RFM69_HH)
 	  << PSTR(",rssi=") << rf.get_input_power_level() 
+#endif
+#if defined(COSA_WIRELESS_DRIVER_CC1101_HH)
 	  << PSTR(",lqi=") << rf.get_link_quality_indicator()
 #endif
 	  << PSTR(":");
