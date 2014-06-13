@@ -117,7 +117,7 @@ CC1101::strobe(Command cmd)
 void 
 CC1101::await(Mode mode)
 {
-  while (read_status().mode != mode) delay(24);
+  while (read_status().mode != mode) DELAY(100);
 }
 
 bool
@@ -171,10 +171,7 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   size_t len = iovec_size(vec);
   if (len > PAYLOAD_MAX) return (-1);
 
-  // Wait for the device to become idle before writing the frame
-  await(IDLE_MODE);
-
-  // Write frame header(length, dest, src, port)
+  // Write frame length and header(dest, src, port)
   spi.begin(this);
   loop_until_bit_is_clear(PIN, Board::MISO);
   write(TXFIFO, len + 3);
@@ -183,7 +180,7 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   write(TXFIFO, port);
   spi.end();
 
-  // Write frame payload
+  // Write payload buffers
   for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
     spi.begin(this);
     loop_until_bit_is_clear(PIN, Board::MISO);
@@ -191,8 +188,10 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
     spi.end();
   }
 
-  // Trigger the transmit
+  // Trigger transmission and wait for completion
   strobe(STX);
+  await(IDLE_MODE);
+
   return (len);
 }
 
@@ -209,25 +208,27 @@ CC1101::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 int 
 CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 {
-  // Check if we need to wait for a message
+  uint32_t start = RTC::millis();
   uint8_t size;
-  if (!m_avail) {
-    // Fix: Use wakeup on radio to reduce power during wait
-    uint32_t start = RTC::millis();
-    if (read_status().mode == IDLE_MODE) {
-      strobe(SFRX);
-      strobe(SRX);
-    }
-    do {
-      while (!m_avail && ((ms == 0) || (RTC::since(start) < ms))) yield();
-      if (!m_avail) return (-2);
-      spi.begin(this);
-      loop_until_bit_is_clear(PIN, Board::MISO);
-      size = read(RXBYTES);
-      spi.end();
-    } while ((size & RXBYTES) == 0);
-  }
+
+  // Put in receive mode and wait for incoming message
+  strobe(SRX);
   m_avail = false;
+  do {
+    while (!m_avail && ((ms == 0) || (RTC::since(start) < ms))) yield();
+    if (!m_avail) {
+      strobe(SIDLE);
+      return (-2);
+    }
+    // Check the received frame size
+    spi.begin(this);
+    loop_until_bit_is_clear(PIN, Board::MISO);
+    size = read(RXBYTES);
+    spi.end();
+  } while ((size & BYTES_MASK) == 0);
+
+  // Put in idle mode and read the payload 
+  strobe(SIDLE);
 
   // Read the payload size and check against buffer length
   spi.begin(this);
@@ -235,25 +236,24 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   size = read(RXFIFO) - 3;
   if (size > len) {
     spi.end();
-    strobe(SIDLE);
     strobe(SFRX);
     return (-1);
   }
 
-  // Read the frame (dest, src, payload)
+  // Read the frame header(dest, src, port), payload and the link quality status
   m_dest = read(RXFIFO);
   src = read(RXFIFO);
   port = read(RXFIFO);
   read(RXFIFO, buf, size);
   spi.end();
 
-  // Read the link quality status
+  // Read link quality status
   spi.begin(this);
   loop_until_bit_is_clear(PIN, Board::MISO);
   read(RXFIFO, &m_recv_status, sizeof(m_recv_status));
   spi.end();
 
-  // Fix: Add possible address checking for robustness
+  // Fix: Add address checking for robustness
   return (size);
 }
 

@@ -27,19 +27,19 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
 // Configuration; network and device addresses. 
 #define NETWORK 0xC05A
-#define PING 0x80
-#define PONG 0x81
-#define DEVICE PONG
+#define DEVICE 0x81
 
 // Select Wireless device driver
-// #define USE_CC1101
+#define USE_CC1101
 // #define USE_NRF24L01P
-#define USE_RFM69
+// #define USE_RFM69
 // #define USE_VWI
 
 #if defined(USE_CC1101)
@@ -71,20 +71,23 @@ static const uint8_t PING_TYPE = 0x80;
 
 void setup()
 {
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaWirelessPong: started"));
   Watchdog::begin();
   RTC::begin();
-  rf.begin();
+  ASSERT(rf.begin());
   rf.set_output_power_level(-18);
 }
 
 void loop()
 {
-  ping_t nr;
   uint8_t port;
   uint8_t src;
+  ping_t nr;
 
-  rf.recv(src, port, &nr, sizeof(nr));
+  while (rf.recv(src, port, &nr, sizeof(nr)) != sizeof(nr));
   if (port != PING_TYPE) return;
+  trace << RTC::millis() << PSTR(":pong:nr=") << nr << endl;
   nr += 1;
   rf.send(src, port, &nr, sizeof(nr));
 }

@@ -39,9 +39,9 @@
 #define DEVICE PING
 
 // Select Wireless device driver
-// #define USE_CC1101
+#define USE_CC1101
 // #define USE_NRF24L01P
-#define USE_RFM69
+// #define USE_RFM69
 // #define USE_VWI
 
 #if defined(USE_CC1101)
@@ -77,25 +77,31 @@ void setup()
   trace.begin(&uart, PSTR("CosaWirelessPing: started"));
   Watchdog::begin();
   RTC::begin();
-  rf.begin();
+  ASSERT(rf.begin());
   rf.set_output_power_level(-18);
 }
 
 void loop()
 {
+  // Auto retransmission wait (ms) and counter
+  static const uint16_t ARW = 200;
+  static uint16_t arc = 0;
+  
+  // Sequence number
   static ping_t nr = 0;
+
+  // Receive port and source address
   uint8_t port;
   uint8_t src;
 
-  trace << endl << PSTR("ping:nr=") << nr;
+  // Send sequence number and receive update
+  trace << RTC::millis() << PSTR(":ping:nr=") << nr;
   while (1) {
     rf.send(PONG, PING_TYPE, &nr, sizeof(nr));
-    if (rf.recv(src, port, &nr, sizeof(nr), 100) == sizeof(nr)) break;
-    trace << PSTR(",retry");
-    delay(500);
+    if (rf.recv(src, port, &nr, sizeof(nr), ARW) == sizeof(nr)) break;
+    trace << PSTR(",retry(") << ++arc << ')';
   }
-  trace << PSTR(",pong:nr=") << nr;
-
+  trace << PSTR(",pong:nr=") << nr << endl;
   rf.powerdown();
   sleep(2);
 }
