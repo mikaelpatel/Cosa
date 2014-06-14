@@ -208,6 +208,7 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   uint8_t size;
 
   // Put in receive mode and wait for incoming message
+  strobe(SFRX);
   strobe(SRX);
   m_avail = false;
   do {
