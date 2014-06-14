@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/LowPowerLab/Moteino.hh
+ * @file Cosa/Board/Anarduino/MiniWireless.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_LOWPOWERLAB_MOTEINO_HH
-#define COSA_BOARD_LOWPOWERLAB_MOTEINO_HH
+#ifndef COSA_BOARD_ANARDUINO_MINIWIRELESS_HH
+#define COSA_BOARD_ANARDUINO_MINIWIRELESS_HH
 
 /* This board is based on ATmega328P */
 #define BOARD_ATMEGA328P
@@ -33,7 +33,7 @@
 
 /**
  * Cosa pin symbol and hardware definitions for the ATmega328P based
- * board Lowpowerlab Moteino. Cosa does not use pin numbers as
+ * board Anarduino MiniWireless. Cosa does not use pin numbers as
  * Arduino/Wiring, instead strong data type is used (enum types) for
  * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
@@ -43,14 +43,14 @@
  *
  * @section Board
  * @code
- *              LowPowerLab Moteino
+ *              Anarduino MiniWireless
  *
- *              GND    VCC RX TX  DTR
+ *              GND GND VCC RX TX DTR
  *                 \  \  | |  /  /
  *                  \  \ | | /  /
  *                +---------------+
  *            RST |o o o o o o o o| GND
- *        EXT0/D2 |o             o| VIN
+ *        EXT0/D2 |o             o| VIN (3V3-7V)
  *   PWM0/EXT1/D3 |o             o| 3V3
  *             D4 |o             o| D1/TX
  *        PWM1/D5 |o             o| D0/RX
@@ -60,8 +60,8 @@
  *        PWM3/D9 |o             o| A4/D18/SDA
  *       PWM4/D10 |o             o| A3/D17
  *  PWM5/MOSI/D11 |o             o| A2/D16
- *       MISO/D12 |o  AR 3V3 GND o| A1/D15
- *        SCK/D13 |o   o  o  o   o| A0/D14
+ *       MISO/D12 |o             o| A1/D15
+ *        SCK/D13 |o             o| A0/D14
  *                +---------------+
  *                   
  * @endcode

@@ -20,6 +20,32 @@
 # This file is part of the Arduino Che Cosa project.
 
 ##
+# ANARDUINO BOARDS
+##
+
+# AVR:ATmega328
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (256 words, 0x3f00). 
+miniwireless.name=Cosa Anarduino MiniWireless (ATmega328/Optiboot)
+miniwireless.upload.tool=avrdude
+miniwireless.upload.protocol=arduino
+miniwireless.upload.maximum_size=32256
+miniwireless.upload.maximum_data_size=2048
+miniwireless.upload.speed=115200
+
+miniwireless.bootloader.tool=avrdude
+miniwireless.bootloader.low_fuses=0xff
+miniwireless.bootloader.high_fuses=0xde
+miniwireless.bootloader.extended_fuses=0x05
+
+miniwireless.build.mcu=atmega328p
+miniwireless.build.f_cpu=16000000L
+miniwireless.build.board=ANARDUINO_MINIWIRELESS
+miniwireless.build.variant=anarduino/miniwireless
+miniwireless.build.core=cosa
+
+##
 # ARDUINO BOARDS
 ##
 

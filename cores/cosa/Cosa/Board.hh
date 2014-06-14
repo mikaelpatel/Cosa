@@ -34,8 +34,12 @@
 #include "Board.h"
 #endif
 
+// Anarduino Boards
+#if defined(ANARDUINO_MINIWIRELESS)
+#include "Cosa/Board/Anarduino/MiniWireless.hh"
+
 // Arduino Boards
-#if defined(ARDUINO_DUEMILANOVE)
+#elif defined(ARDUINO_DUEMILANOVE)
 #include "Cosa/Board/Arduino/Duemilanove.hh"
 #elif defined(ARDUINO_LEONARDO)
 #include "Cosa/Board/Arduino/Leonardo.hh"
