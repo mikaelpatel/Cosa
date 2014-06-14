@@ -33,6 +33,7 @@ Cosa has built-in support for a large number of boards and
 clones/vendors. It also supports breadboards and custom-design
 boards with AVR MCUs.
 
+* [Anarduino MiniWireless] (./cores/cosa/Cosa/Board/Anarduino/MiniWireless.hh)
 * [Arduino Duemilanove] (./cores/cosa/Cosa/Board/Arduino/Duemilanove.hh)
 * [Arduino Leonardo] (./cores/cosa/Cosa/Board/Arduino/Leonardo.hh)
 * [Arduino Mega2560] (./cores/cosa/Cosa/Board/Arduino/Mega2560.hh)
