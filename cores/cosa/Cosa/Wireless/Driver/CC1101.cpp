@@ -158,6 +158,7 @@ CC1101::begin(const void* config)
 bool 
 CC1101::end()
 {
+  // Fix: Should be state-based disable/enable
   m_irq.disable();
   powerdown();
   return (true);
@@ -171,22 +172,17 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   size_t len = iovec_size(vec);
   if (len > PAYLOAD_MAX) return (-1);
 
-  // Write frame length and header(dest, src, port)
+  // Write frame length and header(dest, src, port) and payload buffers
   spi.begin(this);
   loop_until_bit_is_clear(PIN, Board::MISO);
-  write(TXFIFO, len + 3);
-  write(TXFIFO, dest);
-  write(TXFIFO, m_addr.device);
-  write(TXFIFO, port);
+  m_status = spi.transfer(header_t(TXFIFO, 1, 0));
+  spi.transfer(len + 3);
+  spi.transfer(dest);
+  spi.transfer(m_addr.device);
+  spi.transfer(port);
+  for (const iovec_t* vp = vec; vp->buf != NULL; vp++) 
+    spi.write(vp->buf, vp->size);
   spi.end();
-
-  // Write payload buffers
-  for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
-    spi.begin(this);
-    loop_until_bit_is_clear(PIN, Board::MISO);
-    write(TXFIFO, vp->buf, vp->size);
-    spi.end();
-  }
 
   // Trigger transmission and wait for completion
   strobe(STX);
@@ -233,24 +229,20 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   // Read the payload size and check against buffer length
   spi.begin(this);
   loop_until_bit_is_clear(PIN, Board::MISO);
-  size = read(RXFIFO) - 3;
+  m_status = spi.transfer(header_t(RXFIFO, 1, 1));
+  size = spi.transfer(0) - 3;
   if (size > len) {
     spi.end();
     strobe(SFRX);
     return (-1);
   }
 
-  // Read the frame header(dest, src, port), payload and the link quality status
-  m_dest = read(RXFIFO);
-  src = read(RXFIFO);
-  port = read(RXFIFO);
-  read(RXFIFO, buf, size);
-  spi.end();
-
-  // Read link quality status
-  spi.begin(this);
-  loop_until_bit_is_clear(PIN, Board::MISO);
-  read(RXFIFO, &m_recv_status, sizeof(m_recv_status));
+  // Read the frame header(dest, src, port), payload and link quality status
+  m_dest = spi.transfer(0);
+  src = spi.transfer(0);
+  port = spi.transfer(0);
+  spi.read(buf, size);
+  spi.read(&m_recv_status, sizeof(m_recv_status));
   spi.end();
 
   // Fix: Add address checking for robustness
