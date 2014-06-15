@@ -179,6 +179,19 @@ public:
    */
   virtual int get_input_power_level();
 
+  /**
+   * Sample internal digital thermometer and return in centigrade
+   * Celsius.
+   * @return temperature.
+   */
+  int get_temperature();
+
+  /**
+   * Recalibrate internal RC oscillator when device is used in an
+   * environment with high temperature variation.
+   */
+  void recalibrate();
+
 private:
   /**
    * Configuration and Status Registers (Table 23, pp. 60).

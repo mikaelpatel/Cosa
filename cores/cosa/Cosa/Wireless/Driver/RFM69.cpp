@@ -158,9 +158,7 @@ RFM69::begin(const void* config)
   write(NODE_ADDR, m_addr.device);
 
   // Set standby mode and calibrate RC oscillator
-  set(STANDBY_MODE);
-  write(OSC1, RC_CAL_START);
-  while ((read(OSC1) & RC_CAL_DONE) == 0x00) DELAY(10);
+  recalibrate();
 
   // Initiate device driver state and enable interrupt handler
   m_avail = false;
@@ -279,11 +277,23 @@ RFM69::set_output_power_level(int8_t dBm)
 int 
 RFM69::get_input_power_level()
 {
-  // Fix: Should be performed with detecting preamble?
-  // write(RSSI_CONFIG, RSSI_START);
-  // while ((read(RSSI_CONFIG) & RSSI_DONE) == 0x00) DELAY(1);
-  int db = ((-read(RSSI_VALUE)) >> 1);
-  return (db);
+  return ((-read(RSSI_VALUE)) >> 1);
+}
+
+int 
+RFM69::get_temperature()
+{
+  set(STANDBY_MODE);
+  write(TEMP1, TEMP_MEAS_START);
+  while (read(TEMP1) & TEMP_MEAS_RUNNING) DELAY(100);
+  return (-read(TEMP2));
+}
+
+void RFM69::recalibrate()
+{
+  set(STANDBY_MODE);
+  write(OSC1, RC_CAL_START);
+  while ((read(OSC1) & RC_CAL_DONE) == 0x00) DELAY(100);
 }
 
 #endif
