@@ -300,7 +300,7 @@ public:
      * @override Wireless::Driver
      * Return link quality indicator. Default zero(0).
      */
-    int get_link_quality_indicator()
+    virtual int get_link_quality_indicator()
     {
       return (0);
     }
