@@ -28,20 +28,20 @@
 ##
 
 # AVR:ATmega328
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 258 CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (256 words, 0x3f00). 
-moteino.name=Cosa LowPowerLab Moteino (ATmega328/Optiboot)
+# Boot Reset vector enable (512 words, 0x3e00). 
+moteino.name=Cosa LowPowerLab Moteino (ATmega328/DualOptiboot)
 moteino.upload.tool=avrdude
 moteino.upload.protocol=arduino
-moteino.upload.maximum_size=32256
+moteino.upload.maximum_size=31744
 moteino.upload.maximum_data_size=2048
 moteino.upload.speed=115200
 
 moteino.bootloader.tool=avrdude
-moteino.bootloader.low_fuses=0xff
-moteino.bootloader.high_fuses=0xde
-moteino.bootloader.extended_fuses=0x05
+moteino.bootloader.low_fuses=0xde
+moteino.bootloader.high_fuses=0xdc
+moteino.bootloader.extended_fuses=0xfd
 
 moteino.build.mcu=atmega328p
 moteino.build.f_cpu=16000000L
