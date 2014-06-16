@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,7 +43,7 @@
 #include "Cosa/Memory.h"
 
 // Define to set clock
-// #define __RTC_SET_TIME__
+// #define RTC_SET_TIME
 
 // The real-time device
 DS3231 rtc;
@@ -65,7 +65,7 @@ void setup()
   Watchdog::begin();
 
   // Initiate time keeper
-#ifdef __RTC_SET_TIME__
+#ifdef RTC_SET_TIME
   time_t now;
   now.seconds = 0x00;
   now.minutes = 0x24;

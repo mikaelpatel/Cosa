@@ -73,7 +73,7 @@ int16_t
 DS3231::get_temperature()
 {
   int16_t temp = 0;
-  read(&temp, sizeof(temp), TEMP_OFFSET);
+  read(&temp, sizeof(temp), offsetof(timekeeper_t, temp));
   return (swap(temp) >> 6);
 }
 

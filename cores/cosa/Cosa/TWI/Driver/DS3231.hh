@@ -172,9 +172,6 @@ public:
     int8_t aging;		//!< Crystal adjustment.
     int16_t temp;		//!< Device temperature.
   };
-  static const uint8_t ALARM1_OFFSET = sizeof(time_t);
-  static const uint8_t ALARM2_OFFSET = ALARM1_OFFSET + sizeof(alarm1_t);
-  static const uint8_t TEMP_OFFSET = sizeof(timekeeper_t) - sizeof(int16_t);
 
   /**
    * Construct DS3231 device with bus address(0x68).
@@ -235,7 +232,7 @@ public:
    */
   bool get_alarm1(alarm1_t& alarm, uint8_t& mask)
   {
-    return (get(&alarm, sizeof(alarm), ALARM1_OFFSET, mask));
+    return (get(&alarm, sizeof(alarm), offsetof(timekeeper_t, alarm1), mask));
   }
 
   /**
@@ -247,7 +244,7 @@ public:
    */
   bool set_alarm1(alarm1_t& alarm, uint8_t mask)
   {
-    return (set(&alarm, sizeof(alarm), ALARM1_OFFSET, mask));
+    return (set(&alarm, sizeof(alarm), offsetof(timekeeper_t, alarm1), mask));
   }
 
   /**
@@ -259,7 +256,7 @@ public:
    */
   bool get_alarm2(alarm2_t& alarm, uint8_t& mask)
   {
-    return (get(&alarm, sizeof(alarm), ALARM2_OFFSET, mask));
+    return (get(&alarm, sizeof(alarm), offsetof(timekeeper_t, alarm2), mask));
   }
 
   /**
@@ -271,7 +268,7 @@ public:
    */
   bool set_alarm2(alarm2_t& alarm, uint8_t mask)
   {
-    return (set(&alarm, sizeof(alarm), ALARM2_OFFSET, mask));
+    return (set(&alarm, sizeof(alarm), offsetof(timekeeper_t, alarm2), mask));
   }
 
   /**
