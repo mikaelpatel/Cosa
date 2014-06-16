@@ -264,11 +264,9 @@ NRF24L01P::available()
   if (read_fifo_status().rx_empty) return (false);
 
   // Sanity check the size of the payload. Might require a flush
-  if (read(R_RX_PL_WID) > 32) {
-    write(FLUSH_RX);
-    return (false);
-  }
-  return (true);
+  if (read(R_RX_PL_WID) <= DEVICE_PAYLOAD_MAX) return (true);
+  write(FLUSH_RX);
+  return (false);
 }
 
 int
@@ -285,7 +283,7 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
     if ((ms != 0) && (RTC::since(start) > ms)) return (-2);
     yield();
   } 
-  m_dest = (m_status.rx_p_no == 1 ? m_addr.device : 0);
+  m_dest = (m_status.rx_p_no == 1 ? m_addr.device : BROADCAST);
   write(STATUS, _BV(RX_DR));
   
   // Check for payload error from device (Tab. 20, pp. 51, R_RX_PL_WID)

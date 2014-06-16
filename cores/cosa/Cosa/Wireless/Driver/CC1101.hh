@@ -25,6 +25,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Wireless.hh"
+
 #if !defined(BOARD_ATTINYX5)
 
 /**
@@ -65,10 +66,10 @@ public:
   /**
    * Maximum size of payload. The device allows 64 bytes payload.
    * The length and destination addressing will require two bytes,
-   * source address one byte, port one byte and radio status an
-   * additional two bytes. This gives a payload max of 64 - 6 = 58.
+   * source address one byte, and port one byte. This gives a payload
+   * max of 64 - 4 = 60. 
    */
-  static const size_t PAYLOAD_MAX = DEVICE_PAYLOAD_MAX - 6;
+  static const size_t PAYLOAD_MAX = DEVICE_PAYLOAD_MAX - 4;
   
   /**
    * Construct C1101 device driver with given network and device

@@ -21,6 +21,7 @@
 #include "Cosa/Wireless/Driver/CC1101.hh"
 
 #if !defined(BOARD_ATTINYX5)
+
 #include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
 
