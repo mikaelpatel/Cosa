@@ -313,7 +313,7 @@ public:
    * Sample accelerometer. Return sample is given data structure
    * @param[in] s sample storage.
    */
-  void sample(sample_t& s)
+  void sample(sample_t& s) __attribute__((always_inline))
   {
     read(DATA, &s, sizeof(s));
   }
