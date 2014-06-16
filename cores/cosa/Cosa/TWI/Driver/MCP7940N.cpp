@@ -19,7 +19,6 @@
  */
 
 #include "Cosa/TWI/Driver/MCP7940N.hh"
-#include "Cosa/BCD.h"
 
 int
 MCP7940N::read(void* regs, uint8_t size, uint8_t pos)
@@ -38,6 +37,40 @@ MCP7940N::write(void* regs, uint8_t size, uint8_t pos)
   int count = twi.write(pos, regs, size);
   twi.end();
   return (count);
+}
+
+bool 
+MCP7940N::get_time(time_t& now, config_t& config)
+{
+  if (read(&now, sizeof(now)) != sizeof(now)) return (false);
+  config.as_uint8 = now.day;
+  now.day = config.day;
+  return (true);
+}
+
+bool 
+MCP7940N::set_time(time_t& now, config_t config)
+{
+  config.day = now.day;
+  now.day = config.as_uint8;
+  return (write(&now, sizeof(now)) == sizeof(now));
+}
+
+bool 
+MCP7940N::get_alarm(alarm_t& alarm, alarm_t::config_t& config, uint8_t pos)
+{
+  if (read(&alarm, sizeof(alarm), pos) != sizeof(alarm)) return (false);
+  config.as_uint8 = alarm.day;
+  alarm.day = config.day;
+  return (true);
+}
+
+bool 
+MCP7940N::set_alarm(alarm_t& alarm, alarm_t::config_t config, uint8_t pos)
+{
+  config.day = alarm.day;
+  alarm.day = config.as_uint8;
+  return (write(&alarm, sizeof(alarm), pos) == sizeof(alarm));
 }
 
 IOStream& operator<<(IOStream& outs, MCP7940N::alarm_t& t)

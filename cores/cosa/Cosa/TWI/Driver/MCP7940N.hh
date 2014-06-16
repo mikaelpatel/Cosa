@@ -36,7 +36,7 @@
 class MCP7940N : private TWI::Driver {
 public:
   /**
-   * The RTCC configuration/status bitfields in day time field (pp. 9-10).
+   * The RTCC configuration/status bitfields. Embedded in day field (pp. 9-10).
    */
   union config_t {
     uint8_t as_uint8;		//!< Unsigned byte access.
@@ -75,33 +75,13 @@ public:
   } __attribute__((packed));
 
   /**
-   * The Alarm Configuration/Status bitfields (pp. 9-11).
+   * The Alarm setting (pp. 9-11).
    */
   struct alarm_t {
-    /**
-     * The Alarm types (when, pp. 10-11).
-     */
-    enum {
-      WHEN_SEC_MATCH = 0x00,	//!< Seconds match.
-      WHEN_MIN_MATCH = 0x01,	//!< Minutes match.
-      WHEN_HOUR_MATCH = 0x02,	//!< Hours match (takes into accout 12/24 hour).
-      WHEN_DAY_MATCH = 0x03,	//!< Matches the current day.
-      WHEN_DATE_MATCH = 0x04,	//!< Date.
-      WHEN_TIME_MATCH = 0x07	//!< Sec, Min, Hour, Day, Dat, Month.
-    } __attribute__ ((packed));
-
     uint8_t seconds;		//!< 00-59 Seconds.
     uint8_t minutes;		//!< 00-59 Minutes.
     uint8_t hours;		//!< 00-23 Hours.
-    union {			//!< Day, alarm configuration and status.
-      uint8_t as_uint8;		//!< Unsigned byte access.
-      struct {			//!< Bitfield access.
-	uint8_t day:3;		//!< Day in BCD (1-7).
-	uint8_t triggered:1;	//!< Alarm Interrupt Flag.
-	uint8_t when:3;		//!< Alarm Configuration.
-	uint8_t polarity:1;	//!< Alarm Pin (MFP) Polarity.
-      };
-    };
+    uint8_t day;		//!< 01-7 Day.
     uint8_t date;		//!< 01-31 Date.
     uint8_t month;		//!< 01-12 Month.
     
@@ -122,8 +102,33 @@ public:
     {
       ::to_bcd(&seconds, sizeof(alarm_t));
     }
+
+    /**
+     * Alarm configuration/status register (part of day value, pp. 11)
+     */
+    union config_t {		//!< Day, alarm configuration and status.
+      uint8_t as_uint8;		//!< Unsigned byte access.
+      struct {			//!< Bitfield access.
+	uint8_t day:3;		//!< Day in BCD (1-7).
+	uint8_t triggered:1;	//!< Alarm Interrupt Flag.
+	uint8_t when:3;		//!< Alarm Match.
+	uint8_t polarity:1;	//!< Alarm Pin (MFP) Polarity.
+      };
+    };
   };
   
+  /**
+   * Alarm match types (pp. 10-11).
+   */
+  enum {
+    WHEN_SEC_MATCH = 0x00,	//!< Seconds match.
+    WHEN_MIN_MATCH = 0x01,	//!< Minutes match.
+    WHEN_HOUR_MATCH = 0x02,	//!< Hours match (takes into accout 12/24 hour).
+    WHEN_DAY_MATCH = 0x03,	//!< Matches the current Day.
+    WHEN_DATE_MATCH = 0x04,	//!< Date.
+    WHEN_TIME_MATCH = 0x07	//!< Sec, Min, Hour, Day, Date, Month.
+  } __attribute__ ((packed));
+
   /**
    * Timestamp type (pp. 9-10). Same as time_t except without year. 
    */
@@ -211,71 +216,88 @@ public:
    * Read current time from real-time clock. Return true(1) if
    * successful otherwise false(0). 
    * @param[out] now time structure return value.
+   * @param[out] config configuration structure.
    * @return boolean.
    */
-  bool get_time(time_t& now) __attribute__((always_inline))
-  {
-    return (read(&now, sizeof(now)) == sizeof(now));
-  }
+  bool get_time(time_t& now, config_t& config);
 
   /**
    * Set the real-time clock to the given time. Return true(1) if
    * successful otherwise false(0). 
    * @param[in] now time structure to set.
+   * @param[in] config configuration structure.
    * @return boolean.
    */
-  bool set_time(time_t& now) __attribute__((always_inline))
-  {
-    return (write(&now, sizeof(now)) == sizeof(now));
-  }
-
+  bool set_time(time_t& now, config_t config);
+  
   /**
    * Read alarm0 time and setting from real-time clock. Return
    * true(1) if successful otherwise false(0).
    * @param[out] alarm time structure.
+   * @param[out] config configuration structure.
    * @return boolean.
    */
-  bool get_alarm0(alarm_t& alarm) __attribute__((always_inline))
+  bool get_alarm0(alarm_t& alarm, alarm_t::config_t& config)
   {
-    return (read(&alarm, sizeof(alarm), offsetof(rtcc_t,alarm0)) 
-	    == sizeof(alarm));
+    return (get_alarm(alarm, config, offsetof(rtcc_t,alarm0)));
   }
 
   /**
    * Set real-time clock alarm0 with the given time and setting. Return
    * true(1) if successful otherwise false(0). 
    * @param[in] alarm time structure to set.
+   * @param[in] config configuration structure.
    * @return boolean.
    */
-  bool set_alarm0(alarm_t& alarm) __attribute__((always_inline))
+  bool set_alarm0(alarm_t& alarm, alarm_t::config_t config)
   {
-    return (write(&alarm, sizeof(alarm), offsetof(rtcc_t,alarm0)) 
-	    == sizeof(alarm));
+    return (set_alarm(alarm, config, offsetof(rtcc_t,alarm0)));
   }
 
   /**
    * Read alarm1 time and setting from real-time clock. Return
    * true(1) if successful otherwise false(0).
    * @param[out] alarm time structure.
+   * @param[out] config configuration structure.
    * @return boolean.
    */
-  bool get_alarm1(alarm_t& alarm) __attribute__((always_inline))
+  bool get_alarm1(alarm_t& alarm, alarm_t::config_t& config)
   {
-    return (read(&alarm, sizeof(alarm), offsetof(rtcc_t,alarm1))
-	    == sizeof(alarm));
+    return (get_alarm(alarm, config, offsetof(rtcc_t,alarm1)));
   }
 
   /**
    * Set real-time clock alarm1 with the given time and setting. Return
    * true(1) if successful otherwise false(0). 
    * @param[in] alarm time structure to set.
+   * @param[in] config configuration structure.
    * @return boolean.
    */
-  bool set_alarm1(alarm_t& alarm) __attribute__((always_inline))
+  bool set_alarm1(alarm_t& alarm, alarm_t::config_t config)
   {
-    return (write(&alarm, sizeof(alarm), offsetof(rtcc_t,alarm1))
-	    == sizeof(alarm));
+    return (set_alarm(alarm, config, offsetof(rtcc_t,alarm1)));
   }
+
+private:
+  /**
+   * Read alarm time and setting from real-time clock at given
+   * address. Return true(1) if successful otherwise false(0).
+   * @param[out] alarm time structure.
+   * @param[out] config configuration structure.
+   * @param[in] pos address in register file to read from.
+   * @return boolean.
+   */
+  bool get_alarm(alarm_t& alarm, alarm_t::config_t& config, uint8_t pos);
+
+  /**
+   * Set real-time clock alarm at given address with the given time
+   * and setting. Return true(1) if successful otherwise false(0). 
+   * @param[in] alarm time structure to set.
+   * @param[in] config configuration structure.
+   * @param[in] pos address in register file to write to.
+   * @return boolean.
+   */
+  bool set_alarm(alarm_t& alarm, alarm_t::config_t config, uint8_t pos);
 };
 
 /**
