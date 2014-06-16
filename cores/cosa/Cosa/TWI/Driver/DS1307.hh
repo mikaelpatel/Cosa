@@ -54,7 +54,7 @@ public:
    */
   union control_t {
     uint8_t as_uint8;		//!< Unsigned byte access.
-    struct {
+    struct {			//!< Bitfield access.
       uint8_t rs:2;		//!< Rate Select.
       uint8_t reserved1:2;	//!< Reserved/1.
       uint8_t sqwe:1;		//!< Square-Ware Enable.
@@ -85,7 +85,7 @@ public:
   const static uint8_t RAM_START = sizeof(timekeeper_t);
 
   /** End of application RAM. */
-  const static uint8_t RAM_END = 0x37;
+  const static uint8_t RAM_END = 0x3f;
 
   /** Max size of application RAM (56 bytes). */
   const static uint8_t RAM_MAX = RAM_END - RAM_START + 1;
@@ -124,7 +124,7 @@ public:
    * @param[out] now time structure return value.
    * @return boolean.
    */
-  bool get_time(time_t& now) 
+  bool get_time(time_t& now) __attribute__((always_inline))
   {
     return (read(&now) == sizeof(now));
   }
@@ -135,7 +135,7 @@ public:
    * @param[in] now time structure to set.
    * @return boolean.
    */
-  bool set_time(time_t& now)
+  bool set_time(time_t& now) __attribute__((always_inline))
   {
     return (write(&now) == sizeof(now));
   }
