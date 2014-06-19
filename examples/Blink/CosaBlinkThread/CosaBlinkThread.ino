@@ -35,49 +35,40 @@
 // delay period. The delay may be changed dynamically.
 class LED : public Nucleo::Thread {
 public:
+
+  // This class is a thread that periodically changes a LED delay
+  // from low to high with a given increment
+  template <uint16_t LOW, uint16_t HIGH, uint16_t INC, uint16_t PERIOD>
+  class Controller : public Nucleo::Thread {
+  public:
+    Controller(LED* led) : Thread(), m_led(led) {}
+    virtual void run()
+    {
+      for (uint16_t ms = LOW; ms < HIGH; ms += INC) {
+	m_led->set_delay(ms);
+	delay(PERIOD);
+      }
+      for (uint16_t ms = HIGH; ms > LOW; ms -= INC) {
+	m_led->set_delay(ms);
+	delay(PERIOD);
+      }
+    }
+  private:
+    LED* m_led;
+  };
+  
   LED(Board::DigitalPin pin) : Thread(), m_pin(pin, 1), m_delay(200) {}
   void set_delay(uint16_t ms) { m_delay = ms; }
-  virtual void run();
+  virtual void run() { m_pin.toggle(); delay(m_delay); }
+
 private:
   OutputPin m_pin;
   uint16_t m_delay;
 };
 
-void 
-LED::run() 
-{ 
-  m_pin.toggle(); 
-  delay(m_delay);
-}
-
-// This class is a thread that periodically changes a LED delay
-// from low to high with a given increment
-template <uint16_t LOW, uint16_t HIGH, uint16_t INC, uint16_t PERIOD>
-class Controller : public Nucleo::Thread {
-public:
-  Controller(LED* led) : Thread(), m_led(led) {}
-  virtual void run();
-private:
-  LED* m_led;
-};
-
-template <uint16_t LOW, uint16_t HIGH, uint16_t INC, uint16_t PERIOD>
-void
-Controller<LOW, HIGH, INC, PERIOD>::run()
-{
-  for (uint16_t ms = LOW; ms < HIGH; ms += INC) {
-    m_led->set_delay(ms);
-    delay(PERIOD);
-  }
-  for (uint16_t ms = HIGH; ms > LOW; ms -= INC) {
-    m_led->set_delay(ms);
-    delay(PERIOD);
-  }
-}
-
 // The instances of the LED and the Controller
 LED buildin(Board::LED);
-Controller<25,500,5,200> controller(&buildin);
+LED::Controller<25,500,5,200> controller(&buildin);
 
 void setup()
 {
@@ -88,10 +79,7 @@ void setup()
   // Allocate the threads with given stack size
   Nucleo::Thread::begin(&buildin, 64);
   Nucleo::Thread::begin(&controller, 64);
-}
 
-void loop()
-{
   // Start the threads
   Nucleo::Thread::begin();
 }
