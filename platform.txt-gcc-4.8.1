@@ -57,7 +57,7 @@ build.extra_flags=
 compiler.c.extra_flags=-Wextra -flto
 compiler.c.elf.extra_flags=-w -flto
 compiler.S.extra_flags=
-compiler.cpp.extra_flags=-Wextra -flto
+compiler.cpp.extra_flags=-Wextra -flto -std=gnu++11 -felide-constructors
 compiler.ar.extra_flags=
 compiler.objcopy.eep.extra_flags=
 compiler.elf2hex.extra_flags=
