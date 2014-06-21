@@ -66,11 +66,19 @@ public:
    * @param[in] s2 photodiode type option bit0 (default D6).
    * @param[in] s3 photodiode type option bit0 (default D7).
    */
+#if !defined(BOARD_ATTINY)
   TCS230(Board::ExternalInterruptPin out = Board::EXT1,
 	 Board::DigitalPin s0 = Board::D4, 
 	 Board::DigitalPin s1 = Board::D5, 
 	 Board::DigitalPin s2 = Board::D6, 
 	 Board::DigitalPin s3 = Board::D7);
+#else
+  TCS230(Board::ExternalInterruptPin out = Board::EXT0,
+	 Board::DigitalPin s0 = Board::D0, 
+	 Board::DigitalPin s1 = Board::D1, 
+	 Board::DigitalPin s2 = Board::D2, 
+	 Board::DigitalPin s3 = Board::D3);
+#endif
 
   /**
    * Set output frequency scaling (f0). Power-down (0%), 2%, 20% and
