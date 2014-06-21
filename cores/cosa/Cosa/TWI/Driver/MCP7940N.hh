@@ -24,6 +24,7 @@
 #include "Cosa/TWI.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/IOStream.hh"
+#include "Cosa/ExternalInterrupt.hh"
 
 /**
  * Driver for the MCP7940N, Low-Cost I2C Real-Time Clock/Calendar (RTCC)
@@ -186,31 +187,21 @@ public:
 
   /**
    * Construct MCP7940N device with bus address(0x6f).
+   * @param[in] pin alarm interrupt pin (Default EXT1/EXT0).
    */
-  MCP7940N() : 
-    TWI::Driver(0x6f) 
+#if !defined(BOARD_ATTINY)
+  MCP7940N(Board::ExternalInterruptPin pin = Board::EXT1) : 
+    TWI::Driver(0x6f),
+    m_alarm_irq(pin, this)
   {
   }
-
-  /**
-   * Read register block with the given size into the buffer from the
-   * position. Return number of bytes read or negative error code.
-   * @param[in] regs buffer to read from register block.
-   * @param[in] size number of bytes to read.
-   * @param[in] pos address in register file to read from.
-   * @return number of bytes or negative error code.
-   */
-  int read(void* regs, uint8_t size, uint8_t pos = 0);
-
-  /**
-   * Write register block at given position with the contents from
-   * buffer. Return number of bytes written or negative error code. 
-   * @param[in] regs buffer to write to register block.
-   * @param[in] size number of bytes to write.
-   * @param[in] pos address in register file to read write to.
-   * @return number of bytes or negative error code.
-   */
-  int write(void* regs, uint8_t size, uint8_t pos = 0);
+#else
+  MCP7940N(Board::ExternalInterruptPin pin = Board::EXT0) : 
+    TWI::Driver(0x6f),
+    m_alarm_irq(pin, this)
+  {
+  }
+#endif
 
   /**
    * Read current time from real-time clock. Return true(1) if
@@ -231,73 +222,73 @@ public:
   bool set_time(time_t& now, config_t config);
   
   /**
-   * Read alarm0 time and setting from real-time clock. Return
-   * true(1) if successful otherwise false(0).
-   * @param[out] alarm time structure.
-   * @param[out] config configuration structure.
-   * @return boolean.
-   */
-  bool get_alarm0(alarm_t& alarm, alarm_t::config_t& config)
-  {
-    return (get_alarm(alarm, config, offsetof(rtcc_t,alarm0)));
-  }
-
-  /**
-   * Set real-time clock alarm0 with the given time and setting. Return
-   * true(1) if successful otherwise false(0). 
+   * Set given real-time clock alarm with the given time and
+   * configuration. Return true(1) if successful otherwise false(0).
+   * @param[in] nr alarm number (0..1).
    * @param[in] alarm time structure to set.
    * @param[in] config configuration structure.
    * @return boolean.
    */
-  bool set_alarm0(alarm_t& alarm, alarm_t::config_t config)
-  {
-    return (set_alarm(alarm, config, offsetof(rtcc_t,alarm0)));
-  }
+  bool set_alarm(uint8_t nr, alarm_t& alarm, alarm_t::config_t config);
 
   /**
-   * Read alarm1 time and setting from real-time clock. Return
-   * true(1) if successful otherwise false(0).
-   * @param[out] alarm time structure.
-   * @param[out] config configuration structure.
-   * @return boolean.
-   */
-  bool get_alarm1(alarm_t& alarm, alarm_t::config_t& config)
-  {
-    return (get_alarm(alarm, config, offsetof(rtcc_t,alarm1)));
-  }
-
-  /**
-   * Set real-time clock alarm1 with the given time and setting. Return
+   * Read given real-time clock alarm time and configuration. Return
    * true(1) if successful otherwise false(0). 
-   * @param[in] alarm time structure to set.
-   * @param[in] config configuration structure.
-   * @return boolean.
-   */
-  bool set_alarm1(alarm_t& alarm, alarm_t::config_t config)
-  {
-    return (set_alarm(alarm, config, offsetof(rtcc_t,alarm1)));
-  }
-
-private:
-  /**
-   * Read alarm time and setting from real-time clock at given
-   * address. Return true(1) if successful otherwise false(0).
+   * @param[in] nr alarm number (0..1).
    * @param[out] alarm time structure.
    * @param[out] config configuration structure.
+   * @return boolean.
+   */
+  bool get_alarm(uint8_t nr, alarm_t& alarm, alarm_t::config_t& config);
+
+  /**
+   * Clear given real-time clock alarm. Return true(1) if successful
+   * otherwise false(0). 
+   * @param[in] nr alarm number (0..1).
+   * @return boolean.
+   */
+  bool clear_alarm(uint8_t nr);
+
+  /**
+   * @override MCP7940N
+   * Alarm handler. Called on alarm expire interrupt.
+   */
+  virtual void on_alarm();
+
+protected:
+  /**
+   * Read register block with the given size into the buffer from the
+   * position. Return number of bytes read or negative error code.
+   * @param[in] regs buffer to read from register block.
+   * @param[in] size number of bytes to read.
    * @param[in] pos address in register file to read from.
-   * @return boolean.
+   * @return number of bytes or negative error code.
    */
-  bool get_alarm(alarm_t& alarm, alarm_t::config_t& config, uint8_t pos);
+  int read(void* regs, uint8_t size, uint8_t pos = 0);
 
   /**
-   * Set real-time clock alarm at given address with the given time
-   * and setting. Return true(1) if successful otherwise false(0). 
-   * @param[in] alarm time structure to set.
-   * @param[in] config configuration structure.
-   * @param[in] pos address in register file to write to.
-   * @return boolean.
+   * Write register block at given position with the contents from
+   * buffer. Return number of bytes written or negative error code. 
+   * @param[in] regs buffer to write to register block.
+   * @param[in] size number of bytes to write.
+   * @param[in] pos address in register file to read write to.
+   * @return number of bytes or negative error code.
    */
-  bool set_alarm(alarm_t& alarm, alarm_t::config_t config, uint8_t pos);
+  int write(void* regs, uint8_t size, uint8_t pos = 0);
+
+  /** 
+   * Alarm Interrupt Handler.
+   */
+  class AlarmInterrupt : public ExternalInterrupt {
+  public:
+    AlarmInterrupt(Board::ExternalInterruptPin pin, MCP7940N* rtcc);
+    virtual void on_interrupt(uint16_t arg = 0);
+  protected:
+    MCP7940N* m_rtcc;
+  };
+
+  /** Alarm Interrupt Pin */
+  AlarmInterrupt m_alarm_irq;
 };
 
 /**
