@@ -17,15 +17,17 @@
  * 
  * @section Description
  * Demonstrate how to use Arduino/Wiring String class in Cosa.
+ * Please note that the include order to get IOStream output 
+ * operator for String.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "String.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "String.hh"
 
 void setup()
 {

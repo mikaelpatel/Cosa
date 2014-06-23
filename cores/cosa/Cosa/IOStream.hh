@@ -509,6 +509,19 @@ public:
     return (*this); 
   }
 
+  /**
+   * Print null terminated String to stream.
+   * @param[in] s String to print.
+   * @return iostream.
+   */
+#ifdef STRING_HH
+  IOStream& operator<<(String& s)
+  {
+    print((char*) s.c_str());
+    return (*this);
+  }
+#endif
+
   friend IOStream& bcd(IOStream& outs);
   friend IOStream& bin(IOStream& outs);
   friend IOStream& oct(IOStream& outs);

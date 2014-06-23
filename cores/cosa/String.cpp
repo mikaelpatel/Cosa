@@ -47,7 +47,7 @@ String::String(String&& rval)
   move(rval);
 }
 
-String::String(StringSumHelper&& rval)
+String::String(__StringSumHelper&& rval)
 {
   init();
   move(rval);
@@ -224,7 +224,7 @@ String::operator=(String&& rval)
 }
 
 String&
-String::operator=(StringSumHelper&& rval)
+String::operator=(__StringSumHelper&& rval)
 {
   if (this != &rval) move(rval);
   return (*this);
@@ -350,90 +350,90 @@ String::concat(const __FlashStringHelper* str)
   return (true);
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, const String& rhs)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, const String& rhs)
 {
-  StringSumHelper& res = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if (!res.concat(rhs.m_buffer, rhs.m_length)) res.invalidate();
   return (res);
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, const char* cstr)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, const char* cstr)
 {
-  StringSumHelper& res = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if ((cstr == NULL) || !res.concat(cstr, strlen(cstr))) res.invalidate();
   return (res);
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, char c)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, char c)
 {
-  StringSumHelper& res = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if (!res.concat(c)) res.invalidate();
   return (res);
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, unsigned char num)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, unsigned char num)
 {
-  StringSumHelper& res = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if (!res.concat(num)) res.invalidate();
   return (res);
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, int num)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, int num)
 {
-  StringSumHelper& res = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if (!res.concat(num)) res.invalidate();
   return (res);
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, unsigned int num)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, unsigned int num)
 {
-  StringSumHelper& res = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if (!res.concat(num)) res.invalidate();
   return (res);
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, long num)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, long num)
 {
-  StringSumHelper& res = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if (!res.concat(num)) res.invalidate();
   return (res);
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, unsigned long num)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, unsigned long num)
 {
-  StringSumHelper& a = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& a = const_cast<__StringSumHelper&>(lhs);
   if (!a.concat(num)) a.invalidate();
   return a;
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, float num)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, float num)
 {
-  StringSumHelper& res = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if (!res.concat(num)) res.invalidate();
   return (res);
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, double num)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, double num)
 {
-  StringSumHelper& res = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if (!res.concat(num)) res.invalidate();
   return (res);
 }
 
-StringSumHelper&
-operator+(const StringSumHelper& lhs, const __FlashStringHelper* rhs)
+__StringSumHelper&
+operator+(const __StringSumHelper& lhs, const __FlashStringHelper* rhs)
 {
-  StringSumHelper& res = const_cast<StringSumHelper&>(lhs);
+  __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if (!res.concat(rhs)) res.invalidate();
   return (res);
 }

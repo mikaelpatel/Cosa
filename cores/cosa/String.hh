@@ -29,17 +29,15 @@
 #include <avr/pgmspace.h>
 
 /**
- * Flash string type.
+ * Flash String type.
  */
 class __FlashStringHelper;
 #define F(s) (reinterpret_cast<const __FlashStringHelper *>(PSTR(s)))
 
 /**
- * An inherited class for holding the result of a concatenation.
- * These result objects are assumed to be writable by subsequent
- * concatenations. 
+ * String add operator handler.
  */
-class StringSumHelper;
+class __StringSumHelper;
 
 /**
  * The String class; dynamic, resizable strings.
@@ -65,7 +63,7 @@ public:
   String(const __FlashStringHelper *str);
 #if (ARDUINO >= 150)
   String(String &&rval);
-  String(StringSumHelper &&rval);
+  String(__StringSumHelper &&rval);
 #endif
 
   explicit String(char c);
@@ -103,9 +101,10 @@ public:
   String& operator=(const String &rhs);
   String& operator=(const char *cstr);
   String& operator=(const __FlashStringHelper *str);
+
 #if (ARDUINO >= 150)
   String& operator=(String &&rval);
-  String& operator=(StringSumHelper &&rval);
+  String& operator=(__StringSumHelper &&rval);
 #endif
 
   /**
@@ -142,17 +141,17 @@ public:
   String& operator+=(double num) { concat(num); return (*this); }
   String& operator+=(const __FlashStringHelper *str) { concat(str); return (*this);}
 
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, const String &rhs);
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, const char *cstr);
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, char c);
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, unsigned char num);
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, int num);
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, unsigned int num);
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, long num);
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, unsigned long num);
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, float num);
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, double num);
-  friend StringSumHelper& operator+(const StringSumHelper &lhs, 
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, const String &rhs);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, const char *cstr);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, char c);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, unsigned char num);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, int num);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, unsigned int num);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, long num);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, unsigned long num);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, float num);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, double num);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, 
 				    const __FlashStringHelper *rhs);
 
   /**
@@ -251,27 +250,23 @@ protected:
   void move(String &rhs);
 };
 
-class StringSumHelper : public String
+/**
+ * An inherited String class for holding the result of a
+ * concatenation. These result objects are assumed to be writable by
+ * subsequent concatenations. 
+ */
+class __StringSumHelper : public String
 {
 public:
-  StringSumHelper(const String& s) : String(s) {}
-  StringSumHelper(const char* p) : String(p) {}
-  StringSumHelper(char c) : String(c) {}
-  StringSumHelper(unsigned char num) : String(num) {}
-  StringSumHelper(int num) : String(num) {}
-  StringSumHelper(unsigned int num) : String(num) {}
-  StringSumHelper(long num) : String(num) {}
-  StringSumHelper(unsigned long num) : String(num) {}
-  StringSumHelper(float num) : String(num) {}
-  StringSumHelper(double num) : String(num) {}
+  __StringSumHelper(const String& s) : String(s) {}
+  __StringSumHelper(const char* p) : String(p) {}
+  __StringSumHelper(char c) : String(c) {}
+  __StringSumHelper(unsigned char num) : String(num) {}
+  __StringSumHelper(int num) : String(num) {}
+  __StringSumHelper(unsigned int num) : String(num) {}
+  __StringSumHelper(long num) : String(num) {}
+  __StringSumHelper(unsigned long num) : String(num) {}
+  __StringSumHelper(float num) : String(num) {}
+  __StringSumHelper(double num) : String(num) {}
 };
-
-#ifdef COSA_IOSTREAM_HH
-IOStream& 
-operator<<(IOStream& outs, String& s)
-{
-  outs << (char*) s.c_str();
-  return (outs);
-}
-#endif
 #endif
