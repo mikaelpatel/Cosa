@@ -130,8 +130,8 @@ union univ32_t {
 /**
  * Compiler branch prediction hinting.
  */
-#define LIKELY(x) __builtin_expect((x), 1)
-#define UNLIKELY(x) __builtin_expect((x), 0)
+#define LIKELY(x) __builtin_expect((x), true)
+#define UNLIKELY(x) __builtin_expect((x), false)
 
 /**
  * Compiler warning on unused varable.
@@ -140,16 +140,25 @@ union univ32_t {
 
 /**
  * Macro for number of elements in a vector.
- * @param[in] x vector
- * @return number of elements
+ * @param[in] x vector.
+ * @return number of elements.
  */
 #define membersof(x) (sizeof(x) / sizeof(x[0]))
 
 /**
- * Workaround for gcc program memory data warning in Arduino build
- * with older version of AVR-GCC. 
+ * Workaround for gcc offsetof macro usage and program memory data
+ * warning in Arduino build with older version of AVR-GCC (1.0.5,
+ * 1.5.6-r2 etc).
  */
 #if ((__GNUC__ == 4) && (__GNUC_MINOR__ <= 3))
+#undef offsetof
+#define offsetof(t,m)							\
+  (__extension__(							\
+    {									\
+      const t* __p = NULL;						\
+      (size_t) &__p->m;							\
+    }									\
+  ))
 #define __PROGMEM  __attribute__((section(".progmem.data")))
 #undef PSTR
 #define PSTR(str) __PSTR(str)
