@@ -51,28 +51,30 @@ MCP7940N::write(void* regs, uint8_t size, uint8_t pos)
   if (!twi.begin(this)) return (-1);
   int count = twi.write(pos, regs, size);
   twi.end();
-  return (count);
+  return (count - 1);
 }
 
 bool 
-MCP7940N::get_time(time_t& now, config_t& config)
+MCP7940N::get_time(time_t& now)
 {
   if (read(&now, sizeof(now)) != sizeof(now)) return (false);
-  config.as_uint8 = now.day;
-  now.day = config.day;
+  now.seconds &= 0x7f;
+  now.day &= 0x07;
+  now.month &= 0x1f;
   return (true);
 }
 
 bool 
-MCP7940N::set_time(time_t& now, config_t config)
+MCP7940N::set_time(time_t& now)
 {
-  config.day = now.day;
-  now.day = config.as_uint8;
-  return (write(&now, sizeof(now)) == sizeof(now));
+  now.seconds |= 0x80;
+  int res = write(&now, sizeof(now));
+  now.seconds &= 0x7f;
+  return (res == sizeof(now));
 }
 
 bool 
-MCP7940N::get_alarm(uint8_t nr, alarm_t& alarm, alarm_t::config_t& config)
+MCP7940N::get_alarm(uint8_t nr, time_t& alarm, uint8_t& when)
 {
   // Map alarm number to offset
   uint8_t pos;
@@ -83,14 +85,14 @@ MCP7940N::get_alarm(uint8_t nr, alarm_t& alarm, alarm_t::config_t& config)
   else return (false);
 
   // Read alarm information and copy configuration
-  if (read(&alarm, sizeof(alarm), pos) != sizeof(alarm)) return (false);
-  config.as_uint8 = alarm.day;
-  alarm.day = config.day;
+  if (read(&alarm, sizeof(alarm_t), pos) != sizeof(alarm_t)) return (false);
+  when = alarm_t::config_t(alarm.day).when;
+  alarm.day &= 0x7;
   return (true);
 }
 
 bool 
-MCP7940N::set_alarm(uint8_t nr, alarm_t& alarm, alarm_t::config_t config)
+MCP7940N::set_alarm(uint8_t nr, time_t& alarm, uint8_t when)
 {
   // Map alarm number to offset
   uint8_t pos;
@@ -101,9 +103,10 @@ MCP7940N::set_alarm(uint8_t nr, alarm_t& alarm, alarm_t::config_t config)
   else return (false);
 
   // Create configuration and write alarm information
-  config.day = alarm.day;
+  alarm_t::config_t config(alarm.day);
+  config.when = when;
   alarm.day = config.as_uint8;
-  if (write(&alarm, sizeof(alarm), pos) != sizeof(alarm)) 
+  if (write(&alarm, sizeof(alarm_t), pos) != sizeof(alarm_t)) 
     return (false);
 
   // Update control flags and enable alarm interrupt and handler
@@ -120,10 +123,31 @@ MCP7940N::set_alarm(uint8_t nr, alarm_t& alarm, alarm_t::config_t config)
   return (true);
 }
 
+bool 
+MCP7940N::is_alarm(uint8_t nr)
+{
+  // Map alarm number to offset
+  uint8_t pos;
+  if (nr == 0)
+    pos = offsetof(rtcc_t,alarm0.day);
+  else if (nr == 1)
+    pos = offsetof(rtcc_t,alarm1.day);
+  else return (false);
+
+  // Read alarm information and copy configuration
+  alarm_t::config_t config;
+  if (read(&config, sizeof(config), pos) != sizeof(config)) return (false);
+  if (!config.triggered) return (false);
+
+  // Clear the alarm if triggered but leave enabled
+  config.triggered = false;
+  return (write(&config, sizeof(config), pos) == sizeof(config));
+}
+
 bool
 MCP7940N::clear_alarm(uint8_t nr)
 {
-  // Update control flags
+  // Update control flags; read, clear flag and write back
   control_t cntrl;
   if (read(&cntrl, sizeof(cntrl), offsetof(rtcc_t,control)) != sizeof(cntrl))
     return (false);
@@ -136,14 +160,14 @@ MCP7940N::clear_alarm(uint8_t nr)
     return (false);
 
   // Check if interrupt handler should be disabled
-  if (cntrl.alm0 || cntrl.alm1) return (true);
-  m_alarm_irq.disable();
+  if (!cntrl.alm0 && !cntrl.alm1) m_alarm_irq.disable();
   return (true);
 }
 
 IOStream& operator<<(IOStream& outs, MCP7940N::alarm_t& t)
 {
-  outs << bcd << t.date << ' '
+  outs << bcd << t.month << '-'
+       << bcd << t.date << ' '
        << bcd << t.hours << ':'
        << bcd << t.minutes << ':'
        << bcd << t.seconds;

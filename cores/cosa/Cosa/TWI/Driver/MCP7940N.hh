@@ -48,6 +48,10 @@ public:
       uint8_t oscon:1;		//!< Oscillator Running Status.
       uint8_t reserved:2;	//!< Reserved.
     };
+    config_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
   };
 
   /**
@@ -63,6 +67,10 @@ public:
       uint8_t sqwe:1;		//!< Square-Ware Enable.
       uint8_t out:1;		//!< Output Control.
     };
+    control_t(uint8_t value = 0) 
+    { 
+      as_uint8 = value; 
+    }
   };
 
   /**
@@ -115,6 +123,10 @@ public:
 	uint8_t when:3;		//!< Alarm Match.
 	uint8_t polarity:1;	//!< Alarm Pin (MFP) Polarity.
       };
+      config_t(uint8_t value = 0)
+      {
+	as_uint8 = value;
+      }
     };
   };
   
@@ -207,39 +219,37 @@ public:
    * Read current time from real-time clock. Return true(1) if
    * successful otherwise false(0). 
    * @param[out] now time structure return value.
-   * @param[out] config configuration structure.
    * @return boolean.
    */
-  bool get_time(time_t& now, config_t& config);
+  bool get_time(time_t& now);
 
   /**
    * Set the real-time clock to the given time. Return true(1) if
    * successful otherwise false(0). 
    * @param[in] now time structure to set.
-   * @param[in] config configuration structure.
    * @return boolean.
    */
-  bool set_time(time_t& now, config_t config);
+  bool set_time(time_t& now);
   
   /**
    * Set given real-time clock alarm with the given time and
    * configuration. Return true(1) if successful otherwise false(0).
    * @param[in] nr alarm number (0..1).
    * @param[in] alarm time structure to set.
-   * @param[in] config configuration structure.
+   * @param[in] when alarm should trigger.
    * @return boolean.
    */
-  bool set_alarm(uint8_t nr, alarm_t& alarm, alarm_t::config_t config);
+  bool set_alarm(uint8_t nr, time_t& alarm, uint8_t when);
 
   /**
    * Read given real-time clock alarm time and configuration. Return
    * true(1) if successful otherwise false(0). 
    * @param[in] nr alarm number (0..1).
    * @param[out] alarm time structure.
-   * @param[out] config configuration structure.
+   * @param[out] when alarm should trigger.
    * @return boolean.
    */
-  bool get_alarm(uint8_t nr, alarm_t& alarm, alarm_t::config_t& config);
+  bool get_alarm(uint8_t nr, time_t& alarm, uint8_t& when);
 
   /**
    * Clear given real-time clock alarm. Return true(1) if successful
@@ -250,10 +260,18 @@ public:
   bool clear_alarm(uint8_t nr);
 
   /**
+   * Return true(1) if the given alarm has been triggered
+   * otherwise false(0). 
+   * @param[in] nr alarm number (0..1).
+   * @return boolean.
+   */
+  bool is_alarm(uint8_t nr);
+
+  /**
    * @override MCP7940N
    * Alarm handler. Called on alarm expire interrupt.
    */
-  virtual void on_alarm();
+  virtual void on_alarm() {}
 
 protected:
   /**
