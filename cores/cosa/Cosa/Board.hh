@@ -30,7 +30,7 @@
 #include "Cosa/Types.h"
 
 // Arduino IDE 1.0.X (variant)
-#if ARDUINO < 150
+#if (ARDUINO < 150)
 #include "Board.h"
 #endif
 
