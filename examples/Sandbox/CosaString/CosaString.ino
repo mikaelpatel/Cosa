@@ -21,11 +21,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "WString.h"
-  
+#include "String.hh"
+
 void setup()
 {
   uart.begin(9600);
@@ -33,14 +34,11 @@ void setup()
   Watchdog::begin();
 }
 
-IOStream& operator<<(IOStream& outs, String& s)
-{
-  outs << (char*) s.c_str();
-  return (outs);
-}
-
 void loop()
 {
+  TRACE(free_memory());
+
+  static uint16_t count = 1000;
   String s = "Nisse badar";
   trace << s << endl;
 
@@ -48,7 +46,7 @@ void loop()
   trace << s << endl;
 
   s += F(" till ");
-  s += 1000;
+  s += count++;
   trace << s << endl;
 
   sleep(2);
