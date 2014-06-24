@@ -20,10 +20,9 @@
 
 #include "Cosa/TWI/Driver/MCP7940N.hh"
 
-MCP7940N::AlarmInterrupt::AlarmInterrupt(Board::ExternalInterruptPin pin, 
-					 MCP7940N* rtcc) :
-  ExternalInterrupt(pin, ExternalInterrupt::ON_FALLING_MODE),
-  m_rtcc(rtcc)
+MCP7940N::AlarmInterrupt::AlarmInterrupt(Board::ExternalInterruptPin pin) :
+  ExternalInterrupt(pin, ExternalInterrupt::ON_RISING_MODE),
+  m_triggered(false)
 {
 }
 
@@ -31,8 +30,7 @@ void
 MCP7940N::AlarmInterrupt::on_interrupt(uint16_t arg)
 {
   UNUSED(arg);
-  if (m_rtcc == NULL) return;
-  m_rtcc->on_alarm();
+  m_triggered = true;
 }
 
 int
@@ -104,44 +102,44 @@ MCP7940N::set_alarm(uint8_t nr, time_t& alarm, uint8_t when)
 
   // Create configuration and write alarm information
   alarm_t::config_t config(alarm.day);
+  config.polarity = 1;
   config.when = when;
   alarm.day = config.as_uint8;
-  if (write(&alarm, sizeof(alarm_t), pos) != sizeof(alarm_t)) 
-    return (false);
+  if (write(&alarm, sizeof(alarm_t), pos) != sizeof(alarm_t)) return (false);
 
   // Update control flags and enable alarm interrupt and handler
   control_t cntrl;
-  if (read(&cntrl, sizeof(cntrl), offsetof(rtcc_t,control)) != sizeof(cntrl))
-    return (false);
+  pos = offsetof(rtcc_t,control);
+  if (read(&cntrl, sizeof(cntrl), pos) != sizeof(cntrl)) return (false);
   if (nr == 0) 
-    cntrl.alm0 = 1; 
+    cntrl.alm0en = 1; 
   else if (nr == 1) 
-    cntrl.alm1 = 1; 
-  if (write(&cntrl, sizeof(cntrl), offsetof(rtcc_t,control)) != sizeof(cntrl))
-    return (false);
+    cntrl.alm1en = 1; 
+  if (write(&cntrl, sizeof(cntrl), pos) != sizeof(cntrl)) return (false);
   m_alarm_irq.enable();
   return (true);
 }
 
-bool 
-MCP7940N::is_alarm(uint8_t nr)
+uint8_t
+MCP7940N::pending_alarm()
 {
-  // Map alarm number to offset
-  uint8_t pos;
-  if (nr == 0)
-    pos = offsetof(rtcc_t,alarm0.day);
-  else if (nr == 1)
-    pos = offsetof(rtcc_t,alarm1.day);
-  else return (false);
-
-  // Read alarm information and copy configuration
+  // Check if an interrupt has been received
   alarm_t::config_t config;
-  if (read(&config, sizeof(config), pos) != sizeof(config)) return (false);
-  if (!config.triggered) return (false);
+  uint8_t pos;
+  int res = 0;
+  if (!m_alarm_irq.m_triggered) return (0);
+  m_alarm_irq.m_triggered = false;
 
-  // Clear the alarm if triggered but leave enabled
-  config.triggered = false;
-  return (write(&config, sizeof(config), pos) == sizeof(config));
+  // Read alarm 0 configuration. Check if alarm is triggered
+  pos = offsetof(rtcc_t,alarm0.day);
+  if (read(&config, sizeof(config), pos) != sizeof(config)) return (0);
+  if (config.triggered) res |= 0x01;
+
+  // Read alarm 1 configuration. Check if alarm is triggered
+  pos = offsetof(rtcc_t,alarm1.day);
+  if (read(&config, sizeof(config), pos) != sizeof(config)) return (0);
+  if (config.triggered) res |= 0x02;
+  return (res);
 }
 
 bool
@@ -149,18 +147,17 @@ MCP7940N::clear_alarm(uint8_t nr)
 {
   // Update control flags; read, clear flag and write back
   control_t cntrl;
-  if (read(&cntrl, sizeof(cntrl), offsetof(rtcc_t,control)) != sizeof(cntrl))
-    return (false);
+  uint8_t pos = offsetof(rtcc_t,control);
+  if (read(&cntrl, sizeof(cntrl), pos) != sizeof(cntrl)) return (false);
   if (nr == 0) 
-    cntrl.alm0 = 0; 
+    cntrl.alm0en = 0; 
   else if (nr == 1) 
-    cntrl.alm1 = 0; 
+    cntrl.alm1en = 0; 
   else return (false);
-  if (write(&cntrl, sizeof(cntrl), offsetof(rtcc_t,control)) != sizeof(cntrl))
-    return (false);
+  if (write(&cntrl, sizeof(cntrl), pos) != sizeof(cntrl)) return (false);
 
   // Check if interrupt handler should be disabled
-  if (!cntrl.alm0 && !cntrl.alm1) m_alarm_irq.disable();
+  if (!cntrl.alm0en && !cntrl.alm1en) m_alarm_irq.disable();
   return (true);
 }
 

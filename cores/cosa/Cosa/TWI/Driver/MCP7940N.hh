@@ -37,12 +37,12 @@
 class MCP7940N : private TWI::Driver {
 public:
   /**
-   * The RTCC configuration/status bitfields. Embedded in day field (pp. 9-10).
+   * The RTCC configuration/status bitfields. Embedded in day field (pp. 18).
    */
   union config_t {
     uint8_t as_uint8;		//!< Unsigned byte access.
     struct {			//!< Bitfield access.
-      uint8_t day:3;		//!< Day in BCD.
+      uint8_t day:3;		//!< Day in 3 bits (1..7).
       uint8_t vbaten:1;		//!< External Battery Enable.
       uint8_t vbat:1;		//!< Battey Used Status.
       uint8_t oscon:1;		//!< Oscillator Running Status.
@@ -55,16 +55,17 @@ public:
   };
 
   /**
-   * The RTCC control register bitfields (pp. 9-10).
+   * The RTCC control register bitfields (pp. 26).
    */
   union control_t {
     uint8_t as_uint8;		//!< Unsigned byte access.
     struct {			//!< Bitfield access.
-      uint8_t rs:3;		//!< Rate Select.
-      uint8_t extosc:1;		//!< External clock signal.
-      uint8_t alm0:1;		//!< Alarm0 Enable.
-      uint8_t alm1:1;		//!< Alarm1 Enable.
-      uint8_t sqwe:1;		//!< Square-Ware Enable.
+      uint8_t sqwfs:2;		//!< Square Wave Clock Output Frequency.
+      uint8_t crstrim:1;	//!< Coarse Trim Mode Enable bit.
+      uint8_t extosc:1;		//!< External Oscillator Input bit.
+      uint8_t alm0en:1;		//!< Alarm 0 Module Enable.
+      uint8_t alm1en:1;		//!< Alarm 1 Module Enable.
+      uint8_t sqwen:1;		//!< Square-Ware Enable.
       uint8_t out:1;		//!< Output Control.
     };
     control_t(uint8_t value = 0) 
@@ -77,10 +78,10 @@ public:
    * Rate Selection in control register (rs, pp. 10).
    */
   enum {
-    RS_1_HZ,			//!< 1 Hz
-    RS_4_096_KHZ,		//!< 4.096 Hz
-    RS_8_192_KHZ,		//!< 8.192 Hz
-    RS_32_768_KHZ		//!< 32.768 Hz
+    SQW_1_HZ,			//!< 1 Hz
+    SQW_4_096_KHZ,		//!< 4.096 Hz
+    SQW_8_192_KHZ,		//!< 8.192 Hz
+    SQW_32_768_KHZ		//!< 32.768 Hz
   } __attribute__((packed));
 
   /**
@@ -204,13 +205,13 @@ public:
 #if !defined(BOARD_ATTINY)
   MCP7940N(Board::ExternalInterruptPin pin = Board::EXT1) : 
     TWI::Driver(0x6f),
-    m_alarm_irq(pin, this)
+    m_alarm_irq(pin)
   {
   }
 #else
   MCP7940N(Board::ExternalInterruptPin pin = Board::EXT0) : 
     TWI::Driver(0x6f),
-    m_alarm_irq(pin, this)
+    m_alarm_irq(pin)
   {
   }
 #endif
@@ -260,18 +261,12 @@ public:
   bool clear_alarm(uint8_t nr);
 
   /**
-   * Return true(1) if the given alarm has been triggered
-   * otherwise false(0). 
-   * @param[in] nr alarm number (0..1).
-   * @return boolean.
+   * Check any pending alarms (signalled on interrupt pin). Returns
+   * alarm pending (0 for no alarms, 1 for alarm0, 2 for alarm1 and 3
+   * for both)
+   * @return alarm triggered or zero for no alarms pending.
    */
-  bool is_alarm(uint8_t nr);
-
-  /**
-   * @override MCP7940N
-   * Alarm handler. Called on alarm expire interrupt.
-   */
-  virtual void on_alarm() {}
+  uint8_t pending_alarm();
 
 protected:
   /**
@@ -299,10 +294,11 @@ protected:
    */
   class AlarmInterrupt : public ExternalInterrupt {
   public:
-    AlarmInterrupt(Board::ExternalInterruptPin pin, MCP7940N* rtcc);
+    AlarmInterrupt(Board::ExternalInterruptPin pin);
     virtual void on_interrupt(uint16_t arg = 0);
   protected:
-    MCP7940N* m_rtcc;
+    friend class MCP7940N;
+    bool m_triggered;
   };
 
   /** Alarm Interrupt Pin */

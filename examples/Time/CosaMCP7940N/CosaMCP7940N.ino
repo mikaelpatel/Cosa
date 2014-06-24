@@ -29,9 +29,6 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
-// Define to set clock
-#define RTC_SET_TIME
-
 // The real-time device
 MCP7940N rtc;
 
@@ -52,7 +49,6 @@ void setup()
   Watchdog::begin();
 
   // Initiate time keeper
-#ifdef RTC_SET_TIME
   time_t now;
   now.seconds = 0x30;
   now.minutes = 0x24;
@@ -63,17 +59,16 @@ void setup()
   now.year = 0x14;
   TRACE(rtc.set_time(now));
   trace << PSTR("time:     ") << now << endl;
-#endif
   
-  // Set alarm0 when seconds match (every minute)
+  // Set alarm 0 when seconds match (every minute)
   time_t alarm(now);
   uint8_t when = MCP7940N::WHEN_SEC_MATCH;
-  alarm.seconds = 0;
+  alarm.seconds = 0x45;
   rtc.set_alarm(0, alarm, when);
   rtc.get_alarm(0, alarm, when);
   trace << PSTR("alarm(0): ") << alarm << ' ' << when << endl;
 
-  // Set alarm1 when time match; in a minute
+  // Set alarm 1 when time match; in a minute
   alarm.minutes += 1;
   when = MCP7940N::WHEN_TIME_MATCH;
   rtc.set_alarm(1, alarm, when);
@@ -107,16 +102,17 @@ void loop()
   // Create time and adjust for zone(2). Use epoch for calculation
   now = time_t(epoch, 2);
   trace << now << ' ';
-
-  // Check for alarm0; keep trigger (every minute)
-  if (rtc.is_alarm(0)) {
+  
+  // Check pending alarms; set alarm 0 in 5 seconds, alarm 1 in 10 seconds
+  uint8_t pending = rtc.pending_alarm();
+  if (pending & 0x01) {
     trace << PSTR("alarm(0) ");
-  }
-
-  // Check for alarm1; set alarm again in 5 seconds
-  if (rtc.is_alarm(1)) {
-    trace << PSTR("alarm(1)");
     time_t alarm(epoch + 5);
+    rtc.set_alarm(0, alarm, MCP7940N::WHEN_SEC_MATCH);
+  }
+  if (pending & 0x02) {
+    trace << PSTR("alarm(1)");
+    time_t alarm(epoch + 10);
     rtc.set_alarm(1, alarm, MCP7940N::WHEN_SEC_MATCH);
   }
   trace << endl;
