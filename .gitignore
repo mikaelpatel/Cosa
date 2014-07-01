@@ -2,3 +2,5 @@ arc
 doc/html
 log/
 ref
+build-*
+
