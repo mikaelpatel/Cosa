@@ -1,0 +1,51 @@
+#!/bin/bash
+#
+# @file fare
+# @version 1.0
+#
+# @section License
+# Copyright (C) 2014, Mikael Patel
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# @section Description
+# The Cosa Arduino-Makefile build command driver.
+#
+# This file is part of the Arduino Che Cosa project.
+
+if [ $# == 0 ];
+then
+   echo "Usage: fare [BOARD] [COMMAND]"
+   echo
+   echo "Build a Cosa sketch for the given board. Give additional commands."
+   echo "Most useful are 'upload' to board, 'monitor' to connect serial monitor."
+   echo
+   echo "'fare boards' for list of boards, and 'fare help' for more command details."
+   exit 1
+fi
+
+COSA_DIR=$HOME/Sketchbook/hardware/Cosa
+
+if [ $1 == "help" ];
+then
+   make -f $COSA_DIR/build/Makefile help
+   exit 0
+fi
+
+if [ $1 == "boards" ];
+then
+   make -f $COSA_DIR/build/Makefile show_boards
+   exit 0
+fi
+
+BOARD=$1
+shift
+make -f $COSA_DIR/build/Makefile "BOARD_TAG=$BOARD" $*
