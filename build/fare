@@ -32,20 +32,20 @@ then
    exit 1
 fi
 
-COSA_DIR=$HOME/Sketchbook/hardware/Cosa
+COSA_DIR=$HOME/Sketchbook/hardware/Cosa ; export COSA_DIR
 
 if [ $1 == "help" ];
 then
-   make -f $COSA_DIR/build/Makefile help
+   make -f $COSA_DIR/build/Cosa.mk help
    exit 0
 fi
 
 if [ $1 == "boards" ];
 then
-   make -f $COSA_DIR/build/Makefile show_boards
+   make -f $COSA_DIR/build/Cosa.mk show_boards
    exit 0
 fi
 
 BOARD=$1
 shift
-make -f $COSA_DIR/build/Makefile "BOARD_TAG=$BOARD" $*
+make -f $COSA_DIR/build/Cosa.mk "BOARD_TAG=$BOARD" $*
