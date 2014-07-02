@@ -32,7 +32,7 @@ then
    exit 1
 fi
 
-COSA_DIR=$HOME/Sketchbook/hardware/Cosa ; export COSA_DIR
+[ -z "$COSA_DIR" ] && COSA_DIR=$HOME/Sketchbook/hardware/Cosa ; export COSA_DIR
 
 if [ $1 == "help" ];
 then
