@@ -21,7 +21,7 @@
 #include "Cosa/LCD/Driver/MAX72XX.hh"
 
 /** 
- * No-Decode Mode Data Bits and Corresponding Segment Lines (Table 6, pp 8.)
+ * No-Decode Mode Data Bits and Corresponding Segment Lines (Table 6, pp 8.).
  * @code
  *      A
  *    +---+
@@ -37,7 +37,7 @@
  */
 const uint8_t MAX72XX::font[] __PROGMEM = {
   0b00000000, // (space)
-  0b00000110, // !
+  0b10000000, // !
   0b00100010, // "
   0b10000000, // #
   0b10000000, // $
@@ -46,7 +46,7 @@ const uint8_t MAX72XX::font[] __PROGMEM = {
   0b00000010, // '
   0b01001110, // (
   0b01111000, // )
-  0b00000000, // *
+  0b10000000, // *
   0b10000000, // +
   0b10000000, // ,
   0b00000001, // -
@@ -154,8 +154,10 @@ bool
 MAX72XX::begin()
 {
   set(DECODE_MODE, NO_DECODE);
-  set(SCAN_LIMIT, 0x0f);
-  set(DISPLAY_MODE, NORMAL_OPERATION);
+  set(SCAN_LIMIT, 7);
+  display_contrast(7);
+  display_clear();
+  display_on();
   return (true);
 }
 

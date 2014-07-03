@@ -21,7 +21,6 @@
 #ifndef COSA_LCD_DRIVER_MAX72XX_HH
 #define COSA_LCD_DRIVER_MAX72XX_HH
 
-#include "Cosa/Board.hh"
 #include "Cosa/LCD.hh"
 
 /**
@@ -71,14 +70,17 @@ public:
 
   /**
    * Construct display device driver with given io adapter and font.
-   * @param[in] io adapter.
+   * The font should be a character to segment mapping table in
+   * program memory for character codes SPACE(0x20) to DEL(0x7f).
+   * @param[in] io adapter, SPI or in/output pin based.
    * @param[in] font program memory (Default NULL).
    */
   MAX72XX(LCD::IO* io, const uint8_t* font = NULL);
 
   /**
    * @override LCD::Device
-   * Start interaction with display.
+   * Start interaction with display. Turns display on, clears and sets
+   * the contrast/intensity to mid-level(7).
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool begin();
@@ -92,7 +94,7 @@ public:
 
   /**
    * @override LCD::Device
-   * Set display contrast (0..15).
+   * Set display contrast/intensity level (0..15).
    * @param[in] contrast level.
    */
   virtual void display_contrast(uint8_t level);
@@ -111,7 +113,7 @@ public:
 
   /**
    * @override LCD::Device
-   * Clear display and move cursor to home.
+   * Clear display and move cursor to home (0, 0).
    */
   virtual void display_clear();
 
@@ -125,9 +127,10 @@ public:
 
   /**
    * @override IOStream::Device
-   * Write character to display. Handles carriage-return-line-feed, back-
-   * space, alert, horizontal tab and form-feed. Returns character or EOF 
-   * on error.
+   * Write character to display. Handles carriage-return-line-feed,
+   * backspace, alert, horizontal tab and form-feed. The period 
+   * character is translated to the 7-segment LED decimal point of the
+   * previous written character. Returns character or EOF on error.
    * @param[in] c character to write.
    * @return character written or EOF(-1).
    */
@@ -135,42 +138,42 @@ public:
 
 protected:
   /**
-   * Register Address Map (Table 2, pp 7)
+   * Register Address Map (Table 2, pp 7).
    */
   enum Register {
-    NOP = 0x00,			//!< No-operation
-    DIGIT0 = 0x01,		//!< Digit 0 (encode or segment data)
-    DIGIT1 = 0x02,		//!< Digit 1 (encode or segment data)
-    DIGIT2 = 0x03,		//!< Digit 2 (encode or segment data)
-    DIGIT3 = 0x04,		//!< Digit 3 (encode or segment data)
-    DIGIT4 = 0x05,		//!< Digit 4 (encode or segment data)
-    DIGIT5 = 0x06,		//!< Digit 5 (encode or segment data)
-    DIGIT6 = 0x07,		//!< Digit 6 (encode or segment data)
-    DIGIT7 = 0x08,		//!< Digit 7 (encode or segment data)
-    DECODE_MODE = 0x09,		//!< Decode Mode (0..255)
-    INTENSITY = 0x0a,		//!< Intensity (0..15)
-    SCAN_LIMIT = 0x0b,		//!< Scan Limit (0..7)
-    DISPLAY_MODE = 0x0c,	//!< Display Mode (shutdown, normal)
-    DISPLAY_TEST = 0x0f		//!< Display Test (0..1)
+    NOP = 0x00,			//!< No-operation.
+    DIGIT0 = 0x01,		//!< Digit 0 (encode or segment data).
+    DIGIT1 = 0x02,		//!< Digit 1 (encode or segment data).
+    DIGIT2 = 0x03,		//!< Digit 2 (encode or segment data).
+    DIGIT3 = 0x04,		//!< Digit 3 (encode or segment data).
+    DIGIT4 = 0x05,		//!< Digit 4 (encode or segment data).
+    DIGIT5 = 0x06,		//!< Digit 5 (encode or segment data).
+    DIGIT6 = 0x07,		//!< Digit 6 (encode or segment data).
+    DIGIT7 = 0x08,		//!< Digit 7 (encode or segment data).
+    DECODE_MODE = 0x09,		//!< Decode Mode (0..255, digit bitset).
+    INTENSITY = 0x0a,		//!< Intensity (0..15, level).
+    SCAN_LIMIT = 0x0b,		//!< Scan Limit (0..7, digits 1..8).
+    DISPLAY_MODE = 0x0c,	//!< Display Mode (shutdown, normal).
+    DISPLAY_TEST = 0x0f		//!< Display Test (0..1, on/off).
   } __attribute__((packed));
   
   /**
-   * Shutdown Register Format (Table 3, pp. 7)
+   * Shutdown Register Format (Table 3, pp. 7).
    */
   enum {
-    SHUTDOWN_MODE = 0x00,	//!< Shutdown mode
-    NORMAL_OPERATION = 0x01	//!< Normal operation
+    SHUTDOWN_MODE = 0x00,	//!< Shutdown mode.
+    NORMAL_OPERATION = 0x01	//!< Normal operation.
   } __attribute__((packed));
 
   /**
-   * Decode-Mode Register (Table 4, pp. 7)
+   * Decode-Mode Register (Table 4, pp. 7).
    */
   enum {
-    NO_DECODE = 0x00,		//!< No decode for digits 7-0
-    ALL_DECODE = 0xff		//!< Code B decode for digits 7-0
+    NO_DECODE = 0x00,		//!< No decode for digits 7-0.
+    ALL_DECODE = 0xff		//!< Code B decode for digits 7-0.
   } __attribute__((packed));
   
-  /** Default font */
+  /** Default font. */
   static const uint8_t font[] PROGMEM;
 
   /** Display pins and state. */

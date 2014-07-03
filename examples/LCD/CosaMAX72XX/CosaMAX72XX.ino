@@ -39,8 +39,17 @@ void setup()
   // Initiate watchdog and lcd
   Watchdog::begin();
   lcd.begin();
-  lcd.display_contrast(8);
-
+  cout << PSTR("CHE COSA.");
+  for (uint8_t i = 0; i < 16; i++) {
+    lcd.display_contrast(i);
+    lcd.display_off();
+    delay(100);
+    lcd.display_on();
+    delay(100);
+  }
+  lcd.display_clear();
+  lcd.display_contrast(7);
+  
   // Display the font table
   for (char c = ' '; c < 0x7f; c++) {
     cout << c;
