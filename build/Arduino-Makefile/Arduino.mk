@@ -1251,7 +1251,7 @@ show_config:
 
 
 show_boards:
-		@$(CAT) "$(BOARDS_TXT)" | grep -E "^[[:alnum:]]+.name" | sort -uf | sed 's/.name=/:/' | column -s: -t
+		@$(CAT) "$(BOARDS_TXT)" | grep -E "^[[:alnum:]|-]+.name" | sort -uf | sed 's/.name=/:/' | column -s: -t
 
 monitor:
 		$(MONITOR_CMD) $(get_monitor_port) $(MONITOR_BAUDRATE)
