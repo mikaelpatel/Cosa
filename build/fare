@@ -49,7 +49,7 @@ fi
 
 if [ $1 == "config" ];
 then
-   make -f $COSA_DIR/build/Cosa.mk show_config
+   make -f $COSA_DIR/build/Cosa.mk show_config "BOARD_TAG=$2"
    exit 0
 fi
 
