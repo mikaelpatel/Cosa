@@ -283,9 +283,7 @@ endif
 # Arduino Directory
 
 ifndef ARDUINO_DIR
-    AUTO_ARDUINO_DIR := $(firstword \
-        $(call dir_if_exists,/usr/share/arduino) \
-        $(call dir_if_exists,/Applications/Arduino.app/Contents/Resources/Java) )
+    AUTO_ARDUINO_DIR := $(firstword $(call dir_if_exists,/usr/share/arduino) $(call dir_if_exists,/Applications/Arduino.app/Contents/Resources/Java))
     ifdef AUTO_ARDUINO_DIR
        ARDUINO_DIR = $(AUTO_ARDUINO_DIR)
        $(call show_config_variable,ARDUINO_DIR,[AUTODETECTED])
@@ -334,9 +332,7 @@ endif
 ifndef ARDUINO_SKETCHBOOK
     ifndef ARDUINO_PREFERENCES_PATH
 
-        AUTO_ARDUINO_PREFERENCES := $(firstword \
-            $(call dir_if_exists,$(HOME)/.arduino/preferences.txt) \
-            $(call dir_if_exists,$(HOME)/Library/Arduino/preferences.txt) )
+        AUTO_ARDUINO_PREFERENCES := $(firstword $(call dir_if_exists,$(HOME)/.arduino/preferences.txt) $(call dir_if_exists,$(HOME)/Library/Arduino/preferences.txt))
         ifdef AUTO_ARDUINO_PREFERENCES
            ARDUINO_PREFERENCES_PATH = $(AUTO_ARDUINO_PREFERENCES)
            $(call show_config_variable,ARDUINO_PREFERENCES_PATH,[AUTODETECTED])
@@ -347,9 +343,7 @@ ifndef ARDUINO_SKETCHBOOK
     endif
 
     ifneq ($(ARDUINO_PREFERENCES_PATH),)
-        ARDUINO_SKETCHBOOK = $(shell grep --max-count=1 --regexp="sketchbook.path=" \
-                                          "$(ARDUINO_PREFERENCES_PATH)" | \
-                                     sed -e 's/sketchbook.path=//' )
+        ARDUINO_SKETCHBOOK = $(shell grep --max-count=1 --regexp="sketchbook.path=" "$(ARDUINO_PREFERENCES_PATH)" | sed -e 's/sketchbook.path=//')
     endif
 
     ifneq ($(ARDUINO_SKETCHBOOK),)
@@ -656,12 +650,8 @@ LOCAL_CC_SRCS   ?= $(wildcard *.cc)
 LOCAL_PDE_SRCS  ?= $(wildcard *.pde)
 LOCAL_INO_SRCS  ?= $(wildcard *.ino)
 LOCAL_AS_SRCS   ?= $(wildcard *.S)
-LOCAL_SRCS      = $(LOCAL_C_SRCS)   $(LOCAL_CPP_SRCS) \
-		$(LOCAL_CC_SRCS)   $(LOCAL_PDE_SRCS) \
-		$(LOCAL_INO_SRCS) $(LOCAL_AS_SRCS)
-LOCAL_OBJ_FILES = $(LOCAL_C_SRCS:.c=.o)   $(LOCAL_CPP_SRCS:.cpp=.o) \
-		$(LOCAL_CC_SRCS:.cc=.o)   $(LOCAL_PDE_SRCS:.pde=.o) \
-		$(LOCAL_INO_SRCS:.ino=.o) $(LOCAL_AS_SRCS:.S=.o)
+LOCAL_SRCS      = $(LOCAL_C_SRCS) $(LOCAL_CPP_SRCS) $(LOCAL_CC_SRCS) $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS) $(LOCAL_AS_SRCS)
+LOCAL_OBJ_FILES = $(LOCAL_C_SRCS:.c=.o) $(LOCAL_CPP_SRCS:.cpp=.o) $(LOCAL_CC_SRCS:.cc=.o) $(LOCAL_PDE_SRCS:.pde=.o) $(LOCAL_INO_SRCS:.ino=.o) $(LOCAL_AS_SRCS:.S=.o)
 LOCAL_OBJS      = $(patsubst %,$(OBJDIR)/%,$(LOCAL_OBJ_FILES))
 
 ifeq ($(words $(LOCAL_SRCS)), 0)
@@ -690,7 +680,6 @@ endif
 # core sources
 ifeq ($(strip $(NO_CORE)),)
     ifdef ARDUINO_CORE_PATH
-	rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
         CORE_C_SRCS     = $(call rwildcard,$(ARDUINO_CORE_PATH),*.c)
         CORE_CPP_SRCS   = $(call rwildcard,$(ARDUINO_CORE_PATH),*.cpp) 
 
@@ -700,8 +689,7 @@ ifeq ($(strip $(NO_CORE)),)
         endif
 
         CORE_OBJ_FILES  = $(CORE_C_SRCS:.c=.o) $(CORE_CPP_SRCS:.cpp=.o) $(CORE_AS_SRCS:.S=.o)
-        CORE_OBJS       = $(patsubst $(ARDUINO_CORE_PATH)/%,  \
-                $(OBJDIR)/core/%,$(CORE_OBJ_FILES))
+        CORE_OBJS       = $(patsubst $(ARDUINO_CORE_PATH)/%, $(OBJDIR)/core/%,$(CORE_OBJ_FILES))
     endif
 else
     $(call show_config_info,NO_CORE set so core library will not be built,[MANUAL])
@@ -712,12 +700,9 @@ endif
 
 ifndef ARDUINO_LIBS
     # automatically determine included libraries
-    ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_DIR)/libraries/*)), \
-        $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
-    ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_SKETCHBOOK)/libraries/*)), \
-        $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
-    ARDUINO_LIBS += $(filter $(notdir $(wildcard $(USER_LIB_PATH)/*)), \
-        $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
+    ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_DIR)/libraries/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
+    ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_SKETCHBOOK)/libraries/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
+    ARDUINO_LIBS += $(filter $(notdir $(wildcard $(USER_LIB_PATH)/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
 endif
 
 ########################################################################
@@ -815,12 +800,8 @@ LIB_AS_SRCS         = $(wildcard $(patsubst %,%/*.S,$(SYS_LIBS)))
 USER_LIB_CPP_SRCS   = $(wildcard $(patsubst %,%/*.cpp,$(USER_LIBS)))
 USER_LIB_C_SRCS     = $(wildcard $(patsubst %,%/*.c,$(USER_LIBS)))
 USER_LIB_AS_SRCS    = $(wildcard $(patsubst %,%/*.S,$(USER_LIBS)))
-LIB_OBJS            = $(patsubst $(ARDUINO_LIB_PATH)/%.c,$(OBJDIR)/libs/%.o,$(LIB_C_SRCS)) \
-                      $(patsubst $(ARDUINO_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(LIB_CPP_SRCS)) \
-                      $(patsubst $(ARDUINO_LIB_PATH)/%.S,$(OBJDIR)/libs/%.o,$(LIB_AS_SRCS))
-USER_LIB_OBJS       = $(patsubst $(USER_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(USER_LIB_CPP_SRCS)) \
-                      $(patsubst $(USER_LIB_PATH)/%.c,$(OBJDIR)/libs/%.o,$(USER_LIB_C_SRCS)) \
-                      $(patsubst $(USER_LIB_PATH)/%.S,$(OBJDIR)/libs/%.o,$(USER_LIB_AS_SRCS))
+LIB_OBJS            = $(patsubst $(ARDUINO_LIB_PATH)/%.c,$(OBJDIR)/libs/%.o,$(LIB_C_SRCS)) $(patsubst $(ARDUINO_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(LIB_CPP_SRCS)) $(patsubst $(ARDUINO_LIB_PATH)/%.S,$(OBJDIR)/libs/%.o,$(LIB_AS_SRCS))
+USER_LIB_OBJS       = $(patsubst $(USER_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(USER_LIB_CPP_SRCS)) $(patsubst $(USER_LIB_PATH)/%.c,$(OBJDIR)/libs/%.o,$(USER_LIB_C_SRCS)) $(patsubst $(USER_LIB_PATH)/%.S,$(OBJDIR)/libs/%.o,$(USER_LIB_AS_SRCS))
 
 # Dependency files
 DEPS                = $(LOCAL_OBJS:.o=.d) $(LIB_OBJS:.o=.d) $(USER_LIB_OBJS:.o=.d) $(CORE_OBJS:.o=.d)
@@ -850,10 +831,7 @@ else
 endif
 
 # Using += instead of =, so that CPPFLAGS can be set per sketch level
-CPPFLAGS      += -$(MCU_FLAG_NAME)=$(MCU) -DF_CPU=$(F_CPU) -DARDUINO=$(ARDUINO_VERSION) -D__PROG_TYPES_COMPAT__ \
-        -I. -I$(ARDUINO_CORE_PATH) -I$(ARDUINO_VAR_PATH)/$(VARIANT) \
-        $(SYS_INCLUDES) $(USER_INCLUDES) -Wall -ffunction-sections \
-        -fdata-sections
+CPPFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -DF_CPU=$(F_CPU) -DARDUINO=$(ARDUINO_VERSION) -D__PROG_TYPES_COMPAT__ -I. -I$(ARDUINO_CORE_PATH) -I$(ARDUINO_VAR_PATH)/$(VARIANT) $(SYS_INCLUDES) $(USER_INCLUDES) -Wall -ffunction-sections -fdata-sections
 
 ifdef DEBUG
 OPTIMIZATION_FLAGS= $(DEBUG_FLAGS)
@@ -903,8 +881,7 @@ ifneq ($(strip $(MONITOR_PORT)),)
 else
     # If no port is specified, try to guess it from wildcards.
     # Will only work if the Arduino is the only/first device matched.
-    DEVICE_PATH = $(firstword $(wildcard \
-			/dev/ttyACM? /dev/ttyUSB? /dev/tty.usbserial* /dev/tty.usbmodem*))
+    DEVICE_PATH = $(firstword $(wildcard /dev/ttyACM? /dev/ttyUSB? /dev/tty.usbserial* /dev/tty.usbmodem*))
     $(call show_config_variable,DEVICE_PATH,[AUTODETECTED])
 endif
 
@@ -1208,10 +1185,8 @@ error_on_caterina:
 # Use submake so we can guarantee the reset happens
 # before the upload, even with make -j
 upload:		$(TARGET_HEX) verify_size
-#		$(MAKE) reset
-		$(call arduino_output,Resetting Arduino...)
+		$(call arduino_output,Resetting...)
 		$(RESET_CMD)
-#		$(MAKE) do_upload
 		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
 
 raw_upload:	$(TARGET_HEX) verify_size
@@ -1248,8 +1223,7 @@ reset_stty:
 		$$STTYF $(call get_monitor_port) -hupcl
 
 ispload:	$(TARGET_EEP) $(TARGET_HEX) verify_size
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) \
-			$(AVRDUDE_ISPLOAD_OPTS)
+		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) $(AVRDUDE_ISPLOAD_OPTS)
 
 burn_bootloader:
 ifneq ($(strip $(AVRDUDE_ISP_FUSES_PRE)),)
@@ -1275,6 +1249,9 @@ clean:
 
 size:	$(TARGET_HEX)
 		$(call avr_size,$(TARGET_ELF),$(TARGET_HEX))
+
+show_config:
+
 
 show_boards:
 		@$(CAT) "$(BOARDS_TXT)" | grep -E "^[[:alnum:]]+.name" | sort -uf | sed 's/.name=/:/' | column -s: -t
@@ -1336,9 +1313,7 @@ help:
 "
 	@$(ECHO) "Please refer to $(ARDMK_DIR)/Arduino.mk for more details.\n"
 
-.PHONY: all upload raw_upload raw_eeprom error_on_caterina reset reset_stty ispload \
-        clean depends size show_boards monitor disasm symbol_sizes generated_assembly \
-        generate_assembly verify_size burn_bootloader help pre-build
+.PHONY: all upload raw_upload raw_eeprom error_on_caterina reset reset_stty ispload clean depends size show_boards monitor disasm symbol_sizes generated_assembly generate_assembly verify_size burn_bootloader help pre-build show_config
 
 # added - in the beginning, so that we don't get an error if the file is not present
 -include $(DEPS)

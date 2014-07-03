@@ -26,6 +26,9 @@ show_config_variable = $(call show_config_info,$(1) = $($(1)) $(3),$(2))
 # Just a nice simple visual separator
 show_separator = $(call arduino_output,-------------------------)
 
+# Recursive wildcard
+rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
+
 $(call show_separator)
 $(call arduino_output,Arduino.mk Configuration:)
 
@@ -43,4 +46,5 @@ else
         CURRENT_OS = MAC
     endif
 endif
+
 $(call show_config_variable,CURRENT_OS,[AUTODETECTED])
