@@ -64,13 +64,13 @@
 #
 # On the Mac you might want to set:
 #
-#   ARDUINO_DIR   = /Applications/Arduino.app/Contents/Resources/Java
-#   ARDMK_DIR     = /usr/local
+#   ARDUINO_DIR = /Applications/Arduino.app/Contents/Resources/Java
+#   ARDMK_DIR = /usr/local
 #
 # On Linux, you might prefer:
 #
-#   ARDUINO_DIR   = /usr/share/arduino
-#   ARDMK_DIR     = /usr/share/arduino
+#   ARDUINO_DIR = /usr/share/arduino
+#   ARDMK_DIR = /usr/share/arduino
 #   AVR_TOOLS_DIR = /usr
 #
 # On Windows declare this environmental variables using the windows
@@ -81,9 +81,9 @@
 # This are just examples, you have to adapt this variables accordingly to
 # your system.
 #
-#   ARDUINO_DIR   =../../../../../Arduino
+#   ARDUINO_DIR =../../../../../Arduino
 #   AVR_TOOLS_DIR =../../../../../Arduino/hardware/tools/avr
-#   ARDMK_DIR     = /cygdrive/c/Users/"YourUser"/Arduino-Makefile
+#   ARDMK_DIR = /cygdrive/c/Users/"YourUser"/Arduino-Makefile
 #
 # On Windows it is highly recommended that you create a symbolic link directory
 # for avoiding using the normal directories name of windows such as
@@ -116,21 +116,21 @@
 # For example:
 #
 #       ARDUINO_LIBS = Ethernet SPI
-#       BOARD_TAG    = uno
+#       BOARD_TAG = uno
 #       MONITOR_PORT = /dev/cu.usb*
 #
 #       include /usr/share/arduino/Arduino.mk
 #
 # Hopefully these will be self-explanatory but in case they're not:
 #
-#    ARDUINO_LIBS - A list of any libraries used by the sketch (we
+#    ARDUINO_LIBS:  A list of any libraries used by the sketch (we
 #                   assume these are in $(ARDUINO_DIR)/hardware/libraries
 #                   or your sketchbook's libraries directory)
 #
-#    MONITOR_PORT - The port where the Arduino can be found (only needed
+#    MONITOR_PORT:  The port where the Arduino can be found (only needed
 #                   when uploading)
 #
-#    BOARD_TAG    - The tag for the board e.g. uno or mega
+#    BOARD_TAG:      The tag for the board e.g. uno or mega
 #                   'make show_boards' shows a list
 #
 # If you have your additional libraries relative to your source, rather
@@ -186,20 +186,20 @@
 # You need to specify some details of your ISP programmer and might
 # also need to specify the fuse values:
 #
-#     ISP_PROG	   = stk500v2
-#     ISP_PORT     = /dev/ttyACM0
+#     ISP_PROG = stk500v2
+#     ISP_PORT = /dev/ttyACM0
 #
 # You might also need to set the fuse bits, but typically they'll be
 # read from boards.txt, based on the BOARD_TAG variable:
 #
-#     ISP_LOCK_FUSE_PRE  = 0x3f
+#     ISP_LOCK_FUSE_PRE = 0x3f
 #     ISP_LOCK_FUSE_POST = 0xcf
-#     ISP_HIGH_FUSE      = 0xdf
-#     ISP_LOW_FUSE       = 0xff
-#     ISP_EXT_FUSE       = 0x01
+#     ISP_HIGH_FUSE = 0xdf
+#     ISP_LOW_FUSE = 0xff
+#     ISP_EXT_FUSE = 0x01
 #
 # You can specify to also upload the EEPROM file:
-#     ISP_EEPROM   = 1
+#     ISP_EEPROM = 1
 #
 # I think the fuses here are fine for uploading to the ATmega168
 # without bootloader.
@@ -207,7 +207,6 @@
 # To actually do this upload use the ispload target:
 #
 #    make ispload
-#
 #
 ########################################################################
 #
@@ -220,27 +219,27 @@
 # ALTERNATE_CORE, assuming your core is in your ~/sketchbook/hardware
 # directory. For example:
 #
-# ISP_PORT          = /dev/ttyACM0
-# BOARD_TAG         = attiny85
-# ALTERNATE_CORE    = attiny-master
+# ISP_PORT = /dev/ttyACM0
+# BOARD_TAG = attiny85
+# ALTERNATE_CORE = attiny-master
 #
 # To use the more complex arduino-tiny and TinyCore2 cores, you must
 # also set ARDUINO_CORE_PATH and ARDUINO_VAR_PATH to the core
 # directory, as these cores essentially replace the main Arduino core.
 # For example:
 #
-# ISP_PORT          = /dev/ttyACM0
-# BOARD_TAG         = attiny85at8
-# ALTERNATE_CORE    = arduino-tiny
-# ARDUINO_VAR_PATH  = ~/sketchbook/hardware/arduino-tiny/cores/tiny
+# ISP_PORT = /dev/ttyACM0
+# BOARD_TAG = attiny85at8
+# ALTERNATE_CORE = arduino-tiny
+# ARDUINO_VAR_PATH = ~/sketchbook/hardware/arduino-tiny/cores/tiny
 # ARDUINO_CORE_PATH = ~/sketchbook/hardware/arduino-tiny/cores/tiny
 #
 # or....
 #
-# ISP_PORT          = /dev/ttyACM0
-# BOARD_TAG         = attiny861at8
-# ALTERNATE_CORE    = tiny2
-# ARDUINO_VAR_PATH  = ~/sketchbook/hardware/tiny2/cores/tiny
+# ISP_PORT = /dev/ttyACM0
+# BOARD_TAG = attiny861at8
+# ALTERNATE_CORE = tiny2
+# ARDUINO_VAR_PATH = ~/sketchbook/hardware/tiny2/cores/tiny
 # ARDUINO_CORE_PATH = ~/sketchbook/hardware/tiny2/cores/tiny
 #
 ########################################################################
@@ -304,7 +303,7 @@ endif
 # Default TARGET to pwd (ex Daniele Vergini)
 
 ifndef TARGET
-    TARGET  = $(notdir $(CURDIR))
+    TARGET = $(notdir $(CURDIR))
 endif
 
 ########################################################################
@@ -360,11 +359,11 @@ endif
 # Arduino and system paths
 
 ifndef CC_NAME
-CC_NAME      = avr-gcc
+CC_NAME = avr-gcc
 endif
 
 ifndef CXX_NAME
-CXX_NAME     = avr-g++
+CXX_NAME = avr-g++
 endif
 
 ifndef OBJCOPY_NAME
@@ -376,15 +375,15 @@ OBJDUMP_NAME = avr-objdump
 endif
 
 ifndef AR_NAME
-AR_NAME      = avr-ar
+AR_NAME = avr-ar
 endif
 
 ifndef SIZE_NAME
-SIZE_NAME    = avr-size
+SIZE_NAME = avr-size
 endif
 
 ifndef NM_NAME
-NM_NAME      = avr-nm
+NM_NAME = avr-nm
 endif
 
 ifndef AVR_TOOLS_DIR
@@ -392,7 +391,7 @@ ifndef AVR_TOOLS_DIR
     BUNDLED_AVR_TOOLS_DIR := $(call dir_if_exists,$(ARDUINO_DIR)/hardware/tools/avr)
 
     ifdef BUNDLED_AVR_TOOLS_DIR
-        AVR_TOOLS_DIR     = $(BUNDLED_AVR_TOOLS_DIR)
+        AVR_TOOLS_DIR = $(BUNDLED_AVR_TOOLS_DIR)
         $(call show_config_variable,AVR_TOOLS_DIR,[BUNDLED],(in Arduino distribution))
 
         # In Linux distribution of Arduino, the path to avrdude and avrdude.conf are different
@@ -411,7 +410,7 @@ ifndef AVR_TOOLS_DIR
         else
 
             ifndef AVRDUDE_CONF
-                AVRDUDE_CONF  = $(AVR_TOOLS_DIR)/etc/avrdude.conf
+                AVRDUDE_CONF = $(AVR_TOOLS_DIR)/etc/avrdude.conf
             endif
 
         endif
@@ -435,17 +434,17 @@ else
     # Check if it works on MAC
     ifeq ($(CURRENT_OS),WINDOWS)
         ifndef AVRDUDE_CONF
-            AVRDUDE_CONF  = $(AVR_TOOLS_DIR)/etc/avrdude.conf
+            AVRDUDE_CONF = $(AVR_TOOLS_DIR)/etc/avrdude.conf
         endif
     endif
 
 endif #ndef AVR_TOOLS_DIR
 
 ifndef AVR_TOOLS_PATH
-    AVR_TOOLS_PATH    = $(AVR_TOOLS_DIR)/bin
+    AVR_TOOLS_PATH = $(AVR_TOOLS_DIR)/bin
 endif
 
-ARDUINO_LIB_PATH  = $(ARDUINO_DIR)/libraries
+ARDUINO_LIB_PATH = $(ARDUINO_DIR)/libraries
 $(call show_config_variable,ARDUINO_LIB_PATH,[COMPUTED],(from ARDUINO_DIR))
 ifndef ARDUINO_CORE_PATH
     ARDUINO_CORE_PATH = $(ARDUINO_DIR)/hardware/arduino/cores/arduino
@@ -472,26 +471,26 @@ ifdef ALTERNATE_CORE_PATH
     endif
 
     ifndef ARDUINO_VAR_PATH
-        ARDUINO_VAR_PATH  = $(ALTERNATE_CORE_PATH)/variants
+        ARDUINO_VAR_PATH = $(ALTERNATE_CORE_PATH)/variants
         $(call show_config_variable,ARDUINO_VAR_PATH,[COMPUTED],(from ALTERNATE_CORE_PATH))
     endif
 
     ifndef BOARDS_TXT
-        BOARDS_TXT  = $(ALTERNATE_CORE_PATH)/boards.txt
+        BOARDS_TXT = $(ALTERNATE_CORE_PATH)/boards.txt
         $(call show_config_variable,BOARDS_TXT,[COMPUTED],(from ALTERNATE_CORE_PATH))
     endif
 
 else
 
     ifndef ARDUINO_VAR_PATH
-        ARDUINO_VAR_PATH  = $(ARDUINO_DIR)/hardware/arduino/variants
+        ARDUINO_VAR_PATH = $(ARDUINO_DIR)/hardware/arduino/variants
         $(call show_config_variable,ARDUINO_VAR_PATH,[COMPUTED],(from ARDUINO_DIR))
     else
         $(call show_config_variable,ARDUINO_VAR_PATH,[USER])
     endif
 
     ifndef BOARDS_TXT
-        BOARDS_TXT  = $(ARDUINO_DIR)/hardware/arduino/boards.txt
+        BOARDS_TXT = $(ARDUINO_DIR)/hardware/arduino/boards.txt
         $(call show_config_variable,BOARDS_TXT,[COMPUTED],(from ARDUINO_DIR))
     else
         $(call show_config_variable,BOARDS_TXT,[USER])
@@ -520,7 +519,7 @@ endif
 # boards.txt parsing
 
 ifndef BOARD_TAG
-    BOARD_TAG   = uno
+    BOARD_TAG = uno
     $(call show_config_variable,BOARD_TAG,[DEFAULT])
 else
     # Strip the board tag of any extra whitespace, since it was causing the makefile to fail
@@ -548,7 +547,7 @@ ifeq ($(strip $(NO_CORE)),)
 
     # processor stuff
     ifndef MCU
-        MCU   = $(call PARSE_BOARD,$(BOARD_TAG),build.mcu)
+        MCU = $(call PARSE_BOARD,$(BOARD_TAG),build.mcu)
     endif
 
     ifndef F_CPU
@@ -605,7 +604,7 @@ ifeq ($(strip $(NO_CORE)),)
     endif
 
     ifndef HEX_MAXIMUM_SIZE
-        HEX_MAXIMUM_SIZE  = $(call PARSE_BOARD,$(BOARD_TAG),upload.maximum_size)
+        HEX_MAXIMUM_SIZE = $(call PARSE_BOARD,$(BOARD_TAG),upload.maximum_size)
     endif
 
 endif
@@ -644,15 +643,15 @@ endif
 ########################################################################
 # Local sources
 
-LOCAL_C_SRCS    ?= $(wildcard *.c)
-LOCAL_CPP_SRCS  ?= $(wildcard *.cpp)
-LOCAL_CC_SRCS   ?= $(wildcard *.cc)
-LOCAL_PDE_SRCS  ?= $(wildcard *.pde)
-LOCAL_INO_SRCS  ?= $(wildcard *.ino)
-LOCAL_AS_SRCS   ?= $(wildcard *.S)
-LOCAL_SRCS      = $(LOCAL_C_SRCS) $(LOCAL_CPP_SRCS) $(LOCAL_CC_SRCS) $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS) $(LOCAL_AS_SRCS)
+LOCAL_C_SRCS ?= $(wildcard *.c)
+LOCAL_CPP_SRCS ?= $(wildcard *.cpp)
+LOCAL_CC_SRCS ?= $(wildcard *.cc)
+LOCAL_PDE_SRCS ?= $(wildcard *.pde)
+LOCAL_INO_SRCS ?= $(wildcard *.ino)
+LOCAL_AS_SRCS ?= $(wildcard *.S)
+LOCAL_SRCS = $(LOCAL_C_SRCS) $(LOCAL_CPP_SRCS) $(LOCAL_CC_SRCS) $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS) $(LOCAL_AS_SRCS)
 LOCAL_OBJ_FILES = $(LOCAL_C_SRCS:.c=.o) $(LOCAL_CPP_SRCS:.cpp=.o) $(LOCAL_CC_SRCS:.cc=.o) $(LOCAL_PDE_SRCS:.pde=.o) $(LOCAL_INO_SRCS:.ino=.o) $(LOCAL_AS_SRCS:.S=.o)
-LOCAL_OBJS      = $(patsubst %,$(OBJDIR)/%,$(LOCAL_OBJ_FILES))
+LOCAL_OBJS = $(patsubst %,$(OBJDIR)/%,$(LOCAL_OBJ_FILES))
 
 ifeq ($(words $(LOCAL_SRCS)), 0)
     $(error At least one source file (*.ino, *.pde, *.cpp, *c, *cc, *.S) is needed)
@@ -680,16 +679,16 @@ endif
 # core sources
 ifeq ($(strip $(NO_CORE)),)
     ifdef ARDUINO_CORE_PATH
-        CORE_C_SRCS     = $(call rwildcard,$(ARDUINO_CORE_PATH),*.c)
-        CORE_CPP_SRCS   = $(call rwildcard,$(ARDUINO_CORE_PATH),*.cpp) 
+        CORE_C_SRCS = $(call rwildcard,$(ARDUINO_CORE_PATH),*.c)
+        CORE_CPP_SRCS = $(call rwildcard,$(ARDUINO_CORE_PATH),*.cpp) 
 
         ifneq ($(strip $(NO_CORE_MAIN_CPP)),)
             CORE_CPP_SRCS := $(filter-out %main.cpp, $(CORE_CPP_SRCS))
             $(call show_config_info,NO_CORE_MAIN_CPP set so core library will not include main.cpp,[MANUAL])
         endif
 
-        CORE_OBJ_FILES  = $(CORE_C_SRCS:.c=.o) $(CORE_CPP_SRCS:.cpp=.o) $(CORE_AS_SRCS:.S=.o)
-        CORE_OBJS       = $(patsubst $(ARDUINO_CORE_PATH)/%, $(OBJDIR)/core/%,$(CORE_OBJ_FILES))
+        CORE_OBJ_FILES = $(CORE_C_SRCS:.c=.o) $(CORE_CPP_SRCS:.cpp=.o) $(CORE_AS_SRCS:.S=.o)
+        CORE_OBJS = $(patsubst $(ARDUINO_CORE_PATH)/%, $(OBJDIR)/core/%,$(CORE_OBJ_FILES))
     endif
 else
     $(call show_config_info,NO_CORE set so core library will not be built,[MANUAL])
@@ -754,35 +753,35 @@ endif
 TARGET_HEX = $(OBJDIR)/$(TARGET).hex
 TARGET_ELF = $(OBJDIR)/$(TARGET).elf
 TARGET_EEP = $(OBJDIR)/$(TARGET).eep
-CORE_LIB   = $(OBJDIR)/libcore.a
+CORE_LIB = $(OBJDIR)/libcore.a
 
 # Names of executables - chipKIT needs to override all to set paths to PIC32
 # tools, and we can't use "?=" assignment because these are already implicitly
 # defined by Make (e.g. $(CC) == cc).
 ifndef OVERRIDE_EXECUTABLES
-    CC      = $(AVR_TOOLS_PATH)/$(CC_NAME)
-    CXX     = $(AVR_TOOLS_PATH)/$(CXX_NAME)
-    AS      = $(AVR_TOOLS_PATH)/$(AS_NAME)
+    CC = $(AVR_TOOLS_PATH)/$(CC_NAME)
+    CXX = $(AVR_TOOLS_PATH)/$(CXX_NAME)
+    AS = $(AVR_TOOLS_PATH)/$(AS_NAME)
     OBJCOPY = $(AVR_TOOLS_PATH)/$(OBJCOPY_NAME)
     OBJDUMP = $(AVR_TOOLS_PATH)/$(OBJDUMP_NAME)
-    AR      = $(AVR_TOOLS_PATH)/$(AR_NAME)
-    SIZE    = $(AVR_TOOLS_PATH)/$(SIZE_NAME)
-    NM      = $(AVR_TOOLS_PATH)/$(NM_NAME)
+    AR = $(AVR_TOOLS_PATH)/$(AR_NAME)
+    SIZE = $(AVR_TOOLS_PATH)/$(SIZE_NAME)
+    NM = $(AVR_TOOLS_PATH)/$(NM_NAME)
 endif
 
-REMOVE  = rm -rf
-MV      = mv -f
-CAT     = cat
-ECHO    = printf
-MKDIR   = mkdir -p
+REMOVE = rm -rf
+MV = mv -f
+CAT = cat
+ECHO = printf
+MKDIR = mkdir -p
 
 # General arguments
-USER_LIBS      = $(wildcard $(patsubst %,$(USER_LIB_PATH)/%,$(ARDUINO_LIBS)))
+USER_LIBS = $(wildcard $(patsubst %,$(USER_LIB_PATH)/%,$(ARDUINO_LIBS)))
 USER_LIB_NAMES = $(patsubst $(USER_LIB_PATH)/%,%,$(USER_LIBS))
 
 # Let user libraries override system ones.
-SYS_LIBS       = $(wildcard $(patsubst %,$(ARDUINO_LIB_PATH)/%,$(filter-out $(USER_LIB_NAMES),$(ARDUINO_LIBS))))
-SYS_LIB_NAMES  = $(patsubst $(ARDUINO_LIB_PATH)/%,%,$(SYS_LIBS))
+SYS_LIBS = $(wildcard $(patsubst %,$(ARDUINO_LIB_PATH)/%,$(filter-out $(USER_LIB_NAMES),$(ARDUINO_LIBS))))
+SYS_LIB_NAMES = $(patsubst $(ARDUINO_LIB_PATH)/%,%,$(SYS_LIBS))
 
 # Error here if any are missing.
 LIBS_NOT_FOUND = $(filter-out $(USER_LIB_NAMES) $(SYS_LIB_NAMES),$(ARDUINO_LIBS))
@@ -790,21 +789,21 @@ ifneq (,$(strip $(LIBS_NOT_FOUND)))
     $(error The following libraries specified in ARDUINO_LIBS could not be found (searched USER_LIB_PATH and ARDUINO_LIB_PATH): $(LIBS_NOT_FOUND))
 endif
 
-SYS_LIBS           := $(wildcard $(SYS_LIBS) $(addsuffix /utility,$(SYS_LIBS)))
-USER_LIBS          := $(wildcard $(USER_LIBS) $(addsuffix /utility,$(USER_LIBS)))
-SYS_INCLUDES        = $(patsubst %,-I%,$(SYS_LIBS))
-USER_INCLUDES       = $(patsubst %,-I%,$(USER_LIBS))
-LIB_C_SRCS          = $(wildcard $(patsubst %,%/*.c,$(SYS_LIBS)))
-LIB_CPP_SRCS        = $(wildcard $(patsubst %,%/*.cpp,$(SYS_LIBS)))
-LIB_AS_SRCS         = $(wildcard $(patsubst %,%/*.S,$(SYS_LIBS)))
-USER_LIB_CPP_SRCS   = $(wildcard $(patsubst %,%/*.cpp,$(USER_LIBS)))
-USER_LIB_C_SRCS     = $(wildcard $(patsubst %,%/*.c,$(USER_LIBS)))
-USER_LIB_AS_SRCS    = $(wildcard $(patsubst %,%/*.S,$(USER_LIBS)))
-LIB_OBJS            = $(patsubst $(ARDUINO_LIB_PATH)/%.c,$(OBJDIR)/libs/%.o,$(LIB_C_SRCS)) $(patsubst $(ARDUINO_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(LIB_CPP_SRCS)) $(patsubst $(ARDUINO_LIB_PATH)/%.S,$(OBJDIR)/libs/%.o,$(LIB_AS_SRCS))
-USER_LIB_OBJS       = $(patsubst $(USER_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(USER_LIB_CPP_SRCS)) $(patsubst $(USER_LIB_PATH)/%.c,$(OBJDIR)/libs/%.o,$(USER_LIB_C_SRCS)) $(patsubst $(USER_LIB_PATH)/%.S,$(OBJDIR)/libs/%.o,$(USER_LIB_AS_SRCS))
+SYS_LIBS := $(wildcard $(SYS_LIBS) $(addsuffix /utility,$(SYS_LIBS)))
+USER_LIBS := $(wildcard $(USER_LIBS) $(addsuffix /utility,$(USER_LIBS)))
+SYS_INCLUDES = $(patsubst %,-I%,$(SYS_LIBS))
+USER_INCLUDES = $(patsubst %,-I%,$(USER_LIBS))
+LIB_C_SRCS = $(wildcard $(patsubst %,%/*.c,$(SYS_LIBS)))
+LIB_CPP_SRCS = $(wildcard $(patsubst %,%/*.cpp,$(SYS_LIBS)))
+LIB_AS_SRCS = $(wildcard $(patsubst %,%/*.S,$(SYS_LIBS)))
+USER_LIB_CPP_SRCS = $(wildcard $(patsubst %,%/*.cpp,$(USER_LIBS)))
+USER_LIB_C_SRCS = $(wildcard $(patsubst %,%/*.c,$(USER_LIBS)))
+USER_LIB_AS_SRCS = $(wildcard $(patsubst %,%/*.S,$(USER_LIBS)))
+LIB_OBJS = $(patsubst $(ARDUINO_LIB_PATH)/%.c,$(OBJDIR)/libs/%.o,$(LIB_C_SRCS)) $(patsubst $(ARDUINO_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(LIB_CPP_SRCS)) $(patsubst $(ARDUINO_LIB_PATH)/%.S,$(OBJDIR)/libs/%.o,$(LIB_AS_SRCS))
+USER_LIB_OBJS = $(patsubst $(USER_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(USER_LIB_CPP_SRCS)) $(patsubst $(USER_LIB_PATH)/%.c,$(OBJDIR)/libs/%.o,$(USER_LIB_C_SRCS)) $(patsubst $(USER_LIB_PATH)/%.S,$(OBJDIR)/libs/%.o,$(USER_LIB_AS_SRCS))
 
 # Dependency files
-DEPS                = $(LOCAL_OBJS:.o=.d) $(LIB_OBJS:.o=.d) $(USER_LIB_OBJS:.o=.d) $(CORE_OBJS:.o=.d)
+DEPS = $(LOCAL_OBJS:.o=.d) $(LIB_OBJS:.o=.d) $(USER_LIB_OBJS:.o=.d) $(CORE_OBJS:.o=.d)
 
 # Optimization level for the compiler.
 # You can get the list of options at http://www.nongnu.org/avr-libc/user-manual/using_tools.html#gcc_optO
@@ -820,9 +819,6 @@ ifndef DEBUG_FLAGS
     DEBUG_FLAGS = -O0 -g
 endif
 
-# SoftwareSerial requires -Os (some delays are tuned for this optimization level)
-%SoftwareSerial.o : OPTIMIZATION_FLAGS = -Os
-
 ifndef MCU_FLAG_NAME
     MCU_FLAG_NAME = mmcu
     $(call show_config_variable,MCU_FLAG_NAME,[DEFAULT])
@@ -831,7 +827,8 @@ else
 endif
 
 # Using += instead of =, so that CPPFLAGS can be set per sketch level
-CPPFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -DF_CPU=$(F_CPU) -DARDUINO=$(ARDUINO_VERSION) -D__PROG_TYPES_COMPAT__ -I. -I$(ARDUINO_CORE_PATH) -I$(ARDUINO_VAR_PATH)/$(VARIANT) $(SYS_INCLUDES) $(USER_INCLUDES) -Wall -ffunction-sections -fdata-sections
+# -D__PROG_TYPES_COMPAT__ ignored
+CPPFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -DF_CPU=$(F_CPU) -DARDUINO=$(ARDUINO_VERSION) -I. -I$(ARDUINO_CORE_PATH) -I$(ARDUINO_VAR_PATH)/$(VARIANT) $(SYS_INCLUDES) $(USER_INCLUDES) -Wall -ffunction-sections -fdata-sections
 
 ifdef DEBUG
 OPTIMIZATION_FLAGS= $(DEBUG_FLAGS)
@@ -847,17 +844,17 @@ ifneq ($(CATERINA),)
 endif
 
 ifndef CFLAGS_STD
-    CFLAGS_STD        = -std=gnu99
+    CFLAGS_STD = -std=gnu99
     $(call show_config_variable,CFLAGS_STD,[DEFAULT])
 else
     $(call show_config_variable,CFLAGS_STD,[USER])
 endif
 
-CFLAGS        += $(EXTRA_FLAGS) $(EXTRA_CFLAGS)
-CXXFLAGS      += -fno-exceptions $(EXTRA_FLAGS) $(EXTRA_CXXFLAGS)
-ASFLAGS       += -x assembler-with-cpp
-LDFLAGS       += -$(MCU_FLAG_NAME)=$(MCU) -Wl,--gc-sections -O$(OPTIMIZATION_LEVEL) $(EXTRA_FLAGS) $(EXTRA_CXXFLAGS) $(EXTRA_LDFLAGS)
-SIZEFLAGS     ?= --mcu=$(MCU) -C
+CFLAGS += $(EXTRA_FLAGS) $(EXTRA_CFLAGS)
+CXXFLAGS += -fno-exceptions $(EXTRA_FLAGS) $(EXTRA_CXXFLAGS)
+ASFLAGS += -x assembler-with-cpp
+LDFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -Wl,--gc-sections -O$(OPTIMIZATION_LEVEL) $(EXTRA_FLAGS) $(EXTRA_CXXFLAGS) $(EXTRA_LDFLAGS)
+SIZEFLAGS ?= --mcu=$(MCU) -C
 
 # for backwards compatibility, grab ARDUINO_PORT if the user has it set
 # instead of MONITOR_PORT
@@ -1052,7 +1049,7 @@ $(OBJDIR)/%.sym: $(OBJDIR)/%.elf $(COMMON_DEPS)
 
 # If avrdude is installed separately, it can find its own config file
 ifndef AVRDUDE
-    AVRDUDE          = $(AVR_TOOLS_PATH)/avrdude
+    AVRDUDE = $(AVR_TOOLS_PATH)/avrdude
 endif
 
 # Default avrdude options
@@ -1144,7 +1141,7 @@ else
 endif
 
 ifndef ISP_EEPROM
-    ISP_EEPROM  = 0
+    ISP_EEPROM = 0
 endif
 
 AVRDUDE_UPLOAD_HEX = -U flash:w:$(TARGET_HEX):i
