@@ -63,6 +63,7 @@ microduino-core32u4.upload.disable_flushing=true
 microduino-core32u4.upload.use_1200bps_touch=true
 microduino-core32u4.upload.wait_for_upload_port=true
 
+microduino-core32u4.bootloader.path=caterina
 microduino-core32u4.bootloader.tool=avrdude
 microduino-core32u4.bootloader.low_fuses=0xff
 microduino-core32u4.bootloader.high_fuses=0xd8

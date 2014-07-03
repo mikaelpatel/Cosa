@@ -85,6 +85,8 @@ leonardo.upload.disable_flushing=true
 leonardo.upload.use_1200bps_touch=true
 leonardo.upload.wait_for_upload_port=true
 
+
+leonardo.bootloader.path=caterina
 leonardo.bootloader.tool=avrdude
 leonardo.bootloader.low_fuses=0xff
 leonardo.bootloader.high_fuses=0xd8
@@ -158,6 +160,7 @@ pro-micro.upload.disable_flushing=true
 pro-micro.upload.use_1200bps_touch=true
 pro-micro.upload.wait_for_upload_port=true
 
+pro-micro.bootloader.path=caterina
 pro-micro.bootloader.tool=avrdude
 pro-micro.bootloader.low_fuses=0xff
 pro-micro.bootloader.high_fuses=0xd8
@@ -408,6 +411,7 @@ lilypad-usb.upload.disable_flushing=true
 lilypad-usb.upload.use_1200bps_touch=true
 lilypad-usb.upload.wait_for_upload_port=true
 
+lilypad-usb.bootloader.path=caterina
 lilypad-usb.bootloader.tool=avrdude
 lilypad-usb.bootloader.low_fuses=0xff
 lilypad-usb.bootloader.high_fuses=0xd8
@@ -489,6 +493,7 @@ microduino-core32u4.upload.disable_flushing=true
 microduino-core32u4.upload.use_1200bps_touch=true
 microduino-core32u4.upload.wait_for_upload_port=true
 
+microduino-core32u4.bootloader.path=caterina
 microduino-core32u4.bootloader.tool=avrdude
 microduino-core32u4.bootloader.low_fuses=0xff
 microduino-core32u4.bootloader.high_fuses=0xd8
@@ -568,6 +573,8 @@ teensy-2_0.upload.maximum_data_size=2560
 teensy-2_0.upload.speed=12000000
 teensy-2_0.upload.disable_flushing=true
 
+teensy-2_0.bootloader.path=caterina
+
 teensy-2_0.build.mcu=atmega32u4
 teensy-2_0.build.f_cpu=16000000L
 teensy-2_0.build.vid=0x16C0
@@ -589,6 +596,8 @@ teensypp-2_0.upload.maximum_size=130048
 teensypp-2_0.upload.maximum_data_size=8192
 teensypp-2_0.upload.speed=12000000
 teensypp-2_0.upload.disable_flushing=true
+
+teensypp-2_0.bootloader.path=caterina
 
 teensypp-2_0.build.mcu=at90usb1286
 teensypp-2_0.build.f_cpu=16000000L

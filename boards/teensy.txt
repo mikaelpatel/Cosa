@@ -39,6 +39,7 @@ teensy-2_0.upload.maximum_data_size=2560
 teensy-2_0.upload.speed=12000000
 teensy-2_0.upload.disable_flushing=true
 
+teensy-2_0.bootloader.path=caterina
 teensy-2_0.build.mcu=atmega32u4
 teensy-2_0.build.f_cpu=16000000L
 teensy-2_0.build.vid=0x16C0
@@ -61,6 +62,7 @@ teensypp-2_0.upload.maximum_data_size=8192
 teensypp-2_0.upload.speed=12000000
 teensypp-2_0.upload.disable_flushing=true
 
+teensypp-2_0.bootloader.path=caterina
 teensypp-2_0.build.mcu=at90usb1286
 teensypp-2_0.build.f_cpu=16000000L
 teensypp-2_0.build.vid=0x16C0

@@ -63,6 +63,7 @@ leonardo.upload.disable_flushing=true
 leonardo.upload.use_1200bps_touch=true
 leonardo.upload.wait_for_upload_port=true
 
+leonardo.bootloader.path=caterina
 leonardo.bootloader.tool=avrdude
 leonardo.bootloader.low_fuses=0xff
 leonardo.bootloader.high_fuses=0xd8
@@ -136,6 +137,7 @@ pro-micro.upload.disable_flushing=true
 pro-micro.upload.use_1200bps_touch=true
 pro-micro.upload.wait_for_upload_port=true
 
+pro-micro.bootloader.path=caterina
 pro-micro.bootloader.tool=avrdude
 pro-micro.bootloader.low_fuses=0xff
 pro-micro.bootloader.high_fuses=0xd8
