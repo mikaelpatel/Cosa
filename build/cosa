@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# @file fare
+# @file cosa
 # @version 1.0
 #
 # @section License
@@ -23,33 +23,33 @@
 
 if [ $# == 0 ];
 then
-   echo "Usage: fare [BOARD] [COMMAND]"
+   echo "Usage: cosa [BOARD] [COMMAND]"
    echo
    echo "Build a Cosa sketch for the given board. Give additional commands."
    echo "Most useful are 'upload' to board, 'monitor' to connect serial monitor."
    echo
-   echo "'fare boards' for list of boards, and 'fare config' for configuration."
-   echo "'fare help' for more command details."
+   echo "'cosa help' for more command details, make targets."
+   echo "'cosa boards' for list of supported boards."
    exit 1
 fi
 
 [ -z "$COSA_DIR" ] && COSA_DIR=$HOME/Sketchbook/hardware/Cosa ; export COSA_DIR
 
-if [ $1 == "help" ];
+if [ "$1" == "help" ];
 then
    make -f $COSA_DIR/build/Cosa.mk help "ARDUINO_QUIET=1"
    exit 0
 fi
 
-if [ $1 == "boards" ];
+if [ "$1" == "boards" ];
 then
    make -f $COSA_DIR/build/Cosa.mk show_boards "ARDUINO_QUIET=1"
    exit 0
 fi
 
-if [ $1 == "config" ];
+if [ "$2" == "show_config" ];
 then
-   make -f $COSA_DIR/build/Cosa.mk show_config "BOARD_TAG=$2"
+   make -f $COSA_DIR/build/Cosa.mk "BOARD_TAG=$1" show_config
    exit 0
 fi
 

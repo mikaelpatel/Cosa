@@ -1248,7 +1248,7 @@ size:	$(TARGET_HEX)
 		$(call avr_size,$(TARGET_ELF),$(TARGET_HEX))
 
 show_config:
-
+	@$(ECHO) "Please refer to $(ARDMK_DIR)/Arduino.mk for more details.\n"
 
 show_boards:
 		@$(CAT) "$(BOARDS_TXT)" | grep -E "^[[:alnum:]|-]+.name" | sort -uf | sed 's/.name=/:/' | column -s: -t
@@ -1279,36 +1279,38 @@ help_vars:
 		@$(CAT) "$(ARDMK_DIR)/arduino-mk-vars.md"
 
 help:
-		@$(ECHO) "\nAvailable targets:\n\
-  make                   - compile the code\n\
-  make upload            - upload\n\
-  make ispload           - upload using an ISP\n\
-  make raw_upload        - upload without first resetting\n\
-  make eeprom            - upload the eep file\n\
-  make raw_eeprom        - upload the eep file without first resetting\n\
-  make clean             - remove all our dependencies\n\
-  make depends           - update dependencies\n\
-  make reset             - reset the Arduino by tickling DTR or changing baud\n\
-                           rate on the serial port.\n\
-  make show_boards       - list all the boards defined in boards.txt\n\
-  make monitor           - connect to the Arduino's serial port\n\
-  make size              - show the size of the compiled output (relative to\n\
-                           resources, if you have a patched avr-size).\n\
-  make verify_size       - verify that the size of the final file is less than\n\
-                           the capacity of the micro controller.\n\
-  make symbol_sizes      - generate a .sym file containing symbols and their\n\
-                           sizes.\n\
-  make disasm            - generate a .lss file that contains disassembly\n\
-                           of the compiled file interspersed with your\n\
-                           original source code.\n\
-  make generate_assembly - generate a .s file containing the compiler\n\
-                           generated assembly of the main sketch.\n\
-  make burn_bootloader   - burn bootloader and fuses\n\
-  make set_fuses         - set fuses without burning bootloader\n\
-  make help_vars         - print all variables that can be overridden\n\
-  make help              - show this help\n\
+		@$(ECHO) "Available targets (default is compile the code):\n\
+  upload            - upload\n\
+  ispload           - upload using an ISP\n\
+  raw_upload        - upload without first resetting\n\
+  eeprom            - upload the eep file\n\
+  raw_eeprom        - upload the eep file without first resetting\n\
+  clean             - remove all our dependencies\n\
+  depends           - update dependencies\n\
+  reset             - reset the Arduino by tickling DTR or changing baud\n\
+                      rate on the serial port.\n\
+  show_boards       - list all the boards defined in boards.txt\n\
+  show_config       - list configuration\n\
+  monitor           - connect to the Arduino's serial port\n\
+  size              - show the size of the compiled output (relative to\n\
+                      resources, if you have a patched avr-size).\n\
+  verify_size       - verify that the size of the final file is less than\n\
+                      the capacity of the micro controller.\n\
+  symbol_sizes      - generate a .sym file containing symbols and their\n\
+                      sizes.\n\
+  disasm            - generate a .lss file that contains disassembly\n\
+                      of the compiled file interspersed with your\n\
+                      original source code.\n\
+  generate_assembly - generate a .s file containing the compiler\n\
+                      generated assembly of the main sketch.\n\
+  burn_bootloader   - burn bootloader and fuses\n\
+  set_fuses         - set fuses without burning bootloader\n\
+  help_vars         - print all variables that can be overridden\n\
+  help              - show this help\n\
+More details in:\n\
+$(ARDMK_DIR)/Arduino.mk\n\
+$(COSA_DIR)/build/Cosa.mk\n\
 "
-	@$(ECHO) "Please refer to $(ARDMK_DIR)/Arduino.mk for more details.\n"
 
 .PHONY: all upload raw_upload raw_eeprom error_on_caterina reset reset_stty ispload clean depends size show_boards monitor disasm symbol_sizes generated_assembly generate_assembly verify_size burn_bootloader help pre-build show_config
 
