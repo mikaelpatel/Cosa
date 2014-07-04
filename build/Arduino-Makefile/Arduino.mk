@@ -398,21 +398,26 @@ ifndef AVR_TOOLS_DIR
         # More details at https://github.com/sudar/Arduino-Makefile/issues/48 and
         # https://groups.google.com/a/arduino.cc/d/msg/developers/D_m97jGr8Xs/uQTt28KO_8oJ
         ifeq ($(CURRENT_OS),LINUX)
-
+	  # Check for old avr-gcc version
+	  ifeq ($(shell expr $(ARDUINO_VERSION) '<' 157), 1)
             ifndef AVRDUDE
                 AVRDUDE = $(AVR_TOOLS_DIR)/../avrdude
             endif
-
             ifndef AVRDUDE_CONF
                 AVRDUDE_CONF = $(AVR_TOOLS_DIR)/../avrdude.conf
             endif
-
-        else
-
+	  else
+            ifndef AVRDUDE
+                AVRDUDE = $(AVR_TOOLS_DIR)/bin/avrdude
+            endif
             ifndef AVRDUDE_CONF
                 AVRDUDE_CONF = $(AVR_TOOLS_DIR)/etc/avrdude.conf
             endif
-
+	  endif
+        else
+            ifndef AVRDUDE_CONF
+                AVRDUDE_CONF = $(AVR_TOOLS_DIR)/etc/avrdude.conf
+            endif
         endif
 
     else
@@ -827,7 +832,6 @@ else
 endif
 
 # Using += instead of =, so that CPPFLAGS can be set per sketch level
-# -D__PROG_TYPES_COMPAT__ ignored
 CPPFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -DF_CPU=$(F_CPU) -DARDUINO=$(ARDUINO_VERSION) -I. -I$(ARDUINO_CORE_PATH) -I$(ARDUINO_VAR_PATH)/$(VARIANT) $(SYS_INCLUDES) $(USER_INCLUDES) -Wall -ffunction-sections -fdata-sections
 
 ifdef DEBUG
@@ -848,6 +852,17 @@ ifndef CFLAGS_STD
     $(call show_config_variable,CFLAGS_STD,[DEFAULT])
 else
     $(call show_config_variable,CFLAGS_STD,[USER])
+endif
+
+# Add extra flags
+ifeq ($(shell expr $(ARDUINO_VERSION) '<' 157), 1)
+    EXTRA_CFLAGS += -Wextra
+    EXTRA_LDFLAGS += 
+    EXTRA_CXXFLAGS += -Wextra -std=gnu++0x -felide-constructors
+else
+    EXTRA_CFLAGS += -Wextra -flto
+    EXTRA_LDFLAGS += -w -Wl,-relax -flto
+    EXTRA_CXXFLAGS += -Wextra -flto -std=gnu++11 -felide-constructors
 endif
 
 CFLAGS += $(EXTRA_FLAGS) $(EXTRA_CFLAGS)
