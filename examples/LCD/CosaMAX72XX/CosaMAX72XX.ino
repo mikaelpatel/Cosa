@@ -63,13 +63,11 @@ void loop()
 
   // Sample analog channel and display voltage
   float volt = (5.0 * AnalogPin::sample((Board::AnalogPin) channel)) / 1023;
-  cout << clear;
-  cout << 'A' << channel << ' ' << volt;
+  cout << clear << 'A' << channel << ' ' << volt;
   sleep(1);
 
   // Display in milli-volt 
-  cout << clear;
-  cout << volt * 1000;
+  cout << clear << volt * 1000;
   sleep(1);
 
   // Step to next channel
