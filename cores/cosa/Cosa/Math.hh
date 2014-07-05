@@ -1,5 +1,5 @@
 /**
- * @file Math.hh
+ * @file Cosa/Math.hh
  * @version 1.0
  *
  * @section License
@@ -18,12 +18,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef MATH_HH
-#define MATH_HH
+#ifndef COSA_MATH_HH
+#define COSA_MATH_HH
 
 #include <math.h>
-#include <stdint.h>
-#include <stdlib.h>
+#include "Cosa/Types.h"
 
 /**
  * Random number in given range (0..range-1). Max range value is
