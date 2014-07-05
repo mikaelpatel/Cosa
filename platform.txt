@@ -13,7 +13,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Lesser General Public License for more details.
-#
+# 
 # @section Description
 # The Cosa Arduino 1.5.X platform definition file.
 #
@@ -54,10 +54,10 @@ compiler.size.cmd=avr-size
 build.extra_flags=
 
 # These can be overridden in platform.local.txt
-compiler.c.extra_flags=-Wextra -flto
-compiler.c.elf.extra_flags=-w -w -Wl,-relax -flto
+compiler.c.extra_flags=-Wextra
+compiler.c.elf.extra_flags=
 compiler.S.extra_flags=
-compiler.cpp.extra_flags=-Wextra -flto -std=gnu++11 -felide-constructors
+compiler.cpp.extra_flags=-Wextra -std=gnu++0x -felide-constructors
 compiler.ar.extra_flags=
 compiler.objcopy.eep.extra_flags=
 compiler.elf2hex.extra_flags=

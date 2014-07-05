@@ -19,9 +19,9 @@
 
 # PLEASE CHANGE THE ARDUINO INSTALLATION PATH
 # ARDUINO_DIR = $(HOME)/opt/arduino-1.0.5
-# ARDUINO_DIR = $(HOME)/opt/arduino-1.5.6-r2
-ARDUINO_DIR = $(HOME)/opt/arduino-avr-toolchain-nightly-gcc-4.8.1
-ARDUINO_VERSION = 157
+ARDUINO_DIR = $(HOME)/opt/arduino-1.5.6-r2
+# ARDUINO_DIR = $(HOME)/opt/arduino-avr-toolchain-nightly-gcc-4.8.1
+# ARDUINO_VERSION = 157
 
 ARDMK_DIR = $(COSA_DIR)/build/Arduino-Makefile
 ARDUINO_CORE_PATH = $(COSA_DIR)/cores/cosa
