@@ -3,7 +3,7 @@
 # Makefile for compiling Arduino sketches from command line
 # System part (i.e. project independent)
 #
-# Copyright (C) 2014 Mikael Patel, based on Sudar work:
+# Copyright (C) 2014 Mikael Patel, based on Sudar work. 
 # https://github.com/sudar/Arduino-Makefile
 #
 # Copyright (C) 2012 Sudar <http://sudarmuthu.com>, based on
@@ -29,7 +29,8 @@
 # GETTING STARTED WITH ARDUINO-MAKEFILE IN COSA
 #
 # 1. Configure the build (build/Cosa.mk) by setting the path of the
-# Arduino installation (1.0.5).
+# Arduino installation (1.0.5). The Cosa version of Arduino-Makefile
+# supports 1.05, 1.5.6-r2 and the nightly build with GCC 4.8.1.
 #   ARDUINO_DIR = $(HOME)/opt/arduino-1.0.5
 #
 # 2. Create a Makefile in the Sketch director. The minimum contents is:
@@ -40,6 +41,10 @@
 # 3. Build, upload and monitor with makefile. The Cosa variant uses
 # miniterm.py as monitor. The default exit command is CTRL-ALT GR-]
 # 
+# The most convinient way of using the Cosa build support is the shell
+# script cosa. It may be found in the $(COSA_DIR)/build directory. 
+# This script allows building without a makefile. 
+#
 ########################################################################
 #
 # PATHS YOU NEED TO SET UP
@@ -73,29 +78,30 @@
 #   ARDMK_DIR = /usr/share/arduino
 #   AVR_TOOLS_DIR = /usr
 #
-# On Windows declare this environmental variables using the windows
-# configuration options. Control Panel > System > Advanced system settings
-# Also take into account that when you set them you have to add '\' on
-# all spaces and special characters.
+# On Windows declare this environmental variables using the windows 
+# configuration options. Control Panel > System > Advanced system
+# settings. Also take into account that when you set them you have to
+# add '\' on all spaces and special characters.
+#
 # ARDUINO_DIR and AVR_TOOLS_DIR have to be relative and not absolute.
-# This are just examples, you have to adapt this variables accordingly to
-# your system.
+# This are just examples, you have to adapt this variables accordingly
+# to your system.
 #
 #   ARDUINO_DIR =../../../../../Arduino
 #   AVR_TOOLS_DIR =../../../../../Arduino/hardware/tools/avr
 #   ARDMK_DIR = /cygdrive/c/Users/"YourUser"/Arduino-Makefile
 #
-# On Windows it is highly recommended that you create a symbolic link directory
-# for avoiding using the normal directories name of windows such as
-# c:\Program Files (x86)\Arduino
-# For this use the command mklink on the console.
+# On Windows it is highly recommended that you create a symbolic link
+# directory for avoiding using the normal directories name of windows
+# such as c:\Program Files (x86)\Arduino
 #
+# For this use the command mklink on the console.
 #
 # You can either set these up in the Makefile, or put them in your
 # environment e.g. in your .bashrc
 #
-# If you don't specify these, we can try to guess, but that might not work
-# or work the way you want it to.
+# If you don't specify these, we can try to guess, but that might not
+# work or work the way you want it to.
 #
 # If you'd rather not see the configuration output, define ARDUINO_QUIET.
 #
@@ -110,8 +116,9 @@
 #
 # STANDARD ARDUINO WORKFLOW
 #
-# Given a normal sketch directory, all you need to do is to create
-# a small Makefile which defines a few things, and then includes this one.
+# Given a normal sketch directory, all you need to do is to create a
+# small Makefile which defines a few things, and then includes this
+# one. 
 #
 # For example:
 #
@@ -145,20 +152,24 @@
 #        ARDMK_DIR := $(realpath ../../tools/Arduino-Makefile)
 #        include $(ARDMK_DIR)/Arduino.mk
 #
-# In any case, once this file has been created the typical workflow is just
+# In any case, once this file has been created the typical workflow is
+# just 
 #
 #   $ make upload
 #
-# All of the object files are created in the build-{BOARD_TAG} subdirectory
-# All sources should be in the current directory and can include:
+# All of the object files are created in the build-{BOARD_TAG}
+# subdirectory. All sources should be in the current directory and can
+# include: 
 #  - at most one .pde or .ino file which will be treated as C++ after
 #    the standard Arduino header and footer have been affixed.
 #  - any number of .c, .cpp, .s and .h files
 #
-# Included libraries are built in the build-{BOARD_TAG}/libs subdirectory.
+# Included libraries are built in the build-{BOARD_TAG}/libs
+# subdirectory. 
 #
-# Besides make upload, there are a couple of other targets that are available.
-# Do make help to get the complete list of targets and their description
+# Besides make upload, there are a couple of other targets that are
+# available. Do make help to get the complete list of targets and
+# their description.
 #
 ########################################################################
 #
@@ -175,9 +186,9 @@
 #
 #    bindkey ^C kill
 #
-# If you want to change the baudrate, just set MONITOR_BAUDRATE. If you
-# don't set it, it tries to read from the sketch. If it couldn't read
-# from the sketch, then it defaults to 9600 baud.
+# If you want to change the baudrate, just set MONITOR_BAUDRATE. If
+# you don't set it, it tries to read from the sketch. If it couldn't
+# read from the sketch, then it defaults to 9600 baud.
 #
 ########################################################################
 #
@@ -225,8 +236,8 @@
 #
 # To use the more complex arduino-tiny and TinyCore2 cores, you must
 # also set ARDUINO_CORE_PATH and ARDUINO_VAR_PATH to the core
-# directory, as these cores essentially replace the main Arduino core.
-# For example:
+# directory, as these cores essentially replace the main Arduino
+# core. For example:
 #
 # ISP_PORT = /dev/ttyACM0
 # BOARD_TAG = attiny85at8
@@ -245,261 +256,258 @@
 ########################################################################
 
 arduino_output =
-# When output is not suppressed and we're in the top-level makefile,
+# When output is not suppressed and we're in the top-level makefile, 
 # running for the first time (i.e., not after a restart after
-# regenerating the dependency file), then output the configuration.
+# regenerating the dependency file), then output the configuration. 
 ifndef ARDUINO_QUIET
-    ifeq ($(MAKE_RESTARTS),)
-        ifeq ($(MAKELEVEL),0)
-            arduino_output = $(info $(1))
-        endif
+  ifeq ($(MAKE_RESTARTS),)
+    ifeq ($(MAKELEVEL),0)
+      arduino_output = $(info $(1))
     endif
+  endif
 endif
 
 ########################################################################
 # Makefile distribution path
 
 ifndef ARDMK_DIR
-    # presume it's the same path to our own file
-    ARDMK_DIR := $(realpath $(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
+  # Presume it's the same path to our own file
+  ARDMK_DIR := $(realpath $(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
 else
-    # show_config_variable macro is defined in Common.mk file and is not available yet.
-    # Let's define a variable to know that user specified ARDMK_DIR
-    ARDMK_DIR_MSG = USER
+  # Show_config_variable macro is defined in Common.mk file and is not
+  # available yet. Let's define a variable to know that user specified
+  # ARDMK_DIR 
+  ARDMK_DIR_MSG = USER
 endif
 
 # include Common.mk now we know where it is
 include $(ARDMK_DIR)/Common.mk
 
-# show_config_variable macro is available now. So let's print config details for ARDMK_DIR
+# Show_config_variable macro is available now. So let's print config
+# details for ARDMK_DIR 
 ifndef ARDMK_DIR_MSG
-    $(call show_config_variable,ARDMK_DIR,[COMPUTED],(relative to $(notdir $(lastword $(MAKEFILE_LIST)))))
+  $(call show_config_variable,ARDMK_DIR,[COMPUTED],(relative to $(notdir $(lastword $(MAKEFILE_LIST)))))
 else
-    $(call show_config_variable,ARDMK_DIR,[USER])
+  $(call show_config_variable,ARDMK_DIR,[USER])
 endif
 
 ########################################################################
 # Arduino Directory
 
 ifndef ARDUINO_DIR
-    AUTO_ARDUINO_DIR := $(firstword $(call dir_if_exists,/usr/share/arduino) $(call dir_if_exists,/Applications/Arduino.app/Contents/Resources/Java))
-    ifdef AUTO_ARDUINO_DIR
-       ARDUINO_DIR = $(AUTO_ARDUINO_DIR)
-       $(call show_config_variable,ARDUINO_DIR,[AUTODETECTED])
-    else
-        echo $(error "ARDUINO_DIR is not defined")
-    endif
+  AUTO_ARDUINO_DIR := $(firstword $(call dir_if_exists,/usr/share/arduino) $(call dir_if_exists,/Applications/Arduino.app/Contents/Resources/Java))
+  ifdef AUTO_ARDUINO_DIR
+    ARDUINO_DIR = $(AUTO_ARDUINO_DIR)
+    $(call show_config_variable,ARDUINO_DIR,[AUTODETECTED])
+  else
+    echo $(error "ARDUINO_DIR is not defined")
+  endif
 else
-    $(call show_config_variable,ARDUINO_DIR,[USER])
+  $(call show_config_variable,ARDUINO_DIR,[USER])
 endif
 
 ifeq ($(CURRENT_OS),WINDOWS)
-    ifneq ($(shell echo $(ARDUINO_DIR) | egrep '^(/|[a-zA-Z]:\\)'),)
-        echo $(error On Windows, ARDUINO_DIR must be a relative path)
-    endif
+  ifneq ($(shell echo $(ARDUINO_DIR) | egrep '^(/|[a-zA-Z]:\\)'),)
+    echo $(error On Windows, ARDUINO_DIR must be a relative path)
+  endif
 endif
 
 ########################################################################
 # Default TARGET to pwd (ex Daniele Vergini)
 
 ifndef TARGET
-    TARGET = $(notdir $(CURDIR))
+  TARGET = $(notdir $(CURDIR))
 endif
 
 ########################################################################
 # Arduino version number
 
 ifndef ARDUINO_VERSION
-    # Remove all the decimals, and right-pad with zeros, and finally grab the first 3 bytes.
-    # Works for 1.0 and 1.0.1
-    VERSION_FILE := $(ARDUINO_DIR)/lib/version.txt
-    AUTO_ARDUINO_VERSION := $(shell [ -e "$(VERSION_FILE)" ] && cat "$(VERSION_FILE)" | sed -e 's/^[0-9]://g' -e 's/[.]//g' -e 's/$$/0000/' | head -c3)
-    ifdef AUTO_ARDUINO_VERSION
-        ARDUINO_VERSION = $(AUTO_ARDUINO_VERSION)
-        $(call show_config_variable,ARDUINO_VERSION,[AUTODETECTED])
-    else
-        ARDUINO_VERSION = 100
-        $(call show_config_variable,ARDUINO_VERSION,[DEFAULT])
-    endif
+  # Remove all the decimals, and right-pad with zeros, and finally
+  # grab the first 3 bytes. Works for 1.0 and 1.0.1
+  VERSION_FILE := $(ARDUINO_DIR)/lib/version.txt
+  AUTO_ARDUINO_VERSION := $(shell [ -e "$(VERSION_FILE)" ] && cat "$(VERSION_FILE)" | sed -e 's/^[0-9]://g' -e 's/[.]//g' -e 's/$$/0000/' | head -c3)
+  ifdef AUTO_ARDUINO_VERSION
+    ARDUINO_VERSION = $(AUTO_ARDUINO_VERSION)
+    $(call show_config_variable,ARDUINO_VERSION,[AUTODETECTED])
+  else
+    ARDUINO_VERSION = 100
+    $(call show_config_variable,ARDUINO_VERSION,[DEFAULT])
+  endif
 else
-    $(call show_config_variable,ARDUINO_VERSION,[USER])
+  $(call show_config_variable,ARDUINO_VERSION,[USER])
 endif
 
 ########################################################################
 # Arduino Sketchbook folder
 
 ifndef ARDUINO_SKETCHBOOK
-    ifndef ARDUINO_PREFERENCES_PATH
+  ifndef ARDUINO_PREFERENCES_PATH
 
-        AUTO_ARDUINO_PREFERENCES := $(firstword $(call dir_if_exists,$(HOME)/.arduino/preferences.txt) $(call dir_if_exists,$(HOME)/Library/Arduino/preferences.txt))
-        ifdef AUTO_ARDUINO_PREFERENCES
-           ARDUINO_PREFERENCES_PATH = $(AUTO_ARDUINO_PREFERENCES)
-           $(call show_config_variable,ARDUINO_PREFERENCES_PATH,[AUTODETECTED])
-        endif
-
-    else
-        $(call show_config_variable,ARDUINO_PREFERENCES_PATH,[USER])
+    AUTO_ARDUINO_PREFERENCES := $(firstword $(call dir_if_exists,$(HOME)/.arduino/preferences.txt) $(call dir_if_exists,$(HOME)/Library/Arduino/preferences.txt))
+    ifdef AUTO_ARDUINO_PREFERENCES
+      ARDUINO_PREFERENCES_PATH = $(AUTO_ARDUINO_PREFERENCES)
+      $(call show_config_variable,ARDUINO_PREFERENCES_PATH,[AUTODETECTED])
     endif
 
-    ifneq ($(ARDUINO_PREFERENCES_PATH),)
-        ARDUINO_SKETCHBOOK = $(shell grep --max-count=1 --regexp="sketchbook.path=" "$(ARDUINO_PREFERENCES_PATH)" | sed -e 's/sketchbook.path=//')
-    endif
+  else
+    $(call show_config_variable,ARDUINO_PREFERENCES_PATH,[USER])
+  endif
 
-    ifneq ($(ARDUINO_SKETCHBOOK),)
-        $(call show_config_variable,ARDUINO_SKETCHBOOK,[AUTODETECTED],(from arduino preferences file))
-    else
-        ARDUINO_SKETCHBOOK = $(HOME)/sketchbook
-        $(call show_config_variable,ARDUINO_SKETCHBOOK,[DEFAULT])
-    endif
+  ifneq ($(ARDUINO_PREFERENCES_PATH),)
+    ARDUINO_SKETCHBOOK = $(shell grep --max-count=1 --regexp="sketchbook.path=" "$(ARDUINO_PREFERENCES_PATH)" | sed -e 's/sketchbook.path=//')
+  endif
+
+  ifneq ($(ARDUINO_SKETCHBOOK),)
+    $(call show_config_variable,ARDUINO_SKETCHBOOK,[AUTODETECTED],(from arduino preferences file))
+  else
+    ARDUINO_SKETCHBOOK = $(HOME)/sketchbook
+    $(call show_config_variable,ARDUINO_SKETCHBOOK,[DEFAULT])
+  endif
 else
-    $(call show_config_variable,ARDUINO_SKETCHBOOK,[USER])
+  $(call show_config_variable,ARDUINO_SKETCHBOOK,[USER])
 endif
 
 ########################################################################
 # Arduino and system paths
 
 ifndef CC_NAME
-CC_NAME = avr-gcc
+  CC_NAME = avr-gcc
 endif
 
 ifndef CXX_NAME
-CXX_NAME = avr-g++
+  CXX_NAME = avr-g++
 endif
 
 ifndef OBJCOPY_NAME
-OBJCOPY_NAME = avr-objcopy
+  OBJCOPY_NAME = avr-objcopy
 endif
 
 ifndef OBJDUMP_NAME
-OBJDUMP_NAME = avr-objdump
+  OBJDUMP_NAME = avr-objdump
 endif
 
 ifndef AR_NAME
-AR_NAME = avr-ar
+  AR_NAME = avr-ar
 endif
 
 ifndef SIZE_NAME
-SIZE_NAME = avr-size
+  SIZE_NAME = avr-size
 endif
 
 ifndef NM_NAME
-NM_NAME = avr-nm
+  NM_NAME = avr-nm
 endif
 
 ifndef AVR_TOOLS_DIR
 
-    BUNDLED_AVR_TOOLS_DIR := $(call dir_if_exists,$(ARDUINO_DIR)/hardware/tools/avr)
+  BUNDLED_AVR_TOOLS_DIR := $(call dir_if_exists,$(ARDUINO_DIR)/hardware/tools/avr)
 
-    ifdef BUNDLED_AVR_TOOLS_DIR
-        AVR_TOOLS_DIR = $(BUNDLED_AVR_TOOLS_DIR)
-        $(call show_config_variable,AVR_TOOLS_DIR,[BUNDLED],(in Arduino distribution))
+  ifdef BUNDLED_AVR_TOOLS_DIR
+    AVR_TOOLS_DIR = $(BUNDLED_AVR_TOOLS_DIR)
+    $(call show_config_variable,AVR_TOOLS_DIR,[BUNDLED],(in Arduino distribution))
 
-        # In Linux distribution of Arduino, the path to avrdude and avrdude.conf are different
-        # More details at https://github.com/sudar/Arduino-Makefile/issues/48 and
-        # https://groups.google.com/a/arduino.cc/d/msg/developers/D_m97jGr8Xs/uQTt28KO_8oJ
-        ifeq ($(CURRENT_OS),LINUX)
-	  # Check for old avr-gcc version
-	  ifeq ($(shell expr $(ARDUINO_VERSION) '<' 157), 1)
-            ifndef AVRDUDE
-                AVRDUDE = $(AVR_TOOLS_DIR)/../avrdude
-            endif
-            ifndef AVRDUDE_CONF
-                AVRDUDE_CONF = $(AVR_TOOLS_DIR)/../avrdude.conf
-            endif
-	  else
-            ifndef AVRDUDE
-                AVRDUDE = $(AVR_TOOLS_DIR)/bin/avrdude
-            endif
-            ifndef AVRDUDE_CONF
-                AVRDUDE_CONF = $(AVR_TOOLS_DIR)/etc/avrdude.conf
-            endif
-	  endif
-        else
-            ifndef AVRDUDE_CONF
-                AVRDUDE_CONF = $(AVR_TOOLS_DIR)/etc/avrdude.conf
-            endif
+    # In Linux distribution of Arduino, the path to avrdude and
+    # avrdude.conf are different. More details at 
+    # https://github.com/sudar/Arduino-Makefile/issues/48 and
+    # https://groups.google.com/a/arduino.cc/d/msg/developers/D_m97jGr8Xs/uQTt28KO_8oJ 
+    ifeq ($(CURRENT_OS),LINUX)
+      # Check for old avr-gcc version
+      ifeq ($(shell expr $(ARDUINO_VERSION) '<' 157), 1)
+        ifndef AVRDUDE
+          AVRDUDE = $(AVR_TOOLS_DIR)/../avrdude
         endif
-
-    else
-
-        SYSTEMPATH_AVR_TOOLS_DIR := $(call dir_if_exists,$(abspath $(dir $(shell which $(CC_NAME)))/..))
-        ifdef SYSTEMPATH_AVR_TOOLS_DIR
-            AVR_TOOLS_DIR = $(SYSTEMPATH_AVR_TOOLS_DIR)
-            $(call show_config_variable,AVR_TOOLS_DIR,[AUTODETECTED],(found in $$PATH))
-        else
-            echo $(error No AVR tools directory found)
-        endif # SYSTEMPATH_AVR_TOOLS_DIR
-
-    endif # BUNDLED_AVR_TOOLS_DIR
-
-else
-    $(call show_config_variable,AVR_TOOLS_DIR,[USER])
-
-    # Check in Windows as Cygwin is being used, that the configuration file for the AVRDUDE is set
-    # Check if it works on MAC
-    ifeq ($(CURRENT_OS),WINDOWS)
         ifndef AVRDUDE_CONF
-            AVRDUDE_CONF = $(AVR_TOOLS_DIR)/etc/avrdude.conf
+          AVRDUDE_CONF = $(AVR_TOOLS_DIR)/../avrdude.conf
         endif
+      else
+        ifndef AVRDUDE
+          AVRDUDE = $(AVR_TOOLS_DIR)/bin/avrdude
+         endif
+        ifndef AVRDUDE_CONF
+          AVRDUDE_CONF = $(AVR_TOOLS_DIR)/etc/avrdude.conf
+        endif
+      endif
+    else
+      ifndef AVRDUDE_CONF
+        AVRDUDE_CONF = $(AVR_TOOLS_DIR)/etc/avrdude.conf
+      endif
     endif
+  else
+    SYSTEMPATH_AVR_TOOLS_DIR := $(call dir_if_exists,$(abspath $(dir $(shell which $(CC_NAME)))/..))
+    ifdef SYSTEMPATH_AVR_TOOLS_DIR
+      AVR_TOOLS_DIR = $(SYSTEMPATH_AVR_TOOLS_DIR)
+      $(call show_config_variable,AVR_TOOLS_DIR,[AUTODETECTED],(found in $$PATH))
+     else
+       echo $(error No AVR tools directory found)
+     endif # SYSTEMPATH_AVR_TOOLS_DIR
+   endif # BUNDLED_AVR_TOOLS_DIR
+else
+  $(call show_config_variable,AVR_TOOLS_DIR,[USER])
 
+  # Check in Windows as Cygwin is being used, that the configuration
+  # file for the AVRDUDE is set. Check if it works on MAC
+  ifeq ($(CURRENT_OS),WINDOWS)
+    ifndef AVRDUDE_CONF
+      AVRDUDE_CONF = $(AVR_TOOLS_DIR)/etc/avrdude.conf
+    endif
+  endif
 endif #ndef AVR_TOOLS_DIR
 
 ifndef AVR_TOOLS_PATH
-    AVR_TOOLS_PATH = $(AVR_TOOLS_DIR)/bin
+  AVR_TOOLS_PATH = $(AVR_TOOLS_DIR)/bin
 endif
 
 ARDUINO_LIB_PATH = $(ARDUINO_DIR)/libraries
 $(call show_config_variable,ARDUINO_LIB_PATH,[COMPUTED],(from ARDUINO_DIR))
 ifndef ARDUINO_CORE_PATH
-    ARDUINO_CORE_PATH = $(ARDUINO_DIR)/hardware/arduino/cores/arduino
-    $(call show_config_variable,ARDUINO_CORE_PATH,[DEFAULT])
+  ARDUINO_CORE_PATH = $(ARDUINO_DIR)/hardware/arduino/cores/arduino
+  $(call show_config_variable,ARDUINO_CORE_PATH,[DEFAULT])
 else
-    $(call show_config_variable,ARDUINO_CORE_PATH,[USER])
+  $(call show_config_variable,ARDUINO_CORE_PATH,[USER])
 endif
 
 # Third party hardware and core like ATtiny or ATmega 16
 ifdef ALTERNATE_CORE
-    $(call show_config_variable,ALTERNATE_CORE,[USER])
-
-    ifndef ALTERNATE_CORE_PATH
-        ALTERNATE_CORE_PATH = $(ARDUINO_SKETCHBOOK)/hardware/$(ALTERNATE_CORE)
-    endif
+  $(call show_config_variable,ALTERNATE_CORE,[USER])
+  ifndef ALTERNATE_CORE_PATH
+    ALTERNATE_CORE_PATH = $(ARDUINO_SKETCHBOOK)/hardware/$(ALTERNATE_CORE)
+  endif
 endif
 
 ifdef ALTERNATE_CORE_PATH
 
-    ifdef ALTERNATE_CORE
-        $(call show_config_variable,ALTERNATE_CORE_PATH,[COMPUTED], (from ARDUINO_SKETCHBOOK and ALTERNATE_CORE))
-    else
-        $(call show_config_variable,ALTERNATE_CORE_PATH,[USER])
-    endif
+  ifdef ALTERNATE_CORE
+    $(call show_config_variable,ALTERNATE_CORE_PATH,[COMPUTED], (from ARDUINO_SKETCHBOOK and ALTERNATE_CORE))
+  else
+    $(call show_config_variable,ALTERNATE_CORE_PATH,[USER])
+  endif
 
-    ifndef ARDUINO_VAR_PATH
-        ARDUINO_VAR_PATH = $(ALTERNATE_CORE_PATH)/variants
-        $(call show_config_variable,ARDUINO_VAR_PATH,[COMPUTED],(from ALTERNATE_CORE_PATH))
-    endif
+  ifndef ARDUINO_VAR_PATH
+    ARDUINO_VAR_PATH = $(ALTERNATE_CORE_PATH)/variants
+    $(call show_config_variable,ARDUINO_VAR_PATH,[COMPUTED],(from ALTERNATE_CORE_PATH))
+  endif
 
-    ifndef BOARDS_TXT
-        BOARDS_TXT = $(ALTERNATE_CORE_PATH)/boards.txt
-        $(call show_config_variable,BOARDS_TXT,[COMPUTED],(from ALTERNATE_CORE_PATH))
-    endif
+  ifndef BOARDS_TXT
+    BOARDS_TXT = $(ALTERNATE_CORE_PATH)/boards.txt
+    $(call show_config_variable,BOARDS_TXT,[COMPUTED],(from ALTERNATE_CORE_PATH))
+   endif
 
 else
 
-    ifndef ARDUINO_VAR_PATH
-        ARDUINO_VAR_PATH = $(ARDUINO_DIR)/hardware/arduino/variants
-        $(call show_config_variable,ARDUINO_VAR_PATH,[COMPUTED],(from ARDUINO_DIR))
-    else
-        $(call show_config_variable,ARDUINO_VAR_PATH,[USER])
-    endif
+  ifndef ARDUINO_VAR_PATH
+    ARDUINO_VAR_PATH = $(ARDUINO_DIR)/hardware/arduino/variants
+    $(call show_config_variable,ARDUINO_VAR_PATH,[COMPUTED],(from ARDUINO_DIR))
+  else
+    $(call show_config_variable,ARDUINO_VAR_PATH,[USER])
+  endif
 
-    ifndef BOARDS_TXT
-        BOARDS_TXT = $(ARDUINO_DIR)/hardware/arduino/boards.txt
-        $(call show_config_variable,BOARDS_TXT,[COMPUTED],(from ARDUINO_DIR))
-    else
-        $(call show_config_variable,BOARDS_TXT,[USER])
-    endif
+  ifndef BOARDS_TXT
+    BOARDS_TXT = $(ARDUINO_DIR)/hardware/arduino/boards.txt
+    $(call show_config_variable,BOARDS_TXT,[COMPUTED],(from ARDUINO_DIR))
+  else
+    $(call show_config_variable,BOARDS_TXT,[USER])
+  endif
 
 endif
 
@@ -507,142 +515,142 @@ endif
 # Miscellaneous
 
 ifndef USER_LIB_PATH
-    USER_LIB_PATH = $(ARDUINO_SKETCHBOOK)/libraries
-    $(call show_config_variable,USER_LIB_PATH,[DEFAULT],(in user sketchbook))
+  USER_LIB_PATH = $(ARDUINO_SKETCHBOOK)/libraries
+  $(call show_config_variable,USER_LIB_PATH,[DEFAULT],(in user sketchbook))
 else
-    $(call show_config_variable,USER_LIB_PATH,[USER])
+  $(call show_config_variable,USER_LIB_PATH,[USER])
 endif
 
 ifndef PRE_BUILD_HOOK
-    PRE_BUILD_HOOK = pre-build-hook.sh
-    $(call show_config_variable,PRE_BUILD_HOOK,[DEFAULT])
+  PRE_BUILD_HOOK = pre-build-hook.sh
+  $(call show_config_variable,PRE_BUILD_HOOK,[DEFAULT])
 else
-    $(call show_config_variable,PRE_BUILD_HOOK,[USER])
+  $(call show_config_variable,PRE_BUILD_HOOK,[USER])
 endif
 
 ########################################################################
-# boards.txt parsing
+# Parsing boards.txt
 
 ifndef BOARD_TAG
-    BOARD_TAG = uno
-    $(call show_config_variable,BOARD_TAG,[DEFAULT])
+  BOARD_TAG = uno
+  $(call show_config_variable,BOARD_TAG,[DEFAULT])
 else
-    # Strip the board tag of any extra whitespace, since it was causing the makefile to fail
-    # https://github.com/sudar/Arduino-Makefile/issues/57
-    BOARD_TAG := $(strip $(BOARD_TAG))
-    $(call show_config_variable,BOARD_TAG,[USER])
+  # Strip the board tag of any extra whitespace, since it was causing
+  # the makefile to fail https://github.com/sudar/Arduino-Makefile/issues/57
+  BOARD_TAG := $(strip $(BOARD_TAG))
+  $(call show_config_variable,BOARD_TAG,[USER])
 endif
 
 ifndef PARSE_BOARD
-    # result = $(call READ_BOARD_TXT, 'boardname', 'parameter')
-    PARSE_BOARD = $(shell grep -v "^\#" "$(BOARDS_TXT)" | grep $(1).$(2) | cut -d = -f 2 )
+  # result = $(call READ_BOARD_TXT, 'boardname', 'parameter')
+  PARSE_BOARD = $(shell grep -v "^\#" "$(BOARDS_TXT)" | grep $(1).$(2) | cut -d = -f 2 )
 endif
 
 # If NO_CORE is set, then we don't have to parse boards.txt file
 # But the user might have to define MCU, F_CPU etc
 ifeq ($(strip $(NO_CORE)),)
 
-    # Which variant ? This affects the include path
-    ifndef VARIANT
-        VARIANT = $(call PARSE_BOARD,$(BOARD_TAG),build.variant)
+  # Which variant ? This affects the include path
+  ifndef VARIANT
+    VARIANT = $(call PARSE_BOARD,$(BOARD_TAG),build.variant)
+  endif
+
+  # See if we are a Caterina device like leonardo or micro
+  CATERINA = $(findstring caterina,$(call PARSE_BOARD,$(BOARD_TAG),bootloader.path))
+
+  # Processor stuff
+  ifndef MCU
+    MCU = $(call PARSE_BOARD,$(BOARD_TAG),build.mcu)
+  endif
+
+  ifndef F_CPU
+    F_CPU = $(call PARSE_BOARD,$(BOARD_TAG),build.f_cpu)
+  endif
+
+  ifneq ($(CATERINA),)
+    # USB IDs for the caterina devices like leonardo or micro
+    ifndef USB_VID
+      USB_VID = $(call PARSE_BOARD,$(BOARD_TAG),build.vid)
     endif
 
-    # see if we are a caterina device like leonardo or micro
-    CATERINA = $(findstring caterina,$(call PARSE_BOARD,$(BOARD_TAG),bootloader.path))
-
-    # processor stuff
-    ifndef MCU
-        MCU = $(call PARSE_BOARD,$(BOARD_TAG),build.mcu)
+    ifndef USB_PID
+      USB_PID = $(call PARSE_BOARD,$(BOARD_TAG),build.pid)
     endif
+ endif
 
-    ifndef F_CPU
-        F_CPU = $(call PARSE_BOARD,$(BOARD_TAG),build.f_cpu)
-    endif
+ # Normal programming info
+ ifndef AVRDUDE_ARD_PROGRAMMER
+   AVRDUDE_ARD_PROGRAMMER = $(call PARSE_BOARD,$(BOARD_TAG),upload.protocol)
+ endif
 
-    ifneq ($(CATERINA),)
-        # USB IDs for the caterina devices like leonardo or micro
-        ifndef USB_VID
-            USB_VID = $(call PARSE_BOARD,$(BOARD_TAG),build.vid)
-        endif
+ ifndef AVRDUDE_ARD_BAUDRATE
+   AVRDUDE_ARD_BAUDRATE = $(call PARSE_BOARD,$(BOARD_TAG),upload.speed)
+ endif
 
-        ifndef USB_PID
-            USB_PID = $(call PARSE_BOARD,$(BOARD_TAG),build.pid)
-        endif
-    endif
+ # Fuses if you're using e.g. ISP
+ ifndef ISP_LOCK_FUSE_PRE
+   ISP_LOCK_FUSE_PRE = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.unlock_bits)
+ endif
 
-    # normal programming info
-    ifndef AVRDUDE_ARD_PROGRAMMER
-        AVRDUDE_ARD_PROGRAMMER = $(call PARSE_BOARD,$(BOARD_TAG),upload.protocol)
-    endif
+ ifndef ISP_HIGH_FUSE
+   ISP_HIGH_FUSE = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.high_fuses)
+ endif
 
-    ifndef AVRDUDE_ARD_BAUDRATE
-        AVRDUDE_ARD_BAUDRATE = $(call PARSE_BOARD,$(BOARD_TAG),upload.speed)
-    endif
+ ifndef ISP_LOW_FUSE
+   ISP_LOW_FUSE = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.low_fuses)
+ endif
 
-    # fuses if you're using e.g. ISP
-    ifndef ISP_LOCK_FUSE_PRE
-        ISP_LOCK_FUSE_PRE = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.unlock_bits)
-    endif
+ ifndef ISP_EXT_FUSE
+   ISP_EXT_FUSE = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.extended_fuses)
+ endif
 
-    ifndef ISP_HIGH_FUSE
-        ISP_HIGH_FUSE = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.high_fuses)
-    endif
+ ifndef BOOTLOADER_PATH
+   BOOTLOADER_PATH = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.path)
+ endif
 
-    ifndef ISP_LOW_FUSE
-        ISP_LOW_FUSE = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.low_fuses)
-    endif
+ ifndef BOOTLOADER_FILE
+   BOOTLOADER_FILE = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.file)
+ endif
 
-    ifndef ISP_EXT_FUSE
-        ISP_EXT_FUSE = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.extended_fuses)
-    endif
+ ifndef ISP_LOCK_FUSE_POST
+   ISP_LOCK_FUSE_POST = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.lock_bits)
+ endif
 
-    ifndef BOOTLOADER_PATH
-        BOOTLOADER_PATH = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.path)
-    endif
-
-    ifndef BOOTLOADER_FILE
-        BOOTLOADER_FILE = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.file)
-    endif
-
-    ifndef ISP_LOCK_FUSE_POST
-        ISP_LOCK_FUSE_POST = $(call PARSE_BOARD,$(BOARD_TAG),bootloader.lock_bits)
-    endif
-
-    ifndef HEX_MAXIMUM_SIZE
-        HEX_MAXIMUM_SIZE = $(call PARSE_BOARD,$(BOARD_TAG),upload.maximum_size)
-    endif
+ ifndef HEX_MAXIMUM_SIZE
+   HEX_MAXIMUM_SIZE = $(call PARSE_BOARD,$(BOARD_TAG),upload.maximum_size)
+ endif
 
 endif
 
 # Everything gets built in here (include BOARD_TAG now)
 ifndef OBJDIR
-    OBJDIR = build-$(BOARD_TAG)
-    $(call show_config_variable,OBJDIR,[COMPUTED],(from BOARD_TAG))
+  OBJDIR = build-$(BOARD_TAG)
+  $(call show_config_variable,OBJDIR,[COMPUTED],(from BOARD_TAG))
 else
-    $(call show_config_variable,OBJDIR,[USER])
+  $(call show_config_variable,OBJDIR,[USER])
 endif
 
 ########################################################################
 # Reset
 
 ifndef RESET_CMD
-	ARD_RESET_ARDUINO := $(shell which ard-reset-arduino 2> /dev/null)
-	ifndef ARD_RESET_ARDUINO
-		# same level as *.mk in bin directory when checked out from git
-		# or in $PATH when packaged
-		ARD_RESET_ARDUINO = $(ARDMK_DIR)/bin/ard-reset-arduino
-	endif
-    ifneq ($(CATERINA),)
-       RESET_CMD = $(ARD_RESET_ARDUINO) --caterina $(ARD_RESET_OPTS) $(call get_monitor_port)
-    else
-       RESET_CMD = $(ARD_RESET_ARDUINO) $(ARD_RESET_OPTS) $(call get_monitor_port)
-    endif
+  ARD_RESET_ARDUINO := $(shell which ard-reset-arduino 2> /dev/null)
+  ifndef ARD_RESET_ARDUINO
+    # Same level as *.mk in bin directory when checked out from git or
+    # in $PATH when packaged 
+    ARD_RESET_ARDUINO = $(ARDMK_DIR)/bin/ard-reset-arduino
+  endif
+  ifneq ($(CATERINA),)
+    RESET_CMD = $(ARD_RESET_ARDUINO) --caterina $(ARD_RESET_OPTS) $(call get_monitor_port)
+  else
+     RESET_CMD = $(ARD_RESET_ARDUINO) $(ARD_RESET_OPTS) $(call get_monitor_port)
+  endif
 endif
 
 ifneq ($(CATERINA),)
-    ERROR_ON_CATERINA = $(error On $(BOARD_TAG), raw_xxx operation is not supported)
+  ERROR_ON_CATERINA = $(error On $(BOARD_TAG), raw_xxx operation is not supported)
 else
-    ERROR_ON_CATERINA =
+  ERROR_ON_CATERINA =
 endif
 
 ########################################################################
@@ -659,54 +667,54 @@ LOCAL_OBJ_FILES = $(LOCAL_C_SRCS:.c=.o) $(LOCAL_CPP_SRCS:.cpp=.o) $(LOCAL_CC_SRC
 LOCAL_OBJS = $(patsubst %,$(OBJDIR)/%,$(LOCAL_OBJ_FILES))
 
 ifeq ($(words $(LOCAL_SRCS)), 0)
-    $(error At least one source file (*.ino, *.pde, *.cpp, *c, *cc, *.S) is needed)
+  $(error At least one source file (*.ino, *.pde, *.cpp, *c, *cc, *.S) is needed)
 endif
 
-# CHK_SOURCES is used by flymake
-# flymake creates a tmp file in the same directory as the file under edition
-# we must skip the verification in this particular case
+# CHK_SOURCES is used by flymake, creates a tmp file in the same
+# directory as the file under edition we must skip the verification in
+# this particular case 
 ifeq ($(strip $(CHK_SOURCES)),)
-    ifeq ($(strip $(NO_CORE)),)
-
-        # Ideally, this should just check if there are more than one file
-        ifneq ($(words $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS)), 1)
-            ifeq ($(words $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS)), 0)
-                $(call show_config_info,No .pde or .ino files found. If you are compiling .c or .cpp files then you need to explicitly include Arduino header files)
-            else
-                #TODO: Support more than one file. https://github.com/sudar/Arduino-Makefile/issues/49
-                $(error Need exactly one .pde or .ino file. This makefile doesn't support multiple .ino/.pde files yet)
-            endif
-        endif
-
-    endif
+  ifeq ($(strip $(NO_CORE)),)
+    # Ideally, this should just check if there are more than one file
+    ifneq ($(words $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS)), 1)
+      ifeq ($(words $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS)), 0)
+        $(call show_config_info,No .pde or .ino files found. If you are compiling .c or .cpp files then you need to explicitly include Arduino header files)
+      else
+        # TODO: Support more than one file.
+        # https://github.com/sudar/Arduino-Makefile/issues/49 
+        $(error Need exactly one .pde or .ino file. This makefile doesn't support multiple .ino/.pde files yet)
+      endif
+   endif
+ endif
 endif
 
 # core sources
 ifeq ($(strip $(NO_CORE)),)
-    ifdef ARDUINO_CORE_PATH
-        CORE_C_SRCS = $(call rwildcard,$(ARDUINO_CORE_PATH),*.c)
-        CORE_CPP_SRCS = $(call rwildcard,$(ARDUINO_CORE_PATH),*.cpp) 
 
-        ifneq ($(strip $(NO_CORE_MAIN_CPP)),)
-            CORE_CPP_SRCS := $(filter-out %main.cpp, $(CORE_CPP_SRCS))
-            $(call show_config_info,NO_CORE_MAIN_CPP set so core library will not include main.cpp,[MANUAL])
-        endif
+  ifdef ARDUINO_CORE_PATH
+    CORE_C_SRCS = $(call rwildcard,$(ARDUINO_CORE_PATH),*.c)
+    CORE_CPP_SRCS = $(call rwildcard,$(ARDUINO_CORE_PATH),*.cpp) 
 
-        CORE_OBJ_FILES = $(CORE_C_SRCS:.c=.o) $(CORE_CPP_SRCS:.cpp=.o) $(CORE_AS_SRCS:.S=.o)
-        CORE_OBJS = $(patsubst $(ARDUINO_CORE_PATH)/%, $(OBJDIR)/core/%,$(CORE_OBJ_FILES))
+    ifneq ($(strip $(NO_CORE_MAIN_CPP)),)
+      CORE_CPP_SRCS := $(filter-out %main.cpp, $(CORE_CPP_SRCS))
+      $(call show_config_info,NO_CORE_MAIN_CPP set so core library will not include main.cpp,[MANUAL])
     endif
+
+    CORE_OBJ_FILES = $(CORE_C_SRCS:.c=.o) $(CORE_CPP_SRCS:.cpp=.o) $(CORE_AS_SRCS:.S=.o)
+    CORE_OBJS = $(patsubst $(ARDUINO_CORE_PATH)/%, $(OBJDIR)/core/%,$(CORE_OBJ_FILES))
+  endif
 else
-    $(call show_config_info,NO_CORE set so core library will not be built,[MANUAL])
+  $(call show_config_info,NO_CORE set so core library will not be built,[MANUAL])
 endif
 
 ########################################################################
 # Determine ARDUINO_LIBS automatically
 
 ifndef ARDUINO_LIBS
-    # automatically determine included libraries
-    ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_DIR)/libraries/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
-    ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_SKETCHBOOK)/libraries/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
-    ARDUINO_LIBS += $(filter $(notdir $(wildcard $(USER_LIB_PATH)/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
+  # automatically determine included libraries
+  ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_DIR)/libraries/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
+  ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_SKETCHBOOK)/libraries/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
+  ARDUINO_LIBS += $(filter $(notdir $(wildcard $(USER_LIB_PATH)/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
 endif
 
 ########################################################################
@@ -717,38 +725,38 @@ endif
 # for more information (search for 'character special device').
 
 ifeq ($(strip $(NO_CORE)),)
-    ifndef MONITOR_BAUDRATE
-        ifeq ($(words $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS)), 1)
-            SPEED = $(shell egrep -h 'uart.begin *\([0-9]+\)' $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS) | sed -e 's/[^0-9]//g'| head -n1)
-            MONITOR_BAUDRATE = $(findstring $(SPEED),300 1200 2400 4800 9600 14400 19200 28800 38400 57600 115200)
-        endif
+  ifndef MONITOR_BAUDRATE
+    ifeq ($(words $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS)), 1)
+      SPEED = $(shell egrep -h 'uart.begin *\([0-9]+\)' $(LOCAL_PDE_SRCS) $(LOCAL_INO_SRCS) | sed -e 's/[^0-9]//g'| head -n1)
+      MONITOR_BAUDRATE = $(findstring $(SPEED),300 1200 2400 4800 9600 14400 19200 28800 38400 57600 115200)
+    endif
 
-        ifeq ($(MONITOR_BAUDRATE),)
-            MONITOR_BAUDRATE = 9600
-            $(call show_config_variable,MONITOR_BAUDRATE,[ASSUMED])
-        else
-            $(call show_config_variable,MONITOR_BAUDRATE,[DETECTED], (in sketch))
-        endif
+    ifeq ($(MONITOR_BAUDRATE),)
+      MONITOR_BAUDRATE = 9600
+      $(call show_config_variable,MONITOR_BAUDRATE,[ASSUMED])
     else
-        $(call show_config_variable,MONITOR_BAUDRATE, [USER])
+      $(call show_config_variable,MONITOR_BAUDRATE,[DETECTED], (in sketch))
     endif
+  else
+   $(call show_config_variable,MONITOR_BAUDRATE, [USER])
+  endif
 
-    ifndef MONITOR_CMD
-        MONITOR_CMD = screen
-    endif
+  ifndef MONITOR_CMD
+    MONITOR_CMD = screen
+  endif
 endif
 
 ########################################################################
 # Include Arduino Header file
 
 ifndef ARDUINO_HEADER
-    # We should check for Arduino version, not just the file extension
-    # because, a .pde file can be used in Arduino 1.0 as well
-    ifeq ($(shell expr $(ARDUINO_VERSION) '<' 100), 1)
-        ARDUINO_HEADER=WProgram.h
-    else
-        ARDUINO_HEADER=Arduino.h
-    endif
+  # We should check for Arduino version, not just the file extension
+  # because, a .pde file can be used in Arduino 1.0 as well 
+  ifeq ($(shell expr $(ARDUINO_VERSION) '<' 100), 1)
+    ARDUINO_HEADER=WProgram.h
+  else
+    ARDUINO_HEADER=Arduino.h
+  endif
 endif
 
 ########################################################################
@@ -764,14 +772,14 @@ CORE_LIB = $(OBJDIR)/libcore.a
 # tools, and we can't use "?=" assignment because these are already implicitly
 # defined by Make (e.g. $(CC) == cc).
 ifndef OVERRIDE_EXECUTABLES
-    CC = $(AVR_TOOLS_PATH)/$(CC_NAME)
-    CXX = $(AVR_TOOLS_PATH)/$(CXX_NAME)
-    AS = $(AVR_TOOLS_PATH)/$(AS_NAME)
-    OBJCOPY = $(AVR_TOOLS_PATH)/$(OBJCOPY_NAME)
-    OBJDUMP = $(AVR_TOOLS_PATH)/$(OBJDUMP_NAME)
-    AR = $(AVR_TOOLS_PATH)/$(AR_NAME)
-    SIZE = $(AVR_TOOLS_PATH)/$(SIZE_NAME)
-    NM = $(AVR_TOOLS_PATH)/$(NM_NAME)
+  CC = $(AVR_TOOLS_PATH)/$(CC_NAME)
+  CXX = $(AVR_TOOLS_PATH)/$(CXX_NAME)
+  AS = $(AVR_TOOLS_PATH)/$(AS_NAME)
+  OBJCOPY = $(AVR_TOOLS_PATH)/$(OBJCOPY_NAME)
+  OBJDUMP = $(AVR_TOOLS_PATH)/$(OBJDUMP_NAME)
+  AR = $(AVR_TOOLS_PATH)/$(AR_NAME)
+  SIZE = $(AVR_TOOLS_PATH)/$(SIZE_NAME)
+  NM = $(AVR_TOOLS_PATH)/$(NM_NAME)
 endif
 
 REMOVE = rm -rf
@@ -810,59 +818,59 @@ USER_LIB_OBJS = $(patsubst $(USER_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(USER_LIB_
 # Dependency files
 DEPS = $(LOCAL_OBJS:.o=.d) $(LIB_OBJS:.o=.d) $(USER_LIB_OBJS:.o=.d) $(CORE_OBJS:.o=.d)
 
-# Optimization level for the compiler.
-# You can get the list of options at http://www.nongnu.org/avr-libc/user-manual/using_tools.html#gcc_optO
+# Optimization level for the compiler. You can get the list of options at
+# http://www.nongnu.org/avr-libc/user-manual/using_tools.html#gcc_optO 
 # Also read http://www.nongnu.org/avr-libc/user-manual/FAQ.html#faq_optflags
 ifndef OPTIMIZATION_LEVEL
-    OPTIMIZATION_LEVEL=s
-    $(call show_config_variable,OPTIMIZATION_LEVEL,[DEFAULT])
+  OPTIMIZATION_LEVEL=s
+  $(call show_config_variable,OPTIMIZATION_LEVEL,[DEFAULT])
 else
-    $(call show_config_variable,OPTIMIZATION_LEVEL,[USER])
+  $(call show_config_variable,OPTIMIZATION_LEVEL,[USER])
 endif
 
 ifndef DEBUG_FLAGS
-    DEBUG_FLAGS = -O0 -g
+  DEBUG_FLAGS = -O0 -g
 endif
 
 ifndef MCU_FLAG_NAME
-    MCU_FLAG_NAME = mmcu
-    $(call show_config_variable,MCU_FLAG_NAME,[DEFAULT])
+  MCU_FLAG_NAME = mmcu
+  $(call show_config_variable,MCU_FLAG_NAME,[DEFAULT])
 else
-    $(call show_config_variable,MCU_FLAG_NAME,[USER])
+  $(call show_config_variable,MCU_FLAG_NAME,[USER])
 endif
 
 # Using += instead of =, so that CPPFLAGS can be set per sketch level
 CPPFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -DF_CPU=$(F_CPU) -DARDUINO=$(ARDUINO_VERSION) -I. -I$(ARDUINO_CORE_PATH) -I$(ARDUINO_VAR_PATH)/$(VARIANT) $(SYS_INCLUDES) $(USER_INCLUDES) -Wall -ffunction-sections -fdata-sections
 
 ifdef DEBUG
-OPTIMIZATION_FLAGS= $(DEBUG_FLAGS)
+  OPTIMIZATION_FLAGS= $(DEBUG_FLAGS)
 else
-OPTIMIZATION_FLAGS = -O$(OPTIMIZATION_LEVEL)
+  OPTIMIZATION_FLAGS = -O$(OPTIMIZATION_LEVEL)
 endif
 
 CPPFLAGS += $(OPTIMIZATION_FLAGS)
 
 # USB IDs for the Caterina devices like leonardo or micro
 ifneq ($(CATERINA),)
-    CPPFLAGS += -DUSB_VID=$(USB_VID) -DUSB_PID=$(USB_PID)
+  CPPFLAGS += -DUSB_VID=$(USB_VID) -DUSB_PID=$(USB_PID)
 endif
 
 ifndef CFLAGS_STD
-    CFLAGS_STD = -std=gnu99
-    $(call show_config_variable,CFLAGS_STD,[DEFAULT])
+  CFLAGS_STD = -std=gnu99
+  $(call show_config_variable,CFLAGS_STD,[DEFAULT])
 else
-    $(call show_config_variable,CFLAGS_STD,[USER])
+  $(call show_config_variable,CFLAGS_STD,[USER])
 endif
 
-# Add extra flags
+# Add extra flags for higher Arduino versions
 ifeq ($(shell expr $(ARDUINO_VERSION) '<' 157), 1)
-    EXTRA_CFLAGS += -Wextra
-    EXTRA_LDFLAGS += 
-    EXTRA_CXXFLAGS += -Wextra -std=gnu++0x -felide-constructors
+  EXTRA_CFLAGS += -Wextra
+  EXTRA_LDFLAGS += 
+  EXTRA_CXXFLAGS += -Wextra -std=gnu++0x -felide-constructors
 else
-    EXTRA_CFLAGS += -Wextra -flto
-    EXTRA_LDFLAGS += -w -Wl,-relax -flto
-    EXTRA_CXXFLAGS += -Wextra -flto -std=gnu++11 -felide-constructors
+  EXTRA_CFLAGS += -Wextra -flto
+  EXTRA_LDFLAGS += -w -Wl,-relax -flto
+  EXTRA_CXXFLAGS += -Wextra -flto -std=gnu++11 -felide-constructors
 endif
 
 CFLAGS += $(EXTRA_FLAGS) $(EXTRA_CFLAGS)
@@ -876,25 +884,25 @@ SIZEFLAGS ?= --mcu=$(MCU) -C
 MONITOR_PORT ?= $(ARDUINO_PORT)
 
 ifeq ($(CURRENT_OS), WINDOWS)
-    # Expect MONITOR_PORT to be '1' or 'com1' for COM1 in Windows. Split it up
-    # into the two styles required: /dev/ttyS* for ard-reset-arduino and com*
-    # for avrdude. This also could work with /dev/com* device names and be more
-    # consistent, but the /dev/com* is not recommended by Cygwin and doesn't
-    # always show up.
-    COM_PORT_ID = $(subst com,,$(MONITOR_PORT))
-    COM_STYLE_MONITOR_PORT = com$(COM_PORT_ID)
-    DEVICE_PATH = /dev/ttyS$(shell awk 'BEGIN{ print $(COM_PORT_ID) - 1 }')
+  # Expect MONITOR_PORT to be '1' or 'com1' for COM1 in Windows. Split
+  # it up into the two styles required: /dev/ttyS* for ard-reset-arduino 
+  # and com* for avrdude. This also could work with /dev/com* device
+  # names and be more consistent, but the /dev/com* is not recommended
+  # by Cygwin and doesn't always show up.
+  COM_PORT_ID = $(subst com,,$(MONITOR_PORT))
+  COM_STYLE_MONITOR_PORT = com$(COM_PORT_ID)
+  DEVICE_PATH = /dev/ttyS$(shell awk 'BEGIN{ print $(COM_PORT_ID) - 1 }')
 endif
 
 ifneq ($(strip $(MONITOR_PORT)),)
-    # set DEVICE_PATH based on user-defined MONITOR_PORT or ARDUINO_PORT
-    DEVICE_PATH = $(MONITOR_PORT)
-    $(call show_config_variable,DEVICE_PATH,[COMPUTED],(from MONITOR_PORT))
+  # Set DEVICE_PATH based on user-defined MONITOR_PORT or ARDUINO_PORT
+  DEVICE_PATH = $(MONITOR_PORT)
+  $(call show_config_variable,DEVICE_PATH,[COMPUTED],(from MONITOR_PORT))
 else
-    # If no port is specified, try to guess it from wildcards.
-    # Will only work if the Arduino is the only/first device matched.
-    DEVICE_PATH = $(firstword $(wildcard /dev/ttyACM? /dev/ttyUSB? /dev/tty.usbserial* /dev/tty.usbmodem*))
-    $(call show_config_variable,DEVICE_PATH,[AUTODETECTED])
+  # If no port is specified, try to guess it from wildcards. Will only
+  # work if the Arduino is the only/first device matched. 
+  DEVICE_PATH = $(firstword $(wildcard /dev/ttyACM? /dev/ttyUSB? /dev/tty.usbserial* /dev/tty.usbmodem*))
+  $(call show_config_variable,DEVICE_PATH,[AUTODETECTED])
 endif
 
 # Returns the Arduino port (first wildcard expansion) if it exists, otherwise it errors.
@@ -905,38 +913,38 @@ get_isp_port = $(if $(wildcard $(ISP_PORT)),$(firstword $(wildcard $(ISP_PORT)))
 
 # Command for avr_size: do $(call avr_size,elffile,hexfile)
 ifneq (,$(findstring AVR,$(shell $(SIZE) --help)))
-    # We have a patched version of binutils that mentions AVR - pass the MCU
-    # and the elf to get nice output.
-    avr_size = $(SIZE) $(SIZEFLAGS) --format=avr $(1)
-    $(call show_config_info,Size utility: AVR-aware for enhanced output,[AUTODETECTED])
+  # We have a patched version of binutils that mentions AVR - pass the
+  # MCU and the elf to get nice output.
+  avr_size = $(SIZE) $(SIZEFLAGS) --format=avr $(1)
+  $(call show_config_info,Size utility: AVR-aware for enhanced output,[AUTODETECTED])
 else
-    # We have a plain-old binutils version - just give it the hex.
-    avr_size = $(SIZE) $(2)
-    $(call show_config_info,Size utility: Basic (not AVR-aware),[AUTODETECTED])
+  # We have a plain-old binutils version - just give it the hex.
+  avr_size = $(SIZE) $(2)
+  $(call show_config_info,Size utility: Basic (not AVR-aware),[AUTODETECTED])
 endif
 
 ifneq (,$(strip $(ARDUINO_LIBS)))
-    $(call arduino_output,-)
-    $(call show_config_info,ARDUINO_LIBS =)
+  $(call arduino_output,-)
+  $(call show_config_info,ARDUINO_LIBS =)
 endif
 
 ifneq (,$(strip $(USER_LIB_NAMES)))
-    $(foreach lib,$(USER_LIB_NAMES),$(call show_config_info,  $(lib),[USER]))
+  $(foreach lib,$(USER_LIB_NAMES),$(call show_config_info,  $(lib),[USER]))
 endif
 
 ifneq (,$(strip $(SYS_LIB_NAMES)))
-    $(foreach lib,$(SYS_LIB_NAMES),$(call show_config_info,  $(lib),[SYSTEM]))
+  $(foreach lib,$(SYS_LIB_NAMES),$(call show_config_info,  $(lib),[SYSTEM]))
 endif
 
-# either calculate parent dir from arduino dir, or user-defined path
+# Either calculate parent dir from arduino dir, or user-defined path
 ifndef BOOTLOADER_PARENT
-    BOOTLOADER_PARENT = $(ARDUINO_DIR)/hardware/arduino/bootloaders
-    $(call show_config_variable,BOOTLOADER_PARENT,[COMPUTED],(from ARDUINO_DIR))
+  BOOTLOADER_PARENT = $(ARDUINO_DIR)/hardware/arduino/bootloaders
+  $(call show_config_variable,BOOTLOADER_PARENT,[COMPUTED],(from ARDUINO_DIR))
 else
-    $(call show_config_variable,BOOTLOADER_PARENT,[USER])
+  $(call show_config_variable,BOOTLOADER_PARENT,[USER])
 endif
 
-# end of config output
+# End of config output
 $(call show_separator)
 
 # Implicit rules for building everything (needed to get everything in
@@ -945,9 +953,9 @@ $(call show_separator)
 # Rather than mess around with VPATH there are quasi-duplicate rules
 # here for building e.g. a system C++ file and a local C++
 # file. Besides making things simpler now, this would also make it
-# easy to change the build options in future
+# easy to change the build options in future 
 
-# library sources
+# Library sources rules
 $(OBJDIR)/libs/%.o: $(ARDUINO_LIB_PATH)/%.c
 	@$(MKDIR) $(dir $@)
 	$(CC) -MMD -c $(CPPFLAGS) $(CFLAGS) $< -o $@
@@ -973,12 +981,12 @@ $(OBJDIR)/libs/%.o: $(USER_LIB_PATH)/%.S
 	$(CC) -MMD -c $(CPPFLAGS) $(ASFLAGS) $< -o $@
 
 ifdef COMMON_DEPS
-    COMMON_DEPS := $(COMMON_DEPS) $(MAKEFILE_LIST)
+  COMMON_DEPS := $(COMMON_DEPS) $(MAKEFILE_LIST)
 else
-    COMMON_DEPS := $(MAKEFILE_LIST)
+  COMMON_DEPS := $(MAKEFILE_LIST)
 endif
 
-# normal local sources
+# Normal local sources rules
 $(OBJDIR)/%.o: %.c $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
 	$(CC) -MMD -c $(CPPFLAGS) $(CFLAGS) $< -o $@
@@ -999,17 +1007,17 @@ $(OBJDIR)/%.o: %.s $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(ASFLAGS) $< -o $@
 
-# the pde -> o file
+# .pde to .o file rule
 $(OBJDIR)/%.o: %.pde $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
 	$(CXX) -x c++ -include $(ARDUINO_HEADER) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
-# the ino -> o file
+# .ino to .o file rule
 $(OBJDIR)/%.o: %.ino $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
 	$(CXX) -x c++ -include $(ARDUINO_HEADER) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
-# generated assembly
+# Generated assembly rule
 $(OBJDIR)/%.s: %.pde $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
 	$(CXX) -x c++ -include $(ARDUINO_HEADER) -MMD -S -fverbose-asm $(CPPFLAGS) $(CXXFLAGS) $< -o $@
@@ -1021,7 +1029,7 @@ $(OBJDIR)/%.s: %.ino $(COMMON_DEPS) | $(OBJDIR)
 #$(OBJDIR)/%.lst: $(OBJDIR)/%.s
 #	$(AS) -$(MCU_FLAG_NAME)=$(MCU) -alhnd $< > $@
 
-# core files
+# Core file rules
 $(OBJDIR)/core/%.o: $(ARDUINO_CORE_PATH)/%.c $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
 	$(CC) -MMD -c $(CPPFLAGS) $(CFLAGS) $< -o $@
@@ -1034,7 +1042,7 @@ $(OBJDIR)/core/%.o: $(ARDUINO_CORE_PATH)/%.S $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
 	$(CC) -MMD -c $(CPPFLAGS) $(ASFLAGS) $< -o $@
 
-# various object conversions
+# Various object conversion rules
 $(OBJDIR)/%.hex: $(OBJDIR)/%.elf $(COMMON_DEPS)
 	@$(MKDIR) $(dir $@)
 	$(OBJCOPY) -O ihex -R .eeprom $< $@
@@ -1064,47 +1072,48 @@ $(OBJDIR)/%.sym: $(OBJDIR)/%.elf $(COMMON_DEPS)
 
 # If avrdude is installed separately, it can find its own config file
 ifndef AVRDUDE
-    AVRDUDE = $(AVR_TOOLS_PATH)/avrdude
+  AVRDUDE = $(AVR_TOOLS_PATH)/avrdude
 endif
 
 # Default avrdude options
 # -V Do not verify
-# -q - suppress progress output
-# -D - Disable auto erase for flash memory
+# -q suppress progress output
+# -D Disable auto erase for flash memory
 # (-D is needed for Mega boards. See https://github.com/sudar/Arduino-Makefile/issues/114#issuecomment-25011005)
 ifndef AVRDUDE_OPTS
-    AVRDUDE_OPTS = -q -V -D
+  AVRDUDE_OPTS = -q -V -D
 endif
 
 AVRDUDE_COM_OPTS = $(AVRDUDE_OPTS) -p $(MCU)
 ifdef AVRDUDE_CONF
-    AVRDUDE_COM_OPTS += -C $(AVRDUDE_CONF)
+  AVRDUDE_COM_OPTS += -C $(AVRDUDE_CONF)
 endif
 
 AVRDUDE_ARD_OPTS = -c $(AVRDUDE_ARD_PROGRAMMER) -b $(AVRDUDE_ARD_BAUDRATE) -P
 ifeq ($(CURRENT_OS), WINDOWS)
-    # get_monitor_port checks to see if the monitor port exists, assuming it is
-    # a file. In Windows, avrdude needs the port in the format 'com1' which is
-    # not a file, so we have to add the COM-style port directly.
-    AVRDUDE_ARD_OPTS += $(COM_STYLE_MONITOR_PORT)
+  # Get_monitor_port checks to see if the monitor port exists,
+  # assuming it is a file. In Windows, avrdude needs the port in the
+  # format 'com1' which is not a file, so we have to add the COM-style
+  # port directly. 
+  AVRDUDE_ARD_OPTS += $(COM_STYLE_MONITOR_PORT)
 else
-    AVRDUDE_ARD_OPTS += $(call get_monitor_port)
+  AVRDUDE_ARD_OPTS += $(call get_monitor_port)
 endif
 
 ifndef ISP_PROG
-    ifneq ($(strip $(AVRDUDE_ARD_PROGRAMMER)),)
-        ISP_PROG = $(AVRDUDE_ARD_PROGRAMMER)
-    else
-        ISP_PROG = stk500v1
-    endif
+  ifneq ($(strip $(AVRDUDE_ARD_PROGRAMMER)),)
+    ISP_PROG = $(AVRDUDE_ARD_PROGRAMMER)
+  else
+    ISP_PROG = stk500v1
+  endif
 endif
 
 ifndef AVRDUDE_ISP_BAUDRATE
-    ifneq ($(strip $(AVRDUDE_ARD_BAUDRATE)),)
-        AVRDUDE_ISP_BAUDRATE = $(AVRDUDE_ARD_BAUDRATE)
-    else
-        AVRDUDE_ISP_BAUDRATE = 19200
-    endif
+  ifneq ($(strip $(AVRDUDE_ARD_BAUDRATE)),)
+    AVRDUDE_ISP_BAUDRATE = $(AVRDUDE_ARD_BAUDRATE)
+  else
+    AVRDUDE_ISP_BAUDRATE = 19200
+  endif
 endif
 
 # Fuse settings copied from Arduino IDE.
@@ -1112,51 +1121,51 @@ endif
 
 # Pre fuse settings
 ifndef AVRDUDE_ISP_FUSES_PRE
-    ifneq ($(strip $(ISP_LOCK_FUSE_PRE)),)
-        AVRDUDE_ISP_FUSES_PRE += -U lock:w:$(ISP_LOCK_FUSE_PRE):m
-    endif
+  ifneq ($(strip $(ISP_LOCK_FUSE_PRE)),)
+    AVRDUDE_ISP_FUSES_PRE += -U lock:w:$(ISP_LOCK_FUSE_PRE):m
+  endif
 
-    ifneq ($(strip $(ISP_EXT_FUSE)),)
-        AVRDUDE_ISP_FUSES_PRE += -U efuse:w:$(ISP_EXT_FUSE):m
-    endif
+  ifneq ($(strip $(ISP_EXT_FUSE)),)
+    AVRDUDE_ISP_FUSES_PRE += -U efuse:w:$(ISP_EXT_FUSE):m
+  endif
 
-    ifneq ($(strip $(ISP_HIGH_FUSE)),)
-        AVRDUDE_ISP_FUSES_PRE += -U hfuse:w:$(ISP_HIGH_FUSE):m
-    endif
+  ifneq ($(strip $(ISP_HIGH_FUSE)),)
+    AVRDUDE_ISP_FUSES_PRE += -U hfuse:w:$(ISP_HIGH_FUSE):m
+  endif
 
-    ifneq ($(strip $(ISP_LOW_FUSE)),)
-        AVRDUDE_ISP_FUSES_PRE += -U lfuse:w:$(ISP_LOW_FUSE):m
-    endif
+  ifneq ($(strip $(ISP_LOW_FUSE)),)
+    AVRDUDE_ISP_FUSES_PRE += -U lfuse:w:$(ISP_LOW_FUSE):m
+  endif
 endif
 
 # Bootloader file settings
 ifndef AVRDUDE_ISP_BURN_BOOTLOADER
-    ifneq ($(strip $(BOOTLOADER_PATH)),)
-        ifneq ($(strip $(BOOTLOADER_FILE)),)
-            AVRDUDE_ISP_BURN_BOOTLOADER += -U flash:w:$(BOOTLOADER_PARENT)/$(BOOTLOADER_PATH)/$(BOOTLOADER_FILE):i
-        endif
+  ifneq ($(strip $(BOOTLOADER_PATH)),)
+    ifneq ($(strip $(BOOTLOADER_FILE)),)
+      AVRDUDE_ISP_BURN_BOOTLOADER += -U flash:w:$(BOOTLOADER_PARENT)/$(BOOTLOADER_PATH)/$(BOOTLOADER_FILE):i
     endif
+  endif
 endif
 
 # Post fuse settings
 ifndef AVRDUDE_ISP_FUSES_POST
-    ifneq ($(strip $(ISP_LOCK_FUSE_POST)),)
-        AVRDUDE_ISP_FUSES_POST += -U lock:w:$(ISP_LOCK_FUSE_POST):m
-    endif
+  ifneq ($(strip $(ISP_LOCK_FUSE_POST)),)
+    AVRDUDE_ISP_FUSES_POST += -U lock:w:$(ISP_LOCK_FUSE_POST):m
+  endif
 endif
 
 AVRDUDE_ISP_OPTS = -c $(ISP_PROG) -b $(AVRDUDE_ISP_BAUDRATE)
 
 ifndef $(ISP_PORT)
-    ifneq ($(strip $(ISP_PROG)),$(filter $(ISP_PROG), usbasp usbtiny gpio))
-        AVRDUDE_ISP_OPTS += -P $(call get_isp_port)
-    endif
+  ifneq ($(strip $(ISP_PROG)),$(filter $(ISP_PROG), usbasp usbtiny gpio))
+    AVRDUDE_ISP_OPTS += -P $(call get_isp_port)
+  endif
 else
-	AVRDUDE_ISP_OPTS += -P $(call get_isp_port)
+  AVRDUDE_ISP_OPTS += -P $(call get_isp_port)
 endif
 
 ifndef ISP_EEPROM
-    ISP_EEPROM = 0
+  ISP_EEPROM = 0
 endif
 
 AVRDUDE_UPLOAD_HEX = -U flash:w:$(TARGET_HEX):i
@@ -1164,118 +1173,118 @@ AVRDUDE_UPLOAD_EEP = -U eeprom:w:$(TARGET_EEP):i
 AVRDUDE_ISPLOAD_OPTS = $(AVRDUDE_UPLOAD_HEX)
 
 ifneq ($(ISP_EEPROM), 0)
-    AVRDUDE_ISPLOAD_OPTS += $(AVRDUDE_UPLOAD_EEP)
+  AVRDUDE_ISPLOAD_OPTS += $(AVRDUDE_UPLOAD_EEP)
 endif
 
 ########################################################################
 # Explicit targets start here
 
-all: 		$(TARGET_EEP) $(TARGET_HEX)
+all: 	$(TARGET_EEP) $(TARGET_HEX)
 
 # Rule to create $(OBJDIR) automatically. All rules with recipes that
-# create a file within it, but do not already depend on a file within it
-# should depend on this rule. They should use a "order-only
+# create a file within it, but do not already depend on a file within
+# it should depend on this rule. They should use a "order-only
 # prerequisite" (e.g., put "| $(OBJDIR)" at the end of the prerequisite
 # list) to prevent remaking the target when any file in the directory
 # changes.
 $(OBJDIR): pre-build
-		$(MKDIR) $(OBJDIR)
+	$(MKDIR) $(OBJDIR)
 
 pre-build:
-		$(call runscript_if_exists,$(PRE_BUILD_HOOK))
+	$(call runscript_if_exists,$(PRE_BUILD_HOOK))
 
-$(TARGET_ELF): 	$(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS)
-		$(CC) $(LDFLAGS) -o $@ $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) -lc -lm
+$(TARGET_ELF): $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS)
+	$(CC) $(LDFLAGS) -o $@ $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) -lc -lm
 
-$(CORE_LIB):	$(CORE_OBJS) $(LIB_OBJS) $(USER_LIB_OBJS)
-		$(AR) rcs $@ $(CORE_OBJS) $(LIB_OBJS) $(USER_LIB_OBJS)
+$(CORE_LIB): $(CORE_OBJS) $(LIB_OBJS) $(USER_LIB_OBJS)
+	$(AR) rcs $@ $(CORE_OBJS) $(LIB_OBJS) $(USER_LIB_OBJS)
 
 error_on_caterina:
-		$(ERROR_ON_CATERINA)
+	$(ERROR_ON_CATERINA)
 
+# Use submake so we can guarantee the reset happens before the upload,
+# even with make -j 
+upload:	$(TARGET_HEX) verify_size
+	$(call arduino_output,Resetting...)
+	$(RESET_CMD)
+	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
 
-# Use submake so we can guarantee the reset happens
-# before the upload, even with make -j
-upload:		$(TARGET_HEX) verify_size
-		$(call arduino_output,Resetting...)
-		$(RESET_CMD)
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
-
-raw_upload:	$(TARGET_HEX) verify_size
-		$(MAKE) error_on_caterina
-		$(MAKE) do_upload
+raw_upload: $(TARGET_HEX) verify_size
+	$(MAKE) error_on_caterina
+	$(MAKE) do_upload
 
 do_upload:
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
+	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
 
-do_eeprom:	$(TARGET_EEP) $(TARGET_HEX)
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_EEP)
+do_eeprom: $(TARGET_EEP) $(TARGET_HEX)
+	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_EEP)
 
-eeprom:		$(TARGET_HEX) verify_size
-		$(MAKE) reset
-		$(MAKE) do_eeprom
+eeprom:	$(TARGET_HEX) verify_size
+	$(MAKE) reset
+	$(MAKE) do_eeprom
 
-raw_eeprom:	$(TARGET_HEX) verify_size
-		$(MAKE) error_on_caterina
-		$(MAKE) do_eeprom
+raw_eeprom: $(TARGET_HEX) verify_size
+	$(MAKE) error_on_caterina
+	$(MAKE) do_eeprom
 
 reset:
-		$(call arduino_output,Resetting Arduino...)
-		$(RESET_CMD)
+	$(call arduino_output,Resetting Arduino...)
+	$(RESET_CMD)
 
 # stty on MacOS likes -F, but on Debian it likes -f redirecting
 # stdin/out appears to work but generates a spurious error on MacOS at
-# least. Perhaps it would be better to just do it in perl ?
+# least. 
 reset_stty:
-		for STTYF in 'stty -F' 'stty --file' 'stty -f' 'stty <' ; \
-		  do $$STTYF /dev/tty >/dev/null 2>&1 && break ; \
-		done ; \
-		$$STTYF $(call get_monitor_port)  hupcl ; \
-		(sleep 0.1 2>/dev/null || sleep 1) ; \
-		$$STTYF $(call get_monitor_port) -hupcl
+	for STTYF in 'stty -F' 'stty --file' 'stty -f' 'stty <' ; \
+	  do $$STTYF /dev/tty >/dev/null 2>&1 && break ; \
+	done ; \
+	$$STTYF $(call get_monitor_port)  hupcl ; \
+	(sleep 0.1 2>/dev/null || sleep 1) ; \
+	$$STTYF $(call get_monitor_port) -hupcl
 
-ispload:	$(TARGET_EEP) $(TARGET_HEX) verify_size
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) $(AVRDUDE_ISPLOAD_OPTS)
+ispload: $(TARGET_EEP) $(TARGET_HEX) verify_size
+	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) $(AVRDUDE_ISPLOAD_OPTS)
 
 burn_bootloader:
 ifneq ($(strip $(AVRDUDE_ISP_FUSES_PRE)),)
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -e $(AVRDUDE_ISP_FUSES_PRE)
+	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -e $(AVRDUDE_ISP_FUSES_PRE)
 endif
 ifneq ($(strip $(AVRDUDE_ISP_BURN_BOOTLOADER)),)
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) $(AVRDUDE_ISP_BURN_BOOTLOADER)
+	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) $(AVRDUDE_ISP_BURN_BOOTLOADER)
 endif
 ifneq ($(strip $(AVRDUDE_ISP_FUSES_POST)),)
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) $(AVRDUDE_ISP_FUSES_POST)
+	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) $(AVRDUDE_ISP_FUSES_POST)
 endif
 
 set_fuses:
 ifneq ($(strip $(AVRDUDE_ISP_FUSES_PRE)),)
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -e $(AVRDUDE_ISP_FUSES_PRE)
+	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -e $(AVRDUDE_ISP_FUSES_PRE)
 endif
 ifneq ($(strip $(AVRDUDE_ISP_FUSES_POST)),)
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) $(AVRDUDE_ISP_FUSES_POST)
+	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) $(AVRDUDE_ISP_FUSES_POST)
 endif
 
 clean:
-		$(REMOVE) ./$(OBJDIR)
+	$(REMOVE) ./$(OBJDIR)
 
-size:	$(TARGET_HEX)
-		$(call avr_size,$(TARGET_ELF),$(TARGET_HEX))
+size: $(TARGET_HEX)
+	$(call avr_size,$(TARGET_ELF),$(TARGET_HEX))
 
-show_config:
+config:
 	@$(ECHO) "Please refer to $(ARDMK_DIR)/Arduino.mk for more details.\n"
 
-show_boards:
-		@$(CAT) "$(BOARDS_TXT)" | grep -E "^[[:alnum:]|-]+.name" | sort -uf | sed 's/.name=/:/' | column -s: -t
+boards:
+	@$(CAT) "$(BOARDS_TXT)" | grep -E "^[[:alnum:]|-]+.name" | sort -uf | sed 's/.name=/:/' | column -s: -t
 
 monitor:
-		$(MONITOR_CMD) $(get_monitor_port) $(MONITOR_BAUDRATE)
+	@$(ECHO) "Use CTRL-ALT GR-] to exit monitor.\n"
+	$(MONITOR_CMD) $(get_monitor_port) $(MONITOR_BAUDRATE)
 
 disasm: $(OBJDIR)/$(TARGET).lss
-		@$(ECHO) "The compiled ELF file has been disassembled to $(OBJDIR)/$(TARGET).lss\n\n"
+	@$(ECHO) "The compiled ELF file has been disassembled to $(OBJDIR)/$(TARGET).lss\n\n"
 
 symbol_sizes: $(OBJDIR)/$(TARGET).sym
-		@$(ECHO) "A symbol listing sorted by their size have been dumped to $(OBJDIR)/$(TARGET).sym\n\n"
+	@$(ECHO) "A symbol listing sorted by their size have been dumped to $(OBJDIR)/$(TARGET).sym\n\n"
 
 verify_size:
 ifeq ($(strip $(HEX_MAXIMUM_SIZE)),)
@@ -1285,16 +1294,15 @@ endif
 See http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it."; false; fi
 
 generate_assembly: $(OBJDIR)/$(TARGET).s
-		@$(ECHO) "Compiler-generated assembly for the main input source has been dumped to $(OBJDIR)/$(TARGET).s\n\n"
+	@$(ECHO) "Compiler-generated assembly for the main input source has been dumped to $(OBJDIR)/$(TARGET).s\n\n"
 
 generated_assembly: generate_assembly
-		@$(ECHO) "\"generated_assembly\" target is deprecated. Use \"generate_assembly\" target instead\n\n"
+	@$(ECHO) "\"generated_assembly\" target is deprecated. Use \"generate_assembly\" target instead\n\n"
 
-help_vars:
-		@$(CAT) "$(ARDMK_DIR)/arduino-mk-vars.md"
+avanti: upload monitor
 
 help:
-		@$(ECHO) "Available targets (default is compile the code):\n\
+	@$(ECHO) "Available targets (default is compile the code):\n\
   upload            - upload\n\
   ispload           - upload using an ISP\n\
   raw_upload        - upload without first resetting\n\
@@ -1304,8 +1312,8 @@ help:
   depends           - update dependencies\n\
   reset             - reset the Arduino by tickling DTR or changing baud\n\
                       rate on the serial port.\n\
-  show_boards       - list all the boards defined in boards.txt\n\
-  show_config       - list configuration\n\
+  boards            - list all the boards defined in boards.txt\n\
+  config            - list configuration\n\
   monitor           - connect to the Arduino's serial port\n\
   size              - show the size of the compiled output (relative to\n\
                       resources, if you have a patched avr-size).\n\
@@ -1314,13 +1322,12 @@ help:
   symbol_sizes      - generate a .sym file containing symbols and their\n\
                       sizes.\n\
   disasm            - generate a .lss file that contains disassembly\n\
-                      of the compiled file interspersed with your\n\
-                      original source code.\n\
+                      of the compiled file with original source code.\n\
   generate_assembly - generate a .s file containing the compiler\n\
                       generated assembly of the main sketch.\n\
   burn_bootloader   - burn bootloader and fuses\n\
   set_fuses         - set fuses without burning bootloader\n\
-  help_vars         - print all variables that can be overridden\n\
+  avanti            - short cut for upload and monitor\n\
   help              - show this help\n\
 More details in:\n\
 $(ARDMK_DIR)/Arduino.mk\n\
