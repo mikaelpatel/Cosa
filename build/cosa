@@ -43,13 +43,13 @@ fi
 
 if [ "$1" == "boards" ];
 then
-   make -f $COSA_DIR/build/Cosa.mk show_boards "ARDUINO_QUIET=1"
+   make -f $COSA_DIR/build/Cosa.mk boards "ARDUINO_QUIET=1"
    exit 0
 fi
 
-if [ "$2" == "show_config" ];
+if [ "$2" == "config" ];
 then
-   make -f $COSA_DIR/build/Cosa.mk "BOARD_TAG=$1" show_config
+   make -f $COSA_DIR/build/Cosa.mk "BOARD_TAG=$1" config
    exit 0
 fi
 
