@@ -876,7 +876,7 @@ endif
 CFLAGS += $(EXTRA_FLAGS) $(EXTRA_CFLAGS)
 CXXFLAGS += -fno-exceptions $(EXTRA_FLAGS) $(EXTRA_CXXFLAGS)
 ASFLAGS += -x assembler-with-cpp
-LDFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -Wl,--gc-sections -O$(OPTIMIZATION_LEVEL) $(EXTRA_FLAGS) $(EXTRA_CXXFLAGS) $(EXTRA_LDFLAGS)
+LDFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -Wl,--gc-sections -O$(OPTIMIZATION_LEVEL) $(EXTRA_FLAGS) $(EXTRA_LDFLAGS)
 SIZEFLAGS ?= --mcu=$(MCU) -C
 
 # for backwards compatibility, grab ARDUINO_PORT if the user has it set
