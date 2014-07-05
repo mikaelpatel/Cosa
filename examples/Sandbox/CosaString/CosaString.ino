@@ -23,7 +23,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "String.hh"
+#include "Cosa/String.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"

@@ -27,23 +27,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Math.hh"
 #include "Cosa/OutputPin.hh"
 
 OutputPin ledPin(Board::LED);
-
-int32_t 
-random(int32_t range)
-{
-  if (range == 0) return 0;
-  return (random() % range);
-}
-
-int32_t
-random(int32_t low, int32_t high)
-{
-  if (low >= high) return (low);
-  return (random(high - low) + low);
-}
 
 void loop()
 {

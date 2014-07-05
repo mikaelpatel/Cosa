@@ -1,5 +1,5 @@
 /**
- * @file String.hh
+ * @file Cosa/String.hh
  * @version 1.0
  *
  * @section License
@@ -20,7 +20,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "String.hh"
+#include "Cosa/String.hh"
 
 String::String(const char* cstr)
 {

@@ -565,7 +565,7 @@ public:
    * @param[in] s String to print.
    * @return iostream.
    */
-#ifdef STRING_HH
+#ifdef COSA_STRING_HH
   IOStream& operator<<(String& s)
   {
     print((char*) s.c_str());

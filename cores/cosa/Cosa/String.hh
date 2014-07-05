@@ -1,5 +1,5 @@
 /**
- * @file String.hh
+ * @file Cosa/String.hh
  * @version 1.0
  *
  * @section License
@@ -20,8 +20,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef STRING_HH
-#define STRING_HH
+#ifndef COSA_STRING_HH
+#define COSA_STRING_HH
 
 #include <stdlib.h>
 #include <string.h>

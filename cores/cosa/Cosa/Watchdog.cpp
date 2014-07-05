@@ -18,6 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Math.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Bits.h"

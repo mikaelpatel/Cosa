@@ -425,54 +425,6 @@ swap(int32_t value)
 #define hton swap
 
 /**
- * Calculate log(2) of the given value. The given template parameter
- * type should be unsigned.
- * @param[in] T unsigned integer type (uint8_t, uint16_t,..)
- * @param[in] value
- * @return log(2) 
- */
-template<class T>
-inline uint8_t log2(T value)
-{
-  uint8_t res = 1;
-  while (value != 0) {
-    res += 1;
-    value >>= 1;
-  }
-  return (res);
-}
-
-/**
- * Template map function for given class/data type.
- * @param[in] T class value to map.
- * @param[in] x value to map.
- * @param[in] in_min minimum value in input range.
- * @param[in] in_max maximum value in input range.
- * @param[in] out_min minimum value in output range.
- * @param[in] out_max maximum value in output range.
- * @return mapping
- */
-template<class T>
-T map(T x, T in_min, T in_max, T out_min, T out_max)
-{
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-/**
- * Template constrain function for given class/data type.
- * @param[in] T class value to constrain.
- * @param[in] x value to constrain.
- * @param[in] low minimum value.
- * @param[in] high maximum value.
- * @return constrain
- */
-template<class T>
-T constrain(T x, T low, T high) 
-{
-  return (x < low ? low : (x > high ? high : x));
-}
-
-/**
  * Convert 4-bit LSB value to hexadecimal character ('0'..'f').
  * @param[in] value.
  * @return character.
