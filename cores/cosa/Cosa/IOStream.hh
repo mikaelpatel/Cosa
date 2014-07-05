@@ -62,14 +62,14 @@ public:
 
     /**
      * @override IOStream::Device
-     * Number of bytes available.
+     * Number of bytes available (possible to read).
      * @return bytes.
      */
     virtual int available();
 
     /**
      * @override IOStream::Device
-     * Number of bytes room.
+     * Number of bytes room (write without blocking).
      * @return bytes.
      */
     virtual int room();
@@ -226,6 +226,31 @@ public:
   Device* set_device(Device* dev);
 
   /**
+   * Set minimum width for double numbers. The width is signed value,
+   * negative for left adjustment. 
+   * @param[in] value width.
+   * @return previous width.
+   */
+  int8_t width(int8_t value)
+  {
+    int8_t res = m_width;
+    m_width = value;
+    return (res);
+  }
+
+  /**
+   * Set number of digits after decimal point for double numbers.
+   * @param[in] value precision.
+   * @return previous precision.
+   */
+  uint8_t precision(uint8_t value)
+  {
+    uint8_t res = m_prec;
+    m_prec = value;
+    return (res);
+  }
+
+  /**
    * Print integer as string with given base to stream.
    * @param[in] value to print.
    * @param[in] base to represent value in (default 10).
@@ -268,6 +293,18 @@ public:
    * @param[in] base to represent value in.
    */
   void print(unsigned long int value, uint8_t digits, Base base);
+
+  /**
+   * Print double with the minimum field width of the output string
+   * (including the '.' and the possible sign for negative values) is
+   * given in width, and prec determines the number of digits after
+   * the decimal sign. width is signed value, negative for left
+   * adjustment. 
+   * @param[in] value to print.
+   * @param[in] width minimum field width.
+   * @param[in] prec number of digits.
+   */
+  void print(double value, int8_t width, uint8_t prec);
 
   /**
    * Print buffer contents in given base to stream.
@@ -415,6 +452,20 @@ public:
   }
 
   /**
+   * Print double as string with the current field min width and
+   * number of decimals.
+   * Reset base to decimal.
+   * @param[in] n value to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(double n)
+  { 
+    print(n, m_width, m_prec); 
+    m_base = dec;
+    return (*this); 
+  }
+
+  /**
    * Print unsigned integer as string in the current base to stream.
    * Reset base to decimal.
    * @param[in] n value to print.
@@ -532,6 +583,8 @@ public:
  private:
   Device* m_dev;		//!< Delegated device.
   Base m_base;			//!< Base for next output operator.
+  int8_t m_width;		//!< Minimum width of output string.
+  uint8_t m_prec;		//!< Number of digits after decimal sign.
 
   /**
    * Print number prefix for non decimal base.

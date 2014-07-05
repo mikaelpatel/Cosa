@@ -57,16 +57,6 @@ void setup()
   }
 }
 
-IOStream& operator<<(IOStream& outs, double value)
-{
-  const uint8_t DECIMAL_PLACES = 4;
-  const uint8_t BUF_MAX = 33;
-  char buf[BUF_MAX];
-  dtostrf(value, (DECIMAL_PLACES + 2), DECIMAL_PLACES, buf);
-  outs << buf;
-  return (outs);
-}
-
 void loop()
 {
   static uint8_t channel = 0;
