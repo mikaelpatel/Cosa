@@ -34,8 +34,8 @@ OutputPin ledPin(Board::LED);
 
 void loop()
 {
-  ledPin.high();
-  delay(random(100, 500));
-  ledPin.low();
-  delay(random(100, 500));
+  ledPin.on();
+  delay(rand(100, 500));
+  ledPin.off();
+  delay(rand(100, 500));
 }
