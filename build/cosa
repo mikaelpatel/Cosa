@@ -29,11 +29,12 @@ then
    echo "  'cosa boards' for list of supported boards"
    echo "  'cosa BOARD config' show configuration for given board"
    echo "  'cosa BOARD upload' compile and upload"
+   echo "  'cosa BOARD ispload ISP_PORT=/dev/ttyACM0' compile and upload with ISP on device ttyACM0"
    echo "  'cosa BOARD monitor' connect serial monitor"
    echo "  'cosa BOARD monitor MONITOR_PORT=/dev/ttyUSB0' connect serial monitor on device ttyUSB0"
    echo "  'cosa BOARD clean' remove all generated files"
    echo "  'cosa BOARD avanti' compile, upload and connect serial monitor"
-   echo "Ver: 1.0, 2014-07-06"
+   echo "Where BOARD is one of the supported boards (see cosa boards)"
    exit 1
 fi
 
