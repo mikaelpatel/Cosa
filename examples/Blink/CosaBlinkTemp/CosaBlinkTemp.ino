@@ -58,7 +58,7 @@ OWI owi(Board::D4);
 DS18B20 sensor(&owi);
 
 // Powerdown on delay
-void powerdown(uint16_t ms)
+void powerdown_delay(uint32_t ms)
 {
   uint8_t mode = Power::set(SLEEP_MODE_PWR_DOWN);
   Power::all_disable();
@@ -71,6 +71,7 @@ void setup()
 {
   // Start watchdog
   Watchdog::begin();
+  delay = powerdown_delay;
 
   // Connect to temperature sensor, and set resolution and triggers
   pw.on();
@@ -95,20 +96,20 @@ void loop()
   // Set LED according to temperature
   if (temp < low) {
     blue.on();
-    powerdown(16);
+    delay(16);
     blue.off();
-    powerdown(1000);
+    delay(1000);
   }
   else if (temp > high) {
     red.on();
-    powerdown(16);
+    delay(16);
     red.off();
-    powerdown(1000);
+    delay(1000);
   }
   else {
     green.on();
-    powerdown(32);
+    delay(32);
     green.off();
-    powerdown(2000);
+    delay(2000);
   }
 }
