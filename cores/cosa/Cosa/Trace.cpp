@@ -36,9 +36,10 @@ Trace::begin(IOStream::Device* dev, const char* banner)
 }
 
 void
-Trace::fatal_P(const char* expr, int line, const char* func)
+Trace::fatal_P(const char* file, int line, const char* expr) 
 {
-  printf_P(PSTR("%d:%s:%S"), line, func, expr);
+  printf_P(PSTR("%s:%d:%S"), file, line, expr);
+  print((char) 255);
   get_device()->flush();
   exit(0);
 }

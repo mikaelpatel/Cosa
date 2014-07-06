@@ -70,7 +70,7 @@ public:
   int read(void* dest, uint32_t src, size_t size);
 
   /**
-   * Erase given 4 Kbyte block. Returs zero(0) if successful otherwise an
+   * Erase given flash block. Returs zero(0) if successful otherwise an
    * negative error code(-1).
    * @param[in] dest destination block to erase.
    * @return zero or negative error code.

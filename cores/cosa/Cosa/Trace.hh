@@ -59,11 +59,11 @@ public:
    * Support function for ASSERT failure. Prints give function name,
    * func, line number and expression that could not be validated 
    * to trace output device before calling exit().
-   * @param[in] expr program memory string with expression.
+   * @param[in] file name.
    * @param[in] line number.
-   * @param[in] func name of function.
+   * @param[in] expr program memory string with expression.
    */
-  void fatal_P(const char* expr, int line, const char* func) 
+  void fatal_P(const char* file, int line, const char* expr) 
     __attribute__((noreturn));
 };
 
@@ -90,16 +90,15 @@ public:
 extern uint8_t trace_log_mask;
 
 /**
- * Prints given message with current function name and line number
+ * Prints given message with current file name and line number
  * to trace device and the program will terminate. The message 
  * string is stored in program memory.
  * @param[in] msg message string to print.
  */
 #define FATAL(msg)							\
-  trace.fatal_P(__PSTR(msg),						\
+  trace.fatal_P(__FILE__,						\
 		__LINE__,						\
-		__PRETTY_FUNCTION__)
-
+		__PSTR(msg))
 #ifndef NDEBUG
 
 /**
