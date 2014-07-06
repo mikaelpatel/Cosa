@@ -30,7 +30,7 @@
  * @param[in] range value.
  * @return random number.
  */
-uint16_t 
+inline uint16_t 
 rand(uint16_t range)
 {
   if (range == 0) return 0;
@@ -44,7 +44,7 @@ rand(uint16_t range)
  * @param[in] high range value.
  * @return random number.
  */
-uint16_t
+inline uint16_t
 rand(uint16_t low, uint16_t high)
 {
   if (low >= high) return (low);
@@ -57,7 +57,7 @@ rand(uint16_t low, uint16_t high)
  * @param[in] range value.
  * @return random number.
  */
-uint32_t 
+inline uint32_t 
 random(uint32_t range)
 {
   if (range == 0) return 0;
@@ -65,13 +65,13 @@ random(uint32_t range)
 }
 
 /**
- * Random number in given range (low..high). Max high value is
+ * Random number in given range (low..high-1). Max high value is
  * RANDOM_MAX(0x7fffffff). 
  * @param[in] low range value.
  * @param[in] high range value.
  * @return random number.
  */
-uint32_t
+inline uint32_t
 random(uint32_t low, uint32_t high)
 {
   if (low >= high) return (low);

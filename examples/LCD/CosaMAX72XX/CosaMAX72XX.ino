@@ -21,6 +21,7 @@
  */
 
 #include "Cosa/Types.h"
+#include "Cosa/Math.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/AnalogPin.hh"
@@ -66,11 +67,13 @@ void loop()
   cout << clear << 'A' << channel << ' ' << volt;
   sleep(1);
 
-  // Display in milli-volt 
-  cout << clear << volt * 1000;
-  sleep(1);
-
   // Step to next channel
   channel += 1;
   if (channel == 6) channel = 0;
+
+  // Draw a random number (1..100)
+  int8_t saved = cout.precision(7);
+  cout << clear << 1.0 / (rand(100U) + 1);
+  cout.precision(saved);
+  sleep(1);
 }
