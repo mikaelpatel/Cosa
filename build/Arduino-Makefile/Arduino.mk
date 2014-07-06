@@ -845,7 +845,7 @@ CPPFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -DF_CPU=$(F_CPU) -DARDUINO=$(ARDUINO_VERSIO
 ifdef DEBUG
   OPTIMIZATION_FLAGS= $(DEBUG_FLAGS)
 else
-  OPTIMIZATION_FLAGS = -O$(OPTIMIZATION_LEVEL)
+  OPTIMIZATION_FLAGS = -g -O$(OPTIMIZATION_LEVEL)
 endif
 
 CPPFLAGS += $(OPTIMIZATION_FLAGS)
@@ -1075,13 +1075,9 @@ ifndef AVRDUDE
   AVRDUDE = $(AVR_TOOLS_PATH)/avrdude
 endif
 
-# Default avrdude options
-# -V Do not verify
-# -q suppress progress output
-# -D Disable auto erase for flash memory
-# (-D is needed for Mega boards. See https://github.com/sudar/Arduino-Makefile/issues/114#issuecomment-25011005)
+# Default avrdude options; -q suppress progress output, -V do not verify
 ifndef AVRDUDE_OPTS
-  AVRDUDE_OPTS = -q -V -D
+  AVRDUDE_OPTS = -q -V
 endif
 
 AVRDUDE_COM_OPTS = $(AVRDUDE_OPTS) -p $(MCU)
@@ -1089,7 +1085,10 @@ ifdef AVRDUDE_CONF
   AVRDUDE_COM_OPTS += -C $(AVRDUDE_CONF)
 endif
 
-AVRDUDE_ARD_OPTS = -c $(AVRDUDE_ARD_PROGRAMMER) -b $(AVRDUDE_ARD_BAUDRATE) -P
+# Arduino programming options
+# -D Disable auto erase for flash memory, needed for Mega boards. See
+# https://github.com/sudar/Arduino-Makefile/issues/114#issuecomment-25011005) 
+AVRDUDE_ARD_OPTS = -D -c $(AVRDUDE_ARD_PROGRAMMER) -b $(AVRDUDE_ARD_BAUDRATE) -P
 ifeq ($(CURRENT_OS), WINDOWS)
   # Get_monitor_port checks to see if the monitor port exists,
   # assuming it is a file. In Windows, avrdude needs the port in the
@@ -1194,7 +1193,7 @@ pre-build:
 	$(call runscript_if_exists,$(PRE_BUILD_HOOK))
 
 $(TARGET_ELF): $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) -lc -lm
+	$(CC) $(LDFLAGS) -o $@ $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) -lm
 
 $(CORE_LIB): $(CORE_OBJS) $(LIB_OBJS) $(USER_LIB_OBJS)
 	$(AR) rcs $@ $(CORE_OBJS) $(LIB_OBJS) $(USER_LIB_OBJS)
