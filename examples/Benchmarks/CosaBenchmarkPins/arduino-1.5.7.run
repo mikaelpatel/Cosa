@@ -11,32 +11,32 @@ F_CPU = 16000000
 I_CPU = 16
 
 123:void loop():info:Measure the time to perform an empty loop block
-131:void loop():info:nop:315 ns
+131:void loop():info:nop:314 ns
 
 133:void loop():info:Measure the time to perform an input pin read
-142:void loop():info:inPin.is_set():125 ns
-154:void loop():info:inPin >> var:125 ns
-164:void loop():info:InputPin::read(D7):62 ns
-174:void loop():info:digitalRead(D7):62 ns
+142:void loop():info:inPin.is_set():126 ns
+154:void loop():info:inPin >> var:126 ns
+164:void loop():info:InputPin::read(D7):63 ns
+174:void loop():info:digitalRead(D7):63 ns
 
 176:void loop():info:Measure the time to perform an output pin write
-186:void loop():info:outPin.write():910 ns
-199:void loop():info:outPin._write():690 ns
-210:void loop():info:outPin.set/clear():910 ns
-223:void loop():info:outPin._set/_clear():690 ns
-234:void loop():info:outPin << val:910 ns
+186:void loop():info:outPin.write():911 ns
+199:void loop():info:outPin._write():691 ns
+210:void loop():info:outPin.set/clear():911 ns
+223:void loop():info:outPin._set/_clear():691 ns
+234:void loop():info:outPin << val:911 ns
 245:void loop():info:OutputPin::write(D8, val):314 ns
-256:void loop():info:digitalWrite(D8, val):125 ns
-267:void loop():info:outPin.toggle():502 ns
-280:void loop():info:outPin._toggle():596 ns
-291:void loop():info:OutputPin::toggle(D8):62 ns
+256:void loop():info:digitalWrite(D8, val):126 ns
+267:void loop():info:outPin.toggle():503 ns
+280:void loop():info:outPin._toggle():597 ns
+291:void loop():info:OutputPin::toggle(D8):63 ns
 
 293:void loop():info:Measure the time to perform input pin read/output pin write
-302:void loop():info:outPin.write(!inPin.read()):1633 ns
-312:void loop():info:inPin.is_set();outPin.clear/set():1633 ns
-324:void loop():info:inPin >> var; outPin << !var:1633 ns
-334:void loop():info:outPin.set(inPin.is_clear()):1633 ns
-344:void loop():info:OutputPin::write(D8, !InputPin::read(D7)):565 ns
+302:void loop():info:outPin.write(!inPin.read()):1667 ns
+312:void loop():info:inPin.is_set();outPin.clear/set():1638 ns
+324:void loop():info:inPin >> var; outPin << !var:1634 ns
+334:void loop():info:outPin.set(inPin.is_clear()):1634 ns
+344:void loop():info:OutputPin::write(D8, !InputPin::read(D7)):566 ns
 357:void loop():info:OutputPin::read(D7)/write(D8,0/1):848 ns
 
 359:void loop():info:Measure the time to perform 8-bit serial data transfer
