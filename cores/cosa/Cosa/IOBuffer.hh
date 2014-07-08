@@ -29,10 +29,10 @@
  * Circular buffer template class for IOStreams. May be used as a
  * string buffer device, or to connect different IOStreams. See
  * UART.hh for an example. Buffer size should be power of 2 and 
- * max 128. 
+ * max 32Kbyte. 
  * @param[in] SIZE number of bytes in buffer.
  */
-template <uint8_t SIZE>
+template <uint16_t SIZE>
 class IOBuffer : public IOStream::Device {
 public:
   /**
@@ -147,13 +147,13 @@ public:
   }
 
 private:
-  static const uint8_t MASK = (SIZE - 1);
-  volatile uint8_t m_head;
-  volatile uint8_t m_tail;
+  static const uint16_t MASK = (SIZE - 1);
+  volatile uint16_t m_head;
+  volatile uint16_t m_tail;
   char m_buffer[SIZE];
 };
 
-template <uint8_t SIZE>
+template <uint16_t SIZE>
 int 
 IOBuffer<SIZE>::putchar(char c)
 {
@@ -164,7 +164,7 @@ IOBuffer<SIZE>::putchar(char c)
   return (c & 0xff);
 }
 
-template <uint8_t SIZE>
+template <uint16_t SIZE>
 int 
 IOBuffer<SIZE>::peekchar()
 {
@@ -173,7 +173,7 @@ IOBuffer<SIZE>::peekchar()
   return (m_buffer[next] & 0xff);
 }
 
-template <uint8_t SIZE>
+template <uint16_t SIZE>
 int 
 IOBuffer<SIZE>::peekchar(char c)
 {
@@ -187,7 +187,7 @@ IOBuffer<SIZE>::peekchar(char c)
   return (IOStream::EOF);
 }
 
-template <uint8_t SIZE>
+template <uint16_t SIZE>
 int 
 IOBuffer<SIZE>::getchar()
 {
@@ -197,7 +197,7 @@ IOBuffer<SIZE>::getchar()
   return (m_buffer[next] & 0xff);
 }
 
-template <uint8_t SIZE>
+template <uint16_t SIZE>
 char*
 IOBuffer<SIZE>::gets(char *s, size_t count) 
 { 
@@ -211,7 +211,7 @@ IOBuffer<SIZE>::gets(char *s, size_t count)
   return (s == res ? NULL : res);
 }
 
-template <uint8_t SIZE>
+template <uint16_t SIZE>
 int
 IOBuffer<SIZE>::flush()
 {
