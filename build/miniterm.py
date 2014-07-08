@@ -199,7 +199,6 @@ class Miniterm:
                 data = self.serial.read(1)
                 # check for exit from device
                 if data == '\xff':
-                    sys.stdout.write('\n')
                     self.stop()
                     break
                 if self.repr_mode == 0:
