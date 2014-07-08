@@ -201,6 +201,19 @@ public:
     return (transfer(m_dev->m_data));
   }
 
+  /**
+   * Next data to exchange with slave. Should only be used within a SPI
+   * transaction; begin()-end() block. 
+   * @param[in] data to send.
+   * @return value received.
+   */
+  uint8_t transfer_next(uint8_t data) __attribute__((always_inline))
+  {
+    uint8_t res = transfer_await();
+    transfer_start(data);
+    return (res);
+  }
+
 #else
   /**
    * Exchange data with slave. Should only be used within a SPI
@@ -234,6 +247,20 @@ public:
   {
     loop_until_bit_is_set(SPSR, SPIF);
     return (SPDR);
+  }
+
+  /**
+   * Next data to exchange with slave. Should only be used within a SPI
+   * transaction; begin()-end() block. 
+   * @param[in] data to send.
+   * @return value received.
+   */
+  uint8_t transfer_next(uint8_t data) __attribute__((always_inline))
+  {
+    loop_until_bit_is_set(SPSR, SPIF);
+    uint8_t res = SPDR;
+    SPDR = data;
+    return (res);
   }
 #endif
 
@@ -278,7 +305,7 @@ public:
    * @param[in] buf buffer with data to write.
    * @param[in] count number of bytes to write.
    */
-  void write_P(const uint8_t* buf, size_t count);
+  void write_P(const void* buf, size_t count);
 
   /**
    * Write null terminated io buffer vector to the device slave. 
