@@ -23,42 +23,76 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/SPI.hh"
+#include "Cosa/Flash.hh"
 
 /**
- * Cosa SPANSINO S25FL127S flash device driver class. Implements disk
- * driver connect/disconnect, erase, read and write block.
+ * Cosa SPANSINO S25FL127S flash device driver class. Implements
+ * the Cosa Flash device driver interface with erase, read and
+ * write/program flash memory blocks. 
  * 
  * @section References
  * 1. S25FL127S, 128 Mbit (16 Mbyte) MirrorBit(R) Flash Non-Volatile
  * Memory, CMOS 3.0 Volt Core, Serial Peripheral Interface with
  * Mult-I/O, Data Sheet, Pub.nr. S25127S_00, Rev. 05, Issue Date
  * Nov. 15, 2013.
- * 
  */
-class S25FL127S : private SPI::Driver {
+class S25FL127S : public Flash::Device, protected SPI::Driver {
 public:
+  /** 
+   * Size of Flash Memory Array. Default hybrid combination of 4-kB and
+   * 64-kB sectors. Address range starts with 16 X 4-kB sectors (in default
+   * configuration). The top 64-kB sector is reserved as the block
+   * address (0xff) is used as flash memory NULL pointer.
+   *
+   * For more details see chapter 8: Address Space Maps (pp. 54).
+   */
+  static const uint32_t SECTOR_MAX = 0x00010000L;
+  static const uint32_t SECTOR_MASK = SECTOR_MAX - 1;
+  static const size_t SECTOR_COUNT = 256;
+  
+  static const uint32_t SECTOR4K_MAX = 0x00001000L;
+  static const uint32_t SECTOR4K_MASK = SECTOR4K_MAX - 1;
+  static const size_t SECTOR4K_COUNT = 16;
+
+  /**
+   * Default programming page buffer size (pp. 61, 97).
+   */
+  static const size_t PAGE_MAX = 256;
+  static const size_t PAGE_MASK = PAGE_MAX - 1;
+
   /**
    * Construct S25FL127S device driver with given chip select pin. 
    * @param[in] csn chip select pin (default D5/D3).
    */
-#if defined(BOARD_ATTINYX5)
-  S25FL127S(Board::DigitalPin csn = Board::D3) :
+#if !defined(BOARD_ATTINYX5)
+  S25FL127S(Board::DigitalPin csn = Board::D5) :
     SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 0, SPI::MSB_ORDER, NULL)
   {}
 #else
-  S25FL127S(Board::DigitalPin csn = Board::D5) :
+  S25FL127S(Board::DigitalPin csn = Board::D3) :
     SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 0, SPI::MSB_ORDER, NULL)
   {}
 #endif
 
   /**
+   * @override Flash::Device
+   * Initiate the flash memory device driver and check for valid
+   * identification. Return true(1) if the successful otherwise
+   * false(0). 
+   * @return bool
+   */
+  virtual bool begin();
+  
+  /**
+   * @override Flash::Device
    * Return true(1) if the device is ready, write cycle is completed,
    * otherwise false(0).
    * @return bool
    */
-  bool is_ready();
+  virtual bool is_ready();
 
   /**
+   * @override Flash::Device
    * Read flash block with the given size into the buffer from the
    * source address. Return number of bytes read or negative error
    * code. 
@@ -67,17 +101,22 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes or negative error code.
    */
-  int read(void* dest, uint32_t src, size_t size);
+  virtual int read(void* dest, uint32_t src, size_t size);
 
   /**
-   * Erase given flash block. Returs zero(0) if successful otherwise an
-   * negative error code(-1).
-   * @param[in] dest destination block to erase.
+   * @override Flash::Device
+   * Erase given flash block for given byte address. The size of the
+   * erased sector is either 4 or 64 KB. The default configuration
+   * consists of 16X4 KB sectors from low address followed by 255X64 KB 
+   * sectors. The highest sector is reserved. Returs zero(0) if
+   * successful otherwise an negative error code(-1).
+   * @param[in] dest destination block byte address to erase.
    * @return zero or negative error code.
    */
-  int erase(uint32_t dest);
+  virtual int erase(uint32_t dest);
 
   /**
+   * @override Flash::Device
    * Write flash block at given destination address with the contents
    * of the source buffer. Return number of bytes written or negative
    * error code. 
@@ -86,7 +125,115 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes or negative error code.
    */
-  int write(uint32_t dest, const void* src, size_t size);
+  virtual int write(uint32_t dest, const void* src, size_t size);
+
+  /**
+   * @override Flash::Device
+   * Write flash block at given destination address with contents
+   * of the source buffer in program memory. Return number of bytes
+   * written or negative error code.  
+   * @param[in] buf buffer to write.
+   * @param[in] size number of bytes to write.
+   * @return number of bytes written or EOF(-1).
+   */
+  virtual int write_P(uint32_t dest, const void* buf, size_t size);
+
+  /**
+   * Configuration Register 1 (CR1) bitfields (Table 8.6, pp. 59).
+   */
+  union config_t {
+    uint8_t as_uint8;		//!< As unsigned 8-bit value.
+    struct {			//!< As bit-fields.
+      uint8_t FREEZE:1;		//!< Lock current statos of BP2-0 bits.
+      uint8_t QUAD:1;		//!< Quad I/O operation.
+      uint8_t TBPARAM:1;	//!< Parameter Sectors location (0=low,1=high).
+      uint8_t BPNV:1;		//!< BP2-0 in status register (0=NV,1=Volatile).
+      uint8_t RFU:1;		//!< Reserved for Future Use.
+      uint8_t TBPROT:1;		//!< Start of Block Protection (0=high,1=low).
+      uint8_t LC:2;		//!< Latency Code (see table 8.7, pp. 60).
+    };
+    config_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
+    }
+    operator uint8_t()
+    {
+      return (as_uint8);
+    }
+  };
+
+  /**
+   * Read device configuration register 1.
+   * @return configuration.
+   */
+  uint8_t read_config()
+  {
+    return (issue(RDCR));
+  }
+
+  /**
+   * Status Register 1 (SR1) bitfields (Table 8.5, pp. 57-58).
+   */
+  union status1_t {
+    uint8_t as_uint8;		//!< As unsigned 8-bit value.
+    struct {			//!< As bit-fields.
+      uint8_t WIP:1;		//!< Write In Progress.
+      uint8_t WEL:1;		//!< Write Enable Latch.
+      uint8_t BP:3;		//!< Block Protection.
+      uint8_t E_ERR:1;		//!< Erase Error Occurred.
+      uint8_t P_ERR:1;		//!< Programming Error Occurred.
+      uint8_t SRWD:1;		//!< Status Register Write Disable.
+    };
+    status1_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
+    }
+    operator uint8_t()
+    {
+      return (as_uint8);
+    }
+  };
+
+  /**
+   * Read device status register 1.
+   * @return status code.
+   */
+  uint8_t read_status1()
+  {
+    return (issue(RDSR1));
+  }
+  
+  /**
+   * Status Register 2 (SR2) bitfields (Table 8.8, pp. 61).
+   */
+  union status2_t {
+    uint8_t as_uint8;		//!< As unsigned 8-bit value.
+    struct {			//!< As bit-fields.
+      uint8_t PS:1;		//!< Program suspend.
+      uint8_t ES:1;		//!< Erase suspend.
+      uint8_t RFU:3;		//!< Reserved for Future Use.
+      uint8_t IO3:1;	        //!< IO3 alternative function (0=RESET,1=HOLD).
+      uint8_t PBW:1;		//!< Page Buffer Wrap (0=256B,1=512B).
+      uint8_t BES:1;		//!< Block Erase Size (0=64,1=256 kB).
+    };
+    status2_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
+    }
+    operator uint8_t()
+    {
+      return (as_uint8);
+    }
+  };
+
+  /**
+   * Read device status register 2.
+   * @return status code.
+   */
+  uint8_t read_status2()
+  {
+    return (issue(RDSR2));
+  }
 
 protected:
   /**
@@ -140,7 +287,7 @@ protected:
     
     /** Erase Flash Array */
     P4E = 0x20,			//!< Parameter 4-kB, sector erase.
-    P4E4 = 0x21,		//!< Parameter 4-kB, sector erase.
+    P4E4 = 0x21,		//!< Parameter 4-kB, sector erase (4-byte addr).
     BER = 0x60,			//!< Bulk Erase.
     SER = 0xd8,			//!< Erase 64 kB or 256 kB.
     SER4 = 0xdc,		//!< Erase 64 kB or 256 kB (4-byte addr).
@@ -169,24 +316,22 @@ protected:
     RESET = 0xf0,		//!< Software Reset.
     MBR = 0xff			//!< Mode Bit Reset.
   } __attribute__((packed));
-  
+
+  /** Manufacturer code */
+  static const uint8_t MANUFACTURER = 0x01;
+
+  /** Device code */
+  static const uint8_t DEVICE = 0x17;
+
   /**
-   * Status Register#1 (SR1) bitfields (Table 8.5, pp. 57-58).
+   * Issue given command and return result.
+   * @param[in] cmd command code.
+   * @return result.
    */
-  union status_t {
-    uint8_t as_uint8;		//!< As unsigned 8-bit value.
-    struct {			//!< As bit-fields.
-      uint8_t WIP:1;		//!< Write In Progress.
-      uint8_t WEL:1;		//!< Write Enable Latch.
-      uint8_t BP:3;		//!< Block Protection.
-      uint8_t E_ERR:1;		//!< Erase Error Occurred.
-      uint8_t P_ERR:1;		//!< Programming Error Occurred.
-      uint8_t SRWD:1;		//!< Status Register Write Disable.
-    };
-  };
-  
+  uint8_t issue(Command cmd);
+
   /** Latest status; is_ready() call */
-  status_t m_status;
+  status1_t m_status;
 };
 
 #endif
