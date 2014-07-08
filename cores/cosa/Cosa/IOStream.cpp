@@ -31,7 +31,9 @@ IOStream::IOStream(Device* dev) :
 
 IOStream::IOStream() : 
   m_dev(NULL),
-  m_base(dec) 
+  m_base(dec),
+  m_width(6),
+  m_prec(4)
 {}
 
 IOStream::Device* 
