@@ -34,6 +34,7 @@
  */
 template <uint16_t SIZE>
 class IOBuffer : public IOStream::Device {
+  static_assert(SIZE && !(SIZE & (SIZE - 1)), "SIZE should be power of 2");
 public:
   /**
    * Constuct buffer object for stream operations. 
