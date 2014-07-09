@@ -29,8 +29,8 @@
 # GETTING STARTED WITH ARDUINO-MAKEFILE IN COSA
 #
 # 1. Configure the build (build/Cosa.mk) by setting the path of the
-# Arduino installation (1.0.5). The Cosa version of Arduino-Makefile
-# supports 1.05, 1.5.6-r2 and the nightly build with GCC 4.8.1.
+# Arduino installation. The Cosa version of Arduino-Makefile supports 
+# 1.0.5 and 1.5.7. 
 #   ARDUINO_DIR = $(HOME)/opt/arduino-1.0.5
 #
 # 2. Create a Makefile in the Sketch director. The minimum contents is:
