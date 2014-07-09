@@ -18,8 +18,8 @@
 # The Cosa Arduino 1.5.X platform definition file.
 #
 # @section Acknowledgement
-# This file is a direct copy of the Arduino 1.5.5 platform/tools
-# definitions. 
+# This file originates from Arduino 1.5.5 platform/tools definitions
+# and modified for the Cosa Arduino core build.
 #
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5
 # ---3rd-party-Hardware-specification
@@ -27,7 +27,7 @@
 # This file is part of the Arduino Che Cosa project.
 
 name=Cosa AVR Boards
-version=1.5.6
+version=1.5.7
 
 # AVR compile variables
 # --------------------- 
