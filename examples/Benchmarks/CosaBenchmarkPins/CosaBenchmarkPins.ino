@@ -66,14 +66,7 @@ AnalogPin analogPin(Board::A0);
 // data typed pins
 inline void digitalWrite(Board::DigitalPin pin, uint8_t value)
 {
-#if ARDUINO < 150
   OutputPin::write(pin, value);
-#else
-  if (__builtin_constant_p(pin) && __builtin_constant_p(value))
-    OutputPin::_write(pin, value);
-  else
-    OutputPin::write(pin, value);
-#endif
 }
 
 inline int digitalRead(Board::DigitalPin pin)

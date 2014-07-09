@@ -38,7 +38,12 @@ public:
   { 
     synchronized {
       *DDR() |= m_mask; 
-      _set(initial);
+      if (initial) {
+	*PORT() |= m_mask; 
+      }
+      else {
+	*PORT() &= ~m_mask; 
+      }
     }
   }
 
@@ -49,10 +54,18 @@ public:
    */
   static void set_mode(Board::DigitalPin pin, uint8_t initial = 0)
   {
+    volatile uint8_t* port = PORT(pin);
+    volatile uint8_t* ddr = DDR(pin);
+    const uint8_t mask = MASK(pin);
     synchronized {
-      *DDR(pin) |= MASK(pin); 
+      *ddr |= mask;
+      if (initial) {
+	*port |= mask;
+      }
+      else {
+	*port &= ~mask;
+      }
     }
-    write(pin, initial);
   }
 
   /**
@@ -251,6 +264,17 @@ public:
   { 
     volatile uint8_t* port = PORT(pin);
     const uint8_t mask = MASK(pin);
+#if ARDUINO > 150
+    if (__builtin_constant_p(pin) && __builtin_constant_p(value)) {
+      if (value) {
+	*port |= mask;
+      }
+      else {
+	*port &= ~mask;
+      }
+    }
+    else 
+#endif
     synchronized {
       if (value) {
 	*port |= mask;
