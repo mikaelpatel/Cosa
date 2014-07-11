@@ -151,23 +151,23 @@ union univ32_t {
  * 1.5.6-r2 etc).
  */
 #if ((__GNUC__ == 4) && (__GNUC_MINOR__ <= 3))
-#undef offsetof
-#define offsetof(t,m)							\
+# undef offsetof
+# define offsetof(t,m)							\
   (__extension__(							\
     {									\
       const t* __p = NULL;						\
       (size_t) &__p->m;							\
     }									\
   ))
-#define __PROGMEM  __attribute__((section(".progmem.data")))
-#undef PSTR
-#define PSTR(str) __PSTR(str)
-/**
- * Program string literal that may be used in macro. Is not unique.
- * @param[in] s string literal (at compile time).
- * @return string literal in program memory.
- */
-#define __PSTR(s)							\
+# define __PROGMEM  __attribute__((section(".progmem.data")))
+# undef PSTR
+# define PSTR(str) __PSTR(str)
+ /**
+  * Program string literal that may be used in macro. Is not unique.
+  * @param[in] s string literal (at compile time).
+  * @return string literal in program memory.
+  */
+# define __PSTR(s)							\
   (__extension__(							\
     {									\
       static const char __c[]						\
@@ -175,9 +175,12 @@ union univ32_t {
       &__c[0];								\
     }									\
   ))
+# if !defined(__GXX_EXPERIMENTAL_CXX0X__)
+#   define static_assert(condition,message)
+# endif
 #else
-#define __PSTR(s) PSTR(s)
-#define __PROGMEM PROGMEM
+# define __PSTR(s) PSTR(s)
+# define __PROGMEM PROGMEM
 #endif
 
 /** String in program memory */
