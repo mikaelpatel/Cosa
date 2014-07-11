@@ -1209,22 +1209,16 @@ upload:	$(TARGET_HEX) verify_size
 	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
 
 raw_upload: $(TARGET_HEX) verify_size
-	$(MAKE) error_on_caterina
-	$(MAKE) do_upload
-
-do_upload:
+	$(ERROR_ON_CATERINA)
 	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
 
-do_eeprom: $(TARGET_EEP) $(TARGET_HEX)
+eeprom:	$(TARGET_EEP) $(TARGET_HEX) verify_size
+	$(call arduino_output,Resetting Arduino...)
+	$(RESET_CMD)
+
+raw_eeprom: $(TARGET_EEP) $(TARGET_HEX) verify_size
+	$(ERROR_ON_CATERINA)
 	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_EEP)
-
-eeprom:	$(TARGET_HEX) verify_size
-	$(MAKE) reset
-	$(MAKE) do_eeprom
-
-raw_eeprom: $(TARGET_HEX) verify_size
-	$(MAKE) error_on_caterina
-	$(MAKE) do_eeprom
 
 reset:
 	$(call arduino_output,Resetting Arduino...)
