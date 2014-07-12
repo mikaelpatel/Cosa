@@ -60,6 +60,15 @@ public:
   }
 
   /**
+   * Set exit character to signal fatal.
+   * @param[in] c new exit character.
+   */
+  void set_exitcharacter(char c)
+  {
+    EXITCHARACTER = c;
+  }
+
+  /**
    * Support function for ASSERT failure. Prints give function name,
    * func, line number and expression that could not be validated 
    * to trace output device before calling exit().
@@ -71,7 +80,7 @@ public:
     __attribute__((noreturn));
   
 protected:
-  /** Exit from miniterm. Default CTRL-ALT GR-] */
+  /** Exit from miniterm. Default CTRL-ALT GR-] (0x1d) */
   char EXITCHARACTER;
 };
 
