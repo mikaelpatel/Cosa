@@ -5,7 +5,7 @@
 
 # Input characters are sent directly (only LF -> CR/LF/CRLF translation is
 # done), received characters are displayed as is (or escaped trough pythons
-# repr, useful for debug purposes). Exit on input character '\xff'
+# repr, useful for debug purposes). 
 
 import sys, os, serial, threading
 
@@ -198,7 +198,7 @@ class Miniterm:
             while self.alive:
                 data = self.serial.read(1)
                 # check for exit from device
-                if data == '\xff':
+                if data == EXITCHARCTER:
                     self.stop()
                     break
                 if self.repr_mode == 0:

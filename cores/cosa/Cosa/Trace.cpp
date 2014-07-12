@@ -39,7 +39,7 @@ void
 Trace::fatal_P(const char* file, int line, const char* expr) 
 {
   printf_P(PSTR("%s:%d:%S\n"), file, line, expr);
-  print((char) 255);
+  print(EXITCHARACTER);
   get_device()->flush();
   exit(0);
 }

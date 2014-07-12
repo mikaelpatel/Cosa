@@ -35,7 +35,11 @@ public:
    * Use begin() to set the trace device. The Trace class is actually 
    * a singleton, trace, as the trace macro set depends on the variable.
    */
-  Trace() : IOStream() {}
+  Trace() : 
+    IOStream(),
+    EXITCHARACTER(0x1d)
+  {
+  }
 
   /**
    * Start trace stream over given iostream device.
@@ -65,6 +69,10 @@ public:
    */
   void fatal_P(const char* file, int line, const char* expr) 
     __attribute__((noreturn));
+  
+protected:
+  /** Exit from miniterm. Default ALT GR-] */
+  char EXITCHARACTER;
 };
 
 /**
