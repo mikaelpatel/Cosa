@@ -16,7 +16,8 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Demo of the default EEPROM device driver.
+ * Demo of the default EEPROM device driver and usage of the EEMEM
+ * directive. 
  *
  * @section Circuit
  * Uses the MCU internal EEPROM and Analog Pin A0 for samples.

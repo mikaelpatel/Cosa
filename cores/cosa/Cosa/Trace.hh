@@ -71,7 +71,7 @@ public:
     __attribute__((noreturn));
   
 protected:
-  /** Exit from miniterm. Default ALT GR-] */
+  /** Exit from miniterm. Default CTRL-ALT GR-] */
   char EXITCHARACTER;
 };
 
