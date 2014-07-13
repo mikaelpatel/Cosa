@@ -104,7 +104,7 @@ mega2560.build.core=cosa
 # AVR:ATmega1280
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (4096 words, 0x1f000). 
+# Boot Reset vector enable (2048 words, 0xf800). 
 mega1280.name=Cosa Arduino Mega (ATmega1280/BOOT_168)
 mega1280.upload.tool=avrdude
 mega1280.upload.protocol=arduino
