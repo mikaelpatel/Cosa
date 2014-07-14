@@ -49,6 +49,28 @@ miniwireless.build.core=cosa
 # ARDUINO BOARDS
 ##
 
+# AVR:ATmega168
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (1024 words, 0x1c00). 
+diecimila.name=Cosa Arduino Diecimila (ATmega168/BOOT_168)
+diecimila.upload.tool=avrdude
+diecimila.upload.protocol=arduino
+diecimila.upload.maximum_size=14336
+diecimila.upload.maximum_data_size=1024
+diecimila.upload.speed=19200
+
+diecimila.bootloader.tool=avrdude
+diecimila.bootloader.low_fuses=0xff
+diecimila.bootloader.high_fuses=0xdd
+diecimila.bootloader.extended_fuses=0x00
+
+diecimila.build.mcu=atmega168
+diecimila.build.f_cpu=16000000L
+diecimila.build.board=ARDUINO_DIECIMILA
+diecimila.build.variant=arduino/duemilanove
+diecimila.build.core=cosa
+
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
