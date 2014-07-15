@@ -347,10 +347,11 @@ SPI::write(const void* buf, size_t count)
 }
 
 void 
-SPI::write_P(const uint8_t* buf, size_t count)
+SPI::write_P(const void* buf, size_t count)
 {
   if (count == 0) return;
-  do transfer(pgm_read_byte(buf++)); while (--count);
+  const uint8_t* bp = (const uint8_t*) buf;
+  do transfer(pgm_read_byte(bp++)); while (--count);
 }
 
 #endif
