@@ -34,9 +34,9 @@
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::ERM1602_5 port;
-// HD44780::MJKDZ port;
+HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
-HD44780::DFRobot port;
+// HD44780::DFRobot port;
 HD44780 lcd(&port);
 
 // Bind the lcd to an io-stream
@@ -75,7 +75,7 @@ void loop()
        << bcd << now.year << '-'
        << bcd << now.month << '-'
        << bcd << now.date << ' '
-       << RTC::diff(clock, epoch);
+       << clock - epoch;
 
   // Second line with time and battery status
   lcd.set_cursor(0, 1);
