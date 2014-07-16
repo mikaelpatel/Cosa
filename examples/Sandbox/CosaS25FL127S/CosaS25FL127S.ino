@@ -31,22 +31,23 @@
 
 S25FL127S flash;
 
+// Disable radio module on common spi bus
 #if defined(ANARDUINO_MINIWIRELESS)
 OutputPin rf_cs(Board::D10, 1);
 #endif
 
 void setup()
 {
-  Watchdog::begin();
-  RTC::begin();
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaS25FL127S: started"));
+  Watchdog::begin();
+  RTC::begin();
   TRACE(free_memory());
   TRACE(sizeof(flash));
 
   // Initiate the flash memory device driver
   ASSERT(flash.begin());
-
+  
   // Read configuration
   uint8_t config = flash.read_config();
   ASSERT(config == 0);
@@ -55,6 +56,7 @@ void setup()
   // Search for first non zero byte and clear next bit
   uint32_t addr = 0L;
   uint8_t data = 0;
+  int res = 0;
   while (1) {
     ASSERT(flash.read(&data, addr, sizeof(data)) == sizeof(data));
     if (data != 0) break;
@@ -62,7 +64,7 @@ void setup()
   }
   data >>= 1;
   uint32_t start = RTC::micros();
-  int res = flash.write(addr, &data, sizeof(data));
+  res = flash.write(addr, &data, sizeof(data));
   uint32_t us = RTC::micros() - start;
   ASSERT(flash.is_ready());
   ASSERT(res == sizeof(data));

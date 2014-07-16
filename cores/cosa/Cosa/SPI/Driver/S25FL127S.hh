@@ -54,6 +54,8 @@ public:
   static const uint32_t SECTOR4K_MASK = SECTOR4K_MAX - 1;
   static const size_t SECTOR4K_COUNT = 16;
 
+  static const uint32_t DEVICE_MAX = SECTOR_MAX * SECTOR_COUNT;
+  
   /**
    * Default programming page buffer size (pp. 61, 97).
    */
@@ -126,7 +128,7 @@ public:
    * @return number of bytes or negative error code.
    */
   virtual int write(uint32_t dest, const void* src, size_t size);
-
+  
   /**
    * @override Flash::Device
    * Write flash block at given destination address with contents
