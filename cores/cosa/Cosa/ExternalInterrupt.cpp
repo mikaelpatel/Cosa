@@ -140,6 +140,14 @@ ExternalInterrupt::disable()
   }
 }
 
+void 
+ExternalInterrupt::clear() 
+{ 
+  synchronized {
+    bit_clear(GIFR, INTF0 + m_ix); 
+  }
+}
+
 #elif defined(BOARD_ATTINY)
 
 ExternalInterrupt::
@@ -170,6 +178,14 @@ ExternalInterrupt::disable()
   }
 }
 
+void 
+ExternalInterrupt::clear() 
+{ 
+  synchronized {
+    bit_clear(GIFR, INTF0); 
+  }
+}
+
 #endif
 
 #if !defined(BOARD_ATTINY)
@@ -188,6 +204,14 @@ ExternalInterrupt::disable()
 { 
   synchronized {
     bit_clear(EIMSK, m_ix); 
+  }
+}
+
+void 
+ExternalInterrupt::clear() 
+{ 
+  synchronized {
+    bit_clear(EIFR, m_ix); 
   }
 }
 #endif

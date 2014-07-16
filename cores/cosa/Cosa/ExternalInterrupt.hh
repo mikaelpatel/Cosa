@@ -62,18 +62,27 @@ public:
 
   /**
    * @override Interrupt::Handler
-   * Enable interrupt pin change detection and interrupt handler.
+   * Enable external interrupt handler.
    */
   virtual void enable();
 
   /**
    * @override Interrupt::Handler
-   * Disable interrupt pin change detection.
+   * Disable external interrupt handler.
    */
   virtual void disable();
 
+  /**
+   * @override Interrupt::Handler
+   * Clear external interrupt flag.
+   */
+  virtual void clear();
+
 private:
+  /** External interrupt pin map. */
   static ExternalInterrupt* ext[Board::EXT_MAX];
+
+  /** External interrupt mask. */
   uint8_t m_ix;
 
   friend void INT0_vect(void);

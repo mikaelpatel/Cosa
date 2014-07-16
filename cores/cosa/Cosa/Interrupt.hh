@@ -51,6 +51,12 @@ public:
      * Disable interrupt handler.
      */
     virtual void disable() {}
+
+    /**
+     * @override Interrupt::Handler
+     * Clear interrupt.
+     */
+    virtual void clear() {}
   };
 };
 #endif
