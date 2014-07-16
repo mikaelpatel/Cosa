@@ -80,7 +80,7 @@ void setup() {}
  * Default loop function. This function may be overridden.
  */
 void loop() __attribute__((weak));
-void loop() {}
+void loop() { exit(0); }
 
 /**
  * The main function. This function may be overridden.
