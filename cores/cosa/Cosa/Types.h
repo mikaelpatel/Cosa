@@ -145,7 +145,7 @@ union univ32_t {
  */
 #define membersof(x) (sizeof(x) / sizeof(x[0]))
 
-/**
+/*
  * Workaround for gcc offsetof macro usage and program memory data
  * warning in Arduino build with older version of AVR-GCC (1.0.5,
  * 1.5.6-r2 etc).
@@ -175,12 +175,16 @@ union univ32_t {
       &__c[0];								\
     }									\
   ))
-# if !defined(__GXX_EXPERIMENTAL_CXX0X__)
-#   define static_assert(condition,message)
-# endif
 #else
 # define __PSTR(s) PSTR(s)
 # define __PROGMEM PROGMEM
+#endif
+
+/* Check if static_assert needs to be disabled */
+#if (ARDUINO < 150)
+# if !defined(__GXX_EXPERIMENTAL_CXX0X__)
+#   define static_assert(condition,message)
+# endif
 #endif
 
 /** String in program memory */
