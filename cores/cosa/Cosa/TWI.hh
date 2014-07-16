@@ -49,10 +49,11 @@
  */
 class TWI {
 public:
-  /**
-   * Default Two-Wire Interface clock: 100 KHz.
-   */
+  /** Default Two-Wire Interface clock: 100 KHz. */
   static const uint32_t DEFAULT_FREQ = 100000L;
+
+  /** Max Two-Wire Interface clock: 444.444 KHz. */
+  static const uint32_t MAX_FREQ = (F_CPU / (16 + 2*10));
 
   /**
    * Device drivers are friends and may have callback/event handler
@@ -291,11 +292,12 @@ public:
   /**
    * Set bus frequency for device access. Does not adjust for
    * cpu frequency scaling. Compile-time cpu frequency used.
+   * Should be called before starting the device driver; begin().
    * @param[in] hz bus frequency.
    */
   void set_freq(uint32_t hz) __attribute__((always_inline))
   {
-    m_freq = ((F_CPU / hz) - 16) / 2;
+    m_freq = (hz < MAX_FREQ) ? (((F_CPU / hz) - 16) / 2) : 10;
   }
 
 private:
