@@ -53,7 +53,7 @@
  * 1. nRF24L01+ Product Specification (Rev. 1.0)
  * http://www.nordicsemi.com/kor/nordic/download_resource/8765/2/17776224
  */
-class NRF24L01P : private SPI::Driver, public Wireless::Driver {
+class NRF24L01P : protected SPI::Driver, public Wireless::Driver {
 public:
   /**
    * Maximum size of payload on device.
@@ -219,7 +219,7 @@ public:
     return (m_drops); 
   }
 
-private:
+protected:
   /**
    * NRF transceiver states (See chap. 6.1.1, fig. 4, pp. 22).
    */
