@@ -64,7 +64,13 @@ static const Board::DigitalPin digital_pin_map[] __PROGMEM = {
   Board::D10, 
   Board::D11, 
   Board::D12, 
-  Board::D13
+  Board::D13,
+  Board::D14,
+  Board::D15,
+  Board::D16,
+  Board::D17,
+  Board::D18,
+  Board::D19
 };
 
 static const Board::AnalogPin analog_pin_map[] __PROGMEM = {

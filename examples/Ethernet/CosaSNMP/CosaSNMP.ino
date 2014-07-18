@@ -52,14 +52,47 @@
 #include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+// Digital and Analog Pin map (index => pin identity)
+static const Board::DigitalPin digital_pin_map[] __PROGMEM = {
+  Board::D0, 
+  Board::D1, 
+  Board::D2, 
+  Board::D3, 
+  Board::D4, 
+  Board::D5, 
+  Board::D6, 
+  Board::D7, 
+  Board::D8, 
+  Board::D9, 
+  Board::D10, 
+  Board::D11, 
+  Board::D12, 
+  Board::D13,
+  Board::D14,
+  Board::D15,
+  Board::D16,
+  Board::D17,
+  Board::D18,
+  Board::D19
+};
+
+static const Board::AnalogPin analog_pin_map[] __PROGMEM = {
+  Board::A0, 
+  Board::A1, 
+  Board::A2, 
+  Board::A3, 
+  Board::A4, 
+  Board::A5
+};
+
 /**
  * Arduino MIB OID(1.3.6.1.4.1.36582)
  */
 class ARDUINO_MIB : public SNMP::MIB {
 private:
   enum {
-    ardDigitalPin = 1,	      // Digital pin[0..22](0..1), read-only
-    ardAnalogPin = 2,	      // Analog pin[0..7](0..1023), read-only
+    ardDigitalPin = 1,	      // Digital pin[0..19](0..1), read-only
+    ardAnalogPin = 2,	      // Analog pin[0..5](0..1023), read-only
     ardVcc = 3,		      // Power supply[0](0..VCC), mV, read-only
   } __attribute__((packed));
 
@@ -92,28 +125,28 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
 
   // Access pin type and number
   uint8_t sys = pdu.oid.name[pos];
-  uint8_t pin = pdu.oid.name[pos + 1];
+  uint8_t index = pdu.oid.name[pos + 1];
   
-  // Get next value; adjust pin referens
+  // Get next value; adjust index referens
   if (pdu.type == SNMP::PDU_GET_NEXT) {
     switch (sys) {
     case 0:
       sys = ardDigitalPin;
-      pin = 0;
+      index = 0;
       break;
     case ardDigitalPin:
-      if (pin < 22)
-	pin += 1;
+      if (index < 19)
+	index += 1;
       else {
-	pin = 0;
+	index = 0;
 	sys = ardAnalogPin;
       } 
       break;
     case ardAnalogPin:
-      if (pin < 7)
-	pin += 1;
+      if (index < 5)
+	index += 1;
       else {
-	pin = 0; 
+	index = 0; 
 	sys = ardVcc;
       }
       break;
@@ -121,7 +154,7 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
       return (false);
     }
     pdu.oid.name[pos] = sys;
-    pdu.oid.name[pos + 1] = pin;
+    pdu.oid.name[pos + 1] = index;
     pdu.type = SNMP::PDU_GET;
   }
 
@@ -132,21 +165,25 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
   if (pdu.type == SNMP::PDU_GET) {
     switch (sys) {
     case ardDigitalPin:
-      if (pin > 22)
+      if (index > 19)
 	pdu.error_status = SNMP::NO_SUCH_NAME;
-      else
-	pdu.value.encode(SNMP::SYNTAX_INT, 
-			 (int16_t) InputPin::read((Board::DigitalPin) pin));
+      else {
+	Board::DigitalPin pin;
+	pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[index]);
+	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) InputPin::read(pin));
+      }
       break;
     case ardAnalogPin:
-      if (pin > 7)
+      if (index > 5)
 	pdu.error_status = SNMP::NO_SUCH_NAME;
-      else
-	pdu.value.encode(SNMP::SYNTAX_INT, 
-			 (int16_t) AnalogPin::sample((Board::AnalogPin) pin));
+      else {
+	Board::AnalogPin pin;
+	pin = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[index]);
+	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::sample(pin));
+      }
       break;
     case ardVcc:
-      if (pin > 0)
+      if (index > 0)
 	pdu.error_status = SNMP::NO_SUCH_NAME;
       else
 	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::bandgap());
