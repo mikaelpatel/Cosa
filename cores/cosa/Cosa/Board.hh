@@ -35,12 +35,14 @@
 #include "Cosa/Board/Anarduino/MiniWireless.hh"
 
 // Arduino Boards
+#elif defined(ARDUINO_DIECIMILA)
+#include "Cosa/Board/Arduino/Diecimila.hh"
 #elif defined(ARDUINO_DUEMILANOVE)
 #include "Cosa/Board/Arduino/Duemilanove.hh"
 #elif defined(ARDUINO_LEONARDO)
 #include "Cosa/Board/Arduino/Leonardo.hh"
-#elif defined(ARDUINO_MEGA2560)
-#include "Cosa/Board/Arduino/Mega2560.hh"
+#elif defined(ARDUINO_MEGA)
+#include "Cosa/Board/Arduino/Mega.hh"
 #elif defined(ARDUINO_NANO)
 #include "Cosa/Board/Arduino/Nano.hh"
 #elif defined(ARDUINO_PRO_MICRO)

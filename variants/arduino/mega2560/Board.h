@@ -1,2 +1,4 @@
+#define ARDUINO_MEGA
 #define ARDUINO_MEGA2560
+
 

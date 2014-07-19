@@ -46,7 +46,7 @@ diecimila.bootloader.extended_fuses=0x00
 diecimila.build.mcu=atmega168
 diecimila.build.f_cpu=16000000L
 diecimila.build.board=ARDUINO_DIECIMILA
-diecimila.build.variant=arduino/duemilanove
+diecimila.build.variant=arduino/diecimila
 diecimila.build.core=cosa
 
 # AVR:ATmega328
@@ -85,6 +85,7 @@ leonardo.upload.disable_flushing=true
 leonardo.upload.use_1200bps_touch=true
 leonardo.upload.wait_for_upload_port=true
 
+
 leonardo.bootloader.path=caterina
 leonardo.bootloader.tool=avrdude
 leonardo.bootloader.low_fuses=0xff
@@ -100,28 +101,6 @@ leonardo.build.board=ARDUINO_LEONARDO
 leonardo.build.variant=arduino/leonardo
 leonardo.build.extra_flags={build.usb_flags}
 leonardo.build.core=cosa
-
-# AVR:ATmega2560
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (4096 words, 0x1f000). 
-mega2560.name=Cosa Arduino Mega (ATmega2560/STK500v2)
-mega2560.upload.tool=avrdude
-mega2560.upload.protocol=wiring
-mega2560.upload.maximum_size=258048
-mega2560.upload.maximum_data_size=8192
-mega2560.upload.speed=115200
-
-mega2560.bootloader.tool=avrdude
-mega2560.bootloader.low_fuses=0xff
-mega2560.bootloader.high_fuses=0xd8
-mega2560.bootloader.extended_fuses=0xfd
-
-mega2560.build.mcu=atmega2560
-mega2560.build.f_cpu=16000000L
-mega2560.build.board=ARDUINO_MEGA2560
-mega2560.build.variant=arduino/mega
-mega2560.build.core=cosa
 
 # AVR:ATmega1280
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -142,8 +121,30 @@ mega1280.bootloader.extended_fuses=0xf5
 mega1280.build.mcu=atmega1280
 mega1280.build.f_cpu=16000000L
 mega1280.build.board=ARDUINO_MEGA1280
-mega1280.build.variant=arduino/mega
+mega1280.build.variant=arduino/mega1280
 mega1280.build.core=cosa
+
+# AVR:ATmega2560
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (4096 words, 0x1f000). 
+mega2560.name=Cosa Arduino Mega (ATmega2560/STK500v2)
+mega2560.upload.tool=avrdude
+mega2560.upload.protocol=wiring
+mega2560.upload.maximum_size=258048
+mega2560.upload.maximum_data_size=8192
+mega2560.upload.speed=115200
+
+mega2560.bootloader.tool=avrdude
+mega2560.bootloader.low_fuses=0xff
+mega2560.bootloader.high_fuses=0xd8
+mega2560.bootloader.extended_fuses=0xfd
+
+mega2560.build.mcu=atmega2560
+mega2560.build.f_cpu=16000000L
+mega2560.build.board=ARDUINO_MEGA2560
+mega2560.build.variant=arduino/mega2560
+mega2560.build.core=cosa
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -262,4 +263,3 @@ uno.build.f_cpu=16000000L
 uno.build.board=ARDUINO_UNO
 uno.build.variant=arduino/uno
 uno.build.core=cosa
-

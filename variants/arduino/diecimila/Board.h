@@ -1,0 +1,1 @@
+#define ARDUINO_DIECIMILA
