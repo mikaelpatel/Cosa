@@ -8,6 +8,9 @@ modes, Digital, and Analog Pins, External and Pin Change Interrupts,
 Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1
 (Servo/Tone/VWI), UART, USI, SPI, TWI and EEPROM.
 
+Sketches using Cosa may be built with the Arduino IDE or with the
+built-in command line support. 
+
 More details are available in [doc](./doc) and [install](./doc/02-install.md).
 
 Cosa API
@@ -19,7 +22,7 @@ The API documentation is available :
 * Compressed for [download](http://dl.dropbox.com/u/993383/Cosa/doc.zip).
 
 The documentation contains a full hyperlinked description of all functions
-in Cosa together with UML graphs of the class hierarchy, includedependencies,
+in Cosa together with UML graphs of the class hierarchy, include dependencies,
 and much more. 
 
 The provided documentation is generated with doxygen and may also be
@@ -34,9 +37,11 @@ clones/vendors. It also supports breadboards and custom-design
 boards with AVR MCUs.
 
 * [Anarduino MiniWireless] (./cores/cosa/Cosa/Board/Anarduino/MiniWireless.hh)
+* [Arduino Diecimila] (./cores/cosa/Cosa/Board/Arduino/Diecimila.hh)
 * [Arduino Duemilanove] (./cores/cosa/Cosa/Board/Arduino/Duemilanove.hh)
 * [Arduino Leonardo] (./cores/cosa/Cosa/Board/Arduino/Leonardo.hh)
-* [Arduino Mega2560] (./cores/cosa/Cosa/Board/Arduino/Mega2560.hh)
+* [Arduino Mega 1280] (./cores/cosa/Cosa/Board/Arduino/Mega.hh)
+* [Arduino Mega 2560] (./cores/cosa/Cosa/Board/Arduino/Mega.hh)
 * [Arduino Nano] (./cores/cosa/Cosa/Board/Arduino/Nano.hh)
 * [Arduino Pro Micro] (./cores/cosa/Cosa/Board/Arduino/Pro_Micro.hh)
 * [Arduino Pro Mini] (./cores/cosa/Cosa/Board/Arduino/Pro_Mini.hh)
