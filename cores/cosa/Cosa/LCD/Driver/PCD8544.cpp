@@ -173,6 +173,7 @@ PCD8544::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
       m_io->write(m_mode ^ (*bp++));
     }
     set_cursor(m_x, m_y + 1);
+    m_io->end();
   }
   m_y += 1;
   set_cursor(m_x, m_y + 1);
