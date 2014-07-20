@@ -158,7 +158,7 @@ template <uint16_t SIZE>
 int 
 IOBuffer<SIZE>::putchar(char c)
 {
-  uint8_t next = (m_head + 1) & MASK;
+  uint16_t next = (m_head + 1) & MASK;
   if (next == m_tail) return (IOStream::EOF);
   m_buffer[next] = c;
   m_head = next;
@@ -170,7 +170,7 @@ int
 IOBuffer<SIZE>::peekchar()
 {
   if (m_head == m_tail) return (IOStream::EOF);
-  uint8_t next = (m_tail + 1) & MASK;
+  uint16_t next = (m_tail + 1) & MASK;
   return (m_buffer[next] & 0xff);
 }
 
@@ -178,7 +178,7 @@ template <uint16_t SIZE>
 int 
 IOBuffer<SIZE>::peekchar(char c)
 {
-  uint8_t tail = m_tail;
+  uint16_t tail = m_tail;
   int res = 0;
   while (tail != m_head) {
     res += 1;
@@ -193,7 +193,7 @@ int
 IOBuffer<SIZE>::getchar()
 {
   if (m_head == m_tail) return (IOStream::EOF);
-  uint8_t next = (m_tail + 1) & MASK;
+  uint16_t next = (m_tail + 1) & MASK;
   m_tail = next;
   return (m_buffer[next] & 0xff);
 }
