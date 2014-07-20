@@ -137,9 +137,16 @@ IOStream::print(const void *ptr, size_t size, Base base, uint8_t max)
   uint8_t* p = (uint8_t*) ptr;
   unsigned int v_adj = (base == dec ? 0 : (base == oct ? 01000 : 0x100));
   uint8_t adj = (v_adj != 0);
+  bool prefix = true;
   uint8_t n = 0;
-  print(p);
-  print_P(PSTR(": "));
+  if (max > 128) {
+    max -= 128;
+    prefix = false;
+  } 
+  else {
+    print(p);
+    print_P(PSTR(": "));
+  }
   while (size--) {
     char buf[sizeof(int) * CHARBITS + 1];
     unsigned int v = (*p++) + v_adj;
@@ -150,7 +157,7 @@ IOStream::print(const void *ptr, size_t size, Base base, uint8_t max)
     else {
       println();
       n = 0;
-      if (size > 0) {
+      if (size > 0 && prefix) {
 	print(p);
 	print_P(PSTR(": "));
       }

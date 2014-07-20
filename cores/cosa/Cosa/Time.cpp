@@ -31,12 +31,6 @@ IOStream& operator<<(IOStream& outs, time_t& t)
   return (outs);
 }
 
-IOStream& operator<<(IOStream& outs, clock_t& c)
-{
-  outs << (c / SECONDS_PER_DAY) << '.' << (c % SECONDS_PER_DAY);
-  return (outs);
-}
-
 static const uint8_t days_in[] __PROGMEM = {
   0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
