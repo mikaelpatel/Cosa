@@ -23,6 +23,7 @@
  */
 
 #include "Cosa/FS/CFFS.hh"
+#include "Cosa/Shell.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
@@ -34,78 +35,119 @@ OutputPin rf_cs(Board::D10, 1);
 
 S25FL127S flash;
 IOStream cout;
+IOStream cin;
+
+static const char CAT_NAME[] PROGMEM = "cat";
+static const char CAT_HELP[] PROGMEM = "cat FILE -- print content of file";
+int cat_action(int argc, char* argv[])
+{
+  UNUSED(argc);
+  const size_t BUF_MAX = 256;
+  char buf[BUF_MAX];
+  CFFS::File file;
+  int res = file.open(argv[1], O_READ);
+  if (res < 0) return (res);
+  while ((res = file.read(buf, sizeof(buf))) > 0)
+    cout.get_device()->write(buf, res);
+  return (0);
+}
+
+static const char CD_NAME[] PROGMEM = "cd";
+static const char CD_HELP[] PROGMEM = "cd DIR -- change directory";
+int cd_action(int argc, char* argv[])
+{
+  UNUSED(argc);
+  return (CFFS::cd(argv[1]));
+}
+
+static const char DATE_NAME[] PROGMEM = "date";
+static const char DATE_HELP[] PROGMEM = "date -- current time and date";
+int date_action(int argc, char* argv[])
+{
+  UNUSED(argc);
+  UNUSED(argv);
+  time_t now(RTC::seconds());
+  cout << now << endl;
+  return (0);
+}
+
+static const char LS_NAME[] PROGMEM = "ls";
+static const char LS_HELP[] PROGMEM = "ls [--verbose] -- list files";
+int ls_action(int argc, char* argv[])
+{
+  bool verbose = false;
+  if (argc == 2) {
+    if (strcmp_P(argv[1], PSTR("--verbose")) == 0)
+      verbose = true;
+    else return (-1);
+  }
+  return (CFFS::ls(cout, verbose));
+}
+
+static const char MKDIR_NAME[] PROGMEM = "mkdir";
+static const char MKDIR_HELP[] PROGMEM = "mkdir DIR -- make directory";
+int mkdir_action(int argc, char* argv[])
+{
+  UNUSED(argc);
+  return (CFFS::mkdir(argv[1]));
+}
+
+static const char OD_NAME[] PROGMEM = "od";
+static const char OD_HELP[] PROGMEM = "od FILE -- dump file in hex";
+int od_action(int argc, char* argv[])
+{
+  UNUSED(argc);
+  const size_t BUF_MAX = 256;
+  char buf[BUF_MAX];
+  CFFS::File file;
+  int res = file.open(argv[1], O_READ);
+  if (res < 0) return (res);
+  while (file.read(buf, sizeof(buf)) > 0) 
+    cout.print(buf, sizeof(buf), IOStream::hex, 128 + 16);
+  return (0);
+}
+
+static const char RM_NAME[] PROGMEM = "rm";
+static const char RM_HELP[] PROGMEM = "rm FILE -- remove file";
+int rm_action(int argc, char* argv[])
+{
+  UNUSED(argc);
+  return (CFFS::rm(argv[1]));
+}
+   
+// List of shell command descriptors
+static const Shell::command_t command_vec[] PROGMEM = {
+  { 2, CAT_NAME, cat_action, CAT_HELP },
+  { 2, CD_NAME, cd_action, CD_HELP },
+  { 2, DATE_NAME, date_action, DATE_HELP },
+  { 2, LS_NAME, ls_action, LS_HELP },
+  { 2, MKDIR_NAME, mkdir_action, MKDIR_HELP },
+  { 2, OD_NAME, od_action, OD_HELP },
+  { 2, RM_NAME, rm_action, RM_HELP }
+};
+
+Shell shell(membersof(command_vec), command_vec);
 
 void setup()
 {
+  // Initiate timers
   Watchdog::begin();
   RTC::begin();
+
+  // Initiate UART for blocked read line
   uart.begin(9600);
   uart.set_blocking(SLEEP_MODE_IDLE);
+  cin.set_device(&uart);
   cout.set_device(&uart);
+
+  // Initiate flash memory and file system
   flash.begin();
   CFFS::begin(&flash);
 }
 
 void loop()
 {
-  static bool echo = false;
-  const size_t BUF_MAX = 256;
-  char buf[BUF_MAX];
-  char* filename;
-  int res = 0;
-  
-  cout << PSTR("arduino:$ ");
-  if (uart.gets(buf, sizeof(buf)) == NULL) return;
-  if (echo) cout << buf << endl;
-
-  if (strncmp_P(buf, PSTR("cat"), 3) == 0) {
-    CFFS::File file;
-    filename = buf + 4;
-    res = file.open(filename, O_READ);
-    if (res == 0) {
-      IOStream::Device* dev = cout.get_device();
-      int res;
-      while ((res = file.read(buf, sizeof(buf))) > 0)
-	dev->write(buf, res);
-    }
-    else {
-      cout << PSTR("cat");
-    }
-  }
-
-  else if (strncmp_P(buf, PSTR("cd"), 2) == 0) {
-    filename = buf + 3;
-    res = CFFS::cd(filename);
-    if (res != 0) {
-      cout << PSTR("cd");
-    }
-  }
-
-  else if (strncmp_P(buf, PSTR("echo"), 4) == 0) {
-    echo = strcmp_P(buf + 5, PSTR("off"));
-  }
-
-  else if (strcmp_P(buf, PSTR("ls")) == 0) {
-    CFFS::ls(cout);
-  }
-
-  else if (strncmp_P(buf, PSTR("od"), 2) == 0) {
-    CFFS::File file;
-    filename = buf + 3;
-    res = file.open(filename, O_READ);
-    if (res == 0) {
-      while (file.read(buf, sizeof(buf)) > 0) 
-	cout.print(buf, sizeof(buf), IOStream::hex, 128 + 16);
-    }
-    else {
-      cout << PSTR("od");
-    }
-  }
-  else if (strcmp_P(buf, PSTR("time")) == 0) {
-    time_t now(RTC::seconds());
-    cout << now << endl;
-  }
-
-  if (res == 0) return;
-  cout << PSTR(": ") << filename << PSTR(": No such file or directory") << endl;
+  // The shell command handler will do the top loop
+  if (!shell.run(&cin, &cout)) return;
+  cout << PSTR("illegal command") << endl;
 }

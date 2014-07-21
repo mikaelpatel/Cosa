@@ -313,9 +313,11 @@ CFFS::create_entry(const char* filename, uint8_t type, uint8_t flags,
   for (uint16_t i = 0; i < DIR_MAX; i++, addr += sizeof(dir_t)) {
     if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry)) 
       return (-2);
+    // Skip deleted entries
+    if ((entry.type & ALLOC_MASK) == 0) continue;
     // Check if file name is already used; error or remove
     if (!strcmp(filename, entry.name)) {
-      if (flags & O_EXCL) return (-3);
+      if ((flags & O_EXCL) || (type == DIR_TYPE)) return (-3);
       entry.type &= TYPE_MASK;
       if (device->write(addr, &entry, sizeof(entry)) != sizeof(entry)) 
 	return (-2);
@@ -323,12 +325,12 @@ CFFS::create_entry(const char* filename, uint8_t type, uint8_t flags,
     else if (entry.type == FREE_TYPE) {
       // Creating a directory or file entry
       if (type == DIR_TYPE) {
-	int res = next_free_directory();
-	if (res < 0) return (res);
-	entry.dir_index = res;
+	int index = next_free_directory();
+	if (index < 0) return (-4);
+	entry.dir_index = index;
       }
       else {
-	int sector = CFFS::next_free_sector();
+	int sector = next_free_sector();
 	if (sector < 0) return (-4);
 	entry.first_sector = sector;
       }

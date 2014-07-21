@@ -66,9 +66,7 @@ public:
    * pad each entry with zero(0x00). Files may be read/written. Write
    * should always be in append mode as the file cannot be rewritten
    * with any value. Opening a file that already exists in append mode
-   * will require locating the end of the file. This can take up to
-   * 150 ms for a binary file. For a text file the open operation is
-   * much faster and takes at most 1 ms.
+   * will require locating the end of the file. 
    */
   class File : public IOStream::Device {
   public:
@@ -80,7 +78,7 @@ public:
     
     /**
      * Open a file by path and mode flags. Returns zero(0) if
-     * successful otherwise a negative error code.
+     * successful otherwise a negative error code. 
      * @param[in] filename of file to open.
      * @param[in] oflag mode of file open.
      * @return zero or negative error code.
@@ -134,35 +132,41 @@ public:
 
     /**
      * @override IOStream::Device
-     * Write data from buffer with given size to the file.
+     * Write data from buffer with given size to the file. If
+     * successful returns number of bytes written or negative error
+     * code.
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
-     * @return number of bytes written or EOF(-1).
+     * @return number of bytes written or negative error code.
      */
     virtual int write(const void *buf, size_t size);
   
     /**
      * @override IOStream::Device
-     * Write data from buffer in program memory with given size to the file.
+     * Write data from buffer in program memory with given size to the
+     * file. If successful returns number of bytes written or negative
+     * error code.  
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
-     * @return number of bytes written or EOF(-1).
+     * @return number of bytes written or negative error code.
      */
     virtual int write_P(const void* buf, size_t size);
 
     /**
      * @override IOStream::Device
-     * Read character from the file.
-     * @return character or EOF(-1).
+     * Read character/byte from the file. If successful returns byte
+     * read or negative error code.  
+     * @return character or negative error code.
      */
     virtual int getchar();
 
     /**
      * @override IOStream::Device
-     * Read data to given buffer with given size from the file.
+     * Read data to given buffer with given size from the file. If
+     * successful returns number of bytes read or negative error code.  
      * @param[in] buf buffer to read into.
      * @param[in] size number of bytes to read.
-     * @return number of bytes read or EOF(-1).
+     * @return number of bytes read or negative error code.
      */
     virtual int read(void* buf, size_t size);
     
