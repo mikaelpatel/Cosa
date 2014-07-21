@@ -20,7 +20,7 @@
 
 #include "Cosa/Shell.hh"
 
-const char Shell::DEFAULT_PROMPT[] PROGMEM = "arduino:$ ";
+const char Shell::DEFAULT_PROMPT[] __PROGMEM = "arduino:$ ";
 
 int
 Shell::lookup(char* name) 
