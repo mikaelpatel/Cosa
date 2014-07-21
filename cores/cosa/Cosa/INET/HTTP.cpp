@@ -41,17 +41,19 @@ HTTP::Server::run(uint32_t ms)
   char* sp;
   int res;
   
+  // Wait for the HTTP request
   uint32_t start = Watchdog::millis();
   while (((res = m_sock->accept()) != 0) &&
 	 ((ms == 0L) || (Watchdog::millis() - start < ms))) 
     yield();
   if (res != 0) return (-2);
-
-  // Wait for the HTTP request
-  while ((res = m_sock->available()) == 0) yield();
-
+  start = Watchdog::millis();
+  while (((res = m_sock->available()) == 0) &&
+	 ((ms == 0L) || (Watchdog::millis() - start < ms))) 
+    yield();
+  
   // Parse request (method and url), call handler and flush buffered response
-  if (res < 0) goto error;
+  if (res <= 0) goto error;
   m_sock->gets(line, REQUEST_MAX);
   method = line;
   sp = strpbrk(line, " ");
