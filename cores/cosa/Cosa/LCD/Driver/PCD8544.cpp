@@ -172,8 +172,8 @@ PCD8544::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
     for (uint8_t x = 0; x < width; x++) {
       m_io->write(m_mode ^ (*bp++));
     }
-    set_cursor(m_x, m_y + 1);
     m_io->end();
+    set_cursor(m_x, m_y + 1);
   }
   m_y += 1;
   set_cursor(m_x, m_y + 1);
