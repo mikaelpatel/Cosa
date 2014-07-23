@@ -27,6 +27,10 @@
 
 /**
  * Cosa Flash File System for S25FL127S Flash Memory. 
+ *
+ * @section Warning
+ * This version will not allow files larger than 64Kbyte and will not
+ * reclaim deleted directory entries.
  */
 class CFFS {
 public:

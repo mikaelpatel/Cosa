@@ -40,7 +40,6 @@ public:
    * Shell command descriptor.
    */
   struct command_t {
-    int argc;			//!< Required number of parameters.
     const char* name;		//!< Shell command name string (PROGMEM).
     action_fn action;		//!< Shell command action function.
     const char* help;		//!< Short description.
@@ -52,6 +51,28 @@ public:
     m_prompt(prompt == NULL ? DEFAULT_PROMPT : prompt)
   {}
   
+  /**
+   * Parse command parameter list for options. The command has the
+   * format: NAME -X -XVALUE OPTION=VALUE ARGUMENT.., where X is an
+   * option character with or without VALUE string, OPTION is an
+   * option name (string), and ARGUMENT is the first
+   * non-option. Returns zero and option string and value if
+   * successful otherwise the index of the first argument in the
+   * argument vector. 
+   * @param[out] option string.
+   * @param[out] value string.
+   * @return zero or index of first argument.
+   */
+  int get(char* &option, char* &value);
+
+  /**
+   * Print short description of commands to the given output
+   * stream. Return zero or negative error code. 
+   * @param[in] outs output stream.
+   * @return zero or negative error code.
+   */
+  int help(IOStream& outs);
+
   /**
    * Parse buffer and create command, option and parameter
    * list. Lookup command in given command vector. If found call
@@ -78,7 +99,11 @@ protected:
   uint8_t m_cmdc;		//!< Number of shell commands.
   const command_t* m_cmdv;	//!< Vector with shell command decriptors.
   const char* m_prompt;		//!< Shell prompt.
-
+  uint8_t m_argc;		//!< Number of arguments.
+  char** m_argv;		//!< Argument vector.
+  uint8_t m_optind;		//!< Next option index.
+  bool m_optend;		//!< End of options.
+  
   /**
    * Lookup given command name in command set. Return command index or
    * negative error code.
