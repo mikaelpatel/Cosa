@@ -48,9 +48,20 @@ public:
   Shell(uint8_t cmdc, const command_t* cmdv, const char* prompt = NULL) :
     m_cmdc(cmdc),
     m_cmdv(cmdv),
-    m_prompt(prompt == NULL ? DEFAULT_PROMPT : prompt)
+    m_prompt(prompt == NULL ? DEFAULT_PROMPT : prompt),
+    m_echo(true)
   {}
   
+  /**
+   * Set command line echo mode. Useful for Arduino Serial Monitor to 
+   * echo commands received.
+   * @param[in] flag on or off.
+   */
+  void set_echo(bool flag)
+  {
+    m_echo = flag;
+  }
+
   /**
    * Parse command parameter list for options. The command has the
    * format: NAME -X -XVALUE OPTION=VALUE ARGUMENT.., where X is an
@@ -93,12 +104,23 @@ public:
    */
   int run(IOStream* ins, IOStream* outs = NULL);
 
+  /**
+   * Read command lines from script in program memory. The command
+   * lines are written to the given output stream. Return zero or
+   * the script command line number of the failed.
+   * @param[in] sp pointer to script in program memory.
+   * @param[in] outs output stream (default NULL).
+   * @return zero or script line number.
+   */
+  int script(const char* sp, IOStream* outs = NULL);
+
 protected:
   static const char DEFAULT_PROMPT[] PROGMEM;
   
   uint8_t m_cmdc;		//!< Number of shell commands.
   const command_t* m_cmdv;	//!< Vector with shell command decriptors.
   const char* m_prompt;		//!< Shell prompt.
+  bool m_echo;			//!< Echo command line.
   uint8_t m_argc;		//!< Number of arguments.
   char** m_argv;		//!< Argument vector.
   uint8_t m_optind;		//!< Next option index.

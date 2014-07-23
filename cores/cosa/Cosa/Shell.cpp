@@ -50,6 +50,7 @@ Shell::execute(char* buf)
   int argc;
   
   // Scan the line for command, options and parameters
+  if (buf == NULL) return (0);
   char* bp = buf;
   char c;
   argc = 0;
@@ -63,6 +64,7 @@ Shell::execute(char* buf)
     *bp++ = 0;
   }
   argv[argc] = NULL;
+  m_argc = argc;
   if (argc == 0) return (0);
   
   // Lookup shell command and call action function
@@ -71,7 +73,6 @@ Shell::execute(char* buf)
   m_optind = 1;
   m_optend = false;
   m_argv = argv;
-  m_argc = argc;
   action_fn action = (action_fn) pgm_read_word(&m_cmdv[i].action);
   return (action(argc, argv));
 }
@@ -83,8 +84,34 @@ Shell::run(IOStream* ins, IOStream* outs)
   char buf[BUF_MAX];
   if (ins == NULL) return (-1);
   if (outs != NULL) *outs << m_prompt;
-  if (ins->get_device()->gets(buf, sizeof(buf)) == NULL) return (-1);
+  ins->get_device()->gets(buf, sizeof(buf));
+  if (m_echo && outs != NULL) *outs << buf << endl;
   return (execute(buf));
+}
+
+int 
+Shell::script(const char* sp, IOStream* cout)
+{
+  const size_t BUF_MAX = 64;
+  char buf[BUF_MAX];
+  int line;
+  char* bp;
+  int res;
+  char c;
+  line = 0;
+  do {
+    bp = buf;
+    do {
+      c = pgm_read_byte(sp++);
+      *bp++ = c;
+    } while (c != '\n' && c != 0);
+    *--bp = 0;
+    line += 1;
+    if (cout != NULL && *buf != 0) *cout << buf << endl;
+    res = execute(buf);
+    if (res != 0) return (line);
+  } while (c != 0);
+  return (0);
 }
 
 int
