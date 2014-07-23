@@ -24,7 +24,7 @@
 #include "Cosa/FS/CFFS.hh"
 
 static const char ARGS_NAME[] __PROGMEM = "args";
-static const char ARGS_HELP[] __PROGMEM = "args OPTS ARGS -- display options and arguments";
+static const char ARGS_HELP[] __PROGMEM = "OPTS ARGS -- display options and arguments";
 static int args_action(int argc, char* argv[])
 {
   char* option;
@@ -38,7 +38,7 @@ static int args_action(int argc, char* argv[])
 }
    
 static const char CAT_NAME[] __PROGMEM = "cat";
-static const char CAT_HELP[] __PROGMEM = "cat FILE -- print content of file";
+static const char CAT_HELP[] __PROGMEM = "FILE -- print content of file";
 static int cat_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -53,7 +53,7 @@ static int cat_action(int argc, char* argv[])
 }
 
 static const char CD_NAME[] __PROGMEM = "cd";
-static const char CD_HELP[] __PROGMEM = "cd DIR -- change directory";
+static const char CD_HELP[] __PROGMEM = "DIR -- change directory";
 static int cd_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -61,7 +61,7 @@ static int cd_action(int argc, char* argv[])
 }
 
 static const char DATE_NAME[] __PROGMEM = "date";
-static const char DATE_HELP[] __PROGMEM = "date -- current time and date";
+static const char DATE_HELP[] __PROGMEM = "-- current time and date";
 static int date_action(int argc, char* argv[])
 {
   UNUSED(argv);
@@ -72,7 +72,7 @@ static int date_action(int argc, char* argv[])
 }
 
 static const char HELP_NAME[] __PROGMEM = "help";
-static const char HELP_HELP[] __PROGMEM = "help -- list command help";
+static const char HELP_HELP[] __PROGMEM = "-- list command help";
 static int help_action(int argc, char* argv[])
 {
   UNUSED(argc);
@@ -81,7 +81,7 @@ static int help_action(int argc, char* argv[])
 }
 
 static const char LS_NAME[] __PROGMEM = "ls";
-static const char LS_HELP[] __PROGMEM = "ls [--verbose] -- list files";
+static const char LS_HELP[] __PROGMEM = "[--verbose] -- list files";
 static int ls_action(int argc, char* argv[])
 {
   if (argc > 2) return (-1);
@@ -95,7 +95,7 @@ static int ls_action(int argc, char* argv[])
 }
 
 static const char MKDIR_NAME[] __PROGMEM = "mkdir";
-static const char MKDIR_HELP[] __PROGMEM = "mkdir DIR -- make directory";
+static const char MKDIR_HELP[] __PROGMEM = "DIR -- make directory";
 static int mkdir_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -103,7 +103,7 @@ static int mkdir_action(int argc, char* argv[])
 }
 
 static const char OD_NAME[] __PROGMEM = "od";
-static const char OD_HELP[] __PROGMEM = "od FILE -- dump file in hex";
+static const char OD_HELP[] __PROGMEM = "FILE -- dump file in hex";
 static int od_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -118,7 +118,7 @@ static int od_action(int argc, char* argv[])
 }
 
 static const char RM_NAME[] __PROGMEM = "rm";
-static const char RM_HELP[] __PROGMEM = "rm FILE -- remove file";
+static const char RM_HELP[] __PROGMEM = "FILE -- remove file";
 static int rm_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -126,7 +126,7 @@ static int rm_action(int argc, char* argv[])
 }
    
 static const char SIZE_NAME[] __PROGMEM = "size";
-static const char SIZE_HELP[] __PROGMEM = "size FILE -- file size";
+static const char SIZE_HELP[] __PROGMEM = "FILE -- file size";
 static int size_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);

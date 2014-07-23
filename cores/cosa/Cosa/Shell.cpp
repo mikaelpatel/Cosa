@@ -35,8 +35,10 @@ Shell::lookup(char* name)
 int
 Shell::help(IOStream& outs)
 {
-  for (uint8_t i = 0; i < m_cmdc; i++)
+  for (uint8_t i = 0; i < m_cmdc; i++) {
+    outs << (const char*) pgm_read_word(&m_cmdv[i].name) << ' ';
     outs << (const char*) pgm_read_word(&m_cmdv[i].help) << endl;
+  }
   return (0);
 }
 
@@ -90,6 +92,7 @@ Shell::get(char* &option, char* &value)
 {
   if (m_optind == m_argc || m_optend) return (m_optind);
   char* arg = m_argv[m_optind];
+  // Check for single character option and possible value
   if (arg[0] == '-') {
     if (arg[1] == 0) {
       m_optend = false;
@@ -102,6 +105,7 @@ Shell::get(char* &option, char* &value)
     m_optind += 1;
     return (0);
   }
+  // Check for option value assignment. End of options if not found
   char* res = strchr(arg, '=');
   if (res == NULL) {
     m_optend = true;
