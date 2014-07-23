@@ -77,7 +77,7 @@ static int analogread_action(int argc, char* argv[])
       if (name[0] != 'a' && name[0] != 'A') return (-1);
       char* sp;
       uint32_t ix = strtoul(name + 1, &sp, 10);
-      if (*sp != 0 || ix > membersof(analog_pin_map)) return (-1);
+      if (*sp != 0 || ix >= membersof(analog_pin_map)) return (-1);
       Board::AnalogPin pin;
       pin = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[ix]);
       cout << name << '=' << AnalogPin::sample(pin) << endl;
@@ -149,7 +149,7 @@ static int digitalread_action(int argc, char* argv[])
       if (name[0] != 'd' && name[0] != 'D') return (-1);
       char* sp;
       uint32_t ix = strtoul(name + 1, &sp, 10);
-      if (*sp != 0 || ix > membersof(digital_pin_map)) return (-1);
+      if (*sp != 0 || ix >= membersof(digital_pin_map)) return (-1);
       Board::DigitalPin pin;
       pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
       cout << name << '=' << InputPin::read(pin) << endl;
