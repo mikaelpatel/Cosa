@@ -93,14 +93,6 @@ public:
   int execute(char* buf);
 
   /**
-   * Read command lines from script in program memory. Return zero or 
-   * the script command line number of the failed.
-   * @param[in] script pointer to script in program memory.
-   * @return zero or script line number.
-   */
-  int execute_P(const char* script);
-
-  /**
    * Prompt to given output stream (if not NULL), read line from given
    * input stream and execute command. Return zero or negative error
    * code. 
@@ -122,8 +114,11 @@ protected:
   /** Default prompt */
   static const char DEFAULT_PROMPT[] PROGMEM;
 
-  /** Command line size */
+  /** Max command line buffer size */
   static const size_t BUF_MAX = 64;
+
+  /** Max number of arguments */
+  const size_t ARGV_MAX = 16;
 
   uint8_t m_cmdc;		//!< Number of shell commands.
   const command_t* m_cmdv;	//!< Vector with shell command decriptors.
@@ -141,6 +136,16 @@ protected:
    * @return command entry or NULL.
    */
   const command_t* lookup(char* name);
+
+  /**
+   * Execute script in program memory. Return zero or the script
+   * command line number of the failed. 
+   * @param[in] script pointer to script in program memory.
+   * @param[in] argc argument count.
+   * @param[in] argv argument vector.
+   * @return zero or script line number.
+   */
+  int execute(const char* script, int argc, char* argv[]);
 };
 
 /** 

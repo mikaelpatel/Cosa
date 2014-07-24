@@ -43,15 +43,12 @@ void setup()
   uart.set_blocking(SLEEP_MODE_IDLE);
   cin.set_device(&uart);
   cout.set_device(&uart);
-
-  // Run blink command (which is actually a script)
-  cout << PSTR("CosaShell: starting...") << endl;
-  shell.execute_P(PSTR("blink"));
 }
 
 void loop()
 {
-  // The shell command handler will do the top loop
-  if (!shell.run(&cin, &cout)) return;
+  // The shell will do the read and execute of commands
+  int res = shell.run(&cin, &cout);
+  if (res == 0) return;
   cout << PSTR("illegal command") << endl;
 }

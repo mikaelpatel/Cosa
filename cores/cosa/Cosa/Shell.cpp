@@ -36,7 +36,6 @@ int
 Shell::get(char* &option, char* &value)
 {
   if (m_optind == m_argc || m_optend) return (m_optind);
-
   // Check for single character option and possible value
   char* arg = m_argv[m_optind];
   if (arg[0] == '-') {
@@ -48,7 +47,6 @@ Shell::get(char* &option, char* &value)
     arg[1] = 0;
     value = arg + 2;
   }
-
   // Check for option value assignment. End of options if not found
   else {
     char* sp = strchr(arg, '=');
@@ -67,21 +65,18 @@ Shell::get(char* &option, char* &value)
 int
 Shell::execute(char* buf)
 {
-  const size_t ARGV_MAX = 32;
-  char* argv[ARGV_MAX];
-  int argc;
-  
   // Scan the line for command, options and parameters
   if (buf == NULL) return (0);
+  char* argv[ARGV_MAX];
+  int argc = 0;
   char* bp = buf;
   char c;
-  argc = 0;
-  while (1) {
+  do {
     c = *bp;
     // Skip white space
     while (c <= ' ' && c != 0) c = *++bp;
     if (c == 0) break;
-    // Check for strings
+    // Check for string literal
     if (c == '"') {
       c = *++bp;
       if (c == 0) return (-1);
@@ -89,7 +84,7 @@ Shell::execute(char* buf)
       while (c != 0 && c != '"') c = *++bp;
       if (c == 0) return (-1);
     }
-    // Scan token with possible string
+    // Scan token with possible embedded string literal
     else {
       argv[argc++] = bp;
       while (c > ' ' && c != '"') c = *++bp;
@@ -103,14 +98,12 @@ Shell::execute(char* buf)
       }
     }
     *bp++ = 0;
-    if (c == 0) break;
-  }
+  } while (c != 0);
   // End the argument list and check for empty commmand line
   argv[argc] = NULL;
   m_argc = argc;
   if (argc == 0) return (0);
-  
-  // Lookup shell command and call action function
+  // Lookup shell command and call action function or script
   const command_t* cp = lookup(argv[0]);
   if (cp == NULL) return (-1);
   m_optind = 1;
@@ -121,26 +114,40 @@ Shell::execute(char* buf)
   size_t len = strlen(SHELL_SCRIPT_MAGIC);
   if (strncmp_P(SHELL_SCRIPT_MAGIC, script, len) != 0) 
     return (action(argc, argv));
-  return (execute_P(script + len));
+  return (execute(script + len, argc, argv));
 }
 
 int 
-Shell::execute_P(const char* script)
+Shell::execute(const char* script, int argc, char* argv[])
 {
   char buf[BUF_MAX];
-  int line;
+  int line = 0;
   const char* sp = script;
+  uint8_t ix;
+  char* ap;
   char* bp;
   int res;
   char c;
-  line = 0;
   // Execute the script by copying line by line to local buffer
   do {
     // Copy command line from program memory to buffer
     bp = buf;
     do {
       c = pgm_read_byte(sp++);
-      *bp++ = c;
+      if (c != '$') {
+	*bp++ = c;
+      }
+      // Expand possible argument
+      else {
+	c = pgm_read_byte(sp++);
+	if (c < '0' || c > '9') return (-1);
+	ix = c - '0';
+	if (ix >= argc) return (-1);
+	ap = argv[ix];
+	while ((c = *ap++) != 0) *bp++ = c;
+	c = pgm_read_byte(sp++);
+	*bp++ = c;
+      }
     } while (c != '\n' && c != 0);
     *--bp = 0;
     line += 1;

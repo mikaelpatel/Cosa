@@ -107,18 +107,18 @@ static int args_action(int argc, char* argv[])
 static const char BLINK_NAME[] __PROGMEM = 
   "blink";
 static const char BLINK_HELP[] __PROGMEM = 
-  "-- turn led on and off";
+  "MS -- turn led on and off";
 static const char BLINK_SCRIPT[] __PROGMEM = 
   SHELL_SCRIPT_MAGIC					       
-  "echo -n \"led on\"" LF
+  "echo -n $1 \"ms:led on\"" LF
   "led on" LF
-  "delay 500" LF
+  "delay $1" LF
   "echo -n \"..off\"" LF
   "led off" LF
-  "delay 500" LF
+  "delay $1" LF
   "echo -n \"..on\"" LF
   "led on" LF
-  "delay 500" LF
+  "delay $1" LF
   "echo \"..off\"" LF
   "led off" LF;
 #define blink_action (Shell::action_fn) BLINK_SCRIPT
@@ -139,7 +139,7 @@ static int date_action(int argc, char* argv[])
 static const char DELAY_NAME[] __PROGMEM = 
   "delay";
 static const char DELAY_HELP[] __PROGMEM = 
-  "ms -- delay for milliseconds";
+  "MS -- delay for milliseconds";
 static int delay_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -181,17 +181,21 @@ static int digitalread_action(int argc, char* argv[])
 static const char ECHO_NAME[] __PROGMEM = 
   "echo";
 static const char ECHO_HELP[] __PROGMEM = 
-  "[-n] STRING -- display a line of text";
+  "[-n] STRING.. -- display a line of text";
 static int echo_action(int argc, char* argv[])
 {
-  if (argc == 3) {
-    if (strcmp_P(argv[1], PSTR("-n")) != 0) return (-1);
-    cout << argv[2];
-  }
-  else {
-    if (argc != 2) return (-1);
-    cout << argv[1] << endl;
-  }
+  bool newline = true;
+  char* option;
+  char* value;
+  int ix;
+  while ((ix = shell.get(option, value)) == 0)
+    if (strcmp_P(option, PSTR("n")) == 0)
+      newline = false;
+    else return (-1);
+  if (ix == argc) return (0);
+  cout << argv[ix++];
+  while (ix < argc) cout << ' ' << argv[ix++];
+  if (newline) cout << endl;
   return (0);
 }
 
