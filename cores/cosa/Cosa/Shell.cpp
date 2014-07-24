@@ -22,14 +22,14 @@
 
 const char Shell::DEFAULT_PROMPT[] __PROGMEM = "arduino:$ ";
 
-int
+const Shell::command_t*
 Shell::lookup(char* name) 
 {
   for (uint8_t i = 0; i < m_cmdc; i++) {
     if (strcmp_P(name, (const char*) pgm_read_word(&m_cmdv[i].name)) == 0)
-      return (i);
+      return (&m_cmdv[i]);
   }
-  return (-1);
+  return (NULL);
 }
 
 int
@@ -111,12 +111,12 @@ Shell::execute(char* buf)
   if (argc == 0) return (0);
   
   // Lookup shell command and call action function
-  int i = lookup(argv[0]);
-  if (i < 0) return (-1);
+  const command_t* cp = lookup(argv[0]);
+  if (cp == NULL) return (-1);
   m_optind = 1;
   m_optend = false;
   m_argv = argv;
-  action_fn action = (action_fn) pgm_read_word(&m_cmdv[i].action);
+  action_fn action = (action_fn) pgm_read_word(&cp->action);
   const char* script = (const char*) action;
   size_t len = strlen(SHELL_SCRIPT_MAGIC);
   if (strncmp_P(SHELL_SCRIPT_MAGIC, script, len) != 0) 
@@ -134,6 +134,7 @@ Shell::execute_P(const char* script)
   int res;
   char c;
   line = 0;
+  // Execute the script by copying line by line to local buffer
   do {
     // Copy command line from program memory to buffer
     bp = buf;

@@ -37,12 +37,12 @@ public:
   typedef int (*action_fn)(int argc, char* argv[]);
 
   /**
-   * Shell command descriptor.
+   * Shell command descriptor with name, help string and action function.
    */
   struct command_t {
     const char* name;		//!< Shell command name string (PROGMEM).
+    const char* help;		//!< Short description of command.
     action_fn action;		//!< Shell command action function.
-    const char* help;		//!< Short description.
   };
   
   /**
@@ -135,12 +135,12 @@ protected:
   bool m_optend;		//!< End of options.
   
   /**
-   * Lookup given command name in command set. Return command index or
-   * negative error code.
+   * Lookup given command name in command set. Return command entry 
+   * in program memory or NULL.
    * @param[in] name of shell command.
-   * @return index or negative error code.
+   * @return command entry or NULL.
    */
-  int lookup(char* name);
+  const command_t* lookup(char* name);
 };
 
 /** 

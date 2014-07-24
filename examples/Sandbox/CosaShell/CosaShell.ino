@@ -16,19 +16,21 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Demonstration of the Cosa Shell commmand line support.
+ * Demonstration of the Cosa Shell commmand line support. 
+ * See Commands.cpp for the implementation of the toy Arduino 
+ * shell.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Commands.h"
 #include "Cosa/RTC.hh"
-#include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-IOStream cout;
+// Input and output streams
 IOStream cin;
+IOStream cout;
 
 void setup()
 {
@@ -42,7 +44,7 @@ void setup()
   cin.set_device(&uart);
   cout.set_device(&uart);
 
-  // Run boot script with trace
+  // Run blink command (which is actually a script)
   cout << PSTR("CosaShell: starting...") << endl;
   shell.execute_P(PSTR("blink"));
 }

@@ -248,18 +248,18 @@ static int stty_action(int argc, char* argv[])
   return (0);
 }
 
-static const Shell::command_t command_vec[] __PROGMEM = {
-  { ANALOGREAD_NAME, analogread_action, ANALOGREAD_HELP },
-  { ARGS_NAME, args_action, ARGS_HELP },
-  { BLINK_NAME, blink_action, BLINK_HELP },
-  { DATE_NAME, date_action, DATE_HELP },
-  { DELAY_NAME, delay_action, DELAY_HELP },
-  { ECHO_NAME, echo_action, ECHO_HELP },
-  { DIGITALREAD_NAME, digitalread_action, DIGITALREAD_HELP },
-  { HELP_NAME, help_action, HELP_HELP },
-  { LED_NAME, led_action, LED_HELP },
-  { MILLIS_NAME, millis_action, MILLIS_HELP },
-  { STTY_NAME, stty_action, STTY_HELP }
+static const Shell::command_t command_tab[] __PROGMEM = {
+  { ANALOGREAD_NAME, ANALOGREAD_HELP, analogread_action },
+  { ARGS_NAME, ARGS_HELP, args_action },
+  { BLINK_NAME, BLINK_HELP, blink_action },
+  { DATE_NAME, DATE_HELP, date_action },
+  { DELAY_NAME, DELAY_HELP, delay_action },
+  { ECHO_NAME, ECHO_HELP, echo_action },
+  { DIGITALREAD_NAME, DIGITALREAD_HELP, digitalread_action },
+  { HELP_NAME, HELP_HELP, help_action },
+  { LED_NAME, LED_HELP, led_action },
+  { MILLIS_NAME, MILLIS_HELP, millis_action },
+  { STTY_NAME, STTY_HELP, stty_action }
 };
 
-Shell shell(membersof(command_vec), command_vec);
+Shell shell(membersof(command_tab), command_tab);
