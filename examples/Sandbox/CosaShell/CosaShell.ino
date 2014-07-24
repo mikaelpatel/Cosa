@@ -30,18 +30,6 @@
 IOStream cout;
 IOStream cin;
 
-#define LF "\n"
-
-// Blink boot script
-const char boot[] __PROGMEM =
-  "led on" LF
-  "delay 1000" LF
-  "led off" LF
-  "delay 1000" LF
-  "led on" LF
-  "delay 1000" LF
-  "led off" LF;
-
 void setup()
 {
   // Initiate timers
@@ -56,7 +44,7 @@ void setup()
 
   // Run boot script with trace
   cout << PSTR("CosaShell: starting...") << endl;
-  shell.script(boot, &cout);
+  shell.execute_P(PSTR("blink"));
 }
 
 void loop()

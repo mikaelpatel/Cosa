@@ -102,11 +102,31 @@ static int args_action(int argc, char* argv[])
   return (0);
 }
    
+#define LF "\n"
+
+static const char BLINK_NAME[] __PROGMEM = 
+  "blink";
+static const char BLINK_HELP[] __PROGMEM = 
+  "-- turn led on and off";
+static const char BLINK_SCRIPT[] __PROGMEM = 
+  SHELL_SCRIPT_MAGIC					       
+  "echo -n \"led on\"" LF
+  "led on" LF
+  "delay 500" LF
+  "echo -n \"..off\"" LF
+  "led off" LF
+  "delay 500" LF
+  "echo -n \"..on\"" LF
+  "led on" LF
+  "delay 500" LF
+  "echo \"..off\"" LF
+  "led off" LF;
+#define blink_action (Shell::action_fn) BLINK_SCRIPT
 
 static const char DATE_NAME[] __PROGMEM = 
   "date";
 static const char DATE_HELP[] __PROGMEM = 
-  "-- current time and date";
+  "-- print the system date and time";
 static int date_action(int argc, char* argv[])
 {
   UNUSED(argv);
@@ -161,15 +181,17 @@ static int digitalread_action(int argc, char* argv[])
 static const char ECHO_NAME[] __PROGMEM = 
   "echo";
 static const char ECHO_HELP[] __PROGMEM = 
- "[on|off] -- turn echo on or off";
+  "[-n] STRING -- display a line of text";
 static int echo_action(int argc, char* argv[])
 {
-  if (argc != 2) return (-1);
-  if (strcmp_P(argv[1], PSTR("on")) == 0) 
-    shell.set_echo(1);
-  else if (strcmp_P(argv[1], PSTR("off")) == 0) 
-    shell.set_echo(0);
-  else return (-1);
+  if (argc == 3) {
+    if (strcmp_P(argv[1], PSTR("-n")) != 0) return (-1);
+    cout << argv[2];
+  }
+  else {
+    if (argc != 2) return (-1);
+    cout << argv[1] << endl;
+  }
   return (0);
 }
 
@@ -211,16 +233,33 @@ static int millis_action(int argc, char* argv[])
   return (0);
 }
 
+static const char STTY_NAME[] __PROGMEM = 
+  "stty";
+static const char STTY_HELP[] __PROGMEM = 
+  "echo [on|off] -- turn tty echo on or off";
+static int stty_action(int argc, char* argv[])
+{
+  if (argc != 3 && strcmp_P(argv[1], PSTR("echo")) != 0) return (-1);
+  if (strcmp_P(argv[2], PSTR("on")) == 0) 
+    shell.set_echo(1);
+  else if (strcmp_P(argv[2], PSTR("off")) == 0) 
+    shell.set_echo(0);
+  else return (-1);
+  return (0);
+}
+
 static const Shell::command_t command_vec[] __PROGMEM = {
   { ANALOGREAD_NAME, analogread_action, ANALOGREAD_HELP },
   { ARGS_NAME, args_action, ARGS_HELP },
+  { BLINK_NAME, blink_action, BLINK_HELP },
   { DATE_NAME, date_action, DATE_HELP },
   { DELAY_NAME, delay_action, DELAY_HELP },
   { ECHO_NAME, echo_action, ECHO_HELP },
   { DIGITALREAD_NAME, digitalread_action, DIGITALREAD_HELP },
   { HELP_NAME, help_action, HELP_HELP },
   { LED_NAME, led_action, LED_HELP },
-  { MILLIS_NAME, millis_action, MILLIS_HELP }
+  { MILLIS_NAME, millis_action, MILLIS_HELP },
+  { STTY_NAME, stty_action, STTY_HELP }
 };
 
 Shell shell(membersof(command_vec), command_vec);

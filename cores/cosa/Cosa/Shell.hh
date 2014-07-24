@@ -45,6 +45,12 @@ public:
     const char* help;		//!< Short description.
   };
   
+  /**
+   * Construct command shell with given command list and prompt.
+   * @param[in] cmdc number of commands in vector.
+   * @param[in] cmdv command vector.
+   * @param[in] prompt to be written to cout.
+   */
   Shell(uint8_t cmdc, const command_t* cmdv, const char* prompt = NULL) :
     m_cmdc(cmdc),
     m_cmdv(cmdv),
@@ -77,14 +83,6 @@ public:
   int get(char* &option, char* &value);
 
   /**
-   * Print short description of commands to the given output
-   * stream. Return zero or negative error code. 
-   * @param[in] outs output stream.
-   * @return zero or negative error code.
-   */
-  int help(IOStream& outs);
-
-  /**
    * Parse buffer and create command, option and parameter
    * list. Lookup command in given command vector. If found call
    * action function with arguments and count. Return value from
@@ -93,6 +91,14 @@ public:
    * @return value from action function or negative error code.
    */
   int execute(char* buf);
+
+  /**
+   * Read command lines from script in program memory. Return zero or 
+   * the script command line number of the failed.
+   * @param[in] script pointer to script in program memory.
+   * @return zero or script line number.
+   */
+  int execute_P(const char* script);
 
   /**
    * Prompt to given output stream (if not NULL), read line from given
@@ -105,18 +111,20 @@ public:
   int run(IOStream* ins, IOStream* outs = NULL);
 
   /**
-   * Read command lines from script in program memory. The command
-   * lines are written to the given output stream. Return zero or
-   * the script command line number of the failed.
-   * @param[in] sp pointer to script in program memory.
-   * @param[in] outs output stream (default NULL).
-   * @return zero or script line number.
+   * Print short description of commands to the given output
+   * stream. Return zero or negative error code. 
+   * @param[in] outs output stream.
+   * @return zero or negative error code.
    */
-  int script(const char* sp, IOStream* outs = NULL);
+  int help(IOStream& outs);
 
 protected:
+  /** Default prompt */
   static const char DEFAULT_PROMPT[] PROGMEM;
-  
+
+  /** Command line size */
+  static const size_t BUF_MAX = 64;
+
   uint8_t m_cmdc;		//!< Number of shell commands.
   const command_t* m_cmdv;	//!< Vector with shell command decriptors.
   const char* m_prompt;		//!< Shell prompt.
@@ -134,5 +142,11 @@ protected:
    */
   int lookup(char* name);
 };
+
+/** 
+ * Shell script magic marker.
+ */
+#define SHELL_SCRIPT_MAGIC "#!Cosa/Shell\n" 
+
 #endif
 
