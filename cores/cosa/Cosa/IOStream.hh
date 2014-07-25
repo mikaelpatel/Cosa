@@ -39,25 +39,24 @@ public:
   public:
     /**
      * Default constructor for IOStream devices.
-     * @param[in] mode sleep mode (Default SLEEP_MODE_IDLE)
+     * @param[in] mode blocking (default non-blocking).
      */
-    Device(uint8_t mode = SLEEP_MODE_IDLE) : m_mode(mode) {}
+    Device(bool mode = false) : m_blocking(mode) {}
 
     /**
      * Set non-blocking mode.
      */
     void set_non_blocking()
     {
-      m_mode = NON_BLOCKING;
+      m_blocking = false;
     }
 
     /**
-     * Set blocking mode with given sleep mode.
-     * @param[in] mode sleep mode.
+     * Set blocking mode.
      */
-    void set_blocking(uint8_t mode)
+    void set_blocking()
     {
-      m_mode = mode;
+      m_blocking = true;
     }
 
     /**
@@ -184,11 +183,8 @@ public:
     virtual int flush();
 
   protected:
-    /** Non blocking mode. */
-    static const uint8_t NON_BLOCKING = 255;
-
-    /** Sleep mode if blocking otherwise NON_BLOCKING. */
-    uint8_t m_mode;
+    /** Blocking state */
+    uint8_t m_blocking;
   };
 
   /**

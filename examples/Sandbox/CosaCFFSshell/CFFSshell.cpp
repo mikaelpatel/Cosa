@@ -23,20 +23,6 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/FS/CFFS.hh"
 
-static const char ARGS_NAME[] __PROGMEM = "args";
-static const char ARGS_HELP[] __PROGMEM = "OPTS ARGS -- display options and arguments";
-static int args_action(int argc, char* argv[])
-{
-  char* option;
-  char* value;
-  int i;
-  while ((i = shell.get(option, value)) == 0)
-    cout << PSTR("option: ") << option << PSTR(" value: ") << value << endl;
-  while (i < argc)
-    cout << PSTR("argument: ") << argv[i++] << endl;
-  return (0);
-}
-   
 static const char CAT_NAME[] __PROGMEM = "cat";
 static const char CAT_HELP[] __PROGMEM = "FILE -- print content of file";
 static int cat_action(int argc, char* argv[])
@@ -75,8 +61,8 @@ static const char HELP_NAME[] __PROGMEM = "help";
 static const char HELP_HELP[] __PROGMEM = "-- list command help";
 static int help_action(int argc, char* argv[])
 {
-  UNUSED(argc);
   UNUSED(argv);
+  if (argc != 1) return (-1);
   return (shell.help(cout));
 }
 
@@ -137,17 +123,32 @@ static int size_action(int argc, char* argv[])
   return (0);
 }
    
-static const Shell::command_t command_vec[] __PROGMEM = {
-  { ARGS_NAME, args_action, ARGS_HELP },
-  { CAT_NAME, cat_action, CAT_HELP },
-  { CD_NAME, cd_action, CD_HELP },
-  { DATE_NAME, date_action, DATE_HELP },
-  { HELP_NAME, help_action, HELP_HELP },
-  { LS_NAME, ls_action, LS_HELP },
-  { MKDIR_NAME, mkdir_action, MKDIR_HELP },
-  { OD_NAME, od_action, OD_HELP },
-  { RM_NAME, rm_action, RM_HELP },
-  { SIZE_NAME, size_action, SIZE_HELP }
+static const char STTY_NAME[] __PROGMEM = 
+  "stty";
+static const char STTY_HELP[] __PROGMEM = 
+  "echo [on|off] -- turn tty echo on or off";
+static int stty_action(int argc, char* argv[])
+{
+  if (argc != 3 && strcmp_P(argv[1], PSTR("echo")) != 0) return (-1);
+  if (strcmp_P(argv[2], PSTR("on")) == 0) 
+    shell.set_echo(1);
+  else if (strcmp_P(argv[2], PSTR("off")) == 0) 
+    shell.set_echo(0);
+  else return (-1);
+  return (0);
+}
+
+static const Shell::command_t command_tab[] __PROGMEM = {
+  { CAT_NAME, CAT_HELP, cat_action },
+  { CD_NAME, CD_HELP, cd_action },
+  { DATE_NAME, DATE_HELP, date_action },
+  { HELP_NAME, HELP_HELP, help_action },
+  { LS_NAME, LS_HELP, ls_action },
+  { MKDIR_NAME, MKDIR_HELP, mkdir_action },
+  { OD_NAME, OD_HELP, od_action },
+  { RM_NAME, RM_HELP, rm_action },
+  { SIZE_NAME, SIZE_HELP, size_action },
+  { STTY_NAME, STTY_HELP, stty_action }
 };
 
-Shell shell(membersof(command_vec), command_vec);
+Shell shell(membersof(command_tab), command_tab);

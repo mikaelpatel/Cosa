@@ -88,14 +88,14 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
     while (m_de.is_set()) Power::sleep(SLEEP_MODE_IDLE);
     while (getchar() != SOT) {
       if ((ms != 0) && (RTC::millis() - start > ms)) return (-2);
-      Power::sleep(m_mode);
+      yield();
     }
     m_state = 1;
     
   case 1: // Read message header and verify header check-sum
     while (available() != sizeof(header_t)) {
       if ((ms != 0) && (RTC::millis() - start > ms)) return (-2);
-      Power::sleep(m_mode);
+      yield();
     }
     m_state = 2;
     if (m_ibuf.read(&m_header, sizeof(header_t)) != (int) sizeof(header_t)) 
@@ -106,7 +106,7 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
   case 2: // Read message payload and verify payload check-sum
     while (available() != (int) (m_header.length + sizeof(crc))) {
       if ((ms != 0) && (RTC::millis() - start > ms)) return (-2);
-      Power::sleep(SLEEP_MODE_IDLE);
+      yield();
     }
     m_state = 3;
   }

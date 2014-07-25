@@ -110,7 +110,13 @@ static const char BLINK_HELP[] __PROGMEM =
   "MS -- turn led on and off";
 static const char BLINK_SCRIPT[] __PROGMEM = 
   SHELL_SCRIPT_MAGIC					       
-  "echo -n $1 \"ms:led on\"" LF
+  "echo -n $1 \"ms:led on\"" LF 
+  "led on" LF
+  "delay $1" LF 
+  "echo -n \"..off\"" LF 
+  "led off" LF
+  "delay $1" LF
+  "echo -n \"..on\"" LF
   "led on" LF
   "delay $1" LF
   "echo -n \"..off\"" LF
@@ -118,9 +124,9 @@ static const char BLINK_SCRIPT[] __PROGMEM =
   "delay $1" LF
   "echo -n \"..on\"" LF
   "led on" LF
-  "delay $1" LF
-  "echo \"..off\"" LF
-  "led off" LF;
+  "delay $1" LF 
+  "echo \"..off\"" LF 
+  "led off";
 #define blink_action (Shell::action_fn) BLINK_SCRIPT
 
 static const char DATE_NAME[] __PROGMEM = 
@@ -205,8 +211,8 @@ static const char HELP_HELP[] __PROGMEM =
   "-- list command help";
 static int help_action(int argc, char* argv[])
 {
-  UNUSED(argc);
   UNUSED(argv);
+  if (argc != 1) return (-1);
   return (shell.help(cout));
 }
 

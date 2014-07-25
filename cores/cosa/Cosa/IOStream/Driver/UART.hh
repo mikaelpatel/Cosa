@@ -99,8 +99,8 @@ public:
 
   /**
    * @override IOStream::Device
-   * Write character to serial port output buffer.
-   * Returns character if successful otherwise on error or buffer full
+   * Write character to serial port output buffer. Returns character
+   * if successful otherwise a negative error code. 
    * returns EOF(-1),
    * @param[in] c character to write.
    * @return character written or EOF(-1).

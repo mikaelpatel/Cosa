@@ -26,8 +26,8 @@ const Shell::command_t*
 Shell::lookup(char* name) 
 {
   for (uint8_t i = 0; i < m_cmdc; i++) {
-    if (strcmp_P(name, (const char*) pgm_read_word(&m_cmdv[i].name)) == 0)
-      return (&m_cmdv[i]);
+    if (strcmp_P(name, (const char*) pgm_read_word(&m_cmdtab[i].name)) == 0)
+      return (&m_cmdtab[i]);
   }
   return (NULL);
 }
@@ -137,7 +137,7 @@ Shell::execute(const char* script, int argc, char* argv[])
       if (c != '$') {
 	*bp++ = c;
       }
-      // Expand possible argument
+      // Expand possible argument; $0..$9
       else {
 	c = pgm_read_byte(sp++);
 	if (c < '0' || c > '9') return (-1);
@@ -165,17 +165,32 @@ Shell::run(IOStream* ins, IOStream* outs)
   char buf[BUF_MAX];
   if (ins == NULL) return (-1);
   if (outs != NULL) *outs << m_prompt;
-  ins->get_device()->gets(buf, sizeof(buf));
-  if (m_echo && outs != NULL) *outs << buf << endl;
-  return (execute(buf));
+  int count = 0;
+  // Read command line. Check that it is not too long for the buffer
+  do {
+    if (ins->get_device()->gets(buf, sizeof(buf)) == NULL) return (-1);
+    count += 1;
+  } while (buf[strlen(buf) - 1] != '\n');
+  if (count != 1) {
+    if (outs == NULL) return (-1);
+    *outs << PSTR("error:too long command") << endl;
+    return (-1);
+  }
+  // Check for command line echo (for the serial monitor)
+  if (m_echo && outs != NULL) *outs << buf;
+  // Execute the command and result code
+  int res = execute(buf);
+  if (res == 0 || outs == NULL) return (res);
+  *outs << PSTR("error:illegal command") << endl;
+  return (res);
 }
 
 int
 Shell::help(IOStream& outs)
 {
   for (uint8_t i = 0; i < m_cmdc; i++) {
-    outs << (const char*) pgm_read_word(&m_cmdv[i].name) << ' ';
-    outs << (const char*) pgm_read_word(&m_cmdv[i].help) << endl;
+    outs << (const char*) pgm_read_word(&m_cmdtab[i].name) << ' ';
+    outs << (const char*) pgm_read_word(&m_cmdtab[i].help) << endl;
   }
   return (0);
 }

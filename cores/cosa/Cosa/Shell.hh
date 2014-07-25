@@ -47,13 +47,13 @@ public:
   
   /**
    * Construct command shell with given command list and prompt.
-   * @param[in] cmdc number of commands in vector.
-   * @param[in] cmdv command vector.
+   * @param[in] cmdc number of commands in vector (max 255).
+   * @param[in] cmdtab command table (in program memory).
    * @param[in] prompt to be written to cout.
    */
-  Shell(uint8_t cmdc, const command_t* cmdv, const char* prompt = NULL) :
+  Shell(uint8_t cmdc, const command_t* cmdtab, const char* prompt = NULL) :
     m_cmdc(cmdc),
-    m_cmdv(cmdv),
+    m_cmdtab(cmdtab),
     m_prompt(prompt == NULL ? DEFAULT_PROMPT : prompt),
     m_echo(true)
   {}
@@ -121,7 +121,7 @@ protected:
   const size_t ARGV_MAX = 16;
 
   uint8_t m_cmdc;		//!< Number of shell commands.
-  const command_t* m_cmdv;	//!< Vector with shell command decriptors.
+  const command_t* m_cmdtab;	//!< Vector with shell command decriptors.
   const char* m_prompt;		//!< Shell prompt.
   bool m_echo;			//!< Echo command line.
   uint8_t m_argc;		//!< Number of arguments.

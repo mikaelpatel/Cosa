@@ -40,7 +40,7 @@ void setup()
 
   // Initiate UART for blocked read line
   uart.begin(9600);
-  uart.set_blocking(SLEEP_MODE_IDLE);
+  uart.set_blocking();
   cin.set_device(&uart);
   cout.set_device(&uart);
 }
@@ -48,7 +48,5 @@ void setup()
 void loop()
 {
   // The shell will do the read and execute of commands
-  int res = shell.run(&cin, &cout);
-  if (res == 0) return;
-  cout << PSTR("illegal command") << endl;
+  shell.run(&cin, &cout);
 }

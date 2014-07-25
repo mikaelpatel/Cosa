@@ -357,14 +357,15 @@ IOStream::Device::gets(char *s, size_t count)
   char* res = s;
   while (--count) {
     int c = getchar();
-    if (c == EOF && m_mode != NON_BLOCKING) {
+    if (c == EOF && m_blocking) {
       while (c == EOF) {
 	yield();
 	c = getchar();
       }
     }
-    if (c == '\n' || c == IOStream::EOF) break;
+    if (c == IOStream::EOF) break;
     *s++ = c;
+    if (c == '\n') break;
   }
   *s = 0;
   return (s == res ? NULL : res);

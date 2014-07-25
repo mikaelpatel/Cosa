@@ -76,12 +76,7 @@ int
 UART::putchar(char c)
 {
   // Check if the buffer is full
-  if (m_obuf->putchar(c) == IOStream::EOF) {
-    if (m_mode == NON_BLOCKING) return (IOStream::EOF);
-    do {
-      Power::sleep();
-    } while (m_obuf->putchar(c) == IOStream::EOF);
-  }
+  while (m_obuf->putchar(c) == IOStream::EOF) yield();
 
   // Enable the transmitter
   *UCSRnB() |= _BV(UDRIE0);

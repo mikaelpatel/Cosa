@@ -216,7 +216,6 @@ template <uint16_t SIZE>
 int
 IOBuffer<SIZE>::flush()
 {
-  if (m_mode == NON_BLOCKING) return (IOStream::EOF);
   while (m_head != m_tail) yield();
   return (0);
 }
