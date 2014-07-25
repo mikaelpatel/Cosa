@@ -118,7 +118,7 @@ protected:
   static const size_t BUF_MAX = 64;
 
   /** Max number of arguments */
-  const size_t ARGV_MAX = 16;
+  static const size_t ARGV_MAX = 16;
 
   uint8_t m_cmdc;		//!< Number of shell commands.
   const command_t* m_cmdtab;	//!< Vector with shell command decriptors.
