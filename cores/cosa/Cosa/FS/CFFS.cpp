@@ -37,6 +37,9 @@ CFFS::File::open(const char* filename, uint8_t oflag)
     if (res < 0) return (res);
     m_entry_index = res;
     m_file_size = 0L;
+    m_current_addr = (m_entry.first_sector * S25FL127S::SECTOR_MAX);
+    m_current_addr += sizeof(CFFS::sector_t);
+    m_current_pos = 0L;
   } 
 
   // Check that the file exists; open file 
@@ -47,6 +50,7 @@ CFFS::File::open(const char* filename, uint8_t oflag)
     m_entry_index = res;
     res = lookup_end_of_file(m_entry.first_sector, m_current_addr, m_file_size);
     if (res < 0) return (res);
+    m_current_pos = m_file_size;
   }
 
   // Check if the position should be from the start of the file
@@ -81,11 +85,11 @@ int
 CFFS::File::seek(uint32_t pos, uint8_t whence)
 {
   if ((m_flags & O_READ) == 0) return (-1);
-  // Fix: Should implement all seek variants not only rewind
-  if ((pos != 0L) || (whence != SEEK_SET)) return (-1);
+  // Fix: Should implement all seek variants
+  if (whence != SEEK_SET) return (-1);
   m_current_addr = (m_entry.first_sector * S25FL127S::SECTOR_MAX);
-  m_current_addr += sizeof(CFFS::sector_t);
-  m_current_pos = 0L;
+  m_current_addr += sizeof(CFFS::sector_t) + pos;
+  m_current_pos = pos;
   return (0);
 }
 
