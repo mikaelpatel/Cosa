@@ -43,7 +43,7 @@
 // Enable sending of dimmer level (-1..-15)
 // #define USE_DIMMER
 
-#if defined(BOARD_TINY)
+#if defined(BOARD_ATTINY)
 NEXA::Transmitter transmitter(Board::D2, 0xc05a01L);
 #else
 NEXA::Transmitter transmitter(Board::D9, 0xc05a01L);

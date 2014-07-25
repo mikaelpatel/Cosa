@@ -49,7 +49,7 @@
 OutputPin ledPin(Board::LED);
 
 // One-wire pin and connected DS18B20 devices
-#if defined(BOARD_TINY)
+#if defined(BOARD_ATTINY)
 OWI owi(Board::D1);
 #else
 OWI owi(Board::D7);
