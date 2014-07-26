@@ -304,12 +304,27 @@ public:
 
   /**
    * Print buffer contents in given base to stream.
+   * @param[in] src address prefix.
    * @param[in] ptr pointer to data memory.
    * @param[in] size number of bytes.
    * @param[in] base to represent value in (default 10).
    * @param[in] max number of numbers per line (default 16).
    */
-  void print(const void *ptr, size_t size, Base base = dec, uint8_t max = 16);
+  void print(uint32_t src, const void *ptr, size_t size, 
+	     Base base = dec, uint8_t max = 16);
+
+  /**
+   * Print buffer contents in given base to stream.
+   * @param[in] ptr pointer to data memory.
+   * @param[in] size number of bytes.
+   * @param[in] base to represent value in (default 10).
+   * @param[in] max number of numbers per line (default 16).
+   */
+  void print(const void *ptr, size_t size, 
+	     Base base = dec, uint8_t max = 16)
+  {
+    print((uint32_t) ptr, ptr, size, base, max);
+  }
 
   /**
    * Print pointer as a hexadecimal number to stream.

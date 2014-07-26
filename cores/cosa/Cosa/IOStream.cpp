@@ -132,33 +132,25 @@ IOStream::print_prefix(Base base)
 }
 
 void 
-IOStream::print(const void *ptr, size_t size, Base base, uint8_t max)
+IOStream::print(uint32_t src, const void *ptr, size_t size, Base base, uint8_t max)
 {
+  Base b = (base != dec ? hex : dec);
+  uint8_t w = (base == hex ? 2 : (base == bin ? 8 : 3));
   uint8_t* p = (uint8_t*) ptr;
-  unsigned int v_adj = (base == dec ? 0 : (base == oct ? 01000 : 0x100));
-  uint8_t adj = (v_adj != 0);
-  bool prefix = true;
   uint8_t n = 0;
-  if (max > 128) {
-    max -= 128;
-    prefix = false;
-  } 
-  else {
-    print(p);
-    print_P(PSTR(": "));
-  }
+  print(src, 6, b);
+  print_P(PSTR(": "));
   while (size--) {
-    char buf[sizeof(int) * CHARBITS + 1];
-    unsigned int v = (*p++) + v_adj;
-    print(utoa(v, buf, base) + adj);
+    print((unsigned int) *p++, w, base);
+    src += 1;
     if (++n < max) {
       print_P(PSTR(" "));
     }
     else {
       println();
       n = 0;
-      if (size > 0 && prefix) {
-	print(p);
+      if (size > 0) {
+	print(src, 6, b);
 	print_P(PSTR(": "));
       }
     }
