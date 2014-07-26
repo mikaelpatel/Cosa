@@ -139,12 +139,12 @@ protected:
   /**
    * Execute script in program memory. Return zero or the script
    * command line number of the failed. 
-   * @param[in] script pointer to script in program memory.
+   * @param[in] sp pointer to script in program memory.
    * @param[in] argc argument count.
    * @param[in] argv argument vector.
    * @return zero or script line number.
    */
-  int script(const char* script, int argc, char* argv[]);
+  int script(const char* sp, int argc, char* argv[]);
 };
 
 /** 
