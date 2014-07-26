@@ -25,6 +25,7 @@
 
 #include "Commands.h"
 #include "Cosa/RTC.hh"
+#include "Cosa/Tone.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
@@ -36,8 +37,9 @@ void setup()
 {
   // Initiate timers
   Watchdog::begin();
+  Tone::begin();
   RTC::begin();
-
+  
   // Initiate UART for blocked read line
   uart.begin(9600);
   uart.set_blocking();

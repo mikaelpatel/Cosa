@@ -19,8 +19,9 @@
  */
 
 #include "Commands.h"
-#include "Cosa/Time.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Time.hh"
+#include "Cosa/Tone.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
@@ -184,6 +185,40 @@ static int digitalread_action(int argc, char* argv[])
   return (0);
 }
 
+static const char DUMP_NAME[] __PROGMEM = 
+  "dump";
+static const char DUMP_HELP[] __PROGMEM = 
+  "[-b|-d] POS [SIZE] -- dump memory";
+static int dump_action(int argc, char* argv[])
+{
+  IOStream::Base base = IOStream::hex;
+  uint32_t addr = 0L;
+  size_t size = 256;
+  char* option;
+  char* value;
+  char* sp;
+  int ix;
+  while ((ix = shell.get(option, value)) == 0) {
+    if (strcmp_P(option, PSTR("b")) == 0)
+      base = IOStream::bin;
+    else if (strcmp_P(option, PSTR("d")) == 0)
+      base = IOStream::dec;
+    else 
+      return (-1);
+  }
+  if (ix < argc) {
+    addr = strtoul(argv[ix++], &sp, 16);
+    if (*sp != 0) return (-1);
+  }
+  if (ix < argc) {
+    size = strtoul(argv[ix++], &sp, 10);
+    if (*sp != 0) return (-1);
+  }
+  if (ix != argc) return (-1);
+  cout.print(addr, (void*) addr, size, base);
+  return (0);
+}
+
 static const char ECHO_NAME[] __PROGMEM = 
   "echo";
 static const char ECHO_HELP[] __PROGMEM = 
@@ -231,6 +266,18 @@ static int led_action(int argc, char* argv[])
   return (0);
 }
 
+static const char MICROS_NAME[] __PROGMEM = 
+  "micros";
+static const char MICROS_HELP[] __PROGMEM = 
+  "-- clock in micro-seconds";
+static int micros_action(int argc, char* argv[])
+{
+  UNUSED(argv);
+  if (argc != 1) return (-1);
+  cout << RTC::micros() << endl;
+  return (0);
+}
+
 static const char MILLIS_NAME[] __PROGMEM = 
   "millis";
 static const char MILLIS_HELP[] __PROGMEM = 
@@ -240,6 +287,49 @@ static int millis_action(int argc, char* argv[])
   UNUSED(argv);
   if (argc != 1) return (-1);
   cout << RTC::millis() << endl;
+  return (0);
+}
+
+static const char REPEAT_NAME[] __PROGMEM = 
+  "repeat";
+static const char REPEAT_HELP[] __PROGMEM = 
+  "COUNT [DELAY] COMMAND -- repeat command line";
+static int repeat_action(int argc, char* argv[])
+{
+  if (argc < 3) return (-1);
+  uint8_t fx = 3;
+  char* sp;
+  uint16_t count = strtoul(argv[1], &sp, 10);
+  if (*sp != 0 || count == 0) return (-1);
+  uint32_t ms = strtoul(argv[2], &sp, 10);
+  if (*sp != 0) {
+    ms = 0L;
+    fx = 2;
+  }
+  const size_t BUF_MAX = 64;
+  char buf[BUF_MAX];
+  while (--count) {
+    buf[0] = 0;
+    strcat(buf, argv[fx]);
+    for (uint8_t ix = fx + 1; ix < argc; ix++) {
+      strcat(buf, " ");
+      strcat(buf, argv[ix]);
+    }
+    if (shell.execute(buf) != 0) return (-1);
+    if (ms != 0) delay(ms);
+  }
+  return (0);
+}
+
+static const char SECONDS_NAME[] __PROGMEM = 
+  "seconds";
+static const char SECONDS_HELP[] __PROGMEM = 
+  "-- clock in seconds";
+static int seconds_action(int argc, char* argv[])
+{
+  UNUSED(argv);
+  if (argc != 1) return (-1);
+  cout << RTC::seconds() << endl;
   return (0);
 }
 
@@ -258,18 +348,47 @@ static int stty_action(int argc, char* argv[])
   return (0);
 }
 
+static const char TONE_NAME[] __PROGMEM = 
+  "tone";
+static const char TONE_HELP[] __PROGMEM = 
+  "FREQ [VOLUME [DURATION]] -- play tone";
+static int tone_action(int argc, char* argv[])
+{
+  if (argc < 2 || argc > 4) return (-1);
+  char* sp;
+  uint16_t freq = strtoul(argv[1], &sp, 10);
+  if (*sp != 0) return (-1);
+  uint8_t volume = Tone::VOLUME_MAX / 2;
+  if (argc > 2) {
+    volume = strtoul(argv[2], &sp, 10);
+    if (*sp != 0) return (-1);
+  }
+  uint16_t duration = 0;
+  if (argc > 3) {
+    duration = strtoul(argv[3], &sp, 10);
+    if (*sp != 0) return (-1);
+  }
+  Tone::play(freq, volume, duration);
+  return (0);
+}
+
 static const Shell::command_t command_tab[] __PROGMEM = {
   { ANALOGREAD_NAME, ANALOGREAD_HELP, analogread_action },
   { ARGS_NAME, ARGS_HELP, args_action },
   { BLINK_NAME, BLINK_HELP, blink_action },
   { DATE_NAME, DATE_HELP, date_action },
   { DELAY_NAME, DELAY_HELP, delay_action },
+  { DUMP_NAME, DUMP_HELP, dump_action },
   { ECHO_NAME, ECHO_HELP, echo_action },
   { DIGITALREAD_NAME, DIGITALREAD_HELP, digitalread_action },
   { HELP_NAME, HELP_HELP, help_action },
   { LED_NAME, LED_HELP, led_action },
+  { MICROS_NAME, MICROS_HELP, micros_action },
   { MILLIS_NAME, MILLIS_HELP, millis_action },
-  { STTY_NAME, STTY_HELP, stty_action }
+  { REPEAT_NAME, REPEAT_HELP, repeat_action },
+  { SECONDS_NAME, SECONDS_HELP, seconds_action },
+  { STTY_NAME, STTY_HELP, stty_action },
+  { TONE_NAME, TONE_HELP, tone_action }
 };
 
 Shell shell(membersof(command_tab), command_tab);
