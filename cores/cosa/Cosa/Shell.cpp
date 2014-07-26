@@ -109,30 +109,28 @@ Shell::execute(char* buf)
   m_optind = 1;
   m_optend = false;
   m_argv = argv;
-  action_fn action = (action_fn) pgm_read_word(&cp->action);
-  const char* script = (const char*) action;
-  size_t len = strlen(SHELL_SCRIPT_MAGIC);
-  if (strncmp_P(SHELL_SCRIPT_MAGIC, script, len) != 0) 
-    return (action(argc, argv));
-  return (execute(script + len, argc, argv));
+  // Check if the action is a script
+  const char* sp = (const char*) pgm_read_word(&cp->action);
+  if (strncmp_P(SHELL_SCRIPT_MAGIC, sp, sizeof(SHELL_SCRIPT_MAGIC) - 1) == 0) 
+    return (script(sp, argc, argv));
+  // Otherwise call the action function
+  action_fn action = (action_fn) sp;
+  return (action(argc, argv));
 }
 
 int 
-Shell::execute(const char* script, int argc, char* argv[])
+Shell::script(const char* sp, int argc, char* argv[])
 {
   char buf[BUF_MAX];
   int line = 0;
-  const char* sp = script;
-  uint8_t ix;
-  char* ap;
-  char* bp;
-  int res;
   char c;
   // Execute the script by copying line by line to local buffer
+  sp += sizeof(SHELL_SCRIPT_MAGIC) - 1;
   do {
     // Copy command line from program memory to buffer
-    bp = buf;
+    char* bp = buf;
     do {
+      // Fix: Should check for buffer overflow
       c = pgm_read_byte(sp++);
       if (c != '$') {
 	*bp++ = c;
@@ -141,9 +139,9 @@ Shell::execute(const char* script, int argc, char* argv[])
       else {
 	c = pgm_read_byte(sp++);
 	if (c < '0' || c > '9') return (-1);
-	ix = c - '0';
+	uint8_t ix = c - '0';
 	if (ix >= argc) return (-1);
-	ap = argv[ix];
+	char* ap = argv[ix];
 	while ((c = *ap++) != 0) *bp++ = c;
 	c = pgm_read_byte(sp++);
 	*bp++ = c;
@@ -152,9 +150,8 @@ Shell::execute(const char* script, int argc, char* argv[])
     *--bp = 0;
     line += 1;
     // Execute the command and check for errors
-    res = execute(buf);
-    if (res != 0) return (line);
-    // Continue to end of script
+    if (execute(buf) != 0) return (line);
+    // Continue until end of script
   } while (c != 0);
   return (0);
 }
@@ -162,9 +159,9 @@ Shell::execute(const char* script, int argc, char* argv[])
 int 
 Shell::run(IOStream* ins, IOStream* outs)
 {
-  char buf[BUF_MAX];
   if (ins == NULL) return (-1);
   if (outs != NULL) *outs << m_prompt;
+  char buf[BUF_MAX];
   int count = 0;
   // Read command line. Check that it is not too long for the buffer
   do {

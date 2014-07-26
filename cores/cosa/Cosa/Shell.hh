@@ -72,10 +72,9 @@ public:
    * Parse command parameter list for options. The command has the
    * format: NAME -X -XVALUE OPTION=VALUE ARGUMENT.., where X is an
    * option character with or without VALUE string, OPTION is an
-   * option name (string), and ARGUMENT is the first
-   * non-option. Returns zero and option string and value if
-   * successful otherwise the index of the first argument in the
-   * argument vector. 
+   * option name (string), and ARGUMENT is the first non-option. 
+   * Returns zero and option string and value if successful otherwise
+   * the index of the first argument in the argument vector. 
    * @param[out] option string.
    * @param[out] value string.
    * @return zero or index of first argument.
@@ -85,7 +84,7 @@ public:
   /**
    * Parse buffer and create command, option and parameter
    * list. Lookup command in given command vector. If found call
-   * action function with arguments and count. Return value from
+   * action function with arguments and count. Return value from 
    * action function or negative error code if not found.
    * @param[in] buf command line (zero terminated string).
    * @return value from action function or negative error code.
@@ -95,7 +94,7 @@ public:
   /**
    * Prompt to given output stream (if not NULL), read line from given
    * input stream and execute command. Return zero or negative error
-   * code. 
+   * code.
    * @param[in] ins input stream.
    * @param[in] outs output stream (default NULL).
    * @return zero or negative error code.
@@ -104,7 +103,7 @@ public:
 
   /**
    * Print short description of commands to the given output
-   * stream. Return zero or negative error code. 
+   * stream. Return zero or negative error code.
    * @param[in] outs output stream.
    * @return zero or negative error code.
    */
@@ -117,7 +116,7 @@ protected:
   /** Max command line buffer size */
   static const size_t BUF_MAX = 64;
 
-  /** Max number of arguments */
+  /** Max number of arguments (options and parameters) */
   static const size_t ARGV_MAX = 16;
 
   uint8_t m_cmdc;		//!< Number of shell commands.
@@ -145,7 +144,7 @@ protected:
    * @param[in] argv argument vector.
    * @return zero or script line number.
    */
-  int execute(const char* script, int argc, char* argv[]);
+  int script(const char* script, int argc, char* argv[]);
 };
 
 /** 
