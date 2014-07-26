@@ -103,7 +103,7 @@ static int mkdir_action(int argc, char* argv[])
 }
 
 static const char OD_NAME[] __PROGMEM = "od";
-static const char OD_HELP[] __PROGMEM = "[-b|-d] FILE -- dump file in hex";
+static const char OD_HELP[] __PROGMEM = "[-b|-d] FILE -- dump file (bin,dec,hex)";
 static int od_action(int argc, char* argv[])
 {
   IOStream::Base base = IOStream::hex;

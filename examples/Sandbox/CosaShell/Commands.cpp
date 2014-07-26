@@ -188,7 +188,7 @@ static int digitalread_action(int argc, char* argv[])
 static const char DUMP_NAME[] __PROGMEM = 
   "dump";
 static const char DUMP_HELP[] __PROGMEM = 
-  "[-b|-d] POS [SIZE] -- dump memory";
+  "[-b|-d] ADDR [SIZE] -- dump memory block";
 static int dump_action(int argc, char* argv[])
 {
   IOStream::Base base = IOStream::hex;
