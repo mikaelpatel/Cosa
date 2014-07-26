@@ -22,7 +22,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "CFFSshell.h"
+#include "Commands.h"
 #include "Cosa/RTC.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
@@ -51,8 +51,9 @@ void setup()
   cout.set_device(&uart);
 
   // Initiate flash memory and file system
-  flash.begin();
-  CFFS::begin(&flash);
+  if (flash.begin() && CFFS::begin(&flash)) return;
+  cout << PSTR("no flash memory") << endl;
+  exit(0);
 }
 
 void loop()
