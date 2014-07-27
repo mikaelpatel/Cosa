@@ -26,7 +26,7 @@
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 
-// Digital and Analog Pin map (index => pin identity)
+// Digital and Analog Pin map (pin index => Cosa pin identity)
 static const Board::DigitalPin digital_pin_map[] __PROGMEM = {
   Board::D0, 
   Board::D1, 
@@ -62,17 +62,21 @@ static const Board::AnalogPin analog_pin_map[] __PROGMEM = {
 static const char ANALOGREAD_NAME[] __PROGMEM = 
   "analogread";
 static const char ANALOGREAD_HELP[] __PROGMEM = 
-  "[all|PIN..] -- read analog pins";
+  "all|ALL|PIN.. -- read analog pins";
 static int analogread_action(int argc, char* argv[])
 {
-  if (argc == 2 && strcmp_P(argv[1], PSTR("all")) == 0) {
+  if (argc == 2 && (strcmp_P(argv[1], PSTR("all")) == 0 ||
+		    strcmp_P(argv[1], PSTR("ALL")) == 0)) {
+    bool chap = argv[1][0] == 'A';
     for (uint8_t ix = 0; ix < membersof(analog_pin_map); ix++) {
       Board::AnalogPin pin;
       pin = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[ix]);
-      cout << 'A' << ix << '=' << AnalogPin::sample(pin) << endl;
+      if (chap) cout << 'A' ; else cout << 'a';
+      cout << ix << '=' << AnalogPin::sample(pin) << endl;
     }
   }
   else {
+    bool multi = argc > 2;
     for (int i = 1; i < argc; i++) {
       char* name = argv[i];
       if (name[0] != 'a' && name[0] != 'A') return (-1);
@@ -81,7 +85,8 @@ static int analogread_action(int argc, char* argv[])
       if (*sp != 0 || ix >= membersof(analog_pin_map)) return (-1);
       Board::AnalogPin pin;
       pin = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[ix]);
-      cout << name << '=' << AnalogPin::sample(pin) << endl;
+      if (multi) cout << name << '=';
+      cout << AnalogPin::sample(pin) << endl;
     }
   }
   return (0);
@@ -95,11 +100,11 @@ static int args_action(int argc, char* argv[])
 {
   char* option;
   char* value;
-  int i;
-  while ((i = shell.get(option, value)) == 0)
+  int ix;
+  while ((ix = shell.get(option, value)) == 0)
     cout << PSTR("option: ") << option << PSTR(" value: ") << value << endl;
-  while (i < argc)
-    cout << PSTR("argument: ") << argv[i++] << endl;
+  while (ix < argc)
+    cout << PSTR("argument: ") << argv[ix++] << endl;
   return (0);
 }
    
@@ -160,28 +165,61 @@ static int delay_action(int argc, char* argv[])
 static const char DIGITALREAD_NAME[] __PROGMEM = 
   "digitalread";
 static const char DIGITALREAD_HELP[] __PROGMEM = 
-  "[all|PIN..] -- read digital pins";
+  "all|ALL|[led] PIN.. -- read digital pins";
 static int digitalread_action(int argc, char* argv[])
 {
-  if (argc == 2 && strcmp_P(argv[1], PSTR("all")) == 0) {
+  if (argc == 2 && (strcmp_P(argv[1], PSTR("all")) == 0 ||
+		    strcmp_P(argv[1], PSTR("ALL")) == 0)) {
+    bool chap = argv[1][0] == 'A';
     for (uint8_t ix = 0; ix < membersof(digital_pin_map); ix++) {
       Board::DigitalPin pin;
       pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
-      cout << 'D' << ix << '=' << InputPin::read(pin) << endl;
+      if (chap) cout << 'D' ; else cout << 'd';
+      cout << ix << '=' << InputPin::read(pin) << endl;
     }
   }
   else {
+    bool multi = argc > 2;
     for (int i = 1; i < argc; i++) {
-      char* name = argv[i];
-      if (name[0] != 'd' && name[0] != 'D') return (-1);
-      char* sp;
-      uint32_t ix = strtoul(name + 1, &sp, 10);
-      if (*sp != 0 || ix >= membersof(digital_pin_map)) return (-1);
       Board::DigitalPin pin;
-      pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
-      cout << name << '=' << InputPin::read(pin) << endl;
+      char* name = argv[i];
+      if (strcmp_P(argv[1], PSTR("led")) == 0) {
+	pin = Board::LED;
+      } else if (name[0] == 'd' || name[0] == 'D') {
+	char* sp;
+	uint32_t ix = strtoul(name + 1, &sp, 10);
+	if (*sp != 0 || ix >= membersof(digital_pin_map)) return (-1);
+	pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
+      }
+      else return (-1);
+      if (multi) cout << name << '=';
+      cout << InputPin::read(pin) << endl;
     }
   }
+  return (0);
+}
+
+static const char DIGITALTOGGLE_NAME[] __PROGMEM = 
+  "digitaltoggle";
+static const char DIGITALTOGGLE_HELP[] __PROGMEM = 
+  "led|PIN -- toggle digital pin";
+static int digitaltoggle_action(int argc, char* argv[])
+{
+  if (argc != 2) return (-1);
+  Board::DigitalPin pin;
+  char* name = argv[1];
+  if (strcmp_P(name, PSTR("led")) == 0) {
+    pin = Board::LED;
+  }
+  else {
+    if (name[0] != 'd' && name[0] != 'D') return (-1);
+    char* sp;
+    uint32_t ix = strtoul(name + 1, &sp, 10);
+    if (*sp != 0 || ix >= membersof(digital_pin_map)) return (-1);
+    pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
+  }
+  OutputPin::toggle(pin);
+  cout << InputPin::read(pin) << endl;
   return (0);
 }
 
@@ -254,7 +292,7 @@ static int help_action(int argc, char* argv[])
 static const char LED_NAME[] __PROGMEM = 
   "led";
 static const char LED_HELP[] __PROGMEM = 
-  "[on|off] -- turn led on or off";
+  "on|off -- turn led on or off";
 static int led_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -336,14 +374,26 @@ static int seconds_action(int argc, char* argv[])
 static const char STTY_NAME[] __PROGMEM = 
   "stty";
 static const char STTY_HELP[] __PROGMEM = 
-  "echo [on|off] -- turn tty echo on or off";
+  "[echo on|off] [eol CR|LF|CRLF] -- set tty echo and eol mode";
 static int stty_action(int argc, char* argv[])
 {
-  if (argc != 3 && strcmp_P(argv[1], PSTR("echo")) != 0) return (-1);
-  if (strcmp_P(argv[2], PSTR("on")) == 0) 
-    shell.set_echo(1);
-  else if (strcmp_P(argv[2], PSTR("off")) == 0) 
-    shell.set_echo(0);
+  if (argc != 3) return (-1);
+  if (strcmp_P(argv[1], PSTR("echo")) == 0) {
+    if (strcmp_P(argv[2], PSTR("on")) == 0) 
+      shell.set_echo(1);
+    else if (strcmp_P(argv[2], PSTR("off")) == 0) 
+      shell.set_echo(0);
+    else return (-1);
+  }
+  else if (strcmp_P(argv[1], PSTR("eol")) == 0) {
+    if (strcmp_P(argv[2], PSTR("CR")) == 0) 
+      cout.get_device()->set_eol(IOStream::CR_MODE);
+    else if (strcmp_P(argv[2], PSTR("LF")) == 0) 
+      cout.get_device()->set_eol(IOStream::LF_MODE);
+    else if (strcmp_P(argv[2], PSTR("CRLF")) == 0) 
+      cout.get_device()->set_eol(IOStream::CRLF_MODE);
+    else return (-1);
+  }
   else return (-1);
   return (0);
 }
@@ -381,6 +431,7 @@ static const Shell::command_t command_tab[] __PROGMEM = {
   { DUMP_NAME, DUMP_HELP, dump_action },
   { ECHO_NAME, ECHO_HELP, echo_action },
   { DIGITALREAD_NAME, DIGITALREAD_HELP, digitalread_action },
+  { DIGITALTOGGLE_NAME, DIGITALTOGGLE_HELP, digitaltoggle_action },
   { HELP_NAME, HELP_HELP, help_action },
   { LED_NAME, LED_HELP, led_action },
   { MICROS_NAME, MICROS_HELP, micros_action },

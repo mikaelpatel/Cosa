@@ -40,9 +40,11 @@ void setup()
   Tone::begin();
   RTC::begin();
   
-  // Initiate UART for blocked read line
+  // Initiate uart for blocking mode
   uart.begin(9600);
   uart.set_blocking();
+
+  // Bind uart to in- and output stream
   cin.set_device(&uart);
   cout.set_device(&uart);
 }
