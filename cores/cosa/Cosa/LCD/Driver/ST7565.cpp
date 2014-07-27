@@ -219,54 +219,63 @@ ST7565::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
 int 
 ST7565::putchar(char c)
 {
-  // Check for special characters; carriage-return-line-feed
-  if (c == '\n') {
-    // Use display start line to implement scrolling
-    if (m_y == (LINES - 1)) {
-      m_line = (m_line + CHARBITS) & DISPLAY_START_MASK;
-      set(SET_DISPLAY_START | m_line);
-      uint8_t y = m_line / CHARBITS;
-      if (y == 0) y = 7; else y = y - 1;
-      set(0, y);
-      fill(m_mode, WIDTH);
-      set(0, y);
-      m_x = 0;
-    } 
-    else {
-      set_cursor(0, m_y + 1);
-      fill(m_mode, WIDTH);
-      set(m_x, m_y);
+  // Check for special characters
+  if (c < ' ') {
+
+    // Carriage-return: move to start of line
+    if (c == '\r') {
+      set_cursor(0, m_y);
+      return (c);
     }
-    return (c);
-  }
-  
-  // Check for special character: form-feed
-  if (c == '\f') {
-    display_clear();
-    return (c);
-  }
+    
+    // Check line-feed: clear new line, Use display start line scroll
+    if (c == '\n') {
+      if (m_y == (LINES - 1)) {
+	m_line = (m_line + CHARBITS) & DISPLAY_START_MASK;
+	set(SET_DISPLAY_START | m_line);
+	uint8_t y = m_line / CHARBITS;
+	if (y == 0) y = 7; else y = y - 1;
+	set(0, y);
+	fill(m_mode, WIDTH);
+	set(0, y);
+	m_x = 0;
+      } 
+      else {
+	set_cursor(0, m_y + 1);
+	fill(m_mode, WIDTH);
+	set(m_x, m_y);
+      }
+      return (c);
+    }
 
-  // Check for special character: back-space
-  if (c == '\b') {
-    uint8_t width = m_font->get_width(' ');
-    if (m_x < width) width = m_x;
-    set_cursor(m_x - width, m_y);
-    return (c);
-  }
+    // Check for special character: horizontal tab
+    if (c == '\t') {
+      uint8_t tab = m_tab * m_font->get_width(' ');
+      uint8_t x = m_x + tab - (m_x % tab);
+      uint8_t y = m_y + (x >= WIDTH);
+      set_cursor(x, y);
+      return (c);
+    }
 
-  // Check for special character: alert
-  if (c == '\a') {
-    m_mode = ~m_mode;
-    return (c);
-  }
+    // Check for special character: form-feed
+    if (c == '\f') {
+      display_clear();
+      return (c);
+    }
 
-  // Check for special character: horizontal tab
-  if (c == '\t') {
-    uint8_t tab = m_tab * m_font->get_width(' ');
-    uint8_t x = m_x + tab - (m_x % tab);
-    uint8_t y = m_y + (x >= WIDTH);
-    set_cursor(x, y);
-    return (c);
+    // Check for special character: back-space
+    if (c == '\b') {
+      uint8_t width = m_font->get_width(' ');
+      if (m_x < width) width = m_x;
+      set_cursor(m_x - width, m_y);
+      return (c);
+    }
+
+    // Check for special character: alert
+    if (c == '\a') {
+      m_mode = ~m_mode;
+      return (c);
+    }
   }
 
   // Write character to the display with an extra space

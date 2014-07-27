@@ -33,15 +33,38 @@ public:
   static const int EOF = -1;
 
   /**
+   * Base conversion.
+   */
+  enum Base {
+    bcd = 0,
+    bin = 2,
+    oct = 8,
+    dec = 10,
+    hex = 16
+  } __attribute__((packed));
+
+  /**
+   * End of line modes.
+   */
+  enum Mode {
+    CR_MODE = 0,
+    LF_MODE = 1,
+    CRLF_MODE = 2
+  } __attribute__((packed));
+
+  /**
    * Device for in/output of characters or strings.
    */
   class Device {
   public:
     /**
-     * Default constructor for IOStream devices.
-     * @param[in] mode blocking (default non-blocking).
+     * Default constructor for IOStream devices. Initiate non-blocking and
+     * CRLF end of line mode.
      */
-    Device(bool mode = false) : m_blocking(mode) {}
+    Device() : 
+      m_blocking(false),
+      m_eol(CR_MODE)
+    {}
 
     /**
      * Set non-blocking mode.
@@ -57,6 +80,14 @@ public:
     void set_blocking()
     {
       m_blocking = true;
+    }
+
+    /**
+     * Set end of line mode.
+     */
+    void set_eol(Mode mode)
+    {
+      m_eol = mode;
     }
 
     /**
@@ -184,19 +215,11 @@ public:
 
   protected:
     /** Blocking state */
-    uint8_t m_blocking;
-  };
+    bool m_blocking;
 
-  /**
-   * Base conversion.
-   */
-  enum Base {
-    bcd = 0,
-    bin = 2,
-    oct = 8,
-    dec = 10,
-    hex = 16
-  } __attribute__((packed));
+    /** End of line mode */
+    Mode m_eol; 
+  };
 
   /**
    * Construct stream with given device.
@@ -378,7 +401,7 @@ public:
    */
   void println() 
   { 
-    m_dev->putchar('\n'); 
+    m_dev->puts_P(PSTR("\r\n"));
   }
 
   /**
@@ -677,14 +700,14 @@ tab(IOStream& outs)
 }
 
 /**
- * Print end of line '\n'; carriage-return-line-feed.
+ * Print carriage-return-line-feed.
  * @param[in] outs stream.
  * @return iostream.
  */
 inline IOStream& 
 endl(IOStream& outs)
 {
-  outs.print('\n');
+  outs.println();
   return (outs);
 }
 

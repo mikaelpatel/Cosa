@@ -356,6 +356,10 @@ IOStream::Device::gets(char *s, size_t count)
       }
     }
     if (c == IOStream::EOF) break;
+    if (c == '\r') {
+      if (m_eol == CRLF_MODE) continue;
+      c = '\n';
+    }
     *s++ = c;
     if (c == '\n') break;
   }

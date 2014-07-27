@@ -26,7 +26,7 @@ Textbox::putchar(char c)
   // Save the current context and setup our context
   Canvas::Context* saved = m_canvas->set_context(this);
 
-  // Handle some special characters, carriage-return, line-feed
+  // Handle some special characters, line-feed
   uint8_t x, y;
   get_cursor(x, y);
   uint8_t scale = m_text_scale;
@@ -44,6 +44,11 @@ Textbox::putchar(char c)
     m_canvas->fill_rect(m_text_port.width, line_height);
     set_pen_color(saved);
   } 
+
+  // Carriage return
+  else if (c == '\r') {
+    set_cursor(m_text_port.x, y);
+  }
 
   // Form-feed
   else if (c == '\f') {

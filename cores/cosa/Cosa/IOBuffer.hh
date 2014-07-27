@@ -40,7 +40,7 @@ public:
    * Constuct buffer object for stream operations. 
    */
   IOBuffer() :
-    IOStream::Device(SLEEP_MODE_IDLE),
+    IOStream::Device(),
     m_head(0),
     m_tail(0)
   {
@@ -116,16 +116,6 @@ public:
 
   /**
    * @override IOStream::Device
-   * Read string terminated by new-line or until size into given
-   * string buffer. Returns pointer to string or NULL if empty line.
-   * @param[in] s string buffer to read into.
-   * @param[in] count max number of bytes to read.
-   * @return string pointer or NULL.
-   */
-  virtual char* gets(char *s, size_t count);
-
-  /**
-   * @override IOStream::Device
    * Wait for the buffer to become empty.
    * @return zero(0) or negative error code.
    */
@@ -196,20 +186,6 @@ IOBuffer<SIZE>::getchar()
   uint16_t next = (m_tail + 1) & MASK;
   m_tail = next;
   return (m_buffer[next] & 0xff);
-}
-
-template <uint16_t SIZE>
-char*
-IOBuffer<SIZE>::gets(char *s, size_t count) 
-{ 
-  char* res = s;
-  while (count--) {
-    int c = getchar();
-    if (c == '\n' || c == IOStream::EOF) break;
-    *s++ = c;
-  }
-  *s = 0;
-  return (s == res ? NULL : res);
 }
 
 template <uint16_t SIZE>

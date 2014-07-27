@@ -163,18 +163,21 @@ Shell::run(IOStream* ins, IOStream* outs)
   if (outs != NULL) *outs << m_prompt;
   char buf[BUF_MAX];
   int count = 0;
+  size_t len;
   // Read command line. Check that it is not too long for the buffer
   do {
     if (ins->get_device()->gets(buf, sizeof(buf)) == NULL) return (-1);
     count += 1;
-  } while (buf[strlen(buf) - 1] != '\n');
+    len = strlen(buf) - 1;
+  } while (buf[len] != '\n');
+  buf[len] = 0;
   if (count != 1) {
     if (outs == NULL) return (-1);
     *outs << PSTR("error:too long command") << endl;
     return (-1);
   }
   // Check for command line echo (for the serial monitor)
-  if (m_echo && outs != NULL) *outs << buf;
+  if (m_echo && outs != NULL) *outs << buf << endl;
   // Execute the command and result code
   int res = execute(buf);
   if (res == 0 || outs == NULL) return (res);

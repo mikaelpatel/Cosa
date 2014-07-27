@@ -121,7 +121,7 @@ Base64::encode(IOStream::Device* dest, const void* src, size_t size)
     dest->putchar(encode(temp.c1));
     dest->putchar(encode(temp.c0));
     res = res + 4;
-    if ((res & 0x3f) == 0) dest->putchar('\n');
+    if ((res & 0x3f) == 0) dest->puts_P(PSTR("\r\n"));
   }
 
   // Pad and encode any remaining bytes with possible line break
@@ -134,7 +134,7 @@ Base64::encode(IOStream::Device* dest, const void* src, size_t size)
     dest->putchar(size > 1 ? encode(temp.c1) : PAD);
     dest->putchar(PAD);
     res = res + 4;
-    if ((res & 0x3f) == 0) dest->putchar('\n');
+    if ((res & 0x3f) == 0) dest->puts_P(PSTR("\r\n"));
   }
 
   return (res);
@@ -158,7 +158,7 @@ Base64::encode_P(IOStream::Device* dest, const void* src, size_t size)
     dest->putchar(encode(temp.c1));
     dest->putchar(encode(temp.c0));
     res = res + 4;
-    if ((res & 0x3f) == 0) dest->putchar('\n');
+    if ((res & 0x3f) == 0) dest->puts_P(PSTR("\r\n"));
   }
 
   // Pad and encode any remaining bytes with possible line break
@@ -171,7 +171,7 @@ Base64::encode_P(IOStream::Device* dest, const void* src, size_t size)
     dest->putchar(size > 1 ? encode(temp.c1) : PAD);
     dest->putchar(PAD);
     res = res + 4;
-    if ((res & 0x3f) == 0) dest->putchar('\n');
+    if ((res & 0x3f) == 0) dest->puts_P(PSTR("\r\n"));
   }
 
   return (res);

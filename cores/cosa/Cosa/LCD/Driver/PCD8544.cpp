@@ -205,42 +205,52 @@ PCD8544::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
 int 
 PCD8544::putchar(char c)
 {
-  // Check for special characters; carriage-return-line-feed
-  if (c == '\n') {
-    m_y += 1;
-    if (m_y == LINES) m_y = 0;
-    set_cursor(0, m_y);
-    fill(m_mode, WIDTH);
-    set(m_x, m_y);
-    return (c);
-  }
+  // Check for special characters
+  if (c < ' ') {
   
-  // Check for special character: form-feed
-  if (c == '\f') {
-    display_clear();
-    return (c);
-  }
+    // Carriage-return: move to start of line
+    if (c == '\r') {
+      set_cursor(0, m_y);
+      return (c);
+    }
 
-  // Check for special character: back-space
-  if (c == '\b') {
-    uint8_t width = m_font->get_width(' ');
-    if (m_x < width) width = m_x;
-    set_cursor(m_x - width, m_y);
-    return (c);
-  }
+    // Check for line-feed: clear new line
+    if (c == '\n') {
+      m_y += 1;
+      if (m_y == LINES) m_y = 0;
+      set_cursor(0, m_y);
+      fill(m_mode, WIDTH);
+      set(m_x, m_y);
+      return (c);
+    }
 
-  // Check for special character: alert
-  if (c == '\a') {
-    m_mode = ~m_mode;
-    return (c);
-  }
+    // Check for horizontal tab
+    if (c == '\t') {
+      uint8_t x = m_x + m_tab - (m_x % m_tab);
+      uint8_t y = m_y + (x >= WIDTH);
+      set_cursor(x, y);
+      return (c);
+    }
 
-  // Check for horizontal tab
-  if (c == '\t') {
-    uint8_t x = m_x + m_tab - (m_x % m_tab);
-    uint8_t y = m_y + (x >= WIDTH);
-    set_cursor(x, y);
-    return (c);
+    // Check for special character: form-feed
+    if (c == '\f') {
+      display_clear();
+      return (c);
+    }
+
+    // Check for special character: back-space
+    if (c == '\b') {
+      uint8_t width = m_font->get_width(' ');
+      if (m_x < width) width = m_x;
+      set_cursor(m_x - width, m_y);
+      return (c);
+    }
+
+    // Check for special character: alert
+    if (c == '\a') {
+      m_mode = ~m_mode;
+      return (c);
+    }
   }
 
   // Access font for character width and bitmap

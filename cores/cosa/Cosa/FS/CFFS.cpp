@@ -180,7 +180,7 @@ CFFS::ls(IOStream& outs, bool verbose)
     if (entry.type != FREE_TYPE) {
       if (verbose) {
 	outs << i << PSTR(":name = ") << '"' << entry.name << '"';
-	outs << PSTR(":type = ");
+	outs << PSTR(",type = ");
 	switch (entry.type) {
 	case DIR_TYPE:
 	  outs << PSTR("dir(") << entry.dir_index << PSTR(")") << endl;

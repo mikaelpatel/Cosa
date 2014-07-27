@@ -150,7 +150,7 @@ protected:
 /** 
  * Shell script magic marker.
  */
-#define SHELL_SCRIPT_MAGIC "#!Cosa/Shell\n" 
+#define SHELL_SCRIPT_MAGIC "#!Cosa/Shell\r\n" 
 
 #endif
 

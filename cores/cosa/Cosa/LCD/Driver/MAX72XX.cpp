@@ -210,11 +210,22 @@ MAX72XX::putchar(char c)
   // Check for special characters
   if (c < ' ') {
 
-    // Alert: blink the backlight
-    if (c == '\a') {
-      display_off();
-      delay(32);
-      display_on();
+    // Carriage-return: move to start of line
+    if (c == '\r') {
+      set_cursor(0, m_y);
+      return (c);
+    }
+    // Form-feed: clear the display or line-feed: clear line
+    if ((c == '\f') || (c == '\n')) {
+      display_clear();
+      return (c);
+    }
+
+    // Horizontal tab
+    if (c == '\t') {
+      uint8_t x = m_x + m_tab - (m_x % m_tab);
+      uint8_t y = m_y + (x >= WIDTH);
+      set_cursor(x, y);
       return (c);
     }
 
@@ -224,17 +235,11 @@ MAX72XX::putchar(char c)
       return (c);
     }
 
-    // Form-feed: clear the display or Carriage-return-line-feed: clear line
-    if ((c == '\f') || (c == '\n')) {
-      display_clear();
-      return (c);
-    }
-    
-    // Horizontal tab
-    if (c == '\t') {
-      uint8_t x = m_x + m_tab - (m_x % m_tab);
-      uint8_t y = m_y + (x >= WIDTH);
-      set_cursor(x, y);
+    // Alert: blink the backlight
+    if (c == '\a') {
+      display_off();
+      delay(32);
+      display_on();
       return (c);
     }
   }

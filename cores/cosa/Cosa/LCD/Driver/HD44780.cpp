@@ -167,28 +167,14 @@ HD44780::putchar(char c)
 {
   // Check for special characters
   if (c < ' ') {
-
-    // Alert: blink the backlight
-    if (c == '\a') {
-      backlight_off();
-      delay(32);
-      backlight_on();
-      return (c);
-    }
-
-    // Back-space: move cursor back one step (if possible)
-    if (c == '\b') {
-      set_cursor(m_x - 1, m_y);
-      return (c);
-    }
-
-    // Form-feed: clear the display
-    if (c == '\f') {
-      display_clear();
-      return (c);
-    }
     
-    // Carriage-return-line-feed: clear line
+    // Carriage-return: move to start of line
+    if (c == '\r') {
+      set_cursor(0, m_y);
+      return (c);
+    }
+
+    // New-line: clear line
     if (c == '\n') {
       uint8_t x, y;
       set_cursor(0, m_y + 1);
@@ -207,6 +193,26 @@ HD44780::putchar(char c)
       uint8_t x = m_x + m_tab - (m_x % m_tab);
       uint8_t y = m_y + (x >= WIDTH);
       set_cursor(x, y);
+      return (c);
+    }
+
+    // Form-feed: clear the display
+    if (c == '\f') {
+      display_clear();
+      return (c);
+    }
+
+    // Back-space: move cursor back one step (if possible)
+    if (c == '\b') {
+      set_cursor(m_x - 1, m_y);
+      return (c);
+    }
+
+    // Alert: blink the backlight
+    if (c == '\a') {
+      backlight_off();
+      delay(32);
+      backlight_on();
       return (c);
     }
   }

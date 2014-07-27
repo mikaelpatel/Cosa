@@ -153,7 +153,7 @@ extern uint8_t trace_log_mask;
  * @param[in] msg log message.
  */
 # define TRACE_LOG(msg, ...)						\
-  trace.printf_P(__PSTR("%d:%s:" msg "\n"),				\
+  trace.printf_P(__PSTR("%d:%s:" msg "\r\n"),				\
 		 __LINE__,						\
 		 __PRETTY_FUNCTION__,					\
 		 __VA_ARGS__)

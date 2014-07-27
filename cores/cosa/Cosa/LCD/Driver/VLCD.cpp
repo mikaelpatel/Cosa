@@ -172,6 +172,9 @@ VLCD::putchar(char c)
     m_y += 1;
     if (m_y > HEIGHT) m_y = 0; 
     break;
+  case '\r':
+    m_x = 0;
+    break;
   case '\t':
     m_x += m_tab - (m_x % m_tab);
     m_y += (m_x >= WIDTH);
