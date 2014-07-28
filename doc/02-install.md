@@ -57,6 +57,6 @@ performance.
 ## Download Versions
 
 * 2014-07-29
-  [SRC](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-07-29-src.zip)
+  [source](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-07-29-src.zip)
   and
-  [DOC](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-07-29-doc.zip) 
+  [documentation](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-07-29-doc.zip) 
