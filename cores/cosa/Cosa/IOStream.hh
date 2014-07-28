@@ -457,6 +457,16 @@ public:
    */
   char* scan(char *s, size_t count);
   
+  /**
+   * Read line into the given buffer. Characters received from the 
+   * device is appended to the end of the string until end of line
+   * is received. The buffer pointer is returned with a complete line
+   * has been received otherwise NULL. The function will append until
+   * the given size of reached.
+   * @param[in] buf buffer for received line.
+   * @param[in] size of buffer.
+   * @return NULL or pointer to buffer when line received.
+   */
   char* readline(char* buf, size_t size);
 
   /**
