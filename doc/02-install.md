@@ -30,7 +30,7 @@ git pull origin master
 * Unzip the files to your `hardware/Cosa` folder.
 * Rename inner `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa/Cosa-master) to `avr` (<custom_path>/sketchbook/hardware/Cosa/avr).
 
-### Step 3 (For Attiny users on Windows version only)
+### Step 3 (For Attiny users on Windows version only and Arduino 1.0.X)
 
 * Install [this patch](https://github.com/TCWORLD/ATTinyCore/tree/master/PCREL%20Patch%20for%20GCC)
 
@@ -48,12 +48,15 @@ platform definition file with link-time optimization enabled. This may
 be used to reduce memory foot-print (program size) and increase
 performance. 
 
-* Download and install [Arduino IDE](https://groups.google.com/a/arduino.cc/forum/#!msg/developers/21G5w2HbUOg/bJtG94vEEhkJ) with the new AVR toolchain.
-* Copy platform.txt-gcc-4.8.1 to platform.txt. 
-* To restore simply copy platform.txt-1.5.6-r2 to platform.txt.
-
 ## Run your first sketch.
 
 * Open the CosaBlink example sketch in the Sketchbook>hardware>Cosa>avr>Blink menu.
 * Select your board in the Tools>Board menu.
 * Compile and download.
+
+## Download Versions
+
+* 2014-07-29
+  [SRC](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-07-29-src.zip)
+  and
+  [DOC](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-07-29-doc.zip) 
