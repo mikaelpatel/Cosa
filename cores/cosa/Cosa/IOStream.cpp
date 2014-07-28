@@ -257,6 +257,42 @@ IOStream::scan(char *s, size_t count)
   return (res);
 }
 
+char*
+IOStream::readline(char* buf, size_t size)
+{
+  if (m_dev == NULL) return (NULL);
+  int count = m_dev->available();
+  if (count <= 0) return (NULL);
+  size_t len = strlen(buf);
+  char* s = buf + len;
+  char c = 0;
+  while (count--) {
+    c = m_dev->getchar();
+    if (c == '\b' || c == 127) {
+      if (len > 0) {
+	print_P(PSTR("\b \b"));
+	len -= 1;
+	s -= 1;
+      }
+    }
+    else {
+      print(c);
+      if (c == '\r') {
+	if (m_dev->get_eol() == CRLF_MODE) continue;
+	c = '\n';
+	print(c);
+      }
+      if (len < size) {
+	len += 1;
+	*s++ = c;
+      }
+      if (c == '\n') break;
+    }
+  }
+  *s = 0;
+  return (c == '\n' ? buf : NULL);
+}
+
 // IOStream::Device IOStream::Device::null;
 
 int 
@@ -349,13 +385,15 @@ IOStream::Device::gets(char *s, size_t count)
   char* res = s;
   while (--count) {
     int c = getchar();
-    if (c == EOF && m_blocking) {
-      while (c == EOF) {
-	yield();
-	c = getchar();
+    if (c == EOF) {
+      if (m_blocking) {
+	while (c == EOF) {
+	  yield();
+	  c = getchar();
+	}
       }
+      else break;
     }
-    if (c == IOStream::EOF) break;
     if (c == '\r') {
       if (m_eol == CRLF_MODE) continue;
       c = '\n';

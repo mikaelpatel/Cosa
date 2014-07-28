@@ -83,11 +83,27 @@ public:
     }
 
     /**
+     * Is blocking mode?
+     */
+    bool is_blocking()
+    {
+      return (m_blocking);
+    }
+
+    /**
      * Set end of line mode.
      */
     void set_eol(Mode mode)
     {
       m_eol = mode;
+    }
+
+    /**
+     * Get end of line mode.
+     */
+    Mode get_eol()
+    {
+      return (m_eol);
     }
 
     /**
@@ -441,6 +457,8 @@ public:
    */
   char* scan(char *s, size_t count);
   
+  char* readline(char* buf, size_t size);
+
   /**
    * Stream manipulator function prototype. To allow implementation
    * of base change and end of line.
