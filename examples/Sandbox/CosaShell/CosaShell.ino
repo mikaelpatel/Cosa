@@ -16,9 +16,8 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Demonstration of the Cosa Shell commmand line support. 
- * See Commands.cpp for the implementation of the toy Arduino 
- * shell.
+ * Demonstration of the Cosa Shell commmand line support. See
+ * Commands.cpp for the implementation of the toy Arduino shell.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -29,28 +28,27 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Input and output streams
-IOStream cin;
-IOStream cout;
+IOStream ios(&uart);
+uint32_t idle = 0L;
+
+void iowait()
+{
+  uint32_t start = RTC::micros();
+  yield();
+  idle += (RTC::micros() - start);
+}
 
 void setup()
 {
-  // Initiate timers
   Watchdog::begin();
   Tone::begin();
   RTC::begin();
-  
-  // Initiate uart for blocking mode
   uart.begin(9600);
-  uart.set_blocking();
-
-  // Bind uart to in- and output stream
-  cin.set_device(&uart);
-  cout.set_device(&uart);
 }
 
 void loop()
 {
-  // The shell will do the read and execute of commands
-  shell.run(&cin, &cout);
+  shell.run(ios);
+  iowait();
 }
+

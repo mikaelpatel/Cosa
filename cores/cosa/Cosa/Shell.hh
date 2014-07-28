@@ -55,19 +55,10 @@ public:
     m_cmdc(cmdc),
     m_cmdtab(cmdtab),
     m_prompt(prompt == NULL ? DEFAULT_PROMPT : prompt),
-    m_echo(true)
-  {}
-  
-  /**
-   * Set command line echo mode. Useful for Arduino Serial Monitor to 
-   * echo commands received.
-   * @param[in] flag on or off.
-   */
-  void set_echo(bool flag)
+    m_init(true)
   {
-    m_echo = flag;
   }
-
+  
   /**
    * Parse command parameter list for options. The command has the
    * format: NAME -X -XVALUE OPTION=VALUE ARGUMENT.., where X is an
@@ -92,14 +83,13 @@ public:
   int execute(char* buf);
 
   /**
-   * Prompt to given output stream (if not NULL), read line from given
-   * input stream and execute command. Return zero or negative error
-   * code.
-   * @param[in] ins input stream.
-   * @param[in] outs output stream (default NULL).
+   * Prompt and read line from given stream and execute command when a
+   * line has been completed. Return zero if commmand was not
+   * completed, one if executed or negative error code. 
+   * @param[in] ios in- and output stream.
    * @return zero or negative error code.
    */
-  int run(IOStream* ins, IOStream* outs = NULL);
+  int run(IOStream& ios);
 
   /**
    * Print short description of commands to the given output
@@ -122,7 +112,8 @@ protected:
   uint8_t m_cmdc;		//!< Number of shell commands.
   const command_t* m_cmdtab;	//!< Vector with shell command decriptors.
   const char* m_prompt;		//!< Shell prompt.
-  bool m_echo;			//!< Echo command line.
+  bool m_init;			//!< Initial state.
+  char m_buf[BUF_MAX];		//!< Command buffer.
   uint8_t m_argc;		//!< Number of arguments.
   char** m_argv;		//!< Argument vector.
   uint8_t m_optind;		//!< Next option index.
@@ -148,9 +139,9 @@ protected:
 };
 
 /** 
- * Shell script magic marker.
+ * Shell script magic marker. 
  */
-#define SHELL_SCRIPT_MAGIC "#!Cosa/Shell\r\n" 
+#define SHELL_SCRIPT_MAGIC "#!Cosa/Shell\n" 
 
 #endif
 

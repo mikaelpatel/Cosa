@@ -35,8 +35,7 @@ OutputPin rf_cs(Board::D10, 1);
 #endif
 
 S25FL127S flash;
-IOStream cout;
-IOStream cin;
+IOStream ios(&uart);
 
 void setup()
 {
@@ -46,18 +45,15 @@ void setup()
 
   // Initiate UART for blocked read line
   uart.begin(9600);
-  uart.set_blocking();
-  cin.set_device(&uart);
-  cout.set_device(&uart);
 
   // Initiate flash memory and file system
   if (flash.begin() && CFFS::begin(&flash)) return;
-  cout << PSTR("no flash memory") << endl;
+  ios << PSTR("no flash memory") << endl;
   exit(0);
 }
 
 void loop()
 {
   // The shell command handler will do the top loop
-  shell.run(&cin, &cout);
+  shell.run(ios);
 }

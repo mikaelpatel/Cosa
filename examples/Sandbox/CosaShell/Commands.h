@@ -28,7 +28,7 @@
 #include "Cosa/IOStream.hh"
 
 extern Shell shell;
-extern IOStream cout;
-extern IOStream cin;
+extern IOStream ios;
+extern uint32_t idle;
 #endif
 

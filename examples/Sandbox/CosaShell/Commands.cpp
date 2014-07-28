@@ -73,8 +73,8 @@ static int analogread_action(int argc, char* argv[])
     for (uint8_t ix = 0; ix < membersof(analog_pin_map); ix++) {
       Board::AnalogPin pin;
       pin = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[ix]);
-      if (chap) cout << 'A' ; else cout << 'a';
-      cout << ix << '=' << AnalogPin::sample(pin) << endl;
+      if (chap) ios << 'A' ; else ios << 'a';
+      ios << ix << '=' << AnalogPin::sample(pin) << endl;
     }
   }
   else {
@@ -87,8 +87,8 @@ static int analogread_action(int argc, char* argv[])
       if (*sp != 0 || ix >= membersof(analog_pin_map)) return (-1);
       Board::AnalogPin pin;
       pin = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[ix]);
-      if (multi) cout << name << '=';
-      cout << AnalogPin::sample(pin) << endl;
+      if (multi) ios << name << '=';
+      ios << AnalogPin::sample(pin) << endl;
     }
   }
   return (0);
@@ -104,9 +104,9 @@ static int args_action(int argc, char* argv[])
   char* value;
   int ix;
   while ((ix = shell.get(option, value)) == 0)
-    cout << PSTR("option: ") << option << PSTR(" value: ") << value << endl;
+    ios << PSTR("option: ") << option << PSTR(" value: ") << value << endl;
   while (ix < argc)
-    cout << PSTR("argument: ") << argv[ix++] << endl;
+    ios << PSTR("argument: ") << argv[ix++] << endl;
   return (0);
 }
    
@@ -118,22 +118,22 @@ static const char BLINK_HELP[] __PROGMEM =
   "MS -- turn led on and off";
 static const char BLINK_SCRIPT[] __PROGMEM = 
   SHELL_SCRIPT_MAGIC					       
-  "echo -n $1 \"ms:led on\"" LF 
+  "echo -n $1 \"ms:led on..\"" LF 
   "led on" LF
   "delay $1" LF 
-  "echo -n \"..off\"" LF 
+  "echo -n \"off..\"" LF 
   "led off" LF
   "delay $1" LF
-  "echo -n \"..on\"" LF
+  "echo -n \"on..\"" LF
   "led on" LF
   "delay $1" LF
-  "echo -n \"..off\"" LF
+  "echo -n \"off..\"" LF
   "led off" LF
   "delay $1" LF
-  "echo -n \"..on\"" LF
+  "echo -n \"on..\"" LF
   "led on" LF
   "delay $1" LF 
-  "echo \"..off\"" LF 
+  "echo \"off\"" LF 
   "led off";
 #define blink_action (Shell::action_fn) BLINK_SCRIPT
 
@@ -146,7 +146,7 @@ static int date_action(int argc, char* argv[])
   UNUSED(argv);
   if (argc != 1) return (-1);
   time_t now(RTC::seconds());
-  cout << now << endl;
+  ios << now << endl;
   return (0);
 }
 
@@ -176,8 +176,8 @@ static int digitalread_action(int argc, char* argv[])
     for (uint8_t ix = 0; ix < membersof(digital_pin_map); ix++) {
       Board::DigitalPin pin;
       pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
-      if (chap) cout << 'D' ; else cout << 'd';
-      cout << ix << '=' << InputPin::read(pin) << endl;
+      if (chap) ios << 'D' ; else ios << 'd';
+      ios << ix << '=' << InputPin::read(pin) << endl;
     }
   }
   else {
@@ -194,8 +194,8 @@ static int digitalread_action(int argc, char* argv[])
 	pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
       }
       else return (-1);
-      if (multi) cout << name << '=';
-      cout << InputPin::read(pin) << endl;
+      if (multi) ios << name << '=';
+      ios << InputPin::read(pin) << endl;
     }
   }
   return (0);
@@ -221,7 +221,7 @@ static int digitaltoggle_action(int argc, char* argv[])
     pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
   }
   OutputPin::toggle(pin);
-  cout << InputPin::read(pin) << endl;
+  ios << InputPin::read(pin) << endl;
   return (0);
 }
 
@@ -255,7 +255,7 @@ static int dump_action(int argc, char* argv[])
     if (*sp != 0) return (-1);
   }
   if (ix != argc) return (-1);
-  cout.print(addr, (void*) addr, size, base);
+  ios.print(addr, (void*) addr, size, base);
   return (0);
 }
 
@@ -274,9 +274,9 @@ static int echo_action(int argc, char* argv[])
       newline = false;
     else return (-1);
   if (ix == argc) return (0);
-  cout << argv[ix++];
-  while (ix < argc) cout << ' ' << argv[ix++];
-  if (newline) cout << endl;
+  ios << argv[ix++];
+  while (ix < argc) ios << ' ' << argv[ix++];
+  if (newline) ios << endl;
   return (0);
 }
 
@@ -288,7 +288,19 @@ static int help_action(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1) return (-1);
-  return (shell.help(cout));
+  return (shell.help(ios));
+}
+
+static const char IDLE_NAME[] __PROGMEM = 
+  "idle";
+static const char IDLE_HELP[] __PROGMEM = 
+  "-- display idle time";
+static int idle_action(int argc, char* argv[])
+{
+  UNUSED(argv);
+  if (argc != 1) return (-1);
+  ios << (idle * 100.0) / RTC::micros() << '%' << endl;
+  return (0);
 }
 
 static const char LED_NAME[] __PROGMEM = 
@@ -314,7 +326,7 @@ static int micros_action(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1) return (-1);
-  cout << RTC::micros() << endl;
+  ios << RTC::micros() << endl;
   return (0);
 }
 
@@ -326,7 +338,7 @@ static int millis_action(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1) return (-1);
-  cout << RTC::millis() << endl;
+  ios << RTC::millis() << endl;
   return (0);
 }
 
@@ -369,14 +381,14 @@ static int seconds_action(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1) return (-1);
-  cout << RTC::seconds() << endl;
+  ios << RTC::seconds() << endl;
   return (0);
 }
 
 static const char STTY_NAME[] __PROGMEM = 
   "stty";
 static const char STTY_HELP[] __PROGMEM = 
-  "[echo=on|off] [eol=CR|LF|CRLF] -- set tty mode (echo, eol)";
+  "[eol=CR|LF|CRLF] -- set tty mode";
 static int stty_action(int argc, char* argv[])
 {
   UNUSED(argv);
@@ -384,20 +396,13 @@ static int stty_action(int argc, char* argv[])
   char* value;
   int ix;
   while ((ix = shell.get(option, value)) == 0) {
-    if (strcmp_P(option, PSTR("echo")) == 0) {
-      if (strcmp_P(value, PSTR("on")) == 0) 
-	shell.set_echo(1);
-      else if (strcmp_P(value, PSTR("off")) == 0) 
-	shell.set_echo(0);
-      else return (-1);
-    }
-    else if (strcmp_P(option, PSTR("eol")) == 0) {
+    if (strcmp_P(option, PSTR("eol")) == 0) {
       if (strcmp_P(value, PSTR("CR")) == 0) 
-	cout.get_device()->set_eol(IOStream::CR_MODE);
+	ios.get_device()->set_eol(IOStream::CR_MODE);
       else if (strcmp_P(value, PSTR("LF")) == 0) 
-	cout.get_device()->set_eol(IOStream::LF_MODE);
+	ios.get_device()->set_eol(IOStream::LF_MODE);
       else if (strcmp_P(value, PSTR("CRLF")) == 0) 
-	cout.get_device()->set_eol(IOStream::CRLF_MODE);
+	ios.get_device()->set_eol(IOStream::CRLF_MODE);
       else return (-1);
     }
   }
@@ -440,6 +445,7 @@ static const Shell::command_t command_tab[] __PROGMEM = {
   { DIGITALREAD_NAME, DIGITALREAD_HELP, digitalread_action },
   { DIGITALTOGGLE_NAME, DIGITALTOGGLE_HELP, digitaltoggle_action },
   { HELP_NAME, HELP_HELP, help_action },
+  { IDLE_NAME, IDLE_HELP, idle_action },
   { LED_NAME, LED_HELP, led_action },
   { MICROS_NAME, MICROS_HELP, micros_action },
   { MILLIS_NAME, MILLIS_HELP, millis_action },

@@ -26,6 +26,6 @@ ARDUINO_CORE_PATH = $(COSA_DIR)/cores/cosa
 ARDUINO_VAR_PATH = $(COSA_DIR)/variants
 BOARDS_TXT = $(COSA_DIR)/boards.txt
 
-MONITOR_CMD = $(COSA_DIR)/build/miniterm.py -q -e --lf
+MONITOR_CMD = $(COSA_DIR)/build/miniterm.py -q --lf
 
 include $(ARDMK_DIR)/Arduino.mk

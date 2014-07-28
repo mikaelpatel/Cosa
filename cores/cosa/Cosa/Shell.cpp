@@ -157,31 +157,28 @@ Shell::script(const char* sp, int argc, char* argv[])
 }
 
 int 
-Shell::run(IOStream* ins, IOStream* outs)
+Shell::run(IOStream& ios)
 {
-  if (ins == NULL) return (-1);
-  if (outs != NULL) *outs << m_prompt;
-  char buf[BUF_MAX];
-  int count = 0;
-  size_t len;
-  // Read command line. Check that it is not too long for the buffer
-  do {
-    if (ins->get_device()->gets(buf, sizeof(buf)) == NULL) return (-1);
-    count += 1;
-    len = strlen(buf) - 1;
-  } while (buf[len] != '\n');
-  buf[len] = 0;
-  if (count != 1) {
-    if (outs == NULL) return (-1);
-    *outs << PSTR("error:too long command") << endl;
-    return (-1);
+  // Check first time run; will need to prompt
+  if (m_init) {
+    ios << m_prompt;
+    m_init = false;
   }
-  // Check for command line echo (for the serial monitor)
-  if (m_echo && outs != NULL) *outs << buf << endl;
-  // Execute the command and result code
-  int res = execute(buf);
-  if (res == 0 || outs == NULL) return (res);
-  *outs << PSTR("error:illegal command") << endl;
+  // Check if a command line is available
+  if (ios.readline(m_buf, BUF_MAX) == NULL) return (0);
+  // Check if the command line was too long
+  int res = 0;
+  if (m_buf[strlen(m_buf)-1] != '\n') {
+    ios << PSTR("error: too long command") << endl;
+    res = -1;
+  }
+  // Execute and check for error return value
+  else if ((res = execute(m_buf)) != 0) {
+    ios << PSTR("error: illegal command") << endl;
+  }
+  // Prompt for the next command line
+  ios << m_prompt;
+  *m_buf = 0;
   return (res);
 }
 
