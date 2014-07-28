@@ -93,7 +93,7 @@ void setup()
   Watchdog::begin();
   lcd.begin();
   cout << PSTR("CosaLCDbench:");
-  SLEEP(2);
+  sleep(2);
 }
 
 void loop()
@@ -160,6 +160,6 @@ void measure(const char* name, benchmark_t fn, uint16_t nr, uint16_t bytes)
   uint32_t us = (RTC::micros() - start) / nr;
   cout << clear << name << endl;
   cout << us << PSTR(" us (") << us / bytes << PSTR(")");
-  SLEEP(4);
+  sleep(4);
 }
 

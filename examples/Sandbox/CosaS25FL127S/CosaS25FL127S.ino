@@ -73,7 +73,7 @@ void setup()
 	<< PSTR(", us = ") << us 
 	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(data) / us
 	<< endl;
-  SLEEP(5);
+  sleep(5);
 
   // Write a buffer (512 byte) of test data across three pages
   addr = 128;
@@ -88,7 +88,7 @@ void setup()
 	<< PSTR(", us = ") << us 
 	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
 	<< endl;
-  SLEEP(5);
+  sleep(5);
 
   // Locate end of file in first sector; binary search
   start = RTC::micros();
@@ -110,7 +110,7 @@ void setup()
 	<< endl;
   ASSERT(flash.read(&data, last + 1, sizeof(data)) == sizeof(data));
   ASSERT(data == 0xff);
-  SLEEP(5);
+  sleep(5);
 
   // Locate end of file in first sector; reverse search
   start = RTC::micros();
@@ -134,7 +134,7 @@ void setup()
 	<< endl;
   ASSERT(flash.read(&data, last + 1, sizeof(data)) == sizeof(data));
   ASSERT(data == 0xff);
-  SLEEP(5);
+  sleep(5);
 }
 
 void loop()
@@ -160,5 +160,5 @@ void loop()
   src += sizeof(buf);
 
   // Step through the flash memory
-  SLEEP(5);
+  sleep(5);
 }

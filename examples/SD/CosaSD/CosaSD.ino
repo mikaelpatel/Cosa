@@ -98,7 +98,7 @@ void loop()
   INFO("Read CID and print fields", 0);
   ASSERT(sd.read(cid));
   trace.print(cid, sizeof(SD::cid_t), IOStream::hex, WIDTH);
-  SLEEP(1);
+  sleep(1);
   trace << PSTR("Manufacturer ID:") << cid->mid << endl;
   trace << PSTR("OEM/Application ID:") << cid->oid[0] << cid->oid[1] << endl;
   trace << PSTR("Product name:");
@@ -110,13 +110,13 @@ void loop()
   trace << PSTR("Manufacturing date:"); 
   cid->mdt = swap((int16_t) cid->mdt);
   trace << (cid->mdt & 0xf) << '-' << (cid->mdt >> 4) << endl;
-  SLEEP(1);
+  sleep(1);
   
   INFO("Read CSD and dump", 0);
   ASSERT(sd.read(csd));
   trace.print(csd, sizeof(SD::csd_t), IOStream::hex, WIDTH);
   trace << PSTR("CSD version:") << csd->v1.csd_ver+1 << endl;
-  SLEEP(1);
+  sleep(1);
 
   INFO("Read block zero and dump", 0);
   ASSERT(sd.read(0, buf));
@@ -128,7 +128,7 @@ void loop()
     buf[i] = 0xa5;
   }
   ASSERT(sd.write(0, buf));
-  SLEEP(1);
+  sleep(1);
 
   INFO("Read back and restore content", 0);
   ASSERT(sd.read(0, buf));
@@ -138,7 +138,7 @@ void loop()
     buf[i] = 0;
   }
   ASSERT(sd.write(0, buf));
-  SLEEP(1);
+  sleep(1);
   
   INFO("Read four first blocks and dump", 0);
   for (uint8_t block = 0; block < 4; block++) {
@@ -146,7 +146,7 @@ void loop()
     ASSERT(sd.read(block, buf));
     trace.print(buf, sizeof(buf), IOStream::hex, WIDTH);
   }
-  SLEEP(1);
+  sleep(1);
 
   ASSERT(sd.end());
   ASSERT(true == false);

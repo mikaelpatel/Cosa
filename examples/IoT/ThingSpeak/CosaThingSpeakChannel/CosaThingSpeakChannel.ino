@@ -93,5 +93,5 @@ void loop()
   update.set_field(1, sensor.get_temperature(), 1);
   update.set_field(2, sensor.get_humidity(), 1);
   TRACE(channel.post(update));
-  SLEEP(20);
+  sleep(20);
 }

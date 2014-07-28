@@ -207,13 +207,6 @@ typedef const PROGMEM void_P void_vec_P;
 #define DELAY(us) _delay_loop_2(((us) * I_CPU) / 4)
 
 /**
- * Macro for sleep for number of seconds. Requires include of the
- * Watchdog and that it has been initiated with Watchdog::begin(). 
- * @param[in] seconds to sleep (Max 65 seconds).
- */
-#define SLEEP(seconds) Watchdog::delay(seconds * 1000)
-
-/**
  * Disable interrupts and return flags.
  * @return processor flags.
  */

@@ -103,5 +103,5 @@ void loop()
     rf.broadcast(DIGITAL_HUMIDITY_TEMPERATURE_TYPE, &msg, sizeof(msg));
     rf.powerdown();
   }
-  SLEEP(2);
+  sleep(2);
 }

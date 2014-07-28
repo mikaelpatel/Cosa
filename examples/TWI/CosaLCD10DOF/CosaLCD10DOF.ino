@@ -82,7 +82,7 @@ void setup()
   // Start trace output stream on the LCD
   lcd.begin();
   trace.begin(&lcd, PSTR("CosaLCD10DOF"));
-  SLEEP(2);
+  sleep(2);
   
   // Start the sensors
   acceleratometer.begin();
@@ -103,7 +103,7 @@ void loop()
   trace << PSTR("Barometer") << endl;
   trace << bmp.get_pressure() << PSTR(" Pa, ");
   trace << (bmp.get_temperature() + 5) / 10 << PSTR(" C");
-  SLEEP(2);
+  sleep(2);
 
   // Read compass heading
   compass.read_heading();
@@ -115,7 +115,7 @@ void loop()
   trace << dir.x << PSTR(", ") 
 	<< dir.y << PSTR(", ") 
 	<< dir.z;
-  SLEEP(2);
+  sleep(2);
 
   // Read acceleration 
   trace << clear;
@@ -125,7 +125,7 @@ void loop()
   trace << acc.x << PSTR(", ")
 	<< acc.y << PSTR(", ")
 	<< acc.z;
-  SLEEP(2);
+  sleep(2);
 
   // Read gyroscope
   trace << clear;
@@ -135,11 +135,11 @@ void loop()
   trace << rate.x << PSTR(", ")
 	<< rate.y << PSTR(", ")
 	<< rate.z;
-  SLEEP(2);
+  sleep(2);
 
   // Read battery 
   trace << clear;
   trace << PSTR("Battery") << endl;
   trace << AnalogPin::bandgap() << PSTR(" mV");
-  SLEEP(2);
+  sleep(2);
 }

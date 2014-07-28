@@ -150,7 +150,7 @@ void loop()
   trace << PSTR(";Vcc=") << AnalogPin::bandgap();
   trace << PSTR(";mem=") << free_memory();
   trace << endl << flush;
-  SLEEP(5);
+  sleep(5);
 
   return;
 

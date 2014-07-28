@@ -72,7 +72,7 @@ void setup()
 void loop()
 {
   // Sample every 2 seconds
-  SLEEP(2);
+  sleep(2);
 
   // Read and print humidity and temperature
 #if !defined(BOARD_ATTINY)

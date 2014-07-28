@@ -71,7 +71,7 @@ void loop()
   trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
   trace << res << endl;
   trace << endl;
-  SLEEP(1);
+  sleep(1);
 
   // Decode the encoded string
   start = RTC::micros();
@@ -80,7 +80,7 @@ void loop()
   trace << m << PSTR(":decode:") << (stop - start) << PSTR(" us") << endl;
   trace << (char*) temp << endl;
   trace << endl;
-  SLEEP(1);
+  sleep(1);
 
   // Encode and decode data from a single byte to the full size of data
   for (uint8_t i = 1; i <= sizeof(data); i++) {
@@ -99,7 +99,7 @@ void loop()
     trace << m << PSTR(":decode:") << (stop - start) << PSTR(" us") << endl;
     trace.print(temp, m, IOStream::hex);
     trace << endl;
-    SLEEP(1);
+    sleep(1);
   }
 
   // Encode data directly to the uart iobuffer
@@ -109,7 +109,7 @@ void loop()
   trace << endl;
   trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
   trace << endl;
-  SLEEP(1);
+  sleep(1);
 
   // Encode a large string directly to the uart iobuffer. This could be
   // any iostream such as Socket::Driver/Ethernet.
@@ -120,7 +120,7 @@ void loop()
   trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
   trace << endl;
   // Note: the measurement is bound by the UART buffer size
-  SLEEP(1);
+  sleep(1);
 
   ASSERT(true == false);
 }

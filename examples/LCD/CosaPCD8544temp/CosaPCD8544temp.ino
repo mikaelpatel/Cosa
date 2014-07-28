@@ -89,19 +89,19 @@ void setup()
   lcd.begin();
   lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
   lcd.draw_icon(arduino_icon_64x32);
-  SLEEP(2);
+  sleep(2);
 
   // Use LCD bind to trace; print some startup information
   trace.begin(&lcd);
   trace << PSTR("\fCosaPCD8544temp: started\n");
-  SLEEP(2);
+  sleep(2);
   trace << clear;
   TRACE(sensor.connect(0));
   TRACE(sensor.read_power_supply());
-  SLEEP(2);
+  sleep(2);
   trace << clear;
   trace << (OWI::Driver&) sensor; 
-  SLEEP(2);
+  sleep(2);
  }
 
 void loop()
@@ -131,5 +131,5 @@ void loop()
   lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
 
   // Take a nap
-  SLEEP(2);
+  sleep(2);
 }

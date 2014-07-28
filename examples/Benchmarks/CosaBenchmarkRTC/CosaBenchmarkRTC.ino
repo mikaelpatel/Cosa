@@ -98,9 +98,9 @@ void setup()
   INFO("DELAY(100): %ul us", stop - start);
 
   start = RTC::micros();
-  SLEEP(1);
+  sleep(1);
   stop = RTC::micros();
-  INFO("SLEEP(1): %ul us", stop - start);
+  INFO("sleep(1): %ul us", stop - start);
 
   start = RTC::micros();
   delay(10);
@@ -189,52 +189,3 @@ void loop()
 {
   ASSERT(true == false);
 }
-
-/**
-@section Output
-CosaBenchmarkRTC: started
-free_memory() = 1694
-F_CPU = 16000000
-I_CPU = 16
-Watchdog::ms_per_tick() = 16
-Watchdog::ticks() = 3
-RTC::us_per_tick() = 1024
-RTC::seconds() = 0
-70:void setup():info:RTC::micros(): 8 us
-76:void setup():info:RTC::millis(): 44 us
-82:void setup():info:RTC::seconds(): 4 us
-88:void setup():info:RTC::delay(1): 1184 us
-93:void setup():info:RTC::delay(10): 10232 us
-98:void setup():info:DELAY(10): 12 us
-103:void setup():info:DELAY(100): 108 us
-108:void setup():info:SLEEP(1): 1071672 us
-113:void setup():info:delay(10): 16500 us
-118:void setup():info:delay(100): 96388 us
-123:void setup():info:sleep(1): 1073728 us
-128:void setup():info:yield(): 600 us
-RTC::micros() = 2748120
-RTC::millis() = 2775
-RTC::seconds() = 2
-RTC::micros() = 3871028
-RTC::millis() = 3871
-RTC::seconds() = 3
-RTC::micros() = 4945188
-RTC::millis() = 4945
-RTC::seconds() = 4
-RTC::micros() = 6019328
-RTC::millis() = 6019
-RTC::seconds() = 6
-RTC::micros() = 7093408
-RTC::millis() = 7093
-RTC::seconds() = 7
-RTC::micros() = 8167504
-RTC::millis() = 8167
-RTC::seconds() = 8
-RTC::seconds() = 19
-156:void setup():info:DELAY(100): 100000 measurement/validation (err = 0)
-RTC::seconds() = 29
-173:void setup():info:RTC::delay(100): 100 measurement/validation (err = 0)
-RTC::seconds() = 39
-190:void setup():info:Watchdog::delay(100): 100 measurement/validation (err = 0)
-195:void loop():assert:true == false
-*/

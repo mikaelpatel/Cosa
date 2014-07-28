@@ -62,7 +62,7 @@ void draw_shade(Canvas::color16_t color)
       tft.set_pen_color(tft.shade(color, level));
       tft.fill_rect(10, y, tft.WIDTH - 20, 4);
     }
-    SLEEP(1);
+    sleep(1);
     color = tft.shade(base, x);
   }
 }

@@ -148,7 +148,7 @@ void setup()
   trace.begin(&lcd, PSTR("\fMonitor: started"));
 #endif
   rf.begin();
-  SLEEP(1);
+  sleep(1);
 }
 
 void loop()

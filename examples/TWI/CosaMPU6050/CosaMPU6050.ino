@@ -66,5 +66,5 @@ void loop()
 {
   // Sample and print measurement to output stream
   trace << mpu;
-  SLEEP(2);
+  sleep(2);
 }

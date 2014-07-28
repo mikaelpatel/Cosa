@@ -83,7 +83,7 @@ VLCD::write(uint8_t cmd)
 bool 
 VLCD::begin()
 {
-  SLEEP(1);
+  sleep(1);
   write(Slave::INIT_CMD);
   if (!twi.begin(this)) return (false);
   uint8_t retry = 3; 

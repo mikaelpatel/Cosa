@@ -100,7 +100,7 @@ void setup()
 #endif
 
   // Give the sensors some time for startup
-  SLEEP(1);
+  sleep(1);
 }
 
 void loop()
@@ -143,5 +143,5 @@ void loop()
 #endif
 
   // Take a nap
-  SLEEP(1);
+  sleep(1);
 }

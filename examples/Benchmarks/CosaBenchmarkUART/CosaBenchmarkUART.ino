@@ -55,21 +55,21 @@ void loop()
   stop = RTC::micros();
   trace << PSTR("one character:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << PSTR("1") << endl;
   stop = RTC::micros();
   trace << PSTR("one character string:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << 1 << endl;
   stop = RTC::micros();
   trace << PSTR("integer:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << 1L << endl;
@@ -77,28 +77,28 @@ void loop()
   trace << PSTR("long integer:");
   trace << stop - start << PSTR(" us") << endl;
   trace << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << '1' << '0' << endl;
   stop = RTC::micros();
   trace << PSTR("two characters:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << PSTR("10") << endl;
   stop = RTC::micros();
   trace << PSTR("two character string:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << 10 << endl;
   stop = RTC::micros();
   trace << PSTR("integer:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << 10L << endl;
@@ -106,28 +106,28 @@ void loop()
   trace << PSTR("long integer:");
   trace << stop - start << PSTR(" us") << endl;
   trace << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << '1' << '0' << '0' << endl;
   stop = RTC::micros();
   trace << PSTR("three characters:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << PSTR("100") << endl;
   stop = RTC::micros();
   trace << PSTR("three character string:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << 100 << endl;
   stop = RTC::micros();
   trace << PSTR("integer:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << 100L << endl;
@@ -135,7 +135,7 @@ void loop()
   trace << PSTR("long integer:");
   trace << stop - start << PSTR(" us") << endl;
   trace << endl;
-  SLEEP(1);
+  sleep(1);
 
   // Measure time to print max integer; 8, 16 and 32 bit.
   start = RTC::micros();
@@ -143,14 +143,14 @@ void loop()
   stop = RTC::micros();
   trace << PSTR("max int8_t:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << (int16_t) 0x7fff << endl;
   stop = RTC::micros();
   trace << PSTR("max int16_t:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << (int32_t) 0x7fffffffL << endl;
@@ -158,7 +158,7 @@ void loop()
   trace << PSTR("max int32_t:");
   trace << stop - start << PSTR(" us") << endl;
   trace << endl;
-  SLEEP(1);
+  sleep(1);
 
   // Measure time to print max unsigned integer; 8, 16 and 32 bit.
   start = RTC::micros();
@@ -166,14 +166,14 @@ void loop()
   stop = RTC::micros();
   trace << PSTR("max uint8_t:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << (uint16_t) 0xffffU << endl;
   stop = RTC::micros();
   trace << PSTR("max uint16_t:");
   trace << stop - start << PSTR(" us") << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace << (uint32_t) 0xffffffffUL << endl;
@@ -181,7 +181,7 @@ void loop()
   trace << PSTR("max uint32_t:");
   trace << stop - start << PSTR(" us") << endl;
   trace << endl;
-  SLEEP(1);
+  sleep(1);
 
   // Measure time to print unsigned integer; 16 and 32 bit.
   start = RTC::micros();
@@ -191,7 +191,7 @@ void loop()
   trace << PSTR("uint16_t(digits=6):");
   trace << stop - start << PSTR(" us") << endl;
   trace << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   trace.print(100UL, 6, IOStream::dec);
@@ -200,7 +200,7 @@ void loop()
   trace << PSTR("uint32_t(digits=6):");
   trace << stop - start << PSTR(" us") << endl;
   trace << endl;
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   for (uint8_t i = 0; i < 64; i++) {
@@ -212,10 +212,5 @@ void loop()
   stop = RTC::micros();
   trace << PSTR("output(") << 64 * 64 << PSTR(" characters):");
   trace << stop - start << PSTR(" us") << endl;
-  trace << endl;
-  SLEEP(1);
-
   ASSERT(true == false);
 }
-
-

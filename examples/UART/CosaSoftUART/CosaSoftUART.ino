@@ -85,5 +85,5 @@ void loop()
 
   // Echo characters received on soft uart
   while (uart.available()) uart.putchar(uart.getchar());
-  SLEEP(1);
+  sleep(1);
 }

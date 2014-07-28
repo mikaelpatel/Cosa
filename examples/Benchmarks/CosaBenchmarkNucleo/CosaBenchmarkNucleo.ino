@@ -58,7 +58,7 @@ Producer::run()
       for (uint16_t j = 0; j < 1000; j++)
 	yield(); 
     us = (RTC::micros() - start)  / 1000000L;
-    INFO("%l us", us);
+    INFO("%l us (%l cycles)", us, us * I_CPU);
     
     // Measure 1,000,000 resume to the current thread
     INFO("Benchmark 2: measure resume", 0);
@@ -67,7 +67,7 @@ Producer::run()
       for (uint16_t j = 0; j < 1000; j++)
 	resume(this);
     us = (RTC::micros() - start) / 1000000L;
-    INFO("%l us", us);
+    INFO("%l us (%l cycles)", us, us * I_CPU);
   
     // Measure 100,000 signal-wait pairs
     INFO("Benchmark 3: measure signal-wait", 0);
@@ -76,9 +76,8 @@ Producer::run()
       for (uint16_t j = 0; j < 1000; j++)
 	sem.signal();
     us = (RTC::micros() - start) / 100000L;
-    INFO("%l us", us);
-
-    trace << endl;
+    INFO("%l us (%l cycles)", us, us * I_CPU);
+    ASSERT(true == false);
   }
 }
 
@@ -105,23 +104,5 @@ void setup()
   RTC::begin();
   Nucleo::Thread::begin(&consumer, 64);
   Nucleo::Thread::begin(&producer, 64);
-}
-
-void loop()
-{
   Nucleo::Thread::begin();
-  ASSERT(true == false);
 }
-
-/**
-@section Output
-CosaBenchmarkNucleo: started
-Thread::Consumer: started
-Thread::Producer: started
-60:virtual void Producer::run():info:Benchmark 1: measure yield
-66:virtual void Producer::run():info:11 us
-69:virtual void Producer::run():info:Benchmark 2: measure resume
-75:virtual void Producer::run():info:11 us
-78:virtual void Producer::run():info:Benchmark 3: measure signal-wait
-84:virtual void Producer::run():info:36 us
-*/

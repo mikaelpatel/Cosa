@@ -95,5 +95,5 @@ void loop()
   }
 
   ledPin.toggle();
-  SLEEP(2);
+  sleep(2);
 }

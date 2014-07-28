@@ -98,5 +98,5 @@ void loop()
   trace << ms << endl;
 
   // Take a nap for 10 seconds (this is not 10 seconds period)
-  SLEEP(10);
+  sleep(10);
 }

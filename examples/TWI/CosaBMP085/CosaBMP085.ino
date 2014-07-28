@@ -62,7 +62,7 @@ void setup()
   // Start the watchdog ticks and the pressure sensor
   Watchdog::begin();
   TRACE(bmp.begin(BMP085::ULTRA_LOW_POWER));
-  SLEEP(1);
+  sleep(1);
 }
 
 void loop()
@@ -70,5 +70,5 @@ void loop()
   // Sample sensor and print temperature and pressure
   bmp.sample();
   trace << bmp << endl;
-  SLEEP(2);
+  sleep(2);
 }

@@ -31,8 +31,7 @@
 // Enable power down during testing and delay
 // #define USE_LOW_POWER
 #if defined(USE_LOW_POWER)
-#undef SLEEP
-#define SLEEP(x)				\
+#define sleep(x)				\
   do {						\
     Power::all_disable();			\
     Watchdog::delay(x * 1024);			\
@@ -89,12 +88,12 @@ void setup()
   trace.begin(&lcd, PSTR("CosaLCDspeed:"));
 #if defined(COSA_VLCD_HH)
   trace << PSTR("REV = ") << lcd.MAJOR << '.' << lcd.MINOR;
-  SLEEP(2);
+  sleep(2);
   trace << clear;
   trace << PSTR("WIDTH = ") << lcd.WIDTH << endl;
   trace << PSTR("HEIGHT = ") << lcd.HEIGHT;
 #endif
-  SLEEP(2);
+  sleep(2);
 }
 
 void loop()
@@ -217,5 +216,5 @@ void measure(const char* name, benchmark_t fn, uint16_t nr)
   lcd.backlight_on();
   lcd.display_on();
 #endif
-  SLEEP(4);
+  sleep(4);
 }

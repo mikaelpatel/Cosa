@@ -219,7 +219,7 @@ void loop()
   stop = RTC::micros();
   ms = (stop - start) / 1000L;
   INFO("init script run: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Run script/sub-script and measure execution time
   start = RTC::micros();
@@ -227,5 +227,5 @@ void loop()
   stop = RTC::micros();
   ms = (stop - start) / 1000L;
   INFO("scipt run: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 }

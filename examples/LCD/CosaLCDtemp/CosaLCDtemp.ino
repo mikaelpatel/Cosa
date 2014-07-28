@@ -75,7 +75,7 @@ void setup()
   lcd.begin();
   console << PSTR("CosaLCDtemp: started");
   sensor.connect(0);
-  SLEEP(2);
+  sleep(2);
 }
 
 void loop()
@@ -92,5 +92,5 @@ void loop()
 	  << PSTR(" [") << low << PSTR("..") << high << PSTR("]") 
 	  << endl;
   console << AnalogPin::bandgap() << PSTR(" mV") << endl;
-  SLEEP(2);
+  sleep(2);
 }

@@ -143,5 +143,5 @@ void loop()
 
   // Turn the builtin led off and sleep
   ledPin.toggle();
-  SLEEP(5);
+  sleep(5);
 }

@@ -110,7 +110,7 @@ OutputPin pw(Board::D4);
 #define DEEP_SLEEP(s)					\
   do {							\
     uint8_t mode = Power::set(SLEEP_MODE_PWR_DOWN);	\
-    SLEEP(s);						\
+    sleep(s);						\
     Power::set(mode);					\
   } while (0)
 

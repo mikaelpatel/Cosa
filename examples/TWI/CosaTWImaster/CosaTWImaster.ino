@@ -99,5 +99,5 @@ void loop()
 
   // Next transaction
   cmd += 1;
-  SLEEP(2);
+  sleep(2);
 }

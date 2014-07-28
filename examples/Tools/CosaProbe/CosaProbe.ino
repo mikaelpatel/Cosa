@@ -131,7 +131,7 @@ void setup()
 
 void loop()
 {
-  SLEEP(2);
+  sleep(2);
 
   // Make a request (DHT)
   probe.set_mode(IOPin::OUTPUT_MODE);

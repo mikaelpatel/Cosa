@@ -120,5 +120,5 @@ void loop()
 
   // Sleep in power down mode
   rf.powerdown();
-  SLEEP(2);
+  sleep(2);
 }

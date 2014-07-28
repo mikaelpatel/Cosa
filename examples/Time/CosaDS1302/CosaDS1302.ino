@@ -88,5 +88,5 @@ void loop()
   trace << now << endl;
 
   // Take a nap
-  SLEEP(5);
+  sleep(5);
 }

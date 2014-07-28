@@ -100,5 +100,5 @@ void loop()
   if (i == membersof(data)) i = 0;
 
   // Take a nap
-  SLEEP(2);
+  sleep(2);
 }

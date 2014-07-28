@@ -89,7 +89,7 @@ void setup()
   compass.set_mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE);
   TRACE(compass.begin());
 
-  SLEEP(1);
+  sleep(1);
 }
 
 void loop()
@@ -109,5 +109,5 @@ void loop()
   // Periodically sample the printout the gyroscope reading
   trace << gyroscope << endl;
   trace << endl;
-  SLEEP(2);
+  sleep(2);
 }

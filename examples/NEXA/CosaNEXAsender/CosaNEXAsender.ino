@@ -68,13 +68,13 @@ void loop()
 #if defined(USE_DIMMER)
   for (int8_t level = -1; level > -16; level--) {
     transmitter.send(0, level);
-    SLEEP(3);
+    sleep(3);
   }
 #else
   transmitter.send(0, 1);
-  SLEEP(1);
+  sleep(1);
 #endif
   transmitter.send(0, 0);
   led.off();
-  SLEEP(5);
+  sleep(5);
 }

@@ -71,5 +71,5 @@ void loop()
   uint8_t pin = port.PINS;
   while (pin--) trace << port.is_set(pin);
   trace << endl;
-  SLEEP(2);
+  sleep(2);
 }

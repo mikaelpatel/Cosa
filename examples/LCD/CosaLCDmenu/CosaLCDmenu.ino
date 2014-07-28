@@ -55,7 +55,7 @@ public:
     UNUSED(item);
     lcd.display_clear();
     lcd.puts_P(PSTR("Opening File..."));
-    SLEEP(2);
+    sleep(2);
     return (true);
   }
 };
@@ -162,7 +162,7 @@ void setup()
   Watchdog::begin(16, Watchdog::push_timeout_events);
   lcd.begin();
   lcd.puts_P(PSTR("CosaLCDmenu: started"));
-  SLEEP(2);
+  sleep(2);
   walker.begin();
   keypad.begin();
   // rotary.begin();

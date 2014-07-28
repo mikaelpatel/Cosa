@@ -119,7 +119,7 @@ void loop()
   textbox.set_text_scale(1);
   console.printf_P(PSTR("test#2:output stream: %ul ms\n"), ms);
   INFO("test#2:output stream: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Test#3: Scroll text port
   start = RTC::micros();
@@ -134,7 +134,7 @@ void loop()
   ms = (RTC::micros() - start) / 1000L;
   console.printf_P(PSTR("%ul ms"), ms);
   INFO("test#3:scroll text mode: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Test#4: Grid with draw pixel
   tft.fill_screen();
@@ -149,7 +149,7 @@ void loop()
   tft.fill_rect(20, 20, 20, 20);
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#4:draw pixel grid: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Test#5: Grid with draw rectangle
   tft.set_pen_color(Canvas::BLACK);
@@ -161,7 +161,7 @@ void loop()
   }
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#5:draw rect grid: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
   
   // Test#6: Fill some of the rectangles
   tft.set_pen_color(Canvas::WHITE);
@@ -173,7 +173,7 @@ void loop()
   }
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#6:fill rect grid: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Test#7: Fill circles
   tft.fill_screen();
@@ -194,7 +194,7 @@ void loop()
   }
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#7:draw circle grid: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Test#8: Draw lines
   tft.set_canvas_color(tft.shade(Canvas::WHITE, 20));
@@ -214,7 +214,7 @@ void loop()
   }
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#8:draw lines: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Test#9: Draw more lines
   start = RTC::micros();
@@ -232,7 +232,7 @@ void loop()
   }
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#9:draw more lines: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Test#10: Display polygons 
   start = RTC::micros();
@@ -254,7 +254,7 @@ void loop()
   }
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#10:polygon: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Test#11: Display stroke
   start = RTC::micros();
@@ -274,23 +274,23 @@ void loop()
   }
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#11:stroke: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Test#12: Display the Arduino Icons
   tft.set_canvas_color(tft.shade(Canvas::WHITE, 10));
   tft.fill_screen();
   tft.set_pen_color(tft.shade(Canvas::CYAN, 80));
   tft.draw_icon((tft.WIDTH-34)/2, (tft.HEIGHT-32)/2, arduino_icon_34x32);
-  SLEEP(2);
+  sleep(2);
   tft.fill_screen();
   tft.draw_icon((tft.WIDTH-64)/2, (tft.HEIGHT-64)/2, arduino_icon_64x64);
-  SLEEP(2);
+  sleep(2);
   tft.fill_screen();
   start = RTC::micros();
   tft.draw_icon((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, arduino_icon_96x32);
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#12:draw arduino icon: %ul ms", ms);
-  SLEEP(2);
+  sleep(2);
 
   // Rotate display
   direction = !direction;

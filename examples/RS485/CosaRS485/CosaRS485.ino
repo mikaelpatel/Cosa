@@ -250,7 +250,7 @@ void loop()
   ASSERT(rs485.broadcast(msg, sizeof(msg)) == sizeof(msg));
   // MASTER: Sending message while still transmitting
   ASSERT(rs485.send(msg, sizeof(msg), SLAVE) == -4);
-  SLEEP(1); 
+  sleep(1); 
 
   // SLAVE: Sending message when should receive
   ASSERT(rs485.send(msg, sizeof(msg), SLAVE) == -5);
@@ -264,15 +264,15 @@ void loop()
   memset(buf, 0, sizeof(buf));
   ASSERT(rs485.recv(buf, sizeof(buf)) == 0);
   ASSERT(memcmp(buf, msg, sizeof(msg)) == 0);
-  SLEEP(1); 
+  sleep(1); 
 
   // SLAVE: Sending message to master
   rs485.set_address(SLAVE);
   ASSERT(rs485.send(rep, sizeof(rep)) == sizeof(rep));
-  SLEEP(1);
+  sleep(1);
   // MASTER: Receive message 
   rs485.set_address();
   ASSERT(rs485.recv(buf, sizeof(buf)) == sizeof(rep));
   ASSERT(memcmp(buf, rep, sizeof(rep)) == 0);
-  SLEEP(1); 
+  sleep(1); 
 }

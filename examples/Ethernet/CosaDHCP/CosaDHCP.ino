@@ -107,7 +107,7 @@ void loop()
   trace << PSTR("LEASE EXPIRES = ");
   trace << dhcp.get_lease_expires();
   trace << endl << endl;
-  SLEEP(15);
+  sleep(15);
   return;
 
  error:

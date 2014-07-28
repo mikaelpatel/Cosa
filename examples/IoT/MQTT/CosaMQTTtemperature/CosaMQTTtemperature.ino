@@ -101,5 +101,5 @@ void loop()
 
   // Publish the value to the MQTT server and take a nap
   client.publish(PSTR("public/cosa/temperature"), buf, buf.available());
-  SLEEP(5);
+  sleep(5);
 }

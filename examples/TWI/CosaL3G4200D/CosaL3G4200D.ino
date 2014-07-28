@@ -68,5 +68,5 @@ void loop()
 {
   // Periodically sample the printout the gyroscope reading
   trace << gyroscope << endl;
-  SLEEP(2);
+  sleep(2);
 }

@@ -84,5 +84,5 @@ void loop()
     cout.printf_P(PSTR("A%d %d mV"), x, 
 		  (AnalogPin::sample((Board::AnalogPin) x) * 500L) / 1024);
   }
-  SLEEP(1);
+  sleep(1);
 }

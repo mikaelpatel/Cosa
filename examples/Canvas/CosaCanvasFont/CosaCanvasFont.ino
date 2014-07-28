@@ -69,7 +69,7 @@ void loop()
       tft.draw_char(c++);
     }
   }
-  SLEEP(4);
+  sleep(4);
 
   // Draw each character in the font table 
   tft.set_text_scale(16);
@@ -86,6 +86,6 @@ void loop()
     tft.set_text_color(tft.shade(Canvas::RED, 75));
     tft.set_cursor(tft.WIDTH/2 - 40, tft.HEIGHT/2 - 63);
     tft.draw_char(c);
-    SLEEP(1);
+    sleep(1);
   }
 }

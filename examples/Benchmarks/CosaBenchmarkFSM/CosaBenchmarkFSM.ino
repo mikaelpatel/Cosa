@@ -133,18 +133,9 @@ void loop()
   uint32_t us = stop - start;
   uint32_t us_per_event = us / EVENTS_MAX;
   INFO("%l us per event (%l cycles)", us_per_event, us_per_event * I_CPU);
-}
 
-/**
-@section Output
-CosaBenchmarkFSM: started
-free_memory() = 1576
-sizeof(Event::Handler) = 2
-sizeof(Link) = 6
-sizeof(FSM) = 12
-sizeof(Echo) = 14
-EVENTS_MAX = 100000
-F_CPU = 16000000
-I_CPU = 16
-139:void loop():info:13 us per event (208 cycles)
-*/
+  // Run the loop a limited number of times
+  static uint8_t count = 0;
+  count += 1;
+  ASSERT(count < 10);
+}

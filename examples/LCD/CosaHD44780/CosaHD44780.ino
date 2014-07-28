@@ -146,7 +146,7 @@ void setup()
 	<< oct << 0x55 << ' '
 	<< dec << 0x55 << ' '
 	<< hex << 0x55;
-  SLEEP(2);
+  sleep(2);
 
   // Banner for font display
   trace << PSTR("\f\aFONT\a\n");

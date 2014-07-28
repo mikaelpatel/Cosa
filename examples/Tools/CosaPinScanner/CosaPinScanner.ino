@@ -266,6 +266,6 @@ void loop()
   print(trace, PINL);
 #endif
   trace << endl;
-  SLEEP(2);
+  sleep(2);
 }
 

@@ -65,5 +65,5 @@ void loop()
   ledPin.toggle();
   
   // Sleep awhile before checking again
-  SLEEP(2);
+  sleep(2);
 }

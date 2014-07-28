@@ -76,5 +76,5 @@ void loop()
   compass.read_heading();
   compass.to_milli_gauss();
   trace << compass << endl;
-  SLEEP(2);
+  sleep(2);
 }

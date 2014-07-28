@@ -169,7 +169,7 @@ void loop()
   TRACE(switch_fn_size);
   for (uint8_t op = OP_ADD; op <= OP_EXIT; op++) 
     TRACE(switch_fn(op));
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   res = 0;
@@ -180,7 +180,7 @@ void loop()
   us = stop - start;
   TRACE(res);
   TRACE(us);
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   for (int i = 0; i < 10000; i++)
@@ -190,14 +190,14 @@ void loop()
   us = stop - start;
   TRACE(res);
   TRACE(us);
-  SLEEP(1);
+  sleep(1);
 
   // Measure goto-label table version
   TRACE(goto_fn_addr);
   TRACE(goto_fn_size);
   for (uint8_t op = OP_ADD; op <= OP_EXIT; op++) 
     TRACE(goto_fn(op));
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   res = 0;
@@ -208,7 +208,7 @@ void loop()
   us = stop - start;
   TRACE(res);
   TRACE(us);
-  SLEEP(1);
+  sleep(1);
 
   start = RTC::micros();
   for (int i = 0; i < 10000; i++)
@@ -218,7 +218,7 @@ void loop()
   us = stop - start;
   TRACE(res);
   TRACE(us);
-  SLEEP(1);
+  sleep(1);
 
   ASSERT(true == false);
 }

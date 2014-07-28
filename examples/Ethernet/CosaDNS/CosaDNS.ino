@@ -90,5 +90,5 @@ void loop()
   INET::print_addr(trace, host);
   trace.println();
 
-  SLEEP(10);
+  sleep(10);
 }

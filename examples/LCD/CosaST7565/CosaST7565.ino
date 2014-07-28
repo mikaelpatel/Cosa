@@ -91,7 +91,7 @@ void setup()
   trace.begin(&lcd);
   lcd.set_cursor(0, lcd.LINES - 1);
   trace << PSTR("CosaST7565: started");
-  SLEEP(2);
+  sleep(2);
 
   // Dump characters in system font
   trace << PSTR("\f\aSYSTEM FONT 5x7\a\n");
@@ -101,7 +101,7 @@ void setup()
     else
       trace << (char) c;
   }
-  SLEEP(2);
+  sleep(2);
 
   // Use the trace iostream onto the LCD with output operator
   trace << PSTR("\f\aSPECIAL CHARACTERS\a\n");
@@ -127,7 +127,7 @@ void setup()
       Watchdog::delay(64);
     }
   }
-  SLEEP(2);
+  sleep(2);
 
   // Use number base handling 
   trace << PSTR("\f\aNUMBER BASE\a\n");
@@ -139,12 +139,12 @@ void setup()
   trace << PSTR("dec = ") << dec << 0x55 << endl;
   trace << PSTR("hex = ") << hex << 0x55 << endl;
   trace << PSTR("ptr = ") << &lcd;
-  SLEEP(2);
+  sleep(2);
 
   // Dump the LCD object raw format with normal print function
   trace << PSTR("\f\aBUFFER DUMP\a\n");
   trace.print(&lcd, sizeof(lcd), IOStream::hex, 5);
-  SLEEP(2);
+  sleep(2);
 
   // Play around with the offscreen canvas
   OffScreen<ST7565::WIDTH, ST7565::HEIGHT> offscreen;
@@ -167,7 +167,7 @@ void setup()
   // Draw the off-screen canvas on the LCD
   lcd.set_cursor(0, 0);
   lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
-  SLEEP(4);
+  sleep(4);
 }
 
 static const Board::AnalogPin pin_map[] __PROGMEM = {
@@ -191,7 +191,7 @@ void loop()
     lcd.draw_bar(percent, ST7565::WIDTH - 20);
     if (i != ST7565::LINES - 1) trace << endl;
   }
-  SLEEP(1);
+  sleep(1);
 
   // Every 4 seconds display the arduino icon and count down time
   static const uint8_t SHOW_BANNER = 4;
@@ -203,7 +203,7 @@ void loop()
     lcd.set_cursor((lcd.WIDTH - 96)/2, 1);
     lcd.display_inverse();
     lcd.draw_icon(arduino_icon_96x32);
-    SLEEP(2);
+    sleep(2);
 
     lcd.display_normal();
     banner = 0;
@@ -236,6 +236,6 @@ void loop()
       }
     } else
       sec -= 10;
-    SLEEP(4);
+    sleep(4);
   }
 }

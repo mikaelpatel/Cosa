@@ -100,5 +100,5 @@ void loop()
   buf.empty();
   cout << temperature / 10 << PSTR(" C") << ends;
   client.publish(PSTR("public/cosa/temperature"), buf, buf.available());
-  SLEEP(5);
+  sleep(5);
 }

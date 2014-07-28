@@ -66,5 +66,5 @@ void loop()
   if (clear == UINT16_MAX) trace << PSTR(":overflow");
   trace << endl;
 
-  SLEEP(1);
+  sleep(1);
 }

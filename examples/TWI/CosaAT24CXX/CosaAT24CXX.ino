@@ -83,7 +83,7 @@ void setup()
 
 void loop()
 {
-  SLEEP(2);
+  sleep(2);
   ledPin.toggle();
 
   // Buffer for update loop

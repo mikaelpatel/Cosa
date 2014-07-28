@@ -131,5 +131,5 @@ void loop()
   }
 
   // Sleep before requesting a new sample
-  SLEEP(2);
+  sleep(2);
 }

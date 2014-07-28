@@ -86,7 +86,7 @@ void setup()
 void loop()
 {
   // Wait a second
-  SLEEP(1);
+  sleep(1);
   ledPin.toggle();
 
   // Read the time from the rtc device and print

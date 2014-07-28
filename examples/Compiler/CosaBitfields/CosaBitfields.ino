@@ -73,5 +73,5 @@ void loop()
   green += 1;
   blue += 1;
   rate += 1;
-  SLEEP(4);
+  sleep(4);
 }

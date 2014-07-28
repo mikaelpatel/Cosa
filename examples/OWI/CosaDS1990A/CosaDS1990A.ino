@@ -63,7 +63,7 @@ void setup()
 void loop()
 {
   // Take a nap
-  SLEEP(1);
+  sleep(1);
 
   // Check if a key was connected
   OWI::Driver dev(&owi);

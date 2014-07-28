@@ -87,7 +87,7 @@ void loop()
       fan.set();
       err = 0;
     }
-    SLEEP(2);
+    sleep(2);
     return;
   }
 
@@ -144,5 +144,5 @@ void loop()
 	<< endl;
 
   // Sample every 2 seconds
-  SLEEP(2);
+  sleep(2);
 }

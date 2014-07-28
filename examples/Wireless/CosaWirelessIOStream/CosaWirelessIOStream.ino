@@ -76,7 +76,7 @@ void setup()
   RTC::begin();
   rf.begin();
   trace << PSTR("\fWIO: connected") << flush;
-  SLEEP(2);
+  sleep(2);
 }
 
 void bar(uint16_t value, uint8_t pos, uint16_t max)
@@ -124,7 +124,7 @@ void loop()
     trace << clear << 'A' << ix << PSTR(": ") << sample << endl;
     bar(sample, 16, 1023);
     trace << flush;
-    SLEEP(1);
+    sleep(1);
   }
 
   // Print bandgap voltage
@@ -132,7 +132,7 @@ void loop()
   trace << clear << PSTR("VCC: ") << vcc << PSTR(" mV") << endl;
   bar(vcc, 16, 5500);
   trace << flush;
-  SLEEP(2);
+  sleep(2);
 
   // Print digital pins
   trace << clear << PSTR("D0-7:  "); 
@@ -149,7 +149,7 @@ void loop()
     trace << InputPin::read(pin);
   }
   trace << flush;
-  SLEEP(2);
+  sleep(2);
 
   // Print statistics
 #if defined(COSA_WIRELESS_DRIVER_NRF24L01P_HH)
@@ -158,6 +158,6 @@ void loop()
   trace << PSTR("ER: ") << rf.get_retrans();
   trace << PSTR(",") << rf.get_drops();
   trace << flush;
-  SLEEP(2);
+  sleep(2);
 #endif
 }
