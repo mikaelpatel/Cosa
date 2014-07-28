@@ -1,0 +1,47 @@
+Use CTRL-ALT GR-] to exit monitor.
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q -e --lf /dev/ttyUSB0 9600
+CosaBenchmarkRTC: started
+free_memory() = 1691
+F_CPU = 16000000
+I_CPU = 16
+Watchdog::ms_per_tick() = 16
+Watchdog::ticks() = 3
+RTC::us_per_tick() = 1024
+RTC::seconds() = 0
+65:void setup():info:RTC::micros(): 8 us
+71:void setup():info:RTC::millis(): 8 us
+77:void setup():info:RTC::seconds(): 4 us
+83:void setup():info:RTC::delay(1): 460 us
+88:void setup():info:RTC::delay(10): 10332 us
+93:void setup():info:DELAY(10): 16 us
+98:void setup():info:DELAY(100): 104 us
+103:void setup():info:sleep(1): 1085696 us
+108:void setup():info:delay(10): 16920 us
+113:void setup():info:delay(100): 97304 us
+118:void setup():info:sleep(1): 1102424 us
+123:void setup():info:yield(): 636 us
+RTC::micros() = 2805512
+RTC::millis() = 2834
+RTC::seconds() = 2
+RTC::micros() = 3957092
+RTC::millis() = 3957
+RTC::seconds() = 3
+RTC::micros() = 5059920
+RTC::millis() = 5060
+RTC::seconds() = 5
+RTC::micros() = 6162716
+RTC::millis() = 6163
+RTC::seconds() = 6
+RTC::micros() = 7265488
+RTC::millis() = 7265
+RTC::seconds() = 7
+RTC::micros() = 8368232
+RTC::millis() = 8368
+RTC::seconds() = 8
+RTC::seconds() = 19
+151:void setup():info:DELAY(100): 100000 measurement/validation (err = 0)
+RTC::seconds() = 29
+168:void setup():info:RTC::delay(100): 100 measurement/validation (err = 0)
+RTC::seconds() = 39
+185:void setup():info:Watchdog::delay(100): 100 measurement/validation (err = 0)
+CosaBenchmarkRTC.ino:190:assert:true == false

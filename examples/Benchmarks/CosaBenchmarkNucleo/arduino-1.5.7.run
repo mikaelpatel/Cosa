@@ -1,0 +1,12 @@
+Use CTRL-ALT GR-] to exit monitor.
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q -e --lf /dev/ttyUSB0 9600
+CosaBenchmarkNucleo: started
+Thread::Consumer: started
+Thread::Producer: started
+55:virtual void Producer::run():info:Benchmark 1: measure yield
+61:virtual void Producer::run():info:11 us (176 cycles)
+64:virtual void Producer::run():info:Benchmark 2: measure resume
+70:virtual void Producer::run():info:10 us (160 cycles)
+73:virtual void Producer::run():info:Benchmark 3: measure signal-wait
+79:virtual void Producer::run():info:35 us (560 cycles)
+CosaBenchmarkNucleo.ino:80:assert:true == false

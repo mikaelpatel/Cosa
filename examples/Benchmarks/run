@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# @file benchmark/run
+# @version 1.0
+#
+# @section License
+# Copyright (C) 2014, Mikael Patel
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# @section Description
+# Build and run all benchmarks. Parameters are board and version 
+# of Arduino IDE. Default are nano and 1.5.7. Note: The cosa build
+# script version is not changed. 
+#
+# This file is part of the Arduino Che Cosa project.
+
+board=nano
+if [ "$1" ]; then
+  board=$1
+fi
+
+version=1.5.7
+if [ "$2" ]; then
+  version=$2
+fi
+
+for dir in $(ls)
+do
+  if [ -d "$dir" ]; then
+    echo -n $dir:
+    cd $dir
+    echo -n build..
+    cosa $board &> arduino-$version.log
+    echo -n upload..
+    cosa $board upload &>> arduino-$version.log
+    echo -n monitor..
+    cosa $board monitor > arduino-$version.run
+    echo -n clean..
+    cosa $board clean > /dev/null
+    rm arduino-$version.log
+    echo done
+    cd ..
+  fi
+done
+

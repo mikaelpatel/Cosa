@@ -1,0 +1,22 @@
+Use CTRL-ALT GR-] to exit monitor.
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q -e --lf /dev/ttyUSB0 9600
+CosaBenchmarkFSM: started
+free_memory() = 1571
+sizeof(Event::Handler) = 2
+sizeof(Link) = 6
+sizeof(FSM) = 12
+sizeof(Echo) = 14
+EVENTS_MAX = 100000
+F_CPU = 16000000
+I_CPU = 16
+135:void loop():info:13 us per event (208 cycles)
+135:void loop():info:13 us per event (208 cycles)
+135:void loop():info:13 us per event (208 cycles)
+135:void loop():info:13 us per event (208 cycles)
+135:void loop():info:13 us per event (208 cycles)
+135:void loop():info:13 us per event (208 cycles)
+135:void loop():info:13 us per event (208 cycles)
+135:void loop():info:13 us per event (208 cycles)
+135:void loop():info:13 us per event (208 cycles)
+135:void loop():info:13 us per event (208 cycles)
+CosaBenchmarkFSM.ino:140:assert:count < 10
