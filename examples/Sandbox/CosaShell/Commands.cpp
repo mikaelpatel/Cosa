@@ -26,7 +26,9 @@
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 
-// Digital and Analog Pin map (pin index => Cosa pin identity)
+// Digital and Analog Pin map (pin index => Cosa pin identity).
+// These maps are need as internally Cosa works with pin symbols and 
+// not pin numbers.
 static const Board::DigitalPin digital_pin_map[] __PROGMEM = {
   Board::D0, 
   Board::D1, 
@@ -374,27 +376,32 @@ static int seconds_action(int argc, char* argv[])
 static const char STTY_NAME[] __PROGMEM = 
   "stty";
 static const char STTY_HELP[] __PROGMEM = 
-  "[echo on|off] [eol CR|LF|CRLF] -- set tty echo and eol mode";
+  "[echo=on|off] [eol=CR|LF|CRLF] -- set tty mode (echo, eol)";
 static int stty_action(int argc, char* argv[])
 {
-  if (argc != 3) return (-1);
-  if (strcmp_P(argv[1], PSTR("echo")) == 0) {
-    if (strcmp_P(argv[2], PSTR("on")) == 0) 
-      shell.set_echo(1);
-    else if (strcmp_P(argv[2], PSTR("off")) == 0) 
-      shell.set_echo(0);
-    else return (-1);
+  UNUSED(argv);
+  char* option;
+  char* value;
+  int ix;
+  while ((ix = shell.get(option, value)) == 0) {
+    if (strcmp_P(option, PSTR("echo")) == 0) {
+      if (strcmp_P(value, PSTR("on")) == 0) 
+	shell.set_echo(1);
+      else if (strcmp_P(value, PSTR("off")) == 0) 
+	shell.set_echo(0);
+      else return (-1);
+    }
+    else if (strcmp_P(option, PSTR("eol")) == 0) {
+      if (strcmp_P(value, PSTR("CR")) == 0) 
+	cout.get_device()->set_eol(IOStream::CR_MODE);
+      else if (strcmp_P(value, PSTR("LF")) == 0) 
+	cout.get_device()->set_eol(IOStream::LF_MODE);
+      else if (strcmp_P(value, PSTR("CRLF")) == 0) 
+	cout.get_device()->set_eol(IOStream::CRLF_MODE);
+      else return (-1);
+    }
   }
-  else if (strcmp_P(argv[1], PSTR("eol")) == 0) {
-    if (strcmp_P(argv[2], PSTR("CR")) == 0) 
-      cout.get_device()->set_eol(IOStream::CR_MODE);
-    else if (strcmp_P(argv[2], PSTR("LF")) == 0) 
-      cout.get_device()->set_eol(IOStream::LF_MODE);
-    else if (strcmp_P(argv[2], PSTR("CRLF")) == 0) 
-      cout.get_device()->set_eol(IOStream::CRLF_MODE);
-    else return (-1);
-  }
-  else return (-1);
+  if (ix != argc) return (-1);
   return (0);
 }
 
