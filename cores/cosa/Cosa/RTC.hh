@@ -128,7 +128,7 @@ public:
    * Delay using the real-time clock.
    * @param[in] ms sleep period in milli-seconds.
    */
-  static void delay(uint16_t ms);
+  static void delay(uint32_t ms);
 
   /**
    * Set RTC overflow interrupt handler. Allow extension of the interrupt

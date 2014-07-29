@@ -56,6 +56,7 @@ RTC::begin()
     TIFR0 = 0;
   }
   s_initiated = true;
+  ::delay = delay;
   return (true);
 }
 
@@ -100,7 +101,7 @@ RTC::micros()
 }
 
 void
-RTC::delay(uint16_t ms)
+RTC::delay(uint32_t ms)
 {
   uint32_t start = RTC::millis();
   while (RTC::since(start) < ms) yield();
