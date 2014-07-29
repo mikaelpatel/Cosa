@@ -22,6 +22,7 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/Tone.hh"
+#include "Cosa/Memory.h"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
@@ -140,11 +141,36 @@ static const char BLINK_SCRIPT[] __PROGMEM =
 static const char DATE_NAME[] __PROGMEM = 
   "date";
 static const char DATE_HELP[] __PROGMEM = 
-  "-- print the system date and time";
+  "[YEAR-MON-DAY HOUR:MIN:SEC] -- print or set the system date and time";
 static int date_action(int argc, char* argv[])
 {
-  UNUSED(argv);
-  if (argc != 1) return (-1);
+  if (argc == 3) {
+    uint32_t value;
+    time_t now;
+    char* sp;
+    value = strtoul(argv[1], &sp, 10);
+    if (*sp != '-' || value < 2000 || value > 2099) return (-1);
+    value -= 2000;
+    now.year = value;
+    value = strtoul(sp + 1, &sp, 10);
+    if (*sp != '-' || value < 1 || value > 12) return (-1);
+    now.month = value;
+    value = strtoul(sp + 1, &sp, 10);
+    if (*sp != 0 || value < 1 || value > 31) return (-1);
+    now.date = value;
+    value = strtoul(argv[2], &sp, 10);
+    if (*sp != ':' || value > 23) return (-1);
+    now.hours = value;
+    value = strtoul(sp + 1, &sp, 10);
+    if (*sp != ':' || value > 60) return (-1);
+    now.minutes = value;
+    value = strtoul(sp + 1, &sp, 10);
+    if (*sp != 0 || value > 60) return (-1);
+    now.seconds = value;
+    now.to_bcd();
+    RTC::time(now);
+  }
+  else if (argc != 1) return (-1);
   time_t now(RTC::seconds());
   ios << now << endl;
   return (0);
@@ -318,6 +344,18 @@ static int led_action(int argc, char* argv[])
   return (0);
 }
 
+static const char MEMORY_NAME[] __PROGMEM = 
+  "memory";
+static const char MEMORY_HELP[] __PROGMEM = 
+  "-- display amout of free memory";
+static int memory_action(int argc, char* argv[])
+{
+  UNUSED(argv);
+  if (argc != 1) return (-1);
+  ios << free_memory() << PSTR(" byte") << endl;
+  return (0);
+}
+
 static const char MICROS_NAME[] __PROGMEM = 
   "micros";
 static const char MICROS_HELP[] __PROGMEM = 
@@ -447,6 +485,7 @@ static const Shell::command_t command_tab[] __PROGMEM = {
   { HELP_NAME, HELP_HELP, help_action },
   { IDLE_NAME, IDLE_HELP, idle_action },
   { LED_NAME, LED_HELP, led_action },
+  { MEMORY_NAME, MEMORY_HELP, memory_action },
   { MICROS_NAME, MICROS_HELP, micros_action },
   { MILLIS_NAME, MILLIS_HELP, millis_action },
   { REPEAT_NAME, REPEAT_HELP, repeat_action },

@@ -37,7 +37,7 @@ void iowait()
   uint32_t start = RTC::micros();
   Power::sleep(); 
   uint32_t stop = RTC::micros();
-  idle = idle + (stop - start);
+  idle = (start > stop) ? 0L : idle + (stop - start);
 }
 
 void setup()
