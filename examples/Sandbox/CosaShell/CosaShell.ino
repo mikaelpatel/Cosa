@@ -25,6 +25,7 @@
 #include "Commands.h"
 #include "Cosa/RTC.hh"
 #include "Cosa/Tone.hh"
+#include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
@@ -34,8 +35,9 @@ uint32_t idle = 0L;
 void iowait()
 {
   uint32_t start = RTC::micros();
-  yield();
-  idle += (RTC::micros() - start);
+  Power::sleep(); 
+  uint32_t stop = RTC::micros();
+  idle = idle + (stop - start);
 }
 
 void setup()
@@ -44,11 +46,12 @@ void setup()
   Tone::begin();
   RTC::begin();
   uart.begin(9600);
+  yield = iowait;
 }
 
 void loop()
 {
   shell.run(ios);
-  iowait();
+  yield();
 }
 
