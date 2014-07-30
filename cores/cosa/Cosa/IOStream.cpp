@@ -258,7 +258,7 @@ IOStream::scan(char *s, size_t count)
 }
 
 char*
-IOStream::readline(char* buf, size_t size)
+IOStream::readline(char* buf, size_t size, bool echo)
 {
   const char DEL = 127;
   const char ESC = 27;
@@ -273,18 +273,18 @@ IOStream::readline(char* buf, size_t size)
     if (c == ESC) continue;
     if (c == '\b' || c == DEL) {
       if (len > 0) {
-	print_P(PSTR("\b \b"));
+	if (echo) print_P(PSTR("\b \b"));
 	len -= 1;
 	s -= 1;
       }
     }
     else {
       if (c == '\r') {
-	print(c);
+	if (echo) print(c);
 	if (m_dev->get_eol() == CRLF_MODE) continue;
 	c = '\n';
       }
-      print(c);
+      if (echo) print(c);
       if (len < size) {
 	len += 1;
 	*s++ = c;

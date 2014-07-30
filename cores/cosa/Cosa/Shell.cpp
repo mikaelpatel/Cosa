@@ -160,12 +160,12 @@ int
 Shell::run(IOStream& ios)
 {
   // Check first time run; will need to prompt
-  if (m_init) {
+  if (m_firstrun) {
     ios << m_prompt;
-    m_init = false;
+    m_firstrun = false;
   }
   // Check if a command line is available
-  if (ios.readline(m_buf, BUF_MAX) == NULL) return (0);
+  if (ios.readline(m_buf, BUF_MAX, m_echo) == NULL) return (0);
   // Check if the command line was too long
   int res = 0;
   if (m_buf[strlen(m_buf)-1] != '\n') {

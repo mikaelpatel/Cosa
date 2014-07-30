@@ -465,9 +465,10 @@ public:
    * the given size of reached.
    * @param[in] buf buffer for received line.
    * @param[in] size of buffer.
+   * @param[in] echo character mode (Default true).
    * @return NULL or pointer to buffer when line received.
    */
-  char* readline(char* buf, size_t size);
+  char* readline(char* buf, size_t size, bool echo = true);
 
   /**
    * Stream manipulator function prototype. To allow implementation

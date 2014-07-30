@@ -55,10 +55,28 @@ public:
     m_cmdc(cmdc),
     m_cmdtab(cmdtab),
     m_prompt(prompt == NULL ? DEFAULT_PROMPT : prompt),
-    m_init(true)
+    m_firstrun(true),
+    m_echo(true)
   {
   }
   
+  /**
+   * Set local echo mode.
+   * @param[in] mode.
+   */
+  void set_echo(bool mode)
+  {
+    m_echo = mode;
+  }
+
+  /**
+   * Reset for new session.
+   */
+  void reset()
+  {
+    m_firstrun = true;
+  }
+
   /**
    * Parse command parameter list for options. The command has the
    * format: NAME -X -XVALUE OPTION=VALUE ARGUMENT.., where X is an
@@ -112,7 +130,8 @@ protected:
   uint8_t m_cmdc;		//!< Number of shell commands.
   const command_t* m_cmdtab;	//!< Vector with shell command decriptors.
   const char* m_prompt;		//!< Shell prompt.
-  bool m_init;			//!< Initial state.
+  bool m_firstrun;		//!< First time run.
+  bool m_echo;			//!< Echo mode.
   char m_buf[BUF_MAX];		//!< Command buffer.
   uint8_t m_argc;		//!< Number of arguments.
   char** m_argv;		//!< Argument vector.
