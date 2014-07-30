@@ -235,7 +235,13 @@ W5100::Driver::available()
     m_dev->read(uint16_t(&m_sreg->RX_RSR), &res, sizeof(res));
     m_dev->read(uint16_t(&m_sreg->RX_RSR), &size, sizeof(size));
   } while (res != size);
-  return (swap(res));
+  if (res != 0) return (swap(res));
+  uint8_t status = m_dev->read(uint16_t(&m_sreg->SR));
+  if ((status == SR_LISTEN) 
+      || (status == SR_CLOSED) 
+      || (status == SR_CLOSE_WAIT))
+    return (-1);
+  return (0);
 }
 
 int 
