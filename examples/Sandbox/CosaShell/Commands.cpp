@@ -62,6 +62,8 @@ static const Board::AnalogPin analog_pin_map[] __PROGMEM = {
   Board::A5
 };
 
+static uint32_t epoch = 0L;
+
 static const char ANALOGREAD_NAME[] __PROGMEM = 
   "analogread";
 static const char ANALOGREAD_HELP[] __PROGMEM = 
@@ -168,7 +170,8 @@ static int date_action(int argc, char* argv[])
     if (*sp != 0 || value > 60) return (-1);
     now.seconds = value;
     now.to_bcd();
-    RTC::time(now);
+    epoch = now;
+    RTC::time(epoch);
   }
   else if (argc != 1) return (-1);
   time_t now(RTC::seconds());
@@ -306,6 +309,19 @@ static int echo_action(int argc, char* argv[])
   return (0);
 }
 
+static const char EPOCH_NAME[] __PROGMEM = 
+  "epoch";
+static const char EPOCH_HELP[] __PROGMEM = 
+  "-- display start time";
+static int epoch_action(int argc, char* argv[])
+{
+  UNUSED(argv);
+  if (argc != 1) return (-1);
+  time_t now(epoch);
+  ios << now << endl;
+  return (0);
+}
+
 static const char HELP_NAME[] __PROGMEM = 
   "help";
 static const char HELP_HELP[] __PROGMEM = 
@@ -414,12 +430,12 @@ static int repeat_action(int argc, char* argv[])
 static const char SECONDS_NAME[] __PROGMEM = 
   "seconds";
 static const char SECONDS_HELP[] __PROGMEM = 
-  "-- clock in seconds";
+  "-- seconds since system start";
 static int seconds_action(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1) return (-1);
-  ios << RTC::seconds() << endl;
+  ios << RTC::seconds() - epoch << endl;
   return (0);
 }
 
@@ -480,6 +496,7 @@ static const Shell::command_t command_tab[] __PROGMEM = {
   { DELAY_NAME, DELAY_HELP, delay_action },
   { DUMP_NAME, DUMP_HELP, dump_action },
   { ECHO_NAME, ECHO_HELP, echo_action },
+  { EPOCH_NAME, EPOCH_HELP, epoch_action },
   { DIGITALREAD_NAME, DIGITALREAD_HELP, digitalread_action },
   { DIGITALTOGGLE_NAME, DIGITALTOGGLE_HELP, digitaltoggle_action },
   { HELP_NAME, HELP_HELP, help_action },
