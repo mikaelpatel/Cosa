@@ -37,23 +37,6 @@ Soft::UART uart(Board::D5, Board::PCI4, &ibuf);
 #endif
 OutputPin led(Board::LED);
 
-static const Board::DigitalPin pin_map[] __PROGMEM = {
-  Board::D0, 
-  Board::D1, 
-  Board::D2, 
-  Board::D3, 
-  Board::D4, 
-  Board::D5, 
-  Board::D6, 
-  Board::D7, 
-  Board::D8, 
-  Board::D9, 
-  Board::D10, 
-  Board::D11, 
-  Board::D12, 
-  Board::D13
-};
-
 void setup()
 {
   Watchdog::begin();
@@ -76,12 +59,12 @@ void loop()
     uart.putchar(ix%10 + '0');
   }
   Board::DigitalPin pin;
-  pin = (Board::DigitalPin) pgm_read_byte(pin_map + ix);
+  pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + ix);
   if (Pin::read(pin))
     uart.puts_P(PSTR(" = on\n"));
   else uart.puts_P(PSTR(" = off\n"));
   led.toggle();
-  if (ix == membersof(pin_map)) ix = 0; else ix += 1;
+  if (ix == membersof(digital_pin_map)) ix = 0; else ix += 1;
 
   // Echo characters received on soft uart
   while (uart.available()) uart.putchar(uart.getchar());

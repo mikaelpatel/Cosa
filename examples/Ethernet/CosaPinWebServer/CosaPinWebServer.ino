@@ -49,39 +49,6 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
-// Digital and Analog Pin map (index => pin identity)
-static const Board::DigitalPin digital_pin_map[] __PROGMEM = {
-  Board::D0, 
-  Board::D1, 
-  Board::D2, 
-  Board::D3, 
-  Board::D4, 
-  Board::D5, 
-  Board::D6, 
-  Board::D7, 
-  Board::D8, 
-  Board::D9, 
-  Board::D10, 
-  Board::D11, 
-  Board::D12, 
-  Board::D13,
-  Board::D14,
-  Board::D15,
-  Board::D16,
-  Board::D17,
-  Board::D18,
-  Board::D19
-};
-
-static const Board::AnalogPin analog_pin_map[] __PROGMEM = {
-  Board::A0, 
-  Board::A1, 
-  Board::A2, 
-  Board::A3, 
-  Board::A4, 
-  Board::A5
-};
-
 // HTML end of line
 #define CRLF "\r\n"
 
