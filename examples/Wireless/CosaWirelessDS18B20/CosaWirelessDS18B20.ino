@@ -145,6 +145,9 @@ void loop()
   // Message sequence number initialization
   static uint8_t nr = 0;
 
+  // Turn on necessary hardware modules
+  Power::all_enable();
+
   // Make a conversion request and read the temperature (scratchpad)
   asserted(pw) {
     DS18B20::convert_request(&owi, 12, true);
@@ -152,9 +155,6 @@ void loop()
     outdoors.read_scratchpad();
   }
   
-  // Turn on necessary hardware modules
-  Power::all_enable();
-
   // Initiate the message with measurements
   dt_msg_t msg;
   msg.nr = nr++;
