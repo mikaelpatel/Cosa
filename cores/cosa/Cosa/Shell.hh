@@ -70,6 +70,15 @@ public:
   }
 
   /**
+   * Get local echo mode.
+   * @return mode.
+   */
+  bool get_echo()
+  {
+    return (m_echo);
+  }
+
+  /**
    * Reset for new session.
    */
   void reset()
