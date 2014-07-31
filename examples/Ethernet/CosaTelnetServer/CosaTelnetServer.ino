@@ -63,33 +63,6 @@ static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 Socket* sock = NULL;
 
-// Digital and Analog Pin map
-static const Board::DigitalPin digital_pin_map[] __PROGMEM = {
-  Board::D0, 
-  Board::D1, 
-  Board::D2, 
-  Board::D3, 
-  Board::D4, 
-  Board::D5, 
-  Board::D6, 
-  Board::D7, 
-  Board::D8, 
-  Board::D9, 
-  Board::D10, 
-  Board::D11, 
-  Board::D12, 
-  Board::D13
-};
-
-static const Board::AnalogPin analog_pin_map[] __PROGMEM = {
-  Board::A0, 
-  Board::A1, 
-  Board::A2, 
-  Board::A3, 
-  Board::A4, 
-  Board::A5
-};
-
 void setup()
 {
   // Initiate watchdog for delay timing

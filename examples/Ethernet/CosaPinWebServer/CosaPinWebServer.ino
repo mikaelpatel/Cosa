@@ -102,7 +102,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
   page << PSTR("Digital Pin:") << BR;
   page << PSTR("<TABLE>") << endl;
   page << PSTR("<TR>") << endl;
-  for (uint8_t i = 0; i < membersof(digital_pin_map); i++) {
+  for (uint8_t i = 0; i < 19; i++) {
     Board::DigitalPin pin;
     pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + i);
     page << PSTR("<TD style=\"text-align: center; background-color: ");
@@ -114,7 +114,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
   }
   page << PSTR("</TR>") << endl;
   page << PSTR("<TR>") << endl;
-  for (uint8_t i = 0; i < membersof(digital_pin_map); i++) {
+  for (uint8_t i = 0; i < 19; i++) {
     page << PSTR("<TD>D") << i << PSTR("</TD>") << endl;
   }
   page << PSTR("</TR>") << endl;
@@ -147,7 +147,8 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
   page << BR;
   
   // Battery and memory status
-  page << PSTR("Vcc (mV): ") << AnalogPin::bandgap() << BR;
+  uint16_t vcc = AnalogPin::bandgap();
+  page << PSTR("Vcc (mV): ") << vcc << BR;
   page << PSTR("Memory (byte): ") << free_memory() << BR;
   page << BR;
 
