@@ -41,11 +41,20 @@ public:
   InputPin(Board::DigitalPin pin, Mode mode = NORMAL_MODE) :
     Pin((uint8_t) pin)
   {
-    if (mode == PULLUP_MODE) {
-      synchronized {
-	*PORT() |= m_mask; 
-      }
+    synchronized { 
+      if (mode == PULLUP_MODE) 
+	*PORT(pin) |= MASK(pin); 
     }
+  }
+
+  /**
+   * Get current input pin mode.
+   * @return mode.
+   */
+  Mode get_mode() const
+    __attribute__((always_inline))
+  {
+    return ((*PORT() & m_mask) != 0 ? PULLUP_MODE : NORMAL_MODE);
   }
 
   /**
@@ -53,14 +62,26 @@ public:
    * @param[in] pin number.
    * @param[in] mode pin mode (default NORMAL_MODE).
    */
-  static void set_mode(uint8_t pin, Mode mode = NORMAL_MODE) 
+  static void set_mode(Board::DigitalPin pin, Mode mode = NORMAL_MODE) 
     __attribute__((always_inline))
   {
-    if (mode == PULLUP_MODE) {
       synchronized { 
-	*PORT(pin) |= MASK(pin); 
+	if (mode == PULLUP_MODE) 
+	  *PORT(pin) |= MASK(pin); 
+	else
+	  *PORT(pin) &= ~MASK(pin); 
       }
-    }
+  }
+
+  /**
+   * Get input pin mode.
+   * @param[in] pin number.
+   * @return mode.
+   */
+  static Mode get_mode(Board::DigitalPin pin)
+    __attribute__((always_inline))
+  {
+    return ((*PORT(pin) & MASK(pin)) == 0 ? NORMAL_MODE : PULLUP_MODE);
   }
 };
 

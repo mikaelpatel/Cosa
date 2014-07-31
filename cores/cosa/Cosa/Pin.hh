@@ -39,7 +39,8 @@ public:
    * @param[in] pin number.
    * @return pin bit mask.
    */
-  static uint8_t MASK(uint8_t pin) __attribute__((always_inline))
+  static uint8_t MASK(uint8_t pin)
+    __attribute__((always_inline))
   {
     return (_BV(Board::BIT(pin)));
   }
@@ -49,7 +50,8 @@ public:
    * @param[in] pin number.
    * @return PIN register pointer.
    */
-  static volatile uint8_t* PIN(uint8_t pin) __attribute__((always_inline))
+  static volatile uint8_t* PIN(uint8_t pin)
+    __attribute__((always_inline))
   { 
     return (Board::SFR(pin));
   }
@@ -59,7 +61,8 @@ public:
    * @param[in] pin number.
    * @return DDR register pointer.
    */
-  static volatile uint8_t* DDR(uint8_t pin) __attribute__((always_inline))
+  static volatile uint8_t* DDR(uint8_t pin)
+    __attribute__((always_inline))
   { 
     return (Board::SFR(pin) + 1);
   }
@@ -69,7 +72,8 @@ public:
    * @param[in] pin number.
    * @return PORT register pointer.
    */
-  static volatile uint8_t* PORT(uint8_t pin) __attribute__((always_inline))
+  static volatile uint8_t* PORT(uint8_t pin)
+    __attribute__((always_inline))
   { 
     return (Board::SFR(pin) + 2);
   }
@@ -106,7 +110,8 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool is_set() const __attribute__((always_inline))
+  bool is_set() const 
+    __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -115,7 +120,8 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool is_high() const __attribute__((always_inline)) 
+  bool is_high() const 
+    __attribute__((always_inline)) 
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -124,7 +130,8 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool is_on() const __attribute__((always_inline))
+  bool is_on() const 
+    __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -133,7 +140,8 @@ public:
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  bool is_clear() const __attribute__((always_inline))
+  bool is_clear() const 
+    __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) == 0); 
   }
@@ -142,7 +150,8 @@ public:
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  bool is_low() const __attribute__((always_inline)) 
+  bool is_low() const 
+    __attribute__((always_inline)) 
   { 
     return ((*PIN() & m_mask) == 0); 
   }
@@ -151,7 +160,8 @@ public:
    * Return true(1) if the pin is clear otherwise false(0).
    * @return boolean.
    */
-  bool is_off() const __attribute__((always_inline))
+  bool is_off() const 
+    __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) == 0); 
   }
@@ -160,7 +170,8 @@ public:
    * Return true(1) if the pin is set otherwise false(0).
    * @return boolean.
    */
-  bool read() const __attribute__((always_inline))
+  bool read() const 
+    __attribute__((always_inline))
   { 
     return ((*PIN() & m_mask) != 0); 
   }
@@ -180,7 +191,8 @@ public:
    * @param[in] pin number.
    * @return boolean.
    */
-  static bool read(Board::DigitalPin pin) __attribute__((always_inline))
+  static bool read(Board::DigitalPin pin) 
+    __attribute__((always_inline))
   {
     return ((*Board::SFR(pin) & MASK(pin)) != 0); 
   }
@@ -190,7 +202,8 @@ public:
    * @param[out] var to assign.
    * @return pin.
    */
-  Pin& operator>>(uint8_t& var) __attribute__((always_inline))
+  Pin& operator>>(uint8_t& var) 
+    __attribute__((always_inline))
   { 
     var = ((*PIN() & m_mask) != 0); 
     return (*this);
@@ -237,7 +250,8 @@ protected:
    * Return pin change interrupt mask register.
    * @return pin change mask register pointer.
    */
-  volatile uint8_t* PCIMR() const __attribute__((always_inline))
+  volatile uint8_t* PCIMR() const 
+    __attribute__((always_inline))
   { 
     return (Board::PCIMR(m_pin));
   }

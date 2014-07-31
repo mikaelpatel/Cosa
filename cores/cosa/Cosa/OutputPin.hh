@@ -71,7 +71,8 @@ public:
   /**
    * Set the output pin. Unprotected version.
    */
-  void _set() const __attribute__((always_inline)) 
+  void _set() const
+    __attribute__((always_inline)) 
   { 
     *PORT() |= m_mask; 
   }
@@ -79,7 +80,8 @@ public:
   /**
    * Set the output pin.
    */
-  void set() const __attribute__((always_inline)) 
+  void set() const 
+    __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() |= m_mask; 
@@ -89,7 +91,8 @@ public:
   /**
    * Set the output pin.
    */
-  void high() const __attribute__((always_inline)) 
+  void high() const
+    __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() |= m_mask; 
@@ -99,7 +102,8 @@ public:
   /**
    * Set the output pin.
    */
-  void on() const __attribute__((always_inline))   
+  void on() const
+    __attribute__((always_inline))   
   { 
     synchronized {
       *PORT() |= m_mask; 
@@ -109,7 +113,8 @@ public:
   /**
    * Clear the output pin. Unprotected version.
    */
-  void _clear() const __attribute__((always_inline)) 
+  void _clear() const
+    __attribute__((always_inline)) 
   { 
     *PORT() &= ~m_mask; 
   }
@@ -117,7 +122,8 @@ public:
   /**
    * Clear the output pin.
    */
-  void clear() const __attribute__((always_inline)) 
+  void clear() const
+    __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() &= ~m_mask; 
@@ -127,7 +133,8 @@ public:
   /**
    * Clear the output pin.
    */
-  void low() const __attribute__((always_inline))
+  void low() const
+    __attribute__((always_inline))
   { 
     synchronized {
       *PORT() &= ~m_mask; 
@@ -137,7 +144,8 @@ public:
   /**
    * Clear the output pin.
    */
-  void off() const __attribute__((always_inline)) 
+  void off() const
+    __attribute__((always_inline)) 
   { 
     synchronized {
       *PORT() &= ~m_mask; 
@@ -148,7 +156,8 @@ public:
    * Toggle the output pin. Actually atomic but defined for
    * consistent naming convension.
    */
-  void _toggle() const __attribute__((always_inline)) 
+  void _toggle() const 
+    __attribute__((always_inline)) 
   { 
     *PIN() = m_mask; 
   }
@@ -156,7 +165,8 @@ public:
   /**
    * Toggle the output pin. Atomic per definition.
    */
-  void toggle() const __attribute__((always_inline)) 
+  void toggle() const
+    __attribute__((always_inline)) 
   { 
     *PIN() = m_mask; 
   }
@@ -165,7 +175,8 @@ public:
    * Toggle the output pin. Atomic per definition
    * @param[in] pin number.
    */
-  static void toggle(Board::DigitalPin pin) __attribute__((always_inline))
+  static void toggle(Board::DigitalPin pin)
+    __attribute__((always_inline))
   { 
     *PIN(pin) = MASK(pin); 
   }
@@ -175,7 +186,8 @@ public:
    * and non-zero to set. Unprotected version.
    * @param[in] value to set.
    */
-  void _set(bool value) const __attribute__((always_inline)) 
+  void _set(bool value) const
+    __attribute__((always_inline)) 
   { 
     if (value) {
       *PORT() |= m_mask; 
@@ -190,7 +202,8 @@ public:
    * and non-zero to set.
    * @param[in] value to set.
    */
-  void set(bool value) const __attribute__((always_inline)) 
+  void set(bool value) const
+    __attribute__((always_inline)) 
   { 
     synchronized {
       if (value) {
@@ -207,7 +220,8 @@ public:
    * and non-zero to set. Unprotected version.
    * @param[in] value to set.
    */
-  void _write(bool value) const __attribute__((always_inline))
+  void _write(bool value) const
+    __attribute__((always_inline))
   { 
     if (value) {
       *PORT() |= m_mask; 
@@ -222,7 +236,8 @@ public:
    * and non-zero to set.
    * @param[in] value to write.
    */
-  void write(uint8_t value) const __attribute__((always_inline))
+  void write(uint8_t value) const
+    __attribute__((always_inline))
   { 
     synchronized {
       if (value) {
@@ -260,7 +275,8 @@ public:
    * @param[in] pin number.
    * @param[in] value to write.
    */
-  static void write(Board::DigitalPin pin, uint8_t value) __attribute__((always_inline))
+  static void write(Board::DigitalPin pin, uint8_t value)
+    __attribute__((always_inline))
   { 
     volatile uint8_t* port = PORT(pin);
     const uint8_t mask = MASK(pin);
@@ -292,7 +308,8 @@ public:
    * @param[in] pin number (must be constant).
    * @param[in] value to write (must be constant).
    */
-  static void _write(Board::DigitalPin pin, uint8_t value) __attribute__((always_inline))
+  static void _write(Board::DigitalPin pin, uint8_t value)
+    __attribute__((always_inline))
   { 
     volatile uint8_t* port = PORT(pin);
     const uint8_t mask = MASK(pin);

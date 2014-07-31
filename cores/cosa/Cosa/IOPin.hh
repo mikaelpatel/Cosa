@@ -39,8 +39,7 @@ public:
    * @param[in] mode pin mode (normal or pullup).
    */
   IOPin(Board::DigitalPin pin, Mode mode = INPUT_MODE, bool pullup = false) :
-    OutputPin(pin),
-    m_mode(mode)
+    OutputPin(pin)
   {
     if (pullup)
       *PORT() |= m_mask; 
@@ -51,7 +50,8 @@ public:
    * Change IO-pin to given mode.
    * @param[in] mode new operation mode.
    */
-  void set_mode(Mode mode) __attribute__((always_inline))
+  void set_mode(Mode mode)
+    __attribute__((always_inline))
   {
     synchronized {
       if (mode == OUTPUT_MODE)
@@ -59,7 +59,6 @@ public:
       else
 	*DDR() &= ~m_mask; 
     }
-    m_mode = mode;
   }
   
   /**
@@ -67,8 +66,9 @@ public:
    * @return mode.
    */
   Mode get_mode() const
+    __attribute__((always_inline))
   {
-    return (m_mode);
+    return ((*DDR() & m_mask) == 0 ? INPUT_MODE : OUTPUT_MODE);
   }
   
   /**
@@ -76,7 +76,8 @@ public:
    * @param[in] pin number.
    * @param[in] mode new operation mode.
    */
-  static void set_mode(Board::DigitalPin pin, Mode mode) __attribute__((always_inline)) 
+  static void set_mode(Board::DigitalPin pin, Mode mode) 
+    __attribute__((always_inline)) 
   { 
     volatile uint8_t* ddr = DDR(pin);
     const uint8_t mask = MASK(pin);
@@ -88,8 +89,16 @@ public:
     }
   }
 
-private:
-  Mode m_mode;
+  /**
+   * Get IO-pin mode.
+   * @param[in] pin number.
+   * @return mode.
+   */
+  static Mode get_mode(Board::DigitalPin pin)
+    __attribute__((always_inline)) 
+  {
+    return ((*DDR(pin) & MASK(pin)) == 0 ? INPUT_MODE : OUTPUT_MODE);
+  }
 };
 
 #endif
