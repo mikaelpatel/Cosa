@@ -148,6 +148,7 @@ public:
     D19 = 16,			// PD0/EXT0
     D20 = 33,			// PF1
     D21 = 32,			// PF0
+    DMAX = 22,			// Number of Pins
     LED = D13
   } __attribute__((packed));
 
@@ -160,7 +161,8 @@ public:
     A2 = 5,			// PF5
     A3 = 4,			// PF4
     A4 = 1,			// PF1
-    A5 = 0			// PF0
+    A5 = 0,			// PF0
+    AMAX = 6			// Number of pins
   } __attribute__((packed));
 
   /**

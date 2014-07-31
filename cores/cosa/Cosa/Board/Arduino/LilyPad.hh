@@ -146,6 +146,7 @@ public:
     D17,			// PC3
     D18,			// PC4
     D19,			// PC5
+    DMAX = 20,			// Number of pins
     LED = D13
   } __attribute__((packed));
 
@@ -158,7 +159,8 @@ public:
     A2,				// PC2/D16
     A3,				// PC3/D17
     A4,				// PC4/D18
-    A5				// PC5/D19
+    A5,				// PC5/D19
+    AMAX = 6			// Number of pins
   } __attribute__((packed));
 
   /**
@@ -277,4 +279,3 @@ extern "C" {
   void USART_UDRE_vect(void) __attribute__ ((signal));
 }
 #endif
-

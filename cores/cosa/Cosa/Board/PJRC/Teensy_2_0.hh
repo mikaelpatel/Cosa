@@ -153,6 +153,7 @@ public:
     D22 = 20,			// PD4
     D23 = 21,			// PD5
     D24 = 30,			// PE6
+    DMAX = 25,			// Number of pins
     LED = D11
   } __attribute__((packed));
 
@@ -171,7 +172,8 @@ public:
     A8 = 35,			// PB4/ADC11
     A9 = 34,			// PD7/ADC10
     A10 = 33,			// PD6/ADC9
-    A11 = 32			// PD4/ADC8
+    A11 = 32,			// PD4/ADC8
+    AMAX = 12			// Number of pins
   } __attribute__((packed));
 
   /**
@@ -311,4 +313,3 @@ extern "C" {
   void USB_GEN_vect(void) __attribute__ ((signal));
 }
 #endif
-

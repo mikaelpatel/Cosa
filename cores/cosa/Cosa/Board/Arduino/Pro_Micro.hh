@@ -150,6 +150,7 @@ public:
     D21 = 1,			// PB1/SCK
     D22 = 2,			// PB2/MOSI
     D23 = 3,			// PB3/MISO
+    DMAX = 24,			// Number of pins
     LED = 15,			// PC7/Not used
     RXLED = 0,			// PB0/Green
     TXLED = 21			// PD5/Yellow
@@ -170,7 +171,8 @@ public:
     A8 = 34,			// PD7/D6
     A9 = 35,			// PB4/D8
     A10 = 36,			// PB5/D9
-    A11 = 37			// PB6/D10
+    A11 = 37,			// PB6/D10
+    AMAX = 12			// Number of pins
   } __attribute__((packed));
 
   /**

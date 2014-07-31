@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/ATtinyX61.hh
+ * @file Cosa/Board/Arduino/ATtinyX61.hh
  * @version 1.0
  *
  * @section License
@@ -18,10 +18,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_ATTINYX61_HH
-#define COSA_BOARD_ATTINYX61_HH
+#ifndef COSA_BOARD_ARDUINO_ATTINYX61_HH
+#define COSA_BOARD_ARDUINO_ATTINYX61_HH
 
-/* This board is based on ATtinyX4/ATtiny */
+/* This board is based on ATtinyX61/ATtiny */
 #define BOARD_ATTINYX61
 #define BOARD_ATTINY
 
@@ -126,6 +126,7 @@ public:
     D13,			// PB5
     D14,			// PB6
     D15,			// PB7
+    DMAX = 16,			// Number of pins
     LED = D5
   } __attribute__((packed));
 
@@ -143,7 +144,8 @@ public:
     A7,				// PA7/D7
     A8,				// PB5/D13
     A9,				// PB6/D14
-    A10				// PB7/D15
+    A10,			// PB7/D15
+    AMAX = 11			// Number of pins
   } __attribute__((packed));
 
   /**

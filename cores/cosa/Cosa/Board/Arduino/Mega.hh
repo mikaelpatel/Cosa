@@ -167,6 +167,7 @@ public:
     D51 = 18,			// PB2/MOSI
     D52 = 17,			// PB1/SCK
     D53 = 16,			// PB0/SS
+    DMAX = 54,			// Number of pins
     LED = D13
   } __attribute__((packed));
 
@@ -189,7 +190,8 @@ public:
     A12 = 36,			// PK4
     A13 = 37,			// PK5
     A14 = 38,			// PK6
-    A15 = 39			// PK7
+    A15 = 39,			// PK7
+    AMAX = 16			// Number of pins
   } __attribute__((packed));
 
   /**
@@ -338,4 +340,3 @@ extern "C" {
   void USART3_TX_vect(void) __attribute__ ((signal));
 }
 #endif
-

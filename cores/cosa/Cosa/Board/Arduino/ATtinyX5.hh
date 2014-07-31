@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/ATtinyX5.hh
+ * @file Cosa/Board/Arduino/ATtinyX5.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_ATTINYX5_HH
-#define COSA_BOARD_ATTINYX5_HH
+#ifndef COSA_BOARD_ARDUINO_ATTINYX5_HH
+#define COSA_BOARD_ARDUINO_ATTINYX5_HH
 
 /* This board is based on ATtinyX5/ATtiny */
 #define BOARD_ATTINYX5
@@ -118,6 +118,7 @@ public:
     D3,				// PB3
     D4,				// PB4
     D5,				// PB5
+    DMAX = 6,			// Number of pins
     LED = D4
   } __attribute__((packed));
 
@@ -128,7 +129,8 @@ public:
     A0 = 0,			// PB5/D5
     A1,				// PB2/D2
     A2,				// PB4/D4
-    A3				// PB3/D3
+    A3,				// PB3/D3
+    AMAX = 4			// Number of pins
   } __attribute__((packed));
 
   /**
@@ -227,5 +229,5 @@ extern "C" {
   void USI_START_vect(void) __attribute__ ((signal));
   void USI_OVF_vect(void) __attribute__ ((signal));
 }
-#endif
 
+#endif

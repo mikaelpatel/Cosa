@@ -146,6 +146,7 @@ public:
     D17,			// PC3
     D18,			// PC4
     D19,			// PC5
+    DMAX = 20,			// Number of pins
     LED = D13
   } __attribute__((packed));
 
@@ -160,7 +161,8 @@ public:
     A4,				// PC4/D18
     A5,				// PC5/D19
     A6,				// Pin only
-    A7				// Pin only
+    A7,				// Pin only
+    AMAX = 8			// Number of pins
   } __attribute__((packed));
 
   /**

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board.hh
+ * @file Cosa/Board.cpp
  * @version 1.0
  *
  * @section License
@@ -24,84 +24,73 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_BOARD_HH
-#define COSA_BOARD_HH
-
 #include "Cosa/Types.h"
 #include "Board.h"
 
 // Anarduino Boards
 #if defined(ANARDUINO_MINIWIRELESS)
-#include "Cosa/Board/Anarduino/MiniWireless.hh"
+#include "Cosa/Board/Anarduino/MiniWireless.map"
 
 // Arduino Boards
 #elif defined(ARDUINO_DIECIMILA)
-#include "Cosa/Board/Arduino/Diecimila.hh"
+#include "Cosa/Board/Arduino/Diecimila.map"
 #elif defined(ARDUINO_DUEMILANOVE)
-#include "Cosa/Board/Arduino/Duemilanove.hh"
+#include "Cosa/Board/Arduino/Duemilanove.map"
 #elif defined(ARDUINO_LEONARDO)
-#include "Cosa/Board/Arduino/Leonardo.hh"
+#include "Cosa/Board/Arduino/Leonardo.map"
 #elif defined(ARDUINO_MEGA)
-#include "Cosa/Board/Arduino/Mega.hh"
+#include "Cosa/Board/Arduino/Mega.map"
 #elif defined(ARDUINO_NANO)
-#include "Cosa/Board/Arduino/Nano.hh"
+#include "Cosa/Board/Arduino/Nano.map"
 #elif defined(ARDUINO_PRO_MICRO)
-#include "Cosa/Board/Arduino/Pro_Micro.hh"
+#include "Cosa/Board/Arduino/Pro_Micro.map"
 #elif defined(ARDUINO_PRO_MINI)
-#include "Cosa/Board/Arduino/Pro_Mini.hh"
+#include "Cosa/Board/Arduino/Pro_Mini.map"
 #elif defined(ARDUINO_UNO)
-#include "Cosa/Board/Arduino/Uno.hh"
+#include "Cosa/Board/Arduino/Uno.map"
 
 // Breadboards
 #elif defined(BREADBOARD_ATTINYX4)
-#include "Cosa/Board/Arduino/ATtinyX4.hh"
+#include "Cosa/Board/Arduino/ATtinyX4.map"
 #elif defined(BREADBOARD_ATTINYX5)
-#include "Cosa/Board/Arduino/ATtinyX5.hh"
+#include "Cosa/Board/Arduino/ATtinyX5.map"
 #elif defined(BREADBOARD_ATTINYX61)
-#include "Cosa/Board/Arduino/ATtinyX61.hh"
+#include "Cosa/Board/Arduino/ATtinyX61.map"
 #elif defined(BREADBOARD_ATMEGA328P)
-#include "Cosa/Board/Arduino/ATmega328P.hh"
+#include "Cosa/Board/Arduino/ATmega328P.map"
 #elif defined(BREADBOARD_ATMEGA1284P)
-#include "Cosa/Board/Arduino/ATmega1284P.hh"
+#include "Cosa/Board/Arduino/ATmega1284P.map"
 
 // LilyPad Arduino Boards
 #elif defined(LILYPAD_ARDUINO)
-#include "Cosa/Board/Arduino/LilyPad.hh"
+#include "Cosa/Board/Arduino/LilyPad.map"
 #elif defined(LILYPAD_ARDUINO_USB)		
-#include "Cosa/Board/Arduino/LilyPad_USB.hh"
+#include "Cosa/Board/Arduino/LilyPad_USB.map"
 
 // LowPowerLab Boards
 #elif defined(LOWPOWERLAB_MOTEINO)
-#include "Cosa/Board/LowPowerLab/Moteino.hh"
+#include "Cosa/Board/LowPowerLab/Moteino.map"
 
 // Microduino Boards
 #elif defined(MICRODUINO_CORE)
-#include "Cosa/Board/Microduino/Core.hh"
+#include "Cosa/Board/Microduino/Core.map"
 #elif defined(MICRODUINO_CORE32U4)
-#include "Cosa/Board/Microduino/Core32U4.hh"
+#include "Cosa/Board/Microduino/Core32U4.map"
 #elif defined(MICRODUINO_CORE_PLUS)
-#include "Cosa/Board/Microduino/Core_Plus.hh"
+#include "Cosa/Board/Microduino/Core_Plus.map"
 
 // Pinoccio Boards
 #elif defined(PINOCCIO_SCOUT)
-#include "Cosa/Board/Pinoccio/Scout.hh"
+#include "Cosa/Board/Pinoccio/Scout.map"
 
 // PJRC Teensy Boards
 #elif defined(PJRC_TEENSY_2_0)
-#include "Cosa/Board/PJRC/Teensy_2_0.hh"
+#include "Cosa/Board/PJRC/Teensy_2_0.map"
 #elif defined(PJRC_TEENSYPP_2_0)
-#include "Cosa/Board/PJRC/Teensypp_2_0.hh"
+#include "Cosa/Board/PJRC/Teensypp_2_0.map"
 
 #else
 #error "Cosa/Board.hh: board not supported"
 #endif
 
-
-/** Digital pin index to symbol map */
-extern const Board::DigitalPin digital_pin_map[Board::DMAX] PROGMEM;
-
-/** Analog pin index to symbol map */
-extern const Board::AnalogPin analog_pin_map[Board::AMAX] PROGMEM;
-
-#endif
 

@@ -126,6 +126,7 @@ public:
     D29,			// PA5
     D30,			// PA6
     D31,			// PA7
+    DMAX = 32,			// Number of pins
     LED = D13
   } __attribute__((packed));
 
@@ -140,7 +141,8 @@ public:
     A4,				// PA4
     A5,				// PA5
     A6,				// PA6
-    A7				// PA7
+    A7,				// PA7
+    AMAX = 8			// Number of pins
   } __attribute__((packed));
 
   /**
@@ -295,4 +297,3 @@ extern "C" {
   void USART1_TX_vect(void) __attribute__ ((signal));
 }
 #endif
-

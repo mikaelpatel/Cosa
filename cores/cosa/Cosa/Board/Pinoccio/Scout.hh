@@ -153,6 +153,7 @@ public:
     D23 = 11,			// PD3/TX1
     D24 = 8,			// PD0/SCL
     D25 = 9,			// PD1/SDA
+    DMAX = 26,			// Number of pins
     LED_BLUE = 4,		// PB4
     LED_RED = 5,		// PB5
     LED_GREEN = 6,		// PB6
@@ -170,7 +171,8 @@ public:
     A4,				// PF4
     A5,				// PF5
     A6,				// PF6
-    A7				// PF7
+    A7,				// PF7
+    AMAX = 8			// Number of pins
   } __attribute__((packed));
 
   /**
@@ -304,4 +306,3 @@ extern "C" {
   void USART1_TX_vect(void) __attribute__ ((signal));
 }
 #endif
-

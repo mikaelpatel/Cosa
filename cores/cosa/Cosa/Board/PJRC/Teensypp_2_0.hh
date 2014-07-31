@@ -183,6 +183,7 @@ public:
     D43 = 45,			// PF5
     D44 = 46,			// PF6
     D45 = 47,			// PF7
+    DMAX = 46,			// Number of pins
     LED = D6
   } __attribute__((packed));
 
@@ -197,7 +198,8 @@ public:
     A4 = 5,			// PF4
     A5 = 5,			// PF5
     A6 = 6,			// PF6
-    A7 = 7			// PF7
+    A7 = 7,			// PF7
+    AMAX = 8			// Number of pins
   } __attribute__((packed));
 
   /**
@@ -343,4 +345,3 @@ extern "C" {
   void USB_GEN_vect(void) __attribute__ ((signal));
 }
 #endif
-

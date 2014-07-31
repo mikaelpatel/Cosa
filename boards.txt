@@ -376,7 +376,7 @@ atmega328-8.build.core=cosa
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (1024 words, 0xfc00). 
-mighty.name=Cosa Breadboard (ATmega1284/BOOT_1284P)
+mighty.name=Cosa Breadboard (ATmega1284P/BOOT_1284P)
 mighty.upload.tool=avrdude
 mighty.upload.protocol=stk500v1
 mighty.upload.maximum_size=129024
@@ -390,14 +390,15 @@ mighty.bootloader.extended_fuses=0xfd
 
 mighty.build.mcu=atmega1284p
 mighty.build.f_cpu=16000000L
-mighty.build.board=BREADBOARD_ATMEGA1284
+mighty.build.board=BREADBOARD_ATMEGA1284P
+mighty.build.variant=arduino/atmega1284p
 mighty.build.core=cosa
 
 # AVR:ATmega1284
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
 # Boot Reset vector enable (512 words, 0xfe00). 
-mighty-opt.name=Cosa Breadboard (ATmega1284/Optiboot)
+mighty-opt.name=Cosa Breadboard (ATmega1284P/Optiboot)
 mighty-opt.upload.tool=avrdude
 mighty-opt.upload.protocol=arduino
 mighty-opt.upload.maximum_size=130048
@@ -411,8 +412,8 @@ mighty-opt.bootloader.extended_fuses=0xfd
 
 mighty-opt.build.mcu=atmega1284p
 mighty-opt.build.f_cpu=16000000L
-mighty-opt.build.board=BREADBOARD_ATMEGA1284
-mighty-opt.build.variant=arduino/atmega1284
+mighty-opt.build.board=BREADBOARD_ATMEGA1284P
+mighty-opt.build.variant=arduino/atmega1284p
 mighty-opt.build.core=cosa
 
 ##
