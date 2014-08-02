@@ -359,12 +359,12 @@ static int led_action(int argc, char* argv[])
 static const char MEMORY_NAME[] __PROGMEM = 
   "memory";
 static const char MEMORY_HELP[] __PROGMEM = 
-  "-- display amout of free memory";
+  "-- display amount of free memory";
 static int memory_action(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1) return (-1);
-  ios << free_memory() << PSTR(" byte") << endl;
+  ios << free_memory() << PSTR(" bytes") << endl;
   return (0);
 }
 
@@ -392,16 +392,39 @@ static int millis_action(int argc, char* argv[])
   return (0);
 }
 
+static void write_pinmode(Board::DigitalPin pin)
+{
+  if (IOPin::get_mode(pin) == IOPin::OUTPUT_MODE) {
+    ios << PSTR("output") << endl;
+  }
+  else {
+    ios << PSTR("input");
+    if (InputPin::get_mode(pin) == InputPin::PULLUP_MODE) 
+      ios << PSTR(", pullup");
+    ios << endl;
+  }
+}
+
 static const char PINMODE_NAME[] __PROGMEM = 
   "pinmode";
 static const char PINMODE_HELP[] __PROGMEM = 
-  "led|PIN [input|output|pullup] -- display or set pin mode";
+  "all|ALL|led|PIN [input|output|pullup] -- display or set pin mode";
 static int pinmode_action(int argc, char* argv[])
 {
   if (argc < 2 || argc > 3) return (-1);
   Board::DigitalPin pin;
   char* name = argv[1];
-  if (strcmp_P(name, PSTR("led")) == 0) {
+  if (argc == 2 && (strcmp_P(argv[1], PSTR("all")) == 0 ||
+		    strcmp_P(argv[1], PSTR("ALL")) == 0)) {
+    char prefix = (argv[1][0] == 'A') ? 'D' : 'd';
+    for (uint8_t ix = 0; ix < membersof(digital_pin_map); ix++) {
+      pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
+      ios << prefix << ix << '=';
+      write_pinmode(pin);
+    }
+    return (0);
+  }
+  else if (strcmp_P(name, PSTR("led")) == 0) {
     pin = Board::LED;
   }
   else if (name[0] == 'd' || name[0] == 'D') {
@@ -411,18 +434,7 @@ static int pinmode_action(int argc, char* argv[])
     pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
   }
   else return (-1);
-  if (argc == 2) {
-    if (IOPin::get_mode(pin) == IOPin::OUTPUT_MODE) {
-      ios << PSTR("output") << endl;
-    }
-    else {
-      ios << PSTR("input");
-      if (InputPin::get_mode(pin) == InputPin::PULLUP_MODE) 
-	ios << PSTR(", pullup");
-      ios << endl;
-    }
-  }
-  else {
+  if (argc == 3) {
     if (strcmp_P(argv[2], PSTR("input")) == 0) 
       IOPin::set_mode(pin, IOPin::INPUT_MODE);
     else if (strcmp_P(argv[2], PSTR("output")) == 0) 
@@ -431,6 +443,7 @@ static int pinmode_action(int argc, char* argv[])
       InputPin::set_mode(pin, InputPin::PULLUP_MODE);
     else return (-1);
   }
+  write_pinmode(pin);
   return (0);
 }
 
@@ -452,7 +465,7 @@ static int repeat_action(int argc, char* argv[])
   }
   const size_t BUF_MAX = 64;
   char buf[BUF_MAX];
-  while (--count) {
+  do {
     buf[0] = 0;
     strcat(buf, argv[fx]);
     for (uint8_t ix = fx + 1; ix < argc; ix++) {
@@ -460,8 +473,9 @@ static int repeat_action(int argc, char* argv[])
       strcat(buf, argv[ix]);
     }
     if (shell.execute(buf) != 0) return (-1);
+    if (ios.get_device()->flush()) return (-1);
     if (ms != 0) delay(ms);
-  }
+  } while (--count);
   return (0);
 }
 
@@ -475,28 +489,24 @@ static int stty_action(int argc, char* argv[])
   char* option;
   char* value;
   int ix;
+  IOStream::Mode mode = ios.get_device()->get_eol();
   while ((ix = shell.get(option, value)) == 0) {
     if (strcmp_P(option, PSTR("eol")) == 0) {
       if (strcmp_P(value, PSTR("CR")) == 0) 
-	ios.get_device()->set_eol(IOStream::CR_MODE);
+	mode = IOStream::CR_MODE;
       else if (strcmp_P(value, PSTR("LF")) == 0) 
-	ios.get_device()->set_eol(IOStream::LF_MODE);
+	mode = IOStream::LF_MODE;
       else if (strcmp_P(value, PSTR("CRLF")) == 0) 
-	ios.get_device()->set_eol(IOStream::CRLF_MODE);
+	mode = IOStream::CRLF_MODE;
       else return (-1);
     }
   }
   if (ix != argc) return (-1);
-  switch (ios.get_device()->get_eol()) {
-  case IOStream::CR_MODE:
-    ios << PSTR("CR");
-    break;
-  case IOStream::LF_MODE:
-    ios << PSTR("LF");
-    break;
-  case IOStream::CRLF_MODE:
-    ios << PSTR("CRLF");
-    break;
+  ios.get_device()->set_eol(mode);
+  switch (mode) {
+  case IOStream::CR_MODE: ios << PSTR("CR"); break;
+  case IOStream::LF_MODE: ios << PSTR("LF"); break;
+  case IOStream::CRLF_MODE: ios << PSTR("CRLF"); break;
   }
   ios << endl;
   return (0);

@@ -85,14 +85,14 @@ void setup()
   trace.begin(&uart, PSTR("CosaTelnetShell: started"));
 
   // Start ethernet controller and request network address for hostname
-  ASSERT(ethernet.begin_P(PSTR("CosaTelenetShell")));
+  ASSERT(ethernet.begin_P(PSTR("CosaTelnetShell")));
 
   // Print the given or default network address
   uint8_t subnet[4];
   uint8_t ip[4];
   ethernet.get_addr(ip, subnet);
   trace << PSTR("server:IP=");
-  INET::print_addr(trace, ip);
+  INET::print_addr(trace, ip, PORT);
   trace << endl;
 
   // Allocate a TCP socket and listen
