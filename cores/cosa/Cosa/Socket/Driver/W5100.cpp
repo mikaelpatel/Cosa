@@ -43,25 +43,28 @@ void
 W5100::write(uint16_t addr, uint8_t data)
 {
   spi.begin(this);
-  spi.transfer(OP_WRITE);
-  spi.transfer(addr >> 8);
-  spi.transfer(addr);
-  spi.transfer(data);
+  spi.transfer_start(OP_WRITE);
+  spi.transfer_next(addr >> 8);
+  spi.transfer_next(addr);
+  spi.transfer_next(data);
+  spi.transfer_await();
   spi.end();
 }
 
 void
 W5100::write(uint16_t addr, const void* buf, size_t len)
 {
+  const uint8_t* bp = (const uint8_t*) buf;
   uint16_t last = addr + len;
   spi.begin(this);
-  for (const uint8_t* bp = (const uint8_t*) buf; addr < last; bp++, addr++) {
+  while (addr < last) {
+    spi.transfer_start(OP_WRITE);
+    spi.transfer_next(addr >> 8);
+    spi.transfer_next(addr++);
+    spi.transfer_next(*bp++);
+    spi.transfer_await();
+    m_cs.set();
     m_cs.clear();
-    spi.transfer(OP_WRITE);
-    spi.transfer(addr >> 8);
-    spi.transfer(addr);
-    spi.transfer(*bp);
-    if (addr < last - 1) m_cs.set();
   }
   spi.end();
 }
@@ -69,15 +72,17 @@ W5100::write(uint16_t addr, const void* buf, size_t len)
 void
 W5100::write_P(uint16_t addr, const void* buf, size_t len)
 {
+  const uint8_t* bp = (const uint8_t*) buf;
   uint16_t last = addr + len;
   spi.begin(this);
-  for (const uint8_t* bp = (const uint8_t*) buf; addr < last; bp++, addr++) {
+  while (addr < last) {
+    spi.transfer_start(OP_WRITE);
+    spi.transfer_next(addr >> 8);
+    spi.transfer_next(addr++);
+    spi.transfer_next(pgm_read_byte(bp++));
+    spi.transfer_await();
+    m_cs.set();
     m_cs.clear();
-    spi.transfer(OP_WRITE);
-    spi.transfer(addr >> 8);
-    spi.transfer(addr);
-    spi.transfer(pgm_read_byte(bp));
-    if (addr < last - 1) m_cs.set();
   }
   spi.end();
 }
@@ -86,10 +91,11 @@ uint8_t
 W5100::read(uint16_t addr)
 {
   spi.begin(this);
-  spi.transfer(OP_READ);
-  spi.transfer(addr >> 8);
-  spi.transfer(addr);
-  uint8_t res = spi.transfer(0);
+  spi.transfer_start(OP_READ);
+  spi.transfer_next(addr >> 8);
+  spi.transfer_next(addr);
+  spi.transfer_next(0);
+  uint8_t res = spi.transfer_await();
   spi.end();
   return (res);
 }
@@ -97,15 +103,17 @@ W5100::read(uint16_t addr)
 void
 W5100::read(uint16_t addr, void* buf, size_t len)
 {
+  uint8_t* bp = (uint8_t*) buf;
   uint16_t last = addr + len;
   spi.begin(this);
-  for (uint8_t* bp = (uint8_t*) buf; addr < last; bp++, addr++) {
+  while (addr < last) {
+    spi.transfer_start(OP_READ);
+    spi.transfer_next(addr >> 8);
+    spi.transfer_next(addr++);
+    spi.transfer_next(0);
+    *bp++ = spi.transfer_await();
+    m_cs.set();
     m_cs.clear();
-    spi.transfer(OP_READ);
-    spi.transfer(addr >> 8);
-    spi.transfer(addr);
-    *bp = spi.transfer(0);
-    if (addr < last - 1) m_cs.set();
   }
   spi.end();
 }
@@ -114,7 +122,7 @@ void
 W5100::issue(uint16_t addr, uint8_t cmd)
 {
   write(addr, cmd);
-  while (read(addr)) DELAY(1);
+  do DELAY(10); while (read(addr));
 }
 
 int
@@ -124,16 +132,6 @@ W5100::Driver::dev_read(void* buf, size_t len)
   int res = available();
   if (res < 0) return (res);
 
-  // If there was no data, check that the socket is still in the correct state
-  if (res == 0) {
-    uint8_t status = m_dev->read(uint16_t(&m_sreg->SR));
-    if ((status == SR_LISTEN) 
-	|| (status == SR_CLOSED) 
-	|| (status == SR_CLOSE_WAIT))
-      return (-3);
-    return (0);
-  }
-  
   // Adjust amount to read to max buffer size
   if ((int) len > res) len = res;
 
