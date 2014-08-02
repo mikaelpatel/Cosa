@@ -48,6 +48,9 @@ AnalogPin::bandgap(uint16_t vref)
 {
   loop_until_bit_is_clear(ADCSRA, ADSC);
   ADMUX = (Board::AVCC_REFERENCE | Board::VBG);
+#if defined(MUX5)
+  bit_clear(ADCSRB, MUX5);
+#endif
   bit_set(ADCSRA, ADEN);
   DELAY(1000);
   bit_set(ADCSRA, ADSC);
