@@ -105,12 +105,29 @@ public:
 	   uint8_t mode = 0, 
 	   Order order = MSB_ORDER,
 	   Interrupt::Handler* irq = NULL);
-    
+
     /**
      * Set SPI master clock rate.
      * @param[in] clock rate.
      */
     void set_clock(Clock rate);
+
+    /**
+     * Calculate SPI clock rate (scale factor) for given frequency.
+     * @param[in] freq device max frequency (in Hz).
+     * @return clock rate.
+     */
+    static Clock clock(uint32_t freq)
+      __attribute__((always_inline))
+    {
+      if (freq > (F_CPU / 4)) return (SPI::DIV2_CLOCK);
+      if (freq > (F_CPU / 8)) return (SPI::DIV4_CLOCK);
+      if (freq > (F_CPU / 16)) return (SPI::DIV8_CLOCK);
+      if (freq > (F_CPU / 32)) return (SPI::DIV16_CLOCK);
+      if (freq > (F_CPU / 64)) return (SPI::DIV32_CLOCK);
+      if (freq > (F_CPU / 128)) return (SPI::DIV64_CLOCK);
+      return (SPI::DIV128_CLOCK);
+    }
 
   protected:
     Driver* m_next;		//!< List of drivers.
@@ -186,7 +203,8 @@ public:
    * transaction; begin()-end() block. 
    * @param[in] data to send.
    */
-  void transfer_start(uint8_t data) __attribute__((always_inline))
+  void transfer_start(uint8_t data) 
+    __attribute__((always_inline))
   {
     m_dev->m_data = data;
   }
