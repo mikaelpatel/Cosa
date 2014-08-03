@@ -126,7 +126,8 @@ public:
   /**
    * Remove the alarm handler from the schedule. 
    */
-  void disable() __attribute__((always_inline))
+  void disable() 
+    __attribute__((always_inline))
   {
     detach();
   }

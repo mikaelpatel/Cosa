@@ -99,7 +99,8 @@ public:
      * Convert time to binary representation (from BCD). 
      * Apply after reading from device and before any calculation.
      */
-    void to_binary() __attribute__((always_inline))
+    void to_binary()
+      __attribute__((always_inline))
     {
       ::to_binary(&seconds, sizeof(alarm_t));
     }
@@ -108,7 +109,8 @@ public:
      * Convert time to BCD representation (from binary).
      * Apply after setting new value and writing to the device.
      */
-    void to_bcd() __attribute__((always_inline))
+    void to_bcd()
+      __attribute__((always_inline))
     {
       ::to_bcd(&seconds, sizeof(alarm_t));
     }
@@ -158,7 +160,8 @@ public:
      * Convert time to binary representation (from BCD). 
      * Apply after reading from device and before any calculation.
      */
-    void to_binary() __attribute__((always_inline))
+    void to_binary()
+      __attribute__((always_inline))
     {
       ::to_binary(&seconds, sizeof(timestamp_t));
     }
@@ -167,7 +170,8 @@ public:
      * Convert time to BCD representation (from binary).
      * Apply after setting new value and writing to the device.
      */
-    void to_bcd() __attribute__((always_inline))
+    void to_bcd()
+      __attribute__((always_inline))
     {
       ::to_bcd(&seconds, sizeof(time_t));
     }

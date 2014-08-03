@@ -268,8 +268,7 @@ struct iovec_t {
  * @param[in] vp io vector pointer
  * @return size.
  */
-inline size_t
-iovec_size(const iovec_t* vec) __attribute__((always_inline));
+inline size_t iovec_size(const iovec_t* vec) __attribute__((always_inline));
 inline size_t
 iovec_size(const iovec_t* vec)
 {
@@ -292,8 +291,7 @@ iovec_size(const iovec_t* vec)
  * @param[in] buf buffer.
  * @param[in] size number of bytes.
  */
-inline void
-iovec_arg(iovec_t* &vp, const void* buf, size_t size) __attribute__((always_inline));
+inline void iovec_arg(iovec_t* &vp, const void* buf, size_t size) __attribute__((always_inline));
 inline void
 iovec_arg(iovec_t* &vp, const void* buf, size_t size)
 {
@@ -313,8 +311,7 @@ iovec_arg(iovec_t* &vp, const void* buf, size_t size)
  * @endcode
  * @param[in,out] vp io vector.
  */
-inline void
-iovec_end(iovec_t* &vp) __attribute__((always_inline));
+inline void iovec_end(iovec_t* &vp) __attribute__((always_inline));
 inline void
 iovec_end(iovec_t* &vp)
 {
@@ -327,8 +324,7 @@ iovec_end(iovec_t* &vp)
  * @param[in] value to byte swap.
  * @return new value.
  */
-inline int16_t
-swap(int16_t value) __attribute__((always_inline));
+inline int16_t swap(int16_t value) __attribute__((always_inline));
 inline int16_t
 swap(int16_t value) 
 {
@@ -399,9 +395,7 @@ void swap(T* buf)
  * @param[in] value to byte swap.
  * @return new value.
  */
-inline int32_t
-swap(int32_t value)
- __attribute__((always_inline));
+inline int32_t swap(int32_t value) __attribute__((always_inline));
 inline int32_t
 swap(int32_t value)
 {

@@ -38,8 +38,7 @@
  * @return binary value.
  */
 
-inline uint8_t
-to_binary(uint8_t value) __attribute__((always_inline));
+inline uint8_t to_binary(uint8_t value) __attribute__((always_inline));
 inline uint8_t
 to_binary(uint8_t value)
 {
@@ -53,8 +52,7 @@ to_binary(uint8_t value)
  * @param[in] value to convert.
  * @return BCD value.
  */
-inline uint8_t
-to_bcd(uint8_t value)  __attribute__((always_inline));
+inline uint8_t to_bcd(uint8_t value)  __attribute__((always_inline));
 inline uint8_t
 to_bcd(uint8_t value)
 {

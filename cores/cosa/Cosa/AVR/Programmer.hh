@@ -59,7 +59,8 @@ public:
     return (USIDR);
   }
 #else
-  uint8_t transfer(uint8_t data) __attribute__((always_inline))
+  uint8_t transfer(uint8_t data)
+    __attribute__((always_inline))
   {
     SPDR = data;
     loop_until_bit_is_set(SPSR, SPIF);

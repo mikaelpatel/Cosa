@@ -100,7 +100,8 @@ public:
   /**
    * Enable analog conversion.
    */
-  static void powerup() __attribute__((always_inline))
+  static void powerup() 
+    __attribute__((always_inline))
   {
     bit_set(ADCSRA, ADEN);
   }
@@ -108,7 +109,8 @@ public:
   /**
    * Disable analog conversion.
    */
-  static void powerdown() __attribute__((always_inline))
+  static void powerdown() 
+    __attribute__((always_inline))
   {
     bit_clear(ADCSRA, ADEN);
   }
@@ -118,7 +120,8 @@ public:
    * returning with sample value.
    * @return sample value.
    */
-  uint16_t sample() __attribute__((always_inline))
+  uint16_t sample()
+    __attribute__((always_inline))
   {
     return (m_value = AnalogPin::sample(m_pin, (Board::Reference) m_reference));
   }
@@ -129,7 +132,8 @@ public:
    * @param[out] var variable to receive the value.
    * @return analog pin.
    */
-  AnalogPin& operator>>(uint16_t& var) __attribute__((always_inline))
+  AnalogPin& operator>>(uint16_t& var)
+    __attribute__((always_inline))
   { 
     var = sample();
     return (*this);

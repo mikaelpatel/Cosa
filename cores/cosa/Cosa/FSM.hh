@@ -63,7 +63,8 @@ public:
    * Set new state handler for next event.
    * @param[in] fn state handler.
    */
-  void set_state(StateHandler fn) __attribute__((always_inline))
+  void set_state(StateHandler fn)
+    __attribute__((always_inline))
   {
     if (fn == NULL) return;
     m_state = fn;
@@ -101,7 +102,8 @@ public:
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
-  void send(uint8_t type, uint16_t value = 0) __attribute__((always_inline))
+  void send(uint8_t type, uint16_t value = 0)
+    __attribute__((always_inline))
   {
     Event::push(type, this, value);
   }
@@ -111,7 +113,8 @@ public:
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
-  void send(uint8_t type, void* value) __attribute__((always_inline))
+  void send(uint8_t type, void* value)
+    __attribute__((always_inline))
   {
     Event::push(type, this, value);
   }
@@ -140,7 +143,8 @@ public:
    * Set timer for time out events and possible state transitions.
    * @param[in] ms timeout period.
    */
-  void set_timer(uint16_t ms) __attribute__((always_inline))
+  void set_timer(uint16_t ms)
+    __attribute__((always_inline))
   {
     m_period = TIMEOUT_REQUEST;
     Watchdog::attach(this, ms);
@@ -150,7 +154,8 @@ public:
    * Cancel a timer request. This is performed by default on a
    * timeout event.
    */
-  void cancel_timer() __attribute__((always_inline))
+  void cancel_timer()
+    __attribute__((always_inline))
   {
     if (m_period == 0) return;
     detach();

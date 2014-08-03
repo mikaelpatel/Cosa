@@ -233,7 +233,8 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes
    */
-  int write(void* buf, size_t size) __attribute__((always_inline))
+  int write(void* buf, size_t size)
+    __attribute__((always_inline))
   {
     if (!write_request(buf, size)) return (-1);
     return (await_completed());
@@ -295,7 +296,8 @@ public:
    * Should be called before starting the device driver; begin().
    * @param[in] hz bus frequency.
    */
-  void set_freq(uint32_t hz) __attribute__((always_inline))
+  void set_freq(uint32_t hz)
+    __attribute__((always_inline))
   {
     m_freq = (hz < MAX_FREQ) ? (((F_CPU / hz) - 16) / 2) : 10;
   }

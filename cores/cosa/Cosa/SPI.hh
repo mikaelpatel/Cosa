@@ -214,7 +214,8 @@ public:
    * transaction; begin()-end() block. Return received value.
    * @return value received.
    */
-  uint8_t transfer_await() __attribute__((always_inline))
+  uint8_t transfer_await()
+    __attribute__((always_inline))
   {
     return (transfer(m_dev->m_data));
   }
@@ -225,7 +226,8 @@ public:
    * @param[in] data to send.
    * @return value received.
    */
-  uint8_t transfer_next(uint8_t data) __attribute__((always_inline))
+  uint8_t transfer_next(uint8_t data)
+    __attribute__((always_inline))
   {
     uint8_t res = transfer_await();
     transfer_start(data);
@@ -239,7 +241,8 @@ public:
    * @param[in] data to send.
    * @return value received.
    */
-  uint8_t transfer(uint8_t data) __attribute__((always_inline))
+  uint8_t transfer(uint8_t data)
+    __attribute__((always_inline))
   {
     SPDR = data;
     loop_until_bit_is_set(SPSR, SPIF);
@@ -251,7 +254,8 @@ public:
    * transaction; begin()-end() block. 
    * @param[in] data to send.
    */
-  void transfer_start(uint8_t data) __attribute__((always_inline))
+  void transfer_start(uint8_t data)
+    __attribute__((always_inline))
   {
     SPDR = data;
   }
@@ -261,7 +265,8 @@ public:
    * transaction; begin()-end() block. Return received value.
    * @return value received.
    */
-  uint8_t transfer_await() __attribute__((always_inline))
+  uint8_t transfer_await()
+    __attribute__((always_inline))
   {
     loop_until_bit_is_set(SPSR, SPIF);
     return (SPDR);
@@ -273,7 +278,8 @@ public:
    * @param[in] data to send.
    * @return value received.
    */
-  uint8_t transfer_next(uint8_t data) __attribute__((always_inline))
+  uint8_t transfer_next(uint8_t data)
+    __attribute__((always_inline))
   {
     loop_until_bit_is_set(SPSR, SPIF);
     uint8_t res = SPDR;

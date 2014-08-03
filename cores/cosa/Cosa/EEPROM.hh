@@ -91,7 +91,8 @@ public:
    * otherwise false(0).
    * @return bool
    */
-  bool is_ready() __attribute__((always_inline))
+  bool is_ready()
+    __attribute__((always_inline))
   {
     return (m_dev->is_ready());
   }
@@ -100,7 +101,8 @@ public:
    * Wait for write to complete. 
    * @param[in] mode of sleep.
    */
-  void write_await() __attribute__((always_inline))
+  void write_await() 
+    __attribute__((always_inline))
   {
     while (!is_ready()) yield();
   }

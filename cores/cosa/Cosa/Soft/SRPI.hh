@@ -93,7 +93,8 @@ public:
    * @param[in] pin pin number.
    * @return bool.
    */
-  bool is_set(uint8_t pin) __attribute__((always_inline))
+  bool is_set(uint8_t pin)
+    __attribute__((always_inline))
   {
     uint8_t ix = (pin >> 3);
     return ((m_port[ix] & _BV(pin & 0x7)) != 0);
@@ -105,7 +106,8 @@ public:
    * @param[in] pin pin number.
    * @return bool.
    */
-  void is_clear(uint8_t pin) __attribute__((always_inline))
+  void is_clear(uint8_t pin)
+    __attribute__((always_inline))
   {
     uint8_t ix = (pin >> 3);
     return ((m_port[ix] & _BV(pin & 0x7)) == 0);
@@ -139,7 +141,8 @@ public:
      * otherwise false(0). 
      * @return bool.
      */
-    bool is_set() __attribute__((always_inline))
+    bool is_set()
+      __attribute__((always_inline))
     {
       return (m_srpi->is_set(m_pin));
     }
@@ -149,7 +152,8 @@ public:
      * otherwise false(0). 
      * @return bool.
      */
-    void is_clear(uint8_t pin) __attribute__((always_inline))
+    void is_clear(uint8_t pin)
+      __attribute__((always_inline))
     {
       return (m_srpi->is_clear(m_pin));
     }

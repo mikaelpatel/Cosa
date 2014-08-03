@@ -117,7 +117,8 @@ public:
   /**
    * Cancel timer and dequeue thread from timer queue.
    */
-  void cancel_timer() __attribute__((always_inline))
+  void cancel_timer()
+    __attribute__((always_inline))
   {
     detach();
   }
@@ -127,6 +128,7 @@ public:
    * state. 
    */
   bool timer_expired() const
+    __attribute__((always_inline))
   {
     return (m_state == TIMEOUT);
   }

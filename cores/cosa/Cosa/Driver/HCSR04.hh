@@ -87,7 +87,8 @@ public:
    * seconds.
    * @param[in] ms milli-second sample period.
    */
-  void periodic(uint16_t ms) __attribute__((always_inline))
+  void periodic(uint16_t ms)
+    __attribute__((always_inline))
   {
     Watchdog::attach(this, ms);
   }

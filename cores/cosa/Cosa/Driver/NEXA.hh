@@ -164,7 +164,8 @@ public:
      * Attach given device to list of listeners.
      * @param[in] device to attach.
      */
-    void attach(Device* device) __attribute__((always_inline))
+    void attach(Device* device)
+      __attribute__((always_inline))
     {
       m_listeners.attach(device);
     }
@@ -191,7 +192,8 @@ public:
      * handler will push an Event::RECEIVE_COMPLETED_TYPE when a
      * command has been received. 
      */
-    void enable() __attribute__((always_inline))
+    void enable()
+      __attribute__((always_inline))
     { 
       ExternalInterrupt::enable();
     }
@@ -199,7 +201,8 @@ public:
     /**
      * Disable interrupt driven command code receiving.
      */
-    void disable() __attribute__((always_inline))
+    void disable()
+      __attribute__((always_inline))
     { 
       ExternalInterrupt::disable();
     }
@@ -303,7 +306,8 @@ public:
      * @param[in] device (0..15).
      * @param[in] onoff device mode (-15..-1..0..1).
      */
-    void send(uint8_t device, int8_t onoff) __attribute__((always_inline))
+    void send(uint8_t device, int8_t onoff)
+      __attribute__((always_inline))
     {
       code_t cmd(m_house, 0, device, onoff);
       send_code(cmd, onoff);
@@ -315,7 +319,8 @@ public:
      * @param[in] group (0..3).
      * @param[in] onoff device mode (0..1).
      */
-    void broadcast(uint8_t group, int8_t onoff) __attribute__((always_inline))
+    void broadcast(uint8_t group, int8_t onoff)
+      __attribute__((always_inline))
     {
       code_t cmd(m_house, 1, group << 2, onoff);
       send_code(cmd, onoff != 0);
@@ -341,7 +346,8 @@ public:
      * non-zero(1).
      * @param[in] value (0..1).
      */
-    void send_pulse(uint8_t value) __attribute__((always_inline))
+    void send_pulse(uint8_t value)
+      __attribute__((always_inline))
     {
       set();
       DELAY(SHORT_PULSE);
@@ -353,7 +359,8 @@ public:
      * Send a single bit as Manchester code (0 -> 01, 1 -> 10).
      * @param[in] value (0..1).
      */
-    void send_bit(uint8_t value) __attribute__((always_inline))
+    void send_bit(uint8_t value)
+      __attribute__((always_inline))
     {
       send_pulse(value);
       send_pulse(!value);

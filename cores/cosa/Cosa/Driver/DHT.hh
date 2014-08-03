@@ -105,7 +105,8 @@ public:
    * values if successful otherwise false(0).  
    * @return bool.
    */
-  bool sample() __attribute__((always_inline))
+  bool sample()
+    __attribute__((always_inline))
   {
     return (sample_request() && sample_await());
   }

@@ -57,7 +57,8 @@ private:
    * @param[in] pin number.
    * @return special register pointer.
    */
-  static volatile uint8_t* SFR(uint8_t pin) __attribute__((always_inline))
+  static volatile uint8_t* SFR(uint8_t pin)
+    __attribute__((always_inline))
   { 
     return (pin < 8  ? &PINE : 
 	    pin < 16 ? &PINH : 
@@ -78,7 +79,8 @@ private:
    * @param[in] pin number.
    * @return pin bit position.
    */
-  static uint8_t BIT(uint8_t pin) __attribute__((always_inline))
+  static uint8_t BIT(uint8_t pin)
+    __attribute__((always_inline))
   {
     return (pin & 0x7);
   }
@@ -89,7 +91,8 @@ private:
    * @param[in] pin number.
    * @return pin change mask register pointer.
    */
-  static volatile uint8_t* PCIMR(uint8_t pin) __attribute__((always_inline))
+  static volatile uint8_t* PCIMR(uint8_t pin)
+    __attribute__((always_inline))
   { 
     return (pin < 24 ? &PCMSK0 : 
 	               &PCMSK2);
@@ -100,7 +103,8 @@ private:
    * @param[in] port number.
    * @return UART register pointer.
    */
-  static volatile uint8_t* UART(uint8_t port) __attribute__((always_inline))
+  static volatile uint8_t* UART(uint8_t port)
+    __attribute__((always_inline))
   { 
     return (port == 1 ? &UCSR1A :
 	    port == 2 ? &UCSR2A :

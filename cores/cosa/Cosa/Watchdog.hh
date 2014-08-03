@@ -61,7 +61,8 @@ public:
    * Get Watchdog clock in milli-seconds.
    * @return ms.
    */
-  static uint32_t millis() __attribute__((always_inline))
+  static uint32_t millis()
+    __attribute__((always_inline))
   { 
     return (s_ticks * ms_per_tick()); 
   }
@@ -125,7 +126,8 @@ public:
   /**
    * Wait for the next watchdog timeout.
    */
-  static void await() __attribute__((always_inline))
+  static void await()
+    __attribute__((always_inline))
   {
     delay(ms_per_tick());
   }
@@ -135,7 +137,8 @@ public:
    * @param[in] start
    * @return (millis() - start)
    */
-  static uint32_t since(uint32_t start) __attribute__((always_inline))
+  static uint32_t since(uint32_t start)
+    __attribute__((always_inline))
   {
     uint32_t now = millis();
     return (now - start);

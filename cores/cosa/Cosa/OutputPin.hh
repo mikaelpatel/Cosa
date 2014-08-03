@@ -327,7 +327,8 @@ public:
    * @param[in] value to write.
    * @return output pin.
    */
-  OutputPin& operator<<(uint8_t value) __attribute__((always_inline))
+  OutputPin& operator<<(uint8_t value)
+    __attribute__((always_inline))
   {
     set(value);
     return (*this);
@@ -338,7 +339,8 @@ public:
    * micro-seconds.
    * @param[in] us pulse width in micro seconds
    */
-  void pulse(uint16_t us) const __attribute__((always_inline))
+  void pulse(uint16_t us) const
+    __attribute__((always_inline))
   {
     toggle();
     DELAY(us);

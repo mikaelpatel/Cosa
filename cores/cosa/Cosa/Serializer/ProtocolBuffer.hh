@@ -72,7 +72,8 @@ public:
    * @param[in] c character to write.
    * @return bytes written or negative error code.
    */
-  int putchar(char c) __attribute__((always_inline))
+  int putchar(char c)
+    __attribute__((always_inline))
   {
     return (m_outs->putchar(c));
   }
@@ -84,7 +85,8 @@ public:
    * @param[out] type.
    * @return number of bytes read or negative error code.
    */
-  int read(uint8_t& tag, Type& type) __attribute__((always_inline))
+  int read(uint8_t& tag, Type& type)
+    __attribute__((always_inline))
   {
     uint8_t prefix = getchar();
     tag = (prefix >> 3);
@@ -106,7 +108,8 @@ public:
    * @param[out] value.
    * @return number of bytes read or negative error code.
    */
-  int read(int32_t& value) __attribute__((always_inline))
+  int read(int32_t& value)
+    __attribute__((always_inline))
   {
     uint32_t zigzag;
     int res = read(zigzag);
@@ -139,7 +142,8 @@ public:
    * @param[in] type.
    * @return number of bytes read or negative error code.
    */
-  int write(uint8_t tag, Type type) __attribute__((always_inline))
+  int write(uint8_t tag, Type type)
+    __attribute__((always_inline))
   {
     if (tag > TAG_MAX) return (-1);
     if (putchar(tag << 3 | type) < 0) return (-1);
@@ -160,7 +164,8 @@ public:
    * @param[in] value.
    * @return number of bytes written or negative error code.
    */
-  int write(int32_t value) __attribute__((always_inline))
+  int write(int32_t value)
+    __attribute__((always_inline))
   {
     uint32_t zigzag = ((value < 0) ? ~(value << 1) : (value << 1));
     return (write(zigzag));
@@ -172,7 +177,8 @@ public:
    * @param[in] value.
    * @return number of bytes written or negative error code.
    */
-  int write(float32_t value) __attribute__((always_inline))
+  int write(float32_t value)
+    __attribute__((always_inline))
   {
     return (write(&value, sizeof(value)));
   }
@@ -184,7 +190,8 @@ public:
    * @param[in] count number of bytes in buffer.
    * @return byte written or negative error code.
    */
-  int write(const void* buf, uint8_t count) __attribute__((always_inline))
+  int write(const void* buf, uint8_t count)
+    __attribute__((always_inline))
   {
     if (m_outs == NULL) return (-1);
     return (m_outs->write(buf, count));
@@ -206,7 +213,8 @@ public:
    * @param[in] value.
    * @return number of bytes written or negative error code.
    */
-  int write(uint8_t tag, int32_t value) __attribute__((always_inline))
+  int write(uint8_t tag, int32_t value)
+    __attribute__((always_inline))
   {
     if (write(tag, VARINT) < 0) return (-1);
     int res = write(value);
@@ -214,12 +222,14 @@ public:
     return (res + 1);
   }
 
-  int write(uint8_t tag, int16_t value) __attribute__((always_inline))
+  int write(uint8_t tag, int16_t value)
+    __attribute__((always_inline))
   { 
     return (write(tag, (int32_t) value)); 
   }
 
-  int write(uint8_t tag, int8_t value) __attribute__((always_inline))
+  int write(uint8_t tag, int8_t value)
+    __attribute__((always_inline))
   { 
     return (write(tag, (int32_t) value)); 
   }
@@ -231,7 +241,8 @@ public:
    * @param[in] value.
    * @return number of bytes written or negative error code.
    */
-  int write(uint8_t tag, uint32_t value) __attribute__((always_inline))
+  int write(uint8_t tag, uint32_t value)
+    __attribute__((always_inline))
   {
     if (write(tag, VARINT) < 0) return (-1);
     int res = write(value);
@@ -239,12 +250,14 @@ public:
     return (res + 1);
   }
 
-  int write(uint8_t tag, uint16_t value) __attribute__((always_inline))
+  int write(uint8_t tag, uint16_t value)
+    __attribute__((always_inline))
   { 
     return (write(tag, (uint32_t) value)); 
   }
 
-  int write(uint8_t tag, uint8_t value) __attribute__((always_inline))
+  int write(uint8_t tag, uint8_t value)
+    __attribute__((always_inline))
   { 
     return (write(tag, (uint32_t) value)); 
   }
@@ -267,7 +280,8 @@ public:
     return (count + 2);
   }
 
-  int write(uint8_t tag, const char* str) __attribute__((always_inline))
+  int write(uint8_t tag, const char* str)
+    __attribute__((always_inline))
   {
     return (write(tag, str, strlen(str)));
   }

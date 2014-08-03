@@ -121,7 +121,8 @@ public:
   /**
    * Detach this link. Unlink from any list.
    */
-  void detach() __attribute__((always_inline))
+  void detach()
+    __attribute__((always_inline))
   {
     Linkage::detach();
   }

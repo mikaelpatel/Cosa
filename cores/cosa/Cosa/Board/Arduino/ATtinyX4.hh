@@ -64,7 +64,8 @@ private:
    * @param[in] pin number.
    * @return special register pointer.
    */
-  static volatile uint8_t* SFR(uint8_t pin) __attribute__((always_inline))
+  static volatile uint8_t* SFR(uint8_t pin)
+    __attribute__((always_inline))
   { 
     return (pin < 8 ? &PINA : 
 	              &PINB);
@@ -76,7 +77,8 @@ private:
    * @param[in] pin number.
    * @return pin bit position.
    */
-  static uint8_t BIT(uint8_t pin) __attribute__((always_inline))
+  static uint8_t BIT(uint8_t pin)
+    __attribute__((always_inline))
   {
     return (pin < 8 ? pin : 
 	              pin - 8);
@@ -87,7 +89,8 @@ private:
    * @param[in] pin number.
    * @return pin change mask register pointer.
    */
-  static volatile uint8_t* PCIMR(uint8_t pin) __attribute__((always_inline))
+  static volatile uint8_t* PCIMR(uint8_t pin)
+    __attribute__((always_inline))
   { 
     return (pin < 8 ? &PCMSK0 : 
 	              &PCMSK1);
@@ -97,7 +100,8 @@ private:
    * Return Universal Serial Interface SFR register.
    * @return special register pointer.
    */
-  static volatile uint8_t* USI() __attribute__((always_inline))
+  static volatile uint8_t* USI()
+    __attribute__((always_inline))
   { 
     return (&PINA);
   }

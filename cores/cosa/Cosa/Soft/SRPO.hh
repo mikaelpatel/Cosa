@@ -91,7 +91,8 @@ public:
    * @param[in] pin pin number.
    * @return bool.
    */
-  bool is_set(uint8_t pin) __attribute__((always_inline))
+  bool is_set(uint8_t pin)
+    __attribute__((always_inline))
   {
     uint8_t ix = (pin >> 3);
     return ((m_port[ix] & _BV(pin & 0x7)) != 0);
@@ -103,7 +104,8 @@ public:
    * @param[in] pin pin number.
    * @return bool.
    */
-  void is_clear(uint8_t pin) __attribute__((always_inline))
+  void is_clear(uint8_t pin)
+    __attribute__((always_inline))
   {
     uint8_t ix = (pin >> 3);
     return ((m_port[ix] & _BV(pin & 0x7)) == 0);
@@ -114,7 +116,8 @@ public:
    * register. 
    * @param[in] pin pin number.
    */
-  void set(uint8_t pin) __attribute__((always_inline))
+  void set(uint8_t pin)
+    __attribute__((always_inline))
   {
     uint8_t ix = (pin >> 3);
     m_port[ix] |= _BV(pin & 0x7);
@@ -125,7 +128,8 @@ public:
    * register. 
    * @param[in] pin pin number.
    */
-  void clear(uint8_t pin) __attribute__((always_inline))
+  void clear(uint8_t pin)
+    __attribute__((always_inline))
   {
     uint8_t ix = (pin >> 3);
     m_port[ix] &= ~_BV(pin & 0x7);
@@ -136,7 +140,8 @@ public:
    * register. 
    * @param[in] pin pin number.
    */
-  void toggle(uint8_t pin) __attribute__((always_inline))
+  void toggle(uint8_t pin)
+    __attribute__((always_inline))
   {
     if (is_set(pin))
       clear(pin);
@@ -148,7 +153,8 @@ public:
    * Set the shadow registers. Call update() to write to shift
    * register.
    */
-  void set() __attribute__((always_inline))
+  void set()
+    __attribute__((always_inline))
   {
     memset(m_port, 0xff, N);
   }
@@ -157,7 +163,8 @@ public:
    * Clear the shadow registers. Call update() to write to shift
    * register.
    */
-  void clear() __attribute__((always_inline))
+  void clear()
+    __attribute__((always_inline))
   {
     memset(m_port, 0, N);
   }
@@ -186,7 +193,8 @@ public:
      * Set pin in shadow register. Call update() to write to shift
      * register. 
      */
-    void set() __attribute__((always_inline))
+    void set()
+      __attribute__((always_inline))
     {
       m_srpo->set(m_pin);
     }
@@ -195,7 +203,8 @@ public:
    * Clear pin in shadow register. Call update() to write to shift
    * register. 
    */
-  void clear() __attribute__((always_inline))
+  void clear()
+    __attribute__((always_inline))
   {
     m_srpo->clear(m_pin);
   }
@@ -204,7 +213,8 @@ public:
    * Toggle pin in shadow register. Call update() to write to shift
    * register. 
    */
-  void toggle() __attribute__((always_inline))
+  void toggle()
+    __attribute__((always_inline))
   {
     m_srpo->toggle(m_pin);
   }

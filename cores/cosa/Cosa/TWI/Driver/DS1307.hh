@@ -124,7 +124,8 @@ public:
    * @param[out] now time structure return value.
    * @return boolean.
    */
-  bool get_time(time_t& now) __attribute__((always_inline))
+  bool get_time(time_t& now)
+    __attribute__((always_inline))
   {
     return (read(&now) == sizeof(now));
   }
@@ -135,7 +136,8 @@ public:
    * @param[in] now time structure to set.
    * @return boolean.
    */
-  bool set_time(time_t& now) __attribute__((always_inline))
+  bool set_time(time_t& now)
+    __attribute__((always_inline))
   {
     return (write(&now) == sizeof(now));
   }

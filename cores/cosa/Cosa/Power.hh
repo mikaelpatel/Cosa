@@ -56,45 +56,53 @@ public:
    */
   static void clock_prescale(uint8_t factor);
 
-  static void adc_enable() __attribute__((always_inline))
+  static void adc_enable()
+    __attribute__((always_inline))
   { 
     power_adc_enable(); 
     bit_set(ADCSRA, ADEN);
   }
 
-  static void adc_disable() __attribute__((always_inline))
+  static void adc_disable()
+    __attribute__((always_inline))
   { 
     bit_clear(ADCSRA, ADEN);
     power_adc_disable(); 
   }
 
   static void timer0_enable() 
+    __attribute__((always_inline))
   { 
     power_timer0_enable(); 
   }
 
   static void timer0_disable() 
+    __attribute__((always_inline))
   { 
     power_timer0_disable(); 
   }
 
   static void timer1_enable() 
+    __attribute__((always_inline))
   { 
     power_timer1_enable(); 
   }
 
   static void timer1_disable() 
+    __attribute__((always_inline))
   { 
     power_timer1_disable(); 
   }
 
 #if defined(power_timer2_enable)
   static void timer2_enable() 
+    __attribute__((always_inline))
   { 
     power_timer2_enable(); 
   }
 
   static void timer2_disable() 
+    __attribute__((always_inline))
   { 
     power_timer2_disable(); 
   }
@@ -102,11 +110,13 @@ public:
 
 #if defined(power_timer3_enable)
   static void timer3_enable() 
+    __attribute__((always_inline))
   { 
     power_timer3_enable(); 
   }
 
   static void timer3_disable() 
+    __attribute__((always_inline))
   { 
     power_timer3_disable(); 
   }
@@ -114,23 +124,27 @@ public:
 
 #if defined(power_timer4_enable)
   static void timer4_enable() 
+    __attribute__((always_inline))
   {
     power_timer4_enable(); 
   }
 
   static void timer4_disable() 
+    __attribute__((always_inline))
   { 
     power_timer4_disable(); 
   }
 #endif
 
 #if defined(power_timer5_enable)
+    __attribute__((always_inline))
   static void timer5_enable() 
   { 
     power_timer5_enable(); 
   }
 
   static void timer5_disable() 
+    __attribute__((always_inline))
   { 
     power_timer5_disable(); 
   }
@@ -138,11 +152,13 @@ public:
 
 #if defined(power_usart0_enable)
   static void usart0_enable() 
+    __attribute__((always_inline))
   { 
     power_usart0_enable(); 
   }
 
   static void usart0_disable() 
+    __attribute__((always_inline))
   { 
     power_usart0_disable(); 
   }
@@ -150,11 +166,13 @@ public:
 
 #if defined(power_usart1_enable)
   static void usart1_enable() 
+    __attribute__((always_inline))
   { 
     power_usart1_enable(); 
   }
 
   static void usart1_disable() 
+    __attribute__((always_inline))
   { 
     power_usart1_disable(); 
   }
@@ -162,11 +180,13 @@ public:
 
 #if defined(power_usart2_enable)
   static void usart2_enable() 
+    __attribute__((always_inline))
   { 
     power_usart2_enable(); 
   }
 
   static void usart2_disable() 
+    __attribute__((always_inline))
   { 
     power_usart2_disable(); 
   }
@@ -174,11 +194,13 @@ public:
 
 #if defined(power_usart3_enable)
   static void usart3_enable() 
+    __attribute__((always_inline))
   { 
     power_usart3_enable(); 
   }
 
   static void usart3_disable() 
+    __attribute__((always_inline))
   { 
     power_usart3_disable(); 
   }
@@ -186,11 +208,13 @@ public:
 
 #if defined(power_usi_enable)
   static void usi_enable() 
+    __attribute__((always_inline))
   { 
     power_usi_enable(); 
   }
 
   static void usi_disable() 
+    __attribute__((always_inline))
   { 
     power_usi_disable(); 
   }
@@ -198,11 +222,13 @@ public:
 
 #if defined(power_spi_enable)
   static void spi_enable() 
+    __attribute__((always_inline))
   { 
     power_spi_enable(); 
   }
 
   static void spi_disable() 
+    __attribute__((always_inline))
   { 
     power_spi_disable(); 
   }
@@ -210,23 +236,27 @@ public:
 
 #if defined(power_twi_enable)
   static void twi_enable() 
+    __attribute__((always_inline))
   { 
     power_twi_enable(); 
   }
 
   static void twi_disable() 
+    __attribute__((always_inline))
   { 
     power_twi_disable(); 
   }
 #endif
 
   static void all_enable() 
+    __attribute__((always_inline))
   { 
     power_all_enable(); 
     bit_set(ADCSRA, ADEN);
   }
 
   static void all_disable() 
+    __attribute__((always_inline))
   { 
     bit_clear(ADCSRA, ADEN);
     power_all_disable(); 

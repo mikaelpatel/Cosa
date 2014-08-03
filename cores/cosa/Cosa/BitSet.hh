@@ -35,7 +35,8 @@ public:
   /**
    * Construct bitset and empty.
    */
-  BitSet() __attribute__((always_inline))
+  BitSet()
+    __attribute__((always_inline))
   {
     empty();
   }
@@ -60,7 +61,8 @@ public:
   /**
    * Empty bitset.
    */
-  void empty()  __attribute__((always_inline))
+  void empty()
+    __attribute__((always_inline))
   {
     memset(m_set, 0, sizeof(m_set));
   }
