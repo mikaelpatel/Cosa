@@ -27,6 +27,8 @@
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/IOPin.hh"
+#include "Cosa/OWI.hh"
+#include "Cosa/TWI.hh"
 
 static uint32_t epoch = 0L;
 
@@ -392,6 +394,24 @@ static int millis_action(int argc, char* argv[])
   return (0);
 }
 
+static const char OWI_NAME[] __PROGMEM = 
+  "owi";
+static const char OWI_HELP[] __PROGMEM = 
+  "scan PIN -- scan 1-wire bus";
+static int owi_action(int argc, char* argv[])
+{
+  if (argc != 3) return (-1);
+  if (strcmp_P(argv[1], PSTR("scan")) != 0) return (-1);
+  char* name = argv[2];
+  char* sp;
+  if (name[0] != 'd' && name[0] != 'D') return (-1);
+  uint32_t ix = strtoul(name + 1, &sp, 10);
+  if (*sp != 0 || ix >= membersof(digital_pin_map)) return (-1);
+  OWI owi((Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]));
+  ios << owi;
+  return (0);
+}
+
 static void write_pinmode(Board::DigitalPin pin)
 {
   if (IOPin::get_mode(pin) == IOPin::OUTPUT_MODE) {
@@ -450,33 +470,41 @@ static int pinmode_action(int argc, char* argv[])
 static const char REPEAT_NAME[] __PROGMEM = 
   "repeat";
 static const char REPEAT_HELP[] __PROGMEM = 
-  "COUNT [DELAY] COMMAND -- repeat command line";
+  "[-t] COUNT [DELAY] COMMAND -- repeat command line";
 static int repeat_action(int argc, char* argv[])
 {
-  if (argc < 3) return (-1);
-  uint8_t fx = 3;
+  uint8_t ix = 1;
+  bool timing = (strcmp_P(argv[ix], PSTR("-t")) == 0);
+  if (timing) ix += 1;
   char* sp;
-  uint16_t count = strtoul(argv[1], &sp, 10);
+  uint16_t count = strtoul(argv[ix++], &sp, 10);
   if (*sp != 0 || count == 0) return (-1);
-  uint32_t ms = strtoul(argv[2], &sp, 10);
+  uint32_t ms = strtoul(argv[ix], &sp, 10);
   if (*sp != 0) {
     ms = 0L;
-    fx = 2;
   }
+  else {
+    ix += 1;
+  }
+  if (argc < ix + 1) return (-1);
   const size_t BUF_MAX = 64;
   char buf[BUF_MAX];
+  uint8_t fx = ix;
+  uint32_t start = RTC::millis();
   do {
     buf[0] = 0;
     strcat(buf, argv[fx]);
-    for (uint8_t ix = fx + 1; ix < argc; ix++) {
+    ix = fx + 1;
+    while (ix < argc) {
       strcat(buf, " ");
-      strcat(buf, argv[ix]);
+      strcat(buf, argv[ix++]);
     }
     if (shell.execute(buf) != 0) return (-1);
-    if (ios.get_device()->flush()) return (-1);
     if (ms != 0) delay(ms);
   } while (--count);
-  return (0);
+  uint32_t stop = RTC::millis();
+  if (timing) ios << stop - start << PSTR(" ms") << endl;
+  return (ios.get_device()->flush());
 }
 
 static const char STTY_NAME[] __PROGMEM = 
@@ -541,6 +569,28 @@ static int tone_action(int argc, char* argv[])
   return (0);
 }
 
+static const char TWI_NAME[] __PROGMEM = 
+  "twi";
+static const char TWI_HELP[] __PROGMEM = 
+  "scan -- scan I2C bus";
+static int twi_action(int argc, char* argv[])
+{
+  if (argc != 2) return (-1);
+  if (strcmp_P(argv[1], PSTR("scan")) != 0) return (-1);
+  for (uint8_t addr = 3; addr < 128; addr++) {
+    TWI::Driver dev(addr);
+    twi.begin(&dev);
+    uint8_t data;
+    int count = twi.read(&data, sizeof(data));
+    twi.end();
+    if (count != sizeof(data)) continue;
+    ios << PSTR("TWI::device(addr = ") << hex << addr 
+	<< PSTR(", group = ") << (addr >> 3) << '.' << (addr & 0x07)
+	<< PSTR(")") << endl;
+  }
+  return (0);
+}
+
 static const char UPTIME_NAME[] __PROGMEM = 
   "uptime";
 static const char UPTIME_HELP[] __PROGMEM = 
@@ -571,10 +621,12 @@ static const Shell::command_t command_tab[] __PROGMEM = {
   { MEMORY_NAME, MEMORY_HELP, memory_action },
   { MICROS_NAME, MICROS_HELP, micros_action },
   { MILLIS_NAME, MILLIS_HELP, millis_action },
+  { OWI_NAME, OWI_HELP, owi_action },
   { PINMODE_NAME, PINMODE_HELP, pinmode_action },
   { REPEAT_NAME, REPEAT_HELP, repeat_action },
   { STTY_NAME, STTY_HELP, stty_action },
   { TONE_NAME, TONE_HELP, tone_action },
+  { TWI_NAME, TWI_HELP, twi_action },
   { UPTIME_NAME, UPTIME_HELP, uptime_action }
 };
 
