@@ -34,7 +34,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Commands.h"
 #include "Cosa/RTC.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
@@ -42,11 +41,21 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
-// Disable SD on Ethernet Shield
+// Configuration
 #define USE_ETHERNET_SHIELD
+#define USE_LCD
+
+#include "Commands.h"
+
+// Disable SD on Ethernet Shield
 #if defined(USE_ETHERNET_SHIELD)
 #include "Cosa/OutputPin.hh"
 OutputPin sd(Board::D4, 1);
+#endif
+
+#if defined(USE_LCD)
+HD44780::MJKDZ port;
+HD44780 lcd(&port, 20, 4);
 #endif
 
 // Network configuration; Telnet port number
@@ -81,19 +90,21 @@ void setup()
   yield = iowait;
 
   // Setup trace output
+  IOStream::Device* dev = NULL;
+#if defined(USE_LCD)
+  lcd.begin();
+  lcd.set_tab_step(2);
+  lcd.cursor_underline_off();
+  lcd.cursor_blink_off();
+  dev = &lcd;
+#else
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaTelnetShell: started"));
+  dev = &uart;
+#endif
+  trace.begin(dev, PSTR("CosaTelnetShell: started"));
 
   // Start ethernet controller and request network address for hostname
   ASSERT(ethernet.begin_P(PSTR("CosaTelnetShell")));
-
-  // Print the given or default network address
-  uint8_t subnet[4];
-  uint8_t ip[4];
-  ethernet.get_addr(ip, subnet);
-  trace << PSTR("server:IP=");
-  INET::print_addr(trace, ip, PORT);
-  trace << endl;
 
   // Allocate a TCP socket and listen
   ASSERT((sock = ethernet.socket(Socket::TCP, PORT)) != NULL);
@@ -107,12 +118,27 @@ void setup()
 
 void loop()
 {
+  // Print the given or default network address
+  uint8_t subnet[4];
+  uint8_t ip[4];
+  ethernet.get_addr(ip, subnet);
+
+#if defined(USE_LCD)
+  lcd.display_clear();
+#endif
+  trace << PSTR("server:IP=");
+  INET::print_addr(trace, ip, PORT);
+  trace << endl;
+
   // Wait for incoming connection requests
   while (sock->accept() != 0) yield();
   
   // Trace client connection information; MAC, IP address and port
   INET::addr_t addr;
   sock->get_src(addr);
+#if defined(USE_LCD)
+  lcd.display_clear();
+#endif
   trace << PSTR("client:IP="); 
   INET::print_addr(trace, addr.ip, addr.port); 
   trace << PSTR(", MAC="); 

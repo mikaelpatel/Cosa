@@ -29,6 +29,8 @@
 #include "Cosa/IOPin.hh"
 #include "Cosa/OWI.hh"
 #include "Cosa/TWI.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
 
 static uint32_t epoch = 0L;
 
@@ -289,21 +291,30 @@ static int dump_action(int argc, char* argv[])
 static const char ECHO_NAME[] __PROGMEM = 
   "echo";
 static const char ECHO_HELP[] __PROGMEM = 
-  "[-n] STRING.. -- print a line of text";
+  "[-fnt] STRING.. -- print a line of text";
 static int echo_action(int argc, char* argv[])
 {
+  bool formfeed = false;
   bool newline = true;
+  bool traced = false;
   char* option;
   char* value;
   int ix;
-  while ((ix = shell.get(option, value)) == 0)
-    if (strcmp_P(option, PSTR("n")) == 0)
+  while ((ix = shell.get(option, value)) == 0) {
+    if (strcmp_P(option, PSTR("f")) == 0)
+      formfeed = true;
+    else if (strcmp_P(option, PSTR("n")) == 0)
       newline = false;
+    else if (strcmp_P(option, PSTR("t")) == 0)
+      traced = true;
     else return (-1);
+  }
+  IOStream* outs = (traced ? &trace : &ios);
+  if (formfeed) *outs << clear;
   if (ix == argc) return (0);
-  ios << argv[ix++];
-  while (ix < argc) ios << ' ' << argv[ix++];
-  if (newline) ios << endl;
+  *outs << argv[ix++];
+  while (ix < argc) *outs << ' ' << argv[ix++];
+  if (newline) *outs << endl;
   return (0);
 }
 
@@ -528,6 +539,7 @@ static int stty_action(int argc, char* argv[])
 	mode = IOStream::CRLF_MODE;
       else return (-1);
     }
+    else return (-1);
   }
   if (ix != argc) return (-1);
   ios.get_device()->set_eol(mode);
