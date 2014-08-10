@@ -26,14 +26,16 @@ IOStream::IOStream(Device* dev) :
   m_dev(dev),
   m_base(dec),
   m_width(6),
-  m_prec(4)
+  m_prec(4),
+  m_eol_P(PSTR("\r\n"))
 {}
 
 IOStream::IOStream() : 
   m_dev(NULL),
   m_base(dec),
   m_width(6),
-  m_prec(4)
+  m_prec(4),
+  m_eol_P(PSTR("\r\n"))
 {}
 
 IOStream::Device* 

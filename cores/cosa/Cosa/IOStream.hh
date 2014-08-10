@@ -261,6 +261,15 @@ public:
   Device* set_device(Device* dev);
 
   /**
+   * Set io stream end of line string.
+   * @param[in] s string for end of line.
+   */
+  void set_eol_P(const char* s)
+  {
+    m_eol_P = s;
+  }
+
+  /**
    * Set minimum width for double numbers. The width is signed value,
    * negative for left adjustment. 
    * @param[in] value width.
@@ -417,7 +426,7 @@ public:
    */
   void println() 
   { 
-    m_dev->puts_P(PSTR("\r\n"));
+    m_dev->puts_P(m_eol_P);
   }
 
   /**
@@ -648,6 +657,7 @@ public:
   Base m_base;			//!< Base for next output operator.
   int8_t m_width;		//!< Minimum width of output string.
   uint8_t m_prec;		//!< Number of digits after decimal sign.
+  const char* m_eol_P;		//!< End of line string (program memory).
 
   /**
    * Print number prefix for non decimal base.
