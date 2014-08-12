@@ -31,10 +31,5 @@ extern Shell shell;
 extern IOStream ios;
 extern uint32_t idle;
 
-#if defined(USE_LCD)
-#include "Cosa/LCD/Driver/HD44780.hh"
-extern HD44780 lcd;
-#endif
-
 #endif
 
