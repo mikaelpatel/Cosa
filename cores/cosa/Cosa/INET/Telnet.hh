@@ -79,11 +79,26 @@ public:
 
     /**
      * @override Telnet::Server
+     * Application extension; Called when a client connect has been
+     * accepted. Return true if accepted otherwise false.
+     * @param[in] ios iostream for response.
+     * @return bool.
+     */
+    virtual bool on_connect(IOStream& ios) = 0;
+
+    /**
+     * @override Telnet::Server
      * Application extension; Should implement the response to the
      * given request. Called with there is available data.
      * @param[in] ios iostream for request and response.
      */
     virtual void on_request(IOStream& ios) = 0;
+
+    /**
+     * @override Telnet::Server
+     * Application extension; Called when a client disconnects.
+     */
+    virtual void on_disconnect() = 0;
 
   protected:
     /** Listen/client socket. Reused between clients. */

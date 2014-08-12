@@ -50,7 +50,7 @@ Telnet::Server::run(uint32_t ms)
     if (res < 0) goto error;
     while (res--) m_sock->getchar();
     // Call handler for initial prompt
-    on_request(m_ios);
+    if (!on_connect(m_ios)) goto error;
     m_sock->flush();
     m_connected = true;
     return (0);
@@ -68,6 +68,7 @@ Telnet::Server::run(uint32_t ms)
 
  error:
   // Error handling; close and restart listen mode
+  on_disconnect();
   m_connected = false;
   m_sock->disconnect();
   m_sock->listen();

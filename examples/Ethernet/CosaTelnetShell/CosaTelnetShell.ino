@@ -56,18 +56,36 @@ IOStream ios;
 // The Telnet Shell Server
 class TelnetShell : public Telnet::Server {
 public:
-  bool begin(Socket* sock)
-  {
-    if (!Telnet::Server::begin(sock)) return (false);
-    ios.set_device(sock);
-    shell.set_echo(false);
-    return (true);
-  }
-  virtual void on_request(IOStream& ios) 
-  {
-    shell.run(ios);
-  }
+  bool begin(Socket* sock);
+  virtual bool on_connect(IOStream& ios);
+  virtual void on_request(IOStream& ios);
+  virtual void on_disconnect();
 };
+
+bool TelnetShell::begin(Socket* sock)
+{
+  if (!Telnet::Server::begin(sock)) return (false);
+  ios.set_device(sock);
+  shell.set_echo(false);
+  return (true);
+}
+
+bool TelnetShell::on_connect(IOStream& ios) 
+{
+  shell.run(ios);
+  return (true);
+}
+
+void TelnetShell::on_request(IOStream& ios) 
+{
+  shell.run(ios);
+}
+
+void TelnetShell::on_disconnect()
+{
+  shell.reset();
+}
+
 TelnetShell server;
 
 // W5100 Ethernet Controller with MAC-address
