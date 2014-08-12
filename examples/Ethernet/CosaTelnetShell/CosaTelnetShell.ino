@@ -16,8 +16,8 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * W5100 Ethernet Controller device driver example code; Use TELNET
- * server port for communication with the Cosa Shell.
+ * W5100 Ethernet Controller device driver example code; Cosa Telnet 
+ * and Shell example sketch.
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
@@ -40,34 +40,39 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
-
-// Configuration
-#define USE_ETHERNET_SHIELD
-#define USE_LCD
-
+#include "Cosa/INET/Telnet.hh"
 #include "Commands.h"
 
 // Disable SD on Ethernet Shield
+#define USE_ETHERNET_SHIELD
 #if defined(USE_ETHERNET_SHIELD)
 #include "Cosa/OutputPin.hh"
 OutputPin sd(Board::D4, 1);
 #endif
 
-#if defined(USE_LCD)
-HD44780::MJKDZ port;
-HD44780 lcd(&port, 20, 4);
-#endif
+// Input/Output Stream (bound to client socket)
+IOStream ios;
 
-// Network configuration; Telnet port number
-#define PORT 23
+// The Telnet Shell Server
+class TelnetShell : public Telnet::Server {
+public:
+  bool begin(Socket* sock)
+  {
+    if (!Telnet::Server::begin(sock)) return (false);
+    ios.set_device(sock);
+    shell.set_echo(false);
+    return (true);
+  }
+  virtual void on_request(IOStream& ios) 
+  {
+    shell.run(ios);
+  }
+};
+TelnetShell server;
 
 // W5100 Ethernet Controller with MAC-address
 static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
-Socket* sock = NULL;
-
-// Input/Output Stream (bound to client socket)
-IOStream ios;
 
 // Idle time capture count. Reset of RTC micro-seconds overflow
 uint32_t idle = 0L;
@@ -90,83 +95,20 @@ void setup()
   yield = iowait;
 
   // Setup trace output
-  IOStream::Device* dev = NULL;
-#if defined(USE_LCD)
-  lcd.begin();
-  lcd.set_tab_step(2);
-  lcd.cursor_underline_off();
-  lcd.cursor_blink_off();
-  dev = &lcd;
-#else
   uart.begin(9600);
-  dev = &uart;
-#endif
-  trace.begin(dev, PSTR("CosaTelnetShell: started"));
+  trace.begin(&uart, PSTR("CosaTelnetShell: started"));
 
   // Start ethernet controller and request network address for hostname
   ASSERT(ethernet.begin_P(PSTR("CosaTelnetShell")));
 
-  // Allocate a TCP socket and listen
-  ASSERT((sock = ethernet.socket(Socket::TCP, PORT)) != NULL);
-  ASSERT(sock->listen() == 0);
-
-  // Bind the socket to io-stream, set line and echo mode
-  ios.set_device(sock);
-  sock->set_eol(IOStream::CRLF_MODE);
-  shell.set_echo(false);
+  // Allocate a TCP socket and start server
+  Socket* sock = ethernet.socket(Socket::TCP, Telnet::PORT);
+  ASSERT(sock != NULL);
+  ASSERT(server.begin(sock));
 }
 
 void loop()
 {
-  // Print the given or default network address
-  uint8_t subnet[4];
-  uint8_t ip[4];
-  ethernet.get_addr(ip, subnet);
-
-#if defined(USE_LCD)
-  lcd.display_clear();
-#endif
-  trace << PSTR("server:IP=");
-  INET::print_addr(trace, ip, PORT);
-  trace << endl;
-
-  // Wait for incoming connection requests
-  while (sock->accept() != 0) yield();
-  
-  // Trace client connection information; MAC, IP address and port
-  INET::addr_t addr;
-  sock->get_src(addr);
-#if defined(USE_LCD)
-  lcd.display_clear();
-#endif
-  trace << PSTR("client:IP="); 
-  INET::print_addr(trace, addr.ip, addr.port); 
-  trace << PSTR(", MAC="); 
-  INET::print_mac(trace, addr.mac); 
-  trace << endl;
-  
-  // Skip the first telnet line and prompt
-  int res;
-  while ((res = sock->available()) == 0) yield();
-  if (res < 0) goto error;
-  while (res--) sock->getchar();
-  shell.run(ios);
-  sock->flush();
-
-  // Process incoming commands
-  while ((res = sock->available()) != IOStream::EOF) {
-    if (res > 0) {
-      shell.run(ios);
-      sock->flush();
-    }
-    yield();
-  }
-  
- error:
-  // Disconnect and wait for a new client
-  ASSERT((sock->disconnect()) == 0);
-  ASSERT((sock->listen()) == 0);
-
-  // Reset shell for new session
-  shell.reset();
+  // Run the server in blocking mode
+  server.run();
 }
