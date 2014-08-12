@@ -82,7 +82,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
   if (query != NULL) {
     char c;
     for (char* qp = query; (c = *qp) != 0; qp++)
-      if (c == '&') *qp = ' ';
+      if (c == '&' || c == '+') *qp = ' ';
     res = shell.execute(query);
   }
   if (res != 0) page << PSTR("illegal query") << endl;
