@@ -98,6 +98,97 @@ PWMPin::set(uint8_t duty)
   }
 }
 
+#elif defined(BOARD_ATMEGA32U4)
+
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
+  OutputPin((Board::DigitalPin) pin) 
+{ 
+  switch (pin) {
+  case Board::PWM0:
+  case Board::PWM1:
+    // PWM0(0A), PMW1(0B), Fast PWM, prescale 64
+    TCCR0A |= _BV(WGM01) | _BV(WGM00);
+    TCCR0B |= _BV(CS01) | _BV(CS00);
+    break;
+    
+  case Board::PWM2:
+  case Board::PWM3:
+    // PWM2(1A), PWM3(1B), PWM phase correct, 10-bit, prescale 64
+    TCCR1A |= _BV(WGM11) | _BV(WGM10);
+    TCCR1B |= _BV(CS11) | _BV(CS10);
+    break;
+  
+  case Board::PWM4:
+    // PWM4(3A), PWM phase correct, 10-bit, prescale 64
+    TCCR3A |= _BV(WGM31) | _BV(WGM30);
+    TCCR3B |= _BV(CS31) | _BV(CS30);
+    break;
+
+  case Board::PWM5:
+  case Board::PWM6:
+    // PWM5(4A), PMW6(4D), Fast PWM, prescale 64
+    TCCR4A |= _BV(PWM4A);
+    TCCR4B |= _BV(CS42) | _BV(CS41) | _BV(CS40);
+    TCCR4C |= _BV(PWM4D);
+    break;
+  }
+  set(duty); 
+}
+
+uint8_t
+PWMPin::get_duty()
+{
+  switch (m_pin) {
+  case Board::PWM0: return (OCR0A);
+  case Board::PWM1: return (OCR0B);
+  case Board::PWM2: return (OCR1A);
+  case Board::PWM3: return (OCR1B);
+  case Board::PWM4: return (OCR3A);
+  case Board::PWM5: return (OCR4A);
+  case Board::PWM6: return (OCR4D);
+  default:
+    return (is_set());
+  }
+}
+
+void 
+PWMPin::set(uint8_t duty)
+{
+  switch (m_pin) {
+  case Board::PWM0:
+    bit_set(TCCR0A, COM0A1);
+    OCR0A = duty;
+    return;
+  case Board::PWM1:
+    bit_set(TCCR0A, COM0B1);
+    OCR0B = duty;
+    return;
+  case Board::PWM2:
+    bit_set(TCCR1A, COM1A1);
+    OCR1A = duty;
+    return;
+  case Board::PWM3:
+    bit_set(TCCR1A, COM1B1);
+    OCR1B = duty;
+    return;
+  case Board::PWM4:
+    bit_set(TCCR3A, COM2A1);
+    OCR3A = duty;
+    return;
+  case Board::PWM5:
+    bit_set(TCCR4A, COM4A1);
+    bit_clear(TCCR4A, COM4A0);
+    OCR4A = duty;
+    return;
+  case Board::PWM6:
+    bit_set(TCCR4C, COM4D1);
+    OCR4D = duty;
+    return;
+  default:
+    OutputPin::set(duty);
+  }
+}
+
 #elif defined(BOARD_ATMEGA1248P)
 
 PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
