@@ -32,6 +32,17 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 
+// Idle time capture count. Reset of RTC micro-seconds overflow
+uint32_t idle = 0L;
+
+void iowait()
+{
+  uint32_t start = RTC::micros();
+  Power::sleep(); 
+  uint32_t stop = RTC::micros();
+  idle = (start > stop) ? 0L : idle + (stop - start);
+}
+
 static uint32_t epoch = 0L;
 
 static const char ANALOGREAD_NAME[] __PROGMEM = 

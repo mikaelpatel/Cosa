@@ -22,6 +22,7 @@
 #define COSA_INET_TELNET_HH
 
 #include "Cosa/Types.h"
+#include "Cosa/IOStream.hh"
 #include "Cosa/Socket.hh"
 
 class Telnet {
@@ -34,17 +35,26 @@ public:
    * virtual member function on_request() should be implemented to
    * receive client requests and send responses.
    */
-  class Server {
+  class Server : public IOStream {
   public:
     /** 
-     * Default constructor.
+     * Default telnet server constructor. Must call begin() to 
+     * initiate with socket. 
      */
     Server() : 
-      m_sock(NULL),
-      m_ios(),
+      IOStream(),
       m_connected(false)
     {
     }
+
+    /**
+     * Get telnet server socket.
+     * @return socket.
+     */
+    Socket* get_socket()
+    {
+      return ((Socket*) get_device());
+    }  
 
     /**
      * Get client address, network address and port.
@@ -52,7 +62,9 @@ public:
      */
     void get_client(INET::addr_t& addr)
     {
-      m_sock->get_src(addr);
+      Socket* sock = get_socket();
+      if (sock == NULL) return;
+      sock->get_src(addr);
     }  
 
     /**
@@ -65,6 +77,10 @@ public:
     bool begin(Socket* sock);
 
     /**
+     * Run server; service incoming client connect requests or data.
+     * Wait for at most given time period or block. Return zero if
+     * successful or negative error code. The error code -2 is 
+     * returned on timeout. 
      * @param[in] ms timeout period (milli-seconds, default BLOCK).
      * @return zero or negative error code.
      */
@@ -84,7 +100,11 @@ public:
      * @param[in] ios iostream for response.
      * @return bool.
      */
-    virtual bool on_connect(IOStream& ios) = 0;
+    virtual bool on_connect(IOStream& ios) 
+    { 
+      UNUSED(ios);
+      return (true);
+    }
 
     /**
      * @override Telnet::Server
@@ -98,15 +118,11 @@ public:
      * @override Telnet::Server
      * Application extension; Called when a client disconnects.
      */
-    virtual void on_disconnect() = 0;
+    virtual void on_disconnect() 
+    {
+    }
 
   protected:
-    /** Listen/client socket. Reused between clients. */
-    Socket* m_sock;
-
-    /** IOStream for input parsing and output print. */
-    IOStream m_ios;
-
     /** State variable; listening/disconnect(false), connected(true). */
     bool m_connected;
   };

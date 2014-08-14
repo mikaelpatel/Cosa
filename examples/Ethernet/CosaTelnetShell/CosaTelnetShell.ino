@@ -92,17 +92,6 @@ TelnetShell server;
 static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
 W5100 ethernet(mac);
 
-// Idle time capture count. Reset of RTC micro-seconds overflow
-uint32_t idle = 0L;
-
-void iowait()
-{
-  uint32_t start = RTC::micros();
-  Power::sleep(); 
-  uint32_t stop = RTC::micros();
-  idle = (start > stop) ? 0L : idle + (stop - start);
-}
-
 void setup()
 {
   // Initiate timers
@@ -120,9 +109,7 @@ void setup()
   ASSERT(ethernet.begin_P(PSTR("CosaTelnetShell")));
 
   // Allocate a TCP socket and start server
-  Socket* sock = ethernet.socket(Socket::TCP, Telnet::PORT);
-  ASSERT(sock != NULL);
-  ASSERT(server.begin(sock));
+  ASSERT(server.begin(ethernet.socket(Socket::TCP, Telnet::PORT)));
 }
 
 void loop()

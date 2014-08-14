@@ -30,6 +30,7 @@
 extern Shell shell;
 extern IOStream ios;
 extern uint32_t idle;
+extern void iowait();
 
 #endif
 
