@@ -19,71 +19,31 @@
  */
 
 #include "Cosa/INET/Telnet.hh"
-#include "Cosa/Watchdog.hh"
 
 bool 
 Telnet::Server::begin(Socket* sock)
 {
+  // Sanity check parameter
   if (sock == NULL) return (false);
-  // Set socket and bind to io-stream
+
+  // Set telnet end of line mode (crlf)
   sock->set_eol(IOStream::CRLF_MODE);
-  set_device(sock);
-  // Set in listen mode
-  return (sock->listen() == 0);
-}
 
-int 
-Telnet::Server::run(uint32_t ms)
-{
-  Socket* sock = get_socket();
-  if (sock == NULL) return (-1);
-  uint32_t start = Watchdog::millis();
-  int res;
-
-  // Check if not checked; accept incoming requests
-  if (!m_connected) {
-    while (((res = sock->accept()) != 0) &&
-	   ((ms == 0L) || (Watchdog::since(start) < ms))) 
-      yield();
-    if (res != 0) return (-2);
-    // Skip first line from client; terminal settings
-    while ((res = sock->available()) == 0) yield();
-    if (res < 0) goto error;
-    while (res--) sock->getchar();
-    // Call handler for initial prompt
-    if (!on_connect(*this)) goto error;
-    sock->flush();
-    m_connected = true;
-    return (0);
-  }
-
-  // Client has been accepted; check for incoming command
-  while (((res = sock->available()) == 0) &&
-	 ((ms == 0L) || (Watchdog::since(start) < ms))) 
-    yield();
-  if (res > 0) {
-    on_request(*this);
-    res = sock->flush();
-  }
-  if (res == 0) return (0);
-
- error:
-  // Error handling; close and restart listen mode
-  on_disconnect();
-  m_connected = false;
-  sock->disconnect();
-  sock->listen();
-  return (res);
+  // Complete the setup
+  return (INET::Server::begin(sock));
 }
 
 bool 
-Telnet::Server::end()
+Telnet::Server::on_accept(IOStream& ios)
 {
+  // Sanity check server state
   Socket* sock = get_socket();
   if (sock == NULL) return (false);
-  // Close the socket and mark as disconnected
-  sock->close();
-  m_connected = false;
+
+  // Skip first line from client; terminal settings not implemented
+  int res;
+  while ((res = sock->available()) == 0) yield();
+  if (res < 0) return (false);
+  while (res--) sock->getchar();
   return (true);
 }
-

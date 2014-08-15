@@ -50,43 +50,26 @@
 OutputPin sd(Board::D4, 1);
 #endif
 
-// Input/Output Stream (bound to client socket)
-IOStream ios;
-
 // The Telnet Shell Server
 class TelnetShell : public Telnet::Server {
 public:
-  bool begin(Socket* sock);
-  virtual bool on_connect(IOStream& ios);
-  virtual void on_request(IOStream& ios);
-  virtual void on_disconnect();
+  TelnetShell(Shell& shell, IOStream& ios) :
+    Telnet::Server(ios),
+    m_shell(shell)
+  {}
+  bool begin(Socket* sock)
+  {
+    if (!Telnet::Server::begin(sock)) return (false);
+    m_shell.set_echo(false);
+    return (true);
+  }  
+  virtual void on_connect(IOStream& ios) { m_shell.run(ios); }
+  virtual void on_request(IOStream& ios) { m_shell.run(ios); }
+  virtual void on_disconnect() { m_shell.reset(); }
+protected:
+  Shell& m_shell;
 };
-
-bool TelnetShell::begin(Socket* sock)
-{
-  if (!Telnet::Server::begin(sock)) return (false);
-  ios.set_device(sock);
-  shell.set_echo(false);
-  return (true);
-}
-
-bool TelnetShell::on_connect(IOStream& ios) 
-{
-  shell.run(ios);
-  return (true);
-}
-
-void TelnetShell::on_request(IOStream& ios) 
-{
-  shell.run(ios);
-}
-
-void TelnetShell::on_disconnect()
-{
-  shell.reset();
-}
-
-TelnetShell server;
+TelnetShell server(shell, ios);
 
 // W5100 Ethernet Controller with MAC-address
 static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };

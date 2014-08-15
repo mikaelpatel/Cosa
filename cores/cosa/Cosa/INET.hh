@@ -24,6 +24,8 @@
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 
+class Socket;
+
 /**
  * Internet message passing support functions.
  */
@@ -121,6 +123,117 @@ public:
    * @param[in] port.
    */
   static void print_addr(IOStream& outs, const uint8_t addr[IP_MAX], uint16_t port = 0);
+
+  /**
+   * Server request handler. Should be sub-classed and the virtual
+   * member function on_request() should be implemented to receive
+   * client requests and send responses. 
+   */
+  class Server {
+  public:
+    /** 
+     * Default server constructor. Must call begin() to initiate with
+     * socket. Associate with given io-stream. The socket will be
+     * bound as the io-stream device.
+     * @param[in] ios associated io-stream.
+     */
+    Server(IOStream& ios) : 
+      m_ios(ios),
+      m_connected(false)
+    {
+    }
+
+    /**
+     * Get server socket.
+     * @return socket.
+     */
+    Socket* get_socket()
+    {
+      return ((Socket*) m_ios.get_device());
+    }  
+
+    /**
+     * Get client address, network address and port.
+     * @param[out] addr network address.
+     */
+    void get_client(INET::addr_t& addr);
+
+    /**
+     * @override INET::Server
+     * Start server with given socket. Initiates socket for incoming
+     * connection-oriented requests (TCP/listen). Returns true if
+     * successful otherwise false.
+     * @param[in] sock server socket.
+     * @return bool.
+     */
+    virtual bool begin(Socket* sock);
+
+    /**
+     * @override INET::Server
+     * Run server; service incoming client connect requests or data.
+     * Wait for at most given time period. Zero time period will give
+     * blocking behavior. Returns zero if successful or negative error
+     * code. The error code -2 is returned on timeout. 
+     * @param[in] ms timeout period (milli-seconds, default BLOCK(0)).
+     * @return zero or negative error code.
+     */
+    virtual int run(uint32_t ms = 0L);
+
+    /**
+     * @override INET::Server
+     * Stop server and close socket. Returns true if successful
+     * otherwise false.
+     * @return bool.
+     */
+    virtual bool end();
+
+    /**
+     * @override INET::Server
+     * Application extension; Called when a client connect has been
+     * accepted. Return true if application accepts otherwise false.
+     * @param[in] ios iostream for response.
+     * @return bool.
+     */
+    virtual bool on_accept(IOStream& ios) 
+    { 
+      UNUSED(ios);
+      return (true);
+    }
+
+    /**
+     * @override INET::Server
+     * Application extension; Called when a client connect has
+     * been accepted.
+     * @param[in] ios iostream for response.
+     */
+    virtual void on_connect(IOStream& ios)
+    {
+      UNUSED(ios);
+    }
+
+    /**
+     * @override INET::Server
+     * Application extension; Should implement the response to the
+     * incoming request. Called with there is available data.
+     * @param[in] ios iostream for request and response.
+     */
+    virtual void on_request(IOStream& ios) = 0;
+
+    /**
+     * @override INET::Server
+     * Application extension; Called when a client disconnects.
+     */
+    virtual void on_disconnect() 
+    {
+    }
+
+  protected:
+    /** Associated io-stream */
+    IOStream& m_ios;
+
+    /** State variable; listening/disconnect(false), connected(true). */
+    bool m_connected;
+  };
 };
 
 #endif

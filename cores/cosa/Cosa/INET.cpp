@@ -19,6 +19,8 @@
  */
 
 #include "Cosa/INET.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Socket.hh"
 #include <ctype.h>
 
 bool
@@ -123,3 +125,83 @@ INET::print_addr(IOStream& outs, const uint8_t* addr, uint16_t port)
   if (port == 0) return;
   outs << ':' << port;
 }
+
+void 
+INET::Server::get_client(INET::addr_t& addr)
+{
+  Socket* sock = get_socket();
+  if (sock == NULL) return;
+  sock->get_src(addr);
+}  
+
+bool 
+INET::Server::begin(Socket* sock)
+{
+  // Sanity check parameter
+  if (sock == NULL) return (false);
+
+  // Bind to io-stream
+  m_ios.set_device(sock);
+
+  // Set socket to listen mode
+  return (sock->listen() == 0);
+}
+
+int 
+INET::Server::run(uint32_t ms)
+{
+  // Sanity check server state
+  Socket* sock = get_socket();
+  if (sock == NULL) return (-1);
+
+  // When not connected; Check incoming connect requests
+  uint32_t start = Watchdog::millis();
+  int res;
+  if (!m_connected) {
+    while (((res = sock->accept()) != 0) &&
+	   ((ms == 0L) || (Watchdog::since(start) < ms))) 
+      yield();
+    if (res != 0) return (-2);
+    // Check if application accepts the connection
+    if (!on_accept(m_ios)) goto error;
+    // Run application connect
+    on_connect(m_ios);
+    // Flush response message
+    sock->flush();
+    m_connected = true;
+    return (0);
+  }
+
+  // Client has been accepted; check for incoming requests
+  while (((res = sock->available()) == 0) &&
+	 ((ms == 0L) || (Watchdog::since(start) < ms))) 
+    yield();
+  // If a message is available call application request handling
+  if (res > 0) {
+    on_request(m_ios);
+    res = sock->flush();
+  }
+  if (res == 0) return (0);
+
+ error:
+  // Error handling; close and restart listen mode
+  on_disconnect();
+  m_connected = false;
+  sock->disconnect();
+  sock->listen();
+  return (res);
+}
+
+bool 
+INET::Server::end()
+{
+  // Sanity check server state
+  Socket* sock = get_socket();
+  if (sock == NULL) return (false);
+
+  // Close the socket and mark as disconnected
+  sock->close();
+  m_connected = false;
+  return (true);
+}
+

@@ -32,99 +32,41 @@ public:
 
   /**
    * Telnet server request handler. Should be sub-classed and the
-   * virtual member function on_request() should be implemented to
-   * receive client requests and send responses.
+   * virtual member function INET::Server::on_request() should be
+   * implemented to receive client requests and send responses.
    */
-  class Server : public IOStream {
+  class Server : public INET::Server {
   public:
     /** 
      * Default telnet server constructor. Must call begin() to 
      * initiate with socket. 
+     * @param[in] ios associated io-stream.
      */
-    Server() : 
-      IOStream(),
-      m_connected(false)
+    Server(IOStream& ios) : INET::Server(ios) 
     {
     }
 
     /**
-     * Get telnet server socket.
-     * @return socket.
-     */
-    Socket* get_socket()
-    {
-      return ((Socket*) get_device());
-    }  
-
-    /**
-     * Get client address, network address and port.
-     * @param[out] addr network address.
-     */
-    void get_client(INET::addr_t& addr)
-    {
-      Socket* sock = get_socket();
-      if (sock == NULL) return;
-      sock->get_src(addr);
-    }  
-
-    /**
+     * @override INET::Server
      * Start server with given socket. Initiates socket for incoming
-     * connection-oriented requests (TCP/listen). Returns true if
-     * successful otherwise false.
+     * connection-oriented requests (TCP/listen). Set io-stream device
+     * (socket) in no echo mode. Returns true if successful otherwise
+     * false. 
      * @param[in] sock server socket.
      * @return bool.
      */
-    bool begin(Socket* sock);
+    virtual bool begin(Socket* sock);
 
+  protected:
     /**
-     * Run server; service incoming client connect requests or data.
-     * Wait for at most given time period or block. Return zero if
-     * successful or negative error code. The error code -2 is 
-     * returned on timeout. 
-     * @param[in] ms timeout period (milli-seconds, default BLOCK).
-     * @return zero or negative error code.
-     */
-    int run(uint32_t ms = 0L);
-
-    /**
-     * Stop server and close socket. Returns true if successful
-     * otherwise false.
-     * @return bool.
-     */
-    bool end();
-
-    /**
-     * @override Telnet::Server
+     * @override INET::Server
      * Application extension; Called when a client connect has been
-     * accepted. Return true if accepted otherwise false.
+     * accepted. Handle flush of telnet terminal setting on connect. 
+     * Return true if accepted otherwise false.
      * @param[in] ios iostream for response.
      * @return bool.
      */
-    virtual bool on_connect(IOStream& ios) 
-    { 
-      UNUSED(ios);
-      return (true);
-    }
-
-    /**
-     * @override Telnet::Server
-     * Application extension; Should implement the response to the
-     * given request. Called with there is available data.
-     * @param[in] ios iostream for request and response.
-     */
-    virtual void on_request(IOStream& ios) = 0;
-
-    /**
-     * @override Telnet::Server
-     * Application extension; Called when a client disconnects.
-     */
-    virtual void on_disconnect() 
-    {
-    }
-
-  protected:
-    /** State variable; listening/disconnect(false), connected(true). */
-    bool m_connected;
+    virtual bool on_accept(IOStream& ios);
   };
 };
 

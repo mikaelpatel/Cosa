@@ -32,6 +32,9 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 
+// Input/Output Stream (bound to client socket)
+IOStream ios;
+
 // Idle time capture count. Reset of RTC micro-seconds overflow
 uint32_t idle = 0L;
 
