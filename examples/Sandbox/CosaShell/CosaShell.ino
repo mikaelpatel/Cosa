@@ -29,17 +29,6 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-IOStream ios(&uart);
-uint32_t idle = 0L;
-
-void iowait()
-{
-  uint32_t start = RTC::micros();
-  Power::sleep(); 
-  uint32_t stop = RTC::micros();
-  idle = (start > stop) ? 0L : idle + (stop - start);
-}
-
 void setup()
 {
   Watchdog::begin();

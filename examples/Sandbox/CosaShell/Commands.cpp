@@ -29,6 +29,20 @@
 #include "Cosa/IOPin.hh"
 #include "Cosa/OWI.hh"
 #include "Cosa/TWI.hh"
+#include "Cosa/IOStream.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+
+IOStream ios(&uart);
+
+static uint32_t idle = 0L;
+
+void iowait()
+{
+  uint32_t start = RTC::micros();
+  Power::sleep(); 
+  uint32_t stop = RTC::micros();
+  idle = (start > stop) ? 0L : idle + (stop - start);
+}
 
 static uint32_t epoch = 0L;
 
@@ -320,6 +334,12 @@ static int epoch_action(int argc, char* argv[])
   return (0);
 }
 
+static const char LOGOUT_NAME[] __PROGMEM = 
+  "logout";
+static const char LOGOUT_HELP[] __PROGMEM = 
+  "-- logout from shell";
+static int logout_action(int argc, char* argv[]);
+
 static const char HELP_NAME[] __PROGMEM = 
   "help";
 static const char HELP_HELP[] __PROGMEM = 
@@ -531,6 +551,7 @@ static int stty_action(int argc, char* argv[])
   }
   if (ix != argc) return (-1);
   ios.get_device()->set_eol(mode);
+  ios << PSTR("eol=");
   switch (mode) {
   case IOStream::CR_MODE: ios << PSTR("CR"); break;
   case IOStream::LF_MODE: ios << PSTR("LF"); break;
@@ -618,6 +639,7 @@ static const Shell::command_t command_tab[] __PROGMEM = {
   { HELP_NAME, HELP_HELP, help_action },
   { IDLE_NAME, IDLE_HELP, idle_action },
   { LED_NAME, LED_HELP, led_action },
+  { LOGOUT_NAME, LOGOUT_HELP, logout_action },
   { MEMORY_NAME, MEMORY_HELP, memory_action },
   { MICROS_NAME, MICROS_HELP, micros_action },
   { MILLIS_NAME, MILLIS_HELP, millis_action },
@@ -630,4 +652,39 @@ static const Shell::command_t command_tab[] __PROGMEM = {
   { UPTIME_NAME, UPTIME_HELP, uptime_action }
 };
 
-Shell shell(membersof(command_tab), command_tab);
+static const char LOGIN_NAME[] __PROGMEM = 
+  "login";
+static const char LOGIN_HELP[] __PROGMEM = 
+  "USER -- authenticate user";
+static int login_action(int argc, char* argv[])
+{
+  UNUSED(argv);
+  if (argc != 2) return (-1);
+  if (strcmp_P(argv[1], PSTR("cosa")) != 0) return (-1);
+  ios << PSTR("password: ");
+  const size_t PASSWD_MAX = 32;
+  char passwd[PASSWD_MAX];
+  passwd[0] = 0;
+  while (ios.readline(passwd, PASSWD_MAX, false) == NULL) yield();
+  ios << endl;
+  if (strcmp_P(passwd, PSTR("ciao\n")) != 0) return (-1);
+  shell.set_commands(membersof(command_tab), command_tab);
+  return (0);
+}
+
+static const char INIT_PROMPT[] __PROGMEM = "$ ";
+static const Shell::command_t init_tab[] __PROGMEM = {
+  { HELP_NAME, HELP_HELP, help_action },
+  { LOGIN_NAME, LOGIN_HELP, login_action }
+};
+
+static int logout_action(int argc, char* argv[])
+{
+  UNUSED(argv);
+  if (argc != 1) return (-1);
+  shell.set_commands(membersof(init_tab), init_tab, INIT_PROMPT);
+  return (0);
+}
+
+Shell shell(membersof(init_tab), init_tab, INIT_PROMPT);
+

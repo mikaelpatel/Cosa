@@ -79,6 +79,25 @@ public:
   }
 
   /**
+   * Set new prompt. Pass NULL for default prompt.
+   * @param[in] prompt string in program memory.
+   */
+  void set_prompt(const char* prompt)
+  {
+    m_prompt = (prompt == NULL ? DEFAULT_PROMPT : prompt);
+  }
+
+  /**
+   * Get current prompt. Returns pointer to string in program
+   * memory.
+   * @return prompt.
+   */
+  const char* get_prompt()
+  {
+    return (m_prompt);
+  }
+
+  /**
    * Reset for new session.
    */
   void reset()
@@ -86,6 +105,19 @@ public:
     m_firstrun = true;
   }
 
+  /**
+   * Set new command table and associated prompt.
+   * @param[in] cmdc number of commands in vector (max 255).
+   * @param[in] cmdtab command table (in program memory).
+   * @param[in] prompt to be written to cout.
+   */
+  void set_commands(uint8_t cmdc, const command_t* cmdtab, const char* prompt = NULL)
+  {
+    m_cmdc = cmdc;
+    m_cmdtab = cmdtab;
+    m_prompt = (prompt == NULL ? DEFAULT_PROMPT : prompt);
+  }
+  
   /**
    * Parse command parameter list for options. The command has the
    * format: NAME -X -XVALUE OPTION=VALUE ARGUMENT.., where X is an
