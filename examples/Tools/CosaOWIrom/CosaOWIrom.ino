@@ -27,7 +27,11 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // One-wire pin
+#if !defined(BOARD_ATTINY)
 OWI owi(Board::D7);
+#else
+OWI owi(Board::D1);
+#endif
 
 void setup()
 {

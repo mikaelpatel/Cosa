@@ -221,7 +221,7 @@ void setup()
   TRACE(sizeof(RTC));
   TRACE(sizeof(Servo));
   TRACE(sizeof(Socket));
-#if !defined(ARDUINO_TINY)
+#if !defined(BOARD_ATTINY)
   TRACE(sizeof(W5100));
   TRACE(sizeof(W5100::Driver));
 #endif
@@ -248,9 +248,11 @@ void setup()
   TRACE(sizeof(PCF8591));
   TRACE(sizeof(Watchdog));
   TRACE(sizeof(Wireless::Driver));
+#if !defined(BOARD_ATTINY)
   TRACE(sizeof(CC1101));
   TRACE(sizeof(NRF24L01P));
   TRACE(sizeof(RFM69));
+#endif
   TRACE(sizeof(VWI));
 }
 

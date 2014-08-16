@@ -65,7 +65,7 @@ Echo::on_request(void* buf, size_t size)
 Echo echo;
 
 #if defined(BOARD_ATTINYX5)
-Soft::UART uart(Board::D1);
+Soft::UAT uart(Board::D1);
 #endif
 
 void setup()

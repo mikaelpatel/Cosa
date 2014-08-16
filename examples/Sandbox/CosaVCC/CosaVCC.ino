@@ -73,8 +73,12 @@ public:
   virtual void run() { sample_request(); }
 };
 
-// Sample analog pin A4 four times per second
+// Sample analog pin A4 (A1 on ATTINY) four times per second
+#if !defined(BOARD_ATTINY)
 Sampler sampler(Board::A4, 256);
+#else
+Sampler sampler(Board::A1, 256);
+#endif
 
 /**
  * Periodical display the values
