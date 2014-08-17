@@ -37,9 +37,9 @@
 #define DEVICE 0x81
 
 // Select Wireless device driver
-#define USE_CC1101
+// #define USE_CC1101
 // #define USE_NRF24L01P
-// #define USE_RFM69
+#define USE_RFM69
 // #define USE_VWI
 
 #if defined(USE_CC1101)
@@ -85,7 +85,7 @@ void loop()
   uint8_t src;
   ping_t nr;
 
-  while (rf.recv(src, port, &nr, sizeof(nr)) != sizeof(nr));
+  while (rf.recv(src, port, &nr, sizeof(nr)) != sizeof(nr)) yield();
   if (port != PING_TYPE) return;
   trace << RTC::millis() << PSTR(":pong:nr=") << nr << endl;
   nr += 1;
