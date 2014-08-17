@@ -1,5 +1,5 @@
 Use CTRL-ALT GR-] to exit monitor.
-/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q -e --lf /dev/ttyUSB0 9600
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkPins: started
 free_memory() = 1560
 sizeof(Event::Handler) = 2
@@ -31,7 +31,7 @@ I_CPU = 16
 284:void loop():info:OutputPin::toggle(D8):62 ns
 
 286:void loop():info:Measure the time to perform input pin read/output pin write
-295:void loop():info:outPin.write(!inPin.read()):1633 ns
+295:void loop():info:outPin.write(!inPin.read()):1640 ns
 305:void loop():info:inPin.is_set();outPin.clear/set():1633 ns
 317:void loop():info:inPin >> var; outPin << !var:1633 ns
 327:void loop():info:outPin.set(inPin.is_clear()):1633 ns

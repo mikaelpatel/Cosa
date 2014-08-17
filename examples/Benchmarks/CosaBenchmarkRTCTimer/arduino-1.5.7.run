@@ -1,7 +1,7 @@
 Use CTRL-ALT GR-] to exit monitor.
-/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q -e --lf /dev/ttyUSB0 9600
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkRTCTimer: started
-free_memory() = 1057
+free_memory() = 1053
 sizeof(Timer) = 10
 sizeof(Simple) = 10
 sizeof(OneShot) = 10

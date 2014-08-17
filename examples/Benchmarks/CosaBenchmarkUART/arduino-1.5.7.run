@@ -1,11 +1,11 @@
 Use CTRL-ALT GR-] to exit monitor.
-/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q -e --lf /dev/ttyUSB0 115200
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 115200
 CosaBenchmarkUART: started
 free_memory() = 435
 1
-one character:32 us
+one character:36 us
 1
-one character string:68 us
+one character string:72 us
 1
 integer:84 us
 1
@@ -14,7 +14,7 @@ long integer:76 us
 10
 two characters:68 us
 10
-two character string:76 us
+two character string:80 us
 10
 integer:104 us
 10
@@ -23,7 +23,7 @@ long integer:108 us
 100
 three characters:76 us
 100
-three character string:84 us
+three character string:88 us
 100
 integer:120 us
 100
@@ -32,16 +32,16 @@ long integer:140 us
 127
 max int8_t:120 us
 32767
-max int16_t:152 us
+max int16_t:156 us
 2147483647
 max int32_t:368 us
 
 255
-max uint8_t:124 us
+max uint8_t:120 us
 65535
-max uint16_t:160 us
+max uint16_t:156 us
 4294967295
-max uint32_t:372 us
+max uint32_t:368 us
 
 000100
 uint16_t(digits=6):136 us
