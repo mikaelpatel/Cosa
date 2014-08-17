@@ -108,9 +108,11 @@ void loop()
 #ifdef USE_WATCHDOG_DELAY
   // 1,5 mA, 64 ms blink
   Watchdog::begin();
+  delay = Watchdog::delay;
   while (wakeup.is_low()) {
     led.toggle();
-    Watchdog::delay(64);
+    // Watchdog::delay(64);
+    delay(64);
   }
   led.off();
   Watchdog::end();
@@ -118,7 +120,8 @@ void loop()
   // 15 mA, 16 ms blink
   while (wakeup.is_low()) {
     led.toggle();
-    for (uint8_t i = 0; i < 4; i++) DELAY(16000U);
+    // for (uint8_t i = 0; i < 4; i++) DELAY(16000U);
+    delay(64);
   }
   led.off();
 #endif
