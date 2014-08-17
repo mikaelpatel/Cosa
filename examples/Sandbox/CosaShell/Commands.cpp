@@ -68,10 +68,12 @@ static int analogread_action(int argc, char* argv[])
     Board::AnalogPin pin[argc];
     for (int i = 1; i < argc; i++) {
       char* name = argv[i];
-      if (name[0] != 'a' && name[0] != 'A') return (-1);
+      if (name[0] != 'a' && name[0] != 'A') 
+	return (Shell::ILLEGAL_COMMAND);
       char* sp;
       uint32_t ix = strtoul(name + 1, &sp, 10);
-      if (*sp != 0 || ix >= membersof(analog_pin_map)) return (-1);
+      if (*sp != 0 || ix >= membersof(analog_pin_map)) 
+	return (Shell::ILLEGAL_COMMAND);
       pin[i] = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[ix]);
     }
     for (int i = 1; i < argc; i++) {
@@ -133,33 +135,42 @@ static const char DATE_HELP[] __PROGMEM =
 static int date_action(int argc, char* argv[])
 {
   if (argc == 3) {
+    if (!shell.is_privileged(Shell::ADMIN)) 
+      return (Shell::PERMISSION_DENIED);
     uint32_t value;
     time_t now;
     char* sp;
     value = strtoul(argv[1], &sp, 10);
-    if (*sp != '-' || value < 2000 || value > 2099) return (-1);
+    if (*sp != '-' || value < 2000 || value > 2099) 
+      return (Shell::ILLEGAL_COMMAND);
     value -= 2000;
     now.year = value;
     value = strtoul(sp + 1, &sp, 10);
-    if (*sp != '-' || value < 1 || value > 12) return (-1);
+    if (*sp != '-' || value < 1 || value > 12) 
+      return (Shell::ILLEGAL_COMMAND);
     now.month = value;
     value = strtoul(sp + 1, &sp, 10);
-    if (*sp != 0 || value < 1 || value > 31) return (-1);
+    if (*sp != 0 || value < 1 || value > 31) 
+      return (Shell::ILLEGAL_COMMAND);
     now.date = value;
     value = strtoul(argv[2], &sp, 10);
-    if (*sp != ':' || value > 23) return (-1);
+    if (*sp != ':' || value > 23) 
+      return (Shell::ILLEGAL_COMMAND);
     now.hours = value;
     value = strtoul(sp + 1, &sp, 10);
-    if (*sp != ':' || value > 60) return (-1);
+    if (*sp != ':' || value > 60)
+      return (Shell::ILLEGAL_COMMAND);
     now.minutes = value;
     value = strtoul(sp + 1, &sp, 10);
-    if (*sp != 0 || value > 60) return (-1);
+    if (*sp != 0 || value > 60)
+      return (Shell::ILLEGAL_COMMAND);
     now.seconds = value;
     now.to_bcd();
     epoch = now;
     RTC::time(epoch);
   }
-  else if (argc != 1) return (-1);
+  else if (argc != 1)
+    return (Shell::ILLEGAL_COMMAND);
   time_t now(RTC::seconds());
   ios << now << endl;
   return (0);
@@ -171,10 +182,12 @@ static const char DELAY_HELP[] __PROGMEM =
   "MS -- delay for milliseconds";
 static int delay_action(int argc, char* argv[])
 {
-  if (argc != 2) return (-1);
+  if (argc != 2)
+    return (Shell::ILLEGAL_COMMAND);
   char* sp;
   uint32_t ms = strtoul(argv[1], &sp, 10);
-  if (*sp != 0) return (-1);
+  if (*sp != 0)
+    return (Shell::ILLEGAL_COMMAND);
   delay(ms);
   return (0);
 }
@@ -194,17 +207,18 @@ static int digitalread_action(int argc, char* argv[])
       ios << prefix << ix << '=' << InputPin::read(pin) << endl;
     }
   }
-  else if (argc == 2 && (strcmp_P(argv[1], PSTR("led")) == 0)) {
+  else if (argc == 2 && (strcmp_P(argv[1], PSTR("led")) == 0))
     ios << InputPin::read(Board::LED) << endl;
-  }
   else {
     Board::DigitalPin pin[argc];
     for (int i = 1; i < argc; i++) {
       char* name = argv[i];
-      if (name[0] != 'd' && name[0] != 'D') return (-1);
+      if (name[0] != 'd' && name[0] != 'D')
+	return (Shell::ILLEGAL_COMMAND);
       char* sp;
       uint32_t ix = strtoul(name + 1, &sp, 10);
-      if (*sp != 0 || ix >= membersof(digital_pin_map)) return (-1);
+      if (*sp != 0 || ix >= membersof(digital_pin_map))
+	return (Shell::ILLEGAL_COMMAND);
       pin[i] = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
     }
     for (int i = 1; i < argc; i++) {
@@ -222,17 +236,20 @@ static const char DIGITALTOGGLE_HELP[] __PROGMEM =
   "led|PIN -- toggle digital pin";
 static int digitaltoggle_action(int argc, char* argv[])
 {
-  if (argc != 2) return (-1);
+  if (argc != 2)
+    return (Shell::ILLEGAL_COMMAND);
   Board::DigitalPin pin;
   if (strcmp_P(argv[1], PSTR("led")) == 0) {
     pin = Board::LED;
   }
   else {
     char* name = argv[1];
-    if (name[0] != 'd' && name[0] != 'D') return (-1);
+    if (name[0] != 'd' && name[0] != 'D')
+      return (Shell::ILLEGAL_COMMAND);
     char* sp;
     uint32_t ix = strtoul(name + 1, &sp, 10);
-    if (*sp != 0 || ix >= membersof(digital_pin_map)) return (-1);
+    if (*sp != 0 || ix >= membersof(digital_pin_map))
+      return (Shell::ILLEGAL_COMMAND);
     pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
   }
   OutputPin::toggle(pin);
@@ -246,7 +263,8 @@ static const char DIGITALWRITE_HELP[] __PROGMEM =
   "led|PIN on|off-- write digital pin VALUE";
 static int digitalwrite_action(int argc, char* argv[])
 {
-  if (argc != 3) return (-1);
+  if (argc != 3)
+    return (Shell::ILLEGAL_COMMAND);
   Board::DigitalPin pin;
   char* name = argv[1];
   char* sp;
@@ -254,13 +272,16 @@ static int digitalwrite_action(int argc, char* argv[])
     pin = Board::LED;
   }
   else {
-    if (name[0] != 'd' && name[0] != 'D') return (-1);
+    if (name[0] != 'd' && name[0] != 'D')
+      return (Shell::ILLEGAL_COMMAND);
     uint32_t ix = strtoul(name + 1, &sp, 10);
-    if (*sp != 0 || ix >= membersof(digital_pin_map)) return (-1);
+    if (*sp != 0 || ix >= membersof(digital_pin_map))
+      return (Shell::ILLEGAL_COMMAND);
     pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
   }
   bool value = (strtoul(argv[2], &sp, 10) != 0);
-  if (*sp != 0) return (-1);
+  if (*sp != 0)
+    return (Shell::ILLEGAL_COMMAND);
   OutputPin::write(pin, value);
   ios << InputPin::read(pin) << endl;
   return (0);
@@ -280,22 +301,27 @@ static int dump_action(int argc, char* argv[])
   char* sp;
   int ix;
   while ((ix = shell.get(option, value)) == 0) {
+    if (*value != 0)
+      return (Shell::ILLEGAL_OPTION);
     if (strcmp_P(option, PSTR("b")) == 0)
       base = IOStream::bin;
     else if (strcmp_P(option, PSTR("d")) == 0)
       base = IOStream::dec;
     else 
-      return (-1);
+      return (Shell::UNKNOWN_OPTION);
   }
   if (ix < argc) {
     addr = strtoul(argv[ix++], &sp, 16);
-    if (*sp != 0) return (-1);
+    if (*sp != 0)
+      return (Shell::ILLEGAL_COMMAND);
   }
   if (ix < argc) {
     size = strtoul(argv[ix++], &sp, 10);
-    if (*sp != 0) return (-1);
+    if (*sp != 0)
+      return (Shell::ILLEGAL_COMMAND);
   }
-  if (ix != argc) return (-1);
+  if (ix != argc)
+    return (Shell::ILLEGAL_COMMAND);
   ios.print(addr, (void*) addr, size, base);
   return (0);
 }
@@ -313,7 +339,8 @@ static int echo_action(int argc, char* argv[])
   while ((ix = shell.get(option, value)) == 0)
     if (strcmp_P(option, PSTR("n")) == 0)
       newline = false;
-    else return (-1);
+    else
+      return (Shell::ILLEGAL_COMMAND);
   if (ix == argc) return (0);
   ios << argv[ix++];
   while (ix < argc) ios << ' ' << argv[ix++];
@@ -328,7 +355,8 @@ static const char EPOCH_HELP[] __PROGMEM =
 static int epoch_action(int argc, char* argv[])
 {
   UNUSED(argv);
-  if (argc != 1) return (-1);
+  if (argc != 1)
+    return (Shell::ILLEGAL_COMMAND);
   time_t now(epoch);
   ios << now << endl;
   return (0);
@@ -347,7 +375,8 @@ static const char HELP_HELP[] __PROGMEM =
 static int help_action(int argc, char* argv[])
 {
   UNUSED(argv);
-  if (argc != 1) return (-1);
+  if (argc != 1)
+    return (Shell::ILLEGAL_COMMAND);
   return (shell.help(ios));
 }
 
@@ -358,7 +387,8 @@ static const char IDLE_HELP[] __PROGMEM =
 static int idle_action(int argc, char* argv[])
 {
   UNUSED(argv);
-  if (argc != 1) return (-1);
+  if (argc != 1)
+    return (Shell::ILLEGAL_COMMAND);
   ios << (idle * 100.0) / RTC::micros() << '%' << endl;
   return (0);
 }
@@ -369,12 +399,14 @@ static const char LED_HELP[] __PROGMEM =
   "on|off -- turn led on or off";
 static int led_action(int argc, char* argv[])
 {
-  if (argc != 2) return (-1);
+  if (argc != 2)
+    return (Shell::ILLEGAL_COMMAND);
   if (strcmp_P(argv[1], PSTR("on")) == 0) 
     OutputPin::write(Board::LED, 1);
   else if (strcmp_P(argv[1], PSTR("off")) == 0) 
     OutputPin::write(Board::LED, 0);
-  else return (-1);
+  else
+    return (Shell::ILLEGAL_COMMAND);
   return (0);
 }
 
@@ -385,7 +417,8 @@ static const char MEMORY_HELP[] __PROGMEM =
 static int memory_action(int argc, char* argv[])
 {
   UNUSED(argv);
-  if (argc != 1) return (-1);
+  if (argc != 1)
+    return (Shell::ILLEGAL_COMMAND);
   ios << free_memory() << PSTR(" bytes") << endl;
   return (0);
 }
@@ -397,7 +430,8 @@ static const char MICROS_HELP[] __PROGMEM =
 static int micros_action(int argc, char* argv[])
 {
   UNUSED(argv);
-  if (argc != 1) return (-1);
+  if (argc != 1)
+    return (Shell::ILLEGAL_COMMAND);
   ios << RTC::micros() << endl;
   return (0);
 }
@@ -409,7 +443,8 @@ static const char MILLIS_HELP[] __PROGMEM =
 static int millis_action(int argc, char* argv[])
 {
   UNUSED(argv);
-  if (argc != 1) return (-1);
+  if (argc != 1)
+    return (Shell::ILLEGAL_COMMAND);
   ios << RTC::millis() << endl;
   return (0);
 }
@@ -420,13 +455,17 @@ static const char OWI_HELP[] __PROGMEM =
   "scan PIN -- scan 1-wire bus";
 static int owi_action(int argc, char* argv[])
 {
-  if (argc != 3) return (-1);
-  if (strcmp_P(argv[1], PSTR("scan")) != 0) return (-1);
+  if (argc != 3)
+    return (Shell::ILLEGAL_COMMAND);
+  if (strcmp_P(argv[1], PSTR("scan")) != 0)
+    return (Shell::ILLEGAL_COMMAND);
   char* name = argv[2];
   char* sp;
-  if (name[0] != 'd' && name[0] != 'D') return (-1);
+  if (name[0] != 'd' && name[0] != 'D')
+    return (Shell::ILLEGAL_COMMAND);
   uint32_t ix = strtoul(name + 1, &sp, 10);
-  if (*sp != 0 || ix >= membersof(digital_pin_map)) return (-1);
+  if (*sp != 0 || ix >= membersof(digital_pin_map))
+    return (Shell::ILLEGAL_COMMAND);
   OWI owi((Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]));
   ios << owi;
   return (0);
@@ -434,9 +473,8 @@ static int owi_action(int argc, char* argv[])
 
 static void write_pinmode(Board::DigitalPin pin)
 {
-  if (IOPin::get_mode(pin) == IOPin::OUTPUT_MODE) {
+  if (IOPin::get_mode(pin) == IOPin::OUTPUT_MODE)
     ios << PSTR("output") << endl;
-  }
   else {
     ios << PSTR("input");
     if (InputPin::get_mode(pin) == InputPin::PULLUP_MODE) 
@@ -451,7 +489,8 @@ static const char PINMODE_HELP[] __PROGMEM =
   "all|ALL|led|PIN [input|output|pullup] -- display or set pin mode";
 static int pinmode_action(int argc, char* argv[])
 {
-  if (argc < 2 || argc > 3) return (-1);
+  if (argc < 2 || argc > 3)
+    return (Shell::ILLEGAL_COMMAND);
   Board::DigitalPin pin;
   char* name = argv[1];
   if (argc == 2 && (strcmp_P(argv[1], PSTR("all")) == 0 ||
@@ -464,24 +503,28 @@ static int pinmode_action(int argc, char* argv[])
     }
     return (0);
   }
-  else if (strcmp_P(name, PSTR("led")) == 0) {
+  else if (strcmp_P(name, PSTR("led")) == 0)
     pin = Board::LED;
-  }
   else if (name[0] == 'd' || name[0] == 'D') {
     char* sp;
     uint32_t ix = strtoul(name + 1, &sp, 10);
-    if (*sp != 0 || ix >= membersof(digital_pin_map)) return (-1);
+    if (*sp != 0 || ix >= membersof(digital_pin_map))
+      return (Shell::ILLEGAL_COMMAND);
     pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
   }
-  else return (-1);
+  else
+    return (Shell::ILLEGAL_COMMAND);
   if (argc == 3) {
+    if (!shell.is_privileged(Shell::USER)) 
+      return (Shell::PERMISSION_DENIED);
     if (strcmp_P(argv[2], PSTR("input")) == 0) 
       IOPin::set_mode(pin, IOPin::INPUT_MODE);
     else if (strcmp_P(argv[2], PSTR("output")) == 0) 
       IOPin::set_mode(pin, IOPin::OUTPUT_MODE);
     else if (strcmp_P(argv[2], PSTR("pullup")) == 0) 
       InputPin::set_mode(pin, InputPin::PULLUP_MODE);
-    else return (-1);
+    else
+      return (Shell::ILLEGAL_COMMAND);
   }
   write_pinmode(pin);
   return (0);
@@ -498,15 +541,16 @@ static int repeat_action(int argc, char* argv[])
   if (timing) ix += 1;
   char* sp;
   uint16_t count = strtoul(argv[ix++], &sp, 10);
-  if (*sp != 0 || count == 0) return (-1);
+  if (*sp != 0 || count == 0)
+    return (Shell::ILLEGAL_COMMAND);
   uint32_t ms = strtoul(argv[ix], &sp, 10);
   if (*sp != 0) {
     ms = 0L;
   }
-  else {
+  else
     ix += 1;
-  }
-  if (argc < ix + 1) return (-1);
+  if (argc < ix + 1)
+    return (Shell::ILLEGAL_COMMAND);
   const size_t BUF_MAX = 64;
   char buf[BUF_MAX];
   uint8_t fx = ix;
@@ -519,7 +563,8 @@ static int repeat_action(int argc, char* argv[])
       strcat(buf, " ");
       strcat(buf, argv[ix++]);
     }
-    if (shell.execute(buf) != 0) return (-1);
+    if (shell.execute(buf) != 0)
+      return (Shell::ILLEGAL_COMMAND);
     if (ms != 0) delay(ms);
   } while (--count);
   uint32_t stop = RTC::millis();
@@ -546,10 +591,14 @@ static int stty_action(int argc, char* argv[])
 	mode = IOStream::LF_MODE;
       else if (strcmp_P(value, PSTR("CRLF")) == 0) 
 	mode = IOStream::CRLF_MODE;
-      else return (-1);
+      else
+	return (Shell::ILLEGAL_OPTION);
     }
+    else
+      return (Shell::UNKNOWN_OPTION);
   }
-  if (ix != argc) return (-1);
+  if (ix != argc)
+    return (Shell::ILLEGAL_COMMAND);
   ios.get_device()->set_eol(mode);
   ios << PSTR("eol=");
   switch (mode) {
@@ -567,23 +616,27 @@ static const char TONE_HELP[] __PROGMEM =
   "off | FREQ [VOLUME [DURATION]] -- play tone";
 static int tone_action(int argc, char* argv[])
 {
-  if (argc < 2 || argc > 4) return (-1);
+  if (argc < 2 || argc > 4)
+    return (Shell::ILLEGAL_COMMAND);
   if (argc == 2 && strcmp_P(argv[1], PSTR("off")) == 0) {
     Tone::silent();
   }
   else {
     char* sp;
     uint16_t freq = strtoul(argv[1], &sp, 10);
-    if (*sp != 0) return (-1);
+    if (*sp != 0)
+      return (Shell::ILLEGAL_COMMAND);
     uint8_t volume = Tone::VOLUME_MAX / 2;
     if (argc > 2) {
       volume = strtoul(argv[2], &sp, 10);
-      if (*sp != 0) return (-1);
+      if (*sp != 0)
+	return (Shell::ILLEGAL_COMMAND);
     }
     uint16_t duration = 0;
     if (argc > 3) {
       duration = strtoul(argv[3], &sp, 10);
-      if (*sp != 0) return (-1);
+      if (*sp != 0)
+	return (Shell::ILLEGAL_COMMAND);
     }
     Tone::play(freq, volume, duration);
   }
@@ -596,8 +649,10 @@ static const char TWI_HELP[] __PROGMEM =
   "scan -- scan I2C bus";
 static int twi_action(int argc, char* argv[])
 {
-  if (argc != 2) return (-1);
-  if (strcmp_P(argv[1], PSTR("scan")) != 0) return (-1);
+  if (argc != 2)
+    return (Shell::ILLEGAL_COMMAND);
+  if (strcmp_P(argv[1], PSTR("scan")) != 0)
+    return (Shell::ILLEGAL_COMMAND);
   for (uint8_t addr = 3; addr < 128; addr++) {
     TWI::Driver dev(addr);
     twi.begin(&dev);
@@ -619,37 +674,38 @@ static const char UPTIME_HELP[] __PROGMEM =
 static int uptime_action(int argc, char* argv[])
 {
   UNUSED(argv);
-  if (argc != 1) return (-1);
+  if (argc != 1)
+    return (Shell::ILLEGAL_COMMAND);
   ios << RTC::seconds() - epoch << endl;
   return (0);
 }
 
 static const Shell::command_t command_tab[] __PROGMEM = {
-  { ANALOGREAD_NAME, ANALOGREAD_HELP, analogread_action },
-  { ARGS_NAME, ARGS_HELP, args_action },
-  { BLINK_NAME, BLINK_HELP, blink_action },
-  { DATE_NAME, DATE_HELP, date_action },
-  { DELAY_NAME, DELAY_HELP, delay_action },
-  { DUMP_NAME, DUMP_HELP, dump_action },
-  { ECHO_NAME, ECHO_HELP, echo_action },
-  { EPOCH_NAME, EPOCH_HELP, epoch_action },
-  { DIGITALREAD_NAME, DIGITALREAD_HELP, digitalread_action },
-  { DIGITALTOGGLE_NAME, DIGITALTOGGLE_HELP, digitaltoggle_action },
-  { DIGITALWRITE_NAME, DIGITALWRITE_HELP, digitalwrite_action },
-  { HELP_NAME, HELP_HELP, help_action },
-  { IDLE_NAME, IDLE_HELP, idle_action },
-  { LED_NAME, LED_HELP, led_action },
-  { LOGOUT_NAME, LOGOUT_HELP, logout_action },
-  { MEMORY_NAME, MEMORY_HELP, memory_action },
-  { MICROS_NAME, MICROS_HELP, micros_action },
-  { MILLIS_NAME, MILLIS_HELP, millis_action },
-  { OWI_NAME, OWI_HELP, owi_action },
-  { PINMODE_NAME, PINMODE_HELP, pinmode_action },
-  { REPEAT_NAME, REPEAT_HELP, repeat_action },
-  { STTY_NAME, STTY_HELP, stty_action },
-  { TONE_NAME, TONE_HELP, tone_action },
-  { TWI_NAME, TWI_HELP, twi_action },
-  { UPTIME_NAME, UPTIME_HELP, uptime_action }
+  { ANALOGREAD_NAME, ANALOGREAD_HELP, analogread_action, Shell::USER },
+  { ARGS_NAME, ARGS_HELP, args_action, Shell::GUEST },
+  { BLINK_NAME, BLINK_HELP, blink_action, Shell::USER },
+  { DATE_NAME, DATE_HELP, date_action, Shell::GUEST },
+  { DELAY_NAME, DELAY_HELP, delay_action, Shell::USER },
+  { DUMP_NAME, DUMP_HELP, dump_action, Shell::USER },
+  { ECHO_NAME, ECHO_HELP, echo_action, Shell::USER },
+  { EPOCH_NAME, EPOCH_HELP, epoch_action, Shell::GUEST },
+  { DIGITALREAD_NAME, DIGITALREAD_HELP, digitalread_action, Shell::GUEST },
+  { DIGITALTOGGLE_NAME, DIGITALTOGGLE_HELP, digitaltoggle_action, Shell::USER },
+  { DIGITALWRITE_NAME, DIGITALWRITE_HELP, digitalwrite_action, Shell::USER },
+  { HELP_NAME, HELP_HELP, help_action, Shell::GUEST },
+  { IDLE_NAME, IDLE_HELP, idle_action, Shell::GUEST },
+  { LED_NAME, LED_HELP, led_action, Shell::GUEST },
+  { LOGOUT_NAME, LOGOUT_HELP, logout_action, Shell::GUEST },
+  { MEMORY_NAME, MEMORY_HELP, memory_action, Shell::USER },
+  { MICROS_NAME, MICROS_HELP, micros_action, Shell::USER },
+  { MILLIS_NAME, MILLIS_HELP, millis_action, Shell::USER },
+  { OWI_NAME, OWI_HELP, owi_action, Shell::USER },
+  { PINMODE_NAME, PINMODE_HELP, pinmode_action, Shell::GUEST },
+  { REPEAT_NAME, REPEAT_HELP, repeat_action, Shell::USER },
+  { STTY_NAME, STTY_HELP, stty_action, Shell::USER },
+  { TONE_NAME, TONE_HELP, tone_action, Shell::USER },
+  { TWI_NAME, TWI_HELP, twi_action, Shell::USER },
+  { UPTIME_NAME, UPTIME_HELP, uptime_action, Shell::GUEST }
 };
 
 static const char LOGIN_NAME[] __PROGMEM = 
@@ -659,29 +715,39 @@ static const char LOGIN_HELP[] __PROGMEM =
 static int login_action(int argc, char* argv[])
 {
   UNUSED(argv);
-  if (argc != 2) return (-1);
-  if (strcmp_P(argv[1], PSTR("cosa")) != 0) return (-1);
-  ios << PSTR("password: ");
-  const size_t PASSWD_MAX = 32;
-  char passwd[PASSWD_MAX];
-  passwd[0] = 0;
-  while (ios.readline(passwd, PASSWD_MAX, false) == NULL) yield();
-  ios << endl;
-  if (strcmp_P(passwd, PSTR("ciao\n")) != 0) return (-1);
+  if (argc != 2)
+    return (Shell::ILLEGAL_COMMAND);
+  if (strcmp_P(argv[1], PSTR("guest")) == 0)
+    shell.set_privilege(Shell::GUEST);
+  else {
+    ios << PSTR("password: ") << flush;
+    const size_t PASSWD_MAX = 32;
+    char passwd[PASSWD_MAX];
+    passwd[0] = 0;
+    while (ios.readline(passwd, PASSWD_MAX, false) == NULL) yield();
+    if (shell.get_echo()) ios << endl;
+    if (strcmp_P(passwd, PSTR("ciao\n")) != 0)
+      return (Shell::ILLEGAL_COMMAND);
+    if (strcmp_P(argv[1], PSTR("admin")) == 0) 
+      shell.set_privilege(Shell::ADMIN);
+    else 
+      shell.set_privilege(Shell::USER);
+  }
   shell.set_commands(membersof(command_tab), command_tab);
   return (0);
 }
 
 static const char INIT_PROMPT[] __PROGMEM = "$ ";
 static const Shell::command_t init_tab[] __PROGMEM = {
-  { HELP_NAME, HELP_HELP, help_action },
-  { LOGIN_NAME, LOGIN_HELP, login_action }
+  { HELP_NAME, HELP_HELP, help_action, Shell::GUEST },
+  { LOGIN_NAME, LOGIN_HELP, login_action, Shell::GUEST }
 };
 
 static int logout_action(int argc, char* argv[])
 {
   UNUSED(argv);
-  if (argc != 1) return (-1);
+  if (argc != 1)
+    return (Shell::ILLEGAL_COMMAND);
   shell.set_commands(membersof(init_tab), init_tab, INIT_PROMPT);
   return (0);
 }

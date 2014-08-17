@@ -27,9 +27,31 @@
 class Shell {
 public:
   /**
+   * Shell command privilege levels.
+   */
+  enum Level {
+    GUEST = 0,			//!< Read-only and limited set.
+    USER = 1,			//!< Local setting and restricted set.
+    ADMIN = 2			//!< Full access.
+  } __attribute__((packed));
+
+  /**
+   * Shell action funtion and run error codes.
+   */
+  enum {
+    ILLEGAL_COMMAND = -1,	//!< Illegal command.
+    PERMISSION_DENIED = -2,	//!< Unsufficent privilege.
+    UNKNOWN_COMMAND = -3,	//!< Command not found.
+    UNKNOWN_OPTION = -4,	//!< Option not found.
+    ILLEGAL_OPTION = -5		//!< Illegal option value.
+  };
+
+  /**
    * Shell command action function. Called with number arguments
    * and NULL terminated argument vector. Should return zero(0) if
-   * successful otherwise a negative error code.
+   * successful otherwise a negative error code; ILLEGAL_COMMAND,
+   * PERMISSION_DENIED, UNKNOWN_COMMAND, UNKNOWN_OPTION and 
+   * ILLEGAL_OPTION.
    * @param[in] argc argument count.
    * @param[in] argv argument vector.
    * @return zero or negative error code.
@@ -43,6 +65,7 @@ public:
     const char* name;		//!< Shell command name string (PROGMEM).
     const char* help;		//!< Short description of command.
     action_fn action;		//!< Shell command action function.
+    Level level;		//!< Shell command privilege level.
   };
   
   /**
@@ -56,7 +79,8 @@ public:
     m_cmdtab(cmdtab),
     m_prompt(prompt == NULL ? DEFAULT_PROMPT : prompt),
     m_firstrun(true),
-    m_echo(true)
+    m_echo(true),
+    m_level(ADMIN)
   {
   }
   
@@ -96,6 +120,33 @@ public:
   {
     return (m_prompt);
   }
+  
+  /**
+   * Set new privilege level.
+   * @param[in] level.
+   */
+  void set_privilege(Level level)
+  {
+    m_level = level;
+  }
+
+  /**
+   * Get privilege level.
+   * @return level.
+   */
+  Level get_privilege()
+  {
+    return (m_level);
+  }
+
+  /**
+   * Validate privilege level.
+   * @return bool.
+   */
+  bool is_privileged(Level level)
+  {
+    return (m_level >= level);
+  }
 
   /**
    * Reset for new session.
@@ -111,7 +162,8 @@ public:
    * @param[in] cmdtab command table (in program memory).
    * @param[in] prompt to be written to cout.
    */
-  void set_commands(uint8_t cmdc, const command_t* cmdtab, const char* prompt = NULL)
+  void set_commands(uint8_t cmdc, const command_t* cmdtab, 
+		    const char* prompt = NULL)
   {
     m_cmdc = cmdc;
     m_cmdtab = cmdtab;
@@ -173,6 +225,7 @@ protected:
   const char* m_prompt;		//!< Shell prompt.
   bool m_firstrun;		//!< First time run.
   bool m_echo;			//!< Echo mode.
+  Level m_level;		//!< Privilege level.
   char m_buf[BUF_MAX];		//!< Command buffer.
   uint8_t m_argc;		//!< Number of arguments.
   char** m_argv;		//!< Argument vector.

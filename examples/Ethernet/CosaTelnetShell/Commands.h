@@ -27,10 +27,8 @@
 #include "Cosa/Shell.hh"
 #include "Cosa/IOStream.hh"
 
-extern IOStream ios;
-extern uint32_t idle;
-extern void iowait();
 extern Shell shell;
-
+extern IOStream ios;
+extern void iowait();
 #endif
 

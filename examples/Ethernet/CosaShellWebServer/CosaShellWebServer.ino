@@ -45,10 +45,6 @@
 
 #include "Commands.h"
 
-// Global variable for shell commands; output stream and idle time
-IOStream ios;
-uint32_t idle = 0L;
-
 // Handling of CRLF in HTML strings
 #define CRLF "\r\n"
 
@@ -108,14 +104,6 @@ Socket* sock = NULL;
 OutputPin sd(Board::D4, 1);
 #endif
 
-void iowait()
-{
-  uint32_t start = RTC::micros();
-  Power::sleep(); 
-  uint32_t stop = RTC::micros();
-  idle = (start > stop) ? 0L : idle + (stop - start);
-}
-
 void setup()
 {
   // Initiate uart and trace output stream. And timers; watchdog and rtc
@@ -136,6 +124,9 @@ void setup()
 
   // Bind the socket to the shell io-stream
   ios.set_device(sock);
+
+  // Set shell privilege level; ADMIN
+  shell.set_privilege(Shell::ADMIN);
 }
 
 void loop()
