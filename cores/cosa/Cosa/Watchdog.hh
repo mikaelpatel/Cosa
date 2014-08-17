@@ -121,7 +121,7 @@ public:
    * Delay using watchdog timeouts and sleep mode.
    * @param[in] ms sleep period in milli-seconds.
    */
-  static void delay(uint16_t ms);
+  static void delay(uint32_t ms);
 
   /**
    * Wait for the next watchdog timeout.

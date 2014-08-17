@@ -23,16 +23,6 @@
 #include "Cosa/Power.hh"
 #include "Cosa/Bits.h"
 
-static void watchdog_delay(uint32_t ms) 
-{ 
-  Watchdog::delay(ms); 
-}
-
-static void watchdog_sleep(uint16_t s) 
-{ 
-  Watchdog::delay(s * 1000L); 
-}
-
 Watchdog::InterruptHandler Watchdog::s_handler = NULL;
 void* Watchdog::s_env = NULL;
 
@@ -74,12 +64,11 @@ Watchdog::begin(uint16_t ms,
   s_env = env;
   s_prescale = prescale;
   s_initiated = true;
-  ::delay = watchdog_delay;
-  ::sleep = watchdog_sleep;
+  ::delay = Watchdog::delay;
 }
 
 void
-Watchdog::delay(uint16_t ms)
+Watchdog::delay(uint32_t ms)
 {
   uint32_t ticks = (ms + (ms_per_tick() / 2)) / ms_per_tick();
   uint8_t key = lock();

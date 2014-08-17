@@ -56,7 +56,7 @@ RTC::begin()
     TIFR0 = 0;
   }
   s_initiated = true;
-  ::delay = delay;
+  ::delay = RTC::delay;
   return (true);
 }
 
