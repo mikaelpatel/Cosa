@@ -36,6 +36,8 @@ Telnet::Server::begin(Socket* sock)
 bool 
 Telnet::Server::on_accept(IOStream& ios)
 {
+  UNUSED(ios);
+
   // Sanity check server state
   Socket* sock = get_socket();
   if (sock == NULL) return (false);
