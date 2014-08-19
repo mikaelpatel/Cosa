@@ -33,8 +33,10 @@
 static IOBuffer<128> ibuf;
 static IOBuffer<1024> obuf;
 
-// Create UART1 and bind to the cout IOStream
+// Create UART and bind to the cout IOStream
+#if !defined(USBCON)
 UART uart(0, &ibuf, &obuf);
+#endif
 
 void setup()
 {
