@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# @file build/all
+# @file build/tutto
 # @version 1.0
 #
 # @section License
@@ -18,15 +18,16 @@
 #
 # @section Description
 # Build all variants. Uses the CosaBlink example sketch as sandbox 
-# for this regression test script.
+# for this regression test script. Warnings and errors are written
+# to standard output.
 #
 # This file is part of the Arduino Che Cosa project.
 
-variants=`grep build.variant ../boards.txt | cut -d. -f1`
+variants=`grep build.variant ../boards.txt | cut -d. -f1 | sort`
 pushd ../examples/Blink/CosaBlink
 for board in $variants
 do
-  echo $board
+  echo `date`: $board
   cosa $board &> LOG
   cosa $board clean &>> LOG
   egrep "(warning|error)" LOG
