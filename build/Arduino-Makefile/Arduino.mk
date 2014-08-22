@@ -1292,7 +1292,17 @@ generate_assembly: $(OBJDIR)/$(TARGET).s
 generated_assembly: generate_assembly
 	@$(ECHO) "\"generated_assembly\" target is deprecated. Use \"generate_assembly\" target instead\n\n"
 
-avanti: upload monitor
+avanti: $(TARGET_HEX)
+ifeq ($(strip $(HEX_MAXIMUM_SIZE)),)
+	@$(ECHO) "\nMaximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s flash memory\n\n"
+endif
+	@if [ ! -f $(TARGET_HEX).sizeok ]; then echo >&2 "\nThe size of the compiled binary file is greater than the $(BOARD_TAG)'s flash memory. \
+See http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it."; false; fi
+	$(call arduino_output,Resetting...)
+	$(RESET_CMD)
+	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
+	@$(ECHO) "Use CTRL-ALT GR-] to exit monitor.\n"
+	$(MONITOR_CMD) $(get_monitor_port) $(MONITOR_BAUDRATE)
 
 help:
 	@$(ECHO) "Available targets (default is compile the code):\n\

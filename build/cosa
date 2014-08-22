@@ -60,4 +60,4 @@ fi
 
 BOARD=$1
 shift
-make -f $COSA_DIR/build/Cosa.mk "BOARD_TAG=$BOARD" "ARDUINO_QUIET=1" $*
+make -j -f $COSA_DIR/build/Cosa.mk "BOARD_TAG=$BOARD" "ARDUINO_QUIET=1" $*
