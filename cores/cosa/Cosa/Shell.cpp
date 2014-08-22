@@ -174,7 +174,7 @@ Shell::run(IOStream& ios)
 {
   // Check first time run; will need to prompt
   if (m_firstrun) {
-    ios << m_prompt;
+    prompt(ios);
     m_firstrun = false;
   }
 
@@ -200,7 +200,7 @@ Shell::run(IOStream& ios)
   }
 
   // Prompt for the next command line
-  ios << m_prompt;
+  prompt(ios);
   *m_buf = 0;
   return (res);
 }
@@ -215,4 +215,10 @@ Shell::help(IOStream& outs)
     outs << name << ' ' << help << endl;
   }
   return (0);
+}
+
+void 
+Shell::prompt(IOStream& outs)
+{
+  outs << m_prompt;
 }

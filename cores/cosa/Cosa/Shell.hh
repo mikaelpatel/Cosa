@@ -210,6 +210,14 @@ public:
    */
   int help(IOStream& outs);
 
+  /**
+   * @override Shell
+   * Print prompt to given output stream. Default implementation will
+   * print instance prompt string (in program memory).
+   * @param[in] outs output stream.
+   */
+  virtual void prompt(IOStream& outs);
+  
 protected:
   /** Default prompt */
   static const char DEFAULT_PROMPT[] PROGMEM;
