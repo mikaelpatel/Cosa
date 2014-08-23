@@ -295,11 +295,11 @@ IOStream& operator<<(IOStream& outs, OWI::Driver& dev)
   if (dev.NAME != NULL) outs << dev.NAME << ':';
   outs << PSTR("OWI::rom(family = ") << hex << dev.m_rom[0] 
        << PSTR(", id = 0x");
-  for (i = 1; i < OWI::ROM_MAX - 1; i++) {
+  for (i = OWI::ROM_MAX - 2; i > 0; i--) {
     uint8_t v = dev.m_rom[i];
     outs << tohex(v >> 4) << tohex(v);
   }
-  outs << PSTR(", crc = ") << hex << dev.m_rom[i] << ')';
+  outs << PSTR(", crc = ") << hex << dev.m_rom[OWI::ROM_MAX - 1] << ')';
   return (outs);
 }
 
