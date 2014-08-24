@@ -118,7 +118,9 @@ void setup()
 
   // Check size of instances
   TRACE(sizeof(Link));
+#if !defined(BOARD_ATTINY)
   TRACE(sizeof(ExternalInterruptPin));
+#endif
   TRACE(sizeof(IR::Receiver));
 #else
   lcd.begin();
