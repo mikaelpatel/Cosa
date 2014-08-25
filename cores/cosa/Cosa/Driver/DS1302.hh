@@ -72,26 +72,63 @@ public:
   {
   }
 
-  /**
-   * Write given data to the static memory (31 bytes) or
-   * clock/calender register on the device.
-   * @param[in] addr memory address.
-   * @param[in] data to write to the memory address.
-   */
-  void write(uint8_t addr, uint8_t data);
-
-  /**
-   * Read given static memory address on the device and return byte.
-   * @param[in] addr memory address on the device.
+  /*
+   * Low level RTC access function. Read data from the clock register
+   * or static memory on device.
+   * @param[in] addr device address.
+   * @return data.
    */
   uint8_t read(uint8_t addr);
+
+  /*
+   * Low level RTC access function. Write given data to the clock
+   * register or static memory on device.
+   * @param[in] addr device address.
+   * @param[in] data to write.
+   */
+  void write(uint8_t addr, uint8_t data);
 
   /**
    * Set write protect-bit according to flag. 
    * @param[in] flag write protect mode.
    */
-  void write_protect(bool flag);
+  void set_write_protect(bool flag)
+  {
+    write(WP, flag ? 0x80 : 0x00);
+  }
   
+  /**
+   * Read clock and calender from the device. 
+   * @param[in,out] now time structure for return value.
+   */
+  void get_time(time_t& now);
+
+  /**
+   * Write clock and calender to the device. 
+   * @param[in] now time to set.
+   */
+  void set_time(time_t& now);
+
+  /**
+   * Read given static memory address on the device and return byte.
+   * @param[in] addr memory address on the device (0..RAM_MAX-1).
+   */
+  uint8_t read_ram(uint8_t addr)
+  {
+    return (read(RAM_START | (addr & ADDR_MASK)));
+  }
+  
+  /**
+   * Write given data to the static memory (31 bytes). Requires
+   * handling of write protect (set_write_protect).
+   * @param[in] addr memory address (0..RAM_MAX-1).
+   * @param[in] data to write to the memory address.
+   */
+  void write_ram(uint8_t addr, uint8_t data)
+  {
+    write(RAM_START | (addr & ADDR_MASK), data);
+  }
+
   /**
    * Burst read memory block from the device starting at address
    * zero(0). Data block is returned in the given buffer.
@@ -103,32 +140,23 @@ public:
   /**
    * Burst write data in buffer with given size to the static memory
    * in the device (max 31 bytes). Burst write is always from address 
-   * zero(0). 
+   * zero(0) and includes handling of write protect.
    * @param[in] buf pointer to memory block to write.
    * @param[in] size number of bytes to write (max RAM_MAX(31)).
    */
   void write_ram(void* buf, size_t size);
 
-  /**
-   * Write clock and calender to the device. 
-   * @param[in] now time to set.
-   */
-  void set_time(time_t& now);
-
-  /**
-   * Read clock and calender from the device. 
-   * @param[in,out] now time structure for return value.
-   */
-  void get_time(time_t& now);
-
 private:
-  /** Read/write address mask. */
-  static const uint8_t ADDR_MASK = 0x3f;
+  /** Write protect register. */
+  static const uint8_t WP = 0x07;
 
-  /** Read/write bit in command byte. */
+  /** Command byte. */
   enum {
-    WRITE = 0x00,
-    READ = 0x01
+    WRITE = 0x80,		//!< Read/write bit in write mode.
+    READ = 0x81,		//!< Read/write bit in read mode.
+    RTC_BURST = 0xbe,		//!< RTC register burst transfer.
+    RAM_BURST = 0xfe,		//!< RAM burst transfer.
+    ADDR_MASK = 0x3f		//!< Mask address bits.
   } __attribute__((packed));
 
   OutputPin m_cs;		//!< Chip select, asserted high.
@@ -136,19 +164,19 @@ private:
   OutputPin m_clk;		//!< Clock for synchronized data. 
 
   /**
-   * Write data to the device. Internal transfer function. Used within
-   * a chip select block.
-   * @param[in] data to write to the device.
-   */
-  void write(uint8_t data);
-
-  /**
-   * Read data from the device. Internal transfer function. Used within
-   * a chip select block. Data direction must be set before calling
-   * this function. 
+   * Low level read data from the device. Internal transfer
+   * function. Used within a chip select block. Data direction must be
+   * set before calling this function. 
    * @return data.
    */
   uint8_t read();
+
+  /**
+   * Write low level data to the device. Internal transfer
+   * function. Used within a chip select block.
+   * @param[in] data to write to the device.
+   */
+  void write(uint8_t data);
 };
 
 #endif

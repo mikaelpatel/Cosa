@@ -45,17 +45,23 @@ void setup()
   trace.begin(&uart, PSTR("CosaDS1302: started"));
   Watchdog::begin();
   
+  // Read device registers
+  trace << PSTR("RTC") << endl;
+  for (uint8_t addr = 0; addr < 8; addr++)
+    trace << addr << PSTR(": ") 
+	  << hex << rtc.read(addr)
+	  << endl;
+
   // Read device static memory
-  trace << PSTR("RAM");
-  for (uint8_t addr = 0; addr < sizeof(uint32_t); addr++)
-    trace  << ':' << hex << rtc.read(DS1302::RAM_START + addr);
-  trace << endl;
+  trace << PSTR("RAM") << endl;
+  for (uint8_t addr = 0; addr < DS1302::RAM_MAX; addr++)
+    trace << addr << PSTR(": ") 
+	  << hex << rtc.read(DS1302::RAM_START + addr) 
+	  << endl;
 
   // Write some data
   uint32_t key = 0x12345678UL;
-  rtc.write_protect(false);
   rtc.write_ram(&key, sizeof(key));
-  rtc.write_protect(true);
 
   // Burst read and check
   rtc.read_ram(&key, sizeof(key));
@@ -79,13 +85,17 @@ void setup()
 void loop()
 {
   // Read clock and calender; low and high level
-  trace << PSTR("RTC");
-  for (uint8_t addr = 0; addr < 9; addr++) 
-    trace << ':' << hex << rtc.read(addr);
-  trace << endl;
+  trace << PSTR("RAM:") << endl;
+  uint8_t buf[DS1302::RAM_MAX];
+  rtc.read_ram(buf, sizeof(buf));
+  trace.print(0L, buf, sizeof(buf), IOStream::hex);
   time_t now;
   rtc.get_time(now);
-  trace << now << endl;
+  trace << PSTR("RTC: ") << now << endl;
+
+  // Update ram
+  for (uint8_t i = 0; i < sizeof(buf); i++) buf[i]++;
+  rtc.write_ram(buf, sizeof(buf));
 
   // Take a nap
   sleep(5);
