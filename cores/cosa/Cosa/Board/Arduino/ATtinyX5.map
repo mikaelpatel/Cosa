@@ -33,3 +33,8 @@ const Board::AnalogPin analog_pin_map[] __PROGMEM = {
   Board::A2, 
   Board::A3
 };
+
+const Board::PWMPin pwm_pin_map[] __PROGMEM = {
+  Board::PWM0,
+  Board::PWM1
+};

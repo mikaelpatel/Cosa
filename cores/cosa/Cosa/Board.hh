@@ -98,10 +98,13 @@
 
 
 /** Digital pin index to symbol map */
-extern const Board::DigitalPin digital_pin_map[Board::DMAX] PROGMEM;
+extern const Board::DigitalPin digital_pin_map[Board::DIGITAL_PIN_MAX] PROGMEM;
 
 /** Analog pin index to symbol map */
-extern const Board::AnalogPin analog_pin_map[Board::AMAX] PROGMEM;
+extern const Board::AnalogPin analog_pin_map[Board::ANALOG_PIN_MAX] PROGMEM;
+
+/** PWM pin index to symbol map */
+extern const Board::PWMPin pwm_pin_map[Board::PWM_PIN_MAX] PROGMEM;
 
 #endif
 

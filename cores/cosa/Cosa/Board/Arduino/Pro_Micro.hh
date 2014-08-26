@@ -154,7 +154,6 @@ public:
     D21 = 1,			// PB1/SCK
     D22 = 2,			// PB2/MOSI
     D23 = 3,			// PB3/MISO
-    DMAX = 24,			// Number of pins
     LED = 15,			// PC7/Not used
     RXLED = 0,			// PB0/Green
     TXLED = 21			// PD5/Yellow
@@ -175,8 +174,7 @@ public:
     A8 = 34,			// PD7/D6
     A9 = 35,			// PB4/D8
     A10 = 36,			// PB5/D9
-    A11 = 37,			// PB6/D10
-    AMAX = 12			// Number of pins
+    A11 = 37			// PB6/D10
   } __attribute__((packed));
 
   /**
@@ -226,6 +224,17 @@ public:
     PCI6 = D10,			// PB6
     PCI7 = D11			// PB7/Not used
   } __attribute__((packed));
+
+  /** 
+   * Size of pin maps.
+   */
+  enum {
+    ANALOG_PIN_MAX = 12,
+    DIGITAL_PIN_MAX = 24,
+    EXT_PIN_MAX = 4,
+    PCI_PIN_MAX = 8,
+    PWM_PIN_MAX = 7
+  };
 
   /**
    * Pins used for TWI interface (port D, bit 0-1, D2-D3)

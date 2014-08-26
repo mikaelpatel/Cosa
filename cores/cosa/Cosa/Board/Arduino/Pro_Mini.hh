@@ -151,7 +151,6 @@ public:
     D17,			// PC3
     D18,			// PC4
     D19,			// PC5
-    DMAX = 20,			// Number of pins
     LED = D13
   } __attribute__((packed));
 
@@ -166,8 +165,7 @@ public:
     A4,				// PC4/D18
     A5,				// PC5/D19
     A6,
-    A7,
-    AMAX = 8			// Number of pins
+    A7
   } __attribute__((packed));
 
   /**
@@ -226,6 +224,17 @@ public:
     PCI18 = D18,		// PC4
     PCI19 = D19			// PC5
   } __attribute__((packed));
+
+  /** 
+   * Size of pin maps.
+   */
+  enum {
+    ANALOG_PIN_MAX = 8,
+    DIGITAL_PIN_MAX = 20,
+    EXT_PIN_MAX = 2,
+    PCI_PIN_MAX = 20,
+    PWM_PIN_MAX = 6
+  };
 
   /**
    * Pins used for TWI interface (in port C, analog pins A4-A5).

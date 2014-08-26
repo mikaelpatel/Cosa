@@ -130,7 +130,6 @@ public:
     D29,			// PA5
     D30,			// PA6
     D31,			// PA7
-    DMAX = 32,			// Number of pins
     LED = D13
   } __attribute__((packed));
 
@@ -145,8 +144,7 @@ public:
     A4,				// PA4
     A5,				// PA5
     A6,				// PA6
-    A7,				// PA7
-    AMAX = 8			// Number of pins
+    A7				// PA7
   } __attribute__((packed));
 
   /**
@@ -169,6 +167,9 @@ public:
 #if defined(__AVR_ATmega1284P__)
     PWM2 = D6,			// PB6 => OCR3A
     PWM3 = D7,			// PB7 => OCR3B
+#else
+    PWM2 = 255,			// PB6 => NOP
+    PWM3 = 255,			// PB7 => NOP
 #endif
     PWM4 = D12,			// PD4 => OCR1B
     PWM5 = D13,			// PD5 => OCR1A
@@ -223,6 +224,17 @@ public:
     PCI30 = D14,		// PD6
     PCI31 = D15			// PD7
   } __attribute__((packed));
+
+  /** 
+   * Size of pin maps.
+   */
+  enum {
+    ANALOG_PIN_MAX = 8,
+    DIGITAL_PIN_MAX = 32,
+    EXT_PIN_MAX = 3,
+    PCI_PIN_MAX = 32,
+    PWM_PIN_MAX = 8
+  };
 
   /**
    * Pins used for TWI interface (in port C, bit 0-1, D16-D17)

@@ -208,8 +208,8 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     // PWM2(3A), PWM3(3B) PWM phase correct, 8-bit, prescale 64
     TCCR3A |= _BV(WGM30);
     TCCR3B |= _BV(CS31) | _BV(CS30);
-    break;
 #endif
+    break;
 
   case Board::PWM4:
   case Board::PWM5:
@@ -223,6 +223,8 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     // PWM6(2B), PWM7(2A), PWM phase correct, prescale 64
     TCCR2A |= _BV(WGM20);
     TCCR2B |= _BV(CS22);
+    break;
+  default:
     break;
   }
   set(duty); 

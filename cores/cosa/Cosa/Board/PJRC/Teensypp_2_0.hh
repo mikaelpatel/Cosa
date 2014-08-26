@@ -187,7 +187,6 @@ public:
     D43 = 45,			// PF5
     D44 = 46,			// PF6
     D45 = 47,			// PF7
-    DMAX = 46,			// Number of pins
     LED = D6
   } __attribute__((packed));
 
@@ -202,8 +201,7 @@ public:
     A4 = 5,			// PF4
     A5 = 5,			// PF5
     A6 = 6,			// PF6
-    A7 = 7,			// PF7
-    AMAX = 8			// Number of pins
+    A7 = 7			// PF7
   } __attribute__((packed));
 
   /**
@@ -257,6 +255,17 @@ public:
     PCI6 = D26,			// PB6
     PCI7 = D27			// PB7
   } __attribute__((packed));
+
+  /** 
+   * Size of pin maps.
+   */
+  enum {
+    ANALOG_PIN_MAX = 8,
+    DIGITAL_PIN_MAX = 46,
+    EXT_PIN_MAX = 8,
+    PCI_PIN_MAX = 8,
+    PWM_PIN_MAX = 7
+  };
 
   /**
    * Pins used for TWI interface (in port D, bit 0-1, D0-D1)
