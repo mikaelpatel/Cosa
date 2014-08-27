@@ -111,18 +111,11 @@ SD::receive()
 {
   univ32_t res;
 #if defined(USE_SPI_PREFETCH)
-  uint8_t data;
-  data = spi.transfer(0xff);
   spi.transfer_start(0xff);
-  res.as_uint8[3] = data;
-  data = spi.transfer_await();
-  spi.transfer_start(0xff);
-  res.as_uint8[2] = data;
-  data = spi.transfer_await();
-  spi.transfer_start(0xff);
-  res.as_uint8[1] = data;
-  data = spi.transfer_await();
-  res.as_uint8[0] = data;
+  res.as_uint8[3] = spi.transfer_next(0xff);
+  res.as_uint8[2] = spi.transfer_next(0xff);
+  res.as_uint8[1] = spi.transfer_next(0xff);
+  res.as_uint8[0] = spi.transfer_await();
 #else
   res.as_uint8[3] = spi.transfer(0xff);
   res.as_uint8[2] = spi.transfer(0xff);
@@ -148,8 +141,7 @@ SD::read(CMD command, uint32_t arg, void* buf, size_t count)
 #if defined(USE_SPI_PREFETCH)
   spi.transfer_start(0xff);
   while (--count) {
-    data = spi.transfer_await();
-    spi.transfer_start(0xff);
+    data = spi.transfer_next(0xff);
     *dst++ = data;
     crc = _crc_xmodem_update(crc, data);
   }
@@ -207,7 +199,9 @@ SD::begin(SPI::Clock rate)
 
   /* Tell the device that the host supports SDHC */
   arg = (m_type == TYPE_SD1) ? 0 : 0X40000000;
-  if (!send(INIT_TIMEOUT, SD_SEND_OP_COND, arg)) goto error;
+  for (uint8_t i = 0; i < 10; i++)
+    if (res = (send(SD_SEND_OP_COND, arg) != 0)) break;
+  if (!res) goto error;
   if (m_type == TYPE_SD2) {
     status = send(READ_OCR);
     if (!status.in_idle_state) goto error;

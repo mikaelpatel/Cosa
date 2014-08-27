@@ -92,7 +92,7 @@ void loop()
   SD::csd_t* csd = (SD::csd_t*) save;
 
   INFO("Connect to card and switch to a higher clock frequency", 0);
-  ASSERT(sd.begin(SPI::DIV4_CLOCK));
+  ASSERT(sd.begin(SPI::DIV2_CLOCK));
   ASSERT(sd.get_type());
 
   INFO("Read CID and print fields", 0);
