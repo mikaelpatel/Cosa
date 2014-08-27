@@ -49,7 +49,6 @@ void setup()
   trace.begin(&uart, PSTR("CosaFAT16: started"));
   TRACE(free_memory());
   TRACE(sizeof(FAT16::File));
-  TRACE(CLOCK);
   ASSERT(sd.begin(CLOCK));
   ASSERT(FAT16::begin(&sd));
 }
