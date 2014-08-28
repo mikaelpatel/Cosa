@@ -298,6 +298,13 @@ protected:
   static const uint16_t READ_TIMEOUT = 300;
   static const uint16_t WRITE_TIMEOUT = 600;
 
+  /** Internal number of init pulses. */
+  static const uint8_t INIT_PULSES = 10;
+
+  /** Internal number of retry. */
+  static const uint8_t INIT_RETRY = 10;
+  static const uint8_t RESPONSE_RETRY = 100;
+
   /** Response from latest command. */
   uint8_t m_response;
 

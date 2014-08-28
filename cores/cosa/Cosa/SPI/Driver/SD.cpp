@@ -108,7 +108,7 @@ SD::send(CMD command, uint32_t arg)
 
   // Wait for the response
   uint8_t response;
-  for (uint8_t i = 0; i < 10; i++) {
+  for (uint8_t i = 0; i < RESPONSE_RETRY; i++) {
     response = spi.transfer(0xff);
     if ((response & 0x80) == 0) break;
   }
@@ -129,7 +129,7 @@ SD::send(uint16_t ms, CMD command, uint32_t arg)
 uint8_t
 SD::send(ACMD command, uint32_t arg)
 {
-  send(APP_CMD, arg);
+  send(APP_CMD);
   return (send((CMD) command, arg));
 }
 
@@ -138,7 +138,7 @@ SD::send(uint16_t ms, ACMD command, uint32_t arg)
 {
   uint16_t start = RTC::millis();
   do {
-    send(APP_CMD, arg);
+    send(APP_CMD);
     uint8_t status = send((CMD) command, arg);
     if (status < 2) return (true);
   } while (((uint16_t) RTC::millis()) - start < ms);
@@ -222,7 +222,7 @@ SD::read(CMD command, uint32_t arg, void* buf, size_t count)
 bool
 SD::begin(SPI::Clock rate)
 {
-  uint8_t res = false;
+  bool res = false;
   uint32_t arg;
   R1 status;
   
@@ -231,7 +231,7 @@ SD::begin(SPI::Clock rate)
   
   /* Card needs 74 cycles minimum to start up */
   spi.begin(this);
-  for (uint8_t i = 0; i < 10; ++i) spi.transfer(0xff);
+  for (uint8_t i = 0; i < INIT_PULSES; i++) spi.transfer(0xff);
 
   /* Reset card */
   if (!send(INIT_TIMEOUT, GO_IDLE_STATE)) goto error;
@@ -251,8 +251,8 @@ SD::begin(SPI::Clock rate)
   } 
 
   /* Tell the device that the host supports SDHC */
-  arg = (m_type == TYPE_SD1) ? 0 : 0X40000000;
-  for (uint8_t i = 0; i < 10 && !res; i++)
+  arg = (m_type == TYPE_SD1) ? 0L : 0X40000000L;
+  for (uint8_t i = 0; i < INIT_RETRY && !res; i++)
     res = (send(SD_SEND_OP_COND, arg) != 0);
   if (!res) goto error;
   if (m_type == TYPE_SD2) {

@@ -45,7 +45,7 @@ void setup()
 {
   Watchdog::begin();
   RTC::begin();
-  uart.begin(9600);
+  uart.begin(115200);
   trace.begin(&uart, PSTR("CosaFAT16: started"));
   TRACE(free_memory());
   TRACE(sizeof(FAT16::File));
