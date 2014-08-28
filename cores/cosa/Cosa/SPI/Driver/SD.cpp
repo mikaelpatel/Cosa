@@ -230,21 +230,22 @@ SD::begin(SPI::Clock rate)
   m_type = TYPE_UNKNOWN;
   
   /* Card needs 74 cycles minimum to start up */
-  spi.begin(this);
+  if (!spi.begin(this)) goto error;
   for (uint8_t i = 0; i < INIT_PULSES; i++) spi.transfer(0xff);
 
   /* Reset card */
-  if (!send(INIT_TIMEOUT, GO_IDLE_STATE)) goto error;
+  status = send(INIT_TIMEOUT, GO_IDLE_STATE);
+  if (status.error()) goto error;
 
   /* Enable CRC */
   status = send(CRC_ON_OFF, true);
-  if (!status.in_idle_state) goto error;
+  if (status.error()) goto error;
   
   /* Check for version of SD card specification; 2.7-3.6V and check pattern */
   m_type = TYPE_SD1;
   arg = (0x100 | CHECK_PATTERN);
   status = send(SEND_IF_COND, arg);
-  if (status.in_idle_state) {
+  if (!status.error()) {
     R7 r7 = receive();
     if (r7.check_pattern != CHECK_PATTERN) goto error;
     m_type = TYPE_SD2;
@@ -252,12 +253,15 @@ SD::begin(SPI::Clock rate)
 
   /* Tell the device that the host supports SDHC */
   arg = (m_type == TYPE_SD1) ? 0L : 0X40000000L;
-  for (uint8_t i = 0; i < INIT_RETRY && !res; i++)
-    res = (send(SD_SEND_OP_COND, arg) != 0);
-  if (!res) goto error;
+  for (uint16_t i = 0; i < INIT_RETRY; i++) {
+    status = send(SD_SEND_OP_COND, arg);
+    if (status.ready()) break;
+    DELAY(((uint32_t)INIT_TIMEOUT*1000L)/(uint32_t)INIT_RETRY);
+  }
+  if (!status.ready()) goto error;
   if (m_type == TYPE_SD2) {
     status = send(READ_OCR);
-    if (!status.in_idle_state) goto error;
+    if (status.error()) goto error;
     uint32_t ocr = receive();
     if ((ocr & 0xC0000000L) == 0xC0000000L) m_type = TYPE_SDHC;
   }
