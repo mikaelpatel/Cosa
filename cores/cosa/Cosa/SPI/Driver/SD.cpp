@@ -120,8 +120,8 @@ SD::send(uint16_t ms, CMD command, uint32_t arg)
 {
   uint16_t start = RTC::millis();
   do {
-    uint8_t status = send(command, arg);
-    if (status < 2) return (true);
+    uint8_t state = send(command, arg);
+    if (state < IDENT_STATE) return (true);
   } while (((uint16_t) RTC::millis()) - start < ms);
   return (false);
 }
@@ -139,8 +139,8 @@ SD::send(uint16_t ms, ACMD command, uint32_t arg)
   uint16_t start = RTC::millis();
   do {
     send(APP_CMD);
-    uint8_t status = send((CMD) command, arg);
-    if (status < 2) return (true);
+    uint8_t state = send((CMD) command, arg);
+    if (state < IDENT_STATE) return (true);
   } while (((uint16_t) RTC::millis()) - start < ms);
   return (false);
 }
@@ -252,9 +252,7 @@ SD::begin(SPI::Clock rate)
 
   /* Tell the device that the host supports SDHC */
   arg = (m_type == TYPE_SD1) ? 0L : 0X40000000L;
-  for (uint8_t i = 0; i < INIT_RETRY && !res; i++)
-    res = (send(SD_SEND_OP_COND, arg) != 0);
-  if (!res) goto error;
+  if (!send(INIT_TIMEOUT, SD_SEND_OP_COND, arg)) goto error;
   if (m_type == TYPE_SD2) {
     status = send(READ_OCR);
     if (!status.in_idle_state) goto error;
