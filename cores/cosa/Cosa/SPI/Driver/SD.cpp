@@ -226,21 +226,21 @@ SD::begin(SPI::Clock rate)
   uint32_t arg;
   R1 status;
   
-  /* Start with unknown card type */
+  // Start with unknown card type
   m_type = TYPE_UNKNOWN;
   
-  /* Card needs 74 cycles minimum to start up */
+  // Card needs 74 cycles minimum to start up
   spi.begin(this);
   for (uint8_t i = 0; i < INIT_PULSES; i++) spi.transfer(0xff);
 
-  /* Reset card */
+  // Reset card
   if (!send(INIT_TIMEOUT, GO_IDLE_STATE)) goto error;
 
-  /* Enable CRC */
+  // Enable CRC
   status = send(CRC_ON_OFF, true);
-  if (!status.in_idle_state) goto error;
+  if (status.is_error()) goto error;
   
-  /* Check for version of SD card specification; 2.7-3.6V and check pattern */
+  // Check for version of SD card specification; 2.7-3.6V and check pattern
   m_type = TYPE_SD1;
   arg = (0x100 | CHECK_PATTERN);
   status = send(SEND_IF_COND, arg);
@@ -250,12 +250,17 @@ SD::begin(SPI::Clock rate)
     m_type = TYPE_SD2;
   } 
 
-  /* Tell the device that the host supports SDHC */
+  // Tell the device that the host supports SDHC
   arg = (m_type == TYPE_SD1) ? 0L : 0X40000000L;
-  if (!send(INIT_TIMEOUT, SD_SEND_OP_COND, arg)) goto error;
+  for (uint8_t i = 0; i < INIT_RETRY; i++) {
+    if (!send(INIT_TIMEOUT, SD_SEND_OP_COND, arg)) goto error;
+    if (m_response == 0) break;
+  }
+
+  // Read OCR register and check type
   if (m_type == TYPE_SD2) {
     status = send(READ_OCR);
-    if (!status.in_idle_state) goto error;
+    if (status.is_error()) goto error;
     uint32_t ocr = receive();
     if ((ocr & 0xC0000000L) == 0xC0000000L) m_type = TYPE_SDHC;
   }

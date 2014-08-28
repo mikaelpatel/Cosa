@@ -222,6 +222,8 @@ protected:
       uint8_t reserved:1;
     };
     R1(uint8_t value = 0) { as_uint8 = value; }
+    bool is_error() const { return ((as_uint8 & 0x7e) != 0); }
+    bool is_ready() const { return (as_uint8 == 0); }
   };
 
   /** R2 (Extended status). */
