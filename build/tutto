@@ -41,11 +41,11 @@ else
   # Build all example sketches for given board
   board=$1
   pushd ../examples &> /dev/null
-  examples=`find -name *.ino | sort`
+  examples=`find -name *.ino | sort -f`
   for example in $examples
   do
     dir=`dirname $example`
-    echo `date`: `basename $example`
+    echo `date`: `echo $example | cut -c3-`
     pushd `dirname $example` &> /dev/null
       cosa $board &> LOG
       cosa $board clean &>> LOG

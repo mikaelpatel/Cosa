@@ -204,6 +204,7 @@ void loop()
   trace << endl;
   sleep(1);
 
+  // Measure time to print all characters
   start = RTC::micros();
   for (uint8_t i = 0; i < 64; i++) {
     for (char c = ' '; c < ' '+64; c++)
@@ -214,5 +215,35 @@ void loop()
   stop = RTC::micros();
   trace << PSTR("output(") << 64 * 64 << PSTR(" characters):");
   trace << stop - start << PSTR(" us") << endl;
+
+  // Measure time to print some special characters
+  start = RTC::micros();
+  trace << '\n' << endl;
+  stop = RTC::micros();
+  trace << PSTR("newline character:");
+  trace << stop - start << PSTR(" us") << endl;
+  sleep(1);
+
+  start = RTC::micros();
+  trace << '\t' << endl;
+  stop = RTC::micros();
+  trace << PSTR("tab:");
+  trace << stop - start << PSTR(" us") << endl;
+  sleep(1);
+
+  start = RTC::micros();
+  trace << (char*) "\n" << endl;
+  stop = RTC::micros();
+  trace << PSTR("newline string(1):");
+  trace << stop - start << PSTR(" us") << endl;
+  sleep(1);
+
+  start = RTC::micros();
+  trace << (char*) "\n\n" << endl;
+  stop = RTC::micros();
+  trace << PSTR("newline string(2):");
+  trace << stop - start << PSTR(" us") << endl;
+  sleep(1);
+
   ASSERT(true == false);
 }

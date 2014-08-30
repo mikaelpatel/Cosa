@@ -44,9 +44,6 @@ public:
     ACTION			//!< Menu action.
   } __attribute__((packed));
 
-  /** Pointer type for character string in program memory. */
-  typedef const PROGMEM char* str_P;
-
   /** Menu item header. Also used for enumeration symbols. */
   struct item_t {
     type_t type;		//!< Item type tag(ITEM).
@@ -323,8 +320,8 @@ public:
  * @param[in] name string for menu.
  */
 #define MENU_BEGIN(var,name)				\
-  const char var ## _name[] PROGMEM = name;		\
-  const Menu::item_P var ## _list[] PROGMEM = {  
+  const char var ## _name[] __PROGMEM = name;		\
+  const Menu::item_P var ## _list[] __PROGMEM = {  
 
 /**
  * Support macro to add a menu item in program memory.
@@ -342,10 +339,10 @@ public:
 #define MENU_END(var)					\
     0							\
   };							\
-  const Menu::item_list_t var PROGMEM = {		\
+  const Menu::item_list_t var __PROGMEM = {		\
   {							\
     Menu::ITEM_LIST,					\
-    var ## _name					\
+    (str_P) var ## _name				\
   },							\
   var ## _list						\
 };
@@ -356,10 +353,10 @@ public:
  * @param[in] name string for menu symbol.
  */
 #define MENU_SYMB(var,name)				\
-  const char var ## _name[] PROGMEM = name;		\
-  const Menu::item_t var PROGMEM = {			\
+  const char var ## _name[] __PROGMEM = name;		\
+  const Menu::item_t var __PROGMEM = {			\
     Menu::ITEM,						\
-    var ## _name					\
+    (str_P) var ## _name				\
   };
 
 /**
@@ -377,7 +374,7 @@ public:
  * @param[in] var menu enumeration variable to create.
  */
 #define MENU_ENUM_BEGIN(var)				\
-  const Menu::item_P var ## _list[] PROGMEM = {  
+  const Menu::item_P var ## _list[] __PROGMEM = {  
 
 /**
  * Support macro to add an menu item/symbol to an enumeration type
@@ -403,11 +400,11 @@ public:
  * @param[in] value variable with runtime value.
  */
 #define MENU_ONE_OF(type,var,name,value)		\
-  const char var ## _name[] PROGMEM = name;		\
-  const Menu::one_of_t var PROGMEM = {			\
+  const char var ## _name[] __PROGMEM = name;		\
+  const Menu::one_of_t var __PROGMEM = {		\
   {							\
     Menu::ONE_OF,					\
-    var ## _name					\
+    (str_P) var ## _name				\
   },							\
   type ## _list,					\
   &value						\
@@ -421,11 +418,11 @@ public:
  * @param[in] value variable with runtime value.
  */
 #define MENU_ZERO_OR_MANY(type,var,name,value)		\
-  const char var ## _name[] PROGMEM = name;		\
-  const Menu::zero_or_many_t var PROGMEM = {		\
+  const char var ## _name[] __PROGMEM = name;		\
+  const Menu::zero_or_many_t var __PROGMEM = {		\
   {							\
     Menu::ZERO_OR_MANY,					\
-    var ## _name					\
+    (str_P) var ## _name				\
   },							\
   type ## _list,					\
   &value						\
@@ -440,11 +437,11 @@ public:
  * @param[in] value variable name.
  */
 #define MENU_INT_RANGE(var,name,low,high,value)		\
-  const char var ## _name[] PROGMEM = name;		\
-  const Menu::int_range_t var PROGMEM = {		\
+  const char var ## _name[] __PROGMEM = name;		\
+  const Menu::int_range_t var __PROGMEM = {		\
   {							\
     Menu::INT_RANGE,					\
-    var ## _name					\
+    (str_P) var ## _name				\
   },							\
   low,							\
   high,							\
@@ -458,11 +455,11 @@ public:
  * @param[in] obj pointer to menu action handler.
  */
 #define MENU_ACTION(var,name,obj)			\
-  const char var ## _name[] PROGMEM = name;		\
-  const Menu::action_t var PROGMEM = {			\
+  const char var ## _name[] __PROGMEM = name;		\
+  const Menu::action_t var __PROGMEM = {		\
   {							\
     Menu::ACTION,					\
-    var ## _name					\
+    (str_P) var ## _name				\
   },							\
   &obj							\
   };

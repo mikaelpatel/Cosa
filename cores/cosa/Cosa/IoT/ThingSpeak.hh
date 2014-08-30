@@ -103,7 +103,7 @@ public:
      * @param[in] status entry annotation string (in program memory).
      * @return zero if successful otherwise negative error code.
      */
-    int post(const char* entry, const char* status = NULL);
+    int post(const char* entry, str_P status = NULL);
 
   private:
     Client* m_client;
@@ -237,6 +237,18 @@ public:
        */
       Command(TalkBack* talkback, const char* string) :
 	m_talkback(talkback),
+	m_string((str_P) string)
+      {
+      }
+
+      /**
+       * Construct a command within the given talkback command
+       * queue and with the given string.
+       * @param[in] talkback handler.
+       * @param[in] string for command.
+       */
+      Command(TalkBack* talkback, str_P string) :
+	m_talkback(talkback),
 	m_string(string)
       {
       }
@@ -245,7 +257,7 @@ public:
        * Return command string. It is stored in program memory.
        * @return string.
        */
-      const char* get_string() 
+      str_P get_string() 
       {
 	return (m_string);
       }
@@ -259,7 +271,7 @@ public:
       
     protected:
       TalkBack* m_talkback;
-      const char* m_string;
+      str_P m_string;
 
     private:
       Command* m_next;
@@ -300,7 +312,7 @@ public:
      * @param[in] position in queue (first is one(1), last is zero(0)).
      * @return zero or negative error code.
      */
-    int add_command_P(const char* string, uint8_t position = 0); 
+    int add_command_P(str_P string, uint8_t position = 0); 
 
   private:
     /**

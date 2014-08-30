@@ -28,14 +28,14 @@
 
 class Echo : public Nucleo::Thread {
 private:
-  const char* m_name;
+  str_P m_name;
   uint16_t m_ms;
 public:
   // Construct echo thread 
   Echo(uint16_t ms) : Thread(), m_name(NULL), m_ms(ms) {};
 
   // Allocate stack and initiate name string
-  void begin_P(const char* name, size_t size);
+  void begin_P(str_P name, size_t size);
 
   // Echo thread function
   virtual void run();
@@ -69,7 +69,7 @@ Echo::fn2(uint16_t& nr)
 }
 
 void
-Echo::begin_P(const char* name, size_t size)
+Echo::begin_P(str_P name, size_t size)
 { 
   m_name = name; 
   Thread::begin(this, size);

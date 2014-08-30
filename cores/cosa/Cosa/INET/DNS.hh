@@ -92,9 +92,9 @@ public:
    * @param[in] ip network address.
    * @return zero if successful otherwise negative error code.
    */
-  int gethostbyname_P(const char* hostname, uint8_t ip[4])
+  int gethostbyname_P(str_P hostname, uint8_t ip[4])
   {
-    return (gethostbyname(hostname, ip, true));
+    return (gethostbyname((const char*) hostname, ip, true));
   }
 
 private:

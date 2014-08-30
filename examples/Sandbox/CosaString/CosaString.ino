@@ -44,10 +44,10 @@ void loop()
   String s = "Nisse badar";
   trace << s << endl;
 
-  s += F(" i svartvitt");
+  s += PSTR(" i svartvitt");
   trace << s << endl;
 
-  s += F(" till ");
+  s += PSTR(" till ");
   s += count++;
   trace << s << endl;
 

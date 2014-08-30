@@ -161,9 +161,9 @@ IOStream::print(uint32_t src, const void *ptr, size_t size, Base base, uint8_t m
 }
 
 void 
-IOStream::vprintf_P(const char* format, va_list args)
+IOStream::vprintf_P(str_P format, va_list args)
 {
-  const char* s = format;
+  const char* s = (const char*) format;
   uint8_t is_signed;
   Base base;
   char c;
@@ -201,7 +201,7 @@ IOStream::vprintf_P(const char* format, va_list args)
 	print(va_arg(args, char*)); 
 	continue;
       case 'S': 
-	print_P(va_arg(args, const char*)); 
+	print_P(va_arg(args, str_P)); 
 	continue;
       case 'd': 
 	if (is_signed) 
@@ -326,9 +326,10 @@ IOStream::Device::puts(const char* s)
 }
 
 int 
-IOStream::Device::puts_P(const char* s)
+IOStream::Device::puts_P(str_P s)
 { 
-  return (write_P(s, strlen_P(s)));
+  const char* p = (const char*) s;
+  return (write_P(p, strlen_P(p)));
 }
 
 int 

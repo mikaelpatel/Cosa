@@ -116,4 +116,4 @@ sizeof(CC1101) = 31
 sizeof(NRF24L01P) = 40
 sizeof(RFM69) = 30
 sizeof(VWI) = 161
-CosaBenchmarkSizeOf.ino:259:assert:true == false
+CosaBenchmarkSizeOf.ino:261:assert:true == false

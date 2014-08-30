@@ -101,7 +101,8 @@ void setup()
   for (s = 0; s < 1024; s++) {
     test.expire_after( s );
     test.start();
-    while (!test.is_dispatched());
+    while (!test.is_dispatched())
+      ;
     if (RTCMeasure::start_queued_cycles > 0)
       break;
     sum_immediate += RTCMeasure::start_immediate_cycles;
@@ -120,7 +121,8 @@ void setup()
   for (; s < 1024; s++) {
     test.expire_after(s);
     test.start();
-    while (!test.is_dispatched());
+    while (!test.is_dispatched())
+      ;
     sum_start += (uint32_t) RTCMeasure::start_queued_cycles;
     sum_setup += (uint32_t) RTCMeasure::setup_cycles;
     sum_dispatch += (uint32_t) RTCMeasure::dispatch_cycles;
@@ -147,7 +149,8 @@ void setup()
     start = RTC::micros();
     one_shot.expire_at(start + expected);
     one_shot.start();
-    while (!Simple::flag); 
+    while (!Simple::flag)
+      ; 
     actual = OneShot::time_stamp - start;
     trace.printf_P(PSTR("expire_after(%ul us): actual %l us\n"), 
 		   expected, actual);
@@ -166,7 +169,8 @@ void setup()
   start = RTC::micros();
   one_shot.expire_at(start + expected);
   one_shot.start();
-  while (!Simple::flag);
+  while (!Simple::flag)
+    ;
   actual = OneShot::time_stamp - start;
   trace.printf_P(PSTR("expire_after(%ul us): actual %ul us\n"), 
 		 expected, actual);
@@ -184,7 +188,8 @@ void setup()
     // correct expiration. 
     timer.expire_at(timer.expire_at() + us_per_tick);
     timer.start();
-    while (Simple::flag == (i & 1));
+    while (Simple::flag == (i & 1))
+      ;
     stop = RTC::micros();
   }
   actual = stop - start;

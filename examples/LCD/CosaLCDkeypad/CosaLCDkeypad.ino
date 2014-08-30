@@ -39,11 +39,11 @@ public:
   KeypadTrace(IOStream::Device* dev) : LCDKeypad(), m_out(dev) {}
   virtual void on_key_down(uint8_t nr) { trace(PSTR("down"), nr); }
   virtual void on_key_up(uint8_t nr) { trace(PSTR("up"), nr); }
-  void trace(const char* msg, uint8_t nr);
+  void trace(str_P msg, uint8_t nr);
 };
 
 void 
-KeypadTrace::trace(const char* msg, uint8_t nr)
+KeypadTrace::trace(str_P msg, uint8_t nr)
 {
   m_out << clear;
   switch (nr) {

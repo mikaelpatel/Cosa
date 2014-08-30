@@ -47,7 +47,7 @@ public:
    * @param[in] banner trace begin message.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(IOStream::Device* dev, const char* banner = NULL);
+  bool begin(IOStream::Device* dev, str_P banner = NULL);
 
   /**
    * Stop trace stream over current device.
@@ -76,7 +76,7 @@ public:
    * @param[in] line number.
    * @param[in] expr program memory string with expression.
    */
-  void fatal_P(const char* file, int line, const char* expr) 
+  void fatal_P(const char* file, int line, str_P expr) 
     __attribute__((noreturn));
   
 protected:

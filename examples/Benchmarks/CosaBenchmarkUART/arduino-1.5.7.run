@@ -1,7 +1,7 @@
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 115200
 CosaBenchmarkUART: started
-free_memory() = 435
+free_memory() = 431
 1
 one character:36 us
 1
@@ -44,10 +44,10 @@ max uint16_t:156 us
 max uint32_t:368 us
 
 000100
-uint16_t(digits=6):136 us
+uint16_t(digits=6):140 us
 
 000100
-uint32_t(digits=6):156 us
+uint32_t(digits=6):160 us
 
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
@@ -114,4 +114,16 @@ uint32_t(digits=6):156 us
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
 output(4096 characters):394784 us
-CosaBenchmarkUART.ino:215:assert:true == false
+
+
+newline character:44 us
+	
+tab:60 us
+
+
+newline string(1):68 us
+
+
+
+newline string(2):76 us
+CosaBenchmarkUART.ino:248:assert:true == false

@@ -76,7 +76,7 @@ void write_bin_uint16(uint16_t nr);
 void write_pos(uint16_t nr);
 
 // Measurement support
-void measure(const char* name, benchmark_t fn, uint16_t nr);
+void measure(str_P name, benchmark_t fn, uint16_t nr);
 #define MEASURE(fn,nr) measure(PSTR(#fn),fn,nr)
 
 void setup()
@@ -197,7 +197,7 @@ void write_pos(uint16_t nr)
   }
 }
 
-void measure(const char* name, benchmark_t fn, uint16_t nr)
+void measure(str_P name, benchmark_t fn, uint16_t nr)
 {
 #if defined(USE_LOW_POWER)
   lcd.display_off();

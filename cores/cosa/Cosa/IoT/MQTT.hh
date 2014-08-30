@@ -131,7 +131,7 @@ public:
      * @param[in] progmem flag if payload buffer in program memory.
      * @return zero if successful otherwise negative error code.
      */
-    int publish(const char* topic, const void* buf, size_t count, 
+    int publish(str_P topic, const void* buf, size_t count, 
 		QoS_t qos, bool retain, bool progmem);
 
     /**
@@ -145,7 +145,7 @@ public:
      * @param[in] retain require server to maintain value (Default false).
      * @return zero if successful otherwise negative error code.
      */
-    int publish(const char* topic, const void* buf, size_t count, 
+    int publish(str_P topic, const void* buf, size_t count, 
 		QoS_t qos = FIRE_AND_FORGET, 
 		bool retain = false)
     {
@@ -163,7 +163,7 @@ public:
      * @param[in] retain require server to maintain value (Default false).
      * @return zero if successful otherwise negative error code.
      */
-    int publish_P(const char* topic, const void* buf, size_t count, 
+    int publish_P(str_P topic, const void* buf, size_t count, 
 		  QoS_t qos = FIRE_AND_FORGET, 
 		  bool retain = false)
     {
@@ -178,7 +178,7 @@ public:
      * @param[in] qos requested quality of service.
      * @return zero if successful otherwise negative error code.
      */
-    int subscribe(const char* topic, QoS_t qos = FIRE_AND_FORGET);
+    int subscribe(str_P topic, QoS_t qos = FIRE_AND_FORGET);
 
     /**
      * Unsubscribe on the given topic. Returns zero if successful
@@ -186,7 +186,7 @@ public:
      * @param[in] topic string (program memory).
      * @return zero if successful otherwise negative error code.
      */
-    int unsubscribe(const char* topic);
+    int unsubscribe(str_P topic);
 
     /**
      * Service the MQTT client. Check for publish messages. Decode and
@@ -218,7 +218,7 @@ public:
     int write(uint8_t cmd, uint16_t length, uint16_t id = 0);
     int write(const void* buf, size_t count);
     int write_P(const void* buf, size_t count);
-    int puts_P(const char* s);
+    int puts_P(str_P s);
     int read(void* buf, size_t count, uint32_t ms = 3000L);
     int flush();
   };

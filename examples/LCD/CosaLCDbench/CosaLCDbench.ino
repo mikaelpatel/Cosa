@@ -73,7 +73,7 @@ const uint16_t HEIGHT = 2;
 
 // Measurement support
 typedef void (*benchmark_t)(uint16_t);
-void measure(const char* name, benchmark_t fn, uint16_t nr, uint16_t bytes);
+void measure(str_P name, benchmark_t fn, uint16_t nr, uint16_t bytes);
 #define MEASURE(fn,bytes) measure(PSTR(#fn),fn,10,bytes)
 
 // The benchmarks
@@ -150,7 +150,7 @@ void benchmark4(uint16_t nr)
   }
 }
 
-void measure(const char* name, benchmark_t fn, uint16_t nr, uint16_t bytes)
+void measure(str_P name, benchmark_t fn, uint16_t nr, uint16_t bytes)
 {
   cout << clear << name;
   uint32_t start = RTC::micros();

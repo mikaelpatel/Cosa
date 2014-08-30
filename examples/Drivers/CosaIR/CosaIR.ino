@@ -95,8 +95,9 @@ static const IR::Receiver::keymap_t LG_keymap[] __PROGMEM = {
 #if defined(USE_UART)
 uint16_t sample[40];
 #else
-// PCD8544::Serial3W port;
-PCD8544::SPI3W port;
+// Select PCD8544 IO Adapter; Serial Output Pins or SPI
+// LCD::Serial3W port;
+LCD::SPI3W port;
 PCD8544 lcd(&port);
 #define sample NULL
 #endif

@@ -23,16 +23,7 @@
 #ifndef COSA_STRING_HH
 #define COSA_STRING_HH
 
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <avr/pgmspace.h>
-
-/**
- * Flash String type.
- */
-class __FlashStringHelper;
-#define F(s) (reinterpret_cast<const __FlashStringHelper *>(PSTR(s)))
+#include "Cosa/Types.h"
 
 /**
  * String add operator handler.
@@ -60,7 +51,7 @@ public:
    */
   String(const char *cstr = "");
   String(const String &str);
-  String(const __FlashStringHelper *str);
+  String(str_P str);
 #if (ARDUINO >= 150)
   String(String &&rval);
   String(__StringSumHelper &&rval);
@@ -100,7 +91,7 @@ public:
    */
   String& operator=(const String &rhs);
   String& operator=(const char *cstr);
-  String& operator=(const __FlashStringHelper *str);
+  String& operator=(str_P str);
 
 #if (ARDUINO >= 150)
   String& operator=(String &&rval);
@@ -122,7 +113,7 @@ public:
   unsigned char concat(unsigned long num);
   unsigned char concat(float num);
   unsigned char concat(double num);
-  unsigned char concat(const __FlashStringHelper * str);
+  unsigned char concat(str_P str);
 	
   /**
    * If there's not enough memory for the concatenated value, the
@@ -139,7 +130,7 @@ public:
   String& operator+=(unsigned long num) { concat(num); return (*this); }
   String& operator+=(float num) { concat(num); return (*this); }
   String& operator+=(double num) { concat(num); return (*this); }
-  String& operator+=(const __FlashStringHelper *str) { concat(str); return (*this);}
+  String& operator+=(str_P str) { concat(str); return (*this);}
 
   friend __StringSumHelper& operator+(const __StringSumHelper &lhs, const String &rhs);
   friend __StringSumHelper& operator+(const __StringSumHelper &lhs, const char *cstr);
@@ -151,8 +142,7 @@ public:
   friend __StringSumHelper& operator+(const __StringSumHelper &lhs, unsigned long num);
   friend __StringSumHelper& operator+(const __StringSumHelper &lhs, float num);
   friend __StringSumHelper& operator+(const __StringSumHelper &lhs, double num);
-  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, 
-				    const __FlashStringHelper *rhs);
+  friend __StringSumHelper& operator+(const __StringSumHelper &lhs, str_P rhs);
 
   /**
    * Comparison (only works w/ Strings and "strings").
@@ -246,7 +236,7 @@ protected:
    * Copy and move.
    */
   String& copy(const char *cstr, unsigned int length);
-  String& copy(const __FlashStringHelper *pstr, unsigned int length);
+  String& copy(str_P pstr, unsigned int length);
   void move(String &rhs);
 };
 

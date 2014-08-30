@@ -65,7 +65,7 @@ IOStream cout(&lcd);
 #if defined(BOARD_ATTINY)
 AnalogPin keypad(Board::A3);
 #else
-AnalogPin keypad(Board::A8);
+AnalogPin keypad(Board::A0);
 #endif
 
 // Initiate horizontal bar (left to right, 1..5)

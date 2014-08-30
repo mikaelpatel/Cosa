@@ -27,6 +27,10 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
 
+#if !defined(USART1_UDRE_vect)
+#error CosaRS485master: board not supported.
+#endif
+
 static const uint8_t PORT = 1;
 static const uint8_t SLAVE = 0x02;
 RS485 rs485(PORT, Board::LED);

@@ -180,7 +180,7 @@ protected:
   void response(uint8_t param1, uint8_t param2);
   void response(uint8_t param1, uint8_t param2, uint8_t param3);
   void response(const char* param, size_t count);
-  void response_P(const char* param);
+  void response_P(str_P param);
   void failed(uint8_t param);
   void illegal(uint8_t resp);
 

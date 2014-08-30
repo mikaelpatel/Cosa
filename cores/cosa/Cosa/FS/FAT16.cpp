@@ -36,7 +36,7 @@ FAT16::make83Name(const char* str, uint8_t* name)
       i = 8;
     } 
     else {
-      PGM_P p = PSTR("|<>^+=?/[];,*\"\\");
+      PGM_P p = (PGM_P) PSTR("|<>^+=?/[];,*\"\\");
       uint8_t b;
       while ((b = pgm_read_byte(p++))) if (b == c) return (false);
       if (i > n || c < 0X21 || c > 0X7E) return (false);

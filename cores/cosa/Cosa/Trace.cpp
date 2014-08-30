@@ -25,7 +25,7 @@ Trace trace;
 uint8_t trace_log_mask = LOG_UPTO(LOG_INFO);
 
 bool 
-Trace::begin(IOStream::Device* dev, const char* banner)
+Trace::begin(IOStream::Device* dev, str_P banner)
 {
   set_device(dev);
   if (banner != NULL) {
@@ -36,7 +36,7 @@ Trace::begin(IOStream::Device* dev, const char* banner)
 }
 
 void
-Trace::fatal_P(const char* file, int line, const char* expr) 
+Trace::fatal_P(const char* file, int line, str_P expr) 
 {
   printf_P(PSTR("%s:%d:%S\r\n"), file, line, expr);
   print(EXITCHARACTER);

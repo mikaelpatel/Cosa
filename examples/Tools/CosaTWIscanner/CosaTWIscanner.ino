@@ -36,7 +36,7 @@ struct tab_t {
   uint8_t mask;			// Sub-address mask
   uint8_t regaddr;		// Identity register address
   uint8_t id;			// Identity value to match
-  str_P name;			// Name and short description
+  const char* name;		// Name and short description
 };
 
 /**

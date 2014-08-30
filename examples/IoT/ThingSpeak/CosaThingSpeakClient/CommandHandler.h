@@ -29,6 +29,9 @@ public:
   Command(ThingSpeak::TalkBack* talkback, const char* string) : 
     ThingSpeak::TalkBack::Command(talkback, string)
   {}
+  Command(ThingSpeak::TalkBack* talkback, str_P string) : 
+    ThingSpeak::TalkBack::Command(talkback, string)
+  {}
   virtual void execute();
 };
 

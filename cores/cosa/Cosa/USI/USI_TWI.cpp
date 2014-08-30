@@ -188,7 +188,8 @@ TWI::start()
 {
   // Release SCL to ensure that (repeated) start can be performed 
   m_scl.set();
-  while (!m_scl.is_set());
+  while (!m_scl.is_set())
+    ;
   DELAY(T4);
 
   // Generate the start condition
@@ -214,7 +215,8 @@ TWI::transfer(uint8_t data, uint8_t bits)
   do { 
     DELAY(T2);
     USICR = CR_DATA_MODE;
-    while (!m_scl.is_set());
+    while (!m_scl.is_set())
+      ;
     DELAY(T4);
     USICR = CR_DATA_MODE;
   } while (!(USISR & _BV(USIOIF)));
@@ -233,7 +235,8 @@ TWI::stop()
   // Release SCL and signal stop. Assume SCL/SDA are both output
   m_sda.clear();
   m_scl.set();
-  while (!m_scl.is_set());
+  while (!m_scl.is_set())
+    ;
   DELAY(T4);
   m_sda.set();
   DELAY(T2);
