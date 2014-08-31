@@ -44,7 +44,7 @@ UAT::putchar(char c)
       data >>= 1;
     } while (--bits);
   }
-  return (c);
+  return (c & 0xff);
 }
 
 bool 
