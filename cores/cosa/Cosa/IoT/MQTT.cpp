@@ -60,7 +60,7 @@ MQTT::Client::write_P(const void* buf, size_t count)
 int 
 MQTT::Client::puts_P(str_P s)
 {
-  uint16_t length = strlen_P((const char*) s);
+  uint16_t length = strlen_P(s);
   int res = length + sizeof(length);
   length = hton((int16_t) length);
   m_sock->write(&length, sizeof(length));
@@ -75,7 +75,7 @@ MQTT::Client::read(void* buf, size_t count, uint32_t ms)
   int res;
   while (((res = m_sock->available()) == 0) &&
 	 ((ms == 0L) || (Watchdog::millis() - start < ms)))
-    delay(16);
+    yield();
   if (res == 0) return (-2);
   return (m_sock->read(buf, count));
 }
@@ -116,13 +116,13 @@ MQTT::Client::connect(const char* hostname,
   // Connect to the server. Check for timeout
   int res = m_sock->connect(hostname, PORT);
   if (res != 0) return (-1);
-  while ((res = m_sock->isconnected()) == 0) delay(16);
+  while ((res = m_sock->isconnected()) == 0) yield();
   if (res == 0) res = -2;
   if (res < 0) return (res);
 
   // Calculate length of variable payload
   size_t length = sizeof(PROTOCOL) + sizeof(flag) + sizeof(keep_alive);
-  length += strlen_P((const char*) identifier) + sizeof(uint16_t);
+  length += strlen_P(identifier) + sizeof(uint16_t);
   va_start(args, flag);
   if (flag & WILL_FLAG) {
     const char* topic = va_arg(args, const char*);
@@ -199,7 +199,7 @@ MQTT::Client::publish(str_P topic, const void* buf, size_t count,
 		      bool progmem)
 
 {
-  uint16_t length = strlen_P((const char*) topic) + sizeof(uint16_t);
+  uint16_t length = strlen_P(topic) + sizeof(uint16_t);
   uint16_t id = 0;
 
   // Check if message identity is required
@@ -261,7 +261,7 @@ MQTT::Client::subscribe(str_P topic, QoS_t qos)
 {
   // Calculate length of variable payload; id, topic, qos
   size_t length = sizeof(uint16_t);
-  length += strlen_P((const char*) topic) + sizeof(uint16_t) + sizeof(uint8_t);
+  length += strlen_P(topic) + sizeof(uint16_t) + sizeof(uint8_t);
   uint16_t id = hton((int16_t) m_mid++);
   if (m_mid == 0) m_mid = 1;
 
@@ -292,7 +292,7 @@ MQTT::Client::unsubscribe(str_P topic)
 {
   // Calculate length of variable payload
   size_t length = sizeof(uint16_t);
-  length += strlen_P((const char*) topic) + sizeof(uint16_t);
+  length += strlen_P(topic) + sizeof(uint16_t);
   uint16_t id = hton((int16_t) m_mid++);
   if (m_mid == 0) m_mid = 1;
 

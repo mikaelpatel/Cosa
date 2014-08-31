@@ -183,6 +183,25 @@ typedef const PROGMEM class prog_str* str_P;
 #define PSTR(str) STR_P(str)
 #define __PSTR(s) STR_P(s)
 
+inline char* 
+strcat_P(char* s1, str_P s2)
+{
+  return (strcat_P(s1, (const char*) s2));
+}
+
+inline str_P 
+strchr_P(str_P s, int __val)
+{
+  return ((str_P) strchr_P((const char*) s, __val));
+}
+
+inline str_P 
+strchrnul_P(str_P s, int __val)
+{
+  return ((str_P) strchrnul_P((const char*) s, __val));
+}
+
+
 inline int
 strcmp_P(const char *s1, str_P s2)
 {
@@ -193,6 +212,18 @@ inline char*
 strcpy_P(char* s1, str_P s2)
 {
   return (strcpy_P(s1, (const char*) s2));
+}
+
+inline int
+strcasecmp_P(const char *s1, str_P s2)
+{
+  return (strcasecmp_P(s1, (const char*) s2));
+}
+
+inline char*
+strcasestr_P(const char *s1, str_P s2)
+{
+  return (strcasestr_P(s1, (const char*) s2));
 }
 
 inline size_t

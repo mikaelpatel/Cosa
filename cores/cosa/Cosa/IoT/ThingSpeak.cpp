@@ -84,7 +84,7 @@ ThingSpeak::Channel::post(const char* entry, str_P status)
   Socket* sock = m_client->m_sock;
   IOStream page(sock);
   size_t length = strlen(entry);
-  if (status != NULL) length += strlen_P((const char*) status) + 8;
+  if (status != NULL) length += strlen_P(status) + 8;
 
   // Connect to the server
   int res = m_client->connect();
@@ -179,10 +179,10 @@ ThingSpeak::TalkBack::execute_next_command()
   char line[64];
   sock->gets(line, sizeof(line));
   res = -1;
-  if (strcmp_P(line, (const char*) PSTR("HTTP/1.1 200 OK\r"))) goto error;
+  if (strcmp_P(line, PSTR("HTTP/1.1 200 OK\r"))) goto error;
   do {
     sock->gets(line, sizeof(line));
-  } while ((sock->available() > 0) && (strcmp_P(line, (const char*) PSTR("\r"))));
+  } while ((sock->available() > 0) && (strcmp_P(line, PSTR("\r"))));
   if (sock->available() <= 0) goto error;
 
   // Parse reply length and command string
@@ -236,7 +236,7 @@ ThingSpeak::TalkBack::add_command_P(str_P string, uint8_t position)
   // Parse reply header
   char line[64];
   sock->gets(line, sizeof(line));
-  res = strcmp_P(line, (const char*) PSTR("HTTP/1.1 200 OK\r")) ? -1 : 0;
+  res = strcmp_P(line, PSTR("HTTP/1.1 200 OK\r")) ? -1 : 0;
   
  error:
   m_client->disconnect();
@@ -247,6 +247,6 @@ ThingSpeak::TalkBack::Command*
 ThingSpeak::TalkBack::lookup(const char* name)
 {
   for (Command* c = m_first; c != NULL; c = c->m_next)
-    if (!strcmp_P(name, (const char*) c->m_string)) return (c);
+    if (!strcmp_P(name, c->m_string)) return (c);
   return (NULL);
 }
