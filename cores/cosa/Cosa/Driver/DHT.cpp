@@ -107,7 +107,6 @@ DHT::on_event(uint8_t type, uint16_t value)
     set_mode(INPUT_MODE);
     DELAY(40);
     enable();
-    Watchdog::attach(this, m_period);
     break;
 
   case COMPLETED:
