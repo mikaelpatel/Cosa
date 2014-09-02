@@ -80,8 +80,9 @@ void setup()
 
 void loop()
 {
-  for (uint8_t ix = 0; ix < membersof(analog_pin_map); ix++) {
-    static uint16_t sample[membersof(analog_pin_map)];
+  const uint8_t ANALOG_PIN_MAX = 6;
+  for (uint8_t ix = 0; ix < ANALOG_PIN_MAX; ix++) {
+    static uint16_t sample[ANALOG_PIN_MAX];
     if (sample[ix] < 20) sample[ix] = 20;
     uint8_t x = 6 + (25*ix);
     uint8_t y = tft.HEIGHT - sample[ix];

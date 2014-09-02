@@ -130,7 +130,7 @@ void loop()
   textbox.set_text_port(5, 5, tft.WIDTH-10, tft.HEIGHT-10);
   console.print('\f');
   console.print(&tft, 200, IOStream::hex, 
-		tft.get_orientation() == Canvas::PORTRAIT ? 4 : 6);
+		tft.get_orientation() == Canvas::PORTRAIT ? 3 : 5);
   ms = (RTC::micros() - start) / 1000L;
   console.printf_P(PSTR("%ul ms"), ms);
   INFO("test#3:scroll text mode: %ul ms", ms);
