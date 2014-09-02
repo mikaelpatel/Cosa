@@ -101,9 +101,6 @@ DHCP::send(uint8_t type)
   };
   res = m_sock->write_P(param, sizeof(param));
   if (res < 0) return (-1);
-  buf[0] = END_OPTION;
-  res = m_sock->write(buf, 1);
-  if (res < 0) return (-1);
   return (m_sock->flush());
 }
 
