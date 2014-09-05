@@ -60,7 +60,7 @@ performance.
   [source](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-07-29-src.zip)
   and
   [documentation](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-07-29-doc.zip) 
-* 2014-08-05
+* 2014-09-05
   [source](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-09-05-src.zip)
   and
   [documentation](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-09-05-doc.zip) 
