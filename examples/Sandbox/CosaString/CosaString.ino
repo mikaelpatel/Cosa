@@ -23,10 +23,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/String.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/String.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
 void setup()
