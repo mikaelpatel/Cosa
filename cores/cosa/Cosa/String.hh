@@ -24,6 +24,7 @@
 #define COSA_STRING_HH
 
 #include "Cosa/Types.h"
+#include "Cosa/IOStream.hh"
 
 /**
  * String add operator handler.
@@ -259,4 +260,15 @@ public:
   __StringSumHelper(float num) : String(num) {}
   __StringSumHelper(double num) : String(num) {}
 };
+
+/**
+ * Print String to given stream.
+ * @param[in] s String to print.
+ * @return iostream.
+ */
+inline IOStream& operator<<(IOStream& outs, String& s)
+{
+  outs.print((char*) s.c_str());
+  return (outs);
+}
 #endif

@@ -22,12 +22,16 @@
 #include "Cosa/Power.hh"
 #include <ctype.h>
 
+const char IOStream::CR[] __PROGMEM = "\n";
+const char IOStream::LF[] __PROGMEM = "\r";
+const char IOStream::CRLF[] __PROGMEM = "\r\n";
+
 IOStream::IOStream(Device* dev) : 
   m_dev(dev),
   m_base(dec),
   m_width(6),
   m_prec(4),
-  m_eol_P(PSTR("\r\n"))
+  m_eol_P((str_P) CRLF)
 {}
 
 IOStream::IOStream() : 
@@ -35,7 +39,7 @@ IOStream::IOStream() :
   m_base(dec),
   m_width(6),
   m_prec(4),
-  m_eol_P(PSTR("\r\n"))
+  m_eol_P((str_P) CRLF)
 {}
 
 IOStream::Device* 

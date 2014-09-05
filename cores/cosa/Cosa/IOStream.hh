@@ -32,6 +32,11 @@ public:
   /** End Of File, returned when device operations fails (empty or full). */
   static const int EOF = -1;
 
+  /** End Of Line character sequences */
+  static const char CR[] PROGMEM;
+  static const char LF[] PROGMEM;
+  static const char CRLF[] PROGMEM;
+  
   /**
    * Base conversion.
    */
@@ -84,14 +89,16 @@ public:
 
     /**
      * Is blocking mode?
+     * @return bool.
      */
-    bool is_blocking()
+    bool is_blocking() const
     {
       return (m_blocking);
     }
 
     /**
      * Set end of line mode.
+     * @param[in] mode for end of line.
      */
     void set_eol(Mode mode)
     {
@@ -100,8 +107,9 @@ public:
 
     /**
      * Get end of line mode.
+     * @return mode.
      */
-    Mode get_eol()
+    Mode get_eol() const
     {
       return (m_eol);
     }
@@ -264,9 +272,9 @@ public:
    * Set io stream end of line string.
    * @param[in] s string for end of line.
    */
-  void set_eol_P(str_P s)
+  void set_eol_P(const char* s)
   {
-    m_eol_P = s;
+    m_eol_P = (str_P) s;
   }
 
   /**
@@ -642,19 +650,6 @@ public:
     print(&buffer);
     return (*this); 
   }
-
-  /**
-   * Print null terminated String to stream.
-   * @param[in] s String to print.
-   * @return iostream.
-   */
-#ifdef COSA_STRING_HH
-  IOStream& operator<<(String& s)
-  {
-    print((char*) s.c_str());
-    return (*this);
-  }
-#endif
 
   friend IOStream& bcd(IOStream& outs);
   friend IOStream& bin(IOStream& outs);
