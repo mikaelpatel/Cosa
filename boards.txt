@@ -330,6 +330,10 @@ attiny85-8.build.board=BREADBOARD_ATTINYX5
 attiny85-8.build.variant=arduino/attinyx5
 attiny85-8.build.core=cosa
 
+# Added for embedXcode
+attiny85-8.upload.protocol=usbtiny
+attiny85-8.upload.tool=avrdude
+
 # AVR:ATtiny861
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
 # Brown-out detection disabled. Serial program downloading enabled
