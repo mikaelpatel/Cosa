@@ -62,8 +62,7 @@ public:
     m_trigPin(trig_pin),
     m_echoPin(echo_pin),
     m_distance(0)
-  {
-  }
+  {}
   
   /**
    * Latest distance reading.

@@ -37,13 +37,6 @@ ProtoThread::on_event(uint8_t type, uint16_t value)
   } 
 }
 
-void 
-ProtoThread::set_timer(uint16_t ms)
-{
-  m_state = WAITING;
-  Watchdog::attach(this, ms);
-}
-
 uint16_t
 ProtoThread::dispatch(bool flag)
 {

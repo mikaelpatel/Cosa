@@ -27,7 +27,7 @@ three character string:88 us
 100
 integer:120 us
 100
-long integer:136 us
+long integer:140 us
 
 127
 max int8_t:120 us
@@ -44,7 +44,7 @@ max uint16_t:156 us
 max uint32_t:368 us
 
 000100
-uint16_t(digits=6):136 us
+uint16_t(digits=6):140 us
 
 000100
 uint32_t(digits=6):156 us

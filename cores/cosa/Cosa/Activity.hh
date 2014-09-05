@@ -80,6 +80,7 @@ public:
    * @return time.
    */
   clock_t time() const
+    __attribute__((always_inline))
   { 
     return (Alarm::time()); 
   }
@@ -117,8 +118,7 @@ private:
     Scheduler(Activity* activity) : 
       Alarm(), 
       m_activity(activity) 
-    {
-    }
+    {}
     virtual void run() 
     { 
       m_activity->schedule(time()); 
@@ -133,13 +133,13 @@ private:
    */
   void schedule(clock_t now);
   
-  Scheduler m_scheduler;
-  clock_t m_start_time;
-  clock_t m_stop_time;
-  uint16_t m_duration;
-  uint16_t m_period;
-  uint16_t m_run_period;
-  uint16_t m_cycles;
+  Scheduler m_scheduler;	//!< Activity scheduler.
+  clock_t m_start_time;		//!< Start time.
+  clock_t m_stop_time;		//!< Stop time.
+  uint16_t m_duration;		//!< Duration in seconds.
+  uint16_t m_period;		//!< Reschedule period in minutes.
+  uint16_t m_run_period;	//!< Run period in seconds.
+  uint16_t m_cycles;		//!< Current cycle count.
 };
 #endif
 

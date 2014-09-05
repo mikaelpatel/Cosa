@@ -81,8 +81,7 @@ public:
     m_firstrun(true),
     m_echo(true),
     m_level(ADMIN)
-  {
-  }
+  {}
   
   /**
    * Set local echo mode.
@@ -97,7 +96,7 @@ public:
    * Get local echo mode.
    * @return mode.
    */
-  bool get_echo()
+  bool get_echo() const
   {
     return (m_echo);
   }
@@ -116,7 +115,7 @@ public:
    * memory.
    * @return prompt.
    */
-  const char* get_prompt()
+  const char* get_prompt() const
   {
     return (m_prompt);
   }
@@ -134,7 +133,7 @@ public:
    * Get privilege level.
    * @return level.
    */
-  Level get_privilege()
+  Level get_privilege() const
   {
     return (m_level);
   }
@@ -143,7 +142,7 @@ public:
    * Validate privilege level.
    * @return bool.
    */
-  bool is_privileged(Level level)
+  bool is_privileged(Level level) const
   {
     return (m_level >= level);
   }

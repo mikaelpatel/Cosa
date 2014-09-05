@@ -57,8 +57,7 @@ public:
     TWI::Driver(0x20 | (subaddr & 0x7)), 
     m_ddr(0xff),
     m_port(0)
-  {
-  }
+  {}
 
   /**
    * Set data direction for port pin P0..P7; 0 for output, 1 for input.
@@ -74,6 +73,7 @@ public:
    * @return bool.
    */
   bool set_input_pin(uint8_t pin)
+    __attribute__((always_inline))
   {
     return (set_data_direction(m_ddr | _BV(pin & PIN_MASK)));
   }
@@ -84,6 +84,7 @@ public:
    * @return bool.
    */
   bool set_output_pin(uint8_t pin)
+    __attribute__((always_inline))
   {
     return (set_data_direction(m_ddr & ~_BV(pin & PIN_MASK)));
   }
@@ -94,6 +95,7 @@ public:
    * @return bool.
    */
   bool read(uint8_t pin)
+    __attribute__((always_inline))
   {
     return ((read() & _BV(pin & PIN_MASK)) != 0);
   }
@@ -150,8 +152,7 @@ protected:
     TWI::Driver(addr | (subaddr & 0x7)),
     m_ddr(0xff),
     m_port(0)
-  {
-  }
+  {}
 };
 
 class PCF8574A : protected PCF8574 {
@@ -161,9 +162,6 @@ public:
    * given sub-address.
    * @param[in] subaddr sub-address (0..7, default 7).
    */
-  PCF8574A(uint8_t subaddr = 7) : 
-    PCF8574(0x70, subaddr) 
-  {
-  }
+  PCF8574A(uint8_t subaddr = 7) : PCF8574(0x70, subaddr) {}
 };
 #endif

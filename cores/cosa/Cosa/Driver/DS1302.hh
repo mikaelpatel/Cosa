@@ -69,8 +69,7 @@ public:
     m_cs(cs, 0),
     m_sda(sda, IOPin::OUTPUT_MODE),
     m_clk(clk, 0)
-  {
-  }
+  {}
 
   /*
    * Low level RTC access function. Read data from the clock register
@@ -93,6 +92,7 @@ public:
    * @param[in] flag write protect mode.
    */
   void set_write_protect(bool flag)
+    __attribute__((always_inline))
   {
     write(WP, flag ? 0x80 : 0x00);
   }
@@ -114,6 +114,7 @@ public:
    * @param[in] addr memory address on the device (0..RAM_MAX-1).
    */
   uint8_t read_ram(uint8_t addr)
+    __attribute__((always_inline))
   {
     return (read(RAM_START | (addr & ADDR_MASK)));
   }
@@ -125,6 +126,7 @@ public:
    * @param[in] data to write to the memory address.
    */
   void write_ram(uint8_t addr, uint8_t data)
+    __attribute__((always_inline))
   {
     write(RAM_START | (addr & ADDR_MASK), data);
   }

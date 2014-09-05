@@ -5,14 +5,14 @@ sizeof(ProtoThread) = 9
 sizeof(Counter) = 13
 F_CPU = 16000000
 I_CPU = 16
-110:void loop():info:27 us per dispatch (432 cycles)
-110:void loop():info:27 us per dispatch (432 cycles)
-110:void loop():info:27 us per dispatch (432 cycles)
-110:void loop():info:27 us per dispatch (432 cycles)
-110:void loop():info:27 us per dispatch (432 cycles)
-110:void loop():info:27 us per dispatch (432 cycles)
-110:void loop():info:27 us per dispatch (432 cycles)
-110:void loop():info:27 us per dispatch (432 cycles)
-110:void loop():info:27 us per dispatch (432 cycles)
-110:void loop():info:27 us per dispatch (432 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:25 us per dispatch (400 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
 CosaBenchmarkProtoThread.ino:115:assert:count < 10

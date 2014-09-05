@@ -36,17 +36,14 @@ public:
   /**
    * Construct timer handler, delayed function.
    */
-  Timer() :
-    Link(), 
-    m_expires(0L) 
-  {
-  }
+  Timer() : Link(), m_expires(0L) {}
 
   /**
    * Start the Timer handler. This member function must be called in
    * the setup to allow Timers. 
    */
   static void begin() 
+    __attribute__((always_inline))
   { 
     RTC::set(on_interrupt); 
   }

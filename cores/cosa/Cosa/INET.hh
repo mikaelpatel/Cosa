@@ -68,6 +68,7 @@ public:
    * @return zero if successful otherwise negative error code. 
    */
   static int aton_P(const char* addr, uint8_t ip[IP_MAX])
+    __attribute__((always_inline))
   {
     return (aton(addr, ip, true));
   }
@@ -96,6 +97,7 @@ public:
    * code.  
    */
   static int nametopath_P(const char* hostname, char* path)
+    __attribute__((always_inline))
   {
     return (nametopath(hostname, path, true));
   }
@@ -140,8 +142,7 @@ public:
     Server(IOStream& ios) : 
       m_ios(ios),
       m_connected(false)
-    {
-    }
+    {}
 
     /**
      * Get server socket.
@@ -223,9 +224,7 @@ public:
      * @override INET::Server
      * Application extension; Called when a client disconnects.
      */
-    virtual void on_disconnect() 
-    {
-    }
+    virtual void on_disconnect() {}
 
   protected:
     /** Associated io-stream */

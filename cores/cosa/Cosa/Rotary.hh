@@ -97,7 +97,7 @@ public:
      * Get current cycle mode.
      * @return mode.
      */
-    Mode get_mode()
+    Mode get_mode() const
     {
       return (m_mode);
     }
@@ -115,6 +115,7 @@ public:
      * Enable the encoder. 
      */
     void enable()
+      __attribute__((always_inline))
     {
       m_clk.enable();
       m_dt.enable();
@@ -124,6 +125,7 @@ public:
      * Disable the encoder.
      */
     void disable()
+      __attribute__((always_inline))
     {
       m_clk.disable();
       m_dt.disable();
@@ -139,8 +141,7 @@ public:
       SignalPin(Board::InterruptPin pin, Encoder* encoder) : 
 	PinChangeInterrupt(pin), 
 	m_encoder(encoder)
-      {
-      }
+      {}
 
     private:
       Encoder* m_encoder;
@@ -214,14 +215,13 @@ public:
       m_min(min),
       m_max(max),
       m_step(step)
-    {
-    }
+    {}
     
     /**
      * Return current dial value.
      * @return value.
      */
-    T get_value()
+    T get_value() const
     {
       return (m_value);
     }
@@ -230,7 +230,7 @@ public:
      * Get current step (increment/decrement).
      * @return step.
      */
-    T get_step()
+    T get_step() const
     {
       return (m_step);
     }
@@ -325,14 +325,13 @@ public:
       m_max(max),
       m_step(step),
       m_steps(steps)
-    {
-    }
+    {}
     
     /**
      * Return current dial value.
      * @return value.
      */
-    T get_value()
+    T get_value() const
     {
       return (m_value);
     }
@@ -341,7 +340,7 @@ public:
      * Get current step (slow increment/decrement).
      * @return step.
      */
-    T get_step()
+    T get_step() const
     {
       return (m_step);
     }
@@ -359,7 +358,7 @@ public:
      * Get current steps (fast increment/decrement).
      * @return steps.
      */
-    T get_steps()
+    T get_steps() const
     {
       return (m_steps);
     }

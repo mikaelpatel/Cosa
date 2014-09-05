@@ -96,10 +96,7 @@ public:
    * Construct data streaming for given device.
    * @param[in] dev output device.
    */
-  Fai(IOStream::Device* dev = NULL) : 
-    Ciao(dev) 
-  {
-  }
+  Fai(IOStream::Device* dev = NULL) : Ciao(dev) {}
 
   /**
    * Start the data stream with a version string and endian information.

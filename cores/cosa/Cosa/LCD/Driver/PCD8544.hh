@@ -163,6 +163,7 @@ public:
    * @return previous font setting.
    */
   Font* set_text_font(Font* font)
+    __attribute__((always_inline))
   {
     Font* previous = m_font;
     m_font = font;

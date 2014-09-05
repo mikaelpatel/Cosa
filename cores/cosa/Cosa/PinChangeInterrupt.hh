@@ -49,8 +49,7 @@ public:
    */
   PinChangeInterrupt(Board::InterruptPin pin, bool pullup = false) :
     IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
-  {
-  }
+  {}
 
   /**
    * @override Interrupt::Handler

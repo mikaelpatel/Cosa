@@ -42,9 +42,7 @@ public:
      * initiate with socket. 
      * @param[in] ios associated io-stream.
      */
-    Server(IOStream& ios) : INET::Server(ios) 
-    {
-    }
+    Server(IOStream& ios) : INET::Server(ios) {}
 
     /**
      * @override INET::Server

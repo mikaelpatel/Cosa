@@ -81,6 +81,7 @@ public:
    * @param[in] seconds to alarm.
    */
   void next_alarm(uint16_t seconds = 0)
+    __attribute__((always_inline))
   { 
     if (seconds == 0) seconds = m_period;
     m_when = s_ticks + seconds; 
@@ -157,8 +158,7 @@ public:
     Scheduler() : 
       Periodic(128), 
       m_seconds(0L) 
-    {
-    }
+    {}
     virtual void run();
   private:
     uint32_t m_seconds;

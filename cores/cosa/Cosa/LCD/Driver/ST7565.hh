@@ -166,7 +166,10 @@ public:
    * Get current text font. 
    * @return font setting.
    */
-  Font* get_text_font() { return (m_font); }
+  Font* get_text_font() const
+  { 
+    return (m_font); 
+  }
 
   /**
    * Set text font. Returns previous setting.
@@ -174,6 +177,7 @@ public:
    * @return previous font setting.
    */
   Font* set_text_font(Font* font)
+    __attribute__((always_inline))
   {
     Font* previous = m_font;
     m_font = font;

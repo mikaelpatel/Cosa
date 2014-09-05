@@ -135,16 +135,14 @@ public:
    * Construct data streaming for given device.
    * @param[in] dev output device.
    */
-  Ciao(IOStream::Device* dev = NULL) : 
-    m_dev(dev) 
-  {
-  }
+  Ciao(IOStream::Device* dev = NULL) : m_dev(dev) {}
 
   /**
    * Set io-stream device.
    * @param[in] dev stream device.
    */
   void set(IOStream::Device* dev) 
+    __attribute__((always_inline))
   { 
     if (dev == NULL) return;
     m_dev = dev;

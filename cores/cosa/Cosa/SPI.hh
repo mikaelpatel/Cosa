@@ -188,6 +188,7 @@ public:
    * @return value received.
    */
   uint8_t transfer(uint8_t data)
+    __attribute__((always_inline))
   {
     USIDR = data;
     USISR = _BV(USIOIF);

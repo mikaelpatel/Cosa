@@ -35,11 +35,7 @@ public:
    * Use begin() to set the trace device. The Trace class is actually 
    * a singleton, trace, as the trace macro set depends on the variable.
    */
-  Trace() : 
-    IOStream(),
-    EXITCHARACTER(0x1d)
-  {
-  }
+  Trace() : IOStream(), EXITCHARACTER(0x1d) {}
 
   /**
    * Start trace stream over given iostream device.
@@ -54,6 +50,7 @@ public:
    * @return true(1) if successful otherwise false(0)
    */
   bool end()
+    __attribute__((always_inline))
   {
     set_device(NULL);
     return (true);

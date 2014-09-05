@@ -34,10 +34,7 @@ public:
   /**
    * Construct system font (5x7) singleton.
    */
-  System5x7() : 
-    Font(5, 8, bitmap) 
-  {
-  }
+  System5x7() : Font(5, 8, bitmap) {}
 
   /**
    * @override Font

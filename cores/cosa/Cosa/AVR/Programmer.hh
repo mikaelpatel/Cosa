@@ -40,11 +40,10 @@ public:
   Programmer(uint8_t pagesize = 32) : 
     m_flash_pagesize(pagesize),
     m_eeprom_pagesize(4)
-  {
-  }
+  {}
   
   /**
-   * Transfer data to and from the device.
+   * Transfer data to and from the device (USI/SPI).
    * @param[in] data to transfer.
    * @return data received.
    */

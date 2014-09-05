@@ -42,14 +42,14 @@ public:
   Queue() :
     m_put(0),
     m_get(0)
-  {
-  }
+  {}
 
   /**
    * Return number of elements in queue.
    * @return available elements.
    */
   uint8_t available() const
+    __attribute__((always_inline))
   { 
     return ((NMEMB + m_put - m_get) & MASK);
   }
@@ -59,6 +59,7 @@ public:
    * @return room for elements.
    */
   uint8_t room() const
+    __attribute__((always_inline))
   {
     return (NMEMB - m_put + m_get - 1) & MASK;
   }

@@ -81,6 +81,7 @@ public:
    * @return zero if successful otherwise negative error code.
    */
   int gethostbyname(const char* hostname, uint8_t ip[4])
+    __attribute__((always_inline))
   {
     return (gethostbyname(hostname, ip, false));
   }
@@ -93,6 +94,7 @@ public:
    * @return zero if successful otherwise negative error code.
    */
   int gethostbyname_P(str_P hostname, uint8_t ip[4])
+    __attribute__((always_inline))
   {
     return (gethostbyname((const char*) hostname, ip, true));
   }

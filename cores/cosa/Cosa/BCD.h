@@ -37,7 +37,6 @@
  * @param[in] value to convert.
  * @return binary value.
  */
-
 inline uint8_t to_binary(uint8_t value) __attribute__((always_inline));
 inline uint8_t
 to_binary(uint8_t value)

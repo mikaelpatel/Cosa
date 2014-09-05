@@ -93,7 +93,7 @@ public:
      * Return pointer to device rom. 
      * @return device rom buffer.
      */
-    uint8_t* get_rom() 
+    uint8_t* get_rom()
     {
       return (m_rom);
     }
@@ -192,8 +192,7 @@ public:
       Driver(owi),
       m_family(family),
       m_last(FIRST)
-    {
-    }
+    {}
 
     /**
      * Get the next device with an active alarm.
@@ -273,6 +272,7 @@ public:
    * Turn off parasite powering of pin. See also write().
    */
   void power_off()
+    __attribute__((always_inline))
   {
     set_mode(INPUT_MODE);
     clear();

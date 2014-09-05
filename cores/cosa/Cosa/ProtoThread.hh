@@ -23,6 +23,7 @@
 
 #include "Cosa/Event.hh"
 #include "Cosa/Linkage.hh"
+#include "Cosa/Watchdog.hh"
 
 /**
  * Cosa implementation of protothreads; A protothread is a
@@ -73,8 +74,7 @@ public:
     Link(),
     m_state(INITIATED),
     m_ip(0)
-  {
-  }
+  {}
   
   /**
    * Start the thread. Must be in INITIATED state to be allowed to be 
@@ -112,7 +112,12 @@ public:
    * If the timer expires the thread is put in TIMEOUT state.
    * @param[in] ms timeout period.
    */
-  void set_timer(uint16_t ms);
+  void set_timer(uint16_t ms)
+    __attribute__((always_inline))
+  {
+    m_state = WAITING;
+    Watchdog::attach(this, ms);
+  }
 
   /**
    * Cancel timer and dequeue thread from timer queue.

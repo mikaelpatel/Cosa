@@ -44,8 +44,7 @@ public:
   AnalogComparator(Mode mode = ON_TOGGLE_MODE) :
     m_mode(mode),
     m_pin(AIN1)
-  {
-  }
+  {}
 
   /**
    * Construct analog comparator handler. Compare with given 
@@ -56,8 +55,7 @@ public:
   AnalogComparator(Board::AnalogPin pin, Mode mode = ON_TOGGLE_MODE) :
     m_mode(mode),
     m_pin((uint8_t) (pin - Board::A0))
-  {
-  }
+  {}
 
   /**
    * @override Interrupt::Handler
@@ -92,10 +90,10 @@ public:
   virtual void on_interrupt(uint16_t arg = 0);
 
 protected:
-  static AnalogComparator* s_comparator;
-  static const uint8_t AIN1 = 255;
-  Mode m_mode;
-  uint8_t m_pin;
+  static AnalogComparator* s_comparator; //!< Current comparator.
+  static const uint8_t AIN1 = 255;	 //!< Default reference voltage.
+  Mode m_mode;				 //!< Compare mode.
+  uint8_t m_pin;			 //!< Analog channel.
 
   /** Interrupt Service Routine */
   friend void ANALOG_COMP_vect(void);

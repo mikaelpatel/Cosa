@@ -59,10 +59,7 @@ public:
    * sub-address. Default is zero(0).
    * @param[in] subaddr sub-address (0..1, default 0)
    */
-  L3G4200D(uint8_t subaddr = 0) : 
-    TWI::Driver(0x68 | (subaddr != 0)) 
-  {
-  }
+  L3G4200D(uint8_t subaddr = 0) : TWI::Driver(0x68 | (subaddr != 0)) {}
 
   /**
    * Start interaction with device. Turn on measurements. 
@@ -91,6 +88,7 @@ public:
    * @param[in] s sample storage.
    */
   void sample(sample_t& s)
+    __attribute__((always_inline))
   {
     read(OUT, &s, sizeof(s));
   }

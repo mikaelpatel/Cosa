@@ -119,8 +119,7 @@ namespace Soft {
       m_miso(miso),
       m_mosi(mosi, 0),
       m_sck(sck, 0)
-    {
-    }
+    {}
   
     /**
      * Start of SPI master interaction block. Sisable SPI interrupt

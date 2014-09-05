@@ -122,17 +122,26 @@ public:
     /**
      * Return current position. 
      */
-    uint32_t tell() { return (m_current_pos); }
+    uint32_t tell()
+    { 
+      return (m_current_pos); 
+    }
 
     /**
      * Rewind to the start of the file.
      */
-    int rewind() { return (seek(0L)); }
+    int rewind()
+    { 
+      return (seek(0L)); 
+    }
 
     /**
      * Return number of bytes in file. 
      */
-    uint32_t size() { return (m_file_size); }
+    uint32_t size()
+    { 
+      return (m_file_size); 
+    }
 
     /**
      * @override IOStream::Device
@@ -285,6 +294,7 @@ protected:
    * @return number of bytes or negative error code.
    */
   static int read(void* dest, uint32_t src, size_t size)
+    __attribute__((always_inline))
   {
     if (device == NULL) return (-1);
     return (device->read(dest, src, size));
@@ -300,6 +310,7 @@ protected:
    * @return number of bytes or negative error code.
    */
   static int write(uint32_t dest, const void* src, size_t size)
+    __attribute__((always_inline))
   {
     if (device == NULL) return (-1);
     return (device->write(dest, src, size));
@@ -314,6 +325,7 @@ protected:
    * @return number of bytes written or EOF(-1).
    */
   static int write_P(uint32_t dest, const void* src, size_t size)
+    __attribute__((always_inline))
   {
     if (device == NULL) return (-1);
     return (device->write_P(dest, src, size));
@@ -327,8 +339,7 @@ protected:
    * @param[out] entry setting return.
    * @return entry index or negative error code.
    */
-  static int lookup_entry(const char* filename, 
-			  dir_t &entry);
+  static int lookup_entry(const char* filename, dir_t &entry);
 
   /**
    * Create directory entry with given file name and type. The flags (O_EXCL)

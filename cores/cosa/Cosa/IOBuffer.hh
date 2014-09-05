@@ -43,8 +43,7 @@ public:
     IOStream::Device(),
     m_head(0),
     m_tail(0)
-  {
-  }
+  {}
 
   /**
    * Return true(1) if the buffer is empty, otherwise false(0).

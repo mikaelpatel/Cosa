@@ -56,8 +56,7 @@ public:
     m_state(init),
     m_period(period),
     m_param(0)
-  {
-  }
+  {}
   
   /**
    * Set new state handler for next event.

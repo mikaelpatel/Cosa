@@ -39,8 +39,7 @@ public:
    */
   UTFTFont(uint8_t width, uint8_t height, const uint8_t* bitmap) :
     Font(width, height, bitmap)
-  {
-  }
+  {}
   
   /**
    * @override Font

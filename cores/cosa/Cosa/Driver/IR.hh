@@ -94,8 +94,7 @@ public:
       m_max(max),
       m_keymap(keymap),
       m_keys(keys)
-    {
-    }
+    {}
 
     /**
      * Reset the receiver for the next code sequence.

@@ -54,8 +54,7 @@ public:
     Client() : 
       m_sock(NULL), 
       m_mid(1) 
-    {
-    }
+    {}
 
     /**
      * Default destructor.
@@ -148,6 +147,7 @@ public:
     int publish(str_P topic, const void* buf, size_t count, 
 		QoS_t qos = FIRE_AND_FORGET, 
 		bool retain = false)
+      __attribute__((always_inline))
     {
       return (publish(topic, buf, count, qos, retain, false));
     }

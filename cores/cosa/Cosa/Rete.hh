@@ -61,8 +61,7 @@ public:
       m_dev(dev),
       m_reg(reg),
       m_tid(0)
-    {
-    }
+    {}
 
     /**
      * Update the registry item with the given value and broadcast.
@@ -115,8 +114,7 @@ public:
     Manager(Wireless::Driver* dev) :
       m_dev(dev),
       m_tid(0)
-    {
-    }
+    {}
 
     /**
      * Send a registry get value request to given destination device and

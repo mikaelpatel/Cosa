@@ -65,6 +65,7 @@ public:
    * @param[in] max number of micro seconds.
    */
   void set_pulse(uint16_t min, uint16_t max)
+    __attribute__((always_inline))
   {
     m_min = min;
     m_max = max;
@@ -74,7 +75,7 @@ public:
    * Return current pulse width in micro seconds.
    * @return pulse width.
    */
-  uint16_t get_width()
+  uint16_t get_width() const
   {
     return (m_width);
   }
@@ -89,7 +90,7 @@ public:
    * Return servo angle.
    * @return angle in degree, 0..180.
    */
-  uint8_t get_angle() 
+  uint8_t get_angle() const
   {
     return (m_angle);
   }

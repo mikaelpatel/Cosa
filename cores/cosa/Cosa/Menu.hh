@@ -249,8 +249,7 @@ public:
       RotaryButton(Menu::Walker* walker, Board::DigitalPin pin = Board::D2) :
 	Button(pin, Button::ON_FALLING_MODE),  
 	m_walker(walker)
-      {
-      }
+      {}
       
       /**
        * @override Button
@@ -285,8 +284,7 @@ public:
       Rotary::Encoder(clk, dt),
       m_walker(walker),
       m_sw(walker, sw)
-    {
-    }
+    {}
     
     /**
      * @override Event::Handler

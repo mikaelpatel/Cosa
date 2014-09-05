@@ -73,8 +73,7 @@ public:
     m_de(de),
     m_addr(addr),
     m_state(0)
-  {
-  }
+  {}
 
   /**
    * @override UART

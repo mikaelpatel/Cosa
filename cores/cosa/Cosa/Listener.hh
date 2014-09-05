@@ -39,14 +39,13 @@ public:
   Listener(T key) : 
     Link(), 
     m_key(key) 
-  {
-  }
+  {}
 
   /**
    * Return Listener key value.
    * @return key.
    */
-  T get_key() 
+  T get_key() const
   { 
     return (m_key); 
   }
@@ -65,7 +64,7 @@ public:
    * else false(0).
    * @return bool.
    */
-  bool match(T key) 
+  bool match(T key) const
   { 
     return (m_key == key); 
   }

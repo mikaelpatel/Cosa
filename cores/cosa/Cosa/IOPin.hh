@@ -41,8 +41,10 @@ public:
   IOPin(Board::DigitalPin pin, Mode mode = INPUT_MODE, bool pullup = false) :
     OutputPin(pin)
   {
-    if (pullup)
-      *PORT() |= m_mask; 
+    synchronized {
+      if (pullup)
+	*PORT() |= m_mask; 
+    }
     set_mode(mode);
   }
 

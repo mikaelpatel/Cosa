@@ -143,8 +143,7 @@ public:
     m_mode(mode),
     m_overflow(false),
     m_output()
-  {
-  }
+  {}
 
   /**
    * Begin interaction with device. Return true(1) if successful
@@ -224,7 +223,7 @@ public:
    * Get output data from device driver.
    * @param[out] data.
    */
-  void get_heading(data_t& data)
+  void get_heading(data_t& data) const
   {
     data = m_output;
   }
@@ -253,6 +252,7 @@ public:
    * @return bool
    */
   bool available()
+    __attribute__((always_inline))
   {
     status_t current;
     if (!read_status(current)) return (false);
@@ -274,6 +274,7 @@ public:
    * the mode given by set_sleep_mode() or constructor. 
    */
   void await()
+    __attribute__((always_inline))
   {
     while (!available()) Power::sleep(m_mode);
   }
@@ -292,6 +293,7 @@ public:
    * @return bool
    */
   bool read_heading(data_t& data)
+    __attribute__((always_inline))
   {
     if (!read_heading()) return (false);
     get_heading(data);
@@ -303,7 +305,7 @@ public:
    * any of the channels.
    * @return bool.
    */
-  bool is_overflow()
+  bool is_overflow() const
   {
     return (m_overflow);
   }

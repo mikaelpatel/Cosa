@@ -37,14 +37,12 @@ public:
    * @param[in] pin number.
    * @param[in] ref reference voltage.
    */
-  AnalogPin(Board::AnalogPin pin, 
-	    Board::Reference ref = Board::AVCC_REFERENCE) :
+  AnalogPin(Board::AnalogPin pin, Board::Reference ref = Board::AVCC_REFERENCE) :
     m_pin(pin),
     m_reference(ref),
     m_value(0),
     m_event(Event::NULL_TYPE)
-  {
-  }
+  {}
 
   /**
    * Set reference voltage for conversion.

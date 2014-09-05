@@ -36,7 +36,10 @@ public:
      * successful otherwise false(0).
      * @return bool
      */
-    virtual bool begin() { return (true); }
+    virtual bool begin() 
+    { 
+      return (true); 
+    }
 
     /**
      * @override Flash::Device
@@ -44,7 +47,10 @@ public:
      * successful otherwise false(0).
      * @return bool
      */
-    virtual bool end() { return (true); }
+    virtual bool end() 
+    { 
+      return (true); 
+    }
 
     /**
      * @override Flash::Device

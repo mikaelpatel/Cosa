@@ -180,7 +180,7 @@ typedef const PROGMEM class prog_str* str_P;
   }									\
 ))
 #undef PSTR
-#define PSTR(str) STR_P(str)
+#define PSTR(s) STR_P(s)
 #define __PSTR(s) STR_P(s)
 
 inline char* 

@@ -70,6 +70,7 @@ public:
    * @param[in] sec.
    */
   static void time(clock_t sec)
+    __attribute__((always_inline))
   {
     synchronized {
       s_sec = sec;
