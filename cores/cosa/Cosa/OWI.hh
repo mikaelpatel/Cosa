@@ -64,7 +64,7 @@ public:
     } __attribute__((packed));
 
     /** Name of device driver instance. */
-    const char* NAME;
+    str_P NAME;
     
     /**
      * Construct one wire device driver. Use one wire bus on given pin.
@@ -72,7 +72,7 @@ public:
      * @param[in] name of device driver instance.
      */
     Driver(OWI* pin, const char* name = NULL) : 
-      NAME(name),
+      NAME((str_P) name),
       ROM(NULL), 
       m_next(NULL),
       m_pin(pin)

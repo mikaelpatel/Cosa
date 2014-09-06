@@ -159,7 +159,7 @@ IOStream& operator<<(IOStream& outs, OWI& owi)
 }
 
 OWI::Driver::Driver(OWI* pin, const uint8_t* rom, const char* name) :
-  NAME(name),
+  NAME((str_P) name),
   ROM(rom), 
   m_next(NULL),
   m_pin(pin)

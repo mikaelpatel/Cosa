@@ -77,7 +77,7 @@ public:
   Shell(uint8_t cmdc, const command_t* cmdtab, const char* prompt = NULL) :
     m_cmdc(cmdc),
     m_cmdtab(cmdtab),
-    m_prompt(prompt == NULL ? DEFAULT_PROMPT : prompt),
+    m_prompt((str_P) (prompt == NULL ? DEFAULT_PROMPT : prompt)),
     m_firstrun(true),
     m_echo(true),
     m_level(ADMIN)
@@ -107,7 +107,7 @@ public:
    */
   void set_prompt(const char* prompt)
   {
-    m_prompt = (prompt == NULL ? DEFAULT_PROMPT : prompt);
+    m_prompt = (str_P) (prompt == NULL ? DEFAULT_PROMPT : prompt);
   }
 
   /**
@@ -115,7 +115,7 @@ public:
    * memory.
    * @return prompt.
    */
-  const char* get_prompt() const
+  str_P get_prompt() const
   {
     return (m_prompt);
   }
@@ -166,7 +166,7 @@ public:
   {
     m_cmdc = cmdc;
     m_cmdtab = cmdtab;
-    m_prompt = (prompt == NULL ? DEFAULT_PROMPT : prompt);
+    m_prompt = (str_P) (prompt == NULL ? DEFAULT_PROMPT : prompt);
   }
   
   /**
@@ -229,7 +229,7 @@ protected:
 
   uint8_t m_cmdc;		//!< Number of shell commands.
   const command_t* m_cmdtab;	//!< Vector with shell command decriptors.
-  const char* m_prompt;		//!< Shell prompt.
+  str_P m_prompt;		//!< Shell prompt.
   bool m_firstrun;		//!< First time run.
   bool m_echo;			//!< Echo mode.
   Level m_level;		//!< Privilege level.

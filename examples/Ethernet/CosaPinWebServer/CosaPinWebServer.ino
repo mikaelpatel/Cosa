@@ -92,11 +92,12 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
   static const char footer[] __PROGMEM = 
     "</BODY>" CRLF 
     "</HTML>";
-  static const char BR[] __PROGMEM = 
+  static const char br[] __PROGMEM = 
     "<BR/>" CRLF;
+  str_P BR = (str_P) br;
 
   // Construct the page; header-contents-footer
-  page << header;
+  page << (str_P) header;
 
   // Digital pin status; table with green/red blocks and pin number
   page << PSTR("Digital Pin:") << BR;
@@ -163,7 +164,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
   // Webclient information
   page << PSTR("MAC: "); INET::print_mac(page, addr.mac); page << BR;
   page << PSTR("IP: "); INET::print_addr(page, addr.ip, addr.port); page << BR;
-  page << footer;
+  page << (str_P) footer;
 }
 
 // Network configuration

@@ -57,8 +57,8 @@ OWI owi(Board::D7);
 
 // Support macro to create name strings in program memory
 #define THERMOMETER(name)			\
-  const char name ## _PSTR[] __PROGMEM = #name;	\
-  DS18B20 name(&owi, name ## _PSTR)
+const char name ## _PSTR[] __PROGMEM = #name;	\
+DS18B20 name(&owi, name ## _PSTR)
 
 // The devices connected to the one-wire bus
 THERMOMETER(outdoors);
