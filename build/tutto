@@ -33,6 +33,7 @@ then
   do
     echo `date`: $board
     cosa $board &> LOG
+    cosa $board size | grep bytes
     cosa $board clean &>> LOG
     egrep "(warning|error)" LOG
   done
@@ -48,6 +49,7 @@ else
     echo `date`: `echo $example | cut -c3-`
     pushd `dirname $example` &> /dev/null
       cosa $board &> LOG
+      cosa $board size | grep bytes
       cosa $board clean &>> LOG
       egrep "(warning|error)" LOG
       rm LOG
