@@ -256,6 +256,26 @@ typedef const PROGMEM void_P void_vec_P;
 #define DELAY(us) _delay_loop_2(((us) * I_CPU) / 4)
 
 /**
+ * Delay given number of milli-seconds. This function pointer
+ * may be redefined to allow low-power and/or multi-task duing wait.
+ * @param[in] ms milli-seconds delay.
+ */
+extern void (*delay)(uint32_t ms);
+
+/**
+ * Sleep given number of seconds. This function pointer may be
+ * redefined to allow low-power and/or multi-task duing wait.
+ * @param[in] s seconds delay.
+ */
+extern void (*sleep)(uint16_t s);
+
+/**
+ * Allow context switch to other task if available. The default
+ * implementation is a low-power state and wait for interrupt.
+ */
+extern void (*yield)();
+
+/**
  * Disable interrupts and return flags.
  * @return processor flags.
  */
@@ -275,6 +295,39 @@ inline void
 unlock(uint8_t key)
 {
   SREG = key;
+}
+
+/**
+ * Disable interrupts and acquire semaphore. Return processor flags for 
+ * unlock. The function will yield while waiting for semaphore.
+ * @param[in,out] sem semaphore.
+ * @return processor flags.
+ */
+inline uint8_t
+lock(volatile uint8_t &sem)
+{
+  uint8_t key = lock();
+  while (sem == 0) {
+    unlock(key);
+    yield();
+    key = lock();
+  }
+  sem -= 1;
+  return (key);
+}
+
+/**
+ * Restore processor flags and possible enable of interrupts.
+ * Increment semaphore.
+ * @param[in] key processor flags.
+ * @param[in,out] sem semaphore.
+ * @return processor flags.
+ */
+inline void
+unlock(uint8_t key, volatile uint8_t &sem)
+{
+  sem += 1;
+  unlock(key);
 }
 
 /**
@@ -495,25 +548,4 @@ toHEX(uint8_t value)
   return (value + '0');
 }
 
-/**
- * Delay given number of milli-seconds. This function pointer
- * may be redefined to allow low-power and/or multi-task duing wait.
- * @param[in] ms milli-seconds delay.
- */
-extern void (*delay)(uint32_t ms);
-
-/**
- * Sleep given number of seconds. This function pointer may be
- * redefined to allow low-power and/or multi-task duing wait.
- * @param[in] s seconds delay.
- */
-extern void (*sleep)(uint16_t s);
-
-/**
- * Allow context switch to other task if available. The default
- * implementation is a low-power state and wait for interrupt.
- */
-extern void (*yield)();
-
 #endif
-

@@ -27,7 +27,7 @@ AT24CXX::poll(const void* addr, const void* buf, size_t size)
   uint8_t i = POLL_MAX;
   int m;
   do {
-    if (!twi.begin(this)) return (false);
+    twi.begin(this);
     if (buf == 0) {
       m = twi.write((uint16_t) addr);
       if (m > 0) return (true);
@@ -46,7 +46,7 @@ AT24CXX::poll(const void* addr, const void* buf, size_t size)
 bool 
 AT24CXX::is_ready()
 {
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   uint16_t addr = 0;
   int m = twi.write(addr);
   twi.end();

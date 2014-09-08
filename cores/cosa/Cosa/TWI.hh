@@ -157,6 +157,7 @@ public:
     m_last(NULL),
     m_count(0),
     m_dev(NULL),
+    m_sem(1),
     m_freq(((F_CPU / DEFAULT_FREQ) - 16) / 2)
   {
     for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
@@ -167,19 +168,17 @@ public:
 
   /**
    * Start TWI logic for a device transaction block. Use given event
-   * handler for completion events. Returns true(1) if successful
-   * otherwise false(0).
+   * handler for completion events. 
    * @param[in] dev device.
    * @param[in] target receiver of events on requests (default NULL).
    * @return true(1) if successful otherwise false(0).
    */
-  bool begin(TWI::Driver* dev, Event::Handler* target = NULL);
+  void begin(TWI::Driver* dev, Event::Handler* target = NULL);
 
   /**
    * Stop usage of the TWI bus logic. 
-   * @return true(1) if successful otherwise false(0).
    */
-  bool end();
+  void end();
 
   /**
    * Issue a write data request to the current driver. Return
@@ -400,6 +399,7 @@ private:
   volatile int m_count;
   uint8_t m_addr;
   Driver* m_dev;
+  volatile uint8_t m_sem;
   uint8_t m_freq;
   
   /**

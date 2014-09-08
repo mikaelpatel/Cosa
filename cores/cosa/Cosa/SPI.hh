@@ -169,16 +169,14 @@ public:
    * pin. Return true(1) if successful otherwise false(0) if the
    * hardware was currently in used.
    * @param[in] dev device driver context.
-   * @return true(1) if successful otherwise false(0)
    */
-  bool begin(Driver* dev);
+  void begin(Driver* dev);
   
   /**
    * End of SPI master interaction block. Deselect device and 
    * enable SPI interrupt sources.
-   * @return true(1) if successful otherwise false(0)
    */
-  bool end();
+  void end();
 
 #if defined(USIDR)
   /**
@@ -420,6 +418,7 @@ public:
 private:
   Driver* m_list;		//!< List of attached device drivers.
   Driver* m_dev;		//!< Current device driver.
+  volatile uint8_t m_sem;	//!< Device driver semphore.
 };
 
 /**
