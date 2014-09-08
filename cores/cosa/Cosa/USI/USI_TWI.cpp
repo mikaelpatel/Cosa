@@ -48,7 +48,7 @@ TWI::Slave::set_read_buf(void* buf, size_t size)
   twi.m_vec[READ_IX].size = size;
 }
 
-bool 
+void
 TWI::Slave::begin()
 {
   twi.m_dev = this;
@@ -58,7 +58,6 @@ TWI::Slave::begin()
     USICR = TWI::CR_START_MODE;
     USISR = TWI::SR_CLEAR_ALL;
   }
-  return (true);
 }
 
 ISR(USI_START_vect) 
@@ -285,11 +284,11 @@ TWI::request(uint8_t op)
   return (count);
 }
 
-bool
+void
 TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
-  // Check that the driver support is not in use
-  if (m_dev != NULL) return (false);
+  // Acquire the driver controller
+  uint8_t key = lock(m_sem);
   m_dev = dev;
 
   // Release level data and init mode
@@ -300,7 +299,18 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
 
   // Setup event target (for completed event)
   m_target = target;
-  return (true);
+  unlock(key);
+}
+
+void 
+TWI::end()
+{
+  // Synchronized update driver
+  uint8_t key = lock();
+  m_dev = NULL;
+  
+  // Release device driver
+  unlock(key, m_sem);
 }
 
 int

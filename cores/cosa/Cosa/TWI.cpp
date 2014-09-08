@@ -279,7 +279,7 @@ ISR(TWI_vect)
   }
 }
 
-bool 
+void
 TWI::Slave::begin()
 {
   twi.m_target = this;
@@ -290,7 +290,6 @@ TWI::Slave::begin()
     TWBR = ((F_CPU / TWI::DEFAULT_FREQ) - 16) / 2;
     TWCR = TWI::IDLE_CMD;
   }
-  return (true);
 }
 
 void 
