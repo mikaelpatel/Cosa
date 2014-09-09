@@ -104,11 +104,9 @@ public:
     void set_write_buf(void* buf, size_t size);
     
     /**
-     * Start TWI bus logic for the slave device. Returns true(1) if
-     * successful otherwise false(0). 
-     * @return true(1) if successful otherwise false(0).
+     * Start TWI bus logic for the slave device. 
      */
-    bool begin();
+    void begin();
 
     /**
      * @override TWI::Slave
