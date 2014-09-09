@@ -174,7 +174,8 @@ TWI::TWI() :
   m_next(0),
   m_last(0),
   m_count(0),
-  m_dev(0)
+  m_dev(0),
+  m_sem(1)
 {
   for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
     m_vec[ix].buf = 0;
