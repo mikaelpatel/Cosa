@@ -31,11 +31,11 @@ I_CPU = 16
 284:void loop():info:OutputPin::toggle(D8):62 ns
 
 286:void loop():info:Measure the time to perform input pin read/output pin write
-295:void loop():info:outPin.write(!inPin.read()):1687 ns
-305:void loop():info:inPin.is_set();outPin.clear/set():1633 ns
-317:void loop():info:inPin >> var; outPin << !var:1633 ns
-327:void loop():info:outPin.set(inPin.is_clear()):1633 ns
-337:void loop():info:OutputPin::write(D8, !InputPin::read(D7)):565 ns
+295:void loop():info:outPin.write(!inPin.read()):1724 ns
+305:void loop():info:inPin.is_set();outPin.clear/set():1692 ns
+317:void loop():info:inPin >> var; outPin << !var:1718 ns
+327:void loop():info:outPin.set(inPin.is_clear()):1716 ns
+337:void loop():info:OutputPin::write(D8, !InputPin::read(D7)):593 ns
 350:void loop():info:OutputPin::read(D7)/write(D8,0/1):660 ns
 
 352:void loop():info:Measure the time to perform 8-bit serial data transfer

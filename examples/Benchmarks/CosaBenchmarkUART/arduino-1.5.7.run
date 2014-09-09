@@ -44,7 +44,7 @@ max uint16_t:156 us
 max uint32_t:368 us
 
 000100
-uint16_t(digits=6):140 us
+uint16_t(digits=6):136 us
 
 000100
 uint32_t(digits=6):156 us
