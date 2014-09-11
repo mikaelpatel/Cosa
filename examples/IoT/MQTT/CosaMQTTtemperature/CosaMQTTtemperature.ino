@@ -31,14 +31,14 @@
  * (D2)-----[ ]-------56-|IRQ         |
  *                       +------------+
  *
- *                       DS18B20/sensor
- *                       +------------+
- * (GND)---------------1-|GND         |
- * (D14)-----+---------2-|DQ          |
- *           |       +-3-|VDD         |
- *          4K7      |   +------------+
+ *                           DS18B20/3
+ *                       +------------+++
+ * (GND)---------------1-|GND         |||\
+ * (D7)------+---------2-|DQ          ||| |
+ *           |       +-3-|VDD         |||/
+ *          4K7      |   +------------+++
  *           |       | 
- * (VCC)-----+-------+
+ * (VCC)-----+       +---(VCC/GND)
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -50,9 +50,26 @@
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
+// Disable SD on Ethernet Shield
+#define USE_ETHERNET_SHIELD
+#if defined(USE_ETHERNET_SHIELD)
+#include "Cosa/OutputPin.hh"
+OutputPin sd(Board::D4, 1);
+#endif
+
 // One-wire pin and connected DS18B20 device
-OWI owi(Board::D14);
-DS18B20 sensor(&owi);
+OWI owi(Board::D7);
+
+// The devices connected to the one-wire bus
+DS18B20 outdoors(&owi);
+DS18B20 indoors(&owi);
+DS18B20 basement(&owi);
+
+DS18B20* thermometer[] = {
+  &outdoors,
+  &indoors,
+  &basement
+};
 
 // Network configuration
 #define MOSQUITTO "test.mosquitto.org"
@@ -72,10 +89,12 @@ void setup()
 {
   Watchdog::begin();
 
-  // Connect the sensor and set resolution to 10-bits
-  sensor.connect(0);
-  sensor.set_resolution(10);
-  sensor.write_scratchpad();
+  // Connect the sensors and set resolution to 10-bits
+  for (uint8_t i = 0; i < membersof(thermometer); i++) {
+    thermometer[i]->connect(i);
+    thermometer[i]->set_resolution(10);
+    thermometer[i]->write_scratchpad();
+  }
 
   // Start ethernet controller and request network address for hostname
   ethernet.begin_P(CLIENT);
@@ -83,23 +102,35 @@ void setup()
   // Start MQTT client with socket and connect to server
   client.begin(ethernet.socket(Socket::TCP));
   client.connect(SERVER, CLIENT);
-
-  // Publish data with the different quality of service levels
   client.publish_P(PSTR("public/cosa/client"), CLIENT, sizeof(CLIENT));
 }
 
 void loop()
 {
-  // Request a conversion and read the temperature
-  sensor.convert_request();
-  sensor.read_scratchpad();
+  static uint8_t i = 0;
 
-  // Use an iobuffer and iostream to convert temperature to a string
-  IOBuffer<16> buf;
+  // Select the topic path for the current thermometer
+  str_P topic;
+  switch (i) {
+  case 0: topic = PSTR("public/cosa/temperature/outdoors"); break;
+  case 1: topic = PSTR("public/cosa/temperature/indoors"); break;
+  case 2: topic = PSTR("public/cosa/temperature/basement"); break;
+  };
+    
+  // Request a conversion and read the temperature
+  thermometer[i]->convert_request();
+  thermometer[i]->read_scratchpad();
+
+  // Use an iobuffer and iostream to convert temperature value to a string
+  IOBuffer<32> buf;
   IOStream cout(&buf);
-  cout << sensor << PSTR(" C") << ends;
+  cout << *thermometer[i] << PSTR(" C") << ends;
 
   // Publish the value to the MQTT server and take a nap
-  client.publish(PSTR("public/cosa/temperature"), buf, buf.available());
+  client.publish(topic, buf, buf.available());
+  i += 1;
+  if (i == membersof(thermometer)) i = 0;
+
+  // Take a nap
   sleep(5);
 }
