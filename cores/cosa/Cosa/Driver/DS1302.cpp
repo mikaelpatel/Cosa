@@ -23,18 +23,16 @@
 uint8_t 
 DS1302::read()
 {
-  uint8_t bits = CHARBITS - 1;
+  uint8_t bits = CHARBITS;
   uint8_t res = 0;
   synchronized {
-    if (m_sda.is_set()) res |= 0x80;
-    do {
-      m_clk._toggle();
-      m_clk._toggle();
-      res >>= 1;
+    for (;;) {
       if (m_sda.is_set()) res |= 0x80;
-    } while (--bits);
-    m_clk._toggle();
-    m_clk._toggle();
+      m_clk._toggle();
+      m_clk._toggle();
+      if (--bits == 0) break;
+      res >>= 1;
+    }
   }
   return (res);
 }
