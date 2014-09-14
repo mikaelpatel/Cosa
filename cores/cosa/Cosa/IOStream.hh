@@ -269,6 +269,24 @@ public:
   Device* set_device(Device* dev);
 
   /**
+   * Get io stream end of line string.
+   * @return string for end of line.
+   */
+  str_P get_eol_P()
+  {
+    return (m_eol_P);
+  }
+
+  /**
+   * Get io stream end of line string.
+   * @return string for end of line.
+   */
+  str_P EOL()
+  {
+    return (m_eol_P);
+  }
+
+  /**
    * Set io stream end of line string.
    * @param[in] s string for end of line.
    */
