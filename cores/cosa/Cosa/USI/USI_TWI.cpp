@@ -309,7 +309,8 @@ TWI::end()
   // Synchronized update driver
   uint8_t key = lock();
   m_dev = NULL;
-  
+  m_target = NULL;
+
   // Release device driver
   unlock(key, m_sem);
 }
