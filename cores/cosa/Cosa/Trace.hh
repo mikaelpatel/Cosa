@@ -137,12 +137,23 @@ extern uint8_t trace_log_mask;
  * is used as a string and evaluated.
  * @param[in] expr expression.
  */
+# if defined(TRACE_NO_VERBOSE) || defined(BOARD_ATTINY)
+#   define TRACE(expr)							\
+    do {								\
+      trace.print_P(__PSTR(#expr " = "));				\
+      trace.print(expr);						\
+      trace.println();							\
+    } while (0)
+# else
 # define TRACE(expr)							\
-  do {									\
-    trace.print_P(__PSTR(#expr " = "));					\
-    trace.print(expr);							\
-    trace.println();							\
-  } while (0)
+    do {								\
+      trace.printf_P(__PSTR("%d:%s:" #expr " = "),			\
+		     __LINE__,						\
+		     __PRETTY_FUNCTION__);				\
+      trace.print(expr);						\
+      trace.println();							\
+    } while (0)
+# endif
 
 /**
  * Support macro for trace of a log message with line number and
