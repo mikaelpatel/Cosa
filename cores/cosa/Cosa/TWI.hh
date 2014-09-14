@@ -52,7 +52,7 @@ public:
   /** Default Two-Wire Interface clock: 100 KHz. */
   static const uint32_t DEFAULT_FREQ = 100000L;
 
-  /** Max Two-Wire Interface clock: 444.444 KHz. */
+  /** Max Two-Wire Interface clock: 444.444 KHz @ 16 MHz. */
   static const uint32_t MAX_FREQ = (F_CPU / (16 + 2*10));
 
   /**
