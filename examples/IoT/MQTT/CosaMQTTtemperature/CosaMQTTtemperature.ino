@@ -90,11 +90,20 @@ void setup()
   Watchdog::begin();
 
   // Connect the sensors and set resolution to 10-bits
+#if (ARDUINO < 150) && !defined(__GXX_EXPERIMENTAL_CXX0X__)
   for (uint8_t i = 0; i < membersof(thermometer); i++) {
     thermometer[i]->connect(i);
     thermometer[i]->set_resolution(10);
     thermometer[i]->write_scratchpad();
   }
+#else
+  uint8_t i = 0;
+  for (auto sensor : thermometer) {
+    sensor->connect(i++);
+    sensor->set_resolution(10);
+    sensor->write_scratchpad();
+  }
+#endif
 
   // Start ethernet controller and request network address for hostname
   ethernet.begin_P(CLIENT);
@@ -102,6 +111,8 @@ void setup()
   // Start MQTT client with socket and connect to server
   client.begin(ethernet.socket(Socket::TCP));
   client.connect(SERVER, CLIENT);
+
+  // Publish the name of the client
   client.publish_P(PSTR("public/cosa/client"), CLIENT, sizeof(CLIENT));
 }
 
