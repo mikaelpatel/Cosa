@@ -1,47 +1,47 @@
 Use CTRL-ALT GR-] to exit monitor.
-/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB1 9600
 CosaBenchmarkRTC: started
-free_memory() = 1691
-F_CPU = 16000000
-I_CPU = 16
-Watchdog::ms_per_tick() = 16
-Watchdog::ticks() = 3
-RTC::us_per_tick() = 1024
-RTC::seconds() = 0
+45:void setup():free_memory() = 1691
+48:void setup():F_CPU = 16000000
+49:void setup():I_CPU = 16
+56:void setup():Watchdog::ms_per_tick() = 16
+57:void setup():Watchdog::ticks() = 5
+58:void setup():RTC::us_per_tick() = 1024
+59:void setup():RTC::seconds() = 0
 65:void setup():info:RTC::micros(): 8 us
 71:void setup():info:RTC::millis(): 8 us
 77:void setup():info:RTC::seconds(): 4 us
-83:void setup():info:RTC::delay(1): 460 us
-88:void setup():info:RTC::delay(10): 10332 us
+83:void setup():info:RTC::delay(1): 972 us
+88:void setup():info:RTC::delay(10): 10028 us
 93:void setup():info:DELAY(10): 16 us
 98:void setup():info:DELAY(100): 104 us
-103:void setup():info:sleep(1): 999844 us
-108:void setup():info:delay(10): 9688 us
-113:void setup():info:delay(100): 100932 us
-118:void setup():info:sleep(1): 999884 us
+103:void setup():info:sleep(1): 1000356 us
+108:void setup():info:delay(10): 9660 us
+113:void setup():info:delay(100): 99792 us
+118:void setup():info:sleep(1): 999912 us
 123:void setup():info:yield(): 428 us
-RTC::micros() = 2617340
-RTC::millis() = 2645
-RTC::seconds() = 2
-RTC::micros() = 3771896
-RTC::millis() = 3772
-RTC::seconds() = 3
-RTC::micros() = 4871788
-RTC::millis() = 4872
-RTC::seconds() = 4
-RTC::micros() = 5971640
-RTC::millis() = 5972
-RTC::seconds() = 5
-RTC::micros() = 7071508
-RTC::millis() = 7071
-RTC::seconds() = 7
-RTC::micros() = 8171328
-RTC::millis() = 8171
-RTC::seconds() = 8
-RTC::seconds() = 19
+126:void setup():RTC::micros() = 2710524
+127:void setup():RTC::millis() = 2758
+128:void setup():RTC::seconds() = 2
+131:void setup():RTC::micros() = 3897404
+132:void setup():RTC::millis() = 3908
+133:void setup():RTC::seconds() = 3
+131:void setup():RTC::micros() = 5050572
+132:void setup():RTC::millis() = 5061
+133:void setup():RTC::seconds() = 5
+131:void setup():RTC::micros() = 6203676
+132:void setup():RTC::millis() = 6214
+133:void setup():RTC::seconds() = 6
+131:void setup():RTC::micros() = 7356748
+132:void setup():RTC::millis() = 7367
+133:void setup():RTC::seconds() = 7
+131:void setup():RTC::micros() = 8509824
+132:void setup():RTC::millis() = 8521
+133:void setup():RTC::seconds() = 8
+150:void setup():RTC::seconds() = 19
 151:void setup():info:DELAY(100): 100000 measurement/validation (err = 0)
-RTC::seconds() = 29
+167:void setup():RTC::seconds() = 29
 168:void setup():info:RTC::delay(100): 100 measurement/validation (err = 0)
-RTC::seconds() = 39
+184:void setup():RTC::seconds() = 40
 185:void setup():info:Watchdog::delay(100): 100 measurement/validation (err = 0)
 CosaBenchmarkRTC.ino:190:assert:true == false

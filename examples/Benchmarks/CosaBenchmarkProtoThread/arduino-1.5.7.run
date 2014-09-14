@@ -1,18 +1,18 @@
 Use CTRL-ALT GR-] to exit monitor.
-/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB1 9600
 CosaBenchmarkProtoThread: started
-sizeof(ProtoThread) = 9
-sizeof(Counter) = 13
-F_CPU = 16000000
-I_CPU = 16
-110:void loop():info:26 us per dispatch (416 cycles)
-110:void loop():info:26 us per dispatch (416 cycles)
-110:void loop():info:26 us per dispatch (416 cycles)
-110:void loop():info:26 us per dispatch (416 cycles)
-110:void loop():info:26 us per dispatch (416 cycles)
-110:void loop():info:26 us per dispatch (416 cycles)
-110:void loop():info:26 us per dispatch (416 cycles)
-110:void loop():info:26 us per dispatch (416 cycles)
-110:void loop():info:26 us per dispatch (416 cycles)
+74:void setup():sizeof(ProtoThread) = 9
+75:void setup():sizeof(Counter) = 13
+78:void setup():F_CPU = 16000000
+79:void setup():I_CPU = 16
 110:void loop():info:25 us per dispatch (400 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
+110:void loop():info:26 us per dispatch (416 cycles)
 CosaBenchmarkProtoThread.ino:115:assert:count < 10

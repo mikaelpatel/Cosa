@@ -1,13 +1,13 @@
 Use CTRL-ALT GR-] to exit monitor.
-/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB1 9600
 CosaBenchmarkPins: started
-free_memory() = 1560
-sizeof(Event::Handler) = 2
-sizeof(InputPin) = 4
-sizeof(OutputPin) = 4
-sizeof(AnalogPin) = 9
-F_CPU = 16000000
-I_CPU = 16
+94:void setup():free_memory() = 1546
+95:void setup():sizeof(Event::Handler) = 2
+96:void setup():sizeof(InputPin) = 4
+97:void setup():sizeof(OutputPin) = 4
+98:void setup():sizeof(AnalogPin) = 9
+101:void setup():F_CPU = 16000000
+102:void setup():I_CPU = 16
 
 116:void loop():info:Measure the time to perform an empty loop block
 124:void loop():info:nop:315 ns
@@ -31,11 +31,11 @@ I_CPU = 16
 284:void loop():info:OutputPin::toggle(D8):62 ns
 
 286:void loop():info:Measure the time to perform input pin read/output pin write
-295:void loop():info:outPin.write(!inPin.read()):1724 ns
-305:void loop():info:inPin.is_set();outPin.clear/set():1692 ns
-317:void loop():info:inPin >> var; outPin << !var:1718 ns
-327:void loop():info:outPin.set(inPin.is_clear()):1716 ns
-337:void loop():info:OutputPin::write(D8, !InputPin::read(D7)):593 ns
+295:void loop():info:outPin.write(!inPin.read()):1710 ns
+305:void loop():info:inPin.is_set();outPin.clear/set():1676 ns
+317:void loop():info:inPin >> var; outPin << !var:1688 ns
+327:void loop():info:outPin.set(inPin.is_clear()):1680 ns
+337:void loop():info:OutputPin::write(D8, !InputPin::read(D7)):579 ns
 350:void loop():info:OutputPin::read(D7)/write(D8,0/1):660 ns
 
 352:void loop():info:Measure the time to perform 8-bit serial data transfer
