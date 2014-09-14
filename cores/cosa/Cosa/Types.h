@@ -257,21 +257,21 @@ typedef const PROGMEM void_P void_vec_P;
 
 /**
  * Delay given number of milli-seconds. This function pointer
- * may be redefined to allow low-power and/or multi-task duing wait.
+ * may be redefined to allow low-power and/or multi-tasking duing wait.
  * @param[in] ms milli-seconds delay.
  */
 extern void (*delay)(uint32_t ms);
 
 /**
  * Sleep given number of seconds. This function pointer may be
- * redefined to allow low-power and/or multi-task duing wait.
+ * redefined to allow low-power and/or multi-tasking duing wait.
  * @param[in] s seconds delay.
  */
 extern void (*sleep)(uint16_t s);
 
 /**
  * Allow context switch to other task if available. The default
- * implementation is a low-power state and wait for interrupt.
+ * implementation is a low-power sleep and wait for interrupt.
  */
 extern void (*yield)();
 
@@ -299,7 +299,7 @@ unlock(uint8_t key)
 
 /**
  * Disable interrupts and acquire semaphore. Return processor flags for 
- * unlock. The function will yield while waiting for semaphore.
+ * unlock. The function will yield while waiting to acquire the semaphore.
  * @param[in,out] sem semaphore.
  * @return processor flags.
  */
@@ -318,7 +318,7 @@ lock(volatile uint8_t &sem)
 
 /**
  * Restore processor flags and possible enable of interrupts.
- * Increment semaphore.
+ * Release the semaphore.
  * @param[in] key processor flags.
  * @param[in,out] sem semaphore.
  * @return processor flags.
