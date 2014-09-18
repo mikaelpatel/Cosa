@@ -90,7 +90,7 @@ void setup()
   Watchdog::begin();
 
   // Connect the sensors and set resolution to 10-bits
-#if (ARDUINO < 150) && !defined(__GXX_EXPERIMENTAL_CXX0X__)
+#if (ARDUINO < 150)
   for (uint8_t i = 0; i < membersof(thermometer); i++) {
     thermometer[i]->connect(i);
     thermometer[i]->set_resolution(10);
