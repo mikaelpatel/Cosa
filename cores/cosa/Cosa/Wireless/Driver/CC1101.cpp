@@ -181,8 +181,7 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   spi.transfer(dest);
   spi.transfer(m_addr.device);
   spi.transfer(port);
-  for (const iovec_t* vp = vec; vp->buf != NULL; vp++) 
-    spi.write(vp->buf, vp->size);
+  spi.write(vec);
   spi.end();
 
   // Trigger transmission and wait for completion
