@@ -40,8 +40,8 @@
 
 // Select Wireless device driver
 // #define USE_CC1101
-// #define USE_NRF24L01P
-#define USE_RFM69
+#define USE_NRF24L01P
+// #define USE_RFM69
 // #define USE_VWI
 
 #if defined(USE_CC1101)
@@ -95,13 +95,18 @@ void loop()
   uint8_t src;
 
   // Send sequence number and receive update
-  trace << RTC::millis() << PSTR(":ping:nr=") << nr;
+  uint32_t now = RTC::millis();
+  trace << now << PSTR(":ping:nr=") << nr;
   while (1) {
     rf.send(PONG, PING_TYPE, &nr, sizeof(nr));
-    if (rf.recv(src, port, &nr, sizeof(nr), ARW) == sizeof(nr)) break;
-    trace << PSTR(",retry(") << ++arc << ')';
+    int res = rf.recv(src, port, &nr, sizeof(nr), ARW);
+    if (res == (int) sizeof(nr)) break;
+    trace << PSTR(",retry(") << ++arc << ',' << res << ')';
   }
   trace << PSTR(",pong:nr=") << nr << endl;
   rf.powerdown();
-  sleep(2);
+  static const uint32_t PERIOD = 2000L;
+  uint32_t ms = PERIOD - RTC::since(now);
+  if (ms > PERIOD) ms = PERIOD;
+  delay(ms);
 }
