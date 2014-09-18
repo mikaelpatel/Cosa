@@ -87,7 +87,7 @@ RF24scanner::measure(uint16_t samples)
       DELAY(WAIT_TIME);
       m_channel[i] += (read(RPD) != 0);
       m_ce.clear();
-      }
+    }
   } while (--samples);
 }
 
