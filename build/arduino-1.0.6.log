@@ -1,0 +1,425 @@
+Thu Sep 18 09:47:13 CEST 2014: Benchmarks/CosaBenchmarkFSM/CosaBenchmarkFSM.ino
+Program:    7488 bytes (22.9% Full)
+Data:        449 bytes (21.9% Full)
+Thu Sep 18 09:47:15 CEST 2014: Benchmarks/CosaBenchmarkNucleo/CosaBenchmarkNucleo.ino
+Program:    8628 bytes (26.3% Full)
+Data:        482 bytes (23.5% Full)
+Thu Sep 18 09:47:20 CEST 2014: Benchmarks/CosaBenchmarkPins/CosaBenchmarkPins.ino
+Program:   18446 bytes (56.3% Full)
+Data:        463 bytes (22.6% Full)
+Thu Sep 18 09:47:25 CEST 2014: Benchmarks/CosaBenchmarkProtoThread/CosaBenchmarkProtoThread.ino
+Program:    8272 bytes (25.2% Full)
+Data:        582 bytes (28.4% Full)
+Thu Sep 18 09:47:30 CEST 2014: Benchmarks/CosaBenchmarkRTC/CosaBenchmarkRTC.ino
+Program:   11294 bytes (34.5% Full)
+Data:        322 bytes (15.7% Full)
+Thu Sep 18 09:47:36 CEST 2014: Benchmarks/CosaBenchmarkRTCTimer/CosaBenchmarkRTCTimer.ino
+Program:   10992 bytes (33.5% Full)
+Data:        405 bytes (19.8% Full)
+Thu Sep 18 09:47:41 CEST 2014: Benchmarks/CosaBenchmarkSizeOf/CosaBenchmarkSizeOf.ino
+Program:   18660 bytes (56.9% Full)
+Data:        295 bytes (14.4% Full)
+Thu Sep 18 09:47:46 CEST 2014: Benchmarks/CosaBenchmarkUART/CosaBenchmarkUART.ino
+Program:   10436 bytes (31.8% Full)
+Data:       1562 bytes (76.3% Full)
+Thu Sep 18 09:47:51 CEST 2014: Blink/CosaBlinkClassic/CosaBlinkClassic.ino
+Program:     420 bytes (1.3% Full)
+Data:          6 bytes (0.3% Full)
+Thu Sep 18 09:47:56 CEST 2014: Blink/CosaBlink/CosaBlink.ino
+Program:     954 bytes (2.9% Full)
+Data:         19 bytes (0.9% Full)
+Thu Sep 18 09:48:01 CEST 2014: Blink/CosaBlinkEvent/CosaBlinkEvent.ino
+Program:    1048 bytes (3.2% Full)
+Data:        101 bytes (4.9% Full)
+Thu Sep 18 09:48:07 CEST 2014: Blink/CosaBlinkFSM/CosaBlinkFSM.ino
+Program:    2224 bytes (6.8% Full)
+Data:        217 bytes (10.6% Full)
+Thu Sep 18 09:48:12 CEST 2014: Blink/CosaBlinkInterrupt/CosaBlinkInterrupt.ino
+Program:     994 bytes (3.0% Full)
+Data:         21 bytes (1.0% Full)
+Thu Sep 18 09:48:17 CEST 2014: Blink/CosaBlinkLED/CosaBlinkLED.ino
+Program:    1618 bytes (4.9% Full)
+Data:        187 bytes (9.1% Full)
+Thu Sep 18 09:48:22 CEST 2014: Blink/CosaBlinkMinimal/CosaBlinkMinimal.ino
+Program:     266 bytes (0.8% Full)
+Data:          2 bytes (0.1% Full)
+Thu Sep 18 09:48:27 CEST 2014: Blink/CosaBlinkPeriodic/CosaBlinkPeriodic.ino
+Program:    1788 bytes (5.5% Full)
+Data:        207 bytes (10.1% Full)
+Thu Sep 18 09:48:32 CEST 2014: Blink/CosaBlinkProtoThread/CosaBlinkProtoThread.ino
+Program:    2210 bytes (6.7% Full)
+Data:        192 bytes (9.4% Full)
+Thu Sep 18 09:48:37 CEST 2014: Blink/CosaBlinkRandom/CosaBlinkRandom.ino
+Program:     996 bytes (3.0% Full)
+Data:         10 bytes (0.5% Full)
+Thu Sep 18 09:48:42 CEST 2014: Blink/CosaBlinkTemp/CosaBlinkTemp.ino
+Program:    3888 bytes (11.9% Full)
+Data:         78 bytes (3.8% Full)
+Thu Sep 18 09:48:47 CEST 2014: Blink/CosaBlinkThread/CosaBlinkThread.ino
+Program:    2448 bytes (7.5% Full)
+Data:        164 bytes (8.0% Full)
+Thu Sep 18 09:48:52 CEST 2014: Blink/CosaBlinkTimeout/CosaBlinkTimeout.ino
+Program:    1758 bytes (5.4% Full)
+Data:        209 bytes (10.2% Full)
+Thu Sep 18 09:48:57 CEST 2014: Blink/CosaBlinkWatchdog/CosaBlinkWatchdog.ino
+Program:     908 bytes (2.8% Full)
+Data:         19 bytes (0.9% Full)
+Thu Sep 18 09:49:02 CEST 2014: Canvas/CosaCanvasClock/CosaCanvasClock.ino
+Program:   11490 bytes (35.1% Full)
+Data:        299 bytes (14.6% Full)
+Thu Sep 18 09:49:07 CEST 2014: Canvas/CosaCanvasFont/CosaCanvasFont.ino
+Program:    8890 bytes (27.1% Full)
+Data:        271 bytes (13.2% Full)
+Thu Sep 18 09:49:12 CEST 2014: Canvas/CosaCanvasHCSR04/CosaCanvasHCSR04.ino
+Program:   14152 bytes (43.2% Full)
+Data:        457 bytes (22.3% Full)
+Thu Sep 18 09:49:17 CEST 2014: Canvas/CosaCanvasHistogram/CosaCanvasHistogram.ino
+Program:   10488 bytes (32.0% Full)
+Data:        350 bytes (17.1% Full)
+Thu Sep 18 09:49:23 CEST 2014: Canvas/CosaCanvasPins/CosaCanvasPins.ino
+Program:   11736 bytes (35.8% Full)
+Data:        336 bytes (16.4% Full)
+Thu Sep 18 09:49:28 CEST 2014: Canvas/CosaCanvasScript/CosaCanvasScript.ino
+Program:   17336 bytes (52.9% Full)
+Data:        589 bytes (28.8% Full)
+Thu Sep 18 09:49:33 CEST 2014: Canvas/CosaCanvasShades/CosaCanvasShades.ino
+Program:    8736 bytes (26.7% Full)
+Data:        272 bytes (13.3% Full)
+Thu Sep 18 09:49:39 CEST 2014: Canvas/CosaCanvasST7735/CosaCanvasST7735.ino
+Program:   21250 bytes (64.8% Full)
+Data:        630 bytes (30.8% Full)
+Thu Sep 18 09:49:46 CEST 2014: Canvas/CosaCanvasSweep/CosaCanvasSweep.ino
+Program:    9156 bytes (27.9% Full)
+Data:        310 bytes (15.1% Full)
+Thu Sep 18 09:49:51 CEST 2014: Codec/CosaBase64/CosaBase64.ino
+Program:   10722 bytes (32.7% Full)
+Data:        324 bytes (15.8% Full)
+Thu Sep 18 09:49:56 CEST 2014: Codec/CosaCiaoNative/CosaCiaoNative.ino
+Program:    7082 bytes (21.6% Full)
+Data:        353 bytes (17.2% Full)
+Thu Sep 18 09:50:01 CEST 2014: Codec/CosaCiaoPoint/CosaCiaoPoint.ino
+Program:    6604 bytes (20.2% Full)
+Data:        327 bytes (16.0% Full)
+Thu Sep 18 09:50:06 CEST 2014: Codec/CosaFai/CosaFai.ino
+Program:    8184 bytes (25.0% Full)
+Data:        464 bytes (22.7% Full)
+Thu Sep 18 09:50:11 CEST 2014: Codec/CosaProtocolBuffer/CosaProtocolBuffer.ino
+Program:   17250 bytes (52.6% Full)
+Data:        371 bytes (18.1% Full)
+Thu Sep 18 09:50:16 CEST 2014: Codec/CosaRC4/CosaRC4.ino
+Program:   10392 bytes (31.7% Full)
+Data:        956 bytes (46.7% Full)
+Thu Sep 18 09:50:22 CEST 2014: Codec/CosaVigenere/CosaVigenere.ino
+Program:    8412 bytes (25.7% Full)
+Data:        324 bytes (15.8% Full)
+Thu Sep 18 09:50:27 CEST 2014: Compiler/CosaBitfields/CosaBitfields.ino
+Program:    6172 bytes (18.8% Full)
+Data:        289 bytes (14.1% Full)
+Thu Sep 18 09:50:32 CEST 2014: Compiler/CosaDiff/CosaDiff.ino
+Program:    6226 bytes (19.0% Full)
+Data:        279 bytes (13.6% Full)
+Thu Sep 18 09:50:37 CEST 2014: Compiler/CosaPSTR/CosaPSTR.ino
+Program:    7396 bytes (22.6% Full)
+Data:        301 bytes (14.7% Full)
+Thu Sep 18 09:50:42 CEST 2014: Compiler/CosaSwitch/CosaSwitch.ino
+Program:    7884 bytes (24.1% Full)
+Data:        310 bytes (15.1% Full)
+Thu Sep 18 09:50:47 CEST 2014: Drivers/CosaDHTevent/CosaDHTevent.ino
+Program:    6750 bytes (20.6% Full)
+Data:        499 bytes (24.4% Full)
+Thu Sep 18 09:50:53 CEST 2014: Drivers/CosaDHTsample/CosaDHTsample.ino
+Program:    8734 bytes (26.7% Full)
+Data:        598 bytes (29.2% Full)
+Thu Sep 18 09:50:58 CEST 2014: Drivers/CosaEEPROM/CosaEEPROM.ino
+Program:    7146 bytes (21.8% Full)
+Data:        430 bytes (21.0% Full)
+EEPROM:       36 bytes (3.5% Full)
+Thu Sep 18 09:51:03 CEST 2014: Drivers/CosaHCSR04/CosaHCSR04.ino
+Program:    6634 bytes (20.2% Full)
+Data:        501 bytes (24.5% Full)
+Thu Sep 18 09:51:08 CEST 2014: Drivers/CosaIR/CosaIR.ino
+Program:    9036 bytes (27.6% Full)
+Data:        408 bytes (19.9% Full)
+Thu Sep 18 09:51:14 CEST 2014: Drivers/CosaServo/CosaServo.ino
+Program:    1770 bytes (5.4% Full)
+Data:         43 bytes (2.1% Full)
+Thu Sep 18 09:51:19 CEST 2014: Ethernet/CosaDHCP/CosaDHCP.ino
+Program:   15948 bytes (48.7% Full)
+Data:        685 bytes (33.4% Full)
+Thu Sep 18 09:51:25 CEST 2014: Ethernet/CosaDNS/CosaDNS.ino
+Program:   13880 bytes (42.4% Full)
+Data:        649 bytes (31.7% Full)
+Thu Sep 18 09:51:30 CEST 2014: Ethernet/CosaPinWebServer/CosaPinWebServer.ino
+Program:   17190 bytes (52.5% Full)
+Data:        677 bytes (33.1% Full)
+Thu Sep 18 09:51:36 CEST 2014: Ethernet/CosaSDWebServer/CosaSDWebServer.ino
+Program:   22298 bytes (68.0% Full)
+Data:       1282 bytes (62.6% Full)
+Thu Sep 18 09:51:41 CEST 2014: Ethernet/CosaShellWebServer/CosaShellWebServer.ino
+Program:   34816 bytes (106.2% Full)
+Data:        872 bytes (42.6% Full)
+Thu Sep 18 09:51:46 CEST 2014: Ethernet/CosaSNMP/CosaSNMP.ino
+Program:   21434 bytes (65.4% Full)
+Data:        701 bytes (34.2% Full)
+Thu Sep 18 09:51:51 CEST 2014: Ethernet/CosaTelnetServer/CosaTelnetServer.ino
+Program:   13032 bytes (39.8% Full)
+Data:        433 bytes (21.1% Full)
+Thu Sep 18 09:51:56 CEST 2014: Ethernet/CosaTelnetShell/CosaTelnetShell.ino
+Program:   37110 bytes (113.3% Full)
+Data:        879 bytes (42.9% Full)
+Thu Sep 18 09:52:01 CEST 2014: Ethernet/CosaWebClient/CosaWebClient.ino
+Program:   15292 bytes (46.7% Full)
+Data:        765 bytes (37.4% Full)
+Thu Sep 18 09:52:06 CEST 2014: IoT/MQTT/CosaMQTTclient/CosaMQTTclient.ino
+Program:   20810 bytes (63.5% Full)
+Data:        703 bytes (34.3% Full)
+Thu Sep 18 09:52:12 CEST 2014: IoT/MQTT/CosaMQTThumidity/CosaMQTThumidity.ino
+Program:   17654 bytes (53.9% Full)
+Data:        591 bytes (28.9% Full)
+Thu Sep 18 09:52:17 CEST 2014: IoT/MQTT/CosaMQTTtemperature/CosaMQTTtemperature.ino
+Program:   18150 bytes (55.4% Full)
+Data:        563 bytes (27.5% Full)
+CosaMQTTtemperature.ino:124: warning: ‘topic’ may be used uninitialized in this function
+Thu Sep 18 09:52:22 CEST 2014: IoT/ThingSpeak/CosaThingSpeakChannel/CosaThingSpeakChannel.ino
+Program:   20618 bytes (62.9% Full)
+Data:        847 bytes (41.4% Full)
+Thu Sep 18 09:52:27 CEST 2014: IoT/ThingSpeak/CosaThingSpeakClient/CosaThingSpeakClient.ino
+Program:   24524 bytes (74.8% Full)
+Data:       1063 bytes (51.9% Full)
+Thu Sep 18 09:52:32 CEST 2014: IoT/ThingSpeak/CosaThingSpeakTalkBack/CosaThingSpeakTalkBack.ino
+Program:   19106 bytes (58.3% Full)
+Data:        731 bytes (35.7% Full)
+Thu Sep 18 09:52:37 CEST 2014: LCD/CosaHD44780/CosaHD44780.ino
+Program:    6312 bytes (19.3% Full)
+Data:        252 bytes (12.3% Full)
+Thu Sep 18 09:52:42 CEST 2014: LCD/CosaLCDbench/CosaLCDbench.ino
+Program:    6254 bytes (19.1% Full)
+Data:        291 bytes (14.2% Full)
+Thu Sep 18 09:52:47 CEST 2014: LCD/CosaLCDclock/CosaLCDclock.ino
+Program:    7248 bytes (22.1% Full)
+Data:        266 bytes (13.0% Full)
+Thu Sep 18 09:52:52 CEST 2014: LCD/CosaLCDhbar/CosaLCDhbar.ino
+Program:    7016 bytes (21.4% Full)
+Data:        288 bytes (14.1% Full)
+Thu Sep 18 09:52:57 CEST 2014: LCD/CosaLCDkeypad/CosaLCDkeypad.ino
+Program:    6424 bytes (19.6% Full)
+Data:        345 bytes (16.8% Full)
+Thu Sep 18 09:53:02 CEST 2014: LCD/CosaLCDmenu/CosaLCDmenu.ino
+Program:    7604 bytes (23.2% Full)
+Data:        385 bytes (18.8% Full)
+Thu Sep 18 09:53:08 CEST 2014: LCD/CosaLCDsize/CosaLCDsize.ino
+Program:    3902 bytes (11.9% Full)
+Data:        136 bytes (6.6% Full)
+Thu Sep 18 09:53:13 CEST 2014: LCD/CosaLCDslave/CosaLCDslave.ino
+Program:    5780 bytes (17.6% Full)
+Data:        315 bytes (15.4% Full)
+Thu Sep 18 09:53:18 CEST 2014: LCD/CosaLCDspeed/CosaLCDspeed.ino
+Program:    7968 bytes (24.3% Full)
+Data:        312 bytes (15.2% Full)
+Thu Sep 18 09:53:23 CEST 2014: LCD/CosaLCDtemp/CosaLCDtemp.ino
+Program:    8550 bytes (26.1% Full)
+Data:        276 bytes (13.5% Full)
+Thu Sep 18 09:53:28 CEST 2014: LCD/CosaLCDterm/CosaLCDterm.ino
+Program:    6880 bytes (21.0% Full)
+Data:        480 bytes (23.4% Full)
+Thu Sep 18 09:53:33 CEST 2014: LCD/CosaLCDvbar/CosaLCDvbar.ino
+Program:    6628 bytes (20.2% Full)
+Data:        255 bytes (12.5% Full)
+Thu Sep 18 09:53:38 CEST 2014: LCD/CosaMAX72XX/CosaMAX72XX.ino
+Program:    7430 bytes (22.7% Full)
+Data:        234 bytes (11.4% Full)
+Thu Sep 18 09:53:43 CEST 2014: LCD/CosaPCD8544/CosaPCD8544.ino
+Program:   15494 bytes (47.3% Full)
+Data:        352 bytes (17.2% Full)
+Thu Sep 18 09:53:48 CEST 2014: LCD/CosaPCD8544temp/CosaPCD8544temp.ino
+Program:   15812 bytes (48.3% Full)
+Data:        441 bytes (21.5% Full)
+Thu Sep 18 09:53:53 CEST 2014: LCD/CosaST7565/CosaST7565.ino
+Program:   15778 bytes (48.2% Full)
+Data:        365 bytes (17.8% Full)
+Thu Sep 18 09:53:58 CEST 2014: NEXA/CosaNEXAreceiver/CosaNEXAreceiver.ino
+Program:    3784 bytes (11.5% Full)
+Data:        206 bytes (10.1% Full)
+Thu Sep 18 09:54:03 CEST 2014: NEXA/CosaNEXAsender/CosaNEXAsender.ino
+Program:    2770 bytes (8.5% Full)
+Data:        130 bytes (6.3% Full)
+Thu Sep 18 09:54:08 CEST 2014: Nucleo/CosaNucleoActor/CosaNucleoActor.ino
+Program:    7038 bytes (21.5% Full)
+Data:        481 bytes (23.5% Full)
+Thu Sep 18 09:54:13 CEST 2014: Nucleo/CosaNucleoMutex/CosaNucleoMutex.ino
+Program:    7812 bytes (23.8% Full)
+Data:        447 bytes (21.8% Full)
+Thu Sep 18 09:54:18 CEST 2014: Nucleo/CosaNucleoPingPong/CosaNucleoPingPong.ino
+Program:    8160 bytes (24.9% Full)
+Data:        464 bytes (22.7% Full)
+Thu Sep 18 09:54:24 CEST 2014: Nucleo/CosaNucleoSemaphore/CosaNucleoSemaphore.ino
+Program:    7776 bytes (23.7% Full)
+Data:        451 bytes (22.0% Full)
+Thu Sep 18 09:54:29 CEST 2014: Nucleo/CosaNucleoThread/CosaNucleoThread.ino
+Program:    7838 bytes (23.9% Full)
+Data:        520 bytes (25.4% Full)
+Thu Sep 18 09:54:34 CEST 2014: OWI/CosaDS18B20alarm/CosaDS18B20alarm.ino
+Program:   10072 bytes (30.7% Full)
+Data:        532 bytes (26.0% Full)
+Thu Sep 18 09:54:39 CEST 2014: OWI/CosaDS18B20/CosaDS18B20.ino
+Program:   10160 bytes (31.0% Full)
+Data:        420 bytes (20.5% Full)
+Thu Sep 18 09:54:44 CEST 2014: OWI/CosaDS1990A/CosaDS1990A.ino
+Program:    6022 bytes (18.4% Full)
+Data:        285 bytes (13.9% Full)
+Thu Sep 18 09:54:49 CEST 2014: Pins/CosaAnalogPins/CosaAnalogPins.ino
+Program:    7210 bytes (22.0% Full)
+Data:        428 bytes (20.9% Full)
+Thu Sep 18 09:54:54 CEST 2014: Pins/CosaButton/CosaButton.ino
+Program:    7200 bytes (22.0% Full)
+Data:        502 bytes (24.5% Full)
+Thu Sep 18 09:54:59 CEST 2014: Pins/CosaPinChangeInterrupt/CosaPinChangeInterrupt.ino
+Program:    5010 bytes (15.3% Full)
+Data:        336 bytes (16.4% Full)
+Thu Sep 18 09:55:04 CEST 2014: Pins/CosaPins/CosaPins.ino
+Program:   11138 bytes (34.0% Full)
+Data:        542 bytes (26.5% Full)
+Thu Sep 18 09:55:09 CEST 2014: Pins/CosaPWMPin/CosaPWMPin.ino
+Program:    6362 bytes (19.4% Full)
+Data:        289 bytes (14.1% Full)
+Thu Sep 18 09:55:14 CEST 2014: Pins/CosaRotaryEncoder/CosaRotaryEncoder.ino
+Program:    5612 bytes (17.1% Full)
+Data:        459 bytes (22.4% Full)
+Thu Sep 18 09:55:19 CEST 2014: Pins/CosaTouch/CosaTouch.ino
+Program:    5452 bytes (16.6% Full)
+Data:        475 bytes (23.2% Full)
+Thu Sep 18 09:55:24 CEST 2014: RS485/CosaRS485/CosaRS485.ino
+Program:    9760 bytes (29.8% Full)
+Data:        533 bytes (26.0% Full)
+Thu Sep 18 09:55:30 CEST 2014: RS485/CosaRS485master/CosaRS485master.ino
+CosaRS485master.ino:31:2: error: #error CosaRS485master: board not supported.
+Thu Sep 18 09:55:31 CEST 2014: RS485/CosaRS485slave/CosaRS485slave.ino
+Program:    6002 bytes (18.3% Full)
+Data:        588 bytes (28.7% Full)
+Thu Sep 18 09:55:37 CEST 2014: Sandbox/CosaBitSet/CosaBitSet.ino
+Program:    6608 bytes (20.2% Full)
+Data:        297 bytes (14.5% Full)
+Thu Sep 18 09:55:42 CEST 2014: Sandbox/CosaCFFS/CosaCFFS.ino
+Program:   16908 bytes (51.6% Full)
+Data:        514 bytes (25.1% Full)
+Thu Sep 18 09:55:47 CEST 2014: Sandbox/CosaCFFSshell/CosaCFFSshell.ino
+Program:   18338 bytes (56.0% Full)
+Data:        556 bytes (27.1% Full)
+Thu Sep 18 09:55:52 CEST 2014: Sandbox/CosaIOBuffer/CosaIOBuffer.ino
+Program:   10482 bytes (32.0% Full)
+Data:        341 bytes (16.7% Full)
+Thu Sep 18 09:55:57 CEST 2014: Sandbox/CosaLowPower/CosaLowPower.ino
+Program:    1952 bytes (6.0% Full)
+Data:        138 bytes (6.7% Full)
+Thu Sep 18 09:56:02 CEST 2014: Sandbox/CosaPingPong/CosaPingPong.ino
+Program:    6592 bytes (20.1% Full)
+Data:        473 bytes (23.1% Full)
+Thu Sep 18 09:56:07 CEST 2014: Sandbox/CosaProgrammer/CosaProgrammer.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+Thu Sep 18 09:56:11 CEST 2014: Sandbox/CosaRegistry/CosaRegistry.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+Thu Sep 18 09:56:13 CEST 2014: Sandbox/CosaS25FL127S/CosaS25FL127S.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+Thu Sep 18 09:56:14 CEST 2014: Sandbox/CosaShell/CosaShell.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+Thu Sep 18 09:56:16 CEST 2014: Sandbox/CosaSoftSRPI/CosaSoftSRPI.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+Thu Sep 18 09:56:18 CEST 2014: Sandbox/CosaSoftSRPO/CosaSoftSRPO.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+Thu Sep 18 09:56:19 CEST 2014: Sandbox/CosaSRPO/CosaSRPO.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+Thu Sep 18 09:56:21 CEST 2014: Sandbox/CosaString/CosaString.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+Thu Sep 18 09:56:23 CEST 2014: Sandbox/CosaTCS230/CosaTCS230.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: ‘synchronized’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:326: error: expected `;' before ‘{’ token
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:324: warning: unused parameter ‘sem’
+Thu Sep 18 09:56:24 CEST 2014: Sandbox/CosaTermostat/CosaTermostat.ino
