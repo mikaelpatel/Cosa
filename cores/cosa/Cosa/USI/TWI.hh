@@ -258,7 +258,6 @@ private:
   volatile uint8_t* m_last;
   volatile int m_count;
   Driver* m_dev;
-  volatile uint8_t m_sem;
 
   /**
    * Get current driver state.

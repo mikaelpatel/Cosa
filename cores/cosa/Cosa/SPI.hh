@@ -75,9 +75,9 @@ public:
   /** Chip select mode. */
   enum Pulse {
     ACTIVE_LOW = 0,	   	//!< Active low logic during transaction.
-    ACTIVE_HIGH = 1,	   	//!< Active high logic.
+    ACTIVE_HIGH = 1,	   	//!< Active high logic during transaction.
     PULSE_LOW = 2, 	   	//!< Pulse low on end of transaction.
-    PULSE_HIGH = 3,	   	//!< Pulse high.
+    PULSE_HIGH = 3,	   	//!< Pulse high on end of transaction.
     DEFAULT_PULSE = ACTIVE_LOW	//!< Default is low logic.
   } __attribute__((packed));
 
@@ -107,12 +107,6 @@ public:
 	   Interrupt::Handler* irq = NULL);
 
     /**
-     * Set SPI master clock rate.
-     * @param[in] clock rate.
-     */
-    void set_clock(Clock rate);
-
-    /**
      * Calculate SPI clock rate (scale factor) for given frequency.
      * @param[in] freq device max frequency (in Hz).
      * @return clock rate.
@@ -129,6 +123,22 @@ public:
       return (SPI::DIV128_CLOCK);
     }
 
+    /**
+     * Set SPI master clock rate.
+     * @param[in] clock rate.
+     */
+    void set_clock(Clock rate);
+
+    /**
+     * Set SPI master clock frequency.
+     * @param[in] freq device max frequency (in Hz).
+     */
+    void set_clock(uint32_t freq)
+      __attribute__((always_inline))
+    {
+      set_clock(clock(freq));
+    }
+    
   protected:
     Driver* m_next;		//!< List of drivers.
     Interrupt::Handler* m_irq;	//!< Interrupt handler.
@@ -145,7 +155,6 @@ public:
     friend class SPI;
   };
 
-public:
   /**
    * Construct serial peripheral interface for master.
    */
@@ -335,7 +344,12 @@ public:
    * Should only be used  within a SPI transaction; begin()-end() block.  
    * @param[in] vec null terminated io buffer vector pointer.
    */
-  void write(const iovec_t* vec);
+  void write(const iovec_t* vec)
+    __attribute__((always_inline))
+  {
+    for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
+      write(vp->buf, vp->size);
+  }
 
   /**
    * SPI slave device support. Allows Arduino/AVR to act as a hardware
@@ -418,7 +432,6 @@ public:
 private:
   Driver* m_list;		//!< List of attached device drivers.
   Driver* m_dev;		//!< Current device driver.
-  volatile uint8_t m_sem;	//!< Device driver semphore.
 };
 
 /**

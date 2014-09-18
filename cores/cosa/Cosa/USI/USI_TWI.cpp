@@ -174,8 +174,7 @@ TWI::TWI() :
   m_next(0),
   m_last(0),
   m_count(0),
-  m_dev(0),
-  m_sem(1)
+  m_dev(0)
 {
   for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
     m_vec[ix].buf = 0;
@@ -288,31 +287,27 @@ TWI::request(uint8_t op)
 void
 TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
-  // Acquire the driver controller
-  uint8_t key = lock(m_sem);
-  m_dev = dev;
-
-  // Release level data and init mode
-  USIDR = 0xff;
-  USICR = CR_INIT_MODE;
-  USISR = SR_CLEAR_ALL;
-  set_mode(IOPin::OUTPUT_MODE);
-
-  // Setup event target (for completed event)
-  m_target = target;
-  unlock(key);
+  synchronized {
+    // Acquire the driver controller
+    m_dev = dev;
+    // Release level data and init mode
+    USIDR = 0xff;
+    USICR = CR_INIT_MODE;
+    USISR = SR_CLEAR_ALL;
+    set_mode(IOPin::OUTPUT_MODE);
+    // Setup event target (for completed event)
+    m_target = target;
+  }
 }
 
 void 
 TWI::end()
 {
-  // Synchronized update driver
-  uint8_t key = lock();
-  m_dev = NULL;
-  m_target = NULL;
-
-  // Release device driver
-  unlock(key, m_sem);
+  // Put into idle state
+  synchronized {
+    m_target = NULL;
+    m_dev = NULL;
+  }
 }
 
 int

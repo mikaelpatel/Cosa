@@ -298,39 +298,6 @@ unlock(uint8_t key)
 }
 
 /**
- * Disable interrupts and acquire semaphore. Return processor flags for 
- * unlock. The function will yield while waiting to acquire the semaphore.
- * @param[in,out] sem semaphore.
- * @return processor flags.
- */
-inline uint8_t
-lock(volatile uint8_t &sem)
-{
-  uint8_t key = lock();
-  while (sem == 0) {
-    unlock(key);
-    yield();
-    key = lock();
-  }
-  sem -= 1;
-  return (key);
-}
-
-/**
- * Restore processor flags and possible enable of interrupts.
- * Release the semaphore.
- * @param[in] key processor flags.
- * @param[in,out] sem semaphore.
- * @return processor flags.
- */
-inline void
-unlock(uint8_t key, volatile uint8_t &sem)
-{
-  sem += 1;
-  unlock(key);
-}
-
-/**
  * Syntactic sugar for synchronized block. Used in the form:
  * @code
  * synchronized {

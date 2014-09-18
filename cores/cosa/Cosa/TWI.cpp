@@ -36,21 +36,18 @@ TWI twi  __attribute__ ((weak));
 void
 TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
-  // Acquire the driver controller
-  uint8_t key = lock(m_sem);
-  m_dev = dev;
-
-  // Set up receiver of completion events
-  m_target = target;
-
-  // Enable internal pullup
-  bit_mask_set(PORT, _BV(Board::SDA) | _BV(Board::SCL));
-
-  // Set clock prescale and bit rate
-  bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
-  TWBR = m_freq;
-  TWCR = IDLE_CMD;
-  unlock(key);
+  synchronized {
+    // Acquire the driver controller
+    m_dev = dev;
+    // Set up receiver of completion events
+    m_target = target;
+    // Enable internal pullup
+    bit_mask_set(PORT, _BV(Board::SDA) | _BV(Board::SCL));
+    // Set clock prescale and bit rate
+    bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
+    TWBR = m_freq;
+    TWCR = IDLE_CMD;
+  }
 }
 
 void
@@ -58,17 +55,12 @@ TWI::end()
 {
   // Check if an asynchronious read/write was issued 
   if (m_target != NULL) await_completed();
-
-  // Synchronized update driver
-  uint8_t key = lock();
-
   // Put into idle state
-  m_target = NULL;
-  m_dev = NULL;
-  TWCR = 0;
-
-  // Release device driver
-  unlock(key, m_sem);
+  synchronized {
+    m_target = NULL;
+    m_dev = NULL;
+    TWCR = 0;
+  }
 }
 
 bool

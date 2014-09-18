@@ -155,7 +155,6 @@ public:
     m_last(NULL),
     m_count(0),
     m_dev(NULL),
-    m_sem(1),
     m_freq(((F_CPU / DEFAULT_FREQ) - 16) / 2)
   {
     for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
@@ -397,7 +396,6 @@ private:
   volatile int m_count;
   uint8_t m_addr;
   Driver* m_dev;
-  volatile uint8_t m_sem;
   uint8_t m_freq;
   
   /**

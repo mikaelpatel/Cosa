@@ -50,8 +50,7 @@ SPI::Driver::Driver(Board::DigitalPin cs, Pulse pulse,
 
 SPI::SPI(uint8_t mode, Order order) :
   m_list(NULL),
-  m_dev(NULL),
-  m_sem(1)
+  m_dev(NULL)
 {
   // Initiate the SPI port and control for slave mode
   synchronized {
@@ -65,8 +64,7 @@ SPI::SPI(uint8_t mode, Order order) :
 
 SPI::SPI() :
   m_list(NULL),
-  m_dev(NULL),
-  m_sem(1)
+  m_dev(NULL)
 {
   // Initiate the SPI data direction for master mode
   // The SPI/SS pin must be an output pin in master mode
@@ -84,11 +82,9 @@ SPI::Slave::on_interrupt(uint16_t arg)
 { 
   // Sanity check that a buffer is defined
   if (m_buf == NULL) return;
-
   // Append to buffer and push event when buffer is full
   m_buf[m_put++] = arg;
   if (m_put != m_max) return;
-  
   // Push receive completed to event dispatch
   Event::push(Event::RECEIVE_COMPLETED_TYPE, this, m_put);
   m_put = 0;
@@ -141,8 +137,7 @@ SPI::Driver::Driver(Board::DigitalPin cs, Pulse pulse,
 
 SPI::SPI(uint8_t mode, Order order) :
   m_list(NULL),
-  m_dev(NULL),
-  m_sem(1)
+  m_dev(NULL)
 {
   UNUSED(order);
 
@@ -159,8 +154,7 @@ SPI::SPI(uint8_t mode, Order order) :
 
 SPI::SPI() :
   m_list(NULL),
-  m_dev(NULL),
-  m_sem(1)
+  m_dev(NULL)
 {
   // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
   // Do not confuse with SPI chip programming pins
@@ -299,13 +293,6 @@ SPI::write_P(const void* buf, size_t count)
 
 #endif
 
-void 
-SPI::write(const iovec_t* vec)
-{
-  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
-    write(vp->buf, vp->size);
-}
-
 bool 
 SPI::attach(Driver* dev)
 {
@@ -318,48 +305,38 @@ SPI::attach(Driver* dev)
 void
 SPI::begin(Driver* dev)
 {
-  // Acquire the driver controller
-  uint8_t key = lock(m_sem);
-  m_dev = dev;
- 
+  synchronized {
+    // Set current device
+    m_dev = dev;
 #if defined(SPDR)
-  // Initiate SPI hardware with device settings
-  SPCR = dev->m_spcr;
-  SPSR = dev->m_spsr;
+    // Initiate SPI hardware with device settings
+    SPCR = dev->m_spcr;
+    SPSR = dev->m_spsr;
 #else
-  // Set clock polarity
-  if (dev->m_cpol & 0x02)
-    bit_set(PORT, Board::SCK);
-  else
-    bit_clear(PORT, Board::SCK);
+    // Set clock polarity
+    bit_write(dev->m_cpol & 0x02, PORT, Board::SCK);
 #endif
-
-  // Enable device
-  if (dev->m_pulse < PULSE_LOW) dev->m_cs.toggle();
-
-  // Disable all interrupt sources on SPI bus
-  for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
-    if (dev->m_irq != NULL) dev->m_irq->disable();
-
-  unlock(key);
+    // Enable device
+    if (dev->m_pulse < PULSE_LOW) dev->m_cs.toggle();
+    // Disable all interrupt sources on SPI bus
+    for (dev = m_list; dev != NULL; dev = dev->m_next)
+      if (dev->m_irq != NULL) dev->m_irq->disable();
+  }
 }
 
 void
 SPI::end()
 { 
-  uint8_t key = lock();
-
-  // Disable the device or give pulse if required
-  m_dev->m_cs.toggle();
-  if (m_dev->m_pulse > ACTIVE_HIGH) m_dev->m_cs.toggle();
-
-  // Enable the bus devices with interrupts
-  for (Driver* dev = spi.m_list; dev != NULL; dev = dev->m_next)
-    if (dev->m_irq != NULL) dev->m_irq->enable();
-
-  // Release the driver controller
-  m_dev = NULL;
-  unlock(key, m_sem);
+  synchronized {
+    // Disable the device or give pulse if required
+    m_dev->m_cs.toggle();
+    if (m_dev->m_pulse > ACTIVE_HIGH) m_dev->m_cs.toggle();
+    // Enable the bus devices with interrupts
+    for (Driver* dev = m_list; dev != NULL; dev = dev->m_next)
+      if (dev->m_irq != NULL) dev->m_irq->enable();
+    // Release the driver controller
+    m_dev = NULL;
+  }
 }
 
 void
