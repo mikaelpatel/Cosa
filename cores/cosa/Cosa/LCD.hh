@@ -314,7 +314,8 @@ public:
      */
     virtual void begin()
     { 
-      spi.begin(this);
+      spi.acquire(this);
+      spi.begin();
     }
 
     /**
@@ -324,6 +325,7 @@ public:
     virtual void end()
     { 
       spi.end();
+      spi.release();
     }
 
     /**

@@ -42,13 +42,15 @@ W5100::W5100(const uint8_t* mac, Board::DigitalPin csn) :
 void
 W5100::write(uint16_t addr, uint8_t data)
 {
-  spi.begin(this);
+  spi.acquire(this);
+  spi.begin();
   spi.transfer_start(OP_WRITE);
   spi.transfer_next(addr >> 8);
   spi.transfer_next(addr);
   spi.transfer_next(data);
   spi.transfer_await();
   spi.end();
+  spi.release();
 }
 
 void
@@ -56,7 +58,8 @@ W5100::write(uint16_t addr, const void* buf, size_t len)
 {
   const uint8_t* bp = (const uint8_t*) buf;
   uint16_t last = addr + len;
-  spi.begin(this);
+  spi.acquire(this);
+  spi.begin();
   while (addr < last) {
     spi.transfer_start(OP_WRITE);
     spi.transfer_next(addr >> 8);
@@ -67,6 +70,7 @@ W5100::write(uint16_t addr, const void* buf, size_t len)
     m_cs.clear();
   }
   spi.end();
+  spi.release();
 }
 
 void
@@ -74,7 +78,8 @@ W5100::write_P(uint16_t addr, const void* buf, size_t len)
 {
   const uint8_t* bp = (const uint8_t*) buf;
   uint16_t last = addr + len;
-  spi.begin(this);
+  spi.acquire(this);
+  spi.begin();
   while (addr < last) {
     spi.transfer_start(OP_WRITE);
     spi.transfer_next(addr >> 8);
@@ -85,18 +90,21 @@ W5100::write_P(uint16_t addr, const void* buf, size_t len)
     m_cs.clear();
   }
   spi.end();
+  spi.release();
 }
 
 uint8_t
 W5100::read(uint16_t addr)
 {
-  spi.begin(this);
+  spi.acquire(this);
+  spi.begin();
   spi.transfer_start(OP_READ);
   spi.transfer_next(addr >> 8);
   spi.transfer_next(addr);
   spi.transfer_next(0);
   uint8_t res = spi.transfer_await();
   spi.end();
+  spi.release();
   return (res);
 }
 
@@ -105,7 +113,8 @@ W5100::read(uint16_t addr, void* buf, size_t len)
 {
   uint8_t* bp = (uint8_t*) buf;
   uint16_t last = addr + len;
-  spi.begin(this);
+  spi.acquire(this);
+  spi.begin();
   while (addr < last) {
     spi.transfer_start(OP_READ);
     spi.transfer_next(addr >> 8);
@@ -116,6 +125,7 @@ W5100::read(uint16_t addr, void* buf, size_t len)
     m_cs.clear();
   }
   spi.end();
+  spi.release();
 }
 
 void

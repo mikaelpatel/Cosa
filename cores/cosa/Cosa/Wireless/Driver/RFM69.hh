@@ -288,10 +288,12 @@ private:
    */
   uint8_t read(Reg reg)
   {
-    spi.begin(this);
-    spi.transfer(REG_READ | reg);
-    uint8_t res = spi.transfer(0);
-    spi.end();
+    spi.acquire(this);
+      spi.begin();
+        spi.transfer(REG_READ | reg);
+	uint8_t res = spi.transfer(0);
+      spi.end();
+    spi.release();
     return (res);
   }
 
@@ -303,10 +305,12 @@ private:
    */
   void read(Reg reg, void* buf, size_t count)
   {
-    spi.begin(this);
-    spi.transfer(REG_READ | reg);
-    spi.read(buf, count);
-    spi.end();
+    spi.acquire(this);
+      spi.begin();
+        spi.transfer(REG_READ | reg);
+	spi.read(buf, count);
+      spi.end();
+    spi.release();
   }
 
   /**
@@ -316,10 +320,12 @@ private:
    */
   void write(Reg reg, uint8_t value)
   {
-    spi.begin(this);
-    spi.transfer(REG_WRITE | reg);
-    spi.transfer(value);
-    spi.end();
+    spi.acquire(this);
+      spi.begin();
+        spi.transfer(REG_WRITE | reg);
+	spi.transfer(value);
+      spi.end();
+    spi.release();
   }
 
   /**
@@ -330,10 +336,12 @@ private:
    */
   void write(Reg reg, const void* buf, size_t count)
   {
-    spi.begin(this);
-    spi.transfer(REG_WRITE | reg);
-    spi.write(buf, count);
-    spi.end();
+    spi.acquire(this);
+      spi.begin();
+        spi.transfer(REG_WRITE | reg);
+	spi.write(buf, count);
+      spi.end();
+    spi.release();
   }
 
   /**
@@ -344,10 +352,12 @@ private:
    */
   void write_P(Reg reg, const uint8_t* buf, size_t count)
   {
-    spi.begin(this);
-    spi.transfer(REG_WRITE | reg);
-    spi.write_P(buf, count);
-    spi.end();
+    spi.acquire(this);
+      spi.begin();
+        spi.transfer(REG_WRITE | reg);
+	spi.write_P(buf, count);
+      spi.end();
+    spi.release();
   }
 
   /**

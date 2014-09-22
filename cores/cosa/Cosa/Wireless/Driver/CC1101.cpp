@@ -109,10 +109,12 @@ CC1101::CC1101(uint16_t net, uint8_t dev,
 void
 CC1101::strobe(Command cmd)
 {
-  spi.begin(this);
-  loop_until_bit_is_clear(PIN, Board::MISO);
-  m_status = spi.transfer(header_t(cmd, 0, 0));
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      loop_until_bit_is_clear(PIN, Board::MISO);
+      m_status = spi.transfer(header_t(cmd, 0, 0));
+    spi.end();
+  spi.release();
 }
 
 void 
@@ -131,22 +133,24 @@ CC1101::begin(const void* config)
   DELAY(300);
 
   // Upload the configuration. Check for default configuration
-  spi.begin(this);
-  loop_until_bit_is_clear(PIN, Board::MISO);
-  write_P(IOCFG2, 
-	  config ? (const uint8_t*) config : CC1101::config, 
-	  CONFIG_MAX);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+    loop_until_bit_is_clear(PIN, Board::MISO);
+    write_P(IOCFG2, 
+	    config ? (const uint8_t*) config : CC1101::config, 
+	    CONFIG_MAX);
+    spi.end();
 
-  // Adjust configuration with instance specific state
-  uint16_t sync = hton(m_addr.network);
-  spi.begin(this);
-  loop_until_bit_is_clear(PIN, Board::MISO);
-  write(PATABLE, 0x60);
-  write(CHANNR, m_channel);
-  write(ADDR, m_addr.device);
-  write(SYNC1, &sync, sizeof(sync));
-  spi.end();
+    // Adjust configuration with instance specific state
+    uint16_t sync = hton(m_addr.network);
+    spi.begin();
+      loop_until_bit_is_clear(PIN, Board::MISO);
+      write(PATABLE, 0x60);
+      write(CHANNR, m_channel);
+      write(ADDR, m_addr.device);
+      write(SYNC1, &sync, sizeof(sync));
+    spi.end();
+  spi.release();
 
   // Initiate device driver state and enable interrupt handler
   strobe(SCAL);
@@ -174,15 +178,17 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   if (len > PAYLOAD_MAX) return (-1);
 
   // Write frame length and header(dest, src, port) and payload buffers
-  spi.begin(this);
-  loop_until_bit_is_clear(PIN, Board::MISO);
-  m_status = spi.transfer(header_t(TXFIFO, 1, 0));
-  spi.transfer(len + 3);
-  spi.transfer(dest);
-  spi.transfer(m_addr.device);
-  spi.transfer(port);
-  spi.write(vec);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      loop_until_bit_is_clear(PIN, Board::MISO);
+      m_status = spi.transfer(header_t(TXFIFO, 1, 0));
+      spi.transfer(len + 3);
+      spi.transfer(dest);
+      spi.transfer(m_addr.device);
+      spi.transfer(port);
+      spi.write(vec);
+    spi.end();
+  spi.release();
 
   // Trigger transmission and wait for completion
   strobe(STX);
@@ -218,33 +224,38 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
       return (-2);
     }
     // Check the received frame size
-    spi.begin(this);
-    loop_until_bit_is_clear(PIN, Board::MISO);
-    size = read(RXBYTES);
-    spi.end();
+    spi.acquire(this);
+      spi.begin();
+        loop_until_bit_is_clear(PIN, Board::MISO);
+	size = read(RXBYTES);
+      spi.end();
+    spi.release();
   } while ((size & BYTES_MASK) == 0);
 
   // Put in idle mode and read the payload 
   strobe(SIDLE);
 
   // Read the payload size and check against buffer length
-  spi.begin(this);
-  loop_until_bit_is_clear(PIN, Board::MISO);
-  m_status = spi.transfer(header_t(RXFIFO, 1, 1));
-  size = spi.transfer(0) - 3;
-  if (size > len) {
-    spi.end();
-    strobe(SFRX);
-    return (-1);
-  }
+  spi.acquire(this);
+    spi.begin();
+      loop_until_bit_is_clear(PIN, Board::MISO);
+      m_status = spi.transfer(header_t(RXFIFO, 1, 1));
+      size = spi.transfer(0) - 3;
+      if (size > len) {
+	spi.end();
+	spi.release();
+	strobe(SFRX);
+	return (-1);
+      }
 
-  // Read the frame header(dest, src, port), payload and link quality status
-  m_dest = spi.transfer(0);
-  src = spi.transfer(0);
-  port = spi.transfer(0);
-  spi.read(buf, size);
-  spi.read(&m_recv_status, sizeof(m_recv_status));
-  spi.end();
+      // Read the frame header(dest, src, port), payload and link quality status
+      m_dest = spi.transfer(0);
+      src = spi.transfer(0);
+      port = spi.transfer(0);
+      spi.read(buf, size);
+      spi.read(&m_recv_status, sizeof(m_recv_status));
+    spi.end();
+  spi.release();
 
   // Fix: Add address checking for robustness
   return (size);
@@ -275,10 +286,12 @@ CC1101::set_output_power_level(int8_t dBm)
   else if (dBm < 5)   pa = 0x60; 
   else if (dBm < 7)   pa = 0x84; 
   else if (dBm < 10)  pa = 0xC4; 
-  spi.begin(this);
-  loop_until_bit_is_clear(PIN, Board::MISO);
-  write(PATABLE, pa);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      loop_until_bit_is_clear(PIN, Board::MISO);
+      write(PATABLE, pa);
+    spi.end();
+  spi.release();
 }
 
 int 

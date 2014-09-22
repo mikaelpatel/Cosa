@@ -578,9 +578,11 @@ private:
    */
   status_t read_status(uint8_t fifo = 1)
   {
-    spi.begin(this);
-    m_status = spi.transfer(header_t(0,0,fifo));
-    spi.end();
+    spi.acquire(this);
+      spi.begin();
+        m_status = spi.transfer(header_t(0,0,fifo));
+      spi.end();
+    spi.release();
     return (m_status);
   }
 
