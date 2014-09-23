@@ -121,8 +121,8 @@ SD::send(uint16_t ms, CMD command, uint32_t arg)
 {
   uint16_t start = RTC::millis();
   do {
-    uint8_t status = send(command, arg);
-    if (status < 2) return (true);
+    uint8_t state = send(command, arg);
+    if (state < IDENT_STATE) return (true);
   } while (((uint16_t) RTC::millis()) - start < ms);
   return (false);
 }
@@ -140,8 +140,8 @@ SD::send(uint16_t ms, ACMD command, uint32_t arg)
   uint16_t start = RTC::millis();
   do {
     send(APP_CMD);
-    uint8_t status = send((CMD) command, arg);
-    if (status < 2) return (true);
+    uint8_t state = send((CMD) command, arg);
+    if (state < IDENT_STATE) return (true);
   } while (((uint16_t) RTC::millis()) - start < ms);
   return (false);
 }
@@ -229,47 +229,9 @@ SD::begin(SPI::Clock rate)
   uint32_t arg;
   R1 status;
   
-  /* Start with unknown card type */
+  // Start with unknown card type
   m_type = TYPE_UNKNOWN;
   
-<<<<<<< HEAD
-  /* Card needs 74 cycles minimum to start up */
-  if (!spi.begin(this)) goto error;
-  for (uint8_t i = 0; i < INIT_PULSES; i++) spi.transfer(0xff);
-
-  /* Reset card */
-  status = send(INIT_TIMEOUT, GO_IDLE_STATE);
-  if (status.error()) goto error;
-
-  /* Enable CRC */
-  status = send(CRC_ON_OFF, true);
-  if (status.error()) goto error;
-  
-  /* Check for version of SD card specification; 2.7-3.6V and check pattern */
-  m_type = TYPE_SD1;
-  arg = (0x100 | CHECK_PATTERN);
-  status = send(SEND_IF_COND, arg);
-  if (!status.error()) {
-    R7 r7 = receive();
-    if (r7.check_pattern != CHECK_PATTERN) goto error;
-    m_type = TYPE_SD2;
-  } 
-
-  /* Tell the device that the host supports SDHC */
-  arg = (m_type == TYPE_SD1) ? 0L : 0X40000000L;
-  for (uint16_t i = 0; i < INIT_RETRY; i++) {
-    status = send(SD_SEND_OP_COND, arg);
-    if (status.ready()) break;
-    DELAY(((uint32_t)INIT_TIMEOUT*1000L)/(uint32_t)INIT_RETRY);
-  }
-  if (!status.ready()) goto error;
-  if (m_type == TYPE_SD2) {
-    status = send(READ_OCR);
-    if (status.error()) goto error;
-    uint32_t ocr = receive();
-    if ((ocr & 0xC0000000L) == 0xC0000000L) m_type = TYPE_SDHC;
-  }
-=======
   spi.acquire(this);
     spi.begin();
     // Card needs 74 cycles minimum to start up
@@ -306,7 +268,6 @@ SD::begin(SPI::Clock rate)
 	uint32_t ocr = receive();
 	if ((ocr & 0xC0000000L) == 0xC0000000L) m_type = TYPE_SDHC;
       }
->>>>>>> 2c296a773d2d073e30c3138130f809a9617291b4
   
       // Set the request clock rate
       set_clock(rate);
