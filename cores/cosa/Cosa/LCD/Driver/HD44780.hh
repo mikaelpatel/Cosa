@@ -181,6 +181,14 @@ public:
   virtual void display_clear();
 
   /**
+   * Clear to end of line.
+   */
+  void line_clear()
+  {
+    while (m_x < WIDTH) putchar(' ');
+  }
+
+  /**
    * Move cursor to home position(0, 0) .
    */
   void cursor_home();
