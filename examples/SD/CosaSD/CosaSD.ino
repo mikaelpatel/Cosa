@@ -74,7 +74,7 @@ void setup()
   tft.fill_screen();
 #else
   IOStream::Device* dev = &uart;
-  uart.begin(9600);
+  uart.begin(115200);
 #endif
 
   Watchdog::begin();

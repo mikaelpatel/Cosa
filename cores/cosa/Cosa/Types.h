@@ -160,25 +160,81 @@ union univ32_t {
     }									\
   ))
 # define __PROGMEM  __attribute__((section(".progmem.data")))
-# undef PSTR
-# define PSTR(str) __PSTR(str)
- /**
-  * Program string literal that may be used in macro. Is not unique.
-  * @param[in] s string literal (at compile time).
-  * @return string literal in program memory.
-  */
-# define __PSTR(s)							\
-  (__extension__(							\
-    {									\
-      static const char __c[]						\
-        __attribute__((section(".progmem.data"))) = (s);		\
-      &__c[0];								\
-    }									\
-  ))
 #else
-# define __PSTR(s) PSTR(s)
 # define __PROGMEM PROGMEM
 #endif
+
+/** String in program memory */
+typedef const PROGMEM class prog_str* str_P;
+
+/**
+ * Program string literal that may be used in macro. Is not unique.
+ * @param[in] s string literal (at compile time).
+ * @return string literal in program memory.
+ */
+#define STR_P(s)							\
+(__extension__(								\
+  {									\
+    static const char __c[] __PROGMEM = (s);				\
+    (str_P) &__c[0];							\
+  }									\
+))
+#undef PSTR
+#define PSTR(s) STR_P(s)
+#define __PSTR(s) STR_P(s)
+
+inline char* 
+strcat_P(char* s1, str_P s2)
+{
+  return (strcat_P(s1, (const char*) s2));
+}
+
+inline str_P 
+strchr_P(str_P s, int __val)
+{
+  return ((str_P) strchr_P((const char*) s, __val));
+}
+
+inline str_P 
+strchrnul_P(str_P s, int __val)
+{
+  return ((str_P) strchrnul_P((const char*) s, __val));
+}
+
+
+inline int
+strcmp_P(const char *s1, str_P s2)
+{
+  return (strcmp_P(s1, (const char*) s2));
+}
+
+inline char*
+strcpy_P(char* s1, str_P s2)
+{
+  return (strcpy_P(s1, (const char*) s2));
+}
+
+inline int
+strcasecmp_P(const char *s1, str_P s2)
+{
+  return (strcasecmp_P(s1, (const char*) s2));
+}
+
+inline char*
+strcasestr_P(const char *s1, str_P s2)
+{
+  return (strcasestr_P(s1, (const char*) s2));
+}
+
+inline size_t
+strlen_P(str_P s)
+{
+  return (strlen_P((const char*) s));
+}
+
+/** Pointer table in program memory */
+typedef const PROGMEM void* void_P;
+typedef const PROGMEM void_P void_vec_P;
 
 /* Check if static_assert needs to be disabled */
 #if (ARDUINO < 150)
@@ -186,13 +242,6 @@ union univ32_t {
 #   define static_assert(condition,message)
 # endif
 #endif
-
-/** String in program memory */
-typedef const PROGMEM char* str_P;
-
-/** Pointer table in program memory */
-typedef const PROGMEM void* void_P;
-typedef const PROGMEM void_P void_vec_P;
 
 /**
  * Instruction clock cycles per micro-second. Assumes clock greater
@@ -205,6 +254,26 @@ typedef const PROGMEM void_P void_vec_P;
  * @param[in] us micro-seconds.
  */
 #define DELAY(us) _delay_loop_2(((us) * I_CPU) / 4)
+
+/**
+ * Delay given number of milli-seconds. This function pointer
+ * may be redefined to allow low-power and/or multi-tasking duing wait.
+ * @param[in] ms milli-seconds delay.
+ */
+extern void (*delay)(uint32_t ms);
+
+/**
+ * Sleep given number of seconds. This function pointer may be
+ * redefined to allow low-power and/or multi-tasking duing wait.
+ * @param[in] s seconds delay.
+ */
+extern void (*sleep)(uint16_t s);
+
+/**
+ * Allow context switch to other task if available. The default
+ * implementation is a low-power sleep and wait for interrupt.
+ */
+extern void (*yield)();
 
 /**
  * Disable interrupts and return flags.
@@ -446,25 +515,4 @@ toHEX(uint8_t value)
   return (value + '0');
 }
 
-/**
- * Delay given number of milli-seconds. This function pointer
- * may be redefined to allow low-power and/or multi-task duing wait.
- * @param[in] ms milli-seconds delay.
- */
-extern void (*delay)(uint32_t ms);
-
-/**
- * Sleep given number of seconds. This function pointer may be
- * redefined to allow low-power and/or multi-task duing wait.
- * @param[in] s seconds delay.
- */
-extern void (*sleep)(uint16_t s);
-
-/**
- * Allow context switch to other task if available. The default
- * implementation is a low-power state and wait for interrupt.
- */
-extern void (*yield)();
-
 #endif
-

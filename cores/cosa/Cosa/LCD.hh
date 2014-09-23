@@ -54,8 +54,7 @@ public:
       m_y(0),
       m_tab(4),
       m_mode(0)
-    {
-    }
+    {}
     
     /**
      * @override LCD::Device
@@ -130,6 +129,7 @@ public:
      * @param[out] y.
      */
     void get_cursor(uint8_t& x, uint8_t& y) const
+      __attribute__((always_inline))
     {
       x = m_x;
       y = m_y;
@@ -167,6 +167,7 @@ public:
      * @return previous text mode.
      */
     TextMode set_text_mode(TextMode mode)
+      __attribute__((always_inline))
     {
       TextMode previous = (TextMode) m_mode;
       m_mode = mode;
@@ -232,8 +233,7 @@ public:
       m_sdin(sdin, 0),
       m_sclk(sclk, 0),
       m_sce(sce, 1)
-    {
-    }
+    {}
 #else
     Serial3W(Board::DigitalPin sdin = Board::D0, 
 	     Board::DigitalPin sclk = Board::D1, 
@@ -241,8 +241,7 @@ public:
       m_sdin(sdin, 0),
       m_sclk(sclk, 0),
       m_sce(sce, 1)
-    {
-    }
+    {}
 #endif
 
     /**
@@ -315,7 +314,8 @@ public:
      */
     virtual void begin()
     { 
-      spi.begin(this);
+      spi.acquire(this);
+      spi.begin();
     }
 
     /**
@@ -325,6 +325,7 @@ public:
     virtual void end()
     { 
       spi.end();
+      spi.release();
     }
 
     /**

@@ -42,10 +42,7 @@ public:
     /** 
      * Default constructor.
      */
-    Server() : 
-      m_sock(NULL) 
-    {
-    }
+    Server() : m_sock(NULL) {}
 
     /**
      * Start server with given socket. Initiates socket for incoming
@@ -90,7 +87,8 @@ public:
      * Get client address, network address and port.
      * @param[out] addr network address.
      */
-    void get_client(INET::addr_t& addr)
+    void get_client(INET::addr_t& addr) const
+      __attribute__((always_inline))
     {
       m_sock->get_src(addr);
     }  
@@ -124,10 +122,7 @@ public:
     /**
      * Default constructor.
      */
-    Client() : 
-      m_sock(NULL) 
-    {
-    }
+    Client() : m_sock(NULL) {}
     
     /**
      * Default destructor. Closes and releases given socket.

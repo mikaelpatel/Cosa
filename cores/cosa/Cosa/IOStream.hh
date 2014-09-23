@@ -32,6 +32,11 @@ public:
   /** End Of File, returned when device operations fails (empty or full). */
   static const int EOF = -1;
 
+  /** End Of Line character sequences */
+  static const char CR[] PROGMEM;
+  static const char LF[] PROGMEM;
+  static const char CRLF[] PROGMEM;
+  
   /**
    * Base conversion.
    */
@@ -84,14 +89,16 @@ public:
 
     /**
      * Is blocking mode?
+     * @return bool.
      */
-    bool is_blocking()
+    bool is_blocking() const
     {
       return (m_blocking);
     }
 
     /**
      * Set end of line mode.
+     * @param[in] mode for end of line.
      */
     void set_eol(Mode mode)
     {
@@ -100,8 +107,9 @@ public:
 
     /**
      * Get end of line mode.
+     * @return mode.
      */
-    Mode get_eol()
+    Mode get_eol() const
     {
       return (m_eol);
     }
@@ -144,7 +152,7 @@ public:
      * @param[in] s string in program memory to write.
      * @return zero(0) or negative error code.
      */
-    virtual int puts_P(const char* s);
+    virtual int puts_P(str_P s);
 
     /**
      * @override IOStream::Device
@@ -261,12 +269,30 @@ public:
   Device* set_device(Device* dev);
 
   /**
+   * Get io stream end of line string.
+   * @return string for end of line.
+   */
+  str_P get_eol_P()
+  {
+    return (m_eol_P);
+  }
+
+  /**
+   * Get io stream end of line string.
+   * @return string for end of line.
+   */
+  str_P EOL()
+  {
+    return (m_eol_P);
+  }
+
+  /**
    * Set io stream end of line string.
    * @param[in] s string for end of line.
    */
   void set_eol_P(const char* s)
   {
-    m_eol_P = s;
+    m_eol_P = (str_P) s;
   }
 
   /**
@@ -416,7 +442,7 @@ public:
    * a string constants in program memory.
    * @param[in] s pointer to program memory string.
    */
-  void print_P(const char* s) 
+  void print_P(str_P s) 
   { 
     m_dev->puts_P(s); 
   }
@@ -435,7 +461,7 @@ public:
    * @param[in] format string in program memory.
    * @param[in] args variable argument list.
    */
-  void vprintf_P(const char* format, va_list args);
+  void vprintf_P(str_P format, va_list args);
 
   /**
    * Formated print with variable argument list. The format string
@@ -443,7 +469,7 @@ public:
    * @param[in] format string in program memory.
    * @param[in] ... variable argument list.
    */
-  void printf_P(const char* format, ...)
+  void printf_P(str_P format, ...)
   {
     va_list args;
     va_start(args, format);
@@ -617,10 +643,21 @@ public:
    */
   IOStream& operator<<(const char* s) 
   { 
-    print_P(s); 
+    print(s); 
     return (*this); 
   }
 
+  /**
+   * Print null terminated string in program memory to stream.
+   * @param[in] s string in program memory to print.
+   * @return iostream.
+   */
+  IOStream& operator<<(str_P s)
+  {
+    print_P(s);
+    return (*this);
+  }
+  
   /**
    * Print contents of iobuffer to stream.
    * @param[in] buffer input/output buffer.
@@ -631,19 +668,6 @@ public:
     print(&buffer);
     return (*this); 
   }
-
-  /**
-   * Print null terminated String to stream.
-   * @param[in] s String to print.
-   * @return iostream.
-   */
-#ifdef COSA_STRING_HH
-  IOStream& operator<<(String& s)
-  {
-    print((char*) s.c_str());
-    return (*this);
-  }
-#endif
 
   friend IOStream& bcd(IOStream& outs);
   friend IOStream& bin(IOStream& outs);
@@ -657,7 +681,7 @@ public:
   Base m_base;			//!< Base for next output operator.
   int8_t m_width;		//!< Minimum width of output string.
   uint8_t m_prec;		//!< Number of digits after decimal sign.
-  const char* m_eol_P;		//!< End of line string (program memory).
+  str_P m_eol_P;		//!< End of line string (program memory).
 
   /**
    * Print number prefix for non decimal base.

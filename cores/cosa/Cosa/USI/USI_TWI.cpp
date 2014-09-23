@@ -48,7 +48,7 @@ TWI::Slave::set_read_buf(void* buf, size_t size)
   twi.m_vec[READ_IX].size = size;
 }
 
-bool 
+void
 TWI::Slave::begin()
 {
   twi.m_dev = this;
@@ -58,7 +58,6 @@ TWI::Slave::begin()
     USICR = TWI::CR_START_MODE;
     USISR = TWI::SR_CLEAR_ALL;
   }
-  return (true);
 }
 
 ISR(USI_START_vect) 
@@ -188,7 +187,8 @@ TWI::start()
 {
   // Release SCL to ensure that (repeated) start can be performed 
   m_scl.set();
-  while (!m_scl.is_set());
+  while (!m_scl.is_set())
+    ;
   DELAY(T4);
 
   // Generate the start condition
@@ -214,7 +214,8 @@ TWI::transfer(uint8_t data, uint8_t bits)
   do { 
     DELAY(T2);
     USICR = CR_DATA_MODE;
-    while (!m_scl.is_set());
+    while (!m_scl.is_set())
+      ;
     DELAY(T4);
     USICR = CR_DATA_MODE;
   } while (!(USISR & _BV(USIOIF)));
@@ -233,7 +234,8 @@ TWI::stop()
   // Release SCL and signal stop. Assume SCL/SDA are both output
   m_sda.clear();
   m_scl.set();
-  while (!m_scl.is_set());
+  while (!m_scl.is_set())
+    ;
   DELAY(T4);
   m_sda.set();
   DELAY(T2);
@@ -282,22 +284,30 @@ TWI::request(uint8_t op)
   return (count);
 }
 
-bool
+void
 TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
-  // Check that the driver support is not in use
-  if (m_dev != NULL) return (false);
-  m_dev = dev;
+  synchronized {
+    // Acquire the driver controller
+    m_dev = dev;
+    // Release level data and init mode
+    USIDR = 0xff;
+    USICR = CR_INIT_MODE;
+    USISR = SR_CLEAR_ALL;
+    set_mode(IOPin::OUTPUT_MODE);
+    // Setup event target (for completed event)
+    m_target = target;
+  }
+}
 
-  // Release level data and init mode
-  USIDR = 0xff;
-  USICR = CR_INIT_MODE;
-  USISR = SR_CLEAR_ALL;
-  set_mode(IOPin::OUTPUT_MODE);
-
-  // Setup event target (for completed event)
-  m_target = target;
-  return (true);
+void 
+TWI::end()
+{
+  // Put into idle state
+  synchronized {
+    m_target = NULL;
+    m_dev = NULL;
+  }
 }
 
 int

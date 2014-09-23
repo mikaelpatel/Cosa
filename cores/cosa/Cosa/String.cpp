@@ -21,6 +21,7 @@
  */
 
 #include "Cosa/String.hh"
+#include <ctype.h>
 
 String::String(const char* cstr)
 {
@@ -34,7 +35,7 @@ String::String(const String& value)
   *this = value;
 }
 
-String::String(const __FlashStringHelper* pstr)
+String::String(str_P pstr)
 {
   init();
   *this = pstr;
@@ -172,7 +173,7 @@ String::copy(const char* cstr, unsigned int length)
 }
 
 String& 
-String::copy(const __FlashStringHelper* pstr, unsigned int length)
+String::copy(str_P pstr, unsigned int length)
 {
   if (!reserve(length)) {
     invalidate();
@@ -240,7 +241,7 @@ String::operator=(const char* cstr)
 }
 
 String&
-String::operator=(const __FlashStringHelper* pstr)
+String::operator=(str_P pstr)
 {
   if (pstr != NULL) copy(pstr, strlen_P((PGM_P) pstr));
   else invalidate();
@@ -338,7 +339,7 @@ String::concat(double num)
 }
 
 unsigned char
-String::concat(const __FlashStringHelper* str)
+String::concat(str_P str)
 {
   if (str == NULL) return (false);
   int length = strlen_P((const char*) str);
@@ -431,7 +432,7 @@ operator+(const __StringSumHelper& lhs, double num)
 }
 
 __StringSumHelper&
-operator+(const __StringSumHelper& lhs, const __FlashStringHelper* rhs)
+operator+(const __StringSumHelper& lhs, str_P rhs)
 {
   __StringSumHelper& res = const_cast<__StringSumHelper&>(lhs);
   if (!res.concat(rhs)) res.invalidate();

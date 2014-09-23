@@ -123,7 +123,7 @@ public:
   }
 
 protected:
-  /**Font bitmap */
+  /** Font bitmap. */
   const uint8_t* m_bitmap;
 };
 

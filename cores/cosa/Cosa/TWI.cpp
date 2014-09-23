@@ -33,15 +33,14 @@ TWI twi  __attribute__ ((weak));
 #define PORT PORTC
 #endif
 
-bool 
+void
 TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
-  // Check that the driver support is not in use
-  if (m_dev != NULL) return (false);
-  m_dev = dev;
-  // Set up receiver of completion events
-  m_target = target;
   synchronized {
+    // Acquire the driver controller
+    m_dev = dev;
+    // Set up receiver of completion events
+    m_target = target;
     // Enable internal pullup
     bit_mask_set(PORT, _BV(Board::SDA) | _BV(Board::SCL));
     // Set clock prescale and bit rate
@@ -49,19 +48,19 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
     TWBR = m_freq;
     TWCR = IDLE_CMD;
   }
-  return (true);
 }
 
-bool 
+void
 TWI::end()
 {
   // Check if an asynchronious read/write was issued 
   if (m_target != NULL) await_completed();
   // Put into idle state
-  m_target = NULL;
-  m_dev = NULL;
-  TWCR = 0;
-  return (true);
+  synchronized {
+    m_target = NULL;
+    m_dev = NULL;
+    TWCR = 0;
+  }
 }
 
 bool
@@ -272,7 +271,7 @@ ISR(TWI_vect)
   }
 }
 
-bool 
+void
 TWI::Slave::begin()
 {
   twi.m_target = this;
@@ -283,7 +282,6 @@ TWI::Slave::begin()
     TWBR = ((F_CPU / TWI::DEFAULT_FREQ) - 16) / 2;
     TWCR = TWI::IDLE_CMD;
   }
-  return (true);
 }
 
 void 

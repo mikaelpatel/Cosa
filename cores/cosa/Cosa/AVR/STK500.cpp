@@ -98,10 +98,11 @@ STK500::response(const char* param, size_t count)
 }
 
 void 
-STK500::response_P(const char* param)
+STK500::response_P(str_P param)
 {
+  const char* p = (const char*) param;
   char c;
-  while ((c = pgm_read_byte(param++)) != 0) putchar(c);
+  while ((c = pgm_read_byte(p++)) != 0) putchar(c);
   putchar(OK);
 }
 

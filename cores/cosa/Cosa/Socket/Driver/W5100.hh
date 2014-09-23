@@ -612,6 +612,10 @@ public:
    * @return bool.
    */
   bool begin_P(const char* hostname, uint16_t timeout = 500);
+  bool begin_P(str_P hostname, uint16_t timeout = 500)
+  {
+    return (begin_P((const char*) hostname, timeout));
+  }
 
   /**
    * Initiate W5100 device driver with given network address and subnet

@@ -52,7 +52,7 @@ public:
   /** Default Two-Wire Interface clock: 100 KHz. */
   static const uint32_t DEFAULT_FREQ = 100000L;
 
-  /** Max Two-Wire Interface clock: 444.444 KHz. */
+  /** Max Two-Wire Interface clock: 444.444 KHz @ 16 MHz. */
   static const uint32_t MAX_FREQ = (F_CPU / (16 + 2*10));
 
   /**
@@ -65,11 +65,7 @@ public:
      * Construct TWI driver with given bus address.
      * @param[in] addr bus address (7-bit LSB).
      */
-   Driver(uint8_t addr) : 
-     Event::Handler(), 
-     m_addr(addr << 1)
-    {
-    }
+   Driver(uint8_t addr) : Event::Handler(), m_addr(addr << 1) {}
 
   protected:
     /** Device bus address. */
@@ -91,10 +87,7 @@ public:
      * Construct slave with given address.
      * @param[in] addr slave address.
      */
-    Slave(uint8_t addr) : 
-      Driver(addr) 
-    {
-    }
+    Slave(uint8_t addr) : Driver(addr) {}
 
     /**
      * Set read (result) buffer. Must be called before starting TWI.
@@ -111,11 +104,9 @@ public:
     void set_write_buf(void* buf, size_t size);
     
     /**
-     * Start TWI bus logic for the slave device. Returns true(1) if
-     * successful otherwise false(0). 
-     * @return true(1) if successful otherwise false(0).
+     * Start TWI bus logic for the slave device. 
      */
-    bool begin();
+    void begin();
 
     /**
      * @override TWI::Slave
@@ -174,19 +165,17 @@ public:
 
   /**
    * Start TWI logic for a device transaction block. Use given event
-   * handler for completion events. Returns true(1) if successful
-   * otherwise false(0).
+   * handler for completion events. 
    * @param[in] dev device.
    * @param[in] target receiver of events on requests (default NULL).
    * @return true(1) if successful otherwise false(0).
    */
-  bool begin(TWI::Driver* dev, Event::Handler* target = NULL);
+  void begin(TWI::Driver* dev, Event::Handler* target = NULL);
 
   /**
    * Stop usage of the TWI bus logic. 
-   * @return true(1) if successful otherwise false(0).
    */
-  bool end();
+  void end();
 
   /**
    * Issue a write data request to the current driver. Return

@@ -36,10 +36,7 @@ public:
   /** 
    * Construct large segment font (32x50) singleton.
    */
-  Segment32x50() : 
-    UTFTFont(32, 50, bitmap) 
-  {
-  }
+  Segment32x50() : UTFTFont(32, 50, bitmap) {}
 
   /**
    * @override Font

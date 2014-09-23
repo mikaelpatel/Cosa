@@ -103,7 +103,7 @@ public:
      * @param[in] status entry annotation string (in program memory).
      * @return zero if successful otherwise negative error code.
      */
-    int post(const char* entry, const char* status = NULL);
+    int post(const char* entry, str_P status = NULL);
 
   private:
     Client* m_client;
@@ -123,8 +123,7 @@ public:
     Entry() : 
       m_buf(), 
       m_cout(&m_buf) 
-    {
-    }
+    {}
 
     /**
      * Set field with given identity and value. The type of the
@@ -158,6 +157,7 @@ public:
      * @param[in] decimals scaling of value.
      */
     void set_field(uint8_t id, int16_t value, uint8_t decimals)
+      __attribute__((always_inline))
     {
       bool sign = (value < 0);
       if (sign) value = -value;
@@ -181,6 +181,7 @@ public:
      * @param[in] decimals scaling of value.
      */
     void set_field(uint8_t id, int32_t value, uint8_t decimals)
+      __attribute__((always_inline))
     {
       bool sign = (value < 0);
       if (sign) value = -value;
@@ -194,6 +195,7 @@ public:
      * @return command string.
      */
     operator const char*()
+      __attribute__((always_inline))
     {
       m_cout << ends;
       return ((const char*) m_buf);
@@ -204,6 +206,7 @@ public:
      * new command line.
      */
     void empty()
+      __attribute__((always_inline))
     {
       m_buf.empty();
     }
@@ -237,15 +240,25 @@ public:
        */
       Command(TalkBack* talkback, const char* string) :
 	m_talkback(talkback),
+	m_string((str_P) string)
+      {}
+
+      /**
+       * Construct a command within the given talkback command
+       * queue and with the given string.
+       * @param[in] talkback handler.
+       * @param[in] string for command.
+       */
+      Command(TalkBack* talkback, str_P string) :
+	m_talkback(talkback),
 	m_string(string)
-      {
-      }
+      {}
 
       /**
        * Return command string. It is stored in program memory.
        * @return string.
        */
-      const char* get_string() 
+      str_P get_string() const
       {
 	return (m_string);
       }
@@ -259,7 +272,7 @@ public:
       
     protected:
       TalkBack* m_talkback;
-      const char* m_string;
+      str_P m_string;
 
     private:
       Command* m_next;
@@ -279,6 +292,7 @@ public:
      * @param[in] command to add.
      */
     void add(Command* command)
+      __attribute__((always_inline))
     {
       command->m_next = m_first;
       m_first = command;
@@ -300,7 +314,7 @@ public:
      * @param[in] position in queue (first is one(1), last is zero(0)).
      * @return zero or negative error code.
      */
-    int add_command_P(const char* string, uint8_t position = 0); 
+    int add_command_P(str_P string, uint8_t position = 0); 
 
   private:
     /**

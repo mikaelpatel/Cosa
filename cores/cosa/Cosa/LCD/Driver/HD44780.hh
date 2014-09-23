@@ -115,8 +115,7 @@ public:
     m_cntl(CONTROL_SET),
     m_func(FUNCTION_SET | DATA_LENGTH_4BITS | NR_LINES_2 | FONT_5X8DOTS),
     m_offset((height == 4) && (width == 16) ? offset1 : offset0)
-  {
-  }
+  {}
   
   /**
    * @override LCD::Device
@@ -161,6 +160,7 @@ public:
    * Set display scrolling left.
    */
   void display_scroll_left() 
+    __attribute__((always_inline))
   { 
     write(SHIFT_SET | DISPLAY_MOVE | MOVE_LEFT); 
   }
@@ -169,6 +169,7 @@ public:
    * Set display scrolling right.
    */
   void display_scroll_right() 
+    __attribute__((always_inline))
   { 
     write(SHIFT_SET | DISPLAY_MOVE |  MOVE_RIGHT); 
   }
@@ -180,6 +181,14 @@ public:
   virtual void display_clear();
 
   /**
+   * Clear to end of line.
+   */
+  void line_clear()
+  {
+    while (m_x < WIDTH) putchar(' ');
+  }
+
+  /**
    * Move cursor to home position(0, 0) .
    */
   void cursor_home();
@@ -188,6 +197,7 @@ public:
    * Turn underline cursor on.
    */
   void cursor_underline_on() 
+    __attribute__((always_inline))
   { 
     set(m_cntl, CURSOR_ON); 
   }
@@ -196,6 +206,7 @@ public:
    * Turn underline cursor off.
    */
   void cursor_underline_off() 
+    __attribute__((always_inline))
   { 
     clear(m_cntl, CURSOR_ON); 
   }
@@ -204,6 +215,7 @@ public:
    * Turn cursor blink on.
    */
   void cursor_blink_on() 
+    __attribute__((always_inline))
   { 
     set(m_cntl, BLINK_ON); 
   }
@@ -212,6 +224,7 @@ public:
    * Turn cursor blink off.
    */
   void cursor_blink_off() 
+    __attribute__((always_inline))
   { 
     clear(m_cntl, BLINK_ON); 
   }
@@ -228,6 +241,7 @@ public:
    * Set text flow left-to-right.
    */
   void text_flow_left_to_right() 
+    __attribute__((always_inline))
   { 
     set(m_mode, INCREMENT); 
   }
@@ -236,6 +250,7 @@ public:
    * Set text flow right-to-left.
    */
   void text_flow_right_to_left() 
+    __attribute__((always_inline))
   { 
     clear(m_mode, INCREMENT); 
   }
@@ -244,6 +259,7 @@ public:
    * Set text scroll left adjust.
    */
   void text_scroll_left_adjust() 
+    __attribute__((always_inline))
   {
     set(m_mode, DISPLAY_SHIFT); 
   }
@@ -252,6 +268,7 @@ public:
    * Set text scroll right adjust.
    */
   void text_scroll_right_adjust() 
+    __attribute__((always_inline))
   { 
     clear(m_mode, DISPLAY_SHIFT); 
   }
@@ -356,8 +373,7 @@ public:
       m_rs(rs, 0),
       m_en(en, 0),
       m_bt(bt, 1)
-    {
-    }
+    {}
 
     /**
      * @override HD44780::IO
@@ -846,10 +862,7 @@ public:
      * I/O expander with given sub-address (A0..A2).
      * @param[in] subaddr sub-address (0..7, default 7).
      */
-    MJKDZ(uint8_t subaddr = 7) : 
-      PCF8574(subaddr), m_port() 
-    {
-    }
+    MJKDZ(uint8_t subaddr = 7) : PCF8574(subaddr), m_port() {}
     
     /**
      * @override HD44780::IO
@@ -950,10 +963,7 @@ public:
      * I/O expander with given sub-address (A0..A2). 
      * @param[in] subaddr sub-address (0..7, default 0).
      */
-    GYIICLCD(uint8_t subaddr = 0) : 
-      MJKDZ(subaddr) 
-    {
-    }
+    GYIICLCD(uint8_t subaddr = 0) : MJKDZ(subaddr) {}
   };
 
   /**
@@ -983,10 +993,7 @@ public:
      * I/O expander with given sub-address (A0..A2).
      * @param[in] subaddr sub-address (0..7, default 7).
      */
-    DFRobot(uint8_t subaddr = 7) : 
-      PCF8574(subaddr), m_port() 
-    {
-    }
+    DFRobot(uint8_t subaddr = 7) : PCF8574(subaddr), m_port() {}
     
     /**
      * @override HD44780::IO
@@ -1247,6 +1254,7 @@ public:
    * @param[in] data to write.
    */
   void write(uint8_t data) 
+    __attribute__((always_inline))
   {
     m_io->write8b(data); 
   }
@@ -1257,6 +1265,7 @@ public:
    * @param[in] mask function.
    */
   void set(uint8_t& cmd, uint8_t mask) 
+    __attribute__((always_inline))
   { 
     m_io->write8b(cmd |= mask); 
   }
@@ -1267,6 +1276,7 @@ public:
    * @param[in] mask function.
    */
   void clear(uint8_t& cmd, uint8_t mask) 
+    __attribute__((always_inline))
   { 
     m_io->write8b(cmd &= ~mask); 
   }
@@ -1275,6 +1285,7 @@ public:
    * Set communication in data stream mode.
    */
   void set_data_mode() 
+    __attribute__((always_inline))
   { 
     m_io->set_mode(1); 
   }
@@ -1283,6 +1294,7 @@ public:
    * Set communication in instruction stream mode.
    */
   void set_instruction_mode() 
+    __attribute__((always_inline))
   { 
     m_io->set_mode(0); 
   }

@@ -58,8 +58,7 @@ public:
   ProtocolBuffer(IOStream::Device* ins, IOStream::Device* outs) : 
     m_ins(ins),
     m_outs(outs)
-  {
-  }
+  {}
   
   /**
    * Read next byte from the input stream.

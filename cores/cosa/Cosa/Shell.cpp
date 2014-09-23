@@ -209,9 +209,9 @@ int
 Shell::help(IOStream& outs)
 {
   for (uint8_t i = 0; i < m_cmdc; i++) {
-    const char* help = (const char*) pgm_read_word(&m_cmdtab[i].help);
+    str_P help = (str_P) pgm_read_word(&m_cmdtab[i].help);
     if (help == NULL) continue;
-    const char* name = (const char*) pgm_read_word(&m_cmdtab[i].name);
+    str_P name = (str_P) pgm_read_word(&m_cmdtab[i].name);
     outs << name << ' ' << help << endl;
   }
   return (0);

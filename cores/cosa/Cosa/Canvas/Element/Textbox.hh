@@ -107,11 +107,10 @@ public:
   virtual int putchar(char c);
 
 protected:
-  /**
-   * Textbox port and line spacing. Character spacing is defined
-   * by the font setting.
-   */
+  /** Textbox port rectangle. */
   Canvas::rect8_t m_text_port;
+
+  /** Line spacing. Character spacing is defined by the font setting. */
   uint8_t m_line_spacing;
 };
 

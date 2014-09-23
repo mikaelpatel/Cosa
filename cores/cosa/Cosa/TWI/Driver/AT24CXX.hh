@@ -73,8 +73,7 @@ public:
     PAGE_MAX(page_max),
     WRITE_MAX(page_max),
     WRITE_MASK(page_max - 1)
-  {
-  }
+  {}
 
   /**
    * @override EEPROM::Device
@@ -148,10 +147,7 @@ public:
  */
 class AT24C64 : public AT24CXX {
 public:
-  AT24C64(uint8_t addr = 0) : 
-    AT24CXX(addr, 64, 32) 
-  {
-  }
+  AT24C64(uint8_t addr = 0) : AT24CXX(addr, 64, 32) {}
 };
 
 /**
@@ -164,10 +160,7 @@ public:
  */
 class AT24C128 : public AT24CXX {
 public:
-  AT24C128(uint8_t addr = 0) : 
-    AT24CXX(addr, 128, 64) 
-  {
-  }
+  AT24C128(uint8_t addr = 0) : AT24CXX(addr, 128, 64) {}
 };
 
 /**
@@ -180,10 +173,7 @@ public:
  */
 class AT24C256 : public AT24CXX {
 public:
-  AT24C256(uint8_t addr = 0) : 
-    AT24CXX(addr, 256, 64) 
-  {
-  }
+  AT24C256(uint8_t addr = 0) : AT24CXX(addr, 256, 64) {}
 };
 
 /**
@@ -196,9 +186,6 @@ public:
  */
 class AT24C512 : public AT24CXX {
 public:
-  AT24C512(uint8_t addr = 0) : 
-    AT24CXX(addr, 512, 128) 
-  {
-  }
+  AT24C512(uint8_t addr = 0) : AT24CXX(addr, 512, 128) {}
 };
 #endif

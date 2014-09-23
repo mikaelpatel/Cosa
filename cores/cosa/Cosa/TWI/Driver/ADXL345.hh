@@ -251,8 +251,7 @@ public:
    */
   ADXL345(bool use_alt_address = false) : 
     TWI::Driver(use_alt_address ? 0x53 : 0x1d) 
-  {
-  }
+  {}
 
   /**
    * Start interaction with device. Set full resolution and 16G.
@@ -285,6 +284,7 @@ public:
    * @param[in] z axis offset.
    */
   void calibrate(int8_t x, int8_t y, int8_t z)
+    __attribute__((always_inline))
   {
     offset_t ofs; 
     ofs.x = x;

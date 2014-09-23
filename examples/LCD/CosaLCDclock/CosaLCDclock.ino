@@ -32,7 +32,8 @@
 #include "Cosa/TWI/Driver/DS3231.hh"
 
 // Configurations
-// #define USE_LARGE_LCD
+#define USE_LARGE_LCD
+// #define USE_SENSORS
 // #define SET_RTC_TIME
 
 // Select the access port for the LCD
@@ -40,12 +41,12 @@
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
-// HD44780::MJKDZ port;
+HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
-HD44780::DFRobot port;
+// HD44780::DFRobot port;
 // HD44780::ERM1602_5 port;
 
-#if defined(USE_LARGE_LCD)
+#if defined(USE_SENSORS)
 #include "Cosa/TWI/Driver/ADXL345.hh"
 #include "Cosa/TWI/Driver/HMC5883L.hh"
 
@@ -54,8 +55,9 @@ ADXL345 accelerometer(1);
 
 // The 3-Axis Digital Compass
 HMC5883L compass;
+#endif
 
-// Use LCD with width=20 characters, height=4 lines
+#if defined(USE_LARGE_LCD)
 HD44780 lcd(&port, 20, 4);
 #else
 HD44780 lcd(&port);
@@ -85,7 +87,7 @@ void setup()
   rtc.set_time(now);
 #endif
 
-#if defined(USE_LARGE_LCD)
+#if defined(USE_SENSORS)
   // Start the accelerometer with the default settings
   accelerometer.begin();
 
@@ -101,6 +103,7 @@ void setup()
 
   // Give the sensors some time for startup
   sleep(1);
+  cout << clear;
 }
 
 void loop()
@@ -110,15 +113,17 @@ void loop()
   rtc.get_time(now);
   int16_t temp = rtc.get_temperature();
 
-  // Update the LCD with the reading
-  cout << clear;
-
   // First line with date and temperature. Use BCD format output
+  lcd.set_cursor(0, 0);
   cout << PSTR("20") << bcd << now.year << '-'
        << bcd << now.month << '-'
        << bcd << now.date << ' '
-       << (temp >> 2) << PSTR(" C");
-
+       << (temp >> 2)
+#if defined(USE_LARGE_LCD)
+       << '.' << (25 * (temp & 0x3))
+#endif
+       << PSTR(" C");
+  
   // Second line with time and battery status
   lcd.set_cursor(0, 1);
   cout << bcd << now.hours << ':'
@@ -126,7 +131,7 @@ void loop()
        << bcd << now.seconds << ' '
        << AnalogPin::bandgap(1100) << PSTR(" mV");
 
-#if defined(USE_LARGE_LCD)
+#if defined(USE_SENSORS)
   // Read the heading, scale to milli gauss and print the data
   compass.read_heading();
   compass.to_milli_gauss();
@@ -142,6 +147,10 @@ void loop()
   cout << acc.x << PSTR(", ") << acc.y << PSTR(", ") << acc.z << PSTR(" mg");
 #endif
 
-  // Take a nap
-  sleep(1);
+  // Delay until the next tick
+  clock_t start = now;
+  do {
+    delay(200);
+    rtc.get_time(now);
+  } while (start == now);
 }

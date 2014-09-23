@@ -36,10 +36,7 @@ public:
   /**
    * Construct fixed number font singleton.
    */
-  FixedNums8x16() : 
-    GLCDFont(8, 15, bitmap) 
-  {
-  }
+  FixedNums8x16() : GLCDFont(8, 15, bitmap) {}
 
   /**
    * @overriden Font

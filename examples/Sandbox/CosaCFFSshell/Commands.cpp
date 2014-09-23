@@ -238,18 +238,18 @@ static int write_action(int argc, char* argv[])
 }
 
 static const Shell::command_t command_tab[] __PROGMEM = {
-  { CAT_NAME, CAT_HELP, cat_action },
-  { CD_NAME, CD_HELP, cd_action },
-  { DATE_NAME, DATE_HELP, date_action },
-  { DU_NAME, DU_HELP, du_action },
-  { HELP_NAME, HELP_HELP, help_action },
-  { LS_NAME, LS_HELP, ls_action },
-  { MKDIR_NAME, MKDIR_HELP, mkdir_action },
-  { OD_NAME, OD_HELP, od_action },
-  { READ_NAME, READ_HELP, read_action },
-  { RM_NAME, RM_HELP, rm_action },
-  { STTY_NAME, STTY_HELP, stty_action },
-  { WRITE_NAME, WRITE_HELP, write_action }
+  { CAT_NAME, CAT_HELP, cat_action, Shell::GUEST },
+  { CD_NAME, CD_HELP, cd_action, Shell::GUEST },
+  { DATE_NAME, DATE_HELP, date_action, Shell::GUEST },
+  { DU_NAME, DU_HELP, du_action, Shell::GUEST },
+  { HELP_NAME, HELP_HELP, help_action, Shell::GUEST },
+  { LS_NAME, LS_HELP, ls_action, Shell::GUEST },
+  { MKDIR_NAME, MKDIR_HELP, mkdir_action, Shell::GUEST },
+  { OD_NAME, OD_HELP, od_action, Shell::GUEST },
+  { READ_NAME, READ_HELP, read_action, Shell::GUEST },
+  { RM_NAME, RM_HELP, rm_action, Shell::GUEST },
+  { STTY_NAME, STTY_HELP, stty_action, Shell::GUEST },
+  { WRITE_NAME, WRITE_HELP, write_action, Shell::GUEST }
 };
 
 Shell shell(membersof(command_tab), command_tab);

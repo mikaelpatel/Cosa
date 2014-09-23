@@ -93,6 +93,7 @@ public:
    * @return pointer to string in program memory.
    */
   static str_P get_name(item_P item)
+    __attribute__((always_inline))
   {
     return ((str_P) pgm_read_word(&item->name));
   }
@@ -103,6 +104,7 @@ public:
    * @return storage type.
    */
   static storage_t get_storage(item_P item)
+    __attribute__((always_inline))
   {
     return ((storage_t) (pgm_read_byte(&item->attr) & STORAGE_MASK));
   }
@@ -113,6 +115,7 @@ public:
    * @return bool.
    */
   static bool is_readonly(item_P item)
+    __attribute__((always_inline))
   {
     return ((pgm_read_byte(&item->attr) & READONLY) != 0);
   }
@@ -137,6 +140,7 @@ public:
    * @return pointer to item list in program memory.
    */
   static item_list_P to_list(item_P item)
+    __attribute__((always_inline))
   {
     return (get_type(item) == ITEM_LIST ? (item_list_P) item : NULL);
   }
@@ -147,6 +151,7 @@ public:
    * @return number of items.
    */
   static int get_length(item_list_P list)
+    __attribute__((always_inline))
   {
     if (get_type(&list->item) != ITEM_LIST) return (-1);
     return ((int) pgm_read_byte(&list->length));
@@ -169,13 +174,13 @@ public:
       m_vec((item_vec_P) pgm_read_word(&list->list)),
       m_length((uint8_t) pgm_read_byte(&list->length)),
       m_next(0)
-    {
-    }
+    {}
 
     /**
      * Return the next item in the item list otherwise NULL.
      */
     item_P next()
+      __attribute__((always_inline))
     {
       if (m_next == m_length) return (NULL);
       return ((item_P) pgm_read_word(&m_vec[m_next++]));
@@ -185,6 +190,7 @@ public:
      * Reset iterator to start position.
      */
     void reset()
+      __attribute__((always_inline))
     {
       m_next = 0;
     }
@@ -227,6 +233,7 @@ public:
    * @return pointer to action in program memory.
    */
   static action_P to_action(item_P item)
+    __attribute__((always_inline))
   {
     return (get_type(item) == ACTION ? (action_P) item : NULL);
   }
@@ -333,8 +340,7 @@ public:
   Registry(item_list_P root, EEPROM::Device* eeprom = NULL) : 
     m_root(root),
     m_eeprom(eeprom == NULL ? &EEPROM::Device::eeprom : eeprom)
-  {
-  }
+  {}
   
   /**
    * Lookup registry item for given path. Returns pointer to item if
@@ -398,8 +404,8 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
  * @param[in] name string for registry item.
  */
 #define REGISTRY_BEGIN(var,name)			\
-  const char var ## _name[] PROGMEM = name;		\
-  const Registry::item_P var ## _list[] PROGMEM = {  
+  const char var ## _name[] __PROGMEM = name;		\
+  const Registry::item_P var ## _list[] __PROGMEM = {  
 
 /**
  * Support macro to add a registry item to an item list in program
@@ -417,10 +423,10 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
  */
 #define REGISTRY_END(var)				\
   };							\
-  const Registry::item_list_t var PROGMEM = {		\
+  const Registry::item_list_t var __PROGMEM = {		\
     {							\
       Registry::ITEM_LIST,				\
-      var ## _name,					\
+      (str_P) var ## _name,				\
       Registry::IN_PROGMEM | Registry::READONLY		\
     },							\
     membersof(var ## _list),				\
@@ -433,11 +439,11 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
  * @param[in] name string of registry item.
  */
 #define REGISTRY_ACTION(var,name)			\
-  const char var ## _name[] PROGMEM = name;		\
-  const Registry::action_t var ## _action PROGMEM = {	\
+  const char var ## _name[] __PROGMEM = name;		\
+  const Registry::action_t var ## _action __PROGMEM = {	\
     {							\
       Registry::ACTION,					\
-      var ## _name,					\
+      (str_P) var ## _name,				\
       Registry::IN_SRAM | Registry::READONLY		\
     },							\
     &var						\
@@ -452,11 +458,11 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
  * @param[in] readonly access.
  */
 #define REGISTRY_BLOB(var,name,mem,readonly)		\
-  const char var ## _blob_name[] PROGMEM = name;	\
-  const Registry::blob_t var ## _blob PROGMEM = {	\
+  const char var ## _blob_name[] __PROGMEM = name;	\
+  const Registry::blob_t var ## _blob __PROGMEM = {	\
     {							\
       Registry::BLOB,					\
-      var ## _blob_name,				\
+      (str_P) var ## _blob_name,			\
       Registry::IN_ ## mem | (readonly << 7)		\
     },							\
     (void*) &var,					\
@@ -497,7 +503,7 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
  * @param[in] value string for variable.
  */
 #define REGISTRY_BLOB_PSTR(var,name,value)		\
-  static const char var[] PROGMEM = value;		\
+  static const char var[] __PROGMEM = value;		\
   REGISTRY_BLOB(var,name,PROGMEM,true)
 
 #endif

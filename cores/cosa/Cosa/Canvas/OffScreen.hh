@@ -39,10 +39,7 @@ public:
    * buffer may be given but must be able to hold the bitmap size.
    * If the buffer pointer is null a buffer is allocated.
    */
-  OffScreen() : 
-    Canvas(width, height) 
-  {
-  }
+  OffScreen() : Canvas(width, height) {}
 
   /**
    * Get bitmap for the off-screen canvas.

@@ -25,7 +25,8 @@
  * Return amount of free memory.
  * @return number of bytes.
  */
-int free_memory()
+int 
+free_memory()
 {
   extern int __heap_start, *__brkval; 
   int v; 

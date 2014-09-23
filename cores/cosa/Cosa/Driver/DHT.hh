@@ -48,8 +48,7 @@ public:
     m_ix(0),
     m_humidity(0),
     m_temperature(0)
-  {
-  }
+  {}
   
   /**
    * Start the DHT device driver with the given sampling period.

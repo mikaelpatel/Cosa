@@ -35,7 +35,7 @@
 class Echo : public FSM {
 
 private:
-  const char* m_name;
+  str_P m_name;
   uint16_t m_count;
   FSM* m_port;
 
@@ -52,7 +52,7 @@ public:
    * @param[in] name string in program memory.
    * @param[in] fsm state machine to receive the event.
    */
-  void bind(const char* name, FSM* fsm)
+  void bind(str_P name, FSM* fsm)
   {
     m_name = name;
     m_port = fsm;

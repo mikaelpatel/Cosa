@@ -17,9 +17,11 @@
 # @section Description
 # Arduino-Makefile configuration for Cosa. 
 
-# PLEASE CHANGE THE ARDUINO INSTALLATION PATH
+ifndef ARDUINO_DIR
 # ARDUINO_DIR = $(HOME)/opt/arduino-1.0.5
-ARDUINO_DIR = $(HOME)/opt/arduino-1.5.7
+# ARDUINO_DIR = $(HOME)/opt/arduino-1.0.6
+  ARDUINO_DIR = $(HOME)/opt/arduino-1.5.7
+endif
 
 ARDMK_DIR = $(COSA_DIR)/build/Arduino-Makefile
 ARDUINO_CORE_PATH = $(COSA_DIR)/cores/cosa

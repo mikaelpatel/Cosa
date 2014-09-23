@@ -47,6 +47,7 @@
  */
 
 #include "Cosa/Types.h"
+#include "Cosa/Math.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"

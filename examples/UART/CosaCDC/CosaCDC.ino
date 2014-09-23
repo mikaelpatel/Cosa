@@ -27,6 +27,10 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/CDC.hh"
 
+#if !defined(USBCON)
+#error CosaCDC: board not supported.
+#endif
+
 OutputPin ledPin(Board::LED);
 
 void setup()

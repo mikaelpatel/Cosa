@@ -74,8 +74,7 @@ public:
     m_start(0),
     B5(0),
     m_pressure(0)
-  {
-  }
+  {}
 
   /**
    * Initiate device driver. Load calibration coefficients from device.
@@ -129,6 +128,7 @@ public:
    * @return bool
    */
   bool sample_pressure()
+    __attribute__((always_inline))
   {
     return (sample_pressure_request() && read_pressure());
   }
@@ -139,6 +139,7 @@ public:
    * @return bool
    */
   bool sample()
+    __attribute__((always_inline))
   {
     return (sample_temperature() && sample_pressure());
   }
@@ -147,7 +148,8 @@ public:
    * Calculate temperature from the latest raw sensor reading.
    * @return calculated temperature in steps of 0.1 C
    */
-  int16_t get_temperature()
+  int16_t get_temperature() const
+    __attribute__((always_inline))
   {
     return ((B5 + 8) >> 4);
   }

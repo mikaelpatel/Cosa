@@ -30,6 +30,7 @@ Command::execute()
 void 
 CommandHandler::run()
 {
-  while (m_talkback->execute_next_command() == 0);
+  while (m_talkback->execute_next_command() == 0)
+    ;
 }
 

@@ -40,14 +40,6 @@ void setup()
   Watchdog::begin();
 }
 
-void loop()
-{
-  iter(0xfffffff0UL, 0xfffffff4UL, 1, 1);
-  iter(0xfffffff0UL, 0xfffffff0UL, 0, 1);
-  iter(0xfffffff0UL, 0xfffffff4UL, 1, 0);
-  ASSERT(true == false);
-}
-
 void iter(uint32_t t0, uint32_t t1, uint8_t i0, uint8_t i1)
 {
   for (int i = 0; i < 32; i++) {
@@ -80,3 +72,12 @@ void iter(uint32_t t0, uint32_t t1, uint8_t i0, uint8_t i1)
   }
   trace << endl;
 }
+
+void loop()
+{
+  iter(0xfffffff0UL, 0xfffffff4UL, 1, 1);
+  iter(0xfffffff0UL, 0xfffffff0UL, 0, 1);
+  iter(0xfffffff0UL, 0xfffffff4UL, 1, 0);
+  ASSERT(true == false);
+}
+

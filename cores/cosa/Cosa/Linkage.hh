@@ -42,8 +42,7 @@ public:
     Event::Handler(),
     m_succ(this),
     m_pred(this)
-  {
-  }
+  {}
   
   /**
    * Return successor in sequence.
@@ -71,11 +70,13 @@ public:
   void attach(Linkage* pred)
   {
     synchronized {
+
       // Check if it needs to be detached first
       if (pred->m_succ != pred) {
 	pred->m_succ->m_pred = pred->m_pred;
 	pred->m_pred->m_succ = pred->m_succ;
       }
+
       // Attach pred as the new predecessor
       pred->m_succ = this;
       pred->m_pred = this->m_pred;
@@ -98,6 +99,7 @@ protected:
   {
     // Check that the detach is necessary
     if (m_succ == this) return;
+
     // Unlink and initiate to self reference
     synchronized {
       m_succ->m_pred = m_pred;
@@ -113,10 +115,7 @@ public:
   /**
    * Construct a link.
    */
-  Link() : 
-    Linkage() 
-  {
-  }
+  Link() : Linkage() {}
 
   /**
    * Detach this link. Unlink from any list.
@@ -133,10 +132,7 @@ public:
   /**
    * Construct a double linked list queue head.
    */
-  Head() : 
-    Linkage() 
-  {
-  }
+  Head() : Linkage() {}
   
   /**
    * Return number of elements in double linked list.
@@ -148,7 +144,7 @@ public:
    * Return true(1) if the queue is empty otherwise false(0).
    * @return bool.
    */
-  bool is_empty()
+  bool is_empty() const
   {
     return (m_succ == this);
   }

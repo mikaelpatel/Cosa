@@ -58,7 +58,7 @@ MQTT::Client::write_P(const void* buf, size_t count)
 }
 
 int 
-MQTT::Client::puts_P(const char* s)
+MQTT::Client::puts_P(str_P s)
 {
   uint16_t length = strlen_P(s);
   int res = length + sizeof(length);
@@ -75,7 +75,7 @@ MQTT::Client::read(void* buf, size_t count, uint32_t ms)
   int res;
   while (((res = m_sock->available()) == 0) &&
 	 ((ms == 0L) || (Watchdog::millis() - start < ms)))
-    delay(16);
+    yield();
   if (res == 0) return (-2);
   return (m_sock->read(buf, count));
 }
@@ -116,7 +116,7 @@ MQTT::Client::connect(const char* hostname,
   // Connect to the server. Check for timeout
   int res = m_sock->connect(hostname, PORT);
   if (res != 0) return (-1);
-  while ((res = m_sock->isconnected()) == 0) delay(16);
+  while ((res = m_sock->isconnected()) == 0) yield();
   if (res == 0) res = -2;
   if (res < 0) return (res);
 
@@ -148,23 +148,23 @@ MQTT::Client::connect(const char* hostname,
   write_P(PROTOCOL, sizeof(PROTOCOL));
   write(&flag, sizeof(flag));
   write(&keep_alive, sizeof(keep_alive));
-  puts_P(identifier);
+  puts_P((str_P) identifier);
 
   // Write variable parameters
   va_start(args, flag);
   if (flag & WILL_FLAG) {
-    const char* topic = va_arg(args, const char*);
-    const char* will = va_arg(args, const char*);
+    str_P topic = va_arg(args, str_P);
+    str_P will = va_arg(args, str_P);
     qos = va_arg(args, uint16_t);
     puts_P(topic);
     puts_P(will);
   }
   if (flag & USER_NAME_FLAG) {
-    const char* user = va_arg(args, const char*);
+    str_P user = va_arg(args, str_P);
     puts_P(user);
   }
   if (flag & PASSWORD_FLAG) {
-    const char* password = va_arg(args, const char*);
+    str_P password = va_arg(args, str_P);
     puts_P(password);
   }
   va_end(args);
@@ -194,7 +194,7 @@ MQTT::Client::disconnect()
 }
 
 int 
-MQTT::Client::publish(const char* topic, const void* buf, size_t count,
+MQTT::Client::publish(str_P topic, const void* buf, size_t count,
 		      QoS_t qos, bool retain,
 		      bool progmem)
 
@@ -257,7 +257,7 @@ MQTT::Client::publish(const char* topic, const void* buf, size_t count,
 }
 
 int
-MQTT::Client::subscribe(const char* topic, QoS_t qos)
+MQTT::Client::subscribe(str_P topic, QoS_t qos)
 {
   // Calculate length of variable payload; id, topic, qos
   size_t length = sizeof(uint16_t);
@@ -288,7 +288,7 @@ MQTT::Client::subscribe(const char* topic, QoS_t qos)
 }
 
 int 
-MQTT::Client::unsubscribe(const char* topic)
+MQTT::Client::unsubscribe(str_P topic)
 {
   // Calculate length of variable payload
   size_t length = sizeof(uint16_t);

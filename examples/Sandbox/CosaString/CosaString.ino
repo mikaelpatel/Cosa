@@ -23,10 +23,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/String.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/String.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
 void setup()
@@ -34,7 +34,20 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaString: started"));
   Watchdog::begin();
+
+  TRACE(free_memory());
+  String s;
+  float f = 20.50;
+  TRACE(free_memory());
+  s = "outdoors = ";
+  TRACE(free_memory());
+  s += f;
+  s += PSTR(" C");
+  s += trace.EOL();
+  TRACE(free_memory());
+  trace << s;
 }
+
 
 void loop()
 {
@@ -44,11 +57,13 @@ void loop()
   String s = "Nisse badar";
   trace << s << endl;
 
-  s += F(" i svartvitt");
+  s += PSTR(" i svartvitt");
   trace << s << endl;
 
-  s += F(" till ");
+  s += PSTR(" till ");
   s += count++;
+
+  TRACE(free_memory());
   trace << s << endl;
 
   sleep(2);

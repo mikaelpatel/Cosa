@@ -75,9 +75,9 @@ public:
   /** Chip select mode. */
   enum Pulse {
     ACTIVE_LOW = 0,	   	//!< Active low logic during transaction.
-    ACTIVE_HIGH = 1,	   	//!< Active high logic.
+    ACTIVE_HIGH = 1,	   	//!< Active high logic during transaction.
     PULSE_LOW = 2, 	   	//!< Pulse low on end of transaction.
-    PULSE_HIGH = 3,	   	//!< Pulse high.
+    PULSE_HIGH = 3,	   	//!< Pulse high on end of transaction.
     DEFAULT_PULSE = ACTIVE_LOW	//!< Default is low logic.
   } __attribute__((packed));
 
@@ -107,12 +107,6 @@ public:
 	   Interrupt::Handler* irq = NULL);
 
     /**
-     * Set SPI master clock rate.
-     * @param[in] clock rate.
-     */
-    void set_clock(Clock rate);
-
-    /**
      * Calculate SPI clock rate (scale factor) for given frequency.
      * @param[in] freq device max frequency (in Hz).
      * @return clock rate.
@@ -129,6 +123,22 @@ public:
       return (SPI::DIV128_CLOCK);
     }
 
+    /**
+     * Set SPI master clock rate.
+     * @param[in] clock rate.
+     */
+    void set_clock(Clock rate);
+
+    /**
+     * Set SPI master clock frequency.
+     * @param[in] freq device max frequency (in Hz).
+     */
+    void set_clock(uint32_t freq)
+      __attribute__((always_inline))
+    {
+      set_clock(clock(freq));
+    }
+    
   protected:
     Driver* m_next;		//!< List of drivers.
     Interrupt::Handler* m_irq;	//!< Interrupt handler.
@@ -145,7 +155,6 @@ public:
     friend class SPI;
   };
 
-public:
   /**
    * Construct serial peripheral interface for master.
    */
@@ -164,21 +173,62 @@ public:
   bool attach(Driver* dev);
   
   /**
-   * Start of SPI master interaction block. Initiate SPI hardware 
-   * registers, disable SPI interrupt sources and assert chip select
-   * pin. Return true(1) if successful otherwise false(0) if the
-   * hardware was currently in used.
+   * Acquire the SPI device driver. Initiate SPI hardware registers
+   * and disable SPI interrupt sources. The function will yield until
+   * the device driver has been acquired. Interrupts from SPI devices
+   * are disabled until the device driver is released. Used in the
+   * below format for a device driver:
+   * @code
+   * spi.acquire(this)
+   *   spi.begin();
+   *     res = spi.transfer(data);
+   *   spi.end();
+   * spi.release();
+   * @endcode
+   * Each transfer that requires chip select should be enclosed in
+   * a block with begin() and end(). There may be several transfer
+   * blocks in a transaction. The transaction is terminated with
+   * release(). 
    * @param[in] dev device driver context.
-   * @return true(1) if successful otherwise false(0)
    */
-  bool begin(Driver* dev);
+  void acquire(Driver* dev);
   
   /**
-   * End of SPI master interaction block. Deselect device and 
-   * enable SPI interrupt sources.
-   * @return true(1) if successful otherwise false(0)
+   * Release the SPI device driver. Enable SPI interrupt sources. 
    */
-  bool end();
+  void release();
+
+  /**
+   * Mark the beginning of a transfer block. Select the device by
+   * asserting the chip select pin according to the pulse pattern. 
+   * Used in the format: 
+   * @code
+   * spi.acquire(this)
+   *   spi.begin();
+   *     res = spi.transfer(data);
+   *   spi.end();
+   * spi.release();
+   * @endcode
+   * The transfer block should be terminated with end(). Typically 
+   * the transfer block is a command (read/write) with a possible 
+   * parameter block. 
+   */
+  void begin()
+    __attribute__((always_inline))
+  {
+    if (m_dev->m_pulse < PULSE_LOW) m_dev->m_cs.toggle();
+  }
+  
+  /**
+   * Mark the end of a transfer block. Deselect the device chip
+   * according to the pulse pattern.
+   */
+  void end()
+    __attribute__((always_inline))
+  { 
+    m_dev->m_cs.toggle();
+    if (m_dev->m_pulse > ACTIVE_HIGH) m_dev->m_cs.toggle();
+  }
 
 #if defined(USIDR)
   /**
@@ -188,6 +238,7 @@ public:
    * @return value received.
    */
   uint8_t transfer(uint8_t data)
+    __attribute__((always_inline))
   {
     USIDR = data;
     USISR = _BV(USIOIF);
@@ -290,7 +341,7 @@ public:
 
   /**
    * Exchange package with slave. Received data from slave is stored
-   * in given buffer. Should only be used within a SPI transaction;
+   * in given buffer. Should only be used within a SPI transfer;
    * begin()-end() block.  
    * @param[in] buf with data to transfer (send/receive).
    * @param[in] count size of buffer.
@@ -300,7 +351,7 @@ public:
   /**
    * Exchange package with slave. Received data from slave is stored
    * in given destination buffer. Should only be used within a SPI
-   * transaction; begin()-end() block.  
+   * transfer; begin()-end() block.  
    * @param[in] dst destination buffer for received data.
    * @param[in] src source buffer with data to send.
    * @param[in] count size of buffers.
@@ -309,7 +360,7 @@ public:
 
   /**
    * Read package from the device slave. Should only be used within a
-   * SPI transaction; begin()-end() block.  
+   * SPI transfer; begin()-end() block.  
    * @param[in] buf buffer for read data.
    * @param[in] count number of bytes to read.
    */
@@ -317,7 +368,7 @@ public:
 
   /**
    * Write package to the device slave. Should only be used within a
-   * SPI transaction; begin()-end() block.  
+   * SPI transfer; begin()-end() block.  
    * @param[in] buf buffer with data to write.
    * @param[in] count number of bytes to write.
    */
@@ -325,7 +376,7 @@ public:
 
   /**
    * Write package to the device slave. Should only be used within a
-   * SPI transaction; begin()-end() block.  
+   * SPI transfer; begin()-end() block.  
    * @param[in] buf buffer with data to write.
    * @param[in] count number of bytes to write.
    */
@@ -333,10 +384,15 @@ public:
 
   /**
    * Write null terminated io buffer vector to the device slave. 
-   * Should only be used  within a SPI transaction; begin()-end() block.  
+   * Should only be used  within a SPI transfer; begin()-end() block.  
    * @param[in] vec null terminated io buffer vector pointer.
    */
-  void write(const iovec_t* vec);
+  void write(const iovec_t* vec)
+    __attribute__((always_inline))
+  {
+    for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
+      write(vp->buf, vp->size);
+  }
 
   /**
    * SPI slave device support. Allows Arduino/AVR to act as a hardware
@@ -419,6 +475,7 @@ public:
 private:
   Driver* m_list;		//!< List of attached device drivers.
   Driver* m_dev;		//!< Current device driver.
+  volatile bool m_busy;		//!< Current device state.
 };
 
 /**

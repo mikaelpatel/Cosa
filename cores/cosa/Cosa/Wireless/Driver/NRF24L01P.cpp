@@ -45,54 +45,66 @@ NRF24L01P::NRF24L01P(uint16_t net, uint8_t dev,
 uint8_t 
 NRF24L01P::read(Command cmd)
 {
-  spi.begin(this);
-  m_status = spi.transfer(cmd);
-  uint8_t res = spi.transfer(0);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      m_status = spi.transfer(cmd);
+      uint8_t res = spi.transfer(0);
+    spi.end();
+  spi.release();
   return (res);
 }
 
 void 
 NRF24L01P::read(Command cmd, void* buf, size_t size)
 {
-  spi.begin(this);
-  m_status = spi.transfer(cmd);
-  spi.read(buf, size);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      m_status = spi.transfer(cmd);
+      spi.read(buf, size);
+    spi.end();
+  spi.release();
 }
 
 void 
 NRF24L01P::write(Command cmd)
 {
-  spi.begin(this);
-  m_status = spi.transfer(cmd);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      m_status = spi.transfer(cmd);
+    spi.end();
+  spi.release();
 }
 
 void 
 NRF24L01P::write(Command cmd, uint8_t data)
 {
-  spi.begin(this);
-  m_status = spi.transfer(cmd);
-  spi.transfer(data);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      m_status = spi.transfer(cmd);
+      spi.transfer(data);
+    spi.end();
+  spi.release();
 }
 
 void 
 NRF24L01P::write(Command cmd, const void* buf, size_t size)
 {
-  spi.begin(this);
-  m_status = spi.transfer(cmd);
-  spi.write(buf, size);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      m_status = spi.transfer(cmd);
+      spi.write(buf, size);
+    spi.end();
+  spi.release();
 }
 
 NRF24L01P::status_t
 NRF24L01P::read_status()
 {
-  spi.begin(this);
-  m_status = spi.transfer(NOP);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      m_status = spi.transfer(NOP);
+    spi.end();
+  spi.release();
   return (m_status);
 }
 
@@ -205,13 +217,17 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 
   // Write source address and payload to the transmit fifo
   // Fix: Allow larger payload(30*3) with fragmentation
-  spi.begin(this);
-  uint8_t command = ((dest != BROADCAST) ? W_TX_PAYLOAD : W_TX_PAYLOAD_NO_ACK);
-  m_status = spi.transfer(command);
-  spi.transfer(m_addr.device);
-  spi.transfer(port);
-  spi.write(vec);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      uint8_t command = ((dest != BROADCAST) 
+			 ? W_TX_PAYLOAD 
+			 : W_TX_PAYLOAD_NO_ACK);
+      m_status = spi.transfer(command);
+      spi.transfer(m_addr.device);
+      spi.transfer(port);
+      spi.write(vec);
+    spi.end();
+  spi.release();
   m_trans += 1;
 
   // Check for auto-acknowledge pipe(0), and address setup and enable
@@ -294,12 +310,14 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
   }
 
   // Read the source address, port and payload
-  spi.begin(this);
-  m_status = spi.transfer(R_RX_PAYLOAD);
-  src = spi.transfer(0);
-  port = spi.transfer(0);
-  spi.read(buf, count);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      m_status = spi.transfer(R_RX_PAYLOAD);
+      src = spi.transfer(0);
+      port = spi.transfer(0);
+      spi.read(buf, count);
+    spi.end();
+  spi.release();
   return (count);
 }
 

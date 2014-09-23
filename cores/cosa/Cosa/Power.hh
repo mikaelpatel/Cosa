@@ -36,6 +36,7 @@ public:
    * @return previous mode.
    */
   static uint8_t set(uint8_t mode) 
+    __attribute__((always_inline))
   { 
     uint8_t res = s_mode;
     s_mode = mode; 

@@ -84,16 +84,20 @@ void setup()
 
 void loop()
 {
-  // Read clock and calender; low and high level
+  // Read ream
   trace << PSTR("RAM:") << endl;
   uint8_t buf[DS1302::RAM_MAX];
   rtc.read_ram(buf, sizeof(buf));
   trace.print(0L, buf, sizeof(buf), IOStream::hex);
+  trace.get_device()->flush();
+
+  // Read clock and calender; low and high level
   time_t now;
   rtc.get_time(now);
   trace << PSTR("RTC: ") << now << endl;
+  trace.get_device()->flush();
 
-  // Update ram
+  // Update ram; increment 
   for (uint8_t i = 0; i < sizeof(buf); i++) buf[i]++;
   rtc.write_ram(buf, sizeof(buf));
 

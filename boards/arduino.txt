@@ -131,7 +131,7 @@ mega1280.build.core=cosa
 mega2560.name=Cosa Arduino Mega (ATmega2560/STK500v2)
 mega2560.upload.tool=avrdude
 mega2560.upload.protocol=wiring
-mega2560.upload.maximum_size=258048
+mega2560.upload.maximum_size=253952
 mega2560.upload.maximum_data_size=8192
 mega2560.upload.speed=115200
 

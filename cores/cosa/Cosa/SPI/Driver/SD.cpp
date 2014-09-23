@@ -44,7 +44,7 @@ crc7(const void* buf, size_t size)
 }
 
 #if defined(USE_CRCTAB)
-static const uint16_t crctab[] PROGMEM = {
+static const uint16_t crctab[] __PROGMEM = {
   0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
   0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
   0x1231, 0x0210, 0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6,
@@ -102,7 +102,8 @@ SD::send(CMD command, uint32_t arg)
   request.crc = crc7(&request, sizeof(request) - 1);
 
   // Issue the command; wait while busy
-  while (spi.transfer(0xff) != 0xff);
+  while (spi.transfer(0xff) != 0xff)
+    ;
   spi.transfer(&request, sizeof(request));
   if (command == STOP_TRANSMISSION) spi.transfer(0xff);
 
@@ -187,35 +188,37 @@ SD::read(CMD command, uint32_t arg, void* buf, size_t count)
   uint8_t data;
 
   // Issue read command and receive data into buffer
-  spi.begin(this);
-  if (send(command, arg)) goto error;
-  if (!await(READ_TIMEOUT, DATA_START_BLOCK)) goto error;
+  spi.acquire(this);
+    spi.begin();
+      if (send(command, arg)) goto error;
+      if (!await(READ_TIMEOUT, DATA_START_BLOCK)) goto error;
 
 #if defined(USE_SPI_PREFETCH)
-  spi.transfer_start(0xff);
-  while (--count) {
-    data = spi.transfer_next(0xff);
-    *dst++ = data;
-    crc = _crc_xmodem_update(crc, data);
-  }
-  data = spi.transfer_await();
-  *dst = data;
-  crc = _crc_xmodem_update(crc, data);
+      spi.transfer_start(0xff);
+      while (--count) {
+	data = spi.transfer_next(0xff);
+	*dst++ = data;
+	crc = _crc_xmodem_update(crc, data);
+      }
+      data = spi.transfer_await();
+      *dst = data;
+      crc = _crc_xmodem_update(crc, data);
 #else
-  do {
-    uint8_t data = spi.transfer(0xff); 
-    *dst++ = data;
-    crc = _crc_xmodem_update(crc, data);
-  } while (--count);
+      do {
+	uint8_t data = spi.transfer(0xff); 
+	*dst++ = data;
+	crc = _crc_xmodem_update(crc, data);
+      } while (--count);
 #endif
 
-  // Receive the check sum and check
-  crc = _crc_xmodem_update(crc, spi.transfer(0xff));
-  crc = _crc_xmodem_update(crc, spi.transfer(0xff));
-  res = (crc == 0);
+      // Receive the check sum and check
+      crc = _crc_xmodem_update(crc, spi.transfer(0xff));
+      crc = _crc_xmodem_update(crc, spi.transfer(0xff));
+      res = (crc == 0);
 
  error:
-  spi.end();
+    spi.end();
+  spi.release();
   return (res);
 }
 
@@ -229,6 +232,7 @@ SD::begin(SPI::Clock rate)
   /* Start with unknown card type */
   m_type = TYPE_UNKNOWN;
   
+<<<<<<< HEAD
   /* Card needs 74 cycles minimum to start up */
   if (!spi.begin(this)) goto error;
   for (uint8_t i = 0; i < INIT_PULSES; i++) spi.transfer(0xff);
@@ -265,13 +269,52 @@ SD::begin(SPI::Clock rate)
     uint32_t ocr = receive();
     if ((ocr & 0xC0000000L) == 0xC0000000L) m_type = TYPE_SDHC;
   }
+=======
+  spi.acquire(this);
+    spi.begin();
+    // Card needs 74 cycles minimum to start up
+      for (uint8_t i = 0; i < INIT_PULSES; i++) spi.transfer(0xff);
+
+      // Reset card
+      if (!send(INIT_TIMEOUT, GO_IDLE_STATE)) goto error;
+
+      // Enable CRC
+      status = send(CRC_ON_OFF, true);
+      if (status.is_error()) goto error;
   
-  // Set the request clock rate
-  set_clock(rate);
-  res = true;
+      // Check for version of SD card specification; 2.7-3.6V and check pattern
+      m_type = TYPE_SD1;
+      arg = (0x100 | CHECK_PATTERN);
+      status = send(SEND_IF_COND, arg);
+      if (status.in_idle_state) {
+	R7 r7 = receive();
+	if (r7.check_pattern != CHECK_PATTERN) goto error;
+	m_type = TYPE_SD2;
+      } 
+
+      // Tell the device that the host supports SDHC
+      arg = (m_type == TYPE_SD1) ? 0L : 0X40000000L;
+      for (uint8_t i = 0; i < INIT_RETRY; i++) {
+	if (!send(INIT_TIMEOUT, SD_SEND_OP_COND, arg)) goto error;
+	if (m_response == 0) break;
+      }
+
+      // Read OCR register and check type
+      if (m_type == TYPE_SD2) {
+	status = send(READ_OCR);
+	if (status.is_error()) goto error;
+	uint32_t ocr = receive();
+	if ((ocr & 0xC0000000L) == 0xC0000000L) m_type = TYPE_SDHC;
+      }
+>>>>>>> 2c296a773d2d073e30c3138130f809a9617291b4
+  
+      // Set the request clock rate
+      set_clock(rate);
+      res = true;
   
  error:
-  spi.end();
+    spi.end();
+  spi.release();
   return (res);
 }
 
@@ -293,15 +336,16 @@ SD::erase(uint32_t start, uint32_t end)
   }
 
   // Send commands for block erase
-  spi.begin(this);
-  if (send(ERASE_WR_BLK_START, start)) goto error;
-  if (send(ERASE_WR_BLK_END, end)) goto error;
-  if (send(ERASE)) goto error;
-  if (!await(ERASE_TIMEOUT)) goto error;
-  res = true;
-  
+  spi.acquire(this);
+    spi.begin();
+      if (send(ERASE_WR_BLK_START, start)) goto error;
+      if (send(ERASE_WR_BLK_END, end)) goto error;
+      if (send(ERASE)) goto error;
+      if (!await(ERASE_TIMEOUT)) goto error;
+      res = true;
  error:
-  spi.end();
+    spi.end();
+  spi.release();
   return (res);
 }
 
@@ -318,44 +362,46 @@ SD::write(uint32_t block, const uint8_t* src)
   if (m_type != TYPE_SDHC) block <<= 9;
 
   // Issue write block command, transfer block, calculate check sum
-  spi.begin(this);
-  if (send(WRITE_BLOCK, block)) goto error;
-  spi.transfer(DATA_START_BLOCK);
+  spi.acquire(this);
+    spi.begin();
+      if (send(WRITE_BLOCK, block)) goto error;
+      spi.transfer(DATA_START_BLOCK);
 
 #if defined(USE_SPI_PREFETCH)
-  data = *src++;
-  spi.transfer_start(data);
-  while (--count) {
-    crc = _crc_xmodem_update(crc, data);
-    data = *src++;
-    spi.transfer_await();
-    spi.transfer_start(data);
-  }
-  crc = _crc_xmodem_update(crc, data);
-  spi.transfer_await();
+      data = *src++;
+      spi.transfer_start(data);
+      while (--count) {
+	crc = _crc_xmodem_update(crc, data);
+	data = *src++;
+	spi.transfer_await();
+	spi.transfer_start(data);
+      }
+      crc = _crc_xmodem_update(crc, data);
+      spi.transfer_await();
 #else
-  do {
-    data = *src++;
-    spi.transfer(data);
-    crc = _crc_xmodem_update(crc, data);
-  } while (--count);
+      do {
+	data = *src++;
+	spi.transfer(data);
+	crc = _crc_xmodem_update(crc, data);
+      } while (--count);
 #endif
 
-  // Transfer the check sum and receive data response token and check status
-  spi.transfer(crc >> 8);
-  spi.transfer(crc);
-  status = spi.transfer(0xff);
-  if ((status & DATA_RES_MASK) != DATA_RES_ACCEPTED) goto error;
+      // Transfer the check sum and receive data response token and check status
+      spi.transfer(crc >> 8);
+      spi.transfer(crc);
+      status = spi.transfer(0xff);
+      if ((status & DATA_RES_MASK) != DATA_RES_ACCEPTED) goto error;
 
-  // Wait for the write operation to complete and check status
-  if (!await(WRITE_TIMEOUT)) goto error;
-  status = send(SEND_STATUS);
-  if (status != 0) goto error;
-  status = spi.transfer(0xff);
-  res = (status == 0);
+      // Wait for the write operation to complete and check status
+      if (!await(WRITE_TIMEOUT)) goto error;
+      status = send(SEND_STATUS);
+      if (status != 0) goto error;
+      status = spi.transfer(0xff);
+      res = (status == 0);
 
  error:
-  spi.end();
+    spi.end();
+  spi.release();
   return (res);
 }
 

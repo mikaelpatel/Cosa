@@ -74,7 +74,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
   UNUSED(method);
   UNUSED(path);
   int res = -1;
-  page << header;
+  page << (str_P) header;
   if (query != NULL) {
     char c;
     for (char* qp = query; (c = *qp) != 0; qp++)
@@ -82,7 +82,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
     res = shell.execute(query);
   }
   if (res != 0) page << PSTR("illegal query") << endl;
-  page << footer;
+  page << (str_P) footer;
 }
 
 // Network configuration

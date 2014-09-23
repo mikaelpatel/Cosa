@@ -60,7 +60,7 @@ rand(uint16_t low, uint16_t high)
 inline uint32_t 
 random(uint32_t range)
 {
-  if (range == 0) return 0;
+  if (range == 0) return (0);
   return (random() % range);
 }
 
@@ -124,6 +124,21 @@ template<class T>
 T constrain(T x, T low, T high) 
 {
   return (x < low ? low : (x > high ? high : x));
+}
+
+/**
+ * Template within range check function for given 
+ * class/data type.
+ * @param[in] T class value check range.
+ * @param[in] x value to check.
+ * @param[in] low minimum range value.
+ * @param[in] high maximum range value.
+ * @return bool
+ */
+template<class T>
+bool is_within(T x, T low, T high) 
+{
+  return (!(x < low || x > high));
 }
 
 #endif

@@ -295,6 +295,7 @@ public:
      * @param[in] nr house number.
      */
     void set_house(uint32_t nr)
+      __attribute__((always_inline))
     {
       m_house = nr;
     }

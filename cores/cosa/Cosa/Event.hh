@@ -116,8 +116,7 @@ public:
     m_type(type),
     m_target(target),
     m_value(value)
-  {
-  }
+  {}
 
   /**
    * Return event type.
@@ -159,6 +158,7 @@ public:
    * Dispatch event handler for target object.
    */
   void dispatch()
+    __attribute__((always_inline))
   {
     if (m_target != NULL) m_target->on_event(m_type, m_value);
   }
@@ -172,6 +172,7 @@ public:
    * @return bool.
    */
   static bool push(uint8_t type, Handler* target, uint16_t value = 0)
+    __attribute__((always_inline))
   {
     Event event(type, target, value);
     return (queue.enqueue(&event));
@@ -186,6 +187,7 @@ public:
    * @return bool.
    */
   static bool push(uint8_t type, Handler* target, void* env)
+    __attribute__((always_inline))
   {
     return (push(type, target, (uint16_t) env));
   }

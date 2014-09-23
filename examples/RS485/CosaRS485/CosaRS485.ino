@@ -193,7 +193,7 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
     uint32_t start = RTC::millis();
     do {
       if ((ms != 0) && (RTC::since(start) > ms)) return (-2);
-      Power::sleep(m_mode);
+      Power::sleep();
     } while (!available());
   }
   // Read message from the input buffer (count, dest, payload, crc)

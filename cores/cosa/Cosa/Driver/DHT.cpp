@@ -86,13 +86,14 @@ DHT::on_event(uint8_t type, uint16_t value)
 {
   UNUSED(type);
   UNUSED(value);
+
   switch (m_state) {
 
   case IDLE: 
     // Issue a request; pull down for more than 18 ms
     m_state = REQUEST;
     set_mode(OUTPUT_MODE);
-    clear();
+    IOPin::clear();
     Watchdog::attach(this, 32);
     break;
 
@@ -154,8 +155,8 @@ DHT::sample_request()
   // Issue a request; pull down for more than 18 ms
   if (m_period != 0) return (true);
   set_mode(OUTPUT_MODE);
-  set();
-  clear();
+  IOPin::set();
+  IOPin::clear();
   Watchdog::delay(32);
 
   // Request pulse completed; pull up for 40 us and collect

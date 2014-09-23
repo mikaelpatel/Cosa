@@ -78,7 +78,9 @@ void setup()
 void loop()
 {
   static const uint32_t TIMEOUT = 1000L;
+#if defined(TRACE)
   static uint16_t nr = 1;
+#endif
   signal_t msg;
   int count;
 
@@ -95,7 +97,8 @@ void loop()
 	<< PSTR(",nr=") << msg.param[1] 
 	<< endl;
 #else
-  while ((count = rs485.recv(&msg, sizeof(msg), TIMEOUT)) != sizeof(msg));
+  while ((count = rs485.recv(&msg, sizeof(msg), TIMEOUT)) != sizeof(msg))
+    ;
 #endif
   
   // Decode function code and dispatch

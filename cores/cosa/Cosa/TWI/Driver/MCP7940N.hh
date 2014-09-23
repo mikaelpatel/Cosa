@@ -210,14 +210,12 @@ public:
   MCP7940N(Board::ExternalInterruptPin pin = Board::EXT1) : 
     TWI::Driver(0x6f),
     m_alarm_irq(pin)
-  {
-  }
+  {}
 #else
   MCP7940N(Board::ExternalInterruptPin pin = Board::EXT0) : 
     TWI::Driver(0x6f),
     m_alarm_irq(pin)
-  {
-  }
+  {}
 #endif
 
   /**

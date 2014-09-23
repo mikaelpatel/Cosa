@@ -49,7 +49,7 @@ OutputPin heater(Board::D6, 1);
 OutputPin fan(Board::D5, 1);
 #endif
 
-const char* 
+str_P
 PSTATE(uint8_t state)
 {
   return (state ? PSTR(" on") : PSTR(" off"));

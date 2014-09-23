@@ -29,11 +29,14 @@ Alarm::tick()
 {
   Alarm* alarm;
   s_ticks += 1;
+
+  // Check for alarms that should be run
   while ((alarm = (Alarm*) s_queue.get_succ()) != (Alarm*) &s_queue) {
     int32_t diff = alarm->m_when - s_ticks;
     if (diff > 0) break;
     alarm->detach();
     alarm->run();
+    // Check if the alarm should be rescheduled (periodic)
     if (alarm->m_period != 0) {
       alarm->m_when += alarm->m_period;
       alarm->enable();
@@ -44,6 +47,7 @@ Alarm::tick()
 void
 Alarm::enable()
 {
+  // Enqueue the alarm in the schedule queue
   Alarm* alarm = (Alarm*) s_queue.get_succ(); 
   while (alarm != (Alarm*) &s_queue) {
     int32_t diff = m_when - alarm->m_when;
@@ -56,6 +60,7 @@ Alarm::enable()
 void
 Alarm::Scheduler::run()
 {
+  // Check if it is time to run the alarm update
   int32_t diff = RTC::seconds() - Alarm::s_ticks;
   if (diff <= 0) return;
   Alarm::tick();

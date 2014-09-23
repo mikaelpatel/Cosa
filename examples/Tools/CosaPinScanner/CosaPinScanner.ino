@@ -25,6 +25,16 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
 
+void print(IOStream& outs, uint8_t value)
+{
+  uint8_t bit = 0x80;
+  while (bit) {
+    outs << ((value & bit) != 0);
+    bit >>= 1;
+  }
+  outs << ' ';
+}
+
 void setup()
 {
   uart.begin(9600);
@@ -178,16 +188,6 @@ void setup()
   print(trace, PORTL);
 #endif
   trace << endl;
-}
-
-void print(IOStream& outs, uint8_t value)
-{
-  uint8_t bit = 0x80;
-  while (bit) {
-    outs << ((value & bit) != 0);
-    bit >>= 1;
-  }
-  outs << ' ';
 }
 
 void loop()

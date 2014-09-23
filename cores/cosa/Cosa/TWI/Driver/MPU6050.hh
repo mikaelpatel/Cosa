@@ -57,10 +57,7 @@ public:
    * sub-address. Default is zero(0).
    * @param[in] subaddr sub-address (0..1, default 0)
    */
-  MPU6050(uint8_t subaddr = 0) : 
-    TWI::Driver(0x68 | (subaddr != 0)) 
-  {
-  }
+  MPU6050(uint8_t subaddr = 0) : TWI::Driver(0x68 | (subaddr != 0)) {}
 
   /**
    * Start interaction with device. Turn on measurements. 

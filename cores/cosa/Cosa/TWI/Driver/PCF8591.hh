@@ -73,8 +73,7 @@ public:
   PCF8591(uint8_t addr = 0) : 
     TWI::Driver(0x48 | (addr & 0x7)),
     m_cntl(0) 
-  {
-  }
+  {}
 
   /**
    * Begin a sampling sequence for the channel given by the control
@@ -98,6 +97,7 @@ public:
    * @return sample
    */
   uint8_t sample()
+    __attribute__((always_inline))
   {
     uint8_t res;
     twi.read(&res, 1);
@@ -110,6 +110,7 @@ public:
    * @return sample
    */
   uint8_t sample(uint8_t cntl)
+    __attribute__((always_inline))
   {
     begin(cntl);
     uint8_t res = sample();
@@ -125,6 +126,7 @@ public:
    * @return count or negative error code.
    */
   int sample(uint8_t* buf, uint8_t size)
+    __attribute__((always_inline))
   {
     return (twi.read(buf, size));
   }

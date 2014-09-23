@@ -36,7 +36,7 @@ HMC5883L::begin()
 {
   // Read the device identity register
   uint8_t id[3];
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   twi.write((uint8_t) IDENTITY);
   twi.read(id, sizeof(id));
   twi.end();
@@ -52,7 +52,7 @@ HMC5883L::begin()
 bool
 HMC5883L::write_config()
 {
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   int count = twi.write((uint8_t) CONFIG, &m_config, sizeof(m_config));
   twi.end();
   return (count == (sizeof(m_config) + 1));
@@ -61,7 +61,7 @@ HMC5883L::write_config()
 bool
 HMC5883L::set_mode(Mode mode)
 {
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   int count = twi.write((uint8_t) MODE, &mode, sizeof(mode));
   twi.end();
   return (count == (sizeof(mode) + 1));
@@ -70,7 +70,7 @@ HMC5883L::set_mode(Mode mode)
 bool 
 HMC5883L::read_status(status_t& status)
 {
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   twi.write((uint8_t) STATUS);
   int count = twi.read(&status, sizeof(status));
   twi.end();
@@ -81,7 +81,7 @@ bool
 HMC5883L::read_heading()
 {
   // Read output data from the device
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   twi.write((uint8_t) OUTPUT);
   int count = twi.read(&m_output, sizeof(m_output));
   twi.end();

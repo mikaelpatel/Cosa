@@ -74,8 +74,7 @@ public:
     Link(),
     MODE(mode),
     m_state(is_set())
-  {
-  }
+  {}
 
   /**
    * Start the button handler.

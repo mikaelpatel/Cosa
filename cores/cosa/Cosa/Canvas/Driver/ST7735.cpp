@@ -96,20 +96,22 @@ ST7735::begin()
   const uint8_t* bp = script;
   uint8_t count;
   uint8_t cmd;
-  spi.begin(this);
-  while ((cmd = pgm_read_byte(bp++)) != SCRIPTEND) {
-    count = pgm_read_byte(bp++);
-    if (cmd == SWDELAY) {
-      DELAY(count);
-    } 
-    else {
-      asserted(m_dc) {
-	spi.transfer(cmd);
+  spi.acquire(this);
+    spi.begin();
+      while ((cmd = pgm_read_byte(bp++)) != SCRIPTEND) {
+	count = pgm_read_byte(bp++);
+	if (cmd == SWDELAY) {
+	  DELAY(count);
+	} 
+	else {
+	  asserted(m_dc) {
+	    spi.transfer(cmd);
+	  }
+	  while (count--) spi.transfer(pgm_read_byte(bp++));
+	}
       }
-      while (count--) spi.transfer(pgm_read_byte(bp++));
-    }
-  }
-  spi.end();
+    spi.end();
+  spi.release();
   m_initiated = 1;
   return (true);
 }
@@ -131,9 +133,11 @@ ST7735::set_orientation(uint8_t direction)
     WIDTH  = SCREEN_WIDTH;
     HEIGHT = SCREEN_HEIGHT;
   }
-  spi.begin(this);
-  write(MADCTL, setting);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      write(MADCTL, setting);
+    spi.end();
+  spi.release();
   return (previous);
 }
 
@@ -141,12 +145,14 @@ void
 ST7735::draw_pixel(uint8_t x, uint8_t y)
 {
   color16_t color = get_pen_color();
-  spi.begin(this);
-  write(CASET, x, x + 1); 
-  write(RASET, y, y + 1);
-  write(RAMWR);
-  write(color.rgb);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      write(CASET, x, x + 1); 
+      write(RASET, y, y + 1);
+      write(RAMWR);
+      write(color.rgb);
+    spi.end();
+  spi.release();
 }
 
 void 
@@ -161,12 +167,14 @@ ST7735::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
   }
   if (y + length >= HEIGHT) length = HEIGHT - y;
   color16_t color = get_pen_color();
-  spi.begin(this);
-  write(CASET, x, x);
-  write(RASET, y, y + length);
-  write(RAMWR);
-  do write(color.rgb); while (--length);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      write(CASET, x, x);
+      write(RASET, y, y + length);
+      write(RAMWR);
+      do write(color.rgb); while (--length);
+    spi.end();
+  spi.release();
 }
 
 void 
@@ -181,12 +189,14 @@ ST7735::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
   }
   if (x + length >= WIDTH) length = WIDTH - x;
   color16_t color = get_pen_color();
-  spi.begin(this);
-  write(CASET, x, x + length); 
-  write(RASET, y, y);
-  write(RAMWR);
-  do write(color.rgb); while (--length);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      write(CASET, x, x + length); 
+      write(RASET, y, y);
+      write(RAMWR);
+      do write(color.rgb); while (--length);
+    spi.end();
+  spi.release();
 }
 
 void 
@@ -195,14 +205,16 @@ ST7735::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
   if (x + width >= WIDTH) width = WIDTH - x;
   if (y + height >= HEIGHT) height = HEIGHT - y;
   color16_t color = get_pen_color();
-  spi.begin(this);
-  write(CASET, x, x + width - 1);
-  write(RASET, y, y + height - 1);
-  write(RAMWR);
-  for (x = 0; x < width; x++) 
-    for (y = 0; y < height; y++) 
-      write(color.rgb);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      write(CASET, x, x + width - 1);
+      write(RASET, y, y + height - 1);
+      write(RAMWR);
+      for (x = 0; x < width; x++) 
+	for (y = 0; y < height; y++) 
+	  write(color.rgb);
+    spi.end();
+  spi.release();
 }
 
 bool

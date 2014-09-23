@@ -85,8 +85,7 @@ void setup()
 
 void loop()
 {
-  // Wait a second
-  sleep(1);
+  // Heartbeat
   ledPin.toggle();
 
   // Read the time from the rtc device and print
@@ -98,4 +97,11 @@ void loop()
 
   // Heartbeat
   ledPin.toggle();
+
+  // Delay until the next tick
+  clock_t start = now;
+  do {
+    delay(200);
+    rtc.get_time(now);
+  } while (start == now);
 }

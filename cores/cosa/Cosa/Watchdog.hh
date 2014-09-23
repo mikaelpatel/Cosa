@@ -52,7 +52,7 @@ public:
    * Get number of watchdog cycles.
    * @return number of ticks.
    */
-  static uint32_t ticks() 
+  static uint32_t ticks()
   { 
     return (s_ticks); 
   }

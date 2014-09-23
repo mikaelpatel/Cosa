@@ -93,10 +93,7 @@ public:
   /** 
    * Construct DS1307 device driver with bus address(0x68).
    */
-  DS1307() : 
-    TWI::Driver(0x68) 
-  {
-  }
+  DS1307() : TWI::Driver(0x68) {}
 
   /**
    * Read ram block with the given size into the buffer from the position.

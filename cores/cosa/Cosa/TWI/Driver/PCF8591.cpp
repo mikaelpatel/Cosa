@@ -24,7 +24,7 @@ bool
 PCF8591::begin(uint8_t cntl)
 {
   m_cntl = cntl;
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   twi.write(m_cntl);
   sample();
   return (true);
@@ -33,7 +33,7 @@ PCF8591::begin(uint8_t cntl)
 bool
 PCF8591::convert(uint8_t value)
 {
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   int count = twi.write(m_cntl, &value, 1);
   twi.end();
   return (count == (sizeof(m_cntl) + sizeof(value)));

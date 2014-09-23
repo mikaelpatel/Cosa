@@ -39,8 +39,7 @@ public:
   LED(Board::DigitalPin pin = Board::LED) :
     Link(),
     m_pin(pin)
-  {
-  }
+  {}
 
   /**
    * Turn LED on.

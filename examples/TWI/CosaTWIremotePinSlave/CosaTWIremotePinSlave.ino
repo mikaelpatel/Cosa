@@ -59,15 +59,15 @@ private:
 public:
   RemotePinSlave() : TWI::Slave(ADDR) {}
   virtual void on_request(void* buf, size_t size);
-  bool begin();
+  void begin();
 };
 
-bool 
+void
 RemotePinSlave::begin() 
 { 
   set_write_buf(m_buf, sizeof(m_buf));
   set_read_buf(m_buf, sizeof(m_buf));
-  return (twi.begin(this)); 
+  twi.begin(this); 
 }
 
 void

@@ -88,11 +88,9 @@ public:
     void set_write_buf(void* buf, size_t size);
 
     /**
-     * Start the slave device. Returns true(1) if successful otherwise
-     * false(0). 
-     * @return true(1) if successful otherwise false(0).
+     * Start the slave device. 
      */
-    bool begin();
+    void begin();
 
     /**
      * @override TWI::Slave
@@ -130,23 +128,17 @@ public:
 
   /**
    * Start TWI logic for a device transaction block. Use given event
-   * handler for completion events. Returns true(1) if successful
-   * otherwise false(0). 
+   * handler for completion events. 
    * @param[in] dev device.
    * @param[in] target receiver of events on requests (default NULL).
-   * @return true(1) if successful otherwise false(0).
    */
-  bool begin(TWI::Driver* dev, Event::Handler* target = NULL);
+  void begin(TWI::Driver* dev, Event::Handler* target = NULL);
 
   /**
    * Stop usage of the TWI bus logic. 
    * @return true(1) if successful otherwise false(0).
    */
-  bool end()
-  {
-    m_dev = NULL;
-    return (true);
-  }
+  void end();
 
   /**
    * Write data to the current driver. Returns number of bytes written

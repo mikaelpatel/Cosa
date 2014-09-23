@@ -65,6 +65,9 @@ public:
   Command(ThingSpeak::TalkBack* talkback, const char* string) : 
     ThingSpeak::TalkBack::Command(talkback, string)
   {}
+  Command(ThingSpeak::TalkBack* talkback, str_P string) : 
+    ThingSpeak::TalkBack::Command(talkback, string)
+  {}
   virtual void execute();
 };
 
@@ -154,6 +157,7 @@ void setup()
 
 void loop()
 {
-  while (talkback.execute_next_command() == 0);
+  while (talkback.execute_next_command() == 0)
+    ;
   sleep(15);
 }

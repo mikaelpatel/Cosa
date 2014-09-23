@@ -225,6 +225,7 @@ protected:
    * @param[in] data to write.
    */
   void write(uint16_t data)
+    __attribute__((always_inline))
   {
     spi.transfer(data >> 8);
     spi.transfer(data);
@@ -235,6 +236,7 @@ protected:
    * @param[in] cmd command to write.
    */
   void write(Command cmd)
+    __attribute__((always_inline))
   {
     asserted(m_dc) {
       spi.transfer(cmd);
@@ -247,6 +249,7 @@ protected:
    * @param[in] data to write.
    */
   void write(Command cmd, uint8_t data)
+    __attribute__((always_inline))
   {
     asserted(m_dc) {
       spi.transfer(cmd);
@@ -260,6 +263,7 @@ protected:
    * @param[in] data to write.
    */
   void write(Command cmd, uint16_t data)
+    __attribute__((always_inline))
   {
     asserted(m_dc) {
       spi.transfer(cmd);
@@ -274,14 +278,15 @@ protected:
    * @param[in] x data to write.
    * @param[in] y data to write.
    */
-  void write(Command cmd, uint16_t x, uint16_t y)
+  void write(Command cmd, uint8_t x, uint8_t y)
+    __attribute__((always_inline))
   {
     asserted(m_dc) {
       spi.transfer(cmd);
     }
-    spi.transfer(x >> 8);
+    spi.transfer(0);
     spi.transfer(x);
-    spi.transfer(y >> 8);
+    spi.transfer(0);
     spi.transfer(y);
   }
 };

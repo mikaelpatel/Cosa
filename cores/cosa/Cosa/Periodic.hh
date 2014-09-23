@@ -44,11 +44,7 @@ public:
    * Construct a periodic function handler. 
    * @param[in] ms period of timeout.
    */
-  Periodic(uint16_t ms) : 
-    Link(), 
-    m_period(ms)
-  {
-  }
+  Periodic(uint16_t ms) : Link(), m_period(ms) {}
 
   /**
    * Set timeout period.

@@ -78,7 +78,7 @@ ThingSpeak::Channel::Channel(Client* client, const char* key) :
 }
 
 int 
-ThingSpeak::Channel::post(const char* entry, const char* status)
+ThingSpeak::Channel::post(const char* entry, str_P status)
 {
   // Use an iostream for the http post request
   Socket* sock = m_client->m_sock;
@@ -207,7 +207,7 @@ ThingSpeak::TalkBack::execute_next_command()
 }
 
 int 
-ThingSpeak::TalkBack::add_command_P(const char* string, uint8_t position)
+ThingSpeak::TalkBack::add_command_P(str_P string, uint8_t position)
 {
   // Use an iostream for the http post request
   Socket* sock = m_client->m_sock;

@@ -94,8 +94,7 @@ public:
     m_sfr(Board::SFR(pin)), 
     m_mask(MASK(pin)),
     m_pin(pin) 
-  {
-  }
+  {}
 
   /**
    * Return Arduino pin number of abstract pin.

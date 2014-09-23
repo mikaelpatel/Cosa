@@ -135,16 +135,14 @@ public:
    * Construct data streaming for given device.
    * @param[in] dev output device.
    */
-  Ciao(IOStream::Device* dev = NULL) : 
-    m_dev(dev) 
-  {
-  }
+  Ciao(IOStream::Device* dev = NULL) : m_dev(dev) {}
 
   /**
    * Set io-stream device.
    * @param[in] dev stream device.
    */
   void set(IOStream::Device* dev) 
+    __attribute__((always_inline))
   { 
     if (dev == NULL) return;
     m_dev = dev;
@@ -165,7 +163,7 @@ public:
    * Write given string from program memory to data stream.
    * @param[in] s program memory string to write
    */
-  void write_P(const char* s);
+  void write_P(str_P s);
 
   /**
    * Write given unsigned 8-bit integer to data stream.

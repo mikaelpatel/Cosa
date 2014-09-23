@@ -55,8 +55,7 @@ public:
   CDC(IOStream::Device* ibuf) : 
     IOStream::Device(),
     m_ibuf(ibuf)
-  {
-  }
+  {}
 
   /**
    * @override IOStream::Device
@@ -146,6 +145,7 @@ protected:
    */
   void accept();
 
+  /** Interrupt Service Routine */
   friend void USB_GEN_vect(void);
 };
 

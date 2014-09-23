@@ -35,11 +35,7 @@ public:
    * Use begin() to set the trace device. The Trace class is actually 
    * a singleton, trace, as the trace macro set depends on the variable.
    */
-  Trace() : 
-    IOStream(),
-    EXITCHARACTER(0x1d)
-  {
-  }
+  Trace() : IOStream(), EXITCHARACTER(0x1d) {}
 
   /**
    * Start trace stream over given iostream device.
@@ -47,13 +43,14 @@ public:
    * @param[in] banner trace begin message.
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(IOStream::Device* dev, const char* banner = NULL);
+  bool begin(IOStream::Device* dev, str_P banner = NULL);
 
   /**
    * Stop trace stream over current device.
    * @return true(1) if successful otherwise false(0)
    */
   bool end()
+    __attribute__((always_inline))
   {
     set_device(NULL);
     return (true);
@@ -76,7 +73,7 @@ public:
    * @param[in] line number.
    * @param[in] expr program memory string with expression.
    */
-  void fatal_P(const char* file, int line, const char* expr) 
+  void fatal_P(const char* file, int line, str_P expr) 
     __attribute__((noreturn));
   
 protected:
@@ -140,12 +137,23 @@ extern uint8_t trace_log_mask;
  * is used as a string and evaluated.
  * @param[in] expr expression.
  */
+# if defined(TRACE_NO_VERBOSE) || defined(BOARD_ATTINY)
+#   define TRACE(expr)							\
+    do {								\
+      trace.print_P(__PSTR(#expr " = "));				\
+      trace.print(expr);						\
+      trace.println();							\
+    } while (0)
+# else
 # define TRACE(expr)							\
-  do {									\
-    trace.print_P(__PSTR(#expr " = "));					\
-    trace.print(expr);							\
-    trace.println();							\
-  } while (0)
+    do {								\
+      trace.printf_P(__PSTR("%d:%s:" #expr " = "),			\
+		     __LINE__,						\
+		     __PRETTY_FUNCTION__);				\
+      trace.print(expr);						\
+      trace.println();							\
+    } while (0)
+# endif
 
 /**
  * Support macro for trace of a log message with line number and

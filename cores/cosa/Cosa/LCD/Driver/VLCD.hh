@@ -49,8 +49,7 @@ public:
     MINOR(0),
     WIDTH(0),
     HEIGHT(0)
-  {
-  }
+  {}
   
   /**
    * @override LCD::Device

@@ -27,14 +27,16 @@ S25FL127S::begin()
   if (!is_ready()) return (false);
 
   // Read identification
-  spi.begin(this);
-  spi.transfer(READ_ID);
-  spi.transfer(0);
-  spi.transfer(0);
-  spi.transfer(0);
-  uint8_t manufacturer = spi.transfer(0);
-  uint8_t device = spi.transfer(0);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      spi.transfer(READ_ID);
+      spi.transfer(0);
+      spi.transfer(0);
+      spi.transfer(0);
+      uint8_t manufacturer = spi.transfer(0);
+      uint8_t device = spi.transfer(0);
+    spi.end();
+  spi.release();
 
   // And check
   return (manufacturer == MANUFACTURER && device == DEVICE);
@@ -44,10 +46,12 @@ bool
 S25FL127S::is_ready()
 {
   // Read Status Register 1
-  spi.begin(this);
-  spi.transfer(RDSR1);
-  m_status = spi.transfer(0);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      spi.transfer(RDSR1);
+      m_status = spi.transfer(0);
+    spi.end();
+  spi.release();
 
   // Return Write-In-Progress is off
   return (!m_status.WIP);
@@ -58,13 +62,15 @@ S25FL127S::read(void* dest, uint32_t src, size_t size)
 {
   // Use READ with 24-bit address; Big-endian
   uint8_t* sp = (uint8_t*) &src;
-  spi.begin(this);
-  spi.transfer(READ);
-  spi.transfer(sp[2]);
-  spi.transfer(sp[1]);
-  spi.transfer(sp[0]);
-  spi.read(dest, size);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      spi.transfer(READ);
+      spi.transfer(sp[2]);
+      spi.transfer(sp[1]);
+      spi.transfer(sp[0]);
+      spi.read(dest, size);
+    spi.end();
+  spi.release();
 
   // Return number of bytes read
   return ((int) size);
@@ -73,20 +79,21 @@ S25FL127S::read(void* dest, uint32_t src, size_t size)
 int 
 S25FL127S::erase(uint32_t dest)
 {
-  // Write enable before page erase.
-  spi.begin(this);
-  spi.transfer(WREN);
-  spi.end();
-
-  // Use erase(P4E/SER) with 24-bit address; Big-endian
-  uint8_t* dp = (uint8_t*) &dest;
-  uint8_t op = ((dp[2] == 0) ? P4E : SER);
-  spi.begin(this);
-  spi.transfer(op);
-  spi.transfer(dp[2]);
-  spi.transfer(dp[1]);
-  spi.transfer(dp[0]);
-  spi.end();
+  spi.acquire(this);
+    // Write enable before page erase.
+    spi.begin();
+      spi.transfer(WREN);
+    spi.end();
+    // Use erase(P4E/SER) with 24-bit address; Big-endian
+    uint8_t* dp = (uint8_t*) &dest;
+    uint8_t op = ((dp[2] == 0) ? P4E : SER);
+    spi.begin();
+      spi.transfer(op);
+      spi.transfer(dp[2]);
+      spi.transfer(dp[1]);
+      spi.transfer(dp[0]);
+    spi.end();
+  spi.release();
 
   // Wait for completion
   // Fix: Allow async erase
@@ -112,20 +119,21 @@ S25FL127S::write(uint32_t dest, const void* src, size_t size)
   if (count > size) count = size;
 
   while (1) {
-    // Write enable before program
-    spi.begin(this);
-    spi.transfer(WREN);
-    spi.end();
-
-    // Use PP with 24-bit address; Big-endian
-    spi.begin(this);
-    spi.transfer(PP);
-    spi.transfer(dp[2]);
-    spi.transfer(dp[1]);
-    spi.transfer(dp[0]);
-    spi.write(sp, count);
-    spi.end();
-
+    spi.acquire(this);
+      // Write enable before program
+      spi.begin();
+        spi.transfer(WREN);
+      spi.end();
+      // Use PP with 24-bit address; Big-endian
+      spi.begin();
+        spi.transfer(PP);
+	spi.transfer(dp[2]);
+	spi.transfer(dp[1]);
+	spi.transfer(dp[0]);
+	spi.write(sp, count);
+      spi.end();
+    spi.release();
+    
     // Wait for completion
     while (!is_ready()) yield();
 
@@ -160,19 +168,20 @@ S25FL127S::write_P(uint32_t dest, const void* src, size_t size)
   if (count > size) count = size;
 
   while (1) {
-    // Write enable before program
-    spi.begin(this);
-    spi.transfer(WREN);
-    spi.end();
-
-    // Use PP with 24-bit address; Big-endian
-    spi.begin(this);
-    spi.transfer(PP);
-    spi.transfer(dp[2]);
-    spi.transfer(dp[1]);
-    spi.transfer(dp[0]);
-    spi.write_P(sp, count);
-    spi.end();
+    spi.acquire(this);
+      // Write enable before program
+      spi.begin();
+        spi.transfer(WREN);
+      spi.end();
+      // Use PP with 24-bit address; Big-endian
+      spi.begin();
+        spi.transfer(PP);
+	spi.transfer(dp[2]);
+	spi.transfer(dp[1]);
+	spi.transfer(dp[0]);
+	spi.write_P(sp, count);
+      spi.end();
+    spi.release();
 
     // Wait for completion
     while (!is_ready()) yield();
@@ -195,9 +204,11 @@ S25FL127S::write_P(uint32_t dest, const void* src, size_t size)
 uint8_t 
 S25FL127S::issue(Command cmd)
 {
-  spi.begin(this);
-  spi.transfer(cmd);
-  uint8_t res = spi.transfer(0);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      spi.transfer(cmd);
+      uint8_t res = spi.transfer(0);
+    spi.end();
+  spi.release();
   return (res);
 }

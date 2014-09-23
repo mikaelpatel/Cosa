@@ -188,15 +188,16 @@ RFM69::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   if (m_avail) return (-2);
 
   // Write frame header(length, dest, src, port) and payload
-  spi.begin(this);
-  spi.transfer(REG_WRITE | FIFO);
-  spi.transfer(len + HEADER_MAX);
-  spi.transfer(dest);
-  spi.transfer(m_addr.device);
-  spi.transfer(port);
-  for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
-    spi.write(vp->buf, vp->size);
-  spi.end();
+  spi.acquire(this);
+    spi.begin();
+      spi.transfer(REG_WRITE | FIFO);
+      spi.transfer(len + HEADER_MAX);
+      spi.transfer(dest);
+      spi.transfer(m_addr.device);
+      spi.transfer(port);
+      spi.write(vec);
+    spi.end();
+  spi.release();
 
   // Trigger the transmit and await completion. Set standby mode
   m_done = false;
@@ -232,21 +233,23 @@ RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   m_avail = false;
 
   // Read the payload size and check size
-  spi.begin(this);
-  spi.transfer(REG_READ | FIFO);
-  uint8_t size = spi.transfer(0);
-  size = size - HEADER_MAX;
-  if (size > len) {
+  spi.acquire(this);
+    spi.begin();
+      spi.transfer(REG_READ | FIFO);
+      uint8_t size = spi.transfer(0);
+      size = size - HEADER_MAX;
+      if (size > len) {
+	spi.end();
+	spi.release();
+	return (-1);
+      } 
+      // Read the frame (dest, src, payload)
+      m_dest = spi.transfer(0);
+      src = spi.transfer(0);
+      port = spi.transfer(0);
+      spi.read(buf, size);
     spi.end();
-    return (-1);
-  } 
-
-  // Read the frame (dest, src, payload)
-  m_dest = spi.transfer(0);
-  src = spi.transfer(0);
-  port = spi.transfer(0);
-  spi.read(buf, size);
-  spi.end();
+  spi.release();
 
   return (size);
 }

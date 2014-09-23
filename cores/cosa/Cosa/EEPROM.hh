@@ -81,10 +81,7 @@ public:
    * is the internal EEPROM memory. 
    * @param[in] dev device.
    */
-  EEPROM(Device* dev = &Device::eeprom) : 
-    m_dev(dev) 
-  {
-  }
+  EEPROM(Device* dev = &Device::eeprom) : m_dev(dev) {}
 
   /**
    * Return true(1) if the device is ready, write cycle is completed,

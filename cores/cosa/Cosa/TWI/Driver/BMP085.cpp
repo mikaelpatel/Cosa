@@ -37,7 +37,7 @@ BMP085::begin(Mode mode)
   m_mode = mode;
   
   // Read coefficients from the device
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   twi.write(COEFF_REG);
   twi.read(&m_param, sizeof(m_param));
   twi.end();
@@ -55,7 +55,7 @@ BMP085::sample_temperature_request()
   
   // Start a temperature measurement and wait
   m_cmd = TEMP_CONV_CMD;
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   twi.write(CMD_REG, &m_cmd, sizeof(m_cmd));
   twi.end();
 
@@ -77,7 +77,7 @@ BMP085::read_temperature()
 
   // Read the raw temperature sensor data
   int16_t UT;
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   twi.write(RES_REG);
   twi.read(&UT, sizeof(UT));
   twi.end();
@@ -99,7 +99,7 @@ BMP085::sample_pressure_request()
   if (m_cmd != 0) return (false);
   
   // Start a pressure measurement
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   m_cmd = PRESSURE_CONV_CMD + (m_mode << 6);
   twi.write(CMD_REG, &m_cmd, sizeof(m_cmd));
   twi.end();
@@ -124,7 +124,7 @@ BMP085::read_pressure()
   // Read the raw pressure sensor data
   univ32_t res;
   res.as_uint8[0] = 0;
-  if (!twi.begin(this)) return (false);
+  twi.begin(this);
   twi.write(RES_REG);
   twi.read(&res.as_uint8[1], 3);
   twi.end();

@@ -871,7 +871,7 @@ public:
    * Draw string from program memory with current text color and font.
    * @param[in] s string in program memory (PSTR).
    */
-  virtual void draw_string_P(const char* s);
+  virtual void draw_string_P(str_P s);
 
   /**
    * @override Canvas

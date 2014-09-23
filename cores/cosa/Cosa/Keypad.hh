@@ -43,13 +43,13 @@ public:
   Keypad(Board::AnalogPin pin, const uint16_t* map) :
     Link(),
     m_key(pin, this, map)
-  {
-  }
+  {}
 
   /**
    * Start the keypad handler.
    */
   void begin()
+    __attribute__((always_inline))
   {
     Watchdog::attach(this, SAMPLE_MS);
   }
@@ -58,6 +58,7 @@ public:
    * Stop the keypad handler.
    */
   void end()
+    __attribute__((always_inline))
   {
     detach();
   }
@@ -89,18 +90,6 @@ protected:
    * to key code. 
    */
   class Key : public AnalogPin {
-  private:
-    Keypad* m_keypad;
-    const uint16_t* m_map;
-    uint8_t m_latest;
-
-    /**
-     * @override AnalogPin
-     * Callback member function when the analog pin value changes.
-     * @param[in] value new reading.
-     */
-    virtual void on_change(uint16_t value);
-
   public:
     /**
      * Construct sampler of analog pin with given zero terminated map.
@@ -113,8 +102,19 @@ protected:
       m_keypad(keypad),
       m_map(map),
       m_latest(0)
-    {
-    }
+    {}
+
+  private:
+    Keypad* m_keypad;
+    const uint16_t* m_map;
+    uint8_t m_latest;
+
+    /**
+     * @override AnalogPin
+     * Callback member function when the analog pin value changes.
+     * @param[in] value new reading.
+     */
+    virtual void on_change(uint16_t value);
   };
 
   /** Keypad sample rate. */
@@ -150,10 +150,7 @@ public:
   } __attribute__((packed));
 
   /** LCD Keypad constructor with internal key map. */
-  LCDKeypad() : 
-    Keypad(Board::A0, m_map) 
-  {
-  }
+  LCDKeypad() : Keypad(Board::A0, m_map) {}
 
 private:
   /** Analog reading to key index map. */

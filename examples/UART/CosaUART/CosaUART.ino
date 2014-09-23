@@ -72,6 +72,7 @@ void loop()
   else {
     // Scan the line. Skip empty lines
     if (uart.gets(s, sizeof(s)) == NULL) return;
+    s[strlen(s)-1] = 0;
     echo(n, s);
 
     // Check for mode change command

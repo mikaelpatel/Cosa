@@ -57,10 +57,7 @@ public:
      * device family.
      * @param[in] owi one-wire pin to search.
      */
-    Search(OWI* owi) : 
-      OWI::Search(owi, FAMILY_CODE) 
-    {
-    }
+    Search(OWI* owi) : OWI::Search(owi, FAMILY_CODE) {}
     
     /**
      * Get the next thermometer with active alarm since latest
@@ -84,8 +81,7 @@ public:
     m_parasite(0),
     m_start(0L),
     m_converting(false)
-  {
-  }
+  {}
 
   /**
    * Construct a DS18B20 device connected to the given 1-Wire bus
@@ -101,8 +97,7 @@ public:
     m_parasite(0),
     m_start(0L),
     m_converting(false)
-  {
-  }
+  {}
 
   /**
    * Connect to DS18B20 device with given index. Reads configuration,
@@ -127,6 +122,7 @@ public:
    * @param[in] high threshold. 
    */
   void set_trigger(int8_t low, int8_t high)
+    __attribute__((always_inline))
   {
     m_scratchpad.low_trigger = low;
     m_scratchpad.high_trigger = high;
@@ -140,7 +136,8 @@ public:
    * bit 1 and 0, and so on (LSB).
    * @return temperature
    */
-  int16_t get_temperature()
+  int16_t get_temperature() const
+    __attribute__((always_inline))
   {
     return (m_scratchpad.temperature);
   }
@@ -150,7 +147,8 @@ public:
    * read values from device before calling this method. 
    * @return number of bits.
    */
-  uint8_t get_resolution()
+  uint8_t get_resolution() const
+    __attribute__((always_inline))
   {
     if (m_rom[0] == 0) return (0);
     return (9 + (m_scratchpad.configuration >> 5));
@@ -162,7 +160,8 @@ public:
    * @param[out] low threshold.
    * @param[out] high threshold. 
    */
-  void get_trigger(int8_t& low, int8_t& high)
+  void get_trigger(int8_t& low, int8_t& high) const
+    __attribute__((always_inline))
   {
     low = m_scratchpad.low_trigger;
     high = m_scratchpad.high_trigger;
@@ -291,6 +290,7 @@ private:
    * device.
    */
   void power_off()
+    __attribute__((always_inline))
   {
     if (m_parasite) m_pin->power_off();
   }

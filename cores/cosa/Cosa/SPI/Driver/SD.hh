@@ -400,7 +400,7 @@ public:
   /**
    * Return detected card type.
    */
-  CARD get_type() 
+  CARD get_type() const
   {
     return (m_type);
   }
@@ -439,6 +439,7 @@ public:
    * @return bool.
    */
   bool read(uint32_t block, uint8_t* dst)
+    __attribute__((always_inline))
   {
     if (m_type != TYPE_SDHC) block <<= 9;
     return (read(READ_SINGLE_BLOCK, block, dst, BLOCK_MAX));
@@ -452,6 +453,7 @@ public:
    * @return true for successful otherwise false.
    */
   bool read(cid_t* cid)
+    __attribute__((always_inline))
   {
     return (read(SEND_CID, 0, cid, sizeof(cid_t)));
   }
@@ -463,6 +465,7 @@ public:
    * @return true for successful otherwise false.
    */
   bool read(csd_t* csd)
+    __attribute__((always_inline))
   {
     return (read(SEND_CSD, 0, csd, sizeof(csd_t)));
   }

@@ -176,10 +176,7 @@ public:
   /**
    * Construct DS3231 device with bus address(0x68).
    */
-  DS3231() : 
-    TWI::Driver(0x68) 
-  {
-  }
+  DS3231() : TWI::Driver(0x68) {}
 
   /**
    * Read register block with the given size into the buffer from the
@@ -208,6 +205,7 @@ public:
    * @return boolean.
    */
   bool get_time(time_t& now) 
+    __attribute__((always_inline))
   {
     return (read(&now, sizeof(now)) == sizeof(now));
   }
@@ -219,6 +217,7 @@ public:
    * @return boolean.
    */
   bool set_time(time_t& now)
+    __attribute__((always_inline))
   {
     return (write(&now, sizeof(now)) == sizeof(now));
   }
@@ -231,6 +230,7 @@ public:
    * @return boolean.
    */
   bool get_alarm1(alarm1_t& alarm, uint8_t& mask)
+    __attribute__((always_inline))
   {
     return (get(&alarm, sizeof(alarm), offsetof(timekeeper_t, alarm1), mask));
   }
@@ -243,6 +243,7 @@ public:
    * @return boolean.
    */
   bool set_alarm1(alarm1_t& alarm, uint8_t mask)
+    __attribute__((always_inline))
   {
     return (set(&alarm, sizeof(alarm), offsetof(timekeeper_t, alarm1), mask));
   }
@@ -255,6 +256,7 @@ public:
    * @return boolean.
    */
   bool get_alarm2(alarm2_t& alarm, uint8_t& mask)
+    __attribute__((always_inline))
   {
     return (get(&alarm, sizeof(alarm), offsetof(timekeeper_t, alarm2), mask));
   }
@@ -267,6 +269,7 @@ public:
    * @return boolean.
    */
   bool set_alarm2(alarm2_t& alarm, uint8_t mask)
+    __attribute__((always_inline))
   {
     return (set(&alarm, sizeof(alarm), offsetof(timekeeper_t, alarm2), mask));
   }
