@@ -30,8 +30,8 @@
  * Two wire library. Support for ATtiny I2C/TWI bus master and slave
  * devices using the USI hardware support. See also Cosa/TWI.hh. The
  * public interface should be maintained the same for portability.
- * Note: The internal pullup resistors on the USI pins are
- * active. External pullup resistors (4K7 ohm) are required for longer
+ * Note: The internal pullup resistors on the USI pins are active. 
+ * External pullup resistors (4K7 ohm) are required for longer 
  * wires and/or higher loads.
  */
 class TWI {
@@ -258,7 +258,8 @@ private:
   volatile uint8_t* m_last;
   volatile int m_count;
   Driver* m_dev;
-
+  volatile bool m_busy;
+  
   /**
    * Get current driver state.
    * @return state
