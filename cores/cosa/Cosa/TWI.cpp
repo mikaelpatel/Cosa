@@ -36,18 +36,24 @@ TWI twi  __attribute__ ((weak));
 void
 TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
-  synchronized {
-    // Acquire the driver controller
-    m_dev = dev;
-    // Set up receiver of completion events
-    m_target = target;
-    // Enable internal pullup
-    bit_mask_set(PORT, _BV(Board::SDA) | _BV(Board::SCL));
-    // Set clock prescale and bit rate
-    bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
-    TWBR = m_freq;
-    TWCR = IDLE_CMD;
+  // Acquire the device driver. Wait is busy. Synchronized update
+  uint8_t key = lock();
+  while (m_busy) {
+    unlock(key);
+    yield();
+    key = lock();
   }
+  // Mark as busy
+  m_dev = dev;
+  m_target = target;
+  m_busy = true;
+  // Enable internal pullup
+  bit_mask_set(PORT, _BV(Board::SDA) | _BV(Board::SCL));
+  // Set clock prescale and bit rate
+  bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
+  TWBR = m_freq;
+  TWCR = IDLE_CMD;
+  unlock(key);
 }
 
 void
@@ -59,6 +65,7 @@ TWI::end()
   synchronized {
     m_target = NULL;
     m_dev = NULL;
+    m_busy = false;
     TWCR = 0;
   }
 }

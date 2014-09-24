@@ -21,7 +21,7 @@
 #include "Cosa/Nucleo/Semaphore.hh"
 #include "Cosa/Nucleo/Thread.hh"
 
-namespace Nucleo {
+using namespace Nucleo;
 
 void
 Semaphore::wait(uint8_t count) 
@@ -44,5 +44,3 @@ Semaphore::signal(uint8_t count, bool flag)
   }
   Thread::s_running->dequeue(&m_queue, flag);
 }
-
-};

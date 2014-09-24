@@ -19,6 +19,22 @@
  */
 
 #include "Cosa/Event.hh"
+#include "Cosa/Watchdog.hh"
 
 Queue<Event, Event::QUEUE_MAX> Event::queue;
+
+bool
+Event::service(uint32_t ms)
+{
+  uint32_t start = Watchdog::millis();
+  Event event;
+  while (!queue.dequeue(&event)) {
+    if ((ms == 0L) || (Watchdog::since(start) < ms)) 
+      yield();
+    else
+      return (false);
+  }
+  event.dispatch();
+  return (true);
+}
 

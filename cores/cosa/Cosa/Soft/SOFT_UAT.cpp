@@ -20,7 +20,7 @@
 
 #include "Cosa/Soft/UART.hh"
 
-namespace Soft {
+using namespace Soft;
 
 UAT::UAT(Board::DigitalPin tx) : 
   IOStream::Device(),
@@ -55,5 +55,3 @@ UAT::begin(uint32_t baudrate, uint8_t format)
   m_count = ((F_CPU / baudrate) - I_CPU) / 4;
   return (true);
 }
-
-};

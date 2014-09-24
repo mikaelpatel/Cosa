@@ -155,7 +155,8 @@ public:
     m_last(NULL),
     m_count(0),
     m_dev(NULL),
-    m_freq(((F_CPU / DEFAULT_FREQ) - 16) / 2)
+    m_freq(((F_CPU / DEFAULT_FREQ) - 16) / 2),
+    m_busy(false)
   {
     for (uint8_t ix = 0; ix < VEC_MAX; ix++) {
       m_vec[ix].buf = 0;
@@ -397,6 +398,7 @@ private:
   uint8_t m_addr;
   Driver* m_dev;
   uint8_t m_freq;
+  volatile bool m_busy;
   
   /**
    * Start block transfer. Setup internal buffer pointers.
@@ -449,3 +451,4 @@ private:
 */
 extern TWI twi;
 #endif
+
