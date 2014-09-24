@@ -197,6 +197,14 @@ public:
    */
   static Queue<Event, QUEUE_MAX> queue;
 
+  /**
+   * Service events and wait at most given number of milliseconds. The
+   * value zero(0) indicates that call should block until an event.
+   * @param[in] ms maximum wait time (Default blocking).
+   * @return true(1) if an event was dispatched otherwise false(0).
+   */
+  static bool service(uint32_t ms = 0L);
+
 private:
   uint8_t m_type;		//!< Event type.
   Handler* m_target;		//!< Event target object (receiver).
