@@ -20,7 +20,7 @@
 
 #include "Cosa/Nucleo/Actor.hh"
 
-namespace Nucleo {
+using namespace Nucleo;
 
 int 
 Actor::send(uint8_t port, const void* buf, size_t size)
@@ -73,6 +73,4 @@ Actor::recv(Actor*& sender, uint8_t& port, void* buf, size_t size)
   unlock(key);
   return (res);
 }
-
-};
 

@@ -20,7 +20,7 @@
 
 #include "Cosa/Soft/SPI.hh"
 
-namespace Soft {
+using namespace Soft;
 
 SPI::Driver::Driver(Board::DigitalPin cs, 
 		    uint8_t pulse,
@@ -98,6 +98,4 @@ SPI::transfer(uint8_t value)
   }
   return (value);
 }
-
-};
 

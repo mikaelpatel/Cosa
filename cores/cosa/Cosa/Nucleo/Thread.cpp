@@ -38,7 +38,7 @@ static void thread_sleep(uint16_t s)
   Nucleo::Thread::get_running()->delay(s * 1000L);
 }
 
-namespace Nucleo {
+using namespace Nucleo;
 
 Head Thread::s_delayed;
 Thread Thread::s_main;
@@ -136,7 +136,5 @@ Thread::await(volatile uint8_t* ptr, uint8_t bit)
 {
   while ((*ptr & _BV(bit)) == 0) yield();
 }
-
-};
 
 

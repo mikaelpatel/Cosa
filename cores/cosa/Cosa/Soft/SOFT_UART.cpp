@@ -20,7 +20,7 @@
 
 #include "Cosa/Soft/UART.hh"
 
-namespace Soft {
+using namespace Soft;
 
 UART::UART(Board::DigitalPin tx, Board::InterruptPin rx, IOStream::Device* ibuf) : 
   UAT(tx),
@@ -61,5 +61,3 @@ UART::RXPinChangeInterrupt::on_interrupt(uint16_t arg)
   } while (--bits);
   m_uart->m_ibuf->putchar(data);
 }
-
-};
