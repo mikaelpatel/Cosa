@@ -85,7 +85,7 @@ static const uint8_t PAYLOAD_TYPE = 0x01;
 IOStream& operator<<(IOStream& outs, payload_msg_t* msg)
 {
   outs << PSTR("nr=") << msg->nr << PSTR(",payload=");
-  outs.print(msg->payload, PAYLOAD_MAX, IOStream::hex);
+  outs.print(0L, msg->payload, PAYLOAD_MAX, IOStream::hex);
   return (outs);
 }
 
@@ -193,7 +193,7 @@ void loop()
       break;
     default:
       trace << PSTR("msg=");
-      trace.print(msg, count, IOStream::hex);
+      trace.print(0L, msg, count, IOStream::hex);
     }
   }
 

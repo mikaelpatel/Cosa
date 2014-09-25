@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,8 +49,8 @@
 #endif
 
 // Select Wireless device driver
-#define USE_CC1101
-// #define USE_NRF24L01P
+// #define USE_CC1101
+#define USE_NRF24L01P
 // #define USE_VWI
 // #define USE_RFM69
 
@@ -105,16 +105,20 @@ void setup()
   RTC::begin();
   rf.begin();
   
+  // Use the Watchdog as the delay
+  delay = Watchdog::delay;
+  
   // Put the hardware in power down
   rf.powerdown();
   Power::all_disable();
   
   // Allow wakeup on button
   wakeup.enable();  
+  Watchdog::end();
 }
 
 struct dlt_msg_t {	       // Digital Luminance Temperature message
-  uint32_t timestamp;	       // Seconds since start of sensor
+  uint32_t timestamp;	       // Logical timestamp (sequence number)
   uint16_t luminance;	       // Light level (0..1023 raw value)
   uint16_t temperature;	       // Room temperature (0..1023 raw value)
   uint16_t battery;	       // Battery level (mV)
@@ -126,14 +130,16 @@ void loop()
   // Wait for events from the button
   Event event;
   Event::queue.await(&event);
-
+  
   // Wake up the hardware
   Power::all_enable();
+  Watchdog::begin(512);
 
   // Construct the message with sample values and broadcast
-  uint32_t now = Watchdog::millis();
+  uint32_t start = Watchdog::millis();
+  const uint32_t PERIOD = 2000L;
   dlt_msg_t msg;
-  msg.timestamp = (now + 500L) / 1000;
+  msg.timestamp = start / PERIOD;
   msg.luminance = luminance.sample();
   msg.temperature = temperature.sample();
   msg.battery = AnalogPin::bandgap();
@@ -144,7 +150,9 @@ void loop()
   Power::all_disable();
 
   // Debounce the button before allowing further interrupts. This also
-  // gives periodic (1 second) message send when the button is kept low.
-  Watchdog::delay(1000 - (Watchdog::millis() - now));
+  // gives periodic (2 second) message send when the button is kept low.
+  uint32_t ms = PERIOD - Watchdog::since(start);
+  Watchdog::delay(ms);
   wakeup.enable();  
+  Watchdog::end();
 }

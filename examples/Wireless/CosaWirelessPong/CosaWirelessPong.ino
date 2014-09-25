@@ -86,7 +86,7 @@ void loop()
   uint8_t port;
   uint8_t src;
   ping_t nr;
-
+  
   while (rf.recv(src, port, &nr, sizeof(nr)) != sizeof(nr)) yield();
   if (port != PING_TYPE) return;
   trace << RTC::millis() << PSTR(":pong:nr=") << nr << endl;

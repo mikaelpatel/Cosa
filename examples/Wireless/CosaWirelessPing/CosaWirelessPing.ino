@@ -33,10 +33,10 @@
 #include "Cosa/RTC.hh"
 
 // Configuration; network and device addresses. 
+#define PING_ID 0x80
+#define PONG_ID 0x81
 #define NETWORK 0xC05A
-#define PING 0x80
-#define PONG 0x81
-#define DEVICE PING
+#define DEVICE PING_ID
 
 // Select Wireless device driver
 // #define USE_CC1101
@@ -81,14 +81,19 @@ void setup()
 #if defined(USE_LOW_POWER)
   rf.set_output_power_level(-18);
 #endif
+  trace << PSTR("nr=sequence number") << endl;
+  trace << PSTR("rc=retransmission count") << endl;
+  trace << PSTR("arc=accumulated retransmission count") << endl;
+  trace << PSTR("dr%=drop rate procent (arc*100/(arc + nr))") << endl;
+  trace << endl;
 }
 
 void loop()
 {
-  // Auto retransmission wait (ms) and counter
+  // Auto retransmission wait (ms) and acculated retransmission counter
   static const uint16_t ARW = 200;
   static uint16_t arc = 0;
-  
+
   // Sequence number
   static ping_t nr = 0;
 
@@ -96,16 +101,22 @@ void loop()
   uint8_t port;
   uint8_t src;
 
-  // Send sequence number and receive update
+  // Send sequence number and receive update. Count number of retransmissions
   uint32_t now = RTC::millis();
+  uint8_t rc = 0;
   trace << now << PSTR(":ping:nr=") << nr;
   while (1) {
-    rf.send(PONG, PING_TYPE, &nr, sizeof(nr));
+    rf.send(PONG_ID, PING_TYPE, &nr, sizeof(nr));
     int res = rf.recv(src, port, &nr, sizeof(nr), ARW);
     if (res == (int) sizeof(nr)) break;
-    trace << PSTR(",retry(") << ++arc << ',' << res << ')';
+    rc += 1;
   }
-  trace << PSTR(",pong:nr=") << nr << endl;
+  arc += rc;
+  trace << PSTR(",pong:nr=") << nr 
+	<< PSTR(",rc=") << rc
+	<< PSTR(",arc=") << arc
+	<< PSTR(",dr%=") << (arc * 100L) / (nr + arc)
+	<< endl;
   rf.powerdown();
   static const uint32_t PERIOD = 2000L;
   uint32_t ms = PERIOD - RTC::since(now);
