@@ -78,7 +78,9 @@ void setup()
   Watchdog::begin();
   RTC::begin();
   ASSERT(rf.begin());
+#if defined(USE_LOW_POWER)
   rf.set_output_power_level(-18);
+#endif
 }
 
 void loop()
