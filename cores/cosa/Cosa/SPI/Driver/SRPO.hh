@@ -189,16 +189,18 @@ public:
    */
   void update()
   {
-    spi.begin(this);
-    uint8_t ix = N - 1;
-    spi.transfer_start(m_port[ix]);
-    while (ix--) {
-      uint8_t data = m_port[ix];
-      spi.transfer_await();
-      spi.transfer_start(data);
-    }
-    spi.transfer_await();
-    spi.end();
+    spi.acquire(this);
+      spi.begin();
+        uint8_t ix = N - 1;
+	spi.transfer_start(m_port[ix]);
+	while (ix--) {
+	  uint8_t data = m_port[ix];
+	  spi.transfer_await();
+	  spi.transfer_start(data);
+	}
+	spi.transfer_await();
+      spi.end();
+    spi.release();
   }
 
   /**
