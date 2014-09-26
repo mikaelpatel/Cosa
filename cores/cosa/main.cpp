@@ -135,7 +135,7 @@ namespace __cxxabiv1
   extern "C" int __cxa_guard_acquire(__guard *g) 
   { 
     UNUSED(g);
-    return (1); 
+    return (0); 
   }
 
   extern "C" void __cxa_guard_release(__guard *g) 
@@ -150,5 +150,20 @@ namespace __cxxabiv1
 
   extern "C" void __cxa_pure_virtual(void) 
   {
+  }
+
+  void *__dso_handle = NULL;
+
+  extern "C" int __cxa_atexit(void (*destructor)(void*), void* arg, void* dso)
+  {
+    UNUSED(destructor);
+    UNUSED(arg);
+    UNUSED(dso);
+    return 0;
+  }
+
+  extern "C" void __cxa_finalize(void* f)
+  {
+    UNUSED(f);
   }
 }
