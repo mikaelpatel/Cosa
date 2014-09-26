@@ -26,18 +26,29 @@
 
 if [ $# == 0 ];
 then
+   echo "Usage: tutto VERSION [BOARD]"
+   echo "Build Cosa core for all boards or all example sketches for"
+   echo "given BOARD. Where VERSION is Arduino version, e.g. 1.5.7". 
+   exit 1
+fi
+
+ver=$1
+shift
+if [ $# == 0 ];
+then
   # Build CosaBlink for all board variants
   variants=`grep build.variant ../boards.txt | cut -d. -f1 | sort`
-  pushd ../examples/Blink/CosaBlink &> /dev/null
+  example="../examples/Blink/CosaBlink"
+  pushd $example &> /dev/null
   for board in $variants
   do
     echo `date`: $board
-    cosa $board &> LOG
-    cosa $board size | grep bytes
-    cosa $board clean &>> LOG
+    cosa $board "ARDUINO_VER=$ver" &> LOG
+    cosa $board size "ARDUINO_VER=$ver" | grep bytes
     egrep "(warning|error)" LOG
   done
   rm LOG
+  popd &> /dev/null
 else
   # Build all example sketches for given board
   board=$1
@@ -48,9 +59,8 @@ else
     dir=`dirname $example`
     echo `date`: `echo $example | cut -c3-`
     pushd `dirname $example` &> /dev/null
-      cosa $board &> LOG
-      cosa $board size | grep bytes
-      cosa $board clean &>> LOG
+      cosa $board "ARDUINO_VER=$ver" &> LOG
+      cosa $board size "ARDUINO_VER=$ver" | grep bytes
       egrep "(warning|error)" LOG
       rm LOG
     popd &> /dev/null

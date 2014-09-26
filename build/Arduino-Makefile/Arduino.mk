@@ -624,7 +624,7 @@ endif
 
 # Everything gets built in here (include BOARD_TAG now)
 ifndef OBJDIR
-  OBJDIR = build-$(BOARD_TAG)
+  OBJDIR = $(COSA_DIR)/obj/build-$(ARDUINO_VER)/$(BOARD_TAG)
   $(call show_config_variable,OBJDIR,[COMPUTED],(from BOARD_TAG))
 else
   $(call show_config_variable,OBJDIR,[USER])
@@ -1258,7 +1258,7 @@ ifneq ($(strip $(AVRDUDE_ISP_FUSES_POST)),)
 endif
 
 clean:
-	$(REMOVE) ./$(OBJDIR)
+	$(REMOVE) $(OBJDIR)
 
 size: $(TARGET_HEX)
 	$(call avr_size,$(TARGET_ELF),$(TARGET_HEX))

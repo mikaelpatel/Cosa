@@ -17,10 +17,12 @@
 # @section Description
 # Arduino-Makefile configuration for Cosa. 
 
+ifndef ARDUINO_VER
+  ARDUINO_VER = 1.5.7
+endif
+
 ifndef ARDUINO_DIR
-# ARDUINO_DIR = $(HOME)/opt/arduino-1.0.5
-# ARDUINO_DIR = $(HOME)/opt/arduino-1.0.6
-  ARDUINO_DIR = $(HOME)/opt/arduino-1.5.7
+  ARDUINO_DIR = $(HOME)/opt/arduino-$(ARDUINO_VER)
 endif
 
 ARDMK_DIR = $(COSA_DIR)/build/Arduino-Makefile

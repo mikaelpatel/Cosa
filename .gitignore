@@ -2,5 +2,6 @@ arc
 doc/html
 log/
 ref
+obj/
 build-*
 
