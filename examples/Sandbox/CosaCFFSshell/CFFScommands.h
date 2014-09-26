@@ -1,5 +1,5 @@
 /**
- * @file Commands.h
+ * @file CFFScommands.h
  * @version 1.0
  *
  * @section License
@@ -22,8 +22,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COMMANDS_HH
-#define COMMANDS_HH
+#ifndef CFFS_COMMANDS_HH
+#define CFFS_COMMANDS_HH
 
 #include "Cosa/Shell.hh"
 #include "Cosa/IOStream.hh"

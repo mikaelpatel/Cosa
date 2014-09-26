@@ -1,5 +1,5 @@
 /**
- * @file Commands.h
+ * @file TelnetCommands.h
  * @version 1.0
  *
  * @section License
@@ -21,8 +21,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COMMANDS_H
-#define COMMANDS_H
+#ifndef TELNET_COMMANDS_H
+#define TELNET_COMMANDS_H
 
 #include "Cosa/Shell.hh"
 #include "Cosa/IOStream.hh"

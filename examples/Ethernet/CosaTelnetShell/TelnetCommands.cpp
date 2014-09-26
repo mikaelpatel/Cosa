@@ -1,5 +1,5 @@
 /**
- * @file Commands.cpp
+ * @file TelnetCommands.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Commands.h"
+#include "TelnetCommands.h"
 #include "Cosa/RTC.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/Tone.hh"

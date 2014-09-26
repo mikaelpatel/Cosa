@@ -22,7 +22,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Commands.h"
+#include "CFFScommands.h"
 #include "Cosa/RTC.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"

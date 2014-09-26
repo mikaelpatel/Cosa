@@ -1,0 +1,2 @@
+mkdir -p /home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.0.6/nano
+/home/epkmipl/opt/arduino-1.0.6/hardware/tools/avr/bin/avr-g++ -x c++ -include Arduino.h -MMD -c -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=106 -I. -I/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa -I/home/epkmipl/Sketchbook/hardware/Cosa/variants/arduino/nano   -Wall -ffunction-sections -fdata-sections -g -Os -fno-exceptions  -Wextra -std=gnu++0x -felide-constructors CosaPWMPin.ino -o /home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.0.6/nano/CosaPWMPin.o

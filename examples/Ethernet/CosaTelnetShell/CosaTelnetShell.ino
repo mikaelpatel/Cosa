@@ -41,7 +41,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/INET/Telnet.hh"
-#include "Commands.h"
+#include "TelnetCommands.h"
 
 // Disable SD on Ethernet Shield
 #define USE_ETHERNET_SHIELD
