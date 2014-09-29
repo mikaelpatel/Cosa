@@ -195,7 +195,7 @@ NRF24L01P::begin(const void* config)
   write(RX_ADDR_P1, &rx_addr, sizeof(rx_addr));
   write(RX_ADDR_P2, BROADCAST);
   write(EN_RXADDR, (_BV(ERX_P2) | _BV(ERX_P1)));
-  write(EN_AA, (_BV(ENAA_P1)));
+  write(EN_AA, (_BV(ENAA_P1) | _BV(ENAA_P0)));
   
   // Ready to go
   powerup();
