@@ -201,7 +201,6 @@ strchrnul_P(str_P s, int __val)
   return ((str_P) strchrnul_P((const char*) s, __val));
 }
 
-
 inline int
 strcmp_P(const char *s1, str_P s2)
 {

@@ -36,9 +36,9 @@ public:
   /**
    * Construct alarm with given timeout period in seconds.
    * The alarm must be enabled to become active. 
-   * @param[in] period seconds (max 65535 s, approx. 18 h).
+   * @param[in] period seconds.
    */
-  Alarm(uint16_t period = 0) :
+  Alarm(uint32_t period = 0L) :
     Link(),
     m_when(0L),
     m_period(period)
@@ -80,10 +80,10 @@ public:
    * handler periodic value is used as increment.
    * @param[in] seconds to alarm.
    */
-  void next_alarm(uint16_t seconds = 0)
+  void next_alarm(uint32_t seconds = 0L)
     __attribute__((always_inline))
   { 
-    if (seconds == 0) seconds = m_period;
+    if (seconds == 0L) seconds = m_period;
     m_when = s_ticks + seconds; 
   }
 
@@ -114,7 +114,7 @@ public:
    * with the given period.
    * @param[in] seconds periodic timeout.
    */
-  void set_period(uint16_t seconds)
+  void set_period(uint32_t seconds)
   {
     m_period = seconds;
   }
@@ -144,11 +144,15 @@ public:
   /**
    * Watchdog based periodic(128 ms) scheduler. The setup function
    * must initiate the Watchdog to generate timeout event, 
+   * @code
    *   Watchdog::begin(ms, mode, Watchdog::push_timeout_events)
+   * @endcode
    * and the loop function must contain an event dispatcher,
+   * @code
    *   Event event;
    *   Event::queue.await(&event);
    *   event.dispatch();
+   * @endcode
    * The alarm manager will check for expired alarms and call the
    * respective alarm handlers. The RTC is used for more accurate
    * timekeeping.
@@ -168,7 +172,7 @@ private:
   static clock_t s_ticks;	//!< Current time in seconds.
   static Head s_queue;		//!< Alarm handler queue.
   uint32_t m_when;		//!< Alarm timeout in seconds.
-  uint16_t m_period;		//!< Period in seconds.
+  uint32_t m_period;		//!< Period in seconds.
 };
 #endif
 
