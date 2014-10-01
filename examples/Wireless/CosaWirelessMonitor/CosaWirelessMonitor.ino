@@ -36,8 +36,8 @@
 
 // Select Wireless device driver
 // #define USE_CC1101
-// #define USE_NRF24L01P
-#define USE_RFM69
+#define USE_NRF24L01P
+// #define USE_RFM69
 // #define USE_VWI
 
 #if defined(USE_CC1101)
@@ -67,19 +67,19 @@ VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
 static const uint8_t IOSTREAM_TYPE = 0x00;
 
 // Select IOStream device
-#include "Cosa/IOStream/Driver/UART.hh"
+// #include "Cosa/IOStream/Driver/UART.hh"
 
 // LCD and communication port
-// #include "Cosa/LCD/Driver/HD44780.hh"
+#include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
-// HD44780::MJKDZ port;
+HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 // HD44780 lcd(&port);
-// HD44780 lcd(&port, 20, 4);
+HD44780 lcd(&port, 20, 4);
 
 const uint8_t bitmaps[] __PROGMEM = {
   // Bar(1)
