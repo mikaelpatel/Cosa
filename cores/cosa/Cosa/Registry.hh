@@ -331,7 +331,7 @@ public:
   
   /** Max length of a path. */
   static const size_t PATH_MAX = 8;
-  
+
   /**
    * Construct registery root object.
    * @param[in] root item list.
@@ -350,6 +350,8 @@ public:
    * @return item pointer or NULL.
    */
   item_P lookup(const uint8_t* path = NULL, size_t count = 0);
+
+  void print(IOStream& outs, const uint8_t* path, size_t count);
 
   /**
    * Lookup registry item for given path and if the item is an action

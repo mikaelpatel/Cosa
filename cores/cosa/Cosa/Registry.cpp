@@ -50,6 +50,34 @@ Registry::lookup(const uint8_t* path, size_t count)
   return (item);
 }
 
+void
+Registry::print(IOStream& outs, const uint8_t* path, size_t count)
+{
+  // Check for root path
+  item_P item = (item_P) m_root;
+  if (path == NULL) return;
+
+  // Paths should not exceed the maximum length
+  if (count > PATH_MAX) return;
+  for (uint8_t i = 0; i < count; i++) {
+    // Check that the current item is a list
+    uint8_t ix = path[i]; 
+    uint8_t nx = i + 1;
+    type_t type = (type_t) pgm_read_byte(&item->type);
+    if ((nx < count) && (type != ITEM_LIST)) return;
+
+    // Check that the current index is within the list length
+    item_list_P items = (item_list_P) item;
+    uint8_t len = pgm_read_byte(&items->length);
+    if (ix >= len) return;
+
+    // Read the item and step to the next path index
+    item_vec_P vec = (item_vec_P) pgm_read_word(&items->list);
+    item = (item_P) pgm_read_word(&vec[ix]);
+    outs << '/' << get_name(item);
+  }
+}
+
 int 
 Registry::run(action_P action, void* buf, size_t size)
 {

@@ -45,10 +45,10 @@
 #include "Cosa/AnalogPin.hh"
 
 // Product information management registry
-REGISTRY_BLOB_PSTR(PRODUCT, "product name", "registry-demo")
-REGISTRY_BLOB_PSTR(VERSION, "version string", "1.0")
+REGISTRY_BLOB_PSTR(PRODUCT, "product", "registry-demo")
+REGISTRY_BLOB_PSTR(VERSION, "version", "1.0")
 
-REGISTRY_BEGIN(PIM, "product information management") // 0
+REGISTRY_BEGIN(PIM, "pim") // 0
   REGISTRY_BLOB_ITEM(PRODUCT)		// 0.0
   REGISTRY_BLOB_ITEM(VERSION)		// 0.1
 REGISTRY_END(PIM)
@@ -58,11 +58,11 @@ static int16_t NETWORK EEMEM = 0xc05a;
 static uint8_t DEVICE EEMEM = 0x42;
 static uint16_t TIMEOUT EEMEM = 2000;
 
-REGISTRY_BLOB(NETWORK, "network address (16b)", EEMEM, false)
-REGISTRY_BLOB(DEVICE, "device address (8b)", EEMEM, false)
-REGISTRY_BLOB(TIMEOUT, "sleep period (ms)", EEMEM, false)
+REGISTRY_BLOB(NETWORK, "network", EEMEM, false)
+REGISTRY_BLOB(DEVICE, "device", EEMEM, false)
+REGISTRY_BLOB(TIMEOUT, "wakeup", EEMEM, false)
 
-REGISTRY_BEGIN(CM, "configuration") 	// 1
+REGISTRY_BEGIN(CM, "config") 		// 1
   REGISTRY_BLOB_ITEM(NETWORK)		// 1.0
   REGISTRY_BLOB_ITEM(DEVICE)		// 1.1
   REGISTRY_BLOB_ITEM(TIMEOUT)		// 1.2
@@ -74,9 +74,9 @@ struct sensor_t {
   uint16_t battery;
 };
 
-REGISTRY_BLOB_STRUCT(sensor_t, sensor, "sensor data", true)
-REGISTRY_BLOB_VAR(uint8_t, load, "processor load (%)", -1, true)
-REGISTRY_BLOB_VAR(uint16_t, errors, "error count", 0, false)
+REGISTRY_BLOB_STRUCT(sensor_t, sensor, "sensor", true)
+REGISTRY_BLOB_VAR(uint8_t, load, "load", 98, true)
+REGISTRY_BLOB_VAR(uint16_t, errors, "errcnt", 0, false)
 
 REGISTRY_BEGIN(STATUS, "status") 	// 2
   REGISTRY_BLOB_ITEM(sensor)		// 2.0
@@ -90,15 +90,15 @@ public:
   virtual int run(void* buf, size_t size) 
   {
     UNUSED(size);
-    trace << PSTR("Action::Restart:") << (const char*) buf << endl;
-    return (strlen_P((const char*) buf));
+    trace << PSTR("Action::Restart:") << (str_P) buf << endl;
+    return (strlen_P((str_P) buf));
   }
 };
 Restart do_restart;
-REGISTRY_ACTION(do_restart, "restart device");
+REGISTRY_ACTION(do_restart, "restart");
 REGISTRY_BLOB_VAR(bool, do_broadcast, "broadcast sensor data", false, false)
 
-REGISTRY_BEGIN(ACTION, "actions")  	// 3
+REGISTRY_BEGIN(ACTION, "action")  	// 3
   REGISTRY_ACTION_ITEM(do_restart)	// 3.0
   REGISTRY_BLOB_ITEM(do_broadcast)	// 3.1
 REGISTRY_END(ACTION)
@@ -124,9 +124,9 @@ void setup()
   Watchdog::begin();
   
   // Initiate EEMEM variables. Arduino build does not handle .eeprom section
-  eeprom.write(&NETWORK, 0xc05a);
-  eeprom.write(&DEVICE, 0x42);
-  eeprom.write(&TIMEOUT, 2000);
+  // eeprom.write(&NETWORK, 0xc05a);
+  // eeprom.write(&DEVICE, 0x42);
+  // eeprom.write(&TIMEOUT, 2000);
 
   // Initiate sensor status
   sensor.battery = AnalogPin::bandgap(1100);
@@ -152,6 +152,8 @@ void loop()
   item = reg.lookup(path, 1);
   list = Registry::to_list(item);
   ASSERT(list != NULL);
+  reg.print(trace, path, 1);
+  trace << '=';
   trace << list << endl;
   
   // Access 0.0 blob product name
@@ -163,6 +165,8 @@ void loop()
   ASSERT(blob != NULL);
   ASSERT(reg.get_value(blob, buf, sizeof(buf)) == sizeof(PRODUCT));
   ASSERT(reg.set_value(blob, buf, sizeof(buf)) < 0);
+  reg.print(trace, path, sizeof(path));
+  trace << '=';
   trace << buf << endl;
 
   // Access 0.1 blob version string
@@ -174,6 +178,8 @@ void loop()
   ASSERT(blob != NULL);
   ASSERT(reg.get_value(blob, buf, sizeof(buf)) == sizeof(VERSION));
   ASSERT(reg.set_value(blob, buf, sizeof(buf)) < 0);
+  reg.print(trace, path, sizeof(path));
+  trace << '=';
   trace << buf << endl;
 
   // Access 1.0 network address
@@ -185,12 +191,16 @@ void loop()
   ASSERT(blob != NULL);
   uint16_t network;
   ASSERT(reg.get_value(blob, &network, sizeof(network)) == sizeof(NETWORK));
+  reg.print(trace, path, 2);
+  trace << '=';
   trace << hex << network << endl;
   network = 0xbeef;
   ASSERT(reg.set_value(blob, &network, sizeof(network)) == sizeof(NETWORK));
   network = 0;
   ASSERT(reg.get_value<uint16_t>(blob, &network));
   ASSERT(network == 0xbeef);
+  reg.print(trace, path, 2);
+  trace << '=';
   trace << hex << network << endl;
 
   // Access 2.0 blob sensor data
@@ -203,8 +213,11 @@ void loop()
   sensor_t sensor;
   ASSERT(reg.get_value(blob, &sensor, sizeof(sensor)) == sizeof(sensor));
   ASSERT(!reg.set_value<sensor_t>(blob, &sensor));
-  trace << sensor.temperature << PSTR(" C") << endl;
-  trace << sensor.battery << PSTR(" mV") << endl;
+  reg.print(trace, path, 2);
+  trace << '=';
+  trace << sensor.temperature << PSTR(" C, ")
+	<< sensor.battery << PSTR(" mV")
+	<< endl;
 
   // Access 2.1 blob processor load %
   path[0] = 2; 
