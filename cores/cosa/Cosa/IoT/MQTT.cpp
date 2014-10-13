@@ -116,7 +116,7 @@ MQTT::Client::connect(const char* hostname,
   // Connect to the server. Check for timeout
   int res = m_sock->connect(hostname, PORT);
   if (res != 0) return (-1);
-  while ((res = m_sock->isconnected()) == 0) yield();
+  while ((res = m_sock->is_connected()) == 0) yield();
   if (res == 0) res = -2;
   if (res < 0) return (res);
 

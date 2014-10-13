@@ -144,7 +144,7 @@ HTTP::Client::get(const char* url, uint32_t ms)
   // Connect to the server
   res = m_sock->connect((const char*) hostname, port);
   if (res != 0) goto error;
-  while ((res = m_sock->isconnected()) == 0) delay(16);
+  while ((res = m_sock->is_connected()) == 0) delay(16);
   if (res == 0) res = -3;
   if (res < 0) goto error;
   

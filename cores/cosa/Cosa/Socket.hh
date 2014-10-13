@@ -167,7 +167,7 @@ public:
    * @return positive integer connected, zero if not otherwise
    * negative error code. 
    */
-  virtual int isconnected() = 0;
+  virtual int is_connected() = 0;
 
   /**
    * @override Socket

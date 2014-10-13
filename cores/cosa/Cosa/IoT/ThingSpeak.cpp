@@ -57,7 +57,7 @@ ThingSpeak::Client::connect()
   uint8_t server[4] = { API_THINGSPEAK_COM };
   int res = m_sock->connect(server, 80);
   if (res != 0) return (res);
-  while ((res = m_sock->isconnected()) == 0) delay(16);
+  while ((res = m_sock->is_connected()) == 0) delay(16);
   if (res < 0) return (-2);
   return (0);
 }
