@@ -43,6 +43,8 @@
 #include "Cosa/Board/Arduino/Leonardo.hh"
 #elif defined(ARDUINO_MEGA)
 #include "Cosa/Board/Arduino/Mega.hh"
+#elif defined(ARDUINO_MICRO)
+#include "Cosa/Board/Arduino/Micro.hh"
 #elif defined(ARDUINO_NANO)
 #include "Cosa/Board/Arduino/Nano.hh"
 #elif defined(ARDUINO_PRO_MICRO)

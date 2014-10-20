@@ -146,6 +146,36 @@ mega2560.build.board=ARDUINO_MEGA2560
 mega2560.build.variant=arduino/mega2560
 mega2560.build.core=cosa
 
+# AVR:ATmega32U4
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.6 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
+micro.name=Cosa Arduino Micro (ATmega32U4/Caterina)
+micro.upload.tool=avrdude
+micro.upload.protocol=avr109
+micro.upload.maximum_size=28672
+micro.upload.maximum_data_size=2560
+micro.upload.speed=57600
+micro.upload.disable_flushing=true
+micro.upload.use_1200bps_touch=true
+micro.upload.wait_for_upload_port=true
+
+micro.bootloader.path=caterina
+micro.bootloader.tool=avrdude
+micro.bootloader.low_fuses=0xff
+micro.bootloader.high_fuses=0xd8
+micro.bootloader.extended_fuses=0xcb
+
+micro.build.mcu=atmega32u4
+micro.build.f_cpu=16000000L
+micro.build.vid=0x2341
+micro.build.pid=0x8037
+micro.build.usb_product="Arduino Micro"
+micro.build.board=ARDUINO_MICRO
+micro.build.variant=arduino/micro
+micro.build.extra_flags={build.usb_flags}
+micro.build.core=cosa
+
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled

@@ -40,6 +40,8 @@
 #include "Cosa/Board/Arduino/Leonardo.map"
 #elif defined(ARDUINO_MEGA)
 #include "Cosa/Board/Arduino/Mega.map"
+#elif defined(ARDUINO_MICRO)
+#include "Cosa/Board/Arduino/Micro.map"
 #elif defined(ARDUINO_NANO)
 #include "Cosa/Board/Arduino/Nano.map"
 #elif defined(ARDUINO_PRO_MICRO)

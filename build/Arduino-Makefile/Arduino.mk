@@ -30,8 +30,8 @@
 #
 # 1. Configure the build (build/Cosa.mk) by setting the path of the
 # Arduino installation. The Cosa version of Arduino-Makefile supports 
-# 1.0.5 and 1.5.7. 
-#   ARDUINO_DIR = $(HOME)/opt/arduino-1.0.5
+# 1.0.X and 1.5.X. 
+#   ARDUINO_DIR = $(HOME)/opt/arduino-1.0.X
 #
 # 2. Create a Makefile in the Sketch director. The minimum contents is:
 #   COSA_DIR = $(HOME)/Sketchbook/hardware/Cosa
@@ -458,8 +458,13 @@ ifndef AVR_TOOLS_PATH
   AVR_TOOLS_PATH = $(AVR_TOOLS_DIR)/bin
 endif
 
-ARDUINO_LIB_PATH = $(ARDUINO_DIR)/libraries
-$(call show_config_variable,ARDUINO_LIB_PATH,[COMPUTED],(from ARDUINO_DIR))
+ifndef ARDUINO_LIB_PATH
+  ARDUINO_LIB_PATH = $(ARDUINO_DIR)/libraries
+  $(call show_config_variable,ARDUINO_LIB_PATH,[COMPUTED],(from ARDUINO_DIR))
+else
+  $(call show_config_variable,ARDUINO_LIB_PATH,[USER])
+endif
+
 ifndef ARDUINO_CORE_PATH
   ARDUINO_CORE_PATH = $(ARDUINO_DIR)/hardware/arduino/cores/arduino
   $(call show_config_variable,ARDUINO_CORE_PATH,[DEFAULT])
@@ -543,7 +548,7 @@ endif
 
 ifndef PARSE_BOARD
   # result = $(call READ_BOARD_TXT, 'boardname', 'parameter')
-  PARSE_BOARD = $(shell grep -v "^\#" "$(BOARDS_TXT)" | grep $(1).$(2) | cut -d = -f 2 )
+  PARSE_BOARD = $(shell grep -v "^\#" "$(BOARDS_TXT)" | grep "^"$(1).$(2) | cut -d = -f 2 )
 endif
 
 # If NO_CORE is set, then we don't have to parse boards.txt file
@@ -712,9 +717,9 @@ endif
 
 ifndef ARDUINO_LIBS
   # automatically determine included libraries
-  ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_DIR)/libraries/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
-  ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_SKETCHBOOK)/libraries/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
-  ARDUINO_LIBS += $(filter $(notdir $(wildcard $(USER_LIB_PATH)/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(LOCAL_SRCS)))
+  ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_LIB_PATH)/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.hh[>\"]/\1/p" $(LOCAL_SRCS)))
+  ARDUINO_LIBS += $(filter $(notdir $(wildcard $(ARDUINO_SKETCHBOOK)/libraries/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.hh[>\"]/\1/p" $(LOCAL_SRCS)))
+  ARDUINO_LIBS += $(filter $(notdir $(wildcard $(USER_LIB_PATH)/*)), $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.hh[>\"]/\1/p" $(LOCAL_SRCS)))
 endif
 
 ########################################################################

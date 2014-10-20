@@ -28,6 +28,7 @@ endif
 ARDMK_DIR = $(COSA_DIR)/build/Arduino-Makefile
 ARDUINO_CORE_PATH = $(COSA_DIR)/cores/cosa
 ARDUINO_VAR_PATH = $(COSA_DIR)/variants
+ARDUINO_LIB_PATH = $(COSA_DIR)/libraries
 BOARDS_TXT = $(COSA_DIR)/boards.txt
 
 MONITOR_CMD = $(COSA_DIR)/build/miniterm.py -q --lf
