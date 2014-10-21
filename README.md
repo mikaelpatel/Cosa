@@ -42,6 +42,7 @@ boards with AVR MCUs.
 * [Arduino Leonardo] (./cores/cosa/Cosa/Board/Arduino/Leonardo.hh)
 * [Arduino Mega 1280] (./cores/cosa/Cosa/Board/Arduino/Mega.hh)
 * [Arduino Mega 2560] (./cores/cosa/Cosa/Board/Arduino/Mega.hh)
+* [Arduino Micro] (./cores/cosa/Cosa/Board/Arduino/Micro.hh)
 * [Arduino Nano] (./cores/cosa/Cosa/Board/Arduino/Nano.hh)
 * [Arduino Pro Micro] (./cores/cosa/Cosa/Board/Arduino/Pro_Micro.hh)
 * [Arduino Pro Mini] (./cores/cosa/Cosa/Board/Arduino/Pro_Mini.hh)
