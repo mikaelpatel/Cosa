@@ -19,6 +19,7 @@
  */
 
 #include "Cosa/Soft/UART.hh"
+#include "util/parity.h"
 
 using namespace Soft;
 
@@ -34,9 +35,14 @@ UAT::UAT(Board::DigitalPin tx) :
 int 
 UAT::putchar(char c)
 {
-  uint16_t data = ((0xff00 | c) << 1);
-  uint8_t bits = m_bits + m_stops + 1;
+  uint8_t bits = m_bits + m_parity + m_stops + 1;
   uint16_t count = m_count;
+  uint16_t data;
+  if (m_parity == 0x01 && ((parity_even_bit(c) ^ m_odd) == 0x00)) {
+      data = ((0xfe00 | c) << 1);
+  } else {
+      data = ((0xff00 | c) << 1);
+  }
   synchronized {
     do {
       m_tx._write(data & 0x01);
@@ -53,5 +59,7 @@ UAT::begin(uint32_t baudrate, uint8_t format)
   m_stops = ((format & STOP2) != 0) + 1;
   m_bits = (5 + (format & DATA_MASK));
   m_count = ((F_CPU / baudrate) - I_CPU) / 4;
+  m_parity = (format & (EVEN_PARITY | ODD_PARITY)) > 0 ? 1 : 0;
+  m_odd = (format & ODD_PARITY) > 0 ? 1 : 0;
   return (true);
 }
