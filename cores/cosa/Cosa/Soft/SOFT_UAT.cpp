@@ -38,10 +38,10 @@ UAT::putchar(char c)
   uint8_t bits = m_bits + m_parity + m_stops + 1;
   uint16_t count = m_count;
   uint16_t data;
-  if (m_parity == 0x01 && ((parity_even_bit(c) ^ m_odd) == 0x00)) {
-      data = ((0xfe00 | c) << 1);
+  if (!m_parity || (parity_even_bit(c) ^ m_odd)) {
+      data = ((0xff00 | (uint8_t) c) << 1);
   } else {
-      data = ((0xff00 | c) << 1);
+      data = ((0xfe00 | (uint8_t) c) << 1);
   }
   synchronized {
     do {
