@@ -78,7 +78,7 @@ struct time_t {
    * @param[in] c clock.
    * @param[in] zone time (hours adjustment from UTC).
    */
-  time_t(clock_t c, uint8_t zone = 0);
+  time_t(clock_t c, int8_t zone = 0);
 
   /**
    * Convert time to clock representation (from bcd).

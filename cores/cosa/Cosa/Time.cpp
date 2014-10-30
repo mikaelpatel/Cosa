@@ -47,7 +47,7 @@ days_per(uint16_t year)
   return (is_leap(year) ? 366 : 365);
 }
 
-time_t::time_t(clock_t c, uint8_t zone)
+time_t::time_t(clock_t c, int8_t zone)
 {
   c += SECONDS_PER_HOUR * zone;
   uint16_t dayno = c / SECONDS_PER_DAY;
