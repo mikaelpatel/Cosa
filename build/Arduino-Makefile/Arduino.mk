@@ -967,7 +967,7 @@ $(OBJDIR)/libs/%.o: $(ARDUINO_LIB_PATH)/%.c
 
 $(OBJDIR)/libs/%.o: $(ARDUINO_LIB_PATH)/%.cpp
 	@$(MKDIR) $(dir $@)
-	$(CC) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+	$(CXX) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 $(OBJDIR)/libs/%.o: $(ARDUINO_LIB_PATH)/%.S
 	@$(MKDIR) $(dir $@)
@@ -975,7 +975,7 @@ $(OBJDIR)/libs/%.o: $(ARDUINO_LIB_PATH)/%.S
 
 $(OBJDIR)/libs/%.o: $(USER_LIB_PATH)/%.cpp
 	@$(MKDIR) $(dir $@)
-	$(CC) -MMD -c $(CPPFLAGS) $(CFLAGS) $< -o $@
+	$(CXX) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 $(OBJDIR)/libs/%.o: $(USER_LIB_PATH)/%.c
 	@$(MKDIR) $(dir $@)
