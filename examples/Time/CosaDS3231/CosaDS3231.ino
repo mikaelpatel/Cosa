@@ -91,6 +91,7 @@ void loop()
   // Read the time from the rtc device and print
   time_t now;
   rtc.get_time(now);
+  now.to_binary();
   trace << now << ' ';
   int16_t temp = rtc.get_temperature();
   trace << (temp >> 2) << '.' << (25 * (temp & 0x3)) << PSTR(" C") << endl;
@@ -103,5 +104,6 @@ void loop()
   do {
     delay(200);
     rtc.get_time(now);
+    now.to_binary();
   } while (start == now);
 }

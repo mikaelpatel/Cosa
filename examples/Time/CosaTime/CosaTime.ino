@@ -48,6 +48,7 @@ void setup()
   now.date = 0x31;
   now.month = 0x12;
   now.year = 0x13;
+  now.to_binary();
   epoch = now;
   RTC::time(epoch);
 

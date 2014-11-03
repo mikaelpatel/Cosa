@@ -97,6 +97,7 @@ IOStream& operator<<(IOStream& outs, DS3231::alarm2_t& t)
 IOStream& operator<<(IOStream& outs, DS3231::timekeeper_t& t)
 {
   int16_t temp = swap(t.temp) >> 6;
+  t.clock.to_binary();
   outs << t.clock << ' '
        << t.alarm1 << ' '
        << t.alarm2 << ' '
@@ -104,5 +105,6 @@ IOStream& operator<<(IOStream& outs, DS3231::timekeeper_t& t)
        << bin << t.status.as_uint8 << ' '
        << t.aging << ' '
        << (temp >> 2) << '.' << (25 * (temp & 0x3));
+  t.clock.to_bcd();
   return (outs);
 }

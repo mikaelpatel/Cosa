@@ -111,13 +111,14 @@ void loop()
   // Read clock and temperature
   time_t now;
   rtc.get_time(now);
+  now.to_binary();
   int16_t temp = rtc.get_temperature();
 
   // First line with date and temperature. Use BCD format output
   lcd.set_cursor(0, 0);
-  cout << PSTR("20") << bcd << now.year << '-'
-       << bcd << now.month << '-'
-       << bcd << now.date << ' '
+  cout << now.full_year() << '-'
+       << now.month << '-'
+       << now.date << ' '
        << (temp >> 2)
 #if defined(USE_LARGE_LCD)
        << '.' << (25 * (temp & 0x3))
@@ -126,9 +127,9 @@ void loop()
   
   // Second line with time and battery status
   lcd.set_cursor(0, 1);
-  cout << bcd << now.hours << ':'
-       << bcd << now.minutes << ':'
-       << bcd << now.seconds << ' '
+  cout << now.hours << ':'
+       << now.minutes << ':'
+       << now.seconds << ' '
        << AnalogPin::bandgap(1100) << PSTR(" mV");
 
 #if defined(USE_SENSORS)
@@ -152,5 +153,6 @@ void loop()
   do {
     delay(200);
     rtc.get_time(now);
+    now.to_binary();
   } while (start == now);
 }

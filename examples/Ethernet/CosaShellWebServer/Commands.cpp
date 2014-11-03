@@ -165,7 +165,6 @@ static int date_action(int argc, char* argv[])
     if (*sp != 0 || value > 60)
       return (Shell::ILLEGAL_COMMAND);
     now.seconds = value;
-    now.to_bcd();
     epoch = now;
     RTC::time(epoch);
   }

@@ -135,6 +135,7 @@ void loop()
 #ifdef USE_RTC
   // Get the current time for logging
   rtc.get_time(now);
+  now.to_binary();
 #endif
 
   // Issue a convert request and check for alarms
