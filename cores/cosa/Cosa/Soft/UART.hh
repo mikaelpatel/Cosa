@@ -87,6 +87,8 @@ protected:
   OutputPin m_tx;
   uint8_t m_stops;
   uint8_t m_bits;
+  uint8_t m_parity;
+  uint8_t m_odd;
   uint16_t m_count;
 };
 
