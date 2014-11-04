@@ -27,6 +27,7 @@
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
 #define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
 #define TICKS_PER_SEC (1000000L / US_PER_TICK)
+#define US_PER_SEC_ERROR (1000000L - (TICKS_PER_SEC * US_PER_TICK))
 
 // Initiated state
 bool RTC::s_initiated = false;
@@ -35,6 +36,7 @@ bool RTC::s_initiated = false;
 volatile uint32_t RTC::s_uticks = 0UL;
 volatile uint16_t RTC::s_ticks = 0;
 volatile clock_t RTC::s_sec = 0L;
+volatile int16_t RTC::s_uerror = 0;
 
 // Timer interrupt extension
 RTC::InterruptHandler RTC::s_handler = NULL;
@@ -111,9 +113,14 @@ ISR(TIMER0_OVF_vect)
 {
   // Increment ticks and check for second count update
   uint16_t ticks = RTC::s_ticks + 1;
+  if (RTC::s_uerror >= US_PER_TICK) {
+      ticks--;
+      RTC::s_uerror -= US_PER_TICK;
+  }
   if (ticks == TICKS_PER_SEC) {
     ticks = 0;
     RTC::s_sec += 1;
+    RTC::s_uerror += US_PER_SEC_ERROR;
   }
   RTC::s_ticks = ticks;
 
