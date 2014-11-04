@@ -94,6 +94,7 @@ void loop()
   // Read clock and calender; low and high level
   time_t now;
   rtc.get_time(now);
+  now.to_binary();
   trace << PSTR("RTC: ") << now << endl;
   trace.get_device()->flush();
 

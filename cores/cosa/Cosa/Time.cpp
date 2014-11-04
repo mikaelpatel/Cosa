@@ -22,75 +22,172 @@
 
 IOStream& operator<<(IOStream& outs, time_t& t)
 {
-  outs << PSTR("20") << bcd << t.year << '-'
-       << bcd << t.month << '-'
-       << bcd << t.date << ' '
-       << bcd << t.hours << ':'
-       << bcd << t.minutes << ':'
-       << bcd << t.seconds;
+  outs << time_t::full_year( t.year ) << '-';
+  if (t.month < 10) outs << '0';
+  outs << t.month << '-';
+  if (t.date < 10) outs << '0';
+  outs << t.date << ' ';
+
+  if (t.hours < 10) outs << '0';
+  outs << t.hours << ':';
+  if (t.minutes < 10) outs << '0';
+  outs << t.minutes << ':';
+  if (t.seconds < 10) outs << '0';
+  outs << t.seconds;
+
   return (outs);
 }
 
-static const uint8_t days_in[] __PROGMEM = {
+bool time_t::parse( str_P c )
+{
+    char chars[24];
+    const char *ptr = (const char *)c;
+
+    uint8_t i;
+    for (i=0; i<sizeof(chars)-1; i++)
+      chars[i] = pgm_read_byte(ptr++);
+    chars[i]=0;
+
+    char* sp = &chars[0];
+    uint16_t value = strtoul(sp, &sp, 10);
+
+    if (*sp != '-') return false;
+    year = value % 100;
+    if (full_year() != value) return false;
+
+    value = strtoul(sp + 1, &sp, 10);
+    if (*sp != '-') return false;
+    month = value;
+
+    value = strtoul(sp + 1, &sp, 10);
+    if (*sp != ' ') return false;
+    date = value;
+
+    value = strtoul(sp + 1, &sp, 10);
+    if (*sp != ':') return false;
+    hours = value;
+
+    value = strtoul(sp + 1, &sp, 10);
+    if (*sp != ':') return false;
+    minutes = value;
+
+    value = strtoul(sp + 1, &sp, 10);
+    if (*sp != 0) return false;
+    seconds = value;
+
+    if (!is_valid()) return false;
+
+    set_day();
+    return true;
+}
+
+uint16_t time_t::s_epoch_year = Y2K_EPOCH_YEAR;
+uint8_t  time_t::epoch_offset = 0;
+uint8_t  time_t::epoch_weekday = Y2K_EPOCH_WEEKDAY;
+uint8_t  time_t::pivot_year = 0;
+
+const uint8_t time_t::days_in[] __PROGMEM = {
   0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
 
-static bool 
-is_leap(uint16_t year)
-{
-  return (!((year) % 4) && (((year) % 100) || (!((year) % 400))));
-}
-
-static uint16_t
-days_per(uint16_t year)
-{
-  return (is_leap(year) ? 366 : 365);
-}
-
 time_t::time_t(clock_t c, int8_t zone)
 {
-  c += SECONDS_PER_HOUR * zone;
+  c += zone * (int32_t) SECONDS_PER_HOUR;
   uint16_t dayno = c / SECONDS_PER_DAY;
-  day = (dayno % DAYS_PER_WEEK) + 1;
-  year = 0;
-  while (1) {
-    uint16_t days = days_per(year);
+  c -= dayno * (uint32_t) SECONDS_PER_DAY;
+  
+  day = weekday_for(dayno);
+
+  uint16_t y = epoch_year();
+  for (;;) {
+    uint16_t days = days_per( y );
     if (dayno < days) break;
     dayno -= days;
-    year += 1;
+    y++;
   }
-  year %= 100;
+  bool leap_year = is_leap(y);
+  y -= epoch_year();
+  y += epoch_offset; // just in case the epoch_year doesn't end in 00
+  while (y > 100)
+    y -= 100;
+  year = y;
+
   month = 1;
-  while (1) {
+  for (;;) {
     uint8_t days = pgm_read_byte(&days_in[month]);
-    if (is_leap(year) && (month == 2)) days += 1;
+    if (leap_year && (month == 2)) days++;
     if (dayno < days) break;
     dayno -= days;
-    month += 1;
+    month++;
   }
   date = dayno + 1;
-  hours = (c % SECONDS_PER_DAY) / SECONDS_PER_HOUR;
-  minutes = (c % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE;
-  seconds = (c % SECONDS_PER_MINUTE);
-  to_bcd();
+
+  hours = c / SECONDS_PER_HOUR;
+
+  uint16_t c_ms;
+  if (hours < 18) // save 16uS
+    c_ms = (uint16_t) c - (hours * (uint16_t) SECONDS_PER_HOUR);
+  else
+    c_ms = c - (hours * (uint32_t) SECONDS_PER_HOUR);
+  minutes = c_ms / SECONDS_PER_MINUTE;
+  seconds = c_ms - (minutes * SECONDS_PER_MINUTE);
 }
 
-time_t::operator clock_t()
+time_t::operator clock_t() const
 {
-  clock_t res;
-  to_binary();
-  res = year * (SECONDS_PER_DAY * 365);
-  for (uint8_t y = 0; y < year; y++) 
-    if (is_leap(y)) 
-      res +=  SECONDS_PER_DAY;
-  for (uint8_t m = 1; m < month; m++) {
-    uint8_t days = pgm_read_byte(&days_in[m]);
-    if (is_leap(year) && (m == 2)) days += 1;
-    res += SECONDS_PER_DAY * days;
+  clock_t s = days() * SECONDS_PER_DAY;
+  if (hours < 18)
+    s += hours * (uint16_t) SECONDS_PER_HOUR;
+  else
+    s += hours * (uint32_t) SECONDS_PER_HOUR;
+  s += minutes * (uint16_t) SECONDS_PER_MINUTE;
+  s += seconds;
+  return s;
+}
+
+uint16_t time_t::days() const
+{
+  uint16_t day_count = day_of_year();
+
+  uint16_t y = full_year();
+  while (y-- > epoch_year())
+    day_count += days_per(y);
+
+  return day_count;
+}
+
+uint16_t time_t::day_of_year() const
+{
+  uint16_t dayno = date-1;
+
+  bool leap_year = is_leap();
+  for (uint8_t m=1; m < month; m++) {
+    dayno += pgm_read_byte(&days_in[m]);
+    if (leap_year && (m == 2)) dayno++;
   }
-  res += (date - 1) * SECONDS_PER_DAY;
-  res += hours * SECONDS_PER_HOUR;
-  res += minutes * SECONDS_PER_MINUTE;
-  res += seconds;
-  return (res);
+
+  return dayno;
+}
+
+void time_t::use_fastest_epoch()
+{
+  //  Figure out when we were compiled and use the year
+  //    for a really fast epoch_year.
+  const char *compile_date = (const char *) PSTR(__DATE__); // "Mmm dd yyyy"
+  uint16_t compile_year = 0;
+  for (uint8_t i=0; i<4; i++)
+    compile_year = compile_year*10 + (pgm_read_byte( &compile_date[7+i] ) - '0');
+
+  // Temporarily set a Y2K epoch so we can figure out
+  // the day for January 1 of this year.
+  epoch_year( Y2K_EPOCH_YEAR );
+  epoch_weekday = Y2K_EPOCH_WEEKDAY;
+  time_t this_year(0);
+  this_year.year = compile_year % 100;
+  this_year.set_day();
+  uint8_t compile_weekday = this_year.day;
+
+  time_t::epoch_year( compile_year );
+  time_t::epoch_weekday = compile_weekday;
+  time_t::pivot_year = this_year.year;
 }

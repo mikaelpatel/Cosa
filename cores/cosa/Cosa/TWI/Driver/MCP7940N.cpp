@@ -173,10 +173,12 @@ IOStream& operator<<(IOStream& outs, MCP7940N::alarm_t& t)
 
 IOStream& operator<<(IOStream& outs, MCP7940N::rtcc_t& t)
 {
+  t.clock.to_binary();
   outs << t.clock << ' '
        << bin << t.control.as_uint8 << ' '
        << t.calibration << ' '
        << t.alarm0 << ' '
        << t.alarm1 << ' ';
+  t.clock.to_bcd();
   return (outs);
 }

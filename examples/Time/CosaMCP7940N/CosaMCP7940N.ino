@@ -58,6 +58,7 @@ void setup()
   now.month = 0x6;
   now.year = 0x14;
   TRACE(rtc.set_time(now));
+  now.to_binary();
   trace << PSTR("time:     ") << now << endl;
   
   // Set alarm 0 when seconds match (every minute)
@@ -84,6 +85,7 @@ void loop()
   // Read the time from the rtc device
   time_t now;
   rtc.get_time(now);
+  now.to_binary();
 
   // Convert to seconds from epoch (will convert now to binary)
   static clock_t clock = 0;
@@ -96,7 +98,6 @@ void loop()
 
   // Print epoch and adjust back to bcd and print time
   trace << epoch << ':';
-  now.to_bcd();
   trace << now << ' ';
 
   // Create time and adjust for zone(2). Use epoch for calculation
@@ -108,11 +109,13 @@ void loop()
   if (pending & 0x01) {
     trace << PSTR("alarm(0) ");
     time_t alarm(epoch + 5);
+    alarm.to_bcd();
     rtc.set_alarm(0, alarm, MCP7940N::WHEN_SEC_MATCH);
   }
   if (pending & 0x02) {
     trace << PSTR("alarm(1)");
     time_t alarm(epoch + 10);
+    alarm.to_bcd();
     rtc.set_alarm(1, alarm, MCP7940N::WHEN_SEC_MATCH);
   }
   trace << endl;

@@ -48,6 +48,13 @@ void setup()
   Watchdog::begin();
   RTC::begin();
 
+  time_t::epoch_year( NTP_EPOCH_YEAR );
+  time_t::epoch_weekday = NTP_EPOCH_WEEKDAY;
+  time_t::pivot_year = 37; // 1937..2036 range
+  
+  // Note: This could also use_fastest_epoch if the clock_t offset was calculated
+  // when the RTC is initiated.  NTP::gettimeofday would need modification.
+
   // Initiate the Ethernet Controller using DHCP
   ASSERT(ethernet.begin_P(PSTR("CosaNTPclient")));
 }
