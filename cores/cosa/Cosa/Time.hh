@@ -31,10 +31,8 @@ const uint8_t  NTP_EPOCH_WEEKDAY = 2;  // Monday
 const uint16_t POSIX_EPOCH_YEAR = 1970;
 const uint8_t  POSIX_EPOCH_WEEKDAY = 5;  // Thursday
 
-const uint8_t PIVOT_YEAR = 0;
-
-const uint16_t EPOCH_YEAR = 2000;
-const uint8_t  EPOCH_WEEKDAY = 7;
+const uint16_t Y2K_EPOCH_YEAR = 2000;
+const uint8_t  Y2K_EPOCH_WEEKDAY = 7; // Saturday
 
 /**
  * Number of seconds elapsed since January 1 of the Epoch Year, 00:00:00 +0000 (UTC).
@@ -89,7 +87,7 @@ struct time_t {
   time_t() {}
 
   /**
-   * Construct time record from seconds from NTP Epoch.
+   * Construct time record from seconds from the Epoch.
    * @param[in] c clock.
    * @param[in] zone time (hours adjustment from UTC).
    */
@@ -113,38 +111,13 @@ struct time_t {
    * Convert time to days.
    * @return days from January 1 of the epoch year.
    */
-  uint16_t days() const
-  {
-    uint16_t day_count = day_of_year();
-
-    uint16_t y = full_year();
-    while (y-- > EPOCH_YEAR)
-      day_count += days_per(y);
-  // save 110uS
-  //  day_count += (y-EPOCH_YEAR) * (SECONDS_PER_DAY * 365);
-  //  while (y-- > EPOCH_YEAR)
-  //    if (is_leap(y)) day_count++;
-
-    return day_count;
-  }
+  uint16_t days() const;
 
   /**
    * Calculate day of the current year.
    * @return days from January 1, which is day zero.
    */
-  uint16_t day_of_year() const
-  {
-    uint16_t dayno = date-1;
-
-    bool leap_year = is_leap();
-    for (uint8_t m=1; m < month; m++) {
-      dayno += pgm_read_byte(&days_in[m]);
-      if (leap_year && (m == 2)) dayno++;
-  // save 14uS    if ((m == 2) && is_leap()) dayno++;
-    }
-
-    return dayno;
-  }
+  uint16_t day_of_year() const;
 
   /**
    * Calculate 4-digit year from internal 2-digit year member.
@@ -160,10 +133,11 @@ struct time_t {
   static uint16_t full_year( uint8_t year )
   {
     uint16_t y = year;
-    if (y < PIVOT_YEAR)
-      y += 100 * (EPOCH_YEAR/100 + 1);
+
+    if (y < pivot_year)
+      y += 100 * (epoch_year()/100 + 1);
     else
-      y += 100 * (EPOCH_YEAR/100);
+      y += 100 * (epoch_year()/100);
 
     return y;
   }
@@ -187,8 +161,6 @@ struct time_t {
     if (year % 4) return false;
     uint16_t y = year%400;
     return (y == 0) || ((y != 100) && (y != 200) && (y != 300));
-//  save 20uS
-//  return (!((year) % 4) && (((year) % 100) || (!((year) % 400))));
   }
 
   /**
@@ -208,14 +180,72 @@ struct time_t {
    */
   static uint8_t weekday_for(uint16_t dayno)
   {
-    return ((dayno+EPOCH_WEEKDAY-1) % DAYS_PER_WEEK) + 1;
+    return ((dayno+epoch_weekday-1) % DAYS_PER_WEEK) + 1;
   }
 
+  /**
+   * Check that all members are set to a coherent date/time.
+   * @return true if valid date/time.
+   */
+  bool is_valid() const
+  {
+    return (year <= 99) &&
+      (1 <= month) && (month <= 12) &&
+      ((1 <= date) &&
+       ((date <= pgm_read_byte(&days_in[month])) ||
+         ((month == 2) && is_leap() && (date == 29)))) &&
+      (1 <= day) && (day <= 7) &&
+      (hours <= 23) &&
+      (minutes <= 59) &&
+      (seconds <= 59);
+  }
+
+  /**
+   * Set the epoch year for all time_t operations.
+   * Note that the pivot year defaults to the epoch_year%100.
+   * Valid years will be in the range epoch_year..epoch_year+99.
+   * Selecting a different pivot year will slide this range to the right.
+   * See also /full_year/.
+   */
+  static void epoch_year( uint16_t y )
+  {
+    s_epoch_year = y;
+    epoch_offset = s_epoch_year % 100;
+    pivot_year = epoch_offset;
+  }
+  static uint16_t epoch_year() { return s_epoch_year; }
+  static uint8_t  epoch_weekday; // default Y2K_WEEKDAY
+
+  /**
+   * The pivot year determine the range of years WRT the epoch_year
+   * For example, an epoch year of 2000 and a pivot year of 80
+   * will allow years in the range 1980 to 2079.
+   */
+  static uint8_t  pivot_year;    // default 0 for Y2K
+
+  /**
+   * Use the current year for the epoch year.
+   * This will result in the best performance, but dates/times before
+   * January 1 of this year cannot be represented.
+   */
+  static void use_fastest_epoch();
+
+  /**
+   * Parse a character string and fill out members.
+   * @param[in] progmem character string with format "YYYY-MM-DD HH:MM:SS".
+   * @return success.
+   */
+  bool parse( str_P c );
+
   static const uint8_t days_in[]; // month index is 1..12, PROGMEM
+
+protected:
+  static uint16_t s_epoch_year;    // default Y2K_EPOCH_YEAR
+  static uint8_t epoch_offset;
 };
 
 /**
- * Print the date/time to the given stream with the format (YYYY-MM-DD HH:MM:SS).
+ * Print the date/time to the given stream with the format "YYYY-MM-DD HH:MM:SS".
  * @param[in] outs output stream.
  * @param[in] t time structure.
  * @return iostream.
