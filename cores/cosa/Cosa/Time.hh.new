@@ -25,22 +25,19 @@
 #include "Cosa/BCD.h"
 #include "Cosa/IOStream.hh"
 
-// NTP epoch year and weekday (Monday)
 const uint16_t NTP_EPOCH_YEAR = 1900;
-const uint8_t  NTP_EPOCH_WEEKDAY = 2;
+const uint8_t  NTP_EPOCH_WEEKDAY = 2;  // Monday
 
-// POSIX epoch year and weekday (Thursday)
 const uint16_t POSIX_EPOCH_YEAR = 1970;
-const uint8_t  POSIX_EPOCH_WEEKDAY = 5;
+const uint8_t  POSIX_EPOCH_WEEKDAY = 5;  // Thursday
 
-// Y2K epoch year and weekday (Saturday)
 const uint16_t Y2K_EPOCH_YEAR = 2000;
-const uint8_t  Y2K_EPOCH_WEEKDAY = 7;
+const uint8_t  Y2K_EPOCH_WEEKDAY = 7; // Saturday
 
 /**
- * Number of seconds elapsed since January 1 of the Epoch Year,
- * 00:00:00 +0000 (UTC). 
+ * Number of seconds elapsed since January 1 of the Epoch Year, 00:00:00 +0000 (UTC).
  */
+
 typedef uint32_t clock_t;
 
 const uint32_t SECONDS_PER_DAY = 86400L;
@@ -49,12 +46,11 @@ const uint8_t SECONDS_PER_MINUTE = 60;
 const uint8_t DAYS_PER_WEEK = 7;
 
 /**
- * Common date/time structure for real-time clocks. Data on some
- * devices is stored in BCD (DS1307/DS3231), although internal
- * representation is binary. Conversion methods are provided to
- * convert to/from the BCD representation. It is up the caller to keep
- * track of the representation.  All time_t methods (except
- * /to_binary/) expect the internal representation to be binary. 
+ * Common date/time structure for real-time clocks. Data on some devices
+ * is stored in BCD (DS1307/DS3231), although internal representation is binary.
+ * Conversion methods are provided to convert to/from the BCD representation.
+ * It is up the caller to keep track of the representation.  All time_t methods
+ * (except /to_binary/) expect the internal representation to be binary.
  */
 struct time_t {
   uint8_t seconds;		//!< 00-59 Seconds.
@@ -66,8 +62,8 @@ struct time_t {
   uint8_t year;			//!< 00-99 Year.
 
   /**
-   * Convert time to binary representation (from BCD). Apply after
-   * reading from a BCD device and before any calculation.
+   * Convert time to binary representation (from BCD). 
+   * Apply after reading from a BCD device and before any calculation.
    */
   void to_binary()
     __attribute__((always_inline))
@@ -76,8 +72,8 @@ struct time_t {
   }
 
   /**
-   * Convert time to BCD representation (from binary). Apply after
-   * setting new value and before writing to a BCD device. 
+   * Convert time to BCD representation (from binary).
+   * Apply after setting new value and before writing to a BCD device.
    */
   void to_bcd()
     __attribute__((always_inline))
@@ -130,7 +126,7 @@ struct time_t {
   uint16_t full_year() const { return full_year(year); }
 
   /**
-   * Calculate 4-digit year from a 2-digit year
+   * class method to calculate 4-digit year from a 2-digit year
    * @param[in] year (4-digit).
    * @return true if /year/ is a leap year.
    */
@@ -152,33 +148,33 @@ struct time_t {
    */
   bool is_leap() const
   {
-    return is_leap(full_year());
+    return is_leap( full_year() );
   }
 
   /**
-   * Determine whether the 4-digit /year/ is a leap year.
+   * class method to determine whether the 4-digit /year/ is a leap year.
    * @param[in] year (4-digit).
    * @return true if /year/ is a leap year.
    */
   static bool is_leap(uint16_t year)
   {
     if (year % 4) return false;
-    uint16_t y = year % 400;
+    uint16_t y = year%400;
     return (y == 0) || ((y != 100) && (y != 200) && (y != 300));
   }
 
   /**
-   * Calculate how many days are in the specified year.
+   * class method to calculate how many days are in the specified year.
    * @param[in] year (4-digit).
    * @return number of days.
    */
   static uint16_t days_per(uint16_t year)
   {
-    return (365 + is_leap(year));
+    return (is_leap(year) ? 366 : 365);
   }
 
   /**
-   * Determine the day of the week for the specified day number
+   * class method to determine the day of the week for the specified day number
    * @param[in] day number as counted from January 1 of the epoch year.
    * @return weekday number 1..7, as for the /day/ member.
    */
@@ -194,68 +190,58 @@ struct time_t {
   bool is_valid() const
   {
     return 
-      ((year <= 99) &&
-       (1 <= month) && (month <= 12) &&
-       ((1 <= date) &&
-	((date <= pgm_read_byte(&days_in[month])) ||
-         ((month == 2) && is_leap() && (date == 29)))) &&
-       (1 <= day) && (day <= 7) &&
-       (hours <= 23) &&
-       (minutes <= 59) &&
-       (seconds <= 59));
+      (year <= 99) &&
+      ((1 <= month) && (month <= 12)) &&
+      ((1 <= date) &&
+       ((date <= pgm_read_byte(&days_in[month])) ||
+	((month == 2) && is_leap() && (date == 29)))) &&
+      (1 <= day) && (day <= 7) &&
+      (hours <= 23) &&
+      (minutes <= 59) &&
+      (seconds <= 59);
   }
 
   /**
-   * Set the epoch year for all time_t operations. Note that the pivot
-   * year defaults to the epoch_year % 100. Valid years will be in the
-   * range epoch_year..epoch_year+99. Selecting a different pivot year
-   * will slide this range to the right.
-   * @param[in] y epoch year to set.
+   * Set the epoch year for all time_t operations.
+   * Note that the pivot year defaults to the epoch_year%100.
+   * Valid years will be in the range epoch_year..epoch_year+99.
+   * Selecting a different pivot year will slide this range to the right.
    * See also /full_year/.
    */
-  static void epoch_year(uint16_t y)
+  static void epoch_year( uint16_t y )
   {
     s_epoch_year = y;
     epoch_offset = s_epoch_year % 100;
     pivot_year = epoch_offset;
   }
-
-  /**
-   * Get the epoch year.
-   * @return year.
-   */
-  static uint16_t epoch_year() 
-  { 
-    return (s_epoch_year); 
-  }
-
-  static uint8_t epoch_weekday;
+  static uint16_t epoch_year() { return s_epoch_year; }
+  static uint8_t  epoch_weekday; // default Y2K_WEEKDAY
 
   /**
    * The pivot year determine the range of years WRT the epoch_year
-   * For example, an epoch year of 2000 and a pivot year of 80 will
-   * allow years in the range 1980 to 2079. Default 0 for Y2K_EPOCH.
+   * For example, an epoch year of 2000 and a pivot year of 80
+   * will allow years in the range 1980 to 2079.
    */
-  static uint8_t pivot_year;
+  static uint8_t  pivot_year;    // default 0 for Y2K
 
   /**
-   * Use the current year for the epoch year. This will result in the
-   * best performance, but dates/times before January 1 of this year
-   * cannot be represented. 
+   * Use the current year for the epoch year.
+   * This will result in the best performance, but dates/times before
+   * January 1 of this year cannot be represented.
    */
   static void use_fastest_epoch();
 
   /**
    * Parse a character string and fill out members.
-   * @param[in] s progmem character string with format "YYYY-MM-DD HH:MM:SS".
+   * @param[in] progmem character string with format "YYYY-MM-DD HH:MM:SS".
    * @return success.
    */
-  bool parse(str_P s);
+  bool parse( str_P c );
 
-  static const uint8_t days_in[] PROGMEM; // month index is 1..12, PROGMEM
+  static const uint8_t days_in[]; // month index is 1..12, PROGMEM
 
 protected:
-  static uint16_t s_epoch_year;
+  static uint16_t s_epoch_year;    // default Y2K_EPOCH_YEAR
   static uint8_t epoch_offset;
 };
 
@@ -266,4 +252,5 @@ protected:
  * @return iostream.
  */
 IOStream& operator<<(IOStream& outs, time_t& t);
+
 #endif
