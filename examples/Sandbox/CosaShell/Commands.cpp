@@ -259,7 +259,7 @@ static int digitaltoggle_action(int argc, char* argv[])
 static const char DIGITALWRITE_NAME[] __PROGMEM = 
   "digitalwrite";
 static const char DIGITALWRITE_HELP[] __PROGMEM = 
-  "led|PIN on|off-- write digital pin VALUE";
+  "led|PIN VALUE -- write digital pin";
 static int digitalwrite_action(int argc, char* argv[])
 {
   if (argc != 3)
