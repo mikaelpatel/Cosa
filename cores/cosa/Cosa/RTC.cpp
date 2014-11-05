@@ -111,21 +111,20 @@ RTC::delay(uint32_t ms)
 
 ISR(TIMER0_OVF_vect)
 {
-  // Increment ticks and check for second count update
-  uint16_t ticks = RTC::s_ticks + 1;
-  if (RTC::s_uerror >= US_PER_TICK) {
-      ticks--;
-      RTC::s_uerror -= US_PER_TICK;
-  }
-  if (ticks == TICKS_PER_SEC) {
-    ticks = 0;
-    RTC::s_sec += 1;
-    RTC::s_uerror += US_PER_SEC_ERROR;
-  }
-  RTC::s_ticks = ticks;
-
   // Increment most significant part of micro second counter
   RTC::s_uticks += US_PER_TICK;
+
+  // Skip tick if accumulated error is greater than tick time
+  if (RTC::s_uerror >= US_PER_TICK)
+    RTC::s_uerror -= US_PER_TICK;
+  else {
+    RTC::s_ticks++;
+    if (RTC::s_ticks == TICKS_PER_SEC) {
+      RTC::s_ticks = 0;
+      RTC::s_sec += 1;
+      RTC::s_uerror += US_PER_SEC_ERROR;
+    }
+  }
 
   // Check for extension of the interrupt handler
   RTC::InterruptHandler fn = RTC::s_handler;
