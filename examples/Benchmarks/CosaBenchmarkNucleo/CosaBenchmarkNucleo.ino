@@ -48,35 +48,22 @@ Producer::run()
   trace << PSTR("Thread::Producer: started") << endl;  
 
   while (1) {
-    uint32_t start, us;
-
-    // Measure 500,000 yield will give 1,000,000 context switches
+    // Measure 1,000 yield will give 2,000 context switches
     // as the main (background) thread will be run
-    INFO("Benchmark 1: measure yield", 0);
-    start = RTC::micros();
-    for (uint16_t i = 0; i < 500; i++)
-      for (uint16_t j = 0; j < 1000; j++)
-	yield(); 
-    us = (RTC::micros() - start)  / 1000000L;
-    INFO("%l us (%l cycles)", us, us * I_CPU);
+    MEASURE("thread yield: ", 1000) {
+      yield(); 
+    }
     
-    // Measure 1,000,000 resume to the current thread
-    INFO("Benchmark 2: measure resume", 0);
-    start = RTC::micros();
-    for (uint16_t i = 0; i < 1000; i++)
-      for (uint16_t j = 0; j < 1000; j++)
-	resume(this);
-    us = (RTC::micros() - start) / 1000000L;
-    INFO("%l us (%l cycles)", us, us * I_CPU);
+    // Measure 1,000 resume to the current thread
+    MEASURE("thread resume: ", 1000) {
+      resume(this);
+    }
   
-    // Measure 100,000 signal-wait pairs
-    INFO("Benchmark 3: measure signal-wait", 0);
-    start = RTC::micros();
-    for (uint8_t i = 0; i < 100; i++)
-      for (uint16_t j = 0; j < 1000; j++)
-	sem.signal();
-    us = (RTC::micros() - start) / 100000L;
-    INFO("%l us (%l cycles)", us, us * I_CPU);
+    // Measure 1,000 signal-wait pairs
+    MEASURE("semaphore signal-wait: ", 1000) {
+      sem.signal();
+    }
+
     ASSERT(true == false);
   }
 }

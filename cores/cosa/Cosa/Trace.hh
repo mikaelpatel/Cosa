@@ -75,7 +75,10 @@ public:
    */
   void fatal_P(const char* file, int line, str_P expr) 
     __attribute__((noreturn));
-  
+
+  /** Result of latest MEASURE */
+  uint32_t measure;
+
 protected:
   /** Exit from miniterm. Default CTRL-ALT GR-] (0x1d) */
   char EXITCHARACTER;
@@ -195,6 +198,45 @@ extern uint8_t trace_log_mask;
 # define NOTICE(msg, ...)
 # define INFO(msg, ...)
 # define DEBUG(msg, ...)
+#endif
+
+/**
+ * Syntactic sugar for measuring execution time for a block. 
+ * Used in the form:
+ * @code
+ * MEASURE("time to execute block", 1) {
+ *   ...
+ *   // Block of code to measure
+ *   ...
+ *   ...
+ * }
+ * @endcode
+ * @param[in] msg measurement prefix string.
+ * @param[in] cnt number of block calls (max UINT16_MAX).
+ */
+# if defined(TRACE_NO_VERBOSE) || defined(BOARD_ATTINY)
+# define MEASURE(msg,cnt)						\
+  trace.get_device()->flush();						\
+  for (uint32_t __stop, __start = RTC::micros(), __i = 1;		\
+       __i != 0;							\
+       __i--,								\
+       __stop = RTC::micros(),						\
+       trace.measure = (__stop - __start) / cnt,			\
+       trace << PSTR(msg) << trace.measure,				\
+       trace << PSTR(" us") << endl)					\
+    for (uint16_t __j = cnt; __j != 0; __j--)
+#else
+# define MEASURE(msg,cnt)						\
+  trace.get_device()->flush();						\
+  for (uint32_t __stop, __start = RTC::micros(), __i = 1;		\
+       __i != 0;							\
+       __i--,								\
+       __stop = RTC::micros(),						\
+       trace.measure = (__stop - __start) / cnt,			\
+       trace << __LINE__ << ':' << __PRETTY_FUNCTION__,			\
+       trace << PSTR(":measure:") << PSTR(msg) << trace.measure,	\
+       trace << PSTR(" us") << endl)					\
+    for (uint16_t __j = cnt; __j != 0; __j--)
 #endif
 
 /**

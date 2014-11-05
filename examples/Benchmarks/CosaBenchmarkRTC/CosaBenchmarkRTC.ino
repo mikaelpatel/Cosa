@@ -59,68 +59,17 @@ void setup()
   TRACE(RTC::seconds());
   
   // Measure baseline
-  start = RTC::micros();
-  uint32_t us = RTC::micros();
-  stop = RTC::micros();
-  INFO("RTC::micros(): %ul us", stop - start);
-  UNUSED(us);
-  
-  start = RTC::micros();
-  uint32_t ms = RTC::millis();
-  stop = RTC::micros();
-  INFO("RTC::millis(): %ul us", stop - start);
-  UNUSED(ms);
-
-  start = RTC::micros();
-  uint32_t sec = RTC::seconds();
-  stop = RTC::micros();
-  INFO("RTC::seconds(): %ul us", stop - start);
-  UNUSED(sec);
-
-  start = RTC::micros();
-  RTC::delay(1);
-  stop = RTC::micros();
-  INFO("RTC::delay(1): %ul us", stop - start);
-
-  start = RTC::micros();
-  RTC::delay(10);
-  stop = RTC::micros();
-  INFO("RTC::delay(10): %ul us", stop - start);
-
-  start = RTC::micros();
-  DELAY(10);
-  stop = RTC::micros();
-  INFO("DELAY(10): %ul us", stop - start);
-
-  start = RTC::micros();
-  DELAY(100);
-  stop = RTC::micros();
-  INFO("DELAY(100): %ul us", stop - start);
-
-  start = RTC::micros();
-  sleep(1);
-  stop = RTC::micros();
-  INFO("sleep(1): %ul us", stop - start);
-
-  start = RTC::micros();
-  delay(10);
-  stop = RTC::micros();
-  INFO("delay(10): %ul us", stop - start);
-
-  start = RTC::micros();
-  delay(100);
-  stop = RTC::micros();
-  INFO("delay(100): %ul us", stop - start);
-
-  start = RTC::micros();
-  sleep(1);
-  stop = RTC::micros();
-  INFO("sleep(1): %ul us", stop - start);
-
-  start = RTC::micros();
-  yield();
-  stop = RTC::micros();
-  INFO("yield(): %ul us", stop - start);
+  MEASURE("RTC::micros(): ", 1) RTC::micros();
+  MEASURE("RTC::millis(): ", 1) RTC::millis();
+  MEASURE("RTC::seconds(): ", 1) RTC::seconds();
+  MEASURE("RTC::delay(1): ", 1)  RTC::delay(1);
+  MEASURE("RTC::delay(10): ", 1) RTC::delay(10);
+  MEASURE("DELAY(10): ", 1) DELAY(10);
+  MEASURE("DELAY(100): ", 1) DELAY(100);
+  MEASURE("delay(10): ", 1) delay(10);
+  MEASURE("delay(100): ", 1) delay(100);
+  MEASURE("sleep(1): ", 1) sleep(1);
+  MEASURE("yield(): ", 1) yield();
 
   // Start the measurement
   TRACE(RTC::micros());
