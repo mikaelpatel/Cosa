@@ -93,21 +93,12 @@ void loop()
   ProtoThread::dispatch();
   ProtoThread::dispatch();
 
-  static const uint16_t EVENTS_MAX = 100;
-  uint16_t events = EVENTS_MAX;
-  uint32_t us = 0;
-  Event event;
-
-  while (events--) {
+  // Dispatch events and measure time per dispatch
+  MEASURE("event dispatch: ", 100) {
+    Event event;
     Event::queue.await(&event);
-    uint32_t start = RTC::micros();
     event.dispatch();
-    uint32_t stop = RTC::micros();
-    us += (stop - start);
   }
-
-  uint32_t us_per_dispatch = us / EVENTS_MAX;
-  INFO("%l us per dispatch (%l cycles)", us_per_dispatch, us_per_dispatch * I_CPU);
 
   // Run the loop a limited number of times
   static uint8_t count = 0;

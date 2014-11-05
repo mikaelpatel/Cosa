@@ -39,11 +39,6 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 /**
- * Number of messages to send in the benchmark.
- */
-const uint32_t EVENTS_MAX = 100000L;
-
-/**
  * Simple echo state machine with a single state. 
  */
 class Echo : public FSM {
@@ -99,7 +94,6 @@ void setup()
   TRACE(sizeof(Echo));
 
   // Give some more startup info
-  TRACE(EVENTS_MAX);
   TRACE(F_CPU);
   TRACE(I_CPU);
 
@@ -117,22 +111,12 @@ void setup()
 
 void loop()
 {
-  // Initiate the counters
-  uint32_t events = EVENTS_MAX;
-  uint32_t start = RTC::micros();
-
-  // Dispatch events and measure total time
-  while (events--) {
+  // Dispatch events and measure time per dispatch
+  MEASURE("event dispatch: ", 1000) {
     Event event;
     Event::queue.await(&event);
     event.dispatch();
   }
-  uint32_t stop = RTC::micros();
-
-  // Capture the tick count and calculate the time per event and cycles
-  uint32_t us = stop - start;
-  uint32_t us_per_event = us / EVENTS_MAX;
-  INFO("%l us per event (%l cycles)", us_per_event, us_per_event * I_CPU);
 
   // Run the loop a limited number of times
   static uint8_t count = 0;
