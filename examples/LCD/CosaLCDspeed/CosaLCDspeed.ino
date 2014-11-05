@@ -77,6 +77,7 @@ void write_pos(uint16_t nr);
 
 // Measurement support
 void measure(str_P name, benchmark_t fn, uint16_t nr);
+#undef MEASURE
 #define MEASURE(fn,nr) measure(PSTR(#fn),fn,nr)
 
 void setup()
