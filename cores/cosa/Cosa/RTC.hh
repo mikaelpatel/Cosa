@@ -154,6 +154,7 @@ private:
   static volatile uint32_t s_uticks;
   static volatile uint16_t s_ticks;
   static volatile clock_t s_sec;
+  static volatile int16_t s_uerror;
   static InterruptHandler s_handler;
   static void* s_env;
 
