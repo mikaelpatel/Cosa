@@ -51,7 +51,7 @@ private:
     __attribute__((always_inline))
   { 
     return (pin < 8  ? &PINB : 
-	    pin < 14 ? &PIND : 
+	    pin < 16 ? &PIND : 
 	    pin < 24 ? &PINC :
 	               &PINA);
   }
@@ -77,7 +77,7 @@ private:
     __attribute__((always_inline))
   { 
     return (pin < 8  ? &PCMSK1 : 
-	    pin < 14 ? &PCMSK3 : 
+	    pin < 16 ? &PCMSK3 : 
 	    pin < 24 ? &PCMSK2 :
 	               &PCMSK0);
   }
