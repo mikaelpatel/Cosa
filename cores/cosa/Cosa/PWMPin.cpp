@@ -552,15 +552,15 @@ PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
   case Board::PWM0:
-    bit_set(TCCR1C, COM1A0);
+    bit_set(TCCR1C, COM1A1);
     OCR1A = duty;
     return;
   case Board::PWM1:
-    bit_set(TCCR1C, COM1B0);
+    bit_set(TCCR1C, COM1B1);
     OCR1B = duty;
     return;
   case Board::PWM2:
-    bit_set(TCCR1C, COM1D0);
+    bit_set(TCCR1C, COM1D1);
     OCR1D = duty;
     return;
   default:
