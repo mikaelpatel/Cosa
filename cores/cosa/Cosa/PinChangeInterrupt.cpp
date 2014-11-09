@@ -97,7 +97,7 @@ PinChangeInterrupt::on_interrupt(uint8_t pcint, uint8_t mask, uint8_t base)
 {
   uint8_t new_state = *Pin::PIN(base);
   uint8_t changed = (new_state ^ s_state[pcint]) & mask;
-  base = (pcint << 3);
+  
   
   for (uint8_t i = 0; changed && (i < CHARBITS); i++) {
     if ((changed & 1) && (s_pin[base + i] != NULL)) {
