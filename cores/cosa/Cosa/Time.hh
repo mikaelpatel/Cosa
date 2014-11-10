@@ -25,17 +25,28 @@
 #include "Cosa/BCD.h"
 #include "Cosa/IOStream.hh"
 
+// Weekday numbers (1..7)
+enum {
+  SUNDAY = 1,
+  MONDAY = 2,
+  TUESDAY = 3,
+  WEDNESDAY = 4,
+  THURSDAY = 5,
+  FRIDAY = 6,
+  SATURDAY = 7
+};
+
 // NTP epoch year and weekday (Monday)
 const uint16_t NTP_EPOCH_YEAR = 1900;
-const uint8_t  NTP_EPOCH_WEEKDAY = 2;
+const uint8_t  NTP_EPOCH_WEEKDAY = MONDAY;
 
 // POSIX epoch year and weekday (Thursday)
 const uint16_t POSIX_EPOCH_YEAR = 1970;
-const uint8_t  POSIX_EPOCH_WEEKDAY = 5;
+const uint8_t  POSIX_EPOCH_WEEKDAY = THURSDAY;
 
 // Y2K epoch year and weekday (Saturday)
 const uint16_t Y2K_EPOCH_YEAR = 2000;
-const uint8_t  Y2K_EPOCH_WEEKDAY = 7;
+const uint8_t  Y2K_EPOCH_WEEKDAY = SATURDAY;
 
 /**
  * Number of seconds elapsed since January 1 of the Epoch Year,
@@ -127,7 +138,10 @@ struct time_t {
    * Calculate 4-digit year from internal 2-digit year member.
    * @return 4-digit year.
    */
-  uint16_t full_year() const { return full_year(year); }
+  uint16_t full_year() const
+  {
+    return full_year(year);
+  }
 
   /**
    * Calculate 4-digit year from a 2-digit year
