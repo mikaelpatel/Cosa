@@ -237,6 +237,12 @@ public:
      */
     virtual int flush();
 
+    /**
+     * @override IOStream::Device
+     * Empty internal device buffers.
+     */
+    virtual void empty();
+
   protected:
     /** Blocking state */
     bool m_blocking;

@@ -153,6 +153,15 @@ public:
   }
 
   /**
+   * @override IOStream::Device
+   * Empty internal device buffers.
+   */
+  virtual void empty()
+  {
+    m_ibuf->empty();
+  }
+
+  /**
    * Start UART device driver.
    * @param[in] baudrate serial bitrate (default 9600).
    * @param[in] format serial frame format (default async, 8data, 2stop bit)
