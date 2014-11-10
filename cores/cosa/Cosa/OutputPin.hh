@@ -153,8 +153,7 @@ public:
   }
 
   /**
-   * Toggle the output pin. Actually atomic but defined for
-   * consistent naming convension.
+   * Toggle the output pin. Unprotected version.
    */
   void _toggle() const 
     __attribute__((always_inline)) 
@@ -163,12 +162,14 @@ public:
   }
 
   /**
-   * Toggle the output pin. Atomic per definition.
+   * Toggle the output pin.
    */
   void toggle() const
     __attribute__((always_inline)) 
   { 
-    *PIN() = m_mask; 
+    synchronized {
+      *PIN() = m_mask;
+    }
   }
 
   /**
@@ -342,9 +343,11 @@ public:
   void pulse(uint16_t us) const
     __attribute__((always_inline))
   {
-    toggle();
-    DELAY(us);
-    toggle();
+    synchronized {
+      _toggle();
+      DELAY(us);
+      _toggle();
+    }
   }
 };
 
