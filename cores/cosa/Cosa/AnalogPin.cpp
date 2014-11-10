@@ -52,7 +52,7 @@ AnalogPin::bandgap(uint16_t vref)
   bit_clear(ADCSRB, MUX5);
 #endif
   bit_set(ADCSRA, ADEN);
-  DELAY(1000);
+  delay(1);
   bit_set(ADCSRA, ADSC);
   loop_until_bit_is_clear(ADCSRA, ADSC);
   uint16_t sample;
