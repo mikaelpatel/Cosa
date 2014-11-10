@@ -33,19 +33,20 @@ if [ "$2" ]; then
   version=$2
 fi
 
+echo `date`: BOARD=$board,VERSION=$version
 for dir in $(ls)
 do
   if [ -d "$dir" ]; then
     echo -n `date`: $dir": " 
     cd $dir
     echo -n build..
-    cosa $board &> arduino-$version.log
+    cosa $board ARDUINO_VER=$version &> arduino-$version.log
     echo -n upload..
-    cosa $board upload &>> arduino-$version.log
+    cosa $board upload ARDUINO_VER=$version &>> arduino-$version.log
     echo -n monitor..
-    cosa $board monitor > arduino-$version.run
+    cosa $board monitor ARDUINO_VER=$version > arduino-$version.run
     echo -n clean..
-    cosa $board clean > /dev/null
+    cosa $board clean ARDUINO_VER=$version > /dev/null
     rm arduino-$version.log
     echo done
     cd ..
