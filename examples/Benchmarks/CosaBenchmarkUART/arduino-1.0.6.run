@@ -1,49 +1,49 @@
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 57600
 CosaBenchmarkUART: started
-45:void setup():free_memory() = 401
+45:void setup():free_memory() = 460
 
-53:void loop():measure:one character (new-line):28 us
+53:void loop():measure:one character (new-line):32 us
 1
 54:void loop():measure:one character:36 us
 1
-55:void loop():measure:one character string:44 us
+55:void loop():measure:one character string:48 us
 1
-56:void loop():measure:integer:56 us
+56:void loop():measure:integer:64 us
 1
-57:void loop():measure:long integer:48 us
+57:void loop():measure:long integer:92 us
 10
-58:void loop():measure:two characters:40 us
+58:void loop():measure:two characters:48 us
 10
-59:void loop():measure:two character string:52 us
+59:void loop():measure:two character string:56 us
 10
-60:void loop():measure:integer:76 us
+60:void loop():measure:integer:88 us
 10
-61:void loop():measure:long integer:80 us
+61:void loop():measure:long integer:140 us
 100
-62:void loop():measure:three characters:48 us
+62:void loop():measure:three characters:64 us
 100
-63:void loop():measure:three character string:56 us
+63:void loop():measure:three character string:68 us
 100
-64:void loop():measure:integer:100 us
+64:void loop():measure:integer:112 us
 100
-65:void loop():measure:long integer:108 us
+65:void loop():measure:long integer:196 us
 127
-68:void loop():measure:max int8_t:100 us
+68:void loop():measure:max int8_t:108 us
 32767
-69:void loop():measure:max int16_t:132 us
+69:void loop():measure:max int16_t:156 us
 2147483647
-70:void loop():measure:max int32_t:356 us
+70:void loop():measure:max int32_t:580 us
 255
-73:void loop():measure:max uint8_t:92 us
+73:void loop():measure:max uint8_t:112 us
 65535
-74:void loop():measure:max uint16_t:128 us
+74:void loop():measure:max uint16_t:152 us
 4294967295
-75:void loop():measure:max uint32_t:348 us
+75:void loop():measure:max uint32_t:584 us
 000100
-78:void loop():measure:uint16_t(digits=6):108 us
+78:void loop():measure:uint16_t(digits=6):132 us
 000100
-82:void loop():measure:uint32_t(digits=6):128 us
+82:void loop():measure:uint32_t(digits=6):224 us
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
@@ -108,13 +108,13 @@ CosaBenchmarkUART: started
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
-88:void loop():measure:output(4096 characters):789704 us
+88:void loop():measure:output(4096 characters):789888 us
 
 98:void loop():measure:newline character:8 us
 	
 99:void loop():measure:tab:36 us
 
-100:void loop():measure:newline string(1):16 us
+100:void loop():measure:newline string(1):20 us
 
 
 101:void loop():measure:newline string(2):24 us
