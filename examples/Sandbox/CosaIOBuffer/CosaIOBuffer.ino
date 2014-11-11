@@ -113,12 +113,12 @@ void loop()
   ASSERT(buffer.putchar('\n') == '\n');
 
   ASSERT(buffer.gets(s, sizeof(s)) == s);
-  ASSERT(strlen(s) == 3);
-  ASSERT(!strcmp_P(s, PSTR("ABC")));
+  ASSERT(strlen(s) == 4);
+  ASSERT(!strcmp_P(s, PSTR("ABC\n")));
 
   ASSERT(buffer.gets(s, sizeof(s)) == s);
-  ASSERT(strlen(s) == 3);
-  ASSERT(!strcmp_P(s, PSTR("123")));
+  ASSERT(strlen(s) == 4);
+  ASSERT(!strcmp_P(s, PSTR("123\n")));
 
   ASSERT(buffer.gets(s, sizeof(s)) == NULL);
   ASSERT(strlen(s) == 0);
