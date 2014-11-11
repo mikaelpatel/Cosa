@@ -123,6 +123,12 @@ void loop()
   ASSERT(buffer.gets(s, sizeof(s)) == NULL);
   ASSERT(strlen(s) == 0);
 
+  // Fill the buffer, empty and check state
+  for (char c = 'A'; !buffer.is_full(); c++) 
+    ASSERT(buffer.putchar(c) == c);
+  buffer.empty();
+  ASSERT(buffer.is_empty());
+
   // End the test suite
   ASSERT(true == false);
 }
