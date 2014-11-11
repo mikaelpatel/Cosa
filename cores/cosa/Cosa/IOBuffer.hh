@@ -127,7 +127,7 @@ public:
   /**
    * Empty the buffer.
    */
-  void empty()
+  virtual void empty()
     __attribute__((always_inline))
   {
     m_head = m_tail = 0;

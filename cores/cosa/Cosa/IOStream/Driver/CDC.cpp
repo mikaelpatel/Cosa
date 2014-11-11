@@ -154,6 +154,12 @@ CDC::flush(void)
   return (0);
 }
 
+void
+CDC::empty(void)
+{
+  m_ibuf->empty();
+}
+
 int 
 CDC::write(const void* buf, size_t size)
 {

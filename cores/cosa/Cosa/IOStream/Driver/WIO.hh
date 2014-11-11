@@ -88,6 +88,15 @@ public:
     return (res);
   }
 
+  /**
+   * @override IOStream::Device
+   * Empty internal device buffers.
+   */
+  virtual void empty()
+  {
+    m_dev->empty();
+  }
+
 private:
   /** Buffered output. */
   uint8_t m_buffer[PAYLOAD_MAX];

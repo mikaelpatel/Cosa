@@ -119,6 +119,12 @@ public:
   virtual int flush();
 
   /**
+   * @override IOStream::Device
+   * Empty internal device buffers.
+   */
+  virtual void empty();
+
+  /**
    * Start CDC device driver. Note: the parameters are not used. They
    * are added to to maintain the same interface as UART.
    * @param[in] baudrate serial bitrate (default 9600).

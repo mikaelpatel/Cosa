@@ -113,15 +113,21 @@ void loop()
   ASSERT(buffer.putchar('\n') == '\n');
 
   ASSERT(buffer.gets(s, sizeof(s)) == s);
-  ASSERT(strlen(s) == 3);
-  ASSERT(!strcmp_P(s, PSTR("ABC")));
+  ASSERT(strlen(s) == 4);
+  ASSERT(!strcmp_P(s, PSTR("ABC\n")));
 
   ASSERT(buffer.gets(s, sizeof(s)) == s);
-  ASSERT(strlen(s) == 3);
-  ASSERT(!strcmp_P(s, PSTR("123")));
+  ASSERT(strlen(s) == 4);
+  ASSERT(!strcmp_P(s, PSTR("123\n")));
 
   ASSERT(buffer.gets(s, sizeof(s)) == NULL);
   ASSERT(strlen(s) == 0);
+
+  // Fill the buffer, empty and check state
+  for (char c = 'A'; !buffer.is_full(); c++) 
+    ASSERT(buffer.putchar(c) == c);
+  buffer.empty();
+  ASSERT(buffer.is_empty());
 
   // End the test suite
   ASSERT(true == false);

@@ -445,3 +445,8 @@ IOStream::Device::flush()
 { 
   return (EOF); 
 }
+
+void
+IOStream::Device::empty()
+{
+}
