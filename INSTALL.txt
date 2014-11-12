@@ -1,0 +1,19 @@
+USING COSA WITHOUT THE ARDUINO IDE [UBUNTU 14.04 LTS]
+
+1. Install gcc-avr (1:48-2.1) with avr-libc and avrdude with Ubuntu
+   Software Center or apt-get. 
+
+2. Set environment variable COSA_DIR to the Cosa install directory.
+   COSA_DIR=$HOME/Cosa ; export COSA_DIR
+
+3. Set environment variable GCC_AVR_VER to gcc-4.2. 
+   GCC_AVR_VER=gcc-avr-4.2 ; export GCC_AVR_VER
+
+4. Add COSA_DIR/bin to PATH
+   or add a symbolic link in local bin to COSA_DIR/bin/cosa.
+   ln -s $COSA_DIR/bin/cosa $HOME/bin/cosa
+
+5. Run command line build with board.
+   cd Cosa/example/Benchmarks/CosaBenchmarksPins
+   cosa nano avanti
+
