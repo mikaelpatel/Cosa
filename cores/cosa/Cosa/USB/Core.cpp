@@ -627,25 +627,29 @@ USBDevice_::USBDevice_()
 #define HW_CONFIG() 
 #define PLL_CONFIG() (PLLCSR = ((1<<PLLE)|(1<<PLLP0)))
 #define USB_CONFIG() (USBCON = (1<<USBE))
+#define USB_UNCONFIG() (USBCON ^= (1<<USBE))
 #define USB_FREEZE() (USBCON = ((1<<USBE)|(1<<FRZCLK)))
 #elif defined(__AVR_ATmega32U4__)
 #define HW_CONFIG() (UHWCON = 0x01)
 #define PLL_CONFIG() (PLLCSR = 0x12)
 #define USB_CONFIG() (USBCON = ((1<<USBE)|(1<<OTGPADE)))
+#define USB_UNCONFIG() (USBCON ^= (1<<USBE))
 #define USB_FREEZE() (USBCON = ((1<<USBE)|(1<<FRZCLK)))
 #elif defined(__AVR_AT90USB646__)
 #define HW_CONFIG() (UHWCON = 0x81)
 #define PLL_CONFIG() (PLLCSR = 0x1A)
 #define USB_CONFIG() (USBCON = ((1<<USBE)|(1<<OTGPADE)))
+#define USB_UNCONFIG() (USBCON ^= (1<<USBE))
 #define USB_FREEZE() (USBCON = ((1<<USBE)|(1<<FRZCLK)))
 #elif defined(__AVR_AT90USB1286__)
 #define HW_CONFIG() (UHWCON = 0x81)
 #define PLL_CONFIG() (PLLCSR = 0x16)
 #define USB_CONFIG() (USBCON = ((1<<USBE)|(1<<OTGPADE)))
+#define USB_UNCONFIG() (USBCON ^= (1<<USBE))
 #define USB_FREEZE() (USBCON = ((1<<USBE)|(1<<FRZCLK)))
 #endif
 
-void 
+bool
 USBDevice_::attach()
 {
   // Configure hardware and phase-locked-loop and enable 
@@ -668,7 +672,17 @@ USBDevice_::attach()
 
   // Wait for usb device to connect to host
   TX_RX_LED_INIT;
-  while (!_usbConfiguration) delay(200);
+  for (uint8_t timeout=10;timeout;timeout--) {   // 2 seconds
+    if (_usbConfiguration)
+      return (true);
+    delay(200);
+  }
+
+  // Host didn't connect, disable USB, leave powered
+  UDIEN = _BV(DETACH);
+  USB_UNCONFIG();
+
+  return (false);
 }
 
 void 

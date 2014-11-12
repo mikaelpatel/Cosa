@@ -128,7 +128,7 @@ CDC::begin(uint32_t baudrate, uint8_t format)
   UNUSED(baudrate);
   UNUSED(format);
   if (!Watchdog::is_initiated()) Watchdog::begin();
-  USBDevice.attach();
+  if (!USBDevice.attach()) return (false);
   for (uint8_t retry = 0; retry < 30; retry++) {
     if (_usbLineInfo.lineState > 0) return (true);
     delay(200);

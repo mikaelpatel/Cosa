@@ -31,7 +31,7 @@ class USBDevice_
  public:
   USBDevice_();
   bool configured();
-  void attach();
+  bool attach();
   void detach();
   void poll();
 };
