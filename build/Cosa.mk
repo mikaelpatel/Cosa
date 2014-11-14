@@ -19,17 +19,13 @@
 
 ifdef GCC_AVR_VER
   ARDUINO_VER = $(GCC_AVR_VER)
-
 else
-
-ifndef ARDUINO_VER
-  ARDUINO_VER = 1.5.7
-endif
-
-ifndef ARDUINO_DIR
-  ARDUINO_DIR = $(HOME)/opt/arduino-$(ARDUINO_VER)
-endif
-
+  ifndef ARDUINO_VER
+    ARDUINO_VER = 1.5.8
+  endif
+  ifndef ARDUINO_DIR
+    ARDUINO_DIR = $(HOME)/opt/arduino-$(ARDUINO_VER)
+  endif
 endif
 
 ARDMK_DIR = $(COSA_DIR)/build/Arduino-Makefile

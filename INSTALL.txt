@@ -1,4 +1,26 @@
-USING COSA WITHOUT THE ARDUINO IDE [UBUNTU 14.04 LTS]
+USING COSA WITH THE ARDUINO IDE
+===============================
+
+1. Download and install Arduino IDE. Default install directory in Cosa
+   build script is $HOME/opt/arduino-VERSION
+
+2. Download and install Cosa. Default install directory for Cosa is 
+   $HOME/Sketchbook/hardware/Cosa (Arduino 1.0.X)
+   $HOME/Sketchbook/hardware/avr/Cosa (Arduino 1.5.X)
+
+3. Start Arduino IDE.
+   cd $HOME/opt/arduino-VERSION ; ./arduino
+
+4. Open sketch, compile and upload, and start serial monitor.
+   a. Set board; Tools>Board>Cosa BOARD
+   b. Set port; Tools>Port>
+   c. Open example sketch; File>Sketchbook/hardware>Cosa>...
+   d. Compile and upload; File>Upload
+   e. Open Serial Monitor; Tools>Serial Monitor
+
+
+USING COSA WITHOUT THE ARDUINO IDE [UBUNTU]
+===========================================
 
 1. Install gcc-avr (1:48-2.1) with avr-libc and avrdude with Ubuntu
    Software Center or apt-get. 
