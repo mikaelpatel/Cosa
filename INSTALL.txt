@@ -1,5 +1,5 @@
-USING COSA WITH THE ARDUINO IDE
-===============================
+USING COSA WITH THE ARDUINO IDE/TOOLCHAIN
+=========================================
 
 1. Download and install Arduino IDE. Default install directory in Cosa
    build script is $HOME/opt/arduino-VERSION
@@ -19,8 +19,8 @@ USING COSA WITH THE ARDUINO IDE
    e. Open Serial Monitor; Tools>Serial Monitor
 
 
-USING COSA WITHOUT THE ARDUINO IDE [UBUNTU]
-===========================================
+USING COSA WITH THE GCC AVR TOOLCHAIN (UBUNTU)
+==============================================
 
 1. Install gcc-avr (1:48-2.1) with avr-libc and avrdude with Ubuntu
    Software Center or apt-get. 
