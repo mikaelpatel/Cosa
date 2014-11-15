@@ -110,7 +110,7 @@ CDC_Setup(Setup& setup)
 	  // Most OSs do some intermediate steps when configuring
 	  // ports and DTR can twiggle more than once before
 	  // stabilizing. To avoid spurious resets we set the watchdog
-	  // to 250ms and eventually cancel if DTR goes back high.
+	  // to 120ms and eventually cancel if DTR goes back high.
 	  wdt_disable();
 	  wdt_reset();
 	  *(uint16_t *)0x0800 = 0x0;
