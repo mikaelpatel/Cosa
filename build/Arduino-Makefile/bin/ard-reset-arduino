@@ -21,8 +21,6 @@ if args.caterina:
     ser.close()
     ser.setBaudrate(1200)
     ser.open()
-    ser.setDTR(False)
-    sleep(1)
     ser.close()
     sleep(1)
 
