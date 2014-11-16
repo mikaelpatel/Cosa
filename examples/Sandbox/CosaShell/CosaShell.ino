@@ -34,7 +34,7 @@ void setup()
   Watchdog::begin();
   Tone::begin();
   RTC::begin();
-  uart.begin(115200);
+  uart.begin(57600);
   yield = iowait;
 }
 

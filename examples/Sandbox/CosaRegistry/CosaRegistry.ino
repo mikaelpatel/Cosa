@@ -274,6 +274,9 @@ void loop()
   path[1] = 2; 
   item = reg.lookup(path, sizeof(path));
   trace << item << endl;
-  ASSERT(item != NULL);
+  ASSERT(item == NULL);
+
+  // End of examples
+  ASSERT(true == false);
 }
 
