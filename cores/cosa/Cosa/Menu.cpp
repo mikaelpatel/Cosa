@@ -26,7 +26,7 @@ Menu::print(IOStream& outs, Menu::one_of_P var)
   uint16_t ix = *((uint16_t*) pgm_read_word(&var->value));
   item_vec_P list = (item_vec_P) pgm_read_word(&var->list);
   item_P item = (item_P) pgm_read_word(&list[ix]);
-  outs << (const char*) pgm_read_word(&item->name);
+  outs << (str_P) pgm_read_word(&item->name);
 }
 
 void 
@@ -39,7 +39,7 @@ Menu::print(IOStream& outs, zero_or_many_P var, bool selected, uint8_t bv)
   if (value & _BV(bv)) 
     outs << PSTR("[x] ");
   else outs << PSTR("[ ] ");
-  outs << (const char*) pgm_read_word(&item->name);
+  outs << (str_P) pgm_read_word(&item->name);
 }
 
 void
@@ -69,9 +69,9 @@ operator<<(IOStream& outs, Menu::Walker& walker)
   if (walker.m_selected) outs << '*';
 
   // Print the name of the current menu item with parent
-  outs << (const char*) pgm_read_word(&item->name) << ':';
+  outs << (str_P) pgm_read_word(&item->name) << ':';
   item = (Menu::item_P) pgm_read_word(&list[walker.m_ix]);
-  outs << (const char*) pgm_read_word(&item->name) << endl;
+  outs << (str_P) pgm_read_word(&item->name) << endl;
   type = (Menu::type_t) pgm_read_byte(&item->type);
 
   // Print possible value of current menu item
