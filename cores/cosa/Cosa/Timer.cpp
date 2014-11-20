@@ -165,7 +165,8 @@ Timer::start()
       Linkage* succ = &s_queue;
       Linkage* timer;
       while ((timer = succ->get_pred()) != &s_queue) {
-        if (((Timer*) timer)->m_expires <= m_expires) {
+        int32_t diff = ((Timer*) timer)->m_expires - m_expires;
+        if (diff < 0) {
           first_changed = false;
           break;
         }
