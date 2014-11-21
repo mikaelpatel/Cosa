@@ -238,6 +238,22 @@ void setup()
 		 (expected_ms % 1000), 
 		 actual);
   uart.flush();
+  
+  synchronized {
+    RTC::s_uticks = 0xFFFFF000UL; // 4095uS 'til rolloover
+  };
+  expected = 5000;  // anywhere past the rolloever...
+ 
+  Simple::flag = false;
+  start = RTC::micros();
+  one_shot.expire_at(start + expected);
+  one_shot.start();
+  while (!Simple::flag)
+    ; 
+  actual = OneShot::time_stamp - start;
+  trace.printf_P(PSTR("Rollover test: start %ul, end %ul\n  expire_after(%ul us): actual %l us\n"), 
+     start, OneShot::time_stamp, expected, actual);
+  uart.flush();
 }
 
 void loop()
