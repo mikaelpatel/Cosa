@@ -239,9 +239,7 @@ void setup()
 		 actual);
   uart.flush();
   
-  synchronized {
-    RTC::s_uticks = 0xFFFFF000UL; // 4095uS 'til rolloover
-  };
+  RTC::micros( 0xFFFFF000UL ); // 4095uS 'til rolloover
   expected = 5000;  // anywhere past the rolloever...
  
   Simple::flag = false;

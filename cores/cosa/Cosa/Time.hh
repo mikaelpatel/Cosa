@@ -271,7 +271,7 @@ struct time_t {
 protected:
   static uint16_t s_epoch_year;
   static uint8_t epoch_offset;
-};
+} __attribute__((packed));
 
 /**
  * Print the date/time to the given stream with the format "YYYY-MM-DD HH:MM:SS".
@@ -279,5 +279,6 @@ protected:
  * @param[in] t time structure.
  * @return iostream.
  */
-IOStream& operator<<(IOStream& outs, time_t& t);
+IOStream& operator<<(IOStream& outs, const time_t& t);
+
 #endif
