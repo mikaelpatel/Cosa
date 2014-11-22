@@ -20,7 +20,7 @@
 
 #include "Cosa/Time.hh"
 
-IOStream& operator<<(IOStream& outs, time_t& t)
+IOStream& operator<<(IOStream& outs, const time_t& t)
 {
   outs << time_t::full_year( t.year ) << '-';
   if (t.month < 10) outs << '0';
