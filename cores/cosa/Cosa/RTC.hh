@@ -74,6 +74,8 @@ public:
   {
     synchronized {
       s_sec = sec;
+      s_ticks = 0;
+      s_uerror = 0;
     }
   }
 
@@ -94,6 +96,18 @@ public:
    * @return micro-seconds.
    */
   static uint32_t micros();
+
+  /**
+   * Set the current clock in micro-seconds.
+   * @param[in] usec.
+   */
+  static void micros( uint32_t usec )
+  {
+    synchronized {
+      s_uticks = usec;
+    }
+  }
+
 
   /**
    * Return the current clock in milli-seconds.
