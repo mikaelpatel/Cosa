@@ -246,7 +246,7 @@ Shell::help_command(IOStream& outs, uint8_t column, const command_t* command)
     for (uint8_t i = 3; i; i--)
       outs << ' ';
   }
-  outs << m_help_separator << help << endl;
+  outs << ' ' << m_help_separator << help << endl;
 
   return (0);
 }
