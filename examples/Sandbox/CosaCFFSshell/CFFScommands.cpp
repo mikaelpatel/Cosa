@@ -23,10 +23,8 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/FS/CFFS.hh"
 
-static const char CAT_NAME[] __PROGMEM = "cat";
-static const char CAT_ARGS[] __PROGMEM = "FILE..";
-static const char CAT_HELP[] __PROGMEM = "print content of file";
-static int cat_action(int argc, char* argv[])
+SHELL_ACTION(cat, "FILE..", "print content of file")
+(int argc, char* argv[])
 {
   for (int ix = 1; ix < argc; ix++) {
     const size_t BUF_MAX = 256;
@@ -41,18 +39,15 @@ static int cat_action(int argc, char* argv[])
   return (0);
 }
 
-static const char CD_NAME[] __PROGMEM = "cd";
-static const char CD_ARGS[] __PROGMEM = "DIR";
-static const char CD_HELP[] __PROGMEM = "change directory";
-static int cd_action(int argc, char* argv[])
+SHELL_ACTION(cd, "DIR", "change directory")
+(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
   return (CFFS::cd(argv[1]));
 }
 
-static const char DATE_NAME[] __PROGMEM = "date";
-static const char DATE_HELP[] __PROGMEM = "current time and date";
-static int date_action(int argc, char* argv[])
+SHELL_ACTION(date, "", "current time and date")
+(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1) return (-1);
@@ -61,10 +56,8 @@ static int date_action(int argc, char* argv[])
   return (0);
 }
 
-static const char DU_NAME[] __PROGMEM = "du";
-static const char DU_ARGS[] __PROGMEM = "FILE";
-static const char DU_HELP[] __PROGMEM = "file size";
-static int du_action(int argc, char* argv[])
+SHELL_ACTION(du, "FILE", "file size")
+(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
   CFFS::File file;
@@ -73,10 +66,9 @@ static int du_action(int argc, char* argv[])
   ios << file.size() << endl;
   return (0);
 }
-   
-static const char HELP_NAME[] __PROGMEM = "help";
-static const char HELP_HELP[] __PROGMEM = "list command help";
-static int help_action(int argc, char* argv[])
+
+SHELL_ACTION(help, "", "list command help")
+(int argc, char* argv[])
 {
   if (argc != 1)
     return (shell.help(ios, argv[1]));
@@ -84,10 +76,8 @@ static int help_action(int argc, char* argv[])
     return (shell.help(ios));
 }
 
-static const char LS_NAME[] __PROGMEM = "ls";
-static const char LS_ARGS[] __PROGMEM = "[-v]";
-static const char LS_HELP[] __PROGMEM = "list files (verbose)";
-static int ls_action(int argc, char* argv[])
+SHELL_ACTION(ls, "[-v]", "list files (verbose)")
+(int argc, char* argv[])
 {
   if (argc > 2) return (-1);
   bool verbose = false;
@@ -99,19 +89,15 @@ static int ls_action(int argc, char* argv[])
   return (CFFS::ls(ios, verbose));
 }
 
-static const char MKDIR_NAME[] __PROGMEM = "mkdir";
-static const char MKDIR_ARGS[] __PROGMEM = "DIR";
-static const char MKDIR_HELP[] __PROGMEM = "make directory";
-static int mkdir_action(int argc, char* argv[])
+SHELL_ACTION(mkdir, "DIR", "make directory")
+(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
   return (CFFS::mkdir(argv[1]));
 }
 
-static const char OD_NAME[] __PROGMEM = "od";
-static const char OD_ARGS[] __PROGMEM = "[-b|-d] FILE";
-static const char OD_HELP[] __PROGMEM = "dump file (bin,dec,hex)";
-static int od_action(int argc, char* argv[])
+SHELL_ACTION(od, "[-b|-d] FILE", "dump file (bin,dec,hex)")
+(int argc, char* argv[])
 {
   IOStream::Base base = IOStream::hex;
   char* option;
@@ -139,10 +125,8 @@ static int od_action(int argc, char* argv[])
   return (0);
 }
 
-static const char READ_NAME[] __PROGMEM = "read";
-static const char READ_ARGS[] __PROGMEM = "[-pPOS|-sSIZE] FILE";
-static const char READ_HELP[] __PROGMEM = "print content of file (position/size)";
-static int read_action(int argc, char* argv[])
+SHELL_ACTION(read, "[-pPOS|-sSIZE] FILE", "print content of file (position/size)")
+(int argc, char* argv[])
 {
   uint32_t pos = 0L;
   uint32_t size = 0L;
@@ -181,22 +165,15 @@ static int read_action(int argc, char* argv[])
   return (0);
 }
 
-static const char RM_NAME[] __PROGMEM = "rm";
-static const char RM_ARGS[] __PROGMEM = "FILE";
-static const char RM_HELP[] __PROGMEM = "remove file";
-static int rm_action(int argc, char* argv[])
+SHELL_ACTION(rm, "FILE", "remove file")
+(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
   return (CFFS::rm(argv[1]));
 }
-   
-static const char STTY_NAME[] __PROGMEM = 
-  "stty";
-static const char STTY_ARGS[] __PROGMEM = 
-  "[eol=CR|LF|CRLF]";
-static const char STTY_HELP[] __PROGMEM = 
-  "set tty mode";
-static int stty_action(int argc, char* argv[])
+
+SHELL_ACTION(stty, "[eol=CR|LF|CRLF]", "set tty mode")
+(int argc, char* argv[])
 {
   UNUSED(argv);
   char* option;
@@ -217,13 +194,8 @@ static int stty_action(int argc, char* argv[])
   return (0);
 }
 
-static const char WRITE_NAME[] __PROGMEM = 
-  "write";
-static const char WRITE_ARGS[] __PROGMEM = 
-  "[-n|t] FILE STRING..";
-static const char WRITE_HELP[] __PROGMEM = 
-  "print text to file (newline/timestamp)";
-static int write_action(int argc, char* argv[])
+SHELL_ACTION(write, "[-n|t] FILE STRING..", "print text to file (newline/timestamp)")
+(int argc, char* argv[])
 {
   bool newline = true;
   bool timestamp = false;
@@ -250,19 +222,19 @@ static int write_action(int argc, char* argv[])
   return (0);
 }
 
-static const Shell::command_t command_tab[] __PROGMEM = {
-  { CAT_NAME, CAT_ARGS, CAT_HELP, cat_action, Shell::GUEST },
-  { CD_NAME, CD_ARGS, CD_HELP, cd_action, Shell::GUEST },
-  { DATE_NAME, NULL, DATE_HELP, date_action, Shell::GUEST },
-  { DU_NAME, DU_ARGS, DU_HELP, du_action, Shell::GUEST },
-  { HELP_NAME, NULL, HELP_HELP, help_action, Shell::GUEST },
-  { LS_NAME, LS_ARGS, LS_HELP, ls_action, Shell::GUEST },
-  { MKDIR_NAME, MKDIR_ARGS, MKDIR_HELP, mkdir_action, Shell::GUEST },
-  { OD_NAME, OD_ARGS, OD_HELP, od_action, Shell::GUEST },
-  { READ_NAME, READ_ARGS, READ_HELP, read_action, Shell::GUEST },
-  { RM_NAME, RM_ARGS, RM_HELP, rm_action, Shell::GUEST },
-  { STTY_NAME, STTY_ARGS, STTY_HELP, stty_action, Shell::GUEST },
-  { WRITE_NAME, WRITE_ARGS, WRITE_HELP, write_action, Shell::GUEST }
-};
+SHELL_BEGIN(command_tab)
+  SHELL_COMMAND(cat, Shell::GUEST)
+  SHELL_COMMAND(cd, Shell::GUEST)
+  SHELL_COMMAND(date, Shell::GUEST)
+  SHELL_COMMAND(du, Shell::GUEST)
+  SHELL_COMMAND(help, Shell::GUEST)
+  SHELL_COMMAND(ls, Shell::GUEST)
+  SHELL_COMMAND(mkdir, Shell::GUEST)
+  SHELL_COMMAND(od, Shell::GUEST)
+  SHELL_COMMAND(read, Shell::GUEST)
+  SHELL_COMMAND(rm, Shell::GUEST)
+  SHELL_COMMAND(stty, Shell::GUEST)
+  SHELL_COMMAND(write, Shell::GUEST)
+SHELL_END
 
 Shell shell(membersof(command_tab), command_tab);

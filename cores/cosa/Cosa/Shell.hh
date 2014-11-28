@@ -24,16 +24,6 @@
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 
-#define SHELL_DEFINE_COMMAND(name, args, help) \
-  static const char name ## _NAME[] __PROGMEM = #name; \
-  static const char name ## _ARGS[] __PROGMEM = args; \
-  static const char name ## _HELP[] __PROGMEM = help;  \
-  static int name ## _action
-
-#define SHELL_REFER_COMMAND(name, lvl) \
-  { name ## _NAME, name ## _ARGS, name ## _HELP, name ## _action, lvl }
-
-
 class Shell {
 public:
   /**
@@ -297,6 +287,91 @@ protected:
  * Shell script magic marker. 
  */
 #define SHELL_SCRIPT_MAGIC "#!Cosa/Shell\n" 
+
+/**
+ * Support macro to define a command.
+ * Used in the form:
+ *   SHELL_ACTION(command,args,help)
+ *   (int argc, char* argv[])
+ *   {
+ *     ...
+ *   }
+ *
+ * Example:
+ *   SHELL_ACTION(echo, "[args]", "echo arguments")
+ *   (int argc, char* argv[])
+ *   {
+ *     ...
+ *   }
+ *
+ * @param[in] command name of command.
+ * @param[in] args string of optional argument format.
+ * @param[in] help string for help.
+ */
+#define SHELL_ACTION(command, args, help) \
+  static const char command ## _NAME[] __PROGMEM = #command; \
+  static const char command ## _ARGS[] __PROGMEM = args; \
+  static const char command ## _HELP[] __PROGMEM = help;  \
+  static int command ## _action
+
+/**
+ * Support macro to start to define a script.
+ * Used in the form:
+ *   SHELL_SCRIPT_BEGIN(command,args,help)
+ *     SHELL_SCRIPT_MAGIC
+ *     ...
+ *   SHELL_SCRIPT_END(command)
+ *
+ * @param[in] command name of command.
+ * @param[in] args string of optional argument format.
+ * @param[in] help string for help.
+ */
+#define SHELL_SCRIPT_BEGIN(command, args, help) \
+  static const char command ## _NAME[] __PROGMEM = #command; \
+  static const char command ## _ARGS[] __PROGMEM = args; \
+  static const char command ## _HELP[] __PROGMEM = help;  \
+  static const char command ## _SCRIPT[] __PROGMEM =
+
+/**
+ * Support macro to complete definition of a script.
+ * Used in the form:
+ *   SHELL_SCRIPT_BEGIN(command,args,help)
+ *     SHELL_SCRIPT_MAGIC
+ *     ...
+ *   SHELL_SCRIPT_END(command)
+ *
+ * @param[in] command name of command.
+ */
+#define SHELL_SCRIPT_END(command) \
+  ; \
+  static Shell::action_fn command ## _action = (Shell::action_fn) command ## _SCRIPT;
+
+/**
+ * Support macro to start the definition of commands in program memory.
+ * Used in the form:
+ *   SHELL_BEGIN(var)
+ *     SHELL_COMMAND(command-1)
+ *     ...
+ *     SHELL_COMMAND(command-n)
+ *   SHELL_END
+ */
+#define SHELL_BEGIN(var) \
+  static const Shell::command_t var[] __PROGMEM = {
+
+/**
+ * Support macro to add a command item in program memory.
+ * @param[in] var command reference to add.
+ * @param[in] level of command.
+ */
+#define SHELL_COMMAND(name, level) \
+  { name ## _NAME, name ## _ARGS, name ## _HELP, name ## _action, level },
+
+/**
+ * Support macro to end the definition of commands in program memory.
+ */
+#define SHELL_END \
+  { 0, 0, 0, 0, Shell::GUEST} \
+  };
 
 #endif
 
