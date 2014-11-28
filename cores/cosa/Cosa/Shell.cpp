@@ -21,6 +21,7 @@
 #include "Cosa/Shell.hh"
 
 const char Shell::DEFAULT_PROMPT[] __PROGMEM = "arduino:$ ";
+const char Shell::DEFAULT_HELP_SEPARATOR[] __PROGMEM = "-- ";
 
 const Shell::command_t*
 Shell::lookup(char* name) 
@@ -206,14 +207,71 @@ Shell::run(IOStream& ios)
 }
 
 int
-Shell::help(IOStream& outs)
+Shell::help_command(IOStream& outs, uint8_t column, const command_t* command)
 {
-  for (uint8_t i = 0; i < m_cmdc; i++) {
-    str_P help = (str_P) pgm_read_word(&m_cmdtab[i].help);
-    if (help == NULL) continue;
-    str_P name = (str_P) pgm_read_word(&m_cmdtab[i].name);
-    outs << name << ' ' << help << endl;
+  uint8_t remains = column;
+
+  if (!command)
+    return (-1);
+
+  str_P help = (str_P) pgm_read_word(&command->help);
+  if (help == NULL) return (0);
+
+  str_P name = (str_P) pgm_read_word(&command->name);
+  str_P args = (str_P) pgm_read_word(&command->args);
+
+  outs << name;
+  if (remains)
+    remains -= strlen_P(name);
+
+  if (args) {
+    outs << ' ' << args;
+    if (remains)
+      remains -= 1 + strlen_P(args);
   }
+
+  if (!column)
+    remains++;
+
+  if (remains) {
+    outs << ' ';
+    remains--;
+  }
+    
+  while (remains--)
+    outs << m_gap_fill;
+
+  if ((column + strlen_P(m_help_separator) + 1 + strlen_P(help)) > 80) {
+    outs << endl;
+    for (uint8_t i = 3; i; i--)
+      outs << ' ';
+  }
+  outs << m_help_separator << help << endl;
+
+  return (0);
+}
+
+int
+Shell::help(IOStream& outs, char* command)
+{
+  uint8_t column = 0;
+
+  if (command)
+    return (help_command(outs, column, lookup(command)));
+
+  for (uint8_t len = 0, i = 0; i < m_cmdc; i++) {
+    len = strlen_P((str_P) pgm_read_word(&m_cmdtab[i].args));
+    if (len) len++;  // space
+    len += strlen_P((str_P) pgm_read_word(&m_cmdtab[i].name));
+    if (len > column)
+      column = len;
+  }
+  column++;
+
+  for (uint8_t i = 0; i < m_cmdc; i++) {
+    help_command(outs, column, &m_cmdtab[i]);
+  }
+
   return (0);
 }
 

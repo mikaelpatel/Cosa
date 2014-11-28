@@ -24,7 +24,8 @@
 #include "Cosa/FS/CFFS.hh"
 
 static const char CAT_NAME[] __PROGMEM = "cat";
-static const char CAT_HELP[] __PROGMEM = "FILE.. -- print content of file";
+static const char CAT_ARGS[] __PROGMEM = "FILE..";
+static const char CAT_HELP[] __PROGMEM = "print content of file";
 static int cat_action(int argc, char* argv[])
 {
   for (int ix = 1; ix < argc; ix++) {
@@ -41,7 +42,8 @@ static int cat_action(int argc, char* argv[])
 }
 
 static const char CD_NAME[] __PROGMEM = "cd";
-static const char CD_HELP[] __PROGMEM = "DIR -- change directory";
+static const char CD_ARGS[] __PROGMEM = "DIR";
+static const char CD_HELP[] __PROGMEM = "change directory";
 static int cd_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -49,7 +51,7 @@ static int cd_action(int argc, char* argv[])
 }
 
 static const char DATE_NAME[] __PROGMEM = "date";
-static const char DATE_HELP[] __PROGMEM = "-- current time and date";
+static const char DATE_HELP[] __PROGMEM = "current time and date";
 static int date_action(int argc, char* argv[])
 {
   UNUSED(argv);
@@ -60,7 +62,8 @@ static int date_action(int argc, char* argv[])
 }
 
 static const char DU_NAME[] __PROGMEM = "du";
-static const char DU_HELP[] __PROGMEM = "FILE -- file size";
+static const char DU_ARGS[] __PROGMEM = "FILE";
+static const char DU_HELP[] __PROGMEM = "file size";
 static int du_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -72,16 +75,18 @@ static int du_action(int argc, char* argv[])
 }
    
 static const char HELP_NAME[] __PROGMEM = "help";
-static const char HELP_HELP[] __PROGMEM = "-- list command help";
+static const char HELP_HELP[] __PROGMEM = "list command help";
 static int help_action(int argc, char* argv[])
 {
-  UNUSED(argv);
-  if (argc != 1) return (-1);
-  return (shell.help(ios));
+  if (argc != 1)
+    return (shell.help(ios, argv[1]));
+  else
+    return (shell.help(ios));
 }
 
 static const char LS_NAME[] __PROGMEM = "ls";
-static const char LS_HELP[] __PROGMEM = "[-v] -- list files (verbose)";
+static const char LS_ARGS[] __PROGMEM = "[-v]";
+static const char LS_HELP[] __PROGMEM = "list files (verbose)";
 static int ls_action(int argc, char* argv[])
 {
   if (argc > 2) return (-1);
@@ -95,7 +100,8 @@ static int ls_action(int argc, char* argv[])
 }
 
 static const char MKDIR_NAME[] __PROGMEM = "mkdir";
-static const char MKDIR_HELP[] __PROGMEM = "DIR -- make directory";
+static const char MKDIR_ARGS[] __PROGMEM = "DIR";
+static const char MKDIR_HELP[] __PROGMEM = "make directory";
 static int mkdir_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -103,7 +109,8 @@ static int mkdir_action(int argc, char* argv[])
 }
 
 static const char OD_NAME[] __PROGMEM = "od";
-static const char OD_HELP[] __PROGMEM = "[-b|-d] FILE -- dump file (bin,dec,hex)";
+static const char OD_ARGS[] __PROGMEM = "[-b|-d] FILE";
+static const char OD_HELP[] __PROGMEM = "dump file (bin,dec,hex)";
 static int od_action(int argc, char* argv[])
 {
   IOStream::Base base = IOStream::hex;
@@ -133,7 +140,8 @@ static int od_action(int argc, char* argv[])
 }
 
 static const char READ_NAME[] __PROGMEM = "read";
-static const char READ_HELP[] __PROGMEM = "[-pPOS|-sSIZE] FILE -- print content of file (position/size)";
+static const char READ_ARGS[] __PROGMEM = "[-pPOS|-sSIZE] FILE";
+static const char READ_HELP[] __PROGMEM = "print content of file (position/size)";
 static int read_action(int argc, char* argv[])
 {
   uint32_t pos = 0L;
@@ -174,7 +182,8 @@ static int read_action(int argc, char* argv[])
 }
 
 static const char RM_NAME[] __PROGMEM = "rm";
-static const char RM_HELP[] __PROGMEM = "FILE -- remove file";
+static const char RM_ARGS[] __PROGMEM = "FILE";
+static const char RM_HELP[] __PROGMEM = "remove file";
 static int rm_action(int argc, char* argv[])
 {
   if (argc != 2) return (-1);
@@ -183,8 +192,10 @@ static int rm_action(int argc, char* argv[])
    
 static const char STTY_NAME[] __PROGMEM = 
   "stty";
+static const char STTY_ARGS[] __PROGMEM = 
+  "[eol=CR|LF|CRLF]";
 static const char STTY_HELP[] __PROGMEM = 
-  "[eol=CR|LF|CRLF] -- set tty mode";
+  "set tty mode";
 static int stty_action(int argc, char* argv[])
 {
   UNUSED(argv);
@@ -208,8 +219,10 @@ static int stty_action(int argc, char* argv[])
 
 static const char WRITE_NAME[] __PROGMEM = 
   "write";
+static const char WRITE_ARGS[] __PROGMEM = 
+  "[-n|t] FILE STRING..";
 static const char WRITE_HELP[] __PROGMEM = 
-  "[-n|t] FILE STRING.. -- print text to file (newline/timestamp)";
+  "print text to file (newline/timestamp)";
 static int write_action(int argc, char* argv[])
 {
   bool newline = true;
@@ -238,18 +251,18 @@ static int write_action(int argc, char* argv[])
 }
 
 static const Shell::command_t command_tab[] __PROGMEM = {
-  { CAT_NAME, CAT_HELP, cat_action, Shell::GUEST },
-  { CD_NAME, CD_HELP, cd_action, Shell::GUEST },
-  { DATE_NAME, DATE_HELP, date_action, Shell::GUEST },
-  { DU_NAME, DU_HELP, du_action, Shell::GUEST },
-  { HELP_NAME, HELP_HELP, help_action, Shell::GUEST },
-  { LS_NAME, LS_HELP, ls_action, Shell::GUEST },
-  { MKDIR_NAME, MKDIR_HELP, mkdir_action, Shell::GUEST },
-  { OD_NAME, OD_HELP, od_action, Shell::GUEST },
-  { READ_NAME, READ_HELP, read_action, Shell::GUEST },
-  { RM_NAME, RM_HELP, rm_action, Shell::GUEST },
-  { STTY_NAME, STTY_HELP, stty_action, Shell::GUEST },
-  { WRITE_NAME, WRITE_HELP, write_action, Shell::GUEST }
+  { CAT_NAME, CAT_ARGS, CAT_HELP, cat_action, Shell::GUEST },
+  { CD_NAME, CD_ARGS, CD_HELP, cd_action, Shell::GUEST },
+  { DATE_NAME, NULL, DATE_HELP, date_action, Shell::GUEST },
+  { DU_NAME, DU_ARGS, DU_HELP, du_action, Shell::GUEST },
+  { HELP_NAME, NULL, HELP_HELP, help_action, Shell::GUEST },
+  { LS_NAME, LS_ARGS, LS_HELP, ls_action, Shell::GUEST },
+  { MKDIR_NAME, MKDIR_ARGS, MKDIR_HELP, mkdir_action, Shell::GUEST },
+  { OD_NAME, OD_ARGS, OD_HELP, od_action, Shell::GUEST },
+  { READ_NAME, READ_ARGS, READ_HELP, read_action, Shell::GUEST },
+  { RM_NAME, RM_ARGS, RM_HELP, rm_action, Shell::GUEST },
+  { STTY_NAME, STTY_ARGS, STTY_HELP, stty_action, Shell::GUEST },
+  { WRITE_NAME, WRITE_ARGS, WRITE_HELP, write_action, Shell::GUEST }
 };
 
 Shell shell(membersof(command_tab), command_tab);
