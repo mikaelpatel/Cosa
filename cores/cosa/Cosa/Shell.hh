@@ -63,6 +63,7 @@ public:
    */
   struct command_t {
     const char* name;		//!< Shell command name string (PROGMEM).
+    const char* args;		//!< Arguments to command.
     const char* help;		//!< Short description of command.
     action_fn action;		//!< Shell command action function.
     Level level;		//!< Shell command privilege level.
@@ -73,11 +74,16 @@ public:
    * @param[in] cmdc number of commands in vector (max 255).
    * @param[in] cmdtab command table (in program memory).
    * @param[in] prompt to be written to cout.
+   * @param[in] help_separator help separator.
+   * @param[in] gap_fill character to fill between args and help.
    */
-  Shell(uint8_t cmdc, const command_t* cmdtab, const char* prompt = NULL) :
+  Shell(uint8_t cmdc, const command_t* cmdtab, const char* prompt = NULL,
+	const char* help_separator = NULL, char gap_fill = DEFAULT_GAP) :
     m_cmdc(cmdc),
     m_cmdtab(cmdtab),
     m_prompt((str_P) (prompt == NULL ? DEFAULT_PROMPT : prompt)),
+    m_gap_fill(gap_fill),
+    m_help_separator((str_P) (help_separator == NULL ? DEFAULT_HELP_SEPARATOR : help_separator)),
     m_firstrun(true),
     m_echo(true),
     m_level(ADMIN)
@@ -205,9 +211,10 @@ public:
    * Print short description of commands to the given output
    * stream. Return zero or negative error code.
    * @param[in] outs output stream.
+   * @param[in] command optional command.
    * @return zero or negative error code.
    */
-  int help(IOStream& outs);
+  int help(IOStream& outs, char* command = NULL);
 
   /**
    * @override Shell
@@ -221,6 +228,12 @@ protected:
   /** Default prompt */
   static const char DEFAULT_PROMPT[] PROGMEM;
 
+  /** Default gap fill character between command/args and help */
+  static const char DEFAULT_GAP = ' ';
+
+  /** Default help separator */
+  static const char DEFAULT_HELP_SEPARATOR[] PROGMEM;
+
   /** Max command line buffer size */
   static const size_t BUF_MAX = 64;
 
@@ -230,6 +243,8 @@ protected:
   uint8_t m_cmdc;		//!< Number of shell commands.
   const command_t* m_cmdtab;	//!< Vector with shell command decriptors.
   str_P m_prompt;		//!< Shell prompt.
+  char m_gap_fill;		//!< Gap fill character.
+  str_P m_help_separator;	//!< Help separator.
   bool m_firstrun;		//!< First time run.
   bool m_echo;			//!< Echo mode.
   Level m_level;		//!< Privilege level.
@@ -256,12 +271,107 @@ protected:
    * @return zero or script line number.
    */
   int script(const char* sp, int argc, char* argv[]);
+
+  /**
+   * Print short description of command to the given output
+   * stream. Return zero or negative error code.
+   * @param[in] outs output stream.
+   * @param[in] column column where help begins.
+   * @param[in] command command to output.
+   * @return zero or negative error code.
+   */
+  int help_command(IOStream& outs, uint8_t column, const command_t* command);
 };
 
 /** 
  * Shell script magic marker. 
  */
 #define SHELL_SCRIPT_MAGIC "#!Cosa/Shell\n" 
+
+/**
+ * Support macro to define a command.
+ * Used in the form:
+ *   SHELL_ACTION(command,args,help)
+ *   (int argc, char* argv[])
+ *   {
+ *     ...
+ *   }
+ *
+ * Example:
+ *   SHELL_ACTION(echo, "[args]", "echo arguments")
+ *   (int argc, char* argv[])
+ *   {
+ *     ...
+ *   }
+ *
+ * @param[in] command name of command.
+ * @param[in] args string of optional argument format.
+ * @param[in] help string for help.
+ */
+#define SHELL_ACTION(command, args, help) \
+  static const char command ## _NAME[] __PROGMEM = #command; \
+  static const char command ## _ARGS[] __PROGMEM = args; \
+  static const char command ## _HELP[] __PROGMEM = help;  \
+  static int command ## _action
+
+/**
+ * Support macro to start to define a script.
+ * Used in the form:
+ *   SHELL_SCRIPT_BEGIN(command,args,help)
+ *     SHELL_SCRIPT_MAGIC
+ *     ...
+ *   SHELL_SCRIPT_END(command)
+ *
+ * @param[in] command name of command.
+ * @param[in] args string of optional argument format.
+ * @param[in] help string for help.
+ */
+#define SHELL_SCRIPT_BEGIN(command, args, help) \
+  static const char command ## _NAME[] __PROGMEM = #command; \
+  static const char command ## _ARGS[] __PROGMEM = args; \
+  static const char command ## _HELP[] __PROGMEM = help;  \
+  static const char command ## _SCRIPT[] __PROGMEM =
+
+/**
+ * Support macro to complete definition of a script.
+ * Used in the form:
+ *   SHELL_SCRIPT_BEGIN(command,args,help)
+ *     SHELL_SCRIPT_MAGIC
+ *     ...
+ *   SHELL_SCRIPT_END(command)
+ *
+ * @param[in] command name of command.
+ */
+#define SHELL_SCRIPT_END(command) \
+  ; \
+  static Shell::action_fn command ## _action = (Shell::action_fn) command ## _SCRIPT;
+
+/**
+ * Support macro to start the definition of commands in program memory.
+ * Used in the form:
+ *   SHELL_BEGIN(var)
+ *     SHELL_COMMAND(command-1)
+ *     ...
+ *     SHELL_COMMAND(command-n)
+ *   SHELL_END
+ */
+#define SHELL_BEGIN(var) \
+  static const Shell::command_t var[] __PROGMEM = {
+
+/**
+ * Support macro to add a command item in program memory.
+ * @param[in] var command reference to add.
+ * @param[in] level of command.
+ */
+#define SHELL_COMMAND(name, level) \
+  { name ## _NAME, name ## _ARGS, name ## _HELP, name ## _action, level },
+
+/**
+ * Support macro to end the definition of commands in program memory.
+ */
+#define SHELL_END \
+  { 0, 0, 0, 0, Shell::GUEST} \
+  };
 
 #endif
 

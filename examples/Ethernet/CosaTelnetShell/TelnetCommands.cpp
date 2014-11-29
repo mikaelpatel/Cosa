@@ -46,11 +46,8 @@ void iowait()
 
 static uint32_t epoch = 0L;
 
-static const char ANALOGREAD_NAME[] __PROGMEM = 
-  "analogread";
-static const char ANALOGREAD_HELP[] __PROGMEM = 
-  "all|ALL|vcc|PIN.. -- read analog pin(s)";
-static int analogread_action(int argc, char* argv[])
+SHELL_ACTION(analogread, "all|ALL|vcc|PIN..", "read analog pin(s)")
+(int argc, char* argv[])
 {
   if (argc == 2 && (strcmp_P(argv[1], PSTR("all")) == 0 ||
 		    strcmp_P(argv[1], PSTR("ALL")) == 0)) {
@@ -85,11 +82,8 @@ static int analogread_action(int argc, char* argv[])
   return (0);
 }
 
-static const char ARGS_NAME[] __PROGMEM = 
-  "args";
-static const char ARGS_HELP[] __PROGMEM = 
-  "OPTS ARGS -- display options and arguments";
-static int args_action(int argc, char* argv[])
+SHELL_ACTION(args, "OPTS ARGS", "display options and arguments")
+(int argc, char* argv[])
 {
   char* option;
   char* value;
@@ -103,11 +97,7 @@ static int args_action(int argc, char* argv[])
    
 #define LF "\n"
 
-static const char BLINK_NAME[] __PROGMEM = 
-  "blink";
-static const char BLINK_HELP[] __PROGMEM = 
-  "MS -- turn led on and off";
-static const char BLINK_SCRIPT[] __PROGMEM = 
+SHELL_SCRIPT_BEGIN(blink, "MS", "turn led on and off")
   SHELL_SCRIPT_MAGIC					       
   "echo -n $1 \"ms:led on..\"" LF 
   "led on" LF
@@ -125,14 +115,11 @@ static const char BLINK_SCRIPT[] __PROGMEM =
   "led on" LF
   "delay $1" LF 
   "echo \"off\"" LF 
-  "led off";
-#define blink_action (Shell::action_fn) BLINK_SCRIPT
+  "led off" LF
+SHELL_SCRIPT_END(blink)
 
-static const char DATE_NAME[] __PROGMEM = 
-  "date";
-static const char DATE_HELP[] __PROGMEM = 
-  "[YEAR-MON-DAY HOUR:MIN:SEC] -- display or set the system date and time";
-static int date_action(int argc, char* argv[])
+SHELL_ACTION(date, "[YEAR-MON-DAY HOUR:MIN:SEC]", "display or set the system date and time")
+(int argc, char* argv[])
 {
   if (argc == 3) {
     if (!shell.is_privileged(Shell::ADMIN)) 
@@ -165,7 +152,6 @@ static int date_action(int argc, char* argv[])
     if (*sp != 0 || value > 60)
       return (Shell::ILLEGAL_COMMAND);
     now.seconds = value;
-    now.to_bcd();
     epoch = now;
     RTC::time(epoch);
   }
@@ -176,11 +162,8 @@ static int date_action(int argc, char* argv[])
   return (0);
 }
 
-static const char DELAY_NAME[] __PROGMEM = 
-  "delay";
-static const char DELAY_HELP[] __PROGMEM = 
-  "MS -- delay for milliseconds";
-static int delay_action(int argc, char* argv[])
+SHELL_ACTION(delay, "MS", "delay for milliseconds")
+(int argc, char* argv[])
 {
   if (argc != 2)
     return (Shell::ILLEGAL_COMMAND);
@@ -192,11 +175,8 @@ static int delay_action(int argc, char* argv[])
   return (0);
 }
 
-static const char DIGITALREAD_NAME[] __PROGMEM = 
-  "digitalread";
-static const char DIGITALREAD_HELP[] __PROGMEM = 
-  "all|ALL|led|PIN.. -- read digital pin(s)";
-static int digitalread_action(int argc, char* argv[])
+SHELL_ACTION(digitalread, "all|ALL|led|PIN..", "read digital pin(s)")
+(int argc, char* argv[])
 {
   if (argc == 2 && (strcmp_P(argv[1], PSTR("all")) == 0 ||
 		    strcmp_P(argv[1], PSTR("ALL")) == 0)) {
@@ -230,11 +210,8 @@ static int digitalread_action(int argc, char* argv[])
   return (0);
 }
 
-static const char DIGITALTOGGLE_NAME[] __PROGMEM = 
-  "digitaltoggle";
-static const char DIGITALTOGGLE_HELP[] __PROGMEM = 
-  "led|PIN -- toggle digital pin";
-static int digitaltoggle_action(int argc, char* argv[])
+SHELL_ACTION(digitaltoggle, "led|PIN", "toggle digital pin")
+(int argc, char* argv[])
 {
   if (argc != 2)
     return (Shell::ILLEGAL_COMMAND);
@@ -257,11 +234,8 @@ static int digitaltoggle_action(int argc, char* argv[])
   return (0);
 }
 
-static const char DIGITALWRITE_NAME[] __PROGMEM = 
-  "digitalwrite";
-static const char DIGITALWRITE_HELP[] __PROGMEM = 
-  "led|PIN on|off-- write digital pin VALUE";
-static int digitalwrite_action(int argc, char* argv[])
+SHELL_ACTION(digitalwrite, "led|PIN VALUE", "write digital pin")
+(int argc, char* argv[])
 {
   if (argc != 3)
     return (Shell::ILLEGAL_COMMAND);
@@ -287,11 +261,8 @@ static int digitalwrite_action(int argc, char* argv[])
   return (0);
 }
 
-static const char DUMP_NAME[] __PROGMEM = 
-  "dump";
-static const char DUMP_HELP[] __PROGMEM = 
-  "[-b|-d] ADDR [SIZE] -- dump memory block";
-static int dump_action(int argc, char* argv[])
+SHELL_ACTION(dump, "[-b|-d] ADDR [SIZE]", "dump memory block")
+(int argc, char* argv[])
 {
   IOStream::Base base = IOStream::hex;
   uint32_t addr = 0L;
@@ -326,11 +297,8 @@ static int dump_action(int argc, char* argv[])
   return (0);
 }
 
-static const char ECHO_NAME[] __PROGMEM = 
-  "echo";
-static const char ECHO_HELP[] __PROGMEM = 
-  "[-n] STRING.. -- print a line of text";
-static int echo_action(int argc, char* argv[])
+SHELL_ACTION(echo, "[-n] STRING..", "print a line of text")
+(int argc, char* argv[])
 {
   bool newline = true;
   char* option;
@@ -348,11 +316,8 @@ static int echo_action(int argc, char* argv[])
   return (0);
 }
 
-static const char EPOCH_NAME[] __PROGMEM = 
-  "epoch";
-static const char EPOCH_HELP[] __PROGMEM = 
-  "-- display start time";
-static int epoch_action(int argc, char* argv[])
+SHELL_ACTION(epoch, "", "display start time")
+(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1)
@@ -362,29 +327,20 @@ static int epoch_action(int argc, char* argv[])
   return (0);
 }
 
-static const char LOGOUT_NAME[] __PROGMEM = 
-  "logout";
-static const char LOGOUT_HELP[] __PROGMEM = 
-  "-- logout from shell";
-static int logout_action(int argc, char* argv[]);
+SHELL_ACTION(logout, "", "logout from shell")
+(int argc, char* argv[]);
 
-static const char HELP_NAME[] __PROGMEM = 
-  "help";
-static const char HELP_HELP[] __PROGMEM = 
-  "-- list command help";
-static int help_action(int argc, char* argv[])
+SHELL_ACTION(help, "", "list command help")
+(int argc, char* argv[])
 {
-  UNUSED(argv);
   if (argc != 1)
-    return (Shell::ILLEGAL_COMMAND);
-  return (shell.help(ios));
+    return (shell.help(ios, argv[1]));
+  else
+    return (shell.help(ios));
 }
 
-static const char IDLE_NAME[] __PROGMEM = 
-  "idle";
-static const char IDLE_HELP[] __PROGMEM = 
-  "-- display idle time";
-static int idle_action(int argc, char* argv[])
+SHELL_ACTION(idle, "", "display idle time")
+(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1)
@@ -393,11 +349,8 @@ static int idle_action(int argc, char* argv[])
   return (0);
 }
 
-static const char LED_NAME[] __PROGMEM = 
-  "led";
-static const char LED_HELP[] __PROGMEM = 
-  "on|off -- turn led on or off";
-static int led_action(int argc, char* argv[])
+SHELL_ACTION(led, "on|off", "turn led on or off")
+(int argc, char* argv[])
 {
   if (argc != 2)
     return (Shell::ILLEGAL_COMMAND);
@@ -410,11 +363,8 @@ static int led_action(int argc, char* argv[])
   return (0);
 }
 
-static const char MEMORY_NAME[] __PROGMEM = 
-  "memory";
-static const char MEMORY_HELP[] __PROGMEM = 
-  "-- display amount of free memory";
-static int memory_action(int argc, char* argv[])
+SHELL_ACTION(memory, "", "display amount of free memory")
+(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1)
@@ -423,11 +373,8 @@ static int memory_action(int argc, char* argv[])
   return (0);
 }
 
-static const char MICROS_NAME[] __PROGMEM = 
-  "micros";
-static const char MICROS_HELP[] __PROGMEM = 
-  "-- clock in micro-seconds";
-static int micros_action(int argc, char* argv[])
+SHELL_ACTION(micros, "", "clock in micro-seconds")
+(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1)
@@ -436,11 +383,8 @@ static int micros_action(int argc, char* argv[])
   return (0);
 }
 
-static const char MILLIS_NAME[] __PROGMEM = 
-  "millis";
-static const char MILLIS_HELP[] __PROGMEM = 
-  "-- clock in milli-seconds";
-static int millis_action(int argc, char* argv[])
+SHELL_ACTION(millis, "", "clock in milli-seconds")
+(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1)
@@ -449,11 +393,8 @@ static int millis_action(int argc, char* argv[])
   return (0);
 }
 
-static const char OWI_NAME[] __PROGMEM = 
-  "owi";
-static const char OWI_HELP[] __PROGMEM = 
-  "scan PIN -- scan 1-wire bus";
-static int owi_action(int argc, char* argv[])
+SHELL_ACTION(owi, "scan PIN", "scan 1-wire bus")
+(int argc, char* argv[])
 {
   if (argc != 3)
     return (Shell::ILLEGAL_COMMAND);
@@ -483,11 +424,9 @@ static void write_pinmode(Board::DigitalPin pin)
   }
 }
 
-static const char PINMODE_NAME[] __PROGMEM = 
-  "pinmode";
-static const char PINMODE_HELP[] __PROGMEM = 
-  "all|ALL|led|PIN [input|output|pullup] -- display or set pin mode";
-static int pinmode_action(int argc, char* argv[])
+SHELL_ACTION(pinmode, "all|ALL|led|PIN [input|output|pullup]",
+             "display or set pin mode")
+(int argc, char* argv[])
 {
   if (argc < 2 || argc > 3)
     return (Shell::ILLEGAL_COMMAND);
@@ -530,11 +469,8 @@ static int pinmode_action(int argc, char* argv[])
   return (0);
 }
 
-static const char REPEAT_NAME[] __PROGMEM = 
-  "repeat";
-static const char REPEAT_HELP[] __PROGMEM = 
-  "[-t] COUNT [DELAY] COMMAND -- repeat command line";
-static int repeat_action(int argc, char* argv[])
+SHELL_ACTION(repeat, "[-t] COUNT [DELAY] COMMAND", "repeat command line")
+(int argc, char* argv[])
 {
   uint8_t ix = 1;
   bool timing = (strcmp_P(argv[ix], PSTR("-t")) == 0);
@@ -572,11 +508,8 @@ static int repeat_action(int argc, char* argv[])
   return (ios.get_device()->flush());
 }
 
-static const char STTY_NAME[] __PROGMEM = 
-  "stty";
-static const char STTY_HELP[] __PROGMEM = 
-  "[eol=CR|LF|CRLF] -- display or set tty mode";
-static int stty_action(int argc, char* argv[])
+SHELL_ACTION(stty, "[eol=CR|LF|CRLF]", "display or set tty mode")
+(int argc, char* argv[])
 {
   UNUSED(argv);
   char* option;
@@ -610,11 +543,8 @@ static int stty_action(int argc, char* argv[])
   return (0);
 }
 
-static const char TONE_NAME[] __PROGMEM = 
-  "tone";
-static const char TONE_HELP[] __PROGMEM = 
-  "off | FREQ [VOLUME [DURATION]] -- play tone";
-static int tone_action(int argc, char* argv[])
+SHELL_ACTION(tone, "off | FREQ [VOLUME [DURATION]]", "play tone")
+(int argc, char* argv[])
 {
   if (argc < 2 || argc > 4)
     return (Shell::ILLEGAL_COMMAND);
@@ -643,11 +573,8 @@ static int tone_action(int argc, char* argv[])
   return (0);
 }
 
-static const char TWI_NAME[] __PROGMEM = 
-  "twi";
-static const char TWI_HELP[] __PROGMEM = 
-  "scan -- scan I2C bus";
-static int twi_action(int argc, char* argv[])
+SHELL_ACTION(twi, "scan", "scan I2C bus")
+(int argc, char* argv[])
 {
   if (argc != 2)
     return (Shell::ILLEGAL_COMMAND);
@@ -667,11 +594,8 @@ static int twi_action(int argc, char* argv[])
   return (0);
 }
 
-static const char UPTIME_NAME[] __PROGMEM = 
-  "uptime";
-static const char UPTIME_HELP[] __PROGMEM = 
-  "-- seconds since latest date set or system start";
-static int uptime_action(int argc, char* argv[])
+SHELL_ACTION(uptime, "", "seconds since latest date set or system start")
+(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 1)
@@ -680,39 +604,36 @@ static int uptime_action(int argc, char* argv[])
   return (0);
 }
 
-static const Shell::command_t command_tab[] __PROGMEM = {
-  { ANALOGREAD_NAME, ANALOGREAD_HELP, analogread_action, Shell::USER },
-  { ARGS_NAME, ARGS_HELP, args_action, Shell::GUEST },
-  { BLINK_NAME, BLINK_HELP, blink_action, Shell::USER },
-  { DATE_NAME, DATE_HELP, date_action, Shell::GUEST },
-  { DELAY_NAME, DELAY_HELP, delay_action, Shell::USER },
-  { DUMP_NAME, DUMP_HELP, dump_action, Shell::USER },
-  { ECHO_NAME, ECHO_HELP, echo_action, Shell::USER },
-  { EPOCH_NAME, EPOCH_HELP, epoch_action, Shell::GUEST },
-  { DIGITALREAD_NAME, DIGITALREAD_HELP, digitalread_action, Shell::GUEST },
-  { DIGITALTOGGLE_NAME, DIGITALTOGGLE_HELP, digitaltoggle_action, Shell::USER },
-  { DIGITALWRITE_NAME, DIGITALWRITE_HELP, digitalwrite_action, Shell::USER },
-  { HELP_NAME, HELP_HELP, help_action, Shell::GUEST },
-  { IDLE_NAME, IDLE_HELP, idle_action, Shell::GUEST },
-  { LED_NAME, LED_HELP, led_action, Shell::GUEST },
-  { LOGOUT_NAME, LOGOUT_HELP, logout_action, Shell::GUEST },
-  { MEMORY_NAME, MEMORY_HELP, memory_action, Shell::USER },
-  { MICROS_NAME, MICROS_HELP, micros_action, Shell::USER },
-  { MILLIS_NAME, MILLIS_HELP, millis_action, Shell::USER },
-  { OWI_NAME, OWI_HELP, owi_action, Shell::USER },
-  { PINMODE_NAME, PINMODE_HELP, pinmode_action, Shell::GUEST },
-  { REPEAT_NAME, REPEAT_HELP, repeat_action, Shell::USER },
-  { STTY_NAME, STTY_HELP, stty_action, Shell::USER },
-  { TONE_NAME, TONE_HELP, tone_action, Shell::USER },
-  { TWI_NAME, TWI_HELP, twi_action, Shell::USER },
-  { UPTIME_NAME, UPTIME_HELP, uptime_action, Shell::GUEST }
-};
+SHELL_BEGIN(command_tab)
+  SHELL_COMMAND(analogread, Shell::USER)
+  SHELL_COMMAND(args, Shell::GUEST)
+  SHELL_COMMAND(blink, Shell::USER)
+  SHELL_COMMAND(date, Shell::GUEST)
+  SHELL_COMMAND(delay, Shell::USER)
+  SHELL_COMMAND(dump, Shell::USER)
+  SHELL_COMMAND(echo, Shell::USER)
+  SHELL_COMMAND(epoch, Shell::GUEST)
+  SHELL_COMMAND(digitalread, Shell::GUEST)
+  SHELL_COMMAND(digitaltoggle, Shell::USER)
+  SHELL_COMMAND(digitalwrite, Shell::USER)
+  SHELL_COMMAND(help, Shell::GUEST)
+  SHELL_COMMAND(idle, Shell::GUEST)
+  SHELL_COMMAND(led, Shell::GUEST)
+  SHELL_COMMAND(logout, Shell::GUEST)
+  SHELL_COMMAND(memory, Shell::USER)
+  SHELL_COMMAND(micros, Shell::USER)
+  SHELL_COMMAND(millis, Shell::USER)
+  SHELL_COMMAND(owi, Shell::USER)
+  SHELL_COMMAND(pinmode, Shell::GUEST)
+  SHELL_COMMAND(repeat, Shell::USER)
+  SHELL_COMMAND(stty, Shell::USER)
+  SHELL_COMMAND(tone, Shell::USER)
+  SHELL_COMMAND(twi, Shell::USER)
+  SHELL_COMMAND(uptime, Shell::GUEST)
+SHELL_END
 
-static const char LOGIN_NAME[] __PROGMEM = 
-  "login";
-static const char LOGIN_HELP[] __PROGMEM = 
-  "USER -- authenticate user";
-static int login_action(int argc, char* argv[])
+SHELL_ACTION(login, "USER", "authenticate user")
+(int argc, char* argv[])
 {
   UNUSED(argv);
   if (argc != 2)
@@ -738,10 +659,10 @@ static int login_action(int argc, char* argv[])
 }
 
 static const char INIT_PROMPT[] __PROGMEM = "$ ";
-static const Shell::command_t init_tab[] __PROGMEM = {
-  { HELP_NAME, HELP_HELP, help_action, Shell::GUEST },
-  { LOGIN_NAME, LOGIN_HELP, login_action, Shell::GUEST }
-};
+SHELL_BEGIN(init_tab)
+  SHELL_COMMAND(help, Shell::GUEST)
+  SHELL_COMMAND(login, Shell::GUEST)
+SHELL_END
 
 static int logout_action(int argc, char* argv[])
 {
