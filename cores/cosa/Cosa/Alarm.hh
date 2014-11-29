@@ -120,6 +120,15 @@ public:
   }
 
   /**
+   * Get the time remaining before the alarm expires.
+   * @return seconds.
+   */
+  uint32_t expires_in() const
+  {
+    return (m_when - s_ticks);
+  }
+
+  /**
    * Schedule the alarm handler. 
    */
   void enable();
