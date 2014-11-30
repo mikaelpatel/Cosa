@@ -124,6 +124,7 @@ public:
    * @return seconds.
    */
   uint32_t expires_in() const
+    __attribute__((always_inline))
   {
     if (m_when > s_ticks)
       return (m_when - s_ticks);
@@ -143,6 +144,7 @@ public:
     __attribute__((always_inline))
   {
     detach();
+    m_when = 0L;
   }
 
   /**
