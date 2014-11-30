@@ -44,23 +44,29 @@ TraceAlarm::TraceAlarm(uint8_t id, uint16_t period) :
   m_tick(0) 
 {}
 
-void 
-TraceAlarm::run()
-{
-  trace << Watchdog::millis() << ':'
-	<< RTC::millis() << ':'
-	<< RTC::seconds() << ':'
-	<< time() << ':' << ++m_tick
-	<< PSTR(":alarm:id=") << m_id 
-	<< endl;
-}
-
 Alarm::Scheduler scheduler;
 
 TraceAlarm every_3rd_second(1, 3);
 TraceAlarm every_5th_second(2, 5);
 TraceAlarm every_15th_second(3, 15);
 TraceAlarm every_30th_second(4, 30);
+
+void 
+TraceAlarm::run()
+{
+  trace << Watchdog::millis() << ':'
+	<< RTC::millis() << ':'
+	<< RTC::seconds() << ':'
+	<< time() << ':'
+	<< ++m_tick << ':'
+	<< every_3rd_second.expires_in() << ':'
+	<< every_5th_second.expires_in() << ':'
+	<< every_15th_second.expires_in() << ':'
+	<< every_30th_second.expires_in() << ':'
+	<< PSTR("alarm:id=") << m_id 
+	<< endl;
+
+}
 
 void setup()
 {
@@ -86,7 +92,7 @@ void setup()
   every_3rd_second.enable();
 
   // Format
-  trace << PSTR("wtd-millis:rtc-millis:rtc-seconds:alarm:tick") << endl;
+  trace << PSTR("wtd-millis:rtc-millis:rtc-seconds:alarm:tick:3rd-in:5th-in:15th-in:30th-in") << endl;
 }
 
 void loop()

@@ -125,7 +125,10 @@ public:
    */
   uint32_t expires_in() const
   {
-    return (m_when - s_ticks);
+    if (m_when > s_ticks)
+      return (m_when - s_ticks);
+    else
+      return (0);
   }
 
   /**
