@@ -31,7 +31,7 @@
 
 class TraceAlarm : public Alarm {
 public:
-  TraceAlarm(uint8_t id, uint16_t period);
+  TraceAlarm(uint8_t id, uint16_t period = 0L);
   virtual void run();
 private:
   uint8_t m_id;
@@ -84,6 +84,18 @@ void setup()
   Watchdog::begin(16, Watchdog::push_timeout_events);
   RTC::begin();
   scheduler.begin();
+
+  // Set time to just before wrap
+  RTC::time(-15);
+
+  // Match time in Alarm
+  Alarm::set_time(RTC::time());
+
+  // Set next alarms
+  every_3rd_second.next_alarm(3);
+  every_5th_second.next_alarm(5);
+  every_15th_second.next_alarm(15);
+  every_30th_second.next_alarm(30);
 
   // Enable the alarm handlers
   every_30th_second.enable();
