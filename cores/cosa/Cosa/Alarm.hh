@@ -120,6 +120,19 @@ public:
   }
 
   /**
+   * Get the time remaining before the alarm expires.
+   * @return seconds.
+   */
+  uint32_t expires_in() const
+    __attribute__((always_inline))
+  {
+    if (m_when > s_ticks)
+      return (m_when - s_ticks);
+    else
+      return (0);
+  }
+
+  /**
    * Schedule the alarm handler. 
    */
   void enable();
@@ -131,6 +144,7 @@ public:
     __attribute__((always_inline))
   {
     detach();
+    m_when = 0L;
   }
 
   /**

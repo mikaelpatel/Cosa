@@ -31,7 +31,7 @@
 
 class TraceAlarm : public Alarm {
 public:
-  TraceAlarm(uint8_t id, uint16_t period);
+  TraceAlarm(uint8_t id, uint16_t period = 0L);
   virtual void run();
 private:
   uint8_t m_id;
@@ -44,23 +44,29 @@ TraceAlarm::TraceAlarm(uint8_t id, uint16_t period) :
   m_tick(0) 
 {}
 
-void 
-TraceAlarm::run()
-{
-  trace << Watchdog::millis() << ':'
-	<< RTC::millis() << ':'
-	<< RTC::seconds() << ':'
-	<< time() << ':' << ++m_tick
-	<< PSTR(":alarm:id=") << m_id 
-	<< endl;
-}
-
 Alarm::Scheduler scheduler;
 
 TraceAlarm every_3rd_second(1, 3);
 TraceAlarm every_5th_second(2, 5);
 TraceAlarm every_15th_second(3, 15);
 TraceAlarm every_30th_second(4, 30);
+
+void 
+TraceAlarm::run()
+{
+  trace << Watchdog::millis() << ':'
+	<< RTC::millis() << ':'
+	<< RTC::seconds() << ':'
+	<< time() << ':'
+	<< ++m_tick << ':'
+	<< every_3rd_second.expires_in() << ':'
+	<< every_5th_second.expires_in() << ':'
+	<< every_15th_second.expires_in() << ':'
+	<< every_30th_second.expires_in() << ':'
+	<< PSTR("alarm:id=") << m_id 
+	<< endl;
+
+}
 
 void setup()
 {
@@ -79,6 +85,18 @@ void setup()
   RTC::begin();
   scheduler.begin();
 
+  // Set time to just before wrap
+  RTC::time(-15);
+
+  // Match time in Alarm
+  Alarm::set_time(RTC::time());
+
+  // Set next alarms
+  every_3rd_second.next_alarm(3);
+  every_5th_second.next_alarm(5);
+  every_15th_second.next_alarm(15);
+  every_30th_second.next_alarm(30);
+
   // Enable the alarm handlers
   every_30th_second.enable();
   every_15th_second.enable();
@@ -86,7 +104,7 @@ void setup()
   every_3rd_second.enable();
 
   // Format
-  trace << PSTR("wtd-millis:rtc-millis:rtc-seconds:alarm:tick") << endl;
+  trace << PSTR("wtd-millis:rtc-millis:rtc-seconds:alarm:tick:3rd-in:5th-in:15th-in:30th-in") << endl;
 }
 
 void loop()
