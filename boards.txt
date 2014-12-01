@@ -250,6 +250,36 @@ pro-micro.build.variant=arduino/pro-micro
 pro-micro.build.extra_flags={build.usb_flags}
 pro-micro.build.core=cosa
 
+# AVR:ATmega32U4
+# Ext Crystal Osc.=8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.6 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
+pro-micro-8.name=Cosa Arduino Pro Micro (ATmega32U4/Caterina, 3.3V, 8 MHz)
+pro-micro-8.upload.tool=avrdude
+pro-micro-8.upload.protocol=avr109
+pro-micro-8.upload.maximum_size=28672
+pro-micro-8.upload.maximum_data_size=2560
+pro-micro-8.upload.speed=57600
+pro-micro-8.upload.disable_flushing=true
+pro-micro-8.upload.use_1200bps_touch=true
+pro-micro-8.upload.wait_for_upload_port=true
+
+pro-micro-8.bootloader.path=caterina
+pro-micro-8.bootloader.tool=avrdude
+pro-micro-8.bootloader.low_fuses=0xff
+pro-micro-8.bootloader.high_fuses=0xd8
+pro-micro-8.bootloader.extended_fuses=0xcb
+
+pro-micro-8.build.mcu=atmega32u4
+pro-micro-8.build.f_cpu=8000000L
+pro-micro-8.build.vid=0x2341
+pro-micro-8.build.pid=0x8037
+pro-micro-8.build.usb_product="Arduino Pro Micro"
+pro-micro-8.build.board=ARDUINO_PRO_MICRO
+pro-micro-8.build.variant=arduino/pro-micro
+pro-micro-8.build.extra_flags={build.usb_flags}
+pro-micro-8.build.core=cosa
+
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
