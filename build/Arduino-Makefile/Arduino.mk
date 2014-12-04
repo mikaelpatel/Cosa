@@ -254,6 +254,37 @@
 # ARDUINO_CORE_PATH = ~/sketchbook/hardware/tiny2/cores/tiny
 #
 ########################################################################
+#
+# SIZE OPTIONS
+#
+# Upload of oversized flash memory is prevented.
+#
+# For compatibility with previous versions, oversized data or eeprom
+# will still be uploaded by default.
+#
+# To prevent upload when data size is exceeded, define PREVENT_DATA_SIZE.
+# To prevent upload when eeprom size is exceeded, define PREVENT_EEPROM_SIZE.
+#
+# These depend on the following settings in boards.txt:
+#    maximum_data_size
+#    maximum_eeprom_size
+#
+########################################################################
+
+#PREVENT_DATA_SIZE=yes
+#PREVENT_EEPROM_SIZE=yes
+
+ifdef PREVENT_DATA_SIZE
+	PREVENT_DATA_SIZE = true
+else
+	PREVENT_DATA_SIZE = false
+endif
+
+ifdef PREVENT_EEPROM_SIZE
+	PREVENT_EEPROM_SIZE = true
+else
+	PREVENT_EEPROM_SIZE = false
+endif
 
 arduino_output =
 # When output is not suppressed and we're in the top-level makefile, 
@@ -623,6 +654,14 @@ ifeq ($(strip $(NO_CORE)),)
 
  ifndef HEX_MAXIMUM_SIZE
    HEX_MAXIMUM_SIZE = $(call PARSE_BOARD,$(BOARD_TAG),upload.maximum_size)
+ endif
+
+ ifndef HEX_MAXIMUM_DATA_SIZE
+   HEX_MAXIMUM_DATA_SIZE = $(call PARSE_BOARD,$(BOARD_TAG),upload.maximum_data_size)
+ endif
+
+ ifndef HEX_MAXIMUM_EEPROM_SIZE
+   HEX_MAXIMUM_EEPROM_SIZE = $(call PARSE_BOARD,$(BOARD_TAG),upload.maximum_eeprom_size)
  endif
 
 endif
@@ -1056,8 +1095,20 @@ $(OBJDIR)/%.hex: $(OBJDIR)/%.elf $(COMMON_DEPS)
 ifneq ($(strip $(HEX_MAXIMUM_SIZE)),)
 	@if [ `$(SIZE) $@ | awk 'FNR == 2 {print $$2}'` -le $(HEX_MAXIMUM_SIZE) ]; then touch $@.sizeok; else rm -f $@.sizeok; fi
 else
-	@$(ECHO) "Maximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $@ is less than $(BOARD_TAG)\'s flash memory"
+	@$(ECHO) "Maximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $@ is less than $(BOARD_TAG)\'s flash memory\n"
 	@touch $@.sizeok
+endif
+ifneq ($(strip $(HEX_MAXIMUM_DATA_SIZE)),)
+	@if [ `$(SIZE) $(SIZEFLAGS) $< | awk '/^Data:/ {print $$2}'` -le $(HEX_MAXIMUM_DATA_SIZE) ]; then touch $@.datasizeok; else rm -f $@.datasizeok; fi
+else
+	@$(ECHO) "Maximum data memory of $(BOARD_TAG) is not specified. Make sure the size of $@ is less than $(BOARD_TAG)\'s data memory\n"
+	@touch $@.datasizeok
+endif
+ifneq ($(strip $(HEX_MAXIMUM_EEPROM_SIZE)),)
+	@if [ `$(SIZE) $(SIZEFLAGS) $< | awk '/^EEPROM:/ {print $$2}'` -le $(HEX_MAXIMUM_EEPROM_SIZE) ]; then touch $@.eepromsizeok; else rm -f $@.eepromsizeok; fi
+else
+	@$(ECHO) "Maximum eeprom memory of $(BOARD_TAG) is not specified. Make sure the size of $@ is less than $(BOARD_TAG)\'s eeprom memory\n"
+	@touch $@.eepromsizeok
 endif
 
 $(OBJDIR)/%.eep: $(OBJDIR)/%.elf $(COMMON_DEPS)
@@ -1290,7 +1341,16 @@ ifeq ($(strip $(HEX_MAXIMUM_SIZE)),)
 	@$(ECHO) "\nMaximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s flash memory\n\n"
 endif
 	@if [ ! -f $(TARGET_HEX).sizeok ]; then echo >&2 "\nThe size of the compiled binary file is greater than the $(BOARD_TAG)'s flash memory. \
-See http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it."; false; fi
+See http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it."; fi
+ifeq ($(strip $(HEX_MAXIMUM_DATA_SIZE)),)
+	@$(ECHO) "\nMaximum data memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s data memory\n\n"
+endif
+	@if [ ! -f $(TARGET_HEX).datasizeok ]; then echo >&2 "The data size of the compiled binary file is greater than the $(BOARD_TAG)'s data memory."; fi
+ifeq ($(strip $(HEX_MAXIMUM_EEPROM_SIZE)),)
+	@$(ECHO) "\nMaximum eeprom memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s eeprom memory\n\n"
+endif
+	@if [ ! -f $(TARGET_HEX).eepromsizeok ]; then echo >&2 "The eeprom size of the compiled binary file is greater than the $(BOARD_TAG)'s eeprom memory."; fi
+	@if [ ! -f $(TARGET_HEX).sizeok -o \( ! -f $(TARGET_HEX).datasizeok -a $(PREVENT_DATA_SIZE) \) -o \( ! -f $(TARGET_HEX).eepromsizeok -a $(PREVENT_EEPROM_SIZE) \) ]; then false; fi
 
 generate_assembly: $(OBJDIR)/$(TARGET).s
 	@$(ECHO) "Compiler-generated assembly for the main input source has been dumped to $(OBJDIR)/$(TARGET).s\n\n"
