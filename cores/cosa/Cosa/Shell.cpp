@@ -119,12 +119,12 @@ Shell::execute(char* buf)
   m_argv = argv;
 
   // Check if the action is a script
-  const char* sp = (const char*) pgm_read_word(&cp->action);
+  const char* sp  = (const char*) cp->action;
   if (strncmp_P(SHELL_SCRIPT_MAGIC, sp, sizeof(SHELL_SCRIPT_MAGIC) - 1) == 0) 
     return (script(sp, argc, argv));
 
   // Otherwise call the action function
-  action_fn action = (action_fn) sp;
+  action_fn action = (action_fn) pgm_read_word(&cp->action);
   return (action(argc, argv));
 }
 
