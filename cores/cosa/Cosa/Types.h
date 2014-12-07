@@ -359,7 +359,8 @@ iovec_size(const iovec_t* vec)
  * @param[in] buf buffer.
  * @param[in] size number of bytes.
  */
-inline void iovec_arg(iovec_t* &vp, const void* buf, size_t size) __attribute__((always_inline));
+inline void iovec_arg(iovec_t* &vp, const void* buf, size_t size) 
+  __attribute__((always_inline));
 inline void
 iovec_arg(iovec_t* &vp, const void* buf, size_t size)
 {
@@ -388,13 +389,13 @@ iovec_end(iovec_t* &vp)
 }
 
 /**
- * Swap bytes in 16-bit integer.
+ * Swap bytes in 16-bit unsigned integer.
  * @param[in] value to byte swap.
  * @return new value.
  */
-inline int16_t swap(int16_t value) __attribute__((always_inline));
-inline int16_t
-swap(int16_t value) 
+inline uint16_t swap(uint16_t value) __attribute__((always_inline));
+inline uint16_t
+swap(uint16_t value) 
 {
   asm volatile("mov __tmp_reg__, %A0" 	"\n\t"
 	       "mov %A0, %B0" 		"\n\t"
@@ -403,6 +404,71 @@ swap(int16_t value)
 	       : "0" (value)
 	       );
   return (value);
+}
+
+/**
+ * Swap bytes in 16-bit unsigned integer vector.
+ * @param[in] dest destination buffer.
+ * @param[in] src source buffer.
+ * @param[in] size number of integers to swap.
+ */
+inline void
+swap(uint16_t* dest, const uint16_t* src, size_t size)
+{
+  if (size == 0) return;
+  do { 
+    *dest++ = swap(*src++); 
+  } while (--size);
+}
+
+/**
+ * Swap bytes in 16-bit values in struct.
+ * @param[in] T type of struct.
+ * @param[in] dest destination buffer.
+ * @param[in] src source buffer.
+ */
+template<class T> 
+void swap(T* dest, const T* src)
+{
+  swap((uint16_t*) dest, (const uint16_t*) src, sizeof(T) / sizeof(uint16_t));
+}
+
+/**
+ * Destructive swap bytes in 16-bit unsigned integer vector.
+ * @param[in] buf buffer.
+ * @param[in] size number of integers to swap.
+ */
+inline void
+swap(uint16_t* buf, size_t size)
+{
+  if (size == 0) return;
+  do { 
+    int16_t data = *buf;
+    *buf++ = swap(data); 
+  } while (--size);
+}
+
+/**
+ * Destructive swap bytes in 16-bit integers in struct.
+ * @param[in] T type of struct.
+ * @param[in] buf buffer.
+ */
+template<class T> 
+void swap(T* buf)
+{
+  swap((uint16_t*) buf, sizeof(T) / sizeof(uint16_t));
+}
+
+/**
+ * Swap bytes in 16-bit signed integer.
+ * @param[in] value to byte swap.
+ * @return new value.
+ */
+inline int16_t swap(int16_t value) __attribute__((always_inline));
+inline int16_t
+swap(int16_t value) 
+{
+  return ((int16_t) swap((uint16_t) value));
 }
 
 /**
@@ -421,51 +487,13 @@ swap(int16_t* dest, const int16_t* src, size_t size)
 }
 
 /**
- * Swap bytes in 16-bit integers in struct.
- * @param[in] T type of struct.
- * @param[in] dest destination buffer.
- * @param[in] src source buffer.
- */
-template<class T> 
-void swap(T* dest, const T* src)
-{
-  swap((int16_t*) dest, (const int16_t*) src, sizeof(T) / sizeof(int16_t));
-}
-
-/**
- * Destructive swap bytes in 16-bit integer vector.
- * @param[in] buf buffer.
- * @param[in] size number of integers to swap.
- */
-inline void
-swap(int16_t* buf, size_t size)
-{
-  if (size == 0) return;
-  do { 
-    int16_t data = *buf;
-    *buf++ = swap(data); 
-  } while (--size);
-}
-
-/**
- * Destructive swap bytes in 16-bit integers in struct.
- * @param[in] T type of struct.
- * @param[in] buf buffer.
- */
-template<class T> 
-void swap(T* buf)
-{
-  swap((int16_t*) buf, sizeof(T) / sizeof(int16_t));
-}
-
-/**
- * Swap bytes in 32-bit integer.
+ * Swap bytes in 32-bit unsigned integer.
  * @param[in] value to byte swap.
  * @return new value.
  */
-inline int32_t swap(int32_t value) __attribute__((always_inline));
-inline int32_t
-swap(int32_t value)
+inline uint32_t swap(uint32_t value) __attribute__((always_inline));
+inline uint32_t
+swap(uint32_t value)
 {
   asm volatile("mov __tmp_reg__, %A0" 	"\n\t"
 	       "mov %A0, %D0" 		"\n\t"
@@ -480,6 +508,18 @@ swap(int32_t value)
 }
 
 /**
+ * Swap bytes in 32-bit signed integer.
+ * @param[in] value to byte swap.
+ * @return new value.
+ */
+inline int32_t swap(int32_t value) __attribute__((always_inline));
+inline int32_t
+swap(int32_t value)
+{
+  return ((int32_t) swap((uint32_t) value));
+}
+
+/**
  * Convert values between host and network byte order. AVR is
  * littlendian and network is bigendian so byte swap.
  */
@@ -491,6 +531,7 @@ swap(int32_t value)
  * @param[in] value.
  * @return character.
  */
+inline char tohex(uint8_t value) __attribute__((always_inline));
 inline char
 tohex(uint8_t value)
 {
@@ -505,6 +546,7 @@ tohex(uint8_t value)
  * @param[in] value.
  * @return character.
  */
+inline char toHEX(uint8_t value) __attribute__((always_inline));
 inline char
 toHEX(uint8_t value)
 {

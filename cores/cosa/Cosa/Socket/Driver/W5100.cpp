@@ -151,7 +151,7 @@ W5100::Driver::dev_read(void* buf, size_t len)
   // Read receiver buffer pointer
   uint16_t ptr;
   m_dev->read(M_SREG(RX_RD), &ptr, sizeof(ptr));
-  ptr = swap((int16_t) ptr);
+  ptr = swap(ptr);
 
   // Read packet to receiver buffer. Handle possible buffer wrapping
   uint8_t* bp = (uint8_t*) buf;
@@ -167,7 +167,7 @@ W5100::Driver::dev_read(void* buf, size_t len)
 
   // Update receiver buffer pointer
   ptr += len;
-  ptr = swap((int16_t) ptr);
+  ptr = swap(ptr);
   m_dev->write(M_SREG(RX_RD), &ptr, sizeof(ptr));
   m_dev->issue(M_SREG(CR), CR_RECV);
   
@@ -219,9 +219,9 @@ W5100::Driver::dev_flush()
   if (!(res > 0)) return;
   uint16_t ptr;
   m_dev->read(M_SREG(RX_RD), &ptr, sizeof(ptr));
-  ptr = swap((int16_t) ptr);
+  ptr = swap(ptr);
   ptr += res;
-  ptr = swap((int16_t) ptr);
+  ptr = swap(ptr);
   m_dev->write(M_SREG(RX_RD), &ptr, sizeof(ptr));
   m_dev->issue(M_SREG(CR), CR_RECV);
 }
@@ -232,7 +232,7 @@ W5100::Driver::dev_setup()
   while (room() < (int) MSG_MAX) yield();
   uint16_t ptr;
   m_dev->read(M_SREG(TX_WR), &ptr, sizeof(ptr));
-  ptr = swap((int16_t) ptr);
+  ptr = swap(ptr);
   m_tx_offset = ptr & BUF_MASK;
   m_tx_len = 0;
 }
@@ -290,9 +290,9 @@ W5100::Driver::flush()
   // Update transmit buffer pointer and issue send command
   uint16_t ptr;
   m_dev->read(M_SREG(TX_WR), &ptr, sizeof(ptr));
-  ptr = swap((int16_t) ptr);
+  ptr = swap(ptr);
   ptr += m_tx_len;
-  ptr = swap((int16_t) ptr);
+  ptr = swap(ptr);
   m_dev->write(M_SREG(TX_WR), &ptr, sizeof(ptr));
   m_dev->issue(M_SREG(CR), CR_SEND);
   uint8_t ir;
@@ -324,7 +324,7 @@ W5100::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
       if (m_dev->m_local == 0) m_dev->m_local = Socket::DYNAMIC_PORT;
     }
     m_port = port;
-    port = swap((int16_t) port);
+    port = swap(port);
     m_dev->write(M_SREG(PORT), &port, sizeof(m_sreg->PORT));
   }
   m_dev->issue(M_SREG(CR), CR_OPEN);
@@ -395,7 +395,7 @@ W5100::Driver::connect(uint8_t addr[4], uint16_t port)
   if (INET::is_illegal(addr, port)) return (-1);
 
   // Set server address and port
-  port = swap((int16_t) port);
+  port = swap(port);
   m_dev->write(M_SREG(DIPR), addr, sizeof(m_sreg->DIPR));
   m_dev->write(M_SREG(DPORT), &port, sizeof(m_sreg->DPORT));
   m_dev->issue(M_SREG(CR), CR_CONNECT);
@@ -443,7 +443,7 @@ W5100::Driver::datagram(uint8_t addr[4], uint16_t port)
       && (m_proto != MACRAW)) return (-2);
   
   // Setup hardware transmit address registers
-  port = swap((int16_t) port);
+  port = swap(port);
   m_dev->write(M_SREG(DIPR), addr, sizeof(m_sreg->DIPR));
   m_dev->write(M_SREG(DPORT), &port, sizeof(port));
   dev_setup();
@@ -603,7 +603,7 @@ W5100::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
   }
   
   // Adjust timeout period to 100 us scale
-  timeout = swap((int16_t) timeout * 10);
+  timeout = swap(timeout * 10);
 
   // Read hardware address from program memory
   uint8_t mac[6];

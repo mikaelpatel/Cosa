@@ -98,7 +98,7 @@ SD::send(CMD command, uint32_t arg)
   // Build request with command, argument and add check-sum (CRC7)
   request_t request;
   request.command = (0x40 | command);
-  request.arg = swap((int32_t) arg);
+  request.arg = swap(arg);
   request.crc = crc7(&request, sizeof(request) - 1);
 
   // Issue the command; wait while busy

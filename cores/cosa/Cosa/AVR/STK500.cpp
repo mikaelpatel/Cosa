@@ -199,7 +199,7 @@ STK500::set_device()
   param_t param;
   read(&param, sizeof(param));
   if (!is_insync()) return;
-  m_prog->set_flash_pagesize(swap((int16_t) param.pagesize));
+  m_prog->set_flash_pagesize(swap(param.pagesize));
   m_state = READY_STATE;
   response();
 }
