@@ -36,6 +36,7 @@ lilypad.upload.tool=avrdude
 lilypad.upload.protocol=arduino
 lilypad.upload.maximum_size=30720
 lilypad.upload.maximum_data_size=2048
+lilypad.upload.maximum_eeprom_size=1024
 lilypad.upload.speed=57600
 
 lilypad.bootloader.tool=avrdude
@@ -58,6 +59,7 @@ lilypad-usb.upload.tool=avrdude
 lilypad-usb.upload.protocol=avr109
 lilypad-usb.upload.maximum_size=28672
 lilypad-usb.upload.maximum_data_size=2560
+lilypad-usb.upload.maximum_eeprom_size=1024
 lilypad-usb.upload.speed=57600
 lilypad-usb.upload.disable_flushing=true
 lilypad-usb.upload.use_1200bps_touch=true

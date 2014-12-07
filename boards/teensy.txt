@@ -36,6 +36,7 @@ teensy-2_0.upload.tool=teensy_reboot
 teensy-2_0.upload.protocol=halfkay
 teensy-2_0.upload.maximum_size=32256
 teensy-2_0.upload.maximum_data_size=2560
+teensy-2_0.upload.maximum_eeprom_size=1024
 teensy-2_0.upload.speed=12000000
 teensy-2_0.upload.disable_flushing=true
 
@@ -59,6 +60,7 @@ teensypp-2_0.upload.tool=teensy_reboot
 teensypp-2_0.upload.protocol=halfkay
 teensypp-2_0.upload.maximum_size=130048
 teensypp-2_0.upload.maximum_data_size=8192
+teensypp-2_0.upload.maximum_eeprom_size=8192
 teensypp-2_0.upload.speed=12000000
 teensypp-2_0.upload.disable_flushing=true
 

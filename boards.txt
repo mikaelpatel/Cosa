@@ -32,6 +32,7 @@ miniwireless.upload.tool=avrdude
 miniwireless.upload.protocol=arduino
 miniwireless.upload.maximum_size=30720
 miniwireless.upload.maximum_data_size=2048
+miniwireless.upload.maximum_eeprom_size=1024
 miniwireless.upload.speed=57600
 
 miniwireless.bootloader.tool=avrdude
@@ -58,6 +59,7 @@ diecimila.upload.tool=avrdude
 diecimila.upload.protocol=arduino
 diecimila.upload.maximum_size=14336
 diecimila.upload.maximum_data_size=1024
+diecimila.upload.maximum_eeprom_size=512
 diecimila.upload.speed=19200
 
 diecimila.bootloader.tool=avrdude
@@ -80,6 +82,7 @@ duemilanove.upload.tool=avrdude
 duemilanove.upload.protocol=arduino
 duemilanove.upload.maximum_size=30720
 duemilanove.upload.maximum_data_size=2048
+duemilanove.upload.maximum_eeprom_size=1024
 duemilanove.upload.speed=57600
 
 duemilanove.bootloader.tool=avrdude
@@ -102,11 +105,11 @@ leonardo.upload.tool=avrdude
 leonardo.upload.protocol=avr109
 leonardo.upload.maximum_size=28672
 leonardo.upload.maximum_data_size=2560
+leonardo.upload.maximum_eeprom_size=1024
 leonardo.upload.speed=57600
 leonardo.upload.disable_flushing=true
 leonardo.upload.use_1200bps_touch=true
 leonardo.upload.wait_for_upload_port=true
-
 
 leonardo.bootloader.path=caterina
 leonardo.bootloader.tool=avrdude
@@ -133,6 +136,7 @@ mega1280.upload.tool=avrdude
 mega1280.upload.protocol=arduino
 mega1280.upload.maximum_size=126976
 mega1280.upload.maximum_data_size=8192
+mega1280.upload.maximum_eeprom_size=4096
 mega1280.upload.speed=57600
 
 mega1280.bootloader.tool=avrdude
@@ -155,6 +159,7 @@ mega2560.upload.tool=avrdude
 mega2560.upload.protocol=wiring
 mega2560.upload.maximum_size=253952
 mega2560.upload.maximum_data_size=8192
+mega2560.upload.maximum_eeprom_size=4096
 mega2560.upload.speed=115200
 
 mega2560.bootloader.tool=avrdude
@@ -177,6 +182,7 @@ micro.upload.tool=avrdude
 micro.upload.protocol=avr109
 micro.upload.maximum_size=28672
 micro.upload.maximum_data_size=2560
+micro.upload.maximum_eeprom_size=1024
 micro.upload.speed=57600
 micro.upload.disable_flushing=true
 micro.upload.use_1200bps_touch=true
@@ -207,6 +213,7 @@ nano.upload.tool=avrdude
 nano.upload.protocol=arduino
 nano.upload.maximum_size=30720
 nano.upload.maximum_data_size=2048
+nano.upload.maximum_eeprom_size=1024
 nano.upload.speed=57600
 
 nano.bootloader.tool=avrdude
@@ -229,6 +236,7 @@ pro-micro.upload.tool=avrdude
 pro-micro.upload.protocol=avr109
 pro-micro.upload.maximum_size=28672
 pro-micro.upload.maximum_data_size=2560
+pro-micro.upload.maximum_eeprom_size=1024
 pro-micro.upload.speed=57600
 pro-micro.upload.disable_flushing=true
 pro-micro.upload.use_1200bps_touch=true
@@ -259,6 +267,7 @@ pro-micro-8.upload.tool=avrdude
 pro-micro-8.upload.protocol=avr109
 pro-micro-8.upload.maximum_size=28672
 pro-micro-8.upload.maximum_data_size=2560
+pro-micro-8.upload.maximum_eeprom_size=1024
 pro-micro-8.upload.speed=57600
 pro-micro-8.upload.disable_flushing=true
 pro-micro-8.upload.use_1200bps_touch=true
@@ -289,6 +298,7 @@ pro-mini.upload.tool=avrdude
 pro-mini.upload.protocol=arduino
 pro-mini.upload.maximum_size=30720
 pro-mini.upload.maximum_data_size=2048
+pro-mini.upload.maximum_eeprom_size=1024
 pro-mini.upload.speed=57600
 
 pro-mini.bootloader.tool=avrdude
@@ -311,6 +321,7 @@ pro-mini-8.upload.tool=avrdude
 pro-mini-8.upload.protocol=arduino
 pro-mini-8.upload.maximum_size=30720
 pro-mini-8.upload.maximum_data_size=2048
+pro-mini-8.upload.maximum_eeprom_size=1024
 pro-mini-8.upload.speed=57600
 
 pro-mini-8.bootloader.tool=avrdude
@@ -333,6 +344,7 @@ uno.upload.tool=avrdude
 uno.upload.protocol=arduino
 uno.upload.maximum_size=32256
 uno.upload.maximum_data_size=2048
+uno.upload.maximum_eeprom_size=1024
 uno.upload.speed=115200
 
 uno.bootloader.tool=avrdude
@@ -359,6 +371,7 @@ attiny84-8.upload.protocol=stk500v1
 attiny84-8.upload.speed=19200
 attiny84-8.upload.maximum_size=8192
 attiny84-8.upload.maximum_data_size=512
+attiny84-8.upload.maximum_eeprom_size=512
 
 attiny84-8.bootloader.tool=avrdude
 attiny84-8.bootloader.low_fuses=0xe2
@@ -380,6 +393,7 @@ attiny85-8.upload.protocol=stk500v1
 attiny85-8.upload.speed=19200
 attiny85-8.upload.maximum_size=8192
 attiny85-8.upload.maximum_data_size=512
+attiny85-8.upload.maximum_eeprom_size=512
 
 attiny85-8.bootloader.tool=avrdude
 attiny85-8.bootloader.low_fuses=0xe2
@@ -401,6 +415,7 @@ attiny861-8.upload.protocol=stk500v1
 attiny861-8.upload.speed=19200
 attiny861-8.upload.maximum_size=8192
 attiny861-8.upload.maximum_data_size=512
+attiny861-8.upload.maximum_eeprom_size=512
 
 attiny861-8.bootloader.tool=avrdude
 attiny861-8.bootloader.low_fuses=0xe2
@@ -423,6 +438,7 @@ atmega328-8.upload.protocol=stk500v1
 atmega328-8.upload.speed=19200
 atmega328-8.upload.maximum_size=32768
 atmega328-8.upload.maximum_data_size=2048
+atmega328-8.upload.maximum_eeprom_size=1024
 
 atmega328-8.bootloader.tool=avrdude
 atmega328-8.bootloader.low_fuses=0xE2
@@ -444,6 +460,7 @@ mighty.upload.tool=avrdude
 mighty.upload.protocol=stk500v1
 mighty.upload.maximum_size=129024
 mighty.upload.maximum_data_size=16384
+mighty.upload.maximum_eeprom_size=4096
 mighty.upload.speed=57600
 
 mighty.bootloader.tool=avrdude
@@ -466,6 +483,7 @@ mighty-opt.upload.tool=avrdude
 mighty-opt.upload.protocol=arduino
 mighty-opt.upload.maximum_size=130048
 mighty-opt.upload.maximum_data_size=16384
+mighty-opt.upload.maximum_eeprom_size=4096
 mighty-opt.upload.speed=115200
 
 mighty-opt.bootloader.tool=avrdude
@@ -492,6 +510,7 @@ lilypad.upload.tool=avrdude
 lilypad.upload.protocol=arduino
 lilypad.upload.maximum_size=30720
 lilypad.upload.maximum_data_size=2048
+lilypad.upload.maximum_eeprom_size=1024
 lilypad.upload.speed=57600
 
 lilypad.bootloader.tool=avrdude
@@ -514,6 +533,7 @@ lilypad-usb.upload.tool=avrdude
 lilypad-usb.upload.protocol=avr109
 lilypad-usb.upload.maximum_size=28672
 lilypad-usb.upload.maximum_data_size=2560
+lilypad-usb.upload.maximum_eeprom_size=1024
 lilypad-usb.upload.speed=57600
 lilypad-usb.upload.disable_flushing=true
 lilypad-usb.upload.use_1200bps_touch=true
@@ -548,6 +568,7 @@ moteino.upload.tool=avrdude
 moteino.upload.protocol=arduino
 moteino.upload.maximum_size=31744
 moteino.upload.maximum_data_size=2048
+moteino.upload.maximum_eeprom_size=1024
 moteino.upload.speed=115200
 
 moteino.bootloader.tool=avrdude
@@ -574,6 +595,7 @@ microduino-core.upload.tool=avrdude
 microduino-core.upload.protocol=arduino
 microduino-core.upload.maximum_size=32256
 microduino-core.upload.maximum_data_size=2048
+microduino-core.upload.maximum_eeprom_size=1024
 microduino-core.upload.speed=115200
 
 microduino-core.bootloader.tool=avrdude
@@ -596,6 +618,7 @@ microduino-core32u4.upload.tool=avrdude
 microduino-core32u4.upload.protocol=avr109
 microduino-core32u4.upload.maximum_size=28672
 microduino-core32u4.upload.maximum_data_size=2560
+microduino-core32u4.upload.maximum_eeprom_size=1024
 microduino-core32u4.upload.speed=57600
 microduino-core32u4.upload.disable_flushing=true
 microduino-core32u4.upload.use_1200bps_touch=true
@@ -626,6 +649,7 @@ microduino-core-plus.upload.tool=avrdude
 microduino-core-plus.upload.protocol=arduino
 microduino-core-plus.upload.maximum_size=64512
 microduino-core-plus.upload.maximum_data_size=4096
+microduino-core-plus.upload.maximum_eeprom_size=2048
 microduino-core-plus.upload.speed=115200
 
 microduino-core-plus.bootloader.tool=avrdude
@@ -652,6 +676,7 @@ pinoccio.upload.tool=avrdude
 pinoccio.upload.protocol=wiring
 pinoccio.upload.maximum_size=253952
 pinoccio.upload.maximum_data_size=32768
+pinoccio.upload.maximum_eeprom_size=8192
 pinoccio.upload.speed=115200
 
 pinoccio.bootloader.tool=avrdude
@@ -678,6 +703,7 @@ teensy-2_0.upload.tool=teensy_reboot
 teensy-2_0.upload.protocol=halfkay
 teensy-2_0.upload.maximum_size=32256
 teensy-2_0.upload.maximum_data_size=2560
+teensy-2_0.upload.maximum_eeprom_size=1024
 teensy-2_0.upload.speed=12000000
 teensy-2_0.upload.disable_flushing=true
 
@@ -702,6 +728,7 @@ teensypp-2_0.upload.tool=teensy_reboot
 teensypp-2_0.upload.protocol=halfkay
 teensypp-2_0.upload.maximum_size=130048
 teensypp-2_0.upload.maximum_data_size=8192
+teensypp-2_0.upload.maximum_eeprom_size=8192
 teensypp-2_0.upload.speed=12000000
 teensypp-2_0.upload.disable_flushing=true
 

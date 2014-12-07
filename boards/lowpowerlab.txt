@@ -36,6 +36,7 @@ moteino.upload.tool=avrdude
 moteino.upload.protocol=arduino
 moteino.upload.maximum_size=31744
 moteino.upload.maximum_data_size=2048
+moteino.upload.maximum_eeprom_size=1024
 moteino.upload.speed=115200
 
 moteino.bootloader.tool=avrdude

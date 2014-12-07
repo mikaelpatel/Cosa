@@ -36,6 +36,7 @@ diecimila.upload.tool=avrdude
 diecimila.upload.protocol=arduino
 diecimila.upload.maximum_size=14336
 diecimila.upload.maximum_data_size=1024
+diecimila.upload.maximum_eeprom_size=512
 diecimila.upload.speed=19200
 
 diecimila.bootloader.tool=avrdude
@@ -58,6 +59,7 @@ duemilanove.upload.tool=avrdude
 duemilanove.upload.protocol=arduino
 duemilanove.upload.maximum_size=30720
 duemilanove.upload.maximum_data_size=2048
+duemilanove.upload.maximum_eeprom_size=1024
 duemilanove.upload.speed=57600
 
 duemilanove.bootloader.tool=avrdude
@@ -80,11 +82,11 @@ leonardo.upload.tool=avrdude
 leonardo.upload.protocol=avr109
 leonardo.upload.maximum_size=28672
 leonardo.upload.maximum_data_size=2560
+leonardo.upload.maximum_eeprom_size=1024
 leonardo.upload.speed=57600
 leonardo.upload.disable_flushing=true
 leonardo.upload.use_1200bps_touch=true
 leonardo.upload.wait_for_upload_port=true
-
 
 leonardo.bootloader.path=caterina
 leonardo.bootloader.tool=avrdude
@@ -111,6 +113,7 @@ mega1280.upload.tool=avrdude
 mega1280.upload.protocol=arduino
 mega1280.upload.maximum_size=126976
 mega1280.upload.maximum_data_size=8192
+mega1280.upload.maximum_eeprom_size=4096
 mega1280.upload.speed=57600
 
 mega1280.bootloader.tool=avrdude
@@ -133,6 +136,7 @@ mega2560.upload.tool=avrdude
 mega2560.upload.protocol=wiring
 mega2560.upload.maximum_size=253952
 mega2560.upload.maximum_data_size=8192
+mega2560.upload.maximum_eeprom_size=4096
 mega2560.upload.speed=115200
 
 mega2560.bootloader.tool=avrdude
@@ -155,6 +159,7 @@ micro.upload.tool=avrdude
 micro.upload.protocol=avr109
 micro.upload.maximum_size=28672
 micro.upload.maximum_data_size=2560
+micro.upload.maximum_eeprom_size=1024
 micro.upload.speed=57600
 micro.upload.disable_flushing=true
 micro.upload.use_1200bps_touch=true
@@ -185,6 +190,7 @@ nano.upload.tool=avrdude
 nano.upload.protocol=arduino
 nano.upload.maximum_size=30720
 nano.upload.maximum_data_size=2048
+nano.upload.maximum_eeprom_size=1024
 nano.upload.speed=57600
 
 nano.bootloader.tool=avrdude
@@ -207,6 +213,7 @@ pro-micro.upload.tool=avrdude
 pro-micro.upload.protocol=avr109
 pro-micro.upload.maximum_size=28672
 pro-micro.upload.maximum_data_size=2560
+pro-micro.upload.maximum_eeprom_size=1024
 pro-micro.upload.speed=57600
 pro-micro.upload.disable_flushing=true
 pro-micro.upload.use_1200bps_touch=true
@@ -237,6 +244,7 @@ pro-micro-8.upload.tool=avrdude
 pro-micro-8.upload.protocol=avr109
 pro-micro-8.upload.maximum_size=28672
 pro-micro-8.upload.maximum_data_size=2560
+pro-micro-8.upload.maximum_eeprom_size=1024
 pro-micro-8.upload.speed=57600
 pro-micro-8.upload.disable_flushing=true
 pro-micro-8.upload.use_1200bps_touch=true
@@ -267,6 +275,7 @@ pro-mini.upload.tool=avrdude
 pro-mini.upload.protocol=arduino
 pro-mini.upload.maximum_size=30720
 pro-mini.upload.maximum_data_size=2048
+pro-mini.upload.maximum_eeprom_size=1024
 pro-mini.upload.speed=57600
 
 pro-mini.bootloader.tool=avrdude
@@ -289,6 +298,7 @@ pro-mini-8.upload.tool=avrdude
 pro-mini-8.upload.protocol=arduino
 pro-mini-8.upload.maximum_size=30720
 pro-mini-8.upload.maximum_data_size=2048
+pro-mini-8.upload.maximum_eeprom_size=1024
 pro-mini-8.upload.speed=57600
 
 pro-mini-8.bootloader.tool=avrdude
@@ -311,6 +321,7 @@ uno.upload.tool=avrdude
 uno.upload.protocol=arduino
 uno.upload.maximum_size=32256
 uno.upload.maximum_data_size=2048
+uno.upload.maximum_eeprom_size=1024
 uno.upload.speed=115200
 
 uno.bootloader.tool=avrdude
