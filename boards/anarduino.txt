@@ -36,6 +36,7 @@ miniwireless.upload.tool=avrdude
 miniwireless.upload.protocol=arduino
 miniwireless.upload.maximum_size=30720
 miniwireless.upload.maximum_data_size=2048
+miniwireless.upload.maximum_eeprom_size=1024
 miniwireless.upload.speed=57600
 
 miniwireless.bootloader.tool=avrdude

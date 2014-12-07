@@ -36,6 +36,7 @@ microduino-core.upload.tool=avrdude
 microduino-core.upload.protocol=arduino
 microduino-core.upload.maximum_size=32256
 microduino-core.upload.maximum_data_size=2048
+microduino-core.upload.maximum_eeprom_size=1024
 microduino-core.upload.speed=115200
 
 microduino-core.bootloader.tool=avrdude
@@ -58,6 +59,7 @@ microduino-core32u4.upload.tool=avrdude
 microduino-core32u4.upload.protocol=avr109
 microduino-core32u4.upload.maximum_size=28672
 microduino-core32u4.upload.maximum_data_size=2560
+microduino-core32u4.upload.maximum_eeprom_size=1024
 microduino-core32u4.upload.speed=57600
 microduino-core32u4.upload.disable_flushing=true
 microduino-core32u4.upload.use_1200bps_touch=true
@@ -88,6 +90,7 @@ microduino-core-plus.upload.tool=avrdude
 microduino-core-plus.upload.protocol=arduino
 microduino-core-plus.upload.maximum_size=64512
 microduino-core-plus.upload.maximum_data_size=4096
+microduino-core-plus.upload.maximum_eeprom_size=2048
 microduino-core-plus.upload.speed=115200
 
 microduino-core-plus.bootloader.tool=avrdude

@@ -36,6 +36,7 @@ pinoccio.upload.tool=avrdude
 pinoccio.upload.protocol=wiring
 pinoccio.upload.maximum_size=253952
 pinoccio.upload.maximum_data_size=32768
+pinoccio.upload.maximum_eeprom_size=8192
 pinoccio.upload.speed=115200
 
 pinoccio.bootloader.tool=avrdude

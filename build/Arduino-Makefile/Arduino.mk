@@ -274,16 +274,22 @@
 #PREVENT_DATA_SIZE=yes
 #PREVENT_EEPROM_SIZE=yes
 
+SIZE_HIGHLIGHT = "\\n"
+
 ifdef PREVENT_DATA_SIZE
-	PREVENT_DATA_SIZE = true
+	PREVENT_DATA_SIZE = 1
+  SIZE_DATA_HIGHLIGHT = ""
 else
-	PREVENT_DATA_SIZE = false
+	PREVENT_DATA_SIZE = 0
+  SIZE_DATA_HIGHLIGHT = "\\n********************************************************************************\\n"
 endif
 
 ifdef PREVENT_EEPROM_SIZE
-	PREVENT_EEPROM_SIZE = true
+	PREVENT_EEPROM_SIZE = 1
+  SIZE_EEPROM_HIGHLIGHT = ""
 else
-	PREVENT_EEPROM_SIZE = false
+	PREVENT_EEPROM_SIZE = 0
+  SIZE_EEPROM_HIGHLIGHT = "\\n********************************************************************************\\n"
 endif
 
 arduino_output =
@@ -1095,19 +1101,19 @@ $(OBJDIR)/%.hex: $(OBJDIR)/%.elf $(COMMON_DEPS)
 ifneq ($(strip $(HEX_MAXIMUM_SIZE)),)
 	@if [ `$(SIZE) $@ | awk 'FNR == 2 {print $$2}'` -le $(HEX_MAXIMUM_SIZE) ]; then touch $@.sizeok; else rm -f $@.sizeok; fi
 else
-	@$(ECHO) "Maximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $@ is less than $(BOARD_TAG)\'s flash memory\n"
+	@$(ECHO) "Maximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $@ is less than $(BOARD_TAG)\'s flash memory\n\n"
 	@touch $@.sizeok
 endif
 ifneq ($(strip $(HEX_MAXIMUM_DATA_SIZE)),)
 	@if [ `$(SIZE) $(SIZEFLAGS) $< | awk '/^Data:/ {print $$2}'` -le $(HEX_MAXIMUM_DATA_SIZE) ]; then touch $@.datasizeok; else rm -f $@.datasizeok; fi
 else
-	@$(ECHO) "Maximum data memory of $(BOARD_TAG) is not specified. Make sure the size of $@ is less than $(BOARD_TAG)\'s data memory\n"
+	@$(ECHO) "Maximum data memory of $(BOARD_TAG) is not specified. Make sure the size of $@ is less than $(BOARD_TAG)\'s data memory\n\n"
 	@touch $@.datasizeok
 endif
 ifneq ($(strip $(HEX_MAXIMUM_EEPROM_SIZE)),)
-	@if [ `$(SIZE) $(SIZEFLAGS) $< | awk '/^EEPROM:/ {print $$2}'` -le $(HEX_MAXIMUM_EEPROM_SIZE) ]; then touch $@.eepromsizeok; else rm -f $@.eepromsizeok; fi
+	@if [ `$(SIZE) $(SIZEFLAGS) $< | awk 'BEGIN{V=0} /^EEPROM:/{V=$$2} END{print V}'` -le $(HEX_MAXIMUM_EEPROM_SIZE) ]; then touch $@.eepromsizeok; else rm -f $@.eepromsizeok; fi
 else
-	@$(ECHO) "Maximum eeprom memory of $(BOARD_TAG) is not specified. Make sure the size of $@ is less than $(BOARD_TAG)\'s eeprom memory\n"
+	@$(ECHO) "Maximum eeprom memory of $(BOARD_TAG) is not specified. Make sure the size of $@ is less than $(BOARD_TAG)\'s eeprom memory\n\n"
 	@touch $@.eepromsizeok
 endif
 
@@ -1339,18 +1345,23 @@ symbol_sizes: $(OBJDIR)/$(TARGET).sym
 verify_size:
 ifeq ($(strip $(HEX_MAXIMUM_SIZE)),)
 	@$(ECHO) "\nMaximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s flash memory\n\n"
+else
+	@if [ ! -f $(TARGET_HEX).sizeok ]; then echo >&2 "$(SIZE_HIGHLIGHT)The size of the compiled binary file is greater than the $(BOARD_TAG)'s flash memory. \
+See http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it.$(SIZE_HIGHLIGHT)"; fi
+	@if [ ! -f $(TARGET_HEX).sizeok ]; then false; fi
 endif
-	@if [ ! -f $(TARGET_HEX).sizeok ]; then echo >&2 "\nThe size of the compiled binary file is greater than the $(BOARD_TAG)'s flash memory. \
-See http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it."; fi
 ifeq ($(strip $(HEX_MAXIMUM_DATA_SIZE)),)
 	@$(ECHO) "\nMaximum data memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s data memory\n\n"
+else
+	@if [ ! -f $(TARGET_HEX).datasizeok ]; then echo >&2 "$(SIZE_DATA_HIGHLIGHT)The data size of the compiled binary file is greater than the $(BOARD_TAG)'s data memory.$(SIZE_DATA_HIGHLIGHT)"; fi
+	@if [ ! -f $(TARGET_HEX).datasizeok -a $(PREVENT_DATA_SIZE) -eq 1 ]; then false; fi
 endif
-	@if [ ! -f $(TARGET_HEX).datasizeok ]; then echo >&2 "The data size of the compiled binary file is greater than the $(BOARD_TAG)'s data memory."; fi
 ifeq ($(strip $(HEX_MAXIMUM_EEPROM_SIZE)),)
 	@$(ECHO) "\nMaximum eeprom memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s eeprom memory\n\n"
+else
+	@if [ ! -f $(TARGET_HEX).eepromsizeok ]; then echo >&2 "$(SIZE_EEPROM_HIGHLIGHT)The eeprom size of the compiled binary file is greater than the $(BOARD_TAG)'s eeprom memory.$(SIZE_EEPROM_HIGHLIGHT)"; fi
+	@if [ ! -f $(TARGET_HEX).eepromsizeok -a $(PREVENT_EEPROM_SIZE) -eq 1 ]; then false; fi
 endif
-	@if [ ! -f $(TARGET_HEX).eepromsizeok ]; then echo >&2 "The eeprom size of the compiled binary file is greater than the $(BOARD_TAG)'s eeprom memory."; fi
-	@if [ ! -f $(TARGET_HEX).sizeok -o \( ! -f $(TARGET_HEX).datasizeok -a $(PREVENT_DATA_SIZE) \) -o \( ! -f $(TARGET_HEX).eepromsizeok -a $(PREVENT_EEPROM_SIZE) \) ]; then false; fi
 
 generate_assembly: $(OBJDIR)/$(TARGET).s
 	@$(ECHO) "Compiler-generated assembly for the main input source has been dumped to $(OBJDIR)/$(TARGET).s\n\n"
@@ -1358,12 +1369,7 @@ generate_assembly: $(OBJDIR)/$(TARGET).s
 generated_assembly: generate_assembly
 	@$(ECHO) "\"generated_assembly\" target is deprecated. Use \"generate_assembly\" target instead\n\n"
 
-avanti: $(TARGET_HEX)
-ifeq ($(strip $(HEX_MAXIMUM_SIZE)),)
-	@$(ECHO) "\nMaximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s flash memory\n\n"
-endif
-	@if [ ! -f $(TARGET_HEX).sizeok ]; then echo >&2 "\nThe size of the compiled binary file is greater than the $(BOARD_TAG)'s flash memory. \
-See http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it."; false; fi
+avanti: $(TARGET_HEX) verify_size
 	$(call arduino_output,Resetting...)
 	$(RESET_CMD)
 	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
