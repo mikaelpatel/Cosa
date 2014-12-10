@@ -1,7 +1,7 @@
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkRTCTimer: started
-74:void setup():free_memory() = 1090
+74:void setup():free_memory() = 1086
 75:void setup():sizeof(Timer) = 10
 76:void setup():sizeof(Simple) = 10
 77:void setup():sizeof(OneShot) = 10
@@ -88,7 +88,9 @@ expire_after(1942 us): actual 1944 us
 expire_after(1983 us): actual 1984 us
 expire_after(2024 us): actual 2024 us
 expire_after(1024 us): actual 1028 us
-1000X expire_at(n * 1024 us): expected 1024000, actual 1028032 us
-50 timers started in 4568us
-elapsed time (0.5 + 49*0.1s = 5.400s): actual 5400012us
-CosaBenchmarkRTCTimer.ino:245:assert:true == false
+1000X expire_at(n * 1024 us): expected 1024000, actual 1028044 us
+50 timers started in 4648us
+elapsed time (0.5 + 49*0.1s = 5.400s): actual 5400008us
+Rollover test: start 4294963320, end 1024
+  expire_after(5000 us): actual 5000 us
+CosaBenchmarkRTCTimer.ino:259:assert:true == false

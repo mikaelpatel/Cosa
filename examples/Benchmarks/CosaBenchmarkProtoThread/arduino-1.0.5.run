@@ -5,14 +5,14 @@ CosaBenchmarkProtoThread: started
 75:void setup():sizeof(Counter) = 13
 78:void setup():F_CPU = 16000000
 79:void setup():I_CPU = 16
-97:void loop():measure:event dispatch: 26985 us
-97:void loop():measure:event dispatch: 27520 us
-97:void loop():measure:event dispatch: 27342 us
-97:void loop():measure:event dispatch: 27517 us
-97:void loop():measure:event dispatch: 27515 us
-97:void loop():measure:event dispatch: 27340 us
-97:void loop():measure:event dispatch: 27878 us
-97:void loop():measure:event dispatch: 27338 us
-97:void loop():measure:event dispatch: 27515 us
-97:void loop():measure:event dispatch: 27338 us
+97:void loop():measure:event dispatch: 26931 us
+97:void loop():measure:event dispatch: 27467 us
+97:void loop():measure:event dispatch: 27287 us
+97:void loop():measure:event dispatch: 27464 us
+97:void loop():measure:event dispatch: 27464 us
+97:void loop():measure:event dispatch: 27286 us
+97:void loop():measure:event dispatch: 27823 us
+97:void loop():measure:event dispatch: 27286 us
+97:void loop():measure:event dispatch: 27463 us
+97:void loop():measure:event dispatch: 27285 us
 CosaBenchmarkProtoThread.ino:106:assert:count < 10

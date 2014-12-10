@@ -1,7 +1,7 @@
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkRTC: started
-45:void setup():free_memory() = 1696
+45:void setup():free_memory() = 1692
 48:void setup():F_CPU = 16000000
 49:void setup():I_CPU = 16
 56:void setup():Watchdog::ms_per_tick() = 16
@@ -11,7 +11,7 @@ CosaBenchmarkRTC: started
 62:void setup():measure:RTC::micros(): 8 us
 63:void setup():measure:RTC::millis(): 8 us
 64:void setup():measure:RTC::seconds(): 4 us
-65:void setup():measure:RTC::delay(1): 1192 us
+65:void setup():measure:RTC::delay(1): 1184 us
 66:void setup():measure:RTC::delay(10): 10136 us
 67:void setup():measure:DELAY(10): 12 us
 68:void setup():measure:DELAY(100): 104 us
@@ -22,20 +22,20 @@ CosaBenchmarkRTC: started
 75:void setup():RTC::micros() = 1905116
 76:void setup():RTC::millis() = 1952
 77:void setup():RTC::seconds() = 1
-80:void setup():RTC::micros() = 3132384
-81:void setup():RTC::millis() = 3141
+80:void setup():RTC::micros() = 3126512
+81:void setup():RTC::millis() = 3135
 82:void setup():RTC::seconds() = 3
-80:void setup():RTC::micros() = 4327080
-81:void setup():RTC::millis() = 4335
+80:void setup():RTC::micros() = 4318960
+81:void setup():RTC::millis() = 4327
 82:void setup():RTC::seconds() = 4
-80:void setup():RTC::micros() = 5521760
-81:void setup():RTC::millis() = 5530
+80:void setup():RTC::micros() = 5511396
+81:void setup():RTC::millis() = 5520
 82:void setup():RTC::seconds() = 5
-80:void setup():RTC::micros() = 6716404
-81:void setup():RTC::millis() = 6725
+80:void setup():RTC::micros() = 6703776
+81:void setup():RTC::millis() = 6712
 82:void setup():RTC::seconds() = 6
-80:void setup():RTC::micros() = 7911020
-81:void setup():RTC::millis() = 7919
+80:void setup():RTC::micros() = 7896164
+81:void setup():RTC::millis() = 7905
 82:void setup():RTC::seconds() = 7
 99:void setup():RTC::seconds() = 18
 100:void setup():info:DELAY(100): 100000 measurement/validation (err = 0)

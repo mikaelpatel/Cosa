@@ -1,7 +1,7 @@
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkRTCTimer: started
-74:void setup():free_memory() = 1033
+74:void setup():free_memory() = 1027
 75:void setup():sizeof(Timer) = 10
 76:void setup():sizeof(Simple) = 10
 77:void setup():sizeof(OneShot) = 10
@@ -24,71 +24,73 @@ expire_after(28 us): actual 12 us
 expire_after(35 us): actual 12 us
 expire_after(42 us): actual 12 us
 expire_after(49 us): actual 12 us
-expire_after(56 us): actual 60 us
-expire_after(63 us): actual 68 us
-expire_after(70 us): actual 76 us
-expire_after(77 us): actual 84 us
-expire_after(84 us): actual 88 us
-expire_after(91 us): actual 96 us
-expire_after(98 us): actual 104 us
-expire_after(105 us): actual 112 us
+expire_after(56 us): actual 12 us
+expire_after(63 us): actual 64 us
+expire_after(70 us): actual 72 us
+expire_after(77 us): actual 80 us
+expire_after(84 us): actual 84 us
+expire_after(91 us): actual 92 us
+expire_after(98 us): actual 100 us
+expire_after(105 us): actual 108 us
 expire_after(118 us): actual 124 us
 expire_after(131 us): actual 136 us
 expire_after(144 us): actual 148 us
-expire_after(157 us): actual 164 us
-expire_after(170 us): actual 180 us
+expire_after(157 us): actual 160 us
+expire_after(170 us): actual 176 us
 expire_after(183 us): actual 188 us
 expire_after(196 us): actual 200 us
 expire_after(209 us): actual 216 us
 expire_after(222 us): actual 228 us
 expire_after(235 us): actual 240 us
 expire_after(248 us): actual 252 us
-expire_after(261 us): actual 268 us
-expire_after(302 us): actual 304 us
-expire_after(343 us): actual 344 us
-expire_after(384 us): actual 384 us
-expire_after(425 us): actual 428 us
-expire_after(466 us): actual 468 us
-expire_after(507 us): actual 508 us
-expire_after(548 us): actual 548 us
-expire_after(589 us): actual 592 us
-expire_after(630 us): actual 632 us
-expire_after(671 us): actual 672 us
-expire_after(712 us): actual 712 us
-expire_after(753 us): actual 756 us
-expire_after(794 us): actual 796 us
-expire_after(835 us): actual 836 us
-expire_after(876 us): actual 876 us
-expire_after(917 us): actual 920 us
-expire_after(958 us): actual 960 us
-expire_after(999 us): actual 1000 us
-expire_after(1040 us): actual 1040 us
-expire_after(1081 us): actual 1084 us
-expire_after(1122 us): actual 1124 us
-expire_after(1163 us): actual 1164 us
-expire_after(1204 us): actual 1204 us
-expire_after(1245 us): actual 1248 us
-expire_after(1286 us): actual 1288 us
-expire_after(1327 us): actual 1328 us
-expire_after(1368 us): actual 1368 us
-expire_after(1409 us): actual 1412 us
-expire_after(1450 us): actual 1452 us
+expire_after(261 us): actual 272 us
+expire_after(302 us): actual 308 us
+expire_after(343 us): actual 348 us
+expire_after(384 us): actual 388 us
+expire_after(425 us): actual 432 us
+expire_after(466 us): actual 472 us
+expire_after(507 us): actual 512 us
+expire_after(548 us): actual 552 us
+expire_after(589 us): actual 596 us
+expire_after(630 us): actual 636 us
+expire_after(671 us): actual 676 us
+expire_after(712 us): actual 716 us
+expire_after(753 us): actual 760 us
+expire_after(794 us): actual 800 us
+expire_after(835 us): actual 840 us
+expire_after(876 us): actual 880 us
+expire_after(917 us): actual 924 us
+expire_after(958 us): actual 964 us
+expire_after(999 us): actual 1004 us
+expire_after(1040 us): actual 1044 us
+expire_after(1081 us): actual 1088 us
+expire_after(1122 us): actual 1128 us
+expire_after(1163 us): actual 1168 us
+expire_after(1204 us): actual 1208 us
+expire_after(1245 us): actual 1252 us
+expire_after(1286 us): actual 1292 us
+expire_after(1327 us): actual 1332 us
+expire_after(1368 us): actual 1372 us
+expire_after(1409 us): actual 1416 us
+expire_after(1450 us): actual 1456 us
 expire_after(1491 us): actual 1492 us
-expire_after(1532 us): actual 1532 us
-expire_after(1573 us): actual 1576 us
-expire_after(1614 us): actual 1616 us
-expire_after(1655 us): actual 1656 us
-expire_after(1696 us): actual 1696 us
-expire_after(1737 us): actual 1740 us
-expire_after(1778 us): actual 1780 us
-expire_after(1819 us): actual 1820 us
-expire_after(1860 us): actual 1860 us
-expire_after(1901 us): actual 1904 us
-expire_after(1942 us): actual 1944 us
-expire_after(1983 us): actual 1984 us
-expire_after(2024 us): actual 2024 us
+expire_after(1532 us): actual 1536 us
+expire_after(1573 us): actual 1580 us
+expire_after(1614 us): actual 1620 us
+expire_after(1655 us): actual 1660 us
+expire_after(1696 us): actual 1700 us
+expire_after(1737 us): actual 1744 us
+expire_after(1778 us): actual 1784 us
+expire_after(1819 us): actual 1824 us
+expire_after(1860 us): actual 1864 us
+expire_after(1901 us): actual 1908 us
+expire_after(1942 us): actual 1940 us
+expire_after(1983 us): actual 1988 us
+expire_after(2024 us): actual 2028 us
 expire_after(1024 us): actual 1028 us
-1000X expire_at(n * 1024 us): expected 1024000, actual 1027380 us
-50 timers started in 4180us
+1000X expire_at(n * 1024 us): expected 1024000, actual 1028004 us
+50 timers started in 4104us
 elapsed time (0.5 + 49*0.1s = 5.400s): actual 5400008us
-CosaBenchmarkRTCTimer.ino:245:assert:true == false
+Rollover test: start 4294963344, end 1044
+  expire_after(5000 us): actual 4996 us
+CosaBenchmarkRTCTimer.ino:259:assert:true == false

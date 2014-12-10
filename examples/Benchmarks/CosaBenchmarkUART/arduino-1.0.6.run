@@ -1,7 +1,7 @@
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 57600
 CosaBenchmarkUART: started
-45:void setup():free_memory() = 460
+45:void setup():free_memory() = 452
 
 53:void loop():measure:one character (new-line):32 us
 1
