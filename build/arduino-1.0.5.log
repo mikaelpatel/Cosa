@@ -1,69 +1,69 @@
-Thu Dec 11 00:00:04 CET 2014: atmega328-8
+Wed Dec 10 23:57:35 CET 2014: atmega328-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:09 CET 2014: attiny84-8
+Wed Dec 10 23:57:40 CET 2014: attiny84-8
 Program:     124 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:14 CET 2014: attiny85-8
+Wed Dec 10 23:57:45 CET 2014: attiny85-8
 Program:     120 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:19 CET 2014: attiny861-8
+Wed Dec 10 23:57:50 CET 2014: attiny861-8
 Program:     128 bytes (1.6% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:24 CET 2014: diecimila
+Wed Dec 10 23:57:54 CET 2014: diecimila
 Program:     216 bytes (1.3% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:29 CET 2014: duemilanove
+Wed Dec 10 23:57:59 CET 2014: duemilanove
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:34 CET 2014: leonardo
+Wed Dec 10 23:58:05 CET 2014: leonardo
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:39 CET 2014: lilypad
+Wed Dec 10 23:58:10 CET 2014: lilypad
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:44 CET 2014: lilypad-usb
+Wed Dec 10 23:58:15 CET 2014: lilypad-usb
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:50 CET 2014: mega1280
+Wed Dec 10 23:58:21 CET 2014: mega1280
 Program:     346 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:55 CET 2014: mega2560
+Wed Dec 10 23:58:26 CET 2014: mega2560
 Program:     350 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:00 CET 2014: micro
+Wed Dec 10 23:58:31 CET 2014: micro
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:06 CET 2014: microduino-core
+Wed Dec 10 23:58:36 CET 2014: microduino-core
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:11 CET 2014: microduino-core32u4
+Wed Dec 10 23:58:41 CET 2014: microduino-core32u4
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:16 CET 2014: microduino-core-plus
+Wed Dec 10 23:58:47 CET 2014: microduino-core-plus
 Program:     236 bytes (0.4% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:21 CET 2014: mighty
+Wed Dec 10 23:58:52 CET 2014: mighty
 Program:     258 bytes
 Data:          0 bytes
-Thu Dec 11 00:01:26 CET 2014: mighty-opt
+Wed Dec 10 23:58:57 CET 2014: mighty-opt
 Program:     258 bytes
 Data:          0 bytes
-Thu Dec 11 00:01:31 CET 2014: miniwireless
+Wed Dec 10 23:59:02 CET 2014: miniwireless
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:36 CET 2014: moteino
+Wed Dec 10 23:59:06 CET 2014: moteino
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:41 CET 2014: nano
+Wed Dec 10 23:59:11 CET 2014: nano
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:46 CET 2014: pinoccio
+Wed Dec 10 23:59:16 CET 2014: pinoccio
 CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.cpp:1: error: MCU ‘atmega256rfr2’ supported for assembler only
-/home/epkmipl/opt/arduino-1.0.6/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/io.h:330:6: warning: #warning "device type not defined"
-/home/epkmipl/opt/arduino-1.0.6/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/sleep.h:369:6: error: #error "No SLEEP mode defined for this device."
-/home/epkmipl/opt/arduino-1.0.6/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/eeprom.h:67:4: warning: #warning "Device does not have EEPROM available."
+/home/epkmipl/opt/arduino-1.0.5/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/io.h:330:6: warning: #warning "device type not defined"
+/home/epkmipl/opt/arduino-1.0.5/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/sleep.h:369:6: error: #error "No SLEEP mode defined for this device."
+/home/epkmipl/opt/arduino-1.0.5/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/eeprom.h:67:4: warning: #warning "Device does not have EEPROM available."
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:185: error: ‘REFS0’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:186: error: ‘REFS1’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:187: error: ‘REFS1’ was not declared in this scope
@@ -131,24 +131,24 @@ CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDTCR’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDCE’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDE’ was not declared in this scope
-Thu Dec 11 00:01:47 CET 2014: pro-micro
+Wed Dec 10 23:59:17 CET 2014: pro-micro
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:53 CET 2014: pro-micro-8
+Wed Dec 10 23:59:23 CET 2014: pro-micro-8
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:58 CET 2014: pro-mini
+Wed Dec 10 23:59:29 CET 2014: pro-mini
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:02:03 CET 2014: pro-mini-8
+Wed Dec 10 23:59:35 CET 2014: pro-mini-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:02:08 CET 2014: teensy-2_0
+Wed Dec 10 23:59:40 CET 2014: teensy-2_0
 Program:     328 bytes (1.0% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:02:14 CET 2014: teensypp-2_0
+Wed Dec 10 23:59:45 CET 2014: teensypp-2_0
 Program:     314 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:02:19 CET 2014: uno
+Wed Dec 10 23:59:51 CET 2014: uno
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
