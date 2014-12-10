@@ -344,7 +344,7 @@ protected:
  */
 #define SHELL_SCRIPT_END(command) \
   ; \
-  static Shell::action_fn command ## _action = (Shell::action_fn) command ## _SCRIPT;
+  static const Shell::action_fn command ## _action __PROGMEM = (Shell::action_fn) command ## _SCRIPT;
 
 /**
  * Support macro to start the definition of commands in program memory.
