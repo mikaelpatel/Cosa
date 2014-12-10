@@ -70,14 +70,15 @@ Watchdog::begin(uint16_t ms,
 void
 Watchdog::delay(uint32_t ms)
 {
-  uint32_t ticks = (ms + (ms_per_tick() / 2)) / ms_per_tick();
+  int32_t ticks = (ms + (ms_per_tick() / 2)) / ms_per_tick();
   uint8_t key = lock();
-  uint32_t stop = s_ticks + (ticks == 0 ? 1 : ticks);
-  while (s_ticks != stop) {
+  uint32_t stop = s_ticks + ticks;
+  do {
     unlock(key);
     yield();
     key = lock();
-  }
+    ticks = stop - s_ticks;
+  } while (ticks > 0);
   unlock(key);
 }
 
