@@ -73,7 +73,7 @@
 #elif defined(LOWPOWERLAB_MOTEINO)
 #include "Cosa/Board/LowPowerLab/Moteino.map"
 #elif defined(LOWPOWERLAB_MOTEINO_MEGA)
-#include "Cosa/Board/LowPowerLab/Moteino_mega.map"
+#include "Cosa/Board/LowPowerLab/Moteino_Mega.map"
 
 // Microduino Boards
 #elif defined(MICRODUINO_CORE)

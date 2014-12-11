@@ -21,21 +21,17 @@
 #ifndef COSA_BOARD_LOWPOWERLAB_MOTEINO_MEGA_HH
 #define COSA_BOARD_LOWPOWERLAB_MOTEINO_MEGA_HH
 
-/**
- * Compiler warning on unused varable.
- */
-#if !defined(UNUSED)
-#define UNUSED(x) (void) (x)
-#endif
+/* This board is based on ATmega1248P */
+#define BOARD_ATMEGA1248P
 
 /**
  * Cosa pin symbol and hardware definitions for the ATmega1284P based
- * board Lowpowerlab Moteino Mega. Cosa does not use pin numbers as
+ * board LowPowerLab Moteino Mega. Cosa does not use pin numbers as
  * Arduino/Wiring, instead strong data type is used (enum types) for
  * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
  * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced.  
+ * optimizations to be reduced. 
  *
  * @section Board
  * @code
@@ -63,15 +59,11 @@
  *          3.3-16V     VIN  | []             [] |  VIN     3.3-16V
  *                      GND  | [] o-o-o-o-o-o [] |  GND
  *                           +-------------------+
- *                                | | | | | |
- *                   DTR/RTS -----^ | | | | |
- *                        TX -------^ | | | |
- *                        RX ---------^ | | |
- *                       VIN -----------^ | |
- *                           -------------^ |
- *                       GND ---------------^
+ *                              /  /  | |  \  \
+ *                             /  /   | |   \  \
+ *                          DTR  TX  RX VIN     GND
  *
- * * = shared by radio if present
+ * * = used by radio if present
  * @endcode
  */
 class Board {
@@ -205,8 +197,13 @@ public:
   enum PWMPin {
     PWM0 = D3,                  // PB3 => OCR0A
     PWM1 = D4,                  // PB4 => OCR0B
+#if defined(__AVR_ATmega1284P__)
     PWM2 = D6,                  // PB6 => OCR3A
     PWM3 = D7,                  // PB7 => OCR3B
+#else
+    PWM2 = 255,                 // PB6 => NOP
+    PWM3 = 255,                 // PB7 => NOP
+#endif
     PWM4 = D12,                 // PD4 => OCR1B
     PWM5 = D13,                 // PD5 => OCR1A
     PWM6 = D14,                 // PD6 => OCR2B
@@ -333,10 +330,12 @@ extern "C" {
   void TIMER2_COMPA_vect(void) __attribute__ ((signal));
   void TIMER2_COMPB_vect(void) __attribute__ ((signal));
   void TIMER2_OVF_vect(void) __attribute__ ((signal));
+#if defined(__AVR_ATmega1284P__)
   void TIMER3_CAPT_vect(void) __attribute__ ((signal));
   void TIMER3_COMPA_vect(void) __attribute__ ((signal));
   void TIMER3_COMPB_vect(void) __attribute__ ((signal));
   void TIMER3_OVF_vect(void) __attribute__ ((signal));
+#endif
   void TWI_vect(void) __attribute__ ((signal));
   void WDT_vect(void) __attribute__ ((signal));
   void USART_RX_vect(void) __attribute__ ((signal));
