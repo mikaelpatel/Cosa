@@ -582,6 +582,29 @@ moteino.build.board=LOWPOWERLAB_MOTEINO
 moteino.build.variant=lowpowerlab/moteino
 moteino.build.core=cosa
 
+# AVR:ATmega1284
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (512 words, 0xfe00). 
+moteino-mega.name=Cosa LowPowerLab Moteino Mega (ATmega1284P/DualOptiboot)
+moteino-mega.upload.tool=avrdude
+moteino-mega.upload.protocol=arduino
+moteino-mega.upload.maximum_size=130048
+moteino-mega.upload.maximum_data_size=16384
+moteino-mega.upload.maximum_eeprom_size=4096
+moteino-mega.upload.speed=115200
+
+moteino-mega.bootloader.tool=avrdude
+moteino-mega.bootloader.low_fuses=0xde
+moteino-mega.bootloader.high_fuses=0xde
+moteino-mega.bootloader.extended_fuses=0xfd
+
+moteino-mega.build.mcu=atmega1284p
+moteino-mega.build.f_cpu=16000000L
+moteino-mega.build.board=LOWPOWERLAB_MOTEINO_MEGA
+moteino-mega.build.variant=lowpowerlab/moteino-mega
+moteino-mega.build.core=cosa
+
 ##
 # MICRODUINO CORE MODULES
 ##

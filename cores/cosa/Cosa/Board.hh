@@ -75,6 +75,8 @@
 // LowPowerLab Boards
 #elif defined(LOWPOWERLAB_MOTEINO)
 #include "Cosa/Board/LowPowerLab/Moteino.hh"
+#elif defined(LOWPOWERLAB_MOTEINO_MEGA)
+#include "Cosa/Board/LowPowerLab/Moteino_Mega.hh"
 
 // Microduino Boards
 #elif defined(MICRODUINO_CORE)
