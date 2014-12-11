@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/LowPowerLab/Moteino_mega.hh
+ * @file Cosa/Board/LowPowerLab/Moteino_Mega.hh
  * @version 1.0
  *
  * @section License
