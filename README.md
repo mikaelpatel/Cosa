@@ -51,6 +51,7 @@ boards with AVR MCUs.
 * [LilyPad Arduino] (./cores/cosa/Cosa/Board/Arduino/LilyPad.hh)
 * [LilyPad Arduino USB] (./cores/cosa/Cosa/Board/Arduino/LilyPad_USB.hh)
 * [LowPowerLab Moteino] (./cores/cosa/Cosa/Board/LowPowerLab/Moteino.hh)
+* [LowPowerLab Moteino Mega] (./cores/cosa/Cosa/Board/LowPowerLab/Moteino_Mega.hh)
 * [Pinoccio Scout] (./cores/cosa/Cosa/Board/Pinoccio/Scout.hh)
 * [Microduino-Core] (./cores/cosa/Cosa/Board/Microduino/Core.hh)
 * [Microduino-Core32u4] (./cores/cosa/Cosa/Board/Microduino/Core32U4.hh)
