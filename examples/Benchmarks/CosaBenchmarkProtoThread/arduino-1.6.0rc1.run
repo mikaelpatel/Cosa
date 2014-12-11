@@ -1,0 +1,18 @@
+Use CTRL-ALT GR-] to exit monitor.
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
+CosaBenchmarkProtoThread: started
+74:void setup():sizeof(ProtoThread) = 9
+75:void setup():sizeof(Counter) = 13
+78:void setup():F_CPU = 16000000
+79:void setup():I_CPU = 16
+97:void loop():measure:event dispatch: 26922 us
+97:void loop():measure:event dispatch: 27458 us
+97:void loop():measure:event dispatch: 27279 us
+97:void loop():measure:event dispatch: 27456 us
+97:void loop():measure:event dispatch: 27456 us
+97:void loop():measure:event dispatch: 27279 us
+97:void loop():measure:event dispatch: 27818 us
+97:void loop():measure:event dispatch: 27278 us
+97:void loop():measure:event dispatch: 27456 us
+97:void loop():measure:event dispatch: 27279 us
+CosaBenchmarkProtoThread.ino:106:assert:count < 10
