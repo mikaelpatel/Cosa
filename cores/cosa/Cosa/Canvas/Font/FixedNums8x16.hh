@@ -30,6 +30,9 @@
  * Originates from the GLCD library and adapted for Cosa Canvas. The
  * GLCD library was created by Michael Margolis and improved by Bill
  * Perry. 
+ * @section Reference
+ * https://code.google.com/p/glcd-arduino/source/browse/trunk/glcd/fonts/fixednums8x16.h
+ * 
  */
 class FixedNums8x16 : public GLCDFont {
 public:
