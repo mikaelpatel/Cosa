@@ -1,64 +1,67 @@
-Thu Dec 11 00:00:04 CET 2014: atmega328-8
+Fri Dec 12 20:23:54 CET 2014: atmega328-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:09 CET 2014: attiny84-8
+Fri Dec 12 20:23:59 CET 2014: attiny84-8
 Program:     124 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:14 CET 2014: attiny85-8
+Fri Dec 12 20:24:03 CET 2014: attiny85-8
 Program:     120 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:19 CET 2014: attiny861-8
+Fri Dec 12 20:24:08 CET 2014: attiny861-8
 Program:     128 bytes (1.6% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:24 CET 2014: diecimila
+Fri Dec 12 20:24:12 CET 2014: diecimila
 Program:     216 bytes (1.3% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:29 CET 2014: duemilanove
+Fri Dec 12 20:24:17 CET 2014: duemilanove
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:34 CET 2014: leonardo
+Fri Dec 12 20:24:22 CET 2014: leonardo
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:39 CET 2014: lilypad
+Fri Dec 12 20:24:27 CET 2014: lilypad
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:44 CET 2014: lilypad-usb
+Fri Dec 12 20:24:32 CET 2014: lilypad-usb
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:50 CET 2014: mega1280
+Fri Dec 12 20:24:37 CET 2014: mega1280
 Program:     346 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:00:55 CET 2014: mega2560
+Fri Dec 12 20:24:42 CET 2014: mega2560
 Program:     350 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:00 CET 2014: micro
+Fri Dec 12 20:24:46 CET 2014: micro
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:06 CET 2014: microduino-core
+Fri Dec 12 20:24:52 CET 2014: microduino-core
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:11 CET 2014: microduino-core32u4
+Fri Dec 12 20:24:56 CET 2014: microduino-core32u4
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:16 CET 2014: microduino-core-plus
+Fri Dec 12 20:25:02 CET 2014: microduino-core-plus
 Program:     236 bytes (0.4% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:21 CET 2014: mighty
+Fri Dec 12 20:25:06 CET 2014: mighty
 Program:     258 bytes
 Data:          0 bytes
-Thu Dec 11 00:01:26 CET 2014: mighty-opt
+Fri Dec 12 20:25:11 CET 2014: mighty-opt
 Program:     258 bytes
 Data:          0 bytes
-Thu Dec 11 00:01:31 CET 2014: miniwireless
+Fri Dec 12 20:25:16 CET 2014: miniwireless
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:36 CET 2014: moteino
+Fri Dec 12 20:25:20 CET 2014: moteino
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:41 CET 2014: nano
+Fri Dec 12 20:25:25 CET 2014: moteino-mega
+Program:     258 bytes
+Data:          0 bytes
+Fri Dec 12 20:25:30 CET 2014: nano
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:46 CET 2014: pinoccio
+Fri Dec 12 20:25:34 CET 2014: pinoccio
 CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.cpp:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/opt/arduino-1.0.6/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/io.h:330:6: warning: #warning "device type not defined"
@@ -131,24 +134,24 @@ CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDTCR’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDCE’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDE’ was not declared in this scope
-Thu Dec 11 00:01:47 CET 2014: pro-micro
+Fri Dec 12 20:25:35 CET 2014: pro-micro
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:53 CET 2014: pro-micro-8
+Fri Dec 12 20:25:41 CET 2014: pro-micro-8
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:01:58 CET 2014: pro-mini
+Fri Dec 12 20:25:46 CET 2014: pro-mini
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:02:03 CET 2014: pro-mini-8
+Fri Dec 12 20:25:50 CET 2014: pro-mini-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:02:08 CET 2014: teensy-2_0
+Fri Dec 12 20:25:55 CET 2014: teensy-2_0
 Program:     328 bytes (1.0% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:02:14 CET 2014: teensypp-2_0
+Fri Dec 12 20:26:00 CET 2014: teensypp-2_0
 Program:     314 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Thu Dec 11 00:02:19 CET 2014: uno
+Fri Dec 12 20:26:05 CET 2014: uno
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
