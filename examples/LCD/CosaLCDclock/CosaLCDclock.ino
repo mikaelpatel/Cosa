@@ -44,6 +44,7 @@
 HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
+// HD44780::SainSmart port;
 // HD44780::ERM1602_5 port;
 
 #if defined(USE_SENSORS)
