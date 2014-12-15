@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# @file build/rebuild
+# @version 1.0
+#
+# @section License
+# Copyright (C) 2014, Mikael Patel
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# @section Description
+# Shell script to build all variants for all supported toolchain
+# versions. Generates build log file(s).
+#
+# This file is part of the Arduino Che Cosa project.
+
+if [ $# == 0 ];
+then
+   echo "Usage: rebuild [all|VER..]"
+   echo "Build Cosa core for all boards with all supported Arduino versions"
+   echo "or given list of versions. Generates build log file(s)."
+   exit 1
+fi
+
+if [ $1 == "all" ];
+then 
+   versions="1.0.5 1.0.6 1.5.7 1.5.8 1.6.0rc1"
+else
+   versions=$*
+fi
+
+for ver in $versions
+do
+    echo `date`: arduino-$ver
+    tutto $ver &> arduino-$ver.log
+done
