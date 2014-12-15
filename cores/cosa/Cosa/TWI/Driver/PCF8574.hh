@@ -162,6 +162,6 @@ public:
    * given sub-address.
    * @param[in] subaddr sub-address (0..7, default 7).
    */
-  PCF8574A(uint8_t subaddr = 7) : PCF8574(0x70, subaddr) {}
+  PCF8574A(uint8_t subaddr = 7) : PCF8574(0x38, subaddr) {}
 };
 #endif
