@@ -30,38 +30,38 @@
  * data has been received and send completed. Extends a given
  * IOStream::Device class. Can be used to map an interrupt driven
  * device such as UART to event driven on completed input lines.
- * @param[in] T IOStream::Device class to filter.
+ * @param[in] DEVICE class to filter.
  */
-template <typename T>
-class IOEvent : public T {
+template <typename DEVICE>
+class IOEvent : public DEVICE {
 public:
   /**
    * Constuct IOEvent object for filtered stream operations. 
    */
-  IOEvent(Event::Handler* handler) : T(), m_handler(handler) {}
+  IOEvent(Event::Handler* handler) : DEVICE(), m_handler(handler) {}
 
   /**
-   * @override IOStream::Device<T>
+   * @override IOStream::Device
    * Write character to device.
    * @param[in] c character to write.
    * @return character written or EOF(-1).
    */
   virtual int putchar(char c)
   {
-    int res = T::putchar(c);
-    if (c == '\n' || T::room() == 0) 
+    int res = DEVICE::putchar(c);
+    if (c == '\n' || DEVICE::room() == 0) 
       Event::push(Event::RECEIVE_COMPLETED_TYPE, m_handler, this);
     return (res);
   }
 
   /**
-   * @override IOStream::Device<T>
+   * @override IOStream::Device
    * Read character from device.
    * @return character or EOF(-1).
    */
   virtual int getchar()
   {
-    int res = T::getchar();
+    int res = DEVICE::getchar();
     if (res == IOStream::EOF) 
       Event::push(Event::SEND_COMPLETED_TYPE, m_handler, this);
     return (res);
