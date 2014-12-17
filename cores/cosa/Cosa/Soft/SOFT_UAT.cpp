@@ -23,7 +23,7 @@
 using namespace Soft;
 
 UAT::UAT(Board::DigitalPin tx) : 
-  IOStream::Device(),
+  Serial(),
   m_tx(tx, 1),
   m_stops(2),
   m_bits(8),
@@ -50,8 +50,8 @@ UAT::putchar(char c)
 bool 
 UAT::begin(uint32_t baudrate, uint8_t format)
 {
-  m_stops = ((format & STOP2) != 0) + 1;
-  m_bits = (5 + (format & DATA_MASK));
+  m_stops = 1 + ((format & STOP2) != 0);
+  m_bits = 5 + ((format & DATA8) >> 1);
   m_count = ((F_CPU / baudrate) - I_CPU) / 4;
   return (true);
 }

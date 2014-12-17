@@ -29,6 +29,7 @@ extern Soft::UAT uart;
 #else
 
 #include "Cosa/Types.h"
+#include "Cosa/Serial.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Board.hh"
 
@@ -37,30 +38,10 @@ extern Soft::UAT uart;
  * devices may be piped with the IOBuffer class. The UART class
  * requires an input- and output IOBuffer instance.
  */
-class UART : public IOStream::Device {
+class UART : public Serial {
 public:
-  /** Default baudrate. */
-  static const uint32_t DEFAULT_BAUDRATE = 9600;
-
   /** Default buffer size for standard UART0 (at 9600 baud). */
   static const uint8_t BUFFER_MAX = 64;
-
-  /** Serial formats; DATA + PARITY + STOP. */
-  enum {
-    DATA5 = 0,
-    DATA6 = _BV(UCSZ00),
-    DATA7 = _BV(UCSZ01),
-    DATA8 = _BV(UCSZ01) | _BV(UCSZ00),
-    DATA9 = _BV(UCSZ02) | _BV(UCSZ01) | _BV(UCSZ00),
-    NO_PARITY = 0,
-    EVEN_PARITY = _BV(UPM01),
-    ODD_PARITY = _BV(UPM01) | _BV(UPM00),
-    STOP1 = 0,
-    STOP2 = _BV(USBS0),
-  } __attribute__((packed));
-    
-  /** Default serial format. */
-  static const uint8_t DEFAULT_FORMAT = DATA8 + STOP2 + NO_PARITY;
 
   /**
    * Construct serial port handler for given UART. 
@@ -69,7 +50,7 @@ public:
    * @param[in] obuf output stream buffer.
    */
   UART(uint8_t port, IOStream::Device* ibuf, IOStream::Device* obuf) : 
-    IOStream::Device(),
+    Serial(),
     m_sfr(Board::UART(port)),
     m_ibuf(ibuf),
     m_obuf(obuf)
@@ -162,19 +143,21 @@ public:
   }
 
   /**
+   * @override Serial
    * Start UART device driver.
    * @param[in] baudrate serial bitrate (default 9600).
    * @param[in] format serial frame format (default async, 8data, 2stop bit)
    * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint32_t baudrate = DEFAULT_BAUDRATE, 
-	     uint8_t format = DEFAULT_FORMAT);
+  virtual bool begin(uint32_t baudrate = DEFAULT_BAUDRATE, 
+		     uint8_t format = DEFAULT_FORMAT);
   
   /**
+   * @override Serial
    * Stop UART device driver.
    * @return true(1) if successful otherwise false(0)
    */
-  bool end();
+  virtual bool end();
 
   /**
    * Serial port references. Only uart0 is predefined (reference to global

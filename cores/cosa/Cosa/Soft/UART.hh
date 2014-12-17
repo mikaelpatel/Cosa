@@ -24,7 +24,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/PinChangeInterrupt.hh"
-#include "Cosa/IOStream.hh"
+#include "Cosa/Serial.hh"
 #include "Cosa/IOBuffer.hh"
 
 namespace Soft {
@@ -34,22 +34,8 @@ namespace Soft {
  * write method. May be used for trace output from ATtiny devices. 
  * Has a very small footprint and requires only one pin. No timers.
  */
-class UAT : public IOStream::Device {
+class UAT : public Serial {
 public:
-  /** Serial formats; DATA + PARITY + STOP. */
-  enum {
-    DATA5 = 0,
-    DATA6 = 1,
-    DATA7 = 2,
-    DATA8 = 3,
-    DATA9 = 4,
-    NO_PARITY = 0,
-    EVEN_PARITY = 8,
-    ODD_PARITY = 16,
-    STOP1 = 0,
-    STOP2 = 32
-  } __attribute__((packed));
-
   /**
    * Construct Soft UART with transmitter (only) on given output pin.
    * @param[in] tx transmitter pin.
@@ -66,24 +52,16 @@ public:
   virtual int putchar(char c);
 
   /**
+   * @override Serial
    * Start Soft UART device driver (transmitter only).
    * @param[in] baudrate serial bitrate (default 9600).
-   * @param[in] format serial frame format (default 8 data, 2 stop bits)
-   * @return true(1) if successful otherwise false(0).
-   */
-  bool begin(uint32_t baudrate = 9600UL, uint8_t format = DATA8 + STOP2);
-
-  /**
-   * Stop Soft UART device driver. 
+   * @param[in] format serial frame format (default DATA8, NO PARITY, STOP2).
    * @return true(1) if successful otherwise false(0)
    */
-  bool end()
-  {
-    return (true);
-  }
+  virtual bool begin(uint32_t baudrate = DEFAULT_BAUDRATE, 
+		     uint8_t format = DEFAULT_FORMAT);
   
 protected:
-  static const uint8_t DATA_MASK = 7;
   OutputPin m_tx;
   uint8_t m_stops;
   uint8_t m_bits;
@@ -170,18 +148,21 @@ public:
   }
 
   /**
+   * @override Serial
    * Start Soft UART device driver.
    * @param[in] baudrate serial bitrate (default 9600).
-   * @param[in] format serial frame format (default 8 data, 2 stop bits)
-   * @return true(1) if successful otherwise false(0).
+   * @param[in] format serial frame format (default DATA8, NO PARITY, STOP2).
+   * @return true(1) if successful otherwise false(0)
    */
-  bool begin(uint32_t baudrate = 9600UL, uint8_t format = DATA8 + STOP2);
-
+  virtual bool begin(uint32_t baudrate = DEFAULT_BAUDRATE, 
+		     uint8_t format = DEFAULT_FORMAT);
+  
   /**
+   * @override Serial
    * Stop Soft UART device driver. 
    * @return true(1) if successful otherwise false(0)
    */
-  bool end()
+  virtual bool end()
   {
     m_rx.disable();
     return (true);
