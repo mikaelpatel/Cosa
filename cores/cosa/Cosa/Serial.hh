@@ -24,6 +24,14 @@
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 
+#if defined(BOARD_ATTINY)
+# define UCSZ00 1
+# define UCSZ01 2
+# define USBS0 3
+# define UPM00 4
+# define UPM01 5
+#endif
+
 /**
  * Abstract Serial IOStream Device class. Common definitions for
  * hardware and software UARTs. Hardware serial format symbols are
