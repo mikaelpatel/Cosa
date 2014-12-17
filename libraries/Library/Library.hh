@@ -24,14 +24,6 @@
 #ifndef LIBRARY_HH
 #define LIBRARY_HH
 
-#include "Cosa/Types.h"
-
-class Library {
-public:
 #include "Library/Component.hh"
-
-public:
-  Library() {}
-};
 
 #endif

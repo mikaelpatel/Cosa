@@ -31,16 +31,18 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+using namespace Library;
+
 void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaLibrary: started"));
   Watchdog::begin();
+  Component comp(1);
 }
 
 void loop()
 {
-  Library lib;
-  Library::Component comp(&lib);
+  Component comp(2);
   ASSERT(true == false);
 }

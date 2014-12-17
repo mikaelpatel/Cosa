@@ -24,9 +24,18 @@
 #ifndef LIBRARY_COMPONENT_HH
 #define LIBRARY_COMPONENT_HH
 
+#include "Cosa/Types.h"
+
+namespace Library {
+
 class Component {
 public:
-  Component(class Library* library) {}
+  Component(uint16_t id);
+  ~Component();
+private:
+  uint16_t m_id;
+};
+
 };
 
 #endif

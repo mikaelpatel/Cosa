@@ -22,3 +22,17 @@
  */
 
 #include "Library/Component.hh"
+#include "Cosa/Trace.hh"
+
+using namespace Library;
+
+Component::Component(uint16_t id) : 
+  m_id(id)
+{
+  TRACE(m_id);
+}
+
+Component::~Component()
+{
+  TRACE(m_id);
+}
