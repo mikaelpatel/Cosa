@@ -47,9 +47,9 @@ then
   done
   rm LOG
 else
-  # Build all example sketches for given board
+  # Build all sketches for given board
   board=$1
-  pushd ../examples &> /dev/null
+  pushd .. &> /dev/null
   examples=`find -name *.ino | sort -f`
   for example in $examples
   do
