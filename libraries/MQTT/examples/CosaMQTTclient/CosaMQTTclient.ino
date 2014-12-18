@@ -33,9 +33,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "MQTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IoT/MQTT.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 

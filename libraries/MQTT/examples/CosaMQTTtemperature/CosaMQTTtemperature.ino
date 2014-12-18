@@ -43,10 +43,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "MQTT.hh"
 #include "Cosa/Board.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"
-#include "Cosa/IoT/MQTT.hh"
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 

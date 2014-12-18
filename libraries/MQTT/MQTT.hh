@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IoT/MQTT.hh
+ * @file MQTT.hh
  * @version 1.0
  *
  * @section License

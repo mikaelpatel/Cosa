@@ -42,11 +42,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "MQTT.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Driver/DHT.hh"
-#include "Cosa/IoT/MQTT.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
 // DHT11 sensor

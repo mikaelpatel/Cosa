@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IoT/MQTT.cpp
+ * @file MQTT.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IoT/MQTT.hh"
+#include "MQTT.hh"
 #include "Cosa/INET/DNS.hh"
 #include "Cosa/Watchdog.hh"
 
