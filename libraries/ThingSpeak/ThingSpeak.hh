@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IoT/ThingSpeak.hh
+ * @file ThingSpeak.hh
  * @version 1.0
  *
  * @section License

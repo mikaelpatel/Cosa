@@ -45,10 +45,10 @@
 // Uncomment to remove debug output
 // #define NDEBUG
 
+#include "ThingSpeak.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/DHT.hh"
-#include "Cosa/IoT/ThingSpeak.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
 #ifndef NDEBUG

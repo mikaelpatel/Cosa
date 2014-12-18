@@ -21,9 +21,9 @@
 #ifndef SENSOR_HANDLER_H
 #define SENSOR_HANDLER_H
 
+#include "ThingSpeak.hh"
 #include "Cosa/Alarm.hh"
 #include "Cosa/Driver/DHT.hh"
-#include "Cosa/IoT/ThingSpeak.hh"
 
 class SensorHandler : public Alarm {
 public:

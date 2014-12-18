@@ -23,7 +23,6 @@
 
 #include "CommandHandler.h"
 #include "Cosa/OutputPin.hh"
-#include "Cosa/IoT/ThingSpeak.hh"
 
 template<uint8_t STATE>
 class LEDCommand : public Command {

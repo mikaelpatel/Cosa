@@ -21,8 +21,8 @@
 #ifndef COMMAND_HANDLER_H
 #define COMMAND_HANDLER_H
 
+#include "ThingSpeak.hh"
 #include "Cosa/Alarm.hh"
-#include "Cosa/IoT/ThingSpeak.hh"
 
 class Command : public ThingSpeak::TalkBack::Command {
 public:

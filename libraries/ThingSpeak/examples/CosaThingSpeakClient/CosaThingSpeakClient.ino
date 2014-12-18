@@ -54,10 +54,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "ThingSpeak.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IoT/ThingSpeak.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"

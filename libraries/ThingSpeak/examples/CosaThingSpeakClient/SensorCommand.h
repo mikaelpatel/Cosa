@@ -23,7 +23,6 @@
 
 #include "CommandHandler.h"
 #include "SensorHandler.h"
-#include "Cosa/IoT/ThingSpeak.hh"
 
 template<bool IS_ENABLE>
 class SensorCommand : public Command {

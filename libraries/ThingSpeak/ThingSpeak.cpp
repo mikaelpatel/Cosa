@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IoT/ThingSpeak.cpp
+ * @file ThingSpeak.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IoT/ThingSpeak.hh"
+#include "ThingSpeak.hh"
 
 // ThingSpeak server network address
 #define API_THINGSPEAK_COM 184,106,153,149

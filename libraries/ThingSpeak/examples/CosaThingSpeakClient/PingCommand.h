@@ -22,7 +22,6 @@
 #define PING_COMMAND_H
 
 #include "CommandHandler.h"
-#include "Cosa/IoT/ThingSpeak.hh"
 
 class PingCommand : public Command {
 public:

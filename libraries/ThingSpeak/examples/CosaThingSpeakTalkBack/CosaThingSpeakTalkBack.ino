@@ -38,8 +38,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "ThingSpeak.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IoT/ThingSpeak.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
 #ifndef NDEBUG
