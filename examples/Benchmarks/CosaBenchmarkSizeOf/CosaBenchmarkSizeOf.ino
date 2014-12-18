@@ -62,8 +62,6 @@
 #include "Cosa/IOStream/Driver/RS485.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/IOStream/Driver/WIO.hh"
-#include "Cosa/IoT/MQTT.hh"
-#include "Cosa/IoT/ThingSpeak.hh"
 #include "Cosa/Interrupt.hh"
 #include "Cosa/Keypad.hh"
 #include "Cosa/LCD.hh"
@@ -161,10 +159,6 @@ void setup()
   TRACE(sizeof(DNS));
   TRACE(sizeof(HTTP::Client));
   TRACE(sizeof(HTTP::Server));
-  TRACE(sizeof(MQTT::Client));
-  TRACE(sizeof(ThingSpeak::Client));
-  TRACE(sizeof(ThingSpeak::Channel));
-  TRACE(sizeof(ThingSpeak::TalkBack));
   TRACE(sizeof(NTP));
   TRACE(sizeof(SNMP));
   TRACE(sizeof(SNMP::MIB));
