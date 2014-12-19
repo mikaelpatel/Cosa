@@ -55,19 +55,6 @@ public:
     Font(width, height, 0, 127, data)
   {}
   
-  /**
-   * @deprecated As of 2014-12, use Glyph.
-   * @overriden Font
-   * Get bitmap for given character.
-   * @param[in] c character.
-   * @return bitmap pointer.
-   */
-  virtual const uint8_t* get_bitmap(char c)
-    __attribute__((deprecated))
-  {
-    return (m_data + ((c - FIRST) * WIDTH * ((HEIGHT+7)/8)));
-  }
-
 protected:
   /**
    * @override Font

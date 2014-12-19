@@ -66,7 +66,9 @@ public:
   virtual const uint8_t* get_bitmap(char c)
     __attribute__((deprecated))
   {
-    return (m_data + (c * HEIGHT) * (WIDTH / CHARBITS));
+    if (c > LAST)
+      c = FIRST;
+    return (m_data + ((c - FIRST) * HEIGHT * (WIDTH / CHARBITS)));
   }
 
 protected:

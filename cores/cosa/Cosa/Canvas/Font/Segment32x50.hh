@@ -38,22 +38,6 @@ public:
    */
   Segment32x50() : UTFTFont(32, 50, '0', ':', bitmap) {}
 
-  /**
-   * @deprecated As of 2014-12, use Glyph.
-   * @override Font
-   * Get bitmap for given character ('0'..'9', ':'). Returns pointer
-   * to bitmap in program memory.
-   * @param[in] c character.
-   * @return bitmap pointer.
-   */
-  virtual const uint8_t* get_bitmap(char c)
-    __attribute__((deprecated))
-  {
-    if (c > LAST)
-      c = FIRST;
-    return (m_data + ((c - FIRST) * HEIGHT * (WIDTH / CHARBITS)));
-  }
-
 private:
   static const uint8_t bitmap[] PROGMEM;
 };

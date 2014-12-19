@@ -70,7 +70,7 @@ public:
   }
 
   /**
-   * @deprecated As of 2014-12, use constructor with recommended character and line spacing.
+   * @deprecated As of 2014-12, use constructor with first and last indicators.
    * Construct font descriptor and bitmap.
    * @param[in] width character width.
    * @param[in] height character height.
