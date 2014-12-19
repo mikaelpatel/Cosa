@@ -25,6 +25,7 @@
 
 // Forward declaration of default system font
 class Font;
+class Glyph;
 class System5x7;
 extern System5x7 system5x7;
 
@@ -545,6 +546,31 @@ public:
 
   /**
    * @override Canvas
+   * Draw glyph with current pen color.
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] glyph.
+   * @param[in] scale.
+   */
+  virtual void draw_glyph(uint8_t x, uint8_t y, Glyph* glyph,
+                          uint8_t scale = 1);
+
+  /**
+   * @override Canvas
+   * Draw glyph at cursor position with current pen color.
+   * @param[in] glyph.
+   * @param[in] scale.
+   */
+  void draw_glyph(Glyph* glyph,
+                  uint8_t scale = 1)
+  {
+    uint8_t x, y;
+    get_cursor(x, y);
+    draw_glyph(x, y, glyph, scale);
+  }
+  
+  /**
+   * @override Canvas
    * Draw bitmap with current pen color. The bitmap must be stored
    * in program memory.
    * @param[in] x.
@@ -574,7 +600,7 @@ public:
     get_cursor(x, y);
     draw_bitmap(x, y, bp, width, height, scale);
   }
-  
+
   /**
    * @override Canvas
    * Draw icon at given position with current pen color. The icon must
@@ -899,6 +925,7 @@ public:
     SET_TEXT_FONT,
     SET_CURSOR,
     MOVE_CURSOR,
+    DRAW_GLYPH,
     DRAW_BITMAP,
     DRAW_ICON,
     DRAW_PIXEL,
@@ -950,6 +977,7 @@ protected:
 #define CANVAS_SET_TEXT_FONT(ix) Canvas::SET_TEXT_FONT, ix, 
 #define CANVAS_SET_CURSOR(x, y) Canvas::SET_CURSOR, x, y,
 #define CANVAS_MOVE_CURSOR(dx, dy) Canvas::MOVE_CURSOR,	(uint8_t) dx, (uint8_t) dy,
+#define CANVAS_DRAW_GLYPH(ix, s) Canvas::DRAW_GLYPH, ix, s,
 #define CANVAS_DRAW_BITMAP(ix, w, h, s) Canvas::DRAW_BITMAP, ix, w, h, s,
 #define CANVAS_DRAW_ICON(ix, s) Canvas::DRAW_ICON, ix, s,
 #define CANVAS_DRAW_PIXEL() Canvas::DRAW_PIXEL,	

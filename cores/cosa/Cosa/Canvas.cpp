@@ -20,6 +20,7 @@
 
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Font.hh"
+#include "Cosa/Canvas/Glyph.hh"
 
 Canvas::Context Canvas::context;
 
@@ -65,21 +66,39 @@ Canvas::draw_pixel(uint8_t x, uint8_t y)
 }
 
 void
+Canvas::draw_glyph(uint8_t x, uint8_t y, Glyph* glyph,
+                   uint8_t scale)
+{
+  glyph->begin();
+  for (uint8_t xx = 0; xx < glyph->WIDTH; xx++) {
+    for (uint8_t yy = 0; yy < glyph->HEIGHT; yy++) {
+      if (glyph->pixel(xx, yy)) {
+        if (scale == 1)
+          draw_pixel(x + xx, y + yy);
+        else
+          fill_rect(x + xx*scale, y + yy*scale, scale, scale);
+      }
+    }
+  }
+  glyph->end();
+}
+
+void
 Canvas::draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp, 
-		    uint8_t width, uint8_t height,
-		    uint8_t scale)
+                    uint8_t width, uint8_t height,
+                    uint8_t scale)
 {
   for (uint8_t i = 0; i < width; i++) {
     uint8_t line = 0;
     for (uint8_t j = 0; j < height; j++) {
       if ((j & 0x7) == 0)
-	line = pgm_read_byte(bp++);
+        line = pgm_read_byte(bp++);
       if (line & 0x1) {
-	if (scale == 1)
-	  draw_pixel(x + i, y + j);
-	else {
-	  fill_rect(x + i*scale, y + j*scale, scale, scale);
-	} 
+        if (scale == 1)
+          draw_pixel(x + i, y + j);
+        else {
+          fill_rect(x + i*scale, y + j*scale, scale, scale);
+        } 
       }
       line >>= 1;
     }
@@ -88,21 +107,21 @@ Canvas::draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp,
 
 void
 Canvas::draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
-		  uint8_t width, uint8_t height,
-		  uint8_t scale)
+                  uint8_t width, uint8_t height,
+                  uint8_t scale)
 {
   for (uint8_t i = 0; i < height; i += 8) {
     for (uint8_t j = 0; j < width; j++) {
       uint8_t line = pgm_read_byte(bp++);
       for (uint8_t k = 0; k < 8; k++) {
-	if (line & 1) {
-	  if (scale == 1)
-	    draw_pixel(x + j, y + k + i);
-	  else {
-	    fill_rect(x + j*scale, y + (k+i)*scale, scale, scale);
-	  } 
-	}
-	line >>= 1;
+        if (line & 1) {
+          if (scale == 1)
+            draw_pixel(x + j, y + k + i);
+          else {
+            fill_rect(x + j*scale, y + (k+i)*scale, scale, scale);
+          } 
+        }
+        line >>= 1;
       }
     }
   }
@@ -271,8 +290,8 @@ Canvas::fill_circle(uint8_t x, uint8_t y, uint8_t radius)
 
 void 
 Canvas::draw_roundrect(uint8_t x, uint8_t y, 
-		       uint8_t width, uint8_t height,
-		       uint8_t radius)
+                       uint8_t width, uint8_t height,
+                       uint8_t radius)
 {
   uint8_t diameter = 2 * radius;
   int16_t f = 1 - radius;
@@ -316,8 +335,8 @@ Canvas::draw_roundrect(uint8_t x, uint8_t y,
 
 void 
 Canvas::fill_roundrect(uint8_t x, uint8_t y, 
-		       uint8_t width, uint8_t height, 
-		       uint8_t radius)
+                       uint8_t width, uint8_t height, 
+                       uint8_t radius)
 {
   int16_t dx = 0, dy = radius;
   int16_t p = 1 - radius;
@@ -353,7 +372,7 @@ Canvas::draw_char(uint8_t x, uint8_t y, char c)
   color16_t saved = set_pen_color(get_text_color());
   Font* font = get_text_font();
   font->draw(this, c, x, y, scale);
-  set_cursor(x + scale * (font->get_width(c)), y);
+  set_cursor(x + scale * (font->WIDTH + font->SPACING), y);
   set_pen_color(saved);
 }
 
@@ -434,6 +453,12 @@ Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
       dx = pgm_read_byte(ip++);
       dy = pgm_read_byte(ip++);
       move_cursor(dx, dy);
+      break;
+    case DRAW_GLYPH:
+      ix = pgm_read_byte(ip++);
+      if (ix >= max) return;
+      s = pgm_read_byte(ip++);
+      draw_glyph((Glyph*) pgm_read_word(tab + ix), s);
       break;
     case DRAW_BITMAP:
       ix = pgm_read_byte(ip++);
