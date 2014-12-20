@@ -33,25 +33,65 @@ public:
    * @param[in] font font.
    * @param[in] c character.
    */
-  FontGlyph(Font* font, char c = ' ');
+  FontGlyph(Font* font, char c = ' ') :
+    Glyph(font->WIDTH, font->HEIGHT),
+    m_font(font),
+    m_character(c)
+  {
+    character(c);
+  }
 
+  /**
+   * Get font.
+   * @return font.
+   */
+  Font* font()
+    __attribute__((always_inline))
+  {
+    return (m_font);
+  }
+  
   /**
    * Change to different character.
    * @param[in] c character.
    */
-  void character(char c);
+  void character(char c)
+    __attribute__((always_inline))
+  {
+    end();
+    m_character = c;
+    m_font->render(m_image, WIDTH * GLYPH_BITS_TO_BYTES(HEIGHT), c);
+  }
+
+  /**
+   * Get character.
+   * @return char.
+   */
+  char character()
+    __attribute__((always_inline))
+  {
+    return (m_character);
+  }
 
   /**
    * Get character spacing.
    * @return character spacing.
    */
-  uint8_t spacing();
+  uint8_t spacing()
+    __attribute__((always_inline))
+  {
+    return (m_font->SPACING);
+  }
   
   /**
    * Get line spacing.
    * @return line spacing.
    */
-  uint8_t line_spacing();
+  uint8_t line_spacing()
+    __attribute__((always_inline))
+  {
+    return (m_font->LINE_SPACING);
+  }
     
 protected:
   /** Font for this glyph.*/
