@@ -101,13 +101,21 @@ public:
    * @override Glyph
    * Begin iterator for access glyph image.
    */
-  void begin();
-  
+  void begin()
+    __attribute__((always_inline))
+  {
+    m_offset = 0;
+  }
+
   /**
    * @override Glyph
    * End iterator.
    */
-  void end();
+  void end()
+    __attribute__((always_inline))
+  {
+    m_offset = 0;
+  }
   
   /**
    * Get value of a pixel.
@@ -131,15 +139,26 @@ public:
    * Determine if iteration has reached end of glyph.
    * @return true if end has been reached.
    */
-  bool eog();
+  bool eog()
+    __attribute__((always_inline))
+  {
+    return (!((int16_t)m_offset < (int16_t)(WIDTH * GLYPH_BITS_TO_BYTES(HEIGHT))));
+  }
   
   /**
    * @override Glyph
    * Determine if iteration has reached end of stripe.
    * @return true if end of band has been reached.
    */
-  bool eos();
-  
+  bool eos()
+    __attribute__((always_inline))
+  {
+    if (m_offset == 0)
+      return (false);
+    else
+      return (!(m_offset % WIDTH));
+  }
+
   /**
    * @override Glyph
    * Get next element.

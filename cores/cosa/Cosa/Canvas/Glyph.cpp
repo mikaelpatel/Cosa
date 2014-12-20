@@ -38,71 +38,26 @@ Glyph::~Glyph()
     }
 }
 
-void
-Glyph::begin()
-{
-  m_offset = 0;
-}
-
-void
-Glyph::end()
-{
-  m_offset = 0;
-}
-
-bool
-Glyph::eog()
-{
-  return (!((int16_t)m_offset < (int16_t)(WIDTH * GLYPH_BITS_TO_BYTES(HEIGHT))));
-}
-
-bool
-Glyph::eos()
-{
-  if (m_offset == 0)
-    return (false);
-  else
-    return (!(m_offset % WIDTH));
-}
-
 uint8_t
 Glyph::next()
 {
-  uint8_t element;
+  if (m_image && !eog())
+    return (*(m_image + m_offset++));
 
-
-  if (!m_image)
-    return (0);
-
-  if (!m_image)
-    element = 0xFF;
-  else
-    element = *(m_image + m_offset);
-
-  if (!eog())
-    {
-      m_offset++;
-      return (element);
-    }
-  else
-    return (0);
+  return (0xFF);
 }
 
 const uint8_t*
 Glyph::next_stripe()
 {
-  if (!m_image)
-    return (NULL);
-
-  uint8_t* stripe = m_image + m_offset;
-
-  if (!eog())
+  if (m_image && !eog())
     {
+      uint8_t* stripe = m_image + m_offset;
       m_offset += WIDTH;
       return (stripe);
     }
-  else
-    return (NULL);
+
+  return (NULL);
 }
 
 IOStream&
