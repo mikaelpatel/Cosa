@@ -93,7 +93,8 @@ public:
    * @param[in] c character.
    * @return true if present.
    */
-  virtual bool present(char c)
+  bool present(char c)
+    __attribute__((always_inline))
   {
     return (c >= FIRST && c <= LAST);
   }
