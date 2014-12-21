@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# @file build/rebuild
+# @file build/rifare
 # @version 1.0
 #
 # @section License
@@ -24,13 +24,13 @@
 
 if [ $# == 0 ];
 then
-   echo "Usage: rebuild [all|VER..]"
+   echo "Usage: rifare [tutto|VER..]"
    echo "Build Cosa core for all boards with all supported Arduino versions"
    echo "or given list of versions. Generates build log file(s)."
    exit 1
 fi
 
-if [ $1 == "all" ];
+if [ $1 == "tutto" ];
 then 
    versions="1.0.5 1.0.6 1.5.7 1.5.8 1.6.0rc1"
 else
