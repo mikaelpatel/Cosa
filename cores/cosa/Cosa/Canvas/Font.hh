@@ -196,7 +196,7 @@ public:
                     uint8_t scale);
 
 protected:
-  friend FontGlyph;
+  friend class FontGlyph;
 
   /** Font data. */
   const uint8_t* m_data;
