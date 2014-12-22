@@ -21,48 +21,48 @@
 #ifndef COSA_CANVAS_GLCDFONT_HH
 #define COSA_CANVAS_GLCDFONT_HH
 
+#include "Cosa/Types.h"
+#include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Font.hh"
 
 /**
- * GLCD font library handler for Cosa Canvas. Needs a special 
- * handling of the font bitmap as the decoding is different.
+ * GLCD font library handler for Cosa Canvas.
  */
 class GLCDFont : public Font {
 public:
   /**
+   * Construct font descriptor with data.
+   * @param[in] width character width.
+   * @param[in] height character height.
+   * @param[in] first character available.
+   * @param[in] last character available.
+   * @param[in] data font storage.
+   */
+  GLCDFont(uint8_t width, uint8_t height,
+           uint8_t first, uint8_t last,
+           const uint8_t* data) :
+    Font(width, height, first, last, data)
+  {
+  }
+  /**
+   * @deprecated As of 2014-12, use constructor with recommended character and line spacing.
    * Construct GLCD font descriptor and bitmap.
    * @param[in] width character width.
    * @param[in] height character height.
-   * @param[in] bitmap font storage.
+   * @param[in] data font storage.
    */
-  GLCDFont(uint8_t width, uint8_t height, const uint8_t* bitmap) :
-    Font(width, height, bitmap)
+  GLCDFont(uint8_t width, uint8_t height, const uint8_t* data) :
+    Font(width, height, 0, 127, data)
   {}
   
-  /**
-   * @overriden Font
-   * Get bitmap for given character.
-   * @param[in] c character.
-   * @return bitmap pointer.
-   */
-  virtual const uint8_t* get_bitmap(char c)
-  {
-    return (m_bitmap + (c * WIDTH) * ((HEIGHT + 1) / CHARBITS));
-  }
-
+protected:
   /**
    * @override Font
-   * Draw character on given canvas.
-   * @param[in] canvas.
+   * Render character into FontGlyph
+   * @param[in] image FontGlyph image.
+   * @param[in] size image size (must be WIDTH * ((HEIGHT+7)/8)).
    * @param[in] c character.
-   * @param[in] x position.
-   * @param[in] y position.
-   * @param[in] scale.
    */
-  virtual void draw(Canvas* canvas, char c, uint8_t x, uint8_t y, 
-		    uint8_t scale)
-  {
-    canvas->draw_icon(x, y, get_bitmap(c), WIDTH, HEIGHT, scale);
-  }
+  virtual void render(uint8_t* image, uint8_t size, char c);
 };
 #endif

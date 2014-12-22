@@ -36,21 +36,7 @@ public:
   /** 
    * Construct large segment font (32x50) singleton.
    */
-  Segment32x50() : UTFTFont(32, 50, bitmap) {}
-
-  /**
-   * @override Font
-   * Get bitmap for given character ('0'..'9', ':'). Returns pointer
-   * to bitmap in program memory.
-   * @param[in] c character.
-   * @return bitmap pointer.
-   */
-  virtual const uint8_t* get_bitmap(char c)
-  {
-    c = c - '0';
-    if (c > 9) c = 10;
-    return (m_bitmap + (c * HEIGHT) * (WIDTH / CHARBITS));
-  }
+  Segment32x50() : UTFTFont(32, 50, '0', ':', bitmap) {}
 
 private:
   static const uint8_t bitmap[] PROGMEM;

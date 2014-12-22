@@ -18,26 +18,32 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Canvas/Glyph.hh"
 #include "Cosa/Canvas/UTFTFont.hh"
 
 void
-UTFTFont::draw(Canvas* canvas, char c, 
-	       uint8_t x, uint8_t y, 
-	       uint8_t scale)
+UTFTFont::render(uint8_t* image, uint8_t size, char c)
 {
-  const uint8_t* bp = get_bitmap(c);
-  for (uint8_t i = 0; i < HEIGHT; i++) {
-    for (uint8_t j = 0; j < WIDTH; j += 8) {
+  if (!image || size != (WIDTH * GLYPH_BITS_TO_BYTES(HEIGHT)))
+    return;
+
+  memset(image, 0, size);
+
+  if (!present(c))
+    return;
+
+  const uint8_t* bp = m_data + ((c - FIRST) * GLYPH_BITS_TO_BYTES(WIDTH) * HEIGHT);
+
+  
+  for (uint8_t y = 0; y < HEIGHT; y++) {
+    for (uint8_t x = 0; x < WIDTH; x += 8) {
       uint8_t line = pgm_read_byte(bp++);
-      for (uint8_t k = 0; k < 8; k++) {
-	if (line & 0x80) {
-	  if (scale == 1)
-	    canvas->draw_pixel(x + j + k, y + i);
-	  else {
-	    canvas->fill_rect(x + (j + k)*scale, y + i*scale, scale, scale);
-	  } 
-	}
-	line <<= 1;
+      for (uint8_t b = 0; b < 8; b++) {
+        uint16_t offset = ((GLYPH_BITS_TO_BYTES(y+1)-1) * WIDTH) + ((GLYPH_BITS_TO_BYTES(x+1)-1)*8) + b;
+        uint16_t shift = y - ((GLYPH_BITS_TO_BYTES(y+1)-1)*8);
+        if (line & 0x80)
+          image[offset] |= 1 << shift;
+        line <<= 1;
       }
     }
   }

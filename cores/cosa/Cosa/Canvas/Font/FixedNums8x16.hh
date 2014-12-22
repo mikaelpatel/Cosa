@@ -39,21 +39,7 @@ public:
   /**
    * Construct fixed number font singleton.
    */
-  FixedNums8x16() : GLCDFont(8, 15, bitmap) {}
-
-  /**
-   * @overriden Font
-   * Get bitmap for given character. Must be ASCII '+'..'0'..'9'.
-   * Returns pointer to bitmap in program memory.   
-   * @param[in] c character.
-   * @return bitmap pointer.
-   */
-  virtual const uint8_t* get_bitmap(char c)
-  {
-    c = c - '+';
-    if (c > 16) c = 0;
-    return (m_bitmap + (c * WIDTH)*((HEIGHT + 1)/CHARBITS));
-  }
+  FixedNums8x16() : GLCDFont(8, 15, '+', ':', bitmap) {}
 
 private:
   static const uint8_t bitmap[] PROGMEM;

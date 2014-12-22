@@ -24,7 +24,8 @@
 #include "Cosa/Canvas/Font.hh"
 
 /**
- * Bitmap system font size 5x7. Full ASCII table (0..127).
+ * Bitmap system font size 5x7. Full ASCII table (0..127)
+ * unless ATTINY (32..127).
  *
  * @section Acknowledgements
  * Inspired by graphics library by ladyada/adafruit.
@@ -34,21 +35,12 @@ public:
   /**
    * Construct system font (5x7) singleton.
    */
-  System5x7() : Font(5, 8, bitmap) {}
-
-  /**
-   * @override Font
-   * Get bitmap for given character. ATtinyX5 does not have the
-   * full character table.
-   * @param[in] c character.
-   * @return bitmap pointer.
-   */
-#if defined(BOARD_ATTINY)
-  virtual const uint8_t* get_bitmap(char c)
-  {
-    return (m_bitmap + ((c - ' ') * WIDTH));
-  }
+#if !defined(BOARD_ATTINY)
+  System5x7() : Font(5, 7, 0, 127, bitmap) {}
+#else
+  System5x7() : Font(5, 7, 32, 127, bitmap) {}
 #endif
+
 private:
   static const uint8_t bitmap[] PROGMEM;
 };

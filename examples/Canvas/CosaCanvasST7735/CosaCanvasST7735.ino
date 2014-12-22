@@ -38,6 +38,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#define USE_GLYPHS
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
@@ -46,9 +48,17 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
+#ifdef USE_GLYPHS
+#include "Cosa/Canvas/Icon/IconArduino34x32.hh"
+#include "Cosa/Canvas/Icon/IconArduino64x32.hh"
+#include "Cosa/Canvas/Icon/IconArduino64x64.hh"
+#include "Cosa/Canvas/Icon/IconArduino96x32.hh"
+#else
 #include "Cosa/Canvas/Icon/arduino_icon_34x32.h"
+#include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_64x64.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
+#endif
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas/Driver/ST7735.hh"
@@ -280,14 +290,33 @@ void loop()
   tft.set_canvas_color(tft.shade(Canvas::WHITE, 10));
   tft.fill_screen();
   tft.set_pen_color(tft.shade(Canvas::CYAN, 80));
+#ifdef USE_GLYPHS
+  tft.draw_glyph((tft.WIDTH-34)/2, (tft.HEIGHT-32)/2, &iconarduino34x32);
+#else
   tft.draw_icon((tft.WIDTH-34)/2, (tft.HEIGHT-32)/2, arduino_icon_34x32);
+#endif
   sleep(2);
   tft.fill_screen();
+#ifdef USE_GLYPHS
+  tft.draw_glyph((tft.WIDTH-64)/2, (tft.HEIGHT-32)/2, &iconarduino64x32);
+#else
+  tft.draw_icon((tft.WIDTH-64)/2, (tft.HEIGHT-32)/2, arduino_icon_64x32);
+#endif
+  sleep(2);
+  tft.fill_screen();
+#ifdef USE_GLYPHS
+  tft.draw_glyph((tft.WIDTH-64)/2, (tft.HEIGHT-64)/2, &iconarduino64x64);
+#else
   tft.draw_icon((tft.WIDTH-64)/2, (tft.HEIGHT-64)/2, arduino_icon_64x64);
+#endif
   sleep(2);
   tft.fill_screen();
   start = RTC::micros();
+#ifdef USE_GLYPHS
+  tft.draw_glyph((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, &iconarduino96x32);
+#else
   tft.draw_icon((tft.WIDTH-96)/2, (tft.HEIGHT-32)/2, arduino_icon_96x32);
+#endif
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#12:draw arduino icon: %ul ms", ms);
   sleep(2);

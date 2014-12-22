@@ -26,6 +26,7 @@
 #include "Cosa/LCD.hh"
 #include "Cosa/SPI.hh"
 #include "Cosa/Canvas/Font.hh"
+#include "Cosa/Canvas/FontGlyph.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"
 
 /**

@@ -19,6 +19,7 @@
  */
 
 #include "Cosa/LCD/Driver/PCD8544.hh"
+#include "Cosa/Canvas/FontGlyph.hh"
 
 // Startup script
 const uint8_t PCD8544::script[] __PROGMEM = {
@@ -240,7 +241,7 @@ PCD8544::putchar(char c)
 
     // Check for special character: back-space
     if (c == '\b') {
-      uint8_t width = m_font->get_width(' ');
+      uint8_t width = m_font->WIDTH + m_font->SPACING;
       if (m_x < width) width = m_x;
       set_cursor(m_x - width, m_y);
       return (c);
@@ -253,10 +254,11 @@ PCD8544::putchar(char c)
     }
   }
 
-  // Access font for character width and bitmap
-  uint8_t width = m_font->get_width(c);
-  const uint8_t* bp = m_font->get_bitmap(c);
+  // Access font for character width and glyph
+  uint8_t width = m_font->WIDTH + m_font->SPACING;
   m_x += width;
+
+  FontGlyph glyph(m_font, c);
 
   // Check that the character is not clipped
   if (m_x > WIDTH) {
@@ -264,12 +266,16 @@ PCD8544::putchar(char c)
     m_x = width;
   }
 
-  // Write character to the display memory and an extra byte
+  // Write character to the display memory and an extra space
+  glyph.begin();
+
   m_io->begin();
   while (--width) 
-    m_io->write(m_mode ^ pgm_read_byte(bp++));
+    m_io->write(m_mode ^ glyph.next());
   m_io->write(m_mode);
   m_io->end();
+
+  glyph.end();
 
   return (c);
 }
