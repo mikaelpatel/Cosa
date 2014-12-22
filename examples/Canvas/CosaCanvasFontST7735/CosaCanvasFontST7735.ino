@@ -1,5 +1,5 @@
 /**
- * @file CosaOLED_Text_test.ino
+ * @file CosaCanvasFontST7735.ino
  * @version 1.0
  *
  * @section License
@@ -41,7 +41,9 @@
 //#define ONE_CHAR '&'
 #define CYCLE_CHARS 0 // ms; 0 to benchmark
 
-//#define SYSTEM_5x7
+// ONLY SYSTEM_5x7 is possible if this is used before Glyphs
+
+#define SYSTEM_5x7
 //#define FIXEDNUMS_8x16
 //#define SEGMENT_32x50
 
@@ -53,7 +55,7 @@
 //#define FONT_6x13B
 //#define FONT_7x13
 //#define FONT_7x13B
-#define FONT_7x14
+//#define FONT_7x14
 //#define FONT_7x14B
 //#define FONT_8x13
 //#define FONT_8x13B
@@ -173,7 +175,15 @@
 #endif
 
 ST7735 tft;
+#ifdef COSA_CANVAS_GLYPH_HH
 Textbox textbox(&tft, (Font*)&FONT);
+#define FIRST_CHAR FONT.FIRST
+#define LAST_CHAR FONT.LAST
+#else
+Textbox textbox(&tft);
+#define FIRST_CHAR 0x0
+#define LAST_CHAR 0x7f
+#endif
 
 static IOStream tftout(&textbox);
 
@@ -206,7 +216,7 @@ void setup()
   RTC::begin();
 
   trace << PSTR("Font ") << STRINGIFY(FONT)
-        << PSTR(" has ") << (FONT.LAST-FONT.FIRST+1) << PSTR(" characters") << endl;
+        << PSTR(" has ") << (LAST_CHAR-FIRST_CHAR+1) << PSTR(" characters") << endl;
 }
 
 void loop()
@@ -217,7 +227,7 @@ void loop()
 #endif
   {
 #if defined(FIXEDNUMS_8x16) || defined(SEGMENT_32x50)
-    for (char c = FONT.FIRST; c <= FONT.LAST; c++)
+    for (char c = FIRST_CHAR; c <= LAST_CHAR; c++)
 #else
     for (char c = ' '; c <= '~'; c++)
 #endif
