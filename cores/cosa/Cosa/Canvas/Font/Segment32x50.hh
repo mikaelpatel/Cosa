@@ -21,39 +21,31 @@
 #ifndef COSA_CANVAS_FONT_SEGMENT32X50_HH
 #define COSA_CANVAS_FONT_SEGMENT32X50_HH
 
-#include "Cosa/Canvas/UTFTFont.hh"
+#include "Cosa/Canvas/Font.hh"
 
 /**
- * UTFT bitmap font size 32x50, segments, fixed with font with 
+ * Bitmap font size 32x50, segments, fixed with font with 
  * numbers only.
  *
  * @section Acknowledgements
- * Font data originates from the UTFT library was created by 
+ * Font data originates from the UTFT library created by 
  * Henning Karlsen.
  */
-class Segment32x50 : public UTFTFont {
+class Segment32x50 : public Font {
 public:
   /** 
    * Construct large segment font (32x50) singleton.
    */
-  Segment32x50() : UTFTFont(32, 50, bitmap) {}
-
-  /**
-   * @override Font
-   * Get bitmap for given character ('0'..'9', ':'). Returns pointer
-   * to bitmap in program memory.
-   * @param[in] c character.
-   * @return bitmap pointer.
-   */
-  virtual const uint8_t* get_bitmap(char c)
-  {
-    c = c - '0';
-    if (c > 9) c = 10;
-    return (m_bitmap + (c * HEIGHT) * (WIDTH / CHARBITS));
-  }
+  Segment32x50() :
+    Font(width, height, first, last, bitmap)
+  {}
 
 private:
   static const uint8_t bitmap[] PROGMEM;
+  static const uint8_t width;
+  static const uint8_t height;
+  static const uint8_t first;
+  static const uint8_t last;
 };
 
 extern Segment32x50 segment32x50;

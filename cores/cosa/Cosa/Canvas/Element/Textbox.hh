@@ -26,6 +26,8 @@
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Font.hh"
 
+extern System5x7 system5x7;
+
 /**
  * Canvas Textbox element. Acts as an IOStream/console output to
  * Canvas. As an element it holds its own canvas state; context. The
@@ -39,10 +41,9 @@ public:
    * Construct text box on given canvas. Set textbox port to canvas size.
    * @param[in] canvas.
    */
-  Textbox(Canvas* canvas) :
-    Canvas::Element(canvas),
-    IOStream::Device(),
-    m_line_spacing(2)
+  Textbox(Canvas* canvas, Font* font = (Font*) &system5x7) :
+    Canvas::Element(canvas, font),
+    IOStream::Device()
   {
     set_text_port(0, 0, canvas->WIDTH, canvas->HEIGHT);
   }
@@ -84,7 +85,7 @@ public:
    */
   uint8_t get_line_spacing()
   {
-    return (m_line_spacing);
+    return (m_canvas->get_context()->get_text_font()->LINE_SPACING);
   }
 
   /**
@@ -93,7 +94,7 @@ public:
    */
   void set_line_spacing(uint8_t spacing)
   {
-    m_line_spacing = spacing;
+    m_canvas->get_context()->get_text_font()->LINE_SPACING = spacing;
   }
 
   /**
@@ -109,9 +110,6 @@ public:
 protected:
   /** Textbox port rectangle. */
   Canvas::rect8_t m_text_port;
-
-  /** Line spacing. Character spacing is defined by the font setting. */
-  uint8_t m_line_spacing;
 };
 
 #endif

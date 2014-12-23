@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Canvas/Font/Segment32x50.cpp
+ * @file Font12x24.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2014, jediunix
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,11 +15,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Canvas/Font/Segment32x50.hh"
+#include "Font12x24.hh"
 
-Segment32x50 segment32x50;
+Font12x24 font12x24;
 
-#include "Data/Segment32x50.h"
+#include "Data/12x24.h"

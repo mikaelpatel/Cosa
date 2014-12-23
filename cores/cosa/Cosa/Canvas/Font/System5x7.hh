@@ -34,23 +34,16 @@ public:
   /**
    * Construct system font (5x7) singleton.
    */
-  System5x7() : Font(5, 8, bitmap) {}
+  System5x7() :
+    Font(width, height, first, last, bitmap)
+  {}
 
-  /**
-   * @override Font
-   * Get bitmap for given character. ATtinyX5 does not have the
-   * full character table.
-   * @param[in] c character.
-   * @return bitmap pointer.
-   */
-#if defined(BOARD_ATTINY)
-  virtual const uint8_t* get_bitmap(char c)
-  {
-    return (m_bitmap + ((c - ' ') * WIDTH));
-  }
-#endif
 private:
   static const uint8_t bitmap[] PROGMEM;
+  static const uint8_t width;
+  static const uint8_t height;
+  static const uint8_t first;
+  static const uint8_t last;
 };
 
 extern System5x7 system5x7;
