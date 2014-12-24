@@ -339,7 +339,7 @@ Canvas::draw_char(uint8_t x, uint8_t y, char c)
   color16_t saved = set_pen_color(get_text_color());
   Font* font = get_text_font();
   font->draw(this, c, x, y, scale);
-  set_cursor(x + scale * (font->get_width(c)), y);
+  set_cursor(x + scale * (font->WIDTH + font->SPACING), y);
   set_pen_color(saved);
 }
 

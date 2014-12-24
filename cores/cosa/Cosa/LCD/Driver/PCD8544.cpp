@@ -140,7 +140,7 @@ void
 PCD8544::set_cursor(uint8_t x, uint8_t y)
 {
   // For x on character boundary (and not pixel)
-  // x *= m_font->get_width(' ');
+  // x *= m_font->WIDTH + m_font->SPACING;
   set(x, y);
   m_x = x;
   m_y = y;
@@ -240,7 +240,7 @@ PCD8544::putchar(char c)
 
     // Check for special character: back-space
     if (c == '\b') {
-      uint8_t width = m_font->get_width(' ');
+      uint8_t width = m_font->WIDTH + m_font->SPACING;
       if (m_x < width) width = m_x;
       set_cursor(m_x - width, m_y);
       return (c);
@@ -254,7 +254,7 @@ PCD8544::putchar(char c)
   }
 
   // Access font for character width and bitmap
-  uint8_t width = m_font->get_width(c);
+  uint8_t width = m_font->WIDTH + m_font->SPACING;
   const uint8_t* bp = m_font->get_bitmap(c);
   m_x += width;
 

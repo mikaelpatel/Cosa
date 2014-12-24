@@ -121,7 +121,7 @@ void write_char(uint16_t nr)
   const uint8_t WIDTH = 16;
   const uint8_t HEIGHT = 2;
 #else
-  const uint8_t WIDTH = lcd.WIDTH / lcd.get_text_font()->get_width(' ');
+  const uint8_t WIDTH = lcd.WIDTH / (lcd.get_text_font()->WIDTH + lcd.get_text_font()->SPACING);
   const uint8_t HEIGHT = lcd.LINES;
 #endif
   while (nr--) {
@@ -184,7 +184,7 @@ void write_pos(uint16_t nr)
   const uint8_t WIDTH = 16;
   const uint8_t HEIGHT = 2;
 #else
-  const uint8_t WIDTH = lcd.WIDTH / lcd.get_text_font()->get_width(' ');
+  const uint8_t WIDTH = lcd.WIDTH / (lcd.get_text_font()->WIDTH + lcd.get_text_font()->SPACING);
   const uint8_t HEIGHT = lcd.LINES;
 #endif
   while (nr--) {

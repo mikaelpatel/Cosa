@@ -208,8 +208,8 @@ void loop()
     offscreen.begin();
     offscreen.set_text_font(&fixednums8x16);
     offscreen.draw_roundrect(8, 8, lcd.WIDTH - 18, lcd.HEIGHT - 18, 8);
-    offscreen.set_cursor((lcd.WIDTH - (fixednums8x16.get_width('0') * 5))/2,
-			 (lcd.HEIGHT - fixednums8x16.get_height('0'))/2);
+    offscreen.set_cursor((lcd.WIDTH - ((fixednums8x16.WIDTH + fixednums8x16.SPACING) * 5))/2,
+			 (lcd.HEIGHT - fixednums8x16.WIDTH - fixednums8x16.SPACING)/2);
     offscreen.draw_char('0' + min/10);
     offscreen.draw_char('0' + min%10);
     offscreen.draw_char(':');
