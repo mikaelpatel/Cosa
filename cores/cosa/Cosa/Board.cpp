@@ -93,6 +93,10 @@
 #elif defined(PJRC_TEENSYPP_2_0)
 #include "Cosa/Board/PJRC/Teensypp_2_0.map"
 
+// AdaFruit Boards
+#elif defined(ADAFRUIT_ATMEGA32U4)
+#include "Cosa/Board/AdaFruit/ATmega32U4.map"
+
 #else
 #error "Cosa/Board.hh: board not supported"
 #endif

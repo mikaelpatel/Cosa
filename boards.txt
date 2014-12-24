@@ -766,3 +766,68 @@ teensypp-2_0.build.board=PJRC_TEENSYPP_2_0
 teensypp-2_0.build.variant=pjrc/teensypp-2.0
 teensypp-2_0.build.extra_flags={build.usb_flags}
 teensypp-2_0.build.core=cosa
+
+##
+# ADAFRUIT BOARDS
+##
+
+# **** Factory bootloader; CDC auto-reset will not work ****
+# AVR:ATmega32U4
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.6 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
+adafruit-atmega32u4.name=Cosa AdaFruit (ATmega32U4/LUFA+)
+adafruit-atmega32u4.upload.tool=avrdude
+adafruit-atmega32u4.upload.protocol=avr109
+adafruit-atmega32u4.upload.maximum_size=28672
+adafruit-atmega32u4.upload.maximum_data_size=2560
+adafruit-atmega32u4.upload.maximum_eeprom_size=1024
+adafruit-atmega32u4.upload.speed=57600
+
+adafruit-atmega32u4.bootloader.path=caterina
+adafruit-atmega32u4.bootloader.tool=avrdude
+adafruit-atmega32u4.bootloader.low_fuses=0xff
+adafruit-atmega32u4.bootloader.high_fuses=0xd8
+adafruit-atmega32u4.bootloader.extended_fuses=0xcb
+
+adafruit-atmega32u4.build.mcu=atmega32u4
+adafruit-atmega32u4.build.f_cpu=16000000L
+adafruit-atmega32u4.build.vid=0x239A
+adafruit-atmega32u4.build.pid=0x8001
+adafruit-atmega32u4.build.usb_product="AVR CDC Bootloader"
+adafruit-atmega32u4.build.board=ADAFRUIT_ATMEGA32U4
+adafruit-atmega32u4.build.variant=adafruit/atmega32u4
+adafruit-atmega32u4.build.extra_flags={build.usb_flags}
+adafruit-atmega32u4.build.core=cosa
+
+# **** Bootloader replaced with Caterina ****
+# AVR:ATmega32U4
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
+# Brown-out detection level 2.6 V. Serial program downloading enabled
+# Boot Reset vector enable (2048 words, 0x3800). 
+adafruit-atmega32u4-cat.name=Cosa AdaFruit (ATmega32U4/Caterina)
+adafruit-atmega32u4-cat.upload.tool=avrdude
+adafruit-atmega32u4-cat.upload.protocol=avr109
+adafruit-atmega32u4-cat.upload.maximum_size=28672
+adafruit-atmega32u4-cat.upload.maximum_data_size=2560
+adafruit-atmega32u4-cat.upload.maximum_eeprom_size=1024
+adafruit-atmega32u4-cat.upload.speed=57600
+adafruit-atmega32u4-cat.upload.disable_flushing=true
+adafruit-atmega32u4-cat.upload.use_1200bps_touch=true
+adafruit-atmega32u4-cat.upload.wait_for_upload_port=true
+
+adafruit-atmega32u4-cat.bootloader.path=caterina
+adafruit-atmega32u4-cat.bootloader.tool=avrdude
+adafruit-atmega32u4-cat.bootloader.low_fuses=0xff
+adafruit-atmega32u4-cat.bootloader.high_fuses=0xd8
+adafruit-atmega32u4-cat.bootloader.extended_fuses=0xcb
+
+adafruit-atmega32u4-cat.build.mcu=atmega32u4
+adafruit-atmega32u4-cat.build.f_cpu=16000000L
+adafruit-atmega32u4-cat.build.vid=0x2341
+adafruit-atmega32u4-cat.build.pid=0x8036
+adafruit-atmega32u4-cat.build.usb_product="Arduino Leonardo"
+adafruit-atmega32u4-cat.build.board=ADAFRUIT_ATMEGA32U4
+adafruit-atmega32u4-cat.build.variant=adafruit/atmega32u4
+adafruit-atmega32u4-cat.build.extra_flags={build.usb_flags}
+adafruit-atmega32u4-cat.build.core=cosa
