@@ -36,6 +36,7 @@ Cosa has built-in support for a large number of boards and
 clones/vendors. It also supports breadboards and custom-design
 boards with AVR MCUs.
 
+* [AdaFruit ATmega32U4] (./cores/cosa/Cosa/Board/AdaFruit/ATmega32U4.hh)
 * [Anarduino MiniWireless] (./cores/cosa/Cosa/Board/Anarduino/MiniWireless.hh)
 * [Arduino Diecimila] (./cores/cosa/Cosa/Board/Arduino/Diecimila.hh)
 * [Arduino Duemilanove] (./cores/cosa/Cosa/Board/Arduino/Duemilanove.hh)
