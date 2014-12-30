@@ -303,21 +303,21 @@ public:
   };
 
   /**
-   * Pins used for TWI interface (port D, bit 0-1, D0-D1)
+   * Pins used for TWI interface (port D, bit 0-1, D2-D3)
    */
   enum TWIPin {
-    SDA = D2,                   // PD1
-    SCL = D3                    // PD0
+    SDA = 1,                   // PD1/D3
+    SCL = 0                    // PD0/D2
   } __attribute__((packed));
   
   /**
-   * Pins used for SPI interface (port B, bit 0-3)
+   * Pins used for SPI interface (port B, bit 0-3, D20)
    */
   enum SPIPin {
-    SS = D20,                   // PB0
-    SCK = D21,                  // PB1/ICSP
-    MOSI = D22,                 // PB2/ICSP
-    MISO = D23                  // PB3/ICSP
+    SS = 0,			// PB0/D20
+    SCK = 1,			// PB1/ICSP
+    MOSI = 2,			// PB2/ICSP
+    MISO = 3			// PB3/ICSP
   } __attribute__((packed));
 
   /**
