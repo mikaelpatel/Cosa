@@ -2,8 +2,6 @@
  * @file Cosa/Board/AdaFruit/ATmega32U4.hh
  * @version 1.0
  *
- * @author Contributed by jediunix
- * 
  * @section License
  * Copyright (C) 2014, Mikael Patel
  *
@@ -36,17 +34,17 @@
 
 /**
  * Cosa pin symbol and hardware definitions for the ATmega32U4 based
- * AdaFruit ATmega32U4 board. Cosa does not use pin numbers as
+ * AdaFruit Atmega32u4 board. Cosa does not use pin numbers as
  * Arduino/Wiring, instead strong data type is used (enum types) for
  * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc. 
  *
- * The pin numbers for ATmega32u4 are mapped as in Arduino Leonardo.
- * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced.  
+ * The pin numbers for AdaFruit Atmega32u4 are mapped as in Arduino
+ * Leonardo. The static inline functions, SFR, BIT and UART, rely on
+ * compiler optimizations to be reduced.  
  *
  * @section Board
  * @code
- *                      AdaFruit ATmega32u4
+ *                      AdaFruit Atmega32u4
  *
  *        Chip           Leonardo-Equiv     Board    -----
  * vvvvvvvvvvvvvvvvvvvv  vvvvvvvvvvvvvvvvvv vvv +----|USB|
@@ -101,21 +99,8 @@
  * Leonardo; that is, D3 refers to Leonardo D3, not the board label
  * D3.
  *
- * Additional aliases of the board label are available for various uses.
- * The symbol format is symbol usage followed by 'L' for Label followed
- * by the board label.  Symbol usage is one of
- *
- * 'D'   - Digital
- * 'A'   - Analog
- * 'PWM' - PWM
- * 'EI'  - ExternalInterrupt
- * 'I'   - Interrupt
- *
- * For example, board pin labeled B5 would have aliases
- * DLB5   - Digital
- * ALB5   - Analog
- * PWMLB5 - PWM
- * ILB5   - Interrupt
+ * Additional aliases of the board label are available by preceding
+ * the board label symbol with a 'L' ie 'LB2', 'LC6', 'LF4'.
  * 
  * Note: The SPI pins (on ICSP) are also numbered as digital pins.
  */
@@ -128,14 +113,6 @@ private:
    */
   Board() {}
 
-  enum PortMap {
-    PORTB_MAP = 0,
-    PORTC_MAP = PORTB_MAP+8,
-    PORTD_MAP = PORTC_MAP+8,
-    PORTE_MAP = PORTD_MAP+8,
-    PORTF_MAP = PORTE_MAP+8
-  } __attribute__((packed));
-
   /**
    * Return Special Function Register for given Arduino pin number.
    * @param[in] pin number.
@@ -144,11 +121,11 @@ private:
   static volatile uint8_t* SFR(uint8_t pin)
     __attribute__((always_inline))
   { 
-    return (pin < PORTC_MAP ? &PINB : 
-            pin < PORTD_MAP ? &PINC : 
-            pin < PORTE_MAP ? &PIND : 
-            pin < PORTF_MAP ? &PINE : 
-                 &PINF);
+    return (pin < 8  ? &PINB : 
+            pin < 16 ? &PINC : 
+            pin < 24 ? &PIND : 
+            pin < 32 ? &PINE : 
+                       &PINF);
   }
 
   /**
@@ -186,131 +163,84 @@ private:
     UNUSED(port);
     return (&UCSR1A);
   }
-
-  /**
-   * Processor pin symbols
-   */
-  enum ProcessorPin {
-    PinE6 = PORTE_MAP + 6,
-    PinB0 = PORTB_MAP + 0,
-    PinB1 = PORTB_MAP + 1,
-    PinB2 = PORTB_MAP + 2,
-    PinB3 = PORTB_MAP + 3,
-    PinD0 = PORTD_MAP + 0,
-    PinD1 = PORTD_MAP + 1,
-    PinD2 = PORTD_MAP + 2,
-    PinD3 = PORTD_MAP + 3,
-    PinD4 = PORTD_MAP + 4,
-    PinD5 = PORTD_MAP + 5,
-    PinD6 = PORTD_MAP + 6,
-    PinD7 = PORTD_MAP + 7,
-    PinB4 = PORTB_MAP + 4,
-    PinB5 = PORTB_MAP + 5,
-    PinB6 = PORTB_MAP + 6,
-    PinB7 = PORTB_MAP + 7,
-    PinC6 = PORTC_MAP + 6,
-    PinC7 = PORTC_MAP + 7,
-    PinF7 = PORTF_MAP + 7,
-    PinF6 = PORTF_MAP + 6,
-    PinF5 = PORTF_MAP + 5,
-    PinF4 = PORTF_MAP + 4,
-    PinF1 = PORTF_MAP + 1,
-    PinF0 = PORTF_MAP + 0
-  } __attribute__((packed));
     
 public:
   /**
    * Digital pin symbols
    *
    * D0-D23 are connected exactly as they are in Leonardo.
-   * Board labels can be addressed with the board symbol prefixed by 'L' (for Label).
+   * Board labels can be addressed with the board symbol prefixed by 'L'.
    */
   enum DigitalPin {
-    D0 = PinD2,
-    D1 = PinD3,
-    D2 = PinD1,
-    D3 = PinD0,
-    D4 = PinD4,
-    D5 = PinC6,
-    D6 = PinD7,
-    D7 = PinE6,
-    D8 = PinB4,
-    D9 = PinB5,
-    D10 = PinB6,
-    D11 = PinB7,
-    D12 = PinD6,
-    D13 = PinC7,
-    D14 = PinF7,
-    D15 = PinF6,
-    D16 = PinF5,
-    D17 = PinF4,
-    D18 = PinF1,
-    D19 = PinF0,
-    D20 = PinB0,
-    D21 = PinB1,
-    D22 = PinB2,
-    D23 = PinB3,
+    D0 = 18,                    // PD2
+    D1 = 19,                    // PD3
+    D2 = 17,                    // PD1
+    D3 = 16,                    // PD0
+    D4 = 20,                    // PD4
+    D5 = 14,                    // PC6
+    D6 = 23,                    // PD7
+    D7 = 30,                    // PE6
+    D8 = 4,                     // PB4
+    D9 = 5,                     // PB5
+    D10 = 6,                    // PB6
+    D11 = 7,                    // PB7
+    D12 = 22,                   // PD6
+    D13 = 15,                   // PC7
+    D14 = 39,                   // PF7
+    D15 = 38,                   // PF6
+    D16 = 37,                   // PF5
+    D17 = 36,                   // PF4
+    D18 = 33,                   // PF1
+    D19 = 32,                   // PF0
+    D20 = 0,                    // PB0
+    D21 = 1,                    // PB1
+    D22 = 2,                    // PB2
+    D23 = 3,                    // PB3
+    LED = D7,
 
-    // Aliases
-    DLE6 = PinE6,
-    DLB0 = PinB0,
-    DLB1 = PinB1,
-    DLB2 = PinB2,
-    DLB3 = PinB3,
-    DLD0 = PinD0,
-    DLD1 = PinD1,
-    DLD2 = PinD2,
-    DLD3 = PinD3,
-    DLD4 = PinD4,
-    DLD6 = PinD6,
-    DLD7 = PinD7,
-    DLB4 = PinB4,
-    DLB5 = PinB5,
-    DLB6 = PinB6,
-    DLB7 = PinB7,
-    DLC6 = PinC6,
-    DLC7 = PinC7,
-    DLF7 = PinF7,
-    DLF6 = PinF6,
-    DLF5 = PinF5,
-    DLF4 = PinF4,
-    DLF1 = PinF1,
-    DLF0 = PinF0,
-    LED = PinE6,
-    TXD1 = PinD3,
-    RXD1 = PinD2
+    // Board Label Aliases
+    LE6 = D7,
+    LB0 = D20,
+    LB1 = D21,
+    LB2 = D22,
+    LB3 = D23,
+    LD0 = D3,
+    LD1 = D2,
+    LD2 = D0,
+    LD3 = D1,
+    LD4 = D4,
+    LD6 = D12,
+    LD7 = D6,
+    LB4 = D8,
+    LB5 = D9,
+    LB6 = D10,
+    LB7 = D11,
+    LC6 = D5,
+    LC7 = D13,
+    LF7 = D14,
+    LF6 = D15,
+    LF5 = D16,
+    LF4 = D17,
+    LF1 = D18,
+    LF0 = D19,
   } __attribute__((packed));
 
   /**
    * Analog pin symbols (ADC channel numbers)
    */
   enum AnalogPin {
-    A0 = PinF7,
-    A1 = PinF6,
-    A2 = PinF5,
-    A3 = PinF4,
-    A4 = PinF1,
-    A5 = PinF0,
-    A6 = PinD4,
-    A7 = PinD6,
-    A8 = PinD7,
-    A9 = PinB4,
-    A10 = PinB5,
-    A11 = PinB6,
-
-    // Aliases
-    ALF7 = PinF7,
-    ALF6 = PinF6,
-    ALF5 = PinF5,
-    ALF4 = PinF4,
-    ALF1 = PinF1,
-    ALF0 = PinF0,
-    ALD4 = PinD4,
-    ALD6 = PinD6,
-    ALD7 = PinD7,
-    ALB4 = PinB4,
-    ALB5 = PinB5,
-    ALB6 = PinB6    
+    A0 = 7,                     // PF7/D14
+    A1 = 6,                     // PF6/D15
+    A2 = 5,                     // PF5/D16
+    A3 = 4,                     // PF4/D17
+    A4 = 1,                     // PF1/D18
+    A5 = 0,                     // PF0/D19
+    A6 = 32,                    // PD4/D4
+    A7 = 33,                    // PD6/D12
+    A8 = 34,                    // PD7/D6
+    A9 = 35,                    // PB4/D8
+    A10 = 36,                   // PB5/D9
+    A11 = 37                    // PB6/D10
   } __attribute__((packed));
 
   /**
@@ -327,22 +257,13 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = PinB7,  // => OCR0A
-    PWM1 = PinD0,  // => OCR0B
-    PWM2 = PinB5,  // => OCR1A
-    PWM3 = PinB6,  // => OCR1B
-    PWM4 = PinC6,  // => OCR3A
-    PWM5 = PinC7,  // => OCR4A
-    PWM6 = PinD7,  // => OCR4D
-
-    // Aliases
-    PWMLB7 = PinB7,
-    PWMLD0 = PinD0,
-    PWMLB5 = PinB5,
-    PWMLB6 = PinB6,
-    PWMLC6 = PinC6,
-    PWMLC7 = PinC7,
-    PWMLD7 = PinD7
+    PWM0 = D11,                 // PB7 => OCR0A
+    PWM1 = D3,                  // PD0 => OCR0B
+    PWM2 = D9,                  // PB5 => OCR1A
+    PWM3 = D10,                 // PB6 => OCR1B
+    PWM4 = D5,                  // PC6 => OCR3A
+    PWM5 = D13,                 // PC7 => OCR4A
+    PWM6 = D6                   // PD7 => OCR4D
   } __attribute__((packed));
 
   /**
@@ -350,40 +271,24 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = PinD0,
-    EXT1 = PinD1,
-    EXT2 = PinD2,
-    EXT3 = PinD3,
-
-    // Aliases
-    EILD0 = PinD0,
-    EILD1 = PinD1,
-    EILD2 = PinD2,
-    EILD3 = PinD3
+    EXT0 = D3,                  // PD0
+    EXT1 = D2,                  // PD1
+    EXT2 = D0,                  // PD2
+    EXT3 = D1                   // PD3
   } __attribute__((packed));
 
   /**
    * Pin change interrupt (PCI) pins. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = PinB0,
-    PCI1 = PinB1,
-    PCI2 = PinB2,
-    PCI3 = PinB3,
-    PCI4 = PinB4,
-    PCI5 = PinB5,
-    PCI6 = PinB6,
-    PCI7 = PinB7,
-
-    // Aliases
-    ILB0 = PinB0,
-    ILB1 = PinB1,
-    ILB2 = PinB2,
-    ILB3 = PinB3,
-    ILB4 = PinB4,
-    ILB5 = PinB5,
-    ILB6 = PinB6,
-    ILB7 = PinB7
+    PCI0 = D20,                 // PB0
+    PCI1 = D21,                 // PB1
+    PCI2 = D22,                 // PB2
+    PCI3 = D23,                 // PB3
+    PCI4 = D8,                  // PB4
+    PCI5 = D9,                  // PB5
+    PCI6 = D10,                 // PB6
+    PCI7 = D11                  // PB7
   } __attribute__((packed));
 
   /** 
@@ -401,18 +306,18 @@ public:
    * Pins used for TWI interface (port D, bit 0-1, D0-D1)
    */
   enum TWIPin {
-    SDA = PinD1,
-    SCL = PinD0
+    SDA = D2,                   // PD1
+    SCL = D3                    // PD0
   } __attribute__((packed));
   
   /**
    * Pins used for SPI interface (port B, bit 0-3)
    */
   enum SPIPin {
-    SS = PinB0,
-    SCK = PinB1,
-    MOSI = PinB2,
-    MISO = PinB3
+    SS = D20,                   // PB0
+    SCK = D21,                  // PB1/ICSP
+    MOSI = D22,                 // PB2/ICSP
+    MISO = D23                  // PB3/ICSP
   } __attribute__((packed));
 
   /**
