@@ -1,73 +1,73 @@
-Wed Dec 31 00:44:34 CET 2014: adafruit-atmega32u4
+Thu Jan 1 23:33:33 CET 2015: adafruit-atmega32u4
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:39 CET 2014: adafruit-atmega32u4-cat
+Thu Jan 1 23:33:35 CET 2015: adafruit-atmega32u4-cat
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:44 CET 2014: atmega328-8
+Thu Jan 1 23:33:36 CET 2015: atmega328-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:46 CET 2014: attiny84-8
+Thu Jan 1 23:33:37 CET 2015: attiny84-8
 Program:     124 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:47 CET 2014: attiny85-8
+Thu Jan 1 23:33:38 CET 2015: attiny85-8
 Program:     120 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:48 CET 2014: attiny861-8
+Thu Jan 1 23:33:39 CET 2015: attiny861-8
 Program:     128 bytes (1.6% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:49 CET 2014: diecimila
+Thu Jan 1 23:33:40 CET 2015: diecimila
 Program:     216 bytes (1.3% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:50 CET 2014: duemilanove
+Thu Jan 1 23:33:41 CET 2015: duemilanove
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:51 CET 2014: leonardo
+Thu Jan 1 23:33:42 CET 2015: leonardo
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:52 CET 2014: lilypad
+Thu Jan 1 23:33:44 CET 2015: lilypad
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:53 CET 2014: lilypad-usb
+Thu Jan 1 23:33:45 CET 2015: lilypad-usb
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:54 CET 2014: mega1280
+Thu Jan 1 23:33:46 CET 2015: mega1280
 Program:     346 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:55 CET 2014: mega2560
+Thu Jan 1 23:33:47 CET 2015: mega2560
 Program:     350 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:56 CET 2014: micro
+Thu Jan 1 23:33:48 CET 2015: micro
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:57 CET 2014: microduino-core
+Thu Jan 1 23:33:49 CET 2015: microduino-core
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:44:58 CET 2014: microduino-core32u4
+Thu Jan 1 23:33:50 CET 2015: microduino-core32u4
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:00 CET 2014: microduino-core-plus
+Thu Jan 1 23:33:51 CET 2015: microduino-core-plus
 Program:     236 bytes (0.4% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:01 CET 2014: mighty
+Thu Jan 1 23:33:52 CET 2015: mighty
 Program:     258 bytes
 Data:          0 bytes
-Wed Dec 31 00:45:02 CET 2014: mighty-opt
+Thu Jan 1 23:33:54 CET 2015: mighty-opt
 Program:     258 bytes
 Data:          0 bytes
-Wed Dec 31 00:45:03 CET 2014: miniwireless
+Thu Jan 1 23:33:55 CET 2015: miniwireless
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:04 CET 2014: moteino
+Thu Jan 1 23:33:56 CET 2015: moteino
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:05 CET 2014: moteino-mega
+Thu Jan 1 23:33:57 CET 2015: moteino-mega
 Program:     258 bytes
 Data:          0 bytes
-Wed Dec 31 00:45:06 CET 2014: nano
+Thu Jan 1 23:33:58 CET 2015: nano
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:07 CET 2014: pinoccio
+Thu Jan 1 23:33:59 CET 2015: pinoccio
 unknown MCU 'atmega256rfr2' specified
 Known MCU names:
    avr2
@@ -189,6 +189,8 @@ Known MCU names:
    attiny15
    attiny28
 CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
+make: *** [/home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.0.5/pinoccio/CosaBuild.o] Error 1
+make: *** Waiting for unfinished jobs....
 unknown MCU 'atmega256rfr2' specified
 Known MCU names:
    avr2
@@ -309,8 +311,6 @@ Known MCU names:
    attiny12
    attiny15
    attiny28
-make: *** [/home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.0.5/pinoccio/CosaBuild.o] Error 1
-make: *** Waiting for unfinished jobs....
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.cpp:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:27,
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.hh:24,
@@ -324,7 +324,7 @@ In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Typ
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.hh:24,
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.cpp:21:
 /home/epkmipl/opt/arduino-1.0.5/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/eeprom.h:67:4: warning: #warning "Device does not have EEPROM available."
-In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board.hh:91,
+In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board.hh:95,
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:41,
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.hh:24,
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.cpp:21:
@@ -492,24 +492,27 @@ CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDTCR’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDCE’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDE’ was not declared in this scope
-Wed Dec 31 00:45:08 CET 2014: pro-micro
+Thu Jan 1 23:34:00 CET 2015: pro-micro
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:09 CET 2014: pro-micro-8
+Thu Jan 1 23:34:01 CET 2015: pro-micro-8
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:10 CET 2014: pro-mini
+Thu Jan 1 23:34:03 CET 2015: pro-mini
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:12 CET 2014: pro-mini-8
+Thu Jan 1 23:34:04 CET 2015: pro-mini-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:13 CET 2014: teensy-2_0
+Thu Jan 1 23:34:05 CET 2015: teensy-2_0
 Program:     328 bytes (1.0% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:14 CET 2014: teensypp-2_0
+Thu Jan 1 23:34:06 CET 2015: teensypp-2_0
 Program:     314 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Wed Dec 31 00:45:15 CET 2014: uno
+Thu Jan 1 23:34:07 CET 2015: uno
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
+Thu Jan 1 23:34:08 CET 2015: wildfire
+Program:     258 bytes
+Data:          0 bytes
