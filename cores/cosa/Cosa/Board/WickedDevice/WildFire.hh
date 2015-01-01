@@ -194,19 +194,14 @@ public:
    * time checking
    */
   enum PWMPin {
-    PWM0 = D3,			// PB3 => OCR0A
-    PWM1 = D4,			// PB4 => OCR0B
-#if defined(__AVR_ATmega1284P__)
-    PWM2 = D6,			// PB6 => OCR3A
-    PWM3 = D7,			// PB7 => OCR3B
-#else
-    PWM2 = 255,			// PB6 => NOP
-    PWM3 = 255,			// PB7 => NOP
-#endif
-    PWM4 = D12,			// PD4 => OCR1B
-    PWM5 = D13,			// PD5 => OCR1A
-    PWM6 = D14,			// PD6 => OCR2B
-    PWM7 = D15			// PD7 => OCR2A
+    PWM0 = D4,			// PB3 => OCR0A
+    PWM1 = D9,			// PB4 => OCR0B
+    PWM2 = D12,			// PB6 => OCR3A
+    PWM3 = D13,			// PB7 => OCR3B
+    PWM4 = D8,			// PD4 => OCR1B
+    PWM5 = D5,			// PD5 => OCR1A
+    PWM6 = D6,			// PD6 => OCR2B
+    PWM7 = D10			// PD7 => OCR2A
   } __attribute__((packed));
 
   /**
@@ -214,9 +209,9 @@ public:
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
-    EXT0 = D10,			// PD2
-    EXT1 = D11,			// PD3
-    EXT2 = D2			// PB2
+    EXT0 = D2,			// PD2
+    EXT1 = D3,			// PD3
+    EXT2 = D22			// PB2
   } __attribute__((packed));
 
   /**
