@@ -23,6 +23,15 @@
 
 System5x7 system5x7;
 
+const uint8_t System5x7::width = 5;
+const uint8_t System5x7::height = 7;
+#if !defined(BOARD_ATTINY)
+const uint8_t System5x7::first = 0;
+#else
+const uint8_t System5x7::first = 32;
+#endif
+const uint8_t System5x7::last = 127;
+
 const uint8_t System5x7::bitmap[] __PROGMEM = {
 #if !defined(BOARD_ATTINY)
   0x00, 0x00, 0x00, 0x00, 0x00,   

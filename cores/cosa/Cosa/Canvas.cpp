@@ -69,28 +69,6 @@ Canvas::draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp,
 		    uint8_t width, uint8_t height,
 		    uint8_t scale)
 {
-  for (uint8_t i = 0; i < width; i++) {
-    uint8_t line = 0;
-    for (uint8_t j = 0; j < height; j++) {
-      if ((j & 0x7) == 0)
-	line = pgm_read_byte(bp++);
-      if (line & 0x1) {
-	if (scale == 1)
-	  draw_pixel(x + i, y + j);
-	else {
-	  fill_rect(x + i*scale, y + j*scale, scale, scale);
-	} 
-      }
-      line >>= 1;
-    }
-  }
-}
-
-void
-Canvas::draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
-		  uint8_t width, uint8_t height,
-		  uint8_t scale)
-{
   for (uint8_t i = 0; i < height; i += 8) {
     for (uint8_t j = 0; j < width; j++) {
       uint8_t line = pgm_read_byte(bp++);
@@ -106,6 +84,14 @@ Canvas::draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
       }
     }
   }
+}
+
+void
+Canvas::draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
+		  uint8_t width, uint8_t height,
+		  uint8_t scale)
+{
+  draw_bitmap(x, y, bp, width, height, scale);
 }
 
 void 
@@ -353,7 +339,7 @@ Canvas::draw_char(uint8_t x, uint8_t y, char c)
   color16_t saved = set_pen_color(get_text_color());
   Font* font = get_text_font();
   font->draw(this, c, x, y, scale);
-  set_cursor(x + scale * (font->get_width(c)), y);
+  set_cursor(x + scale * (font->WIDTH + font->SPACING), y);
   set_pen_color(saved);
 }
 

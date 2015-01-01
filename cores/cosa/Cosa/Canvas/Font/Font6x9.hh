@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Canvas/Font/FixedNums8x16.hh
+ * @file Font6x9.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2014, jediunix
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,31 +15,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_CANVAS_FONT_FIXEDNUMS8X16_HH
-#define COSA_CANVAS_FONT_FIXEDNUMS8X16_HH
+#ifndef COSA_FONT_FONT6X9_HH
+#define COSA_FONT_FONT6X9_HH
 
 #include "Cosa/Canvas/Font.hh"
 
 /**
- * Bitmap font size 8x16, fixed width font with numbers only.
- *
- * @section Acknowledgements
- * Originates from the GLCD library and adapted for Cosa Canvas. The
- * GLCD library was created by Michael Margolis and improved by Bill
- * Perry. 
- * @section Reference
- * https://code.google.com/p/glcd-arduino/source/browse/trunk/glcd/fonts/fixednums8x16.h
- * 
+ * Font size 6x9.
  */
-class FixedNums8x16 : public Font {
+class Font6x9 : public Font {
 public:
   /**
-   * Construct fixed number font singleton.
+   * Construct font (6x9) singleton.
    */
-  FixedNums8x16() :
+  Font6x9() :
     Font(width, height, first, last, bitmap)
   {}
 
@@ -51,6 +42,6 @@ private:
   static const uint8_t last;
 };
 
-extern FixedNums8x16 fixednums8x16;
+extern Font6x9 font6x9;
 
 #endif

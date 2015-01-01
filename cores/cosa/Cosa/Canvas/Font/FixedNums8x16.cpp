@@ -23,6 +23,11 @@
 
 FixedNums8x16 fixednums8x16;
 
+const uint8_t FixedNums8x16::width = 8;
+const uint8_t FixedNums8x16::height = 16;
+const uint8_t FixedNums8x16::first = '+';
+const uint8_t FixedNums8x16::last = ':';
+
 const uint8_t FixedNums8x16::bitmap[] __PROGMEM = {
   0x80, 0x80, 0x80, 0xe0, 0xe0, 0x80, 0x80, 0x80, 
   0x00, 0x00, 0x00, 0x03, 0x03, 0x00, 0x00, 0x00, // char '+'
