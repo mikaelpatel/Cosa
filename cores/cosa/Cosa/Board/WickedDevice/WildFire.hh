@@ -82,7 +82,7 @@ private:
   static volatile uint8_t* SFR(uint8_t pin)
     __attribute__((always_inline))
   { 
-    return (pin < 8  ? &PINA: 
+    return (pin < 8  ? &PINA : 
 	    pin < 16 ? &PINB : 
 	    pin < 24 ? &PINC :
 	               &PIND);
@@ -324,12 +324,10 @@ extern "C" {
   void TIMER2_COMPA_vect(void) __attribute__ ((signal));
   void TIMER2_COMPB_vect(void) __attribute__ ((signal));
   void TIMER2_OVF_vect(void) __attribute__ ((signal));
-#if defined(__AVR_ATmega1284P__)
   void TIMER3_CAPT_vect(void) __attribute__ ((signal));
   void TIMER3_COMPA_vect(void) __attribute__ ((signal));
   void TIMER3_COMPB_vect(void) __attribute__ ((signal));
   void TIMER3_OVF_vect(void) __attribute__ ((signal));
-#endif
   void TWI_vect(void) __attribute__ ((signal));
   void WDT_vect(void) __attribute__ ((signal));
   void USART_RX_vect(void) __attribute__ ((signal));
