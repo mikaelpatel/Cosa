@@ -1342,7 +1342,7 @@ disasm: $(OBJDIR)/$(TARGET).lss
 symbol_sizes: $(OBJDIR)/$(TARGET).sym
 	@$(ECHO) "A symbol listing sorted by their size have been dumped to $(OBJDIR)/$(TARGET).sym\n\n"
 
-verify_size:
+verify_size: $(TARGET_HEX)
 ifeq ($(strip $(HEX_MAXIMUM_SIZE)),)
 	@$(ECHO) "\nMaximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s flash memory\n\n"
 else
