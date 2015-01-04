@@ -29,7 +29,7 @@
  *                       +------------+
  *
  * Connect Arduino to DS18B20 in D4 and GND. May use parasite 
- * powering (connect DS18B20 VCC to GND) otherwise to VCC.
+ * powering (connect DS18B20 VDD to GND) otherwise to VCC.
  * 
  * This file is part of the Arduino Che Cosa project.
  */
@@ -40,22 +40,22 @@
 #include "Cosa/OWI/Driver/DS18B20.hh"
 
 // Select the LCD device for the sketch
-// #include "Cosa/LCD/Driver/HD44780.hh"
+#include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port4b port;
 // HD44780::SR3W port;
-// HD44780::SR3WSPI port;
+HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::ERM1602_5 port;
 // HD44780::MJKDZ port;
 // HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 // HD44780::SainSmart port;
-// HD44780 lcd(&port);
+HD44780 lcd(&port);
 
-#include "Cosa/LCD/Driver/PCD8544.hh"
-LCD::Serial3W port;
+// #include "Cosa/LCD/Driver/PCD8544.hh"
+// LCD::Serial3W port;
 // LCD::SPI3W port;
-PCD8544 lcd(&port);
+// PCD8544 lcd(&port);
 
 // #include "Cosa/LCD/Driver/ST7565.hh"
 // ST7565 lcd;
@@ -82,16 +82,13 @@ void setup()
 void loop()
 {
   // Request temperature conversion and read result
-  int8_t low, high;
   sensor.convert_request();
+  uint16_t vcc = AnalogPin::bandgap();
   sensor.read_scratchpad();
-  sensor.get_trigger(low, high);
 
-  // Display current temperature, alarm trigger and battery status
+  // Display current temperature and battery status
   console << clear;
-  console << sensor 
-	  << PSTR(" [") << low << PSTR("..") << high << PSTR("]") 
-	  << endl;
-  console << AnalogPin::bandgap() << PSTR(" mV") << endl;
+  console << PSTR("sensor:  ") << sensor << PSTR(" C") << endl;
+  console << PSTR("battery: ") << vcc << PSTR(" mV");
   sleep(2);
 }
