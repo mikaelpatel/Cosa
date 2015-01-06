@@ -76,8 +76,8 @@ OWI owi(Board::D5);
 DS18B20 sensor(&owi);
 
 // Select PCD8544 IO Adapter; Serial Output Pins or SPI
-// LCD::Serial3W port;
-LCD::SPI3W port;
+LCD::Serial3W port;
+// LCD::SPI3W port;
 PCD8544 lcd(&port);
 
 void setup()
