@@ -43,14 +43,14 @@
 
 // ONLY SYSTEM_5x7 is possible if this is used before Glyphs
 
-#define SYSTEM_5x7
+//#define SYSTEM_5x7
 //#define FIXEDNUMS_8x16
 //#define SEGMENT_32x50
 
 //#define FONT_5x8
 //#define FONT_6x9
 //#define FONT_6x10
-//#define FONT_6x12
+#define FONT_6x12
 //#define FONT_6x13
 //#define FONT_6x13B
 //#define FONT_7x13
@@ -196,7 +196,7 @@ void setup()
 
   textbox.set_canvas_color(Canvas::WHITE);
   textbox.set_text_color(Canvas::BLACK);
-  textbox.set_text_port(0, 0, tft.WIDTH, tft.HEIGHT);
+  textbox.set_text_port(1, 1, tft.WIDTH - 2, tft.HEIGHT - 2);
   
 #ifdef ONE_CHAR
   tftout << ONE_CHAR;
