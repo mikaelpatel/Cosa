@@ -41,6 +41,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/AnalogPin.hh"
@@ -49,6 +50,7 @@
 #include "Cosa/TWI/Driver/BMP085.hh"
 #include "Cosa/TWI/Driver/HMC5883L.hh"
 #include "Cosa/TWI/Driver/L3G4200D.hh"
+#include "Cosa/TWI/Driver/DS1307.hh"
 
 // LCD and communication port
 // HD44780::Port4b port;
@@ -56,11 +58,17 @@
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
-HD44780::GYIICLCD port;
+HD44780::MJKDZ port(0);
+// HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 // HD44780::ERM1602_5 port;
-// HD44780 lcd(&port, 20, 4);
-HD44780 lcd(&port);
+
+// Select LCD width and height
+#define WIDTH 16
+// #define WIDTH 20
+// #define HEIGHT 2
+#define HEIGHT 4
+HD44780 lcd(&port, WIDTH, HEIGHT);
 
 // Digital acceleratometer with alternative address
 ADXL345 acceleratometer(1);
@@ -73,6 +81,9 @@ HMC5883L compass;
 
 // Digital Gyroscope using alternative address
 L3G4200D gyroscope(1);
+
+// Real-time clock
+DS1307 rtc;
 
 void setup()
 {
@@ -97,21 +108,45 @@ void setup()
 
 void loop()
 {
+  // Read the time from the rtc device and print
+  time_t now;
+  rtc.get_time(now);
+  now.to_binary();
+  trace << clear;
+  trace << PSTR("RTC; ") << now;
+
+  // Read battery 
+#if (HEIGHT == 2)
+  sleep(2);
+  trace << clear;
+#else
+  trace << endl;
+#endif
+  trace << PSTR("VCC: ") << AnalogPin::bandgap() << PSTR(" mV") << endl;
+
+  // Free memory
+  trace << PSTR("MEM: ") << free_memory() << PSTR(" bytes");
+  sleep(2);
+
   // Read barometer; pressure and temperature
   bmp.sample();
   trace << clear;
-  trace << PSTR("Barometer") << endl;
+  trace << PSTR("Barometer:") << endl;
   trace << bmp.get_pressure() << PSTR(" Pa, ");
   trace << (bmp.get_temperature() + 5) / 10 << PSTR(" C");
+#if (HEIGHT == 2)
   sleep(2);
+  trace << clear;
+#else
+  trace << endl;
+#endif
 
   // Read compass heading
   compass.read_heading();
   compass.to_milli_gauss();
   HMC5883L::data_t dir;
   compass.get_heading(dir);
-  trace << clear;
-  trace << PSTR("Compass") << endl;
+  trace << PSTR("Compass:") << endl;
   trace << dir.x << PSTR(", ") 
 	<< dir.y << PSTR(", ") 
 	<< dir.z;
@@ -121,25 +156,23 @@ void loop()
   trace << clear;
   ADXL345::sample_t acc;
   acceleratometer.sample(acc);
-  trace << PSTR("Accelerometer") << endl;
+  trace << PSTR("Accelerometer:") << endl;
   trace << acc.x << PSTR(", ")
 	<< acc.y << PSTR(", ")
 	<< acc.z;
-  sleep(2);
 
   // Read gyroscope
+#if (HEIGHT == 2)
+  sleep(2);
   trace << clear;
+#else
+  trace << endl;
+#endif
   L3G4200D::sample_t rate;
   gyroscope.sample(rate);
-  trace << PSTR("Gyroscope") << endl;
+  trace << PSTR("Gyroscope:") << endl;
   trace << rate.x << PSTR(", ")
 	<< rate.y << PSTR(", ")
 	<< rate.z;
-  sleep(2);
-
-  // Read battery 
-  trace << clear;
-  trace << PSTR("Battery") << endl;
-  trace << AnalogPin::bandgap() << PSTR(" mV");
   sleep(2);
 }
