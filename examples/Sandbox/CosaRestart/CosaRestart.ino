@@ -28,8 +28,6 @@
 
 void (*RESTART)() = NULL;
 
-#define TRACE_FLUSH() trace.get_device()->flush()
-
 void setup()
 {
   uart.begin(9600);
@@ -42,7 +40,7 @@ void loop()
 {
   sleep(4);
   TRACE(Watchdog::millis());
-  TRACE_FLUSH();
+  trace.flush();
   RESTART();
   ASSERT(true == false);
 }

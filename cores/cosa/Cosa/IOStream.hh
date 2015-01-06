@@ -490,6 +490,14 @@ public:
   void print(IOStream::Device* buffer);
 
   /**
+   * Flush contents of iostream to stream.
+   */
+  void flush()
+  {
+    m_dev->flush();
+  }
+
+  /**
    * Scan next token from the input stream. Returns pointer to string
    * or NULL if not stream is empty. 
    * @param[in] s string buffer to read into.
@@ -682,7 +690,7 @@ public:
   friend IOStream& hex(IOStream& outs);
   friend IOStream& flush(IOStream& outs);
 
- private:
+protected:
   Device* m_dev;		//!< Delegated device.
   Base m_base;			//!< Base for next output operator.
   int8_t m_width;		//!< Minimum width of output string.

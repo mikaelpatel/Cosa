@@ -131,7 +131,7 @@ void setup()
   INFO(msg, 0);
 
 #define MEASURE_NS(msg)							\
-  uart.flush();								\
+  trace.flush();							\
   start = RTC::micros();						\
   for (uint8_t n = 1;							\
        n != 0;								\
@@ -146,7 +146,7 @@ void setup()
       for (uint16_t j = 0; j < 1000; j++)
 
 #define MEASURE_US(msg)							\
-  uart.flush();								\
+  trace.flush();							\
   start = RTC::micros();						\
   for (uint8_t n = 1;							\
        n != 0;								\

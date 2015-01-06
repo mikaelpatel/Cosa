@@ -112,7 +112,7 @@ void setup()
   trace.printf_P(PSTR("Expirations < %l us will be immediately dispatched\n"
 		      "  Avg immediate dispatch = %l us (%l instructions)\n"),
 		 max_immediate_expiration, avg_immediate, avg_immediate*I_CPU );
-  uart.flush();
+  trace.flush();
 
   uint32_t sum_start = 0;
   uint32_t sum_setup = 0;
@@ -140,7 +140,7 @@ void setup()
 		 avg_start, avg_start * I_CPU,
 		 avg_setup, avg_setup * I_CPU,
 		 avg_dispatch, avg_dispatch * I_CPU );
-  uart.flush();
+  trace.flush();
 #endif
 
   // microsecond test
@@ -154,7 +154,7 @@ void setup()
     actual = OneShot::time_stamp - start;
     trace.printf_P(PSTR("expire_after(%ul us): actual %l us\n"), 
 		   expected, actual);
-    uart.flush();
+    trace.flush();
     if (expected < 100)
       expected += 7;
     else if (expected < 256)
@@ -174,7 +174,7 @@ void setup()
   actual = OneShot::time_stamp - start;
   trace.printf_P(PSTR("expire_after(%ul us): actual %ul us\n"), 
 		 expected, actual);
-  uart.flush();
+  trace.flush();
 
   // 1000x tick tests
   Simple::flag = false;
@@ -195,7 +195,7 @@ void setup()
   actual = stop - start;
   trace.printf_P(PSTR("1000X expire_at(n * %ul us): expected %ul, actual %ul us\n"),
 		 us_per_tick, expected, actual);
-  uart.flush();
+  trace.flush();
 
   TimerGroup bunch[50];
   const uint32_t base_offset = 500000;
@@ -237,7 +237,7 @@ void setup()
 		 (expected_ms / 1000), 
 		 (expected_ms % 1000), 
 		 actual);
-  uart.flush();
+  trace.flush();
   
   RTC::micros( 0xFFFFF000UL ); // 4095uS 'til rolloover
   expected = 5000;  // anywhere past the rolloever...
@@ -251,7 +251,7 @@ void setup()
   actual = OneShot::time_stamp - start;
   trace.printf_P(PSTR("Rollover test: start %ul, end %ul\n  expire_after(%ul us): actual %l us\n"), 
      start, OneShot::time_stamp, expected, actual);
-  uart.flush();
+  trace.flush();
 }
 
 void loop()

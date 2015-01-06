@@ -86,13 +86,13 @@ static bool check(time_t &now,
   const uint16_t imax = F_CPU / 16000UL;
 
   // Get some timings
-  uart.flush();
+  cout.flush();
   uint32_t us = RTC::micros();
   clock_t c;
   for (uint16_t i = 0; i < imax; i++) c = now;
   uint32_t elapsed_us = RTC::micros() - us;
   cout << PSTR(", to/from in ") << elapsed_us/imax << PSTR("us/");
-  uart.flush();
+  cout.flush();
 
   time_t test;
   us = RTC::micros();

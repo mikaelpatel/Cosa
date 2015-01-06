@@ -91,7 +91,7 @@ void loop()
 	trace << c;
       trace << endl;
     }
-    uart.flush();
+    trace.flush();
   }
 
   // Measure time to print some special characters
