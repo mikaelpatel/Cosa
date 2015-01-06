@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -90,7 +90,7 @@ public:
    * @param[in] x.
    * @param[in] y.
    */
-  virtual void draw_pixel(uint8_t x, uint8_t y);
+  virtual void draw_pixel(uint16_t x, uint16_t y);
 
   /**
    * @override Canvas
@@ -99,7 +99,7 @@ public:
    * @param[in] y
    * @param[in] length
    */
-  virtual void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length);
+  virtual void draw_vertical_line(uint16_t x, uint16_t y, uint16_t length);
 
   /**
    * @override Canvas
@@ -108,7 +108,7 @@ public:
    * @param[in] y.
    * @param[in] length.
    */
-  virtual void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length);
+  virtual void draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length);
 
   /**
    * @override Canvas
@@ -118,7 +118,7 @@ public:
    * @param[in] width.
    * @param[in] height.
    */
-  virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
+  virtual void fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
   
   /**
    * @override Canvas

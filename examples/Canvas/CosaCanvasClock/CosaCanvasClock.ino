@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -90,7 +90,7 @@ void draw_digit(uint8_t pos, uint8_t digit)
 
   // Fill the background
   Canvas::color16_t saved = tft.set_pen_color(BACKGROUND);
-  uint8_t x, y;
+  uint16_t x, y;
   tft.get_cursor(x, y);
   tft.fill_rect(x, y, segment32x50.WIDTH, segment32x50.HEIGHT);
   tft.set_pen_color(saved);

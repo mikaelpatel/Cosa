@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -90,28 +90,28 @@ public:
   /**
    * Canvas position<x,y>.
    */
-  struct pos8_t {
-    uint8_t x;
-    uint8_t y;
+  struct pos16_t {
+    uint16_t x;
+    uint16_t y;
   };
 
   /**
    * Rectangle<x, y, width, height> data structure.
    */
-  struct rect8_t {
-    uint8_t x;
-    uint8_t y;
-    uint8_t width;
-    uint8_t height;
+  struct rect16_t {
+    uint16_t x;
+    uint16_t y;
+    uint16_t width;
+    uint16_t height;
   };
 
   /**
    * circle<x, y, radius> data structure.
    */
-  struct circle8_t {
-    uint8_t x;
-    uint8_t y;
-    uint8_t radius;
+  struct circle16_t {
+    uint16_t x;
+    uint16_t y;
+    uint16_t radius;
   };
 
   /**
@@ -247,7 +247,7 @@ public:
      * @param[out] x
      * @param[out] y
      */
-    void get_cursor(uint8_t& x, uint8_t& y) const
+    void get_cursor(uint16_t& x, uint16_t& y) const
     {
       x = m_cursor.x;
       y = m_cursor.y;
@@ -258,7 +258,7 @@ public:
      * @param[in] x
      * @param[in] y
      */
-    void set_cursor(uint8_t x, uint8_t y)
+    void set_cursor(uint16_t x, uint16_t y)
     {
       m_cursor.x = x;
       m_cursor.y = y;
@@ -269,7 +269,7 @@ public:
      * @param[in] dx
      * @param[in] dy
      */
-    void move_cursor(int8_t dx, int8_t dy)
+    void move_cursor(int16_t dx, int16_t dy)
     {
       m_cursor.x += dx;
       m_cursor.y += dy;
@@ -281,7 +281,7 @@ public:
     color16_t m_text_color;	//!< Current text color.
     uint8_t m_text_scale;	//!< Current text scale.
     Font* m_font;		//!< Current font.
-    pos8_t m_cursor;		//!< Current cursor position.
+    pos16_t m_cursor;		//!< Current cursor position.
   };
 
   /**
@@ -309,8 +309,8 @@ public:
   /**
    * Screen size; width/height and orientation
    */
-  uint8_t WIDTH;
-  uint8_t HEIGHT;
+  uint16_t WIDTH;
+  uint16_t HEIGHT;
   enum {
     PORTRAIT = 0,
     LANDSCAPE = 1,
@@ -322,7 +322,7 @@ public:
    * @param[in] height screen height.
    * @param[in] context canvas state.
    */
-  Canvas(uint8_t width, uint8_t height, Context* context = &Canvas::context) :
+  Canvas(uint16_t width, uint16_t height, Context* context = &Canvas::context) :
     WIDTH(width),
     HEIGHT(height),
     m_context(context),
@@ -457,7 +457,7 @@ public:
    * @param[out] x
    * @param[out] y
    */
-  void get_cursor(uint8_t& x, uint8_t& y) const
+  void get_cursor(uint16_t& x, uint16_t& y) const
   {
     m_context->get_cursor(x, y);
   }
@@ -467,7 +467,7 @@ public:
    * @param[in] x
    * @param[in] y
    */
-  void set_cursor(uint8_t x, uint8_t y)
+  void set_cursor(uint16_t x, uint16_t y)
   {
     m_context->set_cursor(x, y);
   }
@@ -477,7 +477,7 @@ public:
    * @param[in] dx
    * @param[in] dy
    */
-  void move_cursor(int8_t dx, int8_t dy)
+  void move_cursor(int16_t dx, int16_t dy)
   {
     m_context->move_cursor(dx, dy);
   }
@@ -531,14 +531,14 @@ public:
    * @param[in] x.
    * @param[in] y.
    */
-  virtual void draw_pixel(uint8_t x, uint8_t y);
+  virtual void draw_pixel(uint16_t x, uint16_t y);
   
   /**
    * Set pixel at cursor position with current pen color.
    */
   void draw_pixel()
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     draw_pixel(x, y);
   }
@@ -554,8 +554,8 @@ public:
    * @param[in] height.
    * @param[in] scale.
    */
-  virtual void draw_bitmap(uint8_t x, uint8_t y, const uint8_t* bp, 
-			   uint8_t width, uint8_t height, 
+  virtual void draw_bitmap(uint16_t x, uint16_t y, const uint8_t* bp, 
+			   uint16_t width, uint16_t height, 
 			   uint8_t scale = 1);
 
   /**
@@ -567,10 +567,10 @@ public:
    * @param[in] scale.
    */
   void draw_bitmap(const uint8_t* bp, 
-		   uint8_t width, uint8_t height,
+		   uint16_t width, uint16_t height,
 		   uint8_t scale = 1)
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     draw_bitmap(x, y, bp, width, height, scale);
   }
@@ -586,8 +586,8 @@ public:
    * @param[in] height.
    * @param[in] scale.
    */
-  virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp,
-			 uint8_t width, uint8_t height,
+  virtual void draw_icon(uint16_t x, uint16_t y, const uint8_t* bp,
+			 uint16_t width, uint16_t height,
 			 uint8_t scale = 1);
 
   /**
@@ -599,7 +599,7 @@ public:
    * @param[in] bp.
    * @param[in] scale.
    */
-  virtual void draw_icon(uint8_t x, uint8_t y, const uint8_t* bp, 
+  virtual void draw_icon(uint16_t x, uint16_t y, const uint8_t* bp, 
 			 uint8_t scale = 1);
 
   /**
@@ -610,9 +610,9 @@ public:
    */
   void draw_icon(const uint8_t* bp, uint8_t scale = 1)
   {
-    uint8_t width = pgm_read_byte(bp++);
-    uint8_t height = pgm_read_byte(bp++);
-    uint8_t x, y;
+    uint16_t width = pgm_read_byte(bp++);
+    uint16_t height = pgm_read_byte(bp++);
+    uint16_t x, y;
     get_cursor(x, y);
     draw_icon(x, y, bp, width, height, scale);
   }
@@ -625,7 +625,7 @@ public:
    * @param[in] x1.
    * @param[in] y1.
    */
-  virtual void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
+  virtual void draw_line(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 
   /**
    * Draw line to given position with current color. Update cursor to
@@ -633,9 +633,9 @@ public:
    * @param[in] x1.
    * @param[in] y1.
    */
-  void draw_line(uint8_t x1, uint8_t y1)
+  void draw_line(uint16_t x1, uint16_t y1)
   {
-    uint8_t x0, y0;
+    uint16_t x0, y0;
     get_cursor(x0, y0);
     draw_line(x0, y0, x1, y1);
     set_cursor(x1, y1);
@@ -648,16 +648,16 @@ public:
    * @param[in] y.
    * @param[in] length.
    */
-  virtual void draw_vertical_line(uint8_t x, uint8_t y, uint8_t length);
+  virtual void draw_vertical_line(uint16_t x, uint16_t y, uint16_t length);
 
   /**
    * Draw vertical line with given length and current pen color. Update
    * cursor to new position.
    * @param[in] length.
    */
-  void draw_vertical_line(uint8_t length)
+  void draw_vertical_line(uint16_t length)
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     draw_line(x, y + length);
   }
@@ -669,16 +669,16 @@ public:
    * @param[in] y.
    * @param[in] length.
    */
-  virtual void draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length);
+  virtual void draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length);
 
   /**
    * Draw horizontal line with given length and current pen color. Update
    * cursor to new position.
    * @param[in] length.
    */
-  void draw_horizontal_line(uint8_t length)
+  void draw_horizontal_line(uint16_t length)
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     draw_line(x + length, y);
   }
@@ -711,16 +711,16 @@ public:
    * @param[in] width.
    * @param[in] height.
    */
-  virtual void draw_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
+  virtual void draw_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 
   /**
    * Draw rectangle at cursor position with current pen color.
    * @param[in] width.
    * @param[in] height.
    */
-  void draw_rect(uint8_t width, uint8_t height)
+  void draw_rect(uint16_t width, uint16_t height)
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     draw_rect(x, y, width, height);
   }
@@ -733,16 +733,16 @@ public:
    * @param[in] width.
    * @param[in] height.
    */
-  virtual void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
+  virtual void fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 
   /**
    * Fill rectangle at cursor position with current pen color.
    * @param[in] width.
    * @param[in] height.
    */
-  void fill_rect(uint8_t width, uint8_t height)
+  void fill_rect(uint16_t width, uint16_t height)
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     fill_rect(x, y, width, height);
   }
@@ -756,9 +756,9 @@ public:
    * @param[in] height.
    * @param[in] radius.
    */
-  virtual void draw_roundrect(uint8_t x, uint8_t y, 
-			      uint8_t width, uint8_t height,
-			      uint8_t radius);
+  virtual void draw_roundrect(uint16_t x, uint16_t y, 
+			      uint16_t width, uint16_t height,
+			      uint16_t radius);
 
   /**
    * Draw round corner rectangle at cursor position with current pen color.
@@ -766,9 +766,9 @@ public:
    * @param[in] height.
    * @param[in] radius.
    */
-  void draw_roundrect(uint8_t width, uint8_t height, uint8_t radius)
+  void draw_roundrect(uint16_t width, uint16_t height, uint16_t radius)
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     draw_roundrect(x, y, width, height, radius);
   }
@@ -782,9 +782,9 @@ public:
    * @param[in] height.
    * @param[in] radius.
    */
-  virtual void fill_roundrect(uint8_t x, uint8_t y, 
-			      uint8_t width, uint8_t height,
-			      uint8_t radius);
+  virtual void fill_roundrect(uint16_t x, uint16_t y, 
+			      uint16_t width, uint16_t height,
+			      uint16_t radius);
 
   /**
    * Fill round corner rectangle at cursor position with current pen color.
@@ -792,9 +792,9 @@ public:
    * @param[in] height.
    * @param[in] radius.
    */
-  void fill_roundrect(uint8_t width, uint8_t height, uint8_t radius)
+  void fill_roundrect(uint16_t width, uint16_t height, uint16_t radius)
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     fill_roundrect(x, y, width, height, radius);
   }
@@ -806,15 +806,15 @@ public:
    * @param[in] y.
    * @param[in] radius.
    */
-  virtual void draw_circle(uint8_t x, uint8_t y, uint8_t radius);
+  virtual void draw_circle(uint16_t x, uint16_t y, uint16_t radius);
 
   /**
    * Draw circle at cursor position with current pen color.
    * @param[in] radius.
    */
-  void draw_circle(uint8_t radius)
+  void draw_circle(uint16_t radius)
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     draw_circle(x, y, radius);
   }
@@ -826,15 +826,15 @@ public:
    * @param[in] y.
    * @param[in] radius.
    */
-  virtual void fill_circle(uint8_t x, uint8_t y, uint8_t radius);
+  virtual void fill_circle(uint16_t x, uint16_t y, uint16_t radius);
 
   /**
    * Fill circle at cursor position with current pen color.
    * @param[in] radius.
    */
-  void fill_circle(uint8_t radius)
+  void fill_circle(uint16_t radius)
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     fill_circle(x, y, radius);
   }
@@ -846,7 +846,7 @@ public:
    * @param[in] y position.
    * @param[in] c character.
    */
-  virtual void draw_char(uint8_t x, uint8_t y, char c);
+  virtual void draw_char(uint16_t x, uint16_t y, char c);
 
   /**
    * Draw character with current text color, font and scale.
@@ -854,7 +854,7 @@ public:
    */
   void draw_char(char c)
   {
-    uint8_t x, y;
+    uint16_t x, y;
     get_cursor(x, y);
     draw_char(x, y, c);
   }

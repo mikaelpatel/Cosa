@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -142,7 +142,7 @@ ST7735::set_orientation(uint8_t direction)
 }
 
 void 
-ST7735::draw_pixel(uint8_t x, uint8_t y)
+ST7735::draw_pixel(uint16_t x, uint16_t y)
 {
   color16_t color = get_pen_color();
   spi.acquire(this);
@@ -156,11 +156,11 @@ ST7735::draw_pixel(uint8_t x, uint8_t y)
 }
 
 void 
-ST7735::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
+ST7735::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
 {
   if (x >= WIDTH || length == 0) return;
   if (y >= HEIGHT) {
-    int8_t z = y + length;
+    uint16_t z = y + length;
     if (z >= HEIGHT) return;
     length = z;
     y = 0;
@@ -178,11 +178,11 @@ ST7735::draw_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 }
 
 void 
-ST7735::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
+ST7735::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
 {
   if (y >= HEIGHT || length == 0) return;
   if (x >= WIDTH) {
-    int8_t z = x + length;
+    uint16_t z = x + length;
     if (z >= WIDTH) return;
     length = z;
     x = 0;
@@ -200,7 +200,7 @@ ST7735::draw_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 }
 
 void 
-ST7735::fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
+ST7735::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
   if (x + width >= WIDTH) width = WIDTH - x;
   if (y + height >= HEIGHT) height = HEIGHT - y;

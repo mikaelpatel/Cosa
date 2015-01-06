@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@
  * @param[in] width of canvas.
  * @param[in] height of canvas.
  */
-template<uint8_t width, uint8_t height>
+template<uint16_t width, uint16_t height>
 class OffScreen : public Canvas {
 public:
   /**
@@ -67,7 +67,7 @@ public:
    * @param[in] x.
    * @param[in] y.
    */
-  virtual void draw_pixel(uint8_t x, uint8_t y)
+  virtual void draw_pixel(uint16_t x, uint16_t y)
   {
     if ((x > WIDTH) || (y > HEIGHT)) return;
     uint8_t* bp = &m_bitmap[((y >> 3) * WIDTH) + x];

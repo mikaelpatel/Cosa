@@ -27,14 +27,14 @@ Textbox::putchar(char c)
   Canvas::Context* saved = m_canvas->set_context(this);
 
   // Handle some special characters, line-feed
-  uint8_t x, y;
+  uint16_t x, y;
   get_cursor(x, y);
   uint8_t scale = m_text_scale;
-  uint8_t width = (x + (scale * (m_font->WIDTH + m_font->SPACING)) - m_text_port.x);
+  uint16_t width = (x + (scale * (m_font->WIDTH + m_font->SPACING)) - m_text_port.x);
   if ((c == '\n') || (width > m_text_port.width)) {
-    uint8_t font_height = scale * (m_font->HEIGHT);
-    uint8_t line_height = scale * (m_font->HEIGHT + m_font->LINE_SPACING);
-    uint8_t y = m_cursor.y + line_height;
+    uint16_t font_height = scale * (m_font->HEIGHT);
+    uint16_t line_height = scale * (m_font->HEIGHT + m_font->LINE_SPACING);
+    uint16_t y = m_cursor.y + line_height;
     if (y + font_height > m_text_port.y + m_text_port.height) {
       y = m_text_port.y;
     }

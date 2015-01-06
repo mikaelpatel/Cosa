@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -107,7 +107,7 @@ void loop()
   console.println();
   console.printf_P(PSTR("text_color(%od)\n"), textbox.get_text_color().rgb);
   console.printf_P(PSTR("text_scale(%d)\n"), textbox.get_text_scale());
-  uint8_t x, y;
+  uint16_t x, y;
   textbox.get_cursor(x, y);
   console.printf_P(PSTR("cursor(x = %d, y = %d)\n"), x, y);
   textbox.set_text_color(Canvas::RED);
@@ -140,8 +140,8 @@ void loop()
   tft.fill_screen();
   tft.set_pen_color(Canvas::BLACK);
   start = RTC::micros();
-  for (uint8_t x = 0; x < tft.WIDTH; x += 2) {
-    for (uint8_t y = 0; y < tft.HEIGHT; y += 2) {
+  for (uint16_t x = 0; x < tft.WIDTH; x += 2) {
+    for (uint16_t y = 0; y < tft.HEIGHT; y += 2) {
       tft.draw_pixel(x, y);
     }
   }
@@ -154,8 +154,8 @@ void loop()
   // Test#5: Grid with draw rectangle
   tft.set_pen_color(Canvas::BLACK);
   start = RTC::micros();
-  for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
-    for (uint8_t y = 0; y < tft.HEIGHT; y += 20) {
+  for (uint16_t x = 0; x < tft.WIDTH; x += 20) {
+    for (uint16_t y = 0; y < tft.HEIGHT; y += 20) {
       tft.draw_rect(x, y, 20, 20);
     }
   }
@@ -166,8 +166,8 @@ void loop()
   // Test#6: Fill some of the rectangles
   tft.set_pen_color(Canvas::WHITE);
   start = RTC::micros();
-  for (uint8_t x = 0; x < tft.WIDTH; x += 20) {
-    for (uint8_t y = x; y < tft.HEIGHT; y += 40) {
+  for (uint16_t x = 0; x < tft.WIDTH; x += 20) {
+    for (uint16_t y = x; y < tft.HEIGHT; y += 40) {
       tft.fill_rect(x + 1, y + 1, 19, 19);
     }
   }
@@ -181,8 +181,8 @@ void loop()
   tft.set_text_scale(1);
   start = RTC::micros();
   uint16_t color = Canvas::BLUE;
-  for (uint8_t x = 0; x < tft.WIDTH; x += 30) {
-    for (uint8_t y = 0; y < tft.HEIGHT; y += 30) {
+  for (uint16_t x = 0; x < tft.WIDTH; x += 30) {
+    for (uint16_t y = 0; y < tft.HEIGHT; y += 30) {
       tft.set_pen_color(tft.shade(color, y * 100/tft.HEIGHT));
       tft.fill_circle(x, y, 12);
       tft.set_cursor(x - 2, y - 3);
@@ -201,15 +201,15 @@ void loop()
   tft.fill_screen();
   start = RTC::micros();
   tft.set_pen_color(Canvas::RED);
-  for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
+  for (uint16_t x = 0; x < tft.WIDTH; x += 6) {
     tft.draw_line(0, 0, x, tft.HEIGHT - 1);
   }
   tft.set_pen_color(Canvas::GREEN);
-  for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
+  for (uint16_t y = 0; y < tft.HEIGHT; y += 6) {
     tft.draw_line(0, 0, tft.WIDTH - 1, y);
   }
   tft.set_pen_color(Canvas::BLUE);
-  for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
+  for (uint16_t x = 0; x < tft.WIDTH; x += 6) {
     tft.draw_line(tft.WIDTH - 1, 0, x, tft.HEIGHT - 1);
   }
   ms = (RTC::micros() - start) / 1000L;
@@ -221,13 +221,13 @@ void loop()
   tft.set_pen_color(Canvas::BLACK);
   tft.fill_screen();
   tft.set_pen_color(Canvas::YELLOW);
-  for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
+  for (uint16_t y = 0; y < tft.HEIGHT; y += 6) {
     tft.draw_line(0, tft.HEIGHT - 1, tft.WIDTH - 1, y);
   }
-  for (uint8_t x = 0; x < tft.WIDTH; x += 6) {
+  for (uint16_t x = 0; x < tft.WIDTH; x += 6) {
     tft.draw_line(tft.WIDTH - 1, tft.HEIGHT - 1, x, 0);
   }
-  for (uint8_t y = 0; y < tft.HEIGHT; y += 6) {
+  for (uint16_t y = 0; y < tft.HEIGHT; y += 6) {
     tft.draw_line(tft.WIDTH - 1, tft.HEIGHT - 1, 0, y);
   }
   ms = (RTC::micros() - start) / 1000L;
@@ -247,9 +247,9 @@ void loop()
     -10, -10,
     0, 0 
   };
-  for (uint8_t x = 10; x < tft.WIDTH - 40; x += 10) {
+  for (uint16_t x = 10; x < tft.WIDTH - 40; x += 10) {
     tft.set_pen_color(tft.shade(Canvas::GREEN, 20 + x));
-    tft.set_cursor(10 + x, 50 - x);
+    tft.set_cursor(10 + x, 50);
     tft.draw_poly_P(polygon);
   }
   ms = (RTC::micros() - start) / 1000L;
@@ -267,7 +267,7 @@ void loop()
     20, 0,
     0, 0 
   };
-  for (uint8_t x = 10; x < tft.WIDTH - 40; x += 10) {
+  for (uint16_t x = 10; x < tft.WIDTH - 40; x += 10) {
     tft.set_pen_color(tft.shade(Canvas::RED, 20 + x));
     tft.set_cursor(x, 120);
     tft.draw_stroke_P(stroke);
