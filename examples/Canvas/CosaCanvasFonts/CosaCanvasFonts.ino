@@ -1,5 +1,5 @@
 /**
- * @file CosaCanvasFontST7735.ino
+ * @file CosaCanvasFonts.ino
  * @version 1.0
  *
  * @section License
@@ -16,10 +16,11 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Cosa demonstration of device driver for ST7735, 262K Color
- * Single-Chip TFT Controller. Shows use of different fonts.
+ * Cosa demonstration of device driver for ST7735 or ILI9341.
+ * Shows use of different fonts.
  *
  * @section Circuit
+ * @code
  *                           ST7735
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -35,13 +36,25 @@
  * (GND)--------------16-|LED-        |
  *                       +------------+
  *
+ *                           ILI9341
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (SS/D10)------------3-|CS          |
+ * (RST)---------------4-|RST         |
+ * (D9)----------------5-|DC          |
+ * (MOSI/D11)----------6-|SDI         |
+ * (SCK/D13)-----------7-|SCK         |
+ * (VCC)------[330]----8-|LED         |
+ * (MISO/D12)----------9-|SDO         |
+ *                       +------------+
+ * @endcode
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 //#define ONE_CHAR '&'
 #define CYCLE_CHARS 0 // ms; 0 to benchmark
-
-// ONLY SYSTEM_5x7 is possible if this is used before Glyphs
 
 //#define SYSTEM_5x7
 //#define FIXEDNUMS_8x16
@@ -50,7 +63,7 @@
 //#define FONT_5x8
 //#define FONT_6x9
 //#define FONT_6x10
-#define FONT_6x12
+//#define FONT_6x12
 //#define FONT_6x13
 //#define FONT_6x13B
 //#define FONT_7x13
@@ -63,16 +76,27 @@
 //#define FONT_9x15
 //#define FONT_9x15B
 //#define FONT_10x20
-//#define FONT_12x24
+#define FONT_12x24
 
-#include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Trace.hh"
 #include "Cosa/RTC.hh"
-
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
-#include "Cosa/Canvas/Driver/ST7735.hh"
 
+// Select TFT device
+// #define TFT_ST7735
+#define TFT_ILI9341
+
+#ifdef TFT_ST7735
+#include "Cosa/Canvas/Driver/ST7735.hh"
+ST7735 tft;
+#endif
+
+#ifdef TFT_ILI9341
+#include "Cosa/Canvas/Driver/ILI9341.hh"
+ILI9341 tft;
+#endif
 
 #ifdef SYSTEM_5x7
 #include "Cosa/Canvas/Font/System5x7.hh"
@@ -174,17 +198,15 @@
 #define FONT segment32x50
 #endif
 
-ST7735 tft;
 Textbox textbox(&tft, (Font*)&FONT);
-
 static IOStream tftout(&textbox);
 
 #define STRINGIFY_(x) #x
 #define STRINGIFY(x) STRINGIFY_(x)
 
-
 void setup()
 {
+  RTC::begin();
   uart.begin(9600);
   trace.begin(&uart);
   trace << PSTR("CosaCanvasFontST7735: started") << endl;
@@ -201,14 +223,15 @@ void setup()
 #ifdef ONE_CHAR
   tftout << ONE_CHAR;
 #endif
+
 #if !defined(ONE_CHAR) && !defined(CYCLE_CHARS)
   tftout << PSTR("Hello World!") << endl;
 #endif
 
-  RTC::begin();
-
   trace << PSTR("Font ") << STRINGIFY(FONT)
-        << PSTR(" has ") << (FONT.LAST-FONT.FIRST+1) << PSTR(" characters") << endl;
+        << PSTR(" has ") << (FONT.LAST-FONT.FIRST+1) 
+	<< PSTR(" characters") 
+	<< endl;
 }
 
 void loop()

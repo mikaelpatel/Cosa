@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Canvas/Driver/ST7735.hh
+ * @file Cosa/Canvas/Driver/ILI9341.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2015, Mikael Patel
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,41 +18,43 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_CANVAS_DRIVER_ST7735_HH
-#define COSA_CANVAS_DRIVER_ST7735_HH
+#ifndef COSA_CANVAS_DRIVER_ILI9341_HH
+#define COSA_CANVAS_DRIVER_ILI9341_HH
 
 #include "Cosa/Canvas.hh"
 #include "Cosa/SPI.hh"
 #include "Cosa/OutputPin.hh"
 
 /**
- * Device driver for ST7735, 262K Color Single-Chip TFT Controller.
+ * Device driver for ILI9341, TFT LCD Single Chip Driver,
+ * 240x320 Resolution and 262K color.
  * 
- * @section Acknowledgements
- * Inspired by graphics library by ladyada/adafruit.
- *
  * @section Circuit
+ * Please note that 3V3 level signals required.
+ *
  * @code
- *                           ST7735
+ *                           ILI9341
  *                       +------------+
- * (GND)---------------1-|GND         |
- * (VCC)---------------2-|VCC         |
- *                      -|            |
- * (RST)---------------6-|RESET       |
- * (D9)----------------7-|A0          |
- * (MOSI/D11)----------8-|SDA         |
- * (SCK/D13)-----------9-|SCK         |
- * (SS/D10)-----------10-|CS          |
- *                      -|            |
- * (VCC)---[330]------15-|LED+        |
- * (GND)--------------16-|LED-        |
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (SS/D10)------------3-|CS          |
+ * (RST)---------------4-|RST         |
+ * (D9)----------------5-|DC          |
+ * (MOSI/D11)----------6-|SDI         |
+ * (SCK/D13)-----------7-|SCK         |
+ * (VCC)------[330]----8-|LED         |
+ * (MISO/D12)----------9-|SDO         |
  *                       +------------+
  * @endcode
  *
  * @section References
- * 1. Sitronix Technology Corp. ST7735 documentation, V2.1, 2010-02-01.
+ * 1. ILITEK. ILI9341 specification, V1.13, 2011-07-20.
+ *
+ * @section Acknowledgements
+ * Inspired by graphics library by ladyada/adafruit.
+ *
  */
-class ST7735 : public Canvas, SPI::Driver {
+class ILI9341 : public Canvas, SPI::Driver {
 public:
   /**
    * Construct display object with given control pins.
@@ -60,13 +62,13 @@ public:
    * @param[in] dc data/command selection pin (default pin 9).
    */
 #if defined(BOARD_ATTINYX4)
-  ST7735(Board::DigitalPin cs = Board::D3, 
+  ILI9341(Board::DigitalPin cs = Board::D3, 
 	 Board::DigitalPin dc = Board::D7);
 #elif defined(BOARD_ATTINYX5)
-  ST7735(Board::DigitalPin cs = Board::D3, 
+  ILI9341(Board::DigitalPin cs = Board::D3, 
 	 Board::DigitalPin dc = Board::D4);
 #else
-  ST7735(Board::DigitalPin cs = Board::D10, 
+  ILI9341(Board::DigitalPin cs = Board::D10, 
 	 Board::DigitalPin dc = Board::D9);
 #endif
 
@@ -137,88 +139,118 @@ protected:
    * Initialization script (in program memory).
    */
   static const uint8_t script[] PROGMEM;
-  uint8_t m_initiated;
+  bool m_initiated;
 
   /**
-   * SPI commands (ch. 10 Command, pp. 77-78, pp. 119-120)
+   * SPI commands (ch. 8 Command, pp. 83-88)
    */
   enum Command {
     NOP = 0x0,			// No Operation
     SWRESET = 0x01,		// Software Reset
     SWDELAY = 0x02,		// Software Delay
     SCRIPTEND = 0x03,		// Script End
-    RDDID = 0x04,		// Read Display ID
+    RDDIDIF = 0x04,		// Read Display Identification Information
     RDDST = 0x09,		// Read Display Status
     RDDPM = 0x0A,		// Read Display Power Mode
     RDDMADCTL = 0x0B,		// Read Display MADCTL
     RDDCOLMOD = 0x0C,		// Read Display Pixel Format
     RDDIM = 0x0D,		// Read Display Image Mode
     RDDSM = 0x0E,		// Read Display Signal Mode
-    SLPIN = 0x10,		// Sleep in
-    SLPOUT = 0x11,		// Sleep out
-    PTLON = 0x12,		// Partial Display Mode On
+    RDDSDR = 0x0F,		// Read Display Self-Diagnostic Result
+    SLPIN = 0x10,		// Enter Sleep Mode
+    SLPOUT = 0x11,		// Exit Sleep Mode
+    PTLON = 0x12,		// Partial Mode On
     NORON = 0x13,		// Normal Display Mode On
-    INVOFF = 0x20,		// Display Inversion Off
-    INVON = 0x21,		// Display Inversion On
+    DINVOFF = 0x20,		// Display Inversion Off
+    DINVON = 0x21,		// Display Inversion On
     GAMSET = 0x26,		// Gamma Set
     DISPOFF = 0x28,		// Display Off
     DISPON = 0x29,		// Display On
     CASET = 0x2A,		// Column Address Set
-    RASET = 0x2B,		// Row Address Set
+    PASET = 0x2B,		// Page Address Set
     RAMWR = 0x2C,		// Memory Write
     RGBSET = 0x2D,		// Color Setting for 4K, 65K and 262K
     RAMRD = 0x2E,		// Memory Read
     PTLAR = 0x30,		// Partial Area
+    VSCRDEF = 0x33,		// Vertical Scrolling Definition
     TEOFF = 0x34,		// Tearing Effect Line Off
     TEON = 0x35,		// Tearing Effect Line On
     MADCTL = 0x36,		// Memory Data Access Control
-    IMDOFF = 0x38,		// Idle Mode Off
-    IMDON = 0x39,		// Idle Mode On
-    COLMOD = 0x3A,		// Interface Pixel Format
+    VSCRSADD = 0x37,		// Vertical Scrolling Start Address
+    IDMOFF = 0x38,		// Idle Mode Off
+    IDMON = 0x39,		// Idle Mode On
+    PIXSET = 0x3A,		// Pixel Format Set
+    RAMWRC = 0x3C,		// Write Memory Continue
+    RAMRDC = 0x3E,		// Read Memory Continue
+    SETSCANLINE = 0x44,		// Set Tear Scanline
+    GETSCANLINE = 0x45,		// Get Scanline
+    WRDISBV = 0x51,		// Write Display Brightness Value
+    RDDISBV = 0x52,		// Read Display Brightness Value
+    WRCTRLD = 0x53,		// Write CTRL Display
+    RDCTRLD = 0x54,		// Read CTRL Display
+    WRCABC = 0x55,		// Write Content Adaptive Brightness Control
+    RDCABC = 0x56,		// Read Content Adaptive Brightness Control
+    WRCABCMIN = 0x5E,		// Write CABC Minimum Brightness
+    RDCABCMIN = 0x5F,		// Read CABC Minimum Brightness
     RDID1 = 0xDA,		// Read ID1 Value
     RDID2 = 0xDB,		// Read ID2 Value
     RDID3 = 0xDC,		// Read ID3 Value
+    IFMODE = 0xB0,		// Interface Mode Control
     FRMCTR1 = 0xB1,		// Frame Rate Control, normal mode
     FRMCTR2 = 0xB2,		// Frame Rate Control, idle mode
     FRMCTR3 = 0xB3,		// Frame Rate Control, partial mode
-    INVCTR = 0xB4,		// Display Inversion Control
-    DISSET5 = 0xB6,		// Diaplay Function set 5
-    PWCTR1 = 0xC0,		// Power Control 1
-    PWCTR2 = 0xC1,		// Power Control 2
-    PWCTR3 = 0xC2,		// Power Control 3, normal mode
-    PWCTR4 = 0xC3,		// Power Control 4, idle mode
-    PWCTR5 = 0xC4,		// Power Control 5, partial mode
-    PWCTR6 = 0xFC,		// Power Control 6, partial mode
-    VMCTR1 = 0xC5,		// VCOM Control 1
-    VMOFCTR = 0xC7,		// VCOM Offset Control
-    WRID2 = 0xD1,		// Write ID2 Value
-    WRID3 = 0xD2,		// Write ID3 Value
-    NVFCTR1 = 0xD9,		// EEPROM Control Status
-    NVRCTR2 = 0xDE,		// EEPROM Read Command
-    NVFCTR3 = 0xDF,		// EEPROM Write Command
-    GMCTRP1 = 0xE0,		// Positive Gamma Correction
-    GMCTRN1 = 0xE1,		// Negative Gamma Correction
-    EXTCTRL = 0xF0,		// Extension Command Control
-    VCOM4L = 0xFF		// VCOM 4 Level Control
+    INVTR = 0xB4,		// Display Inversion Control
+    PRCTR = 0xB5,		// Blanking Porch Control
+    DISCTRL = 0xB6,		// Display Function Control
+    ETMOD = 0xB7,		// Entry Mode Set
+    BLCTRL1 = 0xB8,		// Backlight Control 1
+    BLCTRL2 = 0xB9,		// Backlight Control 2
+    BLCTRL3 = 0xBA,		// Backlight Control 3
+    BLCTRL4 = 0xBB,		// Backlight Control 4
+    BLCTRL5 = 0xBC,		// Backlight Control 5
+    BLCTRL6 = 0xBD,		// Backlight Control 6
+    BLCTRL7 = 0xBE,		// Backlight Control 7
+    BLCTRL8 = 0xBF,		// Backlight Control 8
+    PWCTRL1 = 0xC0,		// Power Control 1
+    PWCTRL2 = 0xC1,		// Power Control 2
+    VMCTRL1 = 0xC5,		// VCOM Control 1
+    VMCTRL2 = 0xC7,		// VCOM Control 2
+    NVMWR = 0xD0,		// NV Memory Write
+    NVMPKEY = 0xD1,		// NV Memory Protection Key
+    RDNVM = 0xD2,		// NV Memory Status Read
+    RDID4 = 0xD3,		// Read ID4
+    PGAMCTRL = 0xE0,		// Positive Gamma Correction
+    NGAMCTRL = 0xE1,		// Negative Gamma Correction
+    DGAMCTRL1 = 0xE2,		// Digital Gamma Control 1
+    DGAMCTRL2 = 0xE3,		// Digital Gamma Control 2
+    IFCTRL = 0xF6,		// Interface Control
+    PWCTRLA = 0xCB,		// Power Control A
+    PWCTRLB = 0xCF,		// Power Control B
+    DTCTRLA = 0xE8,		// Driver Timing Control A
+    DTCTRLB = 0xEA,		// Driver Timing Control B
+    PWONCTRL = 0xED,		// Power On Sequence Control
+    EN3GAM = 0xF2,		// Enable/Disable 3-Gamma
+    PRCTRL = 0xF7		// Pump Ratio Control
   } __attribute__((packed));
 
   /**
    *  Memory Data Access Control (bits)
    */
   enum {
-    MADCTL_MY = 0x80,
-    MADCTL_MX = 0x40,
-    MADCTL_MV = 0x20,
-    MADCTL_ML = 0x10,
-    MADCTL_BGR = 0x08,
-    MADCTL_MH = 0x04
+    MADCTL_MH = 0x04,		// Horizontal Refresh order
+    MADCTL_ML = 0x10,		// Vertical Refresh order
+    MADCTL_MV = 0x20,		// Row / Column Exchange
+    MADCTL_MX = 0x40,		// Column Address order
+    MADCTL_MY = 0x80,		// Row Address order
+    MADCTL_BGR = 0x08,		// BGR order
+    MADCTL_RGB = 0x00		// RGB order
   } __attribute__((packed));
 
   /**
    * Screen size
    */
-  static const uint16_t SCREEN_WIDTH = 128;
-  static const uint16_t SCREEN_HEIGHT = 160;
+  static const uint16_t SCREEN_WIDTH = 240;
+  static const uint16_t SCREEN_HEIGHT = 320;
 
   /**
    * Write 16-bit data to device, MSB first.
@@ -278,15 +310,15 @@ protected:
    * @param[in] x data to write.
    * @param[in] y data to write.
    */
-  void write(Command cmd, uint8_t x, uint8_t y)
+  void write(Command cmd, uint16_t x, uint16_t y)
     __attribute__((always_inline))
   {
     asserted(m_dc) {
       spi.transfer(cmd);
     }
-    spi.transfer(0);
+    spi.transfer(x >> 8);
     spi.transfer(x);
-    spi.transfer(0);
+    spi.transfer(y >> 8);
     spi.transfer(y);
   }
 };

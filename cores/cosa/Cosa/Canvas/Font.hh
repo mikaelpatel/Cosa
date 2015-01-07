@@ -171,7 +171,7 @@ public:
    * @param[in] y position.
    * @param[in] scale.
    */
-  virtual void draw(Canvas* canvas, char c, uint8_t x, uint8_t y, 
+  virtual void draw(Canvas* canvas, char c, uint16_t x, uint16_t y, 
 		    uint8_t scale)
   {
     canvas->draw_bitmap(x, y, get_bitmap(c), WIDTH, HEIGHT, scale);

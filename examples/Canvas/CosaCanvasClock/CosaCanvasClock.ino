@@ -17,10 +17,10 @@
  * 
  * @section Description
  * A simple count down clock; Cosa demonstration of Canvas Segment
- * Font handling and device driver for ST7735, 262K Color Single-Chip
- * TFT Controller. 
+ * Font handling and device driver for ST7735 or ILI9314.
  *
  * @section Circuit
+ * @code
  *                           ST7735
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -36,15 +36,41 @@
  * (GND)--------------16-|LED-        |
  *                       +------------+
  *
+ *                           ILI9341
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (SS/D10)------------3-|CS          |
+ * (RST)---------------4-|RST         |
+ * (D9)----------------5-|DC          |
+ * (MOSI/D11)----------6-|SDI         |
+ * (SCK/D13)-----------7-|SCK         |
+ * (VCC)------[330]----8-|LED         |
+ * (MISO/D12)----------9-|SDO         |
+ *                       +------------+
+ * @endcode
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Canvas/Driver/ST7735.hh"
 #include "Cosa/Canvas/Font/Segment32x50.hh"
 
+// Select TFT device
+//#define TFT_ST7735
+#define TFT_ILI9341
+
+#if defined(TFT_ST7735)
+#include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
+#endif
+
+#if defined(TFT_ILI9341)
+#include "Cosa/Canvas/Driver/ILI9341.hh"
+ILI9341 tft;
+#endif
+
 const Canvas::color16_t BACKGROUND = tft.shade(Canvas::RED, 25);
 const Canvas::color16_t TEXT_COLOR = tft.shade(Canvas::RED, 75);
 uint8_t min = 30;

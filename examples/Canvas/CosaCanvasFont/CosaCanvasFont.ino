@@ -17,9 +17,10 @@
  * 
  * @section Description
  * Cosa demonstration of Canvas Font handling and device driver for 
- * ST7735, 262K Color Single-Chip TFT Controller.
+ * ST7735 or ILI9341.
  *
  * @section Circuit
+ * @code
  *                           ST7735
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -35,13 +36,38 @@
  * (GND)--------------16-|LED-        |
  *                       +------------+
  *
+ *                           ILI9341
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (SS/D10)------------3-|CS          |
+ * (RST)---------------4-|RST         |
+ * (D9)----------------5-|DC          |
+ * (MOSI/D11)----------6-|SDI         |
+ * (SCK/D13)-----------7-|SCK         |
+ * (VCC)------[330]----8-|LED         |
+ * (MISO/D12)----------9-|SDO         |
+ *                       +------------+
+ * @endcode
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Canvas/Driver/ST7735.hh"
 
+// Select TFT device
+//#define TFT_ST7735
+#define TFT_ILI9341
+
+#if defined(TFT_ST7735)
+#include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
+#endif
+
+#if defined(TFT_ILI9341)
+#include "Cosa/Canvas/Driver/ILI9341.hh"
+ILI9341 tft;
+#endif
 
 void setup()
 {
@@ -59,8 +85,8 @@ void loop()
   tft.set_pen_color(Canvas::BLACK);
   tft.set_text_color(tft.shade(Canvas::RED, 75));
   char c = 0;
-  for (uint8_t x = 3; x < tft.WIDTH - 12; x += 12) {
-    for (uint8_t y = 2; y < tft.HEIGHT - 12; y += 12) {
+  for (uint16_t x = 3; x < tft.WIDTH - 12; x += 12) {
+    for (uint16_t y = 2; y < tft.HEIGHT - 12; y += 12) {
       tft.set_pen_color(tft.shade(Canvas::WHITE, 75));
       tft.fill_rect(x, y, 12, 12);
       tft.set_pen_color(Canvas::BLACK);

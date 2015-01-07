@@ -1,5 +1,5 @@
 /**
- * @file CosaCanvasST7735.ino
+ * @file CosaCanvasDemo.ino
  * @version 1.0
  *
  * @section License
@@ -16,10 +16,11 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Cosa demonstration of device driver for ST7735, 262K Color
- * Single-Chip TFT Controller. Shows binding to IOStream::Device.
+ * Cosa demonstration of device driver for ST7735 or ILI9341.
+ * Shows binding to IOStream::Device and basic drawing functions.
  *
  * @section Circuit
+ * @code
  *                           ST7735
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -34,6 +35,20 @@
  * (VCC)----[330]-----15-|LED+        |
  * (GND)--------------16-|LED-        |
  *                       +------------+
+ *
+ *                           ILI9341
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (SS/D10)------------3-|CS          |
+ * (RST)---------------4-|RST         |
+ * (D9)----------------5-|DC          |
+ * (MOSI/D11)----------6-|SDI         |
+ * (SCK/D13)-----------7-|SCK         |
+ * (VCC)------[330]----8-|LED         |
+ * (MISO/D12)----------9-|SDO         |
+ *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -51,9 +66,21 @@
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
-#include "Cosa/Canvas/Driver/ST7735.hh"
 
+// Select TFT device
+//#define TFT_ST7735
+#define TFT_ILI9341
+
+#if defined(TFT_ST7735)
+#include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
+#endif
+
+#if defined(TFT_ILI9341)
+#include "Cosa/Canvas/Driver/ILI9341.hh"
+ILI9341 tft;
+#endif
+
 Textbox textbox(&tft);
 IOStream console(&textbox);
 
@@ -61,7 +88,7 @@ void setup()
 {
   // Initiate trace stream on the serial port
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaST7735: started"));
+  trace.begin(&uart, PSTR("CosaCanvasDemo: started"));
 
   // Check amount of free memory and size of objects
   TRACE(free_memory());
@@ -70,7 +97,7 @@ void setup()
   TRACE(sizeof(UART));
   TRACE(sizeof(Canvas));
   TRACE(sizeof(Font));
-  TRACE(sizeof(ST7735));
+  TRACE(sizeof(tft));
   TRACE(sizeof(Canvas::Context));
   TRACE(sizeof(Canvas::Element));
   TRACE(sizeof(IOStream));
