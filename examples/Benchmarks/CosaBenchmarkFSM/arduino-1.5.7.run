@@ -1,7 +1,7 @@
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkFSM: started
-88:void setup():free_memory() = 1547
+88:void setup():free_memory() = 1543
 91:void setup():sizeof(Event::Handler) = 2
 92:void setup():sizeof(Link) = 6
 93:void setup():sizeof(FSM) = 12

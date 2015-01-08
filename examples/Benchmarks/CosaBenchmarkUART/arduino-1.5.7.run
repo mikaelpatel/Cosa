@@ -1,7 +1,7 @@
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 57600
 CosaBenchmarkUART: started
-45:void setup():free_memory() = 391
+45:void setup():free_memory() = 387
 
 53:void loop():measure:one character (new-line):28 us
 1
@@ -9,9 +9,9 @@ CosaBenchmarkUART: started
 1
 55:void loop():measure:one character string:44 us
 1
-56:void loop():measure:integer:56 us
+56:void loop():measure:integer:60 us
 1
-57:void loop():measure:long integer:52 us
+57:void loop():measure:long integer:48 us
 10
 58:void loop():measure:two characters:40 us
 10
@@ -19,15 +19,15 @@ CosaBenchmarkUART: started
 10
 60:void loop():measure:integer:76 us
 10
-61:void loop():measure:long integer:84 us
+61:void loop():measure:long integer:80 us
 100
-62:void loop():measure:three characters:44 us
+62:void loop():measure:three characters:48 us
 100
-63:void loop():measure:three character string:56 us
+63:void loop():measure:three character string:60 us
 100
 64:void loop():measure:integer:100 us
 100
-65:void loop():measure:long integer:108 us
+65:void loop():measure:long integer:112 us
 127
 68:void loop():measure:max int8_t:100 us
 32767
@@ -35,13 +35,13 @@ CosaBenchmarkUART: started
 2147483647
 70:void loop():measure:max int32_t:356 us
 255
-73:void loop():measure:max uint8_t:92 us
+73:void loop():measure:max uint8_t:96 us
 65535
 74:void loop():measure:max uint16_t:128 us
 4294967295
-75:void loop():measure:max uint32_t:352 us
+75:void loop():measure:max uint32_t:356 us
 000100
-78:void loop():measure:uint16_t(digits=6):112 us
+78:void loop():measure:uint16_t(digits=6):108 us
 000100
 82:void loop():measure:uint32_t(digits=6):128 us
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
@@ -108,11 +108,11 @@ CosaBenchmarkUART: started
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
-88:void loop():measure:output(4096 characters):789700 us
+88:void loop():measure:output(4096 characters):789704 us
 
-98:void loop():measure:newline character:8 us
+98:void loop():measure:newline character:12 us
 	
-99:void loop():measure:tab:36 us
+99:void loop():measure:tab:32 us
 
 100:void loop():measure:newline string(1):16 us
 

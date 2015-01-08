@@ -1,7 +1,7 @@
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkPins: started
-118:void setup():free_memory() = 1529
+118:void setup():free_memory() = 1525
 119:void setup():sizeof(Event::Handler) = 2
 120:void setup():sizeof(InputPin) = 4
 121:void setup():sizeof(OutputPin) = 4
@@ -33,7 +33,7 @@ CosaBenchmarkPins: started
 274:void loop():measure:digitalToggle(D8):126 ns
 
 280:void loop():info:Measure the time to perform input pin read/output pin write
-282:void loop():measure:outPin.write(!inPin.read()):1639 ns
+282:void loop():measure:outPin.write(!inPin.read()):1635 ns
 287:void loop():measure:inPin.is_set();outPin.clear/set():1698 ns
 295:void loop():measure:inPin >> var; outPin << !var:1635 ns
 302:void loop():measure:outPin.set(inPin.is_clear()):1635 ns
@@ -59,8 +59,8 @@ CosaBenchmarkPins: started
 461:void loop():measure:analogPin.sample():112 us
 465:void loop():measure:analogPin.sample_request/await():112 us
 470:void loop():measure:analogPin >> var:112 us
-475:void loop():measure:AnalogPin::sample(A0):112 us
-479:void loop():measure:AnalogPin::bandgap():1095 us
+475:void loop():measure:AnalogPin::sample(A0):111 us
+479:void loop():measure:AnalogPin::bandgap():1098 us
 483:void loop():measure:analogRead(A0):112 us
 
 487:void loop():info:Measure the time to read analog pin with varying prescale
