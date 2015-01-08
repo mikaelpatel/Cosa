@@ -26,8 +26,8 @@
 
 /**
  * Off-screen canvas for drawing before copying to the canvas device.
- * Supports monochrome, 1-bit, pixel in off-screen buffer. 
- * Minimum implementation; draw_pixel() only.
+ * Supports monochrome, 1-bit, pixel in off-screen buffer. Minimum
+ * implementation; draw_pixel() only.
  * @param[in] width of canvas.
  * @param[in] height of canvas.
  */
@@ -35,9 +35,7 @@ template<uint16_t width, uint16_t height>
 class OffScreen : public Canvas {
 public:
   /**
-   * Construct off-screen canvas with given width and height. A 
-   * buffer may be given but must be able to hold the bitmap size.
-   * If the buffer pointer is null a buffer is allocated.
+   * Construct off-screen canvas with given width and height.
    */
   OffScreen() : Canvas(width, height) {}
 
@@ -53,7 +51,7 @@ public:
   /**
    * @override Canvas
    * Start interaction with off-screen canvas.
-   * @return true(1) if successful otherwise false(0)
+   * @return true(1) if successful otherwise false(0).
    */
   virtual bool begin()
   {
@@ -90,7 +88,7 @@ public:
   /**
    * @override Canvas
    * Stop sequence of interaction with off-screen device.
-   * @return true(1) if successful otherwise false(0)
+   * @return true(1) if successful otherwise false(0).
    */
   virtual bool end()
   {

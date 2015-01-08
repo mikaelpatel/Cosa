@@ -16,7 +16,9 @@
 # 
 # @section Description
 # The Cosa Arduino core boards definition file; in alfabetical order. 
-# 
+# The default setting is the composition of the supported boards.
+# See the directory boards.
+#
 # This file is part of the Arduino Che Cosa project.
 
 ##

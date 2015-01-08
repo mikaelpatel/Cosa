@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel.
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,7 @@
  * Cosa Flash File System for S25FL127S Flash Memory. 
  *
  * @section Warning
- * This version will not allow files larger than 64Kbyte and will not
+ * This version will not allow files larger than 64K byte and will not
  * reclaim deleted directory entries.
  */
 class CFFS {
@@ -93,7 +93,10 @@ public:
      * Checks the file's open/closed status.
      * @return the value true if a file is open otherwise false;
      */
-    bool is_open(void) const { return (m_flags & O_RDWR) != 0; }
+    bool is_open(void) const 
+    { 
+      return ((m_flags & O_RDWR) != 0); 
+    }
 
     /**
      * Remove a file. The directory entry and all data for the file
@@ -320,7 +323,8 @@ protected:
    * Write flash block at given destination address with contents
    * of the source buffer in program memory. Return number of bytes
    * written or negative error code.  
-   * @param[in] buf buffer to write.
+   * @param[in] dest address in flash to write to.
+   * @param[in] src buffer in program memory to write to flash.
    * @param[in] size number of bytes to write.
    * @return number of bytes written or EOF(-1).
    */

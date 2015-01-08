@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,16 +26,23 @@
 #include "Cosa/Alarm.hh"
 
 /**
- * Cosa Activity Handler; the activity run function is called when
- * the activity start time is reached. The function is called with a
- * given run period through the activity duration. The activity is 
- * rescheduled with a period. 
+ * Cosa Activity Handler; the activity run function is called when the
+ * activity start time is reached. The function is called with a given
+ * run period through the activity duration. The activity is
+ * rescheduled with a period.
+ * 
+ * @sections Examples
+ * 1. Starting at 10:00 schedule the activity every hour. Run every
+ * minute for 10 minutes.  
+ * 2. Starting at 12:00 schedule the activity every 12 hours. Run
+ * once. 
  */
 class Activity {
 public:
   /**
    * Construct activity with default setting; start(now), duration(15 seconds),
-   * period(1 minute), and run period(5 seconds)
+   * period(1 minute), and run period(5 seconds). Use member function set_time()
+   * to set activity.
    */
   Activity() :
     m_scheduler(this),		// Alarm used as scheduler
@@ -68,7 +75,7 @@ public:
 
   /**
    * Return cycle of run in activity.
-   * @return cycles
+   * @return cycles.
    */
   uint16_t get_cycles() const
   { 
@@ -107,7 +114,7 @@ public:
    * @override Activity
    * Callback member function during the activity duration. The
    * activity is automatically rescheduled if the activity period is
-   * not zero. 
+   * not zero.
    */
   virtual void run() = 0;
   

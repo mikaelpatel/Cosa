@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,7 +43,7 @@ public:
      * @override EEPROM::Device
      * Return true(1) if the device is ready, write cycle is completed,
      * otherwise false(0).
-     * @return bool
+     * @return bool.
      */
     virtual bool is_ready();
 
@@ -86,7 +86,7 @@ public:
   /**
    * Return true(1) if the device is ready, write cycle is completed,
    * otherwise false(0).
-   * @return bool
+   * @return bool.
    */
   bool is_ready()
     __attribute__((always_inline))
@@ -124,7 +124,7 @@ public:
    * false(0). 
    * @param[out] dest address variable.
    * @param[in] src address in rom to read from.
-   * @return boolean.
+   * @return bool.
    */
   template<class T> bool read(T* dest, const T* src)
   {

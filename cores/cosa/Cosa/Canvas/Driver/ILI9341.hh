@@ -27,10 +27,12 @@
 
 /**
  * Device driver for ILI9341, TFT LCD Single Chip Driver,
- * 240x320 Resolution and 262K color.
+ * 240x320 Resolution and max 262K color. The device driver uses
+ * 16-bit color. See Canvas.
  * 
  * @section Circuit
- * Please note that 3V3 level signals required.
+ * Please note that 3V3 level signals are required. The reset signal
+ * is optional.
  *
  * @code
  *                           ILI9341
@@ -38,7 +40,7 @@
  * (VCC)---------------1-|VCC         |
  * (GND)---------------2-|GND         |
  * (SS/D10)------------3-|CS          |
- * (RST)---------------4-|RST         |
+ * (RST*)--------------4-|RST         |
  * (D9)----------------5-|DC          |
  * (MOSI/D11)----------6-|SDI         |
  * (SCK/D13)-----------7-|SCK         |
@@ -57,7 +59,7 @@
 class ILI9341 : public Canvas, SPI::Driver {
 public:
   /**
-   * Construct display object with given control pins.
+   * Construct ILI9341 canvas object with given control pins.
    * @param[in] cs slave selection pin (default pin 10).
    * @param[in] dc data/command selection pin (default pin 9).
    */
@@ -75,13 +77,13 @@ public:
   /**
    * @override Canvas
    * Start interaction with device.
-   * @return true(1) if successful otherwise false(0)
+   * @return true(1) if successful otherwise false(0).
    */
   virtual bool begin();
 
   /**
    * @override Canvas
-   * Set screen orientation
+   * Set screen orientation.
    * @param[in] direction.
    */
   virtual uint8_t set_orientation(uint8_t direction);
@@ -99,7 +101,7 @@ public:
    * Draw vertical line with current color.
    * @param[in] x 
    * @param[in] y
-   * @param[in] length
+   * @param[in] length.
    */
   virtual void draw_vertical_line(uint16_t x, uint16_t y, uint16_t length);
 
@@ -125,13 +127,13 @@ public:
   /**
    * @override Canvas
    * Stop sequence of interaction with device.
-   * @return true(1) if successful otherwise false(0)
+   * @return true(1) if successful otherwise false(0).
    */
   virtual bool end();
 
 protected:
   /**
-   * Data/Command select pin (default is pin 9)
+   * Data/Command select pin (default is pin 9).
    */
   OutputPin m_dc;
 
@@ -142,7 +144,7 @@ protected:
   bool m_initiated;
 
   /**
-   * SPI commands (ch. 8 Command, pp. 83-88)
+   * SPI commands (ch. 8 Command, pp. 83-88).
    */
   enum Command {
     NOP = 0x0,			// No Operation
@@ -234,7 +236,7 @@ protected:
   } __attribute__((packed));
 
   /**
-   *  Memory Data Access Control (bits)
+   *  Memory Data Access Control (bits).
    */
   enum {
     MADCTL_MH = 0x04,		// Horizontal Refresh order
@@ -247,7 +249,7 @@ protected:
   } __attribute__((packed));
 
   /**
-   * Screen size
+   * Screen size.
    */
   static const uint16_t SCREEN_WIDTH = 240;
   static const uint16_t SCREEN_HEIGHT = 320;
@@ -276,7 +278,7 @@ protected:
   }
 
   /**
-   * Write command and data to device.
+   * Write command and 8-bit data to device.
    * @param[in] cmd command to write.
    * @param[in] data to write.
    */
@@ -290,7 +292,7 @@ protected:
   }
 
   /**
-   * Write command and data to device.
+   * Write command and 16-bit data to device.
    * @param[in] cmd command to write.
    * @param[in] data to write.
    */
@@ -305,7 +307,7 @@ protected:
   }
 
   /**
-   * Write command and data to device.
+   * Write command and 2x16-bit data to device.
    * @param[in] cmd command to write.
    * @param[in] x data to write.
    * @param[in] y data to write.

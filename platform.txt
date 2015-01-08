@@ -27,7 +27,7 @@
 # This file is part of the Arduino Che Cosa project.
 
 name=Cosa AVR Boards
-version=1.5.7
+version=1.0
 
 # AVR compile variables
 # --------------------- 
@@ -50,7 +50,7 @@ compiler.elf2hex.cmd=avr-objcopy
 compiler.ldflags=
 compiler.size.cmd=avr-size
 
-# This can be overriden in boards.txt
+# This can be overridden in boards.txt
 build.extra_flags=
 
 # These can be overridden in platform.local.txt

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,7 +32,7 @@
  * on change calls an event action. Subclass Button and implement the
  * virtual on_change() method. Use the subclass for any state needed
  * for the action function. Connect button/switch from pin to
- * ground. Internal pull-up resistor is activated.  
+ * ground. Internal pull-up resistor is activated.
  *
  * @section Circuit
  * @code
@@ -58,9 +58,9 @@ public:
    * to high) and change (falling or rising). 
    */
   enum Mode {
-    ON_FALLING_MODE = 0,
-    ON_RISING_MODE = 1,
-    ON_CHANGE_MODE = 2
+    ON_FALLING_MODE = 0,	// High to low transition.
+    ON_RISING_MODE = 1,		// Low to high transition.
+    ON_CHANGE_MODE = 2		// Any transition.
   } __attribute__((packed));
 
   /**

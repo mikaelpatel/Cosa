@@ -27,9 +27,6 @@
 
 /**
  * Device driver for ST7735, 262K Color Single-Chip TFT Controller.
- * 
- * @section Acknowledgements
- * Inspired by graphics library by ladyada/adafruit.
  *
  * @section Circuit
  * @code
@@ -38,7 +35,7 @@
  * (GND)---------------1-|GND         |
  * (VCC)---------------2-|VCC         |
  *                      -|            |
- * (RST)---------------6-|RESET       |
+ * (RST*)--------------6-|RESET       |
  * (D9)----------------7-|A0          |
  * (MOSI/D11)----------8-|SDA         |
  * (SCK/D13)-----------9-|SCK         |
@@ -51,11 +48,14 @@
  *
  * @section References
  * 1. Sitronix Technology Corp. ST7735 documentation, V2.1, 2010-02-01.
+ * 
+ * @section Acknowledgements
+ * Inspired by graphics library by ladyada/adafruit.
  */
 class ST7735 : public Canvas, SPI::Driver {
 public:
   /**
-   * Construct display object with given control pins.
+   * Construct canvas object with given control pins.
    * @param[in] cs slave selection pin (default pin 10).
    * @param[in] dc data/command selection pin (default pin 9).
    */
@@ -73,13 +73,13 @@ public:
   /**
    * @override Canvas
    * Start interaction with device.
-   * @return true(1) if successful otherwise false(0)
+   * @return true(1) if successful otherwise false(0).
    */
   virtual bool begin();
 
   /**
    * @override Canvas
-   * Set screen orientation
+   * Set screen orientation.
    * @param[in] direction.
    */
   virtual uint8_t set_orientation(uint8_t direction);
@@ -95,9 +95,9 @@ public:
   /**
    * @override Canvas
    * Draw vertical line with current color.
-   * @param[in] x 
-   * @param[in] y
-   * @param[in] length
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] length.
    */
   virtual void draw_vertical_line(uint16_t x, uint16_t y, uint16_t length);
 
@@ -123,13 +123,13 @@ public:
   /**
    * @override Canvas
    * Stop sequence of interaction with device.
-   * @return true(1) if successful otherwise false(0)
+   * @return true(1) if successful otherwise false(0).
    */
   virtual bool end();
 
 protected:
   /**
-   * Data/Command select pin (default is pin 9)
+   * Data/Command select pin (default is pin 9).
    */
   OutputPin m_dc;
 
@@ -140,7 +140,7 @@ protected:
   uint8_t m_initiated;
 
   /**
-   * SPI commands (ch. 10 Command, pp. 77-78, pp. 119-120)
+   * SPI commands (ch. 10 Command, pp. 77-78, pp. 119-120).
    */
   enum Command {
     NOP = 0x0,			// No Operation
@@ -203,7 +203,7 @@ protected:
   } __attribute__((packed));
 
   /**
-   *  Memory Data Access Control (bits)
+   *  Memory Data Access Control (bits).
    */
   enum {
     MADCTL_MY = 0x80,
@@ -215,7 +215,7 @@ protected:
   } __attribute__((packed));
 
   /**
-   * Screen size
+   * Screen size.
    */
   static const uint16_t SCREEN_WIDTH = 128;
   static const uint16_t SCREEN_HEIGHT = 160;
@@ -244,7 +244,7 @@ protected:
   }
 
   /**
-   * Write command and data to device.
+   * Write command and 8-bit data to device.
    * @param[in] cmd command to write.
    * @param[in] data to write.
    */
@@ -258,7 +258,7 @@ protected:
   }
 
   /**
-   * Write command and data to device.
+   * Write command and 16-bit data to device.
    * @param[in] cmd command to write.
    * @param[in] data to write.
    */
@@ -273,7 +273,7 @@ protected:
   }
 
   /**
-   * Write command and data to device.
+   * Write command and 2x8-bit data to device.
    * @param[in] cmd command to write.
    * @param[in] x data to write.
    * @param[in] y data to write.

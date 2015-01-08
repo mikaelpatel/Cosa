@@ -29,17 +29,17 @@ class System5x7;
 extern System5x7 system5x7;
 
 /**
- * Virtual Canvas device; abstraction of small screens, LCD/TFT. 
+ * Virtual Canvas device; abstraction of small screens, LCD/TFT.
  * Device drivers need to override at least begin(), fill_rect()
- * and end(). See ST7735R for an example of usage.
+ * and end(). See ST7735R and ILI9341 for examples of usage.
  *
  * @section Limitations
- * Color model is 16-bit RGB<5,6,5>. Canvas size is max 256x256.
+ * Color model is 16-bit RGB<5,6,5>. Canvas size is max 64K square.
  *
  * @section Acknowledgements
  * Inspired by GFX graphics library by ladyada/adafruit, the glcd
  * library by Michael Margolis and Bill Perry, and scd library by
- * Sungjune Lee. 
+ * Sungjune Lee.
  */
 class Canvas {
 public:
@@ -53,20 +53,41 @@ public:
       unsigned int green:6;
       unsigned int red:5;
     };
+
+    /**
+     * Construct default color.
+     */
     color16_t()
     {
       rgb = 0;
     }
+
+    /**
+     * Construct color from given 16-bit value.
+     * @param[in] color.
+     */
     color16_t(uint16_t color) 
     {
       rgb = color;
     }
+
+    /**
+     * Construct color from given 8-bit values. Scaled from 8-bit to
+     * 5-bits for blue and red, and 6-bits for green.
+     * @param[in] r.
+     * @param[in] g.
+     * @param[in] b.
+     */
     color16_t(uint8_t r, uint8_t g, uint8_t b) 
     {
       red = r >> 3;
       green = g >> 2;
       blue = b >> 3;
     }
+
+    /**
+     * Cast color to 16-bit unsigned integer.
+     */
     operator uint16_t()
     {
       return (rgb);
@@ -147,7 +168,7 @@ public:
 
     /**
      * Set context canvas color. Return previous color.
-     * @param[in] color
+     * @param[in] color.
      * @return previous color.
      */
     color16_t set_canvas_color(color16_t color)
@@ -189,7 +210,7 @@ public:
 
     /**
      * Set context text color. Return previous color.
-     * @param[in] color
+     * @param[in] color.
      * @return previous color.
      */
     color16_t set_text_color(color16_t color)
@@ -209,9 +230,9 @@ public:
 
     /**
      * Set context text font. Return previous color.
-     * @param[in] font
+     * @param[in] font.
      * @return previous font.
-     * @pre font != 0
+     * @pre font != 0.
      */
     Font* set_text_font(Font* font)
     {
@@ -233,7 +254,7 @@ public:
      * Set context text scale (1..n). Return previous text scale.
      * @param[in] scale.
      * @return previous scale.
-     * @pre scale > 0
+     * @pre scale > 0.
      */
     uint8_t set_text_scale(uint8_t scale)
     {
@@ -244,8 +265,8 @@ public:
 
     /**
      * Get context cursor position.
-     * @param[out] x
-     * @param[out] y
+     * @param[out] x.
+     * @param[out] y.
      */
     void get_cursor(uint16_t& x, uint16_t& y) const
     {
@@ -255,8 +276,8 @@ public:
 
     /**
      * Set context cursor position.
-     * @param[in] x
-     * @param[in] y
+     * @param[in] x.
+     * @param[in] y.
      */
     void set_cursor(uint16_t x, uint16_t y)
     {
@@ -266,8 +287,8 @@ public:
 
     /**
      * Move context cursor to delta position.
-     * @param[in] dx
-     * @param[in] dy
+     * @param[in] dx.
+     * @param[in] dy.
      */
     void move_cursor(int16_t dx, int16_t dy)
     {
@@ -293,8 +314,8 @@ public:
     /**
      * Construct an element with the default context on the given 
      * canvas.
-     * @param[in] canvas
-     * @param[in] font
+     * @param[in] canvas.
+     * @param[in] font.
      */
     Element(Canvas* canvas, Font* font = (Font*) &system5x7) :
       Context(font),
@@ -307,7 +328,7 @@ public:
   
 public:
   /**
-   * Screen size; width/height and orientation
+   * Screen size; width/height and orientation.
    */
   uint16_t WIDTH;
   uint16_t HEIGHT;
@@ -333,7 +354,7 @@ public:
   /**
    * @override Canvas
    * Start interaction with device. Must override.
-   * @return true(1) if successful otherwise false(0)
+   * @return true(1) if successful otherwise false(0).
    */
   virtual bool begin() = 0;
 
@@ -369,7 +390,7 @@ public:
 
   /**
    * Set current canvas color. Return previous color.
-   * @param[in] color
+   * @param[in] color.
    * @return previous color.
    */
   color16_t set_canvas_color(color16_t color)
@@ -388,7 +409,7 @@ public:
 
   /**
    * Set current drawing color. Return previous color.
-   * @param[in] color
+   * @param[in] color.
    * @return previous color.
    */
   color16_t set_pen_color(color16_t color)
@@ -407,7 +428,7 @@ public:
 
   /**
    * Set current text color. Return previous color.
-   * @param[in] color
+   * @param[in] color.
    * @return previous color.
    */
   color16_t set_text_color(color16_t color)
@@ -425,7 +446,7 @@ public:
 
   /**
    * Set current text font. Return previous font.
-   * @param[in] font
+   * @param[in] font.
    * @return previous font.
    */
   Font* set_text_font(Font* font)
@@ -454,8 +475,8 @@ public:
 
   /**
    * Get current cursor position.
-   * @param[out] x
-   * @param[out] y
+   * @param[out] x.
+   * @param[out] y.
    */
   void get_cursor(uint16_t& x, uint16_t& y) const
   {
@@ -464,8 +485,8 @@ public:
 
   /**
    * Set current cursor position.
-   * @param[in] x
-   * @param[in] y
+   * @param[in] x.
+   * @param[in] y.
    */
   void set_cursor(uint16_t x, uint16_t y)
   {
@@ -474,8 +495,8 @@ public:
 
   /**
    * Move current cursor to delta position.
-   * @param[in] dx
-   * @param[in] dy
+   * @param[in] dx.
+   * @param[in] dy.
    */
   void move_cursor(int16_t dx, int16_t dy)
   {
@@ -484,9 +505,9 @@ public:
 
   /**
    * Create 16-bit color from primary colors (RGB).
-   * @param[in] red
-   * @param[in] green
-   * @param[in] blue
+   * @param[in] red.
+   * @param[in] green.
+   * @param[in] blue.
    * @return color.
    */
   color16_t color(uint8_t red, uint8_t green, uint8_t blue)
@@ -495,17 +516,17 @@ public:
   }
 
   /**
-   * Create color shade (0..100%)
-   * @param[in] color
-   * @param[in] scale
+   * Create color shade (0..100%).
+   * @param[in] color.
+   * @param[in] scale.
    * @return color shade.
    */
   static color16_t shade(color16_t color, uint8_t scale);
 
   /**
    * Blend the two colors.
-   * @param[in] c1
-   * @param[in] c2
+   * @param[in] c1.
+   * @param[in] c2.
    * @return color blend.
    */
   static color16_t blend(color16_t c1, color16_t c2);
@@ -513,14 +534,14 @@ public:
   /**
    * @override Canvas
    * Get screen orientation.
-   * @return direction (Canvas::LANDSCAPE/PORTRAIT)
+   * @return direction (Canvas::LANDSCAPE/PORTRAIT).
    */
   virtual uint8_t get_orientation();
 
   /**
    * @override Canvas
    * Set screen orientation. Return previous orientation.
-   * @param[in] direction (Canvas::LANDSCAPE/PORTRAIT)
+   * @param[in] direction (Canvas::LANDSCAPE/PORTRAIT).
    * @return previous orientation.
    */
   virtual uint8_t set_orientation(uint8_t direction);
@@ -620,7 +641,7 @@ public:
   /**
    * @override Canvas
    * Draw line with current pen color.
-   * @param[in] x0. 
+   * @param[in] x0.
    * @param[in] y0.
    * @param[in] x1.
    * @param[in] y1.
@@ -697,7 +718,7 @@ public:
    * Draw stroke from program memory with current pen color. Vector of 
    * delta positions, terminated with 0, 0. The cursor is moved for
    * when both dx and dy are zero or negative. Update cursor to new
-   * position. 
+   * position.
    * @param[in] stroke.
    * @param[in] scale.
    */
@@ -775,7 +796,7 @@ public:
 
   /**
    * @override Canvas
-   * Fill round corner rectangle with current pen color. 
+   * Fill round corner rectangle with current pen color.
    * @param[in] x.
    * @param[in] y.
    * @param[in] width.
@@ -882,7 +903,7 @@ public:
   /**
    * @override Canvas
    * Stop sequence of interaction with device. Must override.
-   * @return true(1) if successful otherwise false(0)
+   * @return true(1) if successful otherwise false(0).
    */
   virtual bool end() = 0;
 

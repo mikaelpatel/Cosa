@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,7 +18,7 @@
  * @section Description
  * Empty Arduino sketch file used for total rebuild of all board
  * variants. Cosa default function for setup and loop are used. See
- * shell script tutto and Cosa main.cpp.
+ * shell script rifare, tutto and Cosa main.cpp.
  *
  * This file is part of the Arduino Che Cosa project.
  */

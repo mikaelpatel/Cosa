@@ -29,11 +29,11 @@
 extern System5x7 system5x7;
 
 /**
- * Canvas Textbox element. Acts as an IOStream/console output to
- * Canvas. As an element it holds its own canvas state; context. The
- * textbox is defined by a port (x, y, width, height) on the
- * canvas. Basic special character handling of carriage-return, line-
- * and form-feed. 
+ * Canvas Textbox element. Acts as an IOStream/console output to a
+ * canvas. As an element it holds its own canvas state; context. The
+ * textbox is defined by a port (x, y, width, height) on the canvas.
+ * Basic special character handling of carriage-return, line- and
+ * form-feed. 
  */
 class Textbox : public Canvas::Element, public IOStream::Device {
 public:
@@ -50,10 +50,10 @@ public:
 
   /**
    * Get current text port.
-   * @param[out] x
-   * @param[out] y
-   * @param[out] width
-   * @param[out] height
+   * @param[out] x.
+   * @param[out] y.
+   * @param[out] width.
+   * @param[out] height.
    */
   void get_text_port(uint16_t& x, uint16_t& y, uint16_t& width, uint16_t& height)
   {
@@ -65,10 +65,10 @@ public:
 
   /**
    * Set current text position.
-   * @param[in] x
-   * @param[in] y
-   * @param[in] width
-   * @param[in] height
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] width.
+   * @param[in] height.
    */
   void set_text_port(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
   {

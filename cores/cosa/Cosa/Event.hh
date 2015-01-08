@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -147,7 +147,7 @@ public:
 
   /**
    * Return event environment pointer.
-   * @return pointer
+   * @return pointer.
    */
   void* get_env() const
   { 

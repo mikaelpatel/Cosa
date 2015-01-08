@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,15 +27,15 @@
 #include "Cosa/Periodic.hh"
 
 /**
- * Cosa Alarm handler; Allows one-time or periodic activities to be
+ * Cosa Alarm handler; Allows one-shot or periodic activities to be
  * schedule with a seconds level resolution. Requires Watchdog with
  * timeout events and RTC for more accurate time-keeping.
  */
 class Alarm : private Link {
 public:
   /**
-   * Construct alarm with given timeout period in seconds.
-   * The alarm must be enabled to become active. 
+   * Construct alarm with given timeout period in seconds. The alarm
+   * must be enabled to become active.
    * @param[in] period seconds.
    */
   Alarm(uint32_t period = 0L) :
@@ -126,10 +126,7 @@ public:
   uint32_t expires_in() const
     __attribute__((always_inline))
   {
-    if (m_when > s_ticks)
-      return (m_when - s_ticks);
-    else
-      return (0);
+    return ((m_when > s_ticks) ? (m_when - s_ticks) : 0);
   }
 
   /**
@@ -157,15 +154,19 @@ public:
 
   /**
    * Watchdog based periodic(128 ms) scheduler. The setup function
-   * must initiate the Watchdog to generate timeout event, 
+   * must initiate the Watchdog to generate timeout event.
    * @code
-   *   Watchdog::begin(ms, mode, Watchdog::push_timeout_events)
+   *   Watchdog::begin(128, mode, Watchdog::push_timeout_events)
    * @endcode
    * and the loop function must contain an event dispatcher,
    * @code
    *   Event event;
    *   Event::queue.await(&event);
    *   event.dispatch();
+   * @endcode
+   * or call the event service function.
+   * @code
+   *   Event::service();
    * @endcode
    * The alarm manager will check for expired alarms and call the
    * respective alarm handlers. The RTC is used for more accurate
