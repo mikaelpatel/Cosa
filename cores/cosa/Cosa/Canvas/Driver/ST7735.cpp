@@ -158,7 +158,7 @@ ST7735::draw_pixel(uint16_t x, uint16_t y)
 void 
 ST7735::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
 {
-  if (x >= WIDTH || length == 0) return;
+  if ((x >= WIDTH) || (length == 0)) return;
   if (y >= HEIGHT) {
     uint16_t z = y + length;
     if (z >= HEIGHT) return;
@@ -172,7 +172,7 @@ ST7735::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
       write(CASET, x, x);
       write(RASET, y, y + length);
       write(RAMWR);
-      do write(color.rgb); while (--length);
+      write(color.rgb, length);
     spi.end();
   spi.release();
 }
@@ -180,7 +180,7 @@ ST7735::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
 void 
 ST7735::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
 {
-  if (y >= HEIGHT || length == 0) return;
+  if ((y >= HEIGHT) || (length == 0)) return;
   if (x >= WIDTH) {
     uint16_t z = x + length;
     if (z >= WIDTH) return;
@@ -194,7 +194,7 @@ ST7735::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
       write(CASET, x, x + length); 
       write(RASET, y, y);
       write(RAMWR);
-      do write(color.rgb); while (--length);
+      write(color.rgb, length);
     spi.end();
   spi.release();
 }
@@ -202,6 +202,7 @@ ST7735::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
 void 
 ST7735::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
+  if ((width == 0) || (height == 0)) return;
   if (x + width >= WIDTH) width = WIDTH - x;
   if (y + height >= HEIGHT) height = HEIGHT - y;
   color16_t color = get_pen_color();
@@ -210,9 +211,14 @@ ST7735::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
       write(CASET, x, x + width - 1);
       write(RASET, y, y + height - 1);
       write(RAMWR);
-      for (x = 0; x < width; x++) 
+      if (width > height) {
 	for (y = 0; y < height; y++) 
-	  write(color.rgb);
+	  write(color.rgb, width);
+      } 
+      else {
+	for (x = 0; x < width; x++) 
+	  write(color.rgb, height);
+      }
     spi.end();
   spi.release();
 }

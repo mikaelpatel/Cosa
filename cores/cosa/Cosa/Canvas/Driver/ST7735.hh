@@ -227,8 +227,29 @@ protected:
   void write(uint16_t data)
     __attribute__((always_inline))
   {
-    spi.transfer(data >> 8);
-    spi.transfer(data);
+    spi.transfer_start(data >> 8);
+    spi.transfer_next(data);
+    spi.transfer_await();
+  }
+
+  /**
+   * Write given number of 16-bit data to device, MSB first.
+   * @param[in] data to write.
+   * @param[in] count number of data elements to write.
+   * @pre (count > 0)
+   */
+  void write(uint16_t data, uint16_t count)
+    __attribute__((always_inline))
+  {
+    uint8_t high = data >> 8;
+    uint8_t low = data;
+    spi.transfer_start(high);
+    while (--count) {
+      spi.transfer_next(low);
+      spi.transfer_next(high);
+    };
+    spi.transfer_next(low);
+    spi.transfer_await();
   }
 
   /**
@@ -268,12 +289,13 @@ protected:
     asserted(m_dc) {
       spi.transfer(cmd);
     }
-    spi.transfer(data >> 8);
-    spi.transfer(data);
+    spi.transfer_start(data >> 8);
+    spi.transfer_next(data);
+    spi.transfer_await();
   }
 
   /**
-   * Write command and 2x8-bit data to device.
+   * Write command and 2x16-bit data to device.
    * @param[in] cmd command to write.
    * @param[in] x data to write.
    * @param[in] y data to write.
@@ -284,10 +306,11 @@ protected:
     asserted(m_dc) {
       spi.transfer(cmd);
     }
-    spi.transfer(0);
-    spi.transfer(x);
-    spi.transfer(0);
-    spi.transfer(y);
+    spi.transfer_start(0);
+    spi.transfer_next(x);
+    spi.transfer_next(0);
+    spi.transfer_next(y);
+    spi.transfer_await();
   }
 };
 

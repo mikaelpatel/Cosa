@@ -128,7 +128,7 @@ void loop()
   textbox.set_text_color(Canvas::BLUE);
   textbox.set_text_scale(1);
   textbox.set_text_port(2, 2, tft.WIDTH, tft.HEIGHT);
-  console.print_P(PSTR("CosaST7735: started"));
+  console.print_P(PSTR("CosaCanvasDemo: started"));
   console.println();
   console.printf_P(PSTR("test#1:fill screen %ul ms\n"), ms);
   console.println();
@@ -153,8 +153,16 @@ void loop()
   tft.set_canvas_color(tft.shade(Canvas::WHITE, 50));
   tft.fill_screen();
   tft.set_canvas_color(Canvas::WHITE);
+#if defined(TFT_ST7735)
   tft.draw_rect(4, 4, tft.WIDTH-8, tft.HEIGHT-8);
   textbox.set_text_port(5, 5, tft.WIDTH-10, tft.HEIGHT-10);
+#endif
+#if defined(TFT_ILI9341)
+  tft.draw_rect(tft.WIDTH/4+4, tft.HEIGHT/4+4, 
+		tft.WIDTH/2-8, tft.HEIGHT/2-8);
+  textbox.set_text_port(tft.WIDTH/4+5, tft.HEIGHT/4+5,
+			tft.WIDTH/2-10, tft.HEIGHT/2-10);
+#endif
   console.print('\f');
   console.print(&tft, 200, IOStream::hex, 
 		tft.get_orientation() == Canvas::PORTRAIT ? 3 : 5);
