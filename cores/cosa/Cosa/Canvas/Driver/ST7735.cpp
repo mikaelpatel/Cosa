@@ -39,28 +39,35 @@ const uint8_t ST7735::script[] __PROGMEM = {
   FRMCTR3, 6, 0x01, 0x2C, 0x2D, 0x01, 0x2C, 0x2D,
   // Display Inversion Control  
   INVCTR, 1, 0x07,
-  // Power Control 1, -4.6V, auto mode
-  PWCTR1, 3, 0xA2, 0x02, 0x84,
-  // Power Control 2, VGH25 = 2.4C, VGH25 = 2.4C VGSEL = -10 VGH = 3 * AVDD
-  PWCTR2, 1, 0xC5,
-  // Power Control 3, Opamp current small, Boost frequency
-  PWCTR3, 2, 0x0A, 0x00,
-  // Power Control 4, BCLK/2, Opamp current small & medium low
-  PWCTR4, 2, 0x8A, 0x2A,
+  // Power Control 1
+  // -4.6V, auto mode
+  PWCTRL1, 3, 0xA2, 0x02, 0x84,
+  // Power Control 2
+  // VGH25 = 2.4C, VGH25 = 2.4C VGSEL = -10 VGH = 3 * AVDD
+  PWCTRL2, 1, 0xC5,
+  // Power Control 3
+  // Opamp current small, Boost frequency
+  PWCTRL3, 2, 0x0A, 0x00,
+  // Power Control 4
+  // BCLK/2, Opamp current small & medium low
+  PWCTRL4, 2, 0x8A, 0x2A,
   // Power Control 5
-  PWCTR5, 2, 0x8A, 0xEE,
+  PWCTRL5, 2, 0x8A, 0xEE,
   // EEPROM Control 1
-  VMCTR1, 1, 0x0E,
+  VMCTRL1, 1, 0x0E,
   // Invert Display Off
-  INVOFF, 0,
-  // Memory Access Control, row address/col address, bottom to top refresh
+  DINVOFF, 0,
+  // Memory Access Control
+  // row address/col address, bottom to top refresh
   MADCTL, 1, 0xC0,
   // Set Color Mode, 16-bit color
   COLMOD, 1, 0x05,
-  // Set Column Address, XSTART = 0, XEND = WIDTH - 1
-  CASET, 4, 0x00, 0x00, 0x00, 127,
-  // Set Row Address, YSTART = 0, XEND = HEIGHT - 1
-  RASET, 4, 0x00, 0x00, 0x00, 159,
+  // Set Column Address
+  // XSTART = 0, XEND = WIDTH - 1
+  CASET, 4, 0x00, 0x00, 0x00, SCREEN_WIDTH - 1,
+  // Set Row Address
+  // YSTART = 0, XEND = HEIGHT - 1
+  RASET, 4, 0x00, 0x00, 0x00, SCREEN_HEIGHT - 1,
   // Positive Gamma Correction
   GMCTRP1, 16, 
   0x02, 0x1c, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2d,
@@ -82,38 +89,8 @@ const uint8_t ST7735::script[] __PROGMEM = {
 };
 
 ST7735::ST7735(Board::DigitalPin cs, Board::DigitalPin dc) :
-  Canvas(SCREEN_WIDTH, SCREEN_HEIGHT),
-  SPI::Driver(cs, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 3, SPI::MSB_ORDER, NULL),
-  m_dc(dc, 1),
-  m_initiated(0)
+  GDDRAM(SCREEN_WIDTH, SCREEN_HEIGHT, cs, dc)
 {
-}
-
-bool 
-ST7735::begin()
-{
-  if (m_initiated) return (false);
-  const uint8_t* bp = script;
-  uint8_t count;
-  uint8_t cmd;
-  spi.acquire(this);
-    spi.begin();
-      while ((cmd = pgm_read_byte(bp++)) != SCRIPTEND) {
-	count = pgm_read_byte(bp++);
-	if (cmd == SWDELAY) {
-	  DELAY(count);
-	} 
-	else {
-	  asserted(m_dc) {
-	    spi.transfer(cmd);
-	  }
-	  while (count--) spi.transfer(pgm_read_byte(bp++));
-	}
-      }
-    spi.end();
-  spi.release();
-  m_initiated = 1;
-  return (true);
 }
 
 uint8_t
@@ -121,17 +98,15 @@ ST7735::set_orientation(uint8_t direction)
 {
   uint8_t previous = m_direction;
   uint8_t setting = 0;
+  m_direction = direction;
+  uint16_t width = WIDTH;
+  WIDTH  = HEIGHT;
+  HEIGHT = width;
   if (direction == LANDSCAPE) {
-    m_direction = LANDSCAPE;
     setting = (MADCTL_MX | MADCTL_MV);
-    WIDTH  = SCREEN_HEIGHT;
-    HEIGHT = SCREEN_WIDTH;
   } 
   else {
-    m_direction = PORTRAIT;
     setting = (MADCTL_MX | MADCTL_MY);
-    WIDTH  = SCREEN_WIDTH;
-    HEIGHT = SCREEN_HEIGHT;
   }
   spi.acquire(this);
     spi.begin();
@@ -139,93 +114,4 @@ ST7735::set_orientation(uint8_t direction)
     spi.end();
   spi.release();
   return (previous);
-}
-
-void 
-ST7735::draw_pixel(uint16_t x, uint16_t y)
-{
-  color16_t color = get_pen_color();
-  spi.acquire(this);
-    spi.begin();
-      write(CASET, x, x + 1); 
-      write(RASET, y, y + 1);
-      write(RAMWR);
-      write(color.rgb);
-    spi.end();
-  spi.release();
-}
-
-void 
-ST7735::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
-{
-  if ((x >= WIDTH) || (length == 0)) return;
-  if (y >= HEIGHT) {
-    uint16_t h = y + length;
-    if (h >= HEIGHT) return;
-    length = h;
-    y = 0;
-  }
-  if ((y + length - 1) >= HEIGHT) length = HEIGHT - y;
-  const color16_t color = get_pen_color();
-  spi.acquire(this);
-    spi.begin();
-      write(CASET, x, x);
-      write(RASET, y, y + length - 1);
-      write(RAMWR);
-      write(color.rgb, length);
-    spi.end();
-  spi.release();
-}
-
-void 
-ST7735::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
-{
-  if ((y >= HEIGHT) || (length == 0)) return;
-  if (x >= WIDTH) {
-    uint16_t w = x + length;
-    if (w >= WIDTH) return;
-    length = w;
-    x = 0;
-  }
-  if ((x + length - 1) >= WIDTH) length = WIDTH - x;
-  const color16_t color = get_pen_color();
-  spi.acquire(this);
-    spi.begin();
-      write(CASET, x, x + length - 1); 
-      write(RASET, y, y);
-      write(RAMWR);
-      write(color.rgb, length);
-    spi.end();
-  spi.release();
-}
-
-void 
-ST7735::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
-{
-  if ((width == 0) || (height == 0)) return;
-  if ((x >= WIDTH) || (y >= HEIGHT)) return;
-  if ((x + width - 1) >= WIDTH) width = WIDTH - x;
-  if ((y + height - 1) >= HEIGHT) height = HEIGHT - y;
-  const color16_t color = get_pen_color();
-  spi.acquire(this);
-    spi.begin();
-      write(CASET, x, x + width - 1);
-      write(RASET, y, y + height - 1);
-      write(RAMWR);
-      if (width > height) {
-	for (y = 0; y < height; y++) 
-	  write(color.rgb, width);
-      } 
-      else {
-	for (x = 0; x < width; x++) 
-	  write(color.rgb, height);
-      }
-    spi.end();
-  spi.release();
-}
-
-bool
-ST7735::end()
-{
-  return (true);
 }
