@@ -83,7 +83,7 @@ const uint8_t ST7735::script[] __PROGMEM = {
 
 ST7735::ST7735(Board::DigitalPin cs, Board::DigitalPin dc) :
   Canvas(SCREEN_WIDTH, SCREEN_HEIGHT),
-  SPI::Driver(cs, SPI::ACTIVE_LOW, SPI::DEFAULT_CLOCK, 3, SPI::MSB_ORDER, NULL),
+  SPI::Driver(cs, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 3, SPI::MSB_ORDER, NULL),
   m_dc(dc, 1),
   m_initiated(0)
 {
@@ -160,17 +160,17 @@ ST7735::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
 {
   if ((x >= WIDTH) || (length == 0)) return;
   if (y >= HEIGHT) {
-    uint16_t z = y + length;
-    if (z >= HEIGHT) return;
-    length = z;
+    uint16_t h = y + length;
+    if (h >= HEIGHT) return;
+    length = h;
     y = 0;
   }
-  if (y + length >= HEIGHT) length = HEIGHT - y;
-  color16_t color = get_pen_color();
+  if ((y + length - 1) >= HEIGHT) length = HEIGHT - y;
+  const color16_t color = get_pen_color();
   spi.acquire(this);
     spi.begin();
       write(CASET, x, x);
-      write(RASET, y, y + length);
+      write(RASET, y, y + length - 1);
       write(RAMWR);
       write(color.rgb, length);
     spi.end();
@@ -182,16 +182,16 @@ ST7735::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
 {
   if ((y >= HEIGHT) || (length == 0)) return;
   if (x >= WIDTH) {
-    uint16_t z = x + length;
-    if (z >= WIDTH) return;
-    length = z;
+    uint16_t w = x + length;
+    if (w >= WIDTH) return;
+    length = w;
     x = 0;
   }
-  if (x + length >= WIDTH) length = WIDTH - x;
-  color16_t color = get_pen_color();
+  if ((x + length - 1) >= WIDTH) length = WIDTH - x;
+  const color16_t color = get_pen_color();
   spi.acquire(this);
     spi.begin();
-      write(CASET, x, x + length); 
+      write(CASET, x, x + length - 1); 
       write(RASET, y, y);
       write(RAMWR);
       write(color.rgb, length);
@@ -203,9 +203,10 @@ void
 ST7735::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
   if ((width == 0) || (height == 0)) return;
-  if (x + width >= WIDTH) width = WIDTH - x;
-  if (y + height >= HEIGHT) height = HEIGHT - y;
-  color16_t color = get_pen_color();
+  if ((x >= WIDTH) || (y >= HEIGHT)) return;
+  if ((x + width - 1) >= WIDTH) width = WIDTH - x;
+  if ((y + height - 1) >= HEIGHT) height = HEIGHT - y;
+  const color16_t color = get_pen_color();
   spi.acquire(this);
     spi.begin();
       write(CASET, x, x + width - 1);
