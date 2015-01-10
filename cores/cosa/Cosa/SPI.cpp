@@ -358,3 +358,31 @@ SPI::Driver::set_clock(Clock rate)
 #endif
 }
 
+IOStream& operator<<(IOStream& outs, SPI::Clock rate)
+{
+  switch (rate) {
+  case SPI::DIV2_CLOCK:
+    outs << PSTR("SPI::DIV2_CLOCK(") << F_CPU / 2000000.0;
+    break;
+  case SPI::DIV4_CLOCK:
+    outs << PSTR("SPI::DIV4_CLOCK(") << F_CPU / 4000000.0;
+    break;
+  case SPI::DIV8_CLOCK:
+    outs << PSTR("SPI::DIV8_CLOCK(") << F_CPU / 8000000.0;
+    break;
+  case SPI::DIV16_CLOCK:
+    outs << PSTR("SPI::DIV16_CLOCK(") << F_CPU / 16000000.0;
+    break;
+  case SPI::DIV32_CLOCK:
+    outs << PSTR("SPI::DIV32_CLOCK(") << F_CPU / 32000000.0;
+    break;
+  case SPI::DIV64_CLOCK:
+    outs << PSTR("SPI::DIV64_CLOCK(") << F_CPU / 64000000.0;
+    break;
+  case SPI::DIV128_CLOCK:
+    outs << PSTR("SPI::DIV128_CLOCK(") <<  F_CPU / 128000000.0;
+    break;
+  };
+  outs << PSTR(" MHz)");
+  return (outs);
+}

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,18 +26,21 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Interrupt.hh"
 #include "Cosa/Event.hh"
+#include "Cosa/IOStream.hh"
 
 /**
- * Serial Peripheral Interface (SPI) device class. A device driver should
- * inherit from SPI::Driver and defined SPI commands and higher level
- * functions. The SPI::Driver class supports multiple SPI devices with
- * possible different configuration (clock, bit order, mode) and
- * integrates with both device chip select and possible interrupt pins.
+ * Serial Peripheral Interface (SPI) device class. A device driver
+ * should inherit from SPI::Driver and defined SPI commands and higher
+ * level functions. The SPI::Driver class supports multiple SPI
+ * devices with possible different configuration (clock, bit order,
+ * mode) and integrates with both device chip select and possible
+ * interrupt pins.
  *
  * @section Circuit
- * SPI slave circuit with chip select and interrupt pin. Note that Tiny
- * uses USI but the software interface is the same but MOSI/MISO pins 
- * are DI/DO. Do not confuse with SPI chip programming pins on Tiny.
+ * SPI slave circuit with chip select and interrupt pin. Note that
+ * Tiny uses USI but the software interface is the same but MOSI/MISO
+ * pins are DI/DO. Do not confuse with SPI chip programming pins on
+ * Tiny. 
  * @code
  *                          SPI Slave
  *                       +------------+
@@ -55,14 +58,14 @@ class SPI {
 public:
   /** Clock selectors. */
   enum Clock {
-    DIV2_CLOCK = 0x04,
-    DIV4_CLOCK = 0x00,
-    DIV8_CLOCK = 0x05,
-    DIV16_CLOCK = 0x01,
-    DIV32_CLOCK = 0x06,
-    DIV64_CLOCK = 0x02,
-    DIV128_CLOCK = 0x03,
-    DEFAULT_CLOCK = DIV4_CLOCK
+    DIV2_CLOCK = 0x04,		//!< Divide system clock by 2.
+    DIV4_CLOCK = 0x00,		//!< Divide system clock by 4. 
+    DIV8_CLOCK = 0x05,		//!< Divide system clock by 8.
+    DIV16_CLOCK = 0x01,		//!< Divide system clock by 16.
+    DIV32_CLOCK = 0x06,		//!< Divide system clock by 32.
+    DIV64_CLOCK = 0x02,		//!< Divide system clock by 64.
+    DIV128_CLOCK = 0x03,	//!< Divide system clock by 128.
+    DEFAULT_CLOCK = DIV4_CLOCK	//!< Default clock rate.
   } __attribute__((packed));
 
   /** Bit order selectors. */
@@ -94,7 +97,7 @@ public:
      * clock, mode, and bit order. 
      * @param[in] cs chip select pin.
      * @param[in] pulse chip select pulse mode (default ACTIVE_LOW).
-     * @param[in] clock SPI hardware setting (default DIV4_CLOCK).
+     * @param[in] rate SPI hardware setting (default DIV4_CLOCK).
      * @param[in] mode SPI mode for phase and transition (0..3, default 0).
      * @param[in] order bit order (default MSB_ORDER).
      * @param[in] irq interrupt handler (default null).
@@ -114,12 +117,30 @@ public:
     static Clock clock(uint32_t freq)
       __attribute__((always_inline))
     {
-      if (freq > (F_CPU / 4)) return (SPI::DIV2_CLOCK);
-      if (freq > (F_CPU / 8)) return (SPI::DIV4_CLOCK);
-      if (freq > (F_CPU / 16)) return (SPI::DIV8_CLOCK);
-      if (freq > (F_CPU / 32)) return (SPI::DIV16_CLOCK);
-      if (freq > (F_CPU / 64)) return (SPI::DIV32_CLOCK);
-      if (freq > (F_CPU / 128)) return (SPI::DIV64_CLOCK);
+      if (freq >= (F_CPU / 2)) return (SPI::DIV2_CLOCK);
+      if (freq >= (F_CPU / 4)) return (SPI::DIV4_CLOCK);
+      if (freq >= (F_CPU / 8)) return (SPI::DIV8_CLOCK);
+      if (freq >= (F_CPU / 16)) return (SPI::DIV16_CLOCK);
+      if (freq >= (F_CPU / 32)) return (SPI::DIV32_CLOCK);
+      if (freq >= (F_CPU / 64)) return (SPI::DIV64_CLOCK);
+      return (SPI::DIV128_CLOCK);
+    }
+
+    /**
+     * Calculate SPI clock rate (scale factor) for given clock
+     * cycle time in nano seconds.
+     * @param[in] ns min device clock cycle time.
+     * @return clock rate.
+     */
+    static Clock cycle(uint16_t ns)
+      __attribute__((always_inline))
+    {
+      if (ns <= (1000000L / (F_CPU/2000L))) return (SPI::DIV2_CLOCK);
+      if (ns <= (1000000L / (F_CPU/4000L))) return (SPI::DIV4_CLOCK);
+      if (ns <= (1000000L / (F_CPU/8000L))) return (SPI::DIV8_CLOCK);
+      if (ns <= (1000000L / (F_CPU/16000L))) return (SPI::DIV16_CLOCK);
+      if (ns <= (1000000L / (F_CPU/32000L))) return (SPI::DIV32_CLOCK);
+      if (ns <= (1000000L / (F_CPU/64000L))) return (SPI::DIV64_CLOCK);
       return (SPI::DIV128_CLOCK);
     }
 
@@ -482,5 +503,13 @@ private:
  * Singleton instance of the hardware SPI module.
  */
 extern SPI spi;
+
+/**
+ * Write given SPI clock rate to given output stream.
+ * @param[in] outs output stream.
+ * @param[in] rate clock setting value.
+ * @return output stream.
+ */
+IOStream& operator<<(IOStream& outs, SPI::Clock rate);
 
 #endif
