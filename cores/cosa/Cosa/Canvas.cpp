@@ -69,18 +69,27 @@ Canvas::draw_bitmap(uint16_t x, uint16_t y, const uint8_t* bp,
 		    uint16_t width, uint16_t height,
 		    uint8_t scale)
 {
-  for (uint16_t i = 0; i < height; i += 8) {
-    for (uint16_t j = 0; j < width; j++) {
-      uint8_t line = pgm_read_byte(bp++);
-      for (uint8_t k = 0; k < 8; k++) {
-	if (line & 1) {
-	  if (scale == 1)
-	    draw_pixel(x + j, y + k + i);
-	  else {
-	    fill_rect(x + j*scale, y + (k+i)*scale, scale, scale);
-	  } 
+  if (scale == 1) {
+    for (uint16_t i = 0; i < height; i += 8) {
+      for (uint16_t j = 0; j < width; j++) {
+	uint8_t line = pgm_read_byte(bp++);
+	if (line == 0) continue;
+	for (uint8_t k = 0; k < 8; k++) {
+	  if (line & 1) draw_pixel(x + j, y + k + i);
+	  line >>= 1;
 	}
-	line >>= 1;
+      }
+    }
+  }
+  else {
+    for (uint16_t i = 0; i < height; i += 8) {
+      for (uint16_t j = 0; j < width; j++) {
+	uint8_t line = pgm_read_byte(bp++);
+	if (line == 0) continue;
+	for (uint8_t k = 0; k < 8; k++) {
+	  if (line & 1) fill_rect(x + j*scale, y + (k+i)*scale, scale, scale);
+	  line >>= 1;
+	}
       }
     }
   }
@@ -114,9 +123,14 @@ Canvas::draw_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 void 
 Canvas::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
-  for (uint16_t i = 0; i < width; i++)
-    for (uint16_t j = 0; j < height; j++)
-      draw_pixel(x + i, y + j);
+  if (width > height) {
+    for (uint16_t h = 0; h < height; h++)
+      draw_horizontal_line(x, y + h, width);
+  }
+  else {
+    for (uint16_t w = 0; w < width; w++)
+      draw_vertical_line(x + w, y, height);
+  }
 }
 
 #define dist(x, y) ((x > y) ? (x - y) : (y - x))
@@ -164,8 +178,6 @@ Canvas::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
 {
   draw_line(x, y, x + length, y);
 }
-
-#include "Cosa/Trace.hh"
 
 void 
 Canvas::draw_poly_P(const int8_t* poly, uint8_t scale)
