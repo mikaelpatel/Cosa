@@ -66,6 +66,15 @@ public:
 
   /**
    * @override Canvas
+   * Draw image on canvas at given position. 
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] image.
+   */
+  virtual void draw_image(uint16_t x, uint16_t y, Image* image);
+
+  /**
+   * @override Canvas
    * Draw vertical line with current color.
    * @param[in] x 
    * @param[in] y

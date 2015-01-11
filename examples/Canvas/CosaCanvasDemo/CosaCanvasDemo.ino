@@ -81,6 +81,32 @@ ST7735 tft;
 ILI9341 tft;
 #endif
 
+// Virtual grid image
+class Grid : public Canvas::Image {
+public:
+  Grid(uint16_t width, uint16_t height, Canvas::color16_t color) :
+    Canvas::Image(width, height),
+    m_color(color),
+    m_x(0),
+    m_y(0)
+  {}
+  virtual Canvas::color16_t get_next_pixel() 
+  {
+    Canvas::color16_t res = (m_x & m_y & 1) ? m_color : Canvas::WHITE;
+    m_x += 1;
+    if (m_x == WIDTH) {
+      m_x = 0;
+      m_y += 1;
+      if (m_y == HEIGHT) m_y = 0;
+    }
+    return (res);
+  }
+private:
+  Canvas::color16_t m_color;
+  uint16_t m_x;
+  uint16_t m_y;
+};
+
 Textbox textbox(&tft);
 IOStream console(&textbox);
 
@@ -327,6 +353,15 @@ void loop()
   INFO("test#12:draw arduino icon: %ul ms", ms);
   sleep(2);
 
+  // Test#13: Grid with draw image
+  tft.fill_screen();
+  start = RTC::micros();
+  Grid grid(tft.WIDTH, tft.HEIGHT, Canvas::RED);
+  tft.draw_image(0, 0, &grid);
+  ms = (RTC::micros() - start) / 1000L;
+  INFO("test#13:draw grid image: %ul ms", ms);
+  sleep(2);
+  
   // Rotate display
   direction = !direction;
   tft.set_orientation(direction);

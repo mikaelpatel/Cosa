@@ -326,7 +326,36 @@ public:
     Canvas* m_canvas;
   };
   
-public:
+  /**
+   * Canvas image abstract class. Allow implementation of pixel
+   * streams with scanning order from left to right, top to bottom.
+   * May be used from pixel grids, shadings and pictures from file.
+   */
+  class Image {
+  public:
+    /** Canvas image width. */
+    const uint16_t WIDTH; 
+
+    /** Canvas image height. */
+    const uint16_t HEIGHT;
+
+    /**
+     * Construct canvas image with given width and height.
+     * @param[in] width.
+     * @param[in] height.
+     */
+    Image(uint16_t width, uint16_t height) :
+      WIDTH(width),
+      HEIGHT(height)
+    {}
+    
+    /**
+     * Return next pixel in image.
+     * @return color16_t.
+     */
+    virtual color16_t get_next_pixel() = 0;
+  };
+
   /**
    * Screen size; width/height and orientation.
    */
@@ -638,6 +667,27 @@ public:
     draw_icon(x, y, bp, width, height, scale);
   }
   
+  /**
+   * @override Canvas
+   * Draw image on canvas at given position. 
+   * @param[in] x.
+   * @param[in] y.
+   * @param[in] image.
+   */
+  virtual void draw_image(uint16_t x, uint16_t y, Image* image);
+
+  /**
+   * @override Canvas
+   * Draw image on canvas at current position. 
+   * @param[in] image.
+   */
+  virtual void draw_image(Image* image)
+  {
+    uint16_t x, y;
+    get_cursor(x, y);
+    draw_image(x, y, image);
+  }
+
   /**
    * @override Canvas
    * Draw line with current pen color.

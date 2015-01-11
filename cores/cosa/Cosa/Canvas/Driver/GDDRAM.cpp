@@ -96,6 +96,23 @@ GDDRAM::draw_pixel(uint16_t x, uint16_t y)
 }
 
 void 
+GDDRAM::draw_image(uint16_t x, uint16_t y, Image* image)
+{
+  uint16_t width = image->WIDTH;
+  uint16_t height = image->HEIGHT;
+  spi.acquire(this);
+    spi.begin();
+      write(CASET, x, x + width - 1);
+      write(PASET, y, y + height - 1);
+      write(RAMWR);
+      for (uint16_t i = 0; i < height; i++)
+	for (uint16_t j = 0; j < width; j++)
+	  write(image->get_next_pixel());
+    spi.end();
+  spi.release();
+}
+
+void 
 GDDRAM::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
 {
   if ((x >= WIDTH) || (length == 0)) return;

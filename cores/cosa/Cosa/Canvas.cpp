@@ -72,11 +72,16 @@ Canvas::draw_bitmap(uint16_t x, uint16_t y, const uint8_t* bp,
   if (scale == 1) {
     for (uint16_t i = 0; i < height; i += 8) {
       for (uint16_t j = 0; j < width; j++) {
-	uint8_t line = pgm_read_byte(bp++);
-	if (line == 0) continue;
-	for (uint8_t k = 0; k < 8; k++) {
-	  if (line & 1) draw_pixel(x + j, y + k + i);
-	  line >>= 1;
+	uint8_t bits = pgm_read_byte(bp++);
+	if (bits == 0xff) {
+	  draw_vertical_line(x + j, y + i, CHARBITS);
+	}
+	else {
+	  for (uint8_t k = 0; k < 8; k++) {
+	    if (bits == 0) break;
+	    if (bits & 1) draw_pixel(x + j, y + k + i);
+	    bits >>= 1;
+	  }
 	}
       }
     }
@@ -84,11 +89,11 @@ Canvas::draw_bitmap(uint16_t x, uint16_t y, const uint8_t* bp,
   else {
     for (uint16_t i = 0; i < height; i += 8) {
       for (uint16_t j = 0; j < width; j++) {
-	uint8_t line = pgm_read_byte(bp++);
-	if (line == 0) continue;
+	uint8_t bits = pgm_read_byte(bp++);
 	for (uint8_t k = 0; k < 8; k++) {
-	  if (line & 1) fill_rect(x + j*scale, y + (k+i)*scale, scale, scale);
-	  line >>= 1;
+	  if (bits == 0) break;
+	  if (bits & 1) fill_rect(x + j*scale, y + (k+i)*scale, scale, scale);
+	  bits >>= 1;
 	}
       }
     }
@@ -109,6 +114,21 @@ Canvas::draw_icon(uint16_t x, uint16_t y, const uint8_t* bp, uint8_t scale)
   uint16_t width = pgm_read_byte(bp++);
   uint16_t height = pgm_read_byte(bp++);
   draw_icon(x, y, bp, width, height, scale);
+}
+
+void 
+Canvas::draw_image(uint16_t x, uint16_t y, Image* image)
+{
+  color16_t saved = set_pen_color(0);
+  uint16_t width = image->WIDTH;
+  uint16_t height = image->HEIGHT;
+  for (uint16_t i = 0; i < height; i++) {
+    for (uint16_t j = 0; j < width; j++) {
+      set_pen_color(image->get_next_pixel());
+      draw_pixel(x + j, y + i);
+    }
+  }
+  set_pen_color(saved);
 }
 
 void
