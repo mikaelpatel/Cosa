@@ -334,26 +334,33 @@ public:
   class Image {
   public:
     /** Canvas image width. */
-    const uint16_t WIDTH; 
+    uint16_t WIDTH; 
 
     /** Canvas image height. */
-    const uint16_t HEIGHT;
+    uint16_t HEIGHT;
 
     /**
      * Construct canvas image with given width and height.
      * @param[in] width.
      * @param[in] height.
      */
-    Image(uint16_t width, uint16_t height) :
+    Image(uint16_t width = 0, uint16_t height = 0) :
       WIDTH(width),
       HEIGHT(height)
     {}
     
     /**
-     * Return next pixel in image.
-     * @return color16_t.
+     * @override Canvas::Image
+     * Read the given number of pixel into the given buffer.
+     * Return true(1) if successful otherwise false(0).
+     * @param[in] buf pixel buffer pointer.
+     * @param[in] count number of pixels to read.
+     * @return bool.
      */
-    virtual color16_t get_next_pixel() = 0;
+    virtual bool read(color16_t* buf, size_t count) = 0;
+
+    /** Buffer size. */
+    static const size_t BUFFER_MAX = 32;
   };
 
   /**

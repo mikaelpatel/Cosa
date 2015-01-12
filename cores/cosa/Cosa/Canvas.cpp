@@ -123,9 +123,15 @@ Canvas::draw_image(uint16_t x, uint16_t y, Image* image)
   uint16_t width = image->WIDTH;
   uint16_t height = image->HEIGHT;
   for (uint16_t i = 0; i < height; i++) {
-    for (uint16_t j = 0; j < width; j++) {
-      set_pen_color(image->get_next_pixel());
-      draw_pixel(x + j, y + i);
+    color16_t buf[Image::BUFFER_MAX];
+    size_t count;
+    for (uint16_t j = 0; j < width; j += count) {
+      count = (width - j > Image::BUFFER_MAX) ? Image::BUFFER_MAX : width - j;
+      image->read(buf, Image::BUFFER_MAX);
+      for (uint8_t k = 0; k < count; k++) {
+	set_pen_color(buf[k]);
+	draw_pixel(x + j, y + i);
+      }
     }
   }
   set_pen_color(saved);

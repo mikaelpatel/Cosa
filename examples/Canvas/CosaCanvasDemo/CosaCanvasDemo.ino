@@ -89,17 +89,21 @@ public:
     m_x(0),
     m_y(0)
   {}
-  virtual Canvas::color16_t get_next_pixel() 
+
+  virtual bool read(Canvas::color16_t* buf, size_t count)
   {
-    Canvas::color16_t res = (m_x & m_y & 1) ? m_color : Canvas::WHITE;
-    m_x += 1;
-    if (m_x == WIDTH) {
-      m_x = 0;
-      m_y += 1;
-      if (m_y == HEIGHT) m_y = 0;
+    for (size_t i = 0; i < count; i++) {
+      buf[i] = (m_x & m_y & 1) ? m_color : Canvas::WHITE;
+      m_x += 1;
+      if (m_x == WIDTH) {
+	m_x = 0;
+	m_y += 1;
+	if (m_y == HEIGHT) m_y = 0;
+      }
     }
-    return (res);
+    return (true);
   }
+
 private:
   Canvas::color16_t m_color;
   uint16_t m_x;

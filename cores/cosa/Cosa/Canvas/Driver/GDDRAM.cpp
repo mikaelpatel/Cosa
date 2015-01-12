@@ -105,11 +105,21 @@ GDDRAM::draw_image(uint16_t x, uint16_t y, Image* image)
       write(CASET, x, x + width - 1);
       write(PASET, y, y + height - 1);
       write(RAMWR);
-      for (uint16_t i = 0; i < height; i++)
-	for (uint16_t j = 0; j < width; j++)
-	  write(image->get_next_pixel());
     spi.end();
   spi.release();
+  for (uint16_t i = 0; i < height; i++) {
+    color16_t buf[Image::BUFFER_MAX];
+    size_t count;
+    for (uint16_t j = 0; j < width; j += count) {
+      count = (width - j > Image::BUFFER_MAX) ? Image::BUFFER_MAX : width - j;
+      image->read(buf, count);
+      spi.acquire(this);
+        spi.begin();
+	for (uint16_t k = 0; k < count; k++) write(buf[k]);
+	spi.end();
+      spi.release();
+    }
+  }
 }
 
 void 
