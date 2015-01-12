@@ -53,17 +53,23 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/RTC.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Canvas.hh"
+#include "Cosa/Canvas/Element/Textbox.hh"
+
 //#define ONE_CHAR '&'
 #define CYCLE_CHARS 0 // ms; 0 to benchmark
 
-//#define SYSTEM_5x7
-//#define FIXEDNUMS_8x16
-//#define SEGMENT_32x50
+#define USE_TFT_ST7735
+//#define USE_TFT_ILI9341
 
+//#define FIXEDNUMS_8x16
 //#define FONT_5x8
 //#define FONT_6x9
 //#define FONT_6x10
-//#define FONT_6x12
+#define FONT_6x12
 //#define FONT_6x13
 //#define FONT_6x13B
 //#define FONT_7x13
@@ -76,24 +82,16 @@
 //#define FONT_9x15
 //#define FONT_9x15B
 //#define FONT_10x20
-#define FONT_12x24
+//#define FONT_12x24
+//#define SEGMENT_32x50
+//#define SYSTEM_5x7
 
-#include "Cosa/RTC.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Canvas.hh"
-#include "Cosa/Canvas/Element/Textbox.hh"
-
-// Select TFT device
-// #define TFT_ST7735
-#define TFT_ILI9341
-
-#ifdef TFT_ST7735
+#ifdef USE_TFT_ST7735
 #include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
 #endif
 
-#ifdef TFT_ILI9341
+#ifdef USE_TFT_ILI9341
 #include "Cosa/Canvas/Driver/ILI9341.hh"
 ILI9341 tft;
 #endif

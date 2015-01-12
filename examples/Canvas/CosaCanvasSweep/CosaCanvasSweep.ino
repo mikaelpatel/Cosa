@@ -43,10 +43,20 @@
 
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Canvas/Driver/ST7735.hh"
 
-// The display and the analog pin to use as a probe
+#define USE_TFT_ST7735
+//#define USE_TFT_ILI9341
+
+#if defined(USE_TFT_ST7735)
+#include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
+#endif
+
+#if defined(USE_TFT_ILI9341)
+#include "Cosa/Canvas/Driver/ILI9341.hh"
+ILI9341 tft;
+#endif
+
 AnalogPin probe(Board::A0);
 Canvas::color16_t CANVAS, PEN, CARET;
 
@@ -71,16 +81,16 @@ void setup()
 void loop()
 {
   const uint8_t STEP = 8;
-  static uint8_t x0 = 0;
-  static uint8_t y0 = 0;
+  static uint16_t x0 = 0;
+  static uint16_t y0 = 0;
 
   // Sample the probe and calculate the position
   uint16_t sample = probe.sample();
-  uint8_t x1 = x0 + STEP;
-  uint8_t y1 = tft.HEIGHT - (sample >> 3);
+  uint16_t x1 = x0 + STEP;
+  uint16_t y1 = tft.HEIGHT - (sample >> 3);
 
   // Calculate the region to erase before drawing the line
-  uint8_t width = STEP * 2;
+  uint16_t width = STEP * 2;
   if (x0 + 2 + width > tft.WIDTH)
     width = tft.WIDTH - x0 - 2;
   tft.set_pen_color(CANVAS);

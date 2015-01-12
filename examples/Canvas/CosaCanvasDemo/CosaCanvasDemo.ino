@@ -67,16 +67,15 @@
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
 
-// Select TFT device
-//#define TFT_ST7735
-#define TFT_ILI9341
+#define USE_TFT_ST7735
+//#define USE_TFT_ILI9341
 
-#if defined(TFT_ST7735)
+#if defined(USE_TFT_ST7735)
 #include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
 #endif
 
-#if defined(TFT_ILI9341)
+#if defined(USE_TFT_ILI9341)
 #include "Cosa/Canvas/Driver/ILI9341.hh"
 ILI9341 tft;
 #endif
@@ -126,8 +125,10 @@ void setup()
   TRACE(sizeof(tft));
   TRACE(sizeof(Canvas::Context));
   TRACE(sizeof(Canvas::Element));
+  TRACE(sizeof(Canvas::Image));
   TRACE(sizeof(IOStream));
   TRACE(sizeof(Textbox));
+  TRACE(sizeof(Grid));
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
@@ -179,11 +180,11 @@ void loop()
   tft.set_canvas_color(tft.shade(Canvas::WHITE, 50));
   tft.fill_screen();
   tft.set_canvas_color(Canvas::WHITE);
-#if defined(TFT_ST7735)
+#if defined(USE_TFT_ST7735)
   tft.draw_rect(4, 4, tft.WIDTH-8, tft.HEIGHT-8);
   textbox.set_text_port(5, 5, tft.WIDTH-10, tft.HEIGHT-10);
 #endif
-#if defined(TFT_ILI9341)
+#if defined(USE_TFT_ILI9341)
   tft.draw_rect(tft.WIDTH/4+4, tft.HEIGHT/4+4, 
 		tft.WIDTH/2-8, tft.HEIGHT/2-8);
   textbox.set_text_port(tft.WIDTH/4+5, tft.HEIGHT/4+5,

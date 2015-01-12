@@ -57,16 +57,15 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Canvas/Font/Segment32x50.hh"
 
-// Select TFT device
-//#define TFT_ST7735
-#define TFT_ILI9341
+#define USE_TFT_ST7735
+//#define USE_TFT_ILI9341
 
-#if defined(TFT_ST7735)
+#if defined(USE_TFT_ST7735)
 #include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
 #endif
 
-#if defined(TFT_ILI9341)
+#if defined(USE_TFT_ILI9341)
 #include "Cosa/Canvas/Driver/ILI9341.hh"
 ILI9341 tft;
 #endif
@@ -78,7 +77,7 @@ uint8_t sec = 00;
 
 void setup()
 {
-  // Start the watchdog for low power sleep
+  // Start the watchdog for low power sleep and 1 second ticks
   Power::set(SLEEP_MODE_PWR_DOWN);
   Watchdog::begin(1024);
   

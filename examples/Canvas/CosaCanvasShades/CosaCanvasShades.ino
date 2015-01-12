@@ -39,9 +39,19 @@
  */
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Canvas/Driver/ST7735.hh"
 
+#define USE_TFT_ST7735
+//#define USE_TFT_ILI9341
+
+#if defined(USE_TFT_ST7735)
+#include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
+#endif
+
+#if defined(USE_TFT_ILI9341)
+#include "Cosa/Canvas/Driver/ILI9341.hh"
+ILI9341 tft;
+#endif
 
 void setup()
 {
@@ -54,11 +64,11 @@ void setup()
 void draw_shade(Canvas::color16_t color)
 {
   Canvas::color16_t base = color;
-  for (uint8_t x = 75; x > 0; x -= 25) {
+  for (uint16_t x = 75; x > 0; x -= 25) {
     tft.set_pen_color(tft.WHITE);
     tft.draw_rect(9, 9, tft.WIDTH - 19, tft.HEIGHT - 19);
-    for (uint8_t y = 10; y < tft.HEIGHT - 10; y += 4) {
-      uint8_t level = ((y - 10) * 100L) / (tft.HEIGHT - 10);
+    for (uint16_t y = 10; y < tft.HEIGHT - 10; y += 4) {
+      uint16_t level = ((y - 10) * 100L) / (tft.HEIGHT - 10);
       tft.set_pen_color(tft.shade(color, level));
       tft.fill_rect(10, y, tft.WIDTH - 20, 4);
     }
@@ -69,7 +79,6 @@ void draw_shade(Canvas::color16_t color)
 
 void loop()
 {
-  static uint8_t direction = Canvas::PORTRAIT;
   draw_shade(tft.WHITE);
   draw_shade(tft.RED);
   draw_shade(tft.GREEN);
@@ -77,6 +86,4 @@ void loop()
   draw_shade(tft.YELLOW);
   draw_shade(tft.CYAN);
   draw_shade(tft.MAGENTA);
-  tft.set_orientation(direction);
-  direction = !direction;
 }

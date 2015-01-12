@@ -50,13 +50,24 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/HCSR04.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Canvas/Driver/ST7735.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/Segment32x50.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
+#define USE_TFT_ST7735
+//#define USE_TFT_ILI9341
+
+#if defined(USE_TFT_ST7735)
+#include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
+#endif
+
+#if defined(USE_TFT_ILI9341)
+#include "Cosa/Canvas/Driver/ILI9341.hh"
+ILI9341 tft;
+#endif
+
 Textbox textbox(&tft);
 IOStream cout(&textbox);
 
