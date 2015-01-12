@@ -40,6 +40,7 @@ OutputPin eth(Board::D10, 1);
 
 #if defined(USE_TFT_ST7735) || defined(USE_SD_ADAPTER)
 SD sd(Board::D8);
+OutputPin tft(Board::D10, 1);
 #endif
 
 #define SLOW_CLOCK SPI::DIV4_CLOCK
@@ -75,6 +76,26 @@ public:
   static const uint16_t SIGNATURE = 0x4d42;
 };
 
+bool operator>>(FAT16::File& file, BMP::file_header_t& header)
+{
+  return ((file.read(&header, sizeof(header)) == sizeof(header))
+	  && (header.signature == BMP::SIGNATURE));
+}
+
+bool operator>>(FAT16::File& file, BMP::image_header_t& header)
+{
+  return ((file.read(&header, sizeof(header)) == sizeof(header))
+	  && (header.header_size == sizeof(header))
+	  && (header.color_planes == 1)
+	  && (header.bits_per_pixel == 24)
+	  && (header.compression_method == 0));
+}
+
+bool operator>>(FAT16::File& file, BMP::color24_t buf[32])
+{
+  return (file.read(buf, sizeof(buf)) == sizeof(buf));
+}
+
 IOStream& operator<<(IOStream& outs, BMP::file_header_t& header)
 {
   outs << PSTR("signature: ") << hex << header.signature << endl;
@@ -109,6 +130,13 @@ IOStream& operator<<(IOStream& outs, BMP::color24_t pixel)
   return (outs);
 }
 
+IOStream& operator<<(IOStream& outs, BMP::color24_t buf[32])
+{
+  for (uint16_t i = 0; i < 32; i++)
+    outs << i << ':' << buf[i] << endl;
+  return (outs);
+}
+
 void setup()
 {
   Watchdog::begin();
@@ -130,32 +158,18 @@ void loop()
 
   INFO("Read file header and verify", 0);
   BMP::file_header_t file_header;
-  ASSERT(file.read(&file_header, sizeof(file_header)) == sizeof(file_header));
-  ASSERT(file_header.signature == BMP::SIGNATURE);
+  ASSERT(file >> file_header);
   trace << file_header << endl;
 
   INFO("Read image header and verify", 0);
   BMP::image_header_t image_header;
-  ASSERT(file.read(&image_header, sizeof(image_header)) == sizeof(image_header));
-  ASSERT(image_header.header_size == sizeof(image_header));
-  ASSERT(image_header.color_planes == 1);
-  ASSERT(image_header.bits_per_pixel == 24);
-  ASSERT(image_header.compression_method == 0);
-  uint32_t image_size = image_header.image_width * image_header.image_height * sizeof(BMP::color24_t);
-  TRACE(image_size);
+  ASSERT(file >> image_header);
   trace << image_header << endl;
 
-  INFO("Read some pixels and dump in hex", 0);
+  INFO("Read some pixels and print", 0);
   BMP::color24_t image_buffer[32];
-  ASSERT(file.read(image_buffer, sizeof(image_buffer)) == sizeof(image_buffer));
-  trace.print(image_buffer, sizeof(image_buffer), 
-	      IOStream::hex, sizeof(BMP::color24_t) * 8);
-  trace << endl;
-
-  INFO("Print pixels using output operator", 0);
-  for (uint16_t i = 0; i < membersof(image_buffer); i++)
-    trace << i << ':' << image_buffer[i] << endl;
-  trace << endl;
+  ASSERT(file >> image_buffer);
+  trace << image_buffer << endl;
 
   INFO("Cleanup and terminate", 0);
   ASSERT(file.close());
