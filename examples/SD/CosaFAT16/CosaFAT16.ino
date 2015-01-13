@@ -29,11 +29,21 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
-#define USE_ETHERNET_SHIELD
+//#define USE_SD_ADAPTER
+//#define USE_ETHERNET_SHIELD
+#define USE_TFT_ST7735
+
 #if defined(USE_ETHERNET_SHIELD)
 SD sd(Board::D4);
 OutputPin eth(Board::D10, 1);
-#else
+#endif
+
+#if defined(USE_TFT_ST7735)
+SD sd;
+OutputPin tft(Board::D10, 1);
+#endif
+
+#if defined(WICKEDDEVICE_WILDFIRE) || defined(USE_SD_ADAPTER)
 SD sd;
 #endif
 

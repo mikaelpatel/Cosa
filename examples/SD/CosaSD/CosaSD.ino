@@ -39,13 +39,17 @@
 #include "Cosa/Memory.h"
 
 // Uncomment/comment to enable/disable trace output to TFT/Canvas/Textbox
-// #define USE_ST7735
-#ifdef USE_ST7735
+//#define USE_SD_ADAPTER
+//#define USE_ETHERNET_SHIELD
+#define USE_TFT_ST7735
+
+#if defined (USE_TFT_ST7735)
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 #include "Cosa/Canvas/Driver/ST7735.hh"
 
 // Use ST7735 default pins; SPI (MOSI, SCK), CS (D10), AO (D9)
+SD sd;
 ST7735 tft;
 Textbox textbox(&tft);
 static const uint8_t WIDTH = 6;
@@ -53,12 +57,12 @@ static const uint8_t WIDTH = 6;
 static const uint8_t WIDTH = 32;
 #endif
 
-// Use SD default pins; SPI (MISO, MOSI, SCK), CS (D4/D8)
-#define USE_ETHERNET_SHIELD
 #if defined(USE_ETHERNET_SHIELD)
 SD sd(Board::D4);
 OutputPin eth(Board::D10, 1);
-#else
+#endif
+
+#if defined(WICKEDDEVICE_WILDFIRE) || defined(USE_SD_ADAPTER)
 SD sd;
 #endif
 
@@ -79,7 +83,7 @@ void setup()
 
   Watchdog::begin();
   RTC::begin();
-  trace.begin(dev, PSTR("CosaDS: started"));
+  trace.begin(dev, PSTR("CosaSD: started"));
   TRACE(free_memory());
   TRACE(sizeof(SD));
 }
