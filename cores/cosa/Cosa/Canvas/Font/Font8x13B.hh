@@ -1,9 +1,11 @@
 /**
- * @file Font8x13B.hh
+ * @file Cosa/Canvas/Font/Font8x13B.hh
  * @version 1.0
  *
+ * @author contributed by jediunix
+ *
  * @section License
- * Copyright (C) 2014, jediunix
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,6 +17,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
+ * This file is part of the Arduino Che Cosa project.
  */
 
 #ifndef COSA_FONT_FONT8X13B_HH

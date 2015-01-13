@@ -1,9 +1,11 @@
 /**
- * @file Font7x14.cpp
+ * @file Cosa/Canvas/Font/Font7x14.cpp
  * @version 1.0
  *
+ * @author contributed by jediunix
+ *
  * @section License
- * Copyright (C) 2014, jediunix
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,6 +17,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
+ * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Types.h"
