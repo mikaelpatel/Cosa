@@ -66,6 +66,10 @@ void init()
   UDIEN = 0;
 #endif
 
+  // Allow the board to set ports in a safe state. Typically chip
+  // select pins to board devices
+  Board::init();
+
   // Allow interrupts from here on
   sei();
 }

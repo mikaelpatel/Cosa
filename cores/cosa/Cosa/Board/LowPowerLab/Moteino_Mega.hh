@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -128,6 +128,12 @@ private:
 
 public:
   /**
+   * Initiate board ports. Disable SPI chip select pins, i.e.
+   * defined as output pins and set high.
+   */
+  static void init();
+
+  /**
    * Digital pin symbols
    */
   enum DigitalPin {
@@ -135,7 +141,7 @@ public:
     D1,                         // PB1
     D2,                         // PB2
     D3,                         // PB3
-    D4,                         // PB4
+    D4,                         // PB4 => RFMXX CS
     D5,                         // PB5
     D6,                         // PB6
     D7,                         // PB7
@@ -154,7 +160,7 @@ public:
     D20,                        // PC4
     D21,                        // PC5
     D22,                        // PC6
-    D23,                        // PC7
+    D23,                        // PC7 => Flash CS
     D24,                        // PA0
     D25,                        // PA1
     D26,                        // PA2

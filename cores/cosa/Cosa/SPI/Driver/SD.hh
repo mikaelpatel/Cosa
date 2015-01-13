@@ -390,6 +390,11 @@ public:
     SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV128_CLOCK, 0, SPI::MSB_ORDER, NULL),
     m_type(TYPE_UNKNOWN)
   {}
+#elif defined(WICKEDDEVICE_WILDFIRE)
+  SD(Board::DigitalPin csn = Board::D16) :
+    SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV128_CLOCK, 0, SPI::MSB_ORDER, NULL),
+    m_type(TYPE_UNKNOWN)
+  {}
 #else
   SD(Board::DigitalPin csn = Board::D8) :
     SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV128_CLOCK, 0, SPI::MSB_ORDER, NULL),

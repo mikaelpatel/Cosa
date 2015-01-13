@@ -127,33 +127,39 @@ private:
 
 public:
   /**
+   * Initiate board ports. Disable SPI chip select pins, i.e.
+   * defined as output pins and set high.
+   */
+  static void init();
+
+  /**
    * Digital pin symbols
    */
   enum DigitalPin {
     D0 = 24,			// PD0
     D1 = 25,			// PD1
-    D2 = 26,			// PD2
+    D2 = 26,			// PD2 => RFM69 IRQ
     D3 = 27,			// PD3
     D4 = 11,			// PB3
     D5 = 29,			// PD5
-    D6 = 30,			// PD6
-    D7 = 19,			// PC3
+    D6 = 30,			// PD6 => LED
+    D7 = 19,			// PC3 => RFM69 CS
     D8 = 28,			// PD4
     D9 = 12,			// PB4
     D10 = 31,			// PD7
     D11 = 13,			// PB5
     D12 = 14,			// PB6
     D13 = 15,			// PB7
-    D14 = 20,			// PC4
-    D15 = 18,			// PC2
-    D16 = 21,			// PC5
-    D17 = 22,			// PC6
-    D18 = 23,			// PC7
-    D19 = 17,			// PC1
-    D20 = 16,			// PC0
-    D21 = 8,			// PB0
-    D22 = 10,			// PB2
-    D23 = 9,			// PB1
+    D14 = 20,			// PC4 => TinyWDT Pet
+    D15 = 18,			// PC2 => Flash CS
+    D16 = 21,			// PC5 => microSD CS
+    D17 = 22,			// PC6 => RTC crystal
+    D18 = 23,			// PC7 => RTC crystal
+    D19 = 17,			// PC1 => TWI SDA
+    D20 = 16,			// PC0 => TWI SCL
+    D21 = 8,			// PB0 => CC3000 CS
+    D22 = 10,			// PB2 => CC3000 IRQ
+    D23 = 9,			// PB1 => CC3000 VBAT
     D24 = 0,			// PA0
     D25 = 1,			// PA1
     D26 = 2,			// PA2
@@ -162,7 +168,7 @@ public:
     D29 = 5,			// PA5
     D30 = 6,			// PA6
     D31 = 7,			// PA7
-    LED = D13
+    LED = D6
   } __attribute__((packed));
 
   /**

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -127,6 +127,12 @@ private:
   }
 
 public:
+  /**
+   * Initiate board ports. Disable SPI chip select pins, i.e.
+   * defined as output pins and set high.
+   */
+  static void init() {}
+
   /**
    * Digital pin symbols; mapping from name to port<5>:bit<3> (BDEF0..7)
    */

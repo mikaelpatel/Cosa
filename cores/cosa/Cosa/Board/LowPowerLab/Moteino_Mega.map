@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,6 +17,15 @@
  * 
  * This file is part of the Arduino Che Cosa project.
  */
+
+#include "Cosa/OutputPin.hh"
+
+void 
+Board::init()
+{
+  OutputPin rfmxx(Board::D4, 1);
+  OutputPin flash(Board::D23, 1);
+}
 
 const Board::DigitalPin digital_pin_map[] __PROGMEM = {
   Board::D0, 

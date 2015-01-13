@@ -18,6 +18,17 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/OutputPin.hh"
+
+void 
+Board::init()
+{
+  OutputPin rfm69(Board::D7, 1);
+  OutputPin flash(Board::D15, 1);
+  OutputPin sd(Board::D16, 1);
+  OutputPin cc3000(Board::D21, 1);
+}
+
 const Board::DigitalPin digital_pin_map[] __PROGMEM = {
   Board::D0, 
   Board::D1, 
