@@ -58,9 +58,9 @@ Textbox::putchar(char c)
     set_pen_color(saved);
   }
 
-  // Draw only normal characters
-  else if (c >= ' ') m_canvas->draw_char(c);
-  
+  // Draw other characters
+  else m_canvas->draw_char(c);
+
   // Restore the previous canvas state; context
   m_canvas->set_context(saved);
   return (c);

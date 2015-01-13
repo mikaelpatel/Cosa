@@ -89,11 +89,13 @@
 #ifdef USE_TFT_ST7735
 #include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
+#define DEVICE "ST7735"
 #endif
 
 #ifdef USE_TFT_ILI9341
 #include "Cosa/Canvas/Driver/ILI9341.hh"
 ILI9341 tft;
+#define DEVICE "ILI9341"
 #endif
 
 #ifdef SYSTEM_5x7
@@ -207,7 +209,10 @@ void setup()
   RTC::begin();
   uart.begin(9600);
   trace.begin(&uart);
-  trace << PSTR("CosaCanvasFontST7735: started") << endl;
+  trace << PSTR("CosaCanvasFont: started ")
+        << PSTR(DEVICE)
+        << PSTR(" font ") << STRINGIFY(FONT)
+        << endl;
 
   tft.begin();
   tft.set_canvas_color(Canvas::WHITE);
@@ -226,10 +231,11 @@ void setup()
   tftout << PSTR("Hello World!") << endl;
 #endif
 
-  trace << PSTR("Font ") << STRINGIFY(FONT)
-        << PSTR(" has ") << (FONT.LAST-FONT.FIRST+1) 
+#ifdef CYCLE_CHARS
+  trace << PSTR("Font has ") << (FONT.LAST-FONT.FIRST+1) 
 	<< PSTR(" characters") 
 	<< endl;
+#endif
 }
 
 void loop()
@@ -239,13 +245,18 @@ void loop()
   MEASURE("full character set ", 20)
 #endif
   {
-#if defined(FIXEDNUMS_8x16) || defined(SEGMENT_32x50)
-    for (char c = FONT.FIRST; c <= FONT.LAST; c++)
-#else
-    for (char c = ' '; c <= '~'; c++)
-#endif
+    for (uint16_t c = FONT.FIRST; c <= FONT.LAST; c++)
       {
-        tftout << c;
+        switch ((char)c)
+          {
+          case '\n':
+          case '\r':
+          case '\f':
+            break;
+
+          default:
+            tftout << (char)c;
+          }
         delay(CYCLE_CHARS);
       }
   }

@@ -23,22 +23,25 @@
 #ifndef COSA_FONT_FONT10X20_HH
 #define COSA_FONT_FONT10X20_HH
 
-#include "Cosa/Canvas/Font.hh"
+#include "Cosa/Canvas/CompressedFont.hh"
 
 /**
  * Font size 10x20.
  */
-class Font10x20 : public Font {
+class Font10x20 : public CompressedFont {
 public:
   /**
    * Construct font (10x20) singleton.
    */
   Font10x20() :
-    Font(width, height, first, last, bitmap)
+    CompressedFont(width, height, first, last,
+                   compressed_bitmap, offsets, compression_type)
   {}
 
 private:
-  static const uint8_t bitmap[] PROGMEM;
+  static const uint16_t offsets[] PROGMEM;
+  static const uint8_t compressed_bitmap[] PROGMEM;
+  static const uint8_t compression_type;
   static const uint8_t width;
   static const uint8_t height;
   static const uint8_t first;
