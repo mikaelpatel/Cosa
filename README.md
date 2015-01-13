@@ -67,32 +67,33 @@ References
 1. D.tools, http://hci.stanford.edu/research/dtools/
 2. Processing, http://processing.org/
 3. Wiring, http://wiring.org.co/
-4. Arduino, http://www.arduino.cc/
-5. Firmata, http://www.firmata.org/wiki/Main_Page
-6. LilyPad, http://web.media.mit.edu/~leah/LilyPad/
-7. Jeelabs, http://jeelabs.org/
-8. Microduino, http://www.microduino.cc/
-9. Teensy, https://www.pjrc.com/
-10. Pinoccio, https://pinocc.io/
-11. LowPowerLab, http://lowpowerlab.com/
-12. Anarduino, http://www.anarduino.com/
-13. Quantum Leaps, http://www.state-machine.com/
-14. Concurrency.cc, http://concurrency.cc/
-15. Protothreads, http://dunkels.com/adam/pt/
-16. Arduino Low Power, http://gammon.com.au/power
-17. Virtual Wire, http://www.open.com.au/mikem/arduino/VirtualWire/
-18. MQTT, http://mqtt.org/
-19. ThingSpeak, https://thingspeak.com/
+4. Quantum Leaps, http://www.state-machine.com/
+5. Concurrency.cc, http://concurrency.cc/
+6. Arduino, http://www.arduino.cc/
+7. Firmata, http://www.firmata.org/wiki/Main_Page
+8. LilyPad, http://web.media.mit.edu/~leah/LilyPad/
+9. Adafruit, http://www.adafruit.com/
+10. Microduino, http://www.microduino.cc/
+11. Jeelabs, http://jeelabs.org/
+12. Teensy, https://www.pjrc.com/
+13. Pinoccio, https://pinocc.io/
+14. LowPowerLab, http://lowpowerlab.com/
+15. Anarduino, http://www.anarduino.com/
+16. Wicked Device, http://shop.wickeddevice.com/
+17. MQTT, http://mqtt.org/
+18. ThingSpeak, https://thingspeak.com/
 
 Naming
 ------
 
-* "Cosa"; noun thing, matter; pronoun; what?, what!. 
-* "Che cosa"; pronoun; what. 
 * "Ciao"; interjection hello!, goodbye!. 
+* "Che cosa"; pronoun; what.
+* "Cosa"; noun thing, matter; pronoun; what?, what!.
 * "Cosa fai"; what do you do?
-* "Rete"; network
-* "Nucleo"; kernel
+* "Nucleo"; kernel.
+* "Rifare"; remake.
+* "Rete"; network.
+* "Tutto"; all.
 
 Stay tuned
 ----------
