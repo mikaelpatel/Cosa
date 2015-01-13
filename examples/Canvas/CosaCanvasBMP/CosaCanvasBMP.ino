@@ -174,14 +174,38 @@ void setup()
   ASSERT(sd.begin(SPI::DIV2_CLOCK));
   ASSERT(FAT16::begin(&sd));
   ASSERT(tft.begin());
-  tft.fill_screen();
 }
 
 void loop()
 {
   BMP::File image;
+  uint16_t pixels = 0;
+  uint32_t start, stop, us = 0;
+
+  start = RTC::micros();
+  tft.set_canvas_color(Canvas::BLUE);
+  tft.fill_screen();
+  stop = RTC::micros();
+  INFO("fill screen: %ul us", stop - start);
+
+  start = RTC::micros();
   ASSERT(image.open("PARROT.BMP"));
+  stop = RTC::micros();
+  INFO("open image file: %ul us", stop - start);
+  INFO("image width: %ud", image.WIDTH);
+  INFO("image height: %ud", image.HEIGHT);
+  INFO("image pixels: %ud", pixels = (image.WIDTH * image.HEIGHT));
+
+  start = RTC::micros();
   tft.draw_image(0, 0, &image);
+  stop = RTC::micros();
+  INFO("draw image: %ul us", us = (stop - start));
+  INFO("draw pixel: %ul us", us / pixels);
+  INFO("transfer rate: %ul bps", 2000L * pixels / (us / 1000));
+  start = RTC::micros();
   ASSERT(image.close());
+  stop = RTC::micros();
+  INFO("close image file: %ul us", stop - start);
+
   ASSERT(true == false);
 }
