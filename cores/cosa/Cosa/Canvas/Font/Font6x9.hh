@@ -23,22 +23,25 @@
 #ifndef COSA_FONT_FONT6X9_HH
 #define COSA_FONT_FONT6X9_HH
 
-#include "Cosa/Canvas/Font.hh"
+#include "Cosa/Canvas/CompressedFont.hh"
 
 /**
  * Font size 6x9.
  */
-class Font6x9 : public Font {
+class Font6x9 : public CompressedFont {
 public:
   /**
    * Construct font (6x9) singleton.
    */
   Font6x9() :
-    Font(width, height, first, last, bitmap)
+    CompressedFont(width, height, first, last,
+                   compressed_bitmap, offsets, compression_type)
   {}
 
 private:
-  static const uint8_t bitmap[] PROGMEM;
+  static const uint16_t offsets[] PROGMEM;
+  static const uint8_t compressed_bitmap[] PROGMEM;
+  static const uint8_t compression_type;
   static const uint8_t width;
   static const uint8_t height;
   static const uint8_t first;

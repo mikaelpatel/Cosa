@@ -25,7 +25,7 @@
 #include "Cosa/Canvas.hh"
 
 /*
- * Bitmap font library handler for Cosa Canvas.
+ * Bitmap font library handler.
  */
 class Font {
 public:
@@ -44,7 +44,7 @@ public:
   const uint8_t LAST;
 
   /**
-   * Construct font descriptor and bitmap.
+   * Construct font descriptor.
    * @param[in] width character width.
    * @param[in] height character height.
    * @param[in] first character available.
@@ -68,24 +68,6 @@ public:
   }
 
   /**
-   * @deprecated As of 2014-12, use constructor with first/last indicators.
-   * Construct font descriptor and bitmap.
-   * @param[in] width character width.
-   * @param[in] height character height.
-   * @param[in] bitmap font storage.
-   */
-  Font(uint8_t width, uint8_t height, const uint8_t* bitmap) __attribute__((deprecated)) :
-    WIDTH(width), 
-    HEIGHT(height),
-    SPACING(1),
-    LINE_SPACING(0),
-    FIRST(0),
-    LAST(127),
-    m_bitmap(bitmap)
-  {
-  }
-  
-  /**
    * @override Font
    * Determine if character is available in font.
    * @param[in] c character.
@@ -99,71 +81,6 @@ public:
 
   /**
    * @override Font
-   * Get bitmap for given character.
-   * @param[in] c character.
-   * @return bitmap pointer.
-   */
-  virtual const uint8_t* get_bitmap(char c)
-  {
-    return (m_bitmap + ((c - FIRST) * WIDTH * ((HEIGHT + (CHARBITS-1)) / CHARBITS)));
-  }
-
-  /**
-   * @deprecated As of 2014-12, because SPACING is included, use WIDTH+SPACING.
-   * @override Font
-   * Get width for given character.
-   * @param[in] c character.
-   * @return width.
-   */
-  virtual uint8_t get_width(char c)
-    __attribute__((deprecated))
-  {
-    UNUSED(c);
-    return (WIDTH + SPACING);
-  }
-  
-  /**
-   * @deprecated As of 2014-12, because SPACING is included, use (WIDTH+SPACING)*strlen(s).
-   * @override Font
-   * Get width for given string.
-   * @param[in] s string.
-   * @return width.
-   */
-  virtual uint8_t get_width(char* s)
-    __attribute__((deprecated))
-  {
-    return ((WIDTH + SPACING) * strlen(s));
-  }
-  
-  /**
-   * @deprecated As of 2014-12, because SPACING is included, use (WIDTH+SPACING)*strlen_P(s).
-   * @override Font
-   * Get width for given string in program memory.
-   * @param[in] s string in program memory.
-   * @return width.
-   */
-  virtual uint8_t get_width_P(const char* s)
-    __attribute__((deprecated))
-  {
-    return ((WIDTH + SPACING) * strlen_P(s));
-  }
-  
-  /**
-   * @deprecated As of 2014-12, because of name style inconsistency, use HEIGHT.
-   * @override Font
-   * Get width for given character.
-   * @param[in] c character.
-   * @return height.
-   */
-  virtual uint8_t get_height(char c)
-    __attribute__((deprecated))
-  {
-    UNUSED(c);
-    return (HEIGHT);
-  }
-
-  /**
-   * @override Font
    * Draw character on given canvas.
    * @param[in] canvas.
    * @param[in] c character.
@@ -172,11 +89,37 @@ public:
    * @param[in] scale.
    */
   virtual void draw(Canvas* canvas, char c, uint16_t x, uint16_t y, 
-		    uint8_t scale)
-  {
-    canvas->draw_bitmap(x, y, get_bitmap(c), WIDTH, HEIGHT, scale);
-  }
+                    uint8_t scale);
 
+  /**
+   * Display a character.
+   * Used in the form:
+   *   display_iterator_t display_iterator = display_begin(character);
+   *   for (uint16_t i = 0; i < HEIGHT; i += 8) {
+   *     for (uint16_t j = 0; j < WIDTH; j++) {
+   *       uint8_t bits = display_next(&display_iterator);
+   *         // display bits
+   *     }
+   *   }
+   */
+  typedef uint8_t* display_iterator_t;
+
+  /**
+   * @override Font
+   * Begin character display.
+   * @param[in] c character.
+   * @return iterator.
+   */
+  virtual display_iterator_t display_begin(char c);
+
+  /**
+   * @override Font
+   * Get next byte for display.
+   * @param[in,out] iterator.
+   * @return byte for display.
+   */
+  virtual uint8_t display_next(display_iterator_t* iterator);
+  
 protected:
   /** Font bitmap. */
   const uint8_t* m_bitmap;

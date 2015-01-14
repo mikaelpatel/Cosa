@@ -255,7 +255,7 @@ PCD8544::putchar(char c)
 
   // Access font for character width and bitmap
   uint8_t width = m_font->WIDTH + m_font->SPACING;
-  const uint8_t* bp = m_font->get_bitmap(c);
+  Font::display_iterator_t it = m_font->display_begin(c);
   m_x += width;
 
   // Check that the character is not clipped
@@ -267,7 +267,7 @@ PCD8544::putchar(char c)
   // Write character to the display memory and an extra byte
   m_io->begin();
   while (--width) 
-    m_io->write(m_mode ^ pgm_read_byte(bp++));
+    m_io->write(m_mode ^ m_font->display_next(&it));
   m_io->write(m_mode);
   m_io->end();
 

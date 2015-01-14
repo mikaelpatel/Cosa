@@ -21,7 +21,7 @@
 #ifndef COSA_CANVAS_FONT_SEGMENT32X50_HH
 #define COSA_CANVAS_FONT_SEGMENT32X50_HH
 
-#include "Cosa/Canvas/Font.hh"
+#include "Cosa/Canvas/CompressedFont.hh"
 
 /**
  * Bitmap font size 32x50, segments, fixed with font with 
@@ -31,17 +31,20 @@
  * Font data originates from the UTFT library created by 
  * Henning Karlsen.
  */
-class Segment32x50 : public Font {
+class Segment32x50 : public CompressedFont {
 public:
   /** 
    * Construct large segment font (32x50) singleton.
    */
   Segment32x50() :
-    Font(width, height, first, last, bitmap)
+    CompressedFont(width, height, first, last,
+                   compressed_bitmap, offsets, compression_type)
   {}
 
 private:
-  static const uint8_t bitmap[] PROGMEM;
+  static const uint16_t offsets[] PROGMEM;
+  static const uint8_t compressed_bitmap[] PROGMEM;
+  static const uint8_t compression_type;
   static const uint8_t width;
   static const uint8_t height;
   static const uint8_t first;
