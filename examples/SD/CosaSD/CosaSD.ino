@@ -68,7 +68,7 @@ SD sd;
 
 void setup()
 {
-#ifdef USE_ST7735
+#if defined(USE_TFT_ST7735)
   IOStream::Device* dev = &textbox;
   tft.begin();
   tft.set_canvas_color(Canvas::WHITE);
