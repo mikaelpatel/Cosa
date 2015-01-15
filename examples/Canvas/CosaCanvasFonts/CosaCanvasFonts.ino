@@ -69,13 +69,13 @@
 //#define FONT_5x8
 //#define FONT_6x9
 //#define FONT_6x10
-#define FONT_6x12
+//#define FONT_6x12
 //#define FONT_6x13
 //#define FONT_6x13B
 //#define FONT_7x13
 //#define FONT_7x13B
 //#define FONT_7x14
-//#define FONT_7x14B
+#define FONT_7x14B
 //#define FONT_8x13
 //#define FONT_8x13B
 //#define FONT_8x16

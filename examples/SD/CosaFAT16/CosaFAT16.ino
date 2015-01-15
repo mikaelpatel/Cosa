@@ -29,9 +29,9 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
-//#define USE_SD_ADAPTER
+#define USE_SD_ADAPTER
 //#define USE_ETHERNET_SHIELD
-#define USE_TFT_ST7735
+//#define USE_TFT_ST7735
 
 #if defined(USE_ETHERNET_SHIELD)
 SD sd(Board::D4);

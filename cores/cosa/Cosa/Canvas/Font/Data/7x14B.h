@@ -16,6 +16,7 @@ const uint8_t Font7x14B::width = 7;
 const uint8_t Font7x14B::height = 14;
 const uint8_t Font7x14B::first = 0x0;
 const uint8_t Font7x14B::last = 0x7f;
+const uint8_t Font7x14B::compression_type = 0;
 
 /* glyph_size=14 total_size=1792 */
 
