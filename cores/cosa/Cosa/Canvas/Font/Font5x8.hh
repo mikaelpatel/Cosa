@@ -34,11 +34,12 @@ public:
    * Construct font (5x8) singleton.
    */
   Font5x8() :
-    Font(width, height, first, last, bitmap)
+    Font(width, height, first, last, bitmap, compression_type)
   {}
 
 private:
   static const uint8_t bitmap[] PROGMEM;
+  static const uint8_t compression_type;
   static const uint8_t width;
   static const uint8_t height;
   static const uint8_t first;

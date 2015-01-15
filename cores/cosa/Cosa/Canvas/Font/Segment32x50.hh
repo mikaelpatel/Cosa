@@ -37,11 +37,12 @@ public:
    * Construct large segment font (32x50) singleton.
    */
   Segment32x50() :
-    Font(width, height, first, last, bitmap)
+    Font(width, height, first, last, bitmap, compression_type)
   {}
 
 private:
   static const uint8_t bitmap[] PROGMEM;
+  static const uint8_t compression_type;
   static const uint8_t width;
   static const uint8_t height;
   static const uint8_t first;
