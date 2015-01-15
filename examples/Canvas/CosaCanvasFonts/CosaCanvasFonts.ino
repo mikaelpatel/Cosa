@@ -75,7 +75,7 @@
 //#define FONT_7x13
 //#define FONT_7x13B
 //#define FONT_7x14
-#define FONT_7x14B
+//#define FONT_7x14B
 //#define FONT_8x13
 //#define FONT_8x13B
 //#define FONT_8x16
@@ -84,7 +84,7 @@
 //#define FONT_10x20
 //#define FONT_12x24
 //#define SEGMENT_32x50
-//#define SYSTEM_5x7
+#define SYSTEM_5x7
 
 #ifdef USE_TFT_ST7735
 #include "Cosa/Canvas/Driver/ST7735.hh"
@@ -245,22 +245,24 @@ void loop()
   MEASURE("full character set ", 20)
 #endif
   {
-    for (uint16_t c = FONT.FIRST; c <= FONT.LAST; c++)
-      {
-        switch ((char)c)
-          {
-          case '\n':
-          case '\r':
-          case '\f':
-            break;
-
-          default:
-            tftout << (char)c;
-          }
-        delay(CYCLE_CHARS);
+    textbox.set_text_color(Canvas::BLUE);
+    for (uint16_t c = FONT.FIRST; c <= FONT.LAST; c++) {
+      if (c == ' ') textbox.set_text_color(Canvas::BLACK);
+      else if (c == 128) textbox.set_text_color(Canvas::RED);
+      switch ((char)c) {
+      case '\n':
+      case '\r':
+      case '\f':
+	break;
+      default:
+	tftout << (char)c;
       }
+      if (CYCLE_CHARS != 0) delay(CYCLE_CHARS);
+    }
+    tftout << endl;
   }
 #else
   delay(100);
 #endif
+  sleep(2);
 }
