@@ -1,9 +1,9 @@
 /**
- * @file Cosa/SPI/Driver/S25FL127S.cpp
+ * @file Cosa/Flash/Driver/S25FL127S.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/Driver/S25FL127S.hh"
+#include "Cosa/Flash/Driver/S25FL127S.hh"
 
 bool 
 S25FL127S::begin()
@@ -77,26 +77,33 @@ S25FL127S::read(void* dest, uint32_t src, size_t size)
 }
 
 int 
-S25FL127S::erase(uint32_t dest)
+S25FL127S::erase(uint32_t dest, uint8_t size)
 {
+  uint8_t op;
+  switch (size) {
+  case 4: op = P4E; break;
+  case 64: op = SER; break;
+  case 255: op = BER; break;
+  default: return (-1);
+  }
   spi.acquire(this);
     // Write enable before page erase.
     spi.begin();
       spi.transfer(WREN);
     spi.end();
-    // Use erase(P4E/SER) with 24-bit address; Big-endian
+    // Use erase(P4E/SER/BER) with possible 24-bit address; Big-endian
     uint8_t* dp = (uint8_t*) &dest;
-    uint8_t op = ((dp[2] == 0) ? P4E : SER);
     spi.begin();
       spi.transfer(op);
-      spi.transfer(dp[2]);
-      spi.transfer(dp[1]);
-      spi.transfer(dp[0]);
+      if (op != BER) {
+	spi.transfer(dp[2]);
+	spi.transfer(dp[1]);
+	spi.transfer(dp[0]);
+      }
     spi.end();
   spi.release();
 
   // Wait for completion
-  // Fix: Allow async erase
   while (!is_ready()) yield();
 
   // Return error code(-1) if erase error otherwise zero

@@ -27,12 +27,8 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/SPI/Driver/S25FL127S.hh"
+#include "Cosa/Flash/Driver/S25FL127S.hh"
 #include "Cosa/FS/CFFS.hh"
-
-#if defined(ANARDUINO_MINIWIRELESS)
-OutputPin rf_cs(Board::D10, 1);
-#endif
 
 S25FL127S flash;
 IOStream ios(&uart);

@@ -79,9 +79,10 @@ public:
      * implementation device. Returs zero(0) if successful otherwise
      * an negative error code(-1).
      * @param[in] dest destination block byte address to erase.
+     * @param[in] size of sector to erase in Kbyte.
      * @return zero or negative error code.
      */
-    virtual int erase(uint32_t dest) = 0;
+    virtual int erase(uint32_t dest, uint8_t size) = 0;
 
     /**
      * @override Flash::Device

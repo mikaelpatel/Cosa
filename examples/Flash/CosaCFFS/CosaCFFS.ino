@@ -22,6 +22,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Flash/Driver/S25FL127S.hh"
 #include "Cosa/FS/CFFS.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -31,11 +32,6 @@
 #include "Cosa/RTC.hh"
 
 S25FL127S flash;
-
-// Disable radio module on common spi bus
-#if defined(ANARDUINO_MINIWIRELESS)
-OutputPin rf_cs(Board::D10, 1);
-#endif
 
 void setup()
 {

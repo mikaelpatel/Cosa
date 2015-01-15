@@ -22,7 +22,7 @@
 #define COSA_FS_CFFS_HH
 
 #include "Cosa/FS.hh"
-#include "Cosa/SPI/Driver/S25FL127S.hh"
+#include "Cosa/Flash/Driver/S25FL127S.hh"
 #include "Cosa/IOStream.hh"
 
 /**

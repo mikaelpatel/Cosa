@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/Driver/S25FL127S.hh
+ * @file Cosa/Flash/Driver/S25FL127S.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_SPI_DRIVER_S25FL127S_HH
-#define COSA_SPI_DRIVER_S25FL127S_HH
+#ifndef COSA_FLASH_DRIVER_S25FL127S_HH
+#define COSA_FLASH_DRIVER_S25FL127S_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/SPI.hh"
@@ -108,14 +108,15 @@ public:
   /**
    * @override Flash::Device
    * Erase given flash block for given byte address. The size of the
-   * erased sector is either 4 or 64 KB. The default configuration
-   * consists of 16X4 KB sectors from low address followed by 255X64 KB 
-   * sectors. The highest sector is reserved. Returs zero(0) if
-   * successful otherwise an negative error code(-1).
+   * erased sector is either 4 or 64 KB. Give sector size 255 to erase
+   * chip. The default configuration consists of 16X4 KB sectors from
+   * low address followed by 255X64 KB sectors. The highest sector is
+   * reserved. Returs zero(0) if successful otherwise an negative
+   * error code(-1).
    * @param[in] dest destination block byte address to erase.
    * @return zero or negative error code.
    */
-  virtual int erase(uint32_t dest);
+  virtual int erase(uint32_t dest, uint8_t size = 4);
 
   /**
    * @override Flash::Device

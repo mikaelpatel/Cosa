@@ -1,9 +1,9 @@
 /**
- * @file CosaS25FL127S.ino
+ * @file CosaW25X40CL.ino
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,42 +16,36 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Demonstration the S25FL127S SPI Flash Memory device driver.
+ * Demonstration the W25X40CL SPI Flash Memory device driver.
  * Measure performance of read and write.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/Driver/S25FL127S.hh"
+#include "Cosa/Flash/Driver/W25X40CL.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/RTC.hh"
 
-S25FL127S flash;
-
-// Disable radio module on common spi bus
-#if defined(ANARDUINO_MINIWIRELESS)
-OutputPin rf_cs(Board::D10, 1);
-#endif
+W25X40CL flash;
 
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaS25FL127S: started"));
+  trace.begin(&uart, PSTR("CosaW25X40CL: started"));
   Watchdog::begin();
   RTC::begin();
   TRACE(free_memory());
   TRACE(sizeof(flash));
 
   // Initiate the flash memory device driver
+  uint32_t start = RTC::micros();
   ASSERT(flash.begin());
-  
-  // Read configuration
-  uint8_t config = flash.read_config();
-  ASSERT(config == 0);
-  trace << PSTR("config: ") << hex << config << endl;
+  uint32_t us = RTC::micros() - start;
+  ASSERT(flash.is_ready());
+  trace << PSTR("begin: us = ") << us << endl;
   
   // Search for first non zero byte and clear next bit
   uint32_t addr = 0L;
@@ -63,9 +57,9 @@ void setup()
     addr += 1;
   }
   data >>= 1;
-  uint32_t start = RTC::micros();
+  start = RTC::micros();
   res = flash.write(addr, &data, sizeof(data));
-  uint32_t us = RTC::micros() - start;
+  us = RTC::micros() - start;
   ASSERT(flash.is_ready());
   ASSERT(res == sizeof(data));
   trace << PSTR("write: dest = ") << hex << addr 
@@ -76,6 +70,7 @@ void setup()
   sleep(5);
 
   // Write a buffer (512 byte) of test data across three pages
+  // Starting from address 128 to 720, page 0..2.
   addr = 128;
   uint8_t buf[512];
   memset(buf, 0xa5, sizeof(buf));
@@ -88,6 +83,59 @@ void setup()
 	<< PSTR(", us = ") << us 
 	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
 	<< endl;
+  sleep(5);
+
+  // Read, erase and write second sector
+  addr = W25X40CL::SECTOR_MAX;
+  start = RTC::micros();
+  res = flash.read(buf, addr, sizeof(buf));
+  us = RTC::micros() - start;
+  ASSERT(res == sizeof(buf));
+  trace << PSTR("read: src = ") << hex << addr
+	<< PSTR(", bytes = ") << sizeof(buf) 
+	<< PSTR(", us = ") << us
+	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
+	<< endl;
+  trace.print(buf, sizeof(buf), IOStream::hex);
+
+  start = RTC::micros();
+  ASSERT(!flash.erase(W25X40CL::SECTOR_MAX));
+  us = RTC::micros() - start;
+  ASSERT(flash.is_ready());
+  trace << PSTR("erase: us = ") << us << endl;
+
+  start = RTC::micros();
+  res = flash.read(buf, addr, sizeof(buf));
+  us = RTC::micros() - start;
+  ASSERT(res == sizeof(buf));
+  trace << PSTR("read: src = ") << hex << addr
+	<< PSTR(", bytes = ") << sizeof(buf) 
+	<< PSTR(", us = ") << us
+	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
+	<< endl;
+  trace.print(buf, sizeof(buf), IOStream::hex);
+
+  memset(buf, 0xa5, sizeof(buf));
+  start = RTC::micros();
+  res = flash.write(addr, buf, sizeof(buf));
+  us = RTC::micros() - start;
+  ASSERT(res == sizeof(buf));
+  trace << PSTR("write: dest = ") << hex << addr 
+	<< PSTR(", bytes = ") << sizeof(buf)
+	<< PSTR(", us = ") << us 
+	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
+	<< endl;
+
+  start = RTC::micros();
+  res = flash.read(buf, addr, sizeof(buf));
+  us = RTC::micros() - start;
+  ASSERT(res == sizeof(buf));
+  trace << PSTR("read: src = ") << hex << addr
+	<< PSTR(", bytes = ") << sizeof(buf) 
+	<< PSTR(", us = ") << us
+	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
+	<< endl;
+  trace.print(buf, sizeof(buf), IOStream::hex);
   sleep(5);
 
   // Locate end of file in first sector; binary search
@@ -140,9 +188,7 @@ void setup()
 void loop()
 {
   // Read status and configuration registers
-  trace << PSTR("status: ") << hex << flash.read_status1() 
-	<< PSTR(", ") << hex << flash.read_status2()
-	<< endl;
+  trace << PSTR("status: ") << hex << flash.read_status() << endl;
 
   // Read a block from the flash; measure time
   uint8_t buf[512];
