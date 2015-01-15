@@ -46,6 +46,11 @@
 #define CHARBITS 8
 
 /**
+ * Number of bytes for given number of bits.
+ */
+#define BYTES(bits) (((bits) + (CHARBITS - 1)) / CHARBITS)
+
+/**
  * Standard integer range
  */
 #ifndef UINT8_MAX
