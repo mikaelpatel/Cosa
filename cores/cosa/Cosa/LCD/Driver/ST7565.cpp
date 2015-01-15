@@ -280,7 +280,7 @@ ST7565::putchar(char c)
 
   // Write character to the display with an extra space
   uint8_t width = m_font->WIDTH + m_font->SPACING;
-  const uint8_t* bp = m_font->get_bitmap(c);
+  Font::Glyph glyph(m_font, c);
   m_x += width;
   if (m_x > WIDTH) {
     putchar('\n');
@@ -288,7 +288,7 @@ ST7565::putchar(char c)
   }
   m_io->begin();
   while (--width) 
-    m_io->write(m_mode ^ pgm_read_byte(bp++));
+    m_io->write(m_mode ^ glyph.next());
   m_io->write(m_mode);
   m_io->end();
 
