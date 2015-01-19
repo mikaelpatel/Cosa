@@ -150,7 +150,7 @@ extern uint8_t trace_log_mask;
 # else
 # define TRACE(expr)							\
     do {								\
-      trace.printf_P(__PSTR("%d:%s:" #expr " = "),			\
+      trace.printf_P(__PSTR("%d:%s:trace:" #expr " = "),		\
 		     __LINE__,						\
 		     __PRETTY_FUNCTION__);				\
       trace.print(expr);						\
