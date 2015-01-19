@@ -84,7 +84,7 @@ W25X40CL::erase(uint32_t dest, uint8_t size)
   case 4: op = SER; break;
   case 32: op = B32ER; break;
   case 64: op = B64ER; break;
-  case 255: op = CE; break;
+  case 255: op = CER; break;
   default: return (-1);
   }
   spi.acquire(this);
@@ -92,11 +92,11 @@ W25X40CL::erase(uint32_t dest, uint8_t size)
     spi.begin();
       spi.transfer(WREN);
     spi.end();
-    // Use erase (SE/B32E/B64E/CE) with possible 24-bit address
+    // Use erase (SE/B32E/B64E/CER) with possible 24-bit address
     uint8_t* dp = (uint8_t*) &dest;
     spi.begin();
       spi.transfer(op);
-      if (op != CE) {
+      if (op != CER) {
 	spi.transfer(dp[2]);
 	spi.transfer(dp[1]);
 	spi.transfer(dp[0]);

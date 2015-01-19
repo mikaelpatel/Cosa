@@ -38,24 +38,6 @@
  */
 class S25FL127S : public Flash::Device, protected SPI::Driver {
 public:
-  /** 
-   * Size of Flash Memory Array. Default hybrid combination of 4-kB and
-   * 64-kB sectors. Address range starts with 16 X 4-kB sectors (in default
-   * configuration). The top 64-kB sector is reserved as the block
-   * address (0xff) is used as flash memory NULL pointer.
-   *
-   * For more details see chapter 8: Address Space Maps (pp. 54).
-   */
-  static const uint32_t SECTOR_MAX = 0x00010000L;
-  static const uint32_t SECTOR_MASK = SECTOR_MAX - 1;
-  static const size_t SECTOR_COUNT = 256;
-  
-  static const uint32_t SECTOR4K_MAX = 0x00001000L;
-  static const uint32_t SECTOR4K_MASK = SECTOR4K_MAX - 1;
-  static const size_t SECTOR4K_COUNT = 16;
-
-  static const uint32_t DEVICE_MAX = SECTOR_MAX * SECTOR_COUNT;
-  
   /**
    * Default programming page buffer size (pp. 61, 97).
    */
@@ -68,10 +50,12 @@ public:
    */
 #if !defined(BOARD_ATTINYX5)
   S25FL127S(Board::DigitalPin csn = Board::D5) :
+    Flash::Device(64 * 1024L, 256),
     SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 0, SPI::MSB_ORDER, NULL)
   {}
 #else
   S25FL127S(Board::DigitalPin csn = Board::D3) :
+    Flash::Device(64 * 1024L, 256),
     SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 0, SPI::MSB_ORDER, NULL)
   {}
 #endif

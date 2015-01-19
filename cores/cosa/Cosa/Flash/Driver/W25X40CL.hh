@@ -37,21 +37,6 @@
  */
 class W25X40CL : public Flash::Device, protected SPI::Driver {
 public:
-  /** 
-   * Size of Flash Memory Array; 8 X 64-kB blocks with 16 X 4-kB
-   * sectors. Total of 128 4-kB sectors. For more details see 
-   * chapter 7 Block Diagram (pp. 8). 
-   */
-  static const uint32_t BLOCK_MAX = 0x00010000L;
-  static const uint32_t BLOCK_MASK = BLOCK_MAX - 1;
-  static const size_t BLOCK_COUNT = 8;
-  
-  static const uint32_t SECTOR_MAX = 0x00001000L;
-  static const uint32_t SECTOR_MASK = SECTOR_MAX - 1;
-  static const size_t SECTOR_COUNT = 16;
-
-  static const uint32_t DEVICE_MAX = BLOCK_MAX * BLOCK_COUNT;
-  
   /**
    * Default programming page buffer size (pp. 61, 97).
    */
@@ -64,10 +49,12 @@ public:
    */
 #if !defined(BOARD_ATTINYX5)
   W25X40CL(Board::DigitalPin csn = Board::D15) :
+    Flash::Device(4 * 1024L, 128),
     SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 0, SPI::MSB_ORDER, NULL)
   {}
 #else
   W25X40CL(Board::DigitalPin csn = Board::D3) :
+    Flash::Device(4 * 1024L, 128),
     SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 0, SPI::MSB_ORDER, NULL)
   {}
 #endif
@@ -185,9 +172,10 @@ protected:
     PP = 0x02,			//!< Page Program.
     SER = 0x20,			//!< Sector Erase (4 kB).
     B32ER = 0x52,		//!< Block Erase (32 kB).
-    B64ER = 0x52,		//!< Block Erase (64kB).
-    CE = 0x60,			//!< Chip Erase.
-    RPW = 0xab,			//!< Release Power-down/Device ID.
+    B64ER = 0xd8,		//!< Block Erase (64kB).
+    CER = 0x60,			//!< Chip Erase.
+    PWD = 0xb9,			//!< Power-down
+    RLPWD = 0xab,		//!< Release Power-down/Device ID.
     RDID = 0x90,		//!< Read Manufacturer/Device ID.
     RDIDDIO = 0x92,		//!< Read Manufacturer/Device ID Dual I/O.
     RDJID = 0x9f, 		//!< Read JEDEC ID.

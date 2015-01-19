@@ -30,6 +30,34 @@ public:
    */
   class Device {
   public:
+    /** Size of sector in bytes. */
+    const uint32_t SECTOR_BYTES;
+
+    /** Default size of sector in bytes. */
+    static const uint32_t DEFAULT_SECTOR_BYTES = 4096;
+
+    /** Sector address mask. */
+    const uint32_t SECTOR_MASK;
+
+    /** Number of sectors. */
+    const uint16_t SECTOR_MAX;
+
+    /** Number of bytes of device. */
+    const uint32_t DEVICE_BYTES;
+
+    /**
+     * Construct flash memory device driver with given sector size and
+     * count. 
+     * @param[in] size of sector in bytes.
+     * @param[in] count number of sector.
+     */
+    Device(uint32_t bytes, uint16_t count) :
+      SECTOR_BYTES(bytes),
+      SECTOR_MASK(bytes - 1),
+      SECTOR_MAX(count),
+      DEVICE_BYTES(count * bytes)
+    {}
+
     /**
      * @override Flash::Device
      * Initiate the flash memory device driver. Return true(1) if the

@@ -86,7 +86,7 @@ void setup()
   sleep(5);
 
   // Read, erase and write second sector
-  addr = W25X40CL::SECTOR_MAX;
+  addr = flash.SECTOR_MAX;
   start = RTC::micros();
   res = flash.read(buf, addr, sizeof(buf));
   us = RTC::micros() - start;
@@ -99,7 +99,7 @@ void setup()
   trace.print(buf, sizeof(buf), IOStream::hex);
 
   start = RTC::micros();
-  ASSERT(!flash.erase(W25X40CL::SECTOR_MAX));
+  ASSERT(!flash.erase(addr));
   us = RTC::micros() - start;
   ASSERT(flash.is_ready());
   trace << PSTR("erase: us = ") << us << endl;
