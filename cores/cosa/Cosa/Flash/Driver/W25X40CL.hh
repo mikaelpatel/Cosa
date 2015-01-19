@@ -47,7 +47,7 @@ public:
    * Construct W25X40CL device driver with given chip select pin. 
    * @param[in] csn chip select pin (default D15/D3).
    */
-#if !defined(BOARD_ATTINYX5)
+#if !defined(BOARD_ATTINY)
   W25X40CL(Board::DigitalPin csn = Board::D15) :
     Flash::Device(4 * 1024L, 128),
     SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 0, SPI::MSB_ORDER, NULL)
