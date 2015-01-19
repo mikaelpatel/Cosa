@@ -1,7 +1,7 @@
 # @file boards/adafruit.txt
 # @version 1.0
 #
-# @author Contributed by jediunix
+# @author contributed by jeditekunum
 #
 # @section License
 # Copyright (C) 2014, Mikael Patel
@@ -10,14 +10,14 @@
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
 # version 2.1 of the License, or (at your option) any later version.
-# 
+#
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Lesser General Public License for more details.
-# 
+#
 # @section Description
-# The Cosa Arduino core boards definition file. 
+# The Cosa Arduino core boards definition file.
 #
 # @section Usage
 # Copy to top directory and rename boards.txt, alternatively
@@ -33,7 +33,7 @@
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 adafruit-atmega32u4.name=Cosa AdaFruit (ATmega32U4/LUFA+)
 adafruit-atmega32u4.upload.tool=avrdude
 adafruit-atmega32u4.upload.protocol=avr109
@@ -62,7 +62,7 @@ adafruit-atmega32u4.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 adafruit-atmega32u4-cat.name=Cosa AdaFruit (ATmega32U4/Caterina)
 adafruit-atmega32u4-cat.upload.tool=avrdude
 adafruit-atmega32u4-cat.upload.protocol=avr109
