@@ -852,6 +852,7 @@ ifneq (,$(strip $(LIBS_NOT_FOUND)))
     $(error The following libraries specified in ARDUINO_LIBS could not be found (searched USER_LIB_PATH and ARDUINO_LIB_PATH): $(LIBS_NOT_FOUND))
 endif
 
+SKETCHFLAGS = $(patsubst %,-D%,$(USEFLAGS)) 
 SYS_LIBS := $(wildcard $(SYS_LIBS) $(addsuffix /utility,$(SYS_LIBS)))
 USER_LIBS := $(wildcard $(USER_LIBS) $(addsuffix /utility,$(USER_LIBS)))
 SYS_INCLUDES = $(patsubst %,-I%,$(SYS_LIBS))
@@ -1065,7 +1066,7 @@ $(OBJDIR)/%.o: %.pde $(COMMON_DEPS) | $(OBJDIR)
 # .ino to .o file rule
 $(OBJDIR)/%.o: %.ino $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
-	$(CXX) -x c++ -include $(ARDUINO_HEADER) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+	$(CXX) -x c++ -include $(ARDUINO_HEADER) -MMD -c $(SKETCHFLAGS) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 # Generated assembly rule
 $(OBJDIR)/%.s: %.pde $(COMMON_DEPS) | $(OBJDIR)
