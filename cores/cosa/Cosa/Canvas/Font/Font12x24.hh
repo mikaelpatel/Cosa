@@ -2,7 +2,7 @@
  * @file Cosa/Canvas/Font/Font12x24.hh
  * @version 1.0
  *
- * @author contributed by jediunix
+ * @author contributed by jeditekunum
  *
  * @section License
  * Copyright (C) 2015, Mikael Patel
