@@ -29,10 +29,8 @@
  * Cosa Flash File System for Flash Memory. 
  *
  * @section Limitations
- * Only a single directory (entry sector), max 128 entries. The file
- * creation will fail when the directory is exhausted. A file may only
- * use a single sector. The sector size is determined by the flash
- * device. Default is 4 KB. 
+ * Does not erase file sectors that are removed. Also directory entries
+ * are not erased (directory block is not erased and rewritten).
  */
 class CFFS {
 public:
