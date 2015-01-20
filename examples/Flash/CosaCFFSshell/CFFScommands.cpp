@@ -27,13 +27,12 @@ SHELL_ACTION(cat, "FILE..", "print content of file")
 (int argc, char* argv[])
 {
   for (int ix = 1; ix < argc; ix++) {
-    const size_t BUF_MAX = 256;
-    char buf[BUF_MAX];
     CFFS::File file;
     int res = file.open(argv[ix], O_READ);
     if (res < 0) return (res);
-    while ((res = file.read(buf, sizeof(buf))) > 0)
-      ios.get_device()->write(buf, res);
+    int c;
+    while ((c = file.getchar()) != IOStream::EOF)
+      ios << (char) c;
     file.close();
   }
   return (0);
@@ -76,16 +75,11 @@ SHELL_ACTION(help, "", "list command help")
     return (shell.help(ios));
 }
 
-SHELL_ACTION(ls, "[-v]", "list files (verbose)")
+SHELL_ACTION(ls, "", "list files")
 (int argc, char* argv[])
 {
-  if (argc > 2) return (-1);
-  bool verbose = false;
-  if (argc == 2) {
-    if (strcmp_P(argv[1], PSTR("-v")) == 0)
-      verbose = true;
-    else return (-1);
-  }
+  UNUSED(argv);
+  if (argc > 1) return (-1);
   return (CFFS::ls(ios));
 }
 
