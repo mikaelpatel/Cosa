@@ -30,8 +30,8 @@
 #include "Cosa/Memory.h"
 #include "Cosa/RTC.hh"
 
-#define USE_FLASH_S25FL127S
-//#define USE_FLASH_W25X40CL
+//#define USE_FLASH_S25FL127S
+#define USE_FLASH_W25X40CL
 
 #if defined(USE_FLASH_S25FL127S)
 #include "Cosa/Flash/Driver/S25FL127S.hh"
@@ -57,20 +57,22 @@ void setup()
   MEASURE("Initiate the flash memory device driver:", 1)
     ASSERT(flash.begin());
 
-  MEASURE("Format file system driver:", 1) {
-    ASSERT(CFFS::format(&flash, "flash") == 0);
-  }
-
-  MEASURE("Initiate the file system driver:", 1) {
-    ASSERT(CFFS::begin(&flash));
-  }
-
   uint8_t buf[128];
   MEASURE("Reading file system and descriptors:", 1) {
     int res = flash.read(buf, 0L, sizeof(buf));
     ASSERT(res == sizeof(buf));
   }
   trace.print(buf, sizeof(buf), IOStream::hex);
+
+#if defined(FORMAT_DRIVE)
+  MEASURE("Format file system driver:", 1) {
+    ASSERT(CFFS::format(&flash, "flash") == 0);
+  }
+#endif
+
+  MEASURE("Initiate the file system driver:", 1) {
+    ASSERT(CFFS::begin(&flash));
+  }
 
   INFO("List files", 0);
   CFFS::ls(trace);
@@ -90,23 +92,40 @@ void setup()
     CFFS::ls(trace);
     TRACE(file.tell());
   }
-  MEASURE("Write log entry:", 1) {
+#if defined(WRITE_LOG_ENTRIES)
+  MEASURE("Write 100 log entries:", 1) {
     IOStream cout(&file);
-    cout << RTC::micros() << PSTR(":A0 = ") 
-	 << AnalogPin::sample(Board::A0)
-	 << endl;
+    for (uint16_t i = 0; i < 100; i++) {
+      cout << RTC::micros() << PSTR(":A0 = ")
+	   << AnalogPin::sample(Board::A0)
+	   << endl;
+    }
   }
+#else
+  MEASURE("Write 10 x buf(80):", 1) {
+    memset(buf, ' ', 79);
+    buf[79] = '\n';
+    for (uint16_t i = 0; i < 10; i++)
+      file.write(buf, 80);
+  }
+#endif
   MEASURE("Tell position:", 1) file.tell();
+  TRACE(file.tell());
   MEASURE("File size:", 1) file.size();
+  TRACE(file.size());
   MEASURE("Close file:", 1) file.close();
   MEASURE("Open log file:", 1) ASSERT(file.open("Kalle", O_READ) == 0);
   MEASURE("Read buffer:", 1) file.read(buf, sizeof(buf));
+  TRACE(file.tell());
 
-  INFO("Rewind and dump as text to output stream", 0);
-  TRACE(file.rewind());
-  uint32_t size = file.size();
-  for (uint32_t i = 0; i < size; i++)
-    trace << (char) file.getchar();
+  INFO("Dump as text to output stream", 0);
+  TRACE(file.seek(10000, SEEK_SET));
+  TRACE(file.seek(1000, SEEK_SET));
+  TRACE(file.seek(10, SEEK_SET));
+  TRACE(file.tell());
+  int c;
+  while ((c = file.getchar()) != IOStream::EOF)
+    trace << (char) c;
   TRACE(file.close());
 
   MEASURE("Make directory:", 1) CFFS::mkdir("Folder");

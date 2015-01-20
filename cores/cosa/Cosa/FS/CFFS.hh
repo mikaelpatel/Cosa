@@ -220,6 +220,19 @@ public:
     uint32_t m_file_size;		//!< File size.
     uint32_t m_current_addr;		//!< Current flash address.
     uint32_t m_current_pos;		//!< Current logical position.
+
+    /**
+     * @override IOStream::Device
+     * Write data from buffer in data or program memory with given
+     * size to the file. If successful returns number of bytes written
+     * or negative 
+     * error code.  
+     * @param[in] buf buffer to write.
+     * @param[in] size number of bytes to write.
+     * @param[in] progmem from data(false) or program memory(true).
+     * @return number of bytes written or negative error code.
+     */
+    int write(const void* buf, size_t size, bool progmem);
   };
 
   /**
@@ -304,12 +317,7 @@ protected:
    * @param[in] size number of bytes to read.
    * @return number of bytes or negative error code.
    */
-  static int read(void* dest, uint32_t src, size_t size)
-    __attribute__((always_inline))
-  {
-    if (device == NULL) return (-1);
-    return (device->read(dest, src, size));
-  }
+  static int read(void* dest, uint32_t src, size_t size);
 
   /**
    * Write flash block at given destination address with the contents
@@ -320,12 +328,7 @@ protected:
    * @param[in] size number of bytes to write.
    * @return number of bytes or negative error code.
    */
-  static int write(uint32_t dest, const void* src, size_t size)
-    __attribute__((always_inline))
-  {
-    if (device == NULL) return (-1);
-    return (device->write(dest, src, size));
-  }
+  static int write(uint32_t dest, const void* src, size_t size);
 
   /**
    * Write flash block at given destination address with contents
@@ -336,12 +339,7 @@ protected:
    * @param[in] size number of bytes to write.
    * @return number of bytes written or EOF(-1).
    */
-  static int write_P(uint32_t dest, const void* src, size_t size)
-    __attribute__((always_inline))
-  {
-    if (device == NULL) return (-1);
-    return (device->write_P(dest, src, size));
-  }
+  static int write_P(uint32_t dest, const void* src, size_t size);
   
   /**
    * Lookup directory entry with the given file name. Return entry
