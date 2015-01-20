@@ -29,8 +29,8 @@
  * Cosa Flash File System for Flash Memory. 
  *
  * @section Limitations
- * Does not erase file sectors that are removed. Also directory entries
- * are not erased (directory block is not erased and rewritten).
+ * Directory entries are not reclaimed (directory block is not erased
+ * and rewritten).
  */
 class CFFS {
 public:
@@ -69,7 +69,7 @@ protected:
    *
    * DIR_BLOCK_TYPE is directory block header; size is the directory
    * sector, ref is the address to the next directory block (NULL is
-   * encoded as 0xffffffffL) 
+   * encoded as 0xffffffffL, NULL_REF) 
    */
   enum {
     CFFS_TYPE = 0xf5cf,		//!< File System Master header.
@@ -91,10 +91,10 @@ public:
   /**
    * Flash File access class. Support for directories, text and binary
    * files. Text files may not use the value (0xff). Binary files must
-   * end each entry with zero(0x00). Files may be read/written. Write
-   * should always be in append mode as the file cannot be rewritten
-   * with any value. Opening a file that already exists in append mode
-   * will require locating the end of the file. 
+   * end each entry with non-0xff entry. Files may be read/written. 
+   * Write should always be in append mode as the file cannot be
+   * rewritten with any value. Opening a file that already exists in
+   * append mode will require locating the end of the file. 
    */
   class File : public IOStream::Device {
   public:
@@ -148,6 +148,7 @@ public:
 
     /**
      * Return current position. 
+     * @return position.
      */
     uint32_t tell()
     { 
@@ -155,7 +156,9 @@ public:
     }
 
     /**
-     * Rewind to the start of the file.
+     * Rewind to the start of the file. Return zero(0) if successful
+     * otherwise a negative error code.
+     * @return zero or negative error code.
      */
     int rewind()
     { 
@@ -164,6 +167,7 @@ public:
 
     /**
      * Return number of bytes in file. 
+     * @return size.
      */
     uint32_t size()
     { 
@@ -174,7 +178,7 @@ public:
      * @override IOStream::Device
      * Write data from buffer with given size to the file. If
      * successful returns number of bytes written or negative error
-     * code.
+     * code. 
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
      * @return number of bytes written or negative error code.
