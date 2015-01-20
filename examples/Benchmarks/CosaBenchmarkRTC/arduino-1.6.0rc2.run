@@ -1,0 +1,46 @@
+Use CTRL-ALT GR-] to exit monitor.
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
+CosaBenchmarkRTC: started
+45:void setup():trace:free_memory() = 1673
+48:void setup():trace:F_CPU = 16000000
+49:void setup():trace:I_CPU = 16
+56:void setup():trace:Watchdog::ms_per_tick() = 16
+57:void setup():trace:Watchdog::ticks() = 6
+58:void setup():trace:RTC::us_per_tick() = 1024
+59:void setup():trace:RTC::seconds() = 0
+62:void setup():measure:RTC::micros(): 4 us
+63:void setup():measure:RTC::millis(): 4 us
+64:void setup():measure:RTC::seconds(): 4 us
+65:void setup():measure:RTC::delay(1): 720 us
+66:void setup():measure:RTC::delay(10): 10440 us
+67:void setup():measure:DELAY(10): 12 us
+68:void setup():measure:DELAY(100): 104 us
+69:void setup():measure:delay(10): 10480 us
+70:void setup():measure:delay(100): 100252 us
+71:void setup():measure:sleep(1): 1000096 us
+72:void setup():measure:yield(): 748 us
+75:void setup():trace:RTC::micros() = 1940636
+76:void setup():trace:RTC::millis() = 1994
+77:void setup():trace:RTC::seconds() = 2
+80:void setup():trace:RTC::micros() = 3117412
+81:void setup():trace:RTC::millis() = 3140
+82:void setup():trace:RTC::seconds() = 3
+80:void setup():trace:RTC::micros() = 4264840
+81:void setup():trace:RTC::millis() = 4287
+82:void setup():trace:RTC::seconds() = 4
+80:void setup():trace:RTC::micros() = 5412256
+81:void setup():trace:RTC::millis() = 5434
+82:void setup():trace:RTC::seconds() = 5
+80:void setup():trace:RTC::micros() = 6559660
+81:void setup():trace:RTC::millis() = 6582
+82:void setup():trace:RTC::seconds() = 6
+80:void setup():trace:RTC::micros() = 7707032
+81:void setup():trace:RTC::millis() = 7729
+82:void setup():trace:RTC::seconds() = 7
+99:void setup():trace:RTC::seconds() = 18
+100:void setup():info:DELAY(100): 100000 measurement/validation (err = 0)
+116:void setup():trace:RTC::seconds() = 28
+117:void setup():info:RTC::delay(100): 100 measurement/validation (err = 0)
+133:void setup():trace:RTC::seconds() = 39
+134:void setup():info:Watchdog::delay(100): 100 measurement/validation (err = 0)
+CosaBenchmarkRTC.ino:139:assert:true == false
