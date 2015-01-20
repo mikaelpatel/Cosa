@@ -27,10 +27,21 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Flash/Driver/S25FL127S.hh"
 #include "Cosa/FS/CFFS.hh"
 
+//#define USE_FLASH_S25FL127S
+//#define USE_FLASH_W25X40CL
+
+#if defined(USE_FLASH_S25FL127S) || defined(ANARDUINO_MINIWIRELESS)
+#include "Cosa/Flash/Driver/S25FL127S.hh"
 S25FL127S flash;
+#endif
+
+#if defined(USE_FLASH_W25X40CL) || defined(WICKEDDEVICE_WILDFIRE)
+#include "Cosa/Flash/Driver/W25X40CL.hh"
+W25X40CL flash;
+#endif
+
 IOStream ios(&uart);
 
 void setup()

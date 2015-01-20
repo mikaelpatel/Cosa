@@ -340,34 +340,38 @@ protected:
   static int write_P(uint32_t dest, const void* src, size_t size);
   
   /**
-   * Lookup directory entry with the given file name. Return entry
-   * address if found and entry setting, otherwise zero.
+   * Lookup directory entry with the given file name. Return zero and
+   * entry if found otherwise negative error code. 
    * @param[in] filename to lookup.
    * @param[out] entry setting.
-   * @return entry address or zero.
+   * @param[out] addr entry address.
+   * @return zero and entry setting otherwise negative error code.
    */
-  static uint32_t lookup(const char* filename, descr_t &entry);
+  static int lookup(const char* filename, descr_t &entry, uint32_t& addr);
 
   /**
    * Create directory entry with given file name and type. The flags (O_EXCL)
    * may be used to fail if the file already exists. The type must be
-   * DIR_TYPE or FILE_TYPE. Returns entry address and entry setting if
-   * created otherwise zero.
+   * DIR_TYPE or FILE_TYPE. Returns zero and entry otherwise negative
+   * error code. 
    * @param[in] filename to create.
    * @param[in] type of entry to create.
    * @param[in] flags open flags to check.
-   * @return entry address or zero.
+   * @param[out] entry setting.
+   * @param[out] addr address of entry.
+   * @return zero and entry otherwise negative error code.
    */
-  static uint32_t create(const char* filename, uint16_t type, uint8_t flags, 
-			 descr_t &entry);
+  static int create(const char* filename, uint16_t type, uint8_t flags, 
+		    descr_t &entry, uint32_t &addr);
 
   /**
    * Remove directory entry. Returns zero(0) if successful otherwise a
    * negative error code. 
    * @param[in] addr entry address.
+   * @param[in] type entry type.
    * @return zero or negative error code.
    */
-  static int remove(uint32_t addr);
+  static int remove(uint32_t addr, uint16_t type);
 
   /**
    * Allocate next free sector. Returns sector address or zero.
@@ -382,7 +386,7 @@ protected:
   static uint32_t next_free_directory();
   
   /**
-   * Locate address and size of file that starts with the given
+   * Find address and size of file that starts with the given
    * sector. Return zero(0) if successful otherwise a negative error
    * code.
    * @param[in] sector address of sector.
@@ -390,7 +394,7 @@ protected:
    * @param[out] size of file.
    * @return zero or negative error code.
    */
-  static int lookup_end_of_file(uint32_t sector, uint32_t &pos, uint32_t &size);
+  static int find_end_of_file(uint32_t sector, uint32_t &pos, uint32_t &size);
 };
 
 #endif

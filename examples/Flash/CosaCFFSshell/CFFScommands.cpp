@@ -86,7 +86,7 @@ SHELL_ACTION(ls, "[-v]", "list files (verbose)")
       verbose = true;
     else return (-1);
   }
-  return (CFFS::ls(ios, verbose));
+  return (CFFS::ls(ios));
 }
 
 SHELL_ACTION(mkdir, "DIR", "make directory")

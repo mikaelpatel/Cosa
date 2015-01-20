@@ -30,33 +30,28 @@ CFFS::File::open(const char* filename, uint8_t oflag)
   if (is_open()) return (-1);
 
   // Check if the file should be created
-  uint32_t addr;
   if (oflag & O_CREAT) {
     oflag |= O_WRITE;
-    addr = CFFS::create(filename, CFFS::FILE_ENTRY_TYPE, oflag, m_entry);
-    if (addr == 0L) return (-1);
-    m_entry_addr = addr;
-    m_file_size = 0L;
-    m_current_addr = m_entry.ref;
-    m_current_addr += sizeof(CFFS::descr_t);
+    int res = create(filename, FILE_ENTRY_TYPE, oflag, m_entry, m_entry_addr);
+    if (res < 0) return (-2);
+    m_current_addr = m_entry.ref + sizeof(CFFS::descr_t);
     m_current_pos = 0L;
+    m_file_size = 0L;
   } 
 
   // Check that the file exists; open file 
   else {
     if ((oflag & O_WRITE) == 0) oflag |= O_READ;
-    addr = CFFS::lookup(filename, m_entry);
-    if (addr == 0L) return (-2);
-    m_entry_addr = addr;
-    int res = lookup_end_of_file(m_entry.ref, m_current_addr, m_file_size);
-    if (res < 0) return (res);
+    int res = lookup(filename, m_entry, m_entry_addr);
+    if (res < 0) return (-3);
+    res = find_end_of_file(m_entry.ref, m_current_addr, m_file_size);
+    if (res < 0) return (-4);
     m_current_pos = m_file_size;
   }
 
   // Check if the position should be from the start of the file
   if (((oflag & O_RDWR) == O_READ) || (oflag & O_CREAT)) {
-    m_current_addr = m_entry.ref;
-    m_current_addr += sizeof(CFFS::descr_t);
+    m_current_addr = m_entry.ref + sizeof(CFFS::descr_t);
     m_current_pos = 0L;
   }
 
@@ -69,7 +64,7 @@ int
 CFFS::File::remove()
 {
   if (m_flags == 0) return (-1);
-  return (CFFS::remove(m_entry_addr));
+  return (CFFS::remove(m_entry_addr, FILE_ENTRY_TYPE));
 }
 
 int 
@@ -83,28 +78,42 @@ CFFS::File::close()
 int 
 CFFS::File::seek(uint32_t pos, uint8_t whence)
 {
+  // Check mode and parameters
   if ((m_flags & O_READ) == 0) return (-1);
   if (pos > m_file_size) return (-1);
 
   // Fix: Should implement all seek variants
   if (whence != SEEK_SET) return (-1);
-
-  // Find sector
+  
+  // Find sector and position in sector
   descr_t entry;
   uint32_t addr = m_entry.ref;
   m_current_pos = pos;
-  do {
+  while (pos != 0) {
+    // Read sector header and check that it is a file block
     if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry))
       return (-2);
     if (entry.type != FILE_BLOCK_TYPE)
       return (-3);
+    // Check if additional sector skip is needed
     uint32_t size = entry.size - sizeof(descr_t);
-    if (pos <= size) {
-      size = pos;
-      m_current_addr = addr + sizeof(descr_t) + size;
+    if (pos >= size) {
+      addr = entry.ref;
+      if (addr == NULL_REF) 
+	return (-4);
+      pos -= size;
+      // First byte in next sector
+      if (pos == 0) 
+	m_current_addr = addr + sizeof(descr_t);
     }
-    pos -= size;
-  } while (pos != 0);
+    else {
+      // Byte in current sector
+      m_current_addr = addr + sizeof(descr_t) + pos;
+      pos = 0;
+    }
+  }
+
+  // Found the position
   return (0);
 }
 
@@ -131,16 +140,23 @@ CFFS::File::getchar()
 int
 CFFS::File::read(void* buf, size_t size)
 {
+  // Check file access mode
   if ((m_flags & O_READ) == 0) return (-1);
+
+  // Adjust requested size if needed
   uint32_t remains = m_file_size - m_current_pos;
   if (size > remains) size = remains;
   int count = size;
+
+  // Read sectors until buffer is filled
   while (size != 0) {
     int res = CFFS::read(buf, m_current_addr, size);
-    if (res < 0) return (res);
+    if (res < 0) return (-2);
     size -= res;
     m_current_pos += res;
     m_current_addr += res;
+
+    // Read next sector header if needed
     if ((m_current_addr & device->SECTOR_MASK) == 0) {
       descr_t header;
       uint32_t addr = m_current_addr - device->SECTOR_BYTES;
@@ -152,45 +168,53 @@ CFFS::File::read(void* buf, size_t size)
       m_current_addr = header.ref + sizeof(header);
     }
   }
+
+  // Return number of bytes read
   return (count);
 }
 
 int 
 CFFS::File::write(const void* buf, size_t size, bool progmem)
 {
+  // Check access mode
   if ((m_flags & O_WRITE) == 0) return (-1);
-  if (m_current_pos != m_file_size) return (-1);
+
+  // Check write position; must be end of file
+  if (m_current_pos != m_file_size) return (-2);
   int count = size;
+
+  // Write sectors with buffer data
   while (size != 0) {
     int res;
     if (progmem) 
       res = CFFS::write_P(m_current_addr, buf, size);
     else
       res = CFFS::write(m_current_addr, buf, size);
-    if (res < 0) return (res);
+    if (res < 0) return (-3);
     m_current_addr += res;
     m_current_pos += res;
     m_file_size += res;
     size -= res;
 
-    // Is the sector full?
+    // Check if sector is exhaused
     if ((m_current_addr & device->SECTOR_MASK) == 0) {
+      // Allocate a new sector
       uint32_t sector = next_free_sector();
-      if (sector == 0L) return (-2);
+      if (sector == 0L) return (-4);
 
       // Update current sector header
       descr_t header;
       uint32_t addr = m_current_addr - device->SECTOR_BYTES;
       if (device->read(&header, addr, sizeof(header)) != sizeof(header))
-	return (-3);
-      if (header.type != FILE_BLOCK_TYPE) return (-4);
-      if (header.size != device->SECTOR_BYTES) return (-4);
-      if (header.ref != NULL_REF) return (-4);
+	return (-5);
+      if (header.type != FILE_BLOCK_TYPE) return (-6);
+      if (header.size != device->SECTOR_BYTES) return (-6);
+      if (header.ref != NULL_REF) return (-6);
       
       // Append new sector
       header.ref = sector;
       if (device->write(addr, &header, sizeof(header)) != sizeof(header))
-	return (-5);
+	return (-7);
 
       // Continue write in new sector
       m_current_addr = sector + sizeof(header);
@@ -223,61 +247,21 @@ CFFS::begin(Flash::Device* flash)
   return (true);
 }
 
-#if defined(CFFS_DEBUG)
 int
 CFFS::ls(IOStream& outs)
 {
   // Check that the file system driver is initiated
   if (device == NULL) return (-1);
-  uint32_t addr = current_dir_addr;
-  descr_t entry;
-  if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry)) 
-    return (-2);
-  const uint16_t ENTRY_MAX = entry.size / sizeof(entry);
-  outs << PSTR("current_dir_addr = ") << hex << addr 
-       << '[' << ENTRY_MAX << ']' << endl;
-  for (uint16_t i = 0; i < ENTRY_MAX; i++, addr += sizeof(entry)) {
-    if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry)) 
-      return (-2);
-    if (entry.type == FREE_TYPE) continue;
-    outs << hex << addr << PSTR(":name=\"") << entry.name << '\"';
-    if ((entry.type & 0x8000) == 0) outs << PSTR("deleted,");
-    outs << PSTR(",type=");
-    switch (entry.type | 0x8000) {
-    case DIR_BLOCK_TYPE: outs << PSTR("DIR_BLOCK"); break;
-    case DIR_ENTRY_TYPE: outs << PSTR("DIR_ENTRY"); break;
-    case FILE_ENTRY_TYPE: outs << PSTR("FILE_ENTRY"); break;
-    }
-    outs << PSTR(",size=") << entry.size;
-    outs << PSTR(",ref=") << hex << entry.ref;
-    if (entry.type == FILE_ENTRY_TYPE) {
-      uint32_t ref = entry.ref;
-      if (ref == NULL_REF) return (-3);
-      while (1) {
-	if (device->read(&entry, ref, sizeof(entry)) != sizeof(entry)) 
-	  return (-3);
-	if (entry.type != FILE_BLOCK_TYPE) return (-4);
-	ref = entry.ref;
-	if (ref == NULL_REF) break;
-	outs << PSTR(",ref=") << hex << entry.ref;
-      }
-    }
-    outs << endl;
-  }
-  return (0);
-}
-#else
-int
-CFFS::ls(IOStream& outs)
-{
-  // Check that the file system driver is initiated
-  if (device == NULL) return (-1);
+
+  // Read directory header for number of entries
   uint32_t addr = current_dir_addr;
   descr_t entry;
   uint8_t j = 0;
   if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry)) 
     return (-2);
   const uint16_t ENTRY_MAX = entry.size / sizeof(entry);
+  
+  // Print file names to given output stream
   for (uint16_t i = 0; i < ENTRY_MAX; i++, addr += sizeof(entry)) {
     if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry)) 
       return (-3);
@@ -290,29 +274,29 @@ CFFS::ls(IOStream& outs)
     }
   }
   if (j & 0x7) outs << endl;
+
+  // Return successful
   return (0);
 }
-#endif
 
 int
 CFFS::rm(const char* filename)
 {
   File file;
-  int res;
-  res = file.open(filename, O_READ);
-  if (res < 0) return (res);
-  return (file.remove());
+  int res = file.open(filename, O_READ);
+  return (res < 0 ? res : file.remove());
 }
 
 int 
 CFFS::cd(const char* filename)
 {
   descr_t entry;
-  uint32_t addr = CFFS::lookup(filename, entry);
-  if (addr == 0L) return (-1);
-  if ((entry.type != DIR_BLOCK_TYPE) && 
-      (entry.type != DIR_ENTRY_TYPE)) 
+  uint32_t addr;
+  int res = CFFS::lookup(filename, entry, addr);
+  if (res < 0) 
     return (-1);
+  if ((entry.type != DIR_BLOCK_TYPE) && (entry.type != DIR_ENTRY_TYPE)) 
+    return (-2);
   current_dir_addr = entry.ref;
   return (0);
 }
@@ -321,9 +305,8 @@ int
 CFFS::mkdir(const char* filename)
 {
   descr_t entry;
-  int res = CFFS::create(filename, CFFS::DIR_ENTRY_TYPE, O_EXCL, entry);
-  if (res < 0) return (res);
-  return (0);
+  uint32_t addr;
+  return (CFFS::create(filename, CFFS::DIR_ENTRY_TYPE, O_EXCL, entry, addr));
 }
 
 int 
@@ -377,67 +360,68 @@ CFFS::format(Flash::Device* flash, const char* name)
   return (0);
 }
 
-uint32_t
-CFFS::lookup(const char* filename, descr_t &entry)
+int
+CFFS::lookup(const char* filename, descr_t &entry, uint32_t& addr)
 {
   // Check that the file system driver is initiated
   if (device == NULL) return (-1);
 
   // Read current director and lookup entry with given filename
-  uint32_t addr = current_dir_addr;
+  addr = current_dir_addr;
   if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry)) 
     return (-2);
   const uint16_t ENTRY_MAX = entry.size / sizeof(descr_t);
   addr = entry.ref;
   for (uint16_t i = 0; i < ENTRY_MAX; i++, addr += sizeof(descr_t)) {
     if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry)) 
-      return (-2);
+      return (-3);
     if (entry.type == FREE_TYPE) break;
     if ((entry.type & ALLOC_MASK) == 0) continue;
     if (strcmp(filename, entry.name)) continue;
-    return (addr);
+    return (0);
   }
-  return (0L);
+
+  // Not found
+  return (-4);
 }
 
-uint32_t
-CFFS::create(const char* filename, uint16_t type, uint8_t flags, descr_t &entry)
+int
+CFFS::create(const char* filename, uint16_t type, uint8_t flags, 
+	     descr_t &entry, uint32_t &addr)
 {
   // Check that the file system driver is initiated
   if (device == NULL) return (-1);
 
   // Check parameters
-  if ((type != DIR_ENTRY_TYPE) && (type != FILE_ENTRY_TYPE)) return (0L);
-  if (strlen(filename) >= FILENAME_MAX) return (0L);
+  if ((type != DIR_ENTRY_TYPE) && (type != FILE_ENTRY_TYPE)) return (-2);
+  if (strlen(filename) >= FILENAME_MAX) return (-3);
 
   // Search through the current directory
-  uint32_t addr = current_dir_addr;
+  addr = current_dir_addr;
   if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry)) 
-    return (-2);
+    return (-4);
   uint16_t ENTRY_MAX = entry.size / sizeof(descr_t);
   addr = entry.ref;
   for (uint16_t i = 0; i < ENTRY_MAX; i++, addr += sizeof(descr_t)) {
     if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry)) 
-      return (0L);
+      return (-5);
     // Skip deleted entries
     if ((entry.type & ALLOC_MASK) == 0) continue;
     // Check if file name is already used; error or remove
     if (!strcmp(filename, entry.name)) {
-      if ((flags & O_EXCL) || (type == DIR_ENTRY_TYPE)) return (-3);
-      entry.type &= TYPE_MASK;
-      if (device->write(addr, &entry, sizeof(entry)) != sizeof(entry)) 
-	return (0L);
+      if ((flags & O_EXCL) || (type == DIR_ENTRY_TYPE)) return (-6);
+      if (remove(addr, entry.type) != 0) return (-7);
     }
     else if (entry.type == FREE_TYPE) {
       // Creating a directory or file entry
       if (type == DIR_ENTRY_TYPE) {
 	uint32_t addr = next_free_directory();
-	if (addr == 0L) return (0L);
+	if (addr == 0L) return (-8);
 	entry.ref = addr;
       }
       else {
 	uint32_t sector = next_free_sector();
-	if (sector == 0L) return (0L);
+	if (sector == 0L) return (-9);
 	entry.ref = sector;
       }
       strcpy(entry.name, filename);
@@ -445,34 +429,43 @@ CFFS::create(const char* filename, uint16_t type, uint8_t flags, descr_t &entry)
       entry.size = sizeof(entry);
       // Write the entry and return the address
       if (device->write(addr, &entry, sizeof(entry)) != sizeof(entry)) 
-	return (0L);
-      return (addr);
+	return (-10);
+      return (0);
     }
   }
   
   // Directory is full
-  return (0L);
+  return (-10);
 }
 
 int
-CFFS::remove(uint32_t addr)
+CFFS::remove(uint32_t addr, uint16_t type)
 {
   // Check that the file system driver is initiated
   if (device == NULL) return (-1);
 
-  // Read directory entry to remove and check type (dir/file)
+  // Read directory entry and check type
   descr_t entry;
   if (device->read(&entry, addr, sizeof(entry)) != sizeof(entry)) 
     return (-2);
-  if ((entry.type != DIR_ENTRY_TYPE) || (entry.type != FILE_ENTRY_TYPE)) return (-3);
+  if ((entry.type != type))
+    return (-3);
 
-  // Fix: Check directory files are removed
-  // Fix: Mark file sectors as removed
-  
-  // Mark the entry as removed but maintain rest of information for cleanup
-  entry.type &= TYPE_MASK;
+  // Save reference to sector to erase
+  uint32_t ref = entry.ref;
+
+  // Mark the entry as removed in the directory block
+  memset(&entry, 0, sizeof(entry));
   if (device->write(addr, &entry, sizeof(entry)) != sizeof(entry)) 
     return (-4);
+
+  // Erase sectors
+  while (ref != NULL_REF) {
+    if (device->read(&entry, ref, sizeof(entry)) != sizeof(entry)) 
+      return (-5);
+    if (device->erase(ref, entry.size / 1024) != 0) return (-5);
+    ref = entry.ref;
+  }
   return (0);
 }
 
@@ -572,7 +565,7 @@ CFFS::next_free_directory()
 }
 
 int
-CFFS::lookup_end_of_file(uint32_t addr, uint32_t &pos, uint32_t &size)
+CFFS::find_end_of_file(uint32_t addr, uint32_t &pos, uint32_t &size)
 {
   // Check that the file system driver is initiated
   if (device == NULL) return (-1);
@@ -582,9 +575,9 @@ CFFS::lookup_end_of_file(uint32_t addr, uint32_t &pos, uint32_t &size)
   size = 0L;
   while (1) {
     if (device->read(&header, addr, sizeof(header)) != sizeof(header))
-      return (0L);
-    if (header.type != FILE_BLOCK_TYPE) return (-1);
-    if (header.size != device->SECTOR_BYTES) return (-1);
+      return (-2);
+    if (header.type != FILE_BLOCK_TYPE) return (-3);
+    if (header.size != device->SECTOR_BYTES) return (-3);
     if (header.ref == NULL_REF) break;
     addr = header.ref;
     size += (header.size - sizeof(header));
@@ -597,7 +590,7 @@ CFFS::lookup_end_of_file(uint32_t addr, uint32_t &pos, uint32_t &size)
   for (uint16_t i = 0; i < BUF_MAX; i++) {
     addr -= sizeof(buf);
     if (device->read(buf, addr, sizeof(buf)) != sizeof(buf))
-      return (-1);
+      return (-4);
     uint16_t j = sizeof(buf) - 1;
     while (buf[j] == 0xff) if (j == 0) break; else j--;
     if (j == 0) continue;
