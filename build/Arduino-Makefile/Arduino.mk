@@ -921,7 +921,7 @@ ifeq ($(shell expr $(ARDUINO_VERSION) '<' 157), 1)
 else
   EXTRA_CFLAGS += -Wextra -flto
   EXTRA_LDFLAGS += -w -Wl,-relax -flto
-  EXTRA_CXXFLAGS += -Wextra -flto -std=gnu++11 -felide-constructors
+  EXTRA_CXXFLAGS += -Wextra -flto -std=gnu++11 -felide-constructors -mcall-prologues
 endif
 
 CFLAGS += $(EXTRA_FLAGS) $(EXTRA_CFLAGS)
