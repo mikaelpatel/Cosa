@@ -6,7 +6,7 @@
 cd <custom_path>/sketchbook
 mkdir hardware # Create the hardware folder if missing
 cd hardware
-git clone git@github.com:mikaelpatel/Cosa.git
+git clone https://github.com/mikaelpatel/Cosa.git
 ```
 
 Then you can update the library by using:
