@@ -64,6 +64,7 @@ int
 CFFS::File::remove()
 {
   if (m_flags == 0) return (-EPERM);
+  m_flags = 0;
   return (CFFS::remove(m_entry_addr, FILE_ENTRY_TYPE));
 }
 

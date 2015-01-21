@@ -163,9 +163,15 @@ void setup()
   MEASURE("Change current directory:", 1) 
     CFFS::cd("Folder");
   CFFS::ls(trace);
+
   TRACE(file.open("Kalle", O_CREAT | O_EXCL));
   CFFS::ls(trace);
   TRACE(file.remove());
+  CFFS::ls(trace);
+  TRACE(file.open("Kalle", O_CREAT | O_EXCL));
+  TRACE(file.write(buf, sizeof(buf)));
+  TRACE(file.size());
+  TRACE(file.close());
   CFFS::ls(trace);
 
   MEASURE("Change to parent directory:", 1) 
