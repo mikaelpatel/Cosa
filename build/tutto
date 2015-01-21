@@ -4,7 +4,7 @@
 # @version 1.0
 #
 # @section License
-# Copyright (C) 2014, Mikael Patel
+# Copyright (C) 2014-2015, Mikael Patel
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@ if [ $# == 0 ];
 then
    echo "Usage: tutto VERSION [BOARD]"
    echo "Build Cosa core for all boards or all example sketches for"
-   echo "given BOARD and VERSION is Arduino version, e.g. 1.5.7". 
+   echo "given BOARD and VERSION is Arduino version, e.g. 1.5.8". 
    exit 1
 fi
 

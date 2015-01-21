@@ -4,7 +4,7 @@
 # @version 1.0
 #
 # @section License
-# Copyright (C) 2014, Mikael Patel
+# Copyright (C) 2014-2015, Mikael Patel
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -32,7 +32,7 @@ fi
 
 if [ $1 == "tutto" ];
 then 
-   versions="1.0.5 1.0.6 1.5.7 1.5.8 1.6.0rc1"
+   versions="1.0.6 1.5.8 1.6.0rc2"
 else
    versions=$*
 fi
