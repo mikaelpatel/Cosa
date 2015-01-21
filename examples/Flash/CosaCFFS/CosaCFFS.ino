@@ -43,7 +43,7 @@ S25FL127S flash;
 W25X40CL flash;
 #endif
 
-//#define FORMAT_DRIVE
+#define FORMAT_DRIVE
 #define WRITE_LOG_ENTRIES
 
 void setup()
@@ -69,7 +69,8 @@ void setup()
     ASSERT(CFFS::begin(&flash));
   }
 
-  uint8_t buf[128];
+  char buf[128];
+  int res;
   MEASURE("Reading file system and descriptors:", 1) {
     int res = flash.read(buf, 0L, sizeof(buf));
     ASSERT(res == sizeof(buf));
@@ -128,8 +129,14 @@ void setup()
   MEASURE("Open log file:", 1) 
     ASSERT(file.open("Nisse", O_READ) == 0);
 
+  TRACE(file.tell());
   MEASURE("Read buffer:", 1) 
-    file.read(buf, sizeof(buf));
+    res = file.read(buf, sizeof(buf) - 1);
+  while (res > 0) {
+    buf[res] = 0;
+    trace << buf;
+    res = file.read(buf, sizeof(buf) - 1);
+  }
   TRACE(file.tell());
 
   INFO("Dump as text to output stream", 0);
@@ -137,9 +144,16 @@ void setup()
   TRACE(file.seek(1000, SEEK_SET));
   TRACE(file.seek(10000, SEEK_SET));
   TRACE(file.tell());
-  int c;
-  while ((c = file.getchar()) != IOStream::EOF)
-    trace << (char) c;
+  bool start = false;
+  for (uint16_t i = 0; i < 100; i++) {
+    int c = file.getchar();
+    if (c == IOStream::EOF) break;
+    if (start)
+      trace << (char) c;
+    else {
+      if (c == '\n') start = true;
+    }
+  }
   TRACE(file.close());
 
   MEASURE("Make directory:", 1) 
@@ -149,10 +163,19 @@ void setup()
   MEASURE("Change current directory:", 1) 
     CFFS::cd("Folder");
   CFFS::ls(trace);
+  TRACE(file.open("Kalle", O_CREAT | O_EXCL));
+  CFFS::ls(trace);
+  TRACE(file.remove());
+  CFFS::ls(trace);
 
   MEASURE("Change to parent directory:", 1) 
     CFFS::cd("..");
   CFFS::ls(trace);
+
+  TRACE(CFFS::cd("Nisse"));
+  TRACE(CFFS::cd("Subfolder"));
+  TRACE(CFFS::rmdir("Folder"));
+  TRACE(CFFS::mkdir("Folder"));
 }
 
 void loop()

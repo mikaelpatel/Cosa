@@ -30,7 +30,7 @@
  *
  * @section Limitations
  * Directory entries are not reclaimed (directory block is not erased
- * and rewritten).
+ * and rewritten when full).
  */
 class CFFS {
 public:
@@ -39,7 +39,7 @@ public:
 
 protected:
   /**
-   * CFFS object descriptor. Should be total 32 byte.
+   * CFFS object descriptor.
    */
   struct descr_t {
     uint16_t type;		//!< Type of file and entry state.
@@ -83,30 +83,33 @@ protected:
   };
   
   /**
-   * CFFS null address.
+   * CFFS null address in flash data structures.
    */
   static const uint32_t NULL_REF = 0xffffffffL;
 
 public:
   /**
-   * Flash File access class. Support for directories, text and binary
-   * files. Text files may not use the value (0xff). Binary files must
-   * end each entry with non-0xff entry. Files may be read/written. 
-   * Write should always be in append mode as the file cannot be
-   * rewritten with any value. Opening a file that already exists in
-   * append mode will require locating the end of the file. 
+   * Flash File access class. Support for directories, hard links,
+   * text and binary files. The end of the file is not store in the
+   * directory entry, instead it is located when the file is
+   * opened. This is done by searching for the first non-0xff value
+   * from the end of the last file sector. Text files may not use the
+   * value (0xff). Binary files must end each entry with non-0xff
+   * entry. Write should always be in append mode as the file cannot
+   * be rewritten with any value. 
    */
   class File : public IOStream::Device {
   public:
     /**
-     * Construct file access instance. Must be use open() before any
-     * operation are possible.
+     * Construct file access instance. Call open() before any
+     * read/write operations are possible.
      */
     File() : IOStream::Device(), m_flags(0) {}
     
     /**
-     * Open a file by path and mode flags. Returns zero(0) if
-     * successful otherwise a negative error code. 
+     * Open a file by name and mode flags. Returns zero(0) if
+     * successful otherwise a negative error code (EBUSY, EPERM,
+     * EINVAL, ENAMETOOLONG, EIO, EEXIST, ENFILE, ENOSPC).
      * @param[in] filename of file to open.
      * @param[in] oflag mode of file open.
      * @return zero or negative error code.
@@ -114,8 +117,9 @@ public:
     int open(const char* filename, uint8_t oflag = O_READ);
     
     /**
-     * Checks the file's open/closed status.
-     * @return the value true if a file is open otherwise false;
+     * Checks the file's open/closed status. Return true if open
+     * otherwise false.
+     * @return bool.
      */
     bool is_open(void) const 
     { 
@@ -125,21 +129,22 @@ public:
     /**
      * Remove a file. The directory entry and all data for the file
      * are deleted. Returns zero(0) if succesful otherwise a negative
-     * error code. 
+     * error code (EPREM, EIO, ENOENT).
      * @return zero or negative error code.
      */
     int remove();
 
     /**
      * Close a file. Return zero(0) if successful otherwise a negative
-     * error code.
+     * error code (EPREM).
      * @return zero or negative error code.
      */
     int close();
 
     /**
      * Sets the file's read position relative to mode. Return zero(0)
-     * if successful otherwise a negative error code.
+     * if successful otherwise a negative error code (EPERM, EINVAL,
+     * EIO, ENXIO).
      * @param[in] pos new position in bytes from given mode.
      * @param[in] mode absolute, relative and from end.
      * @return zero or negative error code.
@@ -157,7 +162,7 @@ public:
 
     /**
      * Rewind to the start of the file. Return zero(0) if successful
-     * otherwise a negative error code.
+     * otherwise a negative error code (EPERM, EINVAL,EIO, ENXIO).
      * @return zero or negative error code.
      */
     int rewind()
@@ -178,7 +183,7 @@ public:
      * @override IOStream::Device
      * Write data from buffer with given size to the file. If
      * successful returns number of bytes written or negative error
-     * code. 
+     * code (EPREM, EFAULT, ENOSPC, EIO, ENXIO).
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
      * @return number of bytes written or negative error code.
@@ -189,7 +194,7 @@ public:
      * @override IOStream::Device
      * Write data from buffer in program memory with given size to the
      * file. If successful returns number of bytes written or negative
-     * error code.  
+     * error (EPREM, EFAULT, ENOSPC, EIO, ENXIO).
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
      * @return number of bytes written or negative error code.
@@ -198,8 +203,8 @@ public:
 
     /**
      * @override IOStream::Device
-     * Read character/byte from the file. If successful returns byte
-     * read or negative error code.  
+     * Read character/byte from the file. If successful returns character
+     * read or negative error code (EPREM, EFAULT, ENOSPC, EIO, ENXIO).
      * @return character or negative error code.
      */
     virtual int getchar();
@@ -207,7 +212,8 @@ public:
     /**
      * @override IOStream::Device
      * Read data to given buffer with given size from the file. If
-     * successful returns number of bytes read or negative error code.  
+     * successful returns number of bytes read or negative error code
+     * (EPERM, EIO, ENXIO).
      * @param[in] buf buffer to read into.
      * @param[in] size number of bytes to read.
      * @return number of bytes read or negative error code.
@@ -227,8 +233,7 @@ public:
      * @override IOStream::Device
      * Write data from buffer in data or program memory with given
      * size to the file. If successful returns number of bytes written
-     * or negative 
-     * error code.  
+     * or negative error code.  
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
      * @param[in] progmem from data(false) or program memory(true).
@@ -247,7 +252,7 @@ public:
 
   /** 
    * List directory contents to given iostream. Return zero(0) if
-   * successful otherwise a negative error code. 
+   * successful otherwise a negative error code (EPERM, EIO).
    * @param[in] outs output stream.
    * @return zero or negative error code.
    */
@@ -256,7 +261,7 @@ public:
   /**
    * Remove a file. The directory entry and all data for the file is 
    * deleted. Return zero(0) if successful otherwise a negative error
-   * code. 
+   * code (EPREM, EIO, ENOENT, ENFILE, EINVAL).
    * @param[in] filename to remove. 
    * @return zero or negative error code.
    */
@@ -264,8 +269,8 @@ public:
   
   /**
    * Change current directory to the given filename in the current
-   * directory. 
-   * Return zero(0) if successful otherwise a negative error code. 
+   * directory. Return zero(0) if successful otherwise a negative
+   * error code (EPREM, EIO, ENOENT, ENOTDIR).
    * @param[in] filename directory to change to.
    * @return zero or negative error code.
    */
@@ -274,7 +279,7 @@ public:
   /**
    * Create a directory with the given filename in the current
    * directory. Return zero(0) if successful otherwise a negative
-   * error code.  
+   * error code (EPERM, EIO, EEXIST).
    * @param[in] filename directory to create.
    * @return zero or negative error code.
    */
@@ -283,7 +288,7 @@ public:
   /**
    * Remove directory with the given filename in the current
    * directory. Return zero(0) if successful otherwise a negative
-   * error code.  
+   * error code (ENOSYS).
    * @param[in] filename directory to remove.
    * @return zero or negative error code.
    */
@@ -291,7 +296,8 @@ public:
   
   /**
    * Format the flash. Create a CFFS volume with root directory. 
-   * Returns zero(0) if successful otherwise a negative error code.   
+   * Returns zero(0) if successful otherwise a negative error code
+   * (EPERM, ENAMETOOLONG, EIO).
    * @param[in] flash device to mount.
    * @param[in] name of file system.
    * @return zero or negative error code.
@@ -304,7 +310,7 @@ protected:
   /** Number of directory sectors. */
   static const size_t DIR_MAX = 16;
 
-  /** Current flash device. */
+  /** Current flash device (singleton). */
   static Flash::Device* device;
 
   /** Current directory address. */
