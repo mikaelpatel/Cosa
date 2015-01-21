@@ -1,73 +1,73 @@
-Tue Jan 20 00:35:55 CET 2015: adafruit-atmega32u4
+Wed Jan 21 23:22:21 CET 2015: adafruit-atmega32u4
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:35:56 CET 2015: adafruit-atmega32u4-cat
+Wed Jan 21 23:22:26 CET 2015: adafruit-atmega32u4-cat
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:35:58 CET 2015: atmega328-8
+Wed Jan 21 23:22:32 CET 2015: atmega328-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:35:59 CET 2015: attiny84-8
+Wed Jan 21 23:22:37 CET 2015: attiny84-8
 Program:     124 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:03 CET 2015: attiny85-8
+Wed Jan 21 23:22:42 CET 2015: attiny85-8
 Program:     120 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:04 CET 2015: attiny861-8
+Wed Jan 21 23:22:47 CET 2015: attiny861-8
 Program:     128 bytes (1.6% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:06 CET 2015: diecimila
+Wed Jan 21 23:22:52 CET 2015: diecimila
 Program:     216 bytes (1.3% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:07 CET 2015: duemilanove
+Wed Jan 21 23:22:57 CET 2015: duemilanove
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:08 CET 2015: leonardo
+Wed Jan 21 23:23:02 CET 2015: leonardo
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:10 CET 2015: lilypad
+Wed Jan 21 23:23:08 CET 2015: lilypad
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:11 CET 2015: lilypad-usb
+Wed Jan 21 23:23:13 CET 2015: lilypad-usb
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:12 CET 2015: mega1280
+Wed Jan 21 23:23:20 CET 2015: mega1280
 Program:     346 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:14 CET 2015: mega2560
+Wed Jan 21 23:23:27 CET 2015: mega2560
 Program:     350 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:15 CET 2015: micro
+Wed Jan 21 23:23:33 CET 2015: micro
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:17 CET 2015: microduino-core
+Wed Jan 21 23:23:39 CET 2015: microduino-core
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:18 CET 2015: microduino-core32u4
+Wed Jan 21 23:23:46 CET 2015: microduino-core32u4
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:24 CET 2015: microduino-core-plus
+Wed Jan 21 23:23:52 CET 2015: microduino-core-plus
 Program:     236 bytes (0.4% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:29 CET 2015: mighty
+Wed Jan 21 23:23:58 CET 2015: mighty
 Program:     258 bytes
 Data:          0 bytes
-Tue Jan 20 00:36:34 CET 2015: mighty-opt
+Wed Jan 21 23:24:04 CET 2015: mighty-opt
 Program:     258 bytes
 Data:          0 bytes
-Tue Jan 20 00:36:39 CET 2015: miniwireless
+Wed Jan 21 23:24:10 CET 2015: miniwireless
 Program:     414 bytes (1.3% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:45 CET 2015: moteino
+Wed Jan 21 23:24:15 CET 2015: moteino
 Program:     414 bytes (1.3% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:36:50 CET 2015: moteino-mega
+Wed Jan 21 23:24:22 CET 2015: moteino-mega
 Program:     284 bytes
 Data:          0 bytes
-Tue Jan 20 00:36:57 CET 2015: nano
+Wed Jan 21 23:24:29 CET 2015: nano
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:37:03 CET 2015: pinoccio
+Wed Jan 21 23:24:35 CET 2015: pinoccio
 unknown MCU 'atmega256rfr2' specified
 Known MCU names:
    avr2
@@ -492,27 +492,27 @@ CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDTCR’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDCE’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDE’ was not declared in this scope
-Tue Jan 20 00:37:04 CET 2015: pro-micro
+Wed Jan 21 23:24:36 CET 2015: pro-micro
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:37:09 CET 2015: pro-micro-8
+Wed Jan 21 23:24:42 CET 2015: pro-micro-8
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:37:15 CET 2015: pro-mini
+Wed Jan 21 23:24:47 CET 2015: pro-mini
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:37:23 CET 2015: pro-mini-8
+Wed Jan 21 23:24:53 CET 2015: pro-mini-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:37:28 CET 2015: teensy-2_0
+Wed Jan 21 23:24:58 CET 2015: teensy-2_0
 Program:     328 bytes (1.0% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:37:34 CET 2015: teensypp-2_0
+Wed Jan 21 23:25:05 CET 2015: teensypp-2_0
 Program:     314 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:37:40 CET 2015: uno
+Wed Jan 21 23:25:18 CET 2015: uno
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:37:45 CET 2015: wildfire
+Wed Jan 21 23:25:29 CET 2015: wildfire
 Program:     472 bytes
 Data:          0 bytes

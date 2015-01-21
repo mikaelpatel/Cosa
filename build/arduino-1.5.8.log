@@ -1,96 +1,96 @@
-Tue Jan 20 00:42:03 CET 2015: adafruit-atmega32u4
+Wed Jan 21 23:25:37 CET 2015: adafruit-atmega32u4
 Program:     232 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:42:10 CET 2015: adafruit-atmega32u4-cat
+Wed Jan 21 23:25:46 CET 2015: adafruit-atmega32u4-cat
 Program:     232 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:42:18 CET 2015: atmega328-8
+Wed Jan 21 23:25:55 CET 2015: atmega328-8
 Program:     152 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:42:27 CET 2015: attiny84-8
+Wed Jan 21 23:26:03 CET 2015: attiny84-8
 Program:      74 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:42:34 CET 2015: attiny85-8
+Wed Jan 21 23:26:10 CET 2015: attiny85-8
 Program:      70 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:42:42 CET 2015: attiny861-8
+Wed Jan 21 23:26:17 CET 2015: attiny861-8
 Program:      78 bytes (1.0% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:42:49 CET 2015: diecimila
+Wed Jan 21 23:26:25 CET 2015: diecimila
 Program:     152 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:42:57 CET 2015: duemilanove
+Wed Jan 21 23:26:34 CET 2015: duemilanove
 Program:     152 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:43:04 CET 2015: leonardo
+Wed Jan 21 23:26:43 CET 2015: leonardo
 Program:     232 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:43:13 CET 2015: lilypad
+Wed Jan 21 23:26:52 CET 2015: lilypad
 Program:     152 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:43:22 CET 2015: lilypad-usb
+Wed Jan 21 23:27:00 CET 2015: lilypad-usb
 Program:     232 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:43:30 CET 2015: mega1280
+Wed Jan 21 23:27:09 CET 2015: mega1280
 Program:     276 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:43:38 CET 2015: mega2560
+Wed Jan 21 23:27:17 CET 2015: mega2560
 Program:     280 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:43:46 CET 2015: micro
+Wed Jan 21 23:27:25 CET 2015: micro
 Program:     232 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:43:54 CET 2015: microduino-core
+Wed Jan 21 23:27:33 CET 2015: microduino-core
 Program:     152 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:44:01 CET 2015: microduino-core32u4
+Wed Jan 21 23:27:41 CET 2015: microduino-core32u4
 Program:     232 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:44:10 CET 2015: microduino-core-plus
+Wed Jan 21 23:27:50 CET 2015: microduino-core-plus
 Program:     172 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:44:18 CET 2015: mighty
+Wed Jan 21 23:27:58 CET 2015: mighty
 Program:     188 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:44:26 CET 2015: mighty-opt
+Wed Jan 21 23:28:06 CET 2015: mighty-opt
 Program:     188 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:44:33 CET 2015: miniwireless
+Wed Jan 21 23:28:14 CET 2015: miniwireless
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:44:35 CET 2015: moteino
+Wed Jan 21 23:28:22 CET 2015: moteino
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:44:43 CET 2015: moteino-mega
+Wed Jan 21 23:28:30 CET 2015: moteino-mega
 Program:     208 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:44:50 CET 2015: nano
+Wed Jan 21 23:28:39 CET 2015: nano
 Program:     152 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:44:58 CET 2015: pinoccio
+Wed Jan 21 23:28:48 CET 2015: pinoccio
 Program:     360 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:45:06 CET 2015: pro-micro
+Wed Jan 21 23:28:56 CET 2015: pro-micro
 Program:     232 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:45:13 CET 2015: pro-micro-8
+Wed Jan 21 23:29:05 CET 2015: pro-micro-8
 Program:     232 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:45:21 CET 2015: pro-mini
+Wed Jan 21 23:29:14 CET 2015: pro-mini
 Program:     152 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:45:29 CET 2015: pro-mini-8
+Wed Jan 21 23:29:23 CET 2015: pro-mini-8
 Program:     152 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:45:36 CET 2015: teensy-2_0
+Wed Jan 21 23:29:31 CET 2015: teensy-2_0
 Program:     246 bytes (0.8% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:45:45 CET 2015: teensypp-2_0
+Wed Jan 21 23:29:39 CET 2015: teensypp-2_0
 Program:     226 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:45:54 CET 2015: uno
+Wed Jan 21 23:29:47 CET 2015: uno
 Program:     152 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Jan 20 00:46:01 CET 2015: wildfire
-Program:     362 bytes (0.3% Full)
+Wed Jan 21 23:29:57 CET 2015: wildfire
+Program:     408 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
