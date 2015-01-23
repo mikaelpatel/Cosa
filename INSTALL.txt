@@ -6,7 +6,7 @@ USING COSA WITH THE ARDUINO IDE/TOOLCHAIN
 
 2. Download and install Cosa. Default install directory for Cosa is 
    $HOME/Sketchbook/hardware/Cosa (Arduino 1.0.X)
-   $HOME/Sketchbook/hardware/avr/Cosa (Arduino 1.5.X)
+   $HOME/Sketchbook/hardware/Cosa/avr (Arduino 1.5.X)
 
 3. Start Arduino IDE.
    cd $HOME/opt/arduino-VERSION ; ./arduino
