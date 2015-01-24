@@ -1130,6 +1130,10 @@ $(OBJDIR)/%.sym: $(OBJDIR)/%.elf $(COMMON_DEPS)
 	@$(MKDIR) $(dir $@)
 	$(NM) --size-sort --demangle --reverse-sort --line-numbers $< > $@
 
+$(OBJDIR)/%.map: $(OBJDIR)/%.elf $(COMMON_DEPS)
+	@$(MKDIR) $(dir $@)
+	$(NM) --demangle $< | grep -v ' [aUw] ' | sort > $@
+
 ########################################################################
 # Avrdude
 
@@ -1343,6 +1347,9 @@ disasm: $(OBJDIR)/$(TARGET).lss
 symbol_sizes: $(OBJDIR)/$(TARGET).sym
 	@$(ECHO) "A symbol listing sorted by their size have been dumped to $(OBJDIR)/$(TARGET).sym\n\n"
 
+map: $(OBJDIR)/$(TARGET).map
+	@$(ECHO) "A map has been dumped to $(OBJDIR)/$(TARGET).map\n\n"
+
 verify_size: $(TARGET_HEX)
 ifeq ($(strip $(HEX_MAXIMUM_SIZE)),)
 	@$(ECHO) "\nMaximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s flash memory\n\n"
@@ -1397,6 +1404,7 @@ help:
                       the capacity of the micro controller.\n\
   symbol_sizes      - generate a .sym file containing symbols and their\n\
                       sizes.\n\
+  map               - generate a .map file.\n\
   disasm            - generate a .lss file that contains disassembly\n\
                       of the compiled file with original source code.\n\
   generate_assembly - generate a .s file containing the compiler\n\
