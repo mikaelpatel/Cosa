@@ -309,7 +309,7 @@ SPI::attach(Driver* dev)
 void
 SPI::acquire(Driver* dev)
 {
-  // Acquire the device driver. Wait is busy. Synchronized update
+  // Acquire the device driver. Wait if busy. Synchronized update
   uint8_t key = lock();
   while (m_busy) {
     unlock(key);
