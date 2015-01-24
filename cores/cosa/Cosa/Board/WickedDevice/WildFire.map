@@ -23,10 +23,11 @@
 void 
 Board::init()
 {
-  OutputPin rfm69(Board::D7, 1);
-  OutputPin flash(Board::D15, 1);
-  OutputPin sd(Board::D16, 1);
-  OutputPin cc3000(Board::D21, 1);
+  OutputPin rfm69_cs(Board::D7, 1);
+  OutputPin flash_cs(Board::D15, 1);
+  OutputPin sd_cs(Board::D16, 1);
+  OutputPin cc3000_cs(Board::D21, 1);
+  OutputPin cc3000_vbat(Board::D23, 0);
 }
 
 const Board::DigitalPin digital_pin_map[] __PROGMEM = {
