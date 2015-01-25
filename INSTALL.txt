@@ -31,9 +31,9 @@ USING COSA WITH THE GCC AVR TOOLCHAIN (UBUNTU)
 3. Set environment variable GCC_AVR_VER to gcc-4.2. 
    GCC_AVR_VER=gcc-avr-4.2 ; export GCC_AVR_VER
 
-4. Add COSA_DIR/bin to PATH
+4. Add COSA_DIR/build to PATH
    or add a symbolic link in local bin to COSA_DIR/bin/cosa.
-   ln -s $COSA_DIR/bin/cosa $HOME/bin/cosa
+   ln -s $COSA_DIR/build/cosa $HOME/bin/cosa
 
 5. Run command line build with board.
    cd Cosa/example/Benchmarks/CosaBenchmarksPins
