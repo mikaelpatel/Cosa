@@ -55,6 +55,68 @@ public:
   }
 
   /**
+   * Read HCI message. Returns message length or negative error
+   * code. The given argument block must be able to hold incoming
+   * packet.  
+   * @param[in] msg pointer to message buffer;
+   * @param[in] len max number of bytes in message buffer.
+   * @return message length or negative error code.
+   */
+  int read(void* args, size_t len);
+
+  /**
+   * Read HCI operation and arguments. Returns argument length
+   * or negative error code. The given argument block must be able to
+   * hold incoming packet. 
+   * @param[out] op HCI operation command.
+   * @param[in] args pointer to argument block.
+   * @param[in] len max number of bytes in argument block.
+   * @return argument length or negative error code.
+   */
+  int read(uint16_t &op, void* args, uint8_t len);
+
+  /**
+   * Write given HCI type operation and arguments. Returns argument
+   * length or negative error code.
+   * @param[in] type HCI message type.
+   * @param[in] op HCI operation command.
+   * @param[in] args pointer to argument block.
+   * @param[in] len number of bytes in argument block.
+   * @return argument length or negative error code.
+   */
+  int write(uint8_t type, uint16_t op, const void* args, uint8_t len)
+  {
+    return (write(type, op, args, len, false));
+  }
+
+  /**
+   * Write given HCI type operation and arguments in program
+   * memory. Returns argument length or negative error code.
+   * @param[in] type HCI message type.
+   * @param[in] op HCI operation command.
+   * @param[in] args pointer to argument block in program memory.
+   * @param[in] len number of bytes in argument block.
+   * @return argument length or negative error code.
+   */
+  int write_P(uint8_t type, uint16_t op, const void* args, uint8_t len)
+  {
+    return (write(type, op, args, len, true));
+  }
+
+  /**
+   * Write given HCI type operation and arguments. Returns argument
+   * length or negative error code. 
+   * @param[in] type HCI message type.
+   * @param[in] op HCI operation command.
+   * @param[in] args pointer to argument block (program memory).
+   * @param[in] len number of bytes in argument block.
+   * @param[in] progmem argment block in program memory.
+   * @return argument length or negative error code.
+   */
+  int write(uint8_t type, uint16_t op, const void* args, uint8_t len, 
+	    bool progmem);
+
+  /**
    * Issue given HCI command message and arguments. Returns argument
    * length or negative error code.
    * @param[in] op HCI operation command.
@@ -62,9 +124,9 @@ public:
    * @param[in] len number of bytes in argument block.
    * @return argument length or negative error code.
    */
-  int issue(uint16_t op, void* args = NULL, uint8_t len = 0)
+  int issue(uint16_t op, const void* args = NULL, uint8_t len = 0)
   {
-    return (write(HCI_TYPE_CMND, op, args, len));
+    return (write(HCI_TYPE_CMND, op, args, len, false));
   }
 
   /**
@@ -77,9 +139,9 @@ public:
    */
   int issue_P(uint16_t op, const void* args, uint8_t len)
   {
-    return (write_P(HCI_TYPE_CMND, op, args, len));
+    return (write(HCI_TYPE_CMND, op, args, len, true));
   }
-
+  
   /**
    * Await HCI event and arguments. Returns argument length
    * or negative error code. The given argument block must be able to
@@ -102,53 +164,34 @@ public:
    */
   int listen(uint16_t &event, void* args = NULL, uint8_t len = 0);
 
-  /**
-   * Write HCI data operation and arguments. Returns argument
-   * length or negative error code.
-   * @param[in] op HCI operation command.
-   * @param[in] args pointer to argument block.
-   * @param[in] len number of bytes in argument block.
-   * @return argument length or negative error code.
-   */
-  int write(uint16_t op, void* args, uint8_t len)
+  int write_data(uint8_t op, const void* args, uint8_t args_len,
+		 const void* data, uint16_t data_len)
   {
-    return (write(HCI_TYPE_DATA, op, args, len));
+    return (write_data(op, args, args_len, data, data_len, false));
+  }
+  
+  int write_data_P(uint8_t op, const void* args, uint8_t args_len,
+		   const void* data, uint16_t data_len)
+  {
+    return (write_data(op, args, args_len, data, data_len, true));
   }
 
+  int write_data(uint8_t op, const void* args, uint8_t args_len,
+		 const void* data, uint16_t data_len, bool progmem);
+
   /**
-   * Read HCI operation and arguments. Returns argument length
-   * or negative error code. The given argument block must be able to
-   * hold incoming packet. 
-   * @param[out] op HCI operation command.
-   * @param[in] args pointer to argument block.
-   * @param[in] len max number of bytes in argument block.
-   * @return argument length or negative error code.
-   */
-  int read(uint16_t &op, void* args, uint8_t len);
-  int read(uint8_t op, void* ret, uint16_t len);
-  
-  /**
-   * Write given HCI type operation and arguments. Returns argument
+   * Issue HCI read data command message and arguments. Returns payload
    * length or negative error code.
-   * @param[in] type HCI message type.
-   * @param[in] op HCI operation command.
-   * @param[in] args pointer to argument block.
-   * @param[in] len number of bytes in argument block.
+   * @param[in] op HCI data operation command.
+   * @param[in] args pointer to command argument block.
+   * @param[in] args_len number of bytes in command argument block.
+   * @param[in] data pointer to data block.
+   * @param[in] data_len number of bytes in data block.
    * @return argument length or negative error code.
    */
-  int write(uint8_t type, uint16_t op, void* args, uint8_t len);
-
-  /**
-   * Write given HCI type operation and arguments in program memory
-   * block. Returns argument length or negative error code.
-   * @param[in] type HCI message type.
-   * @param[in] op HCI operation command.
-   * @param[in] args pointer to argument block (program memory).
-   * @param[in] len number of bytes in argument block.
-   * @return argument length or negative error code.
-   */
-  int write_P(uint8_t type, uint16_t op, const void* args, uint8_t len);
-
+  int read_data(uint8_t op, void* args, uint8_t args_len,
+		void* data, uint16_t data_len);
+  
   /**
    * Enable incoming HCI packets (DATA/EVNT).
    */
@@ -219,12 +262,22 @@ protected:
   };
 
   /**
-   * HCI Header.
+   * HCI Command Header.
    */
-  struct header_t {
+  struct cmnd_header_t {
     uint8_t type;		//!< HCI Message Type.
     uint16_t cmnd;		//!< HCI Operation Code (little-endian).
     uint8_t len;		//!< HCI Arguments Length.
+  };
+
+  /**
+   * HCI Data Header.
+   */
+  struct data_header_t {
+    uint8_t type;		//!< HCI Message Type.
+    uint8_t cmnd;		//!< HCI Data Operation Code. 
+    uint8_t args_len;		//!< HCI Arguments Length.
+    uint16_t payload_len;	//!< HCI Payload Length.
   };
 
   /**

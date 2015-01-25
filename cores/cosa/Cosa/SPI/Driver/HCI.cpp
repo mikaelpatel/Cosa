@@ -21,11 +21,103 @@
 #include "Cosa/SPI/Driver/HCI.hh"
 #include "Cosa/RTC.hh"
 
-#ifdef DEBUG
-#include "Cosa/Trace.hh"
-#else
-#define TRACE(x)
-#endif
+int 
+HCI::read(void* msg, size_t len)
+{
+  if (!m_available) return (0);
+  uint16_t payload;
+  int res = -EFAULT;
+  spi.acquire(this);
+  spi.begin();
+  if (spi.transfer(SPI_OP_READ) == SPI_OP_REPLY) {
+    spi.transfer(0);
+    spi.transfer(0);
+    payload = spi.transfer(0);
+    payload = (payload << 8) | spi.transfer(0);
+    if (payload <= len) {
+      res = payload;
+      spi.read(msg, res);
+    }
+    else {
+      for (uint16_t i = 0; i < payload; i++) spi.transfer(0);
+      res = -EINVAL;
+    }
+  }
+  m_available = false;
+  spi.end();
+  spi.release();
+  return (res);
+}
+
+int 
+HCI::read(uint16_t &op, void* args, uint8_t len)
+{
+  if (!m_available) return (0);
+  uint16_t payload;
+  bool padding;
+  int res = -EFAULT;
+  op = 0;
+  spi.acquire(this);
+  spi.begin();
+  if (spi.transfer(SPI_OP_READ) == SPI_OP_REPLY) {
+    res = -ENOMSG;
+    spi.transfer(0);
+    spi.transfer(0);
+    payload = spi.transfer(0);
+    payload = (payload << 8) | spi.transfer(0);
+    if (payload >= sizeof(HCI::cmnd_header_t)) {
+      cmnd_header_t header;
+      spi.read(&header, sizeof(header));
+      payload -= sizeof(header);
+      res = -EINVAL;
+      if (header.type == HCI_TYPE_EVNT || header.type == HCI_TYPE_DATA) {
+	op = header.cmnd;
+	if (header.len <= len) {
+	  res = header.len;
+	  padding = ((res & 1) == 0);
+	  spi.read(args, res);
+	  if (padding) spi.transfer(0);
+	}
+      }
+    }
+  }
+  if (res < 0) {
+    for (uint16_t i = 0; i < payload; i++) spi.transfer(0);
+  }
+  m_available = false;
+  spi.end();
+  spi.release();
+  return (res);
+}
+
+int 
+HCI::write(uint8_t type, uint16_t op, const void* args, uint8_t len, bool progmem)
+{
+  bool padding = (len & 1) == 0;
+  int payload = sizeof(cmnd_header_t) + len + padding;
+  int res = -EFAULT;
+  spi.acquire(this);
+  spi.begin();
+  if (spi.transfer(SPI_OP_WRITE) == SPI_OP_REPLY) {
+    spi.transfer(payload >> 8);
+    spi.transfer(payload);
+    spi.transfer(0);
+    spi.transfer(0);
+    spi.transfer(type);
+    spi.transfer(op & 0xff);
+    spi.transfer(op >> 8);
+    spi.transfer(len);
+    if (progmem)
+      spi.write_P(args, len);
+    else
+      spi.write(args, len);
+    if (padding) spi.transfer(0);
+    res = len;
+  }
+  spi.end();
+  spi.release();
+  return (res);
+}
 
 int 
 HCI::await(uint16_t op, void* args, uint8_t len)
@@ -38,7 +130,6 @@ HCI::await(uint16_t op, void* args, uint8_t len)
     if (!m_available) return (-ETIME);
     res = read(event, args, len);
   } while (res == -ENOMSG);
-  TRACE(event);
   if ((res < 0) || (op == event)) return (res);
   if (op == 0) return (event);
   return (-ENOMSG);
@@ -58,89 +149,42 @@ HCI::listen(uint16_t &event, void* args, uint8_t len)
 }
 
 int 
-HCI::write(uint8_t type, uint16_t op, void* args, uint8_t len)
-{
-  bool padding = (len & 1) == 0;
-  int payload = sizeof(header_t) + len + padding;
-  int res = -EFAULT;
-  spi.acquire(this);
-  spi.begin();
-  if (spi.transfer(SPI_OP_WRITE) == SPI_OP_REPLY) {
-    spi.transfer(payload >> 8);
-    spi.transfer(payload);
-    spi.transfer(0);
-    spi.transfer(0);
-    spi.transfer(type);
-    spi.transfer(op & 0xff);
-    spi.transfer(op >> 8);
-    spi.transfer(len);
-    spi.write(args, len);
-    if (padding) spi.transfer(0);
-    res = len;
-  }
-  spi.end();
-  spi.release();
-  return (res);
-}
-
-int 
-HCI::write_P(uint8_t type, uint16_t op, const void* args, uint8_t len)
-{
-  bool padding = (len & 1) == 0;
-  int payload = sizeof(header_t) + len + padding;
-  int res = -EFAULT;
-  spi.acquire(this);
-  spi.begin();
-  if (spi.transfer(SPI_OP_WRITE) == SPI_OP_REPLY) {
-    spi.transfer(payload >> 8);
-    spi.transfer(payload);
-    spi.transfer(0);
-    spi.transfer(0);
-    spi.transfer(type);
-    spi.transfer(op & 0xff);
-    spi.transfer(op >> 8);
-    spi.transfer(len);
-    spi.write_P(args, len);
-    if (padding) spi.transfer(0);
-    res = len;
-  }
-  spi.end();
-  spi.release();
-  return (res);
-}
-
-int 
-HCI::read(uint16_t &op, void* args, uint8_t len)
+HCI::read_data(uint8_t op, void* args, uint8_t args_len,
+	       void* data, uint16_t data_len)
 {
   if (!m_available) return (0);
   uint16_t payload;
-  bool padding;
   int res = -EFAULT;
-  op = 0;
   spi.acquire(this);
   spi.begin();
   if (spi.transfer(SPI_OP_READ) == SPI_OP_REPLY) {
+    res = -ENOMSG;
     spi.transfer(0);
     spi.transfer(0);
     payload = spi.transfer(0);
     payload = (payload << 8) | spi.transfer(0);
-    if (payload >= sizeof(HCI::header_t)) {
-      header_t header;
+    if (payload >= sizeof(HCI::data_header_t)) {
+      data_header_t header;
       spi.read(&header, sizeof(header));
-      if (header.type == HCI_TYPE_EVNT) {
-	op = header.cmnd;
-	if (header.len <= len) {
-	  res = header.len;
-	  padding = ((res & 1) == 0);
-	  spi.read(args, res);
-	  if (padding) spi.transfer(0);
+      payload -= sizeof(header);
+      res = -EINVAL;
+      if (header.type == HCI_TYPE_DATA) {
+	if (header.cmnd == op && header.args_len == args_len) {
+	  res = header.payload_len - args_len;
+	  if ((uint16_t) res <= data_len) {
+	    if (args != NULL)
+	      spi.read(args, args_len);
+	    else
+	      for (uint8_t i = 0; i < args_len; i++) spi.transfer(0);
+	    spi.read(data, res);
+	    if (header.payload_len & 1) spi.transfer(0);
+	  }
 	}
-	else
-	  res = -EINVAL;
       }
     }
-    else
-      res = -ENOMSG;
+  }
+  if (res < 0) {
+    for (uint16_t i = 0; i < payload; i++) spi.transfer(0);
   }
   m_available = false;
   spi.end();
@@ -149,45 +193,34 @@ HCI::read(uint16_t &op, void* args, uint8_t len)
 }
 
 int 
-HCI::read(uint8_t op, void* ret, uint16_t len)
+HCI::write_data(uint8_t op, const void* args, uint8_t args_len,
+		const void* data, uint16_t data_len, bool progmem)
 {
-  if (!m_available) return (0);
-  uint16_t payload;
-  bool padding;
-  uint8_t type;
-  uint8_t data;
+  int len = args_len + data_len;
+  int payload = sizeof(data_header_t) + len;
+  bool padding = (payload & 1) == 0;
+  if (padding) payload += 1;
   int res = -EFAULT;
   spi.acquire(this);
   spi.begin();
-  if (spi.transfer(SPI_OP_READ) == SPI_OP_REPLY) {
+  if (spi.transfer(SPI_OP_WRITE) == SPI_OP_REPLY) {
+    spi.transfer(payload >> 8);
+    spi.transfer(payload);
     spi.transfer(0);
     spi.transfer(0);
-    payload = spi.transfer(0);
-    payload = (payload << 8) | spi.transfer(0);
-    if (payload >= sizeof(HCI::header_t)) {
-      type = spi.transfer(0);
-      if (type == HCI_TYPE_DATA) {
-	data = spi.transfer(0);
-	if (data == op) {
-	  uint8_t args = spi.transfer(0);
-	  res = spi.transfer(0);
-	  res = (spi.transfer(0) << 8) | (res & 0xff);
-	  res = res - args;
-	  for (uint8_t i = 0; i < args; i++) spi.transfer(0);
-	  if ((uint16_t) res <= len) {
-	    padding = ((res & 1) == 0);
-	    spi.read(ret, res);
-	    if (padding) spi.transfer(0);
-	  }
-	  else
-	    res = -EINVAL;
-	}
-      }
-    }
+    spi.transfer(HCI_TYPE_DATA);
+    spi.transfer(op);
+    spi.transfer(args_len);
+    spi.transfer(len);
+    spi.transfer(len >> 8);
+    spi.write(args, args_len);
+    if (progmem)
+      spi.write_P(data, data_len);
     else
-      res = -ENOMSG;
+      spi.write(data, data_len);
+    if (padding) spi.transfer(0);
+    res = len;
   }
-  m_available = false;
   spi.end();
   spi.release();
   return (res);
