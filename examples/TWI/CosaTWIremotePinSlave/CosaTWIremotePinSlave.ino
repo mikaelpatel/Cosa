@@ -57,18 +57,13 @@ private:
   uint8_t m_buf[BUF_MAX];
 
 public:
-  RemotePinSlave() : TWI::Slave(ADDR) {}
+  RemotePinSlave() : TWI::Slave(ADDR)
+  {
+    set_write_buf(m_buf, sizeof(m_buf));
+    set_read_buf(m_buf, sizeof(m_buf));
+  }
   virtual void on_request(void* buf, size_t size);
-  void begin();
 };
-
-void
-RemotePinSlave::begin() 
-{ 
-  set_write_buf(m_buf, sizeof(m_buf));
-  set_read_buf(m_buf, sizeof(m_buf));
-  twi.begin(this); 
-}
 
 void
 RemotePinSlave::on_request(void* buf, size_t size)
@@ -94,3 +89,7 @@ void setup()
   slave.begin();
 }
 
+void loop()
+{
+  Event::service();
+}
