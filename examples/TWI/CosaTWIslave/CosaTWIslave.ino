@@ -85,3 +85,8 @@ void setup()
   // Start the TWI echo device 
   echo.begin();
 }
+
+void loop()
+{
+  Event::service();
+}
