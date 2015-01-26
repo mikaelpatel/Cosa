@@ -101,3 +101,22 @@ Stay tuned
 Please follow the development of this project on the blog 
 http://cosa-arduino.blogspot.se and on the Arduino forum,
 http://arduino.cc/forum/index.php/topic,150299.0.html.    
+
+Supporting this project
+-----------------------
+
+There are many ways to support this project. 
+
+1. Build and test.
+2. Fix bugs and take part in the development work.
+3. Write blog or instructions on how you have used Cosa in your
+project(s).
+4. Donate hardware; Arduino boards and shields. This is especially
+welcome as with the growning number of device drivers and supported
+module require hardware setups which takes a lot of time if
+breadboarded.
+5. Or donations through paypal (use email address).
+
+If you are planning to use Cosa you are encourage to support the
+project. This will help keep the software at high quality and follow
+changes in tooling, etc. 
