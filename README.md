@@ -113,7 +113,7 @@ There are many ways to support this project.
 project(s).
 4. Donate hardware; Arduino boards and shields. This is especially
 welcome as with the growning number of device drivers and supported
-module require hardware setups which takes a lot of time if
+modules that require hardware setups which takes a lot of time if
 breadboarded.
 5. Or donations through paypal (use email address).
 
