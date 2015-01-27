@@ -54,7 +54,7 @@ int
 HCI::read(uint16_t &op, void* args, uint8_t len)
 {
   if (!m_available) return (0);
-  uint16_t payload;
+  uint16_t payload = 0;
   bool padding;
   int res = -EFAULT;
   op = 0;
@@ -156,7 +156,7 @@ HCI::read_data(uint8_t op, void* args, uint8_t args_len,
 	       void* data, uint16_t data_len)
 {
   if (!m_available) return (0);
-  uint16_t payload;
+  uint16_t payload = 0;
   int res = -EFAULT;
   spi.acquire(this);
   spi.begin();
