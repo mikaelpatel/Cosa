@@ -20,6 +20,7 @@
 
 #include "Cosa/SPI/Driver/HCI.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Trace.hh"
 
 int 
 HCI::read(void* msg, size_t len)
@@ -125,13 +126,15 @@ HCI::await(uint16_t op, void* args, uint8_t len)
   uint32_t start = RTC::millis();
   uint16_t event;
   int res;
-  do {
-    while (!m_available && (RTC::since(start) < m_timeout)) yield();
-    if (!m_available) return (-ETIME);
-    res = read(event, args, len);
-  } while (res == -ENOMSG);
-  if ((res < 0) || (op == event)) return (res);
-  if (op == 0) return (event);
+  while (1) {
+    do {
+      while (!m_available && (RTC::since(start) < m_timeout)) yield();
+      if (!m_available) return (-ETIME);
+      res = read(event, args, len);
+    } while (res == -ENOMSG);
+    if ((res < 0) || (op == event)) return (res);
+    INFO("await: op=%xd, event=%xd", op, event);
+  };
   return (-ENOMSG);
 }
 
