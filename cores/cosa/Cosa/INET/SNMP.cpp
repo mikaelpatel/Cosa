@@ -70,7 +70,7 @@ SNMP::MIB2_SYSTEM::is_request(PDU& pdu)
 			 pgm_read_byte(ARDUINO_MIB_OID));
       break;
     case sysUpTime:
-      pdu.value.encode(SNMP::SYNTAX_UINT32, Watchdog::millis() / 1000L);
+      pdu.value.encode(SNMP::SYNTAX_TIME_TICKS, Watchdog::millis() / 1000L);
       break;
     case sysContact:
       pdu.value.encode_P(SNMP::SYNTAX_OCTETS, m_contact, strlen_P(m_contact));
