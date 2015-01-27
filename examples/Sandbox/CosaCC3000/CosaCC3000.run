@@ -1,0 +1,59 @@
+Use CTRL-ALT GR-] to exit monitor.
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 57600
+CosaCC3000: started
+44:void setup():info:Read software package information:
+50:void setup():trace:PACKAGE_ID = 1
+51:void setup():trace:PACKAGE_BUILD_NR = 32
+
+55:void setup():info:Get the network addresses provided by the access point:
+IP=192.168.1.114,SUBNET=255.255.255.0,DNS=192.168.1.1
+
+69:void setup():info:Scan the network for access points (2 sec):
+ssid=SJUMILASKOGEN,rssi=79,wlan_security=3
+ssid=GAAS-2.4G,rssi=48,wlan_security=3
+ssid=wireless,rssi=52,wlan_security=3
+ssid=megabyte_the_dust,rssi=76,wlan_security=3
+ssid=TeliaGatewayA4-B1-E9-7E-5C-CD,rssi=46,wlan_security=3
+ssid=Sunside_network,rssi=48,wlan_security=3
+
+82:void setup():info:Create a socket and connect to server:
+88:void setup():info:Send HTML GET request:
+GET / HTTP/1.1
+Host: WildFire
+Connection: close
+
+98:void setup():info:Receive HTML page:
+103:void setup():info:Use select to check available:
+HTTP/1.1 302 Found
+Location: http://www.google.com/
+Cache-Control: private
+Content-Type: text/html; charset=UTF-8
+X-Content-Type-Options: nosniff
+Date: Tue, 27 Jan 2015 00:31:36 GMT
+Server: sffe
+Content-Length: 219
+X-XSS-Protection: 1; mode=block
+136:int HCI::await(uint16_t, void*, uint8_t):info:await: op=0x1008, event=0x8800
+Alternate-Protocol: 80:quic,p=0.02
+Connection: close
+
+<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
+<TITLE>302 Moved</TITLE></HEAD><BODY>
+<H1>302 Moved</H1>
+The document has moved
+<A HREF="http://www.google.com/">here</A>.
+</BODY></HTML>
+
+115:void setup():info:Close socket:
+
+119:void setup():info:Service WiFi events:
+
+5821:274:int CC3000::service(uint32_t):info:HCI_EVNT_DATA_UNSOL_FREE_BUFF
+277:int CC3000::service(uint32_t):info:BUFFERS=1
+00407e: 00 01 00 00 00 01 00 
+11240:268:int CC3000::service(uint32_t):info:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
+00407e: 00 
+21251:268:int CC3000::service(uint32_t):info:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
+00407e: 00 
+31260:268:int CC3000::service(uint32_t):info:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
+00407e: 00 
