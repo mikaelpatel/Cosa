@@ -32,6 +32,10 @@ CC3000 wifi(Board::D21, Board::EXT2, Board::D23);
 
 #define CRLF "\r\n"
 
+#define FD_ZERO() 0UL
+#define FD_ISSET(fd,set) ((1UL << (fd)) & set)
+#define FD_SET(fd,set) set = (1UL << (fd)) | set
+
 void setup()
 {
   uart.begin(57600);
@@ -39,13 +43,15 @@ void setup()
   Watchdog::begin();
   RTC::begin();
 
-  ASSERT(wifi.begin_P(PSTR("CosaCC3300")));
+  MEASURE("Start CC3000:", 1)
+    ASSERT(wifi.begin_P(PSTR("CosaCC3300")));
 
-  INFO("Read software package information:", 0);
   uint8_t PACKAGE_ID;
   uint8_t PACKAGE_BUILD_NR;
   int res;
-  res = wifi.read_sp_version(PACKAGE_ID, PACKAGE_BUILD_NR);
+
+  MEASURE("Read software package information:", 1)
+    res = wifi.read_sp_version(PACKAGE_ID, PACKAGE_BUILD_NR);
   if (res == 0) {
     TRACE(PACKAGE_ID);
     TRACE(PACKAGE_BUILD_NR);
@@ -66,12 +72,12 @@ void setup()
   INET::print_addr(trace, dns);
   trace << endl << endl;
 
-  INFO("Scan the network for access points (2 sec):", 0);
-  ASSERT(wifi.wlan_ioctl_set_scanparam() == 0);
+  MEASURE("Request scan for available access points:", 1)
+    ASSERT(wifi.wlan_ioctl_set_scanparam() == 0);
+  INFO("Wait for scan results (2 sec)", 0);
   sleep(2);
   CC3000::hci_evnt_wlan_ioctl_get_scan_results_t info;
   while (wifi.wlan_ioctl_get_scan_results(info) > 0) {
-    if (info.scan_status == 0 || info.valid == 0) continue;
     trace << PSTR("ssid=") << (char*) info.ssid
 	  << PSTR(",rssi=") << info.rssi
 	  << PSTR(",wlan_security=") << info.wlan_security
@@ -79,41 +85,47 @@ void setup()
   }
   trace << endl;
 
-  INFO("Create a socket and connect to server:", 0);
-  int handle = wifi.socket(wifi.AF_INET, wifi.SOCK_STREAM, wifi.IPPROTO_TCP);
+  int handle;
+  MEASURE("Create a socket:", 1)
+    handle = wifi.socket(wifi.AF_INET, wifi.SOCK_STREAM, wifi.IPPROTO_TCP);
   ASSERT(handle >= 0);
+
   uint8_t WWW_GOOGLE_COM[4] = { 216, 58, 209, 132 };
-  ASSERT(wifi.connect(handle, WWW_GOOGLE_COM, 80) == 0);
+  MEASURE("Connect to server:", 1) 
+    ASSERT(wifi.connect(handle, WWW_GOOGLE_COM, 80) == 0);
   
-  INFO("Send HTML GET request:", 0);
   char msg[] = 
     "GET / HTTP/1.1" CRLF
     "Host: WildFire" CRLF
     "Connection: close" CRLF
     CRLF;
   trace << msg;
-  res = wifi.send(handle, msg, strlen(msg));
+  trace.flush();
+  MEASURE("Send request:", 1)
+    res = wifi.send(handle, msg, strlen(msg));
   ASSERT((res > 0) && ((size_t) res == strlen(msg)));
   
-  INFO("Receive HTML page:", 0);
-  char buf[256];
-  uint32_t read_mask = 1UL << handle;
-  uint32_t write_mask = 0;
-  uint32_t error_mask = 1UL << handle;
-  INFO("Use select to check available:", 0);
-  res = wifi.select(handle + 1, read_mask, write_mask, error_mask, 0, 0);
+  char buf[1500];
+  uint32_t read_mask = FD_ZERO();
+  uint32_t write_mask = FD_ZERO();
+  uint32_t error_mask = FD_ZERO();
+  FD_SET(handle, read_mask);
+  FD_SET(handle, error_mask);
+  MEASURE("Use select to wait for response:", 1)
+    res = wifi.select(handle + 1, read_mask, write_mask, error_mask, 0, 0);
   ASSERT(res > 0);
-  while ((res > 0) && (read_mask == (1UL << handle))) {
-    res = wifi.recv(handle, buf, sizeof(buf));
+  while ((res > 0) && (FD_ISSET(handle,read_mask))) {
+    MEASURE("Receive HTML page:", 1) 
+      res = wifi.recv(handle, buf, sizeof(buf));
     if (res < 0) break;
     for (int i = 0; i < res; i++)
       trace << (char) buf[i];
-    res = wifi.select(1, read_mask, write_mask, error_mask, 0, 50000);
+    res = wifi.select(1, read_mask, write_mask, error_mask, 0, 5000);
   } 
   trace << endl;
 
-  INFO("Close socket:", 0);
-  ASSERT(wifi.close(handle) == 0);
+  MEASURE("Close socket:", 1)
+    ASSERT(wifi.close(handle) == 0);
   trace << endl;
 
   INFO("Service WiFi events:", 0);

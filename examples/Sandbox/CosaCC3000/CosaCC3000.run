@@ -1,39 +1,45 @@
+mkdir -p /home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.5.8/wildfire
+/home/epkmipl/Sketchbook/hardware/Cosa/build/Arduino-Makefile/bin/ard-reset-arduino  /dev/ttyUSB0
+/home/epkmipl/opt/arduino-1.5.8/hardware/tools/avr/bin/avrdude -q -V -p atmega1284p -C /home/epkmipl/opt/arduino-1.5.8/hardware/tools/avr/etc/avrdude.conf -D -c arduino -b 115200 -P /dev/ttyUSB0 -U flash:w:/home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.5.8/wildfire/CosaCC3000.hex:i
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 57600
 CosaCC3000: started
-44:void setup():info:Read software package information:
-50:void setup():trace:PACKAGE_ID = 1
-51:void setup():trace:PACKAGE_BUILD_NR = 32
+46:void setup():measure:Start CC3000:1387868 us
+53:void setup():measure:Read software package information:248 us
+56:void setup():trace:PACKAGE_ID = 1
+57:void setup():trace:PACKAGE_BUILD_NR = 32
 
-55:void setup():info:Get the network addresses provided by the access point:
+61:void setup():info:Get the network addresses provided by the access point:
 IP=192.168.1.114,SUBNET=255.255.255.0,DNS=192.168.1.1
 
-69:void setup():info:Scan the network for access points (2 sec):
-ssid=SJUMILASKOGEN,rssi=79,wlan_security=3
-ssid=GAAS-2.4G,rssi=48,wlan_security=3
-ssid=wireless,rssi=52,wlan_security=3
-ssid=megabyte_the_dust,rssi=76,wlan_security=3
-ssid=TeliaGatewayA4-B1-E9-7E-5C-CD,rssi=46,wlan_security=3
-ssid=Sunside_network,rssi=48,wlan_security=3
+75:void setup():measure:Request scan for available access points:1178064 us
+77:void setup():info:Wait for scan results (2 sec)
+ssid=SJUMILASKOGEN,rssi=71,wlan_security=3
+ssid=wireless,rssi=56,wlan_security=3
+ssid=megabyte_the_dust,rssi=74,wlan_security=3
+ssid=Jockes,rssi=46,wlan_security=3
+ssid=Sunside_network,rssi=51,wlan_security=3
+ssid=FamAhlbeck,rssi=50,wlan_security=2
 
-82:void setup():info:Create a socket and connect to server:
-88:void setup():info:Send HTML GET request:
+89:void setup():measure:Create a socket:372 us
+94:void setup():measure:Connect to server:15768 us
 GET / HTTP/1.1
 Host: WildFire
 Connection: close
 
-98:void setup():info:Receive HTML page:
-103:void setup():info:Use select to check available:
+104:void setup():measure:Send request:748 us
+114:void setup():measure:Use select to wait for response:17888 us
+136:int HCI::await(uint16_t, void*, uint8_t):info:await: op=0x1004, event=0x8800
+118:void setup():measure:Receive HTML page:5212 us
 HTTP/1.1 302 Found
 Location: http://www.google.com/
 Cache-Control: private
 Content-Type: text/html; charset=UTF-8
 X-Content-Type-Options: nosniff
-Date: Tue, 27 Jan 2015 00:31:36 GMT
+Date: Tue, 27 Jan 2015 10:58:20 GMT
 Server: sffe
 Content-Length: 219
 X-XSS-Protection: 1; mode=block
-136:int HCI::await(uint16_t, void*, uint8_t):info:await: op=0x1008, event=0x8800
 Alternate-Protocol: 80:quic,p=0.02
 Connection: close
 
@@ -44,11 +50,11 @@ The document has moved
 <A HREF="http://www.google.com/">here</A>.
 </BODY></HTML>
 
-115:void setup():info:Close socket:
+127:void setup():measure:Close socket:14624 us
 
-119:void setup():info:Service WiFi events:
+131:void setup():info:Service WiFi events:
 
-5821:274:int CC3000::service(uint32_t):info:HCI_EVNT_DATA_UNSOL_FREE_BUFF
+5820:274:int CC3000::service(uint32_t):info:HCI_EVNT_DATA_UNSOL_FREE_BUFF
 277:int CC3000::service(uint32_t):info:BUFFERS=1
 00407e: 00 01 00 00 00 01 00 
 11240:268:int CC3000::service(uint32_t):info:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
