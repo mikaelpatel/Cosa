@@ -20,7 +20,8 @@
 
 #include "Cosa/SPI/Driver/HCI.hh"
 #include "Cosa/RTC.hh"
-#include "Cosa/Trace.hh"
+
+uint8_t HCI::DEFAULT_EVNT[DEFAULT_EVNT_MAX];
 
 int 
 HCI::read(void* msg, size_t len)
@@ -133,7 +134,8 @@ HCI::await(uint16_t op, void* args, uint8_t len)
       res = read(event, args, len);
     } while (res == -ENOMSG);
     if ((res < 0) || (op == event)) return (res);
-    INFO("await: op=%xd, event=%xd", op, event);
+    if (m_event_handler != NULL) 
+      m_event_handler->on_event(event, args, res);
   };
   return (-ENOMSG);
 }

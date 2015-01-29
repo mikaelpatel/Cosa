@@ -34,6 +34,25 @@
  */
 class HCI : public SPI::Driver {
 public:
+
+  /**
+   * HCI Event handler for unsolicited events.
+   */
+  class Event {
+  public:
+    class Handler {
+    public:
+      /**
+       * @override HCI::Event::Handler
+       * Unsolicited event callback.
+       * @param[in] event operation code.
+       * @param[in] args pointer to argument block.
+       * @param[in] len number of bytes in argument block.
+       */
+      virtual void on_event(uint16_t event, void* args, size_t len) = 0;
+    };
+  };
+
   /** Default timeout on command/data reply (in ms). */
   static const uint16_t DEFAULT_TIMEOUT = 3000;
 
@@ -50,7 +69,8 @@ public:
     SPI::Driver(cs, SPI::ACTIVE_LOW, rate, 1, SPI::MSB_ORDER, &m_irq),
     m_irq(irq, this),
     m_available(false),
-    m_timeout(DEFAULT_TIMEOUT)
+    m_timeout(DEFAULT_TIMEOUT),
+    m_event_handler(NULL)
   {
   }
 
@@ -145,13 +165,13 @@ public:
   /**
    * Await HCI event and arguments. Returns argument length
    * or negative error code. The given argument block must be able to
-   * hold incoming packet. 
+   * hold incoming event message.
    * @param[in] op HCI event code required.
    * @param[in] args pointer to argument block.
    * @param[in] len max number of bytes in argument block.
    * @return argument length or negative error code.
    */
-  int await(uint16_t op, void* args = NULL, uint8_t len = 0);
+  int await(uint16_t op, void* args = DEFAULT_EVNT, uint8_t len = DEFAULT_EVNT_MAX);
   
   /**
    * Listen for HCI event and arguments. Returns argument length
@@ -164,18 +184,52 @@ public:
    */
   int listen(uint16_t &event, void* args = NULL, uint8_t len = 0);
 
+  /**
+   * Write data with given data operation code, argument block and
+   * data payload. Returns number of bytes written or negative error
+   * code. 
+   * @param[in] op data operation code.
+   * @param[in] args pointer to argument block.
+   * @param[in] args_len number of bytes in argument block.
+   * @param[in] data pointer to data block
+   * @param[in] data_len number of bytes in data block.
+   * @return number of bytes written or negative error code.
+   */
   int write_data(uint8_t op, const void* args, uint8_t args_len,
 		 const void* data, uint16_t data_len)
   {
     return (write_data(op, args, args_len, data, data_len, false));
   }
   
+  /**
+   * Write data with given data operation code, argument block and
+   * data payload in program memory. Returns number of bytes written
+   * or negative error code. 
+   * @param[in] op data operation code.
+   * @param[in] args pointer to argument block.
+   * @param[in] args_len number of bytes in argument block.
+   * @param[in] data pointer to data block in program memory.
+   * @param[in] data_len number of bytes in data block.
+   * @return number of bytes written or negative error code.
+   */
   int write_data_P(uint8_t op, const void* args, uint8_t args_len,
 		   const void* data, uint16_t data_len)
   {
     return (write_data(op, args, args_len, data, data_len, true));
   }
 
+  /**
+   * Write data with given data operation code, argument block and
+   * data payload in given memory source. Returns number of bytes written
+   * or negative error code. 
+   * @param[in] op data operation code.
+   * @param[in] args pointer to argument block.
+   * @param[in] args_len number of bytes in argument block.
+   * @param[in] data pointer to data block.
+   * @param[in] data_len number of bytes in data block.
+   * @param[in] progmem flag data block in program memory.
+   * @return number of bytes written or negative error code.
+   */
   int write_data(uint8_t op, const void* args, uint8_t args_len,
 		 const void* data, uint16_t data_len, bool progmem);
 
@@ -215,6 +269,16 @@ public:
   bool is_available()
   {
     return (m_available);
+  }
+
+  /**
+   * Set event service handler. Called by service() for incoming
+   * events. 
+   * @param[in] handler. 
+   */
+  void set_event_handler(Event::Handler* handler)
+  {
+    m_event_handler = handler;
   }
 
 protected:
@@ -284,10 +348,10 @@ protected:
    * HCI Message Types.
    */
   enum {
-    HCI_TYPE_CMND = 0x01,	//!< HCI Command (SPI_OP_WRITE).
-    HCI_TYPE_DATA = 0x02,	//!< HCI Data (SPI_OP_WRITE/READ).
-    HCI_TYPE_PATCH = 0x03,	//!< HCI Patch (SPI_OP_WRITE).
-    HCI_TYPE_EVNT = 0x04	//!< HCI Event (SPI_OP_READ).
+    HCI_TYPE_CMND = 0x01,	//!< HCI Command (SPI_OP_WRITE only).
+    HCI_TYPE_DATA = 0x02,	//!< HCI Data (both SPI_OP_WRITE/READ).
+    HCI_TYPE_PATCH = 0x03,	//!< HCI Patch (SPI_OP_WRITE only).
+    HCI_TYPE_EVNT = 0x04	//!< HCI Event (SPI_OP_READ only).
   };
 
   /** Interrupt request handler. */
@@ -298,5 +362,14 @@ protected:
 
   /** Reply timeout in milli-seconds. */
   uint16_t m_timeout;
+
+  /** Event handler for unsolicited events. */
+  Event::Handler* m_event_handler;
+
+  /** Size of default event block. */
+  static const uint8_t DEFAULT_EVNT_MAX = 32;
+
+  /** Default event block. */
+  static uint8_t DEFAULT_EVNT[DEFAULT_EVNT_MAX];
 };
 #endif

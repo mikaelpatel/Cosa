@@ -85,15 +85,23 @@ void setup()
   }
   trace << endl;
 
+  INFO("Service WiFi events:", 0);
+  trace << endl;
+}
+
+void loop()
+{
   int handle;
+
   MEASURE("Create a socket:", 1)
     handle = wifi.socket(wifi.AF_INET, wifi.SOCK_STREAM, wifi.IPPROTO_TCP);
-  ASSERT(handle >= 0);
+  TRACE(handle);
 
   uint8_t WWW_GOOGLE_COM[4] = { 216, 58, 209, 132 };
   MEASURE("Connect to server:", 1) 
     ASSERT(wifi.connect(handle, WWW_GOOGLE_COM, 80) == 0);
   
+  int res;
   char msg[] = 
     "GET / HTTP/1.1" CRLF
     "Host: WildFire" CRLF
@@ -106,21 +114,21 @@ void setup()
   ASSERT((res > 0) && ((size_t) res == strlen(msg)));
   
   char buf[1500];
-  uint32_t read_mask = FD_ZERO();
-  uint32_t write_mask = FD_ZERO();
-  uint32_t error_mask = FD_ZERO();
-  FD_SET(handle, read_mask);
-  FD_SET(handle, error_mask);
+  uint32_t readhndls = FD_ZERO();
+  uint32_t writehndls = FD_ZERO();
+  uint32_t errorhndls = FD_ZERO();
+  FD_SET(handle, readhndls);
+  FD_SET(handle, errorhndls);
   MEASURE("Use select to wait for response:", 1)
-    res = wifi.select(handle + 1, read_mask, write_mask, error_mask, 0, 0);
+    res = wifi.select(handle + 1, readhndls, writehndls, errorhndls, 0, 0);
   ASSERT(res > 0);
-  while ((res > 0) && (FD_ISSET(handle,read_mask))) {
+  while ((res > 0) && (FD_ISSET(handle,readhndls))) {
     MEASURE("Receive HTML page:", 1) 
       res = wifi.recv(handle, buf, sizeof(buf));
     if (res < 0) break;
     for (int i = 0; i < res; i++)
       trace << (char) buf[i];
-    res = wifi.select(1, read_mask, write_mask, error_mask, 0, 5000);
+    res = wifi.select(1, readhndls, writehndls, errorhndls, 0, 5000);
   } 
   trace << endl;
 
@@ -128,13 +136,6 @@ void setup()
     ASSERT(wifi.close(handle) == 0);
   trace << endl;
 
-  INFO("Service WiFi events:", 0);
-  trace << endl;
-}
-
-void loop()
-{
-  wifi.service();
-  delay(100);
+  wifi.service(1000);
 }
 

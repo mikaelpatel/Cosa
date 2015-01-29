@@ -4,7 +4,7 @@ mkdir -p /home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.5.8/wildfire
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 57600
 CosaCC3000: started
-46:void setup():measure:Start CC3000:1387868 us
+46:void setup():measure:Start CC3000:1439620 us
 53:void setup():measure:Read software package information:248 us
 56:void setup():trace:PACKAGE_ID = 1
 57:void setup():trace:PACKAGE_BUILD_NR = 32
@@ -12,31 +12,37 @@ CosaCC3000: started
 61:void setup():info:Get the network addresses provided by the access point:
 IP=192.168.1.114,SUBNET=255.255.255.0,DNS=192.168.1.1
 
-75:void setup():measure:Request scan for available access points:1178064 us
+75:void setup():measure:Request scan for available access points:1178048 us
 77:void setup():info:Wait for scan results (2 sec)
-ssid=SJUMILASKOGEN,rssi=71,wlan_security=3
-ssid=wireless,rssi=56,wlan_security=3
-ssid=megabyte_the_dust,rssi=74,wlan_security=3
-ssid=Jockes,rssi=46,wlan_security=3
-ssid=Sunside_network,rssi=51,wlan_security=3
-ssid=FamAhlbeck,rssi=50,wlan_security=2
+ssid=SJUMILASKOGEN,rssi=83,wlan_security=3
+ssid=FamAhlbeck,rssi=52,wlan_security=2
+ssid=GAAS-2.4G,rssi=52,wlan_security=3
+ssid=Jockes,rssi=52,wlan_security=3
+ssid=Jockes Open,rssi=52,wlan_security=0
+ssid=wireless,rssi=51,wlan_security=3
+ssid=TeliaGateway58-98-35-55-D8-C5,rssi=49,wlan_security=3
+ssid=megabyte_the_dust,rssi=77,wlan_security=3
 
-89:void setup():measure:Create a socket:372 us
-94:void setup():measure:Connect to server:15768 us
+88:void setup():info:Service WiFi events:
+
+96:void loop():measure:Create a socket:368 us
+98:void loop():trace:handle = 0
+101:void loop():measure:Connect to server:15252 us
 GET / HTTP/1.1
 Host: WildFire
 Connection: close
 
-104:void setup():measure:Send request:748 us
-114:void setup():measure:Use select to wait for response:17888 us
-136:int HCI::await(uint16_t, void*, uint8_t):info:await: op=0x1004, event=0x8800
-118:void setup():measure:Receive HTML page:5212 us
+605:int CC3000::send(int, const void*, size_t):trace:BUFFER_COUNT = 5
+112:void loop():measure:Send request:1864 us
+122:void loop():measure:Use select to wait for response:4520 us
+4858:HCI_EVNT_WLAN_UNSOL_TCP_CLOSE_WAIT:handle=0
+126:void loop():measure:Receive HTML page:2468 us
 HTTP/1.1 302 Found
 Location: http://www.google.com/
 Cache-Control: private
 Content-Type: text/html; charset=UTF-8
 X-Content-Type-Options: nosniff
-Date: Tue, 27 Jan 2015 10:58:20 GMT
+Date: Thu, 29 Jan 2015 00:17:58 GMT
 Server: sffe
 Content-Length: 219
 X-XSS-Protection: 1; mode=block
@@ -50,16 +56,119 @@ The document has moved
 <A HREF="http://www.google.com/">here</A>.
 </BODY></HTML>
 
-127:void setup():measure:Close socket:14624 us
+135:void loop():measure:Close socket:15108 us
 
-131:void setup():info:Service WiFi events:
+5834:HCI_EVNT_DATA_UNSOL_FREE_BUFF:buffers_freed=1
+63:virtual void CC3000::UnsolicitedEvent::on_event(uint16_t, void*, size_t):trace:m_device->BUFFER_COUNT = 6
+11165:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
+96:void loop():measure:Create a socket:364 us
+98:void loop():trace:handle = 0
+101:void loop():measure:Connect to server:17540 us
+GET / HTTP/1.1
+Host: WildFire
+Connection: close
 
-5820:274:int CC3000::service(uint32_t):info:HCI_EVNT_DATA_UNSOL_FREE_BUFF
-277:int CC3000::service(uint32_t):info:BUFFERS=1
-00407e: 00 01 00 00 00 01 00 
-11240:268:int CC3000::service(uint32_t):info:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
-00407e: 00 
-21251:268:int CC3000::service(uint32_t):info:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
-00407e: 00 
-31260:268:int CC3000::service(uint32_t):info:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
-00407e: 00 
+605:int CC3000::send(int, const void*, size_t):trace:BUFFER_COUNT = 5
+112:void loop():measure:Send request:1716 us
+122:void loop():measure:Use select to wait for response:3692 us
+15923:HCI_EVNT_WLAN_UNSOL_TCP_CLOSE_WAIT:handle=0
+126:void loop():measure:Receive HTML page:2524 us
+HTTP/1.1 302 Found
+Location: http://www.google.com/
+Cache-Control: private
+Content-Type: text/html; charset=UTF-8
+X-Content-Type-Options: nosniff
+Date: Thu, 29 Jan 2015 00:18:09 GMT
+Server: sffe
+Content-Length: 219
+X-XSS-Protection: 1; mode=block
+Alternate-Protocol: 80:quic,p=0.02
+Connection: close
+
+<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
+<TITLE>302 Moved</TITLE></HEAD><BODY>
+<H1>302 Moved</H1>
+The document has moved
+<A HREF="http://www.google.com/">here</A>.
+</BODY></HTML>
+
+135:void loop():measure:Close socket:15188 us
+
+16900:HCI_EVNT_DATA_UNSOL_FREE_BUFF:buffers_freed=1
+63:virtual void CC3000::UnsolicitedEvent::on_event(uint16_t, void*, size_t):trace:m_device->BUFFER_COUNT = 6
+21166:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
+96:void loop():measure:Create a socket:360 us
+98:void loop():trace:handle = 0
+101:void loop():measure:Connect to server:308428 us
+GET / HTTP/1.1
+Host: WildFire
+Connection: close
+
+605:int CC3000::send(int, const void*, size_t):trace:BUFFER_COUNT = 5
+112:void loop():measure:Send request:2264 us
+122:void loop():measure:Use select to wait for response:3432 us
+27281:HCI_EVNT_WLAN_UNSOL_TCP_CLOSE_WAIT:handle=0
+126:void loop():measure:Receive HTML page:2520 us
+HTTP/1.1 302 Found
+Location: http://www.google.com/
+Cache-Control: private
+Content-Type: text/html; charset=UTF-8
+X-Content-Type-Options: nosniff
+Date: Thu, 29 Jan 2015 00:18:21 GMT
+Server: sffe
+Content-Length: 219
+X-XSS-Protection: 1; mode=block
+Alternate-Protocol: 80:quic,p=0.02
+Connection: close
+
+<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
+<TITLE>302 Moved</TITLE></HEAD><BODY>
+<H1>302 Moved</H1>
+The document has moved
+<A HREF="http://www.google.com/">here</A>.
+</BODY></HTML>
+
+135:void loop():measure:Close socket:14940 us
+
+28258:HCI_EVNT_DATA_UNSOL_FREE_BUFF:buffers_freed=1
+63:virtual void CC3000::UnsolicitedEvent::on_event(uint16_t, void*, size_t):trace:m_device->BUFFER_COUNT = 6
+31164:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
+96:void loop():measure:Create a socket:356 us
+98:void loop():trace:handle = 0
+101:void loop():measure:Connect to server:15844 us
+GET / HTTP/1.1
+Host: WildFire
+Connection: close
+
+605:int CC3000::send(int, const void*, size_t):trace:BUFFER_COUNT = 5
+112:void loop():measure:Send request:2180 us
+122:void loop():measure:Use select to wait for response:50736 us
+38394:HCI_EVNT_WLAN_UNSOL_TCP_CLOSE_WAIT:handle=0
+126:void loop():measure:Receive HTML page:2528 us
+HTTP/1.1 302 Found
+Location: http://www.google.com/
+Cache-Control: private
+Content-Type: text/html; charset=UTF-8
+X-Content-Type-Options: nosniff
+Date: Thu, 29 Jan 2015 00:18:32 GMT
+Server: sffe
+Content-Length: 219
+X-XSS-Protection: 1; mode=block
+Alternate-Protocol: 80:quic,p=0.02
+Connection: close
+
+<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
+<TITLE>302 Moved</TITLE></HEAD><BODY>
+<H1>302 Moved</H1>
+The document has moved
+<A HREF="http://www.google.com/">here</A>.
+</BODY></HTML>
+
+135:void loop():measure:Close socket:15716 us
+
+39323:HCI_EVNT_DATA_UNSOL_FREE_BUFF:buffers_freed=1
+63:virtual void CC3000::UnsolicitedEvent::on_event(uint16_t, void*, size_t):trace:m_device->BUFFER_COUNT = 6
+41164:HCI_EVNT_WLAN_UNSOL_KEEPALIVE
+96:void loop():measure:Create a socket:352 us
+98:void loop():trace:handle = 0
+1
