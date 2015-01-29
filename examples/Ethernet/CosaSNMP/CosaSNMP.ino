@@ -38,7 +38,7 @@
  * 2. Access the Arduino MIB (ardDigitalPin.0)
  *   snmpget -v1 -c public 192.168.1.18 0.1.3.6.1.4.1.36582.1.0
  * 3. Walk the OID tree
- *   snmpwalk -v1 -c public 192.168.1.18 0
+ *   snmpwalk -v1 -c public 192.168.1.18
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -88,7 +88,7 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
 {
   // Match with Arduino MIB OID root
   int pos = pdu.oid.match(get_oid(), false);
-  if (pos < 0 || pdu.oid.length != 11) return (false);
+  if (pos < 0 || pdu.oid.length != 10) return (false);
 
   // Access pin type and number
   uint8_t sys = pdu.oid.name[pos];
