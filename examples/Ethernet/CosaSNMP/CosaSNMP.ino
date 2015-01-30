@@ -34,11 +34,11 @@
  * @section Testing
  * Test with Linux snmp commands:
  * 1. Access the MIB-2 SYSTEM (sysDescr)
- *   snmpget -v1 -c public 192.168.1.18 0.1.3.6.1.2.1.1.1
+ *   snmpget -v1 -c public {W5100_IP} 1.3.6.1.2.1.1.1
  * 2. Access the Arduino MIB (ardDigitalPin.0)
- *   snmpget -v1 -c public 192.168.1.18 0.1.3.6.1.4.1.36582.1.0
- * 3. Walk the OID tree
- *   snmpwalk -v1 -c public 192.168.1.18
+ *   snmpget -v1 -c public {W5100_IP} 1.3.6.1.4.1.36582.1.0
+ * 3. Walk all available OID tree
+ *   snmpwalk -v1 -c public {W5100_IP} 1
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -51,6 +51,7 @@
 #include "Cosa/INET/SNMP.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#define PRINT_PDU // Comment this out to remove some tracing and reduce memory usage
 
 /**
  * Arduino MIB OID(1.3.6.1.4.1.36582)
@@ -86,16 +87,19 @@ public:
 bool 
 ARDUINO_MIB::is_request(SNMP::PDU& pdu)
 {
-  // Match with Arduino MIB OID root
-  int pos = pdu.oid.match(get_oid(), false);
-  if (pos < 0 || pdu.oid.length != 10) return (false);
+  uint8_t mib_baselen = pgm_read_byte(SNMP::ARDUINO_MIB_OID);
+  if(pdu.oid.length > (mib_baselen + 2)) return (false);
 
-  // Access pin type and number
-  uint8_t sys = pdu.oid.name[pos];
-  uint8_t index = pdu.oid.name[pos + 1];
-  
+  // Match with Arduino MIB OID root
+  uint8_t index = pdu.oid.match(get_oid());
+  if (index < -1) return (false); // MIB is greater than what we deal with
+  uint8_t sys = (pdu.oid.length > mib_baselen) ? pdu.oid.name[mib_baselen] : 0;
   // Get next value; adjust index referens
   if (pdu.type == SNMP::PDU_GET_NEXT) {
+    if ((index < 0) || (sys == 0)) {
+        memcpy_P(&pdu.oid, SNMP::ARDUINO_MIB_OID, mib_baselen + 1);
+        index = 0;
+    }
     switch (sys) {
     case 0:
       sys = ardDigitalPin;
@@ -120,8 +124,9 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
     case ardVcc:
       return (false);
     }
-    pdu.oid.name[pos] = sys;
-    pdu.oid.name[pos + 1] = index;
+    pdu.oid.name[mib_baselen] = sys;
+    pdu.oid.name[mib_baselen + 1] = index;
+    pdu.oid.length = mib_baselen + 2;
     pdu.type = SNMP::PDU_GET;
   }
 
@@ -173,10 +178,11 @@ OutputPin sd(Board::D4, 1);
 #endif
 
 // Network configuration
-#define IP 192,168,1,100
-#define SUBNET 255,255,255,0
-#define GATEWAY 192,168,1,1
+// If WS5100 board has a MAC sticker then use here instead of this default
 static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
+// If no DHCP set these, uncomment in var definitions, and switch to ethernet.begin() below
+//#define IP 192,168,1,100
+//#define SUBNET 255,255,255,0
 
 // SNMP MIB-2 System configuration
 static const char descr[] __PROGMEM = "<service description>";
@@ -191,8 +197,8 @@ SNMP snmp;
 
 void setup()
 {
-  uint8_t ip[4] = { IP };
-  uint8_t subnet[4] = { SUBNET };
+  uint8_t ip[4]; // = { IP };
+  uint8_t subnet[4]; // = { SUBNET };
 
   // Start watchdog and uart. Use uart for trace output
   uart.begin(9600);
@@ -201,6 +207,7 @@ void setup()
 
   // Start ethernet controller and request network address for hostname
   ASSERT(ethernet.begin_P(PSTR("CosaSNMPAgent")));
+//ASSERT(ethernet.begin(ip, subnet); // If no DHCP
 
   // Alternative give network address and subnet mask
   // ASSERT(ethernet.begin(ip, subnet));

@@ -34,25 +34,26 @@ const uint8_t SNMP::ARDUINO_MIB_OID[] __PROGMEM = {
 bool
 SNMP::MIB2_SYSTEM::is_request(PDU& pdu)
 {
+  uint8_t mib_baselen = pgm_read_byte(SNMP::MIB2_SYSTEM::OID);
+  if(pdu.oid.length > (mib_baselen + 1)) return (false);
+
   // Match with SNMP MIB-2 System OID root
   int sys = pdu.oid.match(OID);
-  if (sys < 0) return (false);
+  if (sys < -1) return (false);
 
   // Get next value or step to next mib
   if (pdu.type == SNMP::PDU_GET_NEXT) {
+    if (sys < 0) {
+        memcpy_P(&pdu.oid, SNMP::MIB2_SYSTEM::OID, mib_baselen + 1);
+        sys = 0;
+    }
+    if ((sys == 0) && (pdu.oid.length == mib_baselen)) pdu.oid.name[pdu.oid.length++] = sys;
     if (sys < sysServices) {
       sys += 1;
-      pdu.oid.name[pdu.oid.length - 1] = sys;
+      pdu.oid.name[mib_baselen] = sys;
       pdu.type = SNMP::PDU_GET;
     }
-    else {
-      memcpy_P(&pdu.oid, 
-	       SNMP::ARDUINO_MIB_OID, 
-	       pgm_read_byte(SNMP::ARDUINO_MIB_OID) + 1);
-      pdu.oid.name[pdu.oid.length++] = 0;
-      pdu.oid.name[pdu.oid.length++] = 0;
-      return (false);
-    }
+    else return (false);
   }
 
   // Check request type
@@ -114,11 +115,14 @@ int
 SNMP::OID::match(const uint8_t* coid, bool flag)
 {
   uint8_t clen = pgm_read_byte(&coid[0]);
-  if (length < clen) return (-1);
-  for (uint8_t i = 0; i < clen; i++) 
-    if (name[i] != pgm_read_byte(&coid[i + 1])) return (-1);
+  for (uint8_t i = 0; i < clen; i++) {
+    if (i >= length) return (-1);
+    uint8_t coidb = pgm_read_byte(&coid[i + 1]);
+    if (name[i] < coidb) return (-1);
+    if (name[i] > coidb) return (-2);
+  }
   if (flag) {
-    if (length - 1 == clen) return (name[clen]);
+    if (length > clen) return (name[length - 1]);
     return (-1);
   }
   return (length == clen ? 0 : clen);
