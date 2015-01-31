@@ -108,7 +108,7 @@ atmega328-8.upload.maximum_eeprom_size=1024
 atmega328-8.bootloader.tool=avrdude
 atmega328-8.bootloader.low_fuses=0xE2
 atmega328-8.bootloader.high_fuses=0xDE
-atmega328-8.bootloader.extended_fuses=0xFD
+atmega328-8.bootloader.extended_fuses=0x05
 
 atmega328-8.build.mcu=atmega328p
 atmega328-8.build.f_cpu=8000000L
