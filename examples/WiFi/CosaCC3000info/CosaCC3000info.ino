@@ -53,19 +53,19 @@ void setup()
     trace << endl;
   }
 
-  INFO("Get the network addresses provided by the access point:", 0);
+  INFO("MAC and Network addresses:", 0);
   uint8_t subnet[4];
   uint8_t dns[4];
   uint8_t ip[4];
+  uint8_t mac[6];
+  wifi.nvmem_read(CC3000::NVMEM_MAC_FILEID, mac, 0, sizeof(mac));
   wifi.get_addr(ip, subnet);
   wifi.get_dns_addr(dns);
-  trace << "IP="; 
-  INET::print_addr(trace, ip);
-  trace << ",SUBNET=";
-  INET::print_addr(trace, subnet);
-  trace << ",DNS="; 
-  INET::print_addr(trace, dns);
-  trace << endl << endl;
+  trace << "MAC="; INET::print_mac(trace, mac); trace << endl;
+  trace << "IP=";  INET::print_addr(trace, ip); trace << endl;
+  trace << "SUBNET="; INET::print_addr(trace, subnet); trace << endl;
+  trace << "DNS="; INET::print_addr(trace, dns); trace << endl;
+  trace << endl;
 }
 
 void loop()
