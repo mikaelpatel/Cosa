@@ -1,0 +1,44 @@
+CosaCC3000demo: started
+66:void loop():measure:Create a socket:376 us
+69:void loop():trace:sock = 0
+71:void loop():measure:Connect to server:33328 us
+76:void loop():measure:Send request:448 us
+83:void loop():measure:Use select to wait for response:26644 us
+87:void loop():measure:Receive HTML page:15500 us
+104:void loop():measure:Close socket:133404 us
+107:void loop():trace:res = 0
+
+66:void loop():measure:Create a socket:372 us
+69:void loop():trace:sock = 0
+71:void loop():measure:Connect to server:33724 us
+76:void loop():measure:Send request:444 us
+83:void loop():measure:Use select to wait for response:27008 us
+87:void loop():measure:Receive HTML page:15380 us
+104:void loop():measure:Close socket:133240 us
+107:void loop():trace:res = 0
+
+66:void loop():measure:Create a socket:352 us
+69:void loop():trace:sock = 0
+71:void loop():measure:Connect to server:33320 us
+76:void loop():measure:Send request:448 us
+83:void loop():measure:Use select to wait for response:26484 us
+87:void loop():measure:Receive HTML page:17064 us
+104:void loop():measure:Close socket:133636 us
+107:void loop():trace:res = 0
+
+66:void loop():measure:Create a socket:356 us
+69:void loop():trace:sock = 0
+71:void loop():measure:Connect to server:300736 us
+103:void loop():trace:res = -62
+104:void loop():measure:Close socket:100672 us
+107:void loop():trace:res = 0
+
+66:void loop():measure:Create a socket:356 us
+69:void loop():trace:sock = 0
+71:void loop():measure:Connect to server:32920 us
+76:void loop():measure:Send request:444 us
+83:void loop():measure:Use select to wait for response:26748 us
+87:void loop():measure:Receive HTML page:16604 us
+104:void loop():measure:Close socket:132428 us
+107:void loop():trace:res = 0
+

@@ -75,16 +75,6 @@ public:
   }
 
   /**
-   * Read HCI message. Returns message length or negative error
-   * code. The given argument block must be able to hold incoming
-   * packet.  
-   * @param[in] msg pointer to message buffer;
-   * @param[in] len max number of bytes in message buffer.
-   * @return message length or negative error code.
-   */
-  int read(void* args, size_t len);
-
-  /**
    * Read HCI operation and arguments. Returns argument length
    * or negative error code. The given argument block must be able to
    * hold incoming packet. 
@@ -173,17 +163,6 @@ public:
    */
   int await(uint16_t op, void* args = DEFAULT_EVNT, uint8_t len = DEFAULT_EVNT_MAX);
   
-  /**
-   * Listen for HCI event and arguments. Returns argument length
-   * or negative error code. The given argument block must be able to
-   * hold incoming packet. 
-   * @param[out] event HCI event code received.
-   * @param[in] args pointer to argument block.
-   * @param[in] len max number of bytes in argument block.
-   * @return argument length or negative error code.
-   */
-  int listen(uint16_t &event, void* args = NULL, uint8_t len = 0);
-
   /**
    * Write data with given data operation code, argument block and
    * data payload. Returns number of bytes written or negative error
@@ -367,7 +346,7 @@ protected:
   Event::Handler* m_event_handler;
 
   /** Size of default event block. */
-  static const uint8_t DEFAULT_EVNT_MAX = 32;
+  static const uint8_t DEFAULT_EVNT_MAX = 64;
 
   /** Default event block. */
   static uint8_t DEFAULT_EVNT[DEFAULT_EVNT_MAX];

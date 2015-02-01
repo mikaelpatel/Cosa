@@ -20,36 +20,9 @@
 
 #include "Cosa/SPI/Driver/HCI.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Trace.hh"
 
 uint8_t HCI::DEFAULT_EVNT[DEFAULT_EVNT_MAX];
-
-int 
-HCI::read(void* msg, size_t len)
-{
-  if (!m_available) return (0);
-  uint16_t payload;
-  int res = -EFAULT;
-  spi.acquire(this);
-  spi.begin();
-  if (spi.transfer(SPI_OP_READ) == SPI_OP_REPLY) {
-    spi.transfer(0);
-    spi.transfer(0);
-    payload = spi.transfer(0);
-    payload = (payload << 8) | spi.transfer(0);
-    if (payload <= len) {
-      res = payload;
-      spi.read(msg, res);
-    }
-    else {
-      for (uint16_t i = 0; i < payload; i++) spi.transfer(0);
-      res = -EINVAL;
-    }
-  }
-  m_available = false;
-  spi.end();
-  spi.release();
-  return (res);
-}
 
 int 
 HCI::read(uint16_t &op, void* args, uint8_t len)
@@ -73,8 +46,8 @@ HCI::read(uint16_t &op, void* args, uint8_t len)
       payload -= sizeof(header);
       res = -EINVAL;
       if (header.type == HCI_TYPE_EVNT || header.type == HCI_TYPE_DATA) {
-	op = header.cmnd;
 	if (header.len <= len) {
+	  op = header.cmnd;
 	  res = header.len;
 	  padding = ((res & 1) == 0);
 	  spi.read(args, res);
@@ -83,7 +56,7 @@ HCI::read(uint16_t &op, void* args, uint8_t len)
       }
     }
   }
-  if (res < 0) {
+  if (res < 0 && payload > 0) {
     for (uint16_t i = 0; i < payload; i++) spi.transfer(0);
   }
   m_available = false;
@@ -131,26 +104,20 @@ HCI::await(uint16_t op, void* args, uint8_t len)
     do {
       while (!m_available && (RTC::since(start) < m_timeout)) yield();
       if (!m_available) return (-ETIME);
-      res = read(event, args, len);
+      res = read(event, DEFAULT_EVNT, DEFAULT_EVNT_MAX);
     } while (res == -ENOMSG);
-    if ((res < 0) || (op == event)) return (res);
+    if (res < 0) {
+      TRACE(res);
+      return (res);
+    }
+    if (op == event && res == len) {
+      memcpy(args, DEFAULT_EVNT, res);
+      return (res);
+    }
     if (m_event_handler != NULL) 
-      m_event_handler->on_event(event, args, res);
+      m_event_handler->on_event(event, DEFAULT_EVNT, res);
   };
   return (-ENOMSG);
-}
-
-int 
-HCI::listen(uint16_t &event, void* args, uint8_t len)
-{
-  uint32_t start = RTC::millis();
-  int res;
-  do {
-    while (!m_available && (RTC::since(start) < m_timeout)) yield();
-    if (!m_available) return (-ETIME);
-    res = read(event, args, len);
-  } while (res == -ENOMSG);
-  return (res);
 }
 
 int 

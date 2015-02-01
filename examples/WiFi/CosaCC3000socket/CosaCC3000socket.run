@@ -1,0 +1,66 @@
+CosaCC3000socket: started
+56:void loop():measure:Create a socket:360 us
+62:void loop():measure:Connect to server:33776 us
+67:void loop():measure:Send request:444 us
+70:void loop():trace:count = 37
+74:void loop():measure:Check if data is available:20860 us
+78:void loop():measure:Receive HTML page buffer:1796 us
+74:void loop():measure:Check if data is available:548 us
+78:void loop():measure:Receive HTML page buffer:616 us
+74:void loop():measure:Check if data is available:50696 us
+90:void loop():trace:count = 543
+92:void loop():measure:Close socket:132392 us
+94:void loop():trace:res = 0
+
+56:void loop():measure:Create a socket:360 us
+62:void loop():measure:Connect to server:33772 us
+67:void loop():measure:Send request:444 us
+70:void loop():trace:count = 37
+74:void loop():measure:Check if data is available:21312 us
+78:void loop():measure:Receive HTML page buffer:1800 us
+74:void loop():measure:Check if data is available:544 us
+78:void loop():measure:Receive HTML page buffer:692 us
+74:void loop():measure:Check if data is available:49824 us
+90:void loop():trace:count = 543
+92:void loop():measure:Close socket:132820 us
+94:void loop():trace:res = 0
+
+56:void loop():measure:Create a socket:364 us
+62:void loop():measure:Connect to server:33364 us
+67:void loop():measure:Send request:444 us
+70:void loop():trace:count = 37
+74:void loop():measure:Check if data is available:20680 us
+78:void loop():measure:Receive HTML page buffer:1792 us
+74:void loop():measure:Check if data is available:544 us
+78:void loop():measure:Receive HTML page buffer:696 us
+74:void loop():measure:Check if data is available:50396 us
+90:void loop():trace:count = 543
+92:void loop():measure:Close socket:132380 us
+94:void loop():trace:res = 0
+
+56:void loop():measure:Create a socket:372 us
+62:void loop():measure:Connect to server:34684 us
+67:void loop():measure:Send request:452 us
+70:void loop():trace:count = 37
+74:void loop():measure:Check if data is available:21816 us
+78:void loop():measure:Receive HTML page buffer:1792 us
+74:void loop():measure:Check if data is available:552 us
+78:void loop():measure:Receive HTML page buffer:700 us
+74:void loop():measure:Check if data is available:49960 us
+90:void loop():trace:count = 543
+92:void loop():measure:Close socket:135736 us
+94:void loop():trace:res = 0
+
+56:void loop():measure:Create a socket:360 us
+62:void loop():measure:Connect to server:32648 us
+67:void loop():measure:Send request:452 us
+70:void loop():trace:count = 37
+74:void loop():measure:Check if data is available:21420 us
+78:void loop():measure:Receive HTML page buffer:1808 us
+74:void loop():measure:Check if data is available:520 us
+78:void loop():measure:Receive HTML page buffer:692 us
+74:void loop():measure:Check if data is available:50360 us
+90:void loop():trace:count = 543
+92:void loop():measure:Close socket:132872 us
+94:void loop():trace:res = 0
+
