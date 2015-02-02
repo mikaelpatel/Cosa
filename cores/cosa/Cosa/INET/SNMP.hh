@@ -92,6 +92,13 @@ public:
     static const size_t NAME_MAX = 32;
     uint8_t length;
     uint8_t name[NAME_MAX];
+    /**
+     * Find out how well ia given OID byte array matches to this one
+     * @param[in] coid byte array of OID to match against
+     * @param[in] flag if true and result is uint then uint is last byte of OID,
+     *              otherwise the uint is length of passed in OID
+     * return 0 if identical, -1 if later, -2 if earlier, uint if a child of.
+     */
     int match(const uint8_t* coid, bool flag = true);
   };
 
