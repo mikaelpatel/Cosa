@@ -27,7 +27,10 @@
 /**
  * Host Control Interface (HCI) Protocol for SPI. Abstraction of the
  * communication with CC3000 WiFi module. Handles command issue, data
- * write, and reply and data read. 
+ * write, and reply and data read. Writes and reads HCI blocks in
+ * SPI frame. SPI frames are in big-endian, HCI frames in
+ * little-endian, except som data which are in network order
+ * (big-endian). 
  * 
  * @section References
  * 1. CC3000 Protocol, http://processors.wiki.ti.com/index.php/CC3000_Protocol
@@ -73,16 +76,6 @@ public:
     m_event_handler(NULL)
   {
   }
-
-  /**
-   * Read HCI message. Returns message length or negative error
-   * code. The given argument block must be able to hold incoming
-   * packet.  
-   * @param[in] msg pointer to message buffer;
-   * @param[in] len max number of bytes in message buffer.
-   * @return message length or negative error code.
-   */
-  int read(void* args, size_t len);
 
   /**
    * Read HCI operation and arguments. Returns argument length
@@ -165,25 +158,15 @@ public:
   /**
    * Await HCI event and arguments. Returns argument length
    * or negative error code. The given argument block must be able to
-   * hold incoming event message.
+   * hold incoming event message. A default event block is used when
+   * passer NULL.
    * @param[in] op HCI event code required.
    * @param[in] args pointer to argument block.
    * @param[in] len max number of bytes in argument block.
    * @return argument length or negative error code.
    */
-  int await(uint16_t op, void* args = DEFAULT_EVNT, uint8_t len = DEFAULT_EVNT_MAX);
+  int await(uint16_t op, void* args = NULL, uint8_t len = 0);
   
-  /**
-   * Listen for HCI event and arguments. Returns argument length
-   * or negative error code. The given argument block must be able to
-   * hold incoming packet. 
-   * @param[out] event HCI event code received.
-   * @param[in] args pointer to argument block.
-   * @param[in] len max number of bytes in argument block.
-   * @return argument length or negative error code.
-   */
-  int listen(uint16_t &event, void* args = NULL, uint8_t len = 0);
-
   /**
    * Write data with given data operation code, argument block and
    * data payload. Returns number of bytes written or negative error
@@ -263,7 +246,7 @@ public:
   }
   
   /**
-   * Return true(1) if a packet is available.
+   * Return true(1) if a packet is available otherwise false(0).
    * @return bool.
    */
   bool is_available()
@@ -367,9 +350,9 @@ protected:
   Event::Handler* m_event_handler;
 
   /** Size of default event block. */
-  static const uint8_t DEFAULT_EVNT_MAX = 32;
+  static const uint8_t EVNT_MAX = 64;
 
   /** Default event block. */
-  static uint8_t DEFAULT_EVNT[DEFAULT_EVNT_MAX];
+  uint8_t m_evnt[EVNT_MAX];
 };
 #endif

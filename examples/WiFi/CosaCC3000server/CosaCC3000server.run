@@ -1,0 +1,40 @@
+CosaCC3000server: started
+IP=192.168.1.114,SUBNET=255.255.255.0
+63:void setup():measure:Create a socket:376 us
+67:void setup():measure:Bind to port:428 us
+70:void setup():measure:Listen mode:428 us
+client=1,IP=192.168.1.101:39602
+98:void loop():measure:Recieve HTML request:11344 us
+137:void loop():trace:count = 289
+141:void loop():measure:Construct and send page:14360 us
+188:void loop():trace:count = 1350
+192:void loop():measure:Close client connection:306492 us
+194:void loop():trace:res = 0
+client=1,IP=192.168.1.101:39609
+98:void loop():measure:Recieve HTML request:12356 us
+137:void loop():trace:count = 315
+141:void loop():measure:Construct and send page:14364 us
+188:void loop():trace:count = 1350
+192:void loop():measure:Close client connection:306500 us
+194:void loop():trace:res = 0
+client=1,IP=192.168.1.101:39604
+98:void loop():measure:Recieve HTML request:11856 us
+137:void loop():trace:count = 315
+141:void loop():measure:Construct and send page:13840 us
+188:void loop():trace:count = 1350
+192:void loop():measure:Close client connection:306676 us
+194:void loop():trace:res = 0
+client=1,IP=192.168.1.101:39610
+98:void loop():measure:Recieve HTML request:11092 us
+137:void loop():trace:count = 315
+141:void loop():measure:Construct and send page:14384 us
+188:void loop():trace:count = 1350
+192:void loop():measure:Close client connection:306968 us
+194:void loop():trace:res = 0
+client=1,IP=192.168.1.101:39611
+98:void loop():measure:Recieve HTML request:12152 us
+137:void loop():trace:count = 315
+141:void loop():measure:Construct and send page:14572 us
+188:void loop():trace:count = 1350
+192:void loop():measure:Close client connection:306676 us
+194:void loop():trace:res = 0
