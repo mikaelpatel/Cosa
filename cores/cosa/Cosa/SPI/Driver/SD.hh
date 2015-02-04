@@ -304,7 +304,7 @@ protected:
   static const uint8_t INIT_PULSES = 10;
 
   /** Internal number of retry. */
-  static const uint8_t INIT_RETRY = 10;
+  static const uint8_t INIT_RETRY = 20;
   static const uint8_t RESPONSE_RETRY = 100;
 
   /** Response from latest command. */
