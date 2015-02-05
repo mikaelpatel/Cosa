@@ -76,7 +76,7 @@ protected:
   virtual void on_interrupt(uint16_t arg = 0) 
   {
     UNUSED(arg);
-    m_signal = !m_signal;
+    m_signal = read();
   }
 
   Signal& m_signal;
