@@ -93,5 +93,6 @@ void setup()
 
 void loop()
 {
+  Event::service();
   controller.run();
 }
