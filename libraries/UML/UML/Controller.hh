@@ -28,8 +28,8 @@ namespace UML {
 
 /**
  * The Controller class is responsible for the scheduling and
- * execution of capsule behavior. With a connector is assigned the
- * capsules listening for change with be scheduled. 
+ * execution of capsule behavior. When a connector is assigned the
+ * capsules listening for change with be scheduled.
  */
 class Controller {
 public:

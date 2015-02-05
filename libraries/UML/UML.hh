@@ -29,6 +29,7 @@
 
 // Cosa UML Real-Time Elements
 #include "UML/Probe.hh"
+#include "UML/Trigger.hh"
 #include "UML/Button.hh"
 #include "UML/Clock.hh"
 #include "UML/LED.hh"

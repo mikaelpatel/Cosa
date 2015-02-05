@@ -67,8 +67,10 @@ Button b1(Board::D2, onoff);
 LED l1(onoff);
 
 // Some probes to trace connector values
-Probe<Clock::Tick> p1(tick);
-Probe<Button::Signal> p2(onoff);
+const char p1_name[] __PROGMEM = "tick";
+Probe<Clock::Tick> p1((str_P) p1_name, tick);
+const char p2_name[] __PROGMEM = "onoff";
+Probe<Button::Signal> p2((str_P) p2_name, onoff);
 
 // The wiring; control dependencies
 Capsule* const tick_listeners[] __PROGMEM = { &p1, &l1, NULL };

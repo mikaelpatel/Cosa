@@ -15,10 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
- * @section Description
- * A simple component based language with Capsules, Connectors and
- * Controller.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -33,6 +29,8 @@ namespace UML {
  * The Connector class for a given type. Implements value set and
  * get. The setting of the connector value will force the scheduling
  * of capsules that are listening for value change. 
+ * @param[in] T connector value type.
+ * @param[in] ON_CHANGE flag (Default false).
  *
  * @section Diagram
  *
@@ -43,7 +41,7 @@ namespace UML {
  *   |         |                         |         |
  *   +---------+                         +---------+
  */
-template<typename T>
+template<typename T, bool ON_CHANGE = false>
 class Connector {
 public:
   /**
@@ -65,6 +63,7 @@ public:
    */
   T operator=(T value)
   {
+    if (ON_CHANGE && (m_value == value)) return (value);
     m_value = value;
     controller.schedule(m_listeners);
     return (value);
@@ -78,9 +77,11 @@ public:
    */
   T operator=(Connector<T> &connector)
   {
-    m_value = connector.m_value;
+    T value = connector.m_value;
+    if (ON_CHANGE && (m_value == value)) return (value);
+    m_value = value;
     controller.schedule(m_listeners);
-    return (m_value);
+    return (value);
   }
 
   /**

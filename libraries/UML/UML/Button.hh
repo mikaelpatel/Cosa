@@ -35,21 +35,22 @@ namespace UML {
  * @section Diagram
  *
  *  +--------+
- *  | Button |---[Signal]-->
+ *  | Button |---[Signal]--->
  *  +--------+
  *     [64 ms]
  */
 class Button : public TimedCapsule, private InputPin {
 public:
   /**
-   * Default sample period (in ms).
+   * Default sample period for debounce of button (in ms).
    */
   static const uint16_t DEFAULT_TIMEOUT = 64;
 
   /**
-   * Type of button signal connector.
+   * Type of button signal connector. Schedule listeners only on
+   * change.
    */
-  typedef Connector<bool> Signal;
+  typedef Connector<bool,true> Signal;
 
   /**
    * Construct Button monitoring given digital pin and generating
@@ -67,14 +68,11 @@ public:
 
   /**
    * @override Capsule
-   * Increment clock tick and schedule all capsules that listen for
-   * clock update.
+   * Read digital pin and update signal on change.
    */
   virtual void behavior() 
   {
-    bool value = read();
-    if (m_signal == value) return;
-    m_signal = value;
+    m_signal = read();
   }
 
 protected:

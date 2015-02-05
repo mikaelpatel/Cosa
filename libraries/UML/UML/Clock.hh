@@ -25,14 +25,15 @@
 #include "UML/Connector.hh"
 #include "UML/Controller.hh"
 #include "Cosa/Periodic.hh"
+#include "Cosa/Time.hh"
 
 namespace UML {
 
 /**
- * Periodic Capsule class. The clock tick value is defined as a
- * Connector type. The behavior of this class is simple incrementing
- * the tick value. The periodic run function will map fromt the event
- * callback to the capsule scheduler (controller).
+ * Clock Capsule class. The clock signal is defined as a Connector
+ * type; Tick. The behavior of this class is simple incrementing the
+ * tick value and thereby scheduling the capsules that are listening
+ * to the tick.
  *
  * @section Diagram
  * 
@@ -46,7 +47,7 @@ public:
   /**
    * Type of clock tick connector.
    */
-  typedef Connector<uint16_t> Tick;
+  typedef Connector<clock_t> Tick;
 
   /**
    * Construct Clock with given tick connector and period in

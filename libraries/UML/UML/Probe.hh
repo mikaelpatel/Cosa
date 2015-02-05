@@ -23,6 +23,7 @@
 
 #include "UML/Capsule.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
 
 namespace UML {
 
@@ -44,23 +45,26 @@ class Probe : public Capsule {
 public:
   /**
    * Construct Probe for given connector.
+   * @param[in] name string in program memory.
    * @param[in] connector.
    */
-  Probe(T& connector) : 
+  Probe(str_P name, T& connector) : 
     Capsule(), 
+    m_name(name),
     m_connector(connector)
   {}
 
   /**
    * @override Capsule
-   * Print connector value to trace output stream.
+   * Print timestamp, probe name and connector value to trace output stream.
    */
   virtual void behavior()
   {
-    TRACE(m_connector);
+    trace << Watchdog::millis() << ':' << m_name << '=' << m_connector << endl;
   }
 
 protected:
+  str_P m_name;
   T& m_connector;
 };
 
