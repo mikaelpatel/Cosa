@@ -28,15 +28,23 @@
 #include "UML.hh"
 
 /**
+ * A simple model with Clock, Button and LED. The connectors are
+ * probed. The LED will blink when the Button is on otherwise the LED
+ * is turned off. The probes will trace changes to the connector
+ * value. The Clock and the Button are timed capsules. The clock has a
+ * period of 1024 ms and the Button 64 ms. The Button will debound the
+ * digital input pin. The LED has control dependency to the Clock tick
+ * and a data dependency to the Button signal.
+ *
  * @section Diagram
  * 
  *    Clock                  Probe
  *  +--------+             +-------+
  *  |   c1   |---[tick]--->|  p1   |
  *  +--------+     |       +-------+
- *                 |          LED
+ *   [1024 ms]     -          LED
  *                 |       +-------+
- *                 +------>|       |
+ *                 + - - ->|       |
  *                         |  l1   | 
  *                 +------>|       |
  *                 |       +-------+
@@ -44,6 +52,7 @@
  *  +--------+     |       +-------+
  *  |   b1   |---[onoff]-->|  p2   |
  *  +--------+             +-------+
+ *     [64 ms]
  */
 
 using namespace UML;
@@ -52,35 +61,32 @@ using namespace UML;
 extern Clock::Tick tick;
 extern Button::Signal onoff;
 
-// The capsules
+// The capsules with data dependencies (connectors)
 Clock c1(tick, 1024);
 Button b1(Board::D2, onoff);
 LED l1(onoff);
 
-// Some probes 
+// Some probes to trace connector values
 Probe<Clock::Tick> p1(tick);
 Probe<Button::Signal> p2(onoff);
 
-// The wiring
-Capsule* const tick_listeners[] __PROGMEM = {
-  &p1,
-  &l1,
-  NULL
-};
+// The wiring; control dependencies
+Capsule* const tick_listeners[] __PROGMEM = { &p1, &l1, NULL };
 Clock::Tick tick(tick_listeners, 0);
 
-Capsule* const onoff_listeners[] __PROGMEM = {
-  &p2,
-  &l1,
-  NULL
-};
+Capsule* const onoff_listeners[] __PROGMEM = { &p2, &l1, NULL};
 Button::Signal onoff(onoff_listeners, false);
 
 void setup()
 {
+  // Start trace on serial output
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaCapsules: started"));
+
+  // Use the watchdog for timeout events
   Watchdog::begin(16, Watchdog::push_timeout_events);
+
+  // Start the Timed Capsules
   c1.begin();
   b1.begin();
 }

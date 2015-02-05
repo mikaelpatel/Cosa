@@ -1,5 +1,5 @@
 /**
- * @file UML/Probe.hh
+ * @file UML/Periodic.hh
  * @version 1.0
  *
  * @section License
@@ -14,54 +14,50 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *
+ * 
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_UML_PROBE_HH
-#define COSA_UML_PROBE_HH
+#ifndef COSA_UML_TIMED_CAPSULE_HH
+#define COSA_UML_TIMED_CAPSULE_HH
 
 #include "UML/Capsule.hh"
-#include "Cosa/Trace.hh"
+#include "UML/Controller.hh"
+#include "Cosa/Periodic.hh"
 
 namespace UML {
 
 /**
- * Abstract Connector Probe for given Connector type.
- * @param[in] T connector type to probe.
+ * Timed Capsule class. Run the behavior periodically. 
  *
  * @section Diagram
- *
- *               +----------+
- *               | Probe<T> |
- *               |          |
- * ---[T]--->[connector]    |
- *               |          |
- *               +----------+
+ * 
+ *   +--------------+
+ *   | TimedCapsule |---[Connector]--->
+ *   +--------------+
+ *               [ms]
  */
-template<typename T>
-class Probe : public Capsule {
+class TimedCapsule : public Capsule, public Periodic {
 public:
   /**
-   * Construct Probe for given connector.
-   * @param[in] connector.
+   * Construct Timed Capsule with given period in milli-seconds. 
+   * @param[in] ms period.
    */
-  Probe(T& connector) : 
+  TimedCapsule(uint16_t ms) : 
     Capsule(), 
-    m_connector(connector)
+    Periodic(ms)
   {}
 
-  /**
-   * @override Capsule
-   * Print connector value to trace output stream.
-   */
-  virtual void behavior()
-  {
-    TRACE(m_connector);
-  }
-
 protected:
-  T& m_connector;
+  /**
+   * @override Periodic
+   * Schedule this capsule on timeout. Could also call behaviour
+   * directly.
+   */
+  virtual void run()
+  {
+    controller.schedule(this);
+  }
 };
 
 };

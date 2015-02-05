@@ -21,7 +21,7 @@
 #ifndef COSA_UML_CLOCK_HH
 #define COSA_UML_CLOCK_HH
 
-#include "UML/Capsule.hh"
+#include "UML/TimedCapsule.hh"
 #include "UML/Connector.hh"
 #include "UML/Controller.hh"
 #include "Cosa/Periodic.hh"
@@ -33,8 +33,15 @@ namespace UML {
  * Connector type. The behavior of this class is simple incrementing
  * the tick value. The periodic run function will map fromt the event
  * callback to the capsule scheduler (controller).
+ *
+ * @section Diagram
+ * 
+ *   +--------+
+ *   | Clock  |---[Tick]--->
+ *   +--------+
+ *         [ms]
  */
-class Clock : public Capsule, public Periodic {
+class Clock : public TimedCapsule {
 public:
   /**
    * Type of clock tick connector.
@@ -48,8 +55,7 @@ public:
    * @param[in] ms period.
    */
   Clock(Tick& tick, uint16_t ms) : 
-    Capsule(), 
-    Periodic(ms), 
+    TimedCapsule(ms), 
     m_tick(tick) 
   {}
 
@@ -61,16 +67,6 @@ public:
   virtual void behavior() 
   {
     m_tick = m_tick + 1;
-  }
-
-  /**
-   * @override Periodic
-   * Schedule this capsule on timeout. Could also call behaviour
-   * directly.
-   */
-  virtual void run()
-  {
-    controller.schedule(this);
   }
 
 protected:

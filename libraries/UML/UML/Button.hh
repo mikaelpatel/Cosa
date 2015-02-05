@@ -21,9 +21,8 @@
 #ifndef COSA_UML_BUTTON_HH
 #define COSA_UML_BUTTON_HH
 
-#include "UML/Capsule.hh"
+#include "UML/TimedCapsule.hh"
 #include "UML/Connector.hh"
-#include "Cosa/Periodic.hh"
 #include "Cosa/InputPin.hh"
 
 namespace UML {
@@ -32,23 +31,36 @@ namespace UML {
  * Button Capsule class. Provides a boolean signal connector that is
  * set according to the button (digital pin). The pin is periodically
  * sampled and listeners are scheduled when the state changes. 
+ *
+ * @section Diagram
+ *
+ *  +--------+
+ *  | Button |---[Signal]-->
+ *  +--------+
+ *     [64 ms]
  */
-class Button : public Capsule, public Periodic, private InputPin {
+class Button : public TimedCapsule, private InputPin {
 public:
+  /**
+   * Default sample period (in ms).
+   */
+  static const uint16_t DEFAULT_TIMEOUT = 64;
+
   /**
    * Type of button signal connector.
    */
   typedef Connector<bool> Signal;
 
   /**
-   * Construct Clock with given tick connector and period in
-   * milli-seconds. 
-   * @param[in] tick connector.
+   * Construct Button monitoring given digital pin and generating
+   * signal. The pin is sampled with the given period (default 64
+   * ms). 
+   * @param[in] pin digital pin for button.
+   * @param[in] signal connector.
    * @param[in] ms period.
    */
-  Button(Board::DigitalPin pin, Signal& signal) : 
-    Capsule(), 
-    Periodic(64),
+  Button(Board::DigitalPin pin, Signal& signal, uint16_t ms = DEFAULT_TIMEOUT) : 
+    TimedCapsule(ms), 
     InputPin(pin, InputPin::PULLUP_MODE),
     m_signal(signal)
   {}
@@ -63,16 +75,6 @@ public:
     bool value = read();
     if (m_signal == value) return;
     m_signal = value;
-  }
-
-  /**
-   * @override Periodic
-   * Schedule this capsule on timeout. Could also call behaviour
-   * directly.
-   */
-  virtual void run()
-  {
-    controller.schedule(this);
   }
 
 protected:

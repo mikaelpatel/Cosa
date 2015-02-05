@@ -29,6 +29,14 @@ namespace UML {
 
 /**
  * The LED Capsule. The behavior will toggle the LED state.
+ *
+ * @section Diagram
+ *                           +---------+
+ *                           |   LED   |
+ *                           |         |
+ * ---[Button::Signal]--->[signal]     |
+ *                           |         |
+ *                           +---------+
  */
 class LED : public Capsule, private OutputPin {
 public:

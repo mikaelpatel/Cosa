@@ -21,11 +21,15 @@ n * @version 1.0
 #ifndef COSA_UML_HH
 #define COSA_UML_HH
 
+// UML Real-Time Elements
 #include "UML/Capsule.hh"
+#include "UML/TimedCapsule.hh"
 #include "UML/Connector.hh"
 #include "UML/Controller.hh"
 
+// Cosa UML Real-Time Elements
 #include "UML/Probe.hh"
+#include "UML/Button.hh"
 #include "UML/Clock.hh"
 #include "UML/LED.hh"
 

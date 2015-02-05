@@ -30,6 +30,15 @@ namespace UML {
  * listens to Connectors. The connector formal arguments to the
  * capsule are called ports. Capsules that generate data to the
  * connectors will also define the connector type.
+ *
+ * @section Diagram
+ *
+ *   +---------+                         +---------+
+ *   | Capsule |                         | Capsule |
+ *   |         |                         |         |
+ *   |      [Port]---[Connector<T>]--->[Port]      |
+ *   |         |                         |         |
+ *   +---------+                         +---------+
  */
 class Capsule {
 public:

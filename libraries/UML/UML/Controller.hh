@@ -47,7 +47,6 @@ public:
    */
   void run()
   {
-    Event::service();
     while (m_available) {
       uint16_t ix;
       synchronized {
@@ -58,7 +57,6 @@ public:
       }
       m_queue[ix]->behavior();
     }
-    yield();
   }
 
   /**

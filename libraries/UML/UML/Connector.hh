@@ -33,6 +33,15 @@ namespace UML {
  * The Connector class for a given type. Implements value set and
  * get. The setting of the connector value will force the scheduling
  * of capsules that are listening for value change. 
+ *
+ * @section Diagram
+ *
+ *   +---------+                         +---------+
+ *   | Capsule |                         | Capsule |
+ *   |         |                         |         |
+ *   |      [Port]---[Connector<T>]--->[Port]      |
+ *   |         |                         |         |
+ *   +---------+                         +---------+
  */
 template<typename T>
 class Connector {
@@ -59,6 +68,19 @@ public:
     m_value = value;
     controller.schedule(m_listeners);
     return (value);
+  }
+
+  /**
+   * Set the connector with value from given connector. Schedule
+   * listener capsules. 
+   * @param[in] connector value to assign.
+   * @return value.
+   */
+  T operator=(Connector<T> &connector)
+  {
+    m_value = connector.m_value;
+    controller.schedule(m_listeners);
+    return (m_value);
   }
 
   /**
