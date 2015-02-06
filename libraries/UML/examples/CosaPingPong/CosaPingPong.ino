@@ -16,28 +16,12 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * Benchmark the Cosa UML Controller and Connector signalling.
- *
- * This file is part of the Arduino Che Cosa project.
- */
-
-#include "Cosa/RTC.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
-#include "UML.hh"
-
-/**
- * A simple ping-ping model. The echo capsule will wait for a signal
+ * Benchmark the Cosa UML Controller and Connector signalling. A
+ * simple ping-ping model. The echo capsule will wait for a signal
  * on one port and send a signal on another port directly after
  * receiving a signal. To allow measurement of the controller
  * performance the echoing of signals will also decrement a counter
  * until zero.
- *
- * Note: The measurement includes the test and decrement of the
- * 16-bit counter, reading the input connector, writing the output
- * connector and scheduling the listener. Total 14 us (224 clock
- * cycles).
  *
  * @section Diagram
  * 
@@ -48,7 +32,19 @@
  *  |        |<----[c2]-----|        |
  *  +--------+              +--------+
  *
+ * @section Note
+ * The measurement includes the test and decrement of the 16-bit
+ * counter, reading the input connector, writing the output connector
+ * and scheduling the listener. Total 14 us (224 clock cycles).
+ *
+ * This file is part of the Arduino Che Cosa project.
  */
+
+#include "Cosa/RTC.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+#include "UML.hh"
 
 using namespace UML;
 

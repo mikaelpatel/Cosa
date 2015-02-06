@@ -16,19 +16,6 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * A simple UML style modelling language with Capsules, Connectors and
- * Controller.
- *
- * This file is part of the Arduino Che Cosa project.
- */
-
-#include "Cosa/Event.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
-#include "UML.hh"
-
-/**
  * A simple model with Clock, Button and LED. The connectors are
  * probed. The LED will blink when the Button is on otherwise the LED
  * is turned off. The probes will trace changes to the connector
@@ -54,7 +41,15 @@
  *  |   b1   |---[onoff]-->|  p2   |
  *  +--------+             +-------+
  *     [64 ms]
+ *
+ * This file is part of the Arduino Che Cosa project.
  */
+
+#include "Cosa/Event.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+#include "UML.hh"
 
 using namespace UML;
 

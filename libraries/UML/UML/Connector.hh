@@ -28,7 +28,12 @@ namespace UML {
 /**
  * The Connector class for a given type. Implements value set and
  * get. The setting of the connector value will force the scheduling
- * of capsules that are listening for value change. 
+ * of capsules that are listening for value change. The template
+ * parameter ON_CHANGE can be used to filter on new values. The
+ * default is scheduling on any setting. By giving ON_CHANGE the value
+ * true the connector will only schedule if the value setting is
+ * different than the previous value. 
+
  * @param[in] T connector value type.
  * @param[in] ON_CHANGE flag (Default false).
  *

@@ -33,6 +33,7 @@
 #include "UML/Counter.hh"
 #include "UML/Trigger.hh"
 #include "UML/Button.hh"
+#include "UML/Sensor.hh"
 #include "UML/Clock.hh"
 #include "UML/LED.hh"
 
