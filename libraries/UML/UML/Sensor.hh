@@ -30,7 +30,8 @@ namespace UML {
 /**
  * Sensor Capsule class. Provides a signal connector that is set
  * according to the sensor (analog pin). The pin is periodically 
- * sampled and listeners are scheduled when the state changes. 
+ * sampled and listeners are scheduled when the value changes. 
+ * By default the sample is scaled to voltage.
  *
  * @section Diagram
  *
@@ -50,7 +51,6 @@ public:
    * Type of sensor sample connector. Schedule listeners only on
    * change.
    */
-  // typedef Connector<uint16_t,true> Sample;
   typedef Connector<float,true> Sample;
 
   /**
@@ -72,8 +72,18 @@ public:
    */
   virtual void behavior() 
   {
-    // m_sample = sample();
-    m_sample = sample() * 5.0 / 1023;
+    m_sample = scale(sample());
+  }
+
+  /**
+   * @override Sensor
+   * Default sample scaling; range [0..1023] is scaled to [0.0..5.0]. 
+   * @param[in] sample value.
+   * @return scaled value.
+   */
+  virtual float scale(uint16_t value)
+  {
+    return (value * 5.0 / 1023);
   }
 
 protected:
