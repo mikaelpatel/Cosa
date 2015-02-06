@@ -287,7 +287,7 @@ public:
    */
   enum {
     ANALOG_PIN_MAX = 16,
-    DIGITAL_PIN_MAX = 54,
+    DIGITAL_PIN_MAX = 70,
     EXT_PIN_MAX = 6,
     PCI_PIN_MAX = 24,
     PWM_PIN_MAX = 13
