@@ -50,7 +50,8 @@ public:
    * Type of sensor sample connector. Schedule listeners only on
    * change.
    */
-  typedef Connector<uint16_t,true> Sample;
+  // typedef Connector<uint16_t,true> Sample;
+  typedef Connector<float,true> Sample;
 
   /**
    * Construct Sensor monitoring given analog pin and generating
@@ -71,7 +72,8 @@ public:
    */
   virtual void behavior() 
   {
-    m_sample = sample();
+    // m_sample = sample();
+    m_sample = sample() * 5.0 / 1023;
   }
 
 protected:

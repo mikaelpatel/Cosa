@@ -74,11 +74,15 @@ void setup()
 
   // Start the timed probe
   probe.begin();
+
+  // Enable the trigger capsule
+  trigger.enable();
 }
 
 void loop()
 {
-  trigger.enable();
-  Event::service();
+  Event event;
+  while (Event::queue.dequeue(&event))
+    event.dispatch();
   controller.run();
 }
