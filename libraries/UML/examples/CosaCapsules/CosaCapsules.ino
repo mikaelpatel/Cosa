@@ -22,6 +22,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"

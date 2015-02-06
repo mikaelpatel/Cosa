@@ -43,7 +43,7 @@ public:
   /**
    * Type of button signal connector.
    */
-  typedef Connector<bool,true> Signal;
+  typedef Connector<bool> Signal;
 
   /**
    * Construct Trigger on external interrupt pin and generating
@@ -77,6 +77,7 @@ protected:
   {
     UNUSED(arg);
     m_signal = read();
+    disable();
   }
 
   Signal& m_signal;

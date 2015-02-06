@@ -22,13 +22,12 @@
 #define UML_CONTROLLER_HH
 
 #include "UML/Capsule.hh"
-#include "Cosa/Event.hh"
 
 namespace UML {
 
 /**
  * The Controller class is responsible for the scheduling and
- * execution of capsule behavior. When a connector is assigned the
+ * execution of capsule behavior. When a connector is updated the
  * capsules listening for change with be scheduled.
  */
 class Controller {

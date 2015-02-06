@@ -16,8 +16,7 @@
  * Lesser General Public License for more details.
  * 
  * @section Description
- * A simple UML style modelling language with Capsules, Connectors and
- * Controller.
+ * Benchmark the Cosa UML Controller and Connector signalling.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -34,6 +33,11 @@
  * receiving a signal. To allow measurement of the controller
  * performance the echoing of signals will also decrement a counter
  * until zero.
+ *
+ * Note: The measurement includes the test and decrement of the
+ * 16-bit counter, reading the input connector, writing the output
+ * connector and scheduling the listener. Total 14 us (224 clock
+ * cycles).
  *
  * @section Diagram
  * 
