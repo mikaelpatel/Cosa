@@ -38,13 +38,13 @@
  *                         |        | 
  *                 +------>|        |
  *                 |       +--------+
- *    Button       |         Probe
+ *    Button       |       TimedProbe
  *  +--------+     |       +--------+
  *  |   b1   |     |       |   p2   |
  *  |        |---[onoff]-->|        |
  *  |        |             |        |
  *  +--------+             +--------+
- *     [64 ms]
+ *     [64 ms]              [2048 ms]
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -58,6 +58,7 @@
 #include "Cosa/UML/Button.hh"
 #include "Cosa/UML/LED.hh"
 #include "Cosa/UML/Probe.hh"
+#include "Cosa/UML/TimedProbe.hh"
 #include "Cosa/UML/Controller.hh"
 
 using namespace UML;
@@ -76,7 +77,7 @@ const char p1_name[] __PROGMEM = "tick";
 Probe<Clock::Tick> p1((str_P) p1_name, tick);
 
 const char p2_name[] __PROGMEM = "onoff";
-Probe<Signal> p2((str_P) p2_name, onoff);
+TimedProbe<Signal> p2((str_P) p2_name, onoff, 2048);
 
 // The wiring; control dependencies
 Capsule* const tick_listeners[] __PROGMEM = { &p1, &l1, NULL };
@@ -97,6 +98,7 @@ void setup()
   // Start the Timed Capsules
   c1.begin();
   b1.begin();
+  p2.begin();
 }
 
 void loop()
