@@ -23,8 +23,6 @@
 
 #include "Cosa/UML/TimedCapsule.hh"
 #include "Cosa/UML/Connector.hh"
-#include "Cosa/UML/Controller.hh"
-#include "Cosa/Periodic.hh"
 #include "Cosa/Time.hh"
 
 namespace UML {
