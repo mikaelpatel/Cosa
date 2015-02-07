@@ -69,7 +69,7 @@ public:
 
   protected:
     /** Device bus address. */
-    int8_t m_addr;
+    uint8_t m_addr;
 
     /** Allow access. */
     friend class TWI;
