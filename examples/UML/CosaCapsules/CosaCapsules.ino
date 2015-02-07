@@ -44,7 +44,7 @@
  *  |        |---[onoff]-->|        |
  *  |        |             |        |
  *  +--------+             +--------+
- *     [64 ms]              [2048 ms]
+ *        [D2]              [2048 ms]
  *
  * This file is part of the Arduino Che Cosa project.
  */

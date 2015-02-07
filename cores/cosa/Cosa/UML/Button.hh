@@ -40,7 +40,7 @@ namespace UML {
  *  |        |---[Signal]--->
  *  |        |
  *  +--------+
- *     [64 ms]
+ *        [Dn]
  */
 class Button : public TimedCapsule, private InputPin {
 public:

@@ -41,7 +41,7 @@ namespace UML {
  *  |        |---[Sample]--->
  *  |        |
  *  +--------+
- *        [ms]
+ *     [An/ms]
  */
 class Sensor : public TimedCapsule, private AnalogPin {
 public:

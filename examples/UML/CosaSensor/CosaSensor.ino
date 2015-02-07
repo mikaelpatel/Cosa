@@ -26,7 +26,7 @@
  *  |        |---[s1]-->|        |
  *  |        |          |        |
  *  +--------+          +--------+
- *        [A0]
+ *  [A0/1024ms]
  *
  * This file is part of the Arduino Che Cosa project.
  */

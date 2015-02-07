@@ -40,7 +40,7 @@ namespace UML {
  *  |         |---[Signal]--->
  *  |         |
  *  +---------+
- *
+ *       [EXTn]
  */
 class Trigger : public Capsule, public ExternalInterrupt {
 public:
