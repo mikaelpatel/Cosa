@@ -84,11 +84,7 @@ public:
    */
   T operator=(Connector<T> &connector)
   {
-    T value = connector.m_value;
-    if (ON_CHANGE && (m_value == value)) return (value);
-    m_value = value;
-    controller.schedule(m_listeners);
-    return (value);
+    return (*this = connector.m_value);
   }
 
   /**
