@@ -22,7 +22,6 @@
 #define COSA_UML_LED_HH
 
 #include "Cosa/UML/Capsule.hh"
-#include "Cosa/UML/Button.hh"
 #include "Cosa/OutputPin.hh"
 
 namespace UML {
@@ -31,12 +30,14 @@ namespace UML {
  * The LED Capsule. The behavior will toggle the LED state.
  *
  * @section Diagram
- *                           +---------+
- *                           |   LED   |
- *                           |         |
- * ---[Button::Signal]--->[signal]     |
- *                           |         |
- *                           +---------+
+ *
+ *                    LED
+ *                +--------+
+ *                |   l1   |
+ * ---[Signal]--->|        |
+ *                |        |
+ *                +--------+
+ *                      [Dn]
  */
 class LED : public Capsule, private OutputPin {
 public:
@@ -44,7 +45,7 @@ public:
    * Construct LED Capsule for given digital pin.
    * @param[in] ledpin.
    */
-  LED(Button::Signal& signal, Board::DigitalPin ledpin = Board::LED) : 
+  LED(Signal& signal, Board::DigitalPin ledpin = Board::LED) : 
     Capsule(), 
     OutputPin(ledpin, 0),
     m_signal(signal)
@@ -65,7 +66,7 @@ public:
   }
 
 protected:
-  Button::Signal& m_signal;
+  Signal& m_signal;
 };
 
 };

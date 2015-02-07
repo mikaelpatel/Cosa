@@ -25,7 +25,7 @@
  * 
  *    Trigger              Counter           TimedProbe
  *  +---------+          +---------+         +---------+
- *  | trigger |          | counter |         | probe   | 
+ *  | trigger |          | counter |         |  probe  | 
  *  |         |---[s1]-->|         |--[c1]-->|         |
  *  |         |          |         |         |         |
  *  +---------+          +---------+         +---------+
@@ -38,6 +38,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
 #include "Cosa/UML/Trigger.hh"
 #include "Cosa/UML/Counter.hh"
 #include "Cosa/UML/TimedProbe.hh"
@@ -46,10 +47,10 @@
 using namespace UML;
 
 // Define Counter type
-typedef Counter<Trigger::Signal> Triggers;
+typedef Counter<Signal> Triggers;
 
 // Forward declaration of the connectors
-extern Trigger::Signal s1;
+extern Signal s1;
 extern Triggers::Count c1;
 
 // The capsules with data dependencies (connectors)
@@ -61,7 +62,7 @@ TimedProbe<Triggers::Count> probe((str_P) probe_name, c1);
 
 // The wiring; control dependencies
 Capsule* const s1_listeners[] __PROGMEM = { &counter, NULL };
-Trigger::Signal s1(s1_listeners, 0);
+Signal s1(s1_listeners, 0);
 
 Capsule* const c1_listeners[] __PROGMEM = { NULL };
 Triggers::Count c1(c1_listeners, 0L);

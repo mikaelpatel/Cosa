@@ -33,14 +33,13 @@ namespace UML {
  *
  * @section Diagram
  *
- *               +----------+
- *               | Timed    |
- *               | Probe<T> |
- *               |          |
- * ---[T]--->[connector]    |
- *               |          |
- *               +----------+
- *                       [ms]
+ *           TimedProbe<T>
+ *           +-----------+
+ *           |    p1     |
+ * ---[T]--->|           |
+ *           |           |
+ *           +-----------+
+ *                    [ms]
  */  
 template<typename T>
 class TimedProbe : public TimedCapsule {

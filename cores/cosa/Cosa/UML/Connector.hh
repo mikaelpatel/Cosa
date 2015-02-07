@@ -39,12 +39,14 @@ namespace UML {
  *
  * @section Diagram
  *
+ *     Capsule                             Capsule
  *   +---------+                         +---------+
- *   | Capsule |                         | Capsule |
+ *   |   c1    |                         |   c2    |
  *   |         |                         |         |
  *   |      [Port]---[Connector<T>]--->[Port]      |
  *   |         |                         |         |
  *   +---------+                         +---------+
+ *
  */
 template<typename T, bool ON_CHANGE = false>
 class Connector {
@@ -102,6 +104,12 @@ protected:
   T m_value;
   Capsule* const* m_listeners;
 };
+
+/**
+ * Boolean Connector with value filtering, i.e. on value change
+ * scheduling.
+ */
+typedef Connector<bool,true> Signal;
 
 };
 #endif

@@ -20,13 +20,13 @@
  *
  * @section Diagram
  * 
- *    Sensor               Probe
- *  +---------+          +---------+
- *  | sensor  |          | probe   |
- *  |         |---[s1]-->|         |
- *  |         |          |         |
- *  +---------+          +---------+
- *         [A0]
+ *    Sensor              Probe
+ *  +--------+          +--------+
+ *  | sensor |          | probe  |
+ *  |        |---[s1]-->|        |
+ *  |        |          |        |
+ *  +--------+          +--------+
+ *        [A0]
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -35,6 +35,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
 #include "Cosa/UML/Sensor.hh"
 #include "Cosa/UML/Probe.hh"
 #include "Cosa/UML/Controller.hh"

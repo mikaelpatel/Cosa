@@ -34,8 +34,11 @@ namespace UML {
  *
  * @section Diagram
  *
+ *    Button
  *  +--------+
- *  | Button |---[Signal]--->
+ *  |   bn   |
+ *  |        |---[Signal]--->
+ *  |        |
  *  +--------+
  *     [64 ms]
  */
@@ -45,12 +48,6 @@ public:
    * Default sample period for debounce of button (in ms).
    */
   static const uint16_t DEFAULT_TIMEOUT = 64;
-
-  /**
-   * Type of button signal connector. Schedule listeners only on
-   * change.
-   */
-  typedef Connector<bool,true> Signal;
 
   /**
    * Construct Button monitoring given digital pin and generating

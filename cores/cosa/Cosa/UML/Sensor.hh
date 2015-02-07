@@ -35,8 +35,11 @@ namespace UML {
  *
  * @section Diagram
  *
+ *    Sensor
  *  +--------+
- *  | Sensor |---[Sample]--->
+ *  |   s1   |
+ *  |        |---[Sample]--->
+ *  |        |
  *  +--------+
  *        [ms]
  */

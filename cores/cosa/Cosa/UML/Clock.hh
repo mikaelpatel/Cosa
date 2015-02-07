@@ -35,8 +35,11 @@ namespace UML {
  *
  * @section Diagram
  * 
+ *     Clock
  *   +--------+
- *   | Clock  |---[Tick]--->
+ *   |   c1   |
+ *   |        |---[Tick]--->
+ *   |        |
  *   +--------+
  *         [ms]
  */

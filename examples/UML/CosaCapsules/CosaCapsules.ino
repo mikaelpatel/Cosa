@@ -27,19 +27,23 @@
  * @section Diagram
  * 
  *    Clock                  Probe
- *  +--------+             +-------+
- *  |   c1   |---[tick]--->|  p1   |
- *  +--------+     |       +-------+
- *   [1024 ms]     -          LED
- *                 |       +-------+
- *                 + - - ->|       |
- *                         |  l1   | 
- *                 +------>|       |
- *                 |       +-------+
+ *  +--------+             +--------+
+ *  |   c1   |             |   p1   |
+ *  |        |---[tick]--->|        |
+ *  |        |     .       |        |
+ *  +--------+     .       +--------+
+ *   [1024 ms]     .          LED
+ *                 .       +--------+
+ *                 + - - ->|   l1   |
+ *                         |        | 
+ *                 +------>|        |
+ *                 |       +--------+
  *    Button       |         Probe
- *  +--------+     |       +-------+
- *  |   b1   |---[onoff]-->|  p2   |
- *  +--------+             +-------+
+ *  +--------+     |       +--------+
+ *  |   b1   |     |       |   p2   |
+ *  |        |---[onoff]-->|        |
+ *  |        |             |        |
+ *  +--------+             +--------+
  *     [64 ms]
  *
  * This file is part of the Arduino Che Cosa project.
@@ -49,6 +53,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
 #include "Cosa/UML/Clock.hh"
 #include "Cosa/UML/Button.hh"
 #include "Cosa/UML/LED.hh"
@@ -58,26 +63,27 @@
 using namespace UML;
 
 // Forward declaration of the connectors
+extern Signal onoff;
 extern Clock::Tick tick;
-extern Button::Signal onoff;
 
 // The capsules with data dependencies (connectors)
-Clock c1(tick, 1024);
 Button b1(Board::D2, onoff);
+Clock c1(tick, 1024);
 LED l1(onoff);
 
 // Some probes to trace connector values
 const char p1_name[] __PROGMEM = "tick";
 Probe<Clock::Tick> p1((str_P) p1_name, tick);
+
 const char p2_name[] __PROGMEM = "onoff";
-Probe<Button::Signal> p2((str_P) p2_name, onoff);
+Probe<Signal> p2((str_P) p2_name, onoff);
 
 // The wiring; control dependencies
 Capsule* const tick_listeners[] __PROGMEM = { &p1, &l1, NULL };
 Clock::Tick tick(tick_listeners, 0);
 
 Capsule* const onoff_listeners[] __PROGMEM = { &p2, &l1, NULL};
-Button::Signal onoff(onoff_listeners, false);
+Signal onoff(onoff_listeners, false);
 
 void setup()
 {

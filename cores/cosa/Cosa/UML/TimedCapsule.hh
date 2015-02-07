@@ -32,8 +32,11 @@ namespace UML {
  *
  * @section Diagram
  * 
+ *     TimedCapsule
  *   +--------------+
- *   | TimedCapsule |---[Connector]--->
+ *   |      c1      |
+ *   |              |---[Connector]--->
+ *   |              |
  *   +--------------+
  *               [ms]
  */

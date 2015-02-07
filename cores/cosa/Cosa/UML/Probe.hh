@@ -33,12 +33,12 @@ namespace UML {
  *
  * @section Diagram
  *
- *               +----------+
- *               | Probe<T> |
- *               |          |
- * ---[T]--->[connector]    |
- *               |          |
- *               +----------+
+ *             Probe<T>
+ *           +----------+
+ *           |    p1    |
+ * ---[T]--->|          |
+ *           |          |
+ *           +----------+
  */
 template<typename T>
 class Probe : public Capsule {

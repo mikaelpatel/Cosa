@@ -33,8 +33,9 @@ namespace UML {
  *
  * @section Diagram
  *
+ *     Capsule                             Capsule
  *   +---------+                         +---------+
- *   | Capsule |                         | Capsule |
+ *   |   c1    |                         |   c2    |
  *   |         |                         |         |
  *   |      [Port]---[Connector<T>]--->[Port]      |
  *   |         |                         |         |

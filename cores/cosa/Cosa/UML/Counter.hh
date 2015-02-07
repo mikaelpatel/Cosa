@@ -33,10 +33,13 @@ namespace UML {
  *
  * @section Diagram
  *
- *            +---------+
- *  ---[T]--->| Counter |---[Count]--->
- *            +---------+
- *                    [T]
+ *              Counter<T>
+ *            +------------+
+ *            |    c1      |
+ *  ---[T]--->|            |---[Count]--->
+ *            |            |
+ *            +------------+
+ *
  */
 template<typename T>
 class Counter : public Capsule {

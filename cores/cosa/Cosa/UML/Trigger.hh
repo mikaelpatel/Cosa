@@ -34,18 +34,16 @@ namespace UML {
  *
  * @section Diagram
  *
+ *    Trigger
  *  +---------+
- *  | Trigger |---[Signal]--->
+ *  |   t1    |
+ *  |         |---[Signal]--->
+ *  |         |
  *  +---------+
  *
  */
 class Trigger : public Capsule, public ExternalInterrupt {
 public:
-  /**
-   * Type of trigger signal connector.
-   */
-  typedef Connector<bool> Signal;
-
   /**
    * Construct Trigger on external interrupt pin and generating
    * signal. 
