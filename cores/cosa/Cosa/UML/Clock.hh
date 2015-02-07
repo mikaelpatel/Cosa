@@ -1,5 +1,5 @@
 /**
- * @file UML/Clock.hh
+ * @file Cosa/UML/Clock.hh
  * @version 1.0
  *
  * @section License
@@ -21,9 +21,9 @@
 #ifndef COSA_UML_CLOCK_HH
 #define COSA_UML_CLOCK_HH
 
-#include "UML/TimedCapsule.hh"
-#include "UML/Connector.hh"
-#include "UML/Controller.hh"
+#include "Cosa/UML/TimedCapsule.hh"
+#include "Cosa/UML/Connector.hh"
+#include "Cosa/UML/Controller.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/Time.hh"
 

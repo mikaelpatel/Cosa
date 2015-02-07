@@ -35,7 +35,9 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "UML.hh"
+#include "Cosa/UML/Sensor.hh"
+#include "Cosa/UML/Probe.hh"
+#include "Cosa/UML/Controller.hh"
 
 using namespace UML;
 

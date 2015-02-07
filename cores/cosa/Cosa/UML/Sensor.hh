@@ -1,5 +1,5 @@
 /**
- * @file UML/Sensor.hh
+ * @file Cosa/UML/Sensor.hh
  * @version 1.0
  *
  * @section License
@@ -21,8 +21,8 @@
 #ifndef COSA_UML_SENSOR_HH
 #define COSA_UML_SENSOR_HH
 
-#include "UML/TimedCapsule.hh"
-#include "UML/Connector.hh"
+#include "Cosa/UML/TimedCapsule.hh"
+#include "Cosa/UML/Connector.hh"
 #include "Cosa/AnalogPin.hh"
 
 namespace UML {

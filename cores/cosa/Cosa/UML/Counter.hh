@@ -1,5 +1,5 @@
 /**
- * @file UML/Counter.hh
+ * @file Cosa/UML/Counter.hh
  * @version 1.0
  *
  * @section License
@@ -21,8 +21,8 @@
 #ifndef COSA_UML_COUNTER_HH
 #define COSA_UML_COUNTER_HH
 
-#include "UML/Capsule.hh"
-#include "UML/Connector.hh"
+#include "Cosa/UML/Capsule.hh"
+#include "Cosa/UML/Connector.hh"
 
 namespace UML {
 

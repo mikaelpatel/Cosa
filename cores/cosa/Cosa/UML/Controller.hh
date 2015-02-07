@@ -1,5 +1,5 @@
 /**
- * @file UML/Controller.hh
+ * @file Cosa/UML/Controller.hh
  * @version 1.0
  *
  * @section License
@@ -21,7 +21,7 @@
 #ifndef UML_CONTROLLER_HH
 #define UML_CONTROLLER_HH
 
-#include "UML/Capsule.hh"
+#include "Cosa/UML/Capsule.hh"
 
 namespace UML {
 

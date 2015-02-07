@@ -1,5 +1,5 @@
 /**
- * @file UML/Periodic.hh
+ * @file Cosa/UML/TimedCapsule.hh
  * @version 1.0
  *
  * @section License
@@ -21,8 +21,8 @@
 #ifndef COSA_UML_TIMED_CAPSULE_HH
 #define COSA_UML_TIMED_CAPSULE_HH
 
-#include "UML/Capsule.hh"
-#include "UML/Controller.hh"
+#include "Cosa/UML/Capsule.hh"
+#include "Cosa/UML/Controller.hh"
 #include "Cosa/Periodic.hh"
 
 namespace UML {

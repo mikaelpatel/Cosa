@@ -49,7 +49,11 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "UML.hh"
+#include "Cosa/UML/Clock.hh"
+#include "Cosa/UML/Button.hh"
+#include "Cosa/UML/LED.hh"
+#include "Cosa/UML/Probe.hh"
+#include "Cosa/UML/Controller.hh"
 
 using namespace UML;
 

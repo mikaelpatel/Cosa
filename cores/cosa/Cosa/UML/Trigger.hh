@@ -1,5 +1,5 @@
 /**
- * @file UML/Trigger.hh
+ * @file Cosa/UML/Trigger.hh
  * @version 1.0
  *
  * @section License
@@ -21,8 +21,8 @@
 #ifndef COSA_UML_TRIGGER_HH
 #define COSA_UML_TRIGGER_HH
 
-#include "UML/Capsule.hh"
-#include "UML/Connector.hh"
+#include "Cosa/UML/Capsule.hh"
+#include "Cosa/UML/Connector.hh"
 #include "Cosa/ExternalInterrupt.hh"
 
 namespace UML {

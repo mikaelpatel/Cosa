@@ -1,5 +1,5 @@
 /**
- * @file UML/TimedProbe.hh
+ * @file Cosa/UML/Probe.hh
  * @version 1.0
  *
  * @section License
@@ -18,10 +18,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_UML_TIMED_PROBE_HH
-#define COSA_UML_TIMED_PROBE_HH
+#ifndef COSA_UML_PROBE_HH
+#define COSA_UML_PROBE_HH
 
-#include "UML/Capsule.hh"
+#include "Cosa/UML/Capsule.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 
@@ -34,25 +34,22 @@ namespace UML {
  * @section Diagram
  *
  *               +----------+
- *               | Timed    |
  *               | Probe<T> |
  *               |          |
  * ---[T]--->[connector]    |
  *               |          |
  *               +----------+
- *                       [ms]
- */  
+ */
 template<typename T>
-class TimedProbe : public TimedCapsule {
+class Probe : public Capsule {
 public:
   /**
-   * Construct Timed Probe for given connector and timeout period.
+   * Construct Probe for given connector.
    * @param[in] name string in program memory.
-   * @param[in] connector to probe.
-   * @param[in] ms timeout period in ms (Default 2048).
+   * @param[in] connector.
    */
-  TimedProbe(str_P name, T& connector, uint16_t ms = 2048) : 
-    TimedCapsule(ms), 
+  Probe(str_P name, T& connector) : 
+    Capsule(), 
     m_name(name),
     m_connector(connector)
   {}

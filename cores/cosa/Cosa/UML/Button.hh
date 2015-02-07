@@ -1,5 +1,5 @@
 /**
- * @file UML/Button.hh
+ * @file Cosa/UML/Button.hh
  * @version 1.0
  *
  * @section License
@@ -21,8 +21,8 @@
 #ifndef COSA_UML_BUTTON_HH
 #define COSA_UML_BUTTON_HH
 
-#include "UML/TimedCapsule.hh"
-#include "UML/Connector.hh"
+#include "Cosa/UML/TimedCapsule.hh"
+#include "Cosa/UML/Connector.hh"
 #include "Cosa/InputPin.hh"
 
 namespace UML {

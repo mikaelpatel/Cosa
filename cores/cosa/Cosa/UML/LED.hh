@@ -1,5 +1,5 @@
 /**
- * @file UML/LED.hh
+ * @file Cosa/UML/LED.hh
  * @version 1.0
  *
  * @section License
@@ -21,8 +21,8 @@
 #ifndef COSA_UML_LED_HH
 #define COSA_UML_LED_HH
 
-#include "UML/Capsule.hh"
-#include "UML/Button.hh"
+#include "Cosa/UML/Capsule.hh"
+#include "Cosa/UML/Button.hh"
 #include "Cosa/OutputPin.hh"
 
 namespace UML {

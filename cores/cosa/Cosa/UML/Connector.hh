@@ -1,5 +1,5 @@
 /**
- * @file UML/Connector.hh
+ * @file Cosa/UML/Connector.hh
  * @version 1.0
  *
  * @section License
@@ -21,7 +21,7 @@
 #ifndef COSA_UML_CONNECTOR_HH
 #define COSA_UML_CONNECTOR_HH
 
-#include "UML/Controller.hh"
+#include "Cosa/UML/Controller.hh"
 
 namespace UML {
 

@@ -1,5 +1,5 @@
 /**
- * @file UML/Capsule.hh
+ * @file Cosa/UML/Capsule.hh
  * @version 1.0
  *
  * @section License
