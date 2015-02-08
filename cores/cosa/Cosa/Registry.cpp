@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Registry.hh"
 
-Registry::item_P 
+Registry::item_P
 Registry::lookup(const uint8_t* path, size_t count)
 {
   // Check for root path
@@ -31,7 +31,7 @@ Registry::lookup(const uint8_t* path, size_t count)
   if (count > PATH_MAX) return (NULL);
   for (uint8_t i = 0; i < count; i++) {
     // Check that the current item is a list
-    uint8_t ix = path[i]; 
+    uint8_t ix = path[i];
     uint8_t nx = i + 1;
     type_t type = (type_t) pgm_read_byte(&item->type);
     if ((nx < count) && (type != ITEM_LIST)) return (NULL);
@@ -61,7 +61,7 @@ Registry::print(IOStream& outs, const uint8_t* path, size_t count)
   if (count > PATH_MAX) return;
   for (uint8_t i = 0; i < count; i++) {
     // Check that the current item is a list
-    uint8_t ix = path[i]; 
+    uint8_t ix = path[i];
     uint8_t nx = i + 1;
     type_t type = (type_t) pgm_read_byte(&item->type);
     if ((nx < count) && (type != ITEM_LIST)) return;
@@ -78,22 +78,22 @@ Registry::print(IOStream& outs, const uint8_t* path, size_t count)
   }
 }
 
-int 
+int
 Registry::run(action_P action, void* buf, size_t size)
 {
   // Sanity check the parameters
   if (action == NULL) return (-EINVAL);
   if (pgm_read_byte(&action->item.type) != ACTION) return (-EINVAL);
 
-  // Access the action object 
+  // Access the action object
   Action* obj = (Action*) pgm_read_word(&action->obj);
   if (obj == NULL) return (-ENXIO);
 
   // And run the member function
   return (obj->run(buf, size));
 }
-  
-int 
+
+int
 Registry::get_value(blob_P blob, void* buf, size_t len)
 {
   // Sanity check the parameters
@@ -108,9 +108,9 @@ Registry::get_value(blob_P blob, void* buf, size_t len)
 
   // Check where the value is stored and copy into buffer
   storage_t storage = get_storage(&blob->item);
-  if (storage == IN_PROGMEM) 
+  if (storage == IN_PROGMEM)
     memcpy_P(buf, (const void*) pgm_read_word(&blob->value), size);
-  else if (storage == IN_SRAM) 
+  else if (storage == IN_SRAM)
     memcpy(buf, (const void*) pgm_read_word(&blob->value), size);
   else if (storage == IN_EEMEM && m_eeprom != NULL)
     m_eeprom->read(buf, (const void*) pgm_read_word(&blob->value), size);
@@ -120,7 +120,7 @@ Registry::get_value(blob_P blob, void* buf, size_t len)
   return (size);
 }
 
-int 
+int
 Registry::set_value(blob_P blob, const void* buf, size_t len)
 {
   // Sanity check the parameters
@@ -136,7 +136,7 @@ Registry::set_value(blob_P blob, const void* buf, size_t len)
 
   // Check where the value is stored and copy into buffer
   storage_t storage = get_storage(&blob->item);
-  if (storage == IN_SRAM) 
+  if (storage == IN_SRAM)
     memcpy((void*) pgm_read_word(&blob->value), buf, size);
   else if (storage == IN_EEMEM && m_eeprom != NULL)
     m_eeprom->write((void*) pgm_read_word(&blob->value), buf, size);
@@ -157,13 +157,13 @@ IOStream& operator<<(IOStream& outs, Registry::item_P item)
   uint8_t type = Registry::get_type(item);
   switch (type) {
   case Registry::ITEM:
-    outs << PSTR("ITEM");      
+    outs << PSTR("ITEM");
     break;
-  case Registry::ITEM_LIST:  
-    outs << PSTR("ITEM_LIST"); 
+  case Registry::ITEM_LIST:
+    outs << PSTR("ITEM_LIST");
     break;
   case Registry::ACTION:
-    outs << PSTR("ACTION");    
+    outs << PSTR("ACTION");
     break;
   case Registry::BLOB:
     outs << PSTR("BLOB");
@@ -174,11 +174,11 @@ IOStream& operator<<(IOStream& outs, Registry::item_P item)
   outs << PSTR(", name = ") << Registry::get_name(item);
   outs << PSTR(", storage = ");
   switch (Registry::get_storage(item)) {
-  case Registry::IN_SRAM:    
-    outs << PSTR("SRAM");      
+  case Registry::IN_SRAM:
+    outs << PSTR("SRAM");
     break;
-  case Registry::IN_PROGMEM: 
-    outs << PSTR("PROGMEM");   
+  case Registry::IN_PROGMEM:
+    outs << PSTR("PROGMEM");
     break;
   case Registry::IN_EEMEM:
     outs << PSTR("EEMEM");

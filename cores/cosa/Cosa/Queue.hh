@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -50,7 +50,7 @@ public:
    */
   uint8_t available() const
     __attribute__((always_inline))
-  { 
+  {
     return ((NMEMB + m_put - m_get) & MASK);
   }
 
@@ -75,7 +75,7 @@ public:
   bool enqueue(T* data);
 
   /**
-   * Enqueue given member data in program memory if storage is available. 
+   * Enqueue given member data in program memory if storage is available.
    * Return true(1) if successful otherwise false(0). Synchronised operation as
    * interrupt handler may push events.
    * @param[in] data pointer to member data buffer in program memory.
@@ -88,7 +88,7 @@ public:
    * Dequeue member data from queue to given buffer. Returns true(1)
    * if member was available and succcessful otherwise
    * false(0). Synchronised operation as interrupt handler may push
-   * events. 
+   * events.
    * @param[in,out] data pointer to member data buffer.
    * @pre data != 0
    * @return boolean.
@@ -97,7 +97,7 @@ public:
 
   /**
    * Await data to become available from queue. Will perform a system
-   * sleep with the given sleep mode. 
+   * sleep with the given sleep mode.
    * @param[in,out] data pointer to member data buffer.
    * @pre data != 0
    */

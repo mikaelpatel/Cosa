@@ -3,34 +3,34 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/Watchdog.hh"
 
-DS18B20* 
+DS18B20*
 DS18B20::Search::next()
-{ 
-  DS18B20* dev = (DS18B20*) OWI::Search::next(); 
+{
+  DS18B20* dev = (DS18B20*) OWI::Search::next();
   if (dev == NULL) return (NULL);
   dev->read_scratchpad(false);
   return (dev);
 }
 
-bool 
+bool
 DS18B20::connect(uint8_t index)
 {
   if (!OWI::Driver::connect(FAMILY_CODE, index)) return (false);
@@ -124,7 +124,7 @@ DS18B20::read_power_supply()
   return (m_parasite);
 }
 
-void 
+void
 DS18B20::print(IOStream& outs, int16_t temp)
 {
   if (temp < 0) {

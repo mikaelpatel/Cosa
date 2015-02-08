@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -94,7 +94,7 @@ public:
 
   /**
    * Menu Action handler. Must be sub-classed and the virtual member
-   * function run() must be implemented. Holds the state for the 
+   * function run() must be implemented. Holds the state for the
    * menu action.
    */
   class Action {
@@ -151,13 +151,13 @@ public:
       UP_KEY,
       RIGHT_KEY
     } __attribute__((packed));
-    
-    /** 
-     * Construct a menu walker for the given menu. 
-     * @param[in] lcd device. 
+
+    /**
+     * Construct a menu walker for the given menu.
+     * @param[in] lcd device.
      * @param[in] root menu item list.
      */
-    Walker(LCD::Device* lcd, item_list_P root) : 
+    Walker(LCD::Device* lcd, item_list_P root) :
       m_top(0),
       m_ix(0),
       m_bv(0),
@@ -188,9 +188,9 @@ public:
      * Initiate the menu. If the given flag is true the menu state
      * is printed.
      */
-    void begin(bool flag = true) 
-    { 
-      if (flag) m_out << clear << *this; 
+    void begin(bool flag = true)
+    {
+      if (flag) m_out << clear << *this;
     }
 
     /**
@@ -207,7 +207,7 @@ public:
   class KeypadController : public LCDKeypad {
   public:
     Walker* m_walker;
-    
+
   public:
     /**
      * Construct keypad event adapter for menu walker.
@@ -217,7 +217,7 @@ public:
       LCDKeypad(),
       m_walker(walker)
     {}
-    
+
     /**
      * @override Keypad
      * The menu walker key interpretor.
@@ -239,7 +239,7 @@ public:
     class RotaryButton : public Button {
     private:
       Menu::Walker* m_walker;
-  
+
     public:
       /**
        * Create rotary encoder push button handler for given pin.
@@ -247,10 +247,10 @@ public:
        * @param[in] pin rotary encoder push button.
        */
       RotaryButton(Menu::Walker* walker, Board::DigitalPin pin = Board::D2) :
-	Button(pin, Button::ON_FALLING_MODE),  
+	Button(pin, Button::ON_FALLING_MODE),
 	m_walker(walker)
       {}
-      
+
       /**
        * @override Button
        * The rotary encoder button generates a SELECT_KEY.
@@ -268,7 +268,7 @@ public:
 
     /** The rotary encoder push button handler. */
     RotaryButton m_sw;
-  
+
   public:
     /**
      * Construct rotary encoder event adapter for menu walker.
@@ -277,15 +277,15 @@ public:
      * @param[in] dt rotary encoder data pin (Default PCI3).
      * @param[in] sw rotary encoder switch pin (Default D2).
      */
-    RotaryController(Menu::Walker* walker, 
-		     Board::InterruptPin clk = Board::PCI4, 
+    RotaryController(Menu::Walker* walker,
+		     Board::InterruptPin clk = Board::PCI4,
 		     Board::InterruptPin dt = Board::PCI3,
 		     Board::DigitalPin sw = Board::D2) :
       Rotary::Encoder(clk, dt),
       m_walker(walker),
       m_sw(walker, sw)
     {}
-    
+
     /**
      * @override Event::Handler
      * Rotary change event handler. Forward change as a key; CW is mapped
@@ -319,7 +319,7 @@ public:
  */
 #define MENU_BEGIN(var,name)				\
   const char var ## _name[] __PROGMEM = name;		\
-  const Menu::item_P var ## _list[] __PROGMEM = {  
+  const Menu::item_P var ## _list[] __PROGMEM = {
 
 /**
  * Support macro to add a menu item in program memory.
@@ -359,7 +359,7 @@ public:
 
 /**
  * Support macro to start the definition of an enumeration type
- * in program memory. 
+ * in program memory.
  * Used in the form:
  *   MENU_SYMB(symb-1)
  *   ...
@@ -372,7 +372,7 @@ public:
  * @param[in] var menu enumeration variable to create.
  */
 #define MENU_ENUM_BEGIN(var)				\
-  const Menu::item_P var ## _list[] __PROGMEM = {  
+  const Menu::item_P var ## _list[] __PROGMEM = {
 
 /**
  * Support macro to add an menu item/symbol to an enumeration type

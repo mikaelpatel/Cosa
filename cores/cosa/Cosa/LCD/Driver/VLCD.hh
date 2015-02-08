@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -37,7 +37,7 @@ public:
   // Display width (characters per line) and height (lines)
   uint8_t WIDTH;
   uint8_t HEIGHT;
-  
+
   /**
    * Construct Virtual LCD connected to given TWI address.
    * @param[in] addr address of Virtual LCD (Default 0x5a);
@@ -50,7 +50,7 @@ public:
     WIDTH(0),
     HEIGHT(0)
   {}
-  
+
   /**
    * @override LCD::Device
    * Start display for text output. Initiate display and retrieve
@@ -69,25 +69,25 @@ public:
 
   /**
    * @override LCD::Device
-   * Turn display backlight on. 
+   * Turn display backlight on.
    */
   virtual void backlight_on();
 
   /**
    * @override LCD::Device
-   * Turn display backlight off. 
+   * Turn display backlight off.
    */
   virtual void backlight_off();
 
   /**
    * @override LCD::Device
-   * Turn display on. 
+   * Turn display on.
    */
   virtual void display_on();
 
   /**
    * @override LCD::Device
-   * Turn display off. 
+   * Turn display off.
    */
   virtual void display_off();
 
@@ -108,7 +108,7 @@ public:
   /**
    * @override IOStream::Device
    * Write character to display. Handles carriage-return-line-feed, back-
-   * space, alert, horizontal tab and form-feed. Returns character or EOF 
+   * space, alert, horizontal tab and form-feed. Returns character or EOF
    * on error.
    * @param[in] c character to write.
    * @return character written or EOF(-1).
@@ -138,8 +138,8 @@ public:
      * @param[in] lcd implementation.
      * @param[in] addr TWI address (default 0x5a).
      */
-    Slave(LCD::Device* lcd, uint8_t addr = 0x5a) : 
-      TWI::Slave(addr), 
+    Slave(LCD::Device* lcd, uint8_t addr = 0x5a) :
+      TWI::Slave(addr),
       m_lcd(lcd)
     {
       set_write_buf(m_buf, sizeof(m_buf));

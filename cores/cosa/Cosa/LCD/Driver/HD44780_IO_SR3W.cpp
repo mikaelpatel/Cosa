@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/LCD/Driver/HD44780.hh"
 
-HD44780::SR3W::SR3W(Board::DigitalPin sda, 
+HD44780::SR3W::SR3W(Board::DigitalPin sda,
 		    Board::DigitalPin scl,
 		    Board::DigitalPin en) :
   m_port(),
@@ -36,7 +36,7 @@ HD44780::SR3W::setup()
   return (false);
 }
 
-void 
+void
 HD44780::SR3W::write4b(uint8_t data)
 {
   m_port.data = data;
@@ -65,7 +65,7 @@ HD44780::SR3W::write4b(uint8_t data)
   }
 }
 
-void 
+void
 HD44780::SR3W::write8b(uint8_t data)
 {
   write4b(data >> 4);
@@ -75,13 +75,13 @@ HD44780::SR3W::write8b(uint8_t data)
 #endif
 }
 
-void 
+void
 HD44780::SR3W::set_mode(uint8_t flag)
 {
   m_port.rs = flag;
 }
 
-void 
+void
 HD44780::SR3W::set_backlight(uint8_t flag)
 {
   m_port.bt = flag;

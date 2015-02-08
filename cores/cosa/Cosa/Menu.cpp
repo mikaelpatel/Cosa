@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -29,14 +29,14 @@ Menu::print(IOStream& outs, Menu::one_of_P var)
   outs << (str_P) pgm_read_word(&item->name);
 }
 
-void 
+void
 Menu::print(IOStream& outs, zero_or_many_P var, bool selected, uint8_t bv)
 {
   if (!selected) return;
   uint16_t value = *((uint16_t*) pgm_read_word(&var->value));
   item_vec_P list = (item_vec_P) pgm_read_word(&var->list);
   item_P item = (item_P) pgm_read_word(&list[bv]);
-  if (value & _BV(bv)) 
+  if (value & _BV(bv))
     outs << PSTR("[x] ");
   else outs << PSTR("[ ] ");
   outs << (str_P) pgm_read_word(&item->name);
@@ -49,14 +49,14 @@ Menu::print(IOStream& outs, int_range_P var, bool selected)
   int16_t value = *vp;
   outs << value;
   if (!selected) return;
-  outs << PSTR(" [") 
-       << (int16_t) pgm_read_word(&var->low) 
+  outs << PSTR(" [")
+       << (int16_t) pgm_read_word(&var->low)
        << PSTR("..")
-       << (int16_t) pgm_read_word(&var->high) 
+       << (int16_t) pgm_read_word(&var->high)
        << PSTR("]");
 }
 
-IOStream& 
+IOStream&
 operator<<(IOStream& outs, Menu::Walker& walker)
 {
   // Access the current state of the menu walker
@@ -76,13 +76,13 @@ operator<<(IOStream& outs, Menu::Walker& walker)
 
   // Print possible value of current menu item
   switch (type) {
-  case Menu::ONE_OF: 
+  case Menu::ONE_OF:
     // Print the one-of variable value string
     Menu::print(outs, (Menu::one_of_P) item);
     break;
-  case Menu::ZERO_OR_MANY: 
+  case Menu::ZERO_OR_MANY:
     // Print the zero-or-many variable when selected
-    Menu::print(outs, (Menu::zero_or_many_P) item, 
+    Menu::print(outs, (Menu::zero_or_many_P) item,
 		walker.m_selected, walker.m_bv);
     break;
   case Menu::INT_RANGE:
@@ -95,7 +95,7 @@ operator<<(IOStream& outs, Menu::Walker& walker)
   return (outs);
 }
 
-void 
+void
 Menu::Walker::on_key_down(uint8_t nr)
 {
   // Access the current menu item
@@ -103,12 +103,12 @@ Menu::Walker::on_key_down(uint8_t nr)
   Menu::item_vec_P list = (Menu::item_vec_P) pgm_read_word(&menu->list);
   Menu::item_P item = (Menu::item_P) pgm_read_word(&list[m_ix]);
   Menu::type_t type = (Menu::type_t) pgm_read_byte(&item->type);
-  
+
   // React to key event
   switch (nr) {
-  case NO_KEY: 
+  case NO_KEY:
     break;
-  case SELECT_KEY: 
+  case SELECT_KEY:
   case RIGHT_KEY:
     switch (type) {
     case Menu::ZERO_OR_MANY:
@@ -121,12 +121,12 @@ Menu::Walker::on_key_down(uint8_t nr)
 	}
 	Menu::zero_or_many_P var = (Menu::zero_or_many_P) item;
 	uint16_t* vp = (uint16_t*) pgm_read_word(&var->value);
-	list = (Menu::item_vec_P) pgm_read_word(&var->list);	  
+	list = (Menu::item_vec_P) pgm_read_word(&var->list);
 	item = (Menu::item_P) pgm_read_word(&list[m_bv]);
 	uint16_t value = *vp;
 	if ((value & _BV(m_bv)) == 0)
 	  *vp = (value | _BV(m_bv));
-	else 
+	else
 	  *vp = (value & ~_BV(m_bv));
       }
       break;
@@ -154,17 +154,17 @@ Menu::Walker::on_key_down(uint8_t nr)
       m_bv = 0;
     }
     break;
-  case LEFT_KEY: 
+  case LEFT_KEY:
     // Exit item modification mode or walk back
     if (m_selected) {
       m_selected = false;
-    } 
+    }
     else if (m_top > 0) {
       m_top -= 1;
       m_ix = 0;
     }
     break;
-  case DOWN_KEY: 
+  case DOWN_KEY:
     // Step to the next menu item or value in item modification mode
     if (!m_selected) {
       m_ix += 1;
@@ -179,7 +179,7 @@ Menu::Walker::on_key_down(uint8_t nr)
 	  Menu::one_of_P evar = (Menu::one_of_P) item;
 	  uint16_t* vp = (uint16_t*) pgm_read_word(&evar->value);
 	  uint16_t value = *vp + 1;
-	  list = (Menu::item_vec_P) pgm_read_word(&evar->list);	  
+	  list = (Menu::item_vec_P) pgm_read_word(&evar->list);
 	  item = (Menu::item_P) pgm_read_word(&list[value]);
 	  if (item == NULL) break;
 	  *vp = value;
@@ -189,7 +189,7 @@ Menu::Walker::on_key_down(uint8_t nr)
 	// Step to the next item
 	{
 	  Menu::zero_or_many_P bitset = (Menu::zero_or_many_P) item;
-	  list = (Menu::item_vec_P) pgm_read_word(&bitset->list);	  
+	  list = (Menu::item_vec_P) pgm_read_word(&bitset->list);
 	  item = (Menu::item_P) pgm_read_word(&list[m_bv + 1]);
 	  if (item == NULL) break;
 	  m_bv += 1;
@@ -211,10 +211,10 @@ Menu::Walker::on_key_down(uint8_t nr)
       }
     }
     break;
-  case UP_KEY: 
+  case UP_KEY:
     // Step to the previous menu item or value in item modification mode
     if (!m_selected) {
-      if (m_ix > 0) 
+      if (m_ix > 0)
 	m_ix -= 1;
       else if (m_top > 0) {
 	m_top -= 1;
@@ -230,7 +230,7 @@ Menu::Walker::on_key_down(uint8_t nr)
 	  uint16_t value = *vp;
 	  if (value == 0) break;
 	  value -= 1;
-	  list = (Menu::item_vec_P) pgm_read_word(&evar->list);	  
+	  list = (Menu::item_vec_P) pgm_read_word(&evar->list);
 	  item = (Menu::item_P) pgm_read_word(&list[value]);
 	  *vp = value;
 	}
@@ -278,16 +278,16 @@ Menu::Walker::get_type()
   return (type);
 }
 
-void 
+void
 Menu::RotaryController::on_event(uint8_t type, uint16_t direction)
 {
   UNUSED(type);
   if (m_walker->get_type() == Menu::INT_RANGE)
-    m_walker->on_key_down(direction == CW ? 
-			  Menu::Walker::UP_KEY : 
+    m_walker->on_key_down(direction == CW ?
+			  Menu::Walker::UP_KEY :
 			  Menu::Walker::DOWN_KEY);
   else
-    m_walker->on_key_down(direction == CW ? 
-			  Menu::Walker::DOWN_KEY : 
+    m_walker->on_key_down(direction == CW ?
+			  Menu::Walker::DOWN_KEY :
 			  Menu::Walker::UP_KEY);
 }

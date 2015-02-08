@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -31,7 +31,7 @@
  * structure. The binary object is a mapping from program memory to
  * data stored in SRAM, PROGMEM or EEMEM. The low level access is
  * type-less. Applications may add run-time data-types by extending
- * the item type system. Any type tag larger than BLOB may be used. 
+ * the item type system. Any type tag larger than BLOB may be used.
  */
 class Registry {
 public:
@@ -45,7 +45,7 @@ public:
     BLOB = 3,			//!< General binary object.
     APPL = 4			//!< Application binary object.
   } __attribute__((packed));
-  
+
   /**
    * Storage type tags.
    */
@@ -75,7 +75,7 @@ public:
 
   /** Pointer to vector of item pointers in program memory. */
   typedef const PROGMEM item_P* item_vec_P;
-  
+
   /**
    * Return item type given pointer to item in program memory.
    * @param [in] item pointer to item in program memory.
@@ -88,7 +88,7 @@ public:
 
   /**
    * Return pointer to name string given pointer to item in program
-   * memory. 
+   * memory.
    * @param [in] item pointer to item in program memory.
    * @return pointer to string in program memory.
    */
@@ -135,7 +135,7 @@ public:
   /**
    * Type check given item pointer and convert it to an item list.
    * Return pointer to item list in program memory if successful
-   * otherwise NULL. This function provides run-time type checking. 
+   * otherwise NULL. This function provides run-time type checking.
    * @param [in] item pointer to item in program memory.
    * @return pointer to item list in program memory.
    */
@@ -226,9 +226,9 @@ public:
   typedef const PROGMEM action_t* action_P;
 
   /**
-   * Type check given item pointer and convert to an action pointer. 
+   * Type check given item pointer and convert to an action pointer.
    * Returns a pointer to action item in program memory if successful
-   * otherwise NULL. This function provides run-time type checking. 
+   * otherwise NULL. This function provides run-time type checking.
    * @param [in] item pointer to item in program memory.
    * @return pointer to action in program memory.
    */
@@ -249,7 +249,7 @@ public:
    * @return number of bytes result or negative error code.
    */
   static int run(action_P action, void* buf, size_t size);
-  
+
   /**
    * Registry binary object variable. Mappning between registry and
    * application data.
@@ -264,7 +264,7 @@ public:
   typedef const PROGMEM blob_t* blob_P;
 
   /**
-   * Type check given item pointer and convert to a blob pointer. 
+   * Type check given item pointer and convert to a blob pointer.
    * Returns pointer to blob registry item in program memory if
    * successful otherwise NULL. This function provides run-time type
    * checking.
@@ -283,8 +283,8 @@ public:
    * too small for the stored data, ENXIO if storage is not recognized).
    * @param [in] blob pointer to blob in program memory.
    * @param [out] buf pointer to buffer for value.
-   * @param [in] len number of bytes maximum in buffer. 
-   * @return number of bytes or negative error code. 
+   * @param [in] len number of bytes maximum in buffer.
+   * @return number of bytes or negative error code.
    */
   int get_value(blob_P blob, void* buf, size_t len);
 
@@ -300,18 +300,18 @@ public:
   {
     return (get_value(blob, value, sizeof(T)) == sizeof(T));
   }
-  
+
   /**
-   * Copy value in given buffer of given maximum size (len) to blob. 
-   * Return number of bytes copied from buffer or negative error 
+   * Copy value in given buffer of given maximum size (len) to blob.
+   * Return number of bytes copied from buffer or negative error
    * code (EINVAL if illegal parameter, EACCES if the blob is
    * readonly, ENOBUFS if the buffer is too small for the stored data,
    * ENXIO if storage is not recognized). The storage type must be
-   * SRAM or EEMEM. 
+   * SRAM or EEMEM.
    * @param [in] blob pointer to blob in program memory.
    * @param [in] buf pointer to buffer with new value.
-   * @param [in] len number of bytes maximum in buffer. 
-   * @return number of bytes or negative error code. 
+   * @param [in] len number of bytes maximum in buffer.
+   * @return number of bytes or negative error code.
    */
   int set_value(blob_P blob, const void* buf, size_t len);
 
@@ -328,7 +328,7 @@ public:
   {
     return (set_value(blob, value, sizeof(T)) == sizeof(T));
   }
-  
+
   /** Max length of a path. */
   static const size_t PATH_MAX = 8;
 
@@ -337,11 +337,11 @@ public:
    * @param[in] root item list.
    * @param[in] eeprom device driver (default internal EEPROM).
    */
-  Registry(item_list_P root, EEPROM::Device* eeprom = NULL) : 
+  Registry(item_list_P root, EEPROM::Device* eeprom = NULL) :
     m_root(root),
     m_eeprom(eeprom == NULL ? &EEPROM::Device::eeprom : eeprom)
   {}
-  
+
   /**
    * Lookup registry item for given path. Returns pointer to item if
    * found otherwise NULL. Default parameters will give root item.
@@ -395,7 +395,7 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
 
 /**
  * Support macro to start the definition of a registery item list in
- * program memory. 
+ * program memory.
  * Used in the form:
  *   REGISTRY_BEGIN(var,name)
  *     REGISTRY_XXX_ITEM(item-1)
@@ -407,7 +407,7 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
  */
 #define REGISTRY_BEGIN(var,name)			\
   const char var ## _name[] __PROGMEM = name;		\
-  const Registry::item_P var ## _list[] __PROGMEM = {  
+  const Registry::item_P var ## _list[] __PROGMEM = {
 
 /**
  * Support macro to add a registry item to an item list in program
@@ -453,7 +453,7 @@ IOStream& operator<<(IOStream& outs, Registry::item_list_P list);
 
 /**
  * Support macro to define a registry binary object item in program
- * memory. 
+ * memory.
  * @param[in] var registry blob to create.
  * @param[in] name string of registry item.
  * @param[in] mem storage type (SRAM, PROGMEM or EEMEM).

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,18 +30,18 @@
  * low-overhead mechanism for concurrent programming. Protothreads
  * function as stackless, lightweight threads providing a blocking
  * context using minimal memory per protothread. Cosa/Thread supports
- * event to thread mapping and timers. The size of Cosa/Thread is 
- * 9 bytes (3 bytes for state and continuation, 4 bytes for Link and 
- * 2 bytes for virtual table pointer). 
+ * event to thread mapping and timers. The size of Cosa/Thread is
+ * 9 bytes (3 bytes for state and continuation, 4 bytes for Link and
+ * 2 bytes for virtual table pointer).
  *
  * @section Limitations
  * The thread macro set should only be used within the ProtoThread::run()
- * function. 
+ * function.
  *
  * @section Acknowledgements
  * Inspired by research and prototype by Adam Dunkels, Oliver Schmidt,
  * Thiermo Voigt, Muneeb Ali, and the protothread library by Larry
- * Ruane. 
+ * Ruane.
  *
  * @section References
  * [1] Adam Dunkels et al, Protothreads: Simplifying Event-Driven
@@ -67,17 +67,17 @@ public:
   } __attribute__((packed));
 
   /**
-   * Construct thread, initiate state and continuation. Does not 
+   * Construct thread, initiate state and continuation. Does not
    * schedule the thread. This is done with begin().
    */
-  ProtoThread() : 
+  ProtoThread() :
     Link(),
     m_state(INITIATED),
     m_ip(0)
   {}
-  
+
   /**
-   * Start the thread. Must be in INITIATED state to be allowed to be 
+   * Start the thread. Must be in INITIATED state to be allowed to be
    * scheduled. Returns false if not in correct state.
    * @return bool true if scheduled otherwise false.
    */
@@ -87,7 +87,7 @@ public:
     schedule(this);
     return (true);
   }
-  
+
   /**
    * End the thread. Mark as terminated and remove from any queue.
    * Use macro THREAD_END() in thread body (run function).
@@ -97,7 +97,7 @@ public:
     m_state = TERMINATED;
     detach();
   }
-  
+
   /**
    * Get current thread state.
    * @return state.
@@ -130,7 +130,7 @@ public:
 
   /**
    * Check if the timer expired; i.e., the thread is in TIMEOUT
-   * state. 
+   * state.
    */
   bool timer_expired() const
     __attribute__((always_inline))
@@ -151,7 +151,7 @@ public:
    *   }
    *   PROTO_THREAD_END();
    * }
-   * Additional macros are PROTO_THREAD_YIELD(), PROTO_THREAD_SLEEP(), 
+   * Additional macros are PROTO_THREAD_YIELD(), PROTO_THREAD_SLEEP(),
    * PROTO_THREAD_WAKE(), and PROTO_THREAD_DELAY().
    * @param[in] type the type of event.
    * @param[in] value the event value.
@@ -170,7 +170,7 @@ public:
 
   /**
    * Add the given thread to the run queue (last). A terminated thread
-   * may be restarted. 
+   * may be restarted.
    * @param[in] thread to enqueue.
    */
   static void schedule(ProtoThread* thread);
@@ -199,7 +199,7 @@ protected:
 
 /**
  * Yield execution to other threads ane event handlers. Remains in the
- * run queue. 
+ * run queue.
  */
 #define PROTO_THREAD_YIELD() 				\
   do {							\
@@ -233,7 +233,7 @@ protected:
 /**
  * Check if the given condition is true(1). If not the thread will
  * yield. The condition is rechecked when the thread is activated
- * again. 
+ * again.
  * @param[in] condition to evaluate.
  */
 #define PROTO_THREAD_AWAIT(condition)			\
@@ -258,7 +258,7 @@ protected:
   } while (0)
 
 /**
- * Marks the running thread as TERMINATED and detach from any queue. 
+ * Marks the running thread as TERMINATED and detach from any queue.
  * Should be the last statement in the thread run() function.
  */
 #define PROTO_THREAD_END()				\

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,7 +34,7 @@
  * text scroll, cursor, and handling of special characters such as
  * carriage-return, form-feed, back-space, horizontal tab and
  * new-line. Graphics should be performed with OffScreen Canvas and
- * copied to the display with draw_bitmap(). 
+ * copied to the display with draw_bitmap().
  *
  * @section Circuit
  * @code
@@ -126,13 +126,13 @@ public:
 
   /**
    * @override LCD::Device
-   * Turn display on. 
+   * Turn display on.
    */
   virtual void display_on();
 
   /**
    * @override LCD::Device
-   * Turn display off. 
+   * Turn display off.
    */
   virtual void display_off();
 
@@ -144,7 +144,7 @@ public:
 
   /**
    * @override LCD::Device
-   * Display inverse mode. 
+   * Display inverse mode.
    */
   virtual void display_inverse();
 
@@ -163,12 +163,12 @@ public:
   virtual void set_cursor(uint8_t x, uint8_t y);
 
   /**
-   * Get current text font. 
+   * Get current text font.
    * @return font setting.
    */
   Font* get_text_font() const
-  { 
-    return (m_font); 
+  {
+    return (m_font);
   }
 
   /**
@@ -192,7 +192,7 @@ public:
   void draw_icon(const uint8_t* bp);
 
   /**
-   * Draw bitmap in the current mode. 
+   * Draw bitmap in the current mode.
    * @param[in] bp.
    * @param[in] width.
    * @param[in] height.
@@ -212,7 +212,7 @@ public:
   /**
    * @override IOStream::Device
    * Write character to display. Handles carriage-return-line-feed, back-
-   * space, alert, horizontal tab and form-feed. Returns character or EOF 
+   * space, alert, horizontal tab and form-feed. Returns character or EOF
    * on error.
    * @param[in] c character to write.
    * @return character written or EOF(-1).
@@ -278,14 +278,14 @@ protected:
    * @param[in] cmd command code.
    */
   void set(uint8_t cmd);
-  
+
   /**
    * Set display address for next data block.
    * @param[in] x position (0..WIDTH-1).
    * @param[in] y position (0..LINES-1).
    */
   void set(uint8_t x, uint8_t y);
-  
+
   /**
    * Fill display with given data.
    * @param[in] data to fill with.

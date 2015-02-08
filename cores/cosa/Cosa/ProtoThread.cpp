@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -23,18 +23,18 @@
 
 Head ProtoThread::runq;
 
-void 
+void
 ProtoThread::on_event(uint8_t type, uint16_t value)
 {
   if (m_state == WAITING) detach();
-  m_state = (type == Event::TIMEOUT_TYPE) ? TIMEOUT : RUNNING; 
+  m_state = (type == Event::TIMEOUT_TYPE) ? TIMEOUT : RUNNING;
   run(type, value);
   if (m_state == RUNNING) {
     m_state = READY;
   }
   else if (m_state == TIMEOUT) {
     schedule(this);
-  } 
+  }
 }
 
 uint16_t
@@ -49,11 +49,11 @@ ProtoThread::dispatch(bool flag)
     count += 1;
   }
   // Iterate once through the run queue and call all threads run method
-  Linkage* link = runq.get_succ(); 
+  Linkage* link = runq.get_succ();
   while (link != &runq) {
     Linkage* succ = link->get_succ();
     ProtoThread* thread = (ProtoThread*) link;
-    thread->m_state = RUNNING; 
+    thread->m_state = RUNNING;
     thread->run();
     if (thread->m_state == RUNNING) {
       thread->m_state = READY;
@@ -74,7 +74,7 @@ ProtoThread::dispatch(bool flag)
   return (count);
 }
 
-void 
+void
 ProtoThread::schedule(ProtoThread* thread)
 {
   if (thread->m_state == TERMINATED) thread->m_ip = 0;

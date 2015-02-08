@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,7 +28,7 @@ HD44780::Port4b::setup()
   return (false);
 }
 
-void 
+void
 HD44780::Port4b::write4b(uint8_t data)
 {
   synchronized {
@@ -41,7 +41,7 @@ HD44780::Port4b::write4b(uint8_t data)
   }
 }
 
-void 
+void
 HD44780::Port4b::write8b(uint8_t data)
 {
   synchronized {
@@ -61,13 +61,13 @@ HD44780::Port4b::write8b(uint8_t data)
   DELAY(SHORT_EXEC_TIME);
 }
 
-void 
+void
 HD44780::Port4b::set_mode(uint8_t flag)
 {
   m_rs.write(flag);
 }
 
-void 
+void
 HD44780::Port4b::set_backlight(uint8_t flag)
 {
   m_bt.write(flag);

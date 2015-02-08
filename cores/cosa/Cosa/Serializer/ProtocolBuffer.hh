@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -55,11 +55,11 @@ public:
    * @param[in] ins input stream device.
    * @param[in] outs output stream device.
    */
-  ProtocolBuffer(IOStream::Device* ins, IOStream::Device* outs) : 
+  ProtocolBuffer(IOStream::Device* ins, IOStream::Device* outs) :
     m_ins(ins),
     m_outs(outs)
   {}
-  
+
   /**
    * Read next byte from the input stream.
    * @return next byte or negative error code.
@@ -78,7 +78,7 @@ public:
   }
 
   /**
-   * Read tag and type from input stream. Return number of bytes 
+   * Read tag and type from input stream. Return number of bytes
    * read or negative error code.
    * @param[out] tag.
    * @param[out] type.
@@ -102,7 +102,7 @@ public:
   int read(uint32_t& value);
 
   /**
-   * Read signed value from the input stream. Return number of bytes 
+   * Read signed value from the input stream. Return number of bytes
    * read or negative error code.
    * @param[out] value.
    * @return number of bytes read or negative error code.
@@ -118,7 +118,7 @@ public:
   }
 
   /**
-   * Read floating point value from input stream. Return number of bytes 
+   * Read floating point value from input stream. Return number of bytes
    * read or negative error code.
    * @param[out] value floating point number.
    * @return number of bytes read or negative error code.
@@ -135,7 +135,7 @@ public:
   int read(void* buf, uint8_t count);
 
   /**
-   * Write tag and type to output stream. Return number of bytes 
+   * Write tag and type to output stream. Return number of bytes
    * written or negative error code.
    * @param[in] tag.
    * @param[in] type.
@@ -150,7 +150,7 @@ public:
   }
 
   /**
-   * Write given unsigned integer value into the output stream. 
+   * Write given unsigned integer value into the output stream.
    * Return number of bytes written or negative error code.
    * @param[in] value.
    * @return number of bytes written or negative error code.
@@ -158,7 +158,7 @@ public:
   int write(uint32_t value);
 
   /**
-   * Write given signed integer value into the output stream. 
+   * Write given signed integer value into the output stream.
    * Return number of bytes written or negative error code.
    * @param[in] value.
    * @return number of bytes written or negative error code.
@@ -171,7 +171,7 @@ public:
   }
 
   /**
-   * Write given floating point value to the output stream. 
+   * Write given floating point value to the output stream.
    * Return number of bytes written or negative error code.
    * @param[in] value.
    * @return number of bytes written or negative error code.
@@ -206,7 +206,7 @@ public:
   int write_P(const void* buf, uint8_t count);
 
   /**
-   * Write given signed integer value and tag into the output stream. 
+   * Write given signed integer value and tag into the output stream.
    * Return number of bytes written or negative error code.
    * @param[in] tag.
    * @param[in] value.
@@ -223,18 +223,18 @@ public:
 
   int write(uint8_t tag, int16_t value)
     __attribute__((always_inline))
-  { 
-    return (write(tag, (int32_t) value)); 
+  {
+    return (write(tag, (int32_t) value));
   }
 
   int write(uint8_t tag, int8_t value)
     __attribute__((always_inline))
-  { 
-    return (write(tag, (int32_t) value)); 
+  {
+    return (write(tag, (int32_t) value));
   }
 
   /**
-   * Write given unsigned integer value and tag into the output stream. 
+   * Write given unsigned integer value and tag into the output stream.
    * Return number of bytes written or negative error code.
    * @param[in] tag.
    * @param[in] value.
@@ -251,18 +251,18 @@ public:
 
   int write(uint8_t tag, uint16_t value)
     __attribute__((always_inline))
-  { 
-    return (write(tag, (uint32_t) value)); 
+  {
+    return (write(tag, (uint32_t) value));
   }
 
   int write(uint8_t tag, uint8_t value)
     __attribute__((always_inline))
-  { 
-    return (write(tag, (uint32_t) value)); 
+  {
+    return (write(tag, (uint32_t) value));
   }
 
   /**
-   * Write given length delimited string or message with given tag to 
+   * Write given length delimited string or message with given tag to
    * output stream. Return number of bytes written or negative error
    * code.
    * @param[in] tag for serialized value.
@@ -296,7 +296,7 @@ public:
   }
 
   /**
-   * Write floating point value and given tag to the output stream. 
+   * Write floating point value and given tag to the output stream.
    * Return number of bytes written or negative error code.
    * @param[in] tag.
    * @param[in] value.

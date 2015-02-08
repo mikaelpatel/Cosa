@@ -4,18 +4,18 @@
  *
  * @section License
  * Copyright (C) 2011, Ben Buxton (Rotary encoder state machine)
- * Copyright (C) 2013-2014, Mikael Patel (Cosa port and extension)
+ * Copyright (C) 2013-2015, Mikael Patel (Cosa port and extension)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -69,9 +69,9 @@
  * next valid codes occur.
  *
  * The biggest advantage of using a state machine over other algorithms
- * is that this has inherent debounce built in. Other algorithms emit 
- * spurious output with switch bounce, but this one will simply flip 
- * between sub-states until the bounce settles, then continue along the 
+ * is that this has inherent debounce built in. Other algorithms emit
+ * spurious output with switch bounce, but this one will simply flip
+ * between sub-states until the bounce settles, then continue along the
  * state machine.
  *
  * A side effect of debounce is that fast rotations can cause steps to
@@ -127,7 +127,7 @@
  *   R_CW_BEGIN_M -> R_CW_BEGIN_M [label="10"];
  *   R_CW_BEGIN_M -> R_START [label="11, DIR_CW"];
  *   R_CCW_BEGIN_M -> R_START_M [label="00"];
- *   R_CCW_BEGIN_M -> R_CCW_BEGIN_M [label="01"]; 
+ *   R_CCW_BEGIN_M -> R_CCW_BEGIN_M [label="01"];
  *   R_CCW_BEGIN_M -> R_START_M [label="10"];
  *   R_CCW_BEGIN_M -> R_START [label="10, DIR_CCW"];
  * }

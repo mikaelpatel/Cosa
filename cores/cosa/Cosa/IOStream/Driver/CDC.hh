@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -31,7 +31,7 @@ public:
   /** Default buffer size. */
   static const uint8_t BUFFER_MAX = 64;
 
-  /** 
+  /**
    * Serial formats; DATA + PARITY + STOP. Note: this is to maintain
    * the same interface as UART.
    */
@@ -49,10 +49,10 @@ public:
   } __attribute__((packed));
 
   /**
-   * Construct serial port handler for given usb serial interface. 
+   * Construct serial port handler for given usb serial interface.
    * @param[in] ibuf input stream buffer.
    */
-  CDC(IOStream::Device* ibuf) : 
+  CDC(IOStream::Device* ibuf) :
     IOStream::Device(),
     m_ibuf(ibuf)
   {}
@@ -98,7 +98,7 @@ public:
   {
     return (m_ibuf->peekchar(c));
   }
-    
+
   /**
    * @override IOStream::Device
    * Read character from serial port input buffer.
@@ -146,7 +146,7 @@ protected:
   /** Input buffering. */
   IOStream::Device* m_ibuf;
 
-  /** 
+  /**
    * Common CDC receive interrupt handler.
    */
   void accept();

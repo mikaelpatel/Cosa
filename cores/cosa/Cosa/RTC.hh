@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -155,11 +155,11 @@ public:
    * @param[in] fn interrupt handler.
    * @param[in] env environment pointer.
    */
-  static void set(InterruptHandler fn, void* env = NULL) 
-  { 
+  static void set(InterruptHandler fn, void* env = NULL)
+  {
     synchronized {
-      s_handler = fn; 
-      s_env = env; 
+      s_handler = fn;
+      s_env = env;
     }
   }
 

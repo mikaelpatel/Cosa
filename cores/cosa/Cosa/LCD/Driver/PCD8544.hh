@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,15 +28,15 @@
 #include "Cosa/Canvas/Font/System5x7.hh"
 
 /**
- * PCD8544 48x84 pixels matrix LCD controller/driver, device driver 
- * for IOStream access. Binding to trace, etc. Supports simple text  
+ * PCD8544 48x84 pixels matrix LCD controller/driver, device driver
+ * for IOStream access. Binding to trace, etc. Supports simple text
  * scroll, cursor, and handling of special characters such as
  * form-feed, back-space and new-line. Graphics may be performed
  * with OffScreen Canvas and copied to the display with draw_bitmap().
  *
  * @section Circuit
  * PCD8544 is a low voltage device (3V3) and signals require level
- * shifter (74HC4050 or 10K resistor). 
+ * shifter (74HC4050 or 10K resistor).
  *
  * @code
  *                    PCD8544/LCD::Serial3W
@@ -64,8 +64,8 @@
  *                        +------------+
  * @endcode
  * @section References
- * 1. Product Specification, Philips Semiconductors, 1999 Apr 12.  
- * https://www.sparkfun.com/datasheets/LCD/Monochrome/Nokia5110.pdf 
+ * 1. Product Specification, Philips Semiconductors, 1999 Apr 12.
+ * https://www.sparkfun.com/datasheets/LCD/Monochrome/Nokia5110.pdf
  */
 class PCD8544 : public LCD::Device {
 public:
@@ -112,13 +112,13 @@ public:
 
   /**
    * @override LCD::Device
-   * Turn display on. 
+   * Turn display on.
    */
   virtual void display_on();
 
   /**
    * @override LCD::Device
-   * Turn display off. 
+   * Turn display off.
    */
   virtual void display_off();
 
@@ -130,7 +130,7 @@ public:
 
   /**
    * @override LCD::Device
-   * Display inverse mode. 
+   * Display inverse mode.
    */
   virtual void display_inverse();
 
@@ -149,12 +149,12 @@ public:
   virtual void set_cursor(uint8_t x, uint8_t y);
 
   /**
-   * Get current text font. 
+   * Get current text font.
    * @return font setting.
    */
   Font* get_text_font() const
-  { 
-    return (m_font); 
+  {
+    return (m_font);
   }
 
   /**
@@ -178,7 +178,7 @@ public:
   void draw_icon(const uint8_t* bp);
 
   /**
-   * Draw bitmap in the current mode. 
+   * Draw bitmap in the current mode.
    * @param[in] bp.
    * @param[in] width.
    * @param[in] height.
@@ -198,7 +198,7 @@ public:
   /**
    * @override IOStream::Device
    * Write character to display. Handles carriage-return-line-feed, back-
-   * space, alert, horizontal tab and form-feed. Returns character or EOF 
+   * space, alert, horizontal tab and form-feed. Returns character or EOF
    * on error.
    * @param[in] c character to write.
    * @return character written or EOF(-1).
@@ -247,14 +247,14 @@ protected:
    * @param[in] cmd command code.
    */
   void set(uint8_t cmd);
-  
+
   /**
    * Set display address for next data block.
    * @param[in] x position 0..WIDTH-1.
    * @param[in] y position 0..HEIGHT-1.
    */
   void set(uint8_t x, uint8_t y);
-  
+
   /**
    * Fill display with given data.
    * @param[in] data to fill with.

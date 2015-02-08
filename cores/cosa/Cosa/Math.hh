@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel.
+ * Copyright (C) 2014-2015, Mikael Patel.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,11 +26,11 @@
 
 /**
  * Random number in given range (0..range-1). Max range value is
- * RAND_MAX(0x7fff). 
+ * RAND_MAX(0x7fff).
  * @param[in] range value.
  * @return random number.
  */
-inline uint16_t 
+inline uint16_t
 rand(uint16_t range)
 {
   if (range == 0) return 0;
@@ -39,7 +39,7 @@ rand(uint16_t range)
 
 /**
  * Random number in given range (low..high). Max high value is
- * RAND_MAX(0x7fff). 
+ * RAND_MAX(0x7fff).
  * @param[in] low range value.
  * @param[in] high range value.
  * @return random number.
@@ -53,11 +53,11 @@ rand(uint16_t low, uint16_t high)
 
 /**
  * Random number in given range (0..range-1). Max range value is
- * RANDOM_MAX(0x7fffffffL). 
+ * RANDOM_MAX(0x7fffffffL).
  * @param[in] range value.
  * @return random number.
  */
-inline uint32_t 
+inline uint32_t
 random(uint32_t range)
 {
   if (range == 0) return (0);
@@ -66,7 +66,7 @@ random(uint32_t range)
 
 /**
  * Random number in given range (low..high-1). Max high value is
- * RANDOM_MAX(0x7fffffff). 
+ * RANDOM_MAX(0x7fffffff).
  * @param[in] low range value.
  * @param[in] high range value.
  * @return random number.
@@ -83,7 +83,7 @@ random(uint32_t low, uint32_t high)
  * type should be unsigned.
  * @param[in] T unsigned integer type (uint8_t, uint16_t,..)
  * @param[in] value
- * @return log(2) 
+ * @return log(2)
  */
 template<class T>
 inline uint8_t log2(T value)
@@ -121,13 +121,13 @@ T map(T x, T in_min, T in_max, T out_min, T out_max)
  * @return constrain
  */
 template<class T>
-T constrain(T x, T low, T high) 
+T constrain(T x, T low, T high)
 {
   return (x < low ? low : (x > high ? high : x));
 }
 
 /**
- * Template within range check function for given 
+ * Template within range check function for given
  * class/data type.
  * @param[in] T class value check range.
  * @param[in] x value to check.
@@ -136,7 +136,7 @@ T constrain(T x, T low, T high)
  * @return bool
  */
 template<class T>
-bool is_within(T x, T low, T high) 
+bool is_within(T x, T low, T high)
 {
   return (!(x < low || x > high));
 }

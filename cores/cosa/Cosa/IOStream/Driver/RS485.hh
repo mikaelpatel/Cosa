@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -40,7 +40,7 @@ class RS485 : public UART {
 public:
   /** Start of transmission token. */
   static const uint8_t SOT = 0x01;
-  
+
   /** Frame header with check-sum; crc7(1 byte). */
   struct header_t {
     uint8_t length;		//!< Number of bytes in payload.
@@ -68,7 +68,7 @@ public:
    * @param[in] de data output enable.
    * @param[in] addr node address (Default MASTER).
    */
-  RS485(uint8_t port, Board::DigitalPin de, uint8_t addr = MASTER) : 
+  RS485(uint8_t port, Board::DigitalPin de, uint8_t addr = MASTER) :
     UART(port, &m_ibuf, &m_obuf),
     m_de(de),
     m_addr(addr),
@@ -79,7 +79,7 @@ public:
    * @override UART
    * Transmit completed callback. Clear data output enable pin.
    */
-  virtual void on_transmit_completed() 
+  virtual void on_transmit_completed()
   {
     m_de.clear();
   }
@@ -93,10 +93,10 @@ public:
     m_addr = addr;
   }
 
-  /** 
-   * Send message in given buffer and number of bytes to given 
+  /**
+   * Send message in given buffer and number of bytes to given
    * destination device. Return number of bytes sent or negative error
-   * code. 
+   * code.
    * @param[in] buf pointer to message buffer.
    * @param[in] len number of bytes.
    * @param[in] dest destination node (Default MASTER).
@@ -104,24 +104,24 @@ public:
    */
   int send(const void* buf, size_t len, uint8_t dest = MASTER);
 
-  /** 
+  /**
    * Send message in given buffer and number of bytes to all device on
-   * network. Return number of bytes sent or negative error code. 
+   * network. Return number of bytes sent or negative error code.
    * @param[in] buf pointer to message buffer.
    * @param[in] len number of bytes.
    * @return number of bytes sent or negative error code.
    */
-  int broadcast(const void* buf, size_t len) 
+  int broadcast(const void* buf, size_t len)
     __attribute__((always_inline))
-  { 
-    return (send(buf, len, BROADCAST)); 
+  {
+    return (send(buf, len, BROADCAST));
   }
 
-  /** 
+  /**
    * Attempt within given time-limit in milli-seconds receive a message.
    * If received the message is stored in the given buffer with given
    * max length. Returns the number of bytes received or negative
-   * error code. 
+   * error code.
    * @param[in] buf pointer to message buffer.
    * @param[in] len number of bytes.
    * @param[in] ms number of milli-seconds timeout (Default BLOCK).

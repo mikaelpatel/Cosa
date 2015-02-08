@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -38,7 +38,7 @@
  * [1] Sun Microsystems (1987). "XDR: External Data Representation
  * Standard". RFC 1014. Network Working Group. Retrieved July 11,
  * 2011. http://tools.ietf.org/html/rfc1014<br>
- * [2] Boost Serialization, 
+ * [2] Boost Serialization,
  * http://www.boost.org/doc/libs/1_46_1/libs/serialization/doc/index.html<br>
  * [3] Java Stream Format,
  * http://docs.oracle.com/javase/7/docs/platform/serialization/spec/protocol.html#10258<br>
@@ -49,7 +49,7 @@ public:
   /**
    * Tag attribute: Number for data values in sequence[count]. User
    * defined data type name as value or end of used defined data type
-   * sequence. 
+   * sequence.
    */
   enum {
     MASK_ATTR = 0x0f,
@@ -116,7 +116,7 @@ public:
   };
 
   /**
-   * Stream header with magic string, revision and endian information 
+   * Stream header with magic string, revision and endian information
    * The identity code is HEADER_ID(0x00).
    */
   struct header_t {
@@ -141,9 +141,9 @@ public:
    * Set io-stream device.
    * @param[in] dev stream device.
    */
-  void set(IOStream::Device* dev) 
+  void set(IOStream::Device* dev)
     __attribute__((always_inline))
-  { 
+  {
     if (dev == NULL) return;
     m_dev = dev;
   }

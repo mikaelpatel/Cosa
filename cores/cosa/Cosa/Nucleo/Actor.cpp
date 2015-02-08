@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -22,7 +22,7 @@
 
 using namespace Nucleo;
 
-int 
+int
 Actor::send(uint8_t port, const void* buf, size_t size)
 {
   // Do not allow send to the running thread
@@ -33,7 +33,7 @@ Actor::send(uint8_t port, const void* buf, size_t size)
   sender->m_port = port;
   sender->m_size = size;
   sender->m_buf = buf;
-  
+
   // And queue in sending. Resume receiver or next thread
   Thread* thread = (m_receiving ? this : (Thread*) sender->get_succ());
   m_sending.attach(sender);
@@ -41,7 +41,7 @@ Actor::send(uint8_t port, const void* buf, size_t size)
   return (size);
 }
 
-int 
+int
 Actor::recv(Actor*& sender, uint8_t& port, void* buf, size_t size)
 {
   // Do not allow receive of other actor queue

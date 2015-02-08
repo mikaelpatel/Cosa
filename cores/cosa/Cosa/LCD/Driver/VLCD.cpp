@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,7 +26,7 @@ void
 VLCD::Slave::on_request(void* buf, size_t size)
 {
   UNUSED(buf);
-  
+
   // Check for non command prefix
   char c = (char) m_buf[0];
   if (c != (char) COMMAND) {
@@ -43,7 +43,7 @@ VLCD::Slave::on_request(void* buf, size_t size)
     case BACKLIGHT_ON_CMD: m_lcd->backlight_on(); return;
     case DISPLAY_OFF_CMD: m_lcd->display_off(); return;
     case DISPLAY_ON_CMD: m_lcd->display_on(); return;
-    case INIT_CMD: 
+    case INIT_CMD:
       m_lcd->display_clear();
       m_lcd->display_on();
       m_lcd->backlight_on();
@@ -65,14 +65,14 @@ VLCD::Slave::on_request(void* buf, size_t size)
   }
 }
 
-void 
+void
 VLCD::write(uint8_t cmd)
 {
   uint8_t buf[2];
   buf[0] = Slave::COMMAND;
   buf[1] = cmd;
   twi.begin(this);
-  uint8_t retry = 3; 
+  uint8_t retry = 3;
   do {
     int res = twi.write(buf, sizeof(buf));
     if (res == sizeof(buf)) break;
@@ -80,13 +80,13 @@ VLCD::write(uint8_t cmd)
   twi.end();
 }
 
-bool 
+bool
 VLCD::begin()
 {
   sleep(1);
   write(Slave::INIT_CMD);
   twi.begin(this);
-  uint8_t retry = 3; 
+  uint8_t retry = 3;
   info_t info;
   do {
     int res = twi.read(&info, sizeof(info));
@@ -100,50 +100,50 @@ VLCD::begin()
   return (true);
 }
 
-bool 
+bool
 VLCD::end()
 {
   display_off();
   return (true);
 }
 
-void 
-VLCD::backlight_off() 
-{ 
+void
+VLCD::backlight_off()
+{
   write(Slave::BACKLIGHT_OFF_CMD);
 }
 
-void 
-VLCD::backlight_on() 
-{ 
+void
+VLCD::backlight_on()
+{
   write(Slave::BACKLIGHT_ON_CMD);
 }
 
-void 
-VLCD::display_off() 
-{ 
+void
+VLCD::display_off()
+{
   write(Slave::DISPLAY_OFF_CMD);
 }
 
-void 
-VLCD::display_on() 
-{ 
+void
+VLCD::display_on()
+{
   write(Slave::DISPLAY_ON_CMD);
 }
 
-void 
-VLCD::display_clear() 
+void
+VLCD::display_clear()
 {
   putchar('\f');
 }
 
-void 
+void
 VLCD::set_cursor(uint8_t x, uint8_t y)
 {
   uint8_t buf[3];
   buf[0] = 0;
   buf[1] = x;
-  buf[2] = y;  
+  buf[2] = y;
   twi.begin(this);
   twi.write(buf, sizeof(buf));
   twi.end();
@@ -151,7 +151,7 @@ VLCD::set_cursor(uint8_t x, uint8_t y)
   m_y = y;
 }
 
-int 
+int
 VLCD::putchar(char c)
 {
   twi.begin(this);
@@ -170,7 +170,7 @@ VLCD::putchar(char c)
   case '\n':
     m_x = 0;
     m_y += 1;
-    if (m_y > HEIGHT) m_y = 0; 
+    if (m_y > HEIGHT) m_y = 0;
     break;
   case '\r':
     m_x = 0;
@@ -184,7 +184,7 @@ VLCD::putchar(char c)
   return (c & 0xff);
 }
 
-int 
+int
 VLCD::write(void* buf, size_t size)
 {
   twi.begin(this);

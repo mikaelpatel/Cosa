@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/LCD/Driver/MAX72XX.hh"
 
-/** 
+/**
  * No-Decode Mode Data Bits and Corresponding Segment Lines (Table 6, pp 8.).
  * @code
  *      A
@@ -141,7 +141,7 @@ MAX72XX::MAX72XX(LCD::IO* io, const uint8_t* font) :
 {
 }
 
-void 
+void
 MAX72XX::set(Register reg, uint8_t value)
 {
   m_io->begin();
@@ -150,7 +150,7 @@ MAX72XX::set(Register reg, uint8_t value)
   m_io->end();
 }
 
-bool 
+bool
 MAX72XX::begin()
 {
   set(DECODE_MODE, NO_DECODE);
@@ -161,26 +161,26 @@ MAX72XX::begin()
   return (true);
 }
 
-bool 
+bool
 MAX72XX::end()
 {
   set(DISPLAY_MODE, SHUTDOWN_MODE);
   return (true);
 }
 
-void 
-MAX72XX::display_on() 
-{ 
+void
+MAX72XX::display_on()
+{
   set(DISPLAY_MODE, NORMAL_OPERATION);
 }
 
-void 
-MAX72XX::display_off() 
-{ 
+void
+MAX72XX::display_off()
+{
   set(DISPLAY_MODE, SHUTDOWN_MODE);
 }
 
-void 
+void
 MAX72XX::display_clear()
 {
   for (uint8_t reg = DIGIT0; reg <= DIGIT7; reg++)
@@ -188,20 +188,20 @@ MAX72XX::display_clear()
   set_cursor(0, 0);
 }
 
-void 
+void
 MAX72XX::display_contrast(uint8_t level)
 {
   set(INTENSITY, level);
 }
 
-void 
+void
 MAX72XX::set_cursor(uint8_t x, uint8_t y)
 {
   m_x = x;
   m_y = y;
 }
 
-int 
+int
 MAX72XX::putchar(char c)
 {
   // Check for illegal characters

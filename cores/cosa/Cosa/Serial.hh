@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -54,7 +54,7 @@ public:
     STOP1 = 0,
     STOP2 = _BV(USBS0),
   } __attribute__((packed));
-    
+
   /** Default serial format. */
   static const uint8_t DEFAULT_FORMAT = DATA8 + NO_PARITY + STOP2;
 
@@ -66,20 +66,20 @@ public:
   /**
    * @override Serial
    * Start Serial device driver with given serial bitrate and serial
-   * format. 
+   * format.
    * @param[in] baudrate serial bitrate (default 9600).
    * @param[in] format serial frame format (default DATA8, NO PARITY, STOP2).
    * @return true(1) if successful otherwise false(0)
    */
-  virtual bool begin(uint32_t baudrate = DEFAULT_BAUDRATE, 
+  virtual bool begin(uint32_t baudrate = DEFAULT_BAUDRATE,
 		     uint8_t format = DEFAULT_FORMAT) = 0;
-  
+
   /**
    * @override Serial
    * Stop Serial device driver.
    * @return true(1) if successful otherwise false(0)
    */
-  virtual bool end() 
+  virtual bool end()
   {
     return (true);
   }

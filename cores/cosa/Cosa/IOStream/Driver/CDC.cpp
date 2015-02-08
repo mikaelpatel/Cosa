@@ -4,18 +4,18 @@
  *
  * @section License
  * Copyright (c) 2011, Peter Barrett (original author)
- * Copyright (C) 2013-2014, Mikael Patel (refactoring and extension)
+ * Copyright (C) 2013-2015, Mikael Patel (refactoring and extension)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -39,8 +39,8 @@ typedef struct {
   uint8_t lineState;
 } LineInfo;
 
-static volatile LineInfo _usbLineInfo = { 
-  57600, 0x00, 0x00, 0x00, 0x00 
+static volatile LineInfo _usbLineInfo = {
+  57600, 0x00, 0x00, 0x00, 0x00
 };
 
 int CDC_GetInterface(uint8_t* interfaceNum) __attribute__ ((weak));
@@ -94,18 +94,18 @@ CDC_Setup(Setup& setup)
 
     if (CDC_SET_CONTROL_LINE_STATE == r) {
       _usbLineInfo.lineState = setup.wValueL;
-      
-      // auto-reset into the bootloader is triggered when the port, already 
+
+      // auto-reset into the bootloader is triggered when the port, already
       // open at 1200 bps, is closed.  this is the signal to start the watchdog
       // with a relatively long period so it can finish housekeeping tasks
       // like servicing endpoints before the sketch ends
       if (1200 == _usbLineInfo.dwDTERate) {
 	// We check DTR state to determine if host port is open (bit 0
-	// of lineState). 
+	// of lineState).
 	if ((_usbLineInfo.lineState & 0x01) == 0) {
 	  *(uint16_t*) 0x0800 = 0x7777;
 	  wdt_enable(WDTO_120MS);
-	} 
+	}
 	else {
 	  // Most OSs do some intermediate steps when configuring
 	  // ports and DTR can twiggle more than once before
@@ -122,7 +122,7 @@ CDC_Setup(Setup& setup)
   return (false);
 }
 
-bool 
+bool
 CDC::begin(uint32_t baudrate, uint8_t format)
 {
   UNUSED(baudrate);
@@ -137,8 +137,8 @@ CDC::begin(uint32_t baudrate, uint8_t format)
   return (false);
 }
 
-void 
-CDC::accept() 
+void
+CDC::accept()
 {
   while (m_ibuf->room()) {
     int c = USB_Recv(CDC_RX);
@@ -160,10 +160,10 @@ CDC::empty(void)
   m_ibuf->empty();
 }
 
-int 
+int
 CDC::write(const void* buf, size_t size)
 {
-  if ((_usbLineInfo.lineState > 0) 
+  if ((_usbLineInfo.lineState > 0)
       && (USB_Send(CDC_TX, buf, size) == (int) size))
     return (size);
   return (IOStream::EOF);

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -25,14 +25,14 @@
 
 /**
  * MAX72XX Serially Interfaced, 8-Digit LED Display Drivers, device
- * driver for IOStream access. 
+ * driver for IOStream access.
  *
  * The MAX7219/MAX7221 are compact, serial input/output common-cathode
  * display drivers that interface microprocessors (μPs) to 7-segment
  * numeric LED displays of up to 8 digits, bar-graph displays, or 64
  * individual LEDs. Included on-chip are a BCD code-B decoder,
  * multiplex scan circuitry, segment and digit drivers, and an 8x8
- * static RAM that stores each digit. 
+ * static RAM that stores each digit.
  *
  * @section Circuit
  * @code
@@ -101,13 +101,13 @@ public:
 
   /**
    * @override LCD::Device
-   * Turn display on. 
+   * Turn display on.
    */
   virtual void display_on();
 
   /**
    * @override LCD::Device
-   * Turn display off. 
+   * Turn display off.
    */
   virtual void display_off();
 
@@ -128,7 +128,7 @@ public:
   /**
    * @override IOStream::Device
    * Write character to display. Handles carriage-return-line-feed,
-   * backspace, alert, horizontal tab and form-feed. The period 
+   * backspace, alert, horizontal tab and form-feed. The period
    * character is translated to the 7-segment LED decimal point of the
    * previous written character. Returns character or EOF on error.
    * @param[in] c character to write.
@@ -156,7 +156,7 @@ protected:
     DISPLAY_MODE = 0x0c,	//!< Display Mode (shutdown, normal).
     DISPLAY_TEST = 0x0f		//!< Display Test (0..1, on/off).
   } __attribute__((packed));
-  
+
   /**
    * Shutdown Register Format (Table 3, pp. 7).
    */
@@ -172,7 +172,7 @@ protected:
     NO_DECODE = 0x00,		//!< No decode for digits 7-0.
     ALL_DECODE = 0xff		//!< Code B decode for digits 7-0.
   } __attribute__((packed));
-  
+
   /** Default font. */
   static const uint8_t font[] PROGMEM;
 
@@ -180,7 +180,7 @@ protected:
   LCD::IO* m_io;		//!< Display adapter.
   const uint8_t* m_font;	//!< Font in program memory.
   char m_latest;		//!< Latest character code.
-  
+
   /**
    * Set register to the given value.
    * @param[in] reg register address.

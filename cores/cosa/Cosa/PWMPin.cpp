@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -22,9 +22,9 @@
 
 #if defined(BOARD_ATMEGA328P)
 
-PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
-  OutputPin((Board::DigitalPin) pin) 
-{ 
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
+  OutputPin((Board::DigitalPin) pin)
+{
   switch (pin) {
   case Board::PWM1:
   case Board::PWM2:
@@ -39,7 +39,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     TCCR1A |= _BV(WGM10);
     TCCR1B |= _BV(CS11) | _BV(CS10);
     break;
-  
+
   case Board::PWM0:
   case Board::PWM5:
     // PWM0(2B), PWM5(2A), PWM phase correct, prescale 64
@@ -47,7 +47,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     TCCR2B |= _BV(CS22);
     break;
   }
-  set(duty); 
+  set(duty);
 }
 
 uint8_t
@@ -65,7 +65,7 @@ PWMPin::get_duty()
   }
 }
 
-void 
+void
 PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
@@ -100,9 +100,9 @@ PWMPin::set(uint8_t duty)
 
 #elif defined(BOARD_ATMEGA32U4)
 
-PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
-  OutputPin((Board::DigitalPin) pin) 
-{ 
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
+  OutputPin((Board::DigitalPin) pin)
+{
   switch (pin) {
   case Board::PWM0:
   case Board::PWM1:
@@ -110,14 +110,14 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     TCCR0A |= _BV(WGM01) | _BV(WGM00);
     TCCR0B |= _BV(CS01) | _BV(CS00);
     break;
-    
+
   case Board::PWM2:
   case Board::PWM3:
     // PWM2(1A), PWM3(1B), PWM phase correct, 10-bit, prescale 64
     TCCR1A |= _BV(WGM11) | _BV(WGM10);
     TCCR1B |= _BV(CS11) | _BV(CS10);
     break;
-  
+
   case Board::PWM4:
     // PWM4(3A), PWM phase correct, 10-bit, prescale 64
     TCCR3A |= _BV(WGM31) | _BV(WGM30);
@@ -132,7 +132,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     TCCR4C |= _BV(PWM4D);
     break;
   }
-  set(duty); 
+  set(duty);
 }
 
 uint8_t
@@ -151,7 +151,7 @@ PWMPin::get_duty()
   }
 }
 
-void 
+void
 PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
@@ -191,9 +191,9 @@ PWMPin::set(uint8_t duty)
 
 #elif defined(BOARD_ATMEGA1248P)
 
-PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
-  OutputPin((Board::DigitalPin) pin) 
-{ 
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
+  OutputPin((Board::DigitalPin) pin)
+{
   switch (pin) {
   case Board::PWM0:
   case Board::PWM1:
@@ -227,7 +227,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
   default:
     break;
   }
-  set(duty); 
+  set(duty);
 }
 
 uint8_t
@@ -249,7 +249,7 @@ PWMPin::get_duty()
   }
 }
 
-void 
+void
 PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
@@ -294,11 +294,11 @@ PWMPin::set(uint8_t duty)
 
 #elif defined(BOARD_ATMEGA2560)
 
-PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
-  OutputPin((Board::DigitalPin) pin) 
-{ 
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
+  OutputPin((Board::DigitalPin) pin)
+{
   switch (pin) {
-  case Board::PWM2: 
+  case Board::PWM2:
   case Board::PWM11:
     // PWM2(0B), PMW11(0A), Fast PWM, prescale 64
     TCCR0A |= _BV(WGM01) | _BV(WGM00);
@@ -311,9 +311,9 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     TCCR1A |= _BV(WGM10);
     TCCR1B |= _BV(CS11) | _BV(CS10);
     break;
-    
-  case Board::PWM7: 
-  case Board::PWM8: 
+
+  case Board::PWM7:
+  case Board::PWM8:
     // PWM7(2B), PWM8(2A), PWM phase correct, prescale 64
     TCCR2A |= _BV(WGM20);
     TCCR2B |= _BV(CS22);
@@ -335,7 +335,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     TCCR4B |= _BV(CS41) | _BV(CS40);
     break;
   }
-  set(duty); 
+  set(duty);
 }
 
 uint8_t
@@ -359,7 +359,7 @@ PWMPin::get_duty()
   }
 }
 
-void 
+void
 PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
@@ -418,9 +418,9 @@ PWMPin::set(uint8_t duty)
 
 #elif defined(BOARD_ATTINYX4)
 
-PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
-  OutputPin((Board::DigitalPin) pin) 
-{ 
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
+  OutputPin((Board::DigitalPin) pin)
+{
   switch (pin) {
   case Board::PWM0:
   case Board::PWM1:
@@ -433,7 +433,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     TCCR1B |= _BV(CS11) | _BV(CS10);
     break;
   }
-  set(duty); 
+  set(duty);
 }
 
 uint8_t
@@ -449,7 +449,7 @@ PWMPin::get_duty()
   }
 }
 
-void 
+void
 PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
@@ -476,12 +476,12 @@ PWMPin::set(uint8_t duty)
 
 #elif defined(BOARD_ATTINYX5)
 
-PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
-  OutputPin((Board::DigitalPin) pin) 
-{ 
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
+  OutputPin((Board::DigitalPin) pin)
+{
   TCCR0A |= _BV(WGM01) | _BV(WGM00);
   TCCR0B |= _BV(CS01) | _BV(CS00);
-  set(duty); 
+  set(duty);
 }
 
 uint8_t
@@ -495,7 +495,7 @@ PWMPin::get_duty()
   }
 }
 
-void 
+void
 PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
@@ -514,25 +514,25 @@ PWMPin::set(uint8_t duty)
 
 #elif defined(BOARD_ATTINYX61)
 
-PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) : 
-  OutputPin((Board::DigitalPin) pin) 
+PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
+  OutputPin((Board::DigitalPin) pin)
 {
   // Prescale(64)
   TCCR1B |= _BV(CS12)  | _BV(CS11)  | _BV(CS10);
 
   // PWM mode
   switch (m_pin) {
-  case Board::PWM0: 
+  case Board::PWM0:
     TCCR1A |= _BV(PWM1A);
     break;
-  case Board::PWM1: 
+  case Board::PWM1:
     TCCR1A |= _BV(PWM1B);
     break;
-  case Board::PWM2: 
+  case Board::PWM2:
     TCCR1C |= _BV(PWM1D);
     break;
   }
-  set(duty); 
+  set(duty);
 }
 
 uint8_t
@@ -547,7 +547,7 @@ PWMPin::get_duty()
   }
 }
 
-void 
+void
 PWMPin::set(uint8_t duty)
 {
   switch (m_pin) {
@@ -570,7 +570,7 @@ PWMPin::set(uint8_t duty)
 
 #endif
 
-void 
+void
 PWMPin::set(uint16_t value, uint16_t min, uint16_t max)
 {
   uint8_t duty;

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -49,7 +49,7 @@ crc_xmodem(const void* buf, size_t len)
   return (crc);
 }
 
-int 
+int
 RS485::send(const void* buf, size_t len, uint8_t dest)
 {
   // Check illegal message size, address and state
@@ -76,7 +76,7 @@ RS485::send(const void* buf, size_t len, uint8_t dest)
   return (len);
 }
 
-int 
+int
 RS485::recv(void* buf, size_t len, uint32_t ms)
 {
   uint32_t start = RTC::millis();
@@ -91,16 +91,16 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
       yield();
     }
     m_state = 1;
-    
+
   case 1: // Read message header and verify header check-sum
     while (available() != sizeof(header_t)) {
       if ((ms != 0) && (RTC::millis() - start > ms)) return (-2);
       yield();
     }
     m_state = 2;
-    if (m_ibuf.read(&m_header, sizeof(header_t)) != (int) sizeof(header_t)) 
+    if (m_ibuf.read(&m_header, sizeof(header_t)) != (int) sizeof(header_t))
       goto error;
-    if (m_header.crc != crc7(&m_header, sizeof(header_t) - 1)) 
+    if (m_header.crc != crc7(&m_header, sizeof(header_t) - 1))
       goto error;
 
   case 2: // Read message payload and verify payload check-sum
@@ -119,10 +119,10 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
   m_state = 0;
 
   // Check that the message was addressed to this device
-  if ((m_header.dest == m_addr) || (m_header.dest == BROADCAST)) 
+  if ((m_header.dest == m_addr) || (m_header.dest == BROADCAST))
     return (m_header.length);
   return (0);
-  
+
  error:
   // Something went wrong; flush buffer and signal data error
   m_ibuf.empty();

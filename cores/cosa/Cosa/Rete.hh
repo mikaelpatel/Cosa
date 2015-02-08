@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -35,16 +35,16 @@
  * SNMP. It allows get and put of values in the registry and
  * dispatching of actions. The data distribution protocol is a micro
  * version of DDS with only a publish message to broadcast registry
- * updates. 
+ * updates.
  *
  * @section References
  * 1. OMG Data Distribution Service Portal, http://portals.omg.org/dds/
  * 2. Simple Network Management Protocol,
- * http://en.wikipedia.org/wiki/Simple_Network_Management_Protocol 
+ * http://en.wikipedia.org/wiki/Simple_Network_Management_Protocol
  */
 class Rete {
 public:
-  /** 
+  /**
    * A Rete::Device is the base-class of wireless sensor nodes. The
    * default behaviour is a periodic function that will handle power
    * up and down.
@@ -138,7 +138,7 @@ public:
     /**
      * Send a registry put value request to given destination device and
      * given registry path and value in given buffer. Returns request
-     * identity or negative error code. 
+     * identity or negative error code.
      * @param[in] dest destination device.
      * @param[in] path in registry.
      * @param[in] len length of path.
@@ -162,7 +162,7 @@ public:
     /**
      * Send a registry action apply request to given destination device and
      * given registry path and arguments in given buffer. Returns request
-     * identity or negative error code. 
+     * identity or negative error code.
      * @param[in] dest destination device.
      * @param[in] path in registry.
      * @param[in] len length of path.
@@ -185,7 +185,7 @@ public:
 
     /**
      * Listen for incoming responses for max given number of
-     * milli-seconds. 
+     * milli-seconds.
      * @param[in] ms milli-seconds.
      */
     int listen(uint16_t ms);
@@ -193,7 +193,7 @@ public:
   protected:
     /** Wireless device. */
     Wireless::Driver* m_dev;
-    
+
     /** Next transaction identity (15b, positive number only). */
     int16_t m_tid;
   };

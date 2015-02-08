@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -23,12 +23,12 @@
 #include "Cosa/Power.hh"
 #include <alloca.h>
 
-static void thread_delay(uint32_t ms) 
+static void thread_delay(uint32_t ms)
 {
   Nucleo::Thread::get_running()->delay(ms);
 }
 
-static void thread_yield() 
+static void thread_yield()
 {
   Nucleo::Thread::get_running()->yield();
 }
@@ -53,7 +53,7 @@ Thread::init(void* stack)
   if (setjmp(m_context)) while (1) run();
 }
 
-void 
+void
 Thread::begin(Thread* thread, size_t size)
 {
   if (thread != NULL) {
@@ -69,11 +69,11 @@ Thread::begin(Thread* thread, size_t size)
   }
 }
 
-void 
-Thread::run() 
-{ 
+void
+Thread::run()
+{
   Thread* thread;
-  while (1) { 
+  while (1) {
     if (!s_delayed.is_empty()) {
       uint32_t now = Watchdog::millis();
       while ((thread = (Thread*) s_delayed.get_succ()) != (Thread*) &s_delayed) {
@@ -82,7 +82,7 @@ Thread::run()
       }
     }
     thread = (Thread*) get_succ();
-    if (thread != this) 
+    if (thread != this)
       resume(thread);
     else
       Power::sleep();
@@ -119,7 +119,7 @@ Thread::dequeue(Head* queue, bool flag)
   }
 }
 
-void 
+void
 Thread::delay(uint32_t ms)
 {
   m_expires = Watchdog::millis() + ms;
@@ -131,7 +131,7 @@ Thread::delay(uint32_t ms)
   enqueue((Head*) thread);
 }
 
-void 
+void
 Thread::await(volatile uint8_t* ptr, uint8_t bit)
 {
   while ((*ptr & _BV(bit)) == 0) yield();

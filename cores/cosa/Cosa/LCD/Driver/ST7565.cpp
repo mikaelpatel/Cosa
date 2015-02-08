@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -48,7 +48,7 @@ ST7565::ST7565(LCD::IO* io, Board::DigitalPin dc, Font* font) :
 {
 }
 
-void 
+void
 ST7565::set(uint8_t cmd)
 {
   m_io->begin();
@@ -58,7 +58,7 @@ ST7565::set(uint8_t cmd)
   m_io->end();
 }
 
-void 
+void
 ST7565::set(uint8_t x, uint8_t y)
 {
   m_io->begin();
@@ -70,15 +70,15 @@ ST7565::set(uint8_t x, uint8_t y)
   m_io->end();
 }
 
-void 
-ST7565::fill(uint8_t data, uint16_t count) 
+void
+ST7565::fill(uint8_t data, uint16_t count)
 {
   m_io->begin();
   while (count--) m_io->write(data);
   m_io->end();
 }
 
-bool 
+bool
 ST7565::begin()
 {
   const uint8_t* bp = script;
@@ -98,14 +98,14 @@ ST7565::begin()
   return (true);
 }
 
-bool 
+bool
 ST7565::end()
 {
   set(DISPLAY_OFF);
   return (true);
 }
 
-void 
+void
 ST7565::display_contrast(uint8_t level)
 {
   m_io->begin();
@@ -116,31 +116,31 @@ ST7565::display_contrast(uint8_t level)
   m_io->end();
 }
 
-void 
-ST7565::display_on() 
-{ 
-  set(DISPLAY_ON); 
+void
+ST7565::display_on()
+{
+  set(DISPLAY_ON);
 }
 
-void 
-ST7565::display_off() 
-{ 
-  set(DISPLAY_OFF); 
+void
+ST7565::display_off()
+{
+  set(DISPLAY_OFF);
 }
 
-void 
-ST7565::display_normal() 
-{ 
-  set(DISPLAY_NORMAL); 
+void
+ST7565::display_normal()
+{
+  set(DISPLAY_NORMAL);
 }
 
-void 
-ST7565::display_inverse() 
-{ 
-  set(DISPLAY_REVERSE); 
+void
+ST7565::display_inverse()
+{
+  set(DISPLAY_REVERSE);
 }
 
-void 
+void
 ST7565::display_clear()
 {
   for (uint8_t y = 0; y < LINES; y++) {
@@ -150,7 +150,7 @@ ST7565::display_clear()
   set_cursor(0, 0);
 }
 
-void 
+void
 ST7565::set_cursor(uint8_t x, uint8_t y)
 {
   set(x, y);
@@ -161,7 +161,7 @@ ST7565::set_cursor(uint8_t x, uint8_t y)
   set(SET_DISPLAY_START | m_line);
 }
 
-void 
+void
 ST7565::draw_icon(const uint8_t* bp)
 {
   uint8_t width = pgm_read_byte(bp++);
@@ -178,7 +178,7 @@ ST7565::draw_icon(const uint8_t* bp)
   set_cursor(m_x, m_y + 1);
 }
 
-void 
+void
 ST7565::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 {
   uint8_t lines = (height >> 3);
@@ -193,7 +193,7 @@ ST7565::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
   set_cursor(m_x, m_y + 1);
 }
 
-void 
+void
 ST7565::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
 {
   if (percent > 100) percent = 100;
@@ -216,7 +216,7 @@ ST7565::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
   m_io->end();
 }
 
-int 
+int
 ST7565::putchar(char c)
 {
   // Check for special characters
@@ -227,7 +227,7 @@ ST7565::putchar(char c)
       set_cursor(0, m_y);
       return (c);
     }
-    
+
     // Check line-feed: clear new line, Use display start line scroll
     if (c == '\n') {
       if (m_y == (LINES - 1)) {
@@ -239,7 +239,7 @@ ST7565::putchar(char c)
 	fill(m_mode, WIDTH);
 	set(0, y);
 	m_x = 0;
-      } 
+      }
       else {
 	set_cursor(0, m_y + 1);
 	fill(m_mode, WIDTH);
@@ -287,7 +287,7 @@ ST7565::putchar(char c)
     m_x = width;
   }
   m_io->begin();
-  while (--width) 
+  while (--width)
     m_io->write(m_mode ^ glyph.next());
   m_io->write(m_mode);
   m_io->end();

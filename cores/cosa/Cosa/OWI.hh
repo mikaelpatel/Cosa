@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -27,11 +27,11 @@
 
 /**
  * 1-wire device driver support class. Allows device rom search
- * and connection to multiple devices on one-wire bus. 
+ * and connection to multiple devices on one-wire bus.
  *
  * @section Limitations
- * The driver will turn off interrupt handling during data read 
- * from the device. 
+ * The driver will turn off interrupt handling during data read
+ * from the device.
  */
 class OWI : private IOPin {
 public:
@@ -65,15 +65,15 @@ public:
 
     /** Name of device driver instance. */
     str_P NAME;
-    
+
     /**
      * Construct one wire device driver. Use one wire bus on given pin.
      * @param[in] pin one wire bus.
      * @param[in] name of device driver instance.
      */
-    Driver(OWI* pin, const char* name = NULL) : 
+    Driver(OWI* pin, const char* name = NULL) :
       NAME((str_P) name),
-      ROM(NULL), 
+      ROM(NULL),
       m_next(NULL),
       m_pin(pin)
     {
@@ -90,7 +90,7 @@ public:
     Driver(OWI* pin, const uint8_t* rom, const char* name = NULL);
 
     /**
-     * Return pointer to device rom. 
+     * Return pointer to device rom.
      * @return device rom buffer.
      */
     uint8_t* get_rom()
@@ -99,7 +99,7 @@ public:
     }
 
     /**
-     * Update the rom identity (in EEPROM). Return true(1) if 
+     * Update the rom identity (in EEPROM). Return true(1) if
      * successful otherwise false(0). Typically used to save
      * configuration after connect().
      * return bool.
@@ -171,7 +171,7 @@ public:
      * @return position of difference or negative error code.
      */
     int8_t search(int8_t last = FIRST);
-    
+
     friend class OWI;
     friend IOStream& operator<<(IOStream& outs, OWI& owi);
     friend IOStream& operator<<(IOStream& outs, Driver& dev);
@@ -183,12 +183,12 @@ public:
   class Search : protected Driver {
   public:
     /**
-     * Initiate an alarm search iterator for the given one-wire bus and 
+     * Initiate an alarm search iterator for the given one-wire bus and
      * device family code.
      * @param[in] owi one-wire bus.
      * @param[in] family code (default all).
      */
-    Search(OWI* owi, uint8_t family = 0) : 
+    Search(OWI* owi, uint8_t family = 0) :
       Driver(owi),
       m_family(family),
       m_last(FIRST)
@@ -218,8 +218,8 @@ public:
    * Construct one wire bus connected to the given pin.
    * @param[in] pin number.
    */
-  OWI(Board::DigitalPin pin) : 
-    IOPin(pin), 
+  OWI(Board::DigitalPin pin) :
+    IOPin(pin),
     m_devices(0),
     m_device(NULL),
     m_crc(0)
@@ -251,7 +251,7 @@ public:
 
   /**
    * Write the given value to the one wire bus. The bits are written
-   * from LSB to MSB. Pass true(1) for power parameter to allow 
+   * from LSB to MSB. Pass true(1) for power parameter to allow
    * parasite devices to be powered. Should be turned off with power_off().
    * @param[in] value to write.
    * @param[in] bits to be written.
@@ -304,7 +304,7 @@ private:
 };
 
 /**
- * Print device driver name and rom to output stream. 
+ * Print device driver name and rom to output stream.
  * @param[in] outs stream to print to.
  * @param[in] dev owi device driver.
  * @return output stream.

@@ -3,25 +3,25 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Pin.hh"
 #include "Cosa/OutputPin.hh"
 
-uint8_t 
+uint8_t
 Pin::read(OutputPin& clk, Direction order) const
 {
   uint8_t value = 0;
@@ -47,8 +47,8 @@ Pin::read(OutputPin& clk, Direction order) const
 
 IOStream& operator<<(IOStream& outs, Pin& pin)
 {
-  outs << PSTR("Pin(pin = ") << (uint8_t) pin.m_pin 
-       << PSTR(", sfr = ") << (void*) pin.m_sfr 
+  outs << PSTR("Pin(pin = ") << (uint8_t) pin.m_pin
+       << PSTR(", sfr = ") << (void*) pin.m_sfr
        << PSTR(", mask = ") << bin << (uint8_t) pin.m_mask << ')';
   return (outs);
 }

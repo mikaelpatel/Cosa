@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,7 +26,7 @@ const char IOStream::CR[] __PROGMEM = "\n";
 const char IOStream::LF[] __PROGMEM = "\r";
 const char IOStream::CRLF[] __PROGMEM = "\r\n";
 
-IOStream::IOStream(Device* dev) : 
+IOStream::IOStream(Device* dev) :
   m_dev(dev),
   m_base(dec),
   m_width(6),
@@ -34,7 +34,7 @@ IOStream::IOStream(Device* dev) :
   m_eol_P((str_P) CRLF)
 {}
 
-IOStream::IOStream() : 
+IOStream::IOStream() :
   m_dev(NULL),
   m_base(dec),
   m_width(6),
@@ -42,17 +42,17 @@ IOStream::IOStream() :
   m_eol_P((str_P) CRLF)
 {}
 
-IOStream::Device* 
-IOStream::set_device(Device* dev) 
-{ 
+IOStream::Device*
+IOStream::set_device(Device* dev)
+{
   if (dev == NULL) return (m_dev);
   Device* previous = m_dev;
   m_dev = dev;
   return (previous);
 }
 
-void 
-IOStream::print(int n, Base base) 
+void
+IOStream::print(int n, Base base)
 {
   if (base != bcd) {
     if (base != dec) print_prefix(base);
@@ -65,7 +65,7 @@ IOStream::print(int n, Base base)
   }
 }
 
-void 
+void
 IOStream::print(long int n, Base base)
 {
   if (base != dec) print_prefix(base);
@@ -73,15 +73,15 @@ IOStream::print(long int n, Base base)
   print(ltoa(n, buf, base));
 }
 
-void 
-IOStream::print(unsigned int n, Base base) 
+void
+IOStream::print(unsigned int n, Base base)
 {
   if (base != dec) print_prefix(base);
   char buf[sizeof(int) * CHARBITS + 1];
   print(utoa(n, buf, base));
 }
 
-void 
+void
 IOStream::print(unsigned long int n, Base base)
 {
   if (base != dec) print_prefix(base);
@@ -89,8 +89,8 @@ IOStream::print(unsigned long int n, Base base)
   print(ultoa(n, buf, base));
 }
 
-void 
-IOStream::print(unsigned int n, uint8_t digits, Base base) 
+void
+IOStream::print(unsigned int n, uint8_t digits, Base base)
 {
   char buf[sizeof(int) * CHARBITS + 1];
   utoa(n, buf, base);
@@ -99,7 +99,7 @@ IOStream::print(unsigned int n, uint8_t digits, Base base)
   print(buf);
 }
 
-void 
+void
 IOStream::print(unsigned long int n, uint8_t digits, Base base)
 {
   char buf[sizeof(long int) * CHARBITS + 1];
@@ -109,7 +109,7 @@ IOStream::print(unsigned long int n, uint8_t digits, Base base)
   print(buf);
 }
 
-void 
+void
 IOStream::print(double value, int8_t width, uint8_t prec)
 {
   const uint8_t BUF_MAX = 33;
@@ -118,7 +118,7 @@ IOStream::print(double value, int8_t width, uint8_t prec)
   print(buf);
 }
 
-void 
+void
 IOStream::print(IOStream::Device* buffer)
 {
   int c;
@@ -126,7 +126,7 @@ IOStream::print(IOStream::Device* buffer)
     print((char) c);
 }
 
-void 
+void
 IOStream::print_prefix(Base base)
 {
   if (base == hex)
@@ -137,7 +137,7 @@ IOStream::print_prefix(Base base)
     print_P(PSTR("0"));
 }
 
-void 
+void
 IOStream::print(uint32_t src, const void *ptr, size_t size, Base base, uint8_t max)
 {
   Base b = (base != dec ? hex : dec);
@@ -164,7 +164,7 @@ IOStream::print(uint32_t src, const void *ptr, size_t size, Base base, uint8_t m
   if (n != 0) println();
 }
 
-void 
+void
 IOStream::vprintf_P(str_P format, va_list args)
 {
   const char* s = (const char*) format;
@@ -179,42 +179,42 @@ IOStream::vprintf_P(str_P format, va_list args)
       c = pgm_read_byte(s++);
       if (c == 0) s--;
       switch (c) {
-      case 'b': 
-	base = bin; 
+      case 'b':
+	base = bin;
 	goto next;
-      case 'B': 
-	base = bcd; 
+      case 'B':
+	base = bcd;
 	goto next;
-      case 'o': 
-	base = oct; 
+      case 'o':
+	base = oct;
 	goto next;
       case 'h':
-      case 'x': 
-	base = hex; 
+      case 'x':
+	base = hex;
 	goto next;
-      case 'u': 
-	is_signed = 0; 
+      case 'u':
+	is_signed = 0;
 	goto next;
-      case 'c': 
-	print((char) va_arg(args, int)); 
+      case 'c':
+	print((char) va_arg(args, int));
 	continue;
-      case 'p': 
-	print(va_arg(args, void*)); 
+      case 'p':
+	print(va_arg(args, void*));
 	continue;
-      case 's': 
-	print(va_arg(args, char*)); 
+      case 's':
+	print(va_arg(args, char*));
 	continue;
-      case 'S': 
-	print_P(va_arg(args, str_P)); 
+      case 'S':
+	print_P(va_arg(args, str_P));
 	continue;
-      case 'd': 
-	if (is_signed) 
-	  print(va_arg(args, int), base); 
+      case 'd':
+	if (is_signed)
+	  print(va_arg(args, int), base);
 	else
-	  print(va_arg(args, unsigned int), base); 
+	  print(va_arg(args, unsigned int), base);
 	continue;
-      case 'l': 
-	if (is_signed) 
+      case 'l':
+	if (is_signed)
 	  print(va_arg(args, long int), base);
 	else
 	  print(va_arg(args, unsigned long int), base);
@@ -225,7 +225,7 @@ IOStream::vprintf_P(str_P format, va_list args)
   }
 }
 
-char* 
+char*
 IOStream::scan(char *s, size_t count)
 {
   if (m_dev == NULL) return (NULL);
@@ -304,41 +304,41 @@ IOStream::readline(char* buf, size_t size, bool echo)
 
 // IOStream::Device IOStream::Device::null;
 
-int 
+int
 IOStream::Device::available()
 {
   return (0);
 }
 
-int 
+int
 IOStream::Device::room()
 {
   return (0);
 }
 
-int 
-IOStream::Device::putchar(char c) 
-{ 
+int
+IOStream::Device::putchar(char c)
+{
   int res = write(&c, sizeof(c));
   return (res == sizeof(c) ? c & 0xff : res);
 }
-    
-int 
-IOStream::Device::puts(const char* s) 
-{ 
+
+int
+IOStream::Device::puts(const char* s)
+{
   return (write(s, strlen(s)));
 }
 
-int 
+int
 IOStream::Device::puts_P(str_P s)
-{ 
+{
   const char* p = (const char*) s;
   return (write_P(p, strlen_P(p)));
 }
 
-int 
-IOStream::Device::write(const void* buf, size_t size) 
-{ 
+int
+IOStream::Device::write(const void* buf, size_t size)
+{
   char* bp = (char*) buf;
   size_t n = 0;
   for(; n < size; n++)
@@ -347,9 +347,9 @@ IOStream::Device::write(const void* buf, size_t size)
   return (n);
 }
 
-int 
-IOStream::Device::write_P(const void* buf, size_t size) 
-{ 
+int
+IOStream::Device::write_P(const void* buf, size_t size)
+{
   char* bp = (char*) buf;
   size_t n = 0;
   for(; n < size; n++)
@@ -358,7 +358,7 @@ IOStream::Device::write_P(const void* buf, size_t size)
   return (n);
 }
 
-int 
+int
 IOStream::Device::write(const iovec_t* vec)
 {
   size_t size = 0;
@@ -370,28 +370,28 @@ IOStream::Device::write(const iovec_t* vec)
   return (size);
 }
 
-int 
-IOStream::Device::peekchar() 
-{ 
-  return (EOF); 
+int
+IOStream::Device::peekchar()
+{
+  return (EOF);
 }
 
-int 
-IOStream::Device::peekchar(char c) 
-{ 
+int
+IOStream::Device::peekchar(char c)
+{
   UNUSED(c);
-  return (EOF); 
+  return (EOF);
 }
 
-int 
-IOStream::Device::getchar() 
-{ 
-  return (EOF); 
+int
+IOStream::Device::getchar()
+{
+  return (EOF);
 }
 
-char* 
-IOStream::Device::gets(char *s, size_t count) 
-{ 
+char*
+IOStream::Device::gets(char *s, size_t count)
+{
   char* res = s;
   while (--count) {
     int c = getchar();
@@ -415,11 +415,11 @@ IOStream::Device::gets(char *s, size_t count)
   return (s == res ? NULL : res);
 }
 
-int 
-IOStream::Device::read(void* buf, size_t size) 
-{ 
+int
+IOStream::Device::read(void* buf, size_t size)
+{
   char* bp = (char*) buf;
-  size_t n = 0; 
+  size_t n = 0;
   for (; n < size; n++) {
     int c = getchar();
     if (c < 0) break;
@@ -428,8 +428,8 @@ IOStream::Device::read(void* buf, size_t size)
   return (n);
 }
 
-int 
-IOStream::Device::read(iovec_t* vec) 
+int
+IOStream::Device::read(iovec_t* vec)
 {
   size_t size = 0;
   for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
@@ -440,10 +440,10 @@ IOStream::Device::read(iovec_t* vec)
   return (size);
 }
 
-int 
-IOStream::Device::flush() 
-{ 
-  return (EOF); 
+int
+IOStream::Device::flush()
+{
+  return (EOF);
 }
 
 void

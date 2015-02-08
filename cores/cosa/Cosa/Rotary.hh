@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -25,15 +25,15 @@
 #include "Cosa/PinChangeInterrupt.hh"
 #include "Cosa/RTC.hh"
 
-/** 
+/**
  * Rotary Encoder class with support for dials (normal and
  * accelerated).
  *
  * @section Acknowledgements
  * The Rotary Encoder algorithm is based on an implementation by Ben
  * Buxton. See comment block in Cosa/Rotary.cpp for more details and
- * the blog; 
- * 
+ * the blog;
+ *
  * @section References
  * 1. http://www.buxtronix.net/2011/10/rotary-encoders-done-properly.html
  */
@@ -67,7 +67,7 @@ public:
       CW = 0x10,		//!< Clock-wise direction.
       CCW = 0x20		//!< Anti-clock-wise direction.
     } __attribute__((packed));
-    
+
     /**
      * Rotary Encoder cycle mode.
      */
@@ -83,7 +83,7 @@ public:
      * @param[in] dt pin.
      * @param[in] mode cycle (default FULL_CYCLE).
      */
-    Encoder(Board::InterruptPin clk, Board::InterruptPin dt, 
+    Encoder(Board::InterruptPin clk, Board::InterruptPin dt,
 	    Mode mode = FULL_CYCLE) :
       m_clk(clk, this),
       m_dt(dt, this),
@@ -101,7 +101,7 @@ public:
     {
       return (m_mode);
     }
-    
+
     /**
      * Set cycle mode.
      * @param[in] mode cycle.
@@ -112,7 +112,7 @@ public:
     }
 
     /**
-     * Enable the encoder. 
+     * Enable the encoder.
      */
     void enable()
       __attribute__((always_inline))
@@ -138,8 +138,8 @@ public:
      */
     class SignalPin : public PinChangeInterrupt {
     public:
-      SignalPin(Board::InterruptPin pin, Encoder* encoder) : 
-	PinChangeInterrupt(pin), 
+      SignalPin(Board::InterruptPin pin, Encoder* encoder) :
+	PinChangeInterrupt(pin),
 	m_encoder(encoder)
       {}
 
@@ -165,11 +165,11 @@ public:
     SignalPin m_dt;
     uint8_t m_state;
     Mode m_mode;
-    
+
     /**
      * Detect Rotary Encoder state change. Reads current input pin
      * values and performs a possible state change. Return turn
-     * direction or none. 
+     * direction or none.
      * @return direction
      */
     Direction detect();
@@ -178,7 +178,7 @@ public:
   /**
    * Use Rotary Encoder as a simple dial (integer value). Allows a
    * dial within a given number(T) range (min, max) and a given
-   * initial value. 
+   * initial value.
    * @param[in] T value type.
    *
    * @section Circuit
@@ -208,7 +208,7 @@ public:
      * @param[in] max value.
      * @param[in] step value.
      */
-    Dial(Board::InterruptPin clk, Board::InterruptPin dt, Mode mode, 
+    Dial(Board::InterruptPin clk, Board::InterruptPin dt, Mode mode,
 	 T initial, T min, T max, T step) :
       Encoder(clk, dt, mode),
       m_value(initial),
@@ -216,7 +216,7 @@ public:
       m_max(max),
       m_step(step)
     {}
-    
+
     /**
      * Return current dial value.
      * @return value.
@@ -225,7 +225,7 @@ public:
     {
       return (m_value);
     }
-    
+
     /**
      * Get current step (increment/decrement).
      * @return step.
@@ -234,7 +234,7 @@ public:
     {
       return (m_step);
     }
-    
+
     /**
      * Set step (increment/decrement).
      * @param[in] step value.
@@ -246,10 +246,10 @@ public:
 
     /**
      * @override Rotary::Dial
-     * Default on change function. 
+     * Default on change function.
      * @param[in] value.
      */
-    virtual void on_change(T value) 
+    virtual void on_change(T value)
     {
       UNUSED(value);
     }
@@ -326,7 +326,7 @@ public:
       m_step(step),
       m_steps(steps)
     {}
-    
+
     /**
      * Return current dial value.
      * @return value.
@@ -335,7 +335,7 @@ public:
     {
       return (m_value);
     }
-    
+
     /**
      * Get current step (slow increment/decrement).
      * @return step.
@@ -344,7 +344,7 @@ public:
     {
       return (m_step);
     }
-    
+
     /**
      * Set step (slow increment/decrement).
      * @param[in] step value.
@@ -362,7 +362,7 @@ public:
     {
       return (m_steps);
     }
-    
+
     /**
      * Set step (fast increment/decrement).
      * @param[in] steps value.
@@ -374,10 +374,10 @@ public:
 
     /**
      * @override Rotary::AcceleratedDial
-     * Default on change function. 
+     * Default on change function.
      * @param[in] value.
      */
-    virtual void on_change(T value) 
+    virtual void on_change(T value)
     {
       UNUSED(value);
     }

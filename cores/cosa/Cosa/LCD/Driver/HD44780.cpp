@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,21 +26,21 @@
 const uint8_t HD44780::offset0[] __PROGMEM = { 0x00, 0x40, 0x14, 0x54 };
 const uint8_t HD44780::offset1[] __PROGMEM = { 0x00, 0x40, 0x10, 0x50 };
 
-void 
+void
 HD44780::IO::write8b(uint8_t data)
 {
   write4b(data >> 4);
   write4b(data);
 }
 
-void 
+void
 HD44780::IO::write8n(void* buf, size_t size)
 {
   uint8_t* bp = (uint8_t*) buf;
   while (size--) write8b(*bp++);
 }
 
-bool 
+bool
 HD44780::begin()
 {
   // Initiate display; See fig. 24, 4-bit interface, pp. 46.
@@ -77,57 +77,57 @@ HD44780::begin()
   return (true);
 }
 
-bool 
+bool
 HD44780::end()
 {
   display_off();
   return (true);
 }
 
-void 
-HD44780::backlight_on() 
-{ 
+void
+HD44780::backlight_on()
+{
   m_io->set_backlight(1);
 }
 
-void 
-HD44780::backlight_off() 
-{ 
+void
+HD44780::backlight_off()
+{
   m_io->set_backlight(0);
 }
 
-void 
-HD44780::display_on() 
-{ 
-  set(m_cntl, DISPLAY_ON); 
-}
-
-void 
-HD44780::display_off() 
-{ 
-  clear(m_cntl, DISPLAY_ON); 
-}
-
-void 
-HD44780::display_clear() 
+void
+HD44780::display_on()
 {
-  write(CLEAR_DISPLAY); 
-  m_x = 0; 
-  m_y = 0; 
+  set(m_cntl, DISPLAY_ON);
+}
+
+void
+HD44780::display_off()
+{
+  clear(m_cntl, DISPLAY_ON);
+}
+
+void
+HD44780::display_clear()
+{
+  write(CLEAR_DISPLAY);
+  m_x = 0;
+  m_y = 0;
   m_mode |= INCREMENT;
   DELAY(LONG_EXEC_TIME);
 }
 
-void 
-HD44780::cursor_home() 
-{ 
-  write(RETURN_HOME); 
-  m_x = 0; 
-  m_y = 0; 
+void
+HD44780::cursor_home()
+{
+  write(RETURN_HOME);
+  m_x = 0;
+  m_y = 0;
   DELAY(LONG_EXEC_TIME);
 }
 
-void 
+void
 HD44780::set_cursor(uint8_t x, uint8_t y)
 {
   if (x >= WIDTH) x = 0;
@@ -138,7 +138,7 @@ HD44780::set_cursor(uint8_t x, uint8_t y)
   m_y = y;
 }
 
-void 
+void
 HD44780::set_custom_char(uint8_t id, const uint8_t* bitmap)
 {
   write(SET_CGRAM_ADDR | ((id << 3) & SET_CGRAM_MASK));
@@ -150,7 +150,7 @@ HD44780::set_custom_char(uint8_t id, const uint8_t* bitmap)
   set_instruction_mode();
 }
 
-void 
+void
 HD44780::set_custom_char_P(uint8_t id, const uint8_t* bitmap)
 {
   write(SET_CGRAM_ADDR | ((id << 3) & SET_CGRAM_MASK));
@@ -162,12 +162,12 @@ HD44780::set_custom_char_P(uint8_t id, const uint8_t* bitmap)
   set_instruction_mode();
 }
 
-int 
+int
 HD44780::putchar(char c)
 {
   // Check for special characters
   if (c < ' ') {
-    
+
     // Carriage-return: move to start of line
     if (c == '\r') {
       set_cursor(0, m_y);
@@ -229,7 +229,7 @@ HD44780::putchar(char c)
   return (c & 0xff);
 }
 
-int 
+int
 HD44780::write(void* buf, size_t size)
 {
   set_data_mode();

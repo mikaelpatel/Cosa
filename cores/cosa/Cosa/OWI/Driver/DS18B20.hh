@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -27,8 +27,8 @@
 
 /**
  * Driver for the DS18B20 Programmable Resolution 1-Write Digital
- * Thermometer.  
- * 
+ * Thermometer.
+ *
  * @section Circuit
  * @code
  *                           DS18B20
@@ -39,11 +39,11 @@
  *                       +------------+
  *
  * @endcode
- * May use parasite powering (connect DS18B20 VCC to GND) otherwise 
+ * May use parasite powering (connect DS18B20 VCC to GND) otherwise
  * to VCC.
- * 
+ *
  * @section References
- * 1. Maxim Integrated product description (REV: 042208) 
+ * 1. Maxim Integrated product description (REV: 042208)
  */
 class DS18B20 : public OWI::Driver {
 public:
@@ -58,7 +58,7 @@ public:
      * @param[in] owi one-wire pin to search.
      */
     Search(OWI* owi) : OWI::Search(owi, FAMILY_CODE) {}
-    
+
     /**
      * Get the next thermometer with active alarm since latest
      * convert request. The temperature value that triggered the alarm
@@ -76,7 +76,7 @@ public:
    * @param[in] pin one wire bus pin.
    * @param[in] name of device.
    */
-  DS18B20(OWI* pin, const char* name = NULL) : 
+  DS18B20(OWI* pin, const char* name = NULL) :
     OWI::Driver(pin, name),
     m_parasite(0),
     m_start(0L),
@@ -101,7 +101,7 @@ public:
 
   /**
    * Connect to DS18B20 device with given index. Reads configuration,
-   * scratchpad, and power supply setting. Returns true(1) if connected, 
+   * scratchpad, and power supply setting. Returns true(1) if connected,
    * otherwise false(0).
    * @param[in] index device order.
    * @return true(1) if successful otherwise false(0).
@@ -110,7 +110,7 @@ public:
 
   /**
    * Set conversion resolution from 9..12 bits. Use write_scratchpad()
-   * and copy_scratchpad() to update device. 
+   * and copy_scratchpad() to update device.
    * @param[in] bits resolution.
    */
   void set_resolution(uint8_t bits);
@@ -119,7 +119,7 @@ public:
    * Set alarm trigger values; low and high threshold values.
    * Use write_scratchpad() and copy_scratchpad() to update device.
    * @param[in] low threshold.
-   * @param[in] high threshold. 
+   * @param[in] high threshold.
    */
   void set_trigger(int8_t low, int8_t high)
     __attribute__((always_inline))
@@ -141,10 +141,10 @@ public:
   {
     return (m_scratchpad.temperature);
   }
-  
+
   /**
    * Get conversion resolution. Use connect(), or read_scratchpad() to
-   * read values from device before calling this method. 
+   * read values from device before calling this method.
    * @return number of bits.
    */
   uint8_t get_resolution() const
@@ -158,7 +158,7 @@ public:
    * Get alarm trigger values; low and high threshold values.
    * Use connect(), or read_scratchpad() to read values from device.
    * @param[out] low threshold.
-   * @param[out] high threshold. 
+   * @param[out] high threshold.
    */
   void get_trigger(int8_t& low, int8_t& high) const
     __attribute__((always_inline))
@@ -170,7 +170,7 @@ public:
   /**
    * Initiate a single temperature conversion. With the default
    * setting 12-bit resolution the max conversion time is 750 ms,
-   * MAX_CONVERSION_TIME. 
+   * MAX_CONVERSION_TIME.
    * @return true(1) if successful otherwise false(0).
    */
   bool convert_request();
@@ -187,19 +187,19 @@ public:
    * @param[in] parasite power mode flag.
    * @return true(1) if successful otherwise false(0).
    */
-  static bool convert_request(OWI* owi, 
-			      uint8_t resolution = 12, 
+  static bool convert_request(OWI* owi,
+			      uint8_t resolution = 12,
 			      bool parasite = false);
 
   /**
    * Write the contents of the scratchpad triggers and configuration
-   * (3 bytes) to device. 
+   * (3 bytes) to device.
    * @return true(1) if successful otherwise false(0).
    */
   bool write_scratchpad();
 
   /**
-   * Read the contents of the scratchpad to local memory. A internal 
+   * Read the contents of the scratchpad to local memory. A internal
    * delay will occur if a convert_request() is pending. The delay is
    * at most max conversion time (750 ms). The flag parameter may be
    * used when a device has been addressed with search (alarm).
@@ -209,7 +209,7 @@ public:
   bool read_scratchpad(bool flag = true);
 
   /**
-   * Copy device scratchpad triggers and configuration data 
+   * Copy device scratchpad triggers and configuration data
    * to device EEPROM. An internal delay is issued to allow the data
    * to be written.
    * @return true(1) if successful otherwise false(0).
@@ -217,13 +217,13 @@ public:
   bool copy_scratchpad();
 
   /**
-   * Recall the alarm triggers and configuration from device EEPROM. 
+   * Recall the alarm triggers and configuration from device EEPROM.
    * @return true(1) if successful otherwise false(0).
    */
   bool recall();
 
   /**
-   * Read power supply. Determine if the device requires parasite 
+   * Read power supply. Determine if the device requires parasite
    * powering. The information is cached and used in read_scratchpad()
    * and copy_scratchpad() for internal delay timing. The function
    * connect() will call this function automatically.
@@ -233,7 +233,7 @@ public:
 
   /**
    * Print temperature reading (fixed point value) to given output
-   * stream. 
+   * stream.
    * @param[in] outs output stream.
    * @param[in] temp temperature fixed point number.
    */
@@ -301,7 +301,7 @@ private:
 /**
  * Print the name of the thermometer and latest temperature reading
  * with two decimals to given output stream. The temperature is in
- * Celcius. 
+ * Celcius.
  * @param[in] outs stream to print device information to.
  * @param[in] thermometer device.
  * @return iostream.

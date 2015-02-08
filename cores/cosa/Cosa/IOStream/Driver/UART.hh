@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -44,12 +44,12 @@ public:
   static const uint8_t BUFFER_MAX = 64;
 
   /**
-   * Construct serial port handler for given UART. 
+   * Construct serial port handler for given UART.
    * @param[in] port number.
    * @param[in] ibuf input stream buffer.
    * @param[in] obuf output stream buffer.
    */
-  UART(uint8_t port, IOStream::Device* ibuf, IOStream::Device* obuf) : 
+  UART(uint8_t port, IOStream::Device* ibuf, IOStream::Device* obuf) :
     Serial(),
     m_sfr(Board::UART(port)),
     m_ibuf(ibuf),
@@ -81,7 +81,7 @@ public:
   /**
    * @override IOStream::Device
    * Write character to serial port output buffer. Returns character
-   * if successful otherwise a negative error code. 
+   * if successful otherwise a negative error code.
    * returns EOF(-1),
    * @param[in] c character to write.
    * @return character written or EOF(-1).
@@ -110,7 +110,7 @@ public:
   {
     return (m_ibuf->peekchar(c));
   }
-    
+
   /**
    * @override IOStream::Device
    * Read character from serial port input buffer.
@@ -149,9 +149,9 @@ public:
    * @param[in] format serial frame format (default async, 8data, 2stop bit)
    * @return true(1) if successful otherwise false(0)
    */
-  virtual bool begin(uint32_t baudrate = DEFAULT_BAUDRATE, 
+  virtual bool begin(uint32_t baudrate = DEFAULT_BAUDRATE,
 		     uint8_t format = DEFAULT_FORMAT);
-  
+
   /**
    * @override Serial
    * Stop UART device driver.
@@ -176,8 +176,8 @@ protected:
    * @return UCSRAn register pointer.
    */
   volatile uint8_t* UCSRnA() const
-  { 
-    return (m_sfr); 
+  {
+    return (m_sfr);
   }
 
   /**
@@ -185,8 +185,8 @@ protected:
    * @return UCSRnB register pointer.
    */
   volatile uint8_t* UCSRnB() const
-  { 
-    return (m_sfr + 1); 
+  {
+    return (m_sfr + 1);
   }
 
   /**
@@ -194,8 +194,8 @@ protected:
    * @return UCSRnC register pointer.
    */
   volatile uint8_t* UCSRnC() const
-  { 
-    return (m_sfr + 2); 
+  {
+    return (m_sfr + 2);
   }
 
   /**
@@ -203,8 +203,8 @@ protected:
    * @return UBRRn register pointer.
    */
   volatile uint16_t* UBRRn() const
-  { 
-    return ((volatile uint16_t*) (m_sfr + 4)); 
+  {
+    return ((volatile uint16_t*) (m_sfr + 4));
   }
 
   /**
@@ -212,8 +212,8 @@ protected:
    * @return UDRn register pointer.
    */
   volatile uint8_t* UDRn() const
-  { 
-    return (m_sfr + 6); 
+  {
+    return (m_sfr + 6);
   }
 
   /**

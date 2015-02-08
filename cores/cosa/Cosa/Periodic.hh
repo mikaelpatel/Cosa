@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,7 +32,7 @@
  *
  * @section Limitations
  * Avoid setting period to the same value in the run method as this
- * will force the function to be executed twice in the same time frame. 
+ * will force the function to be executed twice in the same time frame.
  *
  * @section See Also
  * For details on time period handling see Watchdog.hh. This execution
@@ -41,7 +41,7 @@
 class Periodic : protected Link {
 public:
   /**
-   * Construct a periodic function handler. 
+   * Construct a periodic function handler.
    * @param[in] ms period of timeout.
    */
   Periodic(uint16_t ms) : Link(), m_period(ms) {}
@@ -75,7 +75,7 @@ public:
 
   /**
    * @override Periodic
-   * The default null function. 
+   * The default null function.
    */
   virtual void run() {}
 

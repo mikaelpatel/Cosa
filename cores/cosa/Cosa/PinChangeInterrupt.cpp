@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -40,9 +40,9 @@
 PinChangeInterrupt* PinChangeInterrupt::s_pin[Board::PCINT_MAX] = { NULL };
 uint8_t PinChangeInterrupt::s_state[Board::PCMSK_MAX] = { 0 };
 
-void 
-PinChangeInterrupt::enable() 
-{ 
+void
+PinChangeInterrupt::enable()
+{
   synchronized {
     *PCIMR() |= m_mask;
 #if defined(BOARD_ATMEGA2560)
@@ -54,9 +54,9 @@ PinChangeInterrupt::enable()
   }
 }
 
-void 
-PinChangeInterrupt::disable() 
-{ 
+void
+PinChangeInterrupt::disable()
+{
   synchronized {
     *PCIMR() &= ~m_mask;
 #if defined(BOARD_ATMEGA2560)
@@ -68,7 +68,7 @@ PinChangeInterrupt::disable()
   }
 }
 
-void 
+void
 PinChangeInterrupt::begin()
 {
 #if defined(BOARD_ATMEGA2560)
@@ -84,7 +84,7 @@ PinChangeInterrupt::begin()
   }
 }
 
-void 
+void
 PinChangeInterrupt::end()
 {
   synchronized {
@@ -97,8 +97,8 @@ PinChangeInterrupt::on_interrupt(uint8_t pcint, uint8_t mask, uint8_t base)
 {
   uint8_t new_state = *Pin::PIN(base);
   uint8_t changed = (new_state ^ s_state[pcint]) & mask;
-  
-  
+
+
   for (uint8_t i = 0; changed && (i < CHARBITS); i++) {
     if ((changed & 1) && (s_pin[base + i] != NULL)) {
       s_pin[base + i]->on_interrupt();
@@ -147,11 +147,11 @@ PCINT_ISR(0, 1, 8);
 PCINT_ISR(1, 2, 14);
 PCINT_ISR(2, 0, 0);
 
-#elif defined(BOARD_ATMEGA32U4) 
+#elif defined(BOARD_ATMEGA32U4)
 
 PCINT_ISR(0, 0, 0);
 
-#elif defined(BOARD_AT90USB1286) 
+#elif defined(BOARD_AT90USB1286)
 
 PCINT_ISR(0, 0, 0);
 

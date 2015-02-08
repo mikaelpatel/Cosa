@@ -3,21 +3,21 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section References
  * The timing of 1-Wire read/write operations are according to
- * AVR318: Dallas 1-Wire(R) master, Rev. 2579A-AVR-09/04, 
+ * AVR318: Dallas 1-Wire(R) master, Rev. 2579A-AVR-09/04,
  * Table 3. Bit transfer layer delays.
  *
  * This file is part of the Arduino Che Cosa project.
@@ -115,7 +115,7 @@ OWI::write(uint8_t value, uint8_t bits, bool power)
   if (!power) power_off();
 }
 
-void 
+void
 OWI::write(uint8_t value, void* buf, uint8_t size)
 {
   write(value);
@@ -123,7 +123,7 @@ OWI::write(uint8_t value, void* buf, uint8_t size)
   while (size--) write(*bp++);
 }
 
-OWI::Driver* 
+OWI::Driver*
 OWI::lookup(uint8_t* rom)
 {
   for (Driver* dev = m_device; dev != NULL; dev = dev->m_next) {
@@ -160,7 +160,7 @@ IOStream& operator<<(IOStream& outs, OWI& owi)
 
 OWI::Driver::Driver(OWI* pin, const uint8_t* rom, const char* name) :
   NAME((str_P) name),
-  ROM(rom), 
+  ROM(rom),
   m_next(NULL),
   m_pin(pin)
 {
@@ -170,7 +170,7 @@ OWI::Driver::Driver(OWI* pin, const uint8_t* rom, const char* name) :
   m_pin->m_device = this;
 }
 
-bool 
+bool
 OWI::Driver::update_rom()
 {
   if (ROM == NULL) return (false);
@@ -190,29 +190,29 @@ OWI::Driver::search(int8_t last)
       switch (m_pin->read(2)) {
       case 0b00: // Discrepency between device roms
 	if (pos == last) {
-	  m_pin->write(1, 1); 
-	  data |= 0x80; 
+	  m_pin->write(1, 1);
+	  data |= 0x80;
 	  last = FIRST;
-	} 
+	}
 	else if (pos > last) {
-	  m_pin->write(0, 1); 
+	  m_pin->write(0, 1);
 	  next = pos;
-	} 
+	}
 	else if (m_rom[i] & (1 << j)) {
 	  m_pin->write(1, 1);
-	  data |= 0x80; 
-	} 
+	  data |= 0x80;
+	}
 	else {
 	  m_pin->write(0, 1);
 	  next = pos;
 	}
 	break;
-      case 0b01: // Only one's at this position 
-	m_pin->write(1, 1); 
-	data |= 0x80; 
+      case 0b01: // Only one's at this position
+	m_pin->write(1, 1);
+	data |= 0x80;
 	break;
       case 0b10: // Only zero's at this position
-	m_pin->write(0, 1); 
+	m_pin->write(0, 1);
 	break;
       case 0b11: // No device detected
 	return (ERROR);
@@ -245,7 +245,7 @@ OWI::Driver::match_rom()
 {
   if (m_rom[0] == 0) return (false);
   if (!m_pin->reset()) return (false);
-  if (m_pin->m_devices > 1) 
+  if (m_pin->m_devices > 1)
     m_pin->write(OWI::MATCH_ROM, m_rom, ROM_MAX);
   else
     m_pin->write(OWI::SKIP_ROM);
@@ -268,7 +268,7 @@ OWI::Driver::alarm_search(int8_t last)
   return (search(last));
 }
 
-bool 
+bool
 OWI::Driver::connect(uint8_t family, uint8_t index)
 {
   int8_t last = FIRST;
@@ -293,7 +293,7 @@ IOStream& operator<<(IOStream& outs, OWI::Driver& dev)
 {
   uint8_t i;
   if (dev.NAME != NULL) outs << dev.NAME << ':';
-  outs << PSTR("OWI::rom(family = ") << hex << dev.m_rom[0] 
+  outs << PSTR("OWI::rom(family = ") << hex << dev.m_rom[0]
        << PSTR(", id = 0x");
   for (i = OWI::ROM_MAX - 2; i > 0; i--) {
     uint8_t v = dev.m_rom[i];
@@ -303,7 +303,7 @@ IOStream& operator<<(IOStream& outs, OWI::Driver& dev)
   return (outs);
 }
 
-OWI::Driver* 
+OWI::Driver*
 OWI::Search::next()
 {
   do {

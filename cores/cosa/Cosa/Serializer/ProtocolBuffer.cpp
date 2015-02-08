@@ -3,25 +3,25 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Serializer/ProtocolBuffer.hh"
 #include "Cosa/Power.hh"
 
-int 
+int
 ProtocolBuffer::getchar()
 {
   if (m_ins == NULL) return (-1);
@@ -29,7 +29,7 @@ ProtocolBuffer::getchar()
   return (m_ins->getchar());
 }
 
-int 
+int
 ProtocolBuffer::write(uint32_t value)
 {
   int res = 0;
@@ -43,7 +43,7 @@ ProtocolBuffer::write(uint32_t value)
   return (res);
 }
 
-int 
+int
 ProtocolBuffer::read(uint32_t& value)
 {
   uint8_t data = getchar();
@@ -63,7 +63,7 @@ ProtocolBuffer::read(uint32_t& value)
   return (cnt);
 }
 
-int 
+int
 ProtocolBuffer::write_P(const void* buf, uint8_t count)
 {
   int res = count;
@@ -72,7 +72,7 @@ ProtocolBuffer::write_P(const void* buf, uint8_t count)
   return (res);
 }
 
-int 
+int
 ProtocolBuffer::read(void* buf, uint8_t count)
 {
   uint8_t size = getchar();
@@ -84,7 +84,7 @@ ProtocolBuffer::read(void* buf, uint8_t count)
   return (res);
 }
 
-int 
+int
 ProtocolBuffer::read(float32_t& value)
 {
   uint8_t size = sizeof(value);

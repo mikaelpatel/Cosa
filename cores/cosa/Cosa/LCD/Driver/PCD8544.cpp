@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -41,7 +41,7 @@ PCD8544::PCD8544(LCD::IO* io, Board::DigitalPin dc, Font* font) :
 {
 }
 
-void 
+void
 PCD8544::set(uint8_t cmd)
 {
   m_io->begin();
@@ -51,7 +51,7 @@ PCD8544::set(uint8_t cmd)
   m_io->end();
 }
 
-void 
+void
 PCD8544::set(uint8_t x, uint8_t y)
 {
   m_io->begin();
@@ -62,7 +62,7 @@ PCD8544::set(uint8_t x, uint8_t y)
   m_io->end();
 }
 
-void 
+void
 PCD8544::fill(uint8_t data, uint16_t count)
 {
   m_io->begin();
@@ -70,7 +70,7 @@ PCD8544::fill(uint8_t data, uint16_t count)
   m_io->end();
 }
 
-bool 
+bool
 PCD8544::begin()
 {
   const uint8_t* bp = script;
@@ -85,38 +85,38 @@ PCD8544::begin()
   return (true);
 }
 
-bool 
+bool
 PCD8544::end()
 {
   set(SET_FUNC | BASIC_INST | POWER_DOWN_MODE);
   return (true);
 }
 
-void 
-PCD8544::display_on() 
-{ 
-  set(DISPLAY_CNTL | DISPLAY_ON); 
+void
+PCD8544::display_on()
+{
+  set(DISPLAY_CNTL | DISPLAY_ON);
 }
 
-void 
-PCD8544::display_off() 
-{ 
-  set(DISPLAY_CNTL | DISPLAY_OFF); 
+void
+PCD8544::display_off()
+{
+  set(DISPLAY_CNTL | DISPLAY_OFF);
 }
 
-void 
+void
 PCD8544::display_normal()
-{ 
-  set(DISPLAY_CNTL | NORMAL_MODE); 
+{
+  set(DISPLAY_CNTL | NORMAL_MODE);
 }
 
-void 
-PCD8544::display_inverse() 
-{ 
-  set(DISPLAY_CNTL | INVERSE_MODE); 
+void
+PCD8544::display_inverse()
+{
+  set(DISPLAY_CNTL | INVERSE_MODE);
 }
 
-void 
+void
 PCD8544::display_clear()
 {
   set_cursor(0, 0);
@@ -124,7 +124,7 @@ PCD8544::display_clear()
   set(m_x, m_y);
 }
 
-void 
+void
 PCD8544::display_contrast(uint8_t level)
 {
   m_io->begin();
@@ -136,7 +136,7 @@ PCD8544::display_contrast(uint8_t level)
   m_io->end();
 }
 
-void 
+void
 PCD8544::set_cursor(uint8_t x, uint8_t y)
 {
   // For x on character boundary (and not pixel)
@@ -146,7 +146,7 @@ PCD8544::set_cursor(uint8_t x, uint8_t y)
   m_y = y;
 }
 
-void 
+void
 PCD8544::draw_icon(const uint8_t* bp)
 {
   uint8_t width = pgm_read_byte(bp++);
@@ -163,7 +163,7 @@ PCD8544::draw_icon(const uint8_t* bp)
   set_cursor(m_x, m_y + 1);
 }
 
-void 
+void
 PCD8544::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 {
   uint8_t lines = (height >> 3);
@@ -179,7 +179,7 @@ PCD8544::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
   set_cursor(m_x, m_y + 1);
 }
 
-void 
+void
 PCD8544::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
 {
   if (percent > 100) percent = 100;
@@ -202,12 +202,12 @@ PCD8544::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
   m_io->end();
 }
 
-int 
+int
 PCD8544::putchar(char c)
 {
   // Check for special characters
   if (c < ' ') {
-  
+
     // Carriage-return: move to start of line
     if (c == '\r') {
       set_cursor(0, m_y);
@@ -266,7 +266,7 @@ PCD8544::putchar(char c)
 
   // Write character to the display memory and an extra byte
   m_io->begin();
-  while (--width) 
+  while (--width)
     m_io->write(m_mode ^ glyph.next());
   m_io->write(m_mode);
   m_io->end();

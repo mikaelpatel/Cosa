@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,7 +28,7 @@
 namespace Nucleo {
 
 /**
- * The Cosa Nucleo Thread; run-to-completion multi-tasking. 
+ * The Cosa Nucleo Thread; run-to-completion multi-tasking.
  */
 class Thread : protected Link {
 public:
@@ -36,9 +36,9 @@ public:
    * Return running thread.
    * @return thread.
    */
-  static Thread* get_running() 
-  { 
-    return (s_running); 
+  static Thread* get_running()
+  {
+    return (s_running);
   }
 
   /**
@@ -56,12 +56,12 @@ public:
    * end-less loop. Returning from the function will result in that
    * the function is called again. The default implementation is the
    * main thread. It is responsible for power down when there are no
-   * other active threads. 
+   * other active threads.
    */
   virtual void run();
 
   /**
-   * Yield control to the given thread. Preserve stack and machine 
+   * Yield control to the given thread. Preserve stack and machine
    * state and later continue after this function.
    * @param[in] t thread to resume.
    */
@@ -69,12 +69,12 @@ public:
 
   /**
    * Yield control to the next thread in the thread queue. Preserve
-   * stack and machine state and later continue after this function. 
+   * stack and machine state and later continue after this function.
    */
   void yield()
     __attribute__((always_inline))
-  { 
-    resume((Thread*) get_succ()); 
+  {
+    resume((Thread*) get_succ());
   }
 
   /**
@@ -116,7 +116,7 @@ protected:
   uint32_t m_expires;
 
   /**
-   * Initiate thread with initial call to member function run(). 
+   * Initiate thread with initial call to member function run().
    * Stack frame is allocated by begin().
    * @param[in] stack top pointer.
    */
@@ -127,7 +127,7 @@ protected:
    * @param[in] queue to transfer to.
    */
   void enqueue(Head* queue);
-  
+
   /**
    * If given queue is not empty dequeue first thread and resume
    * direct if flag is true otherwise on yield.
