@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration the SPI Flash Memory device drivers and file
  * system.
@@ -93,7 +93,7 @@ void setup()
     TRACE(file.tell());
   }
   else {
-    MEASURE("Open file:", 1) 
+    MEASURE("Open file:", 1)
       ASSERT(file.open("Nisse", O_CREAT | O_EXCL) == 0);
     CFFS::ls(trace);
     TRACE(file.tell());
@@ -115,22 +115,22 @@ void setup()
       file.write(buf, 80);
   }
 #endif
-  MEASURE("Tell position:", 1) 
+  MEASURE("Tell position:", 1)
     file.tell();
   TRACE(file.tell());
 
-  MEASURE("File size:", 1) 
+  MEASURE("File size:", 1)
     file.size();
   TRACE(file.size());
 
-  MEASURE("Close file:", 1) 
+  MEASURE("Close file:", 1)
     file.close();
 
-  MEASURE("Open log file:", 1) 
+  MEASURE("Open log file:", 1)
     ASSERT(file.open("Nisse", O_READ) == 0);
 
   TRACE(file.tell());
-  MEASURE("Read buffer:", 1) 
+  MEASURE("Read buffer:", 1)
     res = file.read(buf, sizeof(buf) - 1);
   while (res > 0) {
     buf[res] = 0;
@@ -156,11 +156,11 @@ void setup()
   }
   TRACE(file.close());
 
-  MEASURE("Make directory:", 1) 
+  MEASURE("Make directory:", 1)
     CFFS::mkdir("Folder");
   CFFS::ls(trace);
 
-  MEASURE("Change current directory:", 1) 
+  MEASURE("Change current directory:", 1)
     CFFS::cd("Folder");
   CFFS::ls(trace);
 
@@ -174,7 +174,7 @@ void setup()
   TRACE(file.close());
   CFFS::ls(trace);
 
-  MEASURE("Change to parent directory:", 1) 
+  MEASURE("Change to parent directory:", 1)
     CFFS::cd("..");
   CFFS::ls(trace);
 

@@ -3,25 +3,25 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * W5100 Ethernet Controller device driver example code; HTTP server
  * with GET request from file on SD/FAT16.
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
- * 
+ *
  *                       W5100/ethernet
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -51,7 +51,7 @@ public:
   virtual void on_request(IOStream& page, char* method, char* path, char* query);
 };
 
-void 
+void
 WebServer::on_request(IOStream& page, char* method, char* path, char* query)
 {
   // Trace uptime in hour:minutes:seconds
@@ -60,11 +60,11 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
   uint8_t m = (uptime / 60) % 60;
   uint8_t s = uptime % 60;
   trace << h << ':' << m << ':' << s << ':';
-  
+
   // Trace client address and port
   INET::addr_t addr;
   get_client(addr);
-  INET::print_addr(trace, addr.ip, addr.port); 
+  INET::print_addr(trace, addr.ip, addr.port);
 
   // Filter path for root
   if (!strcmp_P(path, PSTR("/")))

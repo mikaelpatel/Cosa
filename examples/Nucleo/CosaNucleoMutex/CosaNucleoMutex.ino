@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of Cosa Nucleo Threads, Semaphores and Mutex.
  *
@@ -46,7 +46,7 @@ void
 Counter::run()
 {
   while (1) {
-    uint8_t x1 = c1; 
+    uint8_t x1 = c1;
 
     // Mutual exclusive update of c2
     {
@@ -65,7 +65,7 @@ Counter::run()
       Nucleo::Mutex mutex(&sem);
       trace << PSTR("id = ") << m_id
 	    << PSTR(", c1 = ") << c1
-	    << PSTR(", c2 = ") << c2 
+	    << PSTR(", c2 = ") << c2
 	    << endl;
     }
   }

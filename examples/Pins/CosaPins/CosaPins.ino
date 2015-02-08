@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa demonstration of pin abstractions.
  *
@@ -38,30 +38,30 @@ class Counter {
 private:
   volatile uint16_t m_counter;
 public:
-  Counter(uint16_t init = 0) : 
-    m_counter(init) 
+  Counter(uint16_t init = 0) :
+    m_counter(init)
   {}
-  uint16_t get_counter() 
-  { 
-    return (m_counter); 
+  uint16_t get_counter()
+  {
+    return (m_counter);
   }
-  void set_counter(uint16_t value) 
-  { 
-    m_counter = value; 
+  void set_counter(uint16_t value)
+  {
+    m_counter = value;
   }
-  void increment(uint16_t value) 
-  { 
-    m_counter += value; 
+  void increment(uint16_t value)
+  {
+    m_counter += value;
   }
 };
 
 // External Interrupt Pin Handler; count interrupts
 class ExtPin : public ExternalInterrupt, public Counter {
 private:
-  virtual void on_interrupt(uint16_t arg) 
-  { 
-    UNUSED(arg); 
-    increment(1); 
+  virtual void on_interrupt(uint16_t arg)
+  {
+    UNUSED(arg);
+    increment(1);
   }
 public:
   ExtPin(Board::ExternalInterruptPin pin) :
@@ -73,15 +73,15 @@ public:
 // Pin Change Interrupt Handler; count interrupts
 class IntPin : public PinChangeInterrupt, public Counter {
 private:
-  virtual void on_interrupt(uint16_t arg) 
-  { 
-    UNUSED(arg); 
-    increment(1); 
+  virtual void on_interrupt(uint16_t arg)
+  {
+    UNUSED(arg);
+    increment(1);
   }
 public:
-  IntPin(Board::InterruptPin pin) : 
-    PinChangeInterrupt(pin), 
-    Counter(0) 
+  IntPin(Board::InterruptPin pin) :
+    PinChangeInterrupt(pin),
+    Counter(0)
   {}
 };
 
@@ -141,7 +141,7 @@ void loop()
 
   // Print the time index
   INFO("ticks = %d", Watchdog::ticks());
-  
+
   // Sample the level
   uint16_t value = levelPin.sample();
   INFO("levelPin = %d", value);

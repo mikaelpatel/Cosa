@@ -3,20 +3,20 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Demonstration of the HD44780 (aka 1602) device driver with mapping 
+ * Demonstration of the HD44780 (aka 1602) device driver with mapping
  * to IOStream::Device.
  *
  * @section Circuit
@@ -105,7 +105,7 @@ void setup()
   lcd.set_tab_step(2);
   lcd.cursor_underline_off();
   lcd.cursor_blink_off();
-  for (char c = 0; c < BITMAPS_MAX; c++) 
+  for (char c = 0; c < BITMAPS_MAX; c++)
     lcd.set_custom_char_P(c, &bitmaps[c*SIZEOF_BITMAP]);
 
   // Bind LCD to trace output and print the custom characters
@@ -131,7 +131,7 @@ void setup()
 
   // Simple scrolling text
   trace << PSTR("\f\aSCROLLING\a\n");
-  static const char msg[] __PROGMEM = 
+  static const char msg[] __PROGMEM =
     "The quick brown fox jumps over the lazy dog.";
   for (uint8_t i = 0; i < 8; i++) {
     uint8_t len = strlen_P(msg);
@@ -142,9 +142,9 @@ void setup()
     trace << ' ';
   }
 
-  // Use number base handling 
+  // Use number base handling
   trace << PSTR("\f\aNUMBER BASE\a\n");
-  trace << bcd << 0x55 << ' ' 
+  trace << bcd << 0x55 << ' '
 	<< oct << 0x55 << ' '
 	<< dec << 0x55 << ' '
 	<< hex << 0x55;

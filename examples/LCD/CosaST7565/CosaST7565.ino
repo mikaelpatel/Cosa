@@ -3,22 +3,22 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Demonstration of the ST7565 device driver with mapping to 
+ * Demonstration of the ST7565 device driver with mapping to
  * IOStream::Device.
- * 
+ *
  * @section Circuit
  *                       ST7565/Serial3W
  *                       +------------+
@@ -39,7 +39,7 @@
  *                    15-|WR(R/W)     |
  *                    16-|RD(E)       |
  *                       +------------+
- * 
+ *
  *                        ST7565/SPI3W
  *                       +------------+
  *                     1-|DB0         |
@@ -86,7 +86,7 @@ void setup()
   lcd.begin();
   lcd.set_cursor((lcd.WIDTH - 64)/2, 1);
   lcd.draw_icon(arduino_icon_64x32);
-  
+
   // Use LCD bind to trace and use inverted text mode for banner
   trace.begin(&lcd);
   lcd.set_cursor(0, lcd.LINES - 1);
@@ -115,10 +115,10 @@ void setup()
     Watchdog::delay(256);
     trace << PSTR("\b \b");
   }
-  
+
   // Scrolling
   trace << PSTR("\f\aSCROLLING\a\n");
-  static const char msg[] __PROGMEM = 
+  static const char msg[] __PROGMEM =
     "The quick brown fox jumps over the lazy dog. ";
   for (uint8_t i = 0; i < 8; i++) {
     uint8_t len = strlen_P(msg);
@@ -129,7 +129,7 @@ void setup()
   }
   sleep(2);
 
-  // Use number base handling 
+  // Use number base handling
   trace << PSTR("\f\aNUMBER BASE\a\n");
   uint16_t ticks = Watchdog::ticks();
   TRACE(ticks);

@@ -3,26 +3,26 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Demonstration of the PCD8544 device driver with mapping to 
+ * Demonstration of the PCD8544 device driver with mapping to
  * IOStream::Device.
- * 
+ *
  * @section Circuit
  * PCD8544 is a low voltage device (3V3) and signals require level
- * shifter (74HC4050 or 10K resistor). 
- * 
+ * shifter (74HC4050 or 10K resistor).
+ *
  *                    (1) PCD8544/LCD::Serial3W
  *                        +------------+
  * (RST)----------[ > ]-1-|RST         |
@@ -34,7 +34,7 @@
  * (GND)----------[220]-7-|LED         |
  * (GND)----------------8-|GND         |
  *                        +------------+
- * 
+ *
  *                    (2) PCD8544/LCD::SPI3W
  *                        +------------+
  * (RST)---------[ > ]--1-|RST         |
@@ -90,7 +90,7 @@ void setup()
     if ((c & 63) == 0) {
       trace << PSTR("\f\aFont page#") << page++ << '\a' << endl;
     }
-    if ((c == '\n') || (c == '\f') || (c == '\b') || (c == '\a') || (c == '\t')) 
+    if ((c == '\n') || (c == '\f') || (c == '\b') || (c == '\a') || (c == '\t'))
       trace << ' ';
     else
       trace << (char) c;
@@ -107,7 +107,7 @@ void setup()
 
   // Scrolling
   trace << PSTR("\f\aSCROLLING\a\n");
-  static const char msg[] __PROGMEM = 
+  static const char msg[] __PROGMEM =
     "The quick brown fox jumps over the lazy dog. ";
   for (uint8_t i = 0; i < 4; i++) {
     uint8_t len = strlen_P(msg);
@@ -118,7 +118,7 @@ void setup()
   }
   sleep(2);
 
-  // Use number base handling 
+  // Use number base handling
   trace << PSTR("\f\aNUMBER BASE\a\n");
   trace << PSTR("bcd = ") << bcd << 0x55 << endl;
   trace << PSTR("oct = ") << oct << 0x55 << endl;

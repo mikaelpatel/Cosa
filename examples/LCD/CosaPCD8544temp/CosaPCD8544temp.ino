@@ -3,27 +3,27 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of the PCD8544 device driver with mapping to
- * IOStream::Device, and off-screen canvas. Uses 1-wire temperature 
+ * IOStream::Device, and off-screen canvas. Uses 1-wire temperature
  * sensor, DS18B20.
  *
  * @section Circuit
  * PCD8544 is a low voltage device (3V3) and signals require level
- * shifter (74HC4050 or 10K resistor). 
- * 
+ * shifter (74HC4050 or 10K resistor).
+ *
  *                    (1) PCD8544/LCD::Serial3W
  *                        +------------+
  * (RST)----------[ > ]-1-|RST         |
@@ -35,7 +35,7 @@
  * (GND)----------[220]-7-|LED         |
  * (GND)----------------8-|GND         |
  *                        +------------+
- * 
+ *
  *                    (2) PCD8544/LCD::SPI3W
  *                        +------------+
  * (RST)---------[ > ]--1-|RST         |
@@ -55,9 +55,9 @@
  * (VCC/GND)----------+-3-|VDD         |/
  *                        +------------+
  *
- * Connect Arduino to DS18B20 in D5 and GND. May use parasite 
+ * Connect Arduino to DS18B20 in D5 and GND. May use parasite
  * powering (connect DS18B20 VCC to GND) otherwise to VCC.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -100,7 +100,7 @@ void setup()
   TRACE(sensor.read_power_supply());
   sleep(2);
   trace << clear;
-  trace << (OWI::Driver&) sensor; 
+  trace << (OWI::Driver&) sensor;
   sleep(2);
  }
 

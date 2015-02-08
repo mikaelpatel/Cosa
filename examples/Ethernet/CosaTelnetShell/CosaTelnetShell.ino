@@ -3,25 +3,25 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * W5100 Ethernet Controller device driver example code; Cosa Telnet 
+ * W5100 Ethernet Controller device driver example code; Cosa Telnet
  * and Shell example sketch.
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
- * 
+ *
  *                       W5100/ethernet
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -62,7 +62,7 @@ public:
     if (!Telnet::Server::begin(sock)) return (false);
     m_shell.set_echo(false);
     return (true);
-  }  
+  }
   virtual void on_connect(IOStream& ios) { m_shell.run(ios); }
   virtual void on_request(IOStream& ios) { m_shell.run(ios); }
   virtual void on_disconnect() { m_shell.reset(); }

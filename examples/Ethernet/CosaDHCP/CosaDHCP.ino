@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * W5100 Ethernet Controller device driver example code; DHCP client.
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
- * 
+ *
  *                       W5100/ethernet
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -40,7 +40,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-  
+
 // Disable SD on Ethernet Shield
 #define USE_ETHERNET_SHIELD
 #if defined(USE_ETHERNET_SHIELD)
@@ -80,7 +80,7 @@ void loop()
   dhcp.end();
 
   // Print dynamic configuration
-  trace << PSTR("DHCP = "); 
+  trace << PSTR("DHCP = ");
   INET::print_addr(trace, dhcp.get_dhcp_addr());
   trace << endl;
 
@@ -88,16 +88,16 @@ void loop()
   INET::print_addr(trace, dhcp.get_dns_addr());
   trace << endl;
 
-  trace << PSTR("IP = "); 
-  INET::print_addr(trace, ip); 
+  trace << PSTR("IP = ");
+  INET::print_addr(trace, ip);
   trace << endl;
 
   trace << PSTR("GATEWAY = ");
   INET::print_addr(trace, gateway);
   trace << endl;
 
-  trace << PSTR("SUBNET = "); 
-  INET::print_addr(trace, subnet); 
+  trace << PSTR("SUBNET = ");
+  INET::print_addr(trace, subnet);
   trace << endl;
 
   trace << PSTR("LEASE OBTAINED = ");

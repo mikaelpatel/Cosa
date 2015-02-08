@@ -3,29 +3,29 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * W5100 Ethernet Controller device driver example code; Use TELNET
  * server port for trace stream output. Allow command "exit" and
- * carriage return to toggle trace output state. In trace mode 
+ * carriage return to toggle trace output state. In trace mode
  * this sketch will print the digital and analog pin values, bandgap
  * voltage (power supply voltage) and free memory to the connected
  * telnet client.
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
- * 
+ *
  *                       W5100/ethernet
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -100,7 +100,7 @@ void loop()
       if (state) trace << PSTR("trace on");
       else trace << PSTR("trace off");
       trace << endl << flush;
-    } 
+    }
     else if (!memcmp_P(buf, PSTR("exit"), 4)) goto error;
   }
 

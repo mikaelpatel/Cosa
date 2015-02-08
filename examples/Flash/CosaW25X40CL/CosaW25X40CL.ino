@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration the W25X40CL SPI Flash Memory device driver.
  * Measure performance of read and write.
@@ -46,7 +46,7 @@ void setup()
   uint32_t us = RTC::micros() - start;
   ASSERT(flash.is_ready());
   trace << PSTR("begin: us = ") << us << endl;
-  
+
   // Search for first non zero byte and clear next bit
   uint32_t addr = 0L;
   uint8_t data = 0;
@@ -62,9 +62,9 @@ void setup()
   us = RTC::micros() - start;
   ASSERT(flash.is_ready());
   ASSERT(res == sizeof(data));
-  trace << PSTR("write: dest = ") << hex << addr 
+  trace << PSTR("write: dest = ") << hex << addr
 	<< PSTR(", bytes = ") << sizeof(data)
-	<< PSTR(", us = ") << us 
+	<< PSTR(", us = ") << us
 	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(data) / us
 	<< endl;
   sleep(5);
@@ -78,9 +78,9 @@ void setup()
   res = flash.write(addr, buf, sizeof(buf));
   us = RTC::micros() - start;
   ASSERT(res == sizeof(buf));
-  trace << PSTR("write: dest = ") << hex << addr 
+  trace << PSTR("write: dest = ") << hex << addr
 	<< PSTR(", bytes = ") << sizeof(buf)
-	<< PSTR(", us = ") << us 
+	<< PSTR(", us = ") << us
 	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
 	<< endl;
   sleep(5);
@@ -92,7 +92,7 @@ void setup()
   us = RTC::micros() - start;
   ASSERT(res == sizeof(buf));
   trace << PSTR("read: src = ") << hex << addr
-	<< PSTR(", bytes = ") << sizeof(buf) 
+	<< PSTR(", bytes = ") << sizeof(buf)
 	<< PSTR(", us = ") << us
 	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
 	<< endl;
@@ -109,7 +109,7 @@ void setup()
   us = RTC::micros() - start;
   ASSERT(res == sizeof(buf));
   trace << PSTR("read: src = ") << hex << addr
-	<< PSTR(", bytes = ") << sizeof(buf) 
+	<< PSTR(", bytes = ") << sizeof(buf)
 	<< PSTR(", us = ") << us
 	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
 	<< endl;
@@ -120,9 +120,9 @@ void setup()
   res = flash.write(addr, buf, sizeof(buf));
   us = RTC::micros() - start;
   ASSERT(res == sizeof(buf));
-  trace << PSTR("write: dest = ") << hex << addr 
+  trace << PSTR("write: dest = ") << hex << addr
 	<< PSTR(", bytes = ") << sizeof(buf)
-	<< PSTR(", us = ") << us 
+	<< PSTR(", us = ") << us
 	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
 	<< endl;
 
@@ -131,7 +131,7 @@ void setup()
   us = RTC::micros() - start;
   ASSERT(res == sizeof(buf));
   trace << PSTR("read: src = ") << hex << addr
-	<< PSTR(", bytes = ") << sizeof(buf) 
+	<< PSTR(", bytes = ") << sizeof(buf)
 	<< PSTR(", us = ") << us
 	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
 	<< endl;
@@ -154,7 +154,7 @@ void setup()
   ASSERT(flash.read(&data, last, sizeof(data)) == sizeof(data));
   trace << PSTR("bsearch: last = ") << hex << last
 	<< PSTR(", data = ") << hex << data
-	<< PSTR(", ms = ") << us / 1000.0 
+	<< PSTR(", ms = ") << us / 1000.0
 	<< endl;
   ASSERT(flash.read(&data, last + 1, sizeof(data)) == sizeof(data));
   ASSERT(data == 0xff);
@@ -198,7 +198,7 @@ void loop()
   uint32_t us = RTC::micros() - start;
   ASSERT(res == sizeof(buf));
   trace << PSTR("read: src = ") << hex << src
-	<< PSTR(", bytes = ") << sizeof(buf) 
+	<< PSTR(", bytes = ") << sizeof(buf)
 	<< PSTR(", us = ") << us
 	<< PSTR(", Kbyte/s = ") << 1000.0 * sizeof(buf) / us
 	<< endl;

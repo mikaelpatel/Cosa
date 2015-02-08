@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa demonstration of the DS18B20 1-Wire device driver alarm
  * callback. Assumes three thermometers are connected to 1-Wire bus on
@@ -32,7 +32,7 @@
  * (D7)------+---------2-|DQ          ||| |
  *           |       +-3-|VDD         |||/
  *          4K7      |   +------------+++
- *           |       | 
+ *           |       |
  * (VCC)-----+       +---(VCC/GND)
  *
  *                       TinyRTC(DS1307)
@@ -79,16 +79,16 @@ public:
   virtual void on_alarm();
 };
 
-void 
-Thermometer::on_alarm() 
-{ 
+void
+Thermometer::on_alarm()
+{
 #ifndef USE_RTC
   uint32_t now = Watchdog::millis();
 #endif
 
   // Read and print temperature. Do not need reset and presence pulse
   read_scratchpad(false);
-  trace << now << PSTR(" alarm ") << *this << PSTR(" C") << endl; 
+  trace << now << PSTR(" alarm ") << *this << PSTR(" C") << endl;
 }
 
 // Support macro to create name strings in program memory for devices

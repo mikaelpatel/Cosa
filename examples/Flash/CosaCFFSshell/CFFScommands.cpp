@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -102,7 +102,7 @@ SHELL_ACTION(od, "[-b|-d] FILE", "dump file (bin,dec,hex)")
       base = IOStream::bin;
     else if (strcmp_P(option, PSTR("d")) == 0)
       base = IOStream::dec;
-    else 
+    else
       return (-1);
   }
   if (ix == argc) return (-1);
@@ -175,11 +175,11 @@ SHELL_ACTION(stty, "[eol=CR|LF|CRLF]", "set tty mode")
   int ix;
   while ((ix = shell.get(option, value)) == 0) {
     if (strcmp_P(option, PSTR("eol")) == 0) {
-      if (strcmp_P(value, PSTR("CR")) == 0) 
+      if (strcmp_P(value, PSTR("CR")) == 0)
 	ios.get_device()->set_eol(IOStream::CR_MODE);
-      else if (strcmp_P(value, PSTR("LF")) == 0) 
+      else if (strcmp_P(value, PSTR("LF")) == 0)
 	ios.get_device()->set_eol(IOStream::LF_MODE);
-      else if (strcmp_P(value, PSTR("CRLF")) == 0) 
+      else if (strcmp_P(value, PSTR("CRLF")) == 0)
 	ios.get_device()->set_eol(IOStream::CRLF_MODE);
       else return (-1);
     }
@@ -205,7 +205,7 @@ SHELL_ACTION(write, "[-n|t] FILE STRING..", "print text to file (newline/timesta
   }
   if (argc <= ix + 1) return (-1);
   CFFS::File file;
-  if (file.open(argv[ix], O_CREAT | O_EXCL) != 0) 
+  if (file.open(argv[ix], O_CREAT | O_EXCL) != 0)
     if (file.open(argv[ix], O_WRITE) != 0) return (-1);
   ix += 1;
   IOStream ios(&file);

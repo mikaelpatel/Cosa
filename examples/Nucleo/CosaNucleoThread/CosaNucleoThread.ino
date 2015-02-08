@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of Cosa Nucleo Threads.
  *
@@ -31,7 +31,7 @@ private:
   str_P m_name;
   uint16_t m_ms;
 public:
-  // Construct echo thread 
+  // Construct echo thread
   Echo(uint16_t ms) : Thread(), m_name(NULL), m_ms(ms) {};
 
   // Allocate stack and initiate name string
@@ -46,32 +46,32 @@ public:
   void fn2(uint16_t& nr)  __attribute__((noinline));
 };
 
-void 
-Echo::fn0(uint16_t& nr) 
-{ 
-  INFO("nr=%d", nr); 
-  fn1(nr); 
+void
+Echo::fn0(uint16_t& nr)
+{
+  INFO("nr=%d", nr);
+  fn1(nr);
 }
 
-void 
+void
 Echo::fn1(uint16_t& nr)
-{ 
-  INFO("nr=%d", nr); 
-  fn2(nr); 
+{
+  INFO("nr=%d", nr);
+  fn2(nr);
 }
 
-void 
+void
 Echo::fn2(uint16_t& nr)
-{ 
-  yield(); 
-  nr += 1; 
-  INFO("nr=%d", nr); 
+{
+  yield();
+  nr += 1;
+  INFO("nr=%d", nr);
 }
 
 void
 Echo::begin_P(str_P name, size_t size)
-{ 
-  m_name = name; 
+{
+  m_name = name;
   Thread::begin(this, size);
 }
 
@@ -80,8 +80,8 @@ Echo::run()
 {
   uint16_t nr = 0;
   while (1) {
-    trace << Watchdog::millis() << PSTR(":Echo:") 
-	  << m_name << ':' << nr 
+    trace << Watchdog::millis() << PSTR(":Echo:")
+	  << m_name << ':' << nr
 	  << endl;
     delay(m_ms);
     fn0(nr);

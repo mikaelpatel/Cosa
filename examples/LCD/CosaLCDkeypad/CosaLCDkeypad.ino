@@ -3,22 +3,22 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa demonstration of LCD Keypad shield handler; Simple trace of
  * callback, on_key_down/up(), with printout of key, name/index, to
- * the LCD as an IOStream. 
+ * the LCD as an IOStream.
  *
  * @section Circuit
  * Requires a LCD Keypad shield with 16x2 HD44780 LCD and six buttons.
@@ -42,28 +42,28 @@ public:
   void trace(str_P msg, uint8_t nr);
 };
 
-void 
+void
 KeypadTrace::trace(str_P msg, uint8_t nr)
 {
   m_out << clear;
   switch (nr) {
-  case NO_KEY: 
-    m_out << PSTR("NO_KEY"); 
+  case NO_KEY:
+    m_out << PSTR("NO_KEY");
     break;
-  case SELECT_KEY: 
-    m_out << PSTR("SELECT_KEY"); 
+  case SELECT_KEY:
+    m_out << PSTR("SELECT_KEY");
     break;
-  case LEFT_KEY: 
-    m_out << PSTR("LEFT_KEY"); 
+  case LEFT_KEY:
+    m_out << PSTR("LEFT_KEY");
     break;
-  case DOWN_KEY: 
-    m_out << PSTR("DOWN_KEY"); 
+  case DOWN_KEY:
+    m_out << PSTR("DOWN_KEY");
     break;
-  case UP_KEY: 
-    m_out << PSTR("UP_KEY"); 
+  case UP_KEY:
+    m_out << PSTR("UP_KEY");
     break;
-  case RIGHT_KEY: 
-    m_out << PSTR("RIGHT_KEY"); 
+  case RIGHT_KEY:
+    m_out << PSTR("RIGHT_KEY");
     break;
   }
   m_out << ' ' << msg << endl;

@@ -3,22 +3,22 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of the LCD device drivers build size for "Hello world"
  * type of sketch.
- * 
+ *
  * @section Circuit
  * No circuit as this is a build size demonstration.
  *
@@ -46,7 +46,7 @@
 // VLCD:		3958/3904/4520 bytes
 // =========================================
 // The baseline is the Watchdog and Arduino
-// init code. Move comment prefix to compile 
+// init code. Move comment prefix to compile
 // different LCD drivers and compare size.
 // =========================================
 

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of Cosa Nucleo Actors and message passing.
  *
@@ -29,8 +29,8 @@
 // Send message to given consumer actor and port
 class Producer : public Nucleo::Actor {
 public:
-  Producer(Actor* consumer, uint8_t port) : 
-    Actor(), 
+  Producer(Actor* consumer, uint8_t port) :
+    Actor(),
     m_consumer(consumer),
     m_port(port)
   {}
@@ -40,14 +40,14 @@ private:
   uint8_t m_port;
 };
 
-void 
-Producer::run() 
-{ 
+void
+Producer::run()
+{
   uint16_t count = 0;
   while (1) {
-    trace << Watchdog::millis() 
-	  << PSTR(":Producer:count=") << count 
-	  << endl;  
+    trace << Watchdog::millis()
+	  << PSTR(":Producer:count=") << count
+	  << endl;
     m_consumer->send(m_port, &count, sizeof(count));
     count += 1;
   }
@@ -67,11 +67,11 @@ Consumer::run()
     uint8_t port = 0;
     uint16_t count = 0;
     recv(sender, port, &count, sizeof(count));
-    trace << Watchdog::millis() 
+    trace << Watchdog::millis()
 	  << PSTR(":Consumer:sender=") << sender
 	  << PSTR(",port=") << port
-	  << PSTR(",count=") << count 
-	  << endl;  
+	  << PSTR(",count=") << count
+	  << endl;
     delay(500);
   }
 }

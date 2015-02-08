@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * W5100 Ethernet Controller device driver example code; HTTP server.
  * Demonstration of integrating Cosa Shell with the Cosa HTTP server
@@ -22,7 +22,7 @@
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
- * 
+ *
  *                       W5100/ethernet
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -54,22 +54,22 @@ public:
   virtual void on_request(IOStream& page, char* method, char* path, char* query);
 };
 
-void 
+void
 WebServer::on_request(IOStream& page, char* method, char* path, char* query)
 {
   // Reply page; header and footer are static, contents dynamic
-  static const char header[] __PROGMEM = 
+  static const char header[] __PROGMEM =
     "HTTP/1.1 200 OK" CRLF
     "Content-Type: text/html" CRLF
     "Connection: close" CRLF CRLF
     "<!DOCTYPE HTML>" CRLF
     "<HTML>" CRLF
-    "<HEAD><TITLE>CosaShellWebServer</TITLE></HEAD>" CRLF 
+    "<HEAD><TITLE>CosaShellWebServer</TITLE></HEAD>" CRLF
     "<BODY>" CRLF
     "<PRE>" CRLF;
-  static const char footer[] __PROGMEM = 
+  static const char footer[] __PROGMEM =
     "</PRE>" CRLF
-    "</BODY>" CRLF 
+    "</BODY>" CRLF
     "</HTML>";
   UNUSED(method);
   UNUSED(path);
