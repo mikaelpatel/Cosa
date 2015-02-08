@@ -3,20 +3,20 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Demonstration and test of the SD card device driver. Allows trace 
+ * Demonstration and test of the SD card device driver. Allows trace
  * to the ST7735 TFT Canvas and Textbox (IOStream::Device). This also
  * allows test and validation of Cosa multiple SPI device handling.
  *
@@ -27,7 +27,7 @@
  * are common to both SD and TFT. TFT does not use MISO. The default
  * pins for chip/mode select are used; SD::CS/D8, TFT::CS/D10 and
  * TFT::A0/D9 (this is the mode pin).
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -106,16 +106,16 @@ void loop()
   trace << PSTR("Manufacturer ID:") << cid->mid << endl;
   trace << PSTR("OEM/Application ID:") << cid->oid[0] << cid->oid[1] << endl;
   trace << PSTR("Product name:");
-  for (uint8_t i = 0; i < 5; i++) 
+  for (uint8_t i = 0; i < 5; i++)
     trace << cid->pnm[i];
   trace << endl;
   trace << PSTR("Product revision:") << bcd << cid->prv << endl;
   trace << PSTR("Product serial number:") << swap((int32_t) cid->psn) << endl;
-  trace << PSTR("Manufacturing date:"); 
+  trace << PSTR("Manufacturing date:");
   cid->mdt = swap((int16_t) cid->mdt);
   trace << (cid->mdt & 0xf) << '-' << (cid->mdt >> 4) << endl;
   sleep(1);
-  
+
   INFO("Read CSD and dump", 0);
   ASSERT(sd.read(csd));
   trace.print(csd, sizeof(SD::csd_t), IOStream::hex, WIDTH);
@@ -143,7 +143,7 @@ void loop()
   }
   ASSERT(sd.write(0, buf));
   sleep(1);
-  
+
   INFO("Read four first blocks and dump", 0);
   for (uint8_t block = 0; block < 4; block++) {
     TRACE(block);

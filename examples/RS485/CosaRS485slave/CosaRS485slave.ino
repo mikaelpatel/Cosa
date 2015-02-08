@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * RS485 slave example. Possible to run on Standard, Mighty and
  * Mega (UART). See also CosaRS485master.
@@ -92,22 +92,22 @@ void loop()
     if (count == sizeof(msg)) break;
     trace << endl;
   }
-  trace << PSTR(",func=") << msg.func 
-	<< PSTR(",index=") << msg.param[0] 
-	<< PSTR(",nr=") << msg.param[1] 
+  trace << PSTR(",func=") << msg.func
+	<< PSTR(",index=") << msg.param[0]
+	<< PSTR(",nr=") << msg.param[1]
 	<< endl;
 #else
   while ((count = rs485.recv(&msg, sizeof(msg), TIMEOUT)) != sizeof(msg))
     ;
 #endif
-  
+
   // Decode function code and dispatch
   switch (msg.func) {
   case GET_MILLIS:
     msg.param[2] = RTC::millis();
     break;
   case GET_HUMIDITY:
-    msg.param[2] = humidity.sample(); 
+    msg.param[2] = humidity.sample();
     break;
   case GET_TEMPERATURE:
     msg.param[2] = temperature.sample();
@@ -118,8 +118,8 @@ void loop()
   count = rs485.send(&msg, sizeof(msg));
 
 #if defined(TRACE)
-  trace << nr++ << PSTR(":send:count=") << count 
-	<< PSTR(",res=") << msg.param[2]  
+  trace << nr++ << PSTR(":send:count=") << count
+	<< PSTR(",res=") << msg.param[2]
 	<< endl;
 #endif
 }

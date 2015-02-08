@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * RS485 master example for Mega/Mighty. See also CosaRS485slave.
  *
@@ -78,15 +78,15 @@ void loop()
   msg.param[1] = nr;
   count = rs485.send(&msg, sizeof(msg), dest);
   trace << nr << PSTR(":send:")
-	<< PSTR("dest=") << dest 
-	<< PSTR(",count=") << count 
-	<< PSTR(",func=") << func 
-	<< PSTR(",index=") << msg.param[0] 
+	<< PSTR("dest=") << dest
+	<< PSTR(",count=") << count
+	<< PSTR(",func=") << func
+	<< PSTR(",index=") << msg.param[0]
 	<< PSTR(",nr=") << msg.param[1]
 	<< endl;
   count = rs485.recv(&msg, sizeof(msg), TIMEOUT);
   trace << nr++ << PSTR(":recv:")
-	<< PSTR("count=") << count 
+	<< PSTR("count=") << count
 	<< PSTR(",func=") << msg.func
 	<< PSTR(",index=") << msg.param[0]
 	<< PSTR(",nr=") << msg.param[1];
@@ -101,13 +101,13 @@ void loop()
   else {
     if (msg.func == GET_MILLIS) {
       trace << PSTR(",millis=");
-    } 
+    }
     else if (msg.func == GET_HUMIDITY) {
       trace << PSTR(",humidity=");
-    } 
+    }
     else if (msg.func == GET_TEMPERATURE) {
       trace << PSTR(",temperature=");
-    } 
+    }
     trace << msg.param[2];
   }
   trace << endl;

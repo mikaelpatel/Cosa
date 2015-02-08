@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa demonstration of the MCP7940N, Real-Time Clock/Calendar with
  * SRAM and Battery Switchover, device driver.
@@ -40,11 +40,11 @@ void setup()
   // Start trace output stream on the serial port
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaMCP7940N: started"));
-  
+
   // Check amount of free memory
   TRACE(free_memory());
   TRACE(sizeof(rtc));
-  
+
   // Start the watchdog ticks counter
   Watchdog::begin();
 
@@ -60,7 +60,7 @@ void setup()
   TRACE(rtc.set_time(now));
   now.to_binary();
   trace << PSTR("time:     ") << now << endl;
-  
+
   // Set alarm 0 when seconds match (every minute)
   time_t alarm(now);
   uint8_t when = MCP7940N::WHEN_SEC_MATCH;
@@ -92,7 +92,7 @@ void loop()
   clock_t epoch(now);
   if (epoch == clock) return;
   clock = epoch;
-  
+
   // Heart beat
   ledPin.toggle();
 
@@ -103,7 +103,7 @@ void loop()
   // Create time and adjust for zone(2). Use epoch for calculation
   now = time_t(epoch, 2);
   trace << now << ' ';
-  
+
   // Check pending alarms; set alarm 0 in 5 seconds, alarm 1 in 10 seconds
   uint8_t pending = rtc.pending_alarm();
   if (pending & 0x01) {
@@ -119,7 +119,7 @@ void loop()
     rtc.set_alarm(1, alarm, MCP7940N::WHEN_SEC_MATCH);
   }
   trace << endl;
-  
+
   // Heartbeat
   ledPin.toggle();
 }

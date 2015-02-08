@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa demonstration of the DS3231, Extremely Accurate I2C-Integrated
  * RTC/TCXO/Crystal device driver.
@@ -56,11 +56,11 @@ void setup()
   // Start trace output stream on the serial port
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaDS3231: started"));
-  
+
   // Check amount of free memory
   TRACE(free_memory());
   TRACE(sizeof(rtc));
-  
+
   // Start the watchdog ticks counter
   Watchdog::begin();
 
@@ -76,7 +76,7 @@ void setup()
   now.year = 0x13;
   rtc.set_time(now);
 #endif
-  
+
   // Read back and print current setting
   DS3231::timekeeper_t keeper;
   rtc.read(&keeper, sizeof(keeper));

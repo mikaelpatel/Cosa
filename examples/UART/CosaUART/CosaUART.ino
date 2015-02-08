@@ -3,21 +3,21 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa IOStream::Device UART line scan example.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -45,11 +45,11 @@ void loop()
   // Count the number of wake-ups
   static uint16_t n = 0;
   static bool is_scan_mode = false;
-  
+
   // Sleep and wait for something to happen
   Power::sleep(SLEEP_MODE_IDLE);
   n += 1;
-  
+
   // Check if a complete line is available
   if (uart.peekchar('\n') < 0) return;
 
@@ -68,7 +68,7 @@ void loop()
       echo(n, s);
     }
     while (trace.scan(s, sizeof(s)) && *s != '\n') echo(n, s);
-  } 
+  }
   else {
     // Scan the line. Skip empty lines
     if (uart.gets(s, sizeof(s)) == NULL) return;

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Testing the UART transmit completed interrupt handler. First step
  * towards a RS485 driver. Typical usage will have three states; idle,
@@ -38,7 +38,7 @@
  * format is; <length,dest,payload,crc> where length is the total
  * length of the frame, dest is the destination device address or the
  * broadcast address(0x00), payload is the message data and crc is a
- * 16 bit CCITT check-sum (MSB first/XMODEM).  
+ * 16 bit CCITT check-sum (MSB first/XMODEM).
  */
 class RS485 : public UART {
 public:
@@ -73,7 +73,7 @@ public:
    * @param[in] de data output enable.
    * @param[in] addr node address (Default MASTER).
    */
-  RS485(Board::DigitalPin de, uint8_t addr = MASTER) : 
+  RS485(Board::DigitalPin de, uint8_t addr = MASTER) :
     UART(0, &m_ibuf, &m_obuf),
     m_de(de),
     m_addr(addr)
@@ -84,7 +84,7 @@ public:
    * @override UART
    * Transmit completed callback. Clear data output enable pin.
    */
-  virtual void on_transmit_completed() 
+  virtual void on_transmit_completed()
   {
     m_de.clear();
   }
@@ -98,10 +98,10 @@ public:
     m_addr = addr;
   }
 
-  /** 
-   * Send message in given buffer and number of bytes to given 
+  /**
+   * Send message in given buffer and number of bytes to given
    * destination device. Return number of bytes sent or negative error
-   * code. 
+   * code.
    * @param[in] buf pointer to message buffer.
    * @param[in] len number of bytes.
    * @param[in] dest destination node (Default MASTER).
@@ -109,23 +109,23 @@ public:
    */
   int send(const void* buf, size_t len, uint8_t dest = MASTER);
 
-  /** 
+  /**
    * Send message in given buffer and number of bytes to all device on
-   * network. Return number of bytes sent or negative error code. 
+   * network. Return number of bytes sent or negative error code.
    * @param[in] buf pointer to message buffer.
    * @param[in] len number of bytes.
    * @return number of bytes sent or negative error code.
    */
-  int broadcast(const void* buf, size_t len) 
-  { 
-    return (send(buf, len, BROADCAST)); 
+  int broadcast(const void* buf, size_t len)
+  {
+    return (send(buf, len, BROADCAST));
   }
 
-  /** 
+  /**
    * Attempt within given time-limit in milli-seconds receive a message.
    * If received the message is stored in the given buffer with given
    * max length. Returns the number of bytes received or negative
-   * error code. 
+   * error code.
    * @param[in] buf pointer to message buffer.
    * @param[in] len number of bytes.
    * @param[in] ms number of milli-seconds timeout (Default BLOCK).
@@ -148,7 +148,7 @@ crc_xmodem(const void* buf, size_t len)
   return (crc);
 }
 
-int 
+int
 RS485::send(const void* buf, size_t len, uint8_t dest)
 {
   // Check illegal message size
@@ -171,8 +171,8 @@ RS485::send(const void* buf, size_t len, uint8_t dest)
   if (m_ibuf.putchar(dest) < 0) return (-3);
   if (m_ibuf.write(buf, len) != (int) len) return (-3);
   if (m_ibuf.write(&crc, sizeof(crc)) != sizeof(crc)) return (-3);
-  trace << PSTR("send::len = ") << len << ':' 
-	<< PSTR("dest = ") << dest << ':' 
+  trace << PSTR("send::len = ") << len << ':'
+	<< PSTR("dest = ") << dest << ':'
 	<< PSTR("crc = ") << hex << crc << ':'
 	<< PSTR("buf = ");
   trace.print(buf, len, IOStream::hex);
@@ -185,7 +185,7 @@ RS485::send(const void* buf, size_t len, uint8_t dest)
   return (len);
 }
 
-int 
+int
 RS485::recv(void* buf, size_t len, uint32_t ms)
 {
   // Wait for a message
@@ -205,8 +205,8 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
   if (m_ibuf.read(&crc, sizeof(crc)) != sizeof(crc)) goto error;
   if (crc_xmodem(buf, count) != crc) return (0);
 #ifdef RS485_DEBUG
-  trace << PSTR("recv::len = ") << count << ':' 
-	<< PSTR("dest = ") << dest << ':' 
+  trace << PSTR("recv::len = ") << count << ':'
+	<< PSTR("dest = ") << dest << ':'
 	<< PSTR("crc = ") << hex << crc << ':'
 	<< PSTR("buf = ");
   trace.print(buf, count, IOStream::hex);
@@ -214,7 +214,7 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
   // Check that the message was addressed to this device
   if ((dest == m_addr) || (dest == BROADCAST)) return (count);
   return (0);
-  
+
  error:
   // Something went wrong; flush buffer and signal data error
   m_ibuf.empty();
@@ -250,7 +250,7 @@ void loop()
   ASSERT(rs485.broadcast(msg, sizeof(msg)) == sizeof(msg));
   // MASTER: Sending message while still transmitting
   ASSERT(rs485.send(msg, sizeof(msg), SLAVE) == -4);
-  sleep(1); 
+  sleep(1);
 
   // SLAVE: Sending message when should receive
   ASSERT(rs485.send(msg, sizeof(msg), SLAVE) == -5);
@@ -260,19 +260,19 @@ void loop()
 
   // MASTER: Sending message to slave
   ASSERT(rs485.send(msg, sizeof(msg), SLAVE) == sizeof(msg));
-  // SLAVE: Receive message 
+  // SLAVE: Receive message
   memset(buf, 0, sizeof(buf));
   ASSERT(rs485.recv(buf, sizeof(buf)) == 0);
   ASSERT(memcmp(buf, msg, sizeof(msg)) == 0);
-  sleep(1); 
+  sleep(1);
 
   // SLAVE: Sending message to master
   rs485.set_address(SLAVE);
   ASSERT(rs485.send(rep, sizeof(rep)) == sizeof(rep));
   sleep(1);
-  // MASTER: Receive message 
+  // MASTER: Receive message
   rs485.set_address();
   ASSERT(rs485.recv(buf, sizeof(buf)) == sizeof(rep));
   ASSERT(memcmp(buf, rep, sizeof(rep)) == 0);
-  sleep(1); 
+  sleep(1);
 }

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Probe to sample pulse sequence for analysis.
  *
@@ -44,16 +44,16 @@ private:
   volatile uint8_t m_sampling;
   volatile uint16_t m_start;
   volatile uint8_t m_ix;
-  
+
   const uint16_t LOW_THRESHOLD;
   const uint16_t HIGH_THRESHOLD;
 
   virtual void on_interrupt(uint16_t arg = 0);
 
 public:
-  Probe(Board::ExternalInterruptPin pin, 
+  Probe(Board::ExternalInterruptPin pin,
 	ExternalInterrupt::InterruptMode mode,
-	uint16_t low, uint16_t high) : 
+	uint16_t low, uint16_t high) :
     ExternalInterrupt(pin, mode),
     m_sampling(false),
     m_start(0L),
@@ -75,9 +75,9 @@ IOStream& operator<<(IOStream& outs, Probe& probe)
   return (outs);
 }
 
-void 
-Probe::on_interrupt(uint16_t arg) 
-{ 
+void
+Probe::on_interrupt(uint16_t arg)
+{
   UNUSED(arg);
   if (m_start == 0) {
     m_start = RTC::micros();
@@ -90,13 +90,13 @@ Probe::on_interrupt(uint16_t arg)
   m_sample[m_ix++] = us;
   if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) goto exception;
   if (m_ix != SAMPLE_MAX) return;
-  
+
  exception:
   m_sampling = false;
   disable();
 }
 
-void 
+void
 Probe::sample_request()
 {
   m_sampling = true;

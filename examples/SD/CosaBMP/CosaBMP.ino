@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Short demo, test and benchmark of the BMP file on SD.
  *
@@ -126,7 +126,7 @@ IOStream& operator<<(IOStream& outs, BMP::image_header_t& header)
 
 IOStream& operator<<(IOStream& outs, BMP::color24_t pixel)
 {
-  outs << '<' 
+  outs << '<'
        << pixel.red << '.'
        << pixel.green << '.'
        << pixel.blue

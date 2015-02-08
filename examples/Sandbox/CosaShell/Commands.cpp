@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -39,7 +39,7 @@ static uint32_t idle = 0L;
 void iowait()
 {
   uint32_t start = RTC::micros();
-  Power::sleep(); 
+  Power::sleep();
   uint32_t stop = RTC::micros();
   idle = (start > stop) ? 0L : idle + (stop - start);
 }
@@ -65,11 +65,11 @@ SHELL_ACTION(analogread, "all|ALL|vcc|PIN..", "read analog pin(s)")
     Board::AnalogPin pin[argc];
     for (int i = 1; i < argc; i++) {
       char* name = argv[i];
-      if (name[0] != 'a' && name[0] != 'A') 
+      if (name[0] != 'a' && name[0] != 'A')
 	return (Shell::ILLEGAL_COMMAND);
       char* sp;
       uint32_t ix = strtoul(name + 1, &sp, 10);
-      if (*sp != 0 || ix >= membersof(analog_pin_map)) 
+      if (*sp != 0 || ix >= membersof(analog_pin_map))
 	return (Shell::ILLEGAL_COMMAND);
       pin[i] = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[ix]);
     }
@@ -94,15 +94,15 @@ SHELL_ACTION(args, "OPTS ARGS", "display options and arguments")
     ios << PSTR("argument: ") << argv[ix++] << endl;
   return (0);
 }
-   
+
 #define LF "\n"
 
 SHELL_SCRIPT_BEGIN(blink, "MS", "turn led on and off")
-  SHELL_SCRIPT_MAGIC					       
-  "echo -n $1 \"ms:led on..\"" LF 
+  SHELL_SCRIPT_MAGIC
+  "echo -n $1 \"ms:led on..\"" LF
   "led on" LF
-  "delay $1" LF 
-  "echo -n \"off..\"" LF 
+  "delay $1" LF
+  "echo -n \"off..\"" LF
   "led off" LF
   "delay $1" LF
   "echo -n \"on..\"" LF
@@ -113,8 +113,8 @@ SHELL_SCRIPT_BEGIN(blink, "MS", "turn led on and off")
   "delay $1" LF
   "echo -n \"on..\"" LF
   "led on" LF
-  "delay $1" LF 
-  "echo \"off\"" LF 
+  "delay $1" LF
+  "echo \"off\"" LF
   "led off" LF
 SHELL_SCRIPT_END(blink)
 
@@ -122,26 +122,26 @@ SHELL_ACTION(date, "[YEAR-MON-DAY HOUR:MIN:SEC]", "display or set the system dat
 (int argc, char* argv[])
 {
   if (argc == 3) {
-    if (!shell.is_privileged(Shell::ADMIN)) 
+    if (!shell.is_privileged(Shell::ADMIN))
       return (Shell::PERMISSION_DENIED);
     uint32_t value;
     time_t now;
     char* sp;
     value = strtoul(argv[1], &sp, 10);
-    if (*sp != '-' || value < 2000 || value > 2099) 
+    if (*sp != '-' || value < 2000 || value > 2099)
       return (Shell::ILLEGAL_COMMAND);
     value -= 2000;
     now.year = value;
     value = strtoul(sp + 1, &sp, 10);
-    if (*sp != '-' || value < 1 || value > 12) 
+    if (*sp != '-' || value < 1 || value > 12)
       return (Shell::ILLEGAL_COMMAND);
     now.month = value;
     value = strtoul(sp + 1, &sp, 10);
-    if (*sp != 0 || value < 1 || value > 31) 
+    if (*sp != 0 || value < 1 || value > 31)
       return (Shell::ILLEGAL_COMMAND);
     now.date = value;
     value = strtoul(argv[2], &sp, 10);
-    if (*sp != ':' || value > 23) 
+    if (*sp != ':' || value > 23)
       return (Shell::ILLEGAL_COMMAND);
     now.hours = value;
     value = strtoul(sp + 1, &sp, 10);
@@ -278,7 +278,7 @@ SHELL_ACTION(dump, "[-b|-d] ADDR [SIZE]", "dump memory block")
       base = IOStream::bin;
     else if (strcmp_P(option, PSTR("d")) == 0)
       base = IOStream::dec;
-    else 
+    else
       return (Shell::UNKNOWN_OPTION);
   }
   if (ix < argc) {
@@ -354,9 +354,9 @@ SHELL_ACTION(led, "on|off", "turn led on or off")
 {
   if (argc != 2)
     return (Shell::ILLEGAL_COMMAND);
-  if (strcmp_P(argv[1], PSTR("on")) == 0) 
+  if (strcmp_P(argv[1], PSTR("on")) == 0)
     OutputPin::write(Board::LED, 1);
-  else if (strcmp_P(argv[1], PSTR("off")) == 0) 
+  else if (strcmp_P(argv[1], PSTR("off")) == 0)
     OutputPin::write(Board::LED, 0);
   else
     return (Shell::ILLEGAL_COMMAND);
@@ -418,7 +418,7 @@ static void write_pinmode(Board::DigitalPin pin)
     ios << PSTR("output") << endl;
   else {
     ios << PSTR("input");
-    if (InputPin::get_mode(pin) == InputPin::PULLUP_MODE) 
+    if (InputPin::get_mode(pin) == InputPin::PULLUP_MODE)
       ios << PSTR(", pullup");
     ios << endl;
   }
@@ -454,13 +454,13 @@ SHELL_ACTION(pinmode, "all|ALL|led|PIN [input|output|pullup]",
   else
     return (Shell::ILLEGAL_COMMAND);
   if (argc == 3) {
-    if (!shell.is_privileged(Shell::USER)) 
+    if (!shell.is_privileged(Shell::USER))
       return (Shell::PERMISSION_DENIED);
-    if (strcmp_P(argv[2], PSTR("input")) == 0) 
+    if (strcmp_P(argv[2], PSTR("input")) == 0)
       IOPin::set_mode(pin, IOPin::INPUT_MODE);
-    else if (strcmp_P(argv[2], PSTR("output")) == 0) 
+    else if (strcmp_P(argv[2], PSTR("output")) == 0)
       IOPin::set_mode(pin, IOPin::OUTPUT_MODE);
-    else if (strcmp_P(argv[2], PSTR("pullup")) == 0) 
+    else if (strcmp_P(argv[2], PSTR("pullup")) == 0)
       InputPin::set_mode(pin, InputPin::PULLUP_MODE);
     else
       return (Shell::ILLEGAL_COMMAND);
@@ -518,11 +518,11 @@ SHELL_ACTION(stty, "[eol=CR|LF|CRLF]", "display or set tty mode")
   IOStream::Mode mode = ios.get_device()->get_eol();
   while ((ix = shell.get(option, value)) == 0) {
     if (strcmp_P(option, PSTR("eol")) == 0) {
-      if (strcmp_P(value, PSTR("CR")) == 0) 
+      if (strcmp_P(value, PSTR("CR")) == 0)
 	mode = IOStream::CR_MODE;
-      else if (strcmp_P(value, PSTR("LF")) == 0) 
+      else if (strcmp_P(value, PSTR("LF")) == 0)
 	mode = IOStream::LF_MODE;
-      else if (strcmp_P(value, PSTR("CRLF")) == 0) 
+      else if (strcmp_P(value, PSTR("CRLF")) == 0)
 	mode = IOStream::CRLF_MODE;
       else
 	return (Shell::ILLEGAL_OPTION);
@@ -587,7 +587,7 @@ SHELL_ACTION(twi, "scan", "scan I2C bus")
     int count = twi.read(&data, sizeof(data));
     twi.end();
     if (count != sizeof(data)) continue;
-    ios << PSTR("TWI::device(addr = ") << hex << addr 
+    ios << PSTR("TWI::device(addr = ") << hex << addr
 	<< PSTR(", group = ") << (addr >> 3) << '.' << (addr & 0x07)
 	<< PSTR(")") << endl;
   }
@@ -649,9 +649,9 @@ SHELL_ACTION(login, "USER", "authenticate user")
     if (shell.get_echo()) ios << endl;
     if (strcmp_P(passwd, PSTR("ciao\n")) != 0)
       return (Shell::ILLEGAL_COMMAND);
-    if (strcmp_P(argv[1], PSTR("admin")) == 0) 
+    if (strcmp_P(argv[1], PSTR("admin")) == 0)
       shell.set_privilege(Shell::ADMIN);
-    else 
+    else
       shell.set_privilege(Shell::USER);
   }
   shell.set_commands(membersof(command_tab), command_tab);

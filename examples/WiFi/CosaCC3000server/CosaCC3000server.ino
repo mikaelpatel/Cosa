@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstrate CC3000 Wifi device driver; simple web server.
  *
@@ -50,13 +50,13 @@ void setup()
   RTC::begin();
 
   ASSERT(wifi.begin_P(PSTR("CosaCC3300server")));
-  
+
   uint8_t subnet[4];
   uint8_t ip[4];
   wifi.get_addr(ip, subnet);
-  trace << "IP="; 
+  trace << "IP=";
   INET::print_addr(trace, ip);
-  trace << ",SUBNET="; 
+  trace << ",SUBNET=";
   INET::print_addr(trace, subnet);
   trace << endl;
 
@@ -64,10 +64,10 @@ void setup()
     server = wifi.socket(wifi.AF_INET, wifi.SOCK_STREAM, wifi.IPPROTO_TCP);
   ASSERT(server == 0);
 
-  MEASURE("Bind to port:", 1) 
+  MEASURE("Bind to port:", 1)
     ASSERT(wifi.bind(server, 80) == 0);
 
-  MEASURE("Listen mode:", 1) 
+  MEASURE("Listen mode:", 1)
     ASSERT(wifi.listen(server) == 0);
 }
 
@@ -88,7 +88,7 @@ void loop()
   client = wifi.accept(server, ip, port);
   if (client < 0) return;
 
-  trace << PSTR("client=") << client << ",IP="; 
+  trace << PSTR("client=") << client << ",IP=";
   INET::print_addr(trace, ip);
   trace << PSTR(":") << (uint16_t) port << endl;
 
@@ -108,26 +108,26 @@ void loop()
 	trace << (char) buf[i];
 #endif
       res = wifi.select(client + 1, readhndls, writehndls, errorhndls, 0, 5000);
-    } 
+    }
 #if defined(TRACE_RECV)
     trace << endl;
 #endif
   }
-      
+
   // Reply page; header and footer are static, contents dynamic
-  static const char header[] __PROGMEM = 
+  static const char header[] __PROGMEM =
     "HTTP/1.1 200 OK" CRLF
     "Content-Type: text/html" CRLF
     "Connection: close" CRLF
     "Refresh: 3" CRLF CRLF
     "<!DOCTYPE HTML>" CRLF
     "<HTML>" CRLF
-    "<HEAD><TITLE>CosaCC3000server</TITLE></HEAD>" CRLF 
+    "<HEAD><TITLE>CosaCC3000server</TITLE></HEAD>" CRLF
     "<BODY>" CRLF;
-  static const char footer[] __PROGMEM = 
-    "</BODY>" CRLF 
+  static const char footer[] __PROGMEM =
+    "</BODY>" CRLF
     "</HTML>";
-  static const char br[] __PROGMEM = 
+  static const char br[] __PROGMEM =
     "<BR/>" CRLF;
   str_P BR = (str_P) br;
 
@@ -164,10 +164,10 @@ void loop()
       Board::DigitalPin pin;
       pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + i);
       page << PSTR("<TD style=\"text-align: center; background-color: ");
-      if (InputPin::read(pin)) 
-	page << PSTR("red\">1"); 
-      else 
-	page << PSTR("green\">0"); 
+      if (InputPin::read(pin))
+	page << PSTR("red\">1");
+      else
+	page << PSTR("green\">0");
       page << PSTR("</TD>") << endl;
     }
     page << PSTR("</TR>") << endl;

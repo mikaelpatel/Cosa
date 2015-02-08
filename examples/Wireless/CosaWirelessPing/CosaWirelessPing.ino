@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa Wireless interface demo; send-receive messages to and from
  * CosaWirelessPong. Send sequence number to pong and wait for reply
@@ -32,7 +32,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
-// Configuration; network and device addresses. 
+// Configuration; network and device addresses.
 #define PING_ID 0x80
 #define PONG_ID 0x81
 #define NETWORK 0xC05A
@@ -112,7 +112,7 @@ void loop()
     rc += 1;
   }
   arc += rc;
-  trace << PSTR(",pong:nr=") << nr 
+  trace << PSTR(",pong:nr=") << nr
 	<< PSTR(",rc=") << rc
 	<< PSTR(",arc=") << arc
 	<< PSTR(",dr%=") << (arc * 100L) / (nr + arc)

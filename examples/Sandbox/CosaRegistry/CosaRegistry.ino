@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa Registry demonstration; example of an application directory
  * with typical information for a wireless sensor.
@@ -87,7 +87,7 @@ REGISTRY_END(STATUS)
 // Action class and registry
 class Restart : public Registry::Action {
 public:
-  virtual int run(void* buf, size_t size) 
+  virtual int run(void* buf, size_t size)
   {
     UNUSED(size);
     trace << PSTR("Action::Restart:") << (str_P) buf << endl;
@@ -122,7 +122,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaRegistry: started"));
   Watchdog::begin();
-  
+
   // Initiate EEMEM variables. Arduino build does not handle .eeprom section
   // eeprom.write(&NETWORK, 0xc05a);
   // eeprom.write(&DEVICE, 0x42);
@@ -155,7 +155,7 @@ void loop()
   reg.print(trace, path, 1);
   trace << '=';
   trace << list << endl;
-  
+
   // Access 0.0 blob product name
   path[0] = 0;
   path[1] = 0;
@@ -171,7 +171,7 @@ void loop()
 
   // Access 0.1 blob version string
   path[0] = 0;
-  path[1] = 1; 
+  path[1] = 1;
   item = reg.lookup(path, sizeof(path));
   trace << item << endl;
   blob = Registry::to_blob(item);
@@ -184,7 +184,7 @@ void loop()
 
   // Access 1.0 network address
   path[0] = 1;
-  path[1] = 0; 
+  path[1] = 0;
   item = reg.lookup(path, sizeof(path));
   trace << item << endl;
   blob = Registry::to_blob(item);
@@ -204,8 +204,8 @@ void loop()
   trace << hex << network << endl;
 
   // Access 2.0 blob sensor data
-  path[0] = 2; 
-  path[1] = 0; 
+  path[0] = 2;
+  path[1] = 0;
   item = reg.lookup(path, sizeof(path));
   trace << item << endl;
   blob = Registry::to_blob(item);
@@ -220,8 +220,8 @@ void loop()
 	<< endl;
 
   // Access 2.1 blob processor load %
-  path[0] = 2; 
-  path[1] = 1; 
+  path[0] = 2;
+  path[1] = 1;
   item = reg.lookup(path, sizeof(path));
   trace << item << endl;
   blob = Registry::to_blob(item);
@@ -232,8 +232,8 @@ void loop()
   trace << load << PSTR(" %") << endl;
 
   // Access 2.2 blob errors
-  path[0] = 2; 
-  path[1] = 2; 
+  path[0] = 2;
+  path[1] = 2;
   item = reg.lookup(path, sizeof(path));
   trace << item << endl;
   blob = Registry::to_blob(item);
@@ -250,13 +250,13 @@ void loop()
   trace << errs << endl;
 
   // Access 3.0 action restart
-  path[0] = 3; 
-  path[1] = 0; 
+  path[0] = 3;
+  path[1] = 0;
   trace << reg.apply(path, sizeof(path), (void*) PSTR("rebooting..."), 0) << endl;
 
   // Access 3.1 action broadcast sensor data
-  path[0] = 3; 
-  path[1] = 1; 
+  path[0] = 3;
+  path[1] = 1;
   item = reg.lookup(path, sizeof(path));
   trace << item << endl;
   blob = Registry::to_blob(item);
@@ -270,8 +270,8 @@ void loop()
   trace << flag << endl;
 
   // Access 3.2 illegal path
-  path[0] = 3; 
-  path[1] = 2; 
+  path[0] = 3;
+  path[1] = 2;
   item = reg.lookup(path, sizeof(path));
   trace << item << endl;
   ASSERT(item == NULL);

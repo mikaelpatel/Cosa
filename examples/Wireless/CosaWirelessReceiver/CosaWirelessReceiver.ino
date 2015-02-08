@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa Wireless interface demo; receiver messages from CosaWirelessSender.
  *
@@ -157,14 +157,14 @@ void loop()
 
   // Print the message header
   if (count >= 0) {
-    trace << PSTR("src=") << hex << src 
+    trace << PSTR("src=") << hex << src
 	  << PSTR(",port=") << hex << port
-	  << PSTR(",dest=") 
+	  << PSTR(",dest=")
 	  << hex << (rf.is_broadcast() ? 0 : rf.get_device_address())
 	  << PSTR(",len=") << count
 #if defined(COSA_WIRELESS_DRIVER_CC1101_HH) \
   || defined(COSA_WIRELESS_DRIVER_RFM69_HH)
-	  << PSTR(",rssi=") << rf.get_input_power_level() 
+	  << PSTR(",rssi=") << rf.get_input_power_level()
 #endif
 #if defined(COSA_WIRELESS_DRIVER_CC1101_HH)
 	  << PSTR(",lqi=") << rf.get_link_quality_indicator()
@@ -175,21 +175,21 @@ void loop()
     switch (port) {
     case IOSTREAM_TYPE:
       for (uint8_t i = 0; i < count; i++)
-	if (msg[i] != '\f' && msg[i] != '\n') 
+	if (msg[i] != '\f' && msg[i] != '\n')
 	  trace << (char) msg[i];
       trace << endl;
       break;
-    case PAYLOAD_TYPE: 
-      trace << (payload_msg_t*) msg; 
+    case PAYLOAD_TYPE:
+      trace << (payload_msg_t*) msg;
       break;
-    case DIGITAL_TEMPERATURE_TYPE: 
-      trace << (dt_msg_t*) msg; 
+    case DIGITAL_TEMPERATURE_TYPE:
+      trace << (dt_msg_t*) msg;
       break;
-    case DIGITAL_HUMIDITY_TEMPERATURE_TYPE: 
-      trace << (dht_msg_t*) msg; 
+    case DIGITAL_HUMIDITY_TEMPERATURE_TYPE:
+      trace << (dht_msg_t*) msg;
       break;
-    case DIGITAL_LUMINANCE_TEMPERATURE_TYPE: 
-      trace << (dlt_msg_t*) msg; 
+    case DIGITAL_LUMINANCE_TEMPERATURE_TYPE:
+      trace << (dlt_msg_t*) msg;
       break;
     default:
       trace << PSTR("msg=");

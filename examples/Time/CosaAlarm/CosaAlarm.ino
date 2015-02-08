@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstrate of Cosa Alarm handling.
  *
@@ -38,10 +38,10 @@ private:
   uint16_t m_tick;
 };
 
-TraceAlarm::TraceAlarm(uint8_t id, uint16_t period) : 
-  Alarm(period), 
-  m_id(id), 
-  m_tick(0) 
+TraceAlarm::TraceAlarm(uint8_t id, uint16_t period) :
+  Alarm(period),
+  m_id(id),
+  m_tick(0)
 {}
 
 Alarm::Scheduler scheduler;
@@ -51,7 +51,7 @@ TraceAlarm every_5th_second(2, 5);
 TraceAlarm every_15th_second(3, 15);
 TraceAlarm every_30th_second(4, 30);
 
-void 
+void
 TraceAlarm::run()
 {
   trace << Watchdog::millis() << ':'
@@ -63,7 +63,7 @@ TraceAlarm::run()
 	<< every_5th_second.expires_in() << ':'
 	<< every_15th_second.expires_in() << ':'
 	<< every_30th_second.expires_in() << ':'
-	<< PSTR("alarm:id=") << m_id 
+	<< PSTR("alarm:id=") << m_id
 	<< endl;
 
 }

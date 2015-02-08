@@ -3,21 +3,21 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * W5100 Ethernet Controller device driver example code; NTP client.
- * Some NTP server hostnames; se.pool.ntp.org, time.nist.gov, 
+ * Some NTP server hostnames; se.pool.ntp.org, time.nist.gov,
  * ntp.ubuntu.com
  *
  * This file is part of the Arduino Che Cosa project.
@@ -51,7 +51,7 @@ void setup()
   time_t::epoch_year( NTP_EPOCH_YEAR );
   time_t::epoch_weekday = NTP_EPOCH_WEEKDAY;
   time_t::pivot_year = 37; // 1937..2036 range
-  
+
   // Note: This could also use_fastest_epoch if the clock_t offset was calculated
   // when the RTC is initiated.  NTP::gettimeofday would need modification.
 
@@ -79,7 +79,7 @@ void loop()
   for (uint8_t retry = 0; retry < RETRY_MAX; retry++)
     if ((clock = ntp.time()) != 0L) break;
   ASSERT(clock != 0L);
-  
+
   // Check if the RTC should be set
   if (!initiated) {
     RTC::time(clock);
@@ -89,11 +89,11 @@ void loop()
   // Get real-time clock and convert to time structure
   time_t rtc(RTC::seconds());
   uint16_t ms = RTC::millis() % 1000;
-  
+
   // Print server
   INET::print_addr(trace, server);
   trace << PSTR(": ");
-  
+
   // Print in stardate notation; dayno.secondno
   trace << (clock / SECONDS_PER_DAY) << '.' << (clock % SECONDS_PER_DAY) << ' ';
 

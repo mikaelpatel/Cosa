@@ -3,23 +3,23 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa 2.4 GHz Scanner using the NRF24L01P device driver.
  *
  * @section Acknowledgement
- * This tool is inspired by the Nrf24L01-Poor Man's 2.4 GHz Scanner. 
+ * This tool is inspired by the Nrf24L01-Poor Man's 2.4 GHz Scanner.
  * http://arduino-info.wikispaces.com/Nrf24L01-Poor+Man%27s+2.4+GHz+Scanner
  *
  * This file is part of the Arduino Che Cosa project.
@@ -43,7 +43,7 @@ class RF24scanner : public NRF24L01P {
 public:
   /** Number of channels scanned; 2 MHz bandwidth */
   static const uint8_t CHANNEL_MAX = 64;
-  
+
   /**
    * Construct the 2.4 GHz channel scanner.
    */
@@ -58,7 +58,7 @@ public:
 
   /**
    * Plot the number of received power detect per channel to the
-   * given output stream. The print out is channel frequency, 
+   * given output stream. The print out is channel frequency,
    * NRF24L01 channel number, WiFi channel number and samples
    * as a bar.
    * @param[in] outs output stream.
@@ -74,11 +74,11 @@ void
 RF24scanner::measure(uint16_t samples)
 {
   if (samples == 0) return;
-  
+
   // Clear the receive power detect counters and configure as receiver
   memset(m_channel, 0, sizeof(m_channel));
   write(CONFIG, (_BV(EN_CRC) | _BV(CRCO) | _BV(PWR_UP) | _BV(PRIM_RX)));
-  
+
   do {
     // Set channel and check the receiver power detect register
     for (uint8_t i = 0; i < CHANNEL_MAX; i++) {

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of the Wireless interface and ExternalInterruptPin
  * for wakeup after power down. An ATtiny85-20PU running this example
@@ -33,8 +33,8 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
-// Connect button between ground and pin TinyX4 EXT0/D10, TinyX5 EXT0/D2, 
-// Mega EXT2/D29 and others to Arduino EXT1 which is Standard/D3 and 
+// Connect button between ground and pin TinyX4 EXT0/D10, TinyX5 EXT0/D2,
+// Mega EXT2/D29 and others to Arduino EXT1 which is Standard/D3 and
 // Mighty/D11.
 #define NETWORK 0xC05A
 #if defined(BOARD_ATMEGA2560)
@@ -82,7 +82,7 @@ class Button : public ExternalInterrupt {
 public:
   Button() : ExternalInterrupt(EXT, ON_LOW_LEVEL_MODE, true) {}
 
-  virtual void on_interrupt(uint16_t arg) 
+  virtual void on_interrupt(uint16_t arg)
   {
     UNUSED(arg);
     Event::push(Event::NULL_TYPE, NULL);
@@ -104,16 +104,16 @@ void setup()
   Watchdog::begin(512);
   RTC::begin();
   rf.begin();
-  
+
   // Use the Watchdog as the delay
   delay = Watchdog::delay;
-  
+
   // Put the hardware in power down
   rf.powerdown();
   Power::all_disable();
-  
+
   // Allow wakeup on button
-  wakeup.enable();  
+  wakeup.enable();
   Watchdog::end();
 }
 
@@ -130,7 +130,7 @@ void loop()
   // Wait for events from the button
   Event event;
   Event::queue.await(&event);
-  
+
   // Wake up the hardware
   Power::all_enable();
   Watchdog::begin(512);
@@ -153,6 +153,6 @@ void loop()
   // gives periodic (2 second) message send when the button is kept low.
   uint32_t ms = PERIOD - Watchdog::since(start);
   Watchdog::delay(ms);
-  wakeup.enable();  
+  wakeup.enable();
   Watchdog::end();
 }

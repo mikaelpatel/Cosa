@@ -3,21 +3,21 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa FSM example with three interacting finite state machines.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -62,7 +62,7 @@ public:
    * The states; init, listen and echo.
    * init -> listen: print init message
    * listen -> echo on timeout(0.5 s): print name
-   * echo -> listen: send message 
+   * echo -> listen: send message
    */
   static bool initState(FSM* fsm, uint8_t type)
   {

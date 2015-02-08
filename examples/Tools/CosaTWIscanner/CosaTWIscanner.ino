@@ -3,20 +3,20 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Cosa TWI bus scanner; printout connect device and if recognized 
+ * Cosa TWI bus scanner; printout connect device and if recognized
  * name of device and short description.
  *
  * This file is part of the Arduino Che Cosa project.
@@ -73,13 +73,13 @@ const tab_t dev_tab[] __PROGMEM = {
 };
 
 /**
- * Lookup up device given bus address. Return name string in program memory 
+ * Lookup up device given bus address. Return name string in program memory
  * if successful otherwise NULL.
  * @param[in] addr device bus address (with possible sub-address).
  * @param[in] dev twi driver.
  * @return program memory string pointer or NULL.
  */
-str_P 
+str_P
 lookup(uint8_t addr, TWI::Driver* dev)
 {
   // Iterate over all devices in table
@@ -130,7 +130,7 @@ void loop()
     // Continue with the next address if there was no device
     if (count != sizeof(data)) continue;
     // Print information about the device
-    cout << PSTR("device = ") << hex << addr 
+    cout << PSTR("device = ") << hex << addr
 	 << PSTR(":group = ") << (addr >> 3) << '.' << (addr & 0x07);
     str_P name = lookup(addr, &dev);
     if (name != NULL) cout << ':' << name;

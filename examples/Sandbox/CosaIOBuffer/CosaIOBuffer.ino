@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa IOBuffer demonstration and tests.
  *
@@ -72,18 +72,18 @@ void loop()
   ASSERT(buffer.room() == 15);
 
   // Fill the buffer and check the state
-  for (char c = 'A'; !buffer.is_full(); c++) 
+  for (char c = 'A'; !buffer.is_full(); c++)
     ASSERT(buffer.putchar(c) == c);
   ASSERT(!buffer.is_empty());
   ASSERT(buffer.is_full());
   ASSERT(buffer.available() == 15);
   ASSERT(buffer.room() == 0);
   ASSERT(buffer.peekchar('A') == 1);
-  for (char c = 'A'; !buffer.is_full(); c++) 
+  for (char c = 'A'; !buffer.is_full(); c++)
     ASSERT(buffer.peekchar(c) == c - 'A' + 1);
 
   // Empty the buffer
-  for (char c = 'A'; !buffer.is_empty(); c++) 
+  for (char c = 'A'; !buffer.is_empty(); c++)
     ASSERT(buffer.getchar() == c);
   ASSERT(buffer.is_empty());
   ASSERT(!buffer.is_full());
@@ -91,7 +91,7 @@ void loop()
   ASSERT(buffer.room() == 15);
 
   // Fill the buffer again. Put another character and it should fail
-  for (char c = 'A'; !buffer.is_full(); c++) 
+  for (char c = 'A'; !buffer.is_full(); c++)
     ASSERT(buffer.putchar(c) == c);
   ASSERT(buffer.putchar('-') == IOStream::EOF);
   ASSERT(buffer.getchar() == 'A');
@@ -124,7 +124,7 @@ void loop()
   ASSERT(strlen(s) == 0);
 
   // Fill the buffer, empty and check state
-  for (char c = 'A'; !buffer.is_full(); c++) 
+  for (char c = 'A'; !buffer.is_full(); c++)
     ASSERT(buffer.putchar(c) == c);
   buffer.empty();
   ASSERT(buffer.is_empty());

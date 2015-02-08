@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa Wireless interface demo; receive-send messages from and to
  * CosaWirelessPing. Check for correct port(PING_TYPE) and message
@@ -32,7 +32,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
-// Configuration; network and device addresses. 
+// Configuration; network and device addresses.
 #define NETWORK 0xC05A
 #define DEVICE 0x81
 
@@ -86,7 +86,7 @@ void loop()
   uint8_t port;
   uint8_t src;
   ping_t nr;
-  
+
   while (rf.recv(src, port, &nr, sizeof(nr)) != sizeof(nr)) yield();
   if (port != PING_TYPE) return;
   trace << RTC::millis() << PSTR(":pong:nr=") << nr << endl;

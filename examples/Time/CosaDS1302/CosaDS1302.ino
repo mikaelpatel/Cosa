@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of Cosa DS1302 Trickle-Charge Timekeeping Chip,
  * device driver.
- * 
+ *
  * @section Circuit
- *                         DS1302/rtc 
+ *                         DS1302/rtc
  *                       +------------+
  * (VCC)---------------1-|VCC         |
  * (GND)---------------2-|GND         |
@@ -44,19 +44,19 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaDS1302: started"));
   Watchdog::begin();
-  
+
   // Read device registers
   trace << PSTR("RTC") << endl;
   for (uint8_t addr = 0; addr < 8; addr++)
-    trace << addr << PSTR(": ") 
+    trace << addr << PSTR(": ")
 	  << hex << rtc.read(addr)
 	  << endl;
 
   // Read device static memory
   trace << PSTR("RAM") << endl;
   for (uint8_t addr = 0; addr < DS1302::RAM_MAX; addr++)
-    trace << addr << PSTR(": ") 
-	  << hex << rtc.read(DS1302::RAM_START + addr) 
+    trace << addr << PSTR(": ")
+	  << hex << rtc.read(DS1302::RAM_START + addr)
 	  << endl;
 
   // Write some data
@@ -98,7 +98,7 @@ void loop()
   trace << PSTR("RTC: ") << now << endl;
   trace.flush();
 
-  // Update ram; increment 
+  // Update ram; increment
   for (uint8_t i = 0; i < sizeof(buf); i++) buf[i]++;
   rtc.write_ram(buf, sizeof(buf));
 

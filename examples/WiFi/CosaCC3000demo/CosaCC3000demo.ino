@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of CC3000 Wifi device driver.
  *
@@ -52,9 +52,9 @@ void loop()
 {
   const size_t BUF_MAX = 64;
   uint8_t WWW_GOOGLE_COM[4] = { 173, 194, 113, 146 };
-  char msg[] = 
+  char msg[] =
     "GET / HTTP/1.1" CRLF
-    "Connection: close" CRLF 
+    "Connection: close" CRLF
     CRLF;
   int sock;
   uint32_t readhndls = FD_ZERO();
@@ -77,7 +77,7 @@ void loop()
     res = wifi.send(sock, msg, strlen(msg));
   }
   if (res < 0) goto error;
-  
+
   FD_SET(sock, readhndls);
   FD_SET(sock, errorhndls);
   MEASURE("Use select to wait for response:", 1) {
@@ -93,7 +93,7 @@ void loop()
 	trace << (char) buf[i];
 #endif
       res = wifi.select(1, readhndls, writehndls, errorhndls, 0, 5000);
-    } 
+    }
   }
 #if defined(TRACE_RECV)
   trace << endl;

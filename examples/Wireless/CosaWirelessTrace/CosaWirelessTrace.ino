@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of the Wireless Interface and device drivers. Handy
  * tool for tracing message streams. The sketch will listen to
@@ -85,11 +85,11 @@ void loop()
   uint8_t msg[MSG_MAX];
   uint8_t src;
   uint8_t port;
-  
+
   // Receive message
   int count = rf.recv(src, port, msg, sizeof(msg), TIMEOUT);
   uint32_t stop = RTC::millis();
-  
+
   // Print prefix with message number, delta time
   trace << nr << ':' << stop - start;
   nr += 1;
@@ -110,7 +110,7 @@ void loop()
   }
 
   // Print source, destination, port, and length of message
-  trace << PSTR(":src=") << src 
+  trace << PSTR(":src=") << src
 	<< PSTR(",dest=") << (rf.is_broadcast() ? 0 : rf.get_device_address())
 	<< PSTR(",port=") << port
 	<< PSTR(",msg[") << count << PSTR("]=");
@@ -123,15 +123,15 @@ void loop()
 	trace << PSTR("\\f");
       else if (msg[i] == '\n')
 	trace << PSTR("\\n");
-      else 
+      else
 	trace << (char) msg[i];
     trace << '"' << endl;
   }
 
   // Otherwise do a hex dump
-  else 
+  else
     trace.print(msg, count, IOStream::hex, sizeof(msg));
 
-  // Save the timestamp 
+  // Save the timestamp
   start = stop;
 }

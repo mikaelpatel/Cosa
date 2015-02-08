@@ -3,21 +3,21 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration sending temperature readings from two 1-Wire DS18B20
- * devices over the Wireless Interface and devices. 
+ * devices over the Wireless Interface and devices.
  *
  * @section Circuit
  *                         RF433/TX
@@ -34,24 +34,24 @@
  * (OWI/D3)--+---------2-|DQ          | ||
  *           |       +-3-|VDD         |//
  *          4K7      |   +------------++
- *           |       | 
+ *           |       |
  * (PW/D4)---+       +---(VCC/GND)
  *
- * Connect RF433/315 Transmitter Data to ATtiny85 D0, connect VCC 
+ * Connect RF433/315 Transmitter Data to ATtiny85 D0, connect VCC
  * GND. Connect 1-Wire digital thermometer to D3 with pullup resistor.
  * The pullup resistor (4K7) may be connected to D4 to allow active power
  * control. This sketch supports parasite powered DS18B20 devices.
- * Connect the DS18B20 VCC to GND. 
- * 
+ * Connect the DS18B20 VCC to GND.
+ *
  * @section Measurements
  * Arduino Mini Pro 16 Mhz (Power LED removed).
- * Power	Idle	Sampling	Transmitting	
+ * Power	Idle	Sampling	Transmitting
  * LiPo 3.9 V	40 uA	1.3 mA 		6 mA (RF433).
  * FTDI 5,1 V	190 uA	1.5 mA		10 mA (RF433).
  *
  * @section Note
  * This sketch is designed to also run on an ATtiny85 running on the
- * internal 8 MHz clock. 
+ * internal 8 MHz clock.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -102,7 +102,7 @@ OWI owi(Board::D3);
 DS18B20 indoors(&owi);
 DS18B20 outdoors(&owi);
 
-// Active pullup (pullup resistor 4K7 connected between this pin 
+// Active pullup (pullup resistor 4K7 connected between this pin
 // and OWI pin)
 OutputPin pw(Board::D4);
 
@@ -154,7 +154,7 @@ void loop()
     indoors.read_scratchpad();
     outdoors.read_scratchpad();
   }
-  
+
   // Initiate the message with measurements
   dt_msg_t msg;
   msg.nr = nr++;

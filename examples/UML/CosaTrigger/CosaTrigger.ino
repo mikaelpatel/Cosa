@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration sketch of Trigger, Counter and TimedProbe; the
  * Trigger will update a connector from an ISR and schedule a Counter.
@@ -22,10 +22,10 @@
  * TimedProbe so that the value is printed every other second.
  *
  * @section Diagram
- * 
+ *
  *    Trigger              Counter           TimedProbe
  *  +---------+          +---------+         +---------+
- *  | trigger |          | counter |         |  probe  | 
+ *  | trigger |          | counter |         |  probe  |
  *  |         |---[s1]-->|         |--[c1]-->|         |
  *  |         |          |         |         |         |
  *  +---------+          +---------+         +---------+

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Wireless IOStream demo.
  *
@@ -109,14 +109,14 @@ void loop()
   sleep(2);
 
   // Print digital pins
-  trace << clear << PSTR("D0-7:  "); 
+  trace << clear << PSTR("D0-7:  ");
   for (uint8_t ix = 0; ix < 8; ix++) {
     Board::DigitalPin pin;
     pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + ix);
     trace << InputPin::read(pin);
   }
   trace << endl;
-  trace << PSTR("D8-16: "); 
+  trace << PSTR("D8-16: ");
   for (uint8_t ix = 8; ix < 16; ix++) {
     Board::DigitalPin pin;
     pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + ix);

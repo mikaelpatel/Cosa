@@ -3,22 +3,22 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of the Wireless IOStream driver. Print incoming
  * messages as a character stream. Select 1) wireless device driver,
- * and 2) LCD or UART. For LCD select 3) port realization. 
+ * and 2) LCD or UART. For LCD select 3) port realization.
  *
  * @section Circuit
  * See Wireless drivers for circuit connections.
@@ -143,7 +143,7 @@ void setup()
   lcd.set_tab_step(2);
   lcd.cursor_underline_off();
   lcd.cursor_blink_off();
-  for (char c = 0; c < BITMAPS_MAX; c++) 
+  for (char c = 0; c < BITMAPS_MAX; c++)
     lcd.set_custom_char_P(c, &bitmaps[c*SIZEOF_BITMAP]);
   trace.begin(&lcd, PSTR("\fMonitor: started"));
 #endif

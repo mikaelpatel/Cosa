@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa Time tests with internal RTC. Show time zone handling.
  * Expected values for seconds and day of week were obtained
@@ -37,36 +37,36 @@ static str_P pf(bool b)
   return (b ? PSTR("PASS: ") : PSTR("FAIL: "));
 }
 
-static char pf2(bool b) 
-{ 
-  return (b ? '\0' : '!'); 
+static char pf2(bool b)
+{
+  return (b ? '\0' : '!');
 }
 
-static bool check(time_t &now, 
-		  clock_t expected, 
-		  bool pass = true, 
-		  uint8_t dow = 8, 
+static bool check(time_t &now,
+		  clock_t expected,
+		  bool pass = true,
+		  uint8_t dow = 8,
 		  uint16_t days = 0)
 {
   bool ok = pass;
 
   now.set_day();
   if ((dow != 8) && (dow != now.day)) {
-    cout << pf(!pass) << pf2(pass) << now 
-	 << PSTR(" day of week ") << now.day 
+    cout << pf(!pass) << pf2(pass) << now
+	 << PSTR(" day of week ") << now.day
 	 << PSTR(" != ") << dow;
     ok = !pass;
 
   } else if ((dow != 8) && (days != now.days())) {
-    cout << pf(!pass) << pf2(pass) << now 
-	 << PSTR(" days since epoch ") << now.days() 
+    cout << pf(!pass) << pf2(pass) << now
+	 << PSTR(" days since epoch ") << now.days()
 	 << PSTR(" != ") << days;
     ok = !pass;
 
   } else {
     clock_t s = now;
     if (s != expected) {
-      cout << pf(!pass) << pf2(pass) << now << ' ' 
+      cout << pf(!pass) << pf2(pass) << now << ' '
 	   << s << PSTR(" != ") << expected;
       ok = !pass;
 
@@ -77,7 +77,7 @@ static bool check(time_t &now,
 
   if (dow != 8)
     cout << PSTR(", day ") << now.day << PSTR(", days = ") << now.days();
-  
+
   if (!ok) {
     cout << endl;
     return (ok);
@@ -102,7 +102,7 @@ static bool check(time_t &now,
 
   // Check the conversion back to time_t
   if (test != now) {
-    cout << endl << pf(!pass) << pf2(pass) 
+    cout << endl << pf(!pass) << pf2(pass)
 	 << PSTR("Reconverted ") << test << PSTR(" != ") << now;
     ok = !pass;
   }
@@ -113,24 +113,24 @@ static bool check(time_t &now,
 static int16_t passes = 0;
 static int16_t fails = 0;
 
-static void check(str_P c, 
-		  clock_t expected, 
-		  bool pass = true, 
-		  uint8_t dow = 8, 
+static void check(str_P c,
+		  clock_t expected,
+		  bool pass = true,
+		  uint8_t dow = 8,
 		  uint16_t days = 0)
 {
   bool ok = pass;
   time_t now;
 
   if (!now.parse( c )) {
-    cout << pf(!pass) << pf2(pass) 
+    cout << pf(!pass) << pf2(pass)
 	 << PSTR("Parsing \"") << c << '"'
 	 << endl;
     ok = !pass;
 
   } else if (!now.is_valid()) {
-    cout << pf(!pass) << pf2(pass) 
-	 << PSTR("Valid date ") << now 
+    cout << pf(!pass) << pf2(pass)
+	 << PSTR("Valid date ") << now
 	 << PSTR(" from \"") << c << '"'
 	 << endl;
     ok = !pass;
@@ -243,7 +243,7 @@ void setup()
   now.date = 31;
   now.month = 12;
   start_time = now;
-  cout << PSTR("Setting RTC to ") << now 
+  cout << PSTR("Setting RTC to ") << now
        << PSTR(" (") << start_time << PSTR(" seconds)")
        << endl;
   RTC::time(start_time);
@@ -260,7 +260,7 @@ void loop()
   // Print seconds since epoch and time zones
   clock_t s = clock - start_time;
   cout << s << ':'
-       << PSTR("se=") << se << ',' 
+       << PSTR("se=") << se << ','
        << PSTR("utc=") << utc << ','
        << PSTR("us=") << us << ',';
 

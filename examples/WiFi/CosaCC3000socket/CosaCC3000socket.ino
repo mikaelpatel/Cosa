@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstrate CC3000 Wifi device driver; Cosa Socket level access.
  *
@@ -45,7 +45,7 @@ void loop()
 {
   const size_t BUF_MAX = 512;
   char buf[BUF_MAX];
-  char msg[] = 
+  char msg[] =
     "GET / HTTP/1.1" CRLF
     "Connection: close" CRLF
     CRLF;
@@ -59,11 +59,11 @@ void loop()
 
   uint8_t WWW_GOOGLE_COM[4] = { 173, 194, 113, 146 };
   do {
-    MEASURE("Connect to server:", 1) 
+    MEASURE("Connect to server:", 1)
       res = socket->connect(WWW_GOOGLE_COM, 80);
     if (res < 0) wifi.service(1000);
   } while (res < 0);
-  
+
   MEASURE("Send request:", 1)
     count = socket->send(msg, strlen(msg));
   ASSERT((size_t) count == strlen(msg));
@@ -88,7 +88,7 @@ void loop()
   trace << endl;
 #endif
   TRACE(count);
-  
+
   MEASURE("Close socket:", 1)
     res = socket->close();
   TRACE(res);

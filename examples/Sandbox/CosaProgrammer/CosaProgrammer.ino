@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of the Cosa AVR Programmer class. Allows serial
  * programming of AVR devices over SPI. Implements the full
@@ -46,11 +46,11 @@ void setup()
 
   trace << PSTR("poll:") << hex << isp.isbusy() << endl;
   trace << PSTR("lock:") << hex << isp.read_lock_bits() << endl;
-  trace << PSTR("signature:") 
+  trace << PSTR("signature:")
 	<< hex << isp.read_signature_byte(0) << ':'
 	<< hex << isp.read_signature_byte(1) << ':'
 	<< hex << isp.read_signature_byte(2) << endl;
-  trace << PSTR("fuse:") 
+  trace << PSTR("fuse:")
 	<< hex << isp.read_fuse_bits() << ':'
 	<< hex << isp.read_fuse_high_bits() << ':'
 	<< hex << isp.read_extended_fuse_bits() << endl;
@@ -58,14 +58,14 @@ void setup()
 
   isp.read_eeprom_memory(buf, 0x01fc, 4);
   trace.print(buf, 4, IOStream::hex);
-  
+
   isp.write_eeprom_memory(0x01fc, 0xde);
   isp.write_eeprom_memory(0x01fd, 0xad);
   isp.write_eeprom_memory(0x01fe, 0xbe);
   isp.write_eeprom_memory(0x01ff, 0xef);
   isp.read_eeprom_memory(buf, 0x01fc, 4);
   trace.print(buf, 4, IOStream::hex);
-  
+
 
   for (uint16_t src = 0; src < 1024; src += sizeof(buf) / 2) {
     isp.read_program_memory(buf, src, sizeof(buf));
@@ -96,7 +96,7 @@ void setup()
 #ifdef __EEPROM_MEMORY__
   memset(buf, 0xff, sizeof(buf));
   isp.write_eeprom_memory(0, buf, sizeof(buf));
-  
+
   for (uint16_t src = 0; src < 256; src += sizeof(buf)) {
     isp.read_eeprom_memory(buf, src, sizeof(buf));
     trace.print(buf, sizeof(buf), IOStream::hex);

@@ -3,20 +3,20 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Cosa demonstration of 10 DOF module (GY-80) with ADXL345, BMP085, 
+ * Cosa demonstration of 10 DOF module (GY-80) with ADXL345, BMP085,
  * HMC5883L, and L3G4200D; 3-axis acceleratometer, thermometer,
  * barometer, 3-axis compass and 3-axis gyroscope with output to LCD.
  *
@@ -94,7 +94,7 @@ void setup()
   lcd.begin();
   trace.begin(&lcd, PSTR("CosaLCD10DOF"));
   sleep(2);
-  
+
   // Start the sensors
   acceleratometer.begin();
   bmp.begin(BMP085::ULTRA_LOW_POWER);
@@ -115,7 +115,7 @@ void loop()
   trace << clear;
   trace << PSTR("RTC; ") << now;
 
-  // Read battery 
+  // Read battery
 #if (HEIGHT == 2)
   sleep(2);
   trace << clear;
@@ -147,12 +147,12 @@ void loop()
   HMC5883L::data_t dir;
   compass.get_heading(dir);
   trace << PSTR("Compass:") << endl;
-  trace << dir.x << PSTR(", ") 
-	<< dir.y << PSTR(", ") 
+  trace << dir.x << PSTR(", ")
+	<< dir.y << PSTR(", ")
 	<< dir.z;
   sleep(2);
 
-  // Read acceleration 
+  // Read acceleration
   trace << clear;
   ADXL345::sample_t acc;
   acceleratometer.sample(acc);
