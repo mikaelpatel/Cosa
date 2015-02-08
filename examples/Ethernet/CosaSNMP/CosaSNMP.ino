@@ -9,19 +9,19 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * W5100 Ethernet Controller device driver example code; SNMP agent
- * with support for GET/GETNEXT/SET for MIB-2 SYSTEM and Arduino MIB. 
+ * with support for GET/GETNEXT/SET for MIB-2 SYSTEM and Arduino MIB.
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
- * 
+ *
  *                       W5100/ethernet
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -34,11 +34,11 @@
  * @section Testing
  * Test with Linux snmp commands:
  * 1. Access the MIB-2 SYSTEM (sysDescr)
- *   snmpget -v1 -c public 192.168.1.18 0.1.3.6.1.2.1.1.1
+ *   snmpget -v1 -c public {W5100_IP} 1.3.6.1.2.1.1.1
  * 2. Access the Arduino MIB (ardDigitalPin.0)
- *   snmpget -v1 -c public 192.168.1.18 0.1.3.6.1.4.1.36582.1.0
- * 3. Walk the OID tree
- *   snmpwalk -v1 -c public 192.168.1.18
+ *   snmpget -v1 -c public {W5100_IP} 1.3.6.1.4.1.36582.1.0
+ * 3. Walk all available OID tree
+ *   snmpwalk -v1 -c public {W5100_IP} 1
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -51,6 +51,32 @@
 #include "Cosa/INET/SNMP.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#define PRINT_PDU // Comment this out to remove some tracing and reduce memory usage
+
+// Network configuration
+// If WS5100 board has a MAC sticker then use here instead of this default
+static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
+// If no DHCP on network set these
+// #define USE_FIXED_IP 192,168,1,100
+// #define SUBNET 255,255,255,0
+
+// Disable SD on Ethernet Shield
+#define USE_ETHERNET_SHIELD
+#if defined(USE_ETHERNET_SHIELD)
+#include "Cosa/OutputPin.hh"
+OutputPin sd(Board::D4, 1);
+#endif
+
+W5100 ethernet(mac);
+
+// SNMP MIB-2 System configuration
+static const char descr[] __PROGMEM = "<service description>";
+static const char contact[] __PROGMEM = "<contact information>";
+static const char name[] __PROGMEM = "<device name>";
+static const char location[] __PROGMEM = "<device location>";
+
+SNMP::MIB2_SYSTEM mib2(descr, contact, name, location);
+SNMP snmp;
 
 /**
  * Arduino MIB OID(1.3.6.1.4.1.36582)
@@ -58,9 +84,9 @@
 class ARDUINO_MIB : public SNMP::MIB {
 private:
   enum {
-    ardDigitalPin = 1,	      // Digital pin[0..19](0..1), read-only
-    ardAnalogPin = 2,	      // Analog pin[0..5](0..1023), read-only
-    ardVcc = 3,		      // Power supply[0](0..VCC), mV, read-only
+    ardDigitalPin = 1,        // Digital pin[0..19](0..1), read-only
+    ardAnalogPin = 2,         // Analog pin[0..5](0..1023), read-only
+    ardVcc = 3,               // Power supply[0](0..VCC), mV, read-only
   } __attribute__((packed));
 
 public:
@@ -72,7 +98,7 @@ public:
   {
     return (SNMP::ARDUINO_MIB_OID);
   }
-    
+
   /**
    * @override SNMP::MIB
    * Handle Arduino MIB objects SNMP requests. Returns true and
@@ -83,19 +109,22 @@ public:
   virtual bool is_request(SNMP::PDU& pdu);
 };
 
-bool 
+bool
 ARDUINO_MIB::is_request(SNMP::PDU& pdu)
 {
-  // Match with Arduino MIB OID root
-  int pos = pdu.oid.match(get_oid(), false);
-  if (pos < 0 || pdu.oid.length != 10) return (false);
+  uint8_t mib_baselen = pgm_read_byte(SNMP::ARDUINO_MIB_OID);
+  if(pdu.oid.length > (mib_baselen + 2)) return (false);
 
-  // Access pin type and number
-  uint8_t sys = pdu.oid.name[pos];
-  uint8_t index = pdu.oid.name[pos + 1];
-  
+  // Match with Arduino MIB OID root
+  uint8_t index = pdu.oid.match(get_oid());
+  if (index < -1) return (false); // MIB is greater than what we deal with
+  uint8_t sys = (pdu.oid.length > mib_baselen) ? pdu.oid.name[mib_baselen] : 0;
   // Get next value; adjust index referens
   if (pdu.type == SNMP::PDU_GET_NEXT) {
+    if ((index < 0) || (sys == 0)) {
+        memcpy_P(&pdu.oid, SNMP::ARDUINO_MIB_OID, mib_baselen + 1);
+        index = 0;
+    }
     switch (sys) {
     case 0:
       sys = ardDigitalPin;
@@ -103,57 +132,58 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
       break;
     case ardDigitalPin:
       if (index < 19)
-	index += 1;
+        index += 1;
       else {
-	index = 0;
-	sys = ardAnalogPin;
-      } 
+        index = 0;
+        sys = ardAnalogPin;
+      }
       break;
     case ardAnalogPin:
       if (index < 5)
-	index += 1;
+        index += 1;
       else {
-	index = 0; 
-	sys = ardVcc;
+        index = 0;
+        sys = ardVcc;
       }
       break;
     case ardVcc:
       return (false);
     }
-    pdu.oid.name[pos] = sys;
-    pdu.oid.name[pos + 1] = index;
+    pdu.oid.name[mib_baselen] = sys;
+    pdu.oid.name[mib_baselen + 1] = index;
+    pdu.oid.length = mib_baselen + 2;
     pdu.type = SNMP::PDU_GET;
   }
 
   // Check request type
   if (sys < ardDigitalPin || sys > ardVcc) return (false);
-  
+
   // Get value for digital or analog pin, or power supply voltage
   if (pdu.type == SNMP::PDU_GET) {
     switch (sys) {
     case ardDigitalPin:
       if (index > 19)
-	pdu.error_status = SNMP::NO_SUCH_NAME;
+        pdu.error_status = SNMP::NO_SUCH_NAME;
       else {
-	Board::DigitalPin pin;
-	pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[index]);
-	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) InputPin::read(pin));
+        Board::DigitalPin pin;
+        pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[index]);
+        pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) InputPin::read(pin));
       }
       break;
     case ardAnalogPin:
       if (index > 5)
-	pdu.error_status = SNMP::NO_SUCH_NAME;
+        pdu.error_status = SNMP::NO_SUCH_NAME;
       else {
-	Board::AnalogPin pin;
-	pin = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[index]);
-	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::sample(pin));
+        Board::AnalogPin pin;
+        pin = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[index]);
+        pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::sample(pin));
       }
       break;
     case ardVcc:
       if (index > 0)
-	pdu.error_status = SNMP::NO_SUCH_NAME;
+        pdu.error_status = SNMP::NO_SUCH_NAME;
       else
-	pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::bandgap());
+        pdu.value.encode(SNMP::SYNTAX_INT, (int16_t) AnalogPin::bandgap());
       break;
     }
   }
@@ -165,34 +195,22 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
   return (true);
 }
 
-// Disable SD on Ethernet Shield
-#define USE_ETHERNET_SHIELD
-#if defined(USE_ETHERNET_SHIELD)
-#include "Cosa/OutputPin.hh"
-OutputPin sd(Board::D4, 1);
-#endif
-
-// Network configuration
-#define IP 192,168,1,100
-#define SUBNET 255,255,255,0
-#define GATEWAY 192,168,1,1
-static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
-
-// SNMP MIB-2 System configuration
-static const char descr[] __PROGMEM = "<service description>";
-static const char contact[] __PROGMEM = "<contact information>";
-static const char name[] __PROGMEM = "<device name>";
-static const char location[] __PROGMEM = "<device location>";
-
-W5100 ethernet(mac);
-SNMP::MIB2_SYSTEM mib2(descr, contact, name, location);
 ARDUINO_MIB arduino;
-SNMP snmp;
 
 void setup()
 {
-  uint8_t ip[4] = { IP };
-  uint8_t subnet[4] = { SUBNET };
+  uint8_t ip[4]
+#if defined(USE_FIXED_IP)
+    = { USE_FIXED_IP };
+#else
+    ;
+#endif
+  uint8_t subnet[4]
+#if defined(SUBNET)
+    = { SUBNET };
+#else
+    ;
+#endif
 
   // Start watchdog and uart. Use uart for trace output
   uart.begin(9600);
@@ -200,17 +218,18 @@ void setup()
   Watchdog::begin();
 
   // Start ethernet controller and request network address for hostname
+#if defined(USE_FIXED_IP)
+  ASSERT(ethernet.begin(ip, subnet);
+#else
   ASSERT(ethernet.begin_P(PSTR("CosaSNMPAgent")));
-
-  // Alternative give network address and subnet mask
-  // ASSERT(ethernet.begin(ip, subnet));
+#endif
 
   // Print the given or default network address
   ethernet.get_addr(ip, subnet);
   trace << PSTR("IP = ");
   INET::print_addr(trace, ip);
   trace << endl;
-  
+
   // Print some memory statistics
   TRACE(free_memory());
   TRACE(sizeof(W5100));
