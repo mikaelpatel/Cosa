@@ -293,13 +293,22 @@ public:
 
   /**
    * Get the current network address and subnet mask. 
-   * @param[in] ip network address.
-   * @param[in] subnet mask.
+   * @param[in,out] ip network address.
+   * @param[in,out] subnet mask.
    */
   void get_addr(uint8_t ip[4], uint8_t subnet[4])
   {
     memcpy(ip, m_ip, sizeof(m_ip)); 
     memcpy(subnet, m_subnet, sizeof(m_subnet)); 
+  }
+
+  /**
+   * Get the device mac address.
+   * @param[in,out] mac device address.
+   */
+  void get_mac_addr(uint8_t mac[6])
+  {
+    memcpy(mac, m_mac, sizeof(m_mac)); 
   }
 
   /**

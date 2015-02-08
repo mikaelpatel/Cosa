@@ -58,8 +58,8 @@ void setup()
   uint8_t dns[4];
   uint8_t ip[4];
   uint8_t mac[6];
-  wifi.nvmem_read(CC3000::NVMEM_MAC_FILEID, mac, 0, sizeof(mac));
   wifi.get_addr(ip, subnet);
+  wifi.get_mac_addr(mac);
   wifi.get_dns_addr(dns);
   trace << "MAC="; INET::print_mac(trace, mac); trace << endl;
   trace << "IP=";  INET::print_addr(trace, ip); trace << endl;
