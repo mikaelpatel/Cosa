@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * W5100 Ethernet Controller device driver example code; MQTT client.
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
- * 
+ *
  *                       W5100/ethernet
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -52,7 +52,7 @@ public:
   virtual void on_publish(char* topic, void* buf, size_t count);
 };
 
-void 
+void
 MQTTClient::on_publish(char* topic, void* buf, size_t count)
 {
   // Print the topic and value to trace stream

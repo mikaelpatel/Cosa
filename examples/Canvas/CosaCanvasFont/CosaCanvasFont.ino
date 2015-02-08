@@ -9,14 +9,14 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Cosa demonstration of Canvas Font handling and device driver for 
+ * Cosa demonstration of Canvas Font handling and device driver for
  * ST7735 or ILI9341.
  *
  * @section Circuit
@@ -96,7 +96,7 @@ void loop()
   }
   sleep(4);
 
-  // Draw each character in the font table 
+  // Draw each character in the font table
   tft.set_text_scale(16);
   tft.set_pen_color(tft.shade(Canvas::WHITE, 75));
   tft.fill_rect(3, 2, tft.WIDTH - 6, tft.HEIGHT - 4);

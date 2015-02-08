@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Evaluate different methods of bit-field access using macro, enum,
  * shift and mask, and bit-fields struct definitions.
@@ -37,8 +37,8 @@ color16a(uint8_t red, uint8_t green, uint8_t blue)
 uint16_t
 color16b(uint8_t red, uint8_t green, uint8_t blue)
 {
-  return ((((red >> 3) & 0x1f) << 11)  | 
-	  (((green >> 2) & 0x3f) << 5) | 
+  return ((((red >> 3) & 0x1f) << 11)  |
+	  (((green >> 2) & 0x3f) << 5) |
 	  ((blue >> 3) & 0x1f));
 }
 

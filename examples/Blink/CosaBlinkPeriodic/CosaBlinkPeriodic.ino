@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * The classic LED blink example using a periodic function handler.
  *
@@ -32,7 +32,7 @@
 // Blinking LED output pin
 class LED : public Periodic {
 public:
-  LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) : 
+  LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) :
     Periodic(ms), m_pin(pin, initial) {}
   virtual void run() { m_pin.toggle(); }
 private:

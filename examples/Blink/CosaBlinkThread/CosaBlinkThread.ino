@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of Cosa Nucleo Threads; Blink LED with thread
  * delay and use an additional thread to control the LED blink
@@ -56,7 +56,7 @@ public:
   private:
     LED* m_led;
   };
-  
+
   LED(Board::DigitalPin pin) : Thread(), m_pin(pin, 1), m_delay(200) {}
   void set_delay(uint16_t ms) { m_delay = ms; }
   virtual void run() { m_pin.toggle(); delay(m_delay); }

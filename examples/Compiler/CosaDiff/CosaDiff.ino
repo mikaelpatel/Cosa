@@ -3,26 +3,26 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Testing code generation of arithmetric and comparison of unsigned 
- * numbers. Force wrap-around uint32_t and show how this works. 
- * Validate RTC/Watchdog::since(start) and 32->16 bit truncation 
+ * Testing code generation of arithmetric and comparison of unsigned
+ * numbers. Force wrap-around uint32_t and show how this works.
+ * Validate RTC/Watchdog::since(start) and 32->16 bit truncation
  * of counters.
  *
  * The conclusion is that difference should be signed and comparison
- * operators should be avoided. Instead compare with difference to 
+ * operators should be avoided. Instead compare with difference to
  * handle wrap-around and negative interval correctly. Or simply use
  * unsigned arithmetrics.
  *
@@ -53,16 +53,16 @@ void iter(uint32_t t0, uint32_t t1, uint8_t i0, uint8_t i1)
     bool lessthan32 = t1 < t0;
     bool diffzeroless16 = diff16 < 0;
     bool diffzeroless32 = diff32 < 0;
-    trace << i 
+    trace << i
 	  << PSTR(":v0=") << t0 << ',' << s0
 	  << PSTR(",v1=") << t1 << ',' << s1
 	  << PSTR(",diff=") << diff32 << ',' << diff16
 	  << PSTR(",udiff=") << udiff32 << ',' << udiff16;
     if ((lessthan16 != diffzeroless16) || (lessthan32 != diffzeroless32)) {
-      trace << PSTR(",(v1 < v0)=") 
+      trace << PSTR(",(v1 < v0)=")
 	    << lessthan32 << ',' << lessthan16
-	    << PSTR(",((v1-v0) < 0)=") 
-	    << diffzeroless32 
+	    << PSTR(",((v1-v0) < 0)=")
+	    << diffzeroless32
 	    << ',' << diffzeroless16
 	    << PSTR(":error");
     }

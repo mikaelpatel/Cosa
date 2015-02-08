@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,9 +26,9 @@
 
 /**
  * MQTT V3.1 Protocol client implementation.
- * 
+ *
  * @section Reference
- * 1. MQTT V3.1 Protocol Specification, 
+ * 1. MQTT V3.1 Protocol Specification,
  *    Copyright (c) 1999-2010, Eurotech, IBM.
  */
 class MQTT {
@@ -51,30 +51,30 @@ public:
     /**
      * Default constructor; initiate client state.
      */
-    Client() : 
-      m_sock(NULL), 
-      m_mid(1) 
+    Client() :
+      m_sock(NULL),
+      m_mid(1)
     {}
 
     /**
      * Default destructor.
      */
-    ~Client() 
-    { 
-      end(); 
+    ~Client()
+    {
+      end();
     }
 
     /**
-     * Start MQTT client with given socket. The socket will be used for 
+     * Start MQTT client with given socket. The socket will be used for
      * all access (DNS and MQTT server) until closed with the member
      * function end() or the default destructor. Returns true if
-     * successful otherwise false. 
+     * successful otherwise false.
      * @param[in] sock connection-less socket (TCP).
      * @return bool.
      */
     bool begin(Socket* sock);
 
-    /** 
+    /**
      * Stop MQTT client and close socket. Returns true if successful
      * otherwise false.
      * @return bool.
@@ -82,7 +82,7 @@ public:
     bool end();
 
     /** Connect flags (pp. 8-9). */
-    enum {			
+    enum {
       WILL_FLAG = 0x04,		//!< Will flag.
       USER_NAME_FLAG = 0x80,	//!< User name flag.
       PASSWORD_FLAG = 0x40,	//!< Password flag.
@@ -94,7 +94,7 @@ public:
      * Connect using given hostname with client identifier, given
      * keep alive timeout in seconds, flags and optional
      * parameters. Returns zero if successful otherwise negative error
-     * code. 
+     * code.
      * @param[in] hostname server name.
      * @param[in] identifier for client (program memory string).
      * @param[in] keep_alive time limit between messages (Default 600).
@@ -106,9 +106,9 @@ public:
      * @return zero if successful otherwise negative error code.
      */
     int connect(const char* hostname,
-		const char* identifier, 
-		uint16_t keep_alive = 600, 
-		uint8_t flag = 0, 
+		const char* identifier,
+		uint16_t keep_alive = 600,
+		uint8_t flag = 0,
 		...);
 
     /**
@@ -130,7 +130,7 @@ public:
      * @param[in] progmem flag if payload buffer in program memory.
      * @return zero if successful otherwise negative error code.
      */
-    int publish(str_P topic, const void* buf, size_t count, 
+    int publish(str_P topic, const void* buf, size_t count,
 		QoS_t qos, bool retain, bool progmem);
 
     /**
@@ -144,8 +144,8 @@ public:
      * @param[in] retain require server to maintain value (Default false).
      * @return zero if successful otherwise negative error code.
      */
-    int publish(str_P topic, const void* buf, size_t count, 
-		QoS_t qos = FIRE_AND_FORGET, 
+    int publish(str_P topic, const void* buf, size_t count,
+		QoS_t qos = FIRE_AND_FORGET,
 		bool retain = false)
       __attribute__((always_inline))
     {
@@ -163,8 +163,8 @@ public:
      * @param[in] retain require server to maintain value (Default false).
      * @return zero if successful otherwise negative error code.
      */
-    int publish_P(str_P topic, const void* buf, size_t count, 
-		  QoS_t qos = FIRE_AND_FORGET, 
+    int publish_P(str_P topic, const void* buf, size_t count,
+		  QoS_t qos = FIRE_AND_FORGET,
 		  bool retain = false)
     {
       return (publish(topic, buf, count, qos, retain, true));
@@ -182,7 +182,7 @@ public:
 
     /**
      * Unsubscribe on the given topic. Returns zero if successful
-     * otherwise negative error code. 
+     * otherwise negative error code.
      * @param[in] topic string (program memory).
      * @return zero if successful otherwise negative error code.
      */
@@ -191,15 +191,15 @@ public:
     /**
      * Service the MQTT client. Check for publish messages. Decode and
      * calls virtual member function on_publish(). Returns zero if
-     * successful otherwise negative error code. 
+     * successful otherwise negative error code.
      * @param[in] ms timeout period, milli-seconds (Default BLOCK).
      * @return zero if successful otherwise negative error code.
      */
     int service(uint32_t ms = 0L);
-    
+
     /**
      * @override MQTT::Client
-     * Called by service when received a publish message. 
+     * Called by service when received a publish message.
      * @param[in] topic string.
      * @param[in] buf buffer with topic value.
      * @param[in] count number of bytes in buffer.

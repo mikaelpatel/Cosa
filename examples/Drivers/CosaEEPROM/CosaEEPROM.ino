@@ -3,21 +3,21 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demo of the default EEPROM device driver and usage of the EEMEM
- * directive. 
+ * directive.
  *
  * @section Circuit
  * Uses the MCU internal EEPROM and Analog Pin A0 for samples.
@@ -62,11 +62,11 @@ void setup()
   trace.begin(&uart, PSTR("CosaEEPROM: started"));
   TRACE(free_memory());
   Watchdog::begin();
-  
+
   // Initiate data vector with index
-  for (uint8_t i = 0; i < DATA_MAX; i++) 
+  for (uint8_t i = 0; i < DATA_MAX; i++)
     ASSERT(eeprom.write(&data[i], (uint16_t) 0xffff) == sizeof(uint16_t));
-  
+
   // Read the configuration and print
   config_t init;
   ASSERT(eeprom.read(&init, &config, sizeof(init)) == sizeof(init));
@@ -80,7 +80,7 @@ void loop()
 {
   static int i = 0;
   uint16_t x;
-  
+
   // Print sensor samples
   if (i == 0) {
     for (i = 0; i < (int) membersof(data); i++) {

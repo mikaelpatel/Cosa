@@ -3,27 +3,27 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Demonstration of Cosa Ciao data streaming; Cosa Fai, Ardino
  * objects; Writes Cosa Fai header and type descriptor followed by
  * analog and digital pin samples and events.
- * 
- * Open the serial monitor to see the print out of the serialized data 
+ *
+ * Open the serial monitor to see the print out of the serialized data
  * stream. No special host program is required, the example sketch
  * will print the stream as hexadecimal numbers and printable
- * characters when possible.  
+ * characters when possible.
  *
  * @section Circuit
  * This example requires no special circuit. Uses serial output,
@@ -57,15 +57,15 @@ OutputPin ledPin(Board::LED);
 class TraceDevice : public IOStream::Device {
 public:
   virtual int putchar(char c)
-  { 
-    trace.print((uint8_t) c, IOStream::hex); 
+  {
+    trace.print((uint8_t) c, IOStream::hex);
     if (isgraph(c)) {
       trace.print_P(PSTR(" '"));
       trace.print(c);
       trace.print('\'');
     }
     trace.println();
-    return (1); 
+    return (1);
   }
 };
 

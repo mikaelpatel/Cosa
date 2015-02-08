@@ -3,13 +3,13 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -27,7 +27,7 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Memory.h"
 
-static const char msg[] __PROGMEM = 
+static const char msg[] __PROGMEM =
 "RC4 was designed by Ron Rivest of RSA Security in 1987. While it is\n"
 "officially termed Rivest Cipher 4, the RC acronym is alternatively\n"
 "understood to stand for Ron's Code.\n"
@@ -144,7 +144,7 @@ void setup()
   while ((c = pgm_read_byte(s++)) != 0)
     trace << receiver.decrypt(sender.encrypt(c));
   trace << endl;
-  
+
   // Test#4: Fill buffer and encrypt/decrypt before print
   trace << endl << PSTR("ENCRYPT MESSAGE") << endl;
   sender.restart(key, strlen(key));

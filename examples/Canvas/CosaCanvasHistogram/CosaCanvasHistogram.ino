@@ -9,19 +9,19 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Cosa demonstration of Canvas device driver for ST7735, 262K Color 
+ * Cosa demonstration of Canvas device driver for ST7735, 262K Color
  * Single-Chip TFT Controller, and monitoring of analog pins as
  * a histogram.
  *
  * @section Circuit
- * Use the analog pin(0..MAX-1) as the probe pins. 
+ * Use the analog pin(0..MAX-1) as the probe pins.
  *
  *                           ST7735
  *                       +------------+

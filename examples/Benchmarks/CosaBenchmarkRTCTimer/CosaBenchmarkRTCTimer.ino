@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa RTC (Real-Time Clock) Benchmark. Validate and measurements.
  *
@@ -75,8 +75,8 @@ void setup()
   TRACE(sizeof(Timer));
   TRACE(sizeof(Simple));
   TRACE(sizeof(OneShot));
-  
-  // Print CPU clock and instructions per 1MHZ 
+
+  // Print CPU clock and instructions per 1MHZ
   TRACE(F_CPU);
   TRACE(I_CPU);
 
@@ -92,12 +92,12 @@ void setup()
 #if defined(RTC_TIMER_MEASURE)
   // Measure basic performance
   RTCMeasure test;
-  
+
   uint32_t max_immediate_expiration = 0;
   uint32_t sum_immediate = 0;
   uint32_t s;
   uint32_t us_per_timer_cycle = RTC::us_per_timer_cycle();
-  
+
   for (s = 0; s < 1024; s++) {
     test.expire_after( s );
     test.start();
@@ -117,7 +117,7 @@ void setup()
   uint32_t sum_start = 0;
   uint32_t sum_setup = 0;
   uint32_t sum_dispatch = 0;
-  
+
   for (; s < 1024; s++) {
     test.expire_after(s);
     test.start();
@@ -128,11 +128,11 @@ void setup()
     sum_dispatch += (uint32_t) RTCMeasure::dispatch_cycles;
   }
   uint32_t queued_samples = s - max_immediate_expiration;
-  
+
   uint32_t avg_start = ((sum_start * us_per_timer_cycle) / queued_samples);
   uint32_t avg_setup = ((sum_setup * us_per_timer_cycle) / queued_samples);
   uint32_t avg_dispatch = ((sum_dispatch * us_per_timer_cycle) / queued_samples);
-  
+
   trace.printf_P(PSTR("For queued expirations,\n"
 		      "  Avg start = %l us (%l instructions)\n"
 		      "  Avg setup = %l us (%l instructions)\n"
@@ -150,9 +150,9 @@ void setup()
     one_shot.expire_at(start + expected);
     one_shot.start();
     while (!Simple::flag)
-      ; 
+      ;
     actual = OneShot::time_stamp - start;
-    trace.printf_P(PSTR("expire_after(%ul us): actual %l us\n"), 
+    trace.printf_P(PSTR("expire_after(%ul us): actual %l us\n"),
 		   expected, actual);
     trace.flush();
     if (expected < 100)
@@ -162,7 +162,7 @@ void setup()
     else
       expected += 41;
   }
-  
+
   // tick test
   Simple::flag = false;
   expected = us_per_tick;
@@ -172,7 +172,7 @@ void setup()
   while (!Simple::flag)
     ;
   actual = OneShot::time_stamp - start;
-  trace.printf_P(PSTR("expire_after(%ul us): actual %ul us\n"), 
+  trace.printf_P(PSTR("expire_after(%ul us): actual %ul us\n"),
 		 expected, actual);
   trace.flush();
 
@@ -185,7 +185,7 @@ void setup()
     expected += us_per_tick;
     // Make sure the expirations are evenly spaced, even if one
     // expires a little late or early. The next one will aim for the
-    // correct expiration. 
+    // correct expiration.
     timer.expire_at(timer.expire_at() + us_per_tick);
     timer.start();
     while (Simple::flag == (i & 1))
@@ -209,16 +209,16 @@ void setup()
   for (int8_t i = membersof(bunch) - 1; i >= 0; i--) {
     bunch[i].start();
   }
-  trace.printf_P(PSTR("%d timers started in %ulus\n"), 
+  trace.printf_P(PSTR("%d timers started in %ulus\n"),
 		 membersof(bunch), RTC::micros() - startStart );
 
   uint32_t timeout = ((expected / 1000000) + 2) * 1000000;
   while (TimerGroup::started > 0) {
     stop = RTC::micros();
     if (stop - start > timeout) {
-      trace.printf_P(PSTR("ERROR: %d timers still running\n"), 
+      trace.printf_P(PSTR("ERROR: %d timers still running\n"),
 		     TimerGroup::started );
-      trace.printf_P(PSTR("  started at %ul, now=%ul, expiring at "), 
+      trace.printf_P(PSTR("  started at %ul, now=%ul, expiring at "),
 		     start, stop );
       for (uint8_t i=0; i < membersof(bunch); i++) {
         trace << bunch[i].expire_at() << PSTR(", ");
@@ -230,26 +230,26 @@ void setup()
   }
   stop = RTC::micros();
   actual = stop - start;
-  
+
   uint32_t expected_ms = expected / 1000;
   trace.printf_P(PSTR("elapsed time (0.5 + %d*0.1s = %ul.%uls): actual %ulus\n"),
-		 (membersof(bunch) - 1), 
-		 (expected_ms / 1000), 
-		 (expected_ms % 1000), 
+		 (membersof(bunch) - 1),
+		 (expected_ms / 1000),
+		 (expected_ms % 1000),
 		 actual);
   trace.flush();
-  
+
   RTC::micros( 0xFFFFF000UL ); // 4095uS 'til rolloover
   expected = 5000;  // anywhere past the rolloever...
- 
+
   Simple::flag = false;
   start = RTC::micros();
   one_shot.expire_at(start + expected);
   one_shot.start();
   while (!Simple::flag)
-    ; 
+    ;
   actual = OneShot::time_stamp - start;
-  trace.printf_P(PSTR("Rollover test: start %ul, end %ul\n  expire_after(%ul us): actual %l us\n"), 
+  trace.printf_P(PSTR("Rollover test: start %ul, end %ul\n  expire_after(%ul us): actual %l us\n"),
      start, OneShot::time_stamp, expected, actual);
   trace.flush();
 }

@@ -3,34 +3,34 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa Pins Benchmark; number of micro-seconds for pin operations.
  *
  * Measurement of the pins operations; digital/analog input pin read,
- * digital output pin write and toggle, and serial output with clock.  
- * 
+ * digital output pin write and toggle, and serial output with clock.
+ *
  * Reading a digital pin in Cosa is 6-7X faster than Arduino. Writing
  * is 2-10X faster. Serial output with data and clock pin is 4X
- * faster. Reading an analog pin in Cosa is equal to Arduino though 
- * Cosa allows the ADC to be performed asynchroniously. 
- * 
+ * faster. Reading an analog pin in Cosa is equal to Arduino though
+ * Cosa allows the ADC to be performed asynchroniously.
+ *
  * The speedup can be explained by the caching of port register
  * pointer and pin mask in Cosa compared to Arduino. Also most access
  * functions in Cosa are inlined. Though object-oriented and in/output
  * operator syntax Cosa is between 2-10X faster allowing high speed
- * protocols. 
+ * protocols.
  *
  * The digital pin object holds reference to special function register
  * (port), pin mask and pin number (total of 4 bytes). The analog pin
@@ -120,8 +120,8 @@ void setup()
   TRACE(sizeof(InputPin));
   TRACE(sizeof(OutputPin));
   TRACE(sizeof(AnalogPin));
-  
-  // Print CPU clock and instructions per 1MHZ 
+
+  // Print CPU clock and instructions per 1MHZ
   TRACE(F_CPU);
   TRACE(I_CPU);
 }
@@ -195,7 +195,7 @@ void loop()
     cnt += digitalRead(Board::D7);
     __asm__ __volatile__("nop");
   }
-  
+
   MEASURE_SUITE("Measure the time to perform an output pin toggle");
 
   MEASURE_NS("outPin.write(x)/x=!x") {
@@ -264,7 +264,7 @@ void loop()
     OutputPin::toggle(Board::D8);
     __asm__ __volatile__("nop");
   }
-  
+
   MEASURE_NS("digitalWrite(D8, 1/0)") {
     digitalWrite(Board::D8, 1);
     digitalWrite(Board::D8, 0);
@@ -285,9 +285,9 @@ void loop()
   }
 
   MEASURE_NS("inPin.is_set();outPin.clear/set()") {
-    if (inPin.is_set()) 
-      outPin.clear(); 
-    else 
+    if (inPin.is_set())
+      outPin.clear();
+    else
       outPin.set();
     __asm__ __volatile__("nop");
   }
@@ -468,7 +468,7 @@ void loop()
   }
 
   MEASURE_US("analogPin >> var") {
-    uint16_t var; 
+    uint16_t var;
     analogPin >> var;
   }
 
@@ -492,7 +492,7 @@ void loop()
       analogPin.sample();
     stop = RTC::micros();
     ns = (stop - start);
-    INFO("prescale(%d):bits(%d):analogPin.sample():%ul us", 
+    INFO("prescale(%d):bits(%d):analogPin.sample():%ul us",
 	 1 << factor, factor + 3, ns / 1000L);
   }
   trace.println();

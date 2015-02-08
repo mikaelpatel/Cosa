@@ -3,25 +3,25 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * MQTT client; Publish 1-Wire digital thermometer, DS18B20, 
+ * MQTT client; Publish 1-Wire digital thermometer, DS18B20,
  * temperature reading on MQTT server.
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
- * 
+ *
  *                       W5100/ethernet
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -37,7 +37,7 @@
  * (D7)------+---------2-|DQ          ||| |
  *           |       +-3-|VDD         |||/
  *          4K7      |   +------------+++
- *           |       | 
+ *           |       |
  * (VCC)-----+       +---(VCC/GND)
  *
  * This file is part of the Arduino Che Cosa project.
@@ -127,7 +127,7 @@ void loop()
   case 1: topic = PSTR("public/cosa/temperature/indoors"); break;
   case 2: topic = PSTR("public/cosa/temperature/basement"); break;
   };
-    
+
   // Request a conversion and read the temperature
   thermometer[i]->convert_request();
   thermometer[i]->read_scratchpad();

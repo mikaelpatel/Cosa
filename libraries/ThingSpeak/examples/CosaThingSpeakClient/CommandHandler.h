@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,10 +26,10 @@
 
 class Command : public ThingSpeak::TalkBack::Command {
 public:
-  Command(ThingSpeak::TalkBack* talkback, const char* string) : 
+  Command(ThingSpeak::TalkBack* talkback, const char* string) :
     ThingSpeak::TalkBack::Command(talkback, string)
   {}
-  Command(ThingSpeak::TalkBack* talkback, str_P string) : 
+  Command(ThingSpeak::TalkBack* talkback, str_P string) :
     ThingSpeak::TalkBack::Command(talkback, string)
   {}
   virtual void execute();
@@ -37,7 +37,7 @@ public:
 
 class CommandHandler : public Alarm {
 public:
-  CommandHandler(ThingSpeak::TalkBack* talkback, uint16_t period) : 
+  CommandHandler(ThingSpeak::TalkBack* talkback, uint16_t period) :
     Alarm(period), m_talkback(talkback)
   {}
   virtual void run();

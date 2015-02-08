@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa IR receiver for LG remote using a TSOP4838 for decoding
  * IR transmission. Uses the Watchdog to monitor the decoding.
@@ -55,7 +55,7 @@
 #endif
 
 /**
- * Use UART or LCD/PCD8544 for output. 
+ * Use UART or LCD/PCD8544 for output.
  */
 #if defined(USE_UART)
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -158,7 +158,7 @@ void loop()
     }
     else if (is_on) {
       // Backspace
-      if (key == '\b') 
+      if (key == '\b')
 	trace << key << ' ' << key;
       // Form-feed
       else if (key == '\f')
@@ -169,8 +169,8 @@ void loop()
       // And other keys
       else if (key != -1)
 	trace << key;
-    } 
-  } 
+    }
+  }
 
   // Reset for the next sequence
   receiver.reset();

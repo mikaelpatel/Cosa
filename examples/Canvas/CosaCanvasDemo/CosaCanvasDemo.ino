@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa demonstration of device driver for ST7735 or ILI9341.
  * Shows binding to IOStream::Device and basic drawing functions.
@@ -189,13 +189,13 @@ void loop()
   textbox.set_text_port(5, 5, tft.WIDTH-10, tft.HEIGHT-10);
 #endif
 #if defined(USE_TFT_ILI9341)
-  tft.draw_rect(tft.WIDTH/4+4, tft.HEIGHT/4+4, 
+  tft.draw_rect(tft.WIDTH/4+4, tft.HEIGHT/4+4,
 		tft.WIDTH/2-8, tft.HEIGHT/2-8);
   textbox.set_text_port(tft.WIDTH/4+5, tft.HEIGHT/4+5,
 			tft.WIDTH/2-10, tft.HEIGHT/2-10);
 #endif
   console.print('\f');
-  console.print(&tft, 200, IOStream::hex, 
+  console.print(&tft, 200, IOStream::hex,
 		tft.get_orientation() == Canvas::PORTRAIT ? 3 : 5);
   ms = (RTC::micros() - start) / 1000L;
   console.printf_P(PSTR("%ul ms"), ms);
@@ -228,7 +228,7 @@ void loop()
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#5:draw rect grid: %ul ms", ms);
   sleep(2);
-  
+
   // Test#6: Fill some of the rectangles
   tft.set_pen_color(Canvas::WHITE);
   start = RTC::micros();
@@ -300,18 +300,18 @@ void loop()
   INFO("test#9:draw more lines: %ul ms", ms);
   sleep(2);
 
-  // Test#10: Display polygons 
+  // Test#10: Display polygons
   start = RTC::micros();
   tft.set_canvas_color(Canvas::WHITE);
   tft.fill_screen();
-  static const int8_t polygon[] __PROGMEM = { 
-    100, 100, 
-    -100, 0, 
-    50, -50, 
-    0, 50, 
+  static const int8_t polygon[] __PROGMEM = {
+    100, 100,
+    -100, 0,
+    50, -50,
+    0, 50,
     50, 50,
     -10, -10,
-    0, 0 
+    0, 0
   };
   for (uint16_t x = 10; x < tft.WIDTH - 40; x += 10) {
     tft.set_pen_color(tft.shade(Canvas::GREEN, 20 + x));
@@ -326,12 +326,12 @@ void loop()
   start = RTC::micros();
   tft.set_canvas_color(Canvas::WHITE);
   tft.fill_screen();
-  static const int8_t stroke[] __PROGMEM = { 
+  static const int8_t stroke[] __PROGMEM = {
     20, -100,
     20, 100,
     -30, -50,
     20, 0,
-    0, 0 
+    0, 0
   };
   for (uint16_t x = 10; x < tft.WIDTH - 40; x += 10) {
     tft.set_pen_color(tft.shade(Canvas::RED, 20 + x));
@@ -366,7 +366,7 @@ void loop()
   ms = (RTC::micros() - start) / 1000L;
   INFO("test#13:draw grid image: %ul ms", ms);
   sleep(2);
-  
+
   // Rotate display
   direction = !direction;
   tft.set_orientation(direction);

@@ -9,15 +9,15 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Cosa demonstration of Cosa Canvas color shades on ST7735, 
- * 262K Color Single-Chip TFT Controller. 
+ * Cosa demonstration of Cosa Canvas color shades on ST7735,
+ * 262K Color Single-Chip TFT Controller.
  *
  * @section Circuit
  *                           ST7735
@@ -34,7 +34,7 @@
  * (VCC)----[330]-----15-|LED+        |
  * (GND)--------------16-|LED-        |
  *                       +------------+
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

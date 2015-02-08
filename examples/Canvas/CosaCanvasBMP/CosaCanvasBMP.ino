@@ -9,17 +9,17 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa demonstration of drawing a BMP image on Canvas. The test
  * bitmap (parrot.bmp) is 30X the size of the available SRAM on the
  * standard Arduino.
- * 
+ *
  * @section Circuit
  * @code
  *                           ST7735
@@ -99,7 +99,7 @@ public:
 
     /**
      * Close bitmap file. Return true(1) if successful otherwise
-     * false(0). 
+     * false(0).
      * @return bool.
      */
     bool close();
@@ -119,7 +119,7 @@ public:
   };
 };
 
-bool 
+bool
 BMP::File::open(const char* filename)
 {
   // Open the file for reading
@@ -127,7 +127,7 @@ BMP::File::open(const char* filename)
 
   // Read the file header and check signature
   BMP::file_header_t file_header;
-  if ((m_file.read(&file_header, sizeof(file_header)) != sizeof(file_header)) 
+  if ((m_file.read(&file_header, sizeof(file_header)) != sizeof(file_header))
       || (file_header.signature != BMP::SIGNATURE))
     return (false);
 
@@ -145,14 +145,14 @@ BMP::File::open(const char* filename)
   HEIGHT = image_header.image_height;
   return (true);
 }
-    
-bool 
+
+bool
 BMP::File::close()
 {
   return (m_file.close());
 }
 
-bool 
+bool
 BMP::File::read(Canvas::color16_t* buf, size_t count)
 {
   // Read the next batch of pixels and translate to canvas color

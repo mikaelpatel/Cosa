@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa ProtocolBuffer demonstration and tests.
  *
@@ -107,7 +107,7 @@ void setup()
   ASSERT(pb.read(f) == sizeof(f));
   ASSERT(f == -1.53729e-3);
 #endif
-  
+
 #if defined(TEST_RANGE)
   // Test signed integer range
   for (int32_t value = -100; value <= 100; value += 10) {
@@ -118,7 +118,7 @@ void setup()
     ASSERT(pb.read(v) > 0);
     ASSERT(v == value);
   }
-  
+
   // Test unsigned integer range
   for (uint32_t value = 0; value <= 200; value += 10) {
     ASSERT(pb.write(2, value) > 0);
@@ -146,7 +146,7 @@ void setup()
   ASSERT(pb.write(1, foo.x) == 2);
   ASSERT(pb.write(2, foo.y) == 3);
   ASSERT(pb.write(3, foo.z) == 4);
-  
+
   // Read and verify tag and value
   ASSERT(pb.read(tag, type) == 1);
   ASSERT(tag == 1 && type == ProtocolBuffer::VARINT);
@@ -173,7 +173,7 @@ void setup()
 #endif
 
 #if defined(TEST_EXAMPLES)
-  // From Google Developers Protocol Buffers Encoding 
+  // From Google Developers Protocol Buffers Encoding
   // https://developers.google.com/protocol-buffers/docs/encoding
   //
   // A SIMPLE MESSAGE
@@ -181,10 +181,10 @@ void setup()
   //   message Test1 {
   //     required int32 a = 1;
   //   }
-  // 
+  //
   // In an application, you create a Test1 message and set a to
   // 150. You then serialize the message to an output stream. If you
-  // were able to examine the encoded message, you'd see three bytes:  
+  // were able to examine the encoded message, you'd see three bytes:
   u = 150;
   ASSERT(pb.write(1, u) == 3);
   trace.print((const char*) iob, iob.available(), IOStream::hex);
@@ -194,9 +194,9 @@ void setup()
   u = 0;
   ASSERT(pb.read(u) == 2);
   ASSERT(u == 150);
-  // 
+  //
   // MORE VALUE TYPES: SIGNED INTEGER
-  // 
+  //
   // ZigZag encoding maps signed integers to unsigned integers so that
   // numbers with a small absolute value (for instance, -1) have a
   // small varint encoded value too. It does this in a way that
@@ -227,12 +227,12 @@ void setup()
   //
   // A wire type of 2 (length-delimited) means that the value is a
   // varint encoded length followed by the specified number of bytes
-  // of data.  
+  // of data.
   //
   //   message Test2 {
   //     required string b = 2;
   //   }
-  // 
+  //
   // Setting the value of b to "testing".
   const char b[] = "testing";
   ASSERT(pb.write(2, b) == strlen(b) + 2);
@@ -260,12 +260,12 @@ void setup()
   // EMBEDDED MESSAGES
   //
   // Here's a message definition with an embedded message of our
-  // example type, Test1:  
-  // 
+  // example type, Test1:
+  //
   //   message Test3 {
   //     required Test1 c = 3;
   //   }
-  // 
+  //
   // And here's the encoded version, again with the Test1's a field
   // set to 150. Use a temporary buffer for the encoding of the
   // embedded message.
@@ -274,7 +274,7 @@ void setup()
   int count;
   u = 150;
   ASSERT(c.write(1, u) == 3);
-  ASSERT(pb.write(3, (const char*) tmp, tmp.available()) == 
+  ASSERT(pb.write(3, (const char*) tmp, tmp.available()) ==
 	 tmp.available() + 2);
   trace.print((const char*) iob, iob.available(), IOStream::hex);
   // Result: 1a 03 08 96 01
@@ -289,7 +289,7 @@ void setup()
   tmp.empty();
   //
   // REPEATED ELEMENTS
-  // 
+  //
   // Version 2.1.0 introduced packed repeated fields, which are
   // declared like repeated fields but with the special [packed=true]
   // option. These function like repeated fields, but are encoded
@@ -297,21 +297,21 @@ void setup()
   // does not appear in the encoded message. Otherwise, all of the
   // elements of the field are packed into a single key-value pair
   // with wire type 2 (length-delimited). Each element is encoded the
-  // same way it would be normally, except without a tag preceding it.  
-  // 
+  // same way it would be normally, except without a tag preceding it.
+  //
   //   message Test4 {
   //     repeated int32 d = 4 [packed=true];
   //   }
   //
   // Now let's say you construct a Test4, providing the values 3, 270,
-  // and 86942 for the repeated field d. 
+  // and 86942 for the repeated field d.
   ASSERT(c.write(3UL) == 1);
   ASSERT(c.write(270UL) == 2);
   ASSERT(c.write(86942UL) == 3);
-  ASSERT(pb.write(4, (const char*) tmp, tmp.available()) == 
+  ASSERT(pb.write(4, (const char*) tmp, tmp.available()) ==
 	 tmp.available() + 2);
   trace.print((const char*) iob, iob.available(), IOStream::hex);
-  // Result: 22 06 03 8e 02 9e a7 05 
+  // Result: 22 06 03 8e 02 9e a7 05
   ASSERT(pb.read(tag, type) == 1);
   ASSERT(tag == 4 && type == ProtocolBuffer::LENGTH_DELIMITED);
   ASSERT((count = pb.getchar()) == 6);
@@ -338,13 +338,13 @@ void loop()
  *  sizeof(iob) = 37
  *  sizeof(pb) = 4
  *  Google Protocol Buffers
- *  0x895: 08 96 01 
- *  0x898: 08 01 
- *  0x89a: 08 03 
- *  0x89c: 12 07 74 65 73 74 69 6e 67 
- *  0x88c: 12 07 74 65 73 74 69 6e 67 
- *  0x88c: 1a 03 08 96 01 
- *  0x891: 22 06 03 8e 02 9e a7 05 
+ *  0x895: 08 96 01
+ *  0x898: 08 01
+ *  0x89a: 08 03
+ *  0x89c: 12 07 74 65 73 74 69 6e 67
+ *  0x88c: 12 07 74 65 73 74 69 6e 67
+ *  0x88c: 1a 03 08 96 01
+ *  0x891: 22 06 03 8e 02 9e a7 05
  *  free_memory() = 1695
  *  334:void loop():assert:true == false
  */

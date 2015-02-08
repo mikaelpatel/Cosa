@@ -4,22 +4,22 @@
 # @version 1.0
 #
 # @section License
-# Copyright (C) 2014, Mikael Patel
+# Copyright (C) 2014-2015, Mikael Patel
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
 # version 2.1 of the License, or (at your option) any later version.
-# 
+#
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Lesser General Public License for more details.
 #
 # @section Description
-# Build and run all benchmarks. Parameters are board and version 
+# Build and run all benchmarks. Parameters are board and version
 # of Arduino IDE. Default are nano and 1.5.7. Note: The cosa build
-# script version is not changed. 
+# script version is not changed.
 #
 # This file is part of the Arduino Che Cosa project.
 
@@ -37,7 +37,7 @@ echo `date`: BOARD=$board,VERSION=$version
 for dir in $(ls)
 do
   if [ -d "$dir" ]; then
-    echo -n `date`: $dir": " 
+    echo -n `date`: $dir": "
     cd $dir
     echo -n build..
     cosa $board ARDUINO_VER=$version &> arduino-$version.log

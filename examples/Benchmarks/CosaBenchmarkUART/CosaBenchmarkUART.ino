@@ -3,23 +3,23 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Benchmarking IOStream and UART functions; measure time to print
  * characters, strings and numbers through the IOStream interface and
  * IOBuffer to the UART.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -50,11 +50,11 @@ void setup()
 void loop()
 {
   // Measure time to print character, string and number
-  MEASURE("one character (new-line):", 1) trace << endl; 
-  MEASURE("one character:", 1) trace << '1' << endl; 
+  MEASURE("one character (new-line):", 1) trace << endl;
+  MEASURE("one character:", 1) trace << '1' << endl;
   MEASURE("one character string:", 1) trace << PSTR("1") << endl;
   MEASURE("integer:", 1) trace << 1 << endl;
-  MEASURE("long integer:", 1) trace << 1L << endl; 
+  MEASURE("long integer:", 1) trace << 1L << endl;
   MEASURE("two characters:", 1) trace << '1' << '0' << endl;
   MEASURE("two character string:", 1) trace << PSTR("10") << endl;
   MEASURE("integer:", 1) trace << 10 << endl;
@@ -76,7 +76,7 @@ void loop()
 
   // Measure time to print unsigned integer; 16 and 32 bit.
   MEASURE("uint16_t(digits=6):", 1) {
-    trace.print(100U, 6, IOStream::dec); 
+    trace.print(100U, 6, IOStream::dec);
     trace.println();
   }
   MEASURE("uint32_t(digits=6):", 1) {

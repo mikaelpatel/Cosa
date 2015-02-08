@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa RGB LED blink demonstration using a Finite State Machine; The
  * classical LEB blink example program with two RGB LEDs controlled by
  * an FSM for each color state on each LED. The two RGB LEDs will also
  * blink with two different periods.
- * 
+ *
  * @section Circuit
  * Connect two RGB LEDs to pins (D5, D6, D7) and (D8, D9, D10).
  *
@@ -49,8 +49,8 @@ class BlinkRGB : public FSM {
 public:
   // Construct the state machine for the RGB led sequencing
   BlinkRGB(uint16_t period = 512,
-	   Board::DigitalPin redLedPinNr = Board::D5, 
-	   Board::DigitalPin greenLedPinNr = Board::D6, 
+	   Board::DigitalPin redLedPinNr = Board::D5,
+	   Board::DigitalPin greenLedPinNr = Board::D6,
 	   Board::DigitalPin blueLedPinNr = Board::D7) :
     FSM(redState, period),
     redLedPin(redLedPinNr, 1),
@@ -60,7 +60,7 @@ public:
 
   // State functions; red => yellow => green => cyan => blue => meganta
   // Receive a timeout events which are ignored. Turns on and off the
-  // leds with toggle and steps to the next state. 
+  // leds with toggle and steps to the next state.
   static bool redState(FSM* fsm, uint8_t type)
   {
     UNUSED(type);
@@ -78,7 +78,7 @@ public:
     fsm->set_state(greenState);
     return (1);
   }
-  
+
   static bool greenState(FSM* fsm, uint8_t type)
   {
     UNUSED(type);
@@ -87,7 +87,7 @@ public:
     fsm->set_state(cyanState);
     return (1);
   }
-  
+
   static bool cyanState(FSM* fsm, uint8_t type)
   {
     UNUSED(type);

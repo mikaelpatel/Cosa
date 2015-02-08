@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -22,13 +22,13 @@
 #include "Cosa/INET/DNS.hh"
 #include "Cosa/Watchdog.hh"
 
-const char MQTT::PROTOCOL[] __PROGMEM = { 
+const char MQTT::PROTOCOL[] __PROGMEM = {
   0, 6, 				// Length(6)
   'M', 'Q', 'I', 's', 'd', 'p',		// Name("MQIsdp")
   3					// Version(3)
 };
 
-int 
+int
 MQTT::Client::write(uint8_t cmd, uint16_t length, uint16_t id)
 {
   int res = sizeof(uint8_t);
@@ -45,19 +45,19 @@ MQTT::Client::write(uint8_t cmd, uint16_t length, uint16_t id)
   return (res + sizeof(uint8_t));
 }
 
-int 
+int
 MQTT::Client::write(const void* buf, size_t count)
 {
   return (m_sock->write(buf, count));
 }
 
-int 
+int
 MQTT::Client::write_P(const void* buf, size_t count)
 {
   return (m_sock->write_P(buf, count));
 }
 
-int 
+int
 MQTT::Client::puts_P(str_P s)
 {
   uint16_t length = strlen_P(s);
@@ -68,7 +68,7 @@ MQTT::Client::puts_P(str_P s)
   return (res);
 }
 
-int 
+int
 MQTT::Client::read(void* buf, size_t count, uint32_t ms)
 {
   uint32_t start = Watchdog::millis();
@@ -86,7 +86,7 @@ MQTT::Client::flush()
   return (m_sock->flush());
 }
 
-bool 
+bool
 MQTT::Client::begin(Socket* sock)
 {
   if (sock == NULL) return (false);
@@ -94,7 +94,7 @@ MQTT::Client::begin(Socket* sock)
   return (true);
 }
 
-bool 
+bool
 MQTT::Client::end()
 {
   if (m_sock == NULL) return (false);
@@ -103,11 +103,11 @@ MQTT::Client::end()
   return (true);
 }
 
-int 
+int
 MQTT::Client::connect(const char* hostname,
-		      const char* identifier, 
-		      uint16_t keep_alive, 
-		      uint8_t flag, 
+		      const char* identifier,
+		      uint16_t keep_alive,
+		      uint8_t flag,
 		      ...)
 {
   uint16_t qos = 0;
@@ -170,7 +170,7 @@ MQTT::Client::connect(const char* hostname,
   va_end(args);
   res = flush();
   if (res < 0) return (-1);
-  
+
   // Wait for response; CONNACK or timeout
   struct {
     uint8_t cmd;
@@ -185,7 +185,7 @@ MQTT::Client::connect(const char* hostname,
   return (res);
 }
 
-int 
+int
 MQTT::Client::disconnect()
 {
   uint16_t cmd = DISCONNECT;
@@ -193,7 +193,7 @@ MQTT::Client::disconnect()
   return (m_sock->disconnect());
 }
 
-int 
+int
 MQTT::Client::publish(str_P topic, const void* buf, size_t count,
 		      QoS_t qos, bool retain,
 		      bool progmem)
@@ -227,19 +227,19 @@ MQTT::Client::publish(str_P topic, const void* buf, size_t count,
 
   // Check acknowledged and assured delivery
   switch (qos) {
-  case FIRE_AND_FORGET: 
+  case FIRE_AND_FORGET:
     return (0);
   case ACKNOWLEDGED_DELIVERY:
     res = read(&response, sizeof(response));
     if (res != sizeof(response)) return (-2);
-    if ((response.cmd != PUBACK) 
+    if ((response.cmd != PUBACK)
 	|| (response.length != sizeof(response.id))
 	|| (response.id != id)) return (-3);
     return (0);
   case ASSURED_DELIVERY:
     res = read(&response, sizeof(response));
     if (res != sizeof(response)) return (-2);
-    if ((response.cmd != PUBREC) 
+    if ((response.cmd != PUBREC)
 	|| (response.length != sizeof(response.id))
 	|| (response.id != id)) return (-3);
     response.cmd = PUBREL;
@@ -248,7 +248,7 @@ MQTT::Client::publish(str_P topic, const void* buf, size_t count,
     if (res < 0) return (-1);
     res = read(&response, sizeof(response));
     if (res != sizeof(response)) return (-2);
-    if ((response.cmd != PUBCOMP) 
+    if ((response.cmd != PUBCOMP)
 	|| (response.length != sizeof(response.id))
 	|| (response.id != id)) return (-4);
     return (0);
@@ -280,14 +280,14 @@ MQTT::Client::subscribe(str_P topic, QoS_t qos)
   } response;
   res = read(&response, sizeof(response));
   if (res != sizeof(response)) return (-2);
-  if ((response.cmd != SUBACK) 
+  if ((response.cmd != SUBACK)
       || (response.length != 3)
       || (response.id != id)
       || (response.qos != qos)) return (-3);
   return (0);
 }
 
-int 
+int
 MQTT::Client::unsubscribe(str_P topic)
 {
   // Calculate length of variable payload
@@ -301,7 +301,7 @@ MQTT::Client::unsubscribe(str_P topic)
   puts_P(topic);
   int res = flush();
   if (res < 0) return (-1);
-  
+
   // Wait for response; UNSUBACK or timeout
   struct {
     uint8_t cmd;
@@ -310,7 +310,7 @@ MQTT::Client::unsubscribe(str_P topic)
   } response;
   res = read(&response, sizeof(response));
   if (res != sizeof(response)) return (-2);
-  if ((response.cmd != UNSUBACK) 
+  if ((response.cmd != UNSUBACK)
       || (response.length != 2)
       || (response.id != id)) return (-3);
   return (0);
@@ -373,7 +373,7 @@ MQTT::Client::service(uint32_t ms)
   response.id = id;
 
   switch (qos) {
-  case FIRE_AND_FORGET: 
+  case FIRE_AND_FORGET:
     on_publish(topic, payload, length);
     return (0);
   case ACKNOWLEDGED_DELIVERY:
@@ -390,7 +390,7 @@ MQTT::Client::service(uint32_t ms)
     if (res < 0) return (-4);
     res = read(&response, sizeof(response));
     if (res != sizeof(response)) return (-2);
-    if ((response.cmd != PUBREL) 
+    if ((response.cmd != PUBREL)
 	|| (response.length != sizeof(response.id))
 	|| (response.id != id)) return (-5);
     response.cmd = PUBCOMP;
@@ -403,7 +403,7 @@ MQTT::Client::service(uint32_t ms)
   return (-1);
 }
 
-void 
+void
 MQTT::Client::on_publish(char* topic, void* buf, size_t count)
 {
   UNUSED(topic);

@@ -3,23 +3,23 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa RTC (Real-Time Clock) Benchmark. Measurement and validate RTC
  * operations; micro- and milli-second. The benchmark shows the number
  * of micro-seconds required for access of the RTC values, how
- * accurate the DELAY macro and Watchdog delay is. 
+ * accurate the DELAY macro and Watchdog delay is.
  *
  * @section Circuit
  * This example requires no special circuit. Uses serial output.
@@ -44,7 +44,7 @@ void setup()
   // Check amount of free memory
   TRACE(free_memory());
 
-  // Print CPU clock and instructions per 1MHZ 
+  // Print CPU clock and instructions per 1MHZ
   TRACE(F_CPU);
   TRACE(I_CPU);
 
@@ -57,7 +57,7 @@ void setup()
   TRACE(Watchdog::ticks());
   TRACE(RTC::us_per_tick());
   TRACE(RTC::seconds());
-  
+
   // Measure baseline
   MEASURE("RTC::micros(): ", 1) RTC::micros();
   MEASURE("RTC::millis(): ", 1) RTC::millis();
@@ -90,7 +90,7 @@ void setup()
     stop = RTC::micros();
     uint32_t diff = stop - start;
     if (diff > 136) {
-      trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"), 
+      trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
 		     i, start, stop, diff);
       Watchdog::delay(128);
       err++;
@@ -107,7 +107,7 @@ void setup()
     stop = RTC::millis();
     uint32_t diff = stop - start;
     if (diff > 115) {
-      trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"), 
+      trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
 		     i, start, stop, diff);
       Watchdog::delay(128);
       err++;
@@ -124,7 +124,7 @@ void setup()
     stop = RTC::millis();
     uint32_t diff = stop - start;
     if (diff > 115) {
-      trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"), 
+      trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
 		     i, start, stop, diff);
       Watchdog::delay(128);
       err++;

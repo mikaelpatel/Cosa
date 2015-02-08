@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,7 +44,7 @@ RTCMeasure::start()
   start_queued_cycles    = 0;
   setup_cycles           = 0;
   dispatch_cycles        = 0;
-  
+
   Timer::start();
 
   if ((enter_on_interrupt_cycle != 0) ||
@@ -64,6 +64,6 @@ RTCMeasure::on_expired()
   enter_on_interrupt_cycle = TCNT0;
 
   dispatch_cycles = enter_on_interrupt_cycle - enter_ISR_cycle + 1;
-  
+
   m_dispatched = true;
 }

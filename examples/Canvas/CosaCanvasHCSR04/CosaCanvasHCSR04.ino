@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa demonstration of the Ultrasonic range module HC-SR04 driver.
  * Display splash screen with Arduino icon and range in milli-meters.
@@ -78,8 +78,8 @@ public:
   virtual void on_change(uint16_t distance);
 };
 
-void 
-Ping::on_change(uint16_t distance) 
+void
+Ping::on_change(uint16_t distance)
 {
   tft.fill_screen();
   tft.draw_roundrect(5, 5, tft.WIDTH - 10, tft.HEIGHT - 10, 8);

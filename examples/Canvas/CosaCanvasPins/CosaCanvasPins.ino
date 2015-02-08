@@ -9,14 +9,14 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Cosa demonstration of Canvas device driver for ST7735, 262K Color 
+ * Cosa demonstration of Canvas device driver for ST7735, 262K Color
  * Single-Chip TFT Controller, and monitoring of Arduino pins.
  * Shows binding to IOStream::Device onto the display (and not the UART).
  *
@@ -87,11 +87,11 @@ void loop()
     tft.draw_rect(10, y, tft.WIDTH - 20, 16);
     textbox.set_cursor(15, y + 5);
     cout.printf_P(PSTR("D%d"), x);
-    tft.set_pen_color(InputPin::read((Board::DigitalPin) x) ? 
+    tft.set_pen_color(InputPin::read((Board::DigitalPin) x) ?
 		      Canvas::RED : Canvas::GREEN);
     tft.fill_circle(35, y + 8, 5);
     textbox.set_cursor(55, y + 5);
-    cout.printf_P(PSTR("A%d %d mV"), x, 
+    cout.printf_P(PSTR("A%d %d mV"), x,
 		  (AnalogPin::sample((Board::AnalogPin) x) * 500L) / 1024);
   }
   sleep(1);

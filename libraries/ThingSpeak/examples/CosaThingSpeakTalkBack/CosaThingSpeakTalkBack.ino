@@ -3,29 +3,29 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * ThingSpeak talkback demonstration; shows how to create a command
  * handler class, execute commands from the TalkBack command queue,
- * and push additional commands to the queue. 
+ * and push additional commands to the queue.
  *
  * @section Circuit
  * Commands LED_ON/LED_OFF will turn on and off the built-in LED.
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
- * 
+ *
  *                       W5100/ethernet
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -62,19 +62,19 @@ ThingSpeak::TalkBack talkback(&client, KEY, ID);
 // Thingspeak TalkBack command handler; simple trace
 class Command : public ThingSpeak::TalkBack::Command {
 public:
-  Command(ThingSpeak::TalkBack* talkback, const char* string) : 
+  Command(ThingSpeak::TalkBack* talkback, const char* string) :
     ThingSpeak::TalkBack::Command(talkback, string)
   {}
-  Command(ThingSpeak::TalkBack* talkback, str_P string) : 
+  Command(ThingSpeak::TalkBack* talkback, str_P string) :
     ThingSpeak::TalkBack::Command(talkback, string)
   {}
   virtual void execute();
 };
 
-void 
-Command::execute() 
-{ 
-  trace << Watchdog::millis() << ':' << m_string << endl; 
+void
+Command::execute()
+{
+  trace << Watchdog::millis() << ':' << m_string << endl;
 }
 
 const char REBOOT_COMMAND[] __PROGMEM = "REBOOT";
@@ -84,8 +84,8 @@ Command reboot(&talkback, REBOOT_COMMAND);
 // to state variable
 class LED : public Command {
 public:
-  LED(ThingSpeak::TalkBack* talkback, const char* string, 
-      Board::DigitalPin pin, uint8_t state) : 
+  LED(ThingSpeak::TalkBack* talkback, const char* string,
+      Board::DigitalPin pin, uint8_t state) :
     Command(talkback, string),
     m_led(pin),
     m_state(state)
@@ -96,9 +96,9 @@ private:
   uint8_t m_state;
 };
 
-void 
+void
 LED::execute()
-{ 
+{
   Command::execute();
   m_led.set(m_state);
 }
@@ -113,7 +113,7 @@ LED led_off(&talkback, LED_OFF_COMMAND, Board::LED, 0);
 // to the command queue
 class Ping : public Command {
 public:
-  Ping(ThingSpeak::TalkBack* talkback, Command* pong) : 
+  Ping(ThingSpeak::TalkBack* talkback, Command* pong) :
     Command(talkback, PSTR("PING")),
     m_pong(pong)
   {}
@@ -122,9 +122,9 @@ private:
   Command* m_pong;
 };
 
-void 
-Ping::execute() 
-{ 
+void
+Ping::execute()
+{
   Command::execute();
   m_talkback->add_command_P(m_pong->get_string());
 }
@@ -143,7 +143,7 @@ void setup()
   // Start the watchdog
   Watchdog::begin();
 
-  // Setup Ethernet controller and ThingSpeak with given ethernet socket 
+  // Setup Ethernet controller and ThingSpeak with given ethernet socket
   TRACE(ethernet.begin_P(HOSTNAME));
   TRACE(client.begin(ethernet.socket(Socket::TCP)));
 

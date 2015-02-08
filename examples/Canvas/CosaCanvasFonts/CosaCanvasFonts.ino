@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa demonstration of device driver for ST7735 or ILI9341.
  * Shows use of different fonts.
@@ -222,7 +222,7 @@ void setup()
   textbox.set_canvas_color(Canvas::WHITE);
   textbox.set_text_color(Canvas::BLACK);
   textbox.set_text_port(1, 1, tft.WIDTH - 2, tft.HEIGHT - 2);
-  
+
 #ifdef ONE_CHAR
   tftout << ONE_CHAR;
 #endif
@@ -232,8 +232,8 @@ void setup()
 #endif
 
 #ifdef CYCLE_CHARS
-  trace << PSTR("Font has ") << (FONT.LAST-FONT.FIRST+1) 
-	<< PSTR(" characters") 
+  trace << PSTR("Font has ") << (FONT.LAST-FONT.FIRST+1)
+	<< PSTR(" characters")
 	<< endl;
 #endif
 }

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Testing code generation of switch statements.
  *
@@ -167,7 +167,7 @@ void loop()
   // Measure traditional switch statement version
   TRACE(switch_fn_addr);
   TRACE(switch_fn_size);
-  for (uint8_t op = OP_ADD; op <= OP_EXIT; op++) 
+  for (uint8_t op = OP_ADD; op <= OP_EXIT; op++)
     TRACE(switch_fn(op));
   sleep(1);
 
@@ -195,7 +195,7 @@ void loop()
   // Measure goto-label table version
   TRACE(goto_fn_addr);
   TRACE(goto_fn_size);
-  for (uint8_t op = OP_ADD; op <= OP_EXIT; op++) 
+  for (uint8_t op = OP_ADD; op <= OP_EXIT; op++)
     TRACE(goto_fn(op));
   sleep(1);
 

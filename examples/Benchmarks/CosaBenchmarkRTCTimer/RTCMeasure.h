@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,9 +31,9 @@ class RTCMeasure : public Timer {
   volatile bool m_dispatched;
 public:
   RTCMeasure() : Timer(), m_dispatched(false) {};
-  
+
   bool is_dispatched() const { return m_dispatched; }
-  
+
   virtual void start();
   virtual void on_expired();
 
@@ -41,7 +41,7 @@ public:
   static uint8_t start_queued_cycles;
   static uint8_t setup_cycles;
   static uint8_t dispatch_cycles;
-  
+
   static const uint16_t I_PER_CYCLE;
 };
 

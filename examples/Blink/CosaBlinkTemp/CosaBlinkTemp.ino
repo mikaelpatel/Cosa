@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Cosa LED blink demonstation. Blink RGB LED according to temperature
- * from 1-wire digital thermometer (DS18B20); RED if above 30 C, 
+ * from 1-wire digital thermometer (DS18B20); RED if above 30 C,
  * BLUE if below 25 C otherwise GREEN. Demonstrates powerdown to
  * less than 10 uA while idle (and no LED on).
- * 
+ *
  *                       DS18B20/sensor
  * (D3)---[4K7]--+       +------------+
  * (GND)---------)-----1-|GND         |\

@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * A simple count down clock; Cosa demonstration of Canvas Segment
  * Font handling and device driver for ST7735 or ILI9314.
@@ -80,7 +80,7 @@ void setup()
   // Start the watchdog for low power sleep and 1 second ticks
   Power::set(SLEEP_MODE_PWR_DOWN);
   Watchdog::begin(1024);
-  
+
   // Initiate the display and set orientation and color scheme
   tft.begin();
   tft.set_canvas_color(Canvas::BLACK);
