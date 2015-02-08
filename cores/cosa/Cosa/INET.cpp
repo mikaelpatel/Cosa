@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,21 +26,21 @@
 bool
 INET::is_illegal(uint8_t addr[4], uint16_t port)
 {
-  return 
-    (((addr[0] == 0xff) 
-      && (addr[1] == 0xff) 
-      && (addr[2] == 0xff) 
-      && (addr[3] == 0xff)) 
+  return
+    (((addr[0] == 0xff)
+      && (addr[1] == 0xff)
+      && (addr[2] == 0xff)
+      && (addr[3] == 0xff))
      ||
-     ((addr[0] == 0x00) 
-      && (addr[1] == 0x00) 
-      && (addr[2] == 0x00) 
-      && (addr[3] == 0x00)) 
+     ((addr[0] == 0x00)
+      && (addr[1] == 0x00)
+      && (addr[2] == 0x00)
+      && (addr[3] == 0x00))
      ||
      (port == 0x0000));
 }
 
-int 
+int
 INET::aton(const char* addr, uint8_t ip[4], bool progmem)
 {
   const char* ap = addr;
@@ -113,7 +113,7 @@ void
 INET::print_mac(IOStream& outs, const uint8_t* mac)
 {
   outs << toHEX(mac[0] >> 4) << toHEX(mac[0]);
-  for (uint8_t i = 1; i < MAC_MAX; i++) 
+  for (uint8_t i = 1; i < MAC_MAX; i++)
     outs << ':' << toHEX(mac[i] >> 4) << toHEX(mac[i]);
 }
 
@@ -126,15 +126,15 @@ INET::print_addr(IOStream& outs, const uint8_t* addr, uint16_t port)
   outs << ':' << port;
 }
 
-void 
+void
 INET::Server::get_client(INET::addr_t& addr)
 {
   Socket* sock = get_socket();
   if (sock == NULL) return;
   sock->get_src(addr);
-}  
+}
 
-bool 
+bool
 INET::Server::begin(Socket* sock)
 {
   // Sanity check parameter
@@ -147,7 +147,7 @@ INET::Server::begin(Socket* sock)
   return (sock->listen() == 0);
 }
 
-int 
+int
 INET::Server::run(uint32_t ms)
 {
   // Sanity check server state
@@ -159,7 +159,7 @@ INET::Server::run(uint32_t ms)
   int res;
   if (!m_connected) {
     while (((res = sock->accept()) != 0) &&
-	   ((ms == 0L) || (Watchdog::since(start) < ms))) 
+	   ((ms == 0L) || (Watchdog::since(start) < ms)))
       yield();
     if (res != 0) return (-2);
     // Check if application accepts the connection
@@ -174,7 +174,7 @@ INET::Server::run(uint32_t ms)
 
   // Client has been accepted; check for incoming requests
   while (((res = sock->available()) == 0) &&
-	 ((ms == 0L) || (Watchdog::since(start) < ms))) 
+	 ((ms == 0L) || (Watchdog::since(start) < ms)))
     yield();
   // If a message is available call application request handling
   if (res > 0) {
@@ -192,7 +192,7 @@ INET::Server::run(uint32_t ms)
   return (res);
 }
 
-bool 
+bool
 INET::Server::end()
 {
   // Sanity check server state

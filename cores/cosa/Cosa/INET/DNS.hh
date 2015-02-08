@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -35,7 +35,7 @@ public:
 
   /**
    * Construct DNS request handler. Use begin() to initiate the
-   * handler and end() to terminate. 
+   * handler and end() to terminate.
    */
   DNS() {}
 
@@ -45,17 +45,17 @@ public:
    * @param[in] sock socket.
    * @param[in] server network address.
    */
-  DNS(Socket* sock, uint8_t server[4]) 
-  { 
-    begin(sock, server); 
+  DNS(Socket* sock, uint8_t server[4])
+  {
+    begin(sock, server);
   }
 
   /**
    * Destruct the DNS request handler; close the socket.
    */
-  ~DNS() 
-  { 
-    end(); 
+  ~DNS()
+  {
+    end();
   }
 
   /**
@@ -144,7 +144,7 @@ private:
     uint16_t TYPE;		//!< Type of data in record.
     uint16_t CLASS;		//!< Data class.
   };
-  
+
   /**
    * Answer record.
    */
@@ -155,13 +155,13 @@ private:
     uint16_t RDL;		//!< Resource Data Length.
     uint8_t RD[];		//!< Resource Data.
   };
-  
+
   static const uint16_t TIMEOUT = 300;
   static const uint8_t RETRY_MAX = 8;
   static const uint16_t ID = 0xC05AU;
   uint8_t m_server[4];
   Socket* m_sock;
-  
+
   /**
    * Lookup the given hostname and return the network address. Returns
    * zero if successful otherwise negative error code.

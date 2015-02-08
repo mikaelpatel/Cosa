@@ -4,18 +4,18 @@
  *
  * @section License
  * Copyright (C) 2009, William Greiman (Arduino Fat16 Library)
- * Copyright (C) 2013-2014, Mikael Patel (Refactoring)
+ * Copyright (C) 2013-2015, Mikael Patel (Refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -66,8 +66,8 @@ protected:
      * the partition. Legal values are 1-63. Only used in old PC BIOS.
      */
     unsigned beginSector : 6;
-    /** 
-     * High bits cylinder for first block in partition. 
+    /**
+     * High bits cylinder for first block in partition.
      */
     unsigned beginCylinderHigh : 2;
     /**
@@ -90,8 +90,8 @@ protected:
      * the partition.  Legal values are 1-63. Only used in old PC BIOS.
      */
     unsigned endSector : 6;
-    /** 
-     * High bits of end cylinder 
+    /**
+     * High bits of end cylinder
      */
     unsigned endCylinderHigh : 2;
     /**
@@ -99,50 +99,50 @@ protected:
      * are 0-1023.  Only used in old PC BIOS.
      */
     uint8_t endCylinderLow;
-    /** 
-     * Logical block address of the first block in the partition. 
+    /**
+     * Logical block address of the first block in the partition.
      */
     uint32_t firstSector;
-    /** 
-     * Length of the partition, in blocks. 
+    /**
+     * Length of the partition, in blocks.
      */
     uint32_t totalSectors;
   };
 
   /**
    * Master Boot Record. The first block of a storage device that is
-   * formatted with a MBR. 
+   * formatted with a MBR.
    */
   struct mbr_t {
-    /** 
-     * Code Area for master boot program. 
+    /**
+     * Code Area for master boot program.
      */
     uint8_t codeArea[440];
-    /** 
-     * Optional WindowsNT disk signature. May contain more boot code. 
+    /**
+     * Optional WindowsNT disk signature. May contain more boot code.
      */
     uint32_t diskSignature;
-    /** 
-     * Usually zero but may be more boot code. 
+    /**
+     * Usually zero but may be more boot code.
      */
     uint16_t usuallyZero;
-    /** 
-     * Partition tables. 
+    /**
+     * Partition tables.
      */
     part_t part[4];
-    /** 
-     * First MBR signature byte. Must be 0X55 
+    /**
+     * First MBR signature byte. Must be 0X55
      */
     uint8_t mbrSig0;
-    /** 
-     * Second MBR signature byte. Must be 0XAA 
+    /**
+     * Second MBR signature byte. Must be 0XAA
      */
     uint8_t mbrSig1;
   };
 
-  /** 
+  /**
    * BIOS parameter block; The BIOS parameter block describes the
-   * physical layout of a FAT volume. 
+   * physical layout of a FAT volume.
    */
   struct bpb_t {
     /**
@@ -197,12 +197,12 @@ protected:
      * contains the FAT size count.
      */
     uint16_t sectorsPerFat16;
-    /** 
-     * Sectors per track for interrupt 0x13. Not used otherwise. 
+    /**
+     * Sectors per track for interrupt 0x13. Not used otherwise.
      */
     uint16_t sectorsPerTrtack;
-    /** 
-     * Number of heads for interrupt 0x13.  Not used otherwise. 
+    /**
+     * Number of heads for interrupt 0x13.  Not used otherwise.
      */
     uint16_t headCount;
     /**
@@ -226,10 +226,10 @@ protected:
      * This field is only defined for FAT32 media and does not exist on
      * FAT12 and FAT16 media.
      * Bits 0-3 -- Zero-based number of active FAT, Only valid if
-     * mirroring is disabled. 
+     * mirroring is disabled.
      * Bits 4-6 -- Reserved.
      * Bit 7 -- 0 means the FAT is mirrored at runtime into all FATs,
-     * 1 means only one FAT is active; it is the one referenced in bits 0-3. 
+     * 1 means only one FAT is active; it is the one referenced in bits 0-3.
      * Bits 8-15 -- Reserved.
      */
     uint16_t fat32Flags;
@@ -263,54 +263,54 @@ protected:
 
   /**
    * Boot sector for a FAT16 or FAT32 volume.
-   */  
+   */
   struct fbs_t {
-    /** 
-     * X86 jmp to boot program 
+    /**
+     * X86 jmp to boot program
      */
     uint8_t jmpToBootCode[3];
-    /** 
-     * Informational only - don't depend on it 
+    /**
+     * Informational only - don't depend on it
      */
     char oemName[8];
-    /** 
-     * BIOS Parameter Block 
+    /**
+     * BIOS Parameter Block
      */
     bpb_t bpb;
-    /** 
-     * For int0x13 use value 0X80 for hard drive 
+    /**
+     * For int0x13 use value 0X80 for hard drive
      */
     uint8_t driveNumber;
-    /** 
-     * Used by Windows NT - should be zero for FAT 
+    /**
+     * Used by Windows NT - should be zero for FAT
      */
     uint8_t reserved1;
-    /** 
-     * 0X29 if next three fields are valid 
+    /**
+     * 0X29 if next three fields are valid
      */
     uint8_t bootSignature;
-    /** 
-     * Usually generated by combining date and time 
+    /**
+     * Usually generated by combining date and time
      */
     uint32_t volumeSerialNumber;
-    /** 
-     * Should match volume label in root dir 
+    /**
+     * Should match volume label in root dir
      */
     char volumeLabel[11];
-    /** 
-     * Informational only - don't depend on it 
+    /**
+     * Informational only - don't depend on it
      */
     char fileSystemType[8];
-    /** 
-     * X86 boot code 
+    /**
+     * X86 boot code
      */
     uint8_t bootCode[420];
-    /** 
-     * Must be 0X55 
+    /**
+     * Must be 0X55
      */
     uint8_t bootSectorSig0;
-    /** 
-     * Must be 0XAA 
+    /**
+     * Must be 0XAA
      */
     uint8_t bootSectorSig1;
   };
@@ -332,7 +332,7 @@ protected:
 
   /**
    * FAT short directory entry. Short means short 8.3 name, not the
-   * entry size. 
+   * entry size.
    */
   struct dir_t {
     /**
@@ -341,7 +341,7 @@ protected:
      * The last three bytes contain the file extension with blank fill.
      */
     uint8_t name[11];
-    /** 
+    /**
      * Entry attributes. The upper two bits of the attribute byte are
      * reserved and should always be set to 0 when a file is created
      * and never modified or looked at after that.  See defines that
@@ -359,12 +359,12 @@ protected:
      * value range is 0-199 inclusive. (WHG note - seems to be hundredths)
      */
     uint8_t creationTimeTenths;
-    /** 
-     * Time file was created. 
+    /**
+     * Time file was created.
      */
     uint16_t creationTime;
-    /** 
-     * Date file was created. 
+    /**
+     * Date file was created.
      */
     uint16_t creationDate;
     /**
@@ -378,24 +378,24 @@ protected:
      * FAT12 or FAT16 volume).
      */
     uint16_t firstClusterHigh;
-    /** 
-     * Time of last write. File creation is considered a write. 
+    /**
+     * Time of last write. File creation is considered a write.
      */
     uint16_t lastWriteTime;
-    /** 
-     * Date of last write. File creation is considered a write. 
+    /**
+     * Date of last write. File creation is considered a write.
      */
     uint16_t lastWriteDate;
-    /** 
-     * Low word of this entry's first cluster number. 
+    /**
+     * Low word of this entry's first cluster number.
      */
     uint16_t firstClusterLow;
-    /** 
-     * 32-bit unsigned holding this file's size in bytes. 
+    /**
+     * 32-bit unsigned holding this file's size in bytes.
      */
     uint32_t fileSize;
   };
-  
+
   /** Type name for directoryEntry */
   /** escape for name[0] = 0XE5 */
   static uint8_t const DIR_NAME_0XE5 = 0X05;
@@ -426,41 +426,41 @@ protected:
   static uint8_t const DIR_ATT_FILE_TYPE_MASK = (DIR_ATT_VOLUME_ID | DIR_ATT_DIRECTORY);
   static uint8_t const DIR_ATT_SKIP = (DIR_ATT_VOLUME_ID | DIR_ATT_DIRECTORY);
 
-  /** 
-   * Directory entry is part of a long name 
+  /**
+   * Directory entry is part of a long name
    */
-  static inline uint8_t DIR_IS_LONG_NAME(const dir_t* dir) 
+  static inline uint8_t DIR_IS_LONG_NAME(const dir_t* dir)
   {
     return (dir->attributes & DIR_ATT_LONG_NAME_MASK) == DIR_ATT_LONG_NAME;
   }
 
-  /** 
-   * Directory entry is for a file 
+  /**
+   * Directory entry is for a file
    */
-  static inline uint8_t DIR_IS_FILE(const dir_t* dir) 
+  static inline uint8_t DIR_IS_FILE(const dir_t* dir)
   {
     return (dir->attributes & DIR_ATT_FILE_TYPE_MASK) == 0;
   }
 
-  /** 
-   * Directory entry is for a subdirectory 
+  /**
+   * Directory entry is for a subdirectory
    */
-  static inline uint8_t DIR_IS_SUBDIR(const dir_t* dir) 
+  static inline uint8_t DIR_IS_SUBDIR(const dir_t* dir)
   {
     return (dir->attributes & DIR_ATT_FILE_TYPE_MASK) == DIR_ATT_DIRECTORY;
   }
 
-  /** 
-   * Directory entry is for a file or subdirectory 
+  /**
+   * Directory entry is for a file or subdirectory
    */
-  static inline uint8_t DIR_IS_FILE_OR_SUBDIR(const dir_t* dir) 
+  static inline uint8_t DIR_IS_FILE_OR_SUBDIR(const dir_t* dir)
   {
     return (dir->attributes & DIR_ATT_VOLUME_ID) == 0;
   }
-  
+
   /** FAT entry */
   typedef uint16_t fat_t;
-  
+
   union cache16_t {
     /** Used to access cached file data blocks. */
     uint8_t data[512];
@@ -474,17 +474,17 @@ protected:
     fbs_t fbs;
   };
 
-  /** 
-   * FAT date representation support 
+  /**
+   * FAT date representation support
    * Date Format. A FAT directory entry date stamp is a 16-bit field
    * that is basically a date relative to the MS-DOS epoch of
    * 01/01/1980. Here is the format (bit 0 is the LSB of the 16-bit
    * word, bit 15 is the MSB of the 16-bit word):
-   *   
+   *
    * Bits 0-4: Day of month, valid value range 1-31 inclusive.
    * Bits 5-8: Month of year, 1 = January, valid value range 1-12
-   * inclusive. 
-   * Bits 9-15: Count of years from 1980, valid value range 0-127 
+   * inclusive.
+   * Bits 9-15: Count of years from 1980, valid value range 0-127
    * inclusive (1980-2107).
    */
   union date_t {
@@ -494,7 +494,7 @@ protected:
       uint8_t month:4;
       uint8_t year:7;
     };
-    date_t(uint16_t y, uint8_t m, uint8_t d) 
+    date_t(uint16_t y, uint8_t m, uint8_t d)
     {
       year = (y - 1980);
       month = m;
@@ -509,18 +509,18 @@ protected:
 
   /** Output stream operator for FAT date value */
   friend IOStream& operator<<(IOStream& outs, date_t& date);
-  
-  /** 
+
+  /**
    * FAT Time Format. A FAT directory entry time stamp is a 16-bit
    * field that has a granularity of 2 seconds. Here is the format
    * (bit 0 is the LSB of the 16-bit word, bit 15 is the MSB of the
-   * 16-bit word). 
+   * 16-bit word).
    *
-   * Bits 0-4: 2-second count, valid value range 0-29 inclusive 
-   * (0-58 seconds). 
+   * Bits 0-4: 2-second count, valid value range 0-29 inclusive
+   * (0-58 seconds).
    * Bits 5-10: Minutes, valid value range 0-59 inclusive.
    * Bits 11-15: Hours, valid value range 0-23 inclusive.
-   *   
+   *
    * The valid time range is from Midnight 00:00:00 to 23:59:58.
    */
   union time_t {
@@ -530,7 +530,7 @@ protected:
       uint8_t minutes:6;
       uint8_t hours:5;
     };
-    time_t(uint16_t h, uint8_t m, uint8_t s) 
+    time_t(uint16_t h, uint8_t m, uint8_t s)
     {
       hours = h;
       minutes = m;
@@ -553,7 +553,7 @@ protected:
   static const uint16_t DEFAULT_TIME = (1 << 11);
 
 public:
-  
+
   class File : public IOStream::Device {
   public:
     /**
@@ -568,14 +568,14 @@ public:
      * if successful otherwise false for failure. Reasons for failure
      * include the FAT volume has not been initialized, a file is
      * already open, file name, is invalid, the file does not exist,
-     * is a directory, or can't be opened in the access mode specified 
-     * by oflag. 
+     * is a directory, or can't be opened in the access mode specified
+     * by oflag.
      * @param[in] fileName a valid 8.3 DOS name for a file in the root.
      * @param[in] oflag mode of file open (create, read, write, etc).
      * @return bool.
      */
     bool open(const char* fileName, uint8_t oflag);
-    
+
     /**
      * Checks the file's open/closed status.
      * @return the value true if a file is open otherwise false;
@@ -584,10 +584,10 @@ public:
 
     /**
      * The sync() call causes all modified data and directory fields
-     * to be written to the storage device. 
+     * to be written to the storage device.
      * @return true if successful otherwise false for failure. Reasons
      * for failure include a call to sync() before a file has been
-     * opened or an I/O error. 
+     * opened or an I/O error.
      */
     bool sync();
 
@@ -604,12 +604,12 @@ public:
 
     /**
      * Close a file and force cached data and directory information to
-     * be written to the storage device. 
+     * be written to the storage device.
      * @return bool, true if successful otherwise false for
      * failure. Reasons for failure include the file is not open for
      * write or an I/O error occurred.
      */
-    bool close() 
+    bool close()
     {
       if (!sync()) return false;
       m_flags = 0;
@@ -621,12 +621,12 @@ public:
      * @param[in] pos new position in bytes from given mode.
      * @param[in] mode absolute, relative and from end.
      * @return bool, true if successful otherwise false for
-     * failure. 
+     * failure.
      */
     bool seek(uint32_t pos, uint8_t whence = SEEK_SET);
 
     /**
-     * Return current position. 
+     * Return current position.
      */
     uint32_t tell() { return (m_curPosition); }
 
@@ -636,7 +636,7 @@ public:
     void rewind() { m_curPosition = m_curCluster = 0; }
 
     /**
-     * Return number of bytes in file. 
+     * Return number of bytes in file.
      */
     uint32_t size() { return (m_fileSize); }
 
@@ -646,9 +646,9 @@ public:
      * length otherwise it will be set to end of file.
      * @param[in] length The desired length for the file.
      * @return bool, true if successful otherwise false for
-     * failure. Reasons for failure include file is read only, file is 
+     * failure. Reasons for failure include file is read only, file is
      * a directory, \a length is greater than the current file size or
-     * an I/O error occurs. 
+     * an I/O error occurs.
      */
     bool truncate(uint32_t size);
 
@@ -668,7 +668,7 @@ public:
      * @return number of bytes written or EOF(-1).
      */
     virtual int write(const void *buf, size_t size);
-  
+
     /**
      * @override IOStream::Device
      * Read character from the file.
@@ -684,7 +684,7 @@ public:
      * @return number of bytes read or EOF(-1).
      */
     virtual int read(void* buf, size_t size);
-    
+
   protected:
     uint8_t m_flags;          // see above for bit definitions
     int16_t m_dirEntryIndex;  // index of directory entry for open file
@@ -719,13 +719,13 @@ public:
    * value zero, false, is returned for failure.  reasons for failure
    * include not finding a valid FAT16 file system in the specified
    * partition, a call to begin() after a volume has been successful
-   * initialized or an I/O error. 
+   * initialized or an I/O error.
    */
   static bool begin(SD* sd, uint8_t partion);
 
   /**
    * Initialize a FAT16 volume. First try partition 1 then try super
-   * floppy format. 
+   * floppy format.
    * @param[in] dev Sd device where the volume is located.
    * @return The value one, true, is returned for success and the
    * value zero, false, is returned for failure.  reasons for failure
@@ -735,9 +735,9 @@ public:
    */
   static bool begin(SD* sd);
 
-  /** 
+  /**
    * List directory contents to given iostream with selected
-   * information. 
+   * information.
    * @param[in] outs output stream.
    * @param[in] flags The inclusive OR of LS_DATE (file modification
    * date) and LS_SIZE (file size).
@@ -746,16 +746,16 @@ public:
 
   /**
    * Remove a file. The directory entry and all data for the file are
-   * deleted. 
+   * deleted.
    * @param[in] fileName name of the file to be removed.
    * @note this function should not be used to delete the 8.3 version
    * of a file that has a long name. For example if a file has the
    * long name "New Text Document.txt" you should not delete the 8.3
-   * name "NEWTEX~1.TXT". 
+   * name "NEWTEX~1.TXT".
    * @return The value one, true, is returned for success and the
    * value zero, false, is returned for failure. Reasons for failure
    * include the file is read only, \a fileName is not found or an I/O
-   * error occurred. 
+   * error occurred.
    */
   static bool rm(const char* fileName)
   {
@@ -796,31 +796,31 @@ protected:
 
   static bool make83Name(const char* str, uint8_t* name);
 
-  static uint8_t blockOfCluster(uint32_t position) 
+  static uint8_t blockOfCluster(uint32_t position)
   {
     return (position >> 9) & (blocksPerCluster - 1);
   }
-  static uint16_t cacheDataOffset(uint32_t position) 
-  { 
-    return position & 0X1FF; 
+  static uint16_t cacheDataOffset(uint32_t position)
+  {
+    return position & 0X1FF;
   }
   static dir_t* cacheDirEntry(uint16_t index, uint8_t action = 0);
   static uint8_t cacheRawBlock(uint32_t blockNumber, uint8_t action = 0);
   static uint8_t cacheFlush(void);
-  static void cacheSetDirty(void) 
-  { 
-    cacheDirty |= CACHE_FOR_WRITE; 
-  }
-  static uint32_t dataBlockLba(fat_t cluster, uint8_t blockOfCluster) 
+  static void cacheSetDirty(void)
   {
-    return (dataStartBlock + 
+    cacheDirty |= CACHE_FOR_WRITE;
+  }
+  static uint32_t dataBlockLba(fat_t cluster, uint8_t blockOfCluster)
+  {
+    return (dataStartBlock +
 	    (uint32_t)(cluster - 2) * blocksPerCluster +
 	    blockOfCluster);
   }
 
   static bool fatGet(fat_t cluster, fat_t* value);
   static bool fatPut(fat_t cluster, fat_t value);
-  
+
   static bool read(dir_t* dir, uint16_t* index, uint8_t skip = DIR_ATT_SKIP);
   static void printDirName(IOStream& outs, const dir_t& dir, uint8_t width);
 };

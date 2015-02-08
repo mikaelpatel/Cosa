@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -44,7 +44,7 @@ public:
   /**
    * Encode the size number of bytes in the source buffer to a
    * null-terminated printable string in the given destination
-   * buffer. The destination buffer must be able to hold the 
+   * buffer. The destination buffer must be able to hold the
    * encoded data and the terminating null.
    * @param[in] dest destination buffer pointer (string).
    * @param[in] src source buffer pointer (binary).
@@ -56,7 +56,7 @@ public:
   /**
    * Encode the size number of bytes in the source buffer to a
    * null-terminated printable string in the given destination
-   * buffer. The destination buffer must be able to hold the 
+   * buffer. The destination buffer must be able to hold the
    * encoded data and the terminating null. A new-line is emitted
    * every 64 characters.
    * @param[in] dest destination buffer pointer (string).
@@ -67,7 +67,7 @@ public:
   static int encode_P(char* dest, const void* src, size_t size);
 
   /**
-   * Encode the size number of bytes in the source buffer to given 
+   * Encode the size number of bytes in the source buffer to given
    * iostream device. A new-line is emitted every 64 characters.
    * @param[in] dest output stream device.
    * @param[in] src source buffer pointer (binary).
@@ -77,8 +77,8 @@ public:
   static int encode(IOStream::Device* dest, const void* src, size_t size);
 
   /**
-   * Encode the size number of bytes in the source buffer to given 
-   * iostream device. 
+   * Encode the size number of bytes in the source buffer to given
+   * iostream device.
    * @param[in] dest output stream device.
    * @param[in] src source buffer pointer (binary, in program memory).
    * @param[in] size number of bytes to encode.
@@ -101,7 +101,7 @@ private:
   /** Padding character for last encoded block */
   static const char PAD = '=';
 
-  /** Mapping between 3-characters and 4-bitfields(6 bits) */ 
+  /** Mapping between 3-characters and 4-bitfields(6 bits) */
   union base64_t {
     uint8_t d[3];
     struct {
@@ -114,7 +114,7 @@ private:
 
   /** Encoding table in program memory */
   static const char ENCODE[] PROGMEM;
-  
+
   /**
    * Encode given 6-bit number to a character.
    * @param[in] bits to encode.

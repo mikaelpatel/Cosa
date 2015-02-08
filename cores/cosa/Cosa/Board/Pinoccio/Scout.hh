@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,14 +28,14 @@
  * Cosa Board pin symbol definitions for the ATmega256rfr based
  * Pinoccio board; Scout. Cosa does not use pin numbers as
  * Arduino/Wiring, instead strong data type is used (enum types) for
- * the specific pin classes; DigitalPin, AnalogPin, etc. 
+ * the specific pin classes; DigitalPin, AnalogPin, etc.
  *
  * The pin numbers for Pinoccio Scout are only symbolically mapped,
  * i.e. a pin number/digit will not work, symbols must be used, e.g.,
- * Board::D42. Avoid iterations assuming that the symbols are in order. 
+ * Board::D42. Avoid iterations assuming that the symbols are in order.
  *
  * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced. 
+ * optimizations to be reduced.
  *
  * @section Board
  * @code
@@ -83,10 +83,10 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin)
     __attribute__((always_inline))
-  { 
-    return (pin < 8  ? &PINB : 
-	    pin < 16 ? &PIND : 
-	    pin < 24 ? &PINE : 
+  {
+    return (pin < 8  ? &PINB :
+	    pin < 16 ? &PIND :
+	    pin < 24 ? &PINE :
 	               &PINF);
   }
 
@@ -101,7 +101,7 @@ private:
   {
     return (pin & 0x7);
   }
-  
+
   /**
    * Return Pin Change Mask Register for given Pinoccio Scount pin number.
    * @param[in] pin number.
@@ -109,8 +109,8 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin)
     __attribute__((always_inline))
-  { 
-    return (pin < 8 ? &PCMSK0 : 
+  {
+    return (pin < 8 ? &PCMSK0 :
 	              &PCMSK1);
   }
 
@@ -121,8 +121,8 @@ private:
    */
   static volatile uint8_t* UART(uint8_t port)
     __attribute__((always_inline))
-  { 
-    return (port == 1 ? &UCSR1A : 
+  {
+    return (port == 1 ? &UCSR1A :
 	                &UCSR0A);
   }
 
@@ -194,7 +194,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * PWM pin symbols; sub-set of digital pins to allow compile 
+   * PWM pin symbols; sub-set of digital pins to allow compile
    * time checking.
    */
   enum PWMPin {
@@ -208,7 +208,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * External interrupt pin symbols; sub-set of digital pins 
+   * External interrupt pin symbols; sub-set of digital pins
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
@@ -236,7 +236,7 @@ public:
     PCI8 = 16			// PE0/D0
   } __attribute__((packed));
 
-  /** 
+  /**
    * Size of pin maps.
    */
   enum {
@@ -281,7 +281,7 @@ public:
  * Redefined symbols to allow generic code.
  */
 #define USART_UDRE_vect USART0_UDRE_vect
-#define USART_RX_vect USART0_RX_vect 
+#define USART_RX_vect USART0_RX_vect
 #define USART_TX_vect USART0_TX_vect
 
 #undef USART2_UDRE_vect

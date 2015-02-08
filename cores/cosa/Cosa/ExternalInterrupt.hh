@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -27,8 +27,8 @@
 #include "Cosa/Interrupt.hh"
 
 /**
- * Abstract external interrupt pin. Allows interrupt handling on 
- * the pin value changes. 
+ * Abstract external interrupt pin. Allows interrupt handling on
+ * the pin value changes.
  */
 class ExternalInterrupt : public IOPin, public Interrupt::Handler {
 public:
@@ -46,7 +46,7 @@ public:
    * @param[in] mode pin mode (Default ON_CHANGE_MODE).
    * @param[in] pullup flag (Default false).
    */
-  ExternalInterrupt(Board::ExternalInterruptPin pin, 
+  ExternalInterrupt(Board::ExternalInterruptPin pin,
 		    InterruptMode mode = ON_CHANGE_MODE,
 		    bool pullup = false);
 
@@ -55,7 +55,7 @@ public:
    * Interrupt service callback on external interrupt pin change.
    * @param[in] arg argument from interrupt service routine.
    */
-  virtual void on_interrupt(uint16_t arg = 0) 
+  virtual void on_interrupt(uint16_t arg = 0)
   {
     UNUSED(arg);
   }

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,7 +28,7 @@
  * Dynamic Host Configuration Protocol. Supports dynamic assignment of
  * network address. Used with connection-less socket to configure a
  * client with network address and subnet mask. Also provides network
- * addresses for DHCP and DNS server. 
+ * addresses for DHCP and DNS server.
  */
 class DHCP {
 public:
@@ -37,7 +37,7 @@ public:
 
   /**
    * Construct DHCP client access with given hostname and hardware
-   * address. 
+   * address.
    * @param[in] hostname string in program memory.
    * @param[in] mac hardware address in program memory.
    */
@@ -62,7 +62,7 @@ public:
    * Discover DHCP servers and receive client network address
    * offer. Return zero if successful otherwise a negative error code;
    * -1 not initiated, -2 discover failed, -3 no response.
-   * @return zero if successful otherwise a negative error code. 
+   * @return zero if successful otherwise a negative error code.
    */
   int discover();
 
@@ -75,58 +75,58 @@ public:
    * @param[in,out] ip granted network address.
    * @param[in,out] subnet mask.
    * @param[in,out] gateway network address.
-   * @return zero if successful otherwise a negative error code. 
+   * @return zero if successful otherwise a negative error code.
    */
   int request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4]);
 
   /**
    * Renew the granted network address lease from successful request().
    * Returns zero if successful otherwise a negative error code; -1
-   * illegal state, -2 request failed, -3 no response. 
+   * illegal state, -2 request failed, -3 no response.
    * @param[in] sock connection-less socket to use for release.
-   * @return zero if successful otherwise a negative error code. 
+   * @return zero if successful otherwise a negative error code.
    */
   int renew(Socket* sock);
 
   /**
    * Release the granted network address lease from successful
    * request(). Returns zero if successful otherwise a negative error
-   * code; -1 illegal state, -2 request failed, -3 no response. 
+   * code; -1 illegal state, -2 request failed, -3 no response.
    * The given socket is closed and the DHCP client handler is put in
-   * idle state. 
+   * idle state.
    * @param[in] sock connection-less socket to use for release.
-   * @return zero if successful otherwise a negative error code. 
+   * @return zero if successful otherwise a negative error code.
    */
   int release(Socket* sock);
 
   /** Return time when lease was obtained. */
   uint32_t get_lease_obtained() const
-  { 
-    return (m_lease_obtained); 
+  {
+    return (m_lease_obtained);
   }
 
   /** Return time when lease will expire. */
   uint32_t get_lease_expires() const
-  { 
-    return (m_lease_expires); 
+  {
+    return (m_lease_expires);
   }
 
   /** Return network address of DHCP server. */
   const uint8_t* get_dhcp_addr() const
-  { 
-    return (m_dhcp); 
+  {
+    return (m_dhcp);
   }
 
   /** Return network address of DNS server. */
   const uint8_t* get_dns_addr() const
-  { 
-    return (m_dns); 
+  {
+    return (m_dns);
   }
 
   /** Return network address of gateway (router). */
   const uint8_t* get_gateway_addr() const
-  { 
-    return (m_gateway); 
+  {
+    return (m_gateway);
   }
 
 private:
@@ -213,7 +213,7 @@ private:
 
   /** Subnet mask (DHCP option). */
   uint8_t m_subnet[4];
-  
+
   /** Hostname. */
   const char* m_hostname;
 
@@ -232,15 +232,15 @@ private:
   /** DHCP Server port numbers. */
   static const uint16_t SERVER_PORT = 67;
 
-  /** 
+  /**
    * Send request of given type. Return zero if successful otherwise
-   * negative error code. 
+   * negative error code.
    * @param[in] type DHCP message type option.
    * @return zero if successful otherwise negative error code.
    */
   int send(uint8_t type);
 
-  /** 
+  /**
    * Receive response of given type within the given time limit.
    * Return zero if successful otherwise negative error code; -1
    * message read error, -2 timeout, -3 illegal source port, -4

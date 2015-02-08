@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -69,12 +69,12 @@ public:
   {
     if ((x > WIDTH) || (y > HEIGHT)) return;
     uint8_t* bp = &m_bitmap[((y >> 3) * WIDTH) + x];
-    uint8_t pos = (y & 0x07); 
+    uint8_t pos = (y & 0x07);
     if (get_pen_color().rgb == Canvas::BLACK)
       *bp |= (1 << pos);
     else
       *bp &= ~(1 << pos);
-  } 
+  }
 
   /**
    * @override Canvas

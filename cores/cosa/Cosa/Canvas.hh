@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -66,7 +66,7 @@ public:
      * Construct color from given 16-bit value.
      * @param[in] color.
      */
-    color16_t(uint16_t color) 
+    color16_t(uint16_t color)
     {
       rgb = color;
     }
@@ -78,7 +78,7 @@ public:
      * @param[in] g.
      * @param[in] b.
      */
-    color16_t(uint8_t r, uint8_t g, uint8_t b) 
+    color16_t(uint8_t r, uint8_t g, uint8_t b)
     {
       red = r >> 3;
       green = g >> 2;
@@ -312,7 +312,7 @@ public:
   class Element : public Context {
   public:
     /**
-     * Construct an element with the default context on the given 
+     * Construct an element with the default context on the given
      * canvas.
      * @param[in] canvas.
      * @param[in] font.
@@ -325,7 +325,7 @@ public:
   protected:
     Canvas* m_canvas;
   };
-  
+
   /**
    * Canvas image abstract class. Allow implementation of pixel
    * streams with scanning order from left to right, top to bottom.
@@ -334,7 +334,7 @@ public:
   class Image {
   public:
     /** Canvas image width. */
-    uint16_t WIDTH; 
+    uint16_t WIDTH;
 
     /** Canvas image height. */
     uint16_t HEIGHT;
@@ -348,7 +348,7 @@ public:
       WIDTH(width),
       HEIGHT(height)
     {}
-    
+
     /**
      * @override Canvas::Image
      * Read the given number of pixel into the given buffer.
@@ -589,7 +589,7 @@ public:
    * @param[in] y.
    */
   virtual void draw_pixel(uint16_t x, uint16_t y);
-  
+
   /**
    * Set pixel at cursor position with current pen color.
    */
@@ -611,8 +611,8 @@ public:
    * @param[in] height.
    * @param[in] scale.
    */
-  virtual void draw_bitmap(uint16_t x, uint16_t y, const uint8_t* bp, 
-			   uint16_t width, uint16_t height, 
+  virtual void draw_bitmap(uint16_t x, uint16_t y, const uint8_t* bp,
+			   uint16_t width, uint16_t height,
 			   uint8_t scale = 1);
 
   /**
@@ -623,7 +623,7 @@ public:
    * @param[in] height.
    * @param[in] scale.
    */
-  void draw_bitmap(const uint8_t* bp, 
+  void draw_bitmap(const uint8_t* bp,
 		   uint16_t width, uint16_t height,
 		   uint8_t scale = 1)
   {
@@ -631,7 +631,7 @@ public:
     get_cursor(x, y);
     draw_bitmap(x, y, bp, width, height, scale);
   }
-  
+
   /**
    * @override Canvas
    * Draw icon at given position with current pen color. The icon must
@@ -656,7 +656,7 @@ public:
    * @param[in] bp.
    * @param[in] scale.
    */
-  virtual void draw_icon(uint16_t x, uint16_t y, const uint8_t* bp, 
+  virtual void draw_icon(uint16_t x, uint16_t y, const uint8_t* bp,
 			 uint8_t scale = 1);
 
   /**
@@ -673,10 +673,10 @@ public:
     get_cursor(x, y);
     draw_icon(x, y, bp, width, height, scale);
   }
-  
+
   /**
    * @override Canvas
-   * Draw image on canvas at given position. 
+   * Draw image on canvas at given position.
    * @param[in] x.
    * @param[in] y.
    * @param[in] image.
@@ -685,7 +685,7 @@ public:
 
   /**
    * @override Canvas
-   * Draw image on canvas at current position. 
+   * Draw image on canvas at current position.
    * @param[in] image.
    */
   virtual void draw_image(Image* image)
@@ -763,7 +763,7 @@ public:
 
   /**
    * @override Canvas
-   * Draw polygon from program memory with current pen color. Vector of 
+   * Draw polygon from program memory with current pen color. Vector of
    * delta positions, terminate with 0, 0. Update cursor to end position.
    * @param[in] poly.
    * @param[in] scale.
@@ -772,7 +772,7 @@ public:
 
   /**
    * @override Canvas
-   * Draw stroke from program memory with current pen color. Vector of 
+   * Draw stroke from program memory with current pen color. Vector of
    * delta positions, terminated with 0, 0. The cursor is moved for
    * when both dx and dy are zero or negative. Update cursor to new
    * position.
@@ -824,7 +824,7 @@ public:
     get_cursor(x, y);
     fill_rect(x, y, width, height);
   }
-  
+
   /**
    * @override Canvas
    * Draw round corner rectangle with current pen color.
@@ -834,7 +834,7 @@ public:
    * @param[in] height.
    * @param[in] radius.
    */
-  virtual void draw_roundrect(uint16_t x, uint16_t y, 
+  virtual void draw_roundrect(uint16_t x, uint16_t y,
 			      uint16_t width, uint16_t height,
 			      uint16_t radius);
 
@@ -860,7 +860,7 @@ public:
    * @param[in] height.
    * @param[in] radius.
    */
-  virtual void fill_roundrect(uint16_t x, uint16_t y, 
+  virtual void fill_roundrect(uint16_t x, uint16_t y,
 			      uint16_t width, uint16_t height,
 			      uint16_t radius);
 
@@ -876,7 +876,7 @@ public:
     get_cursor(x, y);
     fill_roundrect(x, y, width, height, radius);
   }
-  
+
   /**
    * @override Canvas
    * Draw circle with current pen color.
@@ -936,7 +936,7 @@ public:
     get_cursor(x, y);
     draw_char(x, y, c);
   }
-  
+
   /**
    * @override Canvas
    * Draw string in current text color, font and scale.
@@ -1025,12 +1025,12 @@ protected:
 #define CANVAS_SET_TEXT_COLOR(r, g, b) Canvas::SET_TEXT_COLOR, r, g, b,
 #define CANVAS_SET_TEXT_SCALE(s) Canvas::SET_TEXT_SCALE, s,
 #define CANVAS_SET_TEXT_PORT(x, y, w, h) Canvas::SET_TEXT_PORT,	x, y, w, h,
-#define CANVAS_SET_TEXT_FONT(ix) Canvas::SET_TEXT_FONT, ix, 
+#define CANVAS_SET_TEXT_FONT(ix) Canvas::SET_TEXT_FONT, ix,
 #define CANVAS_SET_CURSOR(x, y) Canvas::SET_CURSOR, x, y,
 #define CANVAS_MOVE_CURSOR(dx, dy) Canvas::MOVE_CURSOR,	(uint8_t) dx, (uint8_t) dy,
 #define CANVAS_DRAW_BITMAP(ix, w, h, s) Canvas::DRAW_BITMAP, ix, w, h, s,
 #define CANVAS_DRAW_ICON(ix, s) Canvas::DRAW_ICON, ix, s,
-#define CANVAS_DRAW_PIXEL() Canvas::DRAW_PIXEL,	
+#define CANVAS_DRAW_PIXEL() Canvas::DRAW_PIXEL,
 #define CANVAS_DRAW_LINE(x, y) Canvas::DRAW_LINE, x, y,
 #define CANVAS_DRAW_POLY(ix, s) Canvas::DRAW_POLY, ix, s,
 #define CANVAS_DRAW_STROKE(ix, s) Canvas::DRAW_STROKE, ix, s,

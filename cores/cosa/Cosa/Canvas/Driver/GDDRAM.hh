@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -37,9 +37,9 @@ public:
    * @param[in] width screen.
    * @param[in] height screen.
    */
-  GDDRAM(uint16_t width, 
+  GDDRAM(uint16_t width,
 	 uint16_t height,
-	 Board::DigitalPin cs, 
+	 Board::DigitalPin cs,
 	 Board::DigitalPin dc);
 
   /**
@@ -66,7 +66,7 @@ public:
 
   /**
    * @override Canvas
-   * Draw image on canvas at given position. 
+   * Draw image on canvas at given position.
    * @param[in] x.
    * @param[in] y.
    * @param[in] image.
@@ -76,7 +76,7 @@ public:
   /**
    * @override Canvas
    * Draw vertical line with current color.
-   * @param[in] x 
+   * @param[in] x
    * @param[in] y
    * @param[in] length.
    */
@@ -100,7 +100,7 @@ public:
    * @param[in] height.
    */
   virtual void fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
-  
+
   /**
    * @override Canvas
    * Stop sequence of interaction with device.

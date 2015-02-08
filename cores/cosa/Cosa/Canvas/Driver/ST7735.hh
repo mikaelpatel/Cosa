@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -46,7 +46,7 @@
  *
  * @section References
  * 1. Sitronix Technology Corp. ST7735 documentation, V2.1, 2010-02-01.
- * 
+ *
  * @section Acknowledgements
  * Inspired by graphics library by ladyada/adafruit.
  */
@@ -58,13 +58,13 @@ public:
    * @param[in] dc data/command selection pin (default pin 9).
    */
 #if defined(BOARD_ATTINYX4)
-  ST7735(Board::DigitalPin cs = Board::D3, 
+  ST7735(Board::DigitalPin cs = Board::D3,
 	 Board::DigitalPin dc = Board::D7);
 #elif defined(BOARD_ATTINYX5)
-  ST7735(Board::DigitalPin cs = Board::D3, 
+  ST7735(Board::DigitalPin cs = Board::D3,
 	 Board::DigitalPin dc = Board::D4);
 #else
-  ST7735(Board::DigitalPin cs = Board::D10, 
+  ST7735(Board::DigitalPin cs = Board::D10,
 	 Board::DigitalPin dc = Board::D9);
 #endif
 
@@ -87,12 +87,12 @@ protected:
    * Get initialization script (in program memory).
    * @return pointer to script.
    */
-  virtual const uint8_t* get_script() 
+  virtual const uint8_t* get_script()
   {
     return (script);
   }
 
-  /** 
+  /**
    * Initialization script (in program memory).
    */
   static const uint8_t script[] PROGMEM;

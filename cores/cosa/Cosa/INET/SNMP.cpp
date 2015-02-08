@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -66,8 +66,8 @@ SNMP::MIB2_SYSTEM::is_request(PDU& pdu)
       pdu.value.encode_P(SNMP::SYNTAX_OCTETS, m_descr, strlen_P(m_descr));
       break;
     case sysObjectID:
-      pdu.value.encode_P(SNMP::SYNTAX_OID, 
-			 (const char*) ARDUINO_MIB_OID + 1, 
+      pdu.value.encode_P(SNMP::SYNTAX_OID,
+			 (const char*) ARDUINO_MIB_OID + 1,
 			 pgm_read_byte(ARDUINO_MIB_OID));
       break;
     case sysUpTime:
@@ -111,7 +111,7 @@ IOStream& operator<<(IOStream& outs, SNMP::OID& oid)
   return (outs);
 }
 
-int 
+int
 SNMP::OID::match(const uint8_t* coid, bool flag)
 {
   uint8_t clen = pgm_read_byte(&coid[0]);
@@ -145,9 +145,9 @@ IOStream& operator<<(IOStream& outs, SNMP::PDU& pdu)
 }
 
 bool
-SNMP::VALUE::encode(SYNTAX syn, const char* value, size_t size) 
+SNMP::VALUE::encode(SYNTAX syn, const char* value, size_t size)
 {
-  if ((syn == SYNTAX_OCTETS) 
+  if ((syn == SYNTAX_OCTETS)
       || (syn == SYNTAX_OPAQUE)) {
     if (size < DATA_MAX) {
       length = size;
@@ -160,9 +160,9 @@ SNMP::VALUE::encode(SYNTAX syn, const char* value, size_t size)
 }
 
 bool
-SNMP::VALUE::encode_P(SYNTAX syn, const char* value, size_t size) 
+SNMP::VALUE::encode_P(SYNTAX syn, const char* value, size_t size)
 {
-  if ((syn == SYNTAX_OCTETS) 
+  if ((syn == SYNTAX_OCTETS)
       || (syn == SYNTAX_OPAQUE)
       || (syn == SYNTAX_OID)) {
     if (size < DATA_MAX) {
@@ -176,9 +176,9 @@ SNMP::VALUE::encode_P(SYNTAX syn, const char* value, size_t size)
 }
 
 bool
-SNMP::VALUE::encode(SYNTAX syn, int16_t value) 
+SNMP::VALUE::encode(SYNTAX syn, int16_t value)
 {
-  if ((syn == SYNTAX_INT) 
+  if ((syn == SYNTAX_INT)
       || (syn == SYNTAX_OPAQUE)) {
     uint8_t *p = (uint8_t*) &value;
     length = sizeof(value);
@@ -191,9 +191,9 @@ SNMP::VALUE::encode(SYNTAX syn, int16_t value)
 }
 
 bool
-SNMP::VALUE::encode(SYNTAX syn, int32_t value) 
+SNMP::VALUE::encode(SYNTAX syn, int32_t value)
 {
-  if ((syn == SYNTAX_INT32) 
+  if ((syn == SYNTAX_INT32)
       || (syn == SYNTAX_OPAQUE)) {
     uint8_t *p = (uint8_t*) &value;
     length = sizeof(value);
@@ -208,12 +208,12 @@ SNMP::VALUE::encode(SYNTAX syn, int32_t value)
 }
 
 bool
-SNMP::VALUE::encode(SYNTAX syn, uint32_t value) 
+SNMP::VALUE::encode(SYNTAX syn, uint32_t value)
 {
-  if ((syn == SYNTAX_COUNTER) 
-      || (syn == SYNTAX_TIME_TICKS) 
-      || (syn == SYNTAX_GAUGE) 
-      || (syn == SYNTAX_UINT32) 
+  if ((syn == SYNTAX_COUNTER)
+      || (syn == SYNTAX_TIME_TICKS)
+      || (syn == SYNTAX_GAUGE)
+      || (syn == SYNTAX_UINT32)
       || (syn == SYNTAX_OPAQUE)) {
     uint8_t *p = (uint8_t*) &value;
     length = sizeof(value);
@@ -230,8 +230,8 @@ SNMP::VALUE::encode(SYNTAX syn, uint32_t value)
 bool
 SNMP::VALUE::encode(SYNTAX syn, const uint8_t* value)
 {
-  if ((syn == SYNTAX_IP_ADDRESS) 
-      || (syn == SYNTAX_NSAPADDR) 
+  if ((syn == SYNTAX_IP_ADDRESS)
+      || (syn == SYNTAX_NSAPADDR)
       || (syn == SYNTAX_OPAQUE)) {
     uint8_t *p = (uint8_t*) &value;
     length = sizeof(uint32_t);
@@ -248,7 +248,7 @@ SNMP::VALUE::encode(SYNTAX syn, const uint8_t* value)
 bool
 SNMP::VALUE::encode(SYNTAX syn, bool value)
 {
-  if ((syn == SYNTAX_BOOL) 
+  if ((syn == SYNTAX_BOOL)
       || (syn == SYNTAX_OPAQUE)) {
     length = sizeof(uint8_t);
     syntax = syn;
@@ -259,9 +259,9 @@ SNMP::VALUE::encode(SYNTAX syn, bool value)
 }
 
 bool
-SNMP::VALUE::encode(SYNTAX syn) 
+SNMP::VALUE::encode(SYNTAX syn)
 {
-  if ((syn == SYNTAX_NULL) 
+  if ((syn == SYNTAX_NULL)
       || (syn == SYNTAX_OPAQUE)) {
     length = 0;
     syntax = syn;
@@ -270,13 +270,13 @@ SNMP::VALUE::encode(SYNTAX syn)
   return (false);
 }
 
-bool 
+bool
 SNMP::read_byte(uint8_t& value)
 {
   return (read(&value, sizeof(value)) == sizeof(value));
 }
 
-bool 
+bool
 SNMP::read_tag(uint8_t expect, uint8_t& length)
 {
   uint8_t buf[2];
@@ -285,14 +285,14 @@ SNMP::read_tag(uint8_t expect, uint8_t& length)
   return (buf[0] == expect);
 }
 
-bool 
+bool
 SNMP::decode_null()
 {
   uint8_t length;
   return (read_tag(SYNTAX_NULL, length) && (length == 0));
 }
 
-bool 
+bool
 SNMP::decode_integer(int32_t& value)
 {
   uint8_t length;
@@ -305,7 +305,7 @@ SNMP::decode_integer(int32_t& value)
   return (true);
 }
 
-bool 
+bool
 SNMP::decode_string(char* buf, size_t count)
 {
   uint8_t length;
@@ -316,13 +316,13 @@ SNMP::decode_string(char* buf, size_t count)
   return (true);
 }
 
-bool 
+bool
 SNMP::decode_sequence(uint8_t& length)
 {
   return (read_tag(SYNTAX_SEQUENCE, length));
 }
 
-bool 
+bool
 SNMP::decode_oid(OID& oid)
 {
   if (!read_tag(SYNTAX_OID, oid.length)) return (false);
@@ -330,14 +330,14 @@ SNMP::decode_oid(OID& oid)
   return (read(oid.name, oid.length) == oid.length);
 }
 
-bool 
+bool
 SNMP::encode_null()
 {
   uint8_t header[] = { SYNTAX_NULL, 0 };
   return (write(header, sizeof(header)) == sizeof(header));
 }
 
-bool 
+bool
 SNMP::encode_integer(int32_t value)
 {
   uint8_t header[] = { SYNTAX_INT, sizeof(value) };
@@ -346,7 +346,7 @@ SNMP::encode_integer(int32_t value)
   return (write(&value, sizeof(value)) == sizeof(value));
 }
 
-bool 
+bool
 SNMP::encode_string(const char* buf)
 {
   uint8_t count = strlen(buf);
@@ -355,14 +355,14 @@ SNMP::encode_string(const char* buf)
   return (write(buf, count) == count);
 }
 
-bool 
+bool
 SNMP::encode_sequence(int32_t count)
 {
   uint8_t header[] = { SYNTAX_SEQUENCE, (uint8_t) count };
   return (write(header, sizeof(header)) == sizeof(header));
 }
 
-bool 
+bool
 SNMP::encode_oid(OID& oid)
 {
   uint8_t header[] = { SYNTAX_OID, oid.length };
@@ -370,20 +370,20 @@ SNMP::encode_oid(OID& oid)
   return (write(oid.name, oid.length) == oid.length);
 }
 
-bool 
+bool
 SNMP::encode_pdu(uint8_t type, uint8_t size)
 {
-  return ((write(&type, sizeof(type)) == sizeof(type)) 
+  return ((write(&type, sizeof(type)) == sizeof(type))
 	  && (write(&size, sizeof(size)) == sizeof(size)));
 }
 
-bool 
+bool
 SNMP::encode_value(VALUE& value)
 {
   return (write(&value, value.length + 2) == value.length + 2);
 }
 
-bool 
+bool
 SNMP::begin(Socket* sock, MIB2_SYSTEM* sys, MIB* mib)
 {
   if ((sock == NULL) || (sys == NULL) || (mib == NULL)) return (false);
@@ -393,7 +393,7 @@ SNMP::begin(Socket* sock, MIB2_SYSTEM* sys, MIB* mib)
   return (true);
 }
 
-bool 
+bool
 SNMP::end()
 {
   m_sock->close();
@@ -409,10 +409,10 @@ SNMP::request(PDU& pdu, uint32_t ms)
   // Attempt to receive a request within given time limit
   int res = recv(pdu, ms);
   if (res < 0) return (res);
-  
+
   // Check for root getnext request
-  if ((pdu.type == PDU_GET_NEXT) 
-      && (pdu.oid.length == 1) 
+  if ((pdu.type == PDU_GET_NEXT)
+      && (pdu.oid.length == 1)
       && (pdu.oid.name[0] == 0)) {
     const uint8_t* oid = MIB2_SYSTEM::OID;
     memcpy_P(&pdu.oid, oid, pgm_read_byte(oid) + 1);
@@ -422,12 +422,12 @@ SNMP::request(PDU& pdu, uint32_t ms)
   // Match with MIB handlers
   if (!m_sys->is_request(pdu) && !m_mib->is_request(pdu))
     pdu.error_status = NO_SUCH_NAME;
-  
+
   // Send the response value
   return (send(pdu));
 }
 
-int 
+int
 SNMP::recv(PDU& pdu, uint32_t ms)
 {
   uint8_t length;
@@ -475,7 +475,7 @@ SNMP::recv(PDU& pdu, uint32_t ms)
   return (err);
 }
 
-int 
+int
 SNMP::send(PDU& pdu)
 {
   uint8_t packet_size;
@@ -494,7 +494,7 @@ SNMP::send(PDU& pdu)
   varbind_list_size = (varbind_size + 2);
   pdu_size = ((varbind_list_size) + 2) + (3*(sizeof(int32_t) + 2));
   packet_size = (pdu_size + 2) + (strlen(pdu.community) + 2) + (sizeof(int32_t) + 2);
-  
+
   // Create the datagram with all encoded elements
   if (m_sock->datagram(pdu.dest, pdu.port) < 0) goto error;
   if (!encode_sequence(packet_size)) goto error;
@@ -508,7 +508,7 @@ SNMP::send(PDU& pdu)
   if (!encode_sequence(varbind_size)) goto error;
   if (!encode_oid(pdu.oid)) goto error;
   if (!encode_value(pdu.value)) goto error;
-  
+
  error:
   // Send the datagram
   return (m_sock->flush());

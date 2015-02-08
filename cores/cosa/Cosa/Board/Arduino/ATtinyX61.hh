@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -35,7 +35,7 @@
  * number/digit will not work, symbols must be used, Board::D2.
  *
  * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced. 
+ * optimizations to be reduced.
  *
  * @section Circuit
  * @code
@@ -69,21 +69,21 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin)
     __attribute__((always_inline))
-  { 
-    return (pin < 8 ? &PINA : 
+  {
+    return (pin < 8 ? &PINA :
 	              &PINB);
   }
 
   /**
    * Return bit position for given Arduino pin number in Special
-   * Function Register. 
+   * Function Register.
    * @param[in] pin number.
    * @return pin bit position.
    */
   static uint8_t BIT(uint8_t pin)
     __attribute__((always_inline))
   {
-    return (pin < 8 ? pin : 
+    return (pin < 8 ? pin :
 	              pin - 8);
   }
 
@@ -94,8 +94,8 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin)
     __attribute__((always_inline))
-  { 
-    return (pin < 8  ? &PCMSK0 : 
+  {
+    return (pin < 8  ? &PCMSK0 :
 	               &PCMSK1);
   }
 
@@ -105,10 +105,10 @@ private:
    */
   static volatile uint8_t* USI()
     __attribute__((always_inline))
-  { 
+  {
     return (&PINA);
   }
-  
+
 public:
   /**
    * Initiate board ports. Default void.
@@ -166,7 +166,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * PWM pin symbols; sub-set of digital pins to allow compile 
+   * PWM pin symbols; sub-set of digital pins to allow compile
    * time checking
    */
   enum PWMPin {
@@ -176,7 +176,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * External interrupt pin symbols; sub-set of digital pins 
+   * External interrupt pin symbols; sub-set of digital pins
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
@@ -206,7 +206,7 @@ public:
     PCI15 = D15			// PB7
   } __attribute__((packed));
 
-  /** 
+  /**
    * Size of pin maps.
    */
   enum {
@@ -224,7 +224,7 @@ public:
     SDA = 0,			// PB2/D8
     SCL = 2			// PB2/D10
   } __attribute__((packed));
-  
+
   /**
    * Pins used for SPI interface (Port A, bit 0-3, D0-D3)
    */

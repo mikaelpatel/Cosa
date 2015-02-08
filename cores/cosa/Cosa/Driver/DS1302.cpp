@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Driver/DS1302.hh"
 
-uint8_t 
+uint8_t
 DS1302::read()
 {
   uint8_t bits = CHARBITS;
@@ -37,7 +37,7 @@ DS1302::read()
   return (res);
 }
 
-void 
+void
 DS1302::write(uint8_t data)
 {
   uint8_t bits = CHARBITS;
@@ -61,11 +61,11 @@ DS1302::read(uint8_t addr)
     m_sda.set_mode(IOPin::INPUT_MODE);
     res = read();
     m_sda.set_mode(IOPin::OUTPUT_MODE);
-  }  
+  }
   return (res);
 }
-  
-void 
+
+void
 DS1302::write(uint8_t addr, uint8_t data)
 {
   addr = ((addr << 1) | WRITE);
@@ -75,7 +75,7 @@ DS1302::write(uint8_t addr, uint8_t data)
   }
 }
 
-void 
+void
 DS1302::get_time(time_t& now)
 {
   asserted(m_cs) {
@@ -89,10 +89,10 @@ DS1302::get_time(time_t& now)
     now.day = read();
     now.year = read();
     m_sda.set_mode(IOPin::OUTPUT_MODE);
-  }  
+  }
 }
 
-void 
+void
 DS1302::set_time(time_t& now)
 {
   set_write_protect(false);
@@ -109,7 +109,7 @@ DS1302::set_time(time_t& now)
   set_write_protect(true);
 }
 
-void 
+void
 DS1302::read_ram(void* buf, size_t size)
 {
   if (size == 0) return;
@@ -120,10 +120,10 @@ DS1302::read_ram(void* buf, size_t size)
     m_sda.set_mode(IOPin::INPUT_MODE);
     do *bp++ = read(); while (--size);
     m_sda.set_mode(IOPin::OUTPUT_MODE);
-  }  
+  }
 }
 
-void 
+void
 DS1302::write_ram(void* buf, size_t size)
 {
   if (size == 0) return;
@@ -132,7 +132,7 @@ DS1302::write_ram(void* buf, size_t size)
   set_write_protect(false);
   asserted(m_cs) {
     write(RAM_BURST | WRITE);
-    do write(*bp++); while (--size); 
+    do write(*bp++); while (--size);
   }
   set_write_protect(true);
 }

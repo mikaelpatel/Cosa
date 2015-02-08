@@ -9,18 +9,18 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Flash/Driver/S25FL127S.hh"
 
-bool 
+bool
 S25FL127S::begin()
 {
   // Check that the device is ready
@@ -42,7 +42,7 @@ S25FL127S::begin()
   return (manufacturer == MANUFACTURER && device == DEVICE);
 }
 
-bool 
+bool
 S25FL127S::is_ready()
 {
   // Read Status Register 1
@@ -57,7 +57,7 @@ S25FL127S::is_ready()
   return (!m_status.WIP);
 }
 
-int 
+int
 S25FL127S::read(void* dest, uint32_t src, size_t size)
 {
   // Use READ with 24-bit address; Big-endian
@@ -76,7 +76,7 @@ S25FL127S::read(void* dest, uint32_t src, size_t size)
   return ((int) size);
 }
 
-int 
+int
 S25FL127S::erase(uint32_t dest, uint8_t size)
 {
   uint8_t op;
@@ -110,7 +110,7 @@ S25FL127S::erase(uint32_t dest, uint8_t size)
   return (m_status.E_ERR ? -1 : 0);
 }
 
-int 
+int
 S25FL127S::write(uint32_t dest, const void* src, size_t size)
 {
   // Check for zero buffer size
@@ -140,13 +140,13 @@ S25FL127S::write(uint32_t dest, const void* src, size_t size)
 	spi.write(sp, count);
       spi.end();
     spi.release();
-    
+
     // Wait for completion
     while (!is_ready()) yield();
 
     // Check for program error
     if (m_status.P_ERR) return (-1);
-    
+
     // Step to next page
     size -= count;
     if (size == 0) break;
@@ -159,7 +159,7 @@ S25FL127S::write(uint32_t dest, const void* src, size_t size)
   return (res);
 }
 
-int 
+int
 S25FL127S::write_P(uint32_t dest, const void* src, size_t size)
 {
   // Check for zero buffer size
@@ -195,7 +195,7 @@ S25FL127S::write_P(uint32_t dest, const void* src, size_t size)
 
     // Check for program error
     if (m_status.P_ERR) return (-1);
-    
+
     // Step to next page
     size -= count;
     if (size == 0) break;
@@ -208,7 +208,7 @@ S25FL127S::write_P(uint32_t dest, const void* src, size_t size)
   return (res);
 }
 
-uint8_t 
+uint8_t
 S25FL127S::issue(Command cmd)
 {
   spi.acquire(this);

@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -33,7 +33,7 @@ extern System5x7 system5x7;
  * canvas. As an element it holds its own canvas state; context. The
  * textbox is defined by a port (x, y, width, height) on the canvas.
  * Basic special character handling of carriage-return, line- and
- * form-feed. 
+ * form-feed.
  */
 class Textbox : public Canvas::Element, public IOStream::Device {
 public:

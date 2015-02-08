@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,7 +26,7 @@
 #include "Cosa/IOStream.hh"
 
 /**
- * Cosa Flash File System for Flash Memory. 
+ * Cosa Flash File System for Flash Memory.
  *
  * @section Limitations
  * Directory entries are not reclaimed (directory block is not erased
@@ -65,11 +65,11 @@ protected:
 
    * DIR_ENTRY_TYPE is a directory reference; size is not used, ref is
    * the address of the directory block, name is the name of the
-   * directory. 
+   * directory.
    *
    * DIR_BLOCK_TYPE is directory block header; size is the directory
    * sector, ref is the address to the next directory block (NULL is
-   * encoded as 0xffffffffL, NULL_REF) 
+   * encoded as 0xffffffffL, NULL_REF)
    */
   enum {
     CFFS_TYPE = 0xf5cf,		//!< File System Master header.
@@ -81,7 +81,7 @@ protected:
     ALLOC_MASK = 0x8000,	//!< Allocated mask.
     TYPE_MASK = 0x7fff		//!< Type mask.
   };
-  
+
   /**
    * CFFS null address in flash data structures.
    */
@@ -96,7 +96,7 @@ public:
    * from the end of the last file sector. Text files may not use the
    * value (0xff). Binary files must end each entry with non-0xff
    * entry. Write should always be in append mode as the file cannot
-   * be rewritten with any value. 
+   * be rewritten with any value.
    */
   class File : public IOStream::Device {
   public:
@@ -105,7 +105,7 @@ public:
      * read/write operations are possible.
      */
     File() : IOStream::Device(), m_flags(0) {}
-    
+
     /**
      * Open a file by name and mode flags. Returns zero(0) if
      * successful otherwise a negative error code (EBUSY, EPERM,
@@ -115,15 +115,15 @@ public:
      * @return zero or negative error code.
      */
     int open(const char* filename, uint8_t oflag = O_READ);
-    
+
     /**
      * Checks the file's open/closed status. Return true if open
      * otherwise false.
      * @return bool.
      */
-    bool is_open(void) const 
-    { 
-      return ((m_flags & O_RDWR) != 0); 
+    bool is_open(void) const
+    {
+      return ((m_flags & O_RDWR) != 0);
     }
 
     /**
@@ -152,12 +152,12 @@ public:
     int seek(uint32_t pos, uint8_t whence = SEEK_SET);
 
     /**
-     * Return current position. 
+     * Return current position.
      * @return position.
      */
     uint32_t tell()
-    { 
-      return (m_current_pos); 
+    {
+      return (m_current_pos);
     }
 
     /**
@@ -166,17 +166,17 @@ public:
      * @return zero or negative error code.
      */
     int rewind()
-    { 
-      return (seek(0L)); 
+    {
+      return (seek(0L));
     }
 
     /**
-     * Return number of bytes in file. 
+     * Return number of bytes in file.
      * @return size.
      */
     uint32_t size()
-    { 
-      return (m_file_size); 
+    {
+      return (m_file_size);
     }
 
     /**
@@ -189,7 +189,7 @@ public:
      * @return number of bytes written or negative error code.
      */
     virtual int write(const void *buf, size_t size);
-  
+
     /**
      * @override IOStream::Device
      * Write data from buffer in program memory with given size to the
@@ -219,7 +219,7 @@ public:
      * @return number of bytes read or negative error code.
      */
     virtual int read(void* buf, size_t size);
-    
+
   protected:
     uint8_t m_flags;			//!< File open flags.
     uint32_t m_entry_addr;		//!< Entry address.
@@ -233,7 +233,7 @@ public:
      * @override IOStream::Device
      * Write data from buffer in data or program memory with given
      * size to the file. If successful returns number of bytes written
-     * or negative error code.  
+     * or negative error code.
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
      * @param[in] progmem from data(false) or program memory(true).
@@ -244,13 +244,13 @@ public:
 
   /**
    * Mount a CFFS volume on the given flash device. Return true if
-   * successful otherwise false. 
+   * successful otherwise false.
    * @param[in] flash device to mount.
    * @return bool.
    */
   static bool begin(Flash::Device* flash);
 
-  /** 
+  /**
    * List directory contents to given iostream. Return zero(0) if
    * successful otherwise a negative error code (EPERM, EIO).
    * @param[in] outs output stream.
@@ -259,14 +259,14 @@ public:
   static int ls(IOStream& outs);
 
   /**
-   * Remove a file. The directory entry and all data for the file is 
+   * Remove a file. The directory entry and all data for the file is
    * deleted. Return zero(0) if successful otherwise a negative error
    * code (EPREM, EIO, ENOENT, ENFILE, EINVAL).
-   * @param[in] filename to remove. 
+   * @param[in] filename to remove.
    * @return zero or negative error code.
    */
   static int rm(const char* filename);
-  
+
   /**
    * Change current directory to the given filename in the current
    * directory. Return zero(0) if successful otherwise a negative
@@ -275,7 +275,7 @@ public:
    * @return zero or negative error code.
    */
   static int cd(const char* filename);
-  
+
   /**
    * Create a directory with the given filename in the current
    * directory. Return zero(0) if successful otherwise a negative
@@ -284,7 +284,7 @@ public:
    * @return zero or negative error code.
    */
   static int mkdir(const char* filename);
-  
+
   /**
    * Remove directory with the given filename in the current
    * directory. Return zero(0) if successful otherwise a negative
@@ -293,9 +293,9 @@ public:
    * @return zero or negative error code.
    */
   static int rmdir(const char* filename);
-  
+
   /**
-   * Format the flash. Create a CFFS volume with root directory. 
+   * Format the flash. Create a CFFS volume with root directory.
    * Returns zero(0) if successful otherwise a negative error code
    * (EPERM, ENAMETOOLONG, EIO).
    * @param[in] flash device to mount.
@@ -319,7 +319,7 @@ protected:
   /**
    * Read flash block with the given size into the buffer from the
    * source address. Return number of bytes read or negative error
-   * code. 
+   * code.
    * @param[in] dest buffer to read from flash into.
    * @param[in] src address in flash to read from.
    * @param[in] size number of bytes to read.
@@ -330,7 +330,7 @@ protected:
   /**
    * Write flash block at given destination address with the contents
    * of the source buffer. Return number of bytes written or negative
-   * error code. 
+   * error code.
    * @param[in] dest address in flash to write to.
    * @param[in] src buffer to write to flash.
    * @param[in] size number of bytes to write.
@@ -341,17 +341,17 @@ protected:
   /**
    * Write flash block at given destination address with contents
    * of the source buffer in program memory. Return number of bytes
-   * written or negative error code.  
+   * written or negative error code.
    * @param[in] dest address in flash to write to.
    * @param[in] src buffer in program memory to write to flash.
    * @param[in] size number of bytes to write.
    * @return number of bytes written or EOF(-1).
    */
   static int write_P(uint32_t dest, const void* src, size_t size);
-  
+
   /**
    * Lookup directory entry with the given file name. Return zero and
-   * entry if found otherwise negative error code. 
+   * entry if found otherwise negative error code.
    * @param[in] filename to lookup.
    * @param[out] entry setting.
    * @param[out] addr entry address.
@@ -363,7 +363,7 @@ protected:
    * Create directory entry with given file name and type. The flags (O_EXCL)
    * may be used to fail if the file already exists. The type must be
    * DIR_TYPE or FILE_TYPE. Returns zero and entry otherwise negative
-   * error code. 
+   * error code.
    * @param[in] filename to create.
    * @param[in] type of entry to create.
    * @param[in] flags open flags to check.
@@ -371,12 +371,12 @@ protected:
    * @param[out] addr address of entry.
    * @return zero and entry otherwise negative error code.
    */
-  static int create(const char* filename, uint16_t type, uint8_t flags, 
+  static int create(const char* filename, uint16_t type, uint8_t flags,
 		    descr_t &entry, uint32_t &addr);
 
   /**
    * Remove directory entry. Returns zero(0) if successful otherwise a
-   * negative error code. 
+   * negative error code.
    * @param[in] addr entry address.
    * @param[in] type entry type.
    * @return zero or negative error code.
@@ -388,13 +388,13 @@ protected:
    * @return sector address or zero.
    */
   static uint32_t next_free_sector();
-  
+
   /**
    * Allocate next free directory. Returns directory address or zero.
    * @return directory address or zero.
    */
   static uint32_t next_free_directory();
-  
+
   /**
    * Find address and size of file that starts with the given
    * sector. Return zero(0) if successful otherwise a negative error

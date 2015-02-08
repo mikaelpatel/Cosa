@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -23,7 +23,7 @@
 
 Canvas::Context Canvas::context;
 
-Canvas::color16_t 
+Canvas::color16_t
 Canvas::shade(color16_t color, uint8_t scale)
 {
   color16_t res;
@@ -34,7 +34,7 @@ Canvas::shade(color16_t color, uint8_t scale)
   return (res);
 }
 
-Canvas::color16_t 
+Canvas::color16_t
 Canvas::blend(color16_t c1, color16_t c2)
 {
   color16_t res;
@@ -44,28 +44,28 @@ Canvas::blend(color16_t c1, color16_t c2)
   return (res);
 }
 
-uint8_t 
-Canvas::get_orientation() 
+uint8_t
+Canvas::get_orientation()
 {
   return (m_direction);
 }
 
-uint8_t 
-Canvas::set_orientation(uint8_t direction) 
+uint8_t
+Canvas::set_orientation(uint8_t direction)
 {
   uint8_t previous = m_direction;
   m_direction = (direction & 1);
   return (previous);
 }
 
-void 
+void
 Canvas::draw_pixel(uint16_t x, uint16_t y)
 {
   fill_rect(x, y, 1, 1);
 }
 
 void
-Canvas::draw_bitmap(uint16_t x, uint16_t y, const uint8_t* bp, 
+Canvas::draw_bitmap(uint16_t x, uint16_t y, const uint8_t* bp,
 		    uint16_t width, uint16_t height,
 		    uint8_t scale)
 {
@@ -108,7 +108,7 @@ Canvas::draw_icon(uint16_t x, uint16_t y, const uint8_t* bp,
   draw_bitmap(x, y, bp, width, height, scale);
 }
 
-void 
+void
 Canvas::draw_icon(uint16_t x, uint16_t y, const uint8_t* bp, uint8_t scale)
 {
   uint16_t width = pgm_read_byte(bp++);
@@ -116,7 +116,7 @@ Canvas::draw_icon(uint16_t x, uint16_t y, const uint8_t* bp, uint8_t scale)
   draw_icon(x, y, bp, width, height, scale);
 }
 
-void 
+void
 Canvas::draw_image(uint16_t x, uint16_t y, Image* image)
 {
   color16_t saved = set_pen_color(0);
@@ -146,7 +146,7 @@ Canvas::draw_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
   draw_horizontal_line(x, y + height, width);
 }
 
-void 
+void
 Canvas::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
   if (width > height) {
@@ -162,7 +162,7 @@ Canvas::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 #define dist(x, y) ((x > y) ? (x - y) : (y - x))
 #define swap(a, b) { uint16_t t = a; a = b; b = t; }
 
-void 
+void
 Canvas::draw_line(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
   bool steep = (dist(y0, y1) > dist(x0, x1));
@@ -193,19 +193,19 @@ Canvas::draw_line(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
   }
 }
 
-void 
+void
 Canvas::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
 {
   draw_line(x, y, x, y + length);
 }
 
-void 
+void
 Canvas::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
 {
   draw_line(x, y, x + length, y);
 }
 
-void 
+void
 Canvas::draw_poly_P(const int8_t* poly, uint8_t scale)
 {
   if (scale == 0) return;
@@ -221,7 +221,7 @@ Canvas::draw_poly_P(const int8_t* poly, uint8_t scale)
   }
 }
 
-void 
+void
 Canvas::draw_stroke_P(const int8_t* stroke, uint8_t scale)
 {
   if (scale == 0) return;
@@ -242,7 +242,7 @@ Canvas::draw_stroke_P(const int8_t* stroke, uint8_t scale)
   }
 }
 
-void 
+void
 Canvas::draw_circle(uint16_t x, uint16_t y, uint16_t radius)
 {
   int16_t f = 1 - radius;
@@ -275,7 +275,7 @@ Canvas::draw_circle(uint16_t x, uint16_t y, uint16_t radius)
   }
 }
 
-void 
+void
 Canvas::fill_circle(uint16_t x, uint16_t y, uint16_t radius)
 {
   int16_t dx = 0, dy = radius;
@@ -296,8 +296,8 @@ Canvas::fill_circle(uint16_t x, uint16_t y, uint16_t radius)
   }
 }
 
-void 
-Canvas::draw_roundrect(uint16_t x, uint16_t y, 
+void
+Canvas::draw_roundrect(uint16_t x, uint16_t y,
 		       uint16_t width, uint16_t height,
 		       uint16_t radius)
 {
@@ -308,12 +308,12 @@ Canvas::draw_roundrect(uint16_t x, uint16_t y,
   int8_t rx = 0;
   int8_t ry = radius;
 
-  // Adjust position, width and height 
+  // Adjust position, width and height
   x += radius;
   y += radius;
   width -= diameter;
   height -= diameter;
-  
+
   // Draw the boundary rectangle
   draw_horizontal_line(x, y - radius, width + 1);
   draw_vertical_line(x + width + radius, y, height + 1);
@@ -341,9 +341,9 @@ Canvas::draw_roundrect(uint16_t x, uint16_t y,
   }
 }
 
-void 
-Canvas::fill_roundrect(uint16_t x, uint16_t y, 
-		       uint16_t width, uint16_t height, 
+void
+Canvas::fill_roundrect(uint16_t x, uint16_t y,
+		       uint16_t width, uint16_t height,
 		       uint16_t radius)
 {
   int16_t dx = 0, dy = radius;
@@ -373,7 +373,7 @@ Canvas::fill_roundrect(uint16_t x, uint16_t y,
   }
 }
 
-void 
+void
 Canvas::draw_char(uint16_t x, uint16_t y, char c)
 {
   uint8_t scale = get_text_scale();
@@ -384,24 +384,24 @@ Canvas::draw_char(uint16_t x, uint16_t y, char c)
   set_pen_color(saved);
 }
 
-void 
+void
 Canvas::draw_string(char* s)
 {
-  char c; 
-  while ((c = *s++) != 0) 
+  char c;
+  while ((c = *s++) != 0)
     draw_char(c);
 }
 
-void 
+void
 Canvas::draw_string_P(str_P s)
 {
   const char* sp = (const char*) s;
-  char c; 
-  while ((c = pgm_read_byte(sp++)) != 0) 
+  char c;
+  while ((c = pgm_read_byte(sp++)) != 0)
     draw_char(c);
 }
 
-void 
+void
 Canvas::fill_screen()
 {
   color16_t saved = set_pen_color(get_canvas_color());
@@ -409,7 +409,7 @@ Canvas::fill_screen()
   set_pen_color(saved);
 }
 
-void 
+void
 Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
 {
   if (ix >= max) return;

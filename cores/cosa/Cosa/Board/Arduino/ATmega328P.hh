@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -35,11 +35,11 @@
  * Cosa pin symbol definitions for the ATmega328P based
  * breadboards. Cosa does not use pin numbers as Arduino/Wiring,
  * instead strong data type is used (enum types) for the specific pin
- * classes; DigitalPin, AnalogPin, PWMPin, etc. 
+ * classes; DigitalPin, AnalogPin, PWMPin, etc.
  *
  * The pin numbers for ATmega328P are mapped as in Arduino. The static
  * inline functions, SFR, BIT and UART, rely on compiler optimizations
- * to be reduced.  
+ * to be reduced.
  */
 class Board {
   friend class Pin;
@@ -57,26 +57,26 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin)
     __attribute__((always_inline))
-  { 
-    return (pin < 8  ? &PIND : 
-	    pin < 14 ? &PINB : 
+  {
+    return (pin < 8  ? &PIND :
+	    pin < 14 ? &PINB :
 	               &PINC);
   }
 
   /**
    * Return bit position for given Arduino pin number in Special
-   * Function Register. 
+   * Function Register.
    * @param[in] pin number.
    * @return pin bit position.
    */
   static uint8_t BIT(uint8_t pin)
     __attribute__((always_inline))
   {
-    return (pin < 8  ? pin : 
-	    pin < 14 ? pin - 8 : 
+    return (pin < 8  ? pin :
+	    pin < 14 ? pin - 8 :
  	               pin - 14);
   }
-  
+
   /**
    * Return Pin Change Mask Register for given Arduino pin number.
    * @param[in] pin number.
@@ -84,9 +84,9 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin)
     __attribute__((always_inline))
-  { 
-    return (pin < 8  ? &PCMSK2 : 
-	    pin < 14 ? &PCMSK0 : 
+  {
+    return (pin < 8  ? &PCMSK2 :
+	    pin < 14 ? &PCMSK0 :
 	               &PCMSK1);
   }
 
@@ -97,7 +97,7 @@ private:
    */
   static volatile uint8_t* UART(uint8_t port)
     __attribute__((always_inline))
-  { 
+  {
     UNUSED(port);
     return (&UCSR0A);
   }
@@ -159,7 +159,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * PWM pin symbols; sub-set of digital pins to allow compile 
+   * PWM pin symbols; sub-set of digital pins to allow compile
    * time checking
    */
   enum PWMPin {
@@ -172,7 +172,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * External interrupt pin symbols; sub-set of digital pins 
+   * External interrupt pin symbols; sub-set of digital pins
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
@@ -206,7 +206,7 @@ public:
     PCI19 = D19			// PC5
   } __attribute__((packed));
 
-  /** 
+  /**
    * Size of pin maps.
    */
   enum {

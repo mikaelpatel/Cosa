@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,14 +30,14 @@ DHCP::DHCP(const char* hostname, const uint8_t* mac) :
 {
 }
 
-int 
+int
 DHCP::send(uint8_t type)
 {
   // Start the construction of the message
   uint8_t BROADCAST[4] = { 0xff, 0xff, 0xff, 0xff };
   int res = m_sock->datagram(BROADCAST, SERVER_PORT);
   if (res < 0) return (-1);
-  
+
   // Construct DHCP message header
   header_t header;
   memset(&header, 0, sizeof(header));
@@ -50,7 +50,7 @@ DHCP::send(uint8_t type)
   memcpy_P(header.CHADDRB, m_mac, INET::MAC_MAX);
   res = m_sock->write(&header, sizeof(header));
   if (res < 0) return (-1);
-  
+
   // Write BOOTP legacy (192 bytes zero)
   uint8_t buf[32];
   memset(buf, 0, sizeof(buf));
@@ -104,7 +104,7 @@ DHCP::send(uint8_t type)
   return (m_sock->flush());
 }
 
-int 
+int
 DHCP::recv(uint8_t type, uint16_t ms)
 {
   // Wait for a reply
@@ -146,7 +146,7 @@ DHCP::recv(uint8_t type, uint16_t ms)
     m_sock->read(&len, sizeof(len));
     m_sock->read(buf, len);
     switch (op) {
-    case MESSAGE_TYPE: 
+    case MESSAGE_TYPE:
       if (buf[0] != type) res = -6;
       break;
     case SUBNET_MASK:
@@ -188,7 +188,7 @@ DHCP::end()
   return (true);
 }
 
-int 
+int
 DHCP::discover()
 {
   if (m_sock == NULL) return (-1);
@@ -196,8 +196,8 @@ DHCP::discover()
   if (recv(DHCP_OFFER) < 0) return (-3);
   return (0);
 }
-  
-int 
+
+int
 DHCP::request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
 {
   if (m_sock == NULL) return (-1);
@@ -209,7 +209,7 @@ DHCP::request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
   return (0);
 }
 
-int 
+int
 DHCP::renew(Socket* sock)
 {
   if (m_sock != NULL) return (-1);
@@ -222,7 +222,7 @@ DHCP::renew(Socket* sock)
   return (0);
 }
 
-int 
+int
 DHCP::release(Socket* sock)
 {
   if (m_sock != NULL) return (-1);

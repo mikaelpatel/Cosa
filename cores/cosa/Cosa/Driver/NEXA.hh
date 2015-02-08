@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,7 +34,7 @@
 class NEXA {
 public:
   /**
-   * Wireless command code; 32-bit, little endian order for AVR 
+   * Wireless command code; 32-bit, little endian order for AVR
    */
   union code_t {
     int32_t as_long;
@@ -49,9 +49,9 @@ public:
      * Construct command code from given 32-bit number. Default constructor.
      * @param[in] value to construct as command code.
      */
-    code_t(int32_t value = 0L) 
-    { 
-      as_long = value; 
+    code_t(int32_t value = 0L)
+    {
+      as_long = value;
     }
 
     /**
@@ -60,7 +60,7 @@ public:
      * @param[in] d device.
      */
     code_t(int32_t h, uint8_t d)
-    { 
+    {
       device = d;
       onoff = 0;
       group = 0;
@@ -68,7 +68,7 @@ public:
     }
 
     /**
-     * Construct command code from given house, group, device and 
+     * Construct command code from given house, group, device and
      * onoff flag.
      * @param[in] h house.
      * @param[in] g group.
@@ -76,7 +76,7 @@ public:
      * @param[in] f onoff.
      */
     code_t(int32_t h, uint8_t g, uint8_t d, uint8_t f)
-    { 
+    {
       device = d;
       onoff = f;
       group = g;
@@ -99,9 +99,9 @@ public:
      * @param[in] other code.
      * @return bool.
      */
-    bool operator==(const NEXA::code_t &other) const 
+    bool operator==(const NEXA::code_t &other) const
     {
-      if (other.group) 
+      if (other.group)
 	return ((device & 0b1100) == (other.device & 0b1100));
       return ((house == other.house) && (device == other.device));
     }
@@ -117,7 +117,7 @@ public:
 
   /**
    * NEXA Wireless Remote Receiver. May be used in polling or
-   * interrupt sampling mode. 
+   * interrupt sampling mode.
    *
    * @section Circuit
    * @code
@@ -140,8 +140,8 @@ public:
   public:
     /**
      * NEXA::Receiver::Listener with code as key. The virtual method
-     * on_event() is called when a command code matches the listeners 
-     * key. The listener will receive Event::CHANGE_TYPE and the value 
+     * on_event() is called when a command code matches the listeners
+     * key. The listener will receive Event::CHANGE_TYPE and the value
      * of the onoff member of the received command code.
      */
     typedef Listener<code_t> Device;
@@ -160,7 +160,7 @@ public:
       m_ix(0)
     {}
 
-    /** 
+    /**
      * Attach given device to list of listeners.
      * @param[in] device to attach.
      */
@@ -169,15 +169,15 @@ public:
     {
       m_listeners.attach(device);
     }
-    
+
     /**
      * Retrieve decoded command after Event::RECEIVE_COMPLETED_TYPE from
      * interrupt handler.
      * @return decoded command.
      */
     code_t get_code() const
-    { 
-      return (m_code); 
+    {
+      return (m_code);
     }
 
     /**
@@ -190,11 +190,11 @@ public:
     /**
      * Enable interrupt driven command code receiving. Interrupt
      * handler will push an Event::RECEIVE_COMPLETED_TYPE when a
-     * command has been received. 
+     * command has been received.
      */
     void enable()
       __attribute__((always_inline))
-    { 
+    {
       ExternalInterrupt::enable();
     }
 
@@ -203,14 +203,14 @@ public:
      */
     void disable()
       __attribute__((always_inline))
-    { 
+    {
       ExternalInterrupt::disable();
     }
 
   private:
     Head m_listeners;
     static const uint8_t SAMPLE_MAX = 4;
-    static const uint8_t IX_MAX = 129;    
+    static const uint8_t IX_MAX = 129;
     static const uint8_t IX_MASK = SAMPLE_MAX - 1;
     static const uint16_t LOW_THRESHOLD = 200;
     static const uint16_t BIT_THRESHOLD = 500;
@@ -227,8 +227,8 @@ public:
      * should be retrieved with get_code(). The event will contain the
      * class instance as target. This allows sub-classes to override
      * the Event::Handler::on_event() method and use event dispatch.
-     * Alternatively sub-class Listener with on_change() and call 
-     * dispatch() after receiving the event.  
+     * Alternatively sub-class Listener with on_change() and call
+     * dispatch() after receiving the event.
      * @param[in] arg argument from first level interrupt handler.
      */
     virtual void on_interrupt(uint16_t arg = 0);
@@ -238,8 +238,8 @@ public:
      * Handle events from interrupt handler; dispatch to listeners.
      * The incoming event should be Event::RECEIVE_COMPLETED_TYPE.
      * The event handler, on_event(), of each listener that matches
-     * the address of the received command code will be called with 
-     * Event::CHANGE_TYPE and the command onoff value. 
+     * the address of the received command code will be called with
+     * Event::CHANGE_TYPE and the command onoff value.
      * @param[in] type the event type.
      * @param[in] value the event value.
      */
@@ -260,8 +260,8 @@ public:
   };
 
   /**
-   * NEXA Wireless Command Code Transmitter. Sends command codes to 
-   * NEXA lighting control equipment or NEXA::Receiver. Delay based 
+   * NEXA Wireless Command Code Transmitter. Sends command codes to
+   * NEXA lighting control equipment or NEXA::Receiver. Delay based
    * implementation; transmission will return when completed.
    *
    * @section Circuit
@@ -279,19 +279,19 @@ public:
   public:
     /**
      * Construct NEXA Command Code Transmitter connected to RF433
-     * Transmitter connected to given pin. The default house code 
+     * Transmitter connected to given pin. The default house code
      * is zero(0).
      * @param[in] pin output pin for transmitter.
      * @param[in] nr house number.
      */
-    Transmitter(Board::DigitalPin pin, uint32_t nr = 0L) : 
+    Transmitter(Board::DigitalPin pin, uint32_t nr = 0L) :
       OutputPin(pin),
       m_house(nr)
     {
     }
 
     /**
-     * Set house code to given number. 
+     * Set house code to given number.
      * @param[in] nr house number.
      */
     void set_house(uint32_t nr)
@@ -301,8 +301,8 @@ public:
     }
 
     /**
-     * Send command code to given device (0..15). Turn device on or 
-     * off according to parameter. Device number is channel:unit<2:2>, 
+     * Send command code to given device (0..15). Turn device on or
+     * off according to parameter. Device number is channel:unit<2:2>,
      * channel(0..3), unit(0..3). Dimmer levels are onoff values -1..-15.
      * @param[in] device (0..15).
      * @param[in] onoff device mode (-15..-1..0..1).
@@ -313,9 +313,9 @@ public:
       code_t cmd(m_house, 0, device, onoff);
       send_code(cmd, onoff);
     }
-    
+
     /**
-     * Send command code to given group. Turn devices in group on 
+     * Send command code to given group. Turn devices in group on
      * or off according to parameter. Group number is (0..3).
      * @param[in] group (0..3).
      * @param[in] onoff device mode (0..1).
@@ -343,7 +343,7 @@ public:
     uint32_t m_house;
 
     /**
-     * Send a pulse followed by short delay for zero(0) and long for 
+     * Send a pulse followed by short delay for zero(0) and long for
      * non-zero(1).
      * @param[in] value (0..1).
      */
@@ -369,7 +369,7 @@ public:
 
     /**
      * Send a command code. Transmitted SEND_CODE_MAX times with
-     * pause between each transmission. Dimmer levels are onoff 
+     * pause between each transmission. Dimmer levels are onoff
      * values -1..-15.
      * @param[in] cmd to transmit.
      * @param[in] onoff device mode (-15..-1..0..1).

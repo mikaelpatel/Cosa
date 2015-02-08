@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,21 +30,21 @@
  * @section References
  * http://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
  */
-template<uint8_t N> 
+template<uint8_t N>
 class Vigenere {
 public:
   /**
    * Construct Vigenere crypto with key generated from given seed.
    * An autokey is generated when key length (n) is less than max key
-   * length (N). 
+   * length (N).
    * @param[in] seed for random key generation.
    * @param[in] n length of random key.
    */
-  Vigenere(uint32_t seed, uint8_t n = N) 
-  { 
+  Vigenere(uint32_t seed, uint8_t n = N)
+  {
     if (n > N) n = N;
     srandom(seed);
-    for (uint8_t i = 0; i < n; i++) 
+    for (uint8_t i = 0; i < n; i++)
       m_key[i] = random();
     m_nr = 0;
     m_max = n;
@@ -53,13 +53,13 @@ public:
 
   /**
    * Construct Vigenere crypto with given password. An autokey is
-   * generated when the password length is less than max key length (N). 
+   * generated when the password length is less than max key length (N).
    * @param[in] password.
    */
   Vigenere(const char* password)
-  { 
+  {
     uint8_t i;
-    for (i = 0; i < N && password[i]; i++) 
+    for (i = 0; i < N && password[i]; i++)
       m_key[i] = password[i];
     m_nr = 0;
     m_max = i;
@@ -80,7 +80,7 @@ public:
    * @param[in] c character to encode.
    * @return encoded character.
    */
-  char encrypt(char c) 
+  char encrypt(char c)
   {
     char res = c + m_key[m_nr++];
     if (m_max != N) m_key[m_max++] = c;
@@ -105,7 +105,7 @@ public:
    * @param[in] src buffer pointer.
    * @param[in] n number of bytes.
    */
-  void encrypt(void* dest, const void* src, size_t n) 
+  void encrypt(void* dest, const void* src, size_t n)
   {
     char* dp = (char*) dest;
     const char* sp = (const char*) src;
@@ -124,13 +124,13 @@ public:
     if (m_nr == N) m_nr = 0;
     return (res);
   }
-  
+
   /**
    * Decrypt the given buffer.
    * @param[in] buf buffer pointer.
    * @param[in] n number of bytes.
    */
-  void decrypt(void* buf, size_t n) 
+  void decrypt(void* buf, size_t n)
   {
     for (char* bp = (char*) buf; n--; bp++)
       *bp = decrypt(*bp);
@@ -142,13 +142,13 @@ public:
    * @param[in] src buffer pointer.
    * @param[in] n number of bytes.
    */
-  void decrypt(void* dest, const void* src, size_t n) 
+  void decrypt(void* dest, const void* src, size_t n)
   {
     char* dp = (char*) dest;
     const char* sp = (const char*) src;
     while (n--) *dp++ = decrypt(*sp++);
   }
-  
+
 private:
   char m_key[N];
   uint8_t m_nr;

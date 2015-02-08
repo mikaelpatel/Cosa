@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -22,9 +22,9 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
-void 
-IR::Receiver::on_interrupt(uint16_t arg) 
-{ 
+void
+IR::Receiver::on_interrupt(uint16_t arg)
+{
   UNUSED(arg);
 
   // Check if the buffer is full
@@ -37,7 +37,7 @@ IR::Receiver::on_interrupt(uint16_t arg)
   uint32_t stop = RTC::micros();
   uint32_t us = (stop - m_start);
   m_start = stop;
-  
+
   // Check if samples should be collected
   if (m_sample != NULL) m_sample[m_ix] = us;
 
@@ -46,7 +46,7 @@ IR::Receiver::on_interrupt(uint16_t arg)
   // And generate binary code. Skip two first and two last samples
   if (m_ix > 1 && m_ix < m_max - 2)
     m_code = (m_code << 1) + (us > m_threshold);
-  
+
   // Check if all samples have been received
   if (++m_ix != m_max) return;
 
@@ -58,7 +58,7 @@ IR::Receiver::on_interrupt(uint16_t arg)
   Event::push(Event::READ_COMPLETED_TYPE, this, m_code);
 }
 
-void 
+void
 IR::Receiver::reset()
 {
   // Remove from any queue

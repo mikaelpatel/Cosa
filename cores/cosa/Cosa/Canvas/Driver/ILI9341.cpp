@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -22,8 +22,8 @@
 
 const uint8_t ILI9341::script[] __PROGMEM = {
   // Software Reset
-  SWRESET, 0, 
-  // Software Delay 
+  SWRESET, 0,
+  // Software Delay
   SWDELAY, 250,
   // Power Control A
   // Vcore = 1.6 V, DDVDH = 5.6 V
@@ -37,7 +37,7 @@ const uint8_t ILI9341::script[] __PROGMEM = {
   // Driver Timing Control B
   // External clock 0, EQE -1, CRE -1, Pre-Charge -2
   DTCTRLB, 2, 0x00, 0x00,
-  // Power On Sequence Control 
+  // Power On Sequence Control
   // Soft start keep 1 frame
   // 1st frame enable
   // DDVHDH enhanced mode enable
@@ -47,7 +47,7 @@ const uint8_t ILI9341::script[] __PROGMEM = {
   PRCTRL, 1, 0x20,
   // Power Control 1
   // GVDD = 4.60 V
-  PWCTRL1, 1, 0x23, 
+  PWCTRL1, 1, 0x23,
   // Power Control 2
   PWCTRL2, 1, 0x10,
   // VCOM Control 1
@@ -77,18 +77,18 @@ const uint8_t ILI9341::script[] __PROGMEM = {
   // Gamma curve 1
   GAMSET, 1, 0x01,
   // Positive Gamma Correction
-  PGAMCTRL, 15, 
-  0x0F, 0x31, 0x2B, 0x0C, 0x0E, 
-  0x08, 0x4E, 0xF1, 0x37, 0x07, 
+  PGAMCTRL, 15,
+  0x0F, 0x31, 0x2B, 0x0C, 0x0E,
+  0x08, 0x4E, 0xF1, 0x37, 0x07,
   0x10, 0x03, 0x0E, 0x09, 0x00,
   // Negative Gamma Correction
   NGAMCTRL, 15,
-  0x00, 0x0E, 0x14, 0x03, 0x11, 
-  0x07, 0x31, 0xC1, 0x48, 0x08, 
+  0x00, 0x0E, 0x14, 0x03, 0x11,
+  0x07, 0x31, 0xC1, 0x48, 0x08,
   0x0F, 0x0C, 0x31, 0x36, 0x0F,
   // Exit Sleep Mode
   SLPOUT, 0,
-  // Software Delay 
+  // Software Delay
   SWDELAY, 120,
   // Display On
   DISPON, 0,

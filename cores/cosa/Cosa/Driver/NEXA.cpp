@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -23,16 +23,16 @@
 
 IOStream& operator<<(IOStream& outs, NEXA::code_t code)
 {
-  outs << PSTR("house = ") << code.house 
+  outs << PSTR("house = ") << code.house
        << PSTR(", group = ") << code.group
        << PSTR(", device = ") << code.device
        << PSTR(", on/off = ") << code.onoff;
   return (outs);
 }
 
-void 
-NEXA::Receiver::on_interrupt(uint16_t arg) 
-{ 
+void
+NEXA::Receiver::on_interrupt(uint16_t arg)
+{
   UNUSED(arg);
 
   // Check start condition
@@ -61,7 +61,7 @@ NEXA::Receiver::on_interrupt(uint16_t arg)
 
   // And when all samples have been read push an event
   Event::push(Event::RECEIVE_COMPLETED_TYPE, this);
-  
+
  exception:
   m_start = 0L;
 }
@@ -77,7 +77,7 @@ NEXA::Receiver::decode_bit()
   bit = ((m_sample[2] < BIT_THRESHOLD) << 1) | (m_sample[3] < BIT_THRESHOLD);
   if (bit < 2) return (-1);
   // And map back to a bit (2 => 0, 3 => 1)
-  return (bit > 2);  
+  return (bit > 2);
 }
 
 void

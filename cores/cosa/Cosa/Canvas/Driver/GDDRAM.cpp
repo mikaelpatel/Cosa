@@ -9,20 +9,20 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Canvas/Driver/GDDRAM.hh"
 
-GDDRAM::GDDRAM(uint16_t width, 
+GDDRAM::GDDRAM(uint16_t width,
 	       uint16_t height,
-	       Board::DigitalPin cs, 
+	       Board::DigitalPin cs,
 	       Board::DigitalPin dc) :
   Canvas(width, height),
   SPI::Driver(cs, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 3, SPI::MSB_ORDER, NULL),
@@ -31,7 +31,7 @@ GDDRAM::GDDRAM(uint16_t width,
 {
 }
 
-bool 
+bool
 GDDRAM::begin()
 {
   if (m_initiated) return (false);
@@ -44,7 +44,7 @@ GDDRAM::begin()
 	count = pgm_read_byte(bp++);
 	if (cmd == SWDELAY) {
 	  DELAY(count);
-	} 
+	}
 	else {
 	  asserted(m_dc) {
 	    spi.transfer(cmd);
@@ -59,7 +59,7 @@ GDDRAM::begin()
 }
 
 uint8_t
-GDDRAM::set_orientation(uint8_t direction) 
+GDDRAM::set_orientation(uint8_t direction)
 {
   uint8_t previous = m_direction;
   uint8_t setting = 0;
@@ -69,7 +69,7 @@ GDDRAM::set_orientation(uint8_t direction)
   HEIGHT = temp;
   if (direction == LANDSCAPE) {
     setting = (MADCTL_MX | MADCTL_MY | MADCTL_MV | MADCTL_BGR);
-  } 
+  }
   else {
     setting = (MADCTL_MX | MADCTL_BGR);
   }
@@ -81,13 +81,13 @@ GDDRAM::set_orientation(uint8_t direction)
   return (previous);
 }
 
-void 
+void
 GDDRAM::draw_pixel(uint16_t x, uint16_t y)
 {
   const color16_t color = get_pen_color();
   spi.acquire(this);
     spi.begin();
-      write(CASET, x, x + 1); 
+      write(CASET, x, x + 1);
       write(PASET, y, y + 1);
       write(RAMWR);
       write(color.rgb);
@@ -95,7 +95,7 @@ GDDRAM::draw_pixel(uint16_t x, uint16_t y)
   spi.release();
 }
 
-void 
+void
 GDDRAM::draw_image(uint16_t x, uint16_t y, Image* image)
 {
   uint16_t width = image->WIDTH;
@@ -122,7 +122,7 @@ GDDRAM::draw_image(uint16_t x, uint16_t y, Image* image)
   }
 }
 
-void 
+void
 GDDRAM::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
 {
   if ((x >= WIDTH) || (length == 0)) return;
@@ -144,7 +144,7 @@ GDDRAM::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
   spi.release();
 }
 
-void 
+void
 GDDRAM::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
 {
   if ((y >= HEIGHT) || (length == 0)) return;
@@ -158,7 +158,7 @@ GDDRAM::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
   const color16_t color = get_pen_color();
   spi.acquire(this);
     spi.begin();
-      write(CASET, x, x + length - 1); 
+      write(CASET, x, x + length - 1);
       write(PASET, y, y);
       write(RAMWR);
       write(color.rgb, length);
@@ -166,7 +166,7 @@ GDDRAM::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
   spi.release();
 }
 
-void 
+void
 GDDRAM::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
   if ((width == 0) || (height == 0)) return;
@@ -180,11 +180,11 @@ GDDRAM::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
       write(PASET, y, y + height - 1);
       write(RAMWR);
       if (width > height) {
-	for (y = 0; y < height; y++) 
+	for (y = 0; y < height; y++)
 	  write(color.rgb, width);
-      } 
+      }
       else {
-	for (x = 0; x < width; x++) 
+	for (x = 0; x < width; x++)
 	  write(color.rgb, height);
       }
     spi.end();

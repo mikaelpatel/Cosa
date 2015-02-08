@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -53,7 +53,7 @@ public:
    * @param[in] c character to encode.
    * @return encoded character.
    */
-  char encrypt(char c) 
+  char encrypt(char c)
   {
     m_x += 1;
     uint8_t sx = m_state[m_x];
@@ -64,7 +64,7 @@ public:
     uint8_t ix = sx + sy;
     return (c ^ m_state[ix]);
   }
-  
+
   /**
    * Encrypt the given buffer.
    * @param[in] buf buffer pointer.
@@ -82,7 +82,7 @@ public:
    * @param[in] src buffer pointer.
    * @param[in] n number of bytes.
    */
-  void encrypt(void* dest, const void* src, size_t n) 
+  void encrypt(void* dest, const void* src, size_t n)
   {
     char* dp = (char*) dest;
     const char* sp = (const char*) src;
@@ -98,13 +98,13 @@ public:
   {
     return (encrypt(c));
   }
-  
+
   /**
    * Decrypt the given buffer.
    * @param[in] buf buffer pointer.
    * @param[in] n number of bytes.
    */
-  void decrypt(void* buf, size_t n) 
+  void decrypt(void* buf, size_t n)
   {
     for (char* bp = (char*) buf; n--; bp++)
       *bp = decrypt(*bp);
@@ -116,7 +116,7 @@ public:
    * @param[in] src buffer pointer.
    * @param[in] n number of bytes.
    */
-  void decrypt(void* dest, const void* src, size_t n) 
+  void decrypt(void* dest, const void* src, size_t n)
   {
     char* dp = (char*) dest;
     const char* sp = (const char*) src;

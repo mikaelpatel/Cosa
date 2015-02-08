@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,12 +28,12 @@
 /**
  * Cosa Winbond W25X40CL flash device driver class. Implements
  * the Cosa Flash device driver interface with erase, read and
- * write/program flash memory blocks. 
- * 
+ * write/program flash memory blocks.
+ *
  * @section References
  * 1. Winbond W25X40CL, spiflash, 2.5/3/3.3V 4M-bit, Serial Flash
  * Memory with 4KB Sectors and Dual I/O SPI, Rev. E, Publication
- * Release Date: October 15, 2012. 
+ * Release Date: October 15, 2012.
  */
 class W25X40CL : public Flash::Device, protected SPI::Driver {
 public:
@@ -44,7 +44,7 @@ public:
   static const size_t PAGE_MASK = PAGE_MAX - 1;
 
   /**
-   * Construct W25X40CL device driver with given chip select pin. 
+   * Construct W25X40CL device driver with given chip select pin.
    * @param[in] csn chip select pin (default D15/D3).
    */
 #if !defined(BOARD_ATTINY)
@@ -63,11 +63,11 @@ public:
    * @override Flash::Device
    * Initiate the flash memory device driver and check for valid
    * identification. Return true(1) if the successful otherwise
-   * false(0). 
+   * false(0).
    * @return bool
    */
   virtual bool begin();
-  
+
   /**
    * @override Flash::Device
    * Return true(1) if the device is ready, write cycle is completed,
@@ -80,7 +80,7 @@ public:
    * @override Flash::Device
    * Read flash block with the given size into the buffer from the
    * source address. Return number of bytes read or negative error
-   * code. 
+   * code.
    * @param[in] dest buffer to read from flash into.
    * @param[in] src address in flash to read from.
    * @param[in] size number of bytes to read.
@@ -94,7 +94,7 @@ public:
    * erased sector/block is either 4/32/64 KB or 255 for chip
    * erase. The flash memory consists of 128 X 4 KB sectors. The
    * highest sector is reserved. Returs zero(0) if successful
-   * otherwise an negative error code(-1). 
+   * otherwise an negative error code(-1).
    * @param[in] dest destination block byte address to erase.
    * @param[in] size of sector to erase in Kbyte (.
    * @return zero or negative error code.
@@ -105,19 +105,19 @@ public:
    * @override Flash::Device
    * Write flash block at given destination address with the contents
    * of the source buffer. Return number of bytes written or negative
-   * error code. 
+   * error code.
    * @param[in] dest address in flash to write to.
    * @param[in] src buffer to write to flash.
    * @param[in] size number of bytes to write.
    * @return number of bytes or negative error code.
    */
   virtual int write(uint32_t dest, const void* src, size_t size);
-  
+
   /**
    * @override Flash::Device
    * Write flash block at given destination address with contents
    * of the source buffer in program memory. Return number of bytes
-   * written or negative error code.  
+   * written or negative error code.
    * @param[in] buf buffer to write.
    * @param[in] size number of bytes to write.
    * @return number of bytes written or EOF(-1).
@@ -162,7 +162,7 @@ protected:
    */
   enum Command {
     WREN = 0x06,		//!< Write Enable.
-    WREVSR = 0x50,		//!< Write Enable for Volatile Status Register. 
+    WREVSR = 0x50,		//!< Write Enable for Volatile Status Register.
     WRDI = 0x04,		//!< Write Disable.
     RDSR = 0x05,		//!< Read Status Register.
     WRR = 0x01,			//!< Write Status Register.

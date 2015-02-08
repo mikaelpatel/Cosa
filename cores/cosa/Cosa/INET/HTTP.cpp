@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -40,18 +40,18 @@ HTTP::Server::run(uint32_t ms)
   char* query;
   char* sp;
   int res;
-  
+
   // Wait for the HTTP request
   uint32_t start = Watchdog::millis();
   while (((res = m_sock->accept()) != 0) &&
-	 ((ms == 0L) || (Watchdog::millis() - start < ms))) 
+	 ((ms == 0L) || (Watchdog::millis() - start < ms)))
     yield();
   if (res != 0) return (-2);
   start = Watchdog::millis();
   while (((res = m_sock->available()) == 0) &&
-	 ((ms == 0L) || (Watchdog::millis() - start < ms))) 
+	 ((ms == 0L) || (Watchdog::millis() - start < ms)))
     yield();
-  
+
   // Parse request (method and url), call handler and flush buffered response
   if (res <= 0) goto error;
   m_sock->gets(line, REQUEST_MAX);
@@ -62,7 +62,7 @@ HTTP::Server::run(uint32_t ms)
   *sp = 0;
   sp = strpbrk(path, " ?");
   if (sp == NULL) goto error;
-  if (*sp != '?') 
+  if (*sp != '?')
     query = NULL;
   else {
     query = sp + 1;
@@ -83,7 +83,7 @@ HTTP::Server::run(uint32_t ms)
   return (res);
 }
 
-bool 
+bool
 HTTP::Client::begin(Socket* sock)
 {
   if (sock == NULL) return (false);
@@ -91,7 +91,7 @@ HTTP::Client::begin(Socket* sock)
   return (true);
 }
 
-bool 
+bool
 HTTP::Client::end()
 {
   if (m_sock == NULL) return (false);
@@ -114,7 +114,7 @@ HTTP::Client::get(const char* url, uint32_t ms)
 
   // Parse given url for hostname
   if (memcmp_P(url, PSTR("http://"), PREFIX_MAX) == 0) url += PREFIX_MAX;
-  i = 0; 
+  i = 0;
   while (1) {
     c = *url;
     hostname[i] = c;
@@ -147,7 +147,7 @@ HTTP::Client::get(const char* url, uint32_t ms)
   while ((res = m_sock->is_connected()) == 0) delay(16);
   if (res == 0) res = -3;
   if (res < 0) goto error;
-  
+
   // Send a HTTP request
   m_sock->puts_P(PSTR("GET /"));
   m_sock->puts(url);
@@ -155,7 +155,7 @@ HTTP::Client::get(const char* url, uint32_t ms)
   m_sock->puts(hostname);
   m_sock->puts_P(PSTR(CRLF "Connection: close" CRLF CRLF));
   m_sock->flush();
-  
+
   // Wait for the response
   start = Watchdog::millis();
   while (((res = m_sock->available()) == 0) &&

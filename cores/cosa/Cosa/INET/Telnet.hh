@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -37,9 +37,9 @@ public:
    */
   class Server : public INET::Server {
   public:
-    /** 
-     * Default telnet server constructor. Must call begin() to 
-     * initiate with socket. 
+    /**
+     * Default telnet server constructor. Must call begin() to
+     * initiate with socket.
      * @param[in] ios associated io-stream.
      */
     Server(IOStream& ios) : INET::Server(ios) {}
@@ -49,7 +49,7 @@ public:
      * Start server with given socket. Initiates socket for incoming
      * connection-oriented requests (TCP/listen). Set io-stream device
      * (socket) in no echo mode. Returns true if successful otherwise
-     * false. 
+     * false.
      * @param[in] sock server socket.
      * @return bool.
      */
@@ -59,7 +59,7 @@ public:
     /**
      * @override INET::Server
      * Application extension; Called when a client connect has been
-     * accepted. Handle flush of telnet terminal setting on connect. 
+     * accepted. Handle flush of telnet terminal setting on connect.
      * Return true if accepted otherwise false.
      * @param[in] ios iostream for response.
      * @return bool.

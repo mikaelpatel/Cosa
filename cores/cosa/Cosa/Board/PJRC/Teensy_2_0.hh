@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,18 +32,18 @@
 #endif
 
 /**
- * Cosa pin symbol definitions for the PJRC Teensy 2.0, ATmega32U4 
+ * Cosa pin symbol definitions for the PJRC Teensy 2.0, ATmega32U4
  * based board. Cosa does not use pin numbers as Arduino/Wiring,
  * instead strong data type is used (enum types) for the specific pin
- * classes; DigitalPin, AnalogPin, PWMPin, etc. 
+ * classes; DigitalPin, AnalogPin, PWMPin, etc.
  *
  * The pin numbers for Teensy 2.0 are only symbolically mapped,
- * i.e. a pin number/digit will not work, symbols must be used, 
- * e.g., Board::D12. Avoid iterations assuming that the symbols 
+ * i.e. a pin number/digit will not work, symbols must be used,
+ * e.g., Board::D12. Avoid iterations assuming that the symbols
  * are in order.
  *
  * The static inline functions, SFR, BIT and UART, rely on compiler
- * optimizations to be reduced.  
+ * optimizations to be reduced.
  *
  * @section Board
  * @code
@@ -54,7 +54,7 @@
  *             D0 |o   -----   o| D21/A0
  *             D1 |o           o| D20/A1
  *             D2 |o           o| D19/A2
- *             D3 |o o       o o| D18/A3 
+ *             D3 |o o       o o| D18/A3
  *        PWM0/D4 |o D24  AREF o| D17/A4
  *   EXT0/PWM1/D5 |o           o| D16/A5
  *        EXT1/D6 |o           o| D15/A6/PWM3
@@ -83,17 +83,17 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin)
     __attribute__((always_inline))
-  { 
-    return (pin < 8  ? &PINB : 
-	    pin < 16 ? &PINC : 
-	    pin < 24 ? &PIND : 
-	    pin < 32 ? &PINE : 
+  {
+    return (pin < 8  ? &PINB :
+	    pin < 16 ? &PINC :
+	    pin < 24 ? &PIND :
+	    pin < 32 ? &PINE :
 	               &PINF);
   }
 
   /**
    * Return bit position for given Teensy pin number in Special
-   * Function Register. 
+   * Function Register.
    * @param[in] pin number.
    * @return pin bit position.
    */
@@ -110,11 +110,11 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin)
     __attribute__((always_inline))
-  { 
+  {
     UNUSED(pin);
     return (&PCMSK0);
   }
-  
+
   /**
    * Return UART Register for given Teensy serial port.
    * @param[in] port number.
@@ -122,7 +122,7 @@ private:
    */
   static volatile uint8_t* UART(uint8_t port)
     __attribute__((always_inline))
-  { 
+  {
     UNUSED(port);
     return (&UCSR1A);
   }
@@ -193,7 +193,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * PWM pin symbols; sub-set of digital pins to allow compile 
+   * PWM pin symbols; sub-set of digital pins to allow compile
    * time checking
    */
   enum PWMPin {
@@ -207,7 +207,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * External interrupt pin symbols; sub-set of digital pins 
+   * External interrupt pin symbols; sub-set of digital pins
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
@@ -231,7 +231,7 @@ public:
     PCI7 = D4			// PB7
   } __attribute__((packed));
 
-  /** 
+  /**
    * Size of pin maps.
    */
   enum {
@@ -275,9 +275,9 @@ public:
 /**
  * Redefined symbols to allow generic code.
  */
-#define UCSZ00 UCSZ10 
-#define UCSZ01 UCSZ11 
-#define UCSZ02 UCSZ12 
+#define UCSZ00 UCSZ10
+#define UCSZ01 UCSZ11
+#define UCSZ02 UCSZ12
 #define UPM00 UPM10
 #define UPM01 UPM11
 #define USBS0 USBS1

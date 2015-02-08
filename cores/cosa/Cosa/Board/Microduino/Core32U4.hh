@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -35,11 +35,11 @@
  * Cosa pin symbol and hardware definitions for the ATmega32U4 based
  * Microduino Core32u4 board. Cosa does not use pin numbers as
  * Arduino/Wiring, instead strong data type is used (enum types) for
- * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc. 
+ * the specific pin classes; DigitalPin, AnalogPin, PWMPin, etc.
  *
  * The pin numbers for ATmega32u4 are mapped as in Arduino. The static
  * inline functions, SFR, BIT and UART, rely on compiler optimizations
- * to be reduced.  
+ * to be reduced.
  *
  * @section Board
  * @code
@@ -81,17 +81,17 @@ private:
    */
   static volatile uint8_t* SFR(uint8_t pin)
     __attribute__((always_inline))
-  { 
-    return (pin < 8  ? &PINB : 
-	    pin < 16 ? &PINC : 
-	    pin < 24 ? &PIND : 
-	    pin < 32 ? &PINE : 
+  {
+    return (pin < 8  ? &PINB :
+	    pin < 16 ? &PINC :
+	    pin < 24 ? &PIND :
+	    pin < 32 ? &PINE :
 	               &PINF);
   }
 
   /**
    * Return bit position for given Arduino pin number in Special
-   * Function Register. 
+   * Function Register.
    * @param[in] pin number.
    * @return pin bit position.
    */
@@ -100,7 +100,7 @@ private:
   {
     return (pin & 0x07);
   }
-  
+
   /**
    * Return Pin Change Mask Register for given Arduino pin number.
    * @param[in] pin number.
@@ -108,7 +108,7 @@ private:
    */
   static volatile uint8_t* PCIMR(uint8_t pin)
     __attribute__((always_inline))
-  { 
+  {
     UNUSED(pin);
     return (&PCMSK0);
   }
@@ -120,7 +120,7 @@ private:
    */
   static volatile uint8_t* UART(uint8_t port)
     __attribute__((always_inline))
-  { 
+  {
     UNUSED(port);
     return (&UCSR1A);
   }
@@ -182,7 +182,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * PWM pin symbols; sub-set of digital pins to allow compile 
+   * PWM pin symbols; sub-set of digital pins to allow compile
    * time checking
    */
   enum PWMPin {
@@ -196,7 +196,7 @@ public:
   } __attribute__((packed));
 
   /**
-   * External interrupt pin symbols; sub-set of digital pins 
+   * External interrupt pin symbols; sub-set of digital pins
    * to allow compile time checking.
    */
   enum ExternalInterruptPin {
@@ -220,7 +220,7 @@ public:
     PCI7 = D7			// PB7
   } __attribute__((packed));
 
-  /** 
+  /**
    * Size of pin maps.
    */
   enum {
@@ -238,7 +238,7 @@ public:
     SDA = 1,			// PD1/D18
     SCL = 0			// PD0/D19
   } __attribute__((packed));
-  
+
   /**
    * Pins used for SPI interface (port B, bit 0-3, D10-D12)
    */
@@ -264,9 +264,9 @@ public:
 /**
  * Redefined symbols to allow generic code.
  */
-#define UCSZ00 UCSZ10 
-#define UCSZ01 UCSZ11 
-#define UCSZ02 UCSZ12 
+#define UCSZ00 UCSZ10
+#define UCSZ01 UCSZ11
+#define UCSZ02 UCSZ12
 #define UPM00 UPM10
 #define UPM01 UPM11
 #define USBS0 USBS1

@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -59,7 +59,7 @@ public:
        const uint8_t* bitmap,
        uint8_t compression_type = 0,
        uint8_t spacing = 1, uint8_t line_spacing = 1) :
-    WIDTH(width), 
+    WIDTH(width),
     HEIGHT(height),
     SPACING(spacing),
     LINE_SPACING(line_spacing),
@@ -91,7 +91,7 @@ public:
    * @param[in] y position.
    * @param[in] scale.
    */
-  virtual void draw(Canvas* canvas, char c, uint16_t x, uint16_t y, 
+  virtual void draw(Canvas* canvas, char c, uint16_t x, uint16_t y,
                     uint8_t scale);
 
   /**
@@ -145,5 +145,5 @@ protected:
   /** Compression type. */
   const uint8_t m_compression_type;
 };
-  
+
 #endif

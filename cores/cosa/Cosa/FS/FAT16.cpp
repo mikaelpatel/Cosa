@@ -4,25 +4,25 @@
  *
  * @section License
  * Copyright (C) 2009, William Greiman (Arduino Fat16 Library)
- * Copyright (C) 2013-2014, Mikael Patel (Refactoring)
+ * Copyright (C) 2013-2015, Mikael Patel (Refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/FS/FAT16.hh"
 
 bool
-FAT16::make83Name(const char* str, uint8_t* name) 
+FAT16::make83Name(const char* str, uint8_t* name)
 {
   uint8_t c;
   uint8_t n = 7;
@@ -34,7 +34,7 @@ FAT16::make83Name(const char* str, uint8_t* name)
       if (n == 10) return (false);
       n = 10;
       i = 8;
-    } 
+    }
     else {
       PGM_P p = (PGM_P) PSTR("|<>^+=?/[];,*\"\\");
       uint8_t b;
@@ -65,7 +65,7 @@ uint32_t FAT16::cacheMirrorBlock = 0;
 void (*FAT16::dateTime)(uint16_t* date, uint16_t* time) = NULL;
 
 bool
-FAT16::begin(SD* sd, uint8_t part) 
+FAT16::begin(SD* sd, uint8_t part)
 {
   // Error if invalid partition
   if (part > 4) return (false);
@@ -81,7 +81,7 @@ FAT16::begin(SD* sd, uint8_t part)
   if (!cacheRawBlock(volumeStartBlock)) return (false);
 
   // Check boot block signature
-  if (cacheBuffer.data[510] != BOOTSIG0 || 
+  if (cacheBuffer.data[510] != BOOTSIG0 ||
       cacheBuffer.data[511] != BOOTSIG1) return (false);
 
   bpb_t* bpb = &cacheBuffer.fbs.bpb;
@@ -112,13 +112,13 @@ FAT16::begin(SD* sd, uint8_t part)
 }
 
 bool
-FAT16::begin(SD* sd) 
+FAT16::begin(SD* sd)
 {
   return (begin(sd, 1) || begin(sd, 0));
 }
 
-bool 
-FAT16::File::sync(void) 
+bool
+FAT16::File::sync(void)
 {
   if (m_flags & F_FILE_DIR_DIRTY) {
     // Cache directory entry
@@ -140,7 +140,7 @@ FAT16::File::sync(void)
 }
 
 bool
-FAT16::File::open(const char* fileName, uint8_t oflag) 
+FAT16::File::open(const char* fileName, uint8_t oflag)
 {
   uint8_t dname[11];   // name formated for dir entry
   int16_t empty = -1;  // index of empty slot
@@ -158,7 +158,7 @@ FAT16::File::open(const char* fileName, uint8_t oflag)
       if (empty < 0) empty = index;
       // Done if no entries follow
       if (p->name[0] == DIR_NAME_FREE) break;
-    } 
+    }
     else if (!memcmp(dname, p->name, 11)) {
       // Don't open existing file if O_CREAT and O_EXCL
       if ((oflag & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL)) return (false);
@@ -196,8 +196,8 @@ FAT16::File::open(const char* fileName, uint8_t oflag)
   return (open(empty, oflag));
 }
 
-bool 
-FAT16::File::open(uint16_t index, uint8_t oflag) 
+bool
+FAT16::File::open(uint16_t index, uint8_t oflag)
 {
   if (!volumeInitialized || is_open()) return (false);
   if ((oflag & O_TRUNC) && !(oflag & O_WRITE)) return (false);
@@ -205,10 +205,10 @@ FAT16::File::open(uint16_t index, uint8_t oflag)
   // If bad file index or I/O error
   if (!d) return (false);
   // Error if unused entry
-  if (d->name[0] == DIR_NAME_FREE || d->name[0] == DIR_NAME_DELETED) 
+  if (d->name[0] == DIR_NAME_FREE || d->name[0] == DIR_NAME_DELETED)
     return (false);
   // Error if long name, volume label or subdirectory
-  if ((d->attributes & (DIR_ATT_VOLUME_ID | DIR_ATT_DIRECTORY)) != 0) 
+  if ((d->attributes & (DIR_ATT_VOLUME_ID | DIR_ATT_DIRECTORY)) != 0)
     return (false);
   // Don't allow write or truncate if read-only
   if ((d->attributes & DIR_ATT_READ_ONLY) && (oflag & (O_WRITE | O_TRUNC)))
@@ -224,8 +224,8 @@ FAT16::File::open(uint16_t index, uint8_t oflag)
   return (true);
 }
 
-bool 
-FAT16::File::remove(void) 
+bool
+FAT16::File::remove(void)
 {
   // Error if file is not open for write
   if (!(m_flags & O_WRITE)) return (false);
@@ -237,15 +237,15 @@ FAT16::File::remove(void)
   return (cacheFlush());
 }
 
-int 
-FAT16::File::getchar() 
+int
+FAT16::File::getchar()
 {
   uint8_t res;
   return (read(&res, sizeof(res)) == sizeof(res) ? res : -1);
 }
 
-int 
-FAT16::File::read(void* buf, size_t nbyte) 
+int
+FAT16::File::read(void* buf, size_t nbyte)
 {
   // Convert void pointer to uin8_t pointer
   uint8_t* dst = reinterpret_cast<uint8_t*>(buf);
@@ -273,9 +273,9 @@ FAT16::File::read(void* buf, size_t nbyte)
     }
 
     // Cache data block
-    if (!cacheRawBlock(dataBlockLba(m_curCluster, blkOfCluster))) 
+    if (!cacheRawBlock(dataBlockLba(m_curCluster, blkOfCluster)))
       return (IOStream::EOF);
-    
+
     // Location of data in cache
     uint8_t* src = cacheBuffer.data + blockOffset;
 
@@ -295,8 +295,8 @@ FAT16::File::read(void* buf, size_t nbyte)
   return (nbyte);
 }
 
-int 
-FAT16::File::write(const void* buf, size_t nbyte) 
+int
+FAT16::File::write(const void* buf, size_t nbyte)
 {
   uint16_t nToWrite = nbyte;
   const uint8_t* src = reinterpret_cast<const uint8_t*>(buf);
@@ -361,7 +361,7 @@ FAT16::File::write(const void* buf, size_t nbyte)
     // Update fileSize and insure sync will update dir entry
     m_fileSize = m_curPosition;
     m_flags |= F_FILE_DIR_DIRTY;
-  } 
+  }
   else if (dateTime && nbyte) {
     // Force sync will update modified date and time
     m_flags |= F_FILE_DIR_DIRTY;
@@ -373,19 +373,19 @@ FAT16::File::write(const void* buf, size_t nbyte)
   return (nbyte);
 }
 
-int 
+int
 FAT16::File::putchar(char c)
 {
   return (write(&c, sizeof(c)));
 }
 
-bool 
-FAT16::File::seek(uint32_t pos, uint8_t whence) 
+bool
+FAT16::File::seek(uint32_t pos, uint8_t whence)
 {
   if (whence == SEEK_CUR) pos += m_curPosition;
   else if (whence == SEEK_END) pos = m_fileSize;
   else if (whence != SEEK_SET) return (false);
-  
+
   // Error if file not open or seek past end of file
   if (!is_open() || pos > m_fileSize) return (false);
   if (pos == 0) {
@@ -410,7 +410,7 @@ FAT16::File::seek(uint32_t pos, uint8_t whence)
 }
 
 bool
-FAT16::File::truncate(uint32_t length) 
+FAT16::File::truncate(uint32_t length)
 {
   // Error if file is not open for write
   if (!(m_flags & O_WRITE)) return (false);
@@ -424,7 +424,7 @@ FAT16::File::truncate(uint32_t length)
     // Free all clusters
     if (!freeChain(m_firstCluster)) return (false);
     m_curCluster = m_firstCluster = 0;
-  } 
+  }
   else {
     fat_t toFree;
     if (!seek(length)) return (false);
@@ -441,8 +441,8 @@ FAT16::File::truncate(uint32_t length)
   return seek(newPos);
 }
 
-bool 
-FAT16::File::dirEntry(FAT16::dir_t* dir) 
+bool
+FAT16::File::dirEntry(FAT16::dir_t* dir)
 {
   if (!sync()) return (false);
   dir_t* p = cacheDirEntry(m_dirEntryIndex, CACHE_FOR_WRITE);
@@ -452,7 +452,7 @@ FAT16::File::dirEntry(FAT16::dir_t* dir)
 }
 
 bool
-FAT16::read(dir_t* dir, uint16_t* index, uint8_t skip) 
+FAT16::read(dir_t* dir, uint16_t* index, uint8_t skip)
 {
   dir_t* p;
   for (uint16_t i = *index; ; i++) {
@@ -479,8 +479,8 @@ FAT16::read(dir_t* dir, uint16_t* index, uint8_t skip)
   return (true);
 }
 
-void 
-FAT16::printDirName(IOStream& outs, const dir_t& dir, uint8_t width) 
+void
+FAT16::printDirName(IOStream& outs, const dir_t& dir, uint8_t width)
 {
   uint8_t w = 0;
   for (uint8_t i = 0; i < 11; i++) {
@@ -502,8 +502,8 @@ FAT16::printDirName(IOStream& outs, const dir_t& dir, uint8_t width)
   }
 }
 
-void 
-FAT16::ls(IOStream& outs, uint8_t flags) 
+void
+FAT16::ls(IOStream& outs, uint8_t flags)
 {
   dir_t d;
   for (uint16_t index = 0; read(&d, &index, DIR_ATT_VOLUME_ID); index++) {
@@ -526,7 +526,7 @@ FAT16::ls(IOStream& outs, uint8_t flags)
 }
 
 bool
-FAT16::File::addCluster() 
+FAT16::File::addCluster()
 {
   // Start search after last cluster of file or at cluster two in FAT
   fat_t freeCluster = m_curCluster ? m_curCluster : 1;
@@ -557,16 +557,16 @@ FAT16::File::addCluster()
   return (true);
 }
 
-FAT16::dir_t* 
-FAT16::cacheDirEntry(uint16_t index, uint8_t action) 
+FAT16::dir_t*
+FAT16::cacheDirEntry(uint16_t index, uint8_t action)
 {
   if (index >= rootDirEntryCount) return NULL;
   if (!cacheRawBlock(rootDirStartBlock + (index >> 4), action)) return NULL;
   return &cacheBuffer.dir[index & 0XF];
 }
 
-uint8_t 
-FAT16::cacheFlush(void) 
+uint8_t
+FAT16::cacheFlush(void)
 {
   if (cacheDirty) {
     if (!device->write(cacheBlockNumber, cacheBuffer.data)) {
@@ -583,8 +583,8 @@ FAT16::cacheFlush(void)
   return (true);
 }
 
-uint8_t 
-FAT16::cacheRawBlock(uint32_t blockNumber, uint8_t action) 
+uint8_t
+FAT16::cacheRawBlock(uint32_t blockNumber, uint8_t action)
 {
   if (cacheBlockNumber != blockNumber) {
     if (!cacheFlush()) return (false);
@@ -596,7 +596,7 @@ FAT16::cacheRawBlock(uint32_t blockNumber, uint8_t action)
 }
 
 bool
-FAT16::fatGet(fat_t cluster, fat_t* value) 
+FAT16::fatGet(fat_t cluster, fat_t* value)
 {
   if (cluster > (clusterCount + 1)) return (false);
   uint32_t lba = fatStartBlock + (cluster >> 8);
@@ -608,7 +608,7 @@ FAT16::fatGet(fat_t cluster, fat_t* value)
 }
 
 bool
-FAT16::fatPut(fat_t cluster, fat_t value) 
+FAT16::fatPut(fat_t cluster, fat_t value)
 {
   if (cluster < 2) return (false);
   if (cluster > (clusterCount + 1)) return (false);
@@ -623,7 +623,7 @@ FAT16::fatPut(fat_t cluster, fat_t value)
 }
 
 bool
-FAT16::File::freeChain(fat_t cluster) 
+FAT16::File::freeChain(fat_t cluster)
 {
   while (1) {
     fat_t next;
@@ -634,7 +634,7 @@ FAT16::File::freeChain(fat_t cluster)
   }
 }
 
-IOStream& 
+IOStream&
 operator<<(IOStream& outs, FAT16::date_t& date)
 {
   outs << date.YEAR() << '-';
@@ -647,7 +647,7 @@ operator<<(IOStream& outs, FAT16::date_t& date)
   return (outs);
 }
 
-IOStream& 
+IOStream&
 operator<<(IOStream& outs, FAT16::time_t& time)
 {
   uint8_t hours = time.HOURS();

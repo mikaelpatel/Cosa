@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -46,16 +46,16 @@
  * @section Limitations
  * Button toggle faster than sample period may be missed. This is the
  * case when connecting to a Rotary Encoder.
- * 
+ *
  * @section See Also
- * The Button event handler requires the usage of an event dispatch. 
- * See Event.hh. 
+ * The Button event handler requires the usage of an event dispatch.
+ * See Event.hh.
  */
 class Button : public InputPin, private Link {
 public:
   /**
    * Button change detection modes; falling (high to low), rising (low
-   * to high) and change (falling or rising). 
+   * to high) and change (falling or rising).
    */
   enum Mode {
     ON_FALLING_MODE = 0,	// High to low transition.
@@ -64,8 +64,8 @@ public:
   } __attribute__((packed));
 
   /**
-   * Construct a button connected to the given pin and with 
-   * the given change detection mode. 
+   * Construct a button connected to the given pin and with
+   * the given change detection mode.
    * @param[in] pin number.
    * @param[in] mode change detection mode.
    */
@@ -98,7 +98,7 @@ public:
    * @override Button
    * The button change event handler. Called when a change
    * corresponding to the mode has been detected. Event types are;
-   * Event::FALLING_TYPE, Event::RISING_TYPE, and Event::CHANGE_TYPE. 
+   * Event::FALLING_TYPE, Event::RISING_TYPE, and Event::CHANGE_TYPE.
    * Sub-class must override this method.
    * @param[in] type event type.
    */
@@ -117,7 +117,7 @@ protected:
   /**
    * @override Event::Handler
    * Button event handler. Called by event dispatch. Samples the
-   * attached pin and calls the pin change handler, on_change(). 
+   * attached pin and calls the pin change handler, on_change().
    * @param[in] type the type of event (timeout).
    * @param[in] value the event value.
    */

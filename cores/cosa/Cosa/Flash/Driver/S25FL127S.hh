@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,8 +28,8 @@
 /**
  * Cosa SPANSINO S25FL127S flash device driver class. Implements
  * the Cosa Flash device driver interface with erase, read and
- * write/program flash memory blocks. 
- * 
+ * write/program flash memory blocks.
+ *
  * @section References
  * 1. S25FL127S, 128 Mbit (16 Mbyte) MirrorBit(R) Flash Non-Volatile
  * Memory, CMOS 3.0 Volt Core, Serial Peripheral Interface with
@@ -45,7 +45,7 @@ public:
   static const size_t PAGE_MASK = PAGE_MAX - 1;
 
   /**
-   * Construct S25FL127S device driver with given chip select pin. 
+   * Construct S25FL127S device driver with given chip select pin.
    * @param[in] csn chip select pin (default D5/D3).
    */
 #if !defined(BOARD_ATTINYX5)
@@ -64,11 +64,11 @@ public:
    * @override Flash::Device
    * Initiate the flash memory device driver and check for valid
    * identification. Return true(1) if the successful otherwise
-   * false(0). 
+   * false(0).
    * @return bool
    */
   virtual bool begin();
-  
+
   /**
    * @override Flash::Device
    * Return true(1) if the device is ready, write cycle is completed,
@@ -81,7 +81,7 @@ public:
    * @override Flash::Device
    * Read flash block with the given size into the buffer from the
    * source address. Return number of bytes read or negative error
-   * code. 
+   * code.
    * @param[in] dest buffer to read from flash into.
    * @param[in] src address in flash to read from.
    * @param[in] size number of bytes to read.
@@ -106,19 +106,19 @@ public:
    * @override Flash::Device
    * Write flash block at given destination address with the contents
    * of the source buffer. Return number of bytes written or negative
-   * error code. 
+   * error code.
    * @param[in] dest address in flash to write to.
    * @param[in] src buffer to write to flash.
    * @param[in] size number of bytes to write.
    * @return number of bytes or negative error code.
    */
   virtual int write(uint32_t dest, const void* src, size_t size);
-  
+
   /**
    * @override Flash::Device
    * Write flash block at given destination address with contents
    * of the source buffer in program memory. Return number of bytes
-   * written or negative error code.  
+   * written or negative error code.
    * @param[in] buf buffer to write.
    * @param[in] size number of bytes to write.
    * @return number of bytes written or EOF(-1).
@@ -189,7 +189,7 @@ public:
   {
     return (issue(RDSR1));
   }
-  
+
   /**
    * Status Register 2 (SR2) bitfields (Table 8.8, pp. 61).
    */
@@ -240,7 +240,7 @@ protected:
     WRR = 0x01,			//!< Write Register (Status-1, Config-1).
     WRDI = 0x04,		//!< Write Disable.
     WREN = 0x06,		//!< Write Enable.
-    CLSR = 0x30,		//!< Clear Status Register#1 
+    CLSR = 0x30,		//!< Clear Status Register#1
     ABRD = 0x14,		//!< AutoBoot Register Read.
     ABWR = 0x15,		//!< AutoBoot Register Write.
     BRRD = 0x16,		//!< Bank Register Read.
@@ -271,7 +271,7 @@ protected:
     QPP4 = 0x34,		//!< Quad Page Program  (4-byte address).
     PGSP = 0x85,		//!< Program Suspend.
     PGRS = 0x8a,		//!< Program Resume.
-    
+
     /** Erase Flash Array */
     P4E = 0x20,			//!< Parameter 4-kB, sector erase.
     P4E4 = 0x21,		//!< Parameter 4-kB, sector erase (4-byte addr).
@@ -280,11 +280,11 @@ protected:
     SER4 = 0xdc,		//!< Erase 64 kB or 256 kB (4-byte addr).
     ERSP = 0x75,		//!< Erase Suspend.
     ERRS = 0x7a,		//!< Erase Resume.
-    
+
     /** One Time Program Array */
     OTPP = 0x42,		//!< OTP Program.
     OTPR = 0x4b,		//!< OTP Read.
-    
+
     /** Advanced Sector Protection */
     DYBRD = 0xe0,		//!< DYB Read.
     DYBWR = 0xe1,		//!< DYB Write.
@@ -298,7 +298,7 @@ protected:
     PASSRD = 0xe7,		//!< Password Read.
     PASSP = 0xe8,		//!< Password Program.
     PASSU = 0xe9, 		//!< Password unlock.
-    
+
     /** Reset */
     RESET = 0xf0,		//!< Software Reset.
     MBR = 0xff			//!< Mode Bit Reset.

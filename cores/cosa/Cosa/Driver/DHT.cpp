@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -29,11 +29,11 @@
  * change interrupts. First pulse is the device response and is a
  * one(1) bit is encoded as a long pulse (54 + 80 = 134 us), a zero(0)
  * bit as a short pulse (54 + 24 = 78 us). Sequence ends with a low
- * pulse (54 us) which allows falling/rising detection. 
+ * pulse (54 us) which allows falling/rising detection.
  */
-void 
-DHT::on_interrupt(uint16_t arg) 
-{ 
+void
+DHT::on_interrupt(uint16_t arg)
+{
   UNUSED(arg);
 
   // Check start condition
@@ -81,7 +81,7 @@ DHT::on_interrupt(uint16_t arg)
   Event::push(Event::SAMPLE_COMPLETED_TYPE, this);
 }
 
-void 
+void
 DHT::on_event(uint8_t type, uint16_t value)
 {
   UNUSED(type);
@@ -89,7 +89,7 @@ DHT::on_event(uint8_t type, uint16_t value)
 
   switch (m_state) {
 
-  case IDLE: 
+  case IDLE:
     // Issue a request; pull down for more than 18 ms
     m_state = REQUEST;
     set_mode(OUTPUT_MODE);
@@ -97,7 +97,7 @@ DHT::on_event(uint8_t type, uint16_t value)
     Watchdog::attach(this, 32);
     break;
 
-  case REQUEST: 
+  case REQUEST:
     // Request pulse completed; pull up for 40 us and collect
     // data as a sequence of on rising mode interrupts
     m_state = RESPONSE;
@@ -115,7 +115,7 @@ DHT::on_event(uint8_t type, uint16_t value)
     uint8_t invalid = 1;
     if (m_ix == DATA_MAX) {
       uint8_t sum = 0;
-      for (uint8_t i = 0; i < DATA_LAST; i++) 
+      for (uint8_t i = 0; i < DATA_LAST; i++)
 	sum += m_data.as_byte[i];
       if (sum == m_data.chksum) {
 	invalid = 0;
@@ -175,7 +175,7 @@ DHT::sample_await()
 {
   if (m_period != 0) return (true);
   uint32_t start = RTC::millis();
-  while (m_state != COMPLETED && (RTC::since(start) < MIN_PERIOD)) 
+  while (m_state != COMPLETED && (RTC::since(start) < MIN_PERIOD))
     yield();
   if (m_state != COMPLETED) return (false);
 
@@ -183,14 +183,14 @@ DHT::sample_await()
   m_state = INIT;
   if (m_ix != DATA_MAX) return (false);
   uint8_t sum = 0;
-  for (uint8_t i = 0; i < DATA_LAST; i++) 
+  for (uint8_t i = 0; i < DATA_LAST; i++)
     sum += m_data.as_byte[i];
   if (sum != m_data.chksum) return (false);
   adjust_data();
   return (true);
 }
 
-void 
+void
 DHT11::adjust_data()
 {
   m_humidity = m_data.humidity * 10;
@@ -198,7 +198,7 @@ DHT11::adjust_data()
 }
 
 void
-DHT22::adjust_data() 
+DHT22::adjust_data()
 {
   m_humidity = swap(m_data.humidity);
   m_temperature = swap(m_data.temperature);
@@ -206,7 +206,7 @@ DHT22::adjust_data()
   m_temperature = -(m_temperature & 0x7fff);
 }
 
-IOStream& 
+IOStream&
 operator<<(IOStream& outs, DHT& dht)
 {
   outs << PSTR("RH = ") << dht.m_humidity / 10

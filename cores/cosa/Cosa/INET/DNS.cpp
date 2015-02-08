@@ -3,47 +3,47 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/INET/DNS.hh"
 #include "Cosa/INET.hh"
 
-bool 
+bool
 DNS::begin(Socket* sock, uint8_t server[4])
 {
   memcpy(m_server, server, sizeof(m_server));
-  m_sock = sock; 
+  m_sock = sock;
   return (sock != NULL);
 }
 
-bool 
+bool
 DNS::end()
-{ 
+{
   if (m_sock == NULL) return (false);
-  m_sock->close(); 
+  m_sock->close();
   m_sock = NULL;
   return (true);
 }
 
-int 
+int
 DNS::gethostbyname(const char* hostname, uint8_t addr[4], bool progmem)
 {
   // Check if we already have a network address (as a string)
   if (INET::aton(hostname, addr, progmem) == 0) return (0);
-  
+
   // Convert hostname to a path
   char path[INET::PATH_MAX];
   int len = INET::nametopath(hostname, path, progmem);
@@ -91,7 +91,7 @@ DNS::gethostbyname(const char* hostname, uint8_t addr[4], bool progmem)
     ntoh((int16_t*) header, (int16_t*) header, sizeof(header_t) / 2);
     if (header->ID != ID) continue;
     uint8_t* ptr = &response[sizeof(header_t)];
-    
+
     // The query; Path and attributes
     uint8_t n;
     while ((n = *ptr++) != 0) ptr += n;

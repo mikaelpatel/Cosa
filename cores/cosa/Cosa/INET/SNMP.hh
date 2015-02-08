@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -132,9 +132,9 @@ public:
     OID oid;
     VALUE value;
   };
-  
+
   /**
-   * Abstract MIB handler. Should hold object identity root and 
+   * Abstract MIB handler. Should hold object identity root and
    * answer request query.
    */
   class MIB {
@@ -149,7 +149,7 @@ public:
      * @override SNMP::MIB
      * Check if the given protocol data unit is a request to the mib.
      * Returns true and value for SNMP::GET in given protocol data
-     * unit, otherwise false.  
+     * unit, otherwise false.
      * @param[in,out] pdu protocol data unit.
      * @return bool
      */
@@ -168,7 +168,7 @@ public:
      * @param[in] name device name string (in program memory).
      * @param[in] location device location string (in program memory).
      */
-    MIB2_SYSTEM(const char* descr, 
+    MIB2_SYSTEM(const char* descr,
 		const char* contact,
 		const char* name,
 		const char* location) :
@@ -178,7 +178,7 @@ public:
       m_location(location)
     {
     }
-    
+
     /**
      * @override SNMP::MIB
      * Return object identity root for MIB-2 SYSTEM.
@@ -187,11 +187,11 @@ public:
     {
       return (OID);
     }
-    
+
     /**
      * @override SNMP::MIB
      * Handle SNMP MIB-2 System objects SNMP requests. Returns true and
-     * value for SNMP::GET in given protocol data unit, otherwise false. 
+     * value for SNMP::GET in given protocol data unit, otherwise false.
      * @param[in,out] pdu protocol data unit.
      * @return bool
      */
@@ -220,7 +220,7 @@ public:
 
   /** The SNMP Agent standard port. */
   static const uint16_t PORT = 161;
-  
+
   /**
    * Start SNMP agent with the given socket (UDP::PORT). Returns true
    * if successful otherwise false.
@@ -241,7 +241,7 @@ public:
    * Receive SNMP protocol data unit (PDU) request within given time
    * limit in milli-seconds, process and send response. Returns zero
    * and data in given PDU otherwise a negative error code.
-   * @param[in,out] pdu protocol unit. 
+   * @param[in,out] pdu protocol unit.
    * @param[in] ms time-out period in milli-seconds (Default BLOCK).
    * @return zero if successful otherwise a negative error code.
    */
@@ -252,7 +252,7 @@ protected:
    * Receive SNMP protocol data unit (PDU) request within given time
    * limit in milli-seconds. Returns zero and data in given PDU
    * otherwise a negative error code.
-   * @param[in,out] pdu protocol unit. 
+   * @param[in,out] pdu protocol unit.
    * @param[in] ms time-out period in milli-seconds (Default BLOCK).
    * @return zero if successful otherwise a negative error code.
    */
@@ -263,7 +263,7 @@ protected:
    * fill in error status and index, and value for PDU_GET on matching
    * OID. For PDU_SET the OID should be matched and the application
    * should set error status if READ_ONLY.
-   * @param[in] pdu protocol unit. 
+   * @param[in] pdu protocol unit.
    * @return zero if successful otherwise a negative error code.
    */
   int send(PDU& pdu);
@@ -285,24 +285,24 @@ protected:
   bool encode_pdu(uint8_t type, uint8_t size);
   bool encode_value(VALUE& value);
 
-  int available() 
-  { 
-    return (m_sock->available()); 
+  int available()
+  {
+    return (m_sock->available());
   }
 
-  int read(void* buf, size_t size) 
-  { 
-    return (m_sock->read(buf, size)); 
+  int read(void* buf, size_t size)
+  {
+    return (m_sock->read(buf, size));
   }
 
-  int write(const void* buf, size_t size) 
-  { 
-    return (m_sock->write(buf, size)); 
+  int write(const void* buf, size_t size)
+  {
+    return (m_sock->write(buf, size));
   }
-  
-  int write_P(const void* buf, size_t size) 
-  { 
-    return (m_sock->write_P(buf, size)); 
+
+  int write_P(const void* buf, size_t size)
+  {
+    return (m_sock->write_P(buf, size));
   }
 
   /** Connection-less socket for incoming requests. */
@@ -322,7 +322,7 @@ protected:
 IOStream& operator<<(IOStream& outs, SNMP::OID& oid);
 
 /**
- * Print given SNMP Protocol Data Unit (PDU) to given output stream. 
+ * Print given SNMP Protocol Data Unit (PDU) to given output stream.
  * @param[in] outs output stream.
  * @param[in] pdu protocol data unit.
  * @return output stream.

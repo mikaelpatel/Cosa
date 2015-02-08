@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,15 +28,15 @@
 #include "Cosa/IOStream.hh"
 
 /**
- * DHT11/22 Humidity & Temperature Sensor abstract device driver. 
+ * DHT11/22 Humidity & Temperature Sensor abstract device driver.
  */
 class DHT : public ExternalInterrupt, public Link {
-public:  
+public:
   /**
    * Construct DHT device connected to given pin.
    * @param[in] pin external interrupt pin (Default EXT0).
    */
-  DHT(Board::ExternalInterruptPin pin = Board::EXT0) : 
+  DHT(Board::ExternalInterruptPin pin = Board::EXT0) :
     ExternalInterrupt(pin, ExternalInterrupt::ON_FALLING_MODE),
     Link(),
     m_state(INIT),
@@ -49,7 +49,7 @@ public:
     m_humidity(0),
     m_temperature(0)
   {}
-  
+
   /**
    * Start the DHT device driver with the given sampling period.
    * @param[in] ms sampling period (Default MIN_PERIOD/2048 ms).
@@ -87,21 +87,21 @@ public:
 
   /**
    * Initiate a sample request from the device. Return true(1) and
-   * values if successful otherwise false(0).  
+   * values if successful otherwise false(0).
    * @return bool.
    */
   bool sample_request();
 
   /**
    * Wait for a sample request to complete. Return true(1) and
-   * values if successful otherwise false(0).  
+   * values if successful otherwise false(0).
    * @return bool.
    */
   bool sample_await();
 
   /**
    * Read temperature and humidity from the device. Return true(1) and
-   * values if successful otherwise false(0).  
+   * values if successful otherwise false(0).
    * @return bool.
    */
   bool sample()
@@ -112,7 +112,7 @@ public:
 
   /**
    * Read temperature and humidity from the device. Return true(1) and
-   * values if successful otherwise false(0).  
+   * values if successful otherwise false(0).
    * @param[out] humidity reading.
    * @param[out] temperature reading.
    * @return bool.
@@ -152,7 +152,7 @@ protected:
   static const uint8_t DATA_LAST = DATA_MAX - 1;
 
   /**
-   * Data read from the device. Allow mapping between received byte 
+   * Data read from the device. Allow mapping between received byte
    * vector and data fields.
    */
   union data_t {
@@ -163,7 +163,7 @@ protected:
       uint8_t chksum;
     };
   };
-  
+
   /** State of device driver. */
   volatile uint8_t m_state;
 
@@ -193,7 +193,7 @@ protected:
 
   /* Latest valid temperature reading. */
   int16_t m_temperature;
-  
+
   /**
    * @override Interrupt::Handler
    * The device driver interrupt level state machine.
@@ -228,7 +228,7 @@ protected:
 };
 
 /**
- * DHT11 Humidity & Temperature Sensor device driver. 
+ * DHT11 Humidity & Temperature Sensor device driver.
  *
  * @section Circuit
  * @code
@@ -241,7 +241,7 @@ protected:
  *                       +------------+
  * @endcode
  * Connect DHT11 to pin, VCC and ground. A pullup resistor from
- * the pin to VCC should be used. Most DHT11 modules have a built-in 
+ * the pin to VCC should be used. Most DHT11 modules have a built-in
  * pullup resistor.
  *
  * @section References
@@ -256,15 +256,15 @@ public:
    * Set humidity and temperature calibration offsets to zero.
    * @param[in] pin data (Default EXT0).
    */
-  DHT11(Board::ExternalInterruptPin pin = Board::EXT0) : 
-    DHT(pin) 
+  DHT11(Board::ExternalInterruptPin pin = Board::EXT0) :
+    DHT(pin)
   {
   }
 
 private:
   /**
    * @override DHT
-   * Adjust data from the DHT11 device; scale by 10 for uniform 
+   * Adjust data from the DHT11 device; scale by 10 for uniform
    * number range as DHT22.
    */
   virtual void adjust_data();
@@ -273,7 +273,7 @@ private:
 /**
  * DHT22 Humidity & Temperature Sensor device driver. Note that the
  * values read from the device are scaled by a factor of 10, i.e. one
- * decimal accurracy. 
+ * decimal accurracy.
  *
  * @section Circuit
  * @code
@@ -286,7 +286,7 @@ private:
  *                       +------------+
  * @endcode
  * Connect DHT22 to pin, VCC and ground. A pullup resistor from
- * the pin to VCC should be used. Most DHT22 modules have a built-in 
+ * the pin to VCC should be used. Most DHT22 modules have a built-in
  * pullup resistor.
  *
  * @section References
@@ -299,15 +299,15 @@ public:
    * Set humidity and temperature calibration offsets to zero.
    * @param[in] pin data (Default EXT0).
    */
-  DHT22(Board::ExternalInterruptPin pin = Board::EXT0) : 
-    DHT(pin) 
+  DHT22(Board::ExternalInterruptPin pin = Board::EXT0) :
+    DHT(pin)
   {
   }
 
 private:
   /**
    * @override DHT
-   * Adjust data from the DHT22 device. Byte order and representation of 
+   * Adjust data from the DHT22 device. Byte order and representation of
    * negative temperature values.
    */
   virtual void adjust_data();

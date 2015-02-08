@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,7 +30,7 @@
  *
  * @section Circuit
  * @code
- *                         DS1302/RTC 
+ *                         DS1302/RTC
  *                       +------------+
  * (VCC)---------------1-|VCC         |
  * (GND)---------------2-|GND         |
@@ -41,7 +41,7 @@
  * @endcode
  *
  * @section References
- * 1. On-line product description, 
+ * 1. On-line product description,
  * http://www.maximintegrated.com/datasheet/index.mvp/id/2685
  * 2. Datasheet, http://datasheets.maximintegrated.com/en/ds/DS1302.pdf
  */
@@ -58,12 +58,12 @@ public:
 
   /**
    * Construct device driver for DS1302 Real-Time Clock with the given
-   * pins. 
+   * pins.
    * @param[in] cs chip select pin (default D4).
    * @param[in] sda serial data pin (default D3).
    * @param[in] clk clock pin (default D2).
    */
-  DS1302(Board::DigitalPin cs = Board::D4, 
+  DS1302(Board::DigitalPin cs = Board::D4,
 	 Board::DigitalPin sda = Board::D3,
 	 Board::DigitalPin clk = Board::D2) :
     m_cs(cs, 0),
@@ -88,7 +88,7 @@ public:
   void write(uint8_t addr, uint8_t data);
 
   /**
-   * Set write protect-bit according to flag. 
+   * Set write protect-bit according to flag.
    * @param[in] flag write protect mode.
    */
   void set_write_protect(bool flag)
@@ -96,15 +96,15 @@ public:
   {
     write(WP, flag ? 0x80 : 0x00);
   }
-  
+
   /**
-   * Read clock and calender from the device. 
+   * Read clock and calender from the device.
    * @param[in,out] now time structure for return value.
    */
   void get_time(time_t& now);
 
   /**
-   * Write clock and calender to the device. 
+   * Write clock and calender to the device.
    * @param[in] now time to set.
    */
   void set_time(time_t& now);
@@ -118,7 +118,7 @@ public:
   {
     return (read(RAM_START | (addr & ADDR_MASK)));
   }
-  
+
   /**
    * Write given data to the static memory (31 bytes). Requires
    * handling of write protect (set_write_protect).
@@ -141,7 +141,7 @@ public:
 
   /**
    * Burst write data in buffer with given size to the static memory
-   * in the device (max 31 bytes). Burst write is always from address 
+   * in the device (max 31 bytes). Burst write is always from address
    * zero(0) and includes handling of write protect.
    * @param[in] buf pointer to memory block to write.
    * @param[in] size number of bytes to write (max RAM_MAX(31)).
@@ -163,12 +163,12 @@ private:
 
   OutputPin m_cs;		//!< Chip select, asserted high.
   IOPin m_sda;			//!< Serial data, bidirectional.
-  OutputPin m_clk;		//!< Clock for synchronized data. 
+  OutputPin m_clk;		//!< Clock for synchronized data.
 
   /**
    * Low level read data from the device. Internal transfer
    * function. Used within a chip select block. Data direction must be
-   * set before calling this function. 
+   * set before calling this function.
    * @return data.
    */
   uint8_t read();

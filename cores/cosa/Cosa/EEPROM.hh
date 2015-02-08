@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,16 +26,16 @@
 
 /**
  * Driver for the ATmega/ATtiny internal EEPROM and abstraction of
- * EEPROM devices. See AT24CXX for an example of driver for external 
+ * EEPROM devices. See AT24CXX for an example of driver for external
  * EEPROM memory. The default device is the internal EEPROM. The class
- * EEPROM delegates to the EEPROM:Device class instance. 
+ * EEPROM delegates to the EEPROM:Device class instance.
  */
 class EEPROM {
 public:
   /**
    * EEPROM Device abstraction; default device is the processors
-   * internal EEPROM data memory. New devices should sub-class and 
-   * implement virtual methods. 
+   * internal EEPROM data memory. New devices should sub-class and
+   * implement virtual methods.
    */
   class Device {
   public:
@@ -68,7 +68,7 @@ public:
      * @return number of bytes or negative error code.
      */
     virtual int write(void* dest, const void* src, size_t size);
-    
+
     /**
      * Default EEPROM device; handling of internal EEPROM Data Memory.
      */
@@ -78,7 +78,7 @@ public:
 public:
   /**
    * Construct access object for EEPROM given device. Default device
-   * is the internal EEPROM memory. 
+   * is the internal EEPROM memory.
    * @param[in] dev device.
    */
   EEPROM(Device* dev = &Device::eeprom) : m_dev(dev) {}
@@ -95,10 +95,10 @@ public:
   }
 
   /**
-   * Wait for write to complete. 
+   * Wait for write to complete.
    * @param[in] mode of sleep.
    */
-  void write_await() 
+  void write_await()
     __attribute__((always_inline))
   {
     while (!is_ready()) yield();
@@ -112,16 +112,16 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes or negative error code.
    */
-  int read(void* dest, const void* src, size_t size) 
-    __attribute__((always_inline)) 
-  { 
-    return (m_dev->read(dest, src, size)); 
+  int read(void* dest, const void* src, size_t size)
+    __attribute__((always_inline))
+  {
+    return (m_dev->read(dest, src, size));
   }
 
   /**
    * Template function to read a rom block with the given type to
    * given value reference. Returns true(1) if successful otherwise
-   * false(0). 
+   * false(0).
    * @param[out] dest address variable.
    * @param[in] src address in rom to read from.
    * @return bool.
@@ -131,60 +131,60 @@ public:
     return (m_dev->read(dest, src, sizeof(T)) == sizeof(T));
   }
 
-  int read(unsigned char* dest, const unsigned char* src) 
+  int read(unsigned char* dest, const unsigned char* src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->read(dest, src, sizeof(unsigned char))); 
+  {
+    return (m_dev->read(dest, src, sizeof(unsigned char)));
   }
 
-  int read(unsigned short* dest, const unsigned short* src) 
+  int read(unsigned short* dest, const unsigned short* src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->read(dest, src, sizeof(unsigned short))); 
+  {
+    return (m_dev->read(dest, src, sizeof(unsigned short)));
   }
-  
-  int read(unsigned int* dest, const unsigned int* src) 
+
+  int read(unsigned int* dest, const unsigned int* src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->read(dest, src, sizeof(unsigned int))); 
+  {
+    return (m_dev->read(dest, src, sizeof(unsigned int)));
   }
 
   int read(unsigned long* dest, const unsigned long* src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->read(dest, src, sizeof(unsigned long))); 
-  }
-  
-  int read(char* dest, const char* src) 
-    __attribute__((always_inline))
-  { 
-    return (m_dev->read(dest, src, sizeof(char))); 
+  {
+    return (m_dev->read(dest, src, sizeof(unsigned long)));
   }
 
-  int read(short* dest, const short* src) 
+  int read(char* dest, const char* src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->read(dest, src, sizeof(short))); 
+  {
+    return (m_dev->read(dest, src, sizeof(char)));
+  }
+
+  int read(short* dest, const short* src)
+    __attribute__((always_inline))
+  {
+    return (m_dev->read(dest, src, sizeof(short)));
   }
 
   int read(int* dest, const int* src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->read(dest, src, sizeof(int))); 
+  {
+    return (m_dev->read(dest, src, sizeof(int)));
   }
 
   int read(long* dest, const long* src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->read(dest, src, sizeof(long))); 
+  {
+    return (m_dev->read(dest, src, sizeof(long)));
   }
 
   int read(float* dest, const float* src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->read(dest, src, sizeof(float))); 
+  {
+    return (m_dev->read(dest, src, sizeof(float)));
   }
-  
+
   /**
    * Write rom block at given address with the contents from the buffer.
    * Return number of bytes written or negative error code.
@@ -193,10 +193,10 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes or negative error code.
    */
-  int write(void* dest, const void* src, size_t size) 
+  int write(void* dest, const void* src, size_t size)
     __attribute__((always_inline))
-  { 
-    return (m_dev->write(dest, src, size)); 
+  {
+    return (m_dev->write(dest, src, size));
   }
 
   /**
@@ -212,58 +212,58 @@ public:
     return (m_dev->write(dest, src, sizeof(T)) == sizeof(T));
   }
 
-  int write(unsigned char* dest, unsigned char src) 
+  int write(unsigned char* dest, unsigned char src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->write(dest, &src, sizeof(unsigned char))); 
+  {
+    return (m_dev->write(dest, &src, sizeof(unsigned char)));
   }
 
-  int write(unsigned short* dest, unsigned short src) 
+  int write(unsigned short* dest, unsigned short src)
     __attribute__((always_inline))
-  { 
+  {
     return (m_dev->write(dest, &src, sizeof(unsigned short)));
   }
 
-  int write(unsigned int* dest, unsigned int src) 
+  int write(unsigned int* dest, unsigned int src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->write(dest, &src, sizeof(unsigned int))); 
+  {
+    return (m_dev->write(dest, &src, sizeof(unsigned int)));
   }
 
-  int write(unsigned long* dest, unsigned long src) 
+  int write(unsigned long* dest, unsigned long src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->write(dest, &src, sizeof(unsigned long))); 
+  {
+    return (m_dev->write(dest, &src, sizeof(unsigned long)));
   }
 
-  int write(char* dest, char src) 
+  int write(char* dest, char src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->write(dest, &src, sizeof(char))); 
+  {
+    return (m_dev->write(dest, &src, sizeof(char)));
   }
 
-  int write(short* dest, short src) 
+  int write(short* dest, short src)
     __attribute__((always_inline))
-  { 
+  {
     return (m_dev->write(dest, &src, sizeof(short)));
   }
 
-  int write(int* dest, int src) 
+  int write(int* dest, int src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->write(dest, &src, sizeof(int))); 
+  {
+    return (m_dev->write(dest, &src, sizeof(int)));
   }
 
-  int write(long* dest, long src) 
+  int write(long* dest, long src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->write(dest, &src, sizeof(long))); 
+  {
+    return (m_dev->write(dest, &src, sizeof(long)));
   }
 
-  int write(float* dest, float src) 
+  int write(float* dest, float src)
     __attribute__((always_inline))
-  { 
-    return (m_dev->write(dest, &src, sizeof(float))); 
+  {
+    return (m_dev->write(dest, &src, sizeof(float)));
   }
 
 private:
