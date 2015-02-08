@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -25,7 +25,7 @@
 #include "Cosa/Interrupt.hh"
 
 /**
- * Analog Comparator; compare input values on the positive pin AIN0 
+ * Analog Comparator; compare input values on the positive pin AIN0
  * and negative pin AIN1 or ADCn. Note: only one instance can be
  * active/enabled at a time.
  */
@@ -47,7 +47,7 @@ public:
   {}
 
   /**
-   * Construct analog comparator handler. Compare with given 
+   * Construct analog comparator handler. Compare with given
    * analog pin (ADCn).
    * @param[in] pin analog pin to compare with.
    * @param[in] mode comparator mode.

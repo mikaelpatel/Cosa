@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -58,7 +58,7 @@ public:
   /**
    * Set the alarm manager clock with given time in seconds. The
    * Cosa/Time time_t data type may be used to map to calender date
-   * and time. 
+   * and time.
    * @param[in] now current time in seconds.
    */
   static void set_time(clock_t now)
@@ -70,7 +70,7 @@ public:
    * Increment alarm manager ticks (seconds) counter and execute
    * all alarm handlers that have expired. This function must be
    * called by a RTC callback. The default scheduler is based on the
-   * Watchdog and Periodic timeout events. 
+   * Watchdog and Periodic timeout events.
    */
   static void tick();
 
@@ -82,20 +82,20 @@ public:
    */
   void next_alarm(uint32_t seconds = 0L)
     __attribute__((always_inline))
-  { 
+  {
     if (seconds == 0L) seconds = m_period;
-    m_when = s_ticks + seconds; 
+    m_when = s_ticks + seconds;
   }
 
   /**
    * Set alarm handler timeout to the given number of seconds from
    * current time (delta). If the parameter is zero the alarm handler
-   * The alarm must be enabled to become active. 
+   * The alarm must be enabled to become active.
    * periodic value is used as delta.
    * @param[in] seconds to alarm.
    */
   void set_alarm(clock_t time)
-  { 
+  {
     m_when = time;
   }
 
@@ -130,14 +130,14 @@ public:
   }
 
   /**
-   * Schedule the alarm handler. 
+   * Schedule the alarm handler.
    */
   void enable();
 
   /**
-   * Remove the alarm handler from the schedule. 
+   * Remove the alarm handler from the schedule.
    */
-  void disable() 
+  void disable()
     __attribute__((always_inline))
   {
     detach();
@@ -174,15 +174,15 @@ public:
    */
   class Scheduler : public Periodic {
   public:
-    Scheduler() : 
-      Periodic(128), 
-      m_seconds(0L) 
+    Scheduler() :
+      Periodic(128),
+      m_seconds(0L)
     {}
     virtual void run();
   private:
     uint32_t m_seconds;
   };
-  
+
 private:
   static clock_t s_ticks;	//!< Current time in seconds.
   static Head s_queue;		//!< Alarm handler queue.

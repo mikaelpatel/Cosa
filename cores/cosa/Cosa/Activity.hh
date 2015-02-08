@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,14 +28,14 @@
 /**
  * Cosa Activity Handler; the activity run function is called when the
  * activity start time is reached. The function is called with a given
- * run period through the activity duration. The activity is
- * rescheduled with a period.
- * 
+ * run period through the activity duration. The activity is rescheduled
+ * with a period.
+ *
  * @sections Examples
  * 1. Starting at 10:00 schedule the activity every hour. Run every
- * minute for 10 minutes.  
+ * minute for 10 minutes.
  * 2. Starting at 12:00 schedule the activity every 12 hours. Run
- * once. 
+ * once.
  */
 class Activity {
 public:
@@ -54,23 +54,23 @@ public:
     m_cycles(0)			// Cycles
   {
   }
-  
+
   /**
-   * Set activity start time, duration in seconds and period in 
+   * Set activity start time, duration in seconds and period in
    * minutes.
    * @param[in] time to start activity.
    * @param[in] duration of activity in seconds.
    * @param[in] period between activity in minutes.
    */
   void set_time(clock_t time, uint16_t duration, uint16_t period);
-  
+
   /**
    * Set run period when during activity start and duration.
    * @param[in] seconds run period.
    */
-  void set_run_period(uint16_t seconds) 
+  void set_run_period(uint16_t seconds)
   {
-    m_run_period = seconds; 
+    m_run_period = seconds;
   }
 
   /**
@@ -78,8 +78,8 @@ public:
    * @return cycles.
    */
   uint16_t get_cycles() const
-  { 
-    return (m_cycles); 
+  {
+    return (m_cycles);
   }
 
   /**
@@ -88,26 +88,26 @@ public:
    */
   clock_t time() const
     __attribute__((always_inline))
-  { 
-    return (Alarm::time()); 
+  {
+    return (Alarm::time());
   }
 
   /**
    * Enable activity handler.
    */
-  void enable() 
+  void enable()
     __attribute__((always_inline))
-  { 
-    m_scheduler.enable(); 
+  {
+    m_scheduler.enable();
   }
 
   /**
    * Disable activity handler.
    */
-  void disable() 
+  void disable()
     __attribute__((always_inline))
-  { 
-    m_scheduler.disable(); 
+  {
+    m_scheduler.disable();
   }
 
   /**
@@ -117,18 +117,18 @@ public:
    * not zero.
    */
   virtual void run() = 0;
-  
+
 private:
   /** Activity scheduler */
   class Scheduler : public Alarm {
   public:
-    Scheduler(Activity* activity) : 
-      Alarm(), 
-      m_activity(activity) 
+    Scheduler(Activity* activity) :
+      Alarm(),
+      m_activity(activity)
     {}
-    virtual void run() 
-    { 
-      m_activity->schedule(time()); 
+    virtual void run()
+    {
+      m_activity->schedule(time());
     }
   private:
     Activity* m_activity;
@@ -139,7 +139,7 @@ private:
    * @param[in] now current time.
    */
   void schedule(clock_t now);
-  
+
   Scheduler m_scheduler;	//!< Activity scheduler.
   clock_t m_start_time;		//!< Start time.
   clock_t m_stop_time;		//!< Stop time.

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Simple two digit BCD convertion functions.
  *
@@ -68,7 +68,7 @@ to_bcd(uint8_t value)
  * @param[in] buf buffer to convert to binary.
  * @param[in] size number of bytes to convert.
  */
-inline void 
+inline void
 to_binary(uint8_t* buf, size_t size)
 {
   for (uint8_t i = 0; i < size; i++)
@@ -80,7 +80,7 @@ to_binary(uint8_t* buf, size_t size)
  * @param[in] buf buffer to convert to BCD.
  * @param[in] size number of bytes to convert.
  */
-inline void 
+inline void
 to_bcd(uint8_t* buf, size_t size)
 {
   for (uint8_t i = 0; i < size; i++)

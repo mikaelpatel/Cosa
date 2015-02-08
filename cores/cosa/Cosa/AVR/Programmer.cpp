@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,11 +32,11 @@ Programmer::begin()
     UNUSED(status);
     UNUSED(data);
 #endif
-    
+
     // Initiate SS/RESET and SCK as output
     bit_set(DDRB, Board::SS);
     bit_set(DDRB, Board::SCK);
-    
+
     // And pulse a reset signal with clock low
     bit_clear(PORTB, Board::SCK);
     bit_set(PORTB, Board::SS);
@@ -49,7 +49,7 @@ Programmer::begin()
     bit_clear(DDRB, Board::MISO);
   }
 
-  // Wait for the device, at least 20 ms, before Programming Enable instruction 
+  // Wait for the device, at least 20 ms, before Programming Enable instruction
   delay(32);
   return (programming_enable());
 }
@@ -67,8 +67,8 @@ Programmer::end()
   bit_clear(DDRB, Board::SS);
 }
 
-int 
-Programmer::read_program_memory(uint8_t* dest, uint16_t src, size_t size) 
+int
+Programmer::read_program_memory(uint8_t* dest, uint16_t src, size_t size)
 {
   for (uint16_t i = 0; i < size; i += 2) {
     *dest++ = read_program_memory_low_byte(src);
@@ -78,7 +78,7 @@ Programmer::read_program_memory(uint8_t* dest, uint16_t src, size_t size)
   return (size);
 }
 
-int 
+int
 Programmer::write_program_memory(uint16_t dest, uint8_t* src, size_t size)
 {
   uint16_t page = get_flash_page(dest);
@@ -95,15 +95,15 @@ Programmer::write_program_memory(uint16_t dest, uint8_t* src, size_t size)
   return (size);
 }
 
-int 
+int
 Programmer::read_eeprom_memory(uint8_t* dest, uint16_t src, size_t size)
 {
-  for (uint16_t i = 0; i < size; i++) 
+  for (uint16_t i = 0; i < size; i++)
     *dest++ = read_eeprom_memory(src++);
   return (size);
 }
 
-int 
+int
 Programmer::write_eeprom_memory(uint16_t dest, uint8_t* src, size_t size)
 {
   uint16_t page = get_eeprom_page(dest);

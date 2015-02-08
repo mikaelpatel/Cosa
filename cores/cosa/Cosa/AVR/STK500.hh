@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -29,7 +29,7 @@
  * Arduino to act as an ISP. Uses the Cosa Programmer class to perform
  * the actual programming of devices (e.g. ATtiny). The overall structure
  * of the protocol is:
- * 
+ *
  * Command: 	Cmnd {param} CRC_EOP
  *
  * Response: 	INSYNC {res} OK
@@ -38,29 +38,29 @@
  *		NOSYNC
  *
  * @section References
- * 1. AVR061: STK500 Communication Protocol, Application Note, 
+ * 1. AVR061: STK500 Communication Protocol, Application Note,
  * Rev. 2525B-AVR-04/03, http://www.atmel.com/Images/doc2525.pdf
  */
 class STK500 {
 public:
-  /** 
+  /**
    * Construct command parser with given io-stream device and
    * programmer.
    * @param[in] dev iostream device for commands.
    * @param[in] prog programmer.
    */
-  STK500(IOStream::Device* dev, Programmer* prog) : 
-    m_dev(dev), 
+  STK500(IOStream::Device* dev, Programmer* prog) :
+    m_dev(dev),
     m_prog(prog),
     m_state(IDLE_STATE),
     m_addr(0)
   {
   }
 
-  /** 
-   * Run the command parser. Returns after parsing and executing 
-   * a single command  
-   */  
+  /**
+   * Run the command parser. Returns after parsing and executing
+   * a single command
+   */
   void run();
 
 protected:
@@ -76,10 +76,10 @@ protected:
   } __attribute__((packed));
 
   /** Synchronization symbol */
-  enum Sync { 
+  enum Sync {
     CRC_EOP = 0x20		// End of command
   } __attribute__((packed));
-    
+
   /** Commands */
   enum Cmnd {
     GET_SYNC = 0x30,		// Regain synchronization
@@ -95,7 +95,7 @@ protected:
     LOAD_ADDRESS = 0x55,	// Load address (eeprom/progmem)
     UNIVERSAL = 0x56,		// Send instruction to device
     UNIVERSAL_MULTI = 0x57,	// Send memory block to device
-    PROG_FLASH = 0x60,		// Write word to program memory 
+    PROG_FLASH = 0x60,		// Write word to program memory
     PROG_DATA = 0x61,		// Write data to eeprom
     PROG_FUSE = 0x62,		// Write fuse bits (low/high)
     PROG_LOCK = 0x63,		// Write lock bits
@@ -138,7 +138,7 @@ protected:
     uint8_t devicecode;		// Device code
     uint8_t revision;		// Device revision
     uint8_t progtype;		// Parallel/High voltage(1), Serial(0) mode
-    uint8_t parmode;		// Full(1), Pseudo(0) parallel 
+    uint8_t parmode;		// Full(1), Pseudo(0) parallel
     uint8_t polling;		// Polling may be used
     uint8_t selftimed;		// Programming self timed
     uint8_t lockbytes;		// Number of lock bytes
@@ -149,7 +149,7 @@ protected:
     uint16_t pagesize;		// Program memory page size in bytes
     uint16_t eepromsize;	// EEPROM size in bytes
     uint32_t flashsize;		// Program memory size
-  }; 
+  };
 
   /** Parameter block for SET_DEVICE_EXT */
   struct extparam_t {
@@ -200,9 +200,9 @@ protected:
 
   /** Command handlers; device write commands */
   void prog_flash();
-  void prog_data(); 
+  void prog_data();
   void prog_fuse();
-  void prog_lock(); 
+  void prog_lock();
   void prog_page();
   void prog_fuse_ext();
 
@@ -210,7 +210,7 @@ protected:
   void read_flash();
   void read_data();
   void read_fuse();
-  void read_lock(); 
+  void read_lock();
   void read_page();
   void read_sign();
   void read_osccal();

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -25,7 +25,7 @@
 #include "Cosa/IOStream.hh"
 
 /**
- * Bitset implemented as a template class with a byte vector for the 
+ * Bitset implemented as a template class with a byte vector for the
  * elements as bits.
  * @param[in] N max number of elements in bitset.
  */
@@ -72,7 +72,7 @@ public:
    */
   bool isempty() const
   {
-    for (uint16_t i = 0; i < sizeof(m_set); i++) 
+    for (uint16_t i = 0; i < sizeof(m_set); i++)
       if (m_set[i] != 0) return (false);
     return (true);
   }
@@ -83,11 +83,11 @@ public:
    */
   bool operator[](uint16_t ix) const
   {
-    if (ix < N) 
+    if (ix < N)
       return ((m_set[ix / CHARBITS] & _BV(ix & MASK)) != 0);
     return (false);
   }
-  
+
   /**
    * Add element index to the bitset.
    */
@@ -111,7 +111,7 @@ public:
   void operator=(BitSet& rhs)
   {
     if (rhs.members() != N) return;
-    for (uint16_t i = 0; i < sizeof(m_set); i++) 
+    for (uint16_t i = 0; i < sizeof(m_set); i++)
       m_set[i] = rhs.m_set[i];
   }
 
@@ -122,7 +122,7 @@ public:
   void operator+=(BitSet& rhs)
   {
     if (rhs.members() != N) return;
-    for (uint16_t i = 0; i < sizeof(m_set); i++) 
+    for (uint16_t i = 0; i < sizeof(m_set); i++)
       m_set[i] |= rhs.m_set[i];
   }
 
@@ -133,7 +133,7 @@ public:
   void operator-=(BitSet& rhs)
   {
     if (rhs.members() != N) return;
-    for (uint16_t i = 0; i < sizeof(m_set); i++) 
+    for (uint16_t i = 0; i < sizeof(m_set); i++)
       m_set[i] &= ~rhs.m_set[i];
   }
 
@@ -156,7 +156,7 @@ public:
    */
   friend IOStream& operator<<(IOStream& outs, BitSet& rhs)
   {
-    for (uint16_t i = 0; i < N; i++) 
+    for (uint16_t i = 0; i < N; i++)
       outs << ((rhs.m_set[i / CHARBITS] & _BV(i & MASK)) != 0);
     return (outs);
   }
@@ -167,7 +167,7 @@ private:
 
   /** Bitset size in bytes. */
   static const size_t SET_MAX = (N + (CHARBITS/2)) / CHARBITS;
- 
+
   /** Bitset storage. */
   uint8_t m_set[SET_MAX];
 };

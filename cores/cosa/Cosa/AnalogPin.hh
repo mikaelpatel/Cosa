@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,7 +28,7 @@
 /**
  * Abstract analog pin. Allows asynchronous sampling.
  */
-class AnalogPin : public Interrupt::Handler, public Event::Handler 
+class AnalogPin : public Interrupt::Handler, public Event::Handler
 {
 public:
   /**
@@ -48,9 +48,9 @@ public:
    * Set reference voltage for conversion.
    * @param[in] ref reference voltage.
    */
-  void set_reference(Board::Reference ref) 
+  void set_reference(Board::Reference ref)
   {
-    m_reference = ref; 
+    m_reference = ref;
   }
 
   /**
@@ -58,17 +58,17 @@ public:
    * @return pin identity.
    */
   Board::AnalogPin get_pin() const
-  { 
-    return (m_pin); 
+  {
+    return (m_pin);
   }
 
   /**
-   * Get latest sample. 
+   * Get latest sample.
    * @return sample value.
    */
   uint16_t get_value() const
-  { 
-    return (m_value); 
+  {
+    return (m_value);
   }
 
   /**
@@ -78,13 +78,13 @@ public:
   static void prescale(uint8_t factor);
 
   /**
-   * Sample analog pin. Wait for conversion to complete before 
+   * Sample analog pin. Wait for conversion to complete before
    * returning with sample value.
    * @param[in] pin number.
    * @param[in] ref reference voltage.
    * @return sample value.
    */
-  static uint16_t sample(Board::AnalogPin pin, 
+  static uint16_t sample(Board::AnalogPin pin,
 			 Board::Reference ref = Board::AVCC_REFERENCE);
 
   /**
@@ -98,7 +98,7 @@ public:
   /**
    * Enable analog conversion.
    */
-  static void powerup() 
+  static void powerup()
     __attribute__((always_inline))
   {
     bit_set(ADCSRA, ADEN);
@@ -107,14 +107,14 @@ public:
   /**
    * Disable analog conversion.
    */
-  static void powerdown() 
+  static void powerdown()
     __attribute__((always_inline))
   {
     bit_clear(ADCSRA, ADEN);
   }
 
   /**
-   * Sample analog pin. Wait for conversion to complete before 
+   * Sample analog pin. Wait for conversion to complete before
    * returning with sample value.
    * @return sample value.
    */
@@ -125,25 +125,25 @@ public:
   }
 
   /**
-   * Sample analog pin. Wait for conversion to complete before 
+   * Sample analog pin. Wait for conversion to complete before
    * returning with sample value.
    * @param[out] var variable to receive the value.
    * @return analog pin.
    */
   AnalogPin& operator>>(uint16_t& var)
     __attribute__((always_inline))
-  { 
+  {
     var = sample();
     return (*this);
   }
 
   /**
-   * Request sample of analog pin. Pushes given event on completion. 
+   * Request sample of analog pin. Pushes given event on completion.
    * Default event is null/no event pushed for sample_await().
    * @param[in] event to push on completion.
    * @return bool.
    */
-  bool sample_request(uint8_t event = Event::NULL_TYPE) 
+  bool sample_request(uint8_t event = Event::NULL_TYPE)
   {
     m_event = event;
     return (sample_request(m_pin, (Board::Reference) m_reference));
@@ -164,10 +164,10 @@ public:
 
   /**
    * @override AnalogPin
-   * Default on change function. 
+   * Default on change function.
    * @param[in] value.
    */
-  virtual void on_change(uint16_t value) 
+  virtual void on_change(uint16_t value)
   {
     UNUSED(value);
   }
@@ -178,7 +178,7 @@ protected:
   uint8_t m_reference;		  //!< ADC reference voltage type.
   uint16_t m_value;		  //!< Latest sample value.
   uint8_t m_event;		  //!< Event to push on completion.
-  
+
   /**
    * Internal request sample of analog pin. Set up sampling of given pin
    * with given reference voltage.

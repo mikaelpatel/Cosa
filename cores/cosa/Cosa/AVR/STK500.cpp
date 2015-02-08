@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,7 +28,7 @@ STK500::getchar()
   return (m_dev->getchar());
 }
 
-void 
+void
 STK500::read(void* buf, size_t count)
 {
   uint8_t* bp = (uint8_t*) buf;
@@ -38,11 +38,11 @@ STK500::read(void* buf, size_t count)
 void
 STK500::putchar(uint8_t c)
 {
-  while (m_dev->putchar(c) == IOStream::EOF) 
+  while (m_dev->putchar(c) == IOStream::EOF)
     Power::sleep(SLEEP_MODE_IDLE);
 }
 
-void 
+void
 STK500::write(void* buf, size_t count)
 {
   uint8_t* bp = (uint8_t*) buf;
@@ -53,27 +53,27 @@ bool
 STK500::is_insync()
 {
   if (getchar() == CRC_EOP) {
-    putchar(INSYNC);    
+    putchar(INSYNC);
     return (true);
   }
-  putchar(NOSYNC);    
+  putchar(NOSYNC);
   return (false);
 }
 
-void 
+void
 STK500::response()
 {
   putchar(OK);
 }
 
-void 
+void
 STK500::response(uint8_t param)
 {
   putchar(param);
   putchar(OK);
 }
 
-void 
+void
 STK500::response(uint8_t param1, uint8_t param2)
 {
   putchar(param1);
@@ -81,7 +81,7 @@ STK500::response(uint8_t param1, uint8_t param2)
   putchar(OK);
 }
 
-void 
+void
 STK500::response(uint8_t param1, uint8_t param2, uint8_t param3)
 {
   putchar(param1);
@@ -90,14 +90,14 @@ STK500::response(uint8_t param1, uint8_t param2, uint8_t param3)
   putchar(OK);
 }
 
-void 
+void
 STK500::response(const char* param, size_t count)
 {
   while (count--) putchar(*param++);
   putchar(OK);
 }
 
-void 
+void
 STK500::response_P(str_P param)
 {
   const char* p = (const char*) param;
@@ -106,14 +106,14 @@ STK500::response_P(str_P param)
   putchar(OK);
 }
 
-void 
+void
 STK500::failed(uint8_t param)
 {
   putchar(param);
   putchar(FAILED);
 }
 
-void 
+void
 STK500::illegal(uint8_t resp)
 {
   putchar(resp);
@@ -234,15 +234,15 @@ STK500::leave_progmode()
   response();
 }
 
-void 
+void
 STK500::chip_erase()
 {
   if (!is_insync()) return;
   m_prog->chip_erase();
   response();
-}  
+}
 
-void 
+void
 STK500::load_address()
 {
   univ16_t addr;
@@ -251,9 +251,9 @@ STK500::load_address()
   if (!is_insync()) return;
   m_addr = addr.as_uint16;
   response();
-}  
+}
 
-void 
+void
 STK500::universal()
 {
   uint8_t buf[4];
@@ -262,9 +262,9 @@ STK500::universal()
   uint8_t res = m_prog->transfer(buf);
   m_prog->await();
   response(res);
-}  
+}
 
-void 
+void
 STK500::universal_multi()
 {
   uint16_t bytes = getchar() + 1;
@@ -274,9 +274,9 @@ STK500::universal_multi()
   uint8_t* bp = buf;
   while (bytes--) m_prog->transfer(*bp++);
   response();
-}  
+}
 
-void 
+void
 STK500::prog_flash()
 {
   uint8_t low = getchar();
@@ -286,9 +286,9 @@ STK500::prog_flash()
   m_prog->load_program_memory_page_high_byte(m_addr, high);
   m_addr += 1;
   response();
-}  
+}
 
-void 
+void
 STK500::prog_data()
 {
   uint8_t data = getchar();
@@ -296,9 +296,9 @@ STK500::prog_data()
   m_prog->write_eeprom_memory(m_addr, data);
   m_addr += 1;
   response();
-}  
+}
 
-void 
+void
 STK500::prog_fuse()
 {
   uint8_t low = getchar();
@@ -307,18 +307,18 @@ STK500::prog_fuse()
   m_prog->write_fuse_bits(low);
   m_prog->write_fuse_high_bits(high);
   response();
-}  
+}
 
-void 
+void
 STK500::prog_lock()
 {
   uint8_t lock = getchar();
   if (!is_insync()) return;
   m_prog->write_lock_bits(lock);
   response();
-}  
+}
 
-void 
+void
 STK500::prog_page()
 {
   univ16_t bytes;
@@ -337,9 +337,9 @@ STK500::prog_page()
   }
   m_addr += (count / 2);
   response();
-}  
+}
 
-void 
+void
 STK500::prog_fuse_ext()
 {
   uint8_t low = getchar();
@@ -350,9 +350,9 @@ STK500::prog_fuse_ext()
   m_prog->write_fuse_high_bits(high);
   m_prog->write_extended_fuse_bits(ext);
   response();
-}  
+}
 
-void 
+void
 STK500::read_flash()
 {
   if (!is_insync()) return;
@@ -362,7 +362,7 @@ STK500::read_flash()
   response(low, high);
 }
 
-void 
+void
 STK500::read_data()
 {
   if (!is_insync()) return;
@@ -371,7 +371,7 @@ STK500::read_data()
   response(data);
 }
 
-void 
+void
 STK500::read_fuse()
 {
   if (!is_insync()) return;
@@ -380,7 +380,7 @@ STK500::read_fuse()
   response(low, high);
 }
 
-void 
+void
 STK500::read_lock()
 {
   if (!is_insync()) return;
@@ -388,7 +388,7 @@ STK500::read_lock()
   response(bits);
 }
 
-void 
+void
 STK500::read_page()
 {
   univ16_t bytes;
@@ -409,7 +409,7 @@ STK500::read_page()
   response();
 }
 
-void  
+void
 STK500::read_sign()
 {
   if (!is_insync()) return;
@@ -419,7 +419,7 @@ STK500::read_sign()
   response(high, middle, low);
 }
 
-void  
+void
 STK500::read_osccal()
 {
   if (!is_insync()) return;
@@ -427,7 +427,7 @@ STK500::read_osccal()
   response(cal);
 }
 
-void  
+void
 STK500::read_fuse_ext()
 {
   if (!is_insync()) return;
@@ -437,90 +437,90 @@ STK500::read_fuse_ext()
   response(low, high, ext);
 }
 
-void 
+void
 STK500::run()
 {
   uint8_t cmnd = getchar();
   switch (cmnd) {
   case GET_SYNC:
-  case CHECK_AUTOINC: 
-    if (is_insync()) response(); 
+  case CHECK_AUTOINC:
+    if (is_insync()) response();
     return;
   case GET_SIGN_ON:
-    if (is_insync()) response_P(PSTR("Cosa AVR ISP")); 
+    if (is_insync()) response_P(PSTR("Cosa AVR ISP"));
     return;
-  case SET_PARAMETER: 
-    set_parameter(); 
+  case SET_PARAMETER:
+    set_parameter();
     return;
   case GET_PARAMETER:
-    get_parameter(); 
+    get_parameter();
     return;
   case SET_DEVICE:
-    set_device(); 
+    set_device();
     return;
   case SET_DEVICE_EXT:
-    set_device_ext(); 
+    set_device_ext();
     return;
   case ENTER_PROGMODE:
-    enter_progmode(); 
+    enter_progmode();
     return;
   case LEAVE_PROGMODE:
-    leave_progmode(); 
+    leave_progmode();
     return;
-  case CHIP_ERASE: 
-    chip_erase(); 
+  case CHIP_ERASE:
+    chip_erase();
     return;
   case LOAD_ADDRESS:
-    load_address(); 
+    load_address();
     return;
   case UNIVERSAL:
-    universal(); 
+    universal();
     return;
-  case UNIVERSAL_MULTI: 
-    universal_multi(); 
+  case UNIVERSAL_MULTI:
+    universal_multi();
     return;
   case PROG_FLASH:
     prog_flash();
     return;
   case PROG_DATA:
-    prog_data(); 
+    prog_data();
     return;
-  case PROG_FUSE: 
-    prog_fuse(); 
+  case PROG_FUSE:
+    prog_fuse();
     return;
-  case PROG_LOCK: 
-    prog_lock(); 
+  case PROG_LOCK:
+    prog_lock();
     return;
   case PROG_PAGE:
-    prog_page(); 
+    prog_page();
     return;
-  case PROG_FUSE_EXT: 
-    prog_fuse_ext(); 
+  case PROG_FUSE_EXT:
+    prog_fuse_ext();
     return;
-  case READ_FLASH: 
-    read_flash(); 
+  case READ_FLASH:
+    read_flash();
     return;
-  case READ_DATA: 
-    read_data(); 
+  case READ_DATA:
+    read_data();
     return;
-  case READ_FUSE: 
-    read_fuse(); 
-    return; 
-  case READ_LOCK: 
-    read_lock(); 
-    return; 
+  case READ_FUSE:
+    read_fuse();
+    return;
+  case READ_LOCK:
+    read_lock();
+    return;
   case READ_PAGE:
-    read_page(); 
+    read_page();
     return;
   case READ_SIGN:
-    read_sign(); 
+    read_sign();
     return;
-  case READ_OSCCAL: 
-    read_osccal(); 
+  case READ_OSCCAL:
+    read_osccal();
     return;
-  case READ_FUSE_EXT: 
-    read_fuse_ext(); 
-    return; 
+  case READ_FUSE_EXT:
+    read_fuse_ext();
+    return;
   }
   if (is_insync()) illegal(UNKNOWN);
 }

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -25,7 +25,7 @@
 #include "Cosa/Bits.h"
 
 /**
- * Serial programming using the SPI interface and RESET pin. Connect the 
+ * Serial programming using the SPI interface and RESET pin. Connect the
  * device to the Arduino SPI pins; MOSI, MISO, SCK and SS/RESET. The member
  * functions implement the serial programming instruction set and
  * additional support functions for block read and write.
@@ -33,15 +33,15 @@
 class Programmer {
 public:
   /**
-   * Construct programmer with given page size for read/write of 
+   * Construct programmer with given page size for read/write of
    * avr micro-controllers.
    * @param[in] pagesize number of words per program memory page.
    */
-  Programmer(uint8_t pagesize = 32) : 
+  Programmer(uint8_t pagesize = 32) :
     m_flash_pagesize(pagesize),
     m_eeprom_pagesize(4)
   {}
-  
+
   /**
    * Transfer data to and from the device (USI/SPI).
    * @param[in] data to transfer.
@@ -151,21 +151,21 @@ public:
    * @return bool.
    */
   bool programming_enable()
-  { 
+  {
     transfer(0xAC);
     transfer(0x53);
-    uint8_t res = transfer((uint8_t) 0x00); 
-    transfer((uint8_t) 0x00); 
+    uint8_t res = transfer((uint8_t) 0x00);
+    transfer((uint8_t) 0x00);
     return (res == 0x53);
   }
-  
+
   /**
    * Issue Chip Erase (Program Memory/EEPROM) Serial Programming
    * Instruction. Waits for erase to complete.
    */
-  void chip_erase() 
-  { 
-    transfer(0xAC, 0x80, 0x00, 0x00); 
+  void chip_erase()
+  {
+    transfer(0xAC, 0x80, 0x00, 0x00);
     await();
   }
 
@@ -174,9 +174,9 @@ public:
    * true if the device is busy otherwise false.
    * @return bool.
    */
-  bool isbusy() 
-  { 
-    return (transfer(0xF0, 0x00, 0x00, 0x00) & 0x1); 
+  bool isbusy()
+  {
+    return (transfer(0xF0, 0x00, 0x00, 0x00) & 0x1);
   }
 
   /**
@@ -198,7 +198,7 @@ public:
 
   /**
    * Issue Load Program Memory Page, High byte, Serial Programming
-   * Instruction. 
+   * Instruction.
    * @param[in] addr program word address.
    * @param[in] data high byte.
    */
@@ -209,7 +209,7 @@ public:
 
   /**
    * Issue Load Program Memory Page, Low byte, Serial Programming
-   * Instruction. 
+   * Instruction.
    * @param[in] addr program word address.
    * @param[in] data low byte.
    */
@@ -220,7 +220,7 @@ public:
 
   /**
    * Issue Load EEPROM Memory Page (page access) Serial Programming
-   * Instruction. 
+   * Instruction.
    * @param[in] addr eeprom byte address.
    * @param[in] data low byte.
    */
@@ -231,7 +231,7 @@ public:
 
   /**
    * Issue Read Program Memory, High byte, Serial Programming
-   * Instruction. 
+   * Instruction.
    * @param[in] addr program word address.
    * @return byte read.
    */
@@ -239,10 +239,10 @@ public:
   {
     return (transfer(0x28, addr >> 8, addr, 0x00));
   }
-  
+
   /**
    * Issue Read Program Memory, Low byte, Serial Programming
-   * Instruction. 
+   * Instruction.
    * @param[in] addr program word address.
    * @return byte read.
    */
@@ -266,7 +266,7 @@ public:
   }
 
   /**
-   * Issue Read EEPROM Memory Serial Programming Instruction. 
+   * Issue Read EEPROM Memory Serial Programming Instruction.
    * @param[in] addr eeprom byte address.
    * @return byte read.
    */
@@ -276,7 +276,7 @@ public:
   }
 
   /**
-   * Issue Read Lock bits Serial Programming Instruction. 
+   * Issue Read Lock bits Serial Programming Instruction.
    * @return byte read.
    */
   uint8_t read_lock_bits()
@@ -296,7 +296,7 @@ public:
   }
 
   /**
-   * Issue Read Fuse bits Serial Programming Instruction. 
+   * Issue Read Fuse bits Serial Programming Instruction.
    * @return byte read.
    */
   uint8_t read_fuse_bits()
@@ -305,7 +305,7 @@ public:
   }
 
   /**
-   * Issue Read Fuse High bits Serial Programming Instruction. 
+   * Issue Read Fuse High bits Serial Programming Instruction.
    * @return byte read.
    */
   uint8_t read_fuse_high_bits()
@@ -314,7 +314,7 @@ public:
   }
 
   /**
-   * Issue Read Extended Fuse bits Serial Programming Instruction. 
+   * Issue Read Extended Fuse bits Serial Programming Instruction.
    * @return byte read.
    */
   uint8_t read_extended_fuse_bits()
@@ -323,7 +323,7 @@ public:
   }
 
   /**
-   * Issue Read Calibration byte Serial Programming Instruction. 
+   * Issue Read Calibration byte Serial Programming Instruction.
    * @return byte read.
    */
   uint8_t read_calibration_byte()
@@ -353,7 +353,7 @@ public:
     transfer(0xC0, addr >> 8, addr, data);
     await();
   }
-    
+
   /**
    * Issue Write EEPROM Memory Page Serial Programming Instruction
    * for given address.
@@ -385,7 +385,7 @@ public:
     transfer(0xAC, 0xA0, 0x00, data);
     await();
   }
-    
+
   /**
    * Issue Write Fuse High bits Serial Programming Instruction for given data.
    * @param[in] data fuse.
@@ -395,10 +395,10 @@ public:
     transfer(0xAC, 0xA8, 0x00, data);
     await();
   }
-    
+
   /**
    * Issue Write Extended Fuse bits Serial Programming Instruction for
-   * given data. 
+   * given data.
    * @param[in] data fuse.
    */
   void write_extended_fuse_bits(uint8_t data)
@@ -420,7 +420,7 @@ public:
 
   /**
    * Write program memory from the given source buffer with the given
-   * size in bytes to the destination program word address. Return the 
+   * size in bytes to the destination program word address. Return the
    * number of bytes written or negative error code.
    * @param[in] dest destination program word address.
    * @param[in] src source buffer pointer.
@@ -442,7 +442,7 @@ public:
 
   /**
    * Write eeprom memory from the given source buffer with the given
-   * size in bytes to the destination program word address. Return the 
+   * size in bytes to the destination program word address. Return the
    * number of bytes written or negative error code.
    * @param[in] dest destination eeprom memory byte address.
    * @param[in] src source buffer pointer.

@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -22,7 +22,7 @@
 
 AnalogPin* AnalogPin::sampling_pin = NULL;
 
-void 
+void
 AnalogPin::prescale(uint8_t factor)
 {
   const uint8_t MASK = (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0));
@@ -43,7 +43,7 @@ AnalogPin::sample_request(Board::AnalogPin pin, uint8_t ref)
   return (true);
 }
 
-uint16_t 
+uint16_t
 AnalogPin::bandgap(uint16_t vref)
 {
   loop_until_bit_is_clear(ADCSRA, ADSC);
@@ -62,7 +62,7 @@ AnalogPin::bandgap(uint16_t vref)
   return ((vref * 1024L) / sample);
 }
 
-uint16_t 
+uint16_t
 AnalogPin::sample(Board::AnalogPin pin, Board::Reference ref)
 {
   if (sampling_pin != NULL) return (0xffffU);
@@ -76,7 +76,7 @@ AnalogPin::sample(Board::AnalogPin pin, Board::Reference ref)
   return (ADCW);
 }
 
-uint16_t 
+uint16_t
 AnalogPin::sample_await()
 {
   if (sampling_pin != this) return (m_value);
@@ -91,7 +91,7 @@ AnalogPin::sample_await()
   return (m_value);
 }
 
-void 
+void
 AnalogPin::on_event(uint8_t type, uint16_t value)
 {
   if (type == Event::TIMEOUT_TYPE) {
@@ -107,17 +107,17 @@ AnalogPin::on_event(uint8_t type, uint16_t value)
 
 void
 AnalogPin::on_interrupt(uint16_t value)
-{ 
+{
   uint8_t event = sampling_pin->m_event;
-  if (event == Event::NULL_TYPE) 
+  if (event == Event::NULL_TYPE)
     sampling_pin->m_value = value;
   else
     Event::push(event, this, value);
   sampling_pin = NULL;
 }
 
-ISR(ADC_vect) 
-{ 
+ISR(ADC_vect)
+{
   bit_clear(ADCSRA, ADIE);
   if (AnalogPin::sampling_pin == NULL) return;
   AnalogPin::sampling_pin->on_interrupt(ADCW);
