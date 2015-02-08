@@ -22,3 +22,6 @@
 (set-frame-height (selected-frame) 64)
 (set-frame-width (selected-frame) 80)
 
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+

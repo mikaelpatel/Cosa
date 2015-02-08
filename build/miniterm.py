@@ -5,7 +5,7 @@
 
 # Input characters are sent directly (only LF -> CR/LF/CRLF translation is
 # done), received characters are displayed as is (or escaped trough pythons
-# repr, useful for debug purposes). 
+# repr, useful for debug purposes).
 
 import sys, os, serial, threading
 
@@ -363,7 +363,7 @@ class Miniterm:
                     menu_active = False
                 elif c == MENUCHARACTER: # next char will be for menu
                     menu_active = True
-                elif c == EXITCHARCTER: 
+                elif c == EXITCHARCTER:
                     self.stop()
                     break                                   # exit app
                 elif c == '\r':

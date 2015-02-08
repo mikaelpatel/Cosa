@@ -2,20 +2,20 @@
 # @version 1.0
 #
 # @section License
-# Copyright (C) 2014, Mikael Patel
+# Copyright (C) 2014-2015, Mikael Patel
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
 # version 2.1 of the License, or (at your option) any later version.
-# 
+#
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Lesser General Public License for more details.
-# 
+#
 # @section Description
-# The Cosa Lilypad Arduino core boards definition file. 
+# The Cosa Lilypad Arduino core boards definition file.
 #
 # @section Usage
 # Copy to top directory and rename boards.txt, alternatively
@@ -30,7 +30,7 @@
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 lilypad.name=Cosa LilyPad Arduino (ATmega328/BOOT_168, 8 MHz)
 lilypad.upload.tool=avrdude
 lilypad.upload.protocol=arduino
@@ -53,7 +53,7 @@ lilypad.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.0 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 lilypad-usb.name=Cosa LilyPad Arduino USB (ATmega32U4/Caterina, 8 MHz)
 lilypad-usb.upload.tool=avrdude
 lilypad-usb.upload.protocol=avr109

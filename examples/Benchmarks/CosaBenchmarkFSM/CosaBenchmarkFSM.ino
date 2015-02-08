@@ -9,20 +9,20 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
- * Cosa FSM Benchmark; number of micro-seconds for a send/dispatch 
+ * Cosa FSM Benchmark; number of micro-seconds for a send/dispatch
  * cycle. The classical finite state machine benchmark with
  * measurement of event send time. The machine has only one state and
- * for each received event sends an event to a connected machine.  
+ * for each received event sends an event to a connected machine.
  * The measurement contains the pushing of the event onto the event
  * queue, pulling and dispatch of the event to the receiving state
- * machine.  
+ * machine.
  *
  * @section Circuit
  * This example requires no special circuit. Uses serial output,
@@ -39,17 +39,17 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 /**
- * Simple echo state machine with a single state. 
+ * Simple echo state machine with a single state.
  */
 class Echo : public FSM {
 public:
   /**
-   * Construct the echo state machine. 
+   * Construct the echo state machine.
    */
   Echo() : FSM(echoState), m_port(0) {}
 
   /**
-   * Bind receiving fsm to port. 
+   * Bind receiving fsm to port.
    * @param[in] fsm state machine to receive the event.
    */
   void bind(FSM* fsm)
@@ -68,7 +68,7 @@ public:
     echo->m_port->send(Event::USER_TYPE);
     return (true);
   }
-  
+
 private:
   /** Port (pointer) to receiving state-machine */
   FSM* m_port;

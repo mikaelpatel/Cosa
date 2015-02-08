@@ -2,20 +2,20 @@
 # @version 1.0
 #
 # @section License
-# Copyright (C) 2014, Mikael Patel
+# Copyright (C) 2014-2015, Mikael Patel
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
 # version 2.1 of the License, or (at your option) any later version.
-# 
+#
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Lesser General Public License for more details.
-# 
+#
 # @section Description
-# The Cosa MPU core breadboards definition file. 
+# The Cosa MPU core breadboards definition file.
 #
 # @section Usage
 # Copy to top directory and rename boards.txt, alternatively
@@ -96,7 +96,7 @@ attiny861-8.build.core=cosa
 # AVR:ATmega328
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (256 words, 0x3f00). 
+# Boot Reset vector enable (256 words, 0x3f00).
 atmega328-8.name=Cosa Breadboard (ATmega328, 8 MHz internal clock)
 atmega328-8.upload.tool=avrdude
 atmega328-8.upload.protocol=stk500v1
@@ -119,7 +119,7 @@ atmega328-8.build.core=cosa
 # AVR:ATmega1284
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0xfc00). 
+# Boot Reset vector enable (1024 words, 0xfc00).
 mighty.name=Cosa Breadboard (ATmega1284P/BOOT_1284P)
 mighty.upload.tool=avrdude
 mighty.upload.protocol=stk500v1
@@ -142,7 +142,7 @@ mighty.build.core=cosa
 # AVR:ATmega1284
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (512 words, 0xfe00). 
+# Boot Reset vector enable (512 words, 0xfe00).
 mighty-opt.name=Cosa Breadboard (ATmega1284P/Optiboot)
 mighty-opt.upload.tool=avrdude
 mighty-opt.upload.protocol=arduino

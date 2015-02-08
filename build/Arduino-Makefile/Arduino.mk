@@ -3,7 +3,7 @@
 # Makefile for compiling Arduino sketches from command line
 # System part (i.e. project independent)
 #
-# Copyright (C) 2014 Mikael Patel, based on Sudar work. 
+# Copyright (C) 2014 Mikael Patel, based on Sudar work.
 # https://github.com/sudar/Arduino-Makefile
 #
 # Copyright (C) 2012 Sudar <http://sudarmuthu.com>, based on
@@ -25,12 +25,12 @@
 # Original version: 1.3.3 (sudar/Arduino-Makefile)
 #
 ########################################################################
-# 
+#
 # GETTING STARTED WITH ARDUINO-MAKEFILE IN COSA
 #
 # 1. Configure the build (build/Cosa.mk) by setting the path of the
-# Arduino installation. The Cosa version of Arduino-Makefile supports 
-# 1.0.X and 1.5.X. 
+# Arduino installation. The Cosa version of Arduino-Makefile supports
+# 1.0.X and 1.5.X.
 #   ARDUINO_DIR = $(HOME)/opt/arduino-1.0.X
 #
 # 2. Create a Makefile in the Sketch director. The minimum contents is:
@@ -40,10 +40,10 @@
 #
 # 3. Build, upload and monitor with makefile. The Cosa variant uses
 # miniterm.py as monitor. The default exit command is CTRL-ALT GR-]
-# 
+#
 # The most convinient way of using the Cosa build support is the shell
-# script cosa. It may be found in the $(COSA_DIR)/build directory. 
-# This script allows building without a makefile. 
+# script cosa. It may be found in the $(COSA_DIR)/build directory.
+# This script allows building without a makefile.
 #
 ########################################################################
 #
@@ -78,7 +78,7 @@
 #   ARDMK_DIR = /usr/share/arduino
 #   AVR_TOOLS_DIR = /usr
 #
-# On Windows declare this environmental variables using the windows 
+# On Windows declare this environmental variables using the windows
 # configuration options. Control Panel > System > Advanced system
 # settings. Also take into account that when you set them you have to
 # add '\' on all spaces and special characters.
@@ -118,7 +118,7 @@
 #
 # Given a normal sketch directory, all you need to do is to create a
 # small Makefile which defines a few things, and then includes this
-# one. 
+# one.
 #
 # For example:
 #
@@ -153,19 +153,19 @@
 #        include $(ARDMK_DIR)/Arduino.mk
 #
 # In any case, once this file has been created the typical workflow is
-# just 
+# just
 #
 #   $ make upload
 #
 # All of the object files are created in the build-{BOARD_TAG}
 # subdirectory. All sources should be in the current directory and can
-# include: 
+# include:
 #  - at most one .pde or .ino file which will be treated as C++ after
 #    the standard Arduino header and footer have been affixed.
 #  - any number of .c, .cpp, .s and .h files
 #
 # Included libraries are built in the build-{BOARD_TAG}/libs
-# subdirectory. 
+# subdirectory.
 #
 # Besides make upload, there are a couple of other targets that are
 # available. Do make help to get the complete list of targets and
@@ -293,9 +293,9 @@ else
 endif
 
 arduino_output =
-# When output is not suppressed and we're in the top-level makefile, 
+# When output is not suppressed and we're in the top-level makefile,
 # running for the first time (i.e., not after a restart after
-# regenerating the dependency file), then output the configuration. 
+# regenerating the dependency file), then output the configuration.
 ifndef ARDUINO_QUIET
   ifeq ($(MAKE_RESTARTS),)
     ifeq ($(MAKELEVEL),0)
@@ -313,7 +313,7 @@ ifndef ARDMK_DIR
 else
   # Show_config_variable macro is defined in Common.mk file and is not
   # available yet. Let's define a variable to know that user specified
-  # ARDMK_DIR 
+  # ARDMK_DIR
   ARDMK_DIR_MSG = USER
 endif
 
@@ -321,7 +321,7 @@ endif
 include $(ARDMK_DIR)/Common.mk
 
 # Show_config_variable macro is available now. So let's print config
-# details for ARDMK_DIR 
+# details for ARDMK_DIR
 ifndef ARDMK_DIR_MSG
   $(call show_config_variable,ARDMK_DIR,[COMPUTED],(relative to $(notdir $(lastword $(MAKEFILE_LIST)))))
 else
@@ -445,9 +445,9 @@ ifndef AVR_TOOLS_DIR
     $(call show_config_variable,AVR_TOOLS_DIR,[BUNDLED],(in Arduino distribution))
 
     # In Linux distribution of Arduino, the path to avrdude and
-    # avrdude.conf are different. More details at 
+    # avrdude.conf are different. More details at
     # https://github.com/sudar/Arduino-Makefile/issues/48 and
-    # https://groups.google.com/a/arduino.cc/d/msg/developers/D_m97jGr8Xs/uQTt28KO_8oJ 
+    # https://groups.google.com/a/arduino.cc/d/msg/developers/D_m97jGr8Xs/uQTt28KO_8oJ
     ifeq ($(CURRENT_OS),LINUX)
       # Check for old avr-gcc version
       ifeq ($(shell expr $(ARDUINO_VERSION) '<' 157), 1)
@@ -687,7 +687,7 @@ ifndef RESET_CMD
   ARD_RESET_ARDUINO := $(shell which ard-reset-arduino 2> /dev/null)
   ifndef ARD_RESET_ARDUINO
     # Same level as *.mk in bin directory when checked out from git or
-    # in $PATH when packaged 
+    # in $PATH when packaged
     ARD_RESET_ARDUINO = $(ARDMK_DIR)/bin/ard-reset-arduino
   endif
   ifneq ($(CATERINA),)
@@ -722,7 +722,7 @@ endif
 
 # CHK_SOURCES is used by flymake, creates a tmp file in the same
 # directory as the file under edition we must skip the verification in
-# this particular case 
+# this particular case
 ifeq ($(strip $(CHK_SOURCES)),)
   ifeq ($(strip $(NO_CORE)),)
     # Ideally, this should just check if there are more than one file
@@ -731,7 +731,7 @@ ifeq ($(strip $(CHK_SOURCES)),)
         $(call show_config_info,No .pde or .ino files found. If you are compiling .c or .cpp files then you need to explicitly include Arduino header files)
       else
         # TODO: Support more than one file.
-        # https://github.com/sudar/Arduino-Makefile/issues/49 
+        # https://github.com/sudar/Arduino-Makefile/issues/49
         $(error Need exactly one .pde or .ino file. This makefile doesn't support multiple .ino/.pde files yet)
       endif
    endif
@@ -743,7 +743,7 @@ ifeq ($(strip $(NO_CORE)),)
 
   ifdef ARDUINO_CORE_PATH
     CORE_C_SRCS = $(call rwildcard,$(ARDUINO_CORE_PATH),*.c)
-    CORE_CPP_SRCS = $(call rwildcard,$(ARDUINO_CORE_PATH),*.cpp) 
+    CORE_CPP_SRCS = $(call rwildcard,$(ARDUINO_CORE_PATH),*.cpp)
 
     ifneq ($(strip $(NO_CORE_MAIN_CPP)),)
       CORE_CPP_SRCS := $(filter-out %main.cpp, $(CORE_CPP_SRCS))
@@ -801,7 +801,7 @@ endif
 
 ifndef ARDUINO_HEADER
   # We should check for Arduino version, not just the file extension
-  # because, a .pde file can be used in Arduino 1.0 as well 
+  # because, a .pde file can be used in Arduino 1.0 as well
   ifeq ($(shell expr $(ARDUINO_VERSION) '<' 100), 1)
     ARDUINO_HEADER=WProgram.h
   else
@@ -852,7 +852,7 @@ ifneq (,$(strip $(LIBS_NOT_FOUND)))
     $(error The following libraries specified in ARDUINO_LIBS could not be found (searched USER_LIB_PATH and ARDUINO_LIB_PATH): $(LIBS_NOT_FOUND))
 endif
 
-SKETCHFLAGS = $(patsubst %,-D%,$(USEFLAGS)) 
+SKETCHFLAGS = $(patsubst %,-D%,$(USEFLAGS))
 SYS_LIBS := $(wildcard $(SYS_LIBS) $(addsuffix /utility,$(SYS_LIBS)))
 USER_LIBS := $(wildcard $(USER_LIBS) $(addsuffix /utility,$(USER_LIBS)))
 SYS_INCLUDES = $(patsubst %,-I%,$(SYS_LIBS))
@@ -870,7 +870,7 @@ USER_LIB_OBJS = $(patsubst $(USER_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(USER_LIB_
 DEPS = $(LOCAL_OBJS:.o=.d) $(LIB_OBJS:.o=.d) $(USER_LIB_OBJS:.o=.d) $(CORE_OBJS:.o=.d)
 
 # Optimization level for the compiler. You can get the list of options at
-# http://www.nongnu.org/avr-libc/user-manual/using_tools.html#gcc_optO 
+# http://www.nongnu.org/avr-libc/user-manual/using_tools.html#gcc_optO
 # Also read http://www.nongnu.org/avr-libc/user-manual/FAQ.html#faq_optflags
 ifndef OPTIMIZATION_LEVEL
   OPTIMIZATION_LEVEL=s
@@ -916,7 +916,7 @@ endif
 # Add extra flags for higher Arduino versions
 ifeq ($(shell expr $(ARDUINO_VERSION) '<' 157), 1)
   EXTRA_CFLAGS += -Wextra
-  EXTRA_LDFLAGS += 
+  EXTRA_LDFLAGS +=
   EXTRA_CXXFLAGS += -Wextra -std=gnu++0x -felide-constructors
 else
   EXTRA_CFLAGS += -Wextra -flto
@@ -936,7 +936,7 @@ MONITOR_PORT ?= $(ARDUINO_PORT)
 
 ifeq ($(CURRENT_OS), WINDOWS)
   # Expect MONITOR_PORT to be '1' or 'com1' for COM1 in Windows. Split
-  # it up into the two styles required: /dev/ttyS* for ard-reset-arduino 
+  # it up into the two styles required: /dev/ttyS* for ard-reset-arduino
   # and com* for avrdude. This also could work with /dev/com* device
   # names and be more consistent, but the /dev/com* is not recommended
   # by Cygwin and doesn't always show up.
@@ -951,7 +951,7 @@ ifneq ($(strip $(MONITOR_PORT)),)
   $(call show_config_variable,DEVICE_PATH,[COMPUTED],(from MONITOR_PORT))
 else
   # If no port is specified, try to guess it from wildcards. Will only
-  # work if the Arduino is the only/first device matched. 
+  # work if the Arduino is the only/first device matched.
   DEVICE_PATH = $(firstword $(wildcard /dev/ttyACM? /dev/ttyUSB? /dev/tty.usbserial* /dev/tty.usbmodem*))
   $(call show_config_variable,DEVICE_PATH,[AUTODETECTED])
 endif
@@ -1004,7 +1004,7 @@ $(call show_separator)
 # Rather than mess around with VPATH there are quasi-duplicate rules
 # here for building e.g. a system C++ file and a local C++
 # file. Besides making things simpler now, this would also make it
-# easy to change the build options in future 
+# easy to change the build options in future
 
 # Library sources rules
 $(OBJDIR)/libs/%.o: $(ARDUINO_LIB_PATH)/%.c
@@ -1154,13 +1154,13 @@ endif
 
 # Arduino programming options
 # -D Disable auto erase for flash memory, needed for Mega boards. See
-# https://github.com/sudar/Arduino-Makefile/issues/114#issuecomment-25011005) 
+# https://github.com/sudar/Arduino-Makefile/issues/114#issuecomment-25011005)
 AVRDUDE_ARD_OPTS = -D -c $(AVRDUDE_ARD_PROGRAMMER) -b $(AVRDUDE_ARD_BAUDRATE) -P
 ifeq ($(CURRENT_OS), WINDOWS)
   # Get_monitor_port checks to see if the monitor port exists,
   # assuming it is a file. In Windows, avrdude needs the port in the
   # format 'com1' which is not a file, so we have to add the COM-style
-  # port directly. 
+  # port directly.
   AVRDUDE_ARD_OPTS += $(COM_STYLE_MONITOR_PORT)
 else
   AVRDUDE_ARD_OPTS += $(call get_monitor_port)
@@ -1269,7 +1269,7 @@ error_on_caterina:
 	$(ERROR_ON_CATERINA)
 
 # Use submake so we can guarantee the reset happens before the upload,
-# even with make -j 
+# even with make -j
 upload:	$(TARGET_HEX) verify_size
 	$(call arduino_output,Resetting...)
 	$(RESET_CMD)
@@ -1294,7 +1294,7 @@ reset:
 
 # stty on MacOS likes -F, but on Debian it likes -f redirecting
 # stdin/out appears to work but generates a spurious error on MacOS at
-# least. 
+# least.
 reset_stty:
 	for STTYF in 'stty -F' 'stty --file' 'stty -f' 'stty <' ; \
 	  do $$STTYF /dev/tty >/dev/null 2>&1 && break ; \

@@ -2,20 +2,20 @@
 # @version 1.0
 #
 # @section License
-# Copyright (C) 2013-2014, Mikael Patel
+# Copyright (C) 2013-2015, Mikael Patel
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
 # version 2.1 of the License, or (at your option) any later version.
-# 
+#
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Lesser General Public License for more details.
-# 
+#
 # @section Description
-# The Cosa Arduino core boards definition file. 
+# The Cosa Arduino core boards definition file.
 #
 # @section Usage
 # Copy to top directory and rename boards.txt, alternatively
@@ -30,7 +30,7 @@
 # AVR:ATmega168
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x1c00). 
+# Boot Reset vector enable (1024 words, 0x1c00).
 diecimila.name=Cosa Arduino Diecimila (ATmega168/BOOT_168)
 diecimila.upload.tool=avrdude
 diecimila.upload.protocol=arduino
@@ -53,7 +53,7 @@ diecimila.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 duemilanove.name=Cosa Arduino Duemilanove (ATmega328/BOOT_168)
 duemilanove.upload.tool=avrdude
 duemilanove.upload.protocol=arduino
@@ -76,7 +76,7 @@ duemilanove.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 leonardo.name=Cosa Arduino Leonardo (ATmega32U4/Caterina)
 leonardo.upload.tool=avrdude
 leonardo.upload.protocol=avr109
@@ -107,7 +107,7 @@ leonardo.build.core=cosa
 # AVR:ATmega1280
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0xf800). 
+# Boot Reset vector enable (2048 words, 0xf800).
 mega1280.name=Cosa Arduino Mega (ATmega1280/BOOT_168)
 mega1280.upload.tool=avrdude
 mega1280.upload.protocol=arduino
@@ -130,7 +130,7 @@ mega1280.build.core=cosa
 # AVR:ATmega2560
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (4096 words, 0x1f000). 
+# Boot Reset vector enable (4096 words, 0x1f000).
 mega2560.name=Cosa Arduino Mega (ATmega2560/STK500v2)
 mega2560.upload.tool=avrdude
 mega2560.upload.protocol=wiring
@@ -153,7 +153,7 @@ mega2560.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 micro.name=Cosa Arduino Micro (ATmega32U4/Caterina)
 micro.upload.tool=avrdude
 micro.upload.protocol=avr109
@@ -184,7 +184,7 @@ micro.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 nano.name=Cosa Arduino Nano (ATmega328/BOOT_168)
 nano.upload.tool=avrdude
 nano.upload.protocol=arduino
@@ -207,7 +207,7 @@ nano.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 pro-micro.name=Cosa Arduino Pro Micro (ATmega32U4/Caterina)
 pro-micro.upload.tool=avrdude
 pro-micro.upload.protocol=avr109
@@ -238,7 +238,7 @@ pro-micro.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.=8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 pro-micro-8.name=Cosa Arduino Pro Micro (ATmega32U4/Caterina, 3.3V, 8 MHz)
 pro-micro-8.upload.tool=avrdude
 pro-micro-8.upload.protocol=avr109
@@ -269,7 +269,7 @@ pro-micro-8.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 pro-mini.name=Cosa Arduino Pro Mini (ATmega328/BOOT_168)
 pro-mini.upload.tool=avrdude
 pro-mini.upload.protocol=arduino
@@ -292,7 +292,7 @@ pro-mini.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 pro-mini-8.name=Cosa Arduino Pro Mini (ATmega328/BOOT_168, 3.3V, 8 MHz)
 pro-mini-8.upload.tool=avrdude
 pro-mini-8.upload.protocol=arduino
@@ -315,7 +315,7 @@ pro-mini-8.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (256 words, 0x3f00). 
+# Boot Reset vector enable (256 words, 0x3f00).
 uno.name=Cosa Arduino Uno (ATmega328/Optiboot)
 uno.upload.tool=avrdude
 uno.upload.protocol=arduino

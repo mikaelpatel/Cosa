@@ -8,14 +8,14 @@
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
 # version 2.1 of the License, or (at your option) any later version.
-# 
+#
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Lesser General Public License for more details.
-# 
+#
 # @section Description
-# The Cosa Arduino core boards definition file; in alfabetical order. 
+# The Cosa Arduino core boards definition file; in alfabetical order.
 # The default setting is the composition of the supported boards.
 # See the directory boards.
 #
@@ -29,7 +29,7 @@
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 adafruit-atmega32u4.name=Cosa AdaFruit (ATmega32U4/LUFA+)
 adafruit-atmega32u4.upload.tool=avrdude
 adafruit-atmega32u4.upload.protocol=avr109
@@ -58,7 +58,7 @@ adafruit-atmega32u4.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 adafruit-atmega32u4-cat.name=Cosa AdaFruit (ATmega32U4/Caterina)
 adafruit-atmega32u4-cat.upload.tool=avrdude
 adafruit-atmega32u4-cat.upload.protocol=avr109
@@ -93,7 +93,7 @@ adafruit-atmega32u4-cat.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 miniwireless.name=Cosa Anarduino MiniWireless (ATmega328/BOOT_168)
 miniwireless.upload.tool=avrdude
 miniwireless.upload.protocol=arduino
@@ -120,7 +120,7 @@ miniwireless.build.core=cosa
 # AVR:ATmega168
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x1c00). 
+# Boot Reset vector enable (1024 words, 0x1c00).
 diecimila.name=Cosa Arduino Diecimila (ATmega168/BOOT_168)
 diecimila.upload.tool=avrdude
 diecimila.upload.protocol=arduino
@@ -143,7 +143,7 @@ diecimila.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 duemilanove.name=Cosa Arduino Duemilanove (ATmega328/BOOT_168)
 duemilanove.upload.tool=avrdude
 duemilanove.upload.protocol=arduino
@@ -166,7 +166,7 @@ duemilanove.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 leonardo.name=Cosa Arduino Leonardo (ATmega32U4/Caterina)
 leonardo.upload.tool=avrdude
 leonardo.upload.protocol=avr109
@@ -197,7 +197,7 @@ leonardo.build.core=cosa
 # AVR:ATmega1280
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0xf800). 
+# Boot Reset vector enable (2048 words, 0xf800).
 mega1280.name=Cosa Arduino Mega (ATmega1280/BOOT_168)
 mega1280.upload.tool=avrdude
 mega1280.upload.protocol=arduino
@@ -220,7 +220,7 @@ mega1280.build.core=cosa
 # AVR:ATmega2560
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (4096 words, 0x1f000). 
+# Boot Reset vector enable (4096 words, 0x1f000).
 mega2560.name=Cosa Arduino Mega (ATmega2560/STK500v2)
 mega2560.upload.tool=avrdude
 mega2560.upload.protocol=wiring
@@ -243,7 +243,7 @@ mega2560.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 micro.name=Cosa Arduino Micro (ATmega32U4/Caterina)
 micro.upload.tool=avrdude
 micro.upload.protocol=avr109
@@ -274,7 +274,7 @@ micro.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 nano.name=Cosa Arduino Nano (ATmega328/BOOT_168)
 nano.upload.tool=avrdude
 nano.upload.protocol=arduino
@@ -297,7 +297,7 @@ nano.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 pro-micro.name=Cosa Arduino Pro Micro (ATmega32U4/Caterina)
 pro-micro.upload.tool=avrdude
 pro-micro.upload.protocol=avr109
@@ -328,7 +328,7 @@ pro-micro.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.=8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 pro-micro-8.name=Cosa Arduino Pro Micro (ATmega32U4/Caterina, 3.3V, 8 MHz)
 pro-micro-8.upload.tool=avrdude
 pro-micro-8.upload.protocol=avr109
@@ -359,7 +359,7 @@ pro-micro-8.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 pro-mini.name=Cosa Arduino Pro Mini (ATmega328/BOOT_168)
 pro-mini.upload.tool=avrdude
 pro-mini.upload.protocol=arduino
@@ -382,7 +382,7 @@ pro-mini.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 pro-mini-8.name=Cosa Arduino Pro Mini (ATmega328/BOOT_168, 3.3V, 8 MHz)
 pro-mini-8.upload.tool=avrdude
 pro-mini-8.upload.protocol=arduino
@@ -405,7 +405,7 @@ pro-mini-8.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (256 words, 0x3f00). 
+# Boot Reset vector enable (256 words, 0x3f00).
 uno.name=Cosa Arduino Uno (ATmega328/Optiboot)
 uno.upload.tool=avrdude
 uno.upload.protocol=arduino
@@ -498,7 +498,7 @@ attiny861-8.build.core=cosa
 # AVR:ATmega328
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (256 words, 0x3f00). 
+# Boot Reset vector enable (256 words, 0x3f00).
 atmega328-8.name=Cosa Breadboard (ATmega328, 8 MHz internal clock)
 atmega328-8.upload.tool=avrdude
 atmega328-8.upload.protocol=stk500v1
@@ -521,7 +521,7 @@ atmega328-8.build.core=cosa
 # AVR:ATmega1284
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0xfc00). 
+# Boot Reset vector enable (1024 words, 0xfc00).
 mighty.name=Cosa Breadboard (ATmega1284P/BOOT_1284P)
 mighty.upload.tool=avrdude
 mighty.upload.protocol=stk500v1
@@ -544,7 +544,7 @@ mighty.build.core=cosa
 # AVR:ATmega1284
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (512 words, 0xfe00). 
+# Boot Reset vector enable (512 words, 0xfe00).
 mighty-opt.name=Cosa Breadboard (ATmega1284P/Optiboot)
 mighty-opt.upload.tool=avrdude
 mighty-opt.upload.protocol=arduino
@@ -571,7 +571,7 @@ mighty-opt.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (1024 words, 0x3c00). 
+# Boot Reset vector enable (1024 words, 0x3c00).
 lilypad.name=Cosa LilyPad Arduino (ATmega328/BOOT_168, 8 MHz)
 lilypad.upload.tool=avrdude
 lilypad.upload.protocol=arduino
@@ -594,7 +594,7 @@ lilypad.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.0 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 lilypad-usb.name=Cosa LilyPad Arduino USB (ATmega32U4/Caterina, 8 MHz)
 lilypad-usb.upload.tool=avrdude
 lilypad-usb.upload.protocol=avr109
@@ -629,7 +629,7 @@ lilypad-usb.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 258 CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (512 words, 0x3e00). 
+# Boot Reset vector enable (512 words, 0x3e00).
 moteino.name=Cosa LowPowerLab Moteino (ATmega328/DualOptiboot)
 moteino.upload.tool=avrdude
 moteino.upload.protocol=arduino
@@ -652,7 +652,7 @@ moteino.build.core=cosa
 # AVR:ATmega1284
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (512 words, 0xfe00). 
+# Boot Reset vector enable (512 words, 0xfe00).
 moteino-mega.name=Cosa LowPowerLab Moteino Mega (ATmega1284P/DualOptiboot)
 moteino-mega.upload.tool=avrdude
 moteino-mega.upload.protocol=arduino
@@ -679,7 +679,7 @@ moteino-mega.build.core=cosa
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (256 words, 0x3f00). 
+# Boot Reset vector enable (256 words, 0x3f00).
 microduino-core.name=Cosa Microduino-Core (ATmega328/Optiboot)
 microduino-core.upload.tool=avrdude
 microduino-core.upload.protocol=arduino
@@ -702,7 +702,7 @@ microduino-core.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 microduino-core32u4.name=Cosa Microduino-Core32u4 (ATmega32U4/Caterina)
 microduino-core32u4.upload.tool=avrdude
 microduino-core32u4.upload.protocol=avr109
@@ -733,7 +733,7 @@ microduino-core32u4.build.core=cosa
 # AVR:ATmega644P
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (512 words, 0xfe00). 
+# Boot Reset vector enable (512 words, 0xfe00).
 microduino-core-plus.name=Cosa Microduino-Core+ (ATmega644P/Optiboot)
 microduino-core-plus.upload.tool=avrdude
 microduino-core-plus.upload.protocol=arduino
@@ -760,7 +760,7 @@ microduino-core-plus.build.core=cosa
 # AVR:Pinoccio
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (4096 words, 0x1f000). 
+# Boot Reset vector enable (4096 words, 0x1f000).
 pinoccio.name=Cosa Pinoccio Scout (ATmega256RFR2/STK500v2)
 pinoccio.upload.tool=avrdude
 pinoccio.upload.protocol=wiring
@@ -787,7 +787,7 @@ pinoccio.build.core=cosa
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 teensy-2_0.name=Cosa Teensy 2.0 (ATmega32U4/halfkay)
 teensy-2_0.upload.tool=teensy_reboot
 teensy-2_0.upload.protocol=halfkay
@@ -812,7 +812,7 @@ teensy-2_0.build.core=cosa
 # AVR:AT90USB1286
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.6 V. Serial program downloading enabled
-# Boot Reset vector enable (2048 words, 0x3800). 
+# Boot Reset vector enable (2048 words, 0x3800).
 teensypp-2_0.name=Cosa Teensy++ 2.0 (AT90USB1286/halfkay)
 teensypp-2_0.upload.tool=teensy_reboot
 teensypp-2_0.upload.protocol=halfkay
@@ -841,7 +841,7 @@ teensypp-2_0.build.core=cosa
 # AVR:ATmega1284P
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
 # Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (512 words, 0xfe00). 
+# Boot Reset vector enable (512 words, 0xfe00).
 
 wildfire.name=Cosa Wicked Device WireFire (ATmega1284P/Optiboot)
 wildfire.upload.tool=avrdude
