@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -82,7 +82,7 @@ static const uint16_t crctab[] __PROGMEM = {
 static inline uint16_t _crc_xmodem_update(uint16_t crc, uint8_t data)
   __attribute__((always_inline));
 
-static inline uint16_t 
+static inline uint16_t
 _crc_xmodem_update(uint16_t crc, uint8_t data)
 {
   return (pgm_read_word(&crctab[((crc >> 8) ^ data) & 0Xff]) ^ (crc << 8));
@@ -92,7 +92,7 @@ _crc_xmodem_update(uint16_t crc, uint8_t data)
 #include <util/crc16.h>
 #endif
 
-uint8_t 
+uint8_t
 SD::send(CMD command, uint32_t arg)
 {
   // Build request with command, argument and add check-sum (CRC7)
@@ -160,7 +160,7 @@ SD::await(uint16_t ms, uint8_t token)
   return (false);
 }
 
-uint32_t 
+uint32_t
 SD::receive()
 {
   univ32_t res;
@@ -179,7 +179,7 @@ SD::receive()
   return (res.as_uint32);
 }
 
-bool 
+bool
 SD::read(CMD command, uint32_t arg, void* buf, size_t count)
 {
   uint8_t* dst = (uint8_t*) buf;
@@ -205,7 +205,7 @@ SD::read(CMD command, uint32_t arg, void* buf, size_t count)
       crc = _crc_xmodem_update(crc, data);
 #else
       do {
-	uint8_t data = spi.transfer(0xff); 
+	uint8_t data = spi.transfer(0xff);
 	*dst++ = data;
 	crc = _crc_xmodem_update(crc, data);
       } while (--count);
@@ -228,10 +228,10 @@ SD::begin(SPI::Clock rate)
   bool res = false;
   uint32_t arg;
   R1 status;
-  
+
   // Start with unknown card type
   m_type = TYPE_UNKNOWN;
-  
+
   spi.acquire(this);
     spi.begin();
     // Card needs 74 cycles minimum to start up
@@ -243,7 +243,7 @@ SD::begin(SPI::Clock rate)
       // Enable CRC
       status = send(CRC_ON_OFF, true);
       if (status.is_error()) goto error;
-  
+
       // Check for version of SD card specification; 2.7-3.6V and check pattern
       m_type = TYPE_SD1;
       arg = (0x100 | CHECK_PATTERN);
@@ -252,7 +252,7 @@ SD::begin(SPI::Clock rate)
 	R7 r7 = receive();
 	if (r7.check_pattern != CHECK_PATTERN) goto error;
 	m_type = TYPE_SD2;
-      } 
+      }
 
       // Tell the device that the host supports SDHC
       arg = (m_type == TYPE_SD1) ? 0L : 0X40000000L;
@@ -268,11 +268,11 @@ SD::begin(SPI::Clock rate)
 	uint32_t ocr = receive();
 	if ((ocr & 0xC0000000L) == 0xC0000000L) m_type = TYPE_SDHC;
       }
-  
+
       // Set the request clock rate
       set_clock(rate);
       res = true;
-  
+
  error:
     spi.end();
   spi.release();
@@ -310,8 +310,8 @@ SD::erase(uint32_t start, uint32_t end)
   return (res);
 }
 
-bool 
-SD::write(uint32_t block, const uint8_t* src) 
+bool
+SD::write(uint32_t block, const uint8_t* src)
 {
   uint16_t crc = 0;
   uint16_t count = BLOCK_MAX;

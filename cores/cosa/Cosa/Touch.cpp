@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,18 +34,18 @@ Touch::Touch(Board::DigitalPin pin, uint16_t threshold) :
   Watchdog::attach(this, SAMPLE_RATE);
 }
 
-void 
+void
 Touch::on_event(uint8_t type, uint16_t value)
 {
   UNUSED(type);
   UNUSED(value);
-  
+
   // Check if sampling should be initiated
   if (!m_sampling) {
     set_mode(INPUT_MODE);
     m_sampling = true;
     return;
-  } 
+  }
 
   // Sample the pin and discharge
   uint8_t state = is_clear();
@@ -53,7 +53,7 @@ Touch::on_event(uint8_t type, uint16_t value)
   clear();
   m_sampling = false;
 
-  // Was the pin discharge during the sampling period 
+  // Was the pin discharge during the sampling period
   if (state) {
     m_start = RTC::millis();
     if (!m_touched) {

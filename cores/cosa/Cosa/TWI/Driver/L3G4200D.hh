@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,12 +26,12 @@
 
 /**
  * Cosa TWI driver for STMicroelectronics, L3G4200D, MEMS motion
- * sensor: ultra-stable three-axis digital output gyroscope. 
+ * sensor: ultra-stable three-axis digital output gyroscope.
  * Doc ID 17116 Rev 3.
  *
  * @section Circuit
  * The GY-80 10DOF module with pull-up resistors (4K7) for TWI signals and
- * 3V3 internal voltage converter. 
+ * 3V3 internal voltage converter.
  * @code
  *                           GY-80
  *                       +------------+
@@ -62,7 +62,7 @@ public:
   L3G4200D(uint8_t subaddr = 0) : TWI::Driver(0x68 | (subaddr != 0)) {}
 
   /**
-   * Start interaction with device. Turn on measurements. 
+   * Start interaction with device. Turn on measurements.
    * @return true(1) if successful otherwise false(0)
    */
   bool begin();
@@ -82,7 +82,7 @@ public:
     int y;
     int z;
   };
-  
+
   /**
    * Sample gyroscope and return values in given data structure
    * @param[in] s sample storage.
@@ -147,13 +147,13 @@ protected:
       uint8_t BW:2;		//!< Bandwidth selection.
       uint8_t DR:2;		//!< Output Data Rate selection.
     };
-    ctrl_reg1_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    ctrl_reg1_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
   enum {			//!< Data rate (table 22).
@@ -179,13 +179,13 @@ protected:
       uint8_t HPM:2;		//!< High Pass filter Mode Selection.
       uint8_t reserved:2;	//!< Zero.
     };
-    ctrl_reg2_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    ctrl_reg2_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
   enum {			//!< High pass filter mode (table 26).
@@ -209,13 +209,13 @@ protected:
       uint8_t I1_Boot:1;	//!< Boot status available on INT1.
       uint8_t I1_Int1:1;	//!< Interrupt enable.
     };
-    ctrl_reg3_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    ctrl_reg3_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -232,13 +232,13 @@ protected:
       uint8_t BLE:1;		//!< Big/Little Endian Data Selection.
       uint8_t BDU:1;		//!< Block Data Update.
     };
-    ctrl_reg4_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    ctrl_reg4_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -254,13 +254,13 @@ protected:
       uint8_t FIFO_EN:1;	//!< FIFO enable.
       uint8_t BOOT:1;		//!< Reboot memory content.
     };
-    ctrl_reg5_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    ctrl_reg5_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -279,13 +279,13 @@ protected:
       uint8_t ZOR:1;		//!< Z axis data overrun.
       uint8_t XYZOR:1;		//!< X,Y,Z-axis data overrun.
     };
-    status_reg_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    status_reg_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -298,13 +298,13 @@ protected:
       uint8_t WTM:5;		//!< FIFO threshold. Watermark level setting.
       uint8_t FM:3;		//!< FIFO mode selection.
     };
-    fifo_ctrl_reg_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    fifo_ctrl_reg_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
   enum {			//!< FIFO mode configuration (table 45).
@@ -326,13 +326,13 @@ protected:
       uint8_t OVRN:1;		//!< Overrun bit status.
       uint8_t WTM:1;		//!< Watermark status.
     };
-    fifo_src_reg_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    fifo_src_reg_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -351,13 +351,13 @@ protected:
       uint8_t LIR:1;		//!< Latch Interrup Request.
       uint8_t AND_OR:1;		//!< AND/OR combination of interrupt events.
     };
-    int1_cfg_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    int1_cfg_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -376,13 +376,13 @@ protected:
       uint8_t IA:1;		//!< Interrupt active.
       uint8_t reserved:1;
     };
-    int1_src_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    int1_src_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -395,13 +395,13 @@ protected:
       uint8_t value:7;		//!< Duration value.
       uint8_t WAIT:1;		//!< Wait enable.
     };
-    int1_duration_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    int1_duration_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -426,7 +426,7 @@ protected:
    * @return register value.
    */
   uint8_t read(Register reg);
-  
+
   /**
    * Read contents of registers, multiple values from give address.
    * @param[in] reg register address.

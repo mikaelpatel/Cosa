@@ -3,13 +3,13 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel (Cosa C++ port and extensions)
+ * Copyright (C) 2014-2015, Mikael Patel (Cosa C++ port and extensions)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -32,8 +32,8 @@
  * with your pin choices, this is a great upgrade. It also uses timer
  * 1 instead of timer 2, which may free up a conflict you have with
  * the tone library. It exclusively uses port registers for the
- * fastest and smallest code possible. 
- * 
+ * fastest and smallest code possible.
+ *
  * @section Circuit
  * Connection is very similar to a piezo or standard speaker. Except,
  * instead of connecting one speaker wire to ground you connect both
@@ -44,7 +44,7 @@
  * perfectly out of phase with each other (push/pull). See the below
  * section for which pins to use for different Arduino boards. Just as
  * usual when connecting a speaker, make sure you add an inline 100
- * ohm resistor between one of the pins and the speaker wire. 
+ * ohm resistor between one of the pins and the speaker wire.
  *
  * Pins  9 & 10 - ATmega328, ATmega128, ATmega640, Uno, Leonardo, etc.
  * Pins 11 & 12 - ATmega2560/2561, ATmega1280/1281, Mega
@@ -54,11 +54,11 @@
  * @section Acknowledgement
  * The original code was created by Tim Eckel - teckel@leethost.com.
  * Copyright 2013 License: GNU GPL v3 http://www.gnu.org/licenses/gpl-3.0.html
- * 
+ *
  * @section References
- * 1, toneAC Arduino Library, 
+ * 1, toneAC Arduino Library,
  *    https://code.google.com/p/arduino-tone-ac/
- * 2. Frequencies for equal-tempered scale, 
+ * 2. Frequencies for equal-tempered scale,
  *    http://www.phy.mtu.edu/~suits/notefreqs.html
  * 3. Wiki, Note, http://en.wikipedia.org/wiki/Note
  *
@@ -78,17 +78,17 @@ public:
 
   /**
    * Play given frequency with given volume for given duration (in
-   * milli-seconds). 
+   * milli-seconds).
    * @param[in] freq frequency in hz.
    * @param[in] volume output volume, range 0..10 (Default 5).
    * @param[in] duration milli-seconds (Default 0)
    * @param[in] background.
    */
-  static void play(uint16_t freq, 
-		   uint8_t volume = VOLUME_MAX / 2, 
-		   uint16_t duration = 0, 
+  static void play(uint16_t freq,
+		   uint8_t volume = VOLUME_MAX / 2,
+		   uint16_t duration = 0,
 		   bool background = false);
-  
+
   /**
    * Stop playing the tone (if background).
    */

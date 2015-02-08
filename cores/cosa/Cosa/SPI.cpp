@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -43,7 +43,7 @@ SPI::Driver::Driver(Board::DigitalPin cs, Pulse pulse,
 	 | _BV(MSTR)
 	 | ((mode & 0x3) << CPHA)
 	 | ((rate & 0x3) << SPR0)),
-  // SPI Clock control in Status Register 
+  // SPI Clock control in Status Register
   m_spsr(((rate & 0x04) != 0) << SPI2X)
 {
 }
@@ -59,7 +59,7 @@ SPI::SPI(uint8_t mode, Order order) :
     bit_mask_clear(DDRB, _BV(Board::MOSI) | _BV(Board::SCK) | _BV(Board::SS));
     SPCR = (_BV(SPIE) | _BV(SPE)
 	    | ((order & 0x1) << DORD)
-	    | ((mode & 0x3) << CPHA)); 
+	    | ((mode & 0x3) << CPHA));
   }
 }
 
@@ -79,9 +79,9 @@ SPI::SPI() :
   // Other the SPI setup is done by the SPI::Driver::begin()
 }
 
-void 
-SPI::Slave::on_interrupt(uint16_t arg) 
-{ 
+void
+SPI::Slave::on_interrupt(uint16_t arg)
+{
   // Sanity check that a buffer is defined
   if (m_buf == NULL) return;
   // Append to buffer and push event when buffer is full
@@ -124,7 +124,7 @@ SPI::Driver::Driver(Board::DigitalPin cs, Pulse pulse,
   UNUSED(rate);
   UNUSED(order);
 
-  // USI command for hardware supported bit banging 
+  // USI command for hardware supported bit banging
   m_usicr = (_BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC));
   if (mode == 1 || mode == 2) m_usicr |= _BV(USICS0);
 
@@ -175,10 +175,10 @@ SPI::SPI() :
  * These implementation allow higher transfer speed for block by using
  * the available cycles while a byte transfer is in progress for data
  * prefetch and store. There are at least 16 instruction cycles available
- * (CLOCK_DIV_2). 
+ * (CLOCK_DIV_2).
  */
 #if defined(USE_SPI_PREFETCH)
-void 
+void
 SPI::transfer(void* buf, size_t count)
 {
   if (count == 0) return;
@@ -194,7 +194,7 @@ SPI::transfer(void* buf, size_t count)
   *dp = transfer_await();
 }
 
-void 
+void
 SPI::transfer(void* dst, const void* src, size_t count)
 {
   if (count == 0) return;
@@ -211,7 +211,7 @@ SPI::transfer(void* dst, const void* src, size_t count)
   *dp = transfer_await();
 }
 
-void 
+void
 SPI::read(void* buf, size_t count)
 {
   if (count == 0) return;
@@ -221,7 +221,7 @@ SPI::read(void* buf, size_t count)
   *dp = transfer_await();
 }
 
-void 
+void
 SPI::write(const void* buf, size_t count)
 {
   if (count == 0) return;
@@ -235,7 +235,7 @@ SPI::write(const void* buf, size_t count)
   transfer_await();
 }
 
-void 
+void
 SPI::write_P(const void* buf, size_t count)
 {
   if (count == 0) return;
@@ -251,7 +251,7 @@ SPI::write_P(const void* buf, size_t count)
 
 #else
 
-void 
+void
 SPI::transfer(void* buf, size_t count)
 {
   if (count == 0) return;
@@ -262,7 +262,7 @@ SPI::transfer(void* buf, size_t count)
   } while (--count);
 }
 
-void 
+void
 SPI::transfer(void* dst, const void* src, size_t count)
 {
   if (count == 0) return;
@@ -271,7 +271,7 @@ SPI::transfer(void* dst, const void* src, size_t count)
   do *dp++ = transfer(*sp++); while (--count);
 }
 
-void 
+void
 SPI::read(void* buf, size_t count)
 {
   if (count == 0) return;
@@ -279,7 +279,7 @@ SPI::read(void* buf, size_t count)
   do *bp++ = transfer(0); while (--count);
 }
 
-void 
+void
 SPI::write(const void* buf, size_t count)
 {
   if (count == 0) return;
@@ -287,7 +287,7 @@ SPI::write(const void* buf, size_t count)
   do transfer(*bp++); while (--count);
 }
 
-void 
+void
 SPI::write_P(const void* buf, size_t count)
 {
   if (count == 0) return;
@@ -297,7 +297,7 @@ SPI::write_P(const void* buf, size_t count)
 
 #endif
 
-bool 
+bool
 SPI::attach(Driver* dev)
 {
   if (dev->m_next != NULL) return (false);
@@ -335,7 +335,7 @@ SPI::acquire(Driver* dev)
 
 void
 SPI::release()
-{ 
+{
   // Lock the device driver update
   uint8_t key = lock();
   // Release the device driver

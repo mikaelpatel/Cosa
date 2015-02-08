@@ -3,25 +3,25 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/TWI/Driver/AT24CXX.hh"
 #include "Cosa/Power.hh"
 
-bool 
+bool
 AT24CXX::poll(const void* addr, const void* buf, size_t size)
 {
   uint8_t i = POLL_MAX;
@@ -39,11 +39,11 @@ AT24CXX::poll(const void* addr, const void* buf, size_t size)
       if (m > 0) return (true);
     }
     delay(16);
-  } while (--i); 
+  } while (--i);
   return (false);
 }
 
-bool 
+bool
 AT24CXX::is_ready()
 {
   twi.begin(this);
@@ -62,7 +62,7 @@ AT24CXX::read(void* dest, const void* src, size_t size)
   return (n);
 }
 
-int 
+int
 AT24CXX::write(void* dest, const void* src, size_t size)
 {
   size_t s = size;

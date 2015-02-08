@@ -4,18 +4,18 @@
  *
  * @section License
  * Copyright (c) 2010, Peter Barrett (original author)
- * Copyright (C) 2013, Mikael Patel (refactoring and extensions)
+ * Copyright (C) 2013-2015, Mikael Patel (refactoring and extensions)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -50,10 +50,10 @@
 #define EP_TYPE_ISOCHRONOUS_IN		0x41
 #define EP_TYPE_ISOCHRONOUS_OUT		0x40
 
-/** 
+/**
  * Pulse generation counters to keep track of the number of
- * milliseconds remaining for each pulse type  
- */   
+ * milliseconds remaining for each pulse type
+ */
 #define TX_RX_LED_PULSE_MS 100
 volatile uint8_t TxLEDPulse;
 volatile uint8_t RxLEDPulse;
@@ -66,12 +66,12 @@ extern const DeviceDescriptor USB_DeviceDescriptorA PROGMEM;
 
 const uint16_t STRING_LANGUAGE[2] = {
   (3<<8) | (2+2),
-  0x0409			
+  0x0409
 };
 
 const uint16_t STRING_IPRODUCT[17] = {
   (3<<8) | (2+2*16),
-#if USB_PID == 0x8036	
+#if USB_PID == 0x8036
   'A','r','d','u','i','n','o',' ','L','e','o','n','a','r','d','o'
 #elif USB_PID == 0x8037
   'A','r','d','u','i','n','o',' ','M','i','c','r','o',' ',' ',' '
@@ -114,27 +114,27 @@ const DeviceDescriptor USB_DeviceDescriptorA =
 
 volatile uint8_t _usbConfiguration = 0;
 
-static inline void 
+static inline void
 WaitIN(void)
 {
   while (!(UEINTX & (1<<TXINI)))
     DELAY(1);
 }
 
-static inline void 
+static inline void
 ClearIN(void)
 {
   UEINTX = ~(1<<TXINI);
 }
 
-static inline void 
+static inline void
 WaitOUT(void)
 {
   while (!(UEINTX & (1<<RXOUTI)))
     DELAY(1);
 }
 
-static inline uint8_t 
+static inline uint8_t
 WaitForINOrOUT()
 {
   while (!(UEINTX & ((1<<TXINI)|(1<<RXOUTI))))
@@ -142,21 +142,21 @@ WaitForINOrOUT()
   return (UEINTX & (1<<RXOUTI)) == 0;
 }
 
-static inline void 
+static inline void
 ClearOUT(void)
 {
   UEINTX = ~(1<<RXOUTI);
 }
 
-void 
+void
 Recv(volatile uint8_t* data, uint8_t count)
 {
   while (count--) *data++ = UEDATX;
   RX_LED_ON;
-  RxLEDPulse = TX_RX_LED_PULSE_MS;	
+  RxLEDPulse = TX_RX_LED_PULSE_MS;
 }
 
-static inline uint8_t 
+static inline uint8_t
 Recv8()
 {
   RX_LED_ON;
@@ -164,75 +164,75 @@ Recv8()
   return (UEDATX);
 }
 
-static inline void 
+static inline void
 Send8(uint8_t d)
 {
   UEDATX = d;
 }
 
-static inline void 
+static inline void
 SetEP(uint8_t ep)
 {
   UENUM = ep;
 }
 
-static inline uint8_t 
+static inline uint8_t
 FifoByteCount()
 {
   return (UEBCLX);
 }
 
-static inline uint8_t 
+static inline uint8_t
 ReceivedSetupInt()
 {
   return (UEINTX & (1<<RXSTPI));
 }
 
-static inline void 
+static inline void
 ClearSetupInt()
 {
   UEINTX = ~((1<<RXSTPI) | (1<<RXOUTI) | (1<<TXINI));
 }
 
-static inline void 
+static inline void
 Stall()
 {
   UECONX = (1<<STALLRQ) | (1<<EPEN);
 }
 
-static inline uint8_t 
+static inline uint8_t
 ReadWriteAllowed()
 {
   return (UEINTX & (1<<RWAL));
 }
 
-static inline uint8_t 
+static inline uint8_t
 Stalled()
 {
   return (UEINTX & (1<<STALLEDI));
 }
 
-static inline uint8_t 
+static inline uint8_t
 FifoFree()
 {
   return (UEINTX & (1<<FIFOCON));
 }
 
-static inline void 
+static inline void
 ReleaseRX()
 {
   // FIFOCON=0 NAKINI=1 RWAL=1 NAKOUTI=0 RXSTPI=1 RXOUTI=0 STALLEDI=1 TXINI=1
   UEINTX = 0x6B;
 }
 
-static inline void 
+static inline void
 ReleaseTX()
 {
   // FIFOCON=0 NAKINI=0 RWAL=1 NAKOUTI=1 RXSTPI=1 RXOUTI=0 STALLEDI=1 TXINI=0
   UEINTX = 0x3A;
 }
 
-static inline uint8_t 
+static inline uint8_t
 FrameNumber()
 {
   return (UDFNUML);
@@ -259,18 +259,18 @@ public:
   }
 };
 
-uint8_t 
+uint8_t
 USB_Available(uint8_t ep)
 {
   LockEP lock(ep);
   return (FifoByteCount());
 }
 
-int 
+int
 USB_Recv(uint8_t ep, void* d, int len)
 {
   if (!_usbConfiguration || len < 0) return (-1);
-	
+
   LockEP lock(ep);
   uint8_t n = FifoByteCount();
   len = min(n,len);
@@ -283,7 +283,7 @@ USB_Recv(uint8_t ep, void* d, int len)
   return (len);
 }
 
-int 
+int
 USB_Recv(uint8_t ep)
 {
   uint8_t c;
@@ -292,7 +292,7 @@ USB_Recv(uint8_t ep)
   return (-1);
 }
 
-uint8_t 
+uint8_t
 USB_SendSpace(uint8_t ep)
 {
   LockEP lock(ep);
@@ -300,7 +300,7 @@ USB_SendSpace(uint8_t ep)
   return (64 - FifoByteCount());
 }
 
-int 
+int
 USB_Send(uint8_t ep, const void* d, int len)
 {
   if (!_usbConfiguration) return (-1);
@@ -339,10 +339,10 @@ USB_Send(uint8_t ep, const void* d, int len)
 }
 
 extern const uint8_t _initEndpoints[] PROGMEM;
-const uint8_t _initEndpoints[] = 
+const uint8_t _initEndpoints[] =
   {
     0,
-	
+
 #ifdef CDC_ENABLED
     EP_TYPE_INTERRUPT_IN,		// CDC_ENDPOINT_ACM
     EP_TYPE_BULK_OUT,			// CDC_ENDPOINT_OUT
@@ -357,7 +357,7 @@ const uint8_t _initEndpoints[] =
 #define EP_SINGLE_64 0x32
 #define EP_DOUBLE_64 0x36
 
-static void 
+static void
 InitEP(uint8_t index, uint8_t type, uint8_t size)
 {
   UENUM = index;
@@ -366,7 +366,7 @@ InitEP(uint8_t index, uint8_t type, uint8_t size)
   UECFG1X = size;
 }
 
-static void 
+static void
 InitEndpoints()
 {
   for (uint8_t i = 1; i < sizeof(_initEndpoints); i++) {
@@ -379,7 +379,7 @@ InitEndpoints()
   UERST = 0;
 }
 
-static bool 
+static bool
 ClassInterfaceRequest(Setup& setup)
 {
   uint8_t i = setup.wIndex;
@@ -398,7 +398,7 @@ ClassInterfaceRequest(Setup& setup)
 static int _cmark;
 static int _cend;
 
-void 
+void
 InitControl(int end)
 {
   SetEP(0);
@@ -406,7 +406,7 @@ InitControl(int end)
   _cend = end;
 }
 
-static bool 
+static bool
 SendControl(uint8_t d)
 {
   if (_cmark < _cend) {
@@ -418,7 +418,7 @@ SendControl(uint8_t d)
   return (true);
 };
 
-int 
+int
 USB_SendControl(uint8_t flags, const void* d, int len)
 {
   int sent = len;
@@ -431,7 +431,7 @@ USB_SendControl(uint8_t flags, const void* d, int len)
   return (sent);
 }
 
-int 
+int
 USB_RecvControl(void* d, int len)
 {
   WaitOUT();
@@ -440,7 +440,7 @@ USB_RecvControl(void* d, int len)
   return (len);
 }
 
-int 
+int
 SendInterfaces()
 {
   int total = 0;
@@ -457,10 +457,10 @@ SendInterfaces()
   return (interfaces);
 }
 
-static bool 
+static bool
 SendConfiguration(int maxlen)
 {
-  InitControl(0);	
+  InitControl(0);
   uint8_t interfaces = SendInterfaces();
   ConfigDescriptor config = D_CONFIG(_cmark + sizeof(ConfigDescriptor), interfaces);
 
@@ -472,7 +472,7 @@ SendConfiguration(int maxlen)
 
 static uint8_t _cdcComposite = 0;
 
-static bool 
+static bool
 SendDescriptor(Setup& setup)
 {
   uint8_t t = setup.wValueH;
@@ -495,7 +495,7 @@ SendDescriptor(Setup& setup)
   else if (USB_STRING_DESCRIPTOR_TYPE == t) {
     if (setup.wValueL == 0)
       desc_addr = (const uint8_t*)&STRING_LANGUAGE;
-    else if (setup.wValueL == IPRODUCT) 
+    else if (setup.wValueL == IPRODUCT)
       desc_addr = (const uint8_t*)&STRING_IPRODUCT;
     else if (setup.wValueL == IMANUFACTURER)
       desc_addr = (const uint8_t*)&STRING_IMANUFACTURER;
@@ -506,7 +506,7 @@ SendDescriptor(Setup& setup)
   if (desc_addr == 0) return (false);
   if (desc_length == 0)
     desc_length = pgm_read_byte(desc_addr);
-  
+
   USB_SendControl(TRANSFER_PGM,desc_addr,desc_length);
   return (true);
 }
@@ -565,14 +565,14 @@ ISR(USB_COM_vect)
     InitControl(setup.wLength);
     ok = ClassInterfaceRequest(setup);
   }
-  
+
   if (ok)
     ClearIN();
-  else 
+  else
     Stall();
 }
 
-void 
+void
 USB_Flush(uint8_t ep)
 {
   SetEP(ep);
@@ -593,14 +593,14 @@ ISR(USB_GEN_vect)
   }
 
   // Start of Frame - happens every millisecond so we use it for TX
-  // and RX LED one-shot timing, too 
+  // and RX LED one-shot timing, too
   if (udint & (1<<SOFI)) {
 #ifdef CDC_ENABLED
     USB_Flush(CDC_TX);			// Send a tx frame if found
     if (USB_Available(CDC_RX))		// Handle received bytes (if any)
       cdc.accept();
 #endif
-		
+
     // check whether the one-shot period has elapsed.  if so, turn off the LED
     if (TxLEDPulse && !(--TxLEDPulse))
       TX_LED_OFF;
@@ -609,7 +609,7 @@ ISR(USB_GEN_vect)
   }
 }
 
-uint8_t 
+uint8_t
 USBConnected()
 {
   uint8_t f = UDFNUML;
@@ -624,7 +624,7 @@ USBDevice_::USBDevice_()
 }
 
 #if defined(__AVR_AT90USB162__)
-#define HW_CONFIG() 
+#define HW_CONFIG()
 #define PLL_CONFIG() (PLLCSR = ((1<<PLLE)|(1<<PLLP0)))
 #define USB_CONFIG() (USBCON = (1<<USBE))
 #define USB_UNCONFIG() (USBCON ^= (1<<USBE))
@@ -652,7 +652,7 @@ USBDevice_::USBDevice_()
 bool
 USBDevice_::attach()
 {
-  // Configure hardware and phase-locked-loop and enable 
+  // Configure hardware and phase-locked-loop and enable
   _usbConfiguration = 0;
   HW_CONFIG();
   USB_FREEZE();
@@ -685,18 +685,18 @@ USBDevice_::attach()
   return (false);
 }
 
-void 
+void
 USBDevice_::detach()
 {
 }
 
-bool 
+bool
 USBDevice_::configured()
 {
   return (_usbConfiguration);
 }
 
-void 
+void
 USBDevice_::poll()
 {
 }

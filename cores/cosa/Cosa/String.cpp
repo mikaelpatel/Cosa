@@ -5,18 +5,18 @@
  * @section License
  * Copyright (c) 2009-10 Hernando Barragan.  All right reserved.
  * Copyright 2011, Paul Stoffregen, paul@pjrc.com, rewriting.
- * Copyright (C) 2014, Mikael Patel, refactoring.
+ * Copyright (C) 2014-2015, Mikael Patel, refactoring.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -123,7 +123,7 @@ String::~String()
   if (m_buffer != NULL) free(m_buffer);
 }
 
-inline void 
+inline void
 String::init(void)
 {
   m_buffer = NULL;
@@ -131,7 +131,7 @@ String::init(void)
   m_length = 0;
 }
 
-void 
+void
 String::invalidate(void)
 {
   if (m_buffer != NULL) free(m_buffer);
@@ -140,7 +140,7 @@ String::invalidate(void)
   m_length = 0;
 }
 
-unsigned char 
+unsigned char
 String::reserve(unsigned int size)
 {
   if ((m_buffer != NULL) && (m_capacity >= size)) return (true);
@@ -149,7 +149,7 @@ String::reserve(unsigned int size)
   return (true);
 }
 
-unsigned char 
+unsigned char
 String::changeBuffer(unsigned int maxStrLen)
 {
   char* newbuffer = (char*) realloc(m_buffer, maxStrLen + 1);
@@ -159,7 +159,7 @@ String::changeBuffer(unsigned int maxStrLen)
   return (true);
 }
 
-String& 
+String&
 String::copy(const char* cstr, unsigned int length)
 {
   if (!reserve(length)) {
@@ -172,7 +172,7 @@ String::copy(const char* cstr, unsigned int length)
   return (*this);
 }
 
-String& 
+String&
 String::copy(str_P pstr, unsigned int length)
 {
   if (!reserve(length)) {
@@ -205,19 +205,19 @@ void String::move(String& rhs)
   rhs.m_length = 0;
 }
 
-String& 
+String&
 String::operator=(const String& rhs)
 {
   if (this == &rhs) return (*this);
-  if (rhs.m_buffer != NULL) 
+  if (rhs.m_buffer != NULL)
     copy(rhs.m_buffer, rhs.m_length);
-  else 
+  else
     invalidate();
   return (*this);
 }
 
 #if (ARDUINO >= 150)
-String& 
+String&
 String::operator=(String&& rval)
 {
   if (this != &rval) move(rval);
@@ -266,14 +266,14 @@ String::concat(const char* cstr, unsigned int length)
   return (true);
 }
 
-unsigned char 
+unsigned char
 String::concat(const char* cstr)
 {
   if (cstr == NULL) return (false);
   return (concat(cstr, strlen(cstr)));
 }
 
-unsigned char 
+unsigned char
 String::concat(char c)
 {
   char buf[2];
@@ -282,7 +282,7 @@ String::concat(char c)
   return (concat(buf, 1));
 }
 
-unsigned char 
+unsigned char
 String::concat(unsigned char num)
 {
   char buf[1 + 3 * sizeof(unsigned char)];
@@ -290,7 +290,7 @@ String::concat(unsigned char num)
   return (concat(buf, strlen(buf)));
 }
 
-unsigned char 
+unsigned char
 String::concat(int num)
 {
   char buf[2 + 3 * sizeof(int)];
@@ -439,7 +439,7 @@ operator+(const __StringSumHelper& lhs, str_P rhs)
   return (res);
 }
 
-int 
+int
 String::compareTo(const String& s) const
 {
   if ((m_buffer == NULL) || (s.m_buffer == NULL)) {
@@ -452,41 +452,41 @@ String::compareTo(const String& s) const
   return (strcmp(m_buffer, s.m_buffer));
 }
 
-unsigned char 
+unsigned char
 String::equals(const String& s2) const
 {
   return ((m_length == s2.m_length) && (compareTo(s2) == 0));
 }
 
-unsigned char 
+unsigned char
 String::equals(const char* cstr) const
 {
-  if (m_length == 0) 
+  if (m_length == 0)
     return ((cstr == NULL) || (*cstr == 0));
-  if (cstr == NULL) 
+  if (cstr == NULL)
     return ((m_buffer == NULL) || (m_buffer[0] == 0));
   return (strcmp(m_buffer, cstr) == 0);
 }
 
-unsigned char 
+unsigned char
 String::operator<(const String& rhs) const
 {
   return (compareTo(rhs) < 0);
 }
 
-unsigned char 
+unsigned char
 String::operator>(const String& rhs) const
 {
   return (compareTo(rhs) > 0);
 }
 
-unsigned char 
+unsigned char
 String::operator<=(const String& rhs) const
 {
   return (compareTo(rhs) <= 0);
 }
 
-unsigned char 
+unsigned char
 String::operator>=(const String& rhs) const
 {
   return (compareTo(rhs) >= 0);
@@ -502,7 +502,7 @@ String::equalsIgnoreCase( const String& s2 ) const
   const char* p2 = s2.m_buffer;
   while (*p1 != 0) {
     if (tolower(*p1++) != tolower(*p2++)) return (false);
-  } 
+  }
   return (true);
 }
 
@@ -513,11 +513,11 @@ String::startsWith( const String& s2 ) const
   return (startsWith(s2, 0));
 }
 
-unsigned char 
+unsigned char
 String::startsWith( const String& s2, unsigned int offset ) const
 {
-  if ((offset > (m_length - s2.m_length)) 
-      || (m_buffer == NULL) 
+  if ((offset > (m_length - s2.m_length))
+      || (m_buffer == NULL)
       || (s2.m_buffer == NULL)) return (false);
   return (strncmp( &m_buffer[offset], s2.m_buffer, s2.m_length) == 0);
 }
@@ -525,20 +525,20 @@ String::startsWith( const String& s2, unsigned int offset ) const
 unsigned char
 String::endsWith( const String& s2 ) const
 {
-  if ((m_length < s2.m_length) 
-      || (m_buffer == NULL) 
+  if ((m_length < s2.m_length)
+      || (m_buffer == NULL)
       || (s2.m_buffer == NULL)) return (false);
   return (strcmp(&m_buffer[m_length - s2.m_length], s2.m_buffer) == 0);
 }
 
-char 
+char
 String::charAt(unsigned int loc) const
 {
   return (operator[](loc));
 }
 
-void 
-String::setCharAt(unsigned int loc, char c) 
+void
+String::setCharAt(unsigned int loc, char c)
 {
   if (loc < m_length) m_buffer[loc] = c;
 }
@@ -554,14 +554,14 @@ String::operator[](unsigned int index)
   return (m_buffer[index]);
 }
 
-char 
+char
 String::operator[]( unsigned int index ) const
 {
   if ((index >= m_length) || (m_buffer == NULL)) return (0);
   return (m_buffer[index]);
 }
 
-void 
+void
 String::getBytes(unsigned char* buf, unsigned int bufsize, unsigned int index) const
 {
   if ((bufsize == 0) || (buf == NULL)) return;
@@ -575,13 +575,13 @@ String::getBytes(unsigned char* buf, unsigned int bufsize, unsigned int index) c
   buf[n] = 0;
 }
 
-int 
+int
 String::indexOf(char c) const
 {
   return (indexOf(c, 0));
 }
 
-int 
+int
 String::indexOf(char ch, unsigned int fromIndex) const
 {
   if (fromIndex >= m_length) return -1;
@@ -590,13 +590,13 @@ String::indexOf(char ch, unsigned int fromIndex) const
   return (temp - m_buffer);
 }
 
-int 
+int
 String::indexOf(const String& s2) const
 {
   return (indexOf(s2, 0));
 }
 
-int 
+int
 String::indexOf(const String& s2, unsigned int fromIndex) const
 {
   if (fromIndex >= m_length) return (-1);
@@ -605,13 +605,13 @@ String::indexOf(const String& s2, unsigned int fromIndex) const
   return (found - m_buffer);
 }
 
-int 
+int
 String::lastIndexOf(char theChar) const
 {
   return (lastIndexOf(theChar, m_length - 1));
 }
 
-int 
+int
 String::lastIndexOf(char ch, unsigned int fromIndex) const
 {
   if (fromIndex >= m_length) return (-1);
@@ -623,17 +623,17 @@ String::lastIndexOf(char ch, unsigned int fromIndex) const
   return (temp - m_buffer);
 }
 
-int 
+int
 String::lastIndexOf(const String& s2) const
 {
   return (lastIndexOf(s2, m_length - s2.m_length));
 }
 
-int 
+int
 String::lastIndexOf(const String& s2, unsigned int fromIndex) const
 {
-  if ((s2.m_length == 0) 
-      || (m_length == 0) 
+  if ((s2.m_length == 0)
+      || (m_length == 0)
       || (s2.m_length > m_length)) return (-1);
   if (fromIndex >= m_length) fromIndex = m_length - 1;
   int found = -1;
@@ -645,7 +645,7 @@ String::lastIndexOf(const String& s2, unsigned int fromIndex) const
   return (found);
 }
 
-String 
+String
 String::substring(unsigned int left, unsigned int right) const
 {
   if (left > right) {
@@ -657,13 +657,13 @@ String::substring(unsigned int left, unsigned int right) const
   if (left > m_length) return (res);
   if (right > m_length) right = m_length;
   char temp = m_buffer[right];
-  m_buffer[right] = '\0';	
+  m_buffer[right] = '\0';
   res = m_buffer + left;
   m_buffer[right] = temp;
   return (res);
 }
 
-void 
+void
 String::replace(char find, char replace)
 {
   if (m_buffer == NULL) return;
@@ -672,7 +672,7 @@ String::replace(char find, char replace)
   }
 }
 
-void 
+void
 String::replace(const String& find, const String& replace)
 {
   if ((m_length == 0) || (find.m_length == 0)) return;
@@ -716,14 +716,14 @@ String::replace(const String& find, const String& replace)
   }
 }
 
-void 
+void
 String::remove(unsigned int index){
   if (index >= m_length) return;
   int count = m_length - index;
   remove(index, count);
 }
 
-void 
+void
 String::remove(unsigned int index, unsigned int count)
 {
   if (index >= m_length) return;
@@ -735,7 +735,7 @@ String::remove(unsigned int index, unsigned int count)
   m_buffer[m_length] = 0;
 }
 
-void 
+void
 String::toLowerCase(void)
 {
   if (m_buffer == NULL) return;
@@ -744,7 +744,7 @@ String::toLowerCase(void)
   }
 }
 
-void 
+void
 String::toUpperCase(void)
 {
   if (m_buffer == NULL) return;
@@ -753,7 +753,7 @@ String::toUpperCase(void)
   }
 }
 
-void 
+void
 String::trim(void)
 {
   if ((m_buffer == NULL) || (m_length == 0)) return;
@@ -766,14 +766,14 @@ String::trim(void)
   m_buffer[m_length] = 0;
 }
 
-long 
+long
 String::toInt(void) const
 {
   if (m_buffer != NULL) return (atol(m_buffer));
   return (0);
 }
 
-float 
+float
 String::toFloat(void) const
 {
   if (m_buffer != NULL) return (float(atof(m_buffer)));

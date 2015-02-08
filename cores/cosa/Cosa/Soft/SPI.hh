@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,7 +32,7 @@
 namespace Soft {
 
   /**
-   * Soft Serial Peripheral Interface (SPI) device class. 
+   * Soft Serial Peripheral Interface (SPI) device class.
    */
   class SPI {
   public:
@@ -51,15 +51,15 @@ namespace Soft {
 
     /** Bit order selectors. */
     enum Order {
-      MSB_ORDER = 0, 
+      MSB_ORDER = 0,
       LSB_ORDER = 1,
       DEFAULT_ORDER = MSB_ORDER
     } __attribute__((packed));
-  
+
     /**
-     * SPI device driver abstract class. Holds SPI/USI state to allow 
+     * SPI device driver abstract class. Holds SPI/USI state to allow
      * handling of several SPI devices with different clock, mode and/or
-     * bit order. 
+     * bit order.
      */
     class Driver {
       friend class SPI;
@@ -68,7 +68,7 @@ namespace Soft {
        * Construct SPI Device driver with given chip select pin, pulse,
        * clock, mode, and bit order. Zero(0) pulse will give active low
        * chip select during transaction, One(1) acive high, otherwise
-       * pulse width on end(). 
+       * pulse width on end().
        * @param[in] cs chip select pin.
        * @param[in] pulse chip select pulse mode (default active low, 0).
        * @param[in] clock SPI hardware setting (default DIV4_CLOCK).
@@ -76,10 +76,10 @@ namespace Soft {
        * @param[in] order bit order (default MSB_ORDER).
        * @param[in] irq interrupt handler (default null).
        */
-      Driver(Board::DigitalPin cs, 
+      Driver(Board::DigitalPin cs,
 	     uint8_t pulse = 0,
-	     Clock clock = DEFAULT_CLOCK, 
-	     uint8_t mode = 0, 
+	     Clock clock = DEFAULT_CLOCK,
+	     uint8_t mode = 0,
 	     Order order = MSB_ORDER,
 	     Interrupt::Handler* irq = NULL);
 
@@ -93,7 +93,7 @@ namespace Soft {
       /** Device chip select pin. */
       OutputPin m_cs;
 
-      /** Chip select pulse mode; 
+      /** Chip select pulse mode;
        *  0 for active low logic during the transaction,
        *  1 for active high logic,
        *  2 pulse at end of transaction.
@@ -106,33 +106,33 @@ namespace Soft {
       /** Data direction; bit order. */
       Order m_order;
     };
-  
+
   public:
     /**
      * Construct soft serial peripheral interface master.
      */
-    SPI(Board::DigitalPin miso, 
-	Board::DigitalPin mosi, 
-	Board::DigitalPin sck) : 
+    SPI(Board::DigitalPin miso,
+	Board::DigitalPin mosi,
+	Board::DigitalPin sck) :
       m_list(0),
       m_dev(0),
       m_miso(miso),
       m_mosi(mosi, 0),
       m_sck(sck, 0)
     {}
-  
+
     /**
      * Start of SPI master interaction block. Sisable SPI interrupt
      * sources and assert chip select pin. Return true(1) if
      * successful otherwise false(0) if the hardware was currently in
-     * used. 
+     * used.
      * @param[in] dev device driver context.
      * @return true(1) if successful otherwise false(0)
      */
     bool begin(Driver* dev);
-  
+
     /**
-     * End of SPI master interaction block. Deselect device and 
+     * End of SPI master interaction block. Deselect device and
      * enable SPI interrupt sources.
      * @return true(1) if successful otherwise false(0)
      */
@@ -148,7 +148,7 @@ namespace Soft {
 
     /**
      * Write package to the device slave. Should only be used within a
-     * SPI transaction; begin()-end() block.  
+     * SPI transaction; begin()-end() block.
      * @param[in] buf buffer with data to write.
      * @param[in] count number of bytes to write.
      */
@@ -161,7 +161,7 @@ namespace Soft {
 
     /**
      * Write package to the device slave. Should only be used within a
-     * SPI transaction; begin()-end() block.  
+     * SPI transaction; begin()-end() block.
      * @param[in] buf buffer with data to write.
      * @param[in] count number of bytes to write.
      */

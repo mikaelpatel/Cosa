@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/TWI/Driver/ADXL345.hh"
 
-bool 
+bool
 ADXL345::begin()
 {
   // Read device register and santity check
@@ -52,22 +52,22 @@ ADXL345::begin()
 
   // Interrupt enable
   write(INT_MAP, 0);
-  write(INT_ENABLE, _BV(DATA_READY) | 
-	_BV(SINGLE_TAP) | _BV(DOUBLE_TAP) | 
-	_BV(ACT) | _BV(INACT) | 
+  write(INT_ENABLE, _BV(DATA_READY) |
+	_BV(SINGLE_TAP) | _BV(DOUBLE_TAP) |
+	_BV(ACT) | _BV(INACT) |
 	_BV(FREE_FALL));
 
   return (true);
 }
 
-bool 
+bool
 ADXL345::end()
 {
   write(POWER_CTL, 0);
   return (true);
 }
 
-void 
+void
 ADXL345::write(Register reg, uint8_t value)
 {
   twi.begin(this);
@@ -75,7 +75,7 @@ ADXL345::write(Register reg, uint8_t value)
   twi.end();
 }
 
-void 
+void
 ADXL345::write(Register reg, void* buffer, uint8_t count)
 {
   twi.begin(this);
@@ -83,11 +83,11 @@ ADXL345::write(Register reg, void* buffer, uint8_t count)
   twi.end();
 }
 
-void 
+void
 ADXL345::read(Register reg, void* buffer, uint8_t count)
 {
   twi.begin(this);
-  twi.write((uint8_t) reg); 
+  twi.write((uint8_t) reg);
   twi.read(buffer, count);
   twi.end();
 }
@@ -116,7 +116,7 @@ ADXL345::is_activity()
   return (source & 0x7c);
 }
 
-IOStream& 
+IOStream&
 operator<<(IOStream& outs, ADXL345& accelerometer)
 {
   ADXL345::sample_t value;

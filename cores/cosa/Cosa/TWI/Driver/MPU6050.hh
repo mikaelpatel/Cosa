@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,7 +30,7 @@
  * extended I2C slave bus.
  *
  * @section Circuit
- * The MPU6050 module ITG/MPU with pull-up resistors (4K7) for TWI 
+ * The MPU6050 module ITG/MPU with pull-up resistors (4K7) for TWI
  * signals and 3V3 internal voltage converter.
  * @code
  *                           ITG/MPU
@@ -60,7 +60,7 @@ public:
   MPU6050(uint8_t subaddr = 0) : TWI::Driver(0x68 | (subaddr != 0)) {}
 
   /**
-   * Start interaction with device. Turn on measurements. 
+   * Start interaction with device. Turn on measurements.
    * @param[in] clksel clock source (default PLL with X axis gyroscope)
    * @return true(1) if successful otherwise false(0)
    */
@@ -78,7 +78,7 @@ public:
    * @return temperature
    */
   int16_t read_temperature();
-  
+
   /**
    * Accelerometer and gyroscope sample data structure (axis x, y, z).
    */
@@ -87,7 +87,7 @@ public:
     int16_t y;
     int16_t z;
   };
-  
+
   /**
    * Motion Processing Unit sensor data; accelerometer, temperature,
    * and gyroscope.
@@ -97,14 +97,14 @@ public:
     int16_t temp;
     sample_t gyro;
   };
-  
+
   /**
    * Read accelerometer and return values in given sample data
    * structure.
    * @param[in,out] m samples storage.
    */
   void read_motion(motion_t& m);
-  
+
   /**
    * Read accelerometer and return values in given sample data
    * structure.
@@ -204,13 +204,13 @@ protected:
       uint8_t EXT_SYNC_SET:3;	//!< Frame Synchronization setting.
       uint8_t reserved:2;	//!< Reserved.
     };
-    config_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    config_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -226,13 +226,13 @@ protected:
       uint8_t YG_ST:1;		//!< Y axis gyroscope selftest.
       uint8_t XG_ST:1;		//!< X axis gyroscope selftest.
     };
-    gyro_config_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    gyro_config_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -258,13 +258,13 @@ protected:
       uint8_t YA_ST:1;		//!< Y axis accelerometer selftest.
       uint8_t XA_ST:1;		//!< X axis accelerometer selftest.
     };
-    accel_config_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    accel_config_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -293,13 +293,13 @@ protected:
       uint8_t XG_FIFO_EN:1;	//!< Enable Gyroscope X.
       uint8_t TEMP_FIFO_EN:1;	//!< Enable Temperature.
     };
-    fifo_en_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    fifo_en_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -318,13 +318,13 @@ protected:
       uint8_t INT_OPEN:1;	//!< Open drain.
       uint8_t INT_LEVEL:1;	//!< Active high(0) or low(1).
     };
-    int_pin_cfg_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    int_pin_cfg_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -340,13 +340,13 @@ protected:
       uint8_t FIFO_OFLOW_EN:1;	//!< Enable FIFO buffer overflow.
       uint8_t reserved2:3;	//!< Reserved-2.
     };
-    int_enable_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    int_enable_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -362,13 +362,13 @@ protected:
       uint8_t FIFO_OFLOW_INT:1;	//!< FIFO buffer overflow.
       uint8_t reserved2:3;	//!< Reserved-2.
     };
-    int_status_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    int_status_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -383,13 +383,13 @@ protected:
       uint8_t GYRO_RESET:1;	//!< Reset gyroscope.
       uint8_t reserved:5;	//!< Reserved.
     };
-    signal_path_reset_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    signal_path_reset_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -408,13 +408,13 @@ protected:
       uint8_t FIFO_EN:1;	//!< Enable FIFO.
       uint8_t reserved2:1;
     };
-    user_ctrl_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    user_ctrl_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -431,13 +431,13 @@ protected:
       uint8_t SLP:1;		//!< Sleep.
       uint8_t DEVICE_RESET:1;	//!< Reset.
     };
-    pwr_mgmt_1_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    pwr_mgmt_1_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -469,13 +469,13 @@ protected:
       uint8_t STBY_XA:1;	//!< Standby mode.
       uint8_t LP_WAKE_CTRL:2;	//!< Low Power wake-up frequency.
     };
-    pwr_mgmt_2_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    pwr_mgmt_2_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
-    operator uint8_t() 
-    { 
-      return (as_uint8); 
+    operator uint8_t()
+    {
+      return (as_uint8);
     }
   };
 
@@ -510,7 +510,7 @@ protected:
    * @return register value.
    */
   uint8_t read(Register reg);
-  
+
   /**
    * Read contents of registers, multiple values from give address.
    * @param[in] reg register address.

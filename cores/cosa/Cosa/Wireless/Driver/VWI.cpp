@@ -4,18 +4,18 @@
  *
  * @section License
  * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire rev. 1.19)
- * Copyright (C) 2013-2014, Mikael Patel (Cosa C++ port and refactoring)
+ * Copyright (C) 2013-2015, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -25,9 +25,9 @@
 #include <util/crc16.h>
 
 /**
- * Calculate check sum for given buffer and number of bytes with CRC. 
+ * Calculate check sum for given buffer and number of bytes with CRC.
  * Return true(1) if equals correct CCITT 16b check sum else
- * false(0). 
+ * false(0).
  * @param[in] ptr buffer pointer.
  * @param[in] count number of bytes in buffer.
  * @return bool.
@@ -36,7 +36,7 @@ static bool
 is_valid_crc(uint8_t* ptr, uint8_t count)
 {
   uint16_t crc = 0xffff;
-  while (count-- > 0) 
+  while (count-- > 0)
     crc = _crc_ccitt_update(crc, *ptr++);
   return (crc == 0xf0b8);
 }
@@ -44,7 +44,7 @@ is_valid_crc(uint8_t* ptr, uint8_t count)
 /** Prescale table for Timer1. Index is prescale setting */
 static const uint16_t prescale[] __PROGMEM = {
 #if defined(BOARD_ATTINYX5) || defined(BOARD_ATTINYX61)
-  0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 
+  0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384
 #else
   0, 1, 8, 64, 256, 1024
 #endif
@@ -60,7 +60,7 @@ static const uint16_t prescale[] __PROGMEM = {
  * @return prescale or zero(0).
  */
 static uint8_t
-timer_setting(uint16_t speed, uint8_t bits, uint16_t* nticks) 
+timer_setting(uint16_t speed, uint8_t bits, uint16_t* nticks)
 {
   uint16_t max_ticks = (1 << bits) - 1;
   uint8_t res = 0;
@@ -75,8 +75,8 @@ timer_setting(uint16_t speed, uint8_t bits, uint16_t* nticks)
   return (res);
 }
 
-VWI::Codec::Codec(uint8_t bits_per_symbol, 
-		  uint16_t start_symbol, 
+VWI::Codec::Codec(uint8_t bits_per_symbol,
+		  uint16_t start_symbol,
 		  uint8_t preamble_max) :
   BITS_PER_SYMBOL(bits_per_symbol),
   START_SYMBOL(start_symbol),
@@ -86,7 +86,7 @@ VWI::Codec::Codec(uint8_t bits_per_symbol,
 {
 }
 
-void 
+void
 VWI::Receiver::PLL()
 {
   // Integrate each sample
@@ -94,7 +94,7 @@ VWI::Receiver::PLL()
 
   if (m_sample != m_last_sample) {
     // Transition, advance if ramp > TRANSITION otherwise retard
-    m_pll_ramp += 
+    m_pll_ramp +=
       ((m_pll_ramp < RAMP_TRANSITION) ? RAMP_INC_RETARD : RAMP_INC_ADVANCE);
     m_last_sample = m_sample;
   }
@@ -103,7 +103,7 @@ VWI::Receiver::PLL()
     m_pll_ramp += RAMP_INC;
   }
   if (m_pll_ramp >= RAMP_MAX) {
-    // Add this to the MSB bit of rx_bits, LSB first. The last bits are kept 
+    // Add this to the MSB bit of rx_bits, LSB first. The last bits are kept
     m_bits >>= 1;
 
     // Check the integrator to see how many samples in this cycle were
@@ -114,21 +114,21 @@ VWI::Receiver::PLL()
     m_pll_ramp -= RAMP_MAX;
 
     // Clear the integral for the next cycle
-    m_integrator = 0; 
+    m_integrator = 0;
 
     if (m_active) {
       // We have the start symbol and now we are collecting message
       // bits for two symbols before decoding to a byte
       if (++m_bit_count >= (m_codec->BITS_PER_SYMBOL * 2)) {
 	uint8_t data = m_codec->decode8(m_bits);
-	
+
 	// The first decoded byte is the byte count of the following
 	// message the count includes the byte count and the 2
-	// trailing FCS bytes. 
+	// trailing FCS bytes.
 	if (m_length == 0) {
 	  // The first byte is the byte count. Check it for
 	  // sensibility. It cant be less than min, since it includes
-	  // the bytes count itself and the 2 byte FCS 
+	  // the bytes count itself and the 2 byte FCS
 	  m_count = data;
 	  if (m_count < MESSAGE_MIN || m_count > MESSAGE_MAX) {
 	    // Stupid message length, drop the whole thing
@@ -160,8 +160,8 @@ VWI::Receiver::PLL()
 }
 
 int
-VWI::Receiver::recv(uint8_t& src, uint8_t& port, 
-		    void* buf, size_t len, 
+VWI::Receiver::recv(uint8_t& src, uint8_t& port,
+		    void* buf, size_t len,
 		    uint32_t ms)
 {
   // Wait until a valid message is available or timeout
@@ -170,10 +170,10 @@ VWI::Receiver::recv(uint8_t& src, uint8_t& port,
   do {
     while (!m_done && (ms == 0 || (RTC::since(start) < ms))) yield();
     if (!m_done) return (-2);
-  
+
     // Check the crc and the network and device destination address
-    if (!is_valid_crc(m_buffer, m_length) 
-	|| (hp->network != s_rf->m_addr.network)  
+    if (!is_valid_crc(m_buffer, m_length)
+	|| (hp->network != s_rf->m_addr.network)
 	|| ((hp->dest != BROADCAST) && (hp->dest != s_rf->m_addr.device))) {
       m_done = false;
     }
@@ -208,7 +208,7 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 
   uint8_t *tp = m_buffer + m_codec->PREAMBLE_MAX;
   uint16_t crc = 0xffff;
-  
+
   // Wait for transmitter to become available. Might be transmitting
   while (m_enabled) yield();
 
@@ -232,7 +232,7 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
     *tp++ = m_codec->encode4(data);
   }
 
-  // Encode the message into symbols. Each byte is converted into 
+  // Encode the message into symbols. Each byte is converted into
   // 2 symbols, high nybble first, low nybble second
   for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
     uint8_t *bp = (uint8_t*) vp->buf;
@@ -243,9 +243,9 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
       *tp++ = m_codec->encode4(data);
     }
   }
-  
+
   // Append the FCS, 16 bits before encoding (4 symbols after
-  // encoding) Caution: VWI expects the _ones_complement_ of the CCITT 
+  // encoding) Caution: VWI expects the _ones_complement_ of the CCITT
   // CRC-16 as the FCS VWI sends FCS as low byte then hi byte
   crc = ~crc;
   *tp++ = m_codec->encode4(crc >> 4);
@@ -275,7 +275,7 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 /** Current transmitter/receiver for interrupt handler access */
 VWI* VWI::s_rf = 0;
 
-bool 
+bool
 VWI::begin(const void* config)
 {
   UNUSED(config);
@@ -313,7 +313,7 @@ VWI::begin(const void* config)
   if (!prescaler) return (false);
 
   // Output Compare pins disconnected, and turn on CTC mode
-  TCCR1A = 0; 
+  TCCR1A = 0;
   TCCR1B = _BV(WGM12) | prescaler;
 
   // Caution: special procedures for setting 16 bit regs
@@ -326,21 +326,21 @@ VWI::begin(const void* config)
   return (true);
 }
 
-bool 
+bool
 VWI::end()
 {
   powerdown();
   return (true);
 }
 
-void 
-VWI::powerup() 
+void
+VWI::powerup()
 {
   m_rx.begin();
   TIMSK1 |= _BV(OCIE1A);
 }
 
-void 
+void
 VWI::powerdown()
 {
   while (m_tx.is_active()) yield();
@@ -357,8 +357,8 @@ ISR(TIMER1_COMPA_vect)
   // Check if the receiver pin should be sampled
   if (receiver->m_enabled && !transmitter->m_enabled)
     receiver->m_sample = receiver->read();
-    
-  // Do transmitter stuff first to reduce transmitter bit jitter due 
+
+  // Do transmitter stuff first to reduce transmitter bit jitter due
   // to variable receiver processing
   if (transmitter->m_enabled && transmitter->m_sample++ == 0) {
     // Send next bit. Symbols are sent LSB first. Finished sending the
@@ -367,7 +367,7 @@ ISR(TIMER1_COMPA_vect)
       transmitter->end();
     }
     else {
-      transmitter->write(transmitter->m_buffer[transmitter->m_index] & 
+      transmitter->write(transmitter->m_buffer[transmitter->m_index] &
 			 (1 << transmitter->m_bit++));
       if (transmitter->m_bit >= transmitter->m_codec->BITS_PER_SYMBOL) {
 	transmitter->m_bit = 0;
@@ -375,7 +375,7 @@ ISR(TIMER1_COMPA_vect)
       }
     }
   }
-  if (transmitter->m_sample >= VWI::SAMPLES_PER_BIT) 
+  if (transmitter->m_sample >= VWI::SAMPLES_PER_BIT)
     transmitter->m_sample = 0;
   if (receiver->m_enabled && !transmitter->m_enabled)
     receiver->PLL();

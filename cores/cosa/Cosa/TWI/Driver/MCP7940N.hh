@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -31,7 +31,7 @@
  * with SRAM and Battery Switchover.
  *
  * @section References
- * 1. Microchip MCP7940N data sheet; 
+ * 1. Microchip MCP7940N data sheet;
  * http://ww1.microchip.com/downloads/en/DeviceDoc/20005010F.pdf
  */
 class MCP7940N : private TWI::Driver {
@@ -48,9 +48,9 @@ public:
       uint8_t oscon:1;		//!< Oscillator Running Status.
       uint8_t reserved:2;	//!< Reserved.
     };
-    config_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    config_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
   };
 
@@ -68,9 +68,9 @@ public:
       uint8_t sqwen:1;		//!< Square-Ware Enable.
       uint8_t out:1;		//!< Output Control.
     };
-    control_t(uint8_t value = 0) 
-    { 
-      as_uint8 = value; 
+    control_t(uint8_t value = 0)
+    {
+      as_uint8 = value;
     }
   };
 
@@ -94,9 +94,9 @@ public:
     uint8_t day;		//!< 01-7 Day.
     uint8_t date;		//!< 01-31 Date.
     uint8_t month;		//!< 01-12 Month.
-    
+
     /**
-     * Convert time to binary representation (from BCD). 
+     * Convert time to binary representation (from BCD).
      * Apply after reading from device and before any calculation.
      */
     void to_binary()
@@ -132,7 +132,7 @@ public:
       }
     };
   };
-  
+
   /**
    * Alarm match types (pp. 10-11).
    */
@@ -146,7 +146,7 @@ public:
   } __attribute__ ((packed));
 
   /**
-   * Timestamp type (pp. 9-10). Same as time_t except without year. 
+   * Timestamp type (pp. 9-10). Same as time_t except without year.
    */
   struct timestamp_t {
     uint8_t seconds;		//!< 00-59 Seconds.
@@ -157,7 +157,7 @@ public:
     uint8_t month;		//!< 01-12 Month.
 
     /**
-     * Convert time to binary representation (from BCD). 
+     * Convert time to binary representation (from BCD).
      * Apply after reading from device and before any calculation.
      */
     void to_binary()
@@ -176,7 +176,7 @@ public:
       ::to_bcd(&seconds, sizeof(time_t));
     }
   };
-  
+
   /**
    * The RTCC Memory Map (Table 4-1. pp. 9).
    */
@@ -195,7 +195,7 @@ public:
 
   /** Start of application RAM. */
   const static uint8_t RAM_START = sizeof(rtcc_t);
-  
+
   /** End of application RAM. */
   const static uint8_t RAM_END = 0x5f;
 
@@ -207,12 +207,12 @@ public:
    * @param[in] pin alarm interrupt pin (Default EXT1/EXT0).
    */
 #if !defined(BOARD_ATTINY)
-  MCP7940N(Board::ExternalInterruptPin pin = Board::EXT1) : 
+  MCP7940N(Board::ExternalInterruptPin pin = Board::EXT1) :
     TWI::Driver(0x6f),
     m_alarm_irq(pin)
   {}
 #else
-  MCP7940N(Board::ExternalInterruptPin pin = Board::EXT0) : 
+  MCP7940N(Board::ExternalInterruptPin pin = Board::EXT0) :
     TWI::Driver(0x6f),
     m_alarm_irq(pin)
   {}
@@ -220,7 +220,7 @@ public:
 
   /**
    * Read current time from real-time clock. Return true(1) if
-   * successful otherwise false(0). 
+   * successful otherwise false(0).
    * @param[out] now time structure return value.
    * @return boolean.
    */
@@ -228,12 +228,12 @@ public:
 
   /**
    * Set the real-time clock to the given time. Return true(1) if
-   * successful otherwise false(0). 
+   * successful otherwise false(0).
    * @param[in] now time structure to set.
    * @return boolean.
    */
   bool set_time(time_t& now);
-  
+
   /**
    * Set given real-time clock alarm with the given time and
    * configuration. Return true(1) if successful otherwise false(0).
@@ -246,7 +246,7 @@ public:
 
   /**
    * Read given real-time clock alarm time and configuration. Return
-   * true(1) if successful otherwise false(0). 
+   * true(1) if successful otherwise false(0).
    * @param[in] nr alarm number (0..1).
    * @param[out] alarm time structure.
    * @param[out] when alarm should trigger.
@@ -256,7 +256,7 @@ public:
 
   /**
    * Clear given real-time clock alarm. Return true(1) if successful
-   * otherwise false(0). 
+   * otherwise false(0).
    * @param[in] nr alarm number (0..1).
    * @return boolean.
    */
@@ -283,7 +283,7 @@ protected:
 
   /**
    * Write register block at given position with the contents from
-   * buffer. Return number of bytes written or negative error code. 
+   * buffer. Return number of bytes written or negative error code.
    * @param[in] regs buffer to write to register block.
    * @param[in] size number of bytes to write.
    * @param[in] pos address in register file to read write to.
@@ -291,7 +291,7 @@ protected:
    */
   int write(void* regs, uint8_t size, uint8_t pos = 0);
 
-  /** 
+  /**
    * Alarm Interrupt Handler.
    */
   class AlarmInterrupt : public ExternalInterrupt {
@@ -309,7 +309,7 @@ protected:
 
 /**
  * Print the alarm to the given stream with the format (DD HH:MM).
- * The values should be in BCD i.e. not converted to binary. 
+ * The values should be in BCD i.e. not converted to binary.
  * @param[in] outs output stream.
  * @param[in] t alarm time structure.
  * @return iostream.
@@ -318,7 +318,7 @@ IOStream& operator<<(IOStream& outs, MCP7940N::alarm_t& t);
 
 /**
  * Print the RTCC structure to the given stream. The RTCC
- * values should be in BCD i.e. not converted to binary.  
+ * values should be in BCD i.e. not converted to binary.
  * @param[in] outs output stream.
  * @param[in] t alarm time structure.
  * @return iostream.

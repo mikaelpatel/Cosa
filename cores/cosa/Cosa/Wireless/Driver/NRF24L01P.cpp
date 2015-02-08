@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,8 +26,8 @@
 #include <util/delay.h>
 
 NRF24L01P::NRF24L01P(uint16_t net, uint8_t dev,
-		     Board::DigitalPin csn, 
-		     Board::DigitalPin ce, 
+		     Board::DigitalPin csn,
+		     Board::DigitalPin ce,
 		     Board::ExternalInterruptPin irq) :
   SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
   Wireless::Driver(net, dev),
@@ -42,7 +42,7 @@ NRF24L01P::NRF24L01P(uint16_t net, uint8_t dev,
   set_channel(64);
 }
 
-uint8_t 
+uint8_t
 NRF24L01P::read(Command cmd)
 {
   spi.acquire(this);
@@ -54,7 +54,7 @@ NRF24L01P::read(Command cmd)
   return (res);
 }
 
-void 
+void
 NRF24L01P::read(Command cmd, void* buf, size_t size)
 {
   spi.acquire(this);
@@ -65,7 +65,7 @@ NRF24L01P::read(Command cmd, void* buf, size_t size)
   spi.release();
 }
 
-void 
+void
 NRF24L01P::write(Command cmd)
 {
   spi.acquire(this);
@@ -75,7 +75,7 @@ NRF24L01P::write(Command cmd)
   spi.release();
 }
 
-void 
+void
 NRF24L01P::write(Command cmd, uint8_t data)
 {
   spi.acquire(this);
@@ -86,7 +86,7 @@ NRF24L01P::write(Command cmd, uint8_t data)
   spi.release();
 }
 
-void 
+void
 NRF24L01P::write(Command cmd, const void* buf, size_t size)
 {
   spi.acquire(this);
@@ -174,7 +174,7 @@ NRF24L01P::powerdown()
   m_state = POWER_DOWN_STATE;
 }
 
-bool 
+bool
 NRF24L01P::begin(const void* config)
 {
   UNUSED(config);
@@ -196,7 +196,7 @@ NRF24L01P::begin(const void* config)
   write(RX_ADDR_P2, BROADCAST);
   write(EN_RXADDR, (_BV(ERX_P2) | _BV(ERX_P1)));
   write(EN_AA, (_BV(ENAA_P1) | _BV(ENAA_P0)));
-  
+
   // Ready to go
   powerup();
   spi.attach(this);
@@ -219,8 +219,8 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   // Fix: Allow larger payload(30*3) with fragmentation
   spi.acquire(this);
     spi.begin();
-      uint8_t command = ((dest != BROADCAST) 
-			 ? W_TX_PAYLOAD 
+      uint8_t command = ((dest != BROADCAST)
+			 ? W_TX_PAYLOAD
 			 : W_TX_PAYLOAD_NO_ACK);
       m_status = spi.transfer(command);
       spi.transfer(m_addr.device);
@@ -233,7 +233,7 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   // Check for auto-acknowledge pipe(0), and address setup and enable
   if (dest != BROADCAST) {
     addr_t tx_addr(m_addr.network, dest);
-    write(RX_ADDR_P0, &tx_addr, sizeof(tx_addr));  
+    write(RX_ADDR_P0, &tx_addr, sizeof(tx_addr));
     write(EN_RXADDR, (_BV(ERX_P2) | _BV(ERX_P1) | _BV(ERX_P0)));
   }
 
@@ -263,7 +263,7 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   return (-2);
 }
 
-int 
+int
 NRF24L01P::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 {
   iovec_t vec[2];
@@ -286,8 +286,8 @@ NRF24L01P::available()
 }
 
 int
-NRF24L01P::recv(uint8_t& src, uint8_t& port, 
-		void* buf, size_t size, 
+NRF24L01P::recv(uint8_t& src, uint8_t& port,
+		void* buf, size_t size,
 		uint32_t ms)
 {
   // Run in receiver mode
@@ -298,10 +298,10 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
   while (!available()) {
     if ((ms != 0) && (RTC::since(start) > ms)) return (-2);
     yield();
-  } 
+  }
   m_dest = (m_status.rx_p_no == 1 ? m_addr.device : BROADCAST);
   write(STATUS, _BV(RX_DR));
-  
+
   // Check for payload error from device (Tab. 20, pp. 51, R_RX_PL_WID)
   uint8_t count = read(R_RX_PL_WID) - 2;
   if ((count > PAYLOAD_MAX) || (count > size)) {
@@ -321,12 +321,12 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
   return (count);
 }
 
-void 
+void
 NRF24L01P::set_output_power_level(int8_t dBm)
 {
   uint8_t pwr = RF_PWR_0DBM;
   if      (dBm < -12) pwr = RF_PWR_18DBM;
-  else if (dBm < -6)  pwr = RF_PWR_12DBM; 
+  else if (dBm < -6)  pwr = RF_PWR_12DBM;
   else if (dBm < 0)   pwr = RF_PWR_6DBM;
   write(RF_SETUP, (RF_DR_2MBPS | pwr));
 }
@@ -334,7 +334,7 @@ NRF24L01P::set_output_power_level(int8_t dBm)
 // Output operators for bitfield status registers
 IOStream& operator<<(IOStream& outs, NRF24L01P::status_t status)
 {
-  outs << PSTR("RX_DR = ") << status.rx_dr 
+  outs << PSTR("RX_DR = ") << status.rx_dr
        << PSTR(", TX_DS = ") << status.tx_ds
        << PSTR(", MAX_RT = ") << status.max_rt
        << PSTR(", RX_P_NO = ") << status.rx_p_no
@@ -353,8 +353,8 @@ IOStream& operator<<(IOStream& outs, NRF24L01P::fifo_status_t fifo)
 {
   outs << PSTR("RX_EMPTY = ") << fifo.rx_empty
        << PSTR(", RX_FULL = ") << fifo.rx_full
-       << PSTR(", TX_EMPTY = ") << fifo.tx_empty 
-       << PSTR(", TX_FULL = ") << fifo.tx_full 
+       << PSTR(", TX_EMPTY = ") << fifo.tx_empty
+       << PSTR(", TX_FULL = ") << fifo.tx_full
        << PSTR(", TX_REUSE = ") << fifo.tx_reuse;
   return (outs);
 }

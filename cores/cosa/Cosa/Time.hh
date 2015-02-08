@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -50,7 +50,7 @@ const uint8_t  Y2K_EPOCH_WEEKDAY = SATURDAY;
 
 /**
  * Number of seconds elapsed since January 1 of the Epoch Year,
- * 00:00:00 +0000 (UTC). 
+ * 00:00:00 +0000 (UTC).
  */
 typedef uint32_t clock_t;
 
@@ -65,7 +65,7 @@ const uint8_t DAYS_PER_WEEK = 7;
  * representation is binary. Conversion methods are provided to
  * convert to/from the BCD representation. It is up the caller to keep
  * track of the representation.  All time_t methods (except
- * /to_binary/) expect the internal representation to be binary. 
+ * /to_binary/) expect the internal representation to be binary.
  */
 struct time_t {
   uint8_t seconds;		//!< 00-59 Seconds.
@@ -88,7 +88,7 @@ struct time_t {
 
   /**
    * Convert time to BCD representation (from binary). Apply after
-   * setting new value and before writing to a BCD device. 
+   * setting new value and before writing to a BCD device.
    */
   void to_bcd()
     __attribute__((always_inline))
@@ -207,7 +207,7 @@ struct time_t {
    */
   bool is_valid() const
   {
-    return 
+    return
       ((year <= 99) &&
        (1 <= month) && (month <= 12) &&
        ((1 <= date) &&
@@ -238,9 +238,9 @@ struct time_t {
    * Get the epoch year.
    * @return year.
    */
-  static uint16_t epoch_year() 
-  { 
-    return (s_epoch_year); 
+  static uint16_t epoch_year()
+  {
+    return (s_epoch_year);
   }
 
   static uint8_t epoch_weekday;
@@ -255,7 +255,7 @@ struct time_t {
   /**
    * Use the current year for the epoch year. This will result in the
    * best performance, but dates/times before January 1 of this year
-   * cannot be represented. 
+   * cannot be represented.
    */
   static void use_fastest_epoch();
 

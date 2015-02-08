@@ -3,25 +3,25 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/TWI/Driver/BMP085.hh"
 #include "Cosa/Watchdog.hh"
 
-// Pressure convertion time depending on mode (pp. 10). 
+// Pressure convertion time depending on mode (pp. 10).
 // Watchdog::delay() with a resolution of 16 ms is used.
 const uint8_t BMP085::PRESSURE_CONV_MS[] __PROGMEM = {
   5,
@@ -30,12 +30,12 @@ const uint8_t BMP085::PRESSURE_CONV_MS[] __PROGMEM = {
   26
 };
 
-bool 
+bool
 BMP085::begin(Mode mode)
 {
   // Set the operation mode
   m_mode = mode;
-  
+
   // Read coefficients from the device
   twi.begin(this);
   twi.write(COEFF_REG);
@@ -47,12 +47,12 @@ BMP085::begin(Mode mode)
   return (true);
 }
 
-bool 
+bool
 BMP085::sample_temperature_request()
 {
   // Check that a conversion request is not in process
   if (m_cmd != 0) return (false);
-  
+
   // Start a temperature measurement and wait
   m_cmd = TEMP_CONV_CMD;
   twi.begin(this);
@@ -64,13 +64,13 @@ BMP085::sample_temperature_request()
   return (true);
 }
 
-bool 
+bool
 BMP085::read_temperature()
 {
   // Check that a temperature conversion request was issued
   if (m_cmd != TEMP_CONV_CMD) return (false);
   m_cmd = 0;
-  
+
   // Check if we need to wait for the conversion to complete
   int16_t ms = Watchdog::millis() - m_start + TEMP_CONV_MS;
   if (ms > 0) delay(ms);
@@ -92,12 +92,12 @@ BMP085::read_temperature()
   return (true);
 }
 
-bool 
+bool
 BMP085::sample_pressure_request()
 {
   // Check that a conversion request is not in process
   if (m_cmd != 0) return (false);
-  
+
   // Start a pressure measurement
   twi.begin(this);
   m_cmd = PRESSURE_CONV_CMD + (m_mode << 6);
@@ -109,7 +109,7 @@ BMP085::sample_pressure_request()
   return (true);
 }
 
-bool 
+bool
 BMP085::read_pressure()
 {
   // Check that a conversion request was issued
@@ -120,7 +120,7 @@ BMP085::read_pressure()
   int16_t ms = Watchdog::millis() - m_start;
   ms += pgm_read_byte(&PRESSURE_CONV_MS[m_mode]);
   if (ms > 0) delay(ms);
-  
+
   // Read the raw pressure sensor data
   univ32_t res;
   res.as_uint8[0] = 0;
@@ -154,7 +154,7 @@ BMP085::read_pressure()
   return (true);
 }
 
-IOStream& 
+IOStream&
 operator<<(IOStream& outs, BMP085& bmp)
 {
   outs << PSTR("BMP085(temperature = ") << bmp.get_temperature()

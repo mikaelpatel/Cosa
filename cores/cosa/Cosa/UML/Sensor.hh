@@ -9,7 +9,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -29,8 +29,8 @@ namespace UML {
 
 /**
  * Sensor Capsule class. Provides a signal connector that is set
- * according to the sensor (analog pin). The pin is periodically 
- * sampled and listeners are scheduled when the value changes. 
+ * according to the sensor (analog pin). The pin is periodically
+ * sampled and listeners are scheduled when the value changes.
  * By default the sample is scaled to voltage.
  *
  * @section Diagram
@@ -63,8 +63,8 @@ public:
    * @param[in] sample connector.
    * @param[in] ms period.
    */
-  Sensor(Board::AnalogPin pin, Sample& sample, uint16_t ms = DEFAULT_TIMEOUT) : 
-    TimedCapsule(ms), 
+  Sensor(Board::AnalogPin pin, Sample& sample, uint16_t ms = DEFAULT_TIMEOUT) :
+    TimedCapsule(ms),
     AnalogPin(pin),
     m_sample(sample)
   {}
@@ -73,14 +73,14 @@ public:
    * @override Capsule
    * Read digital pin and update signal on change.
    */
-  virtual void behavior() 
+  virtual void behavior()
   {
     m_sample = scale(sample());
   }
 
   /**
    * @override Sensor
-   * Default sample scaling; range [0..1023] is scaled to [0.0..5.0]. 
+   * Default sample scaling; range [0..1023] is scaled to [0.0..5.0].
    * @param[in] sample value.
    * @return scaled value.
    */

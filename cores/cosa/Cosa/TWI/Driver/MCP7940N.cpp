@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -52,7 +52,7 @@ MCP7940N::write(void* regs, uint8_t size, uint8_t pos)
   return (count - 1);
 }
 
-bool 
+bool
 MCP7940N::get_time(time_t& now)
 {
   if (read(&now, sizeof(now)) != sizeof(now)) return (false);
@@ -62,7 +62,7 @@ MCP7940N::get_time(time_t& now)
   return (true);
 }
 
-bool 
+bool
 MCP7940N::set_time(time_t& now)
 {
   now.seconds |= 0x80;
@@ -71,7 +71,7 @@ MCP7940N::set_time(time_t& now)
   return (res == sizeof(now));
 }
 
-bool 
+bool
 MCP7940N::get_alarm(uint8_t nr, time_t& alarm, uint8_t& when)
 {
   // Map alarm number to offset
@@ -89,7 +89,7 @@ MCP7940N::get_alarm(uint8_t nr, time_t& alarm, uint8_t& when)
   return (true);
 }
 
-bool 
+bool
 MCP7940N::set_alarm(uint8_t nr, time_t& alarm, uint8_t when)
 {
   // Map alarm number to offset
@@ -111,10 +111,10 @@ MCP7940N::set_alarm(uint8_t nr, time_t& alarm, uint8_t when)
   control_t cntrl;
   pos = offsetof(rtcc_t,control);
   if (read(&cntrl, sizeof(cntrl), pos) != sizeof(cntrl)) return (false);
-  if (nr == 0) 
-    cntrl.alm0en = 1; 
-  else if (nr == 1) 
-    cntrl.alm1en = 1; 
+  if (nr == 0)
+    cntrl.alm0en = 1;
+  else if (nr == 1)
+    cntrl.alm1en = 1;
   if (write(&cntrl, sizeof(cntrl), pos) != sizeof(cntrl)) return (false);
   m_alarm_irq.enable();
   return (true);
@@ -149,10 +149,10 @@ MCP7940N::clear_alarm(uint8_t nr)
   control_t cntrl;
   uint8_t pos = offsetof(rtcc_t,control);
   if (read(&cntrl, sizeof(cntrl), pos) != sizeof(cntrl)) return (false);
-  if (nr == 0) 
-    cntrl.alm0en = 0; 
-  else if (nr == 1) 
-    cntrl.alm1en = 0; 
+  if (nr == 0)
+    cntrl.alm0en = 0;
+  else if (nr == 1)
+    cntrl.alm1en = 0;
   else return (false);
   if (write(&cntrl, sizeof(cntrl), pos) != sizeof(cntrl)) return (false);
 

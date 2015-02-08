@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -67,7 +67,7 @@
  * The shift registers will clock data for presented on the SPI bus
  * (MOSI/SCK) but will not transfer to output register until the
  * enable pulse is given (i.e. when addressed).
- * 
+ *
  * @param[in] N number of shift registers (N * 8 output pins).
  */
 template<uint8_t N>
@@ -83,8 +83,8 @@ public:
    * @param[in] clock SPI hardware setting (default DIV4_CLOCK).
    */
 #if !defined(BOARD_ATTINY)
-  SRPO(Board::DigitalPin cs = Board::D10, 
-       SPI::Clock rate = SPI::DEFAULT_CLOCK) : 
+  SRPO(Board::DigitalPin cs = Board::D10,
+       SPI::Clock rate = SPI::DEFAULT_CLOCK) :
     SPI::Driver(cs, SPI::PULSE_HIGH, rate)
   {
     clear();
@@ -92,7 +92,7 @@ public:
   }
 #else
   SRPO(Board::DigitalPin cs = Board::D3,
-       SPI::Clock rate = SPI::DEFAULT_CLOCK) : 
+       SPI::Clock rate = SPI::DEFAULT_CLOCK) :
     SPI::Driver(cs, SPI::PULSE_HIGH, rate)
   {
     clear();
@@ -102,7 +102,7 @@ public:
 
   /**
    * Return true(1) if the given pin in shadow register is set,
-   * otherwise false(0). 
+   * otherwise false(0).
    * @param[in] pin pin number.
    * @return bool.
    */
@@ -115,7 +115,7 @@ public:
 
   /**
    * Return true(1) if the given pin in shadow register is set,
-   * otherwise false(0). 
+   * otherwise false(0).
    * @param[in] pin pin number.
    * @return bool.
    */
@@ -128,7 +128,7 @@ public:
 
   /**
    * Set given pin in shadow register. Call update() to write to shift
-   * register. 
+   * register.
    * @param[in] pin pin number.
    */
   void set(uint8_t pin)
@@ -140,7 +140,7 @@ public:
 
   /**
    * Clear given pin in shadow register. Call update() to write to shift
-   * register. 
+   * register.
    * @param[in] pin pin number.
    */
   void clear(uint8_t pin)
@@ -152,7 +152,7 @@ public:
 
   /**
    * Toggle given pin in shadow register. Call update() to write to shift
-   * register. 
+   * register.
    * @param[in] pin pin number.
    */
   void toggle(uint8_t pin)
@@ -185,7 +185,7 @@ public:
   }
 
   /**
-   * Update shift register with value of shadow registers. 
+   * Update shift register with value of shadow registers.
    */
   void update()
   {
@@ -213,10 +213,10 @@ public:
       m_pin(pin)
     {
     }
-    
+
     /**
      * Set pin in shadow register. Call update() to write to shift
-     * register. 
+     * register.
      */
     void set()
       __attribute__((always_inline))
@@ -226,7 +226,7 @@ public:
 
     /**
      * Clear pin in shadow register. Call update() to write to shift
-     * register. 
+     * register.
      */
     void clear()
       __attribute__((always_inline))
@@ -236,7 +236,7 @@ public:
 
     /**
      * Toggle pin in shadow register. Call update() to write to shift
-     * register. 
+     * register.
      */
     void toggle()
       __attribute__((always_inline))

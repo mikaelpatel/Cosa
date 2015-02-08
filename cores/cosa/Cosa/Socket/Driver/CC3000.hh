@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,7 +30,7 @@
 /**
  * Cosa TI CC3000 WiFi module device driver class. Provides an
  * implementation of the Cosa Socket and Cosa IOStream::Device
- * classes. A socket may be bound directly to a Cosa IOStream. 
+ * classes. A socket may be bound directly to a Cosa IOStream.
  *
  * @section References
  * 1. http://processors.wiki.ti.com/index.php/CC3000
@@ -60,7 +60,7 @@ public:
      * @return bytes.
      */
     virtual int room();
-    
+
     /**
      * @override IOStream::Device
      * Read data to given buffer with given size from device.
@@ -89,7 +89,7 @@ public:
 
     /**
      * @override Socket
-     * Close the socket. 
+     * Close the socket.
      * @return zero if successful otherwise negative error code.
      */
     virtual int close();
@@ -103,13 +103,13 @@ public:
 
     /**
      * @override Socket
-     * Check for incoming requests from clients. Return zero if 
+     * Check for incoming requests from clients. Return zero if
      * the socket has accepted a request and a connection is
-     * established. 
+     * established.
      * @return zero if successful otherwise negative error code.
      */
     virtual int accept();
-  
+
     /**
      * @override Socket
      * Connect the socket to the given address and port; client mode.
@@ -134,7 +134,7 @@ public:
      * Returns positive integer if a connection is established, zero is
      * not yet established, otherwise a negative error code.
      * @return positive integer connected, zero if not otherwise
-     * negative error code. 
+     * negative error code.
      */
     virtual int is_connected();
 
@@ -159,25 +159,25 @@ public:
      * @override Socket
      * Receive data from connection-oriented socket. The data is stored
      * in given buffer with given maximum number of bytes. Return number of
-     * bytes or negative error code. 
+     * bytes or negative error code.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @return number of bytes sent if successful otherwise negative
-     * error code.  
+     * error code.
      */
     virtual int recv(void* buf, size_t len);
-  
+
     /**
      * @override Socket
      * Receive datagram on connectionless socket into given buffer with
      * given maximum size. Returns zero(0) if successful with
-     * information in Datagram otherwise negative error code. 
+     * information in Datagram otherwise negative error code.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @param[in] src source address.
      * @param[in] port source port.
      * @return number of bytes received if successful otherwise negative
-     * error code.  
+     * error code.
      */
     virtual int recv(void* buf, size_t len, uint8_t src[4], uint16_t& port);
 
@@ -186,41 +186,41 @@ public:
      * @override Socket
      * Write data from buffer with given size to device. Boolean flag
      * progmem defined if the buffer is in program memory. Return number
-     * of bytes or negative error code. 
+     * of bytes or negative error code.
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
      * @param[in] progmem program memory pointer flag.
      * @return number of bytes written or EOF(-1).
      */
     virtual int write(const void* buf, size_t size, bool progmem);
-    
+
     /**
      * @override Socket
      * Send given data in buffer on connection-oriented socket. Boolean flag
      * progmem defined if the buffer is in program memory. Return number
-     * of bytes or negative error code. 
+     * of bytes or negative error code.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @param[in] progmem program memory pointer flag.
      * @return number of bytes sent if successful otherwise negative
-     * error code.  
+     * error code.
      */
     virtual int send(const void* buf, size_t len, bool progmem);
 
     /**
      * @override Socket
      * Send given data on connectionless socket as a datagram to given
-     * destination address (dest:port). Return number of bytes 
-     * sent or negative error code. 
+     * destination address (dest:port). Return number of bytes
+     * sent or negative error code.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @param[in] dest destination address.
      * @param[in] port destination port.
      * @param[in] progmem program memory pointer flag.
      * @return number of bytes sent if successful otherwise negative
-     * error code.  
+     * error code.
      */
-    virtual int send(const void* buf, size_t len, 
+    virtual int send(const void* buf, size_t len,
 		     uint8_t dest[4], uint16_t port,
 		     bool progmem);
 
@@ -236,18 +236,18 @@ public:
     /** Port. */
     int m_port;
   };
-  
+
 public:
   /**
    * Construct CC3000 device driver with given chip select, interrupt
-   * request and enable pin. May also configure with SPI clock rate. 
+   * request and enable pin. May also configure with SPI clock rate.
    * @param[in] cs chip select pin.
    * @param[in] irq interrupt request pin.
    * @param[in] vbat enable pin.
    * @param[in] rate of communication with device.
    */
-  CC3000(Board::DigitalPin cs, 
-	 Board::ExternalInterruptPin irq, 
+  CC3000(Board::DigitalPin cs,
+	 Board::ExternalInterruptPin irq,
 	 Board::DigitalPin vbat,
 	 SPI::Clock rate = SPI::DEFAULT_CLOCK) :
     HCI(cs, irq, rate),
@@ -261,7 +261,7 @@ public:
   /**
    * Initiate CC3000 device driver with given hostname. Network address,
    * subnet mask and gateway should be obtained from DNS. Returns true
-   * if successful otherwise false. 
+   * if successful otherwise false.
    * @param[in] hostname string in program memory.
    * @param[in] timeout retry timeout period.
    * @return bool.
@@ -284,7 +284,7 @@ public:
    * @return zero or negative error code.
    */
   int service(uint32_t timeout = 0L);
-  
+
   /**
    * Terminate CC3000 device driver. Closes all active sockets. Return
    * true if successful otherwise false.
@@ -292,14 +292,14 @@ public:
   bool end();
 
   /**
-   * Get the current network address and subnet mask. 
+   * Get the current network address and subnet mask.
    * @param[in,out] ip network address.
    * @param[in,out] subnet mask.
    */
   void get_addr(uint8_t ip[4], uint8_t subnet[4])
   {
-    memcpy(ip, m_ip, sizeof(m_ip)); 
-    memcpy(subnet, m_subnet, sizeof(m_subnet)); 
+    memcpy(ip, m_ip, sizeof(m_ip));
+    memcpy(subnet, m_subnet, sizeof(m_subnet));
   }
 
   /**
@@ -308,17 +308,17 @@ public:
    */
   void get_mac_addr(uint8_t mac[6])
   {
-    memcpy(mac, m_mac, sizeof(m_mac)); 
+    memcpy(mac, m_mac, sizeof(m_mac));
   }
 
   /**
    * Get DNS network address if W5100 device driver was initiated with
-   * hostname and obtained network address from DHCP. 
+   * hostname and obtained network address from DHCP.
    * @param[in,out] ip network address.
    */
-  void get_dns_addr(uint8_t ip[4]) 
-  { 
-    memcpy(ip, m_dns, sizeof(m_dns)); 
+  void get_dns_addr(uint8_t ip[4])
+  {
+    memcpy(ip, m_dns, sizeof(m_dns));
   }
 
 public:
@@ -327,19 +327,19 @@ public:
    */
   class UnsolicitedEvent : public HCI::Event::Handler {
   public:
-    /** 
+    /**
      * Construct handler for unsolicited events for the given device.
      * @param[in] device.
      */
-    UnsolicitedEvent(CC3000* dev) : 
-      HCI::Event::Handler(), 
+    UnsolicitedEvent(CC3000* dev) :
+      HCI::Event::Handler(),
       m_dev(dev)
     {}
 
     /*
      * @override HCI::Event::Handler
      * Handle unsolicited events; buffer free cound, socket close
-     * wait, keepalive, etc.  
+     * wait, keepalive, etc.
      * @param[in] event operation code.
      * @param[in] args pointer to argument block.
      * @param[in] len number of bytes in argument block.
@@ -396,14 +396,14 @@ public:
   int wlan_ioctl_set_scanparam(const hci_cmnd_wlan_ioctl_set_scanparam_t* param = NULL);
 
   /**
-   * Get WLAN status. 
+   * Get WLAN status.
    * @return status or negative error code.
    */
   int wlan_ioctl_statusget();
 
   /**
    * Set policy to control if and how the CC3000 will try to
-   * automatically associate to an access point.  
+   * automatically associate to an access point.
    */
   int wlan_ioctl_set_connection_policy(bool should_connect_to_open_ap,
 				       bool should_use_fast_connect,
@@ -431,7 +431,7 @@ public:
    * wlan_ioctl_set_scanparam(). Returns value in event structure. The
    * first call after the scan will have the highest network id and
    * following calls with have network id lower until zero, which
-   * indicates the last entry. 
+   * indicates the last entry.
    */
   int wlan_ioctl_get_scan_results(hci_evnt_wlan_ioctl_get_scan_results_t& ret);
 
@@ -486,7 +486,7 @@ public:
   /**
    * Query CC3000 for service package information; package
    * identification and build number. Returns zero(0) or negative
-   * error code. 
+   * error code.
    * @param[out] package_id.
    * @param[out] package_build_nr.
    * @return zero or negative error code.
@@ -562,20 +562,20 @@ public:
    * Poll given set of handles for waiting read, write or errors operations.
    * Returns zero and socket handle set otherwise a negative error code.
    * @param[in] hndls number of handles in set (max handle number + 1).
-   * @param[in,out] readhndls read handle set. 
-   * @param[in,out] writehndls write handle set. 
-   * @param[in,out] errorhndls error handle set. 
+   * @param[in,out] readhndls read handle set.
+   * @param[in,out] writehndls write handle set.
+   * @param[in,out] errorhndls error handle set.
    * @param[in] sec timeout in seconds.
    * @param[in] us timeout in micro-seconds.
    * @return zero or negative error code.
    */
-  int select(int hndls, 
+  int select(int hndls,
 	     uint32_t &readhnds, uint32_t &writehndls, uint32_t &errorhndls,
 	     uint32_t sec = 0UL, uint32_t us = 0UL);
 
   /**
    * Receive message to given buffer with given size. Returns number
-   * of bytes received or negative error code. 
+   * of bytes received or negative error code.
    * @param[in] hndl socket descriptor.
    * @param[in] buf message buffer.
    * @param[in] size of message buffer.
@@ -585,7 +585,7 @@ public:
 
   /**
    * Send message from given buffer with given size. Returns number
-   * of bytes sent or negative error code. 
+   * of bytes sent or negative error code.
    * @param[in] hndl socket descriptor.
    * @param[in] buf message buffer.
    * @param[in] size of message buffer.
@@ -626,7 +626,7 @@ public:
    * @return zero or negative error code.
    */
   int close(int hndl);
-  
+
 protected:
   /** Function enable pin. */
   OutputPin m_vbat;
@@ -642,7 +642,7 @@ protected:
 
   /** Subnet mask. */
   uint8_t m_subnet[4];
-  
+
   /** Gateway address. */
   uint8_t m_gateway[4];
 
@@ -738,9 +738,9 @@ protected:
       ssid_length_plus = ssid_length + 16;
       key_length = strlen_P(key);
       reserved = 0;
-      if (bssid == NULL) 
+      if (bssid == NULL)
 	memset(this->bssid, 0, sizeof(bssid));
-      else 
+      else
 	memcpy_P(this->bssid, bssid, sizeof(bssid));
       memcpy_P(data, ssid, ssid_length);
       memcpy_P(data + ssid_length, key, key_length);
@@ -749,7 +749,7 @@ protected:
 
   /**
    * HCI Command WLAN Disconnect.
-   * http://processors.wiki.ti.com/index.php/CC3000_HCI_CMND_messages#HCI_CMND_WLAN_DISCONNECT_.280x0002.29   
+   * http://processors.wiki.ti.com/index.php/CC3000_HCI_CMND_messages#HCI_CMND_WLAN_DISCONNECT_.280x0002.29
    */
   static const uint16_t HCI_CMND_WLAN_DISCONNECT = 0x0002;
 
@@ -794,7 +794,7 @@ protected:
       this->scan_timeout = scan_timeout;
     }
   };
-  
+
   // Fix: Not yet implemented.
   static const uint16_t HCI_CMND_WLAN_SET_EVENT_MASK = 0x0008;
   static const uint16_t HCI_CMND_WLAN_IOCTL_STATUSGET = 0x0009;
@@ -876,7 +876,7 @@ protected:
     uint32_t handle;
     uint32_t count;
     uint32_t flags;
-    hci_cmnd_recv_t(int hndl, size_t size) 
+    hci_cmnd_recv_t(int hndl, size_t size)
     {
       handle = hndl;
       count = size;
@@ -987,7 +987,7 @@ protected:
     uint32_t magic;
     uint32_t optlen;
     uint8_t optval[OPTVAL_MAX];
-    hci_cmnd_setsockopt_t(int hndl, int level, int optname, 
+    hci_cmnd_setsockopt_t(int hndl, int level, int optname,
 			  const void* optval, size_t optlen)
     {
       this->handle = hndl;
@@ -1058,7 +1058,7 @@ protected:
   struct hci_cmnd_simple_link_start_t {
     uint8_t src;
   };
-  
+
   /**
    * HCI Command read buffer size.
    * http://processors.wiki.ti.com/index.php/CC3000_HCI_CMND_messages#HCI_CMND_READ_BUFFER_SIZE_.280x400B.29
@@ -1103,7 +1103,7 @@ protected:
 
   // Fix: Not yet implemented.
   static const uint8_t HCI_DATA_NVMEM_WRITE = 0x90;
-  
+
   /**
    * HCI Data Command recv.
    * http://processors.wiki.ti.com/index.php/CC3000_HCI_DATA_messages#HCI_DATA_NVMEM_READ_.280x91.29
@@ -1181,7 +1181,7 @@ protected:
     WLAN_STATUS_DISCONNECTED = 0x00000000,
     WLAN_STATUS_SCANNING = 0x00000001,
     WLAN_STATUS_CONNECTING = 0x00000002,
-    WLAN_STATUS_CONNECTED = 0x00000003 
+    WLAN_STATUS_CONNECTED = 0x00000003
   };
   struct hci_evnt_wlan_ioctl_statusget_t {
     int8_t status;
@@ -1223,7 +1223,7 @@ protected:
     int8_t status;
     int32_t handle;
   };
-  
+
   /**
    * HCI Event bind.
    *
@@ -1360,7 +1360,7 @@ protected:
   struct hci_evnt_netapp_ping_stop_t {
     int8_t status;
   };
-  
+
   /**
    * HCI Event NetApp getipconfig.
    * http://processors.wiki.ti.com/index.php/CC3000_HCI_EVNT_messages#HCI_EVNT_NETAPP_GETIPCONFIG_.280x2005.29
@@ -1464,7 +1464,7 @@ protected:
     int8_t status;
     uint32_t handle;
   };
-  
+
   /**
    * HCI Event simple link start.
    * http://processors.wiki.ti.com/index.php/CC3000_HCI_EVNT_messages#HCI_EVNT_SIMPLE_LINK_START_.280x4000.29
@@ -1476,7 +1476,7 @@ protected:
 
   /**
    * HCI Event read buffer size.
-   * http://processors.wiki.ti.com/index.php/CC3000_HCI_EVNT_messages#HCI_EVNT_READ_BUFFER_SIZE_.280x400B.29   * 
+   * http://processors.wiki.ti.com/index.php/CC3000_HCI_EVNT_messages#HCI_EVNT_READ_BUFFER_SIZE_.280x400B.29   *
    */
   static const uint16_t HCI_EVNT_READ_BUFFER_SIZE = 0x400B;
   struct hci_evnt_read_buffer_size_t {

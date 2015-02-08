@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -70,9 +70,9 @@ public:
    * chip address.
    * @param[in] addr chip address (0..7)
    */
-  PCF8591(uint8_t addr = 0) : 
+  PCF8591(uint8_t addr = 0) :
     TWI::Driver(0x48 | (addr & 0x7)),
-    m_cntl(0) 
+    m_cntl(0)
   {}
 
   /**
@@ -82,7 +82,7 @@ public:
    * @return bool
    */
   bool begin(uint8_t cntl);
-  
+
   /**
    * End sampling sequence.
    */
@@ -90,7 +90,7 @@ public:
   {
     twi.end();
   }
-  
+
   /**
    * Sample the channel defined by the latest begin() call.
    * Return sample value.
@@ -120,7 +120,7 @@ public:
 
   /**
    * Read a sequence of samples the channel defined by the latest
-   * begin() call. 
+   * begin() call.
    * @param[in] buf sample buffer.
    * @param[in] size of sample buffer.
    * @return count or negative error code.

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -31,7 +31,7 @@
 /**
  * Cosa Device Driver for Texas Instruments CC1101, Low-Power Sub-1
  * GHz RF Transceiver. Note that this device requires data in big
- * endian order. 
+ * endian order.
  *
  * @section Circuit
  * This is the pin-out for the CC1101 module which is compatible with
@@ -67,10 +67,10 @@ public:
    * Maximum size of payload. The device allows 64 bytes payload.
    * The length and destination addressing will require two bytes,
    * source address one byte, and port one byte. This gives a payload
-   * max of 64 - 4 = 60. 
+   * max of 64 - 4 = 60.
    */
   static const size_t PAYLOAD_MAX = DEVICE_PAYLOAD_MAX - 4;
-  
+
   /**
    * Construct C1101 device driver with given network and device
    * address. Connected to SPI bus and given chip select pin. Default
@@ -82,15 +82,15 @@ public:
    * @param[in] irq interrupt pin (Default EXT0/EXT0/EXT4).
    */
 #if defined(BOARD_ATTINYX4)
-  CC1101(uint16_t net, uint8_t dev, 
+  CC1101(uint16_t net, uint8_t dev,
 	 Board::DigitalPin csn = Board::D2,
 	 Board::ExternalInterruptPin irq = Board::EXT0);
 #elif defined(BOARD_ATMEGA2560)
-  CC1101(uint16_t net, uint8_t dev, 
+  CC1101(uint16_t net, uint8_t dev,
 	 Board::DigitalPin csn = Board::D53,
 	 Board::ExternalInterruptPin irq = Board::EXT4);
 #else
-  CC1101(uint16_t net, uint8_t dev, 
+  CC1101(uint16_t net, uint8_t dev,
 	 Board::DigitalPin csn = Board::D10,
 	 Board::ExternalInterruptPin irq = Board::EXT0);
 #endif
@@ -99,7 +99,7 @@ public:
    * @override Wireless::Driver
    * Start and configure C1101 device driver. The configuration must
    * set GDO2 to assert on received message. This device pin is
-   * assumed to be connected the device driver interrupt pin (EXTn). 
+   * assumed to be connected the device driver interrupt pin (EXTn).
    * Return true(1) if successful othewise false(0).
    * @param[in] config configuration vector (default NULL)
    * @return bool.
@@ -109,11 +109,11 @@ public:
   /**
    * @override Wireless::Driver
    * Shutdown the device driver. Return true(1) if successful
-   * otherwise false(0). 
+   * otherwise false(0).
    * @return bool.
    */
   virtual bool end();
-    
+
   /**
    * @override Wireless::Driver
    * Send message in given null terminated io vector. Returns number
@@ -148,7 +148,7 @@ public:
    * length. The source network address is returned in the parameter src.
    * Returns error code(-2) if no message is available and/or a
    * timeout occured. Returns error code(-1) if the buffer size if to
-   * small for incoming message or if the receiver fifo has overflowed. 
+   * small for incoming message or if the receiver fifo has overflowed.
    * Otherwise the actual number of received bytes is returned
    * @param[out] src source network address.
    * @param[out] port device port (or message type).
@@ -157,18 +157,18 @@ public:
    * @param[in] ms maximum time out period (Default blocking(0L)).
    * @return number of bytes received or negative error code.
    */
-  virtual int recv(uint8_t& src, uint8_t& port, void* buf, size_t len, 
+  virtual int recv(uint8_t& src, uint8_t& port, void* buf, size_t len,
 		   uint32_t ms = 0L);
 
   /**
    * @override Wireless::Driver
-   * Set device in power down mode. 
+   * Set device in power down mode.
    */
   virtual void powerdown();
 
   /**
    * @override Wireless::Driver
-   * Set device in wakeup on radio mode. 
+   * Set device in wakeup on radio mode.
    */
   virtual void wakeup_on_radio();
 
@@ -182,7 +182,7 @@ public:
   /**
    * @override Wireless::Driver
    * Return estimated input power level (dBm) from latest successful
-   * message received. 
+   * message received.
    */
   virtual int get_input_power_level();
 
@@ -208,7 +208,7 @@ private:
       uint8_t burst:1;		//!< Burst(1) or Single(0) byte mode.
       uint8_t rw:1;		//!< Read(1) or Write(0).
     };
-    
+
     /**
      * Construct header with given register address, burst and read
      * flag.
@@ -227,7 +227,7 @@ private:
      * Cast header bit-field to byte.
      * @return byte representation.
      */
-    operator uint8_t() 
+    operator uint8_t()
     {
       return (as_uint8);
     }
@@ -235,7 +235,7 @@ private:
 
   /**
    * Read single register value and status. Access status with
-   * get_status(). Returns register value. 
+   * get_status(). Returns register value.
    * @param[in] reg register address.
    * @return value.
    */
@@ -248,7 +248,7 @@ private:
 
   /**
    * Read multiple register values into given buffer. Access status
-   * with get_status(). 
+   * with get_status().
    * @param[in] reg start register address.
    * @param[in] buf buffer to store register values.
    * @param[in] count size of buffer and number of registers to read.
@@ -295,7 +295,7 @@ private:
     m_status = spi.transfer(header_t(reg, 1, 0));
     spi.write_P(buf, count);
   }
-  
+
   /**
    * Configuration Registers (Table 43, pp. 68).
    */
@@ -349,7 +349,7 @@ private:
     TEST0 = 0x2E,		//!< Various test settings.
     CONFIG_MAX = 0x29		//!< Number of configuration registers.
   } __attribute__((packed));
-  
+
   /**
    * Read single configuration register value.
    * @param[in] reg register address.
@@ -362,7 +362,7 @@ private:
 
   /**
    * Read given number of configuration register values into given
-   * buffer. 
+   * buffer.
    * @param[in] reg start register address.
    * @param[in] buf buffer to store register values.
    * @param[in] count size of buffer and number of registers to read.
@@ -502,7 +502,7 @@ private:
    */
   uint8_t read(Status reg)
   {
-    uint8_t res;    
+    uint8_t res;
     read((uint8_t) reg, &res, sizeof(res));
     return (res);
   }
@@ -533,7 +533,7 @@ private:
    * @param[in] cmd command.
    */
   void strobe(Command cmd);
-  
+
   /**
    * Status Byte Summary (Table 23, pp. 31).
    */
@@ -555,14 +555,14 @@ private:
       uint8_t mode:3;		//!< Current main state machine mode.
       uint8_t ready:1;		//!< Chip ready.
     };
-    
+
     status_t(uint8_t value)
     {
       as_uint8 = value;
     }
   };
-  
-  /** 
+
+  /**
    * Get latest transaction status.
    * @return status
    */
@@ -571,7 +571,7 @@ private:
     return (m_status);
   }
 
-  /** 
+  /**
    * Read status byte.
    * @param[in] fifo status (0 = write, 1 = read)
    * @return status
@@ -587,7 +587,7 @@ private:
   }
 
   /**
-   * Await given mode. 
+   * Await given mode.
    * @param[in] mode to await.
    */
   void await(Mode mode);
@@ -644,7 +644,7 @@ private:
 
   /**
    * Handler for interrupt pin. Service interrupt on incoming message
-   * with valid checksum. 
+   * with valid checksum.
    */
   class IRQPin : public ExternalInterrupt {
     friend class CC1101;
@@ -656,11 +656,11 @@ private:
      * @param[in] mode interrupt mode.
      * @param[in] rf device.
      */
-    IRQPin(Board::ExternalInterruptPin pin, InterruptMode mode, CC1101* rf) : 
+    IRQPin(Board::ExternalInterruptPin pin, InterruptMode mode, CC1101* rf) :
       ExternalInterrupt(pin, mode, true),
       m_rf(rf)
     {}
-    
+
     /**
      * @override Interrupt::Handler
      * Signal message has been receive and is available in receive fifo.

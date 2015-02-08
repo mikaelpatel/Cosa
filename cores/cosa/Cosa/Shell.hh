@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -50,7 +50,7 @@ public:
    * Shell command action function. Called with number arguments
    * and NULL terminated argument vector. Should return zero(0) if
    * successful otherwise a negative error code; ILLEGAL_COMMAND,
-   * PERMISSION_DENIED, UNKNOWN_COMMAND, UNKNOWN_OPTION and 
+   * PERMISSION_DENIED, UNKNOWN_COMMAND, UNKNOWN_OPTION and
    * ILLEGAL_OPTION.
    * @param[in] argc argument count.
    * @param[in] argv argument vector.
@@ -68,7 +68,7 @@ public:
     action_fn action;		//!< Shell command action function.
     Level level;		//!< Shell command privilege level.
   };
-  
+
   /**
    * Construct command shell with given command list and prompt.
    * @param[in] cmdc number of commands in vector (max 255).
@@ -88,7 +88,7 @@ public:
     m_echo(true),
     m_level(ADMIN)
   {}
-  
+
   /**
    * Set local echo mode.
    * @param[in] mode.
@@ -125,7 +125,7 @@ public:
   {
     return (m_prompt);
   }
-  
+
   /**
    * Set new privilege level.
    * @param[in] level.
@@ -167,21 +167,21 @@ public:
    * @param[in] cmdtab command table (in program memory).
    * @param[in] prompt to be written to cout.
    */
-  void set_commands(uint8_t cmdc, const command_t* cmdtab, 
+  void set_commands(uint8_t cmdc, const command_t* cmdtab,
 		    const char* prompt = NULL)
   {
     m_cmdc = cmdc;
     m_cmdtab = cmdtab;
     m_prompt = (str_P) (prompt == NULL ? DEFAULT_PROMPT : prompt);
   }
-  
+
   /**
    * Parse command parameter list for options. The command has the
    * format: NAME -X -XVALUE OPTION=VALUE ARGUMENT.., where X is an
    * option character with or without VALUE string, OPTION is an
-   * option name (string), and ARGUMENT is the first non-option. 
+   * option name (string), and ARGUMENT is the first non-option.
    * Returns zero and option string and value if successful otherwise
-   * the index of the first argument in the argument vector. 
+   * the index of the first argument in the argument vector.
    * @param[out] option string.
    * @param[out] value string.
    * @return zero or index of first argument.
@@ -191,7 +191,7 @@ public:
   /**
    * Parse buffer and create command, option and parameter
    * list. Lookup command in given command vector. If found call
-   * action function with arguments and count. Return value from 
+   * action function with arguments and count. Return value from
    * action function or negative error code if not found.
    * @param[in] buf command line (zero terminated string).
    * @return value from action function or negative error code.
@@ -201,7 +201,7 @@ public:
   /**
    * Prompt and read line from given stream and execute command when a
    * line has been completed. Return zero if commmand was not
-   * completed, one if executed or negative error code. 
+   * completed, one if executed or negative error code.
    * @param[in] ios in- and output stream.
    * @return zero or negative error code.
    */
@@ -223,7 +223,7 @@ public:
    * @param[in] outs output stream.
    */
   virtual void prompt(IOStream& outs);
-  
+
 protected:
   /** Default prompt */
   static const char DEFAULT_PROMPT[] PROGMEM;
@@ -253,9 +253,9 @@ protected:
   char** m_argv;		//!< Argument vector.
   uint8_t m_optind;		//!< Next option index.
   bool m_optend;		//!< End of options.
-  
+
   /**
-   * Lookup given command name in command set. Return command entry 
+   * Lookup given command name in command set. Return command entry
    * in program memory or NULL.
    * @param[in] name of shell command.
    * @return command entry or NULL.
@@ -264,7 +264,7 @@ protected:
 
   /**
    * Execute script in program memory. Return zero or the script
-   * command line number of the failed. 
+   * command line number of the failed.
    * @param[in] sp pointer to script in program memory.
    * @param[in] argc argument count.
    * @param[in] argv argument vector.
@@ -283,10 +283,10 @@ protected:
   int help_command(IOStream& outs, uint8_t column, const command_t* command);
 };
 
-/** 
- * Shell script magic marker. 
+/**
+ * Shell script magic marker.
  */
-#define SHELL_SCRIPT_MAGIC "#!Cosa/Shell\n" 
+#define SHELL_SCRIPT_MAGIC "#!Cosa/Shell\n"
 
 /**
  * Support macro to define a command.

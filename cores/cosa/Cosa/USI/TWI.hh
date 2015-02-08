@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,15 +30,15 @@
  * Two wire library. Support for ATtiny I2C/TWI bus master and slave
  * devices using the USI hardware support. See also Cosa/TWI.hh. The
  * public interface should be maintained the same for portability.
- * Note: The internal pullup resistors on the USI pins are active. 
- * External pullup resistors (4K7 ohm) are required for longer 
+ * Note: The internal pullup resistors on the USI pins are active.
+ * External pullup resistors (4K7 ohm) are required for longer
  * wires and/or higher loads.
  */
 class TWI {
 public:
   /**
    * Device drivers are friends and may have callback/event handler
-   * for completion events. 
+   * for completion events.
    */
   class Driver : public Event::Handler {
   public:
@@ -51,7 +51,7 @@ public:
   protected:
     /** Device bus address. */
     uint8_t m_addr;
-    
+
     /** Allow access. */
     friend class TWI;
     friend void ::USI_START_vect(void);
@@ -61,7 +61,7 @@ public:
   /**
    * USI/TWI slave device. Handles incoming requests from TWI master;
    * performs address matching, byte data transfer with ack/nack,
-   * and device callback. 
+   * and device callback.
    */
   class Slave : public TWI::Driver {
   public:
@@ -81,14 +81,14 @@ public:
 
     /**
      * Set write (argument) buffer. Must be called before starting
-     * TWI. 
+     * TWI.
      * @param[in] buf buffer pointer.
      * @param[in] size of buffer.
      */
     void set_write_buf(void* buf, size_t size);
 
     /**
-     * Start the slave device. 
+     * Start the slave device.
      */
     void begin();
 
@@ -97,8 +97,8 @@ public:
      * Service request callback when a write has been completed,
      * i.e., an argument block as been written. Must be defined by
      * sub-class. Must handle write-read and write-write
-     * sequences. The device will become ready after the completion 
-     * of the function.  
+     * sequences. The device will become ready after the completion
+     * of the function.
      * @param[in] buf buffer pointer.
      * @param[in] size of buffer.
      */
@@ -120,7 +120,7 @@ public:
     friend void ::USI_OVF_vect(void);
   };
 
-  /** 
+  /**
    * Construct two-wire instance. This is actually a single-ton on
    * current supported hardware, i.e. there can only be one unit.
    */
@@ -128,21 +128,21 @@ public:
 
   /**
    * Start TWI logic for a device transaction block. Use given event
-   * handler for completion events. 
+   * handler for completion events.
    * @param[in] dev device.
    * @param[in] target receiver of events on requests (default NULL).
    */
   void begin(TWI::Driver* dev, Event::Handler* target = NULL);
 
   /**
-   * Stop usage of the TWI bus logic. 
+   * Stop usage of the TWI bus logic.
    * @return true(1) if successful otherwise false(0).
    */
   void end();
 
   /**
    * Write data to the current driver. Returns number of bytes written
-   * or negative error code. 
+   * or negative error code.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
    * @return number of bytes
@@ -151,7 +151,7 @@ public:
 
   /**
    * Write data to the current driver with given byte header. Returns
-   * number of bytes written or negative error code. 
+   * number of bytes written or negative error code.
    * @param[in] header to write before buffer.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
@@ -182,7 +182,7 @@ public:
    * Set bus frequency (not implemented for USI).
    * @param[in] hz bus frequency.
    */
-  void set_freq(uint32_t hz) 
+  void set_freq(uint32_t hz)
   {
     UNUSED(hz);
   }
@@ -222,7 +222,7 @@ private:
   enum {
     // Clear all interrupt flags
     SR_CLEAR_ALL = _BV(USISIF) | _BV(USIOIF) | _BV(USIPF) | _BV(USIDC),
-    // Clear all flags, except Start Condition. 
+    // Clear all flags, except Start Condition.
     SR_CLEAR = _BV(USIOIF) | _BV(USIPF) | _BV(USIDC),
     // Clear flags. Set USI counter to shift 1 bit (2 edges)
     SR_CLEAR_ACK = SR_CLEAR | (0x0E << USICNT0),
@@ -233,7 +233,7 @@ private:
     // Enable start condition. Set USI TWI mode(0). External clock source
     CR_START_MODE = _BV(USISIE) | _BV(USIWM1) |  _BV(USICS1),
     // Enable start and overflow. Set USI TWI mode(1). External clock
-    CR_TRANSFER_MODE = _BV(USISIE) |  _BV(USIOIE) | _BV(USIWM1) | _BV(USIWM0) 
+    CR_TRANSFER_MODE = _BV(USISIE) |  _BV(USIOIE) | _BV(USIWM1) | _BV(USIWM0)
                      | _BV(USICS1),
     // Master initialization. Software clock strobe
     CR_INIT_MODE =  _BV(USIWM1) | _BV(USICS1) | _BV(USICLK),
@@ -259,7 +259,7 @@ private:
   volatile int m_count;
   Driver* m_dev;
   volatile bool m_busy;
-  
+
   /**
    * Get current driver state.
    * @return state
@@ -277,7 +277,7 @@ private:
   {
     m_state = state;
   }
-  
+
   /**
    * Set data (SDA) pin input/output mode.
    * @param[in] mode.
@@ -311,7 +311,7 @@ private:
 
   /**
    * Write data to buffer. Return true if not full otherwise
-   * false. 
+   * false.
    * @param[in] data to write.
    * @return bool
    */
@@ -321,10 +321,10 @@ private:
     m_count += 1;
     return (m_next < m_last);
   }
-  
+
   /**
    * Read data into write buffer. Return true if successful
-   * otherwise if empty false. 
+   * otherwise if empty false.
    * @param[out] data read.
    * @return bool
    */

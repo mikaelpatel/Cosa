@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,7 +30,7 @@ namespace Soft {
  * Soft N-Shift Register Parallel Input. The shift registers (74HC165)
  * may be cascaded for N*8-bit parallel input port (see circuit
  * below). The pins are numbered from the first connect shift register
- * (Q0..Q7) and updwards in the chain (Q8..Q15) and so on. 
+ * (Q0..Q7) and updwards in the chain (Q8..Q15) and so on.
  *
  * @section Circuit
  * @code
@@ -77,7 +77,7 @@ public:
    * @param[in] scl serial clock (Default D4).
    * @param[in] pld load (Default D5).
    */
-  SRPI(Board::DigitalPin sda = Board::D3, 
+  SRPI(Board::DigitalPin sda = Board::D3,
        Board::DigitalPin scl = Board::D4,
        Board::DigitalPin pld = Board::D5) :
     m_sda(sda),
@@ -89,7 +89,7 @@ public:
 
   /**
    * Return true(1) if the given pin in shadow register is set,
-   * otherwise false(0). 
+   * otherwise false(0).
    * @param[in] pin pin number.
    * @return bool.
    */
@@ -102,7 +102,7 @@ public:
 
   /**
    * Return true(1) if the given pin in shadow register is set,
-   * otherwise false(0). 
+   * otherwise false(0).
    * @param[in] pin pin number.
    * @return bool.
    */
@@ -114,7 +114,7 @@ public:
   }
 
   /**
-   * Update shadow register with value of shift registers. 
+   * Update shadow register with value of shift registers.
    * Parallel load and shift from register.
    */
   void update()
@@ -138,7 +138,7 @@ public:
 
     /**
      * Return true(1) if the given pin in shadow register is set,
-     * otherwise false(0). 
+     * otherwise false(0).
      * @return bool.
      */
     bool is_set()
@@ -149,7 +149,7 @@ public:
 
     /**
      * Return true(1) if the given pin in shadow register is set,
-     * otherwise false(0). 
+     * otherwise false(0).
      * @return bool.
      */
     void is_clear(uint8_t pin)

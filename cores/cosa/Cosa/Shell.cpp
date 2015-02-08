@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -24,7 +24,7 @@ const char Shell::DEFAULT_PROMPT[] __PROGMEM = "arduino:$ ";
 const char Shell::DEFAULT_HELP_SEPARATOR[] __PROGMEM = "-- ";
 
 const Shell::command_t*
-Shell::lookup(char* name) 
+Shell::lookup(char* name)
 {
   for (uint8_t i = 0; i < m_cmdc; i++) {
     if (strcmp_P(name, (const char*) pgm_read_word(&m_cmdtab[i].name)) == 0)
@@ -94,8 +94,8 @@ Shell::execute(char* buf)
       argv[argc++] = bp;
       while (c > ' ' && c != '"') c = *++bp;
       if (c == '"') {
-	do 
-	  c = *++bp; 
+	do
+	  c = *++bp;
 	while (c != 0 && c != '"');
 	if (c == 0) return (ILLEGAL_COMMAND);
 	c = *++bp;
@@ -120,7 +120,7 @@ Shell::execute(char* buf)
 
   // Check if the action is a script
   const char* sp  = (const char*) pgm_read_word(&cp->action);
-  if (strncmp_P(SHELL_SCRIPT_MAGIC, sp, sizeof(SHELL_SCRIPT_MAGIC) - 1) == 0) 
+  if (strncmp_P(SHELL_SCRIPT_MAGIC, sp, sizeof(SHELL_SCRIPT_MAGIC) - 1) == 0)
     return (script(sp, argc, argv));
 
   // Otherwise call the action function
@@ -128,7 +128,7 @@ Shell::execute(char* buf)
   return (action(argc, argv));
 }
 
-int 
+int
 Shell::script(const char* sp, int argc, char* argv[])
 {
   char buf[BUF_MAX];
@@ -170,7 +170,7 @@ Shell::script(const char* sp, int argc, char* argv[])
   return (0);
 }
 
-int 
+int
 Shell::run(IOStream& ios)
 {
   // Check first time run; will need to prompt
@@ -237,7 +237,7 @@ Shell::help_command(IOStream& outs, uint8_t column, const command_t* command)
     outs << ' ';
     remains--;
   }
-    
+
   while (remains--)
     outs << m_gap_fill;
 
@@ -275,7 +275,7 @@ Shell::help(IOStream& outs, char* command)
   return (0);
 }
 
-void 
+void
 Shell::prompt(IOStream& outs)
 {
   outs << m_prompt;

@@ -9,7 +9,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -46,14 +46,14 @@ class Trigger : public Capsule, public ExternalInterrupt {
 public:
   /**
    * Construct Trigger on external interrupt pin and generating
-   * signal. 
+   * signal.
    * @param[in] pin digital pin for trigger.
    * @param[in] signal connector.
    * @param[in] ms period.
    */
-  Trigger(Board::ExternalInterruptPin pin, Signal& signal, 
+  Trigger(Board::ExternalInterruptPin pin, Signal& signal,
 	  ExternalInterrupt::InterruptMode mode = ON_FALLING_MODE) :
-    Capsule(), 
+    Capsule(),
     ExternalInterrupt(pin, mode, true),
     m_signal(signal)
   {}
@@ -62,7 +62,7 @@ public:
    * @override Capsule
    * Trigger will perform all updates in the interrupt service.
    */
-  virtual void behavior() 
+  virtual void behavior()
   {
   }
 
@@ -72,7 +72,7 @@ protected:
    * Interrupt service callback on external interrupt pin change.
    * @param[in] arg argument from interrupt service routine.
    */
-  virtual void on_interrupt(uint16_t arg = 0) 
+  virtual void on_interrupt(uint16_t arg = 0)
   {
     UNUSED(arg);
     m_signal = read();

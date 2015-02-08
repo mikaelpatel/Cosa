@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -27,7 +27,7 @@
 
 /**
  * Driver for the DS3231, Extremely Accurate I2C-Integrated
- * RTC/TCXO/Crystal. 
+ * RTC/TCXO/Crystal.
  *
  * @section Circuit
  * The Mini RTC pro module with pull-up resistors (4K7) for TWI signals.
@@ -44,7 +44,7 @@
  * @endcode
  *
  * @section References
- * 1. Maxim Integrated product description; 
+ * 1. Maxim Integrated product description;
  * http://datasheets.maximintegrated.com/en/ds/DS3231.pdf
  */
 class DS3231 : private TWI::Driver {
@@ -70,7 +70,7 @@ public:
     };
 
     /**
-     * Convert alarm time to binary representation (from BCD). 
+     * Convert alarm time to binary representation (from BCD).
      * Apply after reading from device and before any calculation.
      * Note that output stream operator requires BCD form.
      */
@@ -89,7 +89,7 @@ public:
       ::to_bcd(&seconds, sizeof(alarm1_t));
     }
   };
-  
+
   /**
    * Alarm2 register sub-set type and mask bits (Table 2, pp. 12).
    */
@@ -109,7 +109,7 @@ public:
     };
 
     /**
-     * Convert alarm time to binary representation (from BCD). 
+     * Convert alarm time to binary representation (from BCD).
      * Apply after reading from device and before any calculation.
      * Note that output stream operator requires BCD form.
      */
@@ -128,7 +128,7 @@ public:
       ::to_bcd(&minutes, sizeof(alarm2_t));
     }
   };
-  
+
   /**
    * Special-Purpose Register: Control Register (pp. 13).
    */
@@ -190,7 +190,7 @@ public:
 
   /**
    * Write register block at given position with the contents from
-   * buffer. Return number of bytes written or negative error code. 
+   * buffer. Return number of bytes written or negative error code.
    * @param[in] regs buffer to write to register block.
    * @param[in] size number of bytes to write.
    * @param[in] pos address in register file to read write to.
@@ -200,11 +200,11 @@ public:
 
   /**
    * Read current time from real-time clock. Return true(1) if
-   * successful otherwise false(0). 
+   * successful otherwise false(0).
    * @param[out] now time structure return value.
    * @return boolean.
    */
-  bool get_time(time_t& now) 
+  bool get_time(time_t& now)
     __attribute__((always_inline))
   {
     return (read(&now, sizeof(now)) == sizeof(now));
@@ -212,7 +212,7 @@ public:
 
   /**
    * Set the real-time clock to the given time. Return true(1) if
-   * successful otherwise false(0). 
+   * successful otherwise false(0).
    * @param[in] now time structure to set.
    * @return boolean.
    */
@@ -237,7 +237,7 @@ public:
 
   /**
    * Set real-time clock alarm1 with the given time and mask. Return
-   * true(1) if successful otherwise false(0). 
+   * true(1) if successful otherwise false(0).
    * @param[in] alarm time structure to set.
    * @param[out] mask alarm mask bits.
    * @return boolean.
@@ -263,7 +263,7 @@ public:
 
   /**
    * Set real-time clock alarm with the given time and mask. Return
-   * true(1) if successful otherwise false(0). 
+   * true(1) if successful otherwise false(0).
    * @param[in] alarm time structure to set.
    * @param[out] mask alarm mask bits.
    * @return boolean.
@@ -294,7 +294,7 @@ private:
 
   /**
    * Set real-time clock alarm with the given time and mask. Return
-   * true(1) if successful otherwise false(0). 
+   * true(1) if successful otherwise false(0).
    * @param[in] alarm time structure to set.
    * @param[in] size of alarm time structure.
    * @param[in] offset to alarm time structure in timekeeper.
@@ -306,7 +306,7 @@ private:
 
 /**
  * Print the alarm to the given stream with the format (DD HH:MM:SS).
- * The values should be in BCD i.e. not converted to binary. 
+ * The values should be in BCD i.e. not converted to binary.
  * @param[in] outs output stream.
  * @param[in] t alarm time structure.
  * @return iostream.
@@ -315,7 +315,7 @@ IOStream& operator<<(IOStream& outs, DS3231::alarm1_t& t);
 
 /**
  * Print the alarm to the given stream with the format (DD HH:MM).
- * The values should be in BCD i.e. not converted to binary. 
+ * The values should be in BCD i.e. not converted to binary.
  * @param[in] outs output stream.
  * @param[in] t alarm time structure.
  * @return iostream.
@@ -324,7 +324,7 @@ IOStream& operator<<(IOStream& outs, DS3231::alarm2_t& t);
 
 /**
  * Print the timekeeper structure to the given stream. The timekeeper
- * values should be in BCD i.e. not converted to binary.  
+ * values should be in BCD i.e. not converted to binary.
  * @param[in] outs output stream.
  * @param[in] t alarm time structure.
  * @return iostream.

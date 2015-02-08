@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -40,7 +40,7 @@ DS3231::write(void* regs, uint8_t size, uint8_t pos)
   return (count);
 }
 
-bool 
+bool
 DS3231::get(void* alarm, uint8_t size, uint8_t offset, uint8_t& mask)
 {
   int res = read(alarm, size, offset);
@@ -56,7 +56,7 @@ DS3231::get(void* alarm, uint8_t size, uint8_t offset, uint8_t& mask)
   return (true);
 }
 
-bool 
+bool
 DS3231::set(void* alarm, uint8_t size, uint8_t offset, uint8_t mask)
 {
   uint8_t* buf = (uint8_t*) alarm;
@@ -69,7 +69,7 @@ DS3231::set(void* alarm, uint8_t size, uint8_t offset, uint8_t mask)
   return (res == size);
 }
 
-int16_t 
+int16_t
 DS3231::get_temperature()
 {
   int16_t temp = 0;

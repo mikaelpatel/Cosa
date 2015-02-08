@@ -9,7 +9,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -30,7 +30,7 @@ namespace UML {
 /**
  * Button Capsule class. Provides a boolean signal connector that is
  * set according to the button (digital pin). The pin is periodically
- * sampled and listeners are scheduled when the state changes. 
+ * sampled and listeners are scheduled when the state changes.
  *
  * @section Diagram
  *
@@ -52,13 +52,13 @@ public:
   /**
    * Construct Button monitoring given digital pin and generating
    * signal. The pin is sampled with the given period (default 64
-   * ms). 
+   * ms).
    * @param[in] pin digital pin for button.
    * @param[in] signal connector.
    * @param[in] ms period.
    */
-  Button(Board::DigitalPin pin, Signal& signal, uint16_t ms = DEFAULT_TIMEOUT) : 
-    TimedCapsule(ms), 
+  Button(Board::DigitalPin pin, Signal& signal, uint16_t ms = DEFAULT_TIMEOUT) :
+    TimedCapsule(ms),
     InputPin(pin, InputPin::PULLUP_MODE),
     m_signal(signal)
   {}
@@ -67,7 +67,7 @@ public:
    * @override Capsule
    * Read digital pin and update signal on change.
    */
-  virtual void behavior() 
+  virtual void behavior()
   {
     m_signal = read();
   }

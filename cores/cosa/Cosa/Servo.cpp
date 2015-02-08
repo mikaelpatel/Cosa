@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -26,7 +26,7 @@ Servo* Servo::servo[2] = { 0, 0 };
 
 #define US_TO_TICKS(us) ((I_CPU * (us)) / 8)
 
-bool 
+bool
 Servo::begin()
 {
   TCCR1A = 0;
@@ -39,7 +39,7 @@ Servo::begin()
   return (true);
 }
 
-bool 
+bool
 Servo::end()
 {
   TIMSK1 &= ~_BV(OCIE1A);
@@ -47,8 +47,8 @@ Servo::end()
   return (true);
 }
 
-void 
-Servo::set_angle(uint8_t degree) 
+void
+Servo::set_angle(uint8_t degree)
 {
   if (degree > 180) degree = 180;
   uint16_t width = (((uint32_t) (m_max - m_min)) * degree) / 180L;
@@ -56,10 +56,10 @@ Servo::set_angle(uint8_t degree)
     m_width = m_min + width;
     m_angle = degree;
   }
-}  
+}
 
-ISR(TIMER1_COMPA_vect) 
-{ 
+ISR(TIMER1_COMPA_vect)
+{
   Servo* servo = Servo::servo[0];
   if (servo == 0) return;
   servo->toggle();
@@ -69,8 +69,8 @@ ISR(TIMER1_COMPA_vect)
     OCR1A = TCNT1 + US_TO_TICKS(Servo::PERIOD - servo->m_width);
 }
 
-ISR(TIMER1_COMPB_vect) 
-{ 
+ISR(TIMER1_COMPB_vect)
+{
   Servo* servo = Servo::servo[1];
   if (servo == 0) return;
   servo->toggle();

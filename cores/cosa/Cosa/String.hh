@@ -4,19 +4,19 @@
  *
  * @section License
  * Copyright (c) 2009-10 Hernando Barragan.  All right reserved.
- * Copyright 2011, Paul Stoffregen, paul@pjrc.com, rewriting. 
- * Copyright (C) 2014, Mikael Patel, refactoring.
+ * Copyright 2011, Paul Stoffregen, paul@pjrc.com, rewriting.
+ * Copyright (C) 2014-2015, Mikael Patel, refactoring.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -36,9 +36,9 @@ class __StringSumHelper;
  */
 class String {
 
-  /** 
+  /**
    * Use a function pointer to allow for "if (s)" without the
-   * complications of an operator bool(). for more information, see: 
+   * complications of an operator bool(). for more information, see:
    * http://www.artima.com/cppsource/safebool.html
    */
   typedef void (String::*StringIfHelperType)() const;
@@ -69,26 +69,26 @@ public:
 
   ~String(void);
 
-  /** 
+  /**
    * Memory Management: Return true on success, false on failure (in
    * which case, the string is left unchanged).  reserve(0), if
    * successful, will validate an invalid string (i.e., "if (s)" will
-   * be true afterwards) 
+   * be true afterwards)
    */
   unsigned char reserve(unsigned int size);
 
   /**
    * Return string length.
    */
-  inline unsigned int length(void) const 
+  inline unsigned int length(void) const
   {
     return (m_length);
   }
-  
+
   /**
    * Creates a copy of the assigned value.  if the value is null or
    * invalid, or if the memory allocation fails, the string will be
-   * marked as invalid ("if (s)" will be false). 
+   * marked as invalid ("if (s)" will be false).
    */
   String& operator=(const String &rhs);
   String& operator=(const char *cstr);
@@ -115,11 +115,11 @@ public:
   unsigned char concat(float num);
   unsigned char concat(double num);
   unsigned char concat(str_P str);
-	
+
   /**
    * If there's not enough memory for the concatenated value, the
    * string will be left unchanged (but this isn't signalled in any
-   * way) 
+   * way)
    */
   String& operator+=(const String &rhs) { concat(rhs); return (*this); }
   String& operator+=(const char *cstr)	{ concat(cstr); return (*this); }
@@ -148,9 +148,9 @@ public:
   /**
    * Comparison (only works w/ Strings and "strings").
    */
-  operator StringIfHelperType() const 
-  { 
-    return m_buffer ? &String::StringIfHelper : 0; 
+  operator StringIfHelperType() const
+  {
+    return m_buffer ? &String::StringIfHelper : 0;
   }
 
   int compareTo(const String &s) const;
@@ -177,14 +177,14 @@ public:
   char operator[](unsigned int index) const;
   char& operator[](unsigned int index);
   void getBytes(unsigned char* buf, unsigned int bufsize, unsigned int index = 0) const;
-  
+
   void toCharArray(char* buf, unsigned int bufsize, unsigned int index = 0) const
   {
     getBytes((unsigned char*) buf, bufsize, index);
   }
 
   const char* c_str() const { return (m_buffer); }
-  
+
   /**
    * Search.
    */
@@ -201,9 +201,9 @@ public:
    * Sub-string.
    */
   String substring(unsigned int beginIndex, unsigned int endIndex) const;
-  String substring(unsigned int beginIndex) const 
-  { 
-    return substring(beginIndex, m_length); 
+  String substring(unsigned int beginIndex) const
+  {
+    return substring(beginIndex, m_length);
   };
 
   /**
@@ -244,7 +244,7 @@ protected:
 /**
  * An inherited String class for holding the result of a
  * concatenation. These result objects are assumed to be writable by
- * subsequent concatenations. 
+ * subsequent concatenations.
  */
 class __StringSumHelper : public String
 {

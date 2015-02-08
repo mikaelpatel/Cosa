@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,7 +34,7 @@
  * @section Circuit
  * This is the pin-out for the NRF24L01+ module. NRF24L01+ is a low
  * voltage device (3V3) and input signals are 5V tolerant.
- * 
+ *
  * @code
  *                          NRF24L01P
  *                       +------------+
@@ -60,14 +60,14 @@ public:
    */
   static const size_t DEVICE_PAYLOAD_MAX = 32;
 
-  /** 
+  /**
    * Maximum size of payload. The device allows 32 bytes payload.
    * The source address one byte and port one byte as header.
    */
   static const size_t PAYLOAD_MAX = DEVICE_PAYLOAD_MAX - 2;
 
   /**
-   * Construct NRF transceiver with given channel and pin numbers 
+   * Construct NRF transceiver with given channel and pin numbers
    * for SPI slave select, activity enable and interrupt. Default
    * in parenthesis (Standard/Mega Arduino/TinyX4).
    * @param[in] net network address.
@@ -78,42 +78,42 @@ public:
    */
 #if defined(BOARD_ATTINYX4)
   NRF24L01P(uint16_t net, uint8_t dev,
-	    Board::DigitalPin csn = Board::D2, 
-	    Board::DigitalPin ce = Board::D3, 
+	    Board::DigitalPin csn = Board::D2,
+	    Board::DigitalPin ce = Board::D3,
 	    Board::ExternalInterruptPin irq = Board::EXT0);
 #elif defined(BOARD_ATMEGA2560)
   NRF24L01P(uint16_t net, uint8_t dev,
-	    Board::DigitalPin csn = Board::D53, 
-	    Board::DigitalPin ce = Board::D48, 
+	    Board::DigitalPin csn = Board::D53,
+	    Board::DigitalPin ce = Board::D48,
 	    Board::ExternalInterruptPin irq = Board::EXT4);
 #else
   NRF24L01P(uint16_t net, uint8_t dev,
-	    Board::DigitalPin csn = Board::D10, 
-	    Board::DigitalPin ce = Board::D9, 
+	    Board::DigitalPin csn = Board::D10,
+	    Board::DigitalPin ce = Board::D9,
 	    Board::ExternalInterruptPin irq = Board::EXT0);
 #endif
-  
+
   /**
    * Set power up mode. Will initiate radio with necessary settings
-   * after power on reset. 
+   * after power on reset.
    */
   void powerup();
 
   /**
-   * Set standby mode. 
+   * Set standby mode.
    */
   void standby();
 
   /**
    * @override Wireless::Device
-   * Set power down. Turn off radio and go into low power mode. 
+   * Set power down. Turn off radio and go into low power mode.
    */
   virtual void powerdown();
 
   /**
    * @override Wireless::Device
    * Start up the device driver. Return true(1) if successful
-   * otherwise false(0). 
+   * otherwise false(0).
    * @param[in] config device configuration (default NULL).
    * @return bool
    */
@@ -134,7 +134,7 @@ public:
   /**
    * @override Wireless::Device
    * Return true(1) if the data to receive on the device otherwise
-   * false(0). 
+   * false(0).
    * @return bool
    */
   virtual bool available();
@@ -173,7 +173,7 @@ public:
    * size. The source network address is returned in the parameter src.
    * Returns error code(-2) if no message is available and/or a
    * timeout occured. Returns error code(-1) if the buffer size if to
-   * small for incoming message or if the receiver fifo has overflowed. 
+   * small for incoming message or if the receiver fifo has overflowed.
    * Otherwise the actual number of received bytes is returned
    * @param[out] src source network address.
    * @param[out] port device port (or message type).
@@ -182,7 +182,7 @@ public:
    * @param[in] ms maximum time out period.
    * @return number of bytes received or negative error code.
    */
-  virtual int recv(uint8_t& src, uint8_t& port, void* buf, size_t count, 
+  virtual int recv(uint8_t& src, uint8_t& port, void* buf, size_t count,
 		   uint32_t ms = 0L);
 
   /**
@@ -197,8 +197,8 @@ public:
    * @return transmitt count.
    */
   uint16_t get_trans() const
-  { 
-    return (m_trans); 
+  {
+    return (m_trans);
   }
 
   /**
@@ -206,8 +206,8 @@ public:
    * @return retransmitt count.
    */
   uint16_t get_retrans() const
-  { 
-    return (m_retrans); 
+  {
+    return (m_retrans);
   }
 
   /**
@@ -215,8 +215,8 @@ public:
    * @return drop count.
    */
   uint16_t get_drops() const
-  { 
-    return (m_drops); 
+  {
+    return (m_drops);
   }
 
 protected:
@@ -263,7 +263,7 @@ protected:
    * @param[in] size number of bytes to read.
    */
   void read(Command cmd, void* buf, size_t size);
-  
+
   /**
    * Issue command.
    * @param[in] cmd command.
@@ -284,7 +284,7 @@ protected:
    * @param[in] size number of bytes to write.
    */
   void write(Command cmd, const void* buf, size_t size);
-  
+
   /**
    * NRF transceiver registers map (See chap. 9, tab. 28, pp. 57).
    */
@@ -347,7 +347,7 @@ protected:
     ENAA_P0 = 0,		//!< - data pipe 0.
     ENAA_PA = 0x3f		//!< Enable all auto ack on all data pipes.
   } __attribute__((packed));
-  
+
   /**
    * Register EN_RXADDR bitfields, enable receive pipe.
    */
@@ -393,7 +393,7 @@ protected:
     RF_DR_HIGH = 3,		//!< Air data bitrate (2 Mbps).
     RF_PWR = 1			//!< Set RF output power in TX mode (bits 2).
   } __attribute__((packed));
-  
+
   /**
    * Transmission rates RF_DR_LOW/RF_DR_HIGH values, radio bit-rate.
    */
@@ -444,8 +444,8 @@ protected:
      * Construct status from register reading.
      * @param[in] value register reading.
      */
-    status_t(uint8_t value) 
-    { 
+    status_t(uint8_t value)
+    {
       as_byte = value;
     }
   };
@@ -489,7 +489,7 @@ protected:
     RX_FULL = 1,		//!< RX FIFO full flag.
     RX_EMPTY = 0,		//!< RX FIFO empty flag.
   } __attribute__((packed));
-  
+
   /**
    * Register FIFO_STATUS data type, transmission queue status.
    */
@@ -514,7 +514,7 @@ protected:
       as_byte = value;
     }
   };
-  
+
   /**
    * Register DYNPD bitfields.
    */
@@ -560,10 +560,10 @@ protected:
   {
     read((Command) (R_REGISTER | (REG_MASK & reg)), buf, size);
   }
-  
+
   /**
    * Write command and value. Issue W_REGISTER command with register
-   * and write data. 
+   * and write data.
    * @param[in] reg register address.
    * @param[in] data new setting.
    * @return status.
@@ -585,14 +585,14 @@ protected:
   {
     write((Command) (W_REGISTER | (REG_MASK & reg)), buf, size);
   }
-  
+
   /**
    * Timing information (ch. 6.1.7, tab. 16, pp. 24).
    */
   static const uint16_t Tpd2stby_ms = 3;
   static const uint16_t Tstby2a_us = 130;
   static const uint16_t Thce_us = 10;
-  
+
   /**
    * Configuration max values.
    */
@@ -606,9 +606,9 @@ protected:
    */
   class IRQPin : public ExternalInterrupt {
   public:
-    IRQPin(Board::ExternalInterruptPin pin, 
-	   InterruptMode mode, 
-	   NRF24L01P* nrf) : 
+    IRQPin(Board::ExternalInterruptPin pin,
+	   InterruptMode mode,
+	   NRF24L01P* nrf) :
       ExternalInterrupt(pin, mode),
       m_nrf(nrf)
     {}
@@ -616,7 +616,7 @@ protected:
   private:
     NRF24L01P* m_nrf;		//!< Device driver.
   };
-  
+
   OutputPin m_ce;		//!< Chip enable activity RX/TX select pin.
   IRQPin m_irq;			//!< Chip interrupt pin and handler.
   status_t m_status;		//!< Latest status.
@@ -643,7 +643,7 @@ protected:
 
   /**
    * Read transmission status. Issue OBSERVE_TX command to read
-   * status. 
+   * status.
    * @return observe tx status.
    */
   observe_tx_t read_observe_tx()
@@ -668,7 +668,7 @@ protected:
   friend IOStream& operator<<(IOStream& outs, observe_tx_t observe);
 };
 
-/** 
+/**
  * Output operator for status field print out.
  * @param[in] outs output stream.
  * @param[in] status value to print.
@@ -676,7 +676,7 @@ protected:
  */
 IOStream& operator<<(IOStream& outs, NRF24L01P::status_t status);
 
-/** 
+/**
  * Output operator for transmitter queue status field print out.
  * @param[in] outs output stream.
  * @param[in] status value to print.
@@ -684,7 +684,7 @@ IOStream& operator<<(IOStream& outs, NRF24L01P::status_t status);
  */
 IOStream& operator<<(IOStream& outs, NRF24L01P::fifo_status_t status);
 
-/** 
+/**
  * Output operator for observe statistics field print out.
  * @param[in] outs output stream.
  * @param[in] observe value to print.

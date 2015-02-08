@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -31,7 +31,7 @@
  * Two wire library. Support for the I2C/TWI bus Master and Slave
  * device drivers. Single-ton, twi, holds bus interaction state.
  * Supporting classes TWI::Driver for device drivers, TWI::Slave
- * for slave devices. 
+ * for slave devices.
  *
  * @section Circuit
  * TWI slave circuit with internal pullup resistors (4K7). Note that
@@ -57,7 +57,7 @@ public:
 
   /**
    * Device drivers are friends and may have callback/event handler
-   * for completion events. 
+   * for completion events.
    */
   class Driver : public Event::Handler {
   public:
@@ -102,9 +102,9 @@ public:
      * @param[in] size of buffer.
      */
     void set_write_buf(void* buf, size_t size);
-    
+
     /**
-     * Start TWI bus logic for the slave device. 
+     * Start TWI bus logic for the slave device.
      */
     void begin();
 
@@ -112,8 +112,8 @@ public:
      * @override TWI::Slave
      * Service request callback when a write has been completed, i.e.,
      * an argument block as been written. Must be defined by sub-class.
-     * Must handle write-read and write-write sequences. The device will 
-     * become ready after the completion of the function. 
+     * Must handle write-read and write-write sequences. The device will
+     * become ready after the completion of the function.
      * @param[in] buf buffer pointer.
      * @param[in] size of buffer.
      */
@@ -141,8 +141,8 @@ public:
     friend class TWI;
     friend void TWI_vect(void);
   };
-  
-  /** 
+
+  /**
    * Construct two-wire instance. This is actually a single-ton on
    * current supported hardware, i.e. there can only be one unit.
    */
@@ -166,7 +166,7 @@ public:
 
   /**
    * Start TWI logic for a device transaction block. Use given event
-   * handler for completion events. 
+   * handler for completion events.
    * @param[in] dev device.
    * @param[in] target receiver of events on requests (default NULL).
    * @return true(1) if successful otherwise false(0).
@@ -174,13 +174,13 @@ public:
   void begin(TWI::Driver* dev, Event::Handler* target = NULL);
 
   /**
-   * Stop usage of the TWI bus logic. 
+   * Stop usage of the TWI bus logic.
    */
   void end();
 
   /**
    * Issue a write data request to the current driver. Return
-   * true(1) if successful otherwise(0). 
+   * true(1) if successful otherwise(0).
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
    * @return bool
@@ -209,7 +209,7 @@ public:
 
   /**
    * Issue a read data request to the current driver. Return true(1)
-   * if successful otherwise(0). 
+   * if successful otherwise(0).
    * @param[in] buf data to read.
    * @param[in] size number of bytes to read.
    * @return number of bytes
@@ -232,7 +232,7 @@ public:
 
   /**
    * Write data to the current driver with given byte header. Returns
-   * number of bytes written or negative error code. 
+   * number of bytes written or negative error code.
    * @param[in] header to write before buffer.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to write.
@@ -262,7 +262,7 @@ public:
 
   /**
    * Read data to the current driver. Returns number of bytes read or
-   * negative error code. 
+   * negative error code.
    * @param[in] buf data to write.
    * @param[in] size number of bytes to read.
    * @return number of bytes
@@ -275,7 +275,7 @@ public:
   }
 
   /**
-   * Await issued request to complete. Returns number of bytes 
+   * Await issued request to complete. Returns number of bytes
    * or negative error code.
    */
   int await_completed();
@@ -399,7 +399,7 @@ private:
   Driver* m_dev;
   uint8_t m_freq;
   volatile bool m_busy;
-  
+
   /**
    * Start block transfer. Setup internal buffer pointers.
    * Part of the TWI ISR state machine.
@@ -435,7 +435,7 @@ private:
 
   /**
    * Initiate a request to the device. Return true(1) if successful
-   * otherwise false(0).  
+   * otherwise false(0).
    * @param[in] op slave operation.
    * @return bool
    */

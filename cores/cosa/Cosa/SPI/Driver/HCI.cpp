@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -22,7 +22,7 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
 
-int 
+int
 HCI::read(uint16_t &op, void* args, uint8_t len)
 {
   // Check that a message is available
@@ -43,7 +43,7 @@ HCI::read(uint16_t &op, void* args, uint8_t len)
     spi.transfer(0);
     payload = spi.transfer(0);
     payload = (payload << 8) | spi.transfer(0);
-    
+
     // Sanity check the SPI payload
     if (payload >= sizeof(HCI::cmnd_header_t)) {
       cmnd_header_t header;
@@ -78,7 +78,7 @@ HCI::read(uint16_t &op, void* args, uint8_t len)
   return (res);
 }
 
-int 
+int
 HCI::write(uint8_t type, uint16_t op, const void* args, uint8_t len, bool progmem)
 {
   // Calculate padding and payload size
@@ -120,7 +120,7 @@ HCI::write(uint8_t type, uint16_t op, const void* args, uint8_t len, bool progme
   return (res);
 }
 
-int 
+int
 HCI::await(uint16_t op, void* args, uint8_t len)
 {
   uint32_t start = RTC::millis();
@@ -147,7 +147,7 @@ HCI::await(uint16_t op, void* args, uint8_t len)
     }
 
     // Otherwise call the message handler
-    if (m_event_handler != NULL) 
+    if (m_event_handler != NULL)
       m_event_handler->on_event(event, m_evnt, res);
   };
 
@@ -155,7 +155,7 @@ HCI::await(uint16_t op, void* args, uint8_t len)
   return (-ENOMSG);
 }
 
-int 
+int
 HCI::read_data(uint8_t op, void* args, uint8_t args_len,
 	       void* data, uint16_t data_len)
 {
@@ -218,7 +218,7 @@ HCI::read_data(uint8_t op, void* args, uint8_t args_len,
   return (res);
 }
 
-int 
+int
 HCI::write_data(uint8_t op, const void* args, uint8_t args_len,
 		const void* data, uint16_t data_len, bool progmem)
 {

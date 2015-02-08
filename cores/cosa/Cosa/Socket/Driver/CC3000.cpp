@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -31,7 +31,7 @@
 #define FD_ISSET(fd,set) (((1UL << (fd)) & set) != 0UL)
 #define FD_SET(fd,set) set = (1UL << (fd)) | set
 
-static void 
+static void
 memrevcpy(void* dest, const void* src, size_t n)
 {
   if (n == 0) return;
@@ -40,7 +40,7 @@ memrevcpy(void* dest, const void* src, size_t n)
   do *dp++ = *--sp; while (--n);
 }
 
-void 
+void
 CC3000::UnsolicitedEvent::on_event(uint16_t event, void* args, size_t len)
 {
   UNUSED(len);
@@ -62,7 +62,7 @@ CC3000::UnsolicitedEvent::on_event(uint16_t event, void* args, size_t len)
       if (evnt->status != 0) return;
       m_dev->set_socket_state(evnt->handle, false);
 #if defined(TRACE_ON_EVENT)
-      trace << PSTR("HCI_EVNT_WLAN_UNSOL_TCP_CLOSE_WAIT:handle=") 
+      trace << PSTR("HCI_EVNT_WLAN_UNSOL_TCP_CLOSE_WAIT:handle=")
 	    << evnt->handle << ',';
 #endif
     }
@@ -74,7 +74,7 @@ CC3000::UnsolicitedEvent::on_event(uint16_t event, void* args, size_t len)
       if (evnt->status != 0) return;
       m_dev->BUFFER_COUNT += evnt->flow_control_event.buffers_freed;
 #if defined(TRACE_ON_EVENT)
-      trace << PSTR("HCI_EVNT_DATA_UNSOL_FREE_BUFF:buffers_freed=") 
+      trace << PSTR("HCI_EVNT_DATA_UNSOL_FREE_BUFF:buffers_freed=")
 	    << evnt->flow_control_event.buffers_freed << ',';
 #endif
     }
@@ -95,8 +95,8 @@ CC3000::UnsolicitedEvent::on_event(uint16_t event, void* args, size_t len)
     break;
   default:
 #if defined(TRACE_ON_EVENT)
-    trace << PSTR("HCI_EVNT=") << hex << event 
-	  << PSTR(",BUFFER_COUNT=") << m_dev->BUFFER_COUNT 
+    trace << PSTR("HCI_EVNT=") << hex << event
+	  << PSTR(",BUFFER_COUNT=") << m_dev->BUFFER_COUNT
 	  << endl;
     trace.print(args, len, IOStream::hex);
 #endif
@@ -107,7 +107,7 @@ CC3000::UnsolicitedEvent::on_event(uint16_t event, void* args, size_t len)
 #endif
 }
 
-int 
+int
 CC3000::Driver::available()
 {
   uint32_t readhndls = FD_ZERO();
@@ -119,7 +119,7 @@ CC3000::Driver::available()
   return (FD_ISSET(m_hndl,readhndls));
 }
 
-int 
+int
 CC3000::Driver::room()
 {
   // Check room in send buffer
@@ -219,7 +219,7 @@ CC3000::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
   return (-1);
 }
 
-int 
+int
 CC3000::Driver::write(const void* buf, size_t size, bool progmem)
 {
   UNUSED(buf);
@@ -236,7 +236,7 @@ CC3000::Driver::send(const void* buf, size_t len, bool progmem)
 }
 
 int
-CC3000::Driver::send(const void* buf, size_t len, 
+CC3000::Driver::send(const void* buf, size_t len,
 		     uint8_t dest[4], uint16_t port,
 		     bool progmem)
 {
@@ -253,7 +253,7 @@ CC3000::begin_P(str_P hostname, uint16_t timeout)
 {
   UNUSED(hostname);
   int res;
-  
+
   // Setup timeout
   m_timeout = timeout;
 
@@ -295,7 +295,7 @@ CC3000::begin_P(str_P hostname, uint16_t timeout)
   return (true);
 }
 
-Socket* 
+Socket*
 CC3000::socket(Socket::Protocol proto, uint16_t port, uint8_t flag)
 {
   UNUSED(port);
@@ -304,7 +304,7 @@ CC3000::socket(Socket::Protocol proto, uint16_t port, uint8_t flag)
   int type, protocol;
 
   switch (proto) {
-  case Socket::TCP: 
+  case Socket::TCP:
     protocol = IPPROTO_TCP;
     type = SOCK_STREAM;
     break;
@@ -324,7 +324,7 @@ CC3000::socket(Socket::Protocol proto, uint16_t port, uint8_t flag)
 
   int res = socket(domain, type, protocol);
   if (res < 0) return (NULL);
-  
+
   Driver* driver = &m_socket[res];
   driver->m_hndl = res;
   driver->m_dev = this;
@@ -332,7 +332,7 @@ CC3000::socket(Socket::Protocol proto, uint16_t port, uint8_t flag)
   return (driver);
 }
 
-int 
+int
 CC3000::service(uint32_t timeout)
 {
   uint32_t start = RTC::millis();
@@ -343,7 +343,7 @@ CC3000::service(uint32_t timeout)
   }
 }
 
-bool 
+bool
 CC3000::end()
 {
   m_irq.disable();
@@ -374,7 +374,7 @@ CC3000::wlan_connect(uint8_t type, str_P ssid, str_P bssid, str_P key)
   return (((evnt.status != 0) || (evnt.result != 0)) ? -EFAULT : 0);
 }
 
-const CC3000::hci_cmnd_wlan_ioctl_set_scanparam_t 
+const CC3000::hci_cmnd_wlan_ioctl_set_scanparam_t
 CC3000::DEFAULT_SCANPARAM __PROGMEM = {
   HCI_CMND_WLAN_IOCTL_SET_SCANPARAM_MAGIC, // magic
   4000,					   // intervall
@@ -405,11 +405,11 @@ CC3000::DEFAULT_SCANPARAM __PROGMEM = {
   }
 };
 
-int 
+int
 CC3000::wlan_ioctl_set_scanparam(const hci_cmnd_wlan_ioctl_set_scanparam_t* param)
 {
-  int res = issue_P(HCI_CMND_WLAN_IOCTL_SET_SCANPARAM, 
-		    (param != NULL ? param : &DEFAULT_SCANPARAM), 
+  int res = issue_P(HCI_CMND_WLAN_IOCTL_SET_SCANPARAM,
+		    (param != NULL ? param : &DEFAULT_SCANPARAM),
 		    sizeof(hci_cmnd_wlan_ioctl_set_scanparam_t));
   if (res < 0) return (res);
 
@@ -422,7 +422,7 @@ CC3000::wlan_ioctl_set_scanparam(const hci_cmnd_wlan_ioctl_set_scanparam_t* para
   return (((evnt.status != 0) || (evnt.result != 0)) ? -EFAULT : 0);
 }
 
-int 
+int
 CC3000::wlan_ioctl_statusget()
 {
   int res = issue(HCI_CMND_WLAN_IOCTL_STATUSGET);
@@ -435,12 +435,12 @@ CC3000::wlan_ioctl_statusget()
   return (evnt.wlan_status);
 }
 
-int 
+int
 CC3000::wlan_ioctl_set_connection_policy(bool should_connect_to_open_ap,
 					 bool should_use_fast_connect,
 					 bool auto_start_use_profiles)
 {
-  hci_cmnd_wlan_ioctl_set_connection_policy_t 
+  hci_cmnd_wlan_ioctl_set_connection_policy_t
     cmnd(should_connect_to_open_ap, should_use_fast_connect, auto_start_use_profiles);
   int res = issue(HCI_CMND_WLAN_IOCTL_SET_CONNECTION_POLICY, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
@@ -452,8 +452,8 @@ CC3000::wlan_ioctl_set_connection_policy(bool should_connect_to_open_ap,
   return (res);
 }
 
-int 
-CC3000::wlan_ioctl_get_scan_results(hci_evnt_wlan_ioctl_get_scan_results_t& evnt) 
+int
+CC3000::wlan_ioctl_get_scan_results(hci_evnt_wlan_ioctl_get_scan_results_t& evnt)
 {
   hci_cmnd_wlan_ioctl_get_scan_results_t cmnd(0UL);
   int res = issue(HCI_CMND_WLAN_IOCTL_GET_SCAN_RESULTS, &cmnd, sizeof(cmnd));
@@ -465,7 +465,7 @@ CC3000::wlan_ioctl_get_scan_results(hci_evnt_wlan_ioctl_get_scan_results_t& evnt
   return (evnt.network_id);
 }
 
-int 
+int
 CC3000::nvmem_read(uint8_t fileid, void* dst, uint32_t src, size_t length)
 {
   hci_cmnd_nvmem_read_t cmnd(fileid, src, length);
@@ -486,7 +486,7 @@ CC3000::nvmem_read(uint8_t fileid, void* dst, uint32_t src, size_t length)
   return (res);
 }
 
-int 
+int
 CC3000::simple_link_start(uint8_t src)
 {
   // Acquire SPI bus and start message transmission after a short delay
@@ -520,7 +520,7 @@ CC3000::simple_link_start(uint8_t src)
   return (evnt.status);
 }
 
-int 
+int
 CC3000::read_buffer_size(uint8_t &count, uint16_t &bytes)
 {
   int res = issue(HCI_CMND_READ_BUFFER_SIZE);
@@ -534,7 +534,7 @@ CC3000::read_buffer_size(uint8_t &count, uint16_t &bytes)
   return (evnt.status);
 }
 
-int 
+int
 CC3000::read_sp_version(uint8_t &package_id, uint8_t &package_build_nr)
 {
   int res = issue(HCI_CMND_READ_SP_VERSION);
@@ -548,7 +548,7 @@ CC3000::read_sp_version(uint8_t &package_id, uint8_t &package_build_nr)
   return (evnt.status);
 }
 
-int 
+int
 CC3000::socket(int domain, int type, int protocol)
 {
   if (domain != AF_INET) return (-EINVAL);
@@ -563,7 +563,7 @@ CC3000::socket(int domain, int type, int protocol)
   return (evnt.handle);
 }
 
-int 
+int
 CC3000::setsockopt(int hndl, int level, int optname, const void* optval, size_t optlen)
 {
   hci_cmnd_setsockopt_t cmnd(hndl, level, optname, optval, optlen);
@@ -586,7 +586,7 @@ CC3000::select(int hndls,
   hci_cmnd_select_t cmnd(hndls, readhndls, writehndls, errorhndls, sec, us);
   int res = issue(HCI_CMND_SELECT, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
-  
+
   hci_evnt_select_t evnt;
   res = await(HCI_EVNT_SELECT, &evnt, sizeof(evnt));
   if (res < 0) return (res);
@@ -597,7 +597,7 @@ CC3000::select(int hndls,
   return (evnt.result);
 }
 
-int 
+int
 CC3000::connect(int hndl, uint8_t ip[4], int port)
 {
   hci_cmnd_connect_t cmnd(hndl, ip, port);
@@ -613,7 +613,7 @@ CC3000::connect(int hndl, uint8_t ip[4], int port)
   return (res);
 }
 
-int 
+int
 CC3000::recv(int hndl, void* buf, size_t size)
 {
   hci_cmnd_recv_t cmnd(hndl, size);
@@ -639,7 +639,7 @@ CC3000::recv(int hndl, void* buf, size_t size)
   return (res);
 }
 
-int 
+int
 CC3000::send(int hndl, const void* buf, size_t size)
 {
   while (BUFFER_COUNT == 0) service();
@@ -655,7 +655,7 @@ CC3000::send(int hndl, const void* buf, size_t size)
   return (evnt.result);
 }
 
-int 
+int
 CC3000::bind(int hndl, int port)
 {
   hci_cmnd_bind_t cmnd(hndl, port);
@@ -668,7 +668,7 @@ CC3000::bind(int hndl, int port)
   return (evnt.result);
 }
 
-int 
+int
 CC3000::listen(int hndl)
 {
   hci_cmnd_listen_t cmnd(hndl);
@@ -681,7 +681,7 @@ CC3000::listen(int hndl)
   return (evnt.result);
 }
 
-int 
+int
 CC3000::accept(int hndl, uint8_t ip[4], int &port)
 {
   service(1000);

@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,12 +35,12 @@ Timer::on_interrupt(void* env)
   if (Timer::s_queue_ticks > 0) {
     if (Timer::MEASURE) Timer::enter_ISR_cycle = TCNT0;
     // Decrement the most significant part of the Timer that's
-    // expiring first. 
+    // expiring first.
     Timer::s_queue_ticks--;
     if (Timer::s_queue_ticks == 0) {
       if (TCNT0 >= OCR0A) {
         // TCNT0 is already past the requested OCR0A time. Interrupt
-        // disabling must have kept us from getting here in time. 
+        // disabling must have kept us from getting here in time.
 	// RTC::micros() doesn't need to add US_PER_TICK any more
         TIFR0 |= _BV(TOV0);
         Timer::schedule();
@@ -76,7 +76,7 @@ uint8_t Timer::enter_on_interrupt_cycle;
  * (1) Reduce all xxx_US constants to 16 instructions.
  * (2) Rebuild and run a test program to obtain new values.
  * (3) Rebuild and verify that actual times are 0-2 timer cycles *greater*
- *     than the expiration times.  The actual time includes returning from 
+ *     than the expiration times.  The actual time includes returning from
  *     the interrupt and calling micros() for the stop time, so the
  *     actual time should always report taking a little longer than requested.
  */
@@ -86,10 +86,10 @@ static const int32_t START_US = (320 / I_CPU);
 
 /** Number of instructions from the beginning of ::setup to the end of ::setup */
 static const int32_t SETUP_US = (128 / I_CPU);
-  
-/** 
+
+/**
  * Number of instructions from ISR to on_interrupt. Added 1 cycle for
- * int vectoring because TCNT0 is always OCR0A+1 at start of ISR 
+ * int vectoring because TCNT0 is always OCR0A+1 at start of ISR
  */
 static const int32_t DISPATCH_US = ((272+64) / I_CPU);
 
@@ -110,14 +110,14 @@ Timer::setup(uint32_t us)
     TIFR0 |=  _BV(OCF0A);
     s_queue_ticks = timer_cycles >> 8;
     return;
-  } 
+  }
 
-  // For the case where timer_cycles == 0, there is a small chance 
-  // that TCNT0 could advance /after/ its value has been read and 
+  // For the case where timer_cycles == 0, there is a small chance
+  // that TCNT0 could advance /after/ its value has been read and
   // added to timer_cycles, which is then written to OCR0A.
   // Then the OC interrupt would *not* trigger immediately as
   // requested. Instead, 255 cycles would have to elapse.  There seems
-  // to be two choices: 
+  // to be two choices:
   // (1) Stop the timer while we're messing with the registers; or
   // (2) Add one to a timer_cycle of 0 so that a match will happen
   // *soon*, but perhaps not immediately as requested.
@@ -131,7 +131,7 @@ Timer::setup(uint32_t us)
     // Catch it in TIMER0_OVF
     TIMSK0 &= ~_BV(OCIE0A);
     s_queue_ticks = 1;
-  } 
+  }
   else {
     // Catch it in TIMER0_OCR0A
     TIMSK0 |= _BV(OCIE0A);
@@ -182,7 +182,7 @@ Timer::start()
         setup(us);
       }
     }
-  } 
+  }
   else {
     bool saved = s_running;
     s_running = true;

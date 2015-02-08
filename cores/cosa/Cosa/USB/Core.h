@@ -4,18 +4,18 @@
  *
  * @section License
  * Copyright (c) 2010, Peter Barrett (original author)
- * Copyright (C) 2013, Mikael Patel (refactoring and extensions)
+ * Copyright (C) 2013-2015, Mikael Patel (refactoring and extensions)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -124,8 +124,8 @@
 #define CDC_CS_ENDPOINT                         0x25
 #define CDC_DATA_INTERFACE_CLASS                0x0A
 
-#define MSC_SUBCLASS_SCSI			0x06 
-#define MSC_PROTOCOL_BULK_ONLY			0x50 
+#define MSC_SUBCLASS_SCSI			0x06
+#define MSC_PROTOCOL_BULK_ONLY			0x50
 
 #define HID_HID_DESCRIPTOR_TYPE			0x21
 #define HID_REPORT_DESCRIPTOR_TYPE		0x22
@@ -220,7 +220,7 @@ typedef struct {
   uint8_t bmCapabilities;
   uint8_t bDataInterface;
 } CMFunctionalDescriptor;
- 
+
 typedef struct {
   uint8_t len;
   uint8_t dtype;

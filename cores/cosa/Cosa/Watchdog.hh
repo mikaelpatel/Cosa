@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -29,7 +29,7 @@
 
 /**
  * The AVR Watchdog is used as a low power timer for periodical
- * events and delay. 
+ * events and delay.
  */
 class Watchdog {
 public:
@@ -53,8 +53,8 @@ public:
    * @return number of ticks.
    */
   static uint32_t ticks()
-  { 
-    return (s_ticks); 
+  {
+    return (s_ticks);
   }
 
   /**
@@ -63,15 +63,15 @@ public:
    */
   static uint32_t millis()
     __attribute__((always_inline))
-  { 
-    return (s_ticks * ms_per_tick()); 
+  {
+    return (s_ticks * ms_per_tick());
   }
 
   /**
    * Reset the ticks counter for time measurement.
    */
-  static void reset() 
-  { 
+  static void reset()
+  {
     s_ticks = 0;
   }
 
@@ -79,21 +79,21 @@ public:
    * Get number of milli-seconds per tick.
    * @return milli-seconds.
    */
-  static uint16_t ms_per_tick() 
-  { 
-    return (16 << s_prescale); 
+  static uint16_t ms_per_tick()
+  {
+    return (16 << s_prescale);
   }
-  
+
   /**
    * Set watchdog timeout interrupt handler.
    * @param[in] fn interrupt handler.
    * @param[in] env environment pointer.
    */
-  static void set(InterruptHandler fn, void* env = NULL) 
-  { 
+  static void set(InterruptHandler fn, void* env = NULL)
+  {
     synchronized {
-      s_handler = fn; 
-      s_env = env; 
+      s_handler = fn;
+      s_env = env;
     }
   }
 
@@ -113,7 +113,7 @@ public:
    * @param[in] handler of interrupts.
    * @param[in] env handler environment.
    */
-  static void begin(uint16_t ms = 16, 
+  static void begin(uint16_t ms = 16,
 		    InterruptHandler handler = NULL,
 		    void* env = NULL);
 
@@ -145,11 +145,11 @@ public:
   }
 
   /**
-   * Stop watchdog. Turn off timout callback. May be restarted with begin(). 
+   * Stop watchdog. Turn off timout callback. May be restarted with begin().
    */
-  static void end() 
-  { 
-    wdt_disable(); 
+  static void end()
+  {
+    wdt_disable();
     s_initiated = false;
   }
 
@@ -166,7 +166,7 @@ public:
    * @param[in] env interrupt handler environment.
    */
   static void push_watchdog_event(void* env)
-  { 
+  {
     Event::push(Event::WATCHDOG_TYPE, 0, env);
   }
 

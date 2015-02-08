@@ -4,18 +4,18 @@
  *
  * @section License
  * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire rev. 1.19)
- * Copyright (C) 2013-2014, Mikael Patel (Cosa C++ port and refactoring)
+ * Copyright (C) 2013-2015, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -73,12 +73,12 @@ public:
   public:
     /** Bits per symbol. */
     const uint8_t BITS_PER_SYMBOL;
-  
+
     /** Start symbol. */
     const uint16_t START_SYMBOL;
 
-    /** 
-     * Size of preamble with start symbol. Should be less or equal to 
+    /**
+     * Size of preamble with start symbol. Should be less or equal to
      * Transmitter::PREAMBLE_MAX.
      */
     const uint8_t PREAMBLE_MAX;
@@ -90,21 +90,21 @@ public:
     const uint16_t BITS_MSB;
 
     /**
-     * Construct Codec with given symbol and preamble definition. The 
+     * Construct Codec with given symbol and preamble definition. The
      * Codec is assumed to code 4 bits to max 8 bit symbol for
      * transmission.
      * @param[in] bits_per_symbol.
      * @param[in] start_symbol.
      * @param[in] preamble_max.
      */
-    Codec(uint8_t bits_per_symbol, 
-	  uint16_t start_symbol, 
+    Codec(uint8_t bits_per_symbol,
+	  uint16_t start_symbol,
 	  uint8_t preamble_max = VWI::Transmitter::PREAMBLE_MAX);
 
     /**
      * @override VWI::Codec
-     * Provide pointer to frame preamble in program memory. PREAMBLE_MAX 
-     * should contain the length of the preamble including start symbol. 
+     * Provide pointer to frame preamble in program memory. PREAMBLE_MAX
+     * should contain the length of the preamble including start symbol.
      * @return pointer to program memory.
      */
     virtual const uint8_t* get_preamble() = 0;
@@ -145,9 +145,9 @@ public:
    * pin and Transmitter to tx pin. Use the given Codec for coding and
    * decoding messages.
    */
-  VWI(int16_t net, uint8_t dev, 
-      uint16_t speed, 
-      Board::DigitalPin rx, 
+  VWI(int16_t net, uint8_t dev,
+      uint16_t speed,
+      Board::DigitalPin rx,
       Board::DigitalPin tx,
       Codec* codec) :
     Wireless::Driver(net, dev),
@@ -174,16 +174,16 @@ public:
    * @return bool
    */
   virtual bool end();
-    
+
   /**
    * @override Wireless::Driver
-   * Set device in power up mode. 
+   * Set device in power up mode.
    */
   virtual void powerup();
 
   /**
    * @override Wireless::Driver
-   * Set device in power down mode. 
+   * Set device in power down mode.
    */
   virtual void powerdown();
 
@@ -218,7 +218,7 @@ public:
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
-   * set transmit mode.  
+   * set transmit mode.
    * @param[in] dest destination network address.
    * @param[in] port device port (or message type).
    * @param[in] buf buffer to transmit.
@@ -236,7 +236,7 @@ public:
    * length. The source network address is returned in the parameter src.
    * Returns error code(-2) if no message is available and/or a
    * timeout occured. Returns error code(-1) if the buffer size if to
-   * small for incoming message or if the receiver fifo has overflowed. 
+   * small for incoming message or if the receiver fifo has overflowed.
    * Otherwise the actual number of received bytes is returned
    * @param[out] src source network address.
    * @param[out] port device port (or message type).
@@ -245,8 +245,8 @@ public:
    * @param[in] ms maximum time out period.
    * @return number of bytes received or negative error code.
    */
-  virtual int recv(uint8_t& src, uint8_t& port, 
-		   void* buf, size_t len, 
+  virtual int recv(uint8_t& src, uint8_t& port,
+		   void* buf, size_t len,
 		   uint32_t ms = 0L)
   {
     return (m_rx.recv(src, port, buf, len, ms));
@@ -262,13 +262,13 @@ private:
     uint8_t src;		//!< Source device address.
     uint8_t port;		//!< Port or message type.
   };
-  
-  /** 
-   * The maximum payload length; 30 byte application payload and 
+
+  /**
+   * The maximum payload length; 30 byte application payload and
    * 4 byte frame header with network(2).
    */
   static const uint8_t PAYLOAD_MAX = 30 + sizeof(header_t);
-  
+
   /** Maximum number of bytes in a message (incl. byte count and FCS). */
   static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
 
@@ -293,21 +293,21 @@ private:
       m_codec(codec)
     {
     }
-    
+
     /**
      * Start the Phase Locked Loop listening for the receiver. Must do
-     * this before receiving any messages, 
+     * this before receiving any messages,
      */
     void begin()
     {
       m_enabled = true;
       m_active = false;
     }
-    
+
     /**
      * Stop the Phase Locked Loop listening to the receiver. No
      * messages will be received until begin() is called again. Saves
-     * interrupt processing cycles. 
+     * interrupt processing cycles.
      */
     void end()
     {
@@ -323,20 +323,20 @@ private:
     {
       return (m_done);
     }
-    
+
     /**
      * If a message is available (good checksum or not), copies up to
-     * len bytes to the given buffer, buf. Returns number of bytes 
-     * received/copied, zero(0) for timeout or negative error code; 
+     * len bytes to the given buffer, buf. Returns number of bytes
+     * received/copied, zero(0) for timeout or negative error code;
      * bad checksum(-1), and in enhanced mode did not match address(-2).
      * @param[out] src source network address.
      * @param[out] port device port (or message type).
      * @param[in] buf pointer to location to save the read data.
-     * @param[in] len available space in buf. 
+     * @param[in] len available space in buf.
      * @param[in] ms timeout period (zero for blocking)
      * @return number of bytes received or negative error code.
      */
-    int recv(uint8_t& src, uint8_t& port, void* buf, size_t len, 
+    int recv(uint8_t& src, uint8_t& port, void* buf, size_t len,
 	     uint32_t ms = 0L);
 
   private:
@@ -346,12 +346,12 @@ private:
     /** Number of samples to integrate before mapping to one(1). */
     static const uint8_t INTEGRATOR_THRESHOLD = 5;
 
-    /** 
+    /**
      * Ramp adjustment parameters. Standard is if a transition occurs
      * before RAMP_TRANSITION(80) in the ramp, the ramp is retarded
      * by adding RAMP_INC_RETARD(11) else by adding
      * RAMP_INC_ADVANCE(29). If there is no transition it is adjusted
-     * by RAMP_INC(20), Internal ramp adjustment parameter 
+     * by RAMP_INC(20), Internal ramp adjustment parameter
      */
     static const uint8_t RAMP_INC = RAMP_MAX / SAMPLES_PER_BIT;
 
@@ -360,10 +360,10 @@ private:
 
     /** Internal ramp adjustment parameter. */
     static const uint8_t RAMP_ADJUST = 9;
-    
+
     /** Internal ramp adjustment parameter. */
     static const uint8_t RAMP_INC_RETARD = (RAMP_INC - RAMP_ADJUST);
-    
+
     /** Internal ramp adjustment parameter. */
     static const uint8_t RAMP_INC_ADVANCE = (RAMP_INC + RAMP_ADJUST);
 
@@ -376,8 +376,8 @@ private:
     /** Last receiver sample. */
     uint8_t m_last_sample;
 
-    /** 
-     * PLL ramp, varies between 0 and RAMP_LEN-1(159) over 
+    /**
+     * PLL ramp, varies between 0 and RAMP_LEN-1(159) over
      * SAMPLES_PER_BIT (8) samples per nominal bit time. When the PLL
      * is synchronised, bit transitions happen at about the 0 mark.
      */
@@ -446,7 +446,7 @@ private:
     }
 
     /**
-     * Start transmitter. 
+     * Start transmitter.
      */
     void begin()
     {
@@ -456,9 +456,9 @@ private:
       m_sample = 0;
       m_enabled = true;
     }
-    
+
     /**
-     * Stop transmitter. 
+     * Stop transmitter.
      */
     void end()
     {
@@ -505,7 +505,7 @@ private:
   private:
     /** Max size of preamble and start symbol. Codec provides actual size. */
     static const uint8_t PREAMBLE_MAX = 8;
-    
+
     /** Transmission buffer with premable, start symbol, count and payload. */
     uint8_t m_buffer[(MESSAGE_MAX * 2) + PREAMBLE_MAX];
 

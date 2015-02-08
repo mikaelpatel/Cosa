@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -30,7 +30,7 @@ volatile uint32_t Watchdog::s_ticks = 0L;
 uint8_t Watchdog::s_prescale;
 bool Watchdog::s_initiated = false;
 
-uint8_t 
+uint8_t
 Watchdog::as_prescale(uint16_t ms)
 {
   // Map milli-seconds to watchdog prescale values
@@ -39,9 +39,9 @@ Watchdog::as_prescale(uint16_t ms)
   return (prescale);
 }
 
-void 
-Watchdog::begin(uint16_t ms, 
-		InterruptHandler handler, 
+void
+Watchdog::begin(uint16_t ms,
+		InterruptHandler handler,
 		void* env)
 {
   // Map milli-seconds to watchdog prescale values

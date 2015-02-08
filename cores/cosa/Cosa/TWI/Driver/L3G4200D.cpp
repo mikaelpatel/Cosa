@@ -3,24 +3,24 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/TWI/Driver/L3G4200D.hh"
 
-bool 
+bool
 L3G4200D::begin()
 {
   ctrl_reg1_t reg;
@@ -32,14 +32,14 @@ L3G4200D::begin()
   return (true);
 }
 
-bool 
+bool
 L3G4200D::end()
 {
   write(CTRL_REG1, 0);
   return (true);
 }
 
-void 
+void
 L3G4200D::write(Register reg, uint8_t value)
 {
   twi.begin(this);
@@ -47,7 +47,7 @@ L3G4200D::write(Register reg, uint8_t value)
   twi.end();
 }
 
-void 
+void
 L3G4200D::write(Register reg, void* buffer, uint8_t count)
 {
   twi.begin(this);
@@ -55,7 +55,7 @@ L3G4200D::write(Register reg, void* buffer, uint8_t count)
   twi.end();
 }
 
-uint8_t 
+uint8_t
 L3G4200D::read(Register reg)
 {
   uint8_t res;
@@ -66,16 +66,16 @@ L3G4200D::read(Register reg)
   return (res);
 }
 
-void 
+void
 L3G4200D::read(Register reg, void* buffer, uint8_t count)
 {
   twi.begin(this);
-  twi.write((uint8_t) (reg | AUTO_INC)); 
+  twi.write((uint8_t) (reg | AUTO_INC));
   twi.read(buffer, count);
   twi.end();
 }
 
-IOStream& 
+IOStream&
 operator<<(IOStream& outs, L3G4200D& gyroscope)
 {
   L3G4200D::sample_t value;

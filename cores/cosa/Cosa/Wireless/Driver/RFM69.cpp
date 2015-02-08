@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -64,7 +64,7 @@
 
 /**
  * Default configuration:
- * Radio: 868 MHz, 4.8 kbps, GFSK(0). Whitening, 13 dBm. 
+ * Radio: 868 MHz, 4.8 kbps, GFSK(0). Whitening, 13 dBm.
  * Packet: Variable packet length with CRC, address check and broadcast(0x00)
  * Frame: sync(2), length(1), dest(1), src(1), port(1), payload(max 63), crc(2)
  * Digital Output Pins: DIO0, Asserts: RX:CRC_OK, TX:PACKET_SENT
@@ -90,16 +90,16 @@ const uint8_t RFM69::config[] __PROGMEM = {
   REG_VALUE8(RSSI_THRESH, 220),
   // Packet Engine Registers
   REG_VALUE16(PREAMBLE, 3),
-  REG_VALUE8(SYNC_CONFIG, SYNC_ON | FIFO_FILL_AUTO  
+  REG_VALUE8(SYNC_CONFIG, SYNC_ON | FIFO_FILL_AUTO
 	     | ((sizeof(int16_t) - 1) << SYNC_SIZE)),
-  REG_VALUE8(PACKET_CONFIG1, VARIABLE_LENGTH | WHITENING 
+  REG_VALUE8(PACKET_CONFIG1, VARIABLE_LENGTH | WHITENING
 	     | CRC_ON | CRC_AUTO_CLEAR_ON
 	     | ADDR_FILTER_ON),
   REG_VALUE8(PAYLOAD_LENGTH, 66),
   REG_VALUE8(BROADCAST_ADDR, BROADCAST),
   REG_VALUE8(FIFO_THRESHOLD, TX_START_NOT_EMPTY | 15),
-  REG_VALUE8(PACKET_CONFIG2, (1 << INTER_PACKET_RX_DELAY) 
-	     | AUTO_RX_RESTART_ON 
+  REG_VALUE8(PACKET_CONFIG2, (1 << INTER_PACKET_RX_DELAY)
+	     | AUTO_RX_RESTART_ON
 	     | AES_OFF),
   REG_VALUE8(TEST_PA1, TEST_PA1_NORMAL_MODE),
   REG_VALUE8(TEST_PA2, TEST_PA2_NORMAL_MODE),
@@ -107,7 +107,7 @@ const uint8_t RFM69::config[] __PROGMEM = {
   0
 };
 
-RFM69::RFM69(uint16_t net, uint8_t dev, 
+RFM69::RFM69(uint16_t net, uint8_t dev,
 	     Board::DigitalPin csn,
 	     Board::ExternalInterruptPin irq) :
   SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
@@ -116,12 +116,12 @@ RFM69::RFM69(uint16_t net, uint8_t dev,
 {
 }
 
-void 
+void
 RFM69::IRQPin::on_interrupt(uint16_t arg)
 {
   UNUSED(arg);
 
-  // The interrupt handler is called on rising signal (RFM69:DIO0). 
+  // The interrupt handler is called on rising signal (RFM69:DIO0).
   // This occures on TX: PACKET_SENT and RX: CRC_OK
   if (m_rf == 0) return;
   if (m_rf->m_opmode == RECEIVER_MODE)
@@ -147,7 +147,7 @@ RFM69::begin(const void* config)
 
   // Upload the configuration. Check for default configuration
   const uint8_t* cp = RFM69::config;
-  Reg reg; 
+  Reg reg;
   if (config != NULL) cp = (const uint8_t*) config;
   while ((reg = (Reg) pgm_read_byte(cp++)) != 0)
     write(reg, pgm_read_byte(cp++));
@@ -168,7 +168,7 @@ RFM69::begin(const void* config)
   return (true);
 }
 
-bool 
+bool
 RFM69::end()
 {
   m_irq.disable();
@@ -176,7 +176,7 @@ RFM69::end()
   return (true);
 }
 
-int 
+int
 RFM69::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
@@ -209,7 +209,7 @@ RFM69::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   return (len);
 }
 
-int 
+int
 RFM69::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 {
   iovec_t vec[2];
@@ -219,7 +219,7 @@ RFM69::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
   return (send(dest, port, vec));
 }
 
-int 
+int
 RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 {
   // Set receive mode and wait for a message
@@ -242,7 +242,7 @@ RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 	spi.end();
 	spi.release();
 	return (-1);
-      } 
+      }
       // Read the frame (dest, src, payload)
       m_dest = spi.transfer(0);
       src = spi.transfer(0);
@@ -254,20 +254,20 @@ RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   return (size);
 }
 
-void 
+void
 RFM69::powerdown()
 {
   set(SLEEP_MODE);
 }
 
-void 
+void
 RFM69::wakeup_on_radio()
 {
   // Fix: Use LISTEN_ON instead
   set(STANDBY_MODE);
 }
 
-void 
+void
 RFM69::set_output_power_level(int8_t dBm)
 {
   // Fix: High power level setting for RFM69HW
@@ -277,13 +277,13 @@ RFM69::set_output_power_level(int8_t dBm)
   write(PA_LEVEL, pa_level | level);
 }
 
-int 
+int
 RFM69::get_input_power_level()
 {
   return ((-read(RSSI_VALUE)) >> 1);
 }
 
-int 
+int
 RFM69::get_temperature()
 {
   set(STANDBY_MODE);

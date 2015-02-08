@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -22,14 +22,14 @@
 
 using namespace Soft;
 
-UART::UART(Board::DigitalPin tx, Board::InterruptPin rx, IOStream::Device* ibuf) : 
+UART::UART(Board::DigitalPin tx, Board::InterruptPin rx, IOStream::Device* ibuf) :
   UAT(tx),
   m_rx(rx, this),
   m_ibuf(ibuf)
 {
 }
 
-bool 
+bool
 UART::begin(uint32_t baudrate, uint8_t format)
 {
   if (!UAT::begin(baudrate, format)) return (false);
@@ -38,14 +38,14 @@ UART::begin(uint32_t baudrate, uint8_t format)
   return (true);
 }
 
-UART::RXPinChangeInterrupt::RXPinChangeInterrupt(Board::InterruptPin pin, 
+UART::RXPinChangeInterrupt::RXPinChangeInterrupt(Board::InterruptPin pin,
 						 UART* uart) :
   PinChangeInterrupt(pin),
   m_uart(uart)
 {
 }
 
-void 
+void
 UART::RXPinChangeInterrupt::on_interrupt(uint16_t arg)
 {
   UNUSED(arg);

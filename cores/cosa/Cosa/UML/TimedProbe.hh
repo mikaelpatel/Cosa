@@ -9,7 +9,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -40,7 +40,7 @@ namespace UML {
  *           |           |
  *           +-----------+
  *                    [ms]
- */  
+ */
 template<typename T>
 class TimedProbe : public TimedCapsule {
 public:
@@ -50,8 +50,8 @@ public:
    * @param[in] connector to probe.
    * @param[in] ms timeout period in ms (Default 2048).
    */
-  TimedProbe(str_P name, T& connector, uint16_t ms = 2048) : 
-    TimedCapsule(ms), 
+  TimedProbe(str_P name, T& connector, uint16_t ms = 2048) :
+    TimedCapsule(ms),
     m_name(name),
     m_connector(connector)
   {}

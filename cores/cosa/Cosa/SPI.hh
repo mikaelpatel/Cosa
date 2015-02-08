@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -40,7 +40,7 @@
  * SPI slave circuit with chip select and interrupt pin. Note that
  * Tiny uses USI but the software interface is the same but MOSI/MISO
  * pins are DI/DO. Do not confuse with SPI chip programming pins on
- * Tiny. 
+ * Tiny.
  * @code
  *                          SPI Slave
  *                       +------------+
@@ -59,7 +59,7 @@ public:
   /** Clock selectors. */
   enum Clock {
     DIV2_CLOCK = 0x04,		//!< Divide system clock by 2.
-    DIV4_CLOCK = 0x00,		//!< Divide system clock by 4. 
+    DIV4_CLOCK = 0x00,		//!< Divide system clock by 4.
     DIV8_CLOCK = 0x05,		//!< Divide system clock by 8.
     DIV16_CLOCK = 0x01,		//!< Divide system clock by 16.
     DIV32_CLOCK = 0x06,		//!< Divide system clock by 32.
@@ -74,7 +74,7 @@ public:
     LSB_ORDER = 1,		//!< Least significant bit first.
     DEFAULT_ORDER = MSB_ORDER	//!< Default is MSB.
   } __attribute__((packed));
-  
+
   /** Chip select mode. */
   enum Pulse {
     ACTIVE_LOW = 0,	   	//!< Active low logic during transaction.
@@ -85,8 +85,8 @@ public:
   } __attribute__((packed));
 
   /**
-   * SPI device driver abstract class. Holds SPI/USI hardware settings 
-   * to allow handling of several SPI devices with different clock, mode 
+   * SPI device driver abstract class. Holds SPI/USI hardware settings
+   * to allow handling of several SPI devices with different clock, mode
    * and/or bit order. Handles device chip select and disables/enables
    * interrupts during SPI transaction.
    */
@@ -94,7 +94,7 @@ public:
   public:
     /**
      * Construct SPI Device driver with given chip select pin, pulse,
-     * clock, mode, and bit order. 
+     * clock, mode, and bit order.
      * @param[in] cs chip select pin.
      * @param[in] pulse chip select pulse mode (default ACTIVE_LOW).
      * @param[in] rate SPI hardware setting (default DIV4_CLOCK).
@@ -102,10 +102,10 @@ public:
      * @param[in] order bit order (default MSB_ORDER).
      * @param[in] irq interrupt handler (default null).
      */
-    Driver(Board::DigitalPin cs, 
+    Driver(Board::DigitalPin cs,
 	   Pulse pulse = DEFAULT_PULSE,
-	   Clock rate = DEFAULT_CLOCK, 
-	   uint8_t mode = 0, 
+	   Clock rate = DEFAULT_CLOCK,
+	   uint8_t mode = 0,
 	   Order order = MSB_ORDER,
 	   Interrupt::Handler* irq = NULL);
 
@@ -159,7 +159,7 @@ public:
     {
       set_clock(clock(freq));
     }
-    
+
   protected:
     Driver* m_next;		//!< List of drivers.
     Interrupt::Handler* m_irq;	//!< Interrupt handler.
@@ -192,7 +192,7 @@ public:
    * @return true(1) if successful otherwise false(0)
    */
   bool attach(Driver* dev);
-  
+
   /**
    * Acquire the SPI device driver. Initiate SPI hardware registers
    * and disable SPI interrupt sources. The function will yield until
@@ -209,20 +209,20 @@ public:
    * Each transfer that requires chip select should be enclosed in
    * a block with begin() and end(). There may be several transfer
    * blocks in a transaction. The transaction is terminated with
-   * release(). 
+   * release().
    * @param[in] dev device driver context.
    */
   void acquire(Driver* dev);
-  
+
   /**
-   * Release the SPI device driver. Enable SPI interrupt sources. 
+   * Release the SPI device driver. Enable SPI interrupt sources.
    */
   void release();
 
   /**
    * Mark the beginning of a transfer block. Select the device by
-   * asserting the chip select pin according to the pulse pattern. 
-   * Used in the format: 
+   * asserting the chip select pin according to the pulse pattern.
+   * Used in the format:
    * @code
    * spi.acquire(this)
    *   spi.begin();
@@ -230,23 +230,23 @@ public:
    *   spi.end();
    * spi.release();
    * @endcode
-   * The transfer block should be terminated with end(). Typically 
-   * the transfer block is a command (read/write) with a possible 
-   * parameter block. 
+   * The transfer block should be terminated with end(). Typically
+   * the transfer block is a command (read/write) with a possible
+   * parameter block.
    */
   void begin()
     __attribute__((always_inline))
   {
     if (m_dev->m_pulse < PULSE_LOW) m_dev->m_cs.toggle();
   }
-  
+
   /**
    * Mark the end of a transfer block. Deselect the device chip
    * according to the pulse pattern.
    */
   void end()
     __attribute__((always_inline))
-  { 
+  {
     m_dev->m_cs.toggle();
     if (m_dev->m_pulse > ACTIVE_HIGH) m_dev->m_cs.toggle();
   }
@@ -272,10 +272,10 @@ public:
 
   /**
    * Start exchange data with slave. Should only be used within a SPI
-   * transaction; begin()-end() block. 
+   * transaction; begin()-end() block.
    * @param[in] data to send.
    */
-  void transfer_start(uint8_t data) 
+  void transfer_start(uint8_t data)
     __attribute__((always_inline))
   {
     m_dev->m_data = data;
@@ -294,7 +294,7 @@ public:
 
   /**
    * Next data to exchange with slave. Should only be used within a SPI
-   * transaction; begin()-end() block. 
+   * transaction; begin()-end() block.
    * @param[in] data to send.
    * @return value received.
    */
@@ -323,7 +323,7 @@ public:
 
   /**
    * Start exchange data with slave. Should only be used within a SPI
-   * transaction; begin()-end() block. 
+   * transaction; begin()-end() block.
    * @param[in] data to send.
    */
   void transfer_start(uint8_t data)
@@ -346,7 +346,7 @@ public:
 
   /**
    * Next data to exchange with slave. Should only be used within a SPI
-   * transaction; begin()-end() block. 
+   * transaction; begin()-end() block.
    * @param[in] data to send.
    * @return value received.
    */
@@ -363,7 +363,7 @@ public:
   /**
    * Exchange package with slave. Received data from slave is stored
    * in given buffer. Should only be used within a SPI transfer;
-   * begin()-end() block.  
+   * begin()-end() block.
    * @param[in] buf with data to transfer (send/receive).
    * @param[in] count size of buffer.
    */
@@ -372,7 +372,7 @@ public:
   /**
    * Exchange package with slave. Received data from slave is stored
    * in given destination buffer. Should only be used within a SPI
-   * transfer; begin()-end() block.  
+   * transfer; begin()-end() block.
    * @param[in] dst destination buffer for received data.
    * @param[in] src source buffer with data to send.
    * @param[in] count size of buffers.
@@ -381,7 +381,7 @@ public:
 
   /**
    * Read package from the device slave. Should only be used within a
-   * SPI transfer; begin()-end() block.  
+   * SPI transfer; begin()-end() block.
    * @param[in] buf buffer for read data.
    * @param[in] count number of bytes to read.
    */
@@ -389,7 +389,7 @@ public:
 
   /**
    * Write package to the device slave. Should only be used within a
-   * SPI transfer; begin()-end() block.  
+   * SPI transfer; begin()-end() block.
    * @param[in] buf buffer with data to write.
    * @param[in] count number of bytes to write.
    */
@@ -397,15 +397,15 @@ public:
 
   /**
    * Write package to the device slave. Should only be used within a
-   * SPI transfer; begin()-end() block.  
+   * SPI transfer; begin()-end() block.
    * @param[in] buf buffer with data to write.
    * @param[in] count number of bytes to write.
    */
   void write_P(const void* buf, size_t count);
 
   /**
-   * Write null terminated io buffer vector to the device slave. 
-   * Should only be used  within a SPI transfer; begin()-end() block.  
+   * Write null terminated io buffer vector to the device slave.
+   * Should only be used  within a SPI transfer; begin()-end() block.
    * @param[in] vec null terminated io buffer vector pointer.
    */
   void write(const iovec_t* vec)
@@ -417,7 +417,7 @@ public:
 
   /**
    * SPI slave device support. Allows Arduino/AVR to act as a hardware
-   * device on the SPI bus. 
+   * device on the SPI bus.
    */
   class Slave : public Interrupt::Handler, public Event::Handler {
   public:
@@ -426,7 +426,7 @@ public:
      * @param[in] buf with data to received data.
      * @param[in] max size of buffer.
      */
-    Slave(void* buf = NULL, uint8_t max = 0) : 
+    Slave(void* buf = NULL, uint8_t max = 0) :
       m_cmd(0),
       m_buf((uint8_t*) buf),
       m_max(max),
@@ -444,15 +444,15 @@ public:
      * @param[in] buf pointer to buffer.
      * @param[in] max max size of data package.
      */
-    void set_buf(void* buf, uint8_t max) 
-    { 
+    void set_buf(void* buf, uint8_t max)
+    {
       if (buf == NULL) {
 	m_buf = m_data;
 	m_max = DATA_MAX;
       }
       else {
-	m_buf = (uint8_t*) buf; 
-	m_max = max; 
+	m_buf = (uint8_t*) buf;
+	m_max = max;
       }
     }
 
@@ -461,16 +461,16 @@ public:
      * @return buf pointer to buffer.
      */
     void* get_buf() const
-    { 
+    {
       return (m_buf);
     }
-    
+
     /**
      * Get number of bytes available in receive buffer.
      * @return number of bytes.
      */
     uint8_t available() const
-    { 
+    {
       return (m_put);
     }
 

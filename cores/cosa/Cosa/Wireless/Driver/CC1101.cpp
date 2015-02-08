@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -33,9 +33,9 @@
 
 /**
  * Default configuration (generated with TI SmartRF Studio tool):
- * Radio: 433 MHz, 38 kbps, GFSK. Whitening, 0 dBm. 
+ * Radio: 433 MHz, 38 kbps, GFSK. Whitening, 0 dBm.
  * Packet: Variable packet length with CRC, address check and broadcast(0x00)
- * FIFO: Append link status. 
+ * FIFO: Append link status.
  * Frame: sync(2), length(1), dest(1), payload(max 59), crc(2)
  * - Send(62): length(1), dest(1), src(1), payload(max 59)
  * - Received(64): length(1), dest(1), src(1), payload(max 59), status(2)
@@ -88,7 +88,7 @@ const uint8_t CC1101::config[CC1101::CONFIG_MAX] __PROGMEM = {
   0x00		// RC Oscillator Configuration
 };
 
-void 
+void
 CC1101::IRQPin::on_interrupt(uint16_t arg)
 {
   UNUSED(arg);
@@ -96,7 +96,7 @@ CC1101::IRQPin::on_interrupt(uint16_t arg)
   m_rf->m_avail = true;
 }
 
-CC1101::CC1101(uint16_t net, uint8_t dev, 
+CC1101::CC1101(uint16_t net, uint8_t dev,
 	       Board::DigitalPin csn,
 	       Board::ExternalInterruptPin irq) :
   SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV4_CLOCK, 0, SPI::MSB_ORDER, &m_irq),
@@ -117,7 +117,7 @@ CC1101::strobe(Command cmd)
   spi.release();
 }
 
-void 
+void
 CC1101::await(Mode mode)
 {
   while (read_status().mode != mode) DELAY(100);
@@ -136,8 +136,8 @@ CC1101::begin(const void* config)
   spi.acquire(this);
     spi.begin();
     loop_until_bit_is_clear(PIN, Board::MISO);
-    write_P(IOCFG2, 
-	    config ? (const uint8_t*) config : CC1101::config, 
+    write_P(IOCFG2,
+	    config ? (const uint8_t*) config : CC1101::config,
 	    CONFIG_MAX);
     spi.end();
 
@@ -160,7 +160,7 @@ CC1101::begin(const void* config)
   return (true);
 }
 
-bool 
+bool
 CC1101::end()
 {
   // Fix: Should be state-based disable/enable
@@ -169,7 +169,7 @@ CC1101::end()
   return (true);
 }
 
-int 
+int
 CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
@@ -197,7 +197,7 @@ CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   return (len);
 }
 
-int 
+int
 CC1101::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 {
   iovec_t vec[2];
@@ -207,7 +207,7 @@ CC1101::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
   return (send(dest, port, vec));
 }
 
-int 
+int
 CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 {
   uint32_t start = RTC::millis();
@@ -232,7 +232,7 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
     spi.release();
   } while ((size & BYTES_MASK) == 0);
 
-  // Put in idle mode and read the payload 
+  // Put in idle mode and read the payload
   strobe(SIDLE);
 
   // Read the payload size and check against buffer length
@@ -261,31 +261,31 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   return (size);
 }
 
-void 
+void
 CC1101::powerdown()
 {
   await(IDLE_MODE);
   strobe(SPWD);
 }
 
-void 
+void
 CC1101::wakeup_on_radio()
 {
   await(IDLE_MODE);
   strobe(SWOR);
 }
 
-void 
+void
 CC1101::set_output_power_level(int8_t dBm)
 {
   uint8_t pa = 0xC0;
-  if      (dBm < -20) pa = 0x12; 
-  else if (dBm < -15) pa = 0x0E; 
-  else if (dBm < -10) pa = 0x1D; 
-  else if (dBm < 0)   pa = 0x34; 
-  else if (dBm < 5)   pa = 0x60; 
-  else if (dBm < 7)   pa = 0x84; 
-  else if (dBm < 10)  pa = 0xC4; 
+  if      (dBm < -20) pa = 0x12;
+  else if (dBm < -15) pa = 0x0E;
+  else if (dBm < -10) pa = 0x1D;
+  else if (dBm < 0)   pa = 0x34;
+  else if (dBm < 5)   pa = 0x60;
+  else if (dBm < 7)   pa = 0x84;
+  else if (dBm < 10)  pa = 0xC4;
   spi.acquire(this);
     spi.begin();
       loop_until_bit_is_clear(PIN, Board::MISO);
@@ -294,7 +294,7 @@ CC1101::set_output_power_level(int8_t dBm)
   spi.release();
 }
 
-int 
+int
 CC1101::get_input_power_level()
 {
   int rssi = m_recv_status.rssi;

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -41,7 +41,7 @@ HMC5883L::begin()
   twi.read(id, sizeof(id));
   twi.end();
 
-  // Sanity check the identity 
+  // Sanity check the identity
   static const uint8_t ID[3] __PROGMEM = { 'H', '4', '3' };
   if (memcmp_P(id, ID, sizeof(ID))) return (false);
 
@@ -67,7 +67,7 @@ HMC5883L::set_mode(Mode mode)
   return (count == (sizeof(mode) + 1));
 }
 
-bool 
+bool
 HMC5883L::read_status(status_t& status)
 {
   twi.begin(this);
@@ -77,7 +77,7 @@ HMC5883L::read_status(status_t& status)
   return (count == sizeof(status));
 }
 
-bool 
+bool
 HMC5883L::read_heading()
 {
   // Read output data from the device
@@ -91,14 +91,14 @@ HMC5883L::read_heading()
   swap<data_t>(&m_output);
 
   // Check if an overflow occured
-  m_overflow = 
-    (m_output.x == -4096) || 
-    (m_output.y == -4096) || 
+  m_overflow =
+    (m_output.x == -4096) ||
+    (m_output.y == -4096) ||
     (m_output.z == -4096);
   return (true);
 }
 
-void 
+void
 HMC5883L::to_milli_gauss()
 {
   // Do not scale if overflow
@@ -111,7 +111,7 @@ HMC5883L::to_milli_gauss()
   m_output.z = (1000L * m_output.z) / gain;
 }
 
-IOStream& 
+IOStream&
 operator<<(IOStream& outs, HMC5883L& compass)
 {
   if (compass.is_overflow()) {

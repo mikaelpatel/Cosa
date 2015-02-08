@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @section Description
  * Common literals, data types and syntax abstractions.
  *
@@ -188,19 +188,19 @@ typedef const PROGMEM class prog_str* str_P;
 #define PSTR(s) STR_P(s)
 #define __PSTR(s) STR_P(s)
 
-inline char* 
+inline char*
 strcat_P(char* s1, str_P s2)
 {
   return (strcat_P(s1, (const char*) s2));
 }
 
-inline str_P 
+inline str_P
 strchr_P(str_P s, int __val)
 {
   return ((str_P) strchr_P((const char*) s, __val));
 }
 
-inline str_P 
+inline str_P
 strchrnul_P(str_P s, int __val)
 {
   return ((str_P) strchrnul_P((const char*) s, __val));
@@ -283,9 +283,9 @@ extern void (*yield)();
  * Disable interrupts and return flags.
  * @return processor flags.
  */
-inline uint8_t 
-lock() 
-{ 
+inline uint8_t
+lock()
+{
   uint8_t key = SREG;
   cli();
   return (key);
@@ -295,7 +295,7 @@ lock()
  * Restore processor flags and possible enable of interrupts.
  * @param[in] key processor flags.
  */
-inline void 
+inline void
 unlock(uint8_t key)
 {
   SREG = key;
@@ -326,7 +326,7 @@ unlock(uint8_t key)
  * Force compiler to store all values in memory at this point.
  * Alternative to volatile declaration.
  */
-#define barrier() __asm__ __volatile__("nop" ::: "memory") 
+#define barrier() __asm__ __volatile__("nop" ::: "memory")
 
 /**
  * Buffer structure for scatter/gather.
@@ -364,7 +364,7 @@ iovec_size(const iovec_t* vec)
  * @param[in] buf buffer.
  * @param[in] size number of bytes.
  */
-inline void iovec_arg(iovec_t* &vp, const void* buf, size_t size) 
+inline void iovec_arg(iovec_t* &vp, const void* buf, size_t size)
   __attribute__((always_inline));
 inline void
 iovec_arg(iovec_t* &vp, const void* buf, size_t size)
@@ -400,7 +400,7 @@ iovec_end(iovec_t* &vp)
  */
 inline uint16_t swap(uint16_t value) __attribute__((always_inline));
 inline uint16_t
-swap(uint16_t value) 
+swap(uint16_t value)
 {
   asm volatile("mov __tmp_reg__, %A0" 	"\n\t"
 	       "mov %A0, %B0" 		"\n\t"
@@ -421,8 +421,8 @@ inline void
 swap(uint16_t* dest, const uint16_t* src, size_t size)
 {
   if (size == 0) return;
-  do { 
-    *dest++ = swap(*src++); 
+  do {
+    *dest++ = swap(*src++);
   } while (--size);
 }
 
@@ -432,7 +432,7 @@ swap(uint16_t* dest, const uint16_t* src, size_t size)
  * @param[in] dest destination buffer.
  * @param[in] src source buffer.
  */
-template<class T> 
+template<class T>
 void swap(T* dest, const T* src)
 {
   swap((uint16_t*) dest, (const uint16_t*) src, sizeof(T) / sizeof(uint16_t));
@@ -447,9 +447,9 @@ inline void
 swap(uint16_t* buf, size_t size)
 {
   if (size == 0) return;
-  do { 
+  do {
     int16_t data = *buf;
-    *buf++ = swap(data); 
+    *buf++ = swap(data);
   } while (--size);
 }
 
@@ -458,7 +458,7 @@ swap(uint16_t* buf, size_t size)
  * @param[in] T type of struct.
  * @param[in] buf buffer.
  */
-template<class T> 
+template<class T>
 void swap(T* buf)
 {
   swap((uint16_t*) buf, sizeof(T) / sizeof(uint16_t));
@@ -471,7 +471,7 @@ void swap(T* buf)
  */
 inline int16_t swap(int16_t value) __attribute__((always_inline));
 inline int16_t
-swap(int16_t value) 
+swap(int16_t value)
 {
   return ((int16_t) swap((uint16_t) value));
 }
@@ -486,8 +486,8 @@ inline void
 swap(int16_t* dest, const int16_t* src, size_t size)
 {
   if (size == 0) return;
-  do { 
-    *dest++ = swap(*src++); 
+  do {
+    *dest++ = swap(*src++);
   } while (--size);
 }
 
@@ -541,7 +541,7 @@ inline char
 tohex(uint8_t value)
 {
   value &= 0xf;
-  if (value > 9) 
+  if (value > 9)
     return (value - 10 + 'a');
   return (value + '0');
 }
@@ -556,7 +556,7 @@ inline char
 toHEX(uint8_t value)
 {
   value &= 0xf;
-  if (value > 9) 
+  if (value > 9)
     return (value - 10 + 'A');
   return (value + '0');
 }

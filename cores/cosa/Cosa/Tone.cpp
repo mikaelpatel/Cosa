@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel (Cosa C++ port and extensions)
+ * Copyright (C) 2014-2015, Mikael Patel (Cosa C++ port and extensions)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -52,30 +52,30 @@
 #endif
 
 uint32_t Tone::s_expires;
-const uint8_t Tone::s_map[] __PROGMEM = { 
-  200, 100, 67, 50, 40, 33, 29, 22, 11, 2 
+const uint8_t Tone::s_map[] __PROGMEM = {
+  200, 100, 67, 50, 40, 33, 29, 22, 11, 2
 };
 
-void 
+void
 Tone::begin()
 {
   // Initiate PWM pins as output
   DDR |= (_BV(PWM1) | _BV(PWM2));
 }
 
-void 
-Tone::play(uint16_t freq, uint8_t volume, uint16_t duration, bool background) 
+void
+Tone::play(uint16_t freq, uint8_t volume, uint16_t duration, bool background)
 {
   // Check if turn off tone
-  if ((freq == 0) || (volume == 0)) { 
+  if ((freq == 0) || (volume == 0)) {
     silent();
     return;
   }
 
   // Check volume does not exceed limit
   if (volume > VOLUME_MAX) volume = VOLUME_MAX;
-  
-  // Calculate clock prescaling 
+
+  // Calculate clock prescaling
   uint8_t prescaler = _BV(CS10);
   uint32_t top = (F_CPU / freq / 2) - 1;
   if (top > 65535L) {
@@ -100,11 +100,11 @@ Tone::play(uint16_t freq, uint8_t volume, uint16_t duration, bool background)
 
   // Check for asychronious mode
   if ((duration == 0) || background) return;
-  delay(duration); 
-  silent(); 
+  delay(duration);
+  silent();
 }
 
-void 
+void
 Tone::silent()
 {
   // Turn off interrupt handler
@@ -116,7 +116,7 @@ Tone::silent()
   PORT &= ~(_BV(PIN1) | _BV(PIN2));
 }
 
-ISR(TIMER1_COMPA_vect) 
+ISR(TIMER1_COMPA_vect)
 {
   // Check if the tone should be turned off
   if (Watchdog::millis() < Tone::s_expires) return;

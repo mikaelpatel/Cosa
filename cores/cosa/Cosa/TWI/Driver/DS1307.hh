@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -27,10 +27,10 @@
 
 /**
  * Driver for the DS1307, 64 X 8, Serial I2C Real-Time Clock,
- * a low-power, full binary-coded decimal (BCD) clock/calendar plus 
- * 56 bytes of NV SRAM. 
+ * a low-power, full binary-coded decimal (BCD) clock/calendar plus
+ * 56 bytes of NV SRAM.
  *
- * For further details see Maxim Integrated product description; 
+ * For further details see Maxim Integrated product description;
  * http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
  * @section Circuit
@@ -90,7 +90,7 @@ public:
   /** Max size of application RAM (56 bytes). */
   const static uint8_t RAM_MAX = RAM_END - RAM_START + 1;
 
-  /** 
+  /**
    * Construct DS1307 device driver with bus address(0x68).
    */
   DS1307() : TWI::Driver(0x68) {}

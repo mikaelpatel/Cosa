@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -64,9 +64,9 @@ public:
    * @param[in] size in Kbits (default 32).
    * @param[in] page_max size of memory page (default 32 byte).
    */
-  AT24CXX(uint8_t subaddr = 0, 
+  AT24CXX(uint8_t subaddr = 0,
 	  const size_t size = 32,
-	  const uint16_t page_max = 32) : 
+	  const uint16_t page_max = 32) :
     TWI::Driver(0x50 | (subaddr & 0x07)),
     EEPROM::Device(),
     SIZE((size / CHARBITS) * 1024),
@@ -115,7 +115,7 @@ private:
    * given memory address. If buffer is not null perform a write
    * to page. The given size must not exceed the page. Return true(1)
    * if the device is ready, write cycle is completed, otherwise
-   * false(0). 
+   * false(0).
    * @param[in] addr address in rom.
    * @param[in] buf buffer to write rom (default null(0)).
    * @param[in] size number to write (default zero(0)).
@@ -130,7 +130,7 @@ private:
  * of 8 bits each. 32-Byte page write mode.
  *
  * See Atmel Product description (Rev. 0336K-SEEPR-7/03),
- * www.atmel.com/images/doc0336.pdf 
+ * www.atmel.com/images/doc0336.pdf
  */
 class AT24C32 : public AT24CXX {
 public:
@@ -140,10 +140,10 @@ public:
 /**
  * The AT24C64 provides 65,536 bits of serial electrically erasable
  * and programmable read only memory (EEPROM) organized as 8192 words
- * of 8 bits each. 32-Byte page write mode. 
+ * of 8 bits each. 32-Byte page write mode.
  *
  * See Atmel Product description (Rev. 0336K-SEEPR-7/03),
- * www.atmel.com/images/doc0336.pdf 
+ * www.atmel.com/images/doc0336.pdf
  */
 class AT24C64 : public AT24CXX {
 public:
@@ -154,7 +154,7 @@ public:
  * The AT24C128 provides 131,072 bits of serial electrically erasable
  * and programmable read only memory (EEPROM) organized as 16,384
  * words of 8 bits each. 64-Byte page write mode.
- * 
+ *
  * See Atmel Product description (Rev. 0670T–SEEPR–3/07),
  * http://www.atmel.com/Images/doc0670.pdf
  */
@@ -167,7 +167,7 @@ public:
  * The AT24C256 provides 262,144 bits of serial electrically erasable
  * and programmable read only memory (EEPROM) organized as
  * 32,768 words of 8 bits each. 64-Byte page write mode.
- * 
+ *
  * See Atmel Product description (Rev. 0670T–SEEPR–3/07),
  * http://www.atmel.com/Images/doc0670.pdf
  */

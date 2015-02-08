@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@
 #include "Cosa/RTC.hh"
 
 /**
- * Real-time clock Timer class for scheduling of micro/milli-second 
+ * Real-time clock Timer class for scheduling of micro/milli-second
  * callbacks.
  *
  * @section Limitations
@@ -40,12 +40,12 @@ public:
 
   /**
    * Start the Timer handler. This member function must be called in
-   * the setup to allow Timers. 
+   * the setup to allow Timers.
    */
-  static void begin() 
+  static void begin()
     __attribute__((always_inline))
-  { 
-    RTC::set(on_interrupt); 
+  {
+    RTC::set(on_interrupt);
   }
 
   /**
@@ -56,7 +56,7 @@ public:
   {
     m_expires = us;
   }
-  
+
   /**
    * Get timer expire time (absolute time, RTC::micro based).
    */
@@ -108,11 +108,11 @@ public:
 
   /**
    * @override Timer
-   * Timer member function that is called when the timeout period 
+   * Timer member function that is called when the timeout period
    * has expired. This member function must be overridden.
    */
   virtual void on_expired() = 0;
-    
+
   /**
    * Minimum relative expiration in order to be queued for ISR dispatch.
    * NOTE: All timers with an expiration less than this will be
@@ -127,13 +127,13 @@ public:
 private:
   /** Queue of timers. */
   static Head s_queue;
-  
+
   /** Queue tick counter (MSB). */
   volatile static uint32_t s_queue_ticks;
-  
+
   /** Running state of timer handler. */
   volatile static bool s_running;
-  
+
   /** Timer expire time in micro-seconds (RTC::micros). */
   uint32_t m_expires;
 

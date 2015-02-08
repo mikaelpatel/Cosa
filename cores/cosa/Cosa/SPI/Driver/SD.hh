@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -25,9 +25,9 @@
 #include "Cosa/SPI.hh"
 
 /**
- * Cosa SD low-level device driver class. Implements disk driver 
+ * Cosa SD low-level device driver class. Implements disk driver
  * connect/disconnect, erase, read and write block.
- * 
+ *
  * @section References
  * 1. SD Specification, Part 1: Physical Layer, Simplified Specification,
  * Version 4.10, January 22, 2013. https://www.sdcard.org/downloads/pls/simplified_specs/part1_410.pdf
@@ -145,7 +145,7 @@ public:
     csd_v1_t v1;
     csd_v2_t v2;
   };
-  
+
 protected:
   /** Command Abbreviations. */
   enum CMD {
@@ -261,7 +261,7 @@ protected:
     };
     R6(uint32_t value = 0L) { as_uint32 = value; }
   };
-  
+
   /** R7 (Card interface condition). */
   union R7 {
     uint32_t as_uint32;
@@ -312,7 +312,7 @@ protected:
 
   /** Detected card type. */
   CARD m_type;
-  
+
   /**
    * Send given command and argument. Returns R1 response byte.
    * @param[in] command to send.
@@ -322,7 +322,7 @@ protected:
   uint8_t send(CMD command, uint32_t arg = 0L);
 
   /**
-   * Send given command and argument. Resend if response any error state. 
+   * Send given command and argument. Resend if response any error state.
    * Return true if command was issued successfully otherwise false.
    * @param[in] ms number of milli-seconds to resend.
    * @param[in] command to send.
@@ -333,7 +333,7 @@ protected:
 
   /**
    * Send given application specific command and argument. Returns R1
-   * response byte.  
+   * response byte.
    * @param[in] command to send.
    * @param[in] arg argument (default 0L).
    * @return response byte (R1).
@@ -342,7 +342,7 @@ protected:
 
   /**
    * Send given application specific command and argument. Resend if
-   * response any error state.  
+   * response any error state.
    * Return true if command was issued successfully otherwise false.
    * @param[in] ms number of milli-seconds to resend.
    * @param[in] command to send.
@@ -370,7 +370,7 @@ protected:
   /**
    * Send given command and argument and transfer data response into
    * given buffer with given number of bytes. Returns true if
-   * successful otherwise false. 
+   * successful otherwise false.
    * @param[in] command to send.
    * @param[in] arg argument.
    * @param[in] buf pointer to buffer for response data.
@@ -382,7 +382,7 @@ protected:
 public:
   /**
    * Construct Secure Disk low-level SPI device driver with given chip
-   * select pin. 
+   * select pin.
    * @param[in] csn chip select pin.
    */
 #if defined(BOARD_ATTINYX5)
@@ -421,7 +421,7 @@ public:
   /**
    * Stop communication with memory card. Flush internal state and
    * allow card to be removed. Returns true if successful otherwise
-   * false. 
+   * false.
    * @return bool.
    */
   bool end();
@@ -438,7 +438,7 @@ public:
   /**
    * Read given block into given destination buffer. The buffer must
    * be able to hold BLOCK_MAX bytes. Returns true if successful
-   * otherwise false. 
+   * otherwise false.
    * @param[in] block address.
    * @param[in] dst pointer to destination buffer.
    * @return bool.
@@ -451,9 +451,9 @@ public:
   }
 
   /**
-   * Read card CID register. The CID contains card identification 
+   * Read card CID register. The CID contains card identification
    * information such as Manufacturer ID, Product name, Product serial
-   * number and Manufacturing date. 
+   * number and Manufacturing date.
    * @param[out] cid pointer to cid data store.
    * @return true for successful otherwise false.
    */
@@ -465,7 +465,7 @@ public:
 
   /**
    * Read card CSD register. The CSD contains that provides
-   * information regarding access to the card's contents. 
+   * information regarding access to the card's contents.
    * @param[out] csd pointer to csd data store.
    * @return true for successful otherwise false.
    */
@@ -474,10 +474,10 @@ public:
   {
     return (read(SEND_CSD, 0, csd, sizeof(csd_t)));
   }
-  
+
   /**
    * Write given source buffer with BLOCK_MAX bytes to the given
-   * block. Returns true if successful otherwise false. 
+   * block. Returns true if successful otherwise false.
    * @param[in] block address.
    * @param[in] src pointer to source buffer.
    * @return bool.

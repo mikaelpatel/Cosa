@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -193,7 +193,7 @@ public:
     STREAM = 0x80,		//!< Holds the latest 32 values.
     TRIGGER = 0xc0		//!< Latest 32 values before trigger.
   };
-  
+
   /**
    * Register FIFO_STATUS bitfields.
    */
@@ -229,7 +229,7 @@ public:
     read(reg, &res, sizeof(res));
     return (res);
   }
-  
+
   /**
    * Read contents of registers, multiple values from give address.
    * @param[in] reg register address.
@@ -246,11 +246,11 @@ public:
   } __attribute__((packed));
 
   /**
-   * Construct ADXL345 driver with normal or alternative address (pp. 18).  
+   * Construct ADXL345 driver with normal or alternative address (pp. 18).
    * @param[in] use_alt_address.
    */
-  ADXL345(bool use_alt_address = false) : 
-    TWI::Driver(use_alt_address ? 0x53 : 0x1d) 
+  ADXL345(bool use_alt_address = false) :
+    TWI::Driver(use_alt_address ? 0x53 : 0x1d)
   {}
 
   /**
@@ -286,7 +286,7 @@ public:
   void calibrate(int8_t x, int8_t y, int8_t z)
     __attribute__((always_inline))
   {
-    offset_t ofs; 
+    offset_t ofs;
     ofs.x = x;
     ofs.y = y;
     ofs.z = z;
@@ -308,7 +308,7 @@ public:
     int y;
     int z;
   };
-  
+
   /**
    * Sample accelerometer. Return sample is given data structure
    * @param[in] s sample storage.
@@ -320,7 +320,7 @@ public:
   }
 
   /**
-   * Check for activity. Returns a bitset with current activity. 
+   * Check for activity. Returns a bitset with current activity.
    * Ignore WATERMARK and OVERRUN.
    * @return activities
    */

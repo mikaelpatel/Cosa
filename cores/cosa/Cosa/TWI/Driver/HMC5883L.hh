@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -81,7 +81,7 @@ public:
     SAMPLES_AVG_4,
     SAMPLES_AVG_8
   } __attribute__((packed));
-  
+
   /**
    * Configuration Register B (pp. 13)
    */
@@ -95,7 +95,7 @@ public:
     RANGE_5_6_GA,
     RANGE_8_1_GA
   } __attribute__((packed));
-  
+
   /**
    * Mode Register (pp. 14).
    */
@@ -137,8 +137,8 @@ public:
   /**
    * Construct HMC5883L device with bus address(0x1e) (pp. 11).
    */
-  HMC5883L(uint8_t mode = SLEEP_MODE_IDLE) : 
-    TWI::Driver(0x1e), 
+  HMC5883L(uint8_t mode = SLEEP_MODE_IDLE) :
+    TWI::Driver(0x1e),
     m_config(),
     m_mode(mode),
     m_overflow(false),
@@ -151,7 +151,7 @@ public:
    * @return bool
    */
   bool begin();
-  
+
   /**
    * End interaction with device. Put into idle mode. Return true(1)
    * if successful otherwise false(0).
@@ -161,7 +161,7 @@ public:
   {
     return (set_mode(IDLE_MEASUREMENT_MODE));
   }
-  
+
   /**
    * Set await sleep mode.
    * @param[in] mode power sleep mode.
@@ -214,7 +214,7 @@ public:
   /**
    * Write configuration change to device. Return true(1) if successful
    * otherwise false(0). Should be called after configuration
-   * changes. 
+   * changes.
    * @return bool
    */
   bool write_config();
@@ -232,8 +232,8 @@ public:
    * Set device operation mode and write mode change to device. Return
    * true(1) if successful otherwise false(0). Must be called for each
    * sample in SINGLE_MEASUREMENT_MODE. There is a delay before the
-   * output data becomes available from the device (rate setting). 
-   * Monitor with available() or the ready pin. 
+   * output data becomes available from the device (rate setting).
+   * Monitor with available() or the ready pin.
    * @param[in] mode of operation.
    * @return bool
    */
@@ -258,10 +258,10 @@ public:
     if (!read_status(current)) return (false);
     return (current.ready);
   }
-  
+
   /**
    * Issue single measurement. Return true(1) if successful otherwise
-   * false(0). 
+   * false(0).
    * @return bool
    */
   bool sample_heading_request()
@@ -271,7 +271,7 @@ public:
 
   /**
    * Wait for measurement to complete. Processor is put to sleep with
-   * the mode given by set_sleep_mode() or constructor. 
+   * the mode given by set_sleep_mode() or constructor.
    */
   void await()
     __attribute__((always_inline))
@@ -309,7 +309,7 @@ public:
   {
     return (m_overflow);
   }
-  
+
   /**
    * Convert the latest reading to milli-gauss using the current gain
    * setting and the gain table.
@@ -327,7 +327,7 @@ protected:
     STATUS = 0x09,		//!< Status register.
     IDENTITY = 0x0a		//!< Identity register(0-2).
   } __attribute__((packed));
-  
+
   /** Gain conversion table. */
   static const uint16_t s_gain[] PROGMEM;
 
@@ -349,7 +349,7 @@ protected:
   };
   /** Configuration mirror register. */
   config_t m_config;
-  
+
   /** Sleep mode while waiting for data. */
   uint8_t m_mode;
 

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -59,7 +59,7 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
 void
 TWI::end()
 {
-  // Check if an asynchronious read/write was issued 
+  // Check if an asynchronious read/write was issued
   if (m_target != NULL) await_completed();
   // Put into idle state
   synchronized {
@@ -134,7 +134,7 @@ TWI::await_completed()
   return (m_count);
 }
 
-void 
+void
 TWI::isr_start(State state, uint8_t ix)
 {
   if (ix == NEXT_IX) {
@@ -147,7 +147,7 @@ TWI::isr_start(State state, uint8_t ix)
   m_state = state;
 }
 
-void 
+void
 TWI::isr_stop(State state, uint8_t type)
 {
   TWCR = TWI::STOP_CMD;
@@ -178,7 +178,7 @@ TWI::isr_read(Command cmd)
   return (true);
 }
 
-ISR(TWI_vect) 
+ISR(TWI_vect)
 {
   twi.m_status = TWI_STATUS(TWSR);
   switch (twi.m_status) {
@@ -197,7 +197,7 @@ ISR(TWI_vect)
     twi.m_state = TWI::ERROR_STATE;
     twi.m_count = -1;
     break;
-    
+
     /**
      * Master Transmitter Mode
      */
@@ -205,10 +205,10 @@ ISR(TWI_vect)
   case TWI::MT_DATA_ACK:
     if (twi.m_next == twi.m_last) twi.isr_start(TWI::MT_STATE, TWI::NEXT_IX);
     if (twi.isr_write(TWI::DATA_CMD)) break;
-  case TWI::MT_DATA_NACK: 
+  case TWI::MT_DATA_NACK:
     twi.isr_stop(TWI::IDLE_STATE, Event::WRITE_COMPLETED_TYPE);
     break;
-  case TWI::MT_SLA_NACK: 
+  case TWI::MT_SLA_NACK:
     twi.isr_stop(TWI::ERROR_STATE, Event::ERROR_TYPE);
     break;
 
@@ -219,12 +219,12 @@ ISR(TWI_vect)
     twi.isr_read();
   case TWI::MR_SLA_ACK:
     TWCR = (twi.m_next < (twi.m_last - 1)) ? TWI::ACK_CMD : TWI::NACK_CMD;
-    break; 
+    break;
   case TWI::MR_DATA_NACK:
     twi.isr_read();
     twi.isr_stop(TWI::IDLE_STATE, Event::READ_COMPLETED_TYPE);
     break;
-  case TWI::MR_SLA_NACK: 
+  case TWI::MR_SLA_NACK:
     twi.isr_stop(TWI::ERROR_STATE, Event::ERROR_TYPE);
     break;
 
@@ -269,12 +269,12 @@ ISR(TWI_vect)
   case TWI::NO_INFO:
     break;
 
-  case TWI::BUS_ERROR: 
+  case TWI::BUS_ERROR:
     twi.isr_stop(TWI::ERROR_STATE);
     break;
-    
-  default:     
-    TWCR = TWI::IDLE_CMD; 
+
+  default:
+    TWCR = TWI::IDLE_CMD;
   }
 }
 
@@ -291,7 +291,7 @@ TWI::Slave::begin()
   }
 }
 
-void 
+void
 TWI::Slave::on_event(uint8_t type, uint16_t value)
 {
   if (type != Event::WRITE_COMPLETED_TYPE) return;
@@ -301,14 +301,14 @@ TWI::Slave::on_event(uint8_t type, uint16_t value)
   TWAR = twi.m_dev->m_addr;
 }
 
-void 
+void
 TWI::Slave::set_write_buf(void* buf, size_t size)
 {
   twi.m_vec[WRITE_IX].buf = buf;
   twi.m_vec[WRITE_IX].size = size;
 }
 
-void 
+void
 TWI::Slave::set_read_buf(void* buf, size_t size)
 {
   twi.m_vec[READ_IX].buf = buf;

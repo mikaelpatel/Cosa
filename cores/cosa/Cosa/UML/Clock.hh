@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,7 +34,7 @@ namespace UML {
  * to the tick.
  *
  * @section Diagram
- * 
+ *
  *     Clock
  *   +--------+
  *   |   c1   |
@@ -52,13 +52,13 @@ public:
 
   /**
    * Construct Clock with given tick connector and period in
-   * milli-seconds. 
+   * milli-seconds.
    * @param[in] tick connector.
    * @param[in] ms period.
    */
-  Clock(Tick& tick, uint16_t ms) : 
-    TimedCapsule(ms), 
-    m_tick(tick) 
+  Clock(Tick& tick, uint16_t ms) :
+    TimedCapsule(ms),
+    m_tick(tick)
   {}
 
   /**
@@ -66,7 +66,7 @@ public:
    * Increment clock tick and schedule all capsules that listen for
    * clock update.
    */
-  virtual void behavior() 
+  virtual void behavior()
   {
     m_tick = m_tick + 1;
   }

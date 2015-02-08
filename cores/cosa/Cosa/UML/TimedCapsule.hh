@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,10 +28,10 @@
 namespace UML {
 
 /**
- * Timed Capsule class. Run the behavior periodically. 
+ * Timed Capsule class. Run the behavior periodically.
  *
  * @section Diagram
- * 
+ *
  *     TimedCapsule
  *   +--------------+
  *   |      c1      |
@@ -43,11 +43,11 @@ namespace UML {
 class TimedCapsule : public Capsule, public Periodic {
 public:
   /**
-   * Construct Timed Capsule with given period in milli-seconds. 
+   * Construct Timed Capsule with given period in milli-seconds.
    * @param[in] ms period.
    */
-  TimedCapsule(uint16_t ms) : 
-    Capsule(), 
+  TimedCapsule(uint16_t ms) :
+    Capsule(),
     Periodic(ms)
   {}
 

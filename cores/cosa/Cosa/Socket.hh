@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -48,13 +48,13 @@ public:
   Socket();
 
   /**
-   * Get source machine address, network address and port. 
+   * Get source machine address, network address and port.
    * @param[out] addr network address.
    */
   void get_src(INET::addr_t& addr) const
   {
     addr = m_src;
-  }  
+  }
 
   /**
    * Get socket protocol.
@@ -63,7 +63,7 @@ public:
   Protocol get_proto() const
   {
     return ((Protocol) m_proto);
-  }  
+  }
 
   /**
    * Get socket port.
@@ -72,7 +72,7 @@ public:
   uint16_t get_port() const
   {
     return (m_port);
-  }  
+  }
 
   /**
    * @override IOStream::Device
@@ -82,7 +82,7 @@ public:
    * @return number of bytes written or EOF(-1).
    */
   virtual int write(const void* buf, size_t size);
-    
+
   /**
    * @override IOStream::Device
    * Write data from buffer in program memory with given size to device.
@@ -98,7 +98,7 @@ public:
    * @return character or EOF(-1).
    */
   virtual int getchar();
-    
+
   /**
    * @override IOStream::Device
    * Read data to given buffer with given size from device.
@@ -120,7 +120,7 @@ public:
 
   /**
    * @override Socket
-   * Close the socket. 
+   * Close the socket.
    * @return zero if successful otherwise negative error code.
    */
   virtual int close() = 0;
@@ -134,13 +134,13 @@ public:
 
   /**
    * @override Socket
-   * Check for incoming requests from clients. Return zero if 
+   * Check for incoming requests from clients. Return zero if
    * the socket has accepted a request and a connection is
-   * established. 
+   * established.
    * @return zero if successful otherwise negative error code.
    */
   virtual int accept() = 0;
-  
+
   /**
    * @override Socket
    * Connect the socket to the given address and port; client mode.
@@ -165,7 +165,7 @@ public:
    * Returns positive integer if a connection is established, zero is
    * not yet established, otherwise a negative error code.
    * @return positive integer connected, zero if not otherwise
-   * negative error code. 
+   * negative error code.
    */
   virtual int is_connected() = 0;
 
@@ -191,7 +191,7 @@ public:
    * number of bytes or negative error code.
    * @param[in] buf buffer pointer.
    * @param[in] len number of bytes in buffer.
-   * @return number of bytes sent if successful otherwise negative error code. 
+   * @return number of bytes sent if successful otherwise negative error code.
    */
   int send(const void* buf, size_t len)
   {
@@ -205,7 +205,7 @@ public:
    * @param[in] buf program memory pointer.
    * @param[in] len number of bytes in buffer.
    * @return number of bytes sent if successful otherwise negative
-   * error code.  
+   * error code.
    */
   int send_P(const void* buf, size_t len)
   {
@@ -216,58 +216,58 @@ public:
    * @override Socket
    * Receive data from connection-oriented socket. The data is stored
    * in given buffer with given maximum number of bytes. Return number of
-   * bytes or negative error code. 
+   * bytes or negative error code.
    * @param[in] buf buffer pointer.
    * @param[in] len number of bytes in buffer.
    * @return number of bytes sent if successful otherwise negative
-   * error code.  
+   * error code.
    */
   virtual int recv(void* buf, size_t len) = 0;
-  
+
   /**
    * Send given data in buffer on connectionless socket as a datagram
    * to given destination address (dest:port). Return number of bytes
-   * sent or negative error code. 
+   * sent or negative error code.
    * @param[in] buf buffer pointer.
    * @param[in] len number of bytes in buffer.
    * @param[in] dest destination address.
    * @param[in] port destination port.
    * @return number of bytes sent if successful otherwise negative
-   * error code.  
+   * error code.
    */
   int send(const void* buf, size_t len, uint8_t dest[4], uint16_t port)
   {
     return (send(buf, len, dest, port, false));
   }
-  
+
   /**
    * Send given data in program memory buffer on connectionless socket
    * as a datagram to given destination address (dest:port). Return
-   * number of bytes 
-   * sent or negative error code. 
+   * number of bytes
+   * sent or negative error code.
    * @param[in] buf buffer pointer.
    * @param[in] len number of bytes in buffer.
    * @param[in] dest destination address.
    * @param[in] port destination port.
    * @return number of bytes sent if successful otherwise negative
-   * error code.  
+   * error code.
    */
   int send_P(const void* buf, size_t len, uint8_t dest[4], uint16_t port)
   {
     return (send(buf, len, dest, port, true));
   }
-  
+
   /**
    * @override Socket
    * Receive datagram on connectionless socket into given buffer with
    * given maximum size. Returns zero(0) if successful with
-   * information in Datagram otherwise negative error code. 
+   * information in Datagram otherwise negative error code.
    * @param[in] buf buffer pointer.
    * @param[in] len number of bytes in buffer.
    * @param[in] src source address.
    * @param[in] port source port.
    * @return number of bytes received if successful otherwise negative
-   * error code.  
+   * error code.
    */
   virtual int recv(void* buf, size_t len, uint8_t src[4], uint16_t& port) = 0;
 
@@ -285,41 +285,41 @@ protected:
    * @override Socket
    * Write data from buffer with given size to device. Boolean flag
    * progmem defined if the buffer is in program memory. Return number
-   * of bytes or negative error code. 
+   * of bytes or negative error code.
    * @param[in] buf buffer to write.
    * @param[in] size number of bytes to write.
    * @param[in] progmem program memory pointer flag.
    * @return number of bytes written or EOF(-1).
    */
   virtual int write(const void* buf, size_t size, bool progmem) = 0;
-    
+
   /**
    * @override Socket
    * Send given data in buffer on connection-oriented socket. Boolean flag
    * progmem defined if the buffer is in program memory. Return number
-   * of bytes or negative error code. 
+   * of bytes or negative error code.
    * @param[in] buf buffer pointer.
    * @param[in] len number of bytes in buffer.
    * @param[in] progmem program memory pointer flag.
    * @return number of bytes sent if successful otherwise negative
-   * error code.  
+   * error code.
    */
   virtual int send(const void* buf, size_t len, bool progmem) = 0;
 
   /**
    * @override Socket
    * Send given data on connectionless socket as a datagram to given
-   * destination address (dest:port). Return number of bytes 
-   * sent or negative error code. 
+   * destination address (dest:port). Return number of bytes
+   * sent or negative error code.
    * @param[in] buf buffer pointer.
    * @param[in] len number of bytes in buffer.
    * @param[in] dest destination address.
    * @param[in] port destination port.
    * @param[in] progmem program memory pointer flag.
    * @return number of bytes sent if successful otherwise negative
-   * error code.  
+   * error code.
    */
-  virtual int send(const void* buf, size_t len, 
+  virtual int send(const void* buf, size_t len,
 		   uint8_t dest[4], uint16_t port,
 		   bool progmem) = 0;
 };

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -22,10 +22,10 @@
 
 using namespace Soft;
 
-SPI::Driver::Driver(Board::DigitalPin cs, 
+SPI::Driver::Driver(Board::DigitalPin cs,
 		    uint8_t pulse,
-		    Clock clock, 
-		    uint8_t mode, 
+		    Clock clock,
+		    uint8_t mode,
 		    Order order,
 		    Interrupt::Handler* irq) :
   m_irq(irq),
@@ -39,7 +39,7 @@ SPI::Driver::Driver(Board::DigitalPin cs,
   spi.m_list = this;
 }
 
-bool 
+bool
 SPI::begin(Driver* dev)
 {
   synchronized {
@@ -56,9 +56,9 @@ SPI::begin(Driver* dev)
   }
   return (true);
 }
-  
-bool 
-SPI::end() 
+
+bool
+SPI::end()
 {
   synchronized {
     if (m_dev == 0) synchronized_return (false);
@@ -73,7 +73,7 @@ SPI::end()
   }
   return (true);
 }
-  
+
 uint8_t
 SPI::transfer(uint8_t value)
 {

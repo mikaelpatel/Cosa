@@ -9,12 +9,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,7 +32,7 @@ namespace UML {
  * parameter ON_CHANGE can be used to filter on new values. The
  * default is scheduling on any setting. By giving ON_CHANGE the value
  * true the connector will only schedule if the value setting is
- * different than the previous value. 
+ * different than the previous value.
 
  * @param[in] T connector value type.
  * @param[in] ON_CHANGE flag (Default false).
@@ -57,14 +57,14 @@ public:
    * @param[in] listeners null terminated vector of capsule references.
    * @param[in] value initial value of connector.
    */
-  Connector(Capsule* const* listeners, T value) : 
+  Connector(Capsule* const* listeners, T value) :
     m_value(value),
     m_listeners(listeners)
   {}
 
   /**
    * Set the connector with given value. Schedule listener
-   * capsules. 
+   * capsules.
    * @param[in] value to update with.
    * @return value.
    */
@@ -78,7 +78,7 @@ public:
 
   /**
    * Set the connector with value from given connector. Schedule
-   * listener capsules. 
+   * listener capsules.
    * @param[in] connector value to assign.
    * @return value.
    */
@@ -95,7 +95,7 @@ public:
   {
     return (m_value);
   }
-  
+
 protected:
   T m_value;
   Capsule* const* m_listeners;

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,8 +34,8 @@
  * transmitter buffer is used. The buffer is sent on flush (TCP/UDP)
  * or when full (TCP). Integrated with Cosa INET/DHCP so that the ethernet
  * controller may obtain a network address and information from a DHCP
- * server. 
- * 
+ * server.
+ *
  * @section Circuit
  * @code
  *                           W5100
@@ -90,7 +90,7 @@ public:
     MR_AI = 0x02,		//!< Address Auto-Increment.
     MR_IND = 0x01		//!< Indirect Bus I/F mode.
   } __attribute__((packed));
-  
+
   /**
    * Interrupt Register bitfields, pp. 21.
    */
@@ -234,7 +234,7 @@ public:
   /** RX Memory Address. */
   static const uint16_t RX_MEMORY_BASE = 0x6000;
   static const uint16_t RX_MEMORY_MAX = 0x2000;
-  
+
   /** Socket Buffer Size; 2 Kbyte TX/RX per socket. */
   static const size_t BUF_MAX = 2048;
   static const uint16_t BUF_MASK = 0x07ff;
@@ -246,7 +246,7 @@ public:
 
   /** Maximum number of sockets on device. */
   static const uint8_t SOCK_MAX = 4;
-  
+
   /** Maximum number of DNS request retries. */
   static const uint8_t DNS_RETRY_MAX = 4;
 
@@ -286,7 +286,7 @@ public:
     /**
      * Wait for given maximum message size in internal transmit buffer.
      * Setup transmitter offset and initiate length for new message
-     * construction. 
+     * construction.
      */
     void dev_setup();
 
@@ -304,7 +304,7 @@ public:
 
     /** Length of message in socket transmitter buffer. */
     uint16_t m_tx_len;
-    
+
     /** Pointer to socket receiver buffer. */
     uint16_t m_rx_buf;
 
@@ -325,7 +325,7 @@ public:
      * @return bytes.
      */
     virtual int room();
-    
+
     /**
      * @override IOStream::Device
      * Read data to given buffer with given size from device.
@@ -369,7 +369,7 @@ public:
      * @override Socket
      * Mark socket for incoming requests; server mode. Returns zero if
      * successful otherwise negative error code; -2 illegal protocol,
-     * -1 failed to mark socket for listen (socket is closed). 
+     * -1 failed to mark socket for listen (socket is closed).
      * @return zero if successful otherwise negative error code.
      */
     virtual int listen();
@@ -380,15 +380,15 @@ public:
      * socket has accepted a request and a connection is established,
      * otherwise a negative error code; -3 listening or connection in
      * progress, -2 illegal protocol, -1 illegal state (socket is
-     * closed). 
+     * closed).
      * @return zero if successful otherwise negative error code.
      */
     virtual int accept();
-  
+
     /**
      * @override Socket
-     * Connect the socket to the given address and port; client mode. 
-     * Returns a zero if successful otherwise a negative error code; 
+     * Connect the socket to the given address and port; client mode.
+     * Returns a zero if successful otherwise a negative error code;
      * -2 illegal protocol, -1 address/port not valid.
      * @param[in] addr destination address.
      * @param[in] port destination port.
@@ -411,14 +411,14 @@ public:
      * Returns positive integer if a connection is established, zero
      * is not yet established, otherwise a negative error code.
      * @return positive integer connected, zero if not otherwise
-     * negative error code. 
+     * negative error code.
      */
     virtual int is_connected();
 
     /**
      * @override Socket
      * Disconnect socket from server. Returns zero if successful
-     * otherwise a negative error code; -2 illegal protocol. 
+     * otherwise a negative error code; -2 illegal protocol.
      * @return zero if successful otherwise negative error code.
      */
     virtual int disconnect();
@@ -438,12 +438,12 @@ public:
      * @override Socket
      * Receive data from connection-oriented socket. The data is stored
      * in given buffer with given maximum number of bytes. Return number of
-     * bytes or negative error code; -3 socket not established, 
+     * bytes or negative error code; -3 socket not established,
      * -2 illegal protocol.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @return number of bytes sent if successful otherwise negative
-     * error code.  
+     * error code.
      */
     virtual int recv(void* buf, size_t len);
 
@@ -451,16 +451,16 @@ public:
      * @override Socket
      * Receive datagram on connectionless socket into given buffer
      * with given maximum size. Returns zero(0) if successful with
-     * information in Datagram otherwise negative error code; 
+     * information in Datagram otherwise negative error code;
      * -2 illegal protocol.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @param[in] src source address.
      * @param[in] port source port.
      * @return number of bytes received if successful otherwise
-     * negative error code.  
+     * negative error code.
      */
-    virtual int recv(void* buf, size_t len, 
+    virtual int recv(void* buf, size_t len,
 		     uint8_t src[4], uint16_t& port);
 
   protected:
@@ -468,20 +468,20 @@ public:
      * @override Socket
      * Write data from buffer with given size to device. Boolean flag
      * progmem defined if the buffer is in program memory. Return number
-     * of bytes or negative error code. 
+     * of bytes or negative error code.
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
      * @param[in] progmem program memory pointer flag.
      * @return number of bytes written or EOF(-1).
      */
     virtual int write(const void* buf, size_t size, bool progmem);
-    
+
     /**
      * @override Socket
      * Send given data in buffer on connection-oriented socket. Boolean flag
      * progmem defined if the buffer is in program memory. Return number
      * of bytes or negative error code; -4 socket closed by peer, -3
-     * connection not estabilished, -2 illegal protocol. 
+     * connection not estabilished, -2 illegal protocol.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @param[in] progmem program memory pointer flag.
@@ -495,16 +495,16 @@ public:
      * Send given data on connectionless socket as a datagram to given
      * destination address (dest:port). Return number of bytes sent or
      * negative error code; -2 illegal protocol, -1 illegal
-     * destination address or port. 
+     * destination address or port.
      * @param[in] buf buffer pointer.
      * @param[in] len number of bytes in buffer.
      * @param[in] dest destination address.
      * @param[in] port destination port.
      * @param[in] progmem program memory pointer flag.
      * @return number of bytes sent if successful otherwise negative
-     * error code.  
+     * error code.
      */
-    virtual int send(const void* buf, size_t len, 
+    virtual int send(const void* buf, size_t len,
 		     uint8_t dest[4], uint16_t port,
 		     bool progmem);
   };
@@ -532,7 +532,7 @@ public:
     OP_WRITE = 0xf0,
     OP_READ = 0x0f
   } __attribute__((packed));
-  
+
   /**
    * Write byte to given address.
    * @param[in] addr address on device.
@@ -550,7 +550,7 @@ public:
 
   /**
    * Write data from given program memory buffer with given number of
-   * bytes to address. 
+   * bytes to address.
    * @param[in] addr address on device.
    * @param[in] buf pointer to buffer in program memory.
    * @param[in] len number of bytes to write.
@@ -562,10 +562,10 @@ public:
    * @param[in] addr address on device.
    */
   uint8_t read(uint16_t addr);
-  
+
   /**
    * Read data from given address on device to given buffer with given
-   * number of bytes. 
+   * number of bytes.
    * @param[in] addr address on device.
    * @param[in] buf pointer to buffer.
    * @param[in] len number of bytes to read.
@@ -579,18 +579,18 @@ public:
    * @param[in] cmd command to issue.
    */
   void issue(uint16_t addr, uint8_t cmd);
-  
+
 public:
   /**
    * Construct W5100 device driver with given hardware address, and chip
-   * select. 
+   * select.
    * @param[in] mac hardware address (in program memory, default NULL).
    * @param[in] csn chip selection pin (Default D10).
    */
   W5100(const uint8_t* mac = NULL, Board::DigitalPin csn = Board::D10);
 
   /**
-   * Get the current network address and subnet mask. 
+   * Get the current network address and subnet mask.
    * @param[in] ip network address.
    * @param[in] subnet mask.
    */
@@ -598,7 +598,7 @@ public:
 
   /**
    * Get DNS network address if W5100 device driver was initiated with
-   * hostname and obtained network address from DHCP. 
+   * hostname and obtained network address from DHCP.
    * @param[in,out] ip network address.
    */
   void get_dns_addr(uint8_t ip[4]) { memcpy(ip, m_dns, sizeof(m_dns)); }
@@ -606,7 +606,7 @@ public:
   /**
    * Initiate W5100 device driver with given hostname. Network address,
    * subnet mask and gateway should be obtained from DNS. Returns true
-   * if successful otherwise false. 
+   * if successful otherwise false.
    * @param[in] hostname string in program memory.
    * @param[in] timeout retry timeout period (Default 500 ms).
    * @return bool.
@@ -625,7 +625,7 @@ public:
    * @param[in] timeout retry timeout period (Default 500 ms).
    * @return bool.
    */
-  bool begin(uint8_t ip[4] = NULL, uint8_t subnet[4] = NULL, 
+  bool begin(uint8_t ip[4] = NULL, uint8_t subnet[4] = NULL,
 	     uint16_t timeout = 500);
 
   /**

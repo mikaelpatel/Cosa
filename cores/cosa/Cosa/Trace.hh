@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2014, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,7 +32,7 @@ class Trace : public IOStream {
 public:
   /**
    * Construct Trace IOStream object and initiate with null device.
-   * Use begin() to set the trace device. The Trace class is actually 
+   * Use begin() to set the trace device. The Trace class is actually
    * a singleton, trace, as the trace macro set depends on the variable.
    */
   Trace() : IOStream(), EXITCHARACTER(0x1d) {}
@@ -67,13 +67,13 @@ public:
 
   /**
    * Support function for ASSERT failure. Prints give function name,
-   * func, line number and expression that could not be validated 
+   * func, line number and expression that could not be validated
    * to trace output device before calling exit().
    * @param[in] file name.
    * @param[in] line number.
    * @param[in] expr program memory string with expression.
    */
-  void fatal_P(const char* file, int line, str_P expr) 
+  void fatal_P(const char* file, int line, str_P expr)
     __attribute__((noreturn));
 
   /** Result of latest MEASURE */
@@ -108,7 +108,7 @@ extern uint8_t trace_log_mask;
 
 /**
  * Prints given message with current file name and line number
- * to trace device and the program will terminate. The message 
+ * to trace device and the program will terminate. The message
  * string is stored in program memory.
  * @param[in] msg message string to print.
  */
@@ -201,7 +201,7 @@ extern uint8_t trace_log_mask;
 #endif
 
 /**
- * Syntactic sugar for measuring execution time for a block. 
+ * Syntactic sugar for measuring execution time for a block.
  * Used in the form:
  * @code
  * MEASURE("time to execute block", 1) {
@@ -240,7 +240,7 @@ extern uint8_t trace_log_mask;
 #endif
 
 /**
- * The Trace class singleton. 
+ * The Trace class singleton.
  */
 extern Trace trace  __attribute__ ((weak));
 

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,8 +28,8 @@
 #if !defined(BOARD_ATTINYX5)
 
 /**
- * Cosa Device Driver for RFM69W/HW, Low-Power Sub-1 GHz RF Transceiver. 
- * Note that this device requires data in big endian order. 
+ * Cosa Device Driver for RFM69W/HW, Low-Power Sub-1 GHz RF Transceiver.
+ * Note that this device requires data in big endian order.
  *
  * @section Circuit
  * This is the pin-out for the RFM69W/HW module.
@@ -48,9 +48,9 @@
  * @endcode
  *
  * @section References
- * 1. Product datasheet, RFM69W ISM Transceiver Module V1.3, 
+ * 1. Product datasheet, RFM69W ISM Transceiver Module V1.3,
  * http://www.hoperf.com/rf/fsk_module/RFM69W.htm
- * 2. Product datasheet, RFM69HW ISM Transceiver Module V1.3, 
+ * 2. Product datasheet, RFM69HW ISM Transceiver Module V1.3,
  * http://www.hoperf.com/rf/fsk_module/RFM69HW.htm
  */
 class RFM69 : private SPI::Driver, public Wireless::Driver {
@@ -61,11 +61,11 @@ public:
   static const size_t HEADER_MAX = 3;
 
   /**
-   * Maximum size of payload. The device allows 66 bytes payload. 
+   * Maximum size of payload. The device allows 66 bytes payload.
    * Adjust for frame header.
    */
   static const size_t PAYLOAD_MAX = 66 - HEADER_MAX;
-  
+
   /**
    * Construct RFM69 device driver with given network and device
    * address. Connected to SPI bus and given chip select pin. Default
@@ -77,15 +77,15 @@ public:
    * @param[in] irq interrupt pin (Default EXT0).
    */
 #if defined(BOARD_ATTINYX4)
-  RFM69(uint16_t net, uint8_t dev, 
+  RFM69(uint16_t net, uint8_t dev,
 	Board::DigitalPin csn = Board::D2,
 	Board::ExternalInterruptPin irq = Board::EXT0);
 #elif defined(BOARD_ATMEGA2560)
-  RFM69(uint16_t net, uint8_t dev, 
+  RFM69(uint16_t net, uint8_t dev,
 	Board::DigitalPin csn = Board::D53,
 	Board::ExternalInterruptPin irq = Board::EXT4);
 #else
-  RFM69(uint16_t net, uint8_t dev, 
+  RFM69(uint16_t net, uint8_t dev,
 	Board::DigitalPin csn = Board::D10,
 	Board::ExternalInterruptPin irq = Board::EXT0);
 #endif
@@ -107,7 +107,7 @@ public:
    * @return bool
    */
   virtual bool end();
-    
+
   /**
    * @override Wireless::Driver
    * Send message in given null terminated io vector. Returns number
@@ -126,7 +126,7 @@ public:
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
-   * set transmit mode.  
+   * set transmit mode.
    * @param[in] dest destination network address.
    * @param[in] port device port (or message type).
    * @param[in] buf buffer to transmit.
@@ -141,7 +141,7 @@ public:
    * length. The source network address is returned in the parameter src.
    * Returns error code(-2) if no message is available and/or a
    * timeout occured. Returns error code(-1) if the buffer size if to
-   * small for incoming message or if the receiver fifo has overflowed. 
+   * small for incoming message or if the receiver fifo has overflowed.
    * Otherwise the actual number of received bytes is returned
    * @param[out] src source network address.
    * @param[out] port device port (or message type).
@@ -150,21 +150,21 @@ public:
    * @param[in] ms maximum time out period.
    * @return number of bytes received or negative error code.
    */
-  virtual int recv(uint8_t& src, uint8_t& port, void* buf, size_t len, 
+  virtual int recv(uint8_t& src, uint8_t& port, void* buf, size_t len,
 		   uint32_t ms = 0L);
 
   /**
    * @override Wireless::Driver
-   * Set device in power down mode. 
+   * Set device in power down mode.
    */
   virtual void powerdown();
 
   /**
    * @override Wireless::Driver
-   * Set device in wakeup on radio mode. 
+   * Set device in wakeup on radio mode.
    */
   virtual void wakeup_on_radio();
-  
+
   /**
    * @override Wireless::Driver
    * Set output power level [-18..13] dBm.
@@ -175,7 +175,7 @@ public:
   /**
    * @override Wireless::Driver
    * Return estimated input power level (dBm) from latest successful
-   * message received. 
+   * message received.
    */
   virtual int get_input_power_level();
 
@@ -270,9 +270,9 @@ private:
     TEST_DAGC = 0x6F,		//!< Fading Margin Improvement.
     TEST_AFC = 0x71,		//!< AFC offset for low modulation index AFC.
   } __attribute__((packed));
-  
+
   /**
-   * Transaction header (figure 25, pp. 44). Register address and 
+   * Transaction header (figure 25, pp. 44). Register address and
    * read/write flag in most significant bit.
    */
   enum {
@@ -280,7 +280,7 @@ private:
     REG_WRITE = 0x80,		//!< Write register.
     REG_MASK = 0x7F		//!< Mask register.
   } __attribute__((packed));
-  
+
   /**
    * Read single register value.
    * @param[in] reg register address.
@@ -298,7 +298,7 @@ private:
   }
 
   /**
-   * Read multiple register or fifo values into given buffer. 
+   * Read multiple register or fifo values into given buffer.
    * @param[in] reg start register or fifo address.
    * @param[in] buf buffer to store register values.
    * @param[in] count size of buffer and number of registers to read.
@@ -329,7 +329,7 @@ private:
   }
 
   /**
-   * Write multiple register values or fifo from given buffer. 
+   * Write multiple register values or fifo from given buffer.
    * @param[in] reg start register address.
    * @param[in] buf buffer with new register values.
    * @param[in] count size of buffer and number of registers to read.
@@ -365,9 +365,9 @@ private:
    */
   enum {
     SEQUENCER_OFF = 0x80,		//!< Controls the automatic sequencer.
-    SEQUENCER_ON = 0x00,		//!< 
+    SEQUENCER_ON = 0x00,		//!<
     LISTEN_OFF = 0x00,			//!< Enables listen mode.
-    LISTEN_ON = 0x40,			//!< 
+    LISTEN_ON = 0x40,			//!<
     LISTEN_ABORT = 0x20,		//!< Aborts listen mode with LISTEN_OFF.
     MODE_MASK = 0x1C			//!< Tranceiver operation modes.
   } __attribute__((packed));
@@ -377,10 +377,10 @@ private:
    */
   enum {
     PACKET_MODE = 0x00,				//!< Data processing mode.
-    CONTINUOUS_MODE_WITH_BIT_SYNC = 0x40,	//!< 
-    CONTINUOUS_MODE_WITHOUT_BIT_SYNC = 0x60,	//!< 
+    CONTINUOUS_MODE_WITH_BIT_SYNC = 0x40,	//!<
+    CONTINUOUS_MODE_WITHOUT_BIT_SYNC = 0x60,	//!<
     FSK_MODULATION = 0x00,			//!< Modulation scheme.
-    OOK_MODULATION = 0x80,			//!< 
+    OOK_MODULATION = 0x80,			//!<
     FSK_NO_SHAPING = 0x00,			//!< Modulation shaping (FSK).
     FSK_BT_1_0 = 0x01,				//!< Gaussian filter, BT = 1.0.
     FSK_BT_0_5 = 0x02,				//!< BT = 0.5.
@@ -412,15 +412,15 @@ private:
   enum {
     RESOL_IDLE_64_US = 0x40,		//!< Resolution of Listen mode idle time.
     RESOL_IDLE_410_US = 0x80,		//!< Calibrated RC oscillator.
-    RESOL_IDLE_262000_US = 0xC0,	//!< 
+    RESOL_IDLE_262000_US = 0xC0,	//!<
     RESOL_RX_64_US = 0x10,		//!< Resolution of Listen mode Rx time.
     RESOL_RX_410_US = 0x20,		//!< Calibrated RC oscillator.
-    RESOL_RX_262000_US = 0x30,		//!< 
+    RESOL_RX_262000_US = 0x30,		//!<
     CRITERIA_RSSI_THRESHOLD = 0x00, 	//!< Packet acceptance criteria.
     CRITERIA_RSSI_SYNC_THRESHOLD = 0x08,//!< RSSI, RSSI & SYNC_ADDR.
     END_MODE0 = 0x00,			//!< Action after acceptance.
-    END_MODE1 = 0x02,			//!< 
-    END_MODE2 = 0x04			//!< 
+    END_MODE1 = 0x02,			//!<
+    END_MODE2 = 0x04			//!<
   } __attribute__((packed));
 
   /**
@@ -428,14 +428,14 @@ private:
    */
   enum {
     PA0_ON = 0x80,		//!< Enables PA0, connected to RFIO and LNA.
-    PA0_OFF = 0x00,		//!< 
+    PA0_OFF = 0x00,		//!<
     PA1_ON = 0x40,		//!< Enables PA1, on PA_BOOST pin.
-    PA1_OFF = 0x00,		//!< 
+    PA1_OFF = 0x00,		//!<
     PA2_ON = 0x20,		//!< Enables PA2, on PA_BOOST pin.
-    PA2_OFF = 0x00,		//!< 
+    PA2_OFF = 0x00,		//!<
     OUTPUT_POWER = 0,		//!< Output power setting, in 1 dB steps.
     OUTPUT_POWER_MASK = 0x1F,	//!< Bitfield position and mask (5-bits).
-    FULL_OUTPUT_POWER = 0x1F	//!< 
+    FULL_OUTPUT_POWER = 0x1F	//!<
   } __attribute__((packed));
 
   /**
@@ -443,7 +443,7 @@ private:
    */
   enum {
     OCP_ON = 0x10,		//!< Enables overload current protection.
-    OCP_OFF = 0x00,		//!< 
+    OCP_OFF = 0x00,		//!<
     OCP_TRIM = 0,		//!< Trimming of OCP current.
     OCP_TRIM_MASK = 0x0F	//!< Bitfield position and mask (4-bit).
   } __attribute__((packed));
@@ -467,9 +467,9 @@ private:
     DCC_FREQ = 5,		//!< Cut-off frequency of the DC offset canceller.
     DCC_FREQ_MASK = 0x07,	//!< Bitfield position and mask (3-bit).
     BW_MANT_16 = 0x00,		//!< Channel filter bandwidth control.
-    BW_MANT_20 = 0x08,		//!< 
-    BW_MANT_24 = 0x10,		//!< 
-    BW_EXP = 0,			//!< 
+    BW_MANT_20 = 0x08,		//!<
+    BW_MANT_24 = 0x10,		//!<
+    BW_EXP = 0,			//!<
     BW_EXP_MASK = 0x07,		//!< Bitfield position and mask (3-bit).
   } __attribute__((packed));
 
@@ -492,8 +492,8 @@ private:
   enum {
     OOK_AVG_THRESHOLD_FILTER_32_PI = 0x00, //!< Filter coefficients.
     OOK_AVG_THRESHOLD_FILTER_8_PI = 0x40,  //!< 32,8,4,2 PI.
-    OOK_AVG_THRESHOLD_FILTER_4_PI = 0x80,  //!< 
-    OOK_AVG_THRESHOLD_FILTER_2_PI = 0xC0   //!< 
+    OOK_AVG_THRESHOLD_FILTER_4_PI = 0x80,  //!<
+    OOK_AVG_THRESHOLD_FILTER_2_PI = 0xC0   //!<
   } __attribute__((packed));
 
   /**
@@ -523,11 +523,11 @@ private:
   enum {
     DIO0_MAPPING1 = 6,		//!< Mapping pins DIO0..3.
     DIO1_MAPPING1 = 4,		//!< Bitfield positions and mask.
-    DIO2_MAPPING1 = 2,		//!< 
-    DIO3_MAPPING1 = 0,		//!< 
+    DIO2_MAPPING1 = 2,		//!<
+    DIO3_MAPPING1 = 0,		//!<
     DIO4_MAPPING2 = 6,		//!< Mapping pins DIO4..5.
-    DIO5_MAPPING2 = 4,		//!< 
-    DIO_MAPPING_MASK = 0x3,	//!< 
+    DIO5_MAPPING2 = 4,		//!<
+    DIO_MAPPING_MASK = 0x3,	//!<
     CLK_OUT = 0,		//!< CLKOUT frequency.
     CLK_OUT_MASK = 0x7		//!< Bitfield position and mask.
   } __attribute__((packed));
@@ -564,9 +564,9 @@ private:
    */
   enum {
     SYNC_ON = 0x80,		//!< Sync word generation.
-    SYNC_OFF = 0x00,		//!< 
+    SYNC_OFF = 0x00,		//!<
     FIFO_FILL_AUTO = 0x00,	//!< FIFO filling condition.
-    FIFO_FILL_MANUAL = 0x40,	//!< 
+    FIFO_FILL_MANUAL = 0x40,	//!<
     SYNC_SIZE = 3,		//!< Number of bytes in sync word plus one.
     SYNC_SIZE_MASK = 0x7,	//!< Bitfield and position (3-bits).
     SYNC_TOL = 0,		//!< Number of tolerated bit errors in sync word.
@@ -580,10 +580,10 @@ private:
     FIXED_LENGTH = 0x00,	//!< Packet formats; fixed.
     VARIABLE_LENGTH = 0x80,	//!< variable length.
     DC_FREE_OFF = 0x00,		//!< DC free encoding.
-    MANCHESTER = 0x20,		//!< 
-    WHITENING = 0x40,		//!< 
+    MANCHESTER = 0x20,		//!<
+    WHITENING = 0x40,		//!<
     CRC_OFF = 0x00,		//!< CRC calculation/check.
-    CRC_ON = 0x10,		//!< 
+    CRC_ON = 0x10,		//!<
     CRC_AUTO_CLEAR_OFF = 0x08,	//!< Do not clear FIFO. PAYLOAD_READY issued.
     CRC_AUTO_CLEAR_ON = 0x00,	//!< Clear FIFO and restart new packet reception.
     ADDR_FILTER_OFF = 0x00,	//!< Address filtering based on node/boardcast.
@@ -666,11 +666,11 @@ private:
      * @param[in] mode interrupt mode.
      * @param[in] rf device.
      */
-    IRQPin(Board::ExternalInterruptPin pin, InterruptMode mode, RFM69* rf) : 
+    IRQPin(Board::ExternalInterruptPin pin, InterruptMode mode, RFM69* rf) :
       ExternalInterrupt(pin, mode),
       m_rf(rf)
     {}
-    
+
     /**
      * @override Interrupt::Handler
      * Signal message has been receive and is available in receive fifo.
@@ -683,7 +683,7 @@ private:
   private:
     RFM69* m_rf;		//!< Device reference.
   };
-  
+
   /** Default configuration. */
   static const uint8_t config[] __PROGMEM;
 

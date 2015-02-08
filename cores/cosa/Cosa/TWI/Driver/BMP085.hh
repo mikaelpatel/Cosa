@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -65,11 +65,11 @@ public:
 
   /**
    * Construct BMP085 driver with I2C address(0x77) and default
-   * ULTRA_LOW_POWER mode. 
+   * ULTRA_LOW_POWER mode.
    */
-  BMP085() : 
-    TWI::Driver(0x77), 
-    m_mode(ULTRA_LOW_POWER), 
+  BMP085() :
+    TWI::Driver(0x77),
+    m_mode(ULTRA_LOW_POWER),
     m_cmd(0),
     m_start(0),
     B5(0),
@@ -86,21 +86,21 @@ public:
 
   /**
    * Issue a sample raw temperature sensor request. Return true(1) if
-   * successful otherwise false. 
+   * successful otherwise false.
    * @return bool
    */
   bool sample_temperature_request();
 
   /**
    * Read the raw temperature sensor. Will wait for the conversion to
-   * complete. Return true(1) if successful otherwise false.  
+   * complete. Return true(1) if successful otherwise false.
    * @return bool
    */
   bool read_temperature();
 
   /**
    * Sample the raw temperature sensor. Return true(1) if successful
-   * otherwise false. 
+   * otherwise false.
    * @return bool
    */
   bool sample_temperature()
@@ -110,21 +110,21 @@ public:
 
   /**
    * Issue a sample request of the raw pressure sensor. Will wait for
-   * the conversion to complete. Return true(1) if successful otherwise false. 
+   * the conversion to complete. Return true(1) if successful otherwise false.
    * @return bool
    */
   bool sample_pressure_request();
 
   /**
    * Read the raw pressure sensor. Return true(1) if successful
-   * otherwise false. 
+   * otherwise false.
    * @return bool
    */
   bool read_pressure();
 
   /**
    * Sample and read the raw pressure sensor. Return true(1) if
-   * successful otherwise false. 
+   * successful otherwise false.
    * @return bool
    */
   bool sample_pressure()
@@ -135,7 +135,7 @@ public:
 
   /**
    * Sample and read the raw temperature and pressure sensor. Return
-   * true(1) if successful otherwise false. 
+   * true(1) if successful otherwise false.
    * @return bool
    */
   bool sample()
@@ -153,7 +153,7 @@ public:
   {
     return ((B5 + 8) >> 4);
   }
-  
+
   /**
    * Return latest calculated pressure from temperature and pressure
    * raw sensor data.
@@ -173,7 +173,7 @@ protected:
 
   /**
    * Calibration coefficients (chap. 3.4, pp. 11). Data from device is
-   * in big-endian order.  
+   * in big-endian order.
    */
   struct param_t {
     int16_t ac1;
@@ -181,7 +181,7 @@ protected:
     int16_t ac3;
     uint16_t ac4;
     uint16_t ac5;
-    uint16_t ac6;    
+    uint16_t ac6;
     int16_t b1;
     int16_t b2;
     int16_t mb;

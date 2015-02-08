@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2014, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -25,7 +25,7 @@
 
 /**
  * Driver for the PCF8574/PCF8574A Remote 8-bit I/O expander for
- * I2C-bus with interrupt. 
+ * I2C-bus with interrupt.
  *
  * @section Circuit
  * The I/0 expander used for LCD 1602 I2C communication.
@@ -54,7 +54,7 @@ public:
    * @param[in] subaddr sub-address (0..7, default 7).
    */
   PCF8574(uint8_t subaddr = 7) :
-    TWI::Driver(0x20 | (subaddr & 0x7)), 
+    TWI::Driver(0x20 | (subaddr & 0x7)),
     m_ddr(0xff),
     m_port(0)
   {}
@@ -135,10 +135,10 @@ public:
 protected:
   /** Pin number mask. */
   static const uint8_t PIN_MASK = 0x07;
-  
+
   /** Data Direction Register, 0 = output, 1 = input, default all input. */
   uint8_t m_ddr;
-  
+
   /** Port Register to mask and maintain output pin values. */
   uint8_t m_port;
 

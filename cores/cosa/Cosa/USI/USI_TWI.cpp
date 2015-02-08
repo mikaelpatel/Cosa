@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -34,14 +34,14 @@
 
 TWI twi  __attribute__ ((weak));
 
-void 
+void
 TWI::Slave::set_write_buf(void* buf, size_t size)
 {
   twi.m_vec[WRITE_IX].buf = buf;
   twi.m_vec[WRITE_IX].size = size;
 }
 
-void 
+void
 TWI::Slave::set_read_buf(void* buf, size_t size)
 {
   twi.m_vec[READ_IX].buf = buf;
@@ -60,7 +60,7 @@ TWI::Slave::begin()
   }
 }
 
-ISR(USI_START_vect) 
+ISR(USI_START_vect)
 {
   if (twi.get_state() != TWI::IDLE) return;
   twi.set_mode(IOPin::INPUT_MODE);
@@ -69,7 +69,7 @@ ISR(USI_START_vect)
   twi.set_state(TWI::START_CHECK);
 }
 
-ISR(USI_OVF_vect) 
+ISR(USI_OVF_vect)
 {
   switch (twi.get_state()) {
     /**
@@ -132,7 +132,7 @@ ISR(USI_OVF_vect)
       twi.set_state(TWI::SERVICE_REQUEST);
     }
     break;
-    
+
   case TWI::WRITE_COMPLETED:
     {
       uint8_t data = USIDR;
@@ -152,7 +152,7 @@ ISR(USI_OVF_vect)
   }
 }
 
-void 
+void
 TWI::Slave::on_event(uint8_t type, uint16_t value)
 {
   if (type != Event::WRITE_COMPLETED_TYPE) return;
@@ -186,7 +186,7 @@ TWI::TWI() :
 bool
 TWI::start()
 {
-  // Release SCL to ensure that (repeated) start can be performed 
+  // Release SCL to ensure that (repeated) start can be performed
   m_scl.set();
   while (!m_scl.is_set())
     ;
@@ -210,9 +210,9 @@ TWI::transfer(uint8_t data, uint8_t bits)
   if (bits == 1) SR |= (0x0E << USICNT0);
   USIDR = data;
   USISR = SR;
-  
+
   // Clock bits onto the bus using software strobe
-  do { 
+  do {
     DELAY(T2);
     USICR = CR_DATA_MODE;
     while (!m_scl.is_set())
@@ -279,7 +279,7 @@ TWI::request(uint8_t op)
     next = (uint8_t*) m_vec[ix].buf;
     last = next + m_vec[ix].size;
   }
-  
+
  nack:
   if (!stop()) return (-1);
   return (count);
@@ -307,7 +307,7 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
   unlock(key);
 }
 
-void 
+void
 TWI::end()
 {
   // Put into idle state
