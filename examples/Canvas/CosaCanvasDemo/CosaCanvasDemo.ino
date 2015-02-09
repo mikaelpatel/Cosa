@@ -67,8 +67,9 @@
 #include "Cosa/Canvas/Font/System5x7.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
 
-#define USE_TFT_ST7735
+//#define USE_TFT_ST7735
 //#define USE_TFT_ILI9341
+#define USE_TFT_ILI9163
 
 #if defined(USE_TFT_ST7735)
 #include "Cosa/Canvas/Driver/ST7735.hh"
@@ -78,6 +79,11 @@ ST7735 tft;
 #if defined(USE_TFT_ILI9341)
 #include "Cosa/Canvas/Driver/ILI9341.hh"
 ILI9341 tft;
+#endif
+
+#if defined(USE_TFT_ILI9163)
+#include "Cosa/Canvas/Driver/ILI9163.hh"
+ILI9163 tft;
 #endif
 
 // Virtual grid image
