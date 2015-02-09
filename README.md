@@ -2,16 +2,19 @@ Che Cosa?
 ---------
 
 Cosa is an object-oriented platform for Arduino. It replaces the Arduino
-and Wiring library with a large set of integrated classes that support 
+and Wiring library with a large set of integrated classes that support
 the full range of AVR/ATmega/ATtiny internal hardware modules; all pin
 modes, Digital, and Analog Pins, External and Pin Change Interrupts,
 Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1
 (Servo/Tone/VWI), UART, USI, SPI, TWI and EEPROM.
 
 Sketches using Cosa may be built with the Arduino IDE or with the
-built-in command line support. 
+built-in command line support.
 
 More details are available in [doc](./doc) and [install](./doc/02-install.md).
+
+Please note that Cosa is not an Arduino core; Cosa does not implement
+the Arduino functions.
 
 Cosa API
 --------
@@ -23,11 +26,11 @@ The API documentation is available :
 
 The documentation contains a full hyperlinked description of all functions
 in Cosa together with UML graphs of the class hierarchy, include dependencies,
-and much more. 
+and much more.
 
 The provided documentation is generated with doxygen and may also be
 generated for users source code if the Cosa documentation style is
-adapted. See the Doxyfile for configuration of doxygen. 
+adapted. See the Doxyfile for configuration of doxygen.
 
 Supported Boards and MCUs
 -------------------------
@@ -86,7 +89,7 @@ References
 Naming
 ------
 
-* "Ciao"; interjection hello!, goodbye!. 
+* "Ciao"; interjection hello!, goodbye!.
 * "Che cosa"; pronoun; what.
 * "Cosa"; noun thing, matter; pronoun; what?, what!.
 * "Cosa fai"; what do you do?
@@ -98,14 +101,14 @@ Naming
 Stay tuned
 ----------
 
-Please follow the development of this project on the blog 
+Please follow the development of this project on the blog
 http://cosa-arduino.blogspot.se and on the Arduino forum,
-http://arduino.cc/forum/index.php/topic,150299.0.html.    
+http://arduino.cc/forum/index.php/topic,150299.0.html.
 
 Supporting this project
 -----------------------
 
-There are many ways to support this project. 
+There are many ways to support this project.
 
 1. Build and test.
 2. Fix bugs and take part in the development work.
@@ -119,4 +122,4 @@ breadboarded.
 
 If you are planning to use Cosa you are encourage to support the
 project. This will help keep the software at high quality and follow
-changes in tooling, etc. 
+changes in tooling, etc.
