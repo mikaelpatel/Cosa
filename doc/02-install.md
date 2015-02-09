@@ -24,7 +24,7 @@ git pull origin master
 * Unzip the files to your hardware folder.
 * Rename `Cosa-master` to `Cosa`.
 
-### Step 2 (For Arduino 1.5.x only)    
+### Step 2 (For Arduino 1.5.x only)
 
 * Create an outer `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa).
 * Unzip the files to your `hardware/Cosa` folder.
@@ -39,14 +39,14 @@ set the fuse bits, before using the device for the first time.
 
 ### Step 4
 
-* Restart the Arduino IDE and Cosa will show up as a number of boards and example sketches.  
+* Restart the Arduino IDE and Cosa will show up as a number of boards and example sketches.
 
 ## Latest AVR Toolchain
 
 The new AVR toolchain with gcc 4.8.1 is supported. There is also a
 platform definition file with link-time optimization enabled. This may
 be used to reduce memory foot-print (program size) and increase
-performance. 
+performance.
 
 ## Run your first sketch.
 
@@ -54,13 +54,3 @@ performance.
 * Select your board in the Tools>Board menu.
 * Compile and download.
 
-## Download Versions
-
-* 2014-07-29
-  [source](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-07-29-src.zip)
-  and
-  [documentation](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-07-29-doc.zip) 
-* 2014-09-05
-  [source](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-09-05-src.zip)
-  and
-  [documentation](https://dl.dropboxusercontent.com/u/993383/Cosa/download/Cosa-2014-09-05-doc.zip) 
