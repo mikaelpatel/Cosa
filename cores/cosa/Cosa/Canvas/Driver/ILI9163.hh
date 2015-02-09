@@ -25,7 +25,7 @@
 
 /**
  * Device driver for ILI9163, TFT LCD Single Chip Driver,
- * 240x320 Resolution and max 262K color. The device driver uses
+ * 128x128 Resolution and max 262K color. The device driver uses
  * 16-bit color. See Canvas and GDDRAM abstract driver.
  *
  * @section Circuit
@@ -43,7 +43,6 @@
  * (MOSI/D11)----------6-|SDI         |
  * (SCK/D13)-----------7-|SCK         |
  * (VCC)------[330]----8-|LED         |
- * (MISO/D12)----------9-|SDO         |
  *                       +------------+
  * @endcode
  *
