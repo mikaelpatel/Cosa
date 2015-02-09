@@ -1,11 +1,11 @@
 # Che Cosa?
 
 Cosa is an object-oriented platform for Arduino. It replaces the Arduino
-and Wiring library with a large set of integrated classes that support 
+and Wiring library with a large set of integrated classes that support
 the full range of AVR/ATmega/ATtiny internal hardware modules; all pin
 modes, Digital, and Analog Pins, External and Pin Change Interrupts,
 Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1 (Servo), UART, USI,
-SPI, TWI and EEPROM.   
+SPI, TWI and EEPROM.
 
 Cosa is implemented as an Arduino IDE core. The Cosa platform can be
 used with almost all Arduino boards and ATtiny/ATmega processors. All
@@ -33,12 +33,13 @@ event driven, with proto-threads or multi-tasking. There is a large
 number of device drivers available for SPI, I2C (TWI) and 1-Wire
 (OWI). A strict directory structure is used to organize the
 Cosa/driver source code. Sub-directories are used for each driver
-type. This allows a foundation for scaling and configuration. 
+type. This allows a foundation for scaling and configuration.
 
 Cosa uses the Arduino IDE and build system. Cosa classes are included
-with prefix, e.g. "Cosa/FileName.hh". It is possible to use both
-Arduino and Cosa functions together, though in some cases the Cosa
-objects may become inconsistent. 
+with prefix, e.g. "Cosa/FileName.hh". There is also (for Linux) an
+advanced build system that allow make-based build and caching of core
+library without writing makefiles. It also support the typical
+development steps; compile, upload, and serial monitoring.
 
 To improve debugging and testing there is assert/trace/syslog style
 support. The IOStream class allows output to both serial wire/wireless
@@ -53,7 +54,7 @@ creating the data structures in program memory.
 
 The drawing Canvas class supports basic drawing operation
 and scripting to reduce program memory footprint. The Canvas class
-also supports drawing of icons and multiple fonts (GLCD and UTFT). 
+also supports drawing of icons and a large set of fonts.
 
 The popular VirtualWire library has been refactored to the
 object-oriented style of Cosa (VWI) and extended with three additional
@@ -62,7 +63,7 @@ cheap wireless nodes with RF315/433 receiver and transmitter. For more
 advanced wireless connections there is also a driver for the Nordic
 Semiconductor NRF24L01+ chip, which allows low-power wireless
 communication of up to 2 Mbps in the 2.4GHz band, and the TI CC1101
-Low-Power Sub-1 GHz RF Transceiver. 
+Low-Power Sub-1 GHz RF Transceiver.
 
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. There
@@ -70,7 +71,7 @@ is an Ethernet/Socket with W5100 Ethernet controller device
 driver. This implementation allows streaming direct to the device
 buffers. Cosa also implements a number of IP protocols; DNS, DHCP,
 NTP, HTTP, and SNMP, and high level messaging such as MQTT and
-ThingSpeak.
+ThingSpeak. There is also support for the TI CC3000 WiFi module.
 
 Unfortunately Cosa is not a beginners entry level programming
 platform, though following some of the design patterns in Cosa will
