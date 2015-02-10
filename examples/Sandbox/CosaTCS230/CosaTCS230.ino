@@ -20,6 +20,7 @@
  * Converter device driver.
  *
  * @section Circuit
+ * @code
  *                       TCS230 Module
  *                   P1 +------------+ P2
  * (D4)---------------1-|S0        S3|-1-----------------(D7)
@@ -27,6 +28,7 @@
  *                    3-|OE       OUT|-3------------(D3/EXT1)
  * (GND)--------------4-|GND      VCC|-4----------------(VCC)
  *                      +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

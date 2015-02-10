@@ -21,6 +21,7 @@
  * @section Circuit
  * PCF8591 module with potentiometer(AIN0), photoresistor(AIN1)
  * and thermistor(AIN2).
+ * @code
  *                          PCF8591
  *                       +------------+
  * (POT)---[ ]---------1-|AIN0     VCC|-16--------------(VCC)
@@ -32,6 +33,7 @@
  * (GND)---------------7-|A2       SCL|-10-----------(SCL/A5)
  * (GND)---------------8-|GND      SDA|-9------------(SDA/A4)
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

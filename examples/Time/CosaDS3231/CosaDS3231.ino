@@ -21,7 +21,7 @@
  *
  * @section Circuit
  * The Mini RTC pro module with pull-up resistors (4K7) for TWI signals.
- *
+ * @code
  *                        Mini RTC pro
  *                       +------------+
  *                     1-|32KHz       |
@@ -31,6 +31,7 @@
  * (GND)---------------5-|GND         |
  * (GND)---------------6-|VCC         |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

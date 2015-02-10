@@ -22,6 +22,7 @@
  *
  * @section Circuit
  * Reads digital pins(D0..D7) and analog pins(A0..A7).
+ * @code
  *
  *                           ST7735
  *                       +------------+
@@ -40,6 +41,8 @@
  *
  * (A0..A7)------------->
  * (A0..D7)------------->
+ *
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

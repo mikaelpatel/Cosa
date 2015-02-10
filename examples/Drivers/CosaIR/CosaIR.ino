@@ -22,7 +22,7 @@
  * @section Circuit
  * PCD8544 is a low voltage device (3V3) and signals require
  * level shifter (74HC4050 or 10K resistor).
- *
+ * @code
  *                       TSOP4838/ir
  *                       +------------+
  * (D2)----------------1-|OUT         |
@@ -41,6 +41,7 @@
  * (GND)---|220|-------7-|LED         |
  * (GND)---------------8-|GND         |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

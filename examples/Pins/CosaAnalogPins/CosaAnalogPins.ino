@@ -19,11 +19,14 @@
  * Cosa demonstration of analog sample set.
  *
  * @section Circuit
+ * @code
  *
  * (A0)-----------------<
  * (A1)-----------------<
  * (A2)-----------------<
  * (A3)-----------------<
+ *
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

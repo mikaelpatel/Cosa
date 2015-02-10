@@ -25,6 +25,7 @@
  * is difficult to use for sampling. Below is to wiring from adapter
  * to keypad pins (left to right).
  * LCD Adapter => KEYPAD
+ * @code
  *   D7 => P0
  *   D6 => P1
  *   P5 => P2
@@ -32,6 +33,7 @@
  *   E  => P4
  *   RW => P5
  *   RS => P6
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

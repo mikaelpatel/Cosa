@@ -32,6 +32,7 @@ namespace UML {
  * @param[in] T connector type to probe.
  *
  * @section Diagram
+ * @code
  *
  *           TimedProbe<T>
  *           +-----------+
@@ -40,6 +41,7 @@ namespace UML {
  *           |           |
  *           +-----------+
  *                    [ms]
+ * @endcode
  */
 template<typename T>
 class TimedProbe : public TimedCapsule {
@@ -57,7 +59,7 @@ public:
   {}
 
   /**
-   * @override Capsule
+   * @override UML::Capsule
    * Print timestamp, probe name and connector value to trace output stream.
    */
   virtual void behavior()

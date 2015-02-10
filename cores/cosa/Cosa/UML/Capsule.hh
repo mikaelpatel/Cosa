@@ -32,6 +32,7 @@ namespace UML {
  * data to the connectors will also define a specific connector type.
  *
  * @section Diagram
+ * @code
  *
  *     Capsule                             Capsule
  *   +---------+                         +---------+
@@ -40,11 +41,13 @@ namespace UML {
  *   |      [Port]---[Connector<T>]--->[Port]      |
  *   |         |                         |         |
  *   +---------+                         +---------+
+ *
+ * @endcode
  */
 class Capsule {
 public:
   /**
-   * @override Capsule
+   * @override UML::Capsule
    * The capsule behavior is run when any of the connectors it
    * listens on is changed.
    */

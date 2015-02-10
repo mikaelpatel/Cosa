@@ -19,6 +19,7 @@
  * Demonstration of the Servo control class.
  *
  * @section Circuit
+ * @code
  *                       Servo#0/servo
  *                       +------------+
  * (D9)----------------1-|PULSE   I   |
@@ -31,6 +32,7 @@
  * (VCC)---------------2-|VCC   ==o== |
  * (GND)---------------3-|GND     I   |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

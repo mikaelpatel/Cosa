@@ -21,6 +21,7 @@
  * EKG style.
  *
  * @section Circuit
+ * @code
  *                           ST7735
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -37,6 +38,8 @@
  *                       +------------+
  *
  * (A0)----------------->
+ *
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

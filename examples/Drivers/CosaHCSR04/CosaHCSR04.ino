@@ -20,6 +20,7 @@
  * Periodic event driven object with callback member function.
  *
  * @section Circuit
+ * @code
  *                           HC-SR04
  *                       +------------+
  * (VCC)---------------1-|VCC         |
@@ -27,6 +28,7 @@
  * (D3) ---------------3-|ECHO        |
  * (GND)---------------4-|GND         |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

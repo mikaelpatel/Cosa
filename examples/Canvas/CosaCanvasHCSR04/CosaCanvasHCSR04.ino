@@ -20,6 +20,7 @@
  * Display splash screen with Arduino icon and range in milli-meters.
  *
  * @section Circuit
+ * @code
  *                           ST7735
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -42,6 +43,7 @@
  * (D3) ---------------3-|ECHO        |
  * (GND)---------------4-|GND         |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

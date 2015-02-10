@@ -31,6 +31,7 @@ namespace UML {
  * Timed Capsule class. Run the behavior periodically.
  *
  * @section Diagram
+ * @code
  *
  *     TimedCapsule
  *   +--------------+
@@ -39,6 +40,7 @@ namespace UML {
  *   |              |
  *   +--------------+
  *               [ms]
+ * @endcode
  */
 class TimedCapsule : public Capsule, public Periodic {
 public:

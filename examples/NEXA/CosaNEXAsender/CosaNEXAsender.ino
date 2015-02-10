@@ -22,6 +22,7 @@
  * See CosaNEXAreceiver.ino.
  *
  * @section Circuit
+ * @code
  *                         RF433/TX
  *                       +------------+
  * (D9)----------------1-|DATA        |
@@ -29,6 +30,7 @@
  * (GND)---------------3-|GND         |                    |
  *                       |ANT       0-|--------------------+
  *                       +------------+       17.3 cm
+ * @endcode
  *
  * Connect Arduino(ATtinyX5) D9(D2) to RF433 Transmitter data pin.
  *

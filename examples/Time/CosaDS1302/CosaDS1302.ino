@@ -20,6 +20,7 @@
  * device driver.
  *
  * @section Circuit
+ * @code
  *                         DS1302/rtc
  *                       +------------+
  * (VCC)---------------1-|VCC         |
@@ -28,6 +29,7 @@
  * (D3)----------------4-|DAT         |
  * (D4)----------------5-|RST         |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

@@ -22,7 +22,7 @@
  * @section Circuit
  * Designed for a LCD Keypad shield with 16x2 HD44780 LCD and six
  * buttons. Samples and displays analog pin 0..5.
- *
+ * @code
  *                           HD44780
  *                       +------------+
  * (GND)---------------1-|VSS         |
@@ -42,6 +42,7 @@
  * (VCC)--------------15-|A           |
  * (GND)--------------16-|K           |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

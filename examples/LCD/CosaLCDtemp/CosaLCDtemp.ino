@@ -20,13 +20,14 @@
  *
  * @section Circuit
  * See LCD driver header files for circuit descriptions.
- *
+ * @code
  *                       DS18B20/sensor
  * (VCC)--[4K7]--+       +------------+
  * (GND)---------)-----1-|GND         |\
  * (D4)----------+-----2-|DQ          | |
  * (VCC/GND)-----------3-|VDD         |/
  *                       +------------+
+ * @endcode
  *
  * Connect Arduino to DS18B20 in D4 and GND. May use parasite
  * powering (connect DS18B20 VDD to GND) otherwise to VCC.

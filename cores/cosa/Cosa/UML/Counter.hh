@@ -32,14 +32,14 @@ namespace UML {
  * @param[in] T connector type to count.
  *
  * @section Diagram
- *
+ * @code
  *              Counter<T>
  *            +------------+
  *            |    c1      |
  *  ---[T]--->|            |---[Count]--->
  *            |            |
  *            +------------+
- *
+ * @endcode
  */
 template<typename T>
 class Counter : public Capsule {
@@ -59,6 +59,7 @@ public:
   {}
 
   /**
+   * @override UML::Capsule
    * Count number of calls.
    */
   virtual void behavior()

@@ -25,6 +25,7 @@
  * A button/switch should be connected to Arduino pin 2 and ground. No
  * additional components are needed as the input pin is configured
  * with input pullup resistor.
+ * @code
  *
  * (D2)-----------------+
  *                      |
@@ -32,6 +33,8 @@
  *                      |
  * (GND)----------------+
 
+ * @endcode
+ *
  * The Arduino builtin LED Pin 13/ATtiny Pin 4, is used for on-off state.
  *
  * This file is part of the Arduino Che Cosa project.

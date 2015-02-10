@@ -20,6 +20,7 @@
  * driven mode.
  *
  * @section Circuit
+ * @code
  *                       DHT11/dht
  *                       +------------+
  * (VCC)---------------1-|VCC  ====== |
@@ -27,6 +28,7 @@
  *                     3-|     ====== |
  * (GND)---------------4-|GND  ====== |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

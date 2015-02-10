@@ -20,6 +20,7 @@
  * 262K Color Single-Chip TFT Controller.
  *
  * @section Circuit
+ * @code
  *                           ST7735
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -34,6 +35,7 @@
  * (VCC)----[330]-----15-|LED+        |
  * (GND)--------------16-|LED-        |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

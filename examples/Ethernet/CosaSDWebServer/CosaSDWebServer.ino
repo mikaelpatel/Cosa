@@ -21,7 +21,7 @@
  *
  * @section Circuit
  * This sketch is designed for the Ethernet Shield.
- *
+ * @code
  *                       W5100/ethernet
  *                       +------------+
  * (D10)--------------29-|CSN         |
@@ -30,6 +30,7 @@
  * (D13)--------------30-|SCK         |
  * (D2)-----[ ]-------56-|IRQ         |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

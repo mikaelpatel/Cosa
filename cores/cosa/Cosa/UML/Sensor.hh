@@ -34,6 +34,7 @@ namespace UML {
  * By default the sample is scaled to voltage.
  *
  * @section Diagram
+ * @code
  *
  *    Sensor
  *  +--------+
@@ -42,6 +43,8 @@ namespace UML {
  *  |        |
  *  +--------+
  *     [An/ms]
+ *
+ * @endcode
  */
 class Sensor : public TimedCapsule, private AnalogPin {
 public:
@@ -70,7 +73,7 @@ public:
   {}
 
   /**
-   * @override Capsule
+   * @override UML::Capsule
    * Read digital pin and update signal on change.
    */
   virtual void behavior()

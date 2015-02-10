@@ -21,7 +21,7 @@
  *
  * @section Circuit
  * The TinyRTC with DS1307 also contains a 24C32 EEPROM.
- *
+ * @code
  *                       TinyRTC(24C32)
  *                       +------------+
  *                     1-|SQ          |
@@ -32,6 +32,7 @@
  * (GND)---------------6-|GND      GND|-5
  *                     7-|BAT         |
  *                       +------------+
+ * @code
  *
  * This file is part of the Arduino Che Cosa project.
  */

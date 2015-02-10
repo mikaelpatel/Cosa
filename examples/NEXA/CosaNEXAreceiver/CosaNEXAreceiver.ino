@@ -24,6 +24,7 @@
  * wish to run the sketch without a NEXA remote control.
  *
  * @section Circuit
+ * @code
  *                         RF433/RX                       V
  *                       +------------+                   |
  *                       |0-----------|-------------------+
@@ -37,6 +38,7 @@
  * (EXT0/D2)-----------3-|DATA        |
  * (GND)---------------4-|GND         |
  *                       +------------+
+ * @endcode
  *
  * On an ATtinyX5 please connect a LED to pin D4 in serie with a
  * resistor (approx 300-500 ohm) to ground.

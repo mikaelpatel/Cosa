@@ -19,6 +19,7 @@
  * Cosa demonstration of the DHT11/DHT22 device driver.
  *
  * @section Circuit
+ * @code
  *                       DHT11/outdoors
  *                       +------------+
  * (VCC)---------------1-|VCC  ====== |
@@ -34,6 +35,7 @@
  *                     3-|     ====== |
  * (GND)---------------4-|GND  ====== |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

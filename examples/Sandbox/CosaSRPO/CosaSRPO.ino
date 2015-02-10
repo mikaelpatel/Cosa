@@ -21,6 +21,7 @@
  * LEDs. Circuit below shows ATtinyX5 and 2 X 74HC595 schematics.
  *
  * @section Circuit
+ * @code
  *                         ATinyX5
  *                       +----U----+
  * (/RESET)------------1-|PB5   VCC|-8------------(VCC)
@@ -57,6 +58,7 @@
  *                   |   +---------+
  *                   |      0.1uF
  *                 (GND)-----||-------(VCC)
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

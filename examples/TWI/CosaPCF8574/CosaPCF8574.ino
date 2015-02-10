@@ -19,6 +19,7 @@
  * Cosa PCF8574 Remote 8-bit I/O expander driver example.
  *
  * @section Circuit
+ * @code
  *                          PCF8574A
  *                       +------------+
  * (GND)---[ ]---------1-|A0       VCC|-16--------------(VCC)
@@ -30,6 +31,7 @@
  * (P3)----------------7-|P3        P5|-10---------------(P5)
  * (GND)---------------8-|GND       P4|-9----------------(P4)
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

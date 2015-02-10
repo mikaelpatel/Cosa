@@ -38,6 +38,7 @@ namespace UML {
  * @param[in] ON_CHANGE flag (Default false).
  *
  * @section Diagram
+ * @code
  *
  *     Capsule                             Capsule
  *   +---------+                         +---------+
@@ -47,6 +48,7 @@ namespace UML {
  *   |         |                         |         |
  *   +---------+                         +---------+
  *
+ * @endcode
  */
 template<typename T, bool ON_CHANGE = false>
 class Connector {

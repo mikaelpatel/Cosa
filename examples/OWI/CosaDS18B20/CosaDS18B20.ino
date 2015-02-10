@@ -23,6 +23,7 @@
  * See LCD driver header files for circuit descriptions.
  *
  * @section Circuit
+ * @code
  *                           DS18B20/3
  *                       +------------+++
  * (GND)---------------1-|GND         |||\
@@ -32,6 +33,8 @@
  *           |       |
  * (VCC)-----+       +---(VCC/GND)
  *
+ * @endcode
+
  * Connect Arduino to DS18B20 in D7 and GND. May use parasite
  * powering (connect DS18B20 VCC to GND) otherwise to VCC.
  *

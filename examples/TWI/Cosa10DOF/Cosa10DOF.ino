@@ -23,7 +23,7 @@
  * @section Circuit
  * The GY-80 10DOF module with pull-up resistors (4K7) for TWI signals and
  * 3V3 internal voltage converter.
- *
+ * @code
  *                           GY-80
  *                       +------------+
  * (VCC)---------------1-|VCC         |
@@ -37,6 +37,7 @@
  *                     9-|P-XCLR      |
  *                    10-|P-EOC       |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

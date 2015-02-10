@@ -21,7 +21,7 @@
  * @section Circuit
  * The GY-291 module with pull-up resistors (4K7) for TWI signals and
  * 3V3 internal voltage converter.
- *
+ * @code
  *                           GY-291
  *                       +------------+
  * (GND)---------------1-|GND         |
@@ -33,6 +33,7 @@
  * (A4/SDA)------------7-|SDA         |
  * (A5/SCL)------------8-|SCL         |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

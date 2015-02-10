@@ -20,6 +20,7 @@
  * IOStream::Device.
  *
  * @section Circuit
+ * @code
  *                       ST7565/Serial3W
  *                       +------------+
  *                     1-|DB0         |
@@ -59,6 +60,8 @@
  *                    15-|WR(R/W)     |
  *                    16-|RD(E)       |
  *                       +------------+
+ * @endcode
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 

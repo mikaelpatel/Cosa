@@ -34,6 +34,7 @@ namespace UML {
  * to the tick.
  *
  * @section Diagram
+ * @code
  *
  *     Clock
  *   +--------+
@@ -42,6 +43,8 @@ namespace UML {
  *   |        |
  *   +--------+
  *         [ms]
+ *
+ * @endcode
  */
 class Clock : public TimedCapsule {
 public:
@@ -62,7 +65,7 @@ public:
   {}
 
   /**
-   * @override Capsule
+   * @override UML::Capsule
    * Increment clock tick and schedule all capsules that listen for
    * clock update.
    */

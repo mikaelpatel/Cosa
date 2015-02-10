@@ -22,6 +22,7 @@
  *
  * @section Circuit
  * Use the analog pin(0..MAX-1) as the probe pins.
+ * @code
  *
  *                           ST7735
  *                       +------------+
@@ -44,6 +45,8 @@
  * (A3)----------------->
  * (A4)----------------->
  * (A5)----------------->
+ *
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

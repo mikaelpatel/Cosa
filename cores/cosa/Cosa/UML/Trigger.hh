@@ -33,6 +33,7 @@ namespace UML {
  * resistor is used and the falling edge of the input is detected.
  *
  * @section Diagram
+ * @code
  *
  *    Trigger
  *  +---------+
@@ -41,6 +42,8 @@ namespace UML {
  *  |         |
  *  +---------+
  *       [EXTn]
+ *
+ * @endcode
  */
 class Trigger : public Capsule, public ExternalInterrupt {
 public:
@@ -59,7 +62,7 @@ public:
   {}
 
   /**
-   * @override Capsule
+   * @override UML::Capsule
    * Trigger will perform all updates in the interrupt service.
    */
   virtual void behavior()

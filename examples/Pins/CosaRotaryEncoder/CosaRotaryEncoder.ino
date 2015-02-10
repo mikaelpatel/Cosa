@@ -20,7 +20,7 @@
  *
  * @section Circuit
  * KY-040 Rotary Encoder Module.
- *
+ * @code
  *                          Dial/dail
  *                       +------------+
  * (PCI6)--------------1-|CLK         |
@@ -29,6 +29,7 @@
  * (VCC)---------------4-|VCC         |
  * (GND)---------------5-|GND         |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

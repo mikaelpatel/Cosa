@@ -30,7 +30,7 @@ namespace UML {
  * The LED Capsule. The behavior will toggle the LED state.
  *
  * @section Diagram
- *
+ * @code
  *                    LED
  *                +--------+
  *                |   l1   |
@@ -38,6 +38,7 @@ namespace UML {
  *                |        |
  *                +--------+
  *                      [Dn]
+ * @endcode
  */
 class LED : public Capsule, private OutputPin {
 public:
@@ -52,7 +53,7 @@ public:
   {}
 
   /**
-   * @override Capsule
+   * @override UML::Capsule
    * Blink the LED if the signal is true.
    */
   virtual void behavior()

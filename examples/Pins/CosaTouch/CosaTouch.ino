@@ -20,6 +20,7 @@
  *
  * @section Circuit
  * Connect a 1-10 Mohm pullup resistor to digital pin D3 and D4.
+ * @code
  *
  * (VCC)----------+----+
  *                |    |
@@ -28,6 +29,8 @@
  * (D4)-----------+----(-----[]
  *                     |
  * (D3)----------------+-----[]
+ *
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

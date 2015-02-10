@@ -23,7 +23,7 @@
  * @section Circuit
  * PCD8544 is a low voltage device (3V3) and signals require level
  * shifter (74HC4050 or 10K resistor).
- *
+ * @code
  *                    (1) PCD8544/LCD::Serial3W
  *                        +------------+
  * (RST)----------[ > ]-1-|RST         |
@@ -54,6 +54,7 @@
  * (D5)----------+------2-|DQ          | |
  * (VCC/GND)----------+-3-|VDD         |/
  *                        +------------+
+ * @endcode
  *
  * Connect Arduino to DS18B20 in D5 and GND. May use parasite
  * powering (connect DS18B20 VCC to GND) otherwise to VCC.

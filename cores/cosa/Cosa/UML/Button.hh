@@ -33,6 +33,7 @@ namespace UML {
  * sampled and listeners are scheduled when the state changes.
  *
  * @section Diagram
+ * @code
  *
  *    Button
  *  +--------+
@@ -41,6 +42,8 @@ namespace UML {
  *  |        |
  *  +--------+
  *        [Dn]
+ *
+ * @endcode
  */
 class Button : public TimedCapsule, private InputPin {
 public:
@@ -64,7 +67,7 @@ public:
   {}
 
   /**
-   * @override Capsule
+   * @override UML::Capsule
    * Read digital pin and update signal on change.
    */
   virtual void behavior()

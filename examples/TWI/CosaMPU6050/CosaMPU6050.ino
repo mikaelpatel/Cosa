@@ -21,7 +21,7 @@
  * @section Circuit
  * The MPU6050 module ITG/MPU with pull-up resistors (4K7) for TWI
  * signals and 3V3 internal voltage converter.
- *
+ * @code
  *                           ITG/MPU
  *                       +------------+
  * (VCC)---------------1-|VCC         |
@@ -33,6 +33,7 @@
  *                     8-|AD0         |
  *                     9-|INT         |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

@@ -26,6 +26,7 @@
  * address).
  *
  * @section Circuit
+ * @code
  *                           DS18B20/3
  *                       +------------+++
  * (GND)---------------1-|GND         |||\
@@ -45,6 +46,7 @@
  * (GND)---------------6-|GND      GND|-5
  *                     7-|BAT         |
  *                       +------------+
+ * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
  */

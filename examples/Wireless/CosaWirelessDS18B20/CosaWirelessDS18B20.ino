@@ -20,6 +20,7 @@
  * devices over the Wireless Interface and devices.
  *
  * @section Circuit
+ * @code
  *                         RF433/TX
  *                       +------------+
  * (D8/D0)-------------1-|DATA        |
@@ -36,6 +37,8 @@
  *          4K7      |   +------------++
  *           |       |
  * (PW/D4)---+       +---(VCC/GND)
+ *
+ * @endcode
  *
  * Connect RF433/315 Transmitter Data to ATtiny85 D0, connect VCC
  * GND. Connect 1-Wire digital thermometer to D3 with pullup resistor.
