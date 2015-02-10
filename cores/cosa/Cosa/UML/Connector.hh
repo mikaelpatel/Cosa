@@ -33,7 +33,6 @@ namespace UML {
  * default is scheduling on any setting. By giving ON_CHANGE the value
  * true the connector will only schedule if the value setting is
  * different than the previous value.
-
  * @param[in] T connector value type.
  * @param[in] ON_CHANGE flag (Default false).
  *
