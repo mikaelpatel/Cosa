@@ -1,0 +1,9 @@
+Use CTRL-ALT GR-] to exit monitor.
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
+CosaBenchmarkNucleo: started
+Thread::Consumer: started
+Thread::Producer: started
+53:virtual void Producer::run():measure:thread yield: 25 us
+58:virtual void Producer::run():measure:thread resume: 12 us
+63:virtual void Producer::run():measure:semaphore signal-wait: 38 us
+CosaBenchmarkNucleo.ino:67:assert:true == false
