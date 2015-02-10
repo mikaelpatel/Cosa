@@ -48,6 +48,18 @@
  * (VCC)------[330]----8-|LED         |
  * (MISO/D12)----------9-|SDO         |
  *                       +------------+
+ *
+ *                           ILI9163
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (SS/D10)------------3-|CS          |
+ * (RST)---------------4-|RST         |
+ * (D9)----------------5-|DC          |
+ * (MOSI/D11)----------6-|SDI         |
+ * (SCK/D13)-----------7-|SCK         |
+ * (VCC)------[330]----8-|LED         |
+ *                       +------------+
  * @endcode
  *
  * This file is part of the Arduino Che Cosa project.
@@ -62,8 +74,9 @@
 //#define ONE_CHAR '&'
 #define CYCLE_CHARS 0 // ms; 0 to benchmark
 
-#define USE_TFT_ST7735
+//#define USE_TFT_ST7735
 //#define USE_TFT_ILI9341
+#define USE_TFT_ILI9163
 
 //#define FIXEDNUMS_8x16
 //#define FONT_5x8
@@ -86,6 +99,7 @@
 //#define SEGMENT_32x50
 #define SYSTEM_5x7
 
+
 #ifdef USE_TFT_ST7735
 #include "Cosa/Canvas/Driver/ST7735.hh"
 ST7735 tft;
@@ -97,6 +111,13 @@ ST7735 tft;
 ILI9341 tft;
 #define DEVICE "ILI9341"
 #endif
+
+#if defined(USE_TFT_ILI9163)
+#include "Cosa/Canvas/Driver/ILI9163.hh"
+ILI9163 tft;
+#define DEVICE "ILI9163"
+#endif
+
 
 #ifdef SYSTEM_5x7
 #include "Cosa/Canvas/Font/System5x7.hh"

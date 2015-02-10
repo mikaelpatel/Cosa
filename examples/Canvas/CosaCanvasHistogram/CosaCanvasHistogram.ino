@@ -39,12 +39,27 @@
  * (GND)--------------16-|LED-        |
  *                       +------------+
  *
+ *                           ILI9341
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (SS/D10)------------3-|CS          |
+ * (RST)---------------4-|RST         |
+ * (D9)----------------5-|DC          |
+ * (MOSI/D11)----------6-|SDI         |
+ * (SCK/D13)-----------7-|SCK         |
+ * (VCC)------[330]----8-|LED         |
+ * (MISO/D12)----------9-|SDO         |
+ *                       +------------+
+ *
  * (A0)----------------->
  * (A1)----------------->
  * (A2)----------------->
  * (A3)----------------->
  * (A4)----------------->
  * (A5)----------------->
+ *
+ * Note: ILI9341 signals are 3V3.
  *
  * @endcode
  *
@@ -56,8 +71,8 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 
-#define USE_TFT_ST7735
-//#define USE_TFT_ILI9341
+//#define USE_TFT_ST7735
+#define USE_TFT_ILI9341
 
 #if defined(USE_TFT_ST7735)
 #include "Cosa/Canvas/Driver/ST7735.hh"

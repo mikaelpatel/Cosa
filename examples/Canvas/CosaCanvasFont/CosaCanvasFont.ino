@@ -48,15 +48,30 @@
  * (VCC)------[330]----8-|LED         |
  * (MISO/D12)----------9-|SDO         |
  *                       +------------+
+ *
+ *                           ILI9163
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (SS/D10)------------3-|CS          |
+ * (RST)---------------4-|RST         |
+ * (D9)----------------5-|DC          |
+ * (MOSI/D11)----------6-|SDI         |
+ * (SCK/D13)-----------7-|SCK         |
+ * (VCC)------[330]----8-|LED         |
+ *                       +------------+
  * @endcode
+ *
+ * Note: ILI9341 and ILI9163 signals are 3V3.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/Watchdog.hh"
 
-#define USE_TFT_ST7735
+//#define USE_TFT_ST7735
 //#define USE_TFT_ILI9341
+#define USE_TFT_ILI9163
 
 #if defined(USE_TFT_ST7735)
 #include "Cosa/Canvas/Driver/ST7735.hh"
@@ -66,6 +81,11 @@ ST7735 tft;
 #if defined(USE_TFT_ILI9341)
 #include "Cosa/Canvas/Driver/ILI9341.hh"
 ILI9341 tft;
+#endif
+
+#if defined(USE_TFT_ILI9163)
+#include "Cosa/Canvas/Driver/ILI9163.hh"
+ILI9163 tft;
 #endif
 
 void setup()
