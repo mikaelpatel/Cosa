@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Cosa demonstration of device driver for ST7735 or ILI9341.
+ * Cosa demonstration of device driver for ST7735, ILI9341 or ILI9163.
  * Shows binding to IOStream::Device and basic drawing functions.
  *
  * @section Circuit
@@ -48,7 +48,21 @@
  * (VCC)------[330]----8-|LED         |
  * (MISO/D12)----------9-|SDO         |
  *                       +------------+
+ *
+ *                           ILI9163
+ *                       +------------+
+ * (VCC)---------------1-|VCC         |
+ * (GND)---------------2-|GND         |
+ * (SS/D10)------------3-|CS          |
+ * (RST)---------------4-|RST         |
+ * (D9)----------------5-|DC          |
+ * (MOSI/D11)----------6-|SDI         |
+ * (SCK/D13)-----------7-|SCK         |
+ * (VCC)------[330]----8-|LED         |
+ *                       +------------+
  * @endcode
+ *
+ * Note: ILI9341 and ILI9163 signals are 3V3.
  *
  * This file is part of the Arduino Che Cosa project.
  */
