@@ -24,7 +24,7 @@ git pull origin master
 * Unzip the files to your hardware folder.
 * Rename `Cosa-master` to `Cosa`.
 
-### Step 2 (For Arduino 1.5.x only)
+### Step 2 (For Arduino 1.5.x and 1.6.x only)
 
 * Create an outer `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa).
 * Unzip the files to your `hardware/Cosa` folder.
