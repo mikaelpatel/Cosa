@@ -53,6 +53,13 @@ void setup()
     trace << endl;
   }
 
+  MEASURE("Connect to WLAN:", 1)
+    res = wifi.wlan_connect(CC3000::WPA2_SECURITY_TYPE,
+			    PSTR("SSID"),
+			    NULL,
+			    PSTR("PASSWORD"));
+  TRACE(res);
+
   INFO("MAC and Network addresses:", 0);
   uint8_t subnet[4];
   uint8_t dns[4];

@@ -20,11 +20,13 @@
 
 #include "Cosa/Socket/Driver/CC3000.hh"
 #if !defined(BOARD_ATTINY)
-#include "Cosa/Trace.hh"
 #include "Cosa/RTC.hh"
 
 // Enable trace of unsolicited events
 // #define TRACE_ON_EVENT
+#if defined(TRACE_ON_EVENT)
+#include "Cosa/Trace.hh"
+#endif
 
 // Some support for setting socket sets for select()
 #define FD_ZERO() 0UL
@@ -352,7 +354,7 @@ CC3000::end()
 }
 
 int
-CC3000::wlan_connect(uint8_t type, str_P ssid, str_P bssid, str_P key)
+CC3000::wlan_connect(Security type, str_P ssid, str_P bssid, str_P key)
 {
   // Check arguments
   if (type > WPA2_SECURITY_TYPE) return (-EINVAL);
@@ -367,9 +369,11 @@ CC3000::wlan_connect(uint8_t type, str_P ssid, str_P bssid, str_P key)
   // Issue connect command and await event
   int res = issue(HCI_CMND_WLAN_CONNECT, &cmnd, len);
   if (res < 0) return (res);
-  delay(1000);
+  uint32_t saved = m_timeout;
+  m_timeout = 5000;
   hci_evnt_wlan_connect_t evnt;
   res = await(HCI_EVNT_WLAN_CONNECT, &evnt, sizeof(evnt));
+  m_timeout = saved;
   if (res < 0) return (res);
   return (((evnt.status != 0) || (evnt.result != 0)) ? -EFAULT : 0);
 }

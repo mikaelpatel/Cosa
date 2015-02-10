@@ -351,6 +351,16 @@ public:
   };
 
   /**
+   * WLAN Security types for wlan_connect().
+   */
+  enum Security {
+    NO_SECURITY_TYPE = 0x0,
+    WEP_SECURITY_TYPE = 0x1,
+    WPA_SECURITY_TYPE = 0x2,
+    WPA2_SECURITY_TYPE = 0x3
+  };
+
+  /**
    * Instruct the CC3000 to connect to a given access point.
    * Returns zero if successful otherwise a negative error code.
    * @param[in] type of security.
@@ -359,7 +369,7 @@ public:
    * @param[in] key string in program memory.
    * @return zero or negative error code.
    */
-  int wlan_connect(uint8_t type, str_P ssid, str_P bssid, str_P key);
+  int wlan_connect(Security type, str_P ssid, str_P bssid, str_P key);
 
   /**
    * Set scan parameters argument block.
@@ -711,12 +721,6 @@ protected:
    */
   static const uint16_t HCI_CMND_WLAN_CONNECT = 0x0001;
   static const uint32_t HCI_CMND_WLAN_CONNECT_MAGIC = 0x0000001cL;
-  enum {
-    NO_SECURITY_TYPE = 0x0000,
-    WEP_SECURITY_TYPE = 0x0001,
-    WPA_SECURITY_TYPE = 0x0002,
-    WPA2_SECURITY_TYPE = 0x0003
-  };
   static const size_t HCI_CMND_WLAN_CONNECT_BSSID_MAX = 6;
   static const size_t HCI_CMND_WLAN_CONNECT_SSID_MAX = 32;
   static const size_t HCI_CMND_WLAN_CONNECT_KEY_MAX = 32;
