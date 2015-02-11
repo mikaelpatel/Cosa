@@ -126,6 +126,32 @@ INET::print_addr(IOStream& outs, const uint8_t* addr, uint16_t port)
   outs << ':' << port;
 }
 
+uint16_t
+INET::checksum(const void* buf, size_t count)
+{
+  // Based on the C-code given in RFC 1071 (Computing the Internet
+  // Checksum by R. Braden, D. Borman, and C. Partridge, 1988).
+  const uint16_t* bp = (const uint16_t*) buf;
+  uint32_t sum = 0L;
+
+  // Sum up the buffer as 16-bit numbers
+  while (count > 1) {
+    sum += ntoh(*bp++);
+    count -= 2;
+  }
+
+  // Add last byte if odd number of bytes
+  if (count > 0)
+    sum += *(const uint8_t*) bp;
+
+  // Add carry bits
+  while (sum >> 16)
+    sum = (sum & 0xffff) + (sum >> 16);
+
+  // And return the one-complement of the sum
+  return (~sum);
+}
+
 void
 INET::Server::get_client(INET::addr_t& addr)
 {

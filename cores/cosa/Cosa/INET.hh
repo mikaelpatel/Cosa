@@ -126,6 +126,17 @@ public:
    */
   static void print_addr(IOStream& outs, const uint8_t addr[IP_MAX], uint16_t port = 0);
 
+
+  /**
+   * Calculate Internet Checksum for given buffer with given
+   * number of bytes. The buffer should contain data in network
+   * order (big-endian). Return check sum.
+   * @param[in] buf pointer to buffer.
+   * @param[in] count number of bytes.
+   * @return checksum.
+   */
+  static uint16_t checksum(const void* buf, size_t count);
+
   /**
    * Server request handler. Should be sub-classed and the virtual
    * member function on_request() should be implemented to receive
