@@ -37,6 +37,7 @@
 #include "Cosa/INET.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 
+#include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -139,6 +140,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaICMPping: started"));
   Watchdog::begin();
+  RTC::begin();
   uint8_t ip[4] = { IP };
   uint8_t subnet[4] = { SUBNET };
   ASSERT(ethernet.begin(ip, subnet));
@@ -157,7 +159,7 @@ void loop()
   req.echo.id = 0xC05A;
   for (uint8_t i = 0; i < sizeof(req.payload); i++)
     req.payload[i] = i;
-  req.echo.seq = Watchdog::millis();
+  req.echo.seq = RTC::millis();
   req.checksum = hton(INET::checksum(&req, sizeof(req)));
   ASSERT(INET::checksum(&req, sizeof(req)) == 0);
 
@@ -175,10 +177,18 @@ void loop()
     if ((res = sock->available()) > 0) break;
     delay(1);
   }
-  if (res != sizeof(req) + sizeof(IPRAW_HEADER)) goto error;
+  if (res != sizeof(reply) + sizeof(IPRAW_HEADER)) goto error;
   res = sock->recv(&reply, sizeof(reply), src, port);
+  roundtrip = RTC::millis();
+
+  // Sanity check the reply; right size, checksum, id
   if (res != sizeof(reply)) goto error;
-  roundtrip = Watchdog::millis() - reply.echo.seq;
+  if (reply.type != ICMP_ECHOREPLY) goto error;
+  if (INET::checksum(&reply, sizeof(reply)) != 0) goto error;
+  if (req.echo.id != 0xC05A) goto error;
+
+  // Calculate the time for the ping roundtrip
+  roundtrip -= reply.echo.seq;
   INFO("roundtrip=%ud ms", roundtrip);
 
  error:
