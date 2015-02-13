@@ -60,7 +60,6 @@ UART::begin(uint32_t baudrate, uint8_t format)
 
   // Enable receiver and transmitter interrupt
   *UCSRnB() = (_BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0));
-
   return (true);
 }
 

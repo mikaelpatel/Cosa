@@ -41,7 +41,7 @@ extern Soft::UAT uart;
 class UART : public Serial {
 public:
   /** Default buffer size for standard UART0 (at 9600 baud). */
-  static const uint8_t BUFFER_MAX = 64;
+  static const uint16_t BUFFER_MAX = 64;
 
   /**
    * Construct serial port handler for given UART.
