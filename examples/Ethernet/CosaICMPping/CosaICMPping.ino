@@ -54,11 +54,12 @@ OutputPin sd(Board::D4, 1);
 #define IP 192,168,1,150
 #define SUBNET 255,255,255,0
 static const uint8_t mac[6] __PROGMEM = { MAC };
-static const char hostname[] __PROGMEM = "CosaICMPping";
 
 // W5100 Ethernet Controller
 W5100 ethernet(mac);
 
+// ICMP header (section from /usr/include/netinet/ip_icmp.h)
+// All message type and codes included (not really needed)
 struct icmphdr
 {
   uint8_t type;			/* message type */
@@ -125,8 +126,8 @@ struct icmphdr
 #define ICMP_EXC_TTL		0	/* TTL count exceeded		*/
 #define ICMP_EXC_FRAGTIME	1	/* Fragment Reass time exceeded	*/
 
-// This is missing in the W5100 device driver to make the IPRAW mode
-// receive frame more explicit
+// This is missing in the W5100 device driver to make the IPRAW socket
+// receive frame more explicit (available reports full frame)
 struct IPRAW_HEADER {
   uint8_t src[4];
   uint16_t port;
@@ -151,7 +152,7 @@ void loop()
   Socket* sock = ethernet.socket(Socket::IPRAW, IPPROTO_ICMP);
   ASSERT(sock != NULL);
 
-  INFO("Build ICMP echo request block", 0);
+  INFO("Build ICMP echo request block", 0); trace.flush();
   icmphdr req;
   static uint16_t seq = 0;
   req.type = ICMP_ECHO;
@@ -168,18 +169,22 @@ void loop()
   int res = sock->send(&req, sizeof(req), dest, 0);
   if (res < 0) goto error;
 
-  INFO("Receive the reply", 0);
-  uint32_t roundtrip;
+  // Wait for the reply
+  const static uint8_t RETRY_MAX = 16;
+  uint32_t stop;
   icmphdr reply;
   uint8_t src[4];
   uint16_t port;
-  for (uint8_t retry = 0; retry < 10; retry++) {
+  for (uint8_t retry = 0; retry < RETRY_MAX; retry++) {
     if ((res = sock->available()) > 0) break;
     delay(1);
   }
+
+  // Check size of reply before actually recieving
   if (res != sizeof(reply) + sizeof(IPRAW_HEADER)) goto error;
   res = sock->recv(&reply, sizeof(reply), src, port);
-  roundtrip = RTC::micros();
+  stop = RTC::micros();
+  INFO("Receive the reply", 0);
 
   // Sanity check the reply; right size, type, id, seq nr, and checksum
   if (res != sizeof(reply)) goto error;
@@ -189,8 +194,7 @@ void loop()
   if (INET::checksum(&reply, sizeof(reply)) != 0) goto error;
 
   // Calculate the time for the ping roundtrip
-  roundtrip -= reply.timestamp;
-  INFO("Roundtrip: %ul us", roundtrip);
+  INFO("Roundtrip: %ul us", stop - reply.timestamp);
 
  error:
   sock->close();
