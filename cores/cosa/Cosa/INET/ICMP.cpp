@@ -24,6 +24,7 @@
 int
 ICMP::ping_request(uint8_t dest[4])
 {
+  // Check given socket
   if (m_sock == NULL) return (-1);
 
   // Build echo request block
@@ -35,6 +36,8 @@ ICMP::ping_request(uint8_t dest[4])
   req.echo.seq = ++m_seq;
   req.timestamp = RTC::millis();
   req.checksum = hton(INET::checksum(&req, sizeof(req)));
+
+  // And send to destination network address
   int res = m_sock->send(&req, sizeof(req), dest, 0);
   if (res < 0) return (res);
   return (res == sizeof(req) ? 0 : -1);
@@ -43,6 +46,7 @@ ICMP::ping_request(uint8_t dest[4])
 int
 ICMP::ping_await(uint16_t timeout)
 {
+  // Check given socket
   if (m_sock == NULL) return (-1);
   header_t reply;
   uint8_t src[4];
@@ -63,7 +67,7 @@ ICMP::ping_await(uint16_t timeout)
   // Sanity check the reply; right size, type, id, seq nr, and checksum
   if ((res != sizeof(reply))
       || (reply.type != ECHOREPLY)
-      || (reply.echo.id != 0xC05A)
+      || (reply.echo.id != m_id)
       || (reply.echo.seq != m_seq)
       || (INET::checksum(&reply, sizeof(reply)) != 0))
     return (-1);

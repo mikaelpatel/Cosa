@@ -36,6 +36,7 @@ public:
   /**
    * Construct ICMP client with given socket.
    * @param[in] sock communications socket (Socket::IPRAW).
+   * @param[in] id request identity (Default 0xC05A).
    */
   ICMP(Socket* sock, uint16_t id = 0xC05A) :
     m_sock(sock),

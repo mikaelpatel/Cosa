@@ -49,28 +49,25 @@
 OutputPin sd(Board::D4, 1);
 #endif
 
-// Network configuration
+// Network configuration and network address to ping
 #define MAC 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed
+static const uint8_t mac[6] __PROGMEM = { MAC };
 #define IP 192,168,1,150
 #define SUBNET 255,255,255,0
-static const uint8_t mac[6] __PROGMEM = { MAC };
+#define DEST 192,168,1,104
 
 // W5100 Ethernet Controller
 W5100 ethernet(mac);
 
-// An address to ping
-#define DEST 192,168,1,104
-
 void setup()
 {
-  uint8_t ip[4] = { IP };
-  uint8_t subnet[4] = { SUBNET };
-
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaICMPping: started"));
   Watchdog::begin();
   RTC::begin();
 
+  uint8_t ip[4] = { IP };
+  uint8_t subnet[4] = { SUBNET };
   ASSERT(ethernet.begin(ip, subnet));
 }
 
