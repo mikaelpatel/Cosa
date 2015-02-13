@@ -33,13 +33,13 @@ public:
   /** Dynamic, private or ephemeral start ports number. */
   static const uint16_t DYNAMIC_PORT = 49152;
 
-  /** Protocol. */
+  /** Socket type. */
   enum Protocol {
-    TCP = 0x01,
-    UDP = 0x02,
-    IPRAW = 0x03,
-    MACRAW = 0x04,
-    PPPoE = 0x05
+    TCP = SOCK_STREAM,
+    UDP = SOCK_DGRAM,
+    IPRAW = SOCK_RAW,
+    MACRAW = SOCK_RDM,
+    PPPoE = SOCK_SEQPACKET
   } __attribute__((packed));
 
   /**

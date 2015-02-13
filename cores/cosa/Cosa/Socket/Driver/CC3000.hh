@@ -503,30 +503,6 @@ public:
    */
   int read_sp_version(uint8_t &package_id, uint8_t &package_build_nr);
 
-  enum domain_t {
-    AF_INET = 0x00000002
-  };
-
-  enum type_t {
-    SOCK_STREAM = 1,
-    SOCK_DGRAM = 2,
-    SOCK_RAW = 3,
-    SOCK_RDM = 4,
-    SOCK_SEQPACKET = 5
-  };
-
-  enum protocol_t {
-    IPPROTO_IP = 0,
-    IPPROTO_IPV4 = 0,
-    IPPROTO_ICMP = 1,
-    IPPROTO_TCP = 6,
-    IPPROTO_UDP = 17,
-    IPPROTO_IPV6 = 41,
-    IPPROTO_NONE = 59,
-    IPPROTO_RAW = 255,
-    IPPROTO_MAX = 256
-  };
-
   /**
    * Create socket for given domain, type and protocol. Ruturn socket
    * descriptor or negative error code.

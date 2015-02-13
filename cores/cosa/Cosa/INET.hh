@@ -24,6 +24,39 @@
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"
 
+/**
+ * Communication domain.
+ */
+enum {
+  AF_INET = 2
+};
+
+/**
+ * Socket type which specifies the communication semantics.
+ */
+enum {
+  SOCK_STREAM = 1,
+  SOCK_DGRAM = 2,
+  SOCK_RAW = 3,
+  SOCK_RDM = 4,
+  SOCK_SEQPACKET = 5
+};
+
+/**
+ * Internet Protocol Number.
+ * http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+ */
+enum  {
+  IPPROTO_IP = 0,
+  IPPROTO_IPV4 = 0,
+  IPPROTO_ICMP = 1,
+  IPPROTO_TCP = 6,
+  IPPROTO_UDP = 17,
+  IPPROTO_IPV6 = 41,
+  IPPROTO_NONE = 59,
+  IPPROTO_RAW = 255
+};
+
 class Socket;
 
 /**
