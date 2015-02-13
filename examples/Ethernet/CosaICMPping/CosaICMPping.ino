@@ -181,11 +181,11 @@ void loop()
   res = sock->recv(&reply, sizeof(reply), src, port);
   roundtrip = RTC::micros();
 
-  // Sanity check the reply; right size, checksum, id
+  // Sanity check the reply; right size, type, id, seq nr, and checksum
   if (res != sizeof(reply)) goto error;
   if (reply.type != ICMP_ECHOREPLY) goto error;
-  if (req.echo.id != 0xC05A) goto error;
-  if (req.echo.seq != seq) goto error;
+  if (reply.echo.id != 0xC05A) goto error;
+  if (reply.echo.seq != seq) goto error;
   if (INET::checksum(&reply, sizeof(reply)) != 0) goto error;
 
   // Calculate the time for the ping roundtrip
