@@ -78,7 +78,7 @@ struct icmphdr
       uint16_t	mtu;
     } frag;			/* path mtu discovery */
   };
-  uint8_t     payload[64];	/* added to simulate echo data */
+  uint32_t    timestamp;
 };
 
 #define ICMP_ECHOREPLY		0	/* Echo Reply			*/
@@ -153,13 +153,13 @@ void loop()
 
   INFO("Build ICMP echo request block", 0);
   icmphdr req;
+  static uint16_t seq = 0;
   req.type = ICMP_ECHO;
   req.code = 0;
   req.checksum = 0;
   req.echo.id = 0xC05A;
-  for (uint8_t i = 0; i < sizeof(req.payload); i++)
-    req.payload[i] = i;
-  req.echo.seq = RTC::millis();
+  req.echo.seq = ++seq;
+  req.timestamp = RTC::micros();
   req.checksum = hton(INET::checksum(&req, sizeof(req)));
   ASSERT(INET::checksum(&req, sizeof(req)) == 0);
 
@@ -169,7 +169,7 @@ void loop()
   if (res < 0) goto error;
 
   INFO("Receive the reply", 0);
-  uint16_t roundtrip;
+  uint32_t roundtrip;
   icmphdr reply;
   uint8_t src[4];
   uint16_t port;
@@ -179,17 +179,18 @@ void loop()
   }
   if (res != sizeof(reply) + sizeof(IPRAW_HEADER)) goto error;
   res = sock->recv(&reply, sizeof(reply), src, port);
-  roundtrip = RTC::millis();
+  roundtrip = RTC::micros();
 
   // Sanity check the reply; right size, checksum, id
   if (res != sizeof(reply)) goto error;
   if (reply.type != ICMP_ECHOREPLY) goto error;
-  if (INET::checksum(&reply, sizeof(reply)) != 0) goto error;
   if (req.echo.id != 0xC05A) goto error;
+  if (req.echo.seq != seq) goto error;
+  if (INET::checksum(&reply, sizeof(reply)) != 0) goto error;
 
   // Calculate the time for the ping roundtrip
-  roundtrip -= reply.echo.seq;
-  INFO("roundtrip=%ud ms", roundtrip);
+  roundtrip -= reply.timestamp;
+  INFO("Roundtrip: %ul us", roundtrip);
 
  error:
   sock->close();
