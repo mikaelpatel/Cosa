@@ -120,6 +120,10 @@ modules that require hardware setups which takes a lot of time if
 breadboarded.
 5. Or donations through paypal (use email address).
 
-If you are planning to use Cosa you are encourage to support the
-project. This will help keep the software at high quality and follow
-changes in tooling, etc.
+If you are planning to use Cosa you are encouraged to support the
+project to help keep the software at high quality and follow
+changes in tooling, and above all open-source.
+
+Please note that the issues list should be used mainly for bug reports
+and enhancement requests. Design and implementation support is only
+provided to contributing projects.
