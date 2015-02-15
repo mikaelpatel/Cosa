@@ -76,6 +76,10 @@
 #elif defined(LILYPAD_ARDUINO_USB)
 #include "Cosa/Board/Arduino/LilyPad_USB.hh"
 
+// ITEAD Studio Boards
+#elif defined(ITEADSTUDIO_IBOARD)
+#include "Cosa/Board/ITEADStudio/IBoard.hh"
+
 // LowPowerLab Boards
 #elif defined(LOWPOWERLAB_MOTEINO)
 #include "Cosa/Board/LowPowerLab/Moteino.hh"

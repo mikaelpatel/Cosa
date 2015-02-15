@@ -623,6 +623,33 @@ lilypad-usb.build.extra_flags={build.usb_flags}
 lilypad-usb.build.core=cosa
 
 ##
+# ITEADSTUDIO BOARDS
+##
+
+# AVR:ATmega328
+# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
+# Brown-out detection level 2.7 V. Serial program downloading enabled
+# Boot Reset vector enable (1024 words, 0x3c00).
+iboard.name=Cosa ITEAD Studio IBoard (ATmega328/BOOT_168)
+iboard.upload.tool=avrdude
+iboard.upload.protocol=arduino
+iboard.upload.maximum_size=30720
+iboard.upload.maximum_data_size=2048
+iboard.upload.maximum_eeprom_size=1024
+iboard.upload.speed=57600
+
+iboard.bootloader.tool=avrdude
+iboard.bootloader.low_fuses=0xff
+iboard.bootloader.high_fuses=0xda
+iboard.bootloader.extended_fuses=0x05
+
+iboard.build.mcu=atmega328p
+iboard.build.f_cpu=16000000L
+iboard.build.board=ITEADSTUDIO_IBOARD
+iboard.build.variant=iteadstudio/iboard
+iboard.build.core=cosa
+
+##
 # LOWPOWERLABS BOARDS
 ##
 
