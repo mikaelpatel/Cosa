@@ -1,73 +1,76 @@
-Tue Feb 10 11:27:36 CET 2015: adafruit-atmega32u4
+Sun Feb 15 14:17:09 CET 2015: adafruit-atmega32u4
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:27:42 CET 2015: adafruit-atmega32u4-cat
+Sun Feb 15 14:17:15 CET 2015: adafruit-atmega32u4-cat
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:27:48 CET 2015: atmega328-8
+Sun Feb 15 14:17:20 CET 2015: atmega328-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:27:53 CET 2015: attiny84-8
+Sun Feb 15 14:17:26 CET 2015: attiny84-8
 Program:     124 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:27:58 CET 2015: attiny85-8
+Sun Feb 15 14:17:31 CET 2015: attiny85-8
 Program:     120 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:03 CET 2015: attiny861-8
+Sun Feb 15 14:17:36 CET 2015: attiny861-8
 Program:     128 bytes (1.6% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:08 CET 2015: diecimila
+Sun Feb 15 14:17:41 CET 2015: diecimila
 Program:     216 bytes (1.3% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:13 CET 2015: duemilanove
+Sun Feb 15 14:17:46 CET 2015: duemilanove
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:18 CET 2015: leonardo
+Sun Feb 15 14:17:51 CET 2015: iboard
+Program:     414 bytes (1.3% Full)
+Data:          0 bytes (0.0% Full)
+Sun Feb 15 14:17:57 CET 2015: leonardo
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:24 CET 2015: lilypad
+Sun Feb 15 14:18:02 CET 2015: lilypad
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:29 CET 2015: lilypad-usb
+Sun Feb 15 14:18:08 CET 2015: lilypad-usb
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:35 CET 2015: mega1280
+Sun Feb 15 14:18:13 CET 2015: mega1280
 Program:     346 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:40 CET 2015: mega2560
+Sun Feb 15 14:18:19 CET 2015: mega2560
 Program:     350 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:45 CET 2015: micro
+Sun Feb 15 14:18:24 CET 2015: micro
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:51 CET 2015: microduino-core
+Sun Feb 15 14:18:30 CET 2015: microduino-core
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:28:56 CET 2015: microduino-core32u4
+Sun Feb 15 14:18:35 CET 2015: microduino-core32u4
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:29:02 CET 2015: microduino-core-plus
+Sun Feb 15 14:18:41 CET 2015: microduino-core-plus
 Program:     236 bytes (0.4% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:29:07 CET 2015: mighty
+Sun Feb 15 14:18:47 CET 2015: mighty
 Program:     258 bytes
 Data:          0 bytes
-Tue Feb 10 11:29:12 CET 2015: mighty-opt
+Sun Feb 15 14:18:52 CET 2015: mighty-opt
 Program:     258 bytes
 Data:          0 bytes
-Tue Feb 10 11:29:17 CET 2015: miniwireless
+Sun Feb 15 14:18:58 CET 2015: miniwireless
 Program:     414 bytes (1.3% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:29:23 CET 2015: moteino
+Sun Feb 15 14:19:03 CET 2015: moteino
 Program:     414 bytes (1.3% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:29:28 CET 2015: moteino-mega
+Sun Feb 15 14:19:09 CET 2015: moteino-mega
 Program:     284 bytes
 Data:          0 bytes
-Tue Feb 10 11:29:33 CET 2015: nano
+Sun Feb 15 14:19:14 CET 2015: nano
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:29:38 CET 2015: pinoccio
+Sun Feb 15 14:19:19 CET 2015: pinoccio
 unknown MCU 'atmega256rfr2' specified
 Known MCU names:
    avr2
@@ -324,7 +327,7 @@ In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Typ
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.hh:24,
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.cpp:21:
 /home/epkmipl/opt/arduino-1.0.6/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/eeprom.h:67:4: warning: #warning "Device does not have EEPROM available."
-In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board.hh:95,
+In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board.hh:99,
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:41,
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.hh:24,
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.cpp:21:
@@ -492,27 +495,27 @@ CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDTCR’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDCE’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDE’ was not declared in this scope
-Tue Feb 10 11:29:39 CET 2015: pro-micro
+Sun Feb 15 14:19:20 CET 2015: pro-micro
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:29:51 CET 2015: pro-micro-8
+Sun Feb 15 14:19:26 CET 2015: pro-micro-8
 Program:     296 bytes (0.9% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:29:57 CET 2015: pro-mini
+Sun Feb 15 14:19:32 CET 2015: pro-mini
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:30:02 CET 2015: pro-mini-8
+Sun Feb 15 14:19:43 CET 2015: pro-mini-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:30:07 CET 2015: teensy-2_0
+Sun Feb 15 14:19:48 CET 2015: teensy-2_0
 Program:     328 bytes (1.0% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:30:13 CET 2015: teensypp-2_0
+Sun Feb 15 14:19:54 CET 2015: teensypp-2_0
 Program:     314 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:30:19 CET 2015: uno
+Sun Feb 15 14:20:00 CET 2015: uno
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Tue Feb 10 11:30:24 CET 2015: wildfire
+Sun Feb 15 14:20:06 CET 2015: wildfire
 Program:     508 bytes
 Data:          0 bytes
