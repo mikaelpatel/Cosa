@@ -58,7 +58,7 @@
  *                |ISP                 SD        |
  *                |[][]                +--------+|
  *                |[][]                |        /|
- *                |[][]                |       | |
+ *                |[][]*               |       | |
  *                |                    |       | |
  *         D14/A0 |[][][]              |        \|
  *         D15/A1 |[][][]              +--------+|
@@ -143,26 +143,26 @@ public:
    * Digital pin symbols
    */
   enum DigitalPin {
-    D0 = 0,			// PD0
-    D1,				// PD1
-    D2,				// PD2
-    D3,				// PD3
-    D4,				// PD4
-    D5,				// PD5
-    D6,				// PD6
-    D7,				// PD7
-    D8,				// PB0
-    D9,				// PB1
-    D10,			// PB2
-    D11,			// PB3
-    D12,			// PB4
-    D13,			// PB5
-    D14,			// PC0
-    D15,			// PC1
-    D16,			// PC2
-    D17,			// PC3
-    D18,			// PC4
-    D19,			// PC5
+    D0 = 0,			// PD0/XBEE:DOUT
+    D1,				// PD1/XBEE:DIN
+    D2,				// PD2/NRF24L01:IRQ
+    D3,				// PD3/NRF24L01:CE
+    D4,				// PD4/SD:CS
+    D5,				// PD5/NRF24L01:MOSI
+    D6,				// PD6/NRF24L01:MISO
+    D7,				// PD7/NRF24L01:SCK
+    D8,				// PB0/NRF24L01:SS
+    D9,				// PB1/NC
+    D10,			// PB2/W5100:SS
+    D11,			// PB3/MOSI
+    D12,			// PB4/MISO
+    D13,			// PB5/SCK
+    D14,			// PC0/A0
+    D15,			// PC1/A1
+    D16,			// PC2/A2
+    D17,			// PC3/A3
+    D18,			// PC4/A4
+    D19,			// PC5/A5
     LED = D13
   } __attribute__((packed));
 
