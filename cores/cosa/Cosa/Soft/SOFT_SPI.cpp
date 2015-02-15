@@ -23,7 +23,7 @@
 using namespace Soft;
 
 SPI::Driver::Driver(Board::DigitalPin cs,
-		    uint8_t pulse,
+		    Pulse pulse,
 		    Clock clock,
 		    uint8_t mode,
 		    Order order,
@@ -39,38 +39,47 @@ SPI::Driver::Driver(Board::DigitalPin cs,
   spi.m_list = this;
 }
 
-bool
-SPI::begin(Driver* dev)
+void
+SPI::acquire(Driver* dev)
 {
-  synchronized {
-    if (m_dev != NULL) synchronized_return (false);
-    // Acquire the driver controller
-    m_dev = dev;
-    // Set clock polarity
-    m_sck.write(dev->m_mode & 0x02);
-    // Enable device
-    if (dev->m_pulse < 2) dev->m_cs.toggle();
-    // Disable all interrupt sources on SPI bus
-    for (dev = spi.m_list; dev != NULL; dev = dev->m_next)
-      if (dev->m_irq) dev->m_irq->disable();
+  // Acquire the device driver. Wait if busy. Synchronized update
+  uint8_t key = lock();
+  while (m_busy) {
+    unlock(key);
+    yield();
+    key = lock();
   }
-  return (true);
+  // Set current device and mark as busy
+  m_busy = true;
+  m_dev = dev;
+  // Set clock polarity
+  m_sck.write(dev->m_mode & 0x02);
+  // Disable all interrupt sources on SPI bus
+  for (SPI::Driver* dev = m_list; dev != NULL; dev = dev->m_next)
+    if (dev->m_irq != NULL) dev->m_irq->disable();
+  unlock(key);
+}
+
+void
+SPI::release()
+{
+  // Lock the device driver update
+  uint8_t key = lock();
+  // Release the device driver
+  m_busy = false;
+  m_dev = NULL;
+  // Enable all interrupt sources on SPI bus
+  for (SPI::Driver* dev = m_list; dev != NULL; dev = dev->m_next)
+    if (dev->m_irq != NULL) dev->m_irq->enable();
+  unlock(key);
 }
 
 bool
-SPI::end()
+SPI::attach(Driver* dev)
 {
-  synchronized {
-    if (m_dev == 0) synchronized_return (false);
-    // Disable the device or give pulse if required
-    m_dev->m_cs.toggle();
-    if (m_dev->m_pulse > 1) m_dev->m_cs.toggle();
-    // Enable the bus devices with interrupts
-    for (Driver* dev = spi.m_list; dev != NULL; dev = dev->m_next)
-      if (dev->m_irq != NULL) dev->m_irq->enable();
-    // Release the driver controller
-    m_dev = NULL;
-  }
+  if (dev->m_next != NULL) return (false);
+  dev->m_next = m_list;
+  m_list = dev;
   return (true);
 }
 
