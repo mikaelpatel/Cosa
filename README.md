@@ -52,6 +52,7 @@ boards with AVR MCUs.
 * [Arduino Pro Mini] (./cores/cosa/Cosa/Board/Arduino/Pro_Mini.hh)
 * [Arduino Uno] (./cores/cosa/Cosa/Board/Arduino/Uno.hh)
 * Breadboard ([ATtinyX4] (./cores/cosa/Cosa/Board/Arduino/ATtinyX4.hh), [ATtinyX5] (./cores/cosa/Cosa/Board/Arduino/ATtinyX5.hh), [ATtinyX61] (./cores/cosa/Cosa/Board/Arduino/ATtinyX61.hh), [ATmega328] (./cores/cosa/Cosa/Board/Arduino/ATmega328P.hh), [ATmega1284] (./cores/cosa/Cosa/Board/Arduino/ATmega1284P.hh))
+* [ITEAD Studio IBoard] (./cores/cosa/Cosa/Board/ITEADStudio/IBoard.hh)
 * [LilyPad Arduino] (./cores/cosa/Cosa/Board/Arduino/LilyPad.hh)
 * [LilyPad Arduino USB] (./cores/cosa/Cosa/Board/Arduino/LilyPad_USB.hh)
 * [LowPowerLab Moteino] (./cores/cosa/Cosa/Board/LowPowerLab/Moteino.hh)
