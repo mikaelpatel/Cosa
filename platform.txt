@@ -8,7 +8,7 @@
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
 # version 2.1 of the License, or (at your option) any later version.
-# 
+#
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -30,7 +30,7 @@ name=Cosa AVR Boards
 version=1.0
 
 # AVR compile variables
-# --------------------- 
+# ---------------------
 
 # Default "compiler.path" is correct, change only if you want to overidde the initial value
 compiler.path={runtime.ide.path}/hardware/tools/avr/bin/
@@ -57,7 +57,7 @@ build.extra_flags=
 compiler.c.extra_flags=-Wextra -flto
 compiler.c.elf.extra_flags=-w -Wl,-relax -flto
 compiler.S.extra_flags=
-compiler.cpp.extra_flags=-Wextra -flto -std=gnu++11 -felide-constructors
+compiler.cpp.extra_flags=-Wextra -flto -std=gnu++11 -felide-constructors -mcall-prologues
 compiler.ar.extra_flags=
 compiler.objcopy.eep.extra_flags=
 compiler.elf2hex.extra_flags=
