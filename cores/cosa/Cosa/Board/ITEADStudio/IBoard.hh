@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Board/ITEADStudio/Iboard.hh
+ * @file Cosa/Board/ITEADStudio/IBoard.hh
  * @version 1.0
  *
  * @section License
@@ -43,7 +43,7 @@
  *
  * @section Board
  * @code
- *                       ITEAD Studio Iboard
+ *                       ITEAD Studio IBoard
  *                  -----              --------
  *                +-|(o)|--------------| RJ45 |--+
  *                | |   |              |      |  |
