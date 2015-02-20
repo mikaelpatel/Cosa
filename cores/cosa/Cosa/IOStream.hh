@@ -152,7 +152,7 @@ public:
      * @param[in] s string in program memory to write.
      * @return zero(0) or negative error code.
      */
-    virtual int puts_P(str_P s);
+    virtual int puts(str_P s);
 
     /**
      * @override IOStream::Device
@@ -278,9 +278,9 @@ public:
    * Get io stream end of line string.
    * @return string for end of line.
    */
-  str_P get_eol_P()
+  str_P get_eol()
   {
-    return (m_eol_P);
+    return (m_eols);
   }
 
   /**
@@ -289,16 +289,16 @@ public:
    */
   str_P EOL()
   {
-    return (m_eol_P);
+    return (m_eols);
   }
 
   /**
    * Set io stream end of line string.
    * @param[in] s string for end of line.
    */
-  void set_eol_P(const char* s)
+  void set_eol(str_P s)
   {
-    m_eol_P = (str_P) s;
+    m_eols = s;
   }
 
   /**
@@ -448,9 +448,9 @@ public:
    * a string constants in program memory.
    * @param[in] s pointer to program memory string.
    */
-  void print_P(str_P s)
+  void print(str_P s)
   {
-    m_dev->puts_P(s);
+    m_dev->puts(s);
   }
 
   /**
@@ -458,7 +458,7 @@ public:
    */
   void println()
   {
-    m_dev->puts_P(m_eol_P);
+    m_dev->puts(m_eols);
   }
 
   /**
@@ -467,7 +467,7 @@ public:
    * @param[in] format string in program memory.
    * @param[in] args variable argument list.
    */
-  void vprintf_P(str_P format, va_list args);
+  void vprintf(str_P format, va_list args);
 
   /**
    * Formated print with variable argument list. The format string
@@ -475,11 +475,11 @@ public:
    * @param[in] format string in program memory.
    * @param[in] ... variable argument list.
    */
-  void printf_P(str_P format, ...)
+  void printf(str_P format, ...)
   {
     va_list args;
     va_start(args, format);
-    vprintf_P(format, args);
+    vprintf(format, args);
     va_end(args);
   }
 
@@ -668,7 +668,7 @@ public:
    */
   IOStream& operator<<(str_P s)
   {
-    print_P(s);
+    print(s);
     return (*this);
   }
 
@@ -691,11 +691,11 @@ public:
   friend IOStream& flush(IOStream& outs);
 
 protected:
-  Device* m_dev;		//!< Delegated device.
-  Base m_base;			//!< Base for next output operator.
-  int8_t m_width;		//!< Minimum width of output string.
-  uint8_t m_prec;		//!< Number of digits after decimal sign.
-  str_P m_eol_P;		//!< End of line string (program memory).
+  Device* m_dev;	     //!< Delegated device.
+  Base m_base;		     //!< Base for next output operator.
+  int8_t m_width;	     //!< Minimum width of output string.
+  uint8_t m_prec;	     //!< Number of digits after decimal sign.
+  str_P m_eols;		     //!< End of line string (program memory).
 
   /**
    * Print number prefix for non decimal base.

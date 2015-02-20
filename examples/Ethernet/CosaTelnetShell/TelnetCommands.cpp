@@ -30,9 +30,8 @@
 #include "Cosa/OWI.hh"
 #include "Cosa/TWI.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
 
-IOStream ios(&uart);
+IOStream ios;
 
 static uint32_t idle = 0L;
 

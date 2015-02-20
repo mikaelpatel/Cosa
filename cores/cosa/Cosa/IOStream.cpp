@@ -31,7 +31,7 @@ IOStream::IOStream(Device* dev) :
   m_base(dec),
   m_width(6),
   m_prec(4),
-  m_eol_P((str_P) CRLF)
+  m_eols((str_P) CRLF)
 {}
 
 IOStream::IOStream() :
@@ -39,7 +39,7 @@ IOStream::IOStream() :
   m_base(dec),
   m_width(6),
   m_prec(4),
-  m_eol_P((str_P) CRLF)
+  m_eols((str_P) CRLF)
 {}
 
 IOStream::Device*
@@ -130,11 +130,11 @@ void
 IOStream::print_prefix(Base base)
 {
   if (base == hex)
-    print_P(PSTR("0x"));
+    print(PSTR("0x"));
   else if (base == bin)
-    print_P(PSTR("0b"));
+    print(PSTR("0b"));
   else if (base == oct)
-    print_P(PSTR("0"));
+    print(PSTR("0"));
 }
 
 void
@@ -145,19 +145,19 @@ IOStream::print(uint32_t src, const void *ptr, size_t size, Base base, uint8_t m
   uint8_t* p = (uint8_t*) ptr;
   uint8_t n = 0;
   print(src, 6, b);
-  print_P(PSTR(": "));
+  print(PSTR(": "));
   while (size--) {
     print((unsigned int) *p++, w, base);
     src += 1;
     if (++n < max) {
-      print_P(PSTR(" "));
+      print(PSTR(" "));
     }
     else {
       println();
       n = 0;
       if (size > 0) {
 	print(src, 6, b);
-	print_P(PSTR(": "));
+	print(PSTR(": "));
       }
     }
   }
@@ -165,7 +165,7 @@ IOStream::print(uint32_t src, const void *ptr, size_t size, Base base, uint8_t m
 }
 
 void
-IOStream::vprintf_P(str_P format, va_list args)
+IOStream::vprintf(str_P format, va_list args)
 {
   const char* s = (const char*) format;
   uint8_t is_signed;
@@ -205,7 +205,7 @@ IOStream::vprintf_P(str_P format, va_list args)
 	print(va_arg(args, char*));
 	continue;
       case 'S':
-	print_P(va_arg(args, str_P));
+	print(va_arg(args, str_P));
 	continue;
       case 'd':
 	if (is_signed)
@@ -279,7 +279,7 @@ IOStream::readline(char* buf, size_t size, bool echo)
     if (c == ESC) continue;
     if (c == '\b' || c == DEL) {
       if (len > 0) {
-	if (echo) print_P(PSTR("\b \b"));
+	if (echo) print(PSTR("\b \b"));
 	len -= 1;
 	s -= 1;
       }
@@ -330,7 +330,7 @@ IOStream::Device::puts(const char* s)
 }
 
 int
-IOStream::Device::puts_P(str_P s)
+IOStream::Device::puts(str_P s)
 {
   const char* p = (const char*) s;
   return (write_P(p, strlen_P(p)));

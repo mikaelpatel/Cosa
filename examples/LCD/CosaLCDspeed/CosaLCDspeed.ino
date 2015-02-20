@@ -156,9 +156,9 @@ void write_pstr(uint16_t nr)
 {
   while (nr--) {
     lcd.set_cursor(0, 0);
-    lcd.puts_P(PSTR(NUM_STR));
+    lcd.puts(PSTR(NUM_STR));
     lcd.set_cursor(0, 0);
-    lcd.puts_P(PSTR(ALPHA_STR));
+    lcd.puts(PSTR(ALPHA_STR));
   }
 }
 
@@ -211,7 +211,7 @@ void measure(str_P name, benchmark_t fn, uint16_t nr)
   uint32_t us = (RTC::micros() - start) / nr;
   uint32_t ops = 1000000L / us;
   lcd.display_clear();
-  lcd.puts_P(name);
+  lcd.puts(name);
   trace << clear << name << endl;
   trace << ops << PSTR(" ops, ") << us << PSTR(" us");
 #if defined(USE_LOW_POWER)

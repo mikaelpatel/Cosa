@@ -218,7 +218,7 @@ public:
     int write(uint8_t cmd, uint16_t length, uint16_t id = 0);
     int write(const void* buf, size_t count);
     int write_P(const void* buf, size_t count);
-    int puts_P(str_P s);
+    int puts(str_P s);
     int read(void* buf, size_t count, uint32_t ms = 3000L);
     int flush();
   };

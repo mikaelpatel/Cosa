@@ -41,7 +41,7 @@ void setup()
 {
   Watchdog::begin();
   uart.begin(BAUDRATE);
-  uart.puts_P(PSTR("Hello World\n"));
+  uart.puts(PSTR("Hello World\n"));
 }
 
 void loop()
@@ -61,8 +61,8 @@ void loop()
   Board::DigitalPin pin;
   pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + ix);
   if (Pin::read(pin))
-    uart.puts_P(PSTR(" = on\n"));
-  else uart.puts_P(PSTR(" = off\n"));
+    uart.puts(PSTR(" = on\n"));
+  else uart.puts(PSTR(" = off\n"));
   led.toggle();
   if (ix == membersof(digital_pin_map)) ix = 0; else ix += 1;
 

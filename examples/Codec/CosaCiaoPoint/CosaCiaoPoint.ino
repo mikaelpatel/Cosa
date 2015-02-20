@@ -80,7 +80,7 @@ public:
   {
     trace.print((uint8_t) c, IOStream::hex);
     if (isgraph(c)) {
-      trace.print_P(PSTR(" '"));
+      trace.print(PSTR(" '"));
       trace.print(c);
       trace.print('\'');
     }

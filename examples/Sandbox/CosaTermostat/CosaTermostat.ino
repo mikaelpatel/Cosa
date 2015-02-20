@@ -110,7 +110,7 @@ void loop()
     }
     if (temperature > TEMP_MAX) {
       trace << PSTR("Heater OFF") << endl;
-      trace.printf_P(PSTR("Runtime: %l:%d:%d\n"), hours, minutes, seconds);
+      trace.printf(PSTR("Runtime: %l:%d:%d\n"), hours, minutes, seconds);
       heater.set();
       heating = 0;
     }

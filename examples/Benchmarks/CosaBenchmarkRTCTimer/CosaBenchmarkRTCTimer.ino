@@ -109,8 +109,8 @@ void setup()
   }
   uint32_t avg_immediate = (sum_immediate * us_per_timer_cycle) / s;
   max_immediate_expiration = s;
-  trace.printf_P(PSTR("Expirations < %l us will be immediately dispatched\n"
-		      "  Avg immediate dispatch = %l us (%l instructions)\n"),
+  trace.printf(PSTR("Expirations < %l us will be immediately dispatched\n"
+		    "  Avg immediate dispatch = %l us (%l instructions)\n"),
 		 max_immediate_expiration, avg_immediate, avg_immediate*I_CPU );
   trace.flush();
 
@@ -133,10 +133,10 @@ void setup()
   uint32_t avg_setup = ((sum_setup * us_per_timer_cycle) / queued_samples);
   uint32_t avg_dispatch = ((sum_dispatch * us_per_timer_cycle) / queued_samples);
 
-  trace.printf_P(PSTR("For queued expirations,\n"
-		      "  Avg start = %l us (%l instructions)\n"
-		      "  Avg setup = %l us (%l instructions)\n"
-		      "  Avg dispatch = %l us (%l instructions)\n"),
+  trace.printf(PSTR("For queued expirations,\n"
+		    "  Avg start = %l us (%l instructions)\n"
+		    "  Avg setup = %l us (%l instructions)\n"
+		    "  Avg dispatch = %l us (%l instructions)\n"),
 		 avg_start, avg_start * I_CPU,
 		 avg_setup, avg_setup * I_CPU,
 		 avg_dispatch, avg_dispatch * I_CPU );
@@ -152,8 +152,8 @@ void setup()
     while (!Simple::flag)
       ;
     actual = OneShot::time_stamp - start;
-    trace.printf_P(PSTR("expire_after(%ul us): actual %l us\n"),
-		   expected, actual);
+    trace.printf(PSTR("expire_after(%ul us): actual %l us\n"),
+		 expected, actual);
     trace.flush();
     if (expected < 100)
       expected += 7;
@@ -172,8 +172,8 @@ void setup()
   while (!Simple::flag)
     ;
   actual = OneShot::time_stamp - start;
-  trace.printf_P(PSTR("expire_after(%ul us): actual %ul us\n"),
-		 expected, actual);
+  trace.printf(PSTR("expire_after(%ul us): actual %ul us\n"),
+	       expected, actual);
   trace.flush();
 
   // 1000x tick tests
@@ -193,8 +193,8 @@ void setup()
     stop = RTC::micros();
   }
   actual = stop - start;
-  trace.printf_P(PSTR("1000X expire_at(n * %ul us): expected %ul, actual %ul us\n"),
-		 us_per_tick, expected, actual);
+  trace.printf(PSTR("1000X expire_at(n * %ul us): expected %ul, actual %ul us\n"),
+	       us_per_tick, expected, actual);
   trace.flush();
 
   TimerGroup bunch[50];
@@ -209,17 +209,17 @@ void setup()
   for (int8_t i = membersof(bunch) - 1; i >= 0; i--) {
     bunch[i].start();
   }
-  trace.printf_P(PSTR("%d timers started in %ulus\n"),
-		 membersof(bunch), RTC::micros() - startStart );
+  trace.printf(PSTR("%d timers started in %ulus\n"),
+	       membersof(bunch), RTC::micros() - startStart );
 
   uint32_t timeout = ((expected / 1000000) + 2) * 1000000;
   while (TimerGroup::started > 0) {
     stop = RTC::micros();
     if (stop - start > timeout) {
-      trace.printf_P(PSTR("ERROR: %d timers still running\n"),
-		     TimerGroup::started );
-      trace.printf_P(PSTR("  started at %ul, now=%ul, expiring at "),
-		     start, stop );
+      trace.printf(PSTR("ERROR: %d timers still running\n"),
+		   TimerGroup::started );
+      trace.printf(PSTR("  started at %ul, now=%ul, expiring at "),
+		   start, stop );
       for (uint8_t i=0; i < membersof(bunch); i++) {
         trace << bunch[i].expire_at() << PSTR(", ");
         bunch[i].stop();
@@ -232,11 +232,11 @@ void setup()
   actual = stop - start;
 
   uint32_t expected_ms = expected / 1000;
-  trace.printf_P(PSTR("elapsed time (0.5 + %d*0.1s = %ul.%uls): actual %ulus\n"),
-		 (membersof(bunch) - 1),
-		 (expected_ms / 1000),
-		 (expected_ms % 1000),
-		 actual);
+  trace.printf(PSTR("elapsed time (0.5 + %d*0.1s = %ul.%uls): actual %ulus\n"),
+	       (membersof(bunch) - 1),
+	       (expected_ms / 1000),
+	       (expected_ms % 1000),
+	       actual);
   trace.flush();
 
   RTC::micros( 0xFFFFF000UL ); // 4095uS 'til rolloover
@@ -249,7 +249,7 @@ void setup()
   while (!Simple::flag)
     ;
   actual = OneShot::time_stamp - start;
-  trace.printf_P(PSTR("Rollover test: start %ul, end %ul\n  expire_after(%ul us): actual %l us\n"),
+  trace.printf(PSTR("Rollover test: start %ul, end %ul\n  expire_after(%ul us): actual %l us\n"),
      start, OneShot::time_stamp, expected, actual);
   trace.flush();
 }

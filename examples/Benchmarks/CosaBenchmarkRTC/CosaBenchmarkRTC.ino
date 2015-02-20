@@ -90,8 +90,8 @@ void setup()
     stop = RTC::micros();
     uint32_t diff = stop - start;
     if (diff > 136) {
-      trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
-		     i, start, stop, diff);
+      trace.printf(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
+		   i, start, stop, diff);
       Watchdog::delay(128);
       err++;
     }
@@ -107,8 +107,8 @@ void setup()
     stop = RTC::millis();
     uint32_t diff = stop - start;
     if (diff > 115) {
-      trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
-		     i, start, stop, diff);
+      trace.printf(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
+		   i, start, stop, diff);
       Watchdog::delay(128);
       err++;
     }
@@ -124,8 +124,8 @@ void setup()
     stop = RTC::millis();
     uint32_t diff = stop - start;
     if (diff > 115) {
-      trace.printf_P(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
-		     i, start, stop, diff);
+      trace.printf(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
+		   i, start, stop, diff);
       Watchdog::delay(128);
       err++;
     }

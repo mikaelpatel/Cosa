@@ -75,9 +75,9 @@ void setup()
   TRACE(count);
 
   // Print latest set and the latest run time
-  trace.print_P(PSTR("set on "));
+  trace.print(PSTR("set on "));
   trace << latest.set << endl;
-  trace.print_P(PSTR("run on "));
+  trace.print(PSTR("run on "));
   trace << latest.run << endl;
 
   // Set the time. Adjust below to your current time

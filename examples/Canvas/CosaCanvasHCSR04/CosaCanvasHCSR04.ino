@@ -104,7 +104,7 @@ Ping::on_change(uint16_t distance)
     uint16_t width = (system5x7.WIDTH + system5x7.SPACING) * 18;
     tft.draw_icon((tft.WIDTH - 96)/2, (tft.HEIGHT - 50)/2, arduino_icon_96x32);
     tft.set_cursor((tft.WIDTH - width)/2, 80);
-    tft.draw_string_P(PSTR("Cosa Canvas HCSR04"));
+    tft.draw_string(PSTR("Cosa Canvas HCSR04"));
   }
 }
 

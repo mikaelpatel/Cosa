@@ -145,9 +145,9 @@ void benchmark4(uint16_t nr)
 {
   while (nr--) {
     lcd.set_cursor(0, 1);
-    lcd.puts_P(PSTR(NUM_STR));
+    lcd.puts(PSTR(NUM_STR));
     lcd.set_cursor(0, 1);
-    lcd.puts_P(PSTR(ALPHA_STR));
+    lcd.puts(PSTR(ALPHA_STR));
   }
 }
 

@@ -179,23 +179,23 @@ void loop()
   textbox.set_text_color(Canvas::BLUE);
   textbox.set_text_scale(1);
   textbox.set_text_port(2, 2, tft.WIDTH, tft.HEIGHT);
-  console.print_P(PSTR("CosaCanvasDemo: started"));
+  console.print(PSTR("CosaCanvasDemo: started"));
   console.println();
-  console.printf_P(PSTR("test#1:fill screen %ul ms\n"), ms);
+  console.printf(PSTR("test#1:fill screen %ul ms\n"), ms);
   console.println();
-  console.printf_P(PSTR("text_color(%od)\n"), textbox.get_text_color().rgb);
-  console.printf_P(PSTR("text_scale(%d)\n"), textbox.get_text_scale());
+  console.printf(PSTR("text_color(%od)\n"), textbox.get_text_color().rgb);
+  console.printf(PSTR("text_scale(%d)\n"), textbox.get_text_scale());
   uint16_t x, y;
   textbox.get_cursor(x, y);
-  console.printf_P(PSTR("cursor(x = %d, y = %d)\n"), x, y);
+  console.printf(PSTR("cursor(x = %d, y = %d)\n"), x, y);
   textbox.set_text_color(Canvas::RED);
   textbox.set_text_scale(2);
-  console.print_P(PSTR("  Hello\n  World"));
+  console.print(PSTR("  Hello\n  World"));
   console.println();
   ms = (RTC::micros() - start) / 1000L;
   textbox.set_text_color(Canvas::BLACK);
   textbox.set_text_scale(1);
-  console.printf_P(PSTR("test#2:output stream: %ul ms\n"), ms);
+  console.printf(PSTR("test#2:output stream: %ul ms\n"), ms);
   INFO("test#2:output stream: %ul ms", ms);
   sleep(2);
 
@@ -218,7 +218,7 @@ void loop()
   console.print(&tft, 200, IOStream::hex,
 		tft.get_orientation() == Canvas::PORTRAIT ? 3 : 5);
   ms = (RTC::micros() - start) / 1000L;
-  console.printf_P(PSTR("%ul ms"), ms);
+  console.printf(PSTR("%ul ms"), ms);
   INFO("test#3:scroll text mode: %ul ms", ms);
   sleep(2);
 

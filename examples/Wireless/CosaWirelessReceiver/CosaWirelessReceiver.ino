@@ -36,9 +36,9 @@
 
 // Select Wireless device driver
 // #define USE_CC1101
-#define USE_NRF24L01P
+// #define USE_NRF24L01P
 // #define USE_RFM69
-// #define USE_VWI
+#define USE_VWI
 
 #if defined(USE_CC1101)
 #include "Cosa/Wireless/Driver/CC1101.hh"
@@ -148,7 +148,7 @@ IOStream& operator<<(IOStream& outs, dlt_msg_t* msg)
 void loop()
 {
   // Receive a message
-  const uint32_t TIMEOUT = 5000;
+  const uint32_t TIMEOUT = 10000;
   const uint8_t MSG_MAX = 32;
   uint8_t msg[MSG_MAX];
   uint8_t src;
@@ -157,7 +157,8 @@ void loop()
 
   // Print the message header
   if (count >= 0) {
-    trace << PSTR("src=") << hex << src
+    trace << RTC::seconds()
+	  << PSTR(":src=") << hex << src
 	  << PSTR(",port=") << hex << port
 	  << PSTR(",dest=")
 	  << hex << (rf.is_broadcast() ? 0 : rf.get_device_address())

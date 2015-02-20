@@ -149,11 +149,11 @@ HTTP::Client::get(const char* url, uint32_t ms)
   if (res < 0) goto error;
 
   // Send a HTTP request
-  m_sock->puts_P(PSTR("GET /"));
+  m_sock->puts(PSTR("GET /"));
   m_sock->puts(url);
-  m_sock->puts_P(PSTR(" HTTP/1.1" CRLF "Host: "));
+  m_sock->puts(PSTR(" HTTP/1.1" CRLF "Host: "));
   m_sock->puts(hostname);
-  m_sock->puts_P(PSTR(CRLF "Connection: close" CRLF CRLF));
+  m_sock->puts(PSTR(CRLF "Connection: close" CRLF CRLF));
   m_sock->flush();
 
   // Wait for the response

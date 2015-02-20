@@ -64,7 +64,7 @@ void loop()
   int res;
 
   MEASURE("Create a socket:", 1) {
-    sock = wifi.socket(wifi.AF_INET, wifi.SOCK_STREAM, wifi.IPPROTO_TCP);
+    sock = wifi.socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
   }
   TRACE(sock);
 

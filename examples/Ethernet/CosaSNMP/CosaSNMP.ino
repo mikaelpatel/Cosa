@@ -117,7 +117,7 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
   if(pdu.oid.length > (mib_baselen + 2)) return (false);
 
   // Match with Arduino MIB OID root
-  uint8_t index = pdu.oid.match(get_oid());
+  int index = pdu.oid.match(get_oid());
   if (index < -1) return (false); // MIB is greater than what we deal with
   uint8_t sys = (pdu.oid.length > mib_baselen) ? pdu.oid.name[mib_baselen] : 0;
   // Get next value; adjust index referens

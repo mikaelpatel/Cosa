@@ -81,7 +81,7 @@ void setup()
    Watchdog::begin(16, Watchdog::push_timeout_events);
    keypad.begin();
    lcd.begin();
-   lcd.puts_P(PSTR("CosaLCDkeypad: started"));
+   lcd.puts(PSTR("CosaLCDkeypad: started"));
 }
 
 void loop()

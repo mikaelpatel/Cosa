@@ -165,7 +165,7 @@ void setup()
     offscreen.draw_line(20, 20, width, ST7565::HEIGHT - 1);
   }
   offscreen.set_cursor(15, 2);
-  offscreen.draw_string_P(PSTR("OffScreen Canvas"));
+  offscreen.draw_string(PSTR("OffScreen Canvas"));
 
   // Draw the off-screen canvas on the LCD
   lcd.set_cursor(0, 0);
@@ -178,7 +178,7 @@ void loop()
   // Draw bars with analog sample values (A0..A5)
   lcd.putchar('\f');
   for (uint8_t i = 0; i < membersof(analog_pin_map); i++) {
-    trace.printf_P(PSTR("A%d:"), i);
+    trace.printf(PSTR("A%d:"), i);
     Board::AnalogPin pin;
     pin = (Board::AnalogPin) pgm_read_byte(analog_pin_map + i);
     uint8_t percent = (AnalogPin::sample(pin) * 100L) / 1023;

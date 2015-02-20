@@ -52,11 +52,14 @@ SHELL_ACTION(analogread, "all|ALL|vcc|PIN..", "read analog pin(s)")
   if (argc == 2 && (strcmp_P(argv[1], PSTR("all")) == 0 ||
 		    strcmp_P(argv[1], PSTR("ALL")) == 0)) {
     char prefix = argv[1][0];
-    for (uint8_t ix = 0; ix < membersof(analog_pin_map); ix++) {
+    for (uint8_t ix = 0; ix < membersof(analog_pin_map);) {
       Board::AnalogPin pin;
       pin = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[ix]);
-      ios << prefix << ix << '=' << AnalogPin::sample(pin) << endl;
+      ios << prefix << ix << '=' << AnalogPin::sample(pin);
+      ix += 1;
+      if (ix < membersof(analog_pin_map)) ios << ',';
     }
+    ios << endl;
   }
   else if (argc == 2 && (strcmp_P(argv[1], PSTR("vcc")) == 0)) {
     ios << AnalogPin::bandgap() << endl;
@@ -73,11 +76,14 @@ SHELL_ACTION(analogread, "all|ALL|vcc|PIN..", "read analog pin(s)")
 	return (Shell::ILLEGAL_COMMAND);
       pin[i] = (Board::AnalogPin) pgm_read_byte(&analog_pin_map[ix]);
     }
-    for (int i = 1; i < argc; i++) {
+    for (int i = 1; i < argc;) {
       char* name = argv[i];
       if (argc > 2) ios << name << '=';
-      ios << AnalogPin::sample(pin[i]) << endl;
+      ios << AnalogPin::sample(pin[i]);
+      i += 1;
+      if (i < argc) ios << ',';
     }
+    ios << endl;
   }
   return (0);
 }
@@ -181,11 +187,14 @@ SHELL_ACTION(digitalread, "all|ALL|led|PIN..", "read digital pin(s)")
   if (argc == 2 && (strcmp_P(argv[1], PSTR("all")) == 0 ||
 		    strcmp_P(argv[1], PSTR("ALL")) == 0)) {
     char prefix = (argv[1][0] == 'A') ? 'D' : 'd';
-    for (uint8_t ix = 0; ix < membersof(digital_pin_map); ix++) {
+    for (uint8_t ix = 0; ix < membersof(digital_pin_map);) {
       Board::DigitalPin pin;
       pin = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
-      ios << prefix << ix << '=' << InputPin::read(pin) << endl;
+      ios << prefix << ix << '=' << InputPin::read(pin);
+      ix += 1;
+      if (ix < membersof(digital_pin_map)) ios << ',';
     }
+    ios << endl;
   }
   else if (argc == 2 && (strcmp_P(argv[1], PSTR("led")) == 0))
     ios << InputPin::read(Board::LED) << endl;
@@ -201,11 +210,14 @@ SHELL_ACTION(digitalread, "all|ALL|led|PIN..", "read digital pin(s)")
 	return (Shell::ILLEGAL_COMMAND);
       pin[i] = (Board::DigitalPin) pgm_read_byte(&digital_pin_map[ix]);
     }
-    for (int i = 1; i < argc; i++) {
+    for (int i = 1; i < argc;) {
       char* name = argv[i];
       if (argc > 2) ios << name << '=';
-      ios << InputPin::read(pin[i]) << endl;
+      ios << InputPin::read(pin[i]);
+      i += 1;
+      if (i < argc) ios << ',';
     }
+    ios << endl;
   }
   return (0);
 }

@@ -76,11 +76,11 @@ void loop()
   ledPin.toggle();
 
   // Sample the four input channels and print values
-  trace.print_P(PSTR("samples: "));
+  trace.print(PSTR("samples: "));
   for (uint8_t i = 0; i < 4; i++) {
     adc.begin(i | PCF8591::FOUR_INPUTS | PCF8591::OUTPUT_ENABLE);
     trace.print(adc.sample());
-    trace.print_P(PSTR(" "));
+    trace.print(PSTR(" "));
     adc.end();
   }
   trace.println();

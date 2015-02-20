@@ -38,11 +38,16 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/INET/Telnet.hh"
 #include "TelnetCommands.h"
+
+#ifdef DEBUG
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+#else
+#define ASSERT(x) x
+#endif
 
 // Disable SD on Ethernet Shield
 #define USE_ETHERNET_SHIELD
@@ -86,8 +91,10 @@ void setup()
   yield = iowait;
 
   // Setup trace output
+#ifdef DEBUG
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaTelnetShell: started"));
+#endif
 
   // Start ethernet controller and request network address for hostname
   ASSERT(ethernet.begin_P(PSTR("CosaTelnetShell")));

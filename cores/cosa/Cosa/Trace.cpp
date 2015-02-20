@@ -29,16 +29,16 @@ Trace::begin(IOStream::Device* dev, str_P banner)
 {
   set_device(dev);
   if (banner != NULL) {
-    print_P(banner);
+    print(banner);
     println();
   }
   return (true);
 }
 
 void
-Trace::fatal_P(const char* file, int line, str_P expr)
+Trace::fatal(const char* file, int line, str_P expr)
 {
-  printf_P(PSTR("%s:%d:%S\r\n"), file, line, expr);
+  printf(PSTR("%s:%d:%S\r\n"), file, line, expr);
   print(EXITCHARACTER);
   get_device()->flush();
   exit(0);

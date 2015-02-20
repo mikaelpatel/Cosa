@@ -79,7 +79,7 @@ void setup()
 {
   Watchdog::begin();
   lcd.begin();
-  lcd.puts_P(PSTR("Hello World!"));
+  lcd.puts(PSTR("Hello World!"));
 }
 
 void loop()

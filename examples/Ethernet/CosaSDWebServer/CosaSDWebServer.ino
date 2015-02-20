@@ -107,7 +107,7 @@ WebServer::on_request(IOStream& page, char* method, char* path, char* query)
 }
 
 // Network configuration
-#define IP 192,168,1,100
+#define IP 192,168,1,150
 #define SUBNET 255,255,255,0
 #define GATEWAY 192,168,1,1
 #define PORT 80
@@ -121,7 +121,7 @@ WebServer server;
 SD sd(Board::D4);
 #define SLOW_CLOCK SPI::DIV4_CLOCK
 #define FAST_CLOCK SPI::DIV2_CLOCK
-#define CLOCK SLOW_CLOCK
+#define CLOCK FAST_CLOCK
 
 void setup()
 {

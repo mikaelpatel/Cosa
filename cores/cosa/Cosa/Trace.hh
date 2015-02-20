@@ -73,7 +73,7 @@ public:
    * @param[in] line number.
    * @param[in] expr program memory string with expression.
    */
-  void fatal_P(const char* file, int line, str_P expr)
+  void fatal(const char* file, int line, str_P expr)
     __attribute__((noreturn));
 
   /** Result of latest MEASURE */
@@ -112,10 +112,10 @@ extern uint8_t trace_log_mask;
  * string is stored in program memory.
  * @param[in] msg message string to print.
  */
-#define FATAL(msg)							\
-  trace.fatal_P(__FILE__,						\
-		__LINE__,						\
-		__PSTR(msg))
+#define FATAL(msg)						\
+  trace.fatal(__FILE__,						\
+	      __LINE__,						\
+	      __PSTR(msg))
 #ifndef NDEBUG
 
 /**
@@ -133,7 +133,7 @@ extern uint8_t trace_log_mask;
  * Support macro for trace of a string in program memory.
  * @param[in] str string literal
  */
-# define TRACE_P(str) trace.print_P(PSTR(str))
+# define TRACE_P(str) trace.print(PSTR(str))
 
 /**
  * Support macro for trace of an expression. The expression
@@ -143,16 +143,16 @@ extern uint8_t trace_log_mask;
 # if defined(TRACE_NO_VERBOSE) || defined(BOARD_ATTINY)
 #   define TRACE(expr)							\
     do {								\
-      trace.print_P(__PSTR(#expr " = "));				\
+      trace.print(__PSTR(#expr " = "));					\
       trace.print(expr);						\
       trace.println();							\
     } while (0)
 # else
 # define TRACE(expr)							\
     do {								\
-      trace.printf_P(__PSTR("%d:%s:trace:" #expr " = "),		\
-		     __LINE__,						\
-		     __PRETTY_FUNCTION__);				\
+      trace.printf(__PSTR("%d:%s:trace:" #expr " = "),			\
+		   __LINE__,						\
+		   __PRETTY_FUNCTION__);				\
       trace.print(expr);						\
       trace.println();							\
     } while (0)
@@ -164,10 +164,10 @@ extern uint8_t trace_log_mask;
  * @param[in] msg log message.
  */
 # define TRACE_LOG(msg, ...)						\
-  trace.printf_P(__PSTR("%d:%s:" msg "\r\n"),				\
-		 __LINE__,						\
-		 __PRETTY_FUNCTION__,					\
-		 __VA_ARGS__)
+  trace.printf(__PSTR("%d:%s:" msg "\r\n"),				\
+	       __LINE__,						\
+	       __PRETTY_FUNCTION__,					\
+	       __VA_ARGS__)
 # define IS_LOG_PRIO(prio) (trace_log_mask & LOG_MASK(prio))
 # define EMERG(msg, ...)						\
   if (IS_LOG_PRIO(LOG_EMERG)) TRACE_LOG("emerg:" msg, __VA_ARGS__)

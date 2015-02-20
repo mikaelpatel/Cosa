@@ -92,10 +92,10 @@ Ciao::write(char* s)
 }
 
 void
-Ciao::write_P(str_P buf)
+Ciao::write(str_P buf)
 {
   write(UINT8_TYPE, 0);
-  m_dev->puts_P(buf);
+  m_dev->puts(buf);
   m_dev->putchar(0);
 }
 
@@ -264,7 +264,7 @@ Ciao::write(const Descriptor::user_t* desc)
   m_dev->putchar(d.id);
 
   // Write descriptor null terminated name null
-  m_dev->puts_P((str_P) d.name);
+  m_dev->puts((str_P) d.name);
   m_dev->putchar(0);
 
   // Write members with name null terminated
@@ -273,7 +273,7 @@ Ciao::write(const Descriptor::user_t* desc)
     Descriptor::member_t m;
     memcpy_P(&m, mp++, sizeof(m));
     write(m.type, m.count);
-    m_dev->puts_P((str_P) m.name);
+    m_dev->puts((str_P) m.name);
     m_dev->putchar(0);
   }
 

@@ -68,8 +68,8 @@ public:
   {
     UNUSED(type);
     Echo* echo = (Echo*) fsm;
-    trace.print_P(PSTR("init "));
-    trace.print_P(echo->m_name);
+    trace.print(PSTR("init "));
+    trace.print(echo->m_name);
     trace.println();
     fsm->set_state(listenState);
     return (true);
@@ -79,8 +79,8 @@ public:
   {
     UNUSED(type);
     Echo* echo = (Echo*) fsm;
-    trace.print_P(echo->m_name);
-    trace.printf_P(PSTR("(count = %d)\n"), echo->m_count++);
+    trace.print(echo->m_name);
+    trace.printf(PSTR("(count = %d)\n"), echo->m_count++);
     fsm->set_state(echoState);
     fsm->set_timer(512);
     return (true);

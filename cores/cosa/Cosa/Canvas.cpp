@@ -393,7 +393,7 @@ Canvas::draw_string(char* s)
 }
 
 void
-Canvas::draw_string_P(str_P s)
+Canvas::draw_string(str_P s)
 {
   const char* sp = (const char*) s;
   char c;
@@ -533,7 +533,7 @@ Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
     case DRAW_STRING:
       ix = pgm_read_byte(ip++);
       if (ix >= max) return;
-      draw_string_P((str_P) pgm_read_word(tab + ix));
+      draw_string((str_P) pgm_read_word(tab + ix));
       break;
     case FILL_SCREEN:
       fill_screen();

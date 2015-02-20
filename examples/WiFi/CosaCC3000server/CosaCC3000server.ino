@@ -61,7 +61,7 @@ void setup()
   trace << endl;
 
   MEASURE("Create a socket:", 1)
-    server = wifi.socket(wifi.AF_INET, wifi.SOCK_STREAM, wifi.IPPROTO_TCP);
+    server = wifi.socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
   ASSERT(server == 0);
 
   MEASURE("Bind to port:", 1)

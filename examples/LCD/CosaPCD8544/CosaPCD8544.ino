@@ -147,7 +147,7 @@ void setup()
   offscreen.draw_rect(20, 20, 40, 20);
   offscreen.draw_rect(0, 0, offscreen.WIDTH - 1, offscreen.HEIGHT - 1);
   offscreen.set_cursor(15, 2);
-  offscreen.draw_string_P(PSTR("OffScreen"));
+  offscreen.draw_string(PSTR("OffScreen"));
 
   // Draw the off-screen canvas on the LCD
   lcd.set_cursor(0, 0);
@@ -161,7 +161,7 @@ void loop()
   // Draw bars with analog sample values (A0..A5)
   lcd.putchar('\f');
   for (uint8_t i = 0; i < lcd.LINES; i++) {
-    trace.printf_P(PSTR("A%d:"), i);
+    trace.printf(PSTR("A%d:"), i);
     uint8_t percent = (AnalogPin::sample((Board::AnalogPin) i) * 100L) / 1023;
     lcd.draw_bar(percent, lcd.WIDTH - 20);
     if (i != lcd.LINES - 1) trace << endl;

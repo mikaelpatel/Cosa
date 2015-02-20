@@ -58,13 +58,13 @@ MQTT::Client::write_P(const void* buf, size_t count)
 }
 
 int
-MQTT::Client::puts_P(str_P s)
+MQTT::Client::puts(str_P s)
 {
   uint16_t length = strlen_P(s);
   int res = length + sizeof(length);
   length = hton((int16_t) length);
   m_sock->write(&length, sizeof(length));
-  if (length != 0) m_sock->puts_P(s);
+  if (length != 0) m_sock->puts(s);
   return (res);
 }
 
@@ -148,7 +148,7 @@ MQTT::Client::connect(const char* hostname,
   write_P(PROTOCOL, sizeof(PROTOCOL));
   write(&flag, sizeof(flag));
   write(&keep_alive, sizeof(keep_alive));
-  puts_P((str_P) identifier);
+  puts((str_P) identifier);
 
   // Write variable parameters
   va_start(args, flag);
@@ -156,16 +156,16 @@ MQTT::Client::connect(const char* hostname,
     str_P topic = va_arg(args, str_P);
     str_P will = va_arg(args, str_P);
     qos = va_arg(args, uint16_t);
-    puts_P(topic);
-    puts_P(will);
+    puts(topic);
+    puts(will);
   }
   if (flag & USER_NAME_FLAG) {
     str_P user = va_arg(args, str_P);
-    puts_P(user);
+    puts(user);
   }
   if (flag & PASSWORD_FLAG) {
     str_P password = va_arg(args, str_P);
-    puts_P(password);
+    puts(password);
   }
   va_end(args);
   res = flush();
@@ -212,7 +212,7 @@ MQTT::Client::publish(str_P topic, const void* buf, size_t count,
 
   // Write message; command, length, topic, {id}, payload
   write(PUBLISH | (qos << MESSAGE_QOS_POS) | (retain & RETAIN), length);
-  puts_P(topic);
+  puts(topic);
   if (qos > FIRE_AND_FORGET) write(&id, sizeof(id));
   if (progmem) write_P(buf, count); else write(buf, count);
   int res = flush();
@@ -267,7 +267,7 @@ MQTT::Client::subscribe(str_P topic, QoS_t qos)
 
   // Write command, length, message identity and topic/qos
   write(SUBSCRIBE, length, id);
-  puts_P(topic);
+  puts(topic);
   write(&qos, sizeof(uint8_t));
   int res = flush();
 
@@ -298,7 +298,7 @@ MQTT::Client::unsubscribe(str_P topic)
 
   // Write command, length, message identity and topic
   write(UNSUBSCRIBE, length, id);
-  puts_P(topic);
+  puts(topic);
   int res = flush();
   if (res < 0) return (-1);
 
