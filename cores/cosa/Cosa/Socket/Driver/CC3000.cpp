@@ -719,6 +719,7 @@ CC3000::close(int hndl)
   do {
     res = await(HCI_EVNT_CLOSE_SOCKET, &evnt, sizeof(evnt));
   } while (res == ENOMSG);
+  set_socket_state(hndl, false);
   if (res < 0) return (res);
   if (evnt.status != 0) return (EFAULT);
   return (evnt.result);

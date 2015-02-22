@@ -190,12 +190,8 @@ void loop()
   TRACE(count);
 
  error:
-  if (res < 0) {
-    errors += 1;
-    TRACE(res);
-  }
+  errors += (res < 0);
   MEASURE("Close client connection:", 1)
     res = wifi.close(client);
+  errors += (res < 0);
 }
-
-
