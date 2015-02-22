@@ -8,18 +8,16 @@ modes, Digital, and Analog Pins, External and Pin Change Interrupts,
 Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1
 (Servo/Tone/VWI), UART, USI, SPI, TWI and EEPROM.
 
-Cosa Sketches may be built with the Arduino IDE or with the
-Cosa command line based build support for Linux.
+Please note that Cosa is not an Arduino core; Cosa does not implement
+the Arduino functions. Cosa Sketches may be built with the Arduino IDE
+or with the Cosa command line based build support for Linux.
 
 More details are available:
 
 * [Che Cosa?](./doc/01-cosa.md)
-* [Install](./doc/02-install.md)
+* [How to install Cosa](./doc/02-install.md)
 * [Built-in drivers](./doc/04-drivers.md)
 * [Exernal Libraries, Tools and Applications](./doc/05-libraries.md)
-
-Please note that Cosa is not an Arduino core; Cosa does not implement
-the Arduino functions.
 
 Cosa API
 --------

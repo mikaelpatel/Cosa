@@ -1,35 +1,59 @@
 # Supported Boards & Micro Controller Units
 
+## AdaFruit Boards
+
+* [AdaFruit ATmega32U4] (./cores/cosa/Cosa/Board/AdaFruit/ATmega32U4.hh)
+
+## Anarduino Boards
+
+* [Anarduino MiniWireless] (./cores/cosa/Cosa/Board/Anarduino/MiniWireless.hh)
+
 ## Arduino Boards
 
-* [Leonardo](http://arduino.cc/en/Main/ArduinoBoardLeonardo#.UxWVeNv0u1E)
-* [LilyPad](http://arduino.cc/en/Main/arduinoBoardLilyPad#.UxWW9tv0u1E)
-* [LilyPad USB](http://arduino.cc/en/Main/ArduinoBoardLilyPadUSB#.UxWXUdv0u1E)
-* [Mega](http://arduino.cc/en/Main/ArduinoBoardMega#.UxWVpNv0u1E)
-* [Micro](http://arduino.cc/en/Main/ArduinoBoardMicro#.UxWVw9v0u1E)
-* Mighty
-* [Mini](http://arduino.cc/en/Main/ArduinoBoardMini#.UxWWR9v0u1E)
-* [Mini Pro](http://arduino.cc/en/Main/ArduinoBoardProMini#.UxWWb9v0u1E)
-* [Nano](http://arduino.cc/en/Main/ArduinoBoardNano#.UxWWh9v0u1E)
-* [Uno](http://arduino.cc/en/Main/ArduinoBoardUno#.UxWWodv0u1F)
-* Any other boards with a [compliant chips](#chips)
+* [Arduino Diecimila] (./cores/cosa/Cosa/Board/Arduino/Diecimila.hh)
+* [Arduino Duemilanove] (./cores/cosa/Cosa/Board/Arduino/Duemilanove.hh)
+* [Arduino Leonardo] (./cores/cosa/Cosa/Board/Arduino/Leonardo.hh)
+* [Arduino Mega 1280] (./cores/cosa/Cosa/Board/Arduino/Mega.hh)
+* [Arduino Mega 2560] (./cores/cosa/Cosa/Board/Arduino/Mega.hh)
+* [Arduino Micro] (./cores/cosa/Cosa/Board/Arduino/Micro.hh)
+* [Arduino Nano] (./cores/cosa/Cosa/Board/Arduino/Nano.hh)
+* [Arduino Pro Micro] (./cores/cosa/Cosa/Board/Arduino/Pro_Micro.hh)
+* [Arduino Pro Mini] (./cores/cosa/Cosa/Board/Arduino/Pro_Mini.hh)
+* [Arduino Uno] (./cores/cosa/Cosa/Board/Arduino/Uno.hh)
+
+## Breadboards
+
+* Breadboard ([ATtinyX4] (./cores/cosa/Cosa/Board/Arduino/ATtinyX4.hh), [ATtinyX5] (./cores/cosa/Cosa/Board/Arduino/ATtinyX5.hh), [ATtinyX61] (./cores/cosa/Cosa/Board/Arduino/ATtinyX61.hh), [ATmega328] (./cores/cosa/Cosa/Board/Arduino/ATmega328P.hh), [ATmega1284] (./cores/cosa/Cosa/Board/Arduino/ATmega1284P.hh))
+
+## ITEAD Studio Boards
+
+* [ITEAD Studio IBoard] (./cores/cosa/Cosa/Board/ITEADStudio/IBoard.hh)
+
+## LilyPad Boards
+
+* [LilyPad Arduino] (./cores/cosa/Cosa/Board/Arduino/LilyPad.hh)
+* [LilyPad Arduino USB] (./cores/cosa/Cosa/Board/Arduino/LilyPad_USB.hh)
+
+## LowPowerLab Boards
+
+* [LowPowerLab Moteino] (./cores/cosa/Cosa/Board/LowPowerLab/Moteino.hh)
+* [LowPowerLab Moteino Mega] (./cores/cosa/Cosa/Board/LowPowerLab/Moteino_Mega.hh)
+
+## Pinoccio Boards
+
+* [Pinoccio Scout] (./cores/cosa/Cosa/Board/Pinoccio/Scout.hh)
 
 ## Microduino Boards
 
-* [Core](http://www.microduino.cc/Modules/Microdoino%20Core%20Modules/Microdoino-Core)
-* [Core32u4](http://www.microduino.cc/Modules/Microdoino%20Core%20Modules/Core32u4)
-* [Core+](http://www.microduino.cc/Modules/Microdoino%20Core%20Modules/Microdoino-Core-Plus)
+* [Microduino-Core] (./cores/cosa/Cosa/Board/Microduino/Core.hh)
+* [Microduino-Core32u4] (./cores/cosa/Cosa/Board/Microduino/Core32U4.hh)
+* [Microduino-Core+] (./cores/cosa/Cosa/Board/Microduino/Core_Plus.hh)
 
-## Pinnocio
+## PJRC Tennsy Boards
 
-* [Scouts](https://pinocc.io/tech-specs)
+* [PJRC Teensy 2.0] (./cores/cosa/Cosa/Board/PJRC/Teensy_2_0.hh)
+* [PJRC Teensy++ 2.0] (./cores/cosa/Cosa/Board/PJRC/Teensypp_2_0.hh)
 
-## Micro Controller Units 
+## Wicked Device Boards
 
-* [ATmega 328P](http://www.atmel.com/Images/Atmel-8271-8-bit-AVR-Microcontroller-ATmega48A-48PA-88A-88PA-168A-168PA-328-328P_datasheet.pdf)
-* [ATmega 1284P](http://www.atmel.com/Images/Atmel-8272-8-bit-AVR-microcontroller-ATmega164A_PA-324A_PA-644A_PA-1284_P_datasheet.pdf)
-* [ATmega 2560](http://www.atmel.com/Images/doc2549.pdf)
-* [ATmega 32u4](http://www.atmel.com/Images/doc7766.pdf)
-* [ATtiny X4](http://www.atmel.com/Images/doc8006.pdf)
-* [ATtiny X5](http://www.atmel.com/Images/Atmel-2586-AVR-8-bit-Microcontroller-ATtiny25-ATtiny45-ATtiny85_Datasheet.pdf)
-* [ATtiny X61](http://www.atmel.com/Images/Atmel-2588-8-bit-AVR-Microcontrollers-tinyAVR-ATtiny261-ATtiny461-ATtiny861_Datasheet.pdf)
+* [Wicked Device WildFire V3] (./cores/cosa/Cosa/Board/WickedDevice/WildFire.hh)
