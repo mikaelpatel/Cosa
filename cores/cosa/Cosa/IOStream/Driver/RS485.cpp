@@ -53,10 +53,10 @@ int
 RS485::send(const void* buf, size_t len, uint8_t dest)
 {
   // Check illegal message size, address and state
-  if (len == 0 || len > PAYLOAD_MAX) return (-1);
-  if (dest == m_addr) return (-2);
-  if (m_addr != MASTER && dest != MASTER) return (-3);
-  if (m_de.is_set()) return (-4);
+  if (len == 0 || len > PAYLOAD_MAX) return (EINVAL);
+  if (dest == m_addr) return (EINVAL);
+  if (m_addr != MASTER && dest != MASTER) return (EINVAL);
+  if (m_de.is_set()) return (EINVAL);
 
   // Build message header and calculate payload check-sum
   header_t header;
@@ -69,10 +69,10 @@ RS485::send(const void* buf, size_t len, uint8_t dest)
   // Write message; SOT, header, payload and crc
   m_de.set();
   DELAY(100);
-  if (putchar(SOT) < 0) return (-5);
-  if (write(&header, sizeof(header)) != (int) sizeof(header)) return (-5);
-  if (write(buf, len) != (int) len) return (-5);
-  if (write(&crc, sizeof(crc)) != sizeof(crc)) return (-5);
+  if (putchar(SOT) < 0) return (EIO);
+  if (write(&header, sizeof(header)) != (int) sizeof(header)) return (EIO);
+  if (write(buf, len) != (int) len) return (EIO);
+  if (write(&crc, sizeof(crc)) != sizeof(crc)) return (EIO);
   return (len);
 }
 
@@ -87,14 +87,14 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
   case 0: // Wait for transmission to complete and start symbol
     while (m_de.is_set()) Power::sleep(SLEEP_MODE_IDLE);
     while (getchar() != SOT) {
-      if ((ms != 0) && (RTC::millis() - start > ms)) return (-2);
+      if ((ms != 0) && (RTC::millis() - start > ms)) return (ETIME);
       yield();
     }
     m_state = 1;
 
   case 1: // Read message header and verify header check-sum
     while (available() != sizeof(header_t)) {
-      if ((ms != 0) && (RTC::millis() - start > ms)) return (-2);
+      if ((ms != 0) && (RTC::millis() - start > ms)) return (ETIME);
       yield();
     }
     m_state = 2;
@@ -105,7 +105,7 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
 
   case 2: // Read message payload and verify payload check-sum
     while (available() != (int) (m_header.length + sizeof(crc))) {
-      if ((ms != 0) && (RTC::millis() - start > ms)) return (-2);
+      if ((ms != 0) && (RTC::millis() - start > ms)) return (ETIME);
       yield();
     }
     m_state = 3;
@@ -127,6 +127,6 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
   // Something went wrong; flush buffer and signal data error
   m_ibuf.empty();
   m_state = 0;
-  return (-1);
+  return (EFAULT);
 }
 #endif

@@ -173,9 +173,9 @@ int
 CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
-  if (vec == NULL) return (-1);
+  if (vec == NULL) return (EINVAL);
   size_t len = iovec_size(vec);
-  if (len > PAYLOAD_MAX) return (-1);
+  if (len > PAYLOAD_MAX) return (EMSGSIZE);
 
   // Write frame length and header(dest, src, port) and payload buffers
   spi.acquire(this);
@@ -221,7 +221,7 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
     while (!m_avail && ((ms == 0) || (RTC::since(start) < ms))) yield();
     if (!m_avail) {
       strobe(SIDLE);
-      return (-2);
+      return (ETIME);
     }
     // Check the received frame size
     spi.acquire(this);
@@ -245,7 +245,7 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 	spi.end();
 	spi.release();
 	strobe(SFRX);
-	return (-1);
+	return (EMSGSIZE);
       }
 
       // Read the frame header(dest, src, port), payload and link quality status

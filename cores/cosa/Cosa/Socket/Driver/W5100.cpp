@@ -251,7 +251,7 @@ W5100::Driver::available()
   if ((status == SR_LISTEN)
       || (status == SR_CLOSED)
       || (status == SR_CLOSE_WAIT))
-    return (-1);
+    return (EINVAL);
   return (0);
 }
 
@@ -284,7 +284,7 @@ W5100::Driver::flush()
   if ((status == SR_LISTEN)
       || (status == SR_CLOSED)
       || (status == SR_CLOSE_WAIT))
-    return (-1);
+    return (EINVAL);
   if (m_tx_len == 0) return (0);
 
   // Update transmit buffer pointer and issue send command
@@ -301,7 +301,7 @@ W5100::Driver::flush()
   } while ((ir & (IR_SEND_OK | IR_TIMEOUT)) == 0);
   m_dev->write(M_SREG(IR), (IR_SEND_OK | IR_TIMEOUT));
   dev_setup();
-  if (ir & IR_TIMEOUT) return (-1);
+  if (ir & IR_TIMEOUT) return (ETIME);
   return (0);
 }
 
@@ -309,7 +309,7 @@ int
 W5100::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
 {
   // Check if the socket is already in use
-  if (m_proto != 0) return (-2);
+  if (m_proto != 0) return (EPROTO);
 
   // Set protocol and port and issue open command
   m_dev->write(M_SREG(MR), proto | (flag & MR_FLAG_MASK));
@@ -336,7 +336,7 @@ W5100::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
       || ((proto == IPRAW) && (status != SR_IPRAW))
       || ((proto == MACRAW) && (status != SR_MACRAW))
       || ((proto == PPPoE) && (status != SR_PPPoE)))
-    return (-1);
+    return (EPROTO);
 
   // Mark socket as in use
   m_proto = proto;
@@ -347,7 +347,7 @@ int
 W5100::Driver::close()
 {
   // Check if the socket is not in use
-  if (m_proto == 0) return (-2);
+  if (m_proto == 0) return (EPROTO);
 
   // Issue close command and clear pending interrupts on socket
   m_dev->issue(M_SREG(CR), CR_CLOSE);
@@ -362,20 +362,20 @@ int
 W5100::Driver::listen()
 {
   // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
+  if (m_proto != TCP) return (EPROTO);
   m_dev->issue(M_SREG(CR), CR_LISTEN);
   if (m_dev->read(M_SREG(SR)) == SR_LISTEN) return (0);
-  return (-1);
+  return (EFAULT);
 }
 
 int
 W5100::Driver::accept()
 {
   // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
+  if (m_proto != TCP) return (EPROTO);
   uint8_t status = m_dev->read(M_SREG(SR));
-  if ((status == SR_LISTEN) || (status == SR_ARP)) return (-3);
-  if (status != SR_ESTABLISHED) return (-1);
+  if ((status == SR_LISTEN) || (status == SR_ARP)) return (EFAULT);
+  if (status != SR_ESTABLISHED) return (EFAULT);
 
   // Get connecting client address and setup transmit buffer
   int16_t dport;
@@ -391,8 +391,8 @@ int
 W5100::Driver::connect(uint8_t addr[4], uint16_t port)
 {
   // Check that the socket is in TCP mode and address/port
-  if (m_proto != TCP) return (-2);
-  if (INET::is_illegal(addr, port)) return (-1);
+  if (m_proto != TCP) return (EPROTO);
+  if (INET::is_illegal(addr, port)) return (EINVAL);
 
   // Set server address and port
   port = swap(port);
@@ -406,9 +406,9 @@ int
 W5100::Driver::connect(const char* hostname, uint16_t port)
 {
   DNS dns;
-  if (!dns.begin(m_dev->socket(Socket::UDP), m_dev->m_dns)) return (-3);
+  if (!dns.begin(m_dev->socket(Socket::UDP), m_dev->m_dns)) return (EPERM);
   uint8_t dest[4];
-  if (dns.gethostbyname(hostname, dest) != 0) return (-4);
+  if (dns.gethostbyname(hostname, dest) != 0) return (EINVAL);
   return (connect(dest, port));
 }
 
@@ -416,9 +416,9 @@ int
 W5100::Driver::is_connected()
 {
   // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
+  if (m_proto != TCP) return (EPROTO);
   uint8_t ir = m_dev->read(M_SREG(IR));
-  if (ir & IR_TIMEOUT) return (-1);
+  if (ir & IR_TIMEOUT) return (ETIME);
   if ((ir & IR_CON) == 0) return (0);
   dev_setup();
   return (1);
@@ -428,7 +428,7 @@ int
 W5100::Driver::disconnect()
 {
   // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
+  if (m_proto != TCP) return (EPROTO);
   m_dev->issue(M_SREG(CR), CR_DISCON);
   dev_flush();
   return (0);
@@ -440,7 +440,7 @@ W5100::Driver::datagram(uint8_t addr[4], uint16_t port)
   // Check that the socket is in UDP/IPRAW/MACRAW mode
   if ((m_proto != UDP)
       && (m_proto != IPRAW)
-      && (m_proto != MACRAW)) return (-2);
+      && (m_proto != MACRAW)) return (EPROTO);
 
   // Setup hardware transmit address registers
   port = swap(port);
@@ -454,7 +454,7 @@ int
 W5100::Driver::recv(void* buf, size_t len)
 {
   // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (-2);
+  if (m_proto != TCP) return (EPROTO);
   if (len == 0) return (0);
 
   // Check if data has been received
@@ -468,7 +468,7 @@ W5100::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
   if ((m_proto != UDP)
       && (m_proto != IPRAW)
       && (m_proto != MACRAW))
-    return (-2);
+    return (EPROTO);
   if (len == 0) return (0);
 
   uint8_t header[8];
@@ -479,7 +479,7 @@ W5100::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
   switch (m_dev->read(M_SREG(MR)) & MR_PROTO_MASK) {
   case MR_PROTO_UDP:
     res = dev_read(header, 8);
-    if (res != 8) return (-1);
+    if (res != 8) return (EIO);
     memcpy(src, header, 4);
     port = (header[4] << 8) | header[5];
     size = (header[6] << 8) | header[7];
@@ -488,7 +488,7 @@ W5100::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
     break;
   case MR_PROTO_IPRAW :
     res = dev_read(header, 6);
-    if (res != 6) return (-1);
+    if (res != 6) return (EIO);
     memcpy(src, header, 4);
     port = 0;
     size = (header[4] << 8) | header[5];
@@ -497,7 +497,7 @@ W5100::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
     break;
   case MR_PROTO_MACRAW:
     res = dev_read(header, 2);
-    if (res != 2) return (-1);
+    if (res != 2) return (EIO);
     memset(src, 0, 4);
     port = 0;
     size = (header[0] << 8) | header[1];
@@ -519,7 +519,7 @@ W5100::Driver::write(const void* buf, size_t len, bool progmem)
 {
   if ((m_proto == TCP)
       && (m_dev->read(M_SREG(SR)) != SR_ESTABLISHED))
-    return (-3);
+    return (EPROTO);
   if (len == 0) return (0);
   const uint8_t* bp = (const uint8_t*) buf;
   int size = len;
@@ -540,7 +540,7 @@ W5100::Driver::send(const void* buf, size_t len, bool progmem)
 {
   int res = write(buf, len, progmem);
   if (res < 0) return (res);
-  return (flush() ? -4 : res);
+  return (flush() ? ENXIO : res);
 }
 
 int
@@ -548,7 +548,7 @@ W5100::Driver::send(const void* buf, size_t len,
 		    uint8_t dest[4], uint16_t port,
 		    bool progmem)
 {
-  if (datagram(dest, port) < 0) return (-1);
+  if (datagram(dest, port) < 0) return (EIO);
   return (send(buf, len, progmem));
 }
 

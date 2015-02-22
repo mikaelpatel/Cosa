@@ -153,7 +153,7 @@ public:
   static int get_length(item_list_P list)
     __attribute__((always_inline))
   {
-    if (get_type(&list->item) != ITEM_LIST) return (-1);
+    if (get_type(&list->item) != ITEM_LIST) return (EINVAL);
     return ((int) pgm_read_byte(&list->length));
   }
 

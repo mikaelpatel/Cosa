@@ -125,7 +125,7 @@ int
 CC3000::Driver::room()
 {
   // Check room in send buffer
-  return (-1);
+  return (ENOSYS);
 }
 
 int
@@ -141,7 +141,7 @@ int
 CC3000::Driver::flush()
 {
   // Force send of buffered message
-  return (-1);
+  return (ENOSYS);
 }
 
 int
@@ -150,7 +150,7 @@ CC3000::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
   UNUSED(proto);
   UNUSED(port);
   UNUSED(flag);
-  return (-1);
+  return (ENOSYS);
 }
 
 int
@@ -182,13 +182,13 @@ CC3000::Driver::connect(const char* hostname, uint16_t port)
 {
   UNUSED(hostname);
   UNUSED(port);
-  return (-1);
+  return (ENOSYS);
 }
 
 int
 CC3000::Driver::is_connected()
 {
-  return (-1);
+  return (ENOSYS);
 }
 
 int
@@ -202,7 +202,7 @@ CC3000::Driver::datagram(uint8_t addr[4], uint16_t port)
 {
   UNUSED(addr);
   UNUSED(port);
-  return (-1);
+  return (ENOSYS);
 }
 
 int
@@ -218,7 +218,7 @@ CC3000::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
   UNUSED(len);
   UNUSED(src);
   UNUSED(port);
-  return (-1);
+  return (ENOSYS);
 }
 
 int
@@ -227,13 +227,13 @@ CC3000::Driver::write(const void* buf, size_t size, bool progmem)
   UNUSED(buf);
   UNUSED(size);
   UNUSED(progmem);
-  return (-1);
+  return (ENOSYS);
 }
 
 int
 CC3000::Driver::send(const void* buf, size_t len, bool progmem)
 {
-  if (progmem) return (-1);
+  if (progmem) return (ENOSYS);
   return (m_dev->send(m_hndl, buf, len));
 }
 
@@ -247,7 +247,7 @@ CC3000::Driver::send(const void* buf, size_t len,
   UNUSED(dest);
   UNUSED(port);
   UNUSED(progmem);
-  return (-1);
+  return (ENOSYS);
 }
 
 bool
@@ -357,9 +357,9 @@ int
 CC3000::wlan_connect(Security type, str_P ssid, str_P bssid, str_P key)
 {
   // Check arguments
-  if (type > WPA2_SECURITY_TYPE) return (-EINVAL);
-  if (strlen_P(ssid) > HCI_CMND_WLAN_CONNECT_SSID_MAX) return (-EINVAL);
-  if (strlen_P(key) > HCI_CMND_WLAN_CONNECT_KEY_MAX) return (-EINVAL);
+  if (type > WPA2_SECURITY_TYPE) return (EINVAL);
+  if (strlen_P(ssid) > HCI_CMND_WLAN_CONNECT_SSID_MAX) return (EINVAL);
+  if (strlen_P(key) > HCI_CMND_WLAN_CONNECT_KEY_MAX) return (EINVAL);
 
   // Build command block and calculate length
   hci_cmnd_wlan_connect_t cmnd(type, ssid, bssid, key);
@@ -375,7 +375,7 @@ CC3000::wlan_connect(Security type, str_P ssid, str_P bssid, str_P key)
   res = await(HCI_EVNT_WLAN_CONNECT, &evnt, sizeof(evnt));
   m_timeout = saved;
   if (res < 0) return (res);
-  return (((evnt.status != 0) || (evnt.result != 0)) ? -EFAULT : 0);
+  return (((evnt.status != 0) || (evnt.result != 0)) ? EFAULT : 0);
 }
 
 const CC3000::hci_cmnd_wlan_ioctl_set_scanparam_t
@@ -423,7 +423,7 @@ CC3000::wlan_ioctl_set_scanparam(const hci_cmnd_wlan_ioctl_set_scanparam_t* para
   res = await(HCI_EVNT_WLAN_IOCTL_SET_SCANPARAM, &evnt, sizeof(evnt));
   m_timeout = saved;
   if (res < 0) return (res);
-  return (((evnt.status != 0) || (evnt.result != 0)) ? -EFAULT : 0);
+  return (((evnt.status != 0) || (evnt.result != 0)) ? EFAULT : 0);
 }
 
 int
@@ -435,7 +435,7 @@ CC3000::wlan_ioctl_statusget()
   hci_evnt_wlan_ioctl_statusget_t evnt;
   res = await(HCI_EVNT_WLAN_IOCTL_STATUSGET, &evnt, sizeof(evnt));
   if (res < 0) return (res);
-  if (evnt.status != 0) return (-EFAULT);
+  if (evnt.status != 0) return (EFAULT);
   return (evnt.wlan_status);
 }
 
@@ -452,7 +452,7 @@ CC3000::wlan_ioctl_set_connection_policy(bool should_connect_to_open_ap,
   hci_evnt_wlan_ioctl_set_connection_policy_t evnt;
   res = await(HCI_EVNT_WLAN_IOCTL_SET_CONNECTION_POLICY, &evnt, sizeof(evnt));
   if (res < 0) return (res);
-  if (evnt.status != 0) return (-EFAULT);
+  if (evnt.status != 0) return (EFAULT);
   return (res);
 }
 
@@ -465,7 +465,7 @@ CC3000::wlan_ioctl_get_scan_results(hci_evnt_wlan_ioctl_get_scan_results_t& evnt
 
   res = await(HCI_EVNT_WLAN_IOCTL_GET_SCAN_RESULTS, &evnt, sizeof(evnt));
   if (res < 0) return (res);
-  if (evnt.status != 0) return (-EFAULT);
+  if (evnt.status != 0) return (EFAULT);
   return (evnt.network_id);
 }
 
@@ -486,7 +486,7 @@ CC3000::nvmem_read(uint8_t fileid, void* dst, uint32_t src, size_t length)
   if ((args.fileid != fileid)
       || (args.length != length)
       || (args.offset != src))
-    return (-EFAULT);
+    return (EFAULT);
   return (res);
 }
 
@@ -555,7 +555,7 @@ CC3000::read_sp_version(uint8_t &package_id, uint8_t &package_build_nr)
 int
 CC3000::socket(int domain, int type, int protocol)
 {
-  if (domain != AF_INET) return (-EINVAL);
+  if (domain != AF_INET) return (EINVAL);
   hci_cmnd_socket_t cmnd(domain, type, protocol);
   int res = issue(HCI_CMND_SOCKET, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
@@ -563,7 +563,7 @@ CC3000::socket(int domain, int type, int protocol)
   hci_evnt_socket_t evnt;
   res = await(HCI_EVNT_SOCKET, &evnt, sizeof(evnt));
   if (res < 0) return (res);
-  if (evnt.status != 0) return (-EFAULT);
+  if (evnt.status != 0) return (EFAULT);
   return (evnt.handle);
 }
 
@@ -577,7 +577,7 @@ CC3000::setsockopt(int hndl, int level, int optname, const void* optval, size_t 
   hci_evnt_setsockopt_t evnt;
   res = await(HCI_EVNT_SETSOCKOPT, &evnt, sizeof(evnt));
   if (res < 0) return (res);
-  if (evnt.status != 0) return (-EFAULT);
+  if (evnt.status != 0) return (EFAULT);
   return (0);
 }
 
@@ -594,7 +594,7 @@ CC3000::select(int hndls,
   hci_evnt_select_t evnt;
   res = await(HCI_EVNT_SELECT, &evnt, sizeof(evnt));
   if (res < 0) return (res);
-  if (evnt.status != 0) return (-EFAULT);
+  if (evnt.status != 0) return (EFAULT);
   readhndls = evnt.read_set;
   writehndls = evnt.write_set;
   errorhndls = evnt.error_set;
@@ -611,9 +611,9 @@ CC3000::connect(int hndl, uint8_t ip[4], int port)
   hci_evnt_connect_t evnt;
   res = await(HCI_EVNT_CONNECT, &evnt, sizeof(evnt));
   if (res < 0) return (res);
-  if (evnt.status != 0) return (-EFAULT);
+  if (evnt.status != 0) return (EFAULT);
   res = evnt.result;
-  if (!set_socket_state(res, true)) return (-EFAULT);
+  if (!set_socket_state(res, true)) return (EFAULT);
   return (res);
 }
 
@@ -626,10 +626,10 @@ CC3000::recv(int hndl, void* buf, size_t size)
   hci_evnt_recv_t evnt;
   for (uint8_t retry = 0; retry < 3; retry++) {
     res = await(HCI_EVNT_RECV, &evnt, sizeof(evnt));
-    if (res != -ENOMSG) break;
+    if (res != ENOMSG) break;
   }
   if (res < 0) return (res);
-  if (evnt.handle != hndl) return (-EFAULT);
+  if (evnt.handle != hndl) return (EFAULT);
   if (evnt.count == 0) return (0);
 
   uint32_t start = RTC::millis();
@@ -637,9 +637,9 @@ CC3000::recv(int hndl, void* buf, size_t size)
   hci_data_recv_t args;
   do {
     while (!m_available && (RTC::since(start) < TIMEOUT)) yield();
-    if (!m_available) return (-ETIME);
+    if (!m_available) return (ETIME);
     res = read_data(HCI_DATA_RECV, &args, sizeof(args), buf, evnt.count);
-  } while (res == -ENOMSG);
+  } while (res == ENOMSG);
   return (res);
 }
 
@@ -654,7 +654,7 @@ CC3000::send(int hndl, const void* buf, size_t size)
   hci_evnt_send_t evnt;
   res = await(HCI_EVNT_SEND, &evnt, sizeof(evnt));
   if (res < 0) return (res);
-  if (evnt.handle != hndl) return (-EFAULT);
+  if (evnt.handle != hndl) return (EFAULT);
   BUFFER_COUNT -= 1;
   return (evnt.result);
 }
@@ -697,8 +697,8 @@ CC3000::accept(int hndl, uint8_t ip[4], int &port)
   res = await(HCI_EVNT_ACCEPT, &evnt, sizeof(evnt));
   if (res < 0) return (res);
   res = evnt.handle;
-  if (evnt.result < 0) return (-EFAULT);
-  if (!set_socket_state(res, true)) return (-EFAULT);
+  if (evnt.result < 0) return (EFAULT);
+  if (!set_socket_state(res, true)) return (EFAULT);
   memrevcpy(ip, evnt.ip, sizeof(evnt.ip));
   port = evnt.port;
   m_socket[res].m_hndl = res;
@@ -708,16 +708,16 @@ CC3000::accept(int hndl, uint8_t ip[4], int &port)
 int
 CC3000::close(int hndl)
 {
-  service(100);
+  service(300);
   hci_cmnd_close_socket_t cmnd(hndl);
   int res = issue(HCI_CMND_CLOSE_SOCKET, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
   hci_evnt_close_socket_t evnt;
   do {
     res = await(HCI_EVNT_CLOSE_SOCKET, &evnt, sizeof(evnt));
-  } while (res == -ENOMSG);
+  } while (res == ENOMSG);
   if (res < 0) return (res);
-  if (evnt.status != 0) return (-EFAULT);
+  if (evnt.status != 0) return (EFAULT);
   return (evnt.result);
 }
 #endif

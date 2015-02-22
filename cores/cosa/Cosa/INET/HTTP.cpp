@@ -46,7 +46,7 @@ HTTP::Server::run(uint32_t ms)
   while (((res = m_sock->accept()) != 0) &&
 	 ((ms == 0L) || (Watchdog::millis() - start < ms)))
     yield();
-  if (res != 0) return (-2);
+  if (res != 0) return (ETIME);
   start = Watchdog::millis();
   while (((res = m_sock->available()) == 0) &&
 	 ((ms == 0L) || (Watchdog::millis() - start < ms)))
@@ -103,7 +103,7 @@ HTTP::Client::end()
 int
 HTTP::Client::get(const char* url, uint32_t ms)
 {
-  if (m_sock == NULL) return (-1);
+  if (m_sock == NULL) return (ENOTSOCK);
   const uint8_t PREFIX_MAX = 7;
   uint16_t port = 80;
   char hostname[HOSTNAME_MAX];
@@ -122,7 +122,7 @@ HTTP::Client::get(const char* url, uint32_t ms)
     url += 1;
     if ((c == '/') || (c == ':')) break;
     i += 1;
-    if (i == sizeof(hostname)) return (-2);
+    if (i == sizeof(hostname)) return (E2BIG);
   }
   if (c != 0) hostname[i] = 0;
 
@@ -133,9 +133,9 @@ HTTP::Client::get(const char* url, uint32_t ms)
     while (isdigit(c = *url)) {
       url += 1;
       num[i++] = c;
-      if (i == sizeof(num)) return (-2);
+      if (i == sizeof(num)) return (E2BIG);
     }
-    if (i == 0) return (-2);
+    if (i == 0) return (EINVAL);
     num[i] = 0;
     port = atoi(num);
     if (c == '/') url += 1;
@@ -145,7 +145,6 @@ HTTP::Client::get(const char* url, uint32_t ms)
   res = m_sock->connect((const char*) hostname, port);
   if (res != 0) goto error;
   while ((res = m_sock->is_connected()) == 0) delay(16);
-  if (res == 0) res = -3;
   if (res < 0) goto error;
 
   // Send a HTTP request
@@ -161,7 +160,7 @@ HTTP::Client::get(const char* url, uint32_t ms)
   while (((res = m_sock->available()) == 0) &&
 	 ((ms == 0L) || (Watchdog::millis() - start < ms)))
     delay(16);
-  if (res == 0) res = -4;
+  if (res == 0) res = ETIME;
   if (res < 0) goto error;
   on_response(hostname, url);
   res = 0;

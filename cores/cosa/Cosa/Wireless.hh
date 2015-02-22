@@ -181,9 +181,7 @@ public:
     /**
      * @override Wireless::Driver
      * Send message in given null terminated io vector. Returns number
-     * of bytes sent. Returns error code(-1) if number of bytes is
-     * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
-     * transmit mode. Note that port numbers (128 and higher are
+     * of bytes sent if successful otherwise a negative error code.
      * reserved for system protocols).
      * @param[in] dest destination network address.
      * @param[in] port device port (or message type).
@@ -195,10 +193,7 @@ public:
     /**
      * @override Wireless::Driver
      * Send message in given buffer, with given number of bytes. Returns
-     * number of bytes sent. Returns error code(-1) if number of bytes
-     * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
-     * set transmit mode. Note that port numbers (128 and higher are
-     * reserved for system protocols).
+     * number of bytes sent if successful otherwise a negative error code.
      * @param[in] dest destination network address.
      * @param[in] port device port (or message type).
      * @param[in] buf buffer to transmit.
@@ -217,10 +212,7 @@ public:
     /**
      * @override Wireless::Driver
      * Broadcast message in given null terminated io vector. Returns
-     * number of bytes sent. Returns error code(-1) if number of bytes
-     * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
-     * set transmit mode. Note that port numbers (128 and higher are
-     * reserved for system protocols).
+     * number of bytes sent if successful otherwise a negative error code.
      * @param[in] port device port (or message type).
      * @param[in] vec null termianted io vector.
      * @return number of bytes send or negative error code.
@@ -233,10 +225,8 @@ public:
     /**
      * @override Wireless::Driver
      * Boardcast message in given buffer, with given number of bytes.
-     * Returns number of bytes sent. Returns error code(-1) if number
-     * of bytes is greater than PAYLOAD_MAX. Return error code(-2) if
-     * fails to set transmit mode. Note that port numbers (128 and
-     * higher are reserved for system protocols).
+     * Returns number of bytes sent if successful otherwise a negative
+     * error code.
      * @param[in] port device port (or message type).
      * @param[in] buf buffer to transmit.
      * @param[in] len number of bytes in buffer.
@@ -251,11 +241,8 @@ public:
      * @override Wireless::Driver
      * Receive message and store into given buffer with given maximum
      * length. The source network address is returned in the parameter
-     * src. Returns error code(-2) if no message is available and/or a
-     * timeout occured. Returns error code(-1) if the buffer size if
-     * to small for incoming message or if the receiver fifo has
-     * overflowed. Otherwise the actual number of received bytes is
-     * returned
+     * src. Returns the number of received bytes or a negative error
+     * code.
      * @param[out] src source network address.
      * @param[out] port device port (or message type).
      * @param[in] buf buffer to store incoming message.

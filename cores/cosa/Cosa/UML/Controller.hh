@@ -67,7 +67,8 @@ public:
   {
     Capsule* capsule;
     while((capsule = (Capsule*) pgm_read_word(capsules++)) != NULL) {
-      if (schedule(capsule) < 0) return (-1);
+      int res = schedule(capsule);
+      if (res < 0) return (res);
     }
     return (0);
   }
@@ -80,7 +81,7 @@ public:
    */
   int schedule(Capsule* capsule)
   {
-    if (m_available == QUEUE_MAX) return (-1);
+    if (m_available == QUEUE_MAX) return (ENOMEM);
     synchronized {
       uint16_t ix = m_get;
       while (ix != m_put) {

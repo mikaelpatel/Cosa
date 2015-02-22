@@ -254,7 +254,7 @@ TWI::request(uint8_t op)
   int count = 0;
 
   // Send start condition and write address
-  if (!start()) return (-1);
+  if (!start()) return (EFAULT);
   m_scl.clear();
   transfer(m_dev->m_addr | is_read);
   set_mode(IOPin::INPUT_MODE);
@@ -281,7 +281,7 @@ TWI::request(uint8_t op)
   }
 
  nack:
-  if (!stop()) return (-1);
+  if (!stop()) return (EFAULT);
   return (count);
 }
 

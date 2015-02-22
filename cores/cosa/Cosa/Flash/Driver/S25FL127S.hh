@@ -96,7 +96,8 @@ public:
    * chip. The default configuration consists of 16X4 KB sectors from
    * low address followed by 255X64 KB sectors. The highest sector is
    * reserved. Returs zero(0) if successful otherwise an negative
-   * error code(-1).
+   * error code (EINVAL on illegal sector size, EFAULT if not
+   * successful).
    * @param[in] dest destination block byte address to erase.
    * @return zero or negative error code.
    */
@@ -106,7 +107,7 @@ public:
    * @override Flash::Device
    * Write flash block at given destination address with the contents
    * of the source buffer. Return number of bytes written or negative
-   * error code.
+   * error code (EFAULT if not successful).
    * @param[in] dest address in flash to write to.
    * @param[in] src buffer to write to flash.
    * @param[in] size number of bytes to write.
@@ -118,7 +119,7 @@ public:
    * @override Flash::Device
    * Write flash block at given destination address with contents
    * of the source buffer in program memory. Return number of bytes
-   * written or negative error code.
+   * written or negative error code (EFAULT is not successful).
    * @param[in] buf buffer to write.
    * @param[in] size number of bytes to write.
    * @return number of bytes written or EOF(-1).

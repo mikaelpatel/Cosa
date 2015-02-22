@@ -62,6 +62,7 @@ S25FL127S::read(void* dest, uint32_t src, size_t size)
 {
   // Use READ with 24-bit address; Big-endian
   uint8_t* sp = (uint8_t*) &src;
+  int res = (int) size;
   spi.acquire(this);
     spi.begin();
       spi.transfer(READ);
@@ -73,7 +74,7 @@ S25FL127S::read(void* dest, uint32_t src, size_t size)
   spi.release();
 
   // Return number of bytes read
-  return ((int) size);
+  return (res);
 }
 
 int
@@ -84,7 +85,7 @@ S25FL127S::erase(uint32_t dest, uint8_t size)
   case 4: op = P4E; break;
   case 64: op = SER; break;
   case 255: op = BER; break;
-  default: return (-1);
+  default: return (EINVAL);
   }
   spi.acquire(this);
     // Write enable before page erase.
@@ -107,7 +108,7 @@ S25FL127S::erase(uint32_t dest, uint8_t size)
   while (!is_ready()) yield();
 
   // Return error code(-1) if erase error otherwise zero
-  return (m_status.E_ERR ? -1 : 0);
+  return (m_status.E_ERR ? EFAULT : 0);
 }
 
 int
@@ -145,7 +146,7 @@ S25FL127S::write(uint32_t dest, const void* src, size_t size)
     while (!is_ready()) yield();
 
     // Check for program error
-    if (m_status.P_ERR) return (-1);
+    if (m_status.P_ERR) return (EFAULT);
 
     // Step to next page
     size -= count;
@@ -194,7 +195,7 @@ S25FL127S::write_P(uint32_t dest, const void* src, size_t size)
     while (!is_ready()) yield();
 
     // Check for program error
-    if (m_status.P_ERR) return (-1);
+    if (m_status.P_ERR) return (EFAULT);
 
     // Step to next page
     size -= count;

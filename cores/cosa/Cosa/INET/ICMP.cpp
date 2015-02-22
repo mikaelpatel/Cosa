@@ -25,7 +25,7 @@ int
 ICMP::ping_request(uint8_t dest[4])
 {
   // Check given socket
-  if (m_sock == NULL) return (-1);
+  if (m_sock == NULL) return (ENOTSOCK);
 
   // Build echo request block
   header_t req;
@@ -47,7 +47,7 @@ int
 ICMP::ping_await(uint16_t timeout)
 {
   // Check given socket
-  if (m_sock == NULL) return (-1);
+  if (m_sock == NULL) return (ENOTSOCK);
   header_t reply;
   uint8_t src[4];
   uint16_t port;
@@ -60,7 +60,7 @@ ICMP::ping_await(uint16_t timeout)
   }
 
   // Check size of reply before actually recieving
-  if (res < (int) sizeof(reply)) return (-1);
+  if (res < (int) sizeof(reply)) return (EFAULT);
   res = m_sock->recv(&reply, sizeof(reply), src, port);
   if (res < 0) return (res);
 
@@ -70,6 +70,6 @@ ICMP::ping_await(uint16_t timeout)
       || (reply.echo.id != m_id)
       || (reply.echo.seq != m_seq)
       || (INET::checksum(&reply, sizeof(reply)) != 0))
-    return (-1);
+    return (ENXIO);
   return (RTC::millis() - reply.timestamp);
 }

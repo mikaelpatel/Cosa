@@ -121,7 +121,7 @@ Base64::encode(IOStream::Device* dest, const void* src, size_t size)
     dest->putchar(encode(temp.c1));
     dest->putchar(encode(temp.c0));
     res = res + 4;
-    if ((res & 0x3f) == 0) dest->puts(PSTR("\r\n"));
+    if ((res & 0x3f) == 0) dest->puts((str_P) IOStream::CRLF);
   }
 
   // Pad and encode any remaining bytes with possible line break
@@ -181,7 +181,7 @@ int
 Base64::decode(void* dest, const char* src, size_t size)
 {
   // Check for illegal length (even 4 character blocks)
-  if (size & 0x3) return (-1);
+  if (size & 0x3) return (EINVAL);
 
   uint8_t* dp = (uint8_t*) dest;
   const char* sp = src;

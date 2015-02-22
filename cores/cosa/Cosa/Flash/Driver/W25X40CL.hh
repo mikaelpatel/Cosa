@@ -94,9 +94,9 @@ public:
    * erased sector/block is either 4/32/64 KB or 255 for chip
    * erase. The flash memory consists of 128 X 4 KB sectors. The
    * highest sector is reserved. Returs zero(0) if successful
-   * otherwise an negative error code(-1).
+   * otherwise an negative error code (EINVAL if illegal sector size).
    * @param[in] dest destination block byte address to erase.
-   * @param[in] size of sector to erase in Kbyte (.
+   * @param[in] size of sector to erase in Kbyte (Default 4 KByte).
    * @return zero or negative error code.
    */
   virtual int erase(uint32_t dest, uint8_t size = 4);

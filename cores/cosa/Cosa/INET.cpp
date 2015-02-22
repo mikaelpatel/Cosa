@@ -50,12 +50,12 @@ INET::aton(const char* addr, uint8_t ip[4], bool progmem)
     while (isdigit(c = (progmem ? pgm_read_byte(ap++) : *ap++)))
       r = (r * 10) + (c - '0');
     if (c != 0) {
-      if (c != '.') return (-1);
+      if (c != '.') return (EINVAL);
     }
     else {
-      if (i < IP_MAX - 1) return (-1);
+      if (i < IP_MAX - 1) return (E2BIG);
     }
-    if (r > 255) return (-1);
+    if (r > 255) return (EOVERFLOW);
     ip[i] = r;
   }
   return (0);
@@ -72,7 +72,7 @@ INET::nametopath(const char* hostname, char* path, bool progmem)
   while (res < PATH_MAX) {
     char c = (progmem ? pgm_read_byte(hp++) : *hp++);
     if (c == 0 || c == '.') {
-      if (n == 0) return (-1);
+      if (n == 0) return (EINVAL);
       *sp = n;
       res += n + 1;
       sp = np++;
@@ -87,7 +87,7 @@ INET::nametopath(const char* hostname, char* path, bool progmem)
       n++;
     }
   }
-  return (-2);
+  return (EINVAL);
 }
 
 void
@@ -178,7 +178,7 @@ INET::Server::run(uint32_t ms)
 {
   // Sanity check server state
   Socket* sock = get_socket();
-  if (sock == NULL) return (-1);
+  if (sock == NULL) return (ENOTSOCK);
 
   // When not connected; Check incoming connect requests
   uint32_t start = Watchdog::millis();
@@ -187,7 +187,7 @@ INET::Server::run(uint32_t ms)
     while (((res = sock->accept()) != 0) &&
 	   ((ms == 0L) || (Watchdog::since(start) < ms)))
       yield();
-    if (res != 0) return (-2);
+    if (res != 0) return (ETIME);
     // Check if application accepts the connection
     if (!on_accept(m_ios)) goto error;
     // Run application connect
@@ -230,4 +230,3 @@ INET::Server::end()
   m_connected = false;
   return (true);
 }
-

@@ -211,8 +211,7 @@ Shell::help_command(IOStream& outs, uint8_t column, const command_t* command)
 {
   uint8_t remains = column;
 
-  if (!command)
-    return (-1);
+  if (!command) return (EINVAL);
 
   str_P help = (str_P) pgm_read_word(&command->help);
   if (help == NULL) return (0);
@@ -221,8 +220,7 @@ Shell::help_command(IOStream& outs, uint8_t column, const command_t* command)
   str_P args = (str_P) pgm_read_word(&command->args);
 
   outs << name;
-  if (remains)
-    remains -= strlen_P(name);
+  if (remains) remains -= strlen_P(name);
 
   if (args) {
     outs << ' ' << args;
@@ -230,8 +228,7 @@ Shell::help_command(IOStream& outs, uint8_t column, const command_t* command)
       remains -= 1 + strlen_P(args);
   }
 
-  if (!column)
-    remains++;
+  if (!column) remains++;
 
   if (remains) {
     outs << ' ';

@@ -82,12 +82,12 @@ int
 Registry::run(action_P action, void* buf, size_t size)
 {
   // Sanity check the parameters
-  if (action == NULL) return (-EINVAL);
-  if (pgm_read_byte(&action->item.type) != ACTION) return (-EINVAL);
+  if (action == NULL) return (EINVAL);
+  if (pgm_read_byte(&action->item.type) != ACTION) return (EINVAL);
 
   // Access the action object
   Action* obj = (Action*) pgm_read_word(&action->obj);
-  if (obj == NULL) return (-ENXIO);
+  if (obj == NULL) return (EINVAL);
 
   // And run the member function
   return (obj->run(buf, size));
@@ -98,13 +98,13 @@ Registry::get_value(blob_P blob, void* buf, size_t len)
 {
   // Sanity check the parameters
   if (len == 0) return (0);
-  if ((blob == NULL) || (buf == NULL)) return (-EINVAL);
-  if (pgm_read_byte(&blob->item.type) < BLOB) return (-EINVAL);
+  if ((blob == NULL) || (buf == NULL)) return (EINVAL);
+  if (pgm_read_byte(&blob->item.type) < BLOB) return (EINVAL);
 
   // Check size of blob
   size_t size = (size_t) pgm_read_word(&blob->size);
   if (size == 0) return (0);
-  if (size > len) return (-ENOBUFS);
+  if (size > len) return (E2BIG);
 
   // Check where the value is stored and copy into buffer
   storage_t storage = get_storage(&blob->item);
@@ -114,7 +114,7 @@ Registry::get_value(blob_P blob, void* buf, size_t len)
     memcpy(buf, (const void*) pgm_read_word(&blob->value), size);
   else if (storage == IN_EEMEM && m_eeprom != NULL)
     m_eeprom->read(buf, (const void*) pgm_read_word(&blob->value), size);
-  else return (-ENXIO);
+  else return (EINVAL);
 
   // Return the number of bytes read
   return (size);
@@ -125,14 +125,14 @@ Registry::set_value(blob_P blob, const void* buf, size_t len)
 {
   // Sanity check the parameters
   if (len == 0) return (0);
-  if ((blob == NULL) || (buf == NULL)) return (-EINVAL);
-  if (pgm_read_byte(&blob->item.type) < BLOB) return (-EINVAL);
-  if (is_readonly(&blob->item)) return (-EACCES);
+  if ((blob == NULL) || (buf == NULL)) return (EINVAL);
+  if (pgm_read_byte(&blob->item.type) < BLOB) return (EINVAL);
+  if (is_readonly(&blob->item)) return (EACCES);
 
   // Check size of blob against given value in buffer
   size_t size = (size_t) pgm_read_word(&blob->size);
   if (size == 0) return (0);
-  if (size != len) return (-ENOBUFS);
+  if (size != len) return (E2BIG);
 
   // Check where the value is stored and copy into buffer
   storage_t storage = get_storage(&blob->item);
@@ -140,7 +140,7 @@ Registry::set_value(blob_P blob, const void* buf, size_t len)
     memcpy((void*) pgm_read_word(&blob->value), buf, size);
   else if (storage == IN_EEMEM && m_eeprom != NULL)
     m_eeprom->write((void*) pgm_read_word(&blob->value), buf, size);
-  else return (-ENXIO);
+  else return (EINVAL);
 
   // Return the number of bytes written
   return (size);

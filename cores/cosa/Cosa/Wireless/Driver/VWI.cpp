@@ -169,7 +169,7 @@ VWI::Receiver::recv(uint8_t& src, uint8_t& port,
   header_t* hp = (header_t*) (m_buffer + 1);
   do {
     while (!m_done && (ms == 0 || (RTC::since(start) < ms))) yield();
-    if (!m_done) return (-2);
+    if (!m_done) return (ETIME);
 
     // Check the crc and the network and device destination address
     if (!is_valid_crc(m_buffer, m_length)
@@ -181,7 +181,7 @@ VWI::Receiver::recv(uint8_t& src, uint8_t& port,
 
   // Sanity check message length
   size_t rxlen = m_length - sizeof(header_t) - 3;
-  if (rxlen > len) return (-1);
+  if (rxlen > len) return (EMSGSIZE);
 
   // Copy payload and source device address
   memcpy(buf, m_buffer + sizeof(header_t) + 1, rxlen);
@@ -200,11 +200,11 @@ int
 VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Santiy check the io vector
-  if (vec == NULL) return (-1);
+  if (vec == NULL) return (EINVAL);
 
   // Check that the message is not too large
   size_t len = iovec_size(vec);
-  if (len > PAYLOAD_MAX) return (-1);
+  if (len > PAYLOAD_MAX) return (EMSGSIZE);
 
   uint8_t *tp = m_buffer + m_codec->PREAMBLE_MAX;
   uint16_t crc = 0xffff;
@@ -264,7 +264,7 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 int
 VWI::Transmitter::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 {
-  if (len > PAYLOAD_MAX) return (-1);
+  if (len > PAYLOAD_MAX) return (EMSGSIZE);
   iovec_t vec[2];
   iovec_t* vp = vec;
   iovec_arg(vp, buf, len);

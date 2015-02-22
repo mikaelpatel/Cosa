@@ -56,7 +56,7 @@ AT24CXX::is_ready()
 int
 AT24CXX::read(void* dest, const void* src, size_t size)
 {
-  if (!poll(src)) return (-1);
+  if (!poll(src)) return (EIO);
   int n = twi.read(dest, size);
   twi.end();
   return (n);
@@ -70,13 +70,13 @@ AT24CXX::write(void* dest, const void* src, size_t size)
   uint8_t* p = (uint8_t*) src;
   size_t n = WRITE_MAX - (((uint16_t) dest) & WRITE_MASK);
   if (n > s) n = s;
-  if (!poll(q, p, n)) return (-1);
+  if (!poll(q, p, n)) return (EIO);
   s -= n;
   while (s > 0) {
     q += n;
     p += n;
     n = (s < WRITE_MAX ? s : WRITE_MAX);
-    if (!poll(q, p, n)) return (-1);
+    if (!poll(q, p, n)) return (EIO);
     s -= n;
   }
   return (size);

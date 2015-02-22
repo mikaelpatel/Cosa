@@ -75,6 +75,7 @@ void loop()
 {
   const size_t BUF_MAX = 64;
   static uint16_t requests = 0;
+  static uint16_t errors = 0;
   uint32_t readhndls = FD_ZERO();
   uint32_t writehndls = FD_ZERO();
   uint32_t errorhndls = FD_ZERO();
@@ -179,6 +180,7 @@ void loop()
     obuf.empty();
 
     page << PSTR("Request: ") << ++requests << BR;
+    page << PSTR("Errors: ") << errors << BR;
     page << PSTR("Time: ") << RTC::seconds() << BR;
     page << (str_P) footer;
     res = wifi.send(client, obuf, obuf.available());
@@ -188,10 +190,12 @@ void loop()
   TRACE(count);
 
  error:
-  if (res < 0) TRACE(res);
+  if (res < 0) {
+    errors += 1;
+    TRACE(res);
+  }
   MEASURE("Close client connection:", 1)
-    res = wifi.close(client);
-  TRACE(res);
+    while (wifi.close(client) != 0) errors += 1;
 }
 
 

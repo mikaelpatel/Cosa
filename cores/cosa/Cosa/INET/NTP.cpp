@@ -61,7 +61,7 @@ int
 NTP::gettimeofday(time_t& time)
 {
   clock_t clock = this->time();
-  if (clock == 0L) return (-1);
+  if (clock == 0L) return (EINVAL);
   time = clock;
   return (0);
 }

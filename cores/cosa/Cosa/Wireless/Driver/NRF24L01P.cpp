@@ -208,9 +208,9 @@ int
 NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
-  if (vec == NULL) return (-1);
+  if (vec == NULL) return (EINVAL);
   size_t len = iovec_size(vec);
-  if (len > PAYLOAD_MAX) return (-1);
+  if (len > PAYLOAD_MAX) return (EMSGSIZE);
 
   // Setting transmit destination
   set_transmit_mode(dest);
@@ -260,7 +260,7 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   // Failed to delivery
   write(FLUSH_TX);
   m_drops += 1;
-  return (-2);
+  return (EIO);
 }
 
 int
@@ -296,7 +296,7 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
   // Check if there is data available on any pipe
   uint32_t start = RTC::millis();
   while (!available()) {
-    if ((ms != 0) && (RTC::since(start) > ms)) return (-2);
+    if ((ms != 0) && (RTC::since(start) > ms)) return (ETIME);
     yield();
   }
   m_dest = (m_status.rx_p_no == 1 ? m_addr.device : BROADCAST);
@@ -306,7 +306,7 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
   uint8_t count = read(R_RX_PL_WID) - 2;
   if ((count > PAYLOAD_MAX) || (count > size)) {
     write(FLUSH_RX);
-    return (-1);
+    return (EMSGSIZE);
   }
 
   // Read the source address, port and payload

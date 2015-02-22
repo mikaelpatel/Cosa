@@ -85,7 +85,7 @@ W25X40CL::erase(uint32_t dest, uint8_t size)
   case 32: op = B32ER; break;
   case 64: op = B64ER; break;
   case 255: op = CER; break;
-  default: return (-1);
+  default: return (EINVAL);
   }
   spi.acquire(this);
     // Write enable before page erase.

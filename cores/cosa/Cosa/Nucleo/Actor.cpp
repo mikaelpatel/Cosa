@@ -26,7 +26,7 @@ int
 Actor::send(uint8_t port, const void* buf, size_t size)
 {
   // Do not allow send to the running thread
-  if (s_running == this) return (-1);
+  if (s_running == this) return (EINVAL);
 
   // Store message in sender actor
   Actor* sender = (Actor*) s_running;
@@ -45,7 +45,7 @@ int
 Actor::recv(Actor*& sender, uint8_t& port, void* buf, size_t size)
 {
   // Do not allow receive of other actor queue
-  if (s_running != this) return (-1);
+  if (s_running != this) return (EINVAL);
 
   // Check if receiver needs to wait for sending actor
   uint8_t key = lock();

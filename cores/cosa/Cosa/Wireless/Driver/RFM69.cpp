@@ -180,12 +180,12 @@ int
 RFM69::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
-  if (vec == NULL) return (-1);
+  if (vec == NULL) return (EINVAL);
   size_t len = iovec_size(vec);
-  if (len > PAYLOAD_MAX) return (-1);
+  if (len > PAYLOAD_MAX) return (EMSGSIZE);
 
   // Check if a packet available. Should receive before send
-  if (m_avail) return (-2);
+  if (m_avail) return (ENXIO);
 
   // Write frame header(length, dest, src, port) and payload
   spi.acquire(this);
@@ -229,7 +229,7 @@ RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 
   // Set standby and check if a message was received
   set(STANDBY_MODE);
-  if (!m_avail) return (-2);
+  if (!m_avail) return (ETIME);
   m_avail = false;
 
   // Read the payload size and check size
@@ -241,7 +241,7 @@ RFM69::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
       if (size > len) {
 	spi.end();
 	spi.release();
-	return (-1);
+	return (EMSGSIZE);
       }
       // Read the frame (dest, src, payload)
       m_dest = spi.transfer(0);

@@ -89,7 +89,8 @@ public:
   /**
    * Decode the size number of bytes in the source buffer to binary
    * representation in the given destination buffer. The destination
-   * buffer must be able to hold the decoded data.
+   * buffer must be able to hold the decoded data. The source buffer
+   * size must be even 4 character blocks (EINVAL is returned if not).
    * @param[in] dest destination buffer pointer (binary).
    * @param[in] src source buffer pointer (string).
    * @param[in] size number of bytes to decode.

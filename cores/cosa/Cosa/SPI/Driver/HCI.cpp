@@ -31,14 +31,14 @@ HCI::read(uint16_t &op, void* args, uint8_t len)
   // Read the SPI message header (big-endian)
   uint16_t payload = 0;
   bool padding;
-  int res = -EFAULT;
+  int res = EFAULT;
   op = 0;
 
   // Check header type
   spi.acquire(this);
   spi.begin();
   if (spi.transfer(SPI_OP_READ) == SPI_OP_REPLY) {
-    res = -ENOMSG;
+    res = ENOMSG;
     spi.transfer(0);
     spi.transfer(0);
     payload = spi.transfer(0);
@@ -49,7 +49,7 @@ HCI::read(uint16_t &op, void* args, uint8_t len)
       cmnd_header_t header;
       spi.read(&header, sizeof(header));
       payload -= sizeof(header);
-      res = -EINVAL;
+      res = EINVAL;
 
       // Check the HCI header type and length
       if (header.type == HCI_TYPE_EVNT || header.type == HCI_TYPE_DATA) {
@@ -84,7 +84,7 @@ HCI::write(uint8_t type, uint16_t op, const void* args, uint8_t len, bool progme
   // Calculate padding and payload size
   bool padding = (len & 1) == 0;
   int payload = sizeof(cmnd_header_t) + len + padding;
-  int res = -EFAULT;
+  int res = EFAULT;
 
   // Check the SPI format and write the SPI in big-endian
   spi.acquire(this);
@@ -133,9 +133,9 @@ HCI::await(uint16_t op, void* args, uint8_t len)
     // Sleep while waiting for a message
     do {
       while (!m_available && (RTC::since(start) < m_timeout)) yield();
-      if (!m_available) return (-ETIME);
+      if (!m_available) return (ETIME);
       res = read(event, m_evnt, EVNT_MAX);
-    } while (res == -ENOMSG);
+    } while (res == ENOMSG);
 
     // Return on negative error code
     if (res < 0) return (res);
@@ -152,7 +152,7 @@ HCI::await(uint16_t op, void* args, uint8_t len)
   };
 
   // Should not come here
-  return (-ENOMSG);
+  return (ENOMSG);
 }
 
 int
@@ -162,13 +162,13 @@ HCI::read_data(uint8_t op, void* args, uint8_t args_len,
   // Sanity check that a message is available
   if (!m_available) return (0);
   uint16_t payload = 0;
-  int res = -EFAULT;
+  int res = EFAULT;
 
   // Check the SPI message header. Read in big-endian
   spi.acquire(this);
   spi.begin();
   if (spi.transfer(SPI_OP_READ) == SPI_OP_REPLY) {
-    res = -ENOMSG;
+    res = ENOMSG;
     spi.transfer(0);
     spi.transfer(0);
     payload = spi.transfer(0);
@@ -179,7 +179,7 @@ HCI::read_data(uint8_t op, void* args, uint8_t args_len,
       data_header_t header;
       spi.read(&header, sizeof(header));
       payload -= sizeof(header);
-      res = -EINVAL;
+      res = EINVAL;
 
       // Sanity check the HCI format
       if (header.type == HCI_TYPE_DATA) {
@@ -227,7 +227,7 @@ HCI::write_data(uint8_t op, const void* args, uint8_t args_len,
   int payload = sizeof(data_header_t) + len;
   bool padding = (payload & 1) == 0;
   if (padding) payload += 1;
-  int res = -EFAULT;
+  int res = EFAULT;
 
   // Sanity check the SPI message header; SPI header in big-endian
   spi.acquire(this);

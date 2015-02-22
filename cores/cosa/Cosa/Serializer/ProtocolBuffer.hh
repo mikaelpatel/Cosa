@@ -112,7 +112,7 @@ public:
   {
     uint32_t zigzag;
     int res = read(zigzag);
-    if (res < 0) return (-1);
+    if (res < 0) return (res);
     value = ((zigzag & 1) ? ~(zigzag >> 1) : (zigzag >> 1));
     return (res);
   }
@@ -144,8 +144,8 @@ public:
   int write(uint8_t tag, Type type)
     __attribute__((always_inline))
   {
-    if (tag > TAG_MAX) return (-1);
-    if (putchar(tag << 3 | type) < 0) return (-1);
+    if (tag > TAG_MAX) return (EINVAL);
+    if (putchar(tag << 3 | type) < 0) return (EIO);
     return (1);
   }
 
@@ -192,7 +192,7 @@ public:
   int write(const void* buf, uint8_t count)
     __attribute__((always_inline))
   {
-    if (m_outs == NULL) return (-1);
+    if (m_outs == NULL) return (EINVAL);
     return (m_outs->write(buf, count));
   }
 
@@ -215,9 +215,9 @@ public:
   int write(uint8_t tag, int32_t value)
     __attribute__((always_inline))
   {
-    if (write(tag, VARINT) < 0) return (-1);
+    if (write(tag, VARINT) < 0) return (EIO);
     int res = write(value);
-    if (res < 0) return (-1);
+    if (res < 0) return (res);
     return (res + 1);
   }
 
@@ -243,9 +243,9 @@ public:
   int write(uint8_t tag, uint32_t value)
     __attribute__((always_inline))
   {
-    if (write(tag, VARINT) < 0) return (-1);
+    if (write(tag, VARINT) < 0) return (EIO);
     int res = write(value);
-    if (res < 0) return (-1);
+    if (res < 0) return (res);
     return (res + 1);
   }
 
@@ -272,10 +272,10 @@ public:
    */
   int write(uint8_t tag, const void* buf, uint8_t count)
   {
-    if (write(tag, LENGTH_DELIMITED) < 0) return (-1);
-    if (putchar(count) < 0) return (-1);
+    if (write(tag, LENGTH_DELIMITED) < 0) return (EIO);
+    if (putchar(count) < 0) return (EIO);
     int res = write(buf, count);
-    if (res != count) return (-1);
+    if (res != count) return (EIO);
     return (count + 2);
   }
 
@@ -287,11 +287,11 @@ public:
 
   int write_P(uint8_t tag, const char* str)
   {
-    if (write(tag, LENGTH_DELIMITED) < 0) return (-1);
+    if (write(tag, LENGTH_DELIMITED) < 0) return (EIO);
     uint8_t count = strlen_P(str);
-    if (putchar(count) < 0) return (-1);
+    if (putchar(count) < 0) return (EIO);
     int res = write_P(str, count);
-    if (res != count) return (-1);
+    if (res != count) return (EIO);
     return (count + 2);
   }
 
@@ -304,9 +304,9 @@ public:
    */
   int write(uint8_t tag, float32_t value)
   {
-    if (write(tag, FIXED32) < 0) return (-1);
+    if (write(tag, FIXED32) < 0) return (EIO);
     int res = write(value);
-    if (res < 0) return (-1);
+    if (res < 0) return (EIO);
     return (res + 1);
   }
 

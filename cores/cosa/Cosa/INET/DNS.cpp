@@ -47,7 +47,7 @@ DNS::gethostbyname(const char* hostname, uint8_t addr[4], bool progmem)
   // Convert hostname to a path
   char path[INET::PATH_MAX];
   int len = INET::nametopath(hostname, path, progmem);
-  if (len <= 0) return (-1);
+  if (len <= 0) return (-EFAULT);
 
   // Construct request header
   header_t request;
@@ -122,5 +122,5 @@ DNS::gethostbyname(const char* hostname, uint8_t addr[4], bool progmem)
       return (0);
     }
   }
-  return (-1);
+  return (-EIO);
 }
