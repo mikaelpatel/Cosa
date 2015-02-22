@@ -272,8 +272,9 @@ CC3000::begin_P(str_P hostname, uint16_t timeout)
   if (res < 0) return (false);
 
   // Read number of buffers and buffer size
-  res = read_buffer_size(BUFFER_COUNT, BUFFER_MAX);
+  res = read_buffer_size(BUFFER_COUNT_MAX, BUFFER_MAX);
   if (res < 0) return (false);
+  BUFFER_COUNT = BUFFER_COUNT_MAX;
 
   // Check for connect to access point
   hci_evnt_wlan_unsol_connect_t evnt;
@@ -646,6 +647,7 @@ CC3000::recv(int hndl, void* buf, size_t size)
 int
 CC3000::send(int hndl, const void* buf, size_t size)
 {
+  if (size > BUFFER_MAX) return (EMSGSIZE);
   while (BUFFER_COUNT == 0) service();
   hci_data_send_t cmnd(hndl, size);
   int res = write_data(HCI_DATA_SEND, &cmnd, sizeof(cmnd), buf, size);
@@ -708,7 +710,7 @@ CC3000::accept(int hndl, uint8_t ip[4], int &port)
 int
 CC3000::close(int hndl)
 {
-  service(300);
+  while (BUFFER_COUNT != BUFFER_COUNT_MAX) service(100);
   hci_cmnd_close_socket_t cmnd(hndl);
   int res = issue(HCI_CMND_CLOSE_SOCKET, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);

@@ -641,7 +641,10 @@ protected:
   /** Size of buffers. Valid after calling begin_P(). */
   uint16_t BUFFER_MAX;
 
-  /** Number of buffers. Valid after calling begin_P(). */
+  /** Max number of buffers. Valid after calling begin_P(). */
+  uint8_t BUFFER_COUNT_MAX;
+
+  /** Current number of buffers. Valid after calling begin_P(). */
   uint8_t BUFFER_COUNT;
 
   /** Maximum number of sockets on device. */
