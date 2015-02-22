@@ -712,6 +712,7 @@ CC3000::close(int hndl)
   hci_cmnd_close_socket_t cmnd(hndl);
   int res = issue(HCI_CMND_CLOSE_SOCKET, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
+
   hci_evnt_close_socket_t evnt;
   do {
     res = await(HCI_EVNT_CLOSE_SOCKET, &evnt, sizeof(evnt));

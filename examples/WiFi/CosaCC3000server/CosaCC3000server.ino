@@ -195,7 +195,7 @@ void loop()
     TRACE(res);
   }
   MEASURE("Close client connection:", 1)
-    while (wifi.close(client) != 0) errors += 1;
+    res = wifi.close(client);
 }
 
 

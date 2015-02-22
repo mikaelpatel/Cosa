@@ -82,7 +82,7 @@
 #define	ENOANO		-55	/**< No anode. */
 #define	EBADRQC		-56	/**< Invalid request code. */
 #define	EBADSLT		-57	/**< Invalid slot. */
-#define	EDEADLOCK	-58      /**< Deadlock would occur on resource. */
+#define	EDEADLOCK	-58     /**< Deadlock would occur on resource. */
 #define	EBFONT		-59	/**< Bad font file format. */
 #define	ENOSTR		-60	/**< Device not a stream. */
 #define	ENODATA		-61	/**< No data available. */
