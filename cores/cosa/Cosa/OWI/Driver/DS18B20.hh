@@ -90,9 +90,10 @@ public:
    * read_power_supply() and read_scratchpad() directly if rom address
    * is given.
    * @param[in] pin one wire bus pin.
-   * @param[in] rom device identity (default null).
+   * @param[in] rom device identity.
+   * @param[in] name of device. In program memory (default null).
    */
-  DS18B20(OWI* pin, const uint8_t* rom, const char* name = 0) :
+  DS18B20(OWI* pin, const uint8_t* rom, const char* name = NULL) :
     OWI::Driver(pin, rom, name),
     m_parasite(0),
     m_start(0L),
