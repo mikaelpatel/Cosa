@@ -23,7 +23,7 @@
 #include "Cosa/RTC.hh"
 
 // Enable trace of unsolicited events
-// #define TRACE_ON_EVENT
+#define TRACE_ON_EVENT
 #if defined(TRACE_ON_EVENT)
 #include "Cosa/Trace.hh"
 #endif
@@ -371,7 +371,7 @@ CC3000::wlan_connect(Security type, str_P ssid, str_P bssid, str_P key)
   int res = issue(HCI_CMND_WLAN_CONNECT, &cmnd, len);
   if (res < 0) return (res);
   uint32_t saved = m_timeout;
-  m_timeout = 5000;
+  m_timeout = 10000;
   hci_evnt_wlan_connect_t evnt;
   res = await(HCI_EVNT_WLAN_CONNECT, &evnt, sizeof(evnt));
   m_timeout = saved;
@@ -450,11 +450,15 @@ CC3000::wlan_ioctl_set_connection_policy(bool should_connect_to_open_ap,
   int res = issue(HCI_CMND_WLAN_IOCTL_SET_CONNECTION_POLICY, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
 
+  uint32_t saved = m_timeout;
+  m_timeout = 5000;
   hci_evnt_wlan_ioctl_set_connection_policy_t evnt;
   res = await(HCI_EVNT_WLAN_IOCTL_SET_CONNECTION_POLICY, &evnt, sizeof(evnt));
+  m_timeout = saved;
   if (res < 0) return (res);
   if (evnt.status != 0) return (EFAULT);
-  return (res);
+  if (evnt.result != 0) return (evnt.result);
+  return (0);
 }
 
 int

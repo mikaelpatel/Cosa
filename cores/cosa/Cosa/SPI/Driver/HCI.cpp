@@ -20,7 +20,6 @@
 
 #include "Cosa/SPI/Driver/HCI.hh"
 #include "Cosa/RTC.hh"
-#include "Cosa/Trace.hh"
 
 int
 HCI::read(uint16_t &op, void* args, uint8_t len)

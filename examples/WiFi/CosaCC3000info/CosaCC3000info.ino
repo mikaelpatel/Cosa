@@ -53,18 +53,22 @@ void setup()
     trace << endl;
   }
 
+  MEASURE("Set connect policy:", 1)
+    res = wifi.wlan_ioctl_set_connection_policy(false, false, false);
+  TRACE(res);
+
   MEASURE("Connect to WLAN:", 1)
     res = wifi.wlan_connect(CC3000::WPA2_SECURITY_TYPE,
-			    PSTR("SSID"),
+			    PSTR("SID"),
 			    NULL,
 			    PSTR("PASSWORD"));
   TRACE(res);
-
   INFO("MAC and Network addresses:", 0);
   uint8_t subnet[4];
   uint8_t dns[4];
   uint8_t ip[4];
   uint8_t mac[6];
+  wifi.service(10000);
   wifi.get_addr(ip, subnet);
   wifi.get_mac_addr(mac);
   wifi.get_dns_addr(dns);
