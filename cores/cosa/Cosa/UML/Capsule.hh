@@ -47,11 +47,22 @@ namespace UML {
 class Capsule {
 public:
   /**
+   * Construct Capsule and initiate state.
+   */
+  Capsule() :
+    is_scheduled(false)
+  {}
+
+  /**
    * @override UML::Capsule
    * The capsule behavior is run when any of the connectors it
    * listens on is changed.
    */
   virtual void behavior() = 0;
+
+protected:
+  bool is_scheduled;
+  friend class Controller;
 };
 
 };

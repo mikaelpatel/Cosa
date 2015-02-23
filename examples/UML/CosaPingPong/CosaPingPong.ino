@@ -25,23 +25,34 @@
  *
  * @section Diagram
  *
- *     Echo                    Echo
- *  +--------+              +--------+
- *  |  ping  |-----[c1]---->|  pong  |
- *  |        | Echo::Signal |        |
- *  |        |<----[c2]-----|        |
- *  +--------+              +--------+
+ *         Echo                Echo                Echo
+ *      +--------+          +--------+          +--------+
+ *      |  ping  |          |  pong  |          |  pang  |
+ *  +-->|        |---[c1]-->|        |---[c2]-->|        |---+
+ *  |   |        |          |        |          |        |   |
+ *  |   +--------+          +--------+          +--------+   |
+ *  |                                                        |
+ *  +--------------------------[c3]--------------------------+
  *
  * @section Note
  * The measurement includes the test and decrement of the 16-bit
  * counter, reading the input connector, writing the output connector
- * and scheduling the listener. Total 14 us (224 clock cycles).
+ * and scheduling the listener. Total 13 us (208 clock cycles).
+ * The inner signal port read/write and scheduling of the listener
+ * takes 8 us (128 clock cycles).
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
+//#define TRACE_NO_VERBOSE
+//#define TRACE_FOOTPRINT
+
+#ifdef TRACE_FOOTPRINT
+#include "Cosa/Memory.h"
+#include "Cosa/IOBuffer.hh"
+#endif
+
 #include "Cosa/RTC.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
@@ -56,7 +67,7 @@ public:
   /**
    * Default number of times to echo.
    */
-  static const uint16_t DEFAULT_COUNT = 1000;
+  static const uint16_t DEFAULT_COUNT = 10000;
 
   /**
    * Number of times to echo.
@@ -102,17 +113,22 @@ uint16_t Echo::count = Echo::DEFAULT_COUNT;
 // Forward declaration of the connectors
 extern Echo::Signal c1;
 extern Echo::Signal c2;
+extern Echo::Signal c3;
 
 // The capsules with data dependencies (connectors)
-Echo ping(c2, c1);
+Echo ping(c3, c1);
 Echo pong(c1, c2);
+Echo pang(c2, c3);
 
 // The wiring; control dependencies
 Capsule* const c1_listeners[] __PROGMEM = { &pong, NULL };
 Echo::Signal c1(c1_listeners, true);
 
-Capsule* const c2_listeners[] __PROGMEM = { &ping, NULL};
+Capsule* const c2_listeners[] __PROGMEM = { &pang, NULL};
 Echo::Signal c2(c2_listeners, true);
+
+Capsule* const c3_listeners[] __PROGMEM = { &ping, NULL};
+Echo::Signal c3(c3_listeners, true);
 
 void setup()
 {
@@ -120,8 +136,18 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaPingPong: started"));
 
-  // Use the watchdog for timeout events
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+#ifdef TRACE_FOOTPRINT
+  // Trace available memory and size of data
+  TRACE(free_memory());
+  TRACE(sizeof(uart));
+  TRACE(sizeof(trace));
+  TRACE(sizeof(IOBuffer<64>));
+  TRACE(sizeof(controller));
+  TRACE(sizeof(ping));
+  TRACE(sizeof(pong));
+  TRACE(sizeof(c1));
+  TRACE(sizeof(c2));
+#endif
 
   // Start RTC for measurement
   RTC::begin();
@@ -130,8 +156,11 @@ void setup()
 void loop()
 {
   // Trigger start and measure echo
+  Echo::count = Echo::DEFAULT_COUNT;
   c1 = true;
   MEASURE("Run controller:", Echo::DEFAULT_COUNT)
     controller.run();
-  ASSERT(true == false);
+
+  // Take a nap
+  sleep(3);
 }

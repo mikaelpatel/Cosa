@@ -47,14 +47,14 @@ public:
   void run()
   {
     while (m_available) {
-      uint16_t ix;
+      Capsule* capsule;
       synchronized {
-	ix = m_get;
-	m_get += 1;
+	capsule = m_queue[m_get++];
 	if (m_get == QUEUE_MAX) m_get = 0;
 	m_available -= 1;
       }
-      m_queue[ix]->behavior();
+      capsule->is_scheduled = false;
+      capsule->behavior();
     }
   }
 
@@ -83,15 +83,11 @@ public:
   {
     if (m_available == QUEUE_MAX) return (ENOMEM);
     synchronized {
-      uint16_t ix = m_get;
-      while (ix != m_put) {
-	if (m_queue[ix] == capsule) synchronized_return (0);
-	ix += 1;
-	if (ix == QUEUE_MAX) ix = 0;
-      }
+      if (capsule->is_scheduled) synchronized_return (0);
+      capsule->is_scheduled = true;
       m_queue[m_put++] = capsule;
-      m_available += 1;
       if (m_put == QUEUE_MAX) m_put = 0;
+      m_available += 1;
     }
     return (1);
   }
