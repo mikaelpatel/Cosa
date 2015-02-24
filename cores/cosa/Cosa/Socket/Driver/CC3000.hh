@@ -256,6 +256,10 @@ public:
     m_active_set(0)
   {
     set_event_handler(&m_evnt_handler);
+    memset(m_ip, 0, sizeof(m_ip));
+    memset(m_subnet, 0, sizeof(m_subnet));
+    memset(m_gateway, 0, sizeof(m_gateway));
+    memset(m_dns, 0, sizeof(m_dns));
   }
 
   /**
@@ -642,10 +646,10 @@ protected:
   uint16_t BUFFER_MAX;
 
   /** Max number of buffers. Valid after calling begin_P(). */
-  uint8_t BUFFER_COUNT_MAX;
+  uint8_t BUFFER_COUNT;
 
   /** Current number of buffers. Valid after calling begin_P(). */
-  uint8_t BUFFER_COUNT;
+  uint8_t m_buffer_avail;
 
   /** Maximum number of sockets on device. */
   static const int SOCKET_MAX = 8;

@@ -30,11 +30,10 @@
 
 CC3000 wifi(Board::D21, Board::EXT2, Board::D23);
 
-uint8_t PACKAGE_ID;
-uint8_t PACKAGE_BUILD_NR;
-
 void setup()
 {
+  uint8_t PACKAGE_ID;
+  uint8_t PACKAGE_BUILD_NR;
   int res;
 
   uart.begin(57600);
@@ -54,24 +53,30 @@ void setup()
   }
 
   MEASURE("Set connect policy:", 1)
-    res = wifi.wlan_ioctl_set_connection_policy(false, false, false);
-  TRACE(res);
+    res = wifi.wlan_ioctl_set_connection_policy(false, true, false);
+  if (res < 0) TRACE(res);
 
   MEASURE("Connect to WLAN:", 1)
     res = wifi.wlan_connect(CC3000::WPA2_SECURITY_TYPE,
-			    PSTR("SID"),
+			    PSTR("SSID"),
 			    NULL,
 			    PSTR("PASSWORD"));
-  TRACE(res);
+  if (res < 0) TRACE(res);
+
   INFO("MAC and Network addresses:", 0);
   uint8_t subnet[4];
   uint8_t dns[4];
   uint8_t ip[4];
   uint8_t mac[6];
-  wifi.service(10000);
-  wifi.get_addr(ip, subnet);
+
+  do {
+    wifi.service(3000);
+    wifi.get_addr(ip, subnet);
+  } while (ip[0] == 0);
+
   wifi.get_mac_addr(mac);
   wifi.get_dns_addr(dns);
+
   trace << "MAC="; INET::print_mac(trace, mac); trace << endl;
   trace << "IP=";  INET::print_addr(trace, ip); trace << endl;
   trace << "SUBNET="; INET::print_addr(trace, subnet); trace << endl;

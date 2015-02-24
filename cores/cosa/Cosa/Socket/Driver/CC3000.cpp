@@ -74,7 +74,7 @@ CC3000::UnsolicitedEvent::on_event(uint16_t event, void* args, size_t len)
       hci_evnt_data_unsol_free_buff_t* evnt;
       evnt = (hci_evnt_data_unsol_free_buff_t*) args;
       if (evnt->status != 0) return;
-      m_dev->BUFFER_COUNT += evnt->flow_control_event.buffers_freed;
+      m_dev->m_buffer_avail += evnt->flow_control_event.buffers_freed;
 #if defined(TRACE_ON_EVENT)
       trace << PSTR("HCI_EVNT_DATA_UNSOL_FREE_BUFF:buffers_freed=")
 	    << evnt->flow_control_event.buffers_freed << ',';
@@ -98,14 +98,14 @@ CC3000::UnsolicitedEvent::on_event(uint16_t event, void* args, size_t len)
   default:
 #if defined(TRACE_ON_EVENT)
     trace << PSTR("HCI_EVNT=") << hex << event
-	  << PSTR(",BUFFER_COUNT=") << m_dev->BUFFER_COUNT
+	  << PSTR(",m_buffer_avail=") << m_dev->m_buffer_avail
 	  << endl;
     trace.print(args, len, IOStream::hex);
 #endif
     return;
   }
 #if defined(TRACE_ON_EVENT)
-  trace << PSTR("BUFFER_COUNT=") << m_dev->BUFFER_COUNT << endl;
+  trace << PSTR("m_buffer_avail=") << m_dev->m_buffer_avail << endl;
 #endif
 }
 
@@ -272,9 +272,14 @@ CC3000::begin_P(str_P hostname, uint16_t timeout)
   if (res < 0) return (false);
 
   // Read number of buffers and buffer size
-  res = read_buffer_size(BUFFER_COUNT_MAX, BUFFER_MAX);
+  res = read_buffer_size(BUFFER_COUNT, BUFFER_MAX);
   if (res < 0) return (false);
-  BUFFER_COUNT = BUFFER_COUNT_MAX;
+  m_buffer_avail = BUFFER_COUNT;
+
+#if defined(TRACE_ON_EVENT)
+  TRACE(BUFFER_COUNT);
+  TRACE(BUFFER_MAX);
+#endif
 
   // Check for connect to access point
   hci_evnt_wlan_unsol_connect_t evnt;
@@ -652,7 +657,7 @@ int
 CC3000::send(int hndl, const void* buf, size_t size)
 {
   if (size > BUFFER_MAX) return (EMSGSIZE);
-  while (BUFFER_COUNT == 0) service();
+  while (m_buffer_avail == 0) service();
   hci_data_send_t cmnd(hndl, size);
   int res = write_data(HCI_DATA_SEND, &cmnd, sizeof(cmnd), buf, size);
   if (res < 0) return (res);
@@ -661,7 +666,7 @@ CC3000::send(int hndl, const void* buf, size_t size)
   res = await(HCI_EVNT_SEND, &evnt, sizeof(evnt));
   if (res < 0) return (res);
   if (evnt.handle != hndl) return (EFAULT);
-  BUFFER_COUNT -= 1;
+  m_buffer_avail -= 1;
   return (evnt.result);
 }
 
@@ -714,7 +719,7 @@ CC3000::accept(int hndl, uint8_t ip[4], int &port)
 int
 CC3000::close(int hndl)
 {
-  while (BUFFER_COUNT != BUFFER_COUNT_MAX) service(100);
+  while (m_buffer_avail != BUFFER_COUNT) service(100);
   hci_cmnd_close_socket_t cmnd(hndl);
   int res = issue(HCI_CMND_CLOSE_SOCKET, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
