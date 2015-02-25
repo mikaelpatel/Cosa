@@ -23,7 +23,6 @@
 
 #include "Cosa/Memory.h"
 #include "Cosa/InputPin.hh"
-#include "Cosa/AnalogPin.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"
@@ -54,10 +53,9 @@ void setup()
   uint8_t subnet[4];
   uint8_t ip[4];
   wifi.get_addr(ip, subnet);
-  trace << "IP=";
-  INET::print_addr(trace, ip);
-  trace << ",SUBNET=";
-  INET::print_addr(trace, subnet);
+
+  trace << "IP="; INET::print_addr(trace, ip);
+  trace << ",SUBNET="; INET::print_addr(trace, subnet);
   trace << endl;
 
   MEASURE("Create a socket:", 1)

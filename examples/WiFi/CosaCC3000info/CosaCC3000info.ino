@@ -46,36 +46,41 @@ void setup()
 
   MEASURE("Read software package information:", 1)
     res = wifi.read_sp_version(PACKAGE_ID, PACKAGE_BUILD_NR);
-  if (res == 0) {
-    TRACE(PACKAGE_ID);
-    TRACE(PACKAGE_BUILD_NR);
-    trace << endl;
+  if (res < 0) TRACE(res);
+  TRACE(PACKAGE_ID);
+  TRACE(PACKAGE_BUILD_NR);
+  trace << endl;
+
+#if defined(DELETE_PROFILES)
+  MEASURE("Clear all profiles:", 1)
+    res = wifi.wlan_ioctl_del_profile(0xff);
+  if (res < 0) TRACE(res);
+#endif
+
+#if defined(SET_CONNECTION_POLICY)
+  MEASURE("Set connect policy:", 1)
+    res = wifi.wlan_ioctl_set_connection_policy(false, false, false);
+  if (res < 0) TRACE(res);
+#endif
+
+  if (wifi.wlan_ioctl_statusget() == wifi.WLAN_STATUS_DISCONNECTED) {
+    MEASURE("Connect to WLAN:", 1)
+      res = wifi.wlan_connect(CC3000::WPA2_SECURITY_TYPE,
+			      PSTR("SSID"),
+			      NULL,
+			      PSTR("PASSWORD"));
+    if (res < 0) TRACE(res);
   }
 
-  MEASURE("Set connect policy:", 1)
-    res = wifi.wlan_ioctl_set_connection_policy(false, true, false);
-  if (res < 0) TRACE(res);
-
-  MEASURE("Connect to WLAN:", 1)
-    res = wifi.wlan_connect(CC3000::WPA2_SECURITY_TYPE,
-			    PSTR("SSID"),
-			    NULL,
-			    PSTR("PASSWORD"));
-  if (res < 0) TRACE(res);
-
   INFO("MAC and Network addresses:", 0);
+  uint8_t ip[4];
   uint8_t subnet[4];
   uint8_t dns[4];
-  uint8_t ip[4];
   uint8_t mac[6];
 
-  do {
-    wifi.service(3000);
-    wifi.get_addr(ip, subnet);
-  } while (ip[0] == 0);
-
-  wifi.get_mac_addr(mac);
+  wifi.get_addr(ip, subnet);
   wifi.get_dns_addr(dns);
+  wifi.get_mac_addr(mac);
 
   trace << "MAC="; INET::print_mac(trace, mac); trace << endl;
   trace << "IP=";  INET::print_addr(trace, ip); trace << endl;

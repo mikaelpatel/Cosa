@@ -350,7 +350,7 @@ protected:
   Event::Handler* m_event_handler;
 
   /** Size of default event block. */
-  static const uint8_t EVNT_MAX = 128;
+  static const uint8_t EVNT_MAX = 64;
 
   /** Default event block. */
   uint8_t m_evnt[EVNT_MAX];

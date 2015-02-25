@@ -256,10 +256,6 @@ public:
     m_active_set(0)
   {
     set_event_handler(&m_evnt_handler);
-    memset(m_ip, 0, sizeof(m_ip));
-    memset(m_subnet, 0, sizeof(m_subnet));
-    memset(m_gateway, 0, sizeof(m_gateway));
-    memset(m_dns, 0, sizeof(m_dns));
   }
 
   /**
@@ -287,7 +283,7 @@ public:
    * @param[in] timeout in milli-seconds.
    * @return zero or negative error code.
    */
-  int service(uint32_t timeout = 0L);
+  int service(uint16_t timeout = 100);
 
   /**
    * Terminate CC3000 device driver. Closes all active sockets. Return
@@ -409,6 +405,13 @@ public:
    */
   int wlan_ioctl_set_scanparam(const hci_cmnd_wlan_ioctl_set_scanparam_t* param = NULL);
 
+  enum {
+    WLAN_STATUS_DISCONNECTED = 0,
+    WLAN_STATUS_SCANNING = 1,
+    WLAN_STATUS_CONNECTING = 2,
+    WLAN_STATUS_CONNECTED = 3
+  };
+
   /**
    * Get WLAN status.
    * @return status or negative error code.
@@ -448,6 +451,18 @@ public:
    * indicates the last entry.
    */
   int wlan_ioctl_get_scan_results(hci_evnt_wlan_ioctl_get_scan_results_t& ret);
+
+  /**
+   * Delete stored profile.
+   * @param[in] index of profile.
+   */
+  int wlan_ioctl_del_profile(uint8_t index);
+
+  /**
+   * Set event mask.
+   * @param[in] mask events.
+   */
+  int wlan_set_event_mask(uint16_t mask);
 
   enum {
     NVMEM_NVS_FILEID = 0,
@@ -767,7 +782,19 @@ protected:
 
   // Fix: Not yet implemented.
   static const uint16_t HCI_CMND_WLAN_IOCTL_ADD_PROFILE = 0x0005;
+
+  /**
+   * HCI Command WLAN ioctl del profile.
+   * http://processors.wiki.ti.com/index.php/CC3000_HCI_CMND_messages#HCI_CMND_WLAN_IOCTL_DEL_PROFILE_.280x0006.29
+   */
   static const uint16_t HCI_CMND_WLAN_IOCTL_DEL_PROFILE = 0x0006;
+  struct hci_cmnd_wlan_ioctl_del_profile_t {
+    uint32_t index;
+    hci_cmnd_wlan_ioctl_del_profile_t(uint8_t index)
+    {
+      this->index = index;
+    }
+  };
 
   /**
    * HCI Command WLAN ioctl get scan results.
@@ -782,8 +809,20 @@ protected:
     }
   };
 
-  // Fix: Not yet implemented.
+  /**
+   * HCI Command WLAN set event mask.
+   * http://processors.wiki.ti.com/index.php/CC3000_HCI_CMND_messages#HCI_CMND_WLAN_SET_EVENT_MASK_.280x0008.29
+   */
   static const uint16_t HCI_CMND_WLAN_SET_EVENT_MASK = 0x0008;
+  struct hci_cmnd_wlan_set_event_mask_t {
+    uint32_t mask;
+    hci_cmnd_wlan_set_event_mask_t(uint16_t mask = 0)
+    {
+      this->mask = mask;
+    }
+  };
+
+  // Fix: Not yet implemented.
   static const uint16_t HCI_CMND_WLAN_IOCTL_STATUSGET = 0x0009;
   static const uint16_t HCI_CMND_WLAN_IOCTL_SMART_CONFIG_START = 0x000A;
   static const uint16_t HCI_CMND_WLAN_IOCTL_SMART_CONFIG_STOP = 0x000B;
@@ -1137,8 +1176,8 @@ protected:
   };
 
   /**
-   * HCI Event WLAN ioctl set scanparam
-   * http://processors.wiki.ti.com/index.php/CC3000_HCI_EVNT_messages#HCI_EVNT_WLAN_IOCTL_SET_SCANPARAM_.280x0003.29
+   * HCI Event WLAN ioctl set connection policy
+   * http://processors.wiki.ti.com/index.php/CC3000_HCI_EVNT_messages
    */
   static const uint16_t HCI_EVNT_WLAN_IOCTL_SET_CONNECTION_POLICY = 0x0004;
   struct hci_evnt_wlan_ioctl_set_connection_policy_t {
@@ -1148,28 +1187,38 @@ protected:
 
   // Fix: Not yet implemented.
   static const uint16_t HCI_EVNT_WLAN_IOCTL_ADD_PROFILE = 0x0005;
+
+  /**
+   * HCI Event WLAN ioctl del profile
+   * http://processors.wiki.ti.com/index.php/CC3000_HCI_EVNT_messages
+   */
   static const uint16_t HCI_EVNT_WLAN_IOCTL_DEL_PROFILE = 0x0006;
+  struct hci_evnt_wlan_ioctl_del_profile_t {
+    int8_t status;
+    int32_t result;
+  };
 
   /**
    * HCI Event WLAN ioctl set scanparam
    * http://processors.wiki.ti.com/index.php/CC3000_HCI_EVNT_messages#HCI_EVNT_WLAN_IOCTL_SET_SCANPARAM_.280x0003.29
    */
-
-  // Fix: Not yet implemented.
   static const uint16_t HCI_EVNT_WLAN_IOCTL_GET_SCAN_RESULTS = 0x0007;
+
+  /**
+   * HCI Event WLAN set event mask
+   * http://processors.wiki.ti.com/index.php/CC3000_HCI_EVNT_messages
+   */
   static const uint16_t HCI_EVNT_WLAN_SET_EVENT_MASK = 0x0008;
+  struct hci_evnt_wlan_set_event_mask_t {
+    int8_t status;
+    int32_t result;
+  };
 
   /**
    * HCI Event WLAN ioctl set scanparam
    * http://processors.wiki.ti.com/index.php/CC3000_HCI_EVNT_messages#HCI_EVNT_WLAN_IOCTL_SET_SCANPARAM_.280x0003.29
    */
   static const uint16_t HCI_EVNT_WLAN_IOCTL_STATUSGET = 0x0009;
-  enum {
-    WLAN_STATUS_DISCONNECTED = 0x00000000,
-    WLAN_STATUS_SCANNING = 0x00000001,
-    WLAN_STATUS_CONNECTING = 0x00000002,
-    WLAN_STATUS_CONNECTED = 0x00000003
-  };
   struct hci_evnt_wlan_ioctl_statusget_t {
     int8_t status;
     uint32_t wlan_status;

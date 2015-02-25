@@ -57,6 +57,20 @@ CC3000::UnsolicitedEvent::on_event(uint16_t event, void* args, size_t len)
 #endif
     }
     break;
+  case HCI_EVNT_WLAN_UNSOL_CONNECT:
+    {
+#if defined(TRACE_ON_EVENT)
+      trace << PSTR("HCI_EVNT_WLAN_UNSOL_CONNECT:");
+#endif
+    }
+    break;
+  case HCI_EVNT_WLAN_UNSOL_DISCONNECT:
+    {
+#if defined(TRACE_ON_EVENT)
+      trace << PSTR("HCI_EVNT_WLAN_UNSOL_DISCONNECT:");
+#endif
+    }
+    break;
   case HCI_EVNT_WLAN_UNSOL_TCP_CLOSE_WAIT:
     {
       hci_evnt_wlan_unsol_tcp_close_wait_t* evnt;
@@ -265,10 +279,16 @@ CC3000::begin_P(str_P hostname, uint16_t timeout)
   m_vbat.high();
   while (m_irq.is_high())
     ;
+  DELAY(100);
   m_irq.enable();
 
   // Start Simple Link
   res = simple_link_start(0);
+  if (res < 0) return (false);
+
+  // Set default connection policy
+  res = wlan_ioctl_set_connection_policy(false, true, false);
+  // res = wlan_ioctl_set_connection_policy(false, false, false);
   if (res < 0) return (false);
 
   // Read number of buffers and buffer size
@@ -276,23 +296,11 @@ CC3000::begin_P(str_P hostname, uint16_t timeout)
   if (res < 0) return (false);
   m_buffer_avail = BUFFER_COUNT;
 
-#if defined(TRACE_ON_EVENT)
-  TRACE(BUFFER_COUNT);
-  TRACE(BUFFER_MAX);
-#endif
-
-  // Check for connect to access point
-  hci_evnt_wlan_unsol_connect_t evnt;
-  res = await(HCI_EVNT_WLAN_UNSOL_CONNECT, &evnt, sizeof(evnt));
-  if ((res > 0) && (evnt.status == 0)) {
-    hci_evnt_wlan_unsol_dhcp_t evnt;
-    res = await(HCI_EVNT_WLAN_UNSOL_DHCP, &evnt, sizeof(evnt));
-    if ((res > 0) && (evnt.status == 0)) {
-      memrevcpy(m_ip, evnt.ip, sizeof(m_ip));
-      memrevcpy(m_subnet, evnt.subnet, sizeof(m_subnet));
-      memrevcpy(m_gateway, evnt.gateway, sizeof(m_gateway));
-      memrevcpy(m_dns, evnt.dns, sizeof(m_dns));
-    }
+  // Capture the startup events
+  while (wlan_ioctl_statusget() == WLAN_STATUS_CONNECTING)
+    service();
+  if (res == WLAN_STATUS_CONNECTED) {
+    while (*m_ip == 0) service();
   }
 
   // Read device MAC address
@@ -341,7 +349,7 @@ CC3000::socket(Socket::Protocol proto, uint16_t port, uint8_t flag)
 }
 
 int
-CC3000::service(uint32_t timeout)
+CC3000::service(uint16_t timeout)
 {
   uint32_t start = RTC::millis();
   while (1) {
@@ -455,7 +463,7 @@ CC3000::wlan_ioctl_set_connection_policy(bool should_connect_to_open_ap,
   int res = issue(HCI_CMND_WLAN_IOCTL_SET_CONNECTION_POLICY, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
 
-  uint32_t saved = m_timeout;
+  uint16_t saved = m_timeout;
   m_timeout = 5000;
   hci_evnt_wlan_ioctl_set_connection_policy_t evnt;
   res = await(HCI_EVNT_WLAN_IOCTL_SET_CONNECTION_POLICY, &evnt, sizeof(evnt));
@@ -477,6 +485,37 @@ CC3000::wlan_ioctl_get_scan_results(hci_evnt_wlan_ioctl_get_scan_results_t& evnt
   if (res < 0) return (res);
   if (evnt.status != 0) return (EFAULT);
   return (evnt.network_id);
+}
+
+int
+CC3000::wlan_ioctl_del_profile(uint8_t index)
+{
+  hci_cmnd_wlan_ioctl_del_profile_t cmnd(index);
+  int res = issue(HCI_CMND_WLAN_IOCTL_DEL_PROFILE, &cmnd, sizeof(cmnd));
+  if (res < 0) return (res);
+
+  uint16_t saved = m_timeout;
+  m_timeout = 5000;
+  hci_evnt_wlan_ioctl_del_profile_t evnt;
+  res = await(HCI_EVNT_WLAN_IOCTL_DEL_PROFILE, &evnt, sizeof(evnt));
+  m_timeout = saved;
+  if (res < 0) return (res);
+  if (evnt.status != 0) return (EFAULT);
+  return (0);
+}
+
+int
+CC3000::wlan_set_event_mask(uint16_t mask)
+{
+  hci_cmnd_wlan_set_event_mask_t cmnd(mask);
+  int res = issue(HCI_CMND_WLAN_SET_EVENT_MASK, &cmnd, sizeof(cmnd));
+  if (res < 0) return (res);
+
+  hci_evnt_wlan_set_event_mask_t evnt;
+  res = await(HCI_EVNT_WLAN_SET_EVENT_MASK, &evnt, sizeof(evnt));
+  if (res < 0) return (res);
+  if (evnt.status != 0) return (EFAULT);
+  return (0);
 }
 
 int
@@ -700,6 +739,7 @@ int
 CC3000::accept(int hndl, uint8_t ip[4], int &port)
 {
   service(1000);
+
   hci_cmnd_accept_t cmnd(hndl);
   int res = issue(HCI_CMND_ACCEPT, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
@@ -710,6 +750,7 @@ CC3000::accept(int hndl, uint8_t ip[4], int &port)
   res = evnt.handle;
   if (evnt.result < 0) return (EFAULT);
   if (!set_socket_state(res, true)) return (EFAULT);
+
   memrevcpy(ip, evnt.ip, sizeof(evnt.ip));
   port = evnt.port;
   m_socket[res].m_hndl = res;
@@ -720,14 +761,16 @@ int
 CC3000::close(int hndl)
 {
   while (m_buffer_avail != BUFFER_COUNT) service(100);
+
   hci_cmnd_close_socket_t cmnd(hndl);
   int res = issue(HCI_CMND_CLOSE_SOCKET, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
 
+  uint16_t saved = m_timeout;
+  m_timeout = 1000;
   hci_evnt_close_socket_t evnt;
-  do {
-    res = await(HCI_EVNT_CLOSE_SOCKET, &evnt, sizeof(evnt));
-  } while (res == ENOMSG);
+  res = await(HCI_EVNT_CLOSE_SOCKET, &evnt, sizeof(evnt));
+  m_timeout = saved;
   set_socket_state(hndl, false);
   if (res < 0) return (res);
   if (evnt.status != 0) return (EFAULT);
