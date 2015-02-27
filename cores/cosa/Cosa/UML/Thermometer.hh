@@ -1,5 +1,5 @@
 /**
- * @file Cosa/UML/Voltmeter.hh
+ * @file Cosa/UML/Thermometer.hh
  * @version 1.0
  *
  * @section License
@@ -18,58 +18,58 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_UML_VOLTMETER_HH
-#define COSA_UML_VOLTMETER_HH
+#ifndef COSA_UML_THERMOMETER_HH
+#define COSA_UML_THERMOMETER_HH
 
 #include "Cosa/UML/TimedCapsule.hh"
 #include "Cosa/UML/Connector.hh"
-#include "Cosa/AnalogPin.hh"
+#include "Cosa/OWI/Driver/DS18B20.hh"
 
 namespace UML {
 
 /**
- * Voltmeter Capsule class. Provides a signal connector that is set
- * according to the sensor (analog pin). The pin is periodically
+ * Thermometer Capsule class. Provides a signal connector that is set
+ * according to temperature reading. The thermometer is periodically
  * sampled and listeners are scheduled when the value changes.
- * By default the sample is scaled to 5.0 volt.
  *
  * @section Diagram
  * @code
  *
- *  Voltmeter
+ *  Thermometer
  *  +--------+
- *  |   s1   |
- *  |        |---[Sample]--->
+ *  |  temp  |
+ *  |        |---[Temperature]--->
  *  |        |
  *  +--------+
- *     [An/ms]
+ *    [OWI/ms]
  *
  * @endcode
  */
-class Voltmeter : public TimedCapsule, private AnalogPin {
+class Thermometer : public TimedCapsule, public DS18B20 {
 public:
   /**
    * Default sample period for sensor (in ms).
    */
-  static const uint16_t DEFAULT_TIMEOUT = 1024;
+  static const uint16_t DEFAULT_TIMEOUT = 2048;
 
   /**
-   * Type of sensor sample connector. Schedule listeners only on
+   * Type of temperature connector. Schedule listeners only on
    * change.
    */
-  typedef Connector<float,true> Sample;
+  typedef Connector<float,true> Temperature;
 
   /**
-   * Construct Voltmeter monitoring given analog pin and generating
+   * Construct Thermometer monitoring given OWI bus and generating
    * signal. The pin is sampled with the given period (default 1024 ms).
-   * @param[in] pin analog pin for sensor.
+   * @param[in] pin 1-wire bus.
    * @param[in] sample connector.
    * @param[in] ms period.
    */
-  Voltmeter(Board::AnalogPin pin, Sample& sample, uint16_t ms = DEFAULT_TIMEOUT) :
-    TimedCapsule(ms),
-    AnalogPin(pin),
-    m_sample(sample)
+  Thermometer(OWI* pin, Temperature& temp, uint16_t ms = DEFAULT_TIMEOUT) :
+    TimedCapsule(ms / 2),
+    DS18B20(pin),
+    m_temp(temp),
+    m_state(0)
   {}
 
   /**
@@ -78,22 +78,22 @@ public:
    */
   virtual void behavior()
   {
-    m_sample = scale(sample());
-  }
-
-  /**
-   * @override Sensor
-   * Default sample scaling; range [0..1023] is scaled to [0.0..5.0].
-   * @param[in] sample value.
-   * @return scaled value.
-   */
-  virtual float scale(uint16_t value)
-  {
-    return (value * 5.0 / 1023);
+    switch (m_state) {
+    case 0:
+      m_state = convert_request() ? 1 : 2;
+      break;
+    case 1:
+      m_state = read_scratchpad() ? 0 : 2;
+      m_temp = get_temperature() * 0.0625;
+      break;
+    case 2:
+      break;
+    }
   }
 
 protected:
-  Sample& m_sample;
+  Temperature& m_temp;
+  uint8_t m_state;
 };
 
 };
