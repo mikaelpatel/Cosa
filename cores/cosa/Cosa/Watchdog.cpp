@@ -34,7 +34,7 @@ uint8_t
 Watchdog::as_prescale(uint16_t ms)
 {
   // Map milli-seconds to watchdog prescale values
-  uint8_t prescale = log2<uint16_t>((ms + 8) >> 5) - 1;
+  uint8_t prescale = log2<uint16_t>((ms + 8) >> 5);
   if (prescale > 9) prescale = 9;
   return (prescale);
 }
