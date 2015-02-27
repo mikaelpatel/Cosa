@@ -388,8 +388,9 @@ CC3000::wlan_connect(Security type, str_P ssid, str_P bssid, str_P key)
   hci_evnt_wlan_connect_t evnt;
   res = await(HCI_EVNT_WLAN_CONNECT, &evnt, sizeof(evnt));
   m_timeout = saved;
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  return (((evnt.status != 0) || (evnt.result != 0)) ? EFAULT : 0);
+  return (evnt.result);
 }
 
 const CC3000::hci_cmnd_wlan_ioctl_set_scanparam_t
@@ -436,8 +437,9 @@ CC3000::wlan_ioctl_set_scanparam(const hci_cmnd_wlan_ioctl_set_scanparam_t* para
   hci_evnt_wlan_ioctl_set_scanparam_t evnt;
   res = await(HCI_EVNT_WLAN_IOCTL_SET_SCANPARAM, &evnt, sizeof(evnt));
   m_timeout = saved;
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  return (((evnt.status != 0) || (evnt.result != 0)) ? EFAULT : 0);
+  return (evnt.result);
 }
 
 int
@@ -448,8 +450,8 @@ CC3000::wlan_ioctl_statusget()
 
   hci_evnt_wlan_ioctl_statusget_t evnt;
   res = await(HCI_EVNT_WLAN_IOCTL_STATUSGET, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.status != 0) return (EFAULT);
   return (evnt.wlan_status);
 }
 
@@ -468,10 +470,9 @@ CC3000::wlan_ioctl_set_connection_policy(bool should_connect_to_open_ap,
   hci_evnt_wlan_ioctl_set_connection_policy_t evnt;
   res = await(HCI_EVNT_WLAN_IOCTL_SET_CONNECTION_POLICY, &evnt, sizeof(evnt));
   m_timeout = saved;
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.status != 0) return (EFAULT);
-  if (evnt.result != 0) return (evnt.result);
-  return (0);
+  return (evnt.result);
 }
 
 int
@@ -482,8 +483,8 @@ CC3000::wlan_ioctl_get_scan_results(hci_evnt_wlan_ioctl_get_scan_results_t& evnt
   if (res < 0) return (res);
 
   res = await(HCI_EVNT_WLAN_IOCTL_GET_SCAN_RESULTS, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.status != 0) return (EFAULT);
   return (evnt.network_id);
 }
 
@@ -499,8 +500,8 @@ CC3000::wlan_ioctl_del_profile(uint8_t index)
   hci_evnt_wlan_ioctl_del_profile_t evnt;
   res = await(HCI_EVNT_WLAN_IOCTL_DEL_PROFILE, &evnt, sizeof(evnt));
   m_timeout = saved;
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.status != 0) return (EFAULT);
   return (0);
 }
 
@@ -513,8 +514,8 @@ CC3000::wlan_set_event_mask(uint16_t mask)
 
   hci_evnt_wlan_set_event_mask_t evnt;
   res = await(HCI_EVNT_WLAN_SET_EVENT_MASK, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.status != 0) return (EFAULT);
   return (0);
 }
 
@@ -569,6 +570,7 @@ CC3000::simple_link_start(uint8_t src)
   delay(1000);
   hci_evnt_simple_link_start_t evnt;
   int res = await(HCI_EVNT_SIMPLE_LINK_START, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
   return (evnt.status);
 }
@@ -581,6 +583,7 @@ CC3000::read_buffer_size(uint8_t &count, uint16_t &bytes)
 
   hci_evnt_read_buffer_size_t evnt;
   res = await(HCI_EVNT_READ_BUFFER_SIZE, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
   count = evnt.count;
   bytes = evnt.bytes;
@@ -595,6 +598,7 @@ CC3000::read_sp_version(uint8_t &package_id, uint8_t &package_build_nr)
 
   hci_evnt_read_sp_version_t evnt;
   res = await(HCI_EVNT_READ_SP_VERSION, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
   package_id = evnt.package_id;
   package_build_nr = evnt.package_build_nr;
@@ -611,8 +615,8 @@ CC3000::socket(int domain, int type, int protocol)
 
   hci_evnt_socket_t evnt;
   res = await(HCI_EVNT_SOCKET, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.status != 0) return (EFAULT);
   return (evnt.handle);
 }
 
@@ -625,8 +629,8 @@ CC3000::setsockopt(int hndl, int level, int optname, const void* optval, size_t 
 
   hci_evnt_setsockopt_t evnt;
   res = await(HCI_EVNT_SETSOCKOPT, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.status != 0) return (EFAULT);
   return (0);
 }
 
@@ -642,8 +646,8 @@ CC3000::select(int hndls,
 
   hci_evnt_select_t evnt;
   res = await(HCI_EVNT_SELECT, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.status != 0) return (EFAULT);
   readhndls = evnt.read_set;
   writehndls = evnt.write_set;
   errorhndls = evnt.error_set;
@@ -659,8 +663,8 @@ CC3000::connect(int hndl, uint8_t ip[4], int port)
 
   hci_evnt_connect_t evnt;
   res = await(HCI_EVNT_CONNECT, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.status != 0) return (EFAULT);
   res = evnt.result;
   if (!set_socket_state(res, true)) return (EFAULT);
   return (res);
@@ -677,6 +681,7 @@ CC3000::recv(int hndl, void* buf, size_t size)
     res = await(HCI_EVNT_RECV, &evnt, sizeof(evnt));
     if (res != ENOMSG) break;
   }
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
   if (evnt.handle != hndl) return (EFAULT);
   if (evnt.count == 0) return (0);
@@ -703,8 +708,9 @@ CC3000::send(int hndl, const void* buf, size_t size)
 
   hci_evnt_send_t evnt;
   res = await(HCI_EVNT_SEND, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
+  if (evnt.handle != hndl) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.handle != hndl) return (EFAULT);
   m_buffer_avail -= 1;
   return (evnt.result);
 }
@@ -718,6 +724,7 @@ CC3000::bind(int hndl, int port)
 
   hci_evnt_bind_t evnt;
   res = await(HCI_EVNT_BIND, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
   return (evnt.result);
 }
@@ -731,6 +738,7 @@ CC3000::listen(int hndl)
 
   hci_evnt_listen_t evnt;
   res = await(HCI_EVNT_LISTEN, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
   return (evnt.result);
 }
@@ -746,9 +754,10 @@ CC3000::accept(int hndl, uint8_t ip[4], int &port)
 
   hci_evnt_accept_t evnt;
   res = await(HCI_EVNT_ACCEPT, &evnt, sizeof(evnt));
+  if (evnt.status != 0) res = EFAULT;
+  if (evnt.result < 0) res = evnt.result;
   if (res < 0) return (res);
   res = evnt.handle;
-  if (evnt.result < 0) return (EFAULT);
   if (!set_socket_state(res, true)) return (EFAULT);
 
   memrevcpy(ip, evnt.ip, sizeof(evnt.ip));
@@ -761,19 +770,20 @@ int
 CC3000::close(int hndl)
 {
   while (m_buffer_avail != BUFFER_COUNT) service(100);
+  service(100);
 
   hci_cmnd_close_socket_t cmnd(hndl);
   int res = issue(HCI_CMND_CLOSE_SOCKET, &cmnd, sizeof(cmnd));
   if (res < 0) return (res);
 
-  uint16_t saved = m_timeout;
-  m_timeout = 1000;
   hci_evnt_close_socket_t evnt;
+  uint16_t saved = m_timeout;
+  m_timeout = 5000;
   res = await(HCI_EVNT_CLOSE_SOCKET, &evnt, sizeof(evnt));
   m_timeout = saved;
   set_socket_state(hndl, false);
+  if (evnt.status != 0) res = EFAULT;
   if (res < 0) return (res);
-  if (evnt.status != 0) return (EFAULT);
   return (evnt.result);
 }
 #endif

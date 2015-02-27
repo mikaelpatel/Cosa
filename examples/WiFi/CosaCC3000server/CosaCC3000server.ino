@@ -73,11 +73,12 @@ void loop()
 {
   const size_t BUF_MAX = 64;
   static uint16_t requests = 0;
-  static uint16_t errors = 0;
+  static uint16_t errs = 0;
+  static uint16_t closerrs = 0;
   uint32_t readhndls = FD_ZERO();
   uint32_t writehndls = FD_ZERO();
   uint32_t errorhndls = FD_ZERO();
-  int count = 0;
+  uint32_t count = 0;
   int recvs = 0;
   uint8_t ip[4];
   int client;
@@ -158,6 +159,7 @@ void loop()
     count += res;
     obuf.empty();
 
+    for (uint8_t ix = 0; ix < 14 * 4; ix++) {
     page << PSTR("<TR>") << endl;
     for (uint8_t i = 0; i < 14; i++) {
       Board::DigitalPin pin;
@@ -170,26 +172,36 @@ void loop()
       page << PSTR("</TD>") << endl;
     }
     page << PSTR("</TR>") << endl;
+    res = wifi.send(client, obuf, obuf.available());
+    if (res != obuf.available()) goto error;
+    count += res;
+    obuf.empty();
+    }
     page << PSTR("</TABLE>") << BR;
     page << BR;
     res = wifi.send(client, obuf, obuf.available());
+    if (res != obuf.available()) goto error;
     count += res;
-    ASSERT(res == obuf.available());
     obuf.empty();
 
     page << PSTR("Request: ") << ++requests << BR;
-    page << PSTR("Errors: ") << errors << BR;
+    page << PSTR("Send Errors: ") << errs << BR;
+    page << PSTR("Close Errors: ") << closerrs << BR;
     page << PSTR("Time: ") << RTC::seconds() << BR;
     page << (str_P) footer;
     res = wifi.send(client, obuf, obuf.available());
-    ASSERT(res == obuf.available());
+    if (res != obuf.available()) goto error;
     count += res;
   }
   TRACE(count);
 
  error:
-  errors += (res < 0);
+  if (res < 0) {
+    TRACE(res);
+    wifi.service(1000);
+  }
+  errs += (res < 0);
   MEASURE("Close client connection:", 1)
     res = wifi.close(client);
-  errors += (res < 0);
+  closerrs += (res < 0);
 }

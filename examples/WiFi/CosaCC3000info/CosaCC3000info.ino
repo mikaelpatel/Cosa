@@ -51,17 +51,19 @@ void setup()
   TRACE(PACKAGE_BUILD_NR);
   trace << endl;
 
-#if defined(DELETE_PROFILES)
+  // #define DELETE_PROFILES
+# if defined(DELETE_PROFILES)
   MEASURE("Clear all profiles:", 1)
     res = wifi.wlan_ioctl_del_profile(0xff);
   if (res < 0) TRACE(res);
-#endif
+# endif
 
-#if defined(SET_CONNECTION_POLICY)
+  // #define SET_CONNECTION_POLICY
+# if defined(SET_CONNECTION_POLICY)
   MEASURE("Set connect policy:", 1)
     res = wifi.wlan_ioctl_set_connection_policy(false, false, false);
   if (res < 0) TRACE(res);
-#endif
+# endif
 
   if (wifi.wlan_ioctl_statusget() == wifi.WLAN_STATUS_DISCONNECTED) {
     MEASURE("Connect to WLAN:", 1)
@@ -70,6 +72,7 @@ void setup()
 			      NULL,
 			      PSTR("PASSWORD"));
     if (res < 0) TRACE(res);
+
   }
 
   INFO("MAC and Network addresses:", 0);
@@ -78,7 +81,10 @@ void setup()
   uint8_t dns[4];
   uint8_t mac[6];
 
-  wifi.get_addr(ip, subnet);
+  do {
+    wifi.service();
+    wifi.get_addr(ip, subnet);
+  } while (*ip == 0 && 0);
   wifi.get_dns_addr(dns);
   wifi.get_mac_addr(mac);
 
