@@ -32,7 +32,7 @@
  *  Thermometer           Display<temp,0,1>
  *  +--------+            +---------+
  *  | sensor |            | display |
- *  |        |---[temp]-->| sensor  |
+ *  |        |---[temp]-->|  temp   |
  *  |        |            |         |
  *  +--------+            +---------+
  *  [OWI/2048ms]
@@ -79,16 +79,16 @@ const char display_tick_suffix[] __PROGMEM = "";
 Display<Clock::Tick, 0, 0>
 display_tick(&lcd, (str_P) display_tick_prefix, (str_P) display_tick_suffix, tick);
 
-const char display_sensor_prefix[] __PROGMEM = "Indoor:";
-const char display_sensor_suffix[] __PROGMEM = " C";
+const char display_temp_prefix[] __PROGMEM = "Indoor:";
+const char display_temp_suffix[] __PROGMEM = " C";
 Display<Thermometer::Temperature, 0, 1>
-display_sensor(&lcd, (str_P) display_sensor_prefix, (str_P) display_sensor_suffix, temp);
+display_temp(&lcd, (str_P) display_temp_prefix, (str_P) display_temp_suffix, temp);
 
 // The wiring; control dependencies (capsules)
 Capsule* const tick_listeners[] __PROGMEM = { &display_tick, NULL };
 Clock::Tick tick(tick_listeners, 0);
 
-Capsule* const temp_listeners[] __PROGMEM = { &display_sensor, NULL };
+Capsule* const temp_listeners[] __PROGMEM = { &display_temp, NULL };
 Thermometer::Temperature temp(temp_listeners, 0);
 
 void setup()
