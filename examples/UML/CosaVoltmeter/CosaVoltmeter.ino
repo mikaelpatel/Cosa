@@ -1,5 +1,5 @@
 /**
- * @file CosaSensor.ino
+ * @file CosaVoltmeter.ino
  * @version 1.0
  *
  * @section License
@@ -20,7 +20,7 @@
  *
  * @section Diagram
  *
- *    Sensor              Probe
+ *  Voltmeter             Probe
  *  +--------+          +--------+
  *  | sensor |          | probe  |
  *  |        |---[s1]-->|        |
@@ -36,24 +36,24 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-#include "Cosa/UML/Sensor.hh"
+#include "Cosa/UML/Voltmeter.hh"
 #include "Cosa/UML/Probe.hh"
 #include "Cosa/UML/Controller.hh"
 
 using namespace UML;
 
 // Forward declaration of the connectors
-extern Sensor::Sample s1;
+extern Voltmeter::Sample s1;
 
 // The capsules with data dependencies (connectors)
-Sensor sensor(Board::A0, s1, 1024);
+Voltmeter sensor(Board::A0, s1, 1024);
 
 const char probe_name[] __PROGMEM = "probe";
-Probe<Sensor::Sample> probe((str_P) probe_name, s1);
+Probe<Voltmeter::Sample> probe((str_P) probe_name, s1);
 
 // The wiring; control dependencies (capsules)
 Capsule* const s1_listeners[] __PROGMEM = { &probe, NULL };
-Sensor::Sample s1(s1_listeners, 0);
+Voltmeter::Sample s1(s1_listeners, 0);
 
 void setup()
 {
