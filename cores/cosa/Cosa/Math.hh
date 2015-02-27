@@ -25,16 +25,15 @@
 #include "Cosa/Types.h"
 
 /**
- * Random number in given range (0..range-1). Max range value is
- * RAND_MAX(0x7fff).
+ * Random number in given range (0..range). Max range value is
+ * RAND_MAX(0x7fff) - 1.
  * @param[in] range value.
  * @return random number.
  */
 inline uint16_t
 rand(uint16_t range)
 {
-  if (range == 0) return 0;
-  return (rand() % range);
+  return (rand() % (range + 1));
 }
 
 /**
@@ -44,11 +43,10 @@ rand(uint16_t range)
  * @param[in] high range value.
  * @return random number.
  */
-inline uint16_t
-rand(uint16_t low, uint16_t high)
+inline int16_t
+rand(int16_t low, int16_t high)
 {
-  if (low >= high) return (low);
-  return (rand(high - low) + low);
+  return (rand() % (high - low + 1) + low);
 }
 
 /**
@@ -60,8 +58,7 @@ rand(uint16_t low, uint16_t high)
 inline uint32_t
 random(uint32_t range)
 {
-  if (range == 0) return (0);
-  return (random() % range);
+  return (random() % (range + 1));
 }
 
 /**
@@ -71,11 +68,10 @@ random(uint32_t range)
  * @param[in] high range value.
  * @return random number.
  */
-inline uint32_t
-random(uint32_t low, uint32_t high)
+inline int32_t
+random(int32_t low, int32_t high)
 {
-  if (low >= high) return (low);
-  return (random(high - low) + low);
+  return (random(high - low + 1) + low);
 }
 
 /**
@@ -83,12 +79,12 @@ random(uint32_t low, uint32_t high)
  * type should be unsigned.
  * @param[in] T unsigned integer type (uint8_t, uint16_t,..)
  * @param[in] value
- * @return log(2)
+ * @return log(2) > value
  */
 template<class T>
 inline uint8_t log2(T value)
 {
-  uint8_t res = 1;
+  uint8_t res = 0;
   while (value != 0) {
     res += 1;
     value >>= 1;
@@ -106,10 +102,16 @@ inline uint8_t log2(T value)
  * @param[in] out_max maximum value in output range.
  * @return mapping
  */
-template<class T>
-T map(T x, T in_min, T in_max, T out_min, T out_max)
+template<class T, T in_min, T in_max, T out_min, T out_max>
+T map(T x)
 {
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  static_assert(in_min < in_max, "bad range for map function");
+  static_assert(out_min < out_max, "bad domain for map function");
+  if (x < in_min) return (out_min);
+  if (x > in_max) return (out_max);
+  T range = in_max - in_min;
+  T domain = out_max - out_min;
+  return ((((x - in_min) * domain)/range) + out_min);
 }
 
 /**
@@ -120,9 +122,10 @@ T map(T x, T in_min, T in_max, T out_min, T out_max)
  * @param[in] high maximum value.
  * @return constrain
  */
-template<class T>
-T constrain(T x, T low, T high)
+template<class T, T low, T high>
+T constrain(T x)
 {
+  static_assert(low < high, "bad range for contrain function");
   return (x < low ? low : (x > high ? high : x));
 }
 
@@ -135,8 +138,8 @@ T constrain(T x, T low, T high)
  * @param[in] high maximum range value.
  * @return bool
  */
-template<class T>
-bool is_within(T x, T low, T high)
+template<class T, T low, T high>
+bool is_within(T x)
 {
   return (!(x < low || x > high));
 }
