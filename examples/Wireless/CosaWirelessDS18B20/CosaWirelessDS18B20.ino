@@ -90,8 +90,16 @@ NRF24L01P rf(NETWORK, DEVICE);
 
 #elif defined(USE_VWI)
 #include "Cosa/Wireless/Driver/VWI.hh"
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-VirtualWireCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh"
+// BitstuffingCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/Block4B4BCodec.hh"
+// BitstuffingCodec codec;
+#include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec.hh"
+HammingCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.hh"
+// ManchesterCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+// VirtualWireCodec codec;
 #define BPS 4000
 #if defined(BOARD_ATTINY)
 VWI rf(NETWORK, DEVICE, BPS, Board::D1, Board::D0, &codec);
@@ -113,14 +121,14 @@ OutputPin pw(Board::D4);
 #define DEEP_SLEEP(s)					\
   do {							\
     uint8_t mode = Power::set(SLEEP_MODE_PWR_DOWN);	\
-    sleep(s);						\
+    Watchdog::delay(s * 1000);				\
     Power::set(mode);					\
   } while (0)
 
 void setup()
 {
   // Start watchdog and real-time clock
-  Watchdog::begin(128);
+  Watchdog::begin(1024);
   RTC::begin();
 
   // Start the wireless device
