@@ -8,7 +8,7 @@ modes, Digital, and Analog Pins, External and Pin Change Interrupts,
 Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1
 (Servo/Tone/VWI), UART, USI, SPI, TWI and EEPROM. Cosa supports
 several programming paradigms including Multi-Tasking, Event Driven
-Programming and UML Capsules/Actors. Cosa contain over 200 classes and
+Programming and UML Capsules/Actors. Cosa contains over 200 classes and
 nearly as many example sketches to get started.
 
 Please note that Cosa is not an Arduino core; Cosa does not implement
