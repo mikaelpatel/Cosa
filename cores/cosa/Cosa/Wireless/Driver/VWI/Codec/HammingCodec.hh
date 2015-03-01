@@ -23,8 +23,8 @@
 
 #include "Cosa/Wireless/Driver/VWI.hh"
 
-// Enable to allow decoding information (error correction and detection).
-// The decoding table with double in size (256 bytes).
+// Enable to allow decoding additional information (syndrome).
+// The decoding table will double in size (256 bytes).
 // #define HAMMING_SYNDROME
 
 /**
@@ -100,7 +100,7 @@ private:
   /** Symbol mapping table: 4 to 8 bits. */
   static const uint8_t symbols[] PROGMEM;
 
-  /** Code mapping table: 8 to 4 bits symptom and 4-bit code. */
+  /** Code mapping table: 8 to (4 bits syndrome and) 4-bit code. */
   static const uint8_t codes[] PROGMEM;
 
   /** Message preamble with start symbol. */

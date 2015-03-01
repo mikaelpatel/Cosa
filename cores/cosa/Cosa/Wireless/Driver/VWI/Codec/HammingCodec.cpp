@@ -20,7 +20,7 @@
 
 #include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec.hh"
 
-// Encoding table; 4-bit code to 8-bit symbol.
+// Encoding table; 4-bit code to 8-bit symbol
 const uint8_t HammingCodec::symbols[] __PROGMEM = {
   0x0f, 0x18, 0x24, 0x33, 0x42, 0x55, 0x69, 0x7e, 0x81, 0x96, 0xaa, 0xbd, 0xcc, 0xdb, 0xe7, 0xf0
 };
@@ -49,7 +49,7 @@ const uint8_t HammingCodec::codes[256] __PROGMEM = {
 
 #else
 
-// Decoding table without syndrome; 8-bit symbol to 4-bit code; nibble vector.
+// Decoding table without syndrome; 8-bit symbol to 4-bit code; 2 x 4-bit per byte
 const uint8_t HammingCodec::codes[128] __PROGMEM = {
   0x08, 0x40, 0x20, 0x00, 0x10, 0x00, 0x00, 0x00,
   0x11, 0x13, 0x15, 0x91, 0x11, 0x11, 0x11, 0x10,
