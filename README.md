@@ -6,18 +6,21 @@ and Wiring library with a large set of integrated classes that support
 the full range of AVR/ATmega/ATtiny internal hardware modules; all pin
 modes, Digital, and Analog Pins, External and Pin Change Interrupts,
 Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1
-(Servo/Tone/VWI), UART, USI, SPI, TWI and EEPROM.
+(Servo/Tone/VWI), UART, USI, SPI, TWI and EEPROM. Cosa supports
+several programming paradigms including Multi-Tasking, Event Driven
+Programming and UML Capsules/Actors. Cosa contain over 200 classes and
+nearly as many example sketches to get started.
 
 Please note that Cosa is not an Arduino core; Cosa does not implement
-the Arduino functions. Cosa Sketches may be built with the Arduino IDE
-or with the Cosa command line based build support for Linux.
+the Arduino API. Sketches written with Cosa may be built with the
+Arduino IDE or with the command line based build support for Linux.
 
 More details are available:
 
 * [Che Cosa?](./doc/01-cosa.md)
 * [How to install Cosa](./doc/02-install.md)
 * [Built-in drivers](./doc/04-drivers.md)
-* [Exernal Libraries, Tools and Applications](./doc/05-libraries.md)
+* [External Libraries, Tools and Applications](./doc/05-libraries.md)
 
 Cosa API
 --------
