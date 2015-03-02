@@ -30,7 +30,7 @@ namespace UML {
 /**
  * Thermometer Capsule class. Provides a signal connector that is set
  * according to temperature reading. The thermometer is periodically
- * sampled and listeners are scheduled when the value changes.
+ * sampled and listeners are scheduled when the temperature changes.
  *
  * @section Diagram
  * @code
@@ -59,41 +59,51 @@ public:
   typedef Connector<float,true> Temperature;
 
   /**
-   * Construct Thermometer monitoring given OWI bus and generating
-   * signal. The pin is sampled with the given period (default 1024 ms).
+   * Construct Thermometer monitoring given OWI bus and temperature
+   * connnector. The temperature is sampled with the given period
+   * (default 2048 ms).
    * @param[in] pin 1-wire bus.
-   * @param[in] sample connector.
+   * @param[in] temp connector.
    * @param[in] ms period.
    */
   Thermometer(OWI* pin, Temperature& temp, uint16_t ms = DEFAULT_TIMEOUT) :
     TimedCapsule(ms / 2),
     DS18B20(pin),
     m_temp(temp),
-    m_state(0)
+    m_state(CONVERT)
   {}
 
   /**
    * @override UML::Capsule
-   * Read digital pin and update signal on change.
+   * Request temperature conversion and read value.
    */
   virtual void behavior()
   {
     switch (m_state) {
-    case 0:
-      m_state = convert_request() ? 1 : 2;
+    case CONVERT:
+      // Request a temperature conversion
+      m_state = convert_request() ? READ : ERROR;
       break;
-    case 1:
-      m_state = read_scratchpad() ? 0 : 2;
+    case READ:
+      // Read temperature and scale to a float
+      m_state = read_scratchpad() ? CONVERT : ERROR;
       m_temp = get_temperature() * 0.0625;
       break;
-    case 2:
+    case ERROR:
+      // Error state; set error value and retry
+      m_temp = 85.0;
+      m_state = CONVERT;
       break;
     }
   }
 
 protected:
-  Temperature& m_temp;
-  uint8_t m_state;
+  Temperature& m_temp;		//!< Temperature reading.
+  enum {
+    CONVERT,			//!< Convert request.
+    READ,			//!< Read temperature.
+    ERROR			//!< Error state.
+  } m_state;		    	//!< Current state.
 };
 
 };

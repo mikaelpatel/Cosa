@@ -28,8 +28,8 @@ namespace UML {
 /**
  * The Capsule class is an abstract behavior. Typically the capsule
  * listens to Connectors. Connectors used as formal arguments to the
- * capsule capsules are also known as Ports. Capsules that generate
- * data to the connectors will also define a specific connector type.
+ * capsule constructor are also known as Ports. Capsules that generate
+ * data to the connectors may also define a specific connector type.
  *
  * @section Diagram
  * @code
@@ -58,10 +58,11 @@ public:
    * The capsule behavior is run when any of the connectors it
    * listens on is changed.
    */
-  virtual void behavior() = 0;
+  virtual void behavior()
+  {}
 
 protected:
-  bool is_scheduled;
+  bool is_scheduled;		//!< Capsule run-time state.
   friend class Controller;
 };
 

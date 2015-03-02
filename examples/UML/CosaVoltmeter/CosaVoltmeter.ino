@@ -31,14 +31,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Event.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-#include "Cosa/UML/Voltmeter.hh"
+#include "Cosa/UML.hh"
 #include "Cosa/UML/Probe.hh"
-#include "Cosa/UML/Controller.hh"
+#include "Cosa/UML/Voltmeter.hh"
 
 using namespace UML;
 
@@ -61,15 +59,15 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaSensor: started"));
 
-  // Use the watchdog for timeout events
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  // Start UML run-time
+  UML::begin();
 
-  // Start the timed probe
+  // Start the Timed Probe
   sensor.begin();
 }
 
 void loop()
 {
-  Event::service();
-  controller.run();
+  // Service Events and scheduled Capsules
+  UML::service();
 }

@@ -40,10 +40,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
-#include "Cosa/Event.hh"
-#include "Cosa/Watchdog.hh"
-
 #include "Cosa/LCD/Driver/HD44780.hh"
 // HD44780::Port4b port;
 // HD44780::SR3W port;
@@ -56,9 +52,9 @@ HD44780::SR3WSPI port;
 // HD44780::SainSmart port;
 HD44780 lcd(&port);
 
+#include "Cosa/UML.hh"
 #include "Cosa/UML/Clock.hh"
 #include "Cosa/UML/Display.hh"
-#include "Cosa/UML/Controller.hh"
 #include "Cosa/UML/Thermometer.hh"
 
 using namespace UML;
@@ -77,12 +73,12 @@ Thermometer sensor(&owi, temp);
 const char display_tick_prefix[] __PROGMEM = "Clock: ";
 const char display_tick_suffix[] __PROGMEM = "";
 Display<Clock::Tick, 0, 0>
-display_tick(&lcd, (str_P) display_tick_prefix, (str_P) display_tick_suffix, tick);
+display_tick(tick, &lcd, (str_P) display_tick_prefix, (str_P) display_tick_suffix);
 
 const char display_temp_prefix[] __PROGMEM = "Indoor:";
 const char display_temp_suffix[] __PROGMEM = " C";
 Display<Thermometer::Temperature, 0, 1>
-display_temp(&lcd, (str_P) display_temp_prefix, (str_P) display_temp_suffix, temp);
+display_temp(temp, &lcd, (str_P) display_temp_prefix, (str_P) display_temp_suffix);
 
 // The wiring; control dependencies (capsules)
 Capsule* const tick_listeners[] __PROGMEM = { &display_tick, NULL };
@@ -93,23 +89,22 @@ Thermometer::Temperature temp(temp_listeners, 0);
 
 void setup()
 {
-  // Use the watchdog for timeout events
-  Watchdog::begin(16, Watchdog::push_timeout_events);
-  RTC::begin();
-
-  // Connect the sensor
-  sensor.connect(0);
+  // Start the UML run-time
+  UML::begin();
 
   // Start the lcd
   lcd.begin();
 
-  // Start the sensor and clock
+  // Connect and start the sensor
+  sensor.connect(0);
   sensor.begin();
+
+  // Start the clock
   clock.begin();
 }
 
 void loop()
 {
-  Event::service();
-  controller.run();
+  // Service Events and scheduled Capsules
+  UML::service();
 }

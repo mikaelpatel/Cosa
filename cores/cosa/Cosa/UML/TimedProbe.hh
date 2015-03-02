@@ -33,10 +33,9 @@ namespace UML {
  *
  * @section Diagram
  * @code
- *
  *           TimedProbe<T>
  *           +-----------+
- *           |    p1     |
+ *           |   probe   |
  * ---[T]--->|           |
  *           |           |
  *           +-----------+
@@ -64,12 +63,14 @@ public:
    */
   virtual void behavior()
   {
-    trace << Watchdog::millis() << ':' << m_name << '=' << m_connector << endl;
+    trace << Watchdog::millis() << ':'
+	  << m_name << '=' << m_connector
+	  << endl;
   }
 
 protected:
-  str_P m_name;
-  T& m_connector;
+  str_P m_name;			//!< Timed Probe trace string.
+  T& m_connector;		//!< Timed Probe input connector.
 };
 
 };

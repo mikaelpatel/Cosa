@@ -21,9 +21,9 @@
 #ifndef COSA_UML_TIMED_CAPSULE_HH
 #define COSA_UML_TIMED_CAPSULE_HH
 
+#include "Cosa/Periodic.hh"
 #include "Cosa/UML/Capsule.hh"
 #include "Cosa/UML/Controller.hh"
-#include "Cosa/Periodic.hh"
 
 namespace UML {
 
@@ -33,13 +33,13 @@ namespace UML {
  * @section Diagram
  * @code
  *
- *     TimedCapsule
- *   +--------------+
- *   |      c1      |
- *   |              |---[Connector]--->
- *   |              |
- *   +--------------+
- *               [ms]
+ *   TimedCapsule
+ *   +-----------+
+ *   |  capsule  |
+ *   |           |---[Connector]--->
+ *   |           |
+ *   +-----------+
+ *            [ms]
  * @endcode
  */
 class TimedCapsule : public Capsule, public Periodic {

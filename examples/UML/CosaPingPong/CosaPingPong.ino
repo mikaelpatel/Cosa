@@ -52,13 +52,12 @@
 #include "Cosa/IOBuffer.hh"
 #endif
 
-#include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+#include "Cosa/UML.hh"
 #include "Cosa/UML/Capsule.hh"
 #include "Cosa/UML/Connector.hh"
-#include "Cosa/UML/Controller.hh"
 
 using namespace UML;
 
@@ -149,8 +148,8 @@ void setup()
   TRACE(sizeof(c2));
 #endif
 
-  // Start RTC for measurement
-  RTC::begin();
+  // Start UML run-time
+  UML::begin();
 }
 
 void loop()

@@ -29,16 +29,16 @@ namespace UML {
 
 /**
  * Clock Capsule class. The clock signal is defined as a Connector
- * type; Tick. The behavior of this class is simple incrementing the
- * tick value and thereby scheduling the capsules that are listening
- * to the tick.
+ * type; Tick. The behavior of the clock capsule will increment
+ * the tick value and thereby scheduling the capsules that are
+ * listening to the tick.
  *
  * @section Diagram
  * @code
  *
  *     Clock
  *   +--------+
- *   |   c1   |
+ *   | clock  |
  *   |        |---[Tick]--->
  *   |        |
  *   +--------+
@@ -49,17 +49,22 @@ namespace UML {
 class Clock : public TimedCapsule {
 public:
   /**
-   * Type of clock tick connector.
+   * Type for clock tick connector.
    */
   typedef Connector<clock_t> Tick;
+
+  /**
+   * Default period for clock (in ms).
+   */
+  static const uint16_t DEFAULT_TIMEOUT = 1024;
 
   /**
    * Construct Clock with given tick connector and period in
    * milli-seconds.
    * @param[in] tick connector.
-   * @param[in] ms period.
+   * @param[in] ms period (default 1024 ms).
    */
-  Clock(Tick& tick, uint16_t ms) :
+  Clock(Tick& tick, uint16_t ms = DEFAULT_TIMEOUT) :
     TimedCapsule(ms),
     m_tick(tick)
   {}
@@ -75,7 +80,7 @@ public:
   }
 
 protected:
-  Tick& m_tick;
+  Tick& m_tick;			//!< Clock output tick connector.
 };
 
 };

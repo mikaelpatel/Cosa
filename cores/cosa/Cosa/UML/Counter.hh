@@ -33,12 +33,12 @@ namespace UML {
  *
  * @section Diagram
  * @code
- *              Counter<T>
- *            +------------+
- *            |    c1      |
- *  ---[T]--->|            |---[Count]--->
- *            |            |
- *            +------------+
+ *            Counter<T>
+ *            +---------+
+ *            | counter |
+ *  ---[T]--->|         |---[Count]--->
+ *            |         |
+ *            +---------+
  * @endcode
  */
 template<typename T>
@@ -76,8 +76,8 @@ public:
   }
 
 protected:
-  T& m_signal;
-  Count& m_count;
+  T& m_signal;			//!< Counter input signal connnector.
+  Count& m_count;		//!< Counter output count connnector.
 };
 
 };

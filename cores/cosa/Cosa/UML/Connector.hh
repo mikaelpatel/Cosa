@@ -54,18 +54,18 @@ class Connector {
 public:
   /**
    * Construct Connector with given null terminated vector of
-   * listeners, and initial value.
+   * listeners (Capsules), and initial connector value.
    * @param[in] listeners null terminated vector of capsule references.
    * @param[in] value initial value of connector.
    */
   Connector(Capsule* const* listeners, T value) :
-    m_value(value),
-    m_listeners(listeners)
+    m_listeners(listeners),
+    m_value(value)
   {}
 
   /**
    * Set the connector with given value. Schedule listener
-   * capsules.
+   * capsules according to ON_CHANGE setting.
    * @param[in] value to update with.
    * @return value.
    */
@@ -79,7 +79,7 @@ public:
 
   /**
    * Set the connector with value from given connector. Schedule
-   * listener capsules.
+   * listener capsules according to ON_CHANGE setting.
    * @param[in] connector value to assign.
    * @return value.
    */
@@ -98,8 +98,8 @@ public:
   }
 
 protected:
-  T m_value;
-  Capsule* const* m_listeners;
+  Capsule* const* m_listeners;	//!< Null terminated vector of capsules.
+  T m_value;			//!< Connector value.
 };
 
 /**

@@ -21,19 +21,22 @@
 #ifndef COSA_UML_LCD_HH
 #define COSA_UML_LCD_HH
 
-#include "Cosa/UML/Capsule.hh"
-#include "Cosa/Trace.hh"
 #include "Cosa/LCD.hh"
+#include "Cosa/UML/Capsule.hh"
 
 namespace UML {
 
 /**
- * Abstract Display Capsule for given Connector type.
+ * Abstract Display Capsule for given Connector type. Will display
+ * connector value with given prefix and suffix string on LCD at the
+ * given position (X,Y).
  * @param[in] T connector type to display.
+ * @param[in] X position on display.
+ * @param[in] Y position on display.
  *
  * @section Diagram
  * @code
- *            Display<T>    LCD::Device
+ *                 Display<T,X,Y>
  *           +----------+-----------------+
  *           | display  | name            |
  * ---[T]--->|          | x,y             |
@@ -47,11 +50,12 @@ class Display : public Capsule {
 public:
   /**
    * Construct Display for given connector.
-   * @param[in] dev LCD device.
-   * @param[in] name string in program memory.
    * @param[in] connector.
+   * @param[in] dev LCD device.
+   * @param[in] prefix string in program memory.
+   * @param[in] suffix string in program memory.
    */
-  Display(LCD::Device* dev, str_P prefix, str_P suffix, T& connector) :
+  Display(T& connector, LCD::Device* dev, str_P prefix, str_P suffix) :
     Capsule(),
     m_dev(dev),
     m_prefix(prefix),
@@ -82,7 +86,7 @@ public:
   /**
    * @override UML::Capsule
    * Print connector value at display position with prefix and suffix
-   * string.
+   * string. Use width and precision if floating-point.
    */
   virtual void behavior()
   {

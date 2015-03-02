@@ -44,22 +44,20 @@
  *  |        |---[onoff]-->|        |
  *  |        |             |        |
  *  +--------+             +--------+
- *        [D2]              [2048 ms]
+ *  GND-()-[D2]              [2048 ms]
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Event.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-#include "Cosa/UML/Clock.hh"
-#include "Cosa/UML/Button.hh"
+#include "Cosa/UML.hh"
 #include "Cosa/UML/LED.hh"
 #include "Cosa/UML/Probe.hh"
+#include "Cosa/UML/Clock.hh"
+#include "Cosa/UML/Button.hh"
 #include "Cosa/UML/TimedProbe.hh"
-#include "Cosa/UML/Controller.hh"
 
 using namespace UML;
 
@@ -92,8 +90,8 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaCapsules: started"));
 
-  // Use the watchdog for timeout events
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  // Start the UML run-time
+  UML::begin();
 
   // Start the Timed Capsules
   c1.begin();
@@ -103,6 +101,6 @@ void setup()
 
 void loop()
 {
-  Event::service();
-  controller.run();
+  // Service Events and scheduled Capsules
+  UML::service();
 }

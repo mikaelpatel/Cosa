@@ -30,29 +30,30 @@ namespace UML {
 /**
  * Trigger Capsule class. Provides a boolean signal connector that is
  * set according to the trigger (external interrupt pin). A pullup
- * resistor is used and the falling edge of the input is detected.
+ * resistor is used and the falling edge of the input is detected by
+ * default.
  *
  * @section Diagram
  * @code
  *
  *    Trigger
  *  +---------+
- *  |   t1    |
+ *  | trigger |
  *  |         |---[Signal]--->
  *  |         |
  *  +---------+
- *       [EXTn]
+ *  GND-()-[EXTn]
  *
  * @endcode
  */
 class Trigger : public Capsule, public ExternalInterrupt {
 public:
   /**
-   * Construct Trigger on external interrupt pin and generating
-   * signal.
+   * Construct Trigger on given external interrupt pin and generating
+   * signal connector.
    * @param[in] pin digital pin for trigger.
    * @param[in] signal connector.
-   * @param[in] ms period.
+   * @param[in] mode of external interrupt.
    */
   Trigger(Board::ExternalInterruptPin pin, Signal& signal,
 	  ExternalInterrupt::InterruptMode mode = ON_FALLING_MODE) :
@@ -60,14 +61,6 @@ public:
     ExternalInterrupt(pin, mode, true),
     m_signal(signal)
   {}
-
-  /**
-   * @override UML::Capsule
-   * Trigger will perform all updates in the interrupt service.
-   */
-  virtual void behavior()
-  {
-  }
 
 protected:
   /**
@@ -81,7 +74,7 @@ protected:
     m_signal = read();
   }
 
-  Signal& m_signal;
+  Signal& m_signal;		//!< Trigger output signal connector.
 };
 
 };

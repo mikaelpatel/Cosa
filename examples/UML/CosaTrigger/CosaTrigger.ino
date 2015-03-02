@@ -34,15 +34,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Event.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+#include "Cosa/UML.hh"
 #include "Cosa/UML/Trigger.hh"
 #include "Cosa/UML/Counter.hh"
 #include "Cosa/UML/TimedProbe.hh"
-#include "Cosa/UML/Controller.hh"
 
 using namespace UML;
 
@@ -73,20 +71,18 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaTrigger: started"));
 
-  // Use the watchdog for timeout events
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  // Start UML run-time
+  UML::begin();
 
-  // Start the timed probe
+  // Start the Timed Probe
   probe.begin();
 
-  // Enable the trigger capsule
+  // Enable the Trigger Capsule
   trigger.enable();
 }
 
 void loop()
 {
-  Event event;
-  while (Event::queue.dequeue(&event))
-    event.dispatch();
-  controller.run();
+  // Service Events and scheduled Capsules
+  UML::service();
 }

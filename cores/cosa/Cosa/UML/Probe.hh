@@ -21,9 +21,9 @@
 #ifndef COSA_UML_PROBE_HH
 #define COSA_UML_PROBE_HH
 
-#include "Cosa/UML/Capsule.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/UML/Capsule.hh"
 
 namespace UML {
 
@@ -33,12 +33,12 @@ namespace UML {
  *
  * @section Diagram
  * @code
- *             Probe<T>
- *           +----------+
- *           |    p1    |
- * ---[T]--->|          |
- *           |          |
- *           +----------+
+ *            Probe<T>
+ *           +--------+
+ *           | probe  |
+ * ---[T]--->|        |
+ *           |        |
+ *           +--------+
  *
  * @endcode
  */
@@ -46,7 +46,8 @@ template<typename T>
 class Probe : public Capsule {
 public:
   /**
-   * Construct Probe for given connector.
+   * Construct Probe for given connector and with given trace string
+   * in program memory.
    * @param[in] name string in program memory.
    * @param[in] connector.
    */
@@ -62,12 +63,14 @@ public:
    */
   virtual void behavior()
   {
-    trace << Watchdog::millis() << ':' << m_name << '=' << m_connector << endl;
+    trace << Watchdog::millis() << ':'
+	  << m_name << '=' << m_connector
+	  << endl;
   }
 
 protected:
-  str_P m_name;
-  T& m_connector;
+  str_P m_name;			//!< Probe trace name.
+  T& m_connector;		//!< Probe trace connector.
 };
 
 };

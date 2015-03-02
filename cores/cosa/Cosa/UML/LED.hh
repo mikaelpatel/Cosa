@@ -21,8 +21,9 @@
 #ifndef COSA_UML_LED_HH
 #define COSA_UML_LED_HH
 
-#include "Cosa/UML/Capsule.hh"
 #include "Cosa/OutputPin.hh"
+#include "Cosa/UML/Capsule.hh"
+#include "Cosa/UML/Connector.hh"
 
 namespace UML {
 
@@ -31,24 +32,24 @@ namespace UML {
  *
  * @section Diagram
  * @code
- *                    LED
- *                +--------+
- *                |   l1   |
- * ---[Signal]--->|        |
- *                |        |
- *                +--------+
- *                      [Dn]
+ *                   LED
+ *                +-------+
+ *                |  led  |
+ * ---[Signal]--->|       |
+ *                |       |
+ *                +-------+
+ *                     [Dn]
  * @endcode
  */
 class LED : public Capsule, private OutputPin {
 public:
   /**
    * Construct LED Capsule for given digital pin.
-   * @param[in] ledpin.
+   * @param[in] pin.
    */
-  LED(Signal& signal, Board::DigitalPin ledpin = Board::LED) :
+  LED(Signal& signal, Board::DigitalPin pin = Board::LED) :
     Capsule(),
-    OutputPin(ledpin, 0),
+    OutputPin(pin, 0),
     m_signal(signal)
   {}
 
@@ -67,7 +68,7 @@ public:
   }
 
 protected:
-  Signal& m_signal;
+  Signal& m_signal;		//!< LED input signal connector.
 };
 
 };

@@ -30,18 +30,18 @@ namespace UML {
 /**
  * Button Capsule class. Provides a boolean signal connector that is
  * set according to the button (digital pin). The pin is periodically
- * sampled and listeners are scheduled when the state changes.
+ * sampled and listeners are scheduled when the button state changes.
  *
  * @section Diagram
  * @code
  *
  *    Button
  *  +--------+
- *  |   bn   |
+ *  | button |
  *  |        |---[Signal]--->
  *  |        |
  *  +--------+
- *        [Dn]
+ *  GND-()-[Dn]
  *
  * @endcode
  */
@@ -60,7 +60,8 @@ public:
    * @param[in] signal connector.
    * @param[in] ms period.
    */
-  Button(Board::DigitalPin pin, Signal& signal, uint16_t ms = DEFAULT_TIMEOUT) :
+  Button(Board::DigitalPin pin, Signal& signal,
+	 uint16_t ms = DEFAULT_TIMEOUT) :
     TimedCapsule(ms),
     InputPin(pin, InputPin::PULLUP_MODE),
     m_signal(signal)
@@ -76,7 +77,7 @@ public:
   }
 
 protected:
-  Signal& m_signal;
+  Signal& m_signal;		//!< Button output signal connector.
 };
 
 };

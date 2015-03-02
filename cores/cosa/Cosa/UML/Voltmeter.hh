@@ -31,18 +31,18 @@ namespace UML {
  * Voltmeter Capsule class. Provides a signal connector that is set
  * according to the sensor (analog pin). The pin is periodically
  * sampled and listeners are scheduled when the value changes.
- * By default the sample is scaled to 5.0 volt.
+ * By default the sample is scaled to the range [0.0..5.0] volt.
  *
  * @section Diagram
  * @code
  *
  *  Voltmeter
  *  +--------+
- *  |   s1   |
+ *  | meter  |
  *  |        |---[Sample]--->
  *  |        |
  *  +--------+
- *     [An/ms]
+ *  >--[An/ms]
  *
  * @endcode
  */
@@ -61,12 +61,14 @@ public:
 
   /**
    * Construct Voltmeter monitoring given analog pin and generating
-   * signal. The pin is sampled with the given period (default 1024 ms).
-   * @param[in] pin analog pin for sensor.
+   * samples on the given connector. The pin is sampled with the given
+   * period.
+   * @param[in] pin analog pin to monitor.
    * @param[in] sample connector.
-   * @param[in] ms period.
+   * @param[in] ms period (default 1024 ms).
    */
-  Voltmeter(Board::AnalogPin pin, Sample& sample, uint16_t ms = DEFAULT_TIMEOUT) :
+  Voltmeter(Board::AnalogPin pin, Sample& sample,
+	    uint16_t ms = DEFAULT_TIMEOUT) :
     TimedCapsule(ms),
     AnalogPin(pin),
     m_sample(sample)
@@ -74,7 +76,7 @@ public:
 
   /**
    * @override UML::Capsule
-   * Read digital pin and update signal on change.
+   * Read analog pin, scale value, and update signal on change.
    */
   virtual void behavior()
   {
@@ -83,9 +85,9 @@ public:
 
   /**
    * @override Sensor
-   * Default sample scaling; range [0..1023] is scaled to [0.0..5.0].
-   * @param[in] sample value.
-   * @return scaled value.
+   * Default sample scaling; range [0..1023] is scaled to [0.0..5.0] volt.
+   * @param[in] sample value (integer).
+   * @return scaled value (float).
    */
   virtual float scale(uint16_t value)
   {
@@ -93,7 +95,7 @@ public:
   }
 
 protected:
-  Sample& m_sample;
+  Sample& m_sample;		//!< Voltmeter output sample connector.
 };
 
 };
