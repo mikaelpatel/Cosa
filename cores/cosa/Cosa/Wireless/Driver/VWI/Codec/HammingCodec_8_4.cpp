@@ -46,6 +46,11 @@ const uint8_t HammingCodec_8_4::codes[128] __PROGMEM = {
   0xff, 0xff, 0xff, 0xfe, 0xff, 0xfd, 0xfb, 0x7f
 };
 
+/*
+ * Calculating the start symbol (8-bits per symbol):
+ * 0x55, 0x55 => 0101.0101, 0101.0101 (preamble 7-bit).
+ * 0x55, 0x5a => 0101.0101, 0101.1010
+ */
 const uint8_t HammingCodec_8_4::preamble[8] __PROGMEM = {
   0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x5a
 };
