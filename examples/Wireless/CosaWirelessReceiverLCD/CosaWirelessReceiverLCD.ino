@@ -58,9 +58,11 @@ RFM69 rf(NETWORK, DEVICE);
 // #include "Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh"
 // BitstuffingCodec codec;
 // #include "Cosa/Wireless/Driver/VWI/Codec/Block4B4BCodec.hh"
-// BitstuffingCodec codec;
-#include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec.hh"
-HammingCodec codec;
+// Block4B4BCodec codec;
+#include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_7_4.hh"
+HammingCodec_7_4 codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_8_4.hh"
+// HammingCodec_8_4 codec;
 // #include "Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.hh"
 // ManchesterCodec codec;
 // #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"

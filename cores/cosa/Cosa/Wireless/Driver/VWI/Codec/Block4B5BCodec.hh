@@ -67,7 +67,7 @@ public:
    */
   virtual uint8_t decode4(uint8_t symbol)
   {
-    return (pgm_read_byte(&codes[symbol & 0x1f]));
+    return (pgm_read_byte(&codes[symbol & SYMBOL_MASK]));
   }
 
 private:

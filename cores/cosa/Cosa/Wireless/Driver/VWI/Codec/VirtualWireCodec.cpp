@@ -26,6 +26,11 @@ const uint8_t VirtualWireCodec::symbols[] __PROGMEM = {
   0x23, 0x25, 0x26, 0x29, 0x2a, 0x2c, 0x32, 0x34
 };
 
+/*
+ * Calculating the start symbol (6-bits per symbol):
+ * 0x2a, 0x2a => 10.1010, 10.1010 (preamble 6-bit).
+ * 0x38, 0x2c => 10.1100, 11.1000 => 1011,0011.1000 => 0xb38
+ */
 const uint8_t VirtualWireCodec::preamble[] __PROGMEM = {
   0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x38, 0x2c
 };

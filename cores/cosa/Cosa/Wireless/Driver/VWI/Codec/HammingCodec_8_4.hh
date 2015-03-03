@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/VWI/Codec/HammingCodec.hh
+ * @file Cosa/Wireless/Driver/VWI/Codec/HammingCodec_8_4.hh
  * @version 1.0
  *
  * @section License
@@ -18,27 +18,30 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_WIRELESS_DRIVER_VWI_CODEC_HAMMINGCODEC_HH
-#define COSA_WIRELESS_DRIVER_VWI_CODEC_HAMMINGCODEC_HH
+#ifndef COSA_WIRELESS_DRIVER_VWI_CODEC_HAMMINGCODEC_8_4_HH
+#define COSA_WIRELESS_DRIVER_VWI_CODEC_HAMMINGCODEC_8_4_HH
 
 #include "Cosa/Wireless/Driver/VWI.hh"
 
-// Enable to allow decoding additional information (syndrome).
-// The decoding table will double in size (256 bytes).
-// #define HAMMING_SYNDROME
-
 /**
- * Hamming 4-to-8 bit Codec for the Cosa VWI (Virtual Wire
- * Interface). Detect and correct 1-bit errors. Detect 2-bit errors.
- * Uses inverted parity bits to improve DC balance in transmission.
+ * Hamming(8,4) Codec for the Cosa VWI (Virtual Wire Interface). This
+ * is a linear error-correcting code that encodes 4 bits of data into
+ * 8 bits by adding 4 parity bits. Hamming's (8,4) algorithm can
+ * correct any single-bit error, or detect all single-bit and two-bit
+ * errors. This implementation uses inverted parity bits to improve DC
+ * balance in transmission (e.g. avoid coding long sequences of zero
+ * or one).
+ *
+ * @section References
+ * 1. http://en.wikipedia.org/wiki/Hamming_code#.5B7.2C4.5D_Hamming_code_with_an_additional_parity_bit
  */
-class HammingCodec : public VWI::Codec {
+class HammingCodec_8_4 : public VWI::Codec {
 public:
   /**
-   * Construct VirtualWire codec with given bits per symbol, start symbol,
-   * and preamble size.
+   * Construct Hamming(8,4) codec with given bits per symbol, start
+   * symbol, and preamble size.
    */
-  HammingCodec() :
+  HammingCodec_8_4() :
     VWI::Codec(8, 0x5a55, 8)
   {
   }
@@ -72,35 +75,15 @@ public:
    */
   virtual uint8_t decode4(uint8_t symbol)
   {
-#if defined(HAMMING_SYNDROME)
-    return (pgm_read_byte(&codes[symbol]) & 0x0f);
-#else
     uint8_t code = pgm_read_byte(&codes[symbol >> 1]);
     return ((symbol & 0x01) ? (code & 0x0f) : (code >> 4));
-#endif
-  }
-
-  /**
-   * Returns 4-bit syndrome for given symbol. One bit set is a single
-   * bit error (corrected), two bits set is a double bit error.
-   * @param[in] symbol code.
-   * @return 4-bit syndrome.
-   */
-  uint8_t syndrome(uint8_t symbol)
-  {
-#if defined(HAMMING_SYNDROME)
-    return ((~pgm_read_byte(&codes[symbol])) >> 4);
-#else
-    UNUSED(symbol);
-    return (0);
-#endif
   }
 
 private:
   /** Symbol mapping table: 4 to 8 bits. */
   static const uint8_t symbols[] PROGMEM;
 
-  /** Code mapping table: 8 to (4 bits syndrome and) 4-bit code. */
+  /** Code mapping table: 8 to 4-bit code (packed table). */
   static const uint8_t codes[] PROGMEM;
 
   /** Message preamble with start symbol. */
