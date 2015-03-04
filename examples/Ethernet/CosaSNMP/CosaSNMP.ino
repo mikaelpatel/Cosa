@@ -117,20 +117,16 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
   if(pdu.oid.length > (mib_baselen + 2)) return (false);
 
   // Match with Arduino MIB OID root
-  int index = pdu.oid.match(get_oid());
-  if (index < -1) return (false); // MIB is greater than what we deal with
-  uint8_t sys = (pdu.oid.length > mib_baselen) ? pdu.oid.name[mib_baselen] : 0;
-  // Get next value; adjust index referens
+  int sys = pdu.oid.match(get_oid());
+  if (sys < -1) return (false); // MIB is greater than what we deal with
+  int index = ((pdu.oid.length == (mib_baselen + 2)) ? pdu.oid.name[mib_baselen+1] : -1);
+  // Get next value request; adjust sys and index references to next
   if (pdu.type == SNMP::PDU_GET_NEXT) {
-    if ((index < 0) || (sys == 0)) {
+    if (sys <= 0) {
         memcpy_P(&pdu.oid, SNMP::ARDUINO_MIB_OID, mib_baselen + 1);
-        index = 0;
+        sys = ardDigitalPin;
     }
     switch (sys) {
-    case 0:
-      sys = ardDigitalPin;
-      index = 0;
-      break;
     case ardDigitalPin:
       if (index < 19)
         index += 1;
@@ -157,7 +153,7 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
   }
 
   // Check request type
-  if (sys < ardDigitalPin || sys > ardVcc) return (false);
+  if ((index < 0) || (sys < ardDigitalPin) || (sys > ardVcc)) return (false);
 
   // Get value for digital or analog pin, or power supply voltage
   if (pdu.type == SNMP::PDU_GET) {
