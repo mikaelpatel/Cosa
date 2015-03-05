@@ -37,23 +37,24 @@ SNMP::MIB2_SYSTEM::is_request(PDU& pdu)
   uint8_t mib_baselen = pgm_read_byte(SNMP::MIB2_SYSTEM::OID);
   if(pdu.oid.length > (mib_baselen + 1)) return (false);
 
-  // Match with SNMP MIB-2 System OID root
+  // Match given PDU against SNMP MIB-2 System OID root
   int sys = pdu.oid.match(OID);
-  if (sys < -1) return (false);
+  if (sys < -1) return (false); // Later in MIB hierarchy than what is dealt with here
 
   // Get next value or step to next mib
   if (pdu.type == SNMP::PDU_GET_NEXT) {
-    if (sys < 0) {
+    if (sys <= 0) { // Earlier in MIB hierarchy or equivalent
         memcpy_P(&pdu.oid, SNMP::MIB2_SYSTEM::OID, mib_baselen + 1);
-        sys = 0;
+        pdu.oid.length = mib_baselen + 1;
+        sys = sysDescr; // First item in MIB-2 System MIB
     }
-    if ((sys == 0) && (pdu.oid.length == mib_baselen)) pdu.oid.name[pdu.oid.length++] = sys;
-    if (sys < sysServices) {
+    else if (sys < sysServices) { // Less than last item in MIB-2 System MIB
       sys += 1;
-      pdu.oid.name[mib_baselen] = sys;
-      pdu.type = SNMP::PDU_GET;
     }
-    else return (false);
+    else return (false); // Effectively fall off end of SNMP MIB-2 MIB
+    // MIB-2 System MIBs are always fixed length we can get away with this
+    pdu.oid.name[mib_baselen] = sys;
+    pdu.type = SNMP::PDU_GET;
   }
 
   // Check request type
@@ -116,16 +117,13 @@ SNMP::OID::match(const uint8_t* coid, bool flag)
 {
   uint8_t clen = pgm_read_byte(&coid[0]);
   for (uint8_t i = 0; i < clen; i++) {
-    if (i >= length) return (-1);
+    if (i >= length) return (-1); // PDU OID shorter than param so must be hierarchically before
     uint8_t coidb = pgm_read_byte(&coid[i + 1]);
-    if (name[i] < coidb) return (-1);
-    if (name[i] > coidb) return (-2);
+    if (name[i] == coidb) continue; // PDU OID and param bytes match so proceed to check next byte
+    return ((name[i] < coidb) ? -1 : -2); // Match failed, less is hierarchically before otherwise after
   }
-  if (flag) {
-    if (length > clen) return (name[length - 1]);
-    return (-1);
-  }
-  return (length == clen ? 0 : clen);
+  if (length == clen) return (0); // Same length at this point means equivalent OID
+  return (flag ? name[clen] : clen); // Default to return next byte of PDU OID (subsys)
 }
 
 IOStream& operator<<(IOStream& outs, SNMP::PDU& pdu)
