@@ -69,6 +69,7 @@ RTC::end()
   synchronized {
     TIMSK0 = 0;
   }
+  s_initiated = false;
   return (true);
 }
 
@@ -107,6 +108,19 @@ RTC::delay(uint32_t ms)
 {
   uint32_t start = RTC::millis();
   while (RTC::since(start) < ms) yield();
+}
+
+int
+RTC::await(volatile bool &condvar, uint32_t ms)
+{
+  if (ms == 0) {
+    while (!condvar) yield();
+    return (0);
+  }
+
+  uint32_t start = millis();
+  while (!condvar && since(start) < ms) yield();
+  return (condvar ? 0 : ETIME);
 }
 
 ISR(TIMER0_OVF_vect)
