@@ -21,6 +21,7 @@
 #include "Cosa/INET/HTTP.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Errno.h"
 
 #include <alloca.h>
 #include <ctype.h>
@@ -30,6 +31,8 @@
 int
 HTTP::Server::run(uint32_t ms)
 {
+  if (m_sock == NULL) return (ENOTSOCK);
+
   // Wait for incoming connection requests
   // NOTE: LTO error; need rewrite to stack allocation
   // char line[REQUEST_MAX];

@@ -19,6 +19,7 @@
  */
 
 #include "Cosa/INET/NTP.hh"
+#include "Cosa/Errno.h"
 
 NTP::NTP(Socket* sock, uint8_t server[4], int8_t zone) :
   m_sock(sock),
@@ -29,12 +30,14 @@ NTP::NTP(Socket* sock, uint8_t server[4], int8_t zone) :
 
 NTP::~NTP()
 {
+  if (m_sock == NULL) return;
   m_sock->close();
 }
 
 clock_t
 NTP::time()
 {
+  if (m_sock == NULL) return (ENOTSOCK);
   const int PACKET_MAX = 48;
   uint8_t packet[PACKET_MAX];
   int res;

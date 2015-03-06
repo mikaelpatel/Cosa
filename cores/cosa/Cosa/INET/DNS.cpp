@@ -20,6 +20,7 @@
 
 #include "Cosa/INET/DNS.hh"
 #include "Cosa/INET.hh"
+#include "Cosa/Errno.h"
 
 bool
 DNS::begin(Socket* sock, uint8_t server[4])
@@ -41,13 +42,15 @@ DNS::end()
 int
 DNS::gethostbyname(const char* hostname, uint8_t addr[4], bool progmem)
 {
+  if (m_sock == NULL) return (ENOTSOCK);
+
   // Check if we already have a network address (as a string)
   if (INET::aton(hostname, addr, progmem) == 0) return (0);
 
   // Convert hostname to a path
   char path[INET::PATH_MAX];
   int len = INET::nametopath(hostname, path, progmem);
-  if (len <= 0) return (-EFAULT);
+  if (len <= 0) return (EFAULT);
 
   // Construct request header
   header_t request;
@@ -122,5 +125,5 @@ DNS::gethostbyname(const char* hostname, uint8_t addr[4], bool progmem)
       return (0);
     }
   }
-  return (-EIO);
+  return (EIO);
 }

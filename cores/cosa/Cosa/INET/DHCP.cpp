@@ -20,6 +20,7 @@
 
 #include "Cosa/INET/DHCP.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Errno.h"
 
 DHCP::DHCP(const char* hostname, const uint8_t* mac) :
   m_hostname(hostname),
@@ -33,6 +34,8 @@ DHCP::DHCP(const char* hostname, const uint8_t* mac) :
 int
 DHCP::send(uint8_t type)
 {
+  if (m_sock == NULL) return (ENOTSOCK);
+
   // Start the construction of the message
   uint8_t BROADCAST[4] = { 0xff, 0xff, 0xff, 0xff };
   int res = m_sock->datagram(BROADCAST, SERVER_PORT);
@@ -107,6 +110,8 @@ DHCP::send(uint8_t type)
 int
 DHCP::recv(uint8_t type, uint16_t ms)
 {
+  if (m_sock == NULL) return (ENOTSOCK);
+
   // Wait for a reply
   int res = 0;
   for (uint16_t i = 0; i < ms; i += 32) {
@@ -191,7 +196,7 @@ DHCP::end()
 int
 DHCP::discover()
 {
-  if (m_sock == NULL) return (EPERM);
+  if (m_sock == NULL) return (ENOTSOCK);
   int res = send(DHCP_DISCOVER);
   if (res < 0) return (res);
   return (recv(DHCP_OFFER));
@@ -200,7 +205,7 @@ DHCP::discover()
 int
 DHCP::request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
 {
-  if (m_sock == NULL) return (EPERM);
+  if (m_sock == NULL) return (ENOTSOCK);
   int res = send(DHCP_REQUEST);
   if (res < 0) return (res);
   res = recv(DHCP_ACK);
@@ -214,7 +219,7 @@ DHCP::request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
 int
 DHCP::renew(Socket* sock)
 {
-  if (m_sock != NULL) return (EPERM);
+  if (m_sock != NULL) return (ENOTSOCK);
   if (m_lease_expires == 0L) return (EACCES);
   m_sock = sock;
   int res = send(DHCP_REQUEST);

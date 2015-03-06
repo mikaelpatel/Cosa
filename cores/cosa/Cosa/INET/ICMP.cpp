@@ -60,7 +60,7 @@ ICMP::ping_await(uint16_t timeout)
   }
 
   // Check size of reply before actually recieving
-  if (res < (int) sizeof(reply)) return (EFAULT);
+  if (res < (int) sizeof(reply)) return (EMSGSIZE);
   res = m_sock->recv(&reply, sizeof(reply), src, port);
   if (res < 0) return (res);
 
