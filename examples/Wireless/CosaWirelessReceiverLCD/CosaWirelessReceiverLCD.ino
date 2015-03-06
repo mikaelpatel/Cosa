@@ -112,7 +112,8 @@ static const uint8_t PAYLOAD_TYPE = 0x01;
 
 IOStream& operator<<(IOStream& outs, payload_msg_t* msg)
 {
-  outs.print(0L, msg->payload, PAYLOAD_MAX, IOStream::hex);
+  outs.print(0L, msg->payload, 2, IOStream::hex);
+  outs << msg->nr;
   return (outs);
 }
 
@@ -130,7 +131,8 @@ IOStream& operator<<(IOStream& outs, dt_msg_t* msg)
   outs << PSTR(" C,");
   DS18B20::print(outs, msg->outdoors);
   outs << PSTR(" C,");
-  outs << msg->battery << PSTR(" mV");
+  outs << msg->battery << PSTR(" mV,");
+  outs << msg->nr;
   return (outs);
 }
 
@@ -146,12 +148,13 @@ IOStream& operator<<(IOStream& outs, dht_msg_t* msg)
 {
   outs << msg->humidity << PSTR(" %,")
        << msg->temperature << PSTR(" C,")
-       << msg->battery << PSTR(" mV");
+       << msg->battery << PSTR(" mV,")
+       << msg->nr;
   return (outs);
 }
 
 struct dlt_msg_t {
-  uint32_t timestamp;
+  uint8_t nr;
   uint16_t luminance;
   uint16_t temperature;
   uint16_t battery;
@@ -160,9 +163,10 @@ static const uint8_t DIGITAL_LUMINANCE_TEMPERATURE_TYPE = 0x04;
 
 IOStream& operator<<(IOStream& outs, dlt_msg_t* msg)
 {
-  outs << msg->luminance << ','
-       << msg->temperature << ','
-       << msg->battery << PSTR(" mV");
+  outs << msg->luminance << PSTR(" lux,")
+       << msg->temperature << PSTR(" C,")
+       << msg->battery << PSTR(" mV,")
+       << msg->nr;
   return (outs);
 }
 
@@ -176,47 +180,78 @@ void loop()
   uint8_t msg[MSG_MAX];
   uint8_t src;
   uint8_t port;
-  int count = rf.recv(src, port, msg, sizeof(msg), TIMEOUT);
+  int res = rf.recv(src, port, msg, sizeof(msg), TIMEOUT);
   recs += 1;
 
-  // Print the message header
+  // Clear screen and display statistics
   cout << clear;
-  if (count >= 0) {
+
+  // Check for message
+  if (res >= 0) {
     // Print the message payload according to port/message type
     switch (port) {
     case IOSTREAM_TYPE:
-      for (uint8_t i = 0; i < count; i++)
+      for (uint8_t i = 0; i < res; i++)
 	if (msg[i] != '\f' && msg[i] != '\n')
 	  cout << (char) msg[i];
-      break;
+      return;
     case PAYLOAD_TYPE:
+      if (res != sizeof(payload_msg_t)) break;
       cout << (payload_msg_t*) msg;
-      break;
+      return;
     case DIGITAL_TEMPERATURE_TYPE:
-      cout << (dt_msg_t*) msg;
-      break;
+      if (res != sizeof(dt_msg_t)) break;
+      {
+	static uint8_t dt_nr = 0;
+	dt_msg_t* dt_msg = (dt_msg_t*) msg;
+	cout << dt_msg;
+	if (dt_nr != dt_msg->nr) {
+	  cout << PSTR("?");
+	  errs++;
+	}
+	dt_nr = dt_msg->nr + 1;
+      }
+      return;
     case DIGITAL_HUMIDITY_TEMPERATURE_TYPE:
-      cout << (dht_msg_t*) msg;
-      break;
+      if (res != sizeof(dht_msg_t)) break;
+      {
+	static uint8_t dht_nr = 0;
+	dht_msg_t* dht_msg = (dht_msg_t*) msg;
+	cout << dht_msg;
+	if (dht_nr != dht_msg->nr) {
+	  cout << PSTR("?");
+	  errs++;
+	}
+	dht_nr = dht_msg->nr + 1;
+      }
+      return;
     case DIGITAL_LUMINANCE_TEMPERATURE_TYPE:
-      cout << (dlt_msg_t*) msg;
-      break;
+      if (res != sizeof(dlt_msg_t)) break;
+      {
+	static uint8_t dlt_nr = 0;
+	dlt_msg_t* dlt_msg = (dlt_msg_t*) msg;
+	cout << dlt_msg;
+	if (dlt_nr != dlt_msg->nr) {
+	  cout << PSTR("?");
+	  errs++;
+	}
+	dlt_nr = dlt_msg->nr + 1;
+      }
+      return;
     default:
-      cout.print(0L, msg, count, IOStream::hex);
+      cout.print(0L, msg, res, IOStream::hex);
+      return;
     }
-    cout << ' ' << errs << '/' << recs;
-    return;
+    res = EMSGSIZE;
   }
 
   // Check error codes
   errs += 1;
-  if (count == EMSGSIZE) {
-    cout << PSTR("error:illegal frame size(-1)");
+  cout << PSTR("error(") << res << PSTR(")");
+  if (res == EMSGSIZE) {
+    cout << PSTR(":illegal frame size");
   }
-  else if (count == ETIME) {
-    cout << PSTR("error:timeout(-2)");
-  }
-  else if (count < 0) {
-    cout << PSTR("error(") << count << PSTR(")");
+  else if (res == ETIME) {
+    cout << PSTR(":timeout");
   }
 }

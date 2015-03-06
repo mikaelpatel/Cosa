@@ -18,7 +18,9 @@
  * @section Description
  * Demonstration of the Wireless interface and ExternalInterruptPin
  * for wakeup after power down. An ATtiny85-20PU running this example
- * sketch will require 5 uA in power down mode (VWI transmitter).
+ * sketch will require 5 uA in power down mode (VWI transmitter),
+ * Arduino Pro-Mini with LED removed will require 10 uA with
+ * BOD disabled.
  *
  * @section Circuit
  * See Wireless drivers for circuit connections.
@@ -28,7 +30,6 @@
 
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/ExternalInterrupt.hh"
-#include "Cosa/Event.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
@@ -68,8 +69,18 @@ RFM69 rf(NETWORK, DEVICE);
 
 #elif defined(USE_VWI)
 #include "Cosa/Wireless/Driver/VWI.hh"
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-VirtualWireCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh"
+// BitstuffingCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/Block4B4BCodec.hh"
+// Block4B4BCodec codec;
+#include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_7_4.hh"
+HammingCodec_7_4 codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_8_4.hh"
+// HammingCodec_8_4 codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.hh"
+// ManchesterCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+// VirtualWireCodec codec;
 #define SPEED 4000
 #if defined(BOARD_ATTINY)
 VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
@@ -85,7 +96,6 @@ public:
   virtual void on_interrupt(uint16_t arg)
   {
     UNUSED(arg);
-    Event::push(Event::NULL_TYPE, NULL);
     disable();
   }
 };
@@ -96,29 +106,21 @@ Button wakeup;
 // Analog pins to sample for values to send
 AnalogPin luminance(Board::A2);
 AnalogPin temperature(Board::A3);
+OutputPin led(Board::LED, 0);
+
+// Sample and transmission min period
+static const uint32_t MIN_PERIOD = 128;
 
 void setup()
 {
-  // Initiate Watchdog with 512 ms period. Start RTC and Wireless device
-  Power::set(SLEEP_MODE_PWR_DOWN);
-  Watchdog::begin(512);
+  // Start Watchdog, RTC and Wireless device
+  Watchdog::begin();
   RTC::begin();
   rf.begin();
-
-  // Use the Watchdog as the delay
-  delay = Watchdog::delay;
-
-  // Put the hardware in power down
-  rf.powerdown();
-  Power::all_disable();
-
-  // Allow wakeup on button
-  wakeup.enable();
-  Watchdog::end();
 }
 
 struct dlt_msg_t {	       // Digital Luminance Temperature message
-  uint32_t timestamp;	       // Logical timestamp (sequence number)
+  uint8_t nr;		       // Message sequence number
   uint16_t luminance;	       // Light level (0..1023 raw value)
   uint16_t temperature;	       // Room temperature (0..1023 raw value)
   uint16_t battery;	       // Battery level (mV)
@@ -127,32 +129,31 @@ static const uint8_t DIGITAL_LUMINANCE_TEMPERATURE_TYPE = 0x04;
 
 void loop()
 {
-  // Wait for events from the button
-  Event event;
-  Event::queue.await(&event);
-
-  // Wake up the hardware
-  Power::all_enable();
-  Watchdog::begin(512);
-
   // Construct the message with sample values and broadcast
-  uint32_t start = Watchdog::millis();
-  const uint32_t PERIOD = 2000L;
+  static uint8_t nr = 0;
   dlt_msg_t msg;
-  msg.timestamp = start / PERIOD;
+  msg.nr = nr++;
   msg.luminance = luminance.sample();
   msg.temperature = temperature.sample();
   msg.battery = AnalogPin::bandgap();
+  led.on();
   rf.broadcast(DIGITAL_LUMINANCE_TEMPERATURE_TYPE, &msg, sizeof(msg));
-
-  // Put the hardware back to sleep
   rf.powerdown();
-  Power::all_disable();
+  led.off();
 
-  // Debounce the button before allowing further interrupts. This also
-  // gives periodic (2 second) message send when the button is kept low.
-  uint32_t ms = PERIOD - Watchdog::since(start);
-  Watchdog::delay(ms);
-  wakeup.enable();
+  // Put the hardware to sleep
+  Power::all_disable();
+  uint8_t mode = Power::set(SLEEP_MODE_PWR_DOWN);
+  do Watchdog::delay(MIN_PERIOD); while (wakeup.is_clear());
   Watchdog::end();
+  wakeup.enable();
+
+  // And wait for the wakeup
+  while (wakeup.is_set()) yield();
+
+  // Wake up the hardware
+  Power::set(mode);
+  Watchdog::begin();
+  Power::all_enable();
+  rf.powerup();
 }

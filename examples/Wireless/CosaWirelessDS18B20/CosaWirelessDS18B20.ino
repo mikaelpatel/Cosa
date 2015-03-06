@@ -48,9 +48,11 @@
  *
  * @section Measurements
  * Arduino Mini Pro 16 Mhz (Power LED removed).
- * Power	Idle	Sampling	Transmitting
- * LiPo 3.9 V	40 uA	1.3 mA 		6 mA (RF433).
- * FTDI 5,1 V	190 uA	1.5 mA		10 mA (RF433).
+ *  Power	Idle	Sampling	Transmitting
+ *  LiPo 3.9 V	40 uA	1.3 mA 		6 mA (RF433).
+ *  FTDI 5,1 V	190 uA	1.5 mA		10 mA (RF433).
+ * ATtiny85V
+ *  LiPo 3.9 V	5 uA	1.3 mA 		5 mA (RF433).
  *
  * @section Note
  * This sketch is designed to also run on an ATtiny85 running on the
@@ -59,13 +61,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OutputPin.hh"
-#include "Cosa/AnalogPin.hh"
-#include "Cosa/OWI.hh"
-#include "Cosa/OWI/Driver/DS18B20.hh"
+#include "Cosa/RTC.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/OutputPin.hh"
+#include "Cosa/AnalogPin.hh"
+
+#include "Cosa/OWI.hh"
+#include "Cosa/OWI/Driver/DS18B20.hh"
 
 // Configuration; network and device addresses
 #define NETWORK 0xC05A

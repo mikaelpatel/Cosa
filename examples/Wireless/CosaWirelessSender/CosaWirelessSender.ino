@@ -42,9 +42,9 @@
 
 // Select Wireless device driver
 // #define USE_CC1101
-#define USE_NRF24L01P
+// #define USE_NRF24L01P
 // #define USE_RFM69
-// #define USE_VWI
+#define USE_VWI
 
 #if defined(USE_CC1101)
 #include "Cosa/Wireless/Driver/CC1101.hh"
@@ -60,8 +60,18 @@ RFM69 rf(NETWORK, DEVICE);
 
 #elif defined(USE_VWI)
 #include "Cosa/Wireless/Driver/VWI.hh"
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-VirtualWireCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh"
+// BitstuffingCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/Block4B4BCodec.hh"
+// Block4B4BCodec codec;
+#include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_7_4.hh"
+HammingCodec_7_4 codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_8_4.hh"
+// HammingCodec_8_4 codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.hh"
+// ManchesterCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+// VirtualWireCodec codec;
 #define BPS 4000
 #if defined(BOARD_ATTINY)
 VWI rf(NETWORK, DEVICE, BPS, Board::D1, Board::D0, &codec);
@@ -95,7 +105,7 @@ void loop()
 
   // Send to nodes 0x01 to 0x03
   for (uint8_t dest = 0x01; dest < 0x04; dest++) {
-    trace << PSTR("dest=") << dest << PSTR(",nr=") << msg.nr;
+    trace << RTC::micros() << PSTR(":dest=") << dest << PSTR(",nr=") << msg.nr;
     res = rf.send(dest, PAYLOAD_TYPE, &msg, sizeof(msg));
     trace << PSTR(",res=") << res;
     if (res != sizeof(msg)) {
@@ -106,7 +116,7 @@ void loop()
   }
 
   // Broadcast message
-  trace << PSTR("dest=0,nr=") << msg.nr;
+  trace << RTC::micros() << PSTR(":dest=0,nr=") << msg.nr;
   res = rf.broadcast(PAYLOAD_TYPE, &msg, sizeof(msg));
   trace << PSTR(",res=") << res;
   if (res != sizeof(msg)) {
