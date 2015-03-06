@@ -396,7 +396,7 @@ private:
     uint8_t m_active;
 
     /** Flag to indicate that a new message is available. */
-    volatile uint8_t m_done;
+    volatile bool m_done;
 
     /** Flag to indicate the receiver PLL is to run. */
     uint8_t m_enabled;
