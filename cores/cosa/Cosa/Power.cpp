@@ -21,7 +21,7 @@
 #include "Cosa/Power.hh"
 
 // Software disable low voltage detect (23 uA at 5 V)
-// #define COSA_BOD_DISABLE
+#define COSA_BOD_DISABLE
 
 uint8_t Power::s_mode = SLEEP_MODE_IDLE;
 
