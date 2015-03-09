@@ -67,9 +67,7 @@ SNMP::MIB2_SYSTEM::is_request(PDU& pdu)
       pdu.value.encode_P(SNMP::SYNTAX_OCTETS, m_descr, strlen_P(m_descr));
       break;
     case sysObjectID:
-      pdu.value.encode_P(SNMP::SYNTAX_OID,
-			 (const char*) ARDUINO_MIB_OID + 1,
-			 pgm_read_byte(ARDUINO_MIB_OID));
+      pdu.value.encode_P(SNMP::SYNTAX_OID, (const char*) m_sysoid + 1, pgm_read_byte(m_sysoid));
       break;
     case sysUpTime:
       pdu.value.encode(SNMP::SYNTAX_TIME_TICKS, Watchdog::millis() / 1000L);
