@@ -408,15 +408,6 @@ SNMP::request(PDU& pdu, uint32_t ms)
   int res = recv(pdu, ms);
   if (res < 0) return (res);
 
-  // Check for root getnext request
-  if ((pdu.type == PDU_GET_NEXT)
-      && (pdu.oid.length == 1)
-      && (pdu.oid.name[0] == 0)) {
-    const uint8_t* oid = MIB2_SYSTEM::OID;
-    memcpy_P(&pdu.oid, oid, pgm_read_byte(oid) + 1);
-    pdu.oid.name[pdu.oid.length++] = 0;
-  }
-
   // Match with MIB handlers
   if (!m_sys->is_request(pdu) && !m_mib->is_request(pdu))
     pdu.error_status = NO_SUCH_NAME;
