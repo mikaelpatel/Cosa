@@ -70,15 +70,6 @@ OutputPin sd(Board::D4, 1);
 
 W5100 ethernet(mac);
 
-// SNMP MIB-2 System configuration
-static const char descr[] __PROGMEM = "<service description>";
-static const char contact[] __PROGMEM = "<contact information>";
-static const char name[] __PROGMEM = "<device name>";
-static const char location[] __PROGMEM = "<device location>";
-
-SNMP::MIB2_SYSTEM mib2(descr, contact, name, location);
-SNMP snmp;
-
 /**
  * Arduino MIB OID(1.3.6.1.4.1.36582)
  */
@@ -91,13 +82,14 @@ private:
   } __attribute__((packed));
 
 public:
+  static const uint8_t OID[] PROGMEM;
   /**
    * @override SNMP::MIB
    * Return object identity root for Arduino MIB.
    */
   virtual const uint8_t* get_oid()
   {
-    return (SNMP::ARDUINO_MIB_OID);
+    return (OID);
   }
 
   /**
@@ -109,11 +101,21 @@ public:
    */
   virtual bool is_request(SNMP::PDU& pdu);
 };
+// Arduino MIB OID(1.3.6.1.4.1.36582)
+const uint8_t ARDUINO_MIB::OID[] __PROGMEM = { 8,0x2b,6,1,4,1,130,157,102 };
+
+// SNMP MIB-2 System configuration
+static const char descr[] __PROGMEM = "<service description>";
+static const char contact[] __PROGMEM = "<contact information>";
+static const char name[] __PROGMEM = "<device name>";
+static const char location[] __PROGMEM = "<device location>";
+SNMP::MIB2_SYSTEM mib2(descr, contact, name, location, ARDUINO_MIB::OID);
+SNMP snmp;
 
 bool
 ARDUINO_MIB::is_request(SNMP::PDU& pdu)
 {
-  uint8_t mib_baselen = pgm_read_byte(SNMP::ARDUINO_MIB_OID);
+  uint8_t mib_baselen = pgm_read_byte(OID);
   if(pdu.oid.length > (mib_baselen + 2)) return (false);
 
   // Match with Arduino MIB OID root
@@ -123,7 +125,7 @@ ARDUINO_MIB::is_request(SNMP::PDU& pdu)
   // Get next value request; adjust sys and index references to next
   if (pdu.type == SNMP::PDU_GET_NEXT) {
     if (sys <= 0) {
-        memcpy_P(&pdu.oid, SNMP::ARDUINO_MIB_OID, mib_baselen + 1);
+        memcpy_P(&pdu.oid, OID, mib_baselen + 1);
         sys = ardDigitalPin;
     }
     switch (sys) {

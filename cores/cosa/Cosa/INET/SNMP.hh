@@ -171,11 +171,13 @@ public:
     MIB2_SYSTEM(const char* descr,
 		const char* contact,
 		const char* name,
-		const char* location) :
+		const char* location,
+        const uint8_t* sysoid=ARDUINO_MIB_OID) :
       m_descr(descr),
       m_contact(contact),
       m_name(name),
-      m_location(location)
+      m_location(location),
+      m_sysoid(sysoid)
     {
     }
 
@@ -203,6 +205,7 @@ public:
     const char* m_contact;
     const char* m_name;
     const char* m_location;
+    const uint8_t* m_sysoid;
     enum {
       sysDescr = 1,		//!< DisplayString(0..255), read-only, mandatory.
       sysObjectID = 2,		//!< OID, read-only, mandatory.

@@ -67,9 +67,7 @@ SNMP::MIB2_SYSTEM::is_request(PDU& pdu)
       pdu.value.encode_P(SNMP::SYNTAX_OCTETS, m_descr, strlen_P(m_descr));
       break;
     case sysObjectID:
-      pdu.value.encode_P(SNMP::SYNTAX_OID,
-			 (const char*) ARDUINO_MIB_OID + 1,
-			 pgm_read_byte(ARDUINO_MIB_OID));
+      pdu.value.encode_P(SNMP::SYNTAX_OID, (const char*) m_sysoid + 1, pgm_read_byte(m_sysoid));
       break;
     case sysUpTime:
       pdu.value.encode(SNMP::SYNTAX_TIME_TICKS, Watchdog::millis() / 1000L);
@@ -407,15 +405,6 @@ SNMP::request(PDU& pdu, uint32_t ms)
   // Attempt to receive a request within given time limit
   int res = recv(pdu, ms);
   if (res < 0) return (res);
-
-  // Check for root getnext request
-  if ((pdu.type == PDU_GET_NEXT)
-      && (pdu.oid.length == 1)
-      && (pdu.oid.name[0] == 0)) {
-    const uint8_t* oid = MIB2_SYSTEM::OID;
-    memcpy_P(&pdu.oid, oid, pgm_read_byte(oid) + 1);
-    pdu.oid.name[pdu.oid.length++] = 0;
-  }
 
   // Match with MIB handlers
   if (!m_sys->is_request(pdu) && !m_mib->is_request(pdu))
