@@ -32,8 +32,8 @@ Power::sleep(uint8_t mode)
   set_sleep_mode(mode);
   sleep_enable();
 #if defined(COSA_BOD_DISABLE) && defined(BODS)
-  MCUCR = _BV(BODS) | _BV(BODSE);
-  MCUCR = _BV(BODS);
+  MCUCR |= _BV(BODS) | _BV(BODSE);
+  MCUCR |= _BV(BODS);
 #endif
   sleep_cpu();
   sleep_disable();
