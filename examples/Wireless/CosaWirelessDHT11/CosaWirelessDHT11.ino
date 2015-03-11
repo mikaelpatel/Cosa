@@ -23,8 +23,8 @@
  *
  * @section Circuit
  * See Wireless drivers for circuit connections. Connect DHT11 data
- * with pullup (approx. 5 Kohm) to D7/D10/D2. The LED (ATtiny84/85
- * D4/D5) is on when transmitting .
+ * with pullup (approx. 5 Kohm) to D3/D2. The LED (ATtiny84/85
+ * D7/D4) is on when transmitting.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -39,16 +39,20 @@
 #if defined(BOARD_ATTINY)
 #define DEVICE 0x20
 #define EXT Board::EXT0
+#define RX Board::D1
+#define TX Board::D0
 #else
 #define DEVICE 0x21
 #define EXT Board::EXT1
+#define RX Board::D7
+#define TX Board::D8
 #endif
 
 // Select Wireless device driver
 // #define USE_CC1101
 // #define USE_NRF24L01P
-// #define USE_VWI
-#define USE_RFM69
+// #define USE_RFM69
+#define USE_VWI
 
 #if defined(USE_CC1101)
 #include "Cosa/Wireless/Driver/CC1101.hh"
@@ -64,18 +68,21 @@ RFM69 rf(NETWORK, DEVICE);
 
 #elif defined(USE_VWI)
 #include "Cosa/Wireless/Driver/VWI.hh"
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-VirtualWireCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh"
+// BitstuffingCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/Block4B4BCodec.hh"
+// Block4B4BCodec codec;
+#include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_7_4.hh"
+HammingCodec_7_4 codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_8_4.hh"
+// HammingCodec_8_4 codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.hh"
+// ManchesterCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+// VirtualWireCodec codec;
 #define SPEED 4000
-#if defined(BOARD_ATTINY)
-VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
-#else
-VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
+VWI rf(NETWORK, DEVICE, SPEED, RX, TX, &codec);
 #endif
-#endif
-
-OutputPin led(Board::LED);
-DHT11 sensor(EXT);
 
 struct dht_msg_t {
   uint8_t nr;
@@ -85,23 +92,43 @@ struct dht_msg_t {
 };
 static const uint8_t DIGITAL_HUMIDITY_TEMPERATURE_TYPE = 0x03;
 
+static const uint32_t SLEEP_PERIOD = 5000L;
+
+DHT11 sensor(EXT);
+
 void setup()
 {
+  // Start timers and the transceiver
   Watchdog::begin();
   RTC::begin();
   rf.begin();
+
+  // Power down transceiver until time to send message
+  rf.powerdown();
 }
 
 void loop()
 {
   static uint8_t nr = 0;
-  asserted(led) {
-    dht_msg_t msg;
-    msg.nr = nr++;
-    sensor.sample(msg.humidity, msg.temperature);
-    msg.battery = AnalogPin::bandgap(1100);
-    rf.broadcast(DIGITAL_HUMIDITY_TEMPERATURE_TYPE, &msg, sizeof(msg));
-    rf.powerdown();
+  dht_msg_t msg;
+
+  // Construct message with humidity, temperature and battery reading
+  msg.nr = nr++;
+  if (!sensor.sample(msg.humidity, msg.temperature)) {
+    msg.humidity = 1000;
+    msg.temperature = 850;
   }
-  sleep(2);
+  msg.battery = AnalogPin::bandgap(1100);
+
+  // Broadcast message and powerdown
+  rf.powerup();
+  rf.broadcast(DIGITAL_HUMIDITY_TEMPERATURE_TYPE, &msg, sizeof(msg));
+  rf.powerdown();
+
+  // Deep sleep with only watchdog awake
+  Power::all_disable();
+  uint8_t mode = Power::set(SLEEP_MODE_PWR_DOWN);
+  Watchdog::delay(SLEEP_PERIOD);
+  Power::set(mode);
+  Power::all_enable();
 }

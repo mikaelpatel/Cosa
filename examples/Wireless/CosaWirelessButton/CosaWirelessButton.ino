@@ -52,8 +52,8 @@
 // Select Wireless device driver
 // #define USE_CC1101
 // #define USE_NRF24L01P
-#define USE_VWI
 // #define USE_RFM69
+#define USE_VWI
 
 #if defined(USE_CC1101)
 #include "Cosa/Wireless/Driver/CC1101.hh"
@@ -146,6 +146,7 @@ void loop()
   uint8_t mode = Power::set(SLEEP_MODE_PWR_DOWN);
   do Watchdog::delay(MIN_PERIOD); while (wakeup.is_clear());
   Watchdog::end();
+  RTC::end();
   wakeup.enable();
 
   // And wait for the wakeup
@@ -154,6 +155,7 @@ void loop()
   // Wake up the hardware
   Power::set(mode);
   Watchdog::begin();
+  RTC::begin();
   Power::all_enable();
   rf.powerup();
 }

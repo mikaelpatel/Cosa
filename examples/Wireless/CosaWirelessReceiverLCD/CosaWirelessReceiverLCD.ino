@@ -146,8 +146,8 @@ static const uint8_t DIGITAL_HUMIDITY_TEMPERATURE_TYPE = 0x03;
 
 IOStream& operator<<(IOStream& outs, dht_msg_t* msg)
 {
-  outs << msg->humidity << PSTR(" %,")
-       << msg->temperature << PSTR(" C,")
+  outs << msg->humidity / 10 << '.' << msg->humidity % 10 << PSTR(" %,")
+       << msg->temperature / 10 << '.' << msg->temperature % 10 << PSTR(" C,")
        << msg->battery << PSTR(" mV,")
        << msg->nr;
   return (outs);

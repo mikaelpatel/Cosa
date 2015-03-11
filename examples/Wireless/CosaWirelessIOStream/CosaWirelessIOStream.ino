@@ -41,8 +41,8 @@
 
 // Select Wireless device driver
 // #define USE_CC1101
-#define USE_NRF24L01P
-// #define USE_VWI
+// #define USE_NRF24L01P
+#define USE_VWI
 
 #if defined(USE_CC1101)
 #include "Cosa/Wireless/Driver/CC1101.hh"
@@ -54,8 +54,19 @@ NRF24L01P rf(NETWORK, DEVICE);
 
 #elif defined(USE_VWI)
 #include "Cosa/Wireless/Driver/VWI.hh"
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-VirtualWireCodec codec;
+#include "Cosa/Wireless/Driver/VWI.hh"
+// #include "Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh"
+// BitstuffingCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/Block4B4BCodec.hh"
+// Block4B4BCodec codec;
+#include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_7_4.hh"
+HammingCodec_7_4 codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_8_4.hh"
+// HammingCodec_8_4 codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.hh"
+// ManchesterCodec codec;
+// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+// VirtualWireCodec codec;
 #define SPEED 4000
 #if defined(BOARD_ATTINY)
 VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
@@ -96,7 +107,7 @@ void loop()
     pin = (Board::AnalogPin) pgm_read_byte(analog_pin_map + ix);
     uint16_t sample = AnalogPin::sample(pin);
     trace << clear << 'A' << ix << PSTR(": ") << sample << endl;
-    bar(sample, 16, 1023);
+    // bar(sample, 16, 1023);
     trace << flush;
     sleep(1);
   }
@@ -104,7 +115,7 @@ void loop()
   // Print bandgap voltage
   uint16_t vcc = AnalogPin::bandgap();
   trace << clear << PSTR("VCC: ") << vcc << PSTR(" mV") << endl;
-  bar(vcc, 16, 5500);
+  // bar(vcc, 16, 5500);
   trace << flush;
   sleep(2);
 
