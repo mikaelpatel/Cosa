@@ -51,6 +51,7 @@ performance.
 ## Run your first sketch.
 
 * Open the CosaBlink example sketch in the Sketchbook>hardware>Cosa>avr>Blink menu.
-* Select your board in the Tools>Board menu.
-* Compile and download.
+* Select your board in the Tools>Board menu. Use the board with prefix
+"Cosa" to get the right build settings.
+* Compile and upload.
 
