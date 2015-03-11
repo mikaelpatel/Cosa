@@ -120,14 +120,15 @@ ExternalInterrupt(Board::ExternalInterruptPin pin,
 {
   m_ix = (pin == Board::EXT1);
   ext[m_ix] = this;
-  bit_field_set(MCUCR, 0b11, mode);
+  uint8_t ix = (m_ix << 1);
+  bit_field_set(MCUCR, 0b11 << ix, mode << ix);
 }
 
 void
 ExternalInterrupt::enable()
 {
   synchronized {
-    bit_clear(GIFR, INTF0 + m_ix);
+    bit_set(GIFR, INTF0 + m_ix);
     bit_set(GIMSK, INT0 + m_ix);
   }
 }
@@ -144,7 +145,7 @@ void
 ExternalInterrupt::clear()
 {
   synchronized {
-    bit_clear(GIFR, INTF0 + m_ix);
+    bit_set(GIFR, INTF0 + m_ix);
   }
 }
 
@@ -165,7 +166,7 @@ void
 ExternalInterrupt::enable()
 {
   synchronized {
-    bit_clear(GIFR, INTF0);
+    bit_set(GIFR, INTF0);
     bit_set(GIMSK, INT0);
   }
 }
@@ -182,7 +183,7 @@ void
 ExternalInterrupt::clear()
 {
   synchronized {
-    bit_clear(GIFR, INTF0);
+    bit_set(GIFR, INTF0);
   }
 }
 
@@ -194,7 +195,7 @@ void
 ExternalInterrupt::enable()
 {
   synchronized {
-    bit_clear(EIFR, m_ix);
+    bit_set(EIFR, m_ix);
     bit_set(EIMSK, m_ix);
   }
 }
