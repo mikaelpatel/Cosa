@@ -1,5 +1,5 @@
 /**
- * @file CosaDHTsample.ino
+ * @file CosaDHT.ino
  * @version 1.0
  *
  * @section License
@@ -49,8 +49,11 @@
 
 // Use DHT11 for outdoors measurement and DHT22 for indoors
 DHT11 outdoors(Board::EXT0);
+
 // ATtiny has only one external interrupt pin
-#if !defined(BOARD_ATTINY)
+#if defined(BOARD_ATTINY)
+Soft::UAT uart(Board::D1);
+#else
 DHT22 indoors(Board::EXT1);
 #endif
 
@@ -58,7 +61,7 @@ void setup()
 {
   // Start trace output stream on the serial port
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaDHTsample: started"));
+  trace.begin(&uart, PSTR("CosaDHT: started"));
 
   // Check amount of free memory and size of instance
   TRACE(free_memory());
@@ -78,9 +81,9 @@ void loop()
 
   // Read and print humidity and temperature
 #if !defined(BOARD_ATTINY)
-  indoors.sample();
-  trace << PSTR("indoors: ") << indoors << endl;
+  if (indoors.sample())
+    trace << PSTR("indoors: ") << indoors << endl;
 #endif
-  outdoors.sample();
-  trace << PSTR("outdoors: ") << outdoors << endl;
+  if (outdoors.sample())
+    trace << PSTR("outdoors: ") << outdoors << endl;
 }

@@ -26,38 +26,35 @@
  * The interrupt handler, enabled after the request pulse, and on
  * falling (low to high) transition. This allows lower interrupt
  * frequency than on change mode (which would be required for pin
- * change interrupts. First pulse is the device response and is a
- * one(1) bit is encoded as a long pulse (54 + 80 = 134 us), a zero(0)
- * bit as a short pulse (54 + 24 = 78 us). Sequence ends with a low
- * pulse (54 us) which allows falling/rising detection.
+ * change interrupts. First pulse is the device response and a
+ * one(1) bit is encoded as a long pulse (54 + 80 = 134 us), a
+ * zero(0) bit as a short pulse (54 + 24 = 78 us). Sequence ends
+ * with a low pulse (54 us) which allows falling/rising detection.
  */
 void
 DHT::on_interrupt(uint16_t arg)
 {
   UNUSED(arg);
 
-  // Check start condition
-  if (m_start == 0) {
-    m_start = RTC::micros();
-    return;
-  }
-
   // Calculate the pulse width and check against thresholds
   uint16_t stop = RTC::micros();
   uint16_t us = (stop - m_start);
-  if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) goto exception;
-  m_start = stop;
 
   // Check the initial response pulse
   if (m_state == RESPONSE) {
     if (us < BIT_THRESHOLD) goto exception;
     m_state = SAMPLING;
+    m_start = stop;
     m_bits = 0;
     m_ix = 0;
     return;
   }
 
-  // Sample was valid, collect data
+  // Sanity check the pulse length
+  if (us < LOW_THRESHOLD || us > HIGH_THRESHOLD) goto exception;
+  m_start = stop;
+
+  // Sample was valid, collect bit and check for more
   m_value = (m_value << 1) + (us > BIT_THRESHOLD);
   m_bits += 1;
   if (m_bits != CHARBITS) return;
@@ -70,102 +67,34 @@ DHT::on_interrupt(uint16_t arg)
 
   // Invalid sample reject sequence
  exception:
-  m_start = 0;
   m_ix = 0;
 
   // Sequence completed
  completed:
   m_state = COMPLETED;
   disable();
-  if (m_period == 0) return;
-  Event::push(Event::SAMPLE_COMPLETED_TYPE, this);
-}
-
-void
-DHT::on_event(uint8_t type, uint16_t value)
-{
-  UNUSED(type);
-  UNUSED(value);
-
-  switch (m_state) {
-
-  case IDLE:
-    // Issue a request; pull down for more than 18 ms
-    m_state = REQUEST;
-    set_mode(OUTPUT_MODE);
-    IOPin::clear();
-    Watchdog::attach(this, 32);
-    break;
-
-  case REQUEST:
-    // Request pulse completed; pull up for 40 us and collect
-    // data as a sequence of on rising mode interrupts
-    m_state = RESPONSE;
-    m_start = 0;
-    detach();
-    set();
-    set_mode(INPUT_MODE);
-    DELAY(40);
-    enable();
-    break;
-
-  case COMPLETED:
-    // Data reading was completed; validate data and check sum
-    // Wait before issueing the next request
-    uint8_t invalid = 1;
-    if (m_ix == DATA_MAX) {
-      uint8_t sum = 0;
-      for (uint8_t i = 0; i < DATA_LAST; i++)
-	sum += m_data.as_byte[i];
-      if (sum == m_data.chksum) {
-	invalid = 0;
-	adjust_data();
-      }
-      on_sample_completed();
-    }
-    m_errors += invalid;
-    m_state = IDLE;
-    Watchdog::attach(this, m_period);
-    break;
-  }
-}
-
-void
-DHT::begin(uint16_t ms)
-{
-  if (m_state != INIT) return;
-  if (ms < MIN_PERIOD) ms = MIN_PERIOD;
-  m_state = IDLE;
-  m_period = ms;
-  Watchdog::attach(this, m_period);
-}
-
-void
-DHT::end()
-{
-  disable();
-  detach();
-  m_state = INIT;
-  m_period = 0;
+  on_sample_completed(m_ix == DATA_MAX);
 }
 
 bool
 DHT::sample_request()
 {
+  // Error humidity and temperature (out of range)
+  m_humidity = 1000;
+  m_temperature = 850;
+
   // Issue a request; pull down for more than 18 ms
-  if (m_period != 0) return (true);
   set_mode(OUTPUT_MODE);
-  IOPin::set();
   IOPin::clear();
   Watchdog::delay(32);
 
   // Request pulse completed; pull up for 40 us and collect
   // data as a sequence of on rising mode interrupts
-  set();
+  m_state = RESPONSE;
+  m_start = RTC::micros();
+  IOPin::set();
   set_mode(INPUT_MODE);
   DELAY(40);
-  m_state = RESPONSE;
-  m_start = 0;
   enable();
   return (true);
 }
@@ -173,7 +102,7 @@ DHT::sample_request()
 bool
 DHT::sample_await()
 {
-  if (m_period != 0) return (true);
+  // Wait for the sample request to complete
   uint32_t start = RTC::millis();
   while (m_state != COMPLETED && (RTC::since(start) < MIN_PERIOD))
     yield();
@@ -181,13 +110,19 @@ DHT::sample_await()
 
   // Data reading was completed; validate data and check sum
   m_state = INIT;
+  if (!is_valid()) return (false);
+  adjust_data();
+  return (true);
+}
+
+bool
+DHT::is_valid()
+{
   if (m_ix != DATA_MAX) return (false);
   uint8_t sum = 0;
   for (uint8_t i = 0; i < DATA_LAST; i++)
     sum += m_data.as_byte[i];
-  if (sum != m_data.chksum) return (false);
-  adjust_data();
-  return (true);
+  return (sum == m_data.chksum);
 }
 
 void

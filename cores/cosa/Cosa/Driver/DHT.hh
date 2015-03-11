@@ -23,14 +23,12 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/ExternalInterrupt.hh"
-#include "Cosa/Linkage.hh"
-#include "Cosa/Power.hh"
 #include "Cosa/IOStream.hh"
 
 /**
  * DHT11/22 Humidity & Temperature Sensor abstract device driver.
  */
-class DHT : public ExternalInterrupt, public Link {
+class DHT : public ExternalInterrupt {
 public:
   /**
    * Construct DHT device connected to given pin.
@@ -38,34 +36,14 @@ public:
    */
   DHT(Board::ExternalInterruptPin pin = Board::EXT0) :
     ExternalInterrupt(pin, ExternalInterrupt::ON_FALLING_MODE),
-    Link(),
     m_state(INIT),
-    m_errors(0),
     m_start(0),
-    m_period(0),
     m_value(0),
     m_bits(0),
     m_ix(0),
     m_humidity(0),
     m_temperature(0)
   {}
-
-  /**
-   * Start the DHT device driver with the given sampling period.
-   * @param[in] ms sampling period (Default MIN_PERIOD/2048 ms).
-   */
-  void begin(uint16_t ms = MIN_PERIOD);
-
-  /**
-   * @override DHT
-   * Callback when data sample is completed.
-   */
-  virtual void on_sample_completed() {}
-
-  /**
-   * Stop the DHT device driver.
-   */
-  void end();
 
   /**
    * Return humidity from latest read.
@@ -127,6 +105,38 @@ public:
   }
 
 protected:
+  /**
+   * @override Interrupt::Handler
+   * The device driver interrupt level state machine.
+   * @param[in] arg argument from interrupt service routine.
+   */
+  virtual void on_interrupt(uint16_t arg = 0);
+
+  /**
+   * @override DHT
+   * Callback when data sample is completed.
+   * @bool valid data received.
+   */
+  virtual void on_sample_completed(bool valid)
+  {
+    UNUSED(valid);
+  }
+
+  /**
+   * Validate received data block. Return true if valid data with
+   * correct check sum otherwise false.
+   * @return bool.
+   */
+  bool is_valid();
+
+  /**
+   * @override DHT
+   * Adjust data from the device. Communication protocol is the same
+   * for the DHT device family but data representation is different,
+   * i.e. data resolution and accuracy. Overridden by DHT11 and DHT22.
+   */
+  virtual void adjust_data() = 0;
+
   // States
   enum {
     INIT,			//!< Initial state.
@@ -148,7 +158,7 @@ protected:
   /** Size of data buffer */
   static const uint8_t DATA_MAX = 5;
 
-  /** Last data elemement index */
+  /** Last data element index */
   static const uint8_t DATA_LAST = DATA_MAX - 1;
 
   /**
@@ -167,23 +177,17 @@ protected:
   /** State of device driver. */
   volatile uint8_t m_state;
 
-  /** Number of errors detected; transfer or checksum. */
-  volatile uint8_t m_errors;
-
   /** Micro-seconds since latest rising of data signal; pulse start. */
-  volatile uint16_t m_start;
-
-  /** Number of milli-seconds between requests. */
-  volatile uint16_t m_period;
+  uint16_t m_start;
 
   /** Current byte being read from device. */
-  volatile uint8_t m_value;
+  uint8_t m_value;
 
   /** Current number of bits read. */
-  volatile uint8_t m_bits;
+  uint8_t m_bits;
 
   /** Current data byte index stream. */
-  volatile uint8_t m_ix;
+  uint8_t m_ix;
 
   /** Current data being transfered. */
   data_t m_data;
@@ -193,29 +197,6 @@ protected:
 
   /* Latest valid temperature reading. */
   int16_t m_temperature;
-
-  /**
-   * @override Interrupt::Handler
-   * The device driver interrupt level state machine.
-   * @param[in] arg argument from interrupt service routine.
-   */
-  virtual void on_interrupt(uint16_t arg = 0);
-
-  /**
-   * @override Event::Handler
-   * The device driver event level state machine.
-   * @param[in] type the type of event.
-   * @param[in] value the event value.
-   */
-  virtual void on_event(uint8_t type, uint16_t value);
-
-  /**
-   * @override DHT
-   * Adjust data from the device. Communication protocol is the same
-   * for the DHT device family but data representation is different,
-   * i.e. data resolution and accuracy. Overridden by DHT11 and DHT22.
-   */
-  virtual void adjust_data() = 0;
 
   /**
    * Print latest humidity and temperature reading to the
@@ -253,7 +234,6 @@ class DHT11 : public DHT {
 public:
   /**
    * Construct connection to a DHT11 device on given in/output-pin.
-   * Set humidity and temperature calibration offsets to zero.
    * @param[in] pin data (Default EXT0).
    */
   DHT11(Board::ExternalInterruptPin pin = Board::EXT0) :
@@ -296,7 +276,6 @@ class DHT22 : public DHT {
 public:
   /**
    * Construct connection to a DHT22 device on given in/output-pin.
-   * Set humidity and temperature calibration offsets to zero.
    * @param[in] pin data (Default EXT0).
    */
   DHT22(Board::ExternalInterruptPin pin = Board::EXT0) :
