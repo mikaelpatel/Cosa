@@ -26,10 +26,19 @@
 #include "Cosa/IOStream.hh"
 
 /**
- * DHT11/22 Humidity & Temperature Sensor abstract device driver.
+ * DHT11/22 Humidity & Temperature Sensor common device driver.
+ * Uses external interrupt on high to low transition to capture
+ * serial data from the device. Please not that excessive interrupt
+ * sources may affect the capture.
  */
 class DHT : public ExternalInterrupt {
 public:
+  /** Humidity when conversion and/or communication fails */
+  static const int16_t BAD_HUMIDITY_SAMPLE = 1000;
+
+  /** Temperature when conversion and/or communication fails */
+  static const int16_t BAD_TEMPERATURE_SAMPLE = 850;
+
   /**
    * Construct DHT device connected to given pin.
    * @param[in] pin external interrupt pin (Default EXT0).
@@ -114,8 +123,10 @@ protected:
 
   /**
    * @override DHT
-   * Callback when data sample is completed.
-   * @bool valid data received.
+   * Callback when data sample is completed. Called from interrupt
+   * service routine. Typically used to push an event for further
+   * processing. Default implementation is an empty function.
+   * @param[in] valid data received and adjusted.
    */
   virtual void on_sample_completed(bool valid)
   {
@@ -241,7 +252,7 @@ public:
   {
   }
 
-private:
+protected:
   /**
    * @override DHT
    * Adjust data from the DHT11 device; scale by 10 for uniform
@@ -283,7 +294,7 @@ public:
   {
   }
 
-private:
+protected:
   /**
    * @override DHT
    * Adjust data from the DHT22 device. Byte order and representation of

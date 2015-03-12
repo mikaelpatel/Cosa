@@ -39,6 +39,7 @@ DHT::on_interrupt(uint16_t arg)
   // Calculate the pulse width and check against thresholds
   uint16_t stop = RTC::micros();
   uint16_t us = (stop - m_start);
+  bool valid = false;
 
   // Check the initial response pulse
   if (m_state == RESPONSE) {
@@ -62,7 +63,8 @@ DHT::on_interrupt(uint16_t arg)
   // Next byte ready
   m_data.as_byte[m_ix++] = m_value;
   m_bits = 0;
-  if (m_ix == DATA_MAX) goto completed;
+  valid = (m_ix == DATA_MAX);
+  if (valid) goto completed;
   return;
 
   // Invalid sample reject sequence
@@ -73,15 +75,16 @@ DHT::on_interrupt(uint16_t arg)
  completed:
   m_state = COMPLETED;
   disable();
-  on_sample_completed(m_ix == DATA_MAX);
+  if (valid) adjust_data();
+  on_sample_completed(valid);
 }
 
 bool
 DHT::sample_request()
 {
   // Error humidity and temperature (out of range)
-  m_humidity = 1000;
-  m_temperature = 850;
+  m_humidity = BAD_HUMIDITY_SAMPLE;
+  m_temperature = BAD_TEMPERATURE_SAMPLE;
 
   // Issue a request; pull down for more than 18 ms
   set_mode(OUTPUT_MODE);
@@ -110,9 +113,7 @@ DHT::sample_await()
 
   // Data reading was completed; validate data and check sum
   m_state = INIT;
-  if (!is_valid()) return (false);
-  adjust_data();
-  return (true);
+  return (is_valid());
 }
 
 bool
