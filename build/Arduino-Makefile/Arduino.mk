@@ -135,9 +135,13 @@
 #                   or your sketchbook's libraries directory)
 #
 #    MONITOR_PORT:  The port where the Arduino can be found (only needed
-#                   when uploading)
+#                   when uploading, resetting, or monitoring)
 #
-#    BOARD_TAG:      The tag for the board e.g. uno or mega
+#    MONITOR_PORTS: If MONITOR_PORT is not used, optionally provides a ':'
+#                   separated list of device path names to limit the
+#                   automatic detection to likely devices
+#
+#    BOARD_TAG:     The tag for the board e.g. uno or mega
 #                   'make show_boards' shows a list
 #
 # If you have your additional libraries relative to your source, rather
@@ -950,10 +954,17 @@ ifneq ($(strip $(MONITOR_PORT)),)
   DEVICE_PATH = $(MONITOR_PORT)
   $(call show_config_variable,DEVICE_PATH,[COMPUTED],(from MONITOR_PORT))
 else
-  # If no port is specified, try to guess it from wildcards. Will only
-  # work if the Arduino is the only/first device matched.
-  DEVICE_PATH = $(firstword $(wildcard /dev/ttyACM? /dev/ttyUSB? /dev/tty.usbserial* /dev/tty.usbmodem*))
-  $(call show_config_variable,DEVICE_PATH,[AUTODETECTED])
+  # If no port is specified, try to guess it from wildcards.
+  DEVICE_PATHS = $(wildcard /dev/ttyACM? /dev/ttyUSB? /dev/tty.usbserial* /dev/tty.usbmodem*)
+  ifneq ($(strip $(MONITOR_PORTS)),)
+    # Limit matches to those in MONITOR_PORTS list; if more than one, take first.
+    DEVICE_PATH = $(firstword $(filter $(subst :, ,$(MONITOR_PORTS)),$(DEVICE_PATHS)))
+    $(call show_config_variable,DEVICE_PATH,[LIMITED AUTODETECTED])
+  else
+    # Will only work if the Arduino is the only/first device matched.
+    DEVICE_PATH = $(firstword $(DEVICE_PATHS))
+    $(call show_config_variable,DEVICE_PATH,[AUTODETECTED])
+  endif
 endif
 
 # Returns the Arduino port (first wildcard expansion) if it exists, otherwise it errors.

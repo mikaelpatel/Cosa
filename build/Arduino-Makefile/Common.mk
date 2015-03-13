@@ -17,7 +17,7 @@ runscript_if_exists =                                                          \
 space_pad_to = $(shell echo $(1) "                                                      " | head -c$(2))
 
 # Call with some text, and a prefix tag if desired (like [AUTODETECTED]),
-show_config_info = $(call arduino_output,- $(call space_pad_to,$(2),20) $(1))
+show_config_info = $(call arduino_output,- $(call space_pad_to,$(2),22) $(1))
 
 # Call with the name of the variable, a prefix tag if desired (like [AUTODETECTED]),
 # and an explanation if desired (like (found in $$PATH)
