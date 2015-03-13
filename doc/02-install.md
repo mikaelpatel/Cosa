@@ -29,6 +29,9 @@ git pull origin master
 * Create an outer `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa).
 * Unzip the files to your `hardware/Cosa` folder.
 * Rename inner `Cosa` folder (<custom_path>/sketchbook/hardware/Cosa/Cosa-master) to `avr` (<custom_path>/sketchbook/hardware/Cosa/avr).
+* Arduino 1.6.1 does not include the GCC plugin for link time
+optimization (LTO). Please rename the file platform.txt-windows-1.6.1
+to platform.txt if using 1.6.1 on Windows.
 
 ### Step 3 (For Attiny users on Windows version only and Arduino 1.0.X)
 
