@@ -50,9 +50,9 @@ HD44780::SR3WSPI::write8b(uint8_t data)
     spi.begin();
       m_port.data = (data >> 4);
       spi.transfer(m_port);
-      m_cs._toggle();
-      m_cs._toggle();
       m_port.data = data;
+      m_cs._toggle();
+      m_cs._toggle();
       spi.transfer(m_port);
     spi.end();
   spi.release();

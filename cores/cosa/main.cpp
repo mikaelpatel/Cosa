@@ -26,6 +26,9 @@
 #include <avr/interrupt.h>
 #include "Cosa/Power.hh"
 
+// Software disable low voltage detect (23 uA at 5 V)
+// #define COSA_BOD_DISABLE
+
 /**
  * The init function; minimum setup of hardware after the bootloader.
  * This function may be overridden.
@@ -64,6 +67,12 @@ void init()
   UDCON = 0;
   UDINT = 0;
   UDIEN = 0;
+#endif
+
+  // Disable low voltage detect
+#if defined(COSA_BOD_DISABLE) && defined(BODS)
+  MCUCR |= _BV(BODS) | _BV(BODSE);
+  MCUCR |= _BV(BODS);
 #endif
 
   // Allow the board to set ports in a safe state. Typically chip
