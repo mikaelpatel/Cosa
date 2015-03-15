@@ -296,15 +296,22 @@ else
   SIZE_EEPROM_HIGHLIGHT = "\\n********************************************************************************\\n"
 endif
 
+########################################################################
+# Display configuration
+
 arduino_output =
-# When output is not suppressed and we're in the top-level makefile,
-# running for the first time (i.e., not after a restart after
-# regenerating the dependency file), then output the configuration.
-ifndef ARDUINO_QUIET
-  ifeq ($(MAKE_RESTARTS),)
-    ifeq ($(MAKELEVEL),0)
-      arduino_output = $(info $(1))
-    endif
+# When we're in the top-level makefile, running for the first time
+# (i.e., not after a restart after regenerating the dependency file),
+# then output the configuration unless output is suppressed and
+# the goal is not 'config'.
+ifeq ($(MAKE_RESTARTS),)
+  ifeq ($(MAKELEVEL),0)
+    arduino_output = $(info $(1))
+  endif
+endif
+ifneq ($(MAKECMDGOALS),config)
+  ifdef ARDUINO_QUIET
+    arduino_output =
   endif
 endif
 
@@ -676,6 +683,11 @@ ifeq ($(strip $(NO_CORE)),)
 
 endif
 
+# If COSA_OBJDIR is defined, use it for OBJDIR
+ifdef COSA_OBJDIR
+  OBJDIR = $(COSA_OBJDIR)/build-$(ARDUINO_VER)/$(BOARD_TAG)
+endif
+
 # Everything gets built in here (include BOARD_TAG now)
 ifndef OBJDIR
   OBJDIR = $(COSA_DIR)/obj/build-$(ARDUINO_VER)/$(BOARD_TAG)
@@ -705,6 +717,24 @@ ifneq ($(CATERINA),)
   ERROR_ON_CATERINA = $(error On $(BOARD_TAG), raw_xxx operation is not supported)
 else
   ERROR_ON_CATERINA =
+endif
+
+########################################################################
+# Wait
+
+ifndef WAIT_CMD
+  ARD_WAIT_ARDUINO := $(shell which ard-wait-arduino 2> /dev/null)
+  ifndef ARD_WAIT_ARDUINO
+    # Same level as *.mk in bin directory when checked out from git or
+    # in $PATH when packaged
+    ARD_WAIT_ARDUINO = $(ARDMK_DIR)/bin/ard-wait-arduino
+  endif
+  ifeq ($(CATERINA),)
+    # Only wait for caterina
+    WAIT_CMD =
+  else
+    WAIT_CMD = $(ARD_WAIT_ARDUINO) $(ARD_WAIT_OPTS) $(call get_monitor_port)
+  endif
 endif
 
 ########################################################################
@@ -1392,6 +1422,7 @@ avanti: $(TARGET_HEX) verify_size
 	$(call arduino_output,Resetting...)
 	$(RESET_CMD)
 	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
+	$(WAIT_CMD)
 	@$(ECHO) "Use CTRL-ALT GR-] to exit monitor.\n"
 	$(MONITOR_CMD) $(get_monitor_port) $(MONITOR_BAUDRATE)
 
