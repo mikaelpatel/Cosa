@@ -179,6 +179,7 @@ void loop()
   msg.battery = AnalogPin::bandgap(1100);
 
   // Broadcast the message and power down after completion
+  rf.powerup();
   rf.broadcast(DIGITAL_TEMP_TYPE, &msg, sizeof(msg));
   rf.powerdown();
 

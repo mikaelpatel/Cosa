@@ -137,6 +137,7 @@ void loop()
   msg.temperature = temperature.sample();
   msg.battery = AnalogPin::bandgap();
   led.on();
+  rf.powerup();
   rf.broadcast(DIGITAL_LUMINANCE_TEMPERATURE_TYPE, &msg, sizeof(msg));
   rf.powerdown();
   led.off();
@@ -157,5 +158,4 @@ void loop()
   Watchdog::begin();
   RTC::begin();
   Power::all_enable();
-  rf.powerup();
 }
