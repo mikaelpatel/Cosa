@@ -42,6 +42,9 @@ attiny84-8.bootloader.tool=avrdude
 attiny84-8.bootloader.low_fuses=0xe2
 attiny84-8.bootloader.high_fuses=0xdf
 attiny84-8.bootloader.extended_fuses=0xff
+attiny84-8.bootloader.unlock_bits=0xff
+attiny84-8.bootloader.lock_bits=0xff
+attiny84-8.bootloader.file=attiny84-8.hex
 
 attiny84-8.build.mcu=attiny84
 attiny84-8.build.f_cpu=8000000L
@@ -64,6 +67,9 @@ attiny85-8.bootloader.tool=avrdude
 attiny85-8.bootloader.low_fuses=0xe2
 attiny85-8.bootloader.high_fuses=0xdf
 attiny85-8.bootloader.extended_fuses=0xff
+attiny85-8.bootloader.unlock_bits=0xff
+attiny85-8.bootloader.lock_bits=0xff
+attiny85-8.bootloader.file=attiny85-8.hex
 
 attiny85-8.build.mcu=attiny85
 attiny85-8.build.f_cpu=8000000L
@@ -86,6 +92,9 @@ attiny861-8.bootloader.tool=avrdude
 attiny861-8.bootloader.low_fuses=0xe2
 attiny861-8.bootloader.high_fuses=0xdf
 attiny861-8.bootloader.extended_fuses=0x01
+attiny861-8.bootloader.unlock_bits=0xff
+attiny861-8.bootloader.lock_bits=0xff
+attiny861-8.bootloader.file=attiny861-8.hex
 
 attiny861-8.build.mcu=attiny861
 attiny861-8.build.f_cpu=8000000L
