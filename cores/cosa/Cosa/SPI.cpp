@@ -35,7 +35,7 @@ SPI::Driver::Driver(Board::DigitalPin cs, Pulse pulse,
 		    Interrupt::Handler* irq) :
   m_next(NULL),
   m_irq(irq),
-  m_cs(cs, (pulse == 0)),
+  m_cs(cs, ((pulse & 0x01) == 0)),
   m_pulse(pulse),
   // SPI Control Register for master mode
   m_spcr(_BV(SPE)
@@ -117,7 +117,7 @@ SPI::Driver::Driver(Board::DigitalPin cs, Pulse pulse,
 		    Interrupt::Handler* irq) :
   m_next(NULL),
   m_irq(irq),
-  m_cs(cs, (pulse == 0)),
+  m_cs(cs, ((pulse & 0x01) == 0)),
   m_pulse(pulse),
   m_cpol(mode)
 {
