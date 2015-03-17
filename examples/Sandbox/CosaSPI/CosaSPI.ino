@@ -25,13 +25,7 @@
 #include "Cosa/SPI.hh"
 #include "Cosa/OutputPin.hh"
 
-SPI::Driver dev1(Board::D2, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 0);
-SPI::Driver dev2(Board::D3, SPI::ACTIVE_HIGH, SPI::DIV8_CLOCK, 1);
-SPI::Driver dev3(Board::D4, SPI::PULSE_LOW, SPI::DIV32_CLOCK, 2);
-
-OutputPin debug(Board::D6, 1);
-
-/*
+/**
  * SPI device driver steps:
  *
  * spi.acquire(&driver);
@@ -40,13 +34,13 @@ OutputPin debug(Board::D6, 1);
  *   Set up SPI control registers.
  *
  * spi.begin();
- *   Assert chip select.
+ *   Assert chip select if active low/high.
  *
  * spi.transfer();
  *   Transfer data.
  *
  * spi.end();
- *   Deassert chip select.
+ *   Deassert chip select or pulse.
  *
  * spi.release();
  *   Release the SPI device driver.
@@ -54,13 +48,21 @@ OutputPin debug(Board::D6, 1);
  *
  * The debug pin marks the acquire-release block.
  */
+
+SPI::Driver dev1(Board::D2, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 0);
+SPI::Driver dev2(Board::D3, SPI::ACTIVE_HIGH, SPI::DIV8_CLOCK, 1);
+SPI::Driver dev3(Board::D4, SPI::PULSE_LOW, SPI::DIV16_CLOCK, 2);
+SPI::Driver dev4(Board::D5, SPI::PULSE_HIGH, SPI::DIV32_CLOCK, 3);
+
+OutputPin debug(Board::D6, 1);
+
 void loop()
 {
   // Sleep to synch with logic analyser
   sleep(5);
 
   // Single byte transfer (dev1@8MHz)
-  // debug=10.5, cs=2.5 (low)
+  // debug=10.5, cs=2.5 (low), diff=8.0
   // 100 Kbyte/s (max 1 Mbyte/s)
   debug.clear();
   spi.acquire(&dev1);
@@ -70,29 +72,34 @@ void loop()
   spi.release();
   debug.set();
 
-  // 10 byte transfer (dev1@8MHz)
-  // debug=24.5, cs=16.5 (low)
-  // 408 Kbyte/s (max 1 Mbyte/s)
+  // 8 byte block transfer (dev1@8MHz)
+  // debug=21.12 cs=13.0 (low), diff=8.12
+  // 592 Kbyte/s (max 1 Mbyte/s)
+  const size_t BUF_MAX = 8;
+  uint8_t buf[BUF_MAX];
   debug.clear();
   spi.acquire(&dev1);
     spi.begin();
-      spi.transfer(0x55);
-      spi.transfer(0x55);
-      spi.transfer(0x55);
-      spi.transfer(0x55);
-      spi.transfer(0x55);
-      spi.transfer(0x55);
-      spi.transfer(0x55);
-      spi.transfer(0x55);
+      spi.write(buf, sizeof(buf));
+    spi.end();
+  spi.release();
+  debug.set();
+
+  // Double byte transfer (dev1@8MHz)
+  // debug=12.12, cs=4.0 (low), diff=8.12
+  // 413 Kbyte/s (max 500 Kbyte/s)
+  debug.clear();
+  spi.acquire(&dev1);
+    spi.begin();
       spi.transfer(0x55);
       spi.transfer(0x55);
     spi.end();
   spi.release();
   debug.set();
 
-  // Double byte transfer (dev2@1MHz)
+  // Double byte transfer (dev2@2MHz)
   // debug=18.1, cs=10.0 (high)
-  // 110 Kbyte/s (max 125 Kbyte/s)
+  // 276 Kbyte/s (max 500 Kbyte/s)
   debug.clear();
   spi.acquire(&dev2);
     spi.begin();
@@ -102,14 +109,23 @@ void loop()
   spi.release();
   debug.set();
 
-  // Multiple transfer; single followed by double (dev3@500KHz)
-  // debug=61.3, cs=1.1 (pulse)
-  // 49 Kbyte/s (max 67 Kbyte/s)
+  // Double byte transfer (dev3@1MHz)
+  // debug=26.1, cs=1.2 (pulse low)
+  // 192 Kbyte/s (max 250 Kbyte/s)
   debug.clear();
   spi.acquire(&dev3);
     spi.begin();
       spi.transfer(0x55);
+      spi.transfer(0x55);
     spi.end();
+  spi.release();
+  debug.set();
+
+  // Double byte tranfer (dev4@500KHz)
+  // debug=42.1, cs=1.2 (pulse high)
+  // 119 Kbyte/s (max 125 Kbyte/s)
+  debug.clear();
+  spi.acquire(&dev4);
     spi.begin();
       spi.transfer(0x55);
       spi.transfer(0x55);
