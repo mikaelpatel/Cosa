@@ -107,10 +107,10 @@ public:
   bool sample(int16_t& humidity, int16_t& temperature)
     __attribute__((always_inline))
   {
-    if (!sample()) return (false);
+    bool res = sample();
     humidity = m_humidity;
     temperature = m_temperature;
-    return (true);
+    return (res);
   }
 
 protected:
