@@ -71,8 +71,10 @@ public:
    */
   T operator=(T value)
   {
-    if (ON_CHANGE && (m_value == value)) return (value);
-    m_value = value;
+    synchronized {
+      if (ON_CHANGE && (m_value == value)) synchronized_return (value);
+      m_value = value;
+    }
     controller.schedule(m_listeners);
     return (value);
   }
