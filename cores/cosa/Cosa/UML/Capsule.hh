@@ -63,7 +63,7 @@ public:
 
 protected:
   bool is_scheduled;		//!< Capsule run-time state.
-  friend class Controller;
+  friend class Controller;	//!< Controller can read state.
 };
 
 };

@@ -34,19 +34,20 @@ namespace UML {
  * true the connector will only schedule if the value setting is
  * different than the previous value.
  * @param[in] T connector value type.
- * @param[in] ON_CHANGE flag (Default false).
+ * @param[in] ON_CHANGE flag (default false).
  *
  * @section Diagram
  * @code
  *
  *     Capsule                             Capsule
  *   +---------+                         +---------+
- *   |   c1    |                         |   c2    |
- *   |         |                         |         |
- *   |      [Port]---[Connector<T>]--->[Port]      |
- *   |         |                         |         |
- *   +---------+                         +---------+
- *
+ *   |   c1    |-+                       |   c2    |-+
+ *   |         | |                       |         | |
+ *   |      [Port]---[Connector<T>]--->[Port]      | |
+ *   |         | |                       |         | |
+ *   +---------+ |                       +---------+ |
+ *     +---------+                        +----------+
+ *             (N)                                 (M)
  * @endcode
  */
 template<typename T, bool ON_CHANGE = false>
@@ -65,7 +66,8 @@ public:
 
   /**
    * Set the connector with given value. Schedule listener
-   * capsules according to ON_CHANGE setting.
+   * capsules according to ON_CHANGE setting. May be called
+   * from an ISR.
    * @param[in] value to update with.
    * @return value.
    */
@@ -81,7 +83,8 @@ public:
 
   /**
    * Set the connector with value from given connector. Schedule
-   * listener capsules according to ON_CHANGE setting.
+   * listener capsules according to ON_CHANGE setting. May be called
+   * from an ISR.
    * @param[in] connector value to assign.
    * @return value.
    */

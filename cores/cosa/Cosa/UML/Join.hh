@@ -53,10 +53,10 @@ public:
   /**
    * Construct Join with given null terminated vector of listeners
    * (Capsules), and number of signals required before dispatch.
-   * @param[in] count number of signals required.
    * @param[in] listeners null terminated vector of capsule references.
+   * @param[in] count number of signals required.
    */
-  Join(uint8_t count, Capsule* const* listeners) :
+  Join(Capsule* const* listeners, uint8_t count) :
     m_listeners(listeners),
     m_count(count),
     m_current(count)

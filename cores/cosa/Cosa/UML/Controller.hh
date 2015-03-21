@@ -38,7 +38,7 @@ public:
   Controller() :
     m_put(0),
     m_get(0),
-    m_available(0)
+    m_cnt(0)
   {}
 
   /**
@@ -51,7 +51,16 @@ public:
    * @param[in] capsules null terminated vector of capsule references.
    * @return zero or negative error code.
    */
-  int schedule(Capsule* const* capsules);
+  int schedule(Capsule* const* capsules)
+  {
+    if (capsules == NULL) return (0);
+    Capsule* capsule;
+    while((capsule = (Capsule*) pgm_read_word(capsules++)) != NULL) {
+      int res = schedule(capsule);
+      if (res < 0) return (res);
+    }
+    return (0);
+  }
 
   /**
    * Schedule given capsule. Append to controller capsule queue if
@@ -64,11 +73,11 @@ public:
   int schedule(Capsule* capsule);
 
 protected:
-  static const size_t QUEUE_MAX = 32; //!< Default run-time queue size.
+  static const uint8_t QUEUE_MAX = 32; //!< Default run-time queue size.
   Capsule* m_queue[QUEUE_MAX];	      //!< Run-time queue.
-  uint16_t m_put;		      //!< Index of queue head.
-  uint16_t m_get;		      //!< Index of queue tail.
-  uint16_t m_available;		      //!< Number of capsules in queue.
+  uint8_t m_put;		      //!< Index of queue head.
+  uint8_t m_get;		      //!< Index of queue tail.
+  uint8_t m_cnt;		      //!< Number of capsules in queue.
 };
 
 /**

@@ -41,7 +41,7 @@ namespace UML {
  *  |        |---[Signal]--->
  *  |        |
  *  +--------+
- *  GND-()-[Dn]
+ *  GND-(X)-[Dn]
  *
  * @endcode
  */
@@ -54,11 +54,10 @@ public:
 
   /**
    * Construct Button monitoring given digital pin and generating
-   * signal. The pin is sampled with the given period (default 64
-   * ms).
+   * signal. The pin is sampled with the given period.
    * @param[in] pin digital pin for button.
    * @param[in] signal connector.
-   * @param[in] ms period.
+   * @param[in] ms period (default timeout 64 ms).
    */
   Button(Board::DigitalPin pin, Signal& signal,
 	 uint16_t ms = DEFAULT_TIMEOUT) :
