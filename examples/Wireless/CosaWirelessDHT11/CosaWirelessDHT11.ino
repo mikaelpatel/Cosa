@@ -114,10 +114,7 @@ void loop()
 
   // Construct message with humidity, temperature and battery reading
   msg.nr = nr++;
-  if (!sensor.sample(msg.humidity, msg.temperature)) {
-    msg.humidity = 1000;
-    msg.temperature = 850;
-  }
+  sensor.sample(msg.humidity, msg.temperature);
   msg.battery = AnalogPin::bandgap(1100);
 
   // Broadcast message and powerdown
