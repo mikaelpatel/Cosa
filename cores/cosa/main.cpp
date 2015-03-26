@@ -113,6 +113,29 @@ int main(void)
 }
 
 /**
+ * The exit function. This function may be overridden.
+ */
+void exit(int status) __attribute__((weak));
+void exit(int status)
+{
+  UNUSED(status);
+
+  cli();
+
+#if defined(USBCON)
+  extern void USB_Keepalive(void);
+  USB_Keepalive();  // never returns
+#endif
+
+  // Hang forever in sleep mode
+  while (1)
+    Power::sleep();
+
+  // Failsafe
+  while (1);
+}
+
+/**
  * Default delay function; busy-wait given number of milli-seconds.
  * @param[in] ms milli-seconds delay.
  */
