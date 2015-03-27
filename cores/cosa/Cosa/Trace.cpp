@@ -41,5 +41,6 @@ Trace::fatal(const char* file, int line, str_P expr)
   printf(PSTR("%s:%d:%S\r\n"), file, line, expr);
   print(EXITCHARACTER);
   get_device()->flush();
-  exit(0);
+  while (1)
+    ;
 }
