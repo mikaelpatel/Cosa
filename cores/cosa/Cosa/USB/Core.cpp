@@ -511,7 +511,8 @@ SendDescriptor(Setup& setup)
   return (true);
 }
 
-ISR(USB_COM_vect)
+static void
+Handle_USB_COM(void)
 {
   SetEP(0);
   if (!ReceivedSetupInt()) return;
@@ -570,6 +571,19 @@ ISR(USB_COM_vect)
     ClearIN();
   else
     Stall();
+}
+
+ISR(USB_COM_vect)
+{
+  Handle_USB_COM();
+}
+
+// USB_Keepalive is called from exit implemented in main.cpp
+void
+USB_Keepalive(void)
+{
+  while (_usbConfiguration)
+    Handle_USB_COM();
 }
 
 void
