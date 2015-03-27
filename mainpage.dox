@@ -33,7 +33,7 @@ Firmata.
 
 The primary programming paradigm is object-oriented and
 state-machine/event driven with proto-threads or multi-tasking. There
-is a large number of device drivers available for SPI, I2C (TWI) and
+are a large number of device drivers available for SPI, I2C (TWI) and
 1-Wire (OWI). A strict directory structure is used to organize the
 Cosa/driver source code. Sub-directories are used for each driver
 type. This allows a foundation for scaling and configuration.
@@ -62,14 +62,14 @@ The popular VirtualWire library has been refactored to the
 object-oriented style of Cosa (VWI) and extended with three additional
 codecs; Manchester, 4B5B and Bitstuffing. This allows basic ultra
 cheap wireless nodes with RF315/433 receiver and transmitter. For more
-advanced wireless connections there is also drivers for the Nordic
+advanced wireless connections there are also drivers for the Nordic
 Semiconductor NRF24L01+ chip, the TI CC1101 Low-Power Sub-1 GHz RF
 Transceiver, and RFM69.  
 
 The goal of this project is to provide an efficient programming
 platform for rapid prototyping of "Internet-of-things"-devices. There
 is an Ethernet/Socket with W5100 Ethernet controller device
-driver. This implementation allows streaming direct to the device
+driver. This implementation allows streaming directly to the device
 buffers. Cosa also implements a number of IP protocols; DNS, DHCP,
 NTP, HTTP, SNMP and MQTT. 
 

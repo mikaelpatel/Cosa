@@ -20,7 +20,8 @@
  * written in Cosa using the Arduino built-in LED and minimal number of
  * lines of code. Uses the OutputPin static member function toggle to
  * turn on and off the built-in LED. And the default delay function
- * which is a busy-wait loop. No setup function is necessary.
+ * which is a busy-wait loop.
+ * The pin must be set up as an Output pin since the default is Input.
  *
  * @section Circuit
  * Uses built-in LED (D13/Arduino).
@@ -28,7 +29,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OutputPin.hh"
+#include "Cosa/IOPin.hh"
+
+void setup ()
+{
+  // Pins default to Input - set Output
+  IOPin::set_mode(Board::LED,IOPin::OUTPUT_MODE);
+}
 
 void loop()
 {

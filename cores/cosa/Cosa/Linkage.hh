@@ -25,7 +25,7 @@
 #include "Cosa/Event.hh"
 
 /**
- * The Cosa collection handling class; double linked circulic list.
+ * The Cosa collection handling class; double linked circular list.
  *
  * @section Acknowledgements
  * These classes are inspired by the Simula-67 SIMSET Linkage classes.
@@ -70,11 +70,10 @@ public:
   void attach(Linkage* pred)
   {
     synchronized {
-
       // Check if it needs to be detached first
       if (pred->m_succ != pred) {
-	pred->m_succ->m_pred = pred->m_pred;
-	pred->m_pred->m_succ = pred->m_succ;
+        pred->m_succ->m_pred = pred->m_pred;
+        pred->m_pred->m_succ = pred->m_succ;
       }
 
       // Attach pred as the new predecessor

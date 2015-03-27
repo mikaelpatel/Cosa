@@ -20,7 +20,7 @@
  * probed. The LED will blink when the Button is on otherwise the LED
  * is turned off. The probes will trace changes to the connector
  * value. The Clock and the Button are timed capsules. The clock has a
- * period of 1024 ms and the Button 64 ms. The Button will debound the
+ * period of 1024 ms and the Button 64 ms. The Button will debounce the
  * digital input pin. The LED has control dependency to the Clock tick
  * and a data dependency to the Button signal.
  *
