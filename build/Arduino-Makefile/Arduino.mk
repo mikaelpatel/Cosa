@@ -1379,6 +1379,7 @@ boards:
 	@$(CAT) "$(BOARDS_TXT)" | grep -E "^[[:alnum:]|-]+.name" | sort -uf | sed 's/.name=/:/' | column -s: -t
 
 monitor:
+	$(WAIT_CMD)
 	@$(ECHO) "Use CTRL-ALT GR-] to exit monitor.\n"
 	$(MONITOR_CMD) $(get_monitor_port) $(MONITOR_BAUDRATE)
 
