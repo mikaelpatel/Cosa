@@ -430,8 +430,10 @@ public:
    * @param[in] c character to print.
    */
   void print(char c)
+    __attribute__((always_inline))
   {
-    m_dev->putchar(c);
+    if (m_dev != NULL)
+      m_dev->putchar(c);
   }
 
   /**
@@ -439,8 +441,10 @@ public:
    * @param[in] s pointer to data memory string.
    */
   void print(const char* s)
+    __attribute__((always_inline))
   {
-    m_dev->puts(s);
+    if (m_dev != NULL)
+      m_dev->puts(s);
   }
 
   /**
@@ -449,16 +453,20 @@ public:
    * @param[in] s pointer to program memory string.
    */
   void print(str_P s)
+    __attribute__((always_inline))
   {
-    m_dev->puts(s);
+    if (m_dev != NULL)
+      m_dev->puts(s);
   }
 
   /**
    * Print end of line to stream.
    */
   void println()
+    __attribute__((always_inline))
   {
-    m_dev->puts(m_eols);
+    if (m_dev != NULL)
+      m_dev->puts(m_eols);
   }
 
   /**
@@ -493,8 +501,10 @@ public:
    * Flush contents of iostream to stream.
    */
   void flush()
+    __attribute__((always_inline))
   {
-    m_dev->flush();
+    if (m_dev != NULL)
+      m_dev->flush();
   }
 
   /**
@@ -820,7 +830,8 @@ clear(IOStream& outs)
 inline IOStream&
 flush(IOStream& outs)
 {
-  outs.m_dev->flush();
+  if (outs.m_dev != NULL)
+    outs.m_dev->flush();
   return (outs);
 }
 #endif

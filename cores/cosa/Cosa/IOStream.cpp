@@ -45,7 +45,7 @@ IOStream::IOStream() :
 IOStream::Device*
 IOStream::set_device(Device* dev)
 {
-  if (dev == NULL) return (m_dev);
+  //  if (dev == NULL) return (m_dev);
   Device* previous = m_dev;
   m_dev = dev;
   return (previous);
