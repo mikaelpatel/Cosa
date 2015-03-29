@@ -33,8 +33,7 @@ version=1.0
 # ---------------------
 
 # Default "compiler.path" is correct, change only if you want to overidde the initial value
-# compiler.path={runtime.ide.path}/hardware/tools/avr/bin/
-compiler.path={runtime.tools.avr-gcc.path}/bin/
+compiler.path={runtime.ide.path}/hardware/tools/avr/bin/
 compiler.c.cmd=avr-gcc
 compiler.c.flags=-c -g -Os -Wall -ffunction-sections -fdata-sections -MMD
 compiler.c.elf.flags=-Os -Wl,--gc-sections
@@ -96,12 +95,8 @@ recipe.size.regex.eeprom=^(?:\.eeprom)\s+([0-9]+).*
 # AVR Uploader/Programmers tools
 # ------------------------------
 
-tools.avrdude.path={runtime.tools.avrdude.path}
-tools.avrdude.cmd.path={path}/bin/avrdude
-tools.avrdude.config.path={path}/etc/avrdude.conf
-
-# tools.avrdude.cmd.path={runtime.ide.path}/hardware/tools/avr/bin/avrdude
-# tools.avrdude.config.path={runtime.ide.path}/hardware/tools/avr/etc/avrdude.conf
+tools.avrdude.cmd.path={runtime.ide.path}/hardware/tools/avr/bin/avrdude
+tools.avrdude.config.path={runtime.ide.path}/hardware/tools/avr/etc/avrdude.conf
 
 tools.avrdude.upload.params.verbose=-v -v -v -v
 tools.avrdude.upload.params.quiet=-q -q
