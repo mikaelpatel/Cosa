@@ -20,7 +20,7 @@
 
 #include "Cosa/Trace.hh"
 
-Trace trace;
+Trace trace __attribute__ ((weak));
 
 uint8_t trace_log_mask = LOG_UPTO(LOG_INFO);
 
