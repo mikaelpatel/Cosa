@@ -118,6 +118,12 @@ CDC_Setup(Setup& setup)
       }
       return (true);
     }
+
+    if (CDC_SEND_BREAK == r) {
+      // lost serial connection; mark lineState as gone
+      _usbLineInfo.lineState = 0;
+      return (true);
+    }
   }
   return (false);
 }
@@ -163,10 +169,11 @@ CDC::empty(void)
 int
 CDC::write(const void* buf, size_t size)
 {
-  if ((_usbLineInfo.lineState > 0)
-      && (USB_Send(CDC_TX, buf, size) == (int) size))
-    return (size);
-  return (IOStream::EOF);
+  if ((_usbLineInfo.lineState & 0x01) &&
+      (USB_Send(CDC_TX, buf, size) != (int) size))
+    return (IOStream::EOF);
+
+  return (size);
 }
 
 #endif
