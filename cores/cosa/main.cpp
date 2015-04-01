@@ -124,15 +124,13 @@ void exit(int status)
 
 #if defined(USBCON)
   extern void USB_Keepalive(void);
-  USB_Keepalive();  // never returns
+  // Never returns
+  USB_Keepalive();
 #endif
 
   // Hang forever in sleep mode
   while (1)
     Power::sleep();
-
-  // Failsafe
-  while (1);
 }
 
 /**
