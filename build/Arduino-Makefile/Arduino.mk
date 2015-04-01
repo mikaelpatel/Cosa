@@ -696,45 +696,29 @@ else
   $(call show_config_variable,OBJDIR,[USER])
 endif
 
-########################################################################
-# Reset
-
-ifndef RESET_CMD
-  ARD_RESET_ARDUINO := $(shell which ard-reset-arduino 2> /dev/null)
-  ifndef ARD_RESET_ARDUINO
+ifndef ARD_UTIL
+  ARD_UTIL := $(shell which ard-util 2> /dev/null)
+  ifndef ARD_UTIL
     # Same level as *.mk in bin directory when checked out from git or
     # in $PATH when packaged
-    ARD_RESET_ARDUINO = $(ARDMK_DIR)/bin/ard-reset-arduino
+    ARD_UTIL = $(ARDMK_DIR)/bin/ard-util
   endif
-  ifneq ($(CATERINA),)
-    RESET_CMD = $(ARD_RESET_ARDUINO) --caterina $(ARD_RESET_OPTS) $(call get_monitor_port)
-  else
-     RESET_CMD = $(ARD_RESET_ARDUINO) $(ARD_RESET_OPTS) $(call get_monitor_port)
-  endif
+endif
+
+ARD_UTIL += $(ARD_UTIL_OPTS) --port $(call get_monitor_port)
+
+ifneq ($(CATERINA),)
+  ARD_UTIL += --caterina
+endif
+
+ifndef RESET_CMD
+  RESET_CMD = $(ARD_UTIL) --reset --appear
 endif
 
 ifneq ($(CATERINA),)
   ERROR_ON_CATERINA = $(error On $(BOARD_TAG), raw_xxx operation is not supported)
 else
   ERROR_ON_CATERINA =
-endif
-
-########################################################################
-# Wait
-
-ifndef WAIT_CMD
-  ARD_WAIT_ARDUINO := $(shell which ard-wait-arduino 2> /dev/null)
-  ifndef ARD_WAIT_ARDUINO
-    # Same level as *.mk in bin directory when checked out from git or
-    # in $PATH when packaged
-    ARD_WAIT_ARDUINO = $(ARDMK_DIR)/bin/ard-wait-arduino
-  endif
-  ifeq ($(CATERINA),)
-    # Only wait for caterina
-    WAIT_CMD =
-  else
-    WAIT_CMD = $(ARD_WAIT_ARDUINO) $(ARD_WAIT_OPTS) $(call get_monitor_port)
-  endif
 endif
 
 ########################################################################
@@ -1379,6 +1363,7 @@ boards:
 	@$(CAT) "$(BOARDS_TXT)" | grep -E "^[[:alnum:]|-]+.name" | sort -uf | sed 's/.name=/:/' | column -s: -t
 
 monitor:
+	$(ARD_UTIL) --appear
 	@$(ECHO) "Use CTRL-ALT GR-] to exit monitor.\n"
 	$(MONITOR_CMD) $(get_monitor_port) $(MONITOR_BAUDRATE)
 
@@ -1422,7 +1407,7 @@ avanti: $(TARGET_HEX) verify_size
 	$(call arduino_output,Resetting...)
 	$(RESET_CMD)
 	$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) $(AVRDUDE_UPLOAD_HEX)
-	$(WAIT_CMD)
+	$(ARD_UTIL) --ifcaterina --disappear --appear
 	@$(ECHO) "Use CTRL-ALT GR-] to exit monitor.\n"
 	$(MONITOR_CMD) $(get_monitor_port) $(MONITOR_BAUDRATE)
 
