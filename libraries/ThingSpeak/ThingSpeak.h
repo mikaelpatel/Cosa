@@ -1,9 +1,9 @@
 /**
- * @file CosaLibrary.ino
+ * @file ThingSpeak.h
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014-2015, Mikael Patel
+ * Copyright (C) 2014, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,33 +16,14 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Cosa Library and Component build example sketch.
- *
- * @section Limitations
- * Can only be built with the Cosa build script; cosa. Will not
- * build in the Arduino IDE.
+ * Trampoline for Arduino library handling.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include <Library.h>
-#include "Cosa/Trace.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#ifndef COSA_IOT_THINGSPEAK_H
+#define COSA_IOT_THINGSPEAK_H
 
-using namespace Library;
+#include "ThingSpeak.hh"
 
-void setup()
-{
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaLibrary: started"));
-  Watchdog::begin();
-  Component comp(1);
-}
-
-void loop()
-{
-  Component comp(2);
-  ASSERT(true == false);
-}
+#endif

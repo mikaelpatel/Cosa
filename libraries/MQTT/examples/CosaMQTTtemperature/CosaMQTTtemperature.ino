@@ -43,7 +43,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "MQTT.hh"
+#include <MQTT.h>
 #include "Cosa/Board.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"

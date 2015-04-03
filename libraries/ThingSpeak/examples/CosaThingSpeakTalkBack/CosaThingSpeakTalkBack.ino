@@ -38,7 +38,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "ThingSpeak.hh"
+#include <ThingSpeak.h>
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Socket/Driver/W5100.hh"
 

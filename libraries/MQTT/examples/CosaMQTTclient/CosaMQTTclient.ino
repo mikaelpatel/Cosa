@@ -33,7 +33,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "MQTT.hh"
+#include <MQTT.h>
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"

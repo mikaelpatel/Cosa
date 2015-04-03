@@ -54,7 +54,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "ThingSpeak.hh"
+#include <ThingSpeak.h>
 #include "Cosa/RTC.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
