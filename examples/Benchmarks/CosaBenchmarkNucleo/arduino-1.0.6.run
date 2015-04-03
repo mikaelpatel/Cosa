@@ -1,3 +1,4 @@
+/home/epkmipl/Sketchbook/hardware/Cosa/build/Arduino-Makefile/bin/ard-util  --port /dev/ttyUSB0 --appear
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkNucleo: started

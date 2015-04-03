@@ -1,7 +1,8 @@
+/home/epkmipl/Sketchbook/hardware/Cosa/build/Arduino-Makefile/bin/ard-util  --port /dev/ttyUSB0 --appear
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkRTCTimer: started
-74:void setup():trace:free_memory() = 1023
+74:void setup():trace:free_memory() = 1025
 75:void setup():trace:sizeof(Timer) = 10
 76:void setup():trace:sizeof(Simple) = 10
 77:void setup():trace:sizeof(OneShot) = 10
@@ -17,26 +18,26 @@ For queued expirations,
   Avg setup = -1 us (-16 instructions)
   Avg dispatch = -1 us (-16 instructions)
 expire_after(0 us): actual 16 us
-expire_after(7 us): actual 16 us
-expire_after(14 us): actual 16 us
-expire_after(21 us): actual 16 us
-expire_after(28 us): actual 16 us
-expire_after(35 us): actual 16 us
-expire_after(42 us): actual 16 us
-expire_after(49 us): actual 16 us
-expire_after(56 us): actual 16 us
-expire_after(63 us): actual 68 us
-expire_after(70 us): actual 76 us
-expire_after(77 us): actual 84 us
-expire_after(84 us): actual 88 us
-expire_after(91 us): actual 96 us
-expire_after(98 us): actual 104 us
-expire_after(105 us): actual 112 us
+expire_after(7 us): actual 12 us
+expire_after(14 us): actual 12 us
+expire_after(21 us): actual 20 us
+expire_after(28 us): actual 12 us
+expire_after(35 us): actual 12 us
+expire_after(42 us): actual 12 us
+expire_after(49 us): actual 12 us
+expire_after(56 us): actual 12 us
+expire_after(63 us): actual 64 us
+expire_after(70 us): actual 72 us
+expire_after(77 us): actual 80 us
+expire_after(84 us): actual 84 us
+expire_after(91 us): actual 92 us
+expire_after(98 us): actual 100 us
+expire_after(105 us): actual 108 us
 expire_after(118 us): actual 120 us
 expire_after(131 us): actual 132 us
 expire_after(144 us): actual 144 us
 expire_after(157 us): actual 160 us
-expire_after(170 us): actual 172 us
+expire_after(170 us): actual 176 us
 expire_after(183 us): actual 184 us
 expire_after(196 us): actual 196 us
 expire_after(209 us): actual 212 us
@@ -69,7 +70,7 @@ expire_after(1163 us): actual 1164 us
 expire_after(1204 us): actual 1204 us
 expire_after(1245 us): actual 1248 us
 expire_after(1286 us): actual 1288 us
-expire_after(1327 us): actual 1328 us
+expire_after(1327 us): actual 1340 us
 expire_after(1368 us): actual 1368 us
 expire_after(1409 us): actual 1412 us
 expire_after(1450 us): actual 1452 us
@@ -84,13 +85,13 @@ expire_after(1778 us): actual 1780 us
 expire_after(1819 us): actual 1820 us
 expire_after(1860 us): actual 1860 us
 expire_after(1901 us): actual 1904 us
-expire_after(1942 us): actual 1948 us
+expire_after(1942 us): actual 1944 us
 expire_after(1983 us): actual 1984 us
 expire_after(2024 us): actual 2024 us
 expire_after(1024 us): actual 1024 us
-1000X expire_at(n * 1024 us): expected 1024000, actual 1028056 us
-50 timers started in 4200us
-elapsed time (0.5 + 49*0.1s = 5.400s): actual 5400008us
-Rollover test: start 4294963536, end 1244
-  expire_after(5000 us): actual 5004 us
+1000X expire_at(n * 1024 us): expected 1024000, actual 1028052 us
+50 timers started in 4204us
+elapsed time (0.5 + 49*0.1s = 5.400s): actual 5400012us
+Rollover test: start 4294964212, end 1928
+  expire_after(5000 us): actual 5012 us
 CosaBenchmarkRTCTimer.ino:259:assert:true == false

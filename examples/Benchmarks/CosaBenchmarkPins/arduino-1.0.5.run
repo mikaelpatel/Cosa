@@ -1,13 +1,14 @@
+/home/epkmipl/Sketchbook/hardware/Cosa/build/Arduino-Makefile/bin/ard-util  --port /dev/ttyUSB0 --appear
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkPins: started
-118:void setup():free_memory() = 1562
-119:void setup():sizeof(Event::Handler) = 2
-120:void setup():sizeof(InputPin) = 4
-121:void setup():sizeof(OutputPin) = 4
-122:void setup():sizeof(AnalogPin) = 9
-125:void setup():F_CPU = 16000000
-126:void setup():I_CPU = 16
+118:void setup():trace:free_memory() = 1560
+119:void setup():trace:sizeof(Event::Handler) = 2
+120:void setup():trace:sizeof(InputPin) = 4
+121:void setup():trace:sizeof(OutputPin) = 4
+122:void setup():trace:sizeof(AnalogPin) = 9
+125:void setup():trace:F_CPU = 16000000
+126:void setup():trace:I_CPU = 16
 
 168:void loop():info:Measure the time to perform an empty loop block
 170:void loop():measure:nop:504 ns
@@ -20,11 +21,11 @@ CosaBenchmarkPins: started
 
 199:void loop():info:Measure the time to perform an output pin toggle
 201:void loop():measure:outPin.write(x)/x=!x:1575 ns
-208:void loop():measure:outPin.write(1/0):1827 ns
+208:void loop():measure:outPin.write(1/0):1828 ns
 214:void loop():measure:outPin._write(1/0):1638 ns
-222:void loop():measure:outPin.set/clear():1827 ns
+222:void loop():measure:outPin.set/clear():1828 ns
 228:void loop():measure:synchronized outPin._set/_clear():1638 ns
-236:void loop():measure:outPin << 1/0:1827 ns
+236:void loop():measure:outPin << 1/0:1828 ns
 242:void loop():measure:OutputPin::write(D8, 1/0):630 ns
 248:void loop():measure:outPin.toggle():1386 ns
 254:void loop():measure:synchronized outPin._toggle():1197 ns
@@ -33,13 +34,13 @@ CosaBenchmarkPins: started
 274:void loop():measure:digitalToggle(D8):126 ns
 
 280:void loop():info:Measure the time to perform input pin read/output pin write
-282:void loop():measure:outPin.write(!inPin.read()):1890 ns
-287:void loop():measure:inPin.is_set();outPin.clear/set():1827 ns
-295:void loop():measure:inPin >> var; outPin << !var:1890 ns
-302:void loop():measure:outPin.set(inPin.is_clear()):1890 ns
-307:void loop():measure:OutputPin::write(D8, !InputPin::read(D7)):630 ns
+282:void loop():measure:outPin.write(!inPin.read()):1891 ns
+287:void loop():measure:inPin.is_set();outPin.clear/set():1954 ns
+295:void loop():measure:inPin >> var; outPin << !var:1891 ns
+302:void loop():measure:outPin.set(inPin.is_clear()):1891 ns
+307:void loop():measure:OutputPin::write(D8, !InputPin::read(D7)):567 ns
 312:void loop():measure:OutputPin::read(D7)/write(D8,0/1):536 ns
-320:void loop():measure:digitalWrite(D8, !digitalRead(D7)):630 ns
+320:void loop():measure:digitalWrite(D8, !digitalRead(D7)):567 ns
 325:void loop():measure:digitalRead(D7)/digitalWrite(D8,0/1):536 ns
 
 333:void loop():info:Measure the time to perform 8-bit serial data transfer
@@ -60,7 +61,7 @@ CosaBenchmarkPins: started
 465:void loop():measure:analogPin.sample_request/await():112 us
 470:void loop():measure:analogPin >> var:112 us
 475:void loop():measure:AnalogPin::sample(A0):112 us
-479:void loop():measure:AnalogPin::bandgap():1121 us
+479:void loop():measure:AnalogPin::bandgap():1124 us
 483:void loop():measure:analogRead(A0):112 us
 
 487:void loop():info:Measure the time to read analog pin with varying prescale

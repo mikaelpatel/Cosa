@@ -1,18 +1,19 @@
+/home/epkmipl/Sketchbook/hardware/Cosa/build/Arduino-Makefile/bin/ard-util  --port /dev/ttyUSB0 --appear
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkProtoThread: started
-74:void setup():sizeof(ProtoThread) = 9
-75:void setup():sizeof(Counter) = 13
-78:void setup():F_CPU = 16000000
-79:void setup():I_CPU = 16
-97:void loop():measure:event dispatch: 26925 us
-97:void loop():measure:event dispatch: 27461 us
-97:void loop():measure:event dispatch: 27283 us
-97:void loop():measure:event dispatch: 27459 us
-97:void loop():measure:event dispatch: 27458 us
-97:void loop():measure:event dispatch: 27280 us
-97:void loop():measure:event dispatch: 27819 us
-97:void loop():measure:event dispatch: 27280 us
-97:void loop():measure:event dispatch: 27457 us
-97:void loop():measure:event dispatch: 27280 us
+74:void setup():trace:sizeof(ProtoThread) = 9
+75:void setup():trace:sizeof(Counter) = 13
+78:void setup():trace:F_CPU = 16000000
+79:void setup():trace:I_CPU = 16
+97:void loop():measure:event dispatch: 25346 us
+97:void loop():measure:event dispatch: 25893 us
+97:void loop():measure:event dispatch: 25694 us
+97:void loop():measure:event dispatch: 25890 us
+97:void loop():measure:event dispatch: 25890 us
+97:void loop():measure:event dispatch: 25691 us
+97:void loop():measure:event dispatch: 26230 us
+97:void loop():measure:event dispatch: 25692 us
+97:void loop():measure:event dispatch: 25890 us
+97:void loop():measure:event dispatch: 25692 us
 CosaBenchmarkProtoThread.ino:106:assert:count < 10

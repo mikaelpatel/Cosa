@@ -1,76 +1,76 @@
-Wed Apr 1 12:12:00 CEST 2015: adafruit-atmega32u4
-Program:    4290 bytes (13.1% Full)
+Fri Apr 3 19:10:53 CEST 2015: adafruit-atmega32u4
+Program:    4322 bytes (13.2% Full)
 Data:        187 bytes (7.3% Full)
-Wed Apr 1 12:12:01 CEST 2015: adafruit-atmega32u4-cat
-Program:    4290 bytes (13.1% Full)
+Fri Apr 3 19:10:54 CEST 2015: adafruit-atmega32u4-cat
+Program:    4322 bytes (13.2% Full)
 Data:        187 bytes (7.3% Full)
-Wed Apr 1 12:12:02 CEST 2015: atmega328-8
+Fri Apr 3 19:10:56 CEST 2015: atmega328-8
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:03 CEST 2015: attiny84-8
+Fri Apr 3 19:10:57 CEST 2015: attiny84-8
 Program:     162 bytes (2.0% Full)
 Data:          1 bytes (0.2% Full)
-Wed Apr 1 12:12:04 CEST 2015: attiny85-8
+Fri Apr 3 19:10:58 CEST 2015: attiny85-8
 Program:     158 bytes (1.9% Full)
 Data:          1 bytes (0.2% Full)
-Wed Apr 1 12:12:05 CEST 2015: attiny861-8
+Fri Apr 3 19:10:59 CEST 2015: attiny861-8
 Program:     166 bytes (2.0% Full)
 Data:          1 bytes (0.2% Full)
-Wed Apr 1 12:12:06 CEST 2015: diecimila
+Fri Apr 3 19:11:00 CEST 2015: diecimila
 Program:     256 bytes (1.6% Full)
 Data:          1 bytes (0.1% Full)
-Wed Apr 1 12:12:07 CEST 2015: duemilanove
+Fri Apr 3 19:11:02 CEST 2015: duemilanove
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:08 CEST 2015: iboard
+Fri Apr 3 19:11:03 CEST 2015: iboard
 Program:     454 bytes (1.4% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:09 CEST 2015: leonardo
-Program:    4310 bytes (13.2% Full)
+Fri Apr 3 19:11:04 CEST 2015: leonardo
+Program:    4342 bytes (13.3% Full)
 Data:        187 bytes (7.3% Full)
-Wed Apr 1 12:12:10 CEST 2015: lilypad
+Fri Apr 3 19:11:05 CEST 2015: lilypad
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:11 CEST 2015: lilypad-usb
-Program:    4290 bytes (13.1% Full)
+Fri Apr 3 19:11:06 CEST 2015: lilypad-usb
+Program:    4322 bytes (13.2% Full)
 Data:        187 bytes (7.3% Full)
-Wed Apr 1 12:12:13 CEST 2015: mega1280
+Fri Apr 3 19:11:07 CEST 2015: mega1280
 Program:     386 bytes (0.3% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:14 CEST 2015: mega2560
+Fri Apr 3 19:11:09 CEST 2015: mega2560
 Program:     390 bytes (0.1% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:15 CEST 2015: micro
-Program:    4290 bytes (13.1% Full)
+Fri Apr 3 19:11:10 CEST 2015: micro
+Program:    4322 bytes (13.2% Full)
 Data:        187 bytes (7.3% Full)
-Wed Apr 1 12:12:16 CEST 2015: microduino-core
+Fri Apr 3 19:11:11 CEST 2015: microduino-core
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:17 CEST 2015: microduino-core32u4
-Program:    4290 bytes (13.1% Full)
+Fri Apr 3 19:11:12 CEST 2015: microduino-core32u4
+Program:    4322 bytes (13.2% Full)
 Data:        187 bytes (7.3% Full)
-Wed Apr 1 12:12:18 CEST 2015: microduino-core-plus
+Fri Apr 3 19:11:13 CEST 2015: microduino-core-plus
 Program:     276 bytes (0.4% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:20 CEST 2015: mighty
+Fri Apr 3 19:11:15 CEST 2015: mighty
 Program:     298 bytes
 Data:          1 bytes
-Wed Apr 1 12:12:21 CEST 2015: mighty-opt
+Fri Apr 3 19:11:16 CEST 2015: mighty-opt
 Program:     298 bytes
 Data:          1 bytes
-Wed Apr 1 12:12:22 CEST 2015: miniwireless
+Fri Apr 3 19:11:17 CEST 2015: miniwireless
 Program:     454 bytes (1.4% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:23 CEST 2015: moteino
+Fri Apr 3 19:11:18 CEST 2015: moteino
 Program:     454 bytes (1.4% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:28 CEST 2015: moteino-mega
+Fri Apr 3 19:11:19 CEST 2015: moteino-mega
 Program:     324 bytes
 Data:          1 bytes
-Wed Apr 1 12:12:34 CEST 2015: nano
+Fri Apr 3 19:11:21 CEST 2015: nano
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:39 CEST 2015: pinoccio
+Fri Apr 3 19:11:26 CEST 2015: pinoccio
 unknown MCU 'atmega256rfr2' specified
 Known MCU names:
    avr2
@@ -192,8 +192,6 @@ Known MCU names:
    attiny15
    attiny28
 CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
-make: *** [/home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.0.6/pinoccio/CosaBuild.o] Error 1
-make: *** Waiting for unfinished jobs....
 unknown MCU 'atmega256rfr2' specified
 Known MCU names:
    avr2
@@ -241,7 +239,7 @@ Known MCU names:
    atmega48p
    atmega88
    atmega88p
-   atmega8515
+make: ega8515
    atmega8535
    atmega8hva
    at90pwm1
@@ -251,8 +249,7 @@ Known MCU names:
    at90pwm3b
    avr5
    atmega16
-   atmega161
-   atmega162
+   atm*** Wai   atmega162
    atmega163
    atmega164p
    atmega165
@@ -424,98 +421,27 @@ In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Per
 make: *** [/home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.0.6/pinoccio/core/Cosa/Activity.o] Error 1
 make: *** wait: No child processes.  Stop.
 CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Activity.cpp:1: error: MCU ‘atmega256rfr2’ supported for assembler only
-/home/epkmipl/opt/arduino-1.0.6/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/io.h:330:6: warning: #warning "device type not defined"
-/home/epkmipl/opt/arduino-1.0.6/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/sleep.h:369:6: error: #error "No SLEEP mode defined for this device."
-/home/epkmipl/opt/arduino-1.0.6/hardware/tools/avr/bin/../lib/gcc/avr/4.3.2/../../../avr/include/avr/eeprom.h:67:4: warning: #warning "Device does not have EEPROM available."
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:191: error: ‘REFS0’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:192: error: ‘REFS1’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:193: error: ‘REFS1’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:193: error: ‘REFS0’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:272: error: ‘MUX4’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:272: error: ‘MUX3’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:272: error: ‘MUX2’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:272: error: ‘MUX1’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:87: error: ‘PINB’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:88: error: ‘PIND’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:89: error: ‘PINE’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:90: error: ‘PINF’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:113: error: ‘PCMSK0’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:114: error: ‘PCMSK1’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:125: error: ‘UCSR1A’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:126: error: ‘UCSR0A’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:294: warning: ‘ADC_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:295: warning: ‘ANALOG_COMP_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:296: warning: ‘INT0_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:297: warning: ‘INT1_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:298: warning: ‘INT2_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:299: warning: ‘INT3_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:300: warning: ‘INT4_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:301: warning: ‘INT5_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:302: warning: ‘INT6_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:303: warning: ‘INT7_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:304: warning: ‘PCINT0_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:305: warning: ‘PCINT1_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:306: warning: ‘PCINT2_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:307: warning: ‘SPI_STC_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:308: warning: ‘TIMER0_COMPA_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:309: warning: ‘TIMER0_COMPB_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:310: warning: ‘TIMER0_OVF_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:311: warning: ‘TIMER1_COMPA_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:312: warning: ‘TIMER1_COMPB_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:313: warning: ‘TIMER1_COMPC_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:314: warning: ‘TIMER1_OVF_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:315: warning: ‘TIMER2_COMPA_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:316: warning: ‘TIMER2_COMPB_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:317: warning: ‘TIMER2_OVF_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:318: warning: ‘TWI_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:319: warning: ‘WDT_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:320: warning: ‘USART0_UDRE_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:321: warning: ‘USART0_RX_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:322: warning: ‘USART0_TX_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:323: warning: ‘USART1_UDRE_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:324: warning: ‘USART1_RX_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:325: warning: ‘USART1_TX_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:63: error: ‘power_adc_enable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:64: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:64: error: ‘ADEN’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:70: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:70: error: ‘ADEN’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:71: error: ‘power_adc_disable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:77: error: ‘power_timer0_enable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:83: error: ‘power_timer0_disable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:89: error: ‘power_timer1_enable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:95: error: ‘power_timer1_disable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:255: error: ‘power_all_enable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:256: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:256: error: ‘ADEN’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:262: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:262: error: ‘ADEN’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:263: error: ‘power_all_disable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDTCR’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDCE’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:152: error: ‘WDE’ was not declared in this scope
-Wed Apr 1 12:12:40 CEST 2015: pro-micro
-Program:    4310 bytes (13.2% Full)
+Fri Apr 3 19:11:27 CEST 2015: pro-micro
+Program:    4342 bytes (13.3% Full)
 Data:        187 bytes (7.3% Full)
-Wed Apr 1 12:12:46 CEST 2015: pro-micro-8
-Program:    4310 bytes (13.2% Full)
+Fri Apr 3 19:11:28 CEST 2015: pro-micro-8
+Program:    4342 bytes (13.3% Full)
 Data:        187 bytes (7.3% Full)
-Wed Apr 1 12:12:52 CEST 2015: pro-mini
+Fri Apr 3 19:11:30 CEST 2015: pro-mini
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:12:57 CEST 2015: pro-mini-8
+Fri Apr 3 19:11:31 CEST 2015: pro-mini-8
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:13:02 CEST 2015: teensy-2_0
-Program:    4322 bytes (13.2% Full)
+Fri Apr 3 19:11:32 CEST 2015: teensy-2_0
+Program:    4354 bytes (13.3% Full)
 Data:        187 bytes (7.3% Full)
-Wed Apr 1 12:13:08 CEST 2015: teensypp-2_0
-Program:    4332 bytes (3.3% Full)
+Fri Apr 3 19:11:33 CEST 2015: teensypp-2_0
+Program:    4364 bytes (3.3% Full)
 Data:        187 bytes (2.3% Full)
-Wed Apr 1 12:13:14 CEST 2015: uno
+Fri Apr 3 19:11:34 CEST 2015: uno
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Wed Apr 1 12:13:19 CEST 2015: wildfire
+Fri Apr 3 19:11:35 CEST 2015: wildfire
 Program:     548 bytes
 Data:          1 bytes

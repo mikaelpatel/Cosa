@@ -2,7 +2,7 @@
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
 CosaBenchmarkSizeOf: started
-free_memory() = 1560
+free_memory() = 1739
 sizeof(Programmer) = 2
 sizeof(STK500) = 8
 sizeof(BitSet<64>) = 8

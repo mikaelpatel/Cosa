@@ -4,7 +4,7 @@ Use CTRL-ALT GR-] to exit monitor.
 CosaBenchmarkNucleo: started
 Thread::Consumer: started
 Thread::Producer: started
-53:virtual void Producer::run():measure:thread yield: 23 us
-58:virtual void Producer::run():measure:thread resume: 11 us
-63:virtual void Producer::run():measure:semaphore signal-wait: 40 us
+53:virtual void Producer::run():measure:thread yield: 25 us
+58:virtual void Producer::run():measure:thread resume: 12 us
+63:virtual void Producer::run():measure:semaphore signal-wait: 43 us
 CosaBenchmarkNucleo.ino:67:assert:true == false

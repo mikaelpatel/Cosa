@@ -26,6 +26,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#define TRACE_NO_VERBOSE
+
 #include "Cosa/Memory.h"
 
 #include "Cosa/AVR/Programmer.hh"
