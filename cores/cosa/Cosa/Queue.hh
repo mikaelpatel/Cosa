@@ -107,6 +107,7 @@ private:
   static const uint8_t MASK = (NMEMB - 1);
   volatile uint8_t m_put;
   volatile uint8_t m_get;
+  volatile uint8_t m_count[NMEMB];
   T m_buffer[NMEMB];
 };
 
@@ -115,10 +116,18 @@ bool
 Queue<T,NMEMB>::enqueue(T* data)
 {
   synchronized {
+    if (m_get != m_put &&
+        m_buffer[m_put] == *data &&
+        m_count[m_put] < ((2 << (sizeof(m_count[0])*8-1)) - 1))
+      {
+        m_count[m_put]++;
+        synchronized_return (true);
+      }
     uint8_t next = (m_put + 1) & MASK;
     if (next == m_get) synchronized_return (false);
     m_buffer[next] = *data;
     m_put = next;
+    m_count[m_put] = 1;
   }
   return (true);
 }
@@ -128,10 +137,18 @@ bool
 Queue<T,NMEMB>::enqueue_P(const T* data)
 {
   synchronized {
+    if (m_get != m_put &&
+        m_buffer[m_put] == *data &&
+        m_count[m_put] < ((2 << (sizeof(m_count[0])*8-1)) - 1))
+      {
+        m_count[m_put]++;
+        synchronized_return (true);
+      }
     uint8_t next = (m_put + 1) & MASK;
     if (next == m_get) synchronized_return (false);
     memcpy_P(&m_buffer[next], data, sizeof(T));
     m_put = next;
+    m_count[m_put] = 1;
   }
   return (true);
 }
@@ -143,8 +160,13 @@ Queue<T,NMEMB>::dequeue(T* data)
   synchronized {
     if (m_get == m_put) synchronized_return (false);
     uint8_t next = (m_get + 1) & MASK;
-    m_get = next;
     *data = m_buffer[next];
+    if (m_count[next] > 1) {
+      m_count[next]--;
+      synchronized_return (true);
+    }
+    m_get = next;
+    m_count[m_get] = 0;
   }
   return (true);
 }
