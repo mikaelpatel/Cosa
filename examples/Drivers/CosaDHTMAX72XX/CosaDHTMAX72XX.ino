@@ -45,6 +45,8 @@
 
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Periodic.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Driver/DHT.hh"
 #include "Cosa/LCD/Driver/MAX72XX.hh"
 
@@ -68,25 +70,26 @@ void setup()
 void loop()
 {
   // Run with a period of 5 seconds
-  const uint32_t PERIOD = 5000L;
-  uint32_t start = RTC::millis();
+  PERIODIC(5000) {
 
-  // Print timestamp; minutes and seconds
-  cout << clear << RTC::seconds() << 'E';
-  sleep(1);
+    // Print timestamp; minutes and seconds
+    cout << clear << RTC::seconds() << 'E';
+    sleep(1);
 
-  // Sample sensor and display humidity and temperature
-  int16_t humidity;
-  int16_t temperature;
-  if (sensor.sample(humidity, temperature)) {
-    cout << clear
-	 << humidity/10 << PSTR("H ")
-	 << temperature/10 << PSTR("C ");
+    // Print voltage
+    cout << clear << AnalogPin::bandgap() / 1000.0 << 'U';
+    sleep(1);
+
+    // Sample sensor and display humidity and temperature
+    int16_t humidity;
+    int16_t temperature;
+    if (sensor.sample(humidity, temperature)) {
+      cout << clear
+	   << humidity/10 << PSTR("H ")
+	   << temperature/10 << PSTR("C ");
+    }
+    else {
+      cout << clear << PSTR("Error");
+    }
   }
-  else {
-    cout << clear << PSTR("Error");
-  }
-
-  // Wait for the next cycle
-  delay(PERIOD - RTC::since(start));
 }

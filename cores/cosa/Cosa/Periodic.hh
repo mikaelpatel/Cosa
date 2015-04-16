@@ -97,4 +97,17 @@ private:
   uint16_t m_period;
 };
 
+/**
+ * Syntactic sugar for periodic block. Used in the form:
+ * @code
+ * PERIODIC(ms) {
+ *   ...
+ * }
+ * @endcode
+ */
+#define PERIODIC(ms)							\
+  for (uint16_t start = RTC::millis(), i = 1;				\
+       i != 0;								\
+       i--, delay(ms - RTC::since(start)))
+
 #endif
