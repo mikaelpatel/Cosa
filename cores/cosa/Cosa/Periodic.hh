@@ -106,7 +106,7 @@ private:
  * @endcode
  */
 #define PERIODIC(ms)							\
-  for (uint16_t start = RTC::millis(), i = 1;				\
+  for (uint32_t start = RTC::millis(), i = 1;				\
        i != 0;								\
        i--, delay(ms - RTC::since(start)))
 
