@@ -691,7 +691,7 @@ ifndef COSA_OBJDIR
   $(call show_config_variable,OBJDIR,[COMPUTED],(from COSA_DIR))
 else
   OBJDIR = $(COSA_OBJDIR)/build-$(ARDUINO_VER)/$(BOARD_TAG)/$(TARGET)
-  $(call show_config_variable,OBJDIR,[USER])
+  $(call show_config_variable,OBJDIR,[COMPUTED],(from COSA_OBJDIR))
 endif
 
 ifndef ARD_UTIL
