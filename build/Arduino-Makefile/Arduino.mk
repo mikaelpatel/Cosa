@@ -683,17 +683,15 @@ ifeq ($(strip $(NO_CORE)),)
 
 endif
 
-# If COSA_OBJDIR is defined, use it for OBJDIR
-ifdef COSA_OBJDIR
-  OBJDIR = $(COSA_OBJDIR)/build-$(ARDUINO_VER)/$(BOARD_TAG)
-endif
-
-# Everything gets built in here (include BOARD_TAG now)
-ifndef OBJDIR
-  OBJDIR = $(COSA_DIR)/obj/build-$(ARDUINO_VER)/$(BOARD_TAG)
-  $(call show_config_variable,OBJDIR,[COMPUTED],(from BOARD_TAG))
+# Everything gets built in OBJDIR which is based on the root object dir
+# (either $COSA_DIR/obj or $COSA_OBJDIR) and Arduino version, board tag,
+# and target
+ifndef COSA_OBJDIR
+  OBJDIR = $(COSA_DIR)/obj/build-$(ARDUINO_VER)/$(BOARD_TAG)/$(TARGET)
+  $(call show_config_variable,OBJDIR,[COMPUTED],(from COSA_DIR))
 else
-  $(call show_config_variable,OBJDIR,[USER])
+  OBJDIR = $(COSA_OBJDIR)/build-$(ARDUINO_VER)/$(BOARD_TAG)/$(TARGET)
+  $(call show_config_variable,OBJDIR,[COMPUTED],(from COSA_OBJDIR))
 endif
 
 ifndef ARD_UTIL

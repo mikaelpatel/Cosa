@@ -24,6 +24,14 @@
 #include "Cosa/Types.h"
 #include "Cosa/Queue.hh"
 
+#ifndef COSA_EVENT_QUEUE_MAX
+#if defined(BOARD_ATTINY)
+#define COSA_EVENT_QUEUE_MAX 8
+#else
+#define COSA_EVENT_QUEUE_MAX 16
+#endif
+#endif
+
 /**
  * Event data structure with type, source and value.
  */
@@ -33,11 +41,8 @@ public:
    * Size of event queue. Adjust depending on application. Must be
    * Power(2).
    */
-#if defined(BOARD_ATTINY)
-  static const uint8_t QUEUE_MAX = 8;
-#else
-  static const uint8_t QUEUE_MAX = 16;
-#endif
+  static const uint8_t QUEUE_MAX = COSA_EVENT_QUEUE_MAX;
+
   /**
    * Event types are added here. Typical mapping from interrupts to
    * events. Note that the event is not a global numbering

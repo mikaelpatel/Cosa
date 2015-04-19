@@ -39,6 +39,7 @@
 
 #include "Cosa/Errno.h"
 #include "Cosa/Board.hh"
+#include "Cosa.h"
 
 /**
  * Number of bits in a character.
