@@ -71,8 +71,8 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 
-//#define USE_TFT_ST7735
-#define USE_TFT_ILI9341
+#define USE_TFT_ST7735
+//#define USE_TFT_ILI9341
 
 #if defined(USE_TFT_ST7735)
 #include "Cosa/Canvas/Driver/ST7735.hh"

@@ -162,8 +162,8 @@ BMP::File::read(Canvas::color16_t* buf, size_t count)
   return (true);
 }
 
-ST7735 tft;
 SD sd(Board::D8);
+ST7735 tft;
 
 void setup()
 {
@@ -178,34 +178,30 @@ void setup()
 
 void loop()
 {
+  uint32_t pixels = 0L;
   BMP::File image;
-  uint16_t pixels = 0;
-  uint32_t start, stop, us = 0;
 
-  start = RTC::micros();
-  tft.set_canvas_color(Canvas::BLUE);
-  tft.fill_screen();
-  stop = RTC::micros();
-  INFO("fill screen: %ul us", stop - start);
+  MEASURE("fill screen:", 1) {
+    tft.set_canvas_color(Canvas::BLUE);
+    tft.fill_screen();
+  }
 
-  start = RTC::micros();
-  ASSERT(image.open("PARROT.BMP"));
-  stop = RTC::micros();
-  INFO("open image file: %ul us", stop - start);
+  MEASURE("open image file:", 1) {
+    ASSERT(image.open("PARROT.BMP"));
+  }
   INFO("image width: %ud", image.WIDTH);
   INFO("image height: %ud", image.HEIGHT);
   INFO("image pixels: %ud", pixels = (image.WIDTH * image.HEIGHT));
 
-  start = RTC::micros();
-  tft.draw_image(0, 0, &image);
-  stop = RTC::micros();
-  INFO("draw image: %ul us", us = (stop - start));
-  INFO("draw pixel: %ul us", us / pixels);
-  INFO("transfer rate: %ul bps", 2000L * pixels / (us / 1000));
-  start = RTC::micros();
-  ASSERT(image.close());
-  stop = RTC::micros();
-  INFO("close image file: %ul us", stop - start);
+  MEASURE("draw image:", 1) {
+    tft.draw_image(0, 0, &image);
+  }
+  INFO("draw pixel: %ul us", trace.measure / pixels);
+  INFO("transfer rate: %ul KBps", 2000L * pixels / trace.measure);
+
+  MEASURE("close image file:", 1) {
+    ASSERT(image.close());
+  }
 
   ASSERT(true == false);
 }
