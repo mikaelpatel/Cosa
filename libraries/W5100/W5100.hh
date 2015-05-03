@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Socket/Driver/W5100.hh
+ * @file W5100.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_SOCKET_DRIVER_W5100_HH
-#define COSA_SOCKET_DRIVER_W5100_HH
+#ifndef COSA_W5100_HH
+#define COSA_W5100_HH
 
 #include "Cosa/Types.h"
 

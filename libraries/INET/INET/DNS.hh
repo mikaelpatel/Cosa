@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/DNS.hh
+ * @file INET/DNS.hh
  * @version 1.0
  *
  * @section License

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/DHCP.cpp
+ * @file INET/DHCP.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/INET/DHCP.hh"
+#include "INET/DHCP.hh"
+
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Errno.h"
 

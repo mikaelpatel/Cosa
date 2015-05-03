@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_IOT_MQTT_HH
-#define COSA_IOT_MQTT_HH
+#ifndef COSA_MQTT_HH
+#define COSA_MQTT_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Socket.hh"

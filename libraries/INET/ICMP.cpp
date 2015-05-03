@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/ICMP.cpp
+ * @file INET/ICMP.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/INET/ICMP.hh"
+#include "INET/ICMP.hh"
 #include "Cosa/RTC.hh"
 
 int

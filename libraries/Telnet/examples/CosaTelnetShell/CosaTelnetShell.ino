@@ -35,11 +35,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <Telnet.h>
+#include <INET.h>
+#include <W5100.h>
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
-#include "Cosa/INET/Telnet.hh"
+
 #include "TelnetCommands.h"
 
 #ifdef DEBUG

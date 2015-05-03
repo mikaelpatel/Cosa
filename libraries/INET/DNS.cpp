@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/DNS.cpp
+ * @file INET/DNS.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/INET/DNS.hh"
+#include "INET/DNS.hh"
 #include "Cosa/INET.hh"
 #include "Cosa/Errno.h"
 

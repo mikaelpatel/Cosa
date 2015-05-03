@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/DHCP.hh
+ * @file INET/DHCP.hh
  * @version 1.0
  *
  * @section License

@@ -3,18 +3,18 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -28,13 +28,13 @@ ThingSpeak::Client::Client() :
   m_sock(NULL)
 {
 }
-  
+
 ThingSpeak::Client::~Client()
 {
   end();
 }
 
-bool 
+bool
 ThingSpeak::Client::begin(Socket* sock)
 {
   if (m_sock != NULL) return (false);
@@ -42,7 +42,7 @@ ThingSpeak::Client::begin(Socket* sock)
   return (true);
 }
 
-bool 
+bool
 ThingSpeak::Client::end()
 {
   if (m_sock == NULL) return (false);
@@ -51,7 +51,7 @@ ThingSpeak::Client::end()
   return (true);
 }
 
-int 
+int
 ThingSpeak::Client::connect()
 {
   uint8_t server[4] = { API_THINGSPEAK_COM };
@@ -62,7 +62,7 @@ ThingSpeak::Client::connect()
   return (0);
 }
 
-int 
+int
 ThingSpeak::Client::disconnect()
 {
   m_sock->disconnect();
@@ -77,7 +77,7 @@ ThingSpeak::Channel::Channel(Client* client, const char* key) :
 {
 }
 
-int 
+int
 ThingSpeak::Channel::post(const char* entry, str_P status)
 {
   // Use an iostream for the http post request
@@ -109,8 +109,8 @@ ThingSpeak::Channel::post(const char* entry, str_P status)
   return (res);
 }
 
-void 
-ThingSpeak::Entry::set_field(uint8_t id, uint16_t value, uint8_t decimals, 
+void
+ThingSpeak::Entry::set_field(uint8_t id, uint16_t value, uint8_t decimals,
 			      bool sign)
 {
   uint16_t scale = 1;
@@ -118,15 +118,15 @@ ThingSpeak::Entry::set_field(uint8_t id, uint16_t value, uint8_t decimals,
   if (!m_buf.is_empty()) m_cout << '&';
   m_cout << PSTR("field") << id << '=';
   if (sign) m_cout << '-';
-  m_cout << value / scale;  
+  m_cout << value / scale;
   if (decimals == 0) return;
   uint16_t rem = value % scale;
   m_cout << '.';
   m_cout.print(rem, decimals, IOStream::dec);
 }
 
-void 
-ThingSpeak::Entry::set_field(uint8_t id, uint32_t value, uint8_t decimals, 
+void
+ThingSpeak::Entry::set_field(uint8_t id, uint32_t value, uint8_t decimals,
 			      bool sign)
 {
   uint16_t scale = 1;
@@ -134,7 +134,7 @@ ThingSpeak::Entry::set_field(uint8_t id, uint32_t value, uint8_t decimals,
   if (!m_buf.is_empty()) m_cout << '&';
   m_cout << PSTR("field") << id << '=';
   if (sign) m_cout << '-';
-  m_cout << value / scale;  
+  m_cout << value / scale;
   if (decimals == 0) return;
   uint16_t rem = value % scale;
   m_cout << '.';
@@ -142,13 +142,13 @@ ThingSpeak::Entry::set_field(uint8_t id, uint32_t value, uint8_t decimals,
 }
 
 ThingSpeak::TalkBack::TalkBack(Client* client, const char* key, uint16_t id) :
-  m_client(client), 
-  m_key(key), 
+  m_client(client),
+  m_key(key),
   m_id(id),
-  m_first(NULL) 
+  m_first(NULL)
 {}
 
-int 
+int
 ThingSpeak::TalkBack::execute_next_command()
 {
   // Use an iostream for the http post request
@@ -200,13 +200,13 @@ ThingSpeak::TalkBack::execute_next_command()
   m_client->disconnect();
   command->execute();
   return (0);
-  
+
  error:
   m_client->disconnect();
   return (res);
 }
 
-int 
+int
 ThingSpeak::TalkBack::add_command_P(str_P string, uint8_t position)
 {
   // Use an iostream for the http post request
@@ -228,7 +228,7 @@ ThingSpeak::TalkBack::add_command_P(str_P string, uint8_t position)
        << PSTR("Content-Length: 0") << CRLF
        << CRLF;
   sock->flush();
-  
+
   // Wait for the reply
   while ((res = sock->available()) == 0) delay(16);
   if (res < 0) goto error;
@@ -237,13 +237,13 @@ ThingSpeak::TalkBack::add_command_P(str_P string, uint8_t position)
   char line[64];
   sock->gets(line, sizeof(line));
   res = strcmp_P(line, PSTR("HTTP/1.1 200 OK\r")) ? -1 : 0;
-  
+
  error:
   m_client->disconnect();
   return (res);
 }
 
-ThingSpeak::TalkBack::Command* 
+ThingSpeak::TalkBack::Command*
 ThingSpeak::TalkBack::lookup(const char* name)
 {
   for (Command* c = m_first; c != NULL; c = c->m_next)

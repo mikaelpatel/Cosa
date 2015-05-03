@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/HTTP.cpp
+ * @file INET/HTTP.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/INET/HTTP.hh"
+#include "INET/HTTP.hh"
+
 #include "Cosa/IOStream.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Errno.h"

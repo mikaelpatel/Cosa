@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/Telnet.cpp
+ * @file Telnet.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/INET/Telnet.hh"
+#include "Telnet.hh"
 
 bool
 Telnet::Server::begin(Socket* sock)

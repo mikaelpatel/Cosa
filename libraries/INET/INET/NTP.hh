@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/NTP.hh
+ * @file INET/NTP.hh
  * @version 1.0
  *
  * @section License

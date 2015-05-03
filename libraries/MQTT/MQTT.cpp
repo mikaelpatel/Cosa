@@ -19,7 +19,7 @@
  */
 
 #include "MQTT.hh"
-#include "Cosa/INET/DNS.hh"
+#include <INET.h>
 #include "Cosa/Watchdog.hh"
 
 const char MQTT::PROTOCOL[] __PROGMEM = {

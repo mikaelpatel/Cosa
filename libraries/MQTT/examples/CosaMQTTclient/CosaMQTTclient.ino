@@ -34,10 +34,12 @@
  */
 
 #include <MQTT.h>
+#include <INET.h>
+#include <W5100.h>
+
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
 
 // Network configuration
 #define MOSQUITTO "test.mosquitto.org"

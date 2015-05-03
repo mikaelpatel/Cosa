@@ -9,17 +9,17 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_IOT_THINGSPEAK_HH
-#define COSA_IOT_THINGSPEAK_HH
+#ifndef COSA_THINGSPEAK_HH
+#define COSA_THINGSPEAK_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Socket.hh"
@@ -28,7 +28,7 @@
 /**
  * ThingSpeak client implementation; Channel update and TalkBack
  * command handler.
- * 
+ *
  * @section Reference
  * 1. ThingSpeak API, http://community.thingspeak.com/documentation/api/
  */
@@ -36,7 +36,7 @@ class ThingSpeak {
 public:
   class Channel;
   class TalkBack;
-  
+
   class Client {
   public:
     /**
@@ -66,21 +66,21 @@ public:
 
   private:
     /**
-     * Connect to the server. Return zero if successful otherwise 
+     * Connect to the server. Return zero if successful otherwise
      * negative error code.
      * @return zero or negative error code.
      */
     int connect();
 
     /**
-     * Disconnect from the server. Return zero if successful otherwise 
+     * Disconnect from the server. Return zero if successful otherwise
      * negative error code.
      * @return zero or negative error code.
      */
     int disconnect();
 
     Socket* m_sock;
-    
+
     friend class Channel;
     friend class TalkBack;
   };
@@ -117,12 +117,12 @@ public:
   class Entry {
   public:
     /**
-     * Construct ThingSpeak channel update entry. Initiate buffer 
+     * Construct ThingSpeak channel update entry. Initiate buffer
      * andio-stream for creating command string.
      */
-    Entry() : 
-      m_buf(), 
-      m_cout(&m_buf) 
+    Entry() :
+      m_buf(),
+      m_cout(&m_buf)
     {}
 
     /**
@@ -133,7 +133,7 @@ public:
      * @param[in] id field identity (1..8).
      * @param[in] value for field.
      */
-    template<class T> 
+    template<class T>
     void set_field(uint8_t id, T value)
     {
       if (!m_buf.is_empty()) m_cout << '&';
@@ -141,8 +141,8 @@ public:
     }
 
     /**
-     * Set field with given identity, unsigned 16-bit value, decimals 
-     * and sign. 
+     * Set field with given identity, unsigned 16-bit value, decimals
+     * and sign.
      * @param[in] id field identity (1..8)
      * @param[in] value for field.
      * @param[in] decimals scaling of value.
@@ -165,8 +165,8 @@ public:
     }
 
     /**
-     * Set field with given identity, unsigned 32-bit value, decimals 
-     * and sign. 
+     * Set field with given identity, unsigned 32-bit value, decimals
+     * and sign.
      * @param[in] id field identity (1..8)
      * @param[in] value for field.
      * @param[in] decimals scaling of value.
@@ -216,7 +216,7 @@ public:
     IOBuffer<BUF_MAX> m_buf;
     IOStream m_cout;
   };
-  
+
   /**
    * ThingSpeak TalkBack API client. Allow handing of commands
    * queued on server.
@@ -227,7 +227,7 @@ public:
 
     /**
      * TalkBack command handler. Applications should sub-class
-     * to implement application commands. 
+     * to implement application commands.
      */
     class Command {
       friend class TalkBack;
@@ -269,7 +269,7 @@ public:
        * when receiving a command string that matches.
        */
       virtual void execute() {}
-      
+
     protected:
       TalkBack* m_talkback;
       str_P m_string;
@@ -300,21 +300,21 @@ public:
 
     /**
      * Execute next command in server talkback command queue. Returns
-     * zero if successful otherwise negative error code. 
+     * zero if successful otherwise negative error code.
      * @return zero or negative error code.
      */
     int execute_next_command();
-    
+
     /**
      * Add the given command to the talkback command queue at the
      * given position. Default position is the end of the queue. The
      * command string should be in program memory. Returns
-     * zero if successful otherwise negative error code. 
+     * zero if successful otherwise negative error code.
      * @param[in] string command in program memory.
      * @param[in] position in queue (first is one(1), last is zero(0)).
      * @return zero or negative error code.
      */
-    int add_command_P(str_P string, uint8_t position = 0); 
+    int add_command_P(str_P string, uint8_t position = 0);
 
   private:
     /**

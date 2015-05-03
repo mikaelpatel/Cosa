@@ -36,13 +36,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <INET.h>
+#include <W5100.h>
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
-#include "Cosa/INET/HTTP.hh"
 
 #include "Commands.h"
 

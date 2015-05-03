@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/SNMP.cpp
+ * @file SNMP.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/INET/SNMP.hh"
+#include "SNMP.hh"
 #include "Cosa/Watchdog.hh"
 
 // SNMP MIB MIB-2 System OID(1.3.6.1.2.1.1.n)

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OWI/Driver/DS18B20.cpp
+ * @file DS18B20.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OWI/Driver/DS18B20.hh"
+#include "DS18B20.hh"
 #include "Cosa/Watchdog.hh"
 
 DS18B20*

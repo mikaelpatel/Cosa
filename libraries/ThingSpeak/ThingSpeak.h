@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014, Mikael Patel
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,14 +15,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @section Description
- * Trampoline for Arduino library handling.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_IOT_THINGSPEAK_H
-#define COSA_IOT_THINGSPEAK_H
+#ifndef COSA_THINGSPEAK_H
+#define COSA_THINGSPEAK_H
 
 #include "ThingSpeak.hh"
 

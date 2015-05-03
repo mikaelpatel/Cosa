@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/NTP.cpp
+ * @file INET/NTP.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/INET/NTP.hh"
+#include "INET/NTP.hh"
 #include "Cosa/Errno.h"
 
 NTP::NTP(Socket* sock, uint8_t server[4], int8_t zone) :

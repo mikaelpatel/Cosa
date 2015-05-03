@@ -55,10 +55,12 @@
  */
 
 #include <ThingSpeak.h>
+#include <INET.h>
+#include <W5100.h>
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 

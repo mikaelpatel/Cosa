@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/SNMP.hh
+ * @file SNMP.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_INET_SNMP_HH
-#define COSA_INET_SNMP_HH
+#ifndef COSA_SNMP_HH
+#define COSA_SNMP_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Socket.hh"

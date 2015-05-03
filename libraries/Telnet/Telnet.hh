@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/Telnet.hh
+ * @file Telnet.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_INET_TELNET_HH
-#define COSA_INET_TELNET_HH
+#ifndef COSA_TELNET_HH
+#define COSA_TELNET_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"

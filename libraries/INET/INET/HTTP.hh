@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/HTTP.hh
+ * @file INET/HTTP.hh
  * @version 1.0
  *
  * @section License

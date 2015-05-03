@@ -1,5 +1,5 @@
 /**
- * @file Cosa/INET/ICMP.hh
+ * @file INET/ICMP.hh
  * @version 1.0
  *
  * @section License

@@ -22,8 +22,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef LIBRARY_H
-#define LIBRARY_H
+#ifndef COSA_LIBRARY_H
+#define COSA_LIBRARY_H
 
 #include "Library.hh"
 

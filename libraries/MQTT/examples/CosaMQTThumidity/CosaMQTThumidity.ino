@@ -43,11 +43,13 @@
  */
 
 #include <MQTT.h>
+#include <INET.h>
+#include <W5100.h>
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Driver/DHT.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
 
 // DHT11 sensor
 DHT11 sensor(Board::EXT0);

@@ -44,11 +44,13 @@
  */
 
 #include <MQTT.h>
+#include <INET.h>
+#include <W5100.h>
+#include <DS18B20.h>
+
 #include "Cosa/Board.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"
-#include "Cosa/OWI/Driver/DS18B20.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
 
 // Disable SD on Ethernet Shield
 #define USE_ETHERNET_SHIELD

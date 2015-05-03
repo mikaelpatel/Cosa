@@ -39,12 +39,15 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <Telnet.h>
+#include <INET.h>
+#include <W5100.h>
+
 #include "Cosa/Memory.h"
 #include "Cosa/InputPin.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
 
 // Disable SD on Ethernet Shield
 #define USE_ETHERNET_SHIELD
@@ -57,7 +60,6 @@ OutputPin sd(Board::D4, 1);
 #define IP 192,168,1,100
 #define SUBNET 255,255,255,0
 #define GATEWAY 192,168,1,1
-#define PORT 23
 
 // W5100 Ethernet Controller with MAC-address
 static const uint8_t mac[6] __PROGMEM = { 0xde, 0xad, 0xbe, 0xef, 0xfe, 0xed };
@@ -75,7 +77,7 @@ void setup()
   ASSERT(ethernet.begin(ip, subnet));
 
   // Allocate a TCP socket and listen
-  ASSERT((sock = ethernet.socket(Socket::TCP, PORT)) != NULL);
+  ASSERT((sock = ethernet.socket(Socket::TCP, Telnet::PORT)) != NULL);
   ASSERT(!sock->listen());
 
   // Wait for incoming connection requests

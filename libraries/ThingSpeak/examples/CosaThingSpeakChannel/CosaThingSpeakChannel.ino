@@ -46,10 +46,12 @@
 // #define NDEBUG
 
 #include <ThingSpeak.h>
+#include <INET.h>
+#include <W5100.h>
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Driver/DHT.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
 
 #ifndef NDEBUG
 #include "Cosa/Trace.hh"

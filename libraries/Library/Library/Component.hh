@@ -21,8 +21,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef LIBRARY_COMPONENT_HH
-#define LIBRARY_COMPONENT_HH
+#ifndef COSA_LIBRARY_COMPONENT_HH
+#define COSA_LIBRARY_COMPONENT_HH
 
 #include "Cosa/Types.h"
 

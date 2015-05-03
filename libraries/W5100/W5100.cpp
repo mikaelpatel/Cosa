@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Socket/Driver/W5100.cpp
+ * @file W5100.cpp
  * @version 1.0
  *
  * @section License
@@ -18,12 +18,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Socket/Driver/W5100.hh"
+#include "W5100.hh"
 
 #if !defined(BOARD_ATTINY)
 
-#include "Cosa/INET/DHCP.hh"
-#include "Cosa/INET/DNS.hh"
+#include <INET.h>
 
 #define M_CREG(name) uint16_t(&m_creg->name)
 #define M_SREG(name) uint16_t(&m_sreg->name)

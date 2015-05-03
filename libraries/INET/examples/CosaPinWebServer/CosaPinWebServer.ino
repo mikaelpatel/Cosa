@@ -39,16 +39,16 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <INET.h>
+#include <W5100.h>
+
 #include "Cosa/Memory.h"
 #include "Cosa/InputPin.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/INET.hh"
-#include "Cosa/INET/HTTP.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
 
 // HTML end of line
 #define CRLF "\r\n"

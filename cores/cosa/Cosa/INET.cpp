@@ -21,6 +21,7 @@
 #include "Cosa/INET.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Socket.hh"
+
 #include <ctype.h>
 
 bool

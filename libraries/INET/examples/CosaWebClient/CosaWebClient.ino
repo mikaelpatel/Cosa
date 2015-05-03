@@ -35,11 +35,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <INET.h>
+#include <W5100.h>
+
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/INET/HTTP.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
 
 // Disable SD on Ethernet Shield
 #define USE_ETHERNET_SHIELD

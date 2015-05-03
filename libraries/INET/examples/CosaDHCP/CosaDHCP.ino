@@ -34,9 +34,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/INET.hh"
-#include "Cosa/INET/DHCP.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
+#include <INET.h>
+#include <W5100.h>
 
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"

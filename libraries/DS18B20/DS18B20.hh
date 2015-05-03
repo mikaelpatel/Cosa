@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OWI/Driver/DS18B20.hh
+ * @file DS18B20.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_OWI_DRIVER_DS18B20_HH
-#define COSA_OWI_DRIVER_DS18B20_HH
+#ifndef COSA_DS18B20_HH
+#define COSA_DS18B20_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/OWI.hh"

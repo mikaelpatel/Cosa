@@ -44,15 +44,19 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <SNMP.h>
+#include <INET.h>
+#include <W5100.h>
+
 #include "Cosa/Memory.h"
 #include "Cosa/InputPin.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/INET/SNMP.hh"
-#include "Cosa/Socket/Driver/W5100.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#define PRINT_PDU // Comment this out to remove some tracing and reduce memory usage
+
+// Comment this out to remove some tracing and reduce memory usage
+#define PRINT_PDU
 
 // Network configuration
 // If WS5100 board has a MAC sticker then use here instead of this default
