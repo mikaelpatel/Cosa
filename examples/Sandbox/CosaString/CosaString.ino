@@ -39,7 +39,7 @@ void setup()
   String s;
   float f = 20.50;
   TRACE(free_memory());
-  s = "outdoors = ";
+  s = PSTR("outdoors = ");
   TRACE(free_memory());
   s += f;
   s += PSTR(" C");
@@ -54,7 +54,7 @@ void loop()
   TRACE(free_memory());
 
   static uint16_t count = 1000;
-  String s = "Nisse badar";
+  String s(PSTR("Nisse badar"));
   trace << s << endl;
 
   s += PSTR(" i svartvitt");
