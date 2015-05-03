@@ -1,5 +1,5 @@
 /**
- * @file CosaBenchmarkNucleo.ino
+ * @file CosaNucleoBenchmark.ino
  * @version 1.0
  *
  * @section License
@@ -28,11 +28,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <Nucleo.h>
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Nucleo/Thread.hh"
-#include "Cosa/Nucleo/Semaphore.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
 Nucleo::Semaphore sem(0);

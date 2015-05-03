@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Socket/Driver/CC3000.hh
+ * @file CC3000.hh
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Socket/Driver/CC3000.hh"
+#include "CC3000.hh"
 #if !defined(BOARD_ATTINY)
 #include "Cosa/RTC.hh"
 

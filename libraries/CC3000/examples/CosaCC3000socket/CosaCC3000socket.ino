@@ -21,12 +21,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <INET.h>
+#include <CC3000.h>
+
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
-#include "Cosa/INET.hh"
-#include "Cosa/Socket/Driver/CC3000.hh"
 
 CC3000 wifi(Board::D21, Board::EXT2, Board::D23);
 

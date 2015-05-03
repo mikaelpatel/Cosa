@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Socket/Driver/CC3000.hh
+ * @file CC3000.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_SOCKET_DRIVER_CC3000_HH
-#define COSA_SOCKET_DRIVER_CC3000_HH
+#ifndef COSA_CC3000_HH
+#define COSA_CC3000_HH
 
 #include "Cosa/Types.h"
 

@@ -21,6 +21,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <INET.h>
+#include <CC3000.h>
+
 #include "Cosa/Memory.h"
 #include "Cosa/InputPin.hh"
 #include "Cosa/RTC.hh"
@@ -28,8 +31,6 @@
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/INET.hh"
-#include "Cosa/Socket/Driver/CC3000.hh"
 
 CC3000 wifi(Board::D21, Board::EXT2, Board::D23);
 
@@ -159,7 +160,7 @@ void loop()
     count += res;
     obuf.empty();
 
-    for (uint8_t ix = 0; ix < 14 * 4; ix++) {
+    for (uint8_t ix = 0; ix < 14; ix++) {
     page << PSTR("<TR>") << endl;
     for (uint8_t i = 0; i < 14; i++) {
       Board::DigitalPin pin;
