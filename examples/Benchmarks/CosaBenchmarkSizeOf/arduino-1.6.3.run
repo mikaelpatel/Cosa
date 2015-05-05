@@ -1,116 +1,97 @@
 /home/epkmipl/Sketchbook/hardware/Cosa/build/Arduino-Makefile/bin/ard-util  --port /dev/ttyUSB0 --appear
 Use CTRL-ALT GR-] to exit monitor.
 /home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
-CosaBenchmarkSizeOf: started
-free_memory() = 1739
-sizeof(Programmer) = 2
-sizeof(STK500) = 8
-sizeof(BitSet<64>) = 8
-sizeof(Button) = 12
-sizeof(Canvas) = 9
-sizeof(ST7735) = 25
-sizeof(Textbox) = 27
-sizeof(OffScreen<64,128>) = 1033
-sizeof(Base64) = 1
-sizeof(RC4) = 258
-sizeof(Vigenere<8>) = 11
-sizeof(DHT) = 22
-sizeof(DS1302) = 12
-sizeof(HCSR04) = 16
-sizeof(NEXA::Receiver) = 32
-sizeof(NEXA::Transmitter) = 8
-sizeof(EEPROM) = 2
-sizeof(Event) = 5
-sizeof(Event::queue) = 82
-sizeof(ExternalInterrupt) = 7
-sizeof(FAT16) = 1
-sizeof(FAT16::File) = 19
-sizeof(FSM) = 12
-sizeof(DHCP) = 34
-sizeof(DNS) = 6
-sizeof(HTTP::Client) = 4
-sizeof(HTTP::Server) = 4
-sizeof(NTP) = 7
-sizeof(SNMP) = 6
-sizeof(SNMP::MIB) = 2
-sizeof(SNMP::MIB2_SYSTEM) = 12
-sizeof(Interrupt::Handler) = 2
-sizeof(IOBuffer<64>) = 72
-sizeof(IOStream) = 7
-sizeof(RS485) = 164
-sizeof(UART) = 10
-sizeof(WIO) = 39
-sizeof(IR::Receiver) = 32
-sizeof(Keypad) = 20
-sizeof(LCDKeypad) = 20
-sizeof(LCD) = 7
-sizeof(HD44780) = 17
-sizeof(PCD8544) = 16
-sizeof(ST7565) = 17
-sizeof(VLCD) = 15
-sizeof(LED) = 10
-sizeof(Linkage) = 6
-sizeof(Link) = 6
-sizeof(Head) = 6
-sizeof(Listener<int>) = 8
-sizeof(Menu) = 1
-sizeof(Menu::Action) = 2
-sizeof(Menu::Walker) = 27
-sizeof(Menu::KeypadController) = 22
-sizeof(Menu::RotaryController) = 36
-sizeof(Nucleo::Thread) = 33
-sizeof(Nucleo::Semaphore) = 7
-sizeof(Nucleo::Mutex) = 2
-sizeof(Nucleo::Actor) = 45
-sizeof(OWI) = 8
-sizeof(OWI::Driver) = 18
-sizeof(OWI::Search) = 20
-sizeof(DS18B20) = 33
-sizeof(Periodic) = 8
-sizeof(Pin) = 4
-sizeof(InputPin) = 4
-sizeof(OutputPin) = 4
-sizeof(IOPin) = 4
-sizeof(PWMPin) = 4
-sizeof(AnalogPin) = 9
-sizeof(AnalogPins) = 15
-sizeof(AnalogComparator) = 6
-sizeof(ProtocolBuffer) = 4
-sizeof(Queue<int,32>) = 66
-sizeof(Registry) = 4
-sizeof(Rotary::Encoder) = 20
-sizeof(Rotary::Dial<int>) = 28
-sizeof(Rotary::AcceleratedDial<int, 900>) = 34
-sizeof(RTC) = 1
-sizeof(Servo) = 11
-sizeof(Socket) = 19
-sizeof(W5100) = 145
-sizeof(W5100::Driver) = 31
-sizeof(SPI::Driver) = 11
-sizeof(SPI::Slave) = 41
-sizeof(SD) = 13
-sizeof(ProtoThread) = 9
-sizeof(clock_t) = 4
-sizeof(time_t) = 7
-sizeof(Timer) = 10
-sizeof(Touch) = 18
-sizeof(Trace) = 12
-sizeof(TWI::Driver) = 3
-sizeof(TWI::Slave) = 3
-sizeof(ADXL345) = 3
-sizeof(AT24CXX) = 13
-sizeof(BMP085) = 37
-sizeof(DS1307) = 3
-sizeof(DS3231) = 3
-sizeof(HMC5883L) = 13
-sizeof(L3G4200D) = 3
-sizeof(MPU6050) = 3
-sizeof(PCF8574) = 5
-sizeof(PCF8591) = 4
-sizeof(Watchdog) = 1
-sizeof(Wireless::Driver) = 8
-sizeof(CC1101) = 31
-sizeof(NRF24L01P) = 40
-sizeof(RFM69) = 30
-sizeof(VWI) = 161
-CosaBenchmarkSizeOf.ino:257:assert:true == false
+CosaBenchmarkRTCTimer: started
+74:void setup():trace:free_memory() = 1030
+75:void setup():trace:sizeof(Timer) = 10
+76:void setup():trace:sizeof(Simple) = 10
+77:void setup():trace:sizeof(OneShot) = 10
+80:void setup():trace:F_CPU = 16000000
+81:void setup():trace:I_CPU = 16
+88:void setup():trace:us_per_tick = 1024
+89:void setup():trace:RTC::millis() = 91
+90:void setup():trace:RTC::seconds() = 0
+Expirations < 1024 us will be immediately dispatched
+  Avg immediate dispatch = 33 us (528 instructions)
+For queued expirations,
+  Avg start = -1 us (-16 instructions)
+  Avg setup = -1 us (-16 instructions)
+  Avg dispatch = -1 us (-16 instructions)
+expire_after(0 us): actual 12 us
+expire_after(7 us): actual 12 us
+expire_after(14 us): actual 12 us
+expire_after(21 us): actual 12 us
+expire_after(28 us): actual 12 us
+expire_after(35 us): actual 12 us
+expire_after(42 us): actual 12 us
+expire_after(49 us): actual 12 us
+expire_after(56 us): actual 12 us
+expire_after(63 us): actual 68 us
+expire_after(70 us): actual 76 us
+expire_after(77 us): actual 84 us
+expire_after(84 us): actual 88 us
+expire_after(91 us): actual 96 us
+expire_after(98 us): actual 104 us
+expire_after(105 us): actual 112 us
+expire_after(118 us): actual 124 us
+expire_after(131 us): actual 136 us
+expire_after(144 us): actual 148 us
+expire_after(157 us): actual 164 us
+expire_after(170 us): actual 176 us
+expire_after(183 us): actual 188 us
+expire_after(196 us): actual 196 us
+expire_after(209 us): actual 216 us
+expire_after(222 us): actual 228 us
+expire_after(235 us): actual 240 us
+expire_after(248 us): actual 252 us
+expire_after(261 us): actual 268 us
+expire_after(302 us): actual 308 us
+expire_after(343 us): actual 348 us
+expire_after(384 us): actual 388 us
+expire_after(425 us): actual 432 us
+expire_after(466 us): actual 472 us
+expire_after(507 us): actual 512 us
+expire_after(548 us): actual 552 us
+expire_after(589 us): actual 596 us
+expire_after(630 us): actual 636 us
+expire_after(671 us): actual 676 us
+expire_after(712 us): actual 716 us
+expire_after(753 us): actual 760 us
+expire_after(794 us): actual 800 us
+expire_after(835 us): actual 840 us
+expire_after(876 us): actual 880 us
+expire_after(917 us): actual 924 us
+expire_after(958 us): actual 964 us
+expire_after(999 us): actual 1008 us
+expire_after(1040 us): actual 1044 us
+expire_after(1081 us): actual 1088 us
+expire_after(1122 us): actual 1128 us
+expire_after(1163 us): actual 1168 us
+expire_after(1204 us): actual 1208 us
+expire_after(1245 us): actual 1252 us
+expire_after(1286 us): actual 1292 us
+expire_after(1327 us): actual 1332 us
+expire_after(1368 us): actual 1380 us
+expire_after(1409 us): actual 1416 us
+expire_after(1450 us): actual 1456 us
+expire_after(1491 us): actual 1496 us
+expire_after(1532 us): actual 1536 us
+expire_after(1573 us): actual 1580 us
+expire_after(1614 us): actual 1620 us
+expire_after(1655 us): actual 1660 us
+expire_after(1696 us): actual 1700 us
+expire_after(1737 us): actual 1744 us
+expire_after(1778 us): actual 1784 us
+expire_after(1819 us): actual 1824 us
+expire_after(1860 us): actual 1864 us
+expire_after(1901 us): actual 1908 us
+expire_after(1942 us): actual 1948 us
+expire_after(1983 us): actual 1988 us
+expire_after(2024 us): actual 2028 us
+expire_after(1024 us): actual 1024 us
+1000X expire_at(n * 1024 us): expected 1024000, actual 1026076 us
+50 timers started in 4196us
+elapsed time (0.5 + 49*0.1s = 5.400s): actual 5400012us
+Rollover test: start 4294963836, end 1540
+  expire_after(5000 us): actual 5000 us
+CosaBenchmarkRTCTimer.ino:259:assert:true == false

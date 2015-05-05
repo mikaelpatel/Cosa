@@ -61,7 +61,7 @@ CosaBenchmarkPins: started
 465:void loop():measure:analogPin.sample_request/await():112 us
 470:void loop():measure:analogPin >> var:112 us
 475:void loop():measure:AnalogPin::sample(A0):112 us
-479:void loop():measure:AnalogPin::bandgap():1119 us
+479:void loop():measure:AnalogPin::bandgap():1120 us
 483:void loop():measure:analogRead(A0):112 us
 
 487:void loop():info:Measure the time to read analog pin with varying prescale
