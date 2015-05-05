@@ -1,5 +1,5 @@
 /**
- * @file Cosa/FS/FAT16.hh
+ * @file FAT16.hh
  * @version 1.0
  *
  * @section License
@@ -19,8 +19,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_FS_FAT16_HH
-#define COSA_FS_FAT16_HH
+#ifndef COSA_FAT16_HH
+#define COSA_FAT16_HH
 
 #include "Cosa/SPI/Driver/SD.hh"
 #include "Cosa/IOStream.hh"

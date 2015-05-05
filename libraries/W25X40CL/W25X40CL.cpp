@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Flash/Driver/W25X40CL.cpp
+ * @file W25X40CL.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Flash/Driver/W25X40CL.hh"
+#include "W25X40CL.hh"
 
 bool
 W25X40CL::begin()

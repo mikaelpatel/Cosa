@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Flash/Driver/W25X40CL.hh
+ * @file W25X40CL.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_FLASH_DRIVER_W25X40CL_HH
-#define COSA_FLASH_DRIVER_W25X40CL_HH
+#ifndef COSA_W25X40CL_HH
+#define COSA_W25X40CL_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/SPI.hh"

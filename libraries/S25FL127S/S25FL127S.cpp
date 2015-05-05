@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Flash/Driver/S25FL127S.cpp
+ * @file S25FL127S.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Flash/Driver/S25FL127S.hh"
+#include "S25FL127S.hh"
 
 bool
 S25FL127S::begin()

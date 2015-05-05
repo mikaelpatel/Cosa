@@ -22,7 +22,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Flash/Driver/S25FL127S.hh"
+#include <S25FL127S.h>
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"

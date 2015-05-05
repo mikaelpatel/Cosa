@@ -19,7 +19,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/FS/FAT16.hh"
+#include "FAT16.hh"
 
 bool
 FAT16::make83Name(const char* str, uint8_t* name)

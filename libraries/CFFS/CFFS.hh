@@ -1,5 +1,5 @@
 /**
- * @file Cosa/FS/CFFS.hh
+ * @file CFFS.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_FS_CFFS_HH
-#define COSA_FS_CFFS_HH
+#ifndef COSA_CFFS_HH
+#define COSA_CFFS_HH
 
 #include "Cosa/FS.hh"
 #include "Cosa/Flash.hh"

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/FS/CFFS.cpp
+ * @file CFFS.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/FS/CFFS.hh"
+#include "CFFS.hh"
 
 Flash::Device* CFFS::device = NULL;
 uint32_t CFFS::current_dir_addr = 0L;

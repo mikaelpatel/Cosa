@@ -21,8 +21,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <FAT16.h>
 #include "Cosa/SPI/Driver/SD.hh"
-#include "Cosa/FS/FAT16.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"

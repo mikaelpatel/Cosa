@@ -21,7 +21,7 @@
 #include "CFFScommands.h"
 #include "Cosa/Time.hh"
 #include "Cosa/RTC.hh"
-#include "Cosa/FS/CFFS.hh"
+#include <CFFS.h>
 
 SHELL_ACTION(cat, "FILE..", "print content of file")
 (int argc, char* argv[])

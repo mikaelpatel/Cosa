@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Flash/Driver/S25FL127S.hh
+ * @file S25FL127S.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_FLASH_DRIVER_S25FL127S_HH
-#define COSA_FLASH_DRIVER_S25FL127S_HH
+#ifndef COSA_S25FL127S_HH
+#define COSA_S25FL127S_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/SPI.hh"

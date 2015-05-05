@@ -22,7 +22,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/FS/CFFS.hh"
+#include <CFFS.h>
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
@@ -34,12 +34,12 @@
 //#define USE_FLASH_W25X40CL
 
 #if defined(USE_FLASH_S25FL127S) || defined(ANARDUINO_MINIWIRELESS)
-#include "Cosa/Flash/Driver/S25FL127S.hh"
+#include <S25FL127S.h>
 S25FL127S flash;
 #endif
 
 #if defined(USE_FLASH_W25X40CL) || defined(WICKEDDEVICE_WILDFIRE)
-#include "Cosa/Flash/Driver/W25X40CL.hh"
+#include <W25X40CL.h>
 W25X40CL flash;
 #endif
 

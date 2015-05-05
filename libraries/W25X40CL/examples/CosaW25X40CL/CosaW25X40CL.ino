@@ -22,7 +22,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Flash/Driver/W25X40CL.hh"
+#include <W25X40CL.h>
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
