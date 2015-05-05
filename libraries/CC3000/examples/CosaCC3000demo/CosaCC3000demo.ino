@@ -21,7 +21,6 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include <INET.h>
 #include <CC3000.h>
 
 #include "Cosa/Trace.hh"

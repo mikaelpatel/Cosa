@@ -24,7 +24,7 @@
 #include "Cosa/Types.h"
 
 #if !defined(BOARD_ATTINY)
-#include "Cosa/SPI/Driver/HCI.hh"
+#include "HCI.hh"
 #include "Cosa/Socket.hh"
 
 /**

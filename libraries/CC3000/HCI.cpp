@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/Driver/HCI.cpp
+ * @file CC3000/HCI.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/Driver/HCI.hh"
+#include "HCI.hh"
 #include "Cosa/RTC.hh"
 
 int

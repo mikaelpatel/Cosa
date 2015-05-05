@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/Driver/HCI.hh
+ * @file CC3000/HCI.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_SPI_DRIVER_HCI_HH
-#define COSA_SPI_DRIVER_HCI_HH
+#ifndef COSA_CC3000_HCI_HH
+#define COSA_CC3000_HCI_HH
 
 #include "Cosa/SPI.hh"
 #include "Cosa/ExternalInterrupt.hh"
