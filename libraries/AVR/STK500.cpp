@@ -1,5 +1,5 @@
 /**
- * @file Cosa/AVR/STK500.cpp
+ * @file AVR/STK500.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/AVR/STK500.hh"
+#include "STK500.hh"
 #include "Cosa/Power.hh"
 
 uint8_t

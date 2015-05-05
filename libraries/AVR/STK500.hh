@@ -1,5 +1,5 @@
 /**
- * @file Cosa/AVR/STK500.hh
+ * @file AVR/STK500.hh
  * @version 1.0
  *
  * @section License
@@ -21,7 +21,7 @@
 #ifndef COSA_AVR_STK500_HH
 #define COSA_AVR_STK500_HH
 
-#include "Cosa/AVR/Programmer.hh"
+#include "Programmer.hh"
 #include "Cosa/IOStream.hh"
 
 /**

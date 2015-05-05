@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Cipher/RC4.hh
+ * @file RC4.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_CIPHER_RC4_HH
-#define COSA_CIPHER_RC4_HH
+#ifndef COSA_RC4_HH
+#define COSA_RC4_HH
 
 #include "Cosa/Types.h"
 

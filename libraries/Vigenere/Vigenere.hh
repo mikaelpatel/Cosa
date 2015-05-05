@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Cipher/Vigenere.hh
+ * @file Vigenere.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_CIPHER_VIGENERE_HH
-#define COSA_CIPHER_VIGENERE_HH
+#ifndef COSA_VIGENERE_HH
+#define COSA_VIGENERE_HH
 
 #include "Cosa/Types.h"
 

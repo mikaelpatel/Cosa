@@ -1,5 +1,5 @@
 /**
- * @file Cosa/AVR/Programmer.cpp
+ * @file AVR/Programmer.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/AVR/Programmer.hh"
+#include "Programmer.hh"
 
 bool
 Programmer::begin()

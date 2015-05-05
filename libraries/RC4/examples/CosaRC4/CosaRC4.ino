@@ -21,7 +21,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Cipher/RC4.hh"
+#include <RC4.h>
+
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/RTC.hh"

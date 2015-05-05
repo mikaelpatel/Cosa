@@ -27,7 +27,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Cipher/Base64.hh"
+#include <Base64.h>
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"

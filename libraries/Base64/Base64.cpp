@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Cipher/Base64.cpp
+ * @file Base64.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Cipher/Base64.hh"
+#include "Base64.hh"
 
 const char Base64::ENCODE[] __PROGMEM =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

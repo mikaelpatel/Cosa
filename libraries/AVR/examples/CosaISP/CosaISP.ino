@@ -29,10 +29,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <AVR.h>
+
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/AVR/Programmer.hh"
-#include "Cosa/AVR/STK500.hh"
 
 Programmer isp;
 STK500 stk(&uart, &isp);

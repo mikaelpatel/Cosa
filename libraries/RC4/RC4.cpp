@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Cipher/RC4.cpp
+ * @file RC4.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Cipher/RC4.hh"
+#include "RC4.hh"
 
 void
 RC4::restart(const void* key, size_t len)

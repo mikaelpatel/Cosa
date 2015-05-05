@@ -21,7 +21,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Cipher/Vigenere.hh"
+#include <Vigenere.h>
+
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"

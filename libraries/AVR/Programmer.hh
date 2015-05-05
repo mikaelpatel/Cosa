@@ -1,5 +1,5 @@
 /**
- * @file Cosa/AVR/Programmer.hh
+ * @file AVR/Programmer.hh
  * @version 1.0
  *
  * @section License
