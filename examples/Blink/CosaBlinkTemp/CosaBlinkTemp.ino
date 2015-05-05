@@ -37,9 +37,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <DS18B20.h>
+
+#include "Cosa/OWI.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
-#include "Cosa/OWI/Driver/DS18B20.hh"
 
 // RGB LED pins
 #if !defined(BOARD_ATTINY)

@@ -21,18 +21,19 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IOBuffer.hh"
-#include "Cosa/Serializer/ProtocolBuffer.hh"
+#include <ProtocolBuffer.h>
+
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/IOBuffer.hh"
 #include "Cosa/Memory.h"
 
 // Selectable test suites
 #define TEST_RANGE
 #define TEST_STRUCT
 #if !defined(BOARD_ATTINY)
-#define TEST_LIMITS
-#define TEST_EXAMPLES
+# define TEST_LIMITS
+# define TEST_EXAMPLES
 #endif
 
 void setup()

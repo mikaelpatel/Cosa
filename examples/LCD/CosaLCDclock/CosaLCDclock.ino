@@ -25,11 +25,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <DS3231.h>
+
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/LCD/Driver/HD44780.hh"
-#include "Cosa/TWI/Driver/DS3231.hh"
 
 // Configurations
 #define USE_LARGE_LCD

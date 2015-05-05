@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Serializer/ProtocolBuffer.cpp
+ * @file ProtocolBuffer.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Serializer/ProtocolBuffer.hh"
+#include "ProtocolBuffer.hh"
 #include "Cosa/Power.hh"
 
 int

@@ -48,9 +48,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <HCSR04.h>
+
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Driver/HCSR04.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Canvas/Element/Textbox.hh"
 #include "Cosa/Canvas/Font/System5x7.hh"

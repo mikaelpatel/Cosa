@@ -27,9 +27,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <Nucleo.h>
+
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Nucleo/Thread.hh"
 
 // This class is a thread that turns a LED on and off given a
 // delay period. The delay may be changed dynamically.

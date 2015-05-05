@@ -41,13 +41,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <FAT16.h>
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/SPI/Driver/SD.hh"
-#include "Cosa/FS/FAT16.hh"
 #include "Cosa/Canvas.hh"
 #include "Cosa/Canvas/Driver/ST7735.hh"
 
