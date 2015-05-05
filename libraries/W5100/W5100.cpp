@@ -19,10 +19,10 @@
  */
 
 #include "W5100.hh"
+#include <DNS.h>
+#include <DHCP.h>
 
 #if !defined(BOARD_ATTINY)
-
-#include <INET.h>
 
 #define M_CREG(name) uint16_t(&m_creg->name)
 #define M_SREG(name) uint16_t(&m_sreg->name)
