@@ -1,99 +1,99 @@
-Tue May 5 17:53:34 CEST 2015: adafruit-atmega32u4
+Tue May 5 22:17:16 CEST 2015: adafruit-atmega32u4
 Program:    3966 bytes (12.1% Full)
 Data:        187 bytes (7.3% Full)
-Tue May 5 17:53:35 CEST 2015: adafruit-atmega32u4-cat
+Tue May 5 22:17:17 CEST 2015: adafruit-atmega32u4-cat
 Program:    3966 bytes (12.1% Full)
 Data:        187 bytes (7.3% Full)
-Tue May 5 17:53:36 CEST 2015: atmega328-8
+Tue May 5 22:17:19 CEST 2015: atmega328-8
 Program:     238 bytes (0.7% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:53:38 CEST 2015: attiny84-8
+Tue May 5 22:17:20 CEST 2015: attiny84-8
 Program:     160 bytes (2.0% Full)
 Data:          1 bytes (0.2% Full)
-Tue May 5 17:53:39 CEST 2015: attiny85-8
+Tue May 5 22:17:21 CEST 2015: attiny85-8
 Program:     156 bytes (1.9% Full)
 Data:          1 bytes (0.2% Full)
-Tue May 5 17:53:41 CEST 2015: attiny861-8
+Tue May 5 22:17:23 CEST 2015: attiny861-8
 Program:     164 bytes (2.0% Full)
 Data:          1 bytes (0.2% Full)
-Tue May 5 17:53:42 CEST 2015: diecimila
+Tue May 5 22:17:24 CEST 2015: diecimila
 Program:     238 bytes (1.5% Full)
 Data:          1 bytes (0.1% Full)
-Tue May 5 17:53:44 CEST 2015: duemilanove
+Tue May 5 22:17:26 CEST 2015: duemilanove
 Program:     238 bytes (0.7% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:53:45 CEST 2015: iboard
+Tue May 5 22:17:27 CEST 2015: iboard
 Program:     262 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:53:47 CEST 2015: leonardo
+Tue May 5 22:17:28 CEST 2015: leonardo
 Program:    3988 bytes (12.2% Full)
 Data:        187 bytes (7.3% Full)
-Tue May 5 17:53:48 CEST 2015: lilypad
+Tue May 5 22:17:30 CEST 2015: lilypad
 Program:     238 bytes (0.7% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:53:49 CEST 2015: lilypad-usb
+Tue May 5 22:17:31 CEST 2015: lilypad-usb
 Program:    3966 bytes (12.1% Full)
 Data:        187 bytes (7.3% Full)
-Tue May 5 17:53:51 CEST 2015: mega1280
+Tue May 5 22:17:32 CEST 2015: mega1280
 Program:     366 bytes (0.3% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:53:52 CEST 2015: mega2560
+Tue May 5 22:17:34 CEST 2015: mega2560
 Program:     370 bytes (0.1% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:53:54 CEST 2015: micro
+Tue May 5 22:17:35 CEST 2015: micro
 Program:    3966 bytes (12.1% Full)
 Data:        187 bytes (7.3% Full)
-Tue May 5 17:53:55 CEST 2015: microduino-core
+Tue May 5 22:17:37 CEST 2015: microduino-core
 Program:     238 bytes (0.7% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:53:57 CEST 2015: microduino-core32u4
+Tue May 5 22:17:38 CEST 2015: microduino-core32u4
 Program:    3966 bytes (12.1% Full)
 Data:        187 bytes (7.3% Full)
-Tue May 5 17:53:58 CEST 2015: microduino-core-plus
+Tue May 5 22:17:39 CEST 2015: microduino-core-plus
 Program:     258 bytes (0.4% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:00 CEST 2015: mighty
+Tue May 5 22:17:41 CEST 2015: mighty
 Program:     278 bytes (0.2% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:01 CEST 2015: mighty-opt
+Tue May 5 22:17:42 CEST 2015: mighty-opt
 Program:     278 bytes (0.2% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:03 CEST 2015: miniwireless
+Tue May 5 22:17:44 CEST 2015: miniwireless
 Program:     262 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:04 CEST 2015: moteino
+Tue May 5 22:17:45 CEST 2015: moteino
 Program:     262 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:05 CEST 2015: moteino-mega
+Tue May 5 22:17:46 CEST 2015: moteino-mega
 Program:     302 bytes (0.2% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:07 CEST 2015: nano
+Tue May 5 22:17:48 CEST 2015: nano
 Program:     238 bytes (0.7% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:08 CEST 2015: pinoccio
+Tue May 5 22:17:49 CEST 2015: pinoccio
 Program:     450 bytes (0.2% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:10 CEST 2015: pro-micro
+Tue May 5 22:17:50 CEST 2015: pro-micro
 Program:    3988 bytes (12.2% Full)
 Data:        187 bytes (7.3% Full)
-Tue May 5 17:54:11 CEST 2015: pro-micro-8
+Tue May 5 22:17:52 CEST 2015: pro-micro-8
 Program:    3988 bytes (12.2% Full)
 Data:        187 bytes (7.3% Full)
-Tue May 5 17:54:13 CEST 2015: pro-mini
+Tue May 5 22:17:53 CEST 2015: pro-mini
 Program:     238 bytes (0.7% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:14 CEST 2015: pro-mini-8
+Tue May 5 22:17:55 CEST 2015: pro-mini-8
 Program:     238 bytes (0.7% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:16 CEST 2015: teensy-2_0
+Tue May 5 22:17:56 CEST 2015: teensy-2_0
 Program:    3994 bytes (12.2% Full)
 Data:        187 bytes (7.3% Full)
-Tue May 5 17:54:17 CEST 2015: teensypp-2_0
+Tue May 5 22:17:57 CEST 2015: teensypp-2_0
 Program:    4008 bytes (3.1% Full)
 Data:        187 bytes (2.3% Full)
-Tue May 5 17:54:18 CEST 2015: uno
+Tue May 5 22:17:59 CEST 2015: uno
 Program:     238 bytes (0.7% Full)
 Data:          1 bytes (0.0% Full)
-Tue May 5 17:54:20 CEST 2015: wildfire
+Tue May 5 22:18:00 CEST 2015: wildfire
 Program:     590 bytes (0.5% Full)
 Data:          1 bytes (0.0% Full)
