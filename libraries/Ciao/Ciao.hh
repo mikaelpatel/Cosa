@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Serializer/Ciao.hh
+ * @file Ciao.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_SERIALIZER_CIAO_HH
-#define COSA_SERIALIZER_CIAO_HH
+#ifndef COSA_CIAO_HH
+#define COSA_CIAO_HH
 
 #include "Cosa/IOStream.hh"
 

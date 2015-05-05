@@ -28,8 +28,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#include "Cosa/Serializer/Ciao.hh"
+#include <Ciao.h>
+
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"

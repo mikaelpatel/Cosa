@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Serializer/Fai/set_mode_t.cpp
+ * @file Fai/event_t.cpp
  * @version 1.0
  *
  * @section License
@@ -18,33 +18,41 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Serializer/Fai.hh"
+#include "Fai.hh"
 
 #if defined(NREFLECTION)
 #define descr_name 0
-#define pin_name 0
-#define mode_name 0
+#define type_name 0
+#define target_name 0
+#define value_name 0
 #else
-static const char descr_name[] __PROGMEM = "Ciao::Fai::set_mode_t";
-static const char pin_name[] __PROGMEM = "pin";
-static const char mode_name[] __PROGMEM = "mode";
+static const char descr_name[] __PROGMEM = "Cosa::Event";
+static const char type_name[] __PROGMEM = "type";
+static const char target_name[] __PROGMEM = "target";
+static const char value_name[] __PROGMEM = "value";
 #endif
 static const Ciao::Descriptor::member_t descr_members[] __PROGMEM = {
   {
     Ciao::UINT8_TYPE,
     1,
-    pin_name,
+    type_name,
     0
   },
   {
-    Ciao::UINT8_TYPE,
+    Ciao::UINT16_TYPE,
     1,
-    mode_name,
+    target_name,
+    0
+  },
+  {
+    Ciao::UINT16_TYPE,
+    1,
+    value_name,
     0
   }
 };
-const Ciao::Descriptor::user_t Fai::Descriptor::set_mode_t __PROGMEM = {
-  Fai::Descriptor::SET_MODE_ID,
+const Ciao::Descriptor::user_t Fai::Descriptor::event_t __PROGMEM = {
+  Fai::Descriptor::EVENT_ID,
   descr_name,
   descr_members,
   membersof(descr_members)

@@ -32,7 +32,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Serializer/Fai.hh"
+#include <Ciao.h>
+#include <Fai.h>
+
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/AnalogPin.hh"
@@ -41,6 +43,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
+
 #include <ctype.h>
 
 // Fai::Ciao output stream over the UART

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Serializer/Fai.cpp
+ * @file Fai.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Serializer/Fai.hh"
+#include "Fai.hh"
 
 static char MAGIC[] = "Cosa::Fai";
 static const uint8_t MAJOR = 1;

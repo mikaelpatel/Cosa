@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Serializer/Fai/sample_request_t.cpp
+ * @file Fai/sample_request_t.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Serializer/Fai.hh"
+#include "Fai.hh"
 
 #if defined(NREFLECTION)
 #define descr_name 0

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Serializer/Fai/analog_pin_t.cpp
+ * @file Fai/digital_pins_t.cpp
  * @version 1.0
  *
  * @section License
@@ -18,34 +18,27 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Serializer/Fai.hh"
+#include "Fai.hh"
 
 #if defined(NREFLECTION)
 #define descr_name 0
-#define pin_name 0
-#define value_name 0
+#define values_name 0
 #else
-static const char descr_name[] __PROGMEM = "Cosa::Fai::analog_pin_t";
-static const char pin_name[] __PROGMEM = "pin";
-static const char value_name[] __PROGMEM = "value";
+static const char descr_name[] __PROGMEM = "Cosa::Fai::digital_pins_t";
+static const char values_name[] __PROGMEM = "values";
 #endif
 static const Ciao::Descriptor::member_t descr_members[] __PROGMEM = {
   {
-    Ciao::UINT8_TYPE,
+    Ciao::UINT32_TYPE,
     1,
-    pin_name,
-    0
-  },
-  {
-    Ciao::UINT16_TYPE,
-    1,
-    value_name,
+    values_name,
     0
   }
 };
-const Ciao::Descriptor::user_t Fai::Descriptor::analog_pin_t __PROGMEM = {
-  Fai::Descriptor::ANALOG_PIN_ID,
+const Ciao::Descriptor::user_t Fai::Descriptor::digital_pins_t __PROGMEM = {
+  Fai::Descriptor::DIGITAL_PINS_ID,
   descr_name,
   descr_members,
   membersof(descr_members)
 };
+

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Serializer/Fai.hh
+ * @file Fai.hh
  * @version 1.0
  *
  * @section License
@@ -18,14 +18,15 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_SERIALIZER_FAI_HH
-#define COSA_SERIALIZER_FAI_HH
+#ifndef COSA_FAI_HH
+#define COSA_FAI_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Pin.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Event.hh"
-#include "Cosa/Serializer/Ciao.hh"
+
+#include <Ciao.h>
 
 /**
  * The Cosa Ciao data stream of Arduino status and commands (Cosa fai).
