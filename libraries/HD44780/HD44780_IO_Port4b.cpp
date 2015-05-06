@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/HD44780_IO_Port4b.cpp
+ * @file HD44780_IO_Port4b.cpp
  * @version 1.0
  *
  * @section License
@@ -20,7 +20,7 @@
 
 #include "Cosa/Board.hh"
 #if !defined(BOARD_ATTINYX5)
-#include "Cosa/LCD/Driver/HD44780.hh"
+#include "HD44780.hh"
 
 bool
 HD44780::Port4b::setup()

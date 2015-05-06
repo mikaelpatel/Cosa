@@ -1,9 +1,9 @@
 /**
- * @file SensorHandler.h
+ * @file ST7565.h
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014-2015, Mikael Patel
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,27 +18,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef SENSOR_HANDLER_H
-#define SENSOR_HANDLER_H
+#ifndef COSA_ST7565_H
+#define COSA_ST7565_H
 
-#include "ThingSpeak.hh"
-#include "Cosa/Alarm.hh"
-#include <DHT.h>
-
-class SensorHandler : public Alarm {
-public:
-  SensorHandler(ThingSpeak::Channel* channel,
-		Board::ExternalInterruptPin pin,
-		uint16_t period) :
-    Alarm(period),
-    m_channel(channel),
-    m_sensor(pin)
-  {}
-  virtual void run();
-private:
-  ThingSpeak::Channel* m_channel;
-  DHT11 m_sensor;
-};
+#include "ST7565.hh"
 
 #endif
-

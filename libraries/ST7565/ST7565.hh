@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/ST7565.hh
+ * @file ST7565.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_LCD_DRIVER_ST7565_HH
-#define COSA_LCD_DRIVER_ST7565_HH
+#ifndef COSA_ST7565_HH
+#define COSA_ST7565_HH
 
 #include "Cosa/Board.hh"
 #include "Cosa/OutputPin.hh"

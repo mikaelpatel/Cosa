@@ -1,9 +1,9 @@
 /**
- * @file Cosa/LCD/Driver/ST7920.cpp
+ * @file HD44780.h
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014-2015, Mikael Patel
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/LCD/Driver/ST7920.hh"
+#ifndef COSA_HD44780_H
+#define COSA_HD44780_H
 
-// DDRAM offset table
-const uint8_t ST7920::offset2[] __PROGMEM = { 0x00, 0x10, 0x08, 0x18 };
+#include "HD44780.hh"
 
+#endif

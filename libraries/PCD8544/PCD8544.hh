@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/PCD8544.hh
+ * @file PCD8544.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_LCD_DRIVER_PCD8544_HH
-#define COSA_LCD_DRIVER_PCD8544_HH
+#ifndef COSA_PCD8544_HH
+#define COSA_PCD8544_HH
 
 #include "Cosa/Board.hh"
 #include "Cosa/OutputPin.hh"

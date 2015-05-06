@@ -20,12 +20,13 @@
  * IOStream::Device.
  */
 
+#include <MAX72XX.h>
+
 #include "Cosa/Types.h"
 #include "Cosa/Math.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/AnalogPin.hh"
-#include "Cosa/LCD/Driver/MAX72XX.hh"
 
 // Select MAX72XX IO Adapter; Serial Output Pins or SPI
 // LCD::Serial3W port;

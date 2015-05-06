@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/MAX72XX.hh
+ * @file MAX72XX.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_LCD_DRIVER_MAX72XX_HH
-#define COSA_LCD_DRIVER_MAX72XX_HH
+#ifndef COSA_MAX72XX_HH
+#define COSA_MAX72XX_HH
 
 #include "Cosa/LCD.hh"
 

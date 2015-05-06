@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/ST7565.cpp
+ * @file ST7565.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/LCD/Driver/ST7565.hh"
+#include "ST7565.hh"
 
 // Initialization script
 const uint8_t ST7565::script[] __PROGMEM = {

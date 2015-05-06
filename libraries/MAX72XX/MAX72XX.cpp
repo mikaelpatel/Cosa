@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/MAX72XX.cpp
+ * @file MAX72XX.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/LCD/Driver/MAX72XX.hh"
+#include "MAX72XX.hh"
 
 /**
  * No-Decode Mode Data Bits and Corresponding Segment Lines (Table 6, pp 8.).

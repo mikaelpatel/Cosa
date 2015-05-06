@@ -86,10 +86,6 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/TWI.hh"
 #include "Cosa/Wireless.hh"
-#include "Cosa/Wireless/Driver/CC1101.hh"
-#include "Cosa/Wireless/Driver/NRF24L01P.hh"
-#include "Cosa/Wireless/Driver/RFM69.hh"
-#include "Cosa/Wireless/Driver/VWI.hh"
 
 void setup()
 {
@@ -171,12 +167,6 @@ void setup()
   TRACE(sizeof(TWI::Slave));
   TRACE(sizeof(Watchdog));
   TRACE(sizeof(Wireless::Driver));
-#if !defined(BOARD_ATTINY)
-  TRACE(sizeof(CC1101));
-  TRACE(sizeof(NRF24L01P));
-  TRACE(sizeof(RFM69));
-#endif
-  TRACE(sizeof(VWI));
 }
 
 void loop()

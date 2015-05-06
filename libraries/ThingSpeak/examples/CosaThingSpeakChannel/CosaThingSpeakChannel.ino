@@ -45,13 +45,14 @@
 // Uncomment to remove debug output
 // #define NDEBUG
 
-#include <ThingSpeak.h>
-#include <INET.h>
+#include <DHT.h>
+#include <DHCP.h>
+#include <DNS.h>
 #include <W5100.h>
+#include <ThingSpeak.h>
 
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Driver/DHT.hh"
 
 #ifndef NDEBUG
 #include "Cosa/Trace.hh"

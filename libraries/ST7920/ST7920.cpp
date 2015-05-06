@@ -1,5 +1,5 @@
 /**
- * @file SensorHandler.h
+ * @file Cosa/LCD/Driver/ST7920.cpp
  * @version 1.0
  *
  * @section License
@@ -18,27 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef SENSOR_HANDLER_H
-#define SENSOR_HANDLER_H
+#include "ST7920.hh"
 
-#include "ThingSpeak.hh"
-#include "Cosa/Alarm.hh"
-#include <DHT.h>
-
-class SensorHandler : public Alarm {
-public:
-  SensorHandler(ThingSpeak::Channel* channel,
-		Board::ExternalInterruptPin pin,
-		uint16_t period) :
-    Alarm(period),
-    m_channel(channel),
-    m_sensor(pin)
-  {}
-  virtual void run();
-private:
-  ThingSpeak::Channel* m_channel;
-  DHT11 m_sensor;
-};
-
-#endif
+// DDRAM offset table
+const uint8_t ST7920::offset2[] __PROGMEM = { 0x00, 0x10, 0x08, 0x18 };
 

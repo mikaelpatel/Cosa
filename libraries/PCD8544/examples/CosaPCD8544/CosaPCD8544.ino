@@ -51,12 +51,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <PCD8544.h>
+
 #include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Canvas/OffScreen.hh"
-#include "Cosa/LCD/Driver/PCD8544.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"

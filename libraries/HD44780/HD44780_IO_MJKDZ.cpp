@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/HD44780_IO_MJKDZ.cpp
+ * @file HD44780_IO_MJKDZ.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/LCD/Driver/HD44780.hh"
+#include "HD44780.hh"
 
 bool
 HD44780::MJKDZ::setup()

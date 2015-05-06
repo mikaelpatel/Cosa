@@ -38,9 +38,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include <ThingSpeak.h>
-#include <INET.h>
+#include <DHCP.h>
+#include <DNS.h>
 #include <W5100.h>
+#include <ThingSpeak.h>
 
 #include "Cosa/Watchdog.hh"
 

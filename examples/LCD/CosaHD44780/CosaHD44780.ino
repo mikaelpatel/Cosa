@@ -25,19 +25,20 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <HD44780.h>
+
 #include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/LCD/Driver/HD44780.hh"
 
 // LCD and communication port
-// HD44780::Port4b port;
+HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port(0);
 // HD44780::MJKDZ port;
-HD44780::GYIICLCD port;
+// HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 // HD44780::SainSmart port;
 // HD44780::ERM1602_5 port;

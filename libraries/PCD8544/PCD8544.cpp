@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/PCD8544.cpp
+ * @file PCD8544.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/LCD/Driver/PCD8544.hh"
+#include "PCD8544.hh"
 
 // Startup script
 const uint8_t PCD8544::script[] __PROGMEM = {

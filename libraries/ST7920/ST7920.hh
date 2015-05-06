@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/ST7920.hh
+ * @file ST7920.hh
  * @version 1.0
  *
  * @section License
@@ -18,10 +18,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_LCD_DRIVER_ST7920_HH
-#define COSA_LCD_DRIVER_ST7920_HH
+#ifndef ST7920_HH
+#define ST7920_HH
 
-#include "Cosa/LCD/Driver/HD44780.hh"
+#include "Cosa/LCD.hh"
+#include <HD44780.h>
 
 /**
  * ST7920 LCD controller/driver. Binding to trace, etc. Supports simple text

@@ -43,10 +43,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include <MQTT.h>
-#include <INET.h>
-#include <W5100.h>
 #include <DS18B20.h>
+#include <W5100.h>
+#include <DHCP.h>
+#include <DNS.h>
+#include <MQTT.h>
 
 #include "Cosa/Board.hh"
 #include "Cosa/Watchdog.hh"

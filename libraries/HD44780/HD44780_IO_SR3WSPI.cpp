@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/HD44780_IO_SR3WSPI.cpp
+ * @file HD44780_IO_SR3WSPI.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/LCD/Driver/HD44780.hh"
+#include "HD44780.hh"
 
 HD44780::SR3WSPI::SR3WSPI(Board::DigitalPin en) :
   SPI::Driver(en, SPI::PULSE_HIGH),

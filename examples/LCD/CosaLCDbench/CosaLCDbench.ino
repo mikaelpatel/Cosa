@@ -29,30 +29,17 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
+#include "Cosa/LCD.hh"
 
 // Select the LCD device for the benchmark
-// #include "Cosa/LCD/Driver/PCD8544.hh"
-// LCD::Serial3W port;
-// LCD::SPI3W port;
-// PCD8544 lcd(&port);
-
-// #include "Cosa/LCD/Driver/ST7565.hh"
-// LCD::Serial3W port;
-// LCD::SPI3W port;
-// ST7565 lcd(&port);
-
-// #include "Cosa/LCD/Driver/VLCD.hh"
-// VLCD lcd;
-
-// Select the HD44780 port adapter for the benchmark
-// #include "Cosa/LCD/Driver/HD44780.hh"
-#include "Cosa/LCD/Driver/ST7920.hh"
+#include <HD44780.h>
+// #include <ST7920.h>
 // HD44780::Port4b port;
 // HD44780::SR3W port;
-HD44780::SR3WSPI port;
+// HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 // HD44780::MJKDZ port;
-// HD44780::GYIICLCD port;
+HD44780::GYIICLCD port;
 // HD44780::DFRobot port;
 // HD44780::SainSmart port;
 // HD44780::ERM1602_5 port;
@@ -60,11 +47,24 @@ HD44780::SR3WSPI port;
 HD44780 lcd(&port);
 // ST7920 lcd(&port);
 
+// #include <PCD8544.h>
+// LCD::Serial3W port;
+// LCD::SPI3W port;
+// PCD8544 lcd(&port);
+
+// #include <ST7565.h>
+// LCD::Serial3W port;
+// LCD::SPI3W port;
+// ST7565 lcd(&port);
+
+// #include <VLCD.h>
+// VLCD lcd;
+
 // Connect IOStream to LCD
 IOStream cout(&lcd);
 
 // Display configuration
-#if defined(COSA_LCD_DRIVER_PCD8544_HH)
+#if defined(COSA_PCD8544_HH)
 const uint16_t WIDTH = 14;
 const uint16_t HEIGHT = 2;
 #else
@@ -163,4 +163,3 @@ void measure(str_P name, benchmark_t fn, uint16_t nr, uint16_t bytes)
   cout << us << PSTR(" us (") << us / bytes << PSTR(")");
   sleep(4);
 }
-

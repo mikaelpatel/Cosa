@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/HD44780.cpp
+ * @file HD44780.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/LCD/Driver/HD44780.hh"
+#include "HD44780.hh"
 
 // DDR offset table
 // 0: 40X2, 20X4, 20X2, 16X2, 16X1

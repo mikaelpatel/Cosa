@@ -33,9 +33,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include <MQTT.h>
-#include <INET.h>
+#include <DHCP.h>
+#include <DNS.h>
 #include <W5100.h>
+#include <MQTT.h>
 
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
