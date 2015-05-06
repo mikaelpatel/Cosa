@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/VWI.cpp
+ * @file VWI.cpp
  * @version 1.0
  *
  * @section License
@@ -19,7 +19,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Wireless/Driver/VWI.hh"
+#include "VWI.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Power.hh"
 #include <util/crc16.h>

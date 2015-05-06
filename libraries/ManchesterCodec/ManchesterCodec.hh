@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh
+ * @file ManchesterCodec.hh
  * @version 1.0
  *
  * @section License
@@ -18,30 +18,29 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_WIRELESS_DRIVER_VWI_CODEC_BITSTUFFINGCODEC_HH
-#define COSA_WIRELESS_DRIVER_VWI_CODEC_BITSTUFFINGCODEC_HH
+#ifndef COSA_MANCHESTERCODEC_HH
+#define COSA_MANCHESTERCODEC_HH
 
-#include "Cosa/Wireless/Driver/VWI.hh"
+#include <VWI.h>
 
 /**
- * Fixed bitstuffing 4 to 5 bit codec for the Cosa VWI (Virtual Wire
+ * Manchester Phase 4-to-8 bit codec for the Cosa VWI (Virtual Wire
  * Interface).
  */
-class BitstuffingCodec : public VWI::Codec {
+class ManchesterCodec : public VWI::Codec {
 public:
   /**
-   * Construct fixed bitstuffing codec with given bits per symbol,
+   * Construct Manchester Phase codec with given bits per symbol,
    * start symbol, and preamble size.
    */
-  BitstuffingCodec() :
-    VWI::Codec(5, 0x34a, 8)
+  ManchesterCodec() :
+    VWI::Codec(8, 0x5d55, 8)
   {
   }
 
   /**
    * @override VWI::Codec
-   * Returns pointer to Cosa fixed bitstuffing frame preamble in
-   * program memory.
+   * Returns pointer to Manchester frame preamble in program memory.
    * @return pointer.
    */
   virtual const uint8_t* get_preamble()
@@ -51,28 +50,28 @@ public:
 
   /**
    * @override VWI::Codec
-   * Returns fixed bitstuffed symbol for given 4-bit data.
+   * Returns symbol for given 4-bit data.
    * @param[in] nibble to encode.
-   * @return 5-bit bitstuffed code.
+   * @return 8-bit Manchester code.
    */
   virtual uint8_t encode4(uint8_t nibble)
   {
-    return (((nibble & 0xf) << 1) + ((nibble & 0x1) == 0));
+    return (pgm_read_byte(&symbols[nibble & 0xf]));
   };
 
   /**
    * @override VWI::Codec
-   * Returns 4-bit data for given fixed bitstuffed symbol.
+   * Returns 4-bit data for given Manchester symbol.
    * @param[in] symbol to decode.
    * @return 4-bit data.
    */
-  virtual uint8_t decode4(uint8_t symbol)
-  {
-    return ((symbol >> 1) & 0xf);
-  }
+  virtual uint8_t decode4(uint8_t symbol);
 
 private:
-  /** Message preamble */
+  /** Symbol mapping table: 4 to 8 bits */
+  static const uint8_t symbols[] PROGMEM;
+
+  /** Message header */
   static const uint8_t preamble[] PROGMEM;
 };
 

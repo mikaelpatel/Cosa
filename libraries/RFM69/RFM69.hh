@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/RFM69.hh
+ * @file RFM69.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_WIRELESS_DRIVER_RFM69_HH
-#define COSA_WIRELESS_DRIVER_RFM69_HH
+#ifndef COSA_RFM69_HH
+#define COSA_RFM69_HH
 
 #include "Cosa/SPI.hh"
 #include "Cosa/OutputPin.hh"

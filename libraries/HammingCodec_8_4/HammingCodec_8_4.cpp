@@ -1,5 +1,5 @@
 /**
- * @file Cosa/VWI/Codec/HammingCodec_8_4.cpp
+ * @file HammingCodec_8_4.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_8_4.hh"
+#include "HammingCodec_8_4.hh"
 
 // Encoding table; 4-bit code to 8-bit symbol
 const uint8_t HammingCodec_8_4::symbols[16] __PROGMEM = {

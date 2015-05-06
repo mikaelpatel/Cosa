@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.hh
+ * @file Block4B5BCodec.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2015, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel (Cosa C++ port and refactoring)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,29 +18,29 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_WIRELESS_DRIVER_VWI_CODEC_MANCHESTERCODEC_HH
-#define COSA_WIRELESS_DRIVER_VWI_CODEC_MANCHESTERCODEC_HH
+#ifndef COSA_BLOCK4B5BCODEC_HH
+#define COSA_BLOCK4B5BCODEC_HH
 
-#include "Cosa/Wireless/Driver/VWI.hh"
+#include <VWI.h>
 
 /**
- * Manchester Phase 4-to-8 bit codec for the Cosa VWI (Virtual Wire
+ * Block Coding 4 to 5 bit codec for the Cosa VWI (Virtual Wire
  * Interface).
  */
-class ManchesterCodec : public VWI::Codec {
+class Block4B5BCodec : public VWI::Codec {
 public:
   /**
-   * Construct Manchester Phase codec with given bits per symbol,
+   * Construct block 4b5b codec with given bits per symbol,
    * start symbol, and preamble size.
    */
-  ManchesterCodec() :
-    VWI::Codec(8, 0x5d55, 8)
+  Block4B5BCodec() :
+    VWI::Codec(5, 0x238, 8)
   {
   }
 
   /**
    * @override VWI::Codec
-   * Returns pointer to Manchester frame preamble in program memory.
+   * Returns pointer to 4B5B frame preamble in program memory.
    * @return pointer.
    */
   virtual const uint8_t* get_preamble()
@@ -50,9 +50,9 @@ public:
 
   /**
    * @override VWI::Codec
-   * Returns symbol for given 4-bit data.
+   * Returns block 5-bit symbol for given 4-bit data.
    * @param[in] nibble to encode.
-   * @return 8-bit Manchester code.
+   * @return 5-bit bitstuffed code.
    */
   virtual uint8_t encode4(uint8_t nibble)
   {
@@ -61,17 +61,23 @@ public:
 
   /**
    * @override VWI::Codec
-   * Returns 4-bit data for given Manchester symbol.
+   * Returns 4-bit data for given block 5-bit symbol.
    * @param[in] symbol to decode.
    * @return 4-bit data.
    */
-  virtual uint8_t decode4(uint8_t symbol);
+  virtual uint8_t decode4(uint8_t symbol)
+  {
+    return (pgm_read_byte(&codes[symbol & SYMBOL_MASK]));
+  }
 
 private:
-  /** Symbol mapping table: 4 to 8 bits */
+  /** Symbol mapping table: 4 to 5 bits */
   static const uint8_t symbols[] PROGMEM;
 
-  /** Message header */
+  /** Code mapping table: 5 to 4 bits */
+  static const uint8_t codes[] PROGMEM;
+
+  /** Message preamble with start symbol */
   static const uint8_t preamble[] PROGMEM;
 };
 

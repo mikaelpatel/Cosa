@@ -1,5 +1,5 @@
 /**
- * @file Cosa/VWI/Codec/VirtualWireCodec.cpp
+ * @file VirtualWireCodec.cpp
  * @version 1.0
  *
  * @section License
@@ -19,7 +19,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
+#include "VirtualWireCodec.hh"
 
 const uint8_t VirtualWireCodec::symbols[] __PROGMEM = {
   0xd,  0xe,  0x13, 0x15, 0x16, 0x19, 0x1a, 0x1c,

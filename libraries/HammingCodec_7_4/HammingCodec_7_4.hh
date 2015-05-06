@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/VWI/Codec/HammingCodec_7_4.hh
+ * @file HammingCodec_7_4.hh
  * @version 1.0
  *
  * @section License
@@ -18,10 +18,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_WIRELESS_DRIVER_VWI_CODEC_HAMMINGCODEC_7_4_HH
-#define COSA_WIRELESS_DRIVER_VWI_CODEC_HAMMINGCODEC_7_4_HH
+#ifndef COSA_HAMMINGCODEC_7_4_HH
+#define COSA_HAMMINGCODEC_7_4_HH
 
-#include "Cosa/Wireless/Driver/VWI.hh"
+#include <VWI.h>
 
 /**
  * Hamming(7,4) Codec for the Cosa VWI (Virtual Wire Interface). This

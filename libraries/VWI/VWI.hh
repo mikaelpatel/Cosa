@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/VWI.hh
+ * @file VWI.hh
  * @version 1.0
  *
  * @section License
@@ -19,8 +19,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_WIRELESS_DRIVER_VWI_HH
-#define COSA_WIRELESS_DRIVER_VWI_HH
+#ifndef COSA_VWI_HH
+#define COSA_VWI_HH
 
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"

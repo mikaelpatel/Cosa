@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/RFM69.cpp
+ * @file RFM69.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Wireless/Driver/RFM69.hh"
+#include "RFM69.hh"
 
 #if !defined(BOARD_ATTINYX5)
 

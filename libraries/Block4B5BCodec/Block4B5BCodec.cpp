@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/VWI/Codec/Block4B5BCodec.cpp
+ * @file Block4B5BCodec.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Wireless/Driver/VWI/Codec/Block4B5BCodec.hh"
+#include "Block4B5BCodec.hh"
 
 /*
  * Calculating the start symbol JK (5-bits per symbol):

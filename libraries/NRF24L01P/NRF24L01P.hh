@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/NRF24L01P.hh
+ * @file NRF24L01P.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_WIRELESS_DRIVER_NRF24L01P_HH
-#define COSA_WIRELESS_DRIVER_NRF24L01P_HH
+#ifndef COSA_NRF24L01P_HH
+#define COSA_NRF24L01P_HH
 
 #include "Cosa/SPI.hh"
 #include "Cosa/OutputPin.hh"

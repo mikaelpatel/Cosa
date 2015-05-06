@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.cpp
+ * @file RFM69.h
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2015, Mikael Patel
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,12 +18,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh"
+#ifndef COSA_RFM69_H
+#define COSA_RFM69_H
 
-/*
- * Calculating the start symbol (5-bits per symbol):
- * 0xa, 0x1a => 01010.11010 => 11010.01010 => 11.0100.1010 => 0x34a
- */
-const uint8_t BitstuffingCodec::preamble[] __PROGMEM = {
-  0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x1a
-};
+#include "RFM69.hh"
+
+#endif

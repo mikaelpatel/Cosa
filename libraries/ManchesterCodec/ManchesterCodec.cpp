@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.cpp
+ * @file ManchesterCodec.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.hh"
+#include "ManchesterCodec.hh"
 
 // Manchester encoder table 4 to 8 bits. In binary to show how it works
 const uint8_t ManchesterCodec::symbols[] __PROGMEM = {

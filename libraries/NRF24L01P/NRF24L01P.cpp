@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/NRF24L01P.cpp
+ * @file NRF24L01P.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Wireless/Driver/NRF24L01P.hh"
+#include "NRF24L01P.hh"
 #if !defined(BOARD_ATTINYX5)
 
 #include "Cosa/Power.hh"

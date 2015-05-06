@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/CC1101.cpp
+ * @file CC1101.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Wireless/Driver/CC1101.hh"
+#include "CC1101.hh"
 
 #if !defined(BOARD_ATTINYX5)
 

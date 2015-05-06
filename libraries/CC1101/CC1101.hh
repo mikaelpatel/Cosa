@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Wireless/Driver/CC1101.hh
+ * @file CC1101.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_WIRELESS_DRIVER_CC1101_HH
-#define COSA_WIRELESS_DRIVER_CC1101_HH
+#ifndef COSA_CC1101_HH
+#define COSA_CC1101_HH
 
 #include "Cosa/SPI.hh"
 #include "Cosa/OutputPin.hh"

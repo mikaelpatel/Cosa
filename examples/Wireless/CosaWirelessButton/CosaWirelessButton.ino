@@ -50,43 +50,33 @@
 #endif
 
 // Select Wireless device driver
-// #define USE_CC1101
-// #define USE_NRF24L01P
-// #define USE_RFM69
-#define USE_VWI
+// #include <CC1101.h>
+// CC1101 rf(NETWORK, DEVICE);
 
-#if defined(USE_CC1101)
-#include "Cosa/Wireless/Driver/CC1101.hh"
-CC1101 rf(NETWORK, DEVICE);
+// #include <NRF24L01P.h>
+// NRF24L01P rf(NETWORK, DEVICE);
 
-#elif defined(USE_NRF24L01P)
-#include "Cosa/Wireless/Driver/NRF24L01P.hh"
-NRF24L01P rf(NETWORK, DEVICE);
+// #include <RFM69.h>
+// RFM69 rf(NETWORK, DEVICE);
 
-#elif defined(USE_RFM69)
-#include "Cosa/Wireless/Driver/RFM69.hh"
-RFM69 rf(NETWORK, DEVICE);
-
-#elif defined(USE_VWI)
-#include "Cosa/Wireless/Driver/VWI.hh"
-// #include "Cosa/Wireless/Driver/VWI/Codec/BitstuffingCodec.hh"
+#include <VWI.h>
+// #include <BitstuffingCodec.h>
 // BitstuffingCodec codec;
-// #include "Cosa/Wireless/Driver/VWI/Codec/Block4B4BCodec.hh"
-// Block4B4BCodec codec;
-#include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_7_4.hh"
-HammingCodec_7_4 codec;
-// #include "Cosa/Wireless/Driver/VWI/Codec/HammingCodec_8_4.hh"
+// #include <Block4B5BCodec.h>
+// Block4B5BCodec codec;
+// #include <HammingCodec_7_4.h>
+// HammingCodec_7_4 codec;
+// #include <HammingCodec_8_4.h>
 // HammingCodec_8_4 codec;
-// #include "Cosa/Wireless/Driver/VWI/Codec/ManchesterCodec.hh"
+// #include <ManchesterCodec.h>
 // ManchesterCodec codec;
-// #include "Cosa/Wireless/Driver/VWI/Codec/VirtualWireCodec.hh"
-// VirtualWireCodec codec;
+#include <VirtualWireCodec.h>
+VirtualWireCodec codec;
 #define SPEED 4000
 #if defined(BOARD_ATTINY)
 VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
 #else
 VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
-#endif
 #endif
 
 class Button : public ExternalInterrupt {
