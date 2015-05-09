@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Menu.hh
+ * @file Menu.hh
  * @version 1.0
  *
  * @section License
@@ -21,8 +21,8 @@
 #ifndef COSA_MENU_HH
 #define COSA_MENU_HH
 
-#include "Cosa/IOStream.hh"
 #include "Cosa/LCD.hh"
+#include "Cosa/IOStream.hh"
 #include "Cosa/Keypad.hh"
 #include "Cosa/Rotary.hh"
 #include "Cosa/Button.hh"

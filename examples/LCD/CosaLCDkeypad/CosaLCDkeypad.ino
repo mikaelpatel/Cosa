@@ -30,7 +30,8 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Keypad.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/LCD/Driver/HD44780.hh"
+
+#include <HD44780.h>
 
 class KeypadTrace : public LCDKeypad {
 private:

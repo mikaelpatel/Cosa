@@ -70,12 +70,12 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Canvas/OffScreen.hh"
-#include "Cosa/LCD/Driver/ST7565.hh"
 #include "Cosa/Canvas/Font/FixedNums8x16.hh"
 #include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
 #include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
 // Select ST7565 IO Adapter; Serial Output Pins or SPI
+#include <ST7565.h>
 // LCD::Serial3W port;
 LCD::SPI3W port;
 ST7565 lcd(&port);

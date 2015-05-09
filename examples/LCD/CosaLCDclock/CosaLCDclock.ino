@@ -30,27 +30,41 @@
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/LCD/Driver/HD44780.hh"
 
 // Configurations
 #define USE_LARGE_LCD
 // #define USE_SENSORS
 // #define SET_RTC_TIME
 
-// Select the access port for the LCD
+// Select port type to use with the LCD device driver.
+// LCD and communication port
+#include <HD44780.h>
+
+// HD44780 driver built-in adapters
 // HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
-HD44780::MJKDZ port;
-// HD44780::GYIICLCD port;
-// HD44780::DFRobot port;
-// HD44780::SainSmart port;
-// HD44780::ERM1602_5 port;
+
+// I2C expander io port based adapters
+#include <PCF8574.h>
+#include <MJKDZ_LCD_Module.h>
+// MJKDZ_LCD_Module port;
+MJKDZ_LCD_Module port(0);
+// #include <GY_IICLCD.h>
+// GY_IICLCD port;
+// #include <DFRobot_IIC_LCD_Module.h>
+// DFRobot_IIC_LCD_Module port;
+// #include <SainSmart_LCD2004.h>
+// SainSmart_LCD2004 port;
+
+// HD44780 based LCD with support for serial communication
+// #include <ERM1602_5.h>
+// ERM1602_5 port;
 
 #if defined(USE_SENSORS)
-#include "Cosa/TWI/Driver/ADXL345.hh"
-#include "Cosa/TWI/Driver/HMC5883L.hh"
+#include <ADXL345.h>
+#include <HMC5883L.h>
 
 // Digital acceleratometer with alternative address
 ADXL345 accelerometer(1);

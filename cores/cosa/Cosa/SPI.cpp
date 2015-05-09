@@ -100,24 +100,6 @@ SPI::Driver::Driver(Board::DigitalPin cs, Pulse pulse,
   }
 }
 
-SPI::SPI(uint8_t mode, Order order) :
-  m_list(NULL),
-  m_dev(NULL),
-  m_busy(false)
-{
-  UNUSED(order);
-
-  // Set port data direction. Note ATtiny MOSI/MISO are DI/DO.
-  // Do not confuse with SPI chip programming pins
-  synchronized {
-    bit_mask_set(DDR, _BV(Board::MOSI) | _BV(Board::SCK));
-    bit_clear(DDR, Board::MISO);
-    bit_set(PORT, Board::MISO);
-    USICR = (_BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC));
-    if (mode == 1 || mode == 2) USICR |= _BV(USICS0);
-  }
-}
-
 SPI::SPI() :
   m_list(NULL),
   m_dev(NULL),

@@ -29,13 +29,17 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 
+// Select port type to use with the LCD device driver.
 // LCD and communication port
 #include <HD44780.h>
+
+// HD44780 driver built-in adapters
 HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
 
+// I2C expander io port based adapters
 // #include <PCF8574.h>
 // #include <MJKDZ_LCD_Module.h>
 // MJKDZ_LCD_Module port;
@@ -46,8 +50,12 @@ HD44780::Port4b port;
 // DFRobot_IIC_LCD_Module port;
 // #include <SainSmart_LCD2004.h>
 // SainSmart_LCD2004 port;
+
+// HD44780 based LCD with support for serial communication
 // #include <ERM1602_5.h>
 // ERM1602_5 port;
+
+// HD44780 variants; 16X1, 16X2, 16X4, 20X4, default 16X2
 // HD44780 lcd(&port, 20, 4);
 // HD44780 lcd(&port, 16, 4);
 HD44780 lcd(&port);

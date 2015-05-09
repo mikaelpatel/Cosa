@@ -46,23 +46,35 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/AnalogPin.hh"
-#include "Cosa/LCD/Driver/HD44780.hh"
-#include "Cosa/TWI/Driver/ADXL345.hh"
-#include "Cosa/TWI/Driver/BMP085.hh"
-#include "Cosa/TWI/Driver/HMC5883L.hh"
-#include "Cosa/TWI/Driver/L3G4200D.hh"
-#include "Cosa/TWI/Driver/DS1307.hh"
 
+#include <HD44780.h>
+#include <ADXL345.h>
+#include <BMP085.h>
+#include <HMC5883L.h>
+#include <L3G4200D.h>
+#include <DS1307.h>
+
+// Select port type to use with the LCD device driver.
 // LCD and communication port
+#include <HD44780.h>
+
+// HD44780 driver built-in adapters
 // HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
-// HD44780::MJKDZ port;
-HD44780::MJKDZ port(0);
-// HD44780::GYIICLCD port;
-// HD44780::DFRobot port;
-// HD44780::ERM1602_5 port;
+
+// I2C expander io port based adapters
+#include <PCF8574.h>
+#include <MJKDZ_LCD_Module.h>
+// MJKDZ_LCD_Module port;
+MJKDZ_LCD_Module port(0);
+// #include <GY_IICLCD.h>
+// GY_IICLCD port;
+// #include <DFRobot_IIC_LCD_Module.h>
+// DFRobot_IIC_LCD_Module port;
+// #include <SainSmart_LCD2004.h>
+// SainSmart_LCD2004 port;
 
 // Select LCD width and height
 #define WIDTH 16

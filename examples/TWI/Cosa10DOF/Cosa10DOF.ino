@@ -42,10 +42,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/Driver/ADXL345.hh"
-#include "Cosa/TWI/Driver/BMP085.hh"
-#include "Cosa/TWI/Driver/HMC5883L.hh"
-#include "Cosa/TWI/Driver/L3G4200D.hh"
+#include <ADXL345.h>
+#include <BMP085.h>
+#include <HMC5883L.h>
+#include <L3G4200D.h>
+
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"

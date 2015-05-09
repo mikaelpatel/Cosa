@@ -1,9 +1,9 @@
 /**
- * @file CosaLCDslave.ino
+ * @file VLCD.h
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2015, Mikael Patel
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,35 +15,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @section Description
- * Cosa demonstration of a Virtual LCD (VLCD).
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Event.hh"
-#include "Cosa/Watchdog.hh"
+#ifndef COSA_VLCD_H
+#define COSA_VLCD_H
 
-#include <HD44780.h>
-#include <VLCD.h>
+#include "VLCD.hh"
 
-// Use a 4-bit parallel port for the HD44780 LCD (16X2 default)
-HD44780::Port4b port;
-HD44780 lcd(&port);
-
-// And use the LCD for the implementation of the Virtual LCD slave
-VLCD::Slave vlcd(&lcd);
-
-void setup()
-{
-  Watchdog::begin();
-  lcd.begin();
-  vlcd.begin();
-}
-
-void loop()
-{
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-}
+#endif

@@ -39,32 +39,54 @@
   } while (0)
 #endif
 
-// Select the LCD device for the benchmark
-// #include "Cosa/LCD/Driver/PCD8544.hh"
+// Select port type to use with the LCD device driver.
+// LCD and communication port
+#include <HD44780.h>
+
+// HD44780 driver built-in adapters
+HD44780::Port4b port;
+// HD44780::SR3W port;
+// HD44780::SR3WSPI port;
+// HD44780::SR4W port;
+
+// I2C expander io port based adapters
+// #include <PCF8574.h>
+// #include <MJKDZ_LCD_Module.h>
+// MJKDZ_LCD_Module port;
+// MJKDZ_LCD_Module port(0);
+// #include <GY_IICLCD.h>
+// GY_IICLCD port;
+// #include <DFRobot_IIC_LCD_Module.h>
+// DFRobot_IIC_LCD_Module port;
+// #include <SainSmart_LCD2004.h>
+// SainSmart_LCD2004 port;
+
+// HD44780 based LCD with support for serial communication
+// #include <ERM1602_5.h>
+// ERM1602_5 port;
+
+// HD44780 variants; 16X1, 16X2, 16X4, 20X4, default 16X2
+// HD44780 lcd(&port, 20, 4);
+// HD44780 lcd(&port, 16, 4);
+HD44780 lcd(&port);
+
+// #include <HD44780.h>
+// #include <ST7920.h>
+// HD44780::Port4b port;
+// ST7920 lcd(&port);
+
+// #include <PCD8544.h>
 // LCD::Serial3W port;
 // LCD::SPI3W port;
 // PCD8544 lcd(&port);
 
-#include "Cosa/LCD/Driver/ST7565.hh"
+// #include <ST7565.h>
 // LCD::Serial3W port;
-LCD::SPI3W port;
-ST7565 lcd(&port);
+// LCD::SPI3W port;
+// ST7565 lcd(&port);
 
-// #include "Cosa/LCD/Driver/VLCD.hh"
+// #include <VLCD.h>
 // VLCD lcd;
-
-// Select the HD44780 port adapter for the benchmark
-// #include "Cosa/LCD/Driver/HD44780.hh"
-// HD44780::Port4b port;
-// HD44780::SR3W port;
-// HD44780::SR3WSPI port;
-// HD44780::SR4W port;
-// HD44780::MJKDZ port;
-// HD44780::GYIICLCD port;
-// HD44780::DFRobot port;
-// HD44780::SainSmart port;
-// HD44780::ERM1602_5 port;
-// HD44780 lcd(&port);
 
 // Benchmarks
 typedef void (*benchmark_t)(uint16_t);
@@ -117,7 +139,7 @@ void clear_display(uint16_t nr)
 
 void write_char(uint16_t nr)
 {
-#if defined(COSA_LCD_DRIVER_HD44780_HH) || defined(COSA_VLCD_HH)
+#if defined(COSA_HD44780_HH) || defined(COSA_VLCD_HH)
   const uint8_t WIDTH = 16;
   const uint8_t HEIGHT = 2;
 #else
@@ -134,7 +156,7 @@ void write_char(uint16_t nr)
   }
 }
 
-#if defined(COSA_LCD_DRIVER_PCD8544_HH)
+#if defined(COSA_PCD8544_HH)
 # define NUM_STR   "12345678901234"
 # define ALPHA_STR "ABCDEFGHIJKLMN"
 #else
@@ -180,7 +202,7 @@ void write_bin_uint16(uint16_t nr)
 
 void write_pos(uint16_t nr)
 {
-#if defined(COSA_LCD_DRIVER_HD44780_HH) || defined(COSA_VLCD_HH)
+#if defined(COSA_HD44780_HH) || defined(COSA_VLCD_HH)
   const uint8_t WIDTH = 16;
   const uint8_t HEIGHT = 2;
 #else

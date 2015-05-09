@@ -51,19 +51,56 @@
 #include "Cosa/Math.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/AnalogPin.hh"
-#include "Cosa/LCD/Driver/HD44780.hh"
 
+// Select port type to use with the LCD device driver.
 // LCD and communication port
-// HD44780::Port4b port;
+#include <HD44780.h>
+
+// HD44780 driver built-in adapters
+HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
-// HD44780::MJKDZ port;
-HD44780::GYIICLCD port;
-// HD44780::DFRobot port;
-// HD44780::SainSmart port;
-// HD44780::ERM1602_5 port;
+
+// I2C expander io port based adapters
+// #include <PCF8574.h>
+// #include <MJKDZ_LCD_Module.h>
+// MJKDZ_LCD_Module port;
+// MJKDZ_LCD_Module port(0);
+// #include <GY_IICLCD.h>
+// GY_IICLCD port;
+// #include <DFRobot_IIC_LCD_Module.h>
+// DFRobot_IIC_LCD_Module port;
+// #include <SainSmart_LCD2004.h>
+// SainSmart_LCD2004 port;
+
+// HD44780 based LCD with support for serial communication
+// #include <ERM1602_5.h>
+// ERM1602_5 port;
+
+// HD44780 variants; 16X1, 16X2, 16X4, 20X4, default 16X2
+// HD44780 lcd(&port, 20, 4);
+// HD44780 lcd(&port, 16, 4);
 HD44780 lcd(&port);
+
+// #include <HD44780.h>
+// #include <ST7920.h>
+// HD44780::Port4b port;
+// ST7920 lcd(&port);
+
+// #include <PCD8544.h>
+// LCD::Serial3W port;
+// LCD::SPI3W port;
+// PCD8544 lcd(&port);
+
+// #include <ST7565.h>
+// LCD::Serial3W port;
+// LCD::SPI3W port;
+// ST7565 lcd(&port);
+
+// #include <VLCD.h>
+// VLCD lcd;
+
 IOStream cout(&lcd);
 
 // Initiate vertical bar (bottom to top, 1..7)
@@ -122,7 +159,7 @@ void loop()
     pin = (Board::AnalogPin) pgm_read_byte(analog_pin_map + i);
     uint16_t value = AnalogPin::sample(pin);
     uint8_t x = i + 8;
-    draw_vertical_bar(x, map<uint32_t>(value, 0, 1023, 0, 100));
+    draw_vertical_bar(x, map<uint32_t,0,1023,0,100>(value));
   }
 
   delay(300);

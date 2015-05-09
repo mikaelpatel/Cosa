@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/VLCD.hh
+ * @file VLCD.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_LCD_DRIVER_VLCD_HH
-#define COSA_LCD_DRIVER_VLCD_HH
+#ifndef COSA_VLCD_HH
+#define COSA_VLCD_HH
 
 #include "Cosa/LCD.hh"
 #include "Cosa/TWI.hh"

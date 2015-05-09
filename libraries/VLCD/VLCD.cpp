@@ -1,5 +1,5 @@
 /**
- * @file Cosa/LCD/Driver/VLCD.cpp
+ * @file VLCD.cpp
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Board.hh"
-#include "Cosa/LCD/Driver/VLCD.hh"
+#include "VLCD.hh"
 #include "Cosa/Watchdog.hh"
 
 void
