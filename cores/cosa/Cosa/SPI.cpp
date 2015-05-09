@@ -48,21 +48,6 @@ SPI::Driver::Driver(Board::DigitalPin cs, Pulse pulse,
 {
 }
 
-SPI::SPI(uint8_t mode, Order order) :
-  m_list(NULL),
-  m_dev(NULL),
-  m_busy(false)
-{
-  // Initiate the SPI port and control for slave mode
-  synchronized {
-    bit_set(DDRB, Board::MISO);
-    bit_mask_clear(DDRB, _BV(Board::MOSI) | _BV(Board::SCK) | _BV(Board::SS));
-    SPCR = (_BV(SPIE) | _BV(SPE)
-	    | ((order & 0x1) << DORD)
-	    | ((mode & 0x3) << CPHA));
-  }
-}
-
 SPI::SPI() :
   m_list(NULL),
   m_dev(NULL),
@@ -77,28 +62,6 @@ SPI::SPI() :
     bit_set(PORTB, Board::MISO);
   }
   // Other the SPI setup is done by the SPI::Driver::begin()
-}
-
-void
-SPI::Slave::on_interrupt(uint16_t arg)
-{
-  // Sanity check that a buffer is defined
-  if (m_buf == NULL) return;
-  // Append to buffer and push event when buffer is full
-  m_buf[m_put++] = arg;
-  if (m_put != m_max) return;
-  // Push receive completed to event dispatch
-  Event::push(Event::RECEIVE_COMPLETED_TYPE, this, m_put);
-  m_put = 0;
-}
-
-// Current slave device. Should be a singleton
-SPI::Slave* SPI::Slave::s_device = NULL;
-
-ISR(SPI_STC_vect)
-{
-  SPI::Slave* device = SPI::Slave::s_device;
-  if (device != NULL) device->on_interrupt(SPDR);
 }
 
 #elif defined(USIDR)

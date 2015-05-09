@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/Driver/PCF8574.cpp
+ * @file PCF8574.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/Driver/PCF8574.hh"
+#include "PCF8574.hh"
 
 bool
 PCF8574::set_data_direction(uint8_t ddr)

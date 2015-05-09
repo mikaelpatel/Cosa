@@ -182,11 +182,6 @@ public:
   SPI();
 
   /**
-   * Construct serial peripheral interface for slave.
-   */
-  SPI(uint8_t mode, Order order);
-
-  /**
    * Attach given SPI device driver context.
    * @param[in] dev device driver context.
    * @return true(1) if successful otherwise false(0)
@@ -414,84 +409,6 @@ public:
     for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
       write(vp->buf, vp->size);
   }
-
-  /**
-   * SPI slave device support. Allows Arduino/AVR to act as a hardware
-   * device on the SPI bus.
-   */
-  class Slave : public Interrupt::Handler, public Event::Handler {
-  public:
-    /**
-     * Construct serial peripheral interface for slave.
-     * @param[in] buf with data to received data.
-     * @param[in] max size of buffer.
-     */
-    Slave(void* buf = NULL, uint8_t max = 0) :
-      m_cmd(0),
-      m_buf((uint8_t*) buf),
-      m_max(max),
-      m_put(0)
-    {
-      if (buf == NULL) {
-	m_buf = m_data;
-	m_max = DATA_MAX;
-      }
-      s_device = this;
-    }
-
-    /**
-     * Set data receive buffer for package receive mode.
-     * @param[in] buf pointer to buffer.
-     * @param[in] max max size of data package.
-     */
-    void set_buf(void* buf, uint8_t max)
-    {
-      if (buf == NULL) {
-	m_buf = m_data;
-	m_max = DATA_MAX;
-      }
-      else {
-	m_buf = (uint8_t*) buf;
-	m_max = max;
-      }
-    }
-
-    /**
-     * Get data receive buffer for package receive mode.
-     * @return buf pointer to buffer.
-     */
-    void* get_buf() const
-    {
-      return (m_buf);
-    }
-
-    /**
-     * Get number of bytes available in receive buffer.
-     * @return number of bytes.
-     */
-    uint8_t available() const
-    {
-      return (m_put);
-    }
-
-    /**
-     * @override Interrupt::Handler
-     * Interrupt service on data receive in slave mode.
-     * @param[in] data received data.
-     */
-    virtual void on_interrupt(uint16_t data);
-
-  protected:
-    static const uint8_t DATA_MAX = 32;
-    uint8_t m_data[DATA_MAX];
-    uint8_t m_cmd;
-    uint8_t* m_buf;
-    uint8_t m_max;
-    uint8_t m_put;
-    static Slave* s_device;
-    friend void SPI_STC_vect(void);
-    friend class SPI;
-  };
 
 private:
   Driver* m_list;		//!< List of attached device drivers.

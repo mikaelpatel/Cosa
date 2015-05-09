@@ -1,9 +1,9 @@
 /**
- * @file HD44780_IO_SainSmart.cpp
+ * @file DFRobot_IIC_LCD_Module.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014-2015, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,17 +18,17 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "HD44780.hh"
+#include "DFRobot_IIC_LCD_Module.hh"
 
 bool
-HD44780::SainSmart::setup()
+DFRobot_IIC_LCD_Module::setup()
 {
   set_data_direction(0);
   return (false);
 }
 
 void
-HD44780::SainSmart::write4b(uint8_t data)
+DFRobot_IIC_LCD_Module::write4b(uint8_t data)
 {
   uint8_t buf[2];
   m_port.data = data;
@@ -40,7 +40,7 @@ HD44780::SainSmart::write4b(uint8_t data)
 }
 
 void
-HD44780::SainSmart::write8b(uint8_t data)
+DFRobot_IIC_LCD_Module::write8b(uint8_t data)
 {
   uint8_t buf[4];
   m_port.data = (data >> 4);
@@ -57,7 +57,7 @@ HD44780::SainSmart::write8b(uint8_t data)
 }
 
 void
-HD44780::SainSmart::write8n(void* buf, size_t size)
+DFRobot_IIC_LCD_Module::write8n(void* buf, size_t size)
 {
   uint8_t* bp = (uint8_t*) buf;
   while (size != 0) {
@@ -83,17 +83,14 @@ HD44780::SainSmart::write8n(void* buf, size_t size)
 }
 
 void
-HD44780::SainSmart::set_mode(uint8_t flag)
+DFRobot_IIC_LCD_Module::set_mode(uint8_t flag)
 {
   m_port.rs = flag;
 }
 
 void
-HD44780::SainSmart::set_backlight(uint8_t flag)
+DFRobot_IIC_LCD_Module::set_backlight(uint8_t flag)
 {
   m_port.bt = flag;
   write(m_port.as_uint8);
 }
-
-
-

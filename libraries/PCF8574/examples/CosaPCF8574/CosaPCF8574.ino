@@ -36,7 +36,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/TWI/Driver/PCF8574.hh"
+#include <PCF8574.h>
+
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/OutputPin.hh"

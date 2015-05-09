@@ -1,5 +1,5 @@
 /**
- * @file HD44780_IO_DFRobot.cpp
+ * @file MJKDZ_LCD_Module.cpp
  * @version 1.0
  *
  * @section License
@@ -18,17 +18,17 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "HD44780.hh"
+#include "MJKDZ_LCD_Module.hh"
 
 bool
-HD44780::DFRobot::setup()
+MJKDZ_LCD_Module::setup()
 {
   set_data_direction(0);
   return (false);
 }
 
 void
-HD44780::DFRobot::write4b(uint8_t data)
+MJKDZ_LCD_Module::write4b(uint8_t data)
 {
   uint8_t buf[2];
   m_port.data = data;
@@ -40,7 +40,7 @@ HD44780::DFRobot::write4b(uint8_t data)
 }
 
 void
-HD44780::DFRobot::write8b(uint8_t data)
+MJKDZ_LCD_Module::write8b(uint8_t data)
 {
   uint8_t buf[4];
   m_port.data = (data >> 4);
@@ -50,14 +50,14 @@ HD44780::DFRobot::write8b(uint8_t data)
   buf[1] = m_port;
   m_port.data = data;
   m_port.en = 1;
-  buf[2] = m_port.as_uint8;
+  buf[2] = m_port;
   m_port.en = 0;
-  buf[3] = m_port.as_uint8;
+  buf[3] = m_port;
   write(buf, sizeof(buf));
 }
 
 void
-HD44780::DFRobot::write8n(void* buf, size_t size)
+MJKDZ_LCD_Module::write8n(void* buf, size_t size)
 {
   uint8_t* bp = (uint8_t*) buf;
   while (size != 0) {
@@ -83,17 +83,18 @@ HD44780::DFRobot::write8n(void* buf, size_t size)
 }
 
 void
-HD44780::DFRobot::set_mode(uint8_t flag)
+MJKDZ_LCD_Module::set_mode(uint8_t flag)
 {
   m_port.rs = flag;
 }
 
 void
-HD44780::DFRobot::set_backlight(uint8_t flag)
+MJKDZ_LCD_Module::set_backlight(uint8_t flag)
 {
-  m_port.bt = flag;
+  m_port.bt = !flag;
   write(m_port.as_uint8);
 }
+
 
 
 

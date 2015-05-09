@@ -1,5 +1,5 @@
 /**
- * @file Cosa/TWI/Driver/PCF8574.hh
+ * @file PCF8574.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_TWI_DRIVER_PCF8574_HH
-#define COSA_TWI_DRIVER_PCF8574_HH
+#ifndef COSA_PCF8574_HH
+#define COSA_PCF8574_HH
 
 #include "Cosa/TWI.hh"
 

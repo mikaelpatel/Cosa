@@ -1,9 +1,9 @@
 /**
- * @file HD44780_IO_MJKDZ.cpp
+ * @file SainSmart_LCD2004.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2015, Mikael Patel
+ * Copyright (C) 2014-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,17 +18,17 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "HD44780.hh"
+#include "SainSmart_LCD2004.hh"
 
 bool
-HD44780::MJKDZ::setup()
+SainSmart_LCD2004::setup()
 {
   set_data_direction(0);
   return (false);
 }
 
 void
-HD44780::MJKDZ::write4b(uint8_t data)
+SainSmart_LCD2004::write4b(uint8_t data)
 {
   uint8_t buf[2];
   m_port.data = data;
@@ -40,7 +40,7 @@ HD44780::MJKDZ::write4b(uint8_t data)
 }
 
 void
-HD44780::MJKDZ::write8b(uint8_t data)
+SainSmart_LCD2004::write8b(uint8_t data)
 {
   uint8_t buf[4];
   m_port.data = (data >> 4);
@@ -50,14 +50,14 @@ HD44780::MJKDZ::write8b(uint8_t data)
   buf[1] = m_port;
   m_port.data = data;
   m_port.en = 1;
-  buf[2] = m_port;
+  buf[2] = m_port.as_uint8;
   m_port.en = 0;
-  buf[3] = m_port;
+  buf[3] = m_port.as_uint8;
   write(buf, sizeof(buf));
 }
 
 void
-HD44780::MJKDZ::write8n(void* buf, size_t size)
+SainSmart_LCD2004::write8n(void* buf, size_t size)
 {
   uint8_t* bp = (uint8_t*) buf;
   while (size != 0) {
@@ -83,17 +83,15 @@ HD44780::MJKDZ::write8n(void* buf, size_t size)
 }
 
 void
-HD44780::MJKDZ::set_mode(uint8_t flag)
+SainSmart_LCD2004::set_mode(uint8_t flag)
 {
   m_port.rs = flag;
 }
 
 void
-HD44780::MJKDZ::set_backlight(uint8_t flag)
+SainSmart_LCD2004::set_backlight(uint8_t flag)
 {
-  m_port.bt = !flag;
+  m_port.bt = flag;
   write(m_port.as_uint8);
 }
-
-
 

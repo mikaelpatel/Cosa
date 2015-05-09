@@ -1,5 +1,5 @@
 /**
- * @file HD44780_IO_ERM1602_5.cpp
+ * @file ERM1602_5.cpp
  * @version 1.0
  *
  * @section License
@@ -18,12 +18,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "HD44780.hh"
+#include "ERM1602_5.hh"
 
-HD44780::ERM1602_5::ERM1602_5(Board::DigitalPin sda,
-			      Board::DigitalPin scl,
-			      Board::DigitalPin en,
-			      Board::DigitalPin bt) :
+ERM1602_5::ERM1602_5(Board::DigitalPin sda,
+		     Board::DigitalPin scl,
+		     Board::DigitalPin en,
+		     Board::DigitalPin bt) :
   m_sda(sda),
   m_scl(scl, 1),
   m_en(en, 1),
@@ -34,30 +34,24 @@ HD44780::ERM1602_5::ERM1602_5(Board::DigitalPin sda,
 }
 
 bool
-HD44780::ERM1602_5::setup()
+ERM1602_5::setup()
 {
   return (true);
 }
 
 void
-HD44780::ERM1602_5::write4b(uint8_t data)
+ERM1602_5::write4b(uint8_t data)
 {
   write8b(data);
 }
 
 void
-HD44780::ERM1602_5::write8b(uint8_t data)
+ERM1602_5::write8b(uint8_t data)
 {
   m_en.clear();
-  if (m_dirty) {
-    uint8_t func = FUNCTION_SET | DATA_LENGTH_8BITS | NR_LINES_2;
-    if (m_rs) func |= EXTENDED_SET;
-    m_sda.write(func, m_scl);
-    DELAY(SHORT_EXEC_TIME);
-    m_dirty = false;
-  }
+  flush();
   if (m_rs) {
-    m_sda.write(SET_DDATA_LENGTH, m_scl);
+    m_sda.write(HD44780::SET_DDATA_LENGTH, m_scl);
     DELAY(SHORT_EXEC_TIME);
   }
   m_sda.write(data, m_scl);
@@ -66,19 +60,13 @@ HD44780::ERM1602_5::write8b(uint8_t data)
 }
 
 void
-HD44780::ERM1602_5::write8n(void* buf, size_t size)
+ERM1602_5::write8n(void* buf, size_t size)
 {
   if (size == 0) return;
   m_en.clear();
-  if (m_dirty) {
-    uint8_t func = FUNCTION_SET | DATA_LENGTH_8BITS | NR_LINES_2;
-    if (m_rs) func |= EXTENDED_SET;
-    m_sda.write(func, m_scl);
-    DELAY(SHORT_EXEC_TIME);
-    m_dirty = false;
-  }
+  flush();
   if (m_rs) {
-    m_sda.write(SET_DDATA_LENGTH | ((size - 1) & SET_DDATA_MASK), m_scl);
+    m_sda.write(HD44780::SET_DDATA_LENGTH | ((size - 1) & HD44780::SET_DDATA_MASK), m_scl);
     DELAY(SHORT_EXEC_TIME);
   }
   uint8_t* bp = (uint8_t*) buf;
@@ -92,7 +80,7 @@ HD44780::ERM1602_5::write8n(void* buf, size_t size)
 }
 
 void
-HD44780::ERM1602_5::set_mode(uint8_t flag)
+ERM1602_5::set_mode(uint8_t flag)
 {
   if (m_rs == flag) return;
   m_rs = flag;
@@ -100,7 +88,19 @@ HD44780::ERM1602_5::set_mode(uint8_t flag)
 }
 
 void
-HD44780::ERM1602_5::set_backlight(uint8_t flag)
+ERM1602_5::set_backlight(uint8_t flag)
 {
   m_bt.write(flag);
 }
+
+void
+ERM1602_5::flush()
+{
+  if (!m_dirty) return;
+  uint8_t func = HD44780::FUNCTION_SET | HD44780::DATA_LENGTH_8BITS | HD44780::NR_LINES_2;
+  if (m_rs) func |= HD44780::EXTENDED_SET;
+  m_sda.write(func, m_scl);
+  DELAY(SHORT_EXEC_TIME);
+  m_dirty = false;
+}
+
