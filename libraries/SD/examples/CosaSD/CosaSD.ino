@@ -31,7 +31,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/Driver/SD.hh"
+#include <SD.h>
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"

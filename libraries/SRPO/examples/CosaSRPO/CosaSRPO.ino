@@ -63,9 +63,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <SRPO.h>
+
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/SPI/Driver/SRPO.hh"
 
 // Power-down delay
 #define POWERDOWN_DELAY(ms)				\

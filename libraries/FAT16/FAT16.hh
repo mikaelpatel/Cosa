@@ -22,7 +22,8 @@
 #ifndef COSA_FAT16_HH
 #define COSA_FAT16_HH
 
-#include "Cosa/SPI/Driver/SD.hh"
+#include <SD.h>
+
 #include "Cosa/IOStream.hh"
 #include "Cosa/FS.hh"
 

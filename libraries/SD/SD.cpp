@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/Driver/SD.cpp
+ * @file SD.cpp
  * @version 1.0
  *
  * @section License
@@ -18,7 +18,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/SPI/Driver/SD.hh"
+#include "SD.hh"
 #include "Cosa/RTC.hh"
 
 // Configuration: Allow SPI transfer interleaving, table driven CRC.

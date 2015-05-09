@@ -1,5 +1,5 @@
 /**
- * @file Cosa/SPI/Driver/SRPO.hh
+ * @file SRPO.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_SPI_DRIVER_SRPO_HH
-#define COSA_SPI_DRIVER_SRPO_HH
+#ifndef COSA_SRPO_HH
+#define COSA_SRPO_HH
 
 #include "Cosa/SPI.hh"
 

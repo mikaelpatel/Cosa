@@ -1,5 +1,5 @@
 /**
- * @file Cosa/FS/FAT16.hh
+ * @file FAT16.hh
  * @version 1.0
  *
  * @section License
