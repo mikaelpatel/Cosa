@@ -1,147 +1,99 @@
-Sat May 9 14:26:29 CEST 2015: adafruit-atmega32u4
+Sat May 9 16:01:54 CEST 2015: adafruit-atmega32u4
 Program:    3720 bytes (11.4% Full)
 Data:        214 bytes (8.4% Full)
-Sat May 9 14:26:34 CEST 2015: adafruit-atmega32u4-cat
+Sat May 9 16:01:59 CEST 2015: adafruit-atmega32u4-cat
 Program:    3720 bytes (11.4% Full)
 Data:        214 bytes (8.4% Full)
-Sat May 9 14:26:38 CEST 2015: atmega328-8
+Sat May 9 16:02:03 CEST 2015: atmega328-8
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:26:43 CEST 2015: attiny84-8
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.cpp:103:1: error: prototype for 'SPI::SPI(uint8_t, SPI::Order)' does not match any in class 'SPI'
- SPI::SPI(uint8_t mode, Order order) :
- ^
-In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.cpp:21:0:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error: candidates are: constexpr SPI::SPI(SPI&&)
- class SPI {
-       ^
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error:                 constexpr SPI::SPI(const SPI&)
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:182:3: error:                 SPI::SPI()
-   SPI();
-   ^
-make: *** [/home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.5.8/attiny84-8/build/core/Cosa/SPI.o] Error 1
-make: *** Waiting for unfinished jobs....
-make: *** wait: No child processes.  Stop.
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.cpp:103:1: error: prototype for 'SPI::SPI(uint8_t, SPI::Order)' does not match any in class 'SPI'
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error: candidates are: constexpr SPI::SPI(SPI&&)
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error:                 constexpr SPI::SPI(const SPI&)
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:182:3: error:                 SPI::SPI()
-Sat May 9 14:26:46 CEST 2015: attiny85-8
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.cpp:103:1: error: prototype for 'SPI::SPI(uint8_t, SPI::Order)' does not match any in class 'SPI'
- SPI::SPI(uint8_t mode, Order order) :
- ^
-In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.cpp:21:0:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error: candidates are: constexpr SPI::SPI(SPI&&)
- class SPI {
-       ^
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error:                 constexpr SPI::SPI(const SPI&)
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:182:3: error:                 SPI::SPI()
-   SPI();
-   ^
-make: *** [/home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.5.8/attiny85-8/build/core/Cosa/SPI.o] Error 1
-make: *** Waiting for unfinished jobs....
-make: *** wait: No child processes.  Stop.
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.cpp:103:1: error: prototype for 'SPI::SPI(uint8_t, SPI::Order)' does not match any in class 'SPI'
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error: candidates are: constexpr SPI::SPI(SPI&&)
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error:                 constexpr SPI::SPI(const SPI&)
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:182:3: error:                 SPI::SPI()
-Sat May 9 14:26:50 CEST 2015: attiny861-8
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.cpp:103:1: error: prototype for 'SPI::SPI(uint8_t, SPI::Order)' does not match any in class 'SPI'
- SPI::SPI(uint8_t mode, Order order) :
- ^
-In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.cpp:21:0:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error: candidates are: constexpr SPI::SPI(SPI&&)
- class SPI {
-       ^
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error:                 constexpr SPI::SPI(const SPI&)
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:182:3: error:                 SPI::SPI()
-   SPI();
-   ^
-make: *** [/home/epkmipl/Sketchbook/hardware/Cosa/obj/build-1.5.8/attiny861-8/build/core/Cosa/SPI.o] Error 1
-make: *** Waiting for unfinished jobs....
-make: *** wait: No child processes.  Stop.
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.cpp:103:1: error: prototype for 'SPI::SPI(uint8_t, SPI::Order)' does not match any in class 'SPI'
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error: candidates are: constexpr SPI::SPI(SPI&&)
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:57:7: error:                 constexpr SPI::SPI(const SPI&)
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/SPI.hh:182:3: error:                 SPI::SPI()
-Sat May 9 14:26:54 CEST 2015: diecimila
+Sat May 9 16:02:07 CEST 2015: attiny84-8
+Program:      94 bytes (1.1% Full)
+Data:          0 bytes (0.0% Full)
+Sat May 9 16:02:11 CEST 2015: attiny85-8
+Program:      90 bytes (1.1% Full)
+Data:          0 bytes (0.0% Full)
+Sat May 9 16:02:15 CEST 2015: attiny861-8
+Program:      98 bytes (1.2% Full)
+Data:          0 bytes (0.0% Full)
+Sat May 9 16:02:19 CEST 2015: diecimila
 Program:     172 bytes (1.0% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:26:58 CEST 2015: duemilanove
+Sat May 9 16:02:23 CEST 2015: duemilanove
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:27:02 CEST 2015: iboard
+Sat May 9 16:02:26 CEST 2015: iboard
 Program:     192 bytes (0.6% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:27:06 CEST 2015: leonardo
+Sat May 9 16:02:30 CEST 2015: leonardo
 Program:    3718 bytes (11.3% Full)
 Data:        214 bytes (8.4% Full)
-Sat May 9 14:27:11 CEST 2015: lilypad
+Sat May 9 16:02:35 CEST 2015: lilypad
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:27:15 CEST 2015: lilypad-usb
+Sat May 9 16:02:39 CEST 2015: lilypad-usb
 Program:    3720 bytes (11.4% Full)
 Data:        214 bytes (8.4% Full)
-Sat May 9 14:27:20 CEST 2015: mega1280
+Sat May 9 16:02:43 CEST 2015: mega1280
 Program:     296 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:27:24 CEST 2015: mega2560
+Sat May 9 16:02:47 CEST 2015: mega2560
 Program:     300 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:27:28 CEST 2015: micro
+Sat May 9 16:02:51 CEST 2015: micro
 Program:    3720 bytes (11.4% Full)
 Data:        214 bytes (8.4% Full)
-Sat May 9 14:27:33 CEST 2015: microduino-core
+Sat May 9 16:02:55 CEST 2015: microduino-core
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:27:37 CEST 2015: microduino-core32u4
+Sat May 9 16:02:59 CEST 2015: microduino-core32u4
 Program:    3720 bytes (11.4% Full)
 Data:        214 bytes (8.4% Full)
-Sat May 9 14:27:41 CEST 2015: microduino-core-plus
+Sat May 9 16:03:03 CEST 2015: microduino-core-plus
 Program:     192 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:27:46 CEST 2015: mighty
+Sat May 9 16:03:07 CEST 2015: mighty
 Program:     208 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:27:50 CEST 2015: mighty-opt
+Sat May 9 16:03:11 CEST 2015: mighty-opt
 Program:     208 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:27:54 CEST 2015: miniwireless
+Sat May 9 16:03:15 CEST 2015: miniwireless
 Program:     192 bytes (0.6% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:27:58 CEST 2015: moteino
+Sat May 9 16:03:19 CEST 2015: moteino
 Program:     192 bytes (0.6% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:28:02 CEST 2015: moteino-mega
+Sat May 9 16:03:23 CEST 2015: moteino-mega
 Program:     228 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:28:06 CEST 2015: nano
+Sat May 9 16:03:27 CEST 2015: nano
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:28:10 CEST 2015: pinoccio
+Sat May 9 16:03:31 CEST 2015: pinoccio
 Program:     380 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:28:15 CEST 2015: pro-micro
+Sat May 9 16:03:35 CEST 2015: pro-micro
 Program:    3718 bytes (11.3% Full)
 Data:        214 bytes (8.4% Full)
-Sat May 9 14:28:19 CEST 2015: pro-micro-8
+Sat May 9 16:03:39 CEST 2015: pro-micro-8
 Program:    3718 bytes (11.3% Full)
 Data:        214 bytes (8.4% Full)
-Sat May 9 14:28:24 CEST 2015: pro-mini
+Sat May 9 16:03:43 CEST 2015: pro-mini
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:28:28 CEST 2015: pro-mini-8
+Sat May 9 16:03:47 CEST 2015: pro-mini-8
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:28:32 CEST 2015: teensy-2_0
+Sat May 9 16:03:51 CEST 2015: teensy-2_0
 Program:    3734 bytes (11.4% Full)
 Data:        214 bytes (8.4% Full)
-Sat May 9 14:28:36 CEST 2015: teensypp-2_0
+Sat May 9 16:03:55 CEST 2015: teensypp-2_0
 Program:    3740 bytes (2.9% Full)
 Data:        214 bytes (2.6% Full)
-Sat May 9 14:28:41 CEST 2015: uno
+Sat May 9 16:04:00 CEST 2015: uno
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat May 9 14:28:45 CEST 2015: wildfire
+Sat May 9 16:04:03 CEST 2015: wildfire
 Program:     458 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
