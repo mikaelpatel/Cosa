@@ -39,8 +39,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <DHCP.h>
+#include <DNS.h>
 #include <Telnet.h>
-#include <INET.h>
 #include <W5100.h>
 
 #include "Cosa/Memory.h"

@@ -23,10 +23,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <AVR.h>
+
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/AVR/Programmer.hh"
 
 Programmer isp;
 

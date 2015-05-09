@@ -69,7 +69,7 @@ OWI owi(Board::D7);
 #endif
 
 #ifdef USE_RTC
-#include "Cosa/TWI/Driver/DS1307.hh"
+#include <DS1307.h>
 DS1307 rtc;
 time_t now;
 #endif

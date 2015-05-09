@@ -39,12 +39,12 @@
 #include <DHCP.h>
 #include <HTTP.h>
 #include <W5100.h>
+#include <SD.h>
+#include <FAT16.h>
 
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/SPI/Driver/SD.hh"
-#include "Cosa/FS/FAT16.hh"
 
 // HTML end of line
 #define CRLF "\r\n"

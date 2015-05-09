@@ -44,12 +44,12 @@
  */
 
 #include <DHT.h>
+#include <MAX72XX.h>
 
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/AnalogPin.hh"
-#include "Cosa/LCD/Driver/MAX72XX.hh"
 
 // Humidity and temperature sensor
 DHT11 sensor(Board::EXT0);

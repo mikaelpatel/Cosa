@@ -63,7 +63,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 #else
-#include "Cosa/LCD/Driver/PCD8544.hh"
+#include <PCD8544.h>
 #endif
 
 /**

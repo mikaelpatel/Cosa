@@ -26,10 +26,11 @@
  */
 
 #include "Cosa/Trace.hh"
-#include "Cosa/OWI/Driver/DS18B20.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
+
+#include <DS18B20.h>
 
 // Configuration; network and device addresses
 #define NETWORK 0xC05A

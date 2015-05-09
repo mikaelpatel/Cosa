@@ -52,14 +52,9 @@
 #include "Cosa/Interrupt.hh"
 #include "Cosa/Keypad.hh"
 #include "Cosa/LCD.hh"
-#include "Cosa/LCD/Driver/HD44780.hh"
-#include "Cosa/LCD/Driver/PCD8544.hh"
-#include "Cosa/LCD/Driver/ST7565.hh"
-#include "Cosa/LCD/Driver/VLCD.hh"
 #include "Cosa/LED.hh"
 #include "Cosa/Linkage.hh"
 #include "Cosa/Listener.hh"
-#include "Cosa/Menu.hh"
 #include "Cosa/OWI.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/PinChangeInterrupt.hh"
@@ -78,7 +73,6 @@
 #include "Cosa/Servo.hh"
 #include "Cosa/Socket.hh"
 #include "Cosa/SPI.hh"
-#include "Cosa/SPI/Driver/SD.hh"
 #include "Cosa/ProtoThread.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/Timer.hh"
@@ -120,20 +114,11 @@ void setup()
   TRACE(sizeof(Keypad));
   TRACE(sizeof(LCDKeypad));
   TRACE(sizeof(LCD));
-  TRACE(sizeof(HD44780));
-  TRACE(sizeof(PCD8544));
-  TRACE(sizeof(ST7565));
-  TRACE(sizeof(VLCD));
   TRACE(sizeof(LED));
   TRACE(sizeof(Linkage));
   TRACE(sizeof(Link));
   TRACE(sizeof(Head));
   TRACE(sizeof(Listener<int>));
-  TRACE(sizeof(Menu));
-  TRACE(sizeof(Menu::Action));
-  TRACE(sizeof(Menu::Walker));
-  TRACE(sizeof(Menu::KeypadController));
-  TRACE(sizeof(Menu::RotaryController));
   TRACE(sizeof(OWI));
   TRACE(sizeof(OWI::Driver));
   TRACE(sizeof(OWI::Search));
@@ -155,8 +140,6 @@ void setup()
   TRACE(sizeof(Servo));
   TRACE(sizeof(Socket));
   TRACE(sizeof(SPI::Driver));
-  TRACE(sizeof(SPI::Slave));
-  TRACE(sizeof(SD));
   TRACE(sizeof(ProtoThread));
   TRACE(sizeof(clock_t));
   TRACE(sizeof(time_t));

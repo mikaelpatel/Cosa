@@ -252,7 +252,7 @@ public:
     return (m_rx.recv(src, port, buf, len, ms));
   }
 
-private:
+protected:
   /**
    * Frame header; Transmitted in little endian order; network LSB first.
    */
@@ -263,12 +263,14 @@ private:
     uint8_t port;		//!< Port or message type.
   };
 
+public:
   /**
    * The maximum payload length; 30 byte application payload and
    * 4 byte frame header with network(2).
    */
   static const uint8_t PAYLOAD_MAX = 30 + sizeof(header_t);
 
+protected:
   /** Maximum number of bytes in a message (incl. byte count and FCS). */
   static const uint8_t MESSAGE_MAX = PAYLOAD_MAX + 3;
 

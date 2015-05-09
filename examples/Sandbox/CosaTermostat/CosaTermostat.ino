@@ -36,7 +36,8 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
-#include "Cosa/Driver/DHT.hh"
+
+#include <DHT.h>
 
 // Sensor and relay control pins
 OutputPin led(Board::LED);
