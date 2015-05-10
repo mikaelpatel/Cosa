@@ -25,7 +25,6 @@
 #ifndef CFFS_COMMANDS_HH
 #define CFFS_COMMANDS_HH
 
-#include "Cosa/Shell.hh"
 #include "Cosa/IOStream.hh"
 
 extern Shell shell;

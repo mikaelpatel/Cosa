@@ -69,10 +69,14 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/AnalogPin.hh"
-#include "Cosa/Canvas/OffScreen.hh"
-#include "Cosa/Canvas/Font/FixedNums8x16.hh"
-#include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
-#include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
+
+#include <Canvas.h>
+#include "Canvas/OffScreen.hh"
+#include "Canvas/Icon/arduino_icon_64x32.h"
+#include "Canvas/Icon/arduino_icon_96x32.h"
+
+#include <Font.h>
+#include "FixedNums8x16.hh"
 
 // Select ST7565 IO Adapter; Serial Output Pins or SPI
 #include <ST7565.h>

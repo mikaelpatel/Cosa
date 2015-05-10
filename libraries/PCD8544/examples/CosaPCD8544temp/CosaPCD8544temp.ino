@@ -63,15 +63,20 @@
  */
 
 #include <DS18B20.h>
+
+#include <Canvas.h>
+#include "Canvas/OffScreen.hh"
+#include "Canvas/Icon/arduino_icon_64x32.h"
+#include "Canvas/Element/Textbox.hh"
+
+#include <Font.h>
+#include "FixedNums8x16.hh"
+
 #include <PCD8544.h>
 
 #include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Canvas/OffScreen.hh"
-#include "Cosa/Canvas/Font/FixedNums8x16.hh"
-#include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
-#include "Cosa/Canvas/Element/Textbox.hh"
 
 // One-Wire and digital thermometer
 OWI owi(Board::D5);

@@ -18,10 +18,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <CFFS.h>
+#include <Shell.h>
+
 #include "CFFScommands.h"
+
 #include "Cosa/Time.hh"
 #include "Cosa/RTC.hh"
-#include <CFFS.h>
 
 SHELL_ACTION(cat, "FILE..", "print content of file")
 (int argc, char* argv[])

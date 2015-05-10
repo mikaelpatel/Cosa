@@ -63,6 +63,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 #else
+#include <Canvas.h>
 #include <PCD8544.h>
 #endif
 

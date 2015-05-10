@@ -23,6 +23,8 @@
  */
 
 #include <CFFS.h>
+#include <Shell.h>
+
 #include "Cosa/RTC.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"

@@ -32,11 +32,6 @@
 
 #include "Cosa/BitSet.hh"
 #include "Cosa/Button.hh"
-#include "Cosa/Canvas.hh"
-#include "Cosa/Canvas/Driver/ST7735.hh"
-#include "Cosa/Canvas/Element/Textbox.hh"
-#include "Cosa/Canvas/Font.hh"
-#include "Cosa/Canvas/OffScreen.hh"
 #include "Cosa/EEPROM.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/ExternalInterrupt.hh"
@@ -91,10 +86,6 @@ void setup()
   TRACE(free_memory());
   TRACE(sizeof(BitSet<64>));
   TRACE(sizeof(Button));
-  TRACE(sizeof(Canvas));
-  TRACE(sizeof(ST7735));
-  TRACE(sizeof(Textbox));
-  TRACE(sizeof(OffScreen<64,128>));
 #if defined(USBCON)
   TRACE(sizeof(CDC));
 #endif

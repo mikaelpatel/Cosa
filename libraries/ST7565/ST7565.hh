@@ -25,8 +25,9 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/LCD.hh"
 #include "Cosa/SPI.hh"
-#include "Cosa/Canvas/Font.hh"
-#include "Cosa/Canvas/Font/System5x7.hh"
+
+#include <Canvas.h>
+#include "System5x7.hh"
 
 /**
  * ST7565 64x128 pixels matrix LCD controller/driver, device driver

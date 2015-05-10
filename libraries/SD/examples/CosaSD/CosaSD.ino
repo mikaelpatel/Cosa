@@ -45,9 +45,10 @@
 #define USE_TFT_ST7735
 
 #if defined (USE_TFT_ST7735)
-#include "Cosa/Canvas.hh"
-#include "Cosa/Canvas/Element/Textbox.hh"
-#include "Cosa/Canvas/Driver/ST7735.hh"
+#include <Canvas.h>
+#include "Canvas/Element/Textbox.hh"
+#include <GDDRAM.h>
+#include <ST7735.h>
 
 // Use ST7735 default pins; SPI (MOSI, SCK), CS (D10), AO (D9)
 SD sd;

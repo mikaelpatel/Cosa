@@ -24,8 +24,9 @@
 #include "Cosa/Board.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/LCD.hh"
-#include "Cosa/Canvas/Font.hh"
-#include "Cosa/Canvas/Font/System5x7.hh"
+
+#include <Canvas.h>
+#include "System5x7.hh"
 
 /**
  * PCD8544 48x84 pixels matrix LCD controller/driver, device driver

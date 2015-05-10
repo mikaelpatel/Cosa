@@ -51,16 +51,20 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <Canvas.h>
+#include "Canvas/OffScreen.hh"
+#include "Canvas/Icon/arduino_icon_64x32.h"
+#include "Canvas/Icon/arduino_icon_96x32.h"
+
+#include <Font.h>
+#include "FixedNums8x16.hh"
+
 #include <PCD8544.h>
 
 #include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/AnalogPin.hh"
-#include "Cosa/Canvas/OffScreen.hh"
-#include "Cosa/Canvas/Font/FixedNums8x16.hh"
-#include "Cosa/Canvas/Icon/arduino_icon_64x32.h"
-#include "Cosa/Canvas/Icon/arduino_icon_96x32.h"
 
 // Select PCD8544 IO Adapter; Serial Output Pins or SPI
 LCD::Serial3W port;
