@@ -23,9 +23,10 @@
 
 #include "Cosa/LCD.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/Keypad.hh"
-#include "Cosa/Rotary.hh"
+
+#include <Rotary.h>
 #include "Cosa/Button.hh"
+#include "Cosa/Keypad.hh"
 
 /**
  * LCD Menu abstraction. Allows definition of menus with sub-menus,

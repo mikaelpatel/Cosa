@@ -26,6 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <Rotary.h>
 #include <Menu.h>
 
 #include "Cosa/Event.hh"

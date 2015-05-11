@@ -25,7 +25,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/ProtoThread.hh"
+#include <ProtoThread.h>
+
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 

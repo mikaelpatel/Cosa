@@ -41,7 +41,6 @@
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/CDC.hh"
-#include "Cosa/IOStream/Driver/RS485.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/IOStream/Driver/WIO.hh"
 #include "Cosa/Interrupt.hh"
@@ -62,16 +61,11 @@
 #include "Cosa/AnalogPins.hh"
 #include "Cosa/AnalogComparator.hh"
 #include "Cosa/Queue.hh"
-#include "Cosa/Registry.hh"
-#include "Cosa/Rotary.hh"
 #include "Cosa/RTC.hh"
-#include "Cosa/Servo.hh"
 #include "Cosa/Socket.hh"
 #include "Cosa/SPI.hh"
-#include "Cosa/ProtoThread.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/Timer.hh"
-#include "Cosa/Touch.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/TWI.hh"
 #include "Cosa/Wireless.hh"
@@ -98,10 +92,8 @@ void setup()
   TRACE(sizeof(IOBuffer<64>));
   TRACE(sizeof(IOStream));
 #if !defined(BOARD_ATTINY)
-  TRACE(sizeof(RS485));
   TRACE(sizeof(UART));
 #endif
-  TRACE(sizeof(WIO));
   TRACE(sizeof(Keypad));
   TRACE(sizeof(LCDKeypad));
   TRACE(sizeof(LCD));
@@ -123,19 +115,12 @@ void setup()
   TRACE(sizeof(AnalogPins));
   TRACE(sizeof(AnalogComparator));
   TRACE(sizeof(Queue<int,32>));
-  TRACE(sizeof(Registry));
-  TRACE(sizeof(Rotary::Encoder));
-  TRACE(sizeof(Rotary::Dial<int>));
-  TRACE(sizeof(Rotary::AcceleratedDial<int, 900>));
   TRACE(sizeof(RTC));
-  TRACE(sizeof(Servo));
   TRACE(sizeof(Socket));
   TRACE(sizeof(SPI::Driver));
-  TRACE(sizeof(ProtoThread));
   TRACE(sizeof(clock_t));
   TRACE(sizeof(time_t));
   TRACE(sizeof(Timer));
-  TRACE(sizeof(Touch));
   TRACE(sizeof(Trace));
   TRACE(sizeof(TWI::Driver));
   TRACE(sizeof(TWI::Slave));
