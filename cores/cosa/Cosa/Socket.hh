@@ -45,7 +45,12 @@ public:
   /**
    * Socket constructor. Initial state of socket.
    */
-  Socket();
+  Socket() :
+    IOStream::Device(),
+    m_proto(0)
+  {
+    memset(&m_src, 0, sizeof(m_src));
+  }
 
   /**
    * Get source machine address, network address and port.
@@ -81,7 +86,10 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes written or EOF(-1).
    */
-  virtual int write(const void* buf, size_t size);
+  virtual int write(const void* buf, size_t size)
+  {
+    return (write(buf, size, false));
+  }
 
   /**
    * @override IOStream::Device
@@ -90,14 +98,22 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes written or EOF(-1).
    */
-  virtual int write_P(const void* buf, size_t size);
+  virtual int write_P(const void* buf, size_t size)
+  {
+    return (write(buf, size, true));
+  }
 
   /**
    * @override IOStream::Device
    * Read character from device.
    * @return character or EOF(-1).
    */
-  virtual int getchar();
+  virtual int getchar()
+  {
+    char c;
+    int res = recv(&c, sizeof(c));
+    return (res == sizeof(c) ? (c & 0xff) : res);
+  }
 
   /**
    * @override IOStream::Device
@@ -106,7 +122,10 @@ public:
    * @param[in] size number of bytes to read.
    * @return number of bytes read or EOF(-1).
    */
-  virtual int read(void* buf, size_t size);
+  virtual int read(void* buf, size_t size)
+  {
+    return (recv(buf, size));
+  }
 
   /**
    * @override Socket
@@ -291,7 +310,10 @@ protected:
    * @param[in] progmem program memory pointer flag.
    * @return number of bytes written or EOF(-1).
    */
-  virtual int write(const void* buf, size_t size, bool progmem) = 0;
+  virtual int write(const void* buf, size_t size, bool progmem)
+  {
+    return (send(buf, size, progmem));
+  }
 
   /**
    * @override Socket
