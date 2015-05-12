@@ -62,7 +62,14 @@ public:
    * @param[in] duration of activity in seconds.
    * @param[in] period between activity in minutes.
    */
-  void set_time(clock_t time, uint16_t duration, uint16_t period);
+  void set_time(clock_t time, uint16_t duration, uint16_t period)
+  {
+    m_start_time = time;
+    m_stop_time = time + duration;
+    m_duration = duration;
+    m_period = period;
+    m_scheduler.set_alarm(time);
+  }
 
   /**
    * Set run period when during activity start and duration.
@@ -138,7 +145,26 @@ private:
    * Dispatch if activity period has not expired.
    * @param[in] now current time.
    */
-  void schedule(clock_t now);
+  void schedule(clock_t now)
+  {
+    // Check if still in activity duration
+    int32_t diff = now - m_stop_time;
+    if (diff < 0) {
+      run();
+      if (m_cycles == 0) m_scheduler.set_period(m_run_period);
+      m_cycles += 1;
+    }
+
+    // Check if activity should be rescheduled
+    else if (m_period != 0) {
+      m_start_time += m_period * 60L;
+      m_stop_time = m_start_time + m_duration;
+      m_scheduler.set_alarm(m_start_time);
+      m_scheduler.set_period(0);
+      m_scheduler.enable();
+      m_cycles = 0;
+    }
+  }
 
   Scheduler m_scheduler;	//!< Activity scheduler.
   clock_t m_start_time;		//!< Start time.

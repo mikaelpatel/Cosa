@@ -121,7 +121,23 @@ protected:
    * @param[in] type the type of event (timeout).
    * @param[in] value the event value.
    */
-  virtual void on_event(uint8_t type, uint16_t value);
+  virtual void on_event(uint8_t type, uint16_t value)
+  {
+    UNUSED(value);
+
+    // Skip all but timeout events
+    if (type != Event::TIMEOUT_TYPE) return;
+
+    // Update the button state
+    uint8_t old_state = m_state;
+    m_state = is_set();
+    uint8_t new_state = m_state;
+
+    // If changed according to mode call the pin change handler
+    if ((old_state != new_state) &&
+	((MODE == ON_CHANGE_MODE) || (new_state == MODE)))
+      on_change(Event::FALLING_TYPE + MODE);
+  }
 };
 
 #endif

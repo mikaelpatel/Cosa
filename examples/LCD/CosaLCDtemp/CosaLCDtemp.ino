@@ -40,6 +40,7 @@
 #include "Cosa/IOStream.hh"
 
 // Digital Thermometer
+#include <OWI.h>
 #include <DS18B20.h>
 
 // Select port type to use with the LCD device driver.

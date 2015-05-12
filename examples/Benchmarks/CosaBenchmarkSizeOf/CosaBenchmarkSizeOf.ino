@@ -49,7 +49,6 @@
 #include "Cosa/LED.hh"
 #include "Cosa/Linkage.hh"
 #include "Cosa/Listener.hh"
-#include "Cosa/OWI.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/PinChangeInterrupt.hh"
 #include "Cosa/Pin.hh"
@@ -102,9 +101,6 @@ void setup()
   TRACE(sizeof(Link));
   TRACE(sizeof(Head));
   TRACE(sizeof(Listener<int>));
-  TRACE(sizeof(OWI));
-  TRACE(sizeof(OWI::Driver));
-  TRACE(sizeof(OWI::Search));
   TRACE(sizeof(Periodic));
   TRACE(sizeof(Pin));
   TRACE(sizeof(InputPin));

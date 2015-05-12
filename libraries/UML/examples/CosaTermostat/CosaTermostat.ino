@@ -38,8 +38,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include <UML.h>
+#include <OWI.h>
 #include <DS18B20.h>
+#include <UML.h>
 #include <UML/Thermometer.h>
 
 #include "Cosa/Trace.hh"

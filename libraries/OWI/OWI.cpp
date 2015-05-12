@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OWI.cpp
+ * @file OWI.cpp
  * @version 1.0
  *
  * @section License
@@ -23,7 +23,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OWI.hh"
+#include "OWI.hh"
 
 bool
 OWI::reset()

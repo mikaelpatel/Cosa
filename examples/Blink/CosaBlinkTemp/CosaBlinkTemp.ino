@@ -37,9 +37,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <OWI.h>
 #include <DS18B20.h>
 
-#include "Cosa/OWI.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 

@@ -138,7 +138,13 @@ public:
    * Return number of elements in double linked list.
    * @return elements.
    */
-  int available();
+  int available()
+  {
+    int res = 0;
+    // Iterate through the list and count the length of the queue
+    for (Linkage* link = m_succ; link != this; link = link->get_succ()) res++;
+    return (res);
+  }
 
   /**
    * Return true(1) if the queue is empty otherwise false(0).
@@ -157,7 +163,17 @@ private:
    * @param[in] type the event type.
    * @param[in] value the event value.
    */
-  virtual void on_event(uint8_t type, uint16_t value);
+  virtual void on_event(uint8_t type, uint16_t value)
+  {
+    // Iterate through the list and dispatch the event
+    Linkage* link = m_succ;
+    while (link != this) {
+      // Get the successor as the current event call may detach itself
+      Linkage* succ = link->get_succ();
+      link->on_event(type, value);
+      link = succ;
+    }
+  }
 };
 
 #endif

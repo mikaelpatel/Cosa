@@ -29,6 +29,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 
+#include <OWI.h>
 #include <DS18B20.h>
 
 // Configuration; network and device addresses

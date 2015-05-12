@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Button.cpp
+ * @file OWI.h
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2015, Mikael Patel
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,23 +18,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Button.hh"
+#ifndef COSA_OWI_H
+#define COSA_OWI_H
 
-void
-Button::on_event(uint8_t type, uint16_t value)
-{
-  UNUSED(value);
+#include "OWI.hh"
 
-  // Skip all but timeout events
-  if (type != Event::TIMEOUT_TYPE) return;
+#endif
 
-  // Update the button state
-  uint8_t old_state = m_state;
-  m_state = is_set();
-  uint8_t new_state = m_state;
-
-  // If changed according to mode call the pin change handler
-  if ((old_state != new_state) &&
-      ((MODE == ON_CHANGE_MODE) || (new_state == MODE)))
-    on_change(Event::FALLING_TYPE + MODE);
-}

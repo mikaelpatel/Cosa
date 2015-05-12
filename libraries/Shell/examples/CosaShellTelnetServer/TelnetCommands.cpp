@@ -19,8 +19,10 @@
  */
 
 #include <Shell.h>
+#include <OWI.h>
 
 #include "TelnetCommands.h"
+
 #include "Cosa/RTC.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/Tone.hh"
@@ -29,7 +31,6 @@
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/IOPin.hh"
-#include "Cosa/OWI.hh"
 #include "Cosa/TWI.hh"
 #include "Cosa/IOStream.hh"
 

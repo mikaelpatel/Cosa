@@ -41,6 +41,7 @@
  */
 
 #include <UML.h>
+#include <OWI.h>
 #include <DS18B20.h>
 #include <UML/Thermometer.h>
 

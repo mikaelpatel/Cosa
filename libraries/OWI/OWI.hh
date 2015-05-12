@@ -1,5 +1,5 @@
 /**
- * @file Cosa/OWI.hh
+ * @file OWI.hh
  * @version 1.0
  *
  * @section License

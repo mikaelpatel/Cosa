@@ -21,8 +21,9 @@
 #ifndef COSA_DS18B20_HH
 #define COSA_DS18B20_HH
 
+#include <OWI.h>
+
 #include "Cosa/Types.h"
-#include "Cosa/OWI.hh"
 #include "Cosa/IOStream.hh"
 
 /**

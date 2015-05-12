@@ -21,8 +21,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include <OWI.h>
+
 #include "Cosa/Board.hh"
-#include "Cosa/OWI.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
