@@ -1,8 +1,8 @@
-# @file platform.txt
-# @version 1.0
+# @file platform.txt-flto
+# @version 2.0
 #
 # @section License
-# Copyright (C) 2014, Mikael Patel
+# Copyright (C) 2014-2015, Mikael Patel
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -27,7 +27,7 @@
 # This file is part of the Arduino Che Cosa project.
 
 name=Cosa AVR Boards
-version=1.0
+version=2.0
 
 # AVR compile variables
 # ---------------------
