@@ -26,9 +26,6 @@
 #include <avr/interrupt.h>
 #include "Cosa/Power.hh"
 
-// Software disable low voltage detect (23 uA at 5 V)
-// #define COSA_BOD_DISABLE
-
 /**
  * The init function; minimum setup of hardware after the bootloader.
  * This function may be overridden.

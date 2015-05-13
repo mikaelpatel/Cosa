@@ -16,22 +16,24 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Default for per-application customization of Cosa.
+ * Default for per-application customization of Cosa. This file is
+ * intentionally empty as it is the default customization if the
+ * application does not provide one.
+ *
+ * @section Configuration
+ * To customize Cosa, copy this file into the application directory
+ * and enable define below.
+ *
+ * Software disable low voltage detect. Powersaving is 23 uA at 5 V.
+ * #define COSA_BOD_DISABLE
+ *
+ * Event queue size. Default is 16 entries (8 ATTINY).
+ * #define COSA_EVENT_QUEUE_MAX
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #ifndef COSA_H
 #define COSA_H
-
-/* This file is intentionally empty as it is the default customization
- * if the application does not provide one.
- *
- * To customize Cosa, copy this file into the application directory
- * and place defines in it.
- *
- * The Cosa standard naming convention for customization defines
- * is COSA_class_parameter. For example, COSA_EVENT_QUEUE_MAX.
- */
 
 #endif
