@@ -1,5 +1,5 @@
 /**
- * @file CosaThermometer.ino
+ * @file CosaUMLThermometer.ino
  * @version 1.0
  *
  * @section License
@@ -43,7 +43,7 @@
 #include <UML.h>
 #include <OWI.h>
 #include <DS18B20.h>
-#include <UML/Thermometer.h>
+#include "UML/Thermometer.hh"
 
 // Select port type to use with the LCD device driver.
 // LCD and communication port

@@ -1,5 +1,5 @@
 /**
- * @file CosaTrigger.ino
+ * @file CosaUMLTrigger.ino
  * @version 1.0
  *
  * @section License
@@ -66,7 +66,7 @@ void setup()
 {
  // Start trace on serial output
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaTrigger: started"));
+  trace.begin(&uart, PSTR("CosaUMLTrigger: started"));
 
   // Start UML run-time
   UML::begin();

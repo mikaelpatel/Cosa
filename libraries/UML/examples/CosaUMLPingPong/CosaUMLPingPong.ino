@@ -1,5 +1,5 @@
 /**
- * @file CosaPingPong.ino
+ * @file CosaUMLPingPong.ino
  * @version 1.0
  *
  * @section License
@@ -132,7 +132,7 @@ void setup()
 {
   // Start trace on serial output
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPingPong: started"));
+  trace.begin(&uart, PSTR("CosaUMLPingPong: started"));
 
 #ifdef TRACE_FOOTPRINT
   // Trace available memory and size of data

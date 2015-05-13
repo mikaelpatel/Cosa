@@ -1,5 +1,5 @@
 /**
- * @file CosaTermostat.ino
+ * @file CosaUMLTermostat.ino
  * @version 1.0
  *
  * @section License
@@ -41,7 +41,7 @@
 #include <OWI.h>
 #include <DS18B20.h>
 #include <UML.h>
-#include <UML/Thermometer.h>
+#include "UML/Thermometer.hh"
 
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -73,7 +73,7 @@ void setup()
 {
   // Start trace on serial output
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaTermostat: started"));
+  trace.begin(&uart, PSTR("CosaUMLTermostat: started"));
 
   // Setup UML run-time
   UML::begin();

@@ -1,5 +1,5 @@
 /**
- * @file CosaVoltmeter.ino
+ * @file CosaUMLVoltmeter.ino
  * @version 1.0
  *
  * @section License
@@ -55,7 +55,7 @@ void setup()
 {
  // Start trace on serial output
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaSensor: started"));
+  trace.begin(&uart, PSTR("CosaUMLVoltmeter: started"));
 
   // Start UML run-time
   UML::begin();
