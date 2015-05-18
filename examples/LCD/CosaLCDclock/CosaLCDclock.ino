@@ -25,7 +25,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include <DS3231.h>
+#include <DS1307.h>
 
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
@@ -74,13 +74,14 @@ HMC5883L compass;
 #endif
 
 #if defined(USE_LARGE_LCD)
-HD44780 lcd(&port, 20, 4);
+// HD44780 lcd(&port, 20, 4);
+HD44780 lcd(&port, 16, 4);
 #else
 HD44780 lcd(&port);
 #endif
 
 // Use Real-time clock with temperature sensor
-DS3231 rtc;
+DS1307 rtc;
 
 // Bind the lcd to an io-stream
 IOStream cout(&lcd);
@@ -94,12 +95,12 @@ void setup()
 #if defined(SET_RTC_TIME)
   time_t now;
   now.seconds = 0x00;
-  now.minutes = 0x08;
-  now.hours = 0x00;
-  now.day = 0x01;
-  now.date = 0x24;
-  now.month = 0x03;
-  now.year = 0x14;
+  now.minutes = 0x52;
+  now.hours = 0x13;
+  now.day = 0x05;
+  now.date = 0x15;
+  now.month = 0x05;
+  now.year = 0x15;
   rtc.set_time(now);
 #endif
 
@@ -127,26 +128,20 @@ void loop()
   // Read clock and temperature
   time_t now;
   rtc.get_time(now);
-  now.to_binary();
-  int16_t temp = rtc.get_temperature();
 
-  // First line with date and temperature. Use BCD format output
+  // First line with date and time.
   lcd.set_cursor(0, 0);
-  cout << now.full_year() << '-'
-       << now.month << '-'
-       << now.date << ' '
-       << (temp >> 2)
-#if defined(USE_LARGE_LCD)
-       << '.' << (25 * (temp & 0x3))
-#endif
-       << PSTR(" C");
+  cout << 20 << bcd << now.year << '-'
+       << bcd << now.month << '-'
+       << bcd << now.date << ' '
+       << bcd << now.hours << ':'
+       << bcd << now.minutes
+       << endl;
 
-  // Second line with time and battery status
-  lcd.set_cursor(0, 1);
-  cout << now.hours << ':'
-       << now.minutes << ':'
-       << now.seconds << ' '
-       << AnalogPin::bandgap(1100) << PSTR(" mV");
+  // Second line with battery status
+  cout << AnalogPin::bandgap(1100) << PSTR(" mV");
+  lcd.set_cursor(lcd.WIDTH - 2, 1);
+  cout << bcd << now.seconds;
 
 #if defined(USE_SENSORS)
   // Read the heading, scale to milli gauss and print the data
@@ -155,16 +150,17 @@ void loop()
   HMC5883L::data_t dir;
   compass.get_heading(dir);
   lcd.set_cursor(0, 2);
-  cout << dir.x << PSTR(", ") << dir.y << PSTR(", ") << dir.z << PSTR(" mG");
+  cout << dir.x << PSTR(",") << dir.y << PSTR(",") << dir.z << PSTR(" mG");
 
   // Read the accelerometer and print the data
   ADXL345::sample_t acc;
   accelerometer.sample(acc);
   lcd.set_cursor(0, 3);
-  cout << acc.x << PSTR(", ") << acc.y << PSTR(", ") << acc.z << PSTR(" mg");
+  cout << acc.x << PSTR(",") << acc.y << PSTR(",") << acc.z << PSTR(" mg");
 #endif
 
   // Delay until the next tick
+  now.to_binary();
   clock_t start = now;
   do {
     delay(200);

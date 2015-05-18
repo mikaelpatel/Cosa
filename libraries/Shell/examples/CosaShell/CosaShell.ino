@@ -23,6 +23,8 @@
  */
 
 #include <Shell.h>
+#include <OWI.h>
+
 #include "Commands.h"
 #include "Cosa/RTC.hh"
 #include "Cosa/Tone.hh"

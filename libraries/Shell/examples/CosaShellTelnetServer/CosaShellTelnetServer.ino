@@ -36,6 +36,7 @@
  */
 
 #include <Shell.h>
+#include <OWI.h>
 #include <DHCP.h>
 #include <DNS.h>
 #include <Telnet.h>
