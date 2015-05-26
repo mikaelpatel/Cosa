@@ -538,15 +538,19 @@ public:
    * @param[in] addr address on device.
    * @param[in] data to write.
    */
-  void write(uint16_t addr, uint8_t data);
+  void write(uint16_t addr, uint8_t data)
+  {
+    write(addr, &data, 1);
+  }
 
   /**
    * Write data from given buffer with given number of bytes to address.
    * @param[in] addr address on device.
    * @param[in] buf pointer to buffer.
    * @param[in] len number of bytes to write.
+   * @param[in] progmem program memory pointer flag.
    */
-  void write(uint16_t addr, const void* buf, size_t len);
+  void write(uint16_t addr, const void* buf, size_t len, bool progmem=false);
 
   /**
    * Write data from given program memory buffer with given number of
@@ -555,7 +559,10 @@ public:
    * @param[in] buf pointer to buffer in program memory.
    * @param[in] len number of bytes to write.
    */
-  void write_P(uint16_t addr, const void* buf, size_t len);
+  void write_P(uint16_t addr, const void* buf, size_t len)
+  {
+    write(addr, buf, len, true);
+  }
 
   /**
    * Read byte from given address.
@@ -605,7 +612,7 @@ public:
 
   /**
    * Initiate W5100 device driver with given hostname. Network address,
-   * subnet mask and gateway should be obtained from DNS. Returns true
+   * subnet mask and gateway should be obtained from DHCP. Returns true
    * if successful otherwise false.
    * @param[in] hostname string in program memory.
    * @param[in] timeout retry timeout period (Default 500 ms).
