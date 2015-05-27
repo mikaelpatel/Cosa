@@ -59,6 +59,38 @@ const uint16_t SECONDS_PER_HOUR = 3600;
 const uint8_t SECONDS_PER_MINUTE = 60;
 const uint8_t DAYS_PER_WEEK = 7;
 
+#if (ARDUINO > 150)
+/**
+ * User defined literal for hours to clock_t (seconds).
+ * @param[in] h hours.
+ * @return clock.
+ */
+constexpr clock_t operator "" _h(unsigned long long h)
+{
+  return (h * SECONDS_PER_HOUR);
+}
+
+/**
+ * User defined literal for minutes to clock_t (seconds).
+ * @param[in] min minutes.
+ * @return clock.
+ */
+constexpr clock_t operator "" _min(unsigned long long min)
+{
+  return (min * SECONDS_PER_MINUTE);
+}
+
+/**
+ * User defined literal for seconds to clock_t (seconds).
+ * @param[in] s seconds.
+ * @return clock.
+ */
+constexpr clock_t operator "" _s(unsigned long long s)
+{
+  return (s);
+}
+#endif
+
 /**
  * Common date/time structure for real-time clocks. Data on some
  * devices is stored in BCD (DS1307/DS3231), although internal
@@ -148,7 +180,7 @@ struct time_t {
    * @param[in] year (4-digit).
    * @return true if /year/ is a leap year.
    */
-  static uint16_t full_year( uint8_t year )
+  static uint16_t full_year(uint8_t year)
   {
     uint16_t y = year;
 
@@ -266,7 +298,10 @@ struct time_t {
    */
   bool parse(str_P s);
 
-  static const uint8_t days_in[] PROGMEM; // month index is 1..12, PROGMEM
+  /**
+   * Days by month index 1..12 in program memory vector.
+   */
+  static const uint8_t days_in[] PROGMEM;
 
 protected:
   static uint16_t s_epoch_year;
@@ -274,7 +309,8 @@ protected:
 } __attribute__((packed));
 
 /**
- * Print the date/time to the given stream with the format "YYYY-MM-DD HH:MM:SS".
+ * Print the date/time to the given stream with the format
+ * "YYYY-MM-DD HH:MM:SS".
  * @param[in] outs output stream.
  * @param[in] t time structure.
  * @return iostream.

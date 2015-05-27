@@ -122,7 +122,7 @@ static void check(str_P c,
   bool ok = pass;
   time_t now;
 
-  if (!now.parse( c )) {
+  if (!now.parse(c)) {
     cout << pf(!pass) << pf2(pass)
 	 << PSTR("Parsing \"") << c << '"'
 	 << endl;
@@ -162,6 +162,11 @@ void setup()
   time_t::epoch_year(Y2K_EPOCH_YEAR);
   time_t::epoch_weekday = Y2K_EPOCH_WEEKDAY;
   show_epoch();
+#if (ARDUINO > 150)
+  cout << 7200_s << endl;
+  cout << 120_min << endl;
+  cout << 2_h << endl;
+#endif
   check(PSTR("2089-06-04 16:45:29"), 2822057129UL, true, 7, 32662);
   check(PSTR("0100-01-01 00:00:00"), 0UL, false);
   check(PSTR("2000-00-01 00:00:00"), 0UL, false);
