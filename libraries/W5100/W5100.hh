@@ -187,7 +187,7 @@ public:
     CR_SEND = 0x20,		//!< Transmit data according to TX_WR.
     CR_SEND_MAC = 0x21,		//!< UDP: Transmit data.
     CR_SEND_KEEP = 0x22,	//!< TCP: Check connection status.
-    CR_RECV = 0x40		//!< Receivering packet to RX_RD.
+    CR_RECV = 0x40		//!< Receiving packet to RX_RD.
   } __attribute__((packed));
 
   /**
