@@ -145,21 +145,12 @@ W5100::Driver::dev_write(const void* buf, size_t len, bool progmem)
   uint16_t offset = m_tx_offset;
   if (offset + len > BUF_MAX) {
     uint16_t size = BUF_MAX - offset;
-    if (progmem) {
-      m_dev->write_P(m_tx_buf + offset, bp, size);
-      m_dev->write_P(m_tx_buf, bp + size, len - size);
-    }
-    else {
-      m_dev->write(m_tx_buf + offset, bp, size);
-      m_dev->write(m_tx_buf, bp + size, len - size);
-    }
+    m_dev->write(m_tx_buf + offset, bp, size, progmem);
+    m_dev->write(m_tx_buf, bp + size, len - size, progmem);
     m_tx_offset = len - size;
   }
   else {
-    if (progmem)
-      m_dev->write_P(m_tx_buf + offset, bp, len);
-    else
-      m_dev->write(m_tx_buf + offset, bp, len);
+    m_dev->write(m_tx_buf + offset, bp, len, progmem);
     m_tx_offset += len;
   }
 
