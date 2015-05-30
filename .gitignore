@@ -1,7 +1,9 @@
 arc
+build-*
+lib
+ref
 doc/html
 log/
-ref
 obj/
-build-*
+
 
