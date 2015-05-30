@@ -50,7 +50,7 @@ else
   # Build all sketches for given board
   board=$1
   pushd .. &> /dev/null
-  examples=`find -name *.ino | sort -f`
+  examples=`find -L -name *.ino | sort -f`
   for example in $examples
   do
     dir=`dirname $example`
