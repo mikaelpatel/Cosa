@@ -1,5 +1,16 @@
 # How to install Cosa?
 
+## Via Arduino IDE Boards Manager
+
+* Add the URL to the Cosa package definition file to the Arduino IDE
+Preferences>Additional Boards Manager URLs field.
+https://raw.githubusercontent.com/mikaelpatel/Cosa/master/package_cosa_index.json
+
+* Open the Arduino IDE Boards Manager in the Tools>Board menu.
+
+* Select Cosa and install.
+
+
 ## Via GIT
 
 ```shell
