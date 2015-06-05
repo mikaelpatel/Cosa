@@ -5,6 +5,7 @@
 * [NMEA and ublox GPS parser](https://github.com/SlashDevin/CosaGPS)
 * [ICMP ping](https://github.com/mikaelpatel/Cosa-ICMP)
 * [INA219 high-side voltage/current/power sensor](https://github.com/jeditekunum/CosaINA219)
+* [HTTP support](https://github.com/mikaelpatel/Cosa-HTTP)
 * [OLED SSD1306/SH1106](https://github.com/jeditekunum/CosaOLED)
 * [NEXA Wireless Protocol](https://github.com/mikaelpatel/Cosa-NEXA)
 * [NTP client](https://github.com/mikaelpatel/Cosa-NTP)
