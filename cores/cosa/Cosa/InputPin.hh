@@ -61,6 +61,7 @@ public:
    * Set input pin to given mode.
    * @param[in] pin number.
    * @param[in] mode pin mode (default NORMAL_MODE).
+   * @note atomic
    */
   static void set_mode(Board::DigitalPin pin, Mode mode = NORMAL_MODE)
     __attribute__((always_inline))

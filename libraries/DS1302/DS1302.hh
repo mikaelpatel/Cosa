@@ -170,6 +170,7 @@ private:
    * function. Used within a chip select block. Data direction must be
    * set before calling this function.
    * @return data.
+   * @note atomic
    */
   uint8_t read();
 
@@ -177,6 +178,7 @@ private:
    * Write low level data to the device. Internal transfer
    * function. Used within a chip select block.
    * @param[in] data to write to the device.
+   * @note atomic
    */
   void write(uint8_t data);
 };

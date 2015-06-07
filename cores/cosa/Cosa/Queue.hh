@@ -70,7 +70,8 @@ public:
    * interrupt handler may push events.
    * @param[in] data pointer to member data buffer.
    * @return boolean.
-   * @pre data != 0
+   * @pre data != NULL
+   * @note atomic
    */
   bool enqueue(T* data);
 
@@ -80,7 +81,8 @@ public:
    * interrupt handler may push events.
    * @param[in] data pointer to member data buffer in program memory.
    * @return boolean.
-   * @pre data != 0
+   * @pre data != NULL
+   * @note atomic
    */
   bool enqueue_P(const T* data);
 
@@ -90,8 +92,9 @@ public:
    * false(0). Synchronised operation as interrupt handler may push
    * events.
    * @param[in,out] data pointer to member data buffer.
-   * @pre data != 0
+   * @pre data != NULL
    * @return boolean.
+   * @note atomic
    */
   bool dequeue(T* data);
 
@@ -99,7 +102,8 @@ public:
    * Await data to become available from queue. Will perform a system
    * sleep with the given sleep mode.
    * @param[in,out] data pointer to member data buffer.
-   * @pre data != 0
+   * @pre data != NULL
+   * @note atomic
    */
   void await(T* data);
 

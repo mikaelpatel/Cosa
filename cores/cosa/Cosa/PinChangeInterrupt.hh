@@ -54,12 +54,14 @@ public:
   /**
    * @override Interrupt::Handler
    * Enable interrupt pin change detection and interrupt handler.
+   * @note atomic
    */
   virtual void enable();
 
   /**
    * @override Interrupt::Handler
    * Disable interrupt pin change detection.
+   * @note atomic
    */
   virtual void disable();
 

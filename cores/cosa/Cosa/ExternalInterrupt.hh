@@ -63,18 +63,21 @@ public:
   /**
    * @override Interrupt::Handler
    * Enable external interrupt handler.
+   * @note atomic
    */
   virtual void enable();
 
   /**
    * @override Interrupt::Handler
    * Disable external interrupt handler.
+   * @note atomic
    */
   virtual void disable();
 
   /**
    * @override Interrupt::Handler
    * Clear external interrupt flag.
+   * @note atomic
    */
   virtual void clear();
 

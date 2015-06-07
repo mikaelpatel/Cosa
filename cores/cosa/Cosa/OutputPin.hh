@@ -51,6 +51,7 @@ public:
    * Set output pin to mode.
    * @param[in] pin number.
    * @param[in] initial value.
+   * @note atomic
    */
   static void set_mode(Board::DigitalPin pin, uint8_t initial = 0)
   {
@@ -79,6 +80,7 @@ public:
 
   /**
    * Set the output pin.
+   * @note atomic
    */
   void set() const
     __attribute__((always_inline))
@@ -90,6 +92,7 @@ public:
 
   /**
    * Set the output pin.
+   * @note atomic
    */
   void high() const
     __attribute__((always_inline))
@@ -101,6 +104,7 @@ public:
 
   /**
    * Set the output pin.
+   * @note atomic
    */
   void on() const
     __attribute__((always_inline))
@@ -121,6 +125,7 @@ public:
 
   /**
    * Clear the output pin.
+   * @note atomic
    */
   void clear() const
     __attribute__((always_inline))
@@ -132,6 +137,7 @@ public:
 
   /**
    * Clear the output pin.
+   * @note atomic
    */
   void low() const
     __attribute__((always_inline))
@@ -143,6 +149,7 @@ public:
 
   /**
    * Clear the output pin.
+   * @note atomic
    */
   void off() const
     __attribute__((always_inline))
@@ -163,6 +170,7 @@ public:
 
   /**
    * Toggle the output pin.
+   * @note atomic
    */
   void toggle() const
     __attribute__((always_inline))
@@ -202,6 +210,7 @@ public:
    * Set the output pin with the given value. Zero(0) to clear
    * and non-zero to set.
    * @param[in] value to set.
+   * @note atomic
    */
   void set(bool value) const
     __attribute__((always_inline))
@@ -236,6 +245,7 @@ public:
    * Set the output pin with the given value. Zero(0) to clear
    * and non-zero to set.
    * @param[in] value to write.
+   * @note atomic
    */
   void write(uint8_t value) const
     __attribute__((always_inline))
@@ -267,6 +277,8 @@ public:
    * @param[in] value to write.
    * @param[in] bits to write.
    * @param[in] us micro-second bit period.
+   * @note atomic
+   * @note us should not exceed 1000
    */
   void write(uint16_t value, uint8_t bits, uint16_t us) const;
 
@@ -275,6 +287,7 @@ public:
    * clear and non-zero to set.
    * @param[in] pin number.
    * @param[in] value to write.
+   * @note atomic
    */
   static void write(Board::DigitalPin pin, uint8_t value)
     __attribute__((always_inline))
@@ -339,6 +352,7 @@ public:
    * Toggle the output pin to form a pulse with given width in
    * micro-seconds.
    * @param[in] us pulse width in micro seconds
+   * @note atomic
    */
   void pulse(uint16_t us) const
     __attribute__((always_inline))

@@ -66,6 +66,7 @@ public:
    * Attach given linkage as predecessor. Will check and detach
    * if already attached.
    * @param[in] pred linkage to attach.
+   * @note atomic
    */
   void attach(Linkage* pred)
   {
@@ -94,6 +95,7 @@ protected:
 
   /**
    * Detach this linkage. Unlink from any list.
+   * @note atomic
    */
   void detach()
   {

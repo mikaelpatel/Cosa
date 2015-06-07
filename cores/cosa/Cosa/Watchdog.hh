@@ -88,6 +88,7 @@ public:
    * Set watchdog timeout interrupt handler.
    * @param[in] fn interrupt handler.
    * @param[in] env environment pointer.
+   * @note atomic
    */
   static void set(InterruptHandler fn, void* env = NULL)
   {
