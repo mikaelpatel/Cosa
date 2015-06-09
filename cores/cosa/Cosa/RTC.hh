@@ -103,11 +103,9 @@ public:
    * @param[in] usec.
    * @note atomic
    */
-  static void micros( uint32_t usec )
+  static void micros(uint32_t usec)
   {
-    synchronized {
-      s_uticks = usec;
-    }
+    synchronized s_uticks = usec;
   }
 
 
@@ -130,9 +128,7 @@ public:
     __attribute__((always_inline))
   {
     uint32_t res;
-    synchronized {
-      res = s_sec;
-    }
+    synchronized res = s_sec;
     return (res);
   }
 

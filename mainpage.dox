@@ -352,8 +352,8 @@ Power(2). May be used as a string buffer device, or to connect
 different IOStreams.
 
 @section IOEvent
-Extended IOBuffer that allows events to be pushed when buffer is full or
-a specific value has been received.
+IOStream filter class that may push events when data has been received
+and send completed.
 
 @section IOStream
 Basic in-/output stream support class IOStream. Requires implementation of

@@ -61,6 +61,7 @@ public:
   /**
    * Set new state handler for next event.
    * @param[in] fn state handler.
+   * @pre fn != NULL
    */
   void set_state(StateHandler fn)
     __attribute__((always_inline))

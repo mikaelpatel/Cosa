@@ -85,9 +85,7 @@ public:
   void set() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() |= m_mask;
-    }
+    synchronized *PORT() |= m_mask;
   }
 
   /**
@@ -97,9 +95,7 @@ public:
   void high() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() |= m_mask;
-    }
+    synchronized *PORT() |= m_mask;
   }
 
   /**
@@ -109,9 +105,7 @@ public:
   void on() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() |= m_mask;
-    }
+    synchronized *PORT() |= m_mask;
   }
 
   /**
@@ -130,9 +124,7 @@ public:
   void clear() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() &= ~m_mask;
-    }
+    synchronized *PORT() &= ~m_mask;
   }
 
   /**
@@ -142,9 +134,7 @@ public:
   void low() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() &= ~m_mask;
-    }
+    synchronized *PORT() &= ~m_mask;
   }
 
   /**
@@ -154,9 +144,7 @@ public:
   void off() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() &= ~m_mask;
-    }
+    synchronized *PORT() &= ~m_mask;
   }
 
   /**
@@ -175,9 +163,7 @@ public:
   void toggle() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PIN() = m_mask;
-    }
+    synchronized *PIN() = m_mask;
   }
 
   /**
@@ -262,7 +248,9 @@ public:
 
   /**
    * Shift out given byte to the output pin using the given clock
-   * output pin. Shift out according to given direction.
+   * output pin. Shift out according to given direction. Data (bits)
+   * are transfered on clock transition. Interrupts are allowed during
+   * the shift out.
    * @param[in] value to write.
    * @param[in] clk output pin.
    * @param[in] order bit first.
@@ -353,6 +341,7 @@ public:
    * micro-seconds.
    * @param[in] us pulse width in micro seconds
    * @note atomic
+   * @note pulse width is limited to 1000 us
    */
   void pulse(uint16_t us) const
     __attribute__((always_inline))

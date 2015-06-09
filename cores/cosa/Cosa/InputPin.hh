@@ -41,10 +41,8 @@ public:
   InputPin(Board::DigitalPin pin, Mode mode = NORMAL_MODE) :
     Pin((uint8_t) pin)
   {
-    synchronized {
-      if (mode == PULLUP_MODE)
-	*PORT(pin) |= MASK(pin);
-    }
+    if (mode == PULLUP_MODE)
+      synchronized *PORT(pin) |= MASK(pin);
   }
 
   /**

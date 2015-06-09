@@ -65,10 +65,13 @@ public:
   /**
    * Get latest sample.
    * @return sample value.
+   * @note atomic
    */
   uint16_t get_value() const
   {
-    return (m_value);
+    uint16_t res;
+    synchronized res = m_value;
+    return (res);
   }
 
   /**
@@ -90,7 +93,7 @@ public:
   /**
    * Get power supply voltage in milli-volt. May be used for low battery
    * detection. Uses the internal 1V1 bandgap reference.
-   * @param[in] vref reference voltage in milli-volt (default is 1100).
+   * @param[in] vref reference voltage in milli-volt (default is 1100 mv).
    * @return milli-volt.
    */
   static uint16_t bandgap(uint16_t vref = 1100);

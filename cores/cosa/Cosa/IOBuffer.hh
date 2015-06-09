@@ -73,7 +73,7 @@ public:
   virtual int available()
     __attribute__((always_inline))
   {
-    return (SIZE + m_head - m_tail) & MASK;
+    return ((SIZE + m_head - m_tail) & MASK);
   }
 
   /**
@@ -84,7 +84,7 @@ public:
   virtual int room()
     __attribute__((always_inline))
   {
-    return (SIZE - m_head + m_tail - 1) & MASK;
+    return ((SIZE - m_head + m_tail - 1) & MASK);
   }
 
   /**

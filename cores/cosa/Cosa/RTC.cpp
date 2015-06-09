@@ -66,9 +66,7 @@ bool
 RTC::end()
 {
   // Disable the timer interrupts
-  synchronized {
-    TIMSK0 = 0;
-  }
+  synchronized TIMSK0 = 0;
   s_initiated = false;
   return (true);
 }

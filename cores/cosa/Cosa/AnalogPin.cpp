@@ -56,9 +56,7 @@ AnalogPin::bandgap(uint16_t vref)
   bit_set(ADCSRA, ADSC);
   loop_until_bit_is_clear(ADCSRA, ADSC);
   uint16_t sample;
-  synchronized {
-    sample = ADCW;
-  }
+  synchronized sample = ADCW;
   return ((vref * 1024L) / sample);
 }
 
@@ -85,9 +83,7 @@ AnalogPin::sample_await()
     bit_clear(ADCSRA, ADIE);
   }
   loop_until_bit_is_clear(ADCSRA, ADSC);
-  synchronized {
-    m_value = ADCW;
-  }
+  synchronized m_value = ADCW;
   return (m_value);
 }
 
