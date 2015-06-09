@@ -100,12 +100,15 @@ private:
 /**
  * Syntactic sugar for periodic block. Used in the form:
  * @code
- * PERIODIC(ms) {
- *   ...
+ * void loop()
+ * {
+ *   periodic(ms) {
+ *     ...
+ *   }
  * }
  * @endcode
- */
-#define PERIODIC(ms)							\
+  */
+#define periodic(ms)							\
   for (uint32_t start = RTC::millis(), i = 1;				\
        i != 0;								\
        i--, delay(ms - RTC::since(start)))
