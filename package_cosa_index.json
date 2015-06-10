@@ -17,10 +17,10 @@
           "help": {
             "online": "https://dl.dropboxusercontent.com/u/993383/Cosa/doc/html/index.html"
           },
-          "url": "https://github.com/mikaelpatel/Cosa/archive/v1.0.1.zip",
-          "archiveFileName": "v1.0.1.zip",
-          "checksum": "SHA-256:393a043b286b375ae32ff5013e1c3600534081b48860532788ff3fdbc3db1fc0",
-          "size": "1943074",
+          "url": "https://github.com/mikaelpatel/Cosa/archive/v1.0.2.zip",
+	  "archiveFileName": "v1.0.2.zip",
+	  "checksum": "SHA-256:667042f8552df77140ec5e2a6f9c902f4fb4bfbb58ae839b5acf064a844e315e",
+	  "size": "1925175",
           "boards": [
 	    {"name" : "AdaFruit ATmega32U4"},
 	    {"name" : "Anarduino MiniWireless"},
