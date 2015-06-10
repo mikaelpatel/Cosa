@@ -49,7 +49,7 @@ public:
   virtual int putchar(char c)
   {
     int res = DEVICE::putchar(c);
-    if (c == '\n' || DEVICE::room() == 0)
+    if (UNLIKELY(c == '\n' || DEVICE::room() == 0))
       Event::push(Event::RECEIVE_COMPLETED_TYPE, m_handler, this);
     return (res);
   }
@@ -62,7 +62,7 @@ public:
   virtual int getchar()
   {
     int res = DEVICE::getchar();
-    if (res == IOStream::EOF)
+    if (UNLIKELY(res == IOStream::EOF))
       Event::push(Event::SEND_COMPLETED_TYPE, m_handler, this);
     return (res);
   }

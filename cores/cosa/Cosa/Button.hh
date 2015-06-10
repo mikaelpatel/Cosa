@@ -126,7 +126,7 @@ protected:
     UNUSED(value);
 
     // Skip all but timeout events
-    if (type != Event::TIMEOUT_TYPE) return;
+    if (UNLIKELY(type != Event::TIMEOUT_TYPE)) return;
 
     // Update the button state
     uint8_t old_state = m_state;

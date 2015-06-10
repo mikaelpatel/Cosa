@@ -126,7 +126,7 @@ SPI::SPI() :
 void
 SPI::transfer(void* buf, size_t count)
 {
-  if (count == 0) return;
+  if (UNLIKELY(count == 0)) return;
   uint8_t* dp = (uint8_t*) buf;
   uint8_t data = *dp;
   transfer_start(data);
@@ -142,7 +142,7 @@ SPI::transfer(void* buf, size_t count)
 void
 SPI::transfer(void* dst, const void* src, size_t count)
 {
-  if (count == 0) return;
+  if (UNLIKELY(count == 0)) return;
   uint8_t* dp = (uint8_t*) dst;
   const uint8_t* sp = (const uint8_t*) src;
   uint8_t data = *sp++;
@@ -159,7 +159,7 @@ SPI::transfer(void* dst, const void* src, size_t count)
 void
 SPI::read(void* buf, size_t count)
 {
-  if (count == 0) return;
+  if (UNLIKELY(count == 0)) return;
   uint8_t* dp = (uint8_t*) buf;
   transfer_start(0xff);
   while (--count) *dp++ = transfer_next(0xff);
@@ -169,7 +169,7 @@ SPI::read(void* buf, size_t count)
 void
 SPI::write(const void* buf, size_t count)
 {
-  if (count == 0) return;
+  if (UNLIKELY(count == 0)) return;
   const uint8_t* sp = (const uint8_t*) buf;
   uint8_t data = *sp++;
   transfer_start(data);
@@ -183,7 +183,7 @@ SPI::write(const void* buf, size_t count)
 void
 SPI::write_P(const void* buf, size_t count)
 {
-  if (count == 0) return;
+  if (UNLIKELY(count == 0)) return;
   const uint8_t* sp = (const uint8_t*) buf;
   uint8_t data = pgm_read_byte(sp++);
   transfer_start(data);
@@ -199,7 +199,7 @@ SPI::write_P(const void* buf, size_t count)
 void
 SPI::transfer(void* buf, size_t count)
 {
-  if (count == 0) return;
+  if (UNLIKELY(count == 0)) return;
   uint8_t* bp = (uint8_t*) buf;
   do {
     *bp = transfer(*bp);
@@ -210,7 +210,7 @@ SPI::transfer(void* buf, size_t count)
 void
 SPI::transfer(void* dst, const void* src, size_t count)
 {
-  if (count == 0) return;
+  if (UNLIKELY(count == 0)) return;
   uint8_t* dp = (uint8_t*) dst;
   const uint8_t* sp = (const uint8_t*) src;
   do *dp++ = transfer(*sp++); while (--count);
@@ -219,7 +219,7 @@ SPI::transfer(void* dst, const void* src, size_t count)
 void
 SPI::read(void* buf, size_t count)
 {
-  if (count == 0) return;
+  if (UNLIKELY(count == 0)) return;
   uint8_t* bp = (uint8_t*) buf;
   do *bp++ = transfer(0); while (--count);
 }
@@ -227,7 +227,7 @@ SPI::read(void* buf, size_t count)
 void
 SPI::write(const void* buf, size_t count)
 {
-  if (count == 0) return;
+  if (UNLIKELY(count == 0)) return;
   const uint8_t* bp = (const uint8_t*) buf;
   do transfer(*bp++); while (--count);
 }
@@ -235,7 +235,7 @@ SPI::write(const void* buf, size_t count)
 void
 SPI::write_P(const void* buf, size_t count)
 {
-  if (count == 0) return;
+  if (UNLIKELY(count == 0)) return;
   const uint8_t* bp = (const uint8_t*) buf;
   do transfer(pgm_read_byte(bp++)); while (--count);
 }
@@ -245,7 +245,7 @@ SPI::write_P(const void* buf, size_t count)
 bool
 SPI::attach(Driver* dev)
 {
-  if (dev->m_next != NULL) return (false);
+  if (UNLIKELY(dev->m_next != NULL)) return (false);
   dev->m_next = m_list;
   m_list = dev;
   return (true);
@@ -256,7 +256,7 @@ SPI::acquire(Driver* dev)
 {
   // Acquire the device driver. Wait if busy. Synchronized update
   uint8_t key = lock();
-  while (m_busy) {
+  while (UNLIKELY(m_busy)) {
     unlock(key);
     yield();
     key = lock();

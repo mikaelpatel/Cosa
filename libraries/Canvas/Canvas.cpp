@@ -28,7 +28,7 @@ Canvas::color16_t
 Canvas::shade(color16_t color, uint8_t scale)
 {
   color16_t res;
-  if (scale > 100) scale = 100;
+  if (UNLIKELY(scale > 100)) scale = 100;
   res.red = (scale * color.red) / 100;
   res.green = (scale * color.green) / 100;
   res.blue = (scale * color.blue) / 100;
@@ -209,11 +209,11 @@ Canvas::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
 void
 Canvas::draw_poly_P(const int8_t* poly, uint8_t scale)
 {
-  if (scale == 0) return;
+  if (UNLIKELY(scale == 0)) return;
   for (;;) {
     int8_t dx = pgm_read_byte(poly++);
     int8_t dy = pgm_read_byte(poly++);
-    if (dx == 0 && dy == 0) return;
+    if (UNLIKELY(dx == 0 && dy == 0)) return;
     uint16_t x, y;
     get_cursor(x, y);
     x += dx*scale;
@@ -225,11 +225,11 @@ Canvas::draw_poly_P(const int8_t* poly, uint8_t scale)
 void
 Canvas::draw_stroke_P(const int8_t* stroke, uint8_t scale)
 {
-  if (scale == 0) return;
+  if (UNLIKELY(scale == 0)) return;
   for (;;) {
     int8_t dx = pgm_read_byte(stroke++);
     int8_t dy = pgm_read_byte(stroke++);
-    if (dx == 0 && dy == 0) return;
+    if (UNLIKELY(dx == 0 && dy == 0)) return;
     if (dx <= 0 && dy <= 0) {
       move_cursor(dx*scale, dy*scale);
     }
@@ -413,7 +413,7 @@ Canvas::fill_screen()
 void
 Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
 {
-  if (ix >= max) return;
+  if (UNLIKELY(ix >= max)) return;
   const uint8_t* ip = (const uint8_t*) pgm_read_word(tab + ix);
   uint8_t x, y, r, g, b, w, h, s;
   int8_t dx, dy;
@@ -424,7 +424,7 @@ Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
       return;
     case CALL_SCRIPT:
       ix = pgm_read_byte(ip++);
-      if (ix >= max) return;
+      if (UNLIKELY(ix >= max)) return;
       run(ix, tab, max);
       break;
     case SET_CANVAS_COLOR:
@@ -450,7 +450,7 @@ Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
       break;
     case SET_TEXT_FONT:
       ix = pgm_read_byte(ip++);
-      if (ix >= max) return;
+      if (UNLIKELY(ix >= max)) return;
       set_text_font((Font*) pgm_read_word(tab + ix));
       break;
     case SET_CURSOR:
@@ -465,7 +465,7 @@ Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
       break;
     case DRAW_BITMAP:
       ix = pgm_read_byte(ip++);
-      if (ix >= max) return;
+      if (UNLIKELY(ix >= max)) return;
       w = pgm_read_byte(ip++);
       h = pgm_read_byte(ip++);
       s = pgm_read_byte(ip++);
@@ -473,7 +473,7 @@ Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
       break;
     case DRAW_ICON:
       ix = pgm_read_byte(ip++);
-      if (ix >= max) return;
+      if (UNLIKELY(ix >= max)) return;
       s = pgm_read_byte(ip++);
       draw_icon((const uint8_t*) pgm_read_word(tab + ix), s);
       break;
@@ -487,13 +487,13 @@ Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
       break;
     case DRAW_POLY:
       ix = pgm_read_byte(ip++);
-      if (ix >= max) return;
+      if (UNLIKELY(ix >= max)) return;
       s = pgm_read_byte(ip++);
       draw_poly_P((const int8_t*) pgm_read_word(tab + ix), s);
       break;
     case DRAW_STROKE:
       ix = pgm_read_byte(ip++);
-      if (ix >= max) return;
+      if (UNLIKELY(ix >= max)) return;
       s = pgm_read_byte(ip++);
       draw_stroke_P((const int8_t*) pgm_read_word(tab + ix), s);
       break;
@@ -533,7 +533,7 @@ Canvas::run(uint8_t ix, const void_P* tab, uint8_t max)
       break;
     case DRAW_STRING:
       ix = pgm_read_byte(ip++);
-      if (ix >= max) return;
+      if (UNLIKELY(ix >= max)) return;
       draw_string((str_P) pgm_read_word(tab + ix));
       break;
     case FILL_SCREEN:

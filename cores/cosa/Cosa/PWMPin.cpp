@@ -574,8 +574,8 @@ void
 PWMPin::set(uint16_t value, uint16_t min, uint16_t max)
 {
   uint8_t duty;
-  if (value <= min) duty = 0;
-  else if (value >= max) duty = 255;
+  if (UNLIKELY(value <= min)) duty = 0;
+  else if (UNLIKELY(value >= max)) duty = 255;
   else duty = (((uint32_t) (value - min)) << 8) / (max - min);
   set(duty);
 }

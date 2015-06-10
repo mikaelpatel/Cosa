@@ -45,7 +45,7 @@ OutputPin::write(uint8_t value, OutputPin& clk, Direction order) const
 void
 OutputPin::write(uint16_t value, uint8_t bits, uint16_t us) const
 {
-  if (bits == 0) return;
+  if (UNLIKELY(bits == 0)) return;
   synchronized {
     do {
       _write(value & 0x01);

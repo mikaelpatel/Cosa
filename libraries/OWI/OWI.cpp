@@ -138,7 +138,7 @@ OWI::alarm_dispatch()
 {
   OWI::Search iter(this);
   OWI::Driver* dev = iter.next();
-  if (dev == NULL) return (false);
+  if (UNLIKELY(dev == NULL)) return (false);
   do {
     dev->on_alarm();
     dev = iter.next();
@@ -152,7 +152,7 @@ IOStream& operator<<(IOStream& outs, OWI& owi)
   int8_t last = OWI::Driver::FIRST;
   do {
     last = dev.search_rom(last);
-    if (last == OWI::Driver::ERROR) return (outs);
+    if (UNLIKELY(last == OWI::Driver::ERROR)) return (outs);
     outs << dev << endl;
   } while (last != OWI::Driver::LAST);
   return (outs);
@@ -173,7 +173,7 @@ OWI::Driver::Driver(OWI* pin, const uint8_t* rom, const char* name) :
 bool
 OWI::Driver::update_rom()
 {
-  if (ROM == NULL) return (false);
+  if (UNLIKELY(ROM == NULL)) return (false);
   eeprom_write_block(ROM, m_rom, sizeof(m_rom));
   return (true);
 }

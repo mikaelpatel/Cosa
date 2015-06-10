@@ -123,7 +123,7 @@ RFM69::IRQPin::on_interrupt(uint16_t arg)
 
   // The interrupt handler is called on rising signal (RFM69:DIO0).
   // This occures on TX: PACKET_SENT and RX: CRC_OK
-  if (m_rf == 0) return;
+  if (UNLIKELY(m_rf == 0)) return;
   if (m_rf->m_opmode == RECEIVER_MODE)
     m_rf->m_avail = true;
   else if (m_rf->m_opmode == TRANSMITTER_MODE)
@@ -180,12 +180,12 @@ int
 RFM69::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
-  if (vec == NULL) return (EINVAL);
+  if (UNLIKELY(vec == NULL)) return (EINVAL);
   size_t len = iovec_size(vec);
-  if (len > PAYLOAD_MAX) return (EMSGSIZE);
+  if (UNLIKELY(len > PAYLOAD_MAX)) return (EMSGSIZE);
 
   // Check if a packet available. Should receive before send
-  if (m_avail) return (ENXIO);
+  if (UNLIKELY(m_avail)) return (ENXIO);
 
   // Write frame header(length, dest, src, port) and payload
   spi.acquire(this);

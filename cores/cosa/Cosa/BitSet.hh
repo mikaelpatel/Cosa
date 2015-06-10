@@ -110,7 +110,7 @@ public:
    */
   void operator=(BitSet& rhs)
   {
-    if (rhs.members() != N) return;
+    if (UNLIKELY(rhs.members() != N)) return;
     for (uint16_t i = 0; i < sizeof(m_set); i++)
       m_set[i] = rhs.m_set[i];
   }
@@ -121,7 +121,7 @@ public:
    */
   void operator+=(BitSet& rhs)
   {
-    if (rhs.members() != N) return;
+    if (UNLIKELY(rhs.members() != N)) return;
     for (uint16_t i = 0; i < sizeof(m_set); i++)
       m_set[i] |= rhs.m_set[i];
   }
@@ -132,7 +132,7 @@ public:
    */
   void operator-=(BitSet& rhs)
   {
-    if (rhs.members() != N) return;
+    if (UNLIKELY(rhs.members() != N)) return;
     for (uint16_t i = 0; i < sizeof(m_set); i++)
       m_set[i] &= ~rhs.m_set[i];
   }
@@ -144,7 +144,7 @@ public:
    */
   bool operator==(BitSet& rhs)
   {
-    if (rhs.members() != N) return (false);
+    if (UNLIKELY(rhs.members() != N)) return (false);
     return (memcmp(m_set, rhs.m_set, sizeof(m_set)) == 0);
   }
 

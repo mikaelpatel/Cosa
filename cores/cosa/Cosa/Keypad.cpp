@@ -25,7 +25,7 @@ Keypad::Key::on_change(uint16_t value)
 {
   uint8_t nr = 0;
   while (value < (uint16_t) pgm_read_word(&m_map[nr])) nr++;
-  if (nr == m_latest) return;
+  if (UNLIKELY(nr == m_latest)) return;
   if (nr != 0)
     m_keypad->on_key_down(nr);
   else
@@ -37,7 +37,7 @@ void
 Keypad::on_event(uint8_t type, uint16_t value)
 {
   UNUSED(value);
-  if (type != Event::TIMEOUT_TYPE) return;
+  if (UNLIKELY(type != Event::TIMEOUT_TYPE)) return;
   m_key.sample_request(Event::SAMPLE_COMPLETED_TYPE);
 }
 

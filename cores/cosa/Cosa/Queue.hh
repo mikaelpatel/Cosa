@@ -61,7 +61,7 @@ public:
   uint8_t room() const
     __attribute__((always_inline))
   {
-    return (NMEMB - m_put + m_get - 1) & MASK;
+    return ((NMEMB - m_put + m_get - 1) & MASK);
   }
 
   /**
@@ -120,7 +120,7 @@ Queue<T,NMEMB>::enqueue(T* data)
 {
   synchronized {
     uint8_t next = (m_put + 1) & MASK;
-    if (next == m_get) synchronized_return (false);
+    if (UNLIKELY(next == m_get)) synchronized_return (false);
     m_buffer[next] = *data;
     m_put = next;
   }
@@ -133,7 +133,7 @@ Queue<T,NMEMB>::enqueue_P(const T* data)
 {
   synchronized {
     uint8_t next = (m_put + 1) & MASK;
-    if (next == m_get) synchronized_return (false);
+    if (UNLIKELY(next == m_get)) synchronized_return (false);
     memcpy_P(&m_buffer[next], data, sizeof(T));
     m_put = next;
   }
@@ -145,7 +145,7 @@ bool
 Queue<T,NMEMB>::dequeue(T* data)
 {
   synchronized {
-    if (m_get == m_put) synchronized_return (false);
+    if (UNLIKELY(m_get == m_put)) synchronized_return (false);
     uint8_t next = (m_get + 1) & MASK;
     m_get = next;
     *data = m_buffer[next];

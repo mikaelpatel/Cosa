@@ -34,12 +34,12 @@ DHCP::DHCP(const char* hostname, const uint8_t* mac) :
 int
 DHCP::send(uint8_t type)
 {
-  if (m_sock == NULL) return (ENOTSOCK);
+  if (UNLIKELY(m_sock == NULL)) return (ENOTSOCK);
 
   // Start the construction of the message
   uint8_t BROADCAST[4] = { 0xff, 0xff, 0xff, 0xff };
   int res = m_sock->datagram(BROADCAST, SERVER_PORT);
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
 
   // Construct DHCP message header
   header_t header;
@@ -52,7 +52,7 @@ DHCP::send(uint8_t type)
   header.FLAGS = hton((int16_t) FLAGS_BROADCAST);
   memcpy_P(header.CHADDRB, m_mac, INET::MAC_MAX);
   res = m_sock->write(&header, sizeof(header));
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
 
   // Write BOOTP legacy (192 bytes zero)
   uint8_t buf[32];
@@ -77,7 +77,7 @@ DHCP::send(uint8_t type)
   buf[13] = len;
   memcpy_P(&buf[14], m_hostname, len);
   res = m_sock->write(buf, 14 + len);
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
 
   // On request add client and server address options
   if (type == DHCP_REQUEST) {
@@ -88,7 +88,7 @@ DHCP::send(uint8_t type)
     buf[7] = INET::IP_MAX;
     memcpy(&buf[8], m_dhcp, INET::IP_MAX);
     res = m_sock->write(buf, 8 + INET::IP_MAX);
-    if (res < 0) return (res);
+    if (UNLIKELY(res < 0)) return (res);
   }
 
   // Parameter request and end option list
@@ -103,14 +103,14 @@ DHCP::send(uint8_t type)
     END_OPTION
   };
   res = m_sock->write_P(param, sizeof(param));
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
   return (m_sock->flush());
 }
 
 int
 DHCP::recv(uint8_t type, uint16_t ms)
 {
-  if (m_sock == NULL) return (ENOTSOCK);
+  if (UNLIKELY(m_sock == NULL)) return (ENOTSOCK);
 
   // Wait for a reply
   int res = 0;
@@ -118,16 +118,16 @@ DHCP::recv(uint8_t type, uint16_t ms)
     if ((res = m_sock->available()) != 0) break;
     delay(32);
   }
-  if (res == 0) return (ETIME);
+  if (UNLIKELY(res == 0)) return (ETIME);
 
   // Read response message
   header_t header;
   uint16_t port;
   res = m_sock->recv(&header, sizeof(header), m_dhcp, port);
-  if (res <= 0) return (EIO);
+  if (UNLIKELY(res <= 0)) return (EIO);
   // Fix: Should also check that the hardware address (broadcast)
-  if (port != SERVER_PORT) return (ENXIO);
-  if (header.OP != REPLY) return (EBADR);
+  if (UNLIKELY(port != SERVER_PORT)) return (ENXIO);
+  if (UNLIKELY(header.OP != REPLY)) return (EBADR);
   memcpy(m_ip, header.YIADDR, sizeof(m_ip));
 
   // Skip legacy BOOTP parameters
@@ -137,9 +137,9 @@ DHCP::recv(uint8_t type, uint16_t ms)
   // Check Magic Cookie
   uint32_t magic;
   res = m_sock->read(&magic, sizeof(magic));
-  if (res < 0) return (EIO);
+  if (UNLIKELY(res < 0)) return (EIO);
   magic = ntoh((int32_t) magic);
-  if (magic != MAGIC_COOKIE) return (EBADRQC);
+  if (UNLIKELY(magic != MAGIC_COOKIE)) return (EBADRQC);
 
   // Parse options and collect; subnet mask, server addresses and lease time
   uint8_t op;
@@ -179,7 +179,7 @@ DHCP::recv(uint8_t type, uint16_t ms)
 bool
 DHCP::begin(Socket* sock)
 {
-  if (m_sock != NULL) return (false);
+  if (UNLIKELY(m_sock != NULL)) return (false);
   m_sock = sock;
   return (true);
 }
@@ -187,7 +187,7 @@ DHCP::begin(Socket* sock)
 bool
 DHCP::end()
 {
-  if (m_sock == NULL) return (false);
+  if (UNLIKELY(m_sock == NULL)) return (false);
   m_sock->close();
   m_sock = NULL;
   return (true);
@@ -196,20 +196,20 @@ DHCP::end()
 int
 DHCP::discover()
 {
-  if (m_sock == NULL) return (ENOTSOCK);
+  if (UNLIKELY(m_sock == NULL)) return (ENOTSOCK);
   int res = send(DHCP_DISCOVER);
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
   return (recv(DHCP_OFFER));
 }
 
 int
 DHCP::request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
 {
-  if (m_sock == NULL) return (ENOTSOCK);
+  if (UNLIKELY(m_sock == NULL)) return (ENOTSOCK);
   int res = send(DHCP_REQUEST);
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
   res = recv(DHCP_ACK);
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
   memcpy(ip, m_ip, sizeof(m_ip));
   memcpy(subnet, m_subnet, sizeof(m_subnet));
   memcpy(gateway, m_gateway, sizeof(m_gateway));
@@ -219,13 +219,13 @@ DHCP::request(uint8_t ip[4], uint8_t subnet[4], uint8_t gateway[4])
 int
 DHCP::renew(Socket* sock)
 {
-  if (m_sock != NULL) return (ENOTSOCK);
-  if (m_lease_expires == 0L) return (EACCES);
+  if (UNLIKELY(m_sock != NULL)) return (ENOTSOCK);
+  if (UNLIKELY(m_lease_expires == 0L)) return (EACCES);
   m_sock = sock;
   int res = send(DHCP_REQUEST);
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
   res = recv(DHCP_ACK);
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
   m_sock->close();
   m_sock = NULL;
   return (0);
@@ -234,12 +234,12 @@ DHCP::renew(Socket* sock)
 int
 DHCP::release(Socket* sock)
 {
-  if (m_sock != NULL) return (EPERM);
+  if (UNLIKELY(m_sock != NULL)) return (EPERM);
   m_sock = sock;
   int res = send(DHCP_RELEASE);
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
   res = recv(DHCP_ACK);
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
   m_sock->close();
   m_sock = NULL;
   memset(m_ip, 0, sizeof(m_ip));

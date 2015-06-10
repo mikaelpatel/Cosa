@@ -66,7 +66,7 @@ public:
    */
   virtual void draw_pixel(uint16_t x, uint16_t y)
   {
-    if ((x > WIDTH) || (y > HEIGHT)) return;
+    if (UNLIKELY((x > WIDTH) || (y > HEIGHT))) return;
     uint8_t* bp = &m_bitmap[((y >> 3) * WIDTH) + x];
     uint8_t pos = (y & 0x07);
     if (get_pen_color().rgb == Canvas::BLACK)

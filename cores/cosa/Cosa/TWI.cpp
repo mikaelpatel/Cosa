@@ -38,7 +38,7 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
 {
   // Acquire the device driver. Wait is busy. Synchronized update
   uint8_t key = lock();
-  while (m_busy) {
+  while (UNLIKELY(m_busy)) {
     unlock(key);
     yield();
     key = lock();
@@ -60,7 +60,7 @@ void
 TWI::end()
 {
   // Check if an asynchronious read/write was issued
-  if (m_target != NULL) await_completed();
+  if (UNLIKELY(m_target != NULL)) await_completed();
   // Put into idle state
   synchronized {
     m_target = NULL;
@@ -152,7 +152,7 @@ TWI::isr_stop(State state, uint8_t type)
 {
   TWCR = TWI::STOP_CMD;
   loop_until_bit_is_clear(TWCR, TWSTO);
-  if (state == TWI::ERROR_STATE) m_count = -1;
+  if (UNLIKELY(state == TWI::ERROR_STATE)) m_count = -1;
   m_state = state;
   if (type != Event::NULL_TYPE && m_target != NULL)
     Event::push(type, m_target, m_count);
@@ -161,7 +161,7 @@ TWI::isr_stop(State state, uint8_t type)
 bool
 TWI::isr_write(Command cmd)
 {
-  if (m_next == m_last) return (false);
+  if (UNLIKELY(m_next == m_last)) return (false);
   TWDR = *m_next++;
   TWCR = cmd;
   m_count += 1;
@@ -171,7 +171,7 @@ TWI::isr_write(Command cmd)
 bool
 TWI::isr_read(Command cmd)
 {
-  if (m_next == m_last) return (false);
+  if (UNLIKELY(m_next == m_last)) return (false);
   *m_next++ = TWDR;
   m_count += 1;
   if (cmd != 0) TWCR = cmd;
@@ -294,7 +294,7 @@ TWI::Slave::begin()
 void
 TWI::Slave::on_event(uint8_t type, uint16_t value)
 {
-  if (type != Event::WRITE_COMPLETED_TYPE) return;
+  if (UNLIKELY(type != Event::WRITE_COMPLETED_TYPE)) return;
   void* buf = twi.m_vec[WRITE_IX].buf;
   size_t size = value;
   on_request(buf, size);

@@ -90,7 +90,7 @@ private:
   virtual void on_event(uint8_t type, uint16_t value)
   {
     UNUSED(value);
-    if (type != Event::TIMEOUT_TYPE) return;
+    if (UNLIKELY(type != Event::TIMEOUT_TYPE)) return;
     run();
   }
 

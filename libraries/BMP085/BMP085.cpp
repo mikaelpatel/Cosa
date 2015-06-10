@@ -51,7 +51,7 @@ bool
 BMP085::sample_temperature_request()
 {
   // Check that a conversion request is not in process
-  if (m_cmd != 0) return (false);
+  if (UNLIKELY(m_cmd != 0)) return (false);
 
   // Start a temperature measurement and wait
   m_cmd = TEMP_CONV_CMD;
@@ -68,7 +68,7 @@ bool
 BMP085::read_temperature()
 {
   // Check that a temperature conversion request was issued
-  if (m_cmd != TEMP_CONV_CMD) return (false);
+  if (UNLIKELY(m_cmd != TEMP_CONV_CMD)) return (false);
   m_cmd = 0;
 
   // Check if we need to wait for the conversion to complete
@@ -96,7 +96,7 @@ bool
 BMP085::sample_pressure_request()
 {
   // Check that a conversion request is not in process
-  if (m_cmd != 0) return (false);
+  if (UNLIKELY(m_cmd != 0)) return (false);
 
   // Start a pressure measurement
   twi.begin(this);
@@ -113,7 +113,7 @@ bool
 BMP085::read_pressure()
 {
   // Check that a conversion request was issued
-  if (m_cmd != (PRESSURE_CONV_CMD + (m_mode << 6))) return (false);
+  if (UNLIKELY(m_cmd != (PRESSURE_CONV_CMD + (m_mode << 6)))) return (false);
   m_cmd = 0;
 
   // Check if we need to wait for the conversion to complete

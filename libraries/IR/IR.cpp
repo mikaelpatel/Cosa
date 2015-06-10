@@ -28,7 +28,7 @@ IR::Receiver::on_interrupt(uint16_t arg)
   UNUSED(arg);
 
   // Check if the buffer is full
-  if (m_ix == m_max) return;
+  if (UNLIKELY(m_ix == m_max)) return;
 
   // Check if the time should be set; i.e. queue for timeout events
   if (m_ix == 0) Watchdog::attach(this, TIMEOUT);
@@ -76,7 +76,7 @@ IR::Receiver::reset()
 int
 IR::Receiver::lookup(uint16_t code)
 {
-  if (m_keymap == NULL) return (-1);
+  if (UNLIKELY(m_keymap == NULL)) return (-1);
   for (uint8_t i = 0; i < m_keys; i++)
     if (code == pgm_read_word(&m_keymap[i].code))
       return (pgm_read_word(&m_keymap[i].key));
@@ -85,7 +85,7 @@ IR::Receiver::lookup(uint16_t code)
 
 IOStream& operator<<(IOStream& outs, IR::Receiver& receiver)
 {
-  if (receiver.m_sample == NULL) return (outs);
+  if (UNLIKELY(receiver.m_sample == NULL)) return (outs);
   for (uint8_t ix = 0; ix < receiver.m_ix; ix++)
     outs << ix << ':' << receiver.m_sample[ix] << endl;
   return (outs);

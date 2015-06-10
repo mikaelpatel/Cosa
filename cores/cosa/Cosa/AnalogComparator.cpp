@@ -30,6 +30,6 @@ AnalogComparator::on_interrupt(uint16_t arg)
 
 ISR(ANALOG_COMP_vect)
 {
-  if (AnalogComparator::s_comparator == NULL) return;
+  if (UNLIKELY(AnalogComparator::s_comparator == NULL)) return;
   AnalogComparator::s_comparator->on_interrupt();
 }

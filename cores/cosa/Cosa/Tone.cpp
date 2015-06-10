@@ -67,13 +67,13 @@ void
 Tone::play(uint16_t freq, uint8_t volume, uint16_t duration, bool background)
 {
   // Check if turn off tone
-  if ((freq == 0) || (volume == 0)) {
+  if (UNLIKELY((freq == 0) || (volume == 0))) {
     silent();
     return;
   }
 
   // Check volume does not exceed limit
-  if (volume > VOLUME_MAX) volume = VOLUME_MAX;
+  if (UNLIKELY(volume > VOLUME_MAX)) volume = VOLUME_MAX;
 
   // Calculate clock prescaling
   uint8_t prescaler = _BV(CS10);

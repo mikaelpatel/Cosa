@@ -156,7 +156,7 @@ ST7565::set_cursor(uint8_t x, uint8_t y)
   set(x, y);
   m_x = (x & (WIDTH - 1));
   m_y = (y & (LINES - 1));
-  if ((m_x != 0) || (m_y != 0)) return;
+  if (UNLIKELY((m_x != 0) || (m_y != 0))) return;
   m_line = 0;
   set(SET_DISPLAY_START | m_line);
 }
@@ -196,7 +196,7 @@ ST7565::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 void
 ST7565::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
 {
-  if (percent > 100) percent = 100;
+  if (UNLIKELY(percent > 100)) percent = 100;
   uint8_t filled = (percent * (width - 2U)) / 100;
   uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
   width -= (filled + 1);

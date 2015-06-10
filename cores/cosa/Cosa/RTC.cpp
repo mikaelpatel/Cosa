@@ -45,7 +45,7 @@ void* RTC::s_env = NULL;
 bool
 RTC::begin()
 {
-  if (s_initiated) return (false);
+  if (UNLIKELY(s_initiated)) return (false);
   synchronized {
     // Set prescaling to 64
     TCCR0B = (_BV(CS01) | _BV(CS00));
@@ -111,14 +111,16 @@ RTC::delay(uint32_t ms)
 int
 RTC::await(volatile bool &condvar, uint32_t ms)
 {
-  if (ms == 0) {
-    while (!condvar) yield();
-    return (0);
+  int res = 0;
+  if (ms != 0) {
+    uint32_t start = millis();
+    while (!condvar && since(start) < ms) yield();
+    if (!condvar) res = ETIME;
   }
-
-  uint32_t start = millis();
-  while (!condvar && since(start) < ms) yield();
-  return (condvar ? 0 : ETIME);
+  else {
+    while (!condvar) yield();
+  }
+  return (res);
 }
 
 ISR(TIMER0_OVF_vect)
@@ -138,7 +140,7 @@ ISR(TIMER0_OVF_vect)
 
   // Check for extension of the interrupt handler
   RTC::InterruptHandler fn = RTC::s_handler;
-  if (fn == NULL) return;
+  if (UNLIKELY(fn == NULL)) return;
   void* env = RTC::s_env;
   fn(env);
 }

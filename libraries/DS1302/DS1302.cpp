@@ -30,7 +30,7 @@ DS1302::read()
       if (m_sda.is_set()) res |= 0x80;
       m_clk._toggle();
       m_clk._toggle();
-      if (--bits == 0) break;
+      if (UNLIKELY(--bits == 0)) break;
       res >>= 1;
     }
   }
@@ -112,9 +112,9 @@ DS1302::set_time(time_t& now)
 void
 DS1302::read_ram(void* buf, size_t size)
 {
-  if (size == 0) return;
+  if (UNLIKELY(size == 0)) return;
   uint8_t* bp = (uint8_t*) buf;
-  if (size > RAM_MAX) size = RAM_MAX;
+  if (UNLIKELY(size > RAM_MAX)) size = RAM_MAX;
   asserted(m_cs) {
     write(RAM_BURST | READ);
     m_sda.set_mode(IOPin::INPUT_MODE);
@@ -126,9 +126,9 @@ DS1302::read_ram(void* buf, size_t size)
 void
 DS1302::write_ram(void* buf, size_t size)
 {
-  if (size == 0) return;
+  if (UNLIKELY(size == 0)) return;
   uint8_t* bp = (uint8_t*) buf;
-  if (size > RAM_MAX) size = RAM_MAX;
+  if (UNLIKELY(size > RAM_MAX)) size = RAM_MAX;
   set_write_protect(false);
   asserted(m_cs) {
     write(RAM_BURST | WRITE);

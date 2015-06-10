@@ -32,7 +32,7 @@ AnalogPin::prescale(uint8_t factor)
 bool
 AnalogPin::sample_request(Board::AnalogPin pin, uint8_t ref)
 {
-  if (sampling_pin != NULL) return (false);
+  if (UNLIKELY(sampling_pin != NULL)) return (false);
   loop_until_bit_is_clear(ADCSRA, ADSC);
   sampling_pin = this;
   ADMUX = (ref | (pin & 0x1f));
@@ -63,7 +63,7 @@ AnalogPin::bandgap(uint16_t vref)
 uint16_t
 AnalogPin::sample(Board::AnalogPin pin, Board::Reference ref)
 {
-  if (sampling_pin != NULL) return (0xffffU);
+  if (UNLIKELY(sampling_pin != NULL)) return (UINT16_MAX);
   loop_until_bit_is_clear(ADCSRA, ADSC);
   ADMUX = (ref | (pin & 0x1f));
 #if defined(MUX5)
@@ -77,7 +77,7 @@ AnalogPin::sample(Board::AnalogPin pin, Board::Reference ref)
 uint16_t
 AnalogPin::sample_await()
 {
-  if (sampling_pin != this) return (m_value);
+  if (UNLIKELY(sampling_pin != this)) return (m_value);
   synchronized {
     sampling_pin = NULL;
     bit_clear(ADCSRA, ADIE);
@@ -115,7 +115,7 @@ AnalogPin::on_interrupt(uint16_t value)
 ISR(ADC_vect)
 {
   bit_clear(ADCSRA, ADIE);
-  if (AnalogPin::sampling_pin == NULL) return;
+  if (UNLIKELY(AnalogPin::sampling_pin == NULL)) return;
   AnalogPin::sampling_pin->on_interrupt(ADCW);
 }
 

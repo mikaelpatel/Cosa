@@ -62,7 +62,7 @@ ERM1602_5::write8b(uint8_t data)
 void
 ERM1602_5::write8n(void* buf, size_t size)
 {
-  if (size == 0) return;
+  if (UNLIKELY(size == 0)) return;
   m_en.clear();
   flush();
   if (m_rs) {

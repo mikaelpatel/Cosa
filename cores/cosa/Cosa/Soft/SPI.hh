@@ -293,7 +293,7 @@ namespace Soft {
      */
     void transfer(void* dst, const void* src, size_t count)
     {
-      if (count == 0) return;
+      if (UNLIKELY(count == 0)) return;
       uint8_t* dp = (uint8_t*) dst;
       const uint8_t* sp = (const uint8_t*) src;
       do *dp++ = transfer(*sp++); while (--count);
@@ -307,7 +307,7 @@ namespace Soft {
      */
     void read(void* buf, size_t count)
     {
-      if (count == 0) return;
+      if (UNLIKELY(count == 0)) return;
       uint8_t* bp = (uint8_t*) buf;
       do *bp++ = transfer(0x00); while (--count);
     }
@@ -320,7 +320,7 @@ namespace Soft {
      */
     void write(const void* buf, size_t count)
     {
-      if (count == 0) return;
+      if (UNLIKELY(count == 0)) return;
       const uint8_t* bp = (const uint8_t*) buf;
       do transfer(*bp++); while (--count);
     }
@@ -333,7 +333,7 @@ namespace Soft {
      */
     void write_P(const uint8_t* buf, size_t count)
     {
-      if (count == 0) return;
+      if (UNLIKELY(count == 0)) return;
       do transfer(pgm_read_byte(buf++)); while (--count);
     }
 

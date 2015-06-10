@@ -67,7 +67,7 @@ IOStream::print(int n, Base base)
 void
 IOStream::print(long int n, Base base)
 {
-  if (base != dec) print_prefix(base);
+  if (UNLIKELY(base != dec)) print_prefix(base);
   char buf[sizeof(long int) * CHARBITS + 1];
   print(ltoa(n, buf, base));
 }
@@ -75,7 +75,7 @@ IOStream::print(long int n, Base base)
 void
 IOStream::print(unsigned int n, Base base)
 {
-  if (base != dec) print_prefix(base);
+  if (UNLIKELY(base != dec)) print_prefix(base);
   char buf[sizeof(int) * CHARBITS + 1];
   print(utoa(n, buf, base));
 }
@@ -83,7 +83,7 @@ IOStream::print(unsigned int n, Base base)
 void
 IOStream::print(unsigned long int n, Base base)
 {
-  if (base != dec) print_prefix(base);
+  if (UNLIKELY(base != dec)) print_prefix(base);
   char buf[sizeof(long int) * CHARBITS + 1];
   print(ultoa(n, buf, base));
 }
@@ -227,13 +227,13 @@ IOStream::vprintf(str_P format, va_list args)
 char*
 IOStream::scan(char *s, size_t count)
 {
-  if (m_dev == NULL) return (NULL);
+  if (UNLIKELY(m_dev == NULL)) return (NULL);
   char* res = s;
 
   // Skip whitespace
   int c = m_dev->peekchar();
   while (c <= ' ' && c != '\n') {
-    if (c == EOF) return (NULL);
+    if (UNLIKELY(c == EOF)) return (NULL);
     c = m_dev->getchar();
     c = m_dev->peekchar();
   }
@@ -267,9 +267,9 @@ IOStream::readline(char* buf, size_t size, bool echo)
 {
   const char DEL = 127;
   const char ESC = 27;
-  if (m_dev == NULL) return (NULL);
+  if (UNLIKELY(m_dev == NULL)) return (NULL);
   int count = m_dev->available();
-  if (count <= 0) return (NULL);
+  if (UNLIKELY(count <= 0)) return (NULL);
   size_t len = strlen(buf);
   char* s = buf + len;
   char c = 0;
@@ -300,8 +300,6 @@ IOStream::readline(char* buf, size_t size, bool echo)
   *s = 0;
   return (c == '\n' ? buf : NULL);
 }
-
-// IOStream::Device IOStream::Device::null;
 
 int
 IOStream::Device::available()
@@ -341,7 +339,7 @@ IOStream::Device::write(const void* buf, size_t size)
   char* bp = (char*) buf;
   size_t n = 0;
   for(; n < size; n++)
-    if (putchar(*bp++) < 0)
+    if (UNLIKELY(putchar(*bp++) < 0))
       break;
   return (n);
 }
@@ -352,7 +350,7 @@ IOStream::Device::write_P(const void* buf, size_t size)
   char* bp = (char*) buf;
   size_t n = 0;
   for(; n < size; n++)
-    if (putchar(pgm_read_byte(bp++)) < 0)
+    if (UNLIKELY(putchar(pgm_read_byte(bp++)) < 0))
       break;
   return (n);
 }
@@ -363,7 +361,7 @@ IOStream::Device::write(const iovec_t* vec)
   size_t size = 0;
   for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
     size_t res = (size_t) write(vp->buf, vp->size);
-    if (res == 0) break;
+    if (UNLIKELY(res == 0)) break;
     size += res;
   }
   return (size);
@@ -394,7 +392,7 @@ IOStream::Device::gets(char *s, size_t count)
   char* res = s;
   while (--count) {
     int c = getchar();
-    if (c == EOF) {
+    if (UNLIKELY(c == EOF)) {
       if (m_blocking) {
 	while (c == EOF) {
 	  yield();
@@ -421,7 +419,7 @@ IOStream::Device::read(void* buf, size_t size)
   size_t n = 0;
   for (; n < size; n++) {
     int c = getchar();
-    if (c < 0) break;
+    if (UNLIKELY(c < 0)) break;
     *bp++ = c;
   }
   return (n);
@@ -433,7 +431,7 @@ IOStream::Device::read(iovec_t* vec)
   size_t size = 0;
   for (const iovec_t* vp = vec; vp->buf != NULL; vp++) {
     size_t res = (size_t) read(vp->buf, vp->size);
-    if (res == 0) break;
+    if (UNLIKELY(res == 0)) break;
     size += res;
   }
   return (size);

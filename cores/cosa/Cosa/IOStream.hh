@@ -432,8 +432,7 @@ public:
   void print(char c)
     __attribute__((always_inline))
   {
-    if (m_dev != NULL)
-      m_dev->putchar(c);
+    if (m_dev != NULL) m_dev->putchar(c);
   }
 
   /**
@@ -443,8 +442,7 @@ public:
   void print(const char* s)
     __attribute__((always_inline))
   {
-    if (m_dev != NULL)
-      m_dev->puts(s);
+    if (m_dev != NULL) m_dev->puts(s);
   }
 
   /**
@@ -455,8 +453,7 @@ public:
   void print(str_P s)
     __attribute__((always_inline))
   {
-    if (m_dev != NULL)
-      m_dev->puts(s);
+    if (m_dev != NULL) m_dev->puts(s);
   }
 
   /**
@@ -465,8 +462,7 @@ public:
   void println()
     __attribute__((always_inline))
   {
-    if (m_dev != NULL)
-      m_dev->puts(m_eols);
+    if (m_dev != NULL) m_dev->puts(m_eols);
   }
 
   /**
@@ -503,8 +499,7 @@ public:
   void flush()
     __attribute__((always_inline))
   {
-    if (m_dev != NULL)
-      m_dev->flush();
+    if (m_dev != NULL) m_dev->flush();
   }
 
   /**
@@ -830,8 +825,7 @@ clear(IOStream& outs)
 inline IOStream&
 flush(IOStream& outs)
 {
-  if (outs.m_dev != NULL)
-    outs.m_dev->flush();
+  if (outs.m_dev != NULL) outs.m_dev->flush();
   return (outs);
 }
 #endif

@@ -101,7 +101,7 @@ W5100::Driver::dev_read(void* buf, size_t len)
 {
   // Check if there is data available
   int res = available();
-  if (res < 0) return (res);
+  if (UNLIKELY(res < 0)) return (res);
 
   // Adjust amount to read to max buffer size
   if ((int) len > res) len = res;
@@ -137,8 +137,8 @@ int
 W5100::Driver::dev_write(const void* buf, size_t len, bool progmem)
 {
   // Check buffer size
-  if (len == 0) return (0);
-  if (len > BUF_MAX) len = BUF_MAX;
+  if (UNLIKELY(len == 0)) return (0);
+  if (UNLIKELY(len > BUF_MAX)) len = BUF_MAX;
 
   // Write packet to transmitter buffer. Handle possible buffer wrapping
   const uint8_t* bp = (const uint8_t*) buf;
@@ -165,7 +165,7 @@ void
 W5100::Driver::dev_flush()
 {
   int res = available();
-  if (!(res > 0)) return;
+  if (UNLIKELY(res <= 0)) return;
   uint16_t ptr;
   m_dev->read(M_SREG(RX_RD), &ptr, sizeof(ptr));
   ptr = swap(ptr);
@@ -258,7 +258,7 @@ int
 W5100::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
 {
   // Check if the socket is already in use
-  if (m_proto != 0) return (EPROTO);
+  if (UNLIKELY(m_proto != 0)) return (EPROTO);
 
   // Set protocol and port and issue open command
   m_dev->write(M_SREG(MR), proto | (flag & MR_FLAG_MASK));
@@ -296,7 +296,7 @@ int
 W5100::Driver::close()
 {
   // Check if the socket is not in use
-  if (m_proto == 0) return (EPROTO);
+  if (UNLIKELY(m_proto == 0)) return (EPROTO);
 
   // Issue close command and clear pending interrupts on socket
   m_dev->issue(M_SREG(CR), CR_CLOSE);
@@ -311,7 +311,7 @@ int
 W5100::Driver::listen()
 {
   // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (EPROTO);
+  if (UNLIKELY(m_proto != TCP)) return (EPROTO);
   m_dev->issue(M_SREG(CR), CR_LISTEN);
   if (m_dev->read(M_SREG(SR)) == SR_LISTEN) return (0);
   return (EFAULT);
@@ -321,7 +321,7 @@ int
 W5100::Driver::accept()
 {
   // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (EPROTO);
+  if (UNLIKELY(m_proto != TCP)) return (EPROTO);
   uint8_t status = m_dev->read(M_SREG(SR));
   if ((status == SR_LISTEN) || (status == SR_ARP)) return (EFAULT);
   if (status != SR_ESTABLISHED) return (EFAULT);
@@ -340,8 +340,8 @@ int
 W5100::Driver::connect(uint8_t addr[4], uint16_t port)
 {
   // Check that the socket is in TCP mode and address/port
-  if (m_proto != TCP) return (EPROTO);
-  if (INET::is_illegal(addr, port)) return (EINVAL);
+  if (UNLIKELY(m_proto != TCP)) return (EPROTO);
+  if (UNLIKELY(INET::is_illegal(addr, port))) return (EINVAL);
 
   // Set server address and port
   port = swap(port);
@@ -365,7 +365,7 @@ int
 W5100::Driver::is_connected()
 {
   // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (EPROTO);
+  if (UNLIKELY(m_proto != TCP)) return (EPROTO);
   uint8_t ir = m_dev->read(M_SREG(IR));
   if (ir & IR_TIMEOUT) return (ETIME);
   if ((ir & IR_CON) == 0) return (0);
@@ -377,7 +377,7 @@ int
 W5100::Driver::disconnect()
 {
   // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (EPROTO);
+  if (UNLIKELY(m_proto != TCP)) return (EPROTO);
   m_dev->issue(M_SREG(CR), CR_DISCON);
   dev_flush();
   return (0);
@@ -403,8 +403,8 @@ int
 W5100::Driver::recv(void* buf, size_t len)
 {
   // Check that the socket is in TCP mode
-  if (m_proto != TCP) return (EPROTO);
-  if (len == 0) return (0);
+  if (UNLIKELY(m_proto != TCP)) return (EPROTO);
+  if (UNLIKELY(len == 0)) return (0);
 
   // Check if data has been received
   if ((m_dev->read(M_SREG(IR)) & IR_RECV) == 0) return (0);
@@ -418,7 +418,7 @@ W5100::Driver::recv(void* buf, size_t len, uint8_t src[4], uint16_t& port)
       && (m_proto != IPRAW)
       && (m_proto != MACRAW))
     return (EPROTO);
-  if (len == 0) return (0);
+  if (UNLIKELY(len == 0)) return (0);
 
   uint8_t header[8];
   uint16_t size;
@@ -469,7 +469,7 @@ W5100::Driver::write(const void* buf, size_t len, bool progmem)
   if ((m_proto == TCP)
       && (m_dev->read(M_SREG(SR)) != SR_ESTABLISHED))
     return (EPROTO);
-  if (len == 0) return (0);
+  if (UNLIKELY(len == 0)) return (0);
   const uint8_t* bp = (const uint8_t*) buf;
   int size = len;
   while (size > 0) {

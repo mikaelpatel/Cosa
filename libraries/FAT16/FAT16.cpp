@@ -68,7 +68,7 @@ bool
 FAT16::begin(SD* sd, uint8_t part)
 {
   // Error if invalid partition
-  if (part > 4) return (false);
+  if (UNLIKELY(part > 4)) return (false);
   device = sd;
   uint32_t volumeStartBlock = 0;
 

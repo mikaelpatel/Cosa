@@ -77,7 +77,7 @@ FixedPoint<POINT>::get_fraction(uint8_t scale)
 {
   uint16_t half = 5;
   uint16_t result = 0;
-  if (scale == 0) return (m_fraction);
+  if (UNLIKELY(scale == 0)) return (m_fraction);
   while (--scale)
     half = (half << 3) + (half << 1);
   for (uint8_t bit = (1 << (POINT - 1)); bit; bit >>= 1, half >>= 1)

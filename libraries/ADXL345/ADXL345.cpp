@@ -25,7 +25,7 @@ ADXL345::begin()
 {
   // Read device register and santity check
   uint8_t id = read(DEVID);
-  if (id != ID) return (false);
+  if (UNLIKELY(id != ID)) return (false);
 
   // Data format
   write(DATA_FORMAT, _BV(FULL_RES) | RANGE_16G);

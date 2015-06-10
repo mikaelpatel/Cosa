@@ -72,7 +72,7 @@ public:
   virtual int putchar(char c)
   {
     m_buffer[m_ix++] = c;
-    if (m_ix == sizeof(m_buffer) || c == '\n') flush();
+    if (UNLIKELY(m_ix == sizeof(m_buffer) || c == '\n')) flush();
     return (c & 0xff);
   }
 

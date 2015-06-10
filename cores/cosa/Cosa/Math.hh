@@ -107,8 +107,8 @@ T map(T x)
 {
   static_assert(in_min < in_max, "bad range for map function");
   static_assert(out_min < out_max, "bad domain for map function");
-  if (x < in_min) return (out_min);
-  if (x > in_max) return (out_max);
+  if (UNLIKELY(x < in_min)) return (out_min);
+  if (UNLIKELY(x > in_max)) return (out_max);
   T range = in_max - in_min;
   T domain = out_max - out_min;
   return ((((x - in_min) * domain)/range) + out_min);

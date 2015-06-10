@@ -45,28 +45,28 @@ time_t::parse(str_P s)
   char* sp = &buf[0];
   uint16_t value = strtoul(sp, &sp, 10);
 
-  if (*sp != '-') return false;
+  if (UNLIKELY(*sp != '-')) return false;
   year = value % 100;
-  if (full_year() != value) return false;
+  if (UNLIKELY(full_year() != value)) return false;
 
   value = strtoul(sp + 1, &sp, 10);
-  if (*sp != '-') return false;
+  if (UNLIKELY(*sp != '-')) return false;
   month = value;
 
   value = strtoul(sp + 1, &sp, 10);
-  if (*sp != ' ') return false;
+  if (UNLIKELY(*sp != ' ')) return false;
   date = value;
 
   value = strtoul(sp + 1, &sp, 10);
-  if (*sp != ':') return false;
+  if (UNLIKELY(*sp != ':')) return false;
   hours = value;
 
   value = strtoul(sp + 1, &sp, 10);
-  if (*sp != ':') return false;
+  if (UNLIKELY(*sp != ':')) return false;
   minutes = value;
 
   value = strtoul(sp + 1, &sp, 10);
-  if (*sp != 0) return false;
+  if (UNLIKELY(*sp != 0)) return false;
   seconds = value;
 
   set_day();

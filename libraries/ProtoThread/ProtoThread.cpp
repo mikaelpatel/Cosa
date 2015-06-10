@@ -26,7 +26,7 @@ Head ProtoThread::runq;
 void
 ProtoThread::on_event(uint8_t type, uint16_t value)
 {
-  if (m_state == WAITING) detach();
+  if (UNLIKELY(m_state == WAITING)) detach();
   m_state = (type == Event::TIMEOUT_TYPE) ? TIMEOUT : RUNNING;
   run(type, value);
   if (m_state == RUNNING) {
@@ -77,7 +77,7 @@ ProtoThread::dispatch(bool flag)
 void
 ProtoThread::schedule(ProtoThread* thread)
 {
-  if (thread->m_state == TERMINATED) thread->m_ip = 0;
+  if (UNLIKELY(thread->m_state == TERMINATED)) thread->m_ip = 0;
   thread->m_state = READY;
   runq.attach(thread);
 }

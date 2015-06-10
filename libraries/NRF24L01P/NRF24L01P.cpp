@@ -208,9 +208,9 @@ int
 NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
-  if (vec == NULL) return (EINVAL);
+  if (UNLIKELY(vec == NULL)) return (EINVAL);
   size_t len = iovec_size(vec);
-  if (len > PAYLOAD_MAX) return (EMSGSIZE);
+  if (UNLIKELY(len > PAYLOAD_MAX)) return (EMSGSIZE);
 
   // Setting transmit destination
   set_transmit_mode(dest);
