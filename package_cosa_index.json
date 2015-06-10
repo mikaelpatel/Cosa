@@ -12,7 +12,7 @@
         {
           "name": "Cosa",
           "architecture": "avr",
-          "version": "1.0.1",
+          "version": "1.0.2",
           "category": "Cosa",
           "help": {
             "online": "https://dl.dropboxusercontent.com/u/993383/Cosa/doc/html/index.html"
