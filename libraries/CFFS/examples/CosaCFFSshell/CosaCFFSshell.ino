@@ -31,7 +31,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "CFFScommands.h"
 
-//#define USE_FLASH_S25FL127S
+#define USE_FLASH_S25FL127S
 //#define USE_FLASH_W25X40CL
 
 #if defined(USE_FLASH_S25FL127S) || defined(ANARDUINO_MINIWIRELESS)
