@@ -179,6 +179,10 @@ NRF24L01P::begin(const void* config)
 {
   UNUSED(config);
 
+  // Check that a device is available
+  read_status();
+  if (UNLIKELY(m_status.reserved)) return (false);
+
   // Setup hardware features, channel, bitrate, retransmission, dynamic payload
   write(FEATURE, (_BV(EN_DPL) | _BV(EN_ACK_PAY) | _BV(EN_DYN_ACK)));
   write(RF_CH, m_channel);
