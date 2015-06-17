@@ -201,6 +201,17 @@ public:
    * @param[out] var to assign.
    * @return pin.
    */
+  operator bool() const
+    __attribute__((always_inline))
+  {
+    return ((*PIN() & m_mask) != 0);
+  }
+
+  /**
+   * Read input pin and assign variable.
+   * @param[out] var to assign.
+   * @return pin.
+   */
   Pin& operator>>(uint8_t& var)
     __attribute__((always_inline))
   {

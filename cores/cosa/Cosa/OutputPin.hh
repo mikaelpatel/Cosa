@@ -181,7 +181,7 @@ public:
    * and non-zero to set. Unprotected version.
    * @param[in] value to set.
    */
-  void _set(bool value) const
+  void _set(int value) const
     __attribute__((always_inline))
   {
     if (value) {
@@ -198,7 +198,7 @@ public:
    * @param[in] value to set.
    * @note atomic
    */
-  void set(bool value) const
+  void set(int value) const
     __attribute__((always_inline))
   {
     synchronized {
@@ -216,7 +216,7 @@ public:
    * and non-zero to set. Unprotected version.
    * @param[in] value to set.
    */
-  void _write(bool value) const
+  void _write(int value) const
     __attribute__((always_inline))
   {
     if (value) {
@@ -233,7 +233,7 @@ public:
    * @param[in] value to write.
    * @note atomic
    */
-  void write(uint8_t value) const
+  void write(int value) const
     __attribute__((always_inline))
   {
     synchronized {
@@ -244,6 +244,32 @@ public:
 	*PORT() &= ~m_mask;
       }
     }
+  }
+
+  /**
+   * Set the output pin with the given value. Zero(0) to clear
+   * and non-zero to set.
+   * @param[in] value to write.
+   * @note atomic
+   */
+  OutputPin& operator=(int value)
+    __attribute__((always_inline))
+  {
+    write(value);
+    return (*this);
+  }
+
+  /**
+   * Set the output pin with the given pin value. Zero(0) to clear
+   * and non-zero to set.
+   * @param[in] value to write.
+   * @note atomic
+   */
+  OutputPin& operator=(Pin& rhs)
+    __attribute__((always_inline))
+  {
+    write(rhs);
+    return (*this);
   }
 
   /**
@@ -277,7 +303,7 @@ public:
    * @param[in] value to write.
    * @note atomic
    */
-  static void write(Board::DigitalPin pin, uint8_t value)
+  static void write(Board::DigitalPin pin, int value)
     __attribute__((always_inline))
   {
     volatile uint8_t* port = PORT(pin);
@@ -329,7 +355,7 @@ public:
    * @param[in] value to write.
    * @return output pin.
    */
-  OutputPin& operator<<(uint8_t value)
+  OutputPin& operator<<(int value)
     __attribute__((always_inline))
   {
     set(value);

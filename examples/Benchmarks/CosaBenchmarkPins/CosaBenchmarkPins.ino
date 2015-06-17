@@ -186,13 +186,22 @@ void loop()
     __asm__ __volatile__("nop");
   }
 
+  MEASURE_NS("var = inPin") {
+    bool var;
+    var = inPin;
+    cnt += var;
+    __asm__ __volatile__("nop");
+  }
+
   MEASURE_NS("InputPin::read(D7)") {
-    cnt += InputPin::read(Board::D7);
+    uint8_t var = InputPin::read(Board::D7);
+    cnt += var;
     __asm__ __volatile__("nop");
   }
 
   MEASURE_NS("digitalRead(D7)") {
-    cnt += digitalRead(Board::D7);
+    uint8_t var = digitalRead(Board::D7);
+    cnt += var;
     __asm__ __volatile__("nop");
   }
 
@@ -236,6 +245,12 @@ void loop()
   MEASURE_NS("outPin << 1/0") {
     outPin << 1;
     outPin << 0;
+    __asm__ __volatile__("nop");
+  }
+
+  MEASURE_NS("outPin = 1/0") {
+    outPin = 1;
+    outPin = 0;
     __asm__ __volatile__("nop");
   }
 
@@ -296,6 +311,11 @@ void loop()
     uint8_t var;
     inPin >> var;
     outPin << !var;
+    __asm__ __volatile__("nop");
+  }
+
+  MEASURE_NS("outPin = !inPin") {
+    outPin = !inPin;
     __asm__ __volatile__("nop");
   }
 
