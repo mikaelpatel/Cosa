@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Memory.h
+ * @file Cosa/Memory.hh
  * @version 1.0
  *
  * @section License
@@ -18,9 +18,13 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_MEMORY_H
-#define COSA_MEMORY_H
+#ifndef COSA_MEMORY_HH
+#define COSA_MEMORY_HH
 
-#include "Cosa/Memory.hh"
+/**
+ * Return amount of free memory.
+ * @return number of bytes.
+ */
+int free_memory();
 
 #endif

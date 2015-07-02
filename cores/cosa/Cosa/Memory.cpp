@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Memory.h
+ * @file Cosa/Memory.cpp
  * @version 1.0
  *
  * @section License
@@ -18,9 +18,11 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_MEMORY_H
-#define COSA_MEMORY_H
-
 #include "Cosa/Memory.hh"
 
-#endif
+int free_memory()
+{
+  extern int __heap_start, *__brkval;
+  int v;
+  return ((int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval));
+}
