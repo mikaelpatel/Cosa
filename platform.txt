@@ -52,7 +52,7 @@ compiler.ldflags=
 compiler.size.cmd=avr-size
 
 # This can be overridden in boards.txt
-build.extra_flags=
+build.extra_flags="-I{build.path}"
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=-Wextra
