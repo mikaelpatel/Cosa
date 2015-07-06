@@ -34,3 +34,15 @@
 	path = libraries/Telnet
 	url = https://github.com/mikaelpatel/Cosa-Telnet.git
 	branch = master
+[submodule "libraries/ICMP"]
+	path = libraries/ICMP
+	url = https://github.com/mikaelpatel/Cosa-ICMP
+	branch = master
+[submodule "libraries/HTTP"]
+	path = libraries/HTTP
+	url = https://github.com/mikaelpatel/Cosa-HTTP
+	branch = master
+[submodule "libraries/NTP"]
+	path = libraries/NTP
+	url = https://github.com/mikaelpatel/Cosa-NTP
+	branch = master
