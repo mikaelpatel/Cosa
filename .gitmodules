@@ -1,0 +1,48 @@
+[submodule "libraries/Shell"]
+	path = libraries/Shell
+	url=https://github.com/mikaelpatel/Cosa-Shell.git
+	branch = master
+[submodule "libraries/SNMP"]
+	path = libraries/SNMP
+	url = https://github.com/mikaelpatel/Cosa-SNMP.git
+	branch = master
+[submodule "libraries/UML"]
+	path = libraries/UML
+	url = https://github.com/mikaelpatel/Cosa-UML.git
+	branch = master
+[submodule "libraries/MQTT"]
+	path = libraries/MQTT
+	url = https://github.com/mikaelpatel/Cosa-MQTT.git
+	branch = master
+[submodule "libraries/ThingSpeak"]
+	path = libraries/ThingSpeak
+	url = https://github.com/mikaelpatel/Cosa-ThingSpeak.git
+	branch = master
+[submodule "libraries/ProtocolBuffer"]
+	path = libraries/ProtocolBuffer
+	url = https://github.com/mikaelpatel/Cosa-ProtocolBuffer.git
+	branch = master
+[submodule "libraries/AVR"]
+	path = libraries/AVR
+	url = https://github.com/mikaelpatel/Cosa-AVR.git
+	branch = master
+[submodule "libraries/NEXA"]
+	path = libraries/NEXA
+	url = https://github.com/mikaelpatel/Cosa-NEXA.git
+	branch = master
+[submodule "libraries/Telnet"]
+	path = libraries/Telnet
+	url = https://github.com/mikaelpatel/Cosa-Telnet.git
+	branch = master
+[submodule "libraries/ICMP"]
+	path = libraries/ICMP
+	url = https://github.com/mikaelpatel/Cosa-ICMP
+	branch = master
+[submodule "libraries/HTTP"]
+	path = libraries/HTTP
+	url = https://github.com/mikaelpatel/Cosa-HTTP
+	branch = master
+[submodule "libraries/NTP"]
+	path = libraries/NTP
+	url = https://github.com/mikaelpatel/Cosa-NTP
+	branch = master
