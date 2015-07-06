@@ -25,7 +25,8 @@
  * Return amount of free memory.
  * @return number of bytes.
  */
-int
+inline int free_memory() __attribute__((always_inline));
+inline int
 free_memory()
 {
   extern int __heap_start, *__brkval;
