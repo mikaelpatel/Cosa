@@ -30,7 +30,7 @@
 #include "Cosa/Memory.h"
 #include "Cosa/RTC.hh"
 
-//#define USE_FLASH_S25FL127S
+#define USE_FLASH_S25FL127S
 //#define USE_FLASH_W25X40CL
 
 #if defined(USE_FLASH_S25FL127S) || defined(ANARDUINO_MINIWIRELESS)

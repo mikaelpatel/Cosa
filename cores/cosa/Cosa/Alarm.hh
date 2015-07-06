@@ -83,7 +83,7 @@ public:
   void next_alarm(uint32_t seconds = 0L)
     __attribute__((always_inline))
   {
-    if (seconds == 0L) seconds = m_period;
+    if (UNLIKELY(seconds == 0L)) seconds = m_period;
     m_when = s_ticks + seconds;
   }
 

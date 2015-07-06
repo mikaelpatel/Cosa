@@ -83,13 +83,12 @@ public:
    */
   bool operator[](uint16_t ix) const
   {
-    if (ix < N)
-      return ((m_set[ix / CHARBITS] & _BV(ix & MASK)) != 0);
-    return (false);
+    return ((ix < N) ? ((m_set[ix / CHARBITS] & _BV(ix & MASK)) != 0) : false);
   }
 
   /**
    * Add element index to the bitset.
+   * @param[in] ix element to add (0..N-1).
    */
   void operator+=(uint16_t ix)
   {
@@ -98,6 +97,7 @@ public:
 
   /**
    * Remove element index from the bitset.
+   * @param[in] ix element to remove (0..N-1).
    */
   void operator-=(uint16_t ix)
   {
@@ -110,7 +110,7 @@ public:
    */
   void operator=(BitSet& rhs)
   {
-    if (rhs.members() != N) return;
+    if (UNLIKELY(rhs.members() != N)) return;
     for (uint16_t i = 0; i < sizeof(m_set); i++)
       m_set[i] = rhs.m_set[i];
   }
@@ -121,7 +121,7 @@ public:
    */
   void operator+=(BitSet& rhs)
   {
-    if (rhs.members() != N) return;
+    if (UNLIKELY(rhs.members() != N)) return;
     for (uint16_t i = 0; i < sizeof(m_set); i++)
       m_set[i] |= rhs.m_set[i];
   }
@@ -132,7 +132,7 @@ public:
    */
   void operator-=(BitSet& rhs)
   {
-    if (rhs.members() != N) return;
+    if (UNLIKELY(rhs.members() != N)) return;
     for (uint16_t i = 0; i < sizeof(m_set); i++)
       m_set[i] &= ~rhs.m_set[i];
   }
@@ -144,7 +144,7 @@ public:
    */
   bool operator==(BitSet& rhs)
   {
-    if (rhs.members() != N) return (false);
+    if (UNLIKELY(rhs.members() != N)) return (false);
     return (memcmp(m_set, rhs.m_set, sizeof(m_set)) == 0);
   }
 

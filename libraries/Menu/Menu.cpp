@@ -32,7 +32,7 @@ Menu::print(IOStream& outs, Menu::one_of_P var)
 void
 Menu::print(IOStream& outs, zero_or_many_P var, bool selected, uint8_t bv)
 {
-  if (!selected) return;
+  if (UNLIKELY(!selected)) return;
   uint16_t value = *((uint16_t*) pgm_read_word(&var->value));
   item_vec_P list = (item_vec_P) pgm_read_word(&var->list);
   item_P item = (item_P) pgm_read_word(&list[bv]);
@@ -48,7 +48,7 @@ Menu::print(IOStream& outs, int_range_P var, bool selected)
   int16_t* vp = (int16_t*) pgm_read_word(&var->value);
   int16_t value = *vp;
   outs << value;
-  if (!selected) return;
+  if (UNLIKELY(!selected)) return;
   outs << PSTR(" [")
        << (int16_t) pgm_read_word(&var->low)
        << PSTR("..")

@@ -113,7 +113,7 @@ int
 W25X40CL::write(uint32_t dest, const void* src, size_t size)
 {
   // Check for zero buffer size
-  if (size == 0) return (0);
+  if (UNLIKELY(size == 0)) return (0);
 
   // Set up destination and source pointers
   uint8_t* dp = (uint8_t*) &dest;
@@ -122,7 +122,7 @@ W25X40CL::write(uint32_t dest, const void* src, size_t size)
 
   // Calculate block size of first program
   size_t count = PAGE_MAX - (dest & PAGE_MASK);
-  if (count > size) count = size;
+  if (UNLIKELY(count > size)) count = size;
 
   while (1) {
     spi.acquire(this);
@@ -159,7 +159,7 @@ int
 W25X40CL::write_P(uint32_t dest, const void* src, size_t size)
 {
   // Check for zero buffer size
-  if (size == 0) return (0);
+  if (UNLIKELY(size == 0)) return (0);
 
   // Set up destination and source pointers
   uint8_t* dp = (uint8_t*) &dest;
@@ -168,7 +168,7 @@ W25X40CL::write_P(uint32_t dest, const void* src, size_t size)
 
   // Calculate block size of first program
   size_t count = PAGE_MAX - (dest & PAGE_MASK);
-  if (count > size) count = size;
+  if (UNLIKELY(count > size)) count = size;
 
   while (1) {
     spi.acquire(this);

@@ -115,7 +115,7 @@ int
 S25FL127S::write(uint32_t dest, const void* src, size_t size)
 {
   // Check for zero buffer size
-  if (size == 0) return (0);
+  if (UNLIKELY(size == 0)) return (0);
 
   // Set up destination and source pointers
   uint8_t* dp = (uint8_t*) &dest;
@@ -124,7 +124,7 @@ S25FL127S::write(uint32_t dest, const void* src, size_t size)
 
   // Calculate block size of first program
   size_t count = PAGE_MAX - (dest & PAGE_MASK);
-  if (count > size) count = size;
+  if (UNLIKELY(count > size)) count = size;
 
   while (1) {
     spi.acquire(this);
@@ -146,11 +146,11 @@ S25FL127S::write(uint32_t dest, const void* src, size_t size)
     while (!is_ready()) yield();
 
     // Check for program error
-    if (m_status.P_ERR) return (EFAULT);
+    if (UNLIKELY(m_status.P_ERR)) return (EFAULT);
 
     // Step to next page
     size -= count;
-    if (size == 0) break;
+    if (UNLIKELY(size == 0)) break;
     dest += count;
     sp += count;
     count = (size > PAGE_MAX ? PAGE_MAX : size);
@@ -164,7 +164,7 @@ int
 S25FL127S::write_P(uint32_t dest, const void* src, size_t size)
 {
   // Check for zero buffer size
-  if (size == 0) return (0);
+  if (UNLIKELY(size == 0)) return (0);
 
   // Set up destination and source pointers
   uint8_t* dp = (uint8_t*) &dest;
@@ -173,7 +173,7 @@ S25FL127S::write_P(uint32_t dest, const void* src, size_t size)
 
   // Calculate block size of first program
   size_t count = PAGE_MAX - (dest & PAGE_MASK);
-  if (count > size) count = size;
+  if (UNLIKELY(count > size)) count = size;
 
   while (1) {
     spi.acquire(this);
@@ -195,11 +195,11 @@ S25FL127S::write_P(uint32_t dest, const void* src, size_t size)
     while (!is_ready()) yield();
 
     // Check for program error
-    if (m_status.P_ERR) return (EFAULT);
+    if (UNLIKELY(m_status.P_ERR)) return (EFAULT);
 
     // Step to next page
     size -= count;
-    if (size == 0) break;
+    if (UNLIKELY(size == 0)) break;
     dest += count;
     sp += count;
     count = (size > PAGE_MAX ? PAGE_MAX : size);

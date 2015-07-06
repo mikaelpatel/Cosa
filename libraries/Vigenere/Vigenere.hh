@@ -42,7 +42,7 @@ public:
    */
   Vigenere(uint32_t seed, uint8_t n = N)
   {
-    if (n > N) n = N;
+    if (UNLIKELY(n > N)) n = N;
     srandom(seed);
     for (uint8_t i = 0; i < n; i++)
       m_key[i] = random();

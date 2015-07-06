@@ -54,6 +54,7 @@ public:
    * Scale the clock frequency according to the give prescale
    * factor (0..8 for prescale pow2(factor) 1..256)
    * @param[in] prescale division factor (0..8).
+   * @note atomic
    */
   static void clock_prescale(uint8_t factor);
 

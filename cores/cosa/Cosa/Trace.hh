@@ -126,7 +126,7 @@ extern uint8_t trace_log_mask;
  */
 # define ASSERT(expr)							\
   do {									\
-    if (!(expr)) FATAL("assert:" #expr);				\
+    if (UNLIKELY(!(expr))) FATAL("assert:" #expr);			\
   } while (0)
 
 /**

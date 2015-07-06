@@ -110,19 +110,19 @@ UART::on_tx_interrupt()
 #define UART_ISR(vec,nr)			\
 ISR(vec ## _UDRE_vect)				\
 {						\
-  if (UART::uart[nr] == NULL) return;		\
+  if (UNLIKELY(UART::uart[nr] == NULL)) return;	\
   UART::uart[nr]->on_udre_interrupt();		\
 }						\
 						\
 ISR(vec ## _RX_vect)				\
 {						\
-  if (UART::uart[nr] == NULL) return;		\
+  if (UNLIKELY(UART::uart[nr] == NULL)) return;	\
   UART::uart[nr]->on_rx_interrupt();		\
 }						\
 						\
 ISR(vec ## _TX_vect)				\
 {						\
-  if (UART::uart[nr] == NULL) return;		\
+  if (UNLIKELY(UART::uart[nr] == NULL)) return;	\
   UART::uart[nr]->on_tx_interrupt();		\
 }
 

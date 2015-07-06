@@ -35,7 +35,7 @@ Watchdog::as_prescale(uint16_t ms)
 {
   // Map milli-seconds to watchdog prescale values
   uint8_t prescale = log2<uint16_t>((ms + 8) >> 5);
-  if (prescale > 9) prescale = 9;
+  if (UNLIKELY(prescale > 9)) prescale = 9;
   return (prescale);
 }
 
@@ -86,7 +86,7 @@ ISR(WDT_vect)
 {
   Watchdog::s_ticks += 1;
   Watchdog::InterruptHandler handler = Watchdog::s_handler;
-  if (handler == NULL) return;
+  if (UNLIKELY(handler == NULL)) return;
   void* env = Watchdog::s_env;
   handler(env);
 }

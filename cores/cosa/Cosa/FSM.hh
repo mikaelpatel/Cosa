@@ -61,11 +61,12 @@ public:
   /**
    * Set new state handler for next event.
    * @param[in] fn state handler.
+   * @pre fn != NULL
    */
   void set_state(StateHandler fn)
     __attribute__((always_inline))
   {
-    if (fn == NULL) return;
+    if (UNLIKELY(fn == NULL)) return;
     m_state = fn;
   }
 
@@ -156,7 +157,7 @@ public:
   void cancel_timer()
     __attribute__((always_inline))
   {
-    if (m_period == 0) return;
+    if (UNLIKELY(m_period == 0)) return;
     detach();
     m_period = 0;
   }

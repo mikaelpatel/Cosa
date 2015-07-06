@@ -200,11 +200,11 @@ int
 VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Santiy check the io vector
-  if (vec == NULL) return (EINVAL);
+  if (UNLIKELY(vec == NULL)) return (EINVAL);
 
   // Check that the message is not too large
   size_t len = iovec_size(vec);
-  if (len > PAYLOAD_MAX) return (EMSGSIZE);
+  if (UNLIKELY(len > PAYLOAD_MAX)) return (EMSGSIZE);
 
   uint8_t *tp = m_buffer + m_codec->PREAMBLE_MAX;
   uint16_t crc = 0xffff;
@@ -264,7 +264,7 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 int
 VWI::Transmitter::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 {
-  if (len > PAYLOAD_MAX) return (EMSGSIZE);
+  if (UNLIKELY(len > PAYLOAD_MAX)) return (EMSGSIZE);
   iovec_t vec[2];
   iovec_t* vp = vec;
   iovec_arg(vp, buf, len);

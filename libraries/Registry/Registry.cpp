@@ -25,10 +25,10 @@ Registry::lookup(const uint8_t* path, size_t count)
 {
   // Check for root path
   item_P item = (item_P) m_root;
-  if (path == NULL) return (item);
+  if (UNLIKELY(path == NULL)) return (item);
 
   // Paths should not exceed the maximum length
-  if (count > PATH_MAX) return (NULL);
+  if (UNLIKELY(count > PATH_MAX)) return (NULL);
   for (uint8_t i = 0; i < count; i++) {
     // Check that the current item is a list
     uint8_t ix = path[i];
@@ -55,10 +55,10 @@ Registry::print(IOStream& outs, const uint8_t* path, size_t count)
 {
   // Check for root path
   item_P item = (item_P) m_root;
-  if (path == NULL) return;
+  if (UNLIKELY(path == NULL)) return;
 
   // Paths should not exceed the maximum length
-  if (count > PATH_MAX) return;
+  if (UNLIKELY(count > PATH_MAX)) return;
   for (uint8_t i = 0; i < count; i++) {
     // Check that the current item is a list
     uint8_t ix = path[i];
@@ -82,12 +82,12 @@ int
 Registry::run(action_P action, void* buf, size_t size)
 {
   // Sanity check the parameters
-  if (action == NULL) return (EINVAL);
-  if (pgm_read_byte(&action->item.type) != ACTION) return (EINVAL);
+  if (UNLIKELY(action == NULL)) return (EINVAL);
+  if (UNLIKELY(pgm_read_byte(&action->item.type) != ACTION)) return (EINVAL);
 
   // Access the action object
   Action* obj = (Action*) pgm_read_word(&action->obj);
-  if (obj == NULL) return (EINVAL);
+  if (UNLIKELY(obj == NULL)) return (EINVAL);
 
   // And run the member function
   return (obj->run(buf, size));
@@ -97,14 +97,14 @@ int
 Registry::get_value(blob_P blob, void* buf, size_t len)
 {
   // Sanity check the parameters
-  if (len == 0) return (0);
-  if ((blob == NULL) || (buf == NULL)) return (EINVAL);
-  if (pgm_read_byte(&blob->item.type) < BLOB) return (EINVAL);
+  if (UNLIKELY(len == 0)) return (0);
+  if (UNLIKELY((blob == NULL) || (buf == NULL))) return (EINVAL);
+  if (UNLIKELY(pgm_read_byte(&blob->item.type) < BLOB)) return (EINVAL);
 
   // Check size of blob
   size_t size = (size_t) pgm_read_word(&blob->size);
-  if (size == 0) return (0);
-  if (size > len) return (E2BIG);
+  if (UNLIKELY(size == 0)) return (0);
+  if (UNLIKELY(size > len)) return (E2BIG);
 
   // Check where the value is stored and copy into buffer
   storage_t storage = get_storage(&blob->item);
@@ -124,15 +124,15 @@ int
 Registry::set_value(blob_P blob, const void* buf, size_t len)
 {
   // Sanity check the parameters
-  if (len == 0) return (0);
-  if ((blob == NULL) || (buf == NULL)) return (EINVAL);
-  if (pgm_read_byte(&blob->item.type) < BLOB) return (EINVAL);
-  if (is_readonly(&blob->item)) return (EACCES);
+  if (UNLIKELY(len == 0)) return (0);
+  if (UNLIKELY((blob == NULL) || (buf == NULL))) return (EINVAL);
+  if (UNLIKELY(pgm_read_byte(&blob->item.type) < BLOB)) return (EINVAL);
+  if (UNLIKELY(is_readonly(&blob->item))) return (EACCES);
 
   // Check size of blob against given value in buffer
   size_t size = (size_t) pgm_read_word(&blob->size);
-  if (size == 0) return (0);
-  if (size != len) return (E2BIG);
+  if (UNLIKELY(size == 0)) return (0);
+  if (UNLIKELY(size != len)) return (E2BIG);
 
   // Check where the value is stored and copy into buffer
   storage_t storage = get_storage(&blob->item);

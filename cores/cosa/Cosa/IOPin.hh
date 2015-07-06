@@ -51,6 +51,7 @@ public:
   /**
    * Change IO-pin to given mode.
    * @param[in] mode new operation mode.
+   * @note atomic
    */
   void set_mode(Mode mode)
     __attribute__((always_inline))
@@ -77,6 +78,7 @@ public:
    * Change IO-pin to given mode.
    * @param[in] pin number.
    * @param[in] mode new operation mode.
+   * @note atomic
    */
   static void set_mode(Board::DigitalPin pin, Mode mode)
     __attribute__((always_inline))

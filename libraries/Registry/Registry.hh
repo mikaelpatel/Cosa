@@ -153,7 +153,7 @@ public:
   static int get_length(item_list_P list)
     __attribute__((always_inline))
   {
-    if (get_type(&list->item) != ITEM_LIST) return (EINVAL);
+    if (UNLIKELY(get_type(&list->item) != ITEM_LIST)) return (EINVAL);
     return ((int) pgm_read_byte(&list->length));
   }
 
@@ -182,7 +182,7 @@ public:
     item_P next()
       __attribute__((always_inline))
     {
-      if (m_next == m_length) return (NULL);
+      if (UNLIKELY(m_next == m_length)) return (NULL);
       return ((item_P) pgm_read_word(&m_vec[m_next++]));
     }
 

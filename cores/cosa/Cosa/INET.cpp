@@ -73,7 +73,7 @@ INET::nametopath(const char* hostname, char* path, bool progmem)
   while (res < PATH_MAX) {
     char c = (progmem ? pgm_read_byte(hp++) : *hp++);
     if (c == 0 || c == '.') {
-      if (n == 0) return (EINVAL);
+      if (UNLIKELY(n == 0)) return (EINVAL);
       *sp = n;
       res += n + 1;
       sp = np++;
@@ -99,7 +99,7 @@ INET::print_path(IOStream& outs, const char* path)
   int i = 0;
   char c;
   while (i < PATH_MAX) {
-    if (n == 0) return;
+    if (UNLIKELY(n == 0)) return;
     i += n;
     while (n--) {
       c = *p++;
@@ -123,7 +123,7 @@ INET::print_addr(IOStream& outs, const uint8_t* addr, uint16_t port)
 {
   outs << addr[0];
   for (uint8_t i = 1; i < IP_MAX; i++) outs << '.' << addr[i];
-  if (port == 0) return;
+  if (UNLIKELY(port == 0)) return;
   outs << ':' << port;
 }
 
@@ -157,7 +157,7 @@ void
 INET::Server::get_client(INET::addr_t& addr)
 {
   Socket* sock = get_socket();
-  if (sock == NULL) return;
+  if (UNLIKELY(sock == NULL)) return;
   sock->get_src(addr);
 }
 
@@ -165,7 +165,7 @@ bool
 INET::Server::begin(Socket* sock)
 {
   // Sanity check parameter
-  if (sock == NULL) return (false);
+  if (UNLIKELY(sock == NULL)) return (false);
 
   // Bind to io-stream
   m_ios.set_device(sock);
@@ -179,7 +179,7 @@ INET::Server::run(uint32_t ms)
 {
   // Sanity check server state
   Socket* sock = get_socket();
-  if (sock == NULL) return (ENOTSOCK);
+  if (UNLIKELY(sock == NULL)) return (ENOTSOCK);
 
   // When not connected; Check incoming connect requests
   uint32_t start = Watchdog::millis();
@@ -224,7 +224,7 @@ INET::Server::end()
 {
   // Sanity check server state
   Socket* sock = get_socket();
-  if (sock == NULL) return (false);
+  if (UNLIKELY(sock == NULL)) return (false);
 
   // Close the socket and mark as disconnected
   sock->close();

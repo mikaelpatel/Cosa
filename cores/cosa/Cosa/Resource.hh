@@ -42,7 +42,7 @@ public:
   void acquire()
   {
     uint8_t key = lock();
-    while (m_busy) {
+    while (UNLIKELY(m_busy)) {
       unlock(key);
       yield();
       key = lock();

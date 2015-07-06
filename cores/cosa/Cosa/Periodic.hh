@@ -90,7 +90,7 @@ private:
   virtual void on_event(uint8_t type, uint16_t value)
   {
     UNUSED(value);
-    if (type != Event::TIMEOUT_TYPE) return;
+    if (UNLIKELY(type != Event::TIMEOUT_TYPE)) return;
     run();
   }
 
@@ -100,12 +100,15 @@ private:
 /**
  * Syntactic sugar for periodic block. Used in the form:
  * @code
- * PERIODIC(ms) {
- *   ...
+ * void loop()
+ * {
+ *   periodic(ms) {
+ *     ...
+ *   }
  * }
  * @endcode
- */
-#define PERIODIC(ms)							\
+  */
+#define periodic(ms)							\
   for (uint32_t start = RTC::millis(), i = 1;				\
        i != 0;								\
        i--, delay(ms - RTC::since(start)))

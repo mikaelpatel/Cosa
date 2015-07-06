@@ -120,15 +120,14 @@ public:
 
   /**
    * Template function to read a rom block with the given type to
-   * given value reference. Returns true(1) if successful otherwise
-   * false(0).
+   * given value reference. Returns number of bytes read or negative error code.
    * @param[out] dest address variable.
    * @param[in] src address in rom to read from.
-   * @return bool.
+   * @return number of bytes or negative error code.
    */
-  template<class T> bool read(T* dest, const T* src)
+  template<class T> int read(T* dest, const T* src)
   {
-    return (m_dev->read(dest, src, sizeof(T)) == sizeof(T));
+    return (m_dev->read(dest, src, sizeof(T)));
   }
 
   int read(unsigned char* dest, const unsigned char* src)
@@ -201,15 +200,15 @@ public:
 
   /**
    * Write rom block at given address with the given value of given
-   * data type. Returns true(1) if successful otherwise false(0).
+   * data type. Returns number of bytes written or negative error code.
    * @param[in] dest address in rom to read write to.
    * @param[in] src buffer to write to rom.
    * @param[in] size number of bytes to write.
-   * @return boolean.
+   * @return number of bytes or negative error code.
    */
   template<class T> int write(T* dest, const T* src)
   {
-    return (m_dev->write(dest, src, sizeof(T)) == sizeof(T));
+    return (m_dev->write(dest, src, sizeof(T)));
   }
 
   int write(unsigned char* dest, unsigned char src)

@@ -125,7 +125,7 @@ GDDRAM::draw_image(uint16_t x, uint16_t y, Image* image)
 void
 GDDRAM::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
 {
-  if ((x >= WIDTH) || (length == 0)) return;
+  if (UNLIKELY((x >= WIDTH) || (length == 0))) return;
   if (y >= HEIGHT) {
     uint16_t h = y + length;
     if (h >= HEIGHT) return;
@@ -147,7 +147,7 @@ GDDRAM::draw_vertical_line(uint16_t x, uint16_t y, uint16_t length)
 void
 GDDRAM::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
 {
-  if ((y >= HEIGHT) || (length == 0)) return;
+  if (UNLIKELY((y >= HEIGHT) || (length == 0))) return;
   if (x >= WIDTH) {
     uint16_t w = x + length;
     if (w >= WIDTH) return;
@@ -169,8 +169,8 @@ GDDRAM::draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length)
 void
 GDDRAM::fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
-  if ((width == 0) || (height == 0)) return;
-  if ((x >= WIDTH) || (y >= HEIGHT)) return;
+  if (UNLIKELY((width == 0) || (height == 0))) return;
+  if (UNLIKELY((x >= WIDTH) || (y >= HEIGHT))) return;
   if ((x + width - 1) >= WIDTH) width = WIDTH - x;
   if ((y + height - 1) >= HEIGHT) height = HEIGHT - y;
   const color16_t color = get_pen_color();

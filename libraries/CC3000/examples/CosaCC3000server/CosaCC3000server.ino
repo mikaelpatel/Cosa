@@ -31,7 +31,11 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+#if defined(WICKEDDEVICE_WILDFIRE)
 CC3000 wifi(Board::D21, Board::EXT2, Board::D23);
+#else
+CC3000 wifi(Board::D3, Board::EXT1, Board::D4);
+#endif
 
 #define CRLF "\r\n"
 

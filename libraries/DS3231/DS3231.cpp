@@ -44,7 +44,7 @@ bool
 DS3231::get(void* alarm, uint8_t size, uint8_t offset, uint8_t& mask)
 {
   int res = read(alarm, size, offset);
-  if (res != size) return (false);
+  if (UNLIKELY(res != size)) return (false);
   mask = 0;
   uint8_t* buf = (uint8_t*) alarm;
   for (uint8_t i = 0; i < size; i++) {

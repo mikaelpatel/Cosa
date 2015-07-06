@@ -179,6 +179,9 @@ NRF24L01P::begin(const void* config)
 {
   UNUSED(config);
 
+  // Check that a device is available
+  if (UNLIKELY(read_status().reserved)) return (false);
+
   // Setup hardware features, channel, bitrate, retransmission, dynamic payload
   write(FEATURE, (_BV(EN_DPL) | _BV(EN_ACK_PAY) | _BV(EN_DYN_ACK)));
   write(RF_CH, m_channel);
@@ -208,9 +211,9 @@ int
 NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
-  if (vec == NULL) return (EINVAL);
+  if (UNLIKELY(vec == NULL)) return (EINVAL);
   size_t len = iovec_size(vec);
-  if (len > PAYLOAD_MAX) return (EMSGSIZE);
+  if (UNLIKELY(len > PAYLOAD_MAX)) return (EMSGSIZE);
 
   // Setting transmit destination
   set_transmit_mode(dest);

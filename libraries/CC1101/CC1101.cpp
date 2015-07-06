@@ -173,9 +173,9 @@ int
 CC1101::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Sanity check the payload size
-  if (vec == NULL) return (EINVAL);
+  if (UNLIKELY(vec == NULL)) return (EINVAL);
   size_t len = iovec_size(vec);
-  if (len > PAYLOAD_MAX) return (EMSGSIZE);
+  if (UNLIKELY(len > PAYLOAD_MAX)) return (EMSGSIZE);
 
   // Write frame length and header(dest, src, port) and payload buffers
   spi.acquire(this);

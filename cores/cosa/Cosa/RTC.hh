@@ -68,6 +68,7 @@ public:
    * based/calculated from the micro-second level clock. This clock is
    * always from system power up.
    * @param[in] sec.
+   * @note atomic
    */
   static void time(clock_t sec)
     __attribute__((always_inline))
@@ -100,12 +101,11 @@ public:
   /**
    * Set the current clock in micro-seconds.
    * @param[in] usec.
+   * @note atomic
    */
-  static void micros( uint32_t usec )
+  static void micros(uint32_t usec)
   {
-    synchronized {
-      s_uticks = usec;
-    }
+    synchronized s_uticks = usec;
   }
 
 
@@ -122,20 +122,20 @@ public:
   /**
    * Return the current clock in seconds.
    * @return seconds.
+   * @note atomic
    */
   static uint32_t seconds()
     __attribute__((always_inline))
   {
     uint32_t res;
-    synchronized {
-      res = s_sec;
-    }
+    synchronized res = s_sec;
     return (res);
   }
 
   /**
    * Return the current clock in seconds.
    * @return seconds.
+   * @note atomic
    */
   static clock_t time()
     __attribute__((always_inline))
@@ -165,6 +165,7 @@ public:
    * handler for Timers.
    * @param[in] fn interrupt handler.
    * @param[in] env environment pointer.
+   * @note atomic
    */
   static void set(InterruptHandler fn, void* env = NULL)
   {

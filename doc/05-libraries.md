@@ -1,12 +1,15 @@
 # Libraries
 
 * [GPS with MT/MTK3339](https://github.com/jeditekunum/CosaGPS)
-* [MQTT client](https://github.com/mikaelpatel/Cosa-MQTT) +MQTT
-* [NMEA and ublox GPS parser](https://github.com/SlashDevin/CosaGPS)
+* [ICMP ping](https://github.com/mikaelpatel/Cosa-ICMP)
 * [INA219 high-side voltage/current/power sensor](https://github.com/jeditekunum/CosaINA219)
-* [OLED SSD1306/SH1106](https://github.com/jeditekunum/CosaOLED)
-* [NEXA Wireless Protocol](https://github.com/mikaelpatel/Cosa-NEXA) +NEXA
+* [HTTP support](https://github.com/mikaelpatel/Cosa-HTTP)
 * [Goggle Protocol Buffers](https://github.com/mikaelpatel/Cosa-ProtocolBuffer) +ProtocolBuffer
+* [OLED SSD1306/SH1106](https://github.com/jeditekunum/CosaOLED)
+* [MQTT client](https://github.com/mikaelpatel/Cosa-MQTT) +MQTT
+* [NEXA Wireless Protocol](https://github.com/mikaelpatel/Cosa-NEXA) +NEXA
+* [NMEA and ublox GPS parser](https://github.com/SlashDevin/CosaGPS)
+* [NTP client](https://github.com/mikaelpatel/Cosa-NTP)
 * [Shell support](https://github.com/mikaelpatel/Cosa-Shell) +Shell
 * [SNMP agent](https://github.com/mikaelpatel/Cosa-SNMP) +SNMP
 * [Telnet server](https://github.com/mikaelpatel/Cosa-Telnet) +Telnet

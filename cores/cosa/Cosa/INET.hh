@@ -159,7 +159,6 @@ public:
    */
   static void print_addr(IOStream& outs, const uint8_t addr[IP_MAX], uint16_t port = 0);
 
-
   /**
    * Calculate Internet Checksum for given buffer with given
    * number of bytes. The buffer should contain data in network
@@ -218,8 +217,8 @@ public:
      * Run server; service incoming client connect requests or data.
      * Wait for at most given time period. Zero time period will give
      * blocking behavior. Returns zero if successful or negative error
-     * code. The error code -2 is returned on timeout.
-     * @param[in] ms timeout period (milli-seconds, default BLOCK(0)).
+     * code. The error code ETIME is returned on timeout.
+     * @param[in] ms timeout period (milli-seconds, default BLOCK(0L)).
      * @return zero or negative error code.
      */
     virtual int run(uint32_t ms = 0L);

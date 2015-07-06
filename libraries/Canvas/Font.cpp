@@ -64,11 +64,10 @@ Font::Glyph::begin(char c)
 {
   unsigned char chr = c;
 
-  if (chr < m_font->FIRST || chr > m_font->LAST)
-    {
-      m_bitmap = NULL;
-      return;
-    }
+  if (chr < m_font->FIRST || chr > m_font->LAST) {
+    m_bitmap = NULL;
+    return;
+  }
 
   m_offset = 0;
   m_flags = 0;
@@ -87,11 +86,11 @@ Font::Glyph::begin(char c)
 
       bitset_offset = pgm_read_byte(&m_font->m_bitmap[(chr - m_font->FIRST)*2]) << 8;
       bitset_offset |= pgm_read_byte(&m_font->m_bitmap[(chr - m_font->FIRST)*2 + 1]);
-      if (bitset_offset & 0x8000)  // indicates an escaped bitset (twice as wide)
-        {
-          m_flags |= ESCAPED_BITSET;
-          bitset_offset &= 0x7FFF;
-        }
+      // indicates an escaped bitset (twice as wide)
+      if (bitset_offset & 0x8000) {
+	m_flags |= ESCAPED_BITSET;
+	bitset_offset &= 0x7FFF;
+      }
       m_bitset = (uint8_t*)&m_font->m_bitmap[bitset_offset];
 
       bitset_size = (uncompressed_size + (CHARBITS-1)) / CHARBITS;

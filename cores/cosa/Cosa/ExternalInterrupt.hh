@@ -42,7 +42,7 @@ public:
   /**
    * Construct external interrupt pin with given pin number, mode and
    * pullup flag.
-   * @param[in] pin pin number.
+   * @param[in] pin number.
    * @param[in] mode pin mode (Default ON_CHANGE_MODE).
    * @param[in] pullup flag (Default false).
    */
@@ -63,18 +63,21 @@ public:
   /**
    * @override Interrupt::Handler
    * Enable external interrupt handler.
+   * @note atomic
    */
   virtual void enable();
 
   /**
    * @override Interrupt::Handler
    * Disable external interrupt handler.
+   * @note atomic
    */
   virtual void disable();
 
   /**
    * @override Interrupt::Handler
    * Clear external interrupt flag.
+   * @note atomic
    */
   virtual void clear();
 

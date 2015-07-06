@@ -181,7 +181,7 @@ int
 Base64::decode(void* dest, const char* src, size_t size)
 {
   // Check for illegal length (even 4 character blocks)
-  if (size & 0x3) return (EINVAL);
+  if (UNLIKELY((size & 0x3) != 0)) return (EINVAL);
 
   uint8_t* dp = (uint8_t*) dest;
   const char* sp = src;

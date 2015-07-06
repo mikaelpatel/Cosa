@@ -421,7 +421,7 @@ swap(uint16_t value)
 inline void
 swap(uint16_t* dest, const uint16_t* src, size_t size)
 {
-  if (size == 0) return;
+  if (UNLIKELY(size == 0)) return;
   do {
     *dest++ = swap(*src++);
   } while (--size);
@@ -447,7 +447,7 @@ void swap(T* dest, const T* src)
 inline void
 swap(uint16_t* buf, size_t size)
 {
-  if (size == 0) return;
+  if (UNLIKELY(size == 0)) return;
   do {
     int16_t data = *buf;
     *buf++ = swap(data);
@@ -486,7 +486,7 @@ swap(int16_t value)
 inline void
 swap(int16_t* dest, const int16_t* src, size_t size)
 {
-  if (size == 0) return;
+  if (UNLIKELY(size == 0)) return;
   do {
     *dest++ = swap(*src++);
   } while (--size);
@@ -542,7 +542,7 @@ inline char
 tohex(uint8_t value)
 {
   value &= 0xf;
-  if (value > 9)
+  if (UNLIKELY(value > 9))
     return (value - 10 + 'a');
   return (value + '0');
 }
@@ -557,7 +557,7 @@ inline char
 toHEX(uint8_t value)
 {
   value &= 0xf;
-  if (value > 9)
+  if (UNLIKELY(value > 9))
     return (value - 10 + 'A');
   return (value + '0');
 }

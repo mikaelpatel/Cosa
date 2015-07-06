@@ -51,6 +51,7 @@ public:
    * Set output pin to mode.
    * @param[in] pin number.
    * @param[in] initial value.
+   * @note atomic
    */
   static void set_mode(Board::DigitalPin pin, uint8_t initial = 0)
   {
@@ -79,35 +80,32 @@ public:
 
   /**
    * Set the output pin.
+   * @note atomic
    */
   void set() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() |= m_mask;
-    }
+    synchronized *PORT() |= m_mask;
   }
 
   /**
    * Set the output pin.
+   * @note atomic
    */
   void high() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() |= m_mask;
-    }
+    synchronized *PORT() |= m_mask;
   }
 
   /**
    * Set the output pin.
+   * @note atomic
    */
   void on() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() |= m_mask;
-    }
+    synchronized *PORT() |= m_mask;
   }
 
   /**
@@ -121,35 +119,32 @@ public:
 
   /**
    * Clear the output pin.
+   * @note atomic
    */
   void clear() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() &= ~m_mask;
-    }
+    synchronized *PORT() &= ~m_mask;
   }
 
   /**
    * Clear the output pin.
+   * @note atomic
    */
   void low() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() &= ~m_mask;
-    }
+    synchronized *PORT() &= ~m_mask;
   }
 
   /**
    * Clear the output pin.
+   * @note atomic
    */
   void off() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PORT() &= ~m_mask;
-    }
+    synchronized *PORT() &= ~m_mask;
   }
 
   /**
@@ -163,13 +158,12 @@ public:
 
   /**
    * Toggle the output pin.
+   * @note atomic
    */
   void toggle() const
     __attribute__((always_inline))
   {
-    synchronized {
-      *PIN() = m_mask;
-    }
+    synchronized *PIN() = m_mask;
   }
 
   /**
@@ -187,7 +181,7 @@ public:
    * and non-zero to set. Unprotected version.
    * @param[in] value to set.
    */
-  void _set(bool value) const
+  void _set(int value) const
     __attribute__((always_inline))
   {
     if (value) {
@@ -202,8 +196,9 @@ public:
    * Set the output pin with the given value. Zero(0) to clear
    * and non-zero to set.
    * @param[in] value to set.
+   * @note atomic
    */
-  void set(bool value) const
+  void set(int value) const
     __attribute__((always_inline))
   {
     synchronized {
@@ -221,7 +216,7 @@ public:
    * and non-zero to set. Unprotected version.
    * @param[in] value to set.
    */
-  void _write(bool value) const
+  void _write(int value) const
     __attribute__((always_inline))
   {
     if (value) {
@@ -236,8 +231,9 @@ public:
    * Set the output pin with the given value. Zero(0) to clear
    * and non-zero to set.
    * @param[in] value to write.
+   * @note atomic
    */
-  void write(uint8_t value) const
+  void write(int value) const
     __attribute__((always_inline))
   {
     synchronized {
@@ -251,8 +247,36 @@ public:
   }
 
   /**
+   * Set the output pin with the given value. Zero(0) to clear
+   * and non-zero to set.
+   * @param[in] value to write.
+   * @note atomic
+   */
+  OutputPin& operator=(int value)
+    __attribute__((always_inline))
+  {
+    write(value);
+    return (*this);
+  }
+
+  /**
+   * Set the output pin with the given pin value. Zero(0) to clear
+   * and non-zero to set.
+   * @param[in] value to write.
+   * @note atomic
+   */
+  OutputPin& operator=(Pin& rhs)
+    __attribute__((always_inline))
+  {
+    write(rhs);
+    return (*this);
+  }
+
+  /**
    * Shift out given byte to the output pin using the given clock
-   * output pin. Shift out according to given direction.
+   * output pin. Shift out according to given direction. Data (bits)
+   * are transfered on clock transition. Interrupts are allowed during
+   * the shift out.
    * @param[in] value to write.
    * @param[in] clk output pin.
    * @param[in] order bit first.
@@ -267,6 +291,8 @@ public:
    * @param[in] value to write.
    * @param[in] bits to write.
    * @param[in] us micro-second bit period.
+   * @note atomic
+   * @note us should not exceed 1000
    */
   void write(uint16_t value, uint8_t bits, uint16_t us) const;
 
@@ -275,8 +301,9 @@ public:
    * clear and non-zero to set.
    * @param[in] pin number.
    * @param[in] value to write.
+   * @note atomic
    */
-  static void write(Board::DigitalPin pin, uint8_t value)
+  static void write(Board::DigitalPin pin, int value)
     __attribute__((always_inline))
   {
     volatile uint8_t* port = PORT(pin);
@@ -328,7 +355,7 @@ public:
    * @param[in] value to write.
    * @return output pin.
    */
-  OutputPin& operator<<(uint8_t value)
+  OutputPin& operator<<(int value)
     __attribute__((always_inline))
   {
     set(value);
@@ -339,6 +366,8 @@ public:
    * Toggle the output pin to form a pulse with given width in
    * micro-seconds.
    * @param[in] us pulse width in micro seconds
+   * @note atomic
+   * @note pulse width is limited to 1000 us
    */
   void pulse(uint16_t us) const
     __attribute__((always_inline))

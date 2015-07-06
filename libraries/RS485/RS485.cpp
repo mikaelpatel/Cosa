@@ -42,7 +42,7 @@ crc7(const void* buf, size_t size)
 static uint16_t
 crc_xmodem(const void* buf, size_t len)
 {
-  if (len == 0) return (0);
+  if (UNLIKELY(len == 0)) return (0);
   uint8_t* bp = (uint8_t*) buf;
   uint16_t crc = 0;
   do crc = _crc_xmodem_update(crc, *bp++); while (--len);
@@ -53,10 +53,10 @@ int
 RS485::send(const void* buf, size_t len, uint8_t dest)
 {
   // Check illegal message size, address and state
-  if (len == 0 || len > PAYLOAD_MAX) return (EINVAL);
-  if (dest == m_addr) return (EINVAL);
-  if (m_addr != MASTER && dest != MASTER) return (EINVAL);
-  if (m_de.is_set()) return (EINVAL);
+  if (UNLIKELY(len == 0 || len > PAYLOAD_MAX)) return (EINVAL);
+  if (UNLIKELY(dest == m_addr)) return (EINVAL);
+  if (UNLIKELY(m_addr != MASTER && dest != MASTER)) return (EINVAL);
+  if (UNLIKELY(m_de.is_set())) return (EINVAL);
 
   // Build message header and calculate payload check-sum
   header_t header;

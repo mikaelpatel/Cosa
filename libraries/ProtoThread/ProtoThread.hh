@@ -83,7 +83,7 @@ public:
    */
   bool begin()
   {
-    if (m_state != INITIATED) return (false);
+    if (UNLIKELY(m_state != INITIATED)) return (false);
     schedule(this);
     return (true);
   }

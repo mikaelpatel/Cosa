@@ -66,13 +66,14 @@ public:
    * Attach given linkage as predecessor. Will check and detach
    * if already attached.
    * @param[in] pred linkage to attach.
+   * @note atomic
    */
   void attach(Linkage* pred)
   {
     synchronized {
 
       // Check if it needs to be detached first
-      if (pred->m_succ != pred) {
+      if (UNLIKELY(pred->m_succ != pred)) {
 	pred->m_succ->m_pred = pred->m_pred;
 	pred->m_pred->m_succ = pred->m_succ;
       }
@@ -94,11 +95,12 @@ protected:
 
   /**
    * Detach this linkage. Unlink from any list.
+   * @note atomic
    */
   void detach()
   {
     // Check that the detach is necessary
-    if (m_succ == this) return;
+    if (UNLIKELY(m_succ == this)) return;
 
     // Unlink and initiate to self reference
     synchronized {

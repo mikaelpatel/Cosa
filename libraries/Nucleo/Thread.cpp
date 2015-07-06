@@ -108,7 +108,7 @@ Thread::enqueue(Head* queue)
 void
 Thread::dequeue(Head* queue, bool flag)
 {
-  if (queue->is_empty()) return;
+  if (UNLIKELY(queue->is_empty())) return;
   Thread* thread = (Thread*) queue->get_succ();
   if (flag) {
     attach(thread);

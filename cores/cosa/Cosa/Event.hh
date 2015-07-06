@@ -24,12 +24,13 @@
 #include "Cosa/Types.h"
 #include "Cosa/Queue.hh"
 
+// Default event queue size
 #ifndef COSA_EVENT_QUEUE_MAX
-#if defined(BOARD_ATTINY)
-#define COSA_EVENT_QUEUE_MAX 8
-#else
-#define COSA_EVENT_QUEUE_MAX 16
-#endif
+# if defined(BOARD_ATTINY)
+#   define COSA_EVENT_QUEUE_MAX 8
+# else
+#   define COSA_EVENT_QUEUE_MAX 16
+# endif
 #endif
 
 /**
@@ -39,7 +40,7 @@ class Event {
 public:
   /**
    * Size of event queue. Adjust depending on application. Must be
-   * Power(2).
+   * Power(2). Class Queue will statically check this.
    */
   static const uint8_t QUEUE_MAX = COSA_EVENT_QUEUE_MAX;
 

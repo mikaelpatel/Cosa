@@ -182,7 +182,7 @@ PCD8544::draw_bitmap(uint8_t* bp, uint8_t width, uint8_t height)
 void
 PCD8544::draw_bar(uint8_t percent, uint8_t width, uint8_t pattern)
 {
-  if (percent > 100) percent = 100;
+  if (UNLIKELY(percent > 100)) percent = 100;
   uint8_t filled = (percent * (width - 2U)) / 100;
   uint8_t boarder = (m_y == 0 ? 0x81 : 0x80);
   width -= (filled + 1);

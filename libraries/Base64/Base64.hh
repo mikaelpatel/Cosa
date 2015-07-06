@@ -138,7 +138,7 @@ private:
   static uint8_t decode(char c)
     __attribute__((always_inline))
   {
-    if (c < 43 || c > 122) return (0);
+    if (UNLIKELY(c < 43 || c > 122)) return (0);
     uint8_t bits = pgm_read_byte(&DECODE[c - 43]);
     return (bits == '$' ? 0 : bits - 62);
   }

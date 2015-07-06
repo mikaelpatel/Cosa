@@ -226,7 +226,7 @@ public:
   int write(void* buf, size_t size)
     __attribute__((always_inline))
   {
-    if (!write_request(buf, size)) return (EIO);
+    if (UNLIKELY(!write_request(buf, size))) return (EIO);
     return (await_completed());
   }
 
@@ -241,7 +241,7 @@ public:
   int write(uint8_t header, void* buf = 0, size_t size = 0)
     __attribute__((always_inline))
   {
-    if (!write_request(header, buf, size)) return (EIO);
+    if (UNLIKELY(!write_request(header, buf, size))) return (EIO);
     return (await_completed());
   }
 
@@ -256,7 +256,7 @@ public:
   int write(uint16_t header, void* buf = 0, size_t size = 0)
     __attribute__((always_inline))
   {
-    if (!write_request(header, buf, size)) return (EIO);
+    if (UNLIKELY(!write_request(header, buf, size))) return (EIO);
     return (await_completed());
   }
 
@@ -270,7 +270,7 @@ public:
   int read(void* buf, size_t size)
     __attribute__((always_inline))
   {
-    if (!read_request(buf, size)) return (EIO);
+    if (UNLIKELY(!read_request(buf, size))) return (EIO);
     return (await_completed());
   }
 

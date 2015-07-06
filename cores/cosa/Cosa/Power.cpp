@@ -35,7 +35,7 @@ Power::sleep(uint8_t mode)
 void
 Power::clock_prescale(uint8_t factor)
 {
-  if (factor > 8) factor = 8;
+  if (UNLIKELY(factor > 8)) factor = 8;
 
   // Fix: RTC and other timer scaling
   synchronized {

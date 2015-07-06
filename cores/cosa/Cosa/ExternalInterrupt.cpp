@@ -136,17 +136,13 @@ ExternalInterrupt::enable()
 void
 ExternalInterrupt::disable()
 {
-  synchronized {
-    bit_clear(GIMSK, INT0 + m_ix);
-  }
+  synchronized bit_clear(GIMSK, INT0 + m_ix);
 }
 
 void
 ExternalInterrupt::clear()
 {
-  synchronized {
-    bit_set(GIFR, INTF0 + m_ix);
-  }
+  synchronized bit_set(GIFR, INTF0 + m_ix);
 }
 
 #elif defined(BOARD_ATTINY)
@@ -174,17 +170,13 @@ ExternalInterrupt::enable()
 void
 ExternalInterrupt::disable()
 {
-  synchronized {
-    bit_clear(GIMSK, INT0);
-  }
+  synchronized bit_clear(GIMSK, INT0);
 }
 
 void
 ExternalInterrupt::clear()
 {
-  synchronized {
-    bit_set(GIFR, INTF0);
-  }
+  synchronized bit_set(GIFR, INTF0);
 }
 
 #endif
@@ -203,17 +195,13 @@ ExternalInterrupt::enable()
 void
 ExternalInterrupt::disable()
 {
-  synchronized {
-    bit_clear(EIMSK, m_ix);
-  }
+  synchronized bit_clear(EIMSK, m_ix);
 }
 
 void
 ExternalInterrupt::clear()
 {
-  synchronized {
-    bit_clear(EIFR, m_ix);
-  }
+  synchronized bit_clear(EIFR, m_ix);
 }
 #endif
 

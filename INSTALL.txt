@@ -1,10 +1,22 @@
+USING COSA WITH THE ARDUINO IDE/BOARDS MANAGER
+==============================================
+
+1. Add the URL to the Cosa package definition file to the Arduino IDE
+   Preferences>Additional Boards Manager URLs field.
+   https://raw.githubusercontent.com/mikaelpatel/Cosa/master/package_cosa_index.json
+
+2. Open the Arduino IDE Boards Manager in the Tools>Board menu.
+
+3. Select Cosa and install.
+
+
 USING COSA WITH THE ARDUINO IDE/TOOLCHAIN
 =========================================
 
 1. Download and install Arduino IDE. Default install directory in Cosa
    build script is $HOME/opt/arduino-VERSION
 
-2. Download and install Cosa. Default install directory for Cosa is 
+2. Download and install Cosa. Default install directory for Cosa is
    $HOME/Sketchbook/hardware/Cosa (Arduino 1.0.X)
    $HOME/Sketchbook/hardware/Cosa/avr (Arduino 1.5.X)
 
@@ -23,12 +35,12 @@ USING COSA WITH THE GCC AVR TOOLCHAIN (UBUNTU)
 ==============================================
 
 1. Install gcc-avr (1:48-2.1) with avr-libc and avrdude with Ubuntu
-   Software Center or apt-get. 
+   Software Center or apt-get.
 
 2. Set environment variable COSA_DIR to the Cosa install directory.
    COSA_DIR=$HOME/Cosa ; export COSA_DIR
 
-3. Set environment variable GCC_AVR_VER to gcc-4.2. 
+3. Set environment variable GCC_AVR_VER to gcc-4.2.
    GCC_AVR_VER=gcc-avr-4.2 ; export GCC_AVR_VER
 
 4. Add COSA_DIR/build to PATH

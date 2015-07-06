@@ -60,6 +60,7 @@ public:
   /**
    * @override Interrupt::Handler
    * Enable analog comparator handler.
+   * @note atomic
    */
   virtual void enable()
   {
@@ -73,6 +74,7 @@ public:
   /**
    * @override Interrupt::Handler
    * Disable analog comparator handler.
+   * @note atomic
    */
   virtual void disable()
   {

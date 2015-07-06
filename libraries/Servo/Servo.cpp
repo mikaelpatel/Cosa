@@ -50,7 +50,7 @@ Servo::end()
 void
 Servo::set_angle(uint8_t degree)
 {
-  if (degree > 180) degree = 180;
+  if (UNLIKELY(degree > 180)) degree = 180;
   uint16_t width = (((uint32_t) (m_max - m_min)) * degree) / 180L;
   synchronized {
     m_width = m_min + width;
@@ -61,7 +61,7 @@ Servo::set_angle(uint8_t degree)
 ISR(TIMER1_COMPA_vect)
 {
   Servo* servo = Servo::servo[0];
-  if (servo == 0) return;
+  if (UNLIKELY(servo == NULL)) return;
   servo->toggle();
   if (servo->is_set())
     OCR1A = TCNT1 + US_TO_TICKS(servo->m_width);
@@ -72,7 +72,7 @@ ISR(TIMER1_COMPA_vect)
 ISR(TIMER1_COMPB_vect)
 {
   Servo* servo = Servo::servo[1];
-  if (servo == 0) return;
+  if (UNLIKELY(servo == NULL)) return;
   servo->toggle();
   if (servo->is_set())
     OCR1B = TCNT1 + US_TO_TICKS(servo->m_width);

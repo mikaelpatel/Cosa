@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Demonstration of the Cosa LED class and creating a static instance.
+ * Demonstration of the Cosa LED class.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -26,17 +26,16 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 
+LED builtin;
+
 void setup()
 {
   Power::set(SLEEP_MODE_PWR_DOWN);
   Watchdog::begin(128, Watchdog::push_timeout_events);
-  static LED builtin;
   builtin.alert_mode();
 }
 
 void loop()
 {
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
+  Event::service();
 }

@@ -25,7 +25,7 @@ DS18B20*
 DS18B20::Search::next()
 {
   DS18B20* dev = (DS18B20*) OWI::Search::next();
-  if (dev == NULL) return (NULL);
+  if (UNLIKELY(dev == NULL)) return (NULL);
   dev->read_scratchpad(false);
   return (dev);
 }
