@@ -78,6 +78,7 @@
  */
 class Board {
   friend class Pin;
+  friend class GPIO;
   friend class UART;
 private:
   /**

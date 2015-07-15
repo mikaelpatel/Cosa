@@ -53,6 +53,7 @@
  */
 class Board {
   friend class Pin;
+  friend class GPIO;
 private:
   /**
    * Do not allow instances. This is a static singleton; name space.
