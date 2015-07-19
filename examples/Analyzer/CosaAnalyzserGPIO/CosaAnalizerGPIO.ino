@@ -17,7 +17,7 @@
  *
  * @section Description
  * Logic Analyzer Cosa GPIO; trigger on rising edge transition
- * on ledPin. Measurement values are for Arduino Uno
+ * on ledPin. Measurement values are for Arduino Uno/Nano.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -55,7 +55,9 @@ void setup()
 void loop()
 {
   // Measure overhead in test case marker;
-  // 0.5 us
+  // 1.5 us (0.5 us per pulse)
+  ~ledPin;
+  ~ledPin;
   ~ledPin;
   ~ledPin;
   DELAY(10);
@@ -242,10 +244,7 @@ void loop()
   // 8.375 us (0.98 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
-    if (data & bit)
-      GPIO::write(Board::D9, 1);
-    else
-      GPIO::write(Board::D9, 0);
+    if (data & bit) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
     GPIO::write(Board::D10, 1);
     GPIO::write(Board::D10, 0);
   }
@@ -269,10 +268,7 @@ void loop()
   // 7.750 us (0.91 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
-    if (data & bit)
-      GPIO::write(Board::D9, 1);
-    else
-      GPIO::write(Board::D9, 0);
+    if (data & bit) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
     GPIO::toggle(Board::D10);
     GPIO::toggle(Board::D10);
   }
@@ -314,52 +310,28 @@ void loop()
   // and toggle member functions fully unrolled
   // 5.250 us (0.59 us per bit)
   ~ledPin;
-  if (data & 0x80)
-    GPIO::write(Board::D9, 1);
-  else
-    GPIO::write(Board::D9, 0);
+  if (data & 0x80) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
   GPIO::toggle(Board::D10);
   GPIO::toggle(Board::D10);
-  if (data & 0x40)
-    GPIO::write(Board::D9, 1);
-  else
-    GPIO::write(Board::D9, 0);
+  if (data & 0x40) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
   GPIO::toggle(Board::D10);
   GPIO::toggle(Board::D10);
-  if (data & 0x20)
-    GPIO::write(Board::D9, 1);
-  else
-    GPIO::write(Board::D9, 0);
+  if (data & 0x20) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
   GPIO::toggle(Board::D10);
   GPIO::toggle(Board::D10);
-  if (data & 0x10)
-    GPIO::write(Board::D9, 1);
-  else
-    GPIO::write(Board::D9, 0);
+  if (data & 0x10) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
   GPIO::toggle(Board::D10);
   GPIO::toggle(Board::D10);
-  if (data & 0x08)
-    GPIO::write(Board::D9, 1);
-  else
-    GPIO::write(Board::D9, 0);
+  if (data & 0x08) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
   GPIO::toggle(Board::D10);
   GPIO::toggle(Board::D10);
-  if (data & 0x04)
-    GPIO::write(Board::D9, 1);
-  else
-    GPIO::write(Board::D9, 0);
+  if (data & 0x04) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
   GPIO::toggle(Board::D10);
   GPIO::toggle(Board::D10);
-  if (data & 0x02)
-    GPIO::write(Board::D9, 1);
-  else
-    GPIO::write(Board::D9, 0);
+  if (data & 0x02) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
   GPIO::toggle(Board::D10);
   GPIO::toggle(Board::D10);
-  if (data & 0x01)
-    GPIO::write(Board::D9, 1);
-  else
-    GPIO::write(Board::D9, 0);
+  if (data & 0x01) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
   GPIO::toggle(Board::D10);
   GPIO::toggle(Board::D10);
   ~ledPin;
