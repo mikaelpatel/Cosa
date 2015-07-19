@@ -23,12 +23,13 @@
  */
 
 #include "Cosa/GPIO.hh"
+#include "Cosa/Math.hh"
 
 GPIO outPin(Board::D8, GPIO::OUTPUT_MODE);
 GPIO dataPin(Board::D9, GPIO::OUTPUT_MODE);
 GPIO clockPin(Board::D10, GPIO::OUTPUT_MODE);
 GPIO ledPin(Board::LED, GPIO::OUTPUT_MODE);
-uint8_t data = 0x55;
+uint8_t data;
 
 void setup()
 {
@@ -37,6 +38,9 @@ void setup()
   dataPin = 0;
   clockPin = 0;
   ledPin = 0;
+
+  // Initial data
+  data = rand(255);
 
   // Allow some time to start logic analyzer trigger
   sleep(2);
@@ -95,12 +99,36 @@ void loop()
   ~ledPin;
   DELAY(10);
 
+  // Measure clocked serial transfer of a byte using assignment
+  // operator with const value;
+  // 21.250 us (2.59 us per bit)
+  ~ledPin;
+  for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
+    if (data & bit) dataPin = 1; else dataPin = 0;
+    clockPin = 1;
+    clockPin = 0;
+  }
+  ~ledPin;
+  DELAY(10);
+
   // Measure clocked serial transfer of a byte using assignment operator
   // and toggle operator;
   // 21.875 us (2.67 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
     dataPin = (data & bit);
+    ~clockPin;
+    ~clockPin;
+  }
+  ~ledPin;
+  DELAY(10);
+
+  // Measure clocked serial transfer of a byte using assignment
+  // operator with const value and toggle operator;
+  // 19.21 us (2.33 us per bit)
+  ~ledPin;
+  for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
+    if (data & bit) dataPin = 1; else dataPin = 0;
     ~clockPin;
     ~clockPin;
   }
@@ -133,6 +161,37 @@ void loop()
   ~clockPin;
   ~clockPin;
   dataPin = (data & 0x01);
+  ~clockPin;
+  ~clockPin;
+  ~ledPin;
+  DELAY(10);
+
+  // Measure clocked serial transfer of a byte using assignment operator
+  // of const value and toggle operator fully unrolled
+  // 16.125 us (1.95 us per bit)
+  ~ledPin;
+  if (data & 0x80) dataPin = 1; else dataPin = 0;
+  ~clockPin;
+  ~clockPin;
+  if (data & 0x40) dataPin = 1; else dataPin = 0;
+  ~clockPin;
+  ~clockPin;
+  if (data & 0x20) dataPin = 1; else dataPin = 0;
+  ~clockPin;
+  ~clockPin;
+  if (data & 0x10) dataPin = 1; else dataPin = 0;
+  ~clockPin;
+  ~clockPin;
+  if (data & 0x08) dataPin = 1; else dataPin = 0;
+  ~clockPin;
+  ~clockPin;
+  if (data & 0x04) dataPin = 1; else dataPin = 0;
+  ~clockPin;
+  ~clockPin;
+  if (data & 0x02) dataPin = 1; else dataPin = 0;
+  ~clockPin;
+  ~clockPin;
+  if (data & 0x01) dataPin = 1; else dataPin = 0;
   ~clockPin;
   ~clockPin;
   ~ledPin;
@@ -179,11 +238,41 @@ void loop()
   DELAY(10);
 
   // Measure clocked serial transfer of a byte using static write
+  // member function with const value
+  // 8.375 us (0.98 us per bit)
+  ~ledPin;
+  for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
+    if (data & bit)
+      GPIO::write(Board::D9, 1);
+    else
+      GPIO::write(Board::D9, 0);
+    GPIO::write(Board::D10, 1);
+    GPIO::write(Board::D10, 0);
+  }
+  ~ledPin;
+  DELAY(10);
+
+  // Measure clocked serial transfer of a byte using static write
   // and toggle member functions
   // 9.875 us (1.17 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
     GPIO::write(Board::D9, data & bit);
+    GPIO::toggle(Board::D10);
+    GPIO::toggle(Board::D10);
+  }
+  ~ledPin;
+  DELAY(10);
+
+  // Measure clocked serial transfer of a byte using static write
+  // with const value and toggle member functions
+  // 7.750 us (0.91 us per bit)
+  ~ledPin;
+  for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
+    if (data & bit)
+      GPIO::write(Board::D9, 1);
+    else
+      GPIO::write(Board::D9, 0);
     GPIO::toggle(Board::D10);
     GPIO::toggle(Board::D10);
   }
@@ -219,9 +308,64 @@ void loop()
   GPIO::toggle(Board::D10);
   GPIO::toggle(Board::D10);
   ~ledPin;
+  DELAY(10);
 
-  // Rotate data to avoid compiler optimization of data
-  data = (data << 1) | ((data & 0x01) == 0);
+  // Measure clocked serial transfer of a byte using static write
+  // and toggle member functions fully unrolled
+  // 5.250 us (0.59 us per bit)
+  ~ledPin;
+  if (data & 0x80)
+    GPIO::write(Board::D9, 1);
+  else
+    GPIO::write(Board::D9, 0);
+  GPIO::toggle(Board::D10);
+  GPIO::toggle(Board::D10);
+  if (data & 0x40)
+    GPIO::write(Board::D9, 1);
+  else
+    GPIO::write(Board::D9, 0);
+  GPIO::toggle(Board::D10);
+  GPIO::toggle(Board::D10);
+  if (data & 0x20)
+    GPIO::write(Board::D9, 1);
+  else
+    GPIO::write(Board::D9, 0);
+  GPIO::toggle(Board::D10);
+  GPIO::toggle(Board::D10);
+  if (data & 0x10)
+    GPIO::write(Board::D9, 1);
+  else
+    GPIO::write(Board::D9, 0);
+  GPIO::toggle(Board::D10);
+  GPIO::toggle(Board::D10);
+  if (data & 0x08)
+    GPIO::write(Board::D9, 1);
+  else
+    GPIO::write(Board::D9, 0);
+  GPIO::toggle(Board::D10);
+  GPIO::toggle(Board::D10);
+  if (data & 0x04)
+    GPIO::write(Board::D9, 1);
+  else
+    GPIO::write(Board::D9, 0);
+  GPIO::toggle(Board::D10);
+  GPIO::toggle(Board::D10);
+  if (data & 0x02)
+    GPIO::write(Board::D9, 1);
+  else
+    GPIO::write(Board::D9, 0);
+  GPIO::toggle(Board::D10);
+  GPIO::toggle(Board::D10);
+  if (data & 0x01)
+    GPIO::write(Board::D9, 1);
+  else
+    GPIO::write(Board::D9, 0);
+  GPIO::toggle(Board::D10);
+  GPIO::toggle(Board::D10);
+  ~ledPin;
+
+  // New data value
+  data = rand(255);
   sleep(1);
 }
 

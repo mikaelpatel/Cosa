@@ -25,7 +25,7 @@
 
 /**
  * High Performance General Purpose Input Output (GPIO) Pin
- * abstraction. Minimalistic operator syntax oriented interface.
+ * abstraction.
  */
 class GPIO {
 public:
@@ -35,7 +35,7 @@ public:
   enum Mode {
     OUTPUT_MODE,		// Output pin mode.
     INPUT_MODE,			// Input pin mode.
-    PULLUP_INPUT_MODE		// Input pin moe with pullup.
+    PULLUP_INPUT_MODE		// Input pin with pullup mode.
   };
 
   /**
@@ -114,6 +114,7 @@ public:
     volatile uint8_t* port = PORT();
     const uint8_t mask = m_mask;
 #if ARDUINO > 150
+    // Synchronized not needed when constant values
     if (__builtin_constant_p(value)) {
       if (value) {
 	*port |= mask;
@@ -166,6 +167,41 @@ public:
   }
 
   /**
+   * Set pin input/output mode. Does not require an instance.
+   * @param mode input or output mode.
+   * @note atomic
+   */
+  static void mode(Board::DigitalPin pin, Mode mode)
+    __attribute__((always_inline))
+  {
+    const uint8_t mask = MASK(pin);
+    synchronized {
+      if (mode == OUTPUT_MODE)
+	*DDR(pin) |= mask;
+      else {
+	*DDR(pin) &= ~mask;
+	if (mode == PULLUP_INPUT_MODE)
+	  *PORT(pin) |= mask;
+      }
+    }
+  }
+
+  /**
+   * Get pin input/output mode. Does not require an instance.
+   * @return mode.
+   */
+  static Mode mode(Board::DigitalPin pin)
+    __attribute__((always_inline))
+  {
+    const uint8_t mask = MASK(pin);
+    if ((*DDR(pin) & mask) != 0)
+      return (OUTPUT_MODE);
+    if ((*PORT(pin) & mask) != 0)
+      return (PULLUP_INPUT_MODE);
+    return (INPUT_MODE);
+  }
+
+  /**
    * Use pin identity directly to read pin state. Does not require an
    * instance. Return true(1) if the pin is set otherwise false(0).
    * @param[in] pin identity.
@@ -174,7 +210,7 @@ public:
   static bool read(Board::DigitalPin pin)
     __attribute__((always_inline))
   {
-    return ((*Board::SFR(pin) & MASK(pin)) != 0);
+    return ((*PIN(pin) & MASK(pin)) != 0);
   }
 
   /**
@@ -190,6 +226,7 @@ public:
     volatile uint8_t* port = PORT(pin);
     const uint8_t mask = MASK(pin);
 #if ARDUINO > 150
+    // Synchronized not needed when constant values
     if (__builtin_constant_p(pin) && __builtin_constant_p(value)) {
       if (value) {
 	*port |= mask;
@@ -221,7 +258,12 @@ public:
   {
     volatile uint8_t* port = PIN(pin);
     const uint8_t mask = MASK(pin);
-    *port = mask;
+#if ARDUINO > 150
+    if (__builtin_constant_p(pin))
+      *port = mask;
+    else
+#endif
+      synchronized *port = mask;
   }
 
 protected:
