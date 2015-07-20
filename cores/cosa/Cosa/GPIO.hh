@@ -40,22 +40,28 @@ public:
 
   /**
    * Construct general purpose pin object for given digital pin
-   * with given input/output mode.
+   * with given input/output mode and initial value.
    * @param[in] pin identity.
    * @param[in] mode input/output mode.
+   * @param[in] value initial value of port.
    * @note atomic
    */
-  GPIO(Board::DigitalPin pin, Mode mode) :
+  GPIO(Board::DigitalPin pin, Mode mode, bool value = 0) :
     m_sfr(Board::SFR(pin)),
     m_mask(MASK(pin))
   {
     synchronized {
-      if (mode == OUTPUT_MODE)
+      if (mode == OUTPUT_MODE) {
 	*DDR() |= m_mask;
+      }
       else {
 	*DDR() &= ~m_mask;
-	if (mode == PULLUP_INPUT_MODE)
-	  *PORT() |= m_mask;
+      }
+      if (value || (mode == PULLUP_INPUT_MODE)) {
+	*PORT() |= m_mask;
+      }
+      else {
+	*PORT() &= ~m_mask;
       }
     }
   }
@@ -111,26 +117,12 @@ public:
   GPIO& operator=(bool value)
     __attribute__((always_inline))
   {
-    volatile uint8_t* port = PORT();
-    const uint8_t mask = m_mask;
-#if ARDUINO > 150
-    // Synchronized not needed when constant values
-    if (__builtin_constant_p(value)) {
-      if (value) {
-	*port |= mask;
-      }
-      else {
-	*port &= ~mask;
-      }
-    }
-    else
-#endif
     synchronized {
       if (value) {
-	*port |= mask;
+	*PORT() |= m_mask;
       }
       else {
-	*port &= ~mask;
+	*PORT() &= ~m_mask;
       }
     }
     return (*this);
@@ -258,12 +250,7 @@ public:
   {
     volatile uint8_t* port = PIN(pin);
     const uint8_t mask = MASK(pin);
-#if ARDUINO > 150
-    if (__builtin_constant_p(pin))
-      *port = mask;
-    else
-#endif
-      synchronized *port = mask;
+    *port = mask;
   }
 
 protected:

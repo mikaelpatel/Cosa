@@ -16,8 +16,9 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Logic Analyzer Cosa GPIO; trigger on rising edge transition
- * on ledPin. Measurement values are for Arduino Uno/Nano.
+ * Logic Analyzer based performance measurement of CosaGPIO. Trigger
+ * on rising edge transition on ledPin. Measurements are for Arduino
+ * Uno/Nano.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -33,12 +34,6 @@ uint8_t data;
 
 void setup()
 {
-  // Initial pin state
-  outPin = 0;
-  dataPin = 0;
-  clockPin = 0;
-  ledPin = 0;
-
   // Initial data
   data = rand(255);
 
@@ -54,16 +49,14 @@ void setup()
 
 void loop()
 {
-  // Measure overhead in test case marker;
-  // 1.5 us (0.5 us per pulse)
-  ~ledPin;
-  ~ledPin;
+  // Measure overhead of test case marker;
+  // 0.5 us per pulse
   ~ledPin;
   ~ledPin;
   DELAY(10);
 
   // Measure four pulses using assignment operator;
-  // 4.5 us (1 us per pulse)
+  // 7.675 us (1.8 us per pulse)
   ~ledPin;
   outPin = 1;
   outPin = 0;
@@ -91,7 +84,7 @@ void loop()
   DELAY(10);
 
   // Measure clocked serial transfer of a byte using assignment operator;
-  // 23.375 us (2.86 us per bit)
+  // 28.1875 us (3.46 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
     dataPin = (data & bit);
@@ -103,7 +96,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using assignment
   // operator with const value;
-  // 21.250 us (2.59 us per bit)
+  // 28.0625 us (3.45 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
     if (data & bit) dataPin = 1; else dataPin = 0;
@@ -115,7 +108,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using assignment operator
   // and toggle operator;
-  // 21.875 us (2.67 us per bit)
+  // 21.6875 us (2.63 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
     dataPin = (data & bit);
@@ -127,7 +120,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using assignment
   // operator with const value and toggle operator;
-  // 19.21 us (2.33 us per bit)
+  // 21.5625 us (2.33 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
     if (data & bit) dataPin = 1; else dataPin = 0;
@@ -139,7 +132,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using assignment operator
   // and toggle operator fully unrolled
-  // 19.208 us (2.33 us per bit)
+  // 19.000 us (2.31 us per bit)
   ~ledPin;
   dataPin = (data & 0x80);
   ~clockPin;
@@ -170,7 +163,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using assignment operator
   // of const value and toggle operator fully unrolled
-  // 16.125 us (1.95 us per bit)
+  // 18.5000 us (2.25 us per bit)
   ~ledPin;
   if (data & 0x80) dataPin = 1; else dataPin = 0;
   ~clockPin;
@@ -229,7 +222,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using static write
   // member function
-  // 10.875 us (1.29 us per bit)
+  // 10.8125 us (1.29 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
     GPIO::write(Board::D9, data & bit);
@@ -241,7 +234,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using static write
   // member function with const value
-  // 8.375 us (0.98 us per bit)
+  // 8.5625 us (1.01 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
     if (data & bit) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
@@ -253,7 +246,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using static write
   // and toggle member functions
-  // 9.875 us (1.17 us per bit)
+  // 9.8125 us (1.16 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
     GPIO::write(Board::D9, data & bit);
@@ -265,7 +258,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using static write
   // with const value and toggle member functions
-  // 7.750 us (0.91 us per bit)
+  // 7.9375 us (0.93 us per bit)
   ~ledPin;
   for(uint8_t bit = 0x80; bit != 0; bit >>= 1) {
     if (data & bit) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
@@ -277,7 +270,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using static write
   // and toggle member functions fully unrolled
-  // 7.167 us (0.83 us per bit)
+  // 7.1250 us (0.83 us per bit)
   ~ledPin;
   GPIO::write(Board::D9, data & 0x80);
   GPIO::toggle(Board::D10);
@@ -308,7 +301,7 @@ void loop()
 
   // Measure clocked serial transfer of a byte using static write
   // and toggle member functions fully unrolled
-  // 5.250 us (0.59 us per bit)
+  // 5.3125 us (0.60 us per bit)
   ~ledPin;
   if (data & 0x80) GPIO::write(Board::D9, 1); else GPIO::write(Board::D9, 0);
   GPIO::toggle(Board::D10);
