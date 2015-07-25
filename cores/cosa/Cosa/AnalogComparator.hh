@@ -41,9 +41,9 @@ public:
    * Construct analog comparator handler. Compare with AIN1.
    * @param[in] mode comparator mode.
    */
-  AnalogComparator(Mode mode = ON_TOGGLE_MODE) :
+  AnalogComparator(Mode mode = ON_TOGGLE_MODE, bool bandgap = false) :
     m_mode(mode),
-    m_pin(AIN1)
+    m_pin(bandgap ? VBG : AIN1)
   {}
 
   /**
@@ -66,8 +66,11 @@ public:
   {
     synchronized {
       s_comparator = this;
-      ADCSRB = _BV(ACME) | (m_pin == AIN1 ? _BV(ADEN) : m_pin);
-      ACSR = _BV(ACIE) | m_mode;
+      ADCSRB = (m_pin >= AIN1) ? 0 : (_BV(ACME) | m_pin);
+      if (m_pin == VBG)
+	ACSR = _BV(ACBG) | _BV(ACIE) | m_mode;
+      else
+	ACSR = _BV(ACIE) | m_mode;
     }
   }
 
@@ -93,7 +96,8 @@ public:
 
 protected:
   static AnalogComparator* s_comparator; //!< Current comparator.
-  static const uint8_t AIN1 = 255;	 //!< Default reference voltage.
+  static const uint8_t AIN1 = 254;	 //!< Default reference voltage.
+  static const uint8_t VBG = 255;	 //!< Bandgap voltage reference.
   Mode m_mode;				 //!< Compare mode.
   uint8_t m_pin;			 //!< Analog channel.
 
