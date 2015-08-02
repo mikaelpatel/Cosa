@@ -15,6 +15,11 @@ Please note that Cosa is not an Arduino core; Cosa does not implement
 the Arduino API. Sketches written with Cosa may be built with the
 Arduino IDE or with the command line based build support for Linux.
 
+Cosa supports the Arduino Boards Manager install. Simply install by
+adding the Cosa Package URL to the Additional Boards Manager URLs in
+the IDE Preferences; https://raw.githubusercontent.com/mikaelpatel/Cosa/master/package_cosa_index.json
+
+
 More details are available:
 
 * [Che Cosa?](./doc/01-cosa.md)
