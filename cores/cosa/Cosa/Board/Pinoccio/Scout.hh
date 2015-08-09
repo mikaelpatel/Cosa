@@ -312,6 +312,7 @@ extern "C" {
   void TIMER1_COMPA_vect(void) __attribute__ ((signal));
   void TIMER1_COMPB_vect(void) __attribute__ ((signal));
   void TIMER1_COMPC_vect(void) __attribute__ ((signal));
+  void TIMER1_CAPT_vect(void)  __attribute__ ((signal));
   void TIMER1_OVF_vect(void) __attribute__ ((signal));
   void TIMER2_COMPA_vect(void) __attribute__ ((signal));
   void TIMER2_COMPB_vect(void) __attribute__ ((signal));
