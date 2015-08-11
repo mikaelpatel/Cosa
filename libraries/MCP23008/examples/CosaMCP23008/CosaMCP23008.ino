@@ -17,8 +17,11 @@
  *
  * @section Description
  * Cosa MCP23008 Remote 8-bit I/O expander driver example. Includes
- * benchmarking of read/write of port and pins; write (340 us),
- * read(468 us).
+ * benchmarking of read/write of port and pins;
+ *  1. write pin, 340 us
+ *  2. write sequence, 113 us per byte
+ *  3. read without cached address, 472 us
+ *  4. read with cached address, 236 us
  *
  * @section Circuit
  * @code
@@ -71,11 +74,14 @@ void setup()
   Watchdog::begin();
   RTC::begin();
 
+  // Start the MCP23008 device driver
+  port.begin();
+
   // Define an output pin(0) for demo. All other are input default
   port.set_output_pin(0);
 
-  // Use pullup resistor on pin(7)
-  port.set_pullup_pin(7);
+  // Use pullup resistor on pin(1..7)
+  port.set_pullup(0xfe);
 }
 
 void loop()
@@ -86,23 +92,33 @@ void loop()
   uint32_t start, stop;
   ledPin.toggle();
 
+  // Fast toggle pin(0)
+  uint8_t buf[16];
+  for (uint8_t i = 0; i < sizeof(buf); i++) buf[i] = i & 1;
   start = RTC::micros();
-  port.write(p, v);
+  port.write(buf, sizeof(buf));
   stop = RTC::micros();
-  trace << stop - start	<< PSTR(": write(0, ") << v << ')' << endl;
-  v = !v;
-  sleep(1);
+  trace << (stop - start) / sizeof(buf)	<< PSTR(": write(buf)") << endl;
 
-  // Read input pins(1..7). Measure execution time in micro-seconds
+  // Read input pins
   start = RTC::micros();
   uint8_t u = port.read();
   stop = RTC::micros();
   trace << stop - start << PSTR(": read() = ") << bin << u << endl;
-  for (uint8_t i = 1; i < 8; i++) {
+
+  // Toggle pin(0)
+  start = RTC::micros();
+  port.write(p, v);
+  stop = RTC::micros();
+  trace << stop - start	<< PSTR(": write(") << p << ',' << v << ')' << endl;
+  v = !v;
+
+  // Read each pin(0..7)
+  for (uint8_t pin = 0; pin < 8; pin++) {
     start = RTC::micros();
-    u = port.read(i);
+    u = port.read(pin);
     stop = RTC::micros();
-    trace << stop - start << PSTR(": read(") << i << PSTR(") = ") << u << endl;
+    trace << stop - start << PSTR(": read(") << pin << PSTR(") = ") << u << endl;
   }
   ledPin.toggle();
   sleep(1);

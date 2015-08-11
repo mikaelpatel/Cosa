@@ -49,33 +49,50 @@
  */
 class MCP23008 : private TWI::Driver {
 public:
+  /** Interrupt Pin modes */
+  enum InterruptMode {
+    DISABLE = 0,		//!< Interrupt disabled.
+    ON_CHANGE = 1,		//!< Interrupt on change (toggle).
+    ON_FALLING = 2,		//!< Interrupt on falling (high to low).
+    ON_RISING = 3		//!< Interrupt on rising (low to high).
+  } __attribute__((packed));
+
   /**
    * Construct connection to MCP23008 8-bit I/O Expander with
-   * given sub-address. All pins are input on reset.
-   * @param[in] subaddr sub-address (0..7, default 7).
+   * given sub-address. All pins are input on reset. Interrupt disabled.
+   * @param[in] subaddr sub-address (0..7, default 0).
    */
-  MCP23008(uint8_t subaddr = 7) :
-    TWI::Driver(0x20 | (subaddr & 0x7)),
+  MCP23008(uint8_t subaddr = 0) :
+    TWI::Driver(0x20 | (subaddr & SUBADDR_MASK)),
     m_iodir(0xff),
+    m_gpinten(0),
+    m_defval(0),
+    m_intcon(0),
     m_gppu(0),
     m_olat(0)
   {}
 
   /**
-   * Set data direction for port pin P0..P7; 0 for output, 1 for input.
-   * Return true if set otherwise false.
-   * @param[in] ddr data direction mask.
+   * Initiate device driver. Return true if initiated otherwise false.
    * @return bool.
    */
-  bool set_data_direction(uint8_t ddr);
+  bool begin();
+
+  /**
+   * Set data direction for port pin P0..P7; 0 for output, 1 for input.
+   * Return true if set otherwise false.
+   * @param[in] iodir data direction mask.
+   * @return bool.
+   */
+  bool set_data_direction(uint8_t iodir);
 
   /**
    * Set pullup mode for port pin P0..P7; 0 for normal, 1 for pullup
-   * resistor enabled. Return true if set otherwise false.
-   * @param[in] pur pullup resistor mask.
+   * resistor. Return true if set otherwise false.
+   * @param[in] gppu pullup resistor mask.
    * @return bool.
    */
-  bool set_pullup(uint8_t pur);
+  bool set_pullup(uint8_t gppu);
 
   /**
    * Set given pin as input. Return true if set otherwise false.
@@ -98,6 +115,15 @@ public:
   {
     return (set_pullup(m_gppu | _BV(pin & PIN_MASK)));
   }
+
+  /**
+   * Set interrupt mode for given pin. Return true if set otherwise
+   * false.
+   * @param[in] pin number (0..7).
+   * @param[in] mode interrupt.
+   * @return bool.
+   */
+  bool set_interrupt_pin(uint8_t pin, InterruptMode mode);
 
   /**
    * Set given pin as output. Return true if set otherwise false.
@@ -144,7 +170,20 @@ public:
    */
   bool write(uint8_t value);
 
+  /**
+   * Write given values to the output pins. Allow sequence of updates
+   * to output pins in a single write. Return true if successful
+   * otherwise false.
+   * @param[in] buf pointer to data to write to port.
+   * @param[in] size of buffer.
+   * @return bool.
+   */
+  bool write(void* buf, size_t size);
+
 protected:
+  /** Sub-address mask. */
+  static const uint8_t SUBADDR_MASK = 0x07;
+
   /** Pin number mask. */
   static const uint8_t PIN_MASK = 0x07;
 
@@ -152,7 +191,7 @@ protected:
   enum {
     IODIR = 0x00,		//!< I/O Direction Register.
     IPOL = 0x01,		//!< Input Polarity Register.
-    GPINTEN = 0x02,		//!< Interrupt Control Register.
+    GPINTEN = 0x02,		//!< Interrupt on Change Control Register.
     DEFVAL = 0x03,		//!< Default Compare Register.
     INTCON = 0x04,		//!< Interrupt Control Register.
     IOCON = 0x05,		//!< Configuration Register.
@@ -160,7 +199,8 @@ protected:
     INTF = 0x07,		//!< Interrupt Flag Register.
     INTCAP = 0x08,		//!< Interrupt Capture Register.
     GPIO = 0x09,		//!< Port Register.
-    OLAT = 0x0a			//!< Output Latch Register.
+    OLAT = 0x0a,		//!< Output Latch Register.
+    REG_MAX = 0x0b		//!< Number of Registers.
   } __attribute__((packed));
 
   /** Configuration Register Bits, pp. 15 */
@@ -175,10 +215,22 @@ protected:
   /** Data Direction Register, 0 = output, 1 = input, default all input. */
   uint8_t m_iodir;
 
+  /** Interrupt on Change Control Register, 0 = disable, 1 = enable. */
+  uint8_t m_gpinten;
+
+  /** Default Compare Register,  0 = rising, 1 = falling. */
+  uint8_t m_defval;
+
+  /** Interrupt Control Register,  0 = change/toggle, 1 = compare. */
+  uint8_t m_intcon;
+
   /** Pullup Register, 0 = disable, 1 = pullup enable, default disable. */
   uint8_t m_gppu;
 
   /** Output Register values. */
   uint8_t m_olat;
+
+  /** Current Register. */
+  uint8_t m_reg;
 };
 #endif
