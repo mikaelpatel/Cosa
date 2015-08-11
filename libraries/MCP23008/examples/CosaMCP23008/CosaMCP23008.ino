@@ -18,10 +18,11 @@
  * @section Description
  * Cosa MCP23008 Remote 8-bit I/O expander driver example. Includes
  * benchmarking of read/write of port and pins;
- *  1. write pin, 340 us
- *  2. write sequence, 113 us per byte
- *  3. read without cached address, 472 us
- *  4. read with cached address, 236 us
+ *  1. read pin, 472 us
+ *  2. read pin (cached address), 236 us
+ *  3. write pin, 340 us
+ *  4. pulse pin, 676 us
+ *  5. pulse pin (sequence), 226 us
  *
  * @section Circuit
  * @code
@@ -98,7 +99,19 @@ void loop()
   start = RTC::micros();
   port.write(buf, sizeof(buf));
   stop = RTC::micros();
-  trace << (stop - start) / sizeof(buf)	<< PSTR(": write(buf)") << endl;
+  trace << (stop - start) / sizeof(buf)
+	<< PSTR(": write(buf[") << sizeof(buf) << PSTR("])")
+	<< endl;
+
+  // Toggle pin(0)
+  start = RTC::micros();
+  for (uint8_t i = 0; i < sizeof(buf); i++) {
+    port.write(p, i & 1);
+  }
+  stop = RTC::micros();
+  trace << (stop - start) / sizeof(buf)
+	<< PSTR(": write():") << sizeof(buf) << PSTR("X")
+	<< endl;
 
   // Read input pins
   start = RTC::micros();
