@@ -45,9 +45,9 @@
  * @code
  *                Arduino Pro_Mini
  *
- *             DTR TX RX VCC GND GND
- *              \   \  |  |  /  /
- *               \   \ |  | /  /
+ *            GND GND VCC RX TX  DTR
+ *              \   \  |  |  /   /
+ *               \   \ |  | /   /
  *                +-------------+
  *                | o o o o o o |
  *          TX/D1 |o*          o| RAW
