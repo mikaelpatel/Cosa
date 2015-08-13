@@ -17,12 +17,12 @@
  *
  * @section Description
  * Cosa MCP23008 Remote 8-bit I/O expander driver example. Includes
- * benchmarking of read/write of port and pins;
- *  1. read pin, 472 us
- *  2. read pin (cached address), 236 us
- *  3. write pin, 340 us
- *  4. pulse pin, 676 us
- *  5. pulse pin (sequence), 226 us
+ * benchmarking of read/write of port and pins (100/444 KHz);
+ *  1. read pin, 472(164) us
+ *  2. read pin (cached address), 236(84) us
+ *  3. write pin, 340(120) us
+ *  4. pulse pin (dual write), 676(234) us
+ *  5. pulse pin (write sequence), 226(66) us
  *
  * @section Circuit
  * @code
@@ -52,6 +52,9 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
+// Use TWI at max frequency (444 KHz @ 16 MHz)
+#define USE_MAX_FREQ
+
 // MCP23008 Remote 8-bit I/O expander with sub-address(0x0)
 MCP23008 port(0);
 
@@ -74,6 +77,11 @@ void setup()
   // Start the watchdog ticks and RTC
   Watchdog::begin();
   RTC::begin();
+
+#if defined(USE_MAX_FREQ)
+  // Set max frequency
+  twi.set_freq(TWI::MAX_FREQ);
+#endif
 
   // Start the MCP23008 device driver
   port.begin();
