@@ -180,48 +180,49 @@ public:
 
   /**
    * Issue a write data request to the current driver. Return
-   * true(1) if successful otherwise(0).
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @return bool
+   * true(1) if successful otherwise false(0).
+   * @param[in] buf pointer to buffer.
+   * @param[in] size number of bytes.
+   * @return bool.
    */
   bool write_request(void* buf, size_t size);
 
   /**
    * Issue a write data request to the current driver with given
-   * byte header/command. Return true(1) if successful otherwise(0).
+   * byte header/command. Return true(1) if successful otherwise
+   * false(0).
    * @param[in] header to write before buffer.
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @return bool
+   * @param[in] buf pointer to buffer.
+   * @param[in] size number of bytes.
+   * @return bool.
    */
   bool write_request(uint8_t header, void* buf, size_t size);
 
   /**
    * Issue a write data request to the current driver with given
-   * header/command. Return true(1) if successful otherwise(0).
+   * header/command. Return true(1) if successful otherwise false(0).
    * @param[in] header to write before buffer.
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @return bool
+   * @param[in] buf pointer to buffer.
+   * @param[in] size number of bytes.
+   * @return bool.
    */
   bool write_request(uint16_t header, void* buf, size_t size);
 
   /**
    * Issue a read data request to the current driver. Return true(1)
-   * if successful otherwise(0).
-   * @param[in] buf data to read.
-   * @param[in] size number of bytes to read.
-   * @return number of bytes
+   * if successful otherwise false(0).
+   * @param[in] buf pointer to buffer.
+   * @param[in] size number of bytes.
+   * @return bool.
    */
   bool read_request(void* buf, size_t size);
 
   /**
    * Write data to the current driver. Returns number of bytes
    * written or negative error code.
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @return number of bytes
+   * @param[in] buf pointer to buffer.
+   * @param[in] size number of bytes.
+   * @return number of bytes or negative error code.
    */
   int write(void* buf, size_t size)
     __attribute__((always_inline))
@@ -234,9 +235,9 @@ public:
    * Write data to the current driver with given byte header. Returns
    * number of bytes written or negative error code.
    * @param[in] header to write before buffer.
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @return number of bytes
+   * @param[in] buf pointer to buffer.
+   * @param[in] size number of bytes.
+   * @return number of bytes or negative error code.
    */
   int write(uint8_t header, void* buf = 0, size_t size = 0)
     __attribute__((always_inline))
@@ -249,9 +250,9 @@ public:
    * Write data to the current driver with given header. Returns
    * number of bytes written or negative error code.
    * @param[in] header to write before buffer.
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to write.
-   * @return number of bytes
+   * @param[in] buf pointer to buffer.
+   * @param[in] size number of bytes.
+   * @return number of bytes or negative error code.
    */
   int write(uint16_t header, void* buf = 0, size_t size = 0)
     __attribute__((always_inline))
@@ -263,9 +264,9 @@ public:
   /**
    * Read data to the current driver. Returns number of bytes read or
    * negative error code.
-   * @param[in] buf data to write.
-   * @param[in] size number of bytes to read.
-   * @return number of bytes
+   * @param[in] buf pointer to buffer.
+   * @param[in] size number of bytes.
+   * @return number of bytes or negative error code.
    */
   int read(void* buf, size_t size)
     __attribute__((always_inline))
@@ -276,14 +277,14 @@ public:
 
   /**
    * Await issued request to complete. Returns number of bytes
-   * or negative error code.
+   * read/written or negative error code.
+   * @return number of bytes or negative error code.
    */
   int await_completed();
 
   /**
    * Set bus frequency for device access. Does not adjust for
    * cpu frequency scaling. Compile-time cpu frequency used.
-   * Should be called before starting the device driver; begin().
    * @param[in] hz bus frequency.
    */
   void set_freq(uint32_t hz)
