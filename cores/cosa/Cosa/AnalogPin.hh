@@ -141,6 +141,17 @@ public:
   }
 
   /**
+   * Sample analog pin. Wait for conversion to complete before
+   * returning with sample value.
+   * @return sample value.
+   */
+  operator uint16_t()
+    __attribute__((always_inline))
+  {
+    return (sample());
+  }
+
+  /**
    * Request sample of analog pin. Pushes given event on completion.
    * Default event is null/no event pushed for sample_await().
    * @param[in] event to push on completion.
