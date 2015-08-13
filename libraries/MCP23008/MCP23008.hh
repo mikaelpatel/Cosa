@@ -148,12 +148,6 @@ public:
   }
 
   /**
-   * Read pins and return current values.
-   * @return input pin values.
-   */
-  uint8_t read();
-
-  /**
    * Write set given output pin if value is non-zero, otherwise clear.
    * Return true if successful otherwise false.
    * @param[in] pin number (0..7).
@@ -163,8 +157,23 @@ public:
   bool write(uint8_t pin, uint8_t value);
 
   /**
+   * Read pins and return current values.
+   * @return input pin values.
+   */
+  uint8_t read();
+
+  /**
+   * Read pins value into given buffer with given size. Return true if
+   * successful otherwise false.
+   * @param[in,out] buf pointer to buffer for data.
+   * @param[in] size number of bytes to read.
+   * @return bool.
+   */
+  bool read(void* buf, size_t size);
+
+  /**
    * Write given value to the output pins. Return true if successful
-   * otherwise false. Return true if successful otherwise false.
+   * otherwise false.
    * @param[in] value.
    * @return bool.
    */

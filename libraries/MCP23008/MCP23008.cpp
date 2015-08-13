@@ -109,6 +109,21 @@ MCP23008::read()
 }
 
 bool
+MCP23008::read(void* buf, size_t size)
+{
+  if (UNLIKELY(size == 0)) return (true);
+  int res = 0;
+  twi.begin(this);
+  if (m_reg != GPIO) {
+    twi.write((uint8_t) GPIO);
+    m_reg = GPIO;
+  }
+  res = twi.read(buf, size);
+  twi.end();
+  return (res == (int) size);
+}
+
+bool
 MCP23008::write(uint8_t pin, uint8_t value)
 {
   uint8_t mask = _BV(pin & PIN_MASK);
@@ -137,7 +152,7 @@ MCP23008::write(uint8_t value)
 bool
 MCP23008::write(void* buf, size_t size)
 {
-  if (size == 0) return (true);
+  if (UNLIKELY(size == 0)) return (true);
   twi.begin(this);
   int res = twi.write((uint8_t) OLAT, buf, size);
   twi.end();
