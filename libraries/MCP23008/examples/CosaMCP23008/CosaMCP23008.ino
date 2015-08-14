@@ -99,27 +99,28 @@ void loop()
   // Toggle led and output pin(0). Measure execution time in micro-seconds
   static bool v = false;
   static const uint8_t p = 0;
+  static const size_t BUF_MAX = 16;
   uint32_t start, stop;
+  uint8_t buf[BUF_MAX];
   ledPin.toggle();
 
   // Fast toggle pin(0)
-  uint8_t buf[16];
-  for (uint8_t i = 0; i < sizeof(buf); i++) buf[i] = i & 1;
+  for (uint8_t i = 0; i < BUF_MAX; i++) buf[i] = i & 1;
   start = RTC::micros();
   port.write(buf, sizeof(buf));
   stop = RTC::micros();
-  trace << (stop - start) / sizeof(buf)
+  trace << (stop - start) / BUF_MAX
 	<< PSTR(": write(buf[") << sizeof(buf) << PSTR("])")
 	<< endl;
   trace.flush();
 
   // Toggle pin(0)
   start = RTC::micros();
-  for (uint8_t i = 0; i < sizeof(buf); i++) {
+  for (uint8_t i = 0; i < BUF_MAX; i++) {
     port.write(p, i & 1);
   }
   stop = RTC::micros();
-  trace << (stop - start) / sizeof(buf)
+  trace << (stop - start) / BUF_MAX
 	<< PSTR(": write():") << sizeof(buf) << PSTR("X")
 	<< endl;
   trace.flush();
@@ -133,14 +134,14 @@ void loop()
 
   // Fast read pins
   start = RTC::micros();
-  port.read(buf, sizeof(buf));
+  port.read(buf, BUF_MAX);
   stop = RTC::micros();
-  trace << (stop - start) / sizeof(buf)
+  trace << (stop - start) / BUF_MAX
 	<< PSTR(": read(buf[") << sizeof(buf) << PSTR("])")
 	<< endl;
   trace.flush();
 
-  // Toggle pin(0)
+  // Toggle pin(0); Note the
   start = RTC::micros();
   port.write((uint8_t) p, v);
   stop = RTC::micros();
