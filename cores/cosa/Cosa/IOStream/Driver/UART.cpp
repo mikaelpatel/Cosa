@@ -82,6 +82,18 @@ UART::putchar(char c)
   return (c & 0xff);
 }
 
+int
+UART::flush()
+{
+  // Flush the output buffer; i.e. wait for it to be emptied
+  int res = m_obuf->flush();
+  if (UNLIKELY(res < 0)) return (res);
+
+  // Wait for the last character to be transmitted
+  while (!(*UCSRnA() & _BV(UDRE0))) yield();
+  return (0);
+}
+
 void
 UART::on_udre_interrupt()
 {

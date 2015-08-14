@@ -137,10 +137,7 @@ public:
    * Flush internal device buffers. Wait for device to become idle.
    * @return zero(0) or negative error code.
    */
-  virtual int flush()
-  {
-    return (m_obuf->flush());
-  }
+  virtual int flush();
 
   /**
    * @override IOStream::Device

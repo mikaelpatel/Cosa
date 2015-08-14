@@ -275,6 +275,7 @@ public:
 #define RXCIE0 RXCIE1
 #define RXEN0 RXEN1
 #define TXEN0 TXEN1
+#define UDRE0 UDRE1
 #define UDRIE0 UDRIE1
 #define TXCIE0 TXCIE1
 #if !defined(ADCW)
