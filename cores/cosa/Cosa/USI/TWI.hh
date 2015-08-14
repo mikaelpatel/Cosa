@@ -40,17 +40,60 @@ public:
    * Device drivers are friends and may have callback/event handler
    * for completion events.
    */
-  class Driver : public Event::Handler {
+  class Driver {
   public:
     /**
      * Construct TWI driver with given bus address.
      * @param[in] addr bus address (7-bit LSB).
      */
-    Driver(uint8_t addr) : Event::Handler(), m_addr(addr << 1) {}
+   Driver(uint8_t addr) :
+     m_addr(addr << 1),
+     m_async(false)
+    {}
+
+    /**
+     * Return true(1) if the request is asyncrhonous otherwise false(0).
+     */
+    bool is_async() const
+    {
+      return (m_async);
+    }
+
+    /**
+     * Set synchronous request mode.
+     */
+    void sync_request()
+    {
+      m_async = false;
+    }
+
+    /**
+     * Set asynchronous request mode.
+     */
+    void async_request()
+    {
+      m_async = true;
+    }
+
+    /**
+     * @override TWI::Driver
+     * Service completion callback when a read/write has been
+     * completed.
+     * @param[in] type event code.
+     * @param[in] count number of bytes in request.
+     */
+    virtual void on_completion(uint8_t type, int count)
+    {
+      UNUSED(type);
+      UNUSED(count);
+    }
 
   protected:
     /** Device bus address. */
     uint8_t m_addr;
+
+    /** Asynchron mode. */
+    bool m_async;
 
     /** Allow access. */
     friend class TWI;
@@ -63,13 +106,13 @@ public:
    * performs address matching, byte data transfer with ack/nack,
    * and device callback.
    */
-  class Slave : public TWI::Driver {
+  class Slave : public Driver, public Event::Handler {
   public:
     /**
      * Construct slave with given address.
      * @param[in] addr slave address.
      */
-    Slave(uint8_t addr) : TWI::Driver(addr) {}
+    Slave(uint8_t addr) : TWI::Driver(addr), Event::Handler() {}
 
     /**
      * Set read (result) buffer. Must be called before starting
@@ -91,6 +134,18 @@ public:
      * Start the slave device.
      */
     void begin();
+
+    /**
+     * @override TWI::Driver
+     * Service completion callback when a read/write has been
+     * completed.
+     * @param[in] type event code.
+     * @param[in] count number of bytes in request.
+     */
+    virtual void on_completion(uint8_t type, int count)
+    {
+      Event::push(type, this, count);
+    }
 
     /**
      * @override TWI::Slave
@@ -127,12 +182,10 @@ public:
   TWI();
 
   /**
-   * Start TWI logic for a device transaction block. Use given event
-   * handler for completion events.
+   * Start TWI logic for a device transaction block.
    * @param[in] dev device.
-   * @param[in] target receiver of events on requests (default NULL).
    */
-  void begin(TWI::Driver* dev, Event::Handler* target = NULL);
+  void begin(TWI::Driver* dev);
 
   /**
    * Stop usage of the TWI bus logic.
@@ -252,7 +305,6 @@ private:
   iovec_t m_vec[VEC_MAX];
   IOPin m_sda;
   IOPin m_scl;
-  Event::Handler* m_target;
   volatile State m_state;
   volatile uint8_t* m_next;
   volatile uint8_t* m_last;

@@ -34,7 +34,7 @@ TWI twi  __attribute__ ((weak));
 #endif
 
 void
-TWI::begin(TWI::Driver* dev, Event::Handler* target)
+TWI::begin(TWI::Driver* dev)
 {
   // Acquire the device driver. Wait is busy. Synchronized update
   uint8_t key = lock();
@@ -43,12 +43,14 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
     yield();
     key = lock();
   }
+
   // Mark as busy
   m_dev = dev;
-  m_target = target;
   m_busy = true;
+
   // Enable internal pullup
   bit_mask_set(PORT, _BV(Board::SDA) | _BV(Board::SCL));
+
   // Set clock prescale and bit rate
   bit_mask_clear(TWSR, _BV(TWPS0) | _BV(TWPS1));
   TWBR = m_freq;
@@ -60,10 +62,10 @@ void
 TWI::end()
 {
   // Check if an asynchronious read/write was issued
-  if (UNLIKELY(m_target != NULL)) await_completed();
+  if (UNLIKELY((m_dev == NULL) || (m_dev->is_async()))) return;
+
   // Put into idle state
   synchronized {
-    m_target = NULL;
     m_dev = NULL;
     m_busy = false;
     TWCR = 0;
@@ -74,13 +76,14 @@ bool
 TWI::request(uint8_t op)
 {
   // Setup buffer pointers
-  m_state = (op == READ_OP) ? MR_STATE : MT_STATE;
+  m_state = ((op == READ_OP) ? MR_STATE : MT_STATE);
   m_addr = (m_dev->m_addr | op);
   m_status = NO_INFO;
   m_next = (uint8_t*) m_vec[0].buf;
   m_last = m_next + m_vec[0].size;
   m_ix = 0;
   m_count = 0;
+
   // And issue start command
   TWCR = START_CMD;
   return (true);
@@ -154,8 +157,14 @@ TWI::isr_stop(State state, uint8_t type)
   loop_until_bit_is_clear(TWCR, TWSTO);
   if (UNLIKELY(state == TWI::ERROR_STATE)) m_count = -1;
   m_state = state;
-  if (type != Event::NULL_TYPE && m_target != NULL)
-    Event::push(type, m_target, m_count);
+
+  // Check for asynchronous mode and call completion callback
+  if (m_dev->is_async() || m_status == SR_STOP) {
+    m_dev->on_completion(type, m_count);
+    m_dev = NULL;
+    m_busy = false;
+    TWCR = 0;
+  }
 }
 
 bool
@@ -281,7 +290,6 @@ ISR(TWI_vect)
 void
 TWI::Slave::begin()
 {
-  twi.m_target = this;
   twi.m_dev = this;
   synchronized {
     TWAR = m_addr;

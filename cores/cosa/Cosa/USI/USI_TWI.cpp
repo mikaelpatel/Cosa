@@ -52,7 +52,6 @@ void
 TWI::Slave::begin()
 {
   twi.m_dev = this;
-  twi.m_target = this;
   twi.set_state(TWI::IDLE);
   synchronized {
     USICR = TWI::CR_START_MODE;
@@ -128,7 +127,7 @@ ISR(USI_OVF_vect)
     if (USISR & _BV(USIPF)) {
       USICR = TWI::CR_SERVICE_MODE;
       USISR = TWI::SR_CLEAR_ALL;
-      Event::push(Event::WRITE_COMPLETED_TYPE, twi.m_target, twi.m_count);
+      twi.m_dev->on_completion(Event::WRITE_COMPLETED_TYPE, twi.m_count);
       twi.set_state(TWI::SERVICE_REQUEST);
     }
     break;
@@ -286,7 +285,7 @@ TWI::request(uint8_t op)
 }
 
 void
-TWI::begin(TWI::Driver* dev, Event::Handler* target)
+TWI::begin(TWI::Driver* dev)
 {
   // Acquire the device driver. Wait is busy. Synchronized update
   uint8_t key = lock();
@@ -295,10 +294,11 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
     yield();
     key = lock();
   }
+
   // Mark as busy
   m_dev = dev;
-  m_target = target;
   m_busy = true;
+
   // Release level data and init mode
   USIDR = 0xff;
   USICR = CR_INIT_MODE;
@@ -310,6 +310,9 @@ TWI::begin(TWI::Driver* dev, Event::Handler* target)
 void
 TWI::end()
 {
+  // Check if an asynchronious read/write was issued
+  if (UNLIKELY((m_dev == NULL) || (m_dev->is_async()))) return;
+
   // Put into idle state
   synchronized {
     m_target = NULL;
