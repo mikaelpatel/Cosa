@@ -223,7 +223,8 @@ extern uint8_t trace_log_mask;
        __stop = RTC::micros(),						\
        trace.measure = (__stop - __start) / cnt,			\
        trace << PSTR(msg) << trace.measure,				\
-       trace << PSTR(" us") << endl)					\
+       trace << PSTR(" us") << endl,					\
+       trace.flush())							\
     for (uint16_t __j = cnt; __j != 0; __j--)
 #else
 # define MEASURE(msg,cnt)						\
@@ -235,7 +236,8 @@ extern uint8_t trace_log_mask;
        trace.measure = (__stop - __start) / cnt,			\
        trace << __LINE__ << ':' << __PRETTY_FUNCTION__,			\
        trace << PSTR(":measure:") << PSTR(msg) << trace.measure,	\
-       trace << PSTR(" us") << endl)					\
+       trace << PSTR(" us") << endl,					\
+       trace.flush())							\
     for (uint16_t __j = cnt; __j != 0; __j--)
 #endif
 
