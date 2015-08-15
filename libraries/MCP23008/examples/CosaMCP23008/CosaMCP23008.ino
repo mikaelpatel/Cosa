@@ -46,7 +46,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
 
-// Use TWI at max frequency (444 KHz @ 16 MHz)
+// Use TWI at max frequency (800 KHz @ 16 MHz)
 #define USE_MAX_FREQ
 
 // MCP23008 Remote 8-bit I/O expander with sub-address(0x0)
@@ -145,15 +145,15 @@ void loop()
 124:void loop():measure:7:Read pin(p):472 us
 128:void loop():measure:8:Write pin(p,v):336 us
  *
- * @section Measurements (444 KHz)
+ * @section Measurements (800 KHz)
  *
-99:void loop():measure:1:Read input pins:168 us
-102:void loop():measure:2:Read input pins (cached address):88 us
-105:void loop():measure:3:Read pins (10X):844 us
-109:void loop():measure:4:Read pins (buf[10]):352 us
-112:void loop():measure:4:Write pins:116 us
-115:void loop():measure:5:Write pins (10X):1176 us
-121:void loop():measure:6:Write pins (buf[10]:368 us
-124:void loop():measure:7:Read pin(p):164 us
-128:void loop():measure:8:Write pin(p,v):116 us
+99:void loop():measure:1:Read input pins:128 us
+102:void loop():measure:2:Read input pins (cached address):72 us
+105:void loop():measure:3:Read pins (10X):652 us
+109:void loop():measure:4:Read pins (buf[10]):256 us
+112:void loop():measure:4:Write pins:96 us
+115:void loop():measure:5:Write pins (10X):884 us
+121:void loop():measure:6:Write pins (buf[10]:260 us
+124:void loop():measure:7:Read pin(p):132 us
+128:void loop():measure:8:Write pin(p,v):96 us
  */
