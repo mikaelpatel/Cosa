@@ -141,7 +141,7 @@ public:
    * @param[in] pin number (0..7).
    * @return bool.
    */
-  bool read(uint8_t pin)
+  bool read_pin(uint8_t pin)
     __attribute__((always_inline))
   {
     return ((read() & _BV(pin & PIN_MASK)) != 0);
@@ -154,7 +154,16 @@ public:
    * @param[in] value.
    * @return bool.
    */
-  bool write(uint8_t pin, uint8_t value);
+  bool write_pin(uint8_t pin, uint8_t value)
+  __attribute__((always_inline))
+  {
+    uint8_t mask = _BV(pin & PIN_MASK);
+    if (value)
+      m_olat |= mask;
+    else
+      m_olat &= ~mask;
+    return (write(m_olat));
+  }
 
   /**
    * Read pins and return current values.

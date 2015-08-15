@@ -124,21 +124,6 @@ MCP23008::read(void* buf, size_t size)
 }
 
 bool
-MCP23008::write(uint8_t pin, uint8_t value)
-{
-  uint8_t mask = _BV(pin & PIN_MASK);
-  if (value)
-    m_olat |= mask;
-  else
-    m_olat &= ~mask;
-  twi.begin(this);
-  int res = twi.write((uint8_t) OLAT, &m_olat, sizeof(m_olat));
-  twi.end();
-  m_reg = OLAT;
-  return (res == sizeof(m_olat));
-}
-
-bool
 MCP23008::write(uint8_t value)
 {
   m_olat = value;

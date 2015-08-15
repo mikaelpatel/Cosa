@@ -16,14 +16,7 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Cosa MCP23008 Remote 8-bit I/O expander driver example. Includes
- * benchmarking of read/write of port and pins (100/444 KHz);
- *  1. read pin, 472(168) us
- *  2. read pin (cached address), 236(88) us
- *  3. read pin (read sequence 16), 108(33) us
- *  4. write pin, 340(120) us
- *  5. pulse pin (write 2*8), 676(234) us
- *  6. pulse pin (write sequence 2*8), 226(66) us
+ * Cosa MCP23008 Remote 8-bit I/O expander driver benchmark.
  *
  * @section Circuit
  * @code
@@ -96,67 +89,71 @@ void setup()
 
 void loop()
 {
-  // Toggle led and output pin(0). Measure execution time in micro-seconds
   static bool v = false;
   static const uint8_t p = 0;
-  static const size_t BUF_MAX = 16;
-  uint32_t start, stop;
+  static const size_t BUF_MAX = 10;
   uint8_t buf[BUF_MAX];
   ledPin.toggle();
+  trace << endl;
 
-  // Fast toggle pin(0)
+  MEASURE("1:Read input pins:", 1)
+    v = port.read();
+
+  MEASURE("2:Read input pins (cached address):", 1)
+    v = port.read();
+
+  MEASURE("3:Read pins (10X):", 1)
+    for (uint8_t i = 0; i < BUF_MAX; i++)
+      v = port.read();
+
+  MEASURE("4:Read pins (buf[10]):", 1)
+    port.read(buf, BUF_MAX);
+
+  MEASURE("4:Write pins:", 1)
+    port.write(0);
+
+  MEASURE("5:Write pins (10X):", 1) {
+    for (uint8_t i = 0; i < BUF_MAX; i++)
+      port.write(i & 1);
+  }
+
   for (uint8_t i = 0; i < BUF_MAX; i++) buf[i] = i & 1;
-  start = RTC::micros();
-  port.write(buf, sizeof(buf));
-  stop = RTC::micros();
-  trace << (stop - start) / BUF_MAX
-	<< PSTR(": write(buf[") << sizeof(buf) << PSTR("])")
-	<< endl;
-  trace.flush();
+  MEASURE("6:Write pins (buf[10]:", 1)
+    port.write(buf, sizeof(buf));
 
-  // Toggle pin(0)
-  start = RTC::micros();
-  for (uint8_t i = 0; i < BUF_MAX; i++) {
-    port.write(p, i & 1);
-  }
-  stop = RTC::micros();
-  trace << (stop - start) / BUF_MAX
-	<< PSTR(": write():") << sizeof(buf) << PSTR("X")
-	<< endl;
-  trace.flush();
-
-  // Read input pins
-  start = RTC::micros();
-  uint8_t u = port.read();
-  stop = RTC::micros();
-  trace << stop - start << PSTR(": read() = ") << bin << u << endl;
-  trace.flush();
-
-  // Fast read pins
-  start = RTC::micros();
-  port.read(buf, BUF_MAX);
-  stop = RTC::micros();
-  trace << (stop - start) / BUF_MAX
-	<< PSTR(": read(buf[") << sizeof(buf) << PSTR("])")
-	<< endl;
-  trace.flush();
-
-  // Toggle pin(0); Note the
-  start = RTC::micros();
-  port.write((uint8_t) p, v);
-  stop = RTC::micros();
+  MEASURE("7:Read pin(p):", 1)
+    v = port.read_pin(p);
   v = !v;
-  trace << stop - start	<< PSTR(": write(") << p << ',' << v << ')' << endl;
-  trace.flush();
 
-  // Read each pin(0..7)
-  for (uint8_t pin = 0; pin < 8; pin++) {
-    start = RTC::micros();
-    u = port.read(pin);
-    stop = RTC::micros();
-    trace << stop - start << PSTR(": read(") << pin << PSTR(") = ") << u << endl;
-    trace.flush();
-  }
+  MEASURE("8:Write pin(p,v):", 1)
+    port.write_pin(p, v);
+
   ledPin.toggle();
   sleep(1);
 }
+
+/**
+ * @section Measurements (100 KHz)
+ *
+99:void loop():measure:1:Read input pins:472 us
+102:void loop():measure:2:Read input pins (cached address):240 us
+105:void loop():measure:3:Read pins (10X):2364 us
+109:void loop():measure:4:Read pins (buf[10]):1128 us
+112:void loop():measure:4:Write pins:340 us
+115:void loop():measure:5:Write pins (10X):3376 us
+121:void loop():measure:6:Write pins (buf[10]:1220 us
+124:void loop():measure:7:Read pin(p):472 us
+128:void loop():measure:8:Write pin(p,v):336 us
+ *
+ * @section Measurements (444 KHz)
+ *
+99:void loop():measure:1:Read input pins:168 us
+102:void loop():measure:2:Read input pins (cached address):88 us
+105:void loop():measure:3:Read pins (10X):844 us
+109:void loop():measure:4:Read pins (buf[10]):352 us
+112:void loop():measure:4:Write pins:116 us
+115:void loop():measure:5:Write pins (10X):1176 us
+121:void loop():measure:6:Write pins (buf[10]:368 us
+124:void loop():measure:7:Read pin(p):164 us
+128:void loop():measure:8:Write pin(p,v):116 us
+ */
