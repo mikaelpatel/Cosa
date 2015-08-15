@@ -14,6 +14,7 @@ Link-time-optimization enabled. Requires that the AVR GCC toolchain
 contains the neccessary plug-in. Does not work with 1.6.4 for
 Windows.
 
-Legacy version of Boards Manager package files
+Legacy versions of boards manager package definition files
 (package_cosa-VERSION_index.json) are also saved here. Use the raw
-file URL to load legacy versions of Cosa.
+file URL to load legacy versions of Cosa in the Arduino IDE.
+
