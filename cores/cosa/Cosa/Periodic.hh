@@ -107,10 +107,13 @@ private:
  *   }
  * }
  * @endcode
-  */
+ * May be used several times in the same block. Creates a unique
+ * timer for each instance. Requires RTC::millis.
+ */
 #define periodic(ms)							\
-  for (uint32_t start = RTC::millis(), i = 1;				\
-       i != 0;								\
-       i--, delay(ms - RTC::since(start)))
+  static uint32_t __LOCAL(timer) = 0L;					\
+  for (int __LOCAL(i) = 1;						\
+       (__LOCAL(i) != 0) && (RTC::since(__LOCAL(timer)) >= ms);		\
+       __LOCAL(i)--, __LOCAL(timer) = RTC::millis())
 
 #endif

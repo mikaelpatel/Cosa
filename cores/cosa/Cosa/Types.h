@@ -42,6 +42,11 @@
 #include "Cosa.h"
 
 /**
+ * Create a local symbol for macro.
+ */
+#define __LOCAL(name) __CONCAT(name,__LINE__)
+
+/**
  * Number of bits in a character.
  */
 #define CHARBITS 8
