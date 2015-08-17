@@ -42,9 +42,9 @@
 #include "Cosa.h"
 
 /**
- * Create a local symbol for macro.
+ * Create an unique symbol for macro from given name and line.
  */
-#define __LOCAL(name) __CONCAT(name,__LINE__)
+#define __UNIQUE(name) __CONCAT(name,__LINE__)
 
 /**
  * Number of bits in a character.
