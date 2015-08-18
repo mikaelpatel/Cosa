@@ -18,7 +18,7 @@
 #
 # @section Description
 # Build and run all benchmarks. Parameters are board and version
-# of Arduino IDE. Default are nano and 1.6.1. Note: The cosa build
+# of Arduino IDE. Default are nano and 1.6.5. Note: The cosa build
 # script version is not changed.
 #
 # This file is part of the Arduino Che Cosa project.
@@ -28,7 +28,7 @@ if [ "$1" ]; then
   board=$1
 fi
 
-version=1.6.1
+version=1.6.5
 if [ "$2" ]; then
   version=$2
 fi
