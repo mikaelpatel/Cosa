@@ -70,16 +70,8 @@ Watchdog::begin(uint16_t ms,
 void
 Watchdog::delay(uint32_t ms)
 {
-  int32_t ticks = (ms + (ms_per_tick() / 2)) / ms_per_tick();
-  uint8_t key = lock();
-  uint32_t stop = s_ticks + ticks;
-  do {
-    unlock(key);
-    yield();
-    key = lock();
-    ticks = stop - s_ticks;
-  } while (ticks > 0);
-  unlock(key);
+  uint32_t start = Watchdog::millis();
+  while (since(start) < ms) yield();
 }
 
 ISR(WDT_vect)

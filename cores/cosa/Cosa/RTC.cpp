@@ -26,14 +26,17 @@
 #define PRESCALE 64
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
 #define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
-#define US_PER_SEC 1000000L
+#define US_PER_MS 1000
+#define MS_PER_SEC 1000
 
 // Initiated state
 bool RTC::s_initiated = false;
 
 // Timer ticks counter
 volatile uint32_t RTC::s_uticks = 0UL;
-volatile uint32_t RTC::s_usec = 0UL;
+volatile uint16_t RTC::s_usec = 0;
+volatile uint32_t RTC::s_ms = 0UL;
+volatile uint16_t RTC::s_msec = 0;
 volatile clock_t RTC::s_sec = 0UL;
 
 // Timer interrupt extension
@@ -123,15 +126,25 @@ RTC::await(volatile bool &condvar, uint32_t ms)
 
 ISR(TIMER0_OVF_vect)
 {
-  // Increment most significant part of micro second counter
+  // Increment most significant part of micro seconds counter
   RTC::s_uticks += US_PER_TICK;
 
-  // Increment micro-second part of second counter
-  RTC::s_usec += US_PER_TICK;
+  // Increment milli-seconds counter
+  RTC::s_ms += 1;
 
-  // Check for time to increment second counter
-  if (RTC::s_usec >= US_PER_SEC) {
-    RTC::s_usec = RTC::s_usec - US_PER_SEC;
+  // Increment micro-seconds part of milli-seconds counter
+  RTC::s_usec += (US_PER_TICK - US_PER_MS);
+  if (UNLIKELY(RTC::s_usec > US_PER_MS)) {
+    RTC::s_usec -= US_PER_MS;
+    RTC::s_ms += 1;
+  }
+
+  // Increment milli-seconds part of seconds counter
+  RTC::s_msec += 1;
+
+  // Check for increment of seconds counter
+  if (UNLIKELY(RTC::s_msec == MS_PER_SEC)) {
+    RTC::s_msec = 0;
     RTC::s_sec++;
   }
 

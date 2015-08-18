@@ -68,11 +68,13 @@ public:
   }
 
   /**
-   * Reset the ticks counter for time measurement.
+   * Set Watchdog clock in millis-seconds.
+   * @param[in] ms.
+   * @note atomic
    */
-  static void reset()
+  static void millis(uint32_t ms)
   {
-    s_ticks = 0;
+    synchronized s_ticks = ms / ms_per_tick();
   }
 
   /**
@@ -136,7 +138,7 @@ public:
   /**
    * Returns number of milli-seconds from given start.
    * @param[in] start
-   * @return (millis() - start)
+   * @return ms.
    */
   static uint32_t since(uint32_t start)
     __attribute__((always_inline))

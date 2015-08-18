@@ -101,9 +101,24 @@ public:
    */
   static void micros(uint32_t usec)
   {
-    synchronized s_uticks = usec;
+    synchronized {
+      s_uticks = usec;
+      s_ms = usec / 1000L;
+    }
   }
 
+  /**
+   * Set the current clock in milli-seconds.
+   * @param[in] usec.
+   * @note atomic
+   */
+  static void millis(uint32_t ms)
+  {
+    synchronized {
+      s_uticks = ms * 1000L;
+      s_ms = ms;
+    }
+  }
 
   /**
    * Return the current clock in milli-seconds.
@@ -112,7 +127,9 @@ public:
   static uint32_t millis()
     __attribute__((always_inline))
   {
-    return (micros() / 1000);
+    uint32_t res;
+    synchronized res = s_ms;
+    return (res);
   }
 
   /**
@@ -174,7 +191,9 @@ public:
 private:
   static bool s_initiated;
   static volatile uint32_t s_uticks;
-  static volatile uint32_t s_usec;
+  static volatile uint16_t s_usec;
+  static volatile uint32_t s_ms;
+  static volatile uint16_t s_msec;
   static volatile clock_t s_sec;
   static InterruptHandler s_handler;
   static void* s_env;

@@ -111,9 +111,9 @@ private:
  * timer for each instance. Requires RTC::millis.
  */
 #define periodic(ms)							\
-  static uint32_t __UNIQUE(timer) = 0L;					\
+  static uint32_t __UNIQUE(timer) = 0UL;				\
   for (int __UNIQUE(i) = 1;						\
-       (__UNIQUE(i) != 0) && (RTC::since(__UNIQUE(timer)) >= ms);	\
-       __UNIQUE(i)--, __UNIQUE(timer) += (uint32_t) ms)
+       (__UNIQUE(i) != 0) && ((RTC::millis() - __UNIQUE(timer)) > ms);	\
+       __UNIQUE(i)--, __UNIQUE(timer) += ms)
 
 #endif
