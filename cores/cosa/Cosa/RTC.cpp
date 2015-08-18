@@ -26,17 +26,15 @@
 #define PRESCALE 64
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
 #define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
-#define TICKS_PER_SEC (1000000L / US_PER_TICK)
-#define US_PER_SEC_ERROR (1000000L - (TICKS_PER_SEC * US_PER_TICK))
+#define US_PER_SEC 1000000L
 
 // Initiated state
 bool RTC::s_initiated = false;
 
 // Timer ticks counter
 volatile uint32_t RTC::s_uticks = 0UL;
-volatile uint16_t RTC::s_ticks = 0;
-volatile clock_t RTC::s_sec = 0L;
-volatile int16_t RTC::s_uerror = 0;
+volatile uint32_t RTC::s_usec = 0UL;
+volatile clock_t RTC::s_sec = 0UL;
 
 // Timer interrupt extension
 RTC::InterruptHandler RTC::s_handler = NULL;
@@ -128,15 +126,14 @@ ISR(TIMER0_OVF_vect)
   // Increment most significant part of micro second counter
   RTC::s_uticks += US_PER_TICK;
 
-  // Skip tick if accumulated error is greater than tick time
-  if (RTC::s_uerror >= US_PER_TICK)
-    RTC::s_uerror -= US_PER_TICK;
-  else if (RTC::s_ticks == TICKS_PER_SEC-1) {
-    RTC::s_ticks = 0;
+  // Increment micro-second part of second counter
+  RTC::s_usec += US_PER_TICK;
+
+  // Check for time to increment second counter
+  if (RTC::s_usec >= US_PER_SEC) {
+    RTC::s_usec = RTC::s_usec - US_PER_SEC;
     RTC::s_sec++;
-    RTC::s_uerror += US_PER_SEC_ERROR;
-  } else
-    RTC::s_ticks++;
+  }
 
   // Check for extension of the interrupt handler
   RTC::InterruptHandler fn = RTC::s_handler;

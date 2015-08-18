@@ -73,11 +73,7 @@ public:
   static void time(clock_t sec)
     __attribute__((always_inline))
   {
-    synchronized {
-      s_sec = sec;
-      s_ticks = 0;
-      s_uerror = 0;
-    }
+    synchronized s_sec = sec;
   }
 
   /**
@@ -178,9 +174,8 @@ public:
 private:
   static bool s_initiated;
   static volatile uint32_t s_uticks;
-  static volatile uint16_t s_ticks;
+  static volatile uint32_t s_usec;
   static volatile clock_t s_sec;
-  static volatile int16_t s_uerror;
   static InterruptHandler s_handler;
   static void* s_env;
 

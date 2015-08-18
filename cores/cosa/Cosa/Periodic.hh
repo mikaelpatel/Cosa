@@ -114,6 +114,6 @@ private:
   static uint32_t __UNIQUE(timer) = 0L;					\
   for (int __UNIQUE(i) = 1;						\
        (__UNIQUE(i) != 0) && (RTC::since(__UNIQUE(timer)) >= ms);	\
-       __UNIQUE(i)--, __UNIQUE(timer) += ms)
+       __UNIQUE(i)--, __UNIQUE(timer) += (uint32_t) ms)
 
 #endif
