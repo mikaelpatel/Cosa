@@ -1,0 +1,44 @@
+/home/epkmipl/Sketchbook/hardware/Cosa/build/Arduino-Makefile/bin/ard-util  --port /dev/ttyUSB0 --appear
+Use CTRL-ALT GR-] to exit monitor.
+/home/epkmipl/Sketchbook/hardware/Cosa/build/miniterm.py -q --lf /dev/ttyUSB0 9600
+CosaBenchmarkGPIO: started
+49:void setup():trace:free_memory() = 1705
+50:void setup():trace:sizeof(GPIO) = 3
+53:void setup():trace:F_CPU = 16000000
+54:void setup():trace:I_CPU = 16
+
+95:void loop():info:Measure the time to perform an empty loop block
+97:void loop():measure:nop:315 ns
+
+102:void loop():info:Measure the time to perform an input pin read
+104:void loop():measure:var = inPin:126 ns
+110:void loop():measure:var = InputPin::read(D7):63 ns
+
+116:void loop():info:Measure the time to perform an output pin write
+118:void loop():measure:outPin = 1:882 ns
+123:void loop():measure:GPIO::write(D8, 1):126 ns
+
+128:void loop():info:Measure the time to perform an output pin toggle
+130:void loop():measure:outPin = !outPin:1700 ns
+135:void loop():measure:GPIO::write(D8, !GPIO::read(D8)):661 ns
+140:void loop():measure:~outPin:504 ns
+145:void loop():measure:GPIO::toggle(D8):63 ns
+
+150:void loop():info:Measure the time to perform an output pin clock pulse
+152:void loop():measure:outPin = 1;outPin = 0:1826 ns
+158:void loop():measure:GPIO::write(D8, 1);GPIO::write(D8, 0):252 ns
+164:void loop():measure:~outPin;~outPin:1007 ns
+170:void loop():measure:GPIO::toggle(D8);GPIO::toggle(D8):126 ns
+
+176:void loop():info:Measure the time to perform input pin read/output pin write
+178:void loop():measure:outPin = !inPin:1637 ns
+183:void loop():measure:GPIO::write(D8, !GPIO::read(D7)):567 ns
+
+188:void loop():info:Measure the time to perform 8-bit serial data transfer
+190:void loop():measure:datePin = bit;clockPin = 1;clockPin = 0:27 us
+199:void loop():measure:GPIO::write(D9,bit);GPIO::write(D8,1);GPIO::write(D8,0):9 us
+208:void loop():measure:datePin = bit;~clockPin;~clockPin:20 us
+217:void loop():measure:GPIO::write(D9,bit);GPIO::toggle(D8);GPIO::toggle(D8):8 us
+226:void loop():measure:unrolled datePin = bit;~clockPin;~clockPin:15 us
+254:void loop():measure:unrolled GPIO::write(D9,bit);GPIO::toggle(D8);GPIO::toggle(D8):2 us
+CosaBenchmarkGPIO.ino:283:assert:true == false
