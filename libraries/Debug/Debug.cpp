@@ -253,6 +253,7 @@ Debug::Variable::print()
   }
   else {
     debug.printf(PSTR("[%d]:"), m_size);
+    if (m_size > 16) debug.println();
     debug.print((uint32_t) m_ref, m_ref, m_size, IOStream::hex);
   }
 }

@@ -90,6 +90,7 @@ void loop()
   REGISTER(buf);
   REGISTER(BUF_MAX);
   REGISTER(cout);
+  REGISTER(uart);
   REGISTER(i);
 
   cout << PSTR("loop running") << endl;
