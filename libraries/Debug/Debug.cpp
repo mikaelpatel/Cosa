@@ -240,8 +240,6 @@ Debug::do_help()
   print((str_P) help);
 }
 
-#if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
-#if !defined(COSA_DEBUG_NO_DUMP_VARIABLES)
 void
 Debug::Variable::print()
 {
@@ -257,7 +255,5 @@ Debug::Variable::print()
     debug.print((uint32_t) m_ref, m_ref, m_size, IOStream::hex);
   }
 }
-#endif
-#endif
 
 #endif
