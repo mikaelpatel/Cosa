@@ -36,8 +36,7 @@ Debug::begin(IOStream::Device* dev,
   DATASIZE = DATAEND - RAMSTART;
 
   set_device(dev);
-  print(PSTR("Cosa/Debug 1.0 Copyright (C) 2015\n"));
-  print(PSTR("Debug::begin:"));
+  print(PSTR("Cosa/Debug 1.0 Copyright (C) 2015\nDebug::begin:"));
   run(file, line, func);
   return (true);
 }
@@ -65,7 +64,6 @@ Debug::run(const char* file, int line, const char* func, str_P expr)
     char buf[BUF_MAX];
     memset(buf, 0, sizeof(buf));
 
-    // Read command line and parse
     print(prompt);
     while (readline(buf, sizeof(buf)) == NULL) yield();
     size_t len = strlen(buf) - 1;
@@ -132,10 +130,14 @@ Debug::run(const char* file, int line, const char* func, str_P expr)
 #endif
 
 #if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
-    if (!do_lookup_variables(buf)) {
-      printf(PSTR("%s: unknown command or variable\n"), buf);
+    if (*buf == '?') {
+      const char* name = buf + 1;
+      if (!do_lookup_variables(name))
+	printf(PSTR("%s: unknown variable\n"), name);
+      continue;
     }
 #endif
+    printf(PSTR("%s: unknown command\n"), buf);
   }
 }
 
@@ -197,13 +199,11 @@ void
 Debug::do_memory_usage(int marker)
 {
   int HEAPEND = (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
-  int heap = HEAPEND - (int) &__heap_start;
-  int stack = RAMEND - marker;
-  int free = marker - HEAPEND;
-  printf(PSTR("data=%d,"), DATASIZE);
-  printf(PSTR("heap=%d,"), heap);
-  printf(PSTR("stack=%d,"), stack);
-  printf(PSTR("free=%d\n"), free);
+  printf(PSTR("data=%d,heap=%d,stack=%d,free=%d\n"),
+	 DATASIZE,
+	 HEAPEND - (int) &__heap_start,
+	 RAMEND - marker + 1,
+	 marker - HEAPEND);
 }
 #endif
 
@@ -235,7 +235,7 @@ Debug::do_help()
     "memory -- print memory usage\n"
 #endif
 #if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
-    "VARIABLE -- print variable(s)\n";
+    "?VARIABLE -- print variable(s)\n";
 #endif
   print((str_P) help);
 }
