@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Debug.cpp
+ * @file Debug.cpp
  * @version 1.0
  *
  * @section License
@@ -132,47 +132,33 @@ Debug::run(const char* file, int line, const char* func, str_P expr)
 #endif
 
 #if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
-    bool found = false;
-    for (Variable* vp = m_var; vp != NULL; vp = vp->m_next) {
-      if (strcmp_P(buf, vp->m_name) == 0) {
-	printf(PSTR("%s:%S@%p"), vp->m_func, vp->m_name, vp->m_ref);
-	if (vp->m_size == 1) {
-	  printf(PSTR("=%d\n"), *((uint8_t*) vp->m_ref));
-	}
-	else if (vp->m_size == 2) {
-	  printf(PSTR("=%d\n"), *((int*) vp->m_ref));
-	}
-	else {
-	  printf(PSTR("[%d]:"), vp->m_size);
-	  print((uint32_t) vp->m_ref, vp->m_ref, vp->m_size, IOStream::hex);
-	}
-	found = true;
-      }
-    }
-    if (!found) {
+    if (!do_lookup_variables(buf)) {
       printf(PSTR("%s: unknown command or variable\n"), buf);
     }
 #endif
   }
 }
 
+#if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
+bool
+Debug::do_lookup_variables(const char* name)
+{
+  bool found = false;
+  for (Variable* vp = m_var; vp != NULL; vp = vp->m_next) {
+    if (strcmp_P(name, vp->m_name) == 0) {
+      vp->print();
+      found = true;
+    }
+  }
+  return (found);
+}
+#endif
+
 #if !defined(COSA_DEBUG_NO_DUMP_VARIABLES)
 void
 Debug::do_dump_variables()
 {
-  for (Variable* vp = m_var; vp != NULL; vp = vp->m_next) {
-      printf(PSTR("%s:%S@%p"), vp->m_func, vp->m_name, vp->m_ref);
-      if (vp->m_size == 1) {
-	printf(PSTR("=%d\n"), *((uint8_t*) vp->m_ref));
-      }
-      else if (vp->m_size == 2) {
-	printf(PSTR("=%d\n"), *((int*) vp->m_ref));
-      }
-      else {
-	printf(PSTR("[%d]:"), vp->m_size);
-	print((uint32_t) vp->m_ref, vp->m_ref, vp->m_size, IOStream::hex);
-      }
-  }
+  for (Variable* vp = m_var; vp != NULL; vp = vp->m_next) vp->print();
 }
 #endif
 
@@ -253,4 +239,25 @@ Debug::do_help()
 #endif
   print((str_P) help);
 }
+
+#if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
+#if !defined(COSA_DEBUG_NO_DUMP_VARIABLES)
+void
+Debug::Variable::print()
+{
+  debug.printf(PSTR("%s:%S@%p"), m_func, m_name, m_ref);
+  if (m_size == 1) {
+    debug.printf(PSTR("=%d\n"), *((uint8_t*) m_ref));
+  }
+  else if (m_size == 2) {
+    debug.printf(PSTR("=%d\n"), *((int*) m_ref));
+  }
+  else {
+    debug.printf(PSTR("[%d]:"), m_size);
+    debug.print((uint32_t) m_ref, m_ref, m_size, IOStream::hex);
+  }
+}
+#endif
+#endif
+
 #endif

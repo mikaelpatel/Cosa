@@ -163,6 +163,11 @@ public:
       debug.m_var = m_next;
     }
 
+    /**
+     * Print information about variable on debug iostream device.
+     */
+    void print();
+
   protected:
     friend class Debug;
     class Variable* m_next;
@@ -187,6 +192,10 @@ protected:
 
 #if !defined(COSA_DEBUG_NO_EXIT)
   void do_exit();
+#endif
+
+#if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
+  bool do_lookup_variables(const char* name);
 #endif
 
 #if !defined(COSA_DEBUG_NO_DUMP_VARIABLES)
