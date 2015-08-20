@@ -118,6 +118,7 @@ Debug::run(const char* file, int line, const char* func, str_P expr)
 #if !defined(COSA_DEBUG_NO_EXIT)
     if (!strcmp_P(buf, PSTR("exit"))) {
       print(EXITCHARACTER);
+      flush();
       exit(0);
     }
 #endif

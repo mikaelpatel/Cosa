@@ -86,8 +86,8 @@ public:
   {
     print(PSTR("Debug::assert"));
     run(file, line, func, cond);
-    print(PSTR("Debug::exit"));
     print(EXITCHARACTER);
+    flush();
     exit(0);
   }
 
