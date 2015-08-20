@@ -23,12 +23,24 @@
 bool
 MCP23008::begin()
 {
-  uint8_t config = _BV(SEQOP);
+  uint8_t reg[REG_MAX];
+  uint8_t config;
+  int res;
+
+  memset(reg, 0, sizeof(reg));
+  reg[IODIR] = 0xff;
   twi.begin(this);
-  int res = twi.write((uint8_t) IOCON, &config, sizeof(config));
+  res = twi.write((uint8_t) IODIR, reg, sizeof(reg));
+  twi.end();
+  if (res != sizeof(reg) + 1) return (false);
+
+  config = _BV(SEQOP);
+  twi.begin(this);
+  res = twi.write((uint8_t) IOCON, &config, sizeof(config));
   twi.end();
   m_reg = IOCON;
-  return (res == sizeof(config));
+
+  return (res == sizeof(config) + 1);
 }
 
 bool
@@ -39,7 +51,7 @@ MCP23008::set_data_direction(uint8_t iodir)
   int res = twi.write((uint8_t) IODIR, &m_iodir, sizeof(m_iodir));
   twi.end();
   m_reg = IODIR;
-  return (res == sizeof(m_iodir));
+  return (res == sizeof(m_iodir) + 1);
 }
 
 bool
@@ -50,7 +62,7 @@ MCP23008::set_pullup(uint8_t gppu)
   int res = twi.write((uint8_t) GPPU, &m_gppu, sizeof(m_gppu));
   twi.end();
   m_reg = GPPU;
-  return (res == sizeof(m_gppu));
+  return (res == sizeof(m_gppu) + 1);
 }
 
 bool
@@ -82,11 +94,11 @@ MCP23008::set_interrupt_pin(uint8_t pin, InterruptMode mode)
   }
   twi.begin(this);
   res = twi.write((uint8_t) GPINTEN, &m_gpinten, sizeof(m_gpinten));
-  if (res != sizeof(m_gpinten)) goto error;
+  if (res != sizeof(m_gpinten) + 1) goto error;
   res = twi.write((uint8_t) DEFVAL, &m_defval, sizeof(m_defval));
-  if (res != sizeof(m_defval)) goto error;
+  if (res != sizeof(m_defval) + 1) goto error;
   res = twi.write((uint8_t) INTCON, &m_intcon, sizeof(m_intcon));
-  if (res != sizeof(m_intcon)) goto error;
+  if (res != sizeof(m_intcon) + 1) goto error;
   twi.end();
   return (true);
  error:
@@ -131,7 +143,7 @@ MCP23008::write(uint8_t value)
   int res = twi.write((uint8_t) OLAT, &m_olat, sizeof(m_olat));
   twi.end();
   m_reg = OLAT;
-  return (res == sizeof(m_olat));
+  return (res == sizeof(m_olat) + 1);
 }
 
 bool
@@ -145,5 +157,5 @@ MCP23008::write(void* buf, size_t size)
   size_t ix = size - 1;
   m_olat = bp[ix];
   m_reg = OLAT;
-  return (res == (int) size);
+  return (res == (int) size + 1);
 }

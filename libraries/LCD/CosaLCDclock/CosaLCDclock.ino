@@ -57,6 +57,9 @@ MJKDZ_LCD_Module port(0);
 // DFRobot_IIC_LCD_Module port;
 // #include <SainSmart_LCD2004.h>
 // SainSmart_LCD2004 port;
+// #include <MCP23008.h>
+// #include <Adafruit_I2C_LCD_Backpack.h>
+// Adafruit_I2C_LCD_Backpack port;
 
 // HD44780 based LCD with support for serial communication
 // #include <ERM1602_5.h>

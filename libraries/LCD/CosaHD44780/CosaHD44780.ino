@@ -34,7 +34,7 @@
 #include <HD44780.h>
 
 // HD44780 driver built-in adapters
-HD44780::Port4b port;
+// HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
@@ -50,6 +50,9 @@ HD44780::Port4b port;
 // DFRobot_IIC_LCD_Module port;
 // #include <SainSmart_LCD2004.h>
 // SainSmart_LCD2004 port;
+#include <MCP23008.h>
+#include <Adafruit_I2C_LCD_Backpack.h>
+Adafruit_I2C_LCD_Backpack port;
 
 // HD44780 based LCD with support for serial communication
 // #include <ERM1602_5.h>
@@ -114,6 +117,10 @@ void setup()
 {
   // Initiate Watchdog for low power delay
   Watchdog::begin();
+
+#if defined(COSA_ADAFRUIT_I2C_LCD_BACKPACK_H)
+  twi.set_freq(TWI::MAX_FREQ);
+#endif
 
   // Initate LCD and load custom character bitmaps
   lcd.begin();

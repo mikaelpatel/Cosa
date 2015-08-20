@@ -205,7 +205,7 @@ protected:
   /** Pin number mask. */
   static const uint8_t PIN_MASK = 0x07;
 
-  /** Register Addresses, table 1-2, pp. 6 */
+  /** Register Addresses, table 1-2, pp. 6. */
   enum {
     IODIR = 0x00,		//!< I/O Direction Register.
     IPOL = 0x01,		//!< Input Polarity Register.
@@ -221,7 +221,7 @@ protected:
     REG_MAX = 0x0b		//!< Number of Registers.
   } __attribute__((packed));
 
-  /** Configuration Register Bits, pp. 15 */
+  /** Configuration Register Bits, pp. 15. */
   enum {
     INTPOL = 1,			//!< Polarity of Interrupt Pin.
     ODR = 2,			//!< Open-drain Output enable.

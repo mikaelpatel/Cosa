@@ -75,6 +75,9 @@ MJKDZ_LCD_Module port(0);
 // DFRobot_IIC_LCD_Module port;
 // #include <SainSmart_LCD2004.h>
 // SainSmart_LCD2004 port;
+// #include <MCP23008.h>
+// #include <Adafruit_I2C_LCD_Backpack.h>
+// Adafruit_I2C_LCD_Backpack port;
 
 // Select LCD width and height
 #define WIDTH 16
