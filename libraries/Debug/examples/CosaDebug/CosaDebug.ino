@@ -50,9 +50,17 @@ namespace A {
     REGISTER(i);
     OBSERVE_IF(i < 1, i);
     OBSERVE_IF(i > 5, i);
-    BREAK_IF(i > 10);
+    BREAK_IF(i == 10);
     i += 1;
     ASSERT(i < 15);
+  }
+
+  long e(int i)
+  {
+    REGISTER(i);
+    CHECK_MEMORY();
+    if (i != 0) return (e(i - 1) * i);
+    return (1);
   }
 };
 
@@ -79,6 +87,10 @@ void setup()
 
   // Contains several breakpoints. Check the memory again. Heap is now used
   A::b();
+
+  // Free allocated buffer. Check memory and heap again
+  free(buf);
+  A::a();
 }
 
 void loop()
@@ -98,12 +110,12 @@ void loop()
   // Contains both breakpoints and observations. Check variables
   A::c();
 
-  // Free allocated buffer. Check memory and heap again
-  if (buf != NULL) {
-    free(buf);
-    buf = NULL;
-  }
+  // Leak memory and run function with memory check
+  buf = (char*) malloc(BUF_MAX);
+  memset(buf, 0xa5, BUF_MAX);
+  cout << A::e(5) << endl;
 
+  // Keep up with the user
   delay(500);
 }
 

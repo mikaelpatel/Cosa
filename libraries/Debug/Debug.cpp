@@ -42,6 +42,16 @@ Debug::begin(IOStream::Device* dev,
 }
 
 bool
+Debug::check_memory()
+{
+  uint16_t marker = 0xA5A5;
+  int HEAPEND = (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+  int STACKSTART = (int) &marker;
+  int HEADROOM = 128;
+  return (STACKSTART > HEAPEND + HEADROOM);
+}
+
+bool
 Debug::end()
 {
   if (m_dev == NULL) return (false);
@@ -73,30 +83,30 @@ Debug::run(const char* file, int line, const char* func, str_P expr)
 
     if (!strcmp_P(buf, PSTR("go"))) return;
 
-#if !defined(COSA_DEBUG_NO_DUMP_VARIABLES)
+#if !defined(COSA_DEBUG_NO_PRINT_VARIABLES)
     if (!strcmp_P(buf, PSTR("variables"))) {
-      do_dump_variables();
+      do_print_variables();
       continue;
     }
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_DATA)
+#if !defined(COSA_DEBUG_NO_PRINT_DATA)
     if (!strcmp_P(buf, PSTR("data"))) {
-      do_dump_data();
+      do_print_data();
       continue;
     }
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_HEAP)
+#if !defined(COSA_DEBUG_NO_PRINT_HEAP)
     if (!strcmp_P(buf, PSTR("heap"))) {
-      do_dump_heap();
+      do_print_heap();
       continue;
     }
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_STACK)
+#if !defined(COSA_DEBUG_NO_PRINT_STACK)
     if (!strcmp_P(buf, PSTR("stack"))) {
-      do_dump_stack((int) &marker);
+      do_print_stack((int) &marker);
       continue;
     }
 #endif
@@ -157,25 +167,25 @@ Debug::do_lookup_variables(const char* name)
 }
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_VARIABLES)
+#if !defined(COSA_DEBUG_NO_PRINT_VARIABLES)
 void
-Debug::do_dump_variables()
+Debug::do_print_variables()
 {
   for (Variable* vp = m_var; vp != NULL; vp = vp->m_next) vp->print();
 }
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_DATA)
+#if !defined(COSA_DEBUG_NO_PRINT_DATA)
 void
-Debug::do_dump_data()
+Debug::do_print_data()
 {
   print(RAMSTART, (void*) RAMSTART, DATASIZE, IOStream::hex);
 }
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_HEAP)
+#if !defined(COSA_DEBUG_NO_PRINT_HEAP)
 void
-Debug::do_dump_heap()
+Debug::do_print_heap()
 {
   int HEAPSTART = (int) &__heap_start;
   int HEAPEND = (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
@@ -185,9 +195,9 @@ Debug::do_dump_heap()
 }
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_STACK)
+#if !defined(COSA_DEBUG_NO_PRINT_STACK)
 void
-Debug::do_dump_stack(int marker)
+Debug::do_print_stack(int marker)
 {
   int size = RAMEND - marker;
   if (size == 0) return;
@@ -220,16 +230,16 @@ Debug::do_help()
 #if !defined(COSA_DEBUG_NO_WHERE)
     "where -- location in source code\n"
 #endif
-#if !defined(COSA_DEBUG_NO_DUMP_REGISTER)
+#if !defined(COSA_DEBUG_NO_PRINT_REGISTER)
     "variables -- list variables\n"
 #endif
-#if !defined(COSA_DEBUG_NO_DUMP_DATA)
+#if !defined(COSA_DEBUG_NO_PRINT_DATA)
     "data -- print data\n"
 #endif
-#if !defined(COSA_DEBUG_NO_DUMP_HEAP)
+#if !defined(COSA_DEBUG_NO_PRINT_HEAP)
     "heap -- print heap\n"
 #endif
-#if !defined(COSA_DEBUG_NO_DUMP_STACK)
+#if !defined(COSA_DEBUG_NO_PRINT_STACK)
     "stack -- print stack\n"
 #endif
 #if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
@@ -244,7 +254,7 @@ Debug::do_help()
 void
 Debug::Variable::print()
 {
-  debug.printf(PSTR("%s:%S@%p"), m_func, m_name, m_ref);
+  debug.printf(PSTR("%p:%s:%S@%p"), this, m_func, m_name, m_ref);
   if (m_size == 1) {
     debug.printf(PSTR("=%d\n"), *((uint8_t*) m_ref));
   }

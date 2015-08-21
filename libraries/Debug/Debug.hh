@@ -34,10 +34,10 @@ extern class Debug debug;
  * Define to remove corresponding command:
  *   COSA_DEBUG_NO_EXIT
  *   COSA_DEBUG_NO_WHERE
- *   COSA_DEBUG_NO_DUMP_VARIABLES
- *   COSA_DEBUG_NO_DUMP_DATA
- *   COSA_DEBUG_NO_DUMP_HEAP
- *   COSA_DEBUG_NO_DUMP_STACK
+ *   COSA_DEBUG_NO_PRINT_VARIABLES
+ *   COSA_DEBUG_NO_PRINT_DATA
+ *   COSA_DEBUG_NO_PRINT_HEAP
+ *   COSA_DEBUG_NO_PRINT_STACK
  *   COSA_DEBUG_NO_MEMORY_USAGE
  *   COSA_DEBUG_NO_HELP
  *   COSA_DEBUG_NO_LOOKUP_VARIABLES
@@ -108,6 +108,13 @@ public:
     print(PSTR("Debug::break_at"));
     run(file, line, func, cond);
   }
+
+  /**
+   * Check memory status. Return false(0) if the stack has moved into
+   * the heap else true(1).
+   * @return bool.
+   */
+  bool check_memory();
 
   /**
    * Print variable obervation prefix with given file name, line
@@ -198,20 +205,20 @@ protected:
   bool do_lookup_variables(const char* name);
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_VARIABLES)
-  void do_dump_variables();
+#if !defined(COSA_DEBUG_NO_PRINT_VARIABLES)
+  void do_print_variables();
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_DATA)
-  void do_dump_data();
+#if !defined(COSA_DEBUG_NO_PRINT_DATA)
+  void do_print_data();
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_HEAP)
-  void do_dump_heap();
+#if !defined(COSA_DEBUG_NO_PRINT_HEAP)
+  void do_print_heap();
 #endif
 
-#if !defined(COSA_DEBUG_NO_DUMP_STACK)
-  void do_dump_stack(int marker);
+#if !defined(COSA_DEBUG_NO_PRINT_STACK)
+  void do_print_stack(int marker);
 #endif
 
 #if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
@@ -276,6 +283,18 @@ protected:
     if (UNLIKELY(cond))							\
       debug.break_at(__FILE__,__LINE__, __PRETTY_FUNCTION__,		\
                      __PSTR(# cond));					\
+  } while (0)
+
+/**
+ * Call the debug command handler with information about the file,
+ * line number and function name if the given condition is true.
+ * @param[in] cond condition.
+ */
+#define CHECK_MEMORY()							\
+  do {									\
+    if (UNLIKELY(!(debug.check_memory())))				\
+      debug.assert(__FILE__,__LINE__, __PRETTY_FUNCTION__,		\
+		   __PSTR("check_memory"));				\
   } while (0)
 
 /**
