@@ -71,9 +71,9 @@ public:
 	     const char* func);
 
   /**
-   * Assertion failure in given file, on line, and in function. The
-   * debug command handler is run. The macro ASSERT(cond) should
-   * be used instead.
+   * Assertion failure of given condition in source code (file, line
+   * and function). The debug command handler is called. The macro
+   * ASSERT(cond) should be used instead.
    * @param[in] file name.
    * @param[in] line number.
    * @param[in] func function name.
@@ -82,14 +82,7 @@ public:
   void assert(const char* file,
 	      int line,
 	      const char* func,
-	      str_P cond)
-  {
-    print(PSTR("Debug::assert"));
-    run(file, line, func, cond);
-    print(EXITCHARACTER);
-    flush();
-    exit(0);
-  }
+	      str_P cond);
 
   /**
    * Break point in given file, on line, and in function. The
@@ -103,23 +96,20 @@ public:
   void break_at(const char* file,
 		int line,
 		const char* func,
-		str_P cond)
-  {
-    print(PSTR("Debug::break_at"));
-    run(file, line, func, cond);
-  }
+		str_P cond);
 
   /**
-   * Check memory status. Return false(0) if the stack has moved into
+   * Check stack status. Return false(0) if the stack has moved into
    * the heap else true(1).
+   * @param[in] room required free bytes.
    * @return bool.
    */
-  bool check_memory();
+  bool check_stack(int room = 128);
 
   /**
    * Print variable obervation prefix with given file name, line
-   * number and function name to debug stream. The macro
-   * OBSERVE_IF(cond,expr) or OBSERVE(expr) should be used instead.
+   * number and function name to debug stream. The macro OBSERVE(expr)
+   * or OBSERVE_IF(cond,expr) should be used instead.
    * @param[in] file name.
    * @param[in] line number.
    * @param[in] func function name.
@@ -177,11 +167,11 @@ public:
 
   protected:
     friend class Debug;
-    class Variable* m_next;
-    const char* m_func;
-    str_P m_name;
-    void* m_ref;
-    size_t m_size;
+    class Variable* m_next;	//!< Next variable.
+    const char* m_func;		//!< Registered in function.
+    str_P m_name;		//!< Function name.
+    void* m_ref;		//!< Variable value reference.
+    size_t m_size;		//!< Variable value size.
   };
 
 protected:
@@ -198,42 +188,77 @@ protected:
 	   str_P expr = NULL);
 
 #if !defined(COSA_DEBUG_NO_EXIT)
+  /**
+   * Stop the sketch.
+   */
   void do_exit();
 #endif
 
 #if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
+  /**
+   * Lookup given variable name in register. Return true(1) if found
+   * otherwise false(0).
+   * @param[in] name of variable.
+   */
   bool do_lookup_variables(const char* name);
 #endif
 
 #if !defined(COSA_DEBUG_NO_PRINT_VARIABLES)
+  /**
+   * Print registered variables in format:
+   * @code
+   * REG:FUNC:VAR@REF=VAL
+   * REG:FUNC:VAR@REF[SIZE]:HEX
+   * @endcode
+   * where REG is the stack address of register item for the variable VAR.
+   * FUNC is the name of the function where registered. REF is the
+   * address of the variables value and VAL is the value. If the value
+   * is larger than int the value is printed in HEX format.
+   */
   void do_print_variables();
 #endif
 
 #if !defined(COSA_DEBUG_NO_PRINT_DATA)
+  /**
+   * Print contents of data segment in hex format.
+   */
   void do_print_data();
 #endif
 
 #if !defined(COSA_DEBUG_NO_PRINT_HEAP)
+  /**
+   * Print contents of heap in hex format.
+   */
   void do_print_heap();
 #endif
 
 #if !defined(COSA_DEBUG_NO_PRINT_STACK)
+  /**
+   * Print contents of stack in hex format.
+   */
   void do_print_stack(int marker);
 #endif
 
 #if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
+  /**
+   * Print memory usage statistics with size of data segment, heap,
+   * stack and number of free bytes.
+   */
   void do_memory_usage(int marker);
 #endif
 
 #if !defined(COSA_DEBUG_NO_HELP)
+  /**
+   * Print list of commands and short description.
+   */
   void do_help();
 #endif
 
   friend class Variable;
-  Variable* m_var;
-  char EXITCHARACTER;
-  int DATAEND;
-  int DATASIZE;
+  Variable* m_var;		//!< Last registered variable.
+  char EXITCHARACTER;		//!< Character to emit on exit.
+  int DATAEND;			//!< End of data segment.
+  int DATASIZE;			//!< Size of data segment.
 };
 
 #if !defined(NDEBUG)
@@ -254,7 +279,7 @@ protected:
 
 /**
  * Assert the given condition. Calls debug handler if the assertion
- * fails. Will not return if asserted.
+ * fails (the condition is false). Will not return if asserted.
  * @param[in] cond condition.
  */
 #define ASSERT(cond)							\
@@ -265,8 +290,9 @@ protected:
   } while (0)
 
 /**
- * Call the debug command handler with information about the file,
- * line number and function name.
+ * Mark a break point in the source code. Call the debug command
+ * handler with information about the file, line number and function
+ * name.
  */
 #define BREAKPOINT()							\
   do {									\
@@ -274,8 +300,9 @@ protected:
   } while (0)
 
 /**
- * Call the debug command handler with information about the file,
- * line number and function name if the given condition is true.
+ * Mark a conditional break point in the source code. Call the debug
+ * command handler with information about the file, line number and
+ * function name if the given condition is true.
  * @param[in] cond condition.
  */
 #define BREAK_IF(cond)							\
@@ -286,15 +313,14 @@ protected:
   } while (0)
 
 /**
- * Call the debug command handler with information about the file,
- * line number and function name if the given condition is true.
- * @param[in] cond condition.
+ * Check for stack error.
+ * @param[in] room required free space (default 128).
  */
-#define CHECK_MEMORY()							\
+#define CHECK_STACK(room)						\
   do {									\
-    if (UNLIKELY(!(debug.check_memory())))				\
+    if (UNLIKELY(!(debug.check_stack(room))))				\
       debug.assert(__FILE__,__LINE__, __PRETTY_FUNCTION__,		\
-		   __PSTR("check_memory"));				\
+		   __PSTR("check_stack()"));				\
   } while (0)
 
 /**
@@ -320,7 +346,9 @@ protected:
 #define OBSERVE(expr) OBSERVE_IF(expr,true)
 
 /**
- * Register the given variable in the debug handler.
+ * Register the given variable in the debug handler. The debug handler
+ * commands "variables" and "?var" will print information about the
+ * registered variable(s).
  * @param[in] var variable.
  */
 #define REGISTER(var)							\
@@ -331,12 +359,13 @@ protected:
 
 #else
 
-#define DEBUG_STREAM(dev)
 #if !defined(ASSERT)
 #define ASSERT(cond) do { if (!(cond)) exit(0); } while (0)
 #endif
 #define BREAKPOINT()
 #define BREAK_IF(cond)
+#define CHECK_STACK(room)
+#define DEBUG_STREAM(dev)
 #define OBSERVE_IF(cond,expr)
 #define OBSERVE(expr)
 #define REGISTER(var)

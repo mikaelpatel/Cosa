@@ -41,14 +41,36 @@ Debug::begin(IOStream::Device* dev,
   return (true);
 }
 
+void
+Debug::assert(const char* file,
+	      int line,
+	      const char* func,
+	      str_P cond)
+{
+  print(PSTR("Debug::assert"));
+  run(file, line, func, cond);
+  print(EXITCHARACTER);
+  flush();
+  exit(0);
+}
+
+void
+Debug::break_at(const char* file,
+		int line,
+		const char* func,
+		str_P cond)
+{
+  print(PSTR("Debug::break_at"));
+  run(file, line, func, cond);
+}
+
 bool
-Debug::check_memory()
+Debug::check_stack(int room)
 {
   uint16_t marker = 0xA5A5;
   int HEAPEND = (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
   int STACKSTART = (int) &marker;
-  int HEADROOM = 128;
-  return (STACKSTART > HEAPEND + HEADROOM);
+  return (STACKSTART > HEAPEND + room);
 }
 
 bool

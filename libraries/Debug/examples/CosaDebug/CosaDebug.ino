@@ -58,7 +58,7 @@ namespace A {
   long e(int i)
   {
     REGISTER(i);
-    CHECK_MEMORY();
+    CHECK_STACK();
     if (i != 0) return (e(i - 1) * i);
     return (1);
   }
