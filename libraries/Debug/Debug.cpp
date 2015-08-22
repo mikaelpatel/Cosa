@@ -245,31 +245,32 @@ void
 Debug::do_help()
 {
   static const char help[] PROGMEM =
-    "go -- return to sketch\n"
-#if !defined(COSA_DEBUG_NO_EXIT)
-    "exit -- exit monitor\n"
-#endif
-#if !defined(COSA_DEBUG_NO_WHERE)
-    "where -- location in source code\n"
-#endif
-#if !defined(COSA_DEBUG_NO_PRINT_REGISTER)
-    "variables -- list variables\n"
+#if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
+    "?VARIABLE -- print variable(s)\n"
 #endif
 #if !defined(COSA_DEBUG_NO_PRINT_DATA)
     "data -- print data\n"
 #endif
+#if !defined(COSA_DEBUG_NO_EXIT)
+    "exit -- exit sketch\n"
+#endif
+    "go -- return to sketch\n"
 #if !defined(COSA_DEBUG_NO_PRINT_HEAP)
     "heap -- print heap\n"
-#endif
-#if !defined(COSA_DEBUG_NO_PRINT_STACK)
-    "stack -- print stack\n"
 #endif
 #if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
     "memory -- print memory usage\n"
 #endif
-#if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
-    "?VARIABLE -- print variable(s)\n";
+#if !defined(COSA_DEBUG_NO_PRINT_STACK)
+    "stack -- print stack\n"
 #endif
+#if !defined(COSA_DEBUG_NO_PRINT_REGISTER)
+    "variables -- print variables\n"
+#endif
+#if !defined(COSA_DEBUG_NO_WHERE)
+    "where -- location in source code\n"
+#endif
+    ;
   print((str_P) help);
 }
 
