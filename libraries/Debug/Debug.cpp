@@ -221,7 +221,7 @@ Debug::do_print_heap()
 void
 Debug::do_print_stack(int marker)
 {
-  int size = RAMEND - marker;
+  int size = RAMEND - marker + 1;
   if (size == 0) return;
   print(marker, (void*) marker, size, IOStream::hex);
 }
