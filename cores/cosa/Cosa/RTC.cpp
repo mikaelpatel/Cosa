@@ -28,6 +28,8 @@
 #define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
 #define US_PER_MS 1000
 #define MS_PER_SEC 1000
+#define MS_PER_TICK (US_PER_TICK / 1000)
+#define US_ERR_PER_TICK (US_PER_TICK % 1000)
 
 // Initiated state
 bool RTC::s_initiated = false;
@@ -130,17 +132,17 @@ ISR(TIMER0_OVF_vect)
   RTC::s_uticks += US_PER_TICK;
 
   // Increment milli-seconds counter
-  RTC::s_ms += 1;
+  RTC::s_ms += MS_PER_TICK;
 
   // Increment micro-seconds part of milli-seconds counter
-  RTC::s_usec += (US_PER_TICK - US_PER_MS);
+  RTC::s_usec += US_ERR_PER_TICK;
   if (UNLIKELY(RTC::s_usec > US_PER_MS)) {
     RTC::s_usec -= US_PER_MS;
     RTC::s_ms += 1;
   }
 
   // Increment milli-seconds part of seconds counter
-  RTC::s_msec += 1;
+  RTC::s_msec += MS_PER_TICK;
 
   // Check for increment of seconds counter
   if (UNLIKELY(RTC::s_msec == MS_PER_SEC)) {
