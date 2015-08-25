@@ -197,6 +197,14 @@ VWI::Receiver::recv(uint8_t& src, uint8_t& port,
 }
 
 int
+VWI::Receiver::get_link_quality_indicator()
+{
+  uint32_t start = RTC::millis();
+  while (is_clear());
+  return (RTC::millis() - start);
+}
+
+int
 VWI::Transmitter::send(uint8_t dest, uint8_t port, const iovec_t* vec)
 {
   // Santiy check the io vector
@@ -273,7 +281,7 @@ VWI::Transmitter::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 }
 
 /** Current transmitter/receiver for interrupt handler access */
-VWI* VWI::s_rf = 0;
+VWI* VWI::s_rf = NULL;
 
 bool
 VWI::begin(const void* config)

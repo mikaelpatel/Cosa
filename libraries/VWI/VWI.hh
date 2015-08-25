@@ -234,10 +234,11 @@ public:
    * @override Wireless::Driver
    * Receive message and store into given buffer with given maximum
    * length. The source network address is returned in the parameter src.
-   * Returns error code(-2) if no message is available and/or a
-   * timeout occured. Returns error code(-1) if the buffer size if to
-   * small for incoming message or if the receiver fifo has overflowed.
-   * Otherwise the actual number of received bytes is returned
+   * Returns error code(ETIME) if no message is available and/or a
+   * timeout occured. Returns error code(EMSGSIZE) if the buffer size
+   * if to small for incoming message or if the receiver fifo has
+   * overflowed. Otherwise the actual number of received bytes is
+   * returned
    * @param[out] src source network address.
    * @param[out] port device port (or message type).
    * @param[in] buf buffer to store incoming message.
@@ -250,6 +251,15 @@ public:
 		   uint32_t ms = 0L)
   {
     return (m_rx.recv(src, port, buf, len, ms));
+  }
+
+  /**
+   * @override Wireless::Driver
+   * Return link quality indicator.
+   */
+  virtual int get_link_quality_indicator()
+  {
+    return (m_rx.get_link_quality_indicator());
   }
 
 protected:
@@ -340,6 +350,19 @@ protected:
      */
     int recv(uint8_t& src, uint8_t& port, void* buf, size_t len,
 	     uint32_t ms = 0L);
+
+    /**
+     * Return link quality indicator; milli-seconds that the receiver
+     * pin is low after receiving a message. RF433 RX modules will
+     * increase gain until noise is detected. The lower the gain
+     * during the latest message the longer the delay before noise.
+     * Typical values are 200 when transmitter (3.7V) is 10 cm from
+     * the receiver, 150 at 50 cm, 100 at 5 m. For this measurement to
+     * be valid a new message should not be sent in the automatic gain
+     * control time slot (time until noise).
+     * @return milli-seconds.
+     */
+    int get_link_quality_indicator();
 
   private:
     /** The size of the receiver ramp. Ramp wraps modulo this number. */
@@ -482,7 +505,9 @@ protected:
      * almost immediately, and message will be sent at the right
      * timing by interrupts. Message is gathered from elements in io
      * vector. The total size of the io vector buffers must be less
-     * than PAYLOAD_MAX.
+     * than PAYLOAD_MAX. Returns number of bytes transmitted or
+     * negative error code; EINVAL if the vector is NULL, EMSGSIZE if
+     * the total io vector size is larger that max payload,
      * @param[in] dest destination network address.
      * @param[in] port device port (or message type).
      * @param[in] vec null terminated io vector.
