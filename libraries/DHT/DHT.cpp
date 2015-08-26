@@ -82,10 +82,6 @@ DHT::on_interrupt(uint16_t arg)
 bool
 DHT::sample_request()
 {
-  // Error humidity and temperature (out of range)
-  m_humidity = BAD_HUMIDITY_SAMPLE;
-  m_temperature = BAD_TEMPERATURE_SAMPLE;
-
   // Issue a request; pull down for more than 18 ms
   set_mode(OUTPUT_MODE);
   IOPin::clear();

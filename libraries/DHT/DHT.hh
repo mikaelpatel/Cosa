@@ -33,11 +33,11 @@
  */
 class DHT : public ExternalInterrupt {
 public:
-  /** Humidity when conversion and/or communication fails */
-  static const int16_t BAD_HUMIDITY_SAMPLE = 1000;
+  /** Initial humidity; 100.0 % RH. */
+  static const int16_t INIT_HUMIDITY_SAMPLE = 1000;
 
-  /** Temperature when conversion and/or communication fails */
-  static const int16_t BAD_TEMPERATURE_SAMPLE = 850;
+  /** Initial temperature; 85 C. */
+  static const int16_t INIT_TEMPERATURE_SAMPLE = 850;
 
   /**
    * Construct DHT device connected to given pin.
@@ -50,8 +50,8 @@ public:
     m_value(0),
     m_bits(0),
     m_ix(0),
-    m_humidity(0),
-    m_temperature(0)
+    m_humidity(INIT_HUMIDITY_SAMPLE),
+    m_temperature(INIT_TEMPERATURE_SAMPLE)
   {}
 
   /**
