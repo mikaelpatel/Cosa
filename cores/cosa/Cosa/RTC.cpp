@@ -60,17 +60,24 @@ RTC::begin()
     TCNT0 = 0;
     TIFR0 = 0;
   }
-  s_initiated = true;
+
+  // Install delay function and mark as initiated
   ::delay = RTC::delay;
+  s_initiated = true;
+
   return (true);
 }
 
 bool
 RTC::end()
 {
-  // Disable the timer interrupts
+  // Check if initiated
+  if (UNLIKELY(!s_initiated)) return (false);
+
+  // Disable the timer interrupts and mark as not initiated
   synchronized TIMSK0 = 0;
   s_initiated = false;
+
   return (true);
 }
 
@@ -136,7 +143,7 @@ ISR(TIMER0_OVF_vect)
 
   // Increment micro-seconds part of milli-seconds counter
   RTC::s_usec += US_ERR_PER_TICK;
-  if (UNLIKELY(RTC::s_usec > US_PER_MS)) {
+  if (UNLIKELY(RTC::s_usec >= US_PER_MS)) {
     RTC::s_usec -= US_PER_MS;
     RTC::s_ms += 1;
   }
@@ -145,9 +152,9 @@ ISR(TIMER0_OVF_vect)
   RTC::s_msec += MS_PER_TICK;
 
   // Check for increment of seconds counter
-  if (UNLIKELY(RTC::s_msec == MS_PER_SEC)) {
-    RTC::s_msec = 0;
-    RTC::s_sec++;
+  if (UNLIKELY(RTC::s_msec >= MS_PER_SEC)) {
+    RTC::s_msec -= MS_PER_SEC;
+    RTC::s_sec += 1;
   }
 
   // Check for extension of the interrupt handler
