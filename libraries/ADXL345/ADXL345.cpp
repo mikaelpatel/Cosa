@@ -28,7 +28,7 @@ ADXL345::begin()
   if (UNLIKELY(id != ID)) return (false);
 
   // Data format
-  write(DATA_FORMAT, _BV(FULL_RES) | RANGE_16G);
+  write(DATA_FORMAT, _BV(INT_INVERT) | _BV(FULL_RES) | RANGE_16G);
 
   // Single and double tap detection
   write(THRESH_TAP, 0x40);
@@ -52,10 +52,7 @@ ADXL345::begin()
 
   // Interrupt enable
   write(INT_MAP, 0);
-  write(INT_ENABLE, _BV(DATA_READY) |
-	_BV(SINGLE_TAP) | _BV(DOUBLE_TAP) |
-	_BV(ACT) | _BV(INACT) |
-	_BV(FREE_FALL));
+  write(INT_ENABLE, _BV(ACT) | _BV(SINGLE_TAP) | _BV(DOUBLE_TAP) | _BV(FREE_FALL));
 
   return (true);
 }
@@ -113,7 +110,7 @@ ADXL345::is_activity()
     uint8_t rate = read(BW_RATE);
     write(BW_RATE, rate & ~_BV(LOW_POWER));
   }
-  return (source & 0x7c);
+  return (source & 0x74);
 }
 
 IOStream&
