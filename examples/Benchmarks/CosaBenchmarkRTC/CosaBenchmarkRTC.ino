@@ -81,6 +81,7 @@ void setup()
     TRACE(RTC::millis());
     TRACE(RTC::seconds());
   }
+  trace.flush();
 
   // Measure and validate micro-second level (RTC)
   err = 0;
@@ -98,6 +99,7 @@ void setup()
   }
   TRACE(RTC::seconds());
   INFO("DELAY(100): 100000 measurement/validation (err = %ul)", err);
+  trace.flush();
 
   // Measure and validate milli-second level (RTC)
   err = 0;
@@ -115,6 +117,7 @@ void setup()
   }
   TRACE(RTC::seconds());
   INFO("RTC::delay(100): 100 measurement/validation (err = %ul)", err);
+  trace.flush();
 
   // Measure and validate milli-second level (Watchdog)
   err = 0;
