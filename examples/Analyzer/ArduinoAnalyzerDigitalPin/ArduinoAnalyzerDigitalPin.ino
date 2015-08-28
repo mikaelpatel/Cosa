@@ -17,8 +17,19 @@
  *
  * @section Description
  * Logic Analyzer based performance measurement of Arduino Digital
- * Pin. Trigger on rising edge transition on ledPin. Measurements are
- * for Arduino Uno/Nano.
+ * Pin. Measurements are for Arduino Uno/Nano (1.6.5).
+ *
+ * @section Circuit
+ * Trigger on CHAN0/D13/LED rising.
+ *
+ * +-------+
+ * | CHAN0 |-------------------------------> ledPin(LED/D13)
+ * | CHAN1 |-------------------------------> outPin(D8);
+ * | CHAN2 |-------------------------------> dataPin(D9);
+ * | CHAN3 |-------------------------------> clockPin(D10);
+ * |       |
+ * | GND   |-------------------------------> GND
+ * +-------+
  *
  * This file is part of the Arduino Che Cosa project.
  */

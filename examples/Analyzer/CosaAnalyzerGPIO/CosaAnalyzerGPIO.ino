@@ -16,9 +16,20 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Logic Analyzer based performance measurement of CosaGPIO. Trigger
- * on rising edge transition on ledPin. Measurements are for Arduino
- * Uno/Nano.
+ * Logic Analyzer based performance measurement of CosaGPIO.
+ * Measurements are for Arduino Uno/Nano (Cosa 1.1.3).
+ *
+ * @section Circuit
+ * Trigger on CHAN0/D13/LED rising.
+ *
+ * +-------+
+ * | CHAN0 |-------------------------------> ledPin(LED/D13)
+ * | CHAN1 |-------------------------------> outPin(D8);
+ * | CHAN2 |-------------------------------> dataPin(D9);
+ * | CHAN3 |-------------------------------> clockPin(D10);
+ * |       |
+ * | GND   |-------------------------------> GND
+ * +-------+
  *
  * This file is part of the Arduino Che Cosa project.
  */
