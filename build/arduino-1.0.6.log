@@ -1,76 +1,76 @@
-Tue Aug 18 18:16:27 CEST 2015: adafruit-atmega32u4
+Fri Aug 28 14:17:49 CEST 2015: adafruit-atmega32u4
 Program:    4322 bytes (13.2% Full)
 Data:        187 bytes (7.3% Full)
-Tue Aug 18 18:16:29 CEST 2015: adafruit-atmega32u4-cat
+Fri Aug 28 14:17:52 CEST 2015: adafruit-atmega32u4-cat
 Program:    4322 bytes (13.2% Full)
 Data:        187 bytes (7.3% Full)
-Tue Aug 18 18:16:30 CEST 2015: atmega328-8
+Fri Aug 28 14:17:55 CEST 2015: atmega328-8
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:16:32 CEST 2015: attiny84-8
+Fri Aug 28 14:17:57 CEST 2015: attiny84-8
 Program:     162 bytes (2.0% Full)
 Data:          1 bytes (0.2% Full)
-Tue Aug 18 18:16:33 CEST 2015: attiny85-8
+Fri Aug 28 14:17:59 CEST 2015: attiny85-8
 Program:     158 bytes (1.9% Full)
 Data:          1 bytes (0.2% Full)
-Tue Aug 18 18:16:35 CEST 2015: attiny861-8
+Fri Aug 28 14:18:01 CEST 2015: attiny861-8
 Program:     166 bytes (2.0% Full)
 Data:          1 bytes (0.2% Full)
-Tue Aug 18 18:16:36 CEST 2015: diecimila
+Fri Aug 28 14:18:03 CEST 2015: diecimila
 Program:     256 bytes (1.6% Full)
 Data:          1 bytes (0.1% Full)
-Tue Aug 18 18:16:38 CEST 2015: duemilanove
+Fri Aug 28 14:18:05 CEST 2015: duemilanove
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:16:39 CEST 2015: iboard
+Fri Aug 28 14:18:07 CEST 2015: iboard
 Program:     454 bytes (1.4% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:16:41 CEST 2015: leonardo
+Fri Aug 28 14:18:10 CEST 2015: leonardo
 Program:    4342 bytes (13.3% Full)
 Data:        187 bytes (7.3% Full)
-Tue Aug 18 18:16:42 CEST 2015: lilypad
+Fri Aug 28 14:18:12 CEST 2015: lilypad
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:16:44 CEST 2015: lilypad-usb
+Fri Aug 28 14:18:14 CEST 2015: lilypad-usb
 Program:    4322 bytes (13.2% Full)
 Data:        187 bytes (7.3% Full)
-Tue Aug 18 18:16:45 CEST 2015: mega1280
+Fri Aug 28 14:18:16 CEST 2015: mega1280
 Program:     386 bytes (0.3% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:16:47 CEST 2015: mega2560
+Fri Aug 28 14:18:18 CEST 2015: mega2560
 Program:     390 bytes (0.1% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:16:48 CEST 2015: micro
+Fri Aug 28 14:18:21 CEST 2015: micro
 Program:    4322 bytes (13.2% Full)
 Data:        187 bytes (7.3% Full)
-Tue Aug 18 18:16:49 CEST 2015: microduino-core
+Fri Aug 28 14:18:23 CEST 2015: microduino-core
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:16:51 CEST 2015: microduino-core32u4
+Fri Aug 28 14:18:25 CEST 2015: microduino-core32u4
 Program:    4322 bytes (13.2% Full)
 Data:        187 bytes (7.3% Full)
-Tue Aug 18 18:16:52 CEST 2015: microduino-core-plus
+Fri Aug 28 14:18:27 CEST 2015: microduino-core-plus
 Program:     276 bytes (0.4% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:16:54 CEST 2015: mighty
+Fri Aug 28 14:18:30 CEST 2015: mighty
 Program:     298 bytes
 Data:          1 bytes
-Tue Aug 18 18:16:55 CEST 2015: mighty-opt
+Fri Aug 28 14:18:32 CEST 2015: mighty-opt
 Program:     298 bytes
 Data:          1 bytes
-Tue Aug 18 18:16:57 CEST 2015: miniwireless
+Fri Aug 28 14:18:34 CEST 2015: miniwireless
 Program:     454 bytes (1.4% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:16:58 CEST 2015: moteino
+Fri Aug 28 14:18:36 CEST 2015: moteino
 Program:     454 bytes (1.4% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:16:59 CEST 2015: moteino-mega
+Fri Aug 28 14:18:39 CEST 2015: moteino-mega
 Program:     324 bytes
 Data:          1 bytes
-Tue Aug 18 18:17:01 CEST 2015: nano
+Fri Aug 28 14:18:41 CEST 2015: nano
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:17:02 CEST 2015: pinoccio
+Fri Aug 28 14:18:43 CEST 2015: pinoccio
 unknown MCU 'atmega256rfr2' specified
 Known MCU names:
    avr2
@@ -495,27 +495,27 @@ CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:155: error: ‘WDTCR’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:155: error: ‘WDCE’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Watchdog.hh:155: error: ‘WDE’ was not declared in this scope
-Tue Aug 18 18:17:03 CEST 2015: pro-micro
+Fri Aug 28 14:18:45 CEST 2015: pro-micro
 Program:    4342 bytes (13.3% Full)
 Data:        187 bytes (7.3% Full)
-Tue Aug 18 18:17:05 CEST 2015: pro-micro-8
+Fri Aug 28 14:18:48 CEST 2015: pro-micro-8
 Program:    4342 bytes (13.3% Full)
 Data:        187 bytes (7.3% Full)
-Tue Aug 18 18:17:06 CEST 2015: pro-mini
+Fri Aug 28 14:18:50 CEST 2015: pro-mini
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:17:08 CEST 2015: pro-mini-8
+Fri Aug 28 14:18:53 CEST 2015: pro-mini-8
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:17:09 CEST 2015: teensy-2_0
+Fri Aug 28 14:18:55 CEST 2015: teensy-2_0
 Program:    4354 bytes (13.3% Full)
 Data:        187 bytes (7.3% Full)
-Tue Aug 18 18:17:10 CEST 2015: teensypp-2_0
+Fri Aug 28 14:18:57 CEST 2015: teensypp-2_0
 Program:    4364 bytes (3.3% Full)
 Data:        187 bytes (2.3% Full)
-Tue Aug 18 18:17:11 CEST 2015: uno
+Fri Aug 28 14:19:00 CEST 2015: uno
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Tue Aug 18 18:17:12 CEST 2015: wildfire
+Fri Aug 28 14:19:02 CEST 2015: wildfire
 Program:     548 bytes
 Data:          1 bytes
