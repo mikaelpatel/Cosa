@@ -89,8 +89,8 @@ UART::flush()
   int res = m_obuf->flush();
   if (UNLIKELY(res < 0)) return (res);
 
-  // Wait for the last character to be transmitted
-  while (!(*UCSRnA() & _BV(UDRE0))) yield();
+  // Wait for all the characters to be transmitted
+  while (*UCSRnB() & _BV(TXCIE0)) yield();
   return (0);
 }
 
