@@ -36,7 +36,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-OutputPin led(Board::LED, 0);
+OutputPin led(Board::LED);
 
 void setup()
 {
@@ -47,10 +47,23 @@ void setup()
 
 void loop()
 {
+  // Write to output buffer
   led.on();
-  trace << PSTR("hello world") << endl;
+  trace << PSTR("hello ");
+  led.off();
+  delay(1);
+
+  // Write again to output buffer
+  led.on();
+  trace << PSTR("world") << endl;
+  led.off();
+  delay(1);
+
+  // Wait for the transmission to complete
+  led.on();
   trace.flush();
   led.off();
+
   sleep(2);
 }
 
