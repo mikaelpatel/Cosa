@@ -38,7 +38,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaSince: started"));
   trace.flush();
 
-  // Start timers. Use RTC::delay()
+  // Start timers
   Watchdog::begin();
   RTC::begin();
 
@@ -50,6 +50,7 @@ void setup()
 void loop()
 {
   led.on();
+  RTC::enable();
   uint32_t rms = RTC::millis();
   uint32_t wms = Watchdog::millis();
   uint32_t wsd = Watchdog::since(START);
@@ -66,6 +67,7 @@ void loop()
 	<< endl;
 
   delay(1000 - RTC::since(rms));
+  RTC::disable();
   led.off();
 
   delay(1000);

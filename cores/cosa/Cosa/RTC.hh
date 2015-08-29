@@ -188,6 +188,17 @@ public:
     }
   }
 
+  /**
+   * Enable pin output toggle on tick. The pin is board/hardware
+   * defined.
+   */
+  static void enable();
+
+  /**
+   * Disable pin toggle on tick. Pin is defined to input.
+   */
+  static void disable();
+
 private:
   static bool s_initiated;	     	//!< Initiated flag.
   static volatile uint32_t s_uticks; 	//!< Tick counter.

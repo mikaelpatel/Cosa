@@ -19,7 +19,7 @@
  */
 
 #include "Cosa/RTC.hh"
-#include "Cosa/Power.hh"
+#include "Cosa/GPIO.hh"
 
 // Real-Time Clock configuration
 #define COUNT 250
@@ -136,6 +136,20 @@ RTC::await(volatile bool &condvar, uint32_t ms)
     while (!condvar) yield();
   }
   return (0);
+}
+
+void
+RTC::enable()
+{
+  TCCR0A |= _BV(COM0A0);
+  GPIO::set_mode(Board::D6, GPIO::OUTPUT_MODE);
+}
+
+void
+RTC::disable()
+{
+  TCCR0A &= ~_BV(COM0A0);
+  GPIO::set_mode(Board::D6, GPIO::INPUT_MODE);
 }
 
 ISR(TIMER0_COMPA_vect)
