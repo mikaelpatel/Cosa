@@ -138,18 +138,38 @@ RTC::await(volatile bool &condvar, uint32_t ms)
   return (0);
 }
 
+#if defined(BOARD_ATTINYX4)
+#define PIN Board::D7
+#elif defined(BOARD_ATTINYX5)
+#define PIN Board::D0
+#elif defined(BOARD_ATMEGA328P)
+#define PIN Board::D6
+#elif defined(BOARD_ATMEGA1248P)
+#define PIN Board::D3
+#elif defined(BOARD_ATMEGA1280)
+#define PIN Board::D13
+#elif defined(BOARD_ATMEGA2560)
+#define PIN Board::D13
+#elif defined(BOARD_ATMEGA32U4)
+#define PIN Board::D11
+#endif
+
 void
 RTC::enable()
 {
+#if defined(PIN)
   TCCR0A |= _BV(COM0A0);
-  GPIO::set_mode(Board::D6, GPIO::OUTPUT_MODE);
+  GPIO::set_mode(PIN, GPIO::OUTPUT_MODE);
+#endif
 }
 
 void
 RTC::disable()
 {
+#if defined(PIN)
   TCCR0A &= ~_BV(COM0A0);
-  GPIO::set_mode(Board::D6, GPIO::INPUT_MODE);
+  GPIO::set_mode(PIN, GPIO::INPUT_MODE);
+#endif
 }
 
 ISR(TIMER0_COMPA_vect)
