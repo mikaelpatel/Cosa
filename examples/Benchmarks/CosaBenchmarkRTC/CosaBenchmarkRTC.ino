@@ -56,6 +56,9 @@ void setup()
   TRACE(Watchdog::ms_per_tick());
   TRACE(Watchdog::ticks());
   TRACE(RTC::us_per_tick());
+  TRACE(RTC::us_per_timer_cycle());
+  TRACE(RTC::micros());
+  TRACE(RTC::millis());
   TRACE(RTC::seconds());
 
   // Measure baseline
