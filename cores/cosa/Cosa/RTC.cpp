@@ -22,22 +22,24 @@
 #include "Cosa/Power.hh"
 
 // Real-Time Clock configuration
-#define COUNT 255
+#define COUNT 250
 #define PRESCALE 64
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
-#define US_PER_TICK ((COUNT + 1) * US_PER_TIMER_CYCLE)
+#define US_PER_TICK (COUNT * US_PER_TIMER_CYCLE)
 #define US_PER_MS 1000
 #define MS_PER_SEC 1000
 #define MS_PER_TICK (US_PER_TICK / 1000)
-#define US_ERR_PER_TICK (US_PER_TICK % 1000)
 
 // Initiated state
 bool RTC::s_initiated = false;
 
 // Timer ticks counter
 volatile uint32_t RTC::s_uticks = 0UL;
-volatile uint16_t RTC::s_usec = 0;
+
+// Milli-seconds counter
 volatile uint32_t RTC::s_ms = 0UL;
+
+// Seconds counter with milli-seconds fraction
 volatile uint16_t RTC::s_msec = 0;
 volatile clock_t RTC::s_sec = 0UL;
 
@@ -53,8 +55,12 @@ RTC::begin()
     // Set prescaling to 64
     TCCR0B = (_BV(CS01) | _BV(CS00));
 
-    // And enable interrupt on overflow
-    TIMSK0 = _BV(TOIE0);
+    // Clear Timer on Compare Match
+    TCCR0A = _BV(WGM01);
+    OCR0A = COUNT;
+
+    // And enable interrupt on match
+    TIMSK0 = _BV(OCIE0A);
 
     // Reset the counter and clear interrupts
     TCNT0 = 0;
@@ -103,7 +109,7 @@ RTC::micros()
   synchronized {
     res = s_uticks;
     cnt = TCNT0;
-    if ((TIFR0 & _BV(TOV0)) && cnt < COUNT) res += US_PER_TICK;
+    if ((TIFR0 & _BV(OCF0A)) && cnt < COUNT) res += US_PER_TICK;
   }
 
   // Convert ticks to micro-seconds
@@ -115,25 +121,26 @@ void
 RTC::delay(uint32_t ms)
 {
   uint32_t start = RTC::millis();
+  ms += 1;
   while (RTC::since(start) < ms) yield();
 }
 
 int
 RTC::await(volatile bool &condvar, uint32_t ms)
 {
-  int res = 0;
   if (ms != 0) {
     uint32_t start = millis();
+    ms += 1;
     while (!condvar && since(start) < ms) yield();
-    if (!condvar) res = ETIME;
+    if (UNLIKELY(!condvar)) return (ETIME);
   }
   else {
     while (!condvar) yield();
   }
-  return (res);
+  return (0);
 }
 
-ISR(TIMER0_OVF_vect)
+ISR(TIMER0_COMPA_vect)
 {
   // Increment most significant part of micro seconds counter
   RTC::s_uticks += US_PER_TICK;
@@ -141,14 +148,7 @@ ISR(TIMER0_OVF_vect)
   // Increment milli-seconds counter
   RTC::s_ms += MS_PER_TICK;
 
-  // Increment micro-seconds part of milli-seconds counter
-  RTC::s_usec += US_ERR_PER_TICK;
-  if (UNLIKELY(RTC::s_usec >= US_PER_MS)) {
-    RTC::s_usec -= US_PER_MS;
-    RTC::s_ms += 1;
-  }
-
-  // Increment milli-seconds part of seconds counter
+  // Increment milli-seconds fraction of seconds counter
   RTC::s_msec += MS_PER_TICK;
 
   // Check for increment of seconds counter
@@ -159,7 +159,9 @@ ISR(TIMER0_OVF_vect)
 
   // Check for extension of the interrupt handler
   RTC::InterruptHandler fn = RTC::s_handler;
-  if (UNLIKELY(fn == NULL)) return;
   void* env = RTC::s_env;
+  if (UNLIKELY(fn == NULL)) return;
+
+  // Callback to extension function
   fn(env);
 }

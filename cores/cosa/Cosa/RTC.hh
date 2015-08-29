@@ -174,8 +174,8 @@ public:
   static int await(volatile bool &condvar, uint32_t ms);
 
   /**
-   * Set RTC overflow interrupt handler. Allow extension of the interrupt
-   * handler for Timers.
+   * Set tick update callback function. Allow extension of the
+   * interrupt handler for Timers.
    * @param[in] fn interrupt handler.
    * @param[in] env environment pointer.
    * @note atomic
@@ -189,14 +189,13 @@ public:
   }
 
 private:
-  static bool s_initiated;
-  static volatile uint32_t s_uticks;
-  static volatile uint16_t s_usec;
-  static volatile uint32_t s_ms;
-  static volatile uint16_t s_msec;
-  static volatile clock_t s_sec;
-  static InterruptHandler s_handler;
-  static void* s_env;
+  static bool s_initiated;	     	//!< Initiated flag.
+  static volatile uint32_t s_uticks; 	//!< Tick counter.
+  static volatile uint32_t s_ms;	//!< Milli-seconds counter.
+  static volatile uint16_t s_msec;	//!< Milli-seconds fraction.
+  static volatile clock_t s_sec;	//!< Seconds counter.
+  static InterruptHandler s_handler;	//!< Tick update callback function.
+  static void* s_env;			//!< Tick update callback enviroment.
 
   /**
    * Do not allow instances. This is a static singleton; name space.
@@ -204,7 +203,7 @@ private:
   RTC() {}
 
   /** Interrupt Service Routine. */
-  friend void TIMER0_OVF_vect(void);
+  friend void TIMER0_COMPA_vect(void);
 
   /** Timer access. */
   friend class Timer;
