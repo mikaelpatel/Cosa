@@ -121,7 +121,6 @@ void
 RTC::delay(uint32_t ms)
 {
   uint32_t start = RTC::millis();
-  ms += 1;
   while (RTC::since(start) < ms) yield();
 }
 
@@ -130,7 +129,6 @@ RTC::await(volatile bool &condvar, uint32_t ms)
 {
   if (ms != 0) {
     uint32_t start = millis();
-    ms += 1;
     while (!condvar && since(start) < ms) yield();
     if (UNLIKELY(!condvar)) return (ETIME);
   }
