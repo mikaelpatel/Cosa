@@ -25,10 +25,7 @@ Head Watchdog::s_timeq[Watchdog::TIMEQ_MAX];
 void
 Watchdog::attach(Link* target, uint16_t ms)
 {
-  // Map milli-seconds to watchdog time queue index
   uint8_t level = as_prescale(ms);
-
-  // Attach the target to the selected time queue
   s_timeq[level].attach(target);
 }
 
@@ -37,7 +34,7 @@ Watchdog::push_timeout_events(void* env)
 {
   UNUSED(env);
   uint32_t changed = (s_ticks ^ (s_ticks + 1));
-  for (uint8_t i = s_prescale; i < TIMEQ_MAX; i++, changed >>= 1)
+  for (uint8_t i = s_scale - 4; i < TIMEQ_MAX; i++, changed >>= 1)
     if ((changed & 1) && !s_timeq[i].is_empty())
       Event::push(Event::TIMEOUT_TYPE, &s_timeq[i], i);
 }

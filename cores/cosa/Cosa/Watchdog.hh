@@ -54,7 +54,9 @@ public:
    */
   static uint32_t ticks()
   {
-    return (s_ticks);
+    uint32_t res;
+    synchronized res = s_ticks;
+    return (res);
   }
 
   /**
@@ -64,7 +66,9 @@ public:
   static uint32_t millis()
     __attribute__((always_inline))
   {
-    return (s_ticks * ms_per_tick());
+    uint32_t res;
+    synchronized res = s_ticks;
+    return (res << s_scale);
   }
 
   /**
@@ -74,7 +78,7 @@ public:
    */
   static void millis(uint32_t ms)
   {
-    synchronized s_ticks = ms / ms_per_tick();
+    synchronized s_ticks = (ms >> s_scale);
   }
 
   /**
@@ -83,7 +87,7 @@ public:
    */
   static uint16_t ms_per_tick()
   {
-    return (16 << s_prescale);
+    return (1 << s_scale);
   }
 
   /**
@@ -187,9 +191,9 @@ private:
   static const uint8_t TIMEQ_MAX = 10;
   static Head s_timeq[TIMEQ_MAX];
 
-  // Watchdog ticks, prescale and mode.
+  // Watchdog ticks, scale and mode.
   static volatile uint32_t s_ticks;
-  static uint8_t s_prescale;
+  static uint8_t s_scale;
   static bool s_initiated;
 
   /**

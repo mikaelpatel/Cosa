@@ -27,7 +27,7 @@ Watchdog::InterruptHandler Watchdog::s_handler = NULL;
 void* Watchdog::s_env = NULL;
 
 volatile uint32_t Watchdog::s_ticks = 0L;
-uint8_t Watchdog::s_prescale;
+uint8_t Watchdog::s_scale;
 bool Watchdog::s_initiated = false;
 
 uint8_t
@@ -62,7 +62,7 @@ Watchdog::begin(uint16_t ms,
   // Register the interrupt handler
   s_handler = handler;
   s_env = env;
-  s_prescale = prescale;
+  s_scale = prescale + 4;
   s_initiated = true;
   ::delay = Watchdog::delay;
 }
