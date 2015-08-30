@@ -48,9 +48,8 @@ RTC::InterruptHandler RTC::s_on_tick_fn = NULL;
 void* RTC::s_on_tick_env = NULL;
 
 // Sub-timer interrupt extension
-volatile bool RTC::s_expired = false;
 bool RTC::s_periodic = false;
-uint8_t RTC::s_period = 0;
+volatile uint8_t RTC::s_period = 0;
 RTC::InterruptHandler RTC::s_on_expire_fn = NULL;
 void* RTC::s_on_expire_env = NULL;
 
@@ -208,19 +207,21 @@ ISR(TIMER0_COMPA_vect)
 bool
 RTC::expire_in(uint16_t us, InterruptHandler fn, void* env)
 {
-  // Set up callback environment
-  s_expired = false;
-  s_period = us / US_PER_TIMER_CYCLE;
+  // Check if already active
+  if (UNLIKELY(s_period != 0)) return (false);
+
+  // Set up period and callback environment
+  s_period = (us / US_PER_TIMER_CYCLE);
   s_on_expire_fn = fn;
   s_on_expire_env = env;
 
   // Initiate timer match with the given time period
   synchronized {
-    uint8_t cnt = TCNT0 + s_period;
+    uint16_t cnt = TCNT0 + s_period;
     if (cnt > COUNT) cnt -= COUNT;
     OCR0B = cnt;
     TIMSK0 |= _BV(OCIE0B);
-    TIFR0 |=  _BV(OCF0B);
+    TIFR0 |= _BV(OCF0B);
   }
   return (true);
 }
@@ -237,7 +238,13 @@ bool
 RTC::periodic_stop()
 {
   if (UNLIKELY(!s_periodic)) return (false);
-  s_periodic = false;
+
+  // Mark as expired and disable interrupts
+  synchronized {
+    RTC::s_period = 0;
+    s_periodic = false;
+    TIMSK0 &= ~_BV(OCIE0B);
+  }
   return (true);
 }
 
@@ -246,12 +253,12 @@ ISR(TIMER0_COMPB_vect)
   // Disable if not periodic. Mark as expired
   if (!RTC::s_periodic) {
     TIMSK0 &= ~_BV(OCIE0B);
-    RTC::s_expired = true;
+    RTC::s_period = 0;
   }
 
   // If periodic the match register need updating
   else {
-    uint8_t cnt = OCR0B + RTC::s_period;
+    uint16_t cnt = OCR0B + RTC::s_period;
     if (cnt > COUNT) cnt -= COUNT;
     OCR0B = cnt;
   }

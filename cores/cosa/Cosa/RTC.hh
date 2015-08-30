@@ -190,7 +190,7 @@ public:
    */
   static bool is_expired()
   {
-    return (s_expired);
+    return (s_period == 0);
   }
 
   /**
@@ -246,9 +246,8 @@ private:
   static InterruptHandler s_on_tick_fn;	//!< Tick callback function.
   static void* s_on_tick_env;		//!< Tick callback enviroment.
 
-  static volatile bool s_expired; 	//!< Expired flag.
   static bool s_periodic;		//!< Periodic flag.
-  static uint8_t s_period;		//!< Timer tick to expire.
+  static volatile uint8_t s_period;	//!< Timer tick to expire.
 
   static InterruptHandler s_on_expire_fn; //!< Expire callback function.
   static void* s_on_expire_env;		//!< Expire callback enviroment.

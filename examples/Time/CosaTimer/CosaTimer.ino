@@ -24,24 +24,23 @@
 
 #include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
 OutputPin led(Board::LED);
-
 volatile int16_t cycles;
 
 void on_expire(void* env)
 {
-  cycles += 1;
-  if (env != NULL) led.toggle();
+  UNUSED(env);
+  led.off();
 }
 
-void sync()
+void on_period(void* env)
 {
-  uint32_t ms = RTC::millis();
-  while (ms == RTC::millis());
+  UNUSED(env);
+  cycles += 1;
+  led.toggle();
 }
 
 void setup()
@@ -49,44 +48,47 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaTimer: started"));
   trace.flush();
-  Watchdog::begin();
   RTC::begin();
+  RTC::enable_pin_toggle();
+  uint32_t ms = RTC::millis();
+  while (ms == RTC::millis());
 }
 
 void loop()
 {
-  uint16_t US[] = { 50, 100, 200, 500, 700, 900, 999 };
   uint16_t start;
   uint16_t stop;
   uint16_t us;
 
-  for (uint8_t i = 0; i < membersof(US); i++) {
-    sync();
-    led.on();
+  led.on();
+  sleep(2);
+  led.off();
+
+  for (uint16_t US = 80; US < 1000; US += 100) {
+    RTC::expire_in(US, on_expire);
     start = RTC::micros();
-    RTC::expire_in(US[i], on_expire);
+    led.on();
     while (!RTC::is_expired());
     led.off();
     stop = RTC::micros();
     us = stop - start;
-    trace << PSTR("US[i]=") << US[i]
+    trace << PSTR("US=") << US
 	  << PSTR(",us=") << us
-	  << PSTR(":") << us - US[i]
+	  << PSTR(":") << us - US
 	  << endl;
     trace.flush();
     delay(1000);
   }
 
-  for (uint8_t i = 0; i < membersof(US); i++) {
-    int16_t CYCLES = 10000 / US[i];
+  for (uint16_t US = 60; US < 1000; US += 100) {
+    int16_t CYCLES = 10000 / US;
     cycles = 0;
-    sync();
     led.on();
-    RTC::periodic_start(US[i], on_expire, &CYCLES);
+    RTC::periodic_start(US, on_period);
     delay(10);
     RTC::periodic_stop();
     led.off();
-    trace << PSTR("CYCLES[i]=") << CYCLES
+    trace << PSTR("CYCLES=") << CYCLES
 	  << PSTR(",cycles=") << cycles
 	  << PSTR(":") << cycles - CYCLES
 	  << endl;
