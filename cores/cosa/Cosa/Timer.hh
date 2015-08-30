@@ -45,7 +45,7 @@ public:
   static void begin()
     __attribute__((always_inline))
   {
-    RTC::set(on_interrupt);
+    RTC::set_on_tick(on_interrupt);
   }
 
   /**

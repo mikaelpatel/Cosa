@@ -44,8 +44,15 @@ volatile uint16_t RTC::s_msec = 0;
 volatile clock_t RTC::s_sec = 0UL;
 
 // Timer interrupt extension
-RTC::InterruptHandler RTC::s_handler = NULL;
-void* RTC::s_env = NULL;
+RTC::InterruptHandler RTC::s_on_tick_fn = NULL;
+void* RTC::s_on_tick_env = NULL;
+
+// Sub-timer interrupt extension
+volatile bool RTC::s_expired = false;
+bool RTC::s_periodic = false;
+uint8_t RTC::s_period = 0;
+RTC::InterruptHandler RTC::s_on_expire_fn = NULL;
+void* RTC::s_on_expire_env = NULL;
 
 bool
 RTC::begin()
@@ -155,7 +162,7 @@ RTC::await(volatile bool &condvar, uint32_t ms)
 #endif
 
 void
-RTC::enable()
+RTC::enable_pin_toggle()
 {
 #if defined(PIN)
   TCCR0A |= _BV(COM0A0);
@@ -164,7 +171,7 @@ RTC::enable()
 }
 
 void
-RTC::disable()
+RTC::disable_pin_toggle()
 {
 #if defined(PIN)
   TCCR0A &= ~_BV(COM0A0);
@@ -190,10 +197,72 @@ ISR(TIMER0_COMPA_vect)
   }
 
   // Check for extension of the interrupt handler
-  RTC::InterruptHandler fn = RTC::s_handler;
-  void* env = RTC::s_env;
+  RTC::InterruptHandler fn = RTC::s_on_tick_fn;
+  void* env = RTC::s_on_tick_env;
   if (UNLIKELY(fn == NULL)) return;
 
   // Callback to extension function
   fn(env);
 }
+
+bool
+RTC::expire_in(uint16_t us, InterruptHandler fn, void* env)
+{
+  // Set up callback environment
+  s_expired = false;
+  s_period = us / US_PER_TIMER_CYCLE;
+  s_on_expire_fn = fn;
+  s_on_expire_env = env;
+
+  // Initiate timer match with the given time period
+  synchronized {
+    uint8_t cnt = TCNT0 + s_period;
+    if (cnt > COUNT) cnt -= COUNT;
+    OCR0B = cnt;
+    TIMSK0 |= _BV(OCIE0B);
+    TIFR0 |=  _BV(OCF0B);
+  }
+  return (true);
+}
+
+bool
+RTC::periodic_start(uint16_t us, InterruptHandler fn, void* env)
+{
+  if (!expire_in(us, fn, env)) return (false);
+  s_periodic = true;
+  return (true);
+}
+
+bool
+RTC::periodic_stop()
+{
+  if (UNLIKELY(!s_periodic)) return (false);
+  s_periodic = false;
+  return (true);
+}
+
+ISR(TIMER0_COMPB_vect)
+{
+  // Disable if not periodic. Mark as expired
+  if (!RTC::s_periodic) {
+    TIMSK0 &= ~_BV(OCIE0B);
+    RTC::s_expired = true;
+  }
+
+  // If periodic the match register need updating
+  else {
+    uint8_t cnt = OCR0B + RTC::s_period;
+    if (cnt > COUNT) cnt -= COUNT;
+    OCR0B = cnt;
+  }
+
+  // Check for extension of the interrupt handler
+  RTC::InterruptHandler fn = RTC::s_on_expire_fn;
+  void* env = RTC::s_on_expire_env;
+  if (UNLIKELY(fn == NULL)) return;
+
+  // Callback to extension function
+  fn(env);
+}
+
+

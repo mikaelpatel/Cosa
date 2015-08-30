@@ -174,17 +174,54 @@ public:
   static int await(volatile bool &condvar, uint32_t ms);
 
   /**
+   * Call given interrupt handler when the given time period in
+   * micro-seconds has expired.
+   * Returns true(1) if scheduled otherwise false(0).
+   * @param[in] us micro-seconds before call.
+   * @param[in] fn interrupt handler.
+   * @param[in] env environment pointer.
+   * @return bool.
+   */
+  static bool expire_in(uint16_t us, InterruptHandler fn, void* env = NULL);
+
+  /**
+   * Returns true(1) if expired otherwise false(0).
+   * @return bool.
+   */
+  static bool is_expired()
+  {
+    return (s_expired);
+  }
+
+  /**
+   * Periodically call given interrupt handler with the given time
+   * period in micro-seconds has expired. The maximum timer period is
+   * 999 us. Returns true(1) if scheduled otherwise false(0).
+   * @param[in] us micro-seconds period.
+   * @param[in] fn interrupt handler.
+   * @param[in] env environment pointer.
+   * @return bool.
+   */
+  static bool periodic_start(uint16_t us, InterruptHandler fn, void* env = NULL);
+
+  /**
+   * Stop periodical call. Returns true(1) if successful otherwise false(0).
+   * @return bool.
+   */
+  static bool periodic_stop();
+
+  /**
    * Set tick update callback function. Allow extension of the
    * interrupt handler for Timers.
    * @param[in] fn interrupt handler.
    * @param[in] env environment pointer.
    * @note atomic
    */
-  static void set(InterruptHandler fn, void* env = NULL)
+  static void set_on_tick(InterruptHandler fn, void* env = NULL)
   {
     synchronized {
-      s_handler = fn;
-      s_env = env;
+      s_on_tick_fn = fn;
+      s_on_tick_env = env;
     }
   }
 
@@ -192,12 +229,12 @@ public:
    * Enable pin output toggle on tick. The pin is board/hardware
    * defined.
    */
-  static void enable();
+  static void enable_pin_toggle();
 
   /**
    * Disable pin toggle on tick. Pin is defined to input.
    */
-  static void disable();
+  static void disable_pin_toggle();
 
 private:
   static bool s_initiated;	     	//!< Initiated flag.
@@ -205,8 +242,16 @@ private:
   static volatile uint32_t s_ms;	//!< Milli-seconds counter.
   static volatile uint16_t s_msec;	//!< Milli-seconds fraction.
   static volatile clock_t s_sec;	//!< Seconds counter.
-  static InterruptHandler s_handler;	//!< Tick update callback function.
-  static void* s_env;			//!< Tick update callback enviroment.
+
+  static InterruptHandler s_on_tick_fn;	//!< Tick callback function.
+  static void* s_on_tick_env;		//!< Tick callback enviroment.
+
+  static volatile bool s_expired; 	//!< Expired flag.
+  static bool s_periodic;		//!< Periodic flag.
+  static uint8_t s_period;		//!< Timer tick to expire.
+
+  static InterruptHandler s_on_expire_fn; //!< Expire callback function.
+  static void* s_on_expire_env;		//!< Expire callback enviroment.
 
   /**
    * Do not allow instances. This is a static singleton; name space.
@@ -215,6 +260,7 @@ private:
 
   /** Interrupt Service Routine. */
   friend void TIMER0_COMPA_vect(void);
+  friend void TIMER0_COMPB_vect(void);
 
   /** Timer access. */
   friend class Timer;

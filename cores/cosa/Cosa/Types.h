@@ -263,7 +263,7 @@ typedef const PROGMEM void_P void_vec_P;
  * Macro for micro-second level delay.
  * @param[in] us micro-seconds.
  */
-#define DELAY(us) _delay_loop_2(((us) * I_CPU) / 4)
+#define DELAY(us) _delay_loop_2((us) * (F_CPU / 4000000L))
 
 /**
  * Delay given number of milli-seconds. This function pointer

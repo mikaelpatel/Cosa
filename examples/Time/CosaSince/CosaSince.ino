@@ -50,7 +50,7 @@ void setup()
 void loop()
 {
   led.on();
-  RTC::enable();
+  RTC::enable_pin_toggle();
   uint32_t rms = RTC::millis();
   uint32_t wms = Watchdog::millis();
   uint32_t wsd = Watchdog::since(START);
@@ -67,7 +67,7 @@ void loop()
 	<< endl;
 
   delay(1000 - RTC::since(rms));
-  RTC::disable();
+  RTC::disable_pin_toggle();
   led.off();
 
   delay(1000);
