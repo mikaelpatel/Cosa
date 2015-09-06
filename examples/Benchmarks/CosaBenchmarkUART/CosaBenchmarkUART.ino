@@ -40,7 +40,7 @@ UART uart(0, &ibuf, &obuf);
 
 void setup()
 {
-  uart.begin(57600);
+  uart.begin(250000);
   trace.begin(&uart, PSTR("CosaBenchmarkUART: started"));
   TRACE(free_memory());
   Watchdog::begin();

@@ -48,6 +48,9 @@ HD44780::Port4b port;
 // DFRobot_IIC_LCD_Module port;
 // #include <SainSmart_LCD2004.h>
 // SainSmart_LCD2004 port;
+// #include <MCP23008.h>
+// #include <Adafruit_I2C_LCD_Backpack.h>
+// Adafruit_I2C_LCD_Backpack port;
 
 // HD44780 based LCD with support for serial communication
 // #include <ERM1602_5.h>
@@ -70,15 +73,16 @@ void setup()
   Watchdog::begin();
   lcd.begin();
   cout << PSTR("CosaTimeLCD: started");
+  sleep(1);
 
   // Set start time
   time_t now;
-  now.seconds = 0x30;
-  now.minutes = 0x59;
-  now.hours = 0x23;
-  now.date = 0x31;
-  now.month = 0x12;
-  now.year = 0x13;
+  now.seconds = 30;
+  now.minutes = 59;
+  now.hours = 23;
+  now.date = 31;
+  now.month = 12;
+  now.year = 13;
   epoch = now;
   RTC::time(epoch);
 }
@@ -88,6 +92,7 @@ void loop()
   // Read internal RTC time
   clock_t clock = RTC::time();
   time_t now(clock);
+  now.to_bcd();
 
   // First line with date and seconds since epoch. Use BCD format output
   cout << clear

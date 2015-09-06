@@ -54,7 +54,6 @@ void setup()
 
   // Check timer parameters
   TRACE(Watchdog::ms_per_tick());
-  TRACE(Watchdog::ticks());
   TRACE(RTC::us_per_tick());
   TRACE(RTC::us_per_timer_cycle());
   TRACE(RTC::micros());

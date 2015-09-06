@@ -23,7 +23,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/IOPin.hh"
-#include "Cosa/Linkage.hh"
+#include "Cosa/Periodic.hh"
 
 /**
  * Touch Capacitive Sensor using periodic discharging to detect a
@@ -40,14 +40,15 @@
  * (Dn)-----------+-----[]
  * @endcode
  */
-class Touch : private IOPin, private Link {
+class Touch : private IOPin, public Periodic {
 public:
   /**
    * Create a touch capacitive sensor connected to the given pin.
+   * @param[in] scheduler.
    * @param[in] pin identity.
    * @param[in] threshold time between release detect (Default 250 ms).
    */
-  Touch(Board::DigitalPin pin, uint16_t threshold = 250);
+  Touch(Job::Scheduler* scheduler, Board::DigitalPin pin, uint16_t threshold = 250);
 
   /**
    * @override Touch
@@ -72,13 +73,11 @@ protected:
   uint8_t m_touched;
 
   /**
-   * @override Event::Handler
+   * @override Job
    * Called on watchdog timeout. Two state period function where the
    * io-pin is discharged and sampled.
-   * @param[in] type the event type.
-   * @param[in] value the event value.
    */
-  virtual void on_event(uint8_t type, uint16_t value);
+  virtual void run();
 };
 
 #endif

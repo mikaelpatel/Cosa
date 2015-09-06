@@ -23,7 +23,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/InputPin.hh"
-#include "Cosa/Linkage.hh"
+#include "Cosa/Periodic.hh"
 #include "Cosa/Watchdog.hh"
 
 /**
@@ -51,7 +51,7 @@
  * The Button event handler requires the usage of an event dispatch.
  * See Event.hh.
  */
-class Button : public InputPin, private Link {
+class Button : public InputPin, public Periodic {
 public:
   /**
    * Button change detection modes; falling (high to low), rising (low
@@ -66,33 +66,16 @@ public:
   /**
    * Construct a button connected to the given pin and with
    * the given change detection mode.
+   * @param[in] scheduler for periodic job.
    * @param[in] pin number.
    * @param[in] mode change detection mode.
    */
-  Button(Board::DigitalPin pin, Mode mode = ON_CHANGE_MODE) :
+  Button(Job::Scheduler* scheduler, Board::DigitalPin pin, Mode mode = ON_CHANGE_MODE) :
     InputPin(pin, InputPin::PULLUP_MODE),
-    Link(),
+    Periodic(scheduler, SAMPLE_MS),
     MODE(mode),
     m_state(is_set())
   {}
-
-  /**
-   * Start the button handler.
-   */
-  void begin()
-    __attribute__((always_inline))
-  {
-    Watchdog::attach(this, SAMPLE_MS);
-  }
-
-  /**
-   * Stop the button handler.
-   */
-  void end()
-    __attribute__((always_inline))
-  {
-    detach();
-  }
 
   /**
    * @override Button

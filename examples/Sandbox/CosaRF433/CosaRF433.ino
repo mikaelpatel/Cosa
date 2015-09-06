@@ -39,7 +39,6 @@ void setup()
 
 void loop()
 {
-  const uint16_t P = 1000;
   const uint16_t D[] = { 1000, 500, 200, 100, 50 };
   rf.set();
   delay(10);

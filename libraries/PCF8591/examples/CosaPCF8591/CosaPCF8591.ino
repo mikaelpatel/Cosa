@@ -40,8 +40,10 @@
 
 #include <PCF8591.h>
 
+#include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
+#include "Cosa/Periodic.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
@@ -65,35 +67,36 @@ void setup()
   TRACE(sizeof(TWI));
   TRACE(sizeof(adc));
 
-  // Start the watchdog ticks and push time events
-  Watchdog::begin(512, Watchdog::push_watchdog_event);
+  // Start the watchdog ticks
+  Watchdog::begin();
+  RTC::begin();
 }
 
 void loop()
 {
-  // Wait for the watchdog event
-  Event event;
-  Event::queue.await(&event);
-  ledPin.toggle();
+  periodic(timer, 2000) {
+    ledPin.toggle();
 
-  // Sample the four input channels and print values
-  trace.print(PSTR("samples: "));
-  for (uint8_t i = 0; i < 4; i++) {
-    adc.begin(i | PCF8591::FOUR_INPUTS | PCF8591::OUTPUT_ENABLE);
-    trace.print(adc.sample());
-    trace.print(PSTR(" "));
+    // Sample the four input channels and print values
+    trace.print(PSTR("samples: "));
+    for (uint8_t i = 0; i < 4; i++) {
+      adc.begin(i | PCF8591::FOUR_INPUTS | PCF8591::OUTPUT_ENABLE);
+      trace.print(adc.sample());
+      trace.print(PSTR(" "));
+      adc.end();
+    }
+    trace.println();
+
+    // A sequence of samples from input channel(AIN2)
+    uint8_t ain[16];
+    adc.begin((PCF8591::AIN2) | PCF8591::FOUR_INPUTS | PCF8591::OUTPUT_ENABLE);
+    TRACE(adc.sample(ain, sizeof(ain)));
     adc.end();
+    trace.print(ain, sizeof(ain));
+
+    // Put first value to output channel
+    TRACE(adc.convert(ain[0]));
+
+    ledPin.toggle();
   }
-  trace.println();
-
-  // A sequence of samples from input channel(AIN2)
-  uint8_t ain[16];
-  adc.begin((PCF8591::AIN2) | PCF8591::FOUR_INPUTS | PCF8591::OUTPUT_ENABLE);
-  TRACE(adc.sample(ain, sizeof(ain)));
-  adc.end();
-  trace.print(ain, sizeof(ain));
-  ledPin.toggle();
-
-  // Put first value to output channel
-  TRACE(adc.convert(ain[0]));
 }

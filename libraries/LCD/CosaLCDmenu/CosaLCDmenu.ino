@@ -32,6 +32,9 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 
+#define USE_KEYPAD
+// #define USE_ROTARY_ENCODER
+
 // Select port type to use with the LCD device driver.
 // LCD and communication port
 #include <HD44780.h>
@@ -175,24 +178,31 @@ MENU_END(root_menu)
 // The menu handler ----------------------------------------------------------
 // Control the menu walker with keypad (analog pin) or rotary encoder with
 // push button.
+Watchdog::Scheduler scheduler;
 Menu::Walker walker(&lcd, &root_menu);
-Menu::KeypadController keypad(&walker);
-// Menu::RotaryController rotary(&walker, Board::PCI6, Board::PCI5, Board::D3);
+
+#if defined(USE_KEYPAD)
+Menu::KeypadController controller(&walker, &scheduler);
+#endif
+
+#if defined(USE_ROTARY_ENCODER)
+Menu::RotaryController controller(&walker, &scheduler,
+				  Board::PCI6, Board::PCI5,
+				  Board::D3);
+#endif
 
 void setup()
 {
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
   lcd.begin();
   lcd.puts(PSTR("CosaLCDmenu: started"));
   sleep(2);
   walker.begin();
-  keypad.begin();
-  // rotary.begin();
+  controller.begin();
 }
 
 void loop()
 {
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
+  Event::service();
 }

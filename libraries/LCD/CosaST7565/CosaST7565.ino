@@ -138,8 +138,8 @@ void setup()
 
   // Use number base handling
   trace << PSTR("\f\aNUMBER BASE\a\n");
-  uint16_t ticks = Watchdog::ticks();
-  TRACE(ticks);
+  uint16_t millis = Watchdog::millis();
+  TRACE(millis);
   trace << PSTR("bcd = ") << bcd << 0x55 << endl;
   trace << PSTR("bin = ") << bin << 0x55 << endl;
   trace << PSTR("oct = ") << oct << 0x55 << endl;

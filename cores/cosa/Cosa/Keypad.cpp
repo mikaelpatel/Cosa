@@ -34,10 +34,8 @@ Keypad::Key::on_change(uint16_t value)
 }
 
 void
-Keypad::on_event(uint8_t type, uint16_t value)
+Keypad::run()
 {
-  UNUSED(value);
-  if (UNLIKELY(type != Event::TIMEOUT_TYPE)) return;
   m_key.sample_request(Event::SAMPLE_COMPLETED_TYPE);
 }
 

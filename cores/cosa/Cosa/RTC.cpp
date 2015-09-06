@@ -19,53 +19,131 @@
  */
 
 #include "Cosa/RTC.hh"
-#include "Cosa/GPIO.hh"
 
-// Real-Time Clock configuration
+// Configuration
 #define COUNT 250
 #define PRESCALE 64
-#define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
-#define US_PER_TICK (COUNT * US_PER_TIMER_CYCLE)
 #define US_PER_MS 1000
 #define MS_PER_SEC 1000
-#define MS_PER_TICK (US_PER_TICK / 1000)
+#define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
+#define US_PER_TICK (COUNT * US_PER_TIMER_CYCLE)
+#define MS_PER_TICK (US_PER_TICK / US_PER_MS)
+#define US_DIRECT_EXPIRE (800 / I_CPU)
+#define US_TIMER_EXPIRE (US_PER_TICK - 1)
 
 // Initiated state
 bool RTC::s_initiated = false;
 
-// Timer ticks counter
-volatile uint32_t RTC::s_uticks = 0UL;
+// Micro-seconds counter (fraction in timer register)
+volatile uint32_t RTC::s_micros = 0UL;
 
 // Milli-seconds counter
-volatile uint32_t RTC::s_ms = 0UL;
+volatile uint32_t RTC::s_millis = 0UL;
 
 // Seconds counter with milli-seconds fraction
 volatile uint16_t RTC::s_msec = 0;
 volatile clock_t RTC::s_sec = 0UL;
 
-// Timer interrupt extension
-RTC::InterruptHandler RTC::s_on_tick_fn = NULL;
-void* RTC::s_on_tick_env = NULL;
+// RTC scheduler
+RTC::Scheduler* RTC::s_scheduler = NULL;
 
-// Sub-timer interrupt extension
-bool RTC::s_periodic = false;
-volatile uint8_t RTC::s_period = 0;
-RTC::InterruptHandler RTC::s_on_expire_fn = NULL;
-void* RTC::s_on_expire_env = NULL;
+bool
+RTC::Scheduler::start(Job* job)
+{
+  // Check that the job is not already started
+  if (job->is_started()) return (false);
+
+  // Check if the job should be run directly
+  uint32_t now = RTC::micros();
+  int32_t diff = job->expire_at() - now;
+  if (diff < US_DIRECT_EXPIRE) {
+    job->on_expired();
+    return (true);
+  }
+
+  // Check if the job should use the timer match register
+  // Note: Should check if the timer match register is already in use
+  if (diff < US_TIMER_EXPIRE) {
+    synchronized {
+      uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
+      if (cnt > COUNT) cnt -= COUNT;
+      OCR0B = cnt;
+      TIMSK0 |= _BV(OCIE0B);
+      TIFR0 |= _BV(OCF0B);
+    }
+  }
+
+  // Insert into the job queue
+  synchronized {
+    Linkage* succ = &m_queue;
+    Linkage* curr;
+    while ((curr = succ->get_pred()) != &m_queue) {
+      int32_t diff = ((Job*) curr)->expire_at() - job->expire_at();
+      if (diff < 0) break;
+      succ = curr;
+    }
+    succ->attach(job);
+  }
+
+  return (true);
+}
+
+void
+RTC::Scheduler::dispatch()
+{
+  // Check if there are no jobs
+  if (m_queue.is_empty()) return;
+
+  // Run all jobs that have expired
+  uint32_t now = RTC::micros();
+  Job* job = (Job*) m_queue.get_succ();
+  while ((Linkage*) job != &m_queue) {
+    int32_t diff = job->expire_at() - now;
+
+    // Check if the job should be run
+    if (diff < US_DIRECT_EXPIRE) {
+      Job* succ = (Job*) job->get_succ();
+      ((Link*) job)->detach();
+      job->on_expired();
+      job = succ;
+      continue;
+    }
+
+    // Check if the job should use the timer
+    if (diff < US_TIMER_EXPIRE) {
+      synchronized {
+	uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
+	if (cnt > COUNT) cnt -= COUNT;
+	OCR0B = cnt;
+	TIMSK0 |= _BV(OCIE0B);
+	TIFR0 |= _BV(OCF0B);
+      }
+    }
+
+    // No more jobs to run
+    return;
+  }
+}
+
+uint32_t
+RTC::Scheduler::time()
+{
+  return (RTC::micros());
+}
 
 bool
 RTC::begin()
 {
+  // Should not be already initiated
   if (UNLIKELY(s_initiated)) return (false);
+
   synchronized {
     // Set prescaling to 64
     TCCR0B = (_BV(CS01) | _BV(CS00));
 
-    // Clear Timer on Compare Match
+    // Clear Timer on Compare Match with given Count. Enable interrupt
     TCCR0A = _BV(WGM01);
     OCR0A = COUNT;
-
-    // And enable interrupt on match
     TIMSK0 = _BV(OCIE0A);
 
     // Reset the counter and clear interrupts
@@ -76,7 +154,6 @@ RTC::begin()
   // Install delay function and mark as initiated
   ::delay = RTC::delay;
   s_initiated = true;
-
   return (true);
 }
 
@@ -111,15 +188,28 @@ RTC::micros()
   uint32_t res;
   uint8_t cnt;
 
-  // Read tick count and hardware counter. Adjust if pending interrupt
+  // Read micro-seconds and hardware counter. Adjust if pending interrupt
   synchronized {
-    res = s_uticks;
+    res = s_micros;
     cnt = TCNT0;
     if ((TIFR0 & _BV(OCF0A)) && cnt < COUNT) res += US_PER_TICK;
   }
 
   // Convert ticks to micro-seconds
   res += ((uint32_t) cnt) * US_PER_TIMER_CYCLE;
+  return (res);
+}
+
+uint32_t
+RTC::millis()
+{
+  uint32_t res;
+
+  // Read milli-seconds. Adjust if pending interrupt
+  synchronized {
+    res = s_millis;
+    if ((TIFR0 & _BV(OCF0A)) && TCNT0 < COUNT) res += MS_PER_TICK;
+  }
   return (res);
 }
 
@@ -133,58 +223,18 @@ RTC::delay(uint32_t ms)
 int
 RTC::await(volatile bool &condvar, uint32_t ms)
 {
-  if (ms != 0) {
-    uint32_t start = millis();
-    while (!condvar && since(start) < ms) yield();
-    if (UNLIKELY(!condvar)) return (ETIME);
-  }
-  else {
-    while (!condvar) yield();
-  }
-  return (0);
-}
-
-#if defined(BOARD_ATTINYX4)
-#define PIN Board::D7
-#elif defined(BOARD_ATTINYX5)
-#define PIN Board::D0
-#elif defined(BOARD_ATMEGA328P)
-#define PIN Board::D6
-#elif defined(BOARD_ATMEGA1248P)
-#define PIN Board::D3
-#elif defined(BOARD_ATMEGA1280)
-#define PIN Board::D13
-#elif defined(BOARD_ATMEGA2560)
-#define PIN Board::D13
-#elif defined(BOARD_ATMEGA32U4)
-#define PIN Board::D11
-#endif
-
-void
-RTC::enable_pin_toggle()
-{
-#if defined(PIN)
-  TCCR0A |= _BV(COM0A0);
-  GPIO::set_mode(PIN, GPIO::OUTPUT_MODE);
-#endif
-}
-
-void
-RTC::disable_pin_toggle()
-{
-#if defined(PIN)
-  TCCR0A &= ~_BV(COM0A0);
-  GPIO::set_mode(PIN, GPIO::INPUT_MODE);
-#endif
+  uint32_t start = RTC::millis();
+  while (!condvar && ((ms == 0) || (RTC::since(start) < ms))) yield();
+  return (!condvar ? ETIME : 0);
 }
 
 ISR(TIMER0_COMPA_vect)
 {
-  // Increment most significant part of micro seconds counter
-  RTC::s_uticks += US_PER_TICK;
+  // Increment micro-seconds counter (fraction in timer)
+  RTC::s_micros += US_PER_TICK;
 
   // Increment milli-seconds counter
-  RTC::s_ms += MS_PER_TICK;
+  RTC::s_millis += MS_PER_TICK;
 
   // Increment milli-seconds fraction of seconds counter
   RTC::s_msec += MS_PER_TICK;
@@ -195,81 +245,18 @@ ISR(TIMER0_COMPA_vect)
     RTC::s_sec += 1;
   }
 
-  // Check for extension of the interrupt handler
-  RTC::InterruptHandler fn = RTC::s_on_tick_fn;
-  void* env = RTC::s_on_tick_env;
-  if (UNLIKELY(fn == NULL)) return;
-
-  // Callback to extension function
-  fn(env);
-}
-
-bool
-RTC::expire_in(uint16_t us, InterruptHandler fn, void* env)
-{
-  // Check if already active
-  if (UNLIKELY(s_period != 0)) return (false);
-
-  // Set up period and callback environment
-  s_period = (us / US_PER_TIMER_CYCLE);
-  s_on_expire_fn = fn;
-  s_on_expire_env = env;
-
-  // Initiate timer match with the given time period
-  synchronized {
-    uint16_t cnt = TCNT0 + s_period;
-    if (cnt > COUNT) cnt -= COUNT;
-    OCR0B = cnt;
-    TIMSK0 |= _BV(OCIE0B);
-    TIFR0 |= _BV(OCF0B);
-  }
-  return (true);
-}
-
-bool
-RTC::periodic_start(uint16_t us, InterruptHandler fn, void* env)
-{
-  if (!expire_in(us, fn, env)) return (false);
-  s_periodic = true;
-  return (true);
-}
-
-bool
-RTC::periodic_stop()
-{
-  if (UNLIKELY(!s_periodic)) return (false);
-
-  // Mark as expired and disable interrupts
-  synchronized {
-    RTC::s_period = 0;
-    s_periodic = false;
-    TIMSK0 &= ~_BV(OCIE0B);
-  }
-  return (true);
+  // Dispatch expired jobs
+  if (RTC::s_scheduler != NULL)
+    RTC::s_scheduler->dispatch();
 }
 
 ISR(TIMER0_COMPB_vect)
 {
-  // Disable if not periodic. Mark as expired
-  if (!RTC::s_periodic) {
-    TIMSK0 &= ~_BV(OCIE0B);
-    RTC::s_period = 0;
-  }
+  // Disable the timer match
+  TIMSK0 &= ~_BV(OCIE0B);
 
-  // If periodic the match register need updating
-  else {
-    uint16_t cnt = OCR0B + RTC::s_period;
-    if (cnt > COUNT) cnt -= COUNT;
-    OCR0B = cnt;
-  }
-
-  // Check for extension of the interrupt handler
-  RTC::InterruptHandler fn = RTC::s_on_expire_fn;
-  void* env = RTC::s_on_expire_env;
-  if (UNLIKELY(fn == NULL)) return;
-
-  // Callback to extension function
-  fn(env);
+  // Dispatch expired jobs
+  if (RTC::s_scheduler != NULL)
+    RTC::s_scheduler->dispatch();
 }
-
 

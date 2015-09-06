@@ -21,8 +21,8 @@
 #ifndef COSA_FSM_HH
 #define COSA_FSM_HH
 
+#include "Cosa/Job.hh"
 #include "Cosa/Event.hh"
-#include "Cosa/Linkage.hh"
 #include "Cosa/Watchdog.hh"
 
 /**
@@ -34,7 +34,7 @@
  * The design of FSM is inspired by UML-2 State Machines, QP by Miro
  * Samek, and ObjecTime by Brian Selic.
  */
-class FSM : protected Link {
+class FSM : protected Job {
 public:
   /**
    * State handler function prototype. Should return true(1) if
@@ -49,10 +49,11 @@ public:
   /**
    * Construct state machine with given initial state.
    * @param[in] init initial state handler.
+   * @param[in] scheduler for timeout handling (default no timout handling).
    * @param[in] period timeout in all states (default no timeout).
    */
-  FSM(StateHandler init, uint16_t period = 0) :
-    Link(),
+  FSM(StateHandler init, Job::Scheduler* scheduler = NULL, uint16_t period = 0) :
+    Job(scheduler),
     m_state(init),
     m_period(period),
     m_param(0)
@@ -68,6 +69,15 @@ public:
   {
     if (UNLIKELY(fn == NULL)) return;
     m_state = fn;
+  }
+
+  /**
+   * Get state handler for next event.
+   */
+  StateHandler get_state()
+    __attribute__((always_inline))
+  {
+    return (m_state);
   }
 
   /**
@@ -124,8 +134,10 @@ public:
    */
   bool begin()
   {
-    if ((m_period != 0) && (m_period != TIMEOUT_REQUEST))
-      Watchdog::attach(this, m_period);
+    if ((m_period != 0) && (m_period != TIMEOUT_REQUEST)) {
+      expire_after(m_period);
+      start();
+    }
     send(Event::BEGIN_TYPE);
     return (true);
   }
@@ -147,7 +159,8 @@ public:
     __attribute__((always_inline))
   {
     m_period = TIMEOUT_REQUEST;
-    Watchdog::attach(this, ms);
+    expire_after(ms);
+    start();
   }
 
   /**
@@ -158,7 +171,7 @@ public:
     __attribute__((always_inline))
   {
     if (UNLIKELY(m_period == 0)) return;
-    detach();
+    stop();
     m_period = 0;
   }
 
@@ -177,9 +190,14 @@ private:
    */
   virtual void on_event(uint8_t type, uint16_t value)
   {
-    if (m_period == TIMEOUT_REQUEST) cancel_timer();
     m_param = value;
     m_state(this, type);
+    if (type == Event::TIMEOUT_TYPE) {
+      if ((m_period != 0) && (m_period != TIMEOUT_REQUEST)) {
+	expire_after(m_period);
+	start();
+      }
+    }
   }
 };
 

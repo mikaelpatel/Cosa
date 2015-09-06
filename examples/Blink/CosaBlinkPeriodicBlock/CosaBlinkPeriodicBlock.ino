@@ -1,9 +1,9 @@
 /**
- * @file Cosa/Watchdog_timeq.cpp
+ * @file CosaBlinkPeriodicBlock.ino
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2012-2015, Mikael Patel
+ * Copyright (C) 2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,27 +15,32 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
+ * @section Description
+ * The classic LED blink example using a periodic block.
+ *
+ * @section Circuit
+ * Uses built-in LED (D13/Arduino).
+ *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Watchdog.hh"
+#include "Cosa/RTC.hh"
+#include "Cosa/Periodic.hh"
+#include "Cosa/OutputPin.hh"
 
-Head Watchdog::s_timeq[Watchdog::TIMEQ_MAX];
+// Use the built-in led
+OutputPin ledPin(Board::LED);
 
-void
-Watchdog::attach(Link* target, uint16_t ms)
+void setup()
 {
-  uint8_t level = as_prescale(ms);
-  s_timeq[level].attach(target);
+  // Start the real-time clock for periodic blocks
+  RTC::begin();
 }
 
-void
-Watchdog::push_timeout_events(void* env)
+void loop()
 {
-  UNUSED(env);
-  uint32_t changed = (s_ticks ^ (s_ticks + 1));
-  for (uint8_t i = s_scale - 4; i < TIMEQ_MAX; i++, changed >>= 1)
-    if ((changed & 1) && !s_timeq[i].is_empty())
-      Event::push(Event::TIMEOUT_TYPE, &s_timeq[i], i);
+  // Blink the built-in LED with approx. 1 Hz
+  periodic(blink, 500) {
+    ledPin.toggle();
+  }
 }
-

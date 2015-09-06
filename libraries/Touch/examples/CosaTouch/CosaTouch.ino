@@ -46,46 +46,53 @@
 
 IOStream cout(&uart);
 
-class Key : private Touch {
+class Key : public Touch {
+public:
+  Key(Job::Scheduler* scheduler, Board::DigitalPin pin, int8_t offset) :
+    Touch(scheduler, pin),
+    m_offset(offset)
+  {}
+
+  static void set_value(int16_t value)
+  {
+    s_value = value;
+  }
+
+  static int16_t get_value()
+  {
+    return (s_value);
+  }
+
 private:
   static int16_t s_value;
   int8_t m_offset;
+
   virtual void on_touch()
   {
     s_value += m_offset;
     cout << PSTR("value = ") << s_value << endl;
   }
-public:
-  Key(Board::DigitalPin pin, int8_t offset) :
-    Touch(pin),
-    m_offset(offset)
-  {}
-  static void set_value(int16_t value)
-  {
-    s_value = value;
-  }
-  static int16_t get_value()
-  {
-    return (s_value);
-  }
 };
+
 int16_t Key::s_value = 0;
 
-Key upkey(Board::D3, 1);
-Key downkey(Board::D4, -1);
+Watchdog::Scheduler scheduler;
+Key upkey(&scheduler, Board::D3, 1);
+Key downkey(&scheduler, Board::D4, -1);
 
 void setup()
 {
   uart.begin(9600);
   cout << PSTR("CosaTouch: started") << endl;
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
   RTC::begin();
   Key::set_value(0);
+  upkey.begin();
+  downkey.begin();
 }
 
 void loop()
 {
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
+  Event::service();
 }

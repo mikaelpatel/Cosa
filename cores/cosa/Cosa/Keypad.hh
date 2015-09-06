@@ -22,46 +22,28 @@
 #define COSA_KEYPAD_HH
 
 #include "Cosa/Types.h"
-#include "Cosa/Linkage.hh"
 #include "Cosa/AnalogPin.hh"
-#include "Cosa/Watchdog.hh"
+#include "Cosa/Periodic.hh"
 
 /**
  * Handling of keypad using resistor net and analog reading. Periodically
  * samples the analog pin and maps to key code. Callback on_key() is called
  * when a key down/up is detected.
  */
-class Keypad : private Link {
+class Keypad : public Periodic {
 public:
   /**
    * Construct keypad handler with given analog pin and mapping.
    * The mapping should be a decending sequence of thresholds and
    * should be stored in program memory.
+   * @param[in] scheduler periodic job handler.
    * @param[in] pin analog pin.
    * @param[in] map between analog value and key.
    */
-  Keypad(Board::AnalogPin pin, const uint16_t* map) :
-    Link(),
+  Keypad(Job::Scheduler* scheduler, Board::AnalogPin pin, const uint16_t* map) :
+    Periodic(scheduler, SAMPLE_MS),
     m_key(pin, this, map)
   {}
-
-  /**
-   * Start the keypad handler.
-   */
-  void begin()
-    __attribute__((always_inline))
-  {
-    Watchdog::attach(this, SAMPLE_MS);
-  }
-
-  /**
-   * Stop the keypad handler.
-   */
-  void end()
-    __attribute__((always_inline))
-  {
-    detach();
-  }
 
   /**
    * @override Keypad
@@ -124,12 +106,10 @@ protected:
   Key m_key;
 
   /**
-   * @override Event::Handler
+   * @override Job
    * Periodic sampling of analog pin.
-   * @param[in] type the event type.
-   * @param[in] value the event value.
    */
-  virtual void on_event(uint8_t type, uint16_t value);
+  virtual void run();
 };
 
 /**
@@ -150,7 +130,7 @@ public:
   } __attribute__((packed));
 
   /** LCD Keypad constructor with internal key map. */
-  LCDKeypad() : Keypad(Board::A0, m_map) {}
+  LCDKeypad(Job::Scheduler* scheduler) : Keypad(scheduler, Board::A0, m_map) {}
 
 private:
   /** Analog reading to key index map. */

@@ -30,6 +30,7 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Keypad.hh"
 #include "Cosa/IOStream.hh"
+#include "Cosa/Watchdog.hh"
 
 #include <HD44780.h>
 
@@ -37,9 +38,21 @@ class KeypadTrace : public LCDKeypad {
 private:
   IOStream m_out;
 public:
-  KeypadTrace(IOStream::Device* dev) : LCDKeypad(), m_out(dev) {}
-  virtual void on_key_down(uint8_t nr) { trace(PSTR("down"), nr); }
-  virtual void on_key_up(uint8_t nr) { trace(PSTR("up"), nr); }
+  KeypadTrace(Job::Scheduler* scheduler, IOStream::Device* dev) :
+    LCDKeypad(scheduler),
+    m_out(dev)
+  {}
+
+  virtual void on_key_down(uint8_t nr)
+  {
+    trace(PSTR("down"), nr);
+  }
+
+  virtual void on_key_up(uint8_t nr)
+  {
+    trace(PSTR("up"), nr);
+  }
+
   void trace(str_P msg, uint8_t nr);
 };
 
@@ -75,19 +88,19 @@ KeypadTrace::trace(str_P msg, uint8_t nr)
 // The LCD Keypad is a 4-bit parallel device (default pins used)
 HD44780::Port4b port;
 HD44780 lcd(&port);
-KeypadTrace keypad(&lcd);
+Watchdog::Scheduler scheduler;
+KeypadTrace keypad(&scheduler, &lcd);
 
 void setup()
 {
-   Watchdog::begin(16, Watchdog::push_timeout_events);
-   keypad.begin();
-   lcd.begin();
-   lcd.puts(PSTR("CosaLCDkeypad: started"));
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
+  keypad.begin();
+  lcd.begin();
+  lcd.puts(PSTR("CosaLCDkeypad: started"));
 }
 
 void loop()
 {
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
+  Event::service();
 }

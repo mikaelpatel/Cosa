@@ -108,7 +108,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaPingPong: started"));
 
   // Start the watchdog for timeout handling
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  Watchdog::begin();
 
   // Bind the state machines to each other and give them names
   ping.bind(PSTR("ping"), &pong);

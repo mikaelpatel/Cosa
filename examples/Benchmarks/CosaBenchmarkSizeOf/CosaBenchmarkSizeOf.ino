@@ -44,6 +44,7 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/IOStream/Driver/WIO.hh"
 #include "Cosa/Interrupt.hh"
+#include "Cosa/Job.hh"
 #include "Cosa/Keypad.hh"
 #include "Cosa/LCD.hh"
 #include "Cosa/LED.hh"
@@ -64,7 +65,6 @@
 #include "Cosa/Socket.hh"
 #include "Cosa/SPI.hh"
 #include "Cosa/Time.hh"
-#include "Cosa/Timer.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/TWI.hh"
 #include "Cosa/Wireless.hh"
@@ -90,6 +90,7 @@ void setup()
   TRACE(sizeof(Interrupt::Handler));
   TRACE(sizeof(IOBuffer<64>));
   TRACE(sizeof(IOStream));
+  TRACE(sizeof(Job));
 #if !defined(BOARD_ATTINY)
   TRACE(sizeof(UART));
 #endif
@@ -116,7 +117,6 @@ void setup()
   TRACE(sizeof(SPI::Driver));
   TRACE(sizeof(clock_t));
   TRACE(sizeof(time_t));
-  TRACE(sizeof(Timer));
   TRACE(sizeof(Trace));
   TRACE(sizeof(TWI::Driver));
   TRACE(sizeof(TWI::Slave));

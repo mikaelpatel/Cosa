@@ -48,15 +48,22 @@
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 
+// Configuration
+#define NO_INDOORS
+
 // Use DHT11 for outdoors measurement and DHT22 for indoors
 DHT11 outdoors(Board::EXT0);
 
 // ATtiny has only one external interrupt pin
 #if defined(BOARD_ATTINY)
+#define NO_INDOORS
 Soft::UAT uart(Board::D1);
-#else
+#elif !defined(NO_INDOORS)
 DHT22 indoors(Board::EXT1);
 #endif
+
+// Start time in milli-seconds
+const uint32_t START = 0xfffff000UL;
 
 void setup()
 {
@@ -73,6 +80,8 @@ void setup()
   // Start the watchdog for low power sleep
   Watchdog::begin();
   RTC::begin();
+  Watchdog::millis(START);
+  RTC::millis(START);
 }
 
 void loop()
@@ -81,10 +90,18 @@ void loop()
   sleep(2);
 
   // Read and print humidity and temperature
-#if !defined(BOARD_ATTINY)
+#if !defined(NO_INDOORS)
+  trace << hex << RTC::micros() << PSTR(":indoors: ");
   if (indoors.sample())
-    trace << PSTR("indoors: ") << indoors << endl;
+    trace << indoors;
+  else
+    trace << PSTR("failed");
+  trace << endl;
 #endif
+  trace << hex << RTC::micros() << PSTR(":outdoors: ");
   if (outdoors.sample())
-    trace << PSTR("outdoors: ") << outdoors << endl;
+    trace << outdoors;
+  else
+    trace << PSTR("failed");
+  trace << endl;
 }

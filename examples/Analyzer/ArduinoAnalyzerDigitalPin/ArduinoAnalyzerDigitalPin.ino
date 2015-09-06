@@ -34,6 +34,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#if defined(HIGH)
+
 const uint8_t outPin = 8;
 const uint8_t dataPin = 9;
 const uint8_t clockPin = 10;
@@ -177,3 +179,4 @@ void loop()
   delay(1000);
 }
 
+#endif

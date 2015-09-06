@@ -42,6 +42,9 @@ void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalyzerFlush: started"));
+  trace << PSTR("CHAN0 - D13/LED [^]") << endl;
+  trace << PSTR("CHAN1 - D1/TX [Async Serial]") << endl;
+  trace.flush();
   Watchdog::begin();
 }
 

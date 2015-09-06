@@ -26,17 +26,17 @@ HCSR04::read(uint16_t& distance)
   distance = 0;
 
   // Give the device a trigger pulse
-  m_trigPin.pulse(10);
+  m_trigger.pulse(10);
   uint16_t timeout = TIMEOUT;
 
   // Wait for the response
-  while (m_echoPin.is_clear() && timeout--) DELAY(1);
+  while (m_echo.is_clear() && timeout--) DELAY(1);
   if (timeout == 0) return (false);
 
   // Measure the lenght of the return pulse
   uint16_t count = 0;
   synchronized {
-    while (m_echoPin.is_set() && timeout--) count++;
+    while (m_echo.is_set() && timeout--) count++;
   }
   if (timeout == 0) return (false);
 

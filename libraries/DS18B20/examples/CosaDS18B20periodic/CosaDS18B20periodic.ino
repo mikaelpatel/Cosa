@@ -56,11 +56,12 @@ public:
    * Construct sensor on given 1-wire bus. Convert and read
    * temperature with given time period (in milli-seconds).
    * @param[in] pin 1-wire bus.
+   * @param[in] scheduler for periodic job.
    * @param[in] ms time period for samples (default 2048 ms).
    */
-  Sensor(OWI* pin, uint16_t ms = 2048) :
+  Sensor(OWI* pin, Job::Scheduler* scheduler, uint16_t ms = 2048) :
     DS18B20(pin),
-    Periodic(ms / 2),
+    Periodic(scheduler, ms / 2),
     m_state(0)
   {}
 
@@ -113,7 +114,8 @@ Sensor::on_sample()
   trace << Watchdog::millis() << ':' << *this << PSTR(" C") << endl;
 }
 
-Sensor sensor(&owi);
+Watchdog::Scheduler scheduler;
+Sensor sensor(&owi, &scheduler);
 
 void setup()
 {
@@ -122,7 +124,8 @@ void setup()
   trace.begin(&uart, PSTR("CosaDS18B20periodic: started"));
 
   // Start the watchdog ticks counter
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
 
   // Connect to the device and start periodic function
   ASSERT(sensor.connect(0));

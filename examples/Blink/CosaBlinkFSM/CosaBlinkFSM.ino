@@ -31,6 +31,11 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
+
+// Use the Watchdog job scheduler
+Watchdog::Scheduler scheduler;
 
 /**
  * The state machine: Blink RGB LED with six color states
@@ -52,11 +57,29 @@ public:
 	   Board::DigitalPin redLedPinNr = Board::D5,
 	   Board::DigitalPin greenLedPinNr = Board::D6,
 	   Board::DigitalPin blueLedPinNr = Board::D7) :
-    FSM(redState, period),
+    FSM(redState, &scheduler, period),
     redLedPin(redLedPinNr, 1),
     greenLedPin(greenLedPinNr),
     blueLedPin(blueLedPinNr, 1)
   {}
+
+  str_P get_state_str_P()
+  {
+    StateHandler fn = get_state();
+    if (fn == redState)
+      return PSTR("red");
+    if (fn == yellowState)
+      return PSTR("yellow");
+    if (fn == greenState)
+      return PSTR("green");
+    if (fn == cyanState)
+      return PSTR("cyan");
+    if (fn == blueState)
+      return PSTR("blue");
+    if (fn == magentaState)
+      return PSTR("magenta");
+    return PSTR("unknown");
+  }
 
   // State functions; red => yellow => green => cyan => blue => meganta
   // Receive a timeout events which are ignored. Turns on and off the
@@ -122,13 +145,17 @@ private:
 };
 
 // The state machines for two RGB leds
-BlinkRGB led1(512, Board::D5, Board::D6, Board::D7);
-BlinkRGB led2(256, Board::D8, Board::D9, Board::D10);
+BlinkRGB led1(1024, Board::D5, Board::D6, Board::D7);
+BlinkRGB led2(512, Board::D8, Board::D9, Board::D10);
 
 void setup()
 {
-  // Start the watchdog (16 ms timeout, push timeout events)
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  uart.begin(57600);
+  trace.begin(&uart, PSTR("CosaFSM: started"));
+
+  // Start the watchdog and set the scheduler
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
 
   // Start the state machines
   led1.begin();
@@ -139,6 +166,11 @@ void loop()
 {
   Event event;
   Event::queue.await(&event);
+  BlinkRGB* led = (BlinkRGB*) event.get_target();
+  trace << led << PSTR(":event=") << event.get_type()
+	<< PSTR(",state=(") << led->get_state_str_P();
   event.dispatch();
+  trace << PSTR(")=>(") << led->get_state_str_P() << PSTR(")")
+	<< endl;
 }
 

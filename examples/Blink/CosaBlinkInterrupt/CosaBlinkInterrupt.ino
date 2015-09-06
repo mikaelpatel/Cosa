@@ -26,27 +26,55 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Job.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 
-// Use the builtin led
-OutputPin ledPin(Board::LED);
+// Use the watchdog job scheduler
+Watchdog::Scheduler scheduler;
 
 // Interrupt handler; toggle the led for each interrupt
-void blink(void* env)
-{
-  UNUSED(env);
-  ledPin.toggle();
-}
+class Blink : public Job, public OutputPin {
+public:
+  Blink(Job::Scheduler* scheduler, uint16_t ms) :
+    Job(scheduler),
+    OutputPin(Board::LED),
+    m_period(ms)
+  {}
+  virtual void on_expired()
+  {
+    toggle();
+    schedule();
+  }
+  void schedule()
+  {
+    expire_after(m_period);
+    start();
+  }
+  void period(uint16_t ms)
+  {
+    m_period = ms;
+  }
+
+private:
+  uint16_t m_period;
+};
+
+Blink led(&scheduler, 512);
 
 void setup()
 {
-  // Start watchdog with approx. 0.5 s timeout and blink interrupt call
-  Watchdog::begin(512, blink);
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
+  led.schedule();
 }
 
 void loop()
 {
-  // Sleep during timeout wait
   sleep(10);
+  led.period(128);
+  sleep(10);
+  led.period(256);
+  sleep(10);
+  led.period(512);
 }

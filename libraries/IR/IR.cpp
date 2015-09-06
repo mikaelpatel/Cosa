@@ -31,12 +31,15 @@ IR::Receiver::on_interrupt(uint16_t arg)
   if (UNLIKELY(m_ix == m_max)) return;
 
   // Check if the time should be set; i.e. queue for timeout events
-  if (m_ix == 0) Watchdog::attach(this, TIMEOUT);
+  if (m_ix == 0) {
+    expire_after(TIMEOUT);
+    start();
+  }
 
   // Measure the sample period
-  uint32_t stop = RTC::micros();
-  uint32_t us = (stop - m_start);
-  m_start = stop;
+  uint32_t now = RTC::micros();
+  uint32_t us = (now - m_start);
+  m_start = now;
 
   // Check if samples should be collected
   if (m_sample != NULL) m_sample[m_ix] = us;
@@ -52,7 +55,7 @@ IR::Receiver::on_interrupt(uint16_t arg)
 
   // Disable further interrupts and remove from timer queue
   disable();
-  detach();
+  stop();
 
   // Push an event with the received code
   Event::push(Event::READ_COMPLETED_TYPE, this, m_code);
@@ -62,7 +65,7 @@ void
 IR::Receiver::reset()
 {
   // Remove from any queue
-  detach();
+  stop();
 
   // Initial state
   m_ix = 0;

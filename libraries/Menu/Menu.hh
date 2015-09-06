@@ -214,8 +214,8 @@ public:
      * Construct keypad event adapter for menu walker.
      * @param[in] walker to control.
      */
-    KeypadController(Walker* walker) :
-      LCDKeypad(),
+    KeypadController(Walker* walker, Job::Scheduler* scheduler) :
+      LCDKeypad(scheduler),
       m_walker(walker)
     {}
 
@@ -245,10 +245,13 @@ public:
       /**
        * Create rotary encoder push button handler for given pin.
        * @param[in] walker to control.
+       * @param[in] scheduler for button sampling.
        * @param[in] pin rotary encoder push button.
        */
-      RotaryButton(Menu::Walker* walker, Board::DigitalPin pin = Board::D2) :
-	Button(pin, Button::ON_FALLING_MODE),
+      RotaryButton(Menu::Walker* walker,
+		   Job::Scheduler* scheduler,
+		   Board::DigitalPin pin = Board::D2) :
+	Button(scheduler, pin, Button::ON_FALLING_MODE),
 	m_walker(walker)
       {}
 
@@ -274,17 +277,19 @@ public:
     /**
      * Construct rotary encoder event adapter for menu walker.
      * @param[in] walker to control.
+     * @param[in] scheduler for button sampling.
      * @param[in] clk rotary encoder clock pin (Default PCI4).
      * @param[in] dt rotary encoder data pin (Default PCI3).
      * @param[in] sw rotary encoder switch pin (Default D2).
      */
     RotaryController(Menu::Walker* walker,
+		     Job::Scheduler* scheduler,
 		     Board::InterruptPin clk = Board::PCI4,
 		     Board::InterruptPin dt = Board::PCI3,
 		     Board::DigitalPin sw = Board::D2) :
       Rotary::Encoder(clk, dt),
       m_walker(walker),
-      m_sw(walker, sw)
+      m_sw(walker, scheduler, sw)
     {}
 
     /**

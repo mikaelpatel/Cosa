@@ -23,12 +23,18 @@
 #include "Cosa/Power.hh"
 #include "Cosa/Bits.h"
 
-Watchdog::InterruptHandler Watchdog::s_handler = NULL;
-void* Watchdog::s_env = NULL;
-
-volatile uint32_t Watchdog::s_ticks = 0L;
-uint8_t Watchdog::s_scale;
+// Initated flag
 bool Watchdog::s_initiated = false;
+
+// Milli-seconds counter and number of ms per tick
+volatile uint32_t Watchdog::s_millis = 0L;
+uint16_t Watchdog::s_ms_per_tick = 16;
+
+// Watchdog timeout event handler
+Event::Handler* Watchdog::s_handler = NULL;
+
+// Watchdog Job Scheduler (milli-seconds level delayed functions)
+Watchdog::Scheduler* Watchdog::s_scheduler = NULL;
 
 uint8_t
 Watchdog::as_prescale(uint16_t ms)
@@ -40,9 +46,7 @@ Watchdog::as_prescale(uint16_t ms)
 }
 
 void
-Watchdog::begin(uint16_t ms,
-		InterruptHandler handler,
-		void* env)
+Watchdog::begin(uint16_t ms)
 {
   // Map milli-seconds to watchdog prescale values
   uint8_t prescale = as_prescale(ms);
@@ -59,34 +63,29 @@ Watchdog::begin(uint16_t ms,
     WDTCSR = config;
   }
 
-  // Register the interrupt handler
-  s_handler = handler;
-  s_env = env;
-  s_scale = prescale + 4;
-  s_initiated = true;
+  // Mark as initiated and set watchdog delay
+  s_ms_per_tick = (1 << (prescale + 4));
   ::delay = Watchdog::delay;
+  s_initiated = true;
 }
 
 void
 Watchdog::delay(uint32_t ms)
 {
-  int32_t ticks = (ms + (ms_per_tick() / 2)) / ms_per_tick();
-  uint8_t key = lock();
-  uint32_t stop = s_ticks + ticks;
-  do {
-    unlock(key);
-    yield();
-    key = lock();
-    ticks = stop - s_ticks;
-  } while (ticks > 0);
-  unlock(key);
+  uint32_t start = Watchdog::millis();
+  while (since(start) < ms) yield();
 }
 
 ISR(WDT_vect)
 {
-  Watchdog::s_ticks += 1;
-  Watchdog::InterruptHandler handler = Watchdog::s_handler;
-  if (UNLIKELY(handler == NULL)) return;
-  void* env = Watchdog::s_env;
-  handler(env);
+  // Increment milli-seconds counter
+  Watchdog::s_millis += Watchdog::s_ms_per_tick;
+
+  // Push timeout event if an event handler is available
+  if (UNLIKELY(Watchdog::s_handler != NULL))
+    Event::push(Event::TIMEOUT_TYPE, Watchdog::s_handler);
+
+  // Run all expired jobs
+  if (Watchdog::s_scheduler != NULL)
+    Watchdog::s_scheduler->dispatch();
 }

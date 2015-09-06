@@ -34,10 +34,14 @@
 // Use the build-in led
 OutputPin ledPin(Board::LED);
 
+// Event handler
+Event::Handler handler;
+
 void setup()
 {
   // Start the watchdog (0.5 second timeout, watchdog timeout events)
-  Watchdog::begin(512, Watchdog::push_watchdog_event);
+  Watchdog::begin(512);
+  Watchdog::push_timeout_events(&handler);
 }
 
 void loop()

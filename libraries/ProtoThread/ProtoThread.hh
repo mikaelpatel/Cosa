@@ -21,9 +21,8 @@
 #ifndef COSA_PROTO_THREAD_HH
 #define COSA_PROTO_THREAD_HH
 
+#include "Cosa/Job.hh"
 #include "Cosa/Event.hh"
-#include "Cosa/Linkage.hh"
-#include "Cosa/Watchdog.hh"
 
 /**
  * Cosa implementation of protothreads; A protothread is a
@@ -51,7 +50,7 @@
  * library for GCC, http://code.google.com/p/protothread/<br>
  * [3] http://en.wikipedia.org/wiki/Protothreads<br>
  */
-class ProtoThread : public Link {
+class ProtoThread : public Job {
 public:
   /**
    * Thread states.
@@ -70,8 +69,8 @@ public:
    * Construct thread, initiate state and continuation. Does not
    * schedule the thread. This is done with begin().
    */
-  ProtoThread() :
-    Link(),
+  ProtoThread(Job::Scheduler* scheduler) :
+    Job(scheduler),
     m_state(INITIATED),
     m_ip(0)
   {}
@@ -116,7 +115,9 @@ public:
     __attribute__((always_inline))
   {
     m_state = WAITING;
-    Watchdog::attach(this, ms);
+    detach();
+    expire_after(ms);
+    start();
   }
 
   /**

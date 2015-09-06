@@ -37,8 +37,8 @@
 // changed at each PROTO_THREAD_AWAIT.
 class Counter : public ProtoThread {
 public:
-  Counter(uint16_t delay) :
-    ProtoThread(),
+  Counter(Job::Scheduler* scheduler, uint16_t delay) :
+    ProtoThread(scheduler),
     m_count(0),
     m_delay(delay)
   {}
@@ -52,6 +52,7 @@ public:
     PROTO_THREAD_YIELD();
     while (1) {
       PROTO_THREAD_DELAY(m_delay);
+      trace << this << PSTR(":count=") << m_count << endl;
       m_count++;
     }
     PROTO_THREAD_END();
@@ -62,10 +63,13 @@ private:
   uint16_t m_delay;
 };
 
+// Use the watchdog job scheduler
+Watchdog::Scheduler scheduler;
+
 // Three counter threads with different delay periods
-Counter cnt1(32);
-Counter cnt2(128);
-Counter cnt3(512);
+Counter cnt1(&scheduler, 32);
+Counter cnt2(&scheduler, 128);
+Counter cnt3(&scheduler, 512);
 
 void setup()
 {
@@ -79,8 +83,9 @@ void setup()
   TRACE(F_CPU);
   TRACE(I_CPU);
 
-  // Start the watchdog (16 ms timeout, push timeout events)
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  // Start the watchdog and rtc
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
   RTC::begin();
 
   // Start the counter threads

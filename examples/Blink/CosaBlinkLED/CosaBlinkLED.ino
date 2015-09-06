@@ -26,12 +26,14 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 
-LED builtin;
+Watchdog::Scheduler scheduler;
+LED builtin(&scheduler);
 
 void setup()
 {
   Power::set(SLEEP_MODE_PWR_DOWN);
-  Watchdog::begin(128, Watchdog::push_timeout_events);
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
   builtin.alert_mode();
 }
 

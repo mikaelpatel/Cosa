@@ -1,5 +1,5 @@
 /**
- * @file CosaPeriodicBlock.ino
+ * @file CosaRF433.ino
  * @version 1.0
  *
  * @section License
@@ -16,53 +16,43 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Demo of Cosa Periodic Blocks.
+ * Study RF433 AGC behavior.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/RTC.hh"
-#include "Cosa/Periodic.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
+OutputPin rf(Board::D6);
 
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPeriodicBlock: started"));
+  trace.begin(&uart, PSTR("CosaRF433: started"));
+  Watchdog::begin();
   RTC::begin();
 }
 
 void loop()
 {
-  static uint16_t nr = 0;
-  static uint16_t x = 0;
-  static uint16_t y = 0;
-  static uint16_t z = 0;
-
+  const uint16_t P = 1000;
+  const uint16_t D[] = { 1000, 500, 200, 100, 50 };
+  rf.set();
   delay(10);
-  nr += 1;
-
-  periodic(t1, 100) {
-    x += 1;
+  rf.clear();
+  for (uint8_t j = 0; j < membersof(D); j++) {
+    uint16_t T = D[j];
+    for (uint8_t i = 0; i < 8; i++) {
+      DELAY(T);
+      rf.set();
+      DELAY(T);
+      rf.clear();
+    }
   }
-
-  periodic(t2, 1000) {
-    y += 1;
-  }
-
-  periodic(t3, 10000) {
-    z += 1;
-  }
-
-  periodic(t4, 5000) {
-    trace << RTC::millis()
-	  << ' ' << RTC::since(t4)
-	  << ' ' << nr
-	  << ' ' << x
-	  << ' ' << y
-	  << ' ' << z
-	  << endl;
-  }
+  sleep(2);
 }
 

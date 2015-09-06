@@ -29,14 +29,16 @@
 #include "Cosa/Periodic.hh"
 #include "Cosa/OutputPin.hh"
 
+// Use watchdog job scheduler for periodic functions
+Watchdog::Scheduler scheduler;
+
 // Blinking LED output pin
-class LED : public Periodic {
+class LED : public Periodic, private OutputPin {
 public:
   LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) :
-    Periodic(ms), m_pin(pin, initial) {}
-  virtual void run() { m_pin.toggle(); }
-private:
-  OutputPin m_pin;
+    Periodic(&scheduler, ms), OutputPin(pin, initial)
+  {}
+  virtual void run() { toggle(); }
 };
 
 // RGB LED connected to Arduino pins
@@ -52,8 +54,8 @@ LED blueLedPin(Board::D7, 1024);
 
 void setup()
 {
-  // Start the watchdog ticks and push time events
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  // Start the watchdog ticks
+  Watchdog::begin();
 
   // Start the periodic functions
   redLedPin.begin();
@@ -63,8 +65,5 @@ void setup()
 
 void loop()
 {
-  // Wait for events (low power mode) and dispatch
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
+  Event::service();
 }

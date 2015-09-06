@@ -1,5 +1,5 @@
 /**
- * @file CosaPeriodicBlock.ino
+ * @file CosaACS712T.ino
  * @version 1.0
  *
  * @section License
@@ -16,53 +16,34 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Demo of Cosa Periodic Blocks.
+ * Study ACS712T Hall Effect-Based Linear Current Sensor behavior.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
-#include "Cosa/Periodic.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
+AnalogPin sensor(Board::A0);
 
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPeriodicBlock: started"));
-  RTC::begin();
+  trace.begin(&uart, PSTR("CosaACS712T: started"));
+  Watchdog::begin();
 }
 
 void loop()
 {
-  static uint16_t nr = 0;
-  static uint16_t x = 0;
-  static uint16_t y = 0;
-  static uint16_t z = 0;
-
-  delay(10);
-  nr += 1;
-
-  periodic(t1, 100) {
-    x += 1;
-  }
-
-  periodic(t2, 1000) {
-    y += 1;
-  }
-
-  periodic(t3, 10000) {
-    z += 1;
-  }
-
-  periodic(t4, 5000) {
-    trace << RTC::millis()
-	  << ' ' << RTC::since(t4)
-	  << ' ' << nr
-	  << ' ' << x
-	  << ' ' << y
-	  << ' ' << z
-	  << endl;
-  }
+  // float32_t current = -5.0 + (sensor / 102.3);
+  const uint16_t SAMPLE_MAX = 16;
+  uint16_t value = 0;
+  for (uint8_t i = 0; i < SAMPLE_MAX; i++)
+    value += sensor;
+  int16_t current = -5000 + ((10000UL * (value / SAMPLE_MAX)) / 1023);
+  trace << (value / SAMPLE_MAX) << ':' << current << PSTR(" mA") << endl;
+  sleep(2);
 }
 

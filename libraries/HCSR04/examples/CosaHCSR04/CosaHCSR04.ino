@@ -35,20 +35,26 @@
 
 #include <HCSR04.h>
 
-#include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/Job.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 
 class Ping : public HCSR04 {
 public:
-  Ping(Board::DigitalPin trig_pin, Board::DigitalPin echo_pin) :
-    HCSR04(trig_pin, echo_pin) {}
-  virtual void on_change(uint16_t distance) { TRACE(distance); }
+  Ping(Job::Scheduler* scheduler, Board::DigitalPin trigger, Board::DigitalPin echo) :
+    HCSR04(scheduler, trigger, echo)
+  {}
+  virtual void on_change(uint16_t distance)
+  {
+    TRACE(distance);
+  }
 };
 
-Ping ping(Board::D2, Board::D3);
+Watchdog::Scheduler scheduler;
+Ping ping(&scheduler, Board::D2, Board::D3);
 
 void setup()
 {
@@ -60,16 +66,15 @@ void setup()
   TRACE(free_memory());
   TRACE(sizeof(HCSR04));
 
-  // Start the watchdog ticks and push time events
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  // Start the watchdog ticks
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
 
-  // Attach the range module to read distance every 1/4 second
-  ping.periodic(256);
+  // Schedule to read distance every 1/4 second
+  ping.schedule(256);
 }
 
 void loop()
 {
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
+  Event::service();
 }

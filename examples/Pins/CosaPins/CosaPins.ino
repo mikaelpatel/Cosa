@@ -94,6 +94,9 @@ PWMPin ledPin(Board::PWM2);
 InputPin onoffPin(Board::D7);
 AnalogPin levelPin(Board::A0);
 
+// Dummy event handler
+Event::Handler handler;
+
 void setup()
 {
   // Start trace output stream on the serial port
@@ -129,7 +132,8 @@ void setup()
   extPin.enable();
 
   // Start the watchdog ticks counter (1 second pulse)
-  Watchdog::begin(1024, Watchdog::push_watchdog_event);
+  Watchdog::begin(1024);
+  Watchdog::push_timeout_events(&handler);
 }
 
 void loop()
@@ -140,7 +144,7 @@ void loop()
   TRACE(event.get_type());
 
   // Print the time index
-  INFO("ticks = %d", Watchdog::ticks());
+  INFO("ms = %d", Watchdog::millis());
 
   // Sample the level
   uint16_t value = levelPin.sample();

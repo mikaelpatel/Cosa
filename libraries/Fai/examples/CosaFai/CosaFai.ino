@@ -75,6 +75,9 @@ public:
 // The new IOStream device that will print in hexadecimal
 TraceDevice traceDevice;
 
+// Dummy Event handler
+Event::Handler handler;
+
 void setup()
 {
   // Start trace output stream on the serial port
@@ -94,7 +97,8 @@ void setup()
   cout.Ciao::write(&Fai::Descriptor::event_t);
 
   // Start the watchdog and trace events
-  Watchdog::begin(2048, Watchdog::push_watchdog_event, &ledPin);
+  Watchdog::begin(2048);
+  Watchdog::push_timeout_events(&handler);
 }
 
 void loop()

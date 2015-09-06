@@ -32,13 +32,16 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Periodic.hh"
 
+// Use the watchdog job scheduler
+Watchdog::Scheduler scheduler;
+
 /**
  * Monitor power supply for low voltage/battery.
  */
 class VCC : public Periodic {
 public:
   VCC(uint16_t mv, uint16_t sec = 2) :
-    Periodic(sec * 1024),
+    Periodic(&scheduler, sec * 1024),
     m_threshold(mv),
     m_vcc(0)
   {
@@ -62,14 +65,15 @@ private:
 };
 
 // Monitor low voltage at 4.4 V
-VCC lowPower(4400);
+// VCC lowPower(4400);
+VCC lowPower(4800);
 
 /**
  * Periodical sampling of analog pin.
  */
 class Sampler : public AnalogPin, public Periodic {
 public:
-  Sampler(Board::AnalogPin pin, uint16_t ms) : AnalogPin(pin), Periodic(ms) {}
+  Sampler(Board::AnalogPin pin, uint16_t ms) : AnalogPin(pin), Periodic(&scheduler, ms) {}
   virtual void run() { sample_request(); }
 };
 
@@ -85,7 +89,7 @@ Sampler sampler(Board::A1, 256);
  */
 class Display : public Periodic {
 public:
-  Display(uint16_t ms) : Periodic(ms) {}
+  Display(uint16_t ms) : Periodic(&scheduler, ms) {}
   virtual void run()
   {
     trace << Watchdog::millis() << PSTR(":A4  = ") << sampler.get_value()
@@ -101,7 +105,8 @@ void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVCC: started"));
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
   lowPower.begin();
   sampler.begin();
   display.begin();

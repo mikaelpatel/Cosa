@@ -22,37 +22,52 @@
 #define COSA_PERIODIC_HH
 
 #include "Cosa/Types.h"
-#include "Cosa/Linkage.hh"
-#include "Cosa/Watchdog.hh"
+#include "Cosa/Job.hh"
 
 /**
- * Periodic function handler. Syntactic sugar for watchdog timeout
- * event handlers. Subclass and implement the virtual method run()
- * as the function to be executed periodically.
- *
- * @section Limitations
- * Avoid setting period to the same value in the run method as this
- * will force the function to be executed twice in the same time frame.
+ * Periodic function handler. Syntactic sugar for periodical jobs.
+ * Subclass and implement the virtual method run() as the function to
+ * be executed periodically. The scheduler defines the time base;
+ * the alarm scheduler uses seconds, the watchdog job scheduler
+ * milli-seconds and the real-time clock micro-seconds.
  *
  * @section See Also
- * For details on time period handling see Watchdog.hh. This execution
+ * For details on handling of time units see Job.hh. This execution
  * pattern is also available in the FSM (Finite State Machine) class.
  */
-class Periodic : protected Link {
+class Periodic : public Job {
 public:
   /**
-   * Construct a periodic function handler.
-   * @param[in] ms period of timeout.
+   * Construct a periodic function handled by the given scheduler and
+   * with the given period in the schedulers time base. The maximum
+   * period is UINT32_MAX; 1.2 hours with RTC::Scheduler, 49 days with
+   * Watchdog::Scheduler and 136 years with Alarm::Scheduler.
+   * @param[in] scheduler for the periodic job.
+   * @param[in] period of timeout.
    */
-  Periodic(uint16_t ms) : Link(), m_period(ms) {}
+  Periodic(Job::Scheduler* scheduler, uint32_t period) :
+    Job(scheduler),
+    m_period(period)
+  {}
 
   /**
    * Set timeout period.
-   * @param[in] ms period of timeout.
+   * @param[in] time period of timeout.
    */
-  void set_period(uint16_t ms)
+  void period(uint32_t time)
+    __attribute__((always_inline))
   {
-    m_period = ms;
+    m_period = time;
+  }
+
+  /**
+   * Get timeout period.
+   * @return period of timeout.
+   */
+  uint32_t period() const
+    __attribute__((always_inline))
+  {
+    return (m_period);
   }
 
   /**
@@ -61,7 +76,8 @@ public:
   void begin()
     __attribute__((always_inline))
   {
-    Watchdog::attach(this, m_period);
+    expire_after(m_period);
+    start();
   }
 
   /**
@@ -70,20 +86,14 @@ public:
   void end()
     __attribute__((always_inline))
   {
-    detach();
+    stop();
   }
 
-  /**
-   * @override Periodic
-   * The default null function.
-   */
-  virtual void run() {}
-
-private:
+protected:
   /**
    * @override Event::Handler
    * Periodic event handler; dispatch the run() function on
-   * timeout events.
+   * timeout events and reschedule the periodic job.
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */
@@ -92,28 +102,36 @@ private:
     UNUSED(value);
     if (UNLIKELY(type != Event::TIMEOUT_TYPE)) return;
     run();
+    expire_after(m_period);
+    start();
   }
 
-  uint16_t m_period;
+  /** Time period. Time unit is defined by the scheduler. */
+  uint32_t m_period;
 };
 
 /**
- * Syntactic sugar for periodic block. Used in the form:
+ * Syntactic sugar for periodic blocks in the loop() function. Used in
+ * the form:
  * @code
  * void loop()
  * {
- *   periodic(ms) {
+ *   periodic(timer,period) {
  *     ...
  *   }
+ *   ...
  * }
  * @endcode
- * May be used several times in the same block. Creates a unique
- * timer for each instance. Requires RTC::millis.
+ * May be used several times in the loop() function. The timer
+ * variable is defined and available in the loop().
+ * @param[in] timer variable.
+ * @param[in] period in milli-seconds.
+ * @note requires RTC.hh.
  */
-#define periodic(ms)							\
-  static uint32_t __UNIQUE(timer) = 0UL;				\
+#define periodic(timer,ms)						\
+  static uint32_t timer = 0UL;						\
   for (int __UNIQUE(i) = 1;						\
-       (__UNIQUE(i) != 0) && ((RTC::millis() - __UNIQUE(timer)) >= ms);	\
-       __UNIQUE(i)--, __UNIQUE(timer) += ms)
+       (__UNIQUE(i) != 0) && ((RTC::since(timer)) >= ms);		\
+       __UNIQUE(i)--, timer += ms)
 
 #endif

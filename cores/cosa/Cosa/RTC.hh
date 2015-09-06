@@ -21,36 +21,34 @@
 #ifndef COSA_RTC_HH
 #define COSA_RTC_HH
 
+#include "Cosa/Types.h"
+#include "Cosa/Job.hh"
 #include "Cosa/Time.hh"
 
 /**
- * Real-time clock; AVR Timer0 for micro/milli-second timing.
+ * Real-time clock with micro/milli/seconds timing based on hardware
+ * timer.
  *
  * @section Limitations
- * Cannot be used together with other classes that use Timer#0.
+ * Cannot be used together with other classes that use AVR/Timer#0.
  */
 class RTC {
 public:
   /**
-   * RTC interrupt handler function prototype.
-   * @param[in] env interrupt handler environment.
-   */
-  typedef void (*InterruptHandler)(void* env);
-
-  /**
-   * Start the Real-Time Clock.
+   * Start the real-time clock and installs the real-time clock delay
+   * function.
    * @return bool true(1) if successful otherwise false(0).
    */
   static bool begin();
 
   /**
-   * Stop the Real-Time Clock.
+   * Stop the real-time clock.
    * @return bool true(1) if successful otherwise false(0).
    */
   static bool end();
 
   /**
-   * Get number of micro-seconds per tick.
+   * Get number of micro-seconds per real-time clock tick.
    * @return micro-seconds.
    */
   static uint16_t us_per_tick();
@@ -60,33 +58,6 @@ public:
    * @return micro-seconds.
    */
   static uint16_t us_per_timer_cycle();
-
-  /**
-   * Set clock (seconds) to real-time (for instance seconds from a
-   * given date; epoch 1900-01-01 00:00 or 1970-01-01 00:00).
-   * Please note that the seconds level clock is not not
-   * based/calculated from the micro-second level clock. This clock is
-   * always from system power up.
-   * @param[in] sec.
-   * @note atomic
-   */
-  static void time(clock_t sec)
-    __attribute__((always_inline))
-  {
-    synchronized s_sec = sec;
-  }
-
-  /**
-   * Returns number of milli-seconds from given start.
-   * @param[in] start
-   * @return (millis() - start)
-   */
-  static uint32_t since(uint32_t start)
-    __attribute__((always_inline))
-  {
-    uint32_t now = millis();
-    return (now - start);
-  }
 
   /**
    * Return the current clock in micro-seconds.
@@ -102,10 +73,16 @@ public:
   static void micros(uint32_t usec)
   {
     synchronized {
-      s_uticks = usec;
-      s_ms = usec / 1000L;
+      s_micros = usec;
+      s_millis = usec / 1000L;
     }
   }
+
+  /**
+   * Return the current clock in milli-seconds.
+   * @return milli-seconds.
+   */
+  static uint32_t millis();
 
   /**
    * Set the current clock in milli-seconds.
@@ -115,21 +92,22 @@ public:
   static void millis(uint32_t ms)
   {
     synchronized {
-      s_uticks = ms * 1000L;
-      s_ms = ms;
+      s_micros = ms * 1000L;
+      s_millis = ms;
     }
   }
 
   /**
-   * Return the current clock in milli-seconds.
-   * @return milli-seconds.
+   * Returns number of milli-seconds from given start time in
+   * milli-seconds.
+   * @param[in] start
+   * @return number of milli-seconds.
    */
-  static uint32_t millis()
+  static uint32_t since(uint32_t start)
     __attribute__((always_inline))
   {
-    uint32_t res;
-    synchronized res = s_ms;
-    return (res);
+    uint32_t now = millis();
+    return (now - start);
   }
 
   /**
@@ -157,7 +135,25 @@ public:
   }
 
   /**
-   * Delay using the real-time clock.
+   * Set clock (seconds) to real-time (for instance seconds from a
+   * given date; epoch 1900-01-01 00:00 or 1970-01-01 00:00).
+   * Please note that the seconds level clock is not based on the
+   * micro-second level clock.
+   * @param[in] sec.
+   * @note atomic
+   */
+  static void time(clock_t sec)
+    __attribute__((always_inline))
+  {
+    synchronized {
+      s_msec = 0;
+      s_sec = sec;
+    }
+  }
+
+  /**
+   * Delay using the real-time clock. Installed as the global delay()
+   * function when the real-time clock is started with begin().
    * @param[in] ms sleep period in milli-seconds.
    */
   static void delay(uint32_t ms);
@@ -174,83 +170,56 @@ public:
   static int await(volatile bool &condvar, uint32_t ms);
 
   /**
-   * Call given interrupt handler when the given time period in
-   * micro-seconds has expired.
-   * Returns true(1) if scheduled otherwise false(0).
-   * @param[in] us micro-seconds before call.
-   * @param[in] fn interrupt handler.
-   * @param[in] env environment pointer.
-   * @return bool.
+   * RTC Scheduler for jobs with a delay of 100 us or longer.
    */
-  static bool expire_in(uint16_t us, InterruptHandler fn, void* env = NULL);
+  class Scheduler : public Job::Scheduler {
+  public:
+    /**
+     * @override Job::Scheduler
+     * Start given job. Returns true(1) if successful otherwise
+     * false(0).
+     * @return bool.
+     */
+    virtual bool start(Job* job);
+
+    /**
+     * @override Job::Scheduler
+     * Dispatch expired jobs. Called from RTC ISR.
+     */
+    virtual void dispatch();
+
+    /**
+     * @override Job::Scheduler
+     * Return current time in micro-seconds.
+     */
+    virtual uint32_t time();
+  };
 
   /**
-   * Returns true(1) if expired otherwise false(0).
-   * @return bool.
+   * Set the real-time clock job scheduler.
+   * @param[in] scheduler.
    */
-  static bool is_expired()
+  static void job(RTC::Scheduler* scheduler)
   {
-    return (s_period == 0);
+    s_scheduler = scheduler;
   }
 
   /**
-   * Periodically call given interrupt handler with the given time
-   * period in micro-seconds has expired. The maximum timer period is
-   * 999 us. Returns true(1) if scheduled otherwise false(0).
-   * @param[in] us micro-seconds period.
-   * @param[in] fn interrupt handler.
-   * @param[in] env environment pointer.
-   * @return bool.
+   * Set the real-time clock job scheduler.
+   * @return scheduler.
    */
-  static bool periodic_start(uint16_t us, InterruptHandler fn, void* env = NULL);
-
-  /**
-   * Stop periodical call. Returns true(1) if successful otherwise false(0).
-   * @return bool.
-   */
-  static bool periodic_stop();
-
-  /**
-   * Set tick update callback function. Allow extension of the
-   * interrupt handler for Timers.
-   * @param[in] fn interrupt handler.
-   * @param[in] env environment pointer.
-   * @note atomic
-   */
-  static void set_on_tick(InterruptHandler fn, void* env = NULL)
+  static RTC::Scheduler* scheduler()
   {
-    synchronized {
-      s_on_tick_fn = fn;
-      s_on_tick_env = env;
-    }
+    return (s_scheduler);
   }
-
-  /**
-   * Enable pin output toggle on tick. The pin is board/hardware
-   * defined.
-   */
-  static void enable_pin_toggle();
-
-  /**
-   * Disable pin toggle on tick. Pin is defined to input.
-   */
-  static void disable_pin_toggle();
 
 private:
   static bool s_initiated;	     	//!< Initiated flag.
-  static volatile uint32_t s_uticks; 	//!< Tick counter.
-  static volatile uint32_t s_ms;	//!< Milli-seconds counter.
+  static volatile uint32_t s_micros; 	//!< Micro-seconds counter.
+  static volatile uint32_t s_millis;	//!< Milli-seconds counter.
   static volatile uint16_t s_msec;	//!< Milli-seconds fraction.
   static volatile clock_t s_sec;	//!< Seconds counter.
-
-  static InterruptHandler s_on_tick_fn;	//!< Tick callback function.
-  static void* s_on_tick_env;		//!< Tick callback enviroment.
-
-  static bool s_periodic;		//!< Periodic flag.
-  static volatile uint8_t s_period;	//!< Timer tick to expire.
-
-  static InterruptHandler s_on_expire_fn; //!< Expire callback function.
-  static void* s_on_expire_env;		//!< Expire callback enviroment.
+  static Scheduler* s_scheduler;	//!< RTC Job scheduler.
 
   /**
    * Do not allow instances. This is a static singleton; name space.

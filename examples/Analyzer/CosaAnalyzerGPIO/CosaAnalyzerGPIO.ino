@@ -36,6 +36,8 @@
 
 #include "Cosa/GPIO.hh"
 #include "Cosa/Math.hh"
+#include "Cosa/Trace.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 
 GPIO outPin(Board::D8, GPIO::OUTPUT_MODE);
 GPIO dataPin(Board::D9, GPIO::OUTPUT_MODE);
@@ -45,6 +47,14 @@ uint8_t data;
 
 void setup()
 {
+  uart.begin(9600);
+  trace.begin(&uart, PSTR("CosaAnalyzerGPIO: started"));
+  trace << PSTR("CHAN0 - D13/LED [^]") << endl;
+  trace << PSTR("CHAN1 - D8 (out)") << endl;
+  trace << PSTR("CHAN2 - D9 (data)") << endl;
+  trace << PSTR("CHAN3 - D10 (clock)") << endl;
+  trace.flush();
+
   // Initial data
   data = rand(255);
 

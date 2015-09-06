@@ -23,21 +23,21 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/OutputPin.hh"
-#include "Cosa/Linkage.hh"
+#include "Cosa/Periodic.hh"
 #include "Cosa/Watchdog.hh"
 
 /**
  * Blinking LED; Use built-in LED or other digital pin for pulse.
  * Support simple application status indicator.
  */
-class LED : private Link {
+class LED : private Periodic {
 public:
   /**
    * Construct LED connected to the given pin.
    * @param[in] pin symbol (default built-in LED).
    */
-  LED(Board::DigitalPin pin = Board::LED) :
-    Link(),
+  LED(Job::Scheduler* scheduler, Board::DigitalPin pin = Board::LED) :
+    Periodic(scheduler, 512),
     m_pin(pin)
   {}
 
@@ -47,7 +47,7 @@ public:
   void on()
     __attribute__((always_inline))
   {
-    detach();
+    end();
     m_pin.on();
   }
 
@@ -57,7 +57,7 @@ public:
   void off()
     __attribute__((always_inline))
   {
-    detach();
+    end();
     m_pin.off();
   }
 
@@ -67,7 +67,9 @@ public:
   void normal_mode()
     __attribute__((always_inline))
   {
-    Watchdog::attach(this, 512);
+    period(512);
+    end();
+    begin();
   }
 
   /**
@@ -76,7 +78,9 @@ public:
   void alert_mode()
     __attribute__((always_inline))
   {
-    Watchdog::attach(this, 128);
+    period(128);
+    end();
+    begin();
   }
 
 private:
@@ -84,15 +88,11 @@ private:
   OutputPin m_pin;
 
   /**
-   * @override Event::Handler
-   * LED event handler; Toggle LED on timeout event.
-   * @param[in] type the type of event (timeout).
-   * @param[in] value the event value.
+   * @override Job
+   * The LED run virtual member function; Toggle LED on timeout event.
    */
-  virtual void on_event(uint8_t type, uint16_t value)
+  virtual void run()
   {
-    UNUSED(type);
-    UNUSED(value);
     m_pin.toggle();
   }
 };

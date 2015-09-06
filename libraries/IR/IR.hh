@@ -22,7 +22,7 @@
 #define COSA_IR_HH
 
 #include "Cosa/ExternalInterrupt.hh"
-#include "Cosa/Linkage.hh"
+#include "Cosa/Periodic.hh"
 #include "Cosa/IOStream.hh"
 
 /**
@@ -44,7 +44,7 @@
 class IR {
 public:
 
-  class Receiver : private ExternalInterrupt, private Link {
+  class Receiver : private ExternalInterrupt, public Job {
   public:
     /**
      * Mapping structure from code to key. Data structure
@@ -76,16 +76,18 @@ public:
      * @param[in] pin interrupt pin (Board::EXTn).
      * @param[in] max number of samples.
      * @param[in] threshold level for mapping to binary.
+     * @param[in] scheduler for timeout.
      * @param[in] keymap mapping table from code to key.
      * @param[in] keys number of members in keymap.
      * @param[in] sample vector for samples[max].
      */
     Receiver(Board::ExternalInterruptPin pin,
 	     uint8_t max, uint32_t threshold,
+	     Job::Scheduler* scheduler,
 	     keymap_P keymap = NULL, uint8_t keys = 0,
 	     uint16_t* sample = NULL) :
       ExternalInterrupt(pin, ExternalInterrupt::ON_FALLING_MODE),
-      Link(),
+      Job(scheduler),
       m_threshold(threshold),
       m_sample(sample),
       m_start(0),

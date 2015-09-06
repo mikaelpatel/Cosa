@@ -139,6 +139,11 @@ union univ32_t {
 };
 
 /**
+ * Round integer division.
+ */
+#define ROUND(x,y) (((x) + (y - 1)) / (y))
+
+/**
  * Compiler branch prediction hinting.
  */
 #define LIKELY(x) __builtin_expect((x), true)

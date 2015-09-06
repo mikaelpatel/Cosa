@@ -105,10 +105,15 @@ PCD8544 lcd(&port);
 #define sample NULL
 #endif
 
+// Use the watchdog job scheduler
+Watchdog::Scheduler scheduler;
+
 /**
  * IR receiver for LG AKB72913104, 36 samples, threshold (1000 + 1000/2).
  */
-IR::Receiver receiver(Board::EXT0, 36, 1500, LG_keymap, membersof(LG_keymap), sample);
+IR::Receiver receiver(Board::EXT0, 36, 1500, &scheduler,
+		      LG_keymap, membersof(LG_keymap),
+		      sample);
 
 void setup()
 {
@@ -134,8 +139,9 @@ void setup()
   // Use the real-time clock for time measurement
   RTC::begin();
 
-  // Use the watchdog for timeouts
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  // Use the watchdog
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
 
   // Reset the receiver to start up clean
   receiver.reset();

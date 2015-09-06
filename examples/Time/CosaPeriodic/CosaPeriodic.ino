@@ -1,5 +1,5 @@
 /**
- * @file CosaPeriodicBlock.ino
+ * @file CosaPeriodic.ino
  * @version 1.0
  *
  * @section License
@@ -16,53 +16,48 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Demo of Cosa Periodic Blocks.
+ * Demonstrate Periodic functions and verify scheduler time wrap.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
-#include "Cosa/Periodic.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/Event.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Periodic.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
+class LED : public Periodic, private OutputPin {
+public:
+  LED(Job::Scheduler* scheduler, uint16_t ms) :
+    Periodic(scheduler, ms),
+    OutputPin(Board::LED)
+  {}
+  virtual void run()
+  {
+    toggle();
+  }
+};
+
+const uint32_t START = 0xfffff000UL;
+Watchdog::Scheduler scheduler;
+LED led(&scheduler, 512);
 
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPeriodicBlock: started"));
-  RTC::begin();
+  trace.begin(&uart, PSTR("CosaPeriodic: started"));
+  trace.flush();
+
+  Watchdog::begin();
+  Watchdog::job(&scheduler);
+  Watchdog::millis(START);
+  led.begin();
 }
 
 void loop()
 {
-  static uint16_t nr = 0;
-  static uint16_t x = 0;
-  static uint16_t y = 0;
-  static uint16_t z = 0;
-
-  delay(10);
-  nr += 1;
-
-  periodic(t1, 100) {
-    x += 1;
-  }
-
-  periodic(t2, 1000) {
-    y += 1;
-  }
-
-  periodic(t3, 10000) {
-    z += 1;
-  }
-
-  periodic(t4, 5000) {
-    trace << RTC::millis()
-	  << ' ' << RTC::since(t4)
-	  << ' ' << nr
-	  << ' ' << x
-	  << ' ' << y
-	  << ' ' << z
-	  << endl;
-  }
+  Event::service();
+  trace << Watchdog::millis() << endl;
 }
-

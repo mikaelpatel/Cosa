@@ -21,51 +21,50 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Memory.h"
+#include "Cosa/Time.hh"
 #include "Cosa/Alarm.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
 class TraceAlarm : public Alarm {
 public:
-  TraceAlarm(uint8_t id, uint16_t period = 0L);
+  TraceAlarm(Job::Scheduler* scheduler, uint8_t id, uint16_t period = 0L);
   virtual void run();
 private:
   uint8_t m_id;
   uint16_t m_tick;
 };
 
-TraceAlarm::TraceAlarm(uint8_t id, uint16_t period) :
-  Alarm(period),
+TraceAlarm::TraceAlarm(Job::Scheduler* scheduler, uint8_t id, uint16_t period) :
+  Alarm(scheduler, period),
   m_id(id),
   m_tick(0)
 {}
 
-Alarm::Scheduler scheduler;
+RTC::Scheduler scheduler;
+Alarm::Scheduler alarms(&scheduler);
 
-TraceAlarm every_3rd_second(1, 3);
-TraceAlarm every_5th_second(2, 5);
-TraceAlarm every_15th_second(3, 15);
-TraceAlarm every_30th_second(4, 30);
+TraceAlarm alarm1(&alarms, 1, 3);
+TraceAlarm alarm2(&alarms, 2, 5);
+TraceAlarm alarm3(&alarms, 3, 15);
+TraceAlarm alarm4(&alarms, 4, 30);
 
 void
 TraceAlarm::run()
 {
-  trace << Watchdog::millis() << ':'
-	<< RTC::millis() << ':'
-	<< RTC::seconds() << ':'
-	<< time() << ':'
-	<< ++m_tick << ':'
-	<< every_3rd_second.expires_in() << ':'
-	<< every_5th_second.expires_in() << ':'
-	<< every_15th_second.expires_in() << ':'
-	<< every_30th_second.expires_in() << ':'
-	<< PSTR("alarm:id=") << m_id
+  uint32_t now = RTC::seconds();
+  uint32_t expires = expire_at();
+  int32_t diff = expires - now;
+  trace << time_t(now) << ':' << expires
+	<< (diff < 0 ? PSTR(":T") : PSTR(":T+")) << diff
+    	<< PSTR(":alarm:id=") << m_id
+	<< PSTR(",period=") << period()
+	<< PSTR(",tick=") << ++m_tick
 	<< endl;
-
 }
 
 void setup()
@@ -76,41 +75,30 @@ void setup()
 
   // Print some memory statistics
   TRACE(free_memory());
-  TRACE(sizeof(Alarm::Scheduler));
+  TRACE(sizeof(Event::Handler));
+  TRACE(sizeof(Link));
+  TRACE(sizeof(Job));
+  TRACE(sizeof(Periodic));
   TRACE(sizeof(Alarm));
   TRACE(sizeof(TraceAlarm));
+  TRACE(sizeof(Job::Scheduler));
+  TRACE(sizeof(Alarm::Scheduler));
 
   // Start the watchdog, real-time clock and the alarm scheduler
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  Watchdog::begin();
   RTC::begin();
-  scheduler.begin();
+  RTC::job(&scheduler);
+  alarms.begin();
 
-  // Set time to just before wrap
-  RTC::time(-15);
-
-  // Match time in Alarm
-  Alarm::set_time(RTC::time());
-
-  // Set next alarms
-  every_3rd_second.next_alarm(3);
-  every_5th_second.next_alarm(5);
-  every_15th_second.next_alarm(15);
-  every_30th_second.next_alarm(30);
-
-  // Enable the alarm handlers
-  every_30th_second.enable();
-  every_15th_second.enable();
-  every_5th_second.enable();
-  every_3rd_second.enable();
-
-  // Format
-  trace << PSTR("wtd-millis:rtc-millis:rtc-seconds:alarm:tick:3rd-in:5th-in:15th-in:30th-in") << endl;
+  // Start the alarm handlers
+  alarm1.begin();
+  alarm2.begin();
+  alarm3.begin();
+  alarm4.begin();
 }
 
 void loop()
 {
   // The standard event dispatcher
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
+  Event::service();
 }
