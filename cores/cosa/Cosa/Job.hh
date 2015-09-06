@@ -126,6 +126,16 @@ public:
   }
 
   /**
+   * Get current scheduler time.
+   * @return time.
+   */
+  uint32_t time() const
+  {
+    if (m_scheduler != NULL) return (m_scheduler->time());
+    return (0UL);
+  }
+
+  /**
    * Return true(1) if the job is queued otherwise false(0).
    * @return bool.
    */
@@ -172,7 +182,7 @@ public:
    * @override Event::Handler
    * Default job event handler; execute the run() virtual member
    * function on timeout event. Event is pushed by on_expired().
-   * @param[in] type the type of event (Typicaly TIMEOUT_TYPE).
+   * @param[in] type the type of event (Typically TIMEOUT_TYPE).
    * @param[in] value the event value.
    */
   virtual void on_event(uint8_t type, uint16_t value)
@@ -184,7 +194,8 @@ public:
 
   /**
    * @override Job
-   * The job run virtual member function; sub-class should define.
+   * The job run() virtual member function; sub-class should define.
+   * Called by the scheduler (via event handler) when the time expires.
    */
   virtual void run() {}
 

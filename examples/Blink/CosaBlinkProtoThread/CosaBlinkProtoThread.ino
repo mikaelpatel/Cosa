@@ -30,12 +30,10 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 
-Watchdog::Scheduler scheduler;
-
 class LED : public ProtoThread {
 public:
-  LED(Board::DigitalPin pin, uint16_t ms) :
-    ProtoThread(&scheduler),
+  LED(Board::DigitalPin pin, Job::Scheduler* scheduler, uint16_t ms) :
+    ProtoThread(scheduler),
     m_pin(pin),
     m_delay(ms)
   {}
@@ -57,7 +55,8 @@ private:
   uint16_t m_delay;
 };
 
-LED builtin(Board::LED, 512);
+Watchdog::Scheduler scheduler;
+LED builtin(Board::LED, &scheduler, 512);
 
 void setup()
 {

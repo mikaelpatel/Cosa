@@ -26,51 +26,57 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-Watchdog::Scheduler scheduler;
-
 class Work : public Job {
 public:
-  Work(Job::Scheduler* scheduler, uint32_t delay, Work* chain);
-  virtual void run();
+  Work(Job::Scheduler* scheduler, uint32_t delay, Work* chain) :
+    Job(scheduler),
+    m_delay(delay),
+    m_chain(chain),
+    m_cycle(0)
+  {
+    expire_at(delay);
+  }
+
+  virtual void run()
+  {
+    uint32_t now = time();
+    uint32_t expire = expire_at();
+    int32_t diff = expire - now;
+    m_chain->expire_after(m_delay);
+    m_chain->start();
+    trace << now << ':' << expire
+	  << (diff < 0 ? PSTR(":T") : PSTR(":T+")) << diff
+	  << PSTR(":work=") << (void*) this
+	  << PSTR(",delay=") << m_delay
+	  << PSTR(",cycle=") << ++m_cycle
+	  << endl;
+  }
+
 private:
   uint32_t m_delay;
   Work* m_chain;
   uint16_t m_cycle;
 };
 
-Work::Work(Job::Scheduler* scheduler, uint32_t delay, Work* work) :
-  Job(scheduler),
-  m_delay(delay),
-  m_chain(work),
-  m_cycle(0)
-{
-  expire_at(delay);
-}
+// Use the watchdog scheduler (milli-seconds)
+Watchdog::Scheduler scheduler;
 
-void
-Work::run()
-{
-  uint32_t now = Watchdog::millis();
-  uint32_t expire = expire_at();
-  int32_t diff = expire - now;
-  m_chain->expire_after(m_delay);
-  m_chain->start();
-  trace << now << ':' << expire
-	<< (diff < 0 ? PSTR(":T") : PSTR(":T+")) << diff
-	<< PSTR(":work=") << (void*) this
-	<< PSTR(",delay=") << m_delay
-	<< PSTR(",cycle=") << ++m_cycle
-	<< endl;
-}
-
+// Forward declare for cyclic reference
+extern Work w0;
 extern Work w1;
 extern Work w2;
 extern Work w3;
 extern Work w4;
 
+// Chain
+// (w0)->64->(w1)-128ms->(w2)-2048ms->(w3)-16ms->(w0)
+Work w0(&scheduler, 64, &w1);
 Work w1(&scheduler, 128, &w2);
 Work w2(&scheduler, 2048, &w3);
-Work w3(&scheduler, 16, &w1);
+Work w3(&scheduler, 16, &w0);
+
+// Periodic
+// (w4)-4096->(w4)
 Work w4(&scheduler, 4096, &w4);
 
 void setup()
@@ -79,10 +85,12 @@ void setup()
   trace.begin(&uart, PSTR("CosaWatchdogJob: started"));
   trace.flush();
 
+  // Start the watchdog clock and scheduler
   Watchdog::begin();
   Watchdog::job(&scheduler);
   Watchdog::millis(0UL);
 
+  // Start the work
   w1.start();
   w4.start();
 }

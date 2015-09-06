@@ -24,15 +24,20 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-//#include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+// Configuration
+// #define USE_RTC
+#define USE_WATCHDOG
 
-#if defined(COSA_RTC_HH)
+#if defined(USE_RTC)
+#include "Cosa/RTC.hh"
 #define TIMER RTC
+#define NAME "RTC"
 #endif
 
-#if defined(COSA_WATCHDOG_HH)
+#if defined(USE_WATCHDOG)
+#include "Cosa/Watchdog.hh"
 #define TIMER Watchdog
+#define NAME "Watchdog"
 #endif
 
 // Start time; 16 ms aligned for watchdog
@@ -44,7 +49,8 @@ static const uint32_t PERIOD = 640UL;
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaDelay: started"));
+  trace.begin(&uart, PSTR("Cosa" NAME "Delay: started"));
+  trace.flush();
 
   // Start time and period in milli-seconds
   TRACE(START);
@@ -57,10 +63,11 @@ void setup()
 
 void loop()
 {
-  static uint16_t i = 0;
-  trace << TIMER::millis()
+  static uint16_t cycle = 0;
+  uint32_t now = TIMER::millis();
+  trace << now
 	<< ':' << TIMER::since(START)
-	<< ':' << i++
+	<< ':' << cycle++
 	<< endl;
-  delay(PERIOD);
+  delay(PERIOD - TIMER::since(now));
 }

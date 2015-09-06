@@ -34,9 +34,6 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Use the Watchdog job scheduler
-Watchdog::Scheduler scheduler;
-
 /**
  * The state machine: Blink RGB LED with six color states
  * @dot
@@ -53,11 +50,12 @@ Watchdog::Scheduler scheduler;
 class BlinkRGB : public FSM {
 public:
   // Construct the state machine for the RGB led sequencing
-  BlinkRGB(uint16_t period = 512,
+  BlinkRGB(Job::Scheduler* scheduler,
+	   uint16_t period = 512,
 	   Board::DigitalPin redLedPinNr = Board::D5,
 	   Board::DigitalPin greenLedPinNr = Board::D6,
 	   Board::DigitalPin blueLedPinNr = Board::D7) :
-    FSM(redState, &scheduler, period),
+    FSM(redState, scheduler, period),
     redLedPin(redLedPinNr, 1),
     greenLedPin(greenLedPinNr),
     blueLedPin(blueLedPinNr, 1)
@@ -144,14 +142,18 @@ private:
   OutputPin blueLedPin;
 };
 
+// Use the Watchdog job scheduler
+Watchdog::Scheduler scheduler;
+
 // The state machines for two RGB leds
-BlinkRGB led1(1024, Board::D5, Board::D6, Board::D7);
-BlinkRGB led2(512, Board::D8, Board::D9, Board::D10);
+BlinkRGB led1(&scheduler, 1024, Board::D5, Board::D6, Board::D7);
+BlinkRGB led2(&scheduler, 512, Board::D8, Board::D9, Board::D10);
 
 void setup()
 {
   uart.begin(57600);
   trace.begin(&uart, PSTR("CosaFSM: started"));
+  trace.flush();
 
   // Start the watchdog and set the scheduler
   Watchdog::begin();
@@ -164,13 +166,20 @@ void setup()
 
 void loop()
 {
+  // Wait for events
   Event event;
   Event::queue.await(&event);
+
+  // Print the event target and current state
   BlinkRGB* led = (BlinkRGB*) event.get_target();
-  trace << led << PSTR(":event=") << event.get_type()
+  trace << Watchdog::millis()
+	<< PSTR(":FSM@") << led
 	<< PSTR(",state=(") << led->get_state_str_P();
+
+  // Dispatch the event and state transition
   event.dispatch();
-  trace << PSTR(")=>(") << led->get_state_str_P() << PSTR(")")
-	<< endl;
+
+  // Print the new state
+  trace << PSTR(")=>(") << led->get_state_str_P() << PSTR(")") << endl;
 }
 

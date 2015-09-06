@@ -41,39 +41,32 @@ class Work : public Job, private OutputPin {
 public:
   Work(Job::Scheduler* scheduler,
        Board::DigitalPin pin, uint32_t delay,
-       Work* chain);
-  virtual void run();
+       Work* chain) :
+    Job(scheduler),
+    OutputPin(pin),
+    m_delay(delay),
+    m_chain(chain)
+  {
+    expire_at(delay);
+  }
+
+  virtual void run()
+  {
+    toggle();
+    m_chain->expire_after(m_delay);
+    m_chain->start();
+    toggle();
+  }
+
 private:
   uint32_t m_delay;
   Work* m_chain;
-  uint16_t m_cycle;
 };
-
-Work::Work(Job::Scheduler* scheduler,
-	   Board::DigitalPin pin, uint32_t delay,
-	   Work* work) :
-  Job(scheduler),
-  OutputPin(pin),
-  m_delay(delay),
-  m_chain(work),
-  m_cycle(0)
-{
-  expire_at(delay);
-}
-
-void
-Work::run()
-{
-  toggle();
-  m_chain->expire_after(m_delay);
-  m_chain->start();
-  toggle();
-}
 
 // Use the real-time clock scheduler (micro-seconds)
 RTC::Scheduler scheduler;
 
-// Forware declare for cyclic reference
+// Forward declare for cyclic reference
 extern Work w0;
 extern Work w1;
 extern Work w2;
@@ -93,6 +86,7 @@ Work w4(&scheduler, Board::LED, 200000UL, &w4);
 
 void setup()
 {
+  // Print short info about the logic analyser probe channels
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalyzerJob: started"));
   trace << PSTR("CHAN0 - D13/LED [^]") << endl;

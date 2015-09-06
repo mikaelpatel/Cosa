@@ -47,6 +47,7 @@ uint8_t data;
 
 void setup()
 {
+  // Print short info about the logic analyser probe channels
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalyzerGPIO: started"));
   trace << PSTR("CHAN0 - D13/LED [^]") << endl;

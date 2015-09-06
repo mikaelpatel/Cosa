@@ -43,7 +43,7 @@ public:
   }
 
   /**
-   * Get Watchdog clock in milli-seconds.
+   * Get watchdog clock in milli-seconds.
    * @return ms.
    */
   static uint32_t millis()
@@ -55,9 +55,8 @@ public:
   }
 
   /**
-   * Set Watchdog clock in millis-seconds.
+   * Set watchdog clock in millis-seconds.
    * @param[in] ms.
-   * @note atomic
    */
   static void millis(uint32_t ms)
   {
@@ -74,10 +73,10 @@ public:
   }
 
   /**
-   * Start watchdog with given period (milli-seconds) and sleep mode.
-   * The given timeout period is mapped to 16 milli-seconds and double
-   * periods (32, 64, 128, etc to approx 8 seconds).
-   * @param[in] ms timeout period in milli-seconds.
+   * Start watchdog with given period (milli-seconds). The given
+   * timeout period is mapped to 16 milli-seconds and double periods
+   * (32, 64, 128, etc to approx 8 seconds).
+   * @param[in] ms timeout period in milli-seconds (default 16 ms).
    */
   static void begin(uint16_t ms = 16);
 
@@ -99,7 +98,7 @@ public:
   /**
    * Returns number of milli-seconds from given start.
    * @param[in] start
-   * @return ms.
+   * @return milli-seconds.
    */
   static uint32_t since(uint32_t start)
     __attribute__((always_inline))
@@ -119,6 +118,7 @@ public:
 
   /**
    * Push timeout events to the given event handler.
+   * @param[in] handler for the timeout events.
    */
   static void push_timeout_events(Event::Handler* handler)
   {
@@ -126,7 +126,7 @@ public:
   }
 
   /**
-   * Watchdog Scheduler for jobs with a delay of 16 ms or longer.
+   * Watchdog Scheduler for jobs with milli-seconds level time base.
    */
   class Scheduler : public Job::Scheduler {
   public:
@@ -136,7 +136,7 @@ public:
      */
     virtual uint32_t time()
     {
-      return (millis());
+      return (Watchdog::millis());
     }
   };
 

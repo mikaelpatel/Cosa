@@ -27,9 +27,9 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // Types to test
-// #define UINT_T uint8_t
+#define UINT_T uint8_t
 // #define UINT_T uint16_t
-#define UINT_T uint32_t
+// #define UINT_T uint32_t
 
 // Delay periods to test
 // static const uint16_t US = 50;

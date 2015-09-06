@@ -29,33 +29,41 @@
 #include "Cosa/Periodic.hh"
 #include "Cosa/OutputPin.hh"
 
-// Use watchdog job scheduler for periodic functions
-Watchdog::Scheduler scheduler;
-
 // Blinking LED output pin
 class LED : public Periodic, private OutputPin {
 public:
-  LED(Board::DigitalPin pin, uint16_t ms, uint8_t initial = 0) :
-    Periodic(&scheduler, ms), OutputPin(pin, initial)
+  LED(Board::DigitalPin pin,
+      Job::Scheduler* scheduler, uint16_t ms,
+      uint8_t initial = 0) :
+    Periodic(scheduler, ms),
+    OutputPin(pin, initial)
   {}
-  virtual void run() { toggle(); }
+
+  virtual void run()
+  {
+    toggle();
+  }
 };
+
+// Use watchdog job scheduler for periodic functions
+Watchdog::Scheduler scheduler;
 
 // RGB LED connected to Arduino pins
 #if defined(BOARD_ATTINY)
-LED redLedPin(Board::D1, 512);
-LED greenLedPin(Board::D2, 1024, 1);
-LED blueLedPin(Board::D3, 1024);
+LED redLedPin(Board::D1, &scheduler, 512);
+LED greenLedPin(Board::D2, &scheduler, 1024, 1);
+LED blueLedPin(Board::D3, &scheduler, 1024);
 #else
-LED redLedPin(Board::D5, 512);
-LED greenLedPin(Board::D6, 1024, 1);
-LED blueLedPin(Board::D7, 1024);
+LED redLedPin(Board::D5, &scheduler, 512);
+LED greenLedPin(Board::D6, &scheduler, 1024, 1);
+LED blueLedPin(Board::D7, &scheduler, 1024);
 #endif
 
 void setup()
 {
-  // Start the watchdog ticks
+  // Start the watchdog ticks and job scheduler
   Watchdog::begin();
+  Watchdog::job(&scheduler);
 
   // Start the periodic functions
   redLedPin.begin();
