@@ -26,6 +26,8 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+Nucleo::Semaphore io(1);
+
 class Echo : public Nucleo::Thread {
 private:
   str_P m_name;
@@ -49,14 +51,14 @@ public:
 void
 Echo::fn0(uint16_t& nr)
 {
-  INFO("nr=%d", nr);
+  mutex(io) INFO("nr=%d", nr);
   fn1(nr);
 }
 
 void
 Echo::fn1(uint16_t& nr)
 {
-  INFO("nr=%d", nr);
+  mutex(io) INFO("nr=%d", nr);
   fn2(nr);
 }
 
@@ -65,7 +67,7 @@ Echo::fn2(uint16_t& nr)
 {
   yield();
   nr += 1;
-  INFO("nr=%d", nr);
+  mutex(io) INFO("nr=%d", nr);
 }
 
 void
@@ -80,9 +82,11 @@ Echo::run()
 {
   uint16_t nr = 0;
   while (1) {
-    trace << Watchdog::millis() << PSTR(":Echo:")
-	  << m_name << ':' << nr
-	  << endl;
+    mutex(io) {
+      trace << Watchdog::millis() << PSTR(":Echo:")
+	    << m_name << ':' << nr
+	    << endl;
+    }
     delay(m_ms);
     fn0(nr);
   }
@@ -104,16 +108,16 @@ void setup()
   TRACE(sizeof(Nucleo::Thread));
   TRACE(sizeof(Echo));
 
-  // Initiate the two threads (stack size 128)
-  foo.begin_P(PSTR("foo"), 128);
-  fie.begin_P(PSTR("fie"), 128);
+  // Initiate the two threads (stack size 256)
+  foo.begin_P(PSTR("foo"), 256);
+  fie.begin_P(PSTR("fie"), 256);
+
+  // Start the main thread
+  Nucleo::Thread::begin();
 }
 
 void loop()
 {
-  // Run the threads; start the main thread
-  Nucleo::Thread::begin();
-
-  // Sanity check; should never come here
-  ASSERT(true == false);
+ // Service the nucleos
+  Nucleo::Thread::service();
 }

@@ -31,43 +31,38 @@ Nucleo::Semaphore sem(0);
 
 class Thread1 : public Nucleo::Thread {
 public:
-  virtual void run();
+  virtual void run()
+  {
+    uint8_t nr = 0;
+    while (1) {
+      trace << Watchdog::millis() << PSTR(":Thread1:") << nr << endl;
+      if (nr == 10) sem.signal();
+      if (nr == 15) sem.signal();
+      if (nr == 20) sem.wait();
+      if (nr == 40) sem.wait();
+      nr += 1;
+      delay(1000);
+    }
+  }
 };
 
 class Thread2 : public Nucleo::Thread {
 public:
-  virtual void run();
+  virtual void run()
+  {
+    uint8_t nr = 0;
+    sem.wait(2);
+    while (1) {
+      trace << Watchdog::millis() << PSTR(":Thread2:") << nr << endl;
+      if (nr == 20) sem.signal();
+      if (nr == 40) sem.wait();
+      nr += 1;
+      delay(1000);
+    }
+  }
 };
 
-void
-Thread1::run()
-{
-  uint8_t nr = 0;
-  while (1) {
-    trace << Watchdog::millis() << PSTR(":Thread1:") << nr << endl;
-    if (nr == 10) sem.signal();
-    if (nr == 15) sem.signal();
-    if (nr == 20) sem.wait();
-    if (nr == 40) sem.wait();
-    nr += 1;
-    delay(1000);
-  }
-}
-
-void
-Thread2::run()
-{
-  uint8_t nr = 0;
-  sem.wait(2);
-  while (1) {
-    trace << Watchdog::millis() << PSTR(":Thread2:") << nr << endl;
-    if (nr == 20) sem.signal();
-    if (nr == 40) sem.wait();
-    nr += 1;
-    delay(1000);
-  }
-}
-
+// The threads
 Thread1 foo;
 Thread2 fie;
 
@@ -86,13 +81,13 @@ void setup()
   // Initiate the two threads (stack size 128)
   Nucleo::Thread::begin(&foo, 128);
   Nucleo::Thread::begin(&fie, 128);
+
+  // Start the main thread
+  Nucleo::Thread::begin();
 }
 
 void loop()
 {
-  // Run the threads; start the main thread
-  Nucleo::Thread::begin();
-
-  // Sanity check; should never come here
-  ASSERT(true == false);
+  // Service the nucleos
+  Nucleo::Thread::service();
 }

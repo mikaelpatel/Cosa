@@ -26,33 +26,40 @@
 namespace Nucleo {
 
 /**
- * The Cosa Nucleo Mutex; mutual exclusion block. Used as a local variable
- * in a function block to wait and signal a semaphore.
+ * The Cosa Nucleo Mutex; mutual exclusion block. Used as a local
+ * variable in a block to wait and signal a semaphore to achive mutual
+ * exclusive execution of the block.
  */
 class Mutex {
 public:
   /**
-   * Start mutual exclusion block using given semaphore. The semaphore should
-   * be initiated with one (which is also the default value).
+   * Start mutual exclusion block using given semaphore. The semaphore
+   * should  be initiated with one (which is also the default value).
    * @param[in] sem semaphore to wait.
    */
-  Mutex(Semaphore* sem) :
-    m_sem(sem)
-  {
-    m_sem->wait();
-  }
+  Mutex(Semaphore& sem) : m_sem(sem) { m_sem.wait(); }
 
   /**
    * End of mutual exclusion block. Will signal semaphore.
    */
-  ~Mutex()
-  {
-    m_sem->signal();
-  }
+  ~Mutex() { m_sem.signal(); }
 
 private:
-  Semaphore* m_sem;
+  Semaphore& m_sem;
 };
 
 };
+
+/**
+ * Syntactic sugar for mutual exclusive block. Used in the form:
+ * @code
+ * Nucleo::Semaphore s(1);
+ * ...
+ * mutex(s) {
+ *   ...
+ * }
+ * @endcode
+ */
+#define mutex(s) for (uint8_t i = (s.wait(), 1); i != 0; i--, s.signal())
+
 #endif

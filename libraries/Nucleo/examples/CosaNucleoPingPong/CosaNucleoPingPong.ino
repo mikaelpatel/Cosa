@@ -16,7 +16,9 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Demonstration of Cosa Nucleo Threads and Semaphores;
+ * Demonstration of Cosa Nucleo Threads and Semaphores; 1) control
+ * signalling between threads, 2) mutual exclusive access to resource
+ * (trace output stream).
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -28,39 +30,56 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+uint32_t start = 0UL;
+
 Nucleo::Semaphore sem(0);
+Nucleo::Semaphore io(1);
 
 class Ping : public Nucleo::Thread {
 public:
-  virtual void run();
+  virtual void run()
+  {
+    uint16_t cycle = 0;
+    mutex(io) {
+      trace << PSTR("Ping: started") << endl;
+    }
+    while (1) {
+      start = RTC::micros();
+      sem.signal();
+      mutex(io) {
+	trace << Watchdog::millis()
+	      << PSTR(":Ping")
+	      << PSTR(",cycle=") << cycle++
+	      << endl;
+      }
+      delay(1000);
+    }
+  }
 };
 
 class Pong : public Nucleo::Thread {
 public:
-  virtual void run();
+  virtual void run()
+  {
+    uint16_t cycle = 0;
+    mutex(io) {
+      trace << PSTR("Pong: started") << endl;
+    }
+    while (1) {
+      sem.wait();
+      uint32_t us = RTC::micros() - start;
+      mutex(io) {
+	trace << Watchdog::millis()
+	      << PSTR(":Pong")
+	      << PSTR(",cycle=") << cycle++
+	      << PSTR(",us=") << us
+	      << endl;
+      }
+    }
+  }
 };
 
-void
-Ping::run()
-{
-  trace << PSTR("Ping: started") << endl;
-  while (1) {
-    sem.signal();
-    trace << Watchdog::millis() << PSTR(":Ping") << endl;
-    delay(1000);
-  }
-}
-
-void
-Pong::run()
-{
-  trace << PSTR("Pong: started") << endl;
-  while (1) {
-    sem.wait();
-    trace << Watchdog::millis() << PSTR(":Pong") << endl;
-  }
-}
-
+// The threads
 Ping ping;
 Pong pong;
 
@@ -69,24 +88,27 @@ void setup()
   // Setup trace output stream and start watchdog timer
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaNucleoPingPong: started"));
+  trace.flush();
   Watchdog::begin();
   RTC::begin();
 
   // Some information about memory foot print
   TRACE(sizeof(jmp_buf));
   TRACE(sizeof(Nucleo::Thread));
+  TRACE(sizeof(Ping));
+  TRACE(sizeof(Pong));
   TRACE(sizeof(Nucleo::Semaphore));
 
   // Initiate the two threads (stack size 128)
-  Nucleo::Thread::begin(&ping, 128);
   Nucleo::Thread::begin(&pong, 128);
+  Nucleo::Thread::begin(&ping, 128);
+
+  // Start the main thread
+  Nucleo::Thread::begin();
 }
 
 void loop()
 {
-  // Run the threads; start the main thread
-  Nucleo::Thread::begin();
-
-  // Sanity check; should never come here
-  ASSERT(true == false);
+  // Service the nucleos
+  Nucleo::Thread::service();
 }

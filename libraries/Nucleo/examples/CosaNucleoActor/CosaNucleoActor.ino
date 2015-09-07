@@ -95,10 +95,13 @@ void setup()
   Nucleo::Thread::begin(&producer1, 128);
   Nucleo::Thread::begin(&producer2, 128);
   Nucleo::Thread::begin(&consumer, 128);
+
+  // Start the main thread
+  Nucleo::Thread::begin();
 }
 
 void loop()
 {
-  // Run actors
-  Nucleo::Thread::begin();
+  // Service the nucleos
+  Nucleo::Thread::service();
 }

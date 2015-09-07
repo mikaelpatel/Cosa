@@ -38,37 +38,33 @@ private:
   uint16_t m_ms;
 public:
   Counter(uint8_t id, uint16_t ms) : m_id(id), m_ms(ms) {}
-  virtual void run();
-};
+  virtual void run()
+  {
+    while (1) {
+      uint8_t x1 = c1;
 
-void
-Counter::run()
-{
-  while (1) {
-    uint8_t x1 = c1;
+      // Mutual exclusive update of c2
+      mutex(sem) {
+	uint8_t x2 = c2;
+	delay(m_ms);
+	c2 = x2 + 1;
+      }
 
-    // Mutual exclusive update of c2
-    {
-      Nucleo::Mutex mutex(&sem);
-      uint8_t x2 = c2;
+      // Update c1 with value that actually might have changed
+      c1 = x1 + 1;
       delay(m_ms);
-      c2 = x2 + 1;
-    }
 
-    // Update c1 with value that actually might have changed
-    c1 = x1 + 1;
-    delay(m_ms);
-
-    // Mutual exclusive trace the values
-    {
-      Nucleo::Mutex mutex(&sem);
-      trace << PSTR("id = ") << m_id
-	    << PSTR(", c1 = ") << c1
-	    << PSTR(", c2 = ") << c2
-	    << endl;
+      // Mutual exclusive trace the values
+      {
+	Nucleo::Mutex m(sem);
+	trace << PSTR("id = ") << m_id
+	      << PSTR(", c1 = ") << c1
+	      << PSTR(", c2 = ") << c2
+	      << endl;
+      }
     }
   }
-}
+};
 
 // Two counters with different delays to achieve interleaving
 Counter count1(1, 1000);
@@ -79,24 +75,27 @@ void setup()
   // Setup trace output stream and start watchdog timer
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaNucleoMutex: started"));
+  trace.flush();
   Watchdog::begin();
 
   // Some information about memory foot print
   TRACE(sizeof(jmp_buf));
   TRACE(sizeof(Nucleo::Thread));
+  TRACE(sizeof(Counter));
   TRACE(sizeof(Nucleo::Semaphore));
   TRACE(sizeof(Nucleo::Mutex));
 
   // Initiate the two threads (stack size 128)
   Nucleo::Thread::begin(&count1, 128);
   Nucleo::Thread::begin(&count2, 128);
+
+  // Start the main thread
+  Nucleo::Thread::begin();
 }
 
 void loop()
 {
-  // Run the threads; start the main thread
-  Nucleo::Thread::begin();
-
-  // Sanity check; should never come here
-  ASSERT(true == false);
+  // Run the kernel
+  Nucleo::Thread::service();
 }
+

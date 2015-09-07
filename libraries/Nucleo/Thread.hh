@@ -30,7 +30,7 @@ namespace Nucleo {
 /**
  * The Cosa Nucleo Thread; run-to-completion multi-tasking.
  */
-class Thread : protected Link {
+class Thread : public Link {
 public:
   /**
    * Return running thread.
@@ -43,7 +43,7 @@ public:
 
   /**
    * Schedule static thread with given stack size. Using the default
-   * parameters will start the thread dispatcher.
+   * parameters will start the main thread.
    * @param[in] thread to initiate and schedule.
    * @param[in] size of stack.
    */
@@ -56,42 +56,59 @@ public:
    * end-less loop. Returning from the function will result in that
    * the function is called again. The default implementation is the
    * main thread. It is responsible for power down when there are no
-   * other active threads.
+   * other active threads. Other threads must override this member
+   * function.
    */
   virtual void run();
 
   /**
    * Yield control to the given thread. Preserve stack and machine
-   * state and later continue after this function.
-   * @param[in] t thread to resume.
+   * state and later continue.
+   * @param[in] thread to resume.
    */
   void resume(Thread* thread);
 
   /**
    * Yield control to the next thread in the thread queue. Preserve
-   * stack and machine state and later continue after this function.
+   * stack and machine state and later continue.
    */
   void yield()
     __attribute__((always_inline))
   {
-    resume((Thread*) get_succ());
+    Thread* thread = (Thread*) get_succ();
+    if (thread == this) thread = &s_main;
+    resume(thread);
   }
 
   /**
    * Delay at least the given time period in milli-seconds. The resolution
-   * is determined by the Watchdog clock and has a minimum resolution of
-   * 16 milli-seconds (per tick). The actual delay also depends on how
-   * other threads yield control to other threads.
-   * @param[in] ms minimum delay time period.
+   * is determined by the Watchdog clock and has a resolution of 16
+   * milli-seconds (per tick). The actual delay also depends on how
+   * other threads yield.
+   * @param[in] ms minimum delay time period in milli-seconds.
    */
   void delay(uint32_t ms);
 
   /**
-   * Wait for a given bit to be set in the variable.
-   * @param[in] ptr pointer to variable (uint8_t).
-   * @param[in] bit position that should be set (default bit zero).
+   * Enqueue running thread to given queue and yield.
+   * @param[in] queue to transfer to.
+   * @param[in] thread to resume (Default yield).
    */
-  void await(volatile uint8_t* ptr, uint8_t bit = 0);
+  void enqueue(Head* queue, Thread* thread = NULL);
+
+  /**
+   * If given queue is not empty dequeue first thread and resume
+   * direct if flag is true otherwise enqueue first in run queue.
+   * @param[in] queue to transfer from.
+   * @param[in] flag resume direct otherwise on yield (Default true).
+   */
+  void dequeue(Head* queue, bool flag = true);
+
+  /**
+   * Service the nucleos main thread. Should be called in the
+   * loop() function.
+   */
+  static void service();
 
 protected:
   /** Size of main thread stack. */
@@ -116,25 +133,11 @@ protected:
   uint32_t m_expires;
 
   /**
-   * Initiate thread with initial call to member function run().
-   * Stack frame is allocated by begin().
+   * Initiate thread and prepare for initial call to virtual member
+   * function run(). Stack frame is allocated by begin().
    * @param[in] stack top pointer.
    */
   void init(void* stack);
-
-  /**
-   * Enqueue running thread to given queue and yield.
-   * @param[in] queue to transfer to.
-   */
-  void enqueue(Head* queue);
-
-  /**
-   * If given queue is not empty dequeue first thread and resume
-   * direct if flag is true otherwise on yield.
-   * @param[in] queue to transfer from.
-   * @param[in] flag resume direct otherwise on yield (Default true).
-   */
-  void dequeue(Head* queue, bool flag = true);
 
   /** Allow friends to use the queue member functions. */
   friend class Semaphore;

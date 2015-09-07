@@ -65,7 +65,6 @@ Thread::begin(Thread* thread, size_t size)
     ::delay = thread_delay;
     ::sleep = thread_sleep;
     ::yield = thread_yield;
-    s_main.run();
   }
 }
 
@@ -73,20 +72,18 @@ void
 Thread::run()
 {
   Thread* thread;
-  while (1) {
-    if (!s_delayed.is_empty()) {
-      uint32_t now = Watchdog::millis();
-      while ((thread = (Thread*) s_delayed.get_succ()) != (Thread*) &s_delayed) {
-	if (thread->m_expires > now) break;
-	this->attach(thread);
-      }
+  if (!s_delayed.is_empty()) {
+    uint32_t now = Watchdog::millis();
+    while ((thread = (Thread*) s_delayed.get_succ()) != (Thread*) &s_delayed) {
+      if (thread->m_expires > now) break;
+      this->attach(thread);
     }
-    thread = (Thread*) get_succ();
-    if (thread != this)
-      resume(thread);
-    else
-      Power::sleep();
   }
+  thread = (Thread*) get_succ();
+  if (thread != this)
+    resume(thread);
+  else
+    Power::sleep();
 }
 
 void
@@ -98,9 +95,10 @@ Thread::resume(Thread* thread)
 }
 
 void
-Thread::enqueue(Head* queue)
+Thread::enqueue(Head* queue, Thread* thread)
 {
-  Thread* thread = (Thread*) get_succ();
+  if (thread == NULL)
+    thread = (Thread*) get_succ();
   queue->attach(this);
   resume(thread);
 }
@@ -132,9 +130,7 @@ Thread::delay(uint32_t ms)
 }
 
 void
-Thread::await(volatile uint8_t* ptr, uint8_t bit)
+Thread::service()
 {
-  while ((*ptr & _BV(bit)) == 0) yield();
+  s_main.run();
 }
-
-

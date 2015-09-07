@@ -36,50 +36,47 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 Nucleo::Semaphore sem(0);
+uint16_t count = 0;
 
 class Producer : public Nucleo::Thread {
 public:
-  virtual void run();
-};
-
-void
-Producer::run()
-{
-  trace << PSTR("Thread::Producer: started") << endl;
-
-  while (1) {
-    // Measure 1,000 yield will give 2,000 context switches
-    // as the main (background) thread will be run
-    MEASURE("thread yield: ", 1000) {
-      yield();
+  virtual void run()
+  {
+    trace << PSTR("Thread::Producer: started") << endl;
+    while (1) {
+      // Measure 1,000 resume to the current thread
+      MEASURE("thread resume: ", 1000) {
+	resume(this);
+      }
+      // Measure 1,000 yield will give 2,000 context switches
+      // as the main (background) thread will be run
+      MEASURE("thread yield: ", 1000) {
+	yield();
+      }
+      // Measure 1,000 signal-wait pairs
+      MEASURE("semaphore signal-wait: ", 1000) {
+	sem.signal();
+      }
+      TRACE(count);
+      // Stop the benchmark run
+      ASSERT(true == false);
     }
-
-    // Measure 1,000 resume to the current thread
-    MEASURE("thread resume: ", 1000) {
-      resume(this);
-    }
-
-    // Measure 1,000 signal-wait pairs
-    MEASURE("semaphore signal-wait: ", 1000) {
-      sem.signal();
-    }
-
-    ASSERT(true == false);
   }
-}
+};
 
 class Consumer : public Nucleo::Thread {
 public:
-  virtual void run();
+  virtual void run()
+  {
+    trace << PSTR("Thread::Consumer: started") << endl;
+    while (1) {
+      sem.wait();
+      count++;
+    }
+  }
 };
 
-void
-Consumer::run()
-{
-  trace << PSTR("Thread::Consumer: started") << endl;
-  while (1) sem.wait();
-}
-
+// The threads
 Producer producer;
 Consumer consumer;
 
@@ -87,9 +84,20 @@ void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaBenchmarkNucleo: started"));
+  trace.flush();
+
+  // Start timers
   Watchdog::begin();
   RTC::begin();
+
+  // Start threads
   Nucleo::Thread::begin(&consumer, 64);
   Nucleo::Thread::begin(&producer, 64);
   Nucleo::Thread::begin();
+}
+
+void loop()
+{
+  // Run the kernel
+  Nucleo::Thread::service();
 }

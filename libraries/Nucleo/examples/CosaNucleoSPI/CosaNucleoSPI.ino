@@ -42,11 +42,8 @@ public:
     // before the transaction is completed
     spi.acquire(this);
       spi.begin();
-        spi.transfer(0x55);
-        spi.transfer(0x55);
-        spi.transfer(0x55);
-        spi.transfer(0x55);
-        spi.transfer(0x55);
+      uint8_t buf[] = { 0x55, 0x55, 0x55, 0x55, 0x55 };
+      spi.transfer(buf, sizeof(buf));
       spi.end();
       // A yield shall not transfer control of the SPI module
       // The context switch back and forth with give a delay
@@ -77,4 +74,10 @@ void setup()
 
   // Start the threads
   Nucleo::Thread::begin();
+}
+
+void loop()
+{
+  // Service the nucleos
+  Nucleo::Thread::service();
 }
