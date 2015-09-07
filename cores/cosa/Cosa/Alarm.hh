@@ -25,6 +25,7 @@
 #include "Cosa/Job.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Periodic.hh"
+#include "Cosa/ExternalInterrupt.hh"
 
 /**
  * The Alarm class is an extension of the Periodic job class to allow
@@ -67,6 +68,64 @@ public:
     {
       dispatch();
     }
+  };
+
+  /**
+   * Alarm Clock is an external interrupt based job scheduler. The
+   * interrupt source should provide an interrupt every second to
+   * update the seconds counter.
+   */
+  class Clock : public Job::Scheduler, public ExternalInterrupt {
+  public:
+    /**
+     * Construct Alarm Clock Job Scheduler with given external
+     * interrupt pin and mode.
+     * @param[in] pin number.
+     * @param[in] mode pin mode (Default ON_RISING_MODE).
+     * @param[in] pullup flag (Default false).
+     */
+    Clock(Board::ExternalInterruptPin pin,
+	  InterruptMode mode = ON_RISING_MODE,
+	  bool pullup = false) :
+      Job::Scheduler(),
+      ExternalInterrupt(pin, mode, pullup),
+      m_seconds(0L)
+    {}
+
+    /**
+     * @override Job::Scheduler
+     * Return current time in seconds.
+     * @return time.
+     */
+    virtual uint32_t time()
+    {
+      return (m_seconds);
+    }
+
+    /**
+     * @override Job::Scheduler
+     * Set current time in seconds.
+     * @param[in] seconds.
+     */
+    void time(uint32_t seconds)
+    {
+      m_seconds = seconds;
+    }
+
+    /**
+     * @override Interrupt::Handler
+     * Increment the seconds counter and dispatch any expired alarms.
+     * @param[in] arg argument from interrupt service routine (not used).
+     */
+    virtual void on_interrupt(uint16_t arg = 0)
+    {
+      UNUSED(arg);
+      m_seconds++;
+      dispatch();
+    }
+
+  protected:
+    uint32_t m_seconds;
   };
 
   /**

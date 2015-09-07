@@ -24,10 +24,26 @@
 #include "Cosa/Time.hh"
 #include "Cosa/Alarm.hh"
 #include "Cosa/Event.hh"
-#include "Cosa/RTC.hh"
-#include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
+// Configuration: RTC or External Interrupt Clock Source
+// #define USE_ALARMS_SCHEDULER
+#define USE_CLOCK_SCHEDULER
+
+// Use the alarm scheduler (trigged by the real-time clock scheduler)
+#if defined(USE_ALARMS_SCHEDULER)
+#include "Cosa/RTC.hh"
+RTC::Scheduler scheduler;
+Alarm::Scheduler alarms(&scheduler);
+#endif
+
+// Use the alarm clock scheduler (trigged by exernal clock source)
+#if defined(USE_CLOCK_SCHEDULER)
+#include <DS1307.h>
+DS1307 rtc;
+Alarm::Clock alarms(Board::EXT0);
+#endif
 
 class TraceAlarm : public Alarm {
 public:
@@ -55,10 +71,6 @@ private:
   uint16_t m_tick;
 };
 
-// Use the alarm scheduler (trigged by the real-time clock scheduler)
-RTC::Scheduler scheduler;
-Alarm::Scheduler alarms(&scheduler);
-
 // The alarms with the given period in seconds
 TraceAlarm alarm1(&alarms, 1, 3);
 TraceAlarm alarm2(&alarms, 2, 5);
@@ -72,11 +84,23 @@ void setup()
   trace.begin(&uart, PSTR("CosaAlarm: started"));
   trace.flush();
 
-  // Start the watchdog, real-time clock and the alarm scheduler
-  Watchdog::begin();
+#if defined(USE_ALARMS_SCHEDULER)
+  // Start the real-time clock and alarm scheduler
   RTC::begin();
   RTC::job(&scheduler);
   alarms.begin();
+#endif
+
+#if defined(USE_CLOCK_SCHEDULER)
+  // Get current time from external real-time clock
+  time_t now;
+  rtc.get_time(now);
+  now.to_binary();
+
+  // Set the alarm scheduler time and enable ticks
+  alarms.time(now);
+  alarms.enable();
+#endif
 
   // Start the alarm handlers
   alarm1.begin();
