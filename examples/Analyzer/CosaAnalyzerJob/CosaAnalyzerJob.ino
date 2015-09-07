@@ -37,6 +37,13 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+// Select call from interrupt service routine or event handler. Latency:
+// Interrupt Service Routine: 1-5 us
+// Event Handler: 20-25 us
+
+#define SERVICE on_expired
+// #define SERVICE run
+
 class Work : public Job, private OutputPin {
 public:
   Work(Job::Scheduler* scheduler,
@@ -50,7 +57,7 @@ public:
     expire_at(delay);
   }
 
-  virtual void run()
+  virtual void SERVICE()
   {
     toggle();
     m_chain->expire_after(m_delay);
