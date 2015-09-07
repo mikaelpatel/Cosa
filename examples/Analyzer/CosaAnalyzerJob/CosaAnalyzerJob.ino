@@ -40,9 +40,7 @@
 // Select call from interrupt service routine or event handler. Latency:
 // Interrupt Service Routine: 1-5 us
 // Event Handler: 20-25 us
-
-#define SERVICE on_expired
-// #define SERVICE run
+#define USE_ISR_DISPATCH
 
 class Work : public Job, private OutputPin {
 public:
@@ -57,7 +55,14 @@ public:
     expire_at(delay);
   }
 
-  virtual void SERVICE()
+#if defined(USE_ISR_DISPATCH)
+  virtual void on_expired()
+  {
+    run();
+  }
+#endif
+
+  virtual void run()
   {
     toggle();
     m_chain->expire_after(m_delay);
