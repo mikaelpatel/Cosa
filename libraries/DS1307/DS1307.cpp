@@ -36,5 +36,29 @@ DS1307::write(void* ram, uint8_t size, uint8_t pos)
   twi.begin(this);
   int count = twi.write(pos, ram, size);
   twi.end();
+  if (count > 0) count -= 1;
   return (count);
 }
+
+
+bool
+DS1307::enable(Rate rs)
+{
+  control_t control;
+  control.rs = rs;
+  control.sqwe = 1;
+  control.out = 1;
+  uint8_t pos = offsetof(DS1307::timekeeper_t, control);
+  int count = write(&control, sizeof(control), pos);
+  return (count == sizeof(control));
+}
+
+bool
+DS1307::disable()
+{
+  control_t control;
+  uint8_t pos = offsetof(DS1307::timekeeper_t, control);
+  int count = write(&control, sizeof(control), pos);
+  return (count == sizeof(control));
+}
+

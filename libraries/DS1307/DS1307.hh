@@ -61,16 +61,33 @@ public:
       uint8_t reserved2:2;	//!< Reserved/2.
       uint8_t out:1;		//!< Output Control.
     };
+
+    /**
+     * Cast control register bit-field to byte.
+     * @return byte representation.
+     */
+    operator uint8_t()
+    {
+      return (as_uint8);
+    }
+
+    /**
+     * Default constructor.
+     */
+    control_t()
+    {
+      as_uint8 = 0;
+    }
   };
 
   /**
    * Rate Selection (pp. 9).
    */
-  enum {
-    RS_1_HZ,
-    RS_4_096_KHZ,
-    RS_8_192_KHZ,
-    RS_32_768_KHZ
+  enum Rate {
+    RS_1_HZ = 0,
+    RS_4096_KHZ = 1,
+    RS_8192_KHZ = 2,
+    RS_32768_KHZ = 3
   } __attribute__((packed));
 
   /**
@@ -138,6 +155,21 @@ public:
   {
     return (write(&now) == sizeof(now));
   }
+
+  /**
+   * Enable clock output with given rate. Return true(1) if successful
+   * otherwise false(0).
+   * @param[in] rs rate selection (default 1 Hz).
+   * @return bool.
+   */
+  bool enable(Rate rs = RS_1_HZ);
+
+  /**
+   * Disable clock output. Return true(1) if successful otherwise
+   * false(0).
+   * @return bool.
+   */
+  bool disable();
 };
 
 #endif

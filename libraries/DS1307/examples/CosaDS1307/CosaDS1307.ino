@@ -22,7 +22,7 @@
  * @code
  *                       TinyRTC(DS1307)
  *                       +------------+
- *                     1-|SQ          |
+ * (D8)----------------1-|SQ          |
  *                     2-|DS        DS|-1
  * (A5/SCL)------------3-|SCL      SCL|-2
  * (A4/SDA)------------4-|SDA      SDA|-3
@@ -37,6 +37,7 @@
 
 #include <DS1307.h>
 
+#include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
@@ -58,6 +59,9 @@ struct latest_t {
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
 
+// Clock pin
+InputPin clkPin(Board::D8);
+
 void setup()
 {
   // Start trace output stream on the serial port
@@ -73,7 +77,9 @@ void setup()
   // Read the latest set and run time
   latest_t latest;
   int count = rtc.read(&latest, sizeof(latest), DS1307::RAM_START);
-  TRACE(count);
+  ASSERT(count == sizeof(latest));
+  latest.set.to_binary();
+  latest.run.to_binary();
 
   // Print latest set and the latest run time
   trace.print(PSTR("set on "));
@@ -85,11 +91,11 @@ void setup()
   time_t now;
 #if defined(SET_TIME)
   now.year = 0x14;
-  now.month = 0x05;
-  now.date = 0x05;
+  now.month = 0x09;
+  now.date = 0x07;
   now.day = 0x00;
-  now.hours = 0x00;
-  now.minutes = 0x01;
+  now.hours = 0x22;
+  now.minutes = 0x52;
   now.seconds = 0x00;
   rtc.set_time(now);
   latest.set = now;
@@ -100,14 +106,22 @@ void setup()
   // Update the run time with the current time and update ram
   latest.run = now;
   count = rtc.write(&latest, sizeof(latest), DS1307::RAM_START);
-  TRACE(count);
+  ASSERT(count == sizeof(latest));
+
+  // Print the control register
+  ASSERT(rtc.enable());
+  DS1307::control_t control;
+  uint8_t pos = offsetof(DS1307::timekeeper_t, control);
+  count = rtc.read(&control, sizeof(control), pos);
+  ASSERT(count == sizeof(control));
+  trace << PSTR("control = ") << bin << control << endl;
 }
 
 void loop()
 {
-  // Wait a second
-  sleep(1);
-  ledPin.toggle();
+  // Wait for rising edge on clock pin
+  while (clkPin.is_clear()) delay(16);
+  ledPin.set();
 
   // Read the time from the rtc device and print
   time_t now;
@@ -116,6 +130,7 @@ void loop()
     trace << now << endl;
   }
 
-  // Heartbeat
-  ledPin.toggle();
+  // Wait for falling edge on clock pin
+  while (clkPin.is_set()) delay(16);
+  ledPin.clear();
 }
