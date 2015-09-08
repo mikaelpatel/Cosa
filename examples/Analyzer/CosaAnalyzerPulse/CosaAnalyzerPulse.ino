@@ -1,5 +1,5 @@
 /**
- * @file CosaAnalyzerJob.ino
+ * @file CosaAnalyzerPulse.ino
  * @version 1.0
  *
  * @section License
@@ -16,7 +16,8 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Logic Analyzer based analysis of Job with RTC Scheduler.
+ * Logic Analyzer based analysis of Job with RTC Scheduler; generate
+ * 100 ms pulse width [10..90%].
  *
  * @section Circuit
  * Trigger on CHAN0/D8 rising.
@@ -24,6 +25,7 @@
  * +-------+
  * | CHAN0 |-------------------------------> D8
  * | CHAN1 |-------------------------------> D9
+ * | CHAN2 |-------------------------------> D10
  * |       |
  * | GND   |-------------------------------> GND
  * +-------+
@@ -37,22 +39,18 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Select call from interrupt service routine or event handler. Latency:
-// Interrupt Service Routine: 1-5 us
-// Event Handler: 20-25 us
-#define USE_ISR_DISPATCH
-
-class Work : public Job {
+class Pulse : public Job {
 public:
-  Work(Job::Scheduler* scheduler,
-       Board::DigitalPin pin, uint32_t delay,
-       Work& chain) :
+  static const uint32_t START = 1000000UL;
+  static const uint32_t WIDTH = 100000UL;
+
+  Pulse(Job::Scheduler* scheduler, uint16_t percent,
+	Board::DigitalPin pin) :
     Job(scheduler),
-    m_pin(pin),
-    m_delay(delay),
-    m_chain(chain)
+    m_pin(pin)
   {
-    expire_at(delay);
+    expire_at(START);
+    width(percent);
   }
 
 #if defined(USE_ISR_DISPATCH)
@@ -65,54 +63,51 @@ public:
   virtual void run()
   {
     m_pin.toggle();
-    m_chain.expire_after(m_delay);
-    m_chain.start();
-    m_pin.toggle();
+    if (m_pin.is_set())
+      expire_after(m_pulse);
+    else
+      expire_after(WIDTH - m_pulse);
+    start();
+  }
+
+  void width(uint16_t percent)
+  {
+    if (percent < 10) percent = 10;
+    else if (percent > 90) percent = 90;
+    m_pulse = (WIDTH * percent) / 100UL;
   }
 
 private:
   OutputPin m_pin;
-  uint32_t m_delay;
-  Work& m_chain;
+  uint32_t m_pulse;
 };
 
 // Use the real-time clock scheduler (micro-seconds)
 RTC::Scheduler scheduler;
 
-// Forward declare for cyclic reference
-extern Work w0;
-extern Work w1;
-extern Work w2;
-extern Work w3;
-extern Work w4;
-
-// Periodic
-// (w0)-200ms->(w0)
-Work w0(&scheduler, Board::D8, 200000UL, w0);
-
-// Chain
-// (w1)-150us->(w2)-400us->(w3)-1200us->(w4)-250us->(w1)
-Work w1(&scheduler, Board::D9,    150UL, w2);
-Work w2(&scheduler, Board::D9,    400UL, w3);
-Work w3(&scheduler, Board::D9,   1200UL, w4);
-Work w4(&scheduler, Board::D9,    250UL, w1);
+// Pulse generators with 10, 50 and 90% pulse width
+Pulse p1(&scheduler, 10, Board::D8);
+Pulse p2(&scheduler, 50, Board::D9);
+Pulse p3(&scheduler, 90, Board::D10);
 
 void setup()
 {
   // Print Info about the logic analyser probe channels
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaAnalyzerJob: started"));
+  trace.begin(&uart, PSTR("CosaAnalyzerPulse: started"));
   trace << PSTR("CHAN0 - D8 [^]") << endl;
   trace << PSTR("CHAN1 - D9") << endl;
+  trace << PSTR("CHAN2 - D10") << endl;
   trace.flush();
 
   // Start the real-time clock and scheduler
   RTC::begin();
   RTC::job(&scheduler);
 
-  // Start the work
-  w0.start();
-  w4.start();
+  // Start the pulse width generators
+  p1.start();
+  p2.start();
+  p3.start();
 }
 
 void loop()
