@@ -16,7 +16,24 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Demonstrate of Cosa Alarm handling.
+ * Demonstrate of Cosa Alarm handling. May be configured to use
+ * either the RTC Scheduler or External Interrupt based Alarm Handler.
+ * The DS1307 square way output is used as interrupt source.
+ *
+ * @section Circuit
+ * @code
+ *                       TinyRTC(DS1307)
+ *                       +------------+
+ * (EXT0/D2)-----------1-|SQ          |
+ *                     2-|DS        DS|-1
+ * (A5/SCL)------------3-|SCL      SCL|-2
+ * (A4/SDA)------------4-|SDA      SDA|-3
+ * (VCC)---------------5-|VCC      VCC|-4
+ * (GND)---------------6-|GND      GND|-5
+ *                     7-|BAT         |
+ *                       +------------+
+ * @endcode
+ *
  *
  * This file is part of the Arduino Che Cosa project.
  */
