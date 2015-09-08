@@ -46,10 +46,12 @@
 
 #if defined(USE_RTC)
 #define TIMER RTC
+#define SCALE(x) (x) * 1000UL
 #endif
 
 #if defined(USE_WATCHDOG)
 #define TIMER Watchdog
+#define SCALE(x) (x)
 #endif
 
 class Work : public Periodic {
@@ -83,17 +85,9 @@ private:
 TIMER::Scheduler scheduler;
 
 // Periodic work
-#if defined(USE_RTC)
-Work w1(&scheduler, 1000, Board::D8);
-Work w2(&scheduler, 500, Board::D9);
-Work w3(&scheduler, 250, Board::D10);
-#endif
-
-#if defined(USE_WATCHDOG)
-Work w1(&scheduler, 64, Board::D8);
-Work w2(&scheduler, 32, Board::D9);
-Work w3(&scheduler, 16, Board::D10);
-#endif
+Work w1(&scheduler, SCALE(640), Board::D8);
+Work w2(&scheduler, SCALE(320), Board::D9);
+Work w3(&scheduler, SCALE(160), Board::D10);
 
 void setup()
 {
