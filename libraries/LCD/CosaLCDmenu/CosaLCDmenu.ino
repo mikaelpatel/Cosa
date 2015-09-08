@@ -199,7 +199,7 @@ void setup()
   lcd.puts(PSTR("CosaLCDmenu: started"));
   sleep(2);
   walker.begin();
-  controller.begin();
+  controller.start();
 }
 
 void loop()

@@ -220,6 +220,7 @@ private:
   static volatile uint16_t s_msec;	//!< Milli-seconds fraction.
   static volatile clock_t s_sec;	//!< Seconds counter.
   static Scheduler* s_scheduler;	//!< RTC Job scheduler.
+  static Job* s_job;			//!< RTC Timer job.
 
   /**
    * Do not allow instances. This is a static singleton; name space.

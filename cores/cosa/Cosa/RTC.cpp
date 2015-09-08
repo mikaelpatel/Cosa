@@ -47,6 +47,9 @@ volatile clock_t RTC::s_sec = 0UL;
 // RTC scheduler
 RTC::Scheduler* RTC::s_scheduler = NULL;
 
+// RTC timer job
+Job* RTC::s_job = NULL;
+
 bool
 RTC::Scheduler::start(Job* job)
 {
@@ -62,18 +65,23 @@ RTC::Scheduler::start(Job* job)
   }
 
   // Check if the job should use the timer match register
-  // Note: Should check if the timer match register is already in use
   if (diff < US_TIMER_EXPIRE) {
-    synchronized {
-      uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
-      if (cnt > COUNT) cnt -= COUNT;
-      OCR0B = cnt;
-      TIMSK0 |= _BV(OCIE0B);
-      TIFR0 |= _BV(OCF0B);
+    if ((s_job == NULL)
+	|| ((int32_t) (job->expire_at() - s_job->expire_at()) < 0)) {
+      synchronized {
+	uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
+	if (cnt > COUNT) cnt -= COUNT;
+	OCR0B = cnt;
+	TIMSK0 |= _BV(OCIE0B);
+	TIFR0 |= _BV(OCF0B);
+	s_job = job;
+	m_queue.get_succ()->attach(job);
+      }
+      return (true);
     }
   }
 
-  // Insert into the job queue
+  // Insert into the job scheduler queue
   synchronized {
     Linkage* succ = &m_queue;
     Linkage* curr;
@@ -84,7 +92,6 @@ RTC::Scheduler::start(Job* job)
     }
     succ->attach(job);
   }
-
   return (true);
 }
 
@@ -98,9 +105,8 @@ RTC::Scheduler::dispatch()
   uint32_t now = RTC::micros();
   Job* job = (Job*) m_queue.get_succ();
   while ((Linkage*) job != &m_queue) {
-    int32_t diff = job->expire_at() - now;
-
     // Check if the job should be run
+    int32_t diff = job->expire_at() - now;
     if (diff < US_DIRECT_EXPIRE) {
       Job* succ = (Job*) job->get_succ();
       ((Link*) job)->detach();
@@ -111,14 +117,19 @@ RTC::Scheduler::dispatch()
 
     // Check if the job should use the timer
     if (diff < US_TIMER_EXPIRE) {
-      synchronized {
-	uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
-	if (cnt > COUNT) cnt -= COUNT;
-	OCR0B = cnt;
-	TIMSK0 |= _BV(OCIE0B);
-	TIFR0 |= _BV(OCF0B);
+      // Check that the job will expire before current match
+      if ((s_job == NULL)
+	  || ((int32_t) (job->expire_at() - s_job->expire_at()) < 0)) {
+	synchronized {
+	  uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
+	  if (cnt > COUNT) cnt -= COUNT;
+	  OCR0B = cnt;
+	  TIMSK0 |= _BV(OCIE0B);
+	  TIFR0 |= _BV(OCF0B);
+	  s_job = job;
+	}
       }
-    }
+   }
 
     // No more jobs to run
     return;
@@ -246,7 +257,7 @@ ISR(TIMER0_COMPA_vect)
   }
 
   // Dispatch expired jobs
-  if (RTC::s_scheduler != NULL)
+  if ((RTC::s_scheduler != NULL) && (RTC::s_job == NULL))
     RTC::s_scheduler->dispatch();
 }
 
@@ -256,6 +267,7 @@ ISR(TIMER0_COMPB_vect)
   TIMSK0 &= ~_BV(OCIE0B);
 
   // Dispatch expired jobs
+  RTC::s_job = NULL;
   if (RTC::s_scheduler != NULL)
     RTC::s_scheduler->dispatch();
 }

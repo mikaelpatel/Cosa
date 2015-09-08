@@ -47,7 +47,7 @@ public:
   void on()
     __attribute__((always_inline))
   {
-    end();
+    stop();
     m_pin.on();
   }
 
@@ -57,7 +57,7 @@ public:
   void off()
     __attribute__((always_inline))
   {
-    end();
+    stop();
     m_pin.off();
   }
 
@@ -67,9 +67,9 @@ public:
   void normal_mode()
     __attribute__((always_inline))
   {
+    stop();
     period(512);
-    end();
-    begin();
+    start();
   }
 
   /**
@@ -78,9 +78,9 @@ public:
   void alert_mode()
     __attribute__((always_inline))
   {
+    stop();
     period(128);
-    end();
-    begin();
+    start();
   }
 
 private:

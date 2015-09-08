@@ -95,7 +95,7 @@ void setup()
 {
   Watchdog::begin();
   Watchdog::job(&scheduler);
-  keypad.begin();
+  keypad.start();
   lcd.begin();
   lcd.puts(PSTR("CosaLCDkeypad: started"));
 }

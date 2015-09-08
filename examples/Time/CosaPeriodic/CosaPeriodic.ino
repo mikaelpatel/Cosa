@@ -53,7 +53,7 @@ void setup()
   Watchdog::begin();
   Watchdog::job(&scheduler);
   Watchdog::millis(START);
-  led.begin();
+  led.start();
 }
 
 void loop()

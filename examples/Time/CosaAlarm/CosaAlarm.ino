@@ -103,10 +103,10 @@ void setup()
 #endif
 
   // Start the alarm handlers
-  alarm1.begin();
-  alarm2.begin();
-  alarm3.begin();
-  alarm4.begin();
+  alarm1.start();
+  alarm2.start();
+  alarm3.start();
+  alarm4.start();
 }
 
 void loop()

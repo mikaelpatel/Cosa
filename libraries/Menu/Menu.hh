@@ -307,7 +307,7 @@ public:
     void begin()
     {
       PinChangeInterrupt::begin();
-      m_sw.begin();
+      m_sw.start();
     }
   };
 };

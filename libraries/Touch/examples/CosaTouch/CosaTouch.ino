@@ -88,8 +88,8 @@ void setup()
   Watchdog::job(&scheduler);
   RTC::begin();
   Key::set_value(0);
-  upkey.begin();
-  downkey.begin();
+  upkey.start();
+  downkey.start();
 }
 
 void loop()

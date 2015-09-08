@@ -66,9 +66,9 @@ void setup()
   Watchdog::job(&scheduler);
 
   // Start the periodic functions
-  redLedPin.begin();
-  greenLedPin.begin();
-  blueLedPin.begin();
+  redLedPin.start();
+  greenLedPin.start();
+  blueLedPin.start();
 }
 
 void loop()

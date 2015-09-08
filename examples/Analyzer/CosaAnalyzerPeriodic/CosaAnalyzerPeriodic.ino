@@ -1,5 +1,5 @@
 /**
- * @file CosaAnalyzerJob.ino
+ * @file CosaAnalyzerPeriodic.ino
  * @version 1.0
  *
  * @section License
@@ -16,14 +16,15 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Logic Analyzer based analysis of Job with RTC Scheduler.
+ * Logic Analyzer based analysis of Periodic Job with RTC Scheduler.
  *
  * @section Circuit
- * Trigger on CHAN0/D8 rising.
+ * Trigger on CHAN0/D13/LED rising.
  *
  * +-------+
  * | CHAN0 |-------------------------------> D8
  * | CHAN1 |-------------------------------> D9
+ * | CHAN2 |-------------------------------> D10
  * |       |
  * | GND   |-------------------------------> GND
  * +-------+
@@ -31,88 +32,87 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Job.hh"
+#include "Cosa/Periodic.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Select call from interrupt service routine or event handler. Latency:
-// Interrupt Service Routine: 1-5 us
-// Event Handler: 20-25 us
-// #define USE_ISR_DISPATCH
+// Configuration
+#define USE_RTC
+// #define USE_WATCHDOG
+#define USE_ISR_DISPATCH
 
-class Work : public Job {
+#if defined(USE_RTC)
+#define TIMER RTC
+#endif
+
+#if defined(USE_WATCHDOG)
+#define TIMER Watchdog
+#endif
+
+class Work : public Periodic {
 public:
-  Work(Job::Scheduler* scheduler,
-       Board::DigitalPin pin, uint32_t delay,
-       Work& chain) :
-    Job(scheduler),
-    m_pin(pin),
-    m_delay(delay),
-    m_chain(chain)
+  Work(Job::Scheduler* scheduler, uint32_t delay, Board::DigitalPin pin) :
+    Periodic(scheduler, delay),
+    m_pin(pin)
   {
-    expire_at(delay);
   }
 
 #if defined(USE_ISR_DISPATCH)
   virtual void on_expired()
   {
     run();
+    start();
   }
 #endif
 
   virtual void run()
   {
     m_pin.toggle();
-    m_chain.expire_after(m_delay);
-    m_chain.start();
+    DELAY(10);
     m_pin.toggle();
   }
 
 private:
   OutputPin m_pin;
-  uint32_t m_delay;
-  Work& m_chain;
 };
 
-// Use the real-time clock scheduler (micro-seconds)
-RTC::Scheduler scheduler;
+// Use the timer scheduler
+TIMER::Scheduler scheduler;
 
-// Forward declare for cyclic reference
-extern Work w0;
-extern Work w1;
-extern Work w2;
-extern Work w3;
-extern Work w4;
+// Periodic work
+#if defined(USE_RTC)
+Work w1(&scheduler, 1000, Board::D8);
+Work w2(&scheduler, 500, Board::D9);
+Work w3(&scheduler, 250, Board::D10);
+#endif
 
-// Periodic
-// (w0)-200ms->(w0)
-Work w0(&scheduler, Board::D8, 200000UL, w0);
-
-// Chain
-// (w1)-150us->(w2)-400us->(w3)-1200us->(w4)-250us->(w1)
-Work w1(&scheduler, Board::D9,    150UL, w2);
-Work w2(&scheduler, Board::D9,    400UL, w3);
-Work w3(&scheduler, Board::D9,   1200UL, w4);
-Work w4(&scheduler, Board::D9,    250UL, w1);
+#if defined(USE_WATCHDOG)
+Work w1(&scheduler, 64, Board::D8);
+Work w2(&scheduler, 32, Board::D9);
+Work w3(&scheduler, 16, Board::D10);
+#endif
 
 void setup()
 {
-  // Print Info about the logic analyser probe channels
+  // Print info about the logic analyser probe channels
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaAnalyzerJob: started"));
+  trace.begin(&uart, PSTR("CosaAnalyzerPeriodic: started"));
   trace << PSTR("CHAN0 - D8 [^]") << endl;
   trace << PSTR("CHAN1 - D9") << endl;
+  trace << PSTR("CHAN2 - D10") << endl;
   trace.flush();
 
-  // Start the real-time clock and scheduler
-  RTC::begin();
-  RTC::job(&scheduler);
+  // Start the timer and scheduler
+  TIMER::begin();
+  TIMER::job(&scheduler);
 
   // Start the work
-  w0.start();
-  w4.start();
+  w1.start();
+  w2.start();
+  w3.start();
 }
 
 void loop()

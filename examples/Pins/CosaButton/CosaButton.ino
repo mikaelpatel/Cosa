@@ -103,7 +103,7 @@ void setup()
   Watchdog::job(&scheduler);
 
   // Start the button handler
-  onOff.begin();
+  onOff.start();
 }
 
 void loop()

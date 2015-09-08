@@ -129,7 +129,7 @@ void setup()
 
   // Connect to the device and start periodic function
   ASSERT(sensor.connect(0));
-  sensor.begin();
+  sensor.start();
 }
 
 void loop()

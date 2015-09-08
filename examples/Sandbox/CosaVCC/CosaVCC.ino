@@ -107,10 +107,9 @@ void setup()
   trace.begin(&uart, PSTR("CosaVCC: started"));
   Watchdog::begin();
   Watchdog::job(&scheduler);
-  lowPower.begin();
-  sampler.begin();
-  display.begin();
-  lowPower.run();
+  lowPower.start();
+  sampler.start();
+  display.start();
 }
 
 void loop()
