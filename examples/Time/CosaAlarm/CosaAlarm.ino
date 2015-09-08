@@ -28,8 +28,8 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // Configuration: RTC or External Interrupt Clock Source
-// #define USE_ALARMS_SCHEDULER
-#define USE_CLOCK_SCHEDULER
+#define USE_ALARMS_SCHEDULER
+// #define USE_CLOCK_SCHEDULER
 
 // Use the alarm scheduler (trigged by the real-time clock scheduler)
 #if defined(USE_ALARMS_SCHEDULER)
@@ -88,7 +88,7 @@ void setup()
   // Start the real-time clock and alarm scheduler
   RTC::begin();
   RTC::job(&scheduler);
-  alarms.begin();
+  alarms.Job::start();
 #endif
 
 #if defined(USE_CLOCK_SCHEDULER)
