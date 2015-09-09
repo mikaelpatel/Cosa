@@ -110,6 +110,42 @@ public:
   }
 
   /**
+   * Return the current clock in seconds.
+   * @return seconds.
+   * @note atomic
+   */
+  static uint32_t seconds()
+    __attribute__((always_inline))
+  {
+    return (clock.time());
+  }
+
+  /**
+   * Return the current clock in seconds.
+   * @return seconds.
+   * @note atomic
+   */
+  static clock_t time()
+    __attribute__((always_inline))
+  {
+    return (clock.time());
+  }
+
+  /**
+   * Set clock (seconds) to real-time (for instance seconds from a
+   * given date; epoch 1900-01-01 00:00 or 1970-01-01 00:00).
+   * Please note that the seconds level clock is not based on the
+   * micro-second level clock.
+   * @param[in] sec.
+   * @note atomic
+   */
+  static void time(clock_t sec)
+    __attribute__((always_inline))
+  {
+    clock.time(sec);
+  }
+
+  /**
    * Stop watchdog. Turn off timout callback. May be restarted with begin().
    */
   static void end()
@@ -161,22 +197,9 @@ public:
   }
 
   /**
-   * Set the watchdog clock.
-   * @param[in] clock.
+   * Watchdog Alarm Clock.
    */
-  static void alarm(Clock* clock)
-  {
-    s_clock = clock;
-  }
-
-  /**
-   * Get the watchdog clock.
-   * @return scheduler.
-   */
-  static Clock* clock()
-  {
-    return (s_clock);
-  }
+  static Clock clock;
 
 private:
   static bool s_initiated;		//!< Initiated flag.
@@ -184,7 +207,7 @@ private:
   static uint16_t s_ms_per_tick;	//!< Number of milli-seconds per tick.
   static Event::Handler* s_handler;	//!< Watchdog timeout event handler.
   static Scheduler* s_scheduler;	//!< Watchdog Job Scheduler.
-  static Clock* s_clock;		//!< Watchdog Alarm Clock.
+
   /**
    * Do not allow instances. This is a static singleton.
    */

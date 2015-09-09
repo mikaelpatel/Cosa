@@ -24,6 +24,7 @@
 #include "Cosa/Types.h"
 #include "Cosa/Job.hh"
 #include "Cosa/Time.hh"
+#include "Cosa/Clock.hh"
 
 /**
  * Real-time clock with micro/milli/seconds timing based on hardware
@@ -118,9 +119,7 @@ public:
   static uint32_t seconds()
     __attribute__((always_inline))
   {
-    uint32_t res;
-    synchronized res = s_sec;
-    return (res);
+    return (clock.time());
   }
 
   /**
@@ -131,7 +130,7 @@ public:
   static clock_t time()
     __attribute__((always_inline))
   {
-    return (seconds());
+    return (clock.time());
   }
 
   /**
@@ -145,10 +144,7 @@ public:
   static void time(clock_t sec)
     __attribute__((always_inline))
   {
-    synchronized {
-      s_msec = 0;
-      s_sec = sec;
-    }
+    clock.time(sec);
   }
 
   /**
@@ -213,12 +209,15 @@ public:
     return (s_scheduler);
   }
 
+  /**
+   * RTC Alarm clock.
+   */
+  static Clock clock;
+
 private:
   static bool s_initiated;	     	//!< Initiated flag.
   static volatile uint32_t s_micros; 	//!< Micro-seconds counter.
   static volatile uint32_t s_millis;	//!< Milli-seconds counter.
-  static volatile uint16_t s_msec;	//!< Milli-seconds fraction.
-  static volatile clock_t s_sec;	//!< Seconds counter.
   static Scheduler* s_scheduler;	//!< Job scheduler.
   static Job* s_job;			//!< Timer job.
 

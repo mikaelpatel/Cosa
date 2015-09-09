@@ -63,9 +63,6 @@ OutputPin ledPin(Board::LED);
 // Clock pin
 InputPin clkPin(Board::D2);
 
-// Watchdog clock
-Clock clock;
-
 void setup()
 {
   // Start trace output stream on the serial port
@@ -77,7 +74,6 @@ void setup()
 
   // Start the watchdog and internal real-time clock
   Watchdog::begin();
-  Watchdog::alarm(&clock);
   RTC::begin();
 
   // Read the latest set and run time
@@ -126,9 +122,10 @@ void setup()
   // Synchronize clocks
   ASSERT(rtc.get_time(now));
   now.to_binary();
-  RTC::time(now);
-  clock.time(now);
-  clock.calibrate(25);
+  RTC::clock.time(now);
+  RTC::clock.calibrate(-5);
+  Watchdog::clock.time(now);
+  Watchdog::clock.calibrate(25);
 }
 
 void loop()
@@ -144,8 +141,8 @@ void loop()
   ASSERT(rtc.get_time(now));
   now.to_binary();
   clock_t seconds = now;
-  int32_t rtc = RTC::time() - seconds;
-  int32_t wdg = Watchdog::clock()->time() - seconds;
+  int32_t rtc = RTC::clock.time() - seconds;
+  int32_t wdg = Watchdog::clock.time() - seconds;
   trace << cycle << ':' << now
 	<< PSTR(":RTC:")
 	<< (rtc < 0 ? PSTR("T") : PSTR("T+")) << rtc

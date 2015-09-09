@@ -36,8 +36,8 @@ Event::Handler* Watchdog::s_handler = NULL;
 // Watchdog Job Scheduler (milli-seconds level delayed functions)
 Watchdog::Scheduler* Watchdog::s_scheduler = NULL;
 
-// Watchdog Alarm Clock (seconds level delayed functions)
-Clock* Watchdog::s_clock = NULL;
+// Watchdog Alarm Clock
+Clock Watchdog::clock;
 
 uint8_t
 Watchdog::as_prescale(uint16_t ms)
@@ -93,6 +93,5 @@ ISR(WDT_vect)
     Watchdog::s_scheduler->dispatch();
 
   // Increment the clock
-  if (UNLIKELY(Watchdog::s_clock != NULL))
-    Watchdog::s_clock->tick(Watchdog::s_ms_per_tick);
+  Watchdog::clock.tick(Watchdog::s_ms_per_tick);
 }

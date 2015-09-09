@@ -22,8 +22,7 @@
 #define COSA_ALARM_HH
 
 #include "Cosa/Types.h"
-#include "Cosa/Job.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/Clock.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/ExternalInterrupt.hh"
 
@@ -34,48 +33,11 @@
 class Alarm : public Periodic {
 public:
   /**
-   * Alarm Scheduler for jobs with a delay of 1 second or longer.
-   * The scheduler is implemented as a periodic job scheduled every
-   * second by the real-time clock scheduler.
-   */
-  class Scheduler : public Job::Scheduler, public Periodic {
-  public:
-    /**
-     * Construct Alarm Scheduler with given real-time scheduler
-     * for dispatch every second.
-     * @param[in] scheduler for periodic dispatch.
-     */
-    Scheduler(RTC::Scheduler* scheduler) :
-      Job::Scheduler(),
-      Periodic(scheduler, 1000000UL)
-    {}
-
-    /**
-     * @override Job::Scheduler
-     * Return current time in seconds.
-     * @return time.
-     */
-    virtual uint32_t time()
-    {
-      return (RTC::seconds());
-    }
-
-    /**
-     * @override Job
-     * Dispatch expired alarms.
-     */
-    virtual void run()
-    {
-      dispatch();
-    }
-  };
-
-  /**
    * Alarm Clock is an external interrupt based job scheduler. The
    * interrupt source should provide an interrupt every second to
    * update the seconds counter.
    */
-  class Clock : public Job::Scheduler, public ExternalInterrupt {
+  class Clock : public ::Clock, public ExternalInterrupt {
   public:
     /**
      * Construct Alarm Clock Job Scheduler with given external
@@ -87,31 +49,11 @@ public:
     Clock(Board::ExternalInterruptPin pin,
 	  InterruptMode mode = ON_RISING_MODE,
 	  bool pullup = false) :
-      Job::Scheduler(),
-      ExternalInterrupt(pin, mode, pullup),
-      m_seconds(0L)
+      ::Clock(),
+      ExternalInterrupt(pin, mode, pullup)
     {}
 
-    /**
-     * @override Job::Scheduler
-     * Return current time in seconds.
-     * @return time.
-     */
-    virtual uint32_t time()
-    {
-      return (m_seconds);
-    }
-
-    /**
-     * @override Job::Scheduler
-     * Set current time in seconds.
-     * @param[in] seconds.
-     */
-    void time(uint32_t seconds)
-    {
-      m_seconds = seconds;
-    }
-
+  protected:
     /**
      * @override Interrupt::Handler
      * Increment the seconds counter and dispatch any expired alarms.
@@ -120,12 +62,8 @@ public:
     virtual void on_interrupt(uint16_t arg = 0)
     {
       UNUSED(arg);
-      m_seconds++;
-      dispatch();
+      tick(1000);
     }
-
-  protected:
-    uint32_t m_seconds;
   };
 
   /**

@@ -45,18 +45,21 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // Configuration: RTC or External Interrupt Clock Source
-#define USE_ALARMS_SCHEDULER
-// #define USE_CLOCK_SCHEDULER
+#define USE_RTC_CLOCK
+// #define USE_WATCHDOG_CLOCK
+// #define USE_ALARM_CLOCK
 
-// Use the alarm scheduler (trigged by the real-time clock scheduler)
-#if defined(USE_ALARMS_SCHEDULER)
+#if defined(USE_RTC_CLOCK)
 #include "Cosa/RTC.hh"
-RTC::Scheduler scheduler;
-Alarm::Scheduler alarms(&scheduler);
+#define alarms RTC::clock
 #endif
 
-// Use the alarm clock scheduler (trigged by exernal clock source)
-#if defined(USE_CLOCK_SCHEDULER)
+#if defined(USE_WATCHDOG_CLOCK)
+#include "Cosa/Watchdog.hh"
+#define alarms Watchdog::clock
+#endif
+
+#if defined(USE_ALARM_CLOCK)
 #include <DS1307.h>
 DS1307 rtc;
 Alarm::Clock alarms(Board::EXT0);
@@ -68,7 +71,9 @@ public:
     Alarm(scheduler, period),
     m_id(id),
     m_tick(0)
-  {}
+  {
+    expire_at(period);
+  }
 
   virtual void run()
   {
@@ -99,23 +104,41 @@ void setup()
   // Start serial device and use as trace iostream
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAlarm: started"));
+
+#if defined(USE_RTC_CLOCK)
+
+  trace << PSTR("RTC clock") << endl;
   trace.flush();
 
-#if defined(USE_ALARMS_SCHEDULER)
-  // Start the real-time clock and alarm scheduler
+  // Start the real-time clock
   RTC::begin();
-  RTC::job(&scheduler);
-  alarms.Job::start();
-#endif
 
-#if defined(USE_CLOCK_SCHEDULER)
+#elif defined(USE_WATCHDOG_CLOCK)
+
+  trace << PSTR("Watchdog clock") << endl;
+  trace.flush();
+
+  // Start the watchdog
+  Watchdog::begin();
+
+#elif defined(USE_ALARM_CLOCK)
+  trace << PSTR("Alarm clock (DS1307/EXT0)") << endl;
+  trace.flush();
+
   // Get current time from external real-time clock
   time_t now;
   rtc.get_time(now);
   now.to_binary();
 
+  // Adjust the expire time for the alarms
+  clock_t clock = now;
+  alarm1.expire_after(clock);
+  alarm2.expire_after(clock);
+  alarm3.expire_after(clock);
+  alarm4.expire_after(clock);
+  alarms.time(clock);
+
   // Set the alarm scheduler time and enable ticks
-  alarms.time(now);
   alarms.enable();
 #endif
 

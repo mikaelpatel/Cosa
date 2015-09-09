@@ -38,15 +38,14 @@ volatile uint32_t RTC::s_micros = 0UL;
 // Milli-seconds counter
 volatile uint32_t RTC::s_millis = 0UL;
 
-// Seconds counter with milli-seconds fraction
-volatile uint16_t RTC::s_msec = 0;
-volatile clock_t RTC::s_sec = 0UL;
-
 // Job scheduler
 RTC::Scheduler* RTC::s_scheduler = NULL;
 
 // Timer job
 Job* RTC::s_job = NULL;
+
+// RTC alarm clock
+Clock RTC::clock;
 
 bool
 RTC::Scheduler::start(Job* job)
@@ -245,18 +244,12 @@ ISR(TIMER0_COMPA_vect)
   // Increment milli-seconds counter
   RTC::s_millis += MS_PER_TICK;
 
-  // Increment milli-seconds fraction of seconds counter
-  RTC::s_msec += MS_PER_TICK;
-
-  // Check for increment of seconds counter
-  if (UNLIKELY(RTC::s_msec >= 1000)) {
-    RTC::s_sec += 1;
-    RTC::s_msec -= 1000;
-  }
-
   // Dispatch expired jobs
   if ((RTC::s_scheduler != NULL) && (RTC::s_job == NULL))
     RTC::s_scheduler->dispatch();
+
+  // Clock tick and dispatch expired jobs
+  RTC::clock.tick(MS_PER_TICK);
 }
 
 ISR(TIMER0_COMPB_vect)
