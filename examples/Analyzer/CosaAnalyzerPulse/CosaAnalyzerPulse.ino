@@ -45,15 +45,8 @@
 #define USE_RTC
 // #define USE_WATCHDOG
 
-// Call directly from interrupt service routine removing the event
-// handler overhead but also making time update and other interrupt
-// vunerable to drops
-#define USE_ISR_DISPATCH
-
-// Use dispatch timestamp as reference. The pulses will be kept in sync
-// otherwise they will drift towards a 1 ms spread. Note that sync
-// will also compensate for the event handler overhead
-#define expire_after expire_period
+// Call directly from interrupt service routine
+// #define USE_ISR_DISPATCH
 
 #if defined(USE_RTC)
 #define TIMER RTC
@@ -124,6 +117,17 @@ void setup()
   trace << PSTR("CHAN0 - D8 [^]") << endl;
   trace << PSTR("CHAN1 - D9") << endl;
   trace << PSTR("CHAN2 - D10") << endl;
+#if defined(USE_RTC)
+  trace << PSTR("RTC Job Scheduler") << endl;
+#endif
+#if defined(USE_WATCHDOG)
+  trace << PSTR("Watchdog Job Scheduler") << endl;
+#endif
+#if defined(USE_ISR_DISPATCH)
+  trace << PSTR("ISR dispatch") << endl;
+#else
+  trace << PSTR("Event dispatch") << endl;
+#endif
   trace.flush();
 
   // Start the real-time clock and scheduler

@@ -193,16 +193,6 @@ public:
      * Return current time in micro-seconds.
      */
     virtual uint32_t time();
-
-    /**
-     * @override Job::Scheduler
-     * Return current dispatch time in micro-seconds.
-     ' @return time.
-     */
-    virtual uint32_t timestamp()
-    {
-      return (RTC::s_timestamp);
-    }
   };
 
   /**
@@ -231,7 +221,6 @@ private:
   static volatile clock_t s_sec;	//!< Seconds counter.
   static Scheduler* s_scheduler;	//!< Job scheduler.
   static Job* s_job;			//!< Timer job.
-  static uint32_t s_timestamp;		//!< Dispatch time.
 
   /**
    * Do not allow instances. This is a static singleton; name space.

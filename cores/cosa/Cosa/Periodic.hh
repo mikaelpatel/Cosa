@@ -70,16 +70,6 @@ public:
     return (m_period);
   }
 
-  /**
-   * Start the periodic function.
-   */
-  bool start()
-    __attribute__((always_inline))
-  {
-    expire_after(m_period);
-    return (Job::start());
-  }
-
 protected:
   /**
    * @override Event::Handler
@@ -93,6 +83,7 @@ protected:
     UNUSED(value);
     if (UNLIKELY(type != Event::TIMEOUT_TYPE)) return;
     run();
+    m_expires += m_period;
     start();
   }
 

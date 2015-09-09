@@ -24,8 +24,10 @@
 #include <avr/wdt.h>
 
 #include "Cosa/Types.h"
+#include "Cosa/Time.hh"
 #include "Cosa/Job.hh"
 #include "Cosa/Event.hh"
+#include "Cosa/Clock.hh"
 
 /**
  * The AVR Watchdog is used as a low power timer for periodical
@@ -158,13 +160,31 @@ public:
     return (s_scheduler);
   }
 
+  /**
+   * Set the watchdog clock.
+   * @param[in] clock.
+   */
+  static void alarm(Clock* clock)
+  {
+    s_clock = clock;
+  }
+
+  /**
+   * Get the watchdog clock.
+   * @return scheduler.
+   */
+  static Clock* clock()
+  {
+    return (s_clock);
+  }
+
 private:
   static bool s_initiated;		//!< Initiated flag.
   static volatile uint32_t s_millis; 	//!< Milli-seconds counter.
   static uint16_t s_ms_per_tick;	//!< Number of milli-seconds per tick.
   static Event::Handler* s_handler;	//!< Watchdog timeout event handler.
   static Scheduler* s_scheduler;	//!< Watchdog Job Scheduler.
-
+  static Clock* s_clock;		//!< Watchdog Alarm Clock.
   /**
    * Do not allow instances. This is a static singleton.
    */

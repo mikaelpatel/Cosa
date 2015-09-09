@@ -37,10 +37,8 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Select call from interrupt service routine or event handler. Latency:
-// Interrupt Service Routine: 1-5 us
-// Event Handler: 20-25 us
-#define USE_ISR_DISPATCH
+// Call from interrupt service routine or event handler.
+// #define USE_ISR_DISPATCH
 
 class Work : public Job {
 public:
@@ -52,7 +50,6 @@ public:
     m_delay(delay),
     m_chain(chain)
   {
-    expire_at(delay);
   }
 
 #if defined(USE_ISR_DISPATCH)
@@ -65,7 +62,7 @@ public:
   virtual void run()
   {
     m_pin.toggle();
-    m_chain.expire_after(m_delay);
+    m_chain.expire_at(time() + m_delay);
     m_chain.start();
     m_pin.toggle();
   }
@@ -104,6 +101,12 @@ void setup()
   trace.begin(&uart, PSTR("CosaAnalyzerJob: started"));
   trace << PSTR("CHAN0 - D8 [^]") << endl;
   trace << PSTR("CHAN1 - D9") << endl;
+  trace << PSTR("RTC Job Scheduler") << endl;
+#if defined(USE_ISR_DISPATCH)
+  trace << PSTR("ISR dispatch") << endl;
+#else
+  trace << PSTR("Event dispatch") << endl;
+#endif
   trace.flush();
 
   // Start the real-time clock and scheduler

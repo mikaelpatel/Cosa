@@ -1,0 +1,105 @@
+/**
+ * @file Cosa/Clock.hh
+ * @version 1.0
+ *
+ * @section License
+ * Copyright (C) 2015, Mikael Patel
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * This file is part of the Arduino Che Cosa project.
+ */
+
+#ifndef COSA_CLOCK_HH
+#define COSA_CLOCK_HH
+
+#include "Cosa/Types.h"
+#include "Cosa/Time.hh"
+#include "Cosa/Job.hh"
+
+/**
+ * Clock for job scheduling with a time unit of seconds. Should be
+ * attached to a tick source such as RTC, Watchdog or External
+ * Interrupt.
+ */
+class Clock : public Job::Scheduler {
+public:
+  /**
+   * Construct clock for job scheduling.
+   */
+  Clock() :
+    Job::Scheduler(),
+    m_msec(0),
+    m_sec(0UL),
+    m_cal(0)
+  {}
+
+  /**
+   * @override Job::Scheduler
+   * Return current scheduler time.
+   * @return time.
+   */
+  virtual uint32_t time()
+  {
+    uint32_t res;
+    synchronized res = m_sec;
+    return (res);
+  }
+
+  /**
+   * Set clock (seconds) to real-time (for instance seconds from a
+   * given date; epoch 1900-01-01 00:00 or 1970-01-01 00:00).
+   * @param[in] sec.
+   * @note atomic
+   */
+  void time(uint32_t sec)
+    __attribute__((always_inline))
+  {
+    synchronized {
+      m_msec = 0;
+      m_sec = sec;
+    }
+  }
+
+  /**
+   * Increment the clock with the given number of milli-seconds.
+   * Dispatch jobs if the number of seconds is incremented.
+   * @param[in] ms milli-seconds in a tick.
+   * @note atomic
+   */
+  void tick(uint16_t ms)
+  {
+    synchronized {
+      m_msec += ms;
+      if (m_msec >= 1000) {
+	m_msec -= 1000 + m_cal;
+	m_sec += 1;
+	dispatch();
+      }
+    }
+  }
+
+  /**
+   * Set clock calibration to given number of milli-seconds.
+   * @param[in] ms milli-seconds.
+   * @note atomic
+   */
+  void calibrate(int16_t ms)
+  {
+    synchronized m_cal = ms;
+  }
+
+protected:
+  volatile int16_t m_msec;	 //!< Milli-seconds fraction.
+  volatile uint32_t m_sec;	 //!< Seconds counter.
+  volatile int16_t m_cal;	 //!< Milli-seconds calibration.
+};
+#endif

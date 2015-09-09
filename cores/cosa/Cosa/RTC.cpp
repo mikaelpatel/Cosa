@@ -23,11 +23,9 @@
 // Configuration
 #define COUNT 250
 #define PRESCALE 64
-#define US_PER_MS 1000
-#define MS_PER_SEC 1000
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
 #define US_PER_TICK (COUNT * US_PER_TIMER_CYCLE)
-#define MS_PER_TICK (US_PER_TICK / US_PER_MS)
+#define MS_PER_TICK (US_PER_TICK / 1000)
 #define US_DIRECT_EXPIRE (800 / I_CPU)
 #define US_TIMER_EXPIRE (US_PER_TICK - 1)
 
@@ -50,9 +48,6 @@ RTC::Scheduler* RTC::s_scheduler = NULL;
 // Timer job
 Job* RTC::s_job = NULL;
 
-// Latest dispatch time
-uint32_t RTC::s_timestamp = 0UL;
-
 bool
 RTC::Scheduler::start(Job* job)
 {
@@ -63,7 +58,6 @@ RTC::Scheduler::start(Job* job)
   uint32_t now = RTC::micros();
   int32_t diff = job->expire_at() - now;
   if (diff < US_DIRECT_EXPIRE) {
-    s_timestamp = now;
     job->on_expired();
     return (true);
   }
@@ -114,7 +108,6 @@ RTC::Scheduler::dispatch()
     if (diff < US_DIRECT_EXPIRE) {
       Job* succ = (Job*) job->get_succ();
       ((Link*) job)->detach();
-      s_timestamp = now;
       job->on_expired();
       job = succ;
       continue;
@@ -256,9 +249,9 @@ ISR(TIMER0_COMPA_vect)
   RTC::s_msec += MS_PER_TICK;
 
   // Check for increment of seconds counter
-  if (UNLIKELY(RTC::s_msec >= MS_PER_SEC)) {
-    RTC::s_msec -= MS_PER_SEC;
+  if (UNLIKELY(RTC::s_msec >= 1000)) {
     RTC::s_sec += 1;
+    RTC::s_msec -= 1000;
   }
 
   // Dispatch expired jobs

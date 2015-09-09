@@ -39,15 +39,13 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Use the RTC Job Scheduler with micro-seconds level timing
-// #define USE_RTC
-
-// Use the Watchdog Job Scheduler with milli-seconds level timing
-#define USE_WATCHDOG
+// Use the RTC or Watchdog Job Scheduler
+#define USE_RTC
+// #define USE_WATCHDOG
 
 // Call directly from the interrupt service routine. Skip event handling.
 // Will also force alignment to the dispatch timestamp, i.e. no drift.
-// #define USE_ISR_DISPATCH
+#define USE_ISR_DISPATCH
 
 #if defined(USE_RTC)
 #define TIMER RTC
@@ -61,18 +59,21 @@
 
 class Work : public Periodic {
 public:
+  static const uint32_t START = 1000000UL;
+
   Work(Job::Scheduler* scheduler, uint32_t delay, Board::DigitalPin pin) :
     Periodic(scheduler, delay),
     m_pin(pin)
   {
+    expire_at(START);
   }
 
 #if defined(USE_ISR_DISPATCH)
   virtual void on_expired()
   {
     run();
-    expire_period(period());
-    Job::start();
+    expire_after(period());
+    start();
   }
 #endif
 
@@ -103,6 +104,17 @@ void setup()
   trace << PSTR("CHAN0 - D8 [^]") << endl;
   trace << PSTR("CHAN1 - D9") << endl;
   trace << PSTR("CHAN2 - D10") << endl;
+#if defined(USE_RTC)
+  trace << PSTR("RTC Job Scheduler") << endl;
+#endif
+#if defined(USE_WATCHDOG)
+  trace << PSTR("Watchdog Job Scheduler") << endl;
+#endif
+#if defined(USE_ISR_DISPATCH)
+  trace << PSTR("ISR dispatch") << endl;
+#else
+  trace << PSTR("Event dispatch") << endl;
+#endif
   trace.flush();
 
   // Start the timer and scheduler
