@@ -111,7 +111,7 @@ private:
 // The job scheduler
 TIMER::Scheduler scheduler;
 
-// Pulse generators with 16, 50 and 16% pulse width
+// Pulse generators with 20, 50 and 20% pulse width (32, 80, 32 ms)
 Pulse p1(&scheduler, 20, Board::D8);
 Pulse p2(&scheduler, 50, Board::D9);
 Pulse p3(&scheduler, 20, Board::D10);
