@@ -44,11 +44,14 @@ volatile uint32_t RTC::s_millis = 0UL;
 volatile uint16_t RTC::s_msec = 0;
 volatile clock_t RTC::s_sec = 0UL;
 
-// RTC scheduler
+// Job scheduler
 RTC::Scheduler* RTC::s_scheduler = NULL;
 
-// RTC timer job
+// Timer job
 Job* RTC::s_job = NULL;
+
+// Latest dispatch time
+uint32_t RTC::s_timestamp = 0UL;
 
 bool
 RTC::Scheduler::start(Job* job)
@@ -60,6 +63,7 @@ RTC::Scheduler::start(Job* job)
   uint32_t now = RTC::micros();
   int32_t diff = job->expire_at() - now;
   if (diff < US_DIRECT_EXPIRE) {
+    s_timestamp = now;
     job->on_expired();
     return (true);
   }
@@ -110,6 +114,7 @@ RTC::Scheduler::dispatch()
     if (diff < US_DIRECT_EXPIRE) {
       Job* succ = (Job*) job->get_succ();
       ((Link*) job)->detach();
+      s_timestamp = now;
       job->on_expired();
       job = succ;
       continue;

@@ -16,8 +16,9 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Logic Analyzer based analysis of Job with RTC Scheduler; generate
- * 100 ms pulse width [10..90%].
+ * Logic Analyzer based analysis of Job Scheduler; generate 160 ms
+ * pulse width [10..90%]. Demonstrate scheduling relative to scheduler
+ * dispatch timestamp (expire_period).
  *
  * @section Circuit
  * Trigger on CHAN0/D8 rising.
@@ -35,14 +36,39 @@
 
 #include "Cosa/Job.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+// Use the RTC or Watchdog Job Scheduler
+#define USE_RTC
+// #define USE_WATCHDOG
+
+// Call directly from interrupt service routine removing the event
+// handler overhead but also making time update and other interrupt
+// vunerable to drops
+#define USE_ISR_DISPATCH
+
+// Use dispatch timestamp as reference. The pulses will be kept in sync
+// otherwise they will drift towards a 1 ms spread. Note that sync
+// will also compensate for the event handler overhead
+#define expire_after expire_period
+
+#if defined(USE_RTC)
+#define TIMER RTC
+#define SCALE(x) (x) * 1000UL
+#endif
+
+#if defined(USE_WATCHDOG)
+#define TIMER Watchdog
+#define SCALE(x) (x)
+#endif
+
 class Pulse : public Job {
 public:
-  static const uint32_t START = 1000000UL;
-  static const uint32_t WIDTH = 100000UL;
+  static const uint32_t START = SCALE(1000);
+  static const uint32_t WIDTH = SCALE(160);
 
   Pulse(Job::Scheduler* scheduler, uint16_t percent,
 	Board::DigitalPin pin) :
@@ -82,13 +108,13 @@ private:
   uint32_t m_pulse;
 };
 
-// Use the real-time clock scheduler (micro-seconds)
-RTC::Scheduler scheduler;
+// The job scheduler
+TIMER::Scheduler scheduler;
 
-// Pulse generators with 10, 50 and 90% pulse width
-Pulse p1(&scheduler, 10, Board::D8);
+// Pulse generators with 16, 50 and 16% pulse width
+Pulse p1(&scheduler, 20, Board::D8);
 Pulse p2(&scheduler, 50, Board::D9);
-Pulse p3(&scheduler, 90, Board::D10);
+Pulse p3(&scheduler, 20, Board::D10);
 
 void setup()
 {
@@ -101,8 +127,8 @@ void setup()
   trace.flush();
 
   // Start the real-time clock and scheduler
-  RTC::begin();
-  RTC::job(&scheduler);
+  TIMER::begin();
+  TIMER::job(&scheduler);
 
   // Start the pulse width generators
   p1.start();

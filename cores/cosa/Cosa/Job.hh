@@ -72,6 +72,16 @@ public:
      */
     virtual uint32_t time() = 0;
 
+    /**
+     * @override Job::Scheduler
+     * Return current dispatch time.
+     ' @return time.
+     */
+    virtual uint32_t timestamp()
+    {
+      return (time());
+    }
+
   protected:
     /** Job queue. */
     Head m_queue;
@@ -104,6 +114,16 @@ public:
   {
     m_expires = time;
     if (m_scheduler != NULL) m_expires += m_scheduler->time();
+  }
+
+  /**
+   * Set expire time relative to scheduler timestamp.
+   * @param[in] time to expire relative scheduler timestamp.
+   */
+  void expire_period(uint32_t time)
+  {
+    m_expires = time;
+    if (m_scheduler != NULL) m_expires += m_scheduler->timestamp();
   }
 
   /**

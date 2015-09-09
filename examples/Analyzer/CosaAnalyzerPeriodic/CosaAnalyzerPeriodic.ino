@@ -39,10 +39,15 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Configuration
-#define USE_RTC
-// #define USE_WATCHDOG
-#define USE_ISR_DISPATCH
+// Use the RTC Job Scheduler with micro-seconds level timing
+// #define USE_RTC
+
+// Use the Watchdog Job Scheduler with milli-seconds level timing
+#define USE_WATCHDOG
+
+// Call directly from the interrupt service routine. Skip event handling.
+// Will also force alignment to the dispatch timestamp, i.e. no drift.
+// #define USE_ISR_DISPATCH
 
 #if defined(USE_RTC)
 #define TIMER RTC
@@ -66,7 +71,8 @@ public:
   virtual void on_expired()
   {
     run();
-    start();
+    expire_period(period());
+    Job::start();
   }
 #endif
 
@@ -81,10 +87,10 @@ private:
   OutputPin m_pin;
 };
 
-// Use the timer scheduler
+// The timer scheduler
 TIMER::Scheduler scheduler;
 
-// Periodic work
+// The periodic work
 Work w1(&scheduler, SCALE(640), Board::D8);
 Work w2(&scheduler, SCALE(320), Board::D9);
 Work w3(&scheduler, SCALE(160), Board::D10);
