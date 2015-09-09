@@ -32,7 +32,7 @@ fi
 
 if [ $1 == "tutto" ];
 then
-   versions="1.0.6 1.5.8 1.6.1 1.6.4 1.6.5"
+   versions="1.0.6 1.5.8 1.6.1 1.6.4 1.6.5 1.6.5-r5"
 else
    versions=$*
 fi

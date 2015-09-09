@@ -21,7 +21,7 @@ ifdef GCC_AVR_VER
   ARDUINO_VER = $(GCC_AVR_VER)
 else
   ifndef ARDUINO_VER
-    ARDUINO_VER = 1.6.5
+    ARDUINO_VER = 1.6.5-r5
   endif
   ifndef ARDUINO_DIR
     ARDUINO_DIR = $(HOME)/opt/arduino-$(ARDUINO_VER)
