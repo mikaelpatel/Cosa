@@ -23,6 +23,7 @@
 // Configuration
 #define COUNT 250
 #define PRESCALE 64
+#define TIMER_MAX (COUNT - 1)
 #define US_PER_TIMER_CYCLE (PRESCALE / I_CPU)
 #define US_PER_TICK (COUNT * US_PER_TIMER_CYCLE)
 #define MS_PER_TICK (US_PER_TICK / 1000)
@@ -151,7 +152,7 @@ RTC::begin()
 
     // Clear Timer on Compare Match with given Count. Enable interrupt
     TCCR0A = _BV(WGM01);
-    OCR0A = COUNT;
+    OCR0A = TIMER_MAX;
     TIMSK0 = _BV(OCIE0A);
 
     // Reset the counter and clear interrupts
@@ -200,7 +201,7 @@ RTC::micros()
   synchronized {
     res = s_micros;
     cnt = TCNT0;
-    if ((TIFR0 & _BV(OCF0A)) && cnt < COUNT) res += US_PER_TICK;
+    if ((TIFR0 & _BV(OCF0A)) && (cnt < TIMER_MAX)) res += US_PER_TICK;
   }
 
   // Convert ticks to micro-seconds
@@ -212,11 +213,13 @@ uint32_t
 RTC::millis()
 {
   uint32_t res;
+  uint8_t cnt;
 
   // Read milli-seconds. Adjust if pending interrupt
   synchronized {
     res = s_millis;
-    if ((TIFR0 & _BV(OCF0A)) && TCNT0 < COUNT) res += MS_PER_TICK;
+    cnt = TCNT0;
+    if ((TIFR0 & _BV(OCF0A)) && (cnt < TIMER_MAX)) res += MS_PER_TICK;
   }
   return (res);
 }
