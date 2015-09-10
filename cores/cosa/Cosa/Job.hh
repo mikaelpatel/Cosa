@@ -26,8 +26,8 @@
 
 /**
  * Abstract job class for handling of scheduled functions. The time
- * unit depends on the queue handler (scheduler). There are three
- * levels of queues predefined. The time resolutions; seconds (Alarm),
+ * scale depends on the queue handler (scheduler). There are three
+ * levels of queues predefined. The time resolutions; seconds (Clock),
  * milli-seconds (Watchdog) and micro-seconds (RTC).
  */
 class Job : public Link {
@@ -199,7 +199,7 @@ public:
   virtual void run() {}
 
 protected:
-  /** Expire time. Unit depends on scheduler. */
+  /** Expire time. Scale (us, ms, s) depends on scheduler. */
   uint32_t m_expires;
 
   /** Job scheduler. */
