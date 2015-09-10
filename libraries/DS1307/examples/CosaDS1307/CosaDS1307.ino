@@ -43,18 +43,38 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/Memory.h"
 
 // Set the real-time clock
 // #define SET_TIME
 
 // Example calibration values for internal clocks
-// 1. Pro-Mini Clone (white reset button)
-#define RTC_CALIBRATION_MS 0
-#define WATCHDOG_CALIBRATION_MS 25
-// 2. Pro-Mini Clone (red reset button)
+// 1. Duemilanove Clone (Funduino 2012 May)
 // #define RTC_CALIBRATION_MS 0
-// #define WATCHDOG_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -13
+// 2. Leonardo (Made in Italy)
+// #define RTC_CALIBRATION_MS -2
+// #define WATCHDOG_CALIBRATION_MS -98
+// 3. Mega 2560 Clone
+// #define RTC_CALIBRATION_MS -5
+// #define WATCHDOG_CALIBRATION_MS -68
+// 4. Mega 2560 Clone (Funduino)
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -110
+// 5. Nano Clone (DCCduino)
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -24
+// 6. Pro-Mini Clone (white reset button)
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS 25
+// 7. Pro-Mini Clone (Deek Robot, red reset button)
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -1
+// 8. Uno R3 Clone (GEtech)
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -112
+// 9. Uno R3 Clone (VISduino)
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -24
 
 // The real-time device, latest start and sample time in ram
 DS1307 rtc;
@@ -77,8 +97,13 @@ void setup()
   uart.begin(57600);
   trace.begin(&uart, PSTR("CosaDS1307: started"));
 
-  // Check amount of free memory
-  TRACE(free_memory());
+  // Print calibration
+#if defined(RTC_CALIBRATION_MS)
+  trace << PSTR("RTC:calibration:") << RTC_CALIBRATION_MS << endl;
+#endif
+#if defined(WATCHDOG_CALIBRATION_MS)
+  trace << PSTR("Watchdog:calibration:") << WATCHDOG_CALIBRATION_MS << endl;
+#endif
 
   // Start the watchdog and internal real-time clock
   Watchdog::begin();
@@ -127,13 +152,6 @@ void setup()
   trace << PSTR("control:") << bin << control << endl;
   trace.flush();
 
-  // Synchronize clocks
-  while (clkPin.is_set()) yield();
-  ASSERT(rtc.get_time(now));
-  now.to_binary();
-  RTC::clock.time(now);
-  Watchdog::clock.time(now);
-
   // Set calibration (from error measurement)
 #if defined(RTC_CALIBRATION_MS)
   RTC::clock.calibration(RTC_CALIBRATION_MS);
@@ -141,6 +159,13 @@ void setup()
 #if defined(WATCHDOG_CALIBRATION_MS)
   Watchdog::clock.calibration(WATCHDOG_CALIBRATION_MS);
 #endif
+
+  // Synchronize clocks
+  while (clkPin.is_set()) yield();
+  ASSERT(rtc.get_time(now));
+  now.to_binary();
+  RTC::clock.time(now);
+  Watchdog::clock.time(now);
 }
 
 void loop()
