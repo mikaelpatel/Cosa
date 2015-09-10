@@ -23,12 +23,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Clock.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
+Clock wall;
 IOStream cout(&uart);
 clock_t start_time;
 
@@ -153,7 +155,7 @@ static void show_epoch()
 
 void setup()
 {
-  RTC::begin();
+  RTC::begin(&wall);
   Watchdog::begin();
   uart.begin(9600);
   cout << PSTR("CosaTime: started") << endl;
@@ -251,13 +253,13 @@ void setup()
   cout << PSTR("Setting RTC to ") << now
        << PSTR(" (") << start_time << PSTR(" seconds)")
        << endl;
-  RTC::time(start_time);
+  wall.time(start_time);
 }
 
 void loop()
 {
   // Read internal RTC time and create time for time zones
-  clock_t clock = RTC::time();
+  clock_t clock = wall.time();
   time_t se(clock, 2);
   time_t utc(clock);
   time_t us(clock, -4);
@@ -271,7 +273,7 @@ void loop()
 
   // Take a nap until seconds update. Count number of yields
   uint8_t cnt = 0;
-  while (clock == RTC::time()) {
+  while (clock == wall.time()) {
     cnt += 1;
     yield();
   }

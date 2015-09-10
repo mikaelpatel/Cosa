@@ -61,10 +61,13 @@ MAX72XX display(&port);
 // Use the display as an iostream
 IOStream cout(&display);
 
+// Wall-clock
+Clock clock;
+
 void setup()
 {
   Watchdog::begin();
-  RTC::begin();
+  RTC::begin(&clock);
   display.begin();
 }
 
@@ -74,7 +77,7 @@ void loop()
   periodic(timer, 5000) {
 
     // Print timestamp; minutes and seconds
-    cout << clear << RTC::seconds() << 'E';
+    cout << clear << clock.time() << 'E';
     sleep(1);
 
     // Print voltage

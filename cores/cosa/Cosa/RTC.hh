@@ -38,9 +38,10 @@ public:
   /**
    * Start the real-time clock and installs the real-time clock delay
    * function.
+   * @param[in] clock.
    * @return bool true(1) if successful otherwise false(0).
    */
-  static bool begin();
+  static bool begin(Clock* clock = 0);
 
   /**
    * Stop the real-time clock.
@@ -112,42 +113,6 @@ public:
   }
 
   /**
-   * Return the current clock in seconds.
-   * @return seconds.
-   * @note atomic
-   */
-  static uint32_t seconds()
-    __attribute__((always_inline))
-  {
-    return (clock.time());
-  }
-
-  /**
-   * Return the current clock in seconds.
-   * @return seconds.
-   * @note atomic
-   */
-  static clock_t time()
-    __attribute__((always_inline))
-  {
-    return (clock.time());
-  }
-
-  /**
-   * Set clock (seconds) to real-time (for instance seconds from a
-   * given date; epoch 1900-01-01 00:00 or 1970-01-01 00:00).
-   * Please note that the seconds level clock is not based on the
-   * micro-second level clock.
-   * @param[in] sec.
-   * @note atomic
-   */
-  static void time(clock_t sec)
-    __attribute__((always_inline))
-  {
-    clock.time(sec);
-  }
-
-  /**
    * Delay using the real-time clock. Installed as the global delay()
    * function when the real-time clock is started with begin().
    * @param[in] ms sleep period in milli-seconds.
@@ -201,7 +166,7 @@ public:
   }
 
   /**
-   * Set the real-time clock job scheduler.
+   * Get the real-time clock job scheduler.
    * @return scheduler.
    */
   static RTC::Scheduler* scheduler()
@@ -210,9 +175,22 @@ public:
   }
 
   /**
-   * RTC Alarm clock.
+   * Set the wall-clock.
+   * @param[in] clock.
    */
-  static Clock clock;
+  static void wall(Clock* clock)
+  {
+    s_clock = clock;
+  }
+
+  /**
+   * Get the wall-clock.
+   * @return clock.
+   */
+  static Clock* clock()
+  {
+    return (s_clock);
+  }
 
 private:
   static bool s_initiated;	     	//!< Initiated flag.
@@ -220,6 +198,7 @@ private:
   static volatile uint32_t s_millis;	//!< Milli-seconds counter.
   static Scheduler* s_scheduler;	//!< Job scheduler.
   static Job* s_job;			//!< Timer job.
+  static Clock* s_clock;		//!< Clock.
 
   /**
    * Do not allow instances. This is a static singleton; name space.

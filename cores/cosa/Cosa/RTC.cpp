@@ -46,7 +46,7 @@ RTC::Scheduler* RTC::s_scheduler = NULL;
 Job* RTC::s_job = NULL;
 
 // RTC alarm clock
-Clock RTC::clock;
+Clock* RTC::s_clock = NULL;
 
 bool
 RTC::Scheduler::start(Job* job)
@@ -141,7 +141,7 @@ RTC::Scheduler::time()
 }
 
 bool
-RTC::begin()
+RTC::begin(Clock* clock)
 {
   // Should not be already initiated
   if (UNLIKELY(s_initiated)) return (false);
@@ -162,6 +162,7 @@ RTC::begin()
 
   // Install delay function and mark as initiated
   ::delay = RTC::delay;
+  s_clock = clock;
   s_initiated = true;
   return (true);
 }
@@ -252,7 +253,8 @@ ISR(TIMER0_COMPA_vect)
     RTC::s_scheduler->dispatch();
 
   // Clock tick and dispatch expired jobs
-  RTC::clock.tick(MS_PER_TICK);
+  if (RTC::s_clock != NULL)
+    RTC::s_clock->tick(MS_PER_TICK);
 }
 
 ISR(TIMER0_COMPB_vect)

@@ -39,30 +39,25 @@
  */
 
 #include "Cosa/Time.hh"
+#include "Cosa/Clock.hh"
+#include "Cosa/RTC.hh"
 #include "Cosa/Alarm.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Configuration: RTC or External Interrupt Clock Source
-#define USE_RTC_CLOCK
+// Configuration: RTC, Watchdog or External Interrupt Clock Source
+// #define USE_RTC_CLOCK
 // #define USE_WATCHDOG_CLOCK
-// #define USE_ALARM_CLOCK
-
-#if defined(USE_RTC_CLOCK)
-#include "Cosa/RTC.hh"
-#define alarms RTC::clock
-#endif
-
-#if defined(USE_WATCHDOG_CLOCK)
-#include "Cosa/Watchdog.hh"
-#define alarms Watchdog::clock
-#endif
+#define USE_ALARM_CLOCK
 
 #if defined(USE_ALARM_CLOCK)
 #include <DS1307.h>
 DS1307 rtc;
 Alarm::Clock alarms(Board::EXT0);
+#else
+Clock alarms;
 #endif
 
 class TraceAlarm : public Alarm {
@@ -111,7 +106,7 @@ void setup()
   trace.flush();
 
   // Start the real-time clock
-  RTC::begin();
+  RTC::begin(&alarms);
 
 #elif defined(USE_WATCHDOG_CLOCK)
 
@@ -119,9 +114,10 @@ void setup()
   trace.flush();
 
   // Start the watchdog
-  Watchdog::begin();
+  Watchdog::begin(16, &alarms);
 
 #elif defined(USE_ALARM_CLOCK)
+
   trace << PSTR("Alarm clock (DS1307/EXT0)") << endl;
   trace.flush();
 

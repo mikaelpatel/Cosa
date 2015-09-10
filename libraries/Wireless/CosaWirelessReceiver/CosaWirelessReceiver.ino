@@ -66,12 +66,15 @@ VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
 VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
 #endif
 
+// Wall-clock
+Clock clock;
+
 void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaWirelessReceiver: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTC::begin(&clock);
   ASSERT(rf.begin());
 }
 
@@ -159,7 +162,7 @@ void loop()
 
   // Print the message header
   if (count >= 0) {
-    trace << RTC::seconds()
+    trace << clock.time()
 	  << PSTR(":src=") << hex << src
 	  << PSTR(",port=") << hex << port
 	  << PSTR(",dest=")

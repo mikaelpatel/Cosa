@@ -31,7 +31,8 @@
 
 /**
  * The AVR Watchdog is used as a low power timer for periodical
- * events and delay. Please note that the accuracy is only within 5%.
+ * events and delay. Please note that the accuracy is only within 1-10%
+ * if not calibrated.
  */
 class Watchdog {
 public:
@@ -79,8 +80,9 @@ public:
    * timeout period is mapped to 16 milli-seconds and double periods
    * (32, 64, 128, etc to approx 8 seconds).
    * @param[in] ms timeout period in milli-seconds (default 16 ms).
+   * @param[in] clock (default NULL).
    */
-  static void begin(uint16_t ms = 16);
+  static void begin(uint16_t ms = 16, Clock* clock = NULL);
 
   /**
    * Delay using watchdog timeouts and sleep mode.
@@ -107,42 +109,6 @@ public:
   {
     uint32_t now = millis();
     return (now - start);
-  }
-
-  /**
-   * Return the current clock in seconds.
-   * @return seconds.
-   * @note atomic
-   */
-  static uint32_t seconds()
-    __attribute__((always_inline))
-  {
-    return (clock.time());
-  }
-
-  /**
-   * Return the current clock in seconds.
-   * @return seconds.
-   * @note atomic
-   */
-  static clock_t time()
-    __attribute__((always_inline))
-  {
-    return (clock.time());
-  }
-
-  /**
-   * Set clock (seconds) to real-time (for instance seconds from a
-   * given date; epoch 1900-01-01 00:00 or 1970-01-01 00:00).
-   * Please note that the seconds level clock is not based on the
-   * micro-second level clock.
-   * @param[in] sec.
-   * @note atomic
-   */
-  static void time(clock_t sec)
-    __attribute__((always_inline))
-  {
-    clock.time(sec);
   }
 
   /**
@@ -197,9 +163,22 @@ public:
   }
 
   /**
-   * Watchdog Alarm Clock.
+   * Set the wall-clock.
+   * @param[in] clock.
    */
-  static Clock clock;
+  static void wall(Clock* clock)
+  {
+    s_clock = clock;
+  }
+
+  /**
+   * Get the wall-clock.
+   * @return clock.
+   */
+  static Clock* clock()
+  {
+    return (s_clock);
+  }
 
 private:
   static bool s_initiated;		//!< Initiated flag.
@@ -207,6 +186,7 @@ private:
   static uint16_t s_ms_per_tick;	//!< Number of milli-seconds per tick.
   static Event::Handler* s_handler;	//!< Watchdog timeout event handler.
   static Scheduler* s_scheduler;	//!< Watchdog Job Scheduler.
+  static Clock* s_clock;		//!< Watchdog Clock.
 
   /**
    * Do not allow instances. This is a static singleton.

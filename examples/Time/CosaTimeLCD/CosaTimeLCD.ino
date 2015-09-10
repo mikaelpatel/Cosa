@@ -21,6 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Clock.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/AnalogPin.hh"
@@ -65,11 +66,12 @@ HD44780 lcd(&port);
 IOStream cout(&lcd);
 
 // Start time (set to 30 seconds before New Years 2014)
+Clock wall;
 clock_t epoch;
 
 void setup()
 {
-  RTC::begin();
+  RTC::begin(&wall);
   Watchdog::begin();
   lcd.begin();
   cout << PSTR("CosaTimeLCD: started");
@@ -84,13 +86,13 @@ void setup()
   now.month = 12;
   now.year = 13;
   epoch = now;
-  RTC::time(epoch);
+  wall.time(epoch);
 }
 
 void loop()
 {
   // Read internal RTC time
-  clock_t clock = RTC::time();
+  clock_t clock = wall.time();
   time_t now(clock);
   now.to_bcd();
 
@@ -109,5 +111,5 @@ void loop()
        << AnalogPin::bandgap(1100) << PSTR(" mV");
 
   // Take a nap until seconds update
-  while (clock == RTC::time()) yield();
+  while (clock == wall.time()) yield();
 }

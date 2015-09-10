@@ -25,9 +25,11 @@
 #ifndef CFFS_COMMANDS_HH
 #define CFFS_COMMANDS_HH
 
+#include "Cosa/Clock.hh"
 #include "Cosa/IOStream.hh"
 
 extern Shell shell;
 extern IOStream ios;
+extern Clock clock;
 #endif
 

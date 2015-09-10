@@ -22,10 +22,13 @@
  */
 
 #include "Cosa/RTC.hh"
+#include "Cosa/Clock.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
+Clock clock;
 
 OutputPin led(Board::LED);
 
@@ -40,7 +43,7 @@ void setup()
 
   // Start timers
   Watchdog::begin();
-  RTC::begin();
+  RTC::begin(&clock);
 
   // Set timers to the start time
   Watchdog::millis(START);
@@ -50,24 +53,22 @@ void setup()
 void loop()
 {
   led.on();
+
   uint32_t rms = RTC::millis();
   uint32_t wms = Watchdog::millis();
   uint32_t wsd = Watchdog::since(START);
   uint32_t rsd = RTC::since(START);
   int32_t diff = wsd - rsd;
 
-  trace << RTC::seconds() << ':'
-	<< rms << ':'
-	<< wms << ':'
-	<< rsd << ':'
-	<< wsd << ':'
-	<< diff << ':'
-	<< diff / Watchdog::ms_per_tick()
+  trace << clock.time()
+	<< ':' << rms << '-' << rsd
+	<< ':' << wms << '-'<< wsd
+	<< PSTR(":T") << diff
+	<< PSTR(",t") << diff / Watchdog::ms_per_tick()
 	<< endl;
 
   delay(1000 - RTC::since(rms));
   led.off();
-
   delay(1000);
 }
 

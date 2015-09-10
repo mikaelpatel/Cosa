@@ -27,11 +27,14 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
+#include "Cosa/Clock.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
+Clock clock;
 
 void setup()
 {
@@ -50,7 +53,7 @@ void setup()
 
   // Start the timers
   Watchdog::begin();
-  RTC::begin();
+  RTC::begin(&clock);
 
   // Check timer parameters
   TRACE(Watchdog::ms_per_tick());
@@ -58,12 +61,12 @@ void setup()
   TRACE(RTC::us_per_timer_cycle());
   TRACE(RTC::micros());
   TRACE(RTC::millis());
-  TRACE(RTC::seconds());
+  TRACE(clock.time());
 
   // Measure baseline
   MEASURE("RTC::micros(): ", 1) RTC::micros();
   MEASURE("RTC::millis(): ", 1) RTC::millis();
-  MEASURE("RTC::seconds(): ", 1) RTC::seconds();
+  MEASURE("clock.time(): ", 1) clock.time();
   MEASURE("RTC::delay(1): ", 1)  RTC::delay(1);
   MEASURE("RTC::delay(10): ", 1) RTC::delay(10);
   MEASURE("DELAY(10): ", 1) DELAY(10);
@@ -76,12 +79,12 @@ void setup()
   // Start the measurement
   TRACE(RTC::micros());
   TRACE(RTC::millis());
-  TRACE(RTC::seconds());
+  TRACE(clock.time());
   for (uint8_t i = 0; i < 5; i++) {
     Watchdog::delay(1000);
     TRACE(RTC::micros());
     TRACE(RTC::millis());
-    TRACE(RTC::seconds());
+    TRACE(clock.time());
   }
   trace.flush();
 
@@ -99,7 +102,7 @@ void setup()
       err++;
     }
   }
-  TRACE(RTC::seconds());
+  TRACE(clock.time());
   INFO("DELAY(100): 100000 measurement/validation (err = %ul)", err);
   trace.flush();
 
@@ -117,7 +120,7 @@ void setup()
       err++;
     }
   }
-  TRACE(RTC::seconds());
+  TRACE(clock.time());
   INFO("RTC::delay(100): 100 measurement/validation (err = %ul)", err);
   trace.flush();
 
@@ -135,7 +138,7 @@ void setup()
       err++;
     }
   }
-  TRACE(RTC::seconds());
+  TRACE(clock.time());
   INFO("Watchdog::delay(100): 100 measurement/validation (err = %ul)", err);
 }
 

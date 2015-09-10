@@ -53,7 +53,7 @@ SHELL_ACTION(date, "", "current time and date")
 {
   UNUSED(argv);
   if (argc != 1) return (-1);
-  time_t now(RTC::seconds());
+  time_t now(clock.time());
   ios << now << endl;
   return (0);
 }
