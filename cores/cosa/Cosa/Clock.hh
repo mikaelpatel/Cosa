@@ -92,9 +92,31 @@ public:
    * @param[in] ms milli-seconds.
    * @note atomic
    */
-  void calibrate(int16_t ms)
+  void calibration(int16_t ms)
   {
     synchronized m_cal = ms;
+  }
+
+  /**
+   * Get current clock calibration.
+   * @return calibration.
+   * @note atomic
+   */
+  int16_t calibration()
+  {
+    int16_t res;
+    synchronized res = m_cal;
+    return (res);
+  }
+
+  /**
+   * Adjust clock calibration with given number of milli-seconds.
+   * @param[in] ms milli-seconds.
+   * @note atomic
+   */
+  void adjust(int16_t ms)
+  {
+    synchronized m_cal += ms;
   }
 
 protected:

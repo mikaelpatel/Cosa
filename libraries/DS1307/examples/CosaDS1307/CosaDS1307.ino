@@ -48,6 +48,14 @@
 // Set the real-time clock
 // #define SET_TIME
 
+// Example calibration values for internal clocks
+// 1. Pro-Mini Clone (white reset button)
+#define RTC_CALIBRATION_MS 0
+#define WATCHDOG_CALIBRATION_MS 25
+// 2. Pro-Mini Clone (red reset button)
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS 0
+
 // The real-time device, latest start and sample time in ram
 DS1307 rtc;
 
@@ -83,13 +91,11 @@ void setup()
   latest.set.to_binary();
   latest.run.to_binary();
 
-  // Print latest set and the latest run time
-  trace.print(PSTR("set on "));
-  trace << latest.set << endl;
-  trace.print(PSTR("run on "));
-  trace << latest.run << endl;
+  // Print the latest set and run time
+  trace << PSTR("set:") << latest.set << endl;
+  trace << PSTR("run:") << latest.run << endl;
 
-  // Set the time. Adjust below to your current time
+  // Set the time. Adjust below to your current time (BCD)
   time_t now;
 #if defined(SET_TIME)
   now.year = 0x14;
@@ -110,22 +116,31 @@ void setup()
   count = rtc.write(&latest, sizeof(latest), DS1307::RAM_START);
   ASSERT(count == sizeof(latest));
 
-  // Print the control register
+  // Enable square wave generation
   ASSERT(rtc.enable());
+
+  // Print the control register
   DS1307::control_t control;
   uint8_t pos = offsetof(DS1307::timekeeper_t, control);
   count = rtc.read(&control, sizeof(control), pos);
   ASSERT(count == sizeof(control));
-  trace << PSTR("control = ") << bin << control << endl;
+  trace << PSTR("control:") << bin << control << endl;
   trace.flush();
 
   // Synchronize clocks
+  while (clkPin.is_set()) yield();
   ASSERT(rtc.get_time(now));
   now.to_binary();
   RTC::clock.time(now);
-  RTC::clock.calibrate(-5);
   Watchdog::clock.time(now);
-  Watchdog::clock.calibrate(25);
+
+  // Set calibration (from error measurement)
+#if defined(RTC_CALIBRATION_MS)
+  RTC::clock.calibration(RTC_CALIBRATION_MS);
+#endif
+#if defined(WATCHDOG_CALIBRATION_MS)
+  Watchdog::clock.calibration(WATCHDOG_CALIBRATION_MS);
+#endif
 }
 
 void loop()
@@ -140,16 +155,20 @@ void loop()
   time_t now;
   ASSERT(rtc.get_time(now));
   now.to_binary();
+
+  // Calculate the error in seconds
   clock_t seconds = now;
   int32_t rtc = RTC::clock.time() - seconds;
   int32_t wdg = Watchdog::clock.time() - seconds;
+
+  // Print the clocks, errors and calibration setting
   trace << cycle << ':' << now
 	<< PSTR(":RTC:")
 	<< (rtc < 0 ? PSTR("T") : PSTR("T+")) << rtc
-	<< PSTR(",err=") << (100.0 * rtc) / cycle << '%'
+	<< PSTR(",err=") << (1000.0 * rtc) / cycle
 	<< PSTR(":Watchdog:")
 	<< (wdg < 0 ? PSTR("T") : PSTR("T+")) << wdg
-	<< PSTR(",err=") << (100.0 * wdg) / cycle << '%'
+	<< PSTR(",err=") << (1000.0 * wdg) / cycle
 	<< endl;
   cycle += 1;
 
