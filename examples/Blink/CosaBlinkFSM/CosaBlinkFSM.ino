@@ -155,13 +155,12 @@ void setup()
   trace.begin(&uart, PSTR("CosaFSM: started"));
   trace.flush();
 
-  // Start the watchdog and set the scheduler
-  Watchdog::begin();
-  Watchdog::job(&scheduler);
-
   // Start the state machines
   led1.begin();
   led2.begin();
+
+  // Start the watchdog and set the scheduler
+  Watchdog::begin();
 }
 
 void loop()

@@ -61,14 +61,13 @@ LED blueLedPin(Board::D7, &scheduler, 1024);
 
 void setup()
 {
-  // Start the watchdog ticks and job scheduler
-  Watchdog::begin();
-  Watchdog::job(&scheduler);
-
   // Start the periodic functions
   redLedPin.start();
   greenLedPin.start();
   blueLedPin.start();
+
+  // Start the watchdog ticks
+  Watchdog::begin();
 }
 
 void loop()

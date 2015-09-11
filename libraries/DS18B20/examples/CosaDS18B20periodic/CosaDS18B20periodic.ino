@@ -125,7 +125,6 @@ void setup()
 
   // Start the watchdog ticks counter
   Watchdog::begin();
-  Watchdog::job(&scheduler);
 
   // Connect to the device and start periodic function
   ASSERT(sensor.connect(0));

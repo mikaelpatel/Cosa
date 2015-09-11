@@ -62,12 +62,12 @@ MAX72XX display(&port);
 IOStream cout(&display);
 
 // Wall-clock
-Clock clock;
+RTC::Clock clock;
 
 void setup()
 {
   Watchdog::begin();
-  RTC::begin(&clock);
+  RTC::begin();
   display.begin();
 }
 

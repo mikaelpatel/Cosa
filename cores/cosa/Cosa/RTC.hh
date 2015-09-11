@@ -36,12 +36,10 @@
 class RTC {
 public:
   /**
-   * Start the real-time clock and installs the real-time clock delay
-   * function.
-   * @param[in] clock.
+   * Start the real-time clock.
    * @return bool true(1) if successful otherwise false(0).
    */
-  static bool begin(Clock* clock = 0);
+  static bool begin();
 
   /**
    * Stop the real-time clock.
@@ -136,6 +134,15 @@ public:
   class Scheduler : public Job::Scheduler {
   public:
     /**
+     * Construct and register a RTC Job Scheduler. Should be a
+     * singleton.
+     */
+    Scheduler() : Job::Scheduler()
+    {
+      RTC::s_scheduler = this;
+    }
+
+    /**
      * @override Job::Scheduler
      * Start given job. Returns true(1) if successful otherwise
      * false(0).
@@ -173,6 +180,20 @@ public:
   {
     return (s_scheduler);
   }
+
+  /**
+   * RTC Clock for seconds level time base.
+   */
+  class Clock : public ::Clock {
+  public:
+    /**
+     * Construct and register a RTC Clock. Should be a singleton.
+     */
+    Clock() : ::Clock()
+    {
+      RTC::s_clock = this;
+    }
+  };
 
   /**
    * Set the wall-clock.

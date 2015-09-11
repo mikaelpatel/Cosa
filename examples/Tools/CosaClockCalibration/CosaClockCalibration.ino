@@ -17,25 +17,25 @@
  *
  * @section Description
  * Calibrate RTC and Watchdog clocks with external clock source on
- * external interrupt pin (EXT0/D2). The source can for instance be
+ * external interrupt pin (EXT1/D3). The source can for instance be
  * square wave from an external I2C RTC module such as DS1307.
  *
  * @section Calibration
  * 1. Run without calibration settings.
  * 2. Run for at least 10-20 minutes (600-1200 seconds) alternatively
- *    connect a Logic Analyzer and probe D3(source), D4(RTC),
- *    D5(Watchdog).
+ *    connect a Logic Analyzer and probe D7(Clock), D8(RTC),
+ *    D9(Watchdog).
  * 3. Use the integer part of the error as calibration value or
  *    collect the period time error from the Logic Analyzer.
- * 4. Rerun and verify that the error level is reduced.
+ * 4. Rerun and verify that the error level reduced.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
 #include "Cosa/OutputPin.hh"
+#include "Cosa/Alarm.hh"
 #include "Cosa/Clock.hh"
 #include "Cosa/RTC.hh"
-#include "Cosa/Alarm.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -68,14 +68,17 @@
 // 9. Uno R3 Clone (VISduino)
 // #define RTC_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -24
-// 10. Your Arduino
+// 10. Anarduino Miniwireless
 #define RTC_CALIBRATION_MS 0
-#define WATCHDOG_CALIBRATION_MS 0
+#define WATCHDOG_CALIBRATION_MS -66
+// 11. Your Arduino
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS 0
 
 // Wall-clocks
-Alarm::Clock clock(Board::EXT0);
-Clock wall;
-Clock bark;
+Alarm::Clock clock(Board::EXT1);
+RTC::Clock wall;
+Watchdog::Clock bark;
 
 // Pulse generator class
 class Pulse : public Periodic {
@@ -97,9 +100,9 @@ private:
 };
 
 // Pulse generators
-Pulse red(&clock, 1, Board::D3);
-Pulse green(&wall, 1, Board::D4);
-Pulse blue(&bark, 1, Board::D5);
+Pulse red(&clock, 1, Board::D7);
+Pulse green(&wall, 1, Board::D8);
+Pulse blue(&bark, 1, Board::D9);
 
 void setup()
 {
@@ -116,8 +119,8 @@ void setup()
 #endif
 
   // Start the watchdog and internal real-time clock
-  Watchdog::begin(16, &bark);
-  RTC::begin(&wall);
+  Watchdog::begin();
+  RTC::begin();
 
   // Set calibration (from error measurement)
 #if defined(RTC_CALIBRATION_MS)

@@ -141,7 +141,6 @@ void setup()
 
   // Use the watchdog
   Watchdog::begin();
-  Watchdog::job(&scheduler);
 
   // Reset the receiver to start up clean
   receiver.reset();

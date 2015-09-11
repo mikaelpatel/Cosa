@@ -85,7 +85,6 @@ void setup()
   uart.begin(9600);
   cout << PSTR("CosaTouch: started") << endl;
   Watchdog::begin();
-  Watchdog::job(&scheduler);
   RTC::begin();
   Key::set_value(0);
   upkey.start();

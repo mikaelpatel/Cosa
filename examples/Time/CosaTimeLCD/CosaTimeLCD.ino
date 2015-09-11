@@ -66,12 +66,12 @@ HD44780 lcd(&port);
 IOStream cout(&lcd);
 
 // Start time (set to 30 seconds before New Years 2014)
-Clock wall;
+RTC::Clock wall;
 clock_t epoch;
 
 void setup()
 {
-  RTC::begin(&wall);
+  RTC::begin();
   Watchdog::begin();
   lcd.begin();
   cout << PSTR("CosaTimeLCD: started");

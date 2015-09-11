@@ -120,6 +120,9 @@ protected:
     if ((old_state != new_state) &&
 	((MODE == ON_CHANGE_MODE) || (new_state == MODE)))
       on_change(Event::FALLING_TYPE + MODE);
+
+    // Put the job back into the queue
+    reschedule();
   }
 };
 

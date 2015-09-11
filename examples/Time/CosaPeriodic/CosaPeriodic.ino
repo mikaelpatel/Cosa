@@ -28,7 +28,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-class LED : public Periodic, private OutputPin {
+class LED : public Periodic, public OutputPin {
 public:
   LED(Job::Scheduler* scheduler, uint16_t ms) :
     Periodic(scheduler, ms),
@@ -40,18 +40,27 @@ public:
   }
 };
 
+IOStream& operator<<(IOStream& outs, LED &led)
+{
+  return (outs << (led.is_on() ? PSTR("on") : PSTR("off")));
+}
+
 const uint32_t START = 0xfffff000UL;
+const uint32_t PERIOD = 512;
+
 Watchdog::Scheduler scheduler;
-LED led(&scheduler, 512);
+LED led(&scheduler, PERIOD);
 
 void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaPeriodic: started"));
+  TRACE(sizeof(LED));
+  TRACE(START);
+  TRACE(PERIOD);
   trace.flush();
 
   Watchdog::begin();
-  Watchdog::job(&scheduler);
   Watchdog::millis(START);
   led.start();
 }
@@ -59,5 +68,5 @@ void setup()
 void loop()
 {
   Event::service();
-  trace << Watchdog::millis() << endl;
+  trace << Watchdog::millis() << ':' << led << endl;
 }

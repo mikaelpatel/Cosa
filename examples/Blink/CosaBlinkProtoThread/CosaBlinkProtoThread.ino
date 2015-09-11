@@ -61,7 +61,6 @@ LED builtin(Board::LED, &scheduler, 512);
 void setup()
 {
   Watchdog::begin();
-  Watchdog::job(&scheduler);
   builtin.begin();
 }
 

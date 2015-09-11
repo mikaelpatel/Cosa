@@ -42,7 +42,7 @@ public:
     uint32_t now = time();
     uint32_t expire = expire_at();
     int32_t diff = expire - now;
-    m_chain->expire_after(m_delay);
+    m_chain->expire_at(expire + m_delay);
     m_chain->start();
     trace << now << ':' << expire
 	  << (diff < 0 ? PSTR(":T") : PSTR(":T+")) << diff
@@ -85,14 +85,12 @@ void setup()
   trace.begin(&uart, PSTR("CosaWatchdogJob: started"));
   trace.flush();
 
-  // Start the watchdog clock and scheduler
-  Watchdog::begin();
-  Watchdog::job(&scheduler);
-  Watchdog::millis(0UL);
-
   // Start the work
   w1.start();
   w4.start();
+
+  // Start the watchdog clock
+  Watchdog::begin();
 }
 
 void loop()

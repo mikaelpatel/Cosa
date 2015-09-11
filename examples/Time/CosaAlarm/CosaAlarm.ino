@@ -49,15 +49,22 @@
 
 // Configuration: RTC, Watchdog or External Interrupt Clock Source
 // #define USE_RTC_CLOCK
-// #define USE_WATCHDOG_CLOCK
-#define USE_ALARM_CLOCK
+#define USE_WATCHDOG_CLOCK
+// #define USE_ALARM_CLOCK
+
+
+#if defined(USE_RTC_CLOCK)
+RTC::Clock alarms;
+#endif
+
+#if defined(USE_WATCHDOG_CLOCK)
+Watchdog::Clock alarms;
+#endif
 
 #if defined(USE_ALARM_CLOCK)
 #include <DS1307.h>
 DS1307 rtc;
 Alarm::Clock alarms(Board::EXT0);
-#else
-Clock alarms;
 #endif
 
 class TraceAlarm : public Alarm {
@@ -106,7 +113,7 @@ void setup()
   trace.flush();
 
   // Start the real-time clock
-  RTC::begin(&alarms);
+  RTC::begin();
 
 #elif defined(USE_WATCHDOG_CLOCK)
 
@@ -114,7 +121,7 @@ void setup()
   trace.flush();
 
   // Start the watchdog
-  Watchdog::begin(16, &alarms);
+  Watchdog::begin();
 
 #elif defined(USE_ALARM_CLOCK)
 

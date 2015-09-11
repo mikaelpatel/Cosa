@@ -37,7 +37,7 @@ Event::Handler* Watchdog::s_handler = NULL;
 Watchdog::Scheduler* Watchdog::s_scheduler = NULL;
 
 // Watchdog Alarm Clock
-Clock* Watchdog::s_clock = NULL;
+Watchdog::Clock* Watchdog::s_clock = NULL;
 
 uint8_t
 Watchdog::as_prescale(uint16_t ms)
@@ -49,7 +49,7 @@ Watchdog::as_prescale(uint16_t ms)
 }
 
 void
-Watchdog::begin(uint16_t ms, Clock* clock)
+Watchdog::begin(uint16_t ms)
 {
   // Map milli-seconds to watchdog prescale values
   uint8_t prescale = as_prescale(ms);
@@ -69,7 +69,6 @@ Watchdog::begin(uint16_t ms, Clock* clock)
   // Mark as initiated and set watchdog delay
   s_ms_per_tick = (1 << (prescale + 4));
   ::delay = Watchdog::delay;
-  s_clock = clock;
   s_initiated = true;
 }
 

@@ -32,9 +32,8 @@ LED builtin(&scheduler);
 void setup()
 {
   Power::set(SLEEP_MODE_PWR_DOWN);
-  Watchdog::begin();
-  Watchdog::job(&scheduler);
   builtin.alert_mode();
+  Watchdog::begin();
 }
 
 void loop()

@@ -98,9 +98,8 @@ void setup()
   TRACE(sizeof(Button));
   TRACE(sizeof(OnOffButton));
 
-  // Start the watchdog ticks and scheduler
+  // Start the watchdog
   Watchdog::begin();
-  Watchdog::job(&scheduler);
 
   // Start the button handler
   onOff.start();

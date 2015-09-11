@@ -67,14 +67,14 @@ VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
 #endif
 
 // Wall-clock
-Clock clock;
+RTC::Clock clock;
 
 void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaWirelessReceiver: started"));
   Watchdog::begin();
-  RTC::begin(&clock);
+  RTC::begin();
   ASSERT(rf.begin());
 }
 

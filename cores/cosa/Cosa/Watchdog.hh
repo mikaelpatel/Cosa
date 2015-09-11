@@ -80,9 +80,8 @@ public:
    * timeout period is mapped to 16 milli-seconds and double periods
    * (32, 64, 128, etc to approx 8 seconds).
    * @param[in] ms timeout period in milli-seconds (default 16 ms).
-   * @param[in] clock (default NULL).
    */
-  static void begin(uint16_t ms = 16, Clock* clock = NULL);
+  static void begin(uint16_t ms = 16);
 
   /**
    * Delay using watchdog timeouts and sleep mode.
@@ -135,6 +134,15 @@ public:
   class Scheduler : public Job::Scheduler {
   public:
     /**
+     * Construct and register a Watchdog Job Scheduler. Should be a
+     * singleton.
+     */
+    Scheduler() : Job::Scheduler()
+    {
+      Watchdog::s_scheduler = this;
+    }
+
+    /**
      * @override Job::Scheduler
      * Return current watchdog time in milli-seconds.
      */
@@ -161,6 +169,20 @@ public:
   {
     return (s_scheduler);
   }
+
+  /**
+   * Watchdog Clock for seconds level time base.
+   */
+  class Clock : public ::Clock {
+  public:
+    /**
+     * Construct and register a Watchdog Clock. Should be a singleton.
+     */
+    Clock() : ::Clock()
+    {
+      Watchdog::s_clock = this;
+    }
+  };
 
   /**
    * Set the wall-clock.

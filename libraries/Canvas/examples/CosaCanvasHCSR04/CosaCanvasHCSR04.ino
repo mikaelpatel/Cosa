@@ -111,7 +111,9 @@ void setup()
 {
   // Start the watchdog ticks
   Watchdog::begin();
-  Watchdog::job(&scheduler);
+
+  // Attach the range module to read distance every 1/4 second
+  ping.schedule(256);
 
   // Start display and initiate text scale and port. Draw splash screen
   tft.begin();
@@ -119,9 +121,6 @@ void setup()
   textbox.set_text_port(0, 0, tft.WIDTH, tft.HEIGHT);
   textbox.set_text_font(&segment32x50);
   ping.on_change(0);
-
-  // Attach the range module to read distance every 1/4 second
-  ping.schedule(256);
 }
 
 void loop()

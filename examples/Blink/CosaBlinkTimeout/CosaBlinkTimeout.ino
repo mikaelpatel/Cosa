@@ -59,7 +59,6 @@ void setup()
 {
   // Start the watchdog timer and job scheduler
   Watchdog::begin();
-  Watchdog::job(&scheduler);
 
   // Start the periodic functions.
   builtinPin.start();

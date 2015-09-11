@@ -28,7 +28,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-Clock clock;
+RTC::Clock clock;
 
 OutputPin led(Board::LED);
 
@@ -41,13 +41,13 @@ void setup()
   trace.begin(&uart, PSTR("CosaSince: started"));
   trace.flush();
 
-  // Start timers
-  Watchdog::begin();
-  RTC::begin(&clock);
-
   // Set timers to the start time
   Watchdog::millis(START);
   RTC::millis(START);
+
+  // Start timers
+  Watchdog::begin();
+  RTC::begin();
 }
 
 void loop()

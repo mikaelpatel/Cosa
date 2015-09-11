@@ -65,7 +65,6 @@ Blink led(&scheduler, 512);
 void setup()
 {
   Watchdog::begin();
-  Watchdog::job(&scheduler);
   led.schedule();
 }
 

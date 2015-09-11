@@ -32,19 +32,24 @@
 // #define UINT_T uint32_t
 
 // Delay periods to test
-// static const uint16_t US = 50;
+static const uint16_t US = 50;
 // static const uint16_t US = 100;
-static const uint16_t US = 200;
+// static const uint16_t US = 200;
 // static const uint16_t US = 300;
 // static const uint16_t US = 1000;
 
 // Start time in micro-seconds; 5 loop cycles before wrap
 const uint32_t START = UINT32_MAX - 10000019UL - (US / 2);
 
+// Max number with defined unsigned integer
+#define UINT_MAX ((UINT_T) (-1UL))
+
 void setup()
 {
   uart.begin(57600);
   trace.begin(&uart, PSTR("CosaMicros: started"));
+  TRACE(UINT_MAX);
+  TRACE(US);
   trace.flush();
   RTC::begin();
   RTC::micros(START);
@@ -53,11 +58,12 @@ void setup()
 
 void loop()
 {
+  ASSERT(US < UINT_MAX);
   UINT_T start = RTC::micros();
   DELAY(US);
   UINT_T stop = RTC::micros();
   UINT_T diff = (stop - start);
-  trace << RTC::micros() << ':' << diff << endl;
+  trace << RTC::micros() << ':' << stop<< '-' << start << ':' << diff << endl;
   delay(2000);
 }
 

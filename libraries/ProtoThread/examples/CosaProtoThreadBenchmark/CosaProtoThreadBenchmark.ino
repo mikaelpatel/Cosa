@@ -85,7 +85,6 @@ void setup()
 
   // Start the watchdog and rtc
   Watchdog::begin();
-  Watchdog::job(&scheduler);
   RTC::begin();
 
   // Start the counter threads

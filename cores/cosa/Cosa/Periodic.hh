@@ -70,6 +70,16 @@ public:
     return (m_period);
   }
 
+  /**
+   * Reschedule after a new period.
+   */
+  void reschedule()
+  {
+    m_expires += m_period;
+    start();
+  }
+
+
 protected:
   /**
    * @override Event::Handler
@@ -83,8 +93,7 @@ protected:
     UNUSED(value);
     if (UNLIKELY(type != Event::TIMEOUT_TYPE)) return;
     run();
-    m_expires += m_period;
-    start();
+    reschedule();
   }
 
   /** Time period. Time unit is defined by the scheduler. */

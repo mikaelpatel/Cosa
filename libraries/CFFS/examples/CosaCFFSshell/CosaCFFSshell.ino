@@ -45,14 +45,14 @@ S25FL127S flash;
 W25X40CL flash;
 #endif
 
-Clock clock;
+RTC::Clock clock;
 IOStream ios(&uart);
 
 void setup()
 {
   // Initiate timers
   Watchdog::begin();
-  RTC::begin(&clock);
+  RTC::begin();
 
   // Initiate UART for blocked read line
   uart.begin(9600);

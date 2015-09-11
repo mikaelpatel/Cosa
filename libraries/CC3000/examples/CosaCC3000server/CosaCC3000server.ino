@@ -32,7 +32,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-Clock clock;
+RTC::Clock clock;
 
 #if defined(WICKEDDEVICE_WILDFIRE)
 CC3000 wifi(Board::D21, Board::EXT2, Board::D23);
@@ -53,7 +53,7 @@ void setup()
   uart.begin(57600);
   trace.begin(&uart, PSTR("CosaCC3000server: started"));
   Watchdog::begin();
-  RTC::begin(&clock);
+  RTC::begin();
 
   ASSERT(wifi.begin_P(PSTR("CosaCC3300server")));
 

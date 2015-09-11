@@ -34,7 +34,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-Clock clock;
+RTC::Clock clock;
 
 void setup()
 {
@@ -53,7 +53,7 @@ void setup()
 
   // Start the timers
   Watchdog::begin();
-  RTC::begin(&clock);
+  RTC::begin();
 
   // Check timer parameters
   TRACE(Watchdog::ms_per_tick());
@@ -113,7 +113,7 @@ void setup()
     RTC::delay(100);
     stop = RTC::millis();
     uint32_t diff = stop - start;
-    if (diff > 115) {
+    if (diff > 105) {
       trace.printf(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
 		   i, start, stop, diff);
       Watchdog::delay(128);
@@ -131,7 +131,7 @@ void setup()
     Watchdog::delay(100);
     stop = RTC::millis();
     uint32_t diff = stop - start;
-    if (diff > 115) {
+    if (diff > 128) {
       trace.printf(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
 		   i, start, stop, diff);
       Watchdog::delay(128);

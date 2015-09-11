@@ -106,7 +106,6 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVCC: started"));
   Watchdog::begin();
-  Watchdog::job(&scheduler);
   lowPower.start();
   sampler.start();
   display.start();

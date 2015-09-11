@@ -30,7 +30,7 @@
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-Clock wall;
+RTC::Clock wall;
 IOStream cout(&uart);
 clock_t start_time;
 
@@ -155,7 +155,7 @@ static void show_epoch()
 
 void setup()
 {
-  RTC::begin(&wall);
+  RTC::begin();
   Watchdog::begin();
   uart.begin(9600);
   cout << PSTR("CosaTime: started") << endl;
