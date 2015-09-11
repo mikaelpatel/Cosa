@@ -24,9 +24,9 @@
  *
  * +-------+
  * | CHAN0 |-------------------------------> ledPin(LED/D13)
- * | CHAN1 |-------------------------------> outPin(D8);
- * | CHAN2 |-------------------------------> dataPin(D9);
- * | CHAN3 |-------------------------------> clockPin(D10);
+ * | CHAN1 |-------------------------------> outPin(D7);
+ * | CHAN2 |-------------------------------> dataPin(D8);
+ * | CHAN3 |-------------------------------> clockPin(D9);
  * |       |
  * | GND   |-------------------------------> GND
  * +-------+
@@ -39,9 +39,9 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-GPIO outPin(Board::D8, GPIO::OUTPUT_MODE);
-GPIO dataPin(Board::D9, GPIO::OUTPUT_MODE);
-GPIO clockPin(Board::D10, GPIO::OUTPUT_MODE);
+GPIO outPin(Board::D7, GPIO::OUTPUT_MODE);
+GPIO dataPin(Board::D8, GPIO::OUTPUT_MODE);
+GPIO clockPin(Board::D9, GPIO::OUTPUT_MODE);
 GPIO ledPin(Board::LED, GPIO::OUTPUT_MODE);
 uint8_t data;
 
@@ -51,9 +51,9 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalyzerGPIO: started"));
   trace << PSTR("CHAN0 - D13/LED [^]") << endl;
-  trace << PSTR("CHAN1 - D8 (out)") << endl;
-  trace << PSTR("CHAN2 - D9 (data)") << endl;
-  trace << PSTR("CHAN3 - D10 (clock)") << endl;
+  trace << PSTR("CHAN1 - D7 (out)") << endl;
+  trace << PSTR("CHAN2 - D8 (data)") << endl;
+  trace << PSTR("CHAN3 - D9 (clock)") << endl;
   trace.flush();
 
   // Initial data
