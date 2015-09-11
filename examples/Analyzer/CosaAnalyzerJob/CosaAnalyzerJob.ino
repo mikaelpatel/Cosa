@@ -16,14 +16,14 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Logic Analyzer based analysis of Job with RTC Scheduler.
+ * Logic Analyzer based analysis of Job chain scheduling.
  *
  * @section Circuit
- * Trigger on CHAN0/D8 rising.
+ * Trigger on CHAN0/D7 rising.
  *
  * +-------+
- * | CHAN0 |-------------------------------> D8
- * | CHAN1 |-------------------------------> D9
+ * | CHAN0 |-------------------------------> D7
+ * | CHAN1 |-------------------------------> D8
  * |       |
  * | GND   |-------------------------------> GND
  * +-------+
@@ -37,8 +37,8 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Call from interrupt service routine or event handler.
-// #define USE_ISR_DISPATCH
+// Call directly from interrupt
+#define USE_ISR_DISPATCH
 
 class Work : public Job {
 public:
@@ -59,10 +59,12 @@ public:
   }
 #endif
 
+  // Generate a pulse and schedule the next job in the chain relative
+  // to the expire time of the current work
   virtual void run()
   {
     m_pin.toggle();
-    m_chain.expire_at(time() + m_delay);
+    m_chain.expire_at(expire_at() + m_delay);
     m_chain.start();
     m_pin.toggle();
   }
@@ -85,22 +87,22 @@ extern Work w4;
 
 // Periodic
 // (w0)-200ms->(w0)
-Work w0(&scheduler, Board::D8, 200000UL, w0);
+Work w0(&scheduler, Board::D7, 200000UL, w0);
 
 // Chain
 // (w1)-150us->(w2)-400us->(w3)-1200us->(w4)-250us->(w1)
-Work w1(&scheduler, Board::D9,    150UL, w2);
-Work w2(&scheduler, Board::D9,    400UL, w3);
-Work w3(&scheduler, Board::D9,   1200UL, w4);
-Work w4(&scheduler, Board::D9,    250UL, w1);
+Work w1(&scheduler, Board::D8,    150UL, w2);
+Work w2(&scheduler, Board::D8,    400UL, w3);
+Work w3(&scheduler, Board::D8,   1200UL, w4);
+Work w4(&scheduler, Board::D8,    250UL, w1);
 
 void setup()
 {
   // Print Info about the logic analyser probe channels
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalyzerJob: started"));
-  trace << PSTR("CHAN0 - D8 [^]") << endl;
-  trace << PSTR("CHAN1 - D9") << endl;
+  trace << PSTR("CHAN0 - D7 [^]") << endl;
+  trace << PSTR("CHAN1 - D8") << endl;
   trace << PSTR("RTC Job Scheduler") << endl;
 #if defined(USE_ISR_DISPATCH)
   trace << PSTR("ISR dispatch") << endl;
@@ -109,13 +111,15 @@ void setup()
 #endif
   trace.flush();
 
-  // Start the real-time clock and scheduler
-  RTC::begin();
-  RTC::job(&scheduler);
-
   // Start the work
+  const uint32_t START = 1000000UL;
+  w0.expire_at(START);
+  w4.expire_at(START);
   w0.start();
   w4.start();
+
+  // Start the real-time clock
+  RTC::begin();
 }
 
 void loop()

@@ -16,15 +16,15 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Logic Analyzer based analysis of Periodic Job with RTC Scheduler.
+ * Logic Analyzer based analysis of Periodic jobs.
  *
  * @section Circuit
- * Trigger on CHAN0/D13/LED rising.
+ * Trigger on CHAN0/D7 rising.
  *
  * +-------+
- * | CHAN0 |-------------------------------> D8
- * | CHAN1 |-------------------------------> D9
- * | CHAN2 |-------------------------------> D10
+ * | CHAN0 |-------------------------------> D7
+ * | CHAN1 |-------------------------------> D8
+ * | CHAN2 |-------------------------------> D9
  * |       |
  * | GND   |-------------------------------> GND
  * +-------+
@@ -43,9 +43,8 @@
 #define USE_RTC
 // #define USE_WATCHDOG
 
-// Call directly from the interrupt service routine. Skip event handling.
-// Will also force alignment to the dispatch timestamp, i.e. no drift.
-#define USE_ISR_DISPATCH
+// Call directly from interrupt
+// #define USE_ISR_DISPATCH
 
 #if defined(USE_RTC)
 #define TIMER RTC
@@ -59,7 +58,7 @@
 
 class Work : public Periodic {
 public:
-  static const uint32_t START = 1000000UL;
+  const uint32_t START = SCALE(1000);
 
   Work(Job::Scheduler* scheduler, uint32_t delay, Board::DigitalPin pin) :
     Periodic(scheduler, delay),
@@ -69,11 +68,12 @@ public:
   }
 
 #if defined(USE_ISR_DISPATCH)
+  // If called direclty from the interrupt the periodic job will
+  // need to be rescheduled
   virtual void on_expired()
   {
     run();
-    expire_after(period());
-    start();
+    reschedule();
   }
 #endif
 
@@ -92,18 +92,18 @@ private:
 TIMER::Scheduler scheduler;
 
 // The periodic work
-Work w1(&scheduler, SCALE(640), Board::D8);
-Work w2(&scheduler, SCALE(320), Board::D9);
-Work w3(&scheduler, SCALE(160), Board::D10);
+Work w1(&scheduler, SCALE(640), Board::D7);
+Work w2(&scheduler, SCALE(320), Board::D8);
+Work w3(&scheduler, SCALE(160), Board::D9);
 
 void setup()
 {
   // Print info about the logic analyser probe channels
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalyzerPeriodic: started"));
-  trace << PSTR("CHAN0 - D8 [^]") << endl;
-  trace << PSTR("CHAN1 - D9") << endl;
-  trace << PSTR("CHAN2 - D10") << endl;
+  trace << PSTR("CHAN0 - D7 [^]") << endl;
+  trace << PSTR("CHAN1 - D8") << endl;
+  trace << PSTR("CHAN2 - D9") << endl;
 #if defined(USE_RTC)
   trace << PSTR("RTC Job Scheduler") << endl;
 #endif
@@ -117,14 +117,13 @@ void setup()
 #endif
   trace.flush();
 
-  // Start the timer and scheduler
-  TIMER::begin();
-  TIMER::job(&scheduler);
-
   // Start the work
   w1.start();
   w2.start();
   w3.start();
+
+  // Start the timer
+  TIMER::begin();
 }
 
 void loop()

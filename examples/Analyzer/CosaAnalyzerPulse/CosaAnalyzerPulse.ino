@@ -17,16 +17,15 @@
  *
  * @section Description
  * Logic Analyzer based analysis of Job Scheduler; generate 160 ms
- * pulse width [10..90%]. Demonstrate scheduling relative to scheduler
- * dispatch timestamp (expire_period).
+ * pulse width [10..90%], simulate servo control pulse.
  *
  * @section Circuit
- * Trigger on CHAN0/D8 rising.
+ * Trigger on CHAN0/D7 rising.
  *
  * +-------+
- * | CHAN0 |-------------------------------> D8
- * | CHAN1 |-------------------------------> D9
- * | CHAN2 |-------------------------------> D10
+ * | CHAN0 |-------------------------------> D7
+ * | CHAN1 |-------------------------------> D8
+ * | CHAN2 |-------------------------------> D9
  * |       |
  * | GND   |-------------------------------> GND
  * +-------+
@@ -60,7 +59,6 @@
 
 class Pulse : public Job {
 public:
-  static const uint32_t START = SCALE(1000);
   static const uint32_t WIDTH = SCALE(160);
 
   Pulse(Job::Scheduler* scheduler, uint16_t percent,
@@ -68,7 +66,6 @@ public:
     Job(scheduler),
     m_pin(pin)
   {
-    expire_at(START);
     width(percent);
   }
 
@@ -104,19 +101,19 @@ private:
 // The job scheduler
 TIMER::Scheduler scheduler;
 
-// Pulse generators with 20, 50 and 20% pulse width (32, 80, 32 ms)
-Pulse p1(&scheduler, 20, Board::D8);
-Pulse p2(&scheduler, 50, Board::D9);
-Pulse p3(&scheduler, 20, Board::D10);
+// Pulse generators with 20, 50 and 80% pulse width (32, 80, 128 ms)
+Pulse p1(&scheduler, 20, Board::D7);
+Pulse p2(&scheduler, 50, Board::D8);
+Pulse p3(&scheduler, 80, Board::D9);
 
 void setup()
 {
   // Print Info about the logic analyser probe channels
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalyzerPulse: started"));
-  trace << PSTR("CHAN0 - D8 [^]") << endl;
-  trace << PSTR("CHAN1 - D9") << endl;
-  trace << PSTR("CHAN2 - D10") << endl;
+  trace << PSTR("CHAN0 - D7 [^]") << endl;
+  trace << PSTR("CHAN1 - D8") << endl;
+  trace << PSTR("CHAN2 - D9") << endl;
 #if defined(USE_RTC)
   trace << PSTR("RTC Job Scheduler") << endl;
 #endif
@@ -130,14 +127,13 @@ void setup()
 #endif
   trace.flush();
 
-  // Start the real-time clock and scheduler
-  TIMER::begin();
-  TIMER::job(&scheduler);
-
   // Start the pulse width generators
   p1.start();
   p2.start();
   p3.start();
+
+  // Start the timer
+  TIMER::begin();
 }
 
 void loop()
