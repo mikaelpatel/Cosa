@@ -76,6 +76,9 @@ void setup()
   rtc.set_alarm(1, alarm, when);
   rtc.get_alarm(1, alarm, when);
   trace << PSTR("alarm(1): ") << alarm << ' ' << when << endl;
+
+  // Enable square wave output
+  TRACE(rtc.square_wave(true));
 }
 
 void loop()

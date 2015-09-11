@@ -270,6 +270,12 @@ public:
    */
   uint8_t pending_alarm();
 
+  /**
+   * Enable/disable square_wave generation.
+   * @param[in] flag.
+   */
+  bool square_wave(bool flag);
+
 protected:
   /**
    * Read register block with the given size into the buffer from the

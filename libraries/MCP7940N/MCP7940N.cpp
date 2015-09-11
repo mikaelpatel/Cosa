@@ -161,6 +161,16 @@ MCP7940N::clear_alarm(uint8_t nr)
   return (true);
 }
 
+bool
+MCP7940N::square_wave(bool flag)
+{
+  control_t cntrl;
+  uint8_t pos = offsetof(rtcc_t,control);
+  if (read(&cntrl, sizeof(cntrl), pos) != sizeof(cntrl)) return (false);
+  cntrl.sqwen = flag;
+  return (write(&cntrl, sizeof(cntrl), pos) == sizeof(cntrl));
+}
+
 IOStream& operator<<(IOStream& outs, MCP7940N::alarm_t& t)
 {
   outs << bcd << t.month << '-'
