@@ -68,7 +68,6 @@ void setup()
 
   // Start the watchdog ticks
   Watchdog::begin();
-  Watchdog::job(&scheduler);
 
   // Schedule to read distance every 1/4 second
   ping.schedule(256);
