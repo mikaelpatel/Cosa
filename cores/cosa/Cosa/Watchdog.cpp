@@ -30,9 +30,6 @@ bool Watchdog::s_initiated = false;
 volatile uint32_t Watchdog::s_millis = 0L;
 uint16_t Watchdog::s_ms_per_tick = 16;
 
-// Watchdog timeout event handler
-Event::Handler* Watchdog::s_handler = NULL;
-
 // Watchdog Job Scheduler (milli-seconds level delayed functions)
 Watchdog::Scheduler* Watchdog::s_scheduler = NULL;
 
@@ -83,10 +80,6 @@ ISR(WDT_vect)
 {
   // Increment milli-seconds counter
   Watchdog::s_millis += Watchdog::s_ms_per_tick;
-
-  // Push timeout event if an event handler is available
-  if (UNLIKELY(Watchdog::s_handler != NULL))
-    Event::push(Event::TIMEOUT_TYPE, Watchdog::s_handler);
 
   // Run all expired jobs
   if (Watchdog::s_scheduler != NULL)

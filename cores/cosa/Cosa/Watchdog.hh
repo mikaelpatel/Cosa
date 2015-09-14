@@ -24,9 +24,7 @@
 #include <avr/wdt.h>
 
 #include "Cosa/Types.h"
-#include "Cosa/Time.hh"
 #include "Cosa/Job.hh"
-#include "Cosa/Event.hh"
 #include "Cosa/Clock.hh"
 
 /**
@@ -117,15 +115,6 @@ public:
   {
     wdt_disable();
     s_initiated = false;
-  }
-
-  /**
-   * Push timeout events to the given event handler.
-   * @param[in] handler for the timeout events.
-   */
-  static void push_timeout_events(Event::Handler* handler)
-  {
-    s_handler = handler;
   }
 
   /**
