@@ -61,7 +61,11 @@ struct latest_t {
 OutputPin ledPin(Board::LED);
 
 // Clock pin
+#if defined(ARDUINO_PRO_MICRO)
+InputPin clkPin(Board::D0);
+#else
 InputPin clkPin(Board::D2);
+#endif
 
 void setup()
 {

@@ -85,9 +85,9 @@ public:
    */
   enum Rate {
     RS_1_HZ = 0,
-    RS_4096_KHZ = 1,
-    RS_8192_KHZ = 2,
-    RS_32768_KHZ = 3
+    RS_4096_HZ = 1,
+    RS_8192_HZ = 2,
+    RS_32768_HZ = 3
   } __attribute__((packed));
 
   /**
