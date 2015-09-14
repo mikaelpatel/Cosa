@@ -22,13 +22,10 @@
 #define COSA_CLOCK_HH
 
 #include "Cosa/Types.h"
-#include "Cosa/Time.hh"
 #include "Cosa/Job.hh"
 
 /**
- * Clock for job scheduling with a time unit of seconds. Should be
- * attached to a tick source such as RTC, Watchdog or External
- * Interrupt.
+ * Clock for job scheduling with a time unit of seconds.
  */
 class Clock : public Job::Scheduler {
 public:
@@ -44,8 +41,8 @@ public:
 
   /**
    * @override Job::Scheduler
-   * Return current scheduler time.
-   * @return time.
+   * Return clock time.
+   * @return seconds.
    */
   virtual uint32_t time()
   {
@@ -61,12 +58,27 @@ public:
    * @note atomic
    */
   void time(uint32_t sec)
-    __attribute__((always_inline))
   {
     synchronized {
       m_msec = 0;
       m_sec = sec;
     }
+  }
+
+  /**
+   * Wait for clock update. Returns clock time.
+   * @return seconds.
+   */
+  uint32_t await()
+  {
+    uint32_t start = time();
+    uint32_t now;
+    while (1) {
+      now = time();
+      if (now != start) break;
+      yield();
+    }
+    return (now);
   }
 
   /**
@@ -120,8 +132,8 @@ public:
   }
 
 protected:
-  volatile int16_t m_msec;	 //!< Milli-seconds fraction.
-  volatile uint32_t m_sec;	 //!< Seconds counter.
-  volatile int16_t m_cal;	 //!< Milli-seconds calibration.
+  int16_t m_msec;		//!< Milli-seconds fraction.
+  uint32_t m_sec;		//!< Seconds counter.
+  int16_t m_cal;		//!< Milli-seconds calibration.
 };
 #endif
