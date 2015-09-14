@@ -112,29 +112,4 @@ protected:
   virtual void run();
 };
 
-/**
- * LCD Keypad shield, keypad handler. The class represents the
- * necessary configuration; keypad sensor on analog pin A0 and
- * mapping vector.
- */
-class LCDKeypad : public Keypad {
-public:
-  // Key index
-  enum {
-    NO_KEY = 0,
-    SELECT_KEY,
-    LEFT_KEY,
-    DOWN_KEY,
-    UP_KEY,
-    RIGHT_KEY
-  } __attribute__((packed));
-
-  /** LCD Keypad constructor with internal key map. */
-  LCDKeypad(Job::Scheduler* scheduler) : Keypad(scheduler, Board::A0, m_map) {}
-
-private:
-  /** Analog reading to key index map. */
-  static const uint16_t m_map[] PROGMEM;
-};
-
 #endif

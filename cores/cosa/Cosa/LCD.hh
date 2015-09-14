@@ -23,7 +23,9 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/SPI.hh"
+#include "Cosa/Keypad.hh"
 #include "Cosa/IOStream.hh"
+#include "Cosa/AnalogPin.hh"
 
 /**
  * Common interface for LCD handlers; class LCD::Device as base
@@ -350,6 +352,33 @@ public:
     {
       spi.write(buf, size);
     }
+  };
+
+  /**
+   * LCD Keypad shield, keypad handler. The class represents the
+   * necessary configuration; keypad sensor on analog pin A0 and
+   * mapping vector.
+   */
+  class Keypad : public ::Keypad {
+  public:
+    // Key index
+    enum {
+      NO_KEY = 0,
+      SELECT_KEY,
+      LEFT_KEY,
+      DOWN_KEY,
+      UP_KEY,
+      RIGHT_KEY
+    } __attribute__((packed));
+
+    /** LCD Keypad constructor with internal key map. */
+    Keypad(Job::Scheduler* scheduler, Board::AnalogPin pin = Board::A0) :
+      ::Keypad(scheduler, pin, m_map)
+    {}
+
+  private:
+    /** Analog reading to key index map. */
+    static const uint16_t m_map[] PROGMEM;
   };
 };
 

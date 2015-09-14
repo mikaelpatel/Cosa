@@ -1,0 +1,5 @@
+
+
+const uint16_t LCD::Keypad::m_map[] __PROGMEM = {
+  1000, 700, 400, 300, 100, 0
+};
