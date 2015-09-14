@@ -41,7 +41,7 @@ public:
    * Construct a periodic function handled by the given scheduler and
    * with the given period in the schedulers time base. The maximum
    * period is UINT32_MAX; 1.2 hours with RTC::Scheduler, 49 days with
-   * Watchdog::Scheduler and 136 years with Alarm::Scheduler.
+   * Watchdog::Scheduler and 136 years with Alarm::Clock.
    * @param[in] scheduler for the periodic job.
    * @param[in] period of timeout.
    */
@@ -75,7 +75,8 @@ public:
    */
   void reschedule()
   {
-    m_expires += m_period;
+    if (m_period == 0) return;
+    expire_after(m_period);
     start();
   }
 

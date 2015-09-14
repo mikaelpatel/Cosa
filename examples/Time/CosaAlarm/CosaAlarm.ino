@@ -49,9 +49,8 @@
 
 // Configuration: RTC, Watchdog or External Interrupt Clock Source
 // #define USE_RTC_CLOCK
-#define USE_WATCHDOG_CLOCK
-// #define USE_ALARM_CLOCK
-
+// #define USE_WATCHDOG_CLOCK
+#define USE_ALARM_CLOCK
 
 #if defined(USE_RTC_CLOCK)
 RTC::Clock alarms;
@@ -67,10 +66,12 @@ DS1307 rtc;
 Alarm::Clock alarms(Board::EXT0);
 #endif
 
+// Trace the expired alarms. Note that the Clock should be the outer
+// context and not the default i.e. Alarm::Clock
 class TraceAlarm : public Alarm {
 public:
-  TraceAlarm(Job::Scheduler* scheduler, uint8_t id, uint16_t period) :
-    Alarm(scheduler, period),
+  TraceAlarm(::Clock* clock, uint8_t id, uint16_t period) :
+    Alarm(clock, period),
     m_id(id),
     m_tick(0)
   {

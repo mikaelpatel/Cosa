@@ -28,7 +28,8 @@
 
 /**
  * The Alarm class is an extension of the Periodic job class to allow
- * repeated jobs with seconds (clock_t) as time unit.
+ * repeated jobs with seconds as time unit. The abstract Clock is used
+ * as the alarm scheduler.
  */
 class Alarm : public Periodic {
 public:
@@ -40,8 +41,8 @@ public:
   class Clock : public ::Clock, public ExternalInterrupt {
   public:
     /**
-     * Construct Alarm Clock Job Scheduler with given external
-     * interrupt pin and mode.
+     * Construct Alarm Clock with given external interrupt pin and
+     * mode.
      * @param[in] pin number.
      * @param[in] mode pin mode (Default ON_RISING_MODE).
      * @param[in] pullup flag (Default false).
@@ -67,15 +68,13 @@ public:
   };
 
   /**
-   * Construct alarm with given timeout period in seconds. The maximum
-   * alarm period is UINT32_MAX (4294967295) seconds. The given
-   * scheduler should use seconds as time unit. Alarm::Scheduler is
-   * the default scheduler.
-   * @param[in] scheduler for alarms.
+   * Construct alarm with given clock (job scheduler) and timeout
+   * period in seconds.
+   * @param[in] clock for alarms.
    * @param[in] period seconds.
    */
-  Alarm(Job::Scheduler* scheduler, uint32_t period) :
-    Periodic(scheduler, period)
+  Alarm(::Clock* clock, uint32_t period) :
+    Periodic(clock, period)
   {}
 };
 #endif
