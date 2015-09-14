@@ -1,5 +1,5 @@
 /**
- * @file Cosa/Job.cpp
+ * @file Cosa/Job_Scheduler.cpp
  * @version 1.0
  *
  * @section License
