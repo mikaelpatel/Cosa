@@ -23,7 +23,6 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/Job.hh"
-#include "Cosa/Time.hh"
 #include "Cosa/Clock.hh"
 
 /**
