@@ -205,7 +205,7 @@ public:
    * key down events to the Menu walker. For simplicity the key
    * map for the walker and the LCD keypad are the same.
    */
-  class KeypadController : public LCDKeypad {
+  class KeypadController : public LCD::Keypad {
   public:
     Walker* m_walker;
 
@@ -215,7 +215,7 @@ public:
      * @param[in] walker to control.
      */
     KeypadController(Walker* walker, Job::Scheduler* scheduler) :
-      LCDKeypad(scheduler),
+      LCD::Keypad(scheduler),
       m_walker(walker)
     {}
 

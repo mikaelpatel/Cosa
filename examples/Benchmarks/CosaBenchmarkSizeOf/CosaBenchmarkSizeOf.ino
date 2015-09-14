@@ -30,15 +30,26 @@
 
 #include "Cosa/Memory.h"
 
+#include "Cosa/Alarm.hh"
+#include "Cosa/AnalogComparator.hh"
+#include "Cosa/AnalogPin.hh"
+#include "Cosa/AnalogPins.hh"
 #include "Cosa/BitSet.hh"
 #include "Cosa/Button.hh"
+#include "Cosa/Clock.hh"
 #include "Cosa/EEPROM.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/ExternalInterrupt.hh"
+#include "Cosa/Flash.hh"
 #include "Cosa/FSM.hh"
+#include "Cosa/GPIO.hh"
+#include "Cosa/InputCapture.hh"
+#include "Cosa/InputPin.hh"
 #include "Cosa/Interrupt.hh"
 #include "Cosa/INET.hh"
 #include "Cosa/IOBuffer.hh"
+#include "Cosa/IOEvent.hh"
+#include "Cosa/IOPin.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/CDC.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -50,20 +61,18 @@
 #include "Cosa/LED.hh"
 #include "Cosa/Linkage.hh"
 #include "Cosa/Listener.hh"
+#include "Cosa/Lock.hh"
 #include "Cosa/Periodic.hh"
-#include "Cosa/PinChangeInterrupt.hh"
 #include "Cosa/Pin.hh"
-#include "Cosa/InputPin.hh"
-#include "Cosa/OutputPin.hh"
+#include "Cosa/PinChangeInterrupt.hh"
 #include "Cosa/PWMPin.hh"
-#include "Cosa/IOPin.hh"
-#include "Cosa/AnalogPin.hh"
-#include "Cosa/AnalogPins.hh"
-#include "Cosa/AnalogComparator.hh"
+#include "Cosa/OutputPin.hh"
 #include "Cosa/Queue.hh"
+#include "Cosa/Resource.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Socket.hh"
 #include "Cosa/SPI.hh"
+#include "Cosa/String.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/TWI.hh"
@@ -75,52 +84,75 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaBenchmarkSizeOf: started"));
 
-  // Check amount of free memory and size of instance
-  TRACE(free_memory());
+  // Print size of instance
+  TRACE(sizeof(Alarm));
+  TRACE(sizeof(Alarm::Clock));
+  TRACE(sizeof(AnalogComparator));
+  TRACE(sizeof(AnalogPin));
+  TRACE(sizeof(AnalogPins));
   TRACE(sizeof(BitSet<64>));
   TRACE(sizeof(Button));
 #if defined(USBCON)
   TRACE(sizeof(CDC));
 #endif
+  TRACE(sizeof(Clock));
   TRACE(sizeof(EEPROM));
+  TRACE(sizeof(EEPROM::Device));
   TRACE(sizeof(Event));
+  TRACE(sizeof(Event::Handler));
   TRACE(sizeof(Event::queue));
   TRACE(sizeof(ExternalInterrupt));
+  TRACE(sizeof(Flash));
+  TRACE(sizeof(Flash::Device));
   TRACE(sizeof(FSM));
+  TRACE(sizeof(GPIO));
+  TRACE(sizeof(InputCapture));
+  TRACE(sizeof(InputPin));
   TRACE(sizeof(Interrupt::Handler));
   TRACE(sizeof(IOBuffer<64>));
+  TRACE(sizeof(IOEvent<UART>));
+  TRACE(sizeof(IOPin));
   TRACE(sizeof(IOStream));
+  TRACE(sizeof(IOStream::Device));
   TRACE(sizeof(Job));
+  TRACE(sizeof(Job::Scheduler));
 #if !defined(BOARD_ATTINY)
   TRACE(sizeof(UART));
 #endif
   TRACE(sizeof(Keypad));
-  TRACE(sizeof(LCDKeypad));
   TRACE(sizeof(LCD));
+  TRACE(sizeof(LCD::Device));
+  TRACE(sizeof(LCD::IO));
+  TRACE(sizeof(LCD::Serial3W));
+  TRACE(sizeof(LCD::SPI3W));
+  TRACE(sizeof(LCD::Keypad));
   TRACE(sizeof(LED));
   TRACE(sizeof(Linkage));
   TRACE(sizeof(Link));
   TRACE(sizeof(Head));
   TRACE(sizeof(Listener<int>));
+  TRACE(sizeof(Lock));
+  TRACE(sizeof(OutputPin));
   TRACE(sizeof(Periodic));
   TRACE(sizeof(Pin));
-  TRACE(sizeof(InputPin));
-  TRACE(sizeof(OutputPin));
-  TRACE(sizeof(IOPin));
   TRACE(sizeof(PWMPin));
-  TRACE(sizeof(AnalogPin));
-  TRACE(sizeof(AnalogPins));
-  TRACE(sizeof(AnalogComparator));
-  TRACE(sizeof(Queue<int,32>));
+  TRACE(sizeof(Queue<Event,16>));
+  TRACE(sizeof(Resource));
   TRACE(sizeof(RTC));
+  TRACE(sizeof(RTC::Scheduler));
+  TRACE(sizeof(RTC::Clock));
+  TRACE(sizeof(Serial));
   TRACE(sizeof(Socket));
   TRACE(sizeof(SPI::Driver));
+  TRACE(sizeof(String));
   TRACE(sizeof(clock_t));
   TRACE(sizeof(time_t));
   TRACE(sizeof(Trace));
   TRACE(sizeof(TWI::Driver));
   TRACE(sizeof(TWI::Slave));
   TRACE(sizeof(Watchdog));
+  TRACE(sizeof(Watchdog::Scheduler));
+  TRACE(sizeof(Watchdog::Clock));
   TRACE(sizeof(Wireless::Driver));
 }
 
