@@ -75,10 +75,9 @@ public:
     uint32_t now;
     while (1) {
       now = time();
-      if (now != start) break;
+      if (now != start) return (now);
       yield();
     }
-    return (now);
   }
 
   /**

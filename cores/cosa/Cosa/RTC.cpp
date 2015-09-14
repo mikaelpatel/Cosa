@@ -25,10 +25,10 @@
 bool RTC::s_initiated = false;
 
 // Micro-seconds counter (fraction in timer register)
-volatile uint32_t RTC::s_micros = 0UL;
+uint32_t RTC::s_micros = 0UL;
 
 // Milli-seconds counter
-volatile uint32_t RTC::s_millis = 0UL;
+uint32_t RTC::s_millis = 0UL;
 
 // Job scheduler
 RTC::Scheduler* RTC::s_scheduler = NULL;

@@ -128,7 +128,7 @@ public:
   static int await(volatile bool &condvar, uint32_t ms);
 
   /**
-   * RTC Scheduler for jobs with a delay of 100 us or longer.
+   * RTC Scheduler for jobs with a delay of 50 us or longer.
    */
   class Scheduler : public Job::Scheduler {
   public:
@@ -214,8 +214,8 @@ public:
 
 private:
   static bool s_initiated;	     	//!< Initiated flag.
-  static volatile uint32_t s_micros; 	//!< Micro-seconds counter.
-  static volatile uint32_t s_millis;	//!< Milli-seconds counter.
+  static uint32_t s_micros;		//!< Micro-seconds counter.
+  static uint32_t s_millis;		//!< Milli-seconds counter.
   static Scheduler* s_scheduler;	//!< Job scheduler.
   static Job* s_job;			//!< Timer job.
   static Clock* s_clock;		//!< Clock.

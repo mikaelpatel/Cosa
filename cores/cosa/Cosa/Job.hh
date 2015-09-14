@@ -166,11 +166,12 @@ public:
 
   /**
    * @override Job
-   * Job member function that is called when the time has
+   * Job member function that is called when the job time has
    * expired. This function is normally called from an ISR. The
    * default implementation will push a timeout event with the job as
    * target. The event handler will call the job run() virtual member
-   * function.
+   * function. Override this function if the job should be executed
+   * during the ISR.
    */
   virtual void on_expired()
   {

@@ -27,7 +27,7 @@
 bool Watchdog::s_initiated = false;
 
 // Milli-seconds counter and number of ms per tick
-volatile uint32_t Watchdog::s_millis = 0L;
+uint32_t Watchdog::s_millis = 0L;
 uint16_t Watchdog::s_ms_per_tick = 16;
 
 // Watchdog Job Scheduler (milli-seconds level delayed functions)

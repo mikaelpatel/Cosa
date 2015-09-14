@@ -193,7 +193,7 @@ public:
 
 private:
   static bool s_initiated;		//!< Initiated flag.
-  static volatile uint32_t s_millis; 	//!< Milli-seconds counter.
+  static uint32_t s_millis;		//!< Milli-seconds counter.
   static uint16_t s_ms_per_tick;	//!< Number of milli-seconds per tick.
   static Event::Handler* s_handler;	//!< Watchdog timeout event handler.
   static Scheduler* s_scheduler;	//!< Watchdog Job Scheduler.
