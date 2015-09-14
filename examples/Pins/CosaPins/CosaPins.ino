@@ -94,9 +94,6 @@ PWMPin ledPin(Board::PWM2);
 InputPin onoffPin(Board::D7);
 AnalogPin levelPin(Board::A0);
 
-// Dummy event handler
-Event::Handler handler;
-
 void setup()
 {
   // Start trace output stream on the serial port
@@ -120,6 +117,9 @@ void setup()
   TRACE(sizeof(PWMPin));
   TRACE(sizeof(Watchdog));
 
+  // Start the watchdog
+  Watchdog::begin();
+
   // Check interrupt pin; enable and print interrupt counter
   PinChangeInterrupt::begin();
   TRACE(int0Pin.get_counter());
@@ -130,18 +130,14 @@ void setup()
   int2Pin.enable();
   TRACE(extPin.get_counter());
   extPin.enable();
-
-  // Start the watchdog ticks counter (1 second pulse)
-  Watchdog::begin(1024);
-  Watchdog::push_timeout_events(&handler);
 }
+
+Watchdog::Clock clock;
 
 void loop()
 {
-  // Wait for the next event. Allow a low power sleep
-  Event event;
-  Event::queue.await(&event);
-  TRACE(event.get_type());
+  // Wait for the next seconds tick
+  clock.await();
 
   // Print the time index
   INFO("ms = %d", Watchdog::millis());
