@@ -29,17 +29,18 @@
 #include "Cosa/Types.h"
 #include "Cosa/Event.hh"
 #include "Cosa/Keypad.hh"
+#include "Cosa/LCD.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Watchdog.hh"
 
 #include <HD44780.h>
 
-class KeypadTrace : public LCDKeypad {
+class KeypadTrace : public LCD::Keypad {
 private:
   IOStream m_out;
 public:
   KeypadTrace(Job::Scheduler* scheduler, IOStream::Device* dev) :
-    LCDKeypad(scheduler),
+    LCD::Keypad(scheduler),
     m_out(dev)
   {}
 
