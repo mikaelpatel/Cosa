@@ -22,36 +22,43 @@
  */
 
 #include "Cosa/RTC.hh"
-#include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
 
-OutputPin rf(Board::D6);
+#if defined(BOARD_ATTINY)
+#define PIN Board::D0
+#else
+#define PIN Board::D6
+#endif
+
+OutputPin rf(PIN);
 
 void setup()
 {
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaRF433: started"));
-  Watchdog::begin();
   RTC::begin();
 }
 
 void loop()
 {
   const uint16_t D[] = { 1000, 500, 200, 100, 50 };
-  rf.set();
-  delay(10);
-  rf.clear();
   for (uint8_t j = 0; j < membersof(D); j++) {
     uint16_t T = D[j];
-    for (uint8_t i = 0; i < 8; i++) {
+    rf.set();
+    DELAY(2000);
+    rf.clear();
+    DELAY(2*T);
+    uint16_t data = 0x5555;
+    uint8_t bit;
+    for (uint8_t i = 0; i < 16; i++) {
+      bit = data & 1;
+      rf.write(bit);
       DELAY(T);
-      rf.set();
+      data >>= 1;
+      rf.write(!bit);
       DELAY(T);
-      rf.clear();
     }
+    rf.clear();
+    sleep(1);
   }
-  sleep(2);
 }
 
