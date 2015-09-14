@@ -17,17 +17,18 @@
  *
  * @section Description
  * Calibrate RTC and Watchdog clocks with external clock source on
- * external interrupt pin (EXT1/D3). The source can for instance be
- * square wave from an external I2C RTC module such as DS1307.
+ * external interrupt pin. The source can for instance be square wave
+ * from an external I2C RTC module such as DS1307.
  *
  * @section Calibration
- * 1. Run without calibration settings.
- * 2. Run for at least 10-20 minutes (600-1200 seconds) alternatively
- *    connect a Logic Analyzer and probe D7(Clock), D8(RTC),
- *    D9(Watchdog).
- * 3. Use the integer part of the error as calibration value or
- *    collect the period time error from the Logic Analyzer.
- * 4. Rerun and verify that the error level reduced.
+ * 1. Comment out any calibration values.
+ * 2. Run the tool and it will generate print of calibration settings.
+ * 3. When values are stable stop the run and add the suggested settings.
+ * 4. Rerun and verify that the error levels are reduced to max +-1.
+ *
+ * @section Circuit
+ * External RTC connected to EXT1/D3, EXT2:Leonardo/D0 and
+ * EXT3:Pro-Micro/D1,Mega 2560/D18.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -40,43 +41,101 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Example calibration values for internal clocks
-// 1. Duemilanove Clone (Funduino 2012 May)
+// -------------------------------------------------------------------
+// Calibration values for some of the boards that are used in the Cosa
+// build and tests. Note that there are variations between individual
+// boards due to factory calibration and the quality of the crystal
+// (+- 50 ppm) or ceramic resonator (+-.5%) and PCB layout.
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Anarduino Miniwireless"
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -66
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Duemilanove Clone (Funduino 2012 May)"
 // #define RTC_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -12
-// 2. Leonardo (Made in Italy)
-// #define RTC_CALIBRATION_MS -2
-// #define WATCHDOG_CALIBRATION_MS -98
-// 3. Mega 2560 Clone
+// -------------------------------------------------------------------
+// #define BOARD_INO "Leonardo (Made in Italy)"
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -95
+// -------------------------------------------------------------------
+// #define BOARD_INO "Lilypad Clone (GEtech)"
 // #define RTC_CALIBRATION_MS -1
+// #define WATCHDOG_CALIBRATION_MS -140
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Mega 2560 Clone"
+// #define RTC_CALIBRATION_MS -2
+// #define WATCHDOG_CALIBRATION_MS -63
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Mega 2560 Clone (Funduino)"
+// #define RTC_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -108
-// 4. Mega 2560 Clone (Funduino)
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Microduino Core"
 // #define RTC_CALIBRATION_MS 0
-// #define WATCHDOG_CALIBRATION_MS -110
-// 5. Nano Clone (DCCduino)
-// #define RTC_CALIBRATION_MS 0
-// #define WATCHDOG_CALIBRATION_MS -24
-// 6. Pro-Mini Clone (white reset button)
-// #define RTC_CALIBRATION_MS 0
-// #define WATCHDOG_CALIBRATION_MS 26
-// 7. Pro-Mini Clone (Deek Robot, red reset button)
-// #define RTC_CALIBRATION_MS 0
-// #define WATCHDOG_CALIBRATION_MS -1
-// 8. Uno R3 Clone (GEtech)
-// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -69
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Microduino Core+"
+// #define RTC_CALIBRATION_MS 1
 // #define WATCHDOG_CALIBRATION_MS -112
-// 9. Uno R3 Clone (VISduino)
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Microduino Core32U4"
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -8
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Moteino"
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -118
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Nano Clone (DCCduino)"
 // #define RTC_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -24
-// 10. Anarduino Miniwireless
-#define RTC_CALIBRATION_MS 0
-#define WATCHDOG_CALIBRATION_MS -66
-// 11. Your Arduino
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Pro-Micro Clone"
 // #define RTC_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS 0
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Pro-Mini Clone (Tinyos, 3.3V/8M)"
+// #define RTC_CALIBRATION_MS -2
+// #define WATCHDOG_CALIBRATION_MS -61
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Pro-Mini Clone (white reset button)"
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS 26
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Pro-Mini Clone (Deek Robot, red reset button)"
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -1
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Pro-Mini Clone (Deek Robot, 10 top pins)"
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS 0
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Uno R3 Clone (GEtech)"
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -112
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Uno R3 Clone (VISduino)"
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -22
+// -------------------------------------------------------------------
+// #define BOARD_INFO "Wildfire"
+// #define RTC_CALIBRATION_MS 0
+// #define WATCHDOG_CALIBRATION_MS -122
+// -------------------------------------------------------------------
 
-// Wall-clocks
+// Wall-clocks; Square Wave from external RTC, internal RTC and
+// Watchdog based seconds level clocks
+#if defined(ARDUINO_MEGA)					\
+  || defined(ARDUINO_PRO_MICRO)
+Alarm::Clock clock(Board::EXT3);
+#elif defined(ARDUINO_LEONARDO)	   				\
+  || defined(MICRODUINO_CORE_PLUS)				\
+  || defined(MICRODUINO_CORE32U4)
+Alarm::Clock clock(Board::EXT2);
+#else
 Alarm::Clock clock(Board::EXT1);
+#endif
 RTC::Clock wall;
 Watchdog::Clock bark;
 
@@ -99,10 +158,10 @@ private:
   OutputPin m_pin;
 };
 
-// Pulse generators
-Pulse red(&clock, 1, Board::D7);
-Pulse green(&wall, 1, Board::D8);
-Pulse blue(&bark, 1, Board::D9);
+// Pulse generators from the different clocks (logic analyzer channel colors)
+Pulse black(&clock, 1, Board::D7);
+Pulse brown(&wall, 1, Board::D8);
+Pulse red(&bark, 1, Board::D9);
 
 void setup()
 {
@@ -111,16 +170,15 @@ void setup()
   trace.begin(&uart, PSTR("CosaClockCalibration: started"));
 
   // Print calibration
+#if defined(BOARD_INFO)
+  trace << PSTR("Board: ") << PSTR(BOARD_INFO) << endl;
+#endif
 #if defined(RTC_CALIBRATION_MS)
   trace << PSTR("RTC:calibration: ") << RTC_CALIBRATION_MS << endl;
 #endif
 #if defined(WATCHDOG_CALIBRATION_MS)
   trace << PSTR("Watchdog:calibration: ") << WATCHDOG_CALIBRATION_MS << endl;
 #endif
-
-  // Start the watchdog and internal real-time clock
-  Watchdog::begin();
-  RTC::begin();
 
   // Set calibration (from error measurement)
 #if defined(RTC_CALIBRATION_MS)
@@ -130,16 +188,23 @@ void setup()
   bark.calibration(WATCHDOG_CALIBRATION_MS);
 #endif
 
-  // Start the clock and adjust start time
+  // Start the clock and wait for next update
   clock.enable();
-  clock.time(0);
-  wall.time(1);
-  bark.time(1);
+  uint32_t now = clock.await();
+
+  // Start internal timers
+  Watchdog::begin();
+  RTC::begin();
+
+  // Synchronize wall clocks
+  delay(500);
+  wall.time(now + 1);
+  bark.time(now + 1);
 
   // Start the probe outputs
+  black.start();
+  brown.start();
   red.start();
-  green.start();
-  blue.start();
 }
 
 void loop()
@@ -147,19 +212,14 @@ void loop()
   // Count loop cycles
   static int32_t cycle = 1;
 
-  // Wait for clock tick
-  clock_t start = clock.time();
-  clock_t now;
-  while (1) {
-    now = clock.time();
-    if (now != start) break;
-    yield();
-  }
+  // Wait for external clock update
+  uint32_t now = clock.await();
 
   // Calculate the clock drift in seconds
   int32_t rtc = wall.time() - now;
   int32_t wdg = bark.time() - now;
 
+#if defined(RTC_CALIBRATION_MS) || defined(WATCHDOG_CALIBRATION_MS)
   // Print the clocks, drift and error rate (milli-seconds per second)
   trace << cycle << ':' << now
 	<< PSTR(":RTC:")
@@ -169,5 +229,23 @@ void loop()
 	<< (wdg < 0 ? PSTR("T") : PSTR("T+")) << wdg
 	<< PSTR(",err=") << (1000.0 * wdg) / cycle
 	<< endl;
+#else
+  // Print number of cycles and calibration settings
+  if ((cycle % 60) == 0) {
+    trace << endl;
+    trace << cycle << PSTR(" seconds") << endl;
+    trace << PSTR("#define BOARD_INFO \"Board Info\"")
+	  << endl;
+    trace << PSTR("#define RTC_CALIBRATION_MS ")
+	  << (1000 * rtc) / cycle
+	  << endl;
+    trace << PSTR("#define WATCHDOG_CALIBRATION_MS ")
+	  << (1000 * wdg) / cycle
+	  << endl;
+  }
+  else {
+    trace << '.';
+  }
+#endif
   cycle += 1;
 }
