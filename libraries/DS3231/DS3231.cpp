@@ -26,18 +26,18 @@ DS3231::read(void* regs, uint8_t size, uint8_t pos)
 {
   twi.begin(this);
   twi.write(pos);
-  int count = twi.read(regs, size);
+  int res = twi.read(regs, size);
   twi.end();
-  return (count);
+  return (res);
 }
 
 int
 DS3231::write(void* regs, uint8_t size, uint8_t pos)
 {
   twi.begin(this);
-  int count = twi.write(pos, regs, size);
+  int res = twi.write(pos, regs, size);
   twi.end();
-  return (count);
+  return (res < 0 ? res : res - 1);
 }
 
 bool
@@ -75,6 +75,20 @@ DS3231::get_temperature()
   int16_t temp = 0;
   read(&temp, sizeof(temp), offsetof(timekeeper_t, temp));
   return (swap(temp) >> 6);
+}
+
+bool
+DS3231::square_wave(bool flag)
+{
+  control_t control;
+  int res;
+  res = read(&control, sizeof(control), offsetof(timekeeper_t, control));
+  if (res != sizeof(control)) return (false);
+  control.bbsqw = flag;
+  control.intcn = !flag;
+  control.rs = RS_1_HZ;
+  res = write(&control, sizeof(control), offsetof(timekeeper_t, control));
+  return (res == sizeof(control));
 }
 
 IOStream& operator<<(IOStream& outs, DS3231::alarm1_t& t)

@@ -146,6 +146,16 @@ public:
   };
 
   /**
+   * Square-Wave Output Frequency.
+   */
+  enum {
+    RS_1_HZ = 0,
+    RS_1024_HZ = 1,
+    RS_4096_HZ = 2,
+    RS_8192_HZ = 3
+  };
+
+  /**
    * Special-Purpose Register: Status Register (pp. 14).
    */
   union status_t {
@@ -279,6 +289,15 @@ public:
    * @return temperature.
    */
   int16_t get_temperature();
+
+
+  /**
+   * Enable/disable square wave output (1 Hz). Returns true(1) if successful
+   * otherwise false(0).
+   * @param[flag] enable/disable.
+   * @return bool.
+   */
+  bool square_wave(bool flag);
 
 private:
   /**

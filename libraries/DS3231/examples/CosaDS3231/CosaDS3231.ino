@@ -25,11 +25,11 @@
  *                        Mini RTC pro
  *                       +------------+
  *                     1-|32KHz       |
- *                     2-|SQW         |
+ * (D3)----------------2-|SQW         |
  * (A5/SCL)------------3-|SCL         |
  * (A4/SDA)------------4-|SDA         |
  * (GND)---------------5-|GND         |
- * (GND)---------------6-|VCC         |
+ * (VCC)---------------6-|VCC         |
  *                       +------------+
  * @endcode
  *
@@ -38,6 +38,7 @@
 
 #include <DS3231.h>
 
+#include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
@@ -52,6 +53,9 @@ DS3231 rtc;
 
 // Use the builtin led for a heartbeat
 OutputPin ledPin(Board::LED);
+
+// Square-wave
+InputPin clkPin(Board::D3);
 
 void setup()
 {
@@ -70,42 +74,39 @@ void setup()
 #ifdef RTC_SET_TIME
   time_t now;
   now.seconds = 0x00;
-  now.minutes = 0x24;
-  now.hours = 0x22;
+  now.minutes = 0x00;
+  now.hours = 0x12;
   now.day = 0x01;
-  now.date = 0x23;
-  now.month = 0x6;
-  now.year = 0x13;
-  rtc.set_time(now);
+  now.date = 0x13;
+  now.month = 0x9;
+  now.year = 0x15;
+  ASSERT(rtc.set_time(now));
 #endif
 
   // Read back and print current setting
   DS3231::timekeeper_t keeper;
-  rtc.read(&keeper, sizeof(keeper));
+  ASSERT(rtc.read(&keeper, sizeof(keeper)) == sizeof(keeper));
   trace << keeper << endl;
+
+  // Set square-wave output
+  TRACE(rtc.square_wave(true));
 }
 
 void loop()
 {
-  // Heartbeat
+  // Wait for rising clock signal
+  while (clkPin.is_clear()) yield();
   ledPin.toggle();
 
   // Read the time from the rtc device and print
   time_t now;
-  rtc.get_time(now);
+  ASSERT(rtc.get_time(now));
   now.to_binary();
   trace << now << ' ';
   int16_t temp = rtc.get_temperature();
   trace << (temp >> 2) << '.' << (25 * (temp & 0x3)) << PSTR(" C") << endl;
 
-  // Heartbeat
+  // Wait for falling clock signal
   ledPin.toggle();
-
-  // Delay until the next tick
-  clock_t start = now;
-  do {
-    delay(200);
-    rtc.get_time(now);
-    now.to_binary();
-  } while (start == now);
+  while (clkPin.is_set()) yield();
 }
