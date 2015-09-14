@@ -1,0 +1,5 @@
+cosa mega2560 > LOG 2> /dev/null
+cosa uno >> LOG 2> /dev/null
+cosa attiny84-8 >> LOG 2> /dev/null
+grep Program LOG
+rm LOG
