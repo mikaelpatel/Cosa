@@ -52,6 +52,9 @@ Job::Scheduler::stop(Job* job)
 void
 Job::Scheduler::dispatch()
 {
+  // Check if the queue is empty
+  if (m_queue.is_empty()) return;
+
   // Run all jobs that have expired
   uint32_t now = time();
   Job* job = (Job*) m_queue.get_succ();
@@ -64,4 +67,3 @@ Job::Scheduler::dispatch()
     job = succ;
   }
 }
-
