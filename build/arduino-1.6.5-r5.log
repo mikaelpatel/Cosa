@@ -1,101 +1,99 @@
-Sat Sep 12 00:37:55 CEST 2015: adafruit-atmega32u4
+Mon Sep 14 10:43:09 CEST 2015: adafruit-atmega32u4
 Program:    3752 bytes (11.5% Full)
 Data:        296 bytes (11.6% Full)
-Sat Sep 12 00:37:58 CEST 2015: adafruit-atmega32u4-cat
+Mon Sep 14 10:43:13 CEST 2015: adafruit-atmega32u4-cat
 Program:    3752 bytes (11.5% Full)
 Data:        296 bytes (11.6% Full)
-Sat Sep 12 00:38:01 CEST 2015: atmega328-8
+Mon Sep 14 10:43:17 CEST 2015: atmega328-8
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:04 CEST 2015: attiny84-8
+Mon Sep 14 10:43:21 CEST 2015: attiny84-8
 Program:      94 bytes (1.1% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:07 CEST 2015: attiny85-8
+Mon Sep 14 10:43:25 CEST 2015: attiny85-8
 Program:      90 bytes (1.1% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:10 CEST 2015: attiny861-8
+Mon Sep 14 10:43:28 CEST 2015: attiny861-8
 Program:      98 bytes (1.2% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:13 CEST 2015: diecimila
+Mon Sep 14 10:43:31 CEST 2015: diecimila
 Program:     172 bytes (1.0% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:15 CEST 2015: duemilanove
+Mon Sep 14 10:43:35 CEST 2015: duemilanove
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:18 CEST 2015: iboard
+Mon Sep 14 10:43:38 CEST 2015: iboard
 Program:     192 bytes (0.6% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:21 CEST 2015: leonardo
+Mon Sep 14 10:43:42 CEST 2015: leonardo
 Program:    3750 bytes (11.4% Full)
 Data:        296 bytes (11.6% Full)
-egrep: LOG: No such file or directory
-Sat Sep 12 00:38:24 CEST 2015: lilypad
+Mon Sep 14 10:43:46 CEST 2015: lilypad
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:28 CEST 2015: lilypad-usb
+Mon Sep 14 10:43:49 CEST 2015: lilypad-usb
 Program:    3752 bytes (11.5% Full)
 Data:        296 bytes (11.6% Full)
-Sat Sep 12 00:38:32 CEST 2015: mega1280
+Mon Sep 14 10:43:53 CEST 2015: mega1280
 Program:     296 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:35 CEST 2015: mega2560
+Mon Sep 14 10:43:56 CEST 2015: mega2560
 Program:     300 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:39 CEST 2015: micro
+Mon Sep 14 10:43:59 CEST 2015: micro
 Program:    3752 bytes (11.5% Full)
 Data:        296 bytes (11.6% Full)
-Sat Sep 12 00:38:43 CEST 2015: microduino-core
+Mon Sep 14 10:44:03 CEST 2015: microduino-core
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:47 CEST 2015: microduino-core32u4
+Mon Sep 14 10:44:06 CEST 2015: microduino-core32u4
 Program:    3752 bytes (11.5% Full)
 Data:        296 bytes (11.6% Full)
-Sat Sep 12 00:38:51 CEST 2015: microduino-core-plus
+Mon Sep 14 10:44:11 CEST 2015: microduino-core-plus
 Program:     192 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:55 CEST 2015: mighty
+Mon Sep 14 10:44:14 CEST 2015: mighty
 Program:     208 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:38:59 CEST 2015: mighty-opt
+Mon Sep 14 10:44:17 CEST 2015: mighty-opt
 Program:     208 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:39:03 CEST 2015: miniwireless
+Mon Sep 14 10:44:20 CEST 2015: miniwireless
 Program:     192 bytes (0.6% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:39:06 CEST 2015: moteino
+Mon Sep 14 10:44:24 CEST 2015: moteino
 Program:     192 bytes (0.6% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:39:10 CEST 2015: moteino-mega
+Mon Sep 14 10:44:27 CEST 2015: moteino-mega
 Program:     228 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-egrep: LOG: No such file or directory
-Sat Sep 12 00:39:14 CEST 2015: nano
+Mon Sep 14 10:44:31 CEST 2015: nano
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:39:17 CEST 2015: pinoccio
+Mon Sep 14 10:44:33 CEST 2015: pinoccio
 Program:     380 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:39:22 CEST 2015: pro-micro
+Mon Sep 14 10:44:36 CEST 2015: pro-micro
 Program:    3750 bytes (11.4% Full)
 Data:        296 bytes (11.6% Full)
-Sat Sep 12 00:39:27 CEST 2015: pro-micro-8
+Mon Sep 14 10:44:40 CEST 2015: pro-micro-8
 Program:    3750 bytes (11.4% Full)
 Data:        296 bytes (11.6% Full)
-Sat Sep 12 00:39:33 CEST 2015: pro-mini
+Mon Sep 14 10:44:43 CEST 2015: pro-mini
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:39:37 CEST 2015: pro-mini-8
+Mon Sep 14 10:44:46 CEST 2015: pro-mini-8
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:39:42 CEST 2015: teensy-2_0
+Mon Sep 14 10:44:49 CEST 2015: teensy-2_0
 Program:    3766 bytes (11.5% Full)
 Data:        296 bytes (11.6% Full)
-Sat Sep 12 00:39:48 CEST 2015: teensypp-2_0
+Mon Sep 14 10:44:53 CEST 2015: teensypp-2_0
 Program:    3772 bytes (2.9% Full)
 Data:        296 bytes (3.6% Full)
-Sat Sep 12 00:39:54 CEST 2015: uno
+Mon Sep 14 10:44:57 CEST 2015: uno
 Program:     172 bytes (0.5% Full)
 Data:          0 bytes (0.0% Full)
-Sat Sep 12 00:39:58 CEST 2015: wildfire
+Mon Sep 14 10:45:00 CEST 2015: wildfire
 Program:     458 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
