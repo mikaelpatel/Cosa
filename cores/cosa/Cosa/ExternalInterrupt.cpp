@@ -26,9 +26,9 @@ ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin,
 		  InterruptMode mode,
 		  bool pullup) :
-  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup),
+  m_ix(pin - Board::EXT0)
 {
-  m_ix = pin - Board::EXT0;
   ext[m_ix] = this;
   uint8_t ix = (m_ix << 1);
   bit_field_set(EICRA, 0b11 << ix, mode << ix);
@@ -40,9 +40,9 @@ ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin,
 		  InterruptMode mode,
 		  bool pullup) :
-  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup),
+  m_ix(pin - Board::EXT0)
 {
-  m_ix = pin - Board::EXT0;
   ext[m_ix] = this;
   uint8_t ix = (m_ix << 1);
   bit_field_set(EICRA, 0b11 << ix, mode << ix);
@@ -54,7 +54,8 @@ ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin,
 		  InterruptMode mode,
 		  bool pullup) :
-  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup),
+  m_ix(0)
 {
   if (pin <= Board::EXT5) {
     m_ix = pin - Board::EXT4;
@@ -76,7 +77,8 @@ ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin,
 		  InterruptMode mode,
 		  bool pullup) :
-  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup),
+  m_ix(0)
 {
   if (pin == Board::EXT2) {
     m_ix = 2;
@@ -94,7 +96,8 @@ ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin,
 		  InterruptMode mode,
 		  bool pullup) :
-  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup),
+  m_ix(0)
 {
   if (pin <= Board::EXT3) {
     m_ix = pin - Board::EXT0;
@@ -116,9 +119,9 @@ ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin,
 		  InterruptMode mode,
 		  bool pullup) :
-  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup),
+  m_ix(pin == Board::EXT1)
 {
-  m_ix = (pin == Board::EXT1);
   ext[m_ix] = this;
   uint8_t ix = (m_ix << 1);
   bit_field_set(MCUCR, 0b11 << ix, mode << ix);
@@ -151,9 +154,9 @@ ExternalInterrupt::
 ExternalInterrupt(Board::ExternalInterruptPin pin,
 		  InterruptMode mode,
 		  bool pullup) :
-  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+  IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup),
+  m_ix(0)
 {
-  m_ix = 0;
   ext[m_ix] = this;
   bit_field_set(MCUCR, 0b11, mode);
 }

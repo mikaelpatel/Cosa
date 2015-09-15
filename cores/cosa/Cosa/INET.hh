@@ -75,6 +75,13 @@ public:
     uint8_t mac[MAC_MAX];	//!< Hardware address.
     uint8_t ip[IP_MAX];		//!< Network address.
     uint16_t port;		//!< Service port.
+
+    addr_t() :
+      port(0)
+    {
+      memset(mac, 0, MAC_MAX);
+      memset(ip, 0, IP_MAX);
+    }
   };
 
   /**

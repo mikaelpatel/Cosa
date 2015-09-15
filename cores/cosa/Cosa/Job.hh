@@ -43,6 +43,11 @@ public:
   class Scheduler {
   public:
     /**
+     * Construct default job scheduler.
+     */
+    Scheduler() : m_queue() {}
+
+    /**
      * @override Job::Scheduler
      * Start given job. Returns true(1) if successful otherwise
      * false(0).

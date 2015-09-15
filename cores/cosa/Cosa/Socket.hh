@@ -47,9 +47,10 @@ public:
    */
   Socket() :
     IOStream::Device(),
-    m_proto(0)
+    m_src(),
+    m_proto(0),
+    m_port(0)
   {
-    memset(&m_src, 0, sizeof(m_src));
   }
 
   /**
@@ -105,6 +106,17 @@ public:
 
   /**
    * @override IOStream::Device
+   * Write data from buffers in null terminated io vector.
+   * @param[in] vec io vector with buffers to write.
+   * @return number of bytes written or EOF(-1).
+   */
+  virtual int write(const iovec_t* vec)
+  {
+    return (IOStream::Device::write(vec));
+  }
+
+  /**
+   * @override IOStream::Device
    * Read character from device.
    * @return character or EOF(-1).
    */
@@ -125,6 +137,17 @@ public:
   virtual int read(void* buf, size_t size)
   {
     return (recv(buf, size));
+  }
+
+  /**
+   * @override IOStream::Device
+   * Read data to given buffers in null terminated io vector.
+   * @param[in] vec io vector with buffers to read into.
+   * @return number of bytes read or EOF(-1).
+   */
+  virtual int read(iovec_t* vec)
+  {
+    return (IOStream::Device::read(vec));
   }
 
   /**
