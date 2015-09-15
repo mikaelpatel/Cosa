@@ -59,10 +59,10 @@
 
 // Select port type to use with the LCD device driver.
 // LCD and communication port
-// #include <HD44780.h>
+#include <HD44780.h>
 
 // HD44780 driver built-in adapters
-// HD44780::Port4b port;
+HD44780::Port4b port;
 // HD44780::SR3W port;
 // HD44780::SR3WSPI port;
 // HD44780::SR4W port;
@@ -91,7 +91,7 @@
 // HD44780 variants; 16X1, 16X2, 16X4, 20X4, default 16X2
 // HD44780 lcd(&port, 20, 4);
 // HD44780 lcd(&port, 16, 4);
-// HD44780 lcd(&port);
+HD44780 lcd(&port);
 
 // #include <Canvas.h>
 // #include <PCD8544.h>
