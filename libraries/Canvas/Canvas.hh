@@ -688,7 +688,7 @@ public:
    * Draw image on canvas at current position.
    * @param[in] image.
    */
-  virtual void draw_image(Image* image)
+  void draw_image(Image* image)
   {
     uint16_t x, y;
     get_cursor(x, y);

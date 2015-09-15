@@ -30,7 +30,7 @@
  */
 class Socket : public IOStream::Device {
 public:
-  /** Dynamic, private or ephemeral start ports number. */
+  /** First dynamic, private or ephemeral port number. */
   static const uint16_t DYNAMIC_PORT = 49152;
 
   /** Socket type. */

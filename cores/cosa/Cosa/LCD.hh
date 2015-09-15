@@ -214,7 +214,7 @@ public:
      * @param[in] buf pointer to buffer.
      * @param[in] size number of bytes in buffer.
      */
-    virtual void write(void* buf, size_t size) = 0;
+    virtual void write(const void* buf, size_t size) = 0;
   };
 
   /**
@@ -282,7 +282,7 @@ public:
      * @param[in] buf pointer to buffer.
      * @param[in] size number of bytes in buffer.
      */
-    virtual void write(void* buf, size_t size)
+    virtual void write(const void* buf, size_t size)
     {
       uint8_t* dp = (uint8_t*) buf;
       while (size--) m_sdin.write(*dp++, m_sclk);
@@ -348,7 +348,7 @@ public:
      * @param[in] buf pointer to buffer.
      * @param[in] size number of bytes in buffer.
      */
-    virtual void write(void* buf, size_t size)
+    virtual void write(const void* buf, size_t size)
     {
       spi.write(buf, size);
     }
