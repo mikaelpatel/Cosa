@@ -58,7 +58,7 @@ build.extra_flags="-I{build.path}"
 compiler.c.extra_flags=-Wextra
 compiler.c.elf.extra_flags=-w -Wl,-relax
 compiler.S.extra_flags=
-compiler.cpp.extra_flags=-Wextra -std=gnu++11 -felide-constructors -mcall-prologues
+compiler.cpp.extra_flags=-Woverloaded-virtual -Wextra -std=gnu++11 -felide-constructors -fno-implement-inlines -fno-rtti -fno-threadsafe-statics -mcall-prologues
 compiler.ar.extra_flags=
 compiler.objcopy.eep.extra_flags=
 compiler.elf2hex.extra_flags=
