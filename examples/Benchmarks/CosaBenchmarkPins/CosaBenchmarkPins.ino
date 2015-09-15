@@ -494,6 +494,7 @@ void loop()
 
   MEASURE_US("var = analogPin") {
     uint16_t var = analogPin;
+    UNUSED(var);
   }
 
   MEASURE_US("AnalogPin::sample(A0)") {
