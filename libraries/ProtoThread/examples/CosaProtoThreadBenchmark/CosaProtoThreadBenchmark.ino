@@ -52,7 +52,6 @@ public:
     PROTO_THREAD_YIELD();
     while (1) {
       PROTO_THREAD_DELAY(m_delay);
-      trace << this << PSTR(":count=") << m_count << endl;
       m_count++;
     }
     PROTO_THREAD_END();
