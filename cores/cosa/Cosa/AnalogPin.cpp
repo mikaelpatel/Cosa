@@ -20,15 +20,6 @@
 
 #include "Cosa/AnalogPin.hh"
 
-AnalogPin* AnalogPin::sampling_pin = NULL;
-
-void
-AnalogPin::prescale(uint8_t factor)
-{
-  const uint8_t MASK = (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0));
-  bit_field_set(ADCSRA, MASK, factor);
-}
-
 bool
 AnalogPin::sample_request(Board::AnalogPin pin, uint8_t ref)
 {
@@ -41,37 +32,6 @@ AnalogPin::sample_request(Board::AnalogPin pin, uint8_t ref)
 #endif
   bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC) | _BV(ADIE));
   return (true);
-}
-
-uint16_t
-AnalogPin::bandgap(uint16_t vref)
-{
-  loop_until_bit_is_clear(ADCSRA, ADSC);
-  ADMUX = (Board::AVCC_REFERENCE | Board::VBG);
-#if defined(MUX5)
-  bit_clear(ADCSRB, MUX5);
-#endif
-  bit_set(ADCSRA, ADEN);
-  delay(1);
-  bit_set(ADCSRA, ADSC);
-  loop_until_bit_is_clear(ADCSRA, ADSC);
-  uint16_t sample;
-  synchronized sample = ADCW;
-  return ((vref * 1024L) / sample);
-}
-
-uint16_t
-AnalogPin::sample(Board::AnalogPin pin, Board::Reference ref)
-{
-  if (UNLIKELY(sampling_pin != NULL)) return (UINT16_MAX);
-  loop_until_bit_is_clear(ADCSRA, ADSC);
-  ADMUX = (ref | (pin & 0x1f));
-#if defined(MUX5)
-  bit_write(pin & 0x20, ADCSRB, MUX5);
-#endif
-  bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
-  loop_until_bit_is_clear(ADCSRA, ADSC);
-  return (ADCW);
 }
 
 uint16_t
