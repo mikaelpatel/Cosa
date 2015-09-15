@@ -40,7 +40,7 @@ static IOBuffer<UART::BUFFER_MAX> obuf;
 UART __attribute__ ((weak)) uart(0, &ibuf, &obuf);
 #endif
 
-UART* UART::uart[Board::UART_MAX] = { 0 };
+UART* UART::uart[Board::UART_MAX] = { NULL };
 
 bool
 UART::begin(uint32_t baudrate, uint8_t format)

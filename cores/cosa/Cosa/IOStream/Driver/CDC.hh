@@ -78,6 +78,17 @@ public:
 
   /**
    * @override IOStream::Device
+   * Write data from buffers in null terminated io vector.
+   * @param[in] vec io vector with buffers to write.
+   * @return number of bytes written or EOF(-1).
+   */
+  virtual int write(const iovec_t* vec)
+  {
+    return (IOStream::Device::write(vec));
+  }
+
+  /**
+   * @override IOStream::Device
    * Peek next character from serial port input buffer.
    * Returns character if successful otherwise on error or buffer empty
    * returns EOF(-1),
