@@ -216,7 +216,7 @@ HD44780::putchar(char c)
 }
 
 int
-HD44780::write(void* buf, size_t size)
+HD44780::write(const void* buf, size_t size)
 {
   set_data_mode();
   {

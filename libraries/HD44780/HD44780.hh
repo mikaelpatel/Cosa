@@ -71,7 +71,7 @@ public:
      * @param[in] buf pointer to buffer.
      * @param[in] size number of bytes in buffer.
      */
-    virtual void write8n(void* buf, size_t size);
+    virtual void write8n(const void* buf, size_t size);
 
     /**
      * @override HD44780::IO
@@ -304,7 +304,18 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes written or EOF(-1).
    */
-  virtual int write(void* buf, size_t size);
+  virtual int write(const void* buf, size_t size);
+
+  /**
+   * @override IOStream::Device
+   * Write data from buffers in null terminated io vector.
+   * @param[in] vec io vector with buffers to write.
+   * @return number of bytes written or EOF(-1).
+   */
+  virtual int write(const iovec_t* vec)
+  {
+    return (IOStream::Device::write(vec));
+  }
 
 #if !defined(BOARD_ATTINYX5)
   /**
@@ -799,14 +810,6 @@ public:
      * @param[in] data (8b) to write.
      */
     virtual void write8b(uint8_t data);
-
-    /**
-     * @override HD44780::IO
-     * Write character buffer to display.
-     * @param[in] buf pointer to buffer.
-     * @param[in] size number of bytes in buffer.
-     */
-    virtual void write8n(void* buf, size_t size);
 
     /**
      * @override HD44780::IO

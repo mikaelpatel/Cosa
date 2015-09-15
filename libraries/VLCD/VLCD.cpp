@@ -184,10 +184,10 @@ VLCD::putchar(char c)
 }
 
 int
-VLCD::write(void* buf, size_t size)
+VLCD::write(const void* buf, size_t size)
 {
   twi.begin(this);
-  int n = twi.write(buf, size);
+  int n = twi.write((void*) buf, size);
   twi.end();
   if (n < 0) return (-1);
   m_x += size;

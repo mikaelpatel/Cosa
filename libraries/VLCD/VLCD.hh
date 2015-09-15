@@ -122,7 +122,18 @@ public:
    * @param[in] size number of bytes to write.
    * @return number of bytes written or EOF(-1).
    */
-  virtual int write(void* buf, size_t size);
+  virtual int write(const void* buf, size_t size);
+
+  /**
+   * @override IOStream::Device
+   * Write data from buffers in null terminated io vector.
+   * @param[in] vec io vector with buffers to write.
+   * @return number of bytes written or EOF(-1).
+   */
+  virtual int write(const iovec_t* vec)
+  {
+    return (IOStream::Device::write(vec));
+  }
 
   /**
    * Virtual LCD Slave device

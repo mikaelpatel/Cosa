@@ -60,7 +60,7 @@ ERM1602_5::write8b(uint8_t data)
 }
 
 void
-ERM1602_5::write8n(void* buf, size_t size)
+ERM1602_5::write8n(const void* buf, size_t size)
 {
   if (UNLIKELY(size == 0)) return;
   m_en.clear();
@@ -69,7 +69,7 @@ ERM1602_5::write8n(void* buf, size_t size)
     m_sda.write(HD44780::SET_DDATA_LENGTH | ((size - 1) & HD44780::SET_DDATA_MASK), m_scl);
     DELAY(SHORT_EXEC_TIME);
   }
-  uint8_t* bp = (uint8_t*) buf;
+  const uint8_t* bp = (const uint8_t*) buf;
   while (size--) {
     m_sda.write(*bp++, m_scl);
     if (size)

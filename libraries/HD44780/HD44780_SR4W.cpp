@@ -57,13 +57,6 @@ HD44780::SR4W::write8b(uint8_t data)
 }
 
 void
-HD44780::SR4W::write8n(void* buf, size_t size)
-{
-  uint8_t* bp = (uint8_t*) buf;
-  while (size--) write8b(*bp++);
-}
-
-void
 HD44780::SR4W::set_mode(uint8_t flag)
 {
   m_rs = flag;

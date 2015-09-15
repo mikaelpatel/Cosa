@@ -80,7 +80,7 @@ public:
    * @param[in] buf pointer to buffer.
    * @param[in] size number of bytes in buffer.
    */
-  virtual void write8n(void* buf, size_t size);
+  virtual void write8n(const void* buf, size_t size);
 
   /**
    * @override HD44780::IO

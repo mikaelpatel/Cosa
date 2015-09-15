@@ -57,9 +57,9 @@ MJKDZ_LCD_Module::write8b(uint8_t data)
 }
 
 void
-MJKDZ_LCD_Module::write8n(void* buf, size_t size)
+MJKDZ_LCD_Module::write8n(const void* buf, size_t size)
 {
-  uint8_t* bp = (uint8_t*) buf;
+  const uint8_t* bp = (const uint8_t*) buf;
   while (size != 0) {
     uint8_t tmp[TMP_MAX];
     uint8_t n = (size > sizeof(tmp) / 4 ? sizeof(tmp) / 4 : size);
