@@ -275,8 +275,8 @@
 #
 ########################################################################
 
-#PREVENT_DATA_SIZE=yes
-#PREVENT_EEPROM_SIZE=yes
+PREVENT_DATA_SIZE=yes
+PREVENT_EEPROM_SIZE=yes
 
 SIZE_HIGHLIGHT = "\\n"
 
