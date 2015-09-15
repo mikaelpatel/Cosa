@@ -661,6 +661,9 @@ public:
      */
     virtual int putchar(char c);
 
+    /** Overloaded virtual member function write. */
+    using IOStream::Device::write;
+
     /**
      * @override IOStream::Device
      * Write data from buffer with given size to the file.
@@ -672,21 +675,13 @@ public:
 
     /**
      * @override IOStream::Device
-     * Write data from buffers in null terminated io vector.
-     * @param[in] vec io vector with buffers to write.
-     * @return number of bytes written or EOF(-1).
-     */
-    virtual int write(const iovec_t* vec)
-    {
-      return (IOStream::Device::write(vec));
-    }
-
-    /**
-     * @override IOStream::Device
      * Read character from the file.
      * @return character or EOF(-1).
      */
     virtual int getchar();
+
+    /** Overloaded virtual member function read. */
+    using IOStream::Device::read;
 
     /**
      * @override IOStream::Device
@@ -696,17 +691,6 @@ public:
      * @return number of bytes read or EOF(-1).
      */
     virtual int read(void* buf, size_t size);
-
-    /**
-     * @override IOStream::Device
-     * Read data to given buffers in null terminated io vector.
-     * @param[in] vec io vector with buffers to read into.
-     * @return number of bytes read or EOF(-1).
-     */
-    virtual int read(iovec_t* vec)
-    {
-      return (IOStream::Device::read(vec));
-    }
 
   protected:
     uint8_t m_flags;          // see above for bit definitions

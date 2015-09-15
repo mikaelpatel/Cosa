@@ -28,7 +28,7 @@ ProtoThread::on_event(uint8_t type, uint16_t value)
 {
   if (UNLIKELY(m_state == WAITING)) detach();
   m_state = (type == Event::TIMEOUT_TYPE) ? TIMEOUT : RUNNING;
-  run(type, value);
+  on_run(type, value);
   if (m_state == RUNNING) {
     m_state = READY;
   }
@@ -54,7 +54,7 @@ ProtoThread::dispatch(bool flag)
     Linkage* succ = link->get_succ();
     ProtoThread* thread = (ProtoThread*) link;
     thread->m_state = RUNNING;
-    thread->run();
+    thread->on_run(Event::RUN_TYPE, 0);
     if (thread->m_state == RUNNING) {
       thread->m_state = READY;
     }

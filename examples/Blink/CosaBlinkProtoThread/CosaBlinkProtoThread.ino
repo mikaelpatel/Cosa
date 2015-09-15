@@ -38,7 +38,7 @@ public:
     m_delay(ms)
   {}
 
-  virtual void run(uint8_t type, uint16_t value)
+  virtual void on_run(uint8_t type, uint16_t value)
   {
     UNUSED(type);
     UNUSED(value);

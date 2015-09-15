@@ -43,7 +43,7 @@ public:
     m_delay(delay)
   {}
 
-  virtual void run(uint8_t type, uint16_t value)
+  virtual void on_run(uint8_t type, uint16_t value)
   {
     UNUSED(type);
     UNUSED(value);
@@ -75,6 +75,7 @@ void setup()
   // Start the UART and trace output stream
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaBenchmarkProtoThread: started"));
+  TRACE(sizeof(Job));
   TRACE(sizeof(ProtoThread));
   TRACE(sizeof(Counter));
 

@@ -326,28 +326,11 @@ public:
      */
     virtual int room();
 
-    /**
-     * @override IOStream::Device
-     * Write data from buffer with given size to device.
-     * @param[in] buf buffer to write.
-     * @param[in] size number of bytes to write.
-     * @return number of bytes written or EOF(-1).
-     */
-    virtual int write(const void* buf, size_t size)
-    {
-      return (write(buf, size, false));
-    }
+    /** Overloaded virtual member function write. */
+    using IOStream::Device::write;
 
-    /**
-     * @override IOStream::Device
-     * Write data from buffers in null terminated io vector.
-     * @param[in] vec io vector with buffers to write.
-     * @return number of bytes written or EOF(-1).
-     */
-    virtual int write(const iovec_t* vec)
-    {
-      return (IOStream::Device::write(vec));
-    }
+    /** Overloaded virtual member function read. */
+    using IOStream::Device::read;
 
     /**
      * @override IOStream::Device
@@ -357,17 +340,6 @@ public:
      * @return number of bytes read or EOF(-1).
      */
     virtual int read(void* buf, size_t size);
-
-    /**
-     * @override IOStream::Device
-     * Read data to given buffers in null terminated io vector.
-     * @param[in] vec io vector with buffers to read into.
-     * @return number of bytes read or EOF(-1).
-     */
-    virtual int read(iovec_t* vec)
-    {
-      return (IOStream::Device::read(vec));
-    }
 
     /**
      * @override IOStream::Device

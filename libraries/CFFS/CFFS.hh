@@ -179,6 +179,9 @@ public:
       return (m_file_size);
     }
 
+    /** Overloaded virtual member functions. */
+    using IOStream::Device::write;
+
     /**
      * @override IOStream::Device
      * Write data from buffer with given size to the file. If
@@ -203,22 +206,14 @@ public:
 
     /**
      * @override IOStream::Device
-     * Write data from buffers in null terminated io vector.
-     * @param[in] vec io vector with buffers to write.
-     * @return number of bytes written or EOF(-1).
-     */
-    virtual int write(const iovec_t* vec)
-    {
-      return (IOStream::Device::write(vec));
-    }
-
-    /**
-     * @override IOStream::Device
      * Read character/byte from the file. If successful returns character
      * read or negative error code (EPREM, EFAULT, ENOSPC, EIO, ENXIO).
      * @return character or negative error code.
      */
     virtual int getchar();
+
+    /** Overloaded virtual member functions. */
+    using IOStream::Device::read;
 
     /**
      * @override IOStream::Device
@@ -230,17 +225,6 @@ public:
      * @return number of bytes read or negative error code.
      */
     virtual int read(void* buf, size_t size);
-
-    /**
-     * @override IOStream::Device
-     * Read data to given buffers in null terminated io vector.
-     * @param[in] vec io vector with buffers to read into.
-     * @return number of bytes read or EOF(-1).
-     */
-    virtual int read(iovec_t* vec)
-    {
-      return (IOStream::Device::read(vec));
-    }
 
   protected:
     uint8_t m_flags;			//!< File open flags.

@@ -67,6 +67,9 @@ public:
     return (m_ibuf->available());
   }
 
+  /** Overloaded virtual member function write. */
+  using IOStream::Device::write;
+
   /**
    * @override IOStream::Device
    * Write data from buffer with given size to device.
@@ -75,17 +78,6 @@ public:
    * @return number of bytes written or EOF(-1).
    */
   virtual int write(const void* buf, size_t size);
-
-  /**
-   * @override IOStream::Device
-   * Write data from buffers in null terminated io vector.
-   * @param[in] vec io vector with buffers to write.
-   * @return number of bytes written or EOF(-1).
-   */
-  virtual int write(const iovec_t* vec)
-  {
-    return (IOStream::Device::write(vec));
-  }
 
   /**
    * @override IOStream::Device

@@ -80,6 +80,9 @@ public:
     return (m_port);
   }
 
+  /** Overloaded virtual member function write. */
+  using IOStream::Device::write;
+
   /**
    * @override IOStream::Device
    * Write data from buffer with given size to device.
@@ -106,17 +109,6 @@ public:
 
   /**
    * @override IOStream::Device
-   * Write data from buffers in null terminated io vector.
-   * @param[in] vec io vector with buffers to write.
-   * @return number of bytes written or EOF(-1).
-   */
-  virtual int write(const iovec_t* vec)
-  {
-    return (IOStream::Device::write(vec));
-  }
-
-  /**
-   * @override IOStream::Device
    * Read character from device.
    * @return character or EOF(-1).
    */
@@ -126,6 +118,9 @@ public:
     int res = recv(&c, sizeof(c));
     return (res == sizeof(c) ? (c & 0xff) : res);
   }
+
+  /** Overloaded virtual member function read. */
+  using IOStream::Device::read;
 
   /**
    * @override IOStream::Device
@@ -137,17 +132,6 @@ public:
   virtual int read(void* buf, size_t size)
   {
     return (recv(buf, size));
-  }
-
-  /**
-   * @override IOStream::Device
-   * Read data to given buffers in null terminated io vector.
-   * @param[in] vec io vector with buffers to read into.
-   * @return number of bytes read or EOF(-1).
-   */
-  virtual int read(iovec_t* vec)
-  {
-    return (IOStream::Device::read(vec));
   }
 
   /**
