@@ -47,6 +47,8 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Time.hh"
+#include "Cosa/Periodic.hh"
 
 // Configuration
 #define NO_INDOORS
@@ -63,7 +65,10 @@ DHT22 indoors(Board::EXT1);
 #endif
 
 // Start time in milli-seconds
-const uint32_t START = 0xfffff000UL;
+const uint32_t START = 8 * 3600 * 1000UL;
+
+// Use the Real-Time Clock
+RTC::Clock clock;
 
 void setup()
 {
@@ -82,26 +87,29 @@ void setup()
   RTC::begin();
   Watchdog::millis(START);
   RTC::millis(START);
+  clock.time(START / 1000);
 }
 
 void loop()
 {
-  // Sample every 2 seconds
-  sleep(2);
-
-  // Read and print humidity and temperature
+  // Periodically read and print humidity and temperature
+  periodic(timer, 2000) {
 #if !defined(NO_INDOORS)
-  trace << hex << RTC::micros() << PSTR(":indoors: ");
-  if (indoors.sample())
-    trace << indoors;
-  else
-    trace << PSTR("failed");
-  trace << endl;
+    trace << time_t(clock.time()) << ':';
+    trace << hex << RTC::micros() << PSTR(":indoors: ");
+    if (indoors.sample())
+      trace << indoors;
+    else
+      trace << PSTR("failed");
+    trace << endl;
 #endif
-  trace << hex << RTC::micros() << PSTR(":outdoors: ");
-  if (outdoors.sample())
-    trace << outdoors;
-  else
-    trace << PSTR("failed");
-  trace << endl;
+    trace << time_t(clock.time()) << ':';
+    trace << hex << RTC::micros() << PSTR(":outdoors: ");
+    if (outdoors.sample())
+      trace << outdoors;
+    else
+      trace << PSTR("failed");
+    trace << endl;
+  }
+  yield();
 }
