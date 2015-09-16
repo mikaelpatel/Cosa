@@ -120,7 +120,7 @@ protected:
  * @note requires RTC.hh.
  */
 #define periodic(timer,ms)						\
-  static uint32_t timer = 0UL;						\
+  static uint32_t timer = RTC::millis();				\
   for (int __UNIQUE(i) = 1;						\
        (__UNIQUE(i) != 0) && ((RTC::since(timer)) >= ms);		\
        __UNIQUE(i)--, timer += ms)
