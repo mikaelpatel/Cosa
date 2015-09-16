@@ -83,7 +83,7 @@ public:
 
 protected:
   /**
-   * @override Event::Handler
+   * @override{Event::Handler}
    * Periodic event handler; dispatch the run() function on
    * timeout events and reschedule the periodic job.
    * @param[in] type the type of event.

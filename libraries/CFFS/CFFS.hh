@@ -183,7 +183,7 @@ public:
     using IOStream::Device::write;
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write data from buffer with given size to the file. If
      * successful returns number of bytes written or negative error
      * code (EPREM, EFAULT, ENOSPC, EIO, ENXIO).
@@ -194,7 +194,7 @@ public:
     virtual int write(const void *buf, size_t size);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write data from buffer in program memory with given size to the
      * file. If successful returns number of bytes written or negative
      * error (EPREM, EFAULT, ENOSPC, EIO, ENXIO).
@@ -205,7 +205,7 @@ public:
     virtual int write_P(const void* buf, size_t size);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Read character/byte from the file. If successful returns character
      * read or negative error code (EPREM, EFAULT, ENOSPC, EIO, ENXIO).
      * @return character or negative error code.
@@ -216,7 +216,7 @@ public:
     using IOStream::Device::read;
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Read data to given buffer with given size from the file. If
      * successful returns number of bytes read or negative error code
      * (EPERM, EIO, ENXIO).
@@ -236,7 +236,7 @@ public:
     uint32_t m_current_pos;		//!< Current logical position.
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write data from buffer in data or program memory with given
      * size to the file. If successful returns number of bytes written
      * or negative error code.

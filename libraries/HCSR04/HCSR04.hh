@@ -96,7 +96,7 @@ public:
   }
 
   /**
-   * @override Periodic
+   * @override{Periodic}
    * Default on change function. Override for callback when the
    * distance has changed.
    * @param[in] distance in milli-meters.
@@ -123,7 +123,7 @@ private:
   uint16_t m_distance;
 
   /**
-   * @override Event::Handler
+   * @override{Event::Handler}
    * Default device event handler function. Attach to watchdog
    * timer queue, Watchdog::attach(), to allow perodic reading
    * and check if the distance has changed.

@@ -48,7 +48,7 @@ public:
     Scheduler() : m_queue() {}
 
     /**
-     * @override Job::Scheduler
+     * @override{Job::Scheduler}
      * Start given job. Returns true(1) if successful otherwise
      * false(0).
      * @param[in] job to start.
@@ -57,7 +57,7 @@ public:
     virtual bool start(Job* job);
 
     /**
-     * @override Job::Scheduler
+     * @override{Job::Scheduler}
      * Stop given job. Returns true(1) if successful otherwise
      * false(0).
      * @return bool.
@@ -65,13 +65,13 @@ public:
     virtual bool stop(Job* job);
 
     /**
-     * @override Job::Scheduler
+     * @override{Job::Scheduler}
      * Dispatch expired jobs.
      */
     virtual void dispatch();
 
     /**
-     * @override Job::Scheduler
+     * @override{Job::Scheduler}
      * Return current scheduler time.
      ' @return time.
      */
@@ -170,7 +170,7 @@ public:
   }
 
   /**
-   * @override Job
+   * @override{Job}
    * Job member function that is called when the job time has
    * expired. This function is normally called from an ISR. The
    * default implementation will push a timeout event with the job as
@@ -184,7 +184,7 @@ public:
   }
 
   /**
-   * @override Event::Handler
+   * @override{Event::Handler}
    * Default job event handler; execute the run() virtual member
    * function on timeout event. Event is pushed by on_expired().
    * @param[in] type the type of event (Typically TIMEOUT_TYPE).
@@ -198,7 +198,7 @@ public:
   }
 
   /**
-   * @override Job
+   * @override{Job}
    * The job run() virtual member function; sub-class should define.
    * Called by the scheduler (via event handler) when the time expires.
    */

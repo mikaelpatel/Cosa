@@ -78,7 +78,7 @@ public:
   static const uint16_t SCREEN_HEIGHT = 128;
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Set screen orientation.
    * @param[in] direction.
    */
@@ -86,7 +86,7 @@ public:
 
 protected:
   /**
-   * @override GDDRAM
+   * @override{GDDRAM}
    * Get initialization script (in program memory).
    * @return pointer to script.
    */

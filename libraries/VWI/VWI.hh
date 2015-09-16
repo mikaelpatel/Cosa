@@ -102,7 +102,7 @@ public:
 	  uint8_t preamble_max = VWI::Transmitter::PREAMBLE_MAX);
 
     /**
-     * @override VWI::Codec
+     * @override{VWI::Codec}
      * Provide pointer to frame preamble in program memory. PREAMBLE_MAX
      * should contain the length of the preamble including start symbol.
      * @return pointer to program memory.
@@ -110,7 +110,7 @@ public:
     virtual const uint8_t* get_preamble() = 0;
 
     /**
-     * @override VWI::Codec
+     * @override{VWI::Codec}
      * Encode 4 bits (nibble) to a symbol with BITS_PER_SYMBOL.
      * @param[in] nibble data to encode.
      * @return symbol.
@@ -118,7 +118,7 @@ public:
     virtual uint8_t encode4(uint8_t nibble) = 0;
 
     /**
-     * @override VWI::Codec
+     * @override{VWI::Codec}
      * Decode symbol back to 4 bits (nibble) of data.
      * @param[in] symbol to decode.
      * @return data.
@@ -126,7 +126,7 @@ public:
     virtual uint8_t decode4(uint8_t symbol) = 0;
 
     /**
-     * @override VWI::Codec
+     * @override{VWI::Codec}
      * Decode two packed symbols (max 16-bit) back to 8 bits (byte) of
      * data.
      * @param[in] symbol to decode.
@@ -159,7 +159,7 @@ public:
   }
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Start the Wireless device driver. Return true(1) if successful
    * otherwise false(0).
    * @param[in] config configuration vector (default NULL)
@@ -168,7 +168,7 @@ public:
   virtual bool begin(const void* config = NULL);
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Shut down the device driver. Return true(1) if successful
    * otherwise false(0).
    * @return bool
@@ -176,19 +176,19 @@ public:
   virtual bool end();
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Set device in power up mode.
    */
   virtual void powerup();
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Set device in power down mode.
    */
   virtual void powerdown();
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Return true(1) if a message is available otherwise false(0).
    * @return bool
    */
@@ -198,7 +198,7 @@ public:
   }
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Send message in given null terminated io vector. Returns number
    * of bytes sent. Returns error code(-1) if number of bytes is
    * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
@@ -214,7 +214,7 @@ public:
   }
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
@@ -231,7 +231,7 @@ public:
   }
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Receive message and store into given buffer with given maximum
    * length. The source network address is returned in the parameter src.
    * Returns error code(ETIME) if no message is available and/or a
@@ -254,7 +254,7 @@ public:
   }
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Return link quality indicator.
    */
   virtual int get_link_quality_indicator()

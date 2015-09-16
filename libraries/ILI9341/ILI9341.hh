@@ -80,7 +80,7 @@ public:
 
 protected:
   /**
-   * @override GDDRAM
+   * @override{GDDRAM}
    * Get initialization script (in program memory).
    * @return pointer to script.
    */

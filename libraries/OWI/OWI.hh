@@ -153,7 +153,7 @@ public:
     bool connect(uint8_t family, uint8_t index);
 
     /**
-     * @override OWI::Driver
+     * @override{OWI::Driver}
      * Callback on alarm dispatch. Default is empty function.
      */
     virtual void on_alarm() {}

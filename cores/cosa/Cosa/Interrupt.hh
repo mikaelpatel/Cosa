@@ -31,7 +31,7 @@ public:
   class Handler {
   public:
     /**
-     * @override Interrupt::Handler
+     * @override{Interrupt::Handler}
      * Default interrupt handler. Should override.
      * @param[in] arg argument from interrupt service routine.
      */
@@ -41,19 +41,19 @@ public:
     }
 
     /**
-     * @override Interrupt::Handler
+     * @override{Interrupt::Handler}
      * Enable interrupt handler.
      */
     virtual void enable() {}
 
     /**
-     * @override Interrupt::Handler
+     * @override{Interrupt::Handler}
      * Disable interrupt handler.
      */
     virtual void disable() {}
 
     /**
-     * @override Interrupt::Handler
+     * @override{Interrupt::Handler}
      * Clear interrupt.
      */
     virtual void clear() {}

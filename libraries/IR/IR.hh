@@ -57,7 +57,7 @@ public:
     typedef const keymap_t* keymap_P;
 
     /**
-     * @override Interrupt::Handler
+     * @override{Interrupt::Handler}
      * Interrupt pin handler: Measure time periods of pulses in sequence
      * from IR receiver circuit. Push an event when a full sequence has
      * been recieved; READ_COMPLETED(this, code) where the code is the

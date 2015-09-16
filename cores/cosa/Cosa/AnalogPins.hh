@@ -76,14 +76,14 @@ public:
   bool samples_request();
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Interrupt service on conversion completion.
    * @param[in] arg sample value.
    */
   virtual void on_interrupt(uint16_t arg);
 
   /**
-   * @override Event::Handler
+   * @override{Event::Handler}
    * Default analog pin set event handler function.
    * @param[in] type the type of event.
    * @param[in] value the event value.

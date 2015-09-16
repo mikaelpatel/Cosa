@@ -50,7 +50,7 @@ public:
   static void begin(Thread* thread = NULL, size_t size = 0);
 
   /**
-   * @override Nucleo::Thread
+   * @override{Nucleo::Thread}
    * The thread main function. The function is called when the thread
    * is scheduled and becomes running. Normally the function is an
    * end-less loop. Returning from the function will result in that

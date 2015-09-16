@@ -132,7 +132,7 @@ public:
     }
 
     /**
-     * @override Job::Scheduler
+     * @override{Job::Scheduler}
      * Return current watchdog time in milli-seconds.
      */
     virtual uint32_t time()

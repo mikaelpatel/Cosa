@@ -88,7 +88,7 @@ private:
   OutputPin m_pin;
 
   /**
-   * @override Job
+   * @override{Job}
    * The LED run virtual member function; Toggle LED on timeout event.
    */
   virtual void run()

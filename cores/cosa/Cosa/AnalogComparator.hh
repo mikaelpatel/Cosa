@@ -58,7 +58,7 @@ public:
   {}
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Enable analog comparator handler.
    * @note atomic
    */
@@ -75,7 +75,7 @@ public:
   }
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Disable analog comparator handler.
    * @note atomic
    */
@@ -88,7 +88,7 @@ public:
   }
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Default interrupt service on comparator output rise, fall or toggle.
    * @param[in] arg argument from interrupt service routine.
    */

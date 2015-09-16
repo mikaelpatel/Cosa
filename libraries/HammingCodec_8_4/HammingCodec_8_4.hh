@@ -47,7 +47,7 @@ public:
   }
 
   /**
-   * @override VWI::Codec
+   * @override{VWI::Codec}
    * Returns pointer to Hamming frame preamble in program memory.
    * @return pointer.
    */
@@ -57,7 +57,7 @@ public:
   }
 
   /**
-   * @override VWI::Codec
+   * @override{VWI::Codec}
    * Returns symbol for given 4-bit data.
    * @param[in] nibble data.
    * @return 8-bit symbol code.
@@ -68,7 +68,7 @@ public:
   };
 
   /**
-   * @override VWI::Codec
+   * @override{VWI::Codec}
    * Returns 4-bit data for given symbol.
    * @param[in] symbol code.
    * @return 4-bit data.

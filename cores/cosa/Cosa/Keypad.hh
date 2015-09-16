@@ -46,7 +46,7 @@ public:
   {}
 
   /**
-   * @override Keypad
+   * @override{Keypad}
    * Callback method when a key down is detected. Must override.
    * @param[in] nr key number (index in map).
    */
@@ -56,7 +56,7 @@ public:
   }
 
   /**
-   * @override Keypad
+   * @override{Keypad}
    * Callback method when a key up is detected. Default is null
    * function.
    * @param[in] nr key number (index in map).
@@ -92,7 +92,7 @@ protected:
     uint8_t m_latest;
 
     /**
-     * @override AnalogPin
+     * @override{AnalogPin}
      * Callback member function when the analog pin value changes.
      * @param[in] value new reading.
      */
@@ -106,7 +106,7 @@ protected:
   Key m_key;
 
   /**
-   * @override Job
+   * @override{Job}
    * Periodic sampling of analog pin.
    */
   virtual void run();

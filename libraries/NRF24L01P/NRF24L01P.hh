@@ -105,13 +105,13 @@ public:
   void standby();
 
   /**
-   * @override Wireless::Device
+   * @override{Wireless::Device}
    * Set power down. Turn off radio and go into low power mode.
    */
   virtual void powerdown();
 
   /**
-   * @override Wireless::Device
+   * @override{Wireless::Device}
    * Start up the device driver. Return true(1) if successful
    * otherwise false(0).
    * @param[in] config device configuration (default NULL).
@@ -120,7 +120,7 @@ public:
   virtual bool begin(const void* config = NULL);
 
   /**
-   * @override Wireless::Device
+   * @override{Wireless::Device}
    * Shut down the device driver. Return true(1) if successful
    * otherwise false(0).
    * @return bool
@@ -132,7 +132,7 @@ public:
   }
 
   /**
-   * @override Wireless::Device
+   * @override{Wireless::Device}
    * Return true(1) if the data to receive on the device otherwise
    * false(0).
    * @return bool
@@ -140,7 +140,7 @@ public:
   virtual bool available();
 
   /**
-   * @override Wireless::Device
+   * @override{Wireless::Device}
    * Send message in given null terminated io vector. Returns number
    * of bytes sent. Returns error code(-1) if number of bytes is
    * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
@@ -153,7 +153,7 @@ public:
   virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec);
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
@@ -168,7 +168,7 @@ public:
   virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
 
   /**
-   * @override Wireless::Device
+   * @override{Wireless::Device}
    * Receive message and store into given buffer with given maximum
    * size. The source network address is returned in the parameter src.
    * Returns error code(-2) if no message is available and/or a
@@ -186,7 +186,7 @@ public:
 		   uint32_t ms = 0L);
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Set output power level (-30..10 dBm)
    * @param[in] dBm.
    */

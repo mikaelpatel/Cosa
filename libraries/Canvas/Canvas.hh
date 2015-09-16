@@ -350,7 +350,7 @@ public:
     {}
 
     /**
-     * @override Canvas::Image
+     * @override{Canvas::Image}
      * Read the given number of pixel into the given buffer.
      * Return true(1) if successful otherwise false(0).
      * @param[in] buf pixel buffer pointer.
@@ -388,7 +388,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Start interaction with device. Must override.
    * @return true(1) if successful otherwise false(0).
    */
@@ -568,14 +568,14 @@ public:
   static color16_t blend(color16_t c1, color16_t c2);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Get screen orientation.
    * @return direction (Canvas::LANDSCAPE/PORTRAIT).
    */
   virtual uint8_t get_orientation();
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Set screen orientation. Return previous orientation.
    * @param[in] direction (Canvas::LANDSCAPE/PORTRAIT).
    * @return previous orientation.
@@ -583,7 +583,7 @@ public:
   virtual uint8_t set_orientation(uint8_t direction);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Set pixel with current pen color.
    * @param[in] x.
    * @param[in] y.
@@ -601,7 +601,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw bitmap with current pen color. The bitmap must be stored
    * in program memory.
    * @param[in] x.
@@ -633,7 +633,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw icon at given position with current pen color. The icon must
    * be stored in program memory.
    * @param[in] x.
@@ -648,7 +648,7 @@ public:
 			 uint8_t scale = 1);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw icon at given position with current pen color. The icon must
    * be stored in program memory.
    * @param[in] x.
@@ -675,7 +675,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw image on canvas at given position.
    * @param[in] x.
    * @param[in] y.
@@ -684,7 +684,7 @@ public:
   virtual void draw_image(uint16_t x, uint16_t y, Image* image);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw image on canvas at current position.
    * @param[in] image.
    */
@@ -696,7 +696,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw line with current pen color.
    * @param[in] x0.
    * @param[in] y0.
@@ -720,7 +720,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw vertical line with current pen color.
    * @param[in] x.
    * @param[in] y.
@@ -741,7 +741,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw horizontal line with current pen color.
    * @param[in] x.
    * @param[in] y.
@@ -762,7 +762,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw polygon from program memory with current pen color. Vector of
    * delta positions, terminate with 0, 0. Update cursor to end position.
    * @param[in] poly.
@@ -771,7 +771,7 @@ public:
   virtual void draw_poly_P(const int8_t* poly, uint8_t scale = 1);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw stroke from program memory with current pen color. Vector of
    * delta positions, terminated with 0, 0. The cursor is moved for
    * when both dx and dy are zero or negative. Update cursor to new
@@ -782,7 +782,7 @@ public:
   virtual void draw_stroke_P(const int8_t* stroke, uint8_t scale = 1);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw rectangle with current pen color.
    * @param[in] x.
    * @param[in] y.
@@ -804,7 +804,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Fill rectangle with current pen color. Must override.
    * @param[in] x.
    * @param[in] y.
@@ -826,7 +826,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw round corner rectangle with current pen color.
    * @param[in] x.
    * @param[in] y.
@@ -852,7 +852,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Fill round corner rectangle with current pen color.
    * @param[in] x.
    * @param[in] y.
@@ -878,7 +878,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw circle with current pen color.
    * @param[in] x.
    * @param[in] y.
@@ -898,7 +898,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Fill circle with current pen color.
    * @param[in] x.
    * @param[in] y.
@@ -918,7 +918,7 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw character with current text color, font and scale.
    * @param[in] x position.
    * @param[in] y position.
@@ -938,27 +938,27 @@ public:
   }
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw string in current text color, font and scale.
    * @param[in] s string.
    */
   virtual void draw_string(char* s);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw string from program memory with current text color and font.
    * @param[in] s string in program memory (PSTR).
    */
   virtual void draw_string(str_P s);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Fill screen with canvas color.
    */
   virtual void fill_screen();
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Stop sequence of interaction with device. Must override.
    * @return true(1) if successful otherwise false(0).
    */

@@ -40,7 +40,7 @@ public:
   {}
 
   /**
-   * @override Job::Scheduler
+   * @override{Job::Scheduler}
    * Return clock time.
    * @return seconds.
    */

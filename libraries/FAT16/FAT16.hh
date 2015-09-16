@@ -654,7 +654,7 @@ public:
     bool truncate(uint32_t size);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write character to the file.
      * @param[in] c character to write.
      * @return character written or EOF(-1).
@@ -665,7 +665,7 @@ public:
     using IOStream::Device::write;
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write data from buffer with given size to the file.
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
@@ -674,7 +674,7 @@ public:
     virtual int write(const void *buf, size_t size);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Read character from the file.
      * @return character or EOF(-1).
      */
@@ -684,7 +684,7 @@ public:
     using IOStream::Device::read;
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Read data to given buffer with given size from the file.
      * @param[in] buf buffer to read into.
      * @param[in] size number of bytes to read.

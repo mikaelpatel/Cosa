@@ -76,7 +76,7 @@ public:
     }
 
     /**
-     * @override TWI::Driver
+     * @override{TWI::Driver}
      * Service completion callback when a read/write has been
      * completed.
      * @param[in] type event code.
@@ -136,7 +136,7 @@ public:
     void begin();
 
     /**
-     * @override TWI::Driver
+     * @override{TWI::Driver}
      * Service completion callback when a read/write has been
      * completed.
      * @param[in] type event code.
@@ -148,7 +148,7 @@ public:
     }
 
     /**
-     * @override TWI::Slave
+     * @override{TWI::Slave}
      * Service request callback when a write has been completed,
      * i.e., an argument block as been written. Must be defined by
      * sub-class. Must handle write-read and write-write

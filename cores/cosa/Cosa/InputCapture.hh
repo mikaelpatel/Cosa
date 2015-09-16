@@ -86,7 +86,7 @@ public:
   }
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Interrupt service callback on input capture. The parameter arg
    * contains the timer value. The timer is incremented with the
    * system clock (prescale is 1).
@@ -95,21 +95,21 @@ public:
   virtual void on_interrupt(uint16_t arg = 0);
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Enable input capture handler.
    * @note atomic
    */
   virtual void enable();
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Disable input capture handler.
    * @note atomic
    */
   virtual void disable();
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Clear input capture interrupt flag.
    * @note atomic
    */

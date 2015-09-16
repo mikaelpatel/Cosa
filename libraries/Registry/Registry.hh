@@ -203,7 +203,7 @@ public:
   class Action {
   public:
     /**
-     * @override Registry::Action
+     * @override{Registry::Action}
      * Registry action function for given registry item. Should return
      * number of bytes in buffer as return value or negative error
      * code (EINVAL if illegal parameter, ENXIO if no object defined).

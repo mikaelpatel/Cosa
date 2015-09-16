@@ -44,7 +44,7 @@ public:
   class IO {
   public:
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Initiate IO port. Called by HD44780::begin(). Should return true(1)
      * for 8-bit mode otherwise false for 4-bit mode.
      * @return bool.
@@ -52,21 +52,21 @@ public:
     virtual bool setup() = 0;
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write LSB nibble (4bit) to display.
      * @param[in] data (4b) to write.
      */
     virtual void write4b(uint8_t data) = 0;
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write byte (8bit) to display.
      * @param[in] data (8b) to write.
      */
     virtual void write8b(uint8_t data);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write character buffer to display.
      * @param[in] buf pointer to buffer.
      * @param[in] size number of bytes in buffer.
@@ -74,7 +74,7 @@ public:
     virtual void write8n(const void* buf, size_t size);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Set data/command mode; zero(0) for command,
      * non-zero(1) for data mode.
      * @param[in] flag.
@@ -82,7 +82,7 @@ public:
     virtual void set_mode(uint8_t flag) = 0;
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Set backlight on/off.
      * @param[in] flag.
      */
@@ -117,7 +117,7 @@ public:
   {}
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Start display for text output. Returns true if successful
    * otherwise false.
    * @return boolean.
@@ -125,32 +125,32 @@ public:
   virtual bool begin();
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Stop display and power down. Returns true if successful
    * otherwise false.
    */
   virtual bool end();
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Turn display backlight on.
    */
   virtual void backlight_on();
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Turn display backlight off.
    */
   virtual void backlight_off();
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Turn display on.
    */
   virtual void display_on();
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Turn display off.
    */
   virtual void display_off();
@@ -174,7 +174,7 @@ public:
   }
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Clear display and move cursor to home(0, 0).
    */
   virtual void display_clear();
@@ -229,7 +229,7 @@ public:
   }
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Set cursor position to given position.
    * @param[in] x.
    * @param[in] y.
@@ -288,7 +288,7 @@ public:
   void set_custom_char_P(uint8_t id, const uint8_t* bitmap);
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Write character to display. Handles carriage-return-line-feed, back-
    * space, alert, horizontal tab and form-feed. Returns character or EOF
    * on error.
@@ -301,7 +301,7 @@ public:
   using IOStream::Device::write;
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Write data from buffer with given size to device.
    * @param[in] buf buffer to write.
    * @param[in] size number of bytes to write.
@@ -378,28 +378,28 @@ public:
     {}
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Initiate 4-bit parallel port. Returns false.
      * @return bool.
      */
     virtual bool setup();
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write LSB nibble to display data pins.
      * @param[in] data (4b) to write.
      */
     virtual void write4b(uint8_t data);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write byte (8bit) to display.
      * @param[in] data (8b) to write.
      */
     virtual void write8b(uint8_t data);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Set instruction/data mode using given rs pin; zero for
      * instruction, non-zero for data mode.
      * @param[in] flag.
@@ -407,7 +407,7 @@ public:
     virtual void set_mode(uint8_t flag);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Set backlight on/off using bt pin.
      * @param[in] flag.
      */
@@ -500,28 +500,28 @@ public:
 #endif
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Initiate serial port. Returns false.
      * @return bool.
      */
     virtual bool setup();
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write LSB nibble to display using serial port.
      * @param[in] data (4b) to write.
      */
     virtual void write4b(uint8_t data);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write byte (8bit) to display.
      * @param[in] data (8b) to write.
      */
     virtual void write8b(uint8_t data);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Set instruction/data mode using given rs pin; zero for
      * instruction, non-zero for data mode.
      * @param[in] flag.
@@ -529,7 +529,7 @@ public:
     virtual void set_mode(uint8_t flag);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Set backlight on/off using bt pin.
      * @param[in] flag.
      */
@@ -629,28 +629,28 @@ public:
 #endif
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Initiate serial port. Returns false.
      * @return bool.
      */
     virtual bool setup();
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write LSB nibble to display using serial port.
      * @param[in] data (4b) to write.
      */
     virtual void write4b(uint8_t data);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write byte (8bit) to display.
      * @param[in] data (8b) to write.
      */
     virtual void write8b(uint8_t data);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Set instruction/data mode using given rs pin; zero for
      * instruction, non-zero for data mode.
      * @param[in] flag.
@@ -658,7 +658,7 @@ public:
     virtual void set_mode(uint8_t flag);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Set backlight on/off using bt pin.
      * @param[in] flag.
      */
@@ -783,28 +783,28 @@ public:
 #endif
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Initiate port for 8-bit serial mode. Returns true(1).
      * @return true(1).
      */
     virtual bool setup();
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write LSB nibble to display using serial port.
      * @param[in] data (4b) to write.
      */
     virtual void write4b(uint8_t data);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Write byte (8bit) to display.
      * @param[in] data (8b) to write.
      */
     virtual void write8b(uint8_t data);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Set instruction/data mode using given rs pin; zero for
      * instruction, non-zero for data mode.
      * @param[in] flag.
@@ -812,7 +812,7 @@ public:
     virtual void set_mode(uint8_t flag);
 
     /**
-     * @override HD44780::IO
+     * @override{HD44780::IO}
      * Set backlight on/off using bt pin.
      * @param[in] flag.
      */
@@ -913,7 +913,6 @@ public:
   const uint8_t* m_offset;	//!< Row offset table.
 
   /**
-   * @override
    * Write data or command to display.
    * @param[in] data to write.
    */

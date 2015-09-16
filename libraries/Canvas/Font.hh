@@ -71,7 +71,7 @@ public:
   }
 
   /**
-   * @override Font
+   * @override{Font}
    * Determine if character is available in font.
    * @param[in] c character.
    * @return true if available.
@@ -83,7 +83,7 @@ public:
   }
 
   /**
-   * @override Font
+   * @override{Font}
    * Draw character on given canvas.
    * @param[in] canvas.
    * @param[in] c character.
@@ -115,14 +115,14 @@ public:
     }
 
     /**
-     * @override Font::Glyph
+     * @override{Font::Glyph}
      * Begin character.
      * @param[in] c character.
      */
     void begin(char c);
 
     /**
-     * @override Font::Glyph
+     * @override{Font::Glyph}
      * Get next byte.
      * @return byte.
      */

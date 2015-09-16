@@ -64,7 +64,7 @@ public:
   Serial() : IOStream::Device() {}
 
   /**
-   * @override Serial
+   * @override{Serial}
    * Start Serial device driver with given serial bitrate and serial
    * format.
    * @param[in] baudrate serial bitrate (default 9600).
@@ -75,7 +75,7 @@ public:
 		     uint8_t format = DEFAULT_FORMAT) = 0;
 
   /**
-   * @override Serial
+   * @override{Serial}
    * Stop Serial device driver.
    * @return true(1) if successful otherwise false(0)
    */

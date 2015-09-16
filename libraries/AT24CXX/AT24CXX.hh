@@ -76,7 +76,7 @@ public:
   {}
 
   /**
-   * @override EEPROM::Device
+   * @override{EEPROM::Device}
    * Return true(1) if the device is ready, write cycle is completed,
    * otherwise false(0).
    * @return bool
@@ -84,7 +84,7 @@ public:
   virtual bool is_ready();
 
   /**
-   * @override EEPROM::Device
+   * @override{EEPROM::Device}
    * Read rom block with the given size into the buffer from the address.
    * Return number of bytes read or negative error code.
    * @param[in] dest buffer to read from rom.
@@ -95,7 +95,7 @@ public:
   virtual int read(void* dest, const void* src, size_t size);
 
   /**
-   * @override EEPROM::Device
+   * @override{EEPROM::Device}
    * Write rom block at given address with the contents from the buffer.
    * Return number of bytes written or negative error code.
    * @param[in] dest address in rom to read write to.

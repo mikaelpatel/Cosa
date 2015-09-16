@@ -51,7 +51,7 @@ public:
 		    bool pullup = false);
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Interrupt service callback on external interrupt pin change.
    * @param[in] arg argument from interrupt service routine.
    */
@@ -61,21 +61,21 @@ public:
   }
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Enable external interrupt handler.
    * @note atomic
    */
   virtual void enable();
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Disable external interrupt handler.
    * @note atomic
    */
   virtual void disable();
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Clear external interrupt flag.
    * @note atomic
    */

@@ -58,7 +58,7 @@ public:
   {}
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Number of bytes available in input buffer.
    * @return bytes.
    */
@@ -71,7 +71,7 @@ public:
   using IOStream::Device::write;
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Write data from buffer with given size to device.
    * @param[in] buf buffer to write.
    * @param[in] size number of bytes to write.
@@ -80,7 +80,7 @@ public:
   virtual int write(const void* buf, size_t size);
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Peek next character from serial port input buffer.
    * Returns character if successful otherwise on error or buffer empty
    * returns EOF(-1),
@@ -92,7 +92,7 @@ public:
   }
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Peek for given character from serial port input buffer.
    * @param[in] c character to peek for.
    * @return available or EOF(-1).
@@ -103,7 +103,7 @@ public:
   }
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Read character from serial port input buffer.
    * Returns character if successful otherwise on error or buffer empty
    * returns EOF(-1),
@@ -115,14 +115,14 @@ public:
   }
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Flush internal device buffers. Wait for device to become idle.
    * @return zero(0) or negative error code.
    */
   virtual int flush();
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Empty internal device buffers.
    */
   virtual void empty();

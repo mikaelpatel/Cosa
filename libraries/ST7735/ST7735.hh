@@ -69,7 +69,7 @@ public:
 #endif
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Set screen orientation.
    * @param[in] direction.
    */
@@ -83,7 +83,7 @@ public:
 
 protected:
   /**
-   * @override GDDRAM
+   * @override{GDDRAM}
    * Get initialization script (in program memory).
    * @return pointer to script.
    */

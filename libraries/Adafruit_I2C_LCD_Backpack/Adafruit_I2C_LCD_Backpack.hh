@@ -61,28 +61,28 @@ public:
   {}
 
   /**
-   * @override HD44780::IO
+   * @override{HD44780::IO}
    * Initiate TWI interface. Returns false.
    * @return bool.
    */
   virtual bool setup();
 
   /**
-   * @override HD44780::IO
+   * @override{HD44780::IO}
    * Write nibble to display using TWI interface.
    * @param[in] data (4b) to write.
    */
   virtual void write4b(uint8_t data);
 
   /**
-   * @override HD44780::IO
+   * @override{HD44780::IO}
    * Write byte (8bit) to display.
    * @param[in] data (8b) to write.
    */
   virtual void write8b(uint8_t data);
 
   /**
-   * @override HD44780::IO
+   * @override{HD44780::IO}
    * Write character buffer to display.
    * @param[in] buf pointer to buffer.
    * @param[in] size number of bytes in buffer.
@@ -90,7 +90,7 @@ public:
   virtual void write8n(const void* buf, size_t size);
 
   /**
-   * @override HD44780::IO
+   * @override{HD44780::IO}
    * Set instruction/data mode; zero for instruction,
    * non-zero for data mode.
    * @param[in] flag.
@@ -98,7 +98,7 @@ public:
   virtual void set_mode(uint8_t flag);
 
   /**
-   * @override HD44780::IO
+   * @override{HD44780::IO}
    * Set backlight on/off.
    * @param[in] flag.
    */

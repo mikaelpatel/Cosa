@@ -39,7 +39,7 @@ public:
   }
 
   /**
-   * @override VWI::Codec
+   * @override{VWI::Codec}
    * Returns pointer to 4B5B frame preamble in program memory.
    * @return pointer.
    */
@@ -49,7 +49,7 @@ public:
   }
 
   /**
-   * @override VWI::Codec
+   * @override{VWI::Codec}
    * Returns block 5-bit symbol for given 4-bit data.
    * @param[in] nibble to encode.
    * @return 5-bit bitstuffed code.
@@ -60,7 +60,7 @@ public:
   };
 
   /**
-   * @override VWI::Codec
+   * @override{VWI::Codec}
    * Returns 4-bit data for given block 5-bit symbol.
    * @param[in] symbol to decode.
    * @return 4-bit data.

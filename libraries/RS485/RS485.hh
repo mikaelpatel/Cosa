@@ -76,7 +76,7 @@ public:
   {}
 
   /**
-   * @override UART
+   * @override{UART}
    * Transmit completed callback. Clear data output enable pin.
    */
   virtual void on_transmit_completed()

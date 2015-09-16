@@ -142,7 +142,7 @@ public:
     }
 
     /**
-     * @override Job::Scheduler
+     * @override{Job::Scheduler}
      * Start given job. Returns true(1) if successful otherwise
      * false(0).
      * @return bool.
@@ -150,13 +150,13 @@ public:
     virtual bool start(Job* job);
 
     /**
-     * @override Job::Scheduler
+     * @override{Job::Scheduler}
      * Dispatch expired jobs. Called from RTC ISR.
      */
     virtual void dispatch();
 
     /**
-     * @override Job::Scheduler
+     * @override{Job::Scheduler}
      * Return current time in micro-seconds.
      */
     virtual uint32_t time();

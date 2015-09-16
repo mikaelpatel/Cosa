@@ -46,7 +46,7 @@ public:
     class Handler {
     public:
       /**
-       * @override HCI::Event::Handler
+       * @override{HCI::Event::Handler}
        * Unsolicited event callback.
        * @param[in] event operation code.
        * @param[in] args pointer to argument block.
@@ -285,7 +285,7 @@ protected:
     {}
 
     /**
-     * @override Interrupt::Handler
+     * @override{Interrupt::Handler}
      * Signal that a packet has is ready and may be read.
      * @param[in] arg (not used).
      */

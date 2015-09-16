@@ -56,7 +56,7 @@ public:
 
   protected:
     /**
-     * @override Interrupt::Handler
+     * @override{Interrupt::Handler}
      * Increment the seconds counter and dispatch any expired alarms.
      * @param[in] arg argument from interrupt service routine (not used).
      */

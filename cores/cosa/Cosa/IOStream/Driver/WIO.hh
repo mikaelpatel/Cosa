@@ -52,7 +52,7 @@ public:
   }
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Number of bytes room in output buffer.
    * @return bytes.
    */
@@ -62,7 +62,7 @@ public:
   }
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Write character to output buffer. Flush if full or carrage return
    * character. Returns character if successful otherwise on error or
    * buffer full returns EOF(-1),
@@ -77,7 +77,7 @@ public:
   }
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Flush internal device buffers. Wait for device to become idle.
    * @return zero(0) or negative error code.
    */

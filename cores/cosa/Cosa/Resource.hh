@@ -65,13 +65,13 @@ public:
 
 protected:
   /**
-   * @override Resource
+   * @override{Resource}
    * Resource extension on acquire.
    */
   virtual void on_acquire() = 0;
 
   /**
-   * @override Resource
+   * @override{Resource}
    * Resource extension on release.
    */
   virtual void on_release() = 0;

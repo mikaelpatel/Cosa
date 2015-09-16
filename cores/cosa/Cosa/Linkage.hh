@@ -159,7 +159,7 @@ public:
 
 private:
   /**
-   * @override Event::Handler
+   * @override{Event::Handler}
    * Event handler. Default event handler for collections.
    * Will boardcase the event to the collection.
    * @param[in] type the event type.

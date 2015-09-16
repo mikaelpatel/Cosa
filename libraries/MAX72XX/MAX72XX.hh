@@ -78,7 +78,7 @@ public:
   MAX72XX(LCD::IO* io, const uint8_t* font = NULL);
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Start interaction with display. Turns display on, clears and sets
    * the contrast/intensity to mid-level(7).
    * @return true(1) if successful otherwise false(0)
@@ -86,39 +86,39 @@ public:
   virtual bool begin();
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Stop sequence of interaction with device.
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool end();
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Set display contrast/intensity level (0..15).
    * @param[in] contrast level.
    */
   virtual void display_contrast(uint8_t level);
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Turn display on.
    */
   virtual void display_on();
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Turn display off.
    */
   virtual void display_off();
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Clear display and move cursor to home (0, 0).
    */
   virtual void display_clear();
 
   /**
-   * @override LCD::Device
+   * @override{LCD::Device}
    * Set cursor to given position.
    * @param[in] x pixel position (0..WIDTH-1).
    * @param[in] y line position (0..LINES-1).
@@ -126,7 +126,7 @@ public:
   virtual void set_cursor(uint8_t x, uint8_t y);
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Write character to display. Handles carriage-return-line-feed,
    * backspace, alert, horizontal tab and form-feed. The period
    * character is translated to the 7-segment LED decimal point of the

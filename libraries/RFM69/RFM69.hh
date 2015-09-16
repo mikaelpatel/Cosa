@@ -91,7 +91,7 @@ public:
 #endif
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Start and configure RFM69 device driver. The configuration must
    * set DIO0 to assert on received message. This device pin is
    * assumed to be connected the device driver interrupt pin (EXTn).
@@ -101,7 +101,7 @@ public:
   virtual bool begin(const void* config = NULL);
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Shut down the device driver. Return true(1) if successful
    * otherwise false(0).
    * @return bool
@@ -109,7 +109,7 @@ public:
   virtual bool end();
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Send message in given null terminated io vector. Returns number
    * of bytes sent. Returns error code(-1) if number of bytes is
    * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
@@ -122,7 +122,7 @@ public:
   virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec);
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Send message in given buffer, with given number of bytes. Returns
    * number of bytes sent. Returns error code(-1) if number of bytes
    * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
@@ -136,7 +136,7 @@ public:
   virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len);
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Receive message and store into given buffer with given maximum
    * length. The source network address is returned in the parameter src.
    * Returns error code(-2) if no message is available and/or a
@@ -154,26 +154,26 @@ public:
 		   uint32_t ms = 0L);
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Set device in power down mode.
    */
   virtual void powerdown();
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Set device in wakeup on radio mode.
    */
   virtual void wakeup_on_radio();
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Set output power level [-18..13] dBm.
    * @param[in] dBm.
    */
   virtual void set_output_power_level(int8_t dBm);
 
   /**
-   * @override Wireless::Driver
+   * @override{Wireless::Driver}
    * Return estimated input power level (dBm) from latest successful
    * message received.
    */
@@ -672,7 +672,7 @@ private:
     {}
 
     /**
-     * @override Interrupt::Handler
+     * @override{Interrupt::Handler}
      * Signal message has been receive and is available in receive fifo.
      * Or message has been sent and transceiver is ready.
      * @param[in] arg (not used).

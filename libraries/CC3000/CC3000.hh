@@ -48,14 +48,14 @@ public:
     Driver() : Socket() {}
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Returns true if data is available in receiver buffer otherwise false.
      * @return bool.
      */
     virtual int available();
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Number of bytes room in transmitter buffer before full will be sent.
      * @return bytes.
      */
@@ -65,7 +65,7 @@ public:
     using IOStream::Device::write;
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write data from buffer with given size to device.
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
@@ -77,7 +77,7 @@ public:
     }
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write data from buffer in program memory with given size to device.
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
@@ -92,7 +92,7 @@ public:
     using IOStream::Device::read;
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Read data to given buffer with given size from device.
      * @param[in] buf buffer to read into.
      * @param[in] size number of bytes to read.
@@ -101,14 +101,14 @@ public:
     virtual int read(void* buf, size_t size);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Flush internal device buffers. Wait for device to become idle.
      * @return zero(0) or negative error code.
      */
     virtual int flush();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Initiate socket to the given protocol and possible port.
      * @param[in] proto protocol.
      * @param[in] port source port.
@@ -118,21 +118,21 @@ public:
     virtual int open(Protocol proto, uint16_t port, uint8_t flag);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Close the socket.
      * @return zero if successful otherwise negative error code.
      */
     virtual int close();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Mark socket for incoming requests; server mode.
      * @return zero if successful otherwise negative error code.
      */
     virtual int listen();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Check for incoming requests from clients. Return zero if
      * the socket has accepted a request and a connection is
      * established.
@@ -141,7 +141,7 @@ public:
     virtual int accept();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Connect the socket to the given address and port; client mode.
      * @param[in] addr destination address.
      * @param[in] port destination port.
@@ -150,7 +150,7 @@ public:
     virtual int connect(uint8_t addr[4], uint16_t port);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Connect the socket to the given hostname and port; client mode.
      * Returns zero if connection established otherwise negative error code.
      * @param[in] hostname string.
@@ -160,7 +160,7 @@ public:
     virtual int connect(const char* hostname, uint16_t port);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Returns positive integer if a connection is established, zero is
      * not yet established, otherwise a negative error code.
      * @return positive integer connected, zero if not otherwise
@@ -169,14 +169,14 @@ public:
     virtual int is_connected();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Disconnect socket from server.
      * @return zero if successful otherwise negative error code.
      */
     virtual int disconnect();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Start the construction of a datagram to the given address and
      * port.
      * @param[in] addr destination address.
@@ -186,7 +186,7 @@ public:
     virtual int datagram(uint8_t addr[4], uint16_t port);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Receive data from connection-oriented socket. The data is stored
      * in given buffer with given maximum number of bytes. Return number of
      * bytes or negative error code.
@@ -198,7 +198,7 @@ public:
     virtual int recv(void* buf, size_t len);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Receive datagram on connectionless socket into given buffer with
      * given maximum size. Returns zero(0) if successful with
      * information in Datagram otherwise negative error code.
@@ -213,7 +213,7 @@ public:
 
   protected:
     /**
-     * @override Socket
+     * @override{Socket}
      * Write data from buffer with given size to device. Boolean flag
      * progmem defined if the buffer is in program memory. Return number
      * of bytes or negative error code.
@@ -225,7 +225,7 @@ public:
     virtual int write(const void* buf, size_t size, bool progmem);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Send given data in buffer on connection-oriented socket. Boolean flag
      * progmem defined if the buffer is in program memory. Return number
      * of bytes or negative error code.
@@ -238,7 +238,7 @@ public:
     virtual int send(const void* buf, size_t len, bool progmem);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Send given data on connectionless socket as a datagram to given
      * destination address (dest:port). Return number of bytes
      * sent or negative error code.
@@ -367,7 +367,7 @@ public:
     {}
 
     /*
-     * @override HCI::Event::Handler
+     * @override{HCI::Event::Handler}
      * Handle unsolicited events; buffer free cound, socket close
      * wait, keepalive, etc.
      * @param[in] event operation code.

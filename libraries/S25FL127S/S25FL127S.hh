@@ -61,7 +61,7 @@ public:
 #endif
 
   /**
-   * @override Flash::Device
+   * @override{Flash::Device}
    * Initiate the flash memory device driver and check for valid
    * identification. Return true(1) if the successful otherwise
    * false(0).
@@ -70,7 +70,7 @@ public:
   virtual bool begin();
 
   /**
-   * @override Flash::Device
+   * @override{Flash::Device}
    * Return true(1) if the device is ready, write cycle is completed,
    * otherwise false(0).
    * @return bool
@@ -78,7 +78,7 @@ public:
   virtual bool is_ready();
 
   /**
-   * @override Flash::Device
+   * @override{Flash::Device}
    * Read flash block with the given size into the buffer from the
    * source address. Return number of bytes read or negative error
    * code.
@@ -90,7 +90,7 @@ public:
   virtual int read(void* dest, uint32_t src, size_t size);
 
   /**
-   * @override Flash::Device
+   * @override{Flash::Device}
    * Erase given flash block for given byte address. The size of the
    * erased sector is either 4 or 64 KB. Give sector size 255 to erase
    * chip. The default configuration consists of 16X4 KB sectors from
@@ -104,7 +104,7 @@ public:
   virtual int erase(uint32_t dest, uint8_t size = 4);
 
   /**
-   * @override Flash::Device
+   * @override{Flash::Device}
    * Write flash block at given destination address with the contents
    * of the source buffer. Return number of bytes written or negative
    * error code (EFAULT if not successful).
@@ -116,7 +116,7 @@ public:
   virtual int write(uint32_t dest, const void* src, size_t size);
 
   /**
-   * @override Flash::Device
+   * @override{Flash::Device}
    * Write flash block at given destination address with contents
    * of the source buffer in program memory. Return number of bytes
    * written or negative error code (EFAULT is not successful).

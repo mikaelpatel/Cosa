@@ -40,7 +40,7 @@ public:
   }
 
   /**
-   * @override VWI::Codec
+   * @override{VWI::Codec}
    * Returns pointer to VirtualWire frame preamble in program memory.
    * @return pointer.
    */
@@ -50,7 +50,7 @@ public:
   }
 
   /**
-   * @override VWI::Codec
+   * @override{VWI::Codec}
    * Returns symbol for given 4-bit data.
    * @return 6-bit code.
    */
@@ -60,7 +60,7 @@ public:
   };
 
   /**
-   * @override VWI::Codec
+   * @override{VWI::Codec}
    * Returns 4-bit data for given symbol.
    * @return 4-bit data.
    */

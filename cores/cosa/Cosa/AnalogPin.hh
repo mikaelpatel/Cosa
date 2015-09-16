@@ -170,14 +170,14 @@ public:
   uint16_t sample_await();
 
   /**
-   * @override Interrupt::Handler
+   * @override{Interrupt::Handler}
    * Interrupt service on conversion completion.
    * @param[in] arg sample value.
    */
   virtual void on_interrupt(uint16_t arg);
 
   /**
-   * @override AnalogPin
+   * @override{AnalogPin}
    * Default on change function.
    * @param[in] value.
    */
@@ -203,7 +203,7 @@ protected:
   bool sample_request(Board::AnalogPin pin, uint8_t ref);
 
   /**
-   * @override Event::Handler
+   * @override{Event::Handler}
    * Handle analog pin periodic sampling and sample completed event.
    * Will call virtual method on_change() if the pin value has changed since
    * latest sample.

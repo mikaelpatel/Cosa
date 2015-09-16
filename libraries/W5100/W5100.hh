@@ -313,14 +313,14 @@ public:
     Driver() : Socket() {}
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Number of bytes available in receiver buffer.
      * @return bytes.
      */
     virtual int available();
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Number of bytes room in transmitter buffer.
      * @return bytes.
      */
@@ -333,7 +333,7 @@ public:
     using IOStream::Device::read;
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Read data to given buffer with given size from device.
      * @param[in] buf buffer to read into.
      * @param[in] size number of bytes to read.
@@ -342,14 +342,14 @@ public:
     virtual int read(void* buf, size_t size);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Flush internal device buffers. Wait for device to become idle.
      * @return zero(0) or negative error code.
      */
     virtual int flush();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Initiate socket to the given protocol and possible
      * port. Returns zero if successful otherwise negative error code;
      * -2 already open, -1 failed to open socket.
@@ -361,7 +361,7 @@ public:
     virtual int open(Protocol proto, uint16_t port, uint8_t flag);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Close the socket. Returns zero if successful otherwise negative
      * error code; -2 already closed.
      * @param[in] proto protocol.
@@ -372,7 +372,7 @@ public:
     virtual int close();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Mark socket for incoming requests; server mode. Returns zero if
      * successful otherwise negative error code; -2 illegal protocol,
      * -1 failed to mark socket for listen (socket is closed).
@@ -381,7 +381,7 @@ public:
     virtual int listen();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Check for incoming requests from clients. Return zero if the
      * socket has accepted a request and a connection is established,
      * otherwise a negative error code; -3 listening or connection in
@@ -392,7 +392,7 @@ public:
     virtual int accept();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Connect the socket to the given address and port; client mode.
      * Returns a zero if successful otherwise a negative error code;
      * -2 illegal protocol, -1 address/port not valid.
@@ -403,7 +403,7 @@ public:
     virtual int connect(uint8_t addr[4], uint16_t port);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Connect the socket to the given hostname and port; client mode.
      * Returns zero if connection established otherwise negative error code.
      * @param[in] hostname string.
@@ -413,7 +413,7 @@ public:
     virtual int connect(const char* hostname, uint16_t port);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Returns positive integer if a connection is established, zero
      * is not yet established, otherwise a negative error code.
      * @return positive integer connected, zero if not otherwise
@@ -422,7 +422,7 @@ public:
     virtual int is_connected();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Disconnect socket from server. Returns zero if successful
      * otherwise a negative error code; -2 illegal protocol.
      * @return zero if successful otherwise negative error code.
@@ -430,7 +430,7 @@ public:
     virtual int disconnect();
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Start the construction of a datagram to the given address and
      * port. Checks that the socket is connection-less (UDP). Returns
      * zero or negative error code.
@@ -441,7 +441,7 @@ public:
     virtual int datagram(uint8_t addr[4], uint16_t port);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Receive data from connection-oriented socket. The data is stored
      * in given buffer with given maximum number of bytes. Return number of
      * bytes or negative error code; -3 socket not established,
@@ -454,7 +454,7 @@ public:
     virtual int recv(void* buf, size_t len);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Receive datagram on connectionless socket into given buffer
      * with given maximum size. Returns zero(0) if successful with
      * information in Datagram otherwise negative error code;
@@ -471,7 +471,7 @@ public:
 
   protected:
     /**
-     * @override Socket
+     * @override{Socket}
      * Write data from buffer with given size to device. Boolean flag
      * progmem defined if the buffer is in program memory. Return number
      * of bytes or negative error code.
@@ -483,7 +483,7 @@ public:
     virtual int write(const void* buf, size_t size, bool progmem);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Send given data in buffer on connection-oriented socket. Boolean flag
      * progmem defined if the buffer is in program memory. Return number
      * of bytes or negative error code; -4 socket closed by peer, -3
@@ -497,7 +497,7 @@ public:
     virtual int send(const void* buf, size_t len, bool progmem);
 
     /**
-     * @override Socket
+     * @override{Socket}
      * Send given data on connectionless socket as a datagram to given
      * destination address (dest:port). Return number of bytes sent or
      * negative error code; -2 illegal protocol, -1 illegal

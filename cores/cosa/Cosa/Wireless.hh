@@ -120,7 +120,7 @@ public:
     }
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Start the Wireless device driver. Return true(1) if successful
      * otherwise false(0).
      * @param[in] config configuration vector (default NULL)
@@ -129,7 +129,7 @@ public:
     virtual bool begin(const void* config = NULL) = 0;
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Shut down the device driver. Return true(1) if successful
      * otherwise false(0).
      * @return bool
@@ -140,25 +140,25 @@ public:
     }
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Set device in power up mode.
      */
     virtual void powerup() {}
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Set device in power down mode.
      */
     virtual void powerdown() {}
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Set device in wakeup on radio mode.
      */
     virtual void wakeup_on_radio() {}
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Return true(1) if a message is available otherwise false(0).
      * @return bool.
      */
@@ -168,7 +168,7 @@ public:
     }
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Return true(1) if there is room to send on the device
      * otherwise false(0).
      * @return bool.
@@ -179,7 +179,7 @@ public:
     }
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Send message in given null terminated io vector. Returns number
      * of bytes sent if successful otherwise a negative error code.
      * reserved for system protocols).
@@ -191,7 +191,7 @@ public:
     virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec) = 0;
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Send message in given buffer, with given number of bytes. Returns
      * number of bytes sent if successful otherwise a negative error code.
      * @param[in] dest destination network address.
@@ -210,7 +210,7 @@ public:
     }
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Broadcast message in given null terminated io vector. Returns
      * number of bytes sent if successful otherwise a negative error code.
      * @param[in] port device port (or message type).
@@ -223,7 +223,7 @@ public:
     }
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Boardcast message in given buffer, with given number of bytes.
      * Returns number of bytes sent if successful otherwise a negative
      * error code.
@@ -238,7 +238,7 @@ public:
     }
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Receive message and store into given buffer with given maximum
      * length. The source network address is returned in the parameter
      * src. Returns the number of received bytes or a negative error
@@ -255,7 +255,7 @@ public:
 		     uint32_t ms = 0L) = 0;
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Return true(1) if the latest received message was a broadcast
      * otherwise false(0).
      */
@@ -265,7 +265,7 @@ public:
     }
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Set output power level in dBm. Default no-operation.
      * @param[in] dBm.
      */
@@ -275,7 +275,7 @@ public:
     }
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Return estimated input power level (dBm). Default zero(0).
      */
     virtual int get_input_power_level()
@@ -284,7 +284,7 @@ public:
     }
 
     /**
-     * @override Wireless::Driver
+     * @override{Wireless::Driver}
      * Return link quality indicator. Default zero(0).
      */
     virtual int get_link_quality_indicator()

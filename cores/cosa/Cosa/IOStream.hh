@@ -115,21 +115,21 @@ public:
     }
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Number of bytes available (possible to read).
      * @return bytes.
      */
     virtual int available();
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Number of bytes room (write without blocking).
      * @return bytes.
      */
     virtual int room();
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write character to device.
      * @param[in] c character to write.
      * @return character written or EOF(-1).
@@ -137,7 +137,7 @@ public:
     virtual int putchar(char c);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write null terminated string to device. Terminating
      * null is not written.
      * @param[in] s string to write.
@@ -146,7 +146,7 @@ public:
     virtual int puts(const char* s);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write null terminated string from program memory to device.
      * Terminating null is not written.
      * @param[in] s string in program memory to write.
@@ -155,7 +155,7 @@ public:
     virtual int puts(str_P s);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write data from buffer with given size to device.
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
@@ -164,7 +164,7 @@ public:
     virtual int write(const void* buf, size_t size);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write data from buffer in program memory with given size to device.
      * @param[in] buf buffer to write.
      * @param[in] size number of bytes to write.
@@ -173,7 +173,7 @@ public:
     virtual int write_P(const void* buf, size_t size);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Write data from buffers in null terminated io vector.
      * @param[in] vec io vector with buffers to write.
      * @return number of bytes written or EOF(-1).
@@ -181,14 +181,14 @@ public:
     virtual int write(const iovec_t* vec);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Peek at the next character from device.
      * @return character or EOF(-1).
      */
     virtual int peekchar();
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Peek for the given character in device buffer. Return number
      * of characters or EOF(-1).
      * @param[in] c character to peek for.
@@ -197,14 +197,14 @@ public:
     virtual int peekchar(char c);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Read character from device.
      * @return character or EOF(-1).
      */
     virtual int getchar();
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Read string terminated by new-line or until size into given
      * string buffer. Returns pointer to string or NULL if empty line.
      * @param[in] s string buffer to read into.
@@ -214,7 +214,7 @@ public:
     virtual char* gets(char *s, size_t count);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Read data to given buffer with given size from device.
      * @param[in] buf buffer to read into.
      * @param[in] size number of bytes to read.
@@ -223,7 +223,7 @@ public:
     virtual int read(void* buf, size_t size);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Read data to given buffers in null terminated io vector.
      * @param[in] vec io vector with buffers to read into.
      * @return number of bytes read or EOF(-1).
@@ -231,14 +231,14 @@ public:
     virtual int read(iovec_t* vec);
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Flush internal device buffers. Wait for device to become idle.
      * @return zero(0) or negative error code.
      */
     virtual int flush();
 
     /**
-     * @override IOStream::Device
+     * @override{IOStream::Device}
      * Empty internal device buffers.
      */
     virtual void empty();

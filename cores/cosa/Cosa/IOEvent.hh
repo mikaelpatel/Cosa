@@ -41,7 +41,7 @@ public:
   IOEvent(Event::Handler* handler) : DEVICE(), m_handler(handler) {}
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Write character to device.
    * @param[in] c character to write.
    * @return character written or EOF(-1).
@@ -55,7 +55,7 @@ public:
   }
 
   /**
-   * @override IOStream::Device
+   * @override{IOStream::Device}
    * Read character from device.
    * @return character or EOF(-1).
    */

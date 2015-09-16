@@ -43,21 +43,21 @@ public:
 	 Board::DigitalPin dc);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Start interaction with device.
    * @return true(1) if successful otherwise false(0).
    */
   virtual bool begin();
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Set screen orientation.
    * @param[in] direction.
    */
   virtual uint8_t set_orientation(uint8_t direction);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Set pixel with current color.
    * @param[in] x.
    * @param[in] y.
@@ -65,7 +65,7 @@ public:
   virtual void draw_pixel(uint16_t x, uint16_t y);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw image on canvas at given position.
    * @param[in] x.
    * @param[in] y.
@@ -74,7 +74,7 @@ public:
   virtual void draw_image(uint16_t x, uint16_t y, Image* image);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw vertical line with current color.
    * @param[in] x
    * @param[in] y
@@ -83,7 +83,7 @@ public:
   virtual void draw_vertical_line(uint16_t x, uint16_t y, uint16_t length);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Draw horizontal line with current color.
    * @param[in] x.
    * @param[in] y.
@@ -92,7 +92,7 @@ public:
   virtual void draw_horizontal_line(uint16_t x, uint16_t y, uint16_t length);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Fill rectangle with current color.
    * @param[in] x.
    * @param[in] y.
@@ -102,7 +102,7 @@ public:
   virtual void fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 
   /**
-   * @override Canvas
+   * @override{Canvas}
    * Stop sequence of interaction with device.
    * @return true(1) if successful otherwise false(0).
    */
@@ -113,7 +113,7 @@ protected:
   bool m_initiated;		//!< Initialization state.
 
   /**
-   * @override GDDRAM
+   * @override{GDDRAM}
    * Get initialization script (in program memory).
    * @return pointer to script.
    */
