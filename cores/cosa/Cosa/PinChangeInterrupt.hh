@@ -42,13 +42,26 @@ public:
    */
   static void end();
 
+  /** Interrupt modes. */
+  enum InterruptMode {
+    ON_FALLING_MODE = 0,
+    ON_RISING_MODE = 1,
+    ON_CHANGE_MODE = 2
+  } __attribute__((packed));
+
   /**
-   * Construct interrupt pin with given pin number.
-   * @param[in] pin.
-   * @param[in] mode.
+   * Construct interrupt pin with given pin identity, mode and pullup
+   * resistor flag.
+   * @param[in] pin identity.
+   * @param[in] mode of operation (default ON_CHANGE_MODE).
+   * @param[in] pullup flag (default false).
    */
-  PinChangeInterrupt(Board::InterruptPin pin, bool pullup = false) :
-    IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup)
+  PinChangeInterrupt(Board::InterruptPin pin,
+		     InterruptMode mode = ON_CHANGE_MODE,
+		     bool pullup = false) :
+    IOPin((Board::DigitalPin) pin, INPUT_MODE, pullup),
+    m_mode(mode),
+    m_next(NULL)
   {}
 
   /**
@@ -73,8 +86,14 @@ public:
   virtual void on_interrupt(uint16_t arg = 0) = 0;
 
 private:
-  static PinChangeInterrupt* s_pin[Board::PCINT_MAX];
+  static PinChangeInterrupt* s_pin[Board::PCMSK_MAX];
   static uint8_t s_state[Board::PCMSK_MAX];
+
+  /** Interrupt Mode. */
+  InterruptMode m_mode;
+
+  /** Linked list of pin change interrupt handlers. */
+  PinChangeInterrupt* m_next;
 
   /**
    * Map interrupt source: Check which pin(s) are the source of the
@@ -82,7 +101,7 @@ private:
    * per pin.
    * @param[in] ix port index.
    * @param[in] mask pin mask.
-   * @param[in] base pin number from IDE.
+   * @param[in] base pin number.
    */
   static void on_interrupt(uint8_t ix, uint8_t mask, uint8_t base);
 

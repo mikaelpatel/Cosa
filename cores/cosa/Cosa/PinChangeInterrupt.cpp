@@ -37,7 +37,7 @@
 #define PCIEN (_BV(PCIE0))
 #endif
 
-PinChangeInterrupt* PinChangeInterrupt::s_pin[Board::PCINT_MAX] = { NULL };
+PinChangeInterrupt* PinChangeInterrupt::s_pin[Board::PCMSK_MAX] = { NULL };
 uint8_t PinChangeInterrupt::s_state[Board::PCMSK_MAX] = { 0 };
 
 void
@@ -45,12 +45,17 @@ PinChangeInterrupt::enable()
 {
   synchronized {
     *PCIMR() |= m_mask;
+    if (m_next == NULL) {
+      uint8_t ix;
 #if defined(BOARD_ATMEGA2560)
-    uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
-    s_pin[ix] = this;
+      ix = m_pin - (m_pin < 24 ? 16 : 48);
 #else
-    s_pin[m_pin] = this;
+      ix = m_pin;
 #endif
+      ix = (ix >> 3);
+      m_next = s_pin[ix];
+      s_pin[ix] = this;
+    }
   }
 }
 
@@ -59,12 +64,6 @@ PinChangeInterrupt::disable()
 {
   synchronized {
     *PCIMR() &= ~m_mask;
-#if defined(BOARD_ATMEGA2560)
-    uint8_t ix = m_pin - (m_pin < 24 ? 16 : 48);
-    s_pin[ix] = NULL;
-#else
-    s_pin[m_pin] = NULL;
-#endif
   }
 }
 
@@ -96,15 +95,14 @@ void
 PinChangeInterrupt::on_interrupt(uint8_t pcint, uint8_t mask, uint8_t base)
 {
   uint8_t new_state = *Pin::PIN(base);
-  uint8_t changed = (new_state ^ s_state[pcint]) & mask;
+  uint8_t old_state = s_state[pcint];
+  uint8_t changed = (new_state ^ old_state) & mask;
 
-
-  for (uint8_t i = 0; changed && (i < CHARBITS); i++) {
-    if ((changed & 1) && (s_pin[base + i] != NULL)) {
-      s_pin[base + i]->on_interrupt();
-    }
-    changed >>= 1;
-  }
+  for (PinChangeInterrupt* pin = s_pin[pcint]; pin != NULL; pin = pin->m_next)
+    if ((pin->m_mask & changed)
+	&& ((pin->m_mode == ON_CHANGE_MODE)
+	    || pin->m_mode == ((pin->m_mask & new_state) == 0)))
+      pin->on_interrupt();
 
   s_state[pcint] = new_state;
 }

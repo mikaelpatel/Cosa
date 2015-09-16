@@ -23,18 +23,26 @@
 
 #include "Cosa/PinChangeInterrupt.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/RTC.hh"
+#include "Cosa/Periodic.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
 class Counter : public PinChangeInterrupt {
 public:
-  Counter(Board::InterruptPin pin) :
-    PinChangeInterrupt(pin),
+  Counter(Board::InterruptPin pin, InterruptMode mode) :
+    PinChangeInterrupt(pin, mode),
     m_count(0)
   {}
-  uint16_t get_count() const
+  void reset()
   {
-    return (m_count);
+    synchronized m_count = 0;
+  }
+  uint16_t count() const
+  {
+    uint16_t res;
+    synchronized res = m_count;
+    return (res);
   }
 private:
   virtual void on_interrupt(uint16_t arg)
@@ -45,19 +53,25 @@ private:
   uint16_t m_count;
 };
 
-Counter pin(Board::PCI0);
+Counter pin(Board::PCI7, PinChangeInterrupt::ON_RISING_MODE);
 
 void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaPinChangeInterrupt: started"));
   Watchdog::begin();
+  RTC::begin();
   PinChangeInterrupt::begin();
   pin.enable();
 }
 
 void loop()
 {
-  delay(1000);
-  trace << Watchdog::millis() << ':' << pin.get_count() << endl;
+  periodic(timer, 1000) {
+    uint16_t count = pin.count();
+    trace << RTC::millis() << ':' << count << endl;
+    trace.flush();
+    pin.reset();
+  }
+  yield();
 }
