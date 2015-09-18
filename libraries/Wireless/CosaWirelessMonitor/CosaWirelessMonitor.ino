@@ -59,19 +59,20 @@
 VirtualWireCodec codec;
 #define SPEED 4000
 #if defined(BOARD_ATTINY)
-VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
+VWI::Receiver rx(Board::D1, &codec);
 #else
-VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
+VWI::Receiver rx(Board::D7, &codec);
 #endif
+VWI rf(NETWORK, DEVICE, SPEED, &rx);
 
 static const uint8_t IOSTREAM_TYPE = 0x00;
 
 // Select IOStream device
-// #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/IOStream/Driver/UART.hh"
 
 // Select port type to use with the LCD device driver.
 // LCD and communication port
-#include <HD44780.h>
+// #include <HD44780.h>
 
 // HD44780 driver built-in adapters
 // HD44780::Port4b port;
@@ -80,9 +81,9 @@ static const uint8_t IOSTREAM_TYPE = 0x00;
 // HD44780::SR4W port;
 
 // I2C expander io port based adapters
-#include <PCF8574.h>
-#include <MJKDZ_LCD_Module.h>
-MJKDZ_LCD_Module port;
+// #include <PCF8574.h>
+// #include <MJKDZ_LCD_Module.h>
+// MJKDZ_LCD_Module port;
 // MJKDZ_LCD_Module port(0);
 // #include <GY_IICLCD.h>
 // GY_IICLCD port;
@@ -96,7 +97,7 @@ MJKDZ_LCD_Module port;
 // ERM1602_5 port;
 
 // HD44780 variants; 16X1, 16X2, 16X4, 20X4, default 16X2
-HD44780 lcd(&port, 20, 4);
+// HD44780 lcd(&port, 20, 4);
 // HD44780 lcd(&port, 16, 4);
 // HD44780 lcd(&port);
 

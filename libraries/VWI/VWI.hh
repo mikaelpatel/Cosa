@@ -5,6 +5,7 @@
  * @section License
  * Copyright (C) 2008-2013, Mike McCauley (Author/VirtualWire rev. 1.19)
  * Copyright (C) 2013-2015, Mikael Patel (Cosa C++ port and refactoring)
+ * Copyright (C) 2015, Mikael Patel (RF433 link quality indicator)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -138,130 +139,6 @@ public:
     }
   };
 
-public:
-  /**
-   * Construct Virtual Wire Interface with given network, device
-   * address and speed (bits per second). Attach Receiver to given rx
-   * pin and Transmitter to tx pin. Use the given Codec for coding and
-   * decoding messages.
-   */
-  VWI(int16_t net, uint8_t dev,
-      uint16_t speed,
-      Board::DigitalPin rx,
-      Board::DigitalPin tx,
-      Codec* codec) :
-    Wireless::Driver(net, dev),
-    m_rx(rx, codec),
-    m_tx(tx, codec),
-    m_speed(speed)
-  {
-    s_rf = this;
-  }
-
-  /**
-   * @override{Wireless::Driver}
-   * Start the Wireless device driver. Return true(1) if successful
-   * otherwise false(0).
-   * @param[in] config configuration vector (default NULL)
-   * @return bool
-   */
-  virtual bool begin(const void* config = NULL);
-
-  /**
-   * @override{Wireless::Driver}
-   * Shut down the device driver. Return true(1) if successful
-   * otherwise false(0).
-   * @return bool
-   */
-  virtual bool end();
-
-  /**
-   * @override{Wireless::Driver}
-   * Set device in power up mode.
-   */
-  virtual void powerup();
-
-  /**
-   * @override{Wireless::Driver}
-   * Set device in power down mode.
-   */
-  virtual void powerdown();
-
-  /**
-   * @override{Wireless::Driver}
-   * Return true(1) if a message is available otherwise false(0).
-   * @return bool
-   */
-  virtual bool available()
-  {
-    return (m_rx.available());
-  }
-
-  /**
-   * @override{Wireless::Driver}
-   * Send message in given null terminated io vector. Returns number
-   * of bytes sent. Returns error code(-1) if number of bytes is
-   * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
-   * transmit mode.
-   * @param[in] dest destination network address.
-   * @param[in] port device port (or message type).
-   * @param[in] vec null termianted io vector.
-   * @return number of bytes send or negative error code.
-   */
-  virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec)
-  {
-    return (m_tx.send(dest, port, vec));
-  }
-
-  /**
-   * @override{Wireless::Driver}
-   * Send message in given buffer, with given number of bytes. Returns
-   * number of bytes sent. Returns error code(-1) if number of bytes
-   * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
-   * set transmit mode.
-   * @param[in] dest destination network address.
-   * @param[in] port device port (or message type).
-   * @param[in] buf buffer to transmit.
-   * @param[in] len number of bytes in buffer.
-   * @return number of bytes send or negative error code.
-   */
-  virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len)
-  {
-    return (m_tx.send(dest, port, buf, len));
-  }
-
-  /**
-   * @override{Wireless::Driver}
-   * Receive message and store into given buffer with given maximum
-   * length. The source network address is returned in the parameter src.
-   * Returns error code(ETIME) if no message is available and/or a
-   * timeout occured. Returns error code(EMSGSIZE) if the buffer size
-   * if to small for incoming message or if the receiver fifo has
-   * overflowed. Otherwise the actual number of received bytes is
-   * returned
-   * @param[out] src source network address.
-   * @param[out] port device port (or message type).
-   * @param[in] buf buffer to store incoming message.
-   * @param[in] len maximum number of bytes to receive.
-   * @param[in] ms maximum time out period.
-   * @return number of bytes received or negative error code.
-   */
-  virtual int recv(uint8_t& src, uint8_t& port,
-		   void* buf, size_t len,
-		   uint32_t ms = 0L)
-  {
-    return (m_rx.recv(src, port, buf, len, ms));
-  }
-
-  /**
-   * @override{Wireless::Driver}
-   * Return link quality indicator.
-   */
-  virtual int get_link_quality_indicator()
-  {
-    return (m_rx.get_link_quality_indicator());
-  }
-
 protected:
   /**
    * Frame header; Transmitted in little endian order; network LSB first.
@@ -290,8 +167,9 @@ protected:
   /** Number of samples per bit. */
   static const uint8_t SAMPLES_PER_BIT = 8;
 
+public:
   /**
-   * Internal Virtual Wire Receiver.
+   * Virtual Wire Receiver.
    */
   class Receiver : private InputPin {
   public:
@@ -561,15 +439,166 @@ protected:
     friend class Codec;
   };
 
+  /**
+   * Construct Virtual Wire Interface with given network, device
+   * address and speed (bits per second).
+   */
+  VWI(int16_t net, uint8_t dev, uint16_t speed, Receiver* rx) :
+    Wireless::Driver(net, dev),
+    m_rx(rx),
+    m_tx(NULL),
+    m_speed(speed)
+  {
+    s_rf = this;
+  }
+
+  /**
+   * Construct Virtual Wire Interface with given network, device
+   * address and speed (bits per second).
+   */
+  VWI(int16_t net, uint8_t dev, uint16_t speed, Transmitter* tx) :
+    Wireless::Driver(net, dev),
+    m_rx(NULL),
+    m_tx(tx),
+    m_speed(speed)
+  {
+    s_rf = this;
+  }
+
+  /**
+   * Construct Virtual Wire Interface with given network, device
+   * address and speed (bits per second).
+   */
+  VWI(int16_t net, uint8_t dev,
+      uint16_t speed,
+      Receiver* rx,
+      Transmitter* tx) :
+    Wireless::Driver(net, dev),
+    m_rx(rx),
+    m_tx(tx),
+    m_speed(speed)
+  {
+    s_rf = this;
+  }
+
+  /**
+   * @override{Wireless::Driver}
+   * Start the Wireless device driver. Return true(1) if successful
+   * otherwise false(0).
+   * @param[in] config configuration vector (default NULL)
+   * @return bool
+   */
+  virtual bool begin(const void* config = NULL);
+
+  /**
+   * @override{Wireless::Driver}
+   * Shut down the device driver. Return true(1) if successful
+   * otherwise false(0).
+   * @return bool
+   */
+  virtual bool end();
+
+  /**
+   * @override{Wireless::Driver}
+   * Set device in power up mode.
+   */
+  virtual void powerup();
+
+  /**
+   * @override{Wireless::Driver}
+   * Set device in power down mode.
+   */
+  virtual void powerdown();
+
+  /**
+   * @override{Wireless::Driver}
+   * Return true(1) if a message is available otherwise false(0).
+   * @return bool
+   */
+  virtual bool available()
+  {
+    if (m_rx == NULL) return (false);
+    return (m_rx->available());
+  }
+
+  /**
+   * @override{Wireless::Driver}
+   * Send message in given null terminated io vector. Returns number
+   * of bytes sent. Returns error code(-1) if number of bytes is
+   * greater than PAYLOAD_MAX. Return error code(-2) if fails to set
+   * transmit mode.
+   * @param[in] dest destination network address.
+   * @param[in] port device port (or message type).
+   * @param[in] vec null termianted io vector.
+   * @return number of bytes send or negative error code.
+   */
+  virtual int send(uint8_t dest, uint8_t port, const iovec_t* vec)
+  {
+    if (m_tx == NULL) return (-1);
+    return (m_tx->send(dest, port, vec));
+  }
+
+  /**
+   * @override{Wireless::Driver}
+   * Send message in given buffer, with given number of bytes. Returns
+   * number of bytes sent. Returns error code(-1) if number of bytes
+   * is greater than PAYLOAD_MAX. Return error code(-2) if fails to
+   * set transmit mode.
+   * @param[in] dest destination network address.
+   * @param[in] port device port (or message type).
+   * @param[in] buf buffer to transmit.
+   * @param[in] len number of bytes in buffer.
+   * @return number of bytes send or negative error code.
+   */
+  virtual int send(uint8_t dest, uint8_t port, const void* buf, size_t len)
+  {
+    if (m_tx == NULL) return (-1);
+    return (m_tx->send(dest, port, buf, len));
+  }
+
+  /**
+   * @override{Wireless::Driver}
+   * Receive message and store into given buffer with given maximum
+   * length. The source network address is returned in the parameter src.
+   * Returns error code(ETIME) if no message is available and/or a
+   * timeout occured. Returns error code(EMSGSIZE) if the buffer size
+   * if to small for incoming message or if the receiver fifo has
+   * overflowed. Otherwise the actual number of received bytes is
+   * returned
+   * @param[out] src source network address.
+   * @param[out] port device port (or message type).
+   * @param[in] buf buffer to store incoming message.
+   * @param[in] len maximum number of bytes to receive.
+   * @param[in] ms maximum time out period.
+   * @return number of bytes received or negative error code.
+   */
+  virtual int recv(uint8_t& src, uint8_t& port,
+		   void* buf, size_t len,
+		   uint32_t ms = 0L)
+  {
+    if (m_rx == NULL) return (-1);
+    return (m_rx->recv(src, port, buf, len, ms));
+  }
+
+  /**
+   * @override{Wireless::Driver}
+   * Return link quality indicator.
+   */
+  virtual int get_link_quality_indicator()
+  {
+    if (m_rx == NULL) return (0);
+    return (m_rx->get_link_quality_indicator());
+  }
+
 private:
   /** Self-reference for interrupt handler. */
   static VWI* s_rf;
 
-  /** Receiver member variable. */
-  Receiver m_rx;
+  /** Receiver reference. */
+  Receiver* m_rx;
 
-  /** Transmitter member variable. */
-  Transmitter m_tx;
+  /** Transmitter reference. */
+  Transmitter* m_tx;
 
   /** Bit per second. */
   uint16_t m_speed;

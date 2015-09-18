@@ -64,10 +64,11 @@
 VirtualWireCodec codec;
 #define SPEED 4000
 #if defined(BOARD_ATTINY)
-VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
+VWI::Transmitter tx(Board::D0, &codec);
 #else
-VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
+VWI::Transmitter tx(Board::D6, &codec);
 #endif
+VWI rf(NETWORK, DEVICE, SPEED, &tx);
 
 static const uint8_t IOSTREAM_TYPE = 0x00;
 #define DEST 0x01
@@ -80,62 +81,51 @@ void setup()
   Watchdog::begin();
   RTC::begin();
   rf.begin();
-  trace << PSTR("\fWIO: connected") << flush;
+  rf.powerup();
+  trace << PSTR("WIO: connected") << endl << flush;
   sleep(2);
-}
-
-void bar(uint16_t value, uint8_t pos, uint16_t max)
-{
-  uint32_t scale = ((uint32_t) value) * pos;
-  uint16_t div = scale / max;
-  uint16_t rem = ((scale % max) * 4) / max;
-  for (uint8_t i = 0; i < div; i++) trace << (char) 4;
-  if (rem != 0) trace << (char) (rem - 1);
 }
 
 void loop()
 {
   // Print analog pins
+  trace << PSTR("A0-") << membersof(analog_pin_map) - 1 << PSTR(":  ");
   for (uint8_t ix = 0; ix < membersof(analog_pin_map); ix++) {
     Board::AnalogPin pin;
     pin = (Board::AnalogPin) pgm_read_byte(analog_pin_map + ix);
     uint16_t sample = AnalogPin::sample(pin);
-    trace << clear << 'A' << ix << PSTR(": ") << sample << endl;
-    // bar(sample, 16, 1023);
-    trace << flush;
-    sleep(1);
+    if (ix > 0) trace << PSTR(", ");
+    trace << sample;
   }
+  trace << endl;
+  trace << flush;
+  sleep(2);
 
   // Print bandgap voltage
   uint16_t vcc = AnalogPin::bandgap();
-  trace << clear << PSTR("VCC: ") << vcc << PSTR(" mV") << endl;
-  // bar(vcc, 16, 5500);
+  trace << PSTR("VCC: ") << vcc << PSTR(" mV");
+  trace << endl;
   trace << flush;
   sleep(2);
 
   // Print digital pins
-  trace << clear << PSTR("D0-7:  ");
-  for (uint8_t ix = 0; ix < 8; ix++) {
+  trace << PSTR("D0-") << membersof(digital_pin_map) - 1 << PSTR(": ");
+  for (uint8_t ix = 0; ix < membersof(digital_pin_map); ix++) {
     Board::DigitalPin pin;
     pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + ix);
+    if (ix > 0) trace << PSTR(", ");
     trace << InputPin::read(pin);
   }
   trace << endl;
-  trace << PSTR("D8-16: ");
-  for (uint8_t ix = 8; ix < 16; ix++) {
-    Board::DigitalPin pin;
-    pin = (Board::DigitalPin) pgm_read_byte(digital_pin_map + ix);
-    trace << InputPin::read(pin);
-  }
   trace << flush;
   sleep(2);
 
   // Print statistics
 #if defined(COSA_WIRELESS_DRIVER_NRF24L01P_HH)
-  trace << clear;
   trace << PSTR("TN: ") << rf.get_trans() << endl;
   trace << PSTR("ER: ") << rf.get_retrans();
   trace << PSTR(",") << rf.get_drops();
+  trace << endl;
   trace << flush;
   sleep(2);
 #endif

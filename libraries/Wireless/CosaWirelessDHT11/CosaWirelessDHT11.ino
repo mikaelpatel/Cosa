@@ -74,10 +74,11 @@
 VirtualWireCodec codec;
 #define SPEED 4000
 #if defined(BOARD_ATTINY)
-VWI rf(NETWORK, DEVICE, SPEED, Board::D1, Board::D0, &codec);
+VWI::Transmitter tx(Board::D0, &codec);
 #else
-VWI rf(NETWORK, DEVICE, SPEED, Board::D7, Board::D8, &codec);
+VWI::Transmitter tx(Board::D6, &codec);
 #endif
+VWI rf(NETWORK, DEVICE, SPEED, &tx);
 
 struct dht_msg_t {
   uint8_t nr;
