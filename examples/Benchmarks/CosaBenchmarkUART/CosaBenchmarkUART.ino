@@ -40,7 +40,14 @@ UART uart(0, &ibuf, &obuf);
 
 void setup()
 {
-  uart.begin(250000);
+  // Put baudrate setting as first line
+  uart.begin(2000000);
+  // uart.begin(1000000);
+  // uart.begin(500000);
+  // uart.begin(250000);
+  // uart.begin(230400);
+  // uart.begin(115200);
+  // uart.begin(57600);
   trace.begin(&uart, PSTR("CosaBenchmarkUART: started"));
   TRACE(free_memory());
   Watchdog::begin();
@@ -84,21 +91,20 @@ void loop()
     trace.println();
   }
 
-  // Measure time to print all characters
-  MEASURE("output(4096 characters):", 1) {
-    for (uint8_t i = 0; i < 64; i++) {
-      for (char c = ' '; c < ' '+64; c++)
-	trace << c;
-      trace << endl;
-    }
-    trace.flush();
-  }
-
   // Measure time to print some special characters
   MEASURE("newline character:", 1) trace << '\n';
   MEASURE("tab:", 1) trace << '\t' << endl;
   MEASURE("newline string(1):", 1) trace << (char*) "\n";
   MEASURE("newline string(2):", 1) trace << (char*) "\n\n";
+
+  // Measure time to print all characters
+  MEASURE("output(100 * 4096 characters):", 100) {
+    for (uint8_t i = 0; i < 64; i++) {
+      for (char c = ' '; c < ' '+64; c++)
+	trace << c;
+      trace << endl;
+    }
+  }
 
   ASSERT(true == false);
 }

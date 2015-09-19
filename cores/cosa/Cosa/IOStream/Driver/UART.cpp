@@ -45,11 +45,12 @@ UART* UART::uart[Board::UART_MAX] = { NULL };
 bool
 UART::begin(uint32_t baudrate, uint8_t format)
 {
-  uint16_t setting = (F_CPU / (baudrate * 8L)) - 1;
+  uint16_t setting = (F_CPU / 4 / baudrate - 1) / 2;
 
   // Check if double rate is not possible
   if (setting > 4095) {
-    setting = (F_CPU / (baudrate * 16L)) - 1;
+    setting = (F_CPU / 8 / baudrate - 1) / 2;
+    *UCSRnA() = 0;
   } else {
     *UCSRnA() = _BV(U2X0);
   }
