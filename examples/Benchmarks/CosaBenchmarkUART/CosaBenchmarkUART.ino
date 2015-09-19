@@ -65,10 +65,12 @@ void loop()
   MEASURE("two character string:", 1) trace << PSTR("10") << endl;
   MEASURE("integer:", 1) trace << 10 << endl;
   MEASURE("long integer:", 1) trace << 10L << endl;
+  MEASURE("floating point:", 1) trace << 10.0 << endl;
   MEASURE("three characters:", 1) trace << '1' << '0' << '0' << endl;
   MEASURE("three character string:", 1) trace << PSTR("100") << endl;
   MEASURE("integer:", 1) trace << 100 << endl;
   MEASURE("long integer:", 1) trace << 100L << endl;
+  MEASURE("floating point:", 1) trace << 100.0 << endl;
 
   // Measure time to print max integer << endl; 8, 16 and 32 bit.
   MEASURE("max int8_t:", 1) trace << (int8_t) 0x7f << endl;
