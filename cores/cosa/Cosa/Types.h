@@ -340,6 +340,11 @@ unlock(uint8_t key)
 #define barrier() __asm__ __volatile__("nop" ::: "memory")
 
 /**
+ * No-operation; 1 clock cycle delay.
+ */
+#define nop() __asm__ __volatile__("nop")
+
+/**
  * Buffer structure for scatter/gather.
  */
 struct iovec_t {
