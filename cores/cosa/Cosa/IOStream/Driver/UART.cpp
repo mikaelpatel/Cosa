@@ -45,7 +45,7 @@ UART* UART::uart[Board::UART_MAX] = { NULL };
 bool
 UART::begin(uint32_t baudrate, uint8_t format)
 {
-  uint16_t setting = (F_CPU / 4 / baudrate - 1) / 2;
+  uint16_t setting = ((F_CPU / 4 / baudrate) - 1) / 2;
 
   // Check if double rate is not possible
   if (setting > 4095) {
@@ -75,11 +75,21 @@ UART::end()
 int
 UART::putchar(char c)
 {
-  // Check if the buffer is full
-  while (m_obuf->putchar(c) == IOStream::EOF) yield();
+  // Fast track when idle
+  if (((*UCSRnB() & _BV(UDRIE0)) == 0) && ((*UCSRnA() & _BV(UDRE0)) != 0)) {
+    // Put directly into the transmit buffer
+    *UDRn() = c;
 
-  // Enable the transmitter
-  *UCSRnB() |= _BV(UDRIE0);
+    // A short delay to make things even faster
+    if (*UBRRn() == 1) _delay_loop_1(27);
+  }
+  else {
+    // Check if the buffer is full
+    while (m_obuf->putchar(c) == IOStream::EOF) yield();
+
+    // Enable the transmitter
+    *UCSRnB() |= _BV(UDRIE0);
+  }
   return (c & 0xff);
 }
 

@@ -27,27 +27,26 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOBuffer.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-static IOBuffer<128> ibuf;
-static IOBuffer<1024> obuf;
-
-// Create UART and bind to the cout IOStream
-#if !defined(USBCON)
-UART uart(0, &ibuf, &obuf);
-#endif
+// Bits transmitted; 1 start bit, 8 data bits, 2 stop bits
+static const uint32_t BITS = 11;
 
 void setup()
 {
   // Put baudrate setting as first line
-  uart.begin(2000000);
+  uart.begin(1000000);
   // uart.begin(1000000);
   // uart.begin(500000);
   // uart.begin(250000);
   // uart.begin(230400);
   // uart.begin(115200);
   // uart.begin(57600);
+  // uart.begin(38400);
+  // uart.begin(28800);
+  // uart.begin(19200);
+  // uart.begin(14400);
+  // uart.begin(9600);
   trace.begin(&uart, PSTR("CosaBenchmarkUART: started"));
   TRACE(free_memory());
   Watchdog::begin();
@@ -98,13 +97,22 @@ void loop()
   MEASURE("newline string(2):", 1) trace << (char*) "\n\n";
 
   // Measure time to print all characters
-  MEASURE("output(100 * 4096 characters):", 100) {
-    for (uint8_t i = 0; i < 64; i++) {
-      for (char c = ' '; c < ' '+64; c++)
-	trace << c;
+  delay(10);
+  uint16_t n = 0;
+  MEASURE("performance:", 1) {
+    for (uint8_t i = 0; i < 10; i++) {
+      for (uint8_t c = ' '; c < ' '+95; c++, n++)
+	trace << (char) c;
       trace << endl;
+      n += 2;
     }
+    trace.flush();
   }
+  delay(10);
+  uint32_t Kbps = (BITS * n * 1000UL) / trace.measure;
+  trace << PSTR("effective baudrate (") << n << PSTR(" characters):")
+	<< Kbps << PSTR(" Kbps")
+	<< endl;
 
   ASSERT(true == false);
 }
