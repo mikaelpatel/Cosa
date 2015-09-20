@@ -39,19 +39,21 @@
 /**
  * Event queue size. Default is 16 entries (8 ATTINY).
  * In file: Cosa/Event.hh
- * #define COSA_EVENT_QUEUE_MAX 32
+ * #define COSA_EVENT_QUEUE_MAX 16
  */
 
 /**
  * UART buffer size. Default is 32 characters (16 ATTINY).
  * In file: Cosa/IOStream/Driver/UART.hh
- * #define COSA_UART_BUFFER_MAX 64
+ * #define COSA_UART_RX_BUFFER_MAX 32
+ * #define COSA_UART_TX_BUFFER_MAX 32
  */
 
 /**
- * Soft::UART buffer size. Default is 32 characters (16 ATTINY).
+ * Soft::UART buffer size. Default is 32 characters (16 for ATTINY).
  * In file: Cosa/Soft/UART.hh
- * #define COSA_SOFT_UART_BUFFER_MAX 64
+ * #define COSA_SOFT_UART_RX_BUFFER_MAX 32
+ * #define COSA_SOFT_UART_TX_BUFFER_MAX 32
  */
 
 #endif

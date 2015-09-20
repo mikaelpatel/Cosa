@@ -27,12 +27,21 @@
 #include "Cosa/Serial.hh"
 #include "Cosa/IOBuffer.hh"
 
-// Default Soft::UART_BUFFER_MAX
-#ifndef COSA_SOFT_UART_BUFFER_MAX
+// Default receiver buffer size
+#ifndef COSA_SOFT_UART_RX_BUFFER_MAX
 # if defined(BOARD_ATTINY)
-#   define COSA_SOFT_UART_BUFFER_MAX 16
+#   define COSA_SOFT_UART_RX_BUFFER_MAX 16
 # else
-#   define COSA_SOFT_UART_BUFFER_MAX 32
+#   define COSA_SOFT_UART_RX_BUFFER_MAX 32
+# endif
+#endif
+
+// Default transmitter buffer size
+#ifndef COSA_SOFT_UART_TX_BUFFER_MAX
+# if defined(BOARD_ATTINY)
+#   define COSA_SOFT_UART_TX_BUFFER_MAX 16
+# else
+#   define COSA_SOFT_UART_TX_BUFFER_MAX 32
 # endif
 #endif
 
@@ -85,7 +94,8 @@ protected:
 class UART : public UAT {
 public:
   /** Default buffer size. */
-  static const uint8_t BUFFER_MAX = COSA_SOFT_UART_BUFFER_MAX;
+  static const uint8_t RX_BUFFER_MAX = COSA_SOFT_UART_RX_BUFFER_MAX;
+  static const uint8_t TX_BUFFER_MAX = COSA_SOFT_UART_TX_BUFFER_MAX;
 
   /**
    * Construct Soft UART with transmitter on given output pin and

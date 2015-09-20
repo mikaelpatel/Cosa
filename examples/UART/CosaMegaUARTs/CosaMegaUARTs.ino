@@ -35,8 +35,8 @@
 #include "Cosa/Watchdog.hh"
 
 // Create buffer for UART1
-static IOBuffer<UART::BUFFER_MAX> ibuf;
-static IOBuffer<UART::BUFFER_MAX> obuf;
+static IOBuffer<UART::RX_BUFFER_MAX> ibuf;
+static IOBuffer<UART::TX_BUFFER_MAX> obuf;
 
 // Create UART1 and bind to the cout IOStream
 UART uart1(1, &ibuf, &obuf);

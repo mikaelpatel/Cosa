@@ -21,12 +21,21 @@
 #ifndef COSA_IOSTREAM_DRIVER_UART_HH
 #define COSA_IOSTREAM_DRIVER_UART_HH
 
-// Default buffer size
-#ifndef COSA_UART_BUFFER_MAX
+// Default reciever buffer size
+#ifndef COSA_UART_RX_BUFFER_MAX
 # if defined(BOARD_ATTINY)
-#   define COSA_UART_BUFFER_MAX 16
+#   define COSA_UART_RX_BUFFER_MAX 16
 # else
-#   define COSA_UART_BUFFER_MAX 32
+#   define COSA_UART_RX_BUFFER_MAX 32
+# endif
+#endif
+
+// Default transmitter buffer size
+#ifndef COSA_UART_TX_BUFFER_MAX
+# if defined(BOARD_ATTINY)
+#   define COSA_UART_TX_BUFFER_MAX 16
+# else
+#   define COSA_UART_TX_BUFFER_MAX 32
 # endif
 #endif
 
@@ -50,7 +59,8 @@ extern Soft::UAT uart;
 class UART : public Serial {
 public:
   /** Default buffer size for standard UART0 (at 9600 baud). */
-  static const uint16_t BUFFER_MAX = COSA_UART_BUFFER_MAX;
+  static const uint16_t RX_BUFFER_MAX = COSA_UART_RX_BUFFER_MAX;
+  static const uint16_t TX_BUFFER_MAX = COSA_UART_TX_BUFFER_MAX;
 
   /**
    * Construct serial port handler for given UART.

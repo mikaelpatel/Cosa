@@ -35,7 +35,7 @@ static const uint32_t BITS = 11;
 void setup()
 {
   // Put baudrate setting as first line
-  uart.begin(1000000);
+  uart.begin(2000000);
   // uart.begin(1000000);
   // uart.begin(500000);
   // uart.begin(250000);

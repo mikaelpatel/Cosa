@@ -27,7 +27,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-typedef IOBuffer<UART::BUFFER_MAX> Buffer;
+typedef IOBuffer<UART::RX_BUFFER_MAX> Buffer;
 
 class Handler : public Event::Handler {
 public:

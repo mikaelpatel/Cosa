@@ -46,10 +46,10 @@ public:
   static const uint8_t FRAME_MAX = 4;
 
   /** Input buffer */
-  IOBuffer<UART::BUFFER_MAX> m_ibuf;
+  IOBuffer<UART::RX_BUFFER_MAX> m_ibuf;
 
   /** Output buffer */
-  IOBuffer<UART::BUFFER_MAX> m_obuf;
+  IOBuffer<UART::TX_BUFFER_MAX> m_obuf;
 
   /** Data output enable pin; MAX485/DE and /RE */
   OutputPin m_de;
@@ -59,7 +59,7 @@ public:
 
 public:
   /** Max size of payload */
-  static const uint8_t PAYLOAD_MAX = BUFFER_MAX - FRAME_MAX - 1;
+  static const uint8_t PAYLOAD_MAX = TX_BUFFER_MAX - FRAME_MAX - 1;
 
   /** Network broadcast address */
   static const uint8_t BROADCAST = 0;

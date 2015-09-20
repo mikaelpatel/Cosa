@@ -27,7 +27,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Soft/UART.hh"
 
-IOBuffer<Soft::UART::BUFFER_MAX> ibuf;
+IOBuffer<Soft::UART::RX_BUFFER_MAX> ibuf;
 #if defined(BOARD_ATTINY)
 Soft::UART uart(Board::D2, Board::PCI1, &ibuf);
 #define BAUDRATE 38400

@@ -22,8 +22,8 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 #if defined(BOARD_ATTINY)
-// Default is serial output only
-// static IOBuffer<Soft::UART::BUFFER_MAX> ibuf;
+// Default is serial output only (UAT)
+// static IOBuffer<Soft::UART::RX_BUFFER_MAX> ibuf;
 // Soft::UART  __attribute__ ((weak)) uart(Board::D2, Board::PCI1, &ibuf);
 Soft::UAT  __attribute__ ((weak)) uart(Board::D2);
 #else
@@ -35,8 +35,8 @@ Soft::UAT  __attribute__ ((weak)) uart(Board::D2);
 #undef uart
 #else
 #include "Cosa/IOBuffer.hh"
-static IOBuffer<UART::BUFFER_MAX> ibuf;
-static IOBuffer<UART::BUFFER_MAX> obuf;
+static IOBuffer<UART::RX_BUFFER_MAX> ibuf;
+static IOBuffer<UART::TX_BUFFER_MAX> obuf;
 UART __attribute__ ((weak)) uart(0, &ibuf, &obuf);
 #endif
 
@@ -49,7 +49,7 @@ UART::begin(uint32_t baudrate, uint8_t format)
 
   // Check if double rate is not possible
   if (setting > 4095) {
-    setting = (F_CPU / 8 / baudrate - 1) / 2;
+    setting = ((F_CPU / 8 / baudrate) - 1) / 2;
     *UCSRnA() = 0;
   } else {
     *UCSRnA() = _BV(U2X0);
