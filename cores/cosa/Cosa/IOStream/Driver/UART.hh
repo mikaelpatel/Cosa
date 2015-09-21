@@ -189,19 +189,18 @@ public:
    */
   virtual void powerdown();
 
+protected:
+  uint8_t m_port;			//!< UART port index.
+  volatile uint8_t* const m_sfr;	//!< Special Function Register Pointer.
+  IOStream::Device* m_ibuf;		//!< Input Buffer/Device.
+  IOStream::Device* m_obuf;		//!< Output Buffer/Device.
+  bool m_buffered;			//!< Flag buffered output.
+
   /**
    * Serial port references. Only uart0 is predefined (reference to global
-   * uart). Others are assuped to be allocated by applications and setup
-   * with UART_SETUP().
+   * uart). Others as installed by constructor when created in application.
    */
   static UART* uart[Board::UART_MAX];
-
-protected:
-  uint8_t m_port;
-  volatile uint8_t* const m_sfr;
-  IOStream::Device* m_ibuf;
-  IOStream::Device* m_obuf;
-  bool m_buffered;
 
   /**
    * Return pointer to UART Control and Status Register A (UCSRnA).
