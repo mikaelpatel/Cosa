@@ -301,6 +301,21 @@ public:
     return (res);
   }
 
+  /**
+   * Powerup SPI.
+   */
+  void powerup()
+  {
+    power_usi_enable();
+  }
+
+  /**
+   * Powerdown SPI.
+   */
+  void powerdown()
+  {
+    power_usi_disable();
+  }
 #else
   /**
    * Exchange data with slave. Should only be used within a SPI
@@ -352,6 +367,22 @@ public:
     uint8_t res = SPDR;
     SPDR = data;
     return (res);
+  }
+
+  /**
+   * Powerup SPI.
+   */
+  void powerup()
+  {
+    power_spi_enable();
+  }
+
+  /**
+   * Powerdown SPI.
+   */
+  void powerdown()
+  {
+    power_spi_disable();
   }
 #endif
 

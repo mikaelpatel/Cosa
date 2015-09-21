@@ -240,6 +240,16 @@ public:
     UNUSED(hz);
   }
 
+  /**
+   * Powerup USI.
+   */
+  void powerup();
+
+  /**
+   * Powerdown USI.
+   */
+  void powerdown();
+
 private:
   /**
    * USI TWI slave states.

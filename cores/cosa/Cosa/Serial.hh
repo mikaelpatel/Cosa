@@ -83,6 +83,18 @@ public:
   {
     return (true);
   }
+
+  /**
+   * @override{Serial}
+   * Powerup Serial.
+   */
+  virtual void powerup() {}
+
+  /**
+   * @override{Serial}
+   * Powerdown Serial.
+   */
+  virtual void powerdown() {}
 };
 
 #endif

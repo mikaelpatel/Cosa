@@ -23,7 +23,6 @@
 #if !defined(BOARD_ATTINY)
 
 #include "Cosa/Bits.h"
-#include "Cosa/Power.hh"
 
 TWI twi  __attribute__ ((weak));
 

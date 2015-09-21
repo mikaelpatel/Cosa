@@ -26,6 +26,7 @@
 #include "Cosa/USI/TWI.hh"
 #else
 #include "Cosa/Event.hh"
+#include <avr/power.h>
 
 /**
  * Two wire library. Support for the I2C/TWI bus Master and Slave
@@ -345,6 +346,22 @@ public:
     m_freq = (hz < MAX_FREQ) ? (((F_CPU / hz) - 16) / 2) : 2;
   }
 
+  /**
+   * Powerup TWI.
+   */
+  void powerup()
+  {
+    power_twi_enable();
+  }
+
+  /**
+   * Powerdown TWI.
+   */
+  void powerdown()
+  {
+    power_twi_disable();
+  }
+
 private:
   /**
    * Two Wire state and status codes.
@@ -503,5 +520,3 @@ private:
 */
 extern TWI twi;
 #endif
-
-
