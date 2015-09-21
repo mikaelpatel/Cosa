@@ -1,0 +1,633 @@
+CosaBenchmarkUART: started
+
+102:void loop():measure:one character (new-line):20 us
+1
+103:void loop():measure:one character:28 us
+1
+104:void loop():measure:one character string:32 us
+1
+105:void loop():measure:integer:52 us
+1
+106:void loop():measure:long integer:40 us
+10
+107:void loop():measure:two characters:32 us
+10
+108:void loop():measure:two character string:36 us
+10
+109:void loop():measure:integer:72 us
+10
+110:void loop():measure:long integer:72 us
+10.0000
+111:void loop():measure:floating point:152 us
+100
+112:void loop():measure:three characters:40 us
+100
+113:void loop():measure:three character string:44 us
+100
+114:void loop():measure:integer:80 us
+100
+115:void loop():measure:long integer:96 us
+100.0000
+116:void loop():measure:floating point:156 us
+127
+119:void loop():measure:max int8_t:80 us
+32767
+120:void loop():measure:max int16_t:116 us
+2147483647
+121:void loop():measure:max int32_t:304 us
+255
+124:void loop():measure:max uint8_t:80 us
+65535
+125:void loop():measure:max uint16_t:112 us
+4294967295
+126:void loop():measure:max uint32_t:308 us
+3.1416
+129:void loop():measure:floating point (pi):152 us
+2.7183
+130:void loop():measure:floating point (e):156 us
+1.4427
+131:void loop():measure:floating point (log2e):144 us
+0.4343
+132:void loop():measure:floating point (log10e):144 us
+0.6931
+133:void loop():measure:floating point (logn2):144 us
+2.3026
+134:void loop():measure:floating point (logn10):156 us
+000100
+137:void loop():measure:uint16_t(digits=6):92 us
+000100
+141:void loop():measure:uint32_t(digits=6):112 us
+
+147:void loop():measure:newline character:8 us
+
+148:void loop():measure:tab:24 us
+
+149:void loop():measure:newline string(1):16 us
+
+
+150:void loop():measure:newline string(2):24 us
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+160:void loop():measure:performance:5496 us
+effective baudrate (970 characters):1941 Kbps
+
+102:void loop():measure:one character (new-line):20 us
+1
+103:void loop():measure:one character:28 us
+1
+104:void loop():measure:one character string:32 us
+1
+105:void loop():measure:integer:52 us
+1
+106:void loop():measure:long integer:40 us
+10
+107:void loop():measure:two characters:32 us
+10
+108:void loop():measure:two character string:36 us
+10
+109:void loop():measure:integer:72 us
+10
+110:void loop():measure:long integer:72 us
+10.0000
+111:void loop():measure:floating point:152 us
+100
+112:void loop():measure:three characters:40 us
+100
+113:void loop():measure:three character string:44 us
+100
+114:void loop():measure:integer:80 us
+100
+115:void loop():measure:long integer:96 us
+100.0000
+116:void loop():measure:floating point:160 us
+127
+119:void loop():measure:max int8_t:80 us
+32767
+120:void loop():measure:max int16_t:116 us
+2147483647
+121:void loop():measure:max int32_t:304 us
+255
+124:void loop():measure:max uint8_t:80 us
+65535
+125:void loop():measure:max uint16_t:112 us
+4294967295
+126:void loop():measure:max uint32_t:308 us
+3.1416
+129:void loop():measure:floating point (pi):152 us
+2.7183
+130:void loop():measure:floating point (e):156 us
+1.4427
+131:void loop():measure:floating point (log2e):144 us
+0.4343
+132:void loop():measure:floating point (log10e):144 us
+0.6931
+133:void loop():measure:floating point (logn2):144 us
+2.3026
+134:void loop():measure:floating point (logn10):156 us
+000100
+137:void loop():measure:uint16_t(digits=6):92 us
+000100
+141:void loop():measure:uint32_t(digits=6):112 us
+
+147:void loop():measure:newline character:8 us
+
+148:void loop():measure:tab:28 us
+
+149:void loop():measure:newline string(1):16 us
+
+
+150:void loop():measure:newline string(2):24 us
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+160:void loop():measure:performance:5488 us
+effective baudrate (970 characters):1944 Kbps
+
+102:void loop():measure:one character (new-line):20 us
+1
+103:void loop():measure:one character:28 us
+1
+104:void loop():measure:one character string:32 us
+1
+105:void loop():measure:integer:52 us
+1
+106:void loop():measure:long integer:40 us
+10
+107:void loop():measure:two characters:32 us
+10
+108:void loop():measure:two character string:36 us
+10
+109:void loop():measure:integer:72 us
+10
+110:void loop():measure:long integer:72 us
+10.0000
+111:void loop():measure:floating point:152 us
+100
+112:void loop():measure:three characters:40 us
+100
+113:void loop():measure:three character string:44 us
+100
+114:void loop():measure:integer:80 us
+100
+115:void loop():measure:long integer:100 us
+100.0000
+116:void loop():measure:floating point:160 us
+127
+119:void loop():measure:max int8_t:80 us
+32767
+120:void loop():measure:max int16_t:116 us
+2147483647
+121:void loop():measure:max int32_t:312 us
+255
+124:void loop():measure:max uint8_t:80 us
+65535
+125:void loop():measure:max uint16_t:112 us
+4294967295
+126:void loop():measure:max uint32_t:308 us
+3.1416
+129:void loop():measure:floating point (pi):152 us
+2.7183
+130:void loop():measure:floating point (e):156 us
+1.4427
+131:void loop():measure:floating point (log2e):148 us
+0.4343
+132:void loop():measure:floating point (log10e):144 us
+0.6931
+133:void loop():measure:floating point (logn2):148 us
+2.3026
+134:void loop():measure:floating point (logn10):152 us
+000100
+137:void loop():measure:uint16_t(digits=6):92 us
+000100
+141:void loop():measure:uint32_t(digits=6):112 us
+
+147:void loop():measure:newline character:8 us
+
+148:void loop():measure:tab:28 us
+
+149:void loop():measure:newline string(1):16 us
+
+
+150:void loop():measure:newline string(2):20 us
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+160:void loop():measure:performance:5488 us
+effective baudrate (970 characters):1944 Kbps
+
+102:void loop():measure:one character (new-line):20 us
+1
+103:void loop():measure:one character:28 us
+1
+104:void loop():measure:one character string:32 us
+1
+105:void loop():measure:integer:52 us
+1
+106:void loop():measure:long integer:40 us
+10
+107:void loop():measure:two characters:32 us
+10
+108:void loop():measure:two character string:36 us
+10
+109:void loop():measure:integer:72 us
+10
+110:void loop():measure:long integer:72 us
+10.0000
+111:void loop():measure:floating point:152 us
+100
+112:void loop():measure:three characters:40 us
+100
+113:void loop():measure:three character string:44 us
+100
+114:void loop():measure:integer:80 us
+100
+115:void loop():measure:long integer:100 us
+100.0000
+116:void loop():measure:floating point:160 us
+127
+119:void loop():measure:max int8_t:80 us
+32767
+120:void loop():measure:max int16_t:116 us
+2147483647
+121:void loop():measure:max int32_t:312 us
+255
+124:void loop():measure:max uint8_t:80 us
+65535
+125:void loop():measure:max uint16_t:112 us
+4294967295
+126:void loop():measure:max uint32_t:308 us
+3.1416
+129:void loop():measure:floating point (pi):152 us
+2.7183
+130:void loop():measure:floating point (e):156 us
+1.4427
+131:void loop():measure:floating point (log2e):144 us
+0.4343
+132:void loop():measure:floating point (log10e):144 us
+0.6931
+133:void loop():measure:floating point (logn2):144 us
+2.3026
+134:void loop():measure:floating point (logn10):156 us
+000100
+137:void loop():measure:uint16_t(digits=6):92 us
+000100
+141:void loop():measure:uint32_t(digits=6):112 us
+
+147:void loop():measure:newline character:8 us
+
+148:void loop():measure:tab:28 us
+
+149:void loop():measure:newline string(1):16 us
+
+
+150:void loop():measure:newline string(2):20 us
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+160:void loop():measure:performance:5496 us
+effective baudrate (970 characters):1941 Kbps
+
+102:void loop():measure:one character (new-line):20 us
+1
+103:void loop():measure:one character:28 us
+1
+104:void loop():measure:one character string:32 us
+1
+105:void loop():measure:integer:52 us
+1
+106:void loop():measure:long integer:40 us
+10
+107:void loop():measure:two characters:32 us
+10
+108:void loop():measure:two character string:36 us
+10
+109:void loop():measure:integer:72 us
+10
+110:void loop():measure:long integer:72 us
+10.0000
+111:void loop():measure:floating point:152 us
+100
+112:void loop():measure:three characters:40 us
+100
+113:void loop():measure:three character string:44 us
+100
+114:void loop():measure:integer:80 us
+100
+115:void loop():measure:long integer:96 us
+100.0000
+116:void loop():measure:floating point:160 us
+127
+119:void loop():measure:max int8_t:80 us
+32767
+120:void loop():measure:max int16_t:116 us
+2147483647
+121:void loop():measure:max int32_t:304 us
+255
+124:void loop():measure:max uint8_t:80 us
+65535
+125:void loop():measure:max uint16_t:112 us
+4294967295
+126:void loop():measure:max uint32_t:308 us
+3.1416
+129:void loop():measure:floating point (pi):152 us
+2.7183
+130:void loop():measure:floating point (e):156 us
+1.4427
+131:void loop():measure:floating point (log2e):144 us
+0.4343
+132:void loop():measure:floating point (log10e):144 us
+0.6931
+133:void loop():measure:floating point (logn2):144 us
+2.3026
+134:void loop():measure:floating point (logn10):156 us
+000100
+137:void loop():measure:uint16_t(digits=6):92 us
+000100
+141:void loop():measure:uint32_t(digits=6):112 us
+
+147:void loop():measure:newline character:8 us
+
+148:void loop():measure:tab:28 us
+
+149:void loop():measure:newline string(1):16 us
+
+
+150:void loop():measure:newline string(2):24 us
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+160:void loop():measure:performance:5488 us
+effective baudrate (970 characters):1944 Kbps
+
+102:void loop():measure:one character (new-line):20 us
+1
+103:void loop():measure:one character:28 us
+1
+104:void loop():measure:one character string:32 us
+1
+105:void loop():measure:integer:52 us
+1
+106:void loop():measure:long integer:40 us
+10
+107:void loop():measure:two characters:32 us
+10
+108:void loop():measure:two character string:36 us
+10
+109:void loop():measure:integer:72 us
+10
+110:void loop():measure:long integer:72 us
+10.0000
+111:void loop():measure:floating point:152 us
+100
+112:void loop():measure:three characters:40 us
+100
+113:void loop():measure:three character string:44 us
+100
+114:void loop():measure:integer:80 us
+100
+115:void loop():measure:long integer:100 us
+100.0000
+116:void loop():measure:floating point:160 us
+127
+119:void loop():measure:max int8_t:80 us
+32767
+120:void loop():measure:max int16_t:116 us
+2147483647
+121:void loop():measure:max int32_t:312 us
+255
+124:void loop():measure:max uint8_t:84 us
+65535
+125:void loop():measure:max uint16_t:112 us
+4294967295
+126:void loop():measure:max uint32_t:308 us
+3.1416
+129:void loop():measure:floating point (pi):152 us
+2.7183
+130:void loop():measure:floating point (e):156 us
+1.4427
+131:void loop():measure:floating point (log2e):148 us
+0.4343
+132:void loop():measure:floating point (log10e):144 us
+0.6931
+133:void loop():measure:floating point (logn2):148 us
+2.3026
+134:void loop():measure:floating point (logn10):152 us
+000100
+137:void loop():measure:uint16_t(digits=6):92 us
+000100
+141:void loop():measure:uint32_t(digits=6):112 us
+
+147:void loop():measure:newline character:8 us
+
+148:void loop():measure:tab:28 us
+
+149:void loop():measure:newline string(1):16 us
+
+
+150:void loop():measure:newline string(2):20 us
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+160:void loop():measure:performance:5488 us
+effective baudrate (970 characters):1944 Kbps
+
+102:void loop():measure:one character (new-line):20 us
+1
+103:void loop():measure:one character:28 us
+1
+104:void loop():measure:one character string:32 us
+1
+105:void loop():measure:integer:52 us
+1
+106:void loop():measure:long integer:40 us
+10
+107:void loop():measure:two characters:32 us
+10
+108:void loop():measure:two character string:36 us
+10
+109:void loop():measure:integer:72 us
+10
+110:void loop():measure:long integer:72 us
+10.0000
+111:void loop():measure:floating point:152 us
+100
+112:void loop():measure:three characters:40 us
+100
+113:void loop():measure:three character string:44 us
+100
+114:void loop():measure:integer:80 us
+100
+115:void loop():measure:long integer:100 us
+100.0000
+116:void loop():measure:floating point:160 us
+127
+119:void loop():measure:max int8_t:80 us
+32767
+120:void loop():measure:max int16_t:116 us
+2147483647
+121:void loop():measure:max int32_t:312 us
+255
+124:void loop():measure:max uint8_t:80 us
+65535
+125:void loop():measure:max uint16_t:112 us
+4294967295
+126:void loop():measure:max uint32_t:308 us
+3.1416
+129:void loop():measure:floating point (pi):152 us
+2.7183
+130:void loop():measure:floating point (e):156 us
+1.4427
+131:void loop():measure:floating point (log2e):144 us
+0.4343
+132:void loop():measure:floating point (log10e):144 us
+0.6931
+133:void loop():measure:floating point (logn2):144 us
+2.3026
+134:void loop():measure:floating point (logn10):152 us
+000100
+137:void loop():measure:uint16_t(digits=6):92 us
+000100
+141:void loop():measure:uint32_t(digits=6):112 us
+
+147:void loop():measure:newline character:8 us
+
+148:void loop():measure:tab:28 us
+
+149:void loop():measure:newline string(1):16 us
+
+
+150:void loop():measure:newline string(2):20 us
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+160:void loop():measure:performance:5496 us
+effective baudrate (970 characters):1941 Kbps
+
+102:void loop():measure:one character (new-line):20 us
+1
+103:void loop():measure:one character:28 us
+1
+104:void loop():measure:one character string:32 us
+1
+105:void loop():measure:integer:52 us
+1
+106:void loop():measure:long integer:40 us
+10
+107:void loop():measure:two characters:32 us
+10
+108:void loop():measure:two character string:36 us
+10
+109:void loop():measure:integer:72 us
+10
+110:void loop():measure:long integer:72 us
+10.0000
+111:void loop():measure:floating point:152 us
+100
+112:void loop():measure:three characters:40 us
+100
+113:void loop():measure:three character string:44 us
+100
+114:void loop():measure:integer:80 us
+100
+115:void loop():measure:long integer:96 us
+100.0000
+116:void loop():measure:floating point:160 us
+127
+119:void loop():measure:max int8_t:80 us
+32767
+120:void loop():measure:max int16_t:116 us
+2147483647
+121:void loop():measure:max int32_t:304 us
+255
+124:void loop():measure:max uint8_t:80 us
+65535
+125:void loop():measure:max uint16_t:112 us
+4294967295
+126:void loop():measure:max uint32_t:308 us
+3.1416
+129:void loop():measure:floating point (pi):152 us
+2.7183
+130:void loop():measure:floating point (e):156 us
+1.4427
+131:void loop():measure:floating point (log2e):144 us
+0.4343
+132:void loop():measure:floating point (log10e):144 us
+0.6931
+133:void loop():measure:floating point (logn2):144 us
+2.3026
+134:void loop():measure:floating point (logn10):156 us
+000100
+137:void loop():measure:uint16_t(digits=6):92 us
+000100
+141:void loop():measure:uint32_t(digits=6):112 us
+
+147:void loop():measure:newline character:8 us
+
+148:void loop():measure:tab:28 us
+
+149:void loop():measure:newline string(1):16 us
+
+
+150:void loop():measure:newline string(2):24 us
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+160:void loop():measure:performance:5488 us
+effective baudrate (970 characters):1944 Kbps
