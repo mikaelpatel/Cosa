@@ -1,76 +1,76 @@
-Sat Sep 19 23:40:13 CEST 2015: adafruit-atmega32u4
-Program:    4454 bytes (13.6% Full)
+Tue Sep 22 00:35:37 CEST 2015: adafruit-atmega32u4
+Program:    4484 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-Sat Sep 19 23:40:15 CEST 2015: adafruit-atmega32u4-cat
-Program:    4454 bytes (13.6% Full)
+Tue Sep 22 00:35:39 CEST 2015: adafruit-atmega32u4-cat
+Program:    4484 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-Sat Sep 19 23:40:18 CEST 2015: atmega328-8
+Tue Sep 22 00:35:41 CEST 2015: atmega328-8
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:40:20 CEST 2015: attiny84-8
+Tue Sep 22 00:35:42 CEST 2015: attiny84-8
 Program:     162 bytes (2.0% Full)
 Data:          1 bytes (0.2% Full)
-Sat Sep 19 23:40:23 CEST 2015: attiny85-8
+Tue Sep 22 00:35:44 CEST 2015: attiny85-8
 Program:     158 bytes (1.9% Full)
 Data:          1 bytes (0.2% Full)
-Sat Sep 19 23:40:25 CEST 2015: attiny861-8
+Tue Sep 22 00:35:45 CEST 2015: attiny861-8
 Program:     166 bytes (2.0% Full)
 Data:          1 bytes (0.2% Full)
-Sat Sep 19 23:40:27 CEST 2015: diecimila
+Tue Sep 22 00:35:47 CEST 2015: diecimila
 Program:     256 bytes (1.6% Full)
 Data:          1 bytes (0.1% Full)
-Sat Sep 19 23:40:30 CEST 2015: duemilanove
+Tue Sep 22 00:35:48 CEST 2015: duemilanove
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:40:32 CEST 2015: iboard
+Tue Sep 22 00:35:50 CEST 2015: iboard
 Program:     454 bytes (1.4% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:40:34 CEST 2015: leonardo
-Program:    4474 bytes (13.7% Full)
+Tue Sep 22 00:35:51 CEST 2015: leonardo
+Program:    4504 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-Sat Sep 19 23:40:37 CEST 2015: lilypad
+Tue Sep 22 00:35:53 CEST 2015: lilypad
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:40:39 CEST 2015: lilypad-usb
-Program:    4454 bytes (13.6% Full)
+Tue Sep 22 00:35:54 CEST 2015: lilypad-usb
+Program:    4484 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-Sat Sep 19 23:40:42 CEST 2015: mega1280
+Tue Sep 22 00:35:56 CEST 2015: mega1280
 Program:     386 bytes (0.3% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:40:44 CEST 2015: mega2560
+Tue Sep 22 00:35:57 CEST 2015: mega2560
 Program:     390 bytes (0.1% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:40:47 CEST 2015: micro
-Program:    4454 bytes (13.6% Full)
+Tue Sep 22 00:35:59 CEST 2015: micro
+Program:    4484 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-Sat Sep 19 23:40:49 CEST 2015: microduino-core
+Tue Sep 22 00:36:00 CEST 2015: microduino-core
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:40:52 CEST 2015: microduino-core32u4
-Program:    4454 bytes (13.6% Full)
+Tue Sep 22 00:36:02 CEST 2015: microduino-core32u4
+Program:    4484 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-Sat Sep 19 23:40:54 CEST 2015: microduino-core-plus
+Tue Sep 22 00:36:03 CEST 2015: microduino-core-plus
 Program:     276 bytes (0.4% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:40:56 CEST 2015: mighty
+Tue Sep 22 00:36:05 CEST 2015: mighty
 Program:     298 bytes
 Data:          1 bytes
-Sat Sep 19 23:40:59 CEST 2015: mighty-opt
+Tue Sep 22 00:36:06 CEST 2015: mighty-opt
 Program:     298 bytes
 Data:          1 bytes
-Sat Sep 19 23:41:01 CEST 2015: miniwireless
+Tue Sep 22 00:36:08 CEST 2015: miniwireless
 Program:     454 bytes (1.4% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:41:04 CEST 2015: moteino
+Tue Sep 22 00:36:09 CEST 2015: moteino
 Program:     454 bytes (1.4% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:41:06 CEST 2015: moteino-mega
+Tue Sep 22 00:36:11 CEST 2015: moteino-mega
 Program:     324 bytes
 Data:          1 bytes
-Sat Sep 19 23:41:08 CEST 2015: nano
+Tue Sep 22 00:36:12 CEST 2015: nano
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:41:11 CEST 2015: pinoccio
+Tue Sep 22 00:36:13 CEST 2015: pinoccio
 unknown MCU 'atmega256rfr2' specified
 Known MCU names:
    avr2
@@ -393,29 +393,29 @@ In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Que
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:24,
                  from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.cpp:21:
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh: In static member function ‘static void Power::adc_enable()’:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:64: error: ‘power_adc_enable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:65: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:65: error: ‘ADEN’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:66: error: ‘power_adc_enable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:67: error: ‘ADCSRA’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:67: error: ‘ADEN’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh: In static member function ‘static void Power::adc_disable()’:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:71: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:71: error: ‘ADEN’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:72: error: ‘power_adc_disable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:73: error: ‘ADCSRA’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:73: error: ‘ADEN’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:74: error: ‘power_adc_disable’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh: In static member function ‘static void Power::timer0_enable()’:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:78: error: ‘power_timer0_enable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:80: error: ‘power_timer0_enable’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh: In static member function ‘static void Power::timer0_disable()’:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:84: error: ‘power_timer0_disable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:86: error: ‘power_timer0_disable’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh: In static member function ‘static void Power::timer1_enable()’:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:90: error: ‘power_timer1_enable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:92: error: ‘power_timer1_enable’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh: In static member function ‘static void Power::timer1_disable()’:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:96: error: ‘power_timer1_disable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:98: error: ‘power_timer1_disable’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh: In static member function ‘static void Power::all_enable()’:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:256: error: ‘power_all_enable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:257: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:257: error: ‘ADEN’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:258: error: ‘power_all_enable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:259: error: ‘ADCSRA’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:259: error: ‘ADEN’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh: In static member function ‘static void Power::all_disable()’:
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:263: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:263: error: ‘ADEN’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:264: error: ‘power_all_disable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:265: error: ‘ADCSRA’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:265: error: ‘ADEN’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:266: error: ‘power_all_disable’ was not declared in this scope
 In file included from /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.cpp:21:
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh: At global scope:
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:36: error: ‘ACIS1’ was not declared in this scope
@@ -490,22 +490,22 @@ CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:325: warning: ‘USART1_UDRE_vect’ appears to be a misspelled signal handler
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:326: warning: ‘USART1_RX_vect’ appears to be a misspelled signal handler
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Board/Pinoccio/Scout.hh:327: warning: ‘USART1_TX_vect’ appears to be a misspelled signal handler
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:64: error: ‘power_adc_enable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:65: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:65: error: ‘ADEN’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:71: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:71: error: ‘ADEN’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:72: error: ‘power_adc_disable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:78: error: ‘power_timer0_enable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:84: error: ‘power_timer0_disable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:90: error: ‘power_timer1_enable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:96: error: ‘power_timer1_disable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:256: error: ‘power_all_enable’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:257: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:257: error: ‘ADEN’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:263: error: ‘ADCSRA’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:263: error: ‘ADEN’ was not declared in this scope
-/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:264: error: ‘power_all_disable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:66: error: ‘power_adc_enable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:67: error: ‘ADCSRA’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:67: error: ‘ADEN’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:73: error: ‘ADCSRA’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:73: error: ‘ADEN’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:74: error: ‘power_adc_disable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:80: error: ‘power_timer0_enable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:86: error: ‘power_timer0_disable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:92: error: ‘power_timer1_enable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:98: error: ‘power_timer1_disable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:258: error: ‘power_all_enable’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:259: error: ‘ADCSRA’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:259: error: ‘ADEN’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:265: error: ‘ADCSRA’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:265: error: ‘ADEN’ was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Power.hh:266: error: ‘power_all_disable’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:36: error: ‘ACIS1’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:37: error: ‘ACIS1’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:37: error: ‘ACIS0’ was not declared in this scope
@@ -519,27 +519,27 @@ CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:85: error: ‘ACSR’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:85: error: ‘ACD’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.cpp:31: warning: ‘ANALOG_COMP_vect’ appears to be a misspelled signal handler
-Sat Sep 19 23:41:12 CEST 2015: pro-micro
-Program:    4474 bytes (13.7% Full)
+Tue Sep 22 00:36:15 CEST 2015: pro-micro
+Program:    4504 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-Sat Sep 19 23:41:15 CEST 2015: pro-micro-8
-Program:    4474 bytes (13.7% Full)
+Tue Sep 22 00:36:16 CEST 2015: pro-micro-8
+Program:    4504 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-Sat Sep 19 23:41:17 CEST 2015: pro-mini
+Tue Sep 22 00:36:18 CEST 2015: pro-mini
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:41:20 CEST 2015: pro-mini-8
+Tue Sep 22 00:36:19 CEST 2015: pro-mini-8
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:41:22 CEST 2015: teensy-2_0
-Program:    4486 bytes (13.7% Full)
+Tue Sep 22 00:36:20 CEST 2015: teensy-2_0
+Program:    4516 bytes (13.8% Full)
 Data:        189 bytes (7.4% Full)
-Sat Sep 19 23:41:25 CEST 2015: teensypp-2_0
-Program:    4496 bytes (3.4% Full)
+Tue Sep 22 00:36:22 CEST 2015: teensypp-2_0
+Program:    4526 bytes (3.5% Full)
 Data:        189 bytes (2.3% Full)
-Sat Sep 19 23:41:27 CEST 2015: uno
+Tue Sep 22 00:36:23 CEST 2015: uno
 Program:     256 bytes (0.8% Full)
 Data:          1 bytes (0.0% Full)
-Sat Sep 19 23:41:29 CEST 2015: wildfire
+Tue Sep 22 00:36:24 CEST 2015: wildfire
 Program:     548 bytes
 Data:          1 bytes
