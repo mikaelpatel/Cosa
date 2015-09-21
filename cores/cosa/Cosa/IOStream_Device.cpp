@@ -42,14 +42,23 @@ IOStream::Device::putchar(char c)
 int
 IOStream::Device::puts(const char* s)
 {
-  return (write(s, strlen(s)));
+  const char* bp = (const char*) s;
+  int n = 0;
+  for (char c; (c = *bp++) != 0; n++)
+    if (UNLIKELY(putchar(c) < 0))
+      break;
+  return (n);
 }
 
 int
 IOStream::Device::puts(str_P s)
 {
-  const char* p = (const char*) s;
-  return (write_P(p, strlen_P(p)));
+  const char* bp = (const char*) s;
+  int n = 0;
+  for (char c; (c = pgm_read_byte(bp++)) != 0; n++)
+    if (UNLIKELY(putchar(c) < 0))
+      break;
+  return (n);
 }
 
 int
