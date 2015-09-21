@@ -31,7 +31,9 @@
 class Power {
 public:
   /**
-   * Set the default sleep mode.
+   * Set the default sleep mode: SLEEP_MODE_IDLE, SLEEP_MODE_ADC,
+   * SLEEP_MODE_PWR_DOWN, SLEEP_MODE_PWR_SAVE, SLEEP_MODE_STANDBY,
+   * and SLEEP_MODE_EXT_STANDBY.
    * @param[in] mode sleep mode, see <avr/sleep.h>
    * @return previous mode.
    */
