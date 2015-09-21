@@ -25,17 +25,54 @@
 
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include <math.h>
 
-// Bits transmitted; 1 start bit, 8 data bits, 2 stop bits
-static const uint32_t BITS = 11;
+// This benchmark can be run with a background interrupt load. Set the
+// below symbol to enable a periodic job with the given period in
+// micro-seconds. Minimum is approx. 100 us.
+// #define BACKGROUND_PULSE 250
+
+#if defined(BACKGROUND_PULSE)
+#include "Cosa/OutputPin.hh"
+#include "Cosa/Periodic.hh"
+
+class Pulse : public Periodic {
+public:
+  Pulse(Job::Scheduler* scheduler, uint32_t delay, Board::DigitalPin pin) :
+    Periodic(scheduler, delay),
+    m_pin(pin)
+  {
+    expire_at(1000000UL);
+  }
+
+  virtual void on_expired()
+  {
+    run();
+    reschedule();
+  }
+
+  virtual void run()
+  {
+    m_pin.toggle();
+    m_pin.toggle();
+  }
+
+private:
+  OutputPin m_pin;
+};
+
+// The RTC job scheduler and background pulse generator
+RTC::Scheduler scheduler;
+Pulse background(&scheduler, BACKGROUND_PULSE, Board::LED);
+#endif
 
 void setup()
 {
-  // Put baudrate setting as first line
+  // Start serial output with given baud-rate
   uart.begin(2000000);
+  // uart.begin(2000000);
   // uart.begin(1000000);
   // uart.begin(500000);
   // uart.begin(250000);
@@ -48,7 +85,13 @@ void setup()
   // uart.begin(14400);
   // uart.begin(9600);
   trace.begin(&uart, PSTR("CosaBenchmarkUART: started"));
-  TRACE(free_memory());
+
+#if defined(BACKGROUND_PULSE)
+  ASSERT(background.start());
+  trace << PSTR("Background pulse:") << BACKGROUND_PULSE << PSTR(" us") << endl;
+#endif
+
+  // Start timers
   Watchdog::begin();
   RTC::begin();
 }
@@ -82,6 +125,14 @@ void loop()
   MEASURE("max uint16_t:", 1) trace << (uint16_t) 0xffffU << endl;
   MEASURE("max uint32_t:", 1) trace << (uint32_t) 0xffffffffUL << endl;
 
+  // Measure time to print some standar floating point numbers
+  MEASURE("floating point (pi):", 1) trace << M_PI << endl;
+  MEASURE("floating point (e):", 1) trace << M_E << endl;
+  MEASURE("floating point (log2e):", 1) trace << M_LOG2E << endl;
+  MEASURE("floating point (log10e):", 1) trace << M_LOG10E << endl;
+  MEASURE("floating point (logn2):", 1) trace << M_LN2 << endl;
+  MEASURE("floating point (logn10):", 1) trace << M_LN10 << endl;
+
   // Measure time to print unsigned integer; 16 and 32 bit.
   MEASURE("uint16_t(digits=6):", 1) {
     trace.print(100U, 6, IOStream::dec);
@@ -99,22 +150,25 @@ void loop()
   MEASURE("newline string(2):", 1) trace << (char*) "\n\n";
 
   // Measure time to print all characters
+  str_P s = PSTR(" !\"#$%&'()*+,-./0123456789:;<=>?@"
+		 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`"
+		 "abcdefghijklmnopqrstuvwxyz{|}~\r\n");
+  const uint8_t LINES = 10;
+
+  // Use 10 ms delay before and after as markers for Logic Analyzer
   delay(10);
-  uint16_t n = 0;
   MEASURE("performance:", 1) {
-    for (uint8_t i = 0; i < 10; i++) {
-      for (uint8_t c = ' '; c < ' '+95; c++, n++)
-	trace << (char) c;
-      trace << endl;
-      n += 2;
-    }
+    for (uint8_t i = 0; i < LINES; i++) trace << s;
     trace.flush();
   }
   delay(10);
-  uint32_t Kbps = (BITS * n * 1000UL) / trace.measure;
-  trace << PSTR("effective baudrate (") << n << PSTR(" characters):")
+  uint32_t BITS = 11;
+  uint16_t chars = LINES * strlen_P(s);
+  uint32_t Kbps = (BITS * chars * 1000UL) / trace.measure;
+  trace << PSTR("effective baudrate (") << chars << PSTR(" characters):")
 	<< Kbps << PSTR(" Kbps")
 	<< endl;
 
-  ASSERT(true == false);
+  // Take a nap before starting over
+  sleep(1);
 }

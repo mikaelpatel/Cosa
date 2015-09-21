@@ -70,11 +70,13 @@ public:
    */
   UART(uint8_t port, IOStream::Device* ibuf, IOStream::Device* obuf) :
     Serial(),
+    m_port(port),
     m_sfr(Board::UART(port)),
     m_ibuf(ibuf),
-    m_obuf(obuf)
+    m_obuf(obuf),
+    m_buffered(false)
   {
-    uart[port] = this;
+    if (port < Board::UART_MAX) uart[port] = this;
   }
 
   /**
@@ -176,6 +178,18 @@ public:
   virtual bool end();
 
   /**
+   * @override{Serial}
+   * Powerup UART.
+   */
+  virtual void powerup();
+
+  /**
+   * @override{Serial}
+   * Powerdown UART.
+   */
+  virtual void powerdown();
+
+  /**
    * Serial port references. Only uart0 is predefined (reference to global
    * uart). Others are assuped to be allocated by applications and setup
    * with UART_SETUP().
@@ -183,9 +197,11 @@ public:
   static UART* uart[Board::UART_MAX];
 
 protected:
+  uint8_t m_port;
   volatile uint8_t* const m_sfr;
   IOStream::Device* m_ibuf;
   IOStream::Device* m_obuf;
+  bool m_buffered;
 
   /**
    * Return pointer to UART Control and Status Register A (UCSRnA).

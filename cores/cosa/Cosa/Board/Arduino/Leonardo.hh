@@ -293,6 +293,7 @@ public:
 #define UPM01 UPM11
 #define USBS0 USBS1
 #define U2X0 U2X1
+#define TXC0 TXC1
 #define RXCIE0 RXCIE1
 #define RXEN0 RXEN1
 #define TXEN0 TXEN1

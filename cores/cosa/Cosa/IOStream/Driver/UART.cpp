@@ -28,8 +28,7 @@
 Soft::UAT  __attribute__ ((weak)) uart(Board::D2);
 #else
 
-#include "Cosa/Bits.h"
-#include "Cosa/Power.hh"
+#include <avr/power.h>
 
 #if defined(USBCON)
 #undef uart
@@ -72,37 +71,127 @@ UART::end()
   return (true);
 }
 
+// A fast track direct to the hardware pipeline is possible when it is
+// idle. At 500 Kbps the effective baud-rate increases from 66% to
+// 99.9%, 1 Mbps from 33% to 76%, and 2 Mbps from 17% to 67%.
+// Does not effect lower baud-rates more than the pipeline is started
+// faster.
+#define USE_FAST_TRACK
+
+// A short delay improves synchronization with hardware pipeline at
+// 1Mbps. The effective baud-rate increases at 1 Mbps from 76% to
+// 99.5% and at 2 Mbps from 67% to 97%. Note that the delay is tuned
+// for program memory string write (at 1 Mbps).
+#define USE_SYNC_DELAY
+
 int
 UART::putchar(char c)
 {
+#if defined(USE_FAST_TRACK)
   // Fast track when idle
   if (((*UCSRnB() & _BV(UDRIE0)) == 0) && ((*UCSRnA() & _BV(UDRE0)) != 0)) {
     // Put directly into the transmit buffer
+    m_buffered = false;
+    *UCSRnA() |= _BV(TXC0);
     *UDRn() = c;
-
-    // A short delay to make things even faster
-    if (*UBRRn() == 1) _delay_loop_1(27);
+#if defined(USE_SYNC_DELAY)
+    // A short delay to make things even faster; optimized for program
+    // memory string write (approx. 5 us)
+    if (UNLIKELY(*UBRRn() == 1))
+      _delay_loop_1(28);
+#endif
+    return (c & 0xff);
   }
-  else {
-    // Check if the buffer is full
-    while (m_obuf->putchar(c) == IOStream::EOF) yield();
+#endif
 
-    // Enable the transmitter
-    *UCSRnB() |= _BV(UDRIE0);
-  }
+  // Check if the buffer is full
+  m_buffered = true;
+  while (m_obuf->putchar(c) == IOStream::EOF)
+    yield();
+
+  // Enable the transmitter
+  *UCSRnB() |= _BV(UDRIE0);
   return (c & 0xff);
 }
 
 int
 UART::flush()
 {
-  // Flush the output buffer; i.e. wait for it to be emptied
+  // Check if last character was not buffered
+  if (!m_buffered) {
+    while ((*UCSRnA() & _BV(TXC0)) == 0)
+      ;
+    return (0);
+  }
+
+  // Wait for output buffer to empty
   int res = m_obuf->flush();
   if (UNLIKELY(res < 0)) return (res);
 
-  // Wait for all the characters to be transmitted
-  while (*UCSRnB() & _BV(TXCIE0)) yield();
+  // Wait for transmission to complete
+  while ((*UCSRnB() & _BV(UDRIE0)) != 0)
+    yield();
+  while ((*UCSRnB() & _BV(TXCIE0)) != 0)
+    ;
   return (0);
+}
+
+void
+UART::powerup()
+{
+  switch (m_port) {
+  case 0:
+#if defined(power_usart0_enable)
+    power_usart0_enable();
+#endif
+    break;
+  case 1:
+#if defined(power_usart1_enable)
+    power_usart1_enable();
+#endif
+    break;
+  case 2:
+#if defined(power_usart2_enable)
+    power_usart2_enable();
+#endif
+    break;
+  case 3:
+#if defined(power_usart3_enable)
+    power_usart3_enable();
+#endif
+    break;
+  default:
+    break;
+  }
+}
+
+void
+UART::powerdown()
+{
+  switch (m_port) {
+  case 0:
+#if defined(power_usart0_disable)
+    power_usart0_disable();
+#endif
+    break;
+  case 1:
+#if defined(power_usart1_disable)
+    power_usart1_disable();
+#endif
+    break;
+  case 2:
+#if defined(power_usart2_disable)
+    power_usart2_disable();
+#endif
+    break;
+  case 3:
+#if defined(power_usart3_disable)
+    power_usart3_disable();
+#endif
+    break;
+  default:
+    break;
+  }
 }
 
 void
