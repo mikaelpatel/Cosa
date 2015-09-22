@@ -32,7 +32,7 @@
 // This benchmark can be run with a background interrupt load. Set the
 // below symbol to enable a periodic job with the given period in
 // micro-seconds. Minimum is approx. 100 us.
-// #define BACKGROUND_PULSE 250
+// #define BACKGROUND_PULSE 100
 
 #if defined(BACKGROUND_PULSE)
 #include "Cosa/OutputPin.hh"
@@ -44,7 +44,7 @@ public:
     Periodic(scheduler, delay),
     m_pin(pin)
   {
-    expire_at(1000000UL);
+    expire_at(100000UL);
   }
 
   virtual void on_expired()
@@ -71,7 +71,7 @@ Pulse background(&scheduler, BACKGROUND_PULSE, Board::LED);
 void setup()
 {
   // Start serial output with given baud-rate
-  uart.begin(2000000);
+  uart.begin(9600);
   // uart.begin(2000000);
   // uart.begin(1000000);
   // uart.begin(500000);
@@ -115,15 +115,18 @@ void loop()
   MEASURE("long integer:", 1) trace << 100L << endl;
   MEASURE("floating point:", 1) trace << 100.0 << endl;
 
-  // Measure time to print max integer << endl; 8, 16 and 32 bit.
-  MEASURE("max int8_t:", 1) trace << (int8_t) 0x7f << endl;
-  MEASURE("max int16_t:", 1) trace << (int16_t) 0x7fff << endl;
-  MEASURE("max int32_t:", 1) trace << (int32_t) 0x7fffffffL << endl;
+  // Measure time to print min/max integer << endl; 8, 16 and 32 bit.
+  MEASURE("min int8_t:", 1) trace << INT8_MIN << endl;
+  MEASURE("max int8_t:", 1) trace << INT8_MAX << endl;
+  MEASURE("min int16_t:", 1) trace << INT16_MIN << endl;
+  MEASURE("max int16_t:", 1) trace << INT16_MAX << endl;
+  MEASURE("min int32_t:", 1) trace << INT32_MIN << endl;
+  MEASURE("max int32_t:", 1) trace << INT32_MAX << endl;
 
   // Measure time to print max unsigned integer << endl; 8, 16 and 32 bit.
-  MEASURE("max uint8_t:", 1) trace << (uint8_t) 0xffU << endl;
-  MEASURE("max uint16_t:", 1) trace << (uint16_t) 0xffffU << endl;
-  MEASURE("max uint32_t:", 1) trace << (uint32_t) 0xffffffffUL << endl;
+  MEASURE("max uint8_t:", 1) trace << UINT8_MAX << endl;
+  MEASURE("max uint16_t:", 1) trace << UINT16_MAX << endl;
+  MEASURE("max uint32_t:", 1) trace << UINT32_MAX << endl;
 
   // Measure time to print some standar floating point numbers
   MEASURE("floating point (pi):", 1) trace << M_PI << endl;

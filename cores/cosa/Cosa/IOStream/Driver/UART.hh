@@ -74,7 +74,7 @@ public:
     m_sfr(Board::UART(port)),
     m_ibuf(ibuf),
     m_obuf(obuf),
-    m_buffered(false)
+    m_buffered(true)
   {
     if (port < Board::UART_MAX) uart[port] = this;
   }
@@ -189,6 +189,13 @@ public:
    */
   virtual void powerdown();
 
+  /**
+   * @override{UART}
+   * Transmit completed callback. This virtual member function is
+   * called when the last byte in the output buffer is transmitted.
+   */
+  virtual void on_transmit_completed() {}
+
 protected:
   uint8_t m_port;			//!< UART port index.
   volatile uint8_t* const m_sfr;	//!< Special Function Register Pointer.
@@ -261,13 +268,6 @@ protected:
    * Common UART transmit completed interrupt handler.
    */
   void on_tx_interrupt();
-
-  /**
-   * @override{UART}
-   * Transmit completed callback. This virtual member function is
-   * called when the last byte in the output buffer is transmitted.
-   */
-  virtual void on_transmit_completed() {}
 
 #if defined(USART_UDRE_vect)
   friend void USART_UDRE_vect(void);

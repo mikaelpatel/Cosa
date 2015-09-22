@@ -60,29 +60,29 @@
  * Standard integer range
  */
 #ifndef UINT8_MAX
-# define UINT8_MAX 0xffU
+# define UINT8_MAX ((uin8_t) 0xffU)
 #endif
 #ifndef UINT16_MAX
-# define UINT16_MAX 0xffffU
+# define UINT16_MAX ((uint16_t) 0xffffU)
 #endif
 #ifndef UINT32_MAX
-# define UINT32_MAX 0xffffffffUL
+# define UINT32_MAX ((uint32_t) 0xffffffffUL)
 #endif
 #ifndef INT_MAX
 # define INT_MIN INT16_MIN
 # define INT_MAX INT16_MAX
 #endif
 #ifndef INT8_MAX
-# define INT8_MIN 0x80
-# define INT8_MAX 0x7f
+# define INT8_MIN ((int8_t) 0x80)
+# define INT8_MAX ((int8_t) 0x7f)
 #endif
 #ifndef INT16_MAX
-# define INT16_MIN 0x8000
-# define INT16_MAX 0x7fff
+# define INT16_MIN ((int16_t) 0x8000)
+# define INT16_MAX ((int16_t) 0x7fff)
 #endif
 #ifndef INT32_MAX
-# define INT32_MIN 0x80000000L
-# define INT32_MAX 0x7fffffffL
+# define INT32_MIN ((int32_t) 0x80000000L)
+# define INT32_MAX ((int32_t) 0x7fffffffL)
 #endif
 #ifndef INT_MAX
 # define INT_MIN INT16_MIN

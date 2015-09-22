@@ -121,12 +121,11 @@ UART::flush()
   if (!m_buffered) {
     while ((*UCSRnA() & _BV(TXC0)) == 0)
       ;
+    *UCSRnA() |= _BV(TXC0);
+    m_buffered = true;
+    synchronized on_transmit_completed();
     return (0);
   }
-
-  // Wait for output buffer to empty
-  int res = m_obuf->flush();
-  if (UNLIKELY(res < 0)) return (res);
 
   // Wait for transmission to complete
   while ((*UCSRnB() & _BV(UDRIE0)) != 0)
@@ -140,26 +139,26 @@ void
 UART::powerup()
 {
   switch (m_port) {
-  case 0:
 #if defined(power_usart0_enable)
+  case 0:
     power_usart0_enable();
-#endif
     break;
-  case 1:
+#endif
 #if defined(power_usart1_enable)
+  case 1:
     power_usart1_enable();
-#endif
     break;
-  case 2:
+#endif
 #if defined(power_usart2_enable)
+  case 2:
     power_usart2_enable();
-#endif
     break;
-  case 3:
+#endif
 #if defined(power_usart3_enable)
+  case 3:
     power_usart3_enable();
-#endif
     break;
+#endif
   default:
     break;
   }
@@ -169,26 +168,26 @@ void
 UART::powerdown()
 {
   switch (m_port) {
-  case 0:
 #if defined(power_usart0_disable)
+  case 0:
     power_usart0_disable();
-#endif
     break;
-  case 1:
+#endif
 #if defined(power_usart1_disable)
+  case 1:
     power_usart1_disable();
-#endif
     break;
-  case 2:
+#endif
 #if defined(power_usart2_disable)
+  case 2:
     power_usart2_disable();
-#endif
     break;
-  case 3:
+#endif
 #if defined(power_usart3_disable)
+  case 3:
     power_usart3_disable();
-#endif
     break;
+#endif
   default:
     break;
   }
@@ -198,8 +197,10 @@ void
 UART::on_udre_interrupt()
 {
   int c = m_obuf->getchar();
-  if (c != IOStream::EOF)
+  if (c != IOStream::EOF) {
+    *UCSRnA() |= _BV(TXC0);
     *UDRn() = c;
+  }
   else {
     *UCSRnB() &= ~_BV(UDRIE0);
     *UCSRnB() |= _BV(TXCIE0);
