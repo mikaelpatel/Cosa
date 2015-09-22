@@ -56,4 +56,10 @@
  * #define COSA_SOFT_UART_TX_BUFFER_MAX 32
  */
 
+/**
+ * IOStream long integer to string conversion. Default is use the
+ * high performance implementation in Cosa.
+ * In file: Cosa/IOStream.hh
+ * #define COSA_IOSTREAM_STDLIB
+ */
 #endif

@@ -688,6 +688,11 @@ public:
     return (*this);
   }
 
+#if !defined(COSA_IOSTREAM_STDLIB)
+  static char* ultoa(unsigned long __val, char *__s, int base);
+  static char* ltoa(long __val, char *__s, int base);
+#endif
+
   friend IOStream& bcd(IOStream& outs);
   friend IOStream& bin(IOStream& outs);
   friend IOStream& oct(IOStream& outs);
