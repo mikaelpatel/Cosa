@@ -50,6 +50,39 @@ crc_xmodem(const void* buf, size_t len)
 }
 
 int
+RS485::putchar(char c)
+{
+  // Check if the buffer is full
+  while (m_obuf->putchar(c) == IOStream::EOF)
+    yield();
+
+  // Enable the transmitter
+  *UCSRnB() |= _BV(UDRIE0);
+  return (c & 0xff);
+}
+
+void
+RS485::on_udre_interrupt()
+{
+  int c = m_obuf->getchar();
+  if (c != IOStream::EOF) {
+    *UCSRnA() |= _BV(TXC0);
+    *UDRn() = c;
+  }
+  else {
+    *UCSRnB() &= ~_BV(UDRIE0);
+    *UCSRnB() |= _BV(TXCIE0);
+  }
+}
+
+void
+RS485::on_tx_interrupt()
+{
+  *UCSRnB() &= ~_BV(TXCIE0);
+  on_transmit_completed();
+}
+
+int
 RS485::send(const void* buf, size_t len, uint8_t dest)
 {
   // Check illegal message size, address and state
@@ -98,7 +131,7 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
       yield();
     }
     m_state = 2;
-    if (m_ibuf.read(&m_header, sizeof(header_t)) != (int) sizeof(header_t))
+    if (m_ibuf->read(&m_header, sizeof(header_t)) != (int) sizeof(header_t))
       goto error;
     if (m_header.crc != crc7(&m_header, sizeof(header_t) - 1))
       goto error;
@@ -113,8 +146,8 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
 
   // Check that the given buffer can hold incoming message
   if (m_header.length > len) goto error;
-  if (m_ibuf.read(buf, m_header.length) != (int) m_header.length) goto error;
-  if (m_ibuf.read(&crc, sizeof(crc)) != sizeof(crc)) goto error;
+  if (m_ibuf->read(buf, m_header.length) != (int) m_header.length) goto error;
+  if (m_ibuf->read(&crc, sizeof(crc)) != sizeof(crc)) goto error;
   if (crc_xmodem(buf, m_header.length) != crc) return (0);
   m_state = 0;
 
@@ -125,8 +158,28 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
 
  error:
   // Something went wrong; flush buffer and signal data error
-  m_ibuf.empty();
+  m_ibuf->empty();
   m_state = 0;
   return (EFAULT);
 }
+
+#define UART_TX_ISR(vec,nr)			\
+ISR(vec ## _TX_vect)				\
+{						\
+  if (UNLIKELY(UART::uart[nr] == NULL)) return;	\
+  UART::uart[nr]->on_tx_interrupt();		\
+}
+
+#if defined(USART_UDRE_vect)
+UART_TX_ISR(USART, 0)
+#endif
+#if defined(USART1_UDRE_vect)
+UART_TX_ISR(USART1, 1)
+#endif
+#if defined(USART2_UDRE_vect)
+UART_TX_ISR(USART2, 2)
+#endif
+#if defined(USART3_UDRE_vect)
+UART_TX_ISR(USART3, 3)
+#endif
 #endif

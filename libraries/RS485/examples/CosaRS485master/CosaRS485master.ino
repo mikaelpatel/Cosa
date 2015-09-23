@@ -23,6 +23,7 @@
 
 #include <RS485.h>
 
+#include "Cosa/IOBuffer.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Trace.hh"
@@ -34,7 +35,11 @@
 
 static const uint8_t PORT = 1;
 static const uint8_t SLAVE = 0x02;
-RS485 rs485(PORT, Board::LED);
+
+static IOBuffer<RS485::BUFFER_MAX> ibuf;
+static IOBuffer<RS485::BUFFER_MAX> obuf;
+
+RS485 rs485(PORT, &ibuf, &obuf, RS485::BUFFER_MAX, Board::LED);
 
 // Function codes
 enum {

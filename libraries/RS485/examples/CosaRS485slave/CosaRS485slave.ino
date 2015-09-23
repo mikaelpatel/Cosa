@@ -24,6 +24,7 @@
 
 #include <RS485.h>
 
+#include "Cosa/IOBuffer.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTC.hh"
@@ -38,7 +39,10 @@ static const uint8_t SLAVE = 0x02;
 #define PORT 0
 #endif
 
-RS485 rs485(PORT, Board::LED, SLAVE);
+static IOBuffer<RS485::BUFFER_MAX> ibuf;
+static IOBuffer<RS485::BUFFER_MAX> obuf;
+
+RS485 rs485(PORT, &ibuf, &obuf, RS485::BUFFER_MAX, Board::LED, SLAVE);
 
 // Simulated sensors; analog pins (0 and 1)
 AnalogPin humidity(Board::A0);

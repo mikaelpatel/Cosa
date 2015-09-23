@@ -26,6 +26,11 @@
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/OutputPin.hh"
 
+// Default buffer size
+#ifndef COSA_RS485_BUFFER_MAX
+# define COSA_RS485_BUFFER_MAX 64
+#endif
+
 /**
  * RS485 link handler; Master-Slave protocol. Master always initiates
  * communication with request message to Slave who responds. The
@@ -52,8 +57,8 @@ public:
   /** Size of frame; SOT, header and crc. */
   static const uint8_t FRAME_MAX = sizeof(header_t) + sizeof(uint16_t) + 1;
 
-  /** Max size of payload. */
-  static const uint8_t PAYLOAD_MAX = TX_BUFFER_MAX - FRAME_MAX - 1;
+  /** Default buffer size. */
+  static const uint16_t BUFFER_MAX = COSA_RS485_BUFFER_MAX;
 
   /** Network broadcast address. */
   static const uint8_t BROADCAST = 0;
@@ -64,25 +69,31 @@ public:
   /**
    * Construct RS485 network driver with data output enable connect to
    * given pin and given node address.
+   * @param[in] ibuf input buffer.
+   * @param[in] obuf output buffer.
+   * @param[in] size of buffers.
    * @param[in] port uart port.
    * @param[in] de data output enable.
    * @param[in] addr node address (Default MASTER).
    */
-  RS485(uint8_t port, Board::DigitalPin de, uint8_t addr = MASTER) :
-    UART(port, &m_ibuf, &m_obuf),
+  RS485(uint8_t port, IOStream::Device* ibuf, IOStream::Device* obuf,
+	uint16_t size, Board::DigitalPin de, uint8_t addr = MASTER) :
+    UART(port, ibuf, obuf),
+    PAYLOAD_MAX(size - FRAME_MAX),
     m_de(de),
     m_addr(addr),
     m_state(0)
   {}
 
   /**
-   * @override{UART}
-   * Transmit completed callback. Clear data output enable pin.
+   * @override{IOStream::Device}
+   * Write character to serial port output buffer. Returns character
+   * if successful otherwise a negative error code.
+   * returns EOF(-1),
+   * @param[in] c character to write.
+   * @return character written or EOF(-1).
    */
-  virtual void on_transmit_completed()
-  {
-    m_de.clear();
-  }
+  virtual int putchar(char c);
 
   /**
    * Set device address.
@@ -130,14 +141,11 @@ public:
   int recv(void* buf, size_t len, uint32_t ms = 0L);
 
 protected:
+  /** Maximum payload size. */
+  const uint16_t PAYLOAD_MAX;
+
   /** Send/receive header. */
   header_t m_header;
-
-  /** Input buffer. */
-  IOBuffer<UART::RX_BUFFER_MAX> m_ibuf;
-
-  /** Output buffer. */
-  IOBuffer<UART::TX_BUFFER_MAX> m_obuf;
 
   /** Data output enable pin; MAX485/DE and /RE. */
   OutputPin m_de;
@@ -147,6 +155,29 @@ protected:
 
   /** Receive state; wait for start symbol, header, payload and check-sum. */
   uint8_t m_state;
+
+  /**
+   * @override{UART}
+   * RS485 data register empty (transmit) interrupt handler with
+   * completion handling.
+   */
+  virtual void on_udre_interrupt();
+
+  /**
+   * @override{UART}
+   * RS485 transmit completed interrupt handler. Call extension
+   *
+   */
+  virtual void on_tx_interrupt();
+
+  /**
+   * @override{RS485}
+   * Transmit completed callback. Clear data output enable pin.
+   */
+  virtual void on_transmit_completed()
+  {
+    m_de.clear();
+  }
 };
 #endif
 #endif
