@@ -44,9 +44,11 @@ UART* UART::uart[Board::UART_MAX] = { NULL };
 bool
 UART::begin(uint32_t baudrate, uint8_t format)
 {
-  uint16_t setting = ((F_CPU / 4 / baudrate) - 1) / 2;
+  // Power up the device
+  powerup();
 
   // Check if double rate is not possible
+  uint16_t setting = ((F_CPU / 4 / baudrate) - 1) / 2;
   if (setting > 4095) {
     setting = ((F_CPU / 8 / baudrate) - 1) / 2;
     *UCSRnA() = 0;
@@ -68,44 +70,51 @@ UART::end()
 {
   // Disable receiver and transmitter interrupt
   *UCSRnB() &= ~(_BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0));
+
+  // Powerdown the device
+  powerdown();
   return (true);
 }
 
 // A fast track direct to the hardware pipeline is possible when it is
-// idle. At 500 Kbps the effective baud-rate increases from 66% to
-// 99.9%, 1 Mbps from 33% to 76%, and 2 Mbps from 17% to 67%.
+// idle. At 500 Kbps the effective baud-rate increases from 84% to
+// 99.9%, 1 Mbps from 42% to 88%, and 2 Mbps from 21% to 88%.
 // Does not effect lower baud-rates more than the pipeline is started
 // faster.
 #define USE_FAST_TRACK
 
 // A short delay improves synchronization with hardware pipeline at
-// 1Mbps. The effective baud-rate increases at 1 Mbps from 76% to
-// 99.5% and at 2 Mbps from 67% to 97%. Note that the delay is tuned
+// 1Mbps. The effective baud-rate increases at 1 Mbps from 88% to
+// 99.5% and at 2 Mbps from 88% to 86%. Note that the delay is tuned
 // for program memory string write (at 1 Mbps).
 #define USE_SYNC_DELAY
 
 int
 UART::putchar(char c)
 {
+  // Flag that transitter is used
+  m_idle = false;
+
 #if defined(USE_FAST_TRACK)
-  // Fast track when idle
+  // Fast track when transmitter is idle; put directly into the pipeline
   if (((*UCSRnB() & _BV(UDRIE0)) == 0) && ((*UCSRnA() & _BV(UDRE0)) != 0)) {
-    // Put directly into the transmit buffer
-    m_buffered = false;
-    *UCSRnA() |= _BV(TXC0);
-    *UDRn() = c;
+    synchronized {
+      *UDRn() = c;
+      *UCSRnA() |= _BV(TXC0);
+    }
 #if defined(USE_SYNC_DELAY)
     // A short delay to make things even faster; optimized for program
     // memory string write (approx. 5 us)
     if (UNLIKELY(*UBRRn() == 1))
-      _delay_loop_1(28);
+      _delay_loop_1(25);
+    nop();
+    nop();
 #endif
     return (c & 0xff);
   }
 #endif
 
   // Check if the buffer is full
-  m_buffered = true;
   while (m_obuf->putchar(c) == IOStream::EOF)
     yield();
 
@@ -117,21 +126,20 @@ UART::putchar(char c)
 int
 UART::flush()
 {
-  // Check if last character was not buffered
-  if (!m_buffered) {
-    while ((*UCSRnA() & _BV(TXC0)) == 0)
-      ;
-    *UCSRnA() |= _BV(TXC0);
-    m_buffered = true;
-    synchronized on_transmit_completed();
-    return (0);
-  }
+  // Check for idle transmitter; nothing to flush
+  if (m_idle) return (0);
 
   // Wait for transmission to complete
   while ((*UCSRnB() & _BV(UDRIE0)) != 0)
     yield();
-  while ((*UCSRnB() & _BV(TXCIE0)) != 0)
+
+  // Wait for the last character to be transmitted
+  while ((*UCSRnA() & _BV(TXC0)) == 0)
     ;
+  *UCSRnA() |= _BV(TXC0);
+
+  // Mark as idle again
+  m_idle = true;
   return (0);
 }
 
@@ -198,12 +206,11 @@ UART::on_udre_interrupt()
 {
   int c = m_obuf->getchar();
   if (c != IOStream::EOF) {
-    *UCSRnA() |= _BV(TXC0);
     *UDRn() = c;
+    *UCSRnA() |= _BV(TXC0);
   }
   else {
     *UCSRnB() &= ~_BV(UDRIE0);
-    *UCSRnB() |= _BV(TXCIE0);
   }
 }
 
@@ -211,13 +218,6 @@ void
 UART::on_rx_interrupt()
 {
   m_ibuf->putchar(*UDRn());
-}
-
-void
-UART::on_tx_interrupt()
-{
-  *UCSRnB() &= ~_BV(TXCIE0);
-  on_transmit_completed();
 }
 
 #define UART_ISR(vec,nr)			\
@@ -232,12 +232,6 @@ ISR(vec ## _RX_vect)				\
   if (UNLIKELY(UART::uart[nr] == NULL)) return;	\
   UART::uart[nr]->on_rx_interrupt();		\
 }						\
-						\
-ISR(vec ## _TX_vect)				\
-{						\
-  if (UNLIKELY(UART::uart[nr] == NULL)) return;	\
-  UART::uart[nr]->on_tx_interrupt();		\
-}
 
 #if defined(USART_UDRE_vect)
 UART_ISR(USART, 0)

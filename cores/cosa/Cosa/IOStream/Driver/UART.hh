@@ -74,7 +74,7 @@ public:
     m_sfr(Board::UART(port)),
     m_ibuf(ibuf),
     m_obuf(obuf),
-    m_buffered(true)
+    m_idle(true)
   {
     if (port < Board::UART_MAX) uart[port] = this;
   }
@@ -189,19 +189,12 @@ public:
    */
   virtual void powerdown();
 
-  /**
-   * @override{UART}
-   * Transmit completed callback. This virtual member function is
-   * called when the last byte in the output buffer is transmitted.
-   */
-  virtual void on_transmit_completed() {}
-
 protected:
   uint8_t m_port;			//!< UART port index.
   volatile uint8_t* const m_sfr;	//!< Special Function Register Pointer.
   IOStream::Device* m_ibuf;		//!< Input Buffer/Device.
   IOStream::Device* m_obuf;		//!< Output Buffer/Device.
-  bool m_buffered;			//!< Flag buffered output.
+  bool m_idle;				//!< Flag idle mode.
 
   /**
    * Serial port references. Only uart0 is predefined (reference to global
@@ -255,19 +248,22 @@ protected:
   }
 
   /**
+   * @override{UART}
    * Common UART data register empty (transmit) interrupt handler.
    */
-  void on_udre_interrupt();
+  virtual void on_udre_interrupt();
 
   /**
+   * @override{UART}
    * Common UART receive interrupt handler.
    */
-  void on_rx_interrupt();
+  virtual void on_rx_interrupt();
 
   /**
+   * @override{UART}
    * Common UART transmit completed interrupt handler.
    */
-  void on_tx_interrupt();
+  virtual void on_tx_interrupt() {}
 
 #if defined(USART_UDRE_vect)
   friend void USART_UDRE_vect(void);
