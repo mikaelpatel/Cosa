@@ -71,7 +71,7 @@ Pulse background(&scheduler, BACKGROUND_PULSE, Board::LED);
 void setup()
 {
   // Start serial output with given baud-rate
-  uart.begin(9600);
+  uart.begin(2000000);
   // uart.begin(2000000);
   // uart.begin(1000000);
   // uart.begin(500000);
@@ -88,7 +88,7 @@ void setup()
 
 #if defined(BACKGROUND_PULSE)
   ASSERT(background.start());
-  trace << PSTR("Background pulse:") << BACKGROUND_PULSE << PSTR(" us") << endl;
+  trace << PSTR("Background:") << BACKGROUND_PULSE << PSTR(" us") << endl;
 #endif
 
   // Start timers
@@ -99,7 +99,7 @@ void setup()
 void loop()
 {
   // Measure time to print character, string and number
-  MEASURE("one character (new-line):", 1) trace << endl;
+  MEASURE("one character (new-line):", 1) trace << '\n' << endl;
   MEASURE("one character:", 1) trace << '1' << endl;
   MEASURE("one character string:", 1) trace << PSTR("1") << endl;
   MEASURE("integer:", 1) trace << 1 << endl;
@@ -115,18 +115,45 @@ void loop()
   MEASURE("long integer:", 1) trace << 100L << endl;
   MEASURE("floating point:", 1) trace << 100.0 << endl;
 
-  // Measure time to print min/max integer << endl; 8, 16 and 32 bit.
-  MEASURE("min int8_t:", 1) trace << INT8_MIN << endl;
-  MEASURE("max int8_t:", 1) trace << INT8_MAX << endl;
+  // Measure time to print min/max integer base(10)
+  MEASURE("zero int16_t:", 1) trace << 0 << endl;
   MEASURE("min int16_t:", 1) trace << INT16_MIN << endl;
   MEASURE("max int16_t:", 1) trace << INT16_MAX << endl;
+  MEASURE("max uint16_t:", 1) trace << UINT16_MAX << endl;
+  MEASURE("zero int32_t:", 1) trace << 0L << endl;
   MEASURE("min int32_t:", 1) trace << INT32_MIN << endl;
   MEASURE("max int32_t:", 1) trace << INT32_MAX << endl;
-
-  // Measure time to print max unsigned integer << endl; 8, 16 and 32 bit.
-  MEASURE("max uint8_t:", 1) trace << UINT8_MAX << endl;
-  MEASURE("max uint16_t:", 1) trace << UINT16_MAX << endl;
   MEASURE("max uint32_t:", 1) trace << UINT32_MAX << endl;
+
+  // Measure time to print min/max integer base(2)
+  MEASURE("zero int16_t:", 1) trace << bin << 0 << endl;
+  MEASURE("min int16_t:", 1) trace << bin << INT16_MIN << endl;
+  MEASURE("max int16_t:", 1) trace << bin << INT16_MAX << endl;
+  MEASURE("max uint16_t:", 1) trace << bin << UINT16_MAX << endl;
+  MEASURE("zero int32_t:", 1) trace << bin << 0L << endl;
+  MEASURE("min int32_t:", 1) trace << bin << INT32_MIN << endl;
+  MEASURE("max int32_t:", 1) trace << bin << INT32_MAX << endl;
+  MEASURE("max uint32_t:", 1) trace << bin << UINT32_MAX << endl;
+
+  // Measure time to print min/max integer base(8)
+  MEASURE("zero int16_t:", 1) trace << oct << 0 << endl;
+  MEASURE("min int16_t:", 1) trace << oct << INT16_MIN << endl;
+  MEASURE("max int16_t:", 1) trace << oct << INT16_MAX << endl;
+  MEASURE("max uint16_t:", 1) trace << oct << UINT16_MAX << endl;
+  MEASURE("zero int32_t:", 1) trace << oct << 0L << endl;
+  MEASURE("min int32_t:", 1) trace << oct << INT32_MIN << endl;
+  MEASURE("max int32_t:", 1) trace << oct << INT32_MAX << endl;
+  MEASURE("max uint32_t:", 1) trace << oct << UINT32_MAX << endl;
+
+  // Measure time to print min/max integer base(16)
+  MEASURE("zero int16_t:", 1) trace << hex << 0 << endl;
+  MEASURE("min int16_t:", 1) trace << hex << INT16_MIN << endl;
+  MEASURE("max int16_t:", 1) trace << hex << INT16_MAX << endl;
+  MEASURE("max uint16_t:", 1) trace << hex << UINT16_MAX << endl;
+  MEASURE("zero int32_t:", 1) trace << hex << 0L << endl;
+  MEASURE("min int32_t:", 1) trace << hex << INT32_MIN << endl;
+  MEASURE("max int32_t:", 1) trace << hex << INT32_MAX << endl;
+  MEASURE("max uint32_t:", 1) trace << hex << UINT32_MAX << endl;
 
   // Measure time to print some standar floating point numbers
   MEASURE("floating point (pi):", 1) trace << M_PI << endl;
@@ -172,6 +199,7 @@ void loop()
 	<< Kbps << PSTR(" Kbps")
 	<< endl;
 
+  ASSERT(true == false);
   // Take a nap before starting over
-  sleep(1);
+  // sleep(1);
 }
