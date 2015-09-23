@@ -14,7 +14,7 @@
 
 #include "Cosa/IOStream.hh"
 
-#if !defined(COSA_IOSTREAM_STDLIB)
+#if !defined(COSA_IOSTREAM_STDLIB_DTOA)
 #include <avr/pgmspace.h>
 
 static const unsigned long digits8[] PROGMEM = {
@@ -44,88 +44,75 @@ static const unsigned long digits10[] PROGMEM = {
   1,
 };
 
-static const unsigned long digits16[] PROGMEM = {
-  268435456,
-  16777216,
-  1048576,
-  65536,
-  4096,
-  256,
-  16,
-  1,
-};
-
-static const unsigned long digits32[] PROGMEM = {
-  1073741824,
-  33554432,
-  1048576,
-  32768,
-  1024,
-  32,
-  1,
-};
-
-static const unsigned long digits36[] PROGMEM = {
-  2176782336,
-  60466176,
-  1679616,
-  46656,
-  1296,
-  36,
-  1,
-};
-
-static const char letters[] PROGMEM = "0123456789abcdefghijklmnopqrstuvwxyz";
+static const char letters[] PROGMEM = "0123456789abcdef";
 
 char*
 IOStream::ultoa(unsigned long __val, char *__s, int base)
 {
-  unsigned char max;
-  const unsigned long *d;
-  unsigned char i, j, k, first = 1;
+  unsigned char i, j, k, l, first;
+  const uint8_t* p;
+  first = 1;
+  j = 0;
 
-  switch(base) {
-  case 8:
-    max = sizeof(digits8) / sizeof(unsigned long);
-    d = digits8;
-    break;
-
-  case 16:
-    max = sizeof(digits16) / sizeof(unsigned long);
-    d = digits16;
-    break;
-
-  case 32:
-    max = sizeof(digits32) / sizeof(unsigned long);
-    d = digits32;
-    break;
-
-  case 36:
-    max = sizeof(digits36) / sizeof(unsigned long);
-    d = digits36;
-    break;
-
-  default:
-    max = sizeof(digits10) / sizeof(unsigned long);
-    d = digits10;
-    break;
-  }
-
-  for (i = j = 0; i < max; i++) {
-    unsigned long check = pgm_read_dword(d + i);
-    if (check > __val) {
-      if (first)
-	continue;
-      __s[j++] = '0';
-      continue;
+  if (__val != 0UL) {
+    if (base == 2) {
+      // Optimize for base(2)
+      first = 0;
+      p = ((uint8_t*) &__val) + sizeof(__val) - 1;
+      for (i = 0; i < 4 && *p == 0; i++, p--);
+      k = *p--;
+      for (l = 0; l < 8; l++) {
+	if (k & 0x80) break;
+	k <<= 1;
+      }
+      for (; i < 4; i++, l = 0, k = *p--) {
+	for (; l < 8; l++) {
+	  __s[j++] = (k & 0x80) ? '1' : '0';
+	  k <<= 1;
+	}
+      }
     }
-    first = k = 0;
-    while(check <= __val) {
-      __val -= check;
-      k++;
+    else if (base == 16) {
+      // Optimize for base(16)
+      first = 0;
+      p = ((uint8_t*) &__val) + sizeof(__val) - 1;
+      for (i = 0; i < 4 && *p == 0; i++, p--);
+      k = *p--;
+      if (k & 0xf0) __s[j++] = pgm_read_byte(letters + (k >> 4));
+      __s[j++] = pgm_read_byte(letters + (k & 0xf));
+      for (i++; i < 4; i++) {
+	k = *p--;
+	__s[j++] = pgm_read_byte(letters + (k >> 4));
+	__s[j++] = pgm_read_byte(letters + (k & 0xf));
+      }
     }
-
-    __s[j++] = pgm_read_byte(letters + k);
+    else {
+      const unsigned long *d;
+      unsigned char max;
+      if (base == 8) {
+	max = sizeof(digits8) / sizeof(unsigned long);
+	d = digits8;
+      }
+      else {
+	max = sizeof(digits10) / sizeof(unsigned long);
+	d = digits10;
+      }
+      for (i = 0; i < max; i++) {
+	unsigned long check = pgm_read_dword(d + i);
+	if (check > __val) {
+	  if (first)
+	    continue;
+	  __s[j++] = '0';
+	  continue;
+	}
+	first = k = 0;
+	while(check <= __val) {
+	  __val -= check;
+	  k++;
+	}
+	__s[j++] = pgm_read_byte(letters + k);
+      }
+    }
   }
 
   if (first)
@@ -138,9 +125,22 @@ IOStream::ultoa(unsigned long __val, char *__s, int base)
 char*
 IOStream::ltoa(long __val, char *__s, int base)
 {
-  if (__val >= 0)
+  if (__val >= 0 || base != 10)
     return (ultoa((unsigned long)__val, __s, base));
   __s[0] = '-';
   return (ultoa((unsigned long)(-__val), __s + 1, base) - 1);
 }
+
+char*
+IOStream::utoa(unsigned int __val, char *__s, int base)
+{
+  return (ultoa(((unsigned long) __val) & 0xffff, __s, base));
+}
+
+char*
+IOStream::itoa(int __val, char *__s, int base)
+{
+  return (ltoa((long)__val, __s, base));
+}
+
 #endif
