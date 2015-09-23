@@ -54,9 +54,14 @@ void
 IOStream::print(int n, Base base)
 {
   if (base != bcd) {
-    if (base != dec) print_prefix(base);
-    char buf[sizeof(int) * CHARBITS + 1];
-    print(itoa(n, buf, base));
+    char buf[BUF_MAX];
+    if (base == dec) {
+      print(itoa(n, buf, base));
+    }
+    else {
+      print_prefix(base);
+      print(utoa(n, buf, base));
+    }
   }
   else {
     print((char) ('0' + ((n >> 4) & 0xf)));
@@ -68,7 +73,7 @@ void
 IOStream::print(long int n, Base base)
 {
   if (UNLIKELY(base != dec)) print_prefix(base);
-  char buf[sizeof(long int) * CHARBITS + 1];
+  char buf[BUF_MAX];
   print(ltoa(n, buf, base));
 }
 
@@ -76,7 +81,7 @@ void
 IOStream::print(unsigned int n, Base base)
 {
   if (UNLIKELY(base != dec)) print_prefix(base);
-  char buf[sizeof(int) * CHARBITS + 1];
+  char buf[BUF_MAX];
   print(utoa(n, buf, base));
 }
 
@@ -84,14 +89,14 @@ void
 IOStream::print(unsigned long int n, Base base)
 {
   if (UNLIKELY(base != dec)) print_prefix(base);
-  char buf[sizeof(long int) * CHARBITS + 1];
+  char buf[BUF_MAX];
   print(ultoa(n, buf, base));
 }
 
 void
 IOStream::print(unsigned int n, uint8_t digits, Base base)
 {
-  char buf[sizeof(int) * CHARBITS + 1];
+  char buf[BUF_MAX];
   utoa(n, buf, base);
   for (uint8_t length = strlen(buf); length < digits; length++)
     print('0');
@@ -101,7 +106,7 @@ IOStream::print(unsigned int n, uint8_t digits, Base base)
 void
 IOStream::print(unsigned long int n, uint8_t digits, Base base)
 {
-  char buf[sizeof(long int) * CHARBITS + 1];
+  char buf[BUF_MAX];
   ultoa(n, buf, base);
   for (uint8_t length = strlen(buf); length < digits; length++)
     print('0');
@@ -111,7 +116,6 @@ IOStream::print(unsigned long int n, uint8_t digits, Base base)
 void
 IOStream::print(double value, int8_t width, uint8_t prec)
 {
-  const uint8_t BUF_MAX = 33;
   char buf[BUF_MAX];
   dtostrf(value, width, prec, buf);
   print(buf);

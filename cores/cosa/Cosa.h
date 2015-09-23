@@ -60,6 +60,6 @@
  * IOStream long integer to string conversion. Default is use the
  * high performance implementation in Cosa.
  * In file: Cosa/IOStream.hh
- * #define COSA_IOSTREAM_STDLIB
+ * #define COSA_IOSTREAM_STDLIB_DTOA
  */
 #endif

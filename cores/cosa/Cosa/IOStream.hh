@@ -688,9 +688,12 @@ public:
     return (*this);
   }
 
-#if !defined(COSA_IOSTREAM_STDLIB)
+#if !defined(COSA_IOSTREAM_STDLIB_DTOA)
+  /* Faster version of standard number to string conversion */
   static char* ultoa(unsigned long __val, char *__s, int base);
   static char* ltoa(long __val, char *__s, int base);
+  static char* utoa(unsigned int __val, char *__s, int base);
+  static char* itoa(int __val, char *__s, int base);
 #endif
 
   friend IOStream& bcd(IOStream& outs);
@@ -706,6 +709,9 @@ protected:
   int8_t m_width;	     //!< Minimum width of output string.
   uint8_t m_prec;	     //!< Number of digits after decimal sign.
   str_P m_eols;		     //!< End of line string (program memory).
+
+  /** Maximum size of required buffer for string conversion. */
+  static const size_t BUF_MAX = sizeof(uint32_t) * CHARBITS + 1;
 
   /**
    * Print number prefix for non decimal base.
