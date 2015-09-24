@@ -273,14 +273,14 @@ public:
     PCI5 = D11,			// PB5
     PCI6 = D12,			// PB6
     PCI7 = D13,			// PB7
-    PCI16 = A8,			// PK0
-    PCI17 = A9,			// PK1
-    PCI18 = A10,		// PK2
-    PCI19 = A11,		// PK3
-    PCI20 = A12,		// PK4
-    PCI21 = A13,		// PK5
-    PCI22 = A14,		// PK6
-    PCI23 = A15			// PK7
+    PCI16 = D62,		// PK0/A8
+    PCI17 = D63,		// PK1/A9
+    PCI18 = D64,		// PK2/A10
+    PCI19 = D65,		// PK3/A11
+    PCI20 = D66,		// PK4/A12
+    PCI21 = D67,		// PK5/A13
+    PCI22 = D68,		// PK6/A14
+    PCI23 = D69			// PK7/A15
   } __attribute__((packed));
 
   /**
