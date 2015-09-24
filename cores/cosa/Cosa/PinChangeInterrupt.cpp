@@ -43,19 +43,12 @@ uint8_t PinChangeInterrupt::s_state[Board::PCMSK_MAX] = { 0 };
 void
 PinChangeInterrupt::enable()
 {
+  // Enable in pin change mask register and add to list of handlers
   synchronized {
     *PCIMR() |= m_mask;
     if (m_next == NULL) {
-      uint8_t ix;
-#if defined(BOARD_ATMEGA2560)
-      ix = m_pin - (m_pin < 24 ? 16 : 48);
-#elif defined(BOARD_ATMEGA328P)
-      ix = m_pin;
-      if (m_pin >= 14) ix += 2;
-#else
-      ix = m_pin;
-#endif
-      ix = (ix >> 3);
+      uint8_t ix = PCIMR() - &PCMSK0;
+      if (ix >= Board::PCMSK_MAX) ix = Board::PCMSK_MAX - 1;
       m_next = s_pin[ix];
       s_pin[ix] = this;
     }
@@ -65,114 +58,128 @@ PinChangeInterrupt::enable()
 void
 PinChangeInterrupt::disable()
 {
-  synchronized {
-    *PCIMR() &= ~m_mask;
-  }
+  synchronized *PCIMR() &= ~m_mask;
 }
 
 void
 PinChangeInterrupt::begin()
 {
-#if defined(BOARD_ATMEGA2560)
-  s_state[0] = *Pin::PIN(16);
-  s_state[1] = 0;
-  s_state[2] = *Pin::PIN(64);
-#else
-  for (uint8_t i = 0; i < Board::PCMSK_MAX; i++)
-    s_state[i] = *Pin::PIN(i << 3);
+  // Initiate the pin state vector
+#if defined(BOARD_ATTINYX61)
+  s_state[0] = PINA;
+  s_state[1] = PINB;
+#elif defined(BOARD_ATTINYX5)
+  s_state[0] = PINB;
+#elif defined(BOARD_ATTINYX4)
+  s_state[0] = PINA;
+  s_state[1] = PINB;
+#elif defined(BOARD_ATMEGA328P)
+  s_state[0] = PINB;
+  s_state[1] = PINC;
+  s_state[2] = PIND;
+#elif defined(BOARD_ATMEGA32U4)
+  s_state[0] = PINB;
+#elif defined(BOARD_AT90USB1286)
+  s_state[0] = PINB;
+#elif defined(BOARD_ATMEGA2560)
+  s_state[0] = PINB;
+  s_state[1] = PINJ;
+  s_state[2] = PINK;
+#elif defined(BOARD_ATMEGA1248P)
+  s_state[0] = PINA;
+  s_state[1] = PINB;
+  s_state[2] = PINC;
+  s_state[3] = PIND;
+#elif defined(BOARD_ATMEGA256RFR2)
+  s_state[0] = PINB;
+  s_state[1] = PINE;
 #endif
-  synchronized {
-    bit_mask_set(PCICR, PCIEN);
-  }
+
+  // Enable the pin change interrupt(s)
+  synchronized bit_mask_set(PCICR, PCIEN);
 }
 
 void
 PinChangeInterrupt::end()
 {
-  synchronized {
-    bit_mask_clear(PCICR, PCIEN);
-  }
+  // Disable the pin change interrupt(s)
+  synchronized bit_mask_clear(PCICR, PCIEN);
 }
 
 void
-PinChangeInterrupt::on_interrupt(uint8_t pcint, uint8_t mask, uint8_t base)
+PinChangeInterrupt::on_interrupt(uint8_t vec, uint8_t mask, uint8_t port)
 {
-  uint8_t new_state = *Pin::PIN(base);
-  uint8_t old_state = s_state[pcint];
+  uint8_t old_state = s_state[vec];
+  uint8_t new_state = port;
   uint8_t changed = (new_state ^ old_state) & mask;
 
-  for (PinChangeInterrupt* pin = s_pin[pcint]; pin != NULL; pin = pin->m_next)
+  // Find the interrupt handler for the changed value and check mode
+  for (PinChangeInterrupt* pin = s_pin[vec]; pin != NULL; pin = pin->m_next)
     if ((pin->m_mask & changed)
 	&& ((pin->m_mode == ON_CHANGE_MODE)
 	    || pin->m_mode == ((pin->m_mask & new_state) == 0)))
       pin->on_interrupt();
 
-  s_state[pcint] = new_state;
+  // Save the new pin state
+  s_state[vec] = new_state;
 }
 
-#define PCINT_ISR(vec,pcint,base)				\
+#define PCINT_ISR(vec,pin)					\
 ISR(PCINT ## vec ## _vect)					\
 {								\
-  PinChangeInterrupt::on_interrupt(pcint, PCMSK ## vec, base);	\
+  PinChangeInterrupt::on_interrupt(vec, PCMSK ## vec, pin);	\
 }
 
 #if defined(BOARD_ATTINYX61)
 
 ISR(PCINT0_vect)
 {
-  uint8_t mask;
-  uint8_t ix;
-
   if (GIFR & _BV(INTF0)) {
-    mask = PCMSK0;
-    ix = 0;
+    PinChangeInterrupt::on_interrupt(0, PCMSK0, PINA);
   } else {
-    mask = PCMSK1;
-    ix = 1;
+    PinChangeInterrupt::on_interrupt(1, PCMSK1, PINB);
   }
-  PinChangeInterrupt::on_interrupt(ix, mask, (ix << 3));
 }
 
 #elif defined(BOARD_ATTINYX5)
 
-PCINT_ISR(0, 0, 0);
+PCINT_ISR(0, PINB);
 
 #elif defined(BOARD_ATTINYX4)
 
-PCINT_ISR(0, 0, 0);
-PCINT_ISR(1, 1, 8);
+PCINT_ISR(0, PINA);
+PCINT_ISR(1, PINB);
 
 #elif defined(BOARD_ATMEGA328P)
 
-PCINT_ISR(0, 1, 8);
-PCINT_ISR(1, 2, 14);
-PCINT_ISR(2, 0, 0);
+PCINT_ISR(0, PINB);
+PCINT_ISR(1, PINC);
+PCINT_ISR(2, PIND);
 
 #elif defined(BOARD_ATMEGA32U4)
 
-PCINT_ISR(0, 0, 0);
+PCINT_ISR(0, PINB);
 
 #elif defined(BOARD_AT90USB1286)
 
-PCINT_ISR(0, 0, 0);
+PCINT_ISR(0, PINB);
 
 #elif defined(BOARD_ATMEGA2560)
 
-PCINT_ISR(0, 0, 16);
-ISR(PCINT1_vect) {}
-PCINT_ISR(2, 2, 64);
+PCINT_ISR(0, PINB);
+PCINT_ISR(1, PINJ);
+PCINT_ISR(2, PINK);
 
 #elif defined(BOARD_ATMEGA1248P)
 
-PCINT_ISR(0, 0, 0);
-PCINT_ISR(1, 1, 8);
-PCINT_ISR(2, 2, 16);
-PCINT_ISR(3, 3, 24);
+PCINT_ISR(0, PINA);
+PCINT_ISR(1, PINB);
+PCINT_ISR(2, PINC);
+PCINT_ISR(3, PIND);
 
 #elif defined(BOARD_ATMEGA256RFR2)
 
-PCINT_ISR(0, 0, 0);
-PCINT_ISR(1, 1, 8);
-PCINT_ISR(2, 2, 16);
+PCINT_ISR(0, PINB);
+PCINT_ISR(1, PINE);
 
 #endif

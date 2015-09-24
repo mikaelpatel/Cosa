@@ -68,8 +68,7 @@ private:
   static volatile uint8_t* SFR(uint8_t pin)
     __attribute__((always_inline))
   {
-    return (pin < 8 ? &PINA :
-	              &PINB);
+    return (pin < 8 ? &PINA : &PINB);
   }
 
   /**
@@ -81,8 +80,7 @@ private:
   static uint8_t BIT(uint8_t pin)
     __attribute__((always_inline))
   {
-    return (pin < 8 ? pin :
-	              pin - 8);
+    return (pin < 8 ? pin : pin - 8);
   }
 
   /**
@@ -93,8 +91,7 @@ private:
   static volatile uint8_t* PCIMR(uint8_t pin)
     __attribute__((always_inline))
   {
-    return (pin < 8 ? &PCMSK0 :
-	              &PCMSK1);
+    return (pin < 8 ? &PCMSK0 : &PCMSK1);
   }
 
   /**

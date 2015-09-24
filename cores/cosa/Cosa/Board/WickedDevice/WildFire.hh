@@ -225,38 +225,38 @@ public:
    * Pin change interrupt. Number of port registers.
    */
   enum InterruptPin {
-    PCI0 = 0,			// PA0
-    PCI1,			// PA1
-    PCI2,			// PA2
-    PCI3,			// PA3
-    PCI4,			// PA4
-    PCI5,			// PA5
-    PCI6,			// PA6
-    PCI7,			// PA7
-    PCI8,			// PB0
-    PCI9,			// PB1
-    PCI10,			// PB2
-    PCI11,			// PB3
-    PCI12,			// PB4
-    PCI13,			// PB5
-    PCI14,			// PB6
-    PCI15,			// PB7
-    PCI16,			// PC0
-    PCI17,			// PC1
-    PCI18,			// PC2
-    PCI19,			// PC3
-    PCI20,			// PC4
-    PCI21,			// PC5
-    PCI22,			// PC6
-    PCI23,			// PC7
-    PCI24,			// PD0
-    PCI25,			// PD1
-    PCI26,			// PD2
-    PCI27,			// PD3
-    PCI28,			// PD4
-    PCI29,			// PD5
-    PCI30,			// PD6
-    PCI31			// PD7
+    PCI0 = D0,			// PD0
+    PCI1 = D1,			// PD1
+    PCI2 = D2,			// PD2
+    PCI3 = D3,			// PD3
+    PCI4 = D4,			// PB3
+    PCI5 = D5,			// PD5
+    PCI6 = D6,			// PD6
+    PCI7 = D7,			// PC3
+    PCI8 = D8,			// PD4
+    PCI9 = D9,			// PB4
+    PCI10 = D10,		// PD7
+    PCI11 = D11,		// PB5
+    PCI12 = D12,		// PB6
+    PCI13 = D13,		// PB7
+    PCI14 = D14,		// PC4
+    PCI15 = D15,		// PC2
+    PCI16 = D16,		// PC5
+    PCI17 = D17,		// PC6
+    PCI18 = D18,		// PC7
+    PCI19 = D19,		// PC1
+    PCI20 = D20,		// PC0
+    PCI21 = D21,		// PB0
+    PCI22 = D22,		// PB2
+    PCI23 = D23,		// PB0
+    PCI24 = D24,		// PA0
+    PCI25 = D25,		// PA1
+    PCI26 = D26,		// PA2
+    PCI27 = D27,		// PA3
+    PCI28 = D28,		// PA4
+    PCI29 = D29,		// PA5
+    PCI30 = D30,		// PA6
+    PCI31 = D31			// PA7
   } __attribute__((packed));
 
   /**
