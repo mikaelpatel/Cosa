@@ -27,15 +27,22 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Soft/UART.hh"
 
+OutputPin led(Board::LED);
 IOBuffer<Soft::UART::RX_BUFFER_MAX> ibuf;
+
 #if defined(BOARD_ATTINY)
+// Arduino Tiny: RX(D2), TX(D1)
 Soft::UART uart(Board::D2, Board::PCI1, &ibuf);
 #define BAUDRATE 38400
+#elif defined(BOARD_ATMEGA2560)
+// Arduino Mega: RX(D11), TX(D10)
+Soft::UART uart(Board::D11, Board::PCI4, &ibuf);
+#define BAUDRATE 57600
 #else
+// Arduino Standard: RX(D5), TX(D4)
 Soft::UART uart(Board::D5, Board::PCI4, &ibuf);
 #define BAUDRATE 57600
 #endif
-OutputPin led(Board::LED);
 
 void setup()
 {
