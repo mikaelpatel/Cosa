@@ -4,6 +4,7 @@
  *
  * @section License
  * Copyright (C) 2011, Dmitry E. Oboukhov
+ * Copyright (C) 2015, Mikael Patel (C++ port and bin/hex optimization).
  *
  * A high performance implementation of standard C functions for
  * conversion from signed and unsigned numbers to character string.
