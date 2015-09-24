@@ -17,7 +17,7 @@
 #if !defined(COSA_IOSTREAM_STDLIB_DTOA)
 #include <avr/pgmspace.h>
 
-static const unsigned long digits8[] PROGMEM = {
+static const unsigned long digits8[] __PROGMEM = {
   1073741824,
   134217728,
   16777216,
@@ -31,7 +31,7 @@ static const unsigned long digits8[] PROGMEM = {
   1,
 };
 
-static const unsigned long digits10[] PROGMEM = {
+static const unsigned long digits10[] __PROGMEM = {
   1000000000,
   100000000,
   10000000,
@@ -44,7 +44,7 @@ static const unsigned long digits10[] PROGMEM = {
   1,
 };
 
-static const char letters[] PROGMEM = "0123456789abcdef";
+static const char letters[] __PROGMEM = "0123456789abcdef";
 
 char*
 IOStream::ultoa(unsigned long __val, char *__s, int base)
@@ -59,7 +59,8 @@ IOStream::ultoa(unsigned long __val, char *__s, int base)
       // Optimize for base(2)
       first = 0;
       p = ((uint8_t*) &__val) + sizeof(__val) - 1;
-      for (i = 0; i < 4 && *p == 0; i++, p--);
+      for (i = 0; i < 4 && *p == 0; i++, p--)
+	;
       k = *p--;
       for (l = 0; l < 8; l++) {
 	if (k & 0x80) break;
@@ -76,7 +77,8 @@ IOStream::ultoa(unsigned long __val, char *__s, int base)
       // Optimize for base(16)
       first = 0;
       p = ((uint8_t*) &__val) + sizeof(__val) - 1;
-      for (i = 0; i < 4 && *p == 0; i++, p--);
+      for (i = 0; i < 4 && *p == 0; i++, p--)
+	;
       k = *p--;
       if (k & 0xf0) __s[j++] = pgm_read_byte(letters + (k >> 4));
       __s[j++] = pgm_read_byte(letters + (k & 0xf));
