@@ -49,6 +49,9 @@ PinChangeInterrupt::enable()
       uint8_t ix;
 #if defined(BOARD_ATMEGA2560)
       ix = m_pin - (m_pin < 24 ? 16 : 48);
+#elif defined(BOARD_ATMEGA328P)
+      ix = m_pin;
+      if (m_pin >= 14) ix += 2;
 #else
       ix = m_pin;
 #endif
