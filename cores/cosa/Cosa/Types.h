@@ -298,7 +298,7 @@ inline uint8_t
 lock()
 {
   uint8_t key = SREG;
-  cli();
+  __asm__ __volatile__("cli" ::: "memory");
   return (key);
 }
 
@@ -310,6 +310,7 @@ inline void
 unlock(uint8_t key)
 {
   SREG = key;
+  __asm__ __volatile__("" ::: "memory");
 }
 
 /**
@@ -337,7 +338,7 @@ unlock(uint8_t key)
  * Force compiler to store all values in memory at this point.
  * Alternative to volatile declaration.
  */
-#define barrier() __asm__ __volatile__("nop" ::: "memory")
+#define barrier() __asm__ __volatile__("" ::: "memory")
 
 /**
  * No-operation; 1 clock cycle delay.

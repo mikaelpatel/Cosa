@@ -46,7 +46,7 @@ public:
   Lock()
   {
     m_key = SREG;
-    cli();
+    __asm__ __volatile__("cli" ::: "memory");
   }
 
   /**
@@ -55,6 +55,7 @@ public:
   ~Lock()
   {
     SREG = m_key;
+    __asm__ __volatile__("" ::: "memory");
   }
 
 private:
