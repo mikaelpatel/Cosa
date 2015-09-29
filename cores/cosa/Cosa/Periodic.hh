@@ -106,7 +106,7 @@ protected:
  * @code
  * void loop()
  * {
- *   periodic(timer,period) {
+ *   periodic(timer,ms) {
  *     ...
  *   }
  *   ...
@@ -115,13 +115,37 @@ protected:
  * May be used several times in the loop() function. The timer
  * variable is defined and available in the loop().
  * @param[in] timer variable.
- * @param[in] period in milli-seconds.
- * @note requires RTC.hh.
+ * @param[in] ms period in milli-seconds.
+ * @note requires RTC.
  */
 #define periodic(timer,ms)						\
   static uint32_t timer = RTC::millis();				\
   for (int __UNIQUE(i) = 1;						\
        (__UNIQUE(i) != 0) && ((RTC::since(timer)) >= ms);		\
        __UNIQUE(i)--, timer += ms)
+
+/**
+ * Syntactic sugar for periodic blocks in the loop() function. Used in
+ * the form:
+ * @code
+ * void loop()
+ * {
+ *   PERIODIC(timer,us) {
+ *     ...
+ *   }
+ *   ...
+ * }
+ * @endcode
+ * May be used several times in the loop() function. The timer
+ * variable is defined and available in the loop().
+ * @param[in] timer variable.
+ * @param[in] us period in micro-seconds.
+ * @note requires RTC.
+ */
+#define PERIODIC(timer,us)						\
+  static uint32_t timer = RTC::micros();				\
+  for (int __UNIQUE(i) = 1;						\
+       (__UNIQUE(i) != 0) && ((RTC::micros() - timer) >= us);		\
+       __UNIQUE(i)--, timer += us)
 
 #endif
