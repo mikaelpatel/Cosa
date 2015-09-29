@@ -117,15 +117,13 @@ public:
   static void delay(uint32_t ms);
 
   /**
-   * Delay using the real-time clock until the given condition
-   * variable becomes true or timeout. Timeout period zero gives
-   * blocking behaviour. Return zero if variable became true otherwise
-   * a negative error code (ETIME).
-   * @param[in] condvar condition variable.
-   * @param[in] ms max wait in milli-seconds.
-   * @return zero or negative error code.
+   * Wait for the next real-time clock milli-seconds update.
    */
-  static int await(volatile bool &condvar, uint32_t ms);
+  static void await()
+    __attribute__((always_inline))
+  {
+    delay(0);
+  }
 
   /**
    * RTC Scheduler for jobs with a delay of 50 us or longer.
