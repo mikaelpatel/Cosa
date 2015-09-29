@@ -37,18 +37,18 @@ RTC::Scheduler::start(Job* job)
 
   // Check if the job should use the timer match register
   if (diff < US_TIMER_EXPIRE) {
-    if ((s_job == NULL)
-	|| ((int32_t) (job->expire_at() - s_job->expire_at()) < 0)) {
-      synchronized {
+    synchronized {
+      if ((s_job == NULL)
+	  || ((int32_t) (job->expire_at() - s_job->expire_at()) < 0)) {
 	uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
-	if (cnt > COUNT) cnt -= COUNT;
+	if (cnt > TIMER_MAX) cnt -= TIMER_MAX;
 	OCR0B = cnt;
 	TIMSK0 |= _BV(OCIE0B);
 	TIFR0 |= _BV(OCF0B);
 	s_job = job;
 	m_queue.get_succ()->attach(job);
+	return (true);
       }
-      return (true);
     }
   }
 
@@ -73,10 +73,10 @@ RTC::Scheduler::dispatch()
   if (m_queue.is_empty()) return;
 
   // Run all jobs that have expired
-  uint32_t now = RTC::micros();
   Job* job = (Job*) m_queue.get_succ();
   while ((Linkage*) job != &m_queue) {
     // Check if the job should be run
+    uint32_t now = RTC::micros();
     int32_t diff = job->expire_at() - now;
     if (diff < US_DIRECT_EXPIRE) {
       Job* succ = (Job*) job->get_succ();
@@ -91,16 +91,14 @@ RTC::Scheduler::dispatch()
       // Check that the job will expire before current match
       if ((s_job == NULL)
 	  || ((int32_t) (job->expire_at() - s_job->expire_at()) < 0)) {
-	synchronized {
-	  uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
-	  if (cnt > COUNT) cnt -= COUNT;
-	  OCR0B = cnt;
-	  TIMSK0 |= _BV(OCIE0B);
-	  TIFR0 |= _BV(OCF0B);
-	  s_job = job;
-	}
+	uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
+	if (cnt > TIMER_MAX) cnt -= TIMER_MAX;
+	OCR0B = cnt;
+	TIMSK0 |= _BV(OCIE0B);
+	TIFR0 |= _BV(OCF0B);
+	s_job = job;
       }
-   }
+    }
 
     // No more jobs to run
     return;
