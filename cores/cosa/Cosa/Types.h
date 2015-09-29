@@ -294,6 +294,7 @@ extern void (*yield)();
  * Disable interrupts and return flags.
  * @return processor flags.
  */
+inline uint8_t lock() __attribute__((always_inline));
 inline uint8_t
 lock()
 {
@@ -306,6 +307,7 @@ lock()
  * Restore processor flags and possible enable of interrupts.
  * @param[in] key processor flags.
  */
+inline void unlock(uint8_t key) __attribute__((always_inline));
 inline void
 unlock(uint8_t key)
 {
@@ -314,13 +316,22 @@ unlock(uint8_t key)
 }
 
 /**
+ * Restore processor flags and possible enable of interrupts.
+ * Internal clean up function for synchronized block.
+ * @param[in] key processor flags.
+ */
+inline void __unlock(uint8_t* key) __attribute__((always_inline));
+inline void
+__unlock(uint8_t* key)
+{
+  SREG = *key;
+  __asm__ __volatile__("" ::: "memory");
+}
+
+/**
  * Syntactic sugar for synchronized block. Used in the form:
  * @code
  * synchronized {
- *   ...
- *   synchronized_return(expr);
- *   ...
- *   synchronized_goto(label);
  *   ...
  * }
  * label:
@@ -328,11 +339,8 @@ unlock(uint8_t key)
  * Interrupts are disabled in the block allowing secure update.
  */
 #define synchronized							\
-  for (uint8_t __key = lock(), i = 1; i != 0; i--, unlock(__key))
-#define synchronized_return(expr)					\
-  return (unlock(__key), expr)
-#define synchronized_goto(label)					\
-  do { unlock(__key); goto label; } while (0)
+  for (uint8_t __key __attribute__((__cleanup__(__unlock))) = lock(),	\
+       i = 1; i != 0; i--)
 
 /**
  * Force compiler to store all values in memory at this point.
@@ -450,7 +458,8 @@ swap(uint16_t* dest, const uint16_t* src, size_t size)
  * @param[in] src source buffer.
  */
 template<class T>
-void swap(T* dest, const T* src)
+void
+swap(T* dest, const T* src)
 {
   swap((uint16_t*) dest, (const uint16_t*) src, sizeof(T) / sizeof(uint16_t));
 }
@@ -476,7 +485,8 @@ swap(uint16_t* buf, size_t size)
  * @param[in] buf buffer.
  */
 template<class T>
-void swap(T* buf)
+void
+swap(T* buf)
 {
   swap((uint16_t*) buf, sizeof(T) / sizeof(uint16_t));
 }
