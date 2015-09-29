@@ -46,6 +46,9 @@ RTC::begin()
   if (UNLIKELY(s_initiated)) return (false);
 
   synchronized {
+    // Power up the timers
+    Power::timer0_enable();
+
     // Set prescaling to 64
     TCCR0B = (_BV(CS01) | _BV(CS00));
 
@@ -71,10 +74,16 @@ RTC::end()
   // Check if initiated
   if (UNLIKELY(!s_initiated)) return (false);
 
-  // Disable the timer interrupts and mark as not initiated
-  synchronized TIMSK0 = 0;
-  s_initiated = false;
+  synchronized {
+    // Disable the timer interrupts
+    TIMSK0 = 0;
 
+    // Power up the timers
+    Power::timer0_disable();
+  }
+
+  // Mark as not initiated
+  s_initiated = false;
   return (true);
 }
 
