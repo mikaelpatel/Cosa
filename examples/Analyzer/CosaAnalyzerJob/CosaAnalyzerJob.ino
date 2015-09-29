@@ -44,7 +44,7 @@ class Work : public Job {
 public:
   Work(Job::Scheduler* scheduler,
        Board::DigitalPin pin, uint32_t delay,
-       Work& chain) :
+       Work* chain) :
     Job(scheduler),
     m_pin(pin),
     m_delay(delay),
@@ -64,15 +64,15 @@ public:
   virtual void run()
   {
     m_pin.toggle();
-    m_chain.expire_at(expire_at() + m_delay);
-    m_chain.start();
+    m_chain->expire_at(expire_at() + m_delay);
+    m_chain->start();
     m_pin.toggle();
   }
 
 private:
   OutputPin m_pin;
   uint32_t m_delay;
-  Work& m_chain;
+  Work* m_chain;
 };
 
 // Use the real-time clock scheduler (micro-seconds)
@@ -87,14 +87,14 @@ extern Work w4;
 
 // Periodic
 // (w0)-200ms->(w0)
-Work w0(&scheduler, Board::D7, 200000UL, w0);
+Work w0(&scheduler, Board::D7, 200000UL, &w0);
 
 // Chain
 // (w1)-150us->(w2)-400us->(w3)-1200us->(w4)-250us->(w1)
-Work w1(&scheduler, Board::D8,    150UL, w2);
-Work w2(&scheduler, Board::D8,    400UL, w3);
-Work w3(&scheduler, Board::D8,   1200UL, w4);
-Work w4(&scheduler, Board::D8,    250UL, w1);
+Work w1(&scheduler, Board::D8,    150UL, &w2);
+Work w2(&scheduler, Board::D8,    400UL, &w3);
+Work w3(&scheduler, Board::D8,   1200UL, &w4);
+Work w4(&scheduler, Board::D8,    250UL, &w1);
 
 void setup()
 {
@@ -114,9 +114,9 @@ void setup()
   // Start the work
   const uint32_t START = 1000000UL;
   w0.expire_at(START);
-  w4.expire_at(START);
+  w1.expire_at(START);
   w0.start();
-  w4.start();
+  w1.start();
 
   // Start the real-time clock
   RTC::begin();

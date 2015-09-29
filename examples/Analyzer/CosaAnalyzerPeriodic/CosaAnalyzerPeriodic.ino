@@ -43,8 +43,9 @@
 #define USE_RTC
 // #define USE_WATCHDOG
 
-// Call directly from interrupt
-// #define USE_ISR_DISPATCH
+// Call directly from interrupt and use one of the scheduling types
+// #define USE_ISR_TIME_PERIOD
+#define USE_ISR_RESCHEDULE
 
 #if defined(USE_RTC)
 #define TIMER RTC
@@ -67,9 +68,16 @@ public:
     expire_at(START);
   }
 
-#if defined(USE_ISR_DISPATCH)
-  // If called direclty from the interrupt the periodic job will
-  // need to be rescheduled
+#if defined(USE_ISR_TIME_PERIOD)
+  virtual void on_expired()
+  {
+    run();
+    expire_at(time() + period());
+    start();
+  }
+#endif
+
+#if defined(USE_ISR_RESCHEDULE)
   virtual void on_expired()
   {
     run();
@@ -80,7 +88,7 @@ public:
   virtual void run()
   {
     m_pin.toggle();
-    DELAY(10);
+    DELAY(50);
     m_pin.toggle();
   }
 
@@ -110,8 +118,10 @@ void setup()
 #if defined(USE_WATCHDOG)
   trace << PSTR("Watchdog Job Scheduler") << endl;
 #endif
-#if defined(USE_ISR_DISPATCH)
-  trace << PSTR("ISR dispatch") << endl;
+#if defined(USE_ISR_RESCHEDULE)
+  trace << PSTR("ISR with reschedule") << endl;
+#elif defined(USE_ISR_TIME_PERIOD)
+  trace << PSTR("ISR with time period") << endl;
 #else
   trace << PSTR("Event dispatch") << endl;
 #endif

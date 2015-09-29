@@ -45,7 +45,7 @@
 // #define USE_WATCHDOG
 
 // Call directly from interrupt service routine
-// #define USE_ISR_DISPATCH
+#define USE_ISR_DISPATCH
 
 #if defined(USE_RTC)
 #define TIMER RTC
