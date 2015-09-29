@@ -17,19 +17,24 @@
  *
  * @section Description
  * Benchmarking IOStream and UART functions; measure time to print
- * approx. 1 Mbyte (10.000 lines (97 characters) with line number).
- * Default format: 11 bits = 1 start bit, 8 data bits, and 2 stop bits.
+ * approx. 1 Mbyte (10.000 lines with 104 characters per line, 98
+ * character string and 5 digits line number). Default format: 11 bits,
+ * 1 start bit, 8 data bits, and 2 stop bits.
  *
  * The print of the line number is an integer to string conversion
  * with 5 digits. Up to 500 Kbps the conversion is in parallel with
  * the print and full effective baudrate is achieved.
  *
- * The sketch will also capture idle time. At 115.200 bps the idle
- * time is almost 80%. Only 20% of the processing power is needed to
- * handle the transmission and number to string conversion. At 250
- * Kbps the idle time drops to 62% and at 500 Kbps it is down to
- * 12%. Higher baudrates require all processing power and there is no
- * idle time.
+ * The sketch will also capture idle time (mostly waiting for buffer
+ * space). At 115.200 bps the idle time is almost 80%. Only 20% of the
+ * processing power is needed to handle the transmission and number to
+ * string conversion. At 250 Kbps the idle time drops to 62% and at
+ * 500 Kbps it is down to 12%. Higher baudrates require all processing
+ * power and there is no idle time.
+ *
+ * The measurements are for command line build with link-time
+ * optimization enabled, run on an Arduino Pro-Mini with a SparkFun
+ * FDTI Basic.
  *
  * @section Warning
  * At 2 Mbps the execution time is about 7 seconds, at 500 Kbps
