@@ -67,8 +67,12 @@ void setup()
   MEASURE("RTC::micros(): ", 1) RTC::micros();
   MEASURE("RTC::millis(): ", 1) RTC::millis();
   MEASURE("clock.time(): ", 1) clock.time();
+  MEASURE("RTC::await(): ", 1) RTC::await();
   MEASURE("RTC::delay(1): ", 1)  RTC::delay(1);
   MEASURE("RTC::delay(10): ", 1) RTC::delay(10);
+  MEASURE("Watchdog::await(): ", 1) Watchdog::await();
+  MEASURE("Watchdog::delay(10): ", 1)  Watchdog::delay(10);
+  MEASURE("Watchdog::delay(100): ", 1) Watchdog::delay(100);
   MEASURE("DELAY(10): ", 1) DELAY(10);
   MEASURE("DELAY(100): ", 1) DELAY(100);
   MEASURE("delay(10): ", 1) delay(10);
