@@ -194,9 +194,10 @@ class Miniterm:
 
     def reader(self):
         """loop and copy serial->console"""
-        try:
-            while self.alive:
+        while self.alive:
+            try:
                 data = self.serial.read(1)
+                # data = self.read()
                 # check for exit from device
                 if data == EXITCHARCTER:
                     self.stop()
@@ -214,26 +215,27 @@ class Miniterm:
                             sys.stdout.write('\n')
                         elif data == '\r':
                             pass
-                    elif data == '\n' and self.convert_outgoing == CONVERT_LF:
-                        sys.stdout.write('\n')
-                    elif data == '\r' and self.convert_outgoing == CONVERT_CR:
-                        sys.stdout.write('\n')
-                    else:
+                        elif data == '\n' and self.convert_outgoing == CONVERT_LF:
+                            sys.stdout.write('\n')
+                        elif data == '\r' and self.convert_outgoing == CONVERT_CR:
+                            sys.stdout.write('\n')
+                        else:
+                            sys.stdout.write(repr(data)[1:-1])
+                    elif self.repr_mode == 2:
+                        # escape all non-printable, including newline
                         sys.stdout.write(repr(data)[1:-1])
-                elif self.repr_mode == 2:
-                    # escape all non-printable, including newline
-                    sys.stdout.write(repr(data)[1:-1])
-                elif self.repr_mode == 3:
-                    # escape everything (hexdump)
-                    for character in data:
-                        sys.stdout.write("%s " % character.encode('hex'))
-                sys.stdout.flush()
-        except serial.SerialException, e:
-            self.alive = False
-            # would be nice if the console reader could be interruptted at this
-            # point...
-            raise
-
+                    elif self.repr_mode == 3:
+                        # escape everything (hexdump)
+                        for character in data:
+                            sys.stdout.write("%s " % character.encode('hex'))
+                            sys.stdout.flush()
+            except serial.SerialException, e:
+                continue
+            except TypeError as e:
+                self.alive = False
+                # would be nice if the console reader could be interruptted at this
+                # point...
+                raise
 
     def writer(self):
         """loop and copy console->serial until EXITCHARCTER character is
