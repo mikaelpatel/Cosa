@@ -31,12 +31,17 @@
 
 // This benchmark can be run with a background interrupt load. Set the
 // below symbol to enable a periodic job with the given period in
-// micro-seconds. Minimum is approx. 100 us.
-// #define BACKGROUND_PULSE 100
+// micro-seconds.
+#define BACKGROUND_PULSE 150
+#define PULSE_WIDTH 50
 
 #if defined(BACKGROUND_PULSE)
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Periodic.hh"
+
+// Schedule from interrupt with time or fixed period
+// #define USE_ISR_TIME_PERIOD
+#define USE_ISR_RESCHEDULE
 
 class Pulse : public Periodic {
 public:
@@ -47,15 +52,29 @@ public:
     expire_at(100000UL);
   }
 
+#if defined(USE_ISR_TIME_PERIOD)
+  virtual void on_expired()
+  {
+    run();
+    expire_at(time() + period());
+    start();
+  }
+#endif
+
+#if defined(USE_ISR_RESCHEDULE)
   virtual void on_expired()
   {
     run();
     reschedule();
   }
+#endif
 
   virtual void run()
   {
     m_pin.toggle();
+#if defined(PULSE_WIDTH)
+    DELAY(PULSE_WIDTH);
+#endif
     m_pin.toggle();
   }
 
@@ -65,13 +84,13 @@ private:
 
 // The RTC job scheduler and background pulse generator
 RTC::Scheduler scheduler;
-Pulse background(&scheduler, BACKGROUND_PULSE, Board::LED);
+Pulse background(&scheduler, BACKGROUND_PULSE, Board::D7);
 #endif
 
 void setup()
 {
   // Start serial output with given baud-rate
-  uart.begin(2000000);
+  uart.begin(500000);
   // uart.begin(2000000);
   // uart.begin(1000000);
   // uart.begin(500000);
@@ -199,7 +218,13 @@ void loop()
 	<< Kbps << PSTR(" Kbps")
 	<< endl;
 
+#if defined(BACKGROUND_PULSE)
+  uint16_t pulses = trace.measure / BACKGROUND_PULSE;
+  trace << PSTR("background pulses (") << pulses << PSTR("):")
+	<< (uint32_t) pulses * PULSE_WIDTH << PSTR(" us")
+	<< endl;
+  sleep(1);
+#else
   ASSERT(true == false);
-  // Take a nap before starting over
-  // sleep(1);
+#endif
 }
