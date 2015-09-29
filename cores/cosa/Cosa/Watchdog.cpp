@@ -73,6 +73,7 @@ void
 Watchdog::delay(uint32_t ms)
 {
   uint32_t start = Watchdog::millis();
+  ms += s_ms_per_tick / 2;
   while (since(start) < ms) yield();
 }
 

@@ -93,7 +93,7 @@ public:
   static void await()
     __attribute__((always_inline))
   {
-    delay(ms_per_tick());
+    delay(0);
   }
 
   /**
