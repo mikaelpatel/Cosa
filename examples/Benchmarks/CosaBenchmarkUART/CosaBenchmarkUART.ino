@@ -32,7 +32,7 @@
 // This benchmark can be run with a background interrupt load. Set the
 // below symbol to enable a periodic job with the given period in
 // micro-seconds.
-#define BACKGROUND_PULSE 150
+// #define BACKGROUND_PULSE 150
 #define PULSE_WIDTH 50
 
 #if defined(BACKGROUND_PULSE)
@@ -40,8 +40,8 @@
 #include "Cosa/Periodic.hh"
 
 // Schedule from interrupt with time or fixed period
-// #define USE_ISR_TIME_PERIOD
-#define USE_ISR_RESCHEDULE
+#define USE_ISR_TIME_PERIOD
+// #define USE_ISR_RESCHEDULE
 
 class Pulse : public Periodic {
 public:
@@ -59,14 +59,14 @@ public:
     expire_at(time() + period());
     start();
   }
-#endif
-
-#if defined(USE_ISR_RESCHEDULE)
+#elif defined(USE_ISR_RESCHEDULE)
   virtual void on_expired()
   {
     run();
     reschedule();
   }
+#else
+#error "on_expired: not defined"
 #endif
 
   virtual void run()
@@ -90,7 +90,7 @@ Pulse background(&scheduler, BACKGROUND_PULSE, Board::D7);
 void setup()
 {
   // Start serial output with given baud-rate
-  uart.begin(500000);
+  uart.begin(2000000);
   // uart.begin(2000000);
   // uart.begin(1000000);
   // uart.begin(500000);
@@ -175,6 +175,9 @@ void loop()
   MEASURE("max uint32_t:", 1) trace << hex << UINT32_MAX << endl;
 
   // Measure time to print some standar floating point numbers
+  MEASURE("floating point (zero):", 1) trace << 0.0 << endl;
+  MEASURE("floating point (nan):", 1) trace << NAN << endl;
+  MEASURE("floating point (infinity):", 1) trace << INFINITY << endl;
   MEASURE("floating point (pi):", 1) trace << M_PI << endl;
   MEASURE("floating point (e):", 1) trace << M_E << endl;
   MEASURE("floating point (log2e):", 1) trace << M_LOG2E << endl;
