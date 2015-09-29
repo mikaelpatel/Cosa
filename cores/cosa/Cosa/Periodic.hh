@@ -80,7 +80,6 @@ public:
     start();
   }
 
-
 protected:
   /**
    * @override{Event::Handler}
