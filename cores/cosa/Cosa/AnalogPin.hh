@@ -28,12 +28,11 @@
 /**
  * Abstract analog pin. Allows asynchronous sampling.
  */
-class AnalogPin : public Interrupt::Handler, public Event::Handler
-{
+class AnalogPin : public Interrupt::Handler, public Event::Handler {
 public:
   /**
-   * Construct abstract analog pin for given Arduino pin with reference and
-   * conversion completion interrupt handler.
+   * Construct abstract analog pin for given pin (channel) and
+   * reference voltage.
    * @param[in] pin number.
    * @param[in] ref reference voltage.
    */

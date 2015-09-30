@@ -25,7 +25,7 @@
 #if defined(BOARD_ATTINY)
 #include "Cosa/IOPin.hh"
 #include "Cosa/Event.hh"
-
+#include "Cosa/Power.hh"
 /**
  * Two wire library. Support for ATtiny I2C/TWI bus master and slave
  * devices using the USI hardware support. See also Cosa/TWI.hh. The
@@ -243,12 +243,18 @@ public:
   /**
    * Powerup USI.
    */
-  void powerup();
+  void powerup()
+  {
+    power_usi_enable();
+  }
 
   /**
    * Powerdown USI.
    */
-  void powerdown();
+  void powerdown()
+  {
+    power_usi_disable();
+  }
 
 private:
   /**

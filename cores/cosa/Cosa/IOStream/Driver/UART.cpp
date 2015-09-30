@@ -68,6 +68,9 @@ UART::begin(uint32_t baudrate, uint8_t format)
 bool
 UART::end()
 {
+  // Flush an output
+  flush();
+
   // Disable receiver and transmitter interrupt
   *UCSRnB() &= ~(_BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0));
 
@@ -78,14 +81,13 @@ UART::end()
 
 // A fast track direct to the hardware pipeline is possible when it is
 // idle. At 500 Kbps the effective baud-rate increases from 84% to
-// 99.9%, 1 Mbps from 42% to 88%, and 2 Mbps from 21% to 88%.
-// Does not effect lower baud-rates more than the pipeline is started
-// faster.
+// 99.9%, 1 Mbps from 42% to 88%, and 2 Mbps from 21% to 88%. Does not
+// effect lower baud-rates more than the pipeline is started faster.
 #define USE_FAST_TRACK
 
 // A short delay improves synchronization with hardware pipeline at
-// 1Mbps. The effective baud-rate increases at 1 Mbps from 88% to
-// 99.5% and at 2 Mbps from 88% to 86%. Note that the delay is tuned
+// 1 Mbps. The effective baud-rate increases at 1 Mbps from 88% to
+// 99.5% and at 2 Mbps from 88% to 90%. Note that the delay is tuned
 // for program memory string write (at 1 Mbps).
 #define USE_SYNC_DELAY
 
@@ -105,10 +107,11 @@ UART::putchar(char c)
 #if defined(USE_SYNC_DELAY)
     // A short delay to make things even faster; optimized for program
     // memory string write (approx. 5 us)
-    if (UNLIKELY(*UBRRn() == 1))
+    if (UNLIKELY(*UBRRn() == 1)) {
       _delay_loop_1(25);
-    nop();
-    nop();
+      nop();
+      nop();
+    }
 #endif
     return (c & 0xff);
   }

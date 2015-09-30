@@ -52,7 +52,7 @@ extern Soft::UAT uart;
 #include "Cosa/Board.hh"
 
 /**
- * Basic UART device handler with internal buffering. IOStream
+ * Basic UART device handler with external buffering. IOStream
  * devices may be piped with the IOBuffer class. The UART class
  * requires an input- and output IOBuffer instance.
  */
@@ -76,7 +76,7 @@ public:
     m_obuf(obuf),
     m_idle(true)
   {
-    if (port < Board::UART_MAX) uart[port] = this;
+    uart[port] = this;
   }
 
   /**
@@ -102,8 +102,7 @@ public:
   /**
    * @override{IOStream::Device}
    * Write character to serial port output buffer. Returns character
-   * if successful otherwise a negative error code.
-   * returns EOF(-1),
+   * if successful otherwise a negative error code (EOF(-1)).
    * @param[in] c character to write.
    * @return character written or EOF(-1).
    */
@@ -111,9 +110,8 @@ public:
 
   /**
    * @override{IOStream::Device}
-   * Peek next character from serial port input buffer.
-   * Returns character if successful otherwise on error or buffer empty
-   * returns EOF(-1),
+   * Peek at next character from serial port input buffer. Returns
+   * character if successful otherwise a negative error code (EOF(-1)).
    * @return character or EOF(-1).
    */
   virtual int peekchar()
@@ -134,9 +132,8 @@ public:
 
   /**
    * @override{IOStream::Device}
-   * Read character from serial port input buffer.
-   * Returns character if successful otherwise on error or buffer empty
-   * returns EOF(-1),
+   * Read character from serial port input buffer. Returns character
+   * if successful otherwise a negative error code (EOF(-1)).
    * @return character or EOF(-1).
    */
   virtual int getchar()
@@ -146,14 +143,15 @@ public:
 
   /**
    * @override{IOStream::Device}
-   * Flush internal device buffers. Wait for device to become idle.
+   * Flush device output buffer and wait for device to become idle and
+   * all character transmitted.
    * @return zero(0) or negative error code.
    */
   virtual int flush();
 
   /**
    * @override{IOStream::Device}
-   * Empty internal device buffers.
+   * Empty output device buffers.
    */
   virtual void empty()
   {
@@ -162,7 +160,8 @@ public:
 
   /**
    * @override{Serial}
-   * Start UART device driver.
+   * Powerup and start UART for given baudrate and format. Returns
+   * true(1) if successful otherwise false(0).
    * @param[in] baudrate serial bitrate (default 9600).
    * @param[in] format serial frame format (default async, 8data, 2stop bit)
    * @return true(1) if successful otherwise false(0)
@@ -172,7 +171,8 @@ public:
 
   /**
    * @override{Serial}
-   * Stop UART device driver.
+   * Stop and powerdown UART device driver. Returns true(1) if
+   * successful otherwise false(0).
    * @return true(1) if successful otherwise false(0)
    */
   virtual bool end();
@@ -265,6 +265,7 @@ protected:
    */
   virtual void on_tx_interrupt() {}
 
+  // Interrupt Service Routines are friends
 #if defined(USART_UDRE_vect)
   friend void USART_UDRE_vect(void);
   friend void USART_RX_vect(void);

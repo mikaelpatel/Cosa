@@ -25,7 +25,10 @@
 #include "Cosa/Job.hh"
 
 /**
- * Clock for job scheduling with a time unit of seconds.
+ * Clock for job scheduling with a time unit of seconds. The clock is
+ * updated by periodically calling the tick() member function with the
+ * number of milli-seconds to update the clock by. Started jobs/alarms
+ * are dispatched When the clock seconds counter is update.
  */
 class Clock : public Job::Scheduler {
 public:
@@ -41,8 +44,9 @@ public:
 
   /**
    * @override{Job::Scheduler}
-   * Return clock time.
+   * Return clock time in seconds.
    * @return seconds.
+   * @note atomic
    */
   virtual uint32_t time()
   {
@@ -66,7 +70,8 @@ public:
   }
 
   /**
-   * Wait for clock update. Returns clock time.
+   * Synchronize with clock by waiting for next clock update. Returns
+   * clock time in seconds.
    * @return seconds.
    */
   uint32_t await()
@@ -82,7 +87,7 @@ public:
 
   /**
    * Increment the clock with the given number of milli-seconds.
-   * Dispatch jobs if the number of seconds is incremented.
+   * Dispatch jobs if the clock seconds counter is incremented.
    * @param[in] ms milli-seconds in a tick.
    * @note atomic
    */
@@ -99,7 +104,8 @@ public:
   }
 
   /**
-   * Set clock calibration to given number of milli-seconds.
+   * Set clock calibration to given number of milli-seconds to adjust
+   * by per second.
    * @param[in] ms milli-seconds.
    * @note atomic
    */
@@ -109,7 +115,7 @@ public:
   }
 
   /**
-   * Get current clock calibration.
+   * Get current clock calibration in milli-seconds.
    * @return calibration.
    * @note atomic
    */

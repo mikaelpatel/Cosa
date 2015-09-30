@@ -47,6 +47,11 @@
 #define __UNIQUE(name) __CONCAT(name,__LINE__)
 
 /**
+ * Round integer division.
+ */
+#define ROUND(x,y) (((x) + (y - 1)) / (y))
+
+/**
  * Number of bits in a character.
  */
 #define CHARBITS 8
@@ -54,7 +59,7 @@
 /**
  * Number of bytes for given number of bits.
  */
-#define BYTES(bits) (((bits) + (CHARBITS - 1)) / CHARBITS)
+#define BYTES(bits) ROUND(bits, CHARBITS)
 
 /**
  * Standard integer range
@@ -139,12 +144,10 @@ union univ32_t {
 };
 
 /**
- * Round integer division.
- */
-#define ROUND(x,y) (((x) + (y - 1)) / (y))
-
-/**
- * Compiler branch prediction hinting.
+ * Compiler branch prediction hinting. The AVR processor pipeline will
+ * stall for one cycle when a condition is not true and a branch is
+ * taken. UNLIKELY will help the compiler adjust the code generation
+ * so that the branch is not taken.
  */
 #define LIKELY(x) __builtin_expect((x), true)
 #define UNLIKELY(x) __builtin_expect((x), false)
@@ -180,7 +183,7 @@ union univ32_t {
 # define __PROGMEM PROGMEM
 #endif
 
-/** String in program memory */
+/** Unique data type for strings in program memory. */
 typedef const PROGMEM class prog_str* str_P;
 
 /**
@@ -247,7 +250,7 @@ strlen_P(str_P s)
   return (strlen_P((const char*) s));
 }
 
-/** Pointer table in program memory */
+/** Pointer table in program memory. */
 typedef const PROGMEM void* void_P;
 typedef const PROGMEM void_P void_vec_P;
 
@@ -271,8 +274,8 @@ typedef const PROGMEM void_P void_vec_P;
 #define DELAY(us) _delay_loop_2((us) * (F_CPU / 4000000L))
 
 /**
- * Delay given number of milli-seconds. This function pointer
- * may be redefined to allow low-power and/or multi-tasking duing wait.
+ * Delay given number of milli-seconds. This function pointer may be
+ * redefined to allow low-power and/or multi-tasking duing wait.
  * @param[in] ms milli-seconds delay.
  */
 extern void (*delay)(uint32_t ms);
@@ -285,7 +288,7 @@ extern void (*delay)(uint32_t ms);
 extern void (*sleep)(uint16_t s);
 
 /**
- * Allow context switch to other task if available. The default
+ * Allow context switch to other tasks if available. The default
  * implementation is a low-power sleep and wait for interrupt.
  */
 extern void (*yield)();
@@ -295,8 +298,7 @@ extern void (*yield)();
  * @return processor flags.
  */
 inline uint8_t lock() __attribute__((always_inline));
-inline uint8_t
-lock()
+inline uint8_t lock()
 {
   uint8_t key = SREG;
   __asm__ __volatile__("cli" ::: "memory");
@@ -308,8 +310,7 @@ lock()
  * @param[in] key processor flags.
  */
 inline void unlock(uint8_t key) __attribute__((always_inline));
-inline void
-unlock(uint8_t key)
+inline void unlock(uint8_t key)
 {
   SREG = key;
   __asm__ __volatile__("" ::: "memory");
@@ -321,8 +322,7 @@ unlock(uint8_t key)
  * @param[in] key processor flags.
  */
 inline void __unlock(uint8_t* key) __attribute__((always_inline));
-inline void
-__unlock(uint8_t* key)
+inline void __unlock(uint8_t* key)
 {
   SREG = *key;
   __asm__ __volatile__("" ::: "memory");
@@ -337,14 +337,16 @@ __unlock(uint8_t* key)
  * label:
  * @endcode
  * Interrupts are disabled in the block allowing secure update.
+ * All control structures are allowed (e.g. return, goto).
  */
 #define synchronized							\
   for (uint8_t __key __attribute__((__cleanup__(__unlock))) = lock(),	\
        i = 1; i != 0; i--)
 
 /**
- * Force compiler to store all values in memory at this point.
- * Alternative to volatile declaration.
+ * Force compiler to store all values in memory at this
+ * point. Compiler may not reorder statements and sub-expression over
+ * barriers. This is an alternative to volatile declaration.
  */
 #define barrier() __asm__ __volatile__("" ::: "memory")
 
@@ -367,8 +369,7 @@ struct iovec_t {
  * @return size.
  */
 inline size_t iovec_size(const iovec_t* vec) __attribute__((always_inline));
-inline size_t
-iovec_size(const iovec_t* vec)
+inline size_t iovec_size(const iovec_t* vec)
 {
   size_t len = 0;
   for (const iovec_t* vp = vec; vp->buf != NULL; vp++)
@@ -391,8 +392,7 @@ iovec_size(const iovec_t* vec)
  */
 inline void iovec_arg(iovec_t* &vp, const void* buf, size_t size)
   __attribute__((always_inline));
-inline void
-iovec_arg(iovec_t* &vp, const void* buf, size_t size)
+inline void iovec_arg(iovec_t* &vp, const void* buf, size_t size)
 {
   vp->buf = (void*) buf;
   vp->size = size;
@@ -411,8 +411,7 @@ iovec_arg(iovec_t* &vp, const void* buf, size_t size)
  * @param[in,out] vp io vector.
  */
 inline void iovec_end(iovec_t* &vp) __attribute__((always_inline));
-inline void
-iovec_end(iovec_t* &vp)
+inline void iovec_end(iovec_t* &vp)
 {
   vp->buf = 0;
   vp->size = 0;
@@ -424,8 +423,7 @@ iovec_end(iovec_t* &vp)
  * @return new value.
  */
 inline uint16_t swap(uint16_t value) __attribute__((always_inline));
-inline uint16_t
-swap(uint16_t value)
+inline uint16_t swap(uint16_t value)
 {
   asm volatile("mov __tmp_reg__, %A0" 	"\n\t"
 	       "mov %A0, %B0" 		"\n\t"
@@ -442,8 +440,7 @@ swap(uint16_t value)
  * @param[in] src source buffer.
  * @param[in] size number of integers to swap.
  */
-inline void
-swap(uint16_t* dest, const uint16_t* src, size_t size)
+inline void swap(uint16_t* dest, const uint16_t* src, size_t size)
 {
   if (UNLIKELY(size == 0)) return;
   do {
@@ -458,8 +455,7 @@ swap(uint16_t* dest, const uint16_t* src, size_t size)
  * @param[in] src source buffer.
  */
 template<class T>
-void
-swap(T* dest, const T* src)
+void swap(T* dest, const T* src)
 {
   swap((uint16_t*) dest, (const uint16_t*) src, sizeof(T) / sizeof(uint16_t));
 }
@@ -469,8 +465,7 @@ swap(T* dest, const T* src)
  * @param[in] buf buffer.
  * @param[in] size number of integers to swap.
  */
-inline void
-swap(uint16_t* buf, size_t size)
+inline void swap(uint16_t* buf, size_t size)
 {
   if (UNLIKELY(size == 0)) return;
   do {
@@ -485,8 +480,7 @@ swap(uint16_t* buf, size_t size)
  * @param[in] buf buffer.
  */
 template<class T>
-void
-swap(T* buf)
+void swap(T* buf)
 {
   swap((uint16_t*) buf, sizeof(T) / sizeof(uint16_t));
 }
@@ -497,8 +491,7 @@ swap(T* buf)
  * @return new value.
  */
 inline int16_t swap(int16_t value) __attribute__((always_inline));
-inline int16_t
-swap(int16_t value)
+inline int16_t swap(int16_t value)
 {
   return ((int16_t) swap((uint16_t) value));
 }
@@ -509,8 +502,7 @@ swap(int16_t value)
  * @param[in] src source buffer.
  * @param[in] size number of integers to swap.
  */
-inline void
-swap(int16_t* dest, const int16_t* src, size_t size)
+inline void swap(int16_t* dest, const int16_t* src, size_t size)
 {
   if (UNLIKELY(size == 0)) return;
   do {
@@ -524,8 +516,7 @@ swap(int16_t* dest, const int16_t* src, size_t size)
  * @return new value.
  */
 inline uint32_t swap(uint32_t value) __attribute__((always_inline));
-inline uint32_t
-swap(uint32_t value)
+inline uint32_t swap(uint32_t value)
 {
   asm volatile("mov __tmp_reg__, %A0" 	"\n\t"
 	       "mov %A0, %D0" 		"\n\t"
@@ -545,8 +536,7 @@ swap(uint32_t value)
  * @return new value.
  */
 inline int32_t swap(int32_t value) __attribute__((always_inline));
-inline int32_t
-swap(int32_t value)
+inline int32_t swap(int32_t value)
 {
   return ((int32_t) swap((uint32_t) value));
 }
@@ -564,8 +554,7 @@ swap(int32_t value)
  * @return character.
  */
 inline char tohex(uint8_t value) __attribute__((always_inline));
-inline char
-tohex(uint8_t value)
+inline char tohex(uint8_t value)
 {
   value &= 0xf;
   if (UNLIKELY(value > 9))
@@ -579,8 +568,7 @@ tohex(uint8_t value)
  * @return character.
  */
 inline char toHEX(uint8_t value) __attribute__((always_inline));
-inline char
-toHEX(uint8_t value)
+inline char toHEX(uint8_t value)
 {
   value &= 0xf;
   if (UNLIKELY(value > 9))

@@ -359,16 +359,4 @@ TWI::read(void* buf, size_t size)
   iovec_end(vp);
   return (request(READ_OP));
 }
-
-void
-TWI::powerup()
-{
-  power_usi_enable();
-}
-
-void
-TWI::powerdown()
-{
-  power_usi_disable();
-}
 #endif

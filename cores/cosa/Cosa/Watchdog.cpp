@@ -33,7 +33,7 @@ uint16_t Watchdog::s_ms_per_tick = 16;
 // Watchdog Job Scheduler (milli-seconds level delayed functions)
 Watchdog::Scheduler* Watchdog::s_scheduler = NULL;
 
-// Watchdog Alarm Clock
+// Watchdog Alarm Clock (seconds level delayed functions)
 Watchdog::Clock* Watchdog::s_clock = NULL;
 
 uint8_t
@@ -63,7 +63,7 @@ Watchdog::begin(uint16_t ms)
     WDTCSR = config;
   }
 
-  // Mark as initiated and set watchdog delay
+  // Mark as initiated and set watchdog delay as global delay
   s_ms_per_tick = (1 << (prescale + 4));
   ::delay = Watchdog::delay;
   s_initiated = true;

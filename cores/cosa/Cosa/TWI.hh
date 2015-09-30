@@ -42,7 +42,7 @@
  *                       +------------+
  * (A4/SDA)------------1-|SDA         |
  * (A5/SCL)------------2-|SCL         |
- * (EXTn)--------------3-|IRQ(opt)    |
+ * (EXTn/PCIn)---------3-|IRQ(opt)    |
  * (VCC)---------------4-|VCC         |
  * (GND)---------------5-|GND         |
  *                       +------------+
@@ -57,8 +57,9 @@ public:
   static const uint32_t MAX_FREQ = (F_CPU / (16 + 2*2));
 
   /**
-   * Device drivers are friends and may have callback/event handler
-   * for completion events.
+   * TWI Device Driver support class. Holds the address of the
+   * device. Should be sub-classed to implement a device driver and
+   * access functions.
    */
   class Driver {
   public:
@@ -112,7 +113,7 @@ public:
     /** Device bus address. */
     uint8_t m_addr;
 
-    /** Asynchron mode. */
+    /** Asynchronious mode. */
     bool m_async;
 
     /** Allow access. */
@@ -220,14 +221,15 @@ public:
   }
 
   /**
-   * Start TWI logic for a device transaction block.
+   * Start TWI logic for a device transaction block. Wait until TWI
+   * hardware can be acquired. The given device driver becomes the
+   * current driver for addressing, read and write requests.
    * @param[in] dev device.
-   * @return true(1) if successful otherwise false(0).
    */
   void begin(TWI::Driver* dev);
 
   /**
-   * Stop usage of the TWI bus logic.
+   * Release TWI hardware and bus.
    */
   void end();
 
@@ -347,7 +349,7 @@ public:
   }
 
   /**
-   * Powerup TWI.
+   * Powerup TWI hardware.
    */
   void powerup()
   {
@@ -355,7 +357,7 @@ public:
   }
 
   /**
-   * Powerdown TWI.
+   * Powerdown TWI hardware.
    */
   void powerdown()
   {

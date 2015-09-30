@@ -28,11 +28,11 @@
 
 /**
  * Debounded Button; Sampled input pin (with internal pullup
- * resistor). Uses a watchdog timeout event (64 ms) for sampling and
- * on change calls an event action. Subclass Button and implement the
- * virtual on_change() method. Use the subclass for any state needed
- * for the action function. Connect button/switch from pin to
- * ground. Internal pull-up resistor is activated.
+ * resistor). Uses a periodic function with timout of 64 ms for
+ * sampling and on change calls an event action. Subclass Button and
+ * implement the virtual on_change() method. Use the subclass for any
+ * state needed for the action function. Connect button/switch from
+ * pin to ground. Internal pull-up resistor is activated.
  *
  * @section Circuit
  * @code
@@ -48,7 +48,9 @@
  * case when connecting to a Rotary Encoder.
  *
  * @section See Also
- * The Button event handler requires the usage of an event dispatch.
+ * The Button event handler requires the usage of an event dispatch or
+ * implementing the virtual member function Job::on_expired() to call
+ * run() and reschedule().
  * See Event.hh.
  */
 class Button : public InputPin, public Periodic {
@@ -65,12 +67,16 @@ public:
 
   /**
    * Construct a button connected to the given pin and with
-   * the given change detection mode.
+   * the given change detection mode. The scheduler should allow
+   * periodic jobs with a time unit of milli-seconds
+   * (e.g. Watchdog::Scheduler).
    * @param[in] scheduler for periodic job.
    * @param[in] pin number.
    * @param[in] mode change detection mode.
    */
-  Button(Job::Scheduler* scheduler, Board::DigitalPin pin, Mode mode = ON_CHANGE_MODE) :
+  Button(Job::Scheduler* scheduler,
+	 Board::DigitalPin pin,
+	 Mode mode = ON_CHANGE_MODE) :
     InputPin(pin, InputPin::PULLUP_MODE),
     Periodic(scheduler, SAMPLE_MS),
     MODE(mode),
@@ -79,10 +85,10 @@ public:
 
   /**
    * @override{Button}
-   * The button change event handler. Called when a change
-   * corresponding to the mode has been detected. Event types are;
-   * Event::FALLING_TYPE, Event::RISING_TYPE, and Event::CHANGE_TYPE.
-   * Sub-class must override this method.
+   * The button change handler. Called when a change corresponding to
+   * the mode has been detected. Event types are; Event::FALLING_TYPE,
+   * Event::RISING_TYPE, and Event::CHANGE_TYPE. Sub-class must
+   * override this method.
    * @param[in] type event type.
    */
   virtual void on_change(uint8_t type) = 0;
@@ -98,19 +104,13 @@ protected:
   uint8_t m_state;
 
   /**
-   * @override{Event::Handler}
-   * Button event handler. Called by event dispatch. Samples the
-   * attached pin and calls the pin change handler, on_change().
-   * @param[in] type the type of event (timeout).
-   * @param[in] value the event value.
+   * @override{Job}
+   * Button periodic function. Called by job scheduler on
+   * timeout. Samples the  attached pin and calls the pin change
+   * handler, on_change().
    */
-  virtual void on_event(uint8_t type, uint16_t value)
+  virtual void run()
   {
-    UNUSED(value);
-
-    // Skip all but timeout events
-    if (UNLIKELY(type != Event::TIMEOUT_TYPE)) return;
-
     // Update the button state
     uint8_t old_state = m_state;
     m_state = is_set();
@@ -120,9 +120,6 @@ protected:
     if ((old_state != new_state) &&
 	((MODE == ON_CHANGE_MODE) || (new_state == MODE)))
       on_change(Event::FALLING_TYPE + MODE);
-
-    // Put the job back into the queue
-    reschedule();
   }
 };
 

@@ -28,14 +28,14 @@
 #include "Cosa/Clock.hh"
 
 /**
- * The AVR Watchdog is used as a low power timer for periodical
- * events and delay. Please note that the accuracy is only within 1-10%
- * if not calibrated.
+ * The Watchdog is used as a low power timer for periodical events
+ * and delay. Please note that the accuracy is only 1-10% if not
+ * calibrated (typical drift is 16-32 ms per second).
  */
 class Watchdog {
 public:
   /**
-   * Get initiated state.
+   * Returns true(1) if initiated.
    * @return bool.
    */
   static bool is_initiated()
@@ -45,7 +45,8 @@ public:
 
   /**
    * Get watchdog clock in milli-seconds.
-   * @return ms.
+   * @return time in milli-seconds.
+   * @note atomic.
    */
   static uint32_t millis()
     __attribute__((always_inline))
@@ -57,7 +58,8 @@ public:
 
   /**
    * Set watchdog clock in millis-seconds.
-   * @param[in] ms.
+   * @param[in] ms milli-seconds.
+   * @note atomic.
    */
   static void millis(uint32_t ms)
   {
@@ -82,7 +84,8 @@ public:
   static void begin(uint16_t ms = 16);
 
   /**
-   * Delay using watchdog timeouts and sleep mode.
+   * Delay using watchdog timeouts and sleep mode. Timeouts will be
+   * the nearest watchdog tick.
    * @param[in] ms sleep period in milli-seconds.
    */
   static void delay(uint32_t ms);
@@ -97,9 +100,10 @@ public:
   }
 
   /**
-   * Returns number of milli-seconds from given start.
-   * @param[in] start
+   * Returns number of milli-seconds from given start time.
+   * @param[in] start time in milli-seconds.
    * @return milli-seconds.
+   * @note atomic.
    */
   static uint32_t since(uint32_t start)
     __attribute__((always_inline))
@@ -109,7 +113,8 @@ public:
   }
 
   /**
-   * Stop watchdog. Turn off timout callback. May be restarted with begin().
+   * Stop watchdog. Turn off timout callback. May be restarted with
+   * begin().
    */
   static void end()
   {
@@ -118,12 +123,13 @@ public:
   }
 
   /**
-   * Watchdog Scheduler for jobs with milli-seconds level time base.
+   * Watchdog Scheduler for jobs with milli-seconds as time unit.
+   * Constructor will automatically register the scheduler.
    */
   class Scheduler : public Job::Scheduler {
   public:
     /**
-     * Construct and register a Watchdog Job Scheduler. Should be a
+     * Construct and register a watchdog scheduler. Should be a
      * singleton.
      */
     Scheduler() : Job::Scheduler()
@@ -134,6 +140,8 @@ public:
     /**
      * @override{Job::Scheduler}
      * Return current watchdog time in milli-seconds.
+     * @return time in milli-seconds.
+     * @note atomic.
      */
     virtual uint32_t time()
     {
@@ -142,12 +150,14 @@ public:
   };
 
   /**
-   * Set the watchdog job scheduler.
+   * Set the watchdog job scheduler. May be used to enable/disable job
+   * scheduler.
    * @param[in] scheduler.
+   * @note atomic.
    */
   static void job(Watchdog::Scheduler* scheduler)
   {
-    s_scheduler = scheduler;
+    synchronized s_scheduler = scheduler;
   }
 
   /**
@@ -160,12 +170,13 @@ public:
   }
 
   /**
-   * Watchdog Clock for seconds level time base.
+   * Watchdog Clock for Alarms with seconds as time unit.
    */
   class Clock : public ::Clock {
   public:
     /**
-     * Construct and register a Watchdog Clock. Should be a singleton.
+     * Construct and register a Watchdog Clock. Should be a
+     * singleton.
      */
     Clock() : ::Clock()
     {
@@ -174,16 +185,17 @@ public:
   };
 
   /**
-   * Set the wall-clock.
+   * Set the watchdog wall-clock.
    * @param[in] clock.
+   * @note atomic.
    */
   static void wall(Clock* clock)
   {
-    s_clock = clock;
+    synchronized s_clock = clock;
   }
 
   /**
-   * Get the wall-clock.
+   * Get the watchdog wall-clock.
    * @return clock.
    */
   static Clock* clock()
@@ -200,7 +212,7 @@ private:
   static Clock* s_clock;		//!< Watchdog Clock.
 
   /**
-   * Do not allow instances. This is a static singleton.
+   * Do not allow instances. This is a name-space.
    */
   Watchdog() {}
 

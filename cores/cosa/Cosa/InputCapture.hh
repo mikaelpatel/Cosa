@@ -32,8 +32,9 @@
  * on ATmega328p, D8).
  *
  * @section Limitations
- * Uses Timer#1. Cannot be used with libraries that use the same Timer;
- * Tone, VWI. Compiles for Mega but the ICP1 pin is not available.
+ * Uses Timer1. Cannot be used with libraries that use the same Timer;
+ * Tone, VWI. Compiles for Mega but the ICP1 pin is not available on
+ * the Arduino Mega board.
  */
 class InputCapture : public Interrupt::Handler {
 public:

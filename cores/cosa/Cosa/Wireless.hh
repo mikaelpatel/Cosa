@@ -25,12 +25,12 @@
 #include "Cosa/Power.hh"
 
 /**
- * Cosa Common Wireless device interface.
+ * Common Wireless device interface.
  */
 class Wireless {
 public:
   /**
-   * Cosa Common Wireless device driver interface.
+   * Common Wireless device driver interface.
    */
   class Driver {
   public:
@@ -122,9 +122,9 @@ public:
     /**
      * @override{Wireless::Driver}
      * Start the Wireless device driver. Return true(1) if successful
-     * otherwise false(0).
-     * @param[in] config configuration vector (default NULL)
-     * @return bool
+     * otherwise false(0). Must be implemented by sub-class.
+     * @param[in] config configuration vector (default NULL).
+     * @return bool.
      */
     virtual bool begin(const void* config = NULL) = 0;
 
@@ -132,7 +132,7 @@ public:
      * @override{Wireless::Driver}
      * Shut down the device driver. Return true(1) if successful
      * otherwise false(0).
-     * @return bool
+     * @return bool.
      */
     virtual bool end()
     {
@@ -182,7 +182,7 @@ public:
      * @override{Wireless::Driver}
      * Send message in given null terminated io vector. Returns number
      * of bytes sent if successful otherwise a negative error code.
-     * reserved for system protocols).
+     * Must be implemented by sub-class.
      * @param[in] dest destination network address.
      * @param[in] port device port (or message type).
      * @param[in] vec null termianted io vector.
@@ -242,7 +242,7 @@ public:
      * Receive message and store into given buffer with given maximum
      * length. The source network address is returned in the parameter
      * src. Returns the number of received bytes or a negative error
-     * code.
+     * code. Must be implemented by sub-class.
      * @param[out] src source network address.
      * @param[out] port device port (or message type).
      * @param[in] buf buffer to store incoming message.
@@ -266,7 +266,7 @@ public:
 
     /**
      * @override{Wireless::Driver}
-     * Set output power level in dBm. Default no-operation.
+     * Set output power level in dBm.
      * @param[in] dBm.
      */
     virtual void set_output_power_level(int8_t dBm)
@@ -277,6 +277,7 @@ public:
     /**
      * @override{Wireless::Driver}
      * Return estimated input power level (dBm). Default zero(0).
+     * @return power level in dBm.
      */
     virtual int get_input_power_level()
     {
@@ -286,6 +287,7 @@ public:
     /**
      * @override{Wireless::Driver}
      * Return link quality indicator. Default zero(0).
+     * @return quality indicator.
      */
     virtual int get_link_quality_indicator()
     {

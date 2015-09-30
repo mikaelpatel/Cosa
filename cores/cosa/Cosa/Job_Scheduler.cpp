@@ -56,9 +56,9 @@ Job::Scheduler::dispatch()
   if (m_queue.is_empty()) return;
 
   // Run all jobs that have expired
-  uint32_t now = time();
   Job* job = (Job*) m_queue.get_succ();
   while ((Linkage*) job != &m_queue) {
+    uint32_t now = time();
     int32_t diff = now - job->expire_at();
     if (diff < 0) return;
     Job* succ = (Job*) job->get_succ();

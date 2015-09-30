@@ -57,7 +57,7 @@ public:
   }
 
   /**
-   * Set exit character to signal fatal.
+   * Set exit character to signal fatal to serial monitor.
    * @param[in] c new exit character.
    */
   void set_exitcharacter(char c)
@@ -76,11 +76,11 @@ public:
   void fatal(const char* file, int line, str_P expr)
     __attribute__((noreturn));
 
-  /** Result of latest MEASURE */
+  /** Result of latest MEASURE (in micro-seconds). */
   uint32_t measure;
 
 protected:
-  /** Exit from miniterm. Default CTRL-ALT GR-] (0x1d) */
+  /** Exit from serial monitor, miniterm. Default CTRL-ALT GR-] (0x1d) */
   char EXITCHARACTER;
 };
 

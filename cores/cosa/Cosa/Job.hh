@@ -27,14 +27,14 @@
 /**
  * Abstract job class for handling of scheduled functions. The time
  * scale depends on the queue handler (scheduler). There are three
- * levels of queues predefined. The time resolutions; seconds (Clock),
- * milli-seconds (Watchdog) and micro-seconds (RTC).
+ * levels of queues predefined. The time resolutions are; seconds
+ * (Clock), milli-seconds (Watchdog) and micro-seconds (RTC).
  */
 class Job : public Link {
 public:
   /**
-   * Abstract class for scheduling of jobs. Must be sub-classed
-   * to implement time base. The virtual member start() queues jobs,
+   * Abstract class for scheduling of jobs. Must be sub-classed to
+   * implement time base. The virtual member start() queues jobs,
    * stop() dequeues jobs, dispatch() which typically is called from
    * an interrupt service will by default push a timeout event to the
    * job. The default event handler will call the job run() virtual
@@ -43,7 +43,7 @@ public:
   class Scheduler {
   public:
     /**
-     * Construct default job scheduler.
+     * Construct default job scheduler and initiate job queue.
      */
     Scheduler() : m_queue() {}
 
@@ -60,13 +60,15 @@ public:
      * @override{Job::Scheduler}
      * Stop given job. Returns true(1) if successful otherwise
      * false(0).
+     * @param[in] job to stop.
      * @return bool.
      */
     virtual bool stop(Job* job);
 
     /**
      * @override{Job::Scheduler}
-     * Dispatch expired jobs.
+     * Dispatch expired jobs. This member function is typically called
+     * from an interrupt service routine.
      */
     virtual void dispatch();
 
@@ -83,7 +85,8 @@ public:
   };
 
   /**
-   * Construct delayed job function.
+   * Construct delayed job function. The virtual member function run()
+   * is called by the given scheduler when the scheduled time expires.
    * @param[in] scheduler for the job.
    */
   Job(Scheduler* scheduler) :
@@ -93,7 +96,7 @@ public:
   {}
 
   /**
-   * Set expire time.
+   * Set expire time. Absolute time in scheduler time unit.
    * @param[in] time to expire.
    */
   void expire_at(uint32_t time)
@@ -130,7 +133,7 @@ public:
   }
 
   /**
-   * Get current scheduler time.
+   * Get current scheduler time. May be used to set relative expire time.
    * @return time.
    */
   uint32_t time() const
@@ -171,12 +174,13 @@ public:
 
   /**
    * @override{Job}
-   * Job member function that is called when the job time has
-   * expired. This function is normally called from an ISR. The
-   * default implementation will push a timeout event with the job as
-   * target. The event handler will call the job run() virtual member
-   * function. Override this function if the job should be executed
-   * during the ISR.
+   * Job member function that is called Scheduler::dispatch() when the
+   * job time has expired. This function is normally called from an
+   * interrupt service routine. The default implementation will push a
+   * timeout event with the job as target. The default event handler
+   * will call  the job run() virtual member function. Override this
+   * function if the job should be executed during the interrupt
+   * service routine.
    */
   virtual void on_expired()
   {
@@ -192,7 +196,6 @@ public:
    */
   virtual void on_event(uint8_t type, uint16_t value)
   {
-    UNUSED(type);
     UNUSED(value);
     if (type == Event::TIMEOUT_TYPE) run();
   }
@@ -201,6 +204,8 @@ public:
    * @override{Job}
    * The job run() virtual member function; sub-class should define.
    * Called by the scheduler (via event handler) when the time expires.
+   * May set an new expire time and start the job again, or even start
+   * other jobs.
    */
   virtual void run() {}
 
