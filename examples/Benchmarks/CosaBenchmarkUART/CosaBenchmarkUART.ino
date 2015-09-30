@@ -226,8 +226,6 @@ void loop()
   trace << PSTR("background pulses (") << pulses << PSTR("):")
 	<< (uint32_t) pulses * PULSE_WIDTH << PSTR(" us")
 	<< endl;
-  sleep(1);
-#else
-  ASSERT(true == false);
 #endif
+  sleep(1);
 }
