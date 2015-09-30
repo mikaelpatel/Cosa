@@ -7,7 +7,7 @@
 # done), received characters are displayed as is (or escaped trough pythons
 # repr, useful for debug purposes).
 
-import sys, os, serial, threading
+import sys, os, serial, threading, time
 
 EXITCHARCTER = '\x1d'   # GS/CTRL+]
 MENUCHARACTER = '\x14'  # Menu: CTRL+T
@@ -230,6 +230,7 @@ class Miniterm:
                             sys.stdout.write("%s " % character.encode('hex'))
                             sys.stdout.flush()
             except serial.SerialException, e:
+                time.sleep(0.001)
                 continue
             except TypeError as e:
                 self.alive = False
