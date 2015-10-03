@@ -228,7 +228,7 @@ class Miniterm:
                         # escape everything (hexdump)
                         for character in data:
                             sys.stdout.write("%s " % character.encode('hex'))
-                            sys.stdout.flush()
+                sys.stdout.flush()
             except serial.SerialException, e:
                 time.sleep(0.001)
                 continue
