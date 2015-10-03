@@ -39,34 +39,30 @@ void setup()
   // Start the watchdog and internal real-time clock
   Watchdog::begin();
   RTC::begin();
-
-  // Synchronized clocks
-  uint32_t now = clock.await();
-  delay(500);
-  bark.time(now + 1);
 }
 
 void loop()
 {
-  static int32_t cycle = 1;
-
-  // Wait for clock update
-  uint32_t now = clock.await();
-
-  // Calculate error and possible adjustment
-  int32_t diff = bark.time() - now;
-  int32_t err = (1000 * diff) / cycle;
-  if (err != 0) {
-    bark.adjust(err / 2);
-    trace << endl << PSTR("calibration=") << bark.calibration() << endl;
-    cycle = 1;
-    clock.time(0);
-    now = clock.await();
-    delay(500);
-    bark.time(now + 1);
+  // Measure the watchdog clock. Wait for stable measurement
+  uint32_t us = 10000L;
+  for (int j = 0; j < 10;) {
+    uint32_t t = us;
+    uint32_t w = bark.time();
+    while (w == bark.time()) yield();
+    uint32_t start = RTC::micros();
+    w = bark.time();
+    while (w == bark.time()) yield();
+    uint32_t stop = RTC::micros();
+    us = stop - start;
+    int32_t diff = t - us;
+    if (diff < 0) diff = -diff;
+    if (diff > 50) j = 0; else j += 1;
+    trace << j << '.';
   }
-  else {
-    trace << '.';
-    cycle += 1;
-  }
+  trace << endl;
+  int32_t diff = (1000000UL - us);
+  int16_t ms = (diff + 500L) / 1000;
+  bark.adjust(ms);
+  trace << PSTR("calibration=") << bark.calibration() << endl;
+  sleep(5);
 }
