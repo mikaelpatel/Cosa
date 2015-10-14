@@ -258,43 +258,6 @@
 # ARDUINO_CORE_PATH = ~/sketchbook/hardware/tiny2/cores/tiny
 #
 ########################################################################
-#
-# SIZE OPTIONS
-#
-# Upload of oversized flash memory is prevented.
-#
-# For compatibility with previous versions, oversized data or eeprom
-# will still be uploaded by default.
-#
-# To prevent upload when data size is exceeded, define PREVENT_DATA_SIZE.
-# To prevent upload when eeprom size is exceeded, define PREVENT_EEPROM_SIZE.
-#
-# These depend on the following settings in boards.txt:
-#    maximum_data_size
-#    maximum_eeprom_size
-#
-########################################################################
-
-PREVENT_DATA_SIZE=yes
-PREVENT_EEPROM_SIZE=yes
-
-SIZE_HIGHLIGHT = "\\n"
-
-ifdef PREVENT_DATA_SIZE
-	PREVENT_DATA_SIZE = 1
-  SIZE_DATA_HIGHLIGHT = ""
-else
-	PREVENT_DATA_SIZE = 0
-  SIZE_DATA_HIGHLIGHT = "\\n********************************************************************************\\n"
-endif
-
-ifdef PREVENT_EEPROM_SIZE
-	PREVENT_EEPROM_SIZE = 1
-  SIZE_EEPROM_HIGHLIGHT = ""
-else
-	PREVENT_EEPROM_SIZE = 0
-  SIZE_EEPROM_HIGHLIGHT = "\\n********************************************************************************\\n"
-endif
 
 ########################################################################
 # Display configuration
@@ -1381,21 +1344,21 @@ verify_size: $(TARGET_HEX)
 ifeq ($(strip $(HEX_MAXIMUM_SIZE)),)
 	@$(ECHO) "\nMaximum flash memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s flash memory\n\n"
 else
-	@if [ ! -f $(TARGET_HEX).sizeok ]; then echo >&2 "$(SIZE_HIGHLIGHT)The size of the compiled binary file is greater than the $(BOARD_TAG)'s flash memory. \
-See http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it.$(SIZE_HIGHLIGHT)"; fi
+	@if [ ! -f $(TARGET_HEX).sizeok ]; then echo >&2 "\\nThe size of the compiled binary file is greater than the $(BOARD_TAG)'s flash memory. \
+See http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it.\\n"; fi
 	@if [ ! -f $(TARGET_HEX).sizeok ]; then false; fi
 endif
 ifeq ($(strip $(HEX_MAXIMUM_DATA_SIZE)),)
 	@$(ECHO) "\nMaximum data memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s data memory\n\n"
 else
-	@if [ ! -f $(TARGET_HEX).datasizeok ]; then echo >&2 "$(SIZE_DATA_HIGHLIGHT)The data size of the compiled binary file is greater than the $(BOARD_TAG)'s data memory.$(SIZE_DATA_HIGHLIGHT)"; fi
-	@if [ ! -f $(TARGET_HEX).datasizeok -a $(PREVENT_DATA_SIZE) -eq 1 ]; then false; fi
+	@if [ ! -f $(TARGET_HEX).datasizeok ]; then echo >&2 "\\nThe data size of the compiled binary file is greater than the $(BOARD_TAG)'s data memory.\\n"; fi
+	@if [ ! -f $(TARGET_HEX).datasizeok ]; then false; fi
 endif
 ifeq ($(strip $(HEX_MAXIMUM_EEPROM_SIZE)),)
 	@$(ECHO) "\nMaximum eeprom memory of $(BOARD_TAG) is not specified. Make sure the size of $(TARGET_HEX) is less than $(BOARD_TAG)\'s eeprom memory\n\n"
 else
-	@if [ ! -f $(TARGET_HEX).eepromsizeok ]; then echo >&2 "$(SIZE_EEPROM_HIGHLIGHT)The eeprom size of the compiled binary file is greater than the $(BOARD_TAG)'s eeprom memory.$(SIZE_EEPROM_HIGHLIGHT)"; fi
-	@if [ ! -f $(TARGET_HEX).eepromsizeok -a $(PREVENT_EEPROM_SIZE) -eq 1 ]; then false; fi
+	@if [ ! -f $(TARGET_HEX).eepromsizeok ]; then echo >&2 "\\nThe eeprom size of the compiled binary file is greater than the $(BOARD_TAG)'s eeprom memory.\\n"; fi
+	@if [ ! -f $(TARGET_HEX).eepromsizeok ]; then false; fi
 endif
 
 generate_assembly: $(OBJDIR)/$(TARGET).s
