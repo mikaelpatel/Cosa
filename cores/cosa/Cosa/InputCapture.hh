@@ -25,6 +25,7 @@
 
 #if !defined(BOARD_ATTINY)
 #include "Cosa/Interrupt.hh"
+#include "Cosa/Power.hh"
 
 /**
  * Input Capture Unit. Allows timer capture and interrupt handling on
@@ -49,6 +50,22 @@ public:
    * @param[in] mode capture mode (Default ON_FALLING_MODE).
    */
   InputCapture(InterruptMode mode = ON_FALLING_MODE);
+
+  /**
+   * Start input capture timer.
+   */
+  static void begin()
+  {
+    Power::timer1_enable();
+  }
+
+  /**
+   * Stop input capture timer.
+   */
+  static void end()
+  {
+    Power::timer1_disable();
+  }
 
   /**
    * Get current capture mode.

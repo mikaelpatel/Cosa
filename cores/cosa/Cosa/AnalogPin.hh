@@ -103,6 +103,7 @@ public:
   static void powerup()
     __attribute__((always_inline))
   {
+    Power::adc_enable();
     bit_set(ADCSRA, ADEN);
   }
 
@@ -113,6 +114,7 @@ public:
     __attribute__((always_inline))
   {
     bit_clear(ADCSRA, ADEN);
+    Power::adc_disable();
   }
 
   /**

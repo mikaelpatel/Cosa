@@ -24,6 +24,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include "Cosa/CPU.hh"
 #include "Cosa/Power.hh"
 
 /**
@@ -35,7 +36,7 @@ void init()
 {
   // Adjust frequency scaling on Teensy; default is no scaling on Cosa
 #if defined(PJRC_TEENSY_2_0) || defined(PJRC_TEENSYPP_2_0)
-  Power::clock_prescale(0);
+  CPU::clock_prescale(0);
 #endif
 
   // Set analog converter prescale factor and but do not enable conversion
@@ -68,9 +69,12 @@ void init()
 
   // Disable low voltage detect
 #if defined(COSA_BOD_DISABLE) && defined(BODS)
-  MCUCR |= _BV(BODS) | _BV(BODSE);
+  MCUCR |= (_BV(BODS) | _BV(BODSE));
   MCUCR |= _BV(BODS);
 #endif
+
+  // Power down all modules.
+  Power::all_disable();
 
   // Allow the board to set ports in a safe state. Typically chip
   // select pins to board devices
@@ -136,6 +140,7 @@ void exit(int status)
  */
 static void default_delay(uint32_t ms)
 {
+  if (UNLIKELY(ms == 0)) return;
   while (ms--) DELAY(1000);
 }
 

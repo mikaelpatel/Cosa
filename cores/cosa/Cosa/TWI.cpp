@@ -43,6 +43,9 @@ TWI::begin(TWI::Driver* dev)
     key = lock();
   }
 
+  // Power up the module
+  powerup();
+
   // Mark as busy
   m_dev = dev;
   m_busy = true;
@@ -69,6 +72,9 @@ TWI::end()
     m_busy = false;
     TWCR = 0;
   }
+
+  // Power down the module
+  powerdown();
 }
 
 bool
