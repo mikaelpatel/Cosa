@@ -90,7 +90,7 @@ Pulse background(&scheduler, BACKGROUND_PULSE, Board::D7);
 void setup()
 {
   // Start serial output with given baud-rate
-  uart.begin(2000000);
+  uart.begin(1000000);
   // uart.begin(2000000);
   // uart.begin(1000000);
   // uart.begin(500000);
