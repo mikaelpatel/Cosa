@@ -81,6 +81,9 @@ VWI::begin(const void* config)
   // Bit values for prescale register: CS0[2:0]
   uint8_t prescaler;
 
+  // Power up the timer
+  Power::timer1_enable();
+
 #if defined(BOARD_ATTINYX5)
   // Figure out prescaler value and counter match value
   prescaler = timer_setting(m_speed * SAMPLES_PER_BIT, 8, &nticks);
@@ -125,6 +128,7 @@ bool
 VWI::end()
 {
   powerdown();
+  Power::timer1_disable();
   return (true);
 }
 

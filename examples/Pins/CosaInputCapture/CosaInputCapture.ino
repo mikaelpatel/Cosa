@@ -29,20 +29,20 @@
  */
 
 #include "Cosa/InputCapture.hh"
+#include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/CPU.hh"
 
 class Probe : public InputCapture {
 public:
-  Probe() : InputCapture(), m_capture(0), m_period(0), m_triggers(0) {}
-  uint16_t get_capture() const { return (m_capture); }
-  uint16_t get_period() const { return (m_period); }
+  Probe() : InputCapture(), m_triggers(0) {}
   uint16_t get_latency() const { return (m_latency); }
+  uint16_t get_triggers() const { return (m_triggers); }
+  void reset() { m_triggers = 0; }
 protected:
   virtual void on_interrupt(uint16_t arg);
-  uint16_t m_capture;
-  uint16_t m_period;
   uint16_t m_triggers;
   uint16_t m_latency;
 };
@@ -52,10 +52,8 @@ Probe::on_interrupt(uint16_t arg)
 {
   // Calculate latency; arg is the timer capture
   m_latency = TCNT1 - arg;
-  // Calculate cycles from latest capture (two falling events)
-  m_period = arg - m_capture;
-  // Save capture
-  m_capture = arg;
+  // Count number of calls
+  m_triggers++;
 }
 
 // The input capture probe on pin D8 (implicit)
@@ -63,18 +61,25 @@ Probe probe;
 
 void setup()
 {
-  uart.begin(9600);
+  CPU::clock_prescale(1);
+  uart.begin(57600);
   trace.begin(&uart, PSTR("CosaInputCapture: started"));
+  trace << PSTR("ICP1 - D8") << endl;
   Watchdog::begin();
-  probe.enable();
+  RTC::begin();
+  InputCapture::begin();
 }
 
 void loop()
 {
   // Periodically print capture period in hz and latency in us
+  probe.reset();
+  RTC::await();
+  probe.enable();
   delay(1000);
-  trace << Watchdog::millis() / 1000L << ':'
-	<< F_CPU / probe.get_period() << PSTR(" hz,")
+  probe.disable();
+  trace << probe.get_triggers() << PSTR(" hz,")
 	<< probe.get_latency() / I_CPU << PSTR(" us")
 	<< endl;
+  trace.flush();
 }
