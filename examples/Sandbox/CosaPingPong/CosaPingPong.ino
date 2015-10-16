@@ -34,17 +34,17 @@
  */
 class Echo : public FSM {
 
-private:
-  str_P m_name;
-  uint16_t m_count;
-  FSM* m_port;
-
 public:
   /**
    * Construct the echo state machine. Name and port must be bound
    * before started.
    */
-  Echo() : FSM(initState), m_name(0), m_count(0), m_port(0) {}
+  Echo(Job::Scheduler* scheduler) :
+    FSM(initState, scheduler),
+    m_name(0),
+    m_count(0),
+    m_port(0)
+  {}
 
   /**
    * Bind name and port. The name is used for the trace print
@@ -58,6 +58,11 @@ public:
     m_port = fsm;
   }
 
+private:
+  str_P m_name;
+  uint16_t m_count;
+  FSM* m_port;
+
   /**
    * The states; init, listen and echo.
    * init -> listen: print init message
@@ -68,9 +73,7 @@ public:
   {
     UNUSED(type);
     Echo* echo = (Echo*) fsm;
-    trace.print(PSTR("init "));
-    trace.print(echo->m_name);
-    trace.println();
+    trace << PSTR("init ") << echo->m_name << endl;
     fsm->set_state(listenState);
     return (true);
   }
@@ -79,10 +82,11 @@ public:
   {
     UNUSED(type);
     Echo* echo = (Echo*) fsm;
-    trace.print(echo->m_name);
-    trace.printf(PSTR("(count = %d)\n"), echo->m_count++);
+    trace << echo->time() << ':' << echo->m_name
+	  << '(' << echo->m_count++ << ')'
+	  << endl;
     fsm->set_state(echoState);
-    fsm->set_timer(512);
+    fsm->set_timer(500);
     return (true);
   }
 
@@ -96,10 +100,13 @@ public:
   };
 };
 
+// Use the Watchdog job scheduler
+Watchdog::Scheduler scheduler;
+
 // The three echo state machines
-Echo ping;
-Echo pong;
-Echo pang;
+Echo ping(&scheduler);
+Echo pong(&scheduler);
+Echo pang(&scheduler);
 
 void setup()
 {
