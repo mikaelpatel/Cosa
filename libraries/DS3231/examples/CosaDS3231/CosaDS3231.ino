@@ -62,6 +62,8 @@ void setup()
   // Start trace output stream on the serial port
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaDS3231: started"));
+  trace.precision(2);
+  trace.width(4);
 
   // Check amount of free memory
   TRACE(free_memory());
@@ -90,23 +92,32 @@ void setup()
 
   // Set square-wave output
   TRACE(rtc.square_wave(true));
+  trace.flush();
 }
 
 void loop()
 {
   // Wait for rising clock signal
+  uart.powerdown();
+  uint8_t mode = Power::set(SLEEP_MODE_PWR_DOWN);
   while (clkPin.is_clear()) yield();
+  Power::set(mode);
+  uart.powerup();
   ledPin.toggle();
 
   // Read the time from the rtc device and print
   time_t now;
   ASSERT(rtc.get_time(now));
   now.to_binary();
-  trace << now << ' ';
-  int16_t temp = rtc.get_temperature();
-  trace << (temp >> 2) << '.' << (25 * (temp & 0x3)) << PSTR(" C") << endl;
+  float temp = rtc.get_temperature() * 0.25;
+  trace << now << ' ' << temp << PSTR(" C") << endl;
 
   // Wait for falling clock signal
   ledPin.toggle();
+  trace.flush();
+  uart.powerdown();
+  mode = Power::set(SLEEP_MODE_PWR_DOWN);
   while (clkPin.is_set()) yield();
+  Power::set(mode);
+  uart.powerup();
 }
