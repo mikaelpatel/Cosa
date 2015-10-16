@@ -67,12 +67,6 @@ void init()
   UDIEN = 0;
 #endif
 
-  // Disable low voltage detect
-#if defined(COSA_BOD_DISABLE) && defined(BODS)
-  MCUCR |= (_BV(BODS) | _BV(BODSE));
-  MCUCR |= _BV(BODS);
-#endif
-
   // Power down all modules.
   Power::all_disable();
 

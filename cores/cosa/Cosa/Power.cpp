@@ -25,10 +25,18 @@ uint8_t Power::s_mode = SLEEP_MODE_IDLE;
 void
 Power::sleep(uint8_t mode)
 {
+  uint8_t saved = ADCSRA;
+  ADCSRA = 0;
   if (mode == POWER_SLEEP_MODE) mode = s_mode;
   set_sleep_mode(mode);
-  sleep_enable();
+  synchronized {
+    sleep_enable();
+#if !defined(COSA_BROWN_OUT_DETECT)
+    sleep_bod_disable();
+#endif
+  }
   sleep_cpu();
   sleep_disable();
+  ADCSRA = saved;
 }
 

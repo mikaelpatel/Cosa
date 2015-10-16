@@ -31,9 +31,9 @@
 #define COSA_H
 
 /**
- * Software disable low voltage detect. Powersaving is 23 uA at 5 V.
+ * Enable low voltage detect.
  * In file: main.cpp
- * #define COSA_BOD_DISABLE
+ * #define COSA_BROWN_OUT_DETECT
  */
 
 /**
