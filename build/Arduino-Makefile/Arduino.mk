@@ -399,7 +399,8 @@ ifndef OBJDUMP_NAME
 endif
 
 ifndef AR_NAME
-  AR_NAME = avr-ar
+  # AR_NAME = avr-ar
+  AR_NAME = avr-gcc-ar
 endif
 
 ifndef SIZE_NAME
@@ -1324,7 +1325,7 @@ config:
 	@$(ECHO) "Please refer to $(ARDMK_DIR)/Arduino.mk for more details.\n"
 
 boards:
-	@$(CAT) "$(BOARDS_TXT)" | grep -E "^[[:alnum:]|-]+.name" | sort -uf | sed 's/.name=/:/' | column -s: -t
+	@$(CAT) "$(BOARDS_TXT)" | grep -E ".name" | sort -uf | sed 's/.name=/:/' | column -s: -t
 
 monitor:
 	$(ARD_UTIL) --appear
