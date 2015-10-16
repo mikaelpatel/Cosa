@@ -16,7 +16,22 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Benchmark Analog data-logging over IOStream/UART.
+ * Benchmark Analog data-logging over IOStream/UART. Is it possible
+ * to achieve 4K samples per second and write the values in text
+ * format over the serial/uart?
+ *
+ * Bits per sample: 10
+ * Sample range: [0..1023], [0..5V]
+ * Micro-seconds per conversion: 112
+ *
+ * Samples per second: 4,000
+ * Micro-seconds per sample: 250
+ *
+ * Max number of characters: 4,000 * (4 + 2) = 24,000
+ * Max number of bits: 24,000 * (1 + 8 + 2) = 264,000
+ *
+ * Avg number of characters: 4,000 * (2 + 2) = 16,000
+ * Avg number of bits: 16,000 * (1 + 8 + 2) = 196,000
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -43,7 +58,7 @@ void iowait()
 void setup()
 {
   // Start serial output with given baud-rate
-  uart.begin(500000);
+  uart.begin(250000);
   // uart.begin(2000000);
   // uart.begin(1000000);
   // uart.begin(500000);
@@ -61,6 +76,9 @@ void setup()
   // Install capture idle time
   ::yield = iowait;
 
+  // Power up ADC
+  AnalogPin::powerup();
+
   // Start timers
   Watchdog::begin();
   RTC::begin();
@@ -69,7 +87,7 @@ void setup()
 void loop()
 {
   uint16_t SAMPLES = 1000;
-  float Ksps;
+  float ksps;
 
   // 1000 samples with 1 ms period; simple sample and print
   idle = 0L;
@@ -84,20 +102,20 @@ void loop()
     trace.flush();
   }
   INFO("per sample:%ul us", trace.measure / SAMPLES);
-  Ksps = ((float) SAMPLES * 1000.0) / trace.measure;
+  ksps = ((float) SAMPLES * 1000.0) / trace.measure;
   trace << PSTR("effective sample rate (") << SAMPLES << PSTR(" samples):")
-	<< Ksps << PSTR(" Ksps")
+	<< ksps << PSTR(" ksps")
 	<< endl;
   trace << PSTR("idle:") << (idle * 100.0) / RTC::micros() << '%'
 	<< endl;
   sleep(5);
 
-  // 1000 samples with 125 us period; pipe-line sample request and print
+  // 1000 samples with 250 us period; pipe-line sample request and print
   idle = 0L;
   MEASURE("performance:", 1) {
     for (uint16_t i = 0; i < SAMPLES;) {
       probe.sample_request();
-      PERIODIC(timer, 500) {
+      PERIODIC(timer, 250) {
 	uint16_t sample = probe.sample_await();
 	probe.sample_request();
 	trace << sample << endl;
@@ -107,9 +125,9 @@ void loop()
     trace.flush();
   }
   INFO("per sample:%ul us", trace.measure / SAMPLES);
-  Ksps = ((float) SAMPLES * 1000.0) / trace.measure;
+  ksps = ((float) SAMPLES * 1000.0) / trace.measure;
   trace << PSTR("effective sample rate (") << SAMPLES << PSTR(" samples):")
-	<< Ksps << PSTR(" Ksps")
+	<< ksps << PSTR(" ksps")
 	<< endl;
   trace << PSTR("idle:") << (idle * 100.0) / RTC::micros() << '%'
 	<< endl;
