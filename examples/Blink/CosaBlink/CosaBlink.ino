@@ -21,9 +21,25 @@
  * blink period(10:2000 ms) and the Watchdog for low power mode during
  * delay.
  *
+ * 		      Lilypad      Pro-Micro
+ * 1. Baseline		9.3	     15.8       mA
+ * 2. Disable modules   8.2	     14.5	mA
+ * 3. Use watchdog	4.5	      8.1	mA
+ * 4. Sleep mode
+ *    a. Standby        280	      600	uA
+ *    b. Ext Standby	280	      600	uA
+ *    c. Powerdown	110	      260	uA
+ * 5. Watchdog period	 50	      200	uA
+ * 6. Output pin	  6	      146	uA
+ * 7. Remove regulator   NA            12	uA
+ *
+ * Note: The Cosa approach to low power is to provide as much as
+ * possible by default, built-in and with additional support functions
+ * to reduce power consumption.
+ *
  * @section Circuit
  * Uses built-in LED (D13/Arduino). Measurement of mA/uA on VCC from
- * FTDI. Power LED removed on Pro-Mini.
+ * FTDI which is kept connected (See 6). Power LED removed on Pro-Mini.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -38,29 +54,29 @@ OutputPin ledPin(Board::LED);
 
 void setup()
 {
-  // 1. Power consumption: 9.9/15.8 mA (Lilypad/Pro-Micro)
+  // 1. Power consumption: 9.3/15.8 mA (Lilypad/Pro-Mini)
   // Busy-wait implementation of delay as Arduino.
   // Power::all_enable();
 
-  // 2. Power Reduction: 10.5/14.5 mA
+  // 2. Power Reduction: 8.2/14.5 mA
   // Baseline measurement with disable of all modules (main.cpp).
 
-  // 3. With watchdog delay: 7.1/8.1 mA
+  // 3. With watchdog delay: 4.5/8.1 mA
   // Start the watchdog with the default timeout period (16 ms)
   // Will install low-power version of the delay() function
   // Watchdog::begin();
 
   // 4. Sleep mode with watchdog delay (3)
-  // a. Idle: 7.1/8.1 mA (default)
+  // Idle: 7.1/8.1 mA (default)
   // Power::set(SLEEP_MODE_IDLE);
-  // b. Standby: 280/600 uA
+  // a. Standby: 280/600 uA
   // Power::set(SLEEP_MODE_STANDBY);
-  // c. Extended standby: 280/600 uA
+  // b. Extended standby: 280/600 uA
   // Power::set(SLEEP_MODE_EXT_STANDBY);
-  // d. Power-down: 110/260 uA
+  // c. Power-down: 110/260 uA
   Power::set(SLEEP_MODE_PWR_DOWN);
 
-  // 5. Watchdog period change with powerdown (4d)
+  // 5. Watchdog period change with powerdown (4c)
   // Watchdog shutdown: 50/200 uA
   #define USE_WATCHDOG_SHUTDOWN
 
@@ -68,12 +84,7 @@ void setup()
   // Output mode: 6/146 uA
   OutputPin::set_mode(Board::D0);
 
-  // 7. Remove Pro-Micro reglator
-  // This will remove the difference.
-
-  // NB: The Cosa approach to low power is to provide
-  // as much as possible built-in and with additional
-  // support functions to reduce power consumption.
+  // 7. Remove Pro-Micro regulator
 }
 
 void loop()
