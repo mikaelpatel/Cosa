@@ -159,9 +159,9 @@ private:
 };
 
 // Pulse generators from the different clocks (logic analyzer channel colors)
-Pulse black(&clock, 1, Board::D7);
-Pulse brown(&wall, 1, Board::D8);
-Pulse red(&bark, 1, Board::D9);
+Pulse black(&clock, 1, Board::LED);
+Pulse brown(&wall, 1, Board::D12);
+Pulse red(&bark, 1, Board::D11);
 
 void setup()
 {
