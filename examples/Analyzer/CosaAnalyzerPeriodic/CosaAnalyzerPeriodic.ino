@@ -19,12 +19,12 @@
  * Logic Analyzer based analysis of Periodic jobs.
  *
  * @section Circuit
- * Trigger on CHAN0/D7 rising.
+ * Trigger on CHAN0/D13 rising.
  *
  * +-------+
- * | CHAN0 |-------------------------------> D7
- * | CHAN1 |-------------------------------> D8
- * | CHAN2 |-------------------------------> D9
+ * | CHAN0 |-------------------------------> D13
+ * | CHAN1 |-------------------------------> D12
+ * | CHAN2 |-------------------------------> D11
  * |       |
  * | GND   |-------------------------------> GND
  * +-------+
@@ -40,12 +40,12 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // Use the RTC or Watchdog Job Scheduler
-#define USE_RTC
-// #define USE_WATCHDOG
+// #define USE_RTC
+#define USE_WATCHDOG
 
 // Call directly from interrupt and use one of the scheduling types
 // #define USE_ISR_TIME_PERIOD
-#define USE_ISR_RESCHEDULE
+// #define USE_ISR_RESCHEDULE
 
 #if defined(USE_RTC)
 #define TIMER RTC
@@ -100,18 +100,18 @@ private:
 TIMER::Scheduler scheduler;
 
 // The periodic work
-Work w1(&scheduler, SCALE(640), Board::D7);
-Work w2(&scheduler, SCALE(320), Board::D8);
-Work w3(&scheduler, SCALE(160), Board::D9);
+Work w1(&scheduler, SCALE(640), Board::D13);
+Work w2(&scheduler, SCALE(320), Board::D12);
+Work w3(&scheduler, SCALE(160), Board::D11);
 
 void setup()
 {
   // Print info about the logic analyser probe channels
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalyzerPeriodic: started"));
-  trace << PSTR("CHAN0 - D7 [^]") << endl;
-  trace << PSTR("CHAN1 - D8") << endl;
-  trace << PSTR("CHAN2 - D9") << endl;
+  trace << PSTR("CHAN0 - D13 [^]") << endl;
+  trace << PSTR("CHAN1 - D12") << endl;
+  trace << PSTR("CHAN2 - D11") << endl;
 #if defined(USE_RTC)
   trace << PSTR("RTC Job Scheduler") << endl;
 #endif

@@ -19,11 +19,11 @@
  * Logic Analyzer based analysis of Job chain scheduling.
  *
  * @section Circuit
- * Trigger on CHAN0/D7 rising.
+ * Trigger on CHAN0/D13 rising.
  *
  * +-------+
- * | CHAN0 |-------------------------------> D7
- * | CHAN1 |-------------------------------> D8
+ * | CHAN0 |-------------------------------> D13
+ * | CHAN1 |-------------------------------> D12
  * |       |
  * | GND   |-------------------------------> GND
  * +-------+
@@ -43,10 +43,11 @@
 class Work : public Job {
 public:
   Work(Job::Scheduler* scheduler,
-       Board::DigitalPin pin, uint32_t delay,
-       Work* chain) :
+       Board::DigitalPin pin, uint16_t pulse,
+       uint32_t delay, Work* chain) :
     Job(scheduler),
     m_pin(pin),
+    m_pulse(pulse),
     m_delay(delay),
     m_chain(chain)
   {
@@ -63,14 +64,16 @@ public:
   // to the expire time of the current work
   virtual void run()
   {
-    m_pin.toggle();
     m_chain->expire_at(expire_at() + m_delay);
     m_chain->start();
+    m_pin.toggle();
+    DELAY(m_pulse);
     m_pin.toggle();
   }
 
 private:
   OutputPin m_pin;
+  uint16_t m_pulse;
   uint32_t m_delay;
   Work* m_chain;
 };
@@ -87,22 +90,22 @@ extern Work w4;
 
 // Periodic
 // (w0)-200ms->(w0)
-Work w0(&scheduler, Board::D7, 200000UL, &w0);
+Work w0(&scheduler, Board::D13, 100, 200000UL, &w0);
 
 // Chain
 // (w1)-150us->(w2)-400us->(w3)-1200us->(w4)-250us->(w1)
-Work w1(&scheduler, Board::D8,    150UL, &w2);
-Work w2(&scheduler, Board::D8,    400UL, &w3);
-Work w3(&scheduler, Board::D8,   1200UL, &w4);
-Work w4(&scheduler, Board::D8,    250UL, &w1);
+Work w1(&scheduler, Board::D12, 50, 150UL, &w2);
+Work w2(&scheduler, Board::D12, 100, 400UL, &w3);
+Work w3(&scheduler, Board::D12, 200, 1200UL, &w4);
+Work w4(&scheduler, Board::D12, 75, 250UL, &w1);
 
 void setup()
 {
   // Print Info about the logic analyser probe channels
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalyzerJob: started"));
-  trace << PSTR("CHAN0 - D7 [^]") << endl;
-  trace << PSTR("CHAN1 - D8") << endl;
+  trace << PSTR("CHAN0 - D13 [^]") << endl;
+  trace << PSTR("CHAN1 - D12") << endl;
   trace << PSTR("RTC Job Scheduler") << endl;
 #if defined(USE_ISR_DISPATCH)
   trace << PSTR("ISR dispatch") << endl;

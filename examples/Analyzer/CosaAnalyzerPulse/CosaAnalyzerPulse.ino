@@ -23,9 +23,9 @@
  * Trigger on CHAN0/D7 rising.
  *
  * +-------+
- * | CHAN0 |-------------------------------> D7
- * | CHAN1 |-------------------------------> D8
- * | CHAN2 |-------------------------------> D9
+ * | CHAN0 |-------------------------------> D13
+ * | CHAN1 |-------------------------------> D12
+ * | CHAN2 |-------------------------------> D11
  * |       |
  * | GND   |-------------------------------> GND
  * +-------+
@@ -41,11 +41,11 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // Use the RTC or Watchdog Job Scheduler
-#define USE_RTC
-// #define USE_WATCHDOG
+// #define USE_RTC
+#define USE_WATCHDOG
 
 // Call directly from interrupt service routine
-#define USE_ISR_DISPATCH
+// #define USE_ISR_DISPATCH
 
 #if defined(USE_RTC)
 #define TIMER RTC
@@ -102,18 +102,18 @@ private:
 TIMER::Scheduler scheduler;
 
 // Pulse generators with 20, 50 and 80% pulse width (32, 80, 128 ms)
-Pulse p1(&scheduler, 20, Board::D7);
-Pulse p2(&scheduler, 50, Board::D8);
-Pulse p3(&scheduler, 80, Board::D9);
+Pulse p1(&scheduler, 20, Board::D13);
+Pulse p2(&scheduler, 50, Board::D12);
+Pulse p3(&scheduler, 80, Board::D11);
 
 void setup()
 {
   // Print Info about the logic analyser probe channels
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalyzerPulse: started"));
-  trace << PSTR("CHAN0 - D7 [^]") << endl;
-  trace << PSTR("CHAN1 - D8") << endl;
-  trace << PSTR("CHAN2 - D9") << endl;
+  trace << PSTR("CHAN0 - D13 [^]") << endl;
+  trace << PSTR("CHAN1 - D12") << endl;
+  trace << PSTR("CHAN2 - D11") << endl;
 #if defined(USE_RTC)
   trace << PSTR("RTC Job Scheduler") << endl;
 #endif
