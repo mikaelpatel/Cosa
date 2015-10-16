@@ -1,4 +1,4 @@
-# @file platform.txt-flto
+# @file platform.txt
 # @version 2.0
 #
 # @section License
@@ -42,7 +42,8 @@ compiler.c.elf.cmd=avr-gcc
 compiler.S.flags=-c -g -assembler-with-cpp
 compiler.cpp.cmd=avr-g++
 compiler.cpp.flags=-c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -MMD
-compiler.ar.cmd=avr-ar
+# compiler.ar.cmd=avr-ar
+compiler.ar.cmd=avr-gcc-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=avr-objcopy
 compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
@@ -52,13 +53,13 @@ compiler.ldflags=
 compiler.size.cmd=avr-size
 
 # This can be overridden in boards.txt
-build.extra_flags=
+build.extra_flags="-I{build.path}"
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=-Wextra -flto
 compiler.c.elf.extra_flags=-w -Wl,-relax -flto
 compiler.S.extra_flags=
-compiler.cpp.extra_flags=-Wextra -flto -std=gnu++11 -felide-constructors -mcall-prologues
+compiler.cpp.extra_flags=-Woverloaded-virtual -Wextra -flto -std=gnu++11 -felide-constructors -fno-implement-inlines -fno-rtti -fno-threadsafe-statics -mcall-prologues
 compiler.ar.extra_flags=
 compiler.objcopy.eep.extra_flags=
 compiler.elf2hex.extra_flags=
