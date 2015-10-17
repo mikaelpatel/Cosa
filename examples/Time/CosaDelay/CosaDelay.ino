@@ -16,7 +16,8 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Test RTC and Watchdog delay wrap around behavior.
+ * Test RTC and Watchdog delay wrap around behavior and low power
+ * sleep modes.
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -28,23 +29,28 @@
 // #define USE_RTC
 #define USE_WATCHDOG
 
+// Use the RTC/Timer based delay. Timer will continue to update
+// during the delay.
 #if defined(USE_RTC)
 #include "Cosa/RTC.hh"
 #define TIMER RTC
 #define NAME "RTC"
+#define SLEEP_MODE SLEEP_MODE_EXT_STANDBY
 #endif
 
+// Use the Watchdog based delay.
 #if defined(USE_WATCHDOG)
 #include "Cosa/Watchdog.hh"
 #define TIMER Watchdog
 #define NAME "Watchdog"
+#define SLEEP_MODE SLEEP_MODE_PWR_DOWN
 #endif
 
-// Start time; 16 ms aligned for watchdog
+// Start time to force wrap-around; 16 ms aligned for watchdog
 static const uint32_t START = UINT32_MAX - 16383UL;
 
 // Loop period
-static const uint32_t PERIOD = 640UL;
+static const uint32_t PERIOD = 1280UL;
 
 void setup()
 {
@@ -65,9 +71,20 @@ void loop()
 {
   static uint16_t cycle = 0;
   uint32_t now = TIMER::millis();
-  trace << now
+  trace << cycle++
+	<< ':' << now
 	<< ':' << TIMER::since(START)
-	<< ':' << cycle++
 	<< endl;
+  trace.flush();
+
+  // Use defined sleep mode during delay to power down
+  // Baseline: 8.3 mA (Pro-Mini with power LED removed)
+  // RTC:      1.5 mA
+  // Watchdog: 260 uA
+  // Baseline: 33 mA (Mega 2560, Vin 5V)
+  // RTC:      16 mA
+  // Watchdog: 14 mA
+  uint8_t mode = Power::set(SLEEP_MODE);
   delay(PERIOD - TIMER::since(now));
+  Power::set(mode);
 }

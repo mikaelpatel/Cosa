@@ -33,6 +33,7 @@
  */
 
 #include "Cosa/Periodic.hh"
+#include "Cosa/Power.hh"
 #include "Cosa/RTC.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
@@ -40,12 +41,15 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // Use the RTC or Watchdog Job Scheduler
-// #define USE_RTC
-#define USE_WATCHDOG
+#define USE_RTC
+// #define USE_WATCHDOG
 
 // Call directly from interrupt and use one of the scheduling types
 // #define USE_ISR_TIME_PERIOD
-// #define USE_ISR_RESCHEDULE
+#define USE_ISR_RESCHEDULE
+
+// Use low power sleep mode
+#define USE_LOW_POWER
 
 #if defined(USE_RTC)
 #define TIMER RTC
@@ -125,12 +129,25 @@ void setup()
 #else
   trace << PSTR("Event dispatch") << endl;
 #endif
-  trace.flush();
 
   // Start the work
   w1.start();
   w2.start();
   w3.start();
+
+  // Set low power mode (Watchdog: 7.8/0.3 mA, RTC: 8.2/1.75 mA)
+#if defined(USE_LOW_POWER)
+# if defined(USE_RTC)
+  trace << PSTR("Extended Standby") << endl;
+  trace.flush();
+  Power::set(SLEEP_MODE_EXT_STANDBY);
+# endif
+# if defined(USE_WATCHDOG)
+  trace << PSTR("Power-down") << endl;
+  trace.flush();
+  Power::set(SLEEP_MODE_PWR_DOWN);
+# endif
+#endif
 
   // Start the timer
   TIMER::begin();
@@ -140,4 +157,3 @@ void loop()
 {
   Event::service();
 }
-

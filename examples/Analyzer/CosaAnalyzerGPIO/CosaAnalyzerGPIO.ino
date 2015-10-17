@@ -36,8 +36,16 @@
 
 #include "Cosa/GPIO.hh"
 #include "Cosa/Math.hh"
+#include "Cosa/RTC.hh"
+#include "Cosa/Watchdog.hh"
+#include "Cosa/Power.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
+
+// Low power sleep (Arduino Pro-Micro with Power LED removed)
+// Baseline: 13.6 mA, RTC: 1.5 mA, Watchdog: 250 uA
+#define USE_RTC
+// #define USE_WATCHDOG
 
 GPIO outPin(Board::D12, GPIO::OUTPUT_MODE);
 GPIO dataPin(Board::D11, GPIO::OUTPUT_MODE);
@@ -54,7 +62,26 @@ void setup()
   trace << PSTR("CHAN1 - D12 (out)") << endl;
   trace << PSTR("CHAN2 - D11 (data)") << endl;
   trace << PSTR("CHAN3 - D10 (clock)") << endl;
+
+  // Use timer based low power sleep
+#if defined(USE_RTC)
+  // RTC(1000 us): 1.5 mA
+  trace << PSTR("RTC delay with extended standby sleep mode") << endl;
   trace.flush();
+  Power::set(SLEEP_MODE_EXT_STANDBY);
+  RTC::begin();
+#elif defined(USE_WATCHDOG)
+  // Watchdog(128 ms): 200 uA
+  trace << PSTR("Watchdog delay with power-down sleep mode") << endl;
+  trace.flush();
+  Power::set(SLEEP_MODE_PWR_DOWN);
+  Watchdog::begin(128);
+#else
+  // Busy-wait: 13.6 mA
+  trace << PSTR("Busy-wait delay") << endl;
+  trace.flush();
+#endif
+  uart.end();
 
   // Initial data
   data = rand(255);
@@ -385,6 +412,6 @@ void loop()
 
   // New data value
   data = rand(255);
-  sleep(1);
+  delay(1000);
 }
 

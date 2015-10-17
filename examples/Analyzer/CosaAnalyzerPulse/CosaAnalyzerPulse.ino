@@ -35,6 +35,7 @@
 
 #include "Cosa/Job.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
@@ -132,8 +133,10 @@ void setup()
   p2.start();
   p3.start();
 
-  // Start the timer
+  // Start the timer (Watchdog: 13/5 mA, RTC: 13/7 mA)
   TIMER::begin();
+  // Power::set(SLEEP_MODE_PWR_DOWN);
+  Power::set(SLEEP_MODE_EXT_STANDBY);
 }
 
 void loop()

@@ -48,6 +48,7 @@
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/RTC.hh"
 
 // Use the built-in led
 OutputPin ledPin(Board::LED);
@@ -64,25 +65,29 @@ void setup()
   // 3. With watchdog delay: 4.5/8.1 mA
   // Start the watchdog with the default timeout period (16 ms)
   // Will install low-power version of the delay() function
-  // Watchdog::begin();
+  Watchdog::begin();
 
   // 4. Sleep mode with watchdog delay (3)
-  // Idle: 7.1/8.1 mA (default)
+  // a. Idle: 7.1/8.1 mA (default)
   // Power::set(SLEEP_MODE_IDLE);
-  // a. Standby: 280/600 uA
+  // b. ADC Noise Reduction: /7.7 mA
+  // Power::set(SLEEP_MODE_ADC);
+  // c. Standby: 280/600 uA
   // Power::set(SLEEP_MODE_STANDBY);
-  // b. Extended standby: 280/600 uA
+  // d. Extended standby: 280/600 uA
   // Power::set(SLEEP_MODE_EXT_STANDBY);
-  // c. Power-down: 110/260 uA
+  // e. Power-save: /260 uA
+  // Power::set(SLEEP_MODE_PWR_SAVE);
+  // f. Power-down: 110/260 uA
   Power::set(SLEEP_MODE_PWR_DOWN);
 
-  // 5. Watchdog period change with powerdown (4c)
+  // 5. Watchdog period change with powerdown (4e)
   // Watchdog shutdown: 50/200 uA
-  #define USE_WATCHDOG_SHUTDOWN
+  // #define USE_WATCHDOG_SHUTDOWN
 
   // 6. FTDI RX/D0 leakage with watchdog shutdown (5)
   // Output mode: 6/146 uA
-  OutputPin::set_mode(Board::D0);
+  // OutputPin::set_mode(Board::D0);
 
   // 7. Remove Pro-Micro regulator
 }
@@ -97,7 +102,7 @@ void loop()
   Watchdog::begin(16);
 #endif
 
-  delay(10);
+  delay(1);
 
   // 5b. Turn off watchdog
 #ifdef USE_WATCHDOG_SHUTDOWN
@@ -107,9 +112,9 @@ void loop()
   // Turn off the led
   ledPin.off();
 
-  // 5c. Turn on watchdog: 1024 ms timeout
+  // 5c. Turn on watchdog: 512 ms timeout
 #ifdef USE_WATCHDOG_SHUTDOWN
-  Watchdog::begin(1024);
+  Watchdog::begin(512);
 #endif
 
   delay(2000);

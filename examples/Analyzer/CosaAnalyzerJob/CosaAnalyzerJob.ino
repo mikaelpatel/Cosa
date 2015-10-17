@@ -33,6 +33,7 @@
 
 #include "Cosa/Job.hh"
 #include "Cosa/RTC.hh"
+#include "Cosa/Power.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -43,11 +44,10 @@
 class Work : public Job {
 public:
   Work(Job::Scheduler* scheduler,
-       Board::DigitalPin pin, uint16_t pulse,
+       Board::DigitalPin pin,
        uint32_t delay, Work* chain) :
     Job(scheduler),
     m_pin(pin),
-    m_pulse(pulse),
     m_delay(delay),
     m_chain(chain)
   {
@@ -64,16 +64,14 @@ public:
   // to the expire time of the current work
   virtual void run()
   {
+    m_pin.toggle();
     m_chain->expire_at(expire_at() + m_delay);
     m_chain->start();
-    m_pin.toggle();
-    DELAY(m_pulse);
     m_pin.toggle();
   }
 
 private:
   OutputPin m_pin;
-  uint16_t m_pulse;
   uint32_t m_delay;
   Work* m_chain;
 };
@@ -90,14 +88,14 @@ extern Work w4;
 
 // Periodic
 // (w0)-200ms->(w0)
-Work w0(&scheduler, Board::D13, 100, 200000UL, &w0);
+Work w0(&scheduler, Board::D13, 200000UL, &w0);
 
 // Chain
-// (w1)-150us->(w2)-400us->(w3)-1200us->(w4)-250us->(w1)
-Work w1(&scheduler, Board::D12, 50, 150UL, &w2);
-Work w2(&scheduler, Board::D12, 100, 400UL, &w3);
-Work w3(&scheduler, Board::D12, 200, 1200UL, &w4);
-Work w4(&scheduler, Board::D12, 75, 250UL, &w1);
+// (w1)-150us->(w2)-500us->(w3)-1500us->(w4)-250us->(w1)
+Work w1(&scheduler, Board::D12, 150UL, &w2);
+Work w2(&scheduler, Board::D12, 500UL, &w3);
+Work w3(&scheduler, Board::D12, 1500UL, &w4);
+Work w4(&scheduler, Board::D12, 250UL, &w1);
 
 void setup()
 {
@@ -121,8 +119,9 @@ void setup()
   w0.start();
   w1.start();
 
-  // Start the real-time clock
+  // Use timer based low power sleep (9.2/3.2 mA)
   RTC::begin();
+  Power::set(SLEEP_MODE_EXT_STANDBY);
 }
 
 void loop()
