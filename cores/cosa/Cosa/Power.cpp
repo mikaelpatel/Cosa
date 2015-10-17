@@ -22,6 +22,10 @@
 
 uint8_t Power::s_mode = SLEEP_MODE_IDLE;
 
+#if defined(COSA_BROWN_OUT_DETECT) || !defined(sleep_bod_disable)
+#define sleep_bod_disable()
+#endif
+
 void
 Power::sleep(uint8_t mode)
 {
@@ -31,9 +35,7 @@ Power::sleep(uint8_t mode)
   set_sleep_mode(mode);
   synchronized {
     sleep_enable();
-#if !defined(COSA_BROWN_OUT_DETECT)
     sleep_bod_disable();
-#endif
   }
   sleep_cpu();
   sleep_disable();
