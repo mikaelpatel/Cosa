@@ -47,19 +47,19 @@ RTC::begin()
 
   synchronized {
     // Power up the timers
-    Power::timer0_enable();
+    Power::timern_enable();
 
     // Set prescaling to 64
-    TCCR0B = (_BV(CS01) | _BV(CS00));
+    TCCRnB = CSn;
 
     // Clear Timer on Compare Match with given Count. Enable interrupt
-    TCCR0A = _BV(WGM01);
-    OCR0A = TIMER_MAX;
-    TIMSK0 = _BV(OCIE0A);
+    TCCRnA = _BV(WGM01);
+    OCRnA = TIMER_MAX;
+    TIMSKn = _BV(OCIE0A);
 
     // Reset the counter and clear interrupts
-    TCNT0 = 0;
-    TIFR0 = 0;
+    TCNTn = 0;
+    TIFRn = 0;
   }
 
   // Install delay function and mark as initiated
@@ -76,10 +76,10 @@ RTC::end()
 
   synchronized {
     // Disable the timer interrupts
-    TIMSK0 = 0;
+    TIMSKn = 0;
 
     // Power up the timers
-    Power::timer0_disable();
+    Power::timern_disable();
   }
 
   // Mark as not initiated
@@ -108,8 +108,8 @@ RTC::micros()
   // Read micro-seconds and hardware counter. Adjust if pending interrupt
   synchronized {
     res = s_micros;
-    cnt = TCNT0;
-    if ((TIFR0 & _BV(OCF0A)) && (cnt < TIMER_MAX)) res += US_PER_TICK;
+    cnt = TCNTn;
+    if ((TIFRn & _BV(OCF0A)) && (cnt < TIMER_MAX)) res += US_PER_TICK;
   }
 
   // Convert ticks to micro-seconds
@@ -126,8 +126,8 @@ RTC::millis()
   // Read milli-seconds. Adjust if pending interrupt
   synchronized {
     res = s_millis;
-    cnt = TCNT0;
-    if ((TIFR0 & _BV(OCF0A)) && (cnt < TIMER_MAX)) res += MS_PER_TICK;
+    cnt = TCNTn;
+    if ((TIFRn & _BV(OCF0A)) && (cnt < TIMER_MAX)) res += MS_PER_TICK;
   }
   return (res);
 }
@@ -140,7 +140,7 @@ RTC::delay(uint32_t ms)
   while (RTC::since(start) < ms) yield();
 }
 
-ISR(TIMER0_COMPA_vect)
+ISR(TIMERn_COMPA_vect)
 {
   // Increment micro-seconds counter (fraction in timer)
   RTC::s_micros += US_PER_TICK;
@@ -157,10 +157,10 @@ ISR(TIMER0_COMPA_vect)
     RTC::s_clock->tick(MS_PER_TICK);
 }
 
-ISR(TIMER0_COMPB_vect)
+ISR(TIMERn_COMPB_vect)
 {
   // Disable the timer match
-  TIMSK0 &= ~_BV(OCIE0B);
+  TIMSKn &= ~_BV(OCIE0B);
 
   // Dispatch expired jobs
   RTC::s_job = NULL;

@@ -40,11 +40,11 @@ RTC::Scheduler::start(Job* job)
     synchronized {
       if ((s_job == NULL)
 	  || ((int32_t) (job->expire_at() - s_job->expire_at()) < 0)) {
-	uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
+	uint16_t cnt = TCNTn + (diff / US_PER_TIMER_CYCLE);
 	if (cnt > TIMER_MAX) cnt -= TIMER_MAX;
-	OCR0B = cnt;
-	TIMSK0 |= _BV(OCIE0B);
-	TIFR0 |= _BV(OCF0B);
+	OCRnB = cnt;
+	TIMSKn |= _BV(OCIE0B);
+	TIFRn |= _BV(OCF0B);
 	s_job = job;
 	m_queue.get_succ()->attach(job);
 	return (true);
@@ -91,11 +91,11 @@ RTC::Scheduler::dispatch()
       // Check that the job will expire before current match
       if ((s_job == NULL)
 	  || ((int32_t) (job->expire_at() - s_job->expire_at()) < 0)) {
-	uint16_t cnt = TCNT0 + (diff / US_PER_TIMER_CYCLE);
+	uint16_t cnt = TCNTn + (diff / US_PER_TIMER_CYCLE);
 	if (cnt > TIMER_MAX) cnt -= TIMER_MAX;
-	OCR0B = cnt;
-	TIMSK0 |= _BV(OCIE0B);
-	TIFR0 |= _BV(OCF0B);
+	OCRnB = cnt;
+	TIMSKn |= _BV(OCIE0B);
+	TIFRn |= _BV(OCF0B);
 	s_job = job;
       }
     }

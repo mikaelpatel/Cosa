@@ -31,4 +31,33 @@
 #define US_DIRECT_EXPIRE (800 / I_CPU)
 #define US_TIMER_EXPIRE (US_PER_TICK - 1)
 
+// RTC Timer Registers. Use Timer2 if available to allow
+// low power mode with RTC running
+#if defined(TIMER2_COMPA_vect)
+#define timern_enable timer2_enable
+#define timern_disable timer2_disable
+#define TCCRnB TCCR2B
+#define CSn _BV(CS22)
+#define TCCRnA TCCR2A
+#define OCRnA OCR2A
+#define OCRnB OCR2B
+#define TIMSKn TIMSK2
+#define TCNTn TCNT2
+#define TIFRn TIFR2
+#define TIMERn_COMPA_vect TIMER2_COMPA_vect
+#define TIMERn_COMPB_vect TIMER2_COMPB_vect
+#elif defined(TCNT0)
+#define timern_enable timer0_enable
+#define timern_disable timer0_disable
+#define TCCRnB TCCR0B
+#define CSn (_BV(CS01) | _BV(CS00))
+#define TCCRnA TCCR0A
+#define OCRnA OCR0A
+#define OCRnB OCR0B
+#define TIMSKn TIMSK0
+#define TCNTn TCNT0
+#define TIFRn TIFR0
+#define TIMERn_COMPA_vect TIMER0_COMPA_vect
+#define TIMERn_COMPB_vect TIMER0_COMPB_vect
+#endif
 #endif

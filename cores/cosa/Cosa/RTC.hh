@@ -224,8 +224,13 @@ private:
   RTC() {}
 
   /** Interrupt Service Routine. */
+#if defined(TIMER2_COMPA_vect)
+  friend void TIMER2_COMPA_vect(void);
+  friend void TIMER2_COMPB_vect(void);
+#elif defined(TCNT0)
   friend void TIMER0_COMPA_vect(void);
   friend void TIMER0_COMPB_vect(void);
+#endif
 
   /** Scheduler access. */
   friend class RTC::Scheduler;
