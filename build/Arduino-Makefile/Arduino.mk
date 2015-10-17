@@ -906,6 +906,9 @@ else
   EXTRA_LDFLAGS += -w -Wl,-relax -flto
   EXTRA_CXXFLAGS += -Woverloaded-virtual -Wextra -flto -std=gnu++11 -felide-constructors -fno-implement-inlines -fno-rtti -fno-threadsafe-statics -mcall-prologues
 endif
+ifeq ($(shell expr $(ARDUINO_VERSION) '<' 166), 1)
+  AR_NAME = avr-ar
+endif
 
 CFLAGS += $(EXTRA_FLAGS) $(EXTRA_CFLAGS)
 CXXFLAGS += -fno-exceptions $(EXTRA_FLAGS) $(EXTRA_CXXFLAGS)
