@@ -33,12 +33,12 @@ uint16_t
 AnalogPin::bandgap(uint16_t vref)
 {
   loop_until_bit_is_clear(ADCSRA, ADSC);
+  if (UNLIKELY(sampling_pin != NULL)) return (UINT16_MAX);
   ADMUX = (Board::AVCC_REFERENCE | Board::VBG);
 #if defined(MUX5)
   bit_clear(ADCSRB, MUX5);
 #endif
-  bit_set(ADCSRA, ADEN);
-  delay(1);
+  DELAY(500);
   bit_set(ADCSRA, ADSC);
   loop_until_bit_is_clear(ADCSRA, ADSC);
   uint16_t sample;
@@ -49,13 +49,13 @@ AnalogPin::bandgap(uint16_t vref)
 uint16_t
 AnalogPin::sample(Board::AnalogPin pin, Board::Reference ref)
 {
-  if (UNLIKELY(sampling_pin != NULL)) return (UINT16_MAX);
   loop_until_bit_is_clear(ADCSRA, ADSC);
+  if (UNLIKELY(sampling_pin != NULL)) return (UINT16_MAX);
   ADMUX = (ref | (pin & 0x1f));
 #if defined(MUX5)
   bit_write(pin & 0x20, ADCSRB, MUX5);
 #endif
-  bit_mask_set(ADCSRA, _BV(ADEN) | _BV(ADSC));
+  bit_set(ADCSRA, ADSC);
   loop_until_bit_is_clear(ADCSRA, ADSC);
   return (ADCW);
 }
