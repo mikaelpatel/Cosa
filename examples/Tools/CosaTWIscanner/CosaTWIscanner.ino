@@ -93,10 +93,10 @@ lookup(uint8_t addr, TWI::Driver* dev)
       if (regaddr != 0) {
 	// Read the register and compare with the expected value
 	uint8_t id = 0;
-	twi.begin(dev);
+	twi.acquire(dev);
 	twi.write(regaddr);
 	twi.read(&id, sizeof(id));
-	twi.end();
+	twi.release();
 	// Continue with the next table entry if no match
 	if (id != pgm_read_byte(&dev_tab[i].id)) continue;
       }
@@ -123,10 +123,10 @@ void loop()
   for (uint8_t addr = 3; addr < 128; addr++) {
     // Attempt to read from the device
     TWI::Driver dev(addr);
-    twi.begin(&dev);
+    twi.acquire(&dev);
     uint8_t data;
     int count = twi.read(&data, sizeof(data));
-    twi.end();
+    twi.release();
     // Continue with the next address if there was no device
     if (count != sizeof(data)) continue;
     // Print information about the device
