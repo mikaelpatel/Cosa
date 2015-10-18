@@ -19,10 +19,6 @@
  * Cosa demonstration of VCC monitoring for low power condition.
  * Class VCC may be reused. Override the default on_low_power() method.
  *
- * @section Note
- * Should be compiled for standard Arduino. VCC class may be used
- * for ATtinyX5 by reimplementing on_low_power().
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
@@ -32,7 +28,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Periodic.hh"
 
-// Use the watchdog job scheduler
+// Use the Watchdog job scheduler
 Watchdog::Scheduler scheduler;
 
 /**
@@ -40,12 +36,11 @@ Watchdog::Scheduler scheduler;
  */
 class VCC : public Periodic {
 public:
-  VCC(uint16_t mv, uint16_t sec = 2) :
-    Periodic(&scheduler, sec * 1024),
+  VCC(uint16_t mv, uint16_t sec = 1) :
+    Periodic(&scheduler, sec * 1000UL),
     m_threshold(mv),
     m_vcc(0)
-  {
-  }
+  {}
   virtual void run()
   {
     m_vcc = AnalogPin::bandgap();
@@ -58,65 +53,78 @@ public:
 	  << PSTR(":warning:low voltage(VCC = ")
 	  << m_vcc << PSTR(" mV)\n");
   }
-  uint16_t get_vcc() { return (m_vcc); }
+  uint16_t vcc()
+  {
+    return (m_vcc);
+  }
 private:
   uint16_t m_threshold;
   uint16_t m_vcc;
 };
 
 // Monitor low voltage at 4.4 V
-// VCC lowPower(4400);
-VCC lowPower(4800);
+VCC lowPower(4400);
 
 /**
  * Periodical sampling of analog pin.
  */
 class Sampler : public AnalogPin, public Periodic {
 public:
-  Sampler(Board::AnalogPin pin, uint16_t ms) : AnalogPin(pin), Periodic(&scheduler, ms) {}
-  virtual void run() { sample_request(); }
+  Sampler(Board::AnalogPin pin, uint16_t ms) :
+    AnalogPin(pin),
+    Periodic(&scheduler, ms),
+    m_count(0)
+  {}
+  virtual void run()
+  {
+    m_count++;
+    sample_request();
+  }
+  uint16_t count()
+  {
+    return (m_count);
+  }
+private:
+  uint16_t m_count;
 };
 
-// Sample analog pin A4 (A1 on ATTINY) four times per second
-#if !defined(BOARD_ATTINY)
-Sampler sampler(Board::A4, 256);
-#else
-Sampler sampler(Board::A1, 256);
-#endif
+Sampler sampler(Board::A0, 250);
 
 /**
  * Periodical display the values
  */
 class Display : public Periodic {
 public:
-  Display(uint16_t ms) : Periodic(&scheduler, ms) {}
+  Display(uint16_t sec = 1) : Periodic(&scheduler, sec * 1000UL)
+  {
+    expire_at(1000);
+  }
   virtual void run()
   {
-    trace << Watchdog::millis() << PSTR(":A4  = ") << sampler.get_value()
-	  << PSTR(":Vcc  = ") << lowPower.get_vcc()
+    trace << Watchdog::millis()
+	  << PSTR(":A0:") << sampler.count()
+	  << PSTR(" = ") << sampler.get_value()
+	  << PSTR(":Vcc  = ") << lowPower.vcc()
 	  << endl;
   }
 };
 
 // Print the latest sample value and voltage
-Display display(1024);
+Display display(1);
 
 void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVCC: started"));
-  Watchdog::begin();
+  AnalogPin::powerup();
   lowPower.start();
   sampler.start();
   display.start();
+  Watchdog::begin();
 }
 
 void loop()
 {
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
-  if (event.get_type() == Event::SAMPLE_COMPLETED_TYPE)
-    AnalogPin::powerdown();
+  Event::service();
 }
 
