@@ -33,22 +33,16 @@ TWI twi  __attribute__ ((weak));
 #endif
 
 void
-TWI::begin(TWI::Driver* dev)
+TWI::acquire(TWI::Driver* dev)
 {
   // Acquire the device driver. Wait is busy. Synchronized update
-  uint8_t key = lock();
-  while (UNLIKELY(m_busy)) {
-    unlock(key);
-    yield();
-    key = lock();
-  }
+  uint8_t key = lock(m_busy);
+
+  // Set the current device driver
+  m_dev = dev;
 
   // Power up the module
   powerup();
-
-  // Mark as busy
-  m_dev = dev;
-  m_busy = true;
 
   // Enable internal pullup
   bit_mask_set(PORT, _BV(Board::SDA) | _BV(Board::SCL));
@@ -61,7 +55,7 @@ TWI::begin(TWI::Driver* dev)
 }
 
 void
-TWI::end()
+TWI::release()
 {
   // Check if an asynchronious read/write was issued
   if (UNLIKELY((m_dev == NULL) || (m_dev->is_async()))) return;

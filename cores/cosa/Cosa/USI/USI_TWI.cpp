@@ -284,19 +284,13 @@ TWI::request(uint8_t op)
 }
 
 void
-TWI::begin(TWI::Driver* dev)
+TWI::acquire(TWI::Driver* dev)
 {
   // Acquire the device driver. Wait is busy. Synchronized update
-  uint8_t key = lock();
-  while (m_busy) {
-    unlock(key);
-    yield();
-    key = lock();
-  }
+  uint8_t key = lock(m_busy);
 
-  // Mark as busy
+  // Set the current device driver
   m_dev = dev;
-  m_busy = true;
 
   // Release level data and init mode
   USIDR = 0xff;
@@ -307,7 +301,7 @@ TWI::begin(TWI::Driver* dev)
 }
 
 void
-TWI::end()
+TWI::release()
 {
   // Check if an asynchronious read/write was issued
   if (UNLIKELY((m_dev == NULL) || (m_dev->is_async()))) return;

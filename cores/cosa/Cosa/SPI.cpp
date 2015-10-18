@@ -255,15 +255,11 @@ void
 SPI::acquire(Driver* dev)
 {
   // Acquire the device driver. Wait if busy. Synchronized update
-  uint8_t key = lock();
-  while (UNLIKELY(m_busy)) {
-    unlock(key);
-    yield();
-    key = lock();
-  }
-  // Set current device and mark as busy
-  m_busy = true;
+  uint8_t key = lock(m_busy);
+
+  // Set current device driver
   m_dev = dev;
+
 #if defined(SPDR)
   // Initiate SPI hardware with device settings
   SPCR = dev->m_spcr;
@@ -281,15 +277,14 @@ SPI::acquire(Driver* dev)
 void
 SPI::release()
 {
-  // Lock the device driver update
-  uint8_t key = lock();
-  // Release the device driver
-  m_busy = false;
-  m_dev = NULL;
-  // Enable all interrupt sources on SPI bus
-  for (SPI::Driver* dev = m_list; dev != NULL; dev = dev->m_next)
-    if (dev->m_irq != NULL) dev->m_irq->enable();
-  unlock(key);
+  synchronized {
+    // Release the device driver
+    m_busy = false;
+    m_dev = NULL;
+    // Enable all interrupt sources on SPI bus
+    for (SPI::Driver* dev = m_list; dev != NULL; dev = dev->m_next)
+      if (dev->m_irq != NULL) dev->m_irq->enable();
+  }
 }
 
 void

@@ -226,12 +226,12 @@ public:
    * current driver for addressing, read and write requests.
    * @param[in] dev device.
    */
-  void begin(TWI::Driver* dev);
+  void acquire(TWI::Driver* dev);
 
   /**
    * Release TWI hardware and bus.
    */
-  void end();
+  void release();
 
   /**
    * Issue a write data request to the current driver. Return

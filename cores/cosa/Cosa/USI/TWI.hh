@@ -185,13 +185,13 @@ public:
    * Start TWI logic for a device transaction block.
    * @param[in] dev device.
    */
-  void begin(TWI::Driver* dev);
+  void acquire(TWI::Driver* dev);
 
   /**
    * Stop usage of the TWI bus logic.
    * @return true(1) if successful otherwise false(0).
    */
-  void end();
+  void release();
 
   /**
    * Write data to the current driver. Returns number of bytes written

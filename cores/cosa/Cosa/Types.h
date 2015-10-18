@@ -192,12 +192,12 @@ typedef const PROGMEM class prog_str* str_P;
  * @return string literal in program memory.
  */
 #define STR_P(s)							\
-(__extension__(								\
-  {									\
-    static const char __c[] __PROGMEM = (s);				\
-    (str_P) &__c[0];							\
-  }									\
-))
+  (__extension__(							\
+    {									\
+      static const char __c[] __PROGMEM = (s);				\
+      (str_P) &__c[0];							\
+    }									\
+  ))
 #undef PSTR
 #define PSTR(s) STR_P(s)
 #define __PSTR(s) STR_P(s)
@@ -294,6 +294,18 @@ extern void (*sleep)(uint16_t s);
 extern void (*yield)();
 
 /**
+ * No-operation; 1 clock cycle delay.
+ */
+#define nop() __asm__ __volatile__("nop")
+
+/**
+ * Force compiler to store all values in memory at this
+ * point. Compiler may not reorder statements and sub-expression over
+ * barriers. This is an alternative to volatile declaration.
+ */
+#define barrier() __asm__ __volatile__("" ::: "memory")
+
+/**
  * Disable interrupts and return flags.
  * @return processor flags.
  */
@@ -344,16 +356,28 @@ inline void __unlock(uint8_t* key)
        i = 1; i != 0; i--)
 
 /**
- * Force compiler to store all values in memory at this
- * point. Compiler may not reorder statements and sub-expression over
- * barriers. This is an alternative to volatile declaration.
+ * Conditional variable.
  */
-#define barrier() __asm__ __volatile__("" ::: "memory")
+typedef volatile bool condvar_t;
 
 /**
- * No-operation; 1 clock cycle delay.
+ * Wait until condition variable is true then disable interrupts and
+ * set condition variable to false and return flags.
+ * @param[in] cond condition variable.
+ * @return processor flags.
  */
-#define nop() __asm__ __volatile__("nop")
+inline uint8_t lock(condvar_t &cond) __attribute__((always_inline));
+inline uint8_t lock(condvar_t &cond)
+{
+  uint8_t key = lock();
+  while (UNLIKELY(cond)) {
+    unlock(key);
+    yield();
+    key = lock();
+  }
+  cond = true;
+  return (key);
+}
 
 /**
  * Buffer structure for scatter/gather.
