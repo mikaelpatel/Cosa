@@ -304,7 +304,7 @@ public:
   /**
    * Powerup SPI.
    */
-  void powerup()
+  static void powerup()
   {
     power_usi_enable();
   }
@@ -312,7 +312,7 @@ public:
   /**
    * Powerdown SPI.
    */
-  void powerdown()
+  static void powerdown()
   {
     power_usi_disable();
   }
@@ -372,7 +372,7 @@ public:
   /**
    * Powerup SPI.
    */
-  void powerup()
+  static void powerup()
   {
     power_spi_enable();
   }
@@ -380,7 +380,7 @@ public:
   /**
    * Powerdown SPI.
    */
-  void powerdown()
+  static void powerdown()
   {
     power_spi_disable();
   }
