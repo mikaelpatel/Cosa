@@ -1,726 +1,726 @@
-Sat Oct 17 22:18:55 CEST 2015: build/CosaBuild.ino
+Mon Oct 19 00:10:17 CEST 2015: build/CosaBuild.ino
 Program:     344 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Sat Oct 17 22:18:57 CEST 2015: examples/Analyzer/ArduinoAnalyzerDigitalPin/ArduinoAnalyzerDigitalPin.ino
+Mon Oct 19 00:10:18 CEST 2015: examples/Analyzer/ArduinoAnalyzerDigitalPin/ArduinoAnalyzerDigitalPin.ino
 Program:     344 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Sat Oct 17 22:18:59 CEST 2015: examples/Analyzer/CosaAnalyzerFlush/CosaAnalyzerFlush.ino
+Mon Oct 19 00:10:21 CEST 2015: examples/Analyzer/CosaAnalyzerFlush/CosaAnalyzerFlush.ino
 Program:    4786 bytes (1.8% Full)
 Data:        231 bytes (2.8% Full)
-Sat Oct 17 22:19:02 CEST 2015: examples/Analyzer/CosaAnalyzerGPIO/CosaAnalyzerGPIO.ino
+Mon Oct 19 00:10:24 CEST 2015: examples/Analyzer/CosaAnalyzerGPIO/CosaAnalyzerGPIO.ino
 Program:    8622 bytes (3.3% Full)
 Data:        245 bytes (3.0% Full)
-Sat Oct 17 22:19:05 CEST 2015: examples/Analyzer/CosaAnalyzerJob/CosaAnalyzerJob.ino
+Mon Oct 19 00:10:26 CEST 2015: examples/Analyzer/CosaAnalyzerJob/CosaAnalyzerJob.ino
 Program:    6758 bytes (2.6% Full)
 Data:        462 bytes (5.6% Full)
-Sat Oct 17 22:19:07 CEST 2015: examples/Analyzer/CosaAnalyzerPeriodic/CosaAnalyzerPeriodic.ino
+Mon Oct 19 00:10:29 CEST 2015: examples/Analyzer/CosaAnalyzerPeriodic/CosaAnalyzerPeriodic.ino
 Program:    7062 bytes (2.7% Full)
 Data:        426 bytes (5.2% Full)
-Sat Oct 17 22:19:10 CEST 2015: examples/Analyzer/CosaAnalyzerPulse/CosaAnalyzerPulse.ino
+Mon Oct 19 00:10:32 CEST 2015: examples/Analyzer/CosaAnalyzerPulse/CosaAnalyzerPulse.ino
 Program:    5608 bytes (2.1% Full)
 Data:        404 bytes (4.9% Full)
-Sat Oct 17 22:19:13 CEST 2015: examples/Analyzer/CosaAnalyzerServo/CosaAnalyzerServo.ino
+Mon Oct 19 00:10:35 CEST 2015: examples/Analyzer/CosaAnalyzerServo/CosaAnalyzerServo.ino
 Program:    8656 bytes (3.3% Full)
 Data:        471 bytes (5.7% Full)
-Sat Oct 17 22:19:15 CEST 2015: examples/Benchmarks/CosaBenchmarkDataLogger/CosaBenchmarkDataLogger.ino
-Program:   11278 bytes (4.3% Full)
+Mon Oct 19 00:10:38 CEST 2015: examples/Benchmarks/CosaBenchmarkDataLogger/CosaBenchmarkDataLogger.ino
+Program:   11276 bytes (4.3% Full)
 Data:        419 bytes (5.1% Full)
-Sat Oct 17 22:19:18 CEST 2015: examples/Benchmarks/CosaBenchmarkFSM/CosaBenchmarkFSM.ino
+Mon Oct 19 00:10:40 CEST 2015: examples/Benchmarks/CosaBenchmarkFSM/CosaBenchmarkFSM.ino
 Program:    8298 bytes (3.2% Full)
 Data:        425 bytes (5.2% Full)
-Sat Oct 17 22:19:21 CEST 2015: examples/Benchmarks/CosaBenchmarkGPIO/CosaBenchmarkGPIO.ino
+Mon Oct 19 00:10:43 CEST 2015: examples/Benchmarks/CosaBenchmarkGPIO/CosaBenchmarkGPIO.ino
 Program:   13536 bytes (5.2% Full)
 Data:        304 bytes (3.7% Full)
-Sat Oct 17 22:19:24 CEST 2015: examples/Benchmarks/CosaBenchmarkPins/CosaBenchmarkPins.ino
-Program:   20864 bytes (8.0% Full)
+Mon Oct 19 00:10:46 CEST 2015: examples/Benchmarks/CosaBenchmarkPins/CosaBenchmarkPins.ino
+Program:   20854 bytes (8.0% Full)
 Data:        424 bytes (5.2% Full)
-Sat Oct 17 22:19:27 CEST 2015: examples/Benchmarks/CosaBenchmarkRTC/CosaBenchmarkRTC.ino
+Mon Oct 19 00:10:49 CEST 2015: examples/Benchmarks/CosaBenchmarkRTC/CosaBenchmarkRTC.ino
 Program:   13628 bytes (5.2% Full)
 Data:        396 bytes (4.8% Full)
-Sat Oct 17 22:19:30 CEST 2015: examples/Benchmarks/CosaBenchmarkSizeOf/CosaBenchmarkSizeOf.ino
+Mon Oct 19 00:10:52 CEST 2015: examples/Benchmarks/CosaBenchmarkSizeOf/CosaBenchmarkSizeOf.ino
 Program:   11764 bytes (4.5% Full)
 Data:        238 bytes (2.9% Full)
-Sat Oct 17 22:19:33 CEST 2015: examples/Benchmarks/CosaBenchmarkUARTburst/CosaBenchmarkUARTburst.ino
+Mon Oct 19 00:10:55 CEST 2015: examples/Benchmarks/CosaBenchmarkUARTburst/CosaBenchmarkUARTburst.ino
 Program:    9638 bytes (3.7% Full)
 Data:        280 bytes (3.4% Full)
-Sat Oct 17 22:19:36 CEST 2015: examples/Benchmarks/CosaBenchmarkUART/CosaBenchmarkUART.ino
+Mon Oct 19 00:10:58 CEST 2015: examples/Benchmarks/CosaBenchmarkUART/CosaBenchmarkUART.ino
 Program:   22078 bytes (8.4% Full)
 Data:        250 bytes (3.1% Full)
-Sat Oct 17 22:19:39 CEST 2015: examples/Blink/CosaBlinkClassic/CosaBlinkClassic.ino
+Mon Oct 19 00:11:01 CEST 2015: examples/Blink/CosaBlinkClassic/CosaBlinkClassic.ino
 Program:     578 bytes (0.2% Full)
 Data:          4 bytes (0.0% Full)
-Sat Oct 17 22:19:41 CEST 2015: examples/Blink/CosaBlink/CosaBlink.ino
+Mon Oct 19 00:11:03 CEST 2015: examples/Blink/CosaBlink/CosaBlink.ino
 Program:     912 bytes (0.3% Full)
 Data:         14 bytes (0.2% Full)
-Sat Oct 17 22:19:44 CEST 2015: examples/Blink/CosaBlinkFSM/CosaBlinkFSM.ino
+Mon Oct 19 00:11:06 CEST 2015: examples/Blink/CosaBlinkFSM/CosaBlinkFSM.ino
 Program:    6962 bytes (2.7% Full)
 Data:        405 bytes (4.9% Full)
-Sat Oct 17 22:19:47 CEST 2015: examples/Blink/CosaBlinkInterrupt/CosaBlinkInterrupt.ino
+Mon Oct 19 00:11:09 CEST 2015: examples/Blink/CosaBlinkInterrupt/CosaBlinkInterrupt.ino
 Program:    1940 bytes (0.7% Full)
 Data:        157 bytes (1.9% Full)
-Sat Oct 17 22:19:49 CEST 2015: examples/Blink/CosaBlinkLED/CosaBlinkLED.ino
+Mon Oct 19 00:11:11 CEST 2015: examples/Blink/CosaBlinkLED/CosaBlinkLED.ino
 Program:    2020 bytes (0.8% Full)
 Data:        150 bytes (1.8% Full)
-Sat Oct 17 22:19:52 CEST 2015: examples/Blink/CosaBlinkMinimal/CosaBlinkMinimal.ino
+Mon Oct 19 00:11:14 CEST 2015: examples/Blink/CosaBlinkMinimal/CosaBlinkMinimal.ino
 Program:     402 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Sat Oct 17 22:19:54 CEST 2015: examples/Blink/CosaBlinkPeriodicBlock/CosaBlinkPeriodicBlock.ino
+Mon Oct 19 00:11:16 CEST 2015: examples/Blink/CosaBlinkPeriodicBlock/CosaBlinkPeriodicBlock.ino
 Program:    1042 bytes (0.4% Full)
 Data:         29 bytes (0.4% Full)
-Sat Oct 17 22:19:57 CEST 2015: examples/Blink/CosaBlinkPeriodic/CosaBlinkPeriodic.ino
+Mon Oct 19 00:11:19 CEST 2015: examples/Blink/CosaBlinkPeriodic/CosaBlinkPeriodic.ino
 Program:    2312 bytes (0.9% Full)
 Data:        199 bytes (2.4% Full)
-Sat Oct 17 22:19:59 CEST 2015: examples/Blink/CosaBlinkProtoThread/CosaBlinkProtoThread.ino
+Mon Oct 19 00:11:21 CEST 2015: examples/Blink/CosaBlinkProtoThread/CosaBlinkProtoThread.ino
 Program:    2334 bytes (0.9% Full)
 Data:        158 bytes (1.9% Full)
-Sat Oct 17 22:20:02 CEST 2015: examples/Blink/CosaBlinkRandom/CosaBlinkRandom.ino
+Mon Oct 19 00:11:24 CEST 2015: examples/Blink/CosaBlinkRandom/CosaBlinkRandom.ino
 Program:    1070 bytes (0.4% Full)
 Data:          8 bytes (0.1% Full)
-Sat Oct 17 22:20:04 CEST 2015: examples/Blink/CosaBlinkTemp/CosaBlinkTemp.ino
+Mon Oct 19 00:11:26 CEST 2015: examples/Blink/CosaBlinkTemp/CosaBlinkTemp.ino
 Program:    3412 bytes (1.3% Full)
 Data:         73 bytes (0.9% Full)
-Sat Oct 17 22:20:07 CEST 2015: examples/Blink/CosaBlinkThread/CosaBlinkThread.ino
+Mon Oct 19 00:11:29 CEST 2015: examples/Blink/CosaBlinkThread/CosaBlinkThread.ino
 Program:    2168 bytes (0.8% Full)
 Data:        164 bytes (2.0% Full)
-Sat Oct 17 22:20:10 CEST 2015: examples/Blink/CosaBlinkTimeout/CosaBlinkTimeout.ino
+Mon Oct 19 00:11:32 CEST 2015: examples/Blink/CosaBlinkTimeout/CosaBlinkTimeout.ino
 Program:    2144 bytes (0.8% Full)
 Data:        219 bytes (2.7% Full)
-Sat Oct 17 22:20:12 CEST 2015: examples/Blink/CosaBlinkWatchdog/CosaBlinkWatchdog.ino
+Mon Oct 19 00:11:34 CEST 2015: examples/Blink/CosaBlinkWatchdog/CosaBlinkWatchdog.ino
 Program:     842 bytes (0.3% Full)
 Data:         13 bytes (0.2% Full)
-Sat Oct 17 22:20:15 CEST 2015: examples/Build/CosaSizeDATA/CosaSizeDATA.ino
+Mon Oct 19 00:11:37 CEST 2015: examples/Build/CosaSizeDATA/CosaSizeDATA.ino
 Program:    3934 bytes (1.5% Full)
 Data:        470 bytes (5.7% Full)
-Sat Oct 17 22:20:17 CEST 2015: examples/Build/CosaSizeEEPROM/CosaSizeEEPROM.ino
+Mon Oct 19 00:11:39 CEST 2015: examples/Build/CosaSizeEEPROM/CosaSizeEEPROM.ino
 Program:    5892 bytes (2.2% Full)
 Data:        248 bytes (3.0% Full)
 EEPROM:      512 bytes (12.5% Full)
-Sat Oct 17 22:20:20 CEST 2015: examples/Compiler/CosaBitfields/CosaBitfields.ino
+Mon Oct 19 00:11:42 CEST 2015: examples/Compiler/CosaBitfields/CosaBitfields.ino
 Program:    6656 bytes (2.5% Full)
 Data:        251 bytes (3.1% Full)
-Sat Oct 17 22:20:23 CEST 2015: examples/Compiler/CosaDiff/CosaDiff.ino
+Mon Oct 19 00:11:45 CEST 2015: examples/Compiler/CosaDiff/CosaDiff.ino
 Program:    6730 bytes (2.6% Full)
 Data:        237 bytes (2.9% Full)
-Sat Oct 17 22:20:26 CEST 2015: examples/Compiler/CosaMath/CosaMath.ino
+Mon Oct 19 00:11:48 CEST 2015: examples/Compiler/CosaMath/CosaMath.ino
 Program:    9212 bytes (3.5% Full)
 Data:        268 bytes (3.3% Full)
-Sat Oct 17 22:20:28 CEST 2015: examples/Compiler/CosaMatrix/CosaMatrix.ino
+Mon Oct 19 00:11:50 CEST 2015: examples/Compiler/CosaMatrix/CosaMatrix.ino
 Program:    5958 bytes (2.3% Full)
 Data:        239 bytes (2.9% Full)
 EEPROM:       54 bytes (1.3% Full)
-Sat Oct 17 22:20:31 CEST 2015: examples/Compiler/CosaPSTR/CosaPSTR.ino
+Mon Oct 19 00:11:53 CEST 2015: examples/Compiler/CosaPSTR/CosaPSTR.ino
 Program:    7600 bytes (2.9% Full)
 Data:        259 bytes (3.2% Full)
-Sat Oct 17 22:20:34 CEST 2015: examples/Compiler/CosaSRAM/CosaSRAM.ino
+Mon Oct 19 00:11:56 CEST 2015: examples/Compiler/CosaSRAM/CosaSRAM.ino
 Program:    4722 bytes (1.8% Full)
 Data:        211 bytes (2.6% Full)
-Sat Oct 17 22:20:36 CEST 2015: examples/Compiler/CosaSwap/CosaSwap.ino
+Mon Oct 19 00:11:58 CEST 2015: examples/Compiler/CosaSwap/CosaSwap.ino
 Program:    8236 bytes (3.1% Full)
 Data:        253 bytes (3.1% Full)
-Sat Oct 17 22:20:39 CEST 2015: examples/Compiler/CosaSwitch/CosaSwitch.ino
+Mon Oct 19 00:12:01 CEST 2015: examples/Compiler/CosaSwitch/CosaSwitch.ino
 Program:    8552 bytes (3.3% Full)
 Data:        274 bytes (3.3% Full)
-Sat Oct 17 22:20:42 CEST 2015: examples/Pins/CosaAnalogComparator/CosaAnalogComparator.ino
+Mon Oct 19 00:12:04 CEST 2015: examples/Pins/CosaAnalogComparator/CosaAnalogComparator.ino
 Program:    5682 bytes (2.2% Full)
 Data:        331 bytes (4.0% Full)
-Sat Oct 17 22:20:45 CEST 2015: examples/Pins/CosaAnalogPins/CosaAnalogPins.ino
-Program:    7994 bytes (3.0% Full)
+Mon Oct 19 00:12:07 CEST 2015: examples/Pins/CosaAnalogPins/CosaAnalogPins.ino
+Program:    7990 bytes (3.0% Full)
 Data:        392 bytes (4.8% Full)
-Sat Oct 17 22:20:47 CEST 2015: examples/Pins/CosaButton/CosaButton.ino
+Mon Oct 19 00:12:09 CEST 2015: examples/Pins/CosaButton/CosaButton.ino
 Program:    8122 bytes (3.1% Full)
 Data:        454 bytes (5.5% Full)
-Sat Oct 17 22:20:50 CEST 2015: examples/Pins/CosaGPIO/CosaGPIO.ino
+Mon Oct 19 00:12:12 CEST 2015: examples/Pins/CosaGPIO/CosaGPIO.ino
 Program:    6434 bytes (2.5% Full)
 Data:        243 bytes (3.0% Full)
-Sat Oct 17 22:20:53 CEST 2015: examples/Pins/CosaInputCapture/CosaInputCapture.ino
+Mon Oct 19 00:12:15 CEST 2015: examples/Pins/CosaInputCapture/CosaInputCapture.ino
 Program:    5978 bytes (2.3% Full)
 Data:        266 bytes (3.2% Full)
-Sat Oct 17 22:20:55 CEST 2015: examples/Pins/CosaPinChangeInterrupt/CosaPinChangeInterrupt.ino
+Mon Oct 19 00:12:18 CEST 2015: examples/Pins/CosaPinChangeInterrupt/CosaPinChangeInterrupt.ino
 Program:    6442 bytes (2.5% Full)
 Data:        278 bytes (3.4% Full)
-Sat Oct 17 22:20:58 CEST 2015: examples/Pins/CosaPins/CosaPins.ino
+Mon Oct 19 00:12:20 CEST 2015: examples/Pins/CosaPins/CosaPins.ino
 Program:   12642 bytes (4.8% Full)
 Data:        523 bytes (6.4% Full)
-Sat Oct 17 22:21:01 CEST 2015: examples/Pins/CosaPWMPin/CosaPWMPin.ino
+Mon Oct 19 00:12:23 CEST 2015: examples/Pins/CosaPWMPin/CosaPWMPin.ino
 Program:    6974 bytes (2.7% Full)
 Data:        255 bytes (3.1% Full)
-Sat Oct 17 22:21:04 CEST 2015: examples/Sandbox/CosaACS712T/CosaACS712T.ino
+Mon Oct 19 00:12:26 CEST 2015: examples/Sandbox/CosaACS712T/CosaACS712T.ino
 Program:    5830 bytes (2.2% Full)
 Data:        338 bytes (4.1% Full)
-Sat Oct 17 22:21:06 CEST 2015: examples/Sandbox/CosaBitSet/CosaBitSet.ino
+Mon Oct 19 00:12:29 CEST 2015: examples/Sandbox/CosaBitSet/CosaBitSet.ino
 Program:    6764 bytes (2.6% Full)
 Data:        263 bytes (3.2% Full)
-Sat Oct 17 22:21:09 CEST 2015: examples/Sandbox/CosaConfig/CosaConfig.ino
+Mon Oct 19 00:12:31 CEST 2015: examples/Sandbox/CosaConfig/CosaConfig.ino
 Program:    6224 bytes (2.4% Full)
 Data:        242 bytes (3.0% Full)
-Sat Oct 17 22:21:12 CEST 2015: examples/Sandbox/CosaEEPROM/CosaEEPROM.ino
+Mon Oct 19 00:12:34 CEST 2015: examples/Sandbox/CosaEEPROM/CosaEEPROM.ino
 Program:    7614 bytes (2.9% Full)
 Data:        394 bytes (4.8% Full)
 EEPROM:       36 bytes (0.9% Full)
-Sat Oct 17 22:21:14 CEST 2015: examples/Sandbox/CosaIOBuffer/CosaIOBuffer.ino
+Mon Oct 19 00:12:37 CEST 2015: examples/Sandbox/CosaIOBuffer/CosaIOBuffer.ino
 Program:    9954 bytes (3.8% Full)
 Data:        304 bytes (3.7% Full)
-Sat Oct 17 22:21:17 CEST 2015: examples/Sandbox/CosaIOEvent/CosaIOEvent.ino
+Mon Oct 19 00:12:40 CEST 2015: examples/Sandbox/CosaIOEvent/CosaIOEvent.ino
 Program:    6130 bytes (2.3% Full)
 Data:        476 bytes (5.8% Full)
-Sat Oct 17 22:21:20 CEST 2015: examples/Sandbox/CosaLowPower/CosaLowPower.ino
+Mon Oct 19 00:12:42 CEST 2015: examples/Sandbox/CosaLowPower/CosaLowPower.ino
 Program:    2330 bytes (0.9% Full)
 Data:        145 bytes (1.8% Full)
-Sat Oct 17 22:21:23 CEST 2015: examples/Sandbox/CosaNucleoActor/CosaNucleoActor.ino
+Mon Oct 19 00:12:45 CEST 2015: examples/Sandbox/CosaNucleoActor/CosaNucleoActor.ino
 Program:   10200 bytes (3.9% Full)
 Data:        541 bytes (6.6% Full)
-Sat Oct 17 22:21:25 CEST 2015: examples/Sandbox/CosaPeriodicBlock/CosaPeriodicBlock.ino
+Mon Oct 19 00:12:48 CEST 2015: examples/Sandbox/CosaPeriodicBlock/CosaPeriodicBlock.ino
 Program:    5832 bytes (2.2% Full)
 Data:        283 bytes (3.5% Full)
-Sat Oct 17 22:21:28 CEST 2015: examples/Sandbox/CosaPingPong/CosaPingPong.ino
+Mon Oct 19 00:12:50 CEST 2015: examples/Sandbox/CosaPingPong/CosaPingPong.ino
 Program:    6890 bytes (2.6% Full)
 Data:        415 bytes (5.1% Full)
-Sat Oct 17 22:21:31 CEST 2015: examples/Sandbox/CosaRestart/CosaRestart.ino
+Mon Oct 19 00:12:53 CEST 2015: examples/Sandbox/CosaRestart/CosaRestart.ino
 Program:    6184 bytes (2.4% Full)
 Data:        265 bytes (3.2% Full)
-Sat Oct 17 22:21:33 CEST 2015: examples/Sandbox/CosaRF433/CosaRF433.ino
+Mon Oct 19 00:12:56 CEST 2015: examples/Sandbox/CosaRF433/CosaRF433.ino
 Program:    1304 bytes (0.5% Full)
 Data:         27 bytes (0.3% Full)
-Sat Oct 17 22:21:36 CEST 2015: examples/Sandbox/CosaSoftSRPI/CosaSoftSRPI.ino
+Mon Oct 19 00:12:58 CEST 2015: examples/Sandbox/CosaSoftSRPI/CosaSoftSRPI.ino
 Program:    5348 bytes (2.0% Full)
 Data:        237 bytes (2.9% Full)
-Sat Oct 17 22:21:39 CEST 2015: examples/Sandbox/CosaSoftSRPO/CosaSoftSRPO.ino
+Mon Oct 19 00:13:01 CEST 2015: examples/Sandbox/CosaSoftSRPO/CosaSoftSRPO.ino
 Program:    1374 bytes (0.5% Full)
 Data:         21 bytes (0.3% Full)
-Sat Oct 17 22:21:41 CEST 2015: examples/Sandbox/CosaSPIclock/CosaSPIclock.ino
+Mon Oct 19 00:13:04 CEST 2015: examples/Sandbox/CosaSPIclock/CosaSPIclock.ino
 Program:    8730 bytes (3.3% Full)
 Data:        257 bytes (3.1% Full)
-Sat Oct 17 22:21:44 CEST 2015: examples/Sandbox/CosaSPI/CosaSPI.ino
-Program:    2166 bytes (0.8% Full)
+Mon Oct 19 00:13:06 CEST 2015: examples/Sandbox/CosaSPI/CosaSPI.ino
+Program:    2168 bytes (0.8% Full)
 Data:         61 bytes (0.7% Full)
-Sat Oct 17 22:21:46 CEST 2015: examples/Sandbox/CosaString/CosaString.ino
+Mon Oct 19 00:13:09 CEST 2015: examples/Sandbox/CosaString/CosaString.ino
 Program:   10090 bytes (3.8% Full)
 Data:        261 bytes (3.2% Full)
-Sat Oct 17 22:21:49 CEST 2015: examples/Sandbox/CosaTermostat/CosaTermostat.ino
+Mon Oct 19 00:13:12 CEST 2015: examples/Sandbox/CosaTermostat/CosaTermostat.ino
 Program:    9656 bytes (3.7% Full)
 Data:        347 bytes (4.2% Full)
-Sat Oct 17 22:21:52 CEST 2015: examples/Sandbox/CosaTone/CosaTone.ino
+Mon Oct 19 00:13:15 CEST 2015: examples/Sandbox/CosaTone/CosaTone.ino
 Program:    3652 bytes (1.4% Full)
 Data:         25 bytes (0.3% Full)
-Sat Oct 17 22:21:54 CEST 2015: examples/Sandbox/CosaVCC/CosaVCC.ino
-Program:    7248 bytes (2.8% Full)
-Data:        454 bytes (5.5% Full)
-Sat Oct 17 22:21:57 CEST 2015: examples/Sandbox/CosaWatchdogJob/CosaWatchdogJob.ino
+Mon Oct 19 00:13:17 CEST 2015: examples/Sandbox/CosaVCC/CosaVCC.ino
+Program:    7276 bytes (2.8% Full)
+Data:        456 bytes (5.6% Full)
+Mon Oct 19 00:13:20 CEST 2015: examples/Sandbox/CosaWatchdogJob/CosaWatchdogJob.ino
 Program:    6884 bytes (2.6% Full)
 Data:        445 bytes (5.4% Full)
-Sat Oct 17 22:22:00 CEST 2015: examples/Time/CosaAlarm/CosaAlarm.ino
+Mon Oct 19 00:13:23 CEST 2015: examples/Time/CosaAlarm/CosaAlarm.ino
 Program:   10690 bytes (4.1% Full)
 Data:        533 bytes (6.5% Full)
-Sat Oct 17 22:22:03 CEST 2015: examples/Time/CosaDelay/CosaDelay.ino
+Mon Oct 19 00:13:26 CEST 2015: examples/Time/CosaDelay/CosaDelay.ino
 Program:    6230 bytes (2.4% Full)
 Data:        240 bytes (2.9% Full)
-Sat Oct 17 22:22:06 CEST 2015: examples/Time/CosaMicros/CosaMicros.ino
+Mon Oct 19 00:13:28 CEST 2015: examples/Time/CosaMicros/CosaMicros.ino
 Program:    6446 bytes (2.5% Full)
 Data:        241 bytes (2.9% Full)
-Sat Oct 17 22:22:08 CEST 2015: examples/Time/CosaPeriodic/CosaPeriodic.ino
+Mon Oct 19 00:13:31 CEST 2015: examples/Time/CosaPeriodic/CosaPeriodic.ino
 Program:    7354 bytes (2.8% Full)
 Data:        389 bytes (4.7% Full)
-Sat Oct 17 22:22:11 CEST 2015: examples/Time/CosaSince/CosaSince.ino
+Mon Oct 19 00:13:34 CEST 2015: examples/Time/CosaSince/CosaSince.ino
 Program:    6926 bytes (2.6% Full)
 Data:        356 bytes (4.3% Full)
-Sat Oct 17 22:22:14 CEST 2015: examples/Time/CosaTime/CosaTime.ino
+Mon Oct 19 00:13:36 CEST 2015: examples/Time/CosaTime/CosaTime.ino
 Program:   12316 bytes (4.7% Full)
 Data:        357 bytes (4.4% Full)
-Sat Oct 17 22:22:17 CEST 2015: examples/Time/CosaTimeLCD/CosaTimeLCD.ino
-Program:    7318 bytes (2.8% Full)
+Mon Oct 19 00:13:39 CEST 2015: examples/Time/CosaTimeLCD/CosaTimeLCD.ino
+Program:    7284 bytes (2.8% Full)
 Data:        270 bytes (3.3% Full)
-Sat Oct 17 22:22:20 CEST 2015: examples/Tools/CosaAutoCalibration/CosaAutoCalibration.ino
+Mon Oct 19 00:13:42 CEST 2015: examples/Tools/CosaAutoCalibration/CosaAutoCalibration.ino
 Program:    6992 bytes (2.7% Full)
 Data:        382 bytes (4.7% Full)
-Sat Oct 17 22:22:23 CEST 2015: examples/Tools/CosaClockCalibration/CosaClockCalibration.ino
+Mon Oct 19 00:13:45 CEST 2015: examples/Tools/CosaClockCalibration/CosaClockCalibration.ino
 Program:    8896 bytes (3.4% Full)
 Data:        559 bytes (6.8% Full)
-Sat Oct 17 22:22:26 CEST 2015: examples/Tools/CosaOWIdebug/CosaOWIdebug.ino
+Mon Oct 19 00:13:48 CEST 2015: examples/Tools/CosaOWIdebug/CosaOWIdebug.ino
 Program:    6856 bytes (2.6% Full)
 Data:        241 bytes (2.9% Full)
-Sat Oct 17 22:22:29 CEST 2015: examples/Tools/CosaOWIrom/CosaOWIrom.ino
+Mon Oct 19 00:13:51 CEST 2015: examples/Tools/CosaOWIrom/CosaOWIrom.ino
 Program:    6066 bytes (2.3% Full)
 Data:        228 bytes (2.8% Full)
-Sat Oct 17 22:22:32 CEST 2015: examples/Tools/CosaPinScanner/CosaPinScanner.ino
+Mon Oct 19 00:13:53 CEST 2015: examples/Tools/CosaPinScanner/CosaPinScanner.ino
 Program:    5932 bytes (2.3% Full)
 Data:        223 bytes (2.7% Full)
-Sat Oct 17 22:22:34 CEST 2015: examples/Tools/CosaProbe/CosaProbe.ino
+Mon Oct 19 00:13:56 CEST 2015: examples/Tools/CosaProbe/CosaProbe.ino
 Program:    7412 bytes (2.8% Full)
 Data:        545 bytes (6.7% Full)
-Sat Oct 17 22:22:37 CEST 2015: examples/Tools/CosaRF24scanner/CosaRF24scanner.ino
-Program:   13538 bytes (5.2% Full)
+Mon Oct 19 00:13:59 CEST 2015: examples/Tools/CosaRF24scanner/CosaRF24scanner.ino
+Program:   13540 bytes (5.2% Full)
 Data:        485 bytes (5.9% Full)
-Sat Oct 17 22:22:40 CEST 2015: examples/Tools/CosaTWIscanner/CosaTWIscanner.ino
+Mon Oct 19 00:14:02 CEST 2015: examples/Tools/CosaTWIscanner/CosaTWIscanner.ino
 Program:    7456 bytes (2.8% Full)
 Data:        342 bytes (4.2% Full)
-Sat Oct 17 22:22:43 CEST 2015: examples/TWI/Cosa10DOF/Cosa10DOF.ino
+Mon Oct 19 00:14:05 CEST 2015: examples/TWI/Cosa10DOF/Cosa10DOF.ino
 Program:   11376 bytes (4.3% Full)
 Data:        457 bytes (5.6% Full)
-Sat Oct 17 22:22:46 CEST 2015: examples/TWI/CosaSi7021/CosaSi7021.ino
+Mon Oct 19 00:14:08 CEST 2015: examples/TWI/CosaSi7021/CosaSi7021.ino
 Program:   12346 bytes (4.7% Full)
 Data:        386 bytes (4.7% Full)
-Sat Oct 17 22:22:49 CEST 2015: examples/TWI/CosaTWIKeyPad/CosaTWIKeyPad.ino
+Mon Oct 19 00:14:11 CEST 2015: examples/TWI/CosaTWIKeyPad/CosaTWIKeyPad.ino
 Program:    8078 bytes (3.1% Full)
 Data:        385 bytes (4.7% Full)
-Sat Oct 17 22:22:52 CEST 2015: examples/TWI/CosaTWImaster/CosaTWImaster.ino
+Mon Oct 19 00:14:13 CEST 2015: examples/TWI/CosaTWImaster/CosaTWImaster.ino
 Program:    9424 bytes (3.6% Full)
 Data:        400 bytes (4.9% Full)
-Sat Oct 17 22:22:55 CEST 2015: examples/TWI/CosaTWIremotePinMaster/CosaTWIremotePinMaster.ino
+Mon Oct 19 00:14:17 CEST 2015: examples/TWI/CosaTWIremotePinMaster/CosaTWIremotePinMaster.ino
 Program:    7864 bytes (3.0% Full)
 Data:        388 bytes (4.7% Full)
-Sat Oct 17 22:22:58 CEST 2015: examples/TWI/CosaTWIremotePinSlave/CosaTWIremotePinSlave.ino
+Mon Oct 19 00:14:19 CEST 2015: examples/TWI/CosaTWIremotePinSlave/CosaTWIremotePinSlave.ino
 Program:    2310 bytes (0.9% Full)
 Data:        163 bytes (2.0% Full)
-Sat Oct 17 22:23:00 CEST 2015: examples/TWI/CosaTWIslave/CosaTWIslave.ino
+Mon Oct 19 00:14:22 CEST 2015: examples/TWI/CosaTWIslave/CosaTWIslave.ino
 Program:    7452 bytes (2.8% Full)
 Data:        401 bytes (4.9% Full)
-Sat Oct 17 22:23:03 CEST 2015: examples/UART/CosaCDC/CosaCDC.ino
+Mon Oct 19 00:14:25 CEST 2015: examples/UART/CosaCDC/CosaCDC.ino
 CosaCDC.ino:31:2: error: #error CosaCDC: board not supported.
  #error CosaCDC: board not supported.
 CosaCDC.ino:40:3: error: 'cdc' was not declared in this scope
-Sat Oct 17 22:23:05 CEST 2015: examples/UART/CosaJobUART/CosaJobUART.ino
+Mon Oct 19 00:14:27 CEST 2015: examples/UART/CosaJobUART/CosaJobUART.ino
 Program:    6654 bytes (2.5% Full)
 Data:        468 bytes (5.7% Full)
-Sat Oct 17 22:23:08 CEST 2015: examples/UART/CosaMegaUARTs/CosaMegaUARTs.ino
+Mon Oct 19 00:14:29 CEST 2015: examples/UART/CosaMegaUARTs/CosaMegaUARTs.ino
 Program:    4374 bytes (1.7% Full)
 Data:        322 bytes (3.9% Full)
-Sat Oct 17 22:23:10 CEST 2015: examples/UART/CosaSoftUART/CosaSoftUART.ino
+Mon Oct 19 00:14:32 CEST 2015: examples/UART/CosaSoftUART/CosaSoftUART.ino
 Program:    3876 bytes (1.5% Full)
 Data:        223 bytes (2.7% Full)
-Sat Oct 17 22:23:13 CEST 2015: examples/UART/CosaUART/CosaUART.ino
+Mon Oct 19 00:14:35 CEST 2015: examples/UART/CosaUART/CosaUART.ino
 Program:    5880 bytes (2.2% Full)
 Data:        226 bytes (2.8% Full)
-Sat Oct 17 22:23:16 CEST 2015: examples/UART/CosaUARTecho/CosaUARTecho.ino
+Mon Oct 19 00:14:37 CEST 2015: examples/UART/CosaUARTecho/CosaUARTecho.ino
 Program:    3606 bytes (1.4% Full)
 Data:        194 bytes (2.4% Full)
-Sat Oct 17 22:23:19 CEST 2015: lib/AVR/examples/CosaISP/CosaISP.ino
+Mon Oct 19 00:14:40 CEST 2015: lib/AVR/examples/CosaISP/CosaISP.ino
 Program:    6248 bytes (2.4% Full)
 Data:        213 bytes (2.6% Full)
-Sat Oct 17 22:23:22 CEST 2015: lib/AVR/examples/CosaProgrammer/CosaProgrammer.ino
+Mon Oct 19 00:14:43 CEST 2015: lib/AVR/examples/CosaProgrammer/CosaProgrammer.ino
 Program:    7446 bytes (2.8% Full)
 Data:        245 bytes (3.0% Full)
-Sat Oct 17 22:23:24 CEST 2015: lib/Domotica/RF433/DomoticaADXL345/DomoticaADXL345.ino
-Program:    8754 bytes (3.3% Full)
+Mon Oct 19 00:14:46 CEST 2015: lib/Domotica/RF433/DomoticaADXL345/DomoticaADXL345.ino
+Program:    8736 bytes (3.3% Full)
 Data:        370 bytes (4.5% Full)
-Sat Oct 17 22:23:27 CEST 2015: lib/Domotica/RF433/DomoticaAnalogPin/DomoticaAnalogPin.ino
-Program:    5198 bytes (2.0% Full)
+Mon Oct 19 00:14:49 CEST 2015: lib/Domotica/RF433/DomoticaAnalogPin/DomoticaAnalogPin.ino
+Program:    5186 bytes (2.0% Full)
 Data:        195 bytes (2.4% Full)
-Sat Oct 17 22:23:30 CEST 2015: lib/Domotica/RF433/DomoticaClock/DomoticaClock.ino
-Program:    5774 bytes (2.2% Full)
+Mon Oct 19 00:14:52 CEST 2015: lib/Domotica/RF433/DomoticaClock/DomoticaClock.ino
+Program:    5758 bytes (2.2% Full)
 Data:        311 bytes (3.8% Full)
-Sat Oct 17 22:23:33 CEST 2015: lib/Domotica/RF433/DomoticaDHT11/DomoticaDHT11.ino
-Program:    7216 bytes (2.8% Full)
+Mon Oct 19 00:14:55 CEST 2015: lib/Domotica/RF433/DomoticaDHT11/DomoticaDHT11.ino
+Program:    7188 bytes (2.7% Full)
 Data:        260 bytes (3.2% Full)
-Sat Oct 17 22:23:36 CEST 2015: lib/Domotica/RF433/DomoticaDigitalPin/DomoticaDigitalPin.ino
-Program:    5328 bytes (2.0% Full)
+Mon Oct 19 00:14:58 CEST 2015: lib/Domotica/RF433/DomoticaDigitalPin/DomoticaDigitalPin.ino
+Program:    5310 bytes (2.0% Full)
 Data:        195 bytes (2.4% Full)
-Sat Oct 17 22:23:39 CEST 2015: lib/Domotica/RF433/DomoticaDigitalPins/DomoticaDigitalPins.ino
-Program:    5358 bytes (2.0% Full)
+Mon Oct 19 00:15:01 CEST 2015: lib/Domotica/RF433/DomoticaDigitalPins/DomoticaDigitalPins.ino
+Program:    5342 bytes (2.0% Full)
 Data:        194 bytes (2.4% Full)
-Sat Oct 17 22:23:42 CEST 2015: lib/Domotica/RF433/DomoticaDS18B20/DomoticaDS18B20.ino
-Program:    7496 bytes (2.9% Full)
+Mon Oct 19 00:15:04 CEST 2015: lib/Domotica/RF433/DomoticaDS18B20/DomoticaDS18B20.ino
+Program:    7482 bytes (2.9% Full)
 Data:        241 bytes (2.9% Full)
-Sat Oct 17 22:23:45 CEST 2015: lib/Domotica/RF433/DomoticaInfo/DomoticaInfo.ino
-Program:    5142 bytes (2.0% Full)
+Mon Oct 19 00:15:07 CEST 2015: lib/Domotica/RF433/DomoticaInfo/DomoticaInfo.ino
+Program:    5138 bytes (2.0% Full)
 Data:        194 bytes (2.4% Full)
-Sat Oct 17 22:23:48 CEST 2015: lib/Domotica/RF433/DomoticaMonitor/DomoticaMonitor.ino
+Mon Oct 19 00:15:09 CEST 2015: lib/Domotica/RF433/DomoticaMonitor/DomoticaMonitor.ino
 Program:   13718 bytes (5.2% Full)
 Data:        392 bytes (4.8% Full)
-Sat Oct 17 22:23:51 CEST 2015: lib/Domotica/RF433/DomoticaPins/DomoticaPins.ino
-Program:    5518 bytes (2.1% Full)
+Mon Oct 19 00:15:13 CEST 2015: lib/Domotica/RF433/DomoticaPins/DomoticaPins.ino
+Program:    5492 bytes (2.1% Full)
 Data:        196 bytes (2.4% Full)
-Sat Oct 17 22:23:54 CEST 2015: lib/Domotica/RF433/DomoticaRelay/DomoticaRelay.ino
+Mon Oct 19 00:15:16 CEST 2015: lib/Domotica/RF433/DomoticaRelay/DomoticaRelay.ino
 Program:    9966 bytes (3.8% Full)
 Data:        478 bytes (5.8% Full)
-Sat Oct 17 22:23:57 CEST 2015: lib/Domotica/RF433/DomoticaTrace/DomoticaTrace.ino
+Mon Oct 19 00:15:19 CEST 2015: lib/Domotica/RF433/DomoticaTrace/DomoticaTrace.ino
 Program:   13560 bytes (5.2% Full)
 Data:        487 bytes (5.9% Full)
-Sat Oct 17 22:24:00 CEST 2015: lib/Domotica/RF433/DomoticaTraceQueue/DomoticaTraceQueue.ino
+Mon Oct 19 00:15:22 CEST 2015: lib/Domotica/RF433/DomoticaTraceQueue/DomoticaTraceQueue.ino
 Program:   13740 bytes (5.2% Full)
 Data:        787 bytes (9.6% Full)
-Sat Oct 17 22:24:04 CEST 2015: lib/Domotica/RF433/DomoticaTraceTable/DomoticaTraceTable.ino
+Mon Oct 19 00:15:25 CEST 2015: lib/Domotica/RF433/DomoticaTraceTable/DomoticaTraceTable.ino
 Program:   14296 bytes (5.5% Full)
 Data:       1651 bytes (20.2% Full)
 DomoticaTraceTable.ino:101:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
 DomoticaTraceTable.ino:127:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-Sat Oct 17 22:24:07 CEST 2015: lib/Domotica/RF433/DomoticaWakeup/DomoticaWakeup.ino
-Program:    6340 bytes (2.4% Full)
+Mon Oct 19 00:15:29 CEST 2015: lib/Domotica/RF433/DomoticaWakeup/DomoticaWakeup.ino
+Program:    6322 bytes (2.4% Full)
 Data:        234 bytes (2.9% Full)
-Sat Oct 17 22:24:10 CEST 2015: lib/HTTP/examples/CosaPinWebServer/CosaPinWebServer.ino
-Program:   15090 bytes (5.8% Full)
+Mon Oct 19 00:15:32 CEST 2015: lib/HTTP/examples/CosaPinWebServer/CosaPinWebServer.ino
+Program:   15142 bytes (5.8% Full)
 Data:        561 bytes (6.8% Full)
-Sat Oct 17 22:24:13 CEST 2015: lib/HTTP/examples/CosaSDWebServer/CosaSDWebServer.ino
-Program:   19172 bytes (7.3% Full)
+Mon Oct 19 00:15:35 CEST 2015: lib/HTTP/examples/CosaSDWebServer/CosaSDWebServer.ino
+Program:   19174 bytes (7.3% Full)
 Data:       1196 bytes (14.6% Full)
-Sat Oct 17 22:24:17 CEST 2015: lib/HTTP/examples/CosaWebClient/CosaWebClient.ino
-Program:   13672 bytes (5.2% Full)
+Mon Oct 19 00:15:38 CEST 2015: lib/HTTP/examples/CosaWebClient/CosaWebClient.ino
+Program:   13590 bytes (5.2% Full)
 Data:        581 bytes (7.1% Full)
-Sat Oct 17 22:24:20 CEST 2015: lib/ICMP/examples/CosaICMPping/CosaICMPping.ino
-Program:   13852 bytes (5.3% Full)
+Mon Oct 19 00:15:42 CEST 2015: lib/ICMP/examples/CosaICMPping/CosaICMPping.ino
+Program:   13854 bytes (5.3% Full)
 Data:        582 bytes (7.1% Full)
-Sat Oct 17 22:24:23 CEST 2015: lib/ICMP/examples/CosaICMPpingLCD/CosaICMPpingLCD.ino
-Program:   13560 bytes (5.2% Full)
+Mon Oct 19 00:15:45 CEST 2015: lib/ICMP/examples/CosaICMPpingLCD/CosaICMPpingLCD.ino
+Program:   13562 bytes (5.2% Full)
 Data:        522 bytes (6.4% Full)
-Sat Oct 17 22:24:27 CEST 2015: lib/MQTT/examples/CosaMQTTclient/CosaMQTTclient.ino
-Program:   18438 bytes (7.0% Full)
+Mon Oct 19 00:15:48 CEST 2015: lib/MQTT/examples/CosaMQTTclient/CosaMQTTclient.ino
+Program:   18440 bytes (7.0% Full)
 Data:        519 bytes (6.3% Full)
-Sat Oct 17 22:24:30 CEST 2015: lib/MQTT/examples/CosaMQTThumidity/CosaMQTThumidity.ino
-Program:   14790 bytes (5.6% Full)
+Mon Oct 19 00:15:52 CEST 2015: lib/MQTT/examples/CosaMQTThumidity/CosaMQTThumidity.ino
+Program:   14792 bytes (5.6% Full)
 Data:        402 bytes (4.9% Full)
-Sat Oct 17 22:24:34 CEST 2015: lib/MQTT/examples/CosaMQTTtemperature/CosaMQTTtemperature.ino
-Program:   15042 bytes (5.7% Full)
+Mon Oct 19 00:15:55 CEST 2015: lib/MQTT/examples/CosaMQTTtemperature/CosaMQTTtemperature.ino
+Program:   15044 bytes (5.7% Full)
 Data:        449 bytes (5.5% Full)
-Sat Oct 17 22:24:37 CEST 2015: lib/NEXA/examples/CosaNEXAreceiver/CosaNEXAreceiver.ino
+Mon Oct 19 00:15:59 CEST 2015: lib/NEXA/examples/CosaNEXAreceiver/CosaNEXAreceiver.ino
 Program:    4118 bytes (1.6% Full)
 Data:        208 bytes (2.5% Full)
-Sat Oct 17 22:24:40 CEST 2015: lib/NEXA/examples/CosaNEXAsender/CosaNEXAsender.ino
+Mon Oct 19 00:16:01 CEST 2015: lib/NEXA/examples/CosaNEXAsender/CosaNEXAsender.ino
 Program:    2786 bytes (1.1% Full)
 Data:        114 bytes (1.4% Full)
-Sat Oct 17 22:24:43 CEST 2015: lib/NTP/examples/CosaNTP/CosaNTP.ino
-Program:   16758 bytes (6.4% Full)
+Mon Oct 19 00:16:04 CEST 2015: lib/NTP/examples/CosaNTP/CosaNTP.ino
+Program:   16760 bytes (6.4% Full)
 Data:        595 bytes (7.3% Full)
-Sat Oct 17 22:24:46 CEST 2015: lib/ProtocolBuffer/examples/CosaProtocolBuffer/CosaProtocolBuffer.ino
+Mon Oct 19 00:16:07 CEST 2015: lib/ProtocolBuffer/examples/CosaProtocolBuffer/CosaProtocolBuffer.ino
 Program:   16078 bytes (6.1% Full)
 Data:        342 bytes (4.2% Full)
 CosaProtocolBuffer.ino:239:25: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-Sat Oct 17 22:24:49 CEST 2015: libraries/ADXL345/examples/CosaADXL345/CosaADXL345.ino
+Mon Oct 19 00:16:11 CEST 2015: libraries/ADXL345/examples/CosaADXL345/CosaADXL345.ino
 Program:    8556 bytes (3.3% Full)
 Data:        383 bytes (4.7% Full)
-Sat Oct 17 22:24:52 CEST 2015: libraries/AT24CXX/examples/CosaAT24CXX/CosaAT24CXX.ino
+Mon Oct 19 00:16:13 CEST 2015: libraries/AT24CXX/examples/CosaAT24CXX/CosaAT24CXX.ino
 Program:    9838 bytes (3.8% Full)
 Data:        403 bytes (4.9% Full)
 EEPROM:      316 bytes (7.7% Full)
-Sat Oct 17 22:24:55 CEST 2015: libraries/Base64/examples/CosaBase64/CosaBase64.ino
+Mon Oct 19 00:16:16 CEST 2015: libraries/Base64/examples/CosaBase64/CosaBase64.ino
 Program:    9894 bytes (3.8% Full)
 Data:        284 bytes (3.5% Full)
-Sat Oct 17 22:24:58 CEST 2015: libraries/BMP085/examples/CosaBMP085/CosaBMP085.ino
+Mon Oct 19 00:16:19 CEST 2015: libraries/BMP085/examples/CosaBMP085/CosaBMP085.ino
 Program:    9348 bytes (3.6% Full)
 Data:        417 bytes (5.1% Full)
-Sat Oct 17 22:25:01 CEST 2015: libraries/Canvas/examples/CosaCanvasBMP/CosaCanvasBMP.ino
-Program:   23042 bytes (8.8% Full)
+Mon Oct 19 00:16:22 CEST 2015: libraries/Canvas/examples/CosaCanvasBMP/CosaCanvasBMP.ino
+Program:   23044 bytes (8.8% Full)
 Data:       1141 bytes (13.9% Full)
-Sat Oct 17 22:25:05 CEST 2015: libraries/Canvas/examples/CosaCanvasClock/CosaCanvasClock.ino
-Program:   12020 bytes (4.6% Full)
+Mon Oct 19 00:16:26 CEST 2015: libraries/Canvas/examples/CosaCanvasClock/CosaCanvasClock.ino
+Program:   12022 bytes (4.6% Full)
 Data:        264 bytes (3.2% Full)
-Sat Oct 17 22:25:08 CEST 2015: libraries/Canvas/examples/CosaCanvasDemo/CosaCanvasDemo.ino
-Program:   25280 bytes (9.6% Full)
+Mon Oct 19 00:16:29 CEST 2015: libraries/Canvas/examples/CosaCanvasDemo/CosaCanvasDemo.ino
+Program:   25282 bytes (9.6% Full)
 Data:        577 bytes (7.0% Full)
-Sat Oct 17 22:25:12 CEST 2015: libraries/Canvas/examples/CosaCanvasFont/CosaCanvasFont.ino
-Program:   10830 bytes (4.1% Full)
+Mon Oct 19 00:16:33 CEST 2015: libraries/Canvas/examples/CosaCanvasFont/CosaCanvasFont.ino
+Program:   10832 bytes (4.1% Full)
 Data:        239 bytes (2.9% Full)
-Sat Oct 17 22:25:15 CEST 2015: libraries/Canvas/examples/CosaCanvasFonts/CosaCanvasFonts.ino
-Program:   18856 bytes (7.2% Full)
+Mon Oct 19 00:16:36 CEST 2015: libraries/Canvas/examples/CosaCanvasFonts/CosaCanvasFonts.ino
+Program:   18858 bytes (7.2% Full)
 Data:        566 bytes (6.9% Full)
-Sat Oct 17 22:25:18 CEST 2015: libraries/Canvas/examples/CosaCanvasHCSR04/CosaCanvasHCSR04.ino
-Program:   15908 bytes (6.1% Full)
+Mon Oct 19 00:16:39 CEST 2015: libraries/Canvas/examples/CosaCanvasHCSR04/CosaCanvasHCSR04.ino
+Program:   15910 bytes (6.1% Full)
 Data:        490 bytes (6.0% Full)
-Sat Oct 17 22:25:22 CEST 2015: libraries/Canvas/examples/CosaCanvasHistogram/CosaCanvasHistogram.ino
-Program:   12148 bytes (4.6% Full)
+Mon Oct 19 00:16:43 CEST 2015: libraries/Canvas/examples/CosaCanvasHistogram/CosaCanvasHistogram.ino
+Program:   12150 bytes (4.6% Full)
 Data:        325 bytes (4.0% Full)
-Sat Oct 17 22:25:25 CEST 2015: libraries/Canvas/examples/CosaCanvasPins/CosaCanvasPins.ino
-Program:   13452 bytes (5.1% Full)
+Mon Oct 19 00:16:46 CEST 2015: libraries/Canvas/examples/CosaCanvasPins/CosaCanvasPins.ino
+Program:   13454 bytes (5.1% Full)
 Data:        309 bytes (3.8% Full)
-Sat Oct 17 22:25:28 CEST 2015: libraries/Canvas/examples/CosaCanvasScript/CosaCanvasScript.ino
-Program:   19656 bytes (7.5% Full)
+Mon Oct 19 00:16:49 CEST 2015: libraries/Canvas/examples/CosaCanvasScript/CosaCanvasScript.ino
+Program:   19658 bytes (7.5% Full)
 Data:        515 bytes (6.3% Full)
-Sat Oct 17 22:25:32 CEST 2015: libraries/Canvas/examples/CosaCanvasShades/CosaCanvasShades.ino
-Program:   10724 bytes (4.1% Full)
+Mon Oct 19 00:16:53 CEST 2015: libraries/Canvas/examples/CosaCanvasShades/CosaCanvasShades.ino
+Program:   10726 bytes (4.1% Full)
 Data:        239 bytes (2.9% Full)
-Sat Oct 17 22:25:35 CEST 2015: libraries/Canvas/examples/CosaCanvasSweep/CosaCanvasSweep.ino
-Program:   11156 bytes (4.3% Full)
+Mon Oct 19 00:16:56 CEST 2015: libraries/Canvas/examples/CosaCanvasSweep/CosaCanvasSweep.ino
+Program:   11158 bytes (4.3% Full)
 Data:        364 bytes (4.4% Full)
-Sat Oct 17 22:25:38 CEST 2015: libraries/CC3000/examples/CosaCC3000demo/CosaCC3000demo.ino
-Program:   17010 bytes (6.5% Full)
+Mon Oct 19 00:16:59 CEST 2015: libraries/CC3000/examples/CosaCC3000demo/CosaCC3000demo.ino
+Program:   17012 bytes (6.5% Full)
 Data:        778 bytes (9.5% Full)
-Sat Oct 17 22:25:42 CEST 2015: libraries/CC3000/examples/CosaCC3000info/CosaCC3000info.ino
-Program:   17612 bytes (6.7% Full)
+Mon Oct 19 00:17:02 CEST 2015: libraries/CC3000/examples/CosaCC3000info/CosaCC3000info.ino
+Program:   17614 bytes (6.7% Full)
 Data:        774 bytes (9.4% Full)
-Sat Oct 17 22:25:45 CEST 2015: libraries/CC3000/examples/CosaCC3000server/CosaCC3000server.ino
-Program:   20038 bytes (7.6% Full)
+Mon Oct 19 00:17:06 CEST 2015: libraries/CC3000/examples/CosaCC3000server/CosaCC3000server.ino
+Program:   20040 bytes (7.6% Full)
 Data:        966 bytes (11.8% Full)
-Sat Oct 17 22:25:49 CEST 2015: libraries/CC3000/examples/CosaCC3000socket/CosaCC3000socket.ino
-Program:   16636 bytes (6.3% Full)
+Mon Oct 19 00:17:09 CEST 2015: libraries/CC3000/examples/CosaCC3000socket/CosaCC3000socket.ino
+Program:   16638 bytes (6.3% Full)
 Data:        780 bytes (9.5% Full)
-Sat Oct 17 22:25:52 CEST 2015: libraries/CFFS/examples/CosaCFFS/CosaCFFS.ino
-Program:   22446 bytes (8.6% Full)
+Mon Oct 19 00:17:12 CEST 2015: libraries/CFFS/examples/CosaCFFS/CosaCFFS.ino
+Program:   22448 bytes (8.6% Full)
 Data:        465 bytes (5.7% Full)
-Sat Oct 17 22:25:55 CEST 2015: libraries/CFFS/examples/CosaCFFSshell/CosaCFFSshell.ino
-Program:   19674 bytes (7.5% Full)
+Mon Oct 19 00:17:15 CEST 2015: libraries/CFFS/examples/CosaCFFSshell/CosaCFFSshell.ino
+Program:   19676 bytes (7.5% Full)
 Data:        600 bytes (7.3% Full)
-Sat Oct 17 22:25:59 CEST 2015: libraries/Ciao/examples/CosaCiaoNative/CosaCiaoNative.ino
+Mon Oct 19 00:17:19 CEST 2015: libraries/Ciao/examples/CosaCiaoNative/CosaCiaoNative.ino
 Program:    7252 bytes (2.8% Full)
 Data:        320 bytes (3.9% Full)
-Sat Oct 17 22:26:02 CEST 2015: libraries/Ciao/examples/CosaCiaoPoint/CosaCiaoPoint.ino
+Mon Oct 19 00:17:22 CEST 2015: libraries/Ciao/examples/CosaCiaoPoint/CosaCiaoPoint.ino
 Program:    6942 bytes (2.6% Full)
 Data:        288 bytes (3.5% Full)
-Sat Oct 17 22:26:05 CEST 2015: libraries/Debug/examples/CosaDebug/CosaDebug.ino
+Mon Oct 19 00:17:25 CEST 2015: libraries/Debug/examples/CosaDebug/CosaDebug.ino
 Program:   10118 bytes (3.9% Full)
 Data:        335 bytes (4.1% Full)
-Sat Oct 17 22:26:08 CEST 2015: libraries/DHCP/examples/CosaDHCP/CosaDHCP.ino
-Program:   14010 bytes (5.3% Full)
+Mon Oct 19 00:17:28 CEST 2015: libraries/DHCP/examples/CosaDHCP/CosaDHCP.ino
+Program:   14012 bytes (5.3% Full)
 Data:        485 bytes (5.9% Full)
-Sat Oct 17 22:26:11 CEST 2015: libraries/DHT/examples/CosaDHT/CosaDHT.ino
+Mon Oct 19 00:17:31 CEST 2015: libraries/DHT/examples/CosaDHT/CosaDHT.ino
 Program:   10356 bytes (4.0% Full)
 Data:        456 bytes (5.6% Full)
-Sat Oct 17 22:26:14 CEST 2015: libraries/DHT/examples/CosaDHTMAX72XX/CosaDHTMAX72XX.ino
-Program:    9874 bytes (3.8% Full)
+Mon Oct 19 00:17:34 CEST 2015: libraries/DHT/examples/CosaDHTMAX72XX/CosaDHTMAX72XX.ino
+Program:    9856 bytes (3.8% Full)
 Data:        346 bytes (4.2% Full)
-Sat Oct 17 22:26:17 CEST 2015: libraries/DNS/examples/CosaDNS/CosaDNS.ino
-Program:   12542 bytes (4.8% Full)
+Mon Oct 19 00:17:37 CEST 2015: libraries/DNS/examples/CosaDNS/CosaDNS.ino
+Program:   12544 bytes (4.8% Full)
 Data:        463 bytes (5.7% Full)
-Sat Oct 17 22:26:20 CEST 2015: libraries/DS1302/examples/CosaDS1302/CosaDS1302.ino
+Mon Oct 19 00:17:40 CEST 2015: libraries/DS1302/examples/CosaDS1302/CosaDS1302.ino
 Program:    8040 bytes (3.1% Full)
 Data:        251 bytes (3.1% Full)
-Sat Oct 17 22:26:23 CEST 2015: libraries/DS1307/examples/CosaDS1307/CosaDS1307.ino
+Mon Oct 19 00:17:43 CEST 2015: libraries/DS1307/examples/CosaDS1307/CosaDS1307.ino
 Program:    8660 bytes (3.3% Full)
 Data:        387 bytes (4.7% Full)
-Sat Oct 17 22:26:26 CEST 2015: libraries/DS18B20/examples/CosaDS18B20alarm/CosaDS18B20alarm.ino
+Mon Oct 19 00:17:45 CEST 2015: libraries/DS18B20/examples/CosaDS18B20alarm/CosaDS18B20alarm.ino
 Program:   10182 bytes (3.9% Full)
 Data:        493 bytes (6.0% Full)
-Sat Oct 17 22:26:29 CEST 2015: libraries/DS18B20/examples/CosaDS18B20calc/CosaDS18B20calc.ino
+Mon Oct 19 00:17:49 CEST 2015: libraries/DS18B20/examples/CosaDS18B20calc/CosaDS18B20calc.ino
 Program:    7412 bytes (2.8% Full)
 Data:        234 bytes (2.9% Full)
-Sat Oct 17 22:26:32 CEST 2015: libraries/DS18B20/examples/CosaDS18B20/CosaDS18B20.ino
+Mon Oct 19 00:17:51 CEST 2015: libraries/DS18B20/examples/CosaDS18B20/CosaDS18B20.ino
 Program:    9778 bytes (3.7% Full)
 Data:        382 bytes (4.7% Full)
-Sat Oct 17 22:26:35 CEST 2015: libraries/DS18B20/examples/CosaDS18B20periodic/CosaDS18B20periodic.ino
+Mon Oct 19 00:17:54 CEST 2015: libraries/DS18B20/examples/CosaDS18B20periodic/CosaDS18B20periodic.ino
 Program:    9206 bytes (3.5% Full)
 Data:        435 bytes (5.3% Full)
-Sat Oct 17 22:26:38 CEST 2015: libraries/DS3231/examples/CosaDS3231/CosaDS3231.ino
+Mon Oct 19 00:17:57 CEST 2015: libraries/DS3231/examples/CosaDS3231/CosaDS3231.ino
 Program:   11180 bytes (4.3% Full)
 Data:        406 bytes (5.0% Full)
-Sat Oct 17 22:26:41 CEST 2015: libraries/Fai/examples/CosaFai/CosaFai.ino
+Mon Oct 19 00:18:00 CEST 2015: libraries/Fai/examples/CosaFai/CosaFai.ino
 Program:    8124 bytes (3.1% Full)
 Data:        412 bytes (5.0% Full)
-Sat Oct 17 22:26:44 CEST 2015: libraries/FAT16/examples/CosaFAT16/CosaFAT16.ino
-Program:   15004 bytes (5.7% Full)
+Mon Oct 19 00:18:03 CEST 2015: libraries/FAT16/examples/CosaFAT16/CosaFAT16.ino
+Program:   15006 bytes (5.7% Full)
 Data:        952 bytes (11.6% Full)
-Sat Oct 17 22:26:47 CEST 2015: libraries/HCSR04/examples/CosaHCSR04/CosaHCSR04.ino
+Mon Oct 19 00:18:06 CEST 2015: libraries/HCSR04/examples/CosaHCSR04/CosaHCSR04.ino
 Program:    7606 bytes (2.9% Full)
 Data:        447 bytes (5.5% Full)
-Sat Oct 17 22:26:50 CEST 2015: libraries/HMC5883L/examples/CosaHMC5883L/CosaHMC5883L.ino
+Mon Oct 19 00:18:09 CEST 2015: libraries/HMC5883L/examples/CosaHMC5883L/CosaHMC5883L.ino
 Program:    8600 bytes (3.3% Full)
 Data:        393 bytes (4.8% Full)
-Sat Oct 17 22:26:53 CEST 2015: libraries/IR/examples/CosaIR/CosaIR.ino
-Program:   10096 bytes (3.9% Full)
+Mon Oct 19 00:18:12 CEST 2015: libraries/IR/examples/CosaIR/CosaIR.ino
+Program:   10098 bytes (3.9% Full)
 Data:        380 bytes (4.6% Full)
-Sat Oct 17 22:26:56 CEST 2015: libraries/L3G4200D/examples/CosaL3G4200D/CosaL3G4200D.ino
+Mon Oct 19 00:18:16 CEST 2015: libraries/L3G4200D/examples/CosaL3G4200D/CosaL3G4200D.ino
 Program:    8138 bytes (3.1% Full)
 Data:        383 bytes (4.7% Full)
-Sat Oct 17 22:26:59 CEST 2015: libraries/LCD/CosaHD44780/CosaHD44780.ino
+Mon Oct 19 00:18:19 CEST 2015: libraries/LCD/CosaHD44780/CosaHD44780.ino
 Program:    7080 bytes (2.7% Full)
 Data:        267 bytes (3.3% Full)
-Sat Oct 17 22:27:02 CEST 2015: libraries/LCD/CosaLCD10DOF/CosaLCD10DOF.ino
-Program:   10504 bytes (4.0% Full)
+Mon Oct 19 00:18:22 CEST 2015: libraries/LCD/CosaLCD10DOF/CosaLCD10DOF.ino
+Program:   10484 bytes (4.0% Full)
 Data:        365 bytes (4.5% Full)
-Sat Oct 17 22:27:06 CEST 2015: libraries/LCD/CosaLCDbench/CosaLCDbench.ino
+Mon Oct 19 00:18:25 CEST 2015: libraries/LCD/CosaLCDbench/CosaLCDbench.ino
 Program:    7440 bytes (2.8% Full)
 Data:        300 bytes (3.7% Full)
-Sat Oct 17 22:27:09 CEST 2015: libraries/LCD/CosaLCDclock/CosaLCDclock.ino
-Program:    7506 bytes (2.9% Full)
+Mon Oct 19 00:18:28 CEST 2015: libraries/LCD/CosaLCDclock/CosaLCDclock.ino
+Program:    7484 bytes (2.9% Full)
 Data:        258 bytes (3.1% Full)
-Sat Oct 17 22:27:12 CEST 2015: libraries/LCD/CosaLCDhbar/CosaLCDhbar.ino
+Mon Oct 19 00:18:32 CEST 2015: libraries/LCD/CosaLCDhbar/CosaLCDhbar.ino
 Program:    7290 bytes (2.8% Full)
 Data:        288 bytes (3.5% Full)
-Sat Oct 17 22:27:15 CEST 2015: libraries/LCD/CosaLCDkeypad/CosaLCDkeypad.ino
-Program:    6910 bytes (2.6% Full)
+Mon Oct 19 00:18:35 CEST 2015: libraries/LCD/CosaLCDkeypad/CosaLCDkeypad.ino
+Program:    6900 bytes (2.6% Full)
 Data:        315 bytes (3.8% Full)
-Sat Oct 17 22:27:18 CEST 2015: libraries/LCD/CosaLCDmenu/CosaLCDmenu.ino
-Program:    7998 bytes (3.1% Full)
+Mon Oct 19 00:18:38 CEST 2015: libraries/LCD/CosaLCDmenu/CosaLCDmenu.ino
+Program:    7986 bytes (3.0% Full)
 Data:        353 bytes (4.3% Full)
-Sat Oct 17 22:27:21 CEST 2015: libraries/LCD/CosaLCDsize/CosaLCDsize.ino
+Mon Oct 19 00:18:41 CEST 2015: libraries/LCD/CosaLCDsize/CosaLCDsize.ino
 Program:    3802 bytes (1.5% Full)
 Data:        130 bytes (1.6% Full)
-Sat Oct 17 22:27:24 CEST 2015: libraries/LCD/CosaLCDslave/CosaLCDslave.ino
+Mon Oct 19 00:18:44 CEST 2015: libraries/LCD/CosaLCDslave/CosaLCDslave.ino
 Program:    5540 bytes (2.1% Full)
 Data:        318 bytes (3.9% Full)
-Sat Oct 17 22:27:27 CEST 2015: libraries/LCD/CosaLCDspeed/CosaLCDspeed.ino
+Mon Oct 19 00:18:47 CEST 2015: libraries/LCD/CosaLCDspeed/CosaLCDspeed.ino
 Program:    7878 bytes (3.0% Full)
 Data:        311 bytes (3.8% Full)
-Sat Oct 17 22:27:30 CEST 2015: libraries/LCD/CosaLCDtemp/CosaLCDtemp.ino
-Program:    8782 bytes (3.4% Full)
+Mon Oct 19 00:18:50 CEST 2015: libraries/LCD/CosaLCDtemp/CosaLCDtemp.ino
+Program:    8762 bytes (3.3% Full)
 Data:        295 bytes (3.6% Full)
-Sat Oct 17 22:27:33 CEST 2015: libraries/LCD/CosaLCDterm/CosaLCDterm.ino
+Mon Oct 19 00:18:54 CEST 2015: libraries/LCD/CosaLCDterm/CosaLCDterm.ino
 Program:    7480 bytes (2.9% Full)
 Data:        435 bytes (5.3% Full)
-Sat Oct 17 22:27:36 CEST 2015: libraries/LCD/CosaLCDvbar/CosaLCDvbar.ino
-Program:    6764 bytes (2.6% Full)
+Mon Oct 19 00:18:57 CEST 2015: libraries/LCD/CosaLCDvbar/CosaLCDvbar.ino
+Program:    6762 bytes (2.6% Full)
 Data:        253 bytes (3.1% Full)
-Sat Oct 17 22:27:40 CEST 2015: libraries/LCD/CosaLCDverify/CosaLCDverify.ino
+Mon Oct 19 00:19:00 CEST 2015: libraries/LCD/CosaLCDverify/CosaLCDverify.ino
 Program:     344 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Sat Oct 17 22:27:43 CEST 2015: libraries/LCD/CosaST7565/CosaST7565.ino
-Program:   15506 bytes (5.9% Full)
+Mon Oct 19 00:19:04 CEST 2015: libraries/LCD/CosaST7565/CosaST7565.ino
+Program:   15508 bytes (5.9% Full)
 Data:        271 bytes (3.3% Full)
-Sat Oct 17 22:27:46 CEST 2015: libraries/MAX72XX/examples/CosaMAX72XX/CosaMAX72XX.ino
-Program:    7132 bytes (2.7% Full)
+Mon Oct 19 00:19:07 CEST 2015: libraries/MAX72XX/examples/CosaMAX72XX/CosaMAX72XX.ino
+Program:    7134 bytes (2.7% Full)
 Data:        142 bytes (1.7% Full)
-Sat Oct 17 22:27:49 CEST 2015: libraries/MCP23008/examples/CosaMCP23008/CosaMCP23008.ino
+Mon Oct 19 00:19:10 CEST 2015: libraries/MCP23008/examples/CosaMCP23008/CosaMCP23008.ino
 Program:   11284 bytes (4.3% Full)
 Data:        434 bytes (5.3% Full)
-Sat Oct 17 22:27:52 CEST 2015: libraries/MCP7940N/examples/CosaMCP7940N/CosaMCP7940N.ino
+Mon Oct 19 00:19:12 CEST 2015: libraries/MCP7940N/examples/CosaMCP7940N/CosaMCP7940N.ino
 Program:   11222 bytes (4.3% Full)
 Data:        441 bytes (5.4% Full)
-Sat Oct 17 22:27:55 CEST 2015: libraries/MPU6050/examples/CosaMPU6050/CosaMPU6050.ino
+Mon Oct 19 00:19:15 CEST 2015: libraries/MPU6050/examples/CosaMPU6050/CosaMPU6050.ino
 Program:    8484 bytes (3.2% Full)
 Data:        383 bytes (4.7% Full)
-Sat Oct 17 22:27:59 CEST 2015: libraries/Nucleo/examples/CosaNucleoActor/CosaNucleoActor.ino
+Mon Oct 19 00:19:18 CEST 2015: libraries/Nucleo/examples/CosaNucleoActor/CosaNucleoActor.ino
 Program:   10200 bytes (3.9% Full)
 Data:        541 bytes (6.6% Full)
-Sat Oct 17 22:28:00 CEST 2015: libraries/Nucleo/examples/CosaNucleoBenchmark/CosaNucleoBenchmark.ino
+Mon Oct 19 00:19:20 CEST 2015: libraries/Nucleo/examples/CosaNucleoBenchmark/CosaNucleoBenchmark.ino
 Program:    8882 bytes (3.4% Full)
 Data:        443 bytes (5.4% Full)
-Sat Oct 17 22:28:03 CEST 2015: libraries/Nucleo/examples/CosaNucleoMutex/CosaNucleoMutex.ino
+Mon Oct 19 00:19:23 CEST 2015: libraries/Nucleo/examples/CosaNucleoMutex/CosaNucleoMutex.ino
 Program:    7976 bytes (3.0% Full)
 Data:        390 bytes (4.8% Full)
-Sat Oct 17 22:28:06 CEST 2015: libraries/Nucleo/examples/CosaNucleoPingPong/CosaNucleoPingPong.ino
+Mon Oct 19 00:19:26 CEST 2015: libraries/Nucleo/examples/CosaNucleoPingPong/CosaNucleoPingPong.ino
 Program:    8696 bytes (3.3% Full)
 Data:        412 bytes (5.0% Full)
-Sat Oct 17 22:28:09 CEST 2015: libraries/Nucleo/examples/CosaNucleoSemaphore/CosaNucleoSemaphore.ino
+Mon Oct 19 00:19:28 CEST 2015: libraries/Nucleo/examples/CosaNucleoSemaphore/CosaNucleoSemaphore.ino
 Program:    7802 bytes (3.0% Full)
 Data:        390 bytes (4.8% Full)
-Sat Oct 17 22:28:12 CEST 2015: libraries/Nucleo/examples/CosaNucleoSPI/CosaNucleoSPI.ino
-Program:    2804 bytes (1.1% Full)
+Mon Oct 19 00:19:31 CEST 2015: libraries/Nucleo/examples/CosaNucleoSPI/CosaNucleoSPI.ino
+Program:    2806 bytes (1.1% Full)
 Data:        188 bytes (2.3% Full)
-Sat Oct 17 22:28:14 CEST 2015: libraries/Nucleo/examples/CosaNucleoThread/CosaNucleoThread.ino
+Mon Oct 19 00:19:34 CEST 2015: libraries/Nucleo/examples/CosaNucleoThread/CosaNucleoThread.ino
 Program:    8092 bytes (3.1% Full)
 Data:        468 bytes (5.7% Full)
-Sat Oct 17 22:28:18 CEST 2015: libraries/OWI/examples/CosaDS1990A/CosaDS1990A.ino
+Mon Oct 19 00:19:37 CEST 2015: libraries/OWI/examples/CosaDS1990A/CosaDS1990A.ino
 Program:    6800 bytes (2.6% Full)
 Data:        241 bytes (2.9% Full)
-Sat Oct 17 22:28:21 CEST 2015: libraries/PCD8544/examples/CosaPCD8544/CosaPCD8544.ino
+Mon Oct 19 00:19:40 CEST 2015: libraries/PCD8544/examples/CosaPCD8544/CosaPCD8544.ino
 Program:   14970 bytes (5.7% Full)
 Data:        245 bytes (3.0% Full)
-Sat Oct 17 22:28:24 CEST 2015: libraries/PCD8544/examples/CosaPCD8544temp/CosaPCD8544temp.ino
+Mon Oct 19 00:19:43 CEST 2015: libraries/PCD8544/examples/CosaPCD8544temp/CosaPCD8544temp.ino
 Program:   15466 bytes (5.9% Full)
 Data:        374 bytes (4.6% Full)
-Sat Oct 17 22:28:27 CEST 2015: libraries/PCF8574/examples/CosaPCF8574/CosaPCF8574.ino
+Mon Oct 19 00:19:46 CEST 2015: libraries/PCF8574/examples/CosaPCF8574/CosaPCF8574.ino
 Program:    8882 bytes (3.4% Full)
 Data:        401 bytes (4.9% Full)
-Sat Oct 17 22:28:30 CEST 2015: libraries/PCF8591/examples/CosaPCF8591/CosaPCF8591.ino
+Mon Oct 19 00:19:49 CEST 2015: libraries/PCF8591/examples/CosaPCF8591/CosaPCF8591.ino
 Program:    9358 bytes (3.6% Full)
 Data:        423 bytes (5.2% Full)
-Sat Oct 17 22:28:33 CEST 2015: libraries/ProtoThread/examples/CosaProtoThreadBenchmark/CosaProtoThreadBenchmark.ino
+Mon Oct 19 00:19:52 CEST 2015: libraries/ProtoThread/examples/CosaProtoThreadBenchmark/CosaProtoThreadBenchmark.ino
 Program:    9160 bytes (3.5% Full)
 Data:        476 bytes (5.8% Full)
-Sat Oct 17 22:28:36 CEST 2015: libraries/RC4/examples/CosaRC4/CosaRC4.ino
+Mon Oct 19 00:19:55 CEST 2015: libraries/RC4/examples/CosaRC4/CosaRC4.ino
 Program:   10302 bytes (3.9% Full)
 Data:        921 bytes (11.2% Full)
-Sat Oct 17 22:28:39 CEST 2015: libraries/Registry/examples/CosaRegistry/CosaRegistry.ino
-Program:   10726 bytes (4.1% Full)
+Mon Oct 19 00:19:58 CEST 2015: libraries/Registry/examples/CosaRegistry/CosaRegistry.ino
+Program:   10706 bytes (4.1% Full)
 Data:        274 bytes (3.3% Full)
 EEPROM:        5 bytes (0.1% Full)
-Sat Oct 17 22:28:42 CEST 2015: libraries/Rotary/examples/CosaRotaryEncoder/CosaRotaryEncoder.ino
+Mon Oct 19 00:20:01 CEST 2015: libraries/Rotary/examples/CosaRotaryEncoder/CosaRotaryEncoder.ino
 Program:    6830 bytes (2.6% Full)
 Data:        386 bytes (4.7% Full)
-Sat Oct 17 22:28:45 CEST 2015: libraries/RS485/examples/CosaRS485master/CosaRS485master.ino
+Mon Oct 19 00:20:04 CEST 2015: libraries/RS485/examples/CosaRS485master/CosaRS485master.ino
 Program:    9458 bytes (3.6% Full)
 Data:        540 bytes (6.6% Full)
-Sat Oct 17 22:28:48 CEST 2015: libraries/RS485/examples/CosaRS485slave/CosaRS485slave.ino
+Mon Oct 19 00:20:07 CEST 2015: libraries/RS485/examples/CosaRS485slave/CosaRS485slave.ino
 Program:    9716 bytes (3.7% Full)
 Data:        660 bytes (8.1% Full)
-Sat Oct 17 22:28:51 CEST 2015: libraries/S25FL127S/examples/CosaS25FL127S/CosaS25FL127S.ino
-Program:   14450 bytes (5.5% Full)
+Mon Oct 19 00:20:10 CEST 2015: libraries/S25FL127S/examples/CosaS25FL127S/CosaS25FL127S.ino
+Program:   14452 bytes (5.5% Full)
 Data:        359 bytes (4.4% Full)
-Sat Oct 17 22:28:54 CEST 2015: libraries/SD/examples/CosaBMP/CosaBMP.ino
-Program:   14890 bytes (5.7% Full)
+Mon Oct 19 00:20:13 CEST 2015: libraries/SD/examples/CosaBMP/CosaBMP.ino
+Program:   14892 bytes (5.7% Full)
 Data:        940 bytes (11.5% Full)
-Sat Oct 17 22:28:57 CEST 2015: libraries/SD/examples/CosaSD/CosaSD.ino
-Program:   18842 bytes (7.2% Full)
+Mon Oct 19 00:20:16 CEST 2015: libraries/SD/examples/CosaSD/CosaSD.ino
+Program:   18844 bytes (7.2% Full)
 Data:        392 bytes (4.8% Full)
-Sat Oct 17 22:29:00 CEST 2015: libraries/Servo/examples/CosaServo/CosaServo.ino
+Mon Oct 19 00:20:20 CEST 2015: libraries/Servo/examples/CosaServo/CosaServo.ino
 Program:    1804 bytes (0.7% Full)
 Data:         37 bytes (0.5% Full)
-Sat Oct 17 22:29:03 CEST 2015: libraries/SRPO/examples/CosaSRPO/CosaSRPO.ino
-Program:    1800 bytes (0.7% Full)
+Mon Oct 19 00:20:22 CEST 2015: libraries/SRPO/examples/CosaSRPO/CosaSRPO.ino
+Program:    1802 bytes (0.7% Full)
 Data:         37 bytes (0.5% Full)
-Sat Oct 17 22:29:05 CEST 2015: libraries/TCS230/examples/CosaTCS230/CosaTCS230.ino
+Mon Oct 19 00:20:25 CEST 2015: libraries/TCS230/examples/CosaTCS230/CosaTCS230.ino
 Program:    7414 bytes (2.8% Full)
 Data:        299 bytes (3.6% Full)
-Sat Oct 17 22:29:08 CEST 2015: libraries/Touch/examples/CosaTouch/CosaTouch.ino
+Mon Oct 19 00:20:28 CEST 2015: libraries/Touch/examples/CosaTouch/CosaTouch.ino
 Program:    7100 bytes (2.7% Full)
 Data:        417 bytes (5.1% Full)
-Sat Oct 17 22:29:11 CEST 2015: libraries/Vigenere/examples/CosaVigenere/CosaVigenere.ino
+Mon Oct 19 00:20:31 CEST 2015: libraries/Vigenere/examples/CosaVigenere/CosaVigenere.ino
 Program:    8938 bytes (3.4% Full)
 Data:        289 bytes (3.5% Full)
-Sat Oct 17 22:29:14 CEST 2015: libraries/W25X40CL/examples/CosaW25X40CL/CosaW25X40CL.ino
-Program:   15880 bytes (6.1% Full)
+Mon Oct 19 00:20:34 CEST 2015: libraries/W25X40CL/examples/CosaW25X40CL/CosaW25X40CL.ino
+Program:   15882 bytes (6.1% Full)
 Data:        357 bytes (4.4% Full)
-Sat Oct 17 22:29:17 CEST 2015: libraries/Wireless/CosaWirelessButton/CosaWirelessButton.ino
-Program:    6810 bytes (2.6% Full)
+Mon Oct 19 00:20:37 CEST 2015: libraries/Wireless/CosaWirelessButton/CosaWirelessButton.ino
+Program:    6812 bytes (2.6% Full)
 Data:        367 bytes (4.5% Full)
-Sat Oct 17 22:29:20 CEST 2015: libraries/Wireless/CosaWirelessDHT11/CosaWirelessDHT11.ino
-Program:    6466 bytes (2.5% Full)
+Mon Oct 19 00:20:40 CEST 2015: libraries/Wireless/CosaWirelessDHT11/CosaWirelessDHT11.ino
+Program:    6452 bytes (2.5% Full)
 Data:        256 bytes (3.1% Full)
-Sat Oct 17 22:29:23 CEST 2015: libraries/Wireless/CosaWirelessDS18B20/CosaWirelessDS18B20.ino
-Program:    6834 bytes (2.6% Full)
+Mon Oct 19 00:20:43 CEST 2015: libraries/Wireless/CosaWirelessDS18B20/CosaWirelessDS18B20.ino
+Program:    6830 bytes (2.6% Full)
 Data:        274 bytes (3.3% Full)
-Sat Oct 17 22:29:26 CEST 2015: libraries/Wireless/CosaWirelessIOStream/CosaWirelessIOStream.ino
-Program:    7520 bytes (2.9% Full)
+Mon Oct 19 00:20:46 CEST 2015: libraries/Wireless/CosaWirelessIOStream/CosaWirelessIOStream.ino
+Program:    7500 bytes (2.9% Full)
 Data:        285 bytes (3.5% Full)
-Sat Oct 17 22:29:29 CEST 2015: libraries/Wireless/CosaWirelessMonitor/CosaWirelessMonitor.ino
+Mon Oct 19 00:20:49 CEST 2015: libraries/Wireless/CosaWirelessMonitor/CosaWirelessMonitor.ino
 Program:    7740 bytes (3.0% Full)
 Data:        365 bytes (4.5% Full)
-Sat Oct 17 22:29:32 CEST 2015: libraries/Wireless/CosaWirelessPing/CosaWirelessPing.ino
+Mon Oct 19 00:20:52 CEST 2015: libraries/Wireless/CosaWirelessPing/CosaWirelessPing.ino
 Program:   10244 bytes (3.9% Full)
 Data:        486 bytes (5.9% Full)
-Sat Oct 17 22:29:35 CEST 2015: libraries/Wireless/CosaWirelessPong/CosaWirelessPong.ino
+Mon Oct 19 00:20:55 CEST 2015: libraries/Wireless/CosaWirelessPong/CosaWirelessPong.ino
 Program:    9720 bytes (3.7% Full)
 Data:        482 bytes (5.9% Full)
-Sat Oct 17 22:29:38 CEST 2015: libraries/Wireless/CosaWirelessReceiver/CosaWirelessReceiver.ino
+Mon Oct 19 00:20:58 CEST 2015: libraries/Wireless/CosaWirelessReceiver/CosaWirelessReceiver.ino
 Program:   11766 bytes (4.5% Full)
 Data:        509 bytes (6.2% Full)
-Sat Oct 17 22:29:41 CEST 2015: libraries/Wireless/CosaWirelessReceiverLCD/CosaWirelessReceiverLCD.ino
+Mon Oct 19 00:21:01 CEST 2015: libraries/Wireless/CosaWirelessReceiverLCD/CosaWirelessReceiverLCD.ino
 Program:   11682 bytes (4.5% Full)
 Data:        399 bytes (4.9% Full)
-Sat Oct 17 22:29:44 CEST 2015: libraries/Wireless/CosaWirelessRelay/CosaWirelessRelay.ino
+Mon Oct 19 00:21:05 CEST 2015: libraries/Wireless/CosaWirelessRelay/CosaWirelessRelay.ino
 Program:    9172 bytes (3.5% Full)
 Data:        460 bytes (5.6% Full)
-Sat Oct 17 22:29:47 CEST 2015: libraries/Wireless/CosaWirelessSender/CosaWirelessSender.ino
+Mon Oct 19 00:21:08 CEST 2015: libraries/Wireless/CosaWirelessSender/CosaWirelessSender.ino
 Program:   10162 bytes (3.9% Full)
 Data:        445 bytes (5.4% Full)
-Sat Oct 17 22:29:50 CEST 2015: libraries/Wireless/CosaWirelessTrace/CosaWirelessTrace.ino
+Mon Oct 19 00:21:11 CEST 2015: libraries/Wireless/CosaWirelessTrace/CosaWirelessTrace.ino
 Program:   10004 bytes (3.8% Full)
 Data:        371 bytes (4.5% Full)
-Sat Oct 17 22:29:53 CEST 2015: lib/Shell/examples/CosaShell/CosaShell.ino
-Program:   24350 bytes (9.3% Full)
-Data:        523 bytes (6.4% Full)
-Sat Oct 17 22:29:57 CEST 2015: lib/Shell/examples/CosaShellTelnetServer/CosaShellTelnetServer.ino
-Program:   30904 bytes (11.8% Full)
-Data:        580 bytes (7.1% Full)
-Sat Oct 17 22:30:01 CEST 2015: lib/Shell/examples/CosaShellWebServer/CosaShellWebServer.ino
-Program:   31732 bytes (12.1% Full)
-Data:        807 bytes (9.9% Full)
-Sat Oct 17 22:30:05 CEST 2015: lib/SNMP/examples/CosaSNMP/CosaSNMP.ino
-Program:   20084 bytes (7.7% Full)
+Mon Oct 19 00:21:13 CEST 2015: lib/Shell/examples/CosaShell/CosaShell.ino
+Program:   24416 bytes (9.3% Full)
+Data:        525 bytes (6.4% Full)
+Mon Oct 19 00:21:17 CEST 2015: lib/Shell/examples/CosaShellTelnetServer/CosaShellTelnetServer.ino
+Program:   30820 bytes (11.8% Full)
+Data:        582 bytes (7.1% Full)
+Mon Oct 19 00:21:21 CEST 2015: lib/Shell/examples/CosaShellWebServer/CosaShellWebServer.ino
+Program:   31632 bytes (12.1% Full)
+Data:        809 bytes (9.9% Full)
+Mon Oct 19 00:21:25 CEST 2015: lib/SNMP/examples/CosaSNMP/CosaSNMP.ino
+Program:   20066 bytes (7.7% Full)
 Data:        535 bytes (6.5% Full)
-Sat Oct 17 22:30:08 CEST 2015: lib/Telnet/examples/CosaTelnetServer/CosaTelnetServer.ino
-Program:   11148 bytes (4.3% Full)
-Data:        291 bytes (3.6% Full)
-Sat Oct 17 22:30:11 CEST 2015: lib/ThingSpeak/examples/CosaThingSpeakChannel/CosaThingSpeakChannel.ino
-Program:   18044 bytes (6.9% Full)
+Mon Oct 19 00:21:28 CEST 2015: lib/Telnet/examples/CosaTelnetServer/CosaTelnetServer.ino
+Program:   11132 bytes (4.2% Full)
+Data:        293 bytes (3.6% Full)
+Mon Oct 19 00:21:32 CEST 2015: lib/ThingSpeak/examples/CosaThingSpeakChannel/CosaThingSpeakChannel.ino
+Program:   18046 bytes (6.9% Full)
 Data:        622 bytes (7.6% Full)
-Sat Oct 17 22:30:15 CEST 2015: lib/ThingSpeak/examples/CosaThingSpeakClient/CosaThingSpeakClient.ino
-Program:   22040 bytes (8.4% Full)
+Mon Oct 19 00:21:35 CEST 2015: lib/ThingSpeak/examples/CosaThingSpeakClient/CosaThingSpeakClient.ino
+Program:   22042 bytes (8.4% Full)
 Data:        946 bytes (11.5% Full)
-Sat Oct 17 22:30:19 CEST 2015: lib/ThingSpeak/examples/CosaThingSpeakTalkBack/CosaThingSpeakTalkBack.ino
-Program:   16812 bytes (6.4% Full)
+Mon Oct 19 00:21:39 CEST 2015: lib/ThingSpeak/examples/CosaThingSpeakTalkBack/CosaThingSpeakTalkBack.ino
+Program:   16814 bytes (6.4% Full)
 Data:        551 bytes (6.7% Full)
-Sat Oct 17 22:30:22 CEST 2015: lib/UML/examples/CosaUMLCapsules/CosaUMLCapsules.ino
+Mon Oct 19 00:21:42 CEST 2015: lib/UML/examples/CosaUMLCapsules/CosaUMLCapsules.ino
 Program:    7890 bytes (3.0% Full)
 Data:        597 bytes (7.3% Full)
-Sat Oct 17 22:30:25 CEST 2015: lib/UML/examples/CosaUMLPingPong/CosaUMLPingPong.ino
+Mon Oct 19 00:21:45 CEST 2015: lib/UML/examples/CosaUMLPingPong/CosaUMLPingPong.ino
 Program:    7104 bytes (2.7% Full)
 Data:        463 bytes (5.7% Full)
-Sat Oct 17 22:30:28 CEST 2015: lib/UML/examples/CosaUMLTermostat/CosaUMLTermostat.ino
+Mon Oct 19 00:21:48 CEST 2015: lib/UML/examples/CosaUMLTermostat/CosaUMLTermostat.ino
 Program:   11508 bytes (4.4% Full)
 Data:        555 bytes (6.8% Full)
-Sat Oct 17 22:30:31 CEST 2015: lib/UML/examples/CosaUMLThermometer/CosaUMLThermometer.ino
+Mon Oct 19 00:21:51 CEST 2015: lib/UML/examples/CosaUMLThermometer/CosaUMLThermometer.ino
 Program:   12614 bytes (4.8% Full)
 Data:        524 bytes (6.4% Full)
-Sat Oct 17 22:30:34 CEST 2015: lib/UML/examples/CosaUMLTrigger/CosaUMLTrigger.ino
+Mon Oct 19 00:21:54 CEST 2015: lib/UML/examples/CosaUMLTrigger/CosaUMLTrigger.ino
 Program:    8354 bytes (3.2% Full)
 Data:        544 bytes (6.6% Full)
-Sat Oct 17 22:30:37 CEST 2015: lib/UML/examples/CosaUMLVoltmeter/CosaUMLVoltmeter.ino
+Mon Oct 19 00:21:57 CEST 2015: lib/UML/examples/CosaUMLVoltmeter/CosaUMLVoltmeter.ino
 Program:    9976 bytes (3.8% Full)
 Data:        506 bytes (6.2% Full)
