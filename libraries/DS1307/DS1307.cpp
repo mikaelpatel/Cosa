@@ -23,19 +23,19 @@
 int
 DS1307::read(void* ram, uint8_t size, uint8_t pos)
 {
-  twi.begin(this);
+  twi.acquire(this);
   twi.write(pos);
   int count = twi.read(ram, size);
-  twi.end();
+  twi.release();
   return (count);
 }
 
 int
 DS1307::write(void* ram, uint8_t size, uint8_t pos)
 {
-  twi.begin(this);
+  twi.acquire(this);
   int count = twi.write(pos, ram, size);
-  twi.end();
+  twi.release();
   if (count > 0) count -= 1;
   return (count);
 }

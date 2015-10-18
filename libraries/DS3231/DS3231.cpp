@@ -24,19 +24,19 @@
 int
 DS3231::read(void* regs, uint8_t size, uint8_t pos)
 {
-  twi.begin(this);
+  twi.acquire(this);
   twi.write(pos);
   int res = twi.read(regs, size);
-  twi.end();
+  twi.release();
   return (res);
 }
 
 int
 DS3231::write(void* regs, uint8_t size, uint8_t pos)
 {
-  twi.begin(this);
+  twi.acquire(this);
   int res = twi.write(pos, regs, size);
-  twi.end();
+  twi.release();
   return (res < 0 ? res : res - 1);
 }
 

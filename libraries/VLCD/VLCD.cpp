@@ -70,13 +70,13 @@ VLCD::write(uint8_t cmd)
   uint8_t buf[2];
   buf[0] = Slave::COMMAND;
   buf[1] = cmd;
-  twi.begin(this);
+  twi.acquire(this);
   uint8_t retry = 3;
   do {
     int res = twi.write(buf, sizeof(buf));
     if (res == sizeof(buf)) break;
   } while (--retry);
-  twi.end();
+  twi.release();
 }
 
 bool
@@ -84,14 +84,14 @@ VLCD::begin()
 {
   sleep(1);
   write(Slave::INIT_CMD);
-  twi.begin(this);
+  twi.acquire(this);
   uint8_t retry = 3;
   info_t info;
   do {
     int res = twi.read(&info, sizeof(info));
     if (res == sizeof(info)) break;
   } while (--retry);
-  twi.end();
+  twi.release();
   MAJOR = info.major;
   MINOR = info.minor;
   WIDTH = info.width;
@@ -143,9 +143,9 @@ VLCD::set_cursor(uint8_t x, uint8_t y)
   buf[0] = 0;
   buf[1] = x;
   buf[2] = y;
-  twi.begin(this);
+  twi.acquire(this);
   twi.write(buf, sizeof(buf));
-  twi.end();
+  twi.release();
   m_x = x;
   m_y = y;
 }
@@ -153,9 +153,9 @@ VLCD::set_cursor(uint8_t x, uint8_t y)
 int
 VLCD::putchar(char c)
 {
-  twi.begin(this);
+  twi.acquire(this);
   int n = twi.write(&c, sizeof(c));
-  twi.end();
+  twi.release();
   if (n != 1) return (-1);
   if (c >= ' ') return (c & 0xff);
   switch (c) {
@@ -186,9 +186,9 @@ VLCD::putchar(char c)
 int
 VLCD::write(const void* buf, size_t size)
 {
-  twi.begin(this);
+  twi.acquire(this);
   int n = twi.write((void*) buf, size);
-  twi.end();
+  twi.release();
   if (n < 0) return (-1);
   m_x += size;
   return (n);

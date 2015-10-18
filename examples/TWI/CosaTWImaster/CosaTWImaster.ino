@@ -65,9 +65,9 @@ void loop()
 
   ledPin.toggle();
   time = RTC::micros();
-  twi.begin(&dev);
+  twi.acquire(&dev);
   count = twi.write(&cmd, sizeof(cmd));
-  twi.end();
+  twi.release();
   time = RTC::micros() - time;
   trace << PSTR("write(2):") << time << ':' << time/sizeof(cmd) << ':';
   if (count > 0) trace.print(&cmd, count);
@@ -76,21 +76,21 @@ void loop()
   uint8_t buf[8];
 
   time = RTC::micros();
-  twi.begin(&dev);
+  twi.acquire(&dev);
   do {
     count = twi.read(buf, sizeof(buf));
   } while (count < 0);
-  twi.end();
+  twi.release();
   time = RTC::micros() - time;
   trace << PSTR("read(8):") << time << ':' << time/sizeof(buf) << ':';
   if (count > 0) trace.print(buf, count);
 
   time  = RTC::micros();
-  twi.begin(&dev);
+  twi.acquire(&dev);
   do {
     count = twi.read(buf, sizeof(buf) - 4);
   } while (count < 0);
-  twi.end();
+  twi.release();
   time = RTC::micros() - time;
   trace << PSTR("read(4):") << time << ':' << time/(sizeof(buf) - 4) << ':';
   if (count > 0) trace.print(buf, count);

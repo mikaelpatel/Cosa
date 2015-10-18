@@ -25,9 +25,9 @@ PCF8574::set_data_direction(uint8_t ddr)
 {
   m_ddr = ddr;
   m_port |= m_ddr;
-  twi.begin(this);
+  twi.acquire(this);
   int res = twi.write(&m_port, sizeof(m_port));
-  twi.end();
+  twi.release();
   return (res == sizeof(m_port));
 }
 
@@ -35,9 +35,9 @@ uint8_t
 PCF8574::read()
 {
   uint8_t res;
-  twi.begin(this);
+  twi.acquire(this);
   twi.read(&res, sizeof(res));
-  twi.end();
+  twi.release();
   return (res & m_ddr);
 }
 
@@ -49,30 +49,30 @@ PCF8574::write(uint8_t pin, uint8_t value)
     m_port |= mask;
   else
     m_port &= ~mask;
-  twi.begin(this);
+  twi.acquire(this);
   int res = twi.write(&m_port, sizeof(m_port));
-  twi.end();
+  twi.release();
   return (res == sizeof(m_port));
 }
 
 bool
 PCF8574::write(uint8_t value)
 {
-  twi.begin(this);
+  twi.acquire(this);
   m_port = value | m_ddr;
   int res = twi.write(&m_port, sizeof(m_port));
-  twi.end();
+  twi.release();
   return (res == sizeof(m_port));
 }
 
 bool
 PCF8574::write(void* buf, size_t size)
 {
-  twi.begin(this);
+  twi.acquire(this);
   uint8_t* bp = (uint8_t*) buf;
   size_t n = size;
   while (n--) *bp++ |= m_ddr;
   int res = twi.write(buf, size);
-  twi.end();
+  twi.release();
   return (res == (int) size);
 }

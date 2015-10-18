@@ -48,10 +48,10 @@ bool read(uint8_t cmd, uint8_t& value)
   uint8_t reg;
   int count;
 
-  twi.begin(&dev);
+  twi.acquire(&dev);
   twi.write(cmd);
   count = twi.read(&reg, sizeof(reg));
-  twi.end();
+  twi.release();
   if (count != sizeof(reg)) return (false);
   value = reg;
   return (true);
@@ -64,10 +64,10 @@ bool read(uint8_t cmd, uint16_t& value, bool check = true)
   int count;
 
   size = check ? sizeof(buf) : sizeof(buf) - 1;
-  twi.begin(&dev);
+  twi.acquire(&dev);
   twi.write(cmd);
   count = twi.read(buf, size);
-  twi.end();
+  twi.release();
   if (count != size) return (false);
   if (check) {
     uint8_t crc;
@@ -103,38 +103,38 @@ void setup()
 
   // Read electronic serial number
   xmd = 0xFA0F;
-  twi.begin(&dev);
+  twi.acquire(&dev);
   count = twi.write(xmd);
-  twi.end();
+  twi.release();
   ASSERT(count == sizeof(xmd));
-  twi.begin(&dev);
+  twi.acquire(&dev);
   count = twi.read(&sna, sizeof(sna));
-  twi.end();
+  twi.release();
   ASSERT(count == sizeof(sna));
   trace << PSTR("sna: ");
   trace.print(sna, sizeof(sna), IOStream::hex);
 
   xmd = 0xFCC9;
-  twi.begin(&dev);
+  twi.acquire(&dev);
   count = twi.write(xmd);
-  twi.end();
+  twi.release();
   ASSERT(count == sizeof(xmd));
-  twi.begin(&dev);
+  twi.acquire(&dev);
   count = twi.read(&snb, sizeof(snb));
-  twi.end();
+  twi.release();
   ASSERT(count == sizeof(snb));
   trace << PSTR("snb: ");
   trace.print(snb, sizeof(snb), IOStream::hex);
 
   // Read software revision
   xmd = 0x84B8;
-  twi.begin(&dev);
+  twi.acquire(&dev);
   count = twi.write(xmd);
-  twi.end();
+  twi.release();
   ASSERT(count == sizeof(xmd));
-  twi.begin(&dev);
+  twi.acquire(&dev);
   count = twi.read(&rev, sizeof(rev));
-  twi.end();
+  twi.release();
   ASSERT(count == sizeof(rev));
   trace << PSTR("rev: ") << hex << rev << endl;
 }

@@ -36,10 +36,10 @@ HMC5883L::begin()
 {
   // Read the device identity register
   uint8_t id[3];
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) IDENTITY);
   twi.read(id, sizeof(id));
-  twi.end();
+  twi.release();
 
   // Sanity check the identity
   static const uint8_t ID[3] __PROGMEM = { 'H', '4', '3' };
@@ -52,28 +52,28 @@ HMC5883L::begin()
 bool
 HMC5883L::write_config()
 {
-  twi.begin(this);
+  twi.acquire(this);
   int count = twi.write((uint8_t) CONFIG, &m_config, sizeof(m_config));
-  twi.end();
+  twi.release();
   return (count == (sizeof(m_config) + 1));
 }
 
 bool
 HMC5883L::set_mode(Mode mode)
 {
-  twi.begin(this);
+  twi.acquire(this);
   int count = twi.write((uint8_t) MODE, &mode, sizeof(mode));
-  twi.end();
+  twi.release();
   return (count == (sizeof(mode) + 1));
 }
 
 bool
 HMC5883L::read_status(status_t& status)
 {
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) STATUS);
   int count = twi.read(&status, sizeof(status));
-  twi.end();
+  twi.release();
   return (count == sizeof(status));
 }
 
@@ -81,10 +81,10 @@ bool
 HMC5883L::read_heading()
 {
   // Read output data from the device
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) OUTPUT);
   int count = twi.read(&m_output, sizeof(m_output));
-  twi.end();
+  twi.release();
   if (count != sizeof(m_output)) return (false);
 
   // Adjust to little endian

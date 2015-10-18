@@ -37,10 +37,10 @@ BMP085::begin(Mode mode)
   m_mode = mode;
 
   // Read coefficients from the device
-  twi.begin(this);
+  twi.acquire(this);
   twi.write(COEFF_REG);
   twi.read(&m_param, sizeof(m_param));
-  twi.end();
+  twi.release();
 
   // Adjust for little endien
   swap<param_t>(&m_param);
@@ -55,9 +55,9 @@ BMP085::sample_temperature_request()
 
   // Start a temperature measurement and wait
   m_cmd = TEMP_CONV_CMD;
-  twi.begin(this);
+  twi.acquire(this);
   twi.write(CMD_REG, &m_cmd, sizeof(m_cmd));
-  twi.end();
+  twi.release();
 
   // Set start time for completion
   m_start = Watchdog::millis();
@@ -77,10 +77,10 @@ BMP085::read_temperature()
 
   // Read the raw temperature sensor data
   int16_t UT;
-  twi.begin(this);
+  twi.acquire(this);
   twi.write(RES_REG);
   twi.read(&UT, sizeof(UT));
-  twi.end();
+  twi.release();
 
   // Adjust for little endien
   UT = swap(UT);
@@ -99,10 +99,10 @@ BMP085::sample_pressure_request()
   if (UNLIKELY(m_cmd != 0)) return (false);
 
   // Start a pressure measurement
-  twi.begin(this);
+  twi.acquire(this);
   m_cmd = PRESSURE_CONV_CMD + (m_mode << 6);
   twi.write(CMD_REG, &m_cmd, sizeof(m_cmd));
-  twi.end();
+  twi.release();
 
   // Set start time for completion
   m_start = Watchdog::millis();
@@ -124,10 +124,10 @@ BMP085::read_pressure()
   // Read the raw pressure sensor data
   univ32_t res;
   res.as_uint8[0] = 0;
-  twi.begin(this);
+  twi.acquire(this);
   twi.write(RES_REG);
   twi.read(&res.as_uint8[1], 3);
-  twi.end();
+  twi.release();
 
   // Adjust for little endian and resolution (oversampling mode)
   int32_t UP = swap(res.as_int32) >> (8 - m_mode);

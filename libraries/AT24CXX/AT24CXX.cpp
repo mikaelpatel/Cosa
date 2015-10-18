@@ -27,15 +27,15 @@ AT24CXX::poll(const void* addr, const void* buf, size_t size)
   uint8_t i = POLL_MAX;
   int m;
   do {
-    twi.begin(this);
+    twi.acquire(this);
     if (buf == 0) {
       m = twi.write((uint16_t) addr);
       if (m > 0) return (true);
-      twi.end();
+      twi.release();
     }
     else {
       m = twi.write((uint16_t) addr, (void*) buf, size);
-      twi.end();
+      twi.release();
       if (m > 0) return (true);
     }
     delay(16);
@@ -46,10 +46,10 @@ AT24CXX::poll(const void* addr, const void* buf, size_t size)
 bool
 AT24CXX::is_ready()
 {
-  twi.begin(this);
+  twi.acquire(this);
   uint16_t addr = 0;
   int m = twi.write(addr);
-  twi.end();
+  twi.release();
   return (m != 0);
 }
 
@@ -58,7 +58,7 @@ AT24CXX::read(void* dest, const void* src, size_t size)
 {
   if (!poll(src)) return (EIO);
   int n = twi.read(dest, size);
-  twi.end();
+  twi.release();
   return (n);
 }
 

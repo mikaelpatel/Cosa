@@ -36,19 +36,19 @@ MCP7940N::AlarmInterrupt::on_interrupt(uint16_t arg)
 int
 MCP7940N::read(void* regs, uint8_t size, uint8_t pos)
 {
-  twi.begin(this);
+  twi.acquire(this);
   twi.write(pos);
   int count = twi.read(regs, size);
-  twi.end();
+  twi.release();
   return (count);
 }
 
 int
 MCP7940N::write(void* regs, uint8_t size, uint8_t pos)
 {
-  twi.begin(this);
+  twi.acquire(this);
   int count = twi.write(pos, regs, size);
-  twi.end();
+  twi.release();
   return (count - 1);
 }
 

@@ -88,7 +88,7 @@ public:
    */
   void end()
   {
-    twi.end();
+    twi.release();
   }
 
   /**

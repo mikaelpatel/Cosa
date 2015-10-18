@@ -72,13 +72,13 @@ RemotePin::read(Board::DigitalPin pin, uint8_t& value)
 {
   Command cmd(READ_OP, pin);
   bool res = false;
-  twi.begin(&dev);
+  twi.acquire(&dev);
   uint8_t count = twi.write(&cmd, sizeof(cmd));
   if (count != sizeof(cmd)) goto error;
   count = twi.read(&value, sizeof(value));
   res = (count == sizeof(value));
  error:
-  twi.end();
+  twi.release();
   return (res);
 }
 
@@ -86,9 +86,9 @@ bool
 RemotePin::write(Board::DigitalPin pin, uint8_t value)
 {
   Command cmd(WRITE_OP, pin);
-  twi.begin(&dev);
+  twi.acquire(&dev);
   uint8_t count = twi.write(cmd.as_char, &value, sizeof(value));
-  twi.end();
+  twi.release();
   return (count == sizeof(cmd) + sizeof(value));
 }
 

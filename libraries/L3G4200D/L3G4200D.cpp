@@ -42,37 +42,37 @@ L3G4200D::end()
 void
 L3G4200D::write(Register reg, uint8_t value)
 {
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) reg, &value, sizeof(value));
-  twi.end();
+  twi.release();
 }
 
 void
 L3G4200D::write(Register reg, void* buffer, uint8_t count)
 {
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) (reg | AUTO_INC), buffer, count);
-  twi.end();
+  twi.release();
 }
 
 uint8_t
 L3G4200D::read(Register reg)
 {
   uint8_t res;
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) reg);
   twi.read(&res, sizeof(res));
-  twi.end();
+  twi.release();
   return (res);
 }
 
 void
 L3G4200D::read(Register reg, void* buffer, uint8_t count)
 {
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) (reg | AUTO_INC));
   twi.read(buffer, count);
-  twi.end();
+  twi.release();
 }
 
 IOStream&

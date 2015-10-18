@@ -23,37 +23,37 @@
 void
 MPU6050::write(Register reg, uint8_t value)
 {
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) reg, &value, sizeof(value));
-  twi.end();
+  twi.release();
 }
 
 void
 MPU6050::write(Register reg, void* buffer, size_t count)
 {
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) reg, buffer, count);
-  twi.end();
+  twi.release();
 }
 
 uint8_t
 MPU6050::read(Register reg)
 {
   uint8_t res;
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) reg);
   twi.read(&res, sizeof(res));
-  twi.end();
+  twi.release();
   return (res);
 }
 
 void
 MPU6050::read(Register reg, void* buffer, size_t count)
 {
-  twi.begin(this);
+  twi.acquire(this);
   twi.write((uint8_t) reg);
   twi.read(buffer, count);
-  twi.end();
+  twi.release();
 }
 
 bool
