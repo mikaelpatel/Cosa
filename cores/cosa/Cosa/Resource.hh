@@ -37,30 +37,39 @@ public:
 
   /**
    * Acquire the resource. Wait until the resource is not busy.
-   * Mark as busy and run call on_acquire() in mutual context.
+   * Mark as busy and call on_acquire() in synchronized context.
    */
   void acquire()
   {
-    uint8_t key = lock();
-    while (UNLIKELY(m_busy)) {
-      unlock(key);
-      yield();
-      key = lock();
-    }
-    m_busy = true;
+    uint8_t key = lock(m_busy);
     on_acquire();
     unlock(key);
   }
 
   /**
-   * Release the resource. Call on_release() in mutex context.
+   * Try to acquire the resource. If successful, mark as busy and call
+   * on_acquire() in synchronized context.
+   * @return bool.
+   */
+  bool try_acquire()
+  {
+    synchronized {
+      if (m_busy) return (false);
+      m_busy = true;
+      on_acquire();
+    }
+  }
+
+  /**
+   * Release the resource. Call on_release() in synchronized context
+   * and mark the resource as available.
    */
   void release()
   {
-    uint8_t key = lock();
-    on_release();
-    m_busy = false;
-    unlock(key);
+    synchronized {
+      on_release();
+      m_busy = false;
+    }
   }
 
 protected:
