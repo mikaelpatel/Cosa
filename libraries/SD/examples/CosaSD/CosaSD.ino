@@ -40,9 +40,9 @@
 #include "Cosa/Memory.h"
 
 // Uncomment/comment to enable/disable trace output to TFT/Canvas/Textbox
-//#define USE_SD_ADAPTER
+#define USE_SD_ADAPTER
 //#define USE_ETHERNET_SHIELD
-#define USE_TFT_ST7735
+//#define USE_TFT_ST7735
 
 #if defined (USE_TFT_ST7735)
 #include <Canvas.h>
