@@ -45,8 +45,11 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Set the real-time clock
+// Set the extern RTC
 // #define SET_TIME
+
+// Synchronized with external RTC square-ware
+// #define SQUARE_WAVE_CLOCK
 
 // The real-time device, latest start and sample time in ram
 DS1307 rtc;
@@ -61,10 +64,14 @@ struct latest_t {
 OutputPin ledPin(Board::LED);
 
 // Clock pin
+#if defined(SQUARE_WAVE_CLOCK)
 #if defined(ARDUINO_PRO_MICRO)
 InputPin clkPin(Board::D0);
 #else
 InputPin clkPin(Board::D2);
+#endif
+#else
+Watchdog::Clock clock;
 #endif
 
 void setup()
@@ -125,7 +132,11 @@ void loop()
   static int32_t cycle = 1;
 
   // Wait for rising edge on clock pin
+#if defined(SQUARE_WAVE_CLOCK)
   while (clkPin.is_clear()) yield();
+#else
+  clock.await();
+#endif
   ledPin.set();
 
   // Read the time from the rtc device and print
@@ -136,6 +147,8 @@ void loop()
   cycle += 1;
 
   // Wait for falling edge on clock pin
+#if defined(SQUARE_WAVE_CLOCK)
   while (clkPin.is_set()) yield();
+#endif
   ledPin.clear();
 }
