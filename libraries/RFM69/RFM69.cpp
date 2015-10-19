@@ -141,6 +141,9 @@ RFM69::set(Mode mode)
 bool
 RFM69::begin(const void* config)
 {
+  // Powerup module
+  SPI::powerup();
+
   // Wait for the transceiver to become ready
   do write(SYNC_VALUE1, 0xaa); while (read(SYNC_VALUE1) != 0xaa);
   do write(SYNC_VALUE1, 0x55); while (read(SYNC_VALUE1) != 0x55);

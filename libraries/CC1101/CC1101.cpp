@@ -126,6 +126,9 @@ CC1101::await(Mode mode)
 bool
 CC1101::begin(const void* config)
 {
+  // Power up
+  SPI::powerup();
+
   // Reset the device
   m_cs.pulse(30);
   DELAY(30);

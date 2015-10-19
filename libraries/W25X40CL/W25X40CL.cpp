@@ -23,6 +23,9 @@
 bool
 W25X40CL::begin()
 {
+  // Powerup module
+  SPI::powerup();
+
   // Check that the device is ready
   if (!is_ready()) return (false);
 

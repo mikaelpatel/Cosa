@@ -179,6 +179,9 @@ NRF24L01P::begin(const void* config)
 {
   UNUSED(config);
 
+  // Powerup SPI
+  SPI::powerup();
+
   // Check that a device is available
   if (UNLIKELY(read_status().reserved)) return (false);
 
