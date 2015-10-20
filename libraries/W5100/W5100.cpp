@@ -534,9 +534,6 @@ W5100::begin_P(const char* hostname, uint16_t timeout)
 bool
 W5100::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
 {
-  // Powerup module
-  SPI::powerup();
-
   // Initiate socket structure; buffer allocation and socket register pointer
   for (uint8_t i = 0; i < SOCK_MAX; i++) {
     SocketRegister* sreg = &((SocketRegister*) SOCKET_REGISTER_BASE)[i];

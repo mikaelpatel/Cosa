@@ -38,7 +38,6 @@ GDDRAM::begin()
   const uint8_t* bp = get_script();
   uint8_t count;
   uint8_t cmd;
-  SPI::powerup();
   spi.acquire(this);
     spi.begin();
       while ((cmd = pgm_read_byte(bp++)) != SCRIPTEND) {

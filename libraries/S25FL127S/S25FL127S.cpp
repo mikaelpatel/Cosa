@@ -23,9 +23,6 @@
 bool
 S25FL127S::begin()
 {
-  // Powerup module
-  SPI::powerup();
-
   // Check that the device is ready
   if (!is_ready()) return (false);
 

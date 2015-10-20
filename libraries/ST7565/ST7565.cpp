@@ -81,7 +81,6 @@ ST7565::fill(uint8_t data, uint16_t count)
 bool
 ST7565::begin()
 {
-  SPI::powerup();
   const uint8_t* bp = script;
   uint8_t cmd;
   m_io->begin();

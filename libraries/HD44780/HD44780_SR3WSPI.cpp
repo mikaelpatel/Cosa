@@ -29,7 +29,6 @@ HD44780::SR3WSPI::SR3WSPI(Board::DigitalPin en) :
 bool
 HD44780::SR3WSPI::setup()
 {
-  SPI::powerup();
   return (false);
 }
 

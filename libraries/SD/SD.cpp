@@ -229,9 +229,6 @@ SD::begin(SPI::Clock rate)
   uint32_t arg;
   R1 status;
 
-  // Power up
-  SPI::powerup();
-
   // Start with unknown card type
   m_type = TYPE_UNKNOWN;
 

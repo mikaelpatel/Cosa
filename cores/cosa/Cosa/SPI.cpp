@@ -257,6 +257,9 @@ SPI::acquire(Driver* dev)
   // Acquire the device driver. Wait if busy. Synchronized update
   uint8_t key = lock(m_busy);
 
+  // Power up
+  SPI::powerup();
+
   // Set current device driver
   m_dev = dev;
 
@@ -278,6 +281,9 @@ void
 SPI::release()
 {
   synchronized {
+    // Power down
+    SPI::powerdown();
+
     // Release the device driver
     m_busy = false;
     m_dev = NULL;
