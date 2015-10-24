@@ -27,8 +27,8 @@
 /**
  * Clock for job scheduling with a time unit of seconds. The clock is
  * updated by periodically calling the tick() member function with the
- * number of milli-seconds to update the clock by. Started jobs/alarms
- * are dispatched When the clock seconds counter is update.
+ * clock update in milli-seconds. Started jobs/alarms are dispatched
+ * When the clock seconds counter is update.
  */
 class Clock : public Job::Scheduler {
 public:

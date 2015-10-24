@@ -25,7 +25,7 @@
 #include <FAT16.h>
 
 #include "Cosa/Memory.h"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -147,7 +147,7 @@ IOStream& operator<<(IOStream& outs, BMP::color24_t buf[32])
 void setup()
 {
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   uart.begin(115200);
   trace.begin(&uart, PSTR("CosaBMP: started"));
   TRACE(free_memory());

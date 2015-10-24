@@ -28,7 +28,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 // Configuration; network and device addresses. Allow multiple senders
 #define NETWORK 0xC05A
@@ -76,7 +76,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaWirelessSender: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   ASSERT(rf.begin());
   rf.output_power_level(-18);
 }
@@ -96,7 +96,7 @@ void loop()
 
   // Send to nodes 0x01 to 0x03
   for (uint8_t dest = 0x01; dest < 0x04; dest++) {
-    trace << RTC::micros() << PSTR(":dest=") << dest << PSTR(",nr=") << msg.nr;
+    trace << RTT::micros() << PSTR(":dest=") << dest << PSTR(",nr=") << msg.nr;
     res = rf.send(dest, PAYLOAD_TYPE, &msg, sizeof(msg));
     trace << PSTR(",res=") << res;
     if (res != sizeof(msg)) {
@@ -107,7 +107,7 @@ void loop()
   }
 
   // Broadcast message
-  trace << RTC::micros() << PSTR(":dest=0,nr=") << msg.nr;
+  trace << RTT::micros() << PSTR(":dest=0,nr=") << msg.nr;
   res = rf.broadcast(PAYLOAD_TYPE, &msg, sizeof(msg));
   trace << PSTR(",res=") << res;
   if (res != sizeof(msg)) {

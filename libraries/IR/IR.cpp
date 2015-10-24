@@ -19,7 +19,7 @@
  */
 
 #include "IR.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 
 void
@@ -37,7 +37,7 @@ IR::Receiver::on_interrupt(uint16_t arg)
   }
 
   // Measure the sample period
-  uint32_t now = RTC::micros();
+  uint32_t now = RTT::micros();
   uint32_t us = (now - m_start);
   m_start = now;
 
@@ -72,7 +72,7 @@ IR::Receiver::reset()
   m_code = 0;
 
   // Reset start time and enable the interrupt handler
-  m_start = RTC::micros();
+  m_start = RTT::micros();
   enable();
 }
 

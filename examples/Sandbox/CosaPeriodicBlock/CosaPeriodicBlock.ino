@@ -21,7 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -30,7 +30,7 @@ void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaPeriodicBlock: started"));
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()
@@ -56,8 +56,8 @@ void loop()
   }
 
   periodic(t4, 5000) {
-    trace << RTC::millis()
-	  << ' ' << RTC::since(t4)
+    trace << RTT::millis()
+	  << ' ' << RTT::since(t4)
 	  << ' ' << nr
 	  << ' ' << x
 	  << ' ' << y

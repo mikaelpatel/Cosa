@@ -67,7 +67,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/IOStream.hh"
@@ -151,7 +151,7 @@ void setup()
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Initiate the display
   TRACE(tft.begin());

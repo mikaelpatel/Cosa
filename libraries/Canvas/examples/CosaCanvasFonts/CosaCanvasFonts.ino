@@ -65,7 +65,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
@@ -224,7 +224,7 @@ static IOStream tftout(&textbox);
 
 void setup()
 {
-  RTC::begin();
+  RTT::begin();
   uart.begin(9600);
   trace.begin(&uart);
   trace << PSTR("CosaCanvasFont: started ")

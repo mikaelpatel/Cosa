@@ -24,7 +24,7 @@
 #include <SD.h>
 #include <FAT16.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
@@ -57,7 +57,7 @@ SD sd(Board::D10);
 void setup()
 {
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   uart.begin(115200);
   trace.begin(&uart, PSTR("CosaFAT16: started"));
   TRACE(free_memory());
@@ -84,9 +84,9 @@ void loop()
   trace.flush();
 
   // Measure time to open/create a file. List the files
-  start = RTC::millis();
+  start = RTT::millis();
   ASSERT(file.open("TMP.TXT", O_WRITE | O_CREAT));
-  stop = RTC::millis();
+  stop = RTT::millis();
   ms = stop - start;
   trace << PSTR("Open file:") << ms << PSTR(" ms") << endl;
   FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
@@ -94,11 +94,11 @@ void loop()
   trace.flush();
 
   // Measure time to write a large block (1 K)
-  start = RTC::millis();
+  start = RTT::millis();
   for (uint8_t i = 0; i < K_BYTE; i++) file.write(NULL, 1024);
   // IOStream cout(&file);
   // cout.print((void*) NULL, 1024, IOStream::hex);
-  stop = RTC::millis();
+  stop = RTT::millis();
   ms = stop - start;
   trace << PSTR("Write file (") << K_BYTE << PSTR(" KByte,1024 Byte):")
 	<< ms << PSTR(" ms (")
@@ -108,9 +108,9 @@ void loop()
   trace.flush();
 
   // Measure time to close a file
-  start = RTC::millis();
+  start = RTT::millis();
   ASSERT(file.close());
-  stop = RTC::millis();
+  stop = RTT::millis();
   ms = stop - start;
   trace << PSTR("Close file:") << ms << PSTR(" ms") << endl;
   FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
@@ -119,10 +119,10 @@ void loop()
 
   // Repen the time and measure the time to read character
   ASSERT(file.open("TMP.TXT", O_READ));
-  start = RTC::millis();
+  start = RTT::millis();
   size = 0;
   while ((c = file.getchar()) != -1) size++;
-  stop = RTC::millis();
+  stop = RTT::millis();
   ms = stop - start;
   ASSERT(file.close());
   trace << PSTR("Read file (") << size / 1024
@@ -134,9 +134,9 @@ void loop()
   // Reopen the time and measure the time to read a smaller buffer
   ASSERT(file.open("TMP.TXT", O_READ));
   size = 0;
-  start = RTC::millis();
+  start = RTT::millis();
   while ((count = file.read(buf, sizeof(buf))) > 0) size += count;
-  stop = RTC::millis();
+  stop = RTT::millis();
   ms = stop - start;
   ASSERT(file.close());
   trace << PSTR("Read file (") << size / 1024
@@ -148,9 +148,9 @@ void loop()
   trace.flush();
 
   // Remove the file and list
-  start = RTC::millis();
+  start = RTT::millis();
   ASSERT(FAT16::rm("TMP.TXT"));
-  stop = RTC::millis();
+  stop = RTT::millis();
   ms = stop - start;
   trace << PSTR("Remove file:") << ms << PSTR(" ms") << endl;
   FAT16::ls(trace, FAT16::LS_DATE | FAT16::LS_SIZE);
@@ -158,26 +158,26 @@ void loop()
   trace.flush();
 
   // Open a new file and write a short message. Measure total time
-  start = RTC::millis();
+  start = RTT::millis();
   ASSERT(file.open("NISSE.TXT", O_WRITE | O_TRUNC | O_CREAT));
   ASSERT(file.is_open());
   char msg[] = "Nisse badar.\n";
   size = strlen(msg);
   ASSERT(file.write(msg, strlen(msg)) == (int) size);
   ASSERT(file.close());
-  stop = RTC::millis();
+  stop = RTT::millis();
   ms = stop - start;
   trace << PSTR("Open/Write/Close file:");
   trace << ms << PSTR(" ms") << endl;
   trace.flush();
 
   // Reopen and read the message. Measure total time
-  start = RTC::millis();
+  start = RTT::millis();
   ASSERT(file.open("NISSE.TXT", O_READ));
   ASSERT(file.is_open());
   while ((c = file.getchar()) != -1) trace << (char) c;
   ASSERT(file.close());
-  stop = RTC::millis();
+  stop = RTT::millis();
   ms = stop - start;
   trace << PSTR("Open/Read/Close file:");
   trace << ms << PSTR(" ms") << endl;

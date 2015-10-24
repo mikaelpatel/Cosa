@@ -45,7 +45,7 @@
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Time.hh"
 #include "Cosa/Periodic.hh"
@@ -68,7 +68,7 @@ DHT22 indoors(Board::EXT1);
 const uint32_t START = 8 * 3600 * 1000UL;
 
 // Use the Real-Time Clock
-RTC::Clock clock;
+RTT::Clock clock;
 
 void setup()
 {
@@ -84,9 +84,9 @@ void setup()
 
   // Start the watchdog for low power sleep
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   Watchdog::millis(START);
-  RTC::millis(START);
+  RTT::millis(START);
   clock.time(START / 1000);
 }
 
@@ -96,7 +96,7 @@ void loop()
   periodic(timer, 2000) {
 #if !defined(NO_INDOORS)
     trace << time_t(clock.time()) << ':';
-    trace << hex << RTC::micros() << PSTR(":indoors: ");
+    trace << hex << RTT::micros() << PSTR(":indoors: ");
     if (indoors.sample())
       trace << indoors;
     else
@@ -104,7 +104,7 @@ void loop()
     trace << endl;
 #endif
     trace << time_t(clock.time()) << ':';
-    trace << hex << RTC::micros() << PSTR(":outdoors: ");
+    trace << hex << RTT::micros() << PSTR(":outdoors: ");
     if (outdoors.sample())
       trace << outdoors;
     else

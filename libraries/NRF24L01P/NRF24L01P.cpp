@@ -22,7 +22,7 @@
 #if !defined(BOARD_ATTINYX5)
 
 #include "Cosa/Power.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include <util/delay.h>
 
 NRF24L01P::NRF24L01P(uint16_t net, uint8_t dev,
@@ -297,9 +297,9 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
   set_receiver_mode();
 
   // Check if there is data available on any pipe
-  uint32_t start = RTC::millis();
+  uint32_t start = RTT::millis();
   while (!available()) {
-    if ((ms != 0) && (RTC::since(start) > ms)) return (ETIME);
+    if ((ms != 0) && (RTT::since(start) > ms)) return (ETIME);
     yield();
   }
   m_dest = (m_status.rx_p_no == 1 ? m_addr.device : BROADCAST);

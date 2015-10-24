@@ -16,19 +16,19 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Verify Watchdog::since() and RTC::since() wrap-around behavior.
+ * Verify Watchdog::since() and RTT::since() wrap-around behavior.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Clock.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-RTC::Clock clock;
+RTT::Clock clock;
 
 OutputPin led(Board::LED);
 
@@ -43,21 +43,21 @@ void setup()
 
   // Set timers to the start time
   Watchdog::millis(START);
-  RTC::millis(START);
+  RTT::millis(START);
 
   // Start timers
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()
 {
   led.on();
 
-  uint32_t rms = RTC::millis();
+  uint32_t rms = RTT::millis();
   uint32_t wms = Watchdog::millis();
   uint32_t wsd = Watchdog::since(START);
-  uint32_t rsd = RTC::since(START);
+  uint32_t rsd = RTT::since(START);
   int32_t diff = wsd - rsd;
 
   trace << clock.time()
@@ -67,7 +67,7 @@ void loop()
 	<< PSTR(",t") << diff / Watchdog::ms_per_tick()
 	<< endl;
 
-  delay(1000 - RTC::since(rms));
+  delay(1000 - RTT::since(rms));
   led.off();
   delay(1000);
 }

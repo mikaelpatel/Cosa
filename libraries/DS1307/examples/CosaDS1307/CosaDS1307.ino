@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Cosa demonstration of the DS1307 I2C/Two-Wire Realtime clock
+ * Cosa demonstration of the DS1307 I2C/Two-Wire Real-Time Clock
  * device; read and write RAM, square wave signal generation,
  * and time keeping.
  *

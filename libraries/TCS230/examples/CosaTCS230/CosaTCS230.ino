@@ -35,7 +35,7 @@
 
 #include <TCS230.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
@@ -47,7 +47,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaTCS230: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   sensor.set_frequency_scaling(100);
 }
 

@@ -36,7 +36,7 @@
 
 #include "Cosa/Job.hh"
 #include "Cosa/Periodic.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Trace.hh"
@@ -137,8 +137,8 @@ private:
 };
 
 // The job schedulers; micro-seconds and seconds level
-RTC::Scheduler scheduler;
-RTC::Clock clock;
+RTT::Scheduler scheduler;
+RTT::Clock clock;
 
 // Servo and Controller
 Servo s1(&scheduler, Board::D12);
@@ -151,7 +151,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaAnalyzerServo: started"));
   trace << PSTR("CHAN0 - D13 (") << c1.period() << PSTR(" s)") << endl;
   trace << PSTR("CHAN1 - D12 (") << s1.pulse() << PSTR(" us)") << endl;
-  trace << PSTR("RTC Job Scheduler and Clock") << endl;
+  trace << PSTR("RTT Job Scheduler and Clock") << endl;
 #if defined(USE_ISR_DISPATCH)
   trace << PSTR("Servo ISR dispatch") << endl;
 #else
@@ -171,7 +171,7 @@ void setup()
   c1.start();
 
   // Start the timer
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()

@@ -28,7 +28,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 #define USE_FLASH_S25FL127S
 //#define USE_FLASH_W25X40CL
@@ -50,7 +50,7 @@ void setup()
 {
   // Initiate components and print memory usage
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   uart.begin(57600);
   trace.begin(&uart, PSTR("CosaCFFS: started"));
   TRACE(free_memory());
@@ -102,7 +102,7 @@ void setup()
   MEASURE("Write 100 log entries:", 1) {
     IOStream cout(&file);
     for (uint16_t i = 0; i < 100; i++) {
-      cout << RTC::micros() << PSTR(":A0 = ")
+      cout << RTT::micros() << PSTR(":A0 = ")
 	   << AnalogPin::sample(Board::A0)
 	   << endl;
     }

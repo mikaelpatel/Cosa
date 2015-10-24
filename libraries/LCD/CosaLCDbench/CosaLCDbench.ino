@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 
@@ -112,7 +112,7 @@ void benchmark4(uint16_t nr);
 
 void setup()
 {
-  RTC::begin();
+  RTT::begin();
   Watchdog::begin();
 #if defined(COSA_ADAFRUIT_I2C_LCD_BACKPACK_H)
   twi.set_freq(TWI::MAX_FREQ);
@@ -179,11 +179,11 @@ void benchmark4(uint16_t nr)
 void measure(str_P name, benchmark_t fn, uint16_t nr, uint16_t bytes)
 {
   cout << clear << name;
-  uint32_t start = RTC::micros();
+  uint32_t start = RTT::micros();
   {
     fn(nr);
   }
-  uint32_t us = (RTC::micros() - start) / nr;
+  uint32_t us = (RTT::micros() - start) / nr;
   cout << clear << name << endl;
   cout << us << PSTR(" us (") << us / bytes << PSTR(")");
   sleep(4);

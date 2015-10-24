@@ -25,7 +25,7 @@
 
 #include <Nucleo.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -44,7 +44,7 @@ public:
       trace << PSTR("Ping: started") << endl;
     }
     while (1) {
-      start = RTC::micros();
+      start = RTT::micros();
       sem.signal();
       mutex(io) {
 	trace << Watchdog::millis()
@@ -67,7 +67,7 @@ public:
     }
     while (1) {
       sem.wait();
-      uint32_t us = RTC::micros() - start;
+      uint32_t us = RTT::micros() - start;
       mutex(io) {
 	trace << Watchdog::millis()
 	      << PSTR(":Pong")
@@ -90,7 +90,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaNucleoPingPong: started"));
   trace.flush();
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Some information about memory foot print
   TRACE(sizeof(jmp_buf));

@@ -29,7 +29,7 @@
  * Subclass and implement the virtual method run() as the function to
  * be executed periodically. The scheduler defines the time base;
  * the alarm scheduler uses seconds, the watchdog job scheduler
- * milli-seconds and the real-time clock micro-seconds.
+ * milli-seconds and the real-time timer micro-seconds.
  *
  * @section See Also
  * For details on handling of time units see Job.hh. This execution
@@ -40,7 +40,7 @@ public:
   /**
    * Construct a periodic function handled by the given scheduler and
    * with the given period in the schedulers time base. The maximum
-   * period is UINT32_MAX; 1.2 hours with RTC::Scheduler, 49 days with
+   * period is UINT32_MAX; 1.2 hours with RTT::Scheduler, 49 days with
    * Watchdog::Scheduler and 136 years with Alarm::Clock.
    * @param[in] scheduler for the periodic job.
    * @param[in] period of timeout.
@@ -116,12 +116,12 @@ protected:
  * variable is defined and available in the loop().
  * @param[in] timer variable.
  * @param[in] ms period in milli-seconds.
- * @note requires RTC.
+ * @note requires RTT.
  */
 #define periodic(timer,ms)						\
-  static uint32_t timer = RTC::millis();				\
+  static uint32_t timer = RTT::millis();				\
   for (int __UNIQUE(i) = 1;						\
-       (__UNIQUE(i) != 0) && ((RTC::since(timer)) >= ms);		\
+       (__UNIQUE(i) != 0) && ((RTT::since(timer)) >= ms);		\
        __UNIQUE(i)--, timer += ms)
 
 /**
@@ -140,12 +140,12 @@ protected:
  * variable is defined and available in the loop().
  * @param[in] timer variable.
  * @param[in] us period in micro-seconds.
- * @note requires RTC.
+ * @note requires RTT.
  */
 #define PERIODIC(timer,us)						\
-  static uint32_t timer = RTC::micros();				\
+  static uint32_t timer = RTT::micros();				\
   for (int __UNIQUE(i) = 1;						\
-       (__UNIQUE(i) != 0) && ((RTC::micros() - timer) >= us);		\
+       (__UNIQUE(i) != 0) && ((RTT::micros() - timer) >= us);		\
        __UNIQUE(i)--, timer += us)
 
 #endif

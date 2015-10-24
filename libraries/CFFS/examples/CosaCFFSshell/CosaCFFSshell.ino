@@ -25,7 +25,7 @@
 #include <CFFS.h>
 #include <Shell.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Clock.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
@@ -45,14 +45,14 @@ S25FL127S flash;
 W25X40CL flash;
 #endif
 
-RTC::Clock clock;
+RTT::Clock clock;
 IOStream ios(&uart);
 
 void setup()
 {
   // Initiate timers
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Initiate UART for blocked read line
   uart.begin(9600);

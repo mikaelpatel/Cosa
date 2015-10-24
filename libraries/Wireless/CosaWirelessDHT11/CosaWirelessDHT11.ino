@@ -33,7 +33,7 @@
 
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 // Configuration; network and device addresses, and sensor pin
 #define NETWORK 0xC05A
@@ -96,7 +96,7 @@ void setup()
 {
   // Start timers and the transceiver
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   rf.begin();
 
   // Power down transceiver until time to send message

@@ -27,7 +27,7 @@
 
 #include <ProtoThread.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -85,7 +85,7 @@ void setup()
 
   // Start the watchdog and rtc
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Start the counter threads
   cnt1.begin();

@@ -46,7 +46,7 @@
 #include <DHT.h>
 #include <MAX72XX.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/AnalogPin.hh"
@@ -62,12 +62,12 @@ MAX72XX display(&port);
 IOStream cout(&display);
 
 // Wall-clock
-RTC::Clock clock;
+RTT::Clock clock;
 
 void setup()
 {
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   display.begin();
 }
 

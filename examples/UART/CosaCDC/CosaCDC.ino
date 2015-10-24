@@ -21,7 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
@@ -35,7 +35,7 @@ OutputPin ledPin(Board::LED);
 
 void setup()
 {
-  RTC::begin();
+  RTT::begin();
   Watchdog::begin();
   cdc.begin();
   trace.begin(&cdc, PSTR("CosaCDC: started"));
@@ -45,7 +45,7 @@ void loop()
 {
   Watchdog::delay(1000);
   ledPin.toggle();
-  trace << Watchdog::millis() << ':' << RTC::millis() << endl;
+  trace << Watchdog::millis() << ':' << RTT::millis() << endl;
   Watchdog::delay(128);
   ledPin.toggle();
 }

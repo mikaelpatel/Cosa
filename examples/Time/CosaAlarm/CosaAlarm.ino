@@ -40,20 +40,20 @@
 
 #include "Cosa/Time.hh"
 #include "Cosa/Clock.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Alarm.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Configuration: RTC, Watchdog or External Interrupt Clock Source
-// #define USE_RTC_CLOCK
+// Configuration: RTT, Watchdog or External Interrupt Clock Source
+// #define USE_RTT_CLOCK
 // #define USE_WATCHDOG_CLOCK
 #define USE_ALARM_CLOCK
 
-#if defined(USE_RTC_CLOCK)
-RTC::Clock alarms;
+#if defined(USE_RTT_CLOCK)
+RTT::Clock alarms;
 #endif
 
 #if defined(USE_WATCHDOG_CLOCK)
@@ -108,13 +108,13 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAlarm: started"));
 
-#if defined(USE_RTC_CLOCK)
+#if defined(USE_RTT_CLOCK)
 
-  trace << PSTR("RTC clock") << endl;
+  trace << PSTR("RTT clock") << endl;
   trace.flush();
 
-  // Start the real-time clock
-  RTC::begin();
+  // Start the real-time timer
+  RTT::begin();
 
 #elif defined(USE_WATCHDOG_CLOCK)
 

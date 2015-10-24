@@ -36,7 +36,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Periodic.hh"
@@ -49,9 +49,9 @@ static uint32_t idle = 0L;
 
 void iowait()
 {
-  uint32_t start = RTC::micros();
+  uint32_t start = RTT::micros();
   Power::sleep();
-  uint32_t stop = RTC::micros();
+  uint32_t stop = RTT::micros();
   idle = (start > stop) ? 0L : idle + (stop - start);
 }
 
@@ -81,7 +81,7 @@ void setup()
 
   // Start timers
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()
@@ -106,7 +106,7 @@ void loop()
   trace << PSTR("effective sample rate (") << SAMPLES << PSTR(" samples):")
 	<< ksps << PSTR(" ksps")
 	<< endl;
-  trace << PSTR("idle:") << (idle * 100.0) / RTC::micros() << '%'
+  trace << PSTR("idle:") << (idle * 100.0) / RTT::micros() << '%'
 	<< endl;
   sleep(5);
 
@@ -129,7 +129,7 @@ void loop()
   trace << PSTR("effective sample rate (") << SAMPLES << PSTR(" samples):")
 	<< ksps << PSTR(" ksps")
 	<< endl;
-  trace << PSTR("idle:") << (idle * 100.0) / RTC::micros() << '%'
+  trace << PSTR("idle:") << (idle * 100.0) / RTT::micros() << '%'
 	<< endl;
 
   ASSERT(true == false);

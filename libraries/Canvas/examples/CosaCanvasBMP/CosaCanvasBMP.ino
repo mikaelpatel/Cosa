@@ -47,7 +47,7 @@
 #include <GDDRAM.h>
 #include <ST7735.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream.hh"
@@ -172,7 +172,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaCanvasBMP: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   ASSERT(sd.begin(SPI::DIV2_CLOCK));
   ASSERT(FAT16::begin(&sd));
   ASSERT(tft.begin());

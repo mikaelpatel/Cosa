@@ -19,7 +19,7 @@
  */
 
 #include "TCS230.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 TCS230::TCS230(Board::ExternalInterruptPin out,
 	       Board::DigitalPin s0,
@@ -74,11 +74,11 @@ TCS230::sample(uint8_t ms)
 {
   // Measure number of pulses of the given time period
   m_out.m_count = 0;
-  uint32_t start = RTC::micros();
+  uint32_t start = RTT::micros();
   m_out.enable();
-  RTC::delay(ms);
+  RTT::delay(ms);
   m_out.disable();
-  uint32_t stop = RTC::micros();
+  uint32_t stop = RTT::micros();
 
   // Check for over-flow
   if (m_out.m_count == m_out.MAX) return (UINT16_MAX);

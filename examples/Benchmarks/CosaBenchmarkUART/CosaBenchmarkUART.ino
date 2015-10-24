@@ -23,7 +23,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -82,8 +82,8 @@ private:
   OutputPin m_pin;
 };
 
-// The RTC job scheduler and background pulse generator
-RTC::Scheduler scheduler;
+// The RTT job scheduler and background pulse generator
+RTT::Scheduler scheduler;
 Pulse background(&scheduler, BACKGROUND_PULSE, Board::D7);
 #endif
 
@@ -112,7 +112,7 @@ void setup()
 
   // Start timers
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()

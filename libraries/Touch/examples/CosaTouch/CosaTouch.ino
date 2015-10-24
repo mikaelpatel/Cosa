@@ -38,7 +38,7 @@
 #include <Touch.h>
 
 #include "Cosa/Types.h"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
@@ -85,7 +85,7 @@ void setup()
   uart.begin(9600);
   cout << PSTR("CosaTouch: started") << endl;
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   Key::set_value(0);
   upkey.start();
   downkey.start();

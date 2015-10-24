@@ -22,7 +22,7 @@
  */
 
 #include "Cosa/GPIO.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
@@ -39,7 +39,7 @@ void setup()
 {
   // Start the timers
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Start the trace output stream on the serial port
   uart.begin(9600);
@@ -60,11 +60,11 @@ void setup()
 
 #define MEASURE_NS(msg)							\
   trace.flush();							\
-  start = RTC::micros();						\
+  start = RTT::micros();						\
   for (uint8_t n = 1;							\
        n != 0;								\
        n--,								\
-       stop = RTC::micros(),						\
+       stop = RTT::micros(),						\
        ns = (stop - start) / 1000L,					\
        trace << __LINE__ << ':' << __PRETTY_FUNCTION__,			\
        trace << PSTR(":measure:") << PSTR(msg),				\
@@ -75,11 +75,11 @@ void setup()
 
 #define MEASURE_US(msg)							\
   trace.flush();							\
-  start = RTC::micros();						\
+  start = RTT::micros();						\
   for (uint8_t n = 1;							\
        n != 0;								\
        n--,								\
-       stop = RTC::micros(),						\
+       stop = RTT::micros(),						\
        ns = stop - start,						\
        trace << __LINE__ << ':' << __PRETTY_FUNCTION__,			\
        trace << PSTR(":measure:") << PSTR(msg),				\

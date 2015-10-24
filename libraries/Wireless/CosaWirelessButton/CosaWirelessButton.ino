@@ -32,7 +32,7 @@
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 // Connect button between ground and pin TinyX4 EXT0/D10, TinyX5 EXT0/D2,
 // Mega EXT2/D29 and others to Arduino EXT1 which is Standard/D3 and
@@ -104,9 +104,9 @@ static const uint32_t MIN_PERIOD = 128;
 
 void setup()
 {
-  // Start Watchdog, RTC and Wireless device
+  // Start Watchdog, RTT and Wireless device
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   rf.begin();
 }
 
@@ -138,7 +138,7 @@ void loop()
   uint8_t mode = Power::set(SLEEP_MODE_PWR_DOWN);
   do Watchdog::delay(MIN_PERIOD); while (wakeup.is_clear());
   Watchdog::end();
-  RTC::end();
+  RTT::end();
   wakeup.enable();
 
   // And wait for the wakeup
@@ -147,6 +147,6 @@ void loop()
   // Wake up the hardware
   Power::set(mode);
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   Power::all_enable();
 }

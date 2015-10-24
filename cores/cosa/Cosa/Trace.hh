@@ -217,10 +217,10 @@ extern uint8_t trace_log_mask;
 # if defined(TRACE_NO_VERBOSE) || defined(BOARD_ATTINY)
 # define MEASURE(msg,cnt)						\
   trace.flush();							\
-  for (uint32_t __stop, __start = RTC::micros(), __i = 1;		\
+  for (uint32_t __stop, __start = RTT::micros(), __i = 1;		\
        __i != 0;							\
        __i--,								\
-       __stop = RTC::micros(),						\
+       __stop = RTT::micros(),						\
        trace.measure = (__stop - __start) / cnt,			\
        trace << PSTR(msg) << trace.measure,				\
        trace << PSTR(" us") << endl,					\
@@ -229,10 +229,10 @@ extern uint8_t trace_log_mask;
 #else
 # define MEASURE(msg,cnt)						\
   trace.flush();							\
-  for (uint32_t __stop, __start = RTC::micros(), __i = 1;		\
+  for (uint32_t __stop, __start = RTT::micros(), __i = 1;		\
        __i != 0;							\
        __i--,								\
-       __stop = RTC::micros(),						\
+       __stop = RTT::micros(),						\
        trace.measure = (__stop - __start) / cnt,			\
        trace << __LINE__ << ':' << __PRETTY_FUNCTION__,			\
        trace << PSTR(":measure:") << PSTR(msg) << trace.measure,	\

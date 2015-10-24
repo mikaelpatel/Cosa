@@ -23,7 +23,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/PinChangeInterrupt.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 /**
  * Rotary Encoder class with support for dials (normal and
@@ -401,7 +401,7 @@ public:
      */
     virtual void on_event(uint8_t type, uint16_t direction)
     {
-      uint32_t now = RTC::micros();
+      uint32_t now = RTT::micros();
       int32_t diff = now - m_latest;
       m_latest = now;
       if (direction == CW) {

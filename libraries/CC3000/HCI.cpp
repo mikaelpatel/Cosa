@@ -19,7 +19,7 @@
  */
 
 #include "HCI.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 int
 HCI::read(uint16_t &op, void* args, uint8_t len)
@@ -122,7 +122,7 @@ HCI::write(uint8_t type, uint16_t op, const void* args, uint8_t len, bool progme
 int
 HCI::await(uint16_t op, void* args, uint8_t len)
 {
-  uint32_t start = RTC::millis();
+  uint32_t start = RTT::millis();
   uint16_t event;
   int res;
 
@@ -131,7 +131,7 @@ HCI::await(uint16_t op, void* args, uint8_t len)
 
     // Sleep while waiting for a message
     do {
-      while (!m_available && (RTC::since(start) < m_timeout)) yield();
+      while (!m_available && (RTT::since(start) < m_timeout)) yield();
       if (!m_available) return (ETIME);
       res = read(event, m_evnt, EVNT_MAX);
     } while (res == ENOMSG);

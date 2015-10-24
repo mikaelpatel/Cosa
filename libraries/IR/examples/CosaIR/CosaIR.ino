@@ -48,7 +48,7 @@
 
 #include <IR.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 
@@ -136,8 +136,8 @@ void setup()
   trace.begin(&lcd, PSTR("\fOFF"));
 #endif
 
-  // Use the real-time clock for time measurement
-  RTC::begin();
+  // Use the real-time timer for time measurement
+  RTT::begin();
 
   // Use the watchdog
   Watchdog::begin();

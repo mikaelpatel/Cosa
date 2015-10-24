@@ -1,5 +1,5 @@
 /**
- * @file Cosa/RTC_Scheduler.cpp
+ * @file Cosa/RTT_Scheduler.cpp
  * @version 1.0
  *
  * @section License
@@ -18,17 +18,17 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
-#include "Cosa/RTC_Config.hh"
+#include "Cosa/RTT.hh"
+#include "Cosa/RTT_Config.hh"
 
 bool
-RTC::Scheduler::start(Job* job)
+RTT::Scheduler::start(Job* job)
 {
   // Check that the job is not already started
   if (job->is_started()) return (false);
 
   // Check if the job should be run directly
-  uint32_t now = RTC::micros();
+  uint32_t now = RTT::micros();
   int32_t diff = job->expire_at() - now;
   if (diff < US_DIRECT_EXPIRE) {
     job->on_expired();
@@ -67,7 +67,7 @@ RTC::Scheduler::start(Job* job)
 }
 
 void
-RTC::Scheduler::dispatch()
+RTT::Scheduler::dispatch()
 {
   // Check if there are no jobs
   if (m_queue.is_empty()) return;
@@ -76,7 +76,7 @@ RTC::Scheduler::dispatch()
   Job* job = (Job*) m_queue.succ();
   while ((Linkage*) job != &m_queue) {
     // Check if the job should be run
-    uint32_t now = RTC::micros();
+    uint32_t now = RTT::micros();
     int32_t diff = job->expire_at() - now;
     if (diff < US_DIRECT_EXPIRE) {
       Job* succ = (Job*) job->succ();
@@ -106,7 +106,7 @@ RTC::Scheduler::dispatch()
 }
 
 uint32_t
-RTC::Scheduler::time()
+RTT::Scheduler::time()
 {
-  return (RTC::micros());
+  return (RTT::micros());
 }

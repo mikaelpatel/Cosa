@@ -83,7 +83,7 @@ HD44780 lcd(&port, 16, 4);
 HD44780 lcd(&port);
 #endif
 
-// Use Real-time clock with temperature sensor
+// Use real-time clock with temperature sensor
 DS1307 rtc;
 
 // Bind the lcd to an io-stream

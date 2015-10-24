@@ -29,7 +29,7 @@
 
 #include <Base64.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
@@ -41,7 +41,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaBase64: started"));
   TRACE(free_memory());
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 }
 
 // Data to verify block handling and padding
@@ -66,18 +66,18 @@ void loop()
   int n, m;
 
   // Encode a string in program memory
-  start = RTC::micros();
+  start = RTT::micros();
   n = Base64::encode_P(res, PSTR("Nisse badar"), 12);
-  stop = RTC::micros();
+  stop = RTT::micros();
   trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
   trace << res << endl;
   trace << endl;
   sleep(1);
 
   // Decode the encoded string
-  start = RTC::micros();
+  start = RTT::micros();
   m = Base64::decode(temp, res, n);
-  stop = RTC::micros();
+  stop = RTT::micros();
   trace << m << PSTR(":decode:") << (stop - start) << PSTR(" us") << endl;
   trace << (char*) temp << endl;
   trace << endl;
@@ -88,15 +88,15 @@ void loop()
     trace << i << ':';
     trace.print(data, i, IOStream::hex);
 
-    start = RTC::micros();
+    start = RTT::micros();
     n = Base64::encode(res, data, i);
-    stop = RTC::micros();
+    stop = RTT::micros();
     trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
     trace << res << endl;
 
-    start = RTC::micros();
+    start = RTT::micros();
     m = Base64::decode(temp, res, n);
-    stop = RTC::micros();
+    stop = RTT::micros();
     trace << m << PSTR(":decode:") << (stop - start) << PSTR(" us") << endl;
     trace.print(temp, m, IOStream::hex);
     trace << endl;
@@ -104,9 +104,9 @@ void loop()
   }
 
   // Encode data directly to the uart iobuffer
-  start = RTC::micros();
+  start = RTT::micros();
   n = Base64::encode(&uart, data, sizeof(data));
-  stop = RTC::micros();
+  stop = RTT::micros();
   trace << endl;
   trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
   trace << endl;
@@ -114,9 +114,9 @@ void loop()
 
   // Encode a large string directly to the uart iobuffer. This could be
   // any iostream such as Socket::Driver/Ethernet.
-  start = RTC::micros();
+  start = RTT::micros();
   n = Base64::encode_P(&uart, citation, strlen_P(citation));
-  stop = RTC::micros();
+  stop = RTT::micros();
   trace << endl;
   trace << n << PSTR(":encode:") << (stop - start) << PSTR(" us") << endl;
   trace << endl;

@@ -23,7 +23,7 @@
 
 #include "Cosa/Types.h"
 #include "Cosa/ExternalInterrupt.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -80,11 +80,11 @@ Probe::on_interrupt(uint16_t arg)
 {
   UNUSED(arg);
   if (m_start == 0) {
-    m_start = RTC::micros();
+    m_start = RTT::micros();
     m_ix = 0;
     return;
   }
-  uint16_t stop = RTC::micros();
+  uint16_t stop = RTT::micros();
   uint16_t us = (stop - m_start);
   m_start = stop;
   m_sample[m_ix++] = us;
@@ -107,11 +107,11 @@ Probe::sample_request()
 void
 Probe::sample_await(uint32_t ms)
 {
-  uint32_t start = RTC::millis();
+  uint32_t start = RTT::millis();
   DELAY(HIGH_THRESHOLD);
-  while (m_sampling && (RTC::since(start) < ms)) {
+  while (m_sampling && (RTT::since(start) < ms)) {
     Power::sleep(SLEEP_MODE_IDLE);
-    uint16_t us = (RTC::micros() - m_start);
+    uint16_t us = (RTT::micros() - m_start);
     if (us > 1000) break;
   }
   disable();
@@ -126,7 +126,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaProbe: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()

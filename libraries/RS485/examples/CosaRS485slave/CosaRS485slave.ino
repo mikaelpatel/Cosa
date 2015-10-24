@@ -27,7 +27,7 @@
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 #if defined(BOARD_ATMEGA2560)
 #include "Cosa/Trace.hh"
@@ -67,7 +67,7 @@ struct signal_t {
 void setup()
 {
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
 #if defined(TRACE)
   uart.begin(9600);
@@ -109,7 +109,7 @@ void loop()
   // Decode function code and dispatch
   switch (msg.func) {
   case GET_MILLIS:
-    msg.param[2] = RTC::millis();
+    msg.param[2] = RTT::millis();
     break;
   case GET_HUMIDITY:
     msg.param[2] = humidity.sample();

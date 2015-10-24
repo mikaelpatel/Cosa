@@ -24,7 +24,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/OutputPin.hh"
 
@@ -33,8 +33,8 @@ OutputPin ledPin(Board::LED);
 
 void setup()
 {
-  // Start the real-time clock for periodic blocks
-  RTC::begin();
+  // Start the real-time timer for periodic blocks
+  RTT::begin();
 }
 
 void loop()

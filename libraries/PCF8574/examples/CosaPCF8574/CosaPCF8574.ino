@@ -39,7 +39,7 @@
 #include <PCF8574.h>
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -64,9 +64,9 @@ void setup()
   TRACE(sizeof(TWI));
   TRACE(sizeof(port));
 
-  // Start the watchdog ticks and RTC
+  // Start the watchdog ticks and RTT
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Define an output pin for demo. All other are input default
   port.set_output_pin(0);
@@ -79,9 +79,9 @@ void loop()
   uint32_t start, stop;
   ledPin.toggle();
 
-  start = RTC::micros();
+  start = RTT::micros();
   port.write((uint8_t) 0, v);
-  stop = RTC::micros();
+  stop = RTT::micros();
   trace << stop - start
 	<< PSTR(": write(0, ") << v << ')'
 	<< endl;
@@ -89,9 +89,9 @@ void loop()
 
   // Read input pins(1..7). Measure execution time in micro-seconds
   for (uint8_t i = 1; i < 8; i++) {
-    start = RTC::micros();
+    start = RTT::micros();
     bool u = port.read(i);
-    stop = RTC::micros();
+    stop = RTT::micros();
     trace << stop - start
 	  << PSTR(": read(") << i << PSTR(") = ") << u
 	  << endl;

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/RTC.hh
+ * @file Cosa/RTT.hh
  * @version 1.0
  *
  * @section License
@@ -18,36 +18,38 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_RTC_HH
-#define COSA_RTC_HH
+#ifndef COSA_RTT_HH
+#define COSA_RTT_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/Job.hh"
 #include "Cosa/Clock.hh"
 
 /**
- * Real-time clock with micro/milli/seconds timing based on hardware
- * timer.
+ * Real-Time Timer (RTT) with micro/milli/seconds timing based on
+ * hardware timer. Uses Timer2 when possible to allow low power mode
+ * with timer. Alternatively Timer0 is used.
  *
  * @section Limitations
- * Cannot be used together with other classes that use AVR/Timer#0.
+ * Cannot be used together with other classes that use AVR/Timer2/
+ * Timer0.
  */
-class RTC {
+class RTT {
 public:
   /**
-   * Start the real-time clock.
+   * Start the real-time timer.
    * @return bool true(1) if successful otherwise false(0).
    */
   static bool begin();
 
   /**
-   * Stop the real-time clock.
+   * Stop the real-time timer.
    * @return bool true(1) if successful otherwise false(0).
    */
   static bool end();
 
   /**
-   * Get number of micro-seconds per real-time clock tick.
+   * Get number of micro-seconds per real-time timer tick.
    * @return micro-seconds.
    */
   static uint16_t us_per_tick();
@@ -110,14 +112,14 @@ public:
   }
 
   /**
-   * Delay using the real-time clock. Installed as the global delay()
-   * function when the real-time clock is started with begin().
+   * Delay using the real-time timer. Installed as the global delay()
+   * function when the real-time timer is started with begin().
    * @param[in] ms sleep period in milli-seconds.
    */
   static void delay(uint32_t ms);
 
   /**
-   * Wait for the next real-time clock milli-seconds update.
+   * Wait for the next real-time timer milli-seconds update.
    */
   static void await()
     __attribute__((always_inline))
@@ -126,17 +128,17 @@ public:
   }
 
   /**
-   * RTC Scheduler for jobs with a delay of 50 us or longer.
+   * RTT Scheduler for jobs with a delay of 50 us or longer.
    */
   class Scheduler : public Job::Scheduler {
   public:
     /**
-     * Construct and register a RTC Job Scheduler. Should be a
+     * Construct and register a RTT Job Scheduler. Should be a
      * singleton.
      */
     Scheduler() : Job::Scheduler()
     {
-      RTC::s_scheduler = this;
+      RTT::s_scheduler = this;
     }
 
     /**
@@ -149,7 +151,7 @@ public:
 
     /**
      * @override{Job::Scheduler}
-     * Dispatch expired jobs. Called from RTC ISR.
+     * Dispatch expired jobs. Called from RTT ISR.
      */
     virtual void dispatch();
 
@@ -161,34 +163,34 @@ public:
   };
 
   /**
-   * Set the real-time clock job scheduler.
+   * Set the real-time timer job scheduler.
    * @param[in] scheduler.
    */
-  static void job(RTC::Scheduler* scheduler)
+  static void job(RTT::Scheduler* scheduler)
   {
     s_scheduler = scheduler;
   }
 
   /**
-   * Get the real-time clock job scheduler.
+   * Get the real-time timer job scheduler.
    * @return scheduler.
    */
-  static RTC::Scheduler* scheduler()
+  static RTT::Scheduler* scheduler()
   {
     return (s_scheduler);
   }
 
   /**
-   * RTC Clock for seconds level time base.
+   * RTT Clock for seconds level time base.
    */
   class Clock : public ::Clock {
   public:
     /**
-     * Construct and register a RTC Clock. Should be a singleton.
+     * Construct and register a RTT Clock. Should be a singleton.
      */
     Clock() : ::Clock()
     {
-      RTC::s_clock = this;
+      RTT::s_clock = this;
     }
   };
 
@@ -221,7 +223,7 @@ private:
   /**
    * Do not allow instances. This is a static singleton; name space.
    */
-  RTC() {}
+  RTT() {}
 
   /** Interrupt Service Routine. */
 #if defined(TIMER2_COMPA_vect)
@@ -233,7 +235,7 @@ private:
 #endif
 
   /** Scheduler access. */
-  friend class RTC::Scheduler;
+  friend class RTT::Scheduler;
 };
 
 #endif

@@ -19,7 +19,7 @@
  */
 
 #include "DHT.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 
 /*
@@ -37,7 +37,7 @@ DHT::on_interrupt(uint16_t arg)
   UNUSED(arg);
 
   // Calculate the pulse width and check against thresholds
-  uint16_t stop = RTC::micros();
+  uint16_t stop = RTT::micros();
   uint16_t us = (stop - m_start);
   bool valid = false;
 
@@ -90,7 +90,7 @@ DHT::sample_request()
   // Request pulse completed; pull up for 40 us and collect
   // data as a sequence of on rising mode interrupts
   m_state = RESPONSE;
-  m_start = RTC::micros();
+  m_start = RTT::micros();
   IOPin::set();
   mode(INPUT_MODE);
   DELAY(40);
@@ -102,8 +102,8 @@ bool
 DHT::sample_await()
 {
   // Wait for the sample request to complete
-  uint32_t start = RTC::millis();
-  while (m_state != COMPLETED && (RTC::since(start) < MIN_PERIOD))
+  uint32_t start = RTT::millis();
+  while (m_state != COMPLETED && (RTT::since(start) < MIN_PERIOD))
     yield();
   if (m_state != COMPLETED) return (false);
 

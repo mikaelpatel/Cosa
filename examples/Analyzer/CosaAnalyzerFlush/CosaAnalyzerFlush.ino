@@ -32,7 +32,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -48,25 +48,25 @@ void setup()
   trace << PSTR("CHAN7 - D1/TX [Async Serial]") << endl;
   trace.flush();
 
-  // Use the RTC for delay
-  RTC::begin();
+  // Use the RTT for delay
+  RTT::begin();
 }
 
 void loop()
 {
   // Toggle led for baseline
-  RTC::await();
+  RTT::await();
   led.on();
   led.off();
 
   // Write to output buffer
-  RTC::await();
+  RTT::await();
   led.on();
   trace << PSTR("hello ");
   led.off();
 
   // Write again to output buffer and wait for completion
-  RTC::await();
+  RTT::await();
   led.on();
   trace << PSTR("world");
   trace.flush();

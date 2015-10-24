@@ -24,7 +24,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 
@@ -109,7 +109,7 @@ void measure(str_P name, benchmark_t fn, uint16_t nr);
 void setup()
 {
   // Power::set(SLEEP_MODE_PWR_DOWN);
-  RTC::begin();
+  RTT::begin();
   Watchdog::begin();
   lcd.begin();
   trace.begin(&lcd, PSTR("CosaLCDspeed:"));
@@ -231,9 +231,9 @@ void measure(str_P name, benchmark_t fn, uint16_t nr)
   lcd.backlight_off();
 #endif
   lcd.display_clear();
-  uint32_t start = RTC::micros();
+  uint32_t start = RTT::micros();
   fn(nr);
-  uint32_t us = (RTC::micros() - start) / nr;
+  uint32_t us = (RTT::micros() - start) / nr;
   uint32_t ops = 1000000L / us;
   lcd.display_clear();
   lcd.puts(name);

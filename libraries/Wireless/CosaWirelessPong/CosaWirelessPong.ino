@@ -30,7 +30,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 // Configuration; network and device addresses.
 #define NETWORK 0xC05A
@@ -77,7 +77,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaWirelessPong: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   ASSERT(rf.begin());
 #if defined(USE_LOW_POWER)
   rf.set_output_power_level(-18);
@@ -92,7 +92,7 @@ void loop()
 
   while (rf.recv(src, port, &nr, sizeof(nr)) != sizeof(nr)) yield();
   if (port != PING_TYPE) return;
-  trace << RTC::millis() << PSTR(":pong:nr=") << nr << endl;
+  trace << RTT::millis() << PSTR(":pong:nr=") << nr << endl;
   nr += 1;
   rf.send(src, port, &nr, sizeof(nr));
 }

@@ -25,7 +25,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 
@@ -102,7 +102,7 @@ IOStream cout(&lcd);
 void setup()
 {
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   lcd.begin();
   cout << clear << PSTR("CosaWirelessReceiver: started");
   rf.begin();

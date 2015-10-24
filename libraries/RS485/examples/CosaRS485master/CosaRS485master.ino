@@ -25,7 +25,7 @@
 
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Memory.h"
 
@@ -60,7 +60,7 @@ struct signal_t {
 void setup()
 {
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaRS485master: started"));
   TRACE(free_memory());

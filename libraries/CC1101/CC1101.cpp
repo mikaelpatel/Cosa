@@ -23,7 +23,7 @@
 #if !defined(BOARD_ATTINYX5)
 
 #include "Cosa/Power.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 #if defined(BOARD_ATTINY)
 #define PIN PINA
@@ -210,7 +210,7 @@ CC1101::send(uint8_t dest, uint8_t port, const void* buf, size_t len)
 int
 CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
 {
-  uint32_t start = RTC::millis();
+  uint32_t start = RTT::millis();
   uint8_t size;
 
   // Put in receive mode and wait for incoming message
@@ -218,7 +218,7 @@ CC1101::recv(uint8_t& src, uint8_t& port, void* buf, size_t len, uint32_t ms)
   strobe(SRX);
   m_avail = false;
   do {
-    while (!m_avail && ((ms == 0) || (RTC::since(start) < ms))) yield();
+    while (!m_avail && ((ms == 0) || (RTT::since(start) < ms))) yield();
     if (!m_avail) {
       strobe(SIDLE);
       return (ETIME);

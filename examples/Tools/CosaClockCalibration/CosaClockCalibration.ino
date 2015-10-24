@@ -36,7 +36,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Alarm.hh"
 #include "Cosa/Clock.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -48,83 +48,83 @@
 // (+- 50 ppm) or ceramic resonator (+-.5%) and PCB layout.
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Anarduino Miniwireless"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -66
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Duemilanove Clone (Funduino 2012 May)"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -12
 // -------------------------------------------------------------------
 // #define BOARD_INO "Leonardo (Made in Italy)"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -95
 // -------------------------------------------------------------------
 // #define BOARD_INO "Lilypad Clone (GEtech)"
-// #define RTC_CALIBRATION_MS -1
+// #define RTT_CALIBRATION_MS -1
 // #define WATCHDOG_CALIBRATION_MS -140
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Mega 2560 Clone"
-// #define RTC_CALIBRATION_MS -2
+// #define RTT_CALIBRATION_MS -2
 // #define WATCHDOG_CALIBRATION_MS -63
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Mega 2560 Clone (Funduino)"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -108
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Microduino Core"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -69
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Microduino Core+"
-// #define RTC_CALIBRATION_MS 1
+// #define RTT_CALIBRATION_MS 1
 // #define WATCHDOG_CALIBRATION_MS -112
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Microduino Core32U4"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -8
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Moteino"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -118
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Nano Clone (DCCduino)"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -24
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Pro-Micro Clone"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS 0
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Pro-Mini Clone (Tinyos, 3.3V/8M)"
-// #define RTC_CALIBRATION_MS -2
+// #define RTT_CALIBRATION_MS -2
 // #define WATCHDOG_CALIBRATION_MS -61
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Pro-Mini Clone (white reset button)"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS 26
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Pro-Mini Clone (Deek Robot, red reset button)"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -1
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Pro-Mini Clone (Deek Robot, 10 top pins)"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS 0
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Uno R3 Clone (GEtech)"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -112
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Uno R3 Clone (VISduino)"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -22
 // -------------------------------------------------------------------
 // #define BOARD_INFO "Wildfire"
-// #define RTC_CALIBRATION_MS 0
+// #define RTT_CALIBRATION_MS 0
 // #define WATCHDOG_CALIBRATION_MS -122
 // -------------------------------------------------------------------
 
-// Wall-clocks; Square Wave from external RTC, internal RTC and
+// Wall-clocks; Square Wave from external RTC, internal RTT and
 // Watchdog based seconds level clocks
 #if defined(ARDUINO_MEGA)					\
   || defined(ARDUINO_PRO_MICRO)
@@ -136,7 +136,7 @@ Alarm::Clock clock(Board::EXT2);
 #else
 Alarm::Clock clock(Board::EXT1);
 #endif
-RTC::Clock wall;
+RTT::Clock wall;
 Watchdog::Clock bark;
 
 // Pulse generator class
@@ -173,16 +173,16 @@ void setup()
 #if defined(BOARD_INFO)
   trace << PSTR("Board: ") << PSTR(BOARD_INFO) << endl;
 #endif
-#if defined(RTC_CALIBRATION_MS)
-  trace << PSTR("RTC:calibration: ") << RTC_CALIBRATION_MS << endl;
+#if defined(RTT_CALIBRATION_MS)
+  trace << PSTR("RTT:calibration: ") << RTT_CALIBRATION_MS << endl;
 #endif
 #if defined(WATCHDOG_CALIBRATION_MS)
   trace << PSTR("Watchdog:calibration: ") << WATCHDOG_CALIBRATION_MS << endl;
 #endif
 
   // Set calibration (from error measurement)
-#if defined(RTC_CALIBRATION_MS)
-  wall.calibration(RTC_CALIBRATION_MS);
+#if defined(RTT_CALIBRATION_MS)
+  wall.calibration(RTT_CALIBRATION_MS);
 #endif
 #if defined(WATCHDOG_CALIBRATION_MS)
   bark.calibration(WATCHDOG_CALIBRATION_MS);
@@ -194,7 +194,7 @@ void setup()
 
   // Start internal timers
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Synchronize wall clocks
   delay(500);
@@ -219,10 +219,10 @@ void loop()
   int32_t rtc = wall.time() - now;
   int32_t wdg = bark.time() - now;
 
-#if defined(RTC_CALIBRATION_MS) || defined(WATCHDOG_CALIBRATION_MS)
+#if defined(RTT_CALIBRATION_MS) || defined(WATCHDOG_CALIBRATION_MS)
   // Print the clocks, drift and error rate (milli-seconds per second)
   trace << cycle << ':' << now
-	<< PSTR(":RTC:")
+	<< PSTR(":RTT:")
 	<< (rtc < 0 ? PSTR("T") : PSTR("T+")) << rtc
 	<< PSTR(",err=") << (1000.0 * rtc) / cycle
 	<< PSTR(":Watchdog:")
@@ -236,7 +236,7 @@ void loop()
     trace << cycle << PSTR(" seconds") << endl;
     trace << PSTR("#define BOARD_INFO \"Board Info\"")
 	  << endl;
-    trace << PSTR("#define RTC_CALIBRATION_MS ")
+    trace << PSTR("#define RTT_CALIBRATION_MS ")
 	  << (1000 * rtc) / cycle
 	  << endl;
     trace << PSTR("#define WATCHDOG_CALIBRATION_MS ")

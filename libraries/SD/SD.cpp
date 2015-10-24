@@ -19,7 +19,7 @@
  */
 
 #include "SD.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 // Configuration: Allow SPI transfer interleaving, table driven CRC.
 #define USE_SPI_PREFETCH
@@ -119,11 +119,11 @@ SD::send(CMD command, uint32_t arg)
 bool
 SD::send(uint16_t ms, CMD command, uint32_t arg)
 {
-  uint16_t start = RTC::millis();
+  uint16_t start = RTT::millis();
   do {
     uint8_t state = send(command, arg);
     if (state < IDENT_STATE) return (true);
-  } while (((uint16_t) RTC::millis()) - start < ms);
+  } while (((uint16_t) RTT::millis()) - start < ms);
   return (false);
 }
 
@@ -137,26 +137,26 @@ SD::send(ACMD command, uint32_t arg)
 bool
 SD::send(uint16_t ms, ACMD command, uint32_t arg)
 {
-  uint16_t start = RTC::millis();
+  uint16_t start = RTT::millis();
   do {
     send(APP_CMD);
     uint8_t state = send((CMD) command, arg);
     if (state < IDENT_STATE) return (true);
-  } while (((uint16_t) RTC::millis()) - start < ms);
+  } while (((uint16_t) RTT::millis()) - start < ms);
   return (false);
 }
 
 bool
 SD::await(uint16_t ms, uint8_t token)
 {
-  uint16_t start = RTC::millis();
+  uint16_t start = RTT::millis();
   do {
     uint8_t response = spi.transfer(0xff);
     if (response != 0xff) {
       m_response = response;
       return (token != 0 ? response == token : true);
     }
-  } while ((ms == 0) || (((uint16_t) RTC::millis()) - start < ms));
+  } while ((ms == 0) || (((uint16_t) RTT::millis()) - start < ms));
   return (false);
 }
 

@@ -36,6 +36,7 @@
 
 #include <Rotary.h>
 
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
@@ -49,7 +50,7 @@ void setup()
   PinChangeInterrupt::begin();
 
   // Enable the RTC
-  RTC::begin();
+  RTT::begin();
 }
 
 // Rotary Dial is connected to D6/D1 and D7/D2 (as interrupt pins)

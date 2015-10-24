@@ -40,7 +40,7 @@
 
 #include <PCF8591.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Periodic.hh"
@@ -69,7 +69,7 @@ void setup()
 
   // Start the watchdog ticks
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()

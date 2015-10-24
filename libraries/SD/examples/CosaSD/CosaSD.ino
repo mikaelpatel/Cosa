@@ -33,7 +33,7 @@
 
 #include <SD.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
@@ -87,7 +87,7 @@ void setup()
 #endif
 
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   trace.begin(dev, PSTR("CosaSD: started"));
   TRACE(free_memory());
   TRACE(sizeof(SD));

@@ -22,7 +22,7 @@
 
 #include "Cosa/TWI.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
@@ -84,7 +84,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaSi7021: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   uint16_t xmd;
   uint8_t reg;

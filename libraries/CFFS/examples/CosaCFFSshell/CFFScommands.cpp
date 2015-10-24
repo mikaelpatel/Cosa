@@ -24,7 +24,7 @@
 #include "CFFScommands.h"
 
 #include "Cosa/Time.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 SHELL_ACTION(cat, "FILE..", "print content of file")
 (int argc, char* argv[])
@@ -212,7 +212,7 @@ SHELL_ACTION(write, "[-n|t] FILE STRING..", "print text to file (newline/timesta
     if (file.open(argv[ix], O_WRITE) != 0) return (-1);
   ix += 1;
   IOStream ios(&file);
-  if (timestamp) ios << RTC::micros() << ':';
+  if (timestamp) ios << RTT::micros() << ':';
   ios << argv[ix++];
   while (ix < argc) ios << ' ' << argv[ix++];
   if (newline) ios << endl;

@@ -26,15 +26,14 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // Configuration
-#define USE_RTC
+#define USE_RTT
 // #define USE_WATCHDOG
 
-// Use the RTC/Timer based delay. Timer will continue to update
-// during the delay.
-#if defined(USE_RTC)
-#include "Cosa/RTC.hh"
-#define TIMER RTC
-#define NAME "RTC"
+// Use the RTT based delay. Timer will continue to update during the delay.
+#if defined(USE_RTT)
+#include "Cosa/RTT.hh"
+#define TIMER RTT
+#define NAME "RTT"
 #define SLEEP_MODE SLEEP_MODE_EXT_STANDBY
 #endif
 
@@ -79,10 +78,10 @@ void loop()
 
   // Use defined sleep mode during delay to power down
   // Baseline: 8.3 mA (Pro-Mini with power LED removed)
-  // RTC:      1.5 mA
+  // RTT:      1.5 mA
   // Watchdog: 260 uA
   // Baseline: 33 mA (Mega 2560, Vin 5V)
-  // RTC:      16 mA
+  // RTT:      16 mA
   // Watchdog: 14 mA
   uint8_t mode = Power::set(SLEEP_MODE);
   delay(PERIOD - TIMER::since(now));

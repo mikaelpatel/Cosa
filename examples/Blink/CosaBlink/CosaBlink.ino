@@ -48,7 +48,6 @@
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
 
 // Use the built-in led
 OutputPin ledPin(Board::LED);

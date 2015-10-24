@@ -20,7 +20,7 @@
 
 #include "CC3000.hh"
 #if !defined(BOARD_ATTINY)
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 // Enable trace of unsolicited events
 #define TRACE_ON_EVENT
@@ -47,7 +47,7 @@ CC3000::UnsolicitedEvent::on_event(uint16_t event, void* args, size_t len)
 {
   UNUSED(len);
 #if defined(TRACE_ON_EVENT)
-  trace << RTC::millis() << ':';
+  trace << RTT::millis() << ':';
 #endif
   switch (event) {
   case HCI_EVNT_WLAN_UNSOL_KEEPALIVE:
@@ -351,9 +351,9 @@ CC3000::socket(Socket::Protocol proto, uint16_t port, uint8_t flag)
 int
 CC3000::service(uint16_t timeout)
 {
-  uint32_t start = RTC::millis();
+  uint32_t start = RTT::millis();
   while (1) {
-    while (!m_available && (RTC::since(start) < timeout)) yield();
+    while (!m_available && (RTT::since(start) < timeout)) yield();
     if (!m_available) return (0);
     await(HCI_EVNT_ANY);
   }
@@ -686,11 +686,11 @@ CC3000::recv(int hndl, void* buf, size_t size)
   if (UNLIKELY(evnt.handle != hndl)) return (EFAULT);
   if (UNLIKELY(evnt.count == 0)) return (0);
 
-  uint32_t start = RTC::millis();
+  uint32_t start = RTT::millis();
   uint32_t TIMEOUT = 3000;
   hci_data_recv_t args;
   do {
-    while (!m_available && (RTC::since(start) < TIMEOUT)) yield();
+    while (!m_available && (RTT::since(start) < TIMEOUT)) yield();
     if (!m_available) return (ETIME);
     res = read_data(HCI_DATA_RECV, &args, sizeof(args), buf, evnt.count);
   } while (res == ENOMSG);

@@ -21,7 +21,7 @@
 #include "Cosa/Types.h"
 #if !defined(BOARD_ATTINY)
 #include "RS485.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include <util/crc16.h>
 
 static uint8_t
@@ -112,7 +112,7 @@ RS485::send(const void* buf, size_t len, uint8_t dest)
 int
 RS485::recv(void* buf, size_t len, uint32_t ms)
 {
-  uint32_t start = RTC::millis();
+  uint32_t start = RTT::millis();
   uint16_t crc;
 
   // Receive state-machine; start symbol, header, payload and check-sum
@@ -120,14 +120,14 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
   case 0: // Wait for transmission to complete and start symbol
     while (m_de.is_set()) Power::sleep(SLEEP_MODE_IDLE);
     while (getchar() != SOT) {
-      if ((ms != 0) && (RTC::millis() - start > ms)) return (ETIME);
+      if ((ms != 0) && (RTT::millis() - start > ms)) return (ETIME);
       yield();
     }
     m_state = 1;
 
   case 1: // Read message header and verify header check-sum
     while (available() != sizeof(header_t)) {
-      if ((ms != 0) && (RTC::millis() - start > ms)) return (ETIME);
+      if ((ms != 0) && (RTT::millis() - start > ms)) return (ETIME);
       yield();
     }
     m_state = 2;
@@ -138,7 +138,7 @@ RS485::recv(void* buf, size_t len, uint32_t ms)
 
   case 2: // Read message payload and verify payload check-sum
     while (available() != (int) (m_header.length + sizeof(crc))) {
-      if ((ms != 0) && (RTC::millis() - start > ms)) return (ETIME);
+      if ((ms != 0) && (RTT::millis() - start > ms)) return (ETIME);
       yield();
     }
     m_state = 3;

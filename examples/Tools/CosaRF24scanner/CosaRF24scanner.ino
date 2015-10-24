@@ -27,7 +27,7 @@
 
 #include <NRF24L01P.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Trace.hh"
@@ -121,7 +121,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaRF24scanner: started"));
   trace << PSTR("channel frequency:number:wifi:detects") << endl;
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   ASSERT(scanner.begin());
 }
 

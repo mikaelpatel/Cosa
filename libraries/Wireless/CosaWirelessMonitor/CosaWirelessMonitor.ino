@@ -26,7 +26,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 
@@ -154,7 +154,7 @@ const uint8_t BITMAPS_MAX = membersof(bitmaps) / SIZEOF_BITMAP;
 void setup()
 {
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 #if defined(COSA_IOSTREAM_DRIVER_UART_HH)
   uart.begin(9600);
   trace.begin(&uart, PSTR("Monitor: started"));

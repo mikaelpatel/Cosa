@@ -30,7 +30,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 // Configuration; network and device addresses.
 #define PING_ID 0x80
@@ -79,7 +79,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaWirelessPing: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   ASSERT(rf.begin());
 #if defined(USE_LOW_POWER)
   rf.set_output_power_level(-18);
@@ -105,7 +105,7 @@ void loop()
   uint8_t src;
 
   // Send sequence number and receive update. Count number of retransmissions
-  uint32_t now = RTC::millis();
+  uint32_t now = RTT::millis();
   uint8_t rc = 0;
   trace << now << PSTR(":ping:nr=") << nr;
   while (1) {
@@ -122,7 +122,7 @@ void loop()
 	<< endl;
   rf.powerdown();
   static const uint32_t PERIOD = 2000L;
-  uint32_t ms = PERIOD - RTC::since(now);
+  uint32_t ms = PERIOD - RTT::since(now);
   if (ms > PERIOD) ms = PERIOD;
   delay(ms);
 }

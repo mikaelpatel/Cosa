@@ -21,7 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 
@@ -35,7 +35,7 @@ OutputPin rf(PIN);
 
 void setup()
 {
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()

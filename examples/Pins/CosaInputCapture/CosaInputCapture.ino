@@ -29,7 +29,7 @@
  */
 
 #include "Cosa/InputCapture.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -66,7 +66,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaInputCapture: started"));
   trace << PSTR("ICP1 - D8") << endl;
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   InputCapture::begin();
 }
 
@@ -74,7 +74,7 @@ void loop()
 {
   // Periodically print capture period in hz and latency in us
   probe.reset();
-  RTC::await();
+  RTT::await();
   probe.enable();
   delay(1000);
   probe.disable();

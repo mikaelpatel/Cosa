@@ -40,7 +40,7 @@
 #include <MCP23008.h>
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -68,9 +68,9 @@ void setup()
   TRACE(sizeof(TWI));
   TRACE(sizeof(port));
 
-  // Start the watchdog ticks and RTC
+  // Start the watchdog ticks and RTT
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
 #if defined(USE_MAX_FREQ)
   // Set max frequency

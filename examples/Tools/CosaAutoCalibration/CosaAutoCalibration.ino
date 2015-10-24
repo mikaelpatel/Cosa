@@ -16,18 +16,18 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Calibrate Watchdog clock with RTC clock as reference. Automatically
- * adjust Watchdog clock to RTC clock tick.
+ * Calibrate Watchdog clock with RTT as reference. Automatically
+ * adjust Watchdog clock to RTT tick.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-RTC::Clock clock;
+RTT::Clock clock;
 Watchdog::Clock bark;
 
 void setup()
@@ -36,9 +36,9 @@ void setup()
   uart.begin(57600);
   trace.begin(&uart, PSTR("CosaAutoCalibration: started"));
 
-  // Start the watchdog and internal real-time clock
+  // Start the watchdog and real-time timer
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()
@@ -49,10 +49,10 @@ void loop()
     uint32_t t = us;
     uint32_t w = bark.time();
     while (w == bark.time()) yield();
-    uint32_t start = RTC::micros();
+    uint32_t start = RTT::micros();
     w = bark.time();
     while (w == bark.time()) yield();
-    uint32_t stop = RTC::micros();
+    uint32_t stop = RTT::micros();
     us = stop - start;
     int32_t diff = t - us;
     if (diff < 0) diff = -diff;

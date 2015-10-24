@@ -30,7 +30,7 @@
 
 #include <Nucleo.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -88,7 +88,7 @@ void setup()
 
   // Start timers
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Start threads
   Nucleo::Thread::begin(&consumer, 64);

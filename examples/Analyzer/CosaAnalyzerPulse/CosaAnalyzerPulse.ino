@@ -34,22 +34,22 @@
  */
 
 #include "Cosa/Job.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-// Use the RTC or Watchdog Job Scheduler
-// #define USE_RTC
+// Use the RTT or Watchdog Job Scheduler
+// #define USE_RTT
 #define USE_WATCHDOG
 
 // Call directly from interrupt service routine
 // #define USE_ISR_DISPATCH
 
-#if defined(USE_RTC)
-#define TIMER RTC
+#if defined(USE_RTT)
+#define TIMER RTT
 #define SCALE(x) (x) * 1000UL
 #endif
 
@@ -115,8 +115,8 @@ void setup()
   trace << PSTR("CHAN0 - D13 [^]") << endl;
   trace << PSTR("CHAN1 - D12") << endl;
   trace << PSTR("CHAN2 - D11") << endl;
-#if defined(USE_RTC)
-  trace << PSTR("RTC Job Scheduler") << endl;
+#if defined(USE_RTT)
+  trace << PSTR("RTT Job Scheduler") << endl;
 #endif
 #if defined(USE_WATCHDOG)
   trace << PSTR("Watchdog Job Scheduler") << endl;
@@ -133,7 +133,7 @@ void setup()
   p2.start();
   p3.start();
 
-  // Start the timer (Watchdog: 13/5 mA, RTC: 13/7 mA)
+  // Start the timer (Watchdog: 13/5 mA, RTT: 13/7 mA)
   TIMER::begin();
   // Power::set(SLEEP_MODE_PWR_DOWN);
   Power::set(SLEEP_MODE_EXT_STANDBY);

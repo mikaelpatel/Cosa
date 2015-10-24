@@ -27,7 +27,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 S25FL127S flash;
 
@@ -36,7 +36,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaS25FL127S: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   TRACE(free_memory());
   TRACE(sizeof(flash));
 
@@ -58,9 +58,9 @@ void setup()
     addr += 1;
   }
   data >>= 1;
-  uint32_t start = RTC::micros();
+  uint32_t start = RTT::micros();
   res = flash.write(addr, &data, sizeof(data));
-  uint32_t us = RTC::micros() - start;
+  uint32_t us = RTT::micros() - start;
   ASSERT(flash.is_ready());
   ASSERT(res == sizeof(data));
   trace << PSTR("write: dest = ") << hex << addr
@@ -74,9 +74,9 @@ void setup()
   addr = 128;
   uint8_t buf[512];
   memset(buf, 0xa5, sizeof(buf));
-  start = RTC::micros();
+  start = RTT::micros();
   res = flash.write(addr, buf, sizeof(buf));
-  us = RTC::micros() - start;
+  us = RTT::micros() - start;
   ASSERT(res == sizeof(buf));
   trace << PSTR("write: dest = ") << hex << addr
 	<< PSTR(", bytes = ") << sizeof(buf)
@@ -86,7 +86,7 @@ void setup()
   sleep(5);
 
   // Locate end of file in first sector; binary search
-  start = RTC::micros();
+  start = RTT::micros();
   uint16_t bit = 0x8000;
   uint32_t last = 0L;
   do {
@@ -96,7 +96,7 @@ void setup()
     if (data != 0xff) last |= bit;
     bit >>= 1;
   } while (bit != 0);
-  us = RTC::micros() - start;
+  us = RTT::micros() - start;
   ASSERT(res == sizeof(data));
   ASSERT(flash.read(&data, last, sizeof(data)) == sizeof(data));
   trace << PSTR("bsearch: last = ") << hex << last
@@ -108,7 +108,7 @@ void setup()
   sleep(5);
 
   // Locate end of file in first sector; reverse search
-  start = RTC::micros();
+  start = RTT::micros();
   last = 0x10000L;
   for (uint8_t i = 0; i < 128; i++) {
     last -= sizeof(buf);
@@ -120,7 +120,7 @@ void setup()
     last += j;
     break;
   }
-  us = RTC::micros() - start;
+  us = RTT::micros() - start;
   ASSERT(res == sizeof(buf));
   ASSERT(flash.read(&data, last, sizeof(data)) == sizeof(data));
   trace << PSTR("rsearch: last = ") << hex << last
@@ -142,9 +142,9 @@ void loop()
   // Read a block from the flash; measure time
   uint8_t buf[512];
   static uint32_t src = 0L;
-  uint32_t start = RTC::micros();
+  uint32_t start = RTT::micros();
   int res = flash.read(buf, src, sizeof(buf));
-  uint32_t us = RTC::micros() - start;
+  uint32_t us = RTT::micros() - start;
   ASSERT(res == sizeof(buf));
   trace << PSTR("read: src = ") << hex << src
 	<< PSTR(", bytes = ") << sizeof(buf)

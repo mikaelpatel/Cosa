@@ -23,7 +23,7 @@
 
 #include "Cosa/PinChangeInterrupt.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -60,7 +60,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaPinChangeInterrupt: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   PinChangeInterrupt::begin();
   pin.enable();
 }
@@ -69,7 +69,7 @@ void loop()
 {
   periodic(timer, 1000) {
     uint16_t count = pin.count();
-    trace << RTC::millis() << ':' << count << endl;
+    trace << RTT::millis() << ':' << count << endl;
     trace.flush();
     pin.reset();
   }

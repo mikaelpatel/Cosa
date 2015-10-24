@@ -32,7 +32,7 @@
  */
 
 #include "Cosa/Job.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
@@ -76,8 +76,8 @@ private:
   Work* m_chain;
 };
 
-// Use the real-time clock scheduler (micro-seconds)
-RTC::Scheduler scheduler;
+// Use the real-time job scheduler (micro-seconds)
+RTT::Scheduler scheduler;
 
 // Forward declare for cyclic reference
 extern Work w0;
@@ -104,7 +104,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaAnalyzerJob: started"));
   trace << PSTR("CHAN0 - D13 [^]") << endl;
   trace << PSTR("CHAN1 - D12") << endl;
-  trace << PSTR("RTC Job Scheduler") << endl;
+  trace << PSTR("RTT Job Scheduler") << endl;
 #if defined(USE_ISR_DISPATCH)
   trace << PSTR("ISR dispatch") << endl;
 #else
@@ -120,7 +120,7 @@ void setup()
   w1.start();
 
   // Use timer based low power sleep (9.2/3.2 mA)
-  RTC::begin();
+  RTT::begin();
   Power::set(SLEEP_MODE_EXT_STANDBY);
 }
 

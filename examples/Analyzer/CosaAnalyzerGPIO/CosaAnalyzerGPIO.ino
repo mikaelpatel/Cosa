@@ -36,15 +36,15 @@
 
 #include "Cosa/GPIO.hh"
 #include "Cosa/Math.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // Low power sleep (Arduino Pro-Micro with Power LED removed)
-// Baseline: 13.6 mA, RTC: 1.5 mA, Watchdog: 250 uA
-#define USE_RTC
+// Baseline: 13.6 mA, RTT: 1.5 mA, Watchdog: 250 uA
+#define USE_RTT
 // #define USE_WATCHDOG
 
 GPIO outPin(Board::D12, GPIO::OUTPUT_MODE);
@@ -64,12 +64,12 @@ void setup()
   trace << PSTR("CHAN3 - D10 (clock)") << endl;
 
   // Use timer based low power sleep
-#if defined(USE_RTC)
-  // RTC(1000 us): 1.5 mA
-  trace << PSTR("RTC delay with extended standby sleep mode") << endl;
+#if defined(USE_RTT)
+  // RTT(1000 us): 1.5 mA
+  trace << PSTR("RTT delay with extended standby sleep mode") << endl;
   trace.flush();
   Power::set(SLEEP_MODE_EXT_STANDBY);
-  RTC::begin();
+  RTT::begin();
 #elif defined(USE_WATCHDOG)
   // Watchdog(128 ms): 200 uA
   trace << PSTR("Watchdog delay with power-down sleep mode") << endl;

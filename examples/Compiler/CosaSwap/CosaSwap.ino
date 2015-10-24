@@ -21,7 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
@@ -29,7 +29,7 @@ void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaSwap: started"));
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()

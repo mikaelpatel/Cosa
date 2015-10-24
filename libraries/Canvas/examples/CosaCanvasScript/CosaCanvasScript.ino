@@ -50,7 +50,7 @@
 #include "System5x7.hh"
 #include "FixedNums8x16.hh"
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
@@ -200,14 +200,14 @@ void setup()
 
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Benchmark the display start
   uint32_t start, stop, ms;
-  start = RTC::micros();
+  start = RTT::micros();
   tft.begin();
   tft.fill_screen();
-  stop = RTC::micros();
+  stop = RTT::micros();
   ms = (stop - start) / 1000L;
   INFO("begin: %ul ms", ms);
 
@@ -221,17 +221,17 @@ void loop()
   uint32_t start, stop, ms;
 
   // Run init script to display arduino icon and banner
-  start = RTC::micros();
+  start = RTT::micros();
   tft.run(0, table, membersof(table));
-  stop = RTC::micros();
+  stop = RTT::micros();
   ms = (stop - start) / 1000L;
   INFO("init script run: %ul ms", ms);
   sleep(2);
 
   // Run script/sub-script and measure execution time
-  start = RTC::micros();
+  start = RTT::micros();
   tft.run(2, table, membersof(table));
-  stop = RTC::micros();
+  stop = RTT::micros();
   ms = (stop - start) / 1000L;
   INFO("scipt run: %ul ms", ms);
   sleep(2);

@@ -61,7 +61,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
@@ -129,9 +129,9 @@ OutputPin pw(Board::D4);
 
 void setup()
 {
-  // Start watchdog and real-time clock
+  // Start watchdog and real-time timer
   Watchdog::begin(1024);
-  RTC::begin();
+  RTT::begin();
 
   // Start the wireless device
   rf.begin();

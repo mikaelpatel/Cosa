@@ -25,11 +25,11 @@
 #ifndef CFFS_COMMANDS_HH
 #define CFFS_COMMANDS_HH
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/IOStream.hh"
 
 extern Shell shell;
 extern IOStream ios;
-extern RTC::Clock clock;
+extern RTT::Clock clock;
 #endif
 

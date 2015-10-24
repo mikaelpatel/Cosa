@@ -33,7 +33,7 @@
 
 #include "Cosa/FSM.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -99,7 +99,7 @@ void setup()
 
   // Start the watchdog with default 16 ms ticks
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Bind the state machines to each other
   ping.bind(&pong);

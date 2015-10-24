@@ -1,5 +1,5 @@
 /**
- * @file Cosa/RTC_Config.hh
+ * @file Cosa/RTT_Config.hh
  * @version 1.0
  *
  * @section License
@@ -18,10 +18,10 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_RTC_CONFIG_HH
-#define COSA_RTC_CONFIG_HH
+#ifndef COSA_RTT_CONFIG_HH
+#define COSA_RTT_CONFIG_HH
 
-// RTC Timer Configuration
+// Real-Time Timer Configuration
 #define COUNT 250
 #define PRESCALE 64
 #define TIMER_MAX (COUNT - 1)
@@ -31,8 +31,8 @@
 #define US_DIRECT_EXPIRE (800 / I_CPU)
 #define US_TIMER_EXPIRE (US_PER_TICK - 1)
 
-// RTC Timer Registers. Use Timer2 if available to allow
-// low power mode with RTC running
+// Real-Time Timer Registers. Use Timer2 if available to keep
+// timer running in low power mode
 #if defined(TIMER2_COMPA_vect)
 #define timern_enable timer2_enable
 #define timern_disable timer2_disable

@@ -1,5 +1,5 @@
 /**
- * @file CosaBenchmarkRTC.ino
+ * @file CosaBenchmarkRTT.ino
  * @version 1.0
  *
  * @section License
@@ -16,9 +16,9 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Cosa RTC (Real-Time Clock) Benchmark. Measurement and validate RTC
+ * Cosa RTT (Real-Time Timer) Benchmark. Measurement and validate RTT
  * operations; micro- and milli-second. The benchmark shows the number
- * of micro-seconds required for access of the RTC values, how
+ * of micro-seconds required for access of the RTT values, how
  * accurate the DELAY macro and Watchdog delay is.
  *
  * @section Circuit
@@ -28,13 +28,13 @@
  */
 
 #include "Cosa/Clock.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-RTC::Clock clock;
+RTT::Clock clock;
 
 void setup()
 {
@@ -42,7 +42,7 @@ void setup()
 
   // Start the trace output stream on the serial port
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaBenchmarkRTC: started"));
+  trace.begin(&uart, PSTR("CosaBenchmarkRTT: started"));
 
   // Check amount of free memory
   TRACE(free_memory());
@@ -53,23 +53,23 @@ void setup()
 
   // Start the timers
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Check timer parameters
   TRACE(Watchdog::ms_per_tick());
-  TRACE(RTC::us_per_tick());
-  TRACE(RTC::us_per_timer_cycle());
-  TRACE(RTC::micros());
-  TRACE(RTC::millis());
+  TRACE(RTT::us_per_tick());
+  TRACE(RTT::us_per_timer_cycle());
+  TRACE(RTT::micros());
+  TRACE(RTT::millis());
   TRACE(clock.time());
 
   // Measure baseline
-  MEASURE("RTC::micros(): ", 1) RTC::micros();
-  MEASURE("RTC::millis(): ", 1) RTC::millis();
+  MEASURE("RTT::micros(): ", 1) RTT::micros();
+  MEASURE("RTT::millis(): ", 1) RTT::millis();
   MEASURE("clock.time(): ", 1) clock.time();
-  MEASURE("RTC::await(): ", 1) RTC::await();
-  MEASURE("RTC::delay(1): ", 1)  RTC::delay(1);
-  MEASURE("RTC::delay(10): ", 1) RTC::delay(10);
+  MEASURE("RTT::await(): ", 1) RTT::await();
+  MEASURE("RTT::delay(1): ", 1)  RTT::delay(1);
+  MEASURE("RTT::delay(10): ", 1) RTT::delay(10);
   MEASURE("Watchdog::await(): ", 1) Watchdog::await();
   MEASURE("Watchdog::delay(10): ", 1)  Watchdog::delay(10);
   MEASURE("Watchdog::delay(100): ", 1) Watchdog::delay(100);
@@ -81,23 +81,23 @@ void setup()
   MEASURE("yield(): ", 1) yield();
 
   // Start the measurement
-  TRACE(RTC::micros());
-  TRACE(RTC::millis());
+  TRACE(RTT::micros());
+  TRACE(RTT::millis());
   TRACE(clock.time());
   for (uint8_t i = 0; i < 5; i++) {
     Watchdog::delay(1000);
-    TRACE(RTC::micros());
-    TRACE(RTC::millis());
+    TRACE(RTT::micros());
+    TRACE(RTT::millis());
     TRACE(clock.time());
   }
   trace.flush();
 
-  // Measure and validate micro-second level (RTC)
+  // Measure and validate micro-second level (RTT)
   err = 0;
   for (uint32_t i = 0; i < 100000; i++) {
-    start = RTC::micros();
+    start = RTT::micros();
     DELAY(100);
-    stop = RTC::micros();
+    stop = RTT::micros();
     uint32_t diff = stop - start;
     if (diff > 136) {
       trace.printf(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
@@ -110,12 +110,12 @@ void setup()
   INFO("DELAY(100): 100000 measurement/validation (err = %ul)", err);
   trace.flush();
 
-  // Measure and validate milli-second level (RTC)
+  // Measure and validate milli-second level (RTT)
   err = 0;
   for (uint32_t i = 0; i < 100; i++) {
-    start = RTC::millis();
-    RTC::delay(100);
-    stop = RTC::millis();
+    start = RTT::millis();
+    RTT::delay(100);
+    stop = RTT::millis();
     uint32_t diff = stop - start;
     if (diff > 105) {
       trace.printf(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),
@@ -125,15 +125,15 @@ void setup()
     }
   }
   TRACE(clock.time());
-  INFO("RTC::delay(100): 100 measurement/validation (err = %ul)", err);
+  INFO("RTT::delay(100): 100 measurement/validation (err = %ul)", err);
   trace.flush();
 
   // Measure and validate milli-second level (Watchdog)
   err = 0;
   for (uint32_t i = 0; i < 100; i++) {
-    start = RTC::millis();
+    start = RTT::millis();
     Watchdog::delay(100);
-    stop = RTC::millis();
+    stop = RTT::millis();
     uint32_t diff = stop - start;
     if (diff > 128) {
       trace.printf(PSTR("%ul: start = %ul, stop = %ul, diff = %ul\n"),

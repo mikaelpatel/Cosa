@@ -31,7 +31,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 // Configuration; network and device addresses
 #define NETWORK 0xC05A
@@ -73,7 +73,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaWirelessTrace: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   rf.begin();
 }
 
@@ -89,7 +89,7 @@ void loop()
 
   // Receive message
   int count = rf.recv(src, port, msg, sizeof(msg), TIMEOUT);
-  uint32_t stop = RTC::millis();
+  uint32_t stop = RTT::millis();
 
   // Print prefix with message number, delta time
   trace << nr << ':' << stop - start;

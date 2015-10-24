@@ -19,7 +19,7 @@
  */
 
 #include "Touch.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 Touch::Touch(Job::Scheduler* scheduler, Board::DigitalPin pin, uint16_t threshold) :
   IOPin(pin),
@@ -50,7 +50,7 @@ Touch::run()
 
   // Was the pin discharge during the sampling period
   if (state) {
-    m_start = RTC::millis();
+    m_start = RTT::millis();
     if (!m_touched) {
       on_touch();
       m_touched = true;
@@ -59,7 +59,7 @@ Touch::run()
   }
 
   // The pin was discharge; low-pass filter pin change
-  if (m_touched && (RTC::since(m_start) > THRESHOLD)) {
+  if (m_touched && (RTT::since(m_start) > THRESHOLD)) {
     m_touched = false;
   }
 }

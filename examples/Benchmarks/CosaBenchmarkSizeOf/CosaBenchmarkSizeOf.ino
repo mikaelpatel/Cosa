@@ -69,7 +69,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Queue.hh"
 #include "Cosa/Resource.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Socket.hh"
 #include "Cosa/SPI.hh"
 #include "Cosa/String.hh"
@@ -138,9 +138,9 @@ void setup()
   TRACE(sizeof(PWMPin));
   TRACE(sizeof(Queue<Event,16>));
   TRACE(sizeof(Resource));
-  TRACE(sizeof(RTC));
-  TRACE(sizeof(RTC::Scheduler));
-  TRACE(sizeof(RTC::Clock));
+  TRACE(sizeof(RTT));
+  TRACE(sizeof(RTT::Scheduler));
+  TRACE(sizeof(RTT::Clock));
   TRACE(sizeof(Serial));
   TRACE(sizeof(Socket));
   TRACE(sizeof(SPI::Driver));

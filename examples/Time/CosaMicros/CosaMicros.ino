@@ -22,7 +22,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
@@ -51,19 +51,19 @@ void setup()
   TRACE(UINT_MAX);
   TRACE(US);
   trace.flush();
-  RTC::begin();
-  RTC::micros(START);
-  RTC::micros();
+  RTT::begin();
+  RTT::micros(START);
+  RTT::micros();
 }
 
 void loop()
 {
   ASSERT(US < UINT_MAX);
-  UINT_T start = RTC::micros();
+  UINT_T start = RTT::micros();
   DELAY(US);
-  UINT_T stop = RTC::micros();
+  UINT_T stop = RTT::micros();
   UINT_T diff = (stop - start);
-  trace << RTC::micros() << ':' << stop<< '-' << start << ':' << diff << endl;
+  trace << RTT::micros() << ':' << stop<< '-' << start << ':' << diff << endl;
   delay(2000);
 }
 

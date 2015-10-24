@@ -1,5 +1,5 @@
 /**
- * @file Cosa/RTC.cpp
+ * @file Cosa/RTT.cpp
  * @version 1.0
  *
  * @section License
@@ -18,29 +18,29 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
-#include "Cosa/RTC_Config.hh"
+#include "Cosa/RTT.hh"
+#include "Cosa/RTT_Config.hh"
 
 // Initiated state
-bool RTC::s_initiated = false;
+bool RTT::s_initiated = false;
 
 // Micro-seconds counter (fraction in timer register)
-uint32_t RTC::s_micros = 0UL;
+uint32_t RTT::s_micros = 0UL;
 
 // Milli-seconds counter
-uint32_t RTC::s_millis = 0UL;
+uint32_t RTT::s_millis = 0UL;
 
 // Job scheduler
-RTC::Scheduler* RTC::s_scheduler = NULL;
+RTT::Scheduler* RTT::s_scheduler = NULL;
 
-// RTC alarm clock
-RTC::Clock* RTC::s_clock = NULL;
+// RTT alarm clock
+RTT::Clock* RTT::s_clock = NULL;
 
 // Timer job
-Job* RTC::s_job = NULL;
+Job* RTT::s_job = NULL;
 
 bool
-RTC::begin()
+RTT::begin()
 {
   // Should not be already initiated
   if (UNLIKELY(s_initiated)) return (false);
@@ -63,13 +63,13 @@ RTC::begin()
   }
 
   // Install delay function and mark as initiated
-  ::delay = RTC::delay;
+  ::delay = RTT::delay;
   s_initiated = true;
   return (true);
 }
 
 bool
-RTC::end()
+RTT::end()
 {
   // Check if initiated
   if (UNLIKELY(!s_initiated)) return (false);
@@ -88,19 +88,19 @@ RTC::end()
 }
 
 uint16_t
-RTC::us_per_tick()
+RTT::us_per_tick()
 {
   return (US_PER_TICK);
 }
 
 uint16_t
-RTC::us_per_timer_cycle()
+RTT::us_per_timer_cycle()
 {
   return (US_PER_TIMER_CYCLE);
 }
 
 uint32_t
-RTC::micros()
+RTT::micros()
 {
   uint32_t res;
   uint8_t cnt;
@@ -118,7 +118,7 @@ RTC::micros()
 }
 
 uint32_t
-RTC::millis()
+RTT::millis()
 {
   uint32_t res;
   uint8_t cnt;
@@ -133,28 +133,28 @@ RTC::millis()
 }
 
 void
-RTC::delay(uint32_t ms)
+RTT::delay(uint32_t ms)
 {
-  uint32_t start = RTC::millis();
+  uint32_t start = RTT::millis();
   ms += 1;
-  while (RTC::since(start) < ms) yield();
+  while (RTT::since(start) < ms) yield();
 }
 
 ISR(TIMERn_COMPA_vect)
 {
   // Increment micro-seconds counter (fraction in timer)
-  RTC::s_micros += US_PER_TICK;
+  RTT::s_micros += US_PER_TICK;
 
   // Increment milli-seconds counter
-  RTC::s_millis += MS_PER_TICK;
+  RTT::s_millis += MS_PER_TICK;
 
   // Dispatch expired jobs
-  if ((RTC::s_scheduler != NULL) && (RTC::s_job == NULL))
-    RTC::s_scheduler->dispatch();
+  if ((RTT::s_scheduler != NULL) && (RTT::s_job == NULL))
+    RTT::s_scheduler->dispatch();
 
   // Clock tick and dispatch expired jobs
-  if (RTC::s_clock != NULL)
-    RTC::s_clock->tick(MS_PER_TICK);
+  if (RTT::s_clock != NULL)
+    RTT::s_clock->tick(MS_PER_TICK);
 }
 
 ISR(TIMERn_COMPB_vect)
@@ -163,8 +163,8 @@ ISR(TIMERn_COMPB_vect)
   TIMSKn &= ~_BV(OCIE0B);
 
   // Dispatch expired jobs
-  RTC::s_job = NULL;
-  if (RTC::s_scheduler != NULL)
-    RTC::s_scheduler->dispatch();
+  RTT::s_job = NULL;
+  if (RTT::s_scheduler != NULL)
+    RTT::s_scheduler->dispatch();
 }
 

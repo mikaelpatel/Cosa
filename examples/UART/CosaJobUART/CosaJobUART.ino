@@ -21,7 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Job.hh"
 #include "Cosa/Serial.hh"
 #include "Cosa/Periodic.hh"
@@ -120,7 +120,7 @@ UART::on_expired()
 
 };
 
-RTC::Scheduler scheduler;
+RTT::Scheduler scheduler;
 IOBuffer<32> obuf;
 Soft::UART serial(&scheduler, Board::D8, &obuf);
 
@@ -128,7 +128,7 @@ void setup()
 {
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaJobUART: started"));
-  RTC::begin();
+  RTT::begin();
   serial.begin(11000);
 }
 

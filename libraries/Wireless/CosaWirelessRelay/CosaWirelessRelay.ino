@@ -28,7 +28,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 #include <OWI.h>
 #include <DS18B20.h>
@@ -76,7 +76,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaWirelessRelay: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   rf.begin();
 }
 

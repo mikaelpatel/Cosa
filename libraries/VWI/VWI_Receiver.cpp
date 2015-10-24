@@ -21,7 +21,7 @@
  */
 
 #include "VWI.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Power.hh"
 #include <util/crc16.h>
 
@@ -121,10 +121,10 @@ VWI::Receiver::recv(uint8_t& src, uint8_t& port,
 		    uint32_t ms)
 {
   // Wait until a valid message is available or timeout
-  uint32_t start = RTC::millis();
+  uint32_t start = RTT::millis();
   header_t* hp = (header_t*) (m_buffer + 1);
   do {
-    while (!m_done && (ms == 0 || (RTC::since(start) < ms))) yield();
+    while (!m_done && (ms == 0 || (RTT::since(start) < ms))) yield();
     if (!m_done) return (ETIME);
 
     // Check the crc and the network and device destination address
@@ -155,7 +155,7 @@ VWI::Receiver::recv(uint8_t& src, uint8_t& port,
 int
 VWI::Receiver::get_link_quality_indicator()
 {
-  uint32_t start = RTC::millis();
+  uint32_t start = RTT::millis();
   while (is_clear());
-  return (RTC::millis() - start);
+  return (RTT::millis() - start);
 }

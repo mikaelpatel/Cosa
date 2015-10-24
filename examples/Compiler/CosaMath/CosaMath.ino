@@ -22,7 +22,7 @@
  */
 
 #include "Cosa/Math.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -32,7 +32,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaMath: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()

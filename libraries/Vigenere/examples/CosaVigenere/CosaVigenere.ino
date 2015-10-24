@@ -26,7 +26,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 #include "Cosa/Memory.h"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 
 static const char msg[] __PROGMEM =
 "The Vigenere cipher is a method of encrypting alphabetic text by\n"
@@ -49,7 +49,7 @@ static const char msg[] __PROGMEM =
 
 void setup()
 {
-  RTC::begin();
+  RTT::begin();
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaVigenere: started"));
 
@@ -63,10 +63,10 @@ void setup()
   char c;
   const char* s = msg;
   uint8_t sum = 0;
-  uint32_t start = RTC::micros();
+  uint32_t start = RTT::micros();
   while ((c = pgm_read_byte(s++)) != 0)
     sum += c;
-  uint32_t base = RTC::micros() - start;
+  uint32_t base = RTT::micros() - start;
   TRACE(base);
   TRACE(sum);
   char key[] = "QUEENLY";
@@ -74,10 +74,10 @@ void setup()
   TRACE(sizeof(sender));
   s = msg;
   sum = 0;
-  start = RTC::micros();
+  start = RTT::micros();
   while ((c = pgm_read_byte(s++)) != 0)
     sum += sender.encrypt(c);
-  uint32_t us = RTC::micros() - start - base;
+  uint32_t us = RTT::micros() - start - base;
   uint16_t len = strlen_P(msg);
   trace << len << PSTR(" bytes, ")
 	<< us << PSTR(" us (")

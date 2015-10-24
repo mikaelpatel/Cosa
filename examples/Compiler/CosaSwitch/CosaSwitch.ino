@@ -21,7 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
@@ -151,7 +151,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaSwitch: started"));
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 }
 
 void loop()
@@ -171,22 +171,22 @@ void loop()
     TRACE(switch_fn(op));
   sleep(1);
 
-  start = RTC::micros();
+  start = RTT::micros();
   res = 0;
   for (int i = 0; i < 1000; i++)
     for (uint8_t op = OP_ADD; op <= OP_EXIT; op++)
       res += switch_fn(op);
-  stop = RTC::micros();
+  stop = RTT::micros();
   us = stop - start;
   TRACE(res);
   TRACE(us);
   sleep(1);
 
-  start = RTC::micros();
+  start = RTT::micros();
   for (int i = 0; i < 10000; i++)
     for (uint8_t op = OP_LOAD; op <= OP_EXIT; op++)
       res += switch_fn(op);
-  stop = RTC::micros();
+  stop = RTT::micros();
   us = stop - start;
   TRACE(res);
   TRACE(us);
@@ -199,22 +199,22 @@ void loop()
     TRACE(goto_fn(op));
   sleep(1);
 
-  start = RTC::micros();
+  start = RTT::micros();
   res = 0;
   for (int i = 0; i < 1000; i++)
     for (uint8_t op = OP_ADD; op <= OP_EXIT; op++)
       res += goto_fn(op);
-  stop = RTC::micros();
+  stop = RTT::micros();
   us = stop - start;
   TRACE(res);
   TRACE(us);
   sleep(1);
 
-  start = RTC::micros();
+  start = RTT::micros();
   for (int i = 0; i < 10000; i++)
     for (uint8_t op = OP_LOAD; op <= OP_EXIT; op++)
       res += goto_fn(op);
-  stop = RTC::micros();
+  stop = RTT::micros();
   us = stop - start;
   TRACE(res);
   TRACE(us);

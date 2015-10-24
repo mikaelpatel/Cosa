@@ -23,7 +23,7 @@
 
 #include "Cosa/Clock.hh"
 #include "Cosa/Time.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
@@ -66,12 +66,12 @@ HD44780 lcd(&port);
 IOStream cout(&lcd);
 
 // Start time (set to 30 seconds before New Years 2014)
-RTC::Clock wall;
+RTT::Clock wall;
 clock_t epoch;
 
 void setup()
 {
-  RTC::begin();
+  RTT::begin();
   Watchdog::begin();
   lcd.begin();
   cout << PSTR("CosaTimeLCD: started");
@@ -91,7 +91,7 @@ void setup()
 
 void loop()
 {
-  // Read internal RTC time
+  // Read internal RTT time
   clock_t clock = wall.time();
   time_t now(clock);
   now.to_bcd();

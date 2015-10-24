@@ -25,12 +25,12 @@
 
 #include "Cosa/Clock.hh"
 #include "Cosa/Time.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
 #include "Cosa/IOStream/Driver/UART.hh"
 
-RTC::Clock wall;
+RTT::Clock wall;
 IOStream cout(&uart);
 clock_t start_time;
 
@@ -89,17 +89,17 @@ static bool check(time_t &now,
 
   // Get some timings
   cout.flush();
-  uint32_t us = RTC::micros();
+  uint32_t us = RTT::micros();
   clock_t c;
   for (uint16_t i = 0; i < imax; i++) c = now;
-  uint32_t elapsed_us = RTC::micros() - us;
+  uint32_t elapsed_us = RTT::micros() - us;
   cout << PSTR(", to/from in ") << elapsed_us/imax << PSTR("us/");
   cout.flush();
 
   time_t test;
-  us = RTC::micros();
+  us = RTT::micros();
   for (uint16_t i = 0; i < imax; i++) test = c;
-  elapsed_us = RTC::micros() - us;
+  elapsed_us = RTT::micros() - us;
   cout << elapsed_us/imax << PSTR("us");
 
   // Check the conversion back to time_t
@@ -155,7 +155,7 @@ static void show_epoch()
 
 void setup()
 {
-  RTC::begin();
+  RTT::begin();
   Watchdog::begin();
   uart.begin(9600);
   cout << PSTR("CosaTime: started") << endl;
@@ -242,7 +242,7 @@ void setup()
   check(this_year, days*SECONDS_PER_DAY, true, (time_t::epoch_weekday+days-1)%7 + 1, days);
   cout << endl;
 
-  // Set the RTC to a start time
+  // Set the RTT to a start time
   time_t now(0);
   now.seconds = 45;
   now.minutes = 59;
@@ -250,7 +250,7 @@ void setup()
   now.date = 31;
   now.month = 12;
   start_time = now;
-  cout << PSTR("Setting RTC to ") << now
+  cout << PSTR("Setting RTT to ") << now
        << PSTR(" (") << start_time << PSTR(" seconds)")
        << endl;
   wall.time(start_time);
@@ -258,7 +258,7 @@ void setup()
 
 void loop()
 {
-  // Read internal RTC time and create time for time zones
+  // Read internal RTT time and create time for time zones
   clock_t clock = wall.time();
   time_t se(clock, 2);
   time_t utc(clock);

@@ -26,7 +26,7 @@
 
 #include "Cosa/InputPin.hh"
 #include "Cosa/AnalogPin.hh"
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/IOStream/Driver/WIO.hh"
@@ -79,7 +79,7 @@ void setup()
 {
   trace.begin(&wio);
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   rf.begin();
   rf.powerup();
   trace << PSTR("WIO: connected") << endl << flush;
