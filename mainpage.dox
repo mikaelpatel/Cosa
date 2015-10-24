@@ -4,7 +4,7 @@ Cosa is an object-oriented platform for Arduino. It replaces the Arduino
 and Wiring library with a large set of integrated classes that support
 the full range of AVR/ATmega/ATtiny internal hardware modules; all pin
 modes, Digital, and Analog Pins, External and Pin Change Interrupts,
-Analog Comparator, PWM, Watchdog, Timer0 (RTC), Timer1 (Servo/Tone),
+Analog Comparator, PWM, Watchdog, Timer0/Timer2 (RTT), Timer1 (Servo/Tone),
 UART, USI, SPI, TWI and EEPROM.
 
 Cosa is implemented as an Arduino IDE core. The Cosa platform can be
@@ -289,8 +289,8 @@ Template class for ring-buffer for queueing data elements.
 @section Resource
 Abstract Resource Handler; secure acquire and release of resources.
 
-@section RTC
-Timer-based Real-Time Clock (micro/milli-second).
+@section RTT
+Real-Time Timer (micro/milli-second).
 
 @section Serial
 Abstract Serial IOStream device class.
@@ -309,9 +309,6 @@ String handling class.
 
 @section Time
 Common date/time structure for real-time clocks.
-
-@section Timer
-RTC interrupt timer handler.
 
 @section Tone
 Tone/Note generator.
