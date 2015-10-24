@@ -78,7 +78,7 @@ void setup()
   Watchdog::begin();
   RTC::begin();
   ASSERT(rf.begin());
-  rf.set_output_power_level(-18);
+  rf.output_power_level(-18);
 }
 
 // Message from the device; message string

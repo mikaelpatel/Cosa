@@ -61,9 +61,9 @@ public:
     blueLedPin(blueLedPinNr, 1)
   {}
 
-  str_P get_state_str_P()
+  str_P state_str_P()
   {
-    StateHandler fn = get_state();
+    StateHandler fn = state();
     if (fn == redState)
       return PSTR("red");
     if (fn == yellowState)
@@ -87,7 +87,7 @@ public:
     UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->blueLedPin.toggle();
-    fsm->set_state(yellowState);
+    fsm->state(yellowState);
     return (1);
   }
 
@@ -96,7 +96,7 @@ public:
     UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->greenLedPin.toggle();
-    fsm->set_state(greenState);
+    fsm->state(greenState);
     return (1);
   }
 
@@ -105,7 +105,7 @@ public:
     UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->redLedPin.toggle();
-    fsm->set_state(cyanState);
+    fsm->state(cyanState);
     return (1);
   }
 
@@ -114,7 +114,7 @@ public:
     UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->blueLedPin.toggle();
-    fsm->set_state(blueState);
+    fsm->state(blueState);
     return (1);
   }
 
@@ -123,7 +123,7 @@ public:
     UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->greenLedPin.toggle();
-    fsm->set_state(magentaState);
+    fsm->state(magentaState);
     return (1);
   }
 
@@ -132,7 +132,7 @@ public:
     UNUSED(type);
     BlinkRGB* rgb = (BlinkRGB*) fsm;
     rgb->redLedPin.toggle();
-    fsm->set_state(redState);
+    fsm->state(redState);
     return (1);
   }
 
@@ -170,15 +170,15 @@ void loop()
   Event::queue.await(&event);
 
   // Print the event target and current state
-  BlinkRGB* led = (BlinkRGB*) event.get_target();
+  BlinkRGB* led = (BlinkRGB*) event.target();
   trace << Watchdog::millis()
 	<< PSTR(":FSM@") << led
-	<< PSTR(",state=(") << led->get_state_str_P();
+	<< PSTR(",state=(") << led->state_str_P();
 
   // Dispatch the event and state transition
   event.dispatch();
 
   // Print the new state
-  trace << PSTR(")=>(") << led->get_state_str_P() << PSTR(")") << endl;
+  trace << PSTR(")=>(") << led->state_str_P() << PSTR(")") << endl;
 }
 

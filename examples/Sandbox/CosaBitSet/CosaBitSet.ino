@@ -48,7 +48,7 @@ void setup()
   TRACE(sizeof(a));
 
   // Check that the bitset is empty
-  ASSERT(b.isempty());
+  ASSERT(b.is_empty());
   ASSERT(a == b);
 
   // Add and remove elements
@@ -83,7 +83,7 @@ void setup()
   b -= a;
   b -= 67;
   trace << PSTR("B2:") << b << endl;
-  ASSERT(b.isempty());
+  ASSERT(b.is_empty());
   for (uint16_t i = 4; i < b.members(); i += 5)
     b += i;
   trace << PSTR("B3:") << b << endl;

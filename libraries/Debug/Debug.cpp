@@ -35,7 +35,7 @@ Debug::begin(IOStream::Device* dev,
   DATAEND =(int) &__heap_start;
   DATASIZE = DATAEND - RAMSTART;
 
-  set_device(dev);
+  device(dev);
   print(PSTR("Cosa/Debug 1.0 Copyright (C) 2015\nDebug::begin:"));
   run(file, line, func);
   return (true);
@@ -77,7 +77,7 @@ bool
 Debug::end()
 {
   if (m_dev == NULL) return (false);
-  set_device(NULL);
+  device(NULL);
   return (true);
 }
 

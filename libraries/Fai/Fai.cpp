@@ -71,7 +71,7 @@ void
 Fai::write(Pin* pin)
 {
   digital_pin_t dgl;
-  dgl.pin = pin->get_pin();
+  dgl.pin = pin->pin();
   dgl.value = pin->is_set();
   Ciao::write(&Descriptor::digital_pin_t, &dgl, 1);
 }
@@ -80,7 +80,7 @@ void
 Fai::write(AnalogPin* pin)
 {
   analog_pin_t ang;
-  ang.pin = pin->get_pin();
-  ang.value = pin->get_value();
+  ang.pin = pin->pin();
+  ang.value = pin->value();
   Ciao::write(&Descriptor::analog_pin_t, &ang, 1);
 }

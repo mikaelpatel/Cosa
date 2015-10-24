@@ -57,7 +57,7 @@ Actor::recv(uint32_t ms)
 	 ((ms == 0L) || (Watchdog::since(start) < ms)))
     yield();
   if (m_queue.is_empty()) return (ETIME);
-  m_client = (Actor*) m_queue.get_succ();
+  m_client = (Actor*) m_queue.succ();
   va_list args = m_client->m_args;
   int op = va_arg(args, int);
   m_client->m_res = on_recv(op, args);

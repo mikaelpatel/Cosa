@@ -145,8 +145,8 @@ public:
       TWI::Slave(addr),
       m_lcd(lcd)
     {
-      set_write_buf(m_buf, sizeof(m_buf));
-      set_read_buf(m_buf, sizeof(m_buf));
+      write_buf(m_buf, sizeof(m_buf));
+      read_buf(m_buf, sizeof(m_buf));
     }
 
     /**

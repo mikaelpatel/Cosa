@@ -149,7 +149,7 @@ void loop()
   // Check if the led should be on and the pwm level updated
   if (onoffPin.is_set()) {
     ledPin.set(value, 0, 1023);
-    INFO("duty = %d", ledPin.get_duty());
+    INFO("duty = %d", ledPin.duty());
 
     // Print the interrupt counters
     TRACE(extPin.get_counter());

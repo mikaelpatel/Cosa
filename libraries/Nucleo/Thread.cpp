@@ -74,12 +74,12 @@ Thread::run()
   Thread* thread;
   if (!s_delayed.is_empty()) {
     uint32_t now = Watchdog::millis();
-    while ((thread = (Thread*) s_delayed.get_succ()) != (Thread*) &s_delayed) {
+    while ((thread = (Thread*) s_delayed.succ()) != (Thread*) &s_delayed) {
       if (thread->m_expires > now) break;
       this->attach(thread);
     }
   }
-  thread = (Thread*) get_succ();
+  thread = (Thread*) succ();
   if (thread != this)
     resume(thread);
   else
@@ -98,7 +98,7 @@ void
 Thread::enqueue(Head* queue, Thread* thread)
 {
   if (thread == NULL)
-    thread = (Thread*) get_succ();
+    thread = (Thread*) succ();
   queue->attach(this);
   resume(thread);
 }
@@ -107,13 +107,13 @@ void
 Thread::dequeue(Head* queue, bool flag)
 {
   if (UNLIKELY(queue->is_empty())) return;
-  Thread* thread = (Thread*) queue->get_succ();
+  Thread* thread = (Thread*) queue->succ();
   if (flag) {
     attach(thread);
     resume(thread);
   }
   else {
-    get_succ()->attach(thread);
+    succ()->attach(thread);
   }
 }
 
@@ -121,10 +121,10 @@ void
 Thread::delay(uint32_t ms)
 {
   m_expires = Watchdog::millis() + ms;
-  Thread* thread = (Thread*) s_delayed.get_succ();
+  Thread* thread = (Thread*) s_delayed.succ();
   while (thread != (Thread*) &s_delayed) {
     if (thread->m_expires > m_expires) break;
-    thread = (Thread*) thread->get_succ();
+    thread = (Thread*) thread->succ();
   }
   enqueue((Head*) thread);
 }

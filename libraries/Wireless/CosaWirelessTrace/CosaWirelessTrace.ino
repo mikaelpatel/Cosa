@@ -112,7 +112,7 @@ void loop()
 
   // Print source, destination, port, and length of message
   trace << PSTR(":src=") << src
-	<< PSTR(",dest=") << (rf.is_broadcast() ? 0 : rf.get_device_address())
+	<< PSTR(",dest=") << (rf.is_broadcast() ? 0 : rf.device_address())
 	<< PSTR(",port=") << port
 	<< PSTR(",msg[") << count << PSTR("]=");
 

@@ -103,7 +103,7 @@ public:
   {
     trace << Watchdog::millis()
 	  << PSTR(":A0:") << sampler.count()
-	  << PSTR(" = ") << sampler.get_value()
+	  << PSTR(" = ") << sampler.value()
 	  << PSTR(":Vcc  = ") << lowPower.vcc()
 	  << endl;
   }

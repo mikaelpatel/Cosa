@@ -76,11 +76,11 @@ void setup()
 #ifdef RTC_SET_TIME
   time_t now;
   now.seconds = 0x00;
-  now.minutes = 0x00;
-  now.hours = 0x12;
-  now.day = 0x01;
-  now.date = 0x13;
-  now.month = 0x9;
+  now.minutes = 0x13;
+  now.hours = 0x00;
+  now.day = 0x05;
+  now.date = 0x24;
+  now.month = 0x10;
   now.year = 0x15;
   ASSERT(rtc.set_time(now));
 #endif

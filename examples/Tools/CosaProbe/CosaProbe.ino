@@ -134,11 +134,11 @@ void loop()
   sleep(2);
 
   // Make a request (DHT)
-  probe.set_mode(IOPin::OUTPUT_MODE);
+  probe.mode(IOPin::OUTPUT_MODE);
   probe.clear();
   Watchdog::delay(32);
   probe.set();
-  probe.set_mode(IOPin::INPUT_MODE);
+  probe.mode(IOPin::INPUT_MODE);
   DELAY(40);
 
   // Wait for the response max 100 ms

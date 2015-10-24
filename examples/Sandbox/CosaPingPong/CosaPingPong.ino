@@ -74,7 +74,7 @@ private:
     UNUSED(type);
     Echo* echo = (Echo*) fsm;
     trace << PSTR("init ") << echo->m_name << endl;
-    fsm->set_state(listenState);
+    fsm->state(listenState);
     return (true);
   }
 
@@ -85,7 +85,7 @@ private:
     trace << echo->time() << ':' << echo->m_name
 	  << '(' << echo->m_count++ << ')'
 	  << endl;
-    fsm->set_state(echoState);
+    fsm->state(echoState);
     fsm->set_timer(500);
     return (true);
   }
@@ -95,7 +95,7 @@ private:
     UNUSED(type);
     Echo* echo = (Echo*) fsm;
     echo->m_port->send(Event::USER_TYPE);
-    fsm->set_state(listenState);
+    fsm->state(listenState);
     return (true);
   };
 };

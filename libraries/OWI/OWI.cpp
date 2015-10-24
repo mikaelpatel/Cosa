@@ -31,13 +31,13 @@ OWI::reset()
   uint8_t retry = 4;
   uint8_t res = 0;
   do {
-    set_mode(OUTPUT_MODE);
+    mode(OUTPUT_MODE);
     set();
     clear();
     DELAY(480);
     set();
     synchronized {
-      set_mode(INPUT_MODE);
+      mode(INPUT_MODE);
       DELAY(70);
       res = is_clear();
     }
@@ -54,11 +54,11 @@ OWI::read(uint8_t bits)
   uint8_t adjust = CHARBITS - bits;
   while (bits--) {
     synchronized {
-      set_mode(OUTPUT_MODE);
+      mode(OUTPUT_MODE);
       set();
       clear();
       DELAY(6);
-      set_mode(INPUT_MODE);
+      mode(INPUT_MODE);
       DELAY(9);
       res >>= 1;
       if (is_set()) {
@@ -90,7 +90,7 @@ void
 OWI::write(uint8_t value, uint8_t bits, bool power)
 {
   uint8_t mix = 0;
-  set_mode(OUTPUT_MODE);
+  mode(OUTPUT_MODE);
   set();
   while (bits--) {
     synchronized {

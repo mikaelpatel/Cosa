@@ -31,11 +31,15 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 //#define USE_SD_ADAPTER
-#define USE_ETHERNET_SHIELD
+#define USE_SD_DATA_LOGGING_SHIELD
+//#define USE_ETHERNET_SHIELD
 //#define USE_TFT_ST7735
 
 #if defined(WICKEDDEVICE_WILDFIRE) || defined(USE_SD_ADAPTER)
 SD sd;
+
+#elif defined(USE_SD_DATA_LOGGING_SHIELD)
+SD sd(Board::D10);
 
 #elif defined(USE_ETHERNET_SHIELD)
 SD sd(Board::D4);

@@ -35,7 +35,7 @@ Actor::send(uint8_t port, const void* buf, size_t size)
   sender->m_buf = buf;
 
   // And queue in sending. Resume receiver or next thread
-  Thread* thread = (m_receiving ? this : (Thread*) sender->get_succ());
+  Thread* thread = (m_receiving ? this : (Thread*) sender->succ());
   m_sending.attach(sender);
   sender->resume(thread);
   return (size);
@@ -51,7 +51,7 @@ Actor::recv(Actor*& sender, uint8_t& port, void* buf, size_t size)
   uint8_t key = lock();
   if (m_sending.is_empty()) {
     m_receiving = true;
-    Thread* thread = (Thread*) get_succ();
+    Thread* thread = (Thread*) succ();
     detach();
     unlock(key);
     resume(thread);
@@ -60,7 +60,7 @@ Actor::recv(Actor*& sender, uint8_t& port, void* buf, size_t size)
 
   // Copy sender message parameters
   int res = -2;
-  sender = (Actor*) m_sending.get_succ();
+  sender = (Actor*) m_sending.succ();
   port = sender->m_port;
   if (size >= sender->m_size) {
     memcpy(buf, sender->m_buf, sender->m_size);
@@ -69,7 +69,7 @@ Actor::recv(Actor*& sender, uint8_t& port, void* buf, size_t size)
   m_receiving = false;
 
   // Reschedule the sender
-  get_succ()->attach(sender);
+  succ()->attach(sender);
   unlock(key);
   return (res);
 }

@@ -49,9 +49,9 @@ ProtoThread::dispatch(bool flag)
     count += 1;
   }
   // Iterate once through the run queue and call all threads run method
-  Linkage* link = runq.get_succ();
+  Linkage* link = runq.succ();
   while (link != &runq) {
-    Linkage* succ = link->get_succ();
+    Linkage* succ = link->succ();
     ProtoThread* thread = (ProtoThread*) link;
     thread->m_state = RUNNING;
     thread->on_run(Event::RUN_TYPE, 0);

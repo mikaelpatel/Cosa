@@ -32,7 +32,7 @@
 
 void setup()
 {
-  OutputPin::set_mode(Board::LED);
+  OutputPin::mode(Board::LED);
 }
 
 void loop()

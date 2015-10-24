@@ -276,7 +276,7 @@ CC1101::wakeup_on_radio()
 }
 
 void
-CC1101::set_output_power_level(int8_t dBm)
+CC1101::output_power_level(int8_t dBm)
 {
   uint8_t pa = 0xC0;
   if      (dBm < -20) pa = 0x12;
@@ -295,7 +295,7 @@ CC1101::set_output_power_level(int8_t dBm)
 }
 
 int
-CC1101::get_input_power_level()
+CC1101::input_power_level()
 {
   int rssi = m_recv_status.rssi;
   return (((rssi < 128) ? rssi : rssi - 256) / 2 - 74);

@@ -47,26 +47,28 @@
 OutputPin ledPin(Board::LED);
 
 // The serial eeprom (sub-address 0b000) with binding to eeprom
-AT24C32 at24c32(0);
+AT24C32 at24c32(7);
 EEPROM eeprom(&at24c32);
 
 // Symbols for data stored in AT24CXX EEPROM memory address space
-int x[6] EEMEM;
-uint8_t y[300] EEMEM;
-float z EEMEM;
+namespace Persistant {
+  int x[6] EEMEM;
+  uint8_t y[300] EEMEM;
+  float z EEMEM;
+};
 
 void init_eeprom()
 {
-  int x0[membersof(x)];
-  for (uint8_t i = 0; i < membersof(x0); i++) x0[i] = i;
-  eeprom.write(x, x0, sizeof(x));
+  int x[membersof(Persistant::x)];
+  for (uint8_t i = 0; i < membersof(x); i++) x[i] = i;
+  TRACE(eeprom.write(Persistant::x, x, sizeof(x)));
 
-  uint8_t y0[sizeof(y)];
-  memset(y0, 0, sizeof(y));
-  eeprom.write(y, y0, sizeof(y));
+  uint8_t y[sizeof(Persistant::y)];
+  memset(y, 0, sizeof(y));
+  TRACE(eeprom.write(Persistant::y, y, sizeof(y)));
 
-  float z0 = 1.0;
-  eeprom.write(&z, z0);
+  float z = 1.0;
+  TRACE(eeprom.write(&Persistant::z, z));
 }
 
 void setup()
@@ -78,39 +80,43 @@ void setup()
   // Start the watchdog with default timeout (16 ms)
   Watchdog::begin();
 
-  // Initiate EEPROM variables
+  // Initiate Persistant variables
   init_eeprom();
 }
 
 void loop()
 {
-  sleep(2);
-  ledPin.toggle();
-
   // Buffer for update loop
-  uint8_t buffer[sizeof(y)];
+  uint8_t buffer[sizeof(Persistant::y)];
   memset(buffer, 0, sizeof(buffer));
+  ledPin.toggle();
 
   // Read x and print contents
-  eeprom.read(buffer, &x, sizeof(x));
-  trace.print(buffer, sizeof(x), IOStream::hex);
+  TRACE(eeprom.read(buffer, &Persistant::x, sizeof(Persistant::x)));
+  trace << PSTR("int Persistant::x[6]:") << endl;
+  trace.print((uint32_t) &Persistant::x, buffer, sizeof(Persistant::x), IOStream::hex);
+  trace << endl;
 
   // Read y, print contents and update
-  eeprom.read(buffer, &y, sizeof(y));
-  trace.print(buffer, sizeof(y), IOStream::hex);
+  TRACE(eeprom.read(buffer, &Persistant::y, sizeof(Persistant::y)));
+  trace << PSTR("uint8_t Persistant::y[300]:") << endl;
+  trace.print((uint32_t) &Persistant::y, buffer, sizeof(Persistant::y), IOStream::hex);
+  trace << endl;
   for (size_t i = 0; i < sizeof(buffer); i++)
     buffer[i]++;
-  eeprom.write(&y, buffer, sizeof(buffer));
-  TRACE(eeprom.is_ready());
+  TRACE(eeprom.write(&Persistant::y, buffer, sizeof(buffer)));
   eeprom.write_await();
   TRACE(eeprom.is_ready());
+  trace << endl;
 
   // Read z and update
-  float z1;
-  eeprom.read(&z1, &z);
-  trace.print(&z1, sizeof(z1), IOStream::hex);
-  z1 += 0.5;
-  TRACE(eeprom.write(&z, z1));
+  float z = 0.0;
+  TRACE(eeprom.read(&z, &Persistant::z));
+  trace << PSTR("float z:") << z << endl;
+  trace << endl;
+  z += 0.5;
+  TRACE(eeprom.write(&Persistant::z, z));
 
   ledPin.toggle();
+  sleep(2);
 }

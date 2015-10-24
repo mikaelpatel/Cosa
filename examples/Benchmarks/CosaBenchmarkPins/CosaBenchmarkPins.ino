@@ -69,7 +69,7 @@ inline void pinMode(Board::DigitalPin pin, uint8_t mode)
 
 inline void pinMode(Board::DigitalPin pin, uint8_t mode)
 {
-  IOPin::set_mode(pin, (IOPin::Mode) mode);
+  IOPin::mode(pin, (IOPin::Mode) mode);
 }
 
 inline int digitalRead(Board::DigitalPin pin)

@@ -59,8 +59,8 @@ private:
 public:
   RemotePinSlave() : TWI::Slave(ADDR)
   {
-    set_write_buf(m_buf, sizeof(m_buf));
-    set_read_buf(m_buf, sizeof(m_buf));
+    write_buf(m_buf, sizeof(m_buf));
+    read_buf(m_buf, sizeof(m_buf));
   }
   virtual void on_request(void* buf, size_t size);
 };
@@ -75,7 +75,7 @@ RemotePinSlave::on_request(void* buf, size_t size)
     if (cmd.m_op == READ_OP)
       m_buf[0] = Pin::read((Board::DigitalPin) cmd.m_pin);
     else if (cmd.m_op == WRITE_OP) {
-      IOPin::set_mode((Board::DigitalPin) cmd.m_pin, IOPin::OUTPUT_MODE);
+      IOPin::mode((Board::DigitalPin) cmd.m_pin, IOPin::OUTPUT_MODE);
       OutputPin::write((Board::DigitalPin) cmd.m_pin, m_buf[1]);
     }
   }

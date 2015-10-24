@@ -58,9 +58,9 @@ DS1302::read(uint8_t addr)
   uint8_t res = 0;
   asserted(m_cs) {
     write(addr);
-    m_sda.set_mode(IOPin::INPUT_MODE);
+    m_sda.mode(IOPin::INPUT_MODE);
     res = read();
-    m_sda.set_mode(IOPin::OUTPUT_MODE);
+    m_sda.mode(IOPin::OUTPUT_MODE);
   }
   return (res);
 }
@@ -80,7 +80,7 @@ DS1302::get_time(time_t& now)
 {
   asserted(m_cs) {
     write(RTC_BURST | READ);
-    m_sda.set_mode(IOPin::INPUT_MODE);
+    m_sda.mode(IOPin::INPUT_MODE);
     now.seconds = read();
     now.minutes = read();
     now.hours = read();
@@ -88,7 +88,7 @@ DS1302::get_time(time_t& now)
     now.month = read();
     now.day = read();
     now.year = read();
-    m_sda.set_mode(IOPin::OUTPUT_MODE);
+    m_sda.mode(IOPin::OUTPUT_MODE);
   }
 }
 
@@ -117,9 +117,9 @@ DS1302::read_ram(void* buf, size_t size)
   if (UNLIKELY(size > RAM_MAX)) size = RAM_MAX;
   asserted(m_cs) {
     write(RAM_BURST | READ);
-    m_sda.set_mode(IOPin::INPUT_MODE);
+    m_sda.mode(IOPin::INPUT_MODE);
     do *bp++ = read(); while (--size);
-    m_sda.set_mode(IOPin::OUTPUT_MODE);
+    m_sda.mode(IOPin::OUTPUT_MODE);
   }
 }
 

@@ -30,9 +30,9 @@
 IOStream& operator<<(IOStream& outs, Event& event)
 {
   outs << Watchdog::millis() << PSTR(":Event(")
-       << event.get_type() << ','
-       << event.get_target() << ','
-       << event.get_value() << ')';
+       << event.type() << ','
+       << event.target() << ','
+       << event.value() << ')';
   return (outs);
 }
 

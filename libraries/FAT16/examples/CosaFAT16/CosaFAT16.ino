@@ -30,9 +30,9 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 
-// #define USE_SD_ADAPTER
-#define USE_SD_DATA_LOGGING_SHIELD
-//#define USE_ETHERNET_SHIELD
+//#define USE_SD_ADAPTER
+//#define USE_SD_DATA_LOGGING_SHIELD
+#define USE_ETHERNET_SHIELD
 //#define USE_TFT_ST7735
 
 #if defined(WICKEDDEVICE_WILDFIRE) || defined(USE_SD_ADAPTER)
@@ -45,6 +45,7 @@ OutputPin eth(Board::D10, 1);
 #elif defined(USE_TFT_ST7735)
 SD sd;
 OutputPin tft(Board::D10, 1);
+
 #elif defined(USE_SD_DATA_LOGGING_SHIELD)
 SD sd(Board::D10);
 #endif

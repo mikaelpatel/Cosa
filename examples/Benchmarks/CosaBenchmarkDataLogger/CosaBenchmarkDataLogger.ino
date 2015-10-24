@@ -58,7 +58,7 @@ void iowait()
 void setup()
 {
   // Start serial output with given baud-rate
-  uart.begin(250000);
+  uart.begin(500000);
   // uart.begin(2000000);
   // uart.begin(1000000);
   // uart.begin(500000);

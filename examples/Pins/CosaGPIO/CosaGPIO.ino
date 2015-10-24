@@ -34,10 +34,10 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaPIO: started"));
   Watchdog::begin();
-  TRACE(led.get_mode());
-  TRACE(button.get_mode());
-  button.set_mode(GPIO::PULLUP_INPUT_MODE);
-  TRACE(button.get_mode());
+  TRACE(led.mode());
+  TRACE(button.mode());
+  button.mode(GPIO::PULLUP_INPUT_MODE);
+  TRACE(button.mode());
 }
 
 void loop()

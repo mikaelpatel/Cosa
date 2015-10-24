@@ -151,12 +151,12 @@ void loop()
   // Wait for an event from the IR receiver
   Event event;
   Event::queue.await(&event);
-  uint8_t type = event.get_type();
+  uint8_t type = event.type();
 
   // Check if a new reading from the IR receiver was completed
   if (type == Event::READ_COMPLETED_TYPE) {
     static uint8_t is_on = 0;
-    uint16_t code = event.get_value();
+    uint16_t code = event.value();
     char key = receiver.lookup(code);
     trace << receiver;
     // Check special keys; first on/off

@@ -39,7 +39,7 @@ NRF24L01P::NRF24L01P(uint16_t net, uint8_t dev,
   m_retrans(0),
   m_drops(0)
 {
-  set_channel(64);
+  channel(64);
 }
 
 uint8_t

@@ -83,7 +83,7 @@ bool
 DHT::sample_request()
 {
   // Issue a request; pull down for more than 18 ms
-  set_mode(OUTPUT_MODE);
+  mode(OUTPUT_MODE);
   IOPin::clear();
   Watchdog::delay(32);
 
@@ -92,7 +92,7 @@ DHT::sample_request()
   m_state = RESPONSE;
   m_start = RTC::micros();
   IOPin::set();
-  set_mode(INPUT_MODE);
+  mode(INPUT_MODE);
   DELAY(40);
   enable();
   return (true);

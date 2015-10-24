@@ -156,7 +156,7 @@ SHELL_ACTION(read, "[-pPOS|-sSIZE] FILE", "print content of file (position/size)
     size_t count = (size > sizeof(buf) ? sizeof(buf) : size);
     res = file.read(buf, count);
     if (res < 0) return (-1);
-    ios.get_device()->write(buf, res);
+    ios.device()->write(buf, res);
     size -= res;
   } while (size != 0);
   return (0);
@@ -179,11 +179,11 @@ SHELL_ACTION(stty, "[eol=CR|LF|CRLF]", "set tty mode")
   while ((ix = shell.get(option, value)) == 0) {
     if (strcmp_P(option, PSTR("eol")) == 0) {
       if (strcmp_P(value, PSTR("CR")) == 0)
-	ios.get_device()->set_eol(IOStream::CR_MODE);
+	ios.device()->eol(IOStream::CR_MODE);
       else if (strcmp_P(value, PSTR("LF")) == 0)
-	ios.get_device()->set_eol(IOStream::LF_MODE);
+	ios.device()->eol(IOStream::LF_MODE);
       else if (strcmp_P(value, PSTR("CRLF")) == 0)
-	ios.get_device()->set_eol(IOStream::CRLF_MODE);
+	ios.device()->eol(IOStream::CRLF_MODE);
       else return (-1);
     }
   }

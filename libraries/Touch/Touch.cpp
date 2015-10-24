@@ -28,7 +28,7 @@ Touch::Touch(Job::Scheduler* scheduler, Board::DigitalPin pin, uint16_t threshol
   m_sampling(false),
   m_touched(false)
 {
-  set_mode(OUTPUT_MODE);
+  mode(OUTPUT_MODE);
   clear();
 }
 
@@ -37,14 +37,14 @@ Touch::run()
 {
   // Check if sampling should be initiated
   if (!m_sampling) {
-    set_mode(INPUT_MODE);
+    mode(INPUT_MODE);
     m_sampling = true;
     return;
   }
 
   // Sample the pin and discharge
   uint8_t state = is_clear();
-  set_mode(OUTPUT_MODE);
+  mode(OUTPUT_MODE);
   clear();
   m_sampling = false;
 

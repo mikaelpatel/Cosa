@@ -107,7 +107,7 @@ void loop()
   Event event(Event::TIMEOUT_TYPE);
   cout.write(&levelPin);
   cout.write(&onoffPin);
-  cout.write(1 << onoffPin.get_pin());
+  cout.write(1 << onoffPin.pin());
   cout.write(&event);
 
   ledPin.toggle();

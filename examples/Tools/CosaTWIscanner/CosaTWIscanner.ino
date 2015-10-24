@@ -42,17 +42,18 @@ struct tab_t {
 /**
  * Device name/description strings in program memory.
  */
-const char adxl345[]  __PROGMEM = "ADXL345, Digital Accelermeter";
-const char at24cxx[]  __PROGMEM = "AT24CXX, Serial EEPROM";
-const char bmp085[]   __PROGMEM = "BMP085, Digital Pressure Sensor";
-const char ds1307[]   __PROGMEM = "DS1307, Real-Time Clock";
-const char ds3231[]   __PROGMEM = "DS3231, Extremely Accurated RTC/TCXO/Crystal";
-const char hmc5883l[] __PROGMEM = "HMC5883L, 3-Axis Digital Compass";
-const char pcf8574[]  __PROGMEM = "PCF8574, Remote 8-bit I/O Expander";
-const char pcf8574a[] __PROGMEM = "PCF8574A, Remote 8-bit I/O Expander";
-const char pcf8591[]  __PROGMEM = "PCF8591, 8-bit A/D and D/A Converter";
-const char l3g4200d[] __PROGMEM = "L3G4200D, 3-Axis Digital Gyroscope";
-const char mpu60x0[]  __PROGMEM = "MPU-60X0, Motion Processing Unit";
+const char adxl345[]  __PROGMEM = "ADXL345,Digital Accelermeter";
+const char at24cxx[]  __PROGMEM = "AT24CXX,Serial EEPROM";
+const char bmp085[]   __PROGMEM = "BMP085,Digital Pressure Sensor";
+const char ds1307[]   __PROGMEM = "DS1307,Real-Time Clock";
+const char ds3231[]   __PROGMEM = "DS3231,Extremely Accurated RTC/TCXO/Crystal";
+const char hmc5883l[] __PROGMEM = "HMC5883L,3-Axis Digital Compass";
+const char pcf8574[]  __PROGMEM = "PCF8574,Remote 8-bit I/O Expander";
+const char pcf8574a[] __PROGMEM = "PCF8574A,Remote 8-bit I/O Expander";
+const char pcf8591[]  __PROGMEM = "PCF8591,8-bit A/D and D/A Converter";
+const char l3g4200d[] __PROGMEM = "L3G4200D,3-Axis Digital Gyroscope";
+const char mpu60x0[]  __PROGMEM = "MPU-60X0,Motion Processing Unit";
+const char si7021[]   __PROGMEM = "Si7021,Humidity and Temperature Sensor";
 
 /**
  * Device table in program memory.
@@ -61,6 +62,7 @@ const tab_t dev_tab[] __PROGMEM = {
   { 0x1d, 0xff, 0,    0xe5, adxl345  },
   { 0x1e, 0xff, 0x0a, 0x48, hmc5883l },
   { 0x20, 0xf8, 0,       0, pcf8574  },
+  { 0x40, 0xff, 0,       0, si7021   },
   { 0x48, 0xf8, 0,       0, pcf8591  },
   { 0x53, 0xff, 0,    0xe5, adxl345  },
   { 0x50, 0xf8, 0,       0, at24cxx  },

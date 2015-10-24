@@ -83,7 +83,7 @@ KeypadTrace::trace(str_P msg, uint8_t nr)
   }
   m_out << ' ' << msg << endl;
   m_out << PSTR("key = ") << nr;
-  m_out << PSTR(" (") << m_key.get_value() << ')';
+  m_out << PSTR(" (") << m_key.value() << ')';
 }
 
 // The LCD Keypad is a 4-bit parallel device (default pins used)

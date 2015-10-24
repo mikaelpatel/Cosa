@@ -94,11 +94,11 @@ void loop()
   if (count >= 0 && !rf.is_broadcast()) {
     trace << PSTR("src=") << hex << src
 	  << PSTR(",port=") << hex << port
-	  << PSTR(",dest=") << hex << rf.get_device_address()
+	  << PSTR(",dest=") << hex << rf.device_address()
 	  << PSTR(",len=") << count
 #if defined(COSA_WIRELESS_DRIVER_CC1101_HH)
-	  << PSTR(",rssi=") << rf.get_input_power_level()
-	  << PSTR(",lqi=") << rf.get_link_quality_indicator()
+	  << PSTR(",rssi=") << rf.input_power_level()
+	  << PSTR(",lqi=") << rf.link_quality_indicator()
 #endif
 	  << endl;
     rf.send(DEST, port, msg, count);

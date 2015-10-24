@@ -274,7 +274,7 @@ public:
   void power_off()
     __attribute__((always_inline))
   {
-    set_mode(INPUT_MODE);
+    mode(INPUT_MODE);
     clear();
   }
 

@@ -26,8 +26,8 @@
 #include "Cosa/IOStream/Driver/UART.hh"
 
 // Configuration
-// #define USE_RTC
-#define USE_WATCHDOG
+#define USE_RTC
+// #define USE_WATCHDOG
 
 // Use the RTC/Timer based delay. Timer will continue to update
 // during the delay.
