@@ -139,14 +139,14 @@ public:
      * @param[in] buf buffer pointer.
      * @param[in] size of buffer.
      */
-    void set_read_buf(void* buf, size_t size);
+    void read_buf(void* buf, size_t size);
 
     /**
      * Set write (argument) buffer. Must be called before starting TWI.
      * @param[in] buf buffer pointer.
      * @param[in] size of buffer.
      */
-    void set_write_buf(void* buf, size_t size);
+    void write_buf(void* buf, size_t size);
 
     /**
      * Start TWI bus logic for the slave device.

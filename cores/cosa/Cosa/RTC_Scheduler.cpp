@@ -46,7 +46,7 @@ RTC::Scheduler::start(Job* job)
 	TIMSKn |= _BV(OCIE0B);
 	TIFRn |= _BV(OCF0B);
 	s_job = job;
-	m_queue.get_succ()->attach(job);
+	m_queue.succ()->attach(job);
 	return (true);
       }
     }
@@ -56,7 +56,7 @@ RTC::Scheduler::start(Job* job)
   synchronized {
     Linkage* succ = &m_queue;
     Linkage* curr;
-    while ((curr = succ->get_pred()) != &m_queue) {
+    while ((curr = succ->pred()) != &m_queue) {
       int32_t diff = ((Job*) curr)->expire_at() - job->expire_at();
       if (diff < 0) break;
       succ = curr;
@@ -73,13 +73,13 @@ RTC::Scheduler::dispatch()
   if (m_queue.is_empty()) return;
 
   // Run all jobs that have expired
-  Job* job = (Job*) m_queue.get_succ();
+  Job* job = (Job*) m_queue.succ();
   while ((Linkage*) job != &m_queue) {
     // Check if the job should be run
     uint32_t now = RTC::micros();
     int32_t diff = job->expire_at() - now;
     if (diff < US_DIRECT_EXPIRE) {
-      Job* succ = (Job*) job->get_succ();
+      Job* succ = (Job*) job->succ();
       ((Link*) job)->detach();
       job->on_expired();
       job = succ;

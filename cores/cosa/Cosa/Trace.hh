@@ -52,7 +52,7 @@ public:
   bool end()
     __attribute__((always_inline))
   {
-    set_device(NULL);
+    device(NULL);
     return (true);
   }
 
@@ -60,7 +60,7 @@ public:
    * Set exit character to signal fatal to serial monitor.
    * @param[in] c new exit character.
    */
-  void set_exitcharacter(char c)
+  void exitcharacter(char c)
   {
     EXITCHARACTER = c;
   }

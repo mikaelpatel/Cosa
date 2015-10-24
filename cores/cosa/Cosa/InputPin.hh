@@ -49,7 +49,7 @@ public:
    * Get current input pin mode.
    * @return mode.
    */
-  Mode get_mode() const
+  Mode mode() const
     __attribute__((always_inline))
   {
     return ((*PORT() & m_mask) != 0 ? PULLUP_MODE : NORMAL_MODE);
@@ -58,10 +58,10 @@ public:
   /**
    * Set input pin to given mode.
    * @param[in] pin number.
-   * @param[in] mode pin mode (default NORMAL_MODE).
+   * @param[in] mode pin mode.
    * @note atomic
    */
-  static void set_mode(Board::DigitalPin pin, Mode mode = NORMAL_MODE)
+  static void mode(Board::DigitalPin pin, Mode mode)
     __attribute__((always_inline))
   {
       synchronized {
@@ -77,7 +77,7 @@ public:
    * @param[in] pin number.
    * @return mode.
    */
-  static Mode get_mode(Board::DigitalPin pin)
+  static Mode mode(Board::DigitalPin pin)
     __attribute__((always_inline))
   {
     return ((*PORT(pin) & MASK(pin)) == 0 ? NORMAL_MODE : PULLUP_MODE);

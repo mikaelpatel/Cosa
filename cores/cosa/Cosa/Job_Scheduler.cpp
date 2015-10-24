@@ -30,7 +30,7 @@ Job::Scheduler::start(Job* job)
   synchronized {
     Linkage* succ = &m_queue;
     Linkage* curr;
-    while ((curr = succ->get_pred()) != &m_queue) {
+    while ((curr = succ->pred()) != &m_queue) {
       int32_t diff = ((Job*) curr)->m_expires - job->m_expires;
       if (diff < 0) break;
       succ = curr;
@@ -56,12 +56,12 @@ Job::Scheduler::dispatch()
   if (m_queue.is_empty()) return;
 
   // Run all jobs that have expired
-  Job* job = (Job*) m_queue.get_succ();
+  Job* job = (Job*) m_queue.succ();
   while ((Linkage*) job != &m_queue) {
     uint32_t now = time();
     int32_t diff = now - job->expire_at();
     if (diff < 0) return;
-    Job* succ = (Job*) job->get_succ();
+    Job* succ = (Job*) job->succ();
     ((Link*) job)->detach();
     job->on_expired();
     job = succ;

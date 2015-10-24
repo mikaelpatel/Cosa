@@ -168,7 +168,7 @@ public:
      * @param[in] mode new text mode.
      * @return previous text mode.
      */
-    TextMode set_text_mode(TextMode mode)
+    TextMode text_mode(TextMode mode)
       __attribute__((always_inline))
     {
       TextMode previous = (TextMode) m_mode;

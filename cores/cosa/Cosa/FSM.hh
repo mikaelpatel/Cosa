@@ -64,7 +64,7 @@ public:
    * @param[in] fn state handler.
    * @pre fn != NULL
    */
-  void set_state(StateHandler fn)
+  void state(StateHandler fn)
     __attribute__((always_inline))
   {
     if (UNLIKELY(fn == NULL)) return;
@@ -74,7 +74,7 @@ public:
   /**
    * Get state handler for next event.
    */
-  StateHandler get_state()
+  StateHandler state() const
     __attribute__((always_inline))
   {
     return (m_state);
@@ -84,7 +84,7 @@ public:
    * Set timeout period for all states.
    * @param[in] ms timeout.
    */
-  void set_period(uint8_t ms)
+  void period(uint8_t ms)
   {
     m_period = ms;
   }

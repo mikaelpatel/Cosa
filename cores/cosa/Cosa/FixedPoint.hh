@@ -44,7 +44,7 @@ public:
    * Return integer part of fixed point number.
    * @return integer.
    */
-  int16_t get_integer()
+  int16_t integer()
   {
     return (m_integer);
   }
@@ -53,7 +53,7 @@ public:
    * Return unsigned fraction part of fixed point number.
    * @return fraction.
    */
-  uint16_t get_fraction()
+  uint16_t fraction()
   {
     return (m_fraction);
   }
@@ -64,7 +64,7 @@ public:
    * @param[in] scale decimal range (1..n)
    * @return scaled fraction.
    */
-  uint16_t get_fraction(uint8_t scale);
+  uint16_t fraction(uint8_t scale);
 
 private:
   int16_t m_integer;
@@ -73,7 +73,7 @@ private:
 
 template<uint8_t POINT>
 uint16_t
-FixedPoint<POINT>::get_fraction(uint8_t scale)
+FixedPoint<POINT>::fraction(uint8_t scale)
 {
   uint16_t half = 5;
   uint16_t result = 0;

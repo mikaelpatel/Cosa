@@ -91,7 +91,7 @@ public:
    * Return duty setting for pwm output pin.
    * @return duty
    */
-  uint8_t get_duty();
+  uint8_t duty();
 };
 
 #endif

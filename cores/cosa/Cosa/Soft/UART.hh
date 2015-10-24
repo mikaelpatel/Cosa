@@ -189,7 +189,6 @@ protected:
   public:
     RXPinChangeInterrupt(Board::InterruptPin pin, UART* uart);
     virtual void on_interrupt(uint16_t arg = 0);
-    void set_baudrate(uint32_t baudrate);
   protected:
     UART* m_uart;
   };

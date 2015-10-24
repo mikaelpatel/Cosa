@@ -23,11 +23,11 @@
 #include "Cosa/Socket.hh"
 
 void
-INET::Server::get_client(INET::addr_t& addr)
+INET::Server::client(INET::addr_t& addr)
 {
-  Socket* sock = get_socket();
+  Socket* sock = socket();
   if (UNLIKELY(sock == NULL)) return;
-  sock->get_src(addr);
+  sock->src(addr);
 }
 
 bool
@@ -37,7 +37,7 @@ INET::Server::begin(Socket* sock)
   if (UNLIKELY(sock == NULL)) return (false);
 
   // Bind to io-stream
-  m_ios.set_device(sock);
+  m_ios.device(sock);
 
   // Set socket to listen mode
   return (sock->listen() == 0);
@@ -47,7 +47,7 @@ int
 INET::Server::run(uint32_t ms)
 {
   // Sanity check server state
-  Socket* sock = get_socket();
+  Socket* sock = socket();
   if (UNLIKELY(sock == NULL)) return (ENOTSOCK);
 
   // When not connected; Check incoming connect requests
@@ -92,7 +92,7 @@ bool
 INET::Server::end()
 {
   // Sanity check server state
-  Socket* sock = get_socket();
+  Socket* sock = socket();
   if (UNLIKELY(sock == NULL)) return (false);
 
   // Close the socket and mark as disconnected

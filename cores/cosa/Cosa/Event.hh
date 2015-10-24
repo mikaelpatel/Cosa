@@ -115,7 +115,7 @@ public:
   /**
    * Construct event with given type, target and value.
    * @param[in] type event identity (default NULL_TYPE(0)).
-   * @param[in] target event receiver (default null(0)).
+   * @param[in] target event receiver (default NULL(0)).
    * @param[in] value event value (default zero(0)).
    */
   Event(int8_t type = NULL_TYPE, Handler* target = NULL, uint16_t value = 0) :
@@ -128,7 +128,7 @@ public:
    * Return event type.
    * @return type.
    */
-  uint8_t get_type() const
+  uint8_t type() const
   {
     return (m_type);
   }
@@ -137,7 +137,7 @@ public:
    * Return event target.
    * @return pointer.
    */
-  Handler* get_target() const
+  Handler* target() const
   {
     return (m_target);
   }
@@ -146,7 +146,7 @@ public:
    * Return event value.
    * @return value.
    */
-  uint16_t get_value() const
+  uint16_t value() const
   {
     return (m_value);
   }
@@ -155,7 +155,7 @@ public:
    * Return event environment pointer.
    * @return pointer.
    */
-  void* get_env() const
+  void* env() const
   {
     return ((void*) m_value);
   }

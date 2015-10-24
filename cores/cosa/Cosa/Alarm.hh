@@ -27,7 +27,7 @@
 #include "Cosa/ExternalInterrupt.hh"
 
 /**
- * The Alarm class is an extension of the Periodic job class to allow
+ * The Alarm class is an extension of the Periodic job class. It allows
  * repeated jobs with seconds as time unit. The abstract Alarm Clock
  * is used as the alarm scheduler. It is triggered by an external
  * interrupt typically from an RTC device.
@@ -73,7 +73,7 @@ public:
    * Construct alarm with given clock and timeout period in seconds.
    * The clock should be a job scheduler with seconds as time unit.
    * @param[in] clock for alarms.
-   * @param[in] period seconds.
+   * @param[in] period for alarm in seconds.
    */
   Alarm(::Clock* clock, uint32_t period) :
     Periodic(clock, period)

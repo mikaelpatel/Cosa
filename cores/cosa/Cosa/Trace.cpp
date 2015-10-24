@@ -27,7 +27,7 @@ uint8_t trace_log_mask = LOG_UPTO(LOG_INFO);
 bool
 Trace::begin(IOStream::Device* dev, str_P banner)
 {
-  set_device(dev);
+  device(dev);
   if (banner != NULL) {
     print(banner);
     println();
@@ -40,6 +40,6 @@ Trace::fatal(const char* file, int line, str_P expr)
 {
   printf(PSTR("%s:%d:%S\r\n"), file, line, expr);
   print(EXITCHARACTER);
-  get_device()->flush();
+  device()->flush();
   exit(0);
 }

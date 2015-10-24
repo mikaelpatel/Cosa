@@ -45,7 +45,7 @@ public:
    * Return Listener key value.
    * @return key.
    */
-  T get_key() const
+  T key() const
   {
     return (m_key);
   }
@@ -54,7 +54,7 @@ public:
    * Set Listener key value.
    * @param[in] key new value.
    */
-  void set_key(T key)
+  void key(T key)
   {
     m_key = key;
   }
@@ -88,11 +88,11 @@ template <typename T>
 void
 Listener<T>::dispatch(Head* head, T key, uint8_t type, uint16_t value)
 {
-  Linkage* link = head->get_succ();
+  Linkage* link = head->succ();
   while (link != head) {
     Listener<T>* listener = (Listener<T>*) link;
     if (listener->match(key)) listener->on_event(type, value);
-    link = link->get_succ();
+    link = link->succ();
   }
 }
 #endif

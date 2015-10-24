@@ -45,7 +45,7 @@ public:
       if (pullup)
 	*PORT() |= m_mask;
     }
-    set_mode(mode);
+    this->mode(mode);
   }
 
   /**
@@ -53,7 +53,7 @@ public:
    * @param[in] mode new operation mode.
    * @note atomic
    */
-  void set_mode(Mode mode)
+  void mode(Mode mode)
     __attribute__((always_inline))
   {
     synchronized {
@@ -68,7 +68,7 @@ public:
    * Get current IO-pin mode.
    * @return mode.
    */
-  Mode get_mode() const
+  Mode mode() const
     __attribute__((always_inline))
   {
     return ((*DDR() & m_mask) == 0 ? INPUT_MODE : OUTPUT_MODE);
@@ -80,7 +80,7 @@ public:
    * @param[in] mode new operation mode.
    * @note atomic
    */
-  static void set_mode(Board::DigitalPin pin, Mode mode)
+  static void mode(Board::DigitalPin pin, Mode mode)
     __attribute__((always_inline))
   {
     volatile uint8_t* ddr = DDR(pin);
@@ -98,7 +98,7 @@ public:
    * @param[in] pin number.
    * @return mode.
    */
-  static Mode get_mode(Board::DigitalPin pin)
+  static Mode mode(Board::DigitalPin pin)
     __attribute__((always_inline))
   {
     return ((*DDR(pin) & MASK(pin)) == 0 ? INPUT_MODE : OUTPUT_MODE);

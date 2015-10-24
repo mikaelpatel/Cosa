@@ -100,7 +100,7 @@ public:
    * Return Arduino pin number of abstract pin.
    * @return pin number.
    */
-  uint8_t get_pin() const
+  uint8_t pin() const
   {
     return (m_pin);
   }

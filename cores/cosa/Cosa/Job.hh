@@ -149,7 +149,7 @@ public:
   bool is_started() const
     __attribute__((always_inline))
   {
-    return (get_pred() != this);
+    return (pred() != this);
   }
 
   /**

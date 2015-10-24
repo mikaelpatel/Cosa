@@ -57,7 +57,7 @@ public:
    * Get source machine address, network address and port.
    * @param[out] addr network address.
    */
-  void get_src(INET::addr_t& addr) const
+  void src(INET::addr_t& addr) const
   {
     addr = m_src;
   }
@@ -66,7 +66,7 @@ public:
    * Get socket protocol.
    * @return protocol.
    */
-  Protocol get_proto() const
+  Protocol proto() const
   {
     return ((Protocol) m_proto);
   }
@@ -75,7 +75,7 @@ public:
    * Get socket port.
    * @return port.
    */
-  uint16_t get_port() const
+  uint16_t port() const
   {
     return (m_port);
   }

@@ -70,7 +70,7 @@ public:
   /**
    * Return true if the bitset is empty.
    */
-  bool isempty() const
+  bool is_empty() const
   {
     for (uint16_t i = 0; i < sizeof(m_set); i++)
       if (m_set[i] != 0) return (false);

@@ -42,14 +42,6 @@ IOStream::IOStream() :
   m_eols((str_P) CRLF)
 {}
 
-IOStream::Device*
-IOStream::set_device(Device* dev)
-{
-  Device* previous = m_dev;
-  m_dev = dev;
-  return (previous);
-}
-
 void
 IOStream::print(int n, Base base)
 {
@@ -290,7 +282,7 @@ IOStream::readline(char* buf, size_t size, bool echo)
     else {
       if (c == '\r') {
 	if (echo) print(c);
-	if (m_dev->get_eol() == CRLF_MODE) continue;
+	if (m_dev->eol() == CRLF_MODE) continue;
 	c = '\n';
       }
       if (echo) print(c);

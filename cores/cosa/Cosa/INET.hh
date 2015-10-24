@@ -198,16 +198,16 @@ public:
      * Get server socket.
      * @return socket.
      */
-    Socket* get_socket()
+    Socket* socket()
     {
-      return ((Socket*) m_ios.get_device());
+      return ((Socket*) m_ios.device());
     }
 
     /**
      * Get client address, network address and port.
      * @param[out] addr network address.
      */
-    void get_client(INET::addr_t& addr);
+    void client(INET::addr_t& addr);
 
     /**
      * @override{INET::Server}

@@ -71,7 +71,7 @@ public:
    * @param mode input or output mode.
    * @note atomic
    */
-  void set_mode(Mode mode) const
+  void mode(Mode mode) const
     __attribute__((always_inline))
   {
     synchronized {
@@ -89,7 +89,7 @@ public:
    * Get pin input/output mode.
    * @return mode.
    */
-  Mode get_mode() const
+  Mode mode() const
     __attribute__((always_inline))
   {
     if ((*DDR() & m_mask) != 0)
@@ -163,7 +163,7 @@ public:
    * @param mode input or output mode.
    * @note atomic
    */
-  static void set_mode(Board::DigitalPin pin, Mode mode)
+  static void mode(Board::DigitalPin pin, Mode mode)
     __attribute__((always_inline))
   {
     const uint8_t mask = MASK(pin);
@@ -182,7 +182,7 @@ public:
    * Get pin input/output mode. Does not require an instance.
    * @return mode.
    */
-  static Mode get_mode(Board::DigitalPin pin)
+  static Mode mode(Board::DigitalPin pin)
     __attribute__((always_inline))
   {
     const uint8_t mask = MASK(pin);

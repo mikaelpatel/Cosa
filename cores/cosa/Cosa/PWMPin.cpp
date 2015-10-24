@@ -51,7 +51,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
 }
 
 uint8_t
-PWMPin::get_duty()
+PWMPin::duty()
 {
   switch (m_pin) {
   case Board::PWM0: return (OCR2B);
@@ -136,7 +136,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
 }
 
 uint8_t
-PWMPin::get_duty()
+PWMPin::duty()
 {
   switch (m_pin) {
   case Board::PWM0: return (OCR0A);
@@ -231,7 +231,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
 }
 
 uint8_t
-PWMPin::get_duty()
+PWMPin::duty()
 {
   switch (m_pin) {
   case Board::PWM0: return (OCR0A);
@@ -339,7 +339,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
 }
 
 uint8_t
-PWMPin::get_duty()
+PWMPin::duty()
 {
   switch (m_pin) {
   case Board::PWM0: return (OCR3B);
@@ -437,7 +437,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
 }
 
 uint8_t
-PWMPin::get_duty()
+PWMPin::duty()
 {
   switch (m_pin) {
   case Board::PWM0: return (OCR0A);
@@ -485,7 +485,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
 }
 
 uint8_t
-PWMPin::get_duty()
+PWMPin::duty()
 {
   switch (m_pin) {
   case Board::PWM0: return (OCR0A);
@@ -536,7 +536,7 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
 }
 
 uint8_t
-PWMPin::get_duty()
+PWMPin::duty()
 {
   switch (m_pin) {
   case Board::PWM0: return (OCR1A);

@@ -71,7 +71,7 @@ public:
    * Get current capture mode.
    * @return mode.
    */
-  InterruptMode get_mode()
+  InterruptMode mode() const
   {
     // Check trigger mode setting
     if (TCCR1B & _BV(ICES1))
@@ -83,7 +83,7 @@ public:
    * Set capture mode.
    * @param[in] new_mode.
    */
-  void set_mode(InterruptMode mode)
+  void mode(InterruptMode mode)
   {
     // Set trigger on rising or falling on input capture pin
     if (mode == ON_RISING_MODE)
@@ -96,7 +96,7 @@ public:
    * Get current timer count.
    * @return mode.
    */
-  uint16_t get_count()
+  uint16_t count()
   {
     uint16_t res;
     synchronized res = TCNT1;

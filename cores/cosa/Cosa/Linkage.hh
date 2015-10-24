@@ -48,7 +48,7 @@ public:
    * Return successor in sequence.
    * @return successor linkage.
    */
-  Linkage* get_succ() const
+  Linkage* succ() const
   {
     return (m_succ);
   }
@@ -57,7 +57,7 @@ public:
    * Return predecessor in sequence.
    * @return predecessor linkage.
    */
-  Linkage* get_pred() const
+  Linkage* pred() const
   {
     return (m_pred);
   }
@@ -144,7 +144,7 @@ public:
   {
     int res = 0;
     // Iterate through the list and count the length of the queue
-    for (Linkage* link = m_succ; link != this; link = link->get_succ()) res++;
+    for (Linkage* link = m_succ; link != this; link = link->succ()) res++;
     return (res);
   }
 
@@ -171,7 +171,7 @@ private:
     Linkage* link = m_succ;
     while (link != this) {
       // Get the successor as the current event call may detach itself
-      Linkage* succ = link->get_succ();
+      Linkage* succ = link->succ();
       link->on_event(type, value);
       link = succ;
     }

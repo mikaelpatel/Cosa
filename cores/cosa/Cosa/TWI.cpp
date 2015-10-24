@@ -309,14 +309,14 @@ TWI::Slave::on_event(uint8_t type, uint16_t value)
 }
 
 void
-TWI::Slave::set_write_buf(void* buf, size_t size)
+TWI::Slave::write_buf(void* buf, size_t size)
 {
   twi.m_vec[WRITE_IX].buf = buf;
   twi.m_vec[WRITE_IX].size = size;
 }
 
 void
-TWI::Slave::set_read_buf(void* buf, size_t size)
+TWI::Slave::read_buf(void* buf, size_t size)
 {
   twi.m_vec[READ_IX].buf = buf;
   twi.m_vec[READ_IX].size = size;

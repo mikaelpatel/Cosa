@@ -53,7 +53,7 @@ public:
    * @param[in] initial value.
    * @note atomic
    */
-  static void set_mode(Board::DigitalPin pin, uint8_t initial = 0)
+  static void mode(Board::DigitalPin pin, uint8_t initial = 0)
   {
     volatile uint8_t* port = PORT(pin);
     volatile uint8_t* ddr = DDR(pin);

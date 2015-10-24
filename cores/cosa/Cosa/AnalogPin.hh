@@ -26,7 +26,8 @@
 #include "Cosa/Types.h"
 
 /**
- * Abstract analog pin. Allows asynchronous sampling.
+ * Abstract analog pin. Allows asynchronous sampling with interrupt
+ * and event handler.
  */
 class AnalogPin : public Interrupt::Handler, public Event::Handler {
 public:
@@ -34,7 +35,7 @@ public:
    * Construct abstract analog pin for given pin (channel) and
    * reference voltage.
    * @param[in] pin number.
-   * @param[in] ref reference voltage.
+   * @param[in] ref reference voltage (default VCC).
    */
   AnalogPin(Board::AnalogPin pin, Board::Reference ref = Board::AVCC_REFERENCE) :
     m_pin(pin),
@@ -47,16 +48,25 @@ public:
    * Set reference voltage for conversion.
    * @param[in] ref reference voltage.
    */
-  void set_reference(Board::Reference ref)
+  void reference(Board::Reference ref)
   {
     m_reference = ref;
+  }
+
+  /**
+   * Get reference voltage for conversion.
+   * @return reference voltage.
+   */
+  Board::Reference reference() const
+  {
+    return (m_reference);
   }
 
   /**
    * Get analog pin.
    * @return pin identity.
    */
-  Board::AnalogPin get_pin() const
+  Board::AnalogPin pin() const
   {
     return (m_pin);
   }
@@ -66,7 +76,7 @@ public:
    * @return sample value.
    * @note atomic
    */
-  uint16_t get_value() const
+  uint16_t value() const
   {
     uint16_t res;
     synchronized res = m_value;
@@ -125,7 +135,7 @@ public:
   uint16_t sample()
     __attribute__((always_inline))
   {
-    return (m_value = AnalogPin::sample(m_pin, (Board::Reference) m_reference));
+    return (m_value = AnalogPin::sample(m_pin, m_reference));
   }
 
   /**
@@ -190,7 +200,7 @@ public:
 protected:
   static AnalogPin* sampling_pin; //!< Current sampling pin if any.
   const Board::AnalogPin m_pin;	  //!< Analog channel number.
-  uint8_t m_reference;		  //!< ADC reference voltage type.
+  Board::Reference m_reference;	  //!< ADC reference voltage type.
   uint16_t m_value;		  //!< Latest sample value.
   uint8_t m_event;		  //!< Event to push on completion.
 

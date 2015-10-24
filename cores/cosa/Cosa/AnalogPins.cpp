@@ -24,7 +24,7 @@ bool
 AnalogPins::samples_request()
 {
   m_next = 0;
-  return (AnalogPin::sample_request(get_pin_at(m_next), m_reference));
+  return (AnalogPin::sample_request(pin_at(m_next), m_reference));
 }
 
 void
@@ -33,7 +33,7 @@ AnalogPins::on_interrupt(uint16_t value)
   sampling_pin = 0;
   m_buffer[m_next++] = value;
   if (m_next != m_count) {
-    AnalogPin::sample_request(get_pin_at(m_next), m_reference);
+    AnalogPin::sample_request(pin_at(m_next), m_reference);
   }
   else {
     Event::push(Event::SAMPLE_COMPLETED_TYPE, this, value);

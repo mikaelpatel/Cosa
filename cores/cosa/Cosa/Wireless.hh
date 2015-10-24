@@ -74,7 +74,7 @@ public:
      * Get driver channel.
      * @return channel.
      */
-    uint8_t get_channel() const
+    uint8_t channel() const
     {
       return (m_channel);
     }
@@ -83,7 +83,7 @@ public:
      * Get driver network address.
      * @return network address.
      */
-    int16_t get_network_address() const
+    int16_t network_address() const
     {
       return (m_addr.network);
     }
@@ -92,7 +92,7 @@ public:
      * Get driver device address.
      * @return device address.
      */
-    uint8_t get_device_address() const
+    uint8_t device_address() const
     {
       return (m_addr.device);
     }
@@ -103,7 +103,7 @@ public:
      * @param[in] net network address.
      * @param[in] dev device address.
      */
-    void set_address(int16_t net, uint8_t dev)
+    void address(int16_t net, uint8_t dev)
     {
       m_addr.network = net;
       m_addr.device = dev;
@@ -114,7 +114,7 @@ public:
      * begin().
      * @param[in] channel.
      */
-    void set_channel(uint8_t channel)
+    void channel(uint8_t channel)
     {
       m_channel = channel;
     }
@@ -269,7 +269,7 @@ public:
      * Set output power level in dBm.
      * @param[in] dBm.
      */
-    virtual void set_output_power_level(int8_t dBm)
+    virtual void output_power_level(int8_t dBm)
     {
       UNUSED(dBm);
     }
@@ -279,7 +279,7 @@ public:
      * Return estimated input power level (dBm). Default zero(0).
      * @return power level in dBm.
      */
-    virtual int get_input_power_level()
+    virtual int input_power_level()
     {
       return (0);
     }
@@ -289,7 +289,7 @@ public:
      * Return link quality indicator. Default zero(0).
      * @return quality indicator.
      */
-    virtual int get_link_quality_indicator()
+    virtual int link_quality_indicator()
     {
       return (0);
     }
