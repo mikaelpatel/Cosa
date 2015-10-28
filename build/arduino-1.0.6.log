@@ -1,76 +1,76 @@
-Sun Oct 25 00:05:41 CEST 2015: adafruit-atmega32u4
+Wed Oct 28 21:05:00 CET 2015: adafruit-atmega32u4
 Program:    4528 bytes (13.8% Full)
 Data:        189 bytes (7.4% Full)
-Sun Oct 25 00:05:45 CEST 2015: adafruit-atmega32u4-cat
+Wed Oct 28 21:05:03 CET 2015: adafruit-atmega32u4-cat
 Program:    4528 bytes (13.8% Full)
 Data:        189 bytes (7.4% Full)
-Sun Oct 25 00:05:47 CEST 2015: atmega328-8
+Wed Oct 28 21:05:06 CET 2015: atmega328-8
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:05:49 CEST 2015: attiny84-8
+Wed Oct 28 21:05:08 CET 2015: attiny84-8
 Program:     182 bytes (2.2% Full)
 Data:          1 bytes (0.2% Full)
-Sun Oct 25 00:05:52 CEST 2015: attiny85-8
+Wed Oct 28 21:05:11 CET 2015: attiny85-8
 Program:     178 bytes (2.2% Full)
 Data:          1 bytes (0.2% Full)
-Sun Oct 25 00:05:54 CEST 2015: attiny861-8
+Wed Oct 28 21:05:13 CET 2015: attiny861-8
 Program:     186 bytes (2.3% Full)
 Data:          1 bytes (0.2% Full)
-Sun Oct 25 00:05:56 CEST 2015: diecimila
+Wed Oct 28 21:05:15 CET 2015: diecimila
 Program:     290 bytes (1.8% Full)
 Data:          1 bytes (0.1% Full)
-Sun Oct 25 00:05:58 CEST 2015: duemilanove
+Wed Oct 28 21:05:18 CET 2015: duemilanove
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:00 CEST 2015: iboard
+Wed Oct 28 21:05:20 CET 2015: iboard
 Program:     488 bytes (1.5% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:02 CEST 2015: leonardo
+Wed Oct 28 21:05:23 CET 2015: leonardo
 Program:    4548 bytes (13.9% Full)
 Data:        189 bytes (7.4% Full)
-Sun Oct 25 00:06:05 CEST 2015: lilypad
+Wed Oct 28 21:05:25 CET 2015: lilypad
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:07 CEST 2015: lilypad-usb
+Wed Oct 28 21:05:28 CET 2015: lilypad-usb
 Program:    4528 bytes (13.8% Full)
 Data:        189 bytes (7.4% Full)
-Sun Oct 25 00:06:09 CEST 2015: mega1280
+Wed Oct 28 21:05:30 CET 2015: mega1280
 Program:     430 bytes (0.3% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:12 CEST 2015: mega2560
+Wed Oct 28 21:05:33 CET 2015: mega2560
 Program:     434 bytes (0.2% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:14 CEST 2015: micro
+Wed Oct 28 21:05:35 CET 2015: micro
 Program:    4528 bytes (13.8% Full)
 Data:        189 bytes (7.4% Full)
-Sun Oct 25 00:06:17 CEST 2015: microduino-core
+Wed Oct 28 21:05:38 CET 2015: microduino-core
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:19 CEST 2015: microduino-core32u4
+Wed Oct 28 21:05:40 CET 2015: microduino-core32u4
 Program:    4528 bytes (13.8% Full)
 Data:        189 bytes (7.4% Full)
-Sun Oct 25 00:06:21 CEST 2015: microduino-core-plus
+Wed Oct 28 21:05:43 CET 2015: microduino-core-plus
 Program:     310 bytes (0.5% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:24 CEST 2015: mighty
+Wed Oct 28 21:05:45 CET 2015: mighty
 Program:     342 bytes
 Data:          1 bytes
-Sun Oct 25 00:06:26 CEST 2015: mighty-opt
+Wed Oct 28 21:05:47 CET 2015: mighty-opt
 Program:     342 bytes
 Data:          1 bytes
-Sun Oct 25 00:06:28 CEST 2015: miniwireless
+Wed Oct 28 21:05:50 CET 2015: miniwireless
+Program:    1304 bytes (4.0% Full)
+Data:         16 bytes (0.8% Full)
+Wed Oct 28 21:05:52 CET 2015: moteino
 Program:     488 bytes (1.5% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:31 CEST 2015: moteino
-Program:     488 bytes (1.5% Full)
-Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:33 CEST 2015: moteino-mega
+Wed Oct 28 21:05:55 CET 2015: moteino-mega
 Program:     368 bytes
 Data:          1 bytes
-Sun Oct 25 00:06:35 CEST 2015: nano
+Wed Oct 28 21:05:57 CET 2015: nano
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:38 CEST 2015: pinoccio
+Wed Oct 28 21:06:00 CET 2015: pinoccio
 unknown MCU 'atmega256rfr2' specified
 Known MCU names:
    avr2
@@ -519,27 +519,27 @@ CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:85: error: ‘ACSR’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:85: error: ‘ACD’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.cpp:31: warning: ‘ANALOG_COMP_vect’ appears to be a misspelled signal handler
-Sun Oct 25 00:06:39 CEST 2015: pro-micro
+Wed Oct 28 21:06:01 CET 2015: pro-micro
 Program:    4548 bytes (13.9% Full)
 Data:        189 bytes (7.4% Full)
-Sun Oct 25 00:06:42 CEST 2015: pro-micro-8
+Wed Oct 28 21:06:04 CET 2015: pro-micro-8
 Program:    4548 bytes (13.9% Full)
 Data:        189 bytes (7.4% Full)
-Sun Oct 25 00:06:44 CEST 2015: pro-mini
+Wed Oct 28 21:06:06 CET 2015: pro-mini
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:47 CEST 2015: pro-mini-8
+Wed Oct 28 21:06:08 CET 2015: pro-mini-8
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:49 CEST 2015: teensy-2_0
+Wed Oct 28 21:06:11 CET 2015: teensy-2_0
 Program:    4544 bytes (13.9% Full)
 Data:        189 bytes (7.4% Full)
-Sun Oct 25 00:06:52 CEST 2015: teensypp-2_0
+Wed Oct 28 21:06:13 CET 2015: teensypp-2_0
 Program:    4554 bytes (3.5% Full)
 Data:        189 bytes (2.3% Full)
-Sun Oct 25 00:06:54 CEST 2015: uno
+Wed Oct 28 21:06:16 CET 2015: uno
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sun Oct 25 00:06:57 CEST 2015: wildfire
+Wed Oct 28 21:06:18 CET 2015: wildfire
 Program:     592 bytes
 Data:          1 bytes
