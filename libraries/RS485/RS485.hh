@@ -22,7 +22,7 @@
 #define COSA_RS485_HH
 
 #if !defined(BOARD_ATTINY)
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/OutputPin.hh"
 

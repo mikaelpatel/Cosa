@@ -37,7 +37,7 @@
 #include <DS1302.h>
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Trace.hh"
 
 DS1302 rtc;

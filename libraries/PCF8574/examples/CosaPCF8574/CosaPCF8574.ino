@@ -42,7 +42,7 @@
 #include "Cosa/RTT.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Memory.h"
 
 // PCF8574 Remote 8-bit I/O expander with sub-address (0x27/0x4e)

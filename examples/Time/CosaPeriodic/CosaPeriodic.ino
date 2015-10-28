@@ -26,7 +26,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/OutputPin.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 class LED : public Periodic, public OutputPin {
 public:

@@ -45,7 +45,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Memory.h"
 
 // The A/D, D/A converter

@@ -45,7 +45,7 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Configuration: RTT, Watchdog or External Interrupt Clock Source
 // #define USE_RTT_CLOCK

@@ -19,12 +19,21 @@
  */
 
 #include "Cosa/OutputPin.hh"
+#include "Cosa/SPI.hh"
 
 void
 Board::init()
 {
   OutputPin flash(Board::D5, 1);
-  OutputPin rfmxx(Board::D10, 1);
+  // Low Power start
+  // RFM69::OP_MODE = SLEEP_MODE
+  SPI::Driver rfm(Board::D10);
+  spi.acquire(&rfm);
+    spi.begin();
+      spi.transfer(0x80 | 0x01);
+      spi.transfer(0x00);
+    spi.end();
+  spi.release();
 }
 
 const Board::DigitalPin digital_pin_map[] __PROGMEM = {

@@ -39,7 +39,7 @@
 #include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // -------------------------------------------------------------------
 // Calibration values for some of the boards that are used in the Cosa

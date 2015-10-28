@@ -30,7 +30,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 RTT::Clock clock;
 

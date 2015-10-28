@@ -35,7 +35,7 @@
 #include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/OutputPin.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 OutputPin led(Board::LED);
 

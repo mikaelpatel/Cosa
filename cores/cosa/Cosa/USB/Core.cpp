@@ -23,7 +23,7 @@
 
 #if defined(USBCON)
 
-#include "Cosa/IOStream/Driver/CDC.hh"
+#include "Cosa/CDC.hh"
 
 #define min(a,b) 			((a)<(b)?(a):(b))
 #define max(a,b) 			((a)>(b)?(a):(b))

@@ -24,7 +24,7 @@
 #include "Cosa.h"
 #include "Cosa/Types.h"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 void setup()
 {

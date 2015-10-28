@@ -29,7 +29,7 @@
 //#define EEPROM_SIZE 2049
 
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/EEPROM.hh"
 
 // EEPROM access object

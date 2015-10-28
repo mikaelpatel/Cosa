@@ -24,7 +24,7 @@
 #include <Nucleo.h>
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 Nucleo::Semaphore io(1);
 

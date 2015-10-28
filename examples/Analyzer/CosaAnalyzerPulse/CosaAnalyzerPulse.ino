@@ -39,7 +39,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Use the RTT or Watchdog Job Scheduler
 // #define USE_RTT

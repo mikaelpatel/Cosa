@@ -31,7 +31,7 @@
 #endif
 #include "Cosa/Trace.hh"
 #include "Cosa/IOBuffer.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Watchdog.hh"
 
 // Create buffer for UART1

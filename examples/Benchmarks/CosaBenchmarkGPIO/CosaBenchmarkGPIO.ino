@@ -26,7 +26,7 @@
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Pins used in the benchmark (Note will not compile for ATtinyX5)
 

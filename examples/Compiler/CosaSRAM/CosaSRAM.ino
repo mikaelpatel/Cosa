@@ -21,7 +21,7 @@
  */
 
 #include "Cosa/Memory.h"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 IOStream cout(&uart);
 

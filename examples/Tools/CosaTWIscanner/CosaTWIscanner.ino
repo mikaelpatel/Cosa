@@ -26,7 +26,7 @@
 #include "Cosa/TWI.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 /**
  * Device table structure with address, sub-address mask and name/description.

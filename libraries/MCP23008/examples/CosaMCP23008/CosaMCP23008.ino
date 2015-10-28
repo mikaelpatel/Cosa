@@ -43,7 +43,7 @@
 #include "Cosa/RTT.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Memory.h"
 
 // Use TWI at max frequency (800 KHz @ 16 MHz)

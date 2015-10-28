@@ -30,7 +30,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 #include "color16.h"
 #include "config.h"

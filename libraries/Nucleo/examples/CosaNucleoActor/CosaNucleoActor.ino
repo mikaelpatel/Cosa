@@ -25,7 +25,7 @@
 
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Send message to given consumer actor and port
 class Producer : public Nucleo::Actor {

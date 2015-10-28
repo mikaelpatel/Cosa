@@ -53,7 +53,7 @@
 #include "Cosa/Soft/SRPI.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Shift Register Parallel Input Port
 Soft::SRPI<2> port;

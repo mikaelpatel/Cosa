@@ -23,7 +23,7 @@
  */
 
 #include <S25FL127S.h>
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"

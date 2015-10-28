@@ -27,7 +27,7 @@
 #include "Cosa/Power.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Select port type to use with the LCD device driver.
 // LCD and communication port

@@ -40,7 +40,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Call directly from interrupt service routine
 #define USE_ISR_DISPATCH

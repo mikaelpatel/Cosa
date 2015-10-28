@@ -40,7 +40,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Power.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Low power sleep (Arduino Pro-Micro with Power LED removed)
 // Baseline: 13.6 mA, RTT: 1.5 mA, Watchdog: 250 uA

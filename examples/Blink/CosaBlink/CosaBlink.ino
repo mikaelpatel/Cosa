@@ -47,6 +47,7 @@
 #include "Cosa/Power.hh"
 #include "Cosa/InputPin.hh"
 #include "Cosa/OutputPin.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 
 // Use the built-in led
@@ -64,6 +65,7 @@ void setup()
   // 3. With watchdog delay: 4.5/8.1 mA
   // Start the watchdog with the default timeout period (16 ms)
   // Will install low-power version of the delay() function
+  RTT::begin();
   Watchdog::begin();
 
   // 4. Sleep mode with watchdog delay (3)
@@ -86,7 +88,7 @@ void setup()
 
   // 6. FTDI RX/D0 leakage with watchdog shutdown (5)
   // Output mode: 6/146 uA
-  // OutputPin::set_mode(Board::D0);
+  // OutputPin::mode(Board::D0);
 
   // 7. Remove Pro-Micro regulator
 }

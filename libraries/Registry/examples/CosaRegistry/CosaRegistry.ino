@@ -41,7 +41,7 @@
 #include <Registry.h>
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/AnalogPin.hh"
 

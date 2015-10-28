@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/UART.cpp
+ * @file Cosa/UART.cpp
  * @version 1.0
  *
  * @section License
@@ -19,7 +19,7 @@
  */
 
 #include "Cosa/Board.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 #if defined(BOARD_ATTINY)
 // Default is serial output only (UAT)

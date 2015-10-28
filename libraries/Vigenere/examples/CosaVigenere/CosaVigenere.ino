@@ -24,7 +24,7 @@
 #include <Vigenere.h>
 
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Memory.h"
 #include "Cosa/RTT.hh"
 

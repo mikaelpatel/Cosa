@@ -28,7 +28,7 @@
 #include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOStream.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 RTT::Clock wall;
 IOStream cout(&uart);

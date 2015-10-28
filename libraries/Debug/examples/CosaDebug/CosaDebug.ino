@@ -25,7 +25,7 @@
 // #define NDEBUG
 
 #include <Debug.h>
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 namespace A {
 

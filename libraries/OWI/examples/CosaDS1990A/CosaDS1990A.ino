@@ -30,7 +30,7 @@
 #include "Cosa/Board.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Table with valid keys (64 bit 1-Wire identity, 8 bytes per entry)
 const uint8_t KEY[] __PROGMEM = {

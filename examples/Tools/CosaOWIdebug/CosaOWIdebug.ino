@@ -25,7 +25,7 @@
 
 #include "Cosa/Board.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Watchdog.hh"
 
 // Use the builtin led for a heartbeat

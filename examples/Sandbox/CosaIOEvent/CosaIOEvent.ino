@@ -25,7 +25,7 @@
 #include "Cosa/IOEvent.hh"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 typedef IOBuffer<UART::RX_BUFFER_MAX> Buffer;
 

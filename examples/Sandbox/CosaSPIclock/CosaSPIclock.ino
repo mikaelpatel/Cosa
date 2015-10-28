@@ -23,7 +23,7 @@
 
 #include "Cosa/SPI.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 void setup()
 {

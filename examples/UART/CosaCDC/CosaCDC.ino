@@ -25,7 +25,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/CDC.hh"
+#include "Cosa/CDC.hh"
 
 #if !defined(USBCON)
 #error CosaCDC: board not supported.

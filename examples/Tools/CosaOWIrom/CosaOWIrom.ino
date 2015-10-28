@@ -25,7 +25,7 @@
 
 #include "Cosa/Board.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // One-wire pin
 #if !defined(BOARD_ATTINY)

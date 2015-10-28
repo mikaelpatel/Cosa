@@ -44,7 +44,7 @@
 
 /**
  * UART buffer size. Default is 32 characters (16 ATTINY).
- * In file: Cosa/IOStream/Driver/UART.hh
+ * In file: Cosa/UART.hh
  * #define COSA_UART_RX_BUFFER_MAX 32
  * #define COSA_UART_TX_BUFFER_MAX 32
  */

@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/UART.hh
+ * @file Cosa/UART.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_IOSTREAM_DRIVER_UART_HH
-#define COSA_IOSTREAM_DRIVER_UART_HH
+#ifndef COSA_UART_HH
+#define COSA_UART_HH
 
 // Default reciever buffer size
 #ifndef COSA_UART_RX_BUFFER_MAX
@@ -293,7 +293,7 @@ protected:
  * and other ATmega32u4 based boards the standard serial is CDC.
  */
 #if defined(USBCON)
-#include "Cosa/IOStream/Driver/CDC.hh"
+#include "Cosa/CDC.hh"
 #define uart cdc
 #else
 extern UART uart;

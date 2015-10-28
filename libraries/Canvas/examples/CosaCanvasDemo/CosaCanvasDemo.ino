@@ -72,7 +72,7 @@
 #include "Cosa/Memory.h"
 #include "Cosa/IOStream.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 #include <Canvas.h>
 #include "Canvas/Element/Textbox.hh"

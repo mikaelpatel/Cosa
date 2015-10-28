@@ -36,7 +36,7 @@
 #include "Cosa/Power.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Call directly from interrupt
 #define USE_ISR_DISPATCH

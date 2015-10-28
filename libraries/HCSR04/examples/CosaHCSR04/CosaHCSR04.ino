@@ -40,7 +40,7 @@
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 class Ping : public HCSR04 {
 public:

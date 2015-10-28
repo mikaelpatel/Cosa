@@ -54,7 +54,7 @@
 #include "Cosa/Memory.h"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 ST7735 tft;
 

@@ -43,7 +43,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Set the extern RTC
 // #define SET_TIME

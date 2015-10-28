@@ -60,7 +60,7 @@
  * Use UART or LCD/PCD8544 for output.
  */
 #if defined(USE_UART)
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Memory.h"
 #else
 #include <Canvas.h>

@@ -29,7 +29,7 @@
 #include "Cosa/Clock.hh"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "CFFScommands.h"
 
 #define USE_FLASH_S25FL127S

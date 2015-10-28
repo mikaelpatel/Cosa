@@ -29,7 +29,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/IOBuffer.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Trace.hh"
 
 namespace Soft {

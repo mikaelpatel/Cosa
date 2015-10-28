@@ -21,7 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 void setup()
 {

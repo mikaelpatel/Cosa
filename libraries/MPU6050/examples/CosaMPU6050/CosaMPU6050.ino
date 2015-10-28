@@ -41,7 +41,7 @@
 #include <MPU6050.h>
 
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Memory.h"
 

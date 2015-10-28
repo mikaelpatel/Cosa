@@ -41,7 +41,7 @@
 #include "Cosa/AnalogPin.hh"
 #include "Cosa/Periodic.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 AnalogPin probe(Board::A0);
 

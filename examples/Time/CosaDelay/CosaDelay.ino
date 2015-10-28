@@ -23,7 +23,7 @@
  */
 
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Configuration
 #define USE_RTT

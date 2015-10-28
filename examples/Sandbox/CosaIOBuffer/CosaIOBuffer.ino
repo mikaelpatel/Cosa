@@ -23,7 +23,7 @@
 
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 IOBuffer<16> buffer;
 

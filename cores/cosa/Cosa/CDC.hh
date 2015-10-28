@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/CDC.hh
+ * @file Cosa/CDC.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_IOSTREAM_DRIVER_CDC_HH
-#define COSA_IOSTREAM_DRIVER_CDC_HH
+#ifndef COSA_CDC_HH
+#define COSA_CDC_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"

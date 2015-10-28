@@ -22,7 +22,7 @@
  */
 
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Trace.hh"
 
 void print(IOStream& outs, uint8_t value)

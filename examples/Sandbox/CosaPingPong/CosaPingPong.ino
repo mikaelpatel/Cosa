@@ -25,7 +25,7 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 /**
  * Simple echo state machine: Listens for an event. When received

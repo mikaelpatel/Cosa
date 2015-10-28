@@ -26,7 +26,7 @@
 #include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include <math.h>
 
 // This benchmark can be run with a background interrupt load. Set the
@@ -121,6 +121,8 @@ void loop()
   MEASURE("one character (new-line):", 1) trace << '\n' << endl;
   MEASURE("one character:", 1) trace << '1' << endl;
   MEASURE("one character string:", 1) trace << PSTR("1") << endl;
+  MEASURE("utf8 character string:", 1) trace << PSTR("€") << endl;
+
   MEASURE("integer:", 1) trace << 1 << endl;
   MEASURE("long integer:", 1) trace << 1L << endl;
   MEASURE("two characters:", 1) trace << '1' << '0' << endl;

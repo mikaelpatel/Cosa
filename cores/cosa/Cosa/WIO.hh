@@ -1,5 +1,5 @@
 /**
- * @file Cosa/IOStream/Driver/WIO.hh
+ * @file Cosa/WIO.hh
  * @version 1.0
  *
  * @section License
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_IOSTREAM_DRIVER_WIO_HH
-#define COSA_IOSTREAM_DRIVER_WIO_HH
+#ifndef COSA_WIO_HH
+#define COSA_WIO_HH
 
 #include "Cosa/Types.h"
 #include "Cosa/IOStream.hh"

@@ -27,7 +27,7 @@
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Memory.h"
 
 // The real-time device
@@ -64,17 +64,22 @@ void setup()
 
   // Set alarm 0 when seconds match (every minute)
   time_t alarm(now);
+  alarm.to_bcd();
   uint8_t when = MCP7940N::WHEN_SEC_MATCH;
   alarm.seconds = 0x45;
   rtc.set_alarm(0, alarm, when);
-  rtc.get_alarm(0, alarm, when);
-  trace << PSTR("alarm(0): ") << alarm << ' ' << when << endl;
 
   // Set alarm 1 when time match; in a minute
   alarm.minutes += 1;
   when = MCP7940N::WHEN_TIME_MATCH;
   rtc.set_alarm(1, alarm, when);
+
+  // Check the settings
+  rtc.get_alarm(0, alarm, when);
+  alarm.to_binary();
+  trace << PSTR("alarm(0): ") << alarm << ' ' << when << endl;
   rtc.get_alarm(1, alarm, when);
+  alarm.to_binary();
   trace << PSTR("alarm(1): ") << alarm << ' ' << when << endl;
 
   // Enable square wave output

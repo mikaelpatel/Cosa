@@ -24,7 +24,7 @@
 
 #include "Cosa/RTT.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Types to test
 #define UINT_T uint8_t

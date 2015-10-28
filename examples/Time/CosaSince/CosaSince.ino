@@ -26,7 +26,7 @@
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/OutputPin.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 RTT::Clock clock;
 

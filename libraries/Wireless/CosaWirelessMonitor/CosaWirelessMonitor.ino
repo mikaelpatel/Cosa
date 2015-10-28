@@ -68,7 +68,7 @@ VWI rf(NETWORK, DEVICE, SPEED, &rx);
 static const uint8_t IOSTREAM_TYPE = 0x00;
 
 // Select IOStream device
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 // Select port type to use with the LCD device driver.
 // LCD and communication port

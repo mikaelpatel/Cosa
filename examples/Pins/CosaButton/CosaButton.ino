@@ -46,7 +46,7 @@
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #include "Cosa/Memory.h"
 
 // Use the watchdog job scheduler

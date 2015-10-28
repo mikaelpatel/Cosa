@@ -29,7 +29,7 @@
 #include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/WIO.hh"
+#include "Cosa/WIO.hh"
 
 // Configuration; network and device addresses
 #define NETWORK 0xC05A

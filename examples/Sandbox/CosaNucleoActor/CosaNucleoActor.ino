@@ -26,7 +26,7 @@
 #include "Cosa/Math.hh"
 #include "Cosa/Trace.hh"
 #include "Cosa/Watchdog.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 
 class Actor : public Nucleo::Thread {
 public:
