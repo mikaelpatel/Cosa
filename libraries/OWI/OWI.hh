@@ -93,7 +93,7 @@ public:
      * Return pointer to device rom.
      * @return device rom buffer.
      */
-    uint8_t* get_rom()
+    uint8_t* rom()
     {
       return (m_rom);
     }

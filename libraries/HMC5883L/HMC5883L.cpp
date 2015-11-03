@@ -59,7 +59,7 @@ HMC5883L::write_config()
 }
 
 bool
-HMC5883L::set_mode(Mode mode)
+HMC5883L::mode(Mode mode)
 {
   twi.acquire(this);
   int count = twi.write((uint8_t) MODE, &mode, sizeof(mode));
@@ -119,7 +119,7 @@ operator<<(IOStream& outs, HMC5883L& compass)
   }
   else {
     HMC5883L::data_t value;
-    compass.get_heading(value);
+    compass.heading(value);
     outs << PSTR("HMC5883L(x = ") << value.x
 	 << PSTR(", y = ") << value.y
 	 << PSTR(", z = ") << value.z

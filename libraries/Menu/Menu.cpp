@@ -268,7 +268,7 @@ Menu::Walker::on_key_down(uint8_t nr)
 }
 
 Menu::type_t
-Menu::Walker::get_type()
+Menu::Walker::type()
 {
   if (!m_selected) return (ITEM_LIST);
   Menu::item_list_P menu = m_stack[m_top];
@@ -282,7 +282,7 @@ void
 Menu::RotaryController::on_event(uint8_t type, uint16_t direction)
 {
   UNUSED(type);
-  if (m_walker->get_type() == Menu::INT_RANGE)
+  if (m_walker->type() == Menu::INT_RANGE)
     m_walker->on_key_down(direction == CW ?
 			  Menu::Walker::UP_KEY :
 			  Menu::Walker::DOWN_KEY);

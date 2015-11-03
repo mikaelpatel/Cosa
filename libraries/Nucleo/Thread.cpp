@@ -25,17 +25,17 @@
 
 static void thread_delay(uint32_t ms)
 {
-  Nucleo::Thread::get_running()->delay(ms);
+  Nucleo::Thread::running()->delay(ms);
 }
 
 static void thread_yield()
 {
-  Nucleo::Thread::get_running()->yield();
+  Nucleo::Thread::running()->yield();
 }
 
 static void thread_sleep(uint16_t s)
 {
-  Nucleo::Thread::get_running()->delay(s * 1000L);
+  Nucleo::Thread::running()->delay(s * 1000L);
 }
 
 using namespace Nucleo;

@@ -502,7 +502,7 @@ W5100::Driver::send(const void* buf, size_t len,
 }
 
 void
-W5100::get_addr(uint8_t ip[4], uint8_t subnet[4])
+W5100::addr(uint8_t ip[4], uint8_t subnet[4])
 {
   read(M_CREG(SIPR), ip, sizeof(m_creg->SIPR));
   read(M_CREG(SUBR), subnet, sizeof(m_creg->SUBR));
@@ -524,7 +524,7 @@ W5100::begin_P(const char* hostname, uint16_t timeout)
     res = dhcp.request(ip, subnet, gateway);
     if (res != 0) continue;
     bind(ip, subnet, gateway);
-    memcpy(m_dns, dhcp.get_dns_addr(), sizeof(m_dns));
+    memcpy(m_dns, dhcp.dns_addr(), sizeof(m_dns));
     dhcp.end();
     return (true);
   }

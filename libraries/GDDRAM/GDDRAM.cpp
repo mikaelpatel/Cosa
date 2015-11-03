@@ -35,7 +35,7 @@ bool
 GDDRAM::begin()
 {
   if (m_initiated) return (false);
-  const uint8_t* bp = get_script();
+  const uint8_t* bp = script();
   uint8_t count;
   uint8_t cmd;
   spi.acquire(this);

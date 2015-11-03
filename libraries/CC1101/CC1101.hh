@@ -235,7 +235,7 @@ private:
 
   /**
    * Read single register value and status. Access status with
-   * get_status(). Returns register value.
+   * status(). Returns register value.
    * @param[in] reg register address.
    * @return value.
    */
@@ -248,7 +248,7 @@ private:
 
   /**
    * Read multiple register values into given buffer. Access status
-   * with get_status().
+   * with status().
    * @param[in] reg start register address.
    * @param[in] buf buffer to store register values.
    * @param[in] count size of buffer and number of registers to read.
@@ -260,7 +260,7 @@ private:
   }
 
   /**
-   * Write single register value. Access status with get_status().
+   * Write single register value. Access status with status().
    * @param[in] reg register address.
    * @param[in] value to write to register.
    */
@@ -272,7 +272,7 @@ private:
 
   /**
    * Write multiple register values from given buffer. Access status
-   * with get_status().
+   * with status().
    * @param[in] reg start register address.
    * @param[in] buf buffer with new register values.
    * @param[in] count size of buffer and number of registers to read.
@@ -285,7 +285,7 @@ private:
 
   /**
    * Write multiple register values from given buffer in program memory.
-   * Access status with get_status().
+   * Access status with status().
    * @param[in] reg start register address.
    * @param[in] buf buffer in program memory with new register values.
    * @param[in] count size of buffer (and number of registers) to write

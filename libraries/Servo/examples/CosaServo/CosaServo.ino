@@ -50,8 +50,8 @@ void setup()
 
   // Start servo handling and set initial angle
   Servo::begin();
-  door.set_angle(10);
-  servo.set_angle(10);
+  door.angle(10);
+  servo.angle(10);
 }
 
 void loop()
@@ -61,16 +61,16 @@ void loop()
 
   // Step servo from 10 to 170 degrees by 45 degrees
   for (; degree < 170; degree += inc) {
-    door.set_angle(degree);
-    servo.set_angle(degree);
+    door.angle(degree);
+    servo.angle(degree);
     delay(512);
   }
   if (degree > 170) degree -= inc;
 
   // Step servo from 170 to 10 degrees by -45 degrees
   for (; degree > 10; degree -= inc) {
-    door.set_angle(degree);
-    servo.set_angle(degree);
+    door.angle(degree);
+    servo.angle(degree);
     delay(512);
   }
   if (degree < 10) degree += inc;

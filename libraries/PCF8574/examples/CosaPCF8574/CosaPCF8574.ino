@@ -69,7 +69,7 @@ void setup()
   RTT::begin();
 
   // Define an output pin for demo. All other are input default
-  port.set_output_pin(0);
+  port.output_pin(0);
 }
 
 void loop()

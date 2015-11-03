@@ -44,9 +44,9 @@ public:
    * Returns pointer to VirtualWire frame preamble in program memory.
    * @return pointer.
    */
-  virtual const uint8_t* get_preamble()
+  virtual const uint8_t* preamble()
   {
-    return (preamble);
+    return (s_preamble);
   }
 
   /**
@@ -56,7 +56,7 @@ public:
    */
   virtual uint8_t encode4(uint8_t nibble)
   {
-    return (pgm_read_byte(&symbols[nibble & 0xf]));
+    return (pgm_read_byte(&s_symbols[nibble & 0xf]));
   };
 
   /**
@@ -68,10 +68,10 @@ public:
 
 private:
   /** Symbol mapping table: 4 to 6 bits */
-  static const uint8_t symbols[] PROGMEM;
+  static const uint8_t s_symbols[] PROGMEM;
 
   /** Message preamble with start symbol */
-  static const uint8_t preamble[] PROGMEM;
+  static const uint8_t s_preamble[] PROGMEM;
 };
 
 #endif

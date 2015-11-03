@@ -101,7 +101,7 @@ public:
    * Get current thread state.
    * @return state.
    */
-  uint8_t get_state() const
+  uint8_t state() const
   {
     return (m_state);
   }

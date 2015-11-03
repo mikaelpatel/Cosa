@@ -78,11 +78,11 @@ void loop()
 
   // Change step mode at min and max value
   static int old_value = -100;
-  int new_value = dial.get_value();
+  int new_value = dial.value();
   if (old_value == -100 && new_value == -99)
-    dial.set_mode(Rotary::Encoder::FULL_CYCLE);
+    dial.mode(Rotary::Encoder::FULL_CYCLE);
   else if (old_value == 10 && new_value == 9)
-    dial.set_mode(Rotary::Encoder::HALF_CYCLE);
+    dial.mode(Rotary::Encoder::HALF_CYCLE);
   old_value = new_value;
 
   // Print the new value

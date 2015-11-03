@@ -108,7 +108,7 @@ public:
      * should contain the length of the preamble including start symbol.
      * @return pointer to program memory.
      */
-    virtual const uint8_t* get_preamble() = 0;
+    virtual const uint8_t* preamble() = 0;
 
     /**
      * @override{VWI::Codec}
@@ -240,7 +240,7 @@ public:
      * control time slot (time until noise).
      * @return milli-seconds.
      */
-    int get_link_quality_indicator();
+    int link_quality_indicator();
 
   private:
     /** The size of the receiver ramp. Ramp wraps modulo this number. */
@@ -345,7 +345,7 @@ public:
       OutputPin(pin),
       m_codec(codec)
     {
-      memcpy_P(m_buffer, codec->get_preamble(), codec->PREAMBLE_MAX);
+      memcpy_P(m_buffer, codec->preamble(), codec->PREAMBLE_MAX);
     }
 
     /**
@@ -584,10 +584,10 @@ public:
    * @override{Wireless::Driver}
    * Return link quality indicator.
    */
-  virtual int get_link_quality_indicator()
+  virtual int link_quality_indicator()
   {
     if (m_rx == NULL) return (0);
-    return (m_rx->get_link_quality_indicator());
+    return (m_rx->link_quality_indicator());
   }
 
 private:

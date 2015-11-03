@@ -68,7 +68,7 @@ public:
   /**
    * Return current state.
    */
-  uint8_t get_state()
+  uint8_t state()
   {
     return (m_state);
   }

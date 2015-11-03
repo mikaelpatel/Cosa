@@ -197,7 +197,7 @@ public:
     /**
      * Get current menu item type.
      */
-    Menu::type_t get_type();
+    Menu::type_t type();
   };
 
   /**

@@ -122,9 +122,9 @@ void loop()
 
   // Print statistics
 #if defined(COSA_WIRELESS_DRIVER_NRF24L01P_HH)
-  trace << PSTR("TN: ") << rf.get_trans() << endl;
-  trace << PSTR("ER: ") << rf.get_retrans();
-  trace << PSTR(",") << rf.get_drops();
+  trace << PSTR("TN: ") << rf.trans() << endl;
+  trace << PSTR("ER: ") << rf.retrans();
+  trace << PSTR(",") << rf.drops();
   trace << endl;
   trace << flush;
   sleep(2);

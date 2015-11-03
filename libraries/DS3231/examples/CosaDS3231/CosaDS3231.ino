@@ -109,7 +109,7 @@ void loop()
   time_t now;
   ASSERT(rtc.get_time(now));
   now.to_binary();
-  float temp = rtc.get_temperature() * 0.25;
+  float temp = rtc.temperature() * 0.25;
   trace << now << ' ' << temp << PSTR(" C") << endl;
 
   // Wait for falling clock signal

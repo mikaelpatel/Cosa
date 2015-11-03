@@ -82,11 +82,11 @@ void loop()
 
   // Print dynamic configuration
   trace << PSTR("DHCP = ");
-  INET::print_addr(trace, dhcp.get_dhcp_addr());
+  INET::print_addr(trace, dhcp.dhcp_addr());
   trace << endl;
 
   trace << PSTR("DNS = ");
-  INET::print_addr(trace, dhcp.get_dns_addr());
+  INET::print_addr(trace, dhcp.dns_addr());
   trace << endl;
 
   trace << PSTR("IP = ");
@@ -102,11 +102,11 @@ void loop()
   trace << endl;
 
   trace << PSTR("LEASE OBTAINED = ");
-  trace << dhcp.get_lease_obtained();
+  trace << dhcp.lease_obtained();
   trace << endl;
 
   trace << PSTR("LEASE EXPIRES = ");
-  trace << dhcp.get_lease_expires();
+  trace << dhcp.lease_expires();
   trace << endl << endl;
   sleep(15);
   return;

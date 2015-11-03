@@ -20,7 +20,7 @@
 
 #include "ST7735.hh"
 
-const uint8_t ST7735::script[] __PROGMEM = {
+const uint8_t ST7735::s_script[] __PROGMEM = {
   // Software Reset
   SWRESET, 0,
   // Software Delay

@@ -20,7 +20,7 @@
 
 #include "ILI9163.hh"
 
-const uint8_t ILI9163::script[] __PROGMEM = {
+const uint8_t ILI9163::s_script[] __PROGMEM = {
   // Software Reset
   SWRESET, 0,
   // Out of Sleep Mode

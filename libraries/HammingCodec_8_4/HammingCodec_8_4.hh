@@ -51,9 +51,9 @@ public:
    * Returns pointer to Hamming frame preamble in program memory.
    * @return pointer.
    */
-  virtual const uint8_t* get_preamble()
+  virtual const uint8_t* preamble()
   {
-    return (preamble);
+    return (s_preamble);
   }
 
   /**
@@ -64,7 +64,7 @@ public:
    */
   virtual uint8_t encode4(uint8_t nibble)
   {
-    return (pgm_read_byte(&symbols[nibble & 0xf]));
+    return (pgm_read_byte(&s_symbols[nibble & 0xf]));
   };
 
   /**
@@ -75,19 +75,19 @@ public:
    */
   virtual uint8_t decode4(uint8_t symbol)
   {
-    uint8_t code = pgm_read_byte(&codes[symbol >> 1]);
+    uint8_t code = pgm_read_byte(&s_codes[symbol >> 1]);
     return ((symbol & 0x01) ? (code & 0x0f) : (code >> 4));
   }
 
 private:
   /** Symbol mapping table: 4 to 8 bits. */
-  static const uint8_t symbols[] PROGMEM;
+  static const uint8_t s_symbols[] PROGMEM;
 
   /** Code mapping table: 8 to 4-bit code (packed table). */
-  static const uint8_t codes[] PROGMEM;
+  static const uint8_t s_codes[] PROGMEM;
 
   /** Message preamble with start symbol. */
-  static const uint8_t preamble[] PROGMEM;
+  static const uint8_t s_preamble[] PROGMEM;
 };
 
 #endif

@@ -59,7 +59,7 @@ void setup()
 
   uint8_t subnet[4];
   uint8_t ip[4];
-  wifi.get_addr(ip, subnet);
+  wifi.addr(ip, subnet);
 
   trace << "IP="; INET::print_addr(trace, ip);
   trace << ",SUBNET="; INET::print_addr(trace, subnet);

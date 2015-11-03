@@ -43,9 +43,9 @@ public:
    * Returns pointer to 4B5B frame preamble in program memory.
    * @return pointer.
    */
-  virtual const uint8_t* get_preamble()
+  virtual const uint8_t* preamble()
   {
-    return (preamble);
+    return (s_preamble);
   }
 
   /**
@@ -56,7 +56,7 @@ public:
    */
   virtual uint8_t encode4(uint8_t nibble)
   {
-    return (pgm_read_byte(&symbols[nibble & 0xf]));
+    return (pgm_read_byte(&s_symbols[nibble & 0xf]));
   };
 
   /**
@@ -67,18 +67,18 @@ public:
    */
   virtual uint8_t decode4(uint8_t symbol)
   {
-    return (pgm_read_byte(&codes[symbol & SYMBOL_MASK]));
+    return (pgm_read_byte(&s_codes[symbol & SYMBOL_MASK]));
   }
 
 private:
   /** Symbol mapping table: 4 to 5 bits */
-  static const uint8_t symbols[] PROGMEM;
+  static const uint8_t s_symbols[] PROGMEM;
 
   /** Code mapping table: 5 to 4 bits */
-  static const uint8_t codes[] PROGMEM;
+  static const uint8_t s_codes[] PROGMEM;
 
   /** Message preamble with start symbol */
-  static const uint8_t preamble[] PROGMEM;
+  static const uint8_t s_preamble[] PROGMEM;
 };
 
 #endif

@@ -171,8 +171,8 @@ void loop()
   // Initiate the message with measurements
   dt_msg_t msg;
   msg.nr = nr++;
-  msg.indoors = indoors.get_temperature();
-  msg.outdoors = outdoors.get_temperature();
+  msg.indoors = indoors.temperature();
+  msg.outdoors = outdoors.temperature();
   msg.battery = AnalogPin::bandgap(1100);
 
   // Broadcast the message and power down after completion

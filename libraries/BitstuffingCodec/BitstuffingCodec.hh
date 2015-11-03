@@ -44,9 +44,9 @@ public:
    * program memory.
    * @return pointer.
    */
-  virtual const uint8_t* get_preamble()
+  virtual const uint8_t* preamble()
   {
-    return (preamble);
+    return (s_preamble);
   }
 
   /**
@@ -73,7 +73,7 @@ public:
 
 private:
   /** Message preamble */
-  static const uint8_t preamble[] PROGMEM;
+  static const uint8_t s_preamble[] PROGMEM;
 };
 
 #endif

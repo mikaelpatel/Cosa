@@ -24,6 +24,6 @@
  * Calculating the start symbol (5-bits per symbol):
  * 0xa, 0x1a => 01010.11010 => 11010.01010 => 11.0100.1010 => 0x34a
  */
-const uint8_t BitstuffingCodec::preamble[] __PROGMEM = {
+const uint8_t BitstuffingCodec::s_preamble[] __PROGMEM = {
   0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x1a
 };

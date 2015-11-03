@@ -157,8 +157,8 @@ BMP085::read_pressure()
 IOStream&
 operator<<(IOStream& outs, BMP085& bmp)
 {
-  outs << PSTR("BMP085(temperature = ") << bmp.get_temperature()
-       << PSTR(", pressure = ") << bmp.get_pressure()
+  outs << PSTR("BMP085(temperature = ") << bmp.temperature()
+       << PSTR(", pressure = ") << bmp.pressure()
        << PSTR(")");
   return (outs);
 }

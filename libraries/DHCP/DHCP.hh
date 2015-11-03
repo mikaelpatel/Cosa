@@ -100,31 +100,31 @@ public:
   int release(Socket* sock);
 
   /** Return time when lease was obtained. */
-  uint32_t get_lease_obtained() const
+  uint32_t lease_obtained() const
   {
     return (m_lease_obtained);
   }
 
   /** Return time when lease will expire. */
-  uint32_t get_lease_expires() const
+  uint32_t lease_expires() const
   {
     return (m_lease_expires);
   }
 
   /** Return network address of DHCP server. */
-  const uint8_t* get_dhcp_addr() const
+  const uint8_t* dhcp_addr() const
   {
     return (m_dhcp);
   }
 
   /** Return network address of DNS server. */
-  const uint8_t* get_dns_addr() const
+  const uint8_t* dns_addr() const
   {
     return (m_dns);
   }
 
   /** Return network address of gateway (router). */
-  const uint8_t* get_gateway_addr() const
+  const uint8_t* gateway_addr() const
   {
     return (m_gateway);
   }

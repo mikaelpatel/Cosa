@@ -21,7 +21,7 @@
 #include "ManchesterCodec.hh"
 
 // Manchester encoder table 4 to 8 bits. In binary to show how it works
-const uint8_t ManchesterCodec::symbols[] __PROGMEM = {
+const uint8_t ManchesterCodec::s_symbols[] __PROGMEM = {
   0b10101010,
   0b10101001,
   0b10100110,
@@ -52,7 +52,7 @@ ManchesterCodec::decode4(uint8_t symbol)
 }
 
 // Ethernet frame preamble and delimiter/start symbol
-const uint8_t ManchesterCodec::preamble[] __PROGMEM = {
+const uint8_t ManchesterCodec::s_preamble[] __PROGMEM = {
   0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x5d
 };
 

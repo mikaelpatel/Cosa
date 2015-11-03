@@ -80,7 +80,7 @@ void setup()
   RTT::begin();
   ASSERT(rf.begin());
 #if defined(USE_LOW_POWER)
-  rf.set_output_power_level(-18);
+  rf.output_power_level(-18);
 #endif
 }
 

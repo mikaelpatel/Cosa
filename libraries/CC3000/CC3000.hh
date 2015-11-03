@@ -285,7 +285,7 @@ public:
     m_evnt_handler(this),
     m_active_set(0)
   {
-    set_event_handler(&m_evnt_handler);
+    event_handler(&m_evnt_handler);
   }
 
   /**
@@ -326,7 +326,7 @@ public:
    * @param[in,out] ip network address.
    * @param[in,out] subnet mask.
    */
-  void get_addr(uint8_t ip[4], uint8_t subnet[4])
+  void addr(uint8_t ip[4], uint8_t subnet[4])
   {
     memcpy(ip, m_ip, sizeof(m_ip));
     memcpy(subnet, m_subnet, sizeof(m_subnet));
@@ -336,7 +336,7 @@ public:
    * Get the device mac address.
    * @param[in,out] mac device address.
    */
-  void get_mac_addr(uint8_t mac[6])
+  void mac_addr(uint8_t mac[6])
   {
     memcpy(mac, m_mac, sizeof(m_mac));
   }
@@ -346,7 +346,7 @@ public:
    * hostname and obtained network address from DHCP.
    * @param[in,out] ip network address.
    */
-  void get_dns_addr(uint8_t ip[4])
+  void dns_addr(uint8_t ip[4])
   {
     memcpy(ip, m_dns, sizeof(m_dns));
   }
@@ -736,7 +736,7 @@ protected:
    * @param[in] state of socket (active, deactive).
    * @return bool.
    */
-  bool set_socket_state(int hndl, bool state)
+  bool socket_state(int hndl, bool state)
   {
     if (!is_socket(hndl)) return (false);
     bit_write(state, m_active_set, hndl);

@@ -76,7 +76,7 @@ CC3000::UnsolicitedEvent::on_event(uint16_t event, void* args, size_t len)
       hci_evnt_wlan_unsol_tcp_close_wait_t* evnt;
       evnt = (hci_evnt_wlan_unsol_tcp_close_wait_t*) args;
       if (evnt->status != 0) return;
-      m_dev->set_socket_state(evnt->handle, false);
+      m_dev->socket_state(evnt->handle, false);
 #if defined(TRACE_ON_EVENT)
       trace << PSTR("HCI_EVNT_WLAN_UNSOL_TCP_CLOSE_WAIT:handle=")
 	    << evnt->handle << ',';
@@ -666,7 +666,7 @@ CC3000::connect(int hndl, uint8_t ip[4], int port)
   if (UNLIKELY(evnt.status != 0)) res = EFAULT;
   if (UNLIKELY(res < 0)) return (res);
   res = evnt.result;
-  if (!set_socket_state(res, true)) return (EFAULT);
+  if (!socket_state(res, true)) return (EFAULT);
   return (res);
 }
 
@@ -758,7 +758,7 @@ CC3000::accept(int hndl, uint8_t ip[4], int &port)
   if (UNLIKELY(evnt.result < 0)) res = evnt.result;
   if (UNLIKELY(res < 0)) return (res);
   res = evnt.handle;
-  if (!set_socket_state(res, true)) return (EFAULT);
+  if (!socket_state(res, true)) return (EFAULT);
 
   memrevcpy(ip, evnt.ip, sizeof(evnt.ip));
   port = evnt.port;
@@ -781,7 +781,7 @@ CC3000::close(int hndl)
   m_timeout = 5000;
   res = await(HCI_EVNT_CLOSE_SOCKET, &evnt, sizeof(evnt));
   m_timeout = saved;
-  set_socket_state(hndl, false);
+  socket_state(hndl, false);
   if (UNLIKELY(evnt.status != 0)) res = EFAULT;
   if (UNLIKELY(res < 0)) return (res);
   return (evnt.result);

@@ -85,13 +85,13 @@ public:
    * 100% levels.
    * @param[in] percent output frequency scaling.
    */
-  void set_frequency_scaling(uint8_t percent);
+  void frequency_scaling(uint8_t percent);
 
   /**
    * Set photodiode filter type (RED, GREEN, BLUE or NO_FILTER).
    * @param[in] type of color filter.
    */
-  void set_photodiode(Filter type);
+  void photodiode(Filter type);
 
   /**
    * Collect generated pulses for the given time-period with the

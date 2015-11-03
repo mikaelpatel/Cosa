@@ -148,7 +148,7 @@ public:
    * Calculate temperature from the latest raw sensor reading.
    * @return calculated temperature in steps of 0.1 C
    */
-  int16_t get_temperature() const
+  int16_t temperature() const
     __attribute__((always_inline))
   {
     return ((B5 + 8) >> 4);
@@ -159,7 +159,7 @@ public:
    * raw sensor data.
    * @return calculated pressure in steps of 1 Pa (0,01 hPa).
    */
-  int32_t get_pressure() const
+  int32_t pressure() const
   {
     return (m_pressure);
   }

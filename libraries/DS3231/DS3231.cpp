@@ -70,7 +70,7 @@ DS3231::set(void* alarm, uint8_t size, uint8_t offset, uint8_t mask)
 }
 
 int16_t
-DS3231::get_temperature()
+DS3231::temperature()
 {
   int16_t temp = 0;
   read(&temp, sizeof(temp), offsetof(timekeeper_t, temp));

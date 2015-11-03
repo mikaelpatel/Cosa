@@ -92,7 +92,7 @@ void setup()
   for (uint8_t i = 0; i < membersof(temp); i++) {
     DS18B20* t = temp[i];
     TRACE(t->connect(i));
-    t->set_resolution(10);
+    t->resolution(10);
     t->set_trigger(18, 22);
     t->write_scratchpad();
   }
@@ -103,7 +103,7 @@ void setup()
     DS18B20* t = temp[i];
     t->read_scratchpad();
     t->get_trigger(low, high);
-    resolution = t->get_resolution();
+    resolution = t->resolution();
     trace << (OWI::Driver&) *t << endl;
     trace << *t << endl;
     trace << PSTR("resolution = ") << resolution << endl;

@@ -42,7 +42,7 @@ public:
    * Get bitmap for the off-screen canvas.
    * @return bitmap pointer.
    */
-  uint8_t* get_bitmap()
+  uint8_t* bitmap()
   {
     return (m_bitmap);
   }

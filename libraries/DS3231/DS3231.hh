@@ -288,7 +288,7 @@ public:
    * Read temperature from real-time clock, signed fixpoint<8:2>
    * @return temperature.
    */
-  int16_t get_temperature();
+  int16_t temperature();
 
 
   /**

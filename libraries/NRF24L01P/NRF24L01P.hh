@@ -190,13 +190,13 @@ public:
    * Set output power level (-30..10 dBm)
    * @param[in] dBm.
    */
-  virtual void set_output_power_level(int8_t dBm);
+  virtual void output_power_level(int8_t dBm);
 
   /**
    * Return number of transmitted messages.
    * @return transmitt count.
    */
-  uint16_t get_trans() const
+  uint16_t trans() const
   {
     return (m_trans);
   }
@@ -205,7 +205,7 @@ public:
    * Return number of retransmissions.
    * @return retransmitt count.
    */
-  uint16_t get_retrans() const
+  uint16_t retrans() const
   {
     return (m_retrans);
   }
@@ -214,7 +214,7 @@ public:
    * Return number of dropped messages.
    * @return drop count.
    */
-  uint16_t get_drops() const
+  uint16_t drops() const
   {
     return (m_drops);
   }
@@ -655,12 +655,12 @@ protected:
    * Set transmit mode and given destination device address.
    * @param[n] dest destination device address.
    */
-  void set_transmit_mode(uint8_t dest);
+  void transmit_mode(uint8_t dest);
 
   /**
    * Set receive mode.
    */
-  void set_receiver_mode();
+  void receiver_mode();
 
   // Allow operators to access internals
   friend IOStream& operator<<(IOStream& outs, status_t status);

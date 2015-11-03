@@ -112,10 +112,10 @@ void setup()
   accelerometer.begin();
 
   // Set continous measurement mode, 3 Hz output, avg 8 samples, +-4.0 Gauss
-  compass.set_output_rate(HMC5883L::OUTPUT_RATE_3_HZ);
-  compass.set_samples_avg(HMC5883L::SAMPLES_AVG_8);
-  compass.set_range(HMC5883L::RANGE_4_0_GA);
-  compass.set_mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE);
+  compass.output_rate(HMC5883L::OUTPUT_RATE_3_HZ);
+  compass.samples_avg(HMC5883L::SAMPLES_AVG_8);
+  compass.range(HMC5883L::RANGE_4_0_GA);
+  compass.mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE);
 
   // And start the compass
   compass.begin();
@@ -151,7 +151,7 @@ void loop()
   compass.read_heading();
   compass.to_milli_gauss();
   HMC5883L::data_t dir;
-  compass.get_heading(dir);
+  compass.heading(dir);
   lcd.set_cursor(0, 2);
   cout << dir.x << PSTR(",") << dir.y << PSTR(",") << dir.z << PSTR(" mG");
 

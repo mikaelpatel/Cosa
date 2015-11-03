@@ -58,7 +58,7 @@ public:
    * Return humidity from latest read.
    * @return humidity.
    */
-  int16_t get_humidity() const
+  int16_t humidity() const
   {
     return (m_humidity);
   }
@@ -67,7 +67,7 @@ public:
    * Return temperature from latest read.
    * @return temperature.
    */
-  int16_t get_temperature() const
+  int16_t temperature() const
   {
     return (m_temperature);
   }

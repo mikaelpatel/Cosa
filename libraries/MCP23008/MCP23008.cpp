@@ -44,7 +44,7 @@ MCP23008::begin()
 }
 
 bool
-MCP23008::set_data_direction(uint8_t iodir)
+MCP23008::data_direction(uint8_t iodir)
 {
   m_iodir = iodir;
   twi.acquire(this);
@@ -55,7 +55,7 @@ MCP23008::set_data_direction(uint8_t iodir)
 }
 
 bool
-MCP23008::set_pullup(uint8_t gppu)
+MCP23008::pullup(uint8_t gppu)
 {
   m_gppu = gppu;
   twi.acquire(this);
@@ -66,7 +66,7 @@ MCP23008::set_pullup(uint8_t gppu)
 }
 
 bool
-MCP23008::set_interrupt_pin(uint8_t pin, InterruptMode mode)
+MCP23008::interrupt_pin(uint8_t pin, InterruptMode mode)
 {
   uint8_t mask = _BV(pin & PIN_MASK);
   int res;

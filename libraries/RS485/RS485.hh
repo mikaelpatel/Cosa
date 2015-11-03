@@ -99,7 +99,7 @@ public:
    * Set device address.
    * @param[in] addr device address.
    */
-  void set_address(uint8_t addr = MASTER)
+  void address(uint8_t addr = MASTER)
   {
     m_addr = addr;
   }

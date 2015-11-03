@@ -44,7 +44,7 @@ public:
     m_min(MIN_WIDTH),
     m_max(MAX_WIDTH)
   {
-    set_angle(INIT_ANGLE);
+    angle(INIT_ANGLE);
     servo[ix != 0] = this;
   }
 
@@ -64,7 +64,7 @@ public:
    * @param[in] min number of micro seconds.
    * @param[in] max number of micro seconds.
    */
-  void set_pulse(uint16_t min, uint16_t max)
+  void pulse(uint16_t min, uint16_t max)
     __attribute__((always_inline))
   {
     m_min = min;
@@ -75,7 +75,7 @@ public:
    * Return current pulse width in micro seconds.
    * @return pulse width.
    */
-  uint16_t get_width() const
+  uint16_t width() const
   {
     return (m_width);
   }
@@ -84,13 +84,13 @@ public:
    * Set servo to given angle degree.
    * @param[in] degree angle, 0..180.
    */
-  void set_angle(uint8_t degree);
+  void angle(uint8_t degree);
 
   /**
    * Return servo angle.
    * @return angle in degree, 0..180.
    */
-  uint8_t get_angle() const
+  uint8_t angle() const
   {
     return (m_angle);
   }

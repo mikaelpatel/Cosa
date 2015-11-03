@@ -65,17 +65,17 @@ public:
    * @param[in] ddr data direction mask.
    * @return bool.
    */
-  bool set_data_direction(uint8_t ddr);
+  bool data_direction(uint8_t ddr);
 
   /**
    * Set given pin as input. Return true if set otherwise false.
    * @param[in] pin number (0..7).
    * @return bool.
    */
-  bool set_input_pin(uint8_t pin)
+  bool input_pin(uint8_t pin)
     __attribute__((always_inline))
   {
-    return (set_data_direction(m_ddr | _BV(pin & PIN_MASK)));
+    return (data_direction(m_ddr | _BV(pin & PIN_MASK)));
   }
 
   /**
@@ -83,10 +83,10 @@ public:
    * @param[in] pin number (0..7).
    * @return bool.
    */
-  bool set_output_pin(uint8_t pin)
+  bool output_pin(uint8_t pin)
     __attribute__((always_inline))
   {
-    return (set_data_direction(m_ddr & ~_BV(pin & PIN_MASK)));
+    return (data_direction(m_ddr & ~_BV(pin & PIN_MASK)));
   }
 
   /**

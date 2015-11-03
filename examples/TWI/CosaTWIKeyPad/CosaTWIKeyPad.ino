@@ -73,7 +73,7 @@ bool
 KeyPad3X4::begin()
 {
   // Set the data direction; Use D4-D7 for input (key pad rows)
-  if (!set_data_direction(0xf0)) return (false);
+  if (!data_direction(0xf0)) return (false);
   // Write zero to detect key pressed
   write(0);
   return (true);

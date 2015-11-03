@@ -97,7 +97,7 @@ public:
      * Get current cycle mode.
      * @return mode.
      */
-    Mode get_mode() const
+    Mode mode() const
     {
       return (m_mode);
     }
@@ -106,7 +106,7 @@ public:
      * Set cycle mode.
      * @param[in] mode cycle.
      */
-    void set_mode(Mode mode)
+    void mode(Mode mode)
     {
       m_mode = mode;
     }
@@ -221,7 +221,7 @@ public:
      * Return current dial value.
      * @return value.
      */
-    T get_value() const
+    T value() const
     {
       return (m_value);
     }
@@ -230,7 +230,7 @@ public:
      * Get current step (increment/decrement).
      * @return step.
      */
-    T get_step() const
+    T step() const
     {
       return (m_step);
     }
@@ -239,7 +239,7 @@ public:
      * Set step (increment/decrement).
      * @param[in] step value.
      */
-    void set_step(T step)
+    void step(T step)
     {
       m_step = step;
     }
@@ -331,7 +331,7 @@ public:
      * Return current dial value.
      * @return value.
      */
-    T get_value() const
+    T value() const
     {
       return (m_value);
     }
@@ -340,7 +340,7 @@ public:
      * Get current step (slow increment/decrement).
      * @return step.
      */
-    T get_step() const
+    T step() const
     {
       return (m_step);
     }
@@ -349,7 +349,7 @@ public:
      * Set step (slow increment/decrement).
      * @param[in] step value.
      */
-    void set_step(T step)
+    void step(T step)
     {
       m_step = step;
     }
@@ -358,7 +358,7 @@ public:
      * Get current steps (fast increment/decrement).
      * @return steps.
      */
-    T get_steps() const
+    T steps() const
     {
       return (m_steps);
     }
@@ -367,7 +367,7 @@ public:
      * Set step (fast increment/decrement).
      * @param[in] steps value.
      */
-    void set_steps(T steps)
+    void steps(T steps)
     {
       m_steps = steps;
     }

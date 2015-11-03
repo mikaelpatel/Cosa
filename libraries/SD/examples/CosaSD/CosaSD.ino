@@ -102,7 +102,7 @@ void loop()
 
   INFO("Connect to card and switch to a higher clock frequency", 0);
   ASSERT(sd.begin(SPI::DIV2_CLOCK));
-  ASSERT(sd.get_type());
+  ASSERT(sd.type());
 
   INFO("Read CID and print fields", 0);
   ASSERT(sd.read(cid));

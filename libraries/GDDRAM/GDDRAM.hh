@@ -117,7 +117,7 @@ protected:
    * Get initialization script (in program memory).
    * @return pointer to script.
    */
-  virtual const uint8_t* get_script() = 0;
+  virtual const uint8_t* script() = 0;
 
   /**
    * GDDRAM SPI commands.

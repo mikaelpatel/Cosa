@@ -71,7 +71,7 @@ void loop()
   if (!dev.read_rom()) return;
 
   // Check if it is an authorized key. Turn on led for 5 seconds
-  uint8_t* rom = dev.get_rom();
+  uint8_t* rom = dev.rom();
   for (uint8_t i = 0; i < sizeof(KEY); i += OWI::ROM_MAX) {
     if (!memcmp_P(rom, &KEY[i], OWI::ROM_MAX)) {
       trace << dev << PSTR(":AUTHORIZED KEY") << endl;

@@ -91,7 +91,7 @@ public:
    * Set write protect-bit according to flag.
    * @param[in] flag write protect mode.
    */
-  void set_write_protect(bool flag)
+  void write_protect(bool flag)
     __attribute__((always_inline))
   {
     write(WP, flag ? 0x80 : 0x00);
@@ -121,7 +121,7 @@ public:
 
   /**
    * Write given data to the static memory (31 bytes). Requires
-   * handling of write protect (set_write_protect).
+   * handling of write protect (write_protect).
    * @param[in] addr memory address (0..RAM_MAX-1).
    * @param[in] data to write to the memory address.
    */

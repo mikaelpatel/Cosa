@@ -29,7 +29,7 @@
 #include "Cosa/RTT.hh"
 
 // Enable printout of data received
-// #define TRACE_RECV
+#define TRACE_RECV
 
 #if defined(WICKEDDEVICE_WILDFIRE)
 CC3000 wifi(Board::D21, Board::EXT2, Board::D23);

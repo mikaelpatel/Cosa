@@ -153,7 +153,7 @@ VWI::Receiver::recv(uint8_t& src, uint8_t& port,
 }
 
 int
-VWI::Receiver::get_link_quality_indicator()
+VWI::Receiver::link_quality_indicator()
 {
   uint32_t start = RTT::millis();
   while (is_clear());

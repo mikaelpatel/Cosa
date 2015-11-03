@@ -62,10 +62,10 @@ void setup()
   TRACE(sizeof(HMC5883L));
 
   // Set continous measurement mode, 3 Hz output, avg 8 samples, +-4.0 Gauss
-  compass.set_output_rate(HMC5883L::OUTPUT_RATE_3_HZ);
-  compass.set_samples_avg(HMC5883L::SAMPLES_AVG_8);
-  compass.set_range(HMC5883L::RANGE_4_0_GA);
-  compass.set_mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE);
+  compass.output_rate(HMC5883L::OUTPUT_RATE_3_HZ);
+  compass.samples_avg(HMC5883L::SAMPLES_AVG_8);
+  compass.range(HMC5883L::RANGE_4_0_GA);
+  compass.mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE);
 
   // Start the watchdog ticks and the compass
   Watchdog::begin();

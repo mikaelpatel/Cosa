@@ -35,14 +35,14 @@ TCS230::TCS230(Board::ExternalInterruptPin out,
 }
 
 void
-TCS230::set_photodiode(Filter type)
+TCS230::photodiode(Filter type)
 {
   m_s2.set(type & 0x2);
   m_s3.set(type & 0x1);
 }
 
 void
-TCS230::set_frequency_scaling(uint8_t percent)
+TCS230::frequency_scaling(uint8_t percent)
 {
   // Power-down on 0%
   if (percent == 0) {

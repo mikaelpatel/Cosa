@@ -23,7 +23,7 @@
 bool
 MJKDZ_LCD_Module::setup()
 {
-  set_data_direction(0);
+  data_direction(0);
   return (false);
 }
 

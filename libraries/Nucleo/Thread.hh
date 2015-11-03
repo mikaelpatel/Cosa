@@ -36,7 +36,7 @@ public:
    * Return running thread.
    * @return thread.
    */
-  static Thread* get_running()
+  static Thread* running()
   {
     return (s_running);
   }

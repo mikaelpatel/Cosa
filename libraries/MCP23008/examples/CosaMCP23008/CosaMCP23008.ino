@@ -81,10 +81,10 @@ void setup()
   ASSERT(port.begin());
 
   // Define an output pin(0) for demo. All other are input default
-  ASSERT(port.set_output_pin(0));
+  ASSERT(port.output_pin(0));
 
   // Use pullup resistor on pin(1..7)
-  ASSERT(port.set_pullup(0xfe));
+  ASSERT(port.pullup(0xfe));
 }
 
 void loop()

@@ -78,7 +78,7 @@ void setup()
   // Connect to temperature sensor, and set resolution and triggers
   pw.on();
   sensor.connect(0);
-  sensor.set_resolution(10);
+  sensor.resolution(10);
   sensor.set_trigger(25,30);
   sensor.write_scratchpad();
   pw.off();
@@ -92,7 +92,7 @@ void loop()
   sensor.read_scratchpad();
   pw.off();
   int8_t low, high;
-  int16_t temp = (sensor.get_temperature() >> 4);
+  int16_t temp = (sensor.temperature() >> 4);
   sensor.get_trigger(low, high);
 
   // Set LED according to temperature

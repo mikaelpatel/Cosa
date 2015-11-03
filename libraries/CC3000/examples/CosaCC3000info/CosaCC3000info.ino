@@ -72,11 +72,10 @@ void setup()
   if (wifi.wlan_ioctl_statusget() == wifi.WLAN_STATUS_DISCONNECTED) {
     MEASURE("Connect to WLAN:", 1)
       res = wifi.wlan_connect(CC3000::WPA2_SECURITY_TYPE,
-			      PSTR("SSID"),
+			      PSTR("SID"),
 			      NULL,
 			      PSTR("PASSWORD"));
     if (res < 0) TRACE(res);
-
   }
 
   INFO("MAC and Network addresses:", 0);
@@ -87,10 +86,10 @@ void setup()
 
   do {
     wifi.service();
-    wifi.get_addr(ip, subnet);
+    wifi.addr(ip, subnet);
   } while (*ip == 0 && 0);
-  wifi.get_dns_addr(dns);
-  wifi.get_mac_addr(mac);
+  wifi.dns_addr(dns);
+  wifi.mac_addr(mac);
 
   trace << "MAC="; INET::print_mac(trace, mac); trace << endl;
   trace << "IP=";  INET::print_addr(trace, ip); trace << endl;

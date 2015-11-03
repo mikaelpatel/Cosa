@@ -259,7 +259,7 @@ public:
    * events.
    * @param[in] handler.
    */
-  void set_event_handler(Event::Handler* handler)
+  void event_handler(Event::Handler* handler)
   {
     m_event_handler = handler;
   }

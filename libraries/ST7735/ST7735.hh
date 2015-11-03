@@ -87,15 +87,15 @@ protected:
    * Get initialization script (in program memory).
    * @return pointer to script.
    */
-  virtual const uint8_t* get_script()
+  virtual const uint8_t* script()
   {
-    return (script);
+    return (s_script);
   }
 
   /**
    * Initialization script (in program memory).
    */
-  static const uint8_t script[] PROGMEM;
+  static const uint8_t s_script[] PROGMEM;
 };
 
 #endif

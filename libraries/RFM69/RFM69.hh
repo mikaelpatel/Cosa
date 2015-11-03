@@ -170,21 +170,21 @@ public:
    * Set output power level [-18..13] dBm.
    * @param[in] dBm.
    */
-  virtual void set_output_power_level(int8_t dBm);
+  virtual void output_power_level(int8_t dBm);
 
   /**
    * @override{Wireless::Driver}
    * Return estimated input power level (dBm) from latest successful
    * message received.
    */
-  virtual int get_input_power_level();
+  virtual int input_power_level();
 
   /**
    * Sample internal digital thermometer and return in centigrade
    * Celsius.
    * @return temperature.
    */
-  int get_temperature();
+  int temperature();
 
   /**
    * Recalibrate internal RC oscillator when device is used in an

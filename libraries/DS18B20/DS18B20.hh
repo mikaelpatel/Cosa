@@ -115,7 +115,7 @@ public:
    * and copy_scratchpad() to update device.
    * @param[in] bits resolution.
    */
-  void set_resolution(uint8_t bits);
+  void resolution(uint8_t bits);
 
   /**
    * Set alarm trigger values; low and high threshold values.
@@ -138,7 +138,7 @@ public:
    * bit 1 and 0, and so on (LSB).
    * @return temperature
    */
-  int16_t get_temperature() const
+  int16_t temperature() const
     __attribute__((always_inline))
   {
     return (m_scratchpad.temperature);
@@ -149,7 +149,7 @@ public:
    * read values from device before calling this method.
    * @return number of bits.
    */
-  uint8_t get_resolution() const
+  uint8_t resolution() const
     __attribute__((always_inline))
   {
     if (m_rom[0] == 0) return (0);

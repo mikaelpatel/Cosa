@@ -95,7 +95,7 @@ DS1302::get_time(time_t& now)
 void
 DS1302::set_time(time_t& now)
 {
-  set_write_protect(false);
+  write_protect(false);
   asserted(m_cs) {
     write(RTC_BURST | WRITE);
     write(now.seconds);
@@ -106,7 +106,7 @@ DS1302::set_time(time_t& now)
     write(now.day);
     write(now.year);
   }
-  set_write_protect(true);
+  write_protect(true);
 }
 
 void
@@ -129,10 +129,10 @@ DS1302::write_ram(void* buf, size_t size)
   if (UNLIKELY(size == 0)) return;
   uint8_t* bp = (uint8_t*) buf;
   if (UNLIKELY(size > RAM_MAX)) size = RAM_MAX;
-  set_write_protect(false);
+  write_protect(false);
   asserted(m_cs) {
     write(RAM_BURST | WRITE);
     do write(*bp++); while (--size);
   }
-  set_write_protect(true);
+  write_protect(true);
 }

@@ -159,14 +159,14 @@ public:
    */
   bool end()
   {
-    return (set_mode(IDLE_MEASUREMENT_MODE));
+    return (mode(IDLE_MEASUREMENT_MODE));
   }
 
   /**
    * Set await sleep mode.
    * @param[in] mode power sleep mode.
    */
-  void set_await_mode(uint8_t mode)
+  void await_mode(uint8_t mode)
   {
     m_mode = mode;
   }
@@ -176,7 +176,7 @@ public:
    * configuration changes.
    * @param[in] bias current configuration.
    */
-  void set_bias(Bias bias)
+  void bias(Bias bias)
   {
     m_config.MS = bias;
   }
@@ -186,7 +186,7 @@ public:
    * write_config() after configuration changes.
    * @param[in] rate of data output.
    */
-  void set_output_rate(Rate rate)
+  void output_rate(Rate rate)
   {
     m_config.DO = rate;
   }
@@ -196,7 +196,7 @@ public:
    * write_config() after configuration changes.
    * @param[in] avg number of samples.
    */
-  void set_samples_avg(Avg avg)
+  void samples_avg(Avg avg)
   {
     m_config.MA = avg;
   }
@@ -206,7 +206,7 @@ public:
    * range. Call write_config() after configuration changes.
    * @param[in] range gauss.
    */
-  void set_range(Range range)
+  void range(Range range)
   {
     m_config.GN = range;
   }
@@ -223,7 +223,7 @@ public:
    * Get output data from device driver.
    * @param[out] data.
    */
-  void get_heading(data_t& data) const
+  void heading(data_t& data) const
   {
     data = m_output;
   }
@@ -237,7 +237,7 @@ public:
    * @param[in] mode of operation.
    * @return bool
    */
-  bool set_mode(Mode mode);
+  bool mode(Mode mode);
 
   /**
    * Read status from device. Return true(1) if successful
@@ -266,7 +266,7 @@ public:
    */
   bool sample_heading_request()
   {
-    return (set_mode(SINGLE_MEASUREMENT_MODE));
+    return (mode(SINGLE_MEASUREMENT_MODE));
   }
 
   /**
@@ -296,7 +296,7 @@ public:
     __attribute__((always_inline))
   {
     if (!read_heading()) return (false);
-    get_heading(data);
+    heading(data);
     return (true);
   }
 

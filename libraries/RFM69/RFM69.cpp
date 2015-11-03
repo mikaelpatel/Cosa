@@ -268,7 +268,7 @@ RFM69::wakeup_on_radio()
 }
 
 void
-RFM69::set_output_power_level(int8_t dBm)
+RFM69::output_power_level(int8_t dBm)
 {
   // Fix: High power level setting for RFM69HW
   if (dBm < -18) dBm = -18; else if (dBm > 13) dBm = 13;
@@ -278,13 +278,13 @@ RFM69::set_output_power_level(int8_t dBm)
 }
 
 int
-RFM69::get_input_power_level()
+RFM69::input_power_level()
 {
   return ((-read(RSSI_VALUE)) >> 1);
 }
 
 int
-RFM69::get_temperature()
+RFM69::temperature()
 {
   set(STANDBY_MODE);
   write(TEMP1, TEMP_MEAS_START);

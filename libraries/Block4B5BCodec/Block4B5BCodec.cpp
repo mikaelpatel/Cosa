@@ -24,11 +24,11 @@
  * Calculating the start symbol JK (5-bits per symbol):
  * 0x18, 0x11 => 11000.10001 => 10001.11000 => 10.0011.1000 => 0x238
  */
-const uint8_t Block4B5BCodec::preamble[] __PROGMEM = {
+const uint8_t Block4B5BCodec::s_preamble[] __PROGMEM = {
   0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x18, 0x11
 };
 
-const uint8_t Block4B5BCodec::symbols[] __PROGMEM = {
+const uint8_t Block4B5BCodec::s_symbols[] __PROGMEM = {
   0b11110,
   0b01001,
   0b10100,
@@ -47,7 +47,7 @@ const uint8_t Block4B5BCodec::symbols[] __PROGMEM = {
   0b11101
 };
 
-const uint8_t Block4B5BCodec::codes[] __PROGMEM = {
+const uint8_t Block4B5BCodec::s_codes[] __PROGMEM = {
   0xff, //  0: 0b00000
   0xff, //  1: 0b00001
   0xff, //  2: 0b00010

@@ -40,7 +40,7 @@ DS18B20::connect(uint8_t index)
 }
 
 void
-DS18B20::set_resolution(uint8_t bits)
+DS18B20::resolution(uint8_t bits)
 {
   if (bits < 9) bits = 9; else if (bits > 12) bits = 12;
   m_scratchpad.configuration = (((bits - 9) << 5) | 0x1f);
@@ -76,7 +76,7 @@ DS18B20::read_scratchpad(bool flag)
 {
   if (m_converting) {
     int32_t ms = Watchdog::millis() - m_start;
-    uint16_t conv_time = (MAX_CONVERSION_TIME >> (12 - get_resolution()));
+    uint16_t conv_time = (MAX_CONVERSION_TIME >> (12 - resolution()));
     if (ms < conv_time) {
       ms = conv_time - ms;
       delay(ms);
@@ -141,7 +141,7 @@ DS18B20::print(IOStream& outs, int16_t temp)
 IOStream& operator<<(IOStream& outs, DS18B20& thermometer)
 {
   if (thermometer.NAME != NULL) outs << thermometer.NAME << PSTR(" = ");
-  DS18B20::print(outs, thermometer.get_temperature());
+  DS18B20::print(outs, thermometer.temperature());
   return (outs);
 }
 

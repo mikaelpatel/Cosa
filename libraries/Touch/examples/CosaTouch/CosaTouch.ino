@@ -53,12 +53,12 @@ public:
     m_offset(offset)
   {}
 
-  static void set_value(int16_t value)
+  static void value(int16_t value)
   {
     s_value = value;
   }
 
-  static int16_t get_value()
+  static int16_t value()
   {
     return (s_value);
   }
@@ -86,7 +86,7 @@ void setup()
   cout << PSTR("CosaTouch: started") << endl;
   Watchdog::begin();
   RTT::begin();
-  Key::set_value(0);
+  Key::value(0);
   upkey.start();
   downkey.start();
 }

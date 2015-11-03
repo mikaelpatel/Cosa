@@ -114,10 +114,10 @@ void setup()
   // Start the sensors
   acceleratometer.begin();
   bmp.begin(BMP085::ULTRA_LOW_POWER);
-  compass.set_output_rate(HMC5883L::OUTPUT_RATE_3_HZ);
-  compass.set_samples_avg(HMC5883L::SAMPLES_AVG_8);
-  compass.set_range(HMC5883L::RANGE_4_0_GA);
-  compass.set_mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE);
+  compass.output_rate(HMC5883L::OUTPUT_RATE_3_HZ);
+  compass.samples_avg(HMC5883L::SAMPLES_AVG_8);
+  compass.range(HMC5883L::RANGE_4_0_GA);
+  compass.mode(HMC5883L::CONTINOUS_MEASUREMENT_MODE);
   compass.begin();
   gyroscope.begin();
 }
@@ -148,8 +148,8 @@ void loop()
   bmp.sample();
   trace << clear;
   trace << PSTR("Barometer:") << endl;
-  trace << bmp.get_pressure() << PSTR(" Pa, ");
-  trace << (bmp.get_temperature() + 5) / 10 << PSTR(" C");
+  trace << bmp.pressure() << PSTR(" Pa, ");
+  trace << (bmp.temperature() + 5) / 10 << PSTR(" C");
 #if (HEIGHT == 2)
   sleep(2);
   trace << clear;
@@ -161,7 +161,7 @@ void loop()
   compass.read_heading();
   compass.to_milli_gauss();
   HMC5883L::data_t dir;
-  compass.get_heading(dir);
+  compass.heading(dir);
   trace << PSTR("Compass:") << endl;
   trace << dir.x << PSTR(", ")
 	<< dir.y << PSTR(", ")

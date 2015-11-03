@@ -156,7 +156,7 @@ void setup()
 
   // Draw the off-screen canvas on the LCD
   lcd.set_cursor(0, 0);
-  lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
+  lcd.draw_bitmap(offscreen.bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
   sleep(4);
 #endif
 }
@@ -208,7 +208,7 @@ void loop()
 
     // Draw the off-screen canvas on the LCD
     lcd.putchar('\f');
-    lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
+    lcd.draw_bitmap(offscreen.bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
 
     // Decrement counter
     if (sec == 0) {

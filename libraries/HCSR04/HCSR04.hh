@@ -68,7 +68,7 @@ public:
    * Latest distance reading.
    * @return distance in millimeters.
    */
-  uint16_t get_distance() const
+  uint16_t distance() const
   {
     return (m_distance);
   }

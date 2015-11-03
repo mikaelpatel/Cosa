@@ -126,7 +126,7 @@ NRF24L01P::powerup()
 }
 
 void
-NRF24L01P::set_receiver_mode()
+NRF24L01P::receiver_mode()
 {
   // Check already in receive mode
   if (m_state == RX_STATE) return;
@@ -139,7 +139,7 @@ NRF24L01P::set_receiver_mode()
 }
 
 void
-NRF24L01P::set_transmit_mode(uint8_t dest)
+NRF24L01P::transmit_mode(uint8_t dest)
 {
   // Setup primary transmit address
   addr_t tx_addr(m_addr.network, dest);
@@ -190,7 +190,7 @@ NRF24L01P::begin(const void* config)
   write(DYNPD, DPL_PA);
 
   // Setup hardware receive pipes address; network (16-bit), device (8-bit)
-  // P0: auto-acknowledge (see set_transmit_mode)
+  // P0: auto-acknowledge (see transmit_mode)
   // P1: node address<network:device> with auto-acknowledge
   // P2: broadcast<network:0>
   addr_t rx_addr = m_addr;
@@ -216,7 +216,7 @@ NRF24L01P::send(uint8_t dest, uint8_t port, const iovec_t* vec)
   if (UNLIKELY(len > PAYLOAD_MAX)) return (EMSGSIZE);
 
   // Setting transmit destination
-  set_transmit_mode(dest);
+  transmit_mode(dest);
 
   // Write source address and payload to the transmit fifo
   // Fix: Allow larger payload(30*3) with fragmentation
@@ -294,7 +294,7 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
 		uint32_t ms)
 {
   // Run in receiver mode
-  set_receiver_mode();
+  receiver_mode();
 
   // Check if there is data available on any pipe
   uint32_t start = RTT::millis();
@@ -325,7 +325,7 @@ NRF24L01P::recv(uint8_t& src, uint8_t& port,
 }
 
 void
-NRF24L01P::set_output_power_level(int8_t dBm)
+NRF24L01P::output_power_level(int8_t dBm)
 {
   uint8_t pwr = RF_PWR_0DBM;
   if      (dBm < -12) pwr = RF_PWR_18DBM;

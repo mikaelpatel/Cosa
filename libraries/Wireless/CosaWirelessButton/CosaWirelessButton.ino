@@ -72,6 +72,7 @@
 // ManchesterCodec codec;
 #include <VirtualWireCodec.h>
 VirtualWireCodec codec;
+#if defined(COSA_VWI_HH)
 #define SPEED 4000
 #if defined(BOARD_ATTINY)
 VWI::Transmitter tx(Board::D0, &codec);
@@ -79,6 +80,7 @@ VWI::Transmitter tx(Board::D0, &codec);
 VWI::Transmitter tx(Board::D6, &codec);
 #endif
 VWI rf(NETWORK, DEVICE, SPEED, &tx);
+#endif
 
 class Button : public ExternalInterrupt {
 public:

@@ -607,14 +607,14 @@ public:
    * @param[in] ip network address.
    * @param[in] subnet mask.
    */
-  void get_addr(uint8_t ip[4], uint8_t subnet[4]);
+  void addr(uint8_t ip[4], uint8_t subnet[4]);
 
   /**
    * Get DNS network address if W5100 device driver was initiated with
    * hostname and obtained network address from DHCP.
    * @param[in,out] ip network address.
    */
-  void get_dns_addr(uint8_t ip[4]) { memcpy(ip, m_dns, sizeof(m_dns)); }
+  void dns_addr(uint8_t ip[4]) { memcpy(ip, m_dns, sizeof(m_dns)); }
 
   /**
    * Initiate W5100 device driver with given hostname. Network address,

@@ -21,7 +21,7 @@
 #include "PCF8574.hh"
 
 bool
-PCF8574::set_data_direction(uint8_t ddr)
+PCF8574::data_direction(uint8_t ddr)
 {
   m_ddr = ddr;
   m_port |= m_ddr;

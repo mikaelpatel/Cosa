@@ -136,7 +136,7 @@ void loop()
 
   // Draw the bitmap to the LCD screen
   lcd.set_cursor(0, 0);
-  lcd.draw_bitmap(offscreen.get_bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
+  lcd.draw_bitmap(offscreen.bitmap(), offscreen.WIDTH, offscreen.HEIGHT);
 
   // Take a nap
   sleep(2);

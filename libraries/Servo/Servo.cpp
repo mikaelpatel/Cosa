@@ -48,7 +48,7 @@ Servo::end()
 }
 
 void
-Servo::set_angle(uint8_t degree)
+Servo::angle(uint8_t degree)
 {
   if (UNLIKELY(degree > 180)) degree = 180;
   uint16_t width = (((uint32_t) (m_max - m_min)) * degree) / 180L;

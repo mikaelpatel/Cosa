@@ -23,7 +23,7 @@
 bool
 SainSmart_LCD2004::setup()
 {
-  set_data_direction(0);
+  data_direction(0);
   return (false);
 }
 

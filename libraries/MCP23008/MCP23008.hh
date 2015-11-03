@@ -84,7 +84,7 @@ public:
    * @param[in] iodir data direction mask.
    * @return bool.
    */
-  bool set_data_direction(uint8_t iodir);
+  bool data_direction(uint8_t iodir);
 
   /**
    * Set pullup mode for port pin P0..P7; 0 for normal, 1 for pullup
@@ -92,17 +92,17 @@ public:
    * @param[in] gppu pullup resistor mask.
    * @return bool.
    */
-  bool set_pullup(uint8_t gppu);
+  bool pullup(uint8_t gppu);
 
   /**
    * Set given pin as input. Return true if set otherwise false.
    * @param[in] pin number (0..7).
    * @return bool.
    */
-  bool set_input_pin(uint8_t pin)
+  bool input_pin(uint8_t pin)
     __attribute__((always_inline))
   {
-    return (set_data_direction(m_iodir | _BV(pin & PIN_MASK)));
+    return (data_direction(m_iodir | _BV(pin & PIN_MASK)));
   }
 
   /**
@@ -110,10 +110,10 @@ public:
    * @param[in] pin number (0..7).
    * @return bool.
    */
-  bool set_pullup_pin(uint8_t pin)
+  bool pullup_pin(uint8_t pin)
     __attribute__((always_inline))
   {
-    return (set_pullup(m_gppu | _BV(pin & PIN_MASK)));
+    return (pullup(m_gppu | _BV(pin & PIN_MASK)));
   }
 
   /**
@@ -123,17 +123,17 @@ public:
    * @param[in] mode interrupt.
    * @return bool.
    */
-  bool set_interrupt_pin(uint8_t pin, InterruptMode mode);
+  bool interrupt_pin(uint8_t pin, InterruptMode mode);
 
   /**
    * Set given pin as output. Return true if set otherwise false.
    * @param[in] pin number (0..7).
    * @return bool.
    */
-  bool set_output_pin(uint8_t pin)
+  bool output_pin(uint8_t pin)
     __attribute__((always_inline))
   {
-    return (set_data_direction(m_iodir & ~_BV(pin & PIN_MASK)));
+    return (data_direction(m_iodir & ~_BV(pin & PIN_MASK)));
   }
 
   /**

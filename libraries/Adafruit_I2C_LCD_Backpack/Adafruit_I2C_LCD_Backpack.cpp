@@ -24,7 +24,7 @@ bool
 Adafruit_I2C_LCD_Backpack::setup()
 {
   if (!begin()) return (false);
-  set_data_direction(0);
+  data_direction(0);
   return (false);
 }
 

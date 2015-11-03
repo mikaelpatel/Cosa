@@ -405,7 +405,7 @@ public:
   /**
    * Return detected card type.
    */
-  CARD get_type() const
+  CARD type() const
   {
     return (m_type);
   }
