@@ -38,7 +38,7 @@
  * (VCC)---------------1-|VIN     ( ) |
  * (VCC)---------------2-|GND         |
  * (A5/SCL)------------3-|SCL         |
- * (A4/SDA)------------6-|SDA         |
+ * (A4/SDA)------------4-|SDA         |
  *                       +------------+
  * @endcode
 
@@ -110,7 +110,8 @@ public:
   float read_humidity_temperature()
   {
     uint16_t value;
-    if (!issue(READ_RH_TEMP) || !read(value)) return (NAN);
+    if (!issue(READ_RH_TEMP)) return (NAN);
+    if (!read(value, false)) return (NAN);
     return (((175.72 * value) / 65536) - 46.85);
   }
 

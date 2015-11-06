@@ -54,18 +54,39 @@ void setup()
 void loop()
 {
   periodic(timer, 2000L) {
-    float humidity, temperature;
-    MEASURE("measure humidity: ", 1)
+    float humidity, humidity_temperature, temperature;
+
+    MEASURE("measure-read humidity: ", 1) {
       sensor.measure_humidity();
-    MEASURE("read humidity: ", 1)
       humidity = sensor.read_humidity();
+    }
+
+    MEASURE("measure humidity: ", 1) {
+      sensor.measure_humidity();
+    }
+    delay(20);
+    MEASURE("read humidity: ", 1) {
+      humidity = sensor.read_humidity();
+    }
+
     MEASURE("read humidity temperature: ", 1)
-      temperature = sensor.read_humidity_temperature();
-    MEASURE("measure temperature: ", 1)
+      humidity_temperature = sensor.read_humidity_temperature();
+
+    MEASURE("measure-read temperature: ", 1) {
       sensor.measure_temperature();
-    MEASURE("read temperature: ", 1)
       temperature = sensor.read_temperature();
+    }
+
+    MEASURE("measure temperature: ", 1) {
+      sensor.measure_temperature();
+    }
+    delay(10);
+    MEASURE("read temperature: ", 1) {
+      temperature = sensor.read_temperature();
+    }
+
     trace << humidity << PSTR("% RH, ")
+	  << humidity_temperature << PSTR("° C, ")
 	  << temperature << PSTR("° C")
 	  << endl;
   }

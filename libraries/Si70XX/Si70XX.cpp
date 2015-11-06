@@ -50,9 +50,13 @@ Si70XX::read(uint16_t& value, bool check)
   int count;
 
   size = check ? sizeof(buf) : sizeof(buf) - 1;
-  twi.acquire(this);
-  count = twi.read(buf, size);
-  twi.release();
+  for (int retry = 0; retry < 20; retry++) {
+    twi.acquire(this);
+    count = twi.read(buf, size);
+    twi.release();
+    if (count != -1) break;
+    delay(1);
+  }
   if (count != size) return (false);
   if (check) {
     uint8_t crc;
