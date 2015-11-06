@@ -22,6 +22,7 @@
  */
 
 #include "Cosa/AnalogComparator.hh"
+#include "Cosa/AnalogPin.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Trace.hh"
@@ -50,6 +51,7 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaAnalogComparator: started"));
   Watchdog::begin();
+  AnalogPin::powerup();
   detector.enable();
 }
 

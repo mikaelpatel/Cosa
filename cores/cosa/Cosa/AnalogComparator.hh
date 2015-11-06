@@ -25,9 +25,9 @@
 #include "Cosa/Interrupt.hh"
 
 /**
- * Analog Comparator; compare input values on the positive pin AIN0
- * and negative pin AIN1 or ADCn. Note: only one instance can be
- * active/enabled at a time.
+ * Analog Comparator; compare input values on the positive pin AIN0 (D6)
+ * and negative pin AIN1 (D7), bandgap voltage or ADCn. Note: only one
+ * instance can be active/enabled at a time.
  */
 class AnalogComparator : public Interrupt::Handler, public Event::Handler {
 public:
@@ -38,7 +38,8 @@ public:
   } __attribute__((packed));
 
   /**
-   * Construct analog comparator handler. Compare with AIN1.
+   * Construct analog comparator handler. Compare AIN0 (D6) with AIN1
+   * (D7) or bandgap voltage (1V1).
    * @param[in] mode comparator mode.
    */
   AnalogComparator(Mode mode = ON_TOGGLE_MODE, bool bandgap = false) :
@@ -47,7 +48,7 @@ public:
   {}
 
   /**
-   * Construct analog comparator handler. Compare with given
+   * Construct analog comparator handler. Compare AIN0 (D6) with given
    * analog pin (ADCn).
    * @param[in] pin analog pin to compare with.
    * @param[in] mode comparator mode.

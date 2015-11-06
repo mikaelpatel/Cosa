@@ -130,6 +130,9 @@ void setup()
   int2Pin.enable();
   TRACE(extPin.get_counter());
   extPin.enable();
+
+  // Power up ADC
+  AnalogPin::powerup();
 }
 
 Watchdog::Clock clock;
@@ -140,7 +143,7 @@ void loop()
   clock.await();
 
   // Print the time index
-  INFO("ms = %d", Watchdog::millis());
+  INFO("ms = %ul", Watchdog::millis());
 
   // Sample the level
   uint16_t value = levelPin.sample();

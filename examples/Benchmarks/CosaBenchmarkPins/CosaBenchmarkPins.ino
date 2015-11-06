@@ -124,6 +124,9 @@ void setup()
   // Print CPU clock and instructions per 1MHZ
   TRACE(F_CPU);
   TRACE(I_CPU);
+
+  // Powerup ADC
+  AnalogPin::powerup();
 }
 
 #define MEASURE_SUITE(msg)						\

@@ -61,7 +61,6 @@ Probe probe;
 
 void setup()
 {
-  CPU::clock_prescale(1);
   uart.begin(57600);
   trace.begin(&uart, PSTR("CosaInputCapture: started"));
   trace << PSTR("ICP1 - D8") << endl;
