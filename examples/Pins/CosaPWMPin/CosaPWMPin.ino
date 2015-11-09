@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Cosa demonstration of PWM pins.
+ * Cosa demonstration of PWM pins (PWM0/D3).
  *
  * This file is part of the Arduino Che Cosa project.
  */
@@ -43,8 +43,9 @@ void setup()
   TRACE(sizeof(OutputPin));
   TRACE(sizeof(PWMPin));
 
-  // Print debug information about the pin
+  // Print debug information about the pin before starting it
   trace << ledPin << endl;
+  ledPin.begin();
 
   // Start the watchdog ticks counter
   Watchdog::begin();

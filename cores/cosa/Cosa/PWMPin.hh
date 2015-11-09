@@ -36,6 +36,11 @@ public:
   PWMPin(Board::PWMPin pin, uint8_t duty = 0);
 
   /**
+   * Start pwm pin. Power up timer.
+   */
+  void begin();
+
+  /**
    * Set duty cycle for pwm output pin.
    * @param[in] duty cycle (0..255)
    */

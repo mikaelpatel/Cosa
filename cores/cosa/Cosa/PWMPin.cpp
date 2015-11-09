@@ -19,6 +19,7 @@
  */
 
 #include "Cosa/PWMPin.hh"
+#include "Cosa/Power.hh"
 
 #if defined(BOARD_ATMEGA328P)
 
@@ -48,6 +49,27 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     break;
   }
   set(duty);
+}
+
+void
+PWMPin::begin()
+{
+  switch (m_pin) {
+  case Board::PWM0:
+  case Board::PWM5:
+    Power::timer2_enable();
+    break;
+  case Board::PWM1:
+  case Board::PWM2:
+    Power::timer0_enable();
+    break;
+  case Board::PWM3:
+  case Board::PWM4:
+    Power::timer1_enable();
+    break;
+  default:
+    ;
+  }
 }
 
 uint8_t
@@ -133,6 +155,31 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     break;
   }
   set(duty);
+}
+
+void
+PWMPin::begin()
+{
+  switch (m_pin) {
+  case Board::PWM0:
+  case Board::PWM1:
+    Power::timer1_enable();
+    break;
+  case Board::PWM2:
+  case Board::PWM3:
+    Power::timer0_enable();
+    break;
+  case Board::PWM4:
+    Power::timer3_enable();
+    break;
+  case Board::PWM5:
+  case Board::PWM6:
+    // Not supported by avr/power.h
+    // Power::timer4_enable();
+    break;
+  default:
+    ;
+  }
 }
 
 uint8_t
@@ -228,6 +275,32 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     break;
   }
   set(duty);
+}
+
+void
+PWMPin::begin()
+{
+  switch (m_pin) {
+  case Board::PWM0:
+  case Board::PWM1:
+    Power::timer0_enable();
+    break;
+#if defined(__AVR_ATmega1284P__)
+  case Board::PWM2:
+  case Board::PWM3:
+    Power::timer3_enable();
+#endif
+  case Board::PWM4:
+  case Board::PWM5:
+    Power::timer1_enable();
+    break;
+  case Board::PWM6:
+  case Board::PWM7:
+    Power::timer2_enable();
+    break;
+  default:
+    ;
+  }
 }
 
 uint8_t
@@ -338,6 +411,37 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
   set(duty);
 }
 
+void
+PWMPin::begin()
+{
+  switch (m_pin) {
+  case Board::PWM0:
+  case Board::PWM1:
+  case Board::PWM3:
+    Power::timer3_enable();
+    break;
+  case Board::PWM2:
+  case Board::PWM11:
+    Power::timer0_enable();
+    break;
+  case Board::PWM4:
+  case Board::PWM5:
+  case Board::PWM6:
+    Power::timer4_enable();
+    break;
+  case Board::PWM7:
+  case Board::PWM8:
+    Power::timer2_enable();
+    break;
+  case Board::PWM9:
+  case Board::PWM10:
+    Power::timer0_enable();
+    break;
+  default:
+    ;
+  }
+}
+
 uint8_t
 PWMPin::duty()
 {
@@ -436,6 +540,23 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
   set(duty);
 }
 
+void
+PWMPin::begin()
+{
+  switch (m_pin) {
+  case Board::PWM0:
+  case Board::PWM1:
+    Power::timer0_enable();
+    break;
+  case Board::PWM2:
+  case Board::PWM3:
+    Power::timer1_enable();
+    break;
+  default:
+    ;
+  }
+}
+
 uint8_t
 PWMPin::duty()
 {
@@ -482,6 +603,19 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
   TCCR0A |= _BV(WGM01) | _BV(WGM00);
   TCCR0B |= _BV(CS01) | _BV(CS00);
   set(duty);
+}
+
+void
+PWMPin::begin()
+{
+  switch (m_pin) {
+  case Board::PWM0:
+  case Board::PWM1:
+    Power::timer0_enable();
+    break;
+  default:
+    ;
+  }
 }
 
 uint8_t
@@ -533,6 +667,20 @@ PWMPin::PWMPin(Board::PWMPin pin, uint8_t duty) :
     break;
   }
   set(duty);
+}
+
+void
+PWMPin::begin()
+{
+  switch (m_pin) {
+  case Board::PWM0:
+  case Board::PWM1:
+  case Board::PWM2:
+    Power::timer1_enable();
+    break;
+  default:
+    ;
+  }
 }
 
 uint8_t
