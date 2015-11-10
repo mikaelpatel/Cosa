@@ -202,6 +202,20 @@ public:
   }
 #endif
 
+#if defined(power_usb_enable)
+  static void usb_enable()
+    __attribute__((always_inline))
+  {
+    power_usb_enable();
+  }
+
+  static void usb_disable()
+    __attribute__((always_inline))
+  {
+    power_usb_disable();
+  }
+#endif
+
 #if defined(power_usi_enable)
   static void usi_enable()
     __attribute__((always_inline))

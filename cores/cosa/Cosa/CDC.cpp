@@ -26,6 +26,7 @@
 #include "Cosa/USB/Platform.h"
 #include "Cosa/IOBuffer.hh"
 #include "Cosa/Watchdog.hh"
+#include "Cosa/Power.hh"
 #include <avr/wdt.h>
 
 static IOBuffer<CDC::BUFFER_MAX> ibuf;
@@ -133,6 +134,7 @@ CDC::begin(uint32_t baudrate, uint8_t format)
 {
   UNUSED(baudrate);
   UNUSED(format);
+  Power::usb_enable();
   if (!Watchdog::is_initiated()) Watchdog::begin();
   if (!USBDevice.attach()) return (false);
   for (uint8_t retry = 0; retry < 30; retry++) {
