@@ -22,6 +22,7 @@
 #define COSA_CDC_HH
 
 #include "Cosa/Types.h"
+#include "Cosa/Power.hh"
 #include "Cosa/IOStream.hh"
 
 #if defined(USBCON)
@@ -142,6 +143,7 @@ public:
    */
   bool end()
   {
+    Power::usb_disable();
     return (true);
   }
 

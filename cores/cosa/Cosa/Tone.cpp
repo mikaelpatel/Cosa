@@ -76,6 +76,7 @@ Tone::play(uint16_t freq, uint8_t volume, uint16_t duration, bool background)
   if (UNLIKELY(volume > VOLUME_MAX)) volume = VOLUME_MAX;
 
   // Calculate clock prescaling
+  Power::timer1_enable();
   uint8_t prescaler = _BV(CS10);
   uint32_t top = (F_CPU / freq / 2) - 1;
   if (top > 65535L) {
@@ -114,6 +115,7 @@ Tone::silent()
 
   // Clear output pin
   PORT &= ~(_BV(PIN1) | _BV(PIN2));
+  Power::timer1_disable();
 }
 
 ISR(TIMER1_COMPA_vect)
