@@ -126,3 +126,19 @@ tools.avrdude.bootloader.pattern="{cmd.path}" "-C{config.path}" {bootloader.verb
 # - from numeric vendor ID, set to Unknown otherwise
 build.usb_manufacturer=
 build.usb_flags=-DUSB_VID={build.vid} -DUSB_PID={build.pid} '-DUSB_MANUFACTURER={build.usb_manufacturer}' '-DUSB_PRODUCT={build.usb_product}'
+
+# ctags
+# ------------------------------
+tools.ctags.path={runtime.tools.ctags.path}
+tools.ctags.cmd.path={path}/ctags
+tools.ctags.pattern="{cmd.path}" -u --language-force=c++ -f - --c++-kinds=svpf --fields=KSTtzns "{source_file}"
+
+# additional entries
+tools.avrdude.path={runtime.tools.avrdude.path}
+
+preproc.includes.flags=-w -x c++ -M -MG -MP -mmcu={build.mcu}
+recipe.preproc.includes="{compiler.path}{compiler.cpp.cmd}" {preproc.includes.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}"
+
+preproc.macros.flags=-w -x c++ -E -CC -mmcu={build.mcu}
+preproc.macros.compatibility_flags={build.mbed_api_include} {build.nRF51822_api_include} {build.ble_api_include} {compiler.libsam.c.flags} {compiler.arm.cmsis.path} {build.variant_system_include}
+recipe.preproc.macros="{compiler.path}{compiler.cpp.cmd}" {compiler.cpreprocessor.flags} {compiler.cpp.flags} {preproc.macros.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} {compiler.cpp.extra_flags} {build.extra_flags} {preproc.macros.compatibility_flags} {includes} "{source_file}"
