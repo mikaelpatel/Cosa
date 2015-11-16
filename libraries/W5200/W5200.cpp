@@ -1,5 +1,5 @@
 /**
- * @file W5100.cpp
+ * @file W5200.cpp
  * @version 1.0
  *
  * @section License
@@ -18,58 +18,54 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "W5100.hh"
+#include "W5200.hh"
 #include <W5X00.h>
 #include <DNS.h>
 #include <DHCP.h>
 
 #if !defined(BOARD_ATTINY)
 
-#define W5X00 W5100
+#define W5X00 W5200
 #include <W5X00.inc>
 
 void
-W5100::write(uint16_t addr, const void* buf, size_t len, bool progmem)
+W5200::write(uint16_t addr, const void* buf, size_t len, bool progmem)
 {
+  if (len == 0) return;
   const uint8_t* bp = (const uint8_t*) buf;
-  uint16_t last = addr + len;
   spi.acquire(this);
-  spi.begin();
-  while (addr < last) {
-    spi.transfer_start(OP_WRITE);
-    spi.transfer_next(addr >> 8);
-    spi.transfer_next(addr++);
-    spi.transfer_next(progmem ? pgm_read_byte(bp++) : *bp++);
-    spi.transfer_await();
-    m_cs.set();
-    m_cs.clear();
-  }
-  spi.end();
+    spi.begin();
+      spi.transfer_start(addr >> 8);
+      spi.transfer_next(addr);
+      spi.transfer_next((OP_WRITE | ((len & 0x7F00) >> 8)));
+      spi.transfer_next(len & 0x00FF);
+      for (size_t i = 0; i < len; i++, bp++)
+	spi.transfer_next(progmem ? pgm_read_byte(bp) : *bp);
+      spi.transfer_await();
+    spi.end();
   spi.release();
 }
 
 void
-W5100::read(uint16_t addr, void* buf, size_t len)
+W5200::read(uint16_t addr, void* buf, size_t len)
 {
+  if (len == 0) return;
   uint8_t* bp = (uint8_t*) buf;
-  uint16_t last = addr + len;
   spi.acquire(this);
-  spi.begin();
-  while (addr < last) {
-    spi.transfer_start(OP_READ);
-    spi.transfer_next(addr >> 8);
-    spi.transfer_next(addr++);
-    spi.transfer_next(0);
-    *bp++ = spi.transfer_await();
-    m_cs.set();
-    m_cs.clear();
-  }
-  spi.end();
+    spi.begin();
+      spi.transfer_start(addr >> 8);
+      spi.transfer_next(addr);
+      spi.transfer_next((OP_READ | ((len & 0x7F00) >> 8)));
+      spi.transfer_next(len & 0x00FF);
+      spi.transfer_await();
+      for (size_t i = 0; i < len; i++, bp++)
+	*bp = spi.transfer(0);
+    spi.end();
   spi.release();
 }
 
 bool
-W5100::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
+W5200::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
 {
   // Initiate socket structure; buffer allocation and socket register pointer
   for (uint8_t i = 0; i < SOCK_MAX; i++) {
@@ -99,8 +95,6 @@ W5100::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
   write(M_CREG(MR), MR_RST);
   write(M_CREG(SHAR), mac, sizeof(m_creg->SHAR));
   write(M_CREG(RTR), &timeout, sizeof(m_creg->RTR));
-  write(M_CREG(TMSR), TX_MEMORY_SIZE);
-  write(M_CREG(RMSR), RX_MEMORY_SIZE);
 
   // Set source network address, subnet mask and default gateway
   bind(ip, subnet);

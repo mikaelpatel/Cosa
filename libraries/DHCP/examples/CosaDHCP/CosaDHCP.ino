@@ -36,7 +36,9 @@
 
 #include <DNS.h>
 #include <DHCP.h>
+#include <W5X00.h>
 #include <W5100.h>
+// #include <W5200.h>
 
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
@@ -58,6 +60,7 @@ static const char hostname[] __PROGMEM = "CosaDHCP";
 
 // W5100 Ethernet Controller and DHCP client
 W5100 ethernet(mac);
+// W5200 ethernet(mac);
 DHCP dhcp(hostname, mac);
 
 void setup()
