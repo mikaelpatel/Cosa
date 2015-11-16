@@ -36,5 +36,6 @@ Keypad::Key::on_change(uint16_t value)
 void
 Keypad::run()
 {
+  m_key.powerup();
   m_key.sample_request(Event::SAMPLE_COMPLETED_TYPE);
 }
