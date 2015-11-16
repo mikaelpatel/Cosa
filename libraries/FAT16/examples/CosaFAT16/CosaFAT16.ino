@@ -31,8 +31,8 @@
 #include "Cosa/Memory.h"
 
 //#define USE_SD_ADAPTER
-//#define USE_SD_DATA_LOGGING_SHIELD
-#define USE_ETHERNET_SHIELD
+#define USE_SD_DATA_LOGGING_SHIELD
+//#define USE_ETHERNET_SHIELD
 //#define USE_TFT_ST7735
 
 #if defined(WICKEDDEVICE_WILDFIRE) || defined(USE_SD_ADAPTER)
@@ -102,7 +102,7 @@ void loop()
   ms = stop - start;
   trace << PSTR("Write file (") << K_BYTE << PSTR(" KByte,1024 Byte):")
 	<< ms << PSTR(" ms (")
-	<< K_BYTE * 1024.0 / ms << PSTR(" KBps)")
+	<< K_BYTE * 1024.0 / ms << PSTR(" KB/s)")
 	<< endl
 	<< endl;
   trace.flush();
@@ -126,8 +126,8 @@ void loop()
   ms = stop - start;
   ASSERT(file.close());
   trace << PSTR("Read file (") << size / 1024
-	<< PSTR("KByte,1 Byte):") << ms << PSTR(" ms (")
-	<< size * 1.0 / ms << PSTR(" KBps)")
+	<< PSTR(" KByte,1 Byte):") << ms << PSTR(" ms (")
+	<< size * 1.0 / ms << PSTR(" KB/s)")
 	<< endl;
   trace.flush();
 
@@ -142,7 +142,7 @@ void loop()
   trace << PSTR("Read file (") << size / 1024
 	<< PSTR(" KByte,") << sizeof(buf) << PSTR(" Byte):")
 	<< ms << PSTR(" ms (")
-	<< size * 1.0 / ms << PSTR(" KBps)")
+	<< size * 1.0 / ms << PSTR(" KB/s)")
 	<< endl
 	<< endl;
   trace.flush();
