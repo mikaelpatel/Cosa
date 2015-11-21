@@ -91,7 +91,7 @@ time_t::time_t(clock_t c, int8_t zone)
 
   uint16_t y = epoch_year();
   for (;;) {
-    uint16_t days = days_per( y );
+    uint16_t days = days_per(y);
     if (dayno < days) break;
     dayno -= days;
     y++;
@@ -172,14 +172,14 @@ void time_t::use_fastest_epoch()
 
   // Temporarily set a Y2K epoch so we can figure out the day for
   // January 1 of this year
-  epoch_year( Y2K_EPOCH_YEAR );
+  epoch_year(Y2K_EPOCH_YEAR);
   epoch_weekday = Y2K_EPOCH_WEEKDAY;
   time_t this_year(0);
   this_year.year = compile_year % 100;
   this_year.set_day();
   uint8_t compile_weekday = this_year.day;
 
-  time_t::epoch_year( compile_year );
+  time_t::epoch_year(compile_year);
   time_t::epoch_weekday = compile_weekday;
   time_t::pivot_year = this_year.year;
 }
