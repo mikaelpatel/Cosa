@@ -43,6 +43,7 @@ public:
   class Controller : public Nucleo::Thread {
   public:
     Controller(LED* led) : Thread(), m_led(led) {}
+
     virtual void run()
     {
       for (uint16_t ms = LOW; ms < HIGH; ms += INC) {
@@ -54,13 +55,25 @@ public:
 	delay(PERIOD);
       }
     }
+
   private:
     LED* m_led;
   };
 
-  LED(Board::DigitalPin pin) : Thread(), m_pin(pin, 1), m_delay(200) {}
-  void set_delay(uint16_t ms) { m_delay = ms; }
-  virtual void run() { m_pin.toggle(); delay(m_delay); }
+  LED(Board::DigitalPin pin) : Thread(), m_pin(pin, 0), m_delay(200) {}
+
+  void set_delay(uint16_t ms)
+  {
+    m_delay = ms;
+  }
+
+  virtual void run()
+  {
+    m_pin.toggle();
+    delay(10);
+    m_pin.toggle();
+    delay(m_delay);
+  }
 
 private:
   OutputPin m_pin;
@@ -83,4 +96,10 @@ void setup()
 
   // Start the threads
   Nucleo::Thread::begin();
+}
+
+void loop()
+{
+ // Service the nucleos
+  Nucleo::Thread::service();
 }
